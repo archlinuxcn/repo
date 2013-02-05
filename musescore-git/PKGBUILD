@@ -1,0 +1,62 @@
+# Contributor: Dr.Egg <hondoheal@gmail.com>
+# Contributor: Stefan Husmann <stefan-husmann@t-online.de>
+# Maintainer: Yichao Yu <yyc1992@gmail.com>
+
+pkgbase=musescore
+pkgname=${pkgbase}-git
+_realver=2.0b
+pkgver=20130120
+pkgrel=1
+pkgdesc="A music score editor - git-version"
+arch=('i686' 'x86_64')
+url="http://www.musescore.org/en/"
+license=('GPL')
+depends=('shared-mime-info' 'alsa-lib' 'zlib' 'libvorbis' 'qt' 'qtwebkit'
+  'qtscriptgenerator' 'portaudio' 'libpulse' 'libsndfile' 'libogg' 'gcc-libs')
+makedepends=('cmake' 'doxygen' 'git')
+optdepends=('jack')
+conflicts=("${pkgbase}" 'mscore' 'musescore-svn')
+provides=("${pkgbase}=${_realver}" 'musescore-svn')
+replaces=('musescore-svn')
+source=('mime.xml')
+md5sums=('969696178e56de36f9af37d7da61baaa')
+install=musescore.install
+
+_gitname="MuseScore"
+_gitroot="https://github.com/musescore/MuseScore.git"
+_gitbranch=master
+
+build() {
+  cd "$srcdir"
+
+  if [ -d "$srcdir/$_gitname/.git" ]; then
+    cd "$_gitname"
+    msg "Reset current branch"
+    git reset --hard HEAD
+    msg "Fetching branch $_gitbranch from $_gitroot..."
+    git fetch --force --update-head-ok \
+      "$_gitroot" "$_gitbranch:$_gitbranch"
+    msg "Checking out branch $_gitbranch..."
+    git checkout "$_gitbranch"
+    git reset --hard "$_gitbranch"
+    msg "The local files are updated."
+  else
+    msg "Cloning branch $_gitbranch from $_gitroot to $_gitname..."
+    git clone --single-branch --branch "$_gitbranch" \
+      "$_gitroot" "$_gitname"
+    cd "$_gitname"
+  fi
+  msg "GIT checkout done or server timeout"
+
+  msg "Creating make environment..."
+  git clean -fdx
+  make PREFIX=/usr release
+}
+
+package() {
+  cd "${srcdir}/${_gitname}/build.release"
+  make DESTDIR="$pkgdir" install
+  install -Dm644 "$srcdir/mime.xml" \
+    "$pkgdir/usr/share/mime/packages/x-musescore.xml"
+  ln -s mscore "$pkgdir/usr/bin/musescore"
+}
