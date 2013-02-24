@@ -5,7 +5,7 @@
 pkgbase=musescore
 pkgname=${pkgbase}-git
 _realver=2.0b
-pkgver=20130120
+pkgver=20130223
 pkgrel=1
 pkgdesc="A music score editor - git-version"
 arch=('i686' 'x86_64')
@@ -23,8 +23,9 @@ md5sums=('969696178e56de36f9af37d7da61baaa')
 install=musescore.install
 
 _gitname="MuseScore"
+
 _gitroot="https://github.com/musescore/MuseScore.git"
-_gitbranch=master
+_gitref=master
 
 build() {
   cd "$srcdir"
@@ -33,28 +34,29 @@ build() {
     cd "$_gitname"
     msg "Reset current branch"
     git reset --hard HEAD
-    msg "Fetching branch $_gitbranch from $_gitroot..."
+    git clean -fdx
+    msg "Fetching branch $_gitref from $_gitroot..."
     git fetch --force --update-head-ok \
-      "$_gitroot" "$_gitbranch:$_gitbranch"
-    msg "Checking out branch $_gitbranch..."
-    git checkout "$_gitbranch"
-    git reset --hard "$_gitbranch"
+      "$_gitroot" "$_gitref:$_gitref" --
+    msg "Checking out branch $_gitref..."
+    git checkout "$_gitref" --
+    git reset --hard "$_gitref"
+    git clean -fdx
     msg "The local files are updated."
   else
-    msg "Cloning branch $_gitbranch from $_gitroot to $_gitname..."
-    git clone --single-branch --branch "$_gitbranch" \
+    msg "Cloning branch $_gitref from $_gitroot to $_gitname..."
+    git clone --single-branch --branch "$_gitref" \
       "$_gitroot" "$_gitname"
     cd "$_gitname"
   fi
   msg "GIT checkout done or server timeout"
 
-  msg "Creating make environment..."
-  git clean -fdx
   make PREFIX=/usr release
 }
 
 package() {
   cd "${srcdir}/${_gitname}/build.release"
+
   make DESTDIR="$pkgdir" install
   install -Dm644 "$srcdir/mime.xml" \
     "$pkgdir/usr/share/mime/packages/x-musescore.xml"
