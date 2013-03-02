@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2876311..a9a80a5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -332,7 +332,7 @@ string(REPLACE ";" ";-I" INC "${QT_INCLUDES}")
+ add_custom_command(
+  OUTPUT ${PROJECT_BINARY_DIR}/all.h.gch
+  COMMAND ${CMAKE_CXX_COMPILER}
+-   -x c++-header -g  ${FLAGS} -I ${INC} -o all.h.gch all.h
++   -x c++-header -g  ${FLAGS} -D_FORTIFY_SOURCE=2 -I ${INC} -o all.h.gch all.h
+  DEPENDS ${PROJECT_BINARY_DIR}/all.h
+  WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+  VERBATIM

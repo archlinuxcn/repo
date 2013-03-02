@@ -5,21 +5,23 @@
 pkgbase=musescore
 pkgname=${pkgbase}-git
 _realver=2.0b
-pkgver=20130223
-pkgrel=1
+pkgver=20130302
+pkgrel=2
 pkgdesc="A music score editor - git-version"
 arch=('i686' 'x86_64')
 url="http://www.musescore.org/en/"
 license=('GPL')
-depends=('shared-mime-info' 'alsa-lib' 'zlib' 'libvorbis' 'qt' 'qtwebkit'
+depends=('shared-mime-info' 'alsa-lib' 'zlib' 'libvorbis' 'qt4' 'qtwebkit'
   'qtscriptgenerator' 'portaudio' 'libpulse' 'libsndfile' 'libogg' 'gcc-libs')
 makedepends=('cmake' 'doxygen' 'git')
 optdepends=('jack')
 conflicts=("${pkgbase}" 'mscore' 'musescore-svn')
 provides=("${pkgbase}=${_realver}" 'musescore-svn')
 replaces=('musescore-svn')
-source=('mime.xml')
-md5sums=('969696178e56de36f9af37d7da61baaa')
+source=('mime.xml'
+  'gch.patch')
+md5sums=('969696178e56de36f9af37d7da61baaa'
+         '427a523a6c26abe057ad57fdefbcf05e')
 install=musescore.install
 
 _gitname="MuseScore"
@@ -51,7 +53,16 @@ build() {
   fi
   msg "GIT checkout done or server timeout"
 
-  make PREFIX=/usr release
+  patch -Np1 < ../gch.patch
+  mkdir -p build.release
+  cd build.release
+  export CXXFLAGS="-std=gnu++0x ${CXXFLAGS}"
+  cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DQT_QMAKE_EXECUTABLE=qmake-qt4 \
+    -DCMAKE_SKIP_RPATH=On
+  make lrelease -j1
+  make
 }
 
 package() {
