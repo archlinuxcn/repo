@@ -1,0 +1,12 @@
+post_install() {
+    dkms install -m nvidia -v 313.26
+}
+pre_upgrade() {
+    pre_remove
+}
+post_upgrade() {
+    post_install
+}
+pre_remove() {
+    dkms remove -m nvidia -v 313.26 --all
+}

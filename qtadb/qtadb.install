@@ -1,0 +1,8 @@
+post_install() {
+  update-desktop-database -q
+  echo -e "\033[1;31m==> qtadb.apk is located in /usr/share/qtadb if you need it.\033[0m"
+}
+
+post_upgrade() {
+  post_install $1
+}

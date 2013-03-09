@@ -1,0 +1,25 @@
+# Maintainer: Marco A Rojas <marquicus at gmail dot com>
+# Contributor: Pavel Larev <pavel@larev.ws>
+
+pkgname=apache-tools
+pkgver=2.2.22
+pkgdesc="Useful Apache tools - htdigest, htpasswd, ab, htdbm"
+pkgrel=1
+arch=("i686" "x86_64")
+url="http://httpd.apache.org/"
+license=('APACHE')
+conflicts=("apache")
+depends=("apr-util" "pcre")
+makedepends=("apr" "apr-util" "pcre" "openssl")
+source=("http://www.apache.org/dist/httpd/httpd-${pkgver}.tar.bz2" "apache-tools-Makefile.patch")
+build() {
+	cd "${srcdir}"/httpd-$pkgver
+	patch -p1 <../apache-tools-Makefile.patch
+	./configure --sbindir=/usr/sbin --prefix=/usr --with-pcre=/usr || return 1 
+	cd support
+	make || return 1
+	make DESTDIR="${pkgdir}" install || return 1
+}
+md5sums=('9fe3093194c8a57f085ff7c3fc43715f'
+         '8fb9720c8adb09357b9c9d41adc55d6f')
+

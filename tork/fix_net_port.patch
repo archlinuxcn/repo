@@ -1,0 +1,20 @@
+--- A/src/upnp/upnprouter.h
++++ B/src/upnp/upnprouter.h
+@@ -242,7 +242,7 @@
+ 		 * @param port The local port to forward
+ 		 */
+ 		void forward(const net::Port & externalport,
+-                     const net::Port & internalport = net::Port::Port(),
++                     const net::Port & internalport = net::Port(),
+                      bool force = false);
+ 		
+ 		/**
+@@ -291,7 +291,7 @@
+ 		bt::HTTPRequest* sendSoapQuery(const QString & query,const QString & soapact,const QString & controlurl,bool fwd, bool at_exit = false );
+ 		bool verbose;
+ 		
+-		void forward(UPnPService* srv,const net::Port & externalport,const net::Port & internalport = net::Port::Port());
++		void forward(UPnPService* srv,const net::Port & externalport,const net::Port & internalport = net::Port());
+ 		void undoForward(UPnPService* srv,const net::Port & externalport,const net::Port &
+                         internalport,bt::WaitJob* waitjob);
+ 		void httpRequestDone(bt::HTTPRequest* r,bool erase_fwd);

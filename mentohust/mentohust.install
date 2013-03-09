@@ -1,0 +1,22 @@
+# arg 1:  the new package version
+# arg 2:  the old package version
+
+name="mentohust"
+
+tips(){
+    echo ">>> If you want to autorun "$name", and please "
+    echo ">>> add '$name' in DAEMONS section in /etc/rc.conf"
+}
+
+post_install () {
+    chmod a+xs "/usr/bin/$name"
+    echo ">>> For first time, you must run '$name' to configure once."
+    #echo ">>> Or you may just manually edit /etc/$name.conf."
+    tips
+}
+
+post_upgrade() {
+    chmod a+xs "/usr/bin/$name"
+    tips
+}
+

@@ -1,0 +1,11 @@
+post_install() {
+    echo "==================================================================="
+    echo "Google App Engine SDK for Python installed in /opt/google-appengine-python"
+    echo "These commands are now available:"
+    find /opt/google-appengine-python -maxdepth 1 -type f -executable -printf "/usr/bin/%f -> /opt/google-appengine-python/%f\n"
+    echo "==================================================================="
+}
+
+post_upgrade() {
+    post_install
+}

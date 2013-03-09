@@ -1,0 +1,11 @@
+[Unit]
+Description=ThinkPad Fan Control
+
+[Service]
+Type=forking
+PIDFile=/var/run/tpfand.pid
+ExecStart=/usr/sbin/tpfand
+
+[Install]
+WantedBy=multi-user.target
+

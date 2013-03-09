@@ -1,0 +1,23 @@
+--- A/src/tork.h	2009-08-13 03:41:23.000000000 +0800
++++ B/src/tork.h	2012-04-04 22:43:55.924940588 +0800
+@@ -45,6 +45,9 @@
+ #include <kpopupmenu.h>
+ #include <qvaluevector.h>
+ 
++#include <unistd.h>
++#include <sys/types.h>
++
+ #include "update.h"
+ #include "trayicon.h"
+ #include "upnpmanager.h"
+--- A/src/likeback.h        2006-10-01 19:58:11.000000000 +0800
++++ B/src/likeback.h    2012-04-04 22:50:38.024921928 +0800
+@@ -22,6 +22,8 @@
+ #define LIKEBACK_H
+
+ #include <qobject.h>
++#include <unistd.h>
++#include <sys/types.h>
+
+ class KConfig;
+ class KAboutData;

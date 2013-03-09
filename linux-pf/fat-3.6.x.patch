@@ -1,0 +1,33 @@
+From: Dave Reisner <dreisner@archlinux.org>
+Date: Thu, 29 Nov 2012 03:18:52 +0000 (+1100)
+Subject: fs/fat: strip "cp" prefix from codepage in display
+X-Git-Tag: next-20121130~1^2~97
+X-Git-Url: http://git.kernel.org/?p=linux%2Fkernel%2Fgit%2Fnext%2Flinux-next.git;a=commitdiff_plain;h=f15914873184cc3f2a8d590fa4f7e32ab0a8a405
+
+fs/fat: strip "cp" prefix from codepage in display
+
+Option parsing code expects an unsigned integer for the codepage option,
+but prefixes and stores this option with "cp" before passing to
+load_nls().  This makes the displayed option in /proc an invalid one.
+Strip the prefix when printing so that the displayed option is valid for
+reuse.
+
+Signed-off-by: Dave Reisner <dreisner@archlinux.org>
+Acked-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+---
+
+diff --git a/fs/fat/inode.c b/fs/fat/inode.c
+index 3b733a7..3580681 100644
+--- a/fs/fat/inode.c
++++ b/fs/fat/inode.c
+@@ -726,7 +726,8 @@ static int fat_show_options(struct seq_file *m, struct dentry *root)
+	if (opts->allow_utime)
+		seq_printf(m, ",allow_utime=%04o", opts->allow_utime);
+	if (sbi->nls_disk)
+-		seq_printf(m, ",codepage=%s", sbi->nls_disk->charset);
++		/* strip "cp" prefix from displayed option */
++		seq_printf(m, ",codepage=%s", &sbi->nls_disk->charset[2]);
+	if (isvfat) {
+		if (sbi->nls_io)
+			seq_printf(m, ",iocharset=%s", sbi->nls_io->charset);

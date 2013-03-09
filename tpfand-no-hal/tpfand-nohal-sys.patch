@@ -1,0 +1,39 @@
+--- src/tpfand/settings.py.orig	2009-03-08 23:27:10.000000000 +0100
++++ src/tpfand/settings.py	2012-07-16 22:52:17.955861939 +0200
+@@ -151,22 +151,25 @@
+         return files, profiles, id_match
+         
+     def read_model_info(self):
+-        """reads model info from HAL"""
++        """reads model info from /sys"""
+         try:
+-            bus = dbus.SystemBus()            
+-            computer_obj = bus.get_object('org.freedesktop.Hal', '/org/freedesktop/Hal/devices/computer')
+-            computer = dbus.Interface(computer_obj, 'org.freedesktop.Hal.Device')
+-            
+-            product_id = computer.GetProperty('system.hardware.vendor') + "_" + computer.GetProperty('system.hardware.product')
++            with open('/sys/class/dmi/id/product_name') as f:
++                hw_product = f.readline().rstrip("\n")
++            with open('/sys/class/dmi/id/sys_vendor') as f:
++                hw_vendor = f.readline().rstrip("\n")
++            with open('/sys/class/dmi/id/product_version') as f:
++                hw_version = f.readline().rstrip("\n")
++             
++            product_id = hw_vendor + "_" + hw_product
+             self.product_id = product_id.lower()
+-            product_name = computer.GetProperty('system.hardware.vendor') + "_" + computer.GetProperty('system.hardware.version')
++            product_name = hw_vendor + "_" + hw_version
+             self.product_name = product_name.lower().replace('/', '-').replace(' ', '_')
+             
+-            self.product_pretty_vendor = computer.GetProperty('system.hardware.vendor') 
+-            self.product_pretty_name = computer.GetProperty('system.hardware.version')
+-            self.product_pretty_id = computer.GetProperty('system.hardware.product')
++            self.product_pretty_vendor = hw_vendor
++            self.product_pretty_name = hw_version
++            self.product_pretty_id = hw_product
+         except:
+-            print "Warning: unable to get your system model from HAL."
++            print "Warning: unable to get your system model from /sys"
+             self.product_id = None
+             self.product_name = None
+             self.product_pretty_vendor = None

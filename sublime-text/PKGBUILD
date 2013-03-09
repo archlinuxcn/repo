@@ -1,0 +1,50 @@
+# Maintainer: Josh Kropf <josh@slashdev.ca>
+# Contributor: Bartosz Chmura <chmurli at gmail dot com>
+# Contributor: Mikkel Kroman <mk at maero dot dk>
+
+pkgname=sublime-text
+pkgver=2.0.1
+pkgrel=2
+pkgdesc="sophisticated text editor for code, html and prose"
+arch=('i686' 'x86_64')
+url="http://www.sublimetext.com/2"
+license=('custom')
+depends=(libpng gtk2)
+install=${pkgname}.install
+_arch=' x64'
+_archurl='%20x64'
+
+[[ "${CARCH}" = i686 ]] && _arch='' && _archurl=''
+
+source=(
+	"http://c758482.r82.cf2.rackcdn.com/Sublime%20Text%20${pkgver}${_archurl}.tar.bz2"
+	sublime-text.desktop
+	subl
+)
+
+md5sums=(
+	'bd816d93239a0af9ade257b2a9dcf8d2'
+	'f6d0e7f5da0e8c1d57640f62173295bf'
+	'8b1e1ebc594a2e48996654cd507095d4'
+)
+
+[[ "${CARCH}" = i686 ]] && md5sums[0]='0965d9b66d8973d65708b460f7657ef0'
+
+package () {
+	cd ${srcdir}
+
+	install -Dm644 ${pkgname}.desktop \
+		${pkgdir}/usr/share/applications/${pkgname}.desktop
+
+	install -dm755 ${pkgdir}/opt
+	cp --preserve=mode -r "Sublime Text 2" \
+		${pkgdir}/opt/${pkgname}
+
+	for res in 128x128 16x16 256x256 32x32 48x48; do
+		install -dm755 ${pkgdir}/usr/share/icons/hicolor/${res}/apps
+		ln -s /opt/${pkgname}/Icon/${res}/sublime_text.png \
+			${pkgdir}/usr/share/icons/hicolor/${res}/apps/sublime_text.png
+	done
+
+	install -Dm755 subl ${pkgdir}/usr/bin/subl
+}

@@ -1,0 +1,3 @@
+post_install() {
+  echo "Please add 'dkms' to the HOOKs array in /etc/mkinitcpio.conf, and 'linux-headers' (or whatever kernel headers you use) to the SyncFirst array in /etc/pacman.conf to enable the automatic dkms modules compilation."
+}
