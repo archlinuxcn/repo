@@ -1,0 +1,34 @@
+# Maintainer: JokerBoy <jokerboy at punctweb dot ro>
+
+pkgname=kfaenza-icon-theme
+pkgver=0.8.9
+pkgrel=2
+pkgdesc="Faenza icon theme for KDE4"
+url="http://kde-look.org/content/show.php?content=143890"
+license=('GPL')
+arch=('any')
+depends=('kdebase-workspace')
+source=("${pkgname}-${pkgver}.tar.gz::http://omploader.org/vYjR0NQ")
+sha256sums=('ac213adfb442f7bb3803bd5e3d1dc77580126162926ce57a4691c125fa0772aa')
+options=(!strip)
+
+package() {
+  install -d "${pkgdir}/usr/share/icons"
+  cp -r "${srcdir}/KFaenza" "${pkgdir}/usr/share/icons/"
+
+  for size in 16 22 32 48 64 128 256; do
+    cd "${pkgdir}/usr/share/icons/KFaenza/places/${size}/"
+    mv start-here-kde.png start-here-kde-default.png
+    ln -sf archlinux-logo.png distributor-logo.png
+    ln -sf start-here-archlinux.png start-here-kde.png
+  done;
+
+  cd "${pkgdir}/usr/share/icons/KFaenza/places/scalable/"
+  mv start-here-kde.svg start-here-kde-default.svg
+  ln -sf archlinux-logo.svg distributor-logo.svg
+  ln -sf start-here-archlinux.svg start-here-kde.svg
+
+  find "${pkgdir}/usr" -type f -exec chmod 644 {} \;
+  find "${pkgdir}/usr" -type d -exec chmod 755 {} \;
+  find "${pkgdir}/usr" -type f -name '.directory' -delete
+}

@@ -1,0 +1,37 @@
+#Contributor: phoenixlzx <phoenixlzx at archlinuxcn dot org>
+
+pkgname=oh-my-zsh-git
+pkgver=20121024
+pkgrel=2
+pkgdesc="A community-driven framework for managing your zsh configuration."
+arch=('any')
+url='https://github.com/robbyrussell/oh-my-zsh'
+license=('GPL')
+depends=('zsh')
+makedepends=('git')
+
+_gitroot='git://github.com/robbyrussell/oh-my-zsh.git'
+_gitname='oh-my-zsh'
+_buildir="$srcdir/$_gitname-build"
+
+build() {
+  cd $srcdir
+  if [ -d $_gitname ]; then
+    cd $_gitname && git pull origin || return 1
+  else
+    git clone $_gitroot || return 1
+  fi
+  rm -rf $_buildir
+  git clone $srcdir/$_gitname $_buildir
+  cd $_buildir
+  sed -i -e'2c\ZSH=/usr/share/oh-my-zsh/' templates/zshrc.zsh-template
+}
+
+package() {
+  mkdir -p $pkgdir/usr/share/oh-my-zsh
+  cd $_buildir
+  rm -rf .git
+  rm -f .gitignore
+  install -D -m644 templates/zshrc.zsh-template $pkgdir/etc/skel/.zshrc
+  cp -r . $pkgdir/usr/share/oh-my-zsh
+}
