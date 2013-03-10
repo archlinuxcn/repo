@@ -1,0 +1,44 @@
+#Contributor: Chernmy <chernmy@gmail.com> 
+#Maintainer: xgdgsc<xgdgsc@gmail.com>
+pkgname=wiznote
+pkgver=1.4.11
+pkgrel=1
+pkgdesc="Opensource Cross platform cloud note-taking application"
+arch=('i686' 'x86_64')
+url="https://github.com/WizTeam/WizQTClient"
+license=('GPLv3')
+depends=()
+
+#PKGEXT=".pkg.tar"
+
+if [ "${CARCH}" = 'x86_64' ]; then
+    ARCH='x64'
+    md5sums=('449af93e6b4a7a6a3c8b5c02d36c37ba' 'ea053acb569c6b008ccdda81bc1d0c30')
+    #source=('http://download.wiz.cn/download?product=wiznote&client=linux-x64' 'wiznote.desktop')
+else 
+    ARCH='x86'
+    md5sums=('fac96e23271f15e4953e3e1a9246996f' 'ea053acb569c6b008ccdda81bc1d0c30')
+   #source=('http://download.wiz.cn/download?product=wiznote&client=linux-x86' 'wiznote.desktop')
+fi
+
+
+_source_name=${pkgname}_${pkgver}_${CARCH}.tar.gz
+source=("${_source_name}::http://download.wiz.cn/download?product=wiznote&client=linux-$ARCH" "wiznote.desktop")
+
+package() {
+    #msg "Extracting..."
+    #ar -xv wiznote-$pkgver-beta-$ARCH.deb || return 1
+    #tar -xvf data.tar.gz || return 1
+    #tar -xvf $srcname
+    #msg2 "Done extracting!"
+    msg "Copying files"
+    mkdir -p $pkgdir/opt/wiznote
+    mkdir -p $pkgdir/usr/share/applications
+    #rm -rf $srcdir/lib
+    #rm -rf $srcdir/plugins
+    cp -R $srcdir/* $pkgdir/opt/wiznote
+    install -Dm644 "$srcdir/wiznote.desktop" "$pkgdir/usr/share/applications/wiznote.desktop"
+    msg2 "Done copying files"
+    rm -rf  $pkgdir/opt/wiznote/"$_source_name"
+    rm -rf  $pkgdir/opt/wiznote/wiznote.desktop
+}
