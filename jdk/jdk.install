@@ -1,0 +1,40 @@
+_update() {
+    xdg-icon-resource forceupdate --theme hicolor 2> /dev/null
+    xdg-icon-resource forceupdate --theme HighContrast 2> /dev/null
+    xdg-icon-resource forceupdate --theme HighContrastInverse 2> /dev/null
+    xdg-icon-resource forceupdate --theme LowContrast 2> /dev/null
+    update-mime-database /usr/share/mime >/dev/null
+    update-desktop-database -q
+}
+
+post_install() {
+    _update
+
+    echo ""
+    echo "- The jdk package is licensed software."
+    echo "  You MUST agree to the license available in:"
+    echo "  http://java.com/license before using it."
+
+    if [ -f /etc/mailcap ] ; then
+      sed -e '/application\/x-java-jnlp-file/d' -i /etc/mailcap
+    fi
+    echo 'application/x-java-jnlp-file;/opt/java/jre/bin/javaws %s' >>/etc/mailcap
+
+    echo '- Please relogin to include jdk in your PATH.'
+    echo ""
+}
+
+post_upgrade() {
+    _update
+}
+
+post_remove() {
+    _update
+
+    mailcap=$(grep -v 'application/x-java-jnlp-file' /etc/mailcap)
+    if [ "$mailcap" != "" ] ; then
+      sed -e '/application\/x-java-jnlp-file/d' -i /etc/mailcap
+    else
+      rm /etc/mailcap
+    fi
+}
