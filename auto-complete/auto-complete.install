@@ -1,0 +1,21 @@
+post_install()
+{
+echo " "
+echo "==================================================================="
+echo " "
+echo "Add the following code to your .emacs:"
+
+echo "(add-to-list 'load-path \"/usr/share/emacs/site-lisp/auto-complete\")"
+echo "(require 'auto-complete-config)"
+echo "(add-to-list 'ac-dictionary-directories \"/usr/share/emacs/site-lisp/auto-complete/ac-dict\")"
+echo "(ac-config-default)"
+echo " "
+echo "==================================================================="
+echo " "
+    
+}
+
+post_upgrade()
+{
+    post_install
+}
