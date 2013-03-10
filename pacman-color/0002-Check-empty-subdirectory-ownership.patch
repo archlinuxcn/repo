@@ -1,0 +1,61 @@
+From 44e9fdd0e848382337edb97d41e7317638a67bac Mon Sep 17 00:00:00 2001
+From: Allan McRae <allan@archlinux.org>
+Date: Sun, 8 Jul 2012 23:58:37 +1000
+Subject: [PATCH 2/4] Check empty subdirectory ownership
+
+When checking if a package owns a directory, it is important to check
+not only that all the files in the directory are part of the package,
+but also if the directory is part of a package.  This catches empty
+subdirectories during conflict checking for directory to file/symlink
+replacements.
+
+Signed-off-by: Allan McRae <allan@archlinux.org>
+Signed-off-by: Dan McGee <dan@archlinux.org>
+---
+ lib/libalpm/conflict.c               |  5 +++++
+ test/pacman/tests/fileconflict012.py | 17 +++++++++++++++++
+ 2 files changed, 22 insertions(+)
+ create mode 100644 test/pacman/tests/fileconflict012.py
+
+diff --git a/lib/libalpm/conflict.c b/lib/libalpm/conflict.c
+index efa1a87..d6e5d8c 100644
+--- a/lib/libalpm/conflict.c
++++ b/lib/libalpm/conflict.c
+@@ -339,6 +339,11 @@ static int dir_belongsto_pkg(alpm_handle_t *handle, const char *dirpath,
+ 	struct dirent *ent = NULL;
+ 	const char *root = handle->root;
+ 
++	/* check directory is actually in package - used for subdirectory checks */
++	if(!_alpm_filelist_contains(alpm_pkg_get_files(pkg), dirpath)) {
++		return 0;
++	}
++
+ 	/* TODO: this is an overly strict check but currently pacman will not
+ 	 * overwrite a directory with a file (case 10/11 in add.c). Adjusting that
+ 	 * is not simple as even if the directory is being unowned by a conflicting
+diff --git a/test/pacman/tests/fileconflict012.py b/test/pacman/tests/fileconflict012.py
+new file mode 100644
+index 0000000..421b739
+--- /dev/null
++++ b/test/pacman/tests/fileconflict012.py
+@@ -0,0 +1,17 @@
++self.description = "dir->file change during package upgrade (filesystem file conflict)"
++
++lp1 = pmpkg("pkg1")
++lp1.files = ["dir/"]
++self.addpkg2db("local", lp1)
++
++self.filesystem = ["dir/file"]
++
++p = pmpkg("pkg1", "1.0-2")
++p.files = ["dir"]
++self.addpkg2db("sync", p)
++
++self.args = "-S pkg1"
++
++self.addrule("PACMAN_RETCODE=1")
++self.addrule("PKG_VERSION=pkg1|1.0-1")
++self.addrule("DIR_EXIST=dir/")
+-- 
+1.7.11.1
+

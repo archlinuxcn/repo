@@ -1,0 +1,29 @@
+From 1bf05e706b5edac92e9c913a69ca8686c6440f8b Mon Sep 17 00:00:00 2001
+From: Dan McGee <dan@archlinux.org>
+Date: Fri, 04 May 2012 16:41:40 +0000
+Subject: Ensure pre_upgrade scriptlet gets old package version
+
+This was accidentally broken in the refactor done in commit 73139ccb.
+
+Fixes FS#29371.
+
+Signed-off-by: Dan McGee <dan@archlinux.org>
+---
+diff --git a/lib/libalpm/add.c b/lib/libalpm/add.c
+index 6c2f0cb..c49d99b 100644
+--- a/lib/libalpm/add.c
++++ b/lib/libalpm/add.c
+@@ -488,8 +488,9 @@ static int commit_single_pkg(alpm_handle_t *handle, alpm_pkg_t *newpkg,
+ 	if(alpm_pkg_has_scriptlet(newpkg) &&
+ 			!(trans->flags & ALPM_TRANS_FLAG_NOSCRIPTLET)) {
+ 		const char *scriptlet_name = is_upgrade ? "pre_upgrade" : "pre_install";
+-		_alpm_runscriptlet(handle, pkgfile,
+-				scriptlet_name, newpkg->version, NULL, 1);
++
++		_alpm_runscriptlet(handle, pkgfile, scriptlet_name,
++				newpkg->version, oldpkg ? oldpkg->version : NULL, 1);
+ 	}
+ 
+ 	/* we override any pre-set reason if we have alldeps or allexplicit set */
+--
+cgit v0.9.0.2-13-g2bd3

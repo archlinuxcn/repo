@@ -1,0 +1,1297 @@
+diff -up -Npaur a/src/pacman/callback.c b/src/pacman/callback.c
+--- a/src/pacman/callback.c	2012-02-03 01:19:15.000000000 +0200
++++ b/src/pacman/callback.c	2012-07-20 21:48:20.266827634 +0300
+@@ -221,16 +221,16 @@ void cb_event(alpm_event_t event, void *
+ 			printf(_("generating %s with %s... "), (char *)data1, (char *)data2);
+ 			break;
+ 		case ALPM_EVENT_DELTA_PATCH_DONE:
+-			printf(_("success!\n"));
++			color_printf(COLOR_GREEN_ALL, _("success!\n"));
+ 			break;
+ 		case ALPM_EVENT_DELTA_PATCH_FAILED:
+-			printf(_("failed.\n"));
++			color_printf(COLOR_RED_ALL, _("failed.\n"));
+ 			break;
+ 		case ALPM_EVENT_SCRIPTLET_INFO:
+ 			printf("%s", (char *)data1);
+ 			break;
+ 		case ALPM_EVENT_RETRIEVE_START:
+-			printf(_(":: Retrieving packages from %s...\n"), (char *)data1);
++			color_printf(COLOR_DOUBLECOLON, _(":: Retrieving packages from %s...\n"), (char *)data1);
+ 			break;
+ 		case ALPM_EVENT_DISKSPACE_START:
+ 			if(config->noprogressbar) {
+@@ -264,14 +264,14 @@ void cb_question(alpm_question_t event,
+ 	switch(event) {
+ 		case ALPM_QUESTION_INSTALL_IGNOREPKG:
+ 			if(!config->op_s_downloadonly) {
+-				*response = yesno(_(":: %s is in IgnorePkg/IgnoreGroup. Install anyway?"),
++				*response = yesno(COLOR_DOUBLECOLON, _(":: %s is in IgnorePkg/IgnoreGroup. Install anyway?"),
+ 								  alpm_pkg_get_name(data1));
+ 			} else {
+ 				*response = 1;
+ 			}
+ 			break;
+ 		case ALPM_QUESTION_REPLACE_PKG:
+-			*response = yesno(_(":: Replace %s with %s/%s?"),
++			*response = yesno(COLOR_DOUBLECOLON, _(":: Replace %s with %s/%s?"),
+ 					alpm_pkg_get_name(data1),
+ 					(char *)data3,
+ 					alpm_pkg_get_name(data2));
+@@ -280,12 +280,12 @@ void cb_question(alpm_question_t event,
+ 			/* data parameters: target package, local package, conflict (strings) */
+ 			/* print conflict only if it contains new information */
+ 			if(strcmp(data1, data3) == 0 || strcmp(data2, data3) == 0) {
+-				*response = noyes(_(":: %s and %s are in conflict. Remove %s?"),
++				*response = noyes(COLOR_DOUBLECOLON, _(":: %s and %s are in conflict. Remove %s?"),
+ 						(char *)data1,
+ 						(char *)data2,
+ 						(char *)data2);
+ 			} else {
+-				*response = noyes(_(":: %s and %s are in conflict (%s). Remove %s?"),
++				*response = noyes(COLOR_DOUBLECOLON, _(":: %s and %s are in conflict (%s). Remove %s?"),
+ 						(char *)data1,
+ 						(char *)data2,
+ 						(char *)data3,
+@@ -302,13 +302,13 @@ void cb_question(alpm_question_t event,
+ 							(char *)alpm_pkg_get_name(i->data));
+ 					count++;
+ 				}
+-				printf(_n(
++				color_printf(COLOR_DOUBLECOLON, _n(
+ 							":: The following package cannot be upgraded due to unresolvable dependencies:\n",
+ 							":: The following packages cannot be upgraded due to unresolvable dependencies:\n",
+ 							count));
+-				list_display("     ", namelist);
++				list_display(NULL, "     ", namelist);
+ 				printf("\n");
+-				*response = noyes(_n(
++				*response = noyes(NULL, _n(
+ 							"Do you want to skip the above package for this upgrade?",
+ 							"Do you want to skip the above packages for this upgrade?",
+ 							count));
+@@ -320,7 +320,7 @@ void cb_question(alpm_question_t event,
+ 				alpm_list_t *providers = (alpm_list_t *)data1;
+ 				size_t count = alpm_list_count(providers);
+ 				char *depstring = alpm_dep_compute_string((alpm_depend_t *)data2);
+-				printf(_(":: There are %zd providers available for %s:\n"), count,
++				color_printf(COLOR_DOUBLECOLON, _(":: There are %zd providers available for %s:\n"), count,
+ 						depstring);
+ 				free(depstring);
+ 				select_display(providers);
+@@ -329,7 +329,7 @@ void cb_question(alpm_question_t event,
+ 			break;
+ 		case ALPM_QUESTION_LOCAL_NEWER:
+ 			if(!config->op_s_downloadonly) {
+-				*response = yesno(_(":: %s-%s: local version is newer. Upgrade anyway?"),
++				*response = yesno(COLOR_DOUBLECOLON, _(":: %s-%s: local version is newer. Upgrade anyway?"),
+ 						alpm_pkg_get_name(data1),
+ 						alpm_pkg_get_version(data1));
+ 			} else {
+@@ -337,7 +337,7 @@ void cb_question(alpm_question_t event,
+ 			}
+ 			break;
+ 		case ALPM_QUESTION_CORRUPTED_PKG:
+-			*response = yesno(_(":: File %s is corrupted (%s).\n"
++			*response = yesno(COLOR_DOUBLECOLON, _(":: File %s is corrupted (%s).\n"
+ 						"Do you want to delete it?"),
+ 					(char *)data1,
+ 					alpm_strerror(*(enum _alpm_errno_t *)data2));
+@@ -347,7 +347,7 @@ void cb_question(alpm_question_t event,
+ 				alpm_pgpkey_t *key = data1;
+ 				char created[12];
+ 				strftime(created, 12, "%Y-%m-%d", localtime(&(key->created)));
+-				*response = yesno(_(":: Import PGP key %s, \"%s\", created %s?"),
++				*response = yesno(COLOR_DOUBLECOLON, _(":: Import PGP key %s, \"%s\", created %s?"),
+ 						key->fingerprint, key->uid, created);
+ 			}
+ 			break;
+@@ -481,8 +481,9 @@ void cb_progress(alpm_progress_t event,
+ 
+ 	}
+ 
+-	printf("(%*ld/%*ld) %ls%-*s", digits, (unsigned long)current,
+-			digits, (unsigned long)howmany, wcstr, padwid, "");
++	color_printf(COLOR_BLUE_ALL, "(%*ld/%*ld)", digits, (unsigned long)current,
++			digits, (unsigned long)howmany);
++	printf(" %ls%-*s", wcstr, padwid, "");
+ 
+ 	free(wcstr);
+ 
+diff -up -Npaur a/src/pacman/package.c b/src/pacman/package.c
+--- a/src/pacman/package.c	2012-02-03 01:18:52.000000000 +0200
++++ b/src/pacman/package.c	2012-07-20 21:48:20.266827634 +0300
+@@ -41,7 +41,7 @@
+  * @param deps a list with items of type alpm_depend_t
+  * @return a string list, must be freed
+  */
+-static void deplist_display(const char *title,
++static void deplist_display(const colordata_t *colors_title, const char *title,
+ 		alpm_list_t *deps)
+ {
+ 	alpm_list_t *i, *text = NULL;
+@@ -49,7 +49,7 @@ static void deplist_display(const char *
+ 		alpm_depend_t *dep = alpm_list_getdata(i);
+ 		text = alpm_list_add(text, alpm_dep_compute_string(dep));
+ 	}
+-	list_display(title, text);
++	list_display(colors_title, title, text);
+ 	FREELIST(text);
+ }
+ 
+@@ -102,65 +102,65 @@ void dump_pkg_full(alpm_pkg_t *pkg, int
+ 
+ 	/* actual output */
+ 	if(from == PKG_FROM_SYNCDB) {
+-		string_display(_("Repository     :"),
+-				alpm_db_get_name(alpm_pkg_get_db(pkg)));
++		color_string_display(COLOR_WHITE_ALL, _("Repository     :"),
++				COLOR_MAGENTA_ALL, alpm_db_get_name(alpm_pkg_get_db(pkg)));
+ 	}
+-	string_display(_("Name           :"), alpm_pkg_get_name(pkg));
+-	string_display(_("Version        :"), alpm_pkg_get_version(pkg));
+-	string_display(_("URL            :"), alpm_pkg_get_url(pkg));
+-	list_display(_("Licenses       :"), alpm_pkg_get_licenses(pkg));
+-	list_display(_("Groups         :"), alpm_pkg_get_groups(pkg));
+-	deplist_display(_("Provides       :"), alpm_pkg_get_provides(pkg));
+-	deplist_display(_("Depends On     :"), alpm_pkg_get_depends(pkg));
+-	list_display_linebreak(_("Optional Deps  :"), alpm_pkg_get_optdepends(pkg));
++	color_string_display(COLOR_WHITE_ALL, _("Name           :"), COLOR_WHITE_ALL, alpm_pkg_get_name(pkg));
++	color_string_display(COLOR_WHITE_ALL, _("Version        :"), COLOR_GREEN_ALL, alpm_pkg_get_version(pkg));
++	color_string_display(COLOR_WHITE_ALL, _("URL            :"), COLOR_CYAN_ALL, alpm_pkg_get_url(pkg));
++	list_display(COLOR_WHITE_ALL, _("Licenses       :"), alpm_pkg_get_licenses(pkg));
++	list_display(COLOR_WHITE_ALL, _("Groups         :"), alpm_pkg_get_groups(pkg));
++	deplist_display(COLOR_WHITE_ALL, _("Provides       :"), alpm_pkg_get_provides(pkg));
++	deplist_display(COLOR_WHITE_ALL, _("Depends On     :"), alpm_pkg_get_depends(pkg));
++	list_display_linebreak(COLOR_WHITE_ALL, _("Optional Deps  :"), alpm_pkg_get_optdepends(pkg));
+ 	if(extra || from == PKG_FROM_LOCALDB) {
+-		list_display(_("Required By    :"), requiredby);
++		list_display(COLOR_WHITE_ALL, _("Required By    :"), requiredby);
+ 	}
+-	deplist_display(_("Conflicts With :"), alpm_pkg_get_conflicts(pkg));
+-	deplist_display(_("Replaces       :"), alpm_pkg_get_replaces(pkg));
++	deplist_display(COLOR_WHITE_ALL, _("Conflicts With :"), alpm_pkg_get_conflicts(pkg));
++	deplist_display(COLOR_WHITE_ALL, _("Replaces       :"), alpm_pkg_get_replaces(pkg));
+ 
+ 	size = humanize_size(alpm_pkg_get_size(pkg), 'K', 2, &label);
+ 	if(from == PKG_FROM_SYNCDB) {
+-		printf(_("Download Size  : %6.2f %s\n"), size, label);
++		color_printf(COLOR_WHITE_COLON, _("Download Size  : %6.2f %s\n"), size, label);
+ 	} else if(from == PKG_FROM_FILE) {
+-		printf(_("Compressed Size: %6.2f %s\n"), size, label);
++		color_printf(COLOR_WHITE_COLON, _("Compressed Size: %6.2f %s\n"), size, label);
+ 	}
+ 
+ 	size = humanize_size(alpm_pkg_get_isize(pkg), 'K', 2, &label);
+-	printf(_("Installed Size : %6.2f %s\n"), size, label);
++	color_printf(COLOR_WHITE_COLON, _("Installed Size : %6.2f %s\n"), size, label);
+ 
+-	string_display(_("Packager       :"), alpm_pkg_get_packager(pkg));
+-	string_display(_("Architecture   :"), alpm_pkg_get_arch(pkg));
+-	string_display(_("Build Date     :"), bdatestr);
++	string_display(COLOR_WHITE_ALL, _("Packager       :"), alpm_pkg_get_packager(pkg));
++	string_display(COLOR_WHITE_ALL, _("Architecture   :"), alpm_pkg_get_arch(pkg));
++	string_display(COLOR_WHITE_ALL, _("Build Date     :"), bdatestr);
+ 	if(from == PKG_FROM_LOCALDB) {
+-		string_display(_("Install Date   :"), idatestr);
+-		string_display(_("Install Reason :"), reason);
++		string_display(COLOR_WHITE_ALL, _("Install Date   :"), idatestr);
++		string_display(COLOR_WHITE_ALL, _("Install Reason :"), reason);
+ 	}
+ 	if(from == PKG_FROM_FILE || from == PKG_FROM_LOCALDB) {
+-		string_display(_("Install Script :"),
++		string_display(COLOR_WHITE_ALL, _("Install Script :"),
+ 				alpm_pkg_has_scriptlet(pkg) ?  _("Yes") : _("No"));
+ 	}
+ 
+ 	if(from == PKG_FROM_SYNCDB) {
+-		string_display(_("MD5 Sum        :"), alpm_pkg_get_md5sum(pkg));
+-		string_display(_("SHA256 Sum     :"), alpm_pkg_get_sha256sum(pkg));
+-		string_display(_("Signatures     :"),
++		string_display(COLOR_WHITE_ALL, _("MD5 Sum        :"), alpm_pkg_get_md5sum(pkg));
++		string_display(COLOR_WHITE_ALL, _("SHA256 Sum     :"), alpm_pkg_get_sha256sum(pkg));
++		string_display(COLOR_WHITE_ALL, _("Signatures     :"),
+ 				alpm_pkg_get_base64_sig(pkg) ? _("Yes") : _("None"));
+ 	}
+ 	if(from == PKG_FROM_FILE) {
+ 		alpm_siglist_t siglist;
+ 		int err = alpm_pkg_check_pgp_signature(pkg, &siglist);
+ 		if(err && alpm_errno(config->handle) == ALPM_ERR_SIG_MISSING) {
+-			string_display(_("Signatures     :"), _("None"));
++			string_display(COLOR_WHITE_ALL, _("Signatures     :"), _("None"));
+ 		} else if(err) {
+-			string_display(_("Signatures     :"),
++			string_display(COLOR_WHITE_ALL, _("Signatures     :"),
+ 					alpm_strerror(alpm_errno(config->handle)));
+ 		} else {
+ 			signature_display(_("Signatures     :"), &siglist);
+ 		}
+ 		alpm_siglist_cleanup(&siglist);
+ 	}
+-	string_display(_("Description    :"), alpm_pkg_get_desc(pkg));
++	string_display(COLOR_WHITE_ALL, _("Description    :"), alpm_pkg_get_desc(pkg));
+ 
+ 	/* Print additional package info if info flag passed more than once */
+ 	if(from == PKG_FROM_LOCALDB && extra) {
+@@ -219,7 +219,7 @@ void dump_pkg_backups(alpm_pkg_t *pkg)
+ {
+ 	alpm_list_t *i;
+ 	const char *root = alpm_option_get_root(config->handle);
+-	printf(_("Backup Files:\n"));
++	color_printf(COLOR_WHITE_ALL, _("Backup Files:\n"));
+ 	if(alpm_pkg_get_backup(pkg)) {
+ 		/* package has backup files, so print them */
+ 		for(i = alpm_pkg_get_backup(pkg); i; i = alpm_list_next(i)) {
+@@ -252,7 +252,8 @@ void dump_pkg_files(alpm_pkg_t *pkg, int
+ 	for(i = 0; i < pkgfiles->count; i++) {
+ 		const alpm_file_t *file = pkgfiles->files + i;
+ 		if(!quiet) {
+-			printf("%s %s%s\n", pkgname, root, file->name);
++			color_printf(COLOR_WHITE_ALL, "%s", pkgname);
++			printf(" %s%s\n", root, file->name);
+ 		} else {
+ 			printf("%s%s\n", root, file->name);
+ 		}
+diff -up -Npaur a/src/pacman/pacman.c b/src/pacman/pacman.c
+--- a/src/pacman/pacman.c	2012-02-15 23:57:20.000000000 +0200
++++ b/src/pacman/pacman.c	2012-07-20 21:48:20.266827634 +0300
+@@ -219,11 +219,23 @@ static void usage(int op, const char * c
+  */
+ static void version(void)
+ {
++	color_printf(COLOR_YELLOW_ALL, " .--. ");
++	printf("        ");
++	color_printf(COLOR_RED_ALL, " .---. ");
++	printf("  Pacman-color v%s - libalpm v%s\n", PACKAGE_VERSION, alpm_version());
++	color_printf(COLOR_YELLOW_ALL, "/ _.-'");
++	color_printf(COLOR_WHITE_ALL, " .-.  .-");
++	color_printf(COLOR_RED_ALL, "|O O  |");
++	printf("  Copyright (C) 2006-2012 Pacman Development Team\n");
++	color_printf(COLOR_YELLOW_ALL, "\\  '-.");
++	color_printf(COLOR_WHITE_ALL, " '-'  '-");
++	color_printf(COLOR_RED_ALL, "|~~~  |");
++	printf("  Copyright (C) 2002-2006 Judd Vinet\n");
++	color_printf(COLOR_YELLOW_ALL, " '--' ");
++	printf("        ");
++	color_printf(COLOR_RED_ALL, "|.-.-.|");
++	printf("  Colored by vogo <vogo(at)seznam(dot)cz>\n");
+ 	printf("\n");
+-	printf(" .--.                  Pacman v%s - libalpm v%s\n", PACKAGE_VERSION, alpm_version());
+-	printf("/ _.-' .-.  .-.  .-.   Copyright (C) 2006-2012 Pacman Development Team\n");
+-	printf("\\  '-. '-'  '-'  '-'   Copyright (C) 2002-2006 Judd Vinet\n");
+-	printf(" '--'\n");
+ 	printf(_("                       This program may be freely redistributed under\n"
+ 	         "                       the terms of the GNU General Public License.\n"));
+ 	printf("\n");
+@@ -795,6 +807,7 @@ int main(int argc, char *argv[])
+ 
+ 	/* init config data */
+ 	config = config_new();
++	parsecolorconfig();
+ 
+ 	/* disable progressbar if the output is redirected */
+ 	if(!isatty(fileno(stdout))) {
+@@ -896,18 +909,18 @@ int main(int argc, char *argv[])
+ 
+ 	if(config->verbose > 0) {
+ 		alpm_list_t *i;
+-		printf("Root      : %s\n", alpm_option_get_root(config->handle));
+-		printf("Conf File : %s\n", config->configfile);
+-		printf("DB Path   : %s\n", alpm_option_get_dbpath(config->handle));
+-		printf("Cache Dirs: ");
++		string_display(COLOR_WHITE_ALL, "Root      :", alpm_option_get_root(config->handle));
++		string_display(COLOR_WHITE_ALL, "Conf File :", config->configfile);
++		string_display(COLOR_WHITE_ALL, "DB Path   :", alpm_option_get_dbpath(config->handle));
++		color_printf(COLOR_WHITE_ALL, "Cache Dirs: ");
+ 		for(i = alpm_option_get_cachedirs(config->handle); i; i = alpm_list_next(i)) {
+ 			printf("%s  ", (char *)alpm_list_getdata(i));
+ 		}
+ 		printf("\n");
+-		printf("Lock File : %s\n", alpm_option_get_lockfile(config->handle));
+-		printf("Log File  : %s\n", alpm_option_get_logfile(config->handle));
+-		printf("GPG Dir   : %s\n", alpm_option_get_gpgdir(config->handle));
+-		list_display("Targets   :", pm_targets);
++		string_display(COLOR_WHITE_ALL, "Lock File :", alpm_option_get_lockfile(config->handle));
++		string_display(COLOR_WHITE_ALL, "Log File  :", alpm_option_get_logfile(config->handle));
++		string_display(COLOR_WHITE_ALL, "GPG Dir   :", alpm_option_get_gpgdir(config->handle));
++		list_display(COLOR_WHITE_ALL, "Targets   :", pm_targets);
+ 	}
+ 
+ 	/* Log command line */
+diff -up -Npaur a/src/pacman/query.c b/src/pacman/query.c
+--- a/src/pacman/query.c	2011-12-23 22:36:36.000000000 +0200
++++ b/src/pacman/query.c	2012-07-20 21:48:20.268827634 +0300
+@@ -266,7 +266,9 @@ static int query_search(alpm_list_t *tar
+ 		alpm_pkg_t *pkg = alpm_list_getdata(i);
+ 
+ 		if(!config->quiet) {
+-			printf("local/%s %s", alpm_pkg_get_name(pkg), alpm_pkg_get_version(pkg));
++			color_printf(COLOR_MAGENTA_ALL, "local/");
++			color_printf(COLOR_WHITE_ALL, "%s ", alpm_pkg_get_name(pkg));
++			color_printf(COLOR_GREEN_ALL, "%s", alpm_pkg_get_version(pkg));
+ 		} else {
+ 			printf("%s", alpm_pkg_get_name(pkg));
+ 		}
+@@ -275,16 +277,11 @@ static int query_search(alpm_list_t *tar
+ 		if(!config->quiet) {
+ 			if((grp = alpm_pkg_get_groups(pkg)) != NULL) {
+ 				alpm_list_t *k;
+-				printf(" (");
++				color_printf(COLOR_BLUE_ALL, " (");
+ 				for(k = grp; k; k = alpm_list_next(k)) {
+ 					const char *group = alpm_list_getdata(k);
+-					printf("%s", group);
+-					if(alpm_list_next(k)) {
+-						/* only print a spacer if there are more groups */
+-						printf(" ");
+-					}
++					color_printf(COLOR_BLUE_ALL, "%s%s", group, (alpm_list_next(k) ? " " : ")"));
+ 				}
+-				printf(")");
+ 			}
+ 
+ 			/* we need a newline and initial indent first */
+@@ -315,7 +312,8 @@ static int query_group(alpm_list_t *targ
+ 
+ 			for(p = grp->packages; p; p = alpm_list_next(p)) {
+ 				alpm_pkg_t *pkg = alpm_list_getdata(p);
+-				printf("%s %s\n", grp->name, alpm_pkg_get_name(pkg));
++				color_printf(COLOR_BLUE_ALL, "%s ", grp->name);
++				color_printf(COLOR_WHITE_ALL, "%s\n", alpm_pkg_get_name(pkg));
+ 			}
+ 		}
+ 	} else {
+@@ -327,8 +325,8 @@ static int query_group(alpm_list_t *targ
+ 				const alpm_list_t *p;
+ 				for(p = grp->packages; p; p = alpm_list_next(p)) {
+ 					if(!config->quiet) {
+-						printf("%s %s\n", grpname,
+-								alpm_pkg_get_name(alpm_list_getdata(p)));
++						color_printf(COLOR_BLUE_ALL, "%s ", grpname);
++						color_printf(COLOR_WHITE_ALL, "%s\n", alpm_pkg_get_name(alpm_list_getdata(p)));
+ 					} else {
+ 						printf("%s\n", alpm_pkg_get_name(alpm_list_getdata(p)));
+ 					}
+@@ -478,7 +476,8 @@ static int display(alpm_pkg_t *pkg)
+ 	if(!config->op_q_info && !config->op_q_list
+ 			&& !config->op_q_changelog && !config->op_q_check) {
+ 		if(!config->quiet) {
+-			printf("%s %s\n", alpm_pkg_get_name(pkg), alpm_pkg_get_version(pkg));
++			color_printf(COLOR_WHITE_ALL, "%s ", alpm_pkg_get_name(pkg));
++			color_printf(COLOR_GREEN_ALL, "%s\n", alpm_pkg_get_version(pkg));
+ 		} else {
+ 			printf("%s\n", alpm_pkg_get_name(pkg));
+ 		}
+diff -up -Npaur a/src/pacman/remove.c b/src/pacman/remove.c
+--- a/src/pacman/remove.c	2012-02-06 13:36:22.000000000 +0200
++++ b/src/pacman/remove.c	2012-07-20 21:48:20.268827634 +0300
+@@ -111,14 +111,14 @@ int pacman_remove(alpm_list_t *targets)
+ 			case ALPM_ERR_PKG_INVALID_ARCH:
+ 				for(i = data; i; i = alpm_list_next(i)) {
+ 					char *pkg = alpm_list_getdata(i);
+-					printf(_(":: package %s does not have a valid architecture\n"), pkg);
++					color_printf(COLOR_DOUBLECOLON, _(":: package %s does not have a valid architecture\n"), pkg);
+ 				}
+ 				break;
+ 			case ALPM_ERR_UNSATISFIED_DEPS:
+ 				for(i = data; i; i = alpm_list_next(i)) {
+ 					alpm_depmissing_t *miss = alpm_list_getdata(i);
+ 					char *depstring = alpm_dep_compute_string(miss->depend);
+-					printf(_(":: %s: requires %s\n"), miss->target, depstring);
++					color_printf(COLOR_DOUBLECOLON, _(":: %s: requires %s\n"), miss->target, depstring);
+ 					free(depstring);
+ 				}
+ 				break;
+@@ -140,7 +140,7 @@ int pacman_remove(alpm_list_t *targets)
+ 			holdpkg = 1;
+ 		}
+ 	}
+-	if(holdpkg && (noyes(_("HoldPkg was found in target list. Do you want to continue?")) == 0)) {
++	if(holdpkg && (noyes(NULL, _("HoldPkg was found in target list. Do you want to continue?")) == 0)) {
+ 		retval = 1;
+ 		goto cleanup;
+ 	}
+@@ -160,7 +160,7 @@ int pacman_remove(alpm_list_t *targets)
+ 	/* print targets and ask user confirmation */
+ 	display_targets();
+ 	printf("\n");
+-	if(yesno(_("Do you want to remove these packages?")) == 0) {
++	if(yesno(NULL, _("Do you want to remove these packages?")) == 0) {
+ 		retval = 1;
+ 		goto cleanup;
+ 	}
+diff -up -Npaur a/src/pacman/sync.c b/src/pacman/sync.c
+--- a/src/pacman/sync.c	2012-03-13 15:24:11.000000000 +0200
++++ b/src/pacman/sync.c	2012-07-20 21:48:20.269827634 +0300
+@@ -146,8 +146,8 @@ static int sync_cleandb_all(void)
+ 	int ret = 0;
+ 
+ 	dbpath = alpm_option_get_dbpath(config->handle);
+-	printf(_("Database directory: %s\n"), dbpath);
+-	if(!yesno(_("Do you want to remove unused repositories?"))) {
++	color_printf(COLOR_WHITE_COLON, _("Database directory: %s\n"), dbpath);
++	if(!yesno(NULL, _("Do you want to remove unused repositories?"))) {
+ 		return 0;
+ 	}
+ 	printf(_("removing unused sync repositories...\n"));
+@@ -175,7 +175,7 @@ static int sync_cleancache(int level)
+ 	int ret = 0;
+ 
+ 	for(i = cachedirs; i; i = alpm_list_next(i)) {
+-		printf(_("Cache directory: %s\n"), (char *)alpm_list_getdata(i));
++		color_printf(COLOR_WHITE_COLON, _("Cache directory: %s\n"), (char *)alpm_list_getdata(i));
+ 	}
+ 
+ 	if(!config->cleanmethod) {
+@@ -184,19 +184,19 @@ static int sync_cleancache(int level)
+ 	}
+ 
+ 	if(level == 1) {
+-		printf(_("Packages to keep:\n"));
++		color_printf(COLOR_WHITE_COLON, _("Packages to keep:\n"));
+ 		if(config->cleanmethod & PM_CLEAN_KEEPINST) {
+ 			printf(_("  All locally installed packages\n"));
+ 		}
+ 		if(config->cleanmethod & PM_CLEAN_KEEPCUR) {
+ 			printf(_("  All current sync database packages\n"));
+ 		}
+-		if(!yesno(_("Do you want to remove all other packages from cache?"))) {
++		if(!yesno(NULL, _("Do you want to remove all other packages from cache?"))) {
+ 			return 0;
+ 		}
+ 		printf(_("removing old packages from cache...\n"));
+ 	} else {
+-		if(!noyes(_("Do you want to remove ALL files from cache?"))) {
++		if(!noyes(NULL, _("Do you want to remove ALL files from cache?"))) {
+ 			return 0;
+ 		}
+ 		printf(_("removing all files from cache...\n"));
+@@ -345,9 +345,9 @@ static void print_installed(alpm_db_t *d
+ 	if(lpkg) {
+ 		const char *lpkgver = alpm_pkg_get_version(lpkg);
+ 		if(strcmp(lpkgver,pkgver) == 0) {
+-			printf(" [%s]", _("installed"));
++			color_printf(COLOR_CYAN_ALL, " [%s]", _("installed"));
+ 		} else {
+-			printf(" [%s: %s]", _("installed"), lpkgver);
++			color_printf(COLOR_CYAN_ALL, " [%s: %s]", _("installed"), lpkgver);
+ 		}
+ 	}
+ }
+@@ -380,8 +380,9 @@ static int sync_search(alpm_list_t *sync
+ 			alpm_pkg_t *pkg = alpm_list_getdata(j);
+ 
+ 			if(!config->quiet) {
+-				printf("%s/%s %s", alpm_db_get_name(db), alpm_pkg_get_name(pkg),
+-							 alpm_pkg_get_version(pkg));
++				color_printf(COLOR_MAGENTA_ALL, "%s/", alpm_db_get_name(db));
++				color_printf(COLOR_WHITE_ALL, "%s ", alpm_pkg_get_name(pkg));
++				color_printf(COLOR_GREEN_ALL, "%s", alpm_pkg_get_version(pkg));
+ 			} else {
+ 				printf("%s", alpm_pkg_get_name(pkg));
+ 			}
+@@ -389,16 +390,11 @@ static int sync_search(alpm_list_t *sync
+ 			if(!config->quiet) {
+ 				if((grp = alpm_pkg_get_groups(pkg)) != NULL) {
+ 					alpm_list_t *k;
+-					printf(" (");
++					color_printf(COLOR_BLUE_ALL, " (");
+ 					for(k = grp; k; k = alpm_list_next(k)) {
+ 						const char *group = alpm_list_getdata(k);
+-						printf("%s", group);
+-						if(alpm_list_next(k)) {
+-							/* only print a spacer if there are more groups */
+-							printf(" ");
+-						}
++						color_printf(COLOR_BLUE_ALL, "%s%s", group, (alpm_list_next(k) ? " " : ")"));
+ 					}
+-					printf(")");
+ 				}
+ 
+ 				print_installed(db_local, pkg);
+@@ -433,8 +429,8 @@ static int sync_group(int level, alpm_li
+ 					/* get names of packages in group */
+ 					for(k = grp->packages; k; k = alpm_list_next(k)) {
+ 						if(!config->quiet) {
+-							printf("%s %s\n", grpname,
+-									alpm_pkg_get_name(alpm_list_getdata(k)));
++							color_printf(COLOR_BLUE_ALL, "%s ", grpname);
++							color_printf(COLOR_WHITE_ALL, "%s\n", alpm_pkg_get_name(alpm_list_getdata(k)));
+ 						} else {
+ 							printf("%s\n", alpm_pkg_get_name(alpm_list_getdata(k)));
+ 						}
+@@ -451,8 +447,8 @@ static int sync_group(int level, alpm_li
+ 
+ 				if(level > 1) {
+ 					for(k = grp->packages; k; k = alpm_list_next(k)) {
+-						printf("%s %s\n", grp->name,
+-								alpm_pkg_get_name(alpm_list_getdata(k)));
++						color_printf(COLOR_BLUE_ALL, "%s ", grp->name);
++						color_printf(COLOR_WHITE_ALL, "%s\n", alpm_pkg_get_name(alpm_list_getdata(k)));
+ 					}
+ 				} else {
+ 					/* print grp names only, no package names */
+@@ -570,8 +566,9 @@ static int sync_list(alpm_list_t *syncs,
+ 			alpm_pkg_t *pkg = alpm_list_getdata(j);
+ 
+ 			if(!config->quiet) {
+-				printf("%s %s %s", alpm_db_get_name(db), alpm_pkg_get_name(pkg),
+-						alpm_pkg_get_version(pkg));
++				color_printf(COLOR_MAGENTA_ALL, "%s ", alpm_db_get_name(db));
++				color_printf(COLOR_WHITE_ALL, "%s ", alpm_pkg_get_name(pkg));
++				color_printf(COLOR_GREEN_ALL, "%s", alpm_pkg_get_version(pkg));
+ 				print_installed(db_local, pkg);
+ 				printf("\n");
+ 			} else {
+@@ -654,7 +651,7 @@ static int process_group(alpm_list_t *db
+ 
+ 
+ 	if(config->print == 0) {
+-		printf(_(":: There are %d members in group %s:\n"), count,
++		color_printf(COLOR_DOUBLECOLON, _(":: There are %d members in group %s:\n"), count,
+ 				group);
+ 		select_display(pkgs);
+ 		char *array = malloc(count);
+@@ -771,7 +768,7 @@ static int sync_trans(alpm_list_t *targe
+ 	}
+ 
+ 	if(config->op_s_upgrade) {
+-		printf(_(":: Starting full system upgrade...\n"));
++		color_printf(COLOR_DOUBLECOLON, _(":: Starting full system upgrade...\n"));
+ 		alpm_logaction(config->handle, "starting full system upgrade\n");
+ 		if(alpm_sync_sysupgrade(config->handle, config->op_s_upgrade >= 2) == -1) {
+ 			pm_printf(ALPM_LOG_ERROR, "%s\n", alpm_strerror(alpm_errno(config->handle)));
+@@ -797,14 +794,14 @@ int sync_prepare_execute(void)
+ 			case ALPM_ERR_PKG_INVALID_ARCH:
+ 				for(i = data; i; i = alpm_list_next(i)) {
+ 					char *pkg = alpm_list_getdata(i);
+-					printf(_(":: package %s does not have a valid architecture\n"), pkg);
++					color_printf(COLOR_DOUBLECOLON, _(":: package %s does not have a valid architecture\n"), pkg);
+ 				}
+ 				break;
+ 			case ALPM_ERR_UNSATISFIED_DEPS:
+ 				for(i = data; i; i = alpm_list_next(i)) {
+ 					alpm_depmissing_t *miss = alpm_list_getdata(i);
+ 					char *depstring = alpm_dep_compute_string(miss->depend);
+-					printf(_(":: %s: requires %s\n"), miss->target, depstring);
++					color_printf(COLOR_DOUBLECOLON, _(":: %s: requires %s\n"), miss->target, depstring);
+ 					free(depstring);
+ 				}
+ 				break;
+@@ -813,11 +810,11 @@ int sync_prepare_execute(void)
+ 					alpm_conflict_t *conflict = alpm_list_getdata(i);
+ 					/* only print reason if it contains new information */
+ 					if(conflict->reason->mod == ALPM_DEP_MOD_ANY) {
+-						printf(_(":: %s and %s are in conflict\n"),
++						color_printf(COLOR_DOUBLECOLON, _(":: %s and %s are in conflict\n"),
+ 								conflict->package1, conflict->package2);
+ 					} else {
+ 						char *reason = alpm_dep_compute_string(conflict->reason);
+-						printf(_(":: %s and %s are in conflict (%s)\n"),
++						color_printf(COLOR_DOUBLECOLON, _(":: %s and %s are in conflict (%s)\n"),
+ 								conflict->package1, conflict->package2, reason);
+ 						free(reason);
+ 					}
+@@ -850,9 +847,9 @@ int sync_prepare_execute(void)
+ 
+ 	int confirm;
+ 	if(config->op_s_downloadonly) {
+-		confirm = yesno(_("Proceed with download?"));
++		confirm = yesno(NULL, _("Proceed with download?"));
+ 	} else {
+-		confirm = yesno(_("Proceed with installation?"));
++		confirm = yesno(NULL, _("Proceed with installation?"));
+ 	}
+ 	if(!confirm) {
+ 		goto cleanup;
+@@ -872,7 +869,7 @@ int sync_prepare_execute(void)
+ 									conflict->file, conflict->target, conflict->ctarget);
+ 							break;
+ 						case ALPM_FILECONFLICT_FILESYSTEM:
+-							printf(_("%s: %s exists in filesystem\n"),
++							color_printf(COLOR_WHITE_COLON, _("%s: %s exists in filesystem\n"),
+ 									conflict->target, conflict->file);
+ 							break;
+ 					}
+@@ -891,7 +888,7 @@ int sync_prepare_execute(void)
+ 				break;
+ 		}
+ 		/* TODO: stderr? */
+-		printf(_("Errors occurred, no packages were upgraded.\n"));
++		color_printf(COLOR_RED_ALL, _("Errors occurred, no packages were upgraded.\n"));
+ 		retval = 1;
+ 		goto cleanup;
+ 	}
+@@ -939,7 +936,7 @@ int pacman_sync(alpm_list_t *targets)
+ 
+ 	if(config->op_s_sync) {
+ 		/* grab a fresh package list */
+-		printf(_(":: Synchronizing package databases...\n"));
++		color_printf(COLOR_DOUBLECOLON, _(":: Synchronizing package databases...\n"));
+ 		alpm_logaction(config->handle, "synchronizing package lists\n");
+ 		if(!sync_synctree(config->op_s_sync, sync_dbs)) {
+ 			return 1;
+@@ -992,9 +989,9 @@ int pacman_sync(alpm_list_t *targets)
+ 			alpm_list_t *tmp = NULL;
+ 			if(config->op_s_upgrade || (tmp = alpm_list_diff(targets, packages, (alpm_list_fn_cmp)strcmp))) {
+ 				alpm_list_free(tmp);
+-				printf(_(":: The following packages should be upgraded first :\n"));
+-				list_display("   ", packages);
+-				if(yesno(_(":: Do you want to cancel the current operation\n"
++				color_printf(COLOR_DOUBLECOLON, _(":: The following packages should be upgraded first :\n"));
++				list_display(NULL, "   ", packages);
++				if(yesno(COLOR_DOUBLECOLON2, _(":: Do you want to cancel the current operation\n"
+ 								":: and upgrade these packages now?"))) {
+ 					FREELIST(targs);
+ 					targs = packages;
+diff -up -Npaur a/src/pacman/util.c b/src/pacman/util.c
+--- a/src/pacman/util.c	2012-02-20 07:18:31.000000000 +0200
++++ b/src/pacman/util.c	2012-07-20 21:48:20.270827634 +0300
+@@ -48,6 +48,20 @@
+ #include "conf.h"
+ #include "callback.h"
+ 
++#define COLOR_LEN 8
++
++typedef struct __colortab_t {
++	char red[COLOR_LEN + 1];
++	char green[COLOR_LEN + 1];
++	char yellow[COLOR_LEN + 1];
++	char blue[COLOR_LEN + 1];
++	char magenta[COLOR_LEN + 1];
++	char cyan[COLOR_LEN + 1];
++	char white[COLOR_LEN + 1];
++	char none[COLOR_LEN + 1];
++} colortab_t;
++
++static colortab_t colortab;
+ 
+ int trans_init(alpm_transflag_t flags, int check_valid)
+ {
+@@ -463,10 +477,10 @@ static size_t string_length(const char *
+ 	return len;
+ }
+ 
+-void string_display(const char *title, const char *string)
++void string_display(const colordata_t *colors_title, const char *title, const char *string)
+ {
+ 	if(title) {
+-		printf("%s ", title);
++		color_printf(colors_title, "%s ", title);
+ 	}
+ 	if(string == NULL || string[0] == '\0') {
+ 		printf(_("None"));
+@@ -599,14 +613,14 @@ int table_display(const char *title, con
+ 	return 0;
+ }
+ 
+-void list_display(const char *title, const alpm_list_t *list)
++void list_display(const colordata_t *colors_title, const char *title, const alpm_list_t *list)
+ {
+ 	const alpm_list_t *i;
+ 	size_t len = 0;
+ 
+ 	if(title) {
+ 		len = string_length(title) + 1;
+-		printf("%s ", title);
++		color_printf(colors_title, "%s ", title);
+ 	}
+ 
+ 	if(!list) {
+@@ -640,13 +654,13 @@ void list_display(const char *title, con
+ 	}
+ }
+ 
+-void list_display_linebreak(const char *title, const alpm_list_t *list)
++void list_display_linebreak(const colordata_t *colors_title, const char *title, const alpm_list_t *list)
+ {
+ 	size_t len = 0;
+ 
+ 	if(title) {
+ 		len = string_length(title) + 1;
+-		printf("%s ", title);
++		color_printf(colors_title, "%s ", title);
+ 	}
+ 
+ 	if(!list) {
+@@ -867,11 +881,11 @@ static void _display_targets(alpm_list_t
+ 		alpm_list_t *header = create_verbose_header(show_dl_size);
+ 		if(table_display(str, header, rows) != 0) {
+ 			/* fallback to list display if table wouldn't fit */
+-			list_display(str, names);
++			list_display(COLOR_YELLOW_ALL, str, names);
+ 		}
+ 		alpm_list_free(header);
+ 	} else {
+-		list_display(str, names);
++		list_display(COLOR_YELLOW_ALL, str, names);
+ 	}
+ 	printf("\n");
+ 
+@@ -886,21 +900,21 @@ static void _display_targets(alpm_list_t
+ 
+ 	if(dlsize > 0 || config->op_s_downloadonly) {
+ 		size = humanize_size(dlsize, 'M', 2, &label);
+-		printf(_("Total Download Size:    %.2f %s\n"), size, label);
++		color_printf(COLOR_WHITE_COLON, _("Total Download Size:    %.2f %s\n"), size, label);
+ 	}
+ 	if(!config->op_s_downloadonly) {
+ 		if(isize > 0) {
+ 			size = humanize_size(isize, 'M', 2, &label);
+-			printf(_("Total Installed Size:   %.2f %s\n"), size, label);
++			color_printf(COLOR_WHITE_COLON, _("Total Installed Size:   %.2f %s\n"), size, label);
+ 		}
+ 		if(rsize > 0 && isize == 0) {
+ 			size = humanize_size(rsize, 'M', 2, &label);
+-			printf(_("Total Removed Size:     %.2f %s\n"), size, label);
++			color_printf(COLOR_WHITE_COLON, _("Total Removed Size:     %.2f %s\n"), size, label);
+ 		}
+ 		/* only show this net value if different from raw installed size */
+ 		if(isize > 0 && rsize > 0) {
+ 			size = humanize_size(isize - rsize, 'M', 2, &label);
+-			printf(_("Net Upgrade Size:       %.2f %s\n"), size, label);
++			color_printf(COLOR_WHITE_COLON, _("Net Upgrade Size:       %.2f %s\n"), size, label);
+ 		}
+ 	}
+ }
+@@ -1115,7 +1129,7 @@ void display_new_optdepends(alpm_pkg_t *
+ 	alpm_list_t *optdeps = alpm_list_diff(new,old,str_cmp);
+ 	if(optdeps) {
+ 		printf(_("New optional dependencies for %s\n"), alpm_pkg_get_name(newpkg));
+-		list_display_linebreak("   ", optdeps);
++		list_display_linebreak(NULL, "   ", optdeps);
+ 	}
+ 	alpm_list_free(optdeps);
+ }
+@@ -1125,7 +1139,7 @@ void display_optdepends(alpm_pkg_t *pkg)
+ 	alpm_list_t *optdeps = alpm_pkg_get_optdepends(pkg);
+ 	if(optdeps) {
+ 		printf(_("Optional dependencies for %s\n"), alpm_pkg_get_name(pkg));
+-		list_display_linebreak("   ", optdeps);
++		list_display_linebreak(NULL, "   ", optdeps);
+ 	}
+ }
+ 
+@@ -1133,9 +1147,9 @@ static void display_repo_list(const char
+ {
+ 	const char *prefix= "  ";
+ 
+-	printf(":: ");
+-	printf(_("Repository %s\n"), dbname);
+-	list_display(prefix, list);
++	color_printf(COLOR_BLUE_ALL, ":: ");
++	color_printf(COLOR_WHITE_ALL, _("Repository %s\n"), dbname);
++	list_display(NULL, prefix, list);
+ }
+ 
+ void select_display(const alpm_list_t *pkglist)
+@@ -1354,7 +1368,7 @@ int select_question(int count)
+ 
+ 
+ /* presents a prompt and gets a Y/N answer */
+-static int question(short preset, char *fmt, va_list args)
++static int question(const colordata_t *colors, short preset, char *fmt, va_list args)
+ {
+ 	char response[32];
+ 	FILE *stream;
+@@ -1370,7 +1384,7 @@ static int question(short preset, char *
+ 	fflush(stdout);
+ 	fflush(stderr);
+ 
+-	vfprintf(stream, fmt, args);
++	color_vfprintf(stream, colors, fmt, args);
+ 
+ 	if(preset) {
+ 		fprintf(stream, " %s ", _("[Y/n]"));
+@@ -1407,25 +1421,25 @@ static int question(short preset, char *
+ 	return 0;
+ }
+ 
+-int yesno(char *fmt, ...)
++int yesno(const colordata_t *colors, char *fmt, ...)
+ {
+ 	int ret;
+ 	va_list args;
+ 
+ 	va_start(args, fmt);
+-	ret = question(1, fmt, args);
++	ret = question(colors, 1, fmt, args);
+ 	va_end(args);
+ 
+ 	return ret;
+ }
+ 
+-int noyes(char *fmt, ...)
++int noyes(const colordata_t *colors, char *fmt, ...)
+ {
+ 	int ret;
+ 	va_list args;
+ 
+ 	va_start(args, fmt);
+-	ret = question(0, fmt, args);
++	ret = question(colors, 0, fmt, args);
+ 	va_end(args);
+ 
+ 	return ret;
+@@ -1474,22 +1488,42 @@ int pm_vasprintf(char **string, alpm_log
+ 	ret = vasprintf(&msg, format, args);
+ 
+ 	/* print a prefix to the message */
+-	switch(level) {
+-		case ALPM_LOG_ERROR:
+-			pm_asprintf(string, _("error: %s"), msg);
+-			break;
+-		case ALPM_LOG_WARNING:
+-			pm_asprintf(string, _("warning: %s"), msg);
+-			break;
+-		case ALPM_LOG_DEBUG:
+-			pm_asprintf(string, "debug: %s", msg);
+-			break;
+-		case ALPM_LOG_FUNCTION:
+-			pm_asprintf(string, "function: %s", msg);
+-			break;
+-		default:
+-			pm_asprintf(string, "%s", msg);
+-			break;
++	if(isatty(fileno(stdout))) {
++		switch(level) {
++			case ALPM_LOG_ERROR:
++				pm_asprintf(string, "%s%s%s%s", colortab.red, _("error: "), colortab.none, msg);
++				break;
++			case ALPM_LOG_WARNING:
++				pm_asprintf(string, "%s%s%s%s", colortab.yellow, _("warning: "), colortab.none, msg);
++				break;
++			case ALPM_LOG_DEBUG:
++				pm_asprintf(string, "debug: %s", msg);
++				break;
++			case ALPM_LOG_FUNCTION:
++				pm_asprintf(string, "function: %s", msg);
++				break;
++			default:
++				pm_asprintf(string, "%s", msg);
++				break;
++		}
++	} else {
++		switch(level) {
++			case ALPM_LOG_ERROR:
++				pm_asprintf(string, _("error: %s"), msg);
++				break;
++			case ALPM_LOG_WARNING:
++				pm_asprintf(string, _("warning: %s"), msg);
++				break;
++			case ALPM_LOG_DEBUG:
++				pm_asprintf(string, "debug: %s", msg);
++				break;
++			case ALPM_LOG_FUNCTION:
++				pm_asprintf(string, "function: %s", msg);
++				break;
++			default:
++				pm_asprintf(string, "%s", msg);
++				break;
++		}
+ 	}
+ 	free(msg);
+ 
+@@ -1524,10 +1558,10 @@ int pm_vfprintf(FILE *stream, alpm_logle
+ 	/* print a prefix to the message */
+ 	switch(level) {
+ 		case ALPM_LOG_ERROR:
+-			fprintf(stream, _("error: "));
++			color_fprintf(stream, COLOR_RED_ALL, _("error: "));
+ 			break;
+ 		case ALPM_LOG_WARNING:
+-			fprintf(stream, _("warning: "));
++			color_fprintf(stream, COLOR_YELLOW_ALL, _("warning: "));
+ 			break;
+ 		case ALPM_LOG_DEBUG:
+ 			fprintf(stream, "debug: ");
+@@ -1566,4 +1600,310 @@ char *strndup(const char *s, size_t n)
+ }
+ #endif
+ 
++/* pacman-color */
++
++int _set_color_sequence(const char* name, char* dest)
++{
++	int ret = 0;
++
++	if(strcmp(name, "black") == 0) {
++		strncpy(dest, "\033[0;30m", COLOR_LEN);
++	} else if(strcmp(name, "red") == 0) {
++		strncpy(dest, "\033[0;31m", COLOR_LEN);
++	} else if(strcmp(name, "green") == 0) {
++		strncpy(dest, "\033[0;32m", COLOR_LEN);
++	} else if(strcmp(name, "yellow") == 0) {
++		strncpy(dest, "\033[0;33m", COLOR_LEN);
++	} else if(strcmp(name, "blue") == 0) {
++		strncpy(dest, "\033[0;34m", COLOR_LEN);
++	} else if(strcmp(name, "magenta") == 0) {
++		strncpy(dest, "\033[0;35m", COLOR_LEN);
++	} else if(strcmp(name, "cyan") == 0) {
++		strncpy(dest, "\033[0;36m", COLOR_LEN);
++	} else if(strcmp(name, "white") == 0) {
++		strncpy(dest, "\033[0;37m", COLOR_LEN);
++	} else if(strcmp(name, "gray") == 0) {
++		strncpy(dest, "\033[1;30m", COLOR_LEN);
++	} else if(strcmp(name, "intensive red") == 0) {
++		strncpy(dest, "\033[1;31m", COLOR_LEN);
++	} else if(strcmp(name, "intensive green") == 0) {
++		strncpy(dest, "\033[1;32m", COLOR_LEN);
++	} else if(strcmp(name, "intensive yellow") == 0) {
++		strncpy(dest, "\033[1;33m", COLOR_LEN);
++	} else if(strcmp(name, "intensive blue") == 0) {
++		strncpy(dest, "\033[1;34m", COLOR_LEN);
++	} else if(strcmp(name, "intensive magenta") == 0) {
++		strncpy(dest, "\033[1;35m", COLOR_LEN);
++	} else if(strcmp(name, "intensive cyan") == 0) {
++		strncpy(dest, "\033[1;36m", COLOR_LEN);
++	} else if(strcmp(name, "intensive white") == 0) {
++		strncpy(dest, "\033[1;37m", COLOR_LEN);
++	} else if(strcmp(name, "intensive foreground") == 0) {
++		strncpy(dest, "\033[m\033[1m", COLOR_LEN);
++	} else if(strcmp(name, "none") == 0) {
++		strncpy(dest, "\033[m", COLOR_LEN);
++	} else {
++		ret = 1;
++	}
++	dest[COLOR_LEN] = '\0';
++	return(ret);
++}
++
++void _insert_color(FILE* stream, color_t color)
++{
++	switch(color) {
++		case COLOR_RED:
++			fprintf(stream, colortab.red);
++			break;
++		case COLOR_GREEN:
++			fprintf(stream, colortab.green);
++			break;
++		case COLOR_YELLOW:
++			fprintf(stream, colortab.yellow);
++			break;
++		case COLOR_BLUE:
++			fprintf(stream, colortab.blue);
++			break;
++		case COLOR_MAGENTA:
++			fprintf(stream, colortab.magenta);
++			break;
++		case COLOR_CYAN:
++			fprintf(stream, colortab.cyan);
++			break;
++		case COLOR_WHITE:
++			fprintf(stream, colortab.white);
++			break;
++		case COLOR_NONE:
++			fprintf(stream, colortab.none);
++			break;
++		default:;
++	}
++}
++
++int _parsecolorconfig(colortab_t* colortab, char* file)
++{
++	_set_color_sequence("intensive red", colortab->red);
++	_set_color_sequence("intensive green", colortab->green);
++	_set_color_sequence("intensive yellow", colortab->yellow);
++	_set_color_sequence("intensive blue", colortab->blue);
++	_set_color_sequence("intensive magenta", colortab->magenta);
++	_set_color_sequence("intensive cyan", colortab->cyan);
++	_set_color_sequence("intensive foreground", colortab->white);
++	_set_color_sequence("none", colortab->none);
++
++	FILE* fp = NULL;
++	int linenum = 0;
++	char line[PATH_MAX+1];
++	char* ptr;
++
++	fp = fopen(file, "r");
++	if(fp == NULL) {
++		pm_printf(ALPM_LOG_ERROR, _("config file %s could not be read.\n"), file);
++		return 1;
++	}
++	while(fgets(line, PATH_MAX, fp)) {
++		linenum++;
++		strtrim(line);
++
++		if(strlen(line) == 0 || line[0] == '#') {
++			continue;
++		}
++		if((ptr = strchr(line, '#'))) {
++			*ptr = '\0';
++		}
++
++		char* key = line;
++		ptr = line;
++		strsep(&ptr, "=");
++		strtrim(key);
++		strtrim(ptr);
++
++		if(key == NULL) {
++			pm_printf(ALPM_LOG_ERROR, _("config file %s, line %d: syntax error in config file- missing key.\n"),
++					file, linenum);
++			return 1;
++		}
++		if(strcmp(key, "Red") == 0) {
++			if(_set_color_sequence(ptr, colortab->red)) {
++				pm_printf(ALPM_LOG_ERROR, _("config file %s, line %d: color '%s' not recognized.\n"),
++							file, linenum, ptr);
++			}
++		} else if(strcmp(key, "Green") == 0) {
++			if(_set_color_sequence(ptr, colortab->green)) {
++				pm_printf(ALPM_LOG_ERROR, _("config file %s, line %d: color '%s' not recognized.\n"),
++							file, linenum, ptr);
++			}
++		} else if(strcmp(key, "Yellow") == 0) {
++			if(_set_color_sequence(ptr, colortab->yellow)) {
++				pm_printf(ALPM_LOG_ERROR, _("config file %s, line %d: color '%s' not recognized.\n"),
++							file, linenum, ptr);
++			}
++		} else if(strcmp(key, "Blue") == 0) {
++			if(_set_color_sequence(ptr, colortab->blue)) {
++				pm_printf(ALPM_LOG_ERROR, _("config file %s, line %d: color '%s' not recognized.\n"),
++							file, linenum, ptr);
++			}
++		} else if(strcmp(key, "Magenta") == 0) {
++			if(_set_color_sequence(ptr, colortab->magenta)) {
++				pm_printf(ALPM_LOG_ERROR, _("config file %s, line %d: color '%s' not recognized.\n"),
++							file, linenum, ptr);
++			}
++		} else if(strcmp(key, "Cyan") == 0) {
++			if(_set_color_sequence(ptr, colortab->cyan)) {
++				pm_printf(ALPM_LOG_ERROR, _("config file %s, line %d: color '%s' not recognized.\n"),
++							file, linenum, ptr);
++			}
++		} else if(strcmp(key, "White") == 0) {
++			if(_set_color_sequence(ptr, colortab->white)) {
++				pm_printf(ALPM_LOG_ERROR, _("config file %s, line %d: color '%s' not recognized.\n"),
++							file, linenum, ptr);
++			}
++		} else {
++			pm_printf(ALPM_LOG_ERROR, _("config file %s, line %d: directive '%s' not recognized.\n"),
++					file, linenum, key);
++			return(1);
++		}
++	}
++	return(0);
++}
++
++int parsecolorconfig()
++{
++	return(_parsecolorconfig(&colortab, "/etc/pacman.d/color.conf"));
++}
++
++int color_vfprintf(FILE* stream, const colordata_t* colors, const char* format, va_list args)
++{
++	int ret = 0;
++
++	if(isatty(fileno(stream)) && colors) {
++		char* msg = NULL;
++		ret = vasprintf(&msg, format, args);
++		if(msg == NULL) {
++			return(ret);
++		}
++
++		const colordata_t* colorpos = colors;
++		color_t colorlast = COLOR_NONE;
++		int len = strlen(msg) + 1;
++		wchar_t* wcstr = calloc(len, sizeof(wchar_t));
++		len = mbstowcs(wcstr, msg, len);
++		free(msg);
++		const wchar_t *strpos = wcstr;
++		
++		while(*strpos) {
++			if(colorpos->color != COLOR_END &&
++				((colorpos->separator == SEP_ANY) ||
++				 (colorpos->separator == SEP_LINE && *strpos == L'\n') ||
++				 (colorpos->separator == SEP_COLON && (*strpos == L':' || *strpos == L'：')))) {
++				_insert_color(stream, colorpos->color);
++				colorlast = colorpos->color;
++				colorpos++;
++			}
++			fprintf(stream, "%lc", (wint_t)*strpos);
++			strpos++;
++		}
++		free(wcstr);
++
++		if(colorlast != COLOR_NONE) {
++			_insert_color(stream, COLOR_NONE);
++		}
++	} else {
++		ret = vfprintf(stream, format, args);
++	}
++	return(ret);
++}
++
++int color_fprintf(FILE* stream, const colordata_t* colors, const char* format, ...)
++{
++	int ret;
++	va_list args;
++	va_start(args, format);
++	ret = color_vfprintf(stream, colors, format, args);
++	va_end(args);
++	return(ret);
++}
++
++int color_printf(const colordata_t* colors, const char* format, ...)
++{
++	int ret;
++	va_list args;
++	va_start(args, format);
++	ret = color_vfprintf(stdout, colors, format, args);
++	va_end(args);
++	return(ret);
++}
++
++void color_string_display(const colordata_t* colors_title, const char* title, const colordata_t* colors_string, const char* string)
++{
++	if(title) {
++		color_printf(colors_title, "%s ", title);
++	}
++	if(string == NULL || string[0] == '\0') {
++		printf(_("None"));
++	} else {
++		color_printf(colors_string, "%s", string);
++	}
++	printf("\n");
++}
++
++const colordata_t COLOR_WHITE_ALL[] = {
++	{ SEP_ANY, COLOR_WHITE },
++	{ SEP_LINE, COLOR_NONE },
++	{ SEP_ANY, COLOR_END } };
++
++const colordata_t COLOR_GREEN_ALL[] = {
++	{ SEP_ANY, COLOR_GREEN },
++	{ SEP_LINE, COLOR_NONE },
++	{ SEP_ANY, COLOR_END } };
++
++const colordata_t COLOR_RED_ALL[] = {
++	{ SEP_ANY, COLOR_RED },
++	{ SEP_LINE, COLOR_NONE },
++	{ SEP_ANY, COLOR_END } };
++
++const colordata_t COLOR_BLUE_ALL[] = {
++	{ SEP_ANY, COLOR_BLUE },
++	{ SEP_LINE, COLOR_NONE },
++	{ SEP_ANY, COLOR_END } };
++
++const colordata_t COLOR_YELLOW_ALL[] = {
++	{ SEP_ANY, COLOR_YELLOW },
++	{ SEP_LINE, COLOR_NONE },
++	{ SEP_ANY, COLOR_END } };
++
++const colordata_t COLOR_MAGENTA_ALL[] = {
++	{ SEP_ANY, COLOR_MAGENTA },
++	{ SEP_LINE, COLOR_NONE },
++	{ SEP_ANY, COLOR_END } };
++
++const colordata_t COLOR_CYAN_ALL[] = {
++	{ SEP_ANY, COLOR_CYAN },
++	{ SEP_LINE, COLOR_NONE },
++	{ SEP_ANY, COLOR_END } };
++
++const colordata_t COLOR_DOUBLECOLON[] = {
++	{ SEP_ANY, COLOR_BLUE },
++	{ SEP_ANY, COLOR_SAME },
++	{ SEP_ANY, COLOR_WHITE },
++	{ SEP_LINE, COLOR_NONE },
++	{ SEP_ANY, COLOR_END } };
++
++const colordata_t COLOR_DOUBLECOLON2[] = {
++	{ SEP_ANY, COLOR_BLUE },
++	{ SEP_ANY, COLOR_SAME },
++	{ SEP_ANY, COLOR_WHITE },
++	{ SEP_LINE, COLOR_NONE },
++	{ SEP_ANY, COLOR_BLUE },
++	{ SEP_ANY, COLOR_SAME },
++	{ SEP_ANY, COLOR_WHITE },
++	{ SEP_LINE, COLOR_NONE },
++	{ SEP_ANY, COLOR_END } };
++
++const colordata_t COLOR_WHITE_COLON[] = {
++	{ SEP_ANY, COLOR_WHITE },
++	{ SEP_COLON, COLOR_SAME },
++	{ SEP_ANY, COLOR_NONE },
++	{ SEP_ANY, COLOR_END } };
++
+ /* vim: set ts=2 sw=2 noet: */
+diff -up -Npaur a/src/pacman/util.h b/src/pacman/util.h
+--- a/src/pacman/util.h	2012-02-03 16:56:16.000000000 +0200
++++ b/src/pacman/util.h	2012-07-20 21:48:20.271827634 +0300
+@@ -45,6 +45,48 @@ typedef struct _pm_target_t {
+ 	int is_explicit;
+ } pm_target_t;
+ 
++/* pacman-color */
++typedef enum _separator_t {
++	SEP_ANY = 0,
++	SEP_LINE,
++	SEP_COLON,
++} separator_t;
++
++typedef enum _color_t {
++	COLOR_END = 0,
++	COLOR_SAME,
++	COLOR_RED,
++	COLOR_GREEN,
++	COLOR_YELLOW,
++	COLOR_BLUE,
++	COLOR_MAGENTA,
++	COLOR_CYAN,
++	COLOR_WHITE,
++	COLOR_NONE,
++} color_t;
++
++typedef struct _colordata_t {
++	separator_t separator;
++	color_t color;
++} colordata_t;
++
++extern const colordata_t COLOR_WHITE_ALL[];
++extern const colordata_t COLOR_GREEN_ALL[];
++extern const colordata_t COLOR_RED_ALL[];
++extern const colordata_t COLOR_BLUE_ALL[];
++extern const colordata_t COLOR_YELLOW_ALL[];
++extern const colordata_t COLOR_MAGENTA_ALL[];
++extern const colordata_t COLOR_CYAN_ALL[];
++extern const colordata_t COLOR_DOUBLECOLON[];
++extern const colordata_t COLOR_DOUBLECOLON2[];
++extern const colordata_t COLOR_WHITE_COLON[];
++
++int parsecolorconfig();
++int color_fprintf(FILE* stream, const colordata_t* colors, const char* format, ...) __attribute__((format(printf,3,4)));
++int color_printf(const colordata_t* colors, const char* format, ...) __attribute__((format(printf,2,3)));
++int color_vfprintf(FILE* stream, const colordata_t* colors, const char* format, va_list args) __attribute__((format(printf,3,0)));
++void color_string_display(const colordata_t* colors_title, const char* title, const colordata_t* colors_string, const char* string);
++
+ void trans_init_error(void);
+ int trans_init(alpm_transflag_t flags, int check_valid);
+ int trans_release(void);
+@@ -58,12 +100,12 @@ void indentprint(const char *str, size_t
+ char *strtrim(char *str);
+ char *strreplace(const char *str, const char *needle, const char *replace);
+ alpm_list_t *strsplit(const char *str, const char splitchar);
+-void string_display(const char *title, const char *string);
++void string_display(const colordata_t *colors_title, const char *title, const char *string);
+ double humanize_size(off_t bytes, const char target_unit, int precision,
+ 		const char **label);
+ int table_display(const char *title, const alpm_list_t *header, const alpm_list_t *rows);
+-void list_display(const char *title, const alpm_list_t *list);
+-void list_display_linebreak(const char *title, const alpm_list_t *list);
++void list_display(const colordata_t *colors_title, const char *title, const alpm_list_t *list);
++void list_display_linebreak(const colordata_t *colors_title, const char *title, const alpm_list_t *list);
+ void signature_display(const char *title, alpm_siglist_t *siglist);
+ void display_targets(void);
+ int str_cmp(const void *s1, const void *s2);
+@@ -73,8 +115,8 @@ void print_packages(const alpm_list_t *p
+ void select_display(const alpm_list_t *pkglist);
+ int select_question(int count);
+ int multiselect_question(char *array, int count);
+-int yesno(char *fmt, ...);
+-int noyes(char *fmt, ...);
++int yesno(const colordata_t *colors, char *fmt, ...);
++int noyes(const colordata_t *colors, char *fmt, ...);
+ 
+ int pm_printf(alpm_loglevel_t level, const char *format, ...) __attribute__((format(printf,2,3)));
+ int pm_asprintf(char **string, const char *format, ...);

@@ -1,0 +1,15 @@
+post_install() {
+  echo "
+==> You may need to delete your local
+==> ~/.mozilla/firefox/<profile-dir>/pluginreg.dat file for mozplugger to be
+==> enabled correctly after you update it. (It will get regenerated).
+==> To add more helpers, edit /etc/mozpluggerrc.
+==> The window name can be obtained using the utility xprop(1x).
+==> Type "xprop WM_CLASS" and click on a window."
+}
+
+post_upgrade() {
+  post_install
+}
+
+# vim:set ts=2 sw=2 et:
