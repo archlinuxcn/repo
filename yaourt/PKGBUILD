@@ -1,0 +1,30 @@
+# Author: Julien MISCHKOWITZ <wain@archlinux.fr>
+# Author: tuxce <tuxce.net@gmail.com>
+
+pkgname=yaourt
+pkgver=1.2.2
+pkgrel=1
+pkgdesc="A pacman wrapper with extended features and AUR support"
+arch=('any')
+url="http://www.archlinux.fr/yaourt-en/"
+license=(GPL)
+depends=('diffutils' 'pacman>=4.0' 'package-query>=1.0' 'gettext')
+optdepends=('aurvote: vote for favorite packages from AUR'
+      'customizepkg: automatically modify PKGBUILD during install/upgrade'
+      'rsync: retrieve PKGBUILD from official repositories'
+      'pacman-color: fully colorized output')
+backup=('etc/yaourtrc')
+source=(http://mir.archlinux.fr/~tuxce/releases/$pkgname/$pkgname-$pkgver.tar.gz)
+
+build() { 
+  cd $srcdir/$pkgname-$pkgver/
+  make PREFIX=/usr sysconfdir=/etc localstatedir=/var 
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver/
+  make PREFIX=/usr sysconfdir=/etc localstatedir=/var DESTDIR=$pkgdir install
+}
+
+md5sums=('b6341eec9b247c1cb9c743af80d190c2')
+# vim:set ts=2 sw=2 et:
