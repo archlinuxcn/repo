@@ -1,0 +1,39 @@
+# Maintainer: peace4all <markspost at rocketmail dot com>
+
+pkgname=dnscrypt-proxy
+pkgver=1.2.1
+pkgrel=2
+pkgdesc="A tool for securing communications between a client and a DNS resolver"
+arch=('i686' 'x86_64')
+url="http://dnscrypt.org/"
+license=('custom')
+source=(http://download.dnscrypt.org/$pkgname/$pkgname-$pkgver.tar.bz2  
+	conf.d.file 
+	dnscrypt-proxy.service)
+backup=(etc/conf.d/dnscrypt-proxy)
+conflicts=(dnscrypt-proxy-git)
+
+build() {
+	cd $srcdir/$pkgname-$pkgver
+	./configure --prefix=/usr
+	make
+}
+
+package() {
+	cd $srcdir/$pkgname-$pkgver
+	make DESTDIR=$pkgdir install
+
+	mkdir -p $pkgdir/usr/share/{licenses,doc}/$pkgname
+	install -m 644 COPYING $pkgdir/usr/share/licenses/$pkgname
+	install -m 644 AUTHORS NEWS README README.markdown $pkgdir/usr/share/doc/$pkgname
+
+	mkdir -p $pkgdir/etc/conf.d
+	install -m 644 $srcdir/conf.d.file $pkgdir/etc/conf.d/$pkgname
+
+	mkdir -p $pkgdir/usr/lib/systemd/system
+	install -m 644 $srcdir/dnscrypt-proxy.service $pkgdir/usr/lib/systemd/system
+}
+
+md5sums=('6fc4098acf432bbc01fcd2fa6fa5a04a'
+	 '4d486b3c2a4d47d4f998ed75c5033f77'
+         '9e8e9f6ca7c3d2efd1721217f62316c9')

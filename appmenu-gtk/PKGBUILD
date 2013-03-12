@@ -1,0 +1,73 @@
+# Maintainer: Limao Luo <luolimao+AUR@gmail.com>
+# Contributor: sausageandeggs <sausageandeggs@archlinux.us>
+# Contributor: György Balló <ballogy@freestart.hu>
+
+pkgbase=appmenu-gtk
+pkgname=appmenu-gtk
+true && pkgname=(${pkgbase}{2,3})
+pkgver=12.10.2
+pkgrel=2
+arch=(i686 x86_64)
+url=https://launchpad.net/$pkgbase
+license=(GPL3)
+makedepends=(libdbusmenu-gtk{2,3})
+options=(!libtool)
+source=($url/${pkgver%.*}/$pkgver/+download/$pkgbase-$pkgver.tar.gz
+    unblacklist-eclipse.patch)
+sha256sums=('eea3355a028f12bf442e483a7d7579910f1cd8e56be5646c9a6ddc639c5ae909'
+    'cd1e8b1fe2012c520c8ad0188de2ff0aeb34ceb73e3490e7bac395ec3892b6ab')
+sha512sums=('5c3e3b82c9d18de5fa2013dad5cb1240e547a7f97295b01ce08b9f03ebaa5e165ed326271ceed7d7014dd0f5c7960e6633090bddf5d18bdf8306157acf39ccdd'
+    'b5dd6d4e0b8d7bc94201ba39c6f881f8088147f63705be9bcd093eb57de554ec3ed2dc84684e388ab03ba009087c4826b672759ffe6d6d175883fd2f6759bcc1')
+
+build() {
+    cd "$srcdir"/$pkgbase-$pkgver/
+
+    patch -Np1 -i ../unblacklist-eclipse.patch
+
+    [[ -d build-gtk2 ]] || mkdir build-gtk2
+    pushd build-gtk2
+    ../configure \
+        --prefix=/usr \
+        --sysconfdir=/etc \
+        --localstatedir=/var \
+        --disable-static \
+        --with-gtk2
+    make
+    popd
+
+    [[ -d build-gtk3 ]] || mkdir build-gtk3
+    pushd build-gtk3
+    ../configure \
+        --prefix=/usr \
+        --sysconfdir=/etc \
+        --localstatedir=/var \
+        --disable-static
+    make
+    popd
+}
+
+package_appmenu-gtk2() {
+    pkgdesc="Adds appmenu support for GTK+ 2 apps"
+    depends=(libdbusmenu-gtk2 gtk2-ubuntu)
+
+    cd "$srcdir"/$pkgbase-$pkgver/build-gtk2/
+
+    make DESTDIR="$pkgdir" install
+    install -Dm755 80appmenu "$pkgdir"/etc/profile.d/80appmenu.sh
+    rm -r "$pkgdir"/etc/X11
+}
+
+package_appmenu-gtk3() {
+    pkgdesc="Adds appmenu support for GTK+ 3 apps"
+    depends=(libdbusmenu-gtk3 gtk3-ubuntu)
+
+    cd "$srcdir"/$pkgbase-$pkgver/build-gtk3/
+
+    make DESTDIR="$pkgdir" install
+    install -Dm755 80appmenu-gtk3 "$pkgdir"/etc/profile.d/80appmenu-gtk3.sh
+    rm -r "$pkgdir"/etc/X11
+}
+
+pkgdesc="Adds appmenu support for GTK+ apps"
+depends=(gtk{2,3}-ubuntu libdbusmenu-gtk{2,3})
+true && depends=()

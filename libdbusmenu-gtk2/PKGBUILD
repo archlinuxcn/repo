@@ -1,0 +1,32 @@
+# Maintainer: Balló György <ballogyor+arch at gmail dot com>
+
+_pkgbase=libdbusmenu
+pkgname=libdbusmenu-gtk2
+pkgver=12.10.2
+pkgrel=1
+pkgdesc="Small little library that passes a menu structure across DBus (GTK+ 2 library)"
+arch=('i686' 'x86_64')
+url="https://launchpad.net/dbusmenu"
+license=('LGPL')
+depends=('gtk2' 'libdbusmenu')
+makedepends=('intltool' 'gnome-doc-utils' 'gobject-introspection' 'vala' 'python2' 'json-glib')
+options=('!libtool' '!emptydirs')
+source=(http://launchpad.net/dbusmenu/${pkgver%.*}/$pkgver/+download/$_pkgbase-$pkgver.tar.gz)
+md5sums=('e30fc986b447f62513d61225fa573a70')
+
+build() {
+  cd "$srcdir/$_pkgbase-$pkgver"
+  sed -i 's@^#!.*python$@#!/usr/bin/python2@' tools/dbusmenu-bench
+
+  ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var --libexecdir=/usr/lib/$pkgname \
+               --disable-static --with-gtk=2
+  make
+}
+
+package() {
+  cd "$srcdir/$_pkgbase-$pkgver"
+
+  make -C libdbusmenu-glib DESTDIR="$pkgdir/" install
+  make -C libdbusmenu-gtk DESTDIR="$pkgdir/" install
+  make -C libdbusmenu-glib DESTDIR="$pkgdir/" uninstall
+}
