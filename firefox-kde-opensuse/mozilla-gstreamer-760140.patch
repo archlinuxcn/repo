@@ -1,0 +1,576 @@
+From: Alessandro Decina <alessandro.d@gmail.com>
+Bug 760140 - Query the GstRegistry for the required demuxers/decoders from canPlayType
+
+diff --git a/content/base/src/nsContentUtils.cpp b/content/base/src/nsContentUtils.cpp
+--- a/content/base/src/nsContentUtils.cpp
++++ b/content/base/src/nsContentUtils.cpp
+@@ -143,16 +143,19 @@
+ #include "xpcprivate.h" // nsXPConnect
+ #include "nsScriptSecurityManager.h"
+ #include "nsIChannelPolicy.h"
+ #include "nsChannelPolicy.h"
+ #include "nsIContentSecurityPolicy.h"
+ #include "nsContentDLF.h"
+ #ifdef MOZ_MEDIA
+ #include "nsHTMLMediaElement.h"
++#ifdef MOZ_GSTREAMER
++#include "GStreamerDecoder.h"
++#endif
+ #endif
+ #include "nsDOMTouchEvent.h"
+ #include "nsIContentViewer.h"
+ #include "nsIObjectLoadingContent.h"
+ #include "nsCCUncollectableMarker.h"
+ #include "mozilla/Base64.h"
+ #include "mozilla/Preferences.h"
+ #include "nsDOMMutationObserver.h"
+diff --git a/content/html/content/public/nsHTMLMediaElement.h b/content/html/content/public/nsHTMLMediaElement.h
+--- a/content/html/content/public/nsHTMLMediaElement.h
++++ b/content/html/content/public/nsHTMLMediaElement.h
+@@ -259,17 +259,19 @@ public:
+   void UpdateMediaSize(nsIntSize size);
+ 
+   // Returns the CanPlayStatus indicating if we can handle this
+   // MIME type. The MIME type should not include the codecs parameter.
+   // If it returns anything other than CANPLAY_NO then it also
+   // returns a null-terminated list of supported codecs
+   // in *aSupportedCodecs. This list should not be freed, it is static data.
+   static CanPlayStatus CanHandleMediaType(const char* aMIMEType,
+-                                          char const *const ** aSupportedCodecs);
++                                          const char* aCodecs,
++                                          char const *const ** aSupportedCodecs,
++                                          bool* aCheckSupportedCodecs);
+ 
+   // Returns the CanPlayStatus indicating if we can handle the
+   // full MIME type including the optional codecs parameter.
+   static CanPlayStatus GetCanPlay(const nsAString& aType);
+ 
+   // Returns true if we should handle this MIME type when it appears
+   // as an <object> or as a toplevel page. If, in practice, our support
+   // for the type is more limited than appears in the wild, we should return
+@@ -292,18 +294,16 @@ public:
+ #ifdef MOZ_WEBM
+   static bool IsWebMType(const nsACString& aType);
+   static const char gWebMTypes[2][11];
+   static char const *const gWebMCodecs[4];
+ #endif
+ 
+ #ifdef MOZ_GSTREAMER
+   static bool IsGStreamerSupportedType(const nsACString& aType);
+-  static bool IsH264Type(const nsACString& aType);
+-  static const char gH264Types[3][16];
+ #endif
+ 
+ #ifdef MOZ_WIDGET_GONK
+   static bool IsOmxSupportedType(const nsACString& aType);
+   static const char gOmxTypes[5][16];
+ #endif
+ 
+ #if defined(MOZ_GSTREAMER) || defined(MOZ_WIDGET_GONK)
+diff --git a/content/html/content/src/nsHTMLMediaElement.cpp b/content/html/content/src/nsHTMLMediaElement.cpp
+--- a/content/html/content/src/nsHTMLMediaElement.cpp
++++ b/content/html/content/src/nsHTMLMediaElement.cpp
+@@ -2213,50 +2213,29 @@ nsHTMLMediaElement::IsWebMType(const nsA
+       return true;
+     }
+   }
+ 
+   return false;
+ }
+ #endif
+ 
+-#if defined(MOZ_GSTREAMER) || defined(MOZ_WIDGET_GONK)
++#ifdef MOZ_WIDGET_GONK
+ char const *const nsHTMLMediaElement::gH264Codecs[9] = {
+   "avc1.42E01E",  // H.264 Constrained Baseline Profile Level 3.0
+   "avc1.42001E",  // H.264 Baseline Profile Level 3.0
+   "avc1.58A01E",  // H.264 Extended Profile Level 3.0
+   "avc1.4D401E",  // H.264 Main Profile Level 3.0
+   "avc1.64001E",  // H.264 High Profile Level 3.0
+   "avc1.64001F",  // H.264 High Profile Level 3.1
+   "mp4v.20.3",    // 3GPP
+   "mp4a.40.2",    // AAC-LC
+   nullptr
+ };
+-#endif
+-
+-#ifdef MOZ_GSTREAMER
+-const char nsHTMLMediaElement::gH264Types[3][16] = {
+-  "video/mp4",
+-  "video/3gpp",
+-  "video/quicktime",
+-};
+-
+-bool
+-nsHTMLMediaElement::IsH264Type(const nsACString& aType)
+-{
+-  for (uint32_t i = 0; i < ArrayLength(gH264Types); ++i) {
+-    if (aType.EqualsASCII(gH264Types[i])) {
+-      return true;
+-    }
+-  }
+-  return false;
+-}
+-#endif
+-
+-#ifdef MOZ_WIDGET_GONK
++
+ const char nsHTMLMediaElement::gOmxTypes[5][16] = {
+   "audio/mpeg",
+   "audio/mp4",
+   "video/mp4",
+   "video/3gpp",
+   "video/quicktime",
+ };
+ 
+@@ -2319,18 +2298,22 @@ nsHTMLMediaElement::IsDASHMPDType(const 
+ 
+   return false;
+ }
+ #endif
+ 
+ /* static */
+ nsHTMLMediaElement::CanPlayStatus
+ nsHTMLMediaElement::CanHandleMediaType(const char* aMIMEType,
+-                                       char const *const ** aCodecList)
++                                       const char *aCodecs,
++                                       char const *const ** aCodecList,
++                                       bool* aCheckCodecList)
+ {
++  if (aCheckCodecList)
++    *aCheckCodecList = true;
+ #ifdef MOZ_RAW
+   if (IsRawType(nsDependentCString(aMIMEType))) {
+     *aCodecList = gRawCodecs;
+     return CANPLAY_MAYBE;
+   }
+ #endif
+ #ifdef MOZ_OGG
+   if (IsOggType(nsDependentCString(aMIMEType))) {
+@@ -2354,20 +2337,22 @@ nsHTMLMediaElement::CanHandleMediaType(c
+   if (IsDASHMPDType(nsDependentCString(aMIMEType))) {
+     // DASH manifest uses WebM codecs only.
+     *aCodecList = gWebMCodecs;
+     return CANPLAY_YES;
+   }
+ #endif
+ 
+ #ifdef MOZ_GSTREAMER
+-  if (IsH264Type(nsDependentCString(aMIMEType))) {
+-    *aCodecList = gH264Codecs;
+-    return CANPLAY_MAYBE;
+-  }
++  if (aCheckCodecList)
++    *aCheckCodecList = false;
++  if (aCodecList)
++    *aCodecList = nullptr;
++  if (GStreamerDecoder::CanHandleMediaType(aMIMEType, aCodecs))
++    return CANPLAY_YES;
+ #endif
+ #ifdef MOZ_WIDGET_GONK
+   if (IsOmxSupportedType(nsDependentCString(aMIMEType))) {
+     *aCodecList = gH264Codecs;
+     return CANPLAY_MAYBE;
+   }
+ #endif
+ #ifdef MOZ_MEDIA_PLUGINS
+@@ -2388,17 +2373,17 @@ bool nsHTMLMediaElement::ShouldHandleMed
+   if (IsOggType(nsDependentCString(aMIMEType)))
+     return true;
+ #endif
+ #ifdef MOZ_WEBM
+   if (IsWebMType(nsDependentCString(aMIMEType)))
+     return true;
+ #endif
+ #ifdef MOZ_GSTREAMER
+-  if (IsH264Type(nsDependentCString(aMIMEType)))
++  if (GStreamerDecoder::CanHandleMediaType(aMIMEType, nullptr))
+     return true;
+ #endif
+ #ifdef MOZ_WIDGET_GONK
+   if (IsOmxSupportedType(nsDependentCString(aMIMEType))) {
+     return true;
+   }
+ #endif
+ #ifdef MOZ_MEDIA_PLUGINS
+@@ -2429,26 +2414,31 @@ nsHTMLMediaElement::GetCanPlay(const nsA
+ {
+   nsContentTypeParser parser(aType);
+   nsAutoString mimeType;
+   nsresult rv = parser.GetType(mimeType);
+   if (NS_FAILED(rv))
+     return CANPLAY_NO;
+ 
+   NS_ConvertUTF16toUTF8 mimeTypeUTF8(mimeType);
++  nsAutoString codecs;
++  rv = parser.GetParameter("codecs", codecs);
++  NS_ConvertUTF16toUTF8 codecsUTF8(codecs);
+   char const *const * supportedCodecs;
++  bool checkSupportedCodecs = true;
+   CanPlayStatus status = CanHandleMediaType(mimeTypeUTF8.get(),
+-                                            &supportedCodecs);
++                                            codecsUTF8.get(),
++                                            &supportedCodecs,
++                                            &checkSupportedCodecs);
+   if (status == CANPLAY_NO)
+     return CANPLAY_NO;
+ 
+-  nsAutoString codecs;
+-  rv = parser.GetParameter("codecs", codecs);
+-  if (NS_FAILED(rv)) {
+-    // Parameter not found or whatever
++  if (codecs.IsEmpty() || !checkSupportedCodecs) {
++    /* no codecs to check for or they were already checked in CanHandleMediaType
++     * above */
+     return status;
+   }
+ 
+   CanPlayStatus result = CANPLAY_YES;
+   // See http://www.rfc-editor.org/rfc/rfc4281.txt for the description
+   // of the 'codecs' parameter
+   nsCharSeparatedTokenizer tokenizer(codecs, ',');
+   bool expectMoreTokens = false;
+@@ -2487,43 +2477,39 @@ nsHTMLMediaElement::CanPlayType(const ns
+ }
+ 
+ #ifdef MOZ_GSTREAMER
+ bool
+ nsHTMLMediaElement::IsGStreamerSupportedType(const nsACString& aMimeType)
+ {
+   if (!MediaDecoder::IsGStreamerEnabled())
+     return false;
+-  if (IsH264Type(aMimeType))
++
++  const char *type;
++  NS_CStringGetData(aMimeType, &type, nullptr);
++  if (GStreamerDecoder::CanHandleMediaType(type, nullptr))
+     return true;
+-  if (!Preferences::GetBool("media.prefer-gstreamer", false))
+-    return false;
+-#ifdef MOZ_WEBM
+-  if (IsWebMType(aMimeType))
+-    return true;
+-#endif
+-#ifdef MOZ_OGG
+-  if (IsOggType(aMimeType))
+-    return true;
+-#endif
++
+   return false;
+ }
+ #endif
+ 
+ already_AddRefed<MediaDecoder>
+ nsHTMLMediaElement::CreateDecoder(const nsACString& aType)
+ {
+ 
+ #ifdef MOZ_GSTREAMER
+   // When enabled, use GStreamer for H.264, but not for codecs handled by our
+   // bundled decoders, unless the "media.prefer-gstreamer" pref is set.
+-  if (IsGStreamerSupportedType(aType)) {
+-    nsRefPtr<GStreamerDecoder> decoder = new GStreamerDecoder();
+-    if (decoder->Init(this)) {
+-      return decoder.forget();
++  if (!Preferences::GetBool("media.prefer-gstreamer", false)) {
++    if (IsGStreamerSupportedType(aType)) {
++      nsRefPtr<GStreamerDecoder> decoder = new GStreamerDecoder();
++      if (decoder->Init(this)) {
++        return decoder.forget();
++      }
+     }
+   }
+ #endif
+ 
+ #ifdef MOZ_RAW
+   if (IsRawType(aType)) {
+     nsRefPtr<RawDecoder> decoder = new RawDecoder();
+     if (decoder->Init(this)) {
+@@ -2576,16 +2562,26 @@ nsHTMLMediaElement::CreateDecoder(const 
+   if (IsDASHMPDType(aType)) {
+     nsRefPtr<DASHDecoder> decoder = new DASHDecoder();
+     if (decoder->Init(this)) {
+       return decoder.forget();
+     }
+   }
+ #endif
+ 
++#ifdef MOZ_GSTREAMER
++  // use GStreamer as fallback if not preferred
++  if (IsGStreamerSupportedType(aType)) {
++    nsRefPtr<GStreamerDecoder> decoder = new GStreamerDecoder();
++    if (decoder->Init(this)) {
++      return decoder.forget();
++    }
++  }
++#endif
++
+   return nullptr;
+ }
+ 
+ nsresult nsHTMLMediaElement::InitializeDecoderAsClone(MediaDecoder* aOriginal)
+ {
+   NS_ASSERTION(mLoadingSrc, "mLoadingSrc must already be set");
+   NS_ASSERTION(mDecoder == nullptr, "Shouldn't have a decoder");
+ 
+diff --git a/content/media/gstreamer/GStreamerDecoder.cpp b/content/media/gstreamer/GStreamerDecoder.cpp
+--- a/content/media/gstreamer/GStreamerDecoder.cpp
++++ b/content/media/gstreamer/GStreamerDecoder.cpp
+@@ -2,18 +2,23 @@
+ /* vim:set ts=2 sw=2 sts=2 et cindent: */
+ /* This Source Code Form is subject to the terms of the Mozilla Public
+  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
+  * You can obtain one at http://mozilla.org/MPL/2.0/. */
+ 
+ #include "MediaDecoderStateMachine.h"
+ #include "GStreamerReader.h"
+ #include "GStreamerDecoder.h"
++#include "nsGStreamerFormatHelper.h"
+ 
+ namespace mozilla {
+ 
+ MediaDecoderStateMachine* GStreamerDecoder::CreateStateMachine()
+ {
+   return new MediaDecoderStateMachine(this, new GStreamerReader(this));
+ }
+ 
++bool GStreamerDecoder::CanHandleMediaType(const char* aMIMEType,
++                                            const char* aCodecs) {
++  return GStreamerFormatHelper::Instance()->CanHandleMediaType(aMIMEType, aCodecs);
++}
+ } // namespace mozilla
+ 
+diff --git a/content/media/gstreamer/GStreamerDecoder.h b/content/media/gstreamer/GStreamerDecoder.h
+--- a/content/media/gstreamer/GStreamerDecoder.h
++++ b/content/media/gstreamer/GStreamerDecoder.h
+@@ -11,13 +11,14 @@
+ 
+ namespace mozilla {
+ 
+ class GStreamerDecoder : public MediaDecoder
+ {
+ public:
+   virtual MediaDecoder* Clone() { return new GStreamerDecoder(); }
+   virtual MediaDecoderStateMachine* CreateStateMachine();
++  static bool CanHandleMediaType(const char* aMIMEType, const char* aCodecs);
+ };
+ 
+ } // namespace mozilla
+ 
+ #endif
+diff --git a/content/media/gstreamer/Makefile.in b/content/media/gstreamer/Makefile.in
+--- a/content/media/gstreamer/Makefile.in
++++ b/content/media/gstreamer/Makefile.in
+@@ -17,16 +17,17 @@ LIBXUL_LIBRARY 	= 1
+ 
+ EXPORTS		+= \
+ 		GStreamerDecoder.h \
+ 		$(NULL)
+ 
+ CPPSRCS		= \
+ 		GStreamerReader.cpp \
+ 		GStreamerDecoder.cpp \
++		nsGStreamerFormatHelper.cpp \
+ 		$(NULL)
+ 
+ FORCE_STATIC_LIB = 1
+ 
+ include $(topsrcdir)/config/rules.mk
+ 
+ CFLAGS		+= $(GSTREAMER_CFLAGS)
+ CXXFLAGS	+= $(GSTREAMER_CFLAGS)
+diff --git a/content/media/gstreamer/nsGStreamerFormatHelper.cpp b/content/media/gstreamer/nsGStreamerFormatHelper.cpp
+new file mode 100644
+--- /dev/null
++++ b/content/media/gstreamer/nsGStreamerFormatHelper.cpp
+@@ -0,0 +1,149 @@
++/* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
++/* vim:set ts=2 sw=2 sts=2 et cindent: */
++/* This Source Code Form is subject to the terms of the Mozilla Public
++ * License, v. 2.0. If a copy of the MPL was not distributed with this file,
++ * You can obtain one at http://mozilla.org/MPL/2.0/. */
++
++#include "nsGStreamerFormatHelper.h"
++#include "nsCharSeparatedTokenizer.h"
++#include "nsXPCOMStrings.h"
++
++#define ENTRY_FORMAT(entry) entry[0]
++#define ENTRY_CAPS(entry) entry[1]
++
++GStreamerFormatHelper* GStreamerFormatHelper::gInstance = nullptr;
++
++GStreamerFormatHelper *GStreamerFormatHelper::Instance() {
++  if (!gInstance) {
++    gst_init(nullptr, nullptr);
++    gInstance = new GStreamerFormatHelper();
++  }
++
++  return gInstance;
++}
++
++GStreamerFormatHelper::GStreamerFormatHelper()
++  : mFactories(nullptr),
++    mCookie(0)
++{
++  const char *containers[3][2] = {
++    {"video/mp4", "video/quicktime"},
++    {"audio/mp4", "audio/mpeg, mpegversion=(int)4"},
++    {"audio/mpeg", "audio/mpeg, mpegversion=(int)1"},
++  };
++  memcpy(mContainers, containers, sizeof(containers));
++
++  const char *codecs[7][2] = {
++    {"avc1.42E01E", "video/x-h264"},
++    {"avc1.42001E", "video/x-h264"},
++    {"avc1.58A01E", "video/x-h264"},
++    {"avc1.4D401E", "video/x-h264"},
++    {"avc1.64001E", "video/x-h264"},
++    {"mp4a.40.2", "audio/mpeg, mpegversion=(int)4"},
++    {"mp3", "audio/mpeg, mpegversion=(int)1"},
++  };
++  memcpy(mCodecs, codecs, sizeof(codecs));
++}
++
++GStreamerFormatHelper::~GStreamerFormatHelper() {
++  if (mFactories)
++    g_list_free(mFactories);
++}
++
++bool GStreamerFormatHelper::CanHandleMediaType(const char* aMIMEType,
++                                                 const char *aCodecs) {
++  GstCaps *caps = ConvertFormatsToCaps(aMIMEType, aCodecs);
++  if (!caps) {
++    return false;
++  }
++
++  bool ret = HaveElementsToProcessCaps(caps);
++  gst_caps_unref(caps);
++
++  return ret;
++}
++
++GstCaps *GStreamerFormatHelper::ConvertFormatsToCaps(const char *aMIMEType,
++                                                       const char *aCodecs) {
++  unsigned int i;
++
++  /* convert aMIMEType to gst container caps */
++  const char *capsString = nullptr;
++  for (i = 0; i < G_N_ELEMENTS(mContainers); i++) {
++    if (!strcmp(ENTRY_FORMAT(mContainers[i]), aMIMEType)) {
++      capsString = ENTRY_CAPS(mContainers[i]);
++      break;
++    }
++  }
++
++  if (!capsString) {
++    /* we couldn't find any matching caps */
++    return nullptr;
++  }
++
++  GstCaps *caps = gst_caps_from_string(capsString);
++  /* container only */
++  if (!aCodecs) {
++    return caps;
++  }
++
++  nsDependentCSubstring codecs(aCodecs, strlen(aCodecs));
++  nsCCharSeparatedTokenizer tokenizer(codecs, ',');
++  while (tokenizer.hasMoreTokens()) {
++    const nsCSubstring& codec = tokenizer.nextToken();
++    capsString = nullptr;
++
++    for (i = 0; i < G_N_ELEMENTS(mCodecs); i++) {
++      if (codec.Equals(ENTRY_FORMAT(mCodecs[i]))) {
++        capsString = ENTRY_CAPS(mCodecs[i]);
++        break;
++      }
++    }
++
++    if (!capsString) {
++      gst_caps_unref(caps);
++      return nullptr;
++    }
++
++    GstCaps *tmp = gst_caps_from_string(capsString);
++    /* appends and frees tmp */
++    gst_caps_append(caps, tmp);
++  }
++
++  return caps;
++}
++
++bool GStreamerFormatHelper::HaveElementsToProcessCaps(GstCaps *aCaps) {
++
++  GList *factories = GetFactories();
++
++  GList *list;
++  /* here aCaps contains [containerCaps, [codecCaps1, [codecCaps2, ...]]] so process
++   * caps structures individually as we want one element for _each_
++   * structure */
++  for (unsigned int i = 0; i < gst_caps_get_size(aCaps); i++) {
++    GstStructure *s = gst_caps_get_structure(aCaps, i);
++    GstCaps *caps = gst_caps_new_full(gst_structure_copy(s), nullptr);
++    list = gst_element_factory_list_filter (factories, caps, GST_PAD_SINK, FALSE);
++    gst_caps_unref(caps);
++    if (!list) {
++      return false;
++    }
++    g_list_free(list);
++  }
++
++  return true;
++}
++
++GList * GStreamerFormatHelper::GetFactories() {
++  uint32_t cookie = gst_default_registry_get_feature_list_cookie ();
++  if (cookie != mCookie) {
++    g_list_free(mFactories);
++    mFactories = gst_element_factory_list_get_elements
++        (GST_ELEMENT_FACTORY_TYPE_DEMUXER | GST_ELEMENT_FACTORY_TYPE_DECODER,
++         GST_RANK_MARGINAL);
++    mCookie = cookie;
++  }
++
++  return mFactories;
++}
+diff --git a/content/media/gstreamer/nsGStreamerFormatHelper.h b/content/media/gstreamer/nsGStreamerFormatHelper.h
+new file mode 100644
+--- /dev/null
++++ b/content/media/gstreamer/nsGStreamerFormatHelper.h
+@@ -0,0 +1,37 @@
++/* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
++/* vim:set ts=2 sw=2 sts=2 et cindent: */
++/* This Source Code Form is subject to the terms of the Mozilla Public
++ * License, v. 2.0. If a copy of the MPL was not distributed with this file,
++ * You can obtain one at http://mozilla.org/MPL/2.0/. */
++
++#if !defined(nsGStreamerFormatHelper_h_)
++#define nsGStreamerFormatHelper_h_
++
++#include <gst/gst.h>
++#include <mozilla/Types.h>
++
++class GStreamerFormatHelper {
++  public:
++    static GStreamerFormatHelper *Instance();
++    ~GStreamerFormatHelper();
++
++    bool CanHandleMediaType(const char *aMIMEType,
++                            const char *aCodecs);
++
++  private:
++    GStreamerFormatHelper();
++    GstCaps *ConvertFormatsToCaps(const char *aMIMEType,
++                                  const char *aCodecs);
++    char * const *CodecListFromCaps(GstCaps *aCaps);
++    bool HaveElementsToProcessCaps(GstCaps *aCaps);
++    GList *GetFactories();
++
++    static GStreamerFormatHelper *gInstance;
++
++    const char *mContainers[3][2];
++    const char *mCodecs[7][2];
++    GList *mFactories;
++    uint32_t mCookie;
++};
++
++#endif

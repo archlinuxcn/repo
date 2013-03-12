@@ -1,0 +1,124 @@
+configs=('10-antialias.conf'
+         '10-hinting.conf'
+         '10-hinting-slight.conf'      
+         '11-lcd-filter-lcddefault.conf'
+         '20-fix-globaladvance.conf'
+         '20-unhint-small-vera.conf'
+         '25-ttf-arphic-uming-render.conf'
+         '30-cjk-aliases.conf'
+         '30-defoma.conf'
+         '30-metric-aliases.conf'
+         '30-urw-aliases.conf'
+         '35-ttf-arphic-uming-aliases.conf'
+         '40-nonlatin.conf'
+         '41-ttf-arphic-uming.conf'        
+         '45-latin.conf'
+         '49-sansserif.conf'
+         '50-user.conf'
+         '51-local.conf'         
+         '53-monospace-lcd-filter.conf'
+         '60-latin.conf'
+         '64-ttf-arphic-uming.conf'
+         '64-ttf-thai-tlwg.conf'
+         '65-fonts-persian.conf'
+         '65-nonlatin.conf'
+         '69-unifont.conf'
+         '80-delicious.conf'
+         '90-synthetic.conf'
+         '90-ttf-arphic-uming-embolden.conf'
+         '90-ttf-thai-tlwg-synthetic.conf')
+
+post_install() {
+  cat << _EOF
+
+  Fontconfig configuration is done via /etc/fonts/conf.avail and conf.d.
+  Read /etc/fonts/conf.d/README for more information.
+
+  Configuration via /etc/fonts/local.conf is still possible,
+  but is no longer recommended for options available in conf.avail.
+
+  Main systemwide configuration should be done by symlinks
+  (especially for autohinting, sub-pixel and lcdfilter):
+
+  cd /etc/fonts/conf.d
+  ln -s ../conf.avail/XX-foo.conf
+
+  Check also https://wiki.archlinux.org/index.php/Font_Configuration
+  and https://wiki.archlinux.org/index.php/Fonts.
+
+_EOF
+
+  echo -n "updating font cache... "
+
+  pushd /etc/fonts/conf.d > /dev/null
+  for config in "${configs[@]}"; do
+    ln -sf ../conf.avail/${config} .
+  done
+  popd > /dev/null
+
+  /usr/bin/fc-cache -f
+  echo "done."
+}
+
+post_upgrade() {
+  if [ `vercmp 2.4.1-1 $2` -gt 0 ]; then
+  # Upgrade from old version, place all symlinks. pre-symlink package version
+    echo -n "Linking configuration files... "
+    pushd /etc/fonts/conf.d > /dev/null
+    for config in "${configs[@]}"; do
+      ln -sf ../conf.avail/${config} .
+    done
+    popd > /dev/null
+    echo "done."
+  fi
+ 
+  if [ `vercmp 2.6.0-6 $2` -gt 0 ]; then
+  # pre-2.6.0 versions have missing config
+    echo -n "Adding missing configuration files... "
+    pushd /etc/fonts/conf.d > /dev/null
+    ln -sf ../conf.avail/30-metric-aliases.conf .
+    ln -sf ../conf.avail/40-nonlatin.conf .
+    ln -sf ../conf.avail/45-latin.conf .
+    popd > /dev/null
+    echo "done."
+  fi
+ 
+  # Remove dead links
+  echo -n "Removing outdated configuration files... "
+  for config in /etc/fonts/conf.d/*; do
+    if [ ! -f ${config} ]; then
+      rm -f ${config}
+    fi
+  done
+  echo "done."
+  echo -n "updating font cache... "
+  /usr/bin/fc-cache -f
+  echo "done."
+}
+
+pre_upgrade() {
+  # Link new config files not present on system yet
+  echo -n "Symlinking new configuration files... "
+  pushd /etc/fonts/conf.d > /dev/null
+  for config in "${configs[@]}"; do
+    if [ ! -f ../conf.avail/${config} ]; then
+      ln -sf ../conf.avail/${config} .
+    fi
+  done
+  popd > /dev/null
+  echo "done."
+}
+
+post_remove() {
+  cat << _EOF
+
+  Checking for dead symlinks and leftover files
+  in /etc/fonts/conf.d/
+
+_EOF
+  pushd /etc/fonts/conf.d > /dev/null
+  for config in "${configs[@]}"; do
+    rm -f ${config}
+  done
+  popd > /dev/null
+}

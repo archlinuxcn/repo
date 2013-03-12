@@ -1,0 +1,10 @@
+--- configure.in.orig	2013-02-20 13:10:47.378843382 +0100
++++ configure.in	2013-02-20 13:13:28.648972331 +0100
+@@ -5902,6 +5902,7 @@
+ if test -n "$MOZ_WEBGL_DISABLED"; then
+   MOZ_WEBGL=
+   MOZ_ANGLE_RENDERER=
++  MOZ_GL_DEFAULT_PROVIDER=
+ fi
+ 
+ if test -n "$MOZ_ANGLE_RENDERER" -a -z "$CROSS_COMPILE"; then

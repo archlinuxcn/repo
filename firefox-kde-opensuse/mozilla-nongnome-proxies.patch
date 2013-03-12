@@ -1,0 +1,46 @@
+From: Wolfgang Rosenauer
+Subject: Do not use gconf for proxy settings if not running within Gnome
+
+Index: toolkit/system/unixproxy/nsUnixSystemProxySettings.cpp
+===================================================================
+RCS file: /cvsroot/mozilla/toolkit/system/unixproxy/nsUnixSystemProxySettings.cpp,v
+retrieving revision 1.1
+
+diff --git a/toolkit/system/unixproxy/nsUnixSystemProxySettings.cpp b/toolkit/system/unixproxy/nsUnixSystemProxySettings.cpp
+--- a/toolkit/system/unixproxy/nsUnixSystemProxySettings.cpp
++++ b/toolkit/system/unixproxy/nsUnixSystemProxySettings.cpp
+@@ -50,22 +50,28 @@ nsUnixSystemProxySettings::GetMainThread
+   // dbus prevents us from being threadsafe, but this routine should not block anyhow
+   *aMainThreadOnly = true;
+   return NS_OK;
+ }
+ 
+ nsresult
+ nsUnixSystemProxySettings::Init()
+ {
+-  mSchemeProxySettings.Init(5);
+-  mGConf = do_GetService(NS_GCONFSERVICE_CONTRACTID);
+-  mGSettings = do_GetService(NS_GSETTINGSSERVICE_CONTRACTID);
+-  if (mGSettings) {
+-    mGSettings->GetCollectionForSchema(NS_LITERAL_CSTRING("org.gnome.system.proxy"),
+-                                       getter_AddRefs(mProxySettings));
++  // If this is a GNOME session, load gconf and try to use its preferences.
++  // If gconf is not available (which would be stupid) we'll proceed as if
++  // this was not a GNOME session, using *_PROXY environment variables.
++  const char* sessionType = PR_GetEnv("DESKTOP_SESSION");
++  if (sessionType && !strcmp(sessionType, "gnome")) {
++    mSchemeProxySettings.Init(5);
++    mGConf = do_GetService(NS_GCONFSERVICE_CONTRACTID);
++    mGSettings = do_GetService(NS_GSETTINGSSERVICE_CONTRACTID);
++    if (mGSettings) {
++      mGSettings->GetCollectionForSchema(NS_LITERAL_CSTRING("org.gnome.system.proxy"),
++                                         getter_AddRefs(mProxySettings));
++    }
+   }
+ 
+   return NS_OK;
+ }
+ 
+ bool
+ nsUnixSystemProxySettings::IsProxyMode(const char* aMode)
+ {

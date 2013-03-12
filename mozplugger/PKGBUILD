@@ -1,0 +1,40 @@
+# $Id: PKGBUILD 82 2009-07-17 19:56:55Z aaron $
+# Maintainer: fs4000 <matthias_dienstbier[at]yahoo[dot]de>
+# Contributor: Allan McRae <allan@archlinux.org>
+# Contributor: Todd Musall <tmusall@comcast.net>
+
+pkgname=mozplugger
+pkgver=2.1.1
+pkgrel=1
+pkgdesc="A Mozilla & Firefox multimedia plugin."
+arch=('i686' 'x86_64')
+url="http://mozplugger.mozdev.org"
+license=('GPL')
+depends=('m4' 'libx11')
+backup=('etc/mozpluggerrc')
+install=mozplugger.install
+source=(http://mozplugger.mozdev.org/files/mozplugger-$pkgver.tar.gz)
+sha256sums=('25042741eea844b866dd9c75c2fd9aa326aa51962118966e29c8cd6cbbb411b7')
+
+build() {
+  cd $pkgname-$pkgver
+
+  ./configure --prefix=/usr --sysconfdir=/etc \
+  #--enable-always-xembed
+  # uncomment the preceding line to get mozplugger running in Chromium
+  # this will always use Xembed which kills keyboard focus
+
+  make
+}
+
+package() {
+  cd $pkgname-$pkgver
+  # doesn't work anymore
+  #make install root="$pkgdir"
+
+  install -Dm644 mozpluggerrc "$pkgdir/etc/mozpluggerrc"
+  install -d "$pkgdir/usr/bin/"
+  install -m755 mozplugger-{helper,controller,linker,update} "$pkgdir/usr/bin/"
+  install -Dm755 mozplugger.so "$pkgdir/usr/lib/mozilla/plugins/mozplugger.so"
+  install -Dm644 mozplugger.7 "$pkgdir/usr/share/man/man7/mozplugger.7"
+}

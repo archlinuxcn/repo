@@ -1,0 +1,27 @@
+# Maintainer: Jiajun Wang <amesists AT gmail DOT com>
+
+pkgname=obfsproxy
+pkgver=0.1.4
+pkgrel=1
+pkgdesc="A tor-compliant pluggable transports proxy to obfuscate tor traffic"
+arch=('i686' 'x86_64')
+url="https://www.torproject.org/projects/obfsproxy"
+license=('GPL')
+depends=('autoconf' 'autoconf' 'libtool' 'pkg-config' 'libevent' 'openssl')
+makedepends=()
+source=("https://archive.torproject.org/tor-package-archive/${pkgname}/${pkgname}-${pkgver}.tar.gz")
+md5sums=('d3b898b1f5ea21c611bceaeb3c20e0d7')
+optdepends=('tor: you need tor to use this package' )
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+  mkdir build
+  cd build
+  ../configure --prefix=/usr
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver/build
+  make DESTDIR=$pkgdir install
+}
