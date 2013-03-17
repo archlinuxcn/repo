@@ -7,7 +7,7 @@ _enable_jemalloc_pgo="n"
 
 
 pkgname=firefox-kde-opensuse
-pkgver=19.0
+pkgver=19.0.2
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
@@ -18,7 +18,7 @@ depends=('gtk2' 'mozilla-common' 'libxt' 'startup-notification' 'mime-types' 'db
          'kmozillahelper')
 makedepends=('unzip' 'zip' 'diffutils' 'python2' 'yasm' 'mesa'
              'autoconf2.13' 'libidl2' 'xorg-server-xvfb' 'imake')
-provides=('firefox')
+provides=("firefox=${pkgver}")
 conflicts=('firefox')
 optdepends=('networkmanager: Location detection via available WiFi networks')
 url="http://www.mozilla.org/projects/firefox"
@@ -142,7 +142,7 @@ package() {
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
 
-md5sums=('3dc732b6ce177792b43324f4bc7164d8'
+md5sums=('de09d603c3b768a1698d90141f3b2644'
          'a35236fe53941392a279e45e0713163c'
          '57d7c8bcdba9025e36fbbe4b794550a4'
          '1df7fd9afd75d06decb129518a769133'
