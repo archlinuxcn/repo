@@ -2,7 +2,7 @@
 # Contributor: Tom < tomgparchaur at gmail dot com >
 
 pkgname=dropbox
-pkgver=2.0.0
+pkgver=2.0.2
 pkgrel=1
 pkgdesc="A free service that lets you bring your photos, docs, and videos anywhere and share them easily."
 arch=("i686" "x86_64")
@@ -15,12 +15,12 @@ options=('!strip' '!upx')
 _source_arch="x86"
 [ "$CARCH" = "x86_64" ] && _source_arch="x86_64"
 
-sha256sums=('6e1d04a3b7d85e7ae622df0d4d973c412eca88ef13ac199e7e38752c12d258c9'
+sha256sums=('a1c26245f0d3d3873e353701f3ce0e7c4b078235dec8d2147693c5dd96867ad3'
             '8b8af2d6a5786d7fa259660a34c47fa0a7534cd112e70d71ee53b1f786baf530'
             'dd8fdb362c0bba8d789010594f021671ff00e535fc75e13da855f43bc7a4b3aa'
             'b9e020c378c318e72857bb6cd859c74e8da1300f34cee5bfec89c4f7a89770a9'
             'c7253ef6806b7efdec6f3d7e1eeaa90f48813e80715733ab9c902123edfdae27')
-[ "$CARCH" = "x86_64" ] && sha256sums[0]='28d7a69fe2719c92c809557384116f369359a005ffc2657d96450d3bbd77a0e0'
+[ "$CARCH" = "x86_64" ] && sha256sums[0]='ce49685f6413ec96563086271abb821f9af3aa5af3100395300b324a2df7e7a1'
 
 source=("https://dl-web.dropbox.com/u/17/${pkgname}-lnx.${_source_arch}-${pkgver}.tar.gz"
         "dropbox.png"
