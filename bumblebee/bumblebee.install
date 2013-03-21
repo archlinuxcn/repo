@@ -1,0 +1,16 @@
+_notice() {
+    echo "Don't forget to add yourself to the 'bumblebee' group to use Bumblebee"
+}
+
+post_upgrade() {
+    getent group "bumblebee" &>/dev/null || groupadd -r bumblebee
+}
+
+post_remove() {
+    getent group "bumblebee" &>/dev/null && groupdel bumblebee 1>/dev/null
+}
+
+post_install() {
+    post_upgrade
+    _notice
+}
