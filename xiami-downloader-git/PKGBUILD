@@ -6,7 +6,7 @@ pkgrel=1
 pkgdesc="Python script for download preview music from xiami.com."
 arch=('any')
 url="https://github.com/timothyqiu/xiami-downloader.git"
-license=('unknown')
+license=('MIT')
 depends=("python2")
 optdepends=("mutagen: ID3 tag support")
 makedepends=('git')
@@ -30,11 +30,11 @@ build() {
     msg "GIT checkout done"
 
     mkdir -p "$pkgdir/$_insdir"
-    mkdir -p "$pkgdir/usr/share/licenses/$pkgname"
     cp -rf "$_gitname/"* "$pkgdir/$_insdir"
     cd "$pkgdir/$_insdir"
     if [ -f LICENSE ]
     then
+        mkdir -p "$pkgdir/usr/share/licenses/$pkgname"
         mv LICENSE "$pkgdir/usr/share/licenses/$pkgname"
     fi
     rm -rf tests .git*
