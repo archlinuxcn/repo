@@ -1,0 +1,48 @@
+# Maintainer: cuihao <cuihao dot leo at gmail dot com>
+
+pkgname=xunlei-lixian-git
+pkgver=20120724
+pkgrel=1
+pkgdesc="Python script for Xunlei (Thunder) cloud."
+arch=('any')
+url="https://github.com/iambus/xunlei-lixian"
+license=('MIT')
+depends=("python2")
+makedepends=('git')
+
+_gitname="xunlei-lixian"
+_gitroot="https://github.com/iambus/xunlei-lixian.git"
+
+_insdir="/opt/$_gitname"
+
+build() {
+    cd $srcdir
+    msg "Connecting to the GIT server...."
+  
+    if [ -d $_gitname ]; then
+        cd $_gitname && git pull origin && cd ..
+        msg "The local files are updated."
+    else
+        git clone $_gitroot $_gitname
+    fi
+    
+    msg "GIT checkout done"
+    
+    mkdir -p "$pkgdir/$_insdir"
+    mkdir -p "$pkgdir/usr/share/licenses/$pkgname"
+    cp -rf "$_gitname/"* "$pkgdir/$_insdir"
+    cd "$pkgdir/$_insdir"
+    mv LICENSE "$pkgdir/usr/share/licenses/$pkgname"
+    rm -rf tests .git*
+    # python2 fix
+    sed -i '1 i#\!/usr/bin/python2' lixian_{batch,cli,hash}.py
+
+    mkdir -p "$pkgdir/usr/bin"
+    cd "$pkgdir/usr/bin"
+    # some links
+    ln -s "$_insdir/lixian_batch.py" lixian_batch
+    ln -s "$_insdir/lixian_cli.py" lixian_cli
+    ln -s "$_insdir/lixian_hash.py" lixian_hash
+    # ln -s "$_insdir/lixian_cli.py" lx
+}
+
