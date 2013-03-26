@@ -2,9 +2,10 @@
 # Contributor: Lex Rivera aka x-demon <aur@x-demon.org>
 # Contributor: Det <nimetonmaili at gmail a-dot com>
 # Contributor: ruario
+# Packager: phoenixlzx <phoenixlzx at archlinuxcn.org>
 
 pkgname=google-chrome-dev
-pkgver=27.0.1438.7   # Check for new Linux releases in: http://googlechromereleases.blogspot.com/search/label/Dev%20updates
+pkgver=27.0.1448.0   # Check for new Linux releases in: http://googlechromereleases.blogspot.com/search/label/Dev%20updates
 pkgrel=1
 pkgdesc="An attempt at creating a safer, faster, and more stable browser (Dev Channel)"
 arch=('i686' 'x86_64')
@@ -17,14 +18,14 @@ conflicts=('google-chrome')
 options=(!strip)
 install=${pkgname}.install
 _channel='unstable'
-_verbld=27.0.1438.7-187670
+_verbld=27.0.1448.0-189523
 
 if [ "$CARCH" = "i686" ]; then
     _arch='i386'
-    md5sums=('42d030e53bb867907deb895b55436b44')
+    md5sums=('65f81f9d6ac9872fcb9d8e71503505b9')
 elif [ "$CARCH" = "x86_64" ]; then
     _arch='x86_64'
-    md5sums=('4b3ed7519fda08f45dcbd7cf9475e97a')
+    md5sums=('8eb31b244af158b2300a82c4bb4c1337')
 fi
 
 
