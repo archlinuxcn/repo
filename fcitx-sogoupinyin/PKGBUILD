@@ -2,13 +2,14 @@
 # Packager: phoenixlzx < phoenixlzx at archlinuxcn.org >
 
 pkgname=fcitx-sogoupinyin
-pkgver=0.0.2
+pkgver=0.0.0
 pkgrel=2
 pkgdesc="Fcitx wrapper for Sogou Pinyin"
 arch=('i686' 'x86_64')
 url="http://code.google.com/p/fcitx"
 license=('custom')
 depends=('fcitx>=4.2.6')
+optdepends=('fcitx-skin-sogou: fcitx skin for SogouPinyin')
 makedepends=('cmake' 'intltool')
 source=("http://packages.linuxdeepin.com/deepin/pool/main/f/fcitx-sogoupinyin/fcitx-sogoupinyin_0.0.0.orig.tar.gz")
 md5sums=('e17cef33559d56810d1b3b9e49947fee')
