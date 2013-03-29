@@ -2,8 +2,8 @@
 # Packager: phoenixlzx < phoenixlzx at archlinuxcn.org >
 
 pkgname=fcitx-sogoupinyin
-pkgver=0.0.2
-pkgrel=2
+pkgver=0.0.0
+pkgrel=3
 pkgdesc="Fcitx wrapper for Sogou Pinyin"
 arch=('i686' 'x86_64')
 url="http://code.google.com/p/fcitx"
@@ -12,10 +12,14 @@ depends=('fcitx>=4.2.6')
 makedepends=('cmake' 'intltool')
 source=("http://packages.linuxdeepin.com/deepin/pool/main/f/fcitx-sogoupinyin/fcitx-sogoupinyin_0.0.0.orig.tar.gz")
 md5sums=('e17cef33559d56810d1b3b9e49947fee')
+option=(!strip)
 
 build(){
 
   msg "Starting make..."
+
+  unset CXXFLAGS
+  unset LDFLAGS
   
   cmake -DCMAKE_INSTALL_PREFIX=/usr .
 
