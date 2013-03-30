@@ -5,8 +5,8 @@
 pkgbase=musescore
 pkgname=${pkgbase}-git
 _realver=2.0b
-pkgver=20130302
-pkgrel=2
+pkgver=20130330
+pkgrel=1
 pkgdesc="A music score editor - git-version"
 arch=('i686' 'x86_64')
 url="http://www.musescore.org/en/"
@@ -53,7 +53,7 @@ build() {
   fi
   msg "GIT checkout done or server timeout"
 
-  patch -Np1 < ../gch.patch
+  # patch -Np1 < ../gch.patch
   mkdir -p build.release
   cd build.release
   export CXXFLAGS="-std=gnu++0x ${CXXFLAGS}"
