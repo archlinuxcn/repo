@@ -3,9 +3,8 @@
 # Contributor: hbdee <hbdee.arch@gmail.com>
 
 pkgname=gtk2-ubuntu
-_ubuntu_rel=1ubuntu2
-#_actual_ver=2.24.16
-pkgver=2.24.16
+_ubuntu_rel=0ubuntu2
+pkgver=2.24.17
 pkgrel=1
 pkgdesc="GTK+ is a multi-platform toolkit (v2)"
 arch=('i686' 'x86_64')
@@ -23,8 +22,8 @@ source=("http://ftp.gnome.org/pub/gnome/sources/gtk+/2.24/gtk+-${pkgver}.tar.xz"
         "https://launchpad.net/ubuntu/+archive/primary/+files/gtk+2.0_${pkgver}-${_ubuntu_rel}.debian.tar.gz"
         'arch_xid-collision-debug.patch'
         'fix-ubuntumenuproxy-build.patch')
-sha512sums=('0b3b7be3eea1372b9fe1a9a4ddaaabaf92ed1437d3c3c281f936b847cd9cb5a1e97f4b8496009faec00c182719a16767b9061efffbd03c0770b35c099f43cccf'
-            '9bbdf9ff1f72c7c167273093484bf092c1edde6d63d04a0d3c2ac838812c70284b5c635542c89f32fbc7d452d6b2b34f51e459b9a7e1c13c1232d32f3d0ff59a'
+sha512sums=('7a83555b4b6eb534bbdb77eae85164e182d68f786a72dcdbf41e221a25af0981263cc6637427cdf8984f82064927fb38d370d3f8621b7b056b3b5dbd92bcaf79'
+	    'f586389974982482497ca659e6d61e6798f4c141bc824af78b7f95cc351f9dfac33060269bf8250c391ed61cd6212a58fdeb711dde11e27c3a919cf45f9eb0c7'
             '89e3223c86731a76b12d39245f1ec4cf8b4860ab1d11d74a10e5deb0db302f20b4bb5d9034da1d8aeb96369dbdeddcdd2f28943270dc501476c694562b960159'
             '4b27afecb82e3517c2584665f8d2a2911193254a00b82ff8064caf4016ab029c76e99af502bb9271a66209594b50b2729797defcc9512d341aa61aff4f64ec24')
 
