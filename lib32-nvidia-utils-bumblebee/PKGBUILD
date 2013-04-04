@@ -5,7 +5,7 @@
 
 _pkgbasename=nvidia-utils-bumblebee
 pkgname=lib32-$_pkgbasename
-pkgver=313.26
+pkgver=313.30
 pkgrel=1
 pkgdesc="NVIDIA drivers utilities and libraries (32-bit). Repacked and installed in away that won't break LibGL from mesa."
 arch=('x86_64')
@@ -19,7 +19,7 @@ options=('!strip')
 _arch='x86'
 _pkg="NVIDIA-Linux-${_arch}-${pkgver}"
 source=("ftp://download.nvidia.com/XFree86/Linux-${_arch}/${pkgver}/${_pkg}.run")
-md5sums=('3c2f5138d0fec58b27e26c5b37d845b8')
+md5sums=('69c0f66c9246217a4fe4d28e95bb7bb6')
 
 
 build() {

@@ -4,13 +4,12 @@
 # Contributor: James Rayner <iphitus@gmail.com>
 
 pkgname=nvidia-utils-bumblebee
-pkgver=313.26
-pkgrel=2
+pkgver=313.30
+pkgrel=1
 arch=('i686' 'x86_64')
 url="http://www.nvidia.com/"
 pkgdesc="NVIDIA drivers utilities and libraries. With LibGL and xorg modules installed in a different directory."
 depends=('xorg-server') 
-#old=libxvmc
 optdepends=('gtk2: nvidia-settings' 'pkg-config: nvidia-xconfig'
             'opencl-nvidia: OpenCL support')
 provides=("nvidia-utils=${pkgver}")
@@ -22,12 +21,12 @@ if [ "$CARCH" = "i686" ]; then
     _arch='x86'
     _pkg="NVIDIA-Linux-${_arch}-${pkgver}"
     source=("ftp://download.nvidia.com/XFree86/Linux-${_arch}/${pkgver}/${_pkg}.run")
-    md5sums=('3c2f5138d0fec58b27e26c5b37d845b8')
+    md5sums=('69c0f66c9246217a4fe4d28e95bb7bb6')
 elif [ "$CARCH" = "x86_64" ]; then
     _arch='x86_64'
     _pkg="NVIDIA-Linux-${_arch}-${pkgver}-no-compat32"
     source=("ftp://download.nvidia.com/XFree86/Linux-${_arch}/${pkgver}/${_pkg}.run")
-    md5sums=('2d35124fa5a4b009f170fe893b5d07e3')
+    md5sums=('e5f147fbcdcad71472b4ddeccf259bd7')
 fi
 
 create_links() {
