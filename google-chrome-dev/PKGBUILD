@@ -5,7 +5,7 @@
 # Packager: phoenixlzx <phoenixlzx at archlinuxcn.org>
 
 pkgname=google-chrome-dev
-pkgver=28.0.1464.0   # Check for new Linux releases in: http://googlechromereleases.blogspot.com/search/label/Dev%20updates
+pkgver=27.0.1453.12   # Check for new Linux releases in: http://googlechromereleases.blogspot.com/search/label/Dev%20updates
 pkgrel=1
 pkgdesc="An attempt at creating a safer, faster, and more stable browser (Dev Channel)"
 arch=('i686' 'x86_64')
@@ -18,7 +18,7 @@ conflicts=('google-chrome')
 options=(!strip)
 install=${pkgname}.install
 _channel='unstable'
-_verbld=28.0.1464.0-192202
+_verbld=27.0.1453.12-191631
 
 if [ "$CARCH" = "i686" ]; then
     _arch='i386'
