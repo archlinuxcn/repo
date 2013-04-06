@@ -5,27 +5,27 @@
 # Packager: phoenixlzx <phoenixlzx at archlinuxcn.org>
 
 pkgname=google-chrome
-pkgver=25.0.1364.172   # Check for new Linux releases in: http://googlechromereleases.blogspot.com/search/label/Stable%20updates
+pkgver=26.0.1410.43   # Check for new Linux releases in: http://googlechromereleases.blogspot.com/search/label/Stable%20updates
 pkgrel=1
 pkgdesc="An attempt at creating a safer, faster, and more stable browser (Stable Channel)"
 arch=('i686' 'x86_64')
 url="http://www.google.com/chrome"
 license=('custom:chrome')
 depends=('alsa-lib' 'gconf' 'gtk2' 'hicolor-icon-theme' 'libpng' 'libxslt' 'libxss' 'nss' 'ttf-font' 'xdg-utils')
-optdepends=('kdebase-kdialog: needed for file dialogs in KDE')
+optdepends=('kdebase-kdialog: needed for file dialogs in KDE' 'ttf-google-webfonts')
 provides=("google-chrome=$pkgver")
 conflicts=('google-chrome')
 options=(!strip)
 install=${pkgname}.install
 _channel='stable'
-_verbld=25.0.1364.172-187217
+_verbld=26.0.1410.43-189671
 
 if [ "$CARCH" = "i686" ]; then
     _arch='i386'
-    md5sums=('68bacc0d36176051a96b2f3687f82248')
+    md5sums=('37331c58b9805ad1e7621b5f002d3e4e')
 elif [ "$CARCH" = "x86_64" ]; then
     _arch='x86_64'
-    md5sums=('b13be4231abb19894b96b357aaa264f0')
+    md5sums=('76524edb4ce9d3f946c050a48e831437')
 fi
 
 
