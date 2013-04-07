@@ -3,4 +3,6 @@ repo
 
 Arch Linux CN Repository
 
-* Please submit issue if you have problems.
+* Flag package OUT-OF-DATE by submit new issue, and shall be closed after package updated.
+
+* Please contact us via Email or submitting new issues.
