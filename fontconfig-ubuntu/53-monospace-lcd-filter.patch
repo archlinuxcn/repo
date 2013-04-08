@@ -1,0 +1,11 @@
+--- fontconfig-2.10.2/conf.d/53-monospace-lcd-filter.conf	2013-04-06 17:08:56.186733226 +0200
++++ fontconfig-2.10.2/conf.d/53-monospace-lcd-filter.conf	2013-04-06 17:13:26.551935199 +0200
+@@ -6,6 +6,8 @@
+   <match target="font">
+     <test name="family">
+       <string>DejaVu Sans Mono</string>
++    </test>
++    <test name="family">
+       <string>Bitstream Vera Sans Mono</string>
+     </test>
+     <test name="pixelsize" compare="less_eq">

@@ -8,31 +8,33 @@
 pkgname=fontconfig-ubuntu
 pkgver=2.10.2
 _ubver=2.10.2-0ubuntu2.debian
-pkgrel=2
+pkgrel=3
 pkgdesc="A library for configuring and customizing font access, with Ubuntu's LCD rendering patches."
 arch=('i686' 'x86_64')
 url="https://launchpad.net/ubuntu/precise/+source/fontconfig"
 license=('custom')
 depends=('expat>=2.0.1' 'freetype2-ubuntu>=2.3.11')
-makedepends=('libtool')
 conflicts=('fontconfig')
 provides=("fontconfig=$pkgver")
 options=('!libtool')
 install=fontconfig.install
 source=(http://archive.ubuntu.com/ubuntu/pool/main/f/fontconfig/fontconfig_$pkgver.orig.tar.bz2
-        http://archive.ubuntu.com/ubuntu/pool/main/f/fontconfig/fontconfig_$_ubver.tar.gz)
-        
+        http://archive.ubuntu.com/ubuntu/pool/main/f/fontconfig/fontconfig_$_ubver.tar.gz
+        53-monospace-lcd-filter.patch)
+
 md5sums=('2f239690057d1438aa282e051f721d08'
-     'fbb37f7a4208239be5b97472888a81bf')
+     'fbb37f7a4208239be5b97472888a81bf'
+     'a17e48be6a06bc056574be6756cb9738')
 
 build() {
-  #patch -Np1 -i ../fontconfig_$_ubver.diff
-  cd $srcdir/fontconfig-$pkgver
+  #patch -Np1 -i "../fontconfig_$_ubver.diff"
+  cd ${srcdir}/fontconfig-${pkgver}
 
   for _f in $(cat ../debian/patches/series) ; do
      patch -Np1 -i "../debian/patches/$_f"
   done
 
+  patch -u "conf.d/53-monospace-lcd-filter.conf" "${srcdir}/../53-monospace-lcd-filter.patch"
 
   # make sure there's no rpath trouble and sane .so versioning - FC and Gentoo do this as well
   libtoolize -f
@@ -49,15 +51,15 @@ build() {
     --with-default-fonts=/usr/share/fonts \
     --with-add-fonts=/usr/share/fonts
   make
-  make DESTDIR=$pkgdir install
+  make DESTDIR=${pkgdir} install
 
-  #rm -f $pkgdir/etc/fonts/conf.d/*.conf
+  #rm -f ${pkgdir}/etc/fonts/conf.d/*.conf
 
   # License
-  install -Dm0644 COPYING $pkgdir/usr/share/licenses/$pkgname/COPYING
+  install -Dm0644 COPYING ${pkgdir}/usr/share/licenses/${pkgname}/COPYING
 
   # Docs
-  install -Dm0644 $srcdir/debian/changelog $pkgdir/usr/share/doc/fontconfig/changelog
+  install -Dm0644 ${srcdir}/debian/changelog ${pkgdir}/usr/share/doc/fontconfig/changelog
 
 }
 
