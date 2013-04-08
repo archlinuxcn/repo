@@ -11,27 +11,29 @@ depends=('zsh')
 makedepends=('git')
 optdepends=('ruby: for some plugin functionality')
 install='oh-my-zsh-git.install'
-
-_gitroot='git://github.com/robbyrussell/oh-my-zsh.git'
-_gitname='oh-my-zsh'
-_buildir="$srcdir/$_gitname-build"
+  
+_gitroot="git://github.com/robbyrussell/oh-my-zsh.git"
+_gitname=$pkgname
 
 build() {
-  cd $srcdir
-  if [ -d $_gitname ]; then
-    cd $_gitname && git pull origin || return 1
-  else
-    git clone $_gitroot || return 1
-  fi
-  rm -rf $_buildir
-  git clone $srcdir/$_gitname $_buildir
-  cd $_buildir
-  sed -i -e'2c\ZSH=/usr/share/oh-my-zsh/' templates/zshrc.zsh-template
+    cd "$srcdir"
+    msg "Connecting to GIT server...."
+
+    if [ -d $_gitname ] ; then
+        cd $_gitname && git pull origin
+        msg "The local files are updated."
+    else
+        git clone $_gitroot $_gitname
+    fi
+    msg "GIT checkout done or server timeout"
+    
+    cd $_gitname
+    sed -i -e'2c\ZSH=/usr/share/oh-my-zsh/' templates/zshrc.zsh-template
 }
 
 package() {
   mkdir -p $pkgdir/usr/share/oh-my-zsh
-  cd $_buildir
+  cd $_gitname
   rm -rf .git
   rm -f .gitignore
   install -D -m644 templates/zshrc.zsh-template $pkgdir/usr/share/oh-my-zsh/zshrc
