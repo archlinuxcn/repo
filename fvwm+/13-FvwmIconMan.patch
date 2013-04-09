@@ -1,8 +1,22 @@
-Index: modules/FvwmIconMan/readconfig.c
-===================================================================
---- modules/FvwmIconMan/readconfig.c	(revision 14)
-+++ modules/FvwmIconMan/readconfig.c	(revision 15)
-@@ -2028,6 +2028,40 @@
+Seulement dans modules/FvwmButtons: FvwmButtons.c.orig
+Seulement dans modules/FvwmButtons: FvwmButtons.h.orig
+Seulement dans modules/FvwmButtons: parse.c.orig
+diff -U3 -r modules/FvwmIconMan/FvwmIconMan.h modules/FvwmIconMan/FvwmIconMan.h
+--- modules/FvwmIconMan/FvwmIconMan.h	2010-08-07 00:35:19.000000000 +0200
++++ modules/FvwmIconMan/FvwmIconMan.h	2011-12-09 21:47:16.017350293 +0100
+@@ -316,6 +316,8 @@
+ 	char *tips_fontname;
+ 	char *tips_formatstring;
+ 	ftips_config *tips_conf;
++	Uchar roundedcorners;
++	int padding;
+ 	
+ 	/* X11 state */
+ 	Window theWindow, theFrame;
+diff -U3 -r modules/FvwmIconMan/readconfig.c modules/FvwmIconMan/readconfig.c
+--- modules/FvwmIconMan/readconfig.c	2011-08-07 00:03:32.000000000 +0200
++++ modules/FvwmIconMan/readconfig.c	2011-12-09 21:47:16.014017045 +0100
+@@ -2021,6 +2021,40 @@
  	}
  	SET_MANAGER(manager, relief_thickness, n);
        }
@@ -43,11 +57,10 @@ Index: modules/FvwmIconMan/readconfig.c
        else if (!strcasecmp(option1, "tips")) {
  	      p = read_next_cmd(READ_ARG);
  	      if (!p) {
-Index: modules/FvwmIconMan/xmanager.c
-===================================================================
---- modules/FvwmIconMan/xmanager.c	(revision 14)
-+++ modules/FvwmIconMan/xmanager.c	(revision 15)
-@@ -1396,6 +1396,8 @@
+diff -U3 -r modules/FvwmIconMan/xmanager.c modules/FvwmIconMan/xmanager.c
+--- modules/FvwmIconMan/xmanager.c	2011-04-15 13:57:02.000000000 +0200
++++ modules/FvwmIconMan/xmanager.c	2011-12-09 21:47:16.014017045 +0100
+@@ -1365,6 +1365,8 @@
  
    g->text_y = g->button_y + text_pad;
    g->text_base = g->text_y + man->FButtonFont->ascent;
@@ -56,7 +69,7 @@ Index: modules/FvwmIconMan/xmanager.c
  }
  
  static void draw_button_background(
-@@ -1668,6 +1670,33 @@
+@@ -1637,6 +1639,33 @@
    }
  }
  
@@ -90,7 +103,7 @@ Index: modules/FvwmIconMan/xmanager.c
  static void draw_button(WinManager *man, int button, int force)
  {
  	Button *b;
-@@ -1856,6 +1885,8 @@
+@@ -1825,6 +1854,8 @@
  				draw_relief(
  					man, button_state, &g, context1,
  					context2);
@@ -99,16 +112,3 @@ Index: modules/FvwmIconMan/xmanager.c
  			}
  			else if (button_state & SELECT_CONTEXT)
  			{
-Index: modules/FvwmIconMan/FvwmIconMan.h
-===================================================================
---- modules/FvwmIconMan/FvwmIconMan.h	(revision 14)
-+++ modules/FvwmIconMan/FvwmIconMan.h	(revision 15)
-@@ -315,6 +315,8 @@
- 	char *tips_fontname;
- 	char *tips_formatstring;
- 	ftips_config *tips_conf;
-+	Uchar roundedcorners;
-+	int padding;
- 	
- 	/* X11 state */
- 	Window theWindow, theFrame;

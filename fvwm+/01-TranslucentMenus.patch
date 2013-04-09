@@ -1,11 +1,7 @@
-Index: fvwm/colorset.c
-===================================================================
-RCS file: /home/cvs/fvwm/fvwm/fvwm/colorset.c,v
-retrieving revision 1.52
-diff -u -r1.52 colorset.c
---- fvwm/colorset.c	27 Jan 2007 11:33:15 -0000	1.52
-+++ fvwm/colorset.c	5 Feb 2007 19:15:51 -0000
-@@ -164,6 +164,8 @@
+diff -U3 -r fvwm/colorset.c fvwm/colorset.c
+--- fvwm/colorset.c	2010-04-28 18:55:22.000000000 +0200
++++ fvwm/colorset.c	2011-12-09 18:11:15.995378109 +0100
+@@ -165,6 +165,8 @@
  	"NoIconTint",
  	"IconAlpha",
  
@@ -14,7 +10,7 @@ diff -u -r1.52 colorset.c
  	NULL
  };
  
-@@ -625,6 +627,7 @@
+@@ -626,6 +628,7 @@
  	char *fg_tint = NULL;
  	char *bg_tint = NULL;
  	char *icon_tint = NULL;
@@ -22,7 +18,7 @@ diff -u -r1.52 colorset.c
  	Bool have_pixels_changed = False;
  	Bool has_icon_pixels_changed = False;
  	Bool has_fg_changed = False;
-@@ -637,6 +640,7 @@
+@@ -638,6 +641,7 @@
  	Bool has_fg_tint_changed = False;
  	Bool has_bg_tint_changed = False;
  	Bool has_icon_tint_changed = False;
@@ -30,7 +26,7 @@ diff -u -r1.52 colorset.c
  	Bool has_pixmap_changed = False;
  	Bool has_shape_changed = False;
  	Bool has_image_alpha_changed = False;
-@@ -763,6 +767,10 @@
+@@ -765,6 +769,10 @@
  		case 21: /* Plain */
  			has_pixmap_changed = True;
  			free_colorset_background(cs, True);
@@ -41,7 +37,7 @@ diff -u -r1.52 colorset.c
  			break;
  		case 22: /* NoShape */
  			has_shape_changed = True;
-@@ -929,6 +937,24 @@
+@@ -931,6 +939,24 @@
  				cs->icon_alpha_percent = tmp;
  			}
  			break;
@@ -66,7 +62,7 @@ diff -u -r1.52 colorset.c
  		default:
  			/* test for ?Gradient */
  			if (option[0] && StrEquals(&option[1], "Gradient"))
-@@ -1615,6 +1641,27 @@
+@@ -1634,6 +1660,27 @@
  	}
  
  	/*
@@ -94,7 +90,7 @@ diff -u -r1.52 colorset.c
  	 * ---------- send new colorset to fvwm and clean up ----------
  	 */
  	/* make sure the server has this to avoid races */
-@@ -1710,6 +1757,7 @@
+@@ -1729,6 +1776,7 @@
  			ncs->fgsh = GetColor(white);
  			ncs->tint = GetColor(black);
  			ncs->icon_tint = GetColor(black);
@@ -102,7 +98,7 @@ diff -u -r1.52 colorset.c
  			ncs->pixmap = XCreatePixmapFromBitmapData(
  				dpy, Scr.NoFocusWin,
  				&g_bits[4 * (nColorsets % 3)], 4, 4,
-@@ -1727,6 +1775,7 @@
+@@ -1746,6 +1794,7 @@
  			ncs->fgsh = GetForeShadow(ncs->fg, ncs->bg);
  			ncs->tint = GetColor(black);
  			ncs->icon_tint = GetColor(black);
@@ -110,7 +106,7 @@ diff -u -r1.52 colorset.c
  		}
  		ncs->fg_tint = ncs->bg_tint = GetColor(black);
  		/* set flags for fg contrast, bg average */
-@@ -1738,6 +1787,7 @@
+@@ -1757,6 +1806,7 @@
  		ncs->icon_alpha_percent = 100;
  		ncs->tint_percent = 0;
  		ncs->icon_tint_percent = 0;
@@ -118,13 +114,9 @@ diff -u -r1.52 colorset.c
  		ncs->fg_tint_percent = ncs->bg_tint_percent = 0;
  		ncs->dither = (PictureDitherByDefault())? True:False;
  		nColorsets++;
-Index: fvwm/menuroot.h
-===================================================================
-RCS file: /home/cvs/fvwm/fvwm/fvwm/menuroot.h,v
-retrieving revision 1.3
-diff -u -r1.3 menuroot.h
---- fvwm/menuroot.h	13 Jan 2007 15:07:14 -0000	1.3
-+++ fvwm/menuroot.h	5 Feb 2007 19:17:37 -0000
+diff -U3 -r fvwm/menuroot.h fvwm/menuroot.h
+--- fvwm/menuroot.h	2007-01-13 16:07:14.000000000 +0100
++++ fvwm/menuroot.h	2011-12-09 18:11:15.998711359 +0100
 @@ -146,6 +146,9 @@
  		int d_npixels;
  	} stored_pixels;
@@ -135,16 +127,12 @@ diff -u -r1.3 menuroot.h
  } MenuRootDynamic;
  
  /* access macros to dynamic menu members */
-Index: fvwm/menus.c
-===================================================================
-RCS file: /home/cvs/fvwm/fvwm/fvwm/menus.c,v
-retrieving revision 1.409
-diff -u -r1.409 menus.c
---- fvwm/menus.c	27 Jan 2007 11:51:15 -0000	1.409
-+++ fvwm/menus.c	5 Feb 2007 19:17:50 -0000
-@@ -75,6 +75,19 @@
- 
- /* ---------------------------- local macros ------------------------------- */
+diff -U3 -r fvwm/menus.c fvwm/menus.c
+--- fvwm/menus.c	2011-08-07 00:03:31.000000000 +0200
++++ fvwm/menus.c	2011-12-09 18:11:15.998711359 +0100
+@@ -85,6 +85,19 @@
+ #define SCTX_GET_MR(ctx)	((ctx).type == SCTX_MENU_ROOT ? \
+ 				 (ctx).menu_root.menu_root : NULL)
  
 +#define MENU_IS_TRANSLUCENT(mr,cs) \
 +	(!MR_IS_TEAR_OFF_MENU(mr) && CSET_IS_TRANSLUCENT(cs))
@@ -162,7 +150,7 @@ diff -u -r1.409 menus.c
  /* ---------------------------- imports ------------------------------------ */
  
  /* This external is safe. It's written only during startup. */
-@@ -188,6 +201,8 @@
+@@ -227,6 +240,8 @@
  } mloop_static_info_t;
  
  /* ---------------------------- forward declarations ----------------------- */
@@ -171,7 +159,7 @@ diff -u -r1.409 menus.c
  
  /* ---------------------------- local variables ---------------------------- */
  
-@@ -353,12 +368,22 @@
+@@ -392,12 +407,22 @@
  		Bool transparent_bg = False;
  
  		/* move it back */
@@ -196,7 +184,7 @@ diff -u -r1.409 menus.c
  		}
  		AnimatedMoveOfWindow(
  			MR_WINDOW(mr), act_x, act_y, act_x - MR_XANIMATION(mr),
-@@ -1779,6 +1804,7 @@
+@@ -1915,6 +1940,7 @@
  				/* Doh.  Use the standard display instead. */
  				MR_CREATE_DPY(mr) = dpy;
  			}
@@ -204,7 +192,7 @@ diff -u -r1.409 menus.c
  		}
  		else
  		{
-@@ -2594,7 +2620,37 @@
+@@ -2719,7 +2745,37 @@
  	}
  	MR_IS_PAINTED(mr) = 1;
  	/* paint the menu background */
@@ -243,7 +231,7 @@ diff -u -r1.409 menus.c
  	{
  		if (MR_IS_BACKGROUND_SET(mr) == False)
  		{
-@@ -3401,10 +3457,7 @@
+@@ -3526,10 +3582,7 @@
  					MR_HAS_POPPED_UP_RIGHT(mr) = 0;
  				}
  				MR_XANIMATION(parent_menu) += end_x - prev_x;
@@ -255,7 +243,7 @@ diff -u -r1.409 menus.c
  				{
  					transparent_bg = True;
  					get_menu_repaint_transparent_parameters(
-@@ -3583,10 +3636,21 @@
+@@ -3708,10 +3761,21 @@
  	 */
  
  	XMoveWindow(dpy, MR_WINDOW(mr), x, y);
@@ -280,7 +268,7 @@ diff -u -r1.409 menus.c
  	XFlush(dpy);
  	MR_MAPPED_COPIES(mr)++;
  	MST_USAGE_COUNT(mr)++;
-@@ -6123,16 +6187,122 @@
+@@ -6252,16 +6316,122 @@
  	{
  		last = True;
  	}
@@ -409,7 +397,7 @@ diff -u -r1.409 menus.c
  }
  
  
-@@ -6173,10 +6343,7 @@
+@@ -6302,10 +6472,7 @@
  	}
  	if (!is_bg_set)
  	{
@@ -421,7 +409,7 @@ diff -u -r1.409 menus.c
  	}
  	/* redraw the background of non active item */
  	for (mi = MR_FIRST_ITEM(mr); mi != NULL; mi = MI_NEXT_ITEM(mi))
-@@ -6813,10 +6980,12 @@
+@@ -6929,10 +7096,12 @@
  				SetWindowBackground(
  					dpy, MR_WINDOW(mr), MR_WIDTH(mr),
  					MR_HEIGHT(mr),
@@ -437,13 +425,9 @@ diff -u -r1.409 menus.c
  			}
  			else if ((ST_HAS_ACTIVE_CSET(ms) &&
  				  ST_CSET_ACTIVE(ms) == cset) ||
-Index: fvwm/menus.h
-===================================================================
-RCS file: /home/cvs/fvwm/fvwm/fvwm/menus.h,v
-retrieving revision 1.111
-diff -u -r1.111 menus.h
---- fvwm/menus.h	27 Jan 2007 11:51:15 -0000	1.111
-+++ fvwm/menus.h	5 Feb 2007 19:17:50 -0000
+diff -U3 -r fvwm/menus.h fvwm/menus.h
+--- fvwm/menus.h	2007-01-27 12:51:15.000000000 +0100
++++ fvwm/menus.h	2011-12-09 18:11:16.002044610 +0100
 @@ -15,6 +15,9 @@
  #define IS_MENU_RETURN(x) \
    ((x)==MENU_DONE || (x)==MENU_ABORTED || (x)==MENU_SUBMENU_TORN_OFF)
@@ -454,13 +438,9 @@ diff -u -r1.111 menus.h
  struct MenuRoot;
  struct MenuStyle;
  struct MenuReturn;
-Index: libs/Colorset.h
-===================================================================
-RCS file: /home/cvs/fvwm/fvwm/libs/Colorset.h,v
-retrieving revision 1.38
-diff -u -r1.38 Colorset.h
---- libs/Colorset.h	10 Jan 2007 00:34:27 -0000	1.38
-+++ libs/Colorset.h	5 Feb 2007 19:19:00 -0000
+diff -U3 -r libs/Colorset.h libs/Colorset.h
+--- libs/Colorset.h	2011-04-28 00:35:21.000000000 +0200
++++ libs/Colorset.h	2011-12-09 18:11:16.002044610 +0100
 @@ -51,6 +51,10 @@
  	Bool dither;
  	Bool allows_buffered_transparency;
@@ -492,14 +472,10 @@ diff -u -r1.38 Colorset.h
  #ifndef FVWM_COLORSET_PRIVATE
  /* Create n new colorsets, fvwm/colorset.c does its own thing (different size)
   */
-Index: libs/PictureGraphics.c
-===================================================================
-RCS file: /home/cvs/fvwm/fvwm/libs/PictureGraphics.c,v
-retrieving revision 1.29
-diff -u -r1.29 PictureGraphics.c
---- libs/PictureGraphics.c	27 Jan 2007 11:33:16 -0000	1.29
-+++ libs/PictureGraphics.c	5 Feb 2007 19:19:49 -0000
-@@ -1340,7 +1340,7 @@
+diff -U3 -r libs/PictureGraphics.c libs/PictureGraphics.c
+--- libs/PictureGraphics.c	2008-02-04 00:12:19.000000000 +0100
++++ libs/PictureGraphics.c	2011-12-09 18:11:16.002044610 +0100
+@@ -1361,7 +1361,7 @@
  	}
  }
  
@@ -508,13 +484,9 @@ diff -u -r1.29 PictureGraphics.c
  Pixmap PGraphicsCreateTranslucent(
  	Display *dpy, Window win, FvwmRenderAttributes *fra, GC gc,
  	int x, int y, int width, int height)
-Index: libs/PictureGraphics.h
-===================================================================
-RCS file: /home/cvs/fvwm/fvwm/libs/PictureGraphics.h,v
-retrieving revision 1.13
-diff -u -r1.13 PictureGraphics.h
---- libs/PictureGraphics.h	9 May 2006 20:46:29 -0000	1.13
-+++ libs/PictureGraphics.h	5 Feb 2007 19:19:49 -0000
+diff -U3 -r libs/PictureGraphics.h libs/PictureGraphics.h
+--- libs/PictureGraphics.h	2006-05-09 22:46:29.000000000 +0200
++++ libs/PictureGraphics.h	2011-12-09 18:11:16.002044610 +0100
 @@ -122,7 +122,9 @@
  	Display *dpy, Window win, Pixel tint, int tint_percent,
  	Drawable dest, Bool dest_is_a_window, GC gc, GC mono_gc, GC alpha_gc,

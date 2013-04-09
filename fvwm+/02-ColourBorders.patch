@@ -1,6 +1,6 @@
-diff -U3 -r /var/portage/distfiles/cvs-src/fvwm/fvwm/borders.c fvwm/borders.c
---- /var/portage/distfiles/cvs-src/fvwm/fvwm/borders.c	2007-01-27 12:33:15.000000000 +0100
-+++ fvwm/borders.c	2007-06-08 00:30:18.000000000 +0200
+diff -U3 -r fvwm/borders.c fvwm/borders.c
+--- fvwm/borders.c	2011-08-07 00:03:31.000000000 +0200
++++ fvwm/borders.c	2011-12-09 18:29:08.005127939 +0100
 @@ -124,14 +124,71 @@
  	int relief_width;
  	GC relief_gc;
@@ -593,7 +593,7 @@ diff -U3 -r /var/portage/distfiles/cvs-src/fvwm/fvwm/borders.c fvwm/borders.c
  		}
  	}
  
-@@ -3281,7 +3679,7 @@
+@@ -3279,7 +3677,7 @@
  		relative_g.x = button_g->x;
  		relative_g.y = button_g->y;
  		border_get_border_background(
@@ -602,7 +602,7 @@ diff -U3 -r /var/portage/distfiles/cvs-src/fvwm/fvwm/borders.c fvwm/borders.c
  		bg.pixmap.g.x = 0;
  		bg.pixmap.g.y = 0;
  		/* set the geometry for drawing the Tiled pixmap;
-@@ -3728,7 +4126,7 @@
+@@ -3723,7 +4121,7 @@
  		relative_g.y = td->layout.title_g.y;
  		border_get_border_background(
  			&bg, td->cd, &td->layout.title_g, &relative_g,
@@ -611,10 +611,10 @@ diff -U3 -r /var/portage/distfiles/cvs-src/fvwm/fvwm/borders.c fvwm/borders.c
  		bg.pixmap.g.x = 0;
  		bg.pixmap.g.y = 0;
  		/* set the geometry for drawing the Tiled pixmap;
-diff -U3 -r /var/portage/distfiles/cvs-src/fvwm/fvwm/fvwm.c fvwm/fvwm.c
---- /var/portage/distfiles/cvs-src/fvwm/fvwm/fvwm.c	2007-02-04 22:47:45.000000000 +0100
-+++ fvwm/fvwm.c	2007-06-08 00:30:18.000000000 +0200
-@@ -1071,7 +1071,22 @@
+diff -U3 -r fvwm/fvwm.c fvwm/fvwm.c
+--- fvwm/fvwm.c	2011-08-07 00:03:31.000000000 +0200
++++ fvwm/fvwm.c	2011-12-09 18:29:08.005127939 +0100
+@@ -1083,7 +1083,22 @@
  	Scr.ScratchGC2 = fvwmlib_XCreateGC(dpy, Scr.NoFocusWin, gcm, &gcv);
  	Scr.ScratchGC3 = fvwmlib_XCreateGC(dpy, Scr.NoFocusWin, gcm, &gcv);
  	Scr.ScratchGC4 = fvwmlib_XCreateGC(dpy, Scr.NoFocusWin, gcm, &gcv);
@@ -637,11 +637,11 @@ diff -U3 -r /var/portage/distfiles/cvs-src/fvwm/fvwm/fvwm.c fvwm/fvwm.c
 +        Scr.TitleGC = fvwmlib_XCreateGC(dpy, Scr.NoFocusWin, gcm, &gcv);
  	Scr.BordersGC = fvwmlib_XCreateGC(dpy, Scr.NoFocusWin, gcm, &gcv);
  	Scr.TransMaskGC = fvwmlib_XCreateGC(dpy, Scr.NoFocusWin, gcm, &gcv);
- 	c.pixel = GetColor(DEFAULT_FORE_COLOR);
-diff -U3 -r /var/portage/distfiles/cvs-src/fvwm/fvwm/fvwm.h fvwm/fvwm.h
---- /var/portage/distfiles/cvs-src/fvwm/fvwm/fvwm.h	2007-06-03 15:32:05.000000000 +0200
-+++ fvwm/fvwm.h	2007-06-08 00:30:18.000000000 +0200
-@@ -567,7 +567,23 @@
+ 	Scr.ScratchMonoPixmap = XCreatePixmap(dpy, Scr.Root, 1, 1, 1);
+diff -U3 -r fvwm/fvwm.h fvwm/fvwm.h
+--- fvwm/fvwm.h	2011-09-11 00:19:51.000000000 +0200
++++ fvwm/fvwm.h	2011-12-09 18:29:08.008461188 +0100
+@@ -577,7 +577,23 @@
  	unsigned use_colorset : 1;
  	unsigned use_colorset_hi : 1;
  	unsigned use_border_colorset : 1;
@@ -665,7 +665,7 @@ diff -U3 -r /var/portage/distfiles/cvs-src/fvwm/fvwm/fvwm.h fvwm/fvwm.h
  	unsigned use_icon_title_colorset : 1;
  	unsigned use_icon_title_colorset_hi : 1;
  	unsigned use_icon_background_colorset : 1;
-@@ -636,7 +652,23 @@
+@@ -668,7 +684,23 @@
  	int colorset;
  	int colorset_hi;
  	int border_colorset;
@@ -689,7 +689,7 @@ diff -U3 -r /var/portage/distfiles/cvs-src/fvwm/fvwm/fvwm.h fvwm/fvwm.h
  	int icon_title_colorset;
  	int icon_title_colorset_hi;
  	int icon_background_colorset;
-@@ -836,12 +868,51 @@
+@@ -883,12 +915,51 @@
  	color_quad colors;
  	color_quad hicolors;
  	color_quad border_colors;
@@ -741,10 +741,9 @@ diff -U3 -r /var/portage/distfiles/cvs-src/fvwm/fvwm/fvwm.h fvwm/fvwm.h
  	int icon_title_cs;
  	int icon_title_cs_hi;
  	int icon_background_cs;
-Sólo en fvwm: fvwm.h.orig
-diff -U3 -r /var/portage/distfiles/cvs-src/fvwm/fvwm/screen.h fvwm/screen.h
---- /var/portage/distfiles/cvs-src/fvwm/fvwm/screen.h	2007-01-13 16:07:14.000000000 +0100
-+++ fvwm/screen.h	2007-06-08 00:30:18.000000000 +0200
+diff -U3 -r fvwm/screen.h fvwm/screen.h
+--- fvwm/screen.h	2009-12-31 18:35:47.000000000 +0100
++++ fvwm/screen.h	2011-12-09 18:29:08.008461188 +0100
 @@ -409,6 +409,21 @@
  	GC ScratchGC2;
  	GC ScratchGC3;
@@ -767,10 +766,10 @@ diff -U3 -r /var/portage/distfiles/cvs-src/fvwm/fvwm/screen.h fvwm/screen.h
  	GC TitleGC;
  	GC BordersGC;
  	/* minimum width of size window */
-diff -U3 -r /var/portage/distfiles/cvs-src/fvwm/fvwm/style.c fvwm/style.c
---- /var/portage/distfiles/cvs-src/fvwm/fvwm/style.c	2007-06-03 15:32:05.000000000 +0200
-+++ fvwm/style.c	2007-06-08 00:30:18.000000000 +0200
-@@ -598,11 +598,91 @@
+diff -U3 -r fvwm/style.c fvwm/style.c
+--- fvwm/style.c	2011-09-27 23:05:00.000000000 +0200
++++ fvwm/style.c	2011-12-09 18:29:08.011794436 +0100
+@@ -675,11 +675,91 @@
  		SSET_BORDER_COLORSET(
  			*merged_style, SGET_BORDER_COLORSET(*add_style));
  	}
@@ -862,7 +861,7 @@ diff -U3 -r /var/portage/distfiles/cvs-src/fvwm/fvwm/style.c fvwm/style.c
  	if (add_style->flags.use_icon_title_colorset)
  	{
  		SSET_ICON_TITLE_COLORSET(
-@@ -2122,6 +2202,120 @@
+@@ -2223,6 +2303,120 @@
  			ps->flag_mask.use_border_colorset = 1;
  			ps->change_mask.use_border_colorset = 1;
  		}
@@ -983,7 +982,7 @@ diff -U3 -r /var/portage/distfiles/cvs-src/fvwm/fvwm/style.c fvwm/style.c
  		else if (StrEquals(token, "BottomTitleRotated"))
  		{
  			S_SET_IS_BOTTOM_TITLE_ROTATED(SCF(*ps), on);
-@@ -2676,7 +2870,117 @@
+@@ -2871,7 +3065,117 @@
  			ps->flag_mask.use_border_colorset_hi = 1;
  			ps->change_mask.use_border_colorset_hi = 1;
  		}
@@ -1102,7 +1101,7 @@ diff -U3 -r /var/portage/distfiles/cvs-src/fvwm/fvwm/style.c fvwm/style.c
  		{
  			*val = -1;
  			GetIntegerArguments(rest, &rest, val, 1);
-@@ -4871,6 +5175,62 @@
+@@ -5290,6 +5594,62 @@
  			temp->change_mask.use_border_colorset = 1;
  			Scr.flags.do_need_window_update = 1;
  		}
@@ -1165,7 +1164,7 @@ diff -U3 -r /var/portage/distfiles/cvs-src/fvwm/fvwm/style.c fvwm/style.c
  		if (SUSE_BORDER_COLORSET_HI(&temp->flags) &&
  		    SGET_BORDER_COLORSET_HI(*temp) == colorset)
  		{
-@@ -4878,6 +5238,62 @@
+@@ -5297,6 +5657,62 @@
  			temp->change_mask.use_border_colorset_hi = 1;
  			Scr.flags.do_need_window_update = 1;
  		}
@@ -1228,7 +1227,7 @@ diff -U3 -r /var/portage/distfiles/cvs-src/fvwm/fvwm/style.c fvwm/style.c
  		if (SUSE_ICON_TITLE_COLORSET(&temp->flags) &&
  		    SGET_ICON_TITLE_COLORSET(*temp) == colorset)
  		{
-@@ -4955,7 +5371,129 @@
+@@ -5374,7 +5790,129 @@
  		fw->border_colors.shadow = fw->colors.shadow;
  		fw->border_colors.back = fw->colors.back;
  	}
@@ -1359,7 +1358,7 @@ diff -U3 -r /var/portage/distfiles/cvs-src/fvwm/fvwm/style.c fvwm/style.c
  
  void update_window_color_hi_style(FvwmWindow *fw, window_style *pstyle)
  {
-@@ -5007,6 +5545,127 @@
+@@ -5428,6 +5966,127 @@
  		fw->border_hicolors.shadow = fw->hicolors.shadow;
  		fw->border_hicolors.back = fw->hicolors.back;
  	}
@@ -1487,11 +1486,10 @@ diff -U3 -r /var/portage/distfiles/cvs-src/fvwm/fvwm/style.c fvwm/style.c
  }
  
  void update_icon_title_cs_style(FvwmWindow *fw, window_style *pstyle)
-Sólo en fvwm: style.c.orig
-diff -U3 -r /var/portage/distfiles/cvs-src/fvwm/fvwm/style.h fvwm/style.h
---- /var/portage/distfiles/cvs-src/fvwm/fvwm/style.h	2007-06-03 15:32:05.000000000 +0200
-+++ fvwm/style.h	2007-06-08 00:30:18.000000000 +0200
-@@ -67,8 +67,40 @@
+diff -U3 -r fvwm/style.h fvwm/style.h
+--- fvwm/style.h	2011-08-15 18:26:17.000000000 +0200
++++ fvwm/style.h	2011-12-09 18:29:08.015127684 +0100
+@@ -72,8 +72,40 @@
  	((sf)->use_colorset_hi)
  #define SUSE_BORDER_COLORSET(sf) \
  	((sf)->use_border_colorset)
@@ -1532,7 +1530,7 @@ diff -U3 -r /var/portage/distfiles/cvs-src/fvwm/fvwm/style.h fvwm/style.h
  #define SUSE_ICON_TITLE_COLORSET(sf) \
  	((sf)->use_icon_title_colorset)
  #define SUSE_ICON_TITLE_COLORSET_HI(sf) \
-@@ -459,6 +491,38 @@
+@@ -464,6 +496,38 @@
  	((s).border_colorset = (x))
  #define SGET_BORDER_COLORSET(s) \
  	((s).border_colorset)
@@ -1571,7 +1569,7 @@ diff -U3 -r /var/portage/distfiles/cvs-src/fvwm/fvwm/style.h fvwm/style.h
  #define SGET_COLORSET_HI(s) \
  	((s).colorset_hi)
  #define SSET_COLORSET_HI(s,x) \
-@@ -467,8 +531,40 @@
+@@ -472,8 +536,40 @@
  	((s).border_colorset_hi)
  #define SSET_BORDER_COLORSET_HI(s,x) \
  	((s).border_colorset_hi = (x))
@@ -1613,3 +1611,4 @@ diff -U3 -r /var/portage/distfiles/cvs-src/fvwm/fvwm/style.h fvwm/style.h
  #define SGET_ICON_TITLE_COLORSET(s) \
  	((s).icon_title_colorset)
  #define SSET_ICON_TITLE_COLORSET_HI(s,x) \
+Seulement dans libs: PictureGraphics.c.orig
