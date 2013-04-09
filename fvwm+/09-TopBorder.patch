@@ -1,0 +1,193 @@
+diff -U3 -r fvwm/builtins.c fvwm/builtins.c
+--- fvwm/builtins.c	2011-08-07 00:03:31.000000000 +0200
++++ fvwm/builtins.c	2011-12-09 20:53:09.537508019 +0100
+@@ -494,6 +494,21 @@
+ 			if (action)
+ 				action += next;
+ 		}
++		else if (!do_add && StrEquals(parm,"buttonwidth"))
++		{
++			int width = 0;
++			int next = 0;
++
++			sscanf(action, "%d%n", &width, &next);
++
++			if (decor->button_width != width)
++			{
++				decor->button_width = width;
++				decor->flags.has_changed = 1;
++			}
++			if (action)
++				action += next;
++		}
+ 		else if (!do_add && StrEquals(parm,"MinHeight"))
+ 		{
+ 			int height = 0;
+diff -U3 -r fvwm/frame.c fvwm/frame.c
+--- fvwm/frame.c	2011-12-09 19:51:38.705188705 +0100
++++ fvwm/frame.c	2011-12-09 20:53:09.537508019 +0100
+@@ -1369,7 +1369,14 @@
+ 	tb_thick = fw->title_thickness;
+ 	nbuttons = fw->nr_left_buttons + fw->nr_right_buttons;
+ 	nbuttons_big = 0;
+-	b_length = tb_thick;
++	if (fw->decor->button_width == 0)
++	{
++		b_length = tb_thick;
++	}
++	else
++	{
++		b_length = fw->decor->button_width;
++	}
+ 	t_length = tb_length - nbuttons * b_length;
+ 	if (nbuttons > 0 && t_length < MIN_WINDOW_TITLE_LENGTH)
+ 	{
+diff -U3 -r fvwm/fvwm.h fvwm/fvwm.h
+--- fvwm/fvwm.h	2011-12-09 19:51:38.705188705 +0100
++++ fvwm/fvwm.h	2011-12-09 20:53:09.534174771 +0100
+@@ -277,6 +277,7 @@
+ 		unsigned has_rounded_corners_top : 1;
+ 		unsigned has_rounded_corners_bottom : 1;
+ 		unsigned has_slightly_rounded_corners : 1;
++		unsigned has_no_top_border : 1;
+ 		focus_policy_t focus_policy;
+ 	} s;
+ } common_flags_t;
+diff -U3 -r fvwm/geometry.c fvwm/geometry.c
+--- fvwm/geometry.c	2011-12-09 19:51:38.705188705 +0100
++++ fvwm/geometry.c	2011-12-09 20:53:09.534174771 +0100
+@@ -480,6 +480,7 @@
+ 	const FvwmWindow *fw, size_borders *borders, Bool is_shaded)
+ {
+ 	int title_thickness;
++	int *title_border = NULL;
+ 	int bw;
+ 	
+ 	bw = HAS_FLUXBOX_HANDLES(fw) ? 1 : fw->boundary_width;
+@@ -497,18 +498,25 @@
+ 	switch (GET_TITLE_DIR(fw))
+ 	{
+ 	case DIR_N:
+-		borders->top_left.height += title_thickness;
++		title_border = &borders->top_left.height;
+ 		break;
+ 	case DIR_S:
+-		borders->bottom_right.height += title_thickness;
++		title_border = &borders->bottom_right.height;
+ 		break;
+ 	case DIR_W:
+-		borders->top_left.width += title_thickness;
++		title_border = &borders->top_left.width;
+ 		break;
+ 	case DIR_E:
+-		borders->bottom_right.width += title_thickness;
++		title_border = &borders->bottom_right.width;
+ 		break;
+ 	}
++
++	if (HAS_NO_TOP_BORDER(fw))
++	{
++		*title_border = 1;
++	}
++	*title_border += title_thickness;
++	
+ 	borders->total_size.width =
+ 		borders->top_left.width + borders->bottom_right.width;
+ 	borders->total_size.height =
+@@ -529,6 +537,26 @@
+ 	borders->bottom_right.width = bw;
+ 	borders->top_left.height = bw;
+ 	borders->bottom_right.height = fw->boundary_width;
++	
++	if (HAS_NO_TOP_BORDER(fw))
++	{
++		switch (GET_TITLE_DIR(fw))
++		{
++		case DIR_N:
++			borders->top_left.height = 1;
++			break;
++		case DIR_S:
++			borders->bottom_right.height = 1;
++			break;
++		case DIR_W:
++			borders->top_left.width = 1;
++			break;
++		case DIR_E:
++			borders->bottom_right.width = 1;
++			break;
++		}
++	}
++
+ 	borders->total_size.width =
+ 		borders->top_left.width + borders->bottom_right.width;
+ 	borders->total_size.height =
+diff -U3 -r fvwm/screen.h fvwm/screen.h
+--- fvwm/screen.h	2011-12-09 19:51:38.675189480 +0100
++++ fvwm/screen.h	2011-12-09 20:53:09.537508019 +0100
+@@ -286,6 +286,7 @@
+ #endif
+ 	int title_height;           /* explicitly specified title bar height */
+ 	int min_title_height;
++	int button_width;
+ 	/* titlebar buttons */
+ 	TitleButton buttons[NUMBER_OF_TITLE_BUTTONS];
+ 	TitleButton titlebar;
+diff -U3 -r fvwm/style.c fvwm/style.c
+--- fvwm/style.c	2011-12-09 19:51:38.708521953 +0100
++++ fvwm/style.c	2011-12-09 20:53:09.534174771 +0100
+@@ -4734,6 +4734,12 @@
+ 			ps->change_mask.has_title_format_string = 1;
+ 
+ 		}
++		else if (StrEquals(token, "TopBorder"))
++		{
++			S_SET_HAS_NO_TOP_BORDER(SCF(*ps), !on);
++			S_SET_HAS_NO_TOP_BORDER(SCM(*ps), 1);
++			S_SET_HAS_NO_TOP_BORDER(SCC(*ps), 1);
++		}
+ 		else if (StrEquals(token, "TopTitleRotated"))
+ 		{
+ 			S_SET_IS_TOP_TITLE_ROTATED(SCF(*ps), on);
+@@ -5360,6 +5366,11 @@
+ 	{
+ 		flags->do_redecorate = True;
+ 	}
++
++	if (S_HAS_NO_TOP_BORDER(SCC(*ret_style)))
++	{
++		flags->do_redecorate = True;
++	}
+ 
+ 	/* has_mwm_border
+ 	 * has_mwm_buttons */
+diff -U3 -r fvwm/style.h fvwm/style.h
+--- fvwm/style.h	2011-12-09 19:51:38.708521953 +0100
++++ fvwm/style.h	2011-12-09 20:53:09.534174771 +0100
+@@ -402,6 +402,11 @@
+ 	((c).s.has_slightly_rounded_corners)
+ #define S_SET_HAS_SLIGHTLY_ROUNDED_CORNERS(c,x) \
+ 	((c).s.has_slightly_rounded_corners = !!(x))
++#define S_HAS_NO_TOP_BORDER(c) \
++	((c).s.has_no_top_border)
++#define S_SET_HAS_NO_TOP_BORDER(c,x) \
++	((c).s.has_no_top_border = !!(x))
++
+ #define S_DO_EWMH_MINI_ICON_OVERRIDE(c) \
+ 	((c).s.do_ewmh_mini_icon_override)
+ #define S_SET_DO_EWMH_MINI_ICON_OVERRIDE(c,x) \
+diff -U3 -r fvwm/window_flags.h fvwm/window_flags.h
+--- fvwm/window_flags.h	2011-12-09 19:51:38.708521953 +0100
++++ fvwm/window_flags.h	2011-12-09 20:53:09.534174771 +0100
+@@ -358,6 +358,12 @@
+ 	(fw)->flags.common.s.has_slightly_rounded_corners = !!(x)
+ #define SETM_HAS_SLIGHTLY_ROUNDED_CORNERS(fw,x) \
+ 	(fw)->flag_mask.common.s.has_slightly_rounded_corners = !!(x)
++#define HAS_NO_TOP_BORDER(fw) \
++	((fw)->flags.common.s.has_no_top_border)
++#define SET_HAS_NO_TOP_BORDER(fw,x) \
++	(fw)->flags.common.s.has_no_top_border = !!(x)
++#define SETM_HAS_NO_TOP_BORDER(fw,x) \
++	(fw)->flag_mask.common.s.has_no_top_border = !!(x)
+ 
+ /* access to the special flags of a window */
+ #define DO_REUSE_DESTROYED(fw) \

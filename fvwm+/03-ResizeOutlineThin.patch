@@ -1,0 +1,638 @@
+diff -U10 -r fvwm/fvwm.h fvwm/fvwm.h
+--- fvwm/fvwm.h	2011-12-09 18:29:08.008461188 +0100
++++ fvwm/fvwm.h	2011-12-09 18:38:57.683444407 +0100
+@@ -218,20 +218,21 @@
+ 		unsigned do_ewmh_ignore_window_type : 1;
+ 		unsigned do_iconify_window_groups : 1;
+ 		unsigned do_ignore_gnome_hints : 1;
+ 		unsigned do_ignore_icon_boxes : 1;
+ 		unsigned do_ignore_restack : 1;
+ 		unsigned do_use_window_group_hint : 1;
+ 		unsigned do_lower_transient : 1;
+ 		unsigned do_not_show_on_map : 1;
+ 		unsigned do_raise_transient : 1;
+ 		unsigned do_resize_opaque : 1;
++		unsigned do_resize_outline_thin : 1;
+ 		unsigned do_shrink_windowshade : 1;
+ 		unsigned do_stack_transient_parent : 1;
+ 		unsigned do_window_list_skip : 1;
+ 		unsigned ewmh_maximize_mode : 2; /* see ewmh.h */
+ 		unsigned has_depressable_border : 1;
+ 		unsigned has_mwm_border : 1;
+ 		unsigned has_mwm_buttons : 1;
+ 		unsigned has_mwm_override : 1;
+ 		unsigned has_no_icon_title : 1;
+ 		unsigned has_override_size : 1;
+diff -U10 -r fvwm/move_resize.c fvwm/move_resize.c
+--- fvwm/move_resize.c	2011-08-28 02:28:04.000000000 +0200
++++ fvwm/move_resize.c	2011-12-09 18:44:06.335552790 +0100
+@@ -101,179 +101,195 @@
+ /* ----- end of move globals ----- */
+ 
+ /* ----- resize globals ----- */
+ 
+ /* DO NOT USE (STATIC) GLOBALS IN THIS MODULE!
+  * Since some functions are called from other modules unwanted side effects
+  * (i.e. bugs.) would be created */
+ 
+ extern Window PressedW;
+ 
+-static void draw_move_resize_grid(int x, int  y, int  width, int height);
++static void draw_move_resize_grid(int x, int  y, int  width, int height, Bool thin);
+ 
+ /* ----- end of resize globals ----- */
+ 
+ /*
+  *
+  *  Procedure:
+  *      draw_move_resize_grid - move a window outline
+  *
+  *  Inputs:
+  *      root        - the window we are outlining
+  *      x           - upper left x coordinate
+  *      y           - upper left y coordinate
+  *      width       - the width of the rectangle
+  *      height      - the height of the rectangle
+  *
+  */
+ static int get_outline_rects(
+-	XRectangle *rects, int x, int y, int width, int height)
++	XRectangle *rects, int x, int y, int width, int height, Bool do_outline_thin)
+ {
+ 	int i;
+ 	int n;
+ 	int m;
+ 
+-	n = 3;
+-	m = (width - 5) / 2;
+-	if (m < n)
++	if (do_outline_thin)
+ 	{
+-		n = m;
+-	}
+-	m = (height - 5) / 2;
+-	if (m < n)
+-	{
+-		n = m;
++		n = 1;
+ 	}
+-	if (n < 1)
++	else
+ 	{
+-		n = 1;
++		n = 3;
++		m = (width - 5) / 2;
++		if (m < n)
++		{
++			n = m;
++		}
++		m = (height - 5) / 2;
++		if (m < n)
++		{
++			n = m;
++		}
++		if (n < 1)
++		{
++			n = 1;
++		}
+ 	}
+ 
+ 	for (i = 0; i < n; i++)
+ 	{
+ 		rects[i].x = x + i;
+ 		rects[i].y = y + i;
+ 		rects[i].width = width - (i << 1);
+ 		rects[i].height = height - (i << 1);
+ 	}
+-	if (width - (n << 1) >= 5 && height - (n << 1) >= 5)
++	if (!do_outline_thin)
+ 	{
+-		if (width - (n << 1) >= 10)
++		if (width - (n << 1) >= 5 && height - (n << 1) >= 5)
+ 		{
+-			int off = (width - (n << 1)) / 3 + n;
+-			rects[i].x = x + off;
+-			rects[i].y = y + n;
+-			rects[i].width = width - (off << 1);
+-			rects[i].height = height - (n << 1);
+-			i++;
+-		}
+-		if (height - (n << 1) >= 10)
+-		{
+-			int off = (height - (n << 1)) / 3 + n;
+-			rects[i].x = x + n;
+-			rects[i].y = y + off;
+-			rects[i].width = width - (n << 1);
+-			rects[i].height = height - (off << 1);
+-			i++;
++			if (width - (n << 1) >= 10)
++			{
++				int off = (width - (n << 1)) / 3 + n;
++				rects[i].x = x + off;
++				rects[i].y = y + n;
++				rects[i].width = width - (off << 1);
++				rects[i].height = height - (n << 1);
++				i++;
++			}
++			if (height - (n << 1) >= 10)
++			{
++				int off = (height - (n << 1)) / 3 + n;
++				rects[i].x = x + n;
++				rects[i].y = y + off;
++				rects[i].width = width - (n << 1);
++				rects[i].height = height - (off << 1);
++				i++;
++			}
+ 		}
+ 	}
+ 
+ 	return i;
+ }
+ 
+ struct
+ {
+ 	rectangle geom;
+ 	struct
+ 	{
+ 		unsigned is_enabled : 1;
++		unsigned do_outline_thin : 1;
+ 	} flags;
+ } move_resize_grid =
+ {
+ 	{ 0, 0, 0, 0 },
+-	{ 0 }
++	{ 0, 0 }
+ };
+ 
+-static void draw_move_resize_grid(int x, int  y, int  width, int height)
++static void draw_move_resize_grid(int x, int  y, int  width, int height, Bool do_outline_thin)
+ {
+ 	int nrects = 0;
+ 	XRectangle rects[10];
+ 
+ 	if (move_resize_grid.flags.is_enabled &&
+ 	    x == move_resize_grid.geom.x &&
+ 	    y == move_resize_grid.geom.y &&
+ 	    width == move_resize_grid.geom.width &&
+-	    height == move_resize_grid.geom.height)
++	    height == move_resize_grid.geom.height &&
++		do_outline_thin == move_resize_grid.flags.do_outline_thin)
+ 	{
+ 		return;
+ 	}
+ 
+ 	memset(rects, 0, 10 * sizeof(XRectangle));
+ 	/* place the resize rectangle into the array of rectangles */
+ 	/* interleave them for best visual look */
+ 	/* draw the new one, if any */
+ 	if (move_resize_grid.flags.is_enabled
+ 	    /*move_resize_grid.geom.width && move_resize_grid.geom.height*/)
+ 	{
+ 		move_resize_grid.flags.is_enabled = 0;
+ 		nrects +=
+ 			get_outline_rects(
+ 				&(rects[0]), move_resize_grid.geom.x,
+ 				move_resize_grid.geom.y,
+ 				move_resize_grid.geom.width,
+-				move_resize_grid.geom.height);
++				move_resize_grid.geom.height,
++				move_resize_grid.flags.do_outline_thin);
+ 	}
+ 	if (width && height)
+ 	{
+ 		move_resize_grid.flags.is_enabled = 1;
+ 		move_resize_grid.geom.x = x;
+ 		move_resize_grid.geom.y = y;
+ 		move_resize_grid.geom.width = width;
+ 		move_resize_grid.geom.height = height;
++		move_resize_grid.flags.do_outline_thin = do_outline_thin;
+ 		nrects += get_outline_rects(
+-			&(rects[nrects]), x, y, width, height);
++			&(rects[nrects]), x, y, width, height, do_outline_thin);
+ 	}
+ 	if (nrects > 0)
+ 	{
+ 		XDrawRectangles(dpy, Scr.Root, Scr.XorGC, rects, nrects);
+ 		XFlush(dpy);
+ 	}
+ 
+ 	return;
+ }
+ 
+ void switch_move_resize_grid(Bool state)
+ {
+ 	if (state == False)
+ 	{
+ 		if (move_resize_grid.flags.is_enabled)
+ 		{
+-			draw_move_resize_grid(0, 0, 0, 0);
++			draw_move_resize_grid(0, 0, 0, 0, 0);
+ 		}
+ 		else
+ 		{
+ 			move_resize_grid.geom.x = 0;
+ 			move_resize_grid.geom.y = 0;
+ 			move_resize_grid.geom.width = 0;
+-			move_resize_grid.geom.height = 0;
++  			move_resize_grid.geom.height = 0;
++			move_resize_grid.flags.do_outline_thin = 0;
+ 		}
+ 	}
+ 	else if (!move_resize_grid.flags.is_enabled)
+ 	{
+ 		if (move_resize_grid.geom.width &&
+ 		    move_resize_grid.geom.height)
+ 		{
+ 			draw_move_resize_grid(
+ 				move_resize_grid.geom.x,
+ 				move_resize_grid.geom.y,
+ 				move_resize_grid.geom.width,
+-				move_resize_grid.geom.height);
++				move_resize_grid.geom.height,
++				move_resize_grid.flags.do_outline_thin);
+ 		}
+ 	}
+ 
+ 	return;
+ }
+ 
+ static int ParsePositionArgumentSuffix(
+ 	float *ret_factor, char *suffix, float wfactor, float sfactor)
+ {
+ 	int n;
+@@ -2362,20 +2378,21 @@
+ 	int orig_icon_x = 0;
+ 	int orig_icon_y = 0;
+ 	Bool do_snap = True;
+ 	Bool was_snapped = False;
+ 	/* if Alt is initially pressed don't enable no-snap until Alt is
+ 	 * released */
+ 	Bool nosnap_enabled = False;
+ 	/* Must not set placed by button if the event is a modified KeyEvent */
+ 	Bool is_fake_event;
+ 	FvwmWindow *fw = exc->w.fw;
++	Bool do_outline_thin = DO_RESIZE_OUTLINE_THIN(fw);
+ 	unsigned int draw_parts = PART_NONE;
+ 	XEvent e;
+ 
+ 	if (!GrabEm(cursor, GRAB_NORMAL))
+ 	{
+ 		XBell(dpy, 0);
+ 		return False;
+ 	}
+ 	if (!IS_MAPPED(fw) && !IS_ICONIFIED(fw))
+ 	{
+@@ -2435,21 +2452,21 @@
+ 		yt += YOffset;
+ 	}
+ 	button_mask &= DEFAULT_ALL_BUTTONS_MASK;
+ 	xl_orig = xl;
+ 	yt_orig = yt;
+ 
+ 	/* draw initial outline */
+ 	if (!IS_ICONIFIED(fw) &&
+ 	    ((!do_move_opaque && !Scr.gs.do_emulate_mwm) || !IS_MAPPED(fw)))
+ 	{
+-		draw_move_resize_grid(xl, yt, Width - 1, Height - 1);
++		draw_move_resize_grid(xl, yt, Width - 1, Height - 1, do_outline_thin);
+ 	}
+ 
+ 	if (move_w == FW_W_FRAME(fw) && do_move_opaque)
+ 	{
+ 		draw_parts = border_get_transparent_decorations_part(fw);
+ 	}
+ 	DisplayPosition(fw, exc->x.elast, xl, yt, True);
+ 
+ 	memset(&e, 0, sizeof(e));
+ 
+@@ -2765,21 +2782,21 @@
+ 			}
+ 
+ 			/* check Paging request once and only once after
+ 			 * outline redrawn redraw after paging if needed
+ 			 * - mab */
+ 			for (paged = 0; paged <= 1; paged++)
+ 			{
+ 				if (!do_move_opaque)
+ 				{
+ 					draw_move_resize_grid(
+-						xl, yt, Width - 1, Height - 1);
++						xl, yt, Width - 1, Height - 1, do_outline_thin);
+ 				}
+ 				else
+ 				{
+ 					if (IS_ICONIFIED(fw))
+ 					{
+ 						set_icon_position(fw, xl, yt);
+ 						move_icon_to_position(fw);
+ 						broadcast_icon_geometry(
+ 							fw, False);
+ 					}
+@@ -2837,21 +2854,21 @@
+ 			if (!do_move_opaque)
+ 			{
+ 				/* must undraw the rubber band in case the
+ 				 * event causes some drawing */
+ 				switch_move_resize_grid(False);
+ 			}
+ 			dispatch_event(&e);
+ 			if (!do_move_opaque)
+ 			{
+ 				draw_move_resize_grid(
+-					xl, yt, Width - 1, Height - 1);
++					xl, yt, Width - 1, Height - 1, do_outline_thin);
+ 			}
+ 			break;
+ 
+ 		default:
+ 			/* cannot happen */
+ 			break;
+ 		} /* switch */
+ 		xl += x_virtual_offset;
+ 		yt += y_virtual_offset;
+ 		if (do_move_opaque && !IS_ICONIFIED(fw) &&
+@@ -3459,21 +3476,21 @@
+  *      y_off    - y offset of pointer from border (input/output)
+  *      drag     - resize internal structure
+  *      orig     - resize internal structure
+  *      xmotionp - pointer to xmotion in resize_window
+  *      ymotionp - pointer to ymotion in resize_window
+  *
+  */
+ static void __resize_step(
+ 	const exec_context_t *exc, int x_root, int y_root, int *x_off,
+ 	int *y_off, rectangle *drag, const rectangle *orig, int *xmotionp,
+-	int *ymotionp, Bool do_resize_opaque, Bool is_direction_fixed)
++	int *ymotionp, Bool do_resize_opaque, Bool is_direction_fixed, Bool do_outline_thin)
+ {
+ 	int action = 0;
+ 	int x2;
+ 	int y2;
+ 	int xdir;
+ 	int ydir;
+ 
+ 	x2 = x_root - *x_off;
+ 	x_root += *x_off;
+ 	if (is_direction_fixed == True && (*xmotionp != 0 || *ymotionp != 0))
+@@ -3581,21 +3598,21 @@
+ 			drag->x = orig->x + orig->width - drag->width;
+ 		}
+ 		if (*ymotionp == 1)
+ 		{
+ 			drag->y = orig->y + orig->height - drag->height;
+ 		}
+ 		if (!do_resize_opaque)
+ 		{
+ 			draw_move_resize_grid(
+ 				drag->x, drag->y, drag->width - 1,
+-				drag->height - 1);
++				drag->height - 1, do_outline_thin);
+ 		}
+ 		else
+ 		{
+ 			frame_setup_window(
+ 				exc->w.fw, drag->x, drag->y, drag->width,
+ 				drag->height, False);
+ 		}
+ 	}
+ 	DisplaySize(exc->w.fw, exc->x.elast, drag->width, drag->height, False, False);
+ 
+@@ -3640,20 +3657,21 @@
+ 	int i;
+ 	size_borders b;
+ 	frame_move_resize_args mr_args = NULL;
+ 	long evmask;
+ 	XEvent ev;
+ 	int ref_x;
+ 	int ref_y;
+ 	int x_off;
+ 	int y_off;
+ 	direction_t dir;
++	Bool do_outline_thin = DO_RESIZE_OUTLINE_THIN(fw);
+ 	int warp_x = 0;
+ 	int warp_y = 0;
+ 
+ 	bad_window = False;
+ 	ResizeWindow = FW_W_FRAME(fw);
+ 	if (fev_get_evpos_or_query(dpy, Scr.Root, exc->x.etrigger, &px, &py) ==
+ 	    False ||
+ 	    XTranslateCoordinates(
+ 		    dpy, Scr.Root, ResizeWindow, px, py, &px, &py,
+ 		    &JunkChild) == False)
+@@ -3963,42 +3981,42 @@
+ 	else
+ 	{
+ 		/* wait until the pointer hits a border before making a
+ 		 * decision about the resize direction */
+ 	}
+ 
+ 	/* draw the rubber-band window */
+ 	if (!do_resize_opaque)
+ 	{
+ 		draw_move_resize_grid(
+-			drag->x, drag->y, drag->width - 1, drag->height - 1);
++			drag->x, drag->y, drag->width - 1, drag->height - 1, do_outline_thin);
+ 	}
+ 	/* kick off resizing without requiring any motion if invoked with a key
+ 	 * press */
+ 	if (exc->x.elast->type == KeyPress)
+ 	{
+ 		int xo;
+ 		int yo;
+ 
+ 		if (FQueryPointer(
+ 			    dpy, Scr.Root, &JunkRoot, &JunkChild, &stashed_x,
+ 			    &stashed_y, &JunkX, &JunkY, &JunkMask) == False)
+ 		{
+ 			/* pointer is on a different screen */
+ 			stashed_x = 0;
+ 			stashed_y = 0;
+ 		}
+ 		xo = 0;
+ 		yo = 0;
+ 		__resize_step(
+ 			exc, stashed_x, stashed_y, &xo, &yo, drag, orig,
+-			&xmotion, &ymotion, do_resize_opaque, True);
++			&xmotion, &ymotion, do_resize_opaque, True, do_outline_thin);
+ 	}
+ 	else
+ 	{
+ 		stashed_x = stashed_y = -1;
+ 	}
+ 
+ 	/* loop to resize */
+ 	memset(&ev, 0, sizeof(ev));
+ 	while (!is_finished && bad_window != FW_W(fw))
+ 	{
+@@ -4145,39 +4163,39 @@
+ 			}
+ 			if (!fForceRedraw)
+ 			{
+ 				x = ev.xmotion.x_root;
+ 				y = ev.xmotion.y_root;
+ 				/* resize before paging request to prevent
+ 				 * resize from lagging * mouse - mab */
+ 				__resize_step(
+ 					exc, x, y, &x_off, &y_off, drag, orig,
+ 					&xmotion, &ymotion, do_resize_opaque,
+-					is_direction_fixed);
++					is_direction_fixed, do_outline_thin);
+ 				/* need to move the viewport */
+ 				HandlePaging(
+ 					&ev, dx, dy, &x, &y, &delta_x,
+ 					&delta_y, False, False, False,
+ 					fw->edge_delay_ms_resize);
+ 			}
+ 			/* redraw outline if we paged - mab */
+ 			if (delta_x != 0 || delta_y != 0)
+ 			{
+ 				sorig.x -= delta_x;
+ 				sorig.y -= delta_y;
+ 				drag->x -= delta_x;
+ 				drag->y -= delta_y;
+ 
+ 				__resize_step(
+ 					exc, x, y, &x_off, &y_off, drag, orig,
+ 					&xmotion, &ymotion, do_resize_opaque,
+-					is_direction_fixed);
++					is_direction_fixed, do_outline_thin);
+ 			}
+ 			fForceRedraw = False;
+ 			is_done = True;
+ 			break;
+ 
+ 		case PropertyNotify:
+ 		{
+ 			evh_args_t ea;
+ 			exec_context_changes_t ecc;
+ 
+@@ -4198,21 +4216,21 @@
+ 			{
+ 				/* must undraw the rubber band in case the
+ 				 * event causes some drawing */
+ 				switch_move_resize_grid(False);
+ 			}
+ 			dispatch_event(&ev);
+ 			if (!do_resize_opaque)
+ 			{
+ 				draw_move_resize_grid(
+ 					drag->x, drag->y, drag->width - 1,
+-					drag->height - 1);
++					drag->height - 1, do_outline_thin);
+ 			}
+ 		}
+ 		else
+ 		{
+ 			if (do_resize_opaque)
+ 			{
+ 				/* only do this with opaque resizes, (i.e. the
+ 				 * server is not grabbed) */
+ 				BroadcastConfig(M_CONFIGURE_WINDOW, fw);
+ 				FlushAllMessageQueues();
+@@ -4251,21 +4269,21 @@
+ 			int yo;
+ 			rectangle g;
+ 
+ 			xo = 0;
+ 			yo = 0;
+ 			xmotion = 1;
+ 			ymotion = 1;
+ 			g = sorig;
+ 			__resize_step(
+ 				exc, sorig.x, sorig.y, &xo, &yo, &g, orig,
+-				&xmotion, &ymotion, do_resize_opaque, True);
++				&xmotion, &ymotion, do_resize_opaque, True, do_outline_thin);
+ 		}
+ 		if (vx != Scr.Vx || vy != Scr.Vy)
+ 		{
+ 			MoveViewport(vx, vy, False);
+ 		}
+ 		/* restore all geometry-related info */
+ 		fw->g = g_backup;
+ 		if (bad_window == FW_W(fw))
+ 		{
+ 			XUnmapWindow(dpy, FW_W_FRAME(fw));
+diff -U10 -r fvwm/style.c fvwm/style.c
+--- fvwm/style.c	2011-12-09 18:29:08.011794436 +0100
++++ fvwm/style.c	2011-12-09 18:38:57.690110903 +0100
+@@ -4057,20 +4057,26 @@
+ 			S_SET_DO_RESIZE_OPAQUE(SCF(*ps), on);
+ 			S_SET_DO_RESIZE_OPAQUE(SCM(*ps), 1);
+ 			S_SET_DO_RESIZE_OPAQUE(SCC(*ps), 1);
+ 		}
+ 		else if (StrEquals(token, "ResizeOutline"))
+ 		{
+ 			S_SET_DO_RESIZE_OPAQUE(SCF(*ps), !on);
+ 			S_SET_DO_RESIZE_OPAQUE(SCM(*ps), 1);
+ 			S_SET_DO_RESIZE_OPAQUE(SCC(*ps), 1);
+ 		}
++		else if (StrEquals(token, "ResizeOutlineThin"))
++		{
++			S_SET_DO_RESIZE_OUTLINE_THIN(SCF(*ps), on);
++			S_SET_DO_RESIZE_OUTLINE_THIN(SCM(*ps), 1);
++			S_SET_DO_RESIZE_OUTLINE_THIN(SCC(*ps), 1);
++		}
+ 		else if (StrEquals(token, "RightTitleRotatedCW"))
+ 		{
+ 			S_SET_IS_RIGHT_TITLE_ROTATED_CW(SCF(*ps), on);
+ 			S_SET_IS_RIGHT_TITLE_ROTATED_CW(SCM(*ps), 1);
+ 			S_SET_IS_RIGHT_TITLE_ROTATED_CW(SCC(*ps), 1);
+ 		}
+ 		else if (StrEquals(token, "RightTitleRotatedCCW"))
+ 		{
+ 			S_SET_IS_RIGHT_TITLE_ROTATED_CW(SCF(*ps), !on);
+ 			S_SET_IS_RIGHT_TITLE_ROTATED_CW(SCM(*ps), 1);
+diff -U10 -r fvwm/style.h fvwm/style.h
+--- fvwm/style.h	2011-12-09 18:29:08.015127684 +0100
++++ fvwm/style.h	2011-12-09 18:38:57.690110903 +0100
+@@ -225,20 +225,24 @@
+ #define S_SET_DO_NOT_SHOW_ON_MAP(c,x) \
+ 	((c).s.do_not_show_on_map = !!(x))
+ #define S_DO_RAISE_TRANSIENT(c) \
+ 	((c).s.do_raise_transient)
+ #define S_SET_DO_RAISE_TRANSIENT(c,x) \
+ 	((c).s.do_raise_transient = !!(x))
+ #define S_DO_RESIZE_OPAQUE(c) \
+ 	((c).s.do_resize_opaque)
+ #define S_SET_DO_RESIZE_OPAQUE(c,x) \
+ 	((c).s.do_resize_opaque = !!(x))
++#define S_DO_RESIZE_OUTLINE_THIN(c) \
++	((c).s.do_resize_outline_thin)
++#define S_SET_DO_RESIZE_OUTLINE_THIN(c,x) \
++	((c).s.do_resize_outline_thin = !!(x))
+ #define S_DO_SHRINK_WINDOWSHADE(c) \
+ 	((c).s.do_shrink_windowshade)
+ #define S_SET_DO_SHRINK_WINDOWSHADE(c,x) \
+ 	((c).s.do_shrink_windowshade = !!(x))
+ #define S_DO_STACK_TRANSIENT_PARENT(c) \
+ 	((c).s.do_stack_transient_parent)
+ #define S_SET_DO_STACK_TRANSIENT_PARENT(c,x) \
+ 	((c).s.do_stack_transient_parent = !!(x))
+ #define S_DO_WINDOW_LIST_SKIP(c) \
+ 	((c).s.do_window_list_skip)
+diff -U10 -r fvwm/window_flags.h fvwm/window_flags.h
+--- fvwm/window_flags.h	2006-12-21 17:38:58.000000000 +0100
++++ fvwm/window_flags.h	2011-12-09 18:38:57.690110903 +0100
+@@ -14,20 +14,22 @@
+ 	((fw)->flags.common.s.focus_policy)
+ 
+ #define DO_LOWER_TRANSIENT(fw) \
+ 	((fw)->flags.common.s.do_lower_transient)
+ #define DO_NOT_SHOW_ON_MAP(fw) \
+ 	((fw)->flags.common.s.do_not_show_on_map)
+ #define DO_RAISE_TRANSIENT(fw) \
+ 	((fw)->flags.common.s.do_raise_transient)
+ #define DO_RESIZE_OPAQUE(fw) \
+ 	((fw)->flags.common.s.do_resize_opaque)
++#define DO_RESIZE_OUTLINE_THIN(fw) \
++	((fw)->flags.common.s.do_resize_outline_thin)
+ #define DO_SHRINK_WINDOWSHADE(fw) \
+ 	((fw)->flags.common.s.do_shrink_windowshade)
+ #define SET_DO_SHRINK_WINDOWSHADE(fw,x) \
+ 	(fw)->flags.common.s.do_shrink_windowshade = !!(x)
+ #define SETM_DO_SHRINK_WINDOWSHADE(fw,x) \
+ 	(fw)->flag_mask.common.s.do_shrink_windowshade = !!(x)
+ #define DO_SKIP_CIRCULATE(fw) \
+ 	((fw)->flags.common.s.do_circulate_skip)
+ #define SET_DO_SKIP_CIRCULATE(fw,x) \
+ 	(fw)->flags.common.s.do_circulate_skip = !!(x)

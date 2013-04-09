@@ -1,0 +1,170 @@
+diff -U3 -r doc/commands/MenuStyle.xml doc/commands/MenuStyle.xml
+--- doc/commands/MenuStyle.xml	2011-08-06 12:50:42.000000000 +0200
++++ doc/commands/MenuStyle.xml	2011-12-09 19:19:30.364527517 +0100
+@@ -58,7 +58,7 @@
+ PopupOffset,
+ TitleWarp / !TitleWarp,
+ TitleUnderlines0 / TitleUnderlines1 / TitleUnderlines2,
+-SeparatorsLong / SeparatorsShort,
++SeparatorsLong / SeparatorsShort / FlatSeparators,
+ TrianglesSolid / TrianglesRelief,
+ PopupImmediately / PopupDelayed,
+ PopdownImmediately / PopdownDelayed,
+@@ -436,6 +436,11 @@
+ few pixels to the edges of the menu.</para>
+ 
+ <para>
++<fvwmopt cmd="MenuStyle" opt="FlatSeparators"/>
++changes the separators so that they are a single pixel thick and
++colored the same as the text.</para>
++
++<para>
+ <fvwmopt cmd="MenuStyle" opt="TrianglesSolid"/> and
+ <fvwmopt cmd="MenuStyle" opt="TrianglesRelief"/>
+ affect how the small triangles for sub menus is drawn.  Solid
+diff -U3 -r fvwm/menuitem.c fvwm/menuitem.c
+--- fvwm/menuitem.c	2008-03-09 17:15:50.000000000 +0100
++++ fvwm/menuitem.c	2011-12-09 19:19:30.364527517 +0100
+@@ -82,10 +82,14 @@
+  *
+  */
+ static void draw_separator(
+-	Window w, GC TopGC, GC BottomGC, int x1, int y, int x2)
++	Window w, GC TopGC, GC BottomGC, GC ForeGC, int x1, int y, int x2,
++	Bool do_flat_separators)
+ {
+ 	XDrawLine(dpy, w, TopGC   , x1,   y,   x2,   y);
+-	XDrawLine(dpy, w, BottomGC, x1-1, y+1, x2+1, y+1);
++	if (!do_flat_separators)
++	{
++			XDrawLine(dpy, w, BottomGC, x1-1, y+1, x2+1, y+1);
++	}
+ 
+ 	return;
+ }
+@@ -381,6 +385,7 @@
+ 	/*Pixel fg, fgsh;*/
+ 	int relief_thickness = ST_RELIEF_THICKNESS(ms);
+ 	Bool is_item_selected;
++	Bool do_flat_separators;
+ 	Bool item_cleared = False;
+ 	Bool xft_clear = False;
+ 	Bool empty_inter = False;
+@@ -599,6 +604,8 @@
+ 	 * Draw the item itself.
+ 	 */
+ 
++	do_flat_separators = ST_DO_FLAT_SEPARATOR(ms);
++	
+ 	/* Calculate the separator offsets. */
+ 	if (ST_HAS_LONG_SEPARATORS(ms))
+ 	{
+@@ -619,9 +626,9 @@
+ 		{
+ 			/* It's a separator. */
+ 			draw_separator(
+-				mpip->w, gcs.shadow_gc, gcs.hilight_gc, sx1,
+-				y_offset + y_height - MENU_SEPARATOR_HEIGHT,
+-				sx2);
++				mpip->w, gcs.shadow_gc, gcs.hilight_gc, gcs.fore_gc,
++				sx1, y_offset + y_height - MENU_SEPARATOR_HEIGHT,
++				sx2, do_flat_separators);
+ 			/* Nothing else to do. */
+ 		}
+ 		return;
+@@ -661,8 +668,8 @@
+ 			if (sx1 < sx2)
+ 			{
+ 				draw_separator(
+-					mpip->w, gcs.shadow_gc, gcs.hilight_gc,
+-					sx1, y, sx2);
++					mpip->w, gcs.shadow_gc, gcs.hilight_gc, gcs.fore_gc,
++					sx1, y, sx2, do_flat_separators);
+ 			}
+ 		}
+ 		/* Underline the title. */
+@@ -675,8 +682,8 @@
+ 			{
+ 				y = y_offset + y_height - MENU_SEPARATOR_HEIGHT;
+ 				draw_separator(
+-					mpip->w, gcs.shadow_gc, gcs.hilight_gc,
+-					sx1, y, sx2);
++					mpip->w, gcs.shadow_gc, gcs.hilight_gc, gcs.fore_gc,
++					sx1, y, sx2, do_flat_separators);
+ 			}
+ 			break;
+ 		default:
+diff -U3 -r fvwm/menus.c fvwm/menus.c
+--- fvwm/menus.c	2011-12-09 19:01:48.851641536 +0100
++++ fvwm/menus.c	2011-12-09 19:19:30.367860764 +0100
+@@ -1659,6 +1659,10 @@
+ 		separator_height = (last_item_has_relief) ?
+ 			MENU_SEPARATOR_HEIGHT + relief_thickness :
+ 			MENU_SEPARATOR_TOTAL_HEIGHT;
++		if (MST_DO_FLAT_SEPARATOR(msp->menu))
++		{
++			separator_height += 1;
++		}
+ 		MI_Y_OFFSET(mi) = y;
+ 		if (MI_IS_TITLE(mi))
+ 		{
+diff -U3 -r fvwm/menustyle.c fvwm/menustyle.c
+--- fvwm/menustyle.c	2011-08-07 00:03:31.000000000 +0200
++++ fvwm/menustyle.c	2011-12-09 19:23:29.135074081 +0100
+@@ -431,7 +431,7 @@
+ 		"TrianglesUseFore",
+ 		"TitleColorset", "HilightTitleBack",
+ 		"TitleFont",
+-		"VerticalMargins",
++		"VerticalMargins", "FlatSeparators",
+ 		"UniqueHotkeyActivatesImmediate",
+ 		NULL
+ 	};
+@@ -901,6 +901,7 @@
+ 			ST_SCROLL_OFF_PAGE(tmpms) = 1;
+ 			ST_DO_HILIGHT_TITLE_BACK(tmpms) = 0;
+ 			ST_USING_DEFAULT_TITLEFONT(tmpms) = True;
++			ST_DO_FLAT_SEPARATOR(tmpms) = 0;
+ 			has_gc_changed = True;
+ 			option = "fvwm";
+ 		}
+@@ -1606,6 +1607,9 @@
+ 		case 63: /* UniqueHotKeyActivatesImmediate */
+ 			ST_HOTKEY_ACTIVATES_IMMEDIATE(tmpms) = on;
+ 			break;
++		case 63: /* FlatSeparators */
++			ST_DO_FLAT_SEPARATOR(tmpms) = on;
++			break;
+ 
+ #if 0
+ 		case 99: /* PositionHints */
+@@ -1864,6 +1868,8 @@
+ 	ST_TRIANGLES_USE_FORE(destms) = ST_TRIANGLES_USE_FORE(origms);
+ 	/* Title */
+ 	ST_DO_HILIGHT_TITLE_BACK(destms) = ST_DO_HILIGHT_TITLE_BACK(origms);
++	/* FlatSeparators */
++	ST_DO_FLAT_SEPARATOR(destms) = ST_DO_FLAT_SEPARATOR(origms);
+ 
+ 	menustyle_update(destms);
+ 
+Seulement dans fvwm: menustyle.c.rej
+diff -U3 -r fvwm/menustyle.h fvwm/menustyle.h
+--- fvwm/menustyle.h	2011-08-06 12:50:43.000000000 +0200
++++ fvwm/menustyle.h	2011-12-09 19:19:30.367860764 +0100
+@@ -23,6 +23,8 @@
+ #define MST_FACE(m)                   ((m)->s->ms->look.face)
+ #define ST_DO_HILIGHT_BACK(s)         ((s)->look.flags.do_hilight_back)
+ #define MST_DO_HILIGHT_BACK(m)        ((m)->s->ms->look.flags.do_hilight_back)
++#define ST_DO_FLAT_SEPARATOR(s)       ((s)->look.flags.do_flat_separator)
++#define MST_DO_FLAT_SEPARATOR(m)      ((m)->s->ms->look.flags.do_flat_separator)
+ #define ST_DO_HILIGHT_FORE(s)         ((s)->look.flags.do_hilight_fore)
+ #define MST_DO_HILIGHT_FORE(m)        ((m)->s->ms->look.flags.do_hilight_fore)
+ #define ST_DO_HILIGHT_TITLE_BACK(s)   ((s)->look.flags.do_hilight_title_back)
+@@ -282,6 +284,7 @@
+ 		unsigned has_title_cset : 1;
+ 		unsigned do_hilight_title_back : 1;
+ 		unsigned using_default_titlefont : 1;
++		unsigned do_flat_separator : 1;
+ 	} flags;
+ 	unsigned char ReliefThickness;
+ 	unsigned char TitleUnderlines;

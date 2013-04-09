@@ -1,0 +1,114 @@
+Seulement dans modules/FvwmButtons: FvwmButtons.c.orig
+Seulement dans modules/FvwmButtons: FvwmButtons.h.orig
+Seulement dans modules/FvwmButtons: parse.c.orig
+diff -U3 -r modules/FvwmIconMan/FvwmIconMan.h modules/FvwmIconMan/FvwmIconMan.h
+--- modules/FvwmIconMan/FvwmIconMan.h	2010-08-07 00:35:19.000000000 +0200
++++ modules/FvwmIconMan/FvwmIconMan.h	2011-12-09 21:47:16.017350293 +0100
+@@ -316,6 +316,8 @@
+ 	char *tips_fontname;
+ 	char *tips_formatstring;
+ 	ftips_config *tips_conf;
++	Uchar roundedcorners;
++	int padding;
+ 	
+ 	/* X11 state */
+ 	Window theWindow, theFrame;
+diff -U3 -r modules/FvwmIconMan/readconfig.c modules/FvwmIconMan/readconfig.c
+--- modules/FvwmIconMan/readconfig.c	2011-08-07 00:03:32.000000000 +0200
++++ modules/FvwmIconMan/readconfig.c	2011-12-09 21:47:16.014017045 +0100
+@@ -2021,6 +2021,40 @@
+ 	}
+ 	SET_MANAGER(manager, relief_thickness, n);
+       }
++      else if (!strcasecmp(option1, "padding")) {
++        p = read_next_cmd(READ_ARG);
++        if (!p) {
++	  ConsoleMessage("Bad line: %s\n", current_line);
++	  continue;
++        }
++	if (extract_int(p, &n) == 0) {
++	  ConsoleMessage("This is not a number: %s\n", p);
++	  ConsoleMessage("Bad line: %s\n", current_line);
++	  continue;
++	}
++	SET_MANAGER(manager, padding, n);
++      }
++      else if (!strcasecmp(option1, "roundedcorners")) {
++       p = read_next_cmd(READ_ARG);
++       if (!p) {
++	 ConsoleMessage("Bad line: %s\n", current_line);
++	 ConsoleMessage("Need argument to roundedcorners\n");
++	 continue;
++       }
++       if (!strcasecmp(p, "true")) {
++	 i = 1;
++       }
++       else if (!strcasecmp(p, "false")) {
++	 i = 0;
++       }
++       else {
++	 ConsoleMessage("Bad line: %s\n", current_line);
++	 ConsoleMessage("What is this: %s?\n", p);
++	 continue;
++       }
++       ConsoleDebug(CONFIG, "Setting roundedcorners to: %d\n", i);
++       SET_MANAGER(manager, roundedcorners, i);
++      }
+       else if (!strcasecmp(option1, "tips")) {
+ 	      p = read_next_cmd(READ_ARG);
+ 	      if (!p) {
+diff -U3 -r modules/FvwmIconMan/xmanager.c modules/FvwmIconMan/xmanager.c
+--- modules/FvwmIconMan/xmanager.c	2011-04-15 13:57:02.000000000 +0200
++++ modules/FvwmIconMan/xmanager.c	2011-12-09 21:47:16.014017045 +0100
+@@ -1365,6 +1365,8 @@
+ 
+   g->text_y = g->button_y + text_pad;
+   g->text_base = g->text_y + man->FButtonFont->ascent;
++
++  g->button_w -= man->padding;
+ }
+ 
+ static void draw_button_background(
+@@ -1637,6 +1639,33 @@
+   }
+ }
+ 
++static void __draw_rounded_corner(WinManager *man, ButtonGeometry *g,
++    int x, int y, int width, int height, GC gc)
++{
++    int x1 = g->button_x + x;
++    int x2 = g->button_x + g->button_w - x - width;
++    int y1 = g->button_y + y;
++    int y2 = g->button_y + g->button_h - y - height;
++
++    XFillRectangle(theDisplay, man->theWindow, gc, x1, y1, width, height);
++    XFillRectangle(theDisplay, man->theWindow, gc, x2, y1, width, height);
++    XFillRectangle(theDisplay, man->theWindow, gc, x1, y2, width, height);
++    XFillRectangle(theDisplay, man->theWindow, gc, x2, y2, width, height);
++}
++
++static void draw_rounded_corners(WinManager *man, ButtonGeometry *g, GC gc)
++{
++    if (man->roundedcorners)
++    {
++	__draw_rounded_corner(man, g, 0, 0, 2, 1, man->backContext[TITLE_CONTEXT]);
++	__draw_rounded_corner(man, g, 0, 1, 1, 1, man->backContext[TITLE_CONTEXT]);
++	__draw_rounded_corner(man, g, 1, 1, 1, 1, gc);
++    }
++
++    XFillRectangle(theDisplay, man->theWindow, man->backContext[TITLE_CONTEXT],
++	    g->button_x + g->button_w, g->button_y, man->padding, g->button_h);
++}
++
+ static void draw_button(WinManager *man, int button, int force)
+ {
+ 	Button *b;
+@@ -1825,6 +1854,8 @@
+ 				draw_relief(
+ 					man, button_state, &g, context1,
+ 					context2);
++
++                draw_rounded_corners(man, &g, context1);
+ 			}
+ 			else if (button_state & SELECT_CONTEXT)
+ 			{
