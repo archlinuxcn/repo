@@ -1,6 +1,11 @@
-diff -U3 -r libs/FTips.c libs/FTips.c
---- libs/FTips.c	2007-01-27 12:33:16.000000000 +0100
-+++ libs/FTips.c	2011-12-09 21:42:01.022148670 +0100
+? FvwmButtons-tips.patch
+Index: libs/FTips.c
+===================================================================
+RCS file: /home/cvs/fvwm/fvwm/libs/FTips.c,v
+retrieving revision 1.4
+diff -u -r1.4 FTips.c
+--- libs/FTips.c	27 Jan 2007 11:33:16 -0000	1.4
++++ libs/FTips.c	21 Feb 2007 07:14:20 -0000
 @@ -505,7 +505,7 @@
  	if (fc == NULL)
  	{
@@ -10,9 +15,13 @@ diff -U3 -r libs/FTips.c libs/FTips.c
  	current_config = fc;
  
  	if (label != NULL)
-diff -U3 -r modules/FvwmButtons/FvwmButtons.c modules/FvwmButtons/FvwmButtons.c
---- modules/FvwmButtons/FvwmButtons.c	2011-08-27 23:51:29.000000000 +0200
-+++ modules/FvwmButtons/FvwmButtons.c	2011-12-09 21:42:01.022148670 +0100
+Index: modules/FvwmButtons/FvwmButtons.c
+===================================================================
+RCS file: /home/cvs/fvwm/fvwm/modules/FvwmButtons/FvwmButtons.c,v
+retrieving revision 1.204
+diff -u -r1.204 FvwmButtons.c
+--- modules/FvwmButtons/FvwmButtons.c	28 Jan 2007 15:38:40 -0000	1.204
++++ modules/FvwmButtons/FvwmButtons.c	21 Feb 2007 07:14:23 -0000
 @@ -62,6 +62,7 @@
  #include "libs/Colorset.h"
  #include "libs/vpacket.h"
@@ -21,15 +30,15 @@ diff -U3 -r modules/FvwmButtons/FvwmButtons.c modules/FvwmButtons/FvwmButtons.c
  #include "libs/fsm.h"
  #include "libs/ColorUtils.h"
  #include "libs/Graphics.h"
-@@ -907,6 +908,7 @@
+@@ -932,6 +933,7 @@
  			button_info *tmp = ActiveButton;
  			ActiveButton = b;
  			RedrawButton(tmp, DRAW_FORCE, NULL);
 +			
  		}
- 		if (
- 			b->flags.b_ActiveIcon ||
-@@ -1061,6 +1063,9 @@
+ 		if (b->flags.b_ActiveIcon || b->flags.b_ActiveTitle ||
+ 		    UberButton->c->flags.b_ActiveColorset)
+@@ -1085,6 +1087,9 @@
  
  	tmp.name = NULL;
  	tmp.name_list = NULL;
@@ -39,7 +48,7 @@ diff -U3 -r modules/FvwmButtons/FvwmButtons.c modules/FvwmButtons/FvwmButtons.c
  	while ( !isTerminated )
  	{
  		if (My_FNextEvent(Dpy, &Event))
-@@ -1186,6 +1191,10 @@
+@@ -1210,6 +1215,10 @@
  	  if (!event.xconfigure.send_event &&
  	      Event.xconfigure.window != MyWindow)
  	    continue;
@@ -50,7 +59,7 @@ diff -U3 -r modules/FvwmButtons/FvwmButtons.c modules/FvwmButtons/FvwmButtons.c
  	  Event.xconfigure.x = event.xconfigure.x;
  	  Event.xconfigure.y = event.xconfigure.y;
  	  Event.xconfigure.send_event = True;
-@@ -1228,10 +1237,33 @@
+@@ -1252,10 +1261,33 @@
  	case EnterNotify:
  		b = handle_new_position(
  			b, Event.xcrossing.x, Event.xcrossing.y);
@@ -84,7 +93,7 @@ diff -U3 -r modules/FvwmButtons/FvwmButtons.c modules/FvwmButtons/FvwmButtons.c
  		break;
  
  	case LeaveNotify:
-@@ -1254,11 +1286,13 @@
+@@ -1268,11 +1300,13 @@
  				b = ActiveButton;
  				ActiveButton = NULL;
  				RedrawButton(b, DRAW_FORCE, NULL);
@@ -97,8 +106,8 @@ diff -U3 -r modules/FvwmButtons/FvwmButtons.c modules/FvwmButtons/FvwmButtons.c
 +			FTipsCancel(Dpy);
  		}
  		break;
- 
-@@ -1280,8 +1314,8 @@
+ 	}
+@@ -1294,8 +1328,8 @@
  	  Window dummy;
  
  	  XTranslateCoordinates(
@@ -109,7 +118,7 @@ diff -U3 -r modules/FvwmButtons/FvwmButtons.c modules/FvwmButtons/FvwmButtons.c
  	}
  	if (CurrentButton)
  	{
-@@ -1323,7 +1357,10 @@
+@@ -1337,7 +1371,10 @@
  	  RedrawButton(tmp, DRAW_FORCE, NULL);
  	}
  	else
@@ -120,9 +129,13 @@ diff -U3 -r modules/FvwmButtons/FvwmButtons.c modules/FvwmButtons/FvwmButtons.c
  	if (!act)
  	{
  	  break;
-diff -U3 -r modules/FvwmButtons/FvwmButtons.h modules/FvwmButtons/FvwmButtons.h
---- modules/FvwmButtons/FvwmButtons.h	2008-04-05 12:02:45.000000000 +0200
-+++ modules/FvwmButtons/FvwmButtons.h	2011-12-09 21:42:01.022148670 +0100
+Index: modules/FvwmButtons/FvwmButtons.h
+===================================================================
+RCS file: /home/cvs/fvwm/fvwm/modules/FvwmButtons/FvwmButtons.h,v
+retrieving revision 1.52
+diff -u -r1.52 FvwmButtons.h
+--- modules/FvwmButtons/FvwmButtons.h	10 Feb 2006 12:33:22 -0000	1.52
++++ modules/FvwmButtons/FvwmButtons.h	21 Feb 2007 07:14:23 -0000
 @@ -38,6 +38,8 @@
  #include "libs/fvwmlib.h"
  #include "libs/Picture.h"
@@ -132,7 +145,7 @@ diff -U3 -r modules/FvwmButtons/FvwmButtons.h modules/FvwmButtons/FvwmButtons.h
  
  /* ------------------------------- structs --------------------------------- */
  
-@@ -82,6 +84,7 @@
+@@ -81,6 +83,7 @@
  	unsigned b_PressIcon      : 1; /* Use alternate Icon on press */
  	unsigned b_PressColorset  : 1; /* Use alternate Colorset on press */
  	unsigned b_PressTitle     : 1; /* Use alternate Title text on press */
@@ -140,7 +153,7 @@ diff -U3 -r modules/FvwmButtons/FvwmButtons.h modules/FvwmButtons/FvwmButtons.h
  } flags_type;
  
  /* Flags for b->swallow */
-@@ -131,6 +134,9 @@
+@@ -130,6 +133,9 @@
  	int colorset;              /* b_Colorset */
  	int activeColorset;        /* b_ActiveColorset */
  	int pressColorset;         /* b_PressColorset */
@@ -150,7 +163,7 @@ diff -U3 -r modules/FvwmButtons/FvwmButtons.h modules/FvwmButtons/FvwmButtons.h
  	Pixel fc;                  /* b_Fore */
  	Pixel bc, hc, sc;          /* b_Back && !b_IconBack */
  	FvwmPicture *backicon;     /* b_Back && b_IconBack */
-@@ -187,6 +193,7 @@
+@@ -186,6 +192,7 @@
  	FvwmPicture *pressicon;  /* b_PressIcon */
  	int activeColorset;      /* b_ActiveColorset */
  	int pressColorset;       /* b_PressColorset */
@@ -158,19 +171,24 @@ diff -U3 -r modules/FvwmButtons/FvwmButtons.h modules/FvwmButtons/FvwmButtons.h
  	Window IconWin;          /* b_Swallow */
  	Window PanelWin;         /* b_Panel */
  	Window BackIconWin;      /* b_Back && b_IconBack */
-diff -U3 -r modules/FvwmButtons/parse.c modules/FvwmButtons/parse.c
---- modules/FvwmButtons/parse.c	2008-04-05 12:02:45.000000000 +0200
-+++ modules/FvwmButtons/parse.c	2011-12-09 21:42:01.025481917 +0100
-@@ -889,6 +889,7 @@
+Index: modules/FvwmButtons/parse.c
+===================================================================
+RCS file: /home/cvs/fvwm/fvwm/modules/FvwmButtons/parse.c,v
+retrieving revision 1.95
+diff -u -r1.95 parse.c
+--- modules/FvwmButtons/parse.c	27 Jan 2007 11:33:16 -0000	1.95
++++ modules/FvwmButtons/parse.c	21 Feb 2007 07:14:24 -0000
+@@ -889,7 +889,8 @@
  			"presstitle",
  			"activecolorset",
  			"presscolorset",
 +			"tipslabel",
- 			"top",
+			"top",
  			NULL
  		};
-@@ -1612,7 +1613,33 @@
- 					b->flags.b_ActiveColorset = 0;
+ 		s = trimleft(s);
+@@ -1627,7 +1628,33 @@
+ 					b->flags.b_PressColorset = 0;
  				}
  				break;
 +			/* --------- TipsLabel ---------*/
@@ -201,9 +219,9 @@ diff -U3 -r modules/FvwmButtons/parse.c modules/FvwmButtons/parse.c
  
 +				break;
  			/* --------------- --------------- */
- 			case 26: /* PressColorset */
- 				i = strtol(s, &t, 10);
-@@ -1784,6 +1811,14 @@
+ 			default:
+ 				t = seekright(&s);
+@@ -1780,6 +1807,14 @@
  		"colorset",
  		"activecolorset",
  		"presscolorset",
@@ -218,7 +236,7 @@ diff -U3 -r modules/FvwmButtons/parse.c modules/FvwmButtons/parse.c
  		NULL
  	};
  	int i, j, k;
-@@ -1931,7 +1966,97 @@
+@@ -1927,7 +1962,97 @@
  			ub->c->flags.b_PressColorset = 0;
  		}
  		break;

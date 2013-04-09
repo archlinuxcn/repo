@@ -1,0 +1,58 @@
+Index: fvwm/frame.c
+===================================================================
+--- fvwm/frame.c	(revision 10)
++++ fvwm/frame.c	(revision 11)
+@@ -1369,7 +1369,14 @@
+ 	tb_thick = fw->title_thickness;
+ 	nbuttons = fw->nr_left_buttons + fw->nr_right_buttons;
+ 	nbuttons_big = 0;
+-	b_length = tb_thick;
++	if (fw->decor->button_width == 0)
++	{
++		b_length = tb_thick;
++	}
++	else
++	{
++		b_length = fw->decor->button_width;
++	}
+ 	t_length = tb_length - nbuttons * b_length;
+ 	if (nbuttons > 0 && t_length < MIN_WINDOW_TITLE_LENGTH)
+ 	{
+Index: fvwm/screen.h
+===================================================================
+--- fvwm/screen.h	(revision 10)
++++ fvwm/screen.h	(revision 11)
+@@ -286,6 +286,7 @@
+ #endif
+ 	int title_height;           /* explicitly specified title bar height */
+ 	int min_title_height;
++	int button_width;
+ 	/* titlebar buttons */
+ 	TitleButton buttons[NUMBER_OF_TITLE_BUTTONS];
+ 	TitleButton titlebar;
+Index: fvwm/builtins.c
+===================================================================
+--- fvwm/builtins.c	(revision 10)
++++ fvwm/builtins.c	(revision 11)
+@@ -485,6 +485,21 @@
+ 			if (action)
+ 				action += next;
+ 		}
++		else if (!do_add && StrEquals(parm,"buttonwidth"))
++		{
++			int width = 0;
++			int next = 0;
++
++			sscanf(action, "%d%n", &width, &next);
++
++			if (decor->button_width != width)
++			{
++				decor->button_width = width;
++				decor->flags.has_changed = 1;
++			}
++			if (action)
++				action += next;
++		}
+ 		else if (!do_add && StrEquals(parm,"MinHeight"))
+ 		{
+ 			int height = 0;

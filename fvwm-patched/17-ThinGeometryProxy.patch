@@ -1,0 +1,26 @@
+Index: modules/FvwmProxy/FvwmProxy.c
+===================================================================
+--- modules/FvwmProxy/FvwmProxy.c	(revision 15)
++++ modules/FvwmProxy/FvwmProxy.c	(revision 16)
+@@ -972,7 +972,7 @@
+ 	{
+ 		XClearWindow(dpy,proxy->proxy);
+ 	}
+-	RelieveRectangle(dpy,proxy->proxy, 0,0, w - 1,h - 1, hi_gc,sh_gc, 2);
++	RelieveRectangle(dpy,proxy->proxy, 0,0, w - 1,h - 1, hi_gc,sh_gc, 1);
+ 
+ 	big_name = proxy->iconname;
+ 	if(big_name==NULL || !big_name[0])
+Index: libs/defaults.h
+===================================================================
+--- libs/defaults.h	(revision 15)
++++ libs/defaults.h	(revision 16)
+@@ -151,7 +151,7 @@
+ #define BROKEN_MINSIZE_LIMIT 30000
+ 
+ /* geometry window */
+-#define GEOMETRY_WINDOW_BW                 2 /* pixels */
++#define GEOMETRY_WINDOW_BW                 1 /* pixels */
+ #define GEOMETRY_WINDOW_STRING             " +8888 x +8888 "
+ #define GEOMETRY_WINDOW_POS_STRING         " %+-4d %+-4d "
+ #define GEOMETRY_WINDOW_SIZE_STRING        " %4d x %-4d "

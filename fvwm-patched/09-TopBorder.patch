@@ -1,47 +1,3 @@
-diff -U3 -r fvwm/builtins.c fvwm/builtins.c
---- fvwm/builtins.c	2011-08-07 00:03:31.000000000 +0200
-+++ fvwm/builtins.c	2011-12-09 20:53:09.537508019 +0100
-@@ -494,6 +494,21 @@
- 			if (action)
- 				action += next;
- 		}
-+		else if (!do_add && StrEquals(parm,"buttonwidth"))
-+		{
-+			int width = 0;
-+			int next = 0;
-+
-+			sscanf(action, "%d%n", &width, &next);
-+
-+			if (decor->button_width != width)
-+			{
-+				decor->button_width = width;
-+				decor->flags.has_changed = 1;
-+			}
-+			if (action)
-+				action += next;
-+		}
- 		else if (!do_add && StrEquals(parm,"MinHeight"))
- 		{
- 			int height = 0;
-diff -U3 -r fvwm/frame.c fvwm/frame.c
---- fvwm/frame.c	2011-12-09 19:51:38.705188705 +0100
-+++ fvwm/frame.c	2011-12-09 20:53:09.537508019 +0100
-@@ -1369,7 +1369,14 @@
- 	tb_thick = fw->title_thickness;
- 	nbuttons = fw->nr_left_buttons + fw->nr_right_buttons;
- 	nbuttons_big = 0;
--	b_length = tb_thick;
-+	if (fw->decor->button_width == 0)
-+	{
-+		b_length = tb_thick;
-+	}
-+	else
-+	{
-+		b_length = fw->decor->button_width;
-+	}
- 	t_length = tb_length - nbuttons * b_length;
- 	if (nbuttons > 0 && t_length < MIN_WINDOW_TITLE_LENGTH)
- 	{
 diff -U3 -r fvwm/fvwm.h fvwm/fvwm.h
 --- fvwm/fvwm.h	2011-12-09 19:51:38.705188705 +0100
 +++ fvwm/fvwm.h	2011-12-09 20:53:09.534174771 +0100
@@ -121,17 +77,6 @@ diff -U3 -r fvwm/geometry.c fvwm/geometry.c
  	borders->total_size.width =
  		borders->top_left.width + borders->bottom_right.width;
  	borders->total_size.height =
-diff -U3 -r fvwm/screen.h fvwm/screen.h
---- fvwm/screen.h	2011-12-09 19:51:38.675189480 +0100
-+++ fvwm/screen.h	2011-12-09 20:53:09.537508019 +0100
-@@ -286,6 +286,7 @@
- #endif
- 	int title_height;           /* explicitly specified title bar height */
- 	int min_title_height;
-+	int button_width;
- 	/* titlebar buttons */
- 	TitleButton buttons[NUMBER_OF_TITLE_BUTTONS];
- 	TitleButton titlebar;
 diff -U3 -r fvwm/style.c fvwm/style.c
 --- fvwm/style.c	2011-12-09 19:51:38.708521953 +0100
 +++ fvwm/style.c	2011-12-09 20:53:09.534174771 +0100
