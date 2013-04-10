@@ -1,0 +1,145 @@
+# Maintainer: Philippe DUCRETTET <ecolinux@gmx.com>
+
+pkgname=fvwm+
+pkgver=2.6.5
+pkgrel=3
+pkgdesc="A multiple large virtual desktop window manager originally derived from twm patched with http://abdn.ac.uk/~u15dm4/fvwm/ and some other"
+arch=('i686' 'x86_64')
+url="http://www.fvwm.org"
+license=('GPL' 'custom')
+depends=('imlib' 'fribidi' 'perl' 'libstroke' 'libxpm' 'libxinerama' 'readline' 'libxft' 'librsvg' 'libxcursor')
+provides=('fvwm-devel' 'fvwm' 'fvwm-patched' )
+conflicts=('fvwm-devel' 'fvwm' 'fvwm-patched' )
+replaces=('fvwm-devel' 'fvwm' 'fvwm-patched' )
+options=('!emptydirs' '!makeflags')
+source=(ftp://ftp.fvwm.org/pub/fvwm/version-2/fvwm-$pkgver.tar.bz2 
+        fvwm+.desktop 
+	01-TranslucentMenus.patch
+	02-ColourBorders.patch
+	03-ResizeOutlineThin.patch
+	04-Conditionals.patch
+	05-FlatSeparators.patch
+	06-BorderUnderTitle.patch
+	07-InactiveFont.patch
+	08-FluxRoundedCorners.patch
+	09-TopBorder.patch
+	10-ButtonWidth.patch
+	11-MultiBorder.patch
+	12-FvwmButtonsTips.patch
+	13-FvwmIconMan.patch
+	14-Hover.patch
+	15-FirstItemUnderPointer.patch
+	16-ThinGeometryProxy.patch )
+
+patched() {
+  cd "${srcdir}/fvwm-$pkgver"
+  #Patching
+  # Enables real transparency on menus
+  echo "** Applying Translucent menus patch **"
+  patch -p0 < $startdir/01-TranslucentMenus.patch || return 1
+
+  # Enables different colours on window's borders
+  echo "** Applying ColourBorders patch **"
+  patch -p0 < $startdir/02-ColourBorders.patch || return 1
+
+  # Enables a single piwel rectangle when resizing
+  echo "** Applying Resize Outline Thin patch **"
+  patch -p0 < $startdir/03-ResizeOutlineThin.patch || return 1
+
+  # Enables other conditions for windows :)
+  echo "** Applying Conditional patch **"
+  patch -p0 < $startdir/04-Conditionals.patch || return 1
+
+  # Enables the use of Flat Separators (single pixel separator)
+  echo "** Applying flat separators patch **"
+  patch -p0 < $startdir/05-FlatSeparators.patch || return 1
+
+  # Adds a border under the titlebar
+  echo "** Applying border under titlebar patch **"
+  patch -p0 < $startdir/06-BorderUnderTitle.patch || return 1
+
+  # Ena1bles the use of a different font for Inactive windows
+  echo "** Applying inactive fonts patch **"
+  patch -p0 < $startdir/07-InactiveFont.patch || return 1
+
+  # A mix of FluxboxHandles and RoundedCorners
+  # you can't activate both on the same window
+  # Add corners in fluxbox style
+  # or add rounded corners
+  echo "** Applying FluxRounded Corners patch **"
+  patch -p0 < $startdir/08-FluxRoundedCorners.patch || return 1
+
+  # Sets the top border to a single pixel
+  echo "** Applying Top Border patch **"
+  patch -p0 < $startdir/09-TopBorder.patch || return 1
+
+  # Sets the width of the title buttons
+  echo "** Applying Button Width patch **"
+  patch -p0 < $startdir/10-ButtonWidth.patch || return 1
+
+  # Enables the use of 8 pixmaps for each borders
+  echo "** Applying Multiborder patch **"
+  patch -p0 < $startdir/11-MultiBorder.patch || return 1
+
+  # Enables the uses of tips on FvwmButtons
+  echo "** Applying FvwmButtonTips patch **"
+  patch -p0 < $startdir/12-FvwmButtonsTips.patch || return 1
+
+  # Enables rounded corners on FvwmIconMan
+  echo "** Applying FvwmIconMan patch **"
+  patch -p0 < $startdir/13-FvwmIconMan.patch || return 1
+
+  # Allows you to specify button pixmaps that will be shown when you move the mouse over the buttons
+  echo "** Applying Hover patch **"
+  patch -p0 < $startdir/14-Hover.patch || return 1
+
+  # Menus with titles are opened so that the first item is under the pointer without warping
+  echo "** Applying First Item Under Pointer patch **"
+  patch -p0 < $startdir/15-FirstItemUnderPointer.patch || return 1
+
+  # The geometry window and proxy windows have a single pixel border
+  echo "** Applying ThinGeometry patch **"
+  patch -p0 < $startdir/16-ThinGeometryProxy.patch || return 1 
+}
+
+build() {
+  cd "${srcdir}/fvwm-${pkgver}"
+patched
+  ./configure --prefix=/usr \
+    --sysconfdir=/etc \
+    --libexecdir=/usr/lib \
+    --with-stroke \
+    --enable-perllib \
+    --enable-xinerama \
+    --enable-bidi \
+    --enable-nls --enable-iconv \
+    --enable-xft
+  make
+}
+
+package() {
+  cd $startdir/src/fvwm-$pkgver
+  make DESTDIR="${pkgdir}" install
+  install -d "${pkgdir}/etc/fvwm"
+  install -D -m644 sample.fvwmrc/{decor_examples,DecorMwm,DecorWin95,new-features,system.*} "${pkgdir}/usr/share/doc/fvwm"
+  install -D -m644 ../fvwm+.desktop "${pkgdir}/usr/share/xsessions/fvwm+.desktop"
+  install -D -m644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
+}
+md5sums=('090ba4e0c517e8b94f71317951530f69'
+         'a12c52729a74355838404ee2f5716e0c'
+         'd208dc6531e2e6a226fb063d007d6046'
+         '23b47a21958455fbd0d9d6011b39d009'
+         '01e4a4cee7780315a275b4428802c49f'
+         '128c6a2d62a15e5fe95f0a3d1c2033b3'
+         '209e2c1fa66bc5b502fba2cbe3a04f8a'
+         '86b6c187be636c0543058f48856b5fb0'
+         '1cceee901466d34953910bd598332d2f'
+         'e053d2f34f527a62831563e26b7cdeb7'
+         '037562c2c0eb82bc35d1b5b55098f2fc'
+         '2541576d57ead08ce9772bb219f73f67'
+         'ce8d47eea51abe0b594a42d17602b574'
+         'c42763877b543c0bcb78a88460671b58'
+         'd79ef23cbd62c647ea8d85526f0f2b17'
+         '09388c4a2f4c86d6e0862e313f2fec86'
+         'e4ed5f774e775c67d16f5be8e9783b52'
+         'a552a1a273a9fa015271bed929cd275a')

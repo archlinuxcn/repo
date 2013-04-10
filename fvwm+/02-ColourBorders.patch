@@ -1,0 +1,1614 @@
+diff -U3 -r fvwm/borders.c fvwm/borders.c
+--- fvwm/borders.c	2011-08-07 00:03:31.000000000 +0200
++++ fvwm/borders.c	2011-12-09 18:29:08.005127939 +0100
+@@ -124,14 +124,71 @@
+ 	int relief_width;
+ 	GC relief_gc;
+ 	GC shadow_gc;
++        GC relief_gc_north;
++        GC shadow_gc_north;
++        GC relief_gc_south;
++        GC shadow_gc_south;
++        GC relief_gc_east;
++        GC shadow_gc_east;
++        GC relief_gc_west;
++        GC shadow_gc_west;
++        GC relief_gc_nw;
++        GC shadow_gc_nw;
++        GC relief_gc_ne;
++        GC shadow_gc_ne;
++        GC relief_gc_sw;
++        GC shadow_gc_sw;
++        GC relief_gc_se;
++        GC shadow_gc_se;
++
+ 	Pixel fore_color;
+ 	Pixel back_color;
+-	int cs;
++        Pixel fore_color_north;
++        Pixel back_color_north;
++        Pixel fore_color_south; 
++        Pixel back_color_south;
++        Pixel fore_color_east; 
++        Pixel back_color_east;
++        Pixel fore_color_west; 
++        Pixel back_color_west;
++        Pixel fore_color_nw;
++        Pixel back_color_nw;
++        Pixel fore_color_ne;
++        Pixel back_color_ne;
++        Pixel fore_color_sw;
++        Pixel back_color_sw;
++        Pixel fore_color_se;
++        Pixel back_color_se;
++        
++        int cs;
++        int cs_north;
++        int cs_south;
++        int cs_east;
++        int cs_west;
+ 	int border_cs;		/* for UseBorderStyle */
++        int border_cs_north;
++        int border_cs_south;
++        int border_cs_east;
++        int border_cs_west;
++        
++        int cs_nw;
++        int cs_ne;
++        int cs_sw;
++        int cs_se;
+ 	int bg_border_cs;	/* for UseBorderStyle */
+ 	Pixmap back_pixmap;
+-	XSetWindowAttributes attributes;
+-	unsigned long valuemask;
++	
++        XSetWindowAttributes attributes;
++        XSetWindowAttributes attributes_north;
++        XSetWindowAttributes attributes_ne;
++        XSetWindowAttributes attributes_nw;
++        XSetWindowAttributes attributes_sw;
++        XSetWindowAttributes attributes_se;
++	XSetWindowAttributes attributes_south;
++        XSetWindowAttributes attributes_east;
++        XSetWindowAttributes attributes_west;
++        
++        unsigned long valuemask;
+ 	Pixmap texture_pixmap;
+ 	int texture_pixmap_width;
+ 	int texture_pixmap_height;
+@@ -329,10 +386,29 @@
+ {
+ 	DecorFace *df;
+ 	color_quad *draw_colors;
++        color_quad *draw_colors_north;
++        color_quad *draw_colors_south;
++        color_quad *draw_colors_east;
++        color_quad *draw_colors_west;
++
++        color_quad *draw_colors_nw;
++        color_quad *draw_colors_ne;
++        color_quad *draw_colors_sw;
++        color_quad *draw_colors_se;
+ 
+ 	df = border_get_border_style(t, has_focus);
+ 	cd->bg_border_cs = -1;
+ 	cd->cs = -1;
++        cd->cs_north = -1;
++        cd->cs_south = -1;
++        cd->cs_east = -1;
++        cd->cs_west = -1;
++        
++        cd->cs_nw = -1;
++        cd->cs_ne = -1;
++        cd->cs_sw = -1;
++        cd->cs_se = -1;
++
+ 	if (has_focus)
+ 	{
+ 		/* are we using textured borders? */
+@@ -356,11 +432,61 @@
+ 		{
+ 			draw_colors = &(t->border_hicolors);
+ 			cd->cs = t->border_cs_hi;
++
++                        draw_colors_north = &(t->border_hicolors_north);
++                        cd->cs_north = t->border_cs_hi_north;
++                        
++                        draw_colors_south = &(t->border_hicolors_south);
++                        cd->cs_south = t->border_cs_hi_south;
++
++                        draw_colors_east = &(t->border_hicolors_east);
++                        cd->cs_east = t->border_cs_hi_east;
++
++                        draw_colors_west = &(t->border_hicolors_west);
++                        cd->cs_west = t->border_cs_hi_west;
++
++                        /* handles */
++                        draw_colors_nw = &(t->border_hicolors_handles_nw);
++                        cd->cs_nw = t->border_cs_hi_handles_nw;
++                        
++                        draw_colors_ne = &(t->border_hicolors_handles_ne);
++                        cd->cs_ne = t->border_cs_hi_handles_ne;
++
++                        draw_colors_sw = &(t->border_hicolors_handles_sw);
++                        cd->cs_sw = t->border_cs_hi_handles_sw;
++
++                        draw_colors_se = &(t->border_hicolors_handles_se);
++                        cd->cs_se = t->border_cs_hi_handles_se;
+ 		}
+ 		else
+ 		{
+ 			draw_colors = &(t->hicolors);
+ 			cd->cs = t->cs_hi;
++
++                        draw_colors_north = &(t->hicolors);
++                        cd->cs_north = t->cs_hi;
++
++                        draw_colors_south = &(t->hicolors);
++                        cd->cs_south = t->cs_hi;
++
++                        draw_colors_east = &(t->hicolors);
++                        cd->cs_east = t->cs_hi;
++
++                        draw_colors_west = &(t->hicolors);
++                        cd->cs_west = t->cs_hi;
++
++                        /* handles */
++                        draw_colors_nw = &(t->hicolors);
++                        cd->cs_nw = t->cs_hi;
++                        
++                        draw_colors_ne = &(t->hicolors);
++                        cd->cs_ne = t->cs_hi;
++
++                        draw_colors_sw = &(t->hicolors);
++                        cd->cs_sw = t->cs_hi;
++
++                        draw_colors_se = &(t->hicolors);
++                        cd->cs_se = t->cs_hi;
+ 		}
+ 	}
+ 	else
+@@ -392,24 +518,167 @@
+ 		{
+ 			draw_colors = &(t->border_colors);
+ 			cd->cs = t->border_cs;
++
++                        draw_colors_north = &(t->border_colors_north);
++                        cd->cs_north = t->border_cs_north;
++
++                        draw_colors_south = &(t->border_colors_south);
++                        cd->cs_south = t->border_cs_south;
++
++                        draw_colors_east = &(t->border_colors_east);
++                        cd->cs_east = t->border_cs_east;
++                        
++                        draw_colors_west = &(t->border_colors_west);
++                        cd->cs_west = t->border_cs_west;
++                        
++                         /* handles */
++                        draw_colors_nw = &(t->border_colors_handles_nw);
++                        cd->cs_nw = t->border_cs_handles_nw;
++                        
++                        draw_colors_ne = &(t->border_colors_handles_ne);
++                        cd->cs_ne = t->border_cs_handles_ne;
++
++                        draw_colors_sw = &(t->border_colors_handles_sw);
++                        cd->cs_sw = t->border_cs_handles_sw;
++
++                        draw_colors_se = &(t->border_colors_handles_se);
++                        cd->cs_se = t->border_cs_handles_se;                        
++
+ 		}
+ 		else
+ 		{
+ 			draw_colors = &(t->colors);
+ 			cd->cs = t->cs;
++
++                        draw_colors_north = &(t->border_colors_north);
++                        cd->cs_north = t->cs;
++
++                        draw_colors_south = &(t->border_colors_south);
++                        cd->cs_south = t->cs;
++
++                        draw_colors_east = &(t->border_colors_east);
++                        cd->cs_east = t->cs;
++
++                        draw_colors_west = &(t->border_colors_west);
++                        cd->cs_west = t->cs;
++
++                         /* handles */
++                        draw_colors_nw = &(t->border_colors_handles_nw);
++                        cd->cs_nw = t->border_cs_handles_nw;
++                        
++                        draw_colors_ne = &(t->border_colors_handles_ne);
++                        cd->cs_ne = t->border_cs_handles_ne;
++
++                        draw_colors_sw = &(t->border_colors_handles_sw);
++                        cd->cs_sw = t->border_cs_handles_sw;
++
++                        draw_colors_se = &(t->border_colors_handles_se);
++                        cd->cs_se = t->border_cs_handles_se;                        
+ 		}
+ 	}
+ 	cd->fore_color = draw_colors->fore;
+ 	cd->back_color = draw_colors->back;
+-	if (do_change_gcs)
++
++        cd->fore_color_north = draw_colors_north->fore;
++        cd->back_color_north = draw_colors_north->back;
++
++        cd->fore_color_south = draw_colors_south->fore;
++        cd->back_color_south = draw_colors_south->back;
++
++        cd->fore_color_east = draw_colors_east->fore;
++        cd->back_color_east = draw_colors_east->back;
++
++        cd->fore_color_west = draw_colors_west->fore;
++        cd->back_color_west = draw_colors_west->back;
++
++        cd->fore_color_nw = draw_colors_nw->fore;
++        cd->back_color_nw = draw_colors_nw->back;
++
++        cd->fore_color_ne = draw_colors_ne->fore;
++        cd->back_color_ne = draw_colors_ne->back;
++
++        cd->fore_color_sw = draw_colors_nw->fore;
++        cd->back_color_sw = draw_colors_nw->back;
++
++        cd->fore_color_se = draw_colors_se->fore;
++        cd->back_color_se = draw_colors_se->back;
++
++        if (do_change_gcs)
+ 	{
+ 		Globalgcv.foreground = draw_colors->hilight;
+ 		Globalgcm = GCForeground;
+ 		XChangeGC(dpy, Scr.ScratchGC1, Globalgcm, &Globalgcv);
+ 		Globalgcv.foreground = draw_colors->shadow;
+ 		XChangeGC(dpy, Scr.ScratchGC2, Globalgcm, &Globalgcv);
++                
++                Globalgcv.foreground = draw_colors_north->hilight;
++		XChangeGC(dpy, Scr.ScratchGC3, Globalgcm, &Globalgcv);
++                Globalgcv.foreground = draw_colors_north->shadow;
++		XChangeGC(dpy, Scr.ScratchGC4, Globalgcm, &Globalgcv);
++
++                Globalgcv.foreground = draw_colors_south->hilight;
++		XChangeGC(dpy, Scr.ScratchGC5, Globalgcm, &Globalgcv);
++                Globalgcv.foreground = draw_colors_south->shadow;
++		XChangeGC(dpy, Scr.ScratchGC6, Globalgcm, &Globalgcv);
++
++                Globalgcv.foreground = draw_colors_east->hilight;
++		XChangeGC(dpy, Scr.ScratchGC7, Globalgcm, &Globalgcv);
++                Globalgcv.foreground = draw_colors_east->shadow;
++		XChangeGC(dpy, Scr.ScratchGC8, Globalgcm, &Globalgcv);
++
++                Globalgcv.foreground = draw_colors_west->hilight;
++		XChangeGC(dpy, Scr.ScratchGC9, Globalgcm, &Globalgcv);
++                Globalgcv.foreground = draw_colors_west->shadow;
++		XChangeGC(dpy, Scr.ScratchGC10, Globalgcm, &Globalgcv);
++
++                /* handles. */
++                Globalgcv.foreground = draw_colors_nw->hilight;
++		XChangeGC(dpy, Scr.ScratchGC11, Globalgcm, &Globalgcv);
++                Globalgcv.foreground = draw_colors_nw->shadow;
++		XChangeGC(dpy, Scr.ScratchGC12, Globalgcm, &Globalgcv);
++
++                Globalgcv.foreground = draw_colors_ne->hilight;
++		XChangeGC(dpy, Scr.ScratchGC13, Globalgcm, &Globalgcv);
++                Globalgcv.foreground = draw_colors_ne->shadow;
++		XChangeGC(dpy, Scr.ScratchGC14, Globalgcm, &Globalgcv);
++
++                Globalgcv.foreground = draw_colors_sw->hilight;
++		XChangeGC(dpy, Scr.ScratchGC15, Globalgcm, &Globalgcv);
++                Globalgcv.foreground = draw_colors_sw->shadow;
++		XChangeGC(dpy, Scr.ScratchGC16, Globalgcm, &Globalgcv);
++
++                Globalgcv.foreground = draw_colors_se->hilight;
++		XChangeGC(dpy, Scr.ScratchGC17, Globalgcm, &Globalgcv);
++                Globalgcv.foreground = draw_colors_se->shadow;
++		XChangeGC(dpy, Scr.ScratchGC18, Globalgcm, &Globalgcv);
++
+ 		cd->relief_gc = Scr.ScratchGC1;
+ 		cd->shadow_gc = Scr.ScratchGC2;
++
++                cd->relief_gc_north = Scr.ScratchGC3;
++                cd->shadow_gc_north = Scr.ScratchGC4;
++
++                cd->relief_gc_south = Scr.ScratchGC5;
++                cd->shadow_gc_south = Scr.ScratchGC6;
++
++                cd->relief_gc_east = Scr.ScratchGC7;
++                cd->shadow_gc_east = Scr.ScratchGC8;
++                
++                cd->relief_gc_west = Scr.ScratchGC9;
++                cd->shadow_gc_west = Scr.ScratchGC10;
++
++                /* Handles */
++                cd->relief_gc_nw = Scr.ScratchGC11;
++                cd->shadow_gc_nw = Scr.ScratchGC12;
++
++                cd->relief_gc_ne = Scr.ScratchGC13;
++                cd->shadow_gc_ne = Scr.ScratchGC14;
++                
++                cd->relief_gc_sw = Scr.ScratchGC15;
++                cd->shadow_gc_sw = Scr.ScratchGC16;
++
++                cd->relief_gc_se = Scr.ScratchGC17;
++                cd->shadow_gc_se = Scr.ScratchGC18;
+ 	}
+ 
+ 	/* MWMBorder style means thin 3d effects */
+@@ -430,6 +699,17 @@
+ 		else
+ 		{
+ 			cd->attributes.background_pixel = cd->back_color;
++                        cd->attributes_north.background_pixel = cd->back_color_north;
++                        cd->attributes_south.background_pixel = cd->back_color_south;
++                        cd->attributes_east.background_pixel = cd->back_color_east;
++                        cd->attributes_west.background_pixel = cd->back_color_west;
++
++                        /* handles */
++                        cd->attributes_nw.background_pixel = cd->back_color_nw;
++                        cd->attributes_ne.background_pixel = cd->back_color_ne;
++                        cd->attributes_sw.background_pixel = cd->back_color_sw;
++                        cd->attributes_se.background_pixel = cd->back_color_se;
++
+ 			cd->valuemask = CWBackPixel;
+ 		}
+ 	}
+@@ -799,7 +1079,7 @@
+ 
+ static void border_get_border_gcs(
+ 	draw_border_gcs *ret_gcs, common_decorations_type *cd, FvwmWindow *fw,
+-	Bool do_hilight)
++	Bool do_hilight, window_parts part)
+ {
+ 	static GC transparent_gc = None;
+ 	DecorFaceStyle *borderstyle;
+@@ -823,17 +1103,102 @@
+ 	{
+ 		is_reversed = True;
+ 	}
+-	if (is_reversed)
+-	{
+-		ret_gcs->shadow = cd->relief_gc;
+-		ret_gcs->relief = cd->shadow_gc;
+-	}
+-	else
+-	{
+-		ret_gcs->relief = cd->relief_gc;
+-		ret_gcs->shadow = cd->shadow_gc;
+-	}
+-
++	
++        switch ( part )
++        {
++                case PART_BORDER_N:
++                        if( is_reversed )
++                        {
++                                ret_gcs->shadow = cd->relief_gc_north;
++                                ret_gcs->relief = cd->shadow_gc_north;
++                        } else {
++                                ret_gcs->relief = cd->relief_gc_north;
++                                ret_gcs->shadow = cd->shadow_gc_north;
++                        }
++                        break;
++                case PART_BORDER_S:
++                        if( is_reversed )
++                        {
++                                ret_gcs->shadow = cd->relief_gc_south;
++                                ret_gcs->relief = cd->shadow_gc_south;
++                        } else {
++                                 ret_gcs->relief = cd->relief_gc_south;
++                                 ret_gcs->shadow = cd->shadow_gc_south;
++                        }
++                        break;
++                case PART_BORDER_E:
++                        if( is_reversed )
++                        {
++                                ret_gcs->shadow = cd->relief_gc_east;
++                                ret_gcs->relief = cd->shadow_gc_east;
++                        } else {
++                                 ret_gcs->relief = cd->relief_gc_east;
++                                 ret_gcs->shadow = cd->shadow_gc_east;
++                        }
++                        break;
++                case PART_BORDER_W:
++                        if( is_reversed )
++                        {
++                                ret_gcs->shadow = cd->relief_gc_west;
++                                ret_gcs->relief = cd->shadow_gc_west;
++                        } else {
++                                 ret_gcs->relief = cd->relief_gc_west;
++                                 ret_gcs->shadow = cd->shadow_gc_west;
++                        }
++                        break;
++                case PART_BORDER_NW:
++                        if( is_reversed )
++                        {
++                                ret_gcs->shadow = cd->relief_gc_nw;
++                                ret_gcs->relief = cd->shadow_gc_nw;
++                        } else {
++                                 ret_gcs->relief = cd->relief_gc_nw;
++                                 ret_gcs->shadow = cd->shadow_gc_nw;
++                        }
++                        break;
++                case PART_BORDER_NE:
++                        if( is_reversed )
++                        {
++                                ret_gcs->shadow = cd->relief_gc_ne;
++                                ret_gcs->relief = cd->shadow_gc_ne;
++                        } else {
++                                 ret_gcs->relief = cd->relief_gc_ne;
++                                 ret_gcs->shadow = cd->shadow_gc_ne;
++                        }
++                        break;
++                case PART_BORDER_SW:
++                        if( is_reversed )
++                        {
++                                ret_gcs->shadow = cd->relief_gc_sw;
++                                ret_gcs->relief = cd->shadow_gc_sw;
++                        } else {
++                                 ret_gcs->relief = cd->relief_gc_sw;
++                                 ret_gcs->shadow = cd->shadow_gc_sw;
++                        }
++                        break;
++                case PART_BORDER_SE:
++                        if( is_reversed )
++                        {
++                                ret_gcs->shadow = cd->relief_gc_se;
++                                ret_gcs->relief = cd->shadow_gc_se;
++                        } else {
++                                 ret_gcs->relief = cd->relief_gc_se;
++                                 ret_gcs->shadow = cd->shadow_gc_se;
++                        }
++                        break;
++                default:
++                        if (is_reversed)
++                        {
++                                ret_gcs->shadow = cd->relief_gc;
++                                ret_gcs->relief = cd->shadow_gc;
++                        }
++                        else
++                        {
++                                ret_gcs->relief = cd->relief_gc;
++                                ret_gcs->shadow = cd->shadow_gc;
++                        }
++                        break;
++        }
+ 	return;
+ }
+ 
+@@ -1135,12 +1500,13 @@
+ 		}
+ 		if (do_draw_shadow)
+ 		{
+-			x1 = x + k;
++			//x1 = x + k;
++                        x1 = x;
+ 			y1 = y - 1 - k;
+ 		}
+ 		else
+ 		{
+-			x1 = x;
++			x1 = x - k;
+ 			y1 = y + k;
+ 		}
+ 		x2 = x1 + length;
+@@ -1291,9 +1657,11 @@
+ 		valuemask |= GCForeground | GCClipMask | GCClipXOrigin |
+ 			GCClipYOrigin;
+ 		XChangeGC(dpy, Scr.BordersGC, valuemask, &xgcv);
+-		XFillRectangle(
++		
++                XFillRectangle(
+ 			dpy, dest_pix, Scr.BordersGC, dest_g->x, dest_g->y,
+ 			dest_g->width - dest_g->x, dest_g->height - dest_g->y);
++                
+ 		return;
+ 	}
+ 
+@@ -1453,7 +1821,7 @@
+ 
+ static void border_get_border_background(
+ 	pixmap_background_type *bg, common_decorations_type *cd,
+-	rectangle *part_g, rectangle *relative_g, int *free_bg_pixmap, Window w)
++	rectangle *part_g, rectangle *relative_g, int *free_bg_pixmap, Window w, window_parts part)
+ {
+ 	*free_bg_pixmap = False;
+ 
+@@ -1519,9 +1887,38 @@
+ 	else
+ 	{
+ 		bg->flags.use_pixmap = 0;
+-		bg->pixel = cd->attributes.background_pixel;
+-	}
+ 
++                switch ( part )
++                {
++                        case PART_BORDER_N:
++                                bg->pixel = cd->attributes_north.background_pixel;
++                                break;
++                        case PART_BORDER_S:
++                                bg->pixel = cd->attributes_south.background_pixel;
++                                break;
++                        case PART_BORDER_E:
++                                bg->pixel = cd->attributes_east.background_pixel;
++                                break;
++                        case PART_BORDER_W:
++                                bg->pixel = cd->attributes_west.background_pixel;
++                                break;
++                        case PART_BORDER_NW:
++                                bg->pixel = cd->attributes_nw.background_pixel;
++                                break;
++                        case PART_BORDER_NE:
++                                bg->pixel = cd->attributes_ne.background_pixel;
++                                break;
++                        case PART_BORDER_SW:
++                                bg->pixel = cd->attributes_sw.background_pixel;
++                                break;
++                        case PART_BORDER_SE:
++                                bg->pixel = cd->attributes_se.background_pixel;
++                                break;
++                        default:
++                                bg->pixel = cd->attributes.background_pixel;
++                                break;
++                }
++	}
+ 	return;
+ }
+ 
+@@ -1551,7 +1948,7 @@
+ 	relative_g.x = part_g.x;
+ 	relative_g.y = part_g.y;
+ 	border_get_border_background(
+-		&bg, cd, &part_g, &relative_g, &free_bg_pixmap, w);
++		&bg, cd, &part_g, &relative_g, &free_bg_pixmap, w, part);
+ 	if (cd->texture_pixmap)
+ 	{
+ 		switch (part)
+@@ -1638,7 +2035,7 @@
+ 	border_get_border_relief_size_descr(&br->relief, fw, do_hilight);
+ 	border_get_border_marks_descr(cd, br, fw);
+ 	/* fetch the gcs used to draw the border */
+-	border_get_border_gcs(&br->gcs, cd, fw, do_hilight);
++	//border_get_border_gcs(&br->gcs, cd, fw, do_hilight);
+ 	/* draw everything in a big loop */
+ 	draw_parts &= (PART_FRAME | PART_HANDLES);
+ 	draw_handles = (draw_parts & PART_HANDLES);
+@@ -1647,11 +2044,12 @@
+ 	{
+ 		if (part & draw_parts)
+ 		{
+-			border_draw_one_border_part(
+-				cd, fw, &br->sidebar_g, frame_g, br, part,
+-				draw_handles,
+-				(pressed_parts & part) ? True : False,
+-				do_clear);
++                        border_get_border_gcs(&br->gcs, cd, fw, do_hilight, part);
++                        border_draw_one_border_part(
++                                        cd, fw, &br->sidebar_g, frame_g, br, part,
++                                        draw_handles,
++                                        (pressed_parts & part) ? True : False,
++                                        do_clear);
+ 		}
+ 	}
+ 
+@@ -3279,7 +3677,7 @@
+ 		relative_g.x = button_g->x;
+ 		relative_g.y = button_g->y;
+ 		border_get_border_background(
+-			&bg, td->cd, button_g, &relative_g, &free_bg_pixmap, w);
++			&bg, td->cd, button_g, &relative_g, &free_bg_pixmap, w, PART_NONE);
+ 		bg.pixmap.g.x = 0;
+ 		bg.pixmap.g.y = 0;
+ 		/* set the geometry for drawing the Tiled pixmap;
+@@ -3723,7 +4121,7 @@
+ 		relative_g.y = td->layout.title_g.y;
+ 		border_get_border_background(
+ 			&bg, td->cd, &td->layout.title_g, &relative_g,
+-			&free_bg_pixmap, w);
++			&free_bg_pixmap, w, PART_NONE);
+ 		bg.pixmap.g.x = 0;
+ 		bg.pixmap.g.y = 0;
+ 		/* set the geometry for drawing the Tiled pixmap;
+diff -U3 -r fvwm/fvwm.c fvwm/fvwm.c
+--- fvwm/fvwm.c	2011-08-07 00:03:31.000000000 +0200
++++ fvwm/fvwm.c	2011-12-09 18:29:08.005127939 +0100
+@@ -1083,7 +1083,22 @@
+ 	Scr.ScratchGC2 = fvwmlib_XCreateGC(dpy, Scr.NoFocusWin, gcm, &gcv);
+ 	Scr.ScratchGC3 = fvwmlib_XCreateGC(dpy, Scr.NoFocusWin, gcm, &gcv);
+ 	Scr.ScratchGC4 = fvwmlib_XCreateGC(dpy, Scr.NoFocusWin, gcm, &gcv);
+-	Scr.TitleGC = fvwmlib_XCreateGC(dpy, Scr.NoFocusWin, gcm, &gcv);
++	Scr.ScratchGC5 = fvwmlib_XCreateGC(dpy, Scr.NoFocusWin, gcm, &gcv);
++	Scr.ScratchGC6 = fvwmlib_XCreateGC(dpy, Scr.NoFocusWin, gcm, &gcv);
++	Scr.ScratchGC7 = fvwmlib_XCreateGC(dpy, Scr.NoFocusWin, gcm, &gcv);
++	Scr.ScratchGC8 = fvwmlib_XCreateGC(dpy, Scr.NoFocusWin, gcm, &gcv);
++        Scr.ScratchGC9 = fvwmlib_XCreateGC(dpy, Scr.NoFocusWin, gcm, &gcv);
++        Scr.ScratchGC10 = fvwmlib_XCreateGC(dpy, Scr.NoFocusWin, gcm, &gcv);
++        Scr.ScratchGC11 = fvwmlib_XCreateGC(dpy, Scr.NoFocusWin, gcm, &gcv);
++        Scr.ScratchGC12 = fvwmlib_XCreateGC(dpy, Scr.NoFocusWin, gcm, &gcv);
++        Scr.ScratchGC13 = fvwmlib_XCreateGC(dpy, Scr.NoFocusWin, gcm, &gcv);
++        Scr.ScratchGC14 = fvwmlib_XCreateGC(dpy, Scr.NoFocusWin, gcm, &gcv);
++        Scr.ScratchGC15 = fvwmlib_XCreateGC(dpy, Scr.NoFocusWin, gcm, &gcv);
++        Scr.ScratchGC16 = fvwmlib_XCreateGC(dpy, Scr.NoFocusWin, gcm, &gcv);
++        Scr.ScratchGC17 = fvwmlib_XCreateGC(dpy, Scr.NoFocusWin, gcm, &gcv);
++        Scr.ScratchGC18 = fvwmlib_XCreateGC(dpy, Scr.NoFocusWin, gcm, &gcv);
++
++        Scr.TitleGC = fvwmlib_XCreateGC(dpy, Scr.NoFocusWin, gcm, &gcv);
+ 	Scr.BordersGC = fvwmlib_XCreateGC(dpy, Scr.NoFocusWin, gcm, &gcv);
+ 	Scr.TransMaskGC = fvwmlib_XCreateGC(dpy, Scr.NoFocusWin, gcm, &gcv);
+ 	Scr.ScratchMonoPixmap = XCreatePixmap(dpy, Scr.Root, 1, 1, 1);
+diff -U3 -r fvwm/fvwm.h fvwm/fvwm.h
+--- fvwm/fvwm.h	2011-09-11 00:19:51.000000000 +0200
++++ fvwm/fvwm.h	2011-12-09 18:29:08.008461188 +0100
+@@ -577,7 +577,23 @@
+ 	unsigned use_colorset : 1;
+ 	unsigned use_colorset_hi : 1;
+ 	unsigned use_border_colorset : 1;
++        unsigned use_border_colorset_north : 1;
++        unsigned use_border_colorset_south : 1;
++        unsigned use_border_colorset_east : 1;
++        unsigned use_border_colorset_west : 1;
++        unsigned use_border_colorset_handles_nw : 1;
++        unsigned use_border_colorset_handles_ne : 1;
++        unsigned use_border_colorset_handles_sw : 1;
++        unsigned use_border_colorset_handles_se : 1;
+ 	unsigned use_border_colorset_hi : 1;
++        unsigned use_border_colorset_hi_north : 1;
++        unsigned use_border_colorset_hi_south : 1;
++        unsigned use_border_colorset_hi_east : 1;
++        unsigned use_border_colorset_hi_west : 1;
++        unsigned use_border_colorset_hi_handles_nw : 1;
++        unsigned use_border_colorset_hi_handles_ne : 1;
++        unsigned use_border_colorset_hi_handles_sw : 1;
++        unsigned use_border_colorset_hi_handles_se : 1;
+ 	unsigned use_icon_title_colorset : 1;
+ 	unsigned use_icon_title_colorset_hi : 1;
+ 	unsigned use_icon_background_colorset : 1;
+@@ -668,7 +684,23 @@
+ 	int colorset;
+ 	int colorset_hi;
+ 	int border_colorset;
++        int border_colorset_north;
++        int border_colorset_south;
++        int border_colorset_east;
++        int border_colorset_west;
++        int border_colorset_handles_nw;
++        int border_colorset_handles_ne;
++        int border_colorset_handles_sw;
++        int border_colorset_handles_se;
+ 	int border_colorset_hi;
++        int border_colorset_hi_north;
++        int border_colorset_hi_south;
++        int border_colorset_hi_east;
++        int border_colorset_hi_west;
++        int border_colorset_hi_handles_nw;
++        int border_colorset_hi_handles_ne;
++        int border_colorset_hi_handles_sw;
++        int border_colorset_hi_handles_se;
+ 	int icon_title_colorset;
+ 	int icon_title_colorset_hi;
+ 	int icon_background_colorset;
+@@ -883,12 +915,51 @@
+ 	color_quad colors;
+ 	color_quad hicolors;
+ 	color_quad border_colors;
++        color_quad border_colors_north;
++        color_quad border_colors_south;
++        color_quad border_colors_east;
++        color_quad border_colors_west;
++
++        color_quad border_colors_handles_nw;
++        color_quad border_colors_handles_ne;
++        color_quad border_colors_handles_sw;
++        color_quad border_colors_handles_se;
++
+ 	color_quad border_hicolors;
++        color_quad border_hicolors_north;
++        color_quad border_hicolors_south;
++        color_quad border_hicolors_east;
++        color_quad border_hicolors_west;
++
++        color_quad border_hicolors_handles_nw;
++        color_quad border_hicolors_handles_ne;
++        color_quad border_hicolors_handles_sw;
++        color_quad border_hicolors_handles_se;
+ 
+ 	int cs;
+ 	int cs_hi;
+ 	int border_cs;
++        int border_cs_north;
++        int border_cs_south;
++        int border_cs_east;
++        int border_cs_west;
++
++        int border_cs_handles_nw;
++        int border_cs_handles_ne;
++        int border_cs_handles_sw;
++        int border_cs_handles_se;
++
+ 	int border_cs_hi;
++        int border_cs_hi_north;
++        int border_cs_hi_south;
++        int border_cs_hi_east;
++        int border_cs_hi_west;
++
++        int border_cs_hi_handles_nw;
++        int border_cs_hi_handles_ne;
++        int border_cs_hi_handles_sw;
++        int border_cs_hi_handles_se;
++
+ 	int icon_title_cs;
+ 	int icon_title_cs_hi;
+ 	int icon_background_cs;
+diff -U3 -r fvwm/screen.h fvwm/screen.h
+--- fvwm/screen.h	2009-12-31 18:35:47.000000000 +0100
++++ fvwm/screen.h	2011-12-09 18:29:08.008461188 +0100
+@@ -409,6 +409,21 @@
+ 	GC ScratchGC2;
+ 	GC ScratchGC3;
+ 	GC ScratchGC4;
++        GC ScratchGC5;
++	GC ScratchGC6;
++	GC ScratchGC7;
++	GC ScratchGC8;
++        GC ScratchGC9;
++        GC ScratchGC10;
++        GC ScratchGC11;
++        GC ScratchGC12;
++        GC ScratchGC13;
++        GC ScratchGC14;
++        GC ScratchGC15;
++        GC ScratchGC16;
++        GC ScratchGC17;
++        GC ScratchGC18;
++
+ 	GC TitleGC;
+ 	GC BordersGC;
+ 	/* minimum width of size window */
+diff -U3 -r fvwm/style.c fvwm/style.c
+--- fvwm/style.c	2011-09-27 23:05:00.000000000 +0200
++++ fvwm/style.c	2011-12-09 18:29:08.011794436 +0100
+@@ -675,11 +675,91 @@
+ 		SSET_BORDER_COLORSET(
+ 			*merged_style, SGET_BORDER_COLORSET(*add_style));
+ 	}
++ 	if (add_style->flags.use_border_colorset_north)
++	{
++		SSET_BORDER_COLORSET_NORTH(
++			*merged_style,SGET_BORDER_COLORSET_NORTH(*add_style));
++	}
++        if (add_style->flags.use_border_colorset_south)
++	{
++		SSET_BORDER_COLORSET_SOUTH(
++			*merged_style,SGET_BORDER_COLORSET_SOUTH(*add_style));
++	}
++        if (add_style->flags.use_border_colorset_east)
++	{
++		SSET_BORDER_COLORSET_EAST(
++			*merged_style,SGET_BORDER_COLORSET_EAST(*add_style));
++	}
++        if (add_style->flags.use_border_colorset_west)
++	{
++		SSET_BORDER_COLORSET_WEST(
++			*merged_style,SGET_BORDER_COLORSET_WEST(*add_style));
++	}
++        if (add_style->flags.use_border_colorset_handles_nw)
++	{
++		SSET_BORDER_COLORSET_HANDLES_NW(
++			*merged_style,SGET_BORDER_COLORSET_HANDLES_NW(*add_style));
++	}
++        if (add_style->flags.use_border_colorset_handles_ne)
++	{
++		SSET_BORDER_COLORSET_HANDLES_NE(
++			*merged_style,SGET_BORDER_COLORSET_HANDLES_NE(*add_style));
++	}
++        if (add_style->flags.use_border_colorset_handles_sw)
++	{
++		SSET_BORDER_COLORSET_HANDLES_SW(
++			*merged_style,SGET_BORDER_COLORSET_HANDLES_SW(*add_style));
++	}
++        if (add_style->flags.use_border_colorset_handles_se)
++	{
++		SSET_BORDER_COLORSET_HANDLES_SE(
++			*merged_style,SGET_BORDER_COLORSET_HANDLES_SE(*add_style));
++	}
+ 	if (add_style->flags.use_border_colorset_hi)
+ 	{
+ 		SSET_BORDER_COLORSET_HI(
+ 			*merged_style,SGET_BORDER_COLORSET_HI(*add_style));
+ 	}
++	if (add_style->flags.use_border_colorset_hi_north)
++	{
++		SSET_BORDER_COLORSET_HI_NORTH(
++			*merged_style,SGET_BORDER_COLORSET_HI_NORTH(*add_style));
++	}
++        if (add_style->flags.use_border_colorset_hi_south)
++	{
++		SSET_BORDER_COLORSET_HI_SOUTH(
++			*merged_style,SGET_BORDER_COLORSET_HI_SOUTH(*add_style));
++	}
++        if (add_style->flags.use_border_colorset_hi_east)
++	{
++		SSET_BORDER_COLORSET_HI_EAST(
++			*merged_style,SGET_BORDER_COLORSET_HI_EAST(*add_style));
++	}
++        if (add_style->flags.use_border_colorset_hi_west)
++	{
++		SSET_BORDER_COLORSET_HI_WEST(
++			*merged_style,SGET_BORDER_COLORSET_HI_WEST(*add_style));
++	}
++        if (add_style->flags.use_border_colorset_hi_handles_nw)
++        {
++                SSET_BORDER_COLORSET_HI_HANDLES_NW(
++                        *merged_style,SGET_BORDER_COLORSET_HI_HANDLES_NW(*add_style));
++        }
++        if (add_style->flags.use_border_colorset_hi_handles_ne)
++        {
++                SSET_BORDER_COLORSET_HI_HANDLES_NE(
++                        *merged_style,SGET_BORDER_COLORSET_HI_HANDLES_NE(*add_style));
++        }
++        if (add_style->flags.use_border_colorset_hi_handles_sw)
++        {
++                SSET_BORDER_COLORSET_HI_HANDLES_SW(
++                        *merged_style,SGET_BORDER_COLORSET_HI_HANDLES_SW(*add_style));
++        }
++        if (add_style->flags.use_border_colorset_hi_handles_se)
++        {
++                SSET_BORDER_COLORSET_HI_HANDLES_SE(
++                        *merged_style,SGET_BORDER_COLORSET_HI_HANDLES_SE(*add_style));
++        }
+ 	if (add_style->flags.use_icon_title_colorset)
+ 	{
+ 		SSET_ICON_TITLE_COLORSET(
+@@ -2223,6 +2303,120 @@
+ 			ps->flag_mask.use_border_colorset = 1;
+ 			ps->change_mask.use_border_colorset = 1;
+ 		}
++                else if (StrEquals(token, "BorderColorsetRegions"))
++                {
++                        int f[4] = {-1, -1, -1, -1};
++                        Bool bad = False;
++
++			num = 0;
++			if (on != 0)
++			{
++				num = GetIntegerArguments(rest, &rest, val, 4);
++
++				for (i=0; i < num; i++)
++				{
++					if (val[i] < 0)
++                                        {
++						bad = True;
++                                        } else {
++                                                f[i] = val[i];
++                                        }       
++				}
++			}
++			if (bad)
++			{
++				fvwm_msg(
++					ERR, "style_parse_one_style_option",
++					"Bad argument to BorderColorsetRegions"
++					": %s", rest);
++				break;
++			}
++
++                        /* If 'f' defines our array of colorsets then dispatch
++                         * them here.
++                         */
++
++                        SSET_BORDER_COLORSET_NORTH(*ps, f[0]);
++			alloc_colorset(f[0]);
++			ps->flags.use_border_colorset_north = (f[0] >= 0);
++			ps->flag_mask.use_border_colorset_north = 1;
++			ps->change_mask.use_border_colorset_north = 1;
++
++
++                        SSET_BORDER_COLORSET_SOUTH(*ps, f[1]);
++			alloc_colorset(f[1]);
++			ps->flags.use_border_colorset_south = (f[1] >= 0);
++			ps->flag_mask.use_border_colorset_south = 1;
++			ps->change_mask.use_border_colorset_south = 1;
++
++                        SSET_BORDER_COLORSET_EAST(*ps, f[2]);
++			alloc_colorset(f[2]);
++			ps->flags.use_border_colorset_east = (f[2] >= 0);
++			ps->flag_mask.use_border_colorset_east = 1;
++			ps->change_mask.use_border_colorset_east = 1;
++
++                        SSET_BORDER_COLORSET_WEST(*ps, f[3]);
++			alloc_colorset(f[3]);
++			ps->flags.use_border_colorset_west = (f[3] >= 0);
++			ps->flag_mask.use_border_colorset_west = 1;
++			ps->change_mask.use_border_colorset_west = 1;
++                }
++                else if (StrEquals(token, "BorderHandlesColorsetRegions"))
++                {
++                        int f[4] = {-1, -1, -1, -1};
++                        Bool bad = False;
++
++			num = 0;
++			if (on != 0)
++			{
++				num = GetIntegerArguments(rest, &rest, val, 4);
++
++				for (i=0; i < num; i++)
++				{
++					if (val[i] < 0)
++						bad = True;
++                                        f[i] = val[i];
++				}
++			}
++			if (bad)
++			{
++				fvwm_msg(
++					ERR, "style_parse_one_style_option",
++					"Bad argument to HandlesColorsetRegions"
++					": %s", rest);
++				break;
++			}
++
++                        /* If 'f' defines our array of colorsets then dispatch
++                         * them here.
++                         */
++
++                        SSET_BORDER_COLORSET_HANDLES_NW(*ps, f[0]);
++			alloc_colorset(f[0]);
++			ps->flags.use_border_colorset_handles_nw = (f[0] >= 0);
++			ps->flag_mask.use_border_colorset_handles_nw = 1;
++			ps->change_mask.use_border_colorset_handles_nw = 1;
++
++                        SSET_BORDER_COLORSET_HANDLES_NE(*ps, f[1]);
++			alloc_colorset(f[1]);
++			ps->flags.use_border_colorset_handles_ne = (f[1] >= 0);
++			ps->flag_mask.use_border_colorset_handles_ne = 1;
++			ps->change_mask.use_border_colorset_handles_ne = 1;
++
++                        SSET_BORDER_COLORSET_HANDLES_SW(*ps, f[2]);
++			alloc_colorset(f[2]);
++			ps->flags.use_border_colorset_handles_sw = (f[2] >= 0);
++			ps->flag_mask.use_border_colorset_handles_sw = 1;
++			ps->change_mask.use_border_colorset_handles_sw = 1;
++
++                        SSET_BORDER_COLORSET_HANDLES_SE(*ps, f[3]);
++			alloc_colorset(f[3]);
++			ps->flags.use_border_colorset_handles_se = (f[3] >= 0);
++			ps->flag_mask.use_border_colorset_handles_se = 1;
++			ps->change_mask.use_border_colorset_handles_se = 1;
++
++                }
++
+ 		else if (StrEquals(token, "BottomTitleRotated"))
+ 		{
+ 			S_SET_IS_BOTTOM_TITLE_ROTATED(SCF(*ps), on);
+@@ -2871,7 +3065,117 @@
+ 			ps->flag_mask.use_border_colorset_hi = 1;
+ 			ps->change_mask.use_border_colorset_hi = 1;
+ 		}
+-		else if (StrEquals(token, "HilightIconTitleColorset"))
++                else if (StrEquals(token, "HilightBorderColorsetRegions"))
++                {
++                        int f[4] = {-1, -1, -1, -1};
++                        Bool bad = False;
++
++			num = 0;
++			if (on != 0)
++			{
++				num = GetIntegerArguments(rest, &rest, val, 4);
++
++				for (i=0; i < num; i++)
++				{
++					if (val[i] < 0)
++						bad = True;
++                                        f[i] = val[i];
++				}
++			}
++			if (bad)
++			{
++				fvwm_msg(
++					ERR, "style_parse_one_style_option",
++					"Bad argument to HilightBorderColorsetRegions"
++					": %s", rest);
++				break;
++			}
++
++                        /* If 'f' defines our array of colorsets then dispatch
++                         * them here.
++                         */
++
++                        SSET_BORDER_COLORSET_HI_NORTH(*ps, f[0]);
++			alloc_colorset(f[0]);
++			ps->flags.use_border_colorset_hi_north = (f[0] >= 0);
++			ps->flag_mask.use_border_colorset_hi_north = 1;
++			ps->change_mask.use_border_colorset_hi_north = 1;
++
++                        SSET_BORDER_COLORSET_HI_SOUTH(*ps, f[1]);
++			alloc_colorset(f[1]);
++			ps->flags.use_border_colorset_hi_south = (f[1] >= 0);
++			ps->flag_mask.use_border_colorset_hi_south = 1;
++			ps->change_mask.use_border_colorset_hi_south = 1;
++
++                        SSET_BORDER_COLORSET_HI_EAST(*ps, f[2]);
++			alloc_colorset(f[2]);
++			ps->flags.use_border_colorset_hi_east = (f[2] >= 0);
++			ps->flag_mask.use_border_colorset_hi_east = 1;
++			ps->change_mask.use_border_colorset_hi_east = 1;
++
++                        SSET_BORDER_COLORSET_HI_WEST(*ps, f[3]);
++			alloc_colorset(f[3]);
++			ps->flags.use_border_colorset_hi_west = (f[3] >= 0);
++			ps->flag_mask.use_border_colorset_hi_west = 1;
++			ps->change_mask.use_border_colorset_hi_west = 1;
++
++                }
++                else if (StrEquals(token, "HilightHandlesColorsetRegions"))
++                {
++                        int f[4] = {-1, -1, -1, -1};
++                        Bool bad = False;
++
++			num = 0;
++			if (on != 0)
++			{
++				num = GetIntegerArguments(rest, &rest, val, 4);
++
++				for (i=0; i < num; i++)
++				{
++					if (val[i] < 0)
++						bad = True;
++                                        f[i] = val[i];
++				}
++			}
++			if (bad)
++			{
++				fvwm_msg(
++					ERR, "style_parse_one_style_option",
++					"Bad argument to HilightHandlesColorsetRegions"
++					": %s", rest);
++				break;
++			}
++
++                        /* If 'f' defines our array of colorsets then dispatch
++                         * them here.
++                         */
++
++                        SSET_BORDER_COLORSET_HI_HANDLES_NW(*ps, f[0]);
++			alloc_colorset(f[0]);
++			ps->flags.use_border_colorset_hi_handles_nw = (f[0] >= 0);
++			ps->flag_mask.use_border_colorset_hi_handles_nw = 1;
++			ps->change_mask.use_border_colorset_hi_handles_nw = 1;
++
++                        SSET_BORDER_COLORSET_HI_HANDLES_NE(*ps, f[1]);
++			alloc_colorset(f[1]);
++			ps->flags.use_border_colorset_hi_handles_ne = (f[1] >= 0);
++			ps->flag_mask.use_border_colorset_hi_handles_ne = 1;
++			ps->change_mask.use_border_colorset_hi_handles_ne = 1;
++
++                        SSET_BORDER_COLORSET_HI_HANDLES_SW(*ps, f[2]);
++			alloc_colorset(f[2]);
++			ps->flags.use_border_colorset_hi_handles_sw = (f[2] >= 0);
++			ps->flag_mask.use_border_colorset_hi_handles_sw = 1;
++			ps->change_mask.use_border_colorset_hi_handles_sw = 1;
++
++                        SSET_BORDER_COLORSET_HI_HANDLES_SE(*ps, f[3]);
++			alloc_colorset(f[3]);
++			ps->flags.use_border_colorset_hi_handles_se = (f[3] >= 0);
++			ps->flag_mask.use_border_colorset_hi_handles_se = 1;
++			ps->change_mask.use_border_colorset_hi_handles_se = 1;
++
++                }
++                else if (StrEquals(token, "HilightIconTitleColorset"))
+ 		{
+ 			*val = -1;
+ 			GetIntegerArguments(rest, &rest, val, 1);
+@@ -5290,6 +5594,62 @@
+ 			temp->change_mask.use_border_colorset = 1;
+ 			Scr.flags.do_need_window_update = 1;
+ 		}
++                if (SUSE_BORDER_COLORSET_NORTH(&temp->flags) &&
++		    SGET_BORDER_COLORSET_NORTH(*temp) == colorset)
++		{
++			temp->has_style_changed = 1;
++			temp->change_mask.use_border_colorset_north = 1;
++			Scr.flags.do_need_window_update = 1;
++		}
++                if (SUSE_BORDER_COLORSET_SOUTH(&temp->flags) &&
++		    SGET_BORDER_COLORSET_SOUTH(*temp) == colorset)
++		{
++			temp->has_style_changed = 1;
++			temp->change_mask.use_border_colorset_south = 1;
++			Scr.flags.do_need_window_update = 1;
++		}
++                if (SUSE_BORDER_COLORSET_EAST(&temp->flags) &&
++		    SGET_BORDER_COLORSET_EAST(*temp) == colorset)
++		{
++			temp->has_style_changed = 1;
++			temp->change_mask.use_border_colorset_east = 1;
++			Scr.flags.do_need_window_update = 1;
++		}
++                if (SUSE_BORDER_COLORSET_WEST(&temp->flags) &&
++		    SGET_BORDER_COLORSET_WEST(*temp) == colorset)
++		{
++			temp->has_style_changed = 1;
++			temp->change_mask.use_border_colorset_west = 1;
++			Scr.flags.do_need_window_update = 1;
++		}
++                if (SUSE_BORDER_COLORSET_HANDLES_NW(&temp->flags) &&
++                    SGET_BORDER_COLORSET_HANDLES_NW(*temp) == colorset)
++                {
++                        temp->has_style_changed = 1;
++			temp->change_mask.use_border_colorset_handles_nw = 1;
++			Scr.flags.do_need_window_update = 1;
++                }
++                if (SUSE_BORDER_COLORSET_HANDLES_NE(&temp->flags) &&
++                    SGET_BORDER_COLORSET_HANDLES_NE(*temp) == colorset)
++                {
++                        temp->has_style_changed = 1;
++			temp->change_mask.use_border_colorset_handles_ne = 1;
++			Scr.flags.do_need_window_update = 1;
++                }
++                if (SUSE_BORDER_COLORSET_HANDLES_SW(&temp->flags) &&
++                    SGET_BORDER_COLORSET_HANDLES_SW(*temp) == colorset)
++                {
++                        temp->has_style_changed = 1;
++			temp->change_mask.use_border_colorset_handles_sw = 1;
++			Scr.flags.do_need_window_update = 1;
++                }
++                if (SUSE_BORDER_COLORSET_HANDLES_SE(&temp->flags) &&
++                    SGET_BORDER_COLORSET_HANDLES_SE(*temp) == colorset)
++                {
++                        temp->has_style_changed = 1;
++			temp->change_mask.use_border_colorset_handles_se = 1;
++			Scr.flags.do_need_window_update = 1;
++                }
+ 		if (SUSE_BORDER_COLORSET_HI(&temp->flags) &&
+ 		    SGET_BORDER_COLORSET_HI(*temp) == colorset)
+ 		{
+@@ -5297,6 +5657,62 @@
+ 			temp->change_mask.use_border_colorset_hi = 1;
+ 			Scr.flags.do_need_window_update = 1;
+ 		}
++                if (SUSE_BORDER_COLORSET_HI_NORTH(&temp->flags) &&
++                    SGET_BORDER_COLORSET_HI_NORTH(*temp) == colorset)
++                {
++                        temp->has_style_changed = 1;
++			temp->change_mask.use_border_colorset_hi_north = 1;
++			Scr.flags.do_need_window_update = 1;
++                }
++                if (SUSE_BORDER_COLORSET_HI_SOUTH(&temp->flags) &&
++                    SGET_BORDER_COLORSET_HI_SOUTH(*temp) == colorset)
++                {
++                        temp->has_style_changed = 1;
++			temp->change_mask.use_border_colorset_hi_south = 1;
++			Scr.flags.do_need_window_update = 1;
++                }
++                if (SUSE_BORDER_COLORSET_HI_EAST(&temp->flags) &&
++                    SGET_BORDER_COLORSET_HI_EAST(*temp) == colorset)
++                {
++                        temp->has_style_changed = 1;
++			temp->change_mask.use_border_colorset_hi_east = 1;
++			Scr.flags.do_need_window_update = 1;
++                }
++                if (SUSE_BORDER_COLORSET_HI_WEST(&temp->flags) &&
++                    SGET_BORDER_COLORSET_HI_WEST(*temp) == colorset)
++                {
++                        temp->has_style_changed = 1;
++			temp->change_mask.use_border_colorset_hi_west = 1;
++			Scr.flags.do_need_window_update = 1;
++                }
++                if (SUSE_BORDER_COLORSET_HI_HANDLES_NW(&temp->flags) &&
++                    SGET_BORDER_COLORSET_HI_HANDLES_NW(*temp) == colorset)
++                {
++                        temp->has_style_changed = 1;
++			temp->change_mask.use_border_colorset_hi_handles_nw = 1;
++			Scr.flags.do_need_window_update = 1;
++                }
++                if (SUSE_BORDER_COLORSET_HI_HANDLES_NE(&temp->flags) &&
++                    SGET_BORDER_COLORSET_HI_HANDLES_NE(*temp) == colorset)
++                {
++                        temp->has_style_changed = 1;
++			temp->change_mask.use_border_colorset_hi_handles_ne = 1;
++			Scr.flags.do_need_window_update = 1;
++                }
++                if (SUSE_BORDER_COLORSET_HI_HANDLES_SW(&temp->flags) &&
++                    SGET_BORDER_COLORSET_HI_HANDLES_SW(*temp) == colorset)
++                {
++                        temp->has_style_changed = 1;
++			temp->change_mask.use_border_colorset_hi_handles_sw = 1;
++			Scr.flags.do_need_window_update = 1;
++                }
++                if (SUSE_BORDER_COLORSET_HI_HANDLES_SE(&temp->flags) &&
++                    SGET_BORDER_COLORSET_HI_HANDLES_SE(*temp) == colorset)
++                {
++                        temp->has_style_changed = 1;
++			temp->change_mask.use_border_colorset_hi_handles_se = 1;
++			Scr.flags.do_need_window_update = 1;
++                }
+ 		if (SUSE_ICON_TITLE_COLORSET(&temp->flags) &&
+ 		    SGET_ICON_TITLE_COLORSET(*temp) == colorset)
+ 		{
+@@ -5374,7 +5790,129 @@
+ 		fw->border_colors.shadow = fw->colors.shadow;
+ 		fw->border_colors.back = fw->colors.back;
+ 	}
+-}
++        if (SUSE_BORDER_COLORSET_NORTH(&pstyle->flags))
++	{
++		cs = SGET_BORDER_COLORSET_NORTH(*pstyle);
++		fw->border_cs_north = cs;
++		fw->border_colors_north.hilight = Colorset[cs].hilite;
++		fw->border_colors_north.shadow = Colorset[cs].shadow;
++		fw->border_colors_north.back = Colorset[cs].bg;
++	}
++	else
++	{
++		fw->border_cs_north = -1;
++		fw->border_colors_north.hilight = fw->colors.hilight;
++		fw->border_colors_north.shadow = fw->colors.shadow;
++		fw->border_colors_north.back = fw->colors.back;
++	}
++        if (SUSE_BORDER_COLORSET_SOUTH(&pstyle->flags))
++	{
++		cs = SGET_BORDER_COLORSET_SOUTH(*pstyle);
++		fw->border_cs_south = cs;
++		fw->border_colors_south.hilight = Colorset[cs].hilite;
++		fw->border_colors_south.shadow = Colorset[cs].shadow;
++		fw->border_colors_south.back = Colorset[cs].bg;
++	}
++	else
++	{
++		fw->border_cs_south = -1;
++		fw->border_colors_south.hilight = fw->colors.hilight;
++		fw->border_colors_south.shadow = fw->colors.shadow;
++		fw->border_colors_south.back = fw->colors.back;
++	}
++        if (SUSE_BORDER_COLORSET_EAST(&pstyle->flags))
++	{
++		cs = SGET_BORDER_COLORSET_EAST(*pstyle);
++		fw->border_cs_east = cs;
++		fw->border_colors_east.hilight = Colorset[cs].hilite;
++		fw->border_colors_east.shadow = Colorset[cs].shadow;
++		fw->border_colors_east.back = Colorset[cs].bg;
++	}
++	else
++	{
++		fw->border_cs_east = -1;
++		fw->border_colors_east.hilight = fw->colors.hilight;
++		fw->border_colors_east.shadow = fw->colors.shadow;
++		fw->border_colors_east.back = fw->colors.back;
++	}
++        if (SUSE_BORDER_COLORSET_WEST(&pstyle->flags))
++	{
++		cs = SGET_BORDER_COLORSET_WEST(*pstyle);
++		fw->border_cs_west = cs;
++		fw->border_colors_west.hilight = Colorset[cs].hilite;
++		fw->border_colors_west.shadow = Colorset[cs].shadow;
++		fw->border_colors_west.back = Colorset[cs].bg;
++	}
++	else
++	{
++		fw->border_cs_west = -1;
++		fw->border_colors_west.hilight = fw->colors.hilight;
++		fw->border_colors_west.shadow = fw->colors.shadow;
++		fw->border_colors_west.back = fw->colors.back;
++	}
++        /* handles */
++        if (SUSE_BORDER_COLORSET_HANDLES_NW(&pstyle->flags))
++        {
++                cs = SGET_BORDER_COLORSET_HANDLES_NW(*pstyle);
++		fw->border_cs_handles_nw = cs;
++		fw->border_colors_handles_nw.hilight = Colorset[cs].hilite;
++		fw->border_colors_handles_nw.shadow = Colorset[cs].shadow;
++		fw->border_colors_handles_nw.back = Colorset[cs].bg;
++	}
++	else
++	{
++		fw->border_cs_handles_nw = -1;
++		fw->border_colors_handles_nw.hilight = fw->colors.hilight;
++		fw->border_colors_handles_nw.shadow = fw->colors.shadow;
++		fw->border_colors_handles_nw.back = fw->colors.back;
++	}
++        if (SUSE_BORDER_COLORSET_HANDLES_NE(&pstyle->flags))
++        {
++                cs = SGET_BORDER_COLORSET_HANDLES_NE(*pstyle);
++		fw->border_cs_handles_ne = cs;
++		fw->border_colors_handles_ne.hilight = Colorset[cs].hilite;
++		fw->border_colors_handles_ne.shadow = Colorset[cs].shadow;
++		fw->border_colors_handles_ne.back = Colorset[cs].bg;
++	}
++	else
++	{
++		fw->border_cs_handles_ne = -1;
++		fw->border_colors_handles_ne.hilight = fw->colors.hilight;
++		fw->border_colors_handles_ne.shadow = fw->colors.shadow;
++		fw->border_colors_handles_ne.back = fw->colors.back;
++	}
++        if (SUSE_BORDER_COLORSET_HANDLES_SW(&pstyle->flags))
++        {
++                cs = SGET_BORDER_COLORSET_HANDLES_SW(*pstyle);
++		fw->border_cs_handles_sw = cs;
++		fw->border_colors_handles_sw.hilight = Colorset[cs].hilite;
++		fw->border_colors_handles_sw.shadow = Colorset[cs].shadow;
++		fw->border_colors_handles_sw.back = Colorset[cs].bg;
++	}
++	else
++	{
++		fw->border_cs_handles_sw = -1;
++		fw->border_colors_handles_sw.hilight = fw->colors.hilight;
++		fw->border_colors_handles_sw.shadow = fw->colors.shadow;
++		fw->border_colors_handles_sw.back = fw->colors.back;
++	}
++        if (SUSE_BORDER_COLORSET_HANDLES_SE(&pstyle->flags))
++        {
++                cs = SGET_BORDER_COLORSET_HANDLES_SE(*pstyle);
++		fw->border_cs_handles_se = cs;
++		fw->border_colors_handles_se.hilight = Colorset[cs].hilite;
++		fw->border_colors_handles_se.shadow = Colorset[cs].shadow;
++		fw->border_colors_handles_se.back = Colorset[cs].bg;
++	}
++	else
++	{
++		fw->border_cs_handles_se = -1;
++		fw->border_colors_handles_se.hilight = fw->colors.hilight;
++		fw->border_colors_handles_se.shadow = fw->colors.shadow;
++		fw->border_colors_handles_se.back = fw->colors.back;
++	}
++
++}       
+ 
+ void update_window_color_hi_style(FvwmWindow *fw, window_style *pstyle)
+ {
+@@ -5428,6 +5966,127 @@
+ 		fw->border_hicolors.shadow = fw->hicolors.shadow;
+ 		fw->border_hicolors.back = fw->hicolors.back;
+ 	}
++        if (SUSE_BORDER_COLORSET_HI_NORTH(&pstyle->flags))
++	{
++		cs = SGET_BORDER_COLORSET_HI_NORTH(*pstyle);
++		fw->border_cs_hi_north = cs;
++		fw->border_hicolors_north.hilight = Colorset[cs].hilite;
++		fw->border_hicolors_north.shadow = Colorset[cs].shadow;
++		fw->border_hicolors_north.back = Colorset[cs].bg;
++	}
++	else
++	{
++		fw->border_cs_hi_north = -1;
++		fw->border_hicolors_north.hilight = fw->hicolors.hilight;
++		fw->border_hicolors_north.shadow = fw->hicolors.shadow;
++		fw->border_hicolors_north.back = fw->hicolors.back;
++	}
++        if (SUSE_BORDER_COLORSET_HI_SOUTH(&pstyle->flags))
++	{
++		cs = SGET_BORDER_COLORSET_HI_SOUTH(*pstyle);
++		fw->border_cs_hi_south = cs;
++		fw->border_hicolors_south.hilight = Colorset[cs].hilite;
++		fw->border_hicolors_south.shadow = Colorset[cs].shadow;
++		fw->border_hicolors_south.back = Colorset[cs].bg;
++	}
++	else
++	{
++		fw->border_cs_hi_south = -1;
++		fw->border_hicolors_south.hilight = fw->hicolors.hilight;
++		fw->border_hicolors_south.shadow = fw->hicolors.shadow;
++		fw->border_hicolors_south.back = fw->hicolors.back;
++	}
++        if (SUSE_BORDER_COLORSET_HI_EAST(&pstyle->flags))
++	{
++		cs = SGET_BORDER_COLORSET_HI_EAST(*pstyle);
++		fw->border_cs_hi_east = cs;
++		fw->border_hicolors_east.hilight = Colorset[cs].hilite;
++		fw->border_hicolors_east.shadow = Colorset[cs].shadow;
++		fw->border_hicolors_east.back = Colorset[cs].bg;
++	}
++	else
++	{
++		fw->border_cs_hi_east = -1;
++		fw->border_hicolors_east.hilight = fw->hicolors.hilight;
++		fw->border_hicolors_east.shadow = fw->hicolors.shadow;
++		fw->border_hicolors_east.back = fw->hicolors.back;
++	}
++        if (SUSE_BORDER_COLORSET_HI_WEST(&pstyle->flags))
++	{
++		cs = SGET_BORDER_COLORSET_HI_WEST(*pstyle);
++		fw->border_cs_hi_west = cs;
++		fw->border_hicolors_west.hilight = Colorset[cs].hilite;
++		fw->border_hicolors_west.shadow = Colorset[cs].shadow;
++		fw->border_hicolors_west.back = Colorset[cs].bg;
++	}
++	else
++	{
++		fw->border_cs_hi_west = -1;
++		fw->border_hicolors_west.hilight = fw->hicolors.hilight;
++		fw->border_hicolors_west.shadow = fw->hicolors.shadow;
++		fw->border_hicolors_west.back = fw->hicolors.back;
++	}
++        /* Handles */
++        if (SUSE_BORDER_COLORSET_HI_HANDLES_NW(&pstyle->flags))
++        {
++                cs = SGET_BORDER_COLORSET_HI_HANDLES_NW(*pstyle);
++		fw->border_cs_hi_handles_nw = cs;
++		fw->border_hicolors_handles_nw.hilight = Colorset[cs].hilite;
++		fw->border_hicolors_handles_nw.shadow = Colorset[cs].shadow;
++		fw->border_hicolors_handles_nw.back = Colorset[cs].bg;
++	}
++	else
++	{
++		fw->border_cs_hi_handles_nw = -1;
++		fw->border_hicolors_handles_nw.hilight = fw->hicolors.hilight;
++		fw->border_hicolors_handles_nw.shadow = fw->hicolors.shadow;
++		fw->border_hicolors_handles_nw.back = fw->hicolors.back;
++        }
++        if (SUSE_BORDER_COLORSET_HI_HANDLES_NE(&pstyle->flags))
++        {
++                cs = SGET_BORDER_COLORSET_HI_HANDLES_NE(*pstyle);
++		fw->border_cs_hi_handles_ne = cs;
++		fw->border_hicolors_handles_ne.hilight = Colorset[cs].hilite;
++		fw->border_hicolors_handles_ne.shadow = Colorset[cs].shadow;
++		fw->border_hicolors_handles_ne.back = Colorset[cs].bg;
++	}
++	else
++	{
++		fw->border_cs_hi_handles_ne = -1;
++		fw->border_hicolors_handles_ne.hilight = fw->hicolors.hilight;
++		fw->border_hicolors_handles_ne.shadow = fw->hicolors.shadow;
++		fw->border_hicolors_handles_ne.back = fw->hicolors.back;
++        }
++        if (SUSE_BORDER_COLORSET_HI_HANDLES_SW(&pstyle->flags))
++        {
++                cs = SGET_BORDER_COLORSET_HI_HANDLES_SW(*pstyle);
++		fw->border_cs_hi_handles_sw = cs;
++		fw->border_hicolors_handles_sw.hilight = Colorset[cs].hilite;
++		fw->border_hicolors_handles_sw.shadow = Colorset[cs].shadow;
++		fw->border_hicolors_handles_sw.back = Colorset[cs].bg;
++	}
++	else
++	{
++		fw->border_cs_hi_handles_sw = -1;
++		fw->border_hicolors_handles_sw.hilight = fw->hicolors.hilight;
++		fw->border_hicolors_handles_sw.shadow = fw->hicolors.shadow;
++		fw->border_hicolors_handles_sw.back = fw->hicolors.back;
++        }
++        if (SUSE_BORDER_COLORSET_HI_HANDLES_SE(&pstyle->flags))
++        {
++                cs = SGET_BORDER_COLORSET_HI_HANDLES_SE(*pstyle);
++		fw->border_cs_hi_handles_se = cs;
++		fw->border_hicolors_handles_se.hilight = Colorset[cs].hilite;
++		fw->border_hicolors_handles_se.shadow = Colorset[cs].shadow;
++		fw->border_hicolors_handles_se.back = Colorset[cs].bg;
++	}
++	else
++	{
++		fw->border_cs_hi_handles_se = -1;
++		fw->border_hicolors_handles_se.hilight = fw->hicolors.hilight;
++		fw->border_hicolors_handles_se.shadow = fw->hicolors.shadow;
++		fw->border_hicolors_handles_se.back = fw->hicolors.back;
++        }
+ }
+ 
+ void update_icon_title_cs_style(FvwmWindow *fw, window_style *pstyle)
+diff -U3 -r fvwm/style.h fvwm/style.h
+--- fvwm/style.h	2011-08-15 18:26:17.000000000 +0200
++++ fvwm/style.h	2011-12-09 18:29:08.015127684 +0100
+@@ -72,8 +72,40 @@
+ 	((sf)->use_colorset_hi)
+ #define SUSE_BORDER_COLORSET(sf) \
+ 	((sf)->use_border_colorset)
++#define SUSE_BORDER_COLORSET_NORTH(sf) \
++	((sf)->use_border_colorset_north)
++#define SUSE_BORDER_COLORSET_SOUTH(sf) \
++	((sf)->use_border_colorset_south)
++#define SUSE_BORDER_COLORSET_EAST(sf) \
++	((sf)->use_border_colorset_east)
++#define SUSE_BORDER_COLORSET_WEST(sf) \
++	((sf)->use_border_colorset_west)
++#define SUSE_BORDER_COLORSET_HANDLES_NW(sf) \
++        ((sf)->use_border_colorset_handles_nw)
++#define SUSE_BORDER_COLORSET_HANDLES_NE(sf) \
++        ((sf)->use_border_colorset_handles_ne)
++#define SUSE_BORDER_COLORSET_HANDLES_SW(sf) \
++        ((sf)->use_border_colorset_handles_sw)
++#define SUSE_BORDER_COLORSET_HANDLES_SE(sf) \
++        ((sf)->use_border_colorset_handles_se)
+ #define SUSE_BORDER_COLORSET_HI(sf) \
+ 	((sf)->use_border_colorset_hi)
++#define SUSE_BORDER_COLORSET_HI_NORTH(sf) \
++	((sf)->use_border_colorset_hi_north)
++#define SUSE_BORDER_COLORSET_HI_SOUTH(sf) \
++	((sf)->use_border_colorset_hi_south)
++#define SUSE_BORDER_COLORSET_HI_EAST(sf) \
++	((sf)->use_border_colorset_hi_east)
++#define SUSE_BORDER_COLORSET_HI_WEST(sf) \
++	((sf)->use_border_colorset_hi_west)
++#define SUSE_BORDER_COLORSET_HI_HANDLES_NW(sf) \
++        ((sf)->use_border_colorset_hi_handles_nw)
++#define SUSE_BORDER_COLORSET_HI_HANDLES_NE(sf) \
++        ((sf)->use_border_colorset_hi_handles_ne)
++#define SUSE_BORDER_COLORSET_HI_HANDLES_SW(sf) \
++        ((sf)->use_border_colorset_hi_handles_sw)
++#define SUSE_BORDER_COLORSET_HI_HANDLES_SE(sf) \
++        ((sf)->use_border_colorset_hi_handles_se)
+ #define SUSE_ICON_TITLE_COLORSET(sf) \
+ 	((sf)->use_icon_title_colorset)
+ #define SUSE_ICON_TITLE_COLORSET_HI(sf) \
+@@ -464,6 +496,38 @@
+ 	((s).border_colorset = (x))
+ #define SGET_BORDER_COLORSET(s) \
+ 	((s).border_colorset)
++#define SSET_BORDER_COLORSET_NORTH(s,x) \
++	((s).border_colorset_north = (x))
++#define SGET_BORDER_COLORSET_NORTH(s) \
++	((s).border_colorset_north)
++#define SSET_BORDER_COLORSET_SOUTH(s,x) \
++	((s).border_colorset_south = (x))
++#define SGET_BORDER_COLORSET_SOUTH(s) \
++	((s).border_colorset_south)
++#define SSET_BORDER_COLORSET_EAST(s,x) \
++	((s).border_colorset_east = (x))
++#define SGET_BORDER_COLORSET_EAST(s) \
++	((s).border_colorset_east)
++#define SSET_BORDER_COLORSET_WEST(s,x) \
++	((s).border_colorset_west = (x))
++#define SGET_BORDER_COLORSET_WEST(s) \
++	((s).border_colorset_west)
++#define SSET_BORDER_COLORSET_HANDLES_NW(s,x) \
++        ((s).border_colorset_handles_nw = (x))
++#define SGET_BORDER_COLORSET_HANDLES_NW(s) \
++        ((s).border_colorset_handles_nw)
++#define SSET_BORDER_COLORSET_HANDLES_NE(s,x) \
++        ((s).border_colorset_handles_ne = (x))
++#define SGET_BORDER_COLORSET_HANDLES_NE(s) \
++        ((s).border_colorset_handles_ne)
++#define SSET_BORDER_COLORSET_HANDLES_SW(s,x) \
++        ((s).border_colorset_handles_sw = (x))
++#define SGET_BORDER_COLORSET_HANDLES_SW(s) \
++        ((s).border_colorset_handles_sw)
++#define SSET_BORDER_COLORSET_HANDLES_SE(s,x) \
++        ((s).border_colorset_handles_se = (x))
++#define SGET_BORDER_COLORSET_HANDLES_SE(s) \
++        ((s).border_colorset_handles_se)
+ #define SGET_COLORSET_HI(s) \
+ 	((s).colorset_hi)
+ #define SSET_COLORSET_HI(s,x) \
+@@ -472,8 +536,40 @@
+ 	((s).border_colorset_hi)
+ #define SSET_BORDER_COLORSET_HI(s,x) \
+ 	((s).border_colorset_hi = (x))
++#define SGET_BORDER_COLORSET_HI_NORTH(s) \
++	((s).border_colorset_hi_north)
++#define SSET_BORDER_COLORSET_HI_NORTH(s,x) \
++	((s).border_colorset_hi_north = (x))
++#define SGET_BORDER_COLORSET_HI_SOUTH(s) \
++	((s).border_colorset_hi_south)
++#define SSET_BORDER_COLORSET_HI_SOUTH(s,x) \
++	((s).border_colorset_hi_south = (x))
++#define SGET_BORDER_COLORSET_HI_EAST(s) \
++	((s).border_colorset_hi_east)
++#define SSET_BORDER_COLORSET_HI_EAST(s,x) \
++	((s).border_colorset_hi_east = (x))
++#define SGET_BORDER_COLORSET_HI_WEST(s) \
++	((s).border_colorset_hi_west)
++#define SSET_BORDER_COLORSET_HI_WEST(s,x) \
++	((s).border_colorset_hi_west = (x))
++#define SSET_BORDER_COLORSET_HI_HANDLES_NW(s,x) \
++        ((s).border_colorset_hi_handles_nw = (x))
++#define SGET_BORDER_COLORSET_HI_HANDLES_NW(s) \
++        ((s).border_colorset_hi_handles_nw)
++#define SSET_BORDER_COLORSET_HI_HANDLES_NE(s,x) \
++        ((s).border_colorset_hi_handles_ne = (x))
++#define SGET_BORDER_COLORSET_HI_HANDLES_NE(s) \
++        ((s).border_colorset_hi_handles_ne)
++#define SSET_BORDER_COLORSET_HI_HANDLES_SW(s,x) \
++        ((s).border_colorset_hi_handles_sw = (x))
++#define SGET_BORDER_COLORSET_HI_HANDLES_SW(s) \
++        ((s).border_colorset_hi_handles_sw)
++#define SSET_BORDER_COLORSET_HI_HANDLES_SE(s,x) \
++        ((s).border_colorset_hi_handles_se = (x))
++#define SGET_BORDER_COLORSET_HI_HANDLES_SE(s) \
++        ((s).border_colorset_hi_handles_se)
+ #define SSET_ICON_TITLE_COLORSET(s,x) \
+-	((s).icon_title_colorset = (x))
++        ((s).icon_title_colorset = (x))
+ #define SGET_ICON_TITLE_COLORSET(s) \
+ 	((s).icon_title_colorset)
+ #define SSET_ICON_TITLE_COLORSET_HI(s,x) \
+Seulement dans libs: PictureGraphics.c.orig

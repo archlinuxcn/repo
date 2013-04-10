@@ -1,0 +1,17 @@
+diff -U3 -r fvwm/menus.c fvwm/menus.c
+--- fvwm/menus.c	2011-12-09 21:49:27.347295005 +0100
++++ fvwm/menus.c	2011-12-09 21:51:30.387454484 +0100
+@@ -3349,6 +3349,13 @@
+ 	}
+ 	context = (*pexc)->w.wcontext;
+ 
++	/* Popup menu with first item (not title) under pointer */
++	if(MI_IS_TITLE(MR_FIRST_ITEM(mr)))
++	{
++		y-=MI_HEIGHT(MR_FIRST_ITEM(mr));
++		do_warp_to_item = True;
++	}
++
+ 	/*
+ 	 * Create a new menu instance (if necessary)
+ 	 */

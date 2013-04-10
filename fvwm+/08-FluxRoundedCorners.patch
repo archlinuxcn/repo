@@ -1,0 +1,864 @@
+diff -U3 -r fvwm/add_window.c fvwm/add_window.c
+--- fvwm/add_window.c	2011-12-09 19:40:50.151782172 +0100
++++ fvwm/add_window.c	2011-12-09 19:51:38.701855458 +0100
+@@ -1766,6 +1766,7 @@
+ {
+ 	int width;
+ 	int offset;
++	style_flags *sflags = &(pstyle->flags);
+ 
+ 	get_title_font_size_and_offset(
+ 		fw, S_TITLE_DIR(SCF(*pstyle)),
+@@ -1777,6 +1778,10 @@
+ 	fw->title_thickness = width;
+ 	fw->title_text_offset = offset;
+ 	fw->corner_width = fw->title_thickness + fw->boundary_width;
++	if (SHAS_CORNER_WIDTH(sflags))
++	{
++		fw->corner_width = SGET_CORNER_WIDTH(*pstyle);
++	}
+ 	if (!HAS_TITLE(fw))
+ 	{
+ 		fw->title_thickness = 0;
+@@ -2714,6 +2719,8 @@
+ 		fw = NULL;
+ 	}
+ 
++	frame_make_rounded_corners(fw);
++
+ 	return fw;
+ }
+ 
+diff -U3 -r fvwm/borders.c fvwm/borders.c
+--- fvwm/borders.c	2011-12-09 19:44:44.919122542 +0100
++++ fvwm/borders.c	2011-12-09 19:51:38.705188705 +0100
+@@ -1754,6 +1754,24 @@
+ 	return;
+ }
+ 
++static void border_fill_fluxbox_handle(
++	Pixmap dest_pix, rectangle *dest_g, common_decorations_type *cd, Bool corner)
++{
++	corner = False;
++	/* Main Color */
++	XFillRectangle(
++		dpy, dest_pix, corner ? cd->shadow_gc : cd->relief_gc, dest_g->x + 1, dest_g->y + 1,
++		dest_g->width - dest_g->x - 3, dest_g->height - dest_g->y - 2);
++	/* Right Shadow */
++	XFillRectangle(
++		dpy, dest_pix, cd->shadow_gc, dest_g->x + dest_g->width - 2, dest_g->y + 1,
++		1, dest_g->height - dest_g->y - 2);
++	/* Bottom Shadow */
++	XFillRectangle(
++		dpy, dest_pix, cd->shadow_gc, dest_g->x + 1, dest_g->height - 2,
++		dest_g->width - dest_g->x - 3, 1);
++}
++
+ /* create a root transparent colorset bg, we take in account a possible
+  * drawing rotation */
+ static Pixmap border_create_root_transparent_pixmap(
+@@ -1998,12 +2016,28 @@
+ 	pix_g.width = part_g.width;
+ 	pix_g.height = part_g.height;
+ 	border_fill_pixmap_background(p, &pix_g, &bg, cd);
++	if (HAS_FLUXBOX_HANDLES(fw) && (part & PART_BOTTOM))
++	{
++		pix_g.y = part_g.height - fw->boundary_width;
++		if (part != PART_BORDER_S)
++		{
++			pix_g.width++;
++		}
++		if (part == PART_BORDER_SE)
++		{
++			pix_g.x--;
++		}
++		if (fw->boundary_width > 2)
++		{
++			border_fill_fluxbox_handle(p, &pix_g, cd, !(part & PART_BORDER_S));
++		}
++	}
+ 	if (free_bg_pixmap && bg.pixmap.p)
+ 	{
+ 		XFreePixmap(dpy, bg.pixmap.p);
+ 	}
+ 	/* draw the relief over the background */
+-	if (!br->relief.is_flat)
++	if (!br->relief.is_flat && !HAS_FLUXBOX_HANDLES(fw))
+ 	{
+ 		border_draw_part_relief(br, frame_g, &part_g, p, is_inverted);
+ 		/* draw the handle marks */
+@@ -4523,6 +4557,9 @@
+ 	JustificationType just;
+ 	int lbl = 0;
+ 	int rbl = 0;
++	int bw;
++
++	bw = HAS_FLUXBOX_HANDLES(fw) ? 1 : fw->boundary_width;
+ 
+ 	ret_td->cd = cd;
+ 	ret_td->frame_g = *new_g;
+@@ -4560,16 +4597,16 @@
+ 	/* geometry of the title bar title + buttons */
+ 	if (!ret_td->has_vt)
+ 	{
+-		ret_td->bar_g.width = new_g->width - 2 * fw->boundary_width;
++		ret_td->bar_g.width = new_g->width - 2 * bw;
+ 		ret_td->bar_g.height = ret_td->layout.title_g.height;
+-		ret_td->bar_g.x = fw->boundary_width;
++		ret_td->bar_g.x = bw;
+ 		ret_td->bar_g.y = ret_td->layout.title_g.y;
+ 	}
+ 	else
+ 	{
+ 		ret_td->bar_g.width = ret_td->layout.title_g.width;
+-		ret_td->bar_g.height = new_g->height - 2 * fw->boundary_width;
+-		ret_td->bar_g.y = fw->boundary_width;
++		ret_td->bar_g.height = new_g->height - 2 * bw;
++		ret_td->bar_g.y = bw;
+ 		ret_td->bar_g.x = ret_td->layout.title_g.x;
+ 	}
+ 
+@@ -4621,7 +4658,7 @@
+ 		{
+ 			ret_td->left_buttons_g.height = rbl;
+ 			ret_td->right_buttons_g.height = lbl;
+-			ret_td->right_buttons_g.y = fw->boundary_width;
++			ret_td->right_buttons_g.y = bw;
+ 			ret_td->right_buttons_g.x = ret_td->bar_g.x;
+ 			ret_td->left_buttons_g.y = ret_td->layout.title_g.y +
+ 				ret_td->layout.title_g.height;
+@@ -4631,7 +4668,7 @@
+ 		{
+ 			ret_td->left_buttons_g.width = rbl;
+ 			ret_td->right_buttons_g.width = lbl;
+-			ret_td->right_buttons_g.x = fw->boundary_width;
++			ret_td->right_buttons_g.x = bw;
+ 			ret_td->right_buttons_g.y = ret_td->bar_g.y;
+ 			ret_td->left_buttons_g.x = ret_td->layout.title_g.x +
+ 				ret_td->layout.title_g.width;
+@@ -4644,7 +4681,7 @@
+ 		{
+ 			ret_td->left_buttons_g.height = lbl;
+ 			ret_td->right_buttons_g.height = rbl;
+-			ret_td->left_buttons_g.y = fw->boundary_width;
++			ret_td->left_buttons_g.y = bw;
+ 			ret_td->left_buttons_g.x = ret_td->bar_g.x;
+ 			ret_td->right_buttons_g.y = ret_td->layout.title_g.y +
+ 				ret_td->layout.title_g.height;
+@@ -4654,7 +4691,7 @@
+ 		{
+ 			ret_td->left_buttons_g.width = lbl;
+ 			ret_td->right_buttons_g.width = rbl;
+-			ret_td->left_buttons_g.x = fw->boundary_width;
++			ret_td->left_buttons_g.x = bw;
+ 			ret_td->left_buttons_g.y = ret_td->bar_g.y;
+ 			ret_td->right_buttons_g.x = ret_td->layout.title_g.x +
+ 				ret_td->layout.title_g.width;
+@@ -4997,7 +5034,7 @@
+ 	int bw;
+ 	Bool title;
+ 
+-	bw = fw->boundary_width;
++	bw = HAS_FLUXBOX_HANDLES(fw) ? 1 : fw->boundary_width;
+ 	/* ret_g->x and ret->y is just an offset relatively to the w,
+ 	 * maybe we can take the relief in account? */
+ 	switch (part)
+@@ -5015,6 +5052,10 @@
+ 	case PART_BORDER_S:
+ 		ret_g->x = sidebar_g->x;
+ 		ret_g->y = 2 * sidebar_g->y + sidebar_g->height - bw;
++		if (HAS_FLUXBOX_HANDLES(fw))
++		{
++			ret_g->y = 2 * sidebar_g->y + sidebar_g->height - fw->boundary_width;
++		}
+ 		*ret_w = FW_W_SIDE(fw, 2);
+ 		break;
+ 	case PART_BORDER_W:
+@@ -5049,9 +5090,14 @@
+ 	switch (part)
+ 	{
+ 	case PART_BORDER_N:
++		ret_g->height = bw;
+ 	case PART_BORDER_S:
+ 		ret_g->width = sidebar_g->width;
+ 		ret_g->height = bw;
++		if (HAS_FLUXBOX_HANDLES(fw))
++		{
++			ret_g->height = fw->boundary_width;
++		}
+ 		break;
+ 	case PART_BORDER_E:
+ 	case PART_BORDER_W:
+diff -U3 -r fvwm/frame.c fvwm/frame.c
+--- fvwm/frame.c	2011-08-07 00:03:31.000000000 +0200
++++ fvwm/frame.c	2011-12-09 19:51:38.705188705 +0100
+@@ -436,6 +436,8 @@
+ 	/* inform the modules of the change */
+ 	BroadcastConfig(M_CONFIGURE_WINDOW,fw);
+ 
++	frame_make_rounded_corners(fw);
++
+ 	return;
+ }
+ 
+@@ -1954,6 +1956,7 @@
+ 			FShapeSet);
+ 	}
+ 	frame_setup_shape(fw, mra->end_g.width, mra->end_g.height, fw->wShaped);
++	frame_make_rounded_corners(fw);
+ 	if (mra->flags.do_restore_gravity)
+ 	{
+ 		mra->grav.client_grav = fw->hints.win_gravity;
+@@ -2075,6 +2078,210 @@
+ 	return;
+ }
+ 
++void draw_rounded_mask(Window win, int width, int height, Bool slightlyrounded, window_parts draw_parts, int col)
++{
++	Pixmap pm;
++	GC gc;
++    rectangle rect;
++	int w,h;
++	unsigned long valuemask;
++	int x;
++	int lstart, lend;
++	int l0[] = { 0, 1, 0, 1, 2, 3 };
++	int l1[] = { 1, 2, 1, 2, 3, 5 };
++	int l2[] = { 2, 1, 5, 3, 2, 1 };
++	int l3[] = { 1, 1, 1, 1, 1, 2 };
++
++	if (slightlyrounded)
++	{
++		lstart = 0;
++		lend = 2;
++	}
++	else
++	{
++		lstart = 2;
++		lend = 6;
++	}
++
++    XGetGeometry(
++        dpy, win, &JunkRoot, &rect.x, &rect.y,
++        &rect.width, &rect.height, &JunkBW, &JunkDepth);
++
++	w = rect.width;
++	h = rect.height;
++	pm = XCreatePixmap(dpy, win, width, height, 1);
++	gc = Scr.MonoGC;
++	XSetForeground(dpy, gc, !col);
++	XFillRectangle(dpy, pm, gc, 0, 0, w, h);
++	XSetForeground(dpy, gc, col);
++
++	/* Draw a rounded shape on the corners of the pixmap */
++	for (x = lstart; x < lend; x++)
++	{
++ 		if (draw_parts & PART_BORDER_NW)
++ 		{
++			XFillRectangle(dpy, pm, gc, 0, l0[x], l2[x], l3[x]);
++ 		}
++ 		if (draw_parts & PART_BORDER_NE)
++ 		{
++			XFillRectangle(dpy, pm, gc, w-l2[x], l0[x], l2[x], l3[x]);
++		}
++  		if (draw_parts & PART_BORDER_SW)
++ 		{
++			XFillRectangle(dpy, pm, gc, 0, h-l1[x], l2[x], l3[x]);
++		}
++ 		if (draw_parts & PART_BORDER_SE)
++ 		{
++			XFillRectangle(dpy, pm, gc, w-l2[x], h-l1[x], l2[x], l3[x]);
++		}
++	}
++
++	FShapeCombineMask(dpy, win, ShapeBounding, 0, 0, pm, col==1 ? ShapeSubtract : ShapeSet);
++
++	XFreePixmap(dpy, pm);
++}
++
++static void frame_draw_rounded_mask(FvwmWindow *fw, Window win, window_parts draw_parts, int col)
++{
++	draw_rounded_mask(win, fw->g.frame.width, fw->g.frame.height,
++		HAS_SLIGHTLY_ROUNDED_CORNERS(fw), IS_MAXIMIZED(fw)?0:draw_parts, col);
++}
++
++/* Returns a corner corrected for rotation of the titlebar (ie button 1 is always NW) */
++#define SWAP_CORNER(PART) corner = corner & (PART) ? corner ^ (PART) : corner
++static window_parts __get_corner(window_parts corner, FvwmWindow *fw)
++{
++	int dir;
++		
++	dir = GET_TITLE_DIR(fw);
++
++	/* Flip horizontally (relative to tb) if the titlebar is rotated */
++	if ((dir == DIR_N && IS_TOP_TITLE_ROTATED(fw))
++		|| (dir == DIR_S && !IS_BOTTOM_TITLE_ROTATED(fw))
++		|| (dir == DIR_W && IS_LEFT_TITLE_ROTATED_CW(fw))
++		|| (dir == DIR_E && !IS_RIGHT_TITLE_ROTATED_CW(fw)))
++	{
++		SWAP_CORNER(PART_BORDER_NE | PART_BORDER_NW);
++	}
++
++	/* Swap SE/SW so that shift left goes in a clockwise order */
++	SWAP_CORNER(PART_BORDER_SW | PART_BORDER_SE);
++
++	/* Rotate clockwise depending on dir */
++	corner <<= dir;
++	if (corner > PART_BORDER_SE)
++	{
++		corner = corner >> 4;
++	}
++	
++	/* Swap SE/SW back */
++	SWAP_CORNER(PART_BORDER_SW | PART_BORDER_SE);
++
++	return corner;
++}
++ 
++void frame_make_rounded_corners(FvwmWindow *fw)
++{
++	rectangle rect;
++	window_parts draw_parts;
++	window_parts mask;
++	int x;
++	FvwmWindow *left_button = 0;
++	FvwmWindow *right_button = 0;
++
++	if (!fw || !FShapesSupported)
++	{
++		return;
++	}
++  
++	window_parts corner_nw = __get_corner(PART_BORDER_NW, fw);
++	window_parts corner_ne = __get_corner(PART_BORDER_NE, fw);
++	window_parts corner_se = __get_corner(PART_BORDER_SE, fw);
++	window_parts corner_sw = __get_corner(PART_BORDER_SW, fw);
++ 
++	for (x = 9;x>=0;x--)
++	{
++		if (FW_W_BUTTON(fw, x) != None)
++		{
++			if (x%2 == 0)
++			{
++				left_button = FW_W_BUTTON(fw, x);
++			}
++			else
++			{
++				right_button = FW_W_BUTTON(fw, x);
++			}
++		}
++	}
++ 
++ 	mask = 0;
++ 	if (HAS_ROUNDED_CORNERS_TOP(fw))
++  	{
++ 		mask |= corner_ne | corner_nw;
++  	}
++ 	if (HAS_ROUNDED_CORNERS_BOTTOM(fw))
++  	{
++ 		mask |= corner_se | corner_sw;
++  	}
++ 
++	/* Draw mask on each corner of the window. This involves the frame, title,
++	 * buttons and parent wins depending on the window configuration */
++ 	rect = fw->g.frame;
++ 	frame_draw_rounded_mask(fw, FW_W_FRAME(fw), mask, 1);
++	if (HAS_TITLE(fw))
++	{
++		draw_parts = 0;
++		if (!left_button)
++		{
++			draw_parts |= corner_nw;
++		}
++		if (!right_button)
++		{
++			draw_parts |= corner_ne;
++		}
++		if (IS_SHADED(fw))
++		{
++			if (!left_button)
++			{
++				draw_parts |= corner_sw;
++			}
++			else
++			{
++				frame_draw_rounded_mask(fw, left_button, mask & (corner_nw|corner_sw), 0);
++			}
++			if (!right_button)
++			{
++				draw_parts |= corner_se;
++			}
++			else
++			{
++				frame_draw_rounded_mask(fw, right_button, mask & (corner_ne|corner_se), 0);
++			}
++		}
++		frame_draw_rounded_mask(fw, FW_W_TITLE(fw), mask & draw_parts, 0);
++  
++		if (!IS_SHADED(fw))
++		{
++			frame_draw_rounded_mask(fw, FW_W_PARENT(fw), mask & (corner_sw|corner_se), 0);
++  
++			if (left_button)
++			{
++				frame_draw_rounded_mask(fw, left_button, mask & corner_nw, 0);
++			}
++			if (right_button)
++			{
++				frame_draw_rounded_mask(fw, right_button, mask & corner_ne, 0);
++			}
++		}
++	}
++	else
++	{
++		frame_draw_rounded_mask(fw, FW_W_PARENT(fw), mask & PART_CORNERS, 0);
++	}
++  
++	XFlush(dpy);
++}
++
+ /****************************************************************************
+  *
+  * Sets up the shaped window borders
+diff -U3 -r fvwm/frame.h fvwm/frame.h
+--- fvwm/frame.h	2007-01-13 14:16:34.000000000 +0100
++++ fvwm/frame.h	2011-12-09 19:51:38.705188705 +0100
+@@ -5,6 +5,8 @@
+ 
+ /* ---------------------------- included header files ---------------------- */
+ 
++#include "borders.h"
++
+ /* ---------------------------- global definitions ------------------------- */
+ 
+ /* ---------------------------- global macros ------------------------------ */
+@@ -71,5 +73,7 @@
+ 	Bool do_send_configure_notify);
+ void frame_setup_shape(
+ 	FvwmWindow *fw, int w, int h, int shape_mode);
++void frame_make_rounded_corners(FvwmWindow *fw);
++void draw_rounded_mask(Window win, int width, int height, Bool slightlyrounded, window_parts draw_parts, int col);
+ 
+ #endif /* FRAME_H */
+diff -U3 -r fvwm/fvwm.h fvwm/fvwm.h
+--- fvwm/fvwm.h	2011-12-09 19:40:50.148448924 +0100
++++ fvwm/fvwm.h	2011-12-09 19:51:38.705188705 +0100
+@@ -273,6 +273,10 @@
+ 		unsigned windowshade_laziness : 2;
+ 		unsigned use_title_decor_rotation : 1;
+ 		unsigned has_border_under_title : 1;
++		unsigned has_fluxbox_handles : 1;
++		unsigned has_rounded_corners_top : 1;
++		unsigned has_rounded_corners_bottom : 1;
++		unsigned has_slightly_rounded_corners : 1;
+ 		focus_policy_t focus_policy;
+ 	} s;
+ } common_flags_t;
+@@ -551,6 +555,7 @@
+ 	unsigned has_edge_resistance_move : 1;
+ 	unsigned has_edge_resistance_xinerama_move : 1;
+ 	unsigned has_handle_width : 1;
++	unsigned has_corner_width : 1;
+ 	unsigned has_icon : 1;
+ 	unsigned has_icon_boxes : 1;
+ 	unsigned has_icon_size_limits : 1;
+@@ -713,6 +718,7 @@
+ 	short border_width;
+ 	/* resize handle width */
+ 	short handle_width;
++	short corner_width;
+ 	int layer;
+ 	int start_desk;
+ 	int start_page_x;
+diff -U3 -r fvwm/geometry.c fvwm/geometry.c
+--- fvwm/geometry.c	2011-12-09 19:40:50.145115675 +0100
++++ fvwm/geometry.c	2011-12-09 19:51:38.705188705 +0100
+@@ -480,16 +480,18 @@
+ 	const FvwmWindow *fw, size_borders *borders, Bool is_shaded)
+ {
+ 	int title_thickness;
++	int bw;
+ 	
+-	borders->top_left.width = fw->boundary_width;
+-	borders->bottom_right.width = fw->boundary_width;
+-	borders->top_left.height = fw->boundary_width;
++	bw = HAS_FLUXBOX_HANDLES(fw) ? 1 : fw->boundary_width;
++	borders->top_left.width = bw;
++	borders->bottom_right.width = bw;
++	borders->top_left.height = bw;
+ 	borders->bottom_right.height = fw->boundary_width;
+ 
+ 	title_thickness = fw->title_thickness;
+ 	if (HAS_TITLE(fw) && HAS_BORDER_UNDER_TITLE(fw) && !is_shaded)
+ 	{
+-		title_thickness += fw->boundary_width;
++		title_thickness += bw;
+ 	}
+ 	
+ 	switch (GET_TITLE_DIR(fw))
+@@ -519,9 +521,13 @@
+ void get_window_borders_no_title(
+ 	const FvwmWindow *fw, size_borders *borders)
+ {
+-	borders->top_left.width = fw->boundary_width;
+-	borders->bottom_right.width = fw->boundary_width;
+-	borders->top_left.height = fw->boundary_width;
++	int bw;
++
++	bw = HAS_FLUXBOX_HANDLES(fw) ? 1 : fw->boundary_width;
++
++	borders->top_left.width = bw;
++	borders->bottom_right.width = bw;
++	borders->top_left.height = bw;
+ 	borders->bottom_right.height = fw->boundary_width;
+ 	borders->total_size.width =
+ 		borders->top_left.width + borders->bottom_right.width;
+diff -U3 -r fvwm/menus.c fvwm/menus.c
+--- fvwm/menus.c	2011-12-09 19:40:50.138449178 +0100
++++ fvwm/menus.c	2011-12-09 19:51:38.708521953 +0100
+@@ -67,6 +67,7 @@
+ #include "menugeometry.h"
+ #include "menuparameters.h"
+ #include "menus.h"
++#include "frame.h"
+ #include "libs/FGettext.h"
+ 
+ /* ---------------------------- local definitions -------------------------- */
+@@ -3191,6 +3192,13 @@
+ 	return x_overlap;
+ }
+ 
++static void menu_make_rounded_corners(MenuRoot *mr)
++{
++	draw_rounded_mask(MR_WINDOW(mr), MR_WIDTH(mr), MR_HEIGHT(mr),
++		MST_HAS_SLIGHTLY_ROUNDED_CORNERS(mr),
++		MST_HAS_ROUNDED_CORNERS(mr)?PART_CORNERS:0, 0);
++}
++
+ /*
+  *
+  *  Procedure:
+@@ -3764,6 +3772,8 @@
+ 	 * Pop up the menu
+ 	 */
+ 
++	menu_make_rounded_corners(mr);
++
+ 	XMoveWindow(dpy, MR_WINDOW(mr), x, y);
+ 	MR_X(mr) = x;
+ 	MR_Y(mr) = y;
+diff -U3 -r fvwm/menustyle.c fvwm/menustyle.c
+--- fvwm/menustyle.c	2011-12-09 19:40:50.138449178 +0100
++++ fvwm/menustyle.c	2011-12-09 20:14:42.916305166 +0100
+@@ -432,6 +432,7 @@
+ 		"TitleColorset", "HilightTitleBack",
+ 		"TitleFont",
+ 		"VerticalMargins", "FlatSeparators",
++		"RoundedCorners", "SlightlyRoundedCorners",
+ 		"UniqueHotkeyActivatesImmediate",
+ 		NULL
+ 	};
+@@ -1604,12 +1605,18 @@
+ 				&ST_VERTICAL_MARGIN_BOTTOM(tmpms),
+ 				0, 0);
+ 			break;
+-		case 63: /* UniqueHotKeyActivatesImmediate */
+-			ST_HOTKEY_ACTIVATES_IMMEDIATE(tmpms) = on;
+-			break;
+ 		case 63: /* FlatSeparators */
+ 			ST_DO_FLAT_SEPARATOR(tmpms) = on;
+ 			break;
++		case 64: /* UniqueHotKeyActivatesImmediate */
++			ST_HOTKEY_ACTIVATES_IMMEDIATE(tmpms) = on;
++			break;
++		case 65: /* RoundedCorners */
++			ST_HAS_ROUNDED_CORNERS(tmpms) = on;
++			break;
++		case 66: /* SlightlyRoundedCorners */
++			ST_HAS_SLIGHTLY_ROUNDED_CORNERS(tmpms) = on;
++			break;
+ 
+ #if 0
+ 		case 99: /* PositionHints */
+diff -U3 -r fvwm/menustyle.h fvwm/menustyle.h
+--- fvwm/menustyle.h	2011-12-09 19:40:50.141782426 +0100
++++ fvwm/menustyle.h	2011-12-09 19:51:38.708521953 +0100
+@@ -25,6 +25,10 @@
+ #define MST_DO_HILIGHT_BACK(m)        ((m)->s->ms->look.flags.do_hilight_back)
+ #define ST_DO_FLAT_SEPARATOR(s)       ((s)->look.flags.do_flat_separator)
+ #define MST_DO_FLAT_SEPARATOR(m)      ((m)->s->ms->look.flags.do_flat_separator)
++#define ST_HAS_ROUNDED_CORNERS(s)     ((s)->look.flags.has_rounded_corners)
++#define MST_HAS_ROUNDED_CORNERS(m)    ((m)->s->ms->look.flags.has_rounded_corners)
++#define ST_HAS_SLIGHTLY_ROUNDED_CORNERS(s)     ((s)->look.flags.has_slightly_rounded_corners)
++#define MST_HAS_SLIGHTLY_ROUNDED_CORNERS(m)    ((m)->s->ms->look.flags.has_slightly_rounded_corners)
+ #define ST_DO_HILIGHT_FORE(s)         ((s)->look.flags.do_hilight_fore)
+ #define MST_DO_HILIGHT_FORE(m)        ((m)->s->ms->look.flags.do_hilight_fore)
+ #define ST_DO_HILIGHT_TITLE_BACK(s)   ((s)->look.flags.do_hilight_title_back)
+@@ -285,6 +289,8 @@
+ 		unsigned do_hilight_title_back : 1;
+ 		unsigned using_default_titlefont : 1;
+ 		unsigned do_flat_separator : 1;
++		unsigned has_rounded_corners : 1;
++		unsigned has_slightly_rounded_corners : 1;
+ 	} flags;
+ 	unsigned char ReliefThickness;
+ 	unsigned char TitleUnderlines;
+diff -U3 -r fvwm/style.c fvwm/style.c
+--- fvwm/style.c	2011-12-09 19:40:50.148448924 +0100
++++ fvwm/style.c	2011-12-09 19:51:38.708521953 +0100
+@@ -565,6 +565,10 @@
+ 		SSET_HANDLE_WIDTH(
+ 			*merged_style, SGET_HANDLE_WIDTH(*add_style));
+ 	}
++	if (add_style->flags.has_corner_width)
++	{
++		SSET_CORNER_WIDTH(*merged_style, SGET_CORNER_WIDTH(*add_style));
++	}
+ 	if (add_style->flags.has_icon_size_limits)
+ 	{
+ 		SSET_MIN_ICON_WIDTH(
+@@ -2602,6 +2606,20 @@
+ 			ps->change_mask.has_color_back = 1;
+ 			break;
+ 		}
++		else if (StrEquals(token, "CornerWidth"))
++		{
++			if (GetIntegerArguments(rest, &rest, val, 1))
++			{
++				SSET_CORNER_WIDTH(*ps, (short)*val);
++				ps->flags.has_corner_width = 1;
++			}
++			else
++			{
++				ps->flags.has_corner_width = 0;
++			}
++			ps->flag_mask.has_corner_width = 1;
++			ps->change_mask.has_corner_width = 1;
++		}		
+ 		else if (StrEquals(token, "CirculateSkipIcon"))
+ 		{
+ 			S_SET_DO_CIRCULATE_SKIP_ICON(SCF(*ps), on);
+@@ -2912,6 +2930,15 @@
+ 			S_SET_HAS_MWM_BORDER(SCM(*ps), 1);
+ 			S_SET_HAS_MWM_BORDER(SCC(*ps), 1);
+ 		}
++		else if (StrEquals(token, "FluxboxHandles"))
++		{
++			S_SET_HAS_FLUXBOX_HANDLES(SCF(*ps), on);
++			S_SET_HAS_FLUXBOX_HANDLES(SCM(*ps), 1);
++			S_SET_HAS_FLUXBOX_HANDLES(SCC(*ps), 1);
++			S_SET_HAS_ROUNDED_CORNERS_BOTTOM(SCF(*ps), !on);
++			S_SET_HAS_ROUNDED_CORNERS_BOTTOM(SCM(*ps), 1);
++			S_SET_HAS_ROUNDED_CORNERS_BOTTOM(SCC(*ps), 1);
++		}
+ 		else if (StrEquals(token, "FocusFollowsMouse"))
+ 		{
+ 			style_set_old_focus_policy(ps, 1);
+@@ -4117,6 +4144,50 @@
+ 			S_SET_IS_RIGHT_TITLE_ROTATED_CW(SCM(*ps), 1);
+ 			S_SET_IS_RIGHT_TITLE_ROTATED_CW(SCC(*ps), 1);
+ 		}
++		else if (StrEquals(token, "RoundedCorners"))
++		{
++			S_SET_HAS_ROUNDED_CORNERS_TOP(SCF(*ps), on);
++			S_SET_HAS_ROUNDED_CORNERS_TOP(SCM(*ps), 1);
++			S_SET_HAS_ROUNDED_CORNERS_TOP(SCC(*ps), 1);
++
++			/* FluxboxHandles found */
++			if (S_HAS_FLUXBOX_HANDLES(SCC(*ps))) {
++				S_SET_HAS_ROUNDED_CORNERS_BOTTOM(SCF(*ps), !on);
++				S_SET_HAS_ROUNDED_CORNERS_BOTTOM(SCM(*ps), 1);
++				S_SET_HAS_ROUNDED_CORNERS_BOTTOM(SCC(*ps), 1);
++			}
++			else {
++				S_SET_HAS_FLUXBOX_HANDLES(SCF(*ps), !on);
++				S_SET_HAS_FLUXBOX_HANDLES(SCM(*ps), 1);
++				S_SET_HAS_FLUXBOX_HANDLES(SCC(*ps), 1);
++				S_SET_HAS_ROUNDED_CORNERS_BOTTOM(SCF(*ps), on);
++				S_SET_HAS_ROUNDED_CORNERS_BOTTOM(SCM(*ps), 1);
++				S_SET_HAS_ROUNDED_CORNERS_BOTTOM(SCC(*ps), 1);
++			}
++		}
++		else if (StrEquals(token, "RoundedCornersTop"))
++		{
++			S_SET_HAS_ROUNDED_CORNERS_TOP(SCF(*ps), on);
++			S_SET_HAS_ROUNDED_CORNERS_TOP(SCM(*ps), 1);
++			S_SET_HAS_ROUNDED_CORNERS_TOP(SCC(*ps), 1);
++		}
++		else if (StrEquals(token, "RoundedCornersBottom"))
++		{
++            /* FluxboxHandles found */
++            if (S_HAS_FLUXBOX_HANDLES(SCC(*ps))) {
++                S_SET_HAS_ROUNDED_CORNERS_BOTTOM(SCF(*ps), !on);
++                S_SET_HAS_ROUNDED_CORNERS_BOTTOM(SCM(*ps), 1);
++                S_SET_HAS_ROUNDED_CORNERS_BOTTOM(SCC(*ps), 1);
++            }
++            else {
++				S_SET_HAS_FLUXBOX_HANDLES(SCF(*ps), !on);
++				S_SET_HAS_FLUXBOX_HANDLES(SCM(*ps), 1);
++				S_SET_HAS_FLUXBOX_HANDLES(SCC(*ps), 1);
++                S_SET_HAS_ROUNDED_CORNERS_BOTTOM(SCF(*ps), on);
++                S_SET_HAS_ROUNDED_CORNERS_BOTTOM(SCM(*ps), 1);
++                S_SET_HAS_ROUNDED_CORNERS_BOTTOM(SCC(*ps), 1);
++            }
++		}		
+ 		else
+ 		{
+ 			found = False;
+@@ -4251,6 +4322,12 @@
+ 			S_SET_HAS_NO_STICKY_STIPPLED_ICON_TITLE(SCM(*ps), 1);
+ 			S_SET_HAS_NO_STICKY_STIPPLED_ICON_TITLE(SCC(*ps), 1);
+ 		}
++		else if (StrEquals(token, "SlightlyRoundedCorners"))
++		{
++			S_SET_HAS_SLIGHTLY_ROUNDED_CORNERS(SCF(*ps), on);
++			S_SET_HAS_SLIGHTLY_ROUNDED_CORNERS(SCM(*ps), 1);
++			S_SET_HAS_SLIGHTLY_ROUNDED_CORNERS(SCC(*ps), 1);
++		}
+ 		else if (StrEquals(token, "Slippery"))
+ 		{
+ 			S_SET_IS_STICKY_ACROSS_PAGES(SCF(*ps), !on);
+@@ -5264,6 +5341,20 @@
+ 	{
+ 		flags->do_update_rotated_title = 1;
+ 	}
++
++	/* has_fluxbox_handles */
++	if (S_HAS_FLUXBOX_HANDLES(SCC(*ret_style)))
++	{
++		flags->do_redecorate = True;
++	}
++
++	/* has_rounded_corners */
++	if (S_HAS_ROUNDED_CORNERS_TOP(SCC(*ret_style))
++		|| S_HAS_ROUNDED_CORNERS_BOTTOM(SCC(*ret_style))
++		|| S_HAS_SLIGHTLY_ROUNDED_CORNERS(SCC(*ret_style)))
++	{
++		flags->do_redecorate = True;
++	}
+ 	
+ 	if (S_HAS_BORDER_UNDER_TITLE(SCC(*ret_style)))
+ 	{
+@@ -5528,6 +5619,12 @@
+ 		flags->do_update_modules_flags = 1;
+ 	}
+ 
++	/* has_corner_width */
++	if (ret_style->change_mask.has_corner_width)
++	{
++		flags->do_redecorate = True;
++	}
++
+ 	if (ret_style->change_mask.do_save_under ||
+ 	    ret_style->change_mask.use_backing_store ||
+ 	    ret_style->change_mask.use_parent_relative)
+diff -U3 -r fvwm/style.h fvwm/style.h
+--- fvwm/style.h	2011-12-09 19:40:50.148448924 +0100
++++ fvwm/style.h	2011-12-09 19:51:38.708521953 +0100
+@@ -24,6 +24,8 @@
+ 	((sf)->has_color_fore)
+ #define SHAS_HANDLE_WIDTH(sf) \
+ 	((sf)->has_handle_width)
++#define SHAS_CORNER_WIDTH(sf) \
++	((sf)->has_corner_width)
+ #define SHAS_ICON(sf) \
+ 	((sf)->has_icon)
+ #define SHAS_ICON_BOXES(sf) \
+@@ -384,6 +386,22 @@
+ 	((c).s.has_border_under_title)
+ #define S_SET_HAS_BORDER_UNDER_TITLE(c,x) \
+ 	((c).s.has_border_under_title = !!(x))
++#define S_HAS_FLUXBOX_HANDLES(c) \
++	((c).s.has_fluxbox_handles)
++#define S_SET_HAS_FLUXBOX_HANDLES(c,x) \
++	((c).s.has_fluxbox_handles = !!(x))
++#define S_HAS_ROUNDED_CORNERS_TOP(c) \
++	((c).s.has_rounded_corners_top)
++#define S_SET_HAS_ROUNDED_CORNERS_TOP(c,x) \
++	((c).s.has_rounded_corners_top = !!(x))
++#define S_HAS_ROUNDED_CORNERS_BOTTOM(c) \
++	((c).s.has_rounded_corners_bottom)
++#define S_SET_HAS_ROUNDED_CORNERS_BOTTOM(c,x) \
++	((c).s.has_rounded_corners_bottom = !!(x))
++#define S_HAS_SLIGHTLY_ROUNDED_CORNERS(c) \
++	((c).s.has_slightly_rounded_corners)
++#define S_SET_HAS_SLIGHTLY_ROUNDED_CORNERS(c,x) \
++	((c).s.has_slightly_rounded_corners = !!(x))
+ #define S_DO_EWMH_MINI_ICON_OVERRIDE(c) \
+ 	((c).s.do_ewmh_mini_icon_override)
+ #define S_SET_DO_EWMH_MINI_ICON_OVERRIDE(c,x) \
+@@ -606,6 +624,10 @@
+ 	((s).handle_width)
+ #define SSET_HANDLE_WIDTH(s,x) \
+ 	((s).handle_width = (x))
++#define SGET_CORNER_WIDTH(s) \
++	((s).corner_width)
++#define SSET_CORNER_WIDTH(s,x) \
++	((s).corner_width = (x))
+ #define SGET_LAYER(s) \
+ 	((s).layer)
+ #define SSET_LAYER(s,x) \
+diff -U3 -r fvwm/window_flags.h fvwm/window_flags.h
+--- fvwm/window_flags.h	2011-12-09 19:40:50.151782172 +0100
++++ fvwm/window_flags.h	2011-12-09 19:51:38.708521953 +0100
+@@ -316,12 +316,12 @@
+ 	(fw)->flags.common.s.is_bottom_title_rotated = !!(x)
+ #define SETM_IS_BOTTOM_TITLE_ROTATED(fw,x) \
+ 	(fw)->flag_mask.common.s.is_bottom_title_rotated = !!(x)
+-#define IS_BOTTOM_TITLE_ROTATED(fw) \
+-	((fw)->flags.common.s.is_bottom_title_rotated)
+-#define SET_IS_BOTTOM_TITLE_ROTATED(fw,x) \
+-	(fw)->flags.common.s.is_bottom_title_rotated = !!(x)
+-#define SETM_IS_BOTTOM_TITLE_ROTATED(fw,x) \
+-	(fw)->flag_mask.common.s.is_bottom_title_rotated = !!(x)
++#define IS_TOP_TITLE_ROTATED(fw) \
++	((fw)->flags.common.s.is_top_title_rotated)
++#define SET_IS_TOP_TITLE_ROTATED(fw,x) \
++	(fw)->flags.common.s.is_top_title_rotated = !!(x)
++#define SETM_IS_TOP_TITLE_ROTATED(fw,x) \
++	(fw)->flag_mask.common.s.is_top_title_rotated = !!(x)
+ #define USE_TITLE_DECOR_ROTATION(fw) \
+ 	((fw)->flags.common.s.use_title_decor_rotation)
+ #define SET_USE_TITLE_DECOR_ROTATION(fw,x) \
+@@ -334,6 +334,30 @@
+ 	(fw)->flags.common.s.has_border_under_title = !!(x)
+ #define SETM_HAS_BORDER_UNDER_TITLE(fw,x) \
+ 	(fw)->flag_mask.common.s.has_border_under_title = !!(x)
++#define HAS_FLUXBOX_HANDLES(fw) \
++	((fw)->flags.common.s.has_fluxbox_handles && (fw->flags.has_handles))
++#define SET_HAS_FLUXBOX_HANDLES(fw,x) \
++	(fw)->flags.common.s.has_fluxbox_handles = !!(x)
++#define SETM_HAS_FLUXBOX_HANDLES(fw,x) \
++	(fw)->flag_mask.common.s.has_fluxbox_handles = !!(x)
++#define HAS_ROUNDED_CORNERS_TOP(fw) \
++	((fw)->flags.common.s.has_rounded_corners_top)
++#define SET_HAS_ROUNDED_CORNERS_TOP(fw,x) \
++	(fw)->flags.common.s.has_rounded_corners_top = !!(x)
++#define SETM_HAS_ROUNDED_CORNERS_TOP(fw,x) \
++	(fw)->flag_mask.common.s.has_rounded_corners_top = !!(x)
++#define HAS_ROUNDED_CORNERS_BOTTOM(fw) \
++	((fw)->flags.common.s.has_rounded_corners_bottom)
++#define SET_HAS_ROUNDED_CORNERS_BOTTOM(fw,x) \
++	(fw)->flags.common.s.has_rounded_corners_bottom = !!(x)
++#define SETM_HAS_ROUNDED_CORNERS_BOTTOM(fw,x) \
++	(fw)->flag_mask.common.s.has_rounded_corners_bottom = !!(x)
++#define HAS_SLIGHTLY_ROUNDED_CORNERS(fw) \
++	((fw)->flags.common.s.has_slightly_rounded_corners)
++#define SET_HAS_SLIGHTLY_ROUNDED_CORNERS_BOTTOM(fw,x) \
++	(fw)->flags.common.s.has_slightly_rounded_corners = !!(x)
++#define SETM_HAS_SLIGHTLY_ROUNDED_CORNERS(fw,x) \
++	(fw)->flag_mask.common.s.has_slightly_rounded_corners = !!(x)
+ 
+ /* access to the special flags of a window */
+ #define DO_REUSE_DESTROYED(fw) \
+diff -U3 -r fvwm/windowshade.c fvwm/windowshade.c
+--- fvwm/windowshade.c	2007-01-27 12:33:16.000000000 +0100
++++ fvwm/windowshade.c	2011-12-09 19:51:38.711855201 +0100
+@@ -213,6 +213,7 @@
+ 	border_draw_decorations(
+ 		fw, PART_TITLEBAR, (fw == get_focus_window()) ? True : False,
+ 		0, CLEAR_BUTTONS, NULL, NULL);
++	frame_make_rounded_corners(fw);
+ 	/* update hints and inform modules */
+ 	BroadcastConfig(M_CONFIGURE_WINDOW, fw);
+ 	BroadcastPacket(
