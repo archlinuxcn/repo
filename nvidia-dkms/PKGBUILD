@@ -1,0 +1,47 @@
+# Maintainer: Alucryd <alucryd at gmail dot com>
+# Contributor: jarda-wien <xstej70 at gmail dot com>
+# Contributor: Jason Melton <jason dot melton at gmail dot com>
+# Contributor: Atilla ÖNTAŞ <tarakbumba at gmail dot com>
+
+pkgname=nvidia-dkms
+pkgver=313.30
+pkgrel=2
+pkgdesc="NVIDIA kernel module sources (DKMS)"
+arch=('i686' 'x86_64')
+[[ $CARCH == i686 ]] && _arch=x86 && _pkg=NVIDIA-Linux-${_arch}-${pkgver} && md5sums=('69c0f66c9246217a4fe4d28e95bb7bb6')
+[[ $CARCH == x86_64 ]] && _arch=x86_64 && _pkg=NVIDIA-Linux-${_arch}-${pkgver}-no-compat32 && md5sums=('e5f147fbcdcad71472b4ddeccf259bd7')
+url="http://www.nvidia.com/"
+license=('custom')
+depends=('dkms' "nvidia-utils=${pkgver}")
+optdepends=('linux-headers: build the module against Arch kernel'
+            'linux-lts-headers: build the module against LTS Arch kernel')
+provides=("nvidia=${pkgver}")
+conflicts=('nvidia')
+source=("http://us.download.nvidia.com/XFree86/Linux-${_arch}/${pkgver}/${_pkg}.run")
+install=${pkgname}.install
+
+build() {
+  cd "${srcdir}"
+
+  if [[ -d ${_pkg} ]] ; then
+    rm -rf ${_pkg}
+  fi
+
+  sh ${_pkg}.run --extract-only
+}
+
+package() {
+  cd "${srcdir}"/${_pkg}/kernel
+
+  install -dm 755 "${pkgdir}"/usr/{lib/modprobe.d,share/licenses,src/nvidia-${pkgver}}
+  cp -dr --no-preserve=ownership * "${pkgdir}"/usr/src/nvidia-${pkgver}/
+  echo "blacklist nouveau" > "${pkgdir}"/usr/lib/modprobe.d/nvidia.conf
+  ln -s /usr/share/licenses/nvidia "${pkgdir}"/usr/share/licenses/${pkgname}
+
+# Fix permissions
+  find "${pkgdir}" -type d -exec chmod 755 {} +
+  find "${pkgdir}" -type f -exec chmod 644 {} +
+  chmod 755 "${pkgdir}"/usr/src/nvidia-${pkgver}/conftest.sh
+}
+
+# vim: ts=2 sw=2 et:

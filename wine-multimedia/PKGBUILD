@@ -6,17 +6,18 @@
 
 pkgname=wine-multimedia
 _basename=wine
-pkgver=1.5.25
+pkgver=1.5.27
 pkgrel=1
 
 _pkgbasever=${pkgver/rc/-rc}
 
 source=(http://prdownloads.sourceforge.net/$_basename/$_basename-$_pkgbasever.tar.bz2{,.sign}
-        winemultimedia_1.5.25_20130304.patch)
+        winemultimedia_1.5.27_20130404.patch)
 
-sha1sums=('fdc0067cce2176577a61b693fcbbf98ec1d50f2a'
-          '0ef6a59906ad599411136018b63e8fc76755e6a0'
-          'e4e05b1b40e431f39eda267d1510dabf7f5720af')
+sha1sums=('457e75660312bd572ae85a567adf7805f482491e'
+          '5dfa970aa5dfb087e9efc32e70b2e42933dcb063'
+          '0764705158774e748dcd2779d7896e2f46763715')
+
 
 pkgdesc="Wine with Maarten Lankhorst's multimedia patches, including PulseAudio support"
 url="http://www.winehq.com"
@@ -113,11 +114,10 @@ build() {
 
   # Apply multimedia patch
   msg2 "Applying multimedia branch patch"
-  (cd $_basename && patch -Np1 -i "${srcdir}"/winemultimedia_1.5.25_20130304.patch)
+  (cd $_basename && patch -Np1 -i "${srcdir}"/winemultimedia_1.5.27_20130404.patch)
 
   # These additional CFLAGS solve FS#27662
-  export CFLAGS="${CFLAGS/-D_FORTIFY_SOURCE=2/} -D_FORTIFY_SOURCE=0"
-  export CXXFLAGS="${CXXFLAGS/-D_FORTIFY_SOURCE=2/} -D_FORTIFY_SOURCE=0"
+  export CPPFLAGS="${CPPFLAGS/-D_FORTIFY_SOURCE=2/} -D_FORTIFY_SOURCE=0"
 
   if [[ $CARCH == x86_64 ]]; then
     msg2 "Building Wine-64..."
