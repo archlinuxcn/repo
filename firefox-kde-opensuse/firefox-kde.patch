@@ -2,7 +2,7 @@ diff --git a/browser/base/content/browser-kde.xul b/browser/base/content/browser
 new file mode 100644
 --- /dev/null
 +++ b/browser/base/content/browser-kde.xul
-@@ -0,0 +1,1276 @@
+@@ -0,0 +1,1221 @@
 +#filter substitution
 +<?xml version="1.0"?>
 +# -*- Mode: HTML -*-
@@ -49,7 +49,6 @@ new file mode 100644
 +        windowtype="navigator:browser"
 +        macanimationtype="document"
 +        screenX="4" screenY="4"
-+        browsingmode="normal"
 +        fullscreenbutton="true"
 +        persist="screenX screenY width height sizemode">
 +
@@ -199,7 +198,7 @@ new file mode 100644
 +        <button id="social-undoactivation-button"
 +                label="&social.activated.undobutton.label;"
 +                accesskey="&social.activated.undobutton.accesskey;"
-+                onclick="SocialUI.undoActivation();"/>
++                onclick="SocialUI.undoActivation(this);"/>
 +        <button default="true"
 +                autofocus="autofocus"
 +                label="&social.ok.label;"
@@ -214,7 +213,7 @@ new file mode 100644
 +        <button id="social-undoactivation-button"
 +                label="&social.activated.undobutton.label;"
 +                accesskey="&social.activated.undobutton.accesskey;"
-+                onclick="SocialUI.undoActivation();"/>
++                onclick="SocialUI.undoActivation(this);"/>
 +#endif
 +          </hbox>
 +        </vbox>
@@ -282,22 +281,6 @@ new file mode 100644
 +           hidden="true"
 +           noautofocus="true"
 +           position="topcenter topright"/>
-+
-+    <menupopup id="inspector-node-popup">
-+      <menuitem id="inspectorHTMLCopyInner"
-+                label="&inspectorHTMLCopyInner.label;"
-+                accesskey="&inspectorHTMLCopyInner.accesskey;"
-+                command="Inspector:CopyInner"/>
-+      <menuitem id="inspectorHTMLCopyOuter"
-+                label="&inspectorHTMLCopyOuter.label;"
-+                accesskey="&inspectorHTMLCopyOuter.accesskey;"
-+                command="Inspector:CopyOuter"/>
-+      <menuseparator/>
-+      <menuitem id="inspectorHTMLDelete"
-+                label="&inspectorHTMLDelete.label;"
-+                accesskey="&inspectorHTMLDelete.accesskey;"
-+                command="Inspector:DeleteNode"/>
-+    </menupopup>
 +
 +    <menupopup id="toolbar-context-menu"
 +               onpopupshowing="onViewToolbarsPopupShowing(event);">
@@ -465,6 +448,34 @@ new file mode 100644
 +      <label class="tooltip-label" value="&backForwardButtonMenu.tooltip;"/>
 +#endif
 +    </tooltip>
++
++    <popupnotification id="webRTC-shareDevices-notification" hidden="true">
++      <popupnotificationcontent id="webRTC-selectCamera" orient="vertical">
++        <separator class="thin"/>
++        <label value="&getUserMedia.selectCamera.label;"
++               accesskey="&getUserMedia.selectCamera.accesskey;"
++               control="webRTC-selectCamera-menulist"/>
++        <menulist id="webRTC-selectCamera-menulist">
++          <menupopup id="webRTC-selectCamera-menupopup"/>
++        </menulist>
++      </popupnotificationcontent>
++      <popupnotificationcontent id="webRTC-selectMicrophone" orient="vertical">
++        <separator class="thin"/>
++        <label value="&getUserMedia.selectMicrophone.label;"
++               accesskey="&getUserMedia.selectMicrophone.accesskey;"
++               control="webRTC-selectMicrophone-menulist"/>
++        <menulist id="webRTC-selectMicrophone-menulist">
++          <menupopup id="webRTC-selectMicrophone-menupopup"/>
++        </menulist>
++      </popupnotificationcontent>
++    </popupnotification>
++
++    <popupnotification id="geolocation-notification" hidden="true">
++      <popupnotificationcontent orient="vertical" align="start">
++        <separator class="thin"/>
++        <label id="geolocation-learnmore-link" class="text-link"/>
++      </popupnotificationcontent>
++    </popupnotification>
 +  </popupset>
 +
 +#ifdef CAN_DRAW_IN_TITLEBAR
@@ -522,7 +533,7 @@ new file mode 100644
 +             toolbarname="&navbarCmd.label;" accesskey="&navbarCmd.accesskey;"
 +             fullscreentoolbar="true" mode="icons" customizable="true"
 +             iconsize="large"
-+             defaultset="unified-back-forward-button,urlbar-container,reload-button,stop-button,search-container,home-button,bookmarks-menu-button-container,window-controls"
++             defaultset="unified-back-forward-button,urlbar-container,reload-button,stop-button,search-container,webrtc-status-button,downloads-button,home-button,bookmarks-menu-button-container,window-controls"
 +             context="toolbar-context-menu">
 +
 +      <toolbaritem id="unified-back-forward-button" class="chromeclass-toolbar-additional"
@@ -579,6 +590,8 @@ new file mode 100644
 +            <image id="webapps-notification-icon" class="notification-anchor-icon" role="button"/>
 +            <image id="plugins-notification-icon" class="notification-anchor-icon" role="button"/>
 +            <image id="blocked-plugins-notification-icon" class="notification-anchor-icon" role="button"/>
++            <image id="webRTC-shareDevices-notification-icon" class="notification-anchor-icon" role="button"/>
++            <image id="webRTC-sharingDevices-notification-icon" class="notification-anchor-icon" role="button"/>
 +          </box>
 +          <!-- Use onclick instead of normal popup= syntax since the popup
 +               code fires onmousedown, and hence eats our favicon drag events.
@@ -654,6 +667,18 @@ new file mode 100644
 +        <searchbar id="searchbar" flex="1"/>
 +      </toolbaritem>
 +
++      <toolbarbutton id="webrtc-status-button"
++                     class="toolbarbutton-1 chromeclass-toolbar-additional"
++                     type="menu"
++                     hidden="true"
++                     orient="horizontal"
++                     label="&webrtcIndicatorButton.label;"
++                     tooltiptext="&webrtcIndicatorButton.tooltip;">
++        <menupopup onpopupshowing="WebrtcIndicator.fillPopup(this);"
++                   onpopuphiding="WebrtcIndicator.clearPopup(this);"
++                   oncommand="WebrtcIndicator.menuCommand(event.target);"/>
++      </toolbarbutton>
++
 +      <toolbarbutton id="home-button" class="toolbarbutton-1 chromeclass-toolbar-additional"
 +                     persist="class" removable="true"
 +                     label="&homeButton.label;"
@@ -669,6 +694,7 @@ new file mode 100644
 +                   removable="false"
 +                   title="&socialToolbar.title;"
 +                   hidden="true"
++                   skipintoolbarset="true"
 +                   observes="socialActiveBroadcaster">
 +        <toolbarbutton id="social-provider-button"
 +                       class="toolbarbutton-1"
@@ -700,6 +726,7 @@ new file mode 100644
 +                      label="&social.toggleNotifications.label;"
 +                      accesskey="&social.toggleNotifications.accesskey;"/>
 +            <menuseparator class="social-statusarea-separator"/>
++            <menuseparator class="social-provider-menu" hidden="true"/>
 +            <menuitem class="social-toggle-menuitem" command="Social:Toggle"/>
 +            <menuitem class="social-remove-menuitem" command="Social:Remove"/>
 +          </menupopup>
@@ -893,7 +920,8 @@ new file mode 100644
 +            tabbrowser="content"
 +            flex="1"
 +            setfocus="false"
-+            tooltip="tabbrowser-tab-tooltip">
++            tooltip="tabbrowser-tab-tooltip"
++            stopwatchid="FX_TAB_CLICK_MS">
 +        <tab class="tabbrowser-tab" selected="true" fadein="true"/>
 +      </tabs>
 +
@@ -1048,6 +1076,8 @@ new file mode 100644
 +    </toolbarpalette>
 +  </toolbox>
 +
++  <hbox id="fullscr-toggler" collapsed="true"/>
++
 +  <hbox flex="1" id="browser">
 +    <vbox id="browser-border-start" hidden="true" layer="true"/>
 +    <vbox id="sidebar-box" hidden="true" class="chromeclass-extrachrome">
@@ -1070,19 +1100,6 @@ new file mode 100644
 +                  onclick="contentAreaClick(event, false);"/>
 +      <chatbar id="pinnedchats" layer="true" mousethrough="always" hidden="true"/>
 +      <statuspanel id="statusbar-display" inactive="true"/>
-+    </vbox>
-+    <splitter id="devtools-side-splitter" hidden="true"/>
-+    <vbox id="devtools-sidebar-box" hidden="true"
-+          style="min-width: 18em; width: 22em; max-width: 42em;" persist="width">
-+      <toolbar id="devtools-sidebar-toolbar"
-+               class="devtools-toolbar"
-+               nowindowdrag="true">
-+        <spacer flex="1"/>
-+        <toolbarbutton tooltiptext="&inspectSidebarCloseButton.tooltiptext;"
-+                       class="devtools-closebutton"
-+                       command="Inspector:Sidebar"/>
-+      </toolbar>
-+      <deck id="devtools-sidebar-deck" flex="1"/>
 +    </vbox>
 +    <splitter id="social-sidebar-splitter"
 +              class="chromeclass-extrachrome sidebar-splitter"
@@ -1122,52 +1139,6 @@ new file mode 100644
 +  </hbox>
 +
 +  <vbox id="browser-bottombox" layer="true">
-+    <toolbar id="inspector-toolbar"
-+             class="devtools-toolbar"
-+             nowindowdrag="true"
-+             hidden="true">
-+#ifdef XP_MACOSX
-+      <toolbarbutton id="highlighter-closebutton"
-+                     class="devtools-closebutton"
-+                     oncommand="InspectorUI.closeInspectorUI(false);"
-+                     tooltiptext="&inspectCloseButton.tooltiptext;"/>
-+#endif
-+      <toolbarbutton id="inspector-inspect-toolbutton"
-+                     class="devtools-toolbarbutton"
-+                     command="Inspector:Inspect"/>
-+      <toolbarbutton id="inspector-treepanel-toolbutton"
-+                     class="devtools-toolbarbutton"
-+                     tabindex="0"
-+                     aria-label="&markupButton.arialabel;"
-+                     accesskey="&markupButton.accesskey;"
-+                     command="Inspector:HTMLPanel"/>
-+      <arrowscrollbox id="inspector-breadcrumbs"
-+                      flex="1" orient="horizontal"
-+                      clicktoscroll="true"/>
-+      <hbox id="inspector-tools">
-+        <toolbarbutton id="inspector-3D-button"
-+                       class="devtools-toolbarbutton"
-+                       hidden="true"
-+                       label="&inspect3DViewButton.label;"
-+                       accesskey="&inspect3DViewButton.accesskey;"
-+                       tabindex="0"
-+                       command="Inspector:Tilt"/>
-+        <toolbarbutton id="inspector-style-button"
-+                       class="devtools-toolbarbutton"
-+                       label="&inspectStyleButton.label;"
-+                       accesskey="&inspectStyleButton.accesskey;"
-+                       tabindex="0"
-+                       command="Inspector:Sidebar"/>
-+        <!-- registered tools go here -->
-+      </hbox>
-+#ifndef XP_MACOSX
-+      <toolbarbutton id="highlighter-closebutton"
-+                     class="devtools-closebutton"
-+                     oncommand="InspectorUI.closeInspectorUI(false);"
-+                     tooltiptext="&inspectCloseButton.tooltiptext;"/>
-+#endif
-+    </toolbar>
-+
 +    <toolbar id="developer-toolbar"
 +             class="devtools-toolbar"
 +             hidden="true">
@@ -1184,36 +1155,10 @@ new file mode 100644
 +            <hbox class="gclitoolbar-complete-node"/>
 +            <textbox class="gclitoolbar-input-node" rows="1"/>
 +          </stack>
-+          <toolbarbutton id="developer-toolbar-webconsole"
++          <toolbarbutton id="developer-toolbar-toolbox-button"
 +                         class="developer-toolbar-button"
-+                         observes="devtoolsMenuBroadcaster_WebConsole"/>
-+          <toolbarbutton id="developer-toolbar-inspector"
-+                         class="developer-toolbar-button"
-+                         observes="devtoolsMenuBroadcaster_Inspect"/>
-+          <toolbarbutton id="developer-toolbar-styleeditor"
-+                         class="developer-toolbar-button"
-+                         observes="devtoolsMenuBroadcaster_StyleEditor"/>
-+          <toolbarbutton id="developer-toolbar-debugger"
-+                         class="developer-toolbar-button"
-+                         observes="devtoolsMenuBroadcaster_Debugger"/>
-+          <toolbarbutton id="developer-toolbar-other-tools"
-+                         type="menu"
-+                         class="developer-toolbar-button"
-+                         label="&devToolbarOtherToolsButton.label;">
-+            <menupopup position="before_end">
-+               <menuitem observes="devtoolsMenuBroadcaster_DevToolbar"/>
-+               <menuitem observes="devtoolsMenuBroadcaster_ResponsiveUI"/>
-+               <menuitem observes="devtoolsMenuBroadcaster_RemoteDebugger"/>
-+               <menuitem observes="devtoolsMenuBroadcaster_ChromeDebugger"/>
-+               <menuitem observes="devtoolsMenuBroadcaster_Scratchpad"/>
-+               <menuitem observes="devtoolsMenuBroadcaster_StyleEditor"/>
-+               <menuitem observes="devtoolsMenuBroadcaster_PageSource"/>
-+               <menuitem observes="devtoolsMenuBroadcaster_ErrorConsole"/>
-+               <menuseparator/>
-+               <menuitem observes="devtoolsMenuBroadcaster_GetMoreTools"/>
-+            </menupopup>
-+          </toolbarbutton>
-+
++                         observes="devtoolsMenuBroadcaster_DevToolbox"
++                         tooltiptext="&devToolbarToolsButton.tooltip;"/>
 +#ifndef XP_MACOSX
 +          <toolbarbutton id="developer-toolbar-closebutton"
 +                         class="devtools-closebutton"
@@ -1282,8 +1227,8 @@ new file mode 100644
 diff --git a/browser/base/jar.mn b/browser/base/jar.mn
 --- a/browser/base/jar.mn
 +++ b/browser/base/jar.mn
-@@ -50,16 +50,18 @@ browser.jar:
-         content/browser/abouthome/mozilla@2x.png       (content/abouthome/mozilla@2x.png)
+@@ -55,16 +55,18 @@ browser.jar:
+         content/browser/abouthealthreport/abouthealth.css     (content/abouthealthreport/abouthealth.css)
  #endif
          content/browser/aboutRobots-icon.png          (content/aboutRobots-icon.png)
          content/browser/aboutRobots-widget-left.png   (content/aboutRobots-widget-left.png)
@@ -1323,7 +1268,7 @@ diff --git a/browser/components/build/nsModule.cpp b/browser/components/build/ns
  
  #include "rdf.h"
  #include "nsFeedSniffer.h"
-@@ -32,18 +32,16 @@ using namespace mozilla::browser;
+@@ -34,18 +34,16 @@ using namespace mozilla::browser;
  
  /////////////////////////////////////////////////////////////////////////////
  
@@ -1342,9 +1287,9 @@ diff --git a/browser/components/build/nsModule.cpp b/browser/components/build/ns
  
  NS_GENERIC_FACTORY_CONSTRUCTOR(nsFeedSniffer)
  
-@@ -64,17 +62,17 @@ NS_DEFINE_NAMED_CID(NS_SHELLSERVICE_CID)
- #endif
+@@ -70,17 +68,17 @@ NS_DEFINE_NAMED_CID(NS_SHELLSERVICE_CID)
  NS_DEFINE_NAMED_CID(NS_PRIVATE_BROWSING_SERVICE_WRAPPER_CID);
+ #endif
  
  static const mozilla::Module::CIDEntry kBrowserCIDs[] = {
      { &kNS_BROWSERDIRECTORYPROVIDER_CID, false, NULL, DirectoryProviderConstructor },
@@ -1387,7 +1332,7 @@ diff --git a/browser/components/preferences/advanced.js b/browser/components/pre
      // when the user will select the default.  We refresh here periodically
      // in case the default changes.  On other Windows OS's defaults can also
      // be set while the prefs are open.
-@@ -715,14 +721,25 @@ var gAdvancedPane = {
+@@ -791,14 +797,25 @@ var gAdvancedPane = {
     * Set browser as the operating system default browser.
     */
    setDefaultBrowser: function()
@@ -1849,24 +1794,25 @@ new file mode 100644
 diff --git a/browser/installer/package-manifest.in b/browser/installer/package-manifest.in
 --- a/browser/installer/package-manifest.in
 +++ b/browser/installer/package-manifest.in
-@@ -578,18 +578,20 @@
- @BINPATH@/@PREF_DIR@/healthreport-prefs.js
- #endif
- @BINPATH@/greprefs.js
- @BINPATH@/defaults/autoconfig/platform.js
+@@ -578,19 +578,21 @@
  @BINPATH@/defaults/autoconfig/prefcalls.js
+ @BINPATH@/defaults/profile/prefs.js
+ 
  #ifndef LIBXUL_SDK
  ; Warning: changing the path to channel-prefs.js can cause bugs (Bug 756325)
+ ; Technically this is an app pref file, but we are keeping it in the original
+ ; gre location for now.
  @BINPATH@/defaults/pref/channel-prefs.js
 +@BINPATH@/defaults/pref/kde.js
  #else
+ ; For Fx-on-xr, channel-prefs lives with the app preferences. (Bug 762588)
  @BINPATH@/@PREF_DIR@/channel-prefs.js
 +@BINPATH@/@PREF_DIR@/kde.js
  #endif
- @BINPATH@/defaults/profile/prefs.js
  
- ; [Layout Engine Resources]
- ; Style Sheets, Graphics and other Resources used by the layout engine. 
- @BINPATH@/res/EditorOverride.css
- @BINPATH@/res/contenteditable.css
- @BINPATH@/res/designmode.css
+ ; Services (gre) prefs
+ #ifdef MOZ_SERVICES_AITC
+ @BINPATH@/defaults/pref/services-aitc.js
+ #endif
+ #ifdef MOZ_SERVICES_NOTIFICATIONS
+ @BINPATH@/defaults/pref/services-notifications.js

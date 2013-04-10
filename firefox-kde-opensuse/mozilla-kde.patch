@@ -7,7 +7,7 @@ Bug: https://bugzilla.mozilla.org/show_bug.cgi?id=140751
 diff --git a/modules/libpref/src/Makefile.in b/modules/libpref/src/Makefile.in
 --- a/modules/libpref/src/Makefile.in
 +++ b/modules/libpref/src/Makefile.in
-@@ -45,14 +45,16 @@ GREPREF_FILES = $(topsrcdir)/netwerk/bas
+@@ -54,14 +54,15 @@ endif
  # Optimizer bug with GCC 3.2.2 on OS/2
  ifeq ($(OS_ARCH), OS2)
  nsPrefService.$(OBJ_SUFFIX): nsPrefService.cpp
@@ -17,9 +17,8 @@ diff --git a/modules/libpref/src/Makefile.in b/modules/libpref/src/Makefile.in
  endif
  
 +LOCAL_INCLUDES += -I$(topsrcdir)/toolkit/xre
-+
  
- greprefs.js: $(GREPREF_FILES)
+ greprefs.js: $(grepref_files)
  	$(PYTHON) $(topsrcdir)/config/Preprocessor.py $(PREF_PPFLAGS) $(DEFINES) $(ACDEFINES) $(XULPPFLAGS) $^ > $@
  
  libs:: greprefs.js
@@ -39,13 +38,13 @@ diff --git a/modules/libpref/src/Preferences.cpp b/modules/libpref/src/Preferenc
 +#include "nsKDEUtils.h"
  
  #include "nsQuickSort.h"
- #include "prmem.h"
  #include "pldhash.h"
  
  #include "prefapi.h"
  #include "prefread.h"
  #include "prefapi_private_data.h"
-@@ -950,16 +951,34 @@ pref_LoadPrefsInDir(nsIFile* aDir, char 
+ 
+@@ -946,16 +947,34 @@ pref_LoadPrefsInDir(nsIFile* aDir, char 
  
  static nsresult pref_LoadPrefsInDirList(const char *listId)
  {
@@ -80,7 +79,7 @@ diff --git a/modules/libpref/src/Preferences.cpp b/modules/libpref/src/Preferenc
      return NS_OK;
  
    bool hasMore;
-@@ -975,17 +994,17 @@ static nsresult pref_LoadPrefsInDirList(
+@@ -971,17 +990,17 @@ static nsresult pref_LoadPrefsInDirList(
  
      nsAutoCString leaf;
      path->GetNativeLeafName(leaf);
@@ -99,7 +98,7 @@ diff --git a/modules/libpref/src/Preferences.cpp b/modules/libpref/src/Preferenc
  {
    nsZipItemPtr<char> manifest(jarReader, name, true);
    NS_ENSURE_TRUE(manifest.Buffer(), NS_ERROR_NOT_AVAILABLE);
-@@ -1079,28 +1098,40 @@ static nsresult pref_InitInitialObjects(
+@@ -1075,28 +1094,40 @@ static nsresult pref_InitInitialObjects(
    /* these pref file names should not be used: we process them after all other application pref files for backwards compatibility */
    static const char* specialFiles[] = {
  #if defined(XP_MACOSX)
@@ -180,7 +179,7 @@ diff --git a/toolkit/components/downloads/nsDownloadManager.cpp b/toolkit/compon
  #include "AndroidBridge.h"
  #endif
  
-@@ -2740,16 +2744,25 @@ nsDownload::SetState(DownloadState aStat
+@@ -2739,16 +2743,25 @@ nsDownload::SetState(DownloadState aStat
        nsCOMPtr<nsIPrefBranch> pref(do_GetService(NS_PREFSERVICE_CONTRACTID));
  
        // Master pref to control this function.
@@ -207,14 +206,14 @@ diff --git a/toolkit/components/downloads/nsDownloadManager.cpp b/toolkit/compon
          showTaskbarAlert = goat > alertIntervalUSec;
  
 @@ -2775,19 +2788,20 @@ nsDownload::SetState(DownloadState aStat
-               // If downloads are automatically removed per the user's
                // retention policy, there's no reason to make the text clickable
                // because if it is, they'll click open the download manager and
                // the items they downloaded will have been removed.
                alerts->ShowAlertNotification(
                    NS_LITERAL_STRING(DOWNLOAD_MANAGER_ALERT_ICON), title,
-                   message, !removeWhenDone, EmptyString(), mDownloadManager,
-                   EmptyString());
+                   message, !removeWhenDone,
+                   mPrivate ? NS_LITERAL_STRING("private") : NS_LITERAL_STRING("non-private"),
+                   mDownloadManager, EmptyString());
 -            }
 +          }
          }
@@ -1366,7 +1365,7 @@ new file mode 100644
 +        if (this.lastSelected) {
 +          lastPane = document.getElementById(this.lastSelected);
 +          if (!lastPane) {
-+            this.lastSelected = null;
++            this.lastSelected = "";
 +          }
 +        }
 +
