@@ -1,0 +1,16 @@
+# Maintainer: tuxce <tuxce.net@gmail.com>
+pkgname=aurvote
+pkgver=1.5
+pkgrel=1
+pkgdesc="Tool to vote for favorite AUR packages"
+url="http://git.archlinux.fr/aurvote.git/" 
+license="GPL" 
+arch=('any')
+depends=('curl') 
+source=($pkgname) 
+
+build() { 
+  	install -D -m 755 "$srcdir/$pkgname" "$pkgdir/usr/bin/$pkgname"
+}
+
+md5sums=('aa7e42dabf2fd5ea75d201225f7b3af0')
