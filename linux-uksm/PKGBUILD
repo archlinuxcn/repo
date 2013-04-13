@@ -31,7 +31,7 @@ pkgname=linux-uksm
 true && pkgname=(linux-uksm linux-uksm-headers)
 _kernelname=-uksm
 _srcname=linux-3.8
-pkgver=3.8.6
+pkgver=3.8.7
 pkgrel=1
 arch=('i686' 'x86_64')
 url="http://kerneldedup.org/"
@@ -50,12 +50,12 @@ source=(
         'config.x86_64'
         )
         
-build() {
+prepare() {
     cd "${srcdir}/${_srcname}"
 
     ### add upstream patch
     msg "Patching kernel patch"
-    patch -p1 -i "${srcdir}/patch-${pkgver}"
+    patch -Np1 -i "${srcdir}/patch-${pkgver}"
 
     ### set DEFAULT_CONSOLE_LOGLEVEL to 4 (same value as the 'quiet' kernel param)
     # remove this when a Kconfig knob is made available by upstream
@@ -118,6 +118,10 @@ build() {
 
     # don't run depmod on 'make install'. We'll do this ourselves in packaging
     sed -i '2iexit 0' scripts/depmod.sh
+}
+
+build() {
+    cd "${srcdir}/${_srcname}"
 
     # get kernel version
     msg "Running make prepare for you to enable patched options of your choosing"
@@ -350,7 +354,7 @@ package_linux-uksm-headers() {
 pkgdesc='Linux Kernel and modules with the UKSM patchset featuring the  v1.2.2.'
 
 md5sums=('1c738edfc54e7c65faeb90c436104e2f'
-         'f11748a53d4ec0e2dcbfbb64526d6434'
+	 'd166692330220c425d69db82c9d693b6'
          '14942242ff034cc1d2cb26228ca5161b'
          'ca3e4c482af0f0514aaa81943f1d65e7'
          'f3def2cefdcbb954c21d8505d23cc83c'
