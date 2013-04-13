@@ -1,0 +1,24 @@
+# Maintainer: Sébastien Luttringer
+pkgname=virtualbox-ext-oracle
+pkgver=4.2.12
+pkgrel=1
+pkgdesc='Oracle VM VirtualBox Extension Pack'
+arch=('any')
+url='http://www.virtualbox.org/'
+license=('custom:PUEL')
+depends=('virtualbox')
+optdepends=('rdesktop: client to connect vm via RDP')
+options=('!strip')
+source=("http://download.virtualbox.org/virtualbox/$pkgver/Oracle_VM_VirtualBox_Extension_Pack-$pkgver.vbox-extpack"
+        'PUEL')
+install=virtualbox-ext-oracle.install
+md5sums=('1c52d6d8f0af5c1f86b4e487df49a03d'
+         '08b28b82d0ebd6962025100d4b5414a1')
+
+package() {
+  install -Dm 644 "Oracle_VM_VirtualBox_Extension_Pack-$pkgver.vbox-extpack" \
+    "$pkgdir/usr/share/virtualbox/extensions/Oracle_VM_VirtualBox_Extension_Pack-$pkgver.vbox-extpack"
+  install -Dm 644 PUEL "$pkgdir/usr/share/licenses/$pkgname/PUEL"
+}
+
+# vim:set ts=2 sw=2 et:
