@@ -1,0 +1,65 @@
+# arg 1:  the new package version
+# arg 2:  the old package version
+
+KERNEL_NAME=-pf
+KERNEL_VERSION=3.8.1-pf
+
+# set a sane PATH to ensure that critical utils like depmod will be found
+export PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+
+post_install () {
+  # updating module dependencies
+  echo ">>> Updating module dependencies. Please wait ..."
+  depmod ${KERNEL_VERSION}
+  echo ">>> Generating initial ramdisk, using mkinitcpio.  Please wait..."
+  mkinitcpio -p linux${KERNEL_NAME}
+
+  # compat symlinks for the official kernels only
+  if [ -z "${KERNEL_NAME}" -o "${KERNEL_NAME}" = "-lts" ]; then
+    loaders="$(find /boot -name syslinux.cfg -or -name extlinux.conf -or -name grub.cfg -or -name menu.lst)"
+    [ -f /etc/lilo.conf ] && loaders="$loaders /etc/lilo.conf"
+    if [ -n "${loaders}" ] && grep -q -e vmlinuz26 -e kernel26.img -e kernel26-fallback.img $loaders; then
+      # add compat symlinks for the initramfs images
+      ln -sf initramfs-linux${KERNEL_NAME}.img boot/kernel26${KERNEL_NAME}.img
+      ln -sf initramfs-linux${KERNEL_NAME}-fallback.img \
+        boot/kernel26${KERNEL_NAME}-fallback.img
+      ln -sf vmlinuz-linux${KERNEL_NAME} /boot/vmlinuz26${KERNEL_NAME}
+    fi
+  fi
+}
+
+post_upgrade() {
+  pacman -Q grub &>/dev/null
+  hasgrub=$?
+  pacman -Q grub-common &>/dev/null
+  hasgrub2=$?
+  pacman -Q lilo &>/dev/null
+  haslilo=$?
+  # reminder notices
+  if [ $haslilo -eq 0 ]; then
+    echo ">>>"
+    if [ $hasgrub -eq 0 -o $hasgrub2 -eq 0 ]; then
+      echo ">>> If you use the LILO bootloader, you should run 'lilo' before rebooting."
+    else
+      echo ">>> You appear to be using the LILO bootloader. You should run"
+      echo ">>> 'lilo' before rebooting."
+    fi
+    echo ">>>"
+  fi
+
+  if findmnt --fstab -uno SOURCE /boot &>/dev/null && ! mountpoint -q /boot; then
+    echo "WARNING: /boot appears to be a separate partition but is not mounted."
+  fi
+
+  # updating module dependencies
+  echo ">>> Updating module dependencies. Please wait ..."
+  depmod ${KERNEL_VERSION}
+  echo ">>> Generating initial ramdisk, using mkinitcpio.  Please wait..."
+  mkinitcpio -p linux${KERNEL_NAME}
+}
+
+post_remove() {
+  # also remove the compat symlinks
+  rm -f boot/{initramfs-linux,kernel26}${KERNEL_NAME}.img
+  rm -f boot/{initramfs-linux,kernel26}${KERNEL_NAME}-fallback.img
+}
