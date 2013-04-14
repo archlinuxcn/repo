@@ -1,0 +1,12 @@
+[Unit]
+Description=Freenet6 tunnel client
+
+[Service]
+ExecStart=/opt/gogoc/bin/gogoc -y -f /opt/gogoc/bin/gogoc.conf
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+Restart=always
+RestartSec=4
+
+[Install]
+WantedBy=multi-user.target
