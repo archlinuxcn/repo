@@ -18,10 +18,8 @@ optdepends=('jack')
 conflicts=("${pkgbase}" 'mscore' 'musescore-svn')
 provides=("${pkgbase}=${_realver}" 'musescore-svn')
 replaces=('musescore-svn')
-source=('mime.xml'
-  'gch.patch')
-md5sums=('969696178e56de36f9af37d7da61baaa'
-         '427a523a6c26abe057ad57fdefbcf05e')
+source=('mime.xml')
+md5sums=('969696178e56de36f9af37d7da61baaa')
 install=musescore.install
 
 _gitname="MuseScore"
@@ -57,7 +55,6 @@ build() {
   fi
   msg "GIT checkout done or server timeout"
 
-  # patch -Np1 < ../gch.patch
   mkdir -p build.release
   cd build.release
   export CXXFLAGS="-std=gnu++0x ${CXXFLAGS}"
