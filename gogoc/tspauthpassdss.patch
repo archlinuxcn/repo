@@ -1,0 +1,11 @@
+--- tsp_auth_passdss.c	2010-03-07 21:13:23.000000000 +0100
++++ tsp_auth_passdss.c.new	2012-06-16 19:25:08.267088255 +0200
+@@ -31,7 +31,7 @@
+ 
+ #define TSP_AUTH_PASSDSS_STRING "PASSDSS-3DES-1"
+ #define TSP_AUTH_PASSDSS_BUFFERSIZE 4096
+-#define TSPC_DSA_KEYFILE "gogockeys.pub"
++#define TSPC_DSA_KEYFILE "/var/lib/gogoc/gogockeys.pub"
+ 
+ #if defined(WIN32) && !defined(WINCE)
+ extern BOOL IsService;    // Declared in winpc/tsp_local.c
