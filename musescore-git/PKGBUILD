@@ -5,7 +5,7 @@
 pkgbase=musescore
 pkgname=${pkgbase}-git
 _realver=2.0b
-pkgver=20130330
+pkgver=20130417
 pkgrel=1
 pkgdesc="A music score editor - git-version"
 arch=('i686' 'x86_64')
@@ -28,6 +28,10 @@ _gitname="MuseScore"
 
 _gitroot="https://github.com/musescore/MuseScore.git"
 _gitref=master
+
+pkgver() {
+  date +%Y%m%d
+}
 
 build() {
   cd "$srcdir"
