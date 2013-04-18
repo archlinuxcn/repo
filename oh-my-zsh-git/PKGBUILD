@@ -1,41 +1,60 @@
-#Contributor: phoenixlzx <phoenixlzx at archlinuxcn dot org>
+# Maintainer: phoenixlzx <phoenixlzx at archlinuxcn.org>
+# Contributor: ThinCarrotShrimp <christoph.r.martin+arch at gmail dot com>
 
 pkgname=oh-my-zsh-git
-pkgver=20130413
+pkgver=0.0.0
 pkgrel=1
 pkgdesc="A community-driven framework for managing your zsh configuration."
 arch=('any')
 url='https://github.com/robbyrussell/oh-my-zsh'
-license=('GPL')
+license=('MIT')
 depends=('zsh')
 makedepends=('git')
 optdepends=('ruby: for some plugin functionality')
 install='oh-my-zsh-git.install'
-  
-_gitroot="git://github.com/robbyrussell/oh-my-zsh.git"
-_gitname=$pkgname
-
-build() {
-    cd "$srcdir"
-    msg "Connecting to GIT server...."
-
-    if [ -d $_gitname ] ; then
-        cd $_gitname && git pull origin
-        msg "The local files are updated."
-    else
-        git clone $_gitroot $_gitname
-    fi
-    msg "GIT checkout done or server timeout"
-    
-    cd $_gitname
-    sed -i -e'2c\ZSH=/usr/share/oh-my-zsh/' templates/zshrc.zsh-template
+ 
+_gitname=oh-my-zsh
+source=("$_gitname::git://github.com/robbyrussell/oh-my-zsh.git#branch=master")
+md5sums=('SKIP')
+ 
+# pacman 4.1 - retrieve version from git
+pkgver() {
+  cd $_gitname
+ 
+  d="$(git describe --always | sed 's/-/./g')"
+  h="$(git show --format="%h" HEAD)"
+ 
+  if [[ "$d" = "$h" ]]; then
+    # If describe just delivers the short hash, set pkgver to <date>_<hash>,
+    # e.g. 20130412_85426a5
+    echo "$(git show --date=short --format="%cd_%h" | sed 's/-//g')"
+  else
+    echo "$d"
+  fi
 }
-
+ 
+build() {
+  cd $_gitname
+ 
+  # Fix the path to oh-my-zsh, and disable auto-updating.
+  sed -e'2c\ZSH=/usr/share/oh-my-zsh/'\
+      -e's/# \(DISABLE_AUTO_UPDATE="true"\)/\1/'\
+      templates/zshrc.zsh-template > zshrc
+}
+ 
 package() {
   mkdir -p $pkgdir/usr/share/oh-my-zsh
   cd $_gitname
-  rm -rf .git
-  rm -f .gitignore
-  install -D -m644 templates/zshrc.zsh-template $pkgdir/usr/share/oh-my-zsh/zshrc
-  cp -r . $pkgdir/usr/share/oh-my-zsh
+ 
+  # We don't need anything related to git in the package.
+  rm -rf .git*
+ 
+  # The license should be in /usr/share/licenses.
+  install -D -m644 MIT-LICENSE.txt $pkgdir/usr/share/licenses/$pkgname/LICENSE
+  rm MIT-LICENSE.txt
+ 
+  # Copy everything else.
+  cp -r . $pkgdir/usr/share/oh-my-zsh/
 }
+ 
+# vim:set ts=8 sts=2 sw=2 et:

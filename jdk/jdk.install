@@ -1,31 +1,46 @@
+# Colors
+note() {
+    printf "${BLUE}==>${ALL_OFF}${BOLD} NOTE:${ALL_OFF} ${1}\n"
+}
+
+ALL_OFF="$(tput sgr0)"
+BOLD="$(tput bold)"
+BLUE="${BOLD}$(tput setaf 4)"
+GREEN="${BOLD}$(tput setaf 2)"
+
 _update() {
-    xdg-icon-resource forceupdate --theme hicolor 2> /dev/null
-    xdg-icon-resource forceupdate --theme HighContrast 2> /dev/null
-    xdg-icon-resource forceupdate --theme HighContrastInverse 2> /dev/null
-    xdg-icon-resource forceupdate --theme LowContrast 2> /dev/null
+    xdg-icon-resource forceupdate 2>/dev/null
+    xdg-icon-resource forceupdate --theme HighContrast 2>/dev/null
+    xdg-icon-resource forceupdate --theme HighContrastInverse 2>/dev/null
+    xdg-icon-resource forceupdate --theme LowContrast 2>/dev/null
     update-mime-database /usr/share/mime >/dev/null
     update-desktop-database -q
+}
+
+_derby() {
+    note "The rc.d script 'derby-network-server' has been replaced
+          by the systemd service 'derby.service'. To start it, use:
+          # systemctl start derby\n"
 }
 
 post_install() {
     _update
 
-    echo ""
-    echo "- The jdk package is licensed software."
-    echo "  You MUST agree to the license available in:"
-    echo "  http://java.com/license before using it."
+    echo
+    note "Please relogin to include jdk in your PATH."
+    _derby 
 
     if [ -f /etc/mailcap ] ; then
       sed -e '/application\/x-java-jnlp-file/d' -i /etc/mailcap
     fi
     echo 'application/x-java-jnlp-file;/opt/java/jre/bin/javaws %s' >>/etc/mailcap
-
-    echo '- Please relogin to include jdk in your PATH.'
-    echo ""
 }
 
 post_upgrade() {
     _update
+
+    echo
+    _derby
 }
 
 post_remove() {

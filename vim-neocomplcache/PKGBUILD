@@ -1,7 +1,7 @@
 # Maintainer: Jarek Sedlacek <jareksedlacek@gmail.com>
 
 pkgname=vim-neocomplcache
-pkgver=7.1
+pkgver=7.2
 _scriptid=17867
 pkgrel=2
 pkgdesc="Ultimate auto completion system for Vim"
@@ -16,21 +16,22 @@ source=(https://github.com/Shougo/neocomplcache/zipball/ver.$pkgver
 
 package() {
     install -d ${pkgdir}/usr/share/vim/vimfiles/{autoload,doc,indent,plugin,syntax}
-
     for x in doc; do
 		install -Dm644 ${srcdir}/Shougo*/$x/* \
 		${pkgdir}/usr/share/vim/vimfiles/$x/ || return 1;
 	done
-
     cp -r ${srcdir}/Shougo*/autoload/* ${pkgdir}/usr/share/vim/vimfiles/autoload/ || return 1
 
     for x in plugin ; do
-		install -Dm755 ${srcdir}/Shougo*/$x/* \
+		install -Dm755 ${srcdir}/Shougo*/$x/neocomplcache.vim \
+		${pkgdir}/usr/share/vim/vimfiles/$x/ || return 1;
+        rm ${srcdir}/Shoug*/$x/neocomplcache.vim
+		install -Dm755 -d ${srcdir}/Shougo*/$x/* \
 		${pkgdir}/usr/share/vim/vimfiles/$x/ || return 1;
 	done
 
     install -Dm644 ${srcdir}/license.txt ${pkgdir}/usr/share/licenses/${pkgname}/license.txt || return 1
 }
 
-md5sums=('d2eff1a0610af993bc1b545fa1d98299'
+md5sums=('eacd418730b34771a5b9e50d74052a11'
          'efbd5986e691ce8c876fb86e8f5961ea')
