@@ -1,0 +1,33 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+# Contributor: Matthias Maennich <arch@maennich.net>
+# Contributor: Massimiliano Torromeo <massimiliano.torromeo@gmail.com>
+# Contributor: Jan-Erik Meyer-Luetgens <nyan at meyer-luetgens dot de>
+pkgname=python-pyside
+_pkgrealname=pyside
+pkgver=1.1.2
+pkgrel=7
+pkgdesc="Provides LGPL Qt bindings for Python and related tools for binding generation."
+arch=('i686' 'x86_64')
+license=('LGPL')
+url="http://www.pyside.org"
+_qtver=4.8
+depends=('python' "qt4>=${_qtver}" 'phonon' 'mesa')
+makedepends=('python-shiboken>=1.1.2' 'cmake' 'automoc4')
+source=("http://qt-project.org/uploads/pyside/${_pkgrealname}-qt${_qtver}+$pkgver.tar.bz2")
+md5sums=('59c8653734b020b0128b82adc98ee704')
+
+build(){
+    cd $srcdir/${_pkgrealname}-qt${_qtver}+$pkgver
+    mkdir -p build && cd build
+    _pyverflags=$(python -c 'import sysconfig; print(sysconfig.get_config_var("SOABI"))')
+    cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=OFF \
+      -DQT_PHONON_INCLUDE_DIR=/usr/include/qt4/phonon -DQT_QMAKE_EXECUTABLE=qmake-qt4 \
+      -DPYTHON_SUFFIX=.${_pyverflags}
+    make
+}
+
+package(){
+    cd $srcdir/${_pkgrealname}-qt${_qtver}+$pkgver/build
+    make DESTDIR=$pkgdir install
+}
+
