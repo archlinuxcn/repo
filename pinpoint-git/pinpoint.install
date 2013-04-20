@@ -1,0 +1,8 @@
+post_install() {
+  echo ">>> pinpoint: a simple tutorial is available at /usr/share/doc/pinpoint/introduction.pin"
+}
+
+post_upgrade() {
+  post_install
+}
+
