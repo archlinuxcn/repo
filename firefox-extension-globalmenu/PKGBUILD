@@ -1,7 +1,7 @@
 # Contributor: Tom Kuther <gimpel@sonnenkinder.org>
 
 pkgname=firefox-extension-globalmenu
-pkgver=20130220
+pkgver=20130410
 pkgrel=1
 pkgdesc="Global dbusmenu/appmenu extension for Firefox"
 url="https://launchpad.net/globalmenu-extension"
@@ -16,8 +16,7 @@ install=
 source=('disable_webgl.patch')
 md5sums=('630639b4d8e3f99fe48428249452b8f0')
 
-# _bzrroot=lp:globalmenu-extension
-_bzrroot=lp:globalmenu-extension/3.7
+_bzrroot=lp:globalmenu-extension
 _bzrname=globalmenu-extension
 
 build() {
@@ -42,6 +41,8 @@ build() {
 	autoconf-2.13
 	sed -i 's/^ \t/\t/g' config/rules.mk
 	sed -i '/^XPIDL_COMPILE[[:space:]]*=/s@\$(LIBXUL_DIST)/@&sdk/@' config/config.mk
+
+	export CPPFLAGS="${CPPFLAGS} -O2"
 
 	./configure --with-libxul-sdk=`pkg-config --variable=sdkdir libxul` \
 		--with-system-libxul \
