@@ -1,10 +1,10 @@
 # Maintainer: Ner0
 
 pkgname=chromium-pepper-flash
-pkgver=11.6.602.171
-_pkgver=27.0.1430.0-186115
+pkgver=11.7.700.169
+_pkgver=28.0.1478.0-194114
 pkgrel=1
-pkgdesc="Google Chrome's Pepper Flash plugin for Chromium (latest development version)"
+pkgdesc="Google Chrome's Pepper Flash plugin for Chromium (works with iron-bin)"
 arch=('i686' 'x86_64')
 url="http://www.google.com/chrome"
 license=('custom:chrome')
@@ -13,17 +13,17 @@ optdepends=('pulseaudio-alsa: For PulseAudio users')
 conflicts=('chromium-pepper-flash-stable')
 install=pepper.install
 
-if [[ "$CARCH" == 'i686' ]]; then
+if [ "$CARCH" = 'i686' ]; then
    _arch='i386'
-   md5sums=('20c44e70519dded0368e200c7471999c')
-elif [[ "$CARCH" == 'x86_64' ]]; then
+   md5sums=('c98fb6ba2263e1b10a0bcad6284cacd6')
+elif [ "$CARCH" = 'x86_64' ]; then
    _arch='x86_64'
-   md5sums=('09acdd047af0d827617d8a1440002206')
+   md5sums=('9059021159ca179e527c8e1be71eda78')
 fi
-md5sums[1]='59fdc83c4754edd18cef14a698329d2d'
+md5sums[1]='3abf4a038d0525c6d17e5bfefbcfee91'
 
 source=("http://dl.google.com/linux/chrome/rpm/stable/$_arch/google-chrome-unstable-$_pkgver.$_arch.rpm"
-	"LICENSE.txt")
+	'LICENSE.txt')
 
 package() {
   install -dm755 "$pkgdir/usr/lib/PepperFlash"
