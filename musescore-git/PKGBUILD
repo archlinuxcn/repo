@@ -5,7 +5,7 @@
 pkgbase=musescore
 pkgname=${pkgbase}-git
 _realver=2.0b
-pkgver=20130417
+pkgver=20130419
 pkgrel=1
 pkgdesc="A music score editor - git-version"
 arch=('i686' 'x86_64')
@@ -18,9 +18,15 @@ optdepends=('jack')
 conflicts=("${pkgbase}" 'mscore' 'musescore-svn')
 provides=("${pkgbase}=${_realver}" 'musescore-svn')
 replaces=('musescore-svn')
-source=('mime.xml')
-md5sums=('969696178e56de36f9af37d7da61baaa')
+source=('mime.xml'
+  '0001-fix-for-pch.patch'
+  '0002-fix-for-manual-install.patch'
+)
+md5sums=('969696178e56de36f9af37d7da61baaa'
+         'f743e73e5a7dc10eac61b1e5d1c3f717'
+         '012b58d5bde58912f3b4e071115e8843')
 install=musescore.install
+options=(strip debug)
 
 _gitname="MuseScore"
 
@@ -55,9 +61,13 @@ build() {
   fi
   msg "GIT checkout done or server timeout"
 
+  # FIXME: Remove hack for gcc 4.8 when the gcc bug is fixed. gcc 4.8 seems to
+  # crash when using pre-compiled headers, remove the following patch to
+  # (probably) gain some compiling speed if you are not affected by the issue.
+  patch -Np1 < ../0001-fix-for-pch.patch
+  export CXXFLAGS="-std=gnu++0x -Wno-unused-local-typedefs -Wno-unused-parameter -Wno-maybe-uninitialized -Wno-unused-function ${CXXFLAGS}"
   mkdir -p build.release
   cd build.release
-  export CXXFLAGS="-std=gnu++0x ${CXXFLAGS}"
   cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DQT_QMAKE_EXECUTABLE=qmake-qt4 \
@@ -73,4 +83,7 @@ package() {
   install -Dm644 "$srcdir/mime.xml" \
     "$pkgdir/usr/share/mime/packages/x-musescore.xml"
   ln -s mscore "$pkgdir/usr/bin/musescore"
+  install -dm755 "$pkgdir/usr/share/mscore-2.0/manual"
+  mv manual/plugins_manual/plugins/* \
+    "$pkgdir/usr/share/mscore-2.0/manual/plugins"
 }
