@@ -5,7 +5,7 @@
 
 pkgname=tpfand-no-hal
 pkgver=0.94
-pkgrel=4
+pkgrel=5
 pkgdesc="Monitors temperatures and controls fan speed of IBM/Lenovo ThinkPad notebooks (patched to work without HAL)."
 arch=('any')
 url="http://www.gambitchess.org/mediawiki/index.php/ThinkPad_Fan_Control"
@@ -16,29 +16,29 @@ source=(http://launchpad.net/tp-fan/tpfand/$pkgver/+download/tpfand-$pkgver.tar.
 conflicts=(tpfand)
 provides=(tpfand)
 
-build() {
+package() {
 	cd "$srcdir/tpfand-$pkgver"
 
 	patch -p0 < $srcdir/tpfand-nohal-sys.patch
 
 	sed -i 's|#! /usr/bin/env python|#! /usr/bin/env python2|' src/tpfand/* wrappers/tpfand
 
-	install -d $pkgdir/usr/lib/python2.7/site-packages/tpfand
-	install -m644 src/tpfand/* $pkgdir/usr/lib/python2.7/site-packages/tpfand
-	install -d $pkgdir/usr/share/tpfand/models/{by-id,by-name}
-	install -m644 share/models/generic $pkgdir/usr/share/tpfand/models
-	install -d $pkgdir/etc/dbus-1/system.d/
-	install -m644 etc/dbus-1/system.d/* $pkgdir/etc/dbus-1/system.d/
-	install -d $pkgdir/usr/sbin
-	install wrappers/tpfand $pkgdir/usr/sbin/
-	install -d $pkgdir/etc/modprobe.d
-	install -m644 etc/modprobe.d/thinkpad_acpi.modprobe $pkgdir/etc/modprobe.d/thinkpad_acpi.conf
+	install -d "$pkgdir"/usr/lib/python2.7/site-packages/tpfand
+	install -m644 src/tpfand/* "$pkgdir"/usr/lib/python2.7/site-packages/tpfand
+	install -d "$pkgdir"/usr/share/tpfand/models/{by-id,by-name}
+	install -m644 share/models/generic "$pkgdir"/usr/share/tpfand/models
+	install -d "$pkgdir"/etc/dbus-1/system.d/
+	install -m644 etc/dbus-1/system.d/* "$pkgdir"/etc/dbus-1/system.d/
+	install -d "$pkgdir"/usr/sbin
+	install wrappers/tpfand "$pkgdir"/usr/sbin/
+	install -d "$pkgdir"/etc/modprobe.d
+	install -m644 etc/modprobe.d/thinkpad_acpi.modprobe "$pkgdir"/etc/modprobe.d/thinkpad_acpi.conf
 	if [ -e /etc/tpfand.conf ] 
-	then install -m644 /etc/tpfand.conf $pkgdir/etc/tpfand.conf 
-	else install -m644 etc/tpfand.conf $pkgdir/etc/tpfand.conf
+	then install -m644 /etc/tpfand.conf "$pkgdir"/etc/tpfand.conf 
+	else install -m644 etc/tpfand.conf "$pkgdir"/etc/tpfand.conf
 	fi
-	install -D -m755 $srcdir/tpfand.PMUTILS $pkgdir/etc/pm/sleep.d/09tpfand
-	install -D -m644 $srcdir/tpfand.service $pkgdir/usr/lib/systemd/system/tpfand.service
+	install -D -m755 $srcdir/tpfand.PMUTILS "$pkgdir"/etc/pm/sleep.d/09tpfand
+	install -D -m644 $srcdir/tpfand.service "$pkgdir"/usr/lib/systemd/system/tpfand.service
 }
 
 md5sums=('fa08a5c3eebd47842e1fb84b6283416d'
