@@ -32,7 +32,7 @@ true && pkgname=(linux-uksm linux-uksm-headers)
 _kernelname=-uksm
 _srcname=linux-3.8
 pkgver=3.8.8
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 url="http://kerneldedup.org/"
 license=('GPL2')
@@ -40,15 +40,14 @@ options=('!strip')
 makedepends=('kmod' 'inetutils' 'bc')
 _uksmvernel="0.1.2.2"
 _uksmname="v3.8.ge.3"
-source=(
-        "http://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
+source=("http://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
         "http://www.kernel.org/pub/linux/kernel/v3.x/patch-${pkgver}.xz"
         "http://kerneldedup.org/download/uksm/${_uksmvernel}/uksm-${_uksmvernel}-for-${_uksmname}.patch"
         'linux-uksm.preset'
         'change-default-console-loglevel.patch'
+	"https://projects.archlinux.org/svntogit/packages.git/plain/trunk/alsa-firmware-loading-3.8.8.patch?h=packages/linux&id=04fca80d591b2d40afb3cfeba701214307978dde"
         'config'
-        'config.x86_64'
-        )
+        'config.x86_64')
         
 prepare() {
     cd "${srcdir}/${_srcname}"
@@ -56,6 +55,9 @@ prepare() {
     ### add upstream patch
     msg "Patching kernel patch"
     patch -Np1 -i "${srcdir}/patch-${pkgver}"
+
+    # fix alsa firmware loading #34865
+    patch -Np1 -i "${srcdir}/alsa-firmware-loading-3.8.8.patch"
 
     ### set DEFAULT_CONSOLE_LOGLEVEL to 4 (same value as the 'quiet' kernel param)
     # remove this when a Kconfig knob is made available by upstream
@@ -351,12 +353,13 @@ package_linux-uksm-headers() {
 }
 
 # Global pkgdesc and depends are here so that they will be picked up by AUR
-pkgdesc='Linux Kernel and modules with the UKSM patchset featuring the  v1.2.2.'
+pkgdesc='Linux Kernel and modules with the UKSM patchset'
 
 md5sums=('1c738edfc54e7c65faeb90c436104e2f'
-	 '08cdcef928c2ca402adf1c444a3c43ac'
+         '08cdcef928c2ca402adf1c444a3c43ac'
          '14942242ff034cc1d2cb26228ca5161b'
          'ca3e4c482af0f0514aaa81943f1d65e7'
          'f3def2cefdcbb954c21d8505d23cc83c'
+         'e2ac681ffa439e969b4c3b4616852454'
          '9b88d2044fa7e77b2a9cf1cf6473bfbf'
          '3459570a1df6700b1f4ce5731bc598b7')
