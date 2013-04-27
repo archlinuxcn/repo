@@ -31,8 +31,8 @@ pkgname=linux-uksm
 true && pkgname=(linux-uksm linux-uksm-headers)
 _kernelname=-uksm
 _srcname=linux-3.8
-pkgver=3.8.8
-pkgrel=2
+pkgver=3.8.9
+pkgrel=1
 arch=('i686' 'x86_64')
 url="http://kerneldedup.org/"
 license=('GPL2')
@@ -45,7 +45,7 @@ source=("http://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
         "http://kerneldedup.org/download/uksm/${_uksmvernel}/uksm-${_uksmvernel}-for-${_uksmname}.patch"
         'linux-uksm.preset'
         'change-default-console-loglevel.patch'
-	"https://projects.archlinux.org/svntogit/packages.git/plain/trunk/alsa-firmware-loading-3.8.8.patch?h=packages/linux&id=04fca80d591b2d40afb3cfeba701214307978dde"
+	"alsa-firmware-loading-3.8.8.patch::https://projects.archlinux.org/svntogit/packages.git/plain/trunk/alsa-firmware-loading-3.8.8.patch?h=packages/linux&id=04fca80d591b2d40afb3cfeba701214307978dde"
         'config'
         'config.x86_64')
         
@@ -356,7 +356,7 @@ package_linux-uksm-headers() {
 pkgdesc='Linux Kernel and modules with the UKSM patchset'
 
 md5sums=('1c738edfc54e7c65faeb90c436104e2f'
-         '08cdcef928c2ca402adf1c444a3c43ac'
+         'b0c0861e8cb99273bfc4570535bbe076'
          '14942242ff034cc1d2cb26228ca5161b'
          'ca3e4c482af0f0514aaa81943f1d65e7'
          'f3def2cefdcbb954c21d8505d23cc83c'
