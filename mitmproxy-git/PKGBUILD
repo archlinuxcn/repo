@@ -1,0 +1,31 @@
+# Contributor: alphazo <alphazo@gmail.com>
+pkgname=mitmproxy-git
+pkgver=v0.8.307_g61c794e
+pkgrel=1
+pkgdesc="mitmproxy is an SSL-capable, intercepting HTTP proxy. It provides a console interface that allows traffic flows to be inspected and edited on the fly."
+arch=('any')
+url="https://github.com/cortesi/mitmproxy"
+license=('GPL')
+groups=()
+depends=('openssl' 'python2-urwid' 'python2-netlib-git' 'python2-pyopenssl' 'python2-pyasn1' 'python-imaging' 'python2-lxml' 'python2-flask')
+optdepends=()
+provides=()
+conflicts=('mitmproxy')
+replaces=()
+backup=()
+options=()
+install=
+_gitroot="git://github.com/cortesi/mitmproxy.git"
+_gitname="mitmproxy"
+source=("git+$_gitroot")
+md5sums=(SKIP)
+
+pkgver() {
+  cd "$srcdir/$_gitname"
+  git describe --tags | sed 's/-/./;s/-/_/g'
+}
+
+build() {
+  cd "$srcdir/$_gitname"
+  python2 setup.py install --root=${pkgdir} --optimize=1
+}
