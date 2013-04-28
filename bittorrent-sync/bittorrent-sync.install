@@ -1,0 +1,11 @@
+post_install() {
+	echo -e "\e[1;34mConfiguration is located at /etc/btsync.conf and contains sample data"
+	echo -e "\e[1;31mEdit config before starting systemd service file is bittorrent-sync.service"
+	echo -e "\e[1;34mAfter editing config and starting, access at http://localhost:8888/gui by default"
+}
+
+post_upgrade() {
+	echo -e "\e[1;34mConfiguration is located at /etc/btsync.conf and contains sample data"
+	echo -e "\e[1;31mEdit config before starting systemd service file is bittorrent-sync.service"
+	echo -e "\e[1;34mAfter editing config and starting access at http://localhost:8888/gui by default"
+}
