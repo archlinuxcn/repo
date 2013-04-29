@@ -4,7 +4,7 @@
 
 pkgname=lib32-jre6
 pkgver=6u45_b06
-pkgrel=1
+pkgrel=2
 pkgdesc="Java 6 Runtime Environment (32-bit)"
 url=http://www.oracle.com/technetwork/java/javase/downloads/index.html
 arch=('x86_64')
@@ -37,16 +37,19 @@ build()
 
   echo ${linux-jdk}
   sh ../construct.sh unbundle-jdk linux-jdk linux-jre
+}
 
+package()
+{
   mkdir -p ${pkgdir}/opt/lib32-java6
-  mv linux-jdk/jre ${pkgdir}/opt/lib32-java6
+  mv ${srcdir}/linux-jdk/jre ${pkgdir}/opt/lib32-java6
 
   mkdir -p ${pkgdir}/usr/lib/mozilla/plugins
   
-  mkdir -p ${pkgdir}/usr/share/licenses/jre6
-  cp ${pkgdir}/opt/lib32-java6/jre/COPYRIGHT ${pkgdir}/usr/share/licenses/jre6
-  cp ${pkgdir}/opt/lib32-java6/jre/LICENSE ${pkgdir}/usr/share/licenses/jre6
-  cp ${pkgdir}/opt/lib32-java6/jre/THIRDPARTYLICENSEREADME.txt ${pkgdir}/usr/share/licenses/jre6
+  mkdir -p ${pkgdir}/usr/share/licenses/${pkgname}
+  cp ${pkgdir}/opt/lib32-java6/jre/COPYRIGHT ${pkgdir}/usr/share/licenses/${pkgname}
+  cp ${pkgdir}/opt/lib32-java6/jre/LICENSE ${pkgdir}/usr/share/licenses/${pkgname}
+  cp ${pkgdir}/opt/lib32-java6/jre/THIRDPARTYLICENSEREADME.txt ${pkgdir}/usr/share/licenses/${pkgname}
 
   install "${startdir}"/javaws-launcher "${pkgdir}"/opt/lib32-java6/jre/bin/javaws-launcher
 }
