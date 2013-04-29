@@ -36,7 +36,7 @@ build()
   cd ..
 
   echo ${linux-jdk}
-  sh ../construct.sh unbundle-jdk linux-jdk linux-jre
+  sh construct.sh unbundle-jdk linux-jdk linux-jre
 }
 
 package()
@@ -51,6 +51,6 @@ package()
   cp ${pkgdir}/opt/lib32-java6/jre/LICENSE ${pkgdir}/usr/share/licenses/${pkgname}
   cp ${pkgdir}/opt/lib32-java6/jre/THIRDPARTYLICENSEREADME.txt ${pkgdir}/usr/share/licenses/${pkgname}
 
-  install "${startdir}"/javaws-launcher "${pkgdir}"/opt/lib32-java6/jre/bin/javaws-launcher
+  install "${srcdir}"/javaws-launcher "${pkgdir}"/opt/lib32-java6/jre/bin/javaws-launcher
 }
 
