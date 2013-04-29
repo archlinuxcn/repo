@@ -1,9 +1,10 @@
-# Maintainer: Ethan Hall
+# Maintainer: Fantix King
+# Upstream Maintainer: Ethan Hall
 # Contributors: Guillaume ALAUX, Daniel J Griffiths, Jason Chu, Geoffroy Carrier, Thomas Dziedzic, Dan Serban
 
 pkgname=lib32-jdk6
 pkgver=6u45_b06
-pkgrel=1
+pkgrel=2
 pkgdesc="Java 6 Development Kit (32-bit)"
 url=http://www.oracle.com/technetwork/java/javase/downloads/index.html
 arch=('x86_64')
@@ -42,17 +43,20 @@ build()
   
   cd ..
 	
-  sh ../construct.sh unbundle-jdk linux-jdk linux-jre
+  sh construct.sh unbundle-jdk linux-jdk linux-jre
   
   rm -rf linux-jdk/jre
-  
+}
+
+package()
+{
   install -d "${pkgdir}"/opt
-  mv linux-jdk "${pkgdir}"/opt/lib32-java6
-  mkdir -p "${pkgdir}"/usr/share/licenses/jdk6
+  mv ${srcdir}/linux-jdk "${pkgdir}"/opt/lib32-java6
+  mkdir -p "${pkgdir}"/usr/share/licenses/${pkgname}
   
-  install -m644 "${pkgdir}"/opt/lib32-java6/COPYRIGHT "${pkgdir}"/usr/share/licenses/jdk6
-  install -m644 "${pkgdir}"/opt/lib32-java6/LICENSE "${pkgdir}"/usr/share/licenses/jdk6
-  install -m644 "${pkgdir}"/opt/lib32-java6/THIRDPARTYLICENSEREADME.txt "${pkgdir}"/usr/share/licenses/jdk6
+  install -m644 "${pkgdir}"/opt/lib32-java6/COPYRIGHT "${pkgdir}"/usr/share/licenses/${pkgname}
+  install -m644 "${pkgdir}"/opt/lib32-java6/LICENSE "${pkgdir}"/usr/share/licenses/${pkgname}
+  install -m644 "${pkgdir}"/opt/lib32-java6/THIRDPARTYLICENSEREADME.txt "${pkgdir}"/usr/share/licenses/${pkgname}
   
   for i in kinit ktab klist; do
     rm "${pkgdir}"/opt/lib32-java6/bin/${i}
