@@ -1,0 +1,156 @@
+# Maintainer: Fantix KIng
+# Upstream Maintainer: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
+# Contributor: Allan McRae <allan@archlinux.org>
+
+# toolchain build order: linux-api-headers->glibc->binutils->gcc->binutils->glibc
+# NOTE: libtool requires rebuilt with each new gcc version
+
+pkgname='gcc-x32-seed'
+pkgver=4.8.0
+pkgrel=1
+_snapshot=4.8-20130425
+pkgdesc="An incomplete GCC build for building Glibc with x32 ABI support"
+arch=('x86_64')
+license=('GPL' 'LGPL' 'FDL' 'custom')
+url="http://gcc.gnu.org"
+makedepends=('binutils-multilib>=2.23' 'libmpc' 'cloog' 
+             'lib32-glibc>=2.17')
+checkdepends=('dejagnu' 'inetutils')
+depends=('binutils-multilib>=2.23' 'libmpc' 'cloog' 'glibc-x32-seed')
+groups=('multilib-devel')
+provides=("gcc-multilib-x32=${pkgver}-${pkgrel}")
+options=('!libtool' '!emptydirs')
+source=(ftp://gcc.gnu.org/pub/gcc/snapshots/${_snapshot}/gcc-${_snapshot}.tar.bz2
+	https://sites.google.com/site/x32abi/documents/gcc-x32-seed.tar.bz2)
+        #ftp://gcc.gnu.org/pub/gcc/releases/gcc-${pkgver}/gcc-${pkgver}.tar.bz2
+md5sums=('03690556f09991fbecac0467227c5d4e'
+         '1672d3283e6827b8b8ff634f85ddf523')
+
+
+if [ -n "${_snapshot}" ]; then
+  _basedir=gcc-${_snapshot}
+else
+  _basedir=gcc-${pkgver}
+fi
+
+prepare() {
+  cd ${srcdir}/${_basedir}
+
+  # Do not run fixincludes
+  sed -i 's@\./fixinc\.sh@-c true@' gcc/Makefile.in
+
+  # Arch Linux installs x86_64 libraries /lib
+  [[ $CARCH == "x86_64" ]] && sed -i '/m64=/s/lib64/lib/' gcc/config/i386/t-linux64
+
+  echo ${pkgver} > gcc/BASE-VER
+
+  # hack! - some configure tests for header files using "$CPP $CPPFLAGS"
+  sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" {libiberty,gcc}/configure
+
+  mkdir ${srcdir}/gcc-build
+}
+
+build() {
+  cd ${srcdir}/gcc-build
+
+  # using -pipe causes spurious test-suite failures
+  # http://gcc.gnu.org/bugzilla/show_bug.cgi?id=48565
+  CFLAGS=${CFLAGS/-pipe/}
+  CXXFLAGS=${CXXFLAGS/-pipe/}
+
+  ${srcdir}/${_basedir}/configure --prefix=/opt/gcc-x32-seed \
+      --libdir=/opt/gcc-x32-seed/lib --libexecdir=/opt/gcc-x32-seed/lib \
+      --mandir=/opt/gcc-x32-seed/share/man --infodir=/opt/gcc-x32-seed/share/info \
+      --with-bugurl=https://bugs.archlinux.org/ \
+      --enable-languages=c,c++ \
+      --enable-shared --enable-threads=posix \
+      --with-system-zlib --enable-__cxa_atexit \
+      --disable-libunwind-exceptions --enable-clocale=gnu \
+      --disable-libstdcxx-pch \
+      --enable-gnu-unique-object --enable-linker-build-id \
+      --enable-cloog-backend=isl --disable-cloog-version-check \
+      --enable-lto --enable-gold --enable-ld=default \
+      --enable-plugin --with-plugin-ld=ld.gold \
+      --with-linker-hash-style=gnu --disable-install-libiberty \
+      --enable-multilib --with-multilib-list=m32,m64,mx32 \
+      --disable-libssp --disable-werror \
+      --enable-checking=release
+  make || true
+
+  ln -s build-*/fixincludes || true
+  
+  # make documentation
+  #cd $CHOST/libstdc++-v3
+  #make doc-man-doxygen
+}
+
+package()
+{
+
+  cd ${srcdir}/gcc-build
+  
+  make -j1 DESTDIR=${pkgdir} install || true
+
+  #install -d $pkgdir/usr/share/gdb/auto-load/usr/lib
+  #mv $pkgdir{,/usr/share/gdb/auto-load}/usr/lib/libstdc++.so.6.0.18-gdb.py
+
+  # unfortunately it is much, much easier to install the lot and clean-up the mess...
+  rm $pkgdir/opt/gcc-x32-seed/bin/{{$CHOST-,}gfortran,{$CHOST-,}gccgo,gnat*} || true
+  rm $pkgdir/opt/gcc-x32-seed/lib{,32}/*.so* || true
+  rm $pkgdir/opt/gcc-x32-seed/lib{,32}/lib{atomic,gfortran,go{,begin},objc}.a || true
+  rm $pkgdir/opt/gcc-x32-seed/lib/libiberty.a || true
+  rm $pkgdir/opt/gcc-x32-seed/lib{,32}/libgfortran.spec || true
+  rm -r $pkgdir/opt/gcc-x32-seed/lib/gcc/$CHOST/${pkgver}/{{,32/}ada{include,lib},finclude,include/objc} || true
+  rm $pkgdir/opt/gcc-x32-seed/lib/gcc/$CHOST/${pkgver}/{cc1obj{,plus},f951,gnat1,go1} || true
+  rm $pkgdir/opt/gcc-x32-seed/lib/gcc/$CHOST/${pkgver}/{,32/}{libcaf_single,libgfortranbegin}.a || true
+  rm -r $pkgdir/opt/gcc-x32-seed/lib{,32}/go || true
+  rm $pkgdir/opt/gcc-x32-seed/share/info/{gccgo,gfortran,gnat*,libgomp,libquadmath,libitm}.info || true
+  rm $pkgdir/opt/gcc-x32-seed/share/locale/{de,fr}/LC_MESSAGES/libstdc++.mo || true
+  rm $pkgdir/opt/gcc-x32-seed/share/man/man1/{gccgo,gfortran}.1 || true
+
+  # many packages expect this symlinks
+  ln -s gcc ${pkgdir}/opt/gcc-x32-seed/bin/cc
+
+  # POSIX conformance launcher scripts for c89 and c99
+  cat > $pkgdir/opt/gcc-x32-seed/bin/c89 <<"EOF"
+#!/bin/sh
+fl="-std=c89"
+for opt; do
+  case "$opt" in
+    -ansi|-std=c89|-std=iso9899:1990) fl="";;
+    -std=*) echo "`basename $0` called with non ANSI/ISO C option $opt" >&2
+	    exit 1;;
+  esac
+done
+exec gcc $fl ${1+"$@"}
+EOF
+
+  cat > $pkgdir/opt/gcc-x32-seed/bin/c99 <<"EOF"
+#!/bin/sh
+fl="-std=c99"
+for opt; do
+  case "$opt" in
+    -std=c99|-std=iso9899:1999) fl="";;
+    -std=*) echo "`basename $0` called with non ISO C99 option $opt" >&2
+	    exit 1;;
+  esac
+done
+exec gcc $fl ${1+"$@"}
+EOF
+
+  chmod 755 $pkgdir/opt/gcc-x32-seed/bin/c{8,9}9
+
+  # install the libstdc++ man pages
+  #install -dm755 ${pkgdir}/usr/share/man/man3
+  #install -m644 -t ${pkgdir}/usr/share/man/man3 \
+  #  ${CHOST}/libstdc++-v3/doc/doxygen/man/man3/*.3
+
+  # Install Runtime Library Exception
+  #install -Dm644 ${srcdir}/${_basedir}/COPYING.RUNTIME \
+  #  ${pkgdir}/usr/share/licenses/gcc-multilib/RUNTIME.LIBRARY.EXCEPTION
+
+  # Install x32 seed
+  install -dm755 ${pkgdir}/opt/gcc-x32-seed/lib/gcc/$CHOST/${pkgver}/x32
+  cp ${srcdir}/x32/* ${pkgdir}/opt/gcc-x32-seed/lib/gcc/$CHOST/${pkgver}/x32
+}
+

@@ -1,44 +1,44 @@
 #Contributor: Chernmy <chernmy@gmail.com> 
 #Maintainer: xgdgsc<xgdgsc@gmail.com>
 pkgname=wiznote
-pkgver=1.4.11
+pkgver=1.5.1
 pkgrel=1
+_release_date=2013-04-30
 pkgdesc="Opensource Cross platform cloud note-taking application"
 arch=('i686' 'x86_64')
 url="https://github.com/WizTeam/WizQTClient"
-license=('GPLv3')
-depends=()
-
+license=('GPL3')
+depends=('qtwebkit')
+install=wiznote.install
 #PKGEXT=".pkg.tar"
 
 if [ "${CARCH}" = 'x86_64' ]; then
     ARCH='x64'
-    md5sums=('449af93e6b4a7a6a3c8b5c02d36c37ba' 'ea053acb569c6b008ccdda81bc1d0c30')
-    #source=('http://download.wiz.cn/download?product=wiznote&client=linux-x64' 'wiznote.desktop')
+    md5sums=('d5ed2406543d7d5ab6c73b60476a8937')
 else 
     ARCH='x86'
-    md5sums=('fac96e23271f15e4953e3e1a9246996f' 'ea053acb569c6b008ccdda81bc1d0c30')
-   #source=('http://download.wiz.cn/download?product=wiznote&client=linux-x86' 'wiznote.desktop')
+    md5sums=('0e3370fd338a569d34b092bfa0cfcfdd' )
 fi
 
-
 _source_name=${pkgname}_${pkgver}_${CARCH}.tar.gz
-source=("${_source_name}::http://download.wiz.cn/download?product=wiznote&client=linux-$ARCH" "wiznote.desktop")
+_src_name=wiznote-linux-$ARCH-$_release_date
+source=("${_source_name}::http://download.wiz.cn/download/wiznote/$_src_name.tar.gz" )
 
 package() {
-    #msg "Extracting..."
-    #ar -xv wiznote-$pkgver-beta-$ARCH.deb || return 1
-    #tar -xvf data.tar.gz || return 1
-    #tar -xvf $srcname
-    #msg2 "Done extracting!"
+
+    cd $srcdir/$_src_name
     msg "Copying files"
-    mkdir -p $pkgdir/opt/wiznote
+    mkdir -p $pkgdir/usr/share/wiznote
     mkdir -p $pkgdir/usr/share/applications
-    #rm -rf $srcdir/lib
-    #rm -rf $srcdir/plugins
-    cp -R $srcdir/* $pkgdir/opt/wiznote
-    install -Dm644 "$srcdir/wiznote.desktop" "$pkgdir/usr/share/applications/wiznote.desktop"
+    rm -rf lib
+    rm -rf plugins
+    cp -R * $pkgdir/usr/
+     for size in 16 24 32 48 64 128 256;do
+        install -dm755 "$pkgdir"/usr/share/icons/hicolor/${size}x${size}/apps
+        ln -s /usr/share/"$pkgname"/skins/${pkgname}${size}.png \
+          "$pkgdir"/usr/share/icons/hicolor/${size}x${size}/apps/${pkgname}.png
+    done
+
     msg2 "Done copying files"
-    rm -rf  $pkgdir/opt/wiznote/"$_source_name"
-    rm -rf  $pkgdir/opt/wiznote/wiznote.desktop
+
 }
