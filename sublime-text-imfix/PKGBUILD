@@ -1,0 +1,59 @@
+# Maintainer: ska <skatiger@gmail.com>
+
+pkgname=sublime-text-imfix
+_pkgname=sublime-text
+pkgver=2.0.1
+pkgrel=2
+pkgdesc="sophisticated text editor for code, html and prose, fixed: supported fcitx input method"
+arch=('i686' 'x86_64')
+url="http://www.sublimetext.com/2"
+license=('custom')
+depends=('libpng' 'gtk2')
+makedepends=('gcc')
+conflicts=('sublime-text')
+install=${_pkgname}.install
+_arch=' x64'
+_archurl='%20x64'
+
+[[ "${CARCH}" = i686 ]] && _arch='' && _archurl=''
+
+source=(
+	"http://c758482.r82.cf2.rackcdn.com/Sublime%20Text%20${pkgver}${_archurl}.tar.bz2"
+	sublime-text.desktop
+	subl
+    sublime_imfix.c
+)
+
+md5sums=(
+	'bd816d93239a0af9ade257b2a9dcf8d2'
+	'f6d0e7f5da0e8c1d57640f62173295bf'
+    'c308b94b59ff99ccad3d85ecab7af19d'
+    'b9cfc9418af10b5c8b509f98f310da7f'
+)
+
+[[ "${CARCH}" = i686 ]] && md5sums[0]='0965d9b66d8973d65708b460f7657ef0'
+
+package () {
+	cd ${srcdir}
+
+    gcc -shared -o libsublime-imfix.so sublime_imfix.c  `pkg-config --libs --cflags gtk+-2.0` -fPIC
+
+	install -Dm644 ${_pkgname}.desktop \
+		${pkgdir}/usr/share/applications/${_pkgname}.desktop
+
+	install -dm755 ${pkgdir}/opt
+    
+	cp --preserve=mode -r "Sublime Text 2" \
+		${pkgdir}/opt/${_pkgname}
+
+	cp --preserve=mode -r libsublime-imfix.so \
+        ${pkgdir}/opt/${_pkgname}/libsublime-imfix.so
+
+	for res in 128x128 16x16 256x256 32x32 48x48; do
+		install -dm755 ${pkgdir}/usr/share/icons/hicolor/${res}/apps
+		ln -s /opt/${_pkgname}/Icon/${res}/sublime_text.png \
+			${pkgdir}/usr/share/icons/hicolor/${res}/apps/sublime_text.png
+	done
+
+	install -Dm755 subl ${pkgdir}/usr/bin/subl
+}
