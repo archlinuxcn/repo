@@ -1,4 +1,4 @@
-# Maintainer: Fantix KIng
+# Maintainer: Fantix King <fantix.king@gmail.com>
 # Upstream Maintainer: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 # Contributor: Allan McRae <allan@archlinux.org>
 
@@ -7,7 +7,7 @@
 
 pkgname='gcc-x32-seed'
 pkgver=4.8.0
-pkgrel=1
+pkgrel=2
 _snapshot=4.8-20130425
 pkgdesc="An incomplete GCC build for building Glibc with x32 ABI support"
 arch=('x86_64')
@@ -17,8 +17,6 @@ makedepends=('binutils-multilib>=2.23' 'libmpc' 'cloog'
              'lib32-glibc>=2.17')
 checkdepends=('dejagnu' 'inetutils')
 depends=('binutils-multilib>=2.23' 'libmpc' 'cloog' 'glibc-x32-seed')
-groups=('multilib-devel')
-provides=("gcc-multilib-x32=${pkgver}-${pkgrel}")
 options=('!libtool' '!emptydirs')
 source=(ftp://gcc.gnu.org/pub/gcc/snapshots/${_snapshot}/gcc-${_snapshot}.tar.bz2
 	https://sites.google.com/site/x32abi/documents/gcc-x32-seed.tar.bz2)
