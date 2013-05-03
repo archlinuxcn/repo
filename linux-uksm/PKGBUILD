@@ -7,7 +7,7 @@ _makenconfig=		# tweak kernel options prior to a build via nconfig
 _localmodcfg=		# compile ONLY probed modules
 _use_current=		# use the current kernel's .config file
 _NUMA_off=yes		# Disable NUMA in kernel config
-MAKEFLAGS=
+#MAKEFLAGS=
 
 ### DOCS
 # DETAILS FOR _localmodcfg="y"
@@ -31,7 +31,7 @@ pkgname=linux-uksm
 true && pkgname=(linux-uksm linux-uksm-headers)
 _kernelname=-uksm
 _srcname=linux-3.8
-pkgver=3.8.10
+pkgver=3.8.11
 pkgrel=1
 arch=('i686' 'x86_64')
 url="http://kerneldedup.org/"
@@ -355,11 +355,11 @@ package_linux-uksm-headers() {
 # Global pkgdesc and depends are here so that they will be picked up by AUR
 pkgdesc='Linux Kernel and modules with the UKSM patchset'
 
-md5sums=('1c738edfc54e7c65faeb90c436104e2f'
-         '973bc1c68bb5f082a66d20c94193d4ee'
-         '14942242ff034cc1d2cb26228ca5161b'
-         'ca3e4c482af0f0514aaa81943f1d65e7'
-         'f3def2cefdcbb954c21d8505d23cc83c'
-         'e2ac681ffa439e969b4c3b4616852454'
-         '9b88d2044fa7e77b2a9cf1cf6473bfbf'
-         '3459570a1df6700b1f4ce5731bc598b7')
+sha512sums=('10a7983391af907d8aec72bdb096d1cabd4911985715e9ea13d35ff09095c035db15d4ab08b92eda7c10026cc27348cb9728c212335f7fcdcda7c610856ec30f'
+            'd2288c3110a6cc603621a85dacfa47ce764769e56e369dc9ddec722e4efc7ac642bf74ad431d2656ce34e32c3b3e95e8e2ff7f7e5475c0d0bde334badd640b4e'
+            '30f855b92c906d198741725e6cb6322768a3104b1d7c8da5546e56ff1ea2a35b36610b3d4be1e359b1be6fbe4b4ea2d7496fef6e76095e8af80933fea02f8c13'
+            '50afb9ff813944382d4c7aedd7dd14801d92f054952ebc63e89df9c50cb573ff8731e54925a23d8e4d2aec976fd805d18741d87095fda88fad75a2eaf5113524'
+            '81ed74b203ff80c8fcc33a9574374905bbdc82dfdb3c248f4502c34027bb916d7b9b100ff96eea9bad0218e8e070a88ab4abce3fb11406e476fefb5753e5a3a8'
+            '10c49878749eb05b064ddf87c660d35c3022b4c85909ae86da7481f25338bf4ce3f08770ca760935f16f8943d2fe60fb2cd2fc7bb5e0424c32e7454f0dc224d6'
+            '08dfee6bb02b4cd921d0e25e8931d815a47be8420f38ea11c74cc69b7296bddc3dafc4c2f6b5599c176f2b219d581c3801e691dc0850dd6363ad8d4dfbc4f1bf'
+            '9c8b098316cc357bde66d7cdd9519fae389a4067ab3c06846a5a11570335d640e25f7536287f4b6f8e16d654597c060d88476a15602a699adee1489b240f4584')
