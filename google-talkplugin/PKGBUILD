@@ -1,0 +1,28 @@
+# Maintainer: Dominik Mayer <dominik.mayer@gmail.com>
+# Maintainer: ava1ar <mail(dot)avatar(at)gmail(dot)com>
+
+pkgname=google-talkplugin
+pkgver=3.17.0.0
+pkgrel=2
+pkgdesc="Video chat browser plug-in for Google Talk"
+arch=('i686' 'x86_64')
+_arch="$CARCH" 
+[ "$CARCH" = 'i686' ] && _arch='i386'
+url="http://www.google.com/chat/video"
+license=('custom:google')
+depends=('gtk2>=2.12.0' 'alsa-lib' 'mesa' 'lsb-release')
+optdepends=('libnotify' 'pulseaudio')
+source=(${pkgname}-$pkgver-${_arch}.rpm::http://dl.google.com/linux/direct/${pkgname}_current_${_arch}.rpm
+license.html::http://www.google.com/intl/en/policies/terms/index.html)
+sha1sums=('f20214fa4e8b840c76444d0e0468ed55878c2315' '07475aafcde2ec4d293f0c64940662c3c39565e2') 
+[ "$CARCH" = 'i686' ] && sha1sums[0]='caff65f3d76a877b054ae0ee8579b2ad1b6ee3f2'
+
+package() {
+    cp -R ${srcdir}/opt ${pkgdir}
+    install -d "${pkgdir}/usr/lib"
+    cp -R ${srcdir}/usr/lib*/* ${pkgdir}/usr/lib
+    # cleaning up cron update script
+    rm -rf ${pkgdir}/opt/google/talkplugin/cron
+    # install license file
+    install -Dm644 "$srcdir/license.html" "$pkgdir/usr/share/licenses/$pkgname/license.html"
+}
