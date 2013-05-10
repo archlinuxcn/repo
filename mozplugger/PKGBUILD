@@ -1,10 +1,9 @@
-# $Id: PKGBUILD 82 2009-07-17 19:56:55Z aaron $
 # Maintainer: fs4000 <matthias_dienstbier[at]yahoo[dot]de>
 # Contributor: Allan McRae <allan@archlinux.org>
 # Contributor: Todd Musall <tmusall@comcast.net>
 
 pkgname=mozplugger
-pkgver=2.1.1
+pkgver=2.1.3
 pkgrel=1
 pkgdesc="A Mozilla & Firefox multimedia plugin."
 arch=('i686' 'x86_64')
@@ -13,8 +12,8 @@ license=('GPL')
 depends=('m4' 'libx11')
 backup=('etc/mozpluggerrc')
 install=mozplugger.install
-source=(http://mozplugger.mozdev.org/files/mozplugger-$pkgver.tar.gz)
-sha256sums=('25042741eea844b866dd9c75c2fd9aa326aa51962118966e29c8cd6cbbb411b7')
+source=($url/files/mozplugger-$pkgver.tar.gz)
+sha256sums=('d19b6063d0aba87430e5ce2e3a4230807288eb45acec1d412009c7f530d8b30a')
 
 build() {
   cd $pkgname-$pkgver
