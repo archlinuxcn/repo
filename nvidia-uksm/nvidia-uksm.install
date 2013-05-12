@@ -1,0 +1,16 @@
+post_install() {
+	EXTRAMODULES='extramodules-3.9-uksm'
+	depmod $(cat /lib/modules/$EXTRAMODULES/version)
+	echo 'In order to use nvidia module, reboot the system.'
+}
+
+post_upgrade() {
+	EXTRAMODULES='extramodules-3.9-uksm'
+	depmod $(cat /lib/modules/$EXTRAMODULES/version)
+	rmmod nvidia || echo 'In order to use the new nvidia module, exit Xserver and unload it manually.'
+}
+
+post_remove() {
+	EXTRAMODULES='extramodules-3.9-uksm'
+	depmod $(cat /lib/modules/$EXTRAMODULES/version)
+}
