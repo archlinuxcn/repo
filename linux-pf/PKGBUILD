@@ -9,7 +9,7 @@ _minor=9
 _basekernel=${_major}.${_minor}
 _srcname=linux-${_major}.${_minor}
 pkgbase=linux-pf
-_pfrel=1
+_pfrel=2
 _kernelname=-pf
 _pfpatchhome="http://pf.natalenko.name/sources/${_basekernel}/"
 _pfpatchname="patch-${_basekernel}.${_pfrel}${_kernelname}"
@@ -68,7 +68,6 @@ source=("ftp://www.kernel.org/pub/linux/kernel/v${_major}.x/linux-${_basekernel}
 	'logo_linux_mono.pbm.bz2'		# the Arch Linux boot logos
 	'logo_linux_vga16.ppm.bz2'		#
 	'change-default-console-loglevel.patch'
-	'alsa-firmware-loading-3.8.8.patch'
 	'http://repo-ck.com/source/gcc_patch/kernel-38-gcc47-1.patch.gz'
 	"${_pfpatchhome}${_pfpatchname}.bz2"	# the -pf patchset
  )
@@ -126,8 +125,6 @@ prepare() {
   # add latest fixes from stable queue, if needed
   # http://git.kernel.org/?p=linux/kernel/git/stable/stable-queue.git
   
-  # fix alsa firmware loading #34865
-  patch -Np1 -i "${srcdir}/alsa-firmware-loading-3.8.8.patch"
 
   # set DEFAULT_CONSOLE_LOGLEVEL to 4 (same value as the 'quiet' kernel param)
   # remove this when a Kconfig knob is made available by upstream
@@ -717,13 +714,12 @@ pkgdesc="Linux kernel and modules with the pf-kernel patch [-ck patchset (BFS in
 
 # makepkg -g >>PKGBUILD
 sha256sums=('60bc3e64ee5dc778de2cd7cd7640abf518a4c9d4f31b8ed624e16fad53f54541'
-            'f702d274891bef4861382b973cd9b8b0e16fa52ccd5fce194e6b613002e9669d'
-            '4bc883a950cd68b3b73e9015d54d8a417fee1c6a9759bd143f63f76b5d38b72f'
+            '4d845f3f7f1950f4a0acea66c9620ff2cd3ddf62189d91e3ce5380d199e249d4'
+            '24ba239f76e8480823f82d4567791ec18dc085c866e3cf309e82293d4573a195'
             '82d660caa11db0cd34fd550a049d7296b4a9dcd28f2a50c81418066d6e598864'
             '03ed4eb4a35d42ae6beaaa5e6fdbada4244ed6c343944bba6462defaa6fed0bf'
             '51ea665cfec42d9f9c7796af2b060b7edbdeb367e42811f8c02667ad729f6b19'
             '9e1e81d80afac6f316e53947e1b081017090081cd30e6c4c473420b77af4b52b'
             '56bd99e54429a25a144f2d221718b67f516344ffd518fd7dcdd752206ec5be69'
-            'ac2059c0c13fa5297b166e505f0fc2531272a02e2b9d01716dc415de6e910ba4'
             '4b8b51a298768048735914e747affe39f58d47d20833cd90fdc002559c719c6a'
-            '563bb739daafb36f183ce0a58bae46713da7d78a0749d0eb67c1af05ac9c1515')
+            '319764d2c45a5b0e2f2456cd40c97ac6bebe89c127b434ca7d499569bc13a6cb')
