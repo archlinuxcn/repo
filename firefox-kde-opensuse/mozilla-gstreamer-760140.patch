@@ -1,7 +1,6 @@
 # HG changeset patch
-# Parent 9fe99f8a584f2369a88bfb5281fd6bc95eb2593c
-Bug 760140 - Query the GstRegistry for the required demuxers/decoders from canPlayType
-
+# Parent 74ba8ebd0dc72be84280bd4806f84d9ec1f4e130
+Bug 760140 - Query the GstRegistry for the required demuxers/decoders from canPlayType (TM: 22)
 
 diff --git a/content/media/DecoderTraits.cpp b/content/media/DecoderTraits.cpp
 --- a/content/media/DecoderTraits.cpp
@@ -25,7 +24,7 @@ diff --git a/content/media/DecoderTraits.cpp b/content/media/DecoderTraits.cpp
  namespace mozilla
  {
  
-@@ -137,48 +139,35 @@
+@@ -137,48 +139,35 @@ DecoderTraits::IsWebMType(const nsACStri
      return false;
    }
  
@@ -75,7 +74,7 @@ diff --git a/content/media/DecoderTraits.cpp b/content/media/DecoderTraits.cpp
    "audio/mp4",
    "video/mp4",
    "video/3gpp",
-@@ -190,19 +179,17 @@
+@@ -190,19 +179,17 @@ bool
  DecoderTraits::IsOmxSupportedType(const nsACString& aType)
  {
    if (!MediaDecoder::IsOmxEnabled()) {
@@ -95,7 +94,7 @@ diff --git a/content/media/DecoderTraits.cpp b/content/media/DecoderTraits.cpp
    "avc1.64001E",  // H.264 High Profile Level 3.0
    "avc1.64001F",  // H.264 High Profile Level 3.1
    "mp4v.20.3",    // 3GPP
-@@ -303,19 +290,19 @@
+@@ -303,19 +290,19 @@ DecoderTraits::CanHandleMediaType(const 
  #ifdef MOZ_DASH
    if (IsDASHMPDType(nsDependentCString(aMIMEType))) {
      // DASH manifest uses WebM codecs only.
@@ -118,7 +117,7 @@ diff --git a/content/media/DecoderTraits.cpp b/content/media/DecoderTraits.cpp
      result = CANPLAY_MAYBE;
    }
  #endif
-@@ -324,17 +311,17 @@
+@@ -324,17 +311,17 @@ DecoderTraits::CanHandleMediaType(const 
      result = CANPLAY_MAYBE;
    }
  #endif
@@ -140,14 +139,14 @@ diff --git a/content/media/DecoderTraits.cpp b/content/media/DecoderTraits.cpp
 diff --git a/content/media/DecoderTraits.h b/content/media/DecoderTraits.h
 --- a/content/media/DecoderTraits.h
 +++ b/content/media/DecoderTraits.h
-@@ -49,17 +49,16 @@
- #endif
- 
+@@ -51,17 +51,16 @@ public:
  #ifdef MOZ_WEBM
    static bool IsWebMType(const nsACString& aType);
  #endif
  
  #ifdef MOZ_GSTREAMER
+   // When enabled, use GStreamer for H.264, but not for codecs handled by our
+   // bundled decoders, unless the "media.prefer-gstreamer" pref is set.
    static bool IsGStreamerSupportedType(const nsACString& aType);
 -  static bool IsH264Type(const nsACString& aType);
  #endif
@@ -447,7 +446,7 @@ new file mode 100644
 diff --git a/content/media/gstreamer/Makefile.in b/content/media/gstreamer/Makefile.in
 --- a/content/media/gstreamer/Makefile.in
 +++ b/content/media/gstreamer/Makefile.in
-@@ -13,21 +13,23 @@
+@@ -13,21 +13,23 @@ include $(DEPTH)/config/autoconf.mk
  MODULE		= content
  LIBRARY_NAME	= gkcongstreamer_s
  LIBXUL_LIBRARY 	= 1
@@ -474,7 +473,7 @@ diff --git a/content/media/gstreamer/Makefile.in b/content/media/gstreamer/Makef
 diff --git a/layout/build/Makefile.in b/layout/build/Makefile.in
 --- a/layout/build/Makefile.in
 +++ b/layout/build/Makefile.in
-@@ -316,16 +316,20 @@
+@@ -318,16 +318,20 @@ LOCAL_INCLUDES	+= -I$(srcdir)/../base \
  		   -I$(topsrcdir)/js/xpconnect/loader \
  		   -I$(topsrcdir)/caps/include \
  		   -I$(topsrcdir)/netwerk/base/src \
@@ -498,7 +497,7 @@ diff --git a/layout/build/Makefile.in b/layout/build/Makefile.in
 diff --git a/layout/build/nsLayoutStatics.cpp b/layout/build/nsLayoutStatics.cpp
 --- a/layout/build/nsLayoutStatics.cpp
 +++ b/layout/build/nsLayoutStatics.cpp
-@@ -78,16 +78,20 @@
+@@ -79,16 +79,20 @@
  #ifdef MOZ_MEDIA_PLUGINS
  #include "MediaPluginHost.h"
  #endif
@@ -515,11 +514,11 @@ diff --git a/layout/build/nsLayoutStatics.cpp b/layout/build/nsLayoutStatics.cpp
  #include "AudioStream.h"
  #endif
  
- #include "nsError.h"
- 
- #include "nsCycleCollector.h"
- #include "nsJSEnvironment.h"
-@@ -336,16 +340,20 @@
+ #ifdef MOZ_WIDGET_GONK
+ #include "nsVolumeService.h"
+ using namespace mozilla::system;
+ #endif
+@@ -344,16 +348,20 @@ nsLayoutStatics::Shutdown()
    nsXBLService::Shutdown();
    nsAutoCopyListener::Shutdown();
    FrameLayerBuilder::Shutdown();

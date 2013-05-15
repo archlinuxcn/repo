@@ -2,7 +2,7 @@ diff --git a/browser/base/content/browser-kde.xul b/browser/base/content/browser
 new file mode 100644
 --- /dev/null
 +++ b/browser/base/content/browser-kde.xul
-@@ -0,0 +1,1221 @@
+@@ -0,0 +1,1216 @@
 +#filter substitution
 +<?xml version="1.0"?>
 +# -*- Mode: HTML -*-
@@ -189,7 +189,7 @@ new file mode 100644
 +           align="start"
 +           role="alert">
 +      <hbox flex="1">
-+        <image src="chrome://browser/content/social-icon.png" class="popup-notification-icon"/>
++        <image id="social-activation-icon" class="popup-notification-icon"/>
 +        <vbox flex="1">
 +          <description id="social-activation-message" class="popup-notification-description"/>
 +          <spacer flex="1"/>
@@ -270,7 +270,6 @@ new file mode 100644
 +           class="social-panel"
 +           type="arrow"
 +           hidden="true"
-+           consumeoutsideclicks="true"
 +           noautofocus="true"/>
 +    <panel id="social-flyout-panel"
 +           class="social-panel"
@@ -279,6 +278,8 @@ new file mode 100644
 +           side="right"
 +           type="arrow"
 +           hidden="true"
++           rolluponmousewheel="true"
++           consumeoutsideclicks="false"
 +           noautofocus="true"
 +           position="topcenter topright"/>
 +
@@ -317,7 +318,7 @@ new file mode 100644
 +    <menupopup id="contentAreaContextMenu" pagemenu="start"
 +               onpopupshowing="if (event.target != this)
 +                                 return true;
-+                               gContextMenu = new nsContextMenu(this, gBrowser, event.shiftKey);
++                               gContextMenu = new nsContextMenu(this, event.shiftKey);
 +                               if (gContextMenu.shouldDisplay)
 +                                 updateEditUIVisibility();
 +                               return gContextMenu.shouldDisplay;"
@@ -399,29 +400,6 @@ new file mode 100644
 +      </hbox>
 +    </panel>
 +
-+    <panel id="allTabs-panel" hidden="true" norestorefocus="true" ignorekeys="true"
-+           onmouseover="allTabs._updateTabCloseButton(event);">
-+      <hbox id="allTabs-meta" align="center">
-+        <spacer flex="1"/>
-+        <textbox id="allTabs-filter"
-+                 tooltiptext="&allTabs.filter.emptyText;"
-+                 type="search"
-+                 oncommand="allTabs.filter();"/>
-+        <spacer flex="1"/>
-+        <toolbarbutton class="KUI-panel-closebutton"
-+                       oncommand="allTabs.close()"
-+                       tooltiptext="&closeCmd.label;"/>
-+      </hbox>
-+      <stack id="allTabs-stack">
-+        <vbox id="allTabs-container"><hbox/></vbox>
-+        <toolbarbutton id="allTabs-tab-close-button"
-+                       class="tabs-closebutton"
-+                       oncommand="allTabs.closeTab(event);"
-+                       tooltiptext="&closeCmd.label;"
-+                       style="visibility:hidden"/>
-+      </stack>
-+    </panel>
-+
 +    <!-- Bookmarks and history tooltip -->
 +    <tooltip id="bhTooltip"/>
 +
@@ -476,11 +454,23 @@ new file mode 100644
 +        <label id="geolocation-learnmore-link" class="text-link"/>
 +      </popupnotificationcontent>
 +    </popupnotification>
++
++    <popupnotification id="mixed-content-blocked-notification" hidden="true">
++      <popupnotificationcontent orient="vertical" align="start">
++        <separator/>
++        <description id="mixed-content-blocked-moreinfo">&mixedContentBlocked.moreinfo;</description>
++        <separator/>
++        <label id="mixed-content-blocked-helplink" class="text-link"
++               value="&mixedContentBlocked.helplink;"/>
++      </popupnotificationcontent>
++    </popupnotification>
++
 +  </popupset>
 +
 +#ifdef CAN_DRAW_IN_TITLEBAR
 +<vbox id="titlebar">
 +  <hbox id="titlebar-content">
++#ifdef MENUBAR_CAN_AUTOHIDE
 +    <hbox id="appmenu-button-container">
 +      <button id="appmenu-button"
 +              type="menu"
@@ -489,6 +479,7 @@ new file mode 100644
 +#include browser-appmenu.inc
 +      </button>
 +    </hbox>
++#endif
 +    <spacer id="titlebar-spacer" flex="1"/>
 +    <hbox id="titlebar-buttonbox-container" align="start">
 +      <hbox id="titlebar-buttonbox">
@@ -562,7 +553,7 @@ new file mode 100644
 +      <toolbaritem id="urlbar-container" align="center" flex="400" persist="width" combined="true"
 +                   title="&locationItem.title;" class="chromeclass-location" removable="true">
 +        <textbox id="urlbar" flex="1"
-+                 placeholder="&urlbar.placeholder;"
++                 placeholder="&urlbar.placeholder2;"
 +                 type="autocomplete"
 +                 autocompletesearch="urlinline history"
 +                 autocompletesearchparam="enable-actions"
@@ -590,6 +581,7 @@ new file mode 100644
 +            <image id="webapps-notification-icon" class="notification-anchor-icon" role="button"/>
 +            <image id="plugins-notification-icon" class="notification-anchor-icon" role="button"/>
 +            <image id="blocked-plugins-notification-icon" class="notification-anchor-icon" role="button"/>
++            <image id="mixed-content-blocked-notification-icon" class="notification-anchor-icon" role="button"/>
 +            <image id="webRTC-shareDevices-notification-icon" class="notification-anchor-icon" role="button"/>
 +            <image id="webRTC-sharingDevices-notification-icon" class="notification-anchor-icon" role="button"/>
 +          </box>
@@ -1110,7 +1102,9 @@ new file mode 100644
 +          persist="width">
 +      <browser id="social-sidebar-browser"
 +               type="content"
++               context="contentAreaContextMenu"
 +               disableglobalhistory="true"
++	       tooltip="aHTMLTooltip"
 +               flex="1"
 +               style="min-width: 14em; width: 18em; max-width: 36em;"/>
 +    </vbox>
@@ -1139,6 +1133,7 @@ new file mode 100644
 +  </hbox>
 +
 +  <vbox id="browser-bottombox" layer="true">
++    <notificationbox id="global-notificationbox"/>
 +    <toolbar id="developer-toolbar"
 +             class="devtools-toolbar"
 +             hidden="true">
@@ -1268,7 +1263,7 @@ diff --git a/browser/components/build/nsModule.cpp b/browser/components/build/ns
  
  #include "rdf.h"
  #include "nsFeedSniffer.h"
-@@ -34,18 +34,16 @@ using namespace mozilla::browser;
+@@ -31,18 +31,16 @@ using namespace mozilla::browser;
  
  /////////////////////////////////////////////////////////////////////////////
  
@@ -1287,8 +1282,8 @@ diff --git a/browser/components/build/nsModule.cpp b/browser/components/build/ns
  
  NS_GENERIC_FACTORY_CONSTRUCTOR(nsFeedSniffer)
  
-@@ -70,17 +68,17 @@ NS_DEFINE_NAMED_CID(NS_SHELLSERVICE_CID)
- NS_DEFINE_NAMED_CID(NS_PRIVATE_BROWSING_SERVICE_WRAPPER_CID);
+@@ -60,17 +58,17 @@ NS_DEFINE_NAMED_CID(NS_WINIEHISTORYENUME
+ NS_DEFINE_NAMED_CID(NS_SHELLSERVICE_CID);
  #endif
  
  static const mozilla::Module::CIDEntry kBrowserCIDs[] = {
@@ -1332,7 +1327,7 @@ diff --git a/browser/components/preferences/advanced.js b/browser/components/pre
      // when the user will select the default.  We refresh here periodically
      // in case the default changes.  On other Windows OS's defaults can also
      // be set while the prefs are open.
-@@ -791,14 +797,25 @@ var gAdvancedPane = {
+@@ -792,14 +798,25 @@ var gAdvancedPane = {
     * Set browser as the operating system default browser.
     */
    setDefaultBrowser: function()
@@ -1794,9 +1789,9 @@ new file mode 100644
 diff --git a/browser/installer/package-manifest.in b/browser/installer/package-manifest.in
 --- a/browser/installer/package-manifest.in
 +++ b/browser/installer/package-manifest.in
-@@ -578,19 +578,21 @@
+@@ -588,19 +588,21 @@
  @BINPATH@/defaults/autoconfig/prefcalls.js
- @BINPATH@/defaults/profile/prefs.js
+ @BINPATH@/browser/defaults/profile/prefs.js
  
  #ifndef LIBXUL_SDK
  ; Warning: changing the path to channel-prefs.js can cause bugs (Bug 756325)
@@ -1811,8 +1806,8 @@ diff --git a/browser/installer/package-manifest.in b/browser/installer/package-m
  #endif
  
  ; Services (gre) prefs
- #ifdef MOZ_SERVICES_AITC
- @BINPATH@/defaults/pref/services-aitc.js
- #endif
  #ifdef MOZ_SERVICES_NOTIFICATIONS
  @BINPATH@/defaults/pref/services-notifications.js
+ #endif
+ #ifdef MOZ_SERVICES_SYNC
+ @BINPATH@/defaults/pref/services-sync.js
