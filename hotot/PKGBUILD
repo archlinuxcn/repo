@@ -1,12 +1,12 @@
 # Maintainer: speps <speps at aur dot archlinux dot org>
 
 _uname=lyricat
-_commit=e0c78bf
+_commit=1f68d33
 pkgbase=hotot
 pkgname=hotot
-true && pkgname=('hotot-data' 'hotot-gtk2' 'hotot-gtk3' 'hotot-qt' 'hotot-qt5')
+true && pkgname=('hotot-data' 'hotot-gtk2' 'hotot-gtk3' 'hotot-qt4' 'hotot-qt5')
 #true && pkgname+=('hotot-kde')
-pkgver=0.9.8.13 # broken
+pkgver=0.9.8.14 # identi.ca support is broken
 pkgrel=1
 pkgdesc="A lightweight & open source microblogging software (twitter identi.ca)"
 arch=('any')
@@ -15,11 +15,11 @@ license=('LGPL3')
 makedepends=('cmake' 'intltool' 'python2' 'qt5-webkit')
 #makedepends+=('kdebase-runtime')
 install="hotot.install"
-source=("https://github.com/$_uname/Hotot/tarball/$_commit")
-md5sums=('6121926b8947c4093beb2ed79f10e855')
+source=("https://github.com/$_uname/Hotot/archive/$pkgver.tar.gz")
+md5sums=('7437f5132a50f7239e1b4bd09f410a17')
 
 build() {
-  cd ${srcdir}/$_uname-Hotot-*
+  cd ${srcdir}/Hotot-*
   [ -d bld ] || mkdir bld && cd bld
   cmake .. -DCMAKE_INSTALL_PREFIX=/usr \
            -DWITH_GTK=ON \
@@ -35,10 +35,10 @@ build() {
 package_hotot-data() {
   true && depends=('hicolor-icon-theme')
 
-  cd ${srcdir}/$_uname-Hotot-*/bld/misc
+  cd ${srcdir}/Hotot-*/bld/misc
   DESTDIR="$pkgdir/" cmake -P cmake_install.cmake
 
-  cd ${srcdir}/$_uname-Hotot-*/bld/po
+  cd ${srcdir}/Hotot-*/bld/po
   DESTDIR="$pkgdir/" cmake -P cmake_install.cmake
 
   # remove google analytics tracking code (tnx to ianux)
@@ -46,10 +46,13 @@ package_hotot-data() {
     sed -i '/\/\/ 7. run track code/,+12d' {} \;
 }
 
-package_hotot-qt() {
+package_hotot-qt4() {
   true && arch=('i686' 'x86_64')
   true && depends=('hotot-data' 'qtwebkit')
-  cd ${srcdir}/$_uname-Hotot-*/bld/qt
+  true && provides=('hotot-qt')
+  true && conflicts=('hotot-qt')
+  true && replaces=('hotot-qt')
+  cd ${srcdir}/Hotot-*/bld/qt
 
   DESTDIR="$pkgdir/" cmake -P cmake_install.cmake
 }
@@ -57,7 +60,7 @@ package_hotot-qt() {
 package_hotot-qt5() {
   true && arch=('i686' 'x86_64')
   true && depends=('hotot-data' 'qt5-webkit')
-  cd ${srcdir}/$_uname-Hotot-*/bld/qt5
+  cd ${srcdir}/Hotot-*/bld/qt5
 
   DESTDIR="$pkgdir/" cmake -P cmake_install.cmake
 }
@@ -65,7 +68,7 @@ package_hotot-qt5() {
 #package_hotot-kde() {
 #  true && arch=('i686' 'x86_64')
 #  true && depends=('hotot-data' 'kdebase-runtime')
-#  cd ${srcdir}/$_uname-Hotot-*/bld/kde
+#  cd ${srcdir}/Hotot-*/bld/kde
 
 #  DESTDIR="$pkgdir/" cmake -P cmake_install.cmake
 #}
@@ -74,7 +77,7 @@ package_hotot-gtk2() {
   true && depends=('hotot-data' 'pywebkitgtk' 'python2-notify' 'python2-pycurl'
                    'python2-keybinder2' 'python2-dbus' 'desktop-file-utils')
   true && optdepends=('libappindicator: unity menubar integration')
-  cd ${srcdir}/$_uname-Hotot-*/bld/hotot
+  cd ${srcdir}/Hotot-*/bld/hotot
 
   DESTDIR="$pkgdir/" cmake -P cmake_install.cmake
 
@@ -91,7 +94,7 @@ package_hotot-gtk3() {
   true && depends=('hotot-data' 'python2-gobject' 'python2-dbus'
                    'python2-pycurl' 'webkitgtk3' 'desktop-file-utils')
   true && optdepends=('libappindicator3: unity menubar integration')
-  cd ${srcdir}/$_uname-Hotot-*/bld/hotot-gir
+  cd ${srcdir}/Hotot-*/bld/hotot-gir
 
   DESTDIR="$pkgdir/" cmake -P cmake_install.cmake
 
