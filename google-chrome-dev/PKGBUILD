@@ -4,7 +4,7 @@
 # Contributor: ruario
 
 pkgname=google-chrome-dev
-pkgver=28.0.1500.5   # Check for new Linux releases in: http://googlechromereleases.blogspot.com/search/label/Dev%20updates
+pkgver=28.0.1500.20   # Check for new Linux releases in: http://googlechromereleases.blogspot.com/search/label/Dev%20updates
 pkgrel=1
 pkgdesc="An attempt at creating a safer, faster, and more stable browser (Dev Channel)"
 arch=('i686' 'x86_64')
@@ -17,14 +17,14 @@ conflicts=('google-chrome')
 options=(!strip)
 install=${pkgname}.install
 _channel='unstable'
-_verbld=28.0.1500.5-199062
+_verbld=28.0.1500.20-201172
 
 if [ "$CARCH" = "i686" ]; then
     _arch='i386'
-    md5sums=('9ccd9f87dc40c54aba670a6ee495153a')
+    md5sums=('f0b8b4dc0fc2671a03c20e3e7b813e7f')
 elif [ "$CARCH" = "x86_64" ]; then
     _arch='x86_64'
-    md5sums=('cd5fb29946535866867cdce5e3261c09')
+    md5sums=('cf69cd862caa61bdf3a96766bbaa32df')
 fi
 
 
