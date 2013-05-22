@@ -1,0 +1,20 @@
+--- screenruler.rb	2008-12-23 22:57:42.000000000 +0100
++++ screenruler.rb.new	2009-10-29 16:40:22.719907886 +0100
+@@ -18,7 +18,7 @@
+  #  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+  ###############################################################################
+ 
+-Dir.chdir(File.dirname(File.expand_path(File.symlink?(__FILE__) ? File.readlink(__FILE__) : __FILE__)))		# So that this file can be run from anywhere
++Dir.chdir('/usr/share/screenruler')	# So that this file can be run from anywhere
+ $LOAD_PATH << './utils'
+ 
+ # removed while we figure out why some users have problems with glade and safe mode $SAFE = 2	 # http://www.rubycentral.com/book/taint.html
+@@ -51,7 +51,7 @@
+ ###################################################################
+ Gtk.init
+ 
+-APP_ICON_LIST = ['screenruler-icon-16x16.png', 'screenruler-icon-32x32.png', 'screenruler-icon-64x64.png'].collect { |filename| Gdk::Pixbuf.new(filename) }
++APP_ICON_LIST = ['/usr/share/pixmaps/screenruler-icon-16x16.png', '/usr/share/pixmaps/screenruler-icon-32x32.png', '/usr/share/pixmaps/screenruler-icon-64x64.png'].collect { |filename| Gdk::Pixbuf.new(filename) }
+ 
+ puts 'Connecting to GConf...'
+ 	gconf = GConf::Client.default
