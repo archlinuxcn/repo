@@ -1,0 +1,31 @@
+
+diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+index cc3a8e6..2300269 100644
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -600,6 +600,7 @@ static void intel_pstate_timer_func(unsigned long __data)
+ static const struct x86_cpu_id intel_pstate_cpu_ids[] = {
+ 	ICPU(0x2a, default_policy),
+ 	ICPU(0x2d, default_policy),
++	ICPU(0x3a, default_policy),
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(x86cpu, intel_pstate_cpu_ids);
+--- linux-3.9/drivers/cpufreq/Kconfig.x86	2013-04-28 20:36:01.000000000 -0400
++++ linux-3.9.mod/drivers/cpufreq/Kconfig.x86	2013-05-18 07:09:23.667729647 -0400
+@@ -6,12 +6,12 @@
+        bool "Intel P state control"
+        depends on X86
+        help
+-          This driver provides a P state for Intel core processors.
++          This driver provides a P state for Intel Core processors.
+ 	  The driver implements an internal governor and will become
+-          the scaling driver and governor for Sandy bridge processors.
++          the scaling driver and governor for Sandy/Ivy Bridge and Haswell processors.
+ 
+ 	  When this driver is enabled it will become the perferred
+-          scaling driver for Sandy bridge processors.
++          scaling driver for Sandy/Ivy Bridge and Haswell processors.
+ 
+ 	  If in doubt, say N.
+
