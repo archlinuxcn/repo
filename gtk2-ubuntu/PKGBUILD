@@ -1,10 +1,9 @@
 # Maintainer: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
-# Original Maintainer: György Balló <ballogy@freestart.hu>
 # Contributor: hbdee <hbdee.arch@gmail.com>
 
 pkgname=gtk2-ubuntu
-_ubuntu_rel=0ubuntu2
-pkgver=2.24.17
+_ubuntu_rel=0ubuntu1
+pkgver=2.24.18
 pkgrel=1
 pkgdesc="GTK+ is a multi-platform toolkit (v2)"
 arch=('i686' 'x86_64')
@@ -22,12 +21,12 @@ source=("http://ftp.gnome.org/pub/gnome/sources/gtk+/2.24/gtk+-${pkgver}.tar.xz"
         "https://launchpad.net/ubuntu/+archive/primary/+files/gtk+2.0_${pkgver}-${_ubuntu_rel}.debian.tar.gz"
         'arch_xid-collision-debug.patch'
         'fix-ubuntumenuproxy-build.patch')
-sha512sums=('7a83555b4b6eb534bbdb77eae85164e182d68f786a72dcdbf41e221a25af0981263cc6637427cdf8984f82064927fb38d370d3f8621b7b056b3b5dbd92bcaf79'
-	    'f586389974982482497ca659e6d61e6798f4c141bc824af78b7f95cc351f9dfac33060269bf8250c391ed61cd6212a58fdeb711dde11e27c3a919cf45f9eb0c7'
+sha512sums=('5250ae00c8d5fcefded54c8476e45f6bcc69d1207457ed53a23cacf3986cbbbcd115c2b5b823c1f90f1e21de4eafb40c7081a7175943ce2adda593bf2759d0da'
+            'af6074cb203296c4269d3d832930412c9d411b05ddb22443275a688bd9175eedbf560954febc2346ec439ac3a4170a4f36ae0bc38704185b8886b952e94a3fec'
             '89e3223c86731a76b12d39245f1ec4cf8b4860ab1d11d74a10e5deb0db302f20b4bb5d9034da1d8aeb96369dbdeddcdd2f28943270dc501476c694562b960159'
             '4b27afecb82e3517c2584665f8d2a2911193254a00b82ff8064caf4016ab029c76e99af502bb9271a66209594b50b2729797defcc9512d341aa61aff4f64ec24')
 
-build() {
+prepare() {
   cd "${srcdir}/gtk+-${pkgver}"
 
   patch -p1 -i "${srcdir}/arch_xid-collision-debug.patch"
@@ -53,9 +52,10 @@ build() {
   for i in $(cat "${srcdir}/debian/patches/series" | grep -v '#'); do
     patch -p1 -i "${srcdir}/debian/patches/${i}"
   done
+}
 
-  # Cannot find gmodule-2.0
-  #CFLAGS="${CFLAGS} $(pkg-config --cflags --libs gmodule-2.0)"
+build() {
+  cd "${srcdir}/gtk+-${pkgver}"
 
   autoreconf -vfi
 
@@ -69,7 +69,7 @@ build() {
   # https://bugzilla.gnome.org/show_bug.cgi?id=655517
   sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
 
-  make ${MAKEFLAGS}
+  make
 }
 
 package() {

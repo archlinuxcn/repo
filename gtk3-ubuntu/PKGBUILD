@@ -1,12 +1,10 @@
 # Maintainer: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
-# Original Maintainer: György Balló <ballogy@freestart.hu>
-# Contributor: hbdee
+# Contributor: hbdee <hbdee.arch@gmail.com>
 
 pkgname=gtk3-ubuntu
-_ubuntu_rel=0ubuntu6
-#_actual_ver=3.6.4
-pkgver=3.6.4
-pkgrel=5
+_ppa_rel=0ubuntu1~build1 
+pkgver=3.8.2
+pkgrel=1
 pkgdesc="GObject-based multi-platform toolkit (v3)"
 arch=('i686' 'x86_64')
 url="http://www.gtk.org/"
@@ -19,13 +17,13 @@ options=('!libtool' '!docs')
 backup=('etc/gtk-3.0/settings.ini')
 license=('LGPL')
 source=("http://ftp.gnome.org/pub/GNOME/sources/gtk+/${pkgver%.*}/gtk+-${pkgver}.tar.xz"
-        "https://launchpad.net/ubuntu/+archive/primary/+files/gtk+3.0_${pkgver}-${_ubuntu_rel}.debian.tar.gz"
+        "http://ppa.launchpad.net/gnome3-team/gnome3/ubuntu/pool/main/g/gtk+3.0/gtk+3.0_${pkgver}-${_ppa_rel}.debian.tar.gz"
         'arch_settings.ini')
-sha512sums=('1ec4655ce19b84b50a4eb6cf219422dea393add51a05845ce3e797ac56e6b491051597fbe7c9def100ebe9d86e886201af57ff23c48959e21a53473b897fc6f8'
-            'ab940f8c5450ef300b8ccebc7c4fbbad1d854339c359c8c70314909f9b7f6c893ba6e0678be401dcc3abaaa8a1a7327917fdda38e3c54b246f9605f88fc2b425'
+sha512sums=('20958c192fe881281f6885e2d7cecc4e2700fc01ef8006304f1fb8befe8f6628cbdb06c0d801f109e5805d58f327ca9a07d5e2c7f938116c99db8080d0c2f83e'
+            '8404a5fb2b64623d5a08c5728aa7540699aad5ff37fe5a6ab5cc832ca57fb3728c4e78e0cb1be521df99edd55ebe0558ff629cbee8d4b609cad7de778947b282'
             '087bf853cb9f6ee8269c60041555ee1546a2d10fbdbe820710c77a74bb9c34735abe8b061e2a0322246932d7a72b21953682fcdca79b09fd555307abb1d88699')
 
-build() {
+prepare() {
   cd "${srcdir}/gtk+-${pkgver}"
 
   # Apply Ubuntu Patches
@@ -34,22 +32,20 @@ build() {
         sed -i '/061_multiarch_module_fallback.patch/d' "${srcdir}/debian/patches/series"
       # Fedora's tracker is not compiled with FTS
       #  sed -i '/044_tracker_fts.patch/d' debian/patches/series
-      # Ubuntu's defaults
-        sed -i '/022_disable-viqr-im-for-vi-locale.patch/d' "${srcdir}/debian/patches/series"
-      # Not needed
-        sed -i '/071_fix-installation-of-HTML-images.patch/d' "${srcdir}/debian/patches/series"
-      # Drop git patches
-        #sed -i '/git/d' "${srcdir}/debian/patches/series"
-        # Except this one
-          #echo 'git_gtkcellrenderer_grabbing_modifier.patch' >> "${srcdir}/debian/patches/series"
 
-  for i in $(cat "${srcdir}/debian/patches/series" | grep -v '#'); do
-    patch -Np1 -i "${srcdir}/debian/patches/${i}"
+  for i in $(grep -v '#' "${srcdir}/debian/patches/series"); do
+    msg "Applying ${i} ..."
+    patch -p1 -i "${srcdir}/debian/patches/${i}"
   done
+}
+
+build() {
+  cd "${srcdir}/gtk+-${pkgver}"
 
   autoreconf -vfi
 
-  CXX=/bin/false ./configure \
+  #CXX=/bin/false ./configure \
+  ./configure \
     --prefix=/usr \
     --sysconfdir=/etc \
     --localstatedir=/var \
@@ -62,14 +58,9 @@ build() {
 
   #https://bugzilla.gnome.org/show_bug.cgi?id=655517
   sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
+  
   make
 }
-
-#check() {
-# cd "${srcdir}/gtk+-${pkgver}"
-#
-# make check
-#}
 
 package() {
   cd "${srcdir}/gtk+-${pkgver}"
