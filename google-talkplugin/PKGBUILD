@@ -2,8 +2,8 @@
 # Maintainer: ava1ar <mail(dot)avatar(at)gmail(dot)com>
 
 pkgname=google-talkplugin
-pkgver=3.17.0.0
-pkgrel=2
+pkgver=3.19.1.0
+pkgrel=1
 pkgdesc="Video chat browser plug-in for Google Talk"
 arch=('i686' 'x86_64')
 _arch="$CARCH" 
@@ -14,8 +14,8 @@ depends=('gtk2>=2.12.0' 'alsa-lib' 'mesa' 'lsb-release')
 optdepends=('libnotify' 'pulseaudio')
 source=(${pkgname}-$pkgver-${_arch}.rpm::http://dl.google.com/linux/direct/${pkgname}_current_${_arch}.rpm
 license.html::http://www.google.com/intl/en/policies/terms/index.html)
-sha1sums=('f20214fa4e8b840c76444d0e0468ed55878c2315' '07475aafcde2ec4d293f0c64940662c3c39565e2') 
-[ "$CARCH" = 'i686' ] && sha1sums[0]='caff65f3d76a877b054ae0ee8579b2ad1b6ee3f2'
+sha1sums=('cd7d1301c3c053208cd48555b57bdafeb747edff' '07475aafcde2ec4d293f0c64940662c3c39565e2') 
+[ "$CARCH" = 'i686' ] && sha1sums[0]='897f938ba49d2bc7527541a6eb60a41b91aec479'
 
 package() {
     cp -R ${srcdir}/opt ${pkgdir}
@@ -24,5 +24,5 @@ package() {
     # cleaning up cron update script
     rm -rf ${pkgdir}/opt/google/talkplugin/cron
     # install license file
-    install -Dm644 "$srcdir/license.html" "$pkgdir/usr/share/licenses/$pkgname/license.html"
+    install -Dm644 "${srcdir}/license.html" "${pkgdir}/usr/share/licenses/${pkgname}/license.html"
 }
