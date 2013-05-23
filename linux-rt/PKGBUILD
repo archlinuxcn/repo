@@ -9,8 +9,8 @@ pkgname=('linux-rt' 'linux-rt-headers' 'linux-rt-docs') # Build realtime patched
 #pkgname=linux-custom       # Build kernel with a different name
 _kernelname=${pkgname#linux}
 _basekernel=3.8
-_releasever=10
-_rtpatchver=rt6
+_releasever=13
+_rtpatchver=rt9
 pkgrel=1
 _pkgver=${_basekernel}.${_releasever}
 pkgver=${_basekernel}.${_releasever}_${_rtpatchver}
@@ -26,16 +26,14 @@ source=("https://www.kernel.org/pub/linux/kernel/v3.x/linux-${_basekernel}.tar.x
         'config' 'config.x86_64'
         # standard config files for mkinitcpio ramdisk
         "${pkgname}.preset"
-        'change-default-console-loglevel.patch'
-        'alsa-firmware-loading-3.8.8.patch')
+        'change-default-console-loglevel.patch')
 md5sums=('1c738edfc54e7c65faeb90c436104e2f'
-         '973bc1c68bb5f082a66d20c94193d4ee'
-         '23d715c891ecfb436cb2a4c4ea5286af'
+         '1b015f0d6f5103b14d3600ee41ff3046'
+         '2b8fc5a819ee9bdf79aec69e07565cae'
          '371d894b67ab630ccc05b4b14b6bc0db'
          'e23d1456474e205147166b71b48f5762'
          'eb14dcfd80c00852ef81ded6e826826a'
-         'f3def2cefdcbb954c21d8505d23cc83c'
-         'e2ac681ffa439e969b4c3b4616852454')
+         'f3def2cefdcbb954c21d8505d23cc83c')
 
 prepare() {
   cd "${srcdir}/linux-${_basekernel}"
@@ -50,10 +48,6 @@ prepare() {
 
   # add latest fixes from stable queue, if needed
   # http://git.kernel.org/?p=linux/kernel/git/stable/stable-queue.git
-
-  # fix alsa firmware loading #34865
-  msg "applying alsa-firmware-loading-3.8.8.patch"
-  patch -Np1 -i "${srcdir}/alsa-firmware-loading-3.8.8.patch"
 
   # set DEFAULT_CONSOLE_LOGLEVEL to 4 (same value as the 'quiet' kernel param)
   # remove this when a Kconfig knob is made available by upstream
