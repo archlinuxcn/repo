@@ -1,10 +1,10 @@
---- a/src/bridge.c	2012-10-03 13:21:06.000000000 -0400
-+++ b/src/bridge.c	2013-02-09 12:40:43.441589211 -0500
+--- ./src/bridge.c.orig	2013-04-24 15:36:13.486078355 -0400
++++ ./src/bridge.c	2013-04-24 15:44:24.063045320 -0400
 @@ -970,7 +970,6 @@
        || (g_strcmp0 (prg, "qtoctave") == 0)
        || (g_strcmp0 (prg, "firefox-bin") == 0)
        || (g_strcmp0 (prg, "thunderbird-bin") == 0)
 -      || (g_strcmp0 (prg, "Eclipse") == 0)
-       || (g_strcmp0 (prg, "emacs") == 0)
-       || (g_strcmp0 (prg, "emacs23") == 0)
-       || (g_strcmp0 (prg, "emacs23-lucid") == 0)
+       || g_str_has_prefix (prg, "emacs")
+       || (g_strcmp0 (prg, "glade") == 0)
+       || (g_strcmp0 (prg, "gnome-panel") == 0)

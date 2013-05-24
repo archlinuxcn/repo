@@ -1,0 +1,12 @@
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -33,8 +33,7 @@
+ 	-I$(top_srcdir)			\
+ 	-DG_DISABLE_DEPRECATED		\
+ 	-DGDK_PIXBUF_DISABLE_DEPRECATED	\
+-	-DGDK_DISABLE_DEPRECATED	\
+-	-DGTK_DISABLE_DEPRECATED
++	-DGDK_DISABLE_DEPRECATED
+ 
+ AM_CPPFLAGS =				\
+ 	$(GCC_FLAGS)			\

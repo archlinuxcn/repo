@@ -5,26 +5,36 @@
 pkgbase=appmenu-gtk
 pkgname=appmenu-gtk
 true && pkgname=(${pkgbase}{2,3})
-pkgver=12.10.2
-pkgrel=2
+pkgver=12.10.3daily13.04.03
+pkgrel=1
 arch=(i686 x86_64)
 url=https://launchpad.net/$pkgbase
 license=(GPL3)
-makedepends=(libdbusmenu-gtk{2,3})
+makedepends=(gtk{2,3}-ubuntu libdbusmenu-gtk{2,3})
 options=(!libtool)
-source=($url/${pkgver%.*}/$pkgver/+download/$pkgbase-$pkgver.tar.gz
+source=(https://launchpad.net/ubuntu/+archive/primary/+files/${pkgbase}_$pkgver.orig.tar.gz
+    enable-gtk-deprecated-functions.patch
     unblacklist-eclipse.patch)
-sha256sums=('eea3355a028f12bf442e483a7d7579910f1cd8e56be5646c9a6ddc639c5ae909'
-    'cd1e8b1fe2012c520c8ad0188de2ff0aeb34ceb73e3490e7bac395ec3892b6ab')
-sha512sums=('5c3e3b82c9d18de5fa2013dad5cb1240e547a7f97295b01ce08b9f03ebaa5e165ed326271ceed7d7014dd0f5c7960e6633090bddf5d18bdf8306157acf39ccdd'
-    'b5dd6d4e0b8d7bc94201ba39c6f881f8088147f63705be9bcd093eb57de554ec3ed2dc84684e388ab03ba009087c4826b672759ffe6d6d175883fd2f6759bcc1')
+sha256sums=('5ba3dee4f2aaa6f22195aa9c17b8605c1ea32e64898ba2abe24a2eef84c503ec'
+            'fe10c1ede40f750cb248b040f2b264fd462324e67b0f11bed52e720a1f38fbb0'
+            '1cae30dd892f033894a146624c522be669e3b177ff0de0eee00e8ed313827581')
+sha512sums=('26804c39de196a508df785d9c8ec964f7676cad92ee24da97eb4bebd9709bc2076a7d1255595de50d20e7e1ab47bfad96f78e60d119421bb260ff65dbc46c0a2'
+            'b5dedccad3a23fb184dd1bdb06e69b626d08dc0b296f7ac6351a3a6542d1d73564327b711c22a9c047ce1ed0f3c375804925aa8397dee53fff88174a50eec968'
+            '961d8b358721a9346935a2b8511942b5f553ab4dfbc735a2b4f14ed1601e0a82b7f4d2c760f771c2fb85acd0c29ecc340c09cdf3c0b3cd0886633ccad0f6e904')
+
+prepare() {
+    cd $pkgbase-$pkgver/
+    patch -p1 -i ../unblacklist-eclipse.patch
+    patch -p1 -i ../enable-gtk-deprecated-functions.patch
+    sed -i 's:AM_CONFIG_HEADER:AC_CONFIG_HEADERS:' configure.ac
+}
 
 build() {
-    cd "$srcdir"/$pkgbase-$pkgver/
+    cd $pkgbase-$pkgver/
+    export CFLAGS+=" -Wno-unused-local-typedefs"
+    autoreconf -fi
 
-    patch -Np1 -i ../unblacklist-eclipse.patch
-
-    [[ -d build-gtk2 ]] || mkdir build-gtk2
+    [[ -d build-gtk2 ]] || install -d build-gtk2
     pushd build-gtk2
     ../configure \
         --prefix=/usr \
@@ -48,24 +58,20 @@ build() {
 
 package_appmenu-gtk2() {
     pkgdesc="Adds appmenu support for GTK+ 2 apps"
-    depends=(libdbusmenu-gtk2 gtk2-ubuntu)
+    depends=(gtk2-ubuntu libdbusmenu-gtk2)
 
-    cd "$srcdir"/$pkgbase-$pkgver/build-gtk2/
-
-    make DESTDIR="$pkgdir" install
-    install -Dm755 80appmenu "$pkgdir"/etc/profile.d/80appmenu.sh
-    rm -r "$pkgdir"/etc/X11
+    make -C $pkgbase-$pkgver/build-gtk2 DESTDIR="$pkgdir" install
+    install -Dm755 "$pkgdir"/etc/X11/Xsession.d/80appmenu "$pkgdir"/etc/X11/xinit/xinitrc.d/80appmenu
+    rm -rf "$pkgdir"/etc/X11/Xsession.d/
 }
 
 package_appmenu-gtk3() {
     pkgdesc="Adds appmenu support for GTK+ 3 apps"
-    depends=(libdbusmenu-gtk3 gtk3-ubuntu)
+    depends=(gtk3-ubuntu libdbusmenu-gtk3)
 
-    cd "$srcdir"/$pkgbase-$pkgver/build-gtk3/
-
-    make DESTDIR="$pkgdir" install
-    install -Dm755 80appmenu-gtk3 "$pkgdir"/etc/profile.d/80appmenu-gtk3.sh
-    rm -r "$pkgdir"/etc/X11
+    make -C $pkgbase-$pkgver/build-gtk3 DESTDIR="$pkgdir" install
+    install -Dm755 "$pkgdir"/etc/X11/Xsession.d/80appmenu-gtk3 "$pkgdir"/etc/X11/xinit/xinitrc.d/80appmenu-gtk3
+    rm -rf "$pkgdir"/etc/X11/Xsession.d/
 }
 
 pkgdesc="Adds appmenu support for GTK+ apps"
