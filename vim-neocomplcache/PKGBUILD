@@ -3,7 +3,7 @@
 pkgname=vim-neocomplcache
 pkgver=8.0
 _scriptid=17867
-pkgrel=1
+pkgrel=2
 pkgdesc="Ultimate auto completion system for Vim"
 arch=('i686' 'x86_64')
 url="http://www.vim.org/scripts/script.php?script_id=2620"
@@ -33,5 +33,5 @@ package() {
     install -Dm644 ${srcdir}/license.txt ${pkgdir}/usr/share/licenses/${pkgname}/license.txt || return 1
 }
 
-md5sums=('d76b6b9a1d61ba2af58da3dfbb51e8e4'
+md5sums=('bcad8a094bcdb4574fe5e07a83bfdee3'
          'efbd5986e691ce8c876fb86e8f5961ea')

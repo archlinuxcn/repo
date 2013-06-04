@@ -2,7 +2,6 @@
 # Contributor: Lex Rivera aka x-demon <aur@x-demon.org>
 # Contributor: Det <nimetonmaili at gmail a-dot com>
 # Contributor: ruario
-# Packager: phoenixlzx <phoenixlzx at archlinuxcn.org>
 
 pkgname=google-chrome
 pkgver=27.0.1453.93   # Check for new Linux releases in: http://googlechromereleases.blogspot.com/search/label/Stable%20updates
@@ -12,7 +11,7 @@ arch=('i686' 'x86_64')
 url="http://www.google.com/chrome"
 license=('custom:chrome')
 depends=('alsa-lib' 'gconf' 'gtk2' 'hicolor-icon-theme' 'libpng' 'libxslt' 'libxss' 'nss' 'ttf-font' 'xdg-utils')
-optdepends=('kdebase-kdialog: needed for file dialogs in KDE' 'ttf-google-webfonts')
+optdepends=('kdebase-kdialog: needed for file dialogs in KDE' 'ttf-google-fonts-git')
 provides=("google-chrome=$pkgver")
 conflicts=('google-chrome')
 options=(!strip)

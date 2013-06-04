@@ -4,27 +4,27 @@
 # Contributor: ruario
 
 pkgname=google-chrome-dev
-pkgver=28.0.1500.20   # Check for new Linux releases in: http://googlechromereleases.blogspot.com/search/label/Dev%20updates
+pkgver=29.0.1521.3   # Check for new Linux releases in: http://googlechromereleases.blogspot.com/search/label/Dev%20updates
 pkgrel=1
 pkgdesc="An attempt at creating a safer, faster, and more stable browser (Dev Channel)"
 arch=('i686' 'x86_64')
 url="http://www.google.com/chrome"
 license=('custom:chrome')
 depends=('alsa-lib' 'gconf' 'gtk2' 'hicolor-icon-theme' 'libpng' 'libxslt' 'libxss' 'nss' 'ttf-font' 'xdg-utils')
-optdepends=('kdebase-kdialog: needed for file dialogs in KDE' 'ttf-google-webfonts')
+optdepends=('kdebase-kdialog: needed for file dialogs in KDE' 'ttf-google-fonts-git')
 provides=("google-chrome=$pkgver")
 conflicts=('google-chrome')
 options=(!strip)
 install=${pkgname}.install
 _channel='unstable'
-_verbld=28.0.1500.20-201172
+_verbld=29.0.1521.3-202710
 
 if [ "$CARCH" = "i686" ]; then
     _arch='i386'
-    md5sums=('f0b8b4dc0fc2671a03c20e3e7b813e7f')
+    md5sums=('9d0eea3ed78d943acb2326260e954802')
 elif [ "$CARCH" = "x86_64" ]; then
     _arch='x86_64'
-    md5sums=('cf69cd862caa61bdf3a96766bbaa32df')
+    md5sums=('6f942c615c704f9b6b3908fcf8c4eab1')
 fi
 
 
