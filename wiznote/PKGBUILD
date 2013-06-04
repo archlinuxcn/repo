@@ -34,7 +34,8 @@ package() {
     mkdir -p "$pkgdir/usr/share/applications"
     rm -rf lib
     rm -rf plugins
-    cp -R * "$pkgdir/usr/"
+    cp -R "$srcdir/"share "$pkgdir/usr/"
+    cp -R "$srcdir/"bin "$pkgdir/usr/"
      for size in 16 24 32 48 64 128 256;do
         install -dm755 "$pkgdir"/usr/share/icons/hicolor/${size}x${size}/apps
         ln -s /usr/share/"$pkgname"/skins/${pkgname}${size}.png \
