@@ -10,7 +10,7 @@ pkgname=('linux-rt' 'linux-rt-headers' 'linux-rt-docs') # Build realtime patched
 _kernelname=${pkgname#linux}
 _basekernel=3.8
 _releasever=13
-_rtpatchver=rt9
+_rtpatchver=rt10
 pkgrel=1
 _pkgver=${_basekernel}.${_releasever}
 pkgver=${_basekernel}.${_releasever}_${_rtpatchver}
@@ -29,7 +29,7 @@ source=("https://www.kernel.org/pub/linux/kernel/v3.x/linux-${_basekernel}.tar.x
         'change-default-console-loglevel.patch')
 md5sums=('1c738edfc54e7c65faeb90c436104e2f'
          '1b015f0d6f5103b14d3600ee41ff3046'
-         '2b8fc5a819ee9bdf79aec69e07565cae'
+         '454de8c18a4f811bcdb2904e8d7710a7'
          '371d894b67ab630ccc05b4b14b6bc0db'
          'e23d1456474e205147166b71b48f5762'
          'eb14dcfd80c00852ef81ded6e826826a'

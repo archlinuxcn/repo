@@ -2,7 +2,7 @@
 
 pkgname=dnscrypt-proxy
 pkgver=1.3.0
-pkgrel=3
+pkgrel=4
 pkgdesc="A tool for securing communications between a client and a DNS resolver"
 arch=('i686' 'x86_64')
 url="http://dnscrypt.org/"
@@ -15,7 +15,7 @@ conflicts=(dnscrypt-proxy-git)
 
 build() {
 	cd $srcdir/$pkgname-$pkgver
-	CFLAGS="$CFLAGS -fPIC" ./configure --prefix=/usr
+	CFLAGS="$CFLAGS -fPIC" ./configure --prefix=/usr --sbindir=/usr/bin
 	make -j2
 }
 
@@ -37,4 +37,4 @@ package() {
 
 md5sums=('33cc94dd06d23f96b4bac3efd1b20c95'
 	 '4d486b3c2a4d47d4f998ed75c5033f77'
-         '9e8e9f6ca7c3d2efd1721217f62316c9')
+         '8ddf884ce05f706f913eab3c5b235f45')

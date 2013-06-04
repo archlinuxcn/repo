@@ -1,23 +1,24 @@
-# Maintainer [-multimedia]: John Schoenick <john@pointysoftware.net>
 # Maintainer [base]: Sven-Hendrik Haase <sh@lutzhaase.com>
+# Maintainer [-multimedia]: John Schoenick <john@pointysoftware.net>
 # Contributor: Jan "heftig" Steffens <jan.steffens@gmail.com>
 # Contributor: Eduardo Romero <eduardo@archlinux.org>
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine-multimedia
 _basename=wine
-pkgver=1.5.27
+pkgver=1.5.31
 pkgrel=1
 
 _pkgbasever=${pkgver/rc/-rc}
 
 source=(http://prdownloads.sourceforge.net/$_basename/$_basename-$_pkgbasever.tar.bz2{,.sign}
-        winemultimedia_1.5.27_20130404.patch)
+        30-win32-aliases.conf
+        winemultimedia_1.5.31_20130529.patch)
 
-sha1sums=('457e75660312bd572ae85a567adf7805f482491e'
-          '5dfa970aa5dfb087e9efc32e70b2e42933dcb063'
-          '0764705158774e748dcd2779d7896e2f46763715')
-
+md5sums=('21a8326bbce7f0f051a19a64101e75bf'
+         'SKIP'
+         '1ff4e467f59409272088d92173a0f801'
+         'a58e060dea2af5347d781e09a04f46ba')
 
 pkgdesc="Wine with Maarten Lankhorst's multimedia patches, including PulseAudio support"
 url="http://www.winehq.com"
@@ -62,8 +63,10 @@ makedepends=(autoconf ncurses bison perl fontforge flex prelink
   # to build as such, exchange for:
   # mesa-libgl      lib32-mesa-libgl
   libgl           lib32-libgl
+  libcl           lib32-libcl
   oss
   samba
+  opencl-headers
 )
 
 optdepends=(
@@ -83,6 +86,8 @@ optdepends=(
   libjpeg-turbo   lib32-libjpeg-turbo
   libxcomposite   lib32-libxcomposite
   libxinerama     lib32-libxinerama
+  ncurses         lib32-ncurses
+  libcl           lib32-libcl
   oss             cups
   samba
 )
@@ -112,11 +117,15 @@ build() {
   # Allow ccache to work
   mv $_basename-$_pkgbasever $_basename
 
+  # ncurses fix
+  sed -i 's|libncurses|libncursesw|g' "$srcdir/$_basename/configure"
+  sed -i 's|lncurses|lncursesw|g' "$srcdir/$_basename/configure"
+
   # Apply multimedia patch
   msg2 "Applying multimedia branch patch"
-  (cd $_basename && patch -Np1 -i "${srcdir}"/winemultimedia_1.5.27_20130404.patch)
+  (cd $_basename && patch -Np1 -i "${srcdir}"/winemultimedia_1.5.31_20130529.patch)
 
-  # These additional CFLAGS solve FS#27662
+  # These additional CPPFLAGS solve FS#27662 and FS#34195
   export CPPFLAGS="${CPPFLAGS/-D_FORTIFY_SOURCE=2/} -D_FORTIFY_SOURCE=0"
 
   if [[ $CARCH == x86_64 ]]; then
@@ -132,7 +141,8 @@ build() {
       --enable-win64
     # Gstreamer was disabled for FS#33655
 
-    make
+    # These additional flags solve FS#34819
+    make CFLAGS+="-fno-builtin-memcpy" CXXFLAGS+="-fno-builtin-memcpy"
 
     _wine32opts=(
       --libdir=/usr/lib32
@@ -173,6 +183,11 @@ package() {
       libdir="$pkgdir/usr/lib" \
       dlldir="$pkgdir/usr/lib/wine" install
   fi
+
+  # Font aliasing settings for Win32 applications
+  install -d "$pkgdir"/etc/fonts/conf.{avail,d}
+  install -m644 "$srcdir/30-win32-aliases.conf" "$pkgdir/etc/fonts/conf.avail"
+  ln -s ../conf.avail/30-win32-aliases.conf "$pkgdir/etc/fonts/conf.d/30-win32-aliases.conf"
 }
 
 # vim:set ts=8 sts=2 sw=2 et:
