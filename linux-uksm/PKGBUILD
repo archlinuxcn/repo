@@ -31,7 +31,7 @@ pkgname=linux-uksm
 true && pkgname=(linux-uksm linux-uksm-headers)
 _kernelname=-uksm
 _srcname=linux-3.9
-pkgver=3.9.4
+pkgver=3.9.5
 pkgrel=1
 arch=('i686' 'x86_64')
 url="http://kerneldedup.org/"
@@ -173,14 +173,16 @@ package_linux-uksm() {
     # add vmlinux
     install -D -m644 vmlinux "${pkgdir}/usr/src/linux-${_kernver}/vmlinux"
 
-    # install fallback mkinitcpio.conf file and preset file for kernel
-    install -D -m644 "${srcdir}/linux-uksm.preset" "${pkgdir}/etc/mkinitcpio.d/linux-uksm.preset"
-
     # set correct depmod command for install
+    cp -f "${startdir}/${install}" "${startdir}/${install}.pkg"
+    true && install=${install}.pkg
     sed \
     -e "s/KERNEL_NAME=.*/KERNEL_NAME=-uksm/g" \
     -e "s/KERNEL_VERSION=.*/KERNEL_VERSION=${_kernver}/g" \
-    -i "${startdir}/linux-uksm.install"
+    -i "${startdir}/${install}"
+
+    # install mkinitcpio preset file for kernel
+    install -D -m644 "${srcdir}/linux-uksm.preset" "${pkgdir}/etc/mkinitcpio.d/linux-uksm.preset"
     sed \
     -e "1s|'linux.*'|'linux-uksm'|" \
     -e "s|ALL_kver=.*|ALL_kver=\"/boot/vmlinuz-linux-uksm\"|" \
@@ -352,7 +354,7 @@ package_linux-uksm-headers() {
 pkgdesc='Linux Kernel and modules with the UKSM patchset'
 
 sha512sums=('77fa521f42380409f8ab400c26f7b00e225cb075ef40834bb263325cfdcc3e65aef8511ec2fc2b50bbf4f50e226fb5ab07d7a479aaf09162adbbf318325d0790'
-            '2a2eb511a610e8e3ddbc38b8bce0b96e60875009b7981542c98f0de3a601632a205fa9f90c6912094196dbda6536083b3990b28204c243a406f5595c40df0965'
+            '8e9a064adadd062c7ca52c44de19dfd46b029e60f2832988a606e086b669ea699861ec57732d4abfb16e486f767d123fcfd66da7c2ddde380b7c13582bb44983'
             '047b04450a533af0fd7844217305c22faebca7cf2f269330825d49e7e29df2b49ff940c8b6b26dc2adc2c01a2b7a60b845507dee5eb346c7381135d92110483b'
             '50afb9ff813944382d4c7aedd7dd14801d92f054952ebc63e89df9c50cb573ff8731e54925a23d8e4d2aec976fd805d18741d87095fda88fad75a2eaf5113524'
             '81ed74b203ff80c8fcc33a9574374905bbdc82dfdb3c248f4502c34027bb916d7b9b100ff96eea9bad0218e8e070a88ab4abce3fb11406e476fefb5753e5a3a8'
