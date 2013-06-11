@@ -1,23 +1,23 @@
-commit 5313e8c9fc4408d9fcb4914bce293f456cb81ab0
+commit 7d95aa2d2fbd67659a88be6ffbb731c969dd49ef
 Author: John Schoenick <jschoenick@mozilla.com>
-Date:   Mon Mar 4 14:04:05 2013 -0800
+Date:   Sun Jun 9 14:33:18 2013 -0700
 
-    Rebase wine-multimedia onto wine-1.5.25
+    Rebase wine-multimedia onto wine-1.6-rc1
 
 diff --git a/configure b/configure
-index 17cc687..2c4910a 100755
+index 3a551e8..c2f5be6 100755
 --- a/configure
 +++ b/configure
-@@ -650,6 +650,8 @@ OSS4INCL
+@@ -649,6 +649,8 @@ OSS4INCL
  ALSALIBS
- GSTREAMER_INCL
  GSTREAMER_LIBS
+ GSTREAMER_CFLAGS
 +PULSEINCL
 +PULSELIBS
  LIBGETTEXTPO
  ZLIB
- FREETYPEINCL
-@@ -829,6 +831,7 @@ with_osmesa
+ FREETYPE_LIBS
+@@ -830,6 +832,7 @@ with_osmesa
  with_oss
  with_png
  with_pthread
@@ -25,7 +25,7 @@ index 17cc687..2c4910a 100755
  with_sane
  with_tiff
  with_v4l
-@@ -1519,6 +1522,7 @@ Optional Packages:
+@@ -1543,6 +1546,7 @@ Optional Packages:
    --without-oss           do not use the OSS sound support
    --without-png           do not use PNG
    --without-pthread       do not use the pthread library
@@ -33,7 +33,7 @@ index 17cc687..2c4910a 100755
    --without-sane          do not use SANE (scanner support)
    --without-tiff          do not use TIFF
    --without-v4l           do not use v4l1 (v4l support)
-@@ -2710,6 +2714,12 @@ if test "${with_pthread+set}" = set; then :
+@@ -2761,6 +2765,12 @@ if test "${with_pthread+set}" = set; then :
  fi
  
  
@@ -46,7 +46,7 @@ index 17cc687..2c4910a 100755
  # Check whether --with-sane was given.
  if test "${with_sane+set}" = set; then :
    withval=$with_sane;
-@@ -10919,6 +10929,87 @@ esac
+@@ -11164,6 +11174,87 @@ esac
  fi
  fi
  
@@ -134,7 +134,7 @@ index 17cc687..2c4910a 100755
  if test "x$with_gstreamer" != "xno"
  then
      ac_save_CPPFLAGS="$CPPFLAGS"
-@@ -12217,12 +12308,13 @@ fi
+@@ -12244,12 +12335,13 @@ fi
  
  test -n "$ALSALIBS" || enable_winealsa_drv=${enable_winealsa_drv:-no}
  test -n "$COREAUDIO" || enable_winecoreaudio_drv=${enable_winecoreaudio_drv:-no}
@@ -150,7 +150,7 @@ index 17cc687..2c4910a 100755
  then
      as_fn_append wine_warnings "|No sound system was found. Windows applications will be silent."
  fi
-@@ -16200,6 +16292,7 @@ wine_fn_config_dll winemp3.acm enable_winemp3_acm
+@@ -16293,6 +16385,7 @@ wine_fn_config_dll winemp3.acm enable_winemp3_acm
  wine_fn_config_dll wineoss.drv enable_wineoss_drv
  wine_fn_config_dll wineps.drv enable_wineps_drv install-lib,po
  wine_fn_config_dll wineps16.drv16 enable_win16
@@ -159,18 +159,18 @@ index 17cc687..2c4910a 100755
  wine_fn_config_dll winex11.drv enable_winex11_drv
  wine_fn_config_dll wing.dll16 enable_win16
 diff --git a/configure.ac b/configure.ac
-index 836c4e7..6a6af97 100644
+index 57d76d9..fbb21d4 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -74,6 +74,7 @@ AC_ARG_WITH(png,       AS_HELP_STRING([--without-png],[do not use PNG]),
-             [if test "x$withval" = "xno"; then ac_cv_header_png_h=no; fi])
+@@ -70,6 +70,7 @@ AC_ARG_WITH(oss,       AS_HELP_STRING([--without-oss],[do not use the OSS sound
+ AC_ARG_WITH(png,       AS_HELP_STRING([--without-png],[do not use PNG]))
  AC_ARG_WITH(pthread,   AS_HELP_STRING([--without-pthread],[do not use the pthread library]),
              [if test "x$withval" = "xno"; then ac_cv_header_pthread_h=no; fi])
 +AC_ARG_WITH(pulse,     AC_HELP_STRING([--without-pulse],[do not use PulseAudio sound support]))
  AC_ARG_WITH(sane,      AS_HELP_STRING([--without-sane],[do not use SANE (scanner support)]))
  AC_ARG_WITH(tiff,       AS_HELP_STRING([--without-tiff],[do not use TIFF]),
              [if test "x$withval" = "xno"; then ac_cv_header_tiffio_h=no; fi])
-@@ -1491,6 +1492,30 @@ then
+@@ -1544,6 +1545,30 @@ then
            [GetText ${notice_platform}development files not found (or too old), po files can't be rebuilt.])
  fi
  
@@ -201,7 +201,7 @@ index 836c4e7..6a6af97 100644
  dnl **** Check for gstreamer ****
  if test "x$with_gstreamer" != "xno"
  then
-@@ -1697,13 +1722,14 @@ WINE_CHECK_SONAME(odbc,SQLConnect,,[AC_DEFINE_UNQUOTED(SONAME_LIBODBC,["libodbc.
+@@ -1733,13 +1758,14 @@ WINE_CHECK_SONAME(odbc,SQLConnect,,[AC_DEFINE_UNQUOTED(SONAME_LIBODBC,["libodbc.
  dnl **** Disable unsupported winmm drivers ****
  test -n "$ALSALIBS" || enable_winealsa_drv=${enable_winealsa_drv:-no}
  test -n "$COREAUDIO" || enable_winecoreaudio_drv=${enable_winecoreaudio_drv:-no}
@@ -218,7 +218,7 @@ index 836c4e7..6a6af97 100644
  then
      WINE_WARNING([No sound system was found. Windows applications will be silent.])
  fi
-@@ -3083,6 +3109,7 @@ WINE_CONFIG_DLL(winemp3.acm)
+@@ -3117,6 +3143,7 @@ WINE_CONFIG_DLL(winemp3.acm)
  WINE_CONFIG_DLL(wineoss.drv)
  WINE_CONFIG_DLL(wineps.drv,,[install-lib,po])
  WINE_CONFIG_DLL(wineps16.drv16,enable_win16)
@@ -227,10 +227,10 @@ index 836c4e7..6a6af97 100644
  WINE_CONFIG_DLL(winex11.drv)
  WINE_CONFIG_DLL(wing.dll16,enable_win16)
 diff --git a/dlls/avrt/main.c b/dlls/avrt/main.c
-index 111ffcd..98ae20d 100644
+index 5c9ef4a..9f79e7d 100644
 --- a/dlls/avrt/main.c
 +++ b/dlls/avrt/main.c
-@@ -82,6 +82,7 @@ HANDLE WINAPI AvSetMmThreadCharacteristicsW(LPCWSTR TaskName, LPDWORD TaskIndex)
+@@ -80,6 +80,7 @@ HANDLE WINAPI AvSetMmThreadCharacteristicsW(LPCWSTR TaskName, LPDWORD TaskIndex)
          SetLastError(ERROR_INVALID_HANDLE);
          return NULL;
      }
@@ -239,7 +239,7 @@ index 111ffcd..98ae20d 100644
  }
  
 diff --git a/dlls/dsound/dsound.c b/dlls/dsound/dsound.c
-index 381d0e1..b80b372 100644
+index 381d0e1..362f0e8 100644
 --- a/dlls/dsound/dsound.c
 +++ b/dlls/dsound/dsound.c
 @@ -306,7 +306,6 @@ static HRESULT WINAPI IDirectSound8Impl_SetCooperativeLevel(IDirectSound8 *iface
@@ -315,7 +315,7 @@ index 381d0e1..b80b372 100644
  
      InitializeCriticalSection(&(device->mixlock));
      device->mixlock.DebugInfo->Spare[0] = (DWORD_PTR)(__FILE__ ": DirectSoundDevice.mixlock");
-@@ -693,17 +682,16 @@ ULONG DirectSoundDevice_Release(DirectSoundDevice * device)
+@@ -693,17 +682,17 @@ ULONG DirectSoundDevice_Release(DirectSoundDevice * device)
          if (hr != DS_OK)
              WARN("DSOUND_PrimaryDestroy failed\n");
  
@@ -333,10 +333,11 @@ index 381d0e1..b80b372 100644
  
          HeapFree(GetProcessHeap(), 0, device->tmp_buffer);
 -        HeapFree(GetProcessHeap(), 0, device->mix_buffer);
++        HeapFree(GetProcessHeap(), 0, device->cp_buffer);
          HeapFree(GetProcessHeap(), 0, device->buffer);
          RtlDeleteResource(&device->buffer_list_lock);
          device->mixlock.DebugInfo->Spare[0] = 0;
-@@ -813,6 +801,7 @@ HRESULT DirectSoundDevice_Initialize(DirectSoundDevice ** ppDevice, LPCGUID lpcG
+@@ -813,6 +802,7 @@ HRESULT DirectSoundDevice_Initialize(DirectSoundDevice ** ppDevice, LPCGUID lpcG
      device->mmdevice = mmdevice;
      device->guid = devGUID;
      device->sleepev = CreateEventW(0, 0, 0, 0);
@@ -344,7 +345,7 @@ index 381d0e1..b80b372 100644
  
      hr = DSOUND_ReopenDevice(device, FALSE);
      if (FAILED(hr))
-@@ -868,12 +857,8 @@ HRESULT DirectSoundDevice_Initialize(DirectSoundDevice ** ppDevice, LPCGUID lpcG
+@@ -868,12 +858,8 @@ HRESULT DirectSoundDevice_Initialize(DirectSoundDevice ** ppDevice, LPCGUID lpcG
  
      ZeroMemory(&device->volpan, sizeof(device->volpan));
  
@@ -392,7 +393,7 @@ index d3d686a..d410d5e 100644
 -    (normfunc)normieee32
  };
 diff --git a/dlls/dsound/dsound_main.c b/dlls/dsound/dsound_main.c
-index 3c47423..0df15b1 100644
+index 7a16366..4f533b4 100644
 --- a/dlls/dsound/dsound_main.c
 +++ b/dlls/dsound/dsound_main.c
 @@ -91,8 +91,7 @@ GUID                    DSOUND_capture_guids[MAXWAVEDRIVERS];
@@ -422,7 +423,7 @@ index 3c47423..0df15b1 100644
  
  static const char * get_device_id(LPCGUID pGuid)
 diff --git a/dlls/dsound/dsound_private.h b/dlls/dsound/dsound_private.h
-index 1a3900c..72db9c9 100644
+index 1a3900c..19b6ccc 100644
 --- a/dlls/dsound/dsound_private.h
 +++ b/dlls/dsound/dsound_private.h
 @@ -31,7 +31,6 @@
@@ -433,7 +434,7 @@ index 1a3900c..72db9c9 100644
  
  /*****************************************************************************
   * Predeclare the interface implementation structures
-@@ -70,17 +69,15 @@ struct DirectSoundDevice
+@@ -70,18 +69,16 @@ struct DirectSoundDevice
      DSCAPS                      drvcaps;
      DWORD                       priolevel, sleeptime;
      PWAVEFORMATEX               pwfx, primary_pwfx;
@@ -449,10 +450,12 @@ index 1a3900c..72db9c9 100644
      IDirectSoundBufferImpl     *primary;
      DWORD                       speaker_config;
 -    float *mix_buffer, *tmp_buffer;
-+    float *tmp_buffer;
-     DWORD                       tmp_buffer_len, mix_buffer_len;
+-    DWORD                       tmp_buffer_len, mix_buffer_len;
++    float *tmp_buffer, *cp_buffer;
++    DWORD                       tmp_buffer_len, mix_buffer_len, cp_buffer_len;
  
      DSVOLUMEPAN                 volpan;
+ 
 @@ -93,7 +90,6 @@ struct DirectSoundDevice
  
      IMMDevice *mmdevice;
@@ -477,10 +480,65 @@ index 1a3900c..72db9c9 100644
      const DSBUFFERDESC *dsbd) DECLSPEC_HIDDEN;
  void primarybuffer_destroy(IDirectSoundBufferImpl *This) DECLSPEC_HIDDEN;
 diff --git a/dlls/dsound/mixer.c b/dlls/dsound/mixer.c
-index 282808e..0f2c32c 100644
+index 282808e..007180c 100644
 --- a/dlls/dsound/mixer.c
 +++ b/dlls/dsound/mixer.c
-@@ -427,7 +427,7 @@ static void DSOUND_MixerVol(const IDirectSoundBufferImpl *dsb, INT frames)
+@@ -251,7 +251,8 @@ static UINT cp_fields_resample(IDirectSoundBufferImpl *dsb, UINT count, float *f
+ {
+     UINT i, channel;
+     UINT istride = dsb->pwfx->nBlockAlign;
+-    UINT ostride = dsb->device->pwfx->nChannels * sizeof(float);
++    DirectSoundDevice *dev = dsb->device;
++    UINT ostride = dev->pwfx->nChannels * sizeof(float);
+ 
+     float freqAdjust = dsb->freqAdjust;
+     float freqAcc_start = *freqAcc;
+@@ -262,18 +263,29 @@ static UINT cp_fields_resample(IDirectSoundBufferImpl *dsb, UINT count, float *f
+ 
+     UINT fir_cachesize = (fir_len + dsbfirstep - 2) / dsbfirstep;
+     UINT required_input = max_ipos + fir_cachesize;
++    float *intermediate, *fir_copy, *itmp;
++
++    DWORD len = required_input * channels;
++    len += fir_cachesize;
++    len *= sizeof(float);
++
++    if (!dev->cp_buffer) {
++        dev->cp_buffer = HeapAlloc(GetProcessHeap(), 0, len);
++        dev->cp_buffer_len = len;
++    } else if (len > dev->cp_buffer_len) {
++        dev->cp_buffer = HeapReAlloc(GetProcessHeap(), 0, dev->cp_buffer, len);
++        dev->cp_buffer_len = len;
++    }
+ 
+-    float* intermediate = HeapAlloc(GetProcessHeap(), 0,
+-            sizeof(float) * required_input * channels);
++    fir_copy = dev->cp_buffer;
++    intermediate = fir_copy + fir_cachesize;
+ 
+-    float* fir_copy = HeapAlloc(GetProcessHeap(), 0,
+-            sizeof(float) * fir_cachesize);
+ 
+     /* Important: this buffer MUST be non-interleaved
+      * if you want -msse3 to have any effect.
+      * This is good for CPU cache effects, too.
+      */
+-    float* itmp = intermediate;
++    itmp = intermediate;
+     for (channel = 0; channel < channels; channel++)
+         for (i = 0; i < required_input; i++)
+             *(itmp++) = get_current_sample(dsb,
+@@ -309,9 +321,6 @@ static UINT cp_fields_resample(IDirectSoundBufferImpl *dsb, UINT count, float *f
+     freqAcc_end -= (int)freqAcc_end;
+     *freqAcc = freqAcc_end;
+ 
+-    HeapFree(GetProcessHeap(), 0, fir_copy);
+-    HeapFree(GetProcessHeap(), 0, intermediate);
+-
+     return max_ipos;
+ }
+ 
+@@ -427,7 +436,7 @@ static void DSOUND_MixerVol(const IDirectSoundBufferImpl *dsb, INT frames)
   * writepos = position (offset) in device buffer to write at
   * fraglen = number of bytes to mix
   */
@@ -489,7 +547,7 @@ index 282808e..0f2c32c 100644
  {
  	INT len = fraglen;
  	float *ibuf;
-@@ -452,7 +452,7 @@ static DWORD DSOUND_MixInBuffer(IDirectSoundBufferImpl *dsb, DWORD writepos, DWO
+@@ -452,7 +461,7 @@ static DWORD DSOUND_MixInBuffer(IDirectSoundBufferImpl *dsb, DWORD writepos, DWO
  	/* Apply volume if needed */
  	DSOUND_MixerVol(dsb, frames);
  
@@ -498,7 +556,7 @@ index 282808e..0f2c32c 100644
  
  	/* check for notification positions */
  	if (dsb->dsbd.dwFlags & DSBCAPS_CTRLPOSITIONNOTIFY &&
-@@ -476,7 +476,7 @@ static DWORD DSOUND_MixInBuffer(IDirectSoundBufferImpl *dsb, DWORD writepos, DWO
+@@ -476,7 +485,7 @@ static DWORD DSOUND_MixInBuffer(IDirectSoundBufferImpl *dsb, DWORD writepos, DWO
   *
   * Returns: the number of bytes beyond the writepos that were mixed.
   */
@@ -507,7 +565,7 @@ index 282808e..0f2c32c 100644
  {
  	DWORD primary_done = 0;
  
-@@ -503,7 +503,7 @@ static DWORD DSOUND_MixOne(IDirectSoundBufferImpl *dsb, DWORD writepos, DWORD mi
+@@ -503,7 +512,7 @@ static DWORD DSOUND_MixOne(IDirectSoundBufferImpl *dsb, DWORD writepos, DWORD mi
  	/* First try to mix to the end of the buffer if possible
  	 * Theoretically it would allow for better optimization
  	*/
@@ -516,7 +574,7 @@ index 282808e..0f2c32c 100644
  
  	TRACE("total mixed data=%d\n", primary_done);
  
-@@ -518,14 +518,12 @@ static DWORD DSOUND_MixOne(IDirectSoundBufferImpl *dsb, DWORD writepos, DWORD mi
+@@ -518,14 +527,12 @@ static DWORD DSOUND_MixOne(IDirectSoundBufferImpl *dsb, DWORD writepos, DWORD mi
   * writepos = the current safe-to-write position in the primary buffer
   * mixlen = the maximum amount to mix into the primary buffer
   *          (beyond the current writepos)
@@ -532,7 +590,7 @@ index 282808e..0f2c32c 100644
  {
  	INT i;
  	IDirectSoundBufferImpl	*dsb;
-@@ -533,7 +531,7 @@ static void DSOUND_MixToPrimary(const DirectSoundDevice *device, DWORD writepos,
+@@ -533,7 +540,7 @@ static void DSOUND_MixToPrimary(const DirectSoundDevice *device, DWORD writepos,
  	/* unless we find a running buffer, all have stopped */
  	*all_stopped = TRUE;
  
@@ -541,7 +599,7 @@ index 282808e..0f2c32c 100644
  	for (i = 0; i < device->nrofbuffers; i++) {
  		dsb = device->buffers[i];
  
-@@ -553,7 +551,7 @@ static void DSOUND_MixToPrimary(const DirectSoundDevice *device, DWORD writepos,
+@@ -553,7 +560,7 @@ static void DSOUND_MixToPrimary(const DirectSoundDevice *device, DWORD writepos,
  					dsb->state = STATE_PLAYING;
  
  				/* mix next buffer into the main buffer */
@@ -550,7 +608,7 @@ index 282808e..0f2c32c 100644
  
  				*all_stopped = FALSE;
  			}
-@@ -572,85 +570,29 @@ static void DSOUND_MixToPrimary(const DirectSoundDevice *device, DWORD writepos,
+@@ -572,85 +579,29 @@ static void DSOUND_MixToPrimary(const DirectSoundDevice *device, DWORD writepos,
   * Returns:  None
   */
  
@@ -644,7 +702,7 @@ index 282808e..0f2c32c 100644
  }
  
  /**
-@@ -663,12 +605,12 @@ static void DSOUND_WaveQueue(DirectSoundDevice *device, BOOL force)
+@@ -663,12 +614,12 @@ static void DSOUND_WaveQueue(DirectSoundDevice *device, BOOL force)
   * secondary->buffer (secondary format)
   *   =[Resample]=> device->tmp_buffer (float format)
   *   =[Volume]=> device->tmp_buffer (float format)
@@ -660,7 +718,7 @@ index 282808e..0f2c32c 100644
  	HRESULT hr;
  
  	TRACE("(%p)\n", device);
-@@ -682,161 +624,68 @@ static void DSOUND_PerformMix(DirectSoundDevice *device)
+@@ -682,161 +633,68 @@ static void DSOUND_PerformMix(DirectSoundDevice *device)
  		LeaveCriticalSection(&device->mixlock);
  		return;
  	}
@@ -758,12 +816,12 @@ index 282808e..0f2c32c 100644
 -			prebuff_left, device->prebuf, device->fraglen, prebuff_max, writelead);
 -
 -		ZeroMemory(device->mix_buffer, device->mix_buffer_len);
--
--		/* do the mixing */
--		DSOUND_MixToPrimary(device, writepos, maxq, recover, &all_stopped);
 +		if (!pad)
 +			WARN("Probable buffer underrun\n");
  
+-		/* do the mixing */
+-		DSOUND_MixToPrimary(device, writepos, maxq, recover, &all_stopped);
+-
 -		if (maxq + writepos > device->buflen)
 -		{
 -			DWORD todo = device->buflen - writepos;
@@ -868,7 +926,7 @@ index 282808e..0f2c32c 100644
  
  	LeaveCriticalSection(&(device->mixlock));
 diff --git a/dlls/dsound/primary.c b/dlls/dsound/primary.c
-index 0bfd5667..95232f9 100644
+index a824477..8f3580a 100644
 --- a/dlls/dsound/primary.c
 +++ b/dlls/dsound/primary.c
 @@ -40,24 +40,6 @@
@@ -976,7 +1034,11 @@ index 0bfd5667..95232f9 100644
 -        device->render = NULL;
 -        WARN("GetService failed: %08x\n", hres);
 -        return hres;
--    }
++    if (device->pad) {
++        device->playpos += device->pad;
++        device->playpos %= device->buflen;
++        device->pad = 0;
+     }
 -
 -    hres = IAudioClient_GetService(device->client, &IID_IAudioStreamVolume,
 -            (void**)&device->volume);
@@ -989,11 +1051,7 @@ index 0bfd5667..95232f9 100644
 -        device->clock = NULL;
 -        WARN("GetService failed: %08x\n", hres);
 -        return hres;
-+    if (device->pad) {
-+        device->playpos += device->pad;
-+        device->playpos %= device->buflen;
-+        device->pad = 0;
-     }
+-    }
 -
 -    /* Now kick off the timer so the event fires periodically */
 -    hres = IAudioClient_Start(device->client);
@@ -1024,14 +1082,14 @@ index 0bfd5667..95232f9 100644
 -        int i;
 -
 -	TRACE("(%p)\n", device);
--
--	device->fraglen = DSOUND_fraglen(device);
 +    IDirectSoundBufferImpl** dsb = device->buffers;
 +    LPBYTE newbuf;
 +    DWORD new_buflen;
 +    BOOL mixfloat = FALSE;
 +    int i;
  
+-	device->fraglen = DSOUND_fraglen(device);
+-
 -	/* on original windows, the buffer it set to a fixed size, no matter what the settings are.
 -	   on windows this size is always fixed (tested on win-xp) */
 -	if (!device->buflen)
@@ -1275,7 +1333,7 @@ index 0bfd5667..95232f9 100644
  	if(device->primary && (device->primary->ref || device->primary->numIfaces))
  		WARN("Destroying primary buffer while references held (%u %u)\n", device->primary->ref, device->primary->numIfaces);
  
-@@ -393,53 +351,6 @@ HRESULT DSOUND_PrimaryDestroy(DirectSoundDevice *device)
+@@ -393,62 +351,19 @@ HRESULT DSOUND_PrimaryDestroy(DirectSoundDevice *device)
  	return DS_OK;
  }
  
@@ -1326,10 +1384,23 @@ index 0bfd5667..95232f9 100644
 -	return DS_OK;
 -}
 -
- static DWORD DSOUND_GetFormatSize(LPCWAVEFORMATEX wfex)
+ WAVEFORMATEX *DSOUND_CopyFormat(const WAVEFORMATEX *wfex)
  {
- 	if (wfex->wFormatTag == WAVE_FORMAT_PCM)
-@@ -476,7 +387,6 @@ HRESULT primarybuffer_SetFormat(DirectSoundDevice *device, LPCWAVEFORMATEX passe
+     WAVEFORMATEX *pwfx;
+     if(wfex->wFormatTag == WAVE_FORMAT_PCM){
+         pwfx = HeapAlloc(GetProcessHeap(), 0, sizeof(WAVEFORMATEX));
++        if (!pwfx)
++            return NULL;
+         CopyMemory(pwfx, wfex, sizeof(PCMWAVEFORMAT));
+         pwfx->cbSize = 0;
+     }else{
+         pwfx = HeapAlloc(GetProcessHeap(), 0, sizeof(WAVEFORMATEX) + wfex->cbSize);
++        if (!pwfx)
++            return NULL;
+         CopyMemory(pwfx, wfex, sizeof(WAVEFORMATEX) + wfex->cbSize);
+     }
+ 
+@@ -465,7 +380,6 @@ HRESULT primarybuffer_SetFormat(DirectSoundDevice *device, LPCWAVEFORMATEX passe
  	HRESULT err = S_OK;
  	WAVEFORMATEX *old_fmt;
  	WAVEFORMATEXTENSIBLE *fmtex, *passed_fmtex = (WAVEFORMATEXTENSIBLE*)passed_fmt;
@@ -1337,7 +1408,7 @@ index 0bfd5667..95232f9 100644
  
  	TRACE("(%p,%p)\n", device, passed_fmt);
  
-@@ -526,24 +436,12 @@ HRESULT primarybuffer_SetFormat(DirectSoundDevice *device, LPCWAVEFORMATEX passe
+@@ -515,28 +429,20 @@ HRESULT primarybuffer_SetFormat(DirectSoundDevice *device, LPCWAVEFORMATEX passe
  			fmtex->Samples.wValidBitsPerSample = fmtex->Format.wBitsPerSample;
  		}
  
@@ -1363,26 +1434,19 @@ index 0bfd5667..95232f9 100644
 -		else
 +		} else
  			HeapFree(GetProcessHeap(), 0, old_fmt);
- 	} else if (passed_fmt->wFormatTag == WAVE_FORMAT_PCM ||
- 		   passed_fmt->wFormatTag == WAVE_FORMAT_IEEE_FLOAT) {
-@@ -556,10 +454,15 @@ done:
- 		if (IsEqualGUID(&fmtex->SubFormat, &KSDATAFORMAT_SUBTYPE_IEEE_FLOAT) &&
- 		    passed_fmt->wFormatTag == WAVE_FORMAT_IEEE_FLOAT) {
- 			fmt->wFormatTag = WAVE_FORMAT_IEEE_FLOAT;
-+			fmt->wBitsPerSample = 32;
- 		} else {
- 			fmt->wFormatTag = WAVE_FORMAT_PCM;
--			fmt->wBitsPerSample = 16;
-+			fmt->wBitsPerSample = passed_fmt->wBitsPerSample;
- 		}
-+		fmt->nSamplesPerSec = passed_fmt->nSamplesPerSec;
-+		fmt->nChannels = passed_fmt->nChannels;
-+		if (fmt->nChannels > device->pwfx->nChannels)
-+			fmt->nChannels = device->pwfx->nChannels;
- 		fmt->nBlockAlign = fmt->nChannels * fmt->wBitsPerSample / 8;
- 		fmt->nAvgBytesPerSec = fmt->nBlockAlign * fmt->nSamplesPerSec;
- 		fmt->cbSize = 0;
-@@ -735,16 +638,7 @@ static HRESULT WINAPI PrimaryBufferImpl_Play(IDirectSoundBuffer *iface, DWORD re
+ 	} else {
+-		HeapFree(GetProcessHeap(), 0, device->primary_pwfx);
+-		device->primary_pwfx = DSOUND_CopyFormat(passed_fmt);
++		WAVEFORMATEX *wfx = DSOUND_CopyFormat(passed_fmt);
++		if (wfx) {
++			HeapFree(GetProcessHeap(), 0, device->primary_pwfx);
++			device->primary_pwfx = wfx;
++		} else
++			err = DSERR_OUTOFMEMORY;
+ 	}
+ 
+ out:
+@@ -706,16 +612,7 @@ static HRESULT WINAPI PrimaryBufferImpl_Play(IDirectSoundBuffer *iface, DWORD re
  		return DSERR_INVALIDPARAM;
  	}
  
@@ -1400,7 +1464,7 @@ index 0bfd5667..95232f9 100644
  
  	return DS_OK;
  }
-@@ -755,16 +649,7 @@ static HRESULT WINAPI PrimaryBufferImpl_Stop(IDirectSoundBuffer *iface)
+@@ -726,16 +623,7 @@ static HRESULT WINAPI PrimaryBufferImpl_Stop(IDirectSoundBuffer *iface)
          DirectSoundDevice *device = This->device;
  	TRACE("(%p)\n", iface);
  
@@ -1418,7 +1482,7 @@ index 0bfd5667..95232f9 100644
  
  	return DS_OK;
  }
-@@ -810,7 +695,9 @@ static ULONG WINAPI PrimaryBufferImpl_Release(IDirectSoundBuffer *iface)
+@@ -781,7 +669,9 @@ static ULONG WINAPI PrimaryBufferImpl_Release(IDirectSoundBuffer *iface)
  static HRESULT WINAPI PrimaryBufferImpl_GetCurrentPosition(IDirectSoundBuffer *iface,
          DWORD *playpos, DWORD *writepos)
  {
@@ -1429,7 +1493,7 @@ index 0bfd5667..95232f9 100644
          IDirectSoundBufferImpl *This = impl_from_IDirectSoundBuffer(iface);
          DirectSoundDevice *device = This->device;
  	TRACE("(%p,%p,%p)\n", iface, playpos, writepos);
-@@ -818,17 +705,23 @@ static HRESULT WINAPI PrimaryBufferImpl_GetCurrentPosition(IDirectSoundBuffer *i
+@@ -789,17 +679,23 @@ static HRESULT WINAPI PrimaryBufferImpl_GetCurrentPosition(IDirectSoundBuffer *i
  	/* **** */
  	EnterCriticalSection(&(device->mixlock));
  
@@ -1457,7 +1521,7 @@ index 0bfd5667..95232f9 100644
  	}
  
  	LeaveCriticalSection(&(device->mixlock));
-@@ -850,8 +743,7 @@ static HRESULT WINAPI PrimaryBufferImpl_GetStatus(IDirectSoundBuffer *iface, DWO
+@@ -821,8 +717,7 @@ static HRESULT WINAPI PrimaryBufferImpl_GetStatus(IDirectSoundBuffer *iface, DWO
  	}
  
  	*status = 0;
@@ -1468,7 +1532,7 @@ index 0bfd5667..95232f9 100644
  
  	TRACE("status=%x\n", *status);
 diff --git a/dlls/mmdevapi/main.c b/dlls/mmdevapi/main.c
-index e19f27d..90b77a9 100644
+index 447813f..b9ae99e 100644
 --- a/dlls/mmdevapi/main.c
 +++ b/dlls/mmdevapi/main.c
 @@ -110,7 +110,7 @@ static BOOL init_driver(void)
@@ -1544,7 +1608,7 @@ index feedfde..e3bb5b6 100644
      hr = IAudioClient_Start(ac);
      ok(hr == S_OK, "Start failed: %08x\n", hr);
 diff --git a/dlls/mmdevapi/tests/render.c b/dlls/mmdevapi/tests/render.c
-index beebfb6..f292a44 100644
+index beebfb6..84ce921 100644
 --- a/dlls/mmdevapi/tests/render.c
 +++ b/dlls/mmdevapi/tests/render.c
 @@ -472,6 +472,169 @@ static void test_formats(AUDCLNT_SHAREMODE mode)
@@ -1596,14 +1660,14 @@ index beebfb6..f292a44 100644
 +
 +    pwfx2 = NULL;
 +    hr = IAudioClient_IsFormatSupported(ac, AUDCLNT_SHAREMODE_SHARED, pwfx, &pwfx2);
-+    ok(hr == E_INVALIDARG && !pwfx2,
++    ok((hr == E_INVALIDARG || hr == AUDCLNT_E_UNSUPPORTED_FORMAT) && !pwfx2,
 +       "Shared IsFormatSupported with nAvgBytesPerSec=0 and nBlockAlign=0 returned %08x %p\n", hr, pwfx2);
 +    CoTaskMemFree(pwfx2);
 +
 +    pwfx->wFormatTag = WAVE_FORMAT_PCM;
 +    pwfx2 = NULL;
 +    hr = IAudioClient_IsFormatSupported(ac, AUDCLNT_SHAREMODE_SHARED, pwfx, &pwfx2);
-+    ok(hr == S_OK && !pwfx2,
++    ok((hr == S_OK || hr == AUDCLNT_E_UNSUPPORTED_FORMAT) && !pwfx2,
 +       "Shared IsFormatSupported with nAvgBytesPerSec=0 and nBlockAlign=0 returned %08x %p\n", hr, pwfx2);
 +    CoTaskMemFree(pwfx2);
 +
@@ -1662,7 +1726,7 @@ index beebfb6..f292a44 100644
 +
 +    pwfx2 = NULL;
 +    hr = IAudioClient_IsFormatSupported(ac, AUDCLNT_SHAREMODE_SHARED, pwfx, &pwfx2);
-+    ok(hr == S_FALSE && pwfx2,
++    ok((hr == S_FALSE || hr == AUDCLNT_E_UNSUPPORTED_FORMAT) && pwfx2,
 +       "Shared IsFormatSupported with wValidBitsPerSample=0 returned %08x %p\n", hr, pwfx2);
 +    if (pwfx2) {
 +        pwfe2 = (WAVEFORMATEXTENSIBLE*)pwfx2;
@@ -1675,7 +1739,7 @@ index beebfb6..f292a44 100644
 +    pwfx2 = NULL;
 +    pwfe->Samples.wValidBitsPerSample = pwfx->wBitsPerSample + 1;
 +    hr = IAudioClient_IsFormatSupported(ac, AUDCLNT_SHAREMODE_SHARED, pwfx, &pwfx2);
-+    ok(hr == E_INVALIDARG && !pwfx2,
++    ok((hr == E_INVALIDARG || hr == AUDCLNT_E_UNSUPPORTED_FORMAT) && !pwfx2,
 +       "Shared IsFormatSupported with wValidBitsPerSample += 1 returned %08x %p\n", hr, pwfx2);
 +
 +    *pwfe = wfe;
@@ -1692,7 +1756,7 @@ index beebfb6..f292a44 100644
 +    pwfx->nBlockAlign = pwfx->wBitsPerSample / 8 * pwfx->nChannels;
 +    pwfx->nAvgBytesPerSec = pwfx->nBlockAlign * pwfx->nSamplesPerSec;
 +    hr = IAudioClient_IsFormatSupported(ac, AUDCLNT_SHAREMODE_SHARED, pwfx, &pwfx2);
-+    ok(hr == E_INVALIDARG && !pwfx2,
++    ok((hr == E_INVALIDARG || hr == AUDCLNT_E_UNSUPPORTED_FORMAT) && !pwfx2,
 +       "Shared IsFormatSupported with wBitsPerSample=256 returned %08x %p\n", hr, pwfx2);
 +    CoTaskMemFree(pwfx2);
 +
@@ -1931,7 +1995,7 @@ index beebfb6..f292a44 100644
      trace("Output to a MS-DOS console is particularly slow and disturbs timing.\n");
      trace("Please redirect output to a file.\n");
 diff --git a/dlls/ntdll/server.c b/dlls/ntdll/server.c
-index dd0d83e..043555a 100644
+index 46494e2..49c6ced 100644
 --- a/dlls/ntdll/server.c
 +++ b/dlls/ntdll/server.c
 @@ -79,6 +79,9 @@
@@ -1944,7 +2008,7 @@ index dd0d83e..043555a 100644
  
  /* Some versions of glibc don't define this */
  #ifndef SCM_RIGHTS
-@@ -981,6 +984,88 @@ static int get_unix_tid(void)
+@@ -979,6 +982,88 @@ static int get_unix_tid(void)
  }
  
  
@@ -2033,7 +2097,7 @@ index dd0d83e..043555a 100644
  /***********************************************************************
   *           server_init_process
   *
-@@ -990,6 +1075,14 @@ void server_init_process(void)
+@@ -988,6 +1073,14 @@ void server_init_process(void)
  {
      obj_handle_t version;
      const char *env_socket = getenv( "WINESERVERSOCKET" );
@@ -2048,7 +2112,7 @@ index dd0d83e..043555a 100644
  
      server_pid = -1;
      if (env_socket)
-@@ -1073,7 +1166,6 @@ NTSTATUS server_init_process_done(void)
+@@ -1071,7 +1164,6 @@ NTSTATUS server_init_process_done(void)
      return status;
  }
  
@@ -2073,10 +2137,10 @@ index 0000000..0f595f1
 +@MAKE_DLL_RULES@
 diff --git a/dlls/winepulse.drv/mmdevdrv.c b/dlls/winepulse.drv/mmdevdrv.c
 new file mode 100644
-index 0000000..5b041a2
+index 0000000..a09ce7f
 --- /dev/null
 +++ b/dlls/winepulse.drv/mmdevdrv.c
-@@ -0,0 +1,3179 @@
+@@ -0,0 +1,3190 @@
 +/*
 + * Copyright 2011-2012 Maarten Lankhorst
 + * Copyright 2010-2011 Maarten Lankhorst for CodeWeavers
@@ -2101,6 +2165,8 @@ index 0000000..5b041a2
 +
 +#define NONAMELESSUNION
 +#define COBJMACROS
++#define _GNU_SOURCE
++
 +#include "config.h"
 +#include <poll.h>
 +#include <pthread.h>
@@ -2109,6 +2175,7 @@ index 0000000..5b041a2
 +#include <unistd.h>
 +#include <math.h>
 +#include <stdio.h>
++#include <errno.h>
 +
 +#include <pulse/pulseaudio.h>
 +
@@ -2147,7 +2214,7 @@ index 0000000..5b041a2
 +static pa_mainloop *pulse_ml;
 +
 +static HANDLE pulse_thread;
-+static pthread_mutex_t pulse_lock = PTHREAD_MUTEX_INITIALIZER;
++static pthread_mutex_t pulse_lock;
 +static pthread_cond_t pulse_cond = PTHREAD_COND_INITIALIZER;
 +static struct list g_sessions = LIST_INIT(g_sessions);
 +
@@ -2172,6 +2239,8 @@ index 0000000..5b041a2
 +{
 +    if (reason == DLL_PROCESS_ATTACH) {
 +        HKEY key;
++        pthread_mutexattr_t attr;
++
 +        if (RegOpenKeyW(HKEY_CURRENT_USER, pulse_keyW, &key) == ERROR_SUCCESS) {
 +            DWORD size = sizeof(pulse_stream_volume);
 +            RegQueryValueExW(key, pulse_streamW, 0, NULL,
@@ -2179,6 +2248,12 @@ index 0000000..5b041a2
 +            RegCloseKey(key);
 +        }
 +        DisableThreadLibraryCalls(dll);
++
++        pthread_mutexattr_init(&attr);
++        pthread_mutexattr_setprotocol(&attr, PTHREAD_PRIO_INHERIT);
++
++        if (pthread_mutex_init(&pulse_lock, &attr) != 0)
++            pthread_mutex_init(&pulse_lock, NULL);
 +    } else if (reason == DLL_PROCESS_DETACH) {
 +        if (pulse_thread)
 +           SetThreadPriority(pulse_thread, 0);
@@ -5284,7 +5359,7 @@ index f387323..3b1be27 100644
      HeapFree(GetProcessHeap(), 0, drvA);
      PropVariantClear(&pv);
 diff --git a/libs/wine/loader.c b/libs/wine/loader.c
-index 302e9c1..3793c9e 100644
+index 4e78116..094e5e1 100644
 --- a/libs/wine/loader.c
 +++ b/libs/wine/loader.c
 @@ -59,6 +59,10 @@ extern char **environ;
@@ -5318,7 +5393,7 @@ index 302e9c1..3793c9e 100644
      if (!getrlimit( limit, &rlimit ))
      {
          rlimit.rlim_cur = rlimit.rlim_max;
-@@ -796,6 +804,34 @@ static void apple_main_thread( void (*init_func)(void) )
+@@ -802,6 +810,34 @@ static void apple_main_thread( void (*init_func)(void) )
  
  
  /***********************************************************************
@@ -5353,7 +5428,7 @@ index 302e9c1..3793c9e 100644
   *           wine_init
   *
   * Main Wine initialisation.
-@@ -814,6 +850,7 @@ void wine_init( int argc, char *argv[], char *error, int error_size )
+@@ -820,6 +856,7 @@ void wine_init( int argc, char *argv[], char *error, int error_size )
  #ifdef RLIMIT_AS
      set_max_limit( RLIMIT_AS );
  #endif
@@ -5362,7 +5437,7 @@ index 302e9c1..3793c9e 100644
      wine_init_argv0_path( argv[0] );
      build_dll_path();
 diff --git a/programs/winemenubuilder/winemenubuilder.c b/programs/winemenubuilder/winemenubuilder.c
-index c931363..8c79abf 100644
+index 973bd02..1982c93 100644
 --- a/programs/winemenubuilder/winemenubuilder.c
 +++ b/programs/winemenubuilder/winemenubuilder.c
 @@ -2536,7 +2536,7 @@ static BOOL write_freedesktop_association_entry(const char *desktopPath, const c
@@ -5375,13 +5450,13 @@ index c931363..8c79abf 100644
  }
  
 diff --git a/server/Makefile.in b/server/Makefile.in
-index 2e9bba1..87b2835 100644
+index 2e9bba1..03b13c2 100644
 --- a/server/Makefile.in
 +++ b/server/Makefile.in
 @@ -1,5 +1,6 @@
  DEFS      = -D__WINESRC__
  EXTRALIBS = @LIBPOLL@ @LIBRT@
-+MODCFLAGS = @DBUSINCL@
++EXTRAINCL = @DBUS_CFLAGS@
  
  C_SRCS = \
  	async.c \
@@ -5721,7 +5796,7 @@ index 0000000..53e5ce4
 +
 +#endif
 diff --git a/server/thread.c b/server/thread.c
-index fdbc144..eed8f14 100644
+index 5f9738d..573719f 100644
 --- a/server/thread.c
 +++ b/server/thread.c
 @@ -52,6 +52,8 @@
@@ -5733,7 +5808,7 @@ index fdbc144..eed8f14 100644
  
  #ifdef __i386__
  static const unsigned int supported_cpus = CPU_FLAG(CPU_x86);
-@@ -200,6 +202,8 @@ static inline void init_thread_structure( struct thread *thread )
+@@ -198,6 +200,8 @@ static inline void init_thread_structure( struct thread *thread )
      list_init( &thread->mutex_list );
      list_init( &thread->system_apc );
      list_init( &thread->user_apc );
@@ -5742,7 +5817,7 @@ index fdbc144..eed8f14 100644
  
      for (i = 0; i < MAX_INFLIGHT_FDS; i++)
          thread->inflight[i].server = thread->inflight[i].client = -1;
-@@ -262,6 +266,9 @@ static void cleanup_thread( struct thread *thread )
+@@ -266,6 +270,9 @@ static void cleanup_thread( struct thread *thread )
  {
      int i;
  
@@ -5752,7 +5827,7 @@ index fdbc144..eed8f14 100644
      clear_apc_queue( &thread->system_apc );
      clear_apc_queue( &thread->user_apc );
      free( thread->req_data );
-@@ -452,6 +459,15 @@ affinity_t get_thread_affinity( struct thread *thread )
+@@ -456,6 +463,15 @@ affinity_t get_thread_affinity( struct thread *thread )
  #define THREAD_PRIORITY_REALTIME_HIGHEST 6
  #define THREAD_PRIORITY_REALTIME_LOWEST -7
  
@@ -5768,7 +5843,7 @@ index fdbc144..eed8f14 100644
  /* set all information about a thread */
  static void set_thread_info( struct thread *thread,
                               const struct set_thread_info_request *req )
-@@ -467,8 +483,22 @@ static void set_thread_info( struct thread *thread,
+@@ -471,8 +487,22 @@ static void set_thread_info( struct thread *thread,
          }
          if ((req->priority >= min && req->priority <= max) ||
              req->priority == THREAD_PRIORITY_IDLE ||

@@ -6,22 +6,22 @@
 
 pkgname=wine-multimedia
 _basename=wine
-pkgver=1.5.31
+pkgver=1.6rc1
 pkgrel=1
 
 _pkgbasever=${pkgver/rc/-rc}
 
 source=(http://prdownloads.sourceforge.net/$_basename/$_basename-$_pkgbasever.tar.bz2{,.sign}
         30-win32-aliases.conf
-        winemultimedia_1.5.31_20130529.patch)
+        winemultimedia_1.6rc1_20130609.patch)
 
-md5sums=('21a8326bbce7f0f051a19a64101e75bf'
-         'SKIP'
-         '1ff4e467f59409272088d92173a0f801'
-         'a58e060dea2af5347d781e09a04f46ba')
+sha1sums=('9b04de409e2602b6cf45ce2d69db2f7c968323d2'
+          'SKIP'
+          '023a5c901c6a091c56e76b6a62d141d87cce9fdb'
+          '8071f2a50778d15d863571e5618550cc47f80c1e')
 
 pkgdesc="Wine with Maarten Lankhorst's multimedia patches, including PulseAudio support"
-url="http://www.winehq.com"
+url="http://repo.or.cz/w/wine/multimedia.git"
 arch=(i686 x86_64)
 license=(LGPL)
 install=wine.install
@@ -123,7 +123,7 @@ build() {
 
   # Apply multimedia patch
   msg2 "Applying multimedia branch patch"
-  (cd $_basename && patch -Np1 -i "${srcdir}"/winemultimedia_1.5.31_20130529.patch)
+  (cd $_basename && patch -Np1 -i "${srcdir}"/winemultimedia_1.6rc1_20130609.patch)
 
   # These additional CPPFLAGS solve FS#27662 and FS#34195
   export CPPFLAGS="${CPPFLAGS/-D_FORTIFY_SOURCE=2/} -D_FORTIFY_SOURCE=0"
