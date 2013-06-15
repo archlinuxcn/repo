@@ -1,11 +1,13 @@
-# Maintainer: Tevin Zhang <mail2tevin {at} gmail {dot} com>
+# Mantainer: Diego Principe <cdprincipeat gmaildot com>
+# Contributor: Matjaz Mozetic <rationalperseus@gmail.com>
+# Contributor: Tevin Zhang <mail2tevin {at} gmail {dot} com>
 # Contributor: Andrea Fagiani <andfagiani {at} gmail {dot} com>
 # Contributor: Paul Bredbury <brebs@sent.com>
 # Contributor: Biru Ionut <biru.ionut at gmail.com>
 
 # Installation order:  freetype2-ubuntu fontconfig-ubuntu libxft-ubuntu cairo-ubuntu
 pkgname=freetype2-ubuntu
-pkgver=2.4.11
+pkgver=2.4.12
 _ubver=2.4.8-1
 pkgrel=1
 pkgdesc="TrueType font rendering library, with Ubuntu's LCD rendering patches"
@@ -20,7 +22,7 @@ source=(http://downloads.sourceforge.net/sourceforge/freetype/freetype-${pkgver}
         https://launchpad.net/ubuntu/precise/+source/freetype/$_ubver/+files/freetype_$_ubver.diff.gz
         freetype-2.2.1-enable-valid.patch)
 
-md5sums=('b93435488942486c8d0ca22e8f768034'
+md5sums=('3463102764315eb86c0d3c2e1f3ffb7d'
          '97a1f13bcf4c5e5a9fc32795fcc72c44'
          '214119610444c9b02766ccee5e220680')
 
