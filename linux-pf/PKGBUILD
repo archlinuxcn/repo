@@ -14,6 +14,9 @@ _kernelname=-pf
 _pfpatchhome="http://pf.natalenko.name/sources/${_basekernel}/"
 _pfpatchname="patch-${_basekernel}.${_pfrel}${_kernelname}"
 
+_CPUSUFFIXES_KBUILD=( CORE2 K7 K8 K10 BARCELONA BOBCAT BULLDOZER PILEDRIVER PSC ATOM PENTIUMII PENTIUMIII PENTIUMM PENTIUM4 COREI7 COREI7AVX COREAVXI COREAVX2 )
+_CPUSUFFIXES=( core2 k7 k8 k10 barcelona bobcat bulldozer piledriver psc atom p2 p3 pm p4 nehalem sandybridge ivybridge haswell)
+
 ### PATCH AND BUILD OPTIONS
 # taken from graysky linux-ck see: https://aur.archlinux.org/packages/linux-ck
 # Set these variables to ANYTHING (yes or no or 1 or 0 or "I like icecream") to enable them
@@ -55,7 +58,7 @@ _NUMA_off=yes		# Disable NUMA in kernel config
 pkgname=('linux-pf')
 true && pkgname=('linux-pf' 'linux-pf-headers')
 pkgver=${_basekernel}.${_pfrel}
-pkgrel=1
+pkgrel=4
 arch=('i686' 'x86_64')
 url="http://pf.natalenko.name/"
 license=('GPL2')
@@ -263,10 +266,13 @@ build() {
 	;;
     esac
     cp -v .config ${startdir}/config.local
-    CPU=`egrep "MK8=y|MK1=y|MCORE2=y|MPSC=y|MATOM=y|MPENTIUMII=y|MPENTIUMIII=y|MPENTIUMM=y|MPENTIUM4=y|MK7=y|CONFIG_GENERIC_CPU=y|M686=y|MBARCELONA=y|MBOBCAT=y|MBULLDOZER=y|MPILEDRIVER=y|MCOREI7=y|MCOREI7AVX=y|MCOREAVXI=y|MCOREAVX2=y" ./.config`
-    CPU=`sed -e "s/CONFIG_M\(.*\)=y/\1/" <<<$CPU`
-    CPU=`sed -e "s/CONFIG_GENERIC_CPU=y/GENERIC/" <<<$CPU`
-    CPU=`sed -e "s/^686$/GENERIC/" <<<$CPU`
+    for _cpusuffix_kbuild in ${_CPUSUFFIXES_KBUILD[@]} ; do
+	_egrepstring="${_egrepstring}M${_cpusuffix_kbuild}=y|"
+    done
+    CPU=$(egrep "${_egrepstring}CONFIG_GENERIC_CPU=y|M686=y" ./.config)
+    CPU=$(sed -e "s/CONFIG_M\(.*\)=y/\1/" <<<$CPU)
+    CPU=$(sed -e "s/CONFIG_GENERIC_CPU=y/GENERIC/" <<<$CPU)
+    CPU=$(sed -e "s/^686$/GENERIC/" <<<$CPU)
     cp -f .config ${startdir}/config.$CPU-$CARCH
     
   # Give option to rename package according to CPU
@@ -363,17 +369,11 @@ package_linux-pf() {
  # below 'provides' is for when you have no other kernel (which is a bad idea anyway)
  # provides=(${pkgbase}=${_basekernel} 'linux=${pkgver}' 'aufs3')
  # If generic build, then conflict with all optimized ones
- conflicts=('linux-pf-core2' 'linux-pf-k8' 'linux-pf-psc' 'linux-pf-atom'
-	    'linux-pf-k7' 'linux-pf-p3' 'linux-pf-pm' 'linux-pf-p4'
-	    'linux-pf-headers-core2' 'linux-pf-headers-k8' 'linux-pf-headers-psc'
-	    'linux-pf-headers-atom' 'linux-pf-headers-k7' 'linux-pf-headers-p3'
-	    'linux-pf-headers-pm' 'linux-pf-headers-p4'
-	    'kernel26-pf-core2' 'kernel26-pf-k8' 'kernel26-pf-psc' 'kernel26-pf-atom'
-	    'kernel26-pf-k7' 'kernel26-pf-p3' 'kernel26-pf-pm' 'kernel26-pf-p4'
-	    'linux-pf-bobcat' 'linux-pf-barcelona' 'linux-pf-bulldozer' 
-	    'linux-pf-pilediver' 'linux-pf-nehalem' 'linux-pf-ivybridge' 'linux-pf-sandybridge' 'linux-pf-haswell' 
-	    'linux-pf-headers-bobcat' 'linux-pf-headers-barcelona' 'linux-pf-headers-bulldozer'
-	    'linux-pf-headers-pilediver' 'linux-pf-headers-nehalem' 'linux-pf-headers-ivybridge' 'linux-pf-headers-sandybridge' 'linux-pf-headers-haswell' )
+ _i=0
+ for _cpusuffix in $_CPUSUFFIXES ; do
+   conflicts[$_i]=${pkgbase}-${_cpusuffix}
+   _i=$(($_i + 1))
+ done  
  replaces=('kernel26-pf' 'aufs3')
  backup=("etc/mkinitcpio.d/${pkgbase}.preset")
  install='linux.install'
@@ -395,6 +395,10 @@ package_linux-pf() {
          pkgname="${pkgbase}-core2"
          pkgdesc="${_pkgdesc} Intel Core2 optimized."
          ;;
+     K7)
+        pkgname="${pkgbase}-k7"
+        pkgdesc="${_pkgdesc} AMD K7 optimized."
+        ;;
      K8)
          pkgname="${pkgbase}-k8" 
          pkgdesc="${_pkgdesc} AMD K8 optimized."
@@ -426,10 +430,6 @@ package_linux-pf() {
      ATOM)
          pkgname="${pkgbase}-atom"
          pkgdesc="${_pkgdesc} Intel Atom optimized."
-         ;;
-     K7)
-         pkgname="${pkgbase}-k7"
-         pkgdesc="${_pkgdesc} AMD K7 optimized."
          ;;
      PENTIUMII)
          pkgname="${pkgbase}-p2"
