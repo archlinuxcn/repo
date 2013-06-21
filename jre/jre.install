@@ -21,7 +21,7 @@ post_install() {
     _update
 
     echo
-    note "Please relogin to include jre in your PATH."
+    note "Please re-login to include JRE in your PATH."
 
     if [ -f /etc/mailcap ] ; then
       sed -e '/application\/x-java-jnlp-file/d' -i /etc/mailcap
