@@ -3,8 +3,8 @@
 
 pkgname=jre
 _major=7
-_minor=21
-_build=b11
+_minor=25
+_build=b15
 _pkg=${_major}u$_minor
 pkgver=$_major.$_minor
 pkgrel=1
@@ -27,12 +27,12 @@ source=("http://download.oracle.com/otn-pub/java/jdk/$_pkg-$_build/jre-$_pkg-lin
         'javaws-launcher'
         'jre.csh'
         'jre.sh')
-md5sums=('d1df6cbb7c2b5cc7e9dd05b3e8e838f9'  # jre-$_pkg-linux-i586.tar.gz
+md5sums=('0e9ccefe49e937e592dbb605f2e8e7d8'  # jre-$_pkg-linux-i586.tar.gz
          'f4e25ef1ccef8d36ff2433c3987a64fe'  # java-policy-settings.desktop
          '45c15a6b4767288f2f745598455ea2bf'  # javaws-launcher
          '92dec202858f2bf7729c6805b1bd3ae4'  # jre.csh
          '85ba1d2b39d5e6efad89ef98d0f19909') # jre.sh
-[ "$CARCH" = 'x86_64' ] && md5sums[0]='ad983b63a4d342f2db249a37f1fd6cc3'  # jre-$_pkg-linux-x64.tar.gz
+[ "$CARCH" = 'x86_64' ] && md5sums[0]='743ee0ebf73ce428c912866d84e374e0'  # jre-$_pkg-linux-x64.tar.gz
 # # Alternative mirrors, if your local one is throttled:
 # source[0]="http://uni-smr.ac.ru/archive/dev/java/JRE/oracle/$_major/jre-$_pkg-linux-$_arch.tar.gz"
 # source[0]="http://ftp.wsisiz.edu.pl/pub/pc/pozyteczne%20oprogramowanie/java/jre-$_pkg-linux-$_arch.tar.gz"
