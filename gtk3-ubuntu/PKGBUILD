@@ -2,25 +2,25 @@
 # Contributor: hbdee <hbdee.arch@gmail.com>
 
 pkgname=gtk3-ubuntu
-_ppa_rel=0ubuntu1~build1 
+_ubuntu_rel=0ubuntu4 
 pkgver=3.8.2
-pkgrel=1
+pkgrel=3
 pkgdesc="GObject-based multi-platform toolkit (v3)"
 arch=('i686' 'x86_64')
 url="http://www.gtk.org/"
 install=arch_gtk3.install
 depends=('atk' 'cairo' 'gtk-update-icon-cache' 'libcups' 'libxcursor' 'libxinerama' 'libxrandr' 'libxi' 'libxcomposite' 'libxdamage' 'pango' 'shared-mime-info' 'colord' 'at-spi2-atk' 'wayland' 'libxkbcommon')
-makedepends=('gobject-introspection' 'mesa')
+makedepends=('gobject-introspection' 'mesa' 'glib2-ubuntu')
 provides=("gtk3=${pkgver}")
 conflicts=('gtk3')
 options=('!libtool' '!docs')
 backup=('etc/gtk-3.0/settings.ini')
 license=('LGPL')
 source=("http://ftp.gnome.org/pub/GNOME/sources/gtk+/${pkgver%.*}/gtk+-${pkgver}.tar.xz"
-        "http://ppa.launchpad.net/gnome3-team/gnome3/ubuntu/pool/main/g/gtk+3.0/gtk+3.0_${pkgver}-${_ppa_rel}.debian.tar.gz"
+        "https://launchpad.net/ubuntu/+archive/primary/+files/gtk+3.0_${pkgver}-${_ubuntu_rel}.debian.tar.gz"
         'arch_settings.ini')
 sha512sums=('20958c192fe881281f6885e2d7cecc4e2700fc01ef8006304f1fb8befe8f6628cbdb06c0d801f109e5805d58f327ca9a07d5e2c7f938116c99db8080d0c2f83e'
-            '8404a5fb2b64623d5a08c5728aa7540699aad5ff37fe5a6ab5cc832ca57fb3728c4e78e0cb1be521df99edd55ebe0558ff629cbee8d4b609cad7de778947b282'
+            'b1e7a7d1dfbbed1d509c09ef290b4ce893f8c4134b5d53764955933a926c0b3c0de239d371ceb39faf91c4a8a5f23f399c821a6ad4d1109e98c5e4fc0046ca58'
             '087bf853cb9f6ee8269c60041555ee1546a2d10fbdbe820710c77a74bb9c34735abe8b061e2a0322246932d7a72b21953682fcdca79b09fd555307abb1d88699')
 
 prepare() {
