@@ -1,0 +1,63 @@
+# Maintainer: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
+# Original Maintainer: Jan de Groot <jgc@archlinux.org>
+# Contributor hbdee <hbdee.arch@gmail.com>
+
+pkgname=glib2-ubuntu
+_ubuntu_rel=0ubuntu1
+pkgver=2.37.1
+pkgrel=2
+pkgdesc="Common C routines used by GTK+ and other libs"
+arch=('i686' 'x86_64')
+url="http://www.gtk.org/"
+license=('LGPL')
+depends=('pcre' 'libffi')
+makedepends=('pkg-config' 'python2' 'libxslt' 'docbook-xml' 'elfutils')
+optdepends=('python2: for gdbus-codegen and gtester-report'
+            'elfutils: gresource inspection tool')
+provides=("glib2=${pkgver}")
+replaces=('glib2')
+conflicts=('glib2')
+options=('!docs' '!libtool' '!emptydirs')
+source=("http://ftp.gnome.org/pub/GNOME/sources/glib/${pkgver%.*}/glib-${pkgver}.tar.xz"
+        'revert-warn-glib-compile-schemas.patch')
+sha512sums=('785eee16ffa22f2d0059feb6f9cbba61a6d98915a0605c7f588aa0e875d22765cc0849883d645c12cf8a1bba0cbabe8311b2b7f1d77335555505d7b2eb16c807'
+            '8d5da70a3ef39771e8dc61e050b7425922012f2d4094bff64bc3efdef12974bd4fea853c52f099b47b6464bc65daf8de5796a2d93ffe2c1100e75d72ce5c9053')
+
+prepare() {
+  cd "${srcdir}/glib-${pkgver}"
+
+  patch -p1 -R -i "${srcdir}/revert-warn-glib-compile-schemas.patch" 
+}
+
+build() {
+  cd "${srcdir}/glib-${pkgver}"
+
+  autoreconf -vfi
+
+  PYTHON=/usr/bin/python2 ./configure \
+    --prefix=/usr \
+    --libdir=/usr/lib \
+    --sysconfdir=/etc \
+    --with-pcre=system \
+    --disable-fam
+
+  make
+}
+
+check() {
+  cd "${srcdir}/glib-${pkgver}"
+  #make check || :
+}
+
+package() {
+  cd "${srcdir}/glib-${pkgver}"
+  make completiondir=/usr/share/bash-completion/completions/ \
+       DESTDIR="${pkgdir}" install
+
+  for i in "${pkgdir}/usr/share/bash-completion/completions/"*; do
+chmod -x "${i}"
+  done
+
+  # Our gdb does not ship the required python modules, so remove it
+  rm -rf "${pkgdir}/usr/share/gdb/"
+}
