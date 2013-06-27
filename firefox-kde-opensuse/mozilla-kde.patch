@@ -7,7 +7,7 @@ Bug: https://bugzilla.mozilla.org/show_bug.cgi?id=140751
 diff --git a/modules/libpref/src/Makefile.in b/modules/libpref/src/Makefile.in
 --- a/modules/libpref/src/Makefile.in
 +++ b/modules/libpref/src/Makefile.in
-@@ -54,14 +54,15 @@ endif
+@@ -52,14 +52,15 @@ endif
  # Optimizer bug with GCC 3.2.2 on OS/2
  ifeq ($(OS_ARCH), OS2)
  nsPrefService.$(OBJ_SUFFIX): nsPrefService.cpp
@@ -184,17 +184,16 @@ diff --git a/python/mozbuild/mozpack/chrome/manifest.py b/python/mozbuild/mozpac
 diff --git a/toolkit/components/downloads/Makefile.in b/toolkit/components/downloads/Makefile.in
 --- a/toolkit/components/downloads/Makefile.in
 +++ b/toolkit/components/downloads/Makefile.in
-@@ -42,9 +42,12 @@ EXTRA_COMPONENTS = \
+@@ -32,9 +32,11 @@ ifndef MOZ_SUITE
+ EXTRA_COMPONENTS = \
+   nsDownloadManagerUI.js \
    nsDownloadManagerUI.manifest \
    $(NULL)
  endif
  
- TEST_DIRS += test
- 
  include $(topsrcdir)/config/rules.mk
  
 +LOCAL_INCLUDES += -I$(topsrcdir)/toolkit/xre
-+
 +
  CXXFLAGS += $(TK_CFLAGS)
 diff --git a/toolkit/components/downloads/nsDownloadManager.cpp b/toolkit/components/downloads/nsDownloadManager.cpp
@@ -255,7 +254,7 @@ diff --git a/toolkit/components/downloads/nsDownloadManager.cpp b/toolkit/compon
                    NS_LITERAL_STRING(DOWNLOAD_MANAGER_ALERT_ICON), title,
                    message, !removeWhenDone,
                    mPrivate ? NS_LITERAL_STRING("private") : NS_LITERAL_STRING("non-private"),
-                   mDownloadManager, EmptyString());
+                   mDownloadManager, EmptyString(), NS_LITERAL_STRING("auto"), EmptyString());
 -            }
 +          }
          }
@@ -2146,7 +2145,7 @@ diff --git a/toolkit/system/unixproxy/nsUnixSystemProxySettings.cpp b/toolkit/sy
  nsUnixSystemProxySettings::GetMainThreadOnly(bool *aMainThreadOnly)
  {
    // dbus prevents us from being threadsafe, but this routine should not block anyhow
-@@ -499,16 +502,19 @@ nsUnixSystemProxySettings::GetProxyFromG
+@@ -496,16 +499,19 @@ nsUnixSystemProxySettings::GetProxyFromG
  
  nsresult
  nsUnixSystemProxySettings::GetProxyForURI(const nsACString & aSpec,
@@ -2166,7 +2165,7 @@ diff --git a/toolkit/system/unixproxy/nsUnixSystemProxySettings.cpp b/toolkit/sy
    if (mGConf)
      return GetProxyFromGConf(aScheme, aHost, aPort, aResult);
  
-@@ -534,8 +540,34 @@ static const mozilla::Module::ContractID
+@@ -531,8 +537,34 @@ static const mozilla::Module::ContractID
  
  static const mozilla::Module kUnixProxyModule = {
    mozilla::Module::kVersion,
@@ -2204,7 +2203,7 @@ diff --git a/toolkit/system/unixproxy/nsUnixSystemProxySettings.cpp b/toolkit/sy
 diff --git a/toolkit/xre/Makefile.in b/toolkit/xre/Makefile.in
 --- a/toolkit/xre/Makefile.in
 +++ b/toolkit/xre/Makefile.in
-@@ -72,17 +72,18 @@ else
+@@ -63,17 +63,18 @@ else
  ifeq ($(MOZ_WIDGET_TOOLKIT),cocoa)
  CMMSRCS = nsNativeAppSupportCocoa.mm
  EXPORTS += MacQuirks.h
@@ -2624,7 +2623,7 @@ new file mode 100644
 diff --git a/uriloader/exthandler/Makefile.in b/uriloader/exthandler/Makefile.in
 --- a/uriloader/exthandler/Makefile.in
 +++ b/uriloader/exthandler/Makefile.in
-@@ -59,18 +59,19 @@ LOCAL_INCLUDES = -I$(srcdir)
+@@ -53,18 +53,19 @@ LOCAL_INCLUDES = -I$(srcdir)
  LOCAL_INCLUDES += -I$(topsrcdir)/dom/base \
              -I$(topsrcdir)/dom/ipc \
              -I$(topsrcdir)/content/base/src \
@@ -2900,14 +2899,14 @@ diff --git a/uriloader/exthandler/unix/nsMIMEInfoUnix.cpp b/uriloader/exthandler
        nsAutoCString spec;
        aURI->GetAsciiSpec(spec);
        if (hildon_uri_open(spec.get(), action, nullptr))
-@@ -61,22 +64,22 @@ nsMIMEInfoUnix::LoadUriInternal(nsIURI *
- 
-   return rv;
- }
- 
- NS_IMETHODIMP
- nsMIMEInfoUnix::GetHasDefaultHandler(bool *_retval)
+@@ -67,22 +70,22 @@ nsMIMEInfoUnix::GetHasDefaultHandler(boo
  {
+   // if mDefaultApplication is set, it means the application has been set from
+   // either /etc/mailcap or ${HOME}/.mailcap, in which case we don't want to
+   // give the GNOME answer.
+   if (mDefaultApplication)
+     return nsMIMEInfoImpl::GetHasDefaultHandler(_retval);
+ 
    *_retval = false;
 -  nsRefPtr<nsMIMEInfoBase> mimeInfo = nsGNOMERegistry::GetFromType(mSchemeOrType);
 +  nsRefPtr<nsMIMEInfoBase> mimeInfo = nsCommonRegistry::GetFromType(mSchemeOrType);
@@ -2925,7 +2924,7 @@ diff --git a/uriloader/exthandler/unix/nsMIMEInfoUnix.cpp b/uriloader/exthandler
    if (*_retval)
      return NS_OK;
  
-@@ -119,16 +122,33 @@ nsMIMEInfoUnix::LaunchDefaultWithFile(ns
+@@ -130,16 +133,33 @@ nsMIMEInfoUnix::LaunchDefaultWithFile(ns
      ContentAction::Action::defaultActionForFile(uri, QString(mSchemeOrType.get()));
    if (action.isValid()) {
      action.trigger();
@@ -2959,7 +2958,7 @@ diff --git a/uriloader/exthandler/unix/nsMIMEInfoUnix.cpp b/uriloader/exthandler
      nsCOMPtr<nsIIOService> ioservice = do_GetService(NS_IOSERVICE_CONTRACTID, &rv);
      NS_ENSURE_SUCCESS(rv, rv);
      nsCOMPtr<nsIURI> uri;
-@@ -146,17 +166,17 @@ nsMIMEInfoUnix::LaunchDefaultWithFile(ns
+@@ -157,17 +177,17 @@ nsMIMEInfoUnix::LaunchDefaultWithFile(ns
      /* Fallback to GnomeVFS */
      nsCOMPtr<nsIGnomeVFSMimeApp> app;
      if (NS_SUCCEEDED(gnomevfs->GetAppForMimeType(mSchemeOrType, getter_AddRefs(app))) && app)
@@ -3073,7 +3072,7 @@ diff --git a/uriloader/exthandler/unix/nsOSHelperAppService.cpp b/uriloader/exth
 diff --git a/widget/gtk2/Makefile.in b/widget/gtk2/Makefile.in
 --- a/widget/gtk2/Makefile.in
 +++ b/widget/gtk2/Makefile.in
-@@ -104,11 +104,14 @@ DEFINES		+= -DCAIRO_GFX -DMOZ_APP_NAME='
+@@ -102,11 +102,14 @@ DEFINES		+= -DCAIRO_GFX -DMOZ_APP_NAME='
  
  INCLUDES	+= \
  		-I$(srcdir)/../xpwidgets \
@@ -3439,7 +3438,7 @@ diff --git a/widget/gtk2/nsFilePicker.h b/widget/gtk2/nsFilePicker.h
 diff --git a/xpcom/components/Makefile.in b/xpcom/components/Makefile.in
 --- a/xpcom/components/Makefile.in
 +++ b/xpcom/components/Makefile.in
-@@ -59,10 +59,11 @@ LOCAL_INCLUDES	= \
+@@ -46,10 +46,11 @@ LOCAL_INCLUDES	= \
  # we don't want the shared lib, but we want to force the creation of a static lib.
  FORCE_STATIC_LIB = 1
  
@@ -3585,7 +3584,7 @@ diff --git a/xpcom/components/ManifestParser.cpp b/xpcom/components/ManifestPars
 diff --git a/xpcom/io/Makefile.in b/xpcom/io/Makefile.in
 --- a/xpcom/io/Makefile.in
 +++ b/xpcom/io/Makefile.in
-@@ -161,17 +161,17 @@ include $(topsrcdir)/ipc/chromium/chromi
+@@ -113,17 +113,17 @@ include $(topsrcdir)/ipc/chromium/chromi
  DEFINES		+= -D_IMPL_NS_COM
  
  ifeq ($(OS_ARCH),Linux)

@@ -1,13 +1,13 @@
 # Contributor: Weng Xuetian <wengxt@gmail.com>
 
 # PGO might not build for you. And it takes very long time to compile.
-_enable_pgo="y"
+_enable_pgo="n"
 # JEMALLOC not works for me, at least. You can just try, but might waste time.
-_enable_jemalloc_pgo="y"
+_enable_jemalloc_pgo="n"
 
 
 pkgname=firefox-kde-opensuse
-pkgver=21.0
+pkgver=22.0
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
@@ -29,7 +29,6 @@ source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/
         firefox-kde.patch
         mozilla-nongnome-proxies.patch
         mozilla-kde.patch
-        mozilla-gstreamer-760140.patch
 	)
 
 build() {
@@ -63,8 +62,6 @@ build() {
         toolkit/content/widgets/preferences-kde.xml
 
 
-  msg "apply mozilla-gstreamer-760140.patch"
-  patch -Np1 -i "../mozilla-gstreamer-760140.patch" || return 1
   msg "apply mozilla-nongnome-proxies.patch"
   patch -Np1 -i "../mozilla-nongnome-proxies.patch" || return 1
   msg "apply mozilla-kde.patch"
@@ -79,7 +76,7 @@ build() {
 
   # WebRTC build tries to execute "python" and expects Python 2
   # Workaround taken from chromium PKGBUILD
-  mkdir "$srcdir/python2-path"
+  mkdir -p "$srcdir/python2-path"
   ln -s /usr/bin/python2 "$srcdir/python2-path/python"
   export PATH="$srcdir/python2-path:$PATH"
 
@@ -140,7 +137,7 @@ package() {
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
 
-md5sums=('6e2510e9466b280c367de0e4c05a8840'
+md5sums=('4ffb6d1c1a04ca8e3dbca23df09626dd'
          'a35236fe53941392a279e45e0713163c'
          '57d7c8bcdba9025e36fbbe4b794550a4'
          '1df7fd9afd75d06decb129518a769133'
@@ -148,8 +145,6 @@ md5sums=('6e2510e9466b280c367de0e4c05a8840'
          '0d053487907de4376d67d8f499c5502b'
          '75df0f88cc7a7fa7d522459e4ff82cc5'
          '52e52f840a49eb1d14be1c0065b03a93'
-         '755528dfc7143f695bf5800f923bf384'
-         '79f113b56057e17ca2466cd0ac578bb3'
-         '79241d15f99ff67acf88209f5c083aa6'
-         '70fb43a673328e3665e999659b3a0d4b')
-
+         '2221965e4bd5f913cf33814b8b4973c6'
+         '28f61de31540e20522aefdbe88a83fa8'
+         '03f4c78952c3e3d1cc80b3fd2f2346fd')
