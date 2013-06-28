@@ -7,27 +7,31 @@
 
 # Installation order:  freetype2-ubuntu fontconfig-ubuntu libxft-ubuntu cairo-ubuntu
 pkgname=freetype2-ubuntu
-pkgver=2.4.12
+pkgver=2.5.0.1
 _ubver=2.4.8-1
-pkgrel=1
+pkgrel=2
 pkgdesc="TrueType font rendering library, with Ubuntu's LCD rendering patches"
 arch=('i686' 'x86_64')
 url="https://launchpad.net/ubuntu/precise/+source/freetype"
 license=('GPL')
-depends=('zlib')
+depends=('zlib' 'bzip2' 'sh')
 conflicts=('freetype2' 'freetype2-cleartype' 'freetype2-lcd')
 provides=("freetype2=$pkgver")
 options=('!libtool')
 source=(http://downloads.sourceforge.net/sourceforge/freetype/freetype-${pkgver}.tar.bz2
         https://launchpad.net/ubuntu/precise/+source/freetype/$_ubver/+files/freetype_$_ubver.diff.gz
-        freetype-2.2.1-enable-valid.patch)
+        freetype-2.2.1-enable-valid.patch
+        freetype-2.3.0-enable-spr.patch
+        freetype-2.4.11-enable-sph.patch)
 
-md5sums=('3463102764315eb86c0d3c2e1f3ffb7d'
+md5sums=('c72e9010b1d986d556fc0b2b5fcbf31a'
          '97a1f13bcf4c5e5a9fc32795fcc72c44'
-         '214119610444c9b02766ccee5e220680')
+         '214119610444c9b02766ccee5e220680'
+         '38765b5cc604179bf3afe33671d8ae37'
+         '4d4a0caad7aa5e09bea0719cd80681bf')
 
-build() {
-  cd ${srcdir}/freetype-${pkgver}
+prepare() {
+  cd "${srcdir}/freetype-${pkgver}"
 
   # Patch from ubuntu
   patch -Np1 -i $srcdir/freetype_$_ubver.diff
@@ -45,12 +49,32 @@ build() {
 
   # Patches from arch trunk
   patch -Np1 -i "${srcdir}/freetype-2.2.1-enable-valid.patch"
+#  patch -Np1 -i "${srcdir}/freetype-2.3.0-enable-spr.patch"
 
-  ./configure --prefix=/usr
+  # Disabled for now due to resistance
+  # Kept here for easier rebuilds via ABS
+  # https://bugs.archlinux.org/task/35274
+  #patch -Np1 -i "${srcdir}/freetype-2.4.11-enable-sph.patch"
+}
+
+
+build() {
+  cd ${srcdir}/freetype-${pkgver}
+
+  # PNG support is useless if FT_CONFIG_OPTION_USE_PNG is disabled
+  ./configure --prefix=/usr --disable-static \
+    --without-png
+
   make
+}
+
+check() {
+  cd "${srcdir}/freetype-${pkgver}"
+  make -k check
 }
 
 package() {
   cd ${srcdir}/freetype-${pkgver}
   make DESTDIR=${pkgdir} install
 }
+
