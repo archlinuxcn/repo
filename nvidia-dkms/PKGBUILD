@@ -4,7 +4,7 @@
 # Contributor: Atilla ÖNTAŞ <tarakbumba at gmail dot com>
 
 pkgname=nvidia-dkms
-pkgver=319.23
+pkgver=319.32
 pkgrel=1
 pkgdesc="NVIDIA kernel module sources (DKMS)"
 arch=('i686' 'x86_64')
@@ -17,10 +17,12 @@ optdepends=('linux-headers: build the module against Arch kernel'
             'linux-lts-headers: build the module against LTS Arch kernel')
 provides=("nvidia=${pkgver}")
 conflicts=('nvidia')
-source=("http://us.download.nvidia.com/XFree86/Linux-${_arch}/${pkgver}/${_pkg}.run")
+source=("http://us.download.nvidia.com/XFree86/Linux-${_arch}/${pkgver}/${_pkg}.run"
+        'linux310.patch')
+md5sums+=('c61091da43ee311335e87d21b469cb83')
 install=${pkgname}.install
 
-build() {
+prepare() {
   cd "${srcdir}"
 
   if [[ -d ${_pkg} ]] ; then
@@ -28,6 +30,9 @@ build() {
   fi
 
   sh ${_pkg}.run --extract-only
+
+  cd ${_pkg}
+  patch -Np1 -i ../linux310.patch
 }
 
 package() {
@@ -45,3 +50,5 @@ package() {
 }
 
 # vim: ts=2 sw=2 et:
+md5sums=('d181d856768868823df3bda4607a5315'
+         'c61091da43ee311335e87d21b469cb83')
