@@ -3,13 +3,13 @@
 # Some lines from  kernel26-bfs and kernel26-ck
 # Credits to respective maintainers
 _major=3
-_minor=9
+_minor=10
 #_patchlevel=0
 #_subversion=1
 _basekernel=${_major}.${_minor}
 _srcname=linux-${_major}.${_minor}
 pkgbase=linux-pf
-_pfrel=5
+_pfrel=0
 _kernelname=-pf
 _pfpatchhome="http://pf.natalenko.name/sources/${_basekernel}/"
 _pfpatchname="patch-${_basekernel}.${_pfrel}${_kernelname}"
@@ -23,6 +23,7 @@ _CPUSUFFIXES=( core2 k7 k8 k10 barcelona bobcat bulldozer piledriver psc atom p2
 #
 
 _NUMA_off=yes		# Disable NUMA in kernel config
+_pstates_pat=yes
 
 ### DOCS
 # Starting with the 3.6.6-3 release, this package ships with the kernel-3x-gcc47-x.patch.
@@ -33,6 +34,12 @@ _NUMA_off=yes		# Disable NUMA in kernel config
 # http://en.gentoo-wiki.com/wiki/Safe_Cflags/AMD
 # http://www.linuxforge.net/docs/linux/linux-gcc.php 
 # http://gcc.gnu.org/onlinedocs/gcc/i386-and-x86_002d64-Options.html
+
+# DETAILS FOR _pstates_pat
+# Enable pstate driver with Ivybridge and Haswell CPUs. Patch for Ivy is included in 3.10.
+# Not sure when the Haswell support is planned but several Arch users have been using this code
+# without problems for several weeks.
+# See https://plus.google.com/117091380454742934025/posts/2vEekAsG2QT for a discussion.
 
 # DETAILS FOR using 'make localmodconfig'
 # As of mainline 2.6.32, running with this option will only build the modules that you currently have
@@ -71,8 +78,8 @@ source=("ftp://www.kernel.org/pub/linux/kernel/v${_major}.x/linux-${_basekernel}
 	'logo_linux_mono.pbm.bz2'		# the Arch Linux boot logos
 	'logo_linux_vga16.ppm.bz2'		#
 	'change-default-console-loglevel.patch'
-        'http://repo-ck.com/source/gcc_patch/kernel-39-gcc48-1.patch.gz'
-        'enable_ivybridge_pstate_driver.patch'
+        'http://repo-ck.com/source/gcc_patch/kernel-310-gcc48-1.patch.gz'
+        'enable_haswell_pstate_driver.patch'
 	"${_pfpatchhome}${_pfpatchname}.bz2"	# the -pf patchset
  )
 
@@ -139,12 +146,16 @@ prepare() {
 
   # end linux-ARCH patches
 
-  # enable intelp state for intel ivybridge cpus
-  patch -Np1 -i "${srcdir}"/enable_ivybridge_pstate_driver.patch 
+  if [ -n "$_pstates_pat" ]; then
+    ### Patch source to enable pstate drivers with ivybridge CPUs
+    ### see https://plus.google.com/117091380454742934025/posts/2vEekAsG2QT
+    msg "Patching source to enable Intel Pstate driver for Haswell CPUs"
+    patch -Np1 -i "${srcdir}/enable_haswell_pstate_driver.patch"
+  fi
 
 
   # added gcc 4.7.1 support for Kconfig and menuconfig
-  zcat "${srcdir}/kernel-39-gcc48-1.patch.gz" | patch -Np1
+  zcat "${srcdir}/kernel-310-gcc48-1.patch.gz" | patch -Np1
   if [ "$CARCH" = "x86_64" ]; then
 	cat "${startdir}/config.x86_64" >| .config
   else
@@ -719,14 +730,14 @@ package_linux-pf-headers() {
 pkgdesc="Linux kernel and modules with the pf-kernel patch [-ck patchset (BFS included), TuxOnIce, BFQ] and aufs3"
 
 # makepkg -g >>PKGBUILD
-sha256sums=('60bc3e64ee5dc778de2cd7cd7640abf518a4c9d4f31b8ed624e16fad53f54541'
-            'd8d348e0ccf855a37f469e3ef7e27085a6344392a09f50ba4f83f01f0253ea74'
-            '9004802874a5e68eae5b5f28a621bf0cb5490e806683c6479bbba7b1ade46737'
+sha256sums=('df27fa92d27a9c410bfe6c4a89f141638500d7eadcca5cce578954efc2ad3544'
+            'bf3bace478f510f325123a7fa820958e0eaae17918faacb377892518f63a1db5'
+            '2ca62c5cf5dd2c5169e044407738a4d9b86d1ef0b0cec095370f016451cb144f'
             '82d660caa11db0cd34fd550a049d7296b4a9dcd28f2a50c81418066d6e598864'
             '03ed4eb4a35d42ae6beaaa5e6fdbada4244ed6c343944bba6462defaa6fed0bf'
             '51ea665cfec42d9f9c7796af2b060b7edbdeb367e42811f8c02667ad729f6b19'
             '9e1e81d80afac6f316e53947e1b081017090081cd30e6c4c473420b77af4b52b'
             '56bd99e54429a25a144f2d221718b67f516344ffd518fd7dcdd752206ec5be69'
-            '7052476e47925bc67210e7ad52f61be21016ef9763843f492501f5e4f8c3d221'
-            '20f948d25b27006d3e18400ebe35f17400ca2e0d02eff77e5a9a2927b78a2494'
-            'b6e8976003e7c4ffa603200dda8326bbac68601489b1a451cbb5714242aaccbb')
+            '16c9eab6e83f0f4f035d8f52e17791115d8c01c6199a21525cb2f583aec61b03'
+            'd7fada52453d12a24af9634024c36792697f97ce0bc6552939cd7b2344d00cd9'
+            'e5e126a0afee75709c2e410014fa18f7b666bdadbeaa940568aa6b6c9ebf9f8c')
