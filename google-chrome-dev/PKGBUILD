@@ -27,8 +27,6 @@ md5sums=('cd0bfcac260c4a6ad90c6e047a14d41c'
          '6d57da7476a4b1b7a81821d9c036425c')
 [ "$CARCH" = 'x86_64' ] && md5sums[0]='6e24e2e0e2428c2375a5d860c46dec58'
 
-PKGEXT='.pkg.tar'
-
 package() {
   msg2 "Extracting the data.tar.lzma"
   bsdtar -xf data.tar.lzma -C "$pkgdir/"
