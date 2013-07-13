@@ -8,7 +8,7 @@
 # Installation order:  freetype2-ubuntu fontconfig-ubuntu libxft-ubuntu cairo-ubuntu
 pkgname=freetype2-ubuntu
 pkgver=2.5.0.1
-_ubver=2.4.8-1
+_ubver=2.4.11-0ubuntu1
 pkgrel=2
 pkgdesc="TrueType font rendering library, with Ubuntu's LCD rendering patches"
 arch=('i686' 'x86_64')
@@ -19,13 +19,13 @@ conflicts=('freetype2' 'freetype2-cleartype' 'freetype2-lcd')
 provides=("freetype2=$pkgver")
 options=('!libtool')
 source=(http://downloads.sourceforge.net/sourceforge/freetype/freetype-${pkgver}.tar.bz2
-        https://launchpad.net/ubuntu/precise/+source/freetype/$_ubver/+files/freetype_$_ubver.diff.gz
+        https://launchpad.net/ubuntu/raring/+source/freetype/$_ubver/+files/freetype_$_ubver.diff.gz
         freetype-2.2.1-enable-valid.patch
         freetype-2.3.0-enable-spr.patch
         freetype-2.4.11-enable-sph.patch)
 
 md5sums=('c72e9010b1d986d556fc0b2b5fcbf31a'
-         '97a1f13bcf4c5e5a9fc32795fcc72c44'
+         'd31b655036ff49d814fdad1ca981edf9'
          '214119610444c9b02766ccee5e220680'
          '38765b5cc604179bf3afe33671d8ae37'
          '4d4a0caad7aa5e09bea0719cd80681bf')
@@ -77,4 +77,5 @@ package() {
   cd ${srcdir}/freetype-${pkgver}
   make DESTDIR=${pkgdir} install
 }
+
 
