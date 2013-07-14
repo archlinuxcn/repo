@@ -25,13 +25,13 @@ source=(
 )
 
 md5sums=(
-	'bd816d93239a0af9ade257b2a9dcf8d2'
+	'699cd26d7fe0bada29eb1b2cd7b50e4b'
 	'f6d0e7f5da0e8c1d57640f62173295bf'
-    'c308b94b59ff99ccad3d85ecab7af19d'
-    'b9cfc9418af10b5c8b509f98f310da7f'
+	'c308b94b59ff99ccad3d85ecab7af19d'
+	'b9cfc9418af10b5c8b509f98f310da7f'
 )
 
-[[ "${CARCH}" = i686 ]] && md5sums[0]='0965d9b66d8973d65708b460f7657ef0'
+[[ "${CARCH}" = i686 ]] && md5sums[0]='34a60dac42f4ebc41218398fcfa92fe2'
 
 package () {
 	cd ${srcdir}
