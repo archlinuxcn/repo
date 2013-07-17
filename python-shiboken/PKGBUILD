@@ -3,14 +3,14 @@
 # Contributor: Matthias Maennich <arch@maennich.net>
 # Contributor: Jan-Erik Meyer-Luetgens <nyan at meyer-luetgens dot de>
 pkgname=python-shiboken
-pkgver=1.1.2
-pkgrel=5
+pkgver=1.2.0
+pkgrel=1
 _pyver=3.3
 _py2ver=2.7
 pkgdesc="Python 2 & 3 bindings generator for Qt C++ libraries"
 arch=('i686' 'x86_64')
 license=('LGPL')
-url="http://www.pyside.org"
+url="http://qt-project.org/wiki/PySide"
 depends=("qt4>=4.8" 'openssl')
 optdepends=(
     "python-sphinx: Documentation"
@@ -19,10 +19,10 @@ optdepends=(
 )
 makedepends=('cmake' 'automoc4' 'generatorrunner>=0.6.16' "python" "python2")
 conflicts=("libshiboken")
-provides=("libshiboken" "shiboken=1.1.2")
+provides=("libshiboken" "shiboken=$pkgver")
 replaces=('shiboken')
-source=("http://qt-project.org/uploads/pyside/shiboken-$pkgver.tar.bz2" "FindPython3Libs.cmake.patch")
-md5sums=('0a37b5011b3a7276bf4584317412a4b6' 'e21f354434c2c43b8ebdcf582d512de5')
+source=("http://download.qt-project.org/official_releases/pyside/shiboken-$pkgver.tar.bz2" "FindPython3Libs.cmake.patch")
+md5sums=('946ae0405ff3238d6b72124e07fae06e' 'e21f354434c2c43b8ebdcf582d512de5')
 
 build(){
     patch $srcdir/shiboken-$pkgver/cmake/Modules/FindPython3Libs.cmake FindPython3Libs.cmake.patch
