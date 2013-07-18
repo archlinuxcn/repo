@@ -9,7 +9,7 @@ _minor=10
 _basekernel=${_major}.${_minor}
 _srcname=linux-${_major}.${_minor}
 pkgbase=linux-pf
-_pfrel=0
+_pfrel=1
 _kernelname=-pf
 _pfpatchhome="http://pf.natalenko.name/sources/${_basekernel}/"
 _pfpatchname="patch-${_basekernel}.${_pfrel}${_kernelname}"
@@ -289,9 +289,9 @@ build() {
   # Give option to rename package according to CPU
     echo
     if [[ "$CPU" = "GENERIC" ]]; then
-      msg "Hit <P>     :  to include the patchlevel number in kernver"
+      msg "Hit <ENTER>     :  to include the patchlevel number in kernver (default)"
       msg "               (i.e. linux-pf-${_basekernel}.${_pfrel})"
-      msg "Hit <ENTER> :  to remove the patchlevel number from kernver (default)"
+      msg "Hit <P> :  to remove the patchlevel number from kernver "
       msg "               (i.e. linux-pf-${_basekernel})"
       read answer
       shopt -s nocasematch
@@ -731,8 +731,8 @@ pkgdesc="Linux kernel and modules with the pf-kernel patch [-ck patchset (BFS in
 
 # makepkg -g >>PKGBUILD
 sha256sums=('df27fa92d27a9c410bfe6c4a89f141638500d7eadcca5cce578954efc2ad3544'
-            'bf3bace478f510f325123a7fa820958e0eaae17918faacb377892518f63a1db5'
-            '2ca62c5cf5dd2c5169e044407738a4d9b86d1ef0b0cec095370f016451cb144f'
+            'b10f588d9508f1eb1c7735dbc86fe6a023a8619d960634b9646a1191ae6431cd'
+            'b76418bf81a3ab51cebf0ad4c422e039cca8ce11f93f3f7fc139e690e91f8a1a'
             '82d660caa11db0cd34fd550a049d7296b4a9dcd28f2a50c81418066d6e598864'
             '03ed4eb4a35d42ae6beaaa5e6fdbada4244ed6c343944bba6462defaa6fed0bf'
             '51ea665cfec42d9f9c7796af2b060b7edbdeb367e42811f8c02667ad729f6b19'
@@ -740,4 +740,4 @@ sha256sums=('df27fa92d27a9c410bfe6c4a89f141638500d7eadcca5cce578954efc2ad3544'
             '56bd99e54429a25a144f2d221718b67f516344ffd518fd7dcdd752206ec5be69'
             '16c9eab6e83f0f4f035d8f52e17791115d8c01c6199a21525cb2f583aec61b03'
             'd7fada52453d12a24af9634024c36792697f97ce0bc6552939cd7b2344d00cd9'
-            'e5e126a0afee75709c2e410014fa18f7b666bdadbeaa940568aa6b6c9ebf9f8c')
+            'deeaaf781974c5120064c11e387b4dbb977c47ae3fe6b63d26cbb0dfa4157ce1')
