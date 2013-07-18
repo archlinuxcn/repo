@@ -1,11 +1,11 @@
-commit 7d95aa2d2fbd67659a88be6ffbb731c969dd49ef
+commit 0e0944c33aa1f575fb94adcfc44ccaa7272b781d
 Author: John Schoenick <jschoenick@mozilla.com>
-Date:   Sun Jun 9 14:33:18 2013 -0700
+Date:   Sat Jun 29 15:03:38 2013 -0700
 
-    Rebase wine-multimedia onto wine-1.6-rc1
+    Rebase wine-multimedia onto wine-1.6-rc3
 
 diff --git a/configure b/configure
-index 3a551e8..c2f5be6 100755
+index 796613c..a47ad60 100755
 --- a/configure
 +++ b/configure
 @@ -649,6 +649,8 @@ OSS4INCL
@@ -46,7 +46,7 @@ index 3a551e8..c2f5be6 100755
  # Check whether --with-sane was given.
  if test "${with_sane+set}" = set; then :
    withval=$with_sane;
-@@ -11164,6 +11174,87 @@ esac
+@@ -11165,6 +11175,87 @@ esac
  fi
  fi
  
@@ -134,7 +134,7 @@ index 3a551e8..c2f5be6 100755
  if test "x$with_gstreamer" != "xno"
  then
      ac_save_CPPFLAGS="$CPPFLAGS"
-@@ -12244,12 +12335,13 @@ fi
+@@ -12245,12 +12336,13 @@ fi
  
  test -n "$ALSALIBS" || enable_winealsa_drv=${enable_winealsa_drv:-no}
  test -n "$COREAUDIO" || enable_winecoreaudio_drv=${enable_winecoreaudio_drv:-no}
@@ -150,7 +150,7 @@ index 3a551e8..c2f5be6 100755
  then
      as_fn_append wine_warnings "|No sound system was found. Windows applications will be silent."
  fi
-@@ -16293,6 +16385,7 @@ wine_fn_config_dll winemp3.acm enable_winemp3_acm
+@@ -16295,6 +16387,7 @@ wine_fn_config_dll winemp3.acm enable_winemp3_acm
  wine_fn_config_dll wineoss.drv enable_wineoss_drv
  wine_fn_config_dll wineps.drv enable_wineps_drv install-lib,po
  wine_fn_config_dll wineps16.drv16 enable_win16
@@ -159,7 +159,7 @@ index 3a551e8..c2f5be6 100755
  wine_fn_config_dll winex11.drv enable_winex11_drv
  wine_fn_config_dll wing.dll16 enable_win16
 diff --git a/configure.ac b/configure.ac
-index 57d76d9..fbb21d4 100644
+index 74fd134..a84cd63 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -70,6 +70,7 @@ AC_ARG_WITH(oss,       AS_HELP_STRING([--without-oss],[do not use the OSS sound
@@ -170,7 +170,7 @@ index 57d76d9..fbb21d4 100644
  AC_ARG_WITH(sane,      AS_HELP_STRING([--without-sane],[do not use SANE (scanner support)]))
  AC_ARG_WITH(tiff,       AS_HELP_STRING([--without-tiff],[do not use TIFF]),
              [if test "x$withval" = "xno"; then ac_cv_header_tiffio_h=no; fi])
-@@ -1544,6 +1545,30 @@ then
+@@ -1546,6 +1547,30 @@ then
            [GetText ${notice_platform}development files not found (or too old), po files can't be rebuilt.])
  fi
  
@@ -201,7 +201,7 @@ index 57d76d9..fbb21d4 100644
  dnl **** Check for gstreamer ****
  if test "x$with_gstreamer" != "xno"
  then
-@@ -1733,13 +1758,14 @@ WINE_CHECK_SONAME(odbc,SQLConnect,,[AC_DEFINE_UNQUOTED(SONAME_LIBODBC,["libodbc.
+@@ -1735,13 +1760,14 @@ WINE_CHECK_SONAME(odbc,SQLConnect,,[AC_DEFINE_UNQUOTED(SONAME_LIBODBC,["libodbc.
  dnl **** Disable unsupported winmm drivers ****
  test -n "$ALSALIBS" || enable_winealsa_drv=${enable_winealsa_drv:-no}
  test -n "$COREAUDIO" || enable_winecoreaudio_drv=${enable_winecoreaudio_drv:-no}
@@ -218,7 +218,7 @@ index 57d76d9..fbb21d4 100644
  then
      WINE_WARNING([No sound system was found. Windows applications will be silent.])
  fi
-@@ -3117,6 +3143,7 @@ WINE_CONFIG_DLL(winemp3.acm)
+@@ -3120,6 +3146,7 @@ WINE_CONFIG_DLL(winemp3.acm)
  WINE_CONFIG_DLL(wineoss.drv)
  WINE_CONFIG_DLL(wineps.drv,,[install-lib,po])
  WINE_CONFIG_DLL(wineps16.drv16,enable_win16)

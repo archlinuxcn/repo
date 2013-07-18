@@ -6,19 +6,19 @@
 
 pkgname=wine-multimedia
 _basename=wine
-pkgver=1.6rc1
+pkgver=1.6rc3
 pkgrel=1
 
 _pkgbasever=${pkgver/rc/-rc}
 
 source=(http://prdownloads.sourceforge.net/$_basename/$_basename-$_pkgbasever.tar.bz2{,.sign}
         30-win32-aliases.conf
-        winemultimedia_1.6rc1_20130609.patch)
+        winemultimedia_1.6rc3_20130629.patch)
 
-sha1sums=('9b04de409e2602b6cf45ce2d69db2f7c968323d2'
+sha1sums=('9533d9e6da23d69c6e5b22b45e1507c721d66ebf'
           'SKIP'
           '023a5c901c6a091c56e76b6a62d141d87cce9fdb'
-          '8071f2a50778d15d863571e5618550cc47f80c1e')
+          '0c40e6769ef7a863318f9c6494b9c634bea51ab8')
 
 pkgdesc="Wine with Maarten Lankhorst's multimedia patches, including PulseAudio support"
 url="http://repo.or.cz/w/wine/multimedia.git"
@@ -123,7 +123,7 @@ build() {
 
   # Apply multimedia patch
   msg2 "Applying multimedia branch patch"
-  (cd $_basename && patch -Np1 -i "${srcdir}"/winemultimedia_1.6rc1_20130609.patch)
+  (cd $_basename && patch -Np1 -i "${srcdir}"/winemultimedia_1.6rc3_20130629.patch)
 
   # These additional CPPFLAGS solve FS#27662 and FS#34195
   export CPPFLAGS="${CPPFLAGS/-D_FORTIFY_SOURCE=2/} -D_FORTIFY_SOURCE=0"
@@ -141,8 +141,7 @@ build() {
       --enable-win64
     # Gstreamer was disabled for FS#33655
 
-    # These additional flags solve FS#34819
-    make CFLAGS+="-fno-builtin-memcpy" CXXFLAGS+="-fno-builtin-memcpy"
+    make
 
     _wine32opts=(
       --libdir=/usr/lib32
