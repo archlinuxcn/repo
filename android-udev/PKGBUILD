@@ -1,21 +1,28 @@
 # Maintainer: M0Rf30 
 # Contributor: marlock
 pkgname=android-udev
-pkgver=1.7
+pkgver=48.756f953
 pkgrel=1
 pkgdesc='Udev rules to connect Android devices to your linux box'
 arch=('any')
 url="https://github.com/M0Rf30/android-udev-rules"
 license=('GPL')
-source=("https://raw.github.com/M0Rf30/android-udev-rules/master/51-android.rules")
+source=('android-udev::git://github.com/M0Rf30/android-udev-rules.git')
 depends=('systemd' 'libmtp')
+makedepends=('git')
 conflicts=('udev-android-rules')
 install='android-udev.install'
 
 package() {
+  cd android-udev
   mkdir -p $pkgdir/usr/lib/udev/rules.d/
-  cp $srcdir/51-android.rules $pkgdir/usr/lib/udev/rules.d/51-android.rules
+  cp 51-android.rules $pkgdir/usr/lib/udev/rules.d/51-android.rules
   chmod a+r $pkgdir/usr/lib/udev/rules.d/51-android.rules
 }
 
-md5sums=('3ecf3f716250917e9007a63456e2bf70')
+pkgver() {
+  cd android-udev
+  echo $(git rev-list --count master).$(git rev-parse --short master)
+}
+
+md5sums=('SKIP')
