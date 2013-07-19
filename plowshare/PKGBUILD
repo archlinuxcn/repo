@@ -2,20 +2,20 @@
 # Contributor: breakdown <breakdown(at)archlinux(dot)us>
 
 pkgname=plowshare
-pkgver=snapshot_git20130302.4a0ee18
+pkgver=snapshot_git20130520.2b2d736
 pkgrel=1
 pkgdesc="Command-line downloader and uploader for Rapidshare, Mediafire and other file sharing websites."
 arch=('any')
 url="http://code.google.com/p/plowshare/"
 license=('GPL')
-depends=('curl' 'recode' 'js')
+depends=('curl' 'recode' 'js185')
 optdepends=('bash-completion: enable bash auto completion'
             'libcaca: ascii display for no X server'
             'tiv: ascii display for no X server'
             'aview: ascii display for no X server')
 conflicts=("$pkgname-git")
 source=("http://$pkgname.googlecode.com/files/${pkgname}4-${pkgver/_/-}.tar.gz")
-md5sums=('bd0f09ab4dfbe0929b4d31f87e7eb9a0')
+md5sums=('34b45f6227163e4ff0e9008e5cba38e1')
 
 package() {
   cd "$srcdir/${pkgname}4-${pkgver/_/-}"

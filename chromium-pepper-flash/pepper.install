@@ -21,14 +21,14 @@ post_upgrade()
   if [[ $(cat "$_default") == *ppapi* ]] > /dev/null 2>&1; then
     sed -i "s/ppapi-flash-version=.*[0-9]/ppapi-flash-version=$flashver/g" "$_default" > /dev/null 2>&1
   else
-    sed -i '/CHROMIUM_FLAGS/s|"$| --ppapi-flash-path=/usr/lib/PepperFlash/libpepflashplayer.so --ppapi-flash-version='$flashver'"|' "$_default" > /dev/null 2>&1
+    sed -i "/CHROMIUM_FLAGS/s/\"$/\ --ppapi-flash-path=\/usr\/lib\/PepperFlash\/libpepflashplayer.so --ppapi-flash-version=$flashver\"/" "$_default" > /dev/null 2>&1
   fi
 
   if [[ -f '/etc/iron/default' ]]; then
     if [[ $(cat '/etc/iron/default') == *ppapi* ]] > /dev/null 2>&1; then
       sed -i "s/ppapi-flash-version=.*[0-9]/ppapi-flash-version=$flashver/g" '/etc/iron/default' > /dev/null 2>&1
     else
-      sed -i '/IRON_FLAGS/s|"$| --ppapi-flash-path=/usr/lib/PepperFlash/libpepflashplayer.so --ppapi-flash-version='$flashver'"|' '/etc/iron/default' > /dev/null 2>&1
+      sed -i "/IRON_FLAGS/s/\"$/\ --ppapi-flash-path=\/usr\/lib\/PepperFlash\/libpepflashplayer.so --ppapi-flash-version=$flashver\"/" '/etc/iron/default' > /dev/null 2>&1
     fi
   fi
 }

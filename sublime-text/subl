@@ -6,7 +6,7 @@
 
 BIN=/opt/sublime-text/sublime_text
 
-PID=$(pidof -o %PPID ${BIN})
+PID=$(ps -Ao comm,pid | awk '$1 == "sublime_text" { print $2 }')
 ARGS="--class=sublime-text"
 
 if [[ ${1:(-16)} == ".sublime-project" ]]; then

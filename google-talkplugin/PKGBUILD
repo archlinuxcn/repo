@@ -1,21 +1,24 @@
 # Maintainer: Dominik Mayer <dominik.mayer@gmail.com>
-# Maintainer: ava1ar <mail(dot)avatar(at)gmail(dot)com>
+# Maintainer: ava1ar <mail(at)ava1ar(dot)info>
 
 pkgname=google-talkplugin
-pkgver=3.19.1.0
-pkgrel=1
+pkgver=4.2.1.0
+pkgrel=2
 pkgdesc="Video chat browser plug-in for Google Talk"
 arch=('i686' 'x86_64')
-_arch="$CARCH" 
-[ "$CARCH" = 'i686' ] && _arch='i386'
 url="http://www.google.com/chat/video"
 license=('custom:google')
 depends=('gtk2>=2.12.0' 'alsa-lib' 'mesa' 'lsb-release')
 optdepends=('libnotify' 'pulseaudio')
-source=(${pkgname}-$pkgver-${_arch}.rpm::http://dl.google.com/linux/direct/${pkgname}_current_${_arch}.rpm
-license.html::http://www.google.com/intl/en/policies/terms/index.html)
-sha1sums=('cd7d1301c3c053208cd48555b57bdafeb747edff' '07475aafcde2ec4d293f0c64940662c3c39565e2') 
-[ "$CARCH" = 'i686' ] && sha1sums[0]='897f938ba49d2bc7527541a6eb60a41b91aec479'
+source=(license.html::http://www.google.com/intl/en/policies/terms/index.html)
+sha1sums=('SKIP') 
+if [ "$CARCH" == x86_64 ]; then
+	source+=(http://dl.google.com/linux/talkplugin/rpm/stable/x86_64/${pkgname}-${pkgver}-1.x86_64.rpm)
+        sha1sums+=('210b0af5cdc8a43d14913d2960839c7069684b96')
+elif [ "$CARCH" == i686 ]; then
+        source+=(http://dl.google.com/linux/talkplugin/rpm/stable/i386/${pkgname}-${pkgver}-1.i386.rpm)
+        sha1sums+=('5f9bda76c1a698980762060519e40a2c1cb955c3')
+fi
 
 package() {
     cp -R ${srcdir}/opt ${pkgdir}

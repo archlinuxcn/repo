@@ -1,9 +1,6 @@
 post_install() {
 getent group adbusers >> /dev/null || /usr/sbin/groupadd adbusers || return 1
 /bin/cat << EOF
-===> In order to use adb, you have to be in the 'adbusers' group
-===> For that, use: gpasswd -a USERNAME adbusers
-
 ===> If you have problems with printers or other devices please comment the relative line
 ===> in "/usr/lib/udev/rules.d/51-android.rules"
 EOF
