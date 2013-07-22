@@ -9,17 +9,18 @@
 pkgname=freetype2-ubuntu
 pkgver=2.5.0.1
 _ubver=2.4.11-0ubuntu1
-pkgrel=2
+_ubrel=raring
+pkgrel=4
 pkgdesc="TrueType font rendering library, with Ubuntu's LCD rendering patches"
 arch=('i686' 'x86_64')
-url="https://launchpad.net/ubuntu/precise/+source/freetype"
+url="https://launchpad.net/ubuntu/+source/freetype"
 license=('GPL')
 depends=('zlib' 'bzip2' 'sh')
 conflicts=('freetype2' 'freetype2-cleartype' 'freetype2-lcd')
 provides=("freetype2=$pkgver")
 options=('!libtool')
 source=(http://downloads.sourceforge.net/sourceforge/freetype/freetype-${pkgver}.tar.bz2
-        https://launchpad.net/ubuntu/raring/+source/freetype/$_ubver/+files/freetype_$_ubver.diff.gz
+        https://launchpad.net/ubuntu/$_ubrel/+source/freetype/$_ubver/+files/freetype_$_ubver.diff.gz
         freetype-2.2.1-enable-valid.patch
         freetype-2.3.0-enable-spr.patch
         freetype-2.4.11-enable-sph.patch)
@@ -36,21 +37,21 @@ prepare() {
   # Patch from ubuntu
   patch -Np1 -i $srcdir/freetype_$_ubver.diff
 
+
   sed -e "s/-p[0-9]\|.*otvalid\.patch//g" \
       -i debian/patches-freetype/series
 
   sed -e 's/ src/ a\/src/g' \
-      -e '/^Index.*fbase.c/,/EOF/d' \
+      -e '/^Index.*ftbase.c/,/EOF/d' \
       -i debian/patches-freetype/freetype-2.1.7-backwards.compat.patch
 
   for _f in $(cat debian/patches-freetype/series) ; do    
     patch -Np1 -i debian/patches-freetype/$_f    
   done
 
-  # Patches from arch trunk
+  # Patches from arch trunkcat debian/patches-freetype/series
   patch -Np1 -i "${srcdir}/freetype-2.2.1-enable-valid.patch"
 #  patch -Np1 -i "${srcdir}/freetype-2.3.0-enable-spr.patch"
-
   # Disabled for now due to resistance
   # Kept here for easier rebuilds via ABS
   # https://bugs.archlinux.org/task/35274
