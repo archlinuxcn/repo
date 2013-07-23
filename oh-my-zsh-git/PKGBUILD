@@ -2,7 +2,7 @@
 # Contributor: ThinCarrotShrimp <christoph.r.martin+arch at gmail dot com>
 
 pkgname=oh-my-zsh-git
-pkgver=0.0.0
+pkgver=20130716_2cc4801
 pkgrel=1
 pkgdesc="A community-driven framework for managing your zsh configuration."
 arch=('any')
@@ -43,18 +43,18 @@ build() {
 }
  
 package() {
-  mkdir -p $pkgdir/usr/share/oh-my-zsh
+  mkdir -p ${pkgdir}/usr/share/oh-my-zsh
   cd $_gitname
  
   # We don't need anything related to git in the package.
   rm -rf .git*
  
   # The license should be in /usr/share/licenses.
-  install -D -m644 MIT-LICENSE.txt $pkgdir/usr/share/licenses/$pkgname/LICENSE
+  install -D -m644 MIT-LICENSE.txt ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
   rm MIT-LICENSE.txt
  
   # Copy everything else.
-  cp -r . $pkgdir/usr/share/oh-my-zsh/
+  cp -r . ${pkgdir}/usr/share/oh-my-zsh/
 }
  
 # vim:set ts=8 sts=2 sw=2 et:
