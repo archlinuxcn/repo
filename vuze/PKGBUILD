@@ -10,10 +10,10 @@
 
 pkgname=vuze
 pkgver=5.0.0.0
-pkgrel=6
+pkgrel=7
 # _ver=${pkgver//./} # Just for reference, this is how it should be done.
-_ver=5000 # So people can download the file from the AUR page directly.
-_extra= # Extra version used in debotched releases, usually takes months... Or years.
+_ver=5000 # But this way people can download the file from the AUR page directly.
+_extra= # Extra version used in fixup releases, usually takes months... Or years.
 pkgdesc="The bittorrent kitchen-sink servlet."
 provides=("azureus")
 arch=('i686' 'x86_64')
@@ -31,7 +31,9 @@ optdepends=(
 	'vuze-plugin-i2p: Use the i2p dark-net.'
 	)
 
-noextract=("Vuze_${_ver}${_extra}.jar" "azrating_1.4.2.jar" "azupnpav_0.4.7.zip")
+noextract=("Vuze_${_ver}${_extra}.jar" 
+		"azrating_1.4.2.jar" 
+		"azupnpav_0.4.7.zip")
 
 source=(
 	 "http://downloads.sourceforge.net/azureus/vuze/Vuze_${_ver}/Vuze_${_ver}${_extra}_linux.tar.bz2"
@@ -60,7 +62,8 @@ package() {
 	# Add magnet mime-type to desktop file.
 
 	sed -i -e 's#\(x-bittorrent\)#\1;x-scheme-handler/magnet;#' \
-		-e 's#^\(Exec=vuze \)%f#\1%U#' "$pkgdir/usr/share/applications/vuze.desktop"
+		-e 's#^\(Exec=vuze \)%f#\1%U#' \
+		"$pkgdir/usr/share/applications/vuze.desktop"
 
 
 	install -pm644 vuze.png -t "$pkgdir/usr/share/pixmaps"
@@ -96,6 +99,7 @@ package() {
 
 	cp -a "$srcdir/$pkgname/plugins" "$pkgdir/usr/share/vuze"
 
+
 	# install the license
 
 	install -pm644 TOS.txt -t "$pkgdir/usr/share/licenses/vuze"
@@ -103,15 +107,19 @@ package() {
 	
 	# We really, really, shouldn't need anything below this line.
 
-	install -pm644 "$srcdir/Vuze_${_ver}${_extra}.jar" -t "$pkgdir/usr/share/vuze"
+	install -pm644 "$srcdir/Vuze_${_ver}${_extra}.jar" \
+		"$pkgdir/usr/share/vuze/Azureus2.jar"
 
-	# When the updater fails to install in system directories, the program falls in an endless
-	# loop. And won't push to the user directories either. They released these loose updates
-	# less than 24 hours after main release yet won't release a fixed linux package.
+	# When the updater fails to install in system directories, the program
+	# falls in an endless loop. And won't push to the user directories 
+	# either. They released these loose updates less than 24 hours after 
+	# the main release yet won't release a fixed linux package.
 	# And what about all the other out-dated junk? Disappointing.
 
-	install -pm644 "$srcdir/azrating_1.4.2.jar" -t "$pkgdir/usr/share/vuze/plugins/azrating"
-	unzip -qq -o -d "$pkgdir/usr/share/vuze/plugins/azupnpav" "$srcdir/azupnpav_0.4.7.zip"
+	install -pm644 "$srcdir/azrating_1.4.2.jar" \
+		-t "$pkgdir/usr/share/vuze/plugins/azrating"
+	unzip -qq -o -d "$pkgdir/usr/share/vuze/plugins/azupnpav" \
+		"$srcdir/azupnpav_0.4.7.zip"
 
 	rm -f "$pkgdir/usr/share/vuze/plugins/azplugins/azplugins_2.1.6.jar"
 	rm -f "$pkgdir/usr/share/vuze/plugins/azrating/azrating_1.3.1.jar"
