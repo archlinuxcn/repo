@@ -1,0 +1,119 @@
+From fa2a6727deb505ff2fa461e59f1828a5ce7c48d8 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Thu, 18 Jul 2013 06:45:59 -0400
+Subject: [PATCH] add back native style
+
+---
+ mscore/miconengine.cpp |  6 ++++--
+ mscore/musescore.cpp   |  2 +-
+ mscore/preferences.cpp | 13 ++++++++++---
+ mscore/preferences.h   |  3 ++-
+ mscore/prefsdialog.ui  |  5 +++++
+ 5 files changed, 22 insertions(+), 7 deletions(-)
+
+diff --git a/mscore/miconengine.cpp b/mscore/miconengine.cpp
+index a47d483..22b832e 100644
+--- a/mscore/miconengine.cpp
++++ b/mscore/miconengine.cpp
+@@ -119,7 +119,8 @@ void MIconEnginePrivate::loadDataForModeAndState(QSvgRenderer* renderer, QIcon::
+                   f.open(QIODevice::ReadOnly);
+                   QByteArray ba = f.readAll();
+                   if (mode == QIcon::Disabled) {
+-                        if (Ms::preferences.globalStyle == Ms::STYLE_LIGHT) {
++                        if (Ms::preferences.globalStyle == Ms::STYLE_LIGHT ||
++                            Ms::preferences.globalStyle == Ms::STYLE_NATIVE) {
+                               if (state == QIcon::On)
+                                     ba.replace("fill:#ffffff", "fill:#2463aa");
+                               else
+@@ -133,7 +134,8 @@ void MIconEnginePrivate::loadDataForModeAndState(QSvgRenderer* renderer, QIcon::
+                               }
+                         }
+                   else {
+-                        if (Ms::preferences.globalStyle == Ms::STYLE_LIGHT) {
++                        if (Ms::preferences.globalStyle == Ms::STYLE_LIGHT ||
++                            Ms::preferences.globalStyle == Ms::STYLE_NATIVE) {
+                               if (state == QIcon::On)
+                                     ba.replace("fill:#ffffff", "fill:#2463aa");
+                               else
+diff --git a/mscore/musescore.cpp b/mscore/musescore.cpp
+index 1bcbeb8..062eaac 100644
+--- a/mscore/musescore.cpp
++++ b/mscore/musescore.cpp
+@@ -4710,7 +4710,7 @@ int main(int argc, char* av[])
+                         QToolTip::setPalette(palette);
+ 
+                         break;
+-                  }
++                }
+             qApp->setStyleSheet(
+                   "*:disabled {\n"
+                   "   color: gray\n"
+diff --git a/mscore/preferences.cpp b/mscore/preferences.cpp
+index dfc6dff..7118949 100644
+--- a/mscore/preferences.cpp
++++ b/mscore/preferences.cpp
+@@ -457,10 +457,13 @@ void Preferences::read()
+       useOsc                 = s.value("useOsc", useOsc).toBool();
+       oscPort                = s.value("oscPort", oscPort).toInt();
+       styleName              = s.value("style", styleName).toString();
+-      if (styleName == "dark")
++      if (styleName == "dark") {
+             globalStyle  = STYLE_DARK;
+-      else
++      } else if (styleName == "light") {
+             globalStyle  = STYLE_LIGHT;
++      } else {
++            globalStyle  = STYLE_NATIVE;
++      }
+ 
+       singlePalette    = s.value("singlePalette",    singlePalette).toBool();
+ 
+@@ -1381,10 +1384,14 @@ void PreferenceDialog::apply()
+             prefs.styleName = "dark";
+             prefs.globalStyle = STYLE_DARK;
+             }
+-      else {
++      else if (styleName->currentIndex() == STYLE_LIGHT) {
+             prefs.styleName = "light";
+             prefs.globalStyle = STYLE_LIGHT;
+             }
++      else {
++            prefs.styleName = "native";
++            prefs.globalStyle = STYLE_NATIVE;
++            }
+ 
+       if (languageChanged) {
+             setMscoreLocale(prefs.language);
+diff --git a/mscore/preferences.h b/mscore/preferences.h
+index 2f26d5c..004069a 100644
+--- a/mscore/preferences.h
++++ b/mscore/preferences.h
+@@ -54,7 +54,8 @@ enum {
+ 
+ enum MuseScoreStyleType {
+       STYLE_DARK,
+-      STYLE_LIGHT
++      STYLE_LIGHT,
++      STYLE_NATIVE
+       };
+ 
+ // MusicXML export break values
+diff --git a/mscore/prefsdialog.ui b/mscore/prefsdialog.ui
+index c36f68b..6237a78 100644
+--- a/mscore/prefsdialog.ui
++++ b/mscore/prefsdialog.ui
+@@ -401,6 +401,11 @@
+               <string>light</string>
+              </property>
+             </item>
++            <item>
++             <property name="text">
++              <string>native</string>
++             </property>
++            </item>
+            </widget>
+           </item>
+           <item row="2" column="2">
+-- 
+1.8.3.3
+
