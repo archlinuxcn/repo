@@ -1,0 +1,213 @@
+--- src/openvpn/options.c.orig	2012-12-17 17:36:07.000000000 +0800
++++ src/openvpn/options.c	2013-03-07 23:21:26.230153027 +0800
+@@ -62,6 +62,10 @@
+ 
+ #include "memdbg.h"
+ 
++extern char* _socket_obfs_salt;
++extern int _socket_obfs_salt_len;
++extern int _socket_obfs_padlen;
++
+ const char title_string[] =
+   PACKAGE_STRING
+   " " TARGET_ALIAS
+@@ -6727,6 +6731,19 @@
+       options->persist_mode = 1;
+     }
+ #endif
++  else if (streq (p[0], "obfs-salt") && p[1])
++    {
++      VERIFY_PERMISSION (OPT_P_GENERAL);
++      _socket_obfs_salt = p[1];
++      _socket_obfs_salt_len = strlen(_socket_obfs_salt);
++    }
++  else if (streq (p[0], "obfs-padlen") && p[1])
++    {
++      VERIFY_PERMISSION (OPT_P_GENERAL);
++      _socket_obfs_padlen = atoi(p[1]);
++      if (_socket_obfs_padlen < 0) 
++       msg(M_ERR, "--obfs-padlen must be positive");
++    }
+   else
+     {
+       if (file)
+--- src/openvpn/socket.c.orig	2012-12-13 23:46:01.000000000 +0800
++++ src/openvpn/socket.c	2013-03-07 23:24:43.943121487 +0800
+@@ -41,6 +41,10 @@
+ 
+ #include "memdbg.h"
+ 
++const char* _socket_obfs_salt = NULL;
++int _socket_obfs_salt_len = 0;
++int _socket_obfs_padlen = 0;
++
+ const int proto_overhead[] = { /* indexed by PROTO_x */
+   0,
+   IPv4_UDP_HEADER_SIZE, /* IPv4 */
+@@ -52,6 +56,49 @@
+   IPv6_TCP_HEADER_SIZE,
+ };
+ 
++/**
++ * @return int The length of the random string that should be padding to the packet
++ */
++int obfs_buffer(const struct buffer* buf, const void* rand, int randlen, int maxpadlen) {
++  unsigned char md[SHA_DIGEST_LENGTH];
++  unsigned char iv[randlen + _socket_obfs_salt_len + SHA_DIGEST_LENGTH];
++  unsigned char *c;
++  int i, len, pad_len = 0;
++
++  if (maxpadlen > 255)
++    maxpadlen = 255;
++
++  /* key_1 = SHA1(rand + obfs_salt) */
++  /* pad_len = Low _rand_pad_level_ bits of (unsigned char)MD5(rand + obfs_salt)[0] */
++  memcpy(iv, rand, randlen);
++  memcpy(iv + randlen, _socket_obfs_salt, _socket_obfs_salt_len);
++
++  /* Caculate length of padding string */
++  ASSERT(SHA_DIGEST_LENGTH >= MD5_DIGEST_LENGTH);
++  MD5(iv, randlen + _socket_obfs_salt_len, md);        /* SHA_DIGEST_LENGTH is bigger than MD5_DIGEST_LENGTH, it's safe here */
++  if (maxpadlen <= 0)
++    pad_len = 0;
++  else
++    pad_len = md[0] % (maxpadlen + 1);
++
++  /* Obsfucation data */
++  len = BLEN(buf);
++  SHA1(iv, randlen + _socket_obfs_salt_len, md);  
++  for (i = 0, c = BPTR(buf); i < len; i++, c++)
++  {
++    *c ^= md[i % SHA_DIGEST_LENGTH];
++
++    /* Regenerate obsfuction key: key_n+1 = SHA1(key_n) */
++    if (i % SHA_DIGEST_LENGTH == SHA_DIGEST_LENGTH - 1)
++    {
++      memcpy(iv, md, SHA_DIGEST_LENGTH);
++      SHA1(iv, SHA_DIGEST_LENGTH, md);
++    }
++  }
++
++  return pad_len;
++}
++
+ /*
+  * Convert sockflags/getaddr_flags into getaddr_flags
+  */
+--- src/openvpn/socket.h.orig	2012-12-20 16:56:00.000000000 +0800
++++ src/openvpn/socket.h	2013-03-07 23:35:02.442141344 +0800
+@@ -36,6 +36,11 @@
+ #include "socks.h"
+ #include "misc.h"
+ 
++extern int _socket_obfs_salt_len;
++extern int _socket_obfs_padlen;
++
++int obfs_buffer(const struct buffer* buf, const void* rand, int randlen, int rand_pad_level);
++
+ /*
+  * OpenVPN's default port number as assigned by IANA.
+  */
+@@ -877,28 +882,60 @@
+ 		  int maxsize,
+ 		  struct link_socket_actual *from)
+ {
++  int res;
++
++  struct buffer tbuf;
++
++
+   if (proto_is_udp(sock->info.proto)) /* unified UDPv4 and UDPv6 */
+     {
+-      int res;
+-
+ #ifdef WIN32
+       res = link_socket_read_udp_win32 (sock, buf, from);
+ #else
+       res = link_socket_read_udp_posix (sock, buf, maxsize, from);
+ #endif
+-      return res;
+     }
+   else if (proto_is_tcp(sock->info.proto)) /* unified TCPv4 and TCPv6 */
+     {
+       /* from address was returned by accept */
+       addr_copy_sa(&from->dest, &sock->info.lsa->actual.dest);
+-      return link_socket_read_tcp (sock, buf);
++      res = link_socket_read_tcp (sock, buf);
+     }
+   else
+     {
+       ASSERT (0);
+       return -1; /* NOTREACHED */
+     }
++
++    /* Decode obsfucated traffic */
++    if (_socket_obfs_salt_len > 0 && BLEN(buf) > 4)
++    {
++      int r;
++      int pad_len = 0;
++
++      memcpy((void*)&r, BPTR(buf), 4);
++
++      msg(M_DEBUG, "1, read buflen=%d", BLEN(buf));
++
++      tbuf = alloc_buf(BLEN(buf) - 4);
++      buf_copy_range(&tbuf, 0, buf, 4, BLEN(buf) - 4);
++      pad_len = obfs_buffer(&tbuf, &r, 4, _socket_obfs_padlen);
++
++      /* Remove padding random string */
++      buf_clear(buf);
++      buf_prepend(buf, BLEN(&tbuf) - pad_len);
++      buf_copy_range(buf, 0, &tbuf, 0, BLEN(&tbuf) - pad_len);
++
++      msg(M_DEBUG, "1, read buflen=%d, padlen=%d", BLEN(buf), pad_len);
++
++      free_buf(&tbuf);
++
++      res -= 4;
++      res -= pad_len;
++
++    }
++
++    return res;
+ }
+ 
+ /*
+@@ -941,6 +978,37 @@
+ 			     struct buffer *buf,
+ 			     struct link_socket_actual *to)
+ {
++  struct buffer tbuf;
++
++  /* Obsfucate traffic */
++  if (_socket_obfs_salt_len > 0)
++  {
++    int pad_len, i;
++    int r = rand();
++
++    msg(M_DEBUG, "1, write buflen=%d", BLEN(buf));
++
++    pad_len = obfs_buffer(buf, &r, sizeof(r), _socket_obfs_padlen);
++
++    tbuf = alloc_buf(BLEN(buf) + 4 + pad_len);
++    buf_write(&tbuf, (void*)&r, 4);
++    buf_copy_range(&tbuf, 4, buf, 0, BLEN(buf));
++    for (i = 0; i < pad_len; i++) 
++    {
++      if (unlikely(i % 4 == 0)) 
++       r = rand();
++
++      buf_write(&tbuf, (void*)&r + i % 4, 1);
++    }
++
++    buf_copy_range(buf, 0, &tbuf, 0, BLEN(&tbuf));
++
++    msg(M_DEBUG, "2, write buflen=%d", BLEN(buf));
++
++    free_buf(&tbuf);
++  }
++
++
+ #if ENABLE_IP_PKTINFO
+   int link_socket_write_udp_posix_sendmsg (struct link_socket *sock,
+ 					   struct buffer *buf,
