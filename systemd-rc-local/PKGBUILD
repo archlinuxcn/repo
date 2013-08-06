@@ -1,0 +1,18 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+pkgname=systemd-rc-local
+pkgver=1
+pkgrel=1
+pkgdesc="/etc/rc.local and /etc/rc.local.shutdown Compatibility"
+arch=('any')
+license=("public domain")
+source=('rc-local.service' 'rc-local-shutdown.service')
+md5sums=('4705023b6b04ca17ab0e4354f129d883'
+         'eac5aacc36a1970702828a000dc8e16f')
+
+build() {
+  true
+}
+package() {
+  install -D -m644 rc-local.service "${pkgdir}/usr/lib/systemd/system/rc-local.service"
+  install -D -m644 rc-local-shutdown.service "${pkgdir}/usr/lib/systemd/system/rc-local-shutdown.service"
+}

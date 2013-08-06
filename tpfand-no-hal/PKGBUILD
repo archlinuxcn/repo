@@ -5,7 +5,7 @@
 
 pkgname=tpfand-no-hal
 pkgver=0.94
-pkgrel=5
+pkgrel=6
 pkgdesc="Monitors temperatures and controls fan speed of IBM/Lenovo ThinkPad notebooks (patched to work without HAL)."
 arch=('any')
 url="http://www.gambitchess.org/mediawiki/index.php/ThinkPad_Fan_Control"
@@ -29,8 +29,8 @@ package() {
 	install -m644 share/models/generic "$pkgdir"/usr/share/tpfand/models
 	install -d "$pkgdir"/etc/dbus-1/system.d/
 	install -m644 etc/dbus-1/system.d/* "$pkgdir"/etc/dbus-1/system.d/
-	install -d "$pkgdir"/usr/sbin
-	install wrappers/tpfand "$pkgdir"/usr/sbin/
+	install -d "$pkgdir"/usr/bin
+	install wrappers/tpfand "$pkgdir"/usr/bin/
 	install -d "$pkgdir"/etc/modprobe.d
 	install -m644 etc/modprobe.d/thinkpad_acpi.modprobe "$pkgdir"/etc/modprobe.d/thinkpad_acpi.conf
 	if [ -e /etc/tpfand.conf ] 
@@ -44,8 +44,8 @@ package() {
 md5sums=('fa08a5c3eebd47842e1fb84b6283416d'
          '353aa8a394f9f1762e70ecb7c6e623ef'
          '048c4c483feec1c106d2b3d42072e270'
-         'ac6093812b569bdf273bfaa3d65346b0')
+         'c89c04e8e255fc93808b828975bec6d8')
 sha1sums=('0f6cb53618f757b73d8b6e8627bcfaa17e2a1e7e'
           '8fa0c0d529a4213c75a841f7a63f0ce8284fd84d'
           '529d4e0cbdfb7352cfd7af275de6cb4bd93ef058'
-          'a062537393feb20e0ab9be596ca96fe7d923e26b')
+          '7d5f5c7b4993c4f6b552126dc3776408e7b73e76')

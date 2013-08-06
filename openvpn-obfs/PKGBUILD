@@ -1,0 +1,45 @@
+# Maintainer: Sascha Weaver <wzyboies@gmail.com>
+
+pkgname=openvpn-obfs
+_pkgname=openvpn
+pkgver=2.3.2
+pkgrel=1
+pkgdesc="OpenVPN binary with obfs patch"
+arch=(i686 x86_64)
+url="https://www.gsea.com.cn/blog/topic/traffic-obsfucate-patch-for-openvpn/"
+depends=('openssl' 'lzo2' 'iproute2' 'openvpn>=2.3.0')
+makedepends=('systemd')
+license=('custom')
+source=(http://swupdate.openvpn.net/community/releases/openvpn-${pkgver}.tar.gz
+        OpenVPN-2.3.0-obfs.patch
+        openvpn-2.3.0-fix-systemd-ask-password-path.patch
+        openvpn-obfs@.service)
+md5sums=('06e5f93dbf13f2c19647ca15ffc23ac1'
+         '4f57dd4cd140f1cce5fbbe2d92893ca0'
+         'e1bd1523e38745e948c710db1a330bb1'
+         '5a27f1207aba303c01b2874763e2bba0')
+options=(!libtool)
+
+build() {
+  cd $srcdir/$_pkgname-$pkgver
+  patch -p0 -i $srcdir/OpenVPN-2.3.0-obfs.patch
+  patch -p0 -i $srcdir/openvpn-2.3.0-fix-systemd-ask-password-path.patch
+  CFLAGS="$CFLAGS -DPLUGIN_LIBDIR=\\\"/usr/lib/openvpn\\\"" ./configure \
+    --prefix=/usr \
+    --sbindir=/usr/bin \
+    --enable-password-save \
+    --mandir=/usr/share/man \
+    --enable-iproute2 \
+    --enable-systemd
+  make
+}
+
+package() {
+  cd $srcdir/$_pkgname-$pkgver
+  make DESTDIR=$pkgdir install
+  mv $pkgdir/usr/bin/openvpn{,-obfs}
+  rm -r $pkgdir/usr/{share,lib,include}
+  cd ..
+  install -Dm644 openvpn-obfs@.service \
+  $pkgdir/usr/lib/systemd/system/openvpn-obfs@.service
+}
