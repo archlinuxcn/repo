@@ -1,9 +1,9 @@
 #Contributor: Chernmy <chernmy@gmail.com> 
 #Maintainer: xgdgsc<xgdgsc@gmail.com>
 pkgname=wiznote
-pkgver=1.5.18
+pkgver=1.5.54
 pkgrel=1
-_release_date=2013-06-03
+_release_date=2013-07-31
 pkgdesc="Opensource Cross platform cloud note-taking application"
 arch=('i686' 'x86_64')
 url="https://github.com/WizTeam/WizQTClient"
@@ -14,15 +14,15 @@ install=wiznote.install
 
 if [ "${CARCH}" = 'x86_64' ]; then
     ARCH='x64'
-    md5sums=('17104a14eb9590358a729e238a3e05a3')
+    md5sums=('908ead6f01d73c82c4f392e55fa832a7')
 else 
     ARCH='x86'
-    md5sums=('0d6d4ce2cd5a4771783721503a342c3b' )
+    md5sums=('e25424609f1f0c571ebff85b5b5b1071' )
 fi
 
-_source_name=${pkgname}_${pkgver}_${CARCH}.tar.gz
+#_source_name=${pkgname}_${pkgver}_${CARCH}.tar.gz
 _src_name=wiznote-linux-$ARCH-$_release_date
-source=("${_source_name}::http://download.wiz.cn/download/wiznote/$_src_name.tar.gz" )
+source=("http://download.wiz.cn/download/wiznote/$_src_name.tar.gz" )
 
 
 
