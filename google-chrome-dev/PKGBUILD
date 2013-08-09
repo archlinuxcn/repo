@@ -23,9 +23,9 @@ _arch=i386
 [ "$CARCH" = 'x86_64' ] && _arch=amd64
 source=("google-chrome-${_channel}_${pkgver}_${_arch}.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_${_arch}.deb"
         "$url/intl/en/eula_text.html")
-md5sums=('23027b36a6d42fc72da738d264eb46c3'
+md5sums=('4c0bd4055bd9c0c7aa69d1ef35d04602'
          '6d57da7476a4b1b7a81821d9c036425c')
-[ "$CARCH" = 'x86_64' ] && md5sums[0]='8c9fc5683aaf4134eb492c1c080c44f3'
+[ "$CARCH" = 'x86_64' ] && md5sums[0]='fc5cde1f113b44d5994a5d62cba946db'
 
 package() {
   msg2 "Extracting the data.tar.lzma"
