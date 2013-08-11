@@ -8,16 +8,16 @@ pkgbase=linux-rt
 pkgname=('linux-rt' 'linux-rt-headers' 'linux-rt-docs') # Build realtime patched -rt kernel
 #pkgname=linux-custom       # Build kernel with a different name
 _kernelname=${pkgname#linux}
-_basekernel=3.8
-_releasever=13
-_rtpatchver=rt14
+_basekernel=3.10
+_releasever=4
+_rtpatchver=rt1
 pkgrel=1
 _pkgver=${_basekernel}.${_releasever}
 pkgver=${_basekernel}.${_releasever}_${_rtpatchver}
 arch=('i686' 'x86_64')
 url="http://rt.wiki.kernel.org/"
 license=('GPL2')
-makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc')
+makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc' 'ncurses')
 options=('!strip')
 source=("https://www.kernel.org/pub/linux/kernel/v3.x/linux-${_basekernel}.tar.xz"
         "https://www.kernel.org/pub/linux/kernel/v3.x/patch-${_pkgver}.xz"
@@ -27,11 +27,11 @@ source=("https://www.kernel.org/pub/linux/kernel/v3.x/linux-${_basekernel}.tar.x
         # standard config files for mkinitcpio ramdisk
         "${pkgname}.preset"
         'change-default-console-loglevel.patch')
-md5sums=('1c738edfc54e7c65faeb90c436104e2f'
-         '1b015f0d6f5103b14d3600ee41ff3046'
-         'cdd69c475b036523e6225774e500192e'
-         '371d894b67ab630ccc05b4b14b6bc0db'
-         'e23d1456474e205147166b71b48f5762'
+md5sums=('4f25cd5bec5f8d5a7d935b3f2ccb8481'
+         '2e46ab138670b3171b52b849568cb42f'
+         '9aea714f522e87dc89e2b4415f1f9bf0'
+         'd46f49f18b9d0010d40f1c9c1ef38a2f'
+         'd8597d281ae4b9776fb730acd86f144f'
          'eb14dcfd80c00852ef81ded6e826826a'
          'f3def2cefdcbb954c21d8505d23cc83c')
 
