@@ -6,19 +6,20 @@
 
 pkgname=wine-multimedia
 _basename=wine
-pkgver=1.6rc3
+pkgver=1.6
 pkgrel=1
 
 _pkgbasever=${pkgver/rc/-rc}
+_multimediasnapshot=20130718
 
 source=(http://prdownloads.sourceforge.net/$_basename/$_basename-$_pkgbasever.tar.bz2{,.sign}
         30-win32-aliases.conf
-        winemultimedia_1.6rc3_20130629.patch)
+        winemultimedia_${pkgver}_${_multimediasnapshot}.patch)
 
-sha1sums=('9533d9e6da23d69c6e5b22b45e1507c721d66ebf'
+sha1sums=('f0feb6b5314d0f638fc6d4bdc43cabc028776a9c'
           'SKIP'
           '023a5c901c6a091c56e76b6a62d141d87cce9fdb'
-          '0c40e6769ef7a863318f9c6494b9c634bea51ab8')
+          '9dc6c9c23bccfe2c08e741ecbd67cdc69062a596')
 
 pkgdesc="Wine with Maarten Lankhorst's multimedia patches, including PulseAudio support"
 url="http://repo.or.cz/w/wine/multimedia.git"
@@ -107,7 +108,7 @@ else
   replaces=('bin32-wine')
 fi
 
-build() {
+prepare() {
   cd "$srcdir"
 
   # Get rid of old dirs
@@ -123,8 +124,11 @@ build() {
 
   # Apply multimedia patch
   msg2 "Applying multimedia branch patch"
-  (cd $_basename && patch -Np1 -i "${srcdir}"/winemultimedia_1.6rc3_20130629.patch)
+  cd $_basename
+  patch -Np1 -i "${srcdir}"/winemultimedia_${pkgver}_${_multimediasnapshot}.patch
+}
 
+build() {
   # These additional CPPFLAGS solve FS#27662 and FS#34195
   export CPPFLAGS="${CPPFLAGS/-D_FORTIFY_SOURCE=2/} -D_FORTIFY_SOURCE=0"
 

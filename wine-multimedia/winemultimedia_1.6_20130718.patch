@@ -1,11 +1,14 @@
-commit 0e0944c33aa1f575fb94adcfc44ccaa7272b781d
+commit 8dc1f462226dbc65556e6d9db5799304b045c47e
 Author: John Schoenick <jschoenick@mozilla.com>
-Date:   Sat Jun 29 15:03:38 2013 -0700
+Date:   Thu Jul 18 17:46:17 2013 -0700
 
-    Rebase wine-multimedia onto wine-1.6-rc3
+    Rebase wine-multimedia onto wine-1.6.
+    
+    Dropped the following patch because it sounded scary:
+        2d6ffe1 DO NOT USE YET -- override pthreads to fix gstreamer
 
 diff --git a/configure b/configure
-index 796613c..a47ad60 100755
+index 63d9d90..60681be 100755
 --- a/configure
 +++ b/configure
 @@ -649,6 +649,8 @@ OSS4INCL
@@ -150,7 +153,7 @@ index 796613c..a47ad60 100755
  then
      as_fn_append wine_warnings "|No sound system was found. Windows applications will be silent."
  fi
-@@ -16295,6 +16387,7 @@ wine_fn_config_dll winemp3.acm enable_winemp3_acm
+@@ -16296,6 +16388,7 @@ wine_fn_config_dll winemp3.acm enable_winemp3_acm
  wine_fn_config_dll wineoss.drv enable_wineoss_drv
  wine_fn_config_dll wineps.drv enable_wineps_drv install-lib,po
  wine_fn_config_dll wineps16.drv16 enable_win16
@@ -159,7 +162,7 @@ index 796613c..a47ad60 100755
  wine_fn_config_dll winex11.drv enable_winex11_drv
  wine_fn_config_dll wing.dll16 enable_win16
 diff --git a/configure.ac b/configure.ac
-index 74fd134..a84cd63 100644
+index 3dbea3f..3ee033d 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -70,6 +70,7 @@ AC_ARG_WITH(oss,       AS_HELP_STRING([--without-oss],[do not use the OSS sound
@@ -218,7 +221,7 @@ index 74fd134..a84cd63 100644
  then
      WINE_WARNING([No sound system was found. Windows applications will be silent.])
  fi
-@@ -3120,6 +3146,7 @@ WINE_CONFIG_DLL(winemp3.acm)
+@@ -3121,6 +3147,7 @@ WINE_CONFIG_DLL(winemp3.acm)
  WINE_CONFIG_DLL(wineoss.drv)
  WINE_CONFIG_DLL(wineps.drv,,[install-lib,po])
  WINE_CONFIG_DLL(wineps16.drv16,enable_win16)
@@ -1545,7 +1548,7 @@ index 447813f..b9ae99e 100644
  
      DriverFuncs driver;
 diff --git a/dlls/mmdevapi/tests/capture.c b/dlls/mmdevapi/tests/capture.c
-index feedfde..e3bb5b6 100644
+index 1873735..bce5c93 100644
 --- a/dlls/mmdevapi/tests/capture.c
 +++ b/dlls/mmdevapi/tests/capture.c
 @@ -240,7 +240,7 @@ static void test_capture(IAudioClient *ac, HANDLE handle, WAVEFORMATEX *wfx)
