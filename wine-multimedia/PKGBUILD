@@ -6,20 +6,20 @@
 
 pkgname=wine-multimedia
 _basename=wine
-pkgver=1.6
+pkgver=1.7.0
 pkgrel=1
 
 _pkgbasever=${pkgver/rc/-rc}
-_multimediasnapshot=20130718
+_multimediasnapshot=20130814
 
 source=(http://prdownloads.sourceforge.net/$_basename/$_basename-$_pkgbasever.tar.bz2{,.sign}
         30-win32-aliases.conf
         winemultimedia_${pkgver}_${_multimediasnapshot}.patch)
 
-sha1sums=('f0feb6b5314d0f638fc6d4bdc43cabc028776a9c'
+sha1sums=('6747086821b4ed0a452c5e2d6793f1e09372d06c'
           'SKIP'
           '023a5c901c6a091c56e76b6a62d141d87cce9fdb'
-          '9dc6c9c23bccfe2c08e741ecbd67cdc69062a596')
+          '7cf279f2818f601e0573975fade433f0967d7a03')
 
 pkgdesc="Wine with Maarten Lankhorst's multimedia patches, including PulseAudio support"
 url="http://repo.or.cz/w/wine/multimedia.git"
@@ -90,7 +90,7 @@ optdepends=(
   ncurses         lib32-ncurses
   libcl           lib32-libcl
   oss             cups
-  samba
+  samba           dosbox
 )
 
 if [[ $CARCH == i686 ]]; then
