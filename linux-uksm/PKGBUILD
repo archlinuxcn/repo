@@ -31,8 +31,8 @@ pkgname=linux-uksm
 true && pkgname=(linux-uksm linux-uksm-headers)
 _kernelname=-uksm
 _srcname=linux-3.10
-pkgver=3.10.6
-pkgrel=2
+pkgver=3.10.7
+pkgrel=1
 arch=('i686' 'x86_64')
 url="http://kerneldedup.org/"
 license=('GPL2')
@@ -47,7 +47,6 @@ source=("http://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
         'change-default-console-loglevel.patch'
 	'criu-no-expert.patch'
 	'3.10.6-logitech-dj.patch'
-	'3.10.6-reset-superseed-xhci-hcd.patch'
         'config'
         'config.x86_64')
         
@@ -70,9 +69,6 @@ prepare() {
 
     # fix FS#35991 - [linux] 3.10.x renders Logitech Unified Receivers useless
     patch -Np1 -i  "${srcdir}/3.10.6-logitech-dj.patch"
-
-    # fix FS#36296 - [linux] 3.10.3 reset SuperSpeed USB using xhci_hcd
-    patch -Np1 -i  "${srcdir}/3.10.6-reset-superseed-xhci-hcd.patch"
 
     ### Patch source with UKSM
     msg "Patching with UKSM"
@@ -367,12 +363,11 @@ package_linux-uksm-headers() {
 pkgdesc='Linux Kernel and modules with the UKSM patchset'
 
 sha512sums=('5fb109fcbd59bf3dffc911b853894f0a84afa75151368f783a1252c5ff60c7a1504de216c0012be446df983e2dea400ad8eeed3ce04f24dc61d0ef76c174dc35'
-            '9e0cc15f3613fc523f3a58a3eaca4aa135aaea2abfc4ba50db4923bb470d41e4f49192b967c9c489e81d0764f6712e9217b026e4e5f1472cf644bf0bcbe438fa'
+            'd34729cfca045f12077c44518171a5b933790b112f2576aa55ba7f6684567b04a6beea4da8a635dcc078a844f9cd47aa66ead1fd6d68b926fdc09ecb0ae34324'
             '41bc23f63e9cfbb50a2f8d3bebc453ead1c120e84a9399f4645111d92eb6851339c3416c5eca4ca94d665bd4bb42f387281b7ac6983c257c3249ef58aa6e638f'
             '6b5e2da5be509020134d2acfda8424f1e75fa681f0b8d5e01c6c68089da2f1398cbca58f6a85c05ac701682feec8c0d3fcf8267cefa8da391a7ada253413f771'
             '81ed74b203ff80c8fcc33a9574374905bbdc82dfdb3c248f4502c34027bb916d7b9b100ff96eea9bad0218e8e070a88ab4abce3fb11406e476fefb5753e5a3a8'
             'fc7b67bad612fdc67f9dd16886188d7bbfe3b8e65eb271672fcd888212e5b9e893c2eafef8070dd6113133b7a0a1a9c0dff90833080b452a2a530166e30587df'
             '71931ba9ba7a2c474df4c3a69244e06dbcbd6427700821d78747b44e578c6c1bd8beb8aca5dcd268a8021b2a0e8619e3048900e7c61eb3f636508545e8ebd616'
-            'c019f6049620902e13fb66a2a97f586fba2923e5f009b54c4d702ac599db73fac7de97791fb778a3386842f71ccbc829627669257d0045ae7b270df7b8f9c612'
             '2849abe99a260b981bcb5c550af135903f8757a1113782f2a139d2f293704905308b7cd4c677925c3b76b5caf60cb6b5ce8f6657db5c1a3eca23f89e5f9de1f6'
             '0f0afccca67139a693fb97cfd57acd94bbd69561105f1681b71667de5057fa1cd09f1a0933d8d7224392646188a5711db81fcc1c93186544ebef1d48c01f601b')
