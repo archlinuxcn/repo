@@ -3,22 +3,23 @@
 
 pkgname=qtadb
 pkgver=0.8.1
-pkgrel=5
+pkgrel=6
 pkgdesc="GUI for Android SDK/ADB, Android phone manager"
 arch=('i686' 'x86_64')
 url="http://qtadb.wordpress.com/"
 license=('custom:"Proprietary"')
 install=${pkgname}.install
 depends=('qt4' 'android-sdk-platform-tools')
-source=('http://motyczko.pl/qtadb/QtADB_0.8.1_src.zip'
+#source=('http://motyczko.pl/qtadb/QtADB_0.8.1_src.zip'
+source=('https://github.com/triochi/QtAdb/archive/master.zip'
         'qtadb.desktop'
         'qtadb.png')
-sha256sums=('732eb8736c2fadddc80c37b47a91589c02e474cf5b0b68393411ffd4611cdb5f'
+sha256sums=('647a66eed7c45acc97fe4fe6522565be00a2adc6b5df85db36627fe4a959542d'
             'c85aac6d113ae832efdfa70e221c4681967e973a5cd798275d295f2cbc137cc3'
             '43b1ec5bda16bb4110de0f11c1220d3e2eac73ef1bc5d0e6062025e49546bd68')
 
 build() {
-    cd $srcdir/trunk
+    cd $srcdir/QtAdb-master/
     qmake-qt4 || return 1
     make || return 1
     install -Dm755 QtADB "$pkgdir/usr/bin/qtadb"

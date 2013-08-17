@@ -1,0 +1,32 @@
+# Maintainer: Leonardo Dagnino <leodag dot sch at gmail dot com>
+
+pkgname=uksmtools
+pkgver=20130713
+pkgrel=1
+pkgdesc="Small set of tools to control UKSM"
+url="https://github.com/pfactum/uksmtools"
+arch=('i686' 'x86_64')
+license=('GPL')
+makedepends=('git')
+depends=()
+replaces=('uksmstat')
+conflicts=('uksmstat')
+_git="https://github.com/pfactum/uksmtools"
+
+prepare() {
+  git clone ${_git} ${pkgname}
+  cd "$srcdir/$pkgname"
+  git checkout
+}
+
+build() {
+  cd "$srcdir/$pkgname"
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname"
+  make install DESTDIR="$pkgdir/"  
+  mv ${pkgdir}/usr/local/* ${pkgdir}/usr
+  rm -r ${pkgdir}/usr/local
+}

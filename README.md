@@ -1,4 +1,4 @@
-Arch Linux Chinese Community repository
+Arch Linux Chinese Community Repository
 ====
 
 ###Usage
@@ -12,7 +12,7 @@ Server = http://repo.archlinuxcn.org/$arch
 ```
 to your /etc/pacman.conf .
 
-Currently we dont have any signature requirement to our maintainers. This option will be updated here after we've done it.
+Currently we don't have any signature requirement to our maintainers. This option will be updated here after we've done it.
 
 ###PKGLIST
 

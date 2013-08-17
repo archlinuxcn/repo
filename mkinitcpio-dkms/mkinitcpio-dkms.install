@@ -1,3 +1,8 @@
 post_install() {
-  echo "Please add 'dkms' to the HOOKs array in /etc/mkinitcpio.conf, and 'linux-headers' (or whatever kernel headers you use) to the SyncFirst array in /etc/pacman.conf to enable the automatic dkms modules compilation."
+  echo "Please add 'dkms' to the HOOKs array in /etc/mkinitcpio.conf (position don't matter). Make sure to update 'linux-headers' (or whatever kernel headers you use) before the image creation to prevent build failure."
 }
+
+post_upgrade() {
+  echo "SyncFirst is deprecated as of pacman v4.1. Make sure to manually update 'linux-headers' (or whatever kernel headers you use) before the image creation to prevent build failure."
+}
+
