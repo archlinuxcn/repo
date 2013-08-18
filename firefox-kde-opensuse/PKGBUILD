@@ -5,7 +5,7 @@
 #_lowmem=true
 
 pkgname=firefox-kde-opensuse
-pkgver=23.0
+pkgver=23.0.1
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
@@ -27,10 +27,19 @@ _patchurl=https://build.opensuse.org/package/rawsourcefile/mozilla:Factory/Mozil
 _patchrev=cdf792b65a71d76e6cb48d838870b3ec
 source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.bz2
         mozconfig firefox.desktop firefox-install-dir.patch vendor.js shared-libs.patch
-        cairo-shared.patch kde.js
+        cairo-shared.patch kde.js fixed-loading-icon.png
 	firefox-kde.patch::$_patchurl/firefox-kde.patch?srcmd5=$_patchrev
 	mozilla-kde.patch::$_patchurl/mozilla-kde.patch?srcmd5=$_patchrev
-	mozilla-nongnome-proxies.patch::$_patchurl/mozilla-nongnome-proxies.patch?srcmd5=$_patchrev)
+	mozilla-nongnome-proxies.patch::$_patchurl/mozilla-nongnome-proxies.patch?srcmd5=$_patchrev
+	firefox-branded-icons.patch::$_patchurl/firefox-branded-icons.patch?srcmd5=$_patchrev
+	firefox-browser-css.patch::$_patchurl/firefox-browser-css.patch?srcmd5=$_patchrev
+	firefox-kde-114.patch::$_patchurl/firefox-kde-114.patch?srcmd5=$_patchrev
+	firefox-no-default-ualocale.patch::$_patchurl/firefox-no-default-ualocale.patch?srcmd5=$_patchrev
+	mozilla-language.patch::$_patchurl/mozilla-language.patch?srcmd5=$_patchrev
+	mozilla-prefer_plugin_pref.patch::$_patchurl/mozilla-prefer_plugin_pref.patch?srcmd5=$_patchrev
+	mozilla-preferences.patch::$_patchurl/mozilla-preferences.patch?srcmd5=$_patchrev
+	toolkit-download-folder.patch::$_patchurl/toolkit-download-folder.patch?srcmd5=$_patchrev
+)
 
 prepare() {
   cd mozilla-release
@@ -55,6 +64,14 @@ prepare() {
   patch -Np1 -i "$srcdir/mozilla-nongnome-proxies.patch"
   patch -Np1 -i "$srcdir/mozilla-kde.patch"
   patch -Np1 -i "$srcdir/firefox-kde.patch"
+  patch -Np1 -i "$srcdir/firefox-branded-icons.patch"
+  patch -Np1 -i "$srcdir/firefox-browser-css.patch"
+  patch -Np1 -i "$srcdir/firefox-kde-114.patch"
+  patch -Np1 -i "$srcdir/firefox-no-default-ualocale.patch"
+  patch -Np1 -i "$srcdir/mozilla-language.patch"
+  patch -Np1 -i "$srcdir/mozilla-prefer_plugin_pref.patch"
+  patch -Np1 -i "$srcdir/mozilla-preferences.patch"
+  patch -Np1 -i "$srcdir/toolkit-download-folder.patch"
 
   # Fix PRE_RELEASE_SUFFIX
   sed -i '/^PRE_RELEASE_SUFFIX := ""/s/ ""//' browser/base/Makefile.in
@@ -66,6 +83,10 @@ prepare() {
   # WebRTC build tries to execute "python" and expects Python 2
   mkdir -p "$srcdir/path"
   ln -s /usr/bin/python2 "$srcdir/path/python"
+
+  # Fix tab loading icon (flickers with libpng 1.6)
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=841734
+  cp "$srcdir/fixed-loading-icon.png" browser/themes/linux/tabbrowser/loading.png
 }
 
 build() {
@@ -119,14 +140,23 @@ package() {
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
 
-md5sums=('794e0139c4df0392146353c655d94bb9'
+md5sums=('0fa25582fb5e0fba37c9f1add8370af2'
          '9cf611028e87c9362e8d3914880c5601'
          '1df7fd9afd75d06decb129518a769133'
          '150ac0fb3ac7b2114c8e8851a9e0516c'
-         '0d053487907de4376d67d8f499c5502b'
+         '2ff27dff68347fa2ea6ec4afbcf72833'
          '52e52f840a49eb1d14be1c0065b03a93'
          '3a236a2a39a60d622cf928655e68657f'
          '05bb69d25fb3572c618e3adf1ee7b670'
+         '6e335a517c68488941340ee1c23f97b0'
          'b251189ff372f3b0c86275f8dac2d9e1'
          '204ab5c4e4e00c840e3b3571f097f02b'
-         '28f61de31540e20522aefdbe88a83fa8')
+         '28f61de31540e20522aefdbe88a83fa8'
+         '2bd29a4922a828d2d04f1da22f824ec6'
+         '10f157ef904c650cd69eec1c7779fdf5'
+         '8d1b465949cacd932cc0da43c87e70b5'
+         '676aae76cf28b957abf57eafd2ebd13e'
+         'c911ffebad75086ebd6690678892ae6c'
+         'd7dc7e9e7a57e619d6197a2fd7ce96e9'
+         '1e73ac7e52ffb47233425a144f43622a'
+         '589ce6f4e863188080b8c234dd74629c')
