@@ -1,53 +1,41 @@
-# Maintainer: Humbert Julien <julroy67 [AT] gmail.com>
-
-pkgname=lugaruhd-hg
-pkgver=443
+# Maintainer: Sam Stuewe <halosghost at archlinux dot info>
+# Contributor: Humbert Julien <julroy67 [AT] gmail.com>
+_hgname=lugaru
+pkgname="${_hgname}hd-hg"
+pkgver=506.e435472cb42f
 pkgrel=1
-pkgdesc=" Lugaru is a third-persion action game featuring a unique close-range combat system, Open Source Version with Cmake buildsystem"
+pkgdesc="A open-source third-persion action game with revamped graphics featuring a unique close-range combat system"
 arch=('i686' 'x86_64')
 license=('GPL' 'CCPL:cc-by-sa' 'custom')
 url="http://code.google.com/p/lugaru"
 depends=('sdl' 'openal' 'libjpeg' 'libpng' 'libvorbis')
 makedepends=('mercurial' 'gcc-libs' 'sdl' 'openal' 'cmake' 'libjpeg' 'libpng' 'libvorbis')
-source=('lugaru.launcher' 'lugaru.desktop')
-conflicts=('lugaru-hd-opensource')
-sha256sums=('6e3f03543963ca1a847331c4ee3f018b0f1f663fac0e0e4d2edfb7b73e78fdbf'
+source=("${_hgname}::hg+https://${_hgname}.googlecode.com/hg"
+        "${_hgname}.launcher"
+        "${_hgname}.desktop")
+sha256sums=('SKIP'
+            'f0868d415e18d5199b2c99980cfdf89311a1214c010206c98d7cf7f1e50c1096'
             'aa7e7615d5c9d8f7bf02265bb392cadfa6e479d2fc2ff4f8972de4a0769bd6d5')
 
-_hgroot='https://lugaru.googlecode.com/hg'
-#_hgroot='http://hg.icculus.org/icculus'
-#_hgroot='https://amonakov-lugaru.googlecode.com/hg/'
-_hgrepo='lugaru'
+pkgver() {
+    cd "${_hgname}"
+    echo "$(hg identify -n).$(hg identify -i)"
+}
 
 build() {
-	if [ -d $_hgrepo ] ; then
-		cd $_hgrepo
-		hg pull -u || return 1
-		msg "The local files are updated."
-	else
-		hg clone $_hgroot $_hgrepo || return 1
-	fi
+    cd "${_hgname}"
+	cmake ./ -DCMAKE_BUILD_TYPE=Release -DLUGARU_INSTALL_PREFIX=/opt/LugaruHD
+	make
+}
+
+package() {
+    cd "${_hgname}"
+    make PREFIX=/usr DESTDIR="${pkgdir}" install
 	
-	msg "Mercurial checkout done or server timeout"
-	msg "Starting make..."
-	
-	rm -rf "$srcdir/$_hgrepo-build"
-	cp -r "$srcdir/$_hgrepo" "$srcdir/$_hgrepo-build"
-	cd "$srcdir/$_hgrepo-build"
-	
-	cmake ./ -DCMAKE_BUILD_TYPE=Release -DLUGARU_INSTALL_PREFIX=/opt/Lugaru || return 1
-	make || return 1
-	make DESTDIR=$pkgdir install
-	
-	# Install Launcher
-	install -D -m 755 $srcdir/lugaru.launcher $pkgdir/usr/bin/lugaru || return 1
-	
-	# Install Icon
-	install -D -m 644 $srcdir/$_hgrepo/Source/win-res/Lugaru.png $pkgdir/usr/share/pixmaps/Lugaru.png || return 1
-	
-	# Install .desktop file
-	install -D -m 644 $srcdir/lugaru.desktop $pkgdir/usr/share/applications/lugaru.desktop || return 1
-	
-	# Install license
-	install -D -m 644 $srcdir/$_hgrepo/CONTENT-LICENSE.txt $pkgdir/usr/share/licenses/$pkgname/LICENSE || return 1
+    cd "${srcdir}"
+	install -Dm755 "${_hgname}.launcher" "${pkgdir}/usr/bin/${_hgname}"
+	install -Dm644 "${_hgname}/Source/win-res/${_hgname//l/L}.png" "${pkgdir}/usr/share/pixmaps/${_hgname//l/L}.png"
+	install -Dm644 "${_hgname}.desktop" "${pkgdir}/usr/share/applications/${_hgname}.desktop"
+
+	install -Dm644 "${_hgname}/CONTENT-LICENSE.txt" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }

@@ -1,0 +1,22 @@
+diff --git a/init/Kconfig b/init/Kconfig
+index be8b7f5..7461760 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -989,7 +989,7 @@ config DEBUG_BLK_CGROUP
+ endif # CGROUPS
+ 
+ config CHECKPOINT_RESTORE
+-	bool "Checkpoint/restore support" if EXPERT
++	bool "Checkpoint/restore support"
+ 	default n
+ 	help
+ 	  Enables additional kernel features in a sake of checkpoint/restore.
+@@ -1000,7 +1000,7 @@ config CHECKPOINT_RESTORE
+ 	  If unsure, say N here.
+ 
+ menuconfig NAMESPACES
+-	bool "Namespaces support" if EXPERT
++	bool "Namespaces support"
+ 	default !EXPERT
+ 	help
+ 	  Provides the way to make tasks work with different objects using

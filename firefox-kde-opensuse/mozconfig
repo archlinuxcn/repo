@@ -17,27 +17,31 @@ ac_add_options --with-system-libvpx
 ac_add_options --enable-system-hunspell
 ac_add_options --enable-system-sqlite
 ac_add_options --enable-system-ffi
-#ac_add_options --enable-system-cairo
+ac_add_options --enable-system-cairo
 ac_add_options --enable-system-pixman
 ac_add_options --disable-libproxy
-ac_add_options --with-pthreads
 
 # Features
 ac_add_options --enable-startup-notification
-ac_add_options --enable-gstreamer
+#ac_add_options --enable-gstreamer
+ac_add_options --enable-pulseaudio
 
 ac_add_options --disable-gio
 ac_add_options --disable-gconf
 ac_add_options --disable-gnomevfs
 ac_add_options --disable-crashreporter
-ac_add_options --disable-updater
 ac_add_options --disable-tests
+ac_add_options --disable-updater
 ac_add_options --disable-mochitest
 ac_add_options --disable-installer
 
 # Optimization
 ac_add_options --enable-optimize
+#ac_add_options --enable-jemalloc
+export MOZ_JEMALLOC=1
 
+# PGO
+#mk_add_options PROFILE_GEN_SCRIPT='EXTRA_TEST_ARGS=10 $(MAKE) -C $(MOZ_OBJDIR) pgo-profile-run'
 
 export BUILD_OFFICIAL=1
 export MOZILLA_OFFICIAL=1

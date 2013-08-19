@@ -1,0 +1,34 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+
+_pkgname=cld2
+_reponame=chromium-compact-language-detector
+pkgname=python-${_pkgname}-hg
+pkgver=81.b1cad3f04ef4
+pkgrel=1
+pkgdesc='C++ library and Python bindings for detecting language from UTF8 text, extracted from the Chromium browser'
+arch=('i686' 'x86_64')
+url='https://code.google.com/p/chromium-compact-language-detector/'
+license=('BSD3')
+depends=('cld2-hg')
+provides=("python-${_pkgname}=0.2")
+source=('hg+https://code.google.com/p/chromium-compact-language-detector/')
+md5sums=('SKIP')
+
+pkgver() {
+  cd "$srcdir/$_reponame"
+  echo $(hg identify -n).$(hg identify -i)
+}
+
+build() {
+  cd "$srcdir/$_reponame"
+  sed -i 's,^CLD2_PATH.*,CLD2_PATH = "/usr/include/cld2",' setup.py setup_full.py
+  python setup.py build
+  python setup_full.py build
+}
+
+package() {
+  cd "$srcdir/$_reponame"
+  python setup.py install --root=$pkgdir --optimize=1
+  python setup_full.py install --root=$pkgdir --optimize=1
+}
+

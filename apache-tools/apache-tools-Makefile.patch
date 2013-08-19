@@ -1,28 +1,32 @@
---- a/support/Makefile.in
-+++ b/support/Makefile.in
-@@ -1,9 +1,10 @@
+--- a/support/Makefile.in	2012-12-11 05:37:25.000000000 -0500
++++ b/support/Makefile.in	2013-03-26 23:16:05.982719344 -0400
+@@ -1,9 +1,9 @@
  DISTCLEAN_TARGETS = apxs apachectl dbmmanage log_server_status \
 -	logresolve.pl phf_abuse_log.cgi split-logfile envvars-std
 +	logresolve.pl phf_abuse_log.cgi split-logfile
  
  CLEAN_TARGETS = suexec
  
--PROGRAMS = htpasswd htdigest rotatelogs logresolve ab htdbm htcacheclean httxt2dbm $(NONPORTABLE_SUPPORT)
-+PROGRAMS = htpasswd htdigest rotatelogs logresolve ab checkgid htdbm \
-+	htcacheclean httxt2dbm log_server_status split-logfile dbmmanage
- TARGETS  = $(PROGRAMS)
+-bin_PROGRAMS = htpasswd htdigest htdbm ab logresolve httxt2dbm
++bin_PROGRAMS = htpasswd htdigest htdbm ab logresolve httxt2dbm dbmmanage
+ sbin_PROGRAMS = htcacheclean rotatelogs $(NONPORTABLE_SUPPORT)
+ TARGETS  = $(bin_PROGRAMS) $(sbin_PROGRAMS)
  
- PROGRAM_LDADD        = $(UTIL_LDFLAGS) $(PROGRAM_DEPENDENCIES) $(EXTRA_LIBS) $(AP_LIBS)
-@@ -12,22 +13,13 @@ PROGRAM_DEPENDENCIES = 
- include $(top_builddir)/build/rules.mk
- 
+@@ -15,26 +15,18 @@
  install:
--	@test -d $(DESTDIR)$(bindir) || $(MKINSTALLDIRS) $(DESTDIR)$(bindir)
+ 	@test -d $(DESTDIR)$(bindir) || $(MKINSTALLDIRS) $(DESTDIR)$(bindir)
  	@test -d $(DESTDIR)$(sbindir) || $(MKINSTALLDIRS) $(DESTDIR)$(sbindir)
 -	@test -d $(DESTDIR)$(libexecdir) || $(MKINSTALLDIRS) $(DESTDIR)$(libexecdir)
 -	@cp -p $(top_builddir)/server/httpd.exp $(DESTDIR)$(libexecdir)
--	@for i in apxs apachectl dbmmanage; do \
-+	@for i in $(PROGRAMS) ; do \
+-	@for i in apxs dbmmanage; do \
++	@for i in $(bin_PROGRAMS); do \
+ 	    if test -f "$(builddir)/$$i"; then \
+ 	        cp -p $$i $(DESTDIR)$(bindir); \
+ 	        chmod 755 $(DESTDIR)$(bindir)/$$i; \
+ 	    fi ; \
+ 	done
+-	@for i in apachectl; do \
++	@for i in $(sbin_PROGRAMS); do \
  	    if test -f "$(builddir)/$$i"; then \
  	        cp -p $$i $(DESTDIR)$(sbindir); \
  	        chmod 755 $(DESTDIR)$(sbindir)/$$i; \
@@ -35,5 +39,5 @@
 -	    fi ; \
 -	fi
  
- htpasswd_OBJECTS = htpasswd.lo
- htpasswd: $(htpasswd_OBJECTS)
+ htpasswd.lo: passwd_common.h
+ passwd_common.lo: passwd_common.h

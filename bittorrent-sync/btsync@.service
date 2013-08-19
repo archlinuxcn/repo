@@ -1,0 +1,13 @@
+[Unit]
+Description=BitTorrent Sync service for %i
+After=network.target
+
+[Service]
+Type=forking
+User=%i
+ExecStart=/usr/bin/btsync-wrapper --config %h/.config/btsync/btsync.conf
+Restart=on-abort
+PIDFile=%h/.config/btsync/sync.pid
+
+[Install]
+WantedBy=multi-user.target
