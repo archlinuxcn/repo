@@ -1,14 +1,16 @@
 # Maintainer: lilydjwg <lilydjwg@gmail.com>
 
 _pkgname=cld2
-pkgname=${_pkgname}-hg
-pkgver=64
+pkgname=${_pkgname}-svn
+pkgver=70
 pkgrel=1
 pkgdesc='Compact Language Detector 2'
 arch=('x86_64')
 url='https://code.google.com/p/cld2/'
 license=('Apache')
-provides=('cld2')
+provides=('cld2' 'cld2-hg')
+replaces=('cld2-hg' 'cld2')
+conflicts=('cld2-hg' 'cld2')
 source=('cld2::svn+http://cld2.googlecode.com/svn/trunk/')
 md5sums=('SKIP')
 

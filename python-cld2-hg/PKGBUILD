@@ -3,13 +3,13 @@
 _pkgname=cld2
 _reponame=chromium-compact-language-detector
 pkgname=python-${_pkgname}-hg
-pkgver=81.b1cad3f04ef4
+pkgver=83.fecae179d7f2
 pkgrel=1
 pkgdesc='C++ library and Python bindings for detecting language from UTF8 text, extracted from the Chromium browser'
 arch=('i686' 'x86_64')
 url='https://code.google.com/p/chromium-compact-language-detector/'
 license=('BSD3')
-depends=('cld2-hg')
+depends=('cld2-svn')
 provides=("python-${_pkgname}=0.2")
 source=('hg+https://code.google.com/p/chromium-compact-language-detector/')
 md5sums=('SKIP')
