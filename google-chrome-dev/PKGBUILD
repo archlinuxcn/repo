@@ -5,7 +5,7 @@
 # or use: $ curl -s https://dl.google.com/linux/chrome/rpm/stable/x86_64/repodata/other.xml.gz | gzip -df | awk -F\" '/pkgid/{ sub(".*-","",$4); print $4": "$10 }'
 
 pkgname=google-chrome-dev
-pkgver=30.0.1581.2
+pkgver=30.0.1599.14
 pkgrel=1
 pkgdesc="An attempt at creating a safer, faster, and more stable browser (Dev Channel)"
 arch=('i686' 'x86_64')
@@ -23,9 +23,9 @@ _arch=i386
 [ "$CARCH" = 'x86_64' ] && _arch=amd64
 source=("google-chrome-${_channel}_${pkgver}_${_arch}.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_${_arch}.deb"
         "$url/intl/en/eula_text.html")
-md5sums=('4c0bd4055bd9c0c7aa69d1ef35d04602'
+md5sums=('992a9010d55180431bb10759438faa12'
          '6d57da7476a4b1b7a81821d9c036425c')
-[ "$CARCH" = 'x86_64' ] && md5sums[0]='fc5cde1f113b44d5994a5d62cba946db'
+[ "$CARCH" = 'x86_64' ] && md5sums[0]='d7d55aa2975ab158e7336eeda980b761'
 
 package() {
   msg2 "Extracting the data.tar.lzma"

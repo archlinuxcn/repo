@@ -1,0 +1,37 @@
+# Some colored makepkg-like functions
+msg_blue() {
+    printf "${BLUE}==>${ALL_OFF}${BOLD} ${1}${ALL_OFF}\n"
+}
+
+note() {
+    printf "${BLUE}==>${ALL_OFF}${BOLD} NOTE:${ALL_OFF} ${1}\n"
+}
+
+ALL_OFF="$(tput sgr0)"
+BOLD="$(tput bold)"
+BLUE="${BOLD}$(tput setaf 4)"
+GREEN="${BOLD}$(tput setaf 2)"
+
+_update() {
+    msg_blue "Updating desktop mime database..."
+    update-desktop-database -q
+    msg_blue "Updating mime database..."
+    update-mime-database usr/share/mime >/dev/null
+    msg_blue "Updating icon cache..."
+    xdg-icon-resource forceupdate &>/dev/null
+}
+
+post_install() {
+    _update
+    echo
+    note "The binary is called 'google-earth'."
+    echo
+}
+
+post_upgrade() {
+    post_install
+}
+
+post_remove() {
+    _update
+}
