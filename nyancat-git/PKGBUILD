@@ -1,0 +1,28 @@
+# Maintainer: Limao Luo <luolimao+AUR@gmail.com>
+
+pkgname=nyancat-git
+pkgver=1.1.7.g89c5bc8
+pkgrel=1
+pkgdesc="Terminal-based Pop Tart Cat animation"
+arch=(i686 x86_64)
+url=http://miku.acm.uiuc.edu
+license=(NCSA)
+provides=(${pkgname%-*})
+source=($pkgname::git://github.com/klange/${pkgname%-*}.git)
+sha256sums=('SKIP')
+sha512sums=('SKIP')
+
+pkgver() {
+    cd $pkgname/
+    git describe | sed 's|-|.|g'
+}
+
+build() {
+    make -C $pkgname
+}
+
+package() {
+    cd $pkgname/
+    install -Dm755 src/${pkgname%-*} "$pkgdir"/usr/bin/${pkgname%-*}
+    install -Dm644 ${pkgname%-*}.1 "$pkgdir"/usr/share/man/man1/${pkgname%-*}.1
+}
