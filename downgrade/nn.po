@@ -1,0 +1,117 @@
+# Norwegian Nynorsk Translation of downgrade
+# Copyright (C) YEAR pbrisbin
+# This file is distributed under the same license as the PACKAGE package.
+# Håkon Vågsether <hauk142@gmail.com>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: downgrade\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-04-01 18:12+0300\n"
+"PO-Revision-Date: 2013-08-06-01:13+0200\n"
+"Last-Translator: Håkon Vågsether <hauk142@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: nn\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../downgrade:10
+msgid "error: $*"
+msgstr "feil: $*"
+
+#: ../downgrade:15
+msgid ""
+"usage: downgrade [ -d <dir> ] [ -m <i686|x86_64> ] [ -a | -c ] [ -i ] [ -- ] "
+"<pkg> ...\n"
+"    options:\n"
+"      -d,--pkgdir       set download directory (A.R.M. only), default is \\`/"
+"tmp'\n"
+"      -m,--arch         set search architecture (A.R.M. only), default is "
+"determined by \\`uname -m\\`\n"
+"      -a,--noarm        don't search the A.R.M. when nothing's available in "
+"cache\n"
+"      -c,--nocache      don't look in cache, go directly to A.R.M.\n"
+"      -i,--noinstalled  don't show [installed] next to installed versions "
+"(speed up)\n"
+"      -s,--nosudo       don't use sudo, even when available"
+msgstr ""
+"bruk: downgrade [ -d <dir> ] [ -m <i686|x86_64> ] [ -a | -c ] [ -i ] [ -- ] "
+"<pkg> ...\n"
+"    handlinger:\n"
+"      -d,--pkgdir       vel nedlastingsområde (berre for A.R.M.), standard er \\`/"
+"tmp'\n"
+"      -m,--arch         vel arkitektur for søk (berre for A.R.M.), standard er "
+"bestemt av \\`uname -m\\`\n"
+"      -a,--noarm        ikkje søk i A.R.M. dersom ingenting er funne i "
+"mellomlagring\n"
+"      -c,--nocache      ikkje leit i mellomlagring, gå rett til A.R.M.\n"
+"      -i,--noinstalled  ikkje vis [installert] ved installerte versjonar "
+"(raskare)\n"
+"      -s,--nosudo       ikkje bruk sudo sjølv om det er tilgjengeleg"
+
+#: ../downgrade:42
+msgid "please do not run downgrade as root; su/sudo will be used when needed"
+msgstr "ikkje køyr downgrade som superbrukar; su/sudo vil bli brukt etter behov"
+
+#: ../downgrade:59
+#, sh-format
+msgid "$msg or [q]uit: "
+msgstr "$msg eller [a]vslutt"
+
+#: ../downgrade:61
+msgid "q"
+msgstr "a"
+
+#: ../downgrade:65
+msgid "y"
+msgstr "j"
+
+#: ../downgrade:122
+#, sh-format
+msgid "$pack [installed]"
+msgstr "$pack [installert]"
+
+#: ../downgrade:137
+#, sh-format
+msgid "could not install package $pkg"
+msgstr "kunne ikkje installere $pkg"
+
+#: ../downgrade:150
+msgid "The following packages are available in your cache:"
+msgstr "følgjande pakkar er tilgjengelege i mellomlagring"
+
+#: ../downgrade:156
+msgid "please choose a version, [s]earch A.R.M"
+msgstr "vel ein versjon, [s]øk A.R.M."
+
+#: ../downgrade:158 ../downgrade:186
+msgid "please choose a version"
+msgstr "vel ein versjon"
+
+#: ../downgrade:161
+msgid "s"
+msgstr "s"
+
+#: ../downgrade:165 ../downgrade:190
+msgid "invalid choice."
+msgstr "ugyldig val."
+
+#: ../downgrade:173
+#, sh-format
+msgid "$arch is invalid, must be 32 or 64"
+msgstr "$arch er ugyldig, må vere 32 eller 64"
+
+#: ../downgrade:181
+msgid "The following packages are available from the A.R.M.:"
+msgstr "Følgjande pakkar er tilgjengelege frå A.R.M.:"
+
+#: ../downgrade:196
+#, sh-format
+msgid "unable to create $pkgdir"
+msgstr "kan ikkje opprette $pkgdir"
+
+#: ../downgrade:212
+#, sh-format
+msgid "Add $pkg to IgnorePkg in $pacman_conf"
+msgstr "Legg til $pkg til IgnorePkg i $pacman_conf"
