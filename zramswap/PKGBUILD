@@ -1,0 +1,25 @@
+# Maintainer:  Swift Geek
+# Contributor: ifaigios <ifaigios_at_gmail_dot_com>
+# Contributor: Alyssa Hung <deciare@isisiew.org>
+# Contributor: Matt Brennan
+# Contributor: falconindy
+# Contributor: adee
+# Contributor: mystilleef
+
+pkgname=zramswap
+pkgver=1.1
+pkgrel=1
+pkgdesc="Sets up zram-based swap devices on boot"
+arch=('any')
+url="http://en.wikipedia.org/wiki/ZRam"
+license=('GPL')
+depends=('bash')
+source=("zramctrl"
+        "zramswap.service")
+md5sums=('e7b096320bc40f56b19e26a4597f3095'
+         '560b724aaaf50678ed1c902cd1517109')
+
+package() {
+  install -Dm755 zramctrl $pkgdir/usr/lib/systemd/scripts/zramctrl
+  install -Dm644 zramswap.service $pkgdir/usr/lib/systemd/system/zramswap.service
+}
