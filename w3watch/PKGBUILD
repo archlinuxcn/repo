@@ -1,0 +1,20 @@
+# $Id: PKGBUILD 328 2012-09-15 08:55:49Z pierre $
+# Maintainer: Pierre Schmitz <pierre@archlinux.de>
+
+pkgname=w3watch
+pkgver=1.0.3
+pkgrel=1
+pkgdesc='Watch the web and get notified on updates'
+arch=('any')
+url='https://git.archlinux.de/w3watch.git/'
+license=('GPL')
+depends=('bash' 'lynx' 'awk' 'diffutils' 'coreutils' 'grep')
+source=("https://users.archlinux.de/~pierre/src/${pkgname}/${pkgname}-${pkgver}.tar.gz"
+        "https://users.archlinux.de/~pierre/src/${pkgname}/${pkgname}-${pkgver}.tar.gz.sig")
+md5sums=('cb539783d39f0bf50aa67494e7845291'
+         'd261efcea66173ee5b2d80c70f4130be')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make install DESTDIR=${pkgdir}
+}
