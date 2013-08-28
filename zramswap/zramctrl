@@ -1,0 +1,50 @@
+#!/bin/sh
+
+
+start() {
+  exec awk -v ZRAM_SIZE=$ZRAM_SIZE '
+  
+  FILENAME == "/proc/cpuinfo" && ($1 == "processor" || $1 == "Processor") {
+    cpucount++
+    next
+  }
+
+  FILENAME == "/proc/meminfo" && $1 == "MemTotal:" {
+    if (ZRAM_SIZE == "")
+      ZRAM_SIZE = 20
+    mem_total = int( (0 + $2) * 1024 * ( ZRAM_SIZE/100 ) )
+    next
+  }
+
+  END {
+    mem_per_cpu = int(mem_total / cpucount)
+
+    system("modprobe zram num_devices=" cpucount)
+
+    for (i = 0; i < cpucount; i++) {
+      print mem_per_cpu > "/sys/block/zram" i "/disksize"
+      system("mkswap /dev/zram" i " -L zram" i)
+      swapdevs = swapdevs " /dev/zram" i
+    }
+
+    system("swapon -p 100" swapdevs)
+  }
+  ' /proc/cpuinfo /proc/meminfo
+}
+
+stop() {
+  exec awk '
+  FNR > 1 && $1 ~ /^\/dev\/zram[0-9]+$/ {
+    activeswaps = activeswaps " " $1
+  }
+
+  END {
+    system("swapoff" activeswaps)
+    system("rmmod zram")
+  }
+  ' /proc/swaps
+}
+
+case $1 in
+  start|stop) "$1" ;;
+esac

@@ -1,0 +1,11 @@
+[Unit]
+Description=Zram-based swap (compressed RAM block devices)
+
+[Service]
+Type=oneshot
+ExecStart=/usr/lib/systemd/scripts/zramctrl start
+ExecStop=/usr/lib/systemd/scripts/zramctrl stop
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
