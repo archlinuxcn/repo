@@ -1,0 +1,61 @@
+diff --git a/qtwebkit/Source/JavaScriptCore/DerivedSources.pri b/qtwebkit/Source/JavaScriptCore/DerivedSources.pri
+index 8bbc29d..43266cc 100644
+--- a/qtwebkit/Source/JavaScriptCore/DerivedSources.pri
++++ b/qtwebkit/Source/JavaScriptCore/DerivedSources.pri
+@@ -85,14 +85,14 @@ GENERATORS += msvcstubs
+ retgen.output = RegExpJitTables.h
+ retgen.script = $$PWD/create_regex_tables
+ retgen.input = retgen.script
+-retgen.commands = python $$retgen.script > ${QMAKE_FILE_OUT}
++retgen.commands = python2 $$retgen.script > ${QMAKE_FILE_OUT}
+ GENERATORS += retgen
+ 
+ #GENERATOR: "KeywordLookup.h": decision tree used by the lexer
+ klgen.output = KeywordLookup.h
+ klgen.script = $$PWD/KeywordLookupGenerator.py
+ klgen.input = KEYWORDLUT_FILES
+-klgen.commands = python $$klgen.script ${QMAKE_FILE_NAME} > ${QMAKE_FILE_OUT}
++klgen.commands = python2 $$klgen.script ${QMAKE_FILE_NAME} > ${QMAKE_FILE_OUT}
+ GENERATORS += klgen
+ 
+ EXTRACTOR_BINARY = LLIntOffsetsExtractor$$BIN_EXTENSION
+@@ -116,7 +116,7 @@ linux-*:if(isEqual(QT_ARCH, "i386")|isEqual(QT_ARCH, "x86_64")) {
+     disassembler.input = DISASSEMBLER_FILES
+     disassembler.script = $$PWD/disassembler/udis86/itab.py
+     disassembler.depends = $$DISASSEMBLER_DEPENDENCY
+-    disassembler.commands = python $$disassembler.script ${QMAKE_FILE_NAME} --outputDir ${QMAKE_FUNC_FILE_OUT_PATH}
++    disassembler.commands = python2 $$disassembler.script ${QMAKE_FILE_NAME} --outputDir ${QMAKE_FUNC_FILE_OUT_PATH}
+     disassembler.CONFIG += no_link
+     GENERATORS += disassembler
+ }
+diff --git a/qtwebkit/Source/WebCore/DerivedSources.pri b/qtwebkit/Source/WebCore/DerivedSources.pri
+index 3457f35..447c1f6 100644
+--- a/qtwebkit/Source/WebCore/DerivedSources.pri
++++ b/qtwebkit/Source/WebCore/DerivedSources.pri
+@@ -770,7 +770,7 @@ GENERATORS += generateBindings
+ inspectorValidate.output = InspectorProtocolVersion.h
+ inspectorValidate.input = INSPECTOR_JSON
+ inspectorValidate.script = $$PWD/inspector/generate-inspector-protocol-version
+-inspectorValidate.commands = python $$inspectorValidate.script -o ${QMAKE_FILE_OUT} ${QMAKE_FILE_IN}
++inspectorValidate.commands = python2 $$inspectorValidate.script -o ${QMAKE_FILE_OUT} ${QMAKE_FILE_IN}
+ inspectorValidate.depends = $$PWD/inspector/generate-inspector-protocol-version
+ inspectorValidate.add_output_to_sources = false
+ GENERATORS += inspectorValidate
+@@ -778,7 +778,7 @@ GENERATORS += inspectorValidate
+ inspectorJSON.output = InspectorFrontend.cpp InspectorBackendDispatcher.cpp InspectorTypeBuilder.cpp
+ inspectorJSON.input = INSPECTOR_JSON
+ inspectorJSON.script = $$PWD/inspector/CodeGeneratorInspector.py
+-inspectorJSON.commands = python $$inspectorJSON.script $$PWD/inspector/Inspector.json --output_h_dir ${QMAKE_FUNC_FILE_OUT_PATH} --output_cpp_dir ${QMAKE_FUNC_FILE_OUT_PATH}
++inspectorJSON.commands = python2 $$inspectorJSON.script $$PWD/inspector/Inspector.json --output_h_dir ${QMAKE_FUNC_FILE_OUT_PATH} --output_cpp_dir ${QMAKE_FUNC_FILE_OUT_PATH}
+ inspectorJSON.depends = $$inspectorJSON.script
+ GENERATORS += inspectorJSON
+ 
+@@ -885,7 +885,7 @@ GENERATORS += settingsmacros
+ entities.output = HTMLEntityTable.cpp
+ entities.input = HTML_ENTITIES
+ entities.script = $$PWD/html/parser/create-html-entity-table
+-entities.commands = python $$entities.script -o ${QMAKE_FILE_OUT} $$HTML_ENTITIES
++entities.commands = python2 $$entities.script -o ${QMAKE_FILE_OUT} $$HTML_ENTITIES
+ entities.clean = ${QMAKE_FILE_OUT}
+ entities.depends = $$PWD/html/parser/create-html-entity-table
+ GENERATORS += entities
