@@ -3,7 +3,7 @@
 # Contributor: Matthias Maennich <arch@maennich.net>
 # Contributor: Jan-Erik Meyer-Luetgens <nyan at meyer-luetgens dot de>
 pkgname=python-shiboken
-pkgver=1.2.0
+pkgver=1.2.1
 pkgrel=1
 _pyver=3.3
 _py2ver=2.7
@@ -11,7 +11,7 @@ pkgdesc="Python 2 & 3 bindings generator for Qt C++ libraries"
 arch=('i686' 'x86_64')
 license=('LGPL')
 url="http://qt-project.org/wiki/PySide"
-depends=("qt4>=4.8" 'openssl')
+depends=("qt4>=4.8" 'openssl' 'libxslt')
 optdepends=(
     "python-sphinx: Documentation"
     "python=${_pyver}: Python 3 support"
@@ -22,7 +22,7 @@ conflicts=("libshiboken")
 provides=("libshiboken" "shiboken=$pkgver")
 replaces=('shiboken')
 source=("http://download.qt-project.org/official_releases/pyside/shiboken-$pkgver.tar.bz2" "FindPython3Libs.cmake.patch")
-md5sums=('946ae0405ff3238d6b72124e07fae06e' 'e21f354434c2c43b8ebdcf582d512de5')
+md5sums=('06100e2c91ab4433dbf15c26f5bb6c17' 'e21f354434c2c43b8ebdcf582d512de5')
 
 build(){
     patch $srcdir/shiboken-$pkgver/cmake/Modules/FindPython3Libs.cmake FindPython3Libs.cmake.patch
