@@ -2,8 +2,8 @@
 # Contributor: hbdee <hbdee.arch@gmail.com>
 
 pkgname=gtk3-appmenu
-_ubuntu_rel=0ubuntu3 
-pkgver=3.8.2
+_ubuntu_rel=3.8.2-0ubuntu3 
+pkgver=3.8.4
 pkgrel=2
 pkgdesc="GObject-based multi-platform toolkit (v3) (Last version with appmenu patches)"
 arch=('i686' 'x86_64')
@@ -17,9 +17,9 @@ options=('!libtool' '!docs')
 backup=('etc/gtk-3.0/settings.ini')
 license=('LGPL')
 source=("http://ftp.gnome.org/pub/GNOME/sources/gtk+/${pkgver%.*}/gtk+-${pkgver}.tar.xz"
-        "https://launchpad.net/ubuntu/+archive/primary/+files/gtk+3.0_${pkgver}-${_ubuntu_rel}.debian.tar.gz"
+        "https://launchpad.net/ubuntu/+archive/primary/+files/gtk+3.0_${_ubuntu_rel}.debian.tar.gz"
         'arch_settings.ini')
-sha512sums=('20958c192fe881281f6885e2d7cecc4e2700fc01ef8006304f1fb8befe8f6628cbdb06c0d801f109e5805d58f327ca9a07d5e2c7f938116c99db8080d0c2f83e'
+sha512sums=('36bbc6ec08dd7997f1e388b93c5a771e35894d134c2a781fc5fc40b668850ea91c8ab94848cb57de4d109987bc1796c098d67896b5c77d85fb7ad3346b140600'
             '77987f706693e52e17906e92bacba8c9a34c7ff644a3e72351b2952e530f3f140b9aecd28230e4b2fb518702bfaf543cfa7648764fd06c86047261bd4839788a'
             '087bf853cb9f6ee8269c60041555ee1546a2d10fbdbe820710c77a74bb9c34735abe8b061e2a0322246932d7a72b21953682fcdca79b09fd555307abb1d88699')
 
