@@ -89,13 +89,20 @@ local_packages() {
   find "$(pacman_cache)" -name "$term-[0-9R]*.pkg.tar.[gx]z" | LC_ALL='C' sort -rV
 }
 
+arm_api() {
+  local pkgname="$1" url='http://repo-arm.archlinuxcn.org/search'
+
+  curl -G \
+    --silent --fail \
+    --data "arch=$arch" \
+    --data-urlencode "pkgname=$term" "$url"
+}
+
 # removes packages duplicated between testing and non-testing repos.
 arm_packages() {
   local term="$1" repos repo url tmp entry pack
 
-  url="http://repo-arm.archlinuxcn.org/search?arch=$arch&pkgname=$term"
-
-  tmp=( $(curl --silent --fail "$url" | grep -v sig$ | cut -d '|' -f 5 | sort -rV) )
+  tmp=($(arm_api "$term" | grep -v sig$ | cut -d '|' -f 5 | sort -rV))
 
   for entry in "${tmp[@]}"; do
     read -r repo pack < <(format_arm "$entry")
