@@ -2,12 +2,12 @@
 # Contributor: Matthias Maennich <arch@maennich.net>
 # Contributor: Massimiliano Torromeo <massimiliano.torromeo@gmail.com>
 # Contributor: Jan-Erik Meyer-Luetgens <nyan at meyer-luetgens dot de>
-pkgbase=pyside
-pkgname=pyside
-true && pkgname=(pyside-common pyside-python2 pyside-python3)
+pkgbase=python-pyside
+pkgname=python-pyside
+true && pkgname=(python-pyside-common python2-pyside python-pyside)
 _pkgrealname=pyside
 pkgver=1.2.1
-pkgrel=4
+pkgrel=5
 pkgdesc="Provides LGPL Qt bindings for Python and related tools for binding generation. Will build for both Python 2 and 3 versions."
 arch=('i686' 'x86_64')
 license=('LGPL')
@@ -19,9 +19,8 @@ source=("http://download.qt-project.org/official_releases/pyside/${_pkgrealname}
 md5sums=('34b05faa7cc44d3c24d5ccadd894bd3c')
 
 depends=('python' 'python2' "qt4>=${_qtver}" 'phonon' "shiboken>=$pkgver")
-provides=("python-pyside=$pkgver" "python2-pyside=$pkgver")
-conflicts=('python-pyside' 'python2-pyside')
-replaces=('python-pyside' 'python2-pyside')
+conflicts=('pyside-python2' 'pyside-python3')
+replaces=('pyside-python2' 'pyside-python3')
 
 build(){
     cd $srcdir/${_pkgrealname}-qt${_qtver}+$pkgver
@@ -39,12 +38,12 @@ build(){
     make
 }
 
-package_pyside-common(){
+package_python-pyside-common(){
     true && depends=("qt4>=${_qtver}" 'phonon' "shiboken>=$pkgver")
     true && pkgdesc="Provides LGPL Qt bindings for Python and related tools for binding generation. Common Files."
-    true && provides=()
     true && conflicts=()
     true && replaces=()
+    true && optdepends=()
     # cmake will use Python 3 version by default
     cd $srcdir/${_pkgrealname}-qt${_qtver}+$pkgver/build_py3
     make DESTDIR=$pkgdir install
@@ -54,12 +53,11 @@ package_pyside-common(){
       "$pkgdir"/usr/lib/pkgconfig/pyside.pc
 }
 
-package_pyside-python3(){
-    true && depends=('python' "qt4>=${_qtver}" 'phonon' "shiboken>=$pkgver" "pyside-common=$pkgver")
+package_python-pyside(){
+    true && depends=('python' "qt4>=${_qtver}" 'phonon' "shiboken>=$pkgver" "python-pyside-common=$pkgver")
     true && pkgdesc="Provides LGPL Qt bindings for Python and related tools for binding generation. Python 3 version."
-    true && provides=("python-pyside=$pkgver")
-    true && conflicts=('python-pyside')
-    true && replaces=('python-pyside')
+    true && conflicts=('pyside-python3')
+    true && replaces=('pyside-python3')
 
     cd $srcdir/${_pkgrealname}-qt${_qtver}+$pkgver/build_py3
     make DESTDIR=$pkgdir install
@@ -71,12 +69,11 @@ package_pyside-python3(){
       "$pkgdir"/usr/share
 }
 
-package_pyside-python2(){
-    true && depends=('python' "qt4>=${_qtver}" 'phonon' "shiboken>=$pkgver" "pyside-common=$pkgver")
+package_python2-pyside(){
+    true && depends=('python' "qt4>=${_qtver}" 'phonon' "shiboken>=$pkgver" "python-pyside-common=$pkgver")
     true && pkgdesc="Provides LGPL Qt bindings for Python and related tools for binding generation. Python 2 version."
-    true && provides=("python2-pyside=$pkgver")
-    true && conflicts=('python2-pyside')
-    true && replaces=('python2-pyside')
+    true && conflicts=('pyside-python2')
+    true && replaces=('pyside-python2')
 
     cd $srcdir/${_pkgrealname}-qt${_qtver}+$pkgver/build_py2
     make DESTDIR=$pkgdir install
