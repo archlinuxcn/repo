@@ -1,0 +1,47 @@
+# Maintainer: Giuseppe Borzi <gborzi@ieee.org>
+# Contributor: Brice M<E9>alier <mealier_brice@yahoo.fr>
+# Contributor: Michele Mocciola <mickele>
+pkgname=opencascade
+pkgver=6.6.0
+pkgrel=1
+pkgdesc="Open CASCADE Technology, 3D modeling & numerical simulation"
+arch=('i686' 'x86_64')
+url="http://www.opencascade.org"
+license=('custom')
+depends=('tk' 'mesa' 'java-runtime' 'libxmu' 'ftgl')
+makedepends=('java-environment')
+options=(!libtool)
+source=("http://files.opencascade.com/OCCT/OCC_${pkgver}_release/OpenCASCADE${pkgver//./}.tgz" "env.sh" "opencascade.sh" "opencascade.conf")
+md5sums=('ad698d9b1e370c14999e7ec130575c92'
+         'ebca349379b5e608030b6ad88a9ab855'
+         'd9368b8d348ced3ec4462012977552d2'
+         '2924ecf57c95d25888f51071fdc72ad0')
+
+build() {
+  cd "$srcdir/ros"
+  export CPLUS_INCLUDE_PATH=/usr/include/FTGL:/usr/include/freetype2
+  export CASROOT="$srcdir/ros"
+  if [ ! -d $JAVA_HOME/include ]; then
+    [ -e /etc/profile.d/openjdk6.sh ] && source /etc/profile.d/openjdk6.sh
+    [ -e /etc/profile.d/jdk.sh ] && source /etc/profile.d/jdk.sh
+  fi
+
+  # fix for automake 1.13
+  sed -i -e 's/AM_CONFIG_HEADER/AC_CONFIG_HEADERS/' configure.ac
+  ./build_configure
+  ./configure --disable-debug --enable-production \
+    --with-java-include=${JAVA_HOME}/include --prefix="$pkgdir/opt/$pkgname"
+  make
+}
+
+package() {
+  cd "$srcdir/ros"
+
+  make install
+  install -D -m644 "${srcdir}/opencascade.conf" "${pkgdir}/etc/ld.so.conf.d/opencascade.conf"
+  install -D -m 755 "${srcdir}/opencascade.sh" "${pkgdir}/etc/profile.d/opencascade.sh"
+  install -m 755 "${srcdir}/env.sh" "${pkgdir}/opt/$pkgname"
+  install -Dm644 "$srcdir/ros/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/License.txt"
+}
+
+# vim:set ts=2 sw=2 et:
