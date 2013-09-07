@@ -1,0 +1,81 @@
+# Maintainer: mickele
+# Contributor: Jordi De Groof <jordi (dot) degroof (at) gmail (dot) com>
+# Contributor: manwithgrenade
+# Contributor: bricem13
+# Contributor: gborzi
+
+pkgname=freecad
+pkgver=0.13.1830
+pkgrel=4
+pkgdesc='A general purpose 3D CAD modeler'
+arch=('i686' 'x86_64')
+url='http://www.freecadweb.org/'
+license=('GPL')
+depends=('boost-libs' 'curl' 'opencascade>=6.6.0' 'pivy-hg' 'python2-pyqt4' 'xerces-c' 'libspnav' 'shared-mime-info' 'hicolor-icon-theme' 'python2-matplotlib')
+makedepends=('boost' 'eigen3' 'gcc-fortran' 'swig' 'xerces-c' 'desktop-file-utils' 'cmake' 'coin>=3.1.3-9')
+optdepends=('python2-matplotlib' 'pycollada-git') 
+options=(!libtool !makeflags)
+install=freecad.install
+source=("http://downloads.sourceforge.net/sourceforge/free-cad/freecad-${pkgver}.tar.gz" "${pkgname}.desktop" "${pkgname}.xml")
+
+_installdir=/opt/$pkgname
+# I prefer installing in opt because installing
+# in /usr there are non standard dir.
+# However if you prefer /usr uncomment the following line
+# _installdir=/usr
+
+build() {
+  cd "${srcdir}/freecad-${pkgver}/"
+
+  # compatibility issues with OCC-6.6
+  for _FILE in $( grep -Rl "BRepTools::OuterShell" * )
+  do
+    sed -e "s|BRepTools|BRepClass3d|g" -i "$_FILE"
+  done
+  
+  mkdir -p build
+
+  cd build
+
+  cmake -DCMAKE_INSTALL_PREFIX:PATH=${_installdir} .. \
+  	-DOCC_INCLUDE_DIR:PATH=/opt/opencascade/inc/ \
+	-DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2 \
+	-DFREECAD_USE_EXTERNAL_PIVY:BOOL=ON
+
+# add these options if you don't want to update coin 
+#	-DCMAKE_C_FLAGS:STRING="$CFLAGS -fpermissive" \
+#	-DCMAKE_CXX_FLAGS:STRING="$CXXFLAGS -fpermissive"
+	
+  make
+
+  # Builds Qt plugin
+  cd ../src/Tools/plugins/widget/
+  qmake-qt4 plugin.pro
+  make
+}
+
+package() {
+  cd "${srcdir}/freecad-${pkgver}/build"
+
+  # Install main program
+  make DESTDIR="${pkgdir}" install
+
+  # Symlink to /usr/bin
+  mkdir -p "${pkgdir}/usr/bin/"
+  ln -sf "${_installdir}/bin/FreeCAD" "${pkgdir}/usr/bin/freecad"
+  ln -sf "${_installdir}/bin/FreeCADCmd" "${pkgdir}/usr/bin/freecadcmd"
+
+  # Installs Qt plugin
+  install -Dm755 ../src/Tools/plugins/widget/libFreeCAD_widgets.so "${pkgdir}/usr/lib/qt4/plugins/designer/libFreeCAD_widgets.so"
+
+  # Install pixmaps and desktop shortcut
+  desktop-file-install \
+    --dir="${pkgdir}/usr/share/applications" \
+    "${srcdir}/${pkgname}.desktop"
+
+   # Mime info
+   install -D -m644 "${srcdir}/${pkgname}.xml" "${pkgdir}/usr/share/mime/packages/${pkgname}.xml"
+}
+md5sums=('13b8fddef12f5f8419dcf4adbab596eb'
+         '0a4d0635dbd97d9f594ac8e927284316'
+         'c2f4154c8e4678825411de8e7fa54c6b')
