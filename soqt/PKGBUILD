@@ -1,0 +1,41 @@
+# Maintainer: Christian Hesse <mail@eworm.de>
+# Contributor: Thomas Dziedzic < gostrc at gmail >
+# Contributor: mickele
+# Contributor: marcus fritzsch <fritschy@googlemail.com>
+
+pkgname=soqt
+pkgver=1.5.0
+pkgrel=5
+pkgdesc='A library which provides the glue between Coin and Qt'
+arch=('i686' 'x86_64')
+url='http://www.coin3d.org/lib/soqt/'
+license=('GPL')
+depends=('coin' 'qt4')
+makedepends=('doxygen')
+options=('!libtool')
+source=("https://bitbucket.org/Coin3D/coin/downloads/SoQt-${pkgver}.tar.gz")
+
+build() {
+  cd ${srcdir}/SoQt-${pkgver}
+
+  ./configure --prefix=/usr \
+    --enable-optimization \
+    --enable-man \
+    --enable-exceptions \
+    --disable-debug \
+    --disable-maintainer-mode \
+    --disable-dependency-tracking \
+    --enable-shared \
+    --disable-static \
+    --with-qt=/usr
+
+  make
+}
+
+package() {
+  cd SoQt-${pkgver}
+
+  make DESTDIR=${pkgdir} install
+}
+
+sha256sums=('f6a34b4c19e536c00f21aead298cdd274a7a0b03a31826fbe38fc96f3d82ab91')
