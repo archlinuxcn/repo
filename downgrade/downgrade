@@ -1,18 +1,13 @@
-#!/bin/bash
-#
-# pbrisbin 2012
-#
-# downgrade one or more packages from cache or A.R.M.
-#
-###
+#!/usr/bin/env bash
 TEXTDOMAINDIR=/usr/share/locale
 TEXTDOMAIN=downgrade
+
 errorout() { echo $"error: $*" >&2; exit 1; }
 
 message() {
   local exit_code="${1:-0}"
 
-echo $"usage: downgrade [ -d <dir> ] [ -m <i686|x86_64> ] [ -a | -c ] [ -i ] [ -- ] <pkg> ...
+  echo $"usage: downgrade [ -d <dir> ] [ -m <i686|x86_64> ] [ -a | -c ] [ -i ] [ -- ] <pkg> ...
     options:
       -d,--pkgdir       set download directory (A.R.M. only), default is \`/tmp'
       -m,--arch         set search architecture (A.R.M. only), default is determined by \`uname -m\`
@@ -23,8 +18,6 @@ echo $"usage: downgrade [ -d <dir> ] [ -m <i686|x86_64> ] [ -a | -c ] [ -i ] [ -
 
   exit $exit_code
 }
-
-enabled_repos() { sed '/^\[\(.*\)\]$/!d;s//\1/g;/options/d' /etc/pacman.conf; }
 
 pacman_cache() {
   local cache
@@ -44,7 +37,6 @@ is_valid_index() {
   return 0
 }
 
-# uses sudo or su to root depending on availability and configuration
 as_root() {
   if ! (( $UID )); then
     errorout $"please do not run downgrade as root; su/sudo will be used when needed"
@@ -70,40 +62,38 @@ prompt_with_quit() {
 }
 
 prompt_yn() {
-  local msg="$*" ans ques=$"y"
+  local msg="$*" ques=$"y" ans
 
   echo
   read -r -p "$msg? [$ques/$"n"] " ans
-  ans=$(echo $ans |tr '[A-Z]' '[a-z]')
 
-  [[ $ans =~ ^($ques) ]]
-  
+  [[ "${ans,,}" =~ ^($ques) ]]
 }
 
-# we use the $term-[0-9]* glob to disambiguate cases like foo-1.0 and
-# foo-completion-1.0.
 local_packages() {
   local term="$1"
 
-  # the R is a special case for erlang, others may exist
+  # we use the $term-[0-9]* glob to disambiguate cases like foo-1.0 and
+  # foo-completion-1.0. the R is a special case for erlang.
   find "$(pacman_cache)" -name "$term-[0-9R]*.pkg.tar.[gx]z" | LC_ALL='C' sort -rV
 }
 
 arm_api() {
-  local pkgname="$1" url='http://repo-arm.archlinuxcn.org/search'
+  local pkgname="$1" url='http://repo-arm.archlinuxcn.org/exact'
 
-  curl -G \
+  curl \
     --silent --fail \
     --data "arch=$arch" \
     --data-urlencode "pkgname=$term" "$url"
 }
 
-# removes packages duplicated between testing and non-testing repos.
 arm_packages() {
-  local term="$1" repos repo url tmp entry pack
+  local term="$1" tmp entry repo pack
 
+  # omit signatures, sort by latest version
   tmp=($(arm_api "$term" | grep -v sig$ | cut -d '|' -f 5 | sort -rV))
 
+  # remove packages duplicated between testing and non-testing
   for entry in "${tmp[@]}"; do
     read -r repo pack < <(format_arm "$entry")
 
@@ -117,15 +107,14 @@ arm_packages() {
   done
 }
 
-# uses the named function to extract repo and package out of each item.
 print_table() {
-  local func="$1"; shift
+  local formatter="$1"; shift
   local i=0 arg repo pack
 
   local fmt=" %4.4s)  %-17.17s  %s\n"
 
   for arg; do
-    read -r repo pack < <($func "$arg")
+    read -r repo pack < <($formatter "$arg")
 
     i=$((i+1))
     case $pack in
@@ -137,7 +126,7 @@ print_table() {
 
 format_local() { echo "local $(basename "$1")"; }
 
-# set elements out of the url, indexed by forward slash.
+# pull elements out of the url, indexed by forward slash.
 format_arm() { set ${1//\// }; echo "$3 $6"; }
 
 install_pkg() {
@@ -147,7 +136,6 @@ install_pkg() {
   as_root "$pacman" -U "$pkg" || errorout $"could not install package $pkg"
 }
 
-# if a choice is made, installs the package.
 check_local_packages() {
   $searchcache || return 1
 
@@ -176,11 +164,10 @@ check_local_packages() {
   install_pkg "${locals[$n]}"
 }
 
-# if a choice is made, downloads and installs the package.
 check_arm_packages() {
   $searcharm || return 1
 
-  [[ "$arch" =~ ^(i686|x86_64)$ ]] || errorout $"$arch is invalid, must be 32 or 64"
+  [[ "$arch" =~ ^(i686|x86_64)$ ]] || errorout $"$arch is invalid, must be i686 or x86_64"
 
   local term="$1" url pkg n
   local arms=( $(arm_packages "$term") )
@@ -210,38 +197,30 @@ check_arm_packages() {
   install_pkg "$pkg"
 }
 
-# won't handle non-standard formatting well, just tacks the argument
-# onto the end of the IgnorePkg line (iff not already present).
 prompt_to_ignore() {
-  local pkg="$1" ans
-  ans=$(echo $ans |tr '[A-Z]' '[a-z]')
+  local pkg="$1"
   local pacman_conf="${PACMAN_CONF:-/etc/pacman.conf}"
 
-  # don't even prompt if already present
-  if ! grep -Eq "^IgnorePkg.*( |=)$pkg( |$)" "$pacman_conf"; then
-    if prompt_yn $"Add $pkg to IgnorePkg in $pacman_conf"; then
-      as_root sed -i "s/^IgnorePkg.*/& $pkg/" "$pacman_conf"
-    fi
+  grep -Eq "^IgnorePkg.*( |=)$pkg( |$)" "$pacman_conf" && return 0
+
+  if prompt_yn $"Add $pkg to IgnorePkg in $pacman_conf"; then
+    as_root sed -i "s/^IgnorePkg.*/& $pkg/" "$pacman_conf"
   fi
 }
 
 (( "$#" )) || message 1
 
+pkgdir='/tmp'
+arch=$(uname -m)
+searcharm=true
+searchcache=true
+showinstalled=true
+usesudo=true
+
 args=()
 
-# Defaults
-pkgdir='/tmp'      # where to put packages
-searcharm=true     # search arm if not in cache
-searchcache=true   # check in cache before arm
-showinstalled=true # show [installed] next to installed versions
-usesudo=true       # use sudo if present
-
-arch=$(uname -m)
-
-# Options
 while [[ -n "$1" ]]; do
   case "$1" in
-    -p|--pacman)      shift; PACMAN="$1"            ;;
     -d|--pkgdir)      shift; pkgdir="${1/\~/$HOME}" ;;
     -m|--arch)        shift; arch="$1"              ;;
     -a|--noarm)       searcharm=false               ;;
@@ -256,9 +235,7 @@ while [[ -n "$1" ]]; do
   shift
 done
 
-# Main
 for term in "${args[@]}"; do
-  # parse installed version if desired
   $showinstalled && installed=$(pacman -Q $term 2>/dev/null)
   installed=${installed:-DummyPkg}
 
