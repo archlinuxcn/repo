@@ -1,17 +1,14 @@
-commit b99cd857096f153de58750413cfdd2610914d1ad
+commit cc4c98bf4f0420707a2c95771d3f69d23f365d51
 Author: John Schoenick <jschoenick@mozilla.com>
-Date:   Wed Aug 14 13:12:44 2013 -0700
+Date:   Fri Aug 30 15:34:02 2013 -0700
 
-    Rebase wine-multimedia onto wine-1.7.0
-    
-    Dropped the following commit due to the name:
-      TESTING -- override pthreads to fix gstreamer
+    Rebase wine-multimedia onto wine-1.7.1
 
 diff --git a/configure b/configure
-index 7c9c76c..9415120 100755
+index d0f15d0..e4dba75 100755
 --- a/configure
 +++ b/configure
-@@ -656,6 +656,8 @@ OSS4INCL
+@@ -657,6 +657,8 @@ OSS4INCL
  ALSALIBS
  GSTREAMER_LIBS
  GSTREAMER_CFLAGS
@@ -20,7 +17,7 @@ index 7c9c76c..9415120 100755
  LIBGETTEXTPO
  ZLIB
  FREETYPE_LIBS
-@@ -837,6 +839,7 @@ with_osmesa
+@@ -838,6 +840,7 @@ with_osmesa
  with_oss
  with_png
  with_pthread
@@ -28,7 +25,7 @@ index 7c9c76c..9415120 100755
  with_sane
  with_tiff
  with_v4l
-@@ -1558,6 +1561,7 @@ Optional Packages:
+@@ -1559,6 +1562,7 @@ Optional Packages:
    --without-oss           do not use the OSS sound support
    --without-png           do not use PNG
    --without-pthread       do not use the pthread library
@@ -36,7 +33,7 @@ index 7c9c76c..9415120 100755
    --without-sane          do not use SANE (scanner support)
    --without-tiff          do not use TIFF
    --without-v4l           do not use v4l1 (v4l support)
-@@ -2787,6 +2791,12 @@ if test "${with_pthread+set}" = set; then :
+@@ -2788,6 +2792,12 @@ if test "${with_pthread+set}" = set; then :
  fi
  
  
@@ -49,7 +46,7 @@ index 7c9c76c..9415120 100755
  # Check whether --with-sane was given.
  if test "${with_sane+set}" = set; then :
    withval=$with_sane;
-@@ -11193,6 +11203,87 @@ esac
+@@ -11109,6 +11119,87 @@ esac
  fi
  fi
  
@@ -137,7 +134,7 @@ index 7c9c76c..9415120 100755
  if test "x$with_gstreamer" != "xno"
  then
      if test -n "$GSTREAMER_CFLAGS"; then :
-@@ -12422,12 +12513,13 @@ fi
+@@ -12386,12 +12477,13 @@ fi
  
  test -n "$ALSALIBS" || enable_winealsa_drv=${enable_winealsa_drv:-no}
  test -n "$COREAUDIO" || enable_winecoreaudio_drv=${enable_winecoreaudio_drv:-no}
@@ -153,7 +150,7 @@ index 7c9c76c..9415120 100755
  then
      as_fn_append wine_warnings "|No sound system was found. Windows applications will be silent."
  fi
-@@ -16473,6 +16565,7 @@ wine_fn_config_dll winemp3.acm enable_winemp3_acm
+@@ -16439,6 +16531,7 @@ wine_fn_config_dll winemp3.acm enable_winemp3_acm
  wine_fn_config_dll wineoss.drv enable_wineoss_drv
  wine_fn_config_dll wineps.drv enable_wineps_drv install-lib,po
  wine_fn_config_dll wineps16.drv16 enable_win16
@@ -162,7 +159,7 @@ index 7c9c76c..9415120 100755
  wine_fn_config_dll winex11.drv enable_winex11_drv
  wine_fn_config_dll wing.dll16 enable_win16
 diff --git a/configure.ac b/configure.ac
-index 0e3df61..086ed24 100644
+index d8033cf..abb40e9 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -67,6 +67,7 @@ AC_ARG_WITH(oss,       AS_HELP_STRING([--without-oss],[do not use the OSS sound
@@ -173,7 +170,7 @@ index 0e3df61..086ed24 100644
  AC_ARG_WITH(sane,      AS_HELP_STRING([--without-sane],[do not use SANE (scanner support)]))
  AC_ARG_WITH(tiff,      AS_HELP_STRING([--without-tiff],[do not use TIFF]))
  AC_ARG_WITH(v4l,       AS_HELP_STRING([--without-v4l],[do not use v4l1 (v4l support)]))
-@@ -1517,6 +1518,30 @@ then
+@@ -1513,6 +1514,30 @@ then
            [GetText ${notice_platform}development files not found (or too old), po files can't be rebuilt.])
  fi
  
@@ -204,7 +201,7 @@ index 0e3df61..086ed24 100644
  dnl **** Check for gstreamer ****
  if test "x$with_gstreamer" != "xno"
  then
-@@ -1727,13 +1752,14 @@ WINE_CHECK_SONAME(odbc,SQLConnect,,[AC_DEFINE_UNQUOTED(SONAME_LIBODBC,["libodbc.
+@@ -1731,13 +1756,14 @@ WINE_CHECK_SONAME(odbc,SQLConnect,,[AC_DEFINE_UNQUOTED(SONAME_LIBODBC,["libodbc.
  dnl **** Disable unsupported winmm drivers ****
  test -n "$ALSALIBS" || enable_winealsa_drv=${enable_winealsa_drv:-no}
  test -n "$COREAUDIO" || enable_winecoreaudio_drv=${enable_winecoreaudio_drv:-no}
@@ -221,7 +218,7 @@ index 0e3df61..086ed24 100644
  then
      WINE_WARNING([No sound system was found. Windows applications will be silent.])
  fi
-@@ -3113,6 +3139,7 @@ WINE_CONFIG_DLL(winemp3.acm)
+@@ -3121,6 +3147,7 @@ WINE_CONFIG_DLL(winemp3.acm)
  WINE_CONFIG_DLL(wineoss.drv)
  WINE_CONFIG_DLL(wineps.drv,,[install-lib,po])
  WINE_CONFIG_DLL(wineps16.drv16,enable_win16)
@@ -242,7 +239,7 @@ index 5c9ef4a..9f79e7d 100644
  }
  
 diff --git a/dlls/dsound/dsound.c b/dlls/dsound/dsound.c
-index 381d0e1..362f0e8 100644
+index 986168b..a6fc671 100644
 --- a/dlls/dsound/dsound.c
 +++ b/dlls/dsound/dsound.c
 @@ -306,7 +306,6 @@ static HRESULT WINAPI IDirectSound8Impl_SetCooperativeLevel(IDirectSound8 *iface
@@ -340,7 +337,7 @@ index 381d0e1..362f0e8 100644
          HeapFree(GetProcessHeap(), 0, device->buffer);
          RtlDeleteResource(&device->buffer_list_lock);
          device->mixlock.DebugInfo->Spare[0] = 0;
-@@ -813,6 +802,7 @@ HRESULT DirectSoundDevice_Initialize(DirectSoundDevice ** ppDevice, LPCGUID lpcG
+@@ -789,6 +778,7 @@ HRESULT DirectSoundDevice_Initialize(DirectSoundDevice ** ppDevice, LPCGUID lpcG
      device->mmdevice = mmdevice;
      device->guid = devGUID;
      device->sleepev = CreateEventW(0, 0, 0, 0);
@@ -348,7 +345,7 @@ index 381d0e1..362f0e8 100644
  
      hr = DSOUND_ReopenDevice(device, FALSE);
      if (FAILED(hr))
-@@ -868,12 +858,8 @@ HRESULT DirectSoundDevice_Initialize(DirectSoundDevice ** ppDevice, LPCGUID lpcG
+@@ -844,12 +834,8 @@ HRESULT DirectSoundDevice_Initialize(DirectSoundDevice ** ppDevice, LPCGUID lpcG
  
      ZeroMemory(&device->volpan, sizeof(device->volpan));
  
@@ -426,7 +423,7 @@ index 7a16366..4f533b4 100644
  
  static const char * get_device_id(LPCGUID pGuid)
 diff --git a/dlls/dsound/dsound_private.h b/dlls/dsound/dsound_private.h
-index 1a3900c..19b6ccc 100644
+index a8f5f42..b2342e3 100644
 --- a/dlls/dsound/dsound_private.h
 +++ b/dlls/dsound/dsound_private.h
 @@ -31,7 +31,6 @@
@@ -1998,7 +1995,7 @@ index 0ee7c8c..57fa4b1 100644
      test_marshal();
      trace("Output to a MS-DOS console is particularly slow and disturbs timing.\n");
 diff --git a/dlls/ntdll/server.c b/dlls/ntdll/server.c
-index 46494e2..49c6ced 100644
+index f77bacf..a15a791 100644
 --- a/dlls/ntdll/server.c
 +++ b/dlls/ntdll/server.c
 @@ -79,6 +79,9 @@
@@ -2011,7 +2008,7 @@ index 46494e2..49c6ced 100644
  
  /* Some versions of glibc don't define this */
  #ifndef SCM_RIGHTS
-@@ -979,6 +982,88 @@ static int get_unix_tid(void)
+@@ -1328,6 +1331,88 @@ static int get_unix_tid(void)
  }
  
  
@@ -2100,7 +2097,7 @@ index 46494e2..49c6ced 100644
  /***********************************************************************
   *           server_init_process
   *
-@@ -988,6 +1073,14 @@ void server_init_process(void)
+@@ -1337,6 +1422,14 @@ void server_init_process(void)
  {
      obj_handle_t version;
      const char *env_socket = getenv( "WINESERVERSOCKET" );
@@ -2115,7 +2112,7 @@ index 46494e2..49c6ced 100644
  
      server_pid = -1;
      if (env_socket)
-@@ -1071,7 +1164,6 @@ NTSTATUS server_init_process_done(void)
+@@ -1420,7 +1513,6 @@ NTSTATUS server_init_process_done(void)
      return status;
  }
  
@@ -5392,6 +5389,21 @@ index f387323..3b1be27 100644
  
      HeapFree(GetProcessHeap(), 0, drvA);
      PropVariantClear(&pv);
+diff --git a/dlls/winmm/waveform.c b/dlls/winmm/waveform.c
+index 23adfc0..97849ff 100644
+--- a/dlls/winmm/waveform.c
++++ b/dlls/winmm/waveform.c
+@@ -68,8 +68,8 @@ static const WCHAR muteW[] = {'M','u','t','e',0};
+  *   - We must be able to identify bad devices without crashing.
+  */
+ 
+-/* buffer size = 100 * 100000 (100 ns) = 1 second */
+-#define AC_BUFLEN (100 * 100000)
++/* buffer size = 10 * 100000 (100 ns) = 0.1 seconds */
++#define AC_BUFLEN (10 * 100000)
+ #define MAX_DEVICES 256
+ #define MAPPER_INDEX 0x3F
+ 
 diff --git a/libs/wine/loader.c b/libs/wine/loader.c
 index 4e78116..094e5e1 100644
 --- a/libs/wine/loader.c
@@ -5830,7 +5842,7 @@ index 0000000..53e5ce4
 +
 +#endif
 diff --git a/server/thread.c b/server/thread.c
-index 5f9738d..573719f 100644
+index 32985ac..61a427a 100644
 --- a/server/thread.c
 +++ b/server/thread.c
 @@ -52,6 +52,8 @@
@@ -5842,7 +5854,7 @@ index 5f9738d..573719f 100644
  
  #ifdef __i386__
  static const unsigned int supported_cpus = CPU_FLAG(CPU_x86);
-@@ -198,6 +200,8 @@ static inline void init_thread_structure( struct thread *thread )
+@@ -201,6 +203,8 @@ static inline void init_thread_structure( struct thread *thread )
      list_init( &thread->mutex_list );
      list_init( &thread->system_apc );
      list_init( &thread->user_apc );
@@ -5851,7 +5863,7 @@ index 5f9738d..573719f 100644
  
      for (i = 0; i < MAX_INFLIGHT_FDS; i++)
          thread->inflight[i].server = thread->inflight[i].client = -1;
-@@ -266,6 +270,9 @@ static void cleanup_thread( struct thread *thread )
+@@ -269,6 +273,9 @@ static void cleanup_thread( struct thread *thread )
  {
      int i;
  
@@ -5861,7 +5873,7 @@ index 5f9738d..573719f 100644
      clear_apc_queue( &thread->system_apc );
      clear_apc_queue( &thread->user_apc );
      free( thread->req_data );
-@@ -456,6 +463,15 @@ affinity_t get_thread_affinity( struct thread *thread )
+@@ -459,6 +466,15 @@ affinity_t get_thread_affinity( struct thread *thread )
  #define THREAD_PRIORITY_REALTIME_HIGHEST 6
  #define THREAD_PRIORITY_REALTIME_LOWEST -7
  
@@ -5877,7 +5889,7 @@ index 5f9738d..573719f 100644
  /* set all information about a thread */
  static void set_thread_info( struct thread *thread,
                               const struct set_thread_info_request *req )
-@@ -471,8 +487,22 @@ static void set_thread_info( struct thread *thread,
+@@ -474,8 +490,22 @@ static void set_thread_info( struct thread *thread,
          }
          if ((req->priority >= min && req->priority <= max) ||
              req->priority == THREAD_PRIORITY_IDLE ||
@@ -5901,7 +5913,7 @@ index 5f9738d..573719f 100644
          else
              set_error( STATUS_INVALID_PARAMETER );
      }
-@@ -1200,6 +1230,10 @@ DECL_HANDLER(init_thread)
+@@ -1289,6 +1319,10 @@ DECL_HANDLER(init_thread)
      }
      debug_level = max( debug_level, req->debug_level );
  
@@ -5913,7 +5925,7 @@ index 5f9738d..573719f 100644
      reply->tid     = get_thread_id( current );
      reply->version = SERVER_PROTOCOL_VERSION;
 diff --git a/server/thread.h b/server/thread.h
-index 1c4a74a..66275f1 100644
+index eddfd30..b9e5645 100644
 --- a/server/thread.h
 +++ b/server/thread.h
 @@ -87,6 +87,8 @@ struct thread

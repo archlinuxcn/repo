@@ -1,0 +1,37 @@
+#!/bin/bash
+
+_downgrade() {
+  local cur prev ng_set options
+
+  ng_set=$(shopt -p nullglob)
+  shopt -s nullglob
+
+  COMPREPLY=()
+  cur=${COMP_WORDS[COMP_CWORD]}
+  prev=${COMP_WORDS[COMP_CWORD-1]}
+
+  options='
+    -d --pkgdir
+    -m --arch
+    -a --noarm
+    -c --nocache
+    -i --noinstalled
+    -s --nosudo
+  '
+
+  case "$prev" in
+    *downgrade)  COMPREPLY=($(compgen -W "$options"    -- $cur)) ;;
+    -d|--pkgdir) COMPREPLY=($(compgen -o dirnames      -- $cur)) ;;
+    -m|--arch)   COMPREPLY=($(compgen -W 'x86_64 i686' -- $cur)) ;;
+    *)
+      case "$cur" in
+        -*)  COMPREPLY=($(compgen -W "$options" -- $cur)) ;;
+        *)   COMPREPLY=($(compgen -W "$(pacman -Qqs "^$cur")")) ;;
+      esac
+      ;;
+  esac
+
+  $ng_set
+}
+
+complete -F _downgrade downgrade

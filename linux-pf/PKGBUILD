@@ -65,7 +65,7 @@ _pstates_pat=yes
 pkgname=('linux-pf')
 true && pkgname=('linux-pf' 'linux-pf-headers')
 pkgver=${_basekernel}.${_pfrel}
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 url="http://pf.natalenko.name/"
 license=('GPL2')
@@ -81,6 +81,7 @@ source=("ftp://www.kernel.org/pub/linux/kernel/v${_major}.x/linux-${_basekernel}
         'http://repo-ck.com/source/gcc_patch/kernel-310-gcc48-1.patch.gz'
         'enable_haswell_pstate_driver.patch'
 	"${_pfpatchhome}${_pfpatchname}.bz2"	# the -pf patchset
+	'0001-drm-i915-correctly-restore-fences-with-objects-attac.patch'
  )
 
 _aufs3git="http://git.code.sf.net/p/aufs/aufs3-standalone"
@@ -145,6 +146,10 @@ prepare() {
 
 
   # end linux-ARCH patches
+
+
+  # fix kernel bug #60530
+  patch -Np1 -i "${srcdir}"/0001-drm-i915-correctly-restore-fences-with-objects-attac.patch
 
   if [ -n "$_pstates_pat" ]; then
     ### Patch source to enable pstate drivers with ivybridge CPUs
@@ -280,7 +285,7 @@ build() {
     for _cpusuffix_kbuild in ${_CPUSUFFIXES_KBUILD[@]} ; do
 	_egrepstring="${_egrepstring}M${_cpusuffix_kbuild}=y|"
     done
-    CPU=$(egrep "${_egrepstring}CONFIG_GENERIC_CPU=y|M686=y" ./.config)
+    CPU=$(egrep "${_egrepstring}CONFIG_GENERIC_CPU=y|M686=y|CONFIG_MNATIVE=y" ./.config)
     CPU=$(sed -e "s/CONFIG_M\(.*\)=y/\1/" <<<$CPU)
     CPU=$(sed -e "s/CONFIG_GENERIC_CPU=y/GENERIC/" <<<$CPU)
     CPU=$(sed -e "s/^686$/GENERIC/" <<<$CPU)
@@ -427,11 +432,11 @@ package_linux-pf() {
 	 pkgdesc="${_pkgdesc} AMD Bobcat optimized."
 	 ;;
      BULLDOZER)
-	 pkgname"${pkgbase}-bulldozer"
+	 pkgname="${pkgbase}-bulldozer"
 	 pkgdesc="${_pkgdesc} AMD Bulldozer optimized."
 	 ;;
      PILEDRIVER)
-	 pkgname"${pkgbase}-piledriver"
+	 pkgname="${pkgbase}-piledriver"
 	 pkgdesc="${_pkgdesc} AMD Piledriver optimized."
 	 ;;
      PSC)
@@ -740,4 +745,5 @@ sha256sums=('df27fa92d27a9c410bfe6c4a89f141638500d7eadcca5cce578954efc2ad3544'
             '56bd99e54429a25a144f2d221718b67f516344ffd518fd7dcdd752206ec5be69'
             '16c9eab6e83f0f4f035d8f52e17791115d8c01c6199a21525cb2f583aec61b03'
             'd7fada52453d12a24af9634024c36792697f97ce0bc6552939cd7b2344d00cd9'
-            'deeaaf781974c5120064c11e387b4dbb977c47ae3fe6b63d26cbb0dfa4157ce1')
+            'deeaaf781974c5120064c11e387b4dbb977c47ae3fe6b63d26cbb0dfa4157ce1'
+            '1445afdc3e9ea2b40123e6ab0a3f0369046d7bacd656d3acd70075cecd8aa774')

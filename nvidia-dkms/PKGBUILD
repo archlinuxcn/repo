@@ -1,11 +1,11 @@
-# Maintainer: Alucryd <alucryd at gmail dot com>
+# Maintainer: alucryd <alucryd at gmail dot com>
 # Contributor: jarda-wien <xstej70 at gmail dot com>
 # Contributor: Jason Melton <jason dot melton at gmail dot com>
 # Contributor: Atilla ÖNTAŞ <tarakbumba at gmail dot com>
 
 pkgname=nvidia-dkms
 pkgver=325.15
-pkgrel=1
+pkgrel=2
 pkgdesc="NVIDIA kernel module sources (DKMS)"
 arch=('i686' 'x86_64')
 [[ $CARCH == i686 ]] && _arch=x86 && _pkg=NVIDIA-Linux-${_arch}-${pkgver} && md5sums=('528fc538584de6446384b9cec3099d6c')
@@ -17,8 +17,10 @@ optdepends=('linux-headers: Build the module against Arch kernel'
             'linux-lts-headers: Build the module against LTS Arch kernel')
 provides=("nvidia=${pkgver}")
 conflicts=('nvidia')
-source=("http://us.download.nvidia.com/XFree86/Linux-${_arch}/${pkgver}/${_pkg}.run")
-install=${pkgname}.install
+install="${pkgname}.install"
+source=("http://us.download.nvidia.com/XFree86/Linux-${_arch}/${pkgver}/${_pkg}.run"
+        'nvidia-linux3.11.patch')
+md5sums+=('5c962760de069ed4ad34e64d5988686a')
 
 prepare() {
   if [[ -d ${_pkg} ]] ; then
@@ -26,6 +28,9 @@ prepare() {
   fi
 
   sh ${_pkg}.run --extract-only
+
+  cd ${_pkg}
+  patch -Np1 -i ../nvidia-linux3.11.patch
 }
 
 package() {

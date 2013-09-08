@@ -3,8 +3,8 @@
 # Contributor: Pavel Larev <pavel@larev.ws>
 
 pkgname=apache-tools
-pkgver=2.4.4
-pkgrel=2
+pkgver=2.4.6
+pkgrel=1
 pkgdesc="Useful Apache tools - htdigest, htpasswd, ab, htdbm"
 arch=(i686 x86_64)
 url=http://httpd.apache.org/
@@ -13,9 +13,9 @@ depends=(apr-util pcre)
 conflicts=(apache)
 source=(http://www.apache.org/dist/httpd/httpd-$pkgver.tar.bz2
     $pkgname-Makefile.patch)
-sha256sums=('92aabddeca76a4ac7330b143df1407bbf35574c7291c15172238ac598d97655c'
+sha256sums=('dc9f3625ebc08bea55eeb0d16e71fba656f252e6cd0aa244ee7806dc3b022fea'
     '2dc48d34773b0c873d10e3542f77a4f7b50d5fb9bd8c52e3bb28b76ff9587f3f')
-sha512sums=('d68789e1e585b4acf26e4e32d063fa512525f8fcc2077b1dbf573dd9f4b47667772d94bb65fefb354fbfae331e87b3fdea422a732838c86d8887eed4b3a76af0'
+sha512sums=('8ade7ec5291f07a60e279f7a73a79c11c150dbf09c9e7b059e136fcb250130aa0f381b118f84e230184b065d452d5e946df8a5766991be8cdc6e8f5d4c4bac01'
     '6e068e7820e852c788a521ad28c367af4c1c22fded51ede7ae3f840a8a04737cfbe4503c2f3f899c89461d984007e84f80376b5a8a27c7eec8ec0fd78155c22b')
 
 prepare() {

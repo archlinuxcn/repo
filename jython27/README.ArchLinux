@@ -1,0 +1,37 @@
+Important Notes
+===============
+The user is strongly advised to create a file named
+~/.jython, containing the following line:
+python.cachedir=/home/USERNAME/.jythoncachedir
+where USERNAME is your username.
+Environment variable expansion and ~ expansion are not honored in this file,
+so you cannot represent /home/USERNAME with ~/ or $HOME.
+
+Jython uses caching to improve performance.  By default, it tries to
+use a global directory as its cache.  This fails, because the directory
+is not writable by non-privileged users.
+
+Some GNU/Linux distributions solve this problem by setting python.cachedir
+in the launcher script, when the JVM is invoked.
+E.G.,
+java -Dpython.cachedir="${HOME}/.jythoncachedir" ...
+That solution seems nice, because jython usually does the
+right thing when invoked via the launcher script.
+However, it has three limitations.
+
+1. If jython is not started via the launcher, it will not cache in
+~/.jythoncachedir.  It will try to cache in the aforementioned global
+directory!
+2. Specifying -Dpython.cachedir on the java command-line guarantees that
+the setting will be ignored if it is found in ~/.jython.
+Thus, the user cannot override the setting in his configuration file when
+the launcher is used.
+3. It enforces a distribution-specific policy.
+
+The best approach is simply to let the user specify
+python.cachedir in ~/.jython.
+
+jythonc
+=======
+The jythonc tool is not included by upstream in the 2.5.x series of jython.
+Thus, it is no longer available in this package.

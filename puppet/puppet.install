@@ -1,0 +1,46 @@
+# Puppet: Installer: Arch
+# Maintainer: Thomas S Hatch <thatch45 (at) Gmail (dot) com>
+# Contributor: Xavion <Xavion (dot) 0 (at) Gmail (dot) com>
+# Contributor: Miah Johnson <Miah (at) chia-pet dot org>
+
+pre_install() {
+  getent group puppet &>/dev/null || groupadd -r puppet -g 52 &>/dev/null
+  getent passwd puppet &>/dev/null || useradd -r -u 52 -g puppet -d /var/lib/puppet -s /sbin/nologin -c "Puppet" puppet &>/dev/null || :
+}
+
+pre_upgrade() {
+  pre_install
+  usermod -d /var/lib/puppet puppet &>/dev/null || :
+}
+
+post_install() {
+    :
+}
+
+pre_remove() {
+if [ -f /var/run/puppetmasterd.pid ]; then
+	PIDOF=$(pidof -xo %PPID puppetmasterd)
+	PIDFILE=$(cat /var/run/puppetmasterd.pid)
+	if [ $PIDOF -eq $PIDFILE ]; then
+		/etc/rc.d/puppetmaster stop
+	fi
+fi
+
+if [ -f /var/run/puppetd.pid ]; then
+	PIDOF=$(pidof -xo %PPID puppetd)
+	PIDFILE=$(cat /var/run/puppetd.pid)
+	if [ $PIDOF -eq $PIDFILE ]; then
+		/etc/rc.d/puppet stop
+	fi
+fi
+}
+
+post_remove() {
+	# Remove user and group
+	userdel puppet
+}
+
+op=$1
+shift
+
+$op "$@"
