@@ -1,0 +1,90 @@
+# Maintainer: Felix Yan <felixonmars@gmail.com>
+# Contributor: Andrea Scarpino <andrea@archlinux.org>
+# Contributor: csslayer <wengxt AT gmail com>
+
+_origname=fcitx
+pkgbase=lib32-fcitx
+pkgname=lib32-fcitx
+true && pkgname=('lib32-fcitx' 'lib32-fcitx-gtk2' 'lib32-fcitx-qt4') # 'lib32-fcitx-gtk3')
+pkgver=4.2.8
+pkgrel=2
+groups=('fcitx-im-multilib')
+arch=('x86_64')
+url="http://code.google.com/p/fcitx/"
+license=('GPL')
+makedepends=('cmake' 'lib32-icu' 'lib32-gtk2' 'lib32-qt4') # 'lib32-gtk3')
+source=("http://download.fcitx-im.org/${_origname}/${_origname}-${pkgver}.tar.xz"
+	"qconfig.h")
+
+build() {
+  cd "$srcdir"
+
+  mkdir -p QtCore
+  cp qconfig.h QtCore
+
+  export CC="gcc -m32 -I$srcdir -I$srcdir/QtCore"
+  export CXX="g++ -m32 -I$srcdir -I$srcdir/QtCore"
+  export PKG_CONFIG_PATH='/usr/lib32/pkgconfig'
+
+  mkdir -p build
+  cd build
+  cmake ../${_origname}-${pkgver} \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DLIB_INSTALL_DIR=/usr/lib32 \
+    -DQT_QMAKE_EXECUTABLE=qmake4 \
+    -DENABLE_OPENCC=OFF \
+    -DFORCE_PRESAGE=ON \
+    -DENABLE_GIR=OFF \
+    -DENABLE_LIBXML2=OFF \
+    -DENABLE_QT_IM_MODULE=ON
+#    -DENABLE_GTK3_IM_MODULE=ON
+  (cd src/lib && make)
+  (cd src/frontend/qt && make)
+  (cd src/frontend/gtk2 && make)
+  #cd src/frontend/gtk3 && make
+}
+
+package_lib32-fcitx() {
+  pkgdesc="Flexible Context-aware Input Tool with eXtension - 32-bit libs"
+  depends=('lib32-glib2')
+
+  cd "${srcdir}"/build/src/lib
+  make DESTDIR="${pkgdir}" install
+
+  rm -r "$pkgdir/usr/include"
+}
+
+package_lib32-fcitx-gtk2() {
+  pkgdesc='GTK2 IM Module for fcitx - 32-bit'
+  depends=('lib32-gtk2' 'lib32-fcitx')
+  install=fcitx-gtk2.install
+
+  cd "${srcdir}"/build/src/frontend/gtk2
+  make DESTDIR="${pkgdir}" install
+}
+
+package_lib32-fcitx-gtk3() {
+  pkgdesc='GTK3 IM Module for fcitx - 32-bit'
+  depends=('lib32-gtk3' 'lib32-fcitx')
+  install=fcitx-gtk3.install
+
+  cd "${srcdir}"/build/src/frontend/gtk3
+  make DESTDIR="${pkgdir}" install
+}
+
+package_lib32-fcitx-qt4() {
+  pkgdesc='QT IM Module for fcitx - 32-bit'
+  depends=('lib32-qt4' 'lib32-fcitx')
+  replaces=('lib32-fcitx-qt')
+  conflicts=('lib32-fcitx-qt')
+
+  cd "${srcdir}"/build/src/frontend/qt
+  # No 32-bit qmake
+  #make DESTDIR="${pkgdir}" install
+  install -Dm755 qtim-fcitx.so "$pkgdir/usr/lib32/qt/plugins/inputmethods/qtim-fcitx.so"
+}
+
+pkgdesc="Flexible Context-aware Input Tool with eXtension - 32-bit Libs & IM Modules"
+sha512sums=('a98fc01cf95f1903dccd76a4a9d11ea3a0bdabef5b625defc70a19aa96b4c6a958fd237d91f799983f8e559ef3309a300a68f2dba0a5746cf038145bc20c8a09'
+            'db6e66b914068932d8696712dc34ce97b11580d66a4e819db2838d622df632a9d2c633ebef59d6bc7dc9f0a093ebdf3c271403f0cdc582999a9e053bd1eac48f')
