@@ -1,0 +1,34 @@
+# Maintainer: tang0th67
+# Have any improvements? Please change this PKGBUILD and send your code to me.
+
+pkgname='balsamiqmockups'
+pkgver=2.2.11
+_releasedate="2013.05.21"
+license=('custom')
+pkgrel=1
+arch=('i686' 'x86_64')
+pkgdesc="The Adobe Air based Mockup client. Not free or open source, there is a 7 day free trial."
+url=('http://balsamiq.com/products/mockups')
+source=("http://builds.balsamiq.com/archives/mockups-desktop/MockupsForDesktop$pkgver-$_releasedate.air" 'balsamiqmockups.desktop')
+noextract=("MockupsForDesktop$pkgver-$_releasedate.air")
+depends=('bash' 'adobe-air-sdk' 'unzip')
+conflicts=('balsamiq-mockups')
+md5sums=('236eb8b9f1f02fbc93367b63ccfe1636'
+         'dc0a099ac9c065cb5675ab5605a61215')
+
+package() {
+  cd $srcdir
+  mkdir $pkgdir/opt/
+  mkdir $pkgdir/opt/airapps
+  mkdir $pkgdir/usr/
+  mkdir $pkgdir/usr/bin
+  install $srcdir/MockupsForDesktop$pkgver-$_releasedate.air  $pkgdir/opt/airapps/balsamiqmockups.air
+  mkdir $pkgdir/opt/airapps/balsamiqmockups
+  cd $pkgdir/opt/airapps/balsamiqmockups
+  unzip ../balsamiqmockups.air
+  echo "#!/bin/bash" >> $pkgdir/usr/bin/balsamiqmockups
+  echo "/opt/adobe-air-sdk/bin/adl -nodebug /opt/airapps/balsamiqmockups/META-INF/AIR/application.xml /opt/airapps/balsamiqmockups/" >> $pkgdir/usr/bin/balsamiqmockups
+  chmod +x $pkgdir/usr/bin/balsamiqmockups
+  mkdir -p $pkgdir/usr/share/applications
+  install $srcdir/${pkgname}.desktop $pkgdir/usr/share/applications/ 
+}

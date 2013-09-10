@@ -1,0 +1,11 @@
+post_install() {
+    usr/bin/gtk-query-immodules-3.0-32 --update-cache
+}
+
+post_upgrade() {
+    post_install
+}
+
+post_remove() {
+    post_install
+}

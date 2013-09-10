@@ -1,0 +1,19 @@
+diff -rupN old/bcmwl-6.30.223.30+bdcom/Makefile new/bcmwl-6.30.223.30+bdcom/Makefile
+--- old/bcmwl-6.30.223.30+bdcom/Makefile	2013-02-10 12:41:08.635882000 -0700
++++ new/bcmwl-6.30.223.30+bdcom/Makefile	2013-02-18 09:49:08.501522000 -0700
+@@ -113,10 +113,12 @@ ifeq ($(APIFINAL),WEXT)
+   $(info Using Wireless Extension API)
+ endif
+ 
+-ifeq ($(shell dpkg --print-architecture),amd64)
+-BINARCH = x86_64
++ifeq ($(shell uname -m),x86_64)
++  $(info Building for x86_64)
++  BINARCH = x86_64
+ else
+-BINARCH = i386
++  $(info Building for i386)
++  BINARCH = i386
+ endif
+ 
+ obj-m              += wl.o

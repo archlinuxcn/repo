@@ -20,7 +20,7 @@
 #
 
 NAME='aurvote'
-VERSION=1.5
+VERSION=1.6
 
 TMPDIR=${TMPDIR:-/tmp}
 AV_TMP="$TMPDIR/aurvote-$USER"
@@ -35,7 +35,7 @@ AUR_DOMAIN="aur.archlinux.org"
 AUR_COOKIE="AURSID"
 AUR_COOKIE_VALUE=""
 AUR_SETLANG="?setlang=en"
-
+AUR_TOKEN=""
 
 version() {
     echo "$NAME $VERSION"
@@ -87,13 +87,24 @@ aur_login() {
     [[ $err ]] && error "$err"
 }
 
+aur_get_pkg_page() {
+    local pkg=$1
+    curl $CURL_OPT -fs -b "$COOKIE_FILE" \
+        "${AUR_URL_PKG_PAGE}${pkg}${AUR_SETLANG}" \
+        -o "$AV_TMP/$pkg.$PID" ||
+        error "Unable to get $pkg page"
+}
+
+aur_set_token() {
+    aur_get_pkg_page "$1"
+    AUR_TOKEN=$(sed -n -e '/<input type="hidden" name="token"/ { s/.*value="\([0-9a-f]\+\)".*/\1/p;q }' "$AV_TMP/$pkg.$PID")
+    [[ ! $AUR_TOKEN ]] && error "Unable to get token from AUR page"
+}
+
 aur_check_vote() {
     local pkg
     for pkg in "${pkgnames[@]}"; do
-        curl $CURL_OPT -fs -b "$COOKIE_FILE" \
-             "${AUR_URL_PKG_PAGE}${pkg}${AUR_SETLANG}" \
-             -o "$AV_TMP/$pkg.$PID" ||
-                 error "Unable to get $pkg page"
+        aur_get_pkg_page "$pkg"
         if sed '/<div id="news">/q' "$AV_TMP/$pkg.$PID" | grep -q /unvote/; then
             echo "already voted"
         elif sed '/<div id="news">/q' "$AV_TMP/$pkg.$PID" | grep -q /vote/; then
@@ -106,11 +117,21 @@ aur_check_vote() {
 
 
 aur_vote() {
-    local pkg
-    (($1)) && vote="/vote/" || vote="/unvote/"
+    local pkg vote action
+    if (($1)); then
+        vote="/vote/"
+        action=do_Vote
+    else
+        vote="/unvote/"
+        action=do_UnVote
+    fi
     for pkg in "${pkgnames[@]}"; do
+        [[ ! $AUR_TOKEN ]] && aur_set_token "$pkg"
         curl $CURL_OPT -fs -b "$COOKIE_FILE" \
-             "${AUR_URL_PKG_PAGE}${pkg}${vote}" -o /dev/null
+             "${AUR_URL_PKG_PAGE}${pkg}${vote}" \
+             -d token="$AUR_TOKEN" \
+             -d "$action"="(Un)Vote" \
+             -o /dev/null
         if (($?)); then
             echo "Error: Can't (un)vote for $pkg"
         else
