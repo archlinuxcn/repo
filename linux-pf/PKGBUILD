@@ -3,7 +3,7 @@
 # Some lines from  kernel26-bfs and kernel26-ck
 # Credits to respective maintainers
 _major=3
-_minor=10
+_minor=11
 #_patchlevel=0
 #_subversion=1
 _basekernel=${_major}.${_minor}
@@ -65,7 +65,7 @@ _pstates_pat=yes
 pkgname=('linux-pf')
 true && pkgname=('linux-pf' 'linux-pf-headers')
 pkgver=${_basekernel}.${_pfrel}
-pkgrel=2
+pkgrel=1
 arch=('i686' 'x86_64')
 url="http://pf.natalenko.name/"
 license=('GPL2')
@@ -74,15 +74,12 @@ makedepends=('git' 'xmlto' 'docbook-xsl' 'xz' 'bc')
 source=("ftp://www.kernel.org/pub/linux/kernel/v${_major}.x/linux-${_basekernel}.tar.xz"
 	'config' 'config.x86_64'		# the main kernel config files
 	'linux.preset'			# standard config files for mkinitcpio ramdisk
-	'logo_linux_clut224.ppm.bz2'		#
-	'logo_linux_mono.pbm.bz2'		# the Arch Linux boot logos
-	'logo_linux_vga16.ppm.bz2'		#
 	'change-default-console-loglevel.patch'
         'http://repo-ck.com/source/gcc_patch/kernel-310-gcc48-1.patch.gz'
         'enable_haswell_pstate_driver.patch'
+	'criu-no-expert.patch'
 	"${_pfpatchhome}${_pfpatchname}.bz2"	# the -pf patchset
-	'0001-drm-i915-correctly-restore-fences-with-objects-attac.patch'
- )
+)
 
 _aufs3git="http://git.code.sf.net/p/aufs/aufs3-standalone"
 _aufs3name=aufs3-standalone
@@ -91,11 +88,6 @@ _aufs3name=aufs3-standalone
 prepare() {
   cd "${srcdir}/linux-${_basekernel}"
   # This is for me, to test the PKGBUILD
-
-     # Arch linux logo
-     msg "Replacing penguins with arches"
-     bzip2 -dk ${startdir}/logo_linux_*.bz2
-     mv -f ${startdir}/logo_linux_*.p?m drivers/video/logo/
      msg "Applying pf-kernel patch"
      patch -Np1 < ${srcdir}/${_pfpatchname}
      msg "Fetching and applying aufs3 patches"
@@ -143,13 +135,13 @@ prepare() {
   # (relevant patch sent upstream: https://lkml.org/lkml/2011/7/26/227)
   patch -Np1 -i "${srcdir}/change-default-console-loglevel.patch"
 
-
+  # allow criu without expert option set
+  # patch from fedora
+  patch -Np1 -i "${srcdir}"/criu-no-expert.patch
 
   # end linux-ARCH patches
 
 
-  # fix kernel bug #60530
-  patch -Np1 -i "${srcdir}"/0001-drm-i915-correctly-restore-fences-with-objects-attac.patch
 
   if [ -n "$_pstates_pat" ]; then
     ### Patch source to enable pstate drivers with ivybridge CPUs
@@ -735,15 +727,12 @@ package_linux-pf-headers() {
 pkgdesc="Linux kernel and modules with the pf-kernel patch [-ck patchset (BFS included), TuxOnIce, BFQ] and aufs3"
 
 # makepkg -g >>PKGBUILD
-sha256sums=('df27fa92d27a9c410bfe6c4a89f141638500d7eadcca5cce578954efc2ad3544'
-            'b10f588d9508f1eb1c7735dbc86fe6a023a8619d960634b9646a1191ae6431cd'
-            'b76418bf81a3ab51cebf0ad4c422e039cca8ce11f93f3f7fc139e690e91f8a1a'
+sha256sums=('803ec8f0ad4b2ddedcb0332a590cd2b5e10dfc57c3b1c95bc9c46af81d51d7f9'
+            'ea90ba883ff2c337cdbd8052b3d19bd4f09e628aea83a8edb0d64894d3ada3bd'
+            '1285edf3adf1b13c6011a52742abf49279a80f99d66534488eb1b0dba2c0d077'
             '82d660caa11db0cd34fd550a049d7296b4a9dcd28f2a50c81418066d6e598864'
-            '03ed4eb4a35d42ae6beaaa5e6fdbada4244ed6c343944bba6462defaa6fed0bf'
-            '51ea665cfec42d9f9c7796af2b060b7edbdeb367e42811f8c02667ad729f6b19'
-            '9e1e81d80afac6f316e53947e1b081017090081cd30e6c4c473420b77af4b52b'
-            '56bd99e54429a25a144f2d221718b67f516344ffd518fd7dcdd752206ec5be69'
+            'faced4eb4c47c4eb1a9ee8a5bf8a7c4b49d6b4d78efbe426e410730e6267d182'
             '16c9eab6e83f0f4f035d8f52e17791115d8c01c6199a21525cb2f583aec61b03'
             'd7fada52453d12a24af9634024c36792697f97ce0bc6552939cd7b2344d00cd9'
-            'deeaaf781974c5120064c11e387b4dbb977c47ae3fe6b63d26cbb0dfa4157ce1'
-            '1445afdc3e9ea2b40123e6ab0a3f0369046d7bacd656d3acd70075cecd8aa774')
+            'daa75228a4c45a925cc5dbfeba884aa696a973a26af7695adc198c396474cbd5'
+            '62e8b7a4af2f04234d866114b1f9afc0f660cc1a60d215b5bf936f0c41414fa8')
