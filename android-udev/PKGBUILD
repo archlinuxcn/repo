@@ -1,7 +1,7 @@
 # Maintainer: M0Rf30 
 # Contributor: marlock
 pkgname=android-udev
-pkgver=54.d024ca8
+pkgver=55
 pkgrel=1
 pkgdesc='Udev rules to connect Android devices to your linux box'
 arch=('any')
@@ -22,7 +22,7 @@ package() {
 
 pkgver() {
   cd android-udev
-  echo $(git rev-list --count master).$(git rev-parse --short master)
+  echo $(git rev-list --count master)
 }
 
 md5sums=('SKIP')
