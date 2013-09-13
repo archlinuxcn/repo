@@ -1,35 +1,32 @@
 # Maintainer: Massimiliano Torromeo <massimiliano.torromeo@gmail.com>
 
 pkgname=libuv
-pkgver=0.11.1
+pkgver=0.11.13
 pkgrel=1
-pkgdesc="libuv is a new platform layer for Node.JS"
+pkgdesc="A new platform layer for Node.JS"
 arch=('i686' 'x86_64')
 url="https://github.com/joyent/libuv"
 license=('custom')
 depends=('glibc')
 source=("https://github.com/joyent/libuv/archive/v$pkgver.tar.gz")
+options=(!libtool)
 
 build() {
-	cd "$srcdir"
-	_tardir=$(tar -tzf v$pkgver.tar.gz --exclude "*/*" | head -n 1)
-	cd "$_tardir"
-
-	CFLAGS=-fPIC make
+	cd "$srcdir/$pkgname-$pkgver"
+	./autogen.sh
+	./configure --prefix=/usr
+	make
 }
 
 check() {
-	cd "$srcdir"
-	_tardir=$(tar -tzf v$pkgver.tar.gz --exclude "*/*" | head -n 1)
-	cd "$_tardir"
-
-	make test
+	cd "$srcdir/$pkgname-$pkgver"
+	make check
 }
 
 package() {
-	cd "$srcdir"
-	_tardir=$(tar -tzf v$pkgver.tar.gz --exclude "*/*" | head -n 1)
-	cd "$_tardir"
+	cd "$srcdir/$pkgname-$pkgver"
+
+	make DESTDIR="$pkgdir" install
 
 	install -Dm644 LICENSE \
 		"$pkgdir/usr/share/licenses/$pkgname/LICENSE"
@@ -37,13 +34,8 @@ package() {
 		"$pkgdir/usr/share/doc/$pkgname/AUTHORS"
 	install -Dm644 README.md \
 		"$pkgdir/usr/share/doc/$pkgname/README.md"
-
-	install -Dm644 libuv.a "$pkgdir/usr/lib/libuv.a"
-	install -Dm644 libuv.so "$pkgdir/usr/lib/libuv.so"
-
-	cd include
-	find -type f -exec \
-		install -Dm644 {} "$pkgdir/usr/include/$pkgname/"{} \;
+	install -Dm644 ChangeLog \
+		"$pkgdir/usr/share/doc/$pkgname/ChangeLog"
 }
 
-sha256sums=('54ca22d4bb47b8066bc7a28f5ba08976bc9a07edfe22713a49578c0bedf09a4f')
+sha256sums=('d8ae1af06ce94d55c4c7568dea39a1ebc4d89012da3af2a35f3a8b1410bccfec')
