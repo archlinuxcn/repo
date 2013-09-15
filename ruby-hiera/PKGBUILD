@@ -1,0 +1,35 @@
+# Maintainer: Jochen Schalanda <jochen+aur@schalanda.name>
+# Contributor: Niels Abspoel <aboe76@gmail.com>
+_gemname=hiera
+pkgname=ruby-$_gemname
+pkgver=1.2.1
+pkgrel=2
+pkgdesc="A pluggable data store for hierarcical data."
+arch=(any)
+url='http://projects.puppetlabs.com/projects/hiera/'
+license=('MIT')
+depends=('ruby')
+makedepends=('rubygems')
+source=(
+        "https://rubygems.org/downloads/$_gemname-$pkgver.gem"
+        'hiera.yaml')
+noextract=($_gemname-$pkgver.gem)
+
+package() {
+  cd "$srcdir"
+  # _gemdir is defined inside package() because if ruby[gems] is not installed on
+  # the system, makepkg will exit with an error when sourcing the PKGBUILD.
+  local _gemdir="$(ruby -rubygems -e'puts Gem.default_dir')"
+
+  gem install --no-user-install --ignore-dependencies -i "$pkgdir$_gemdir" \
+    -n "$pkgdir/usr/bin" "$_gemname-$pkgver.gem"
+
+  # Create hiera default directory
+  install -d $pkgdir/var/lib/hiera
+
+  # Create hiera default configuration
+  install -d $pkgdir/etc
+  install -m 644 $srcdir/hiera.yaml $pkgdir/etc/
+}
+md5sums=('81fe66ecc588545a8b06055fb9decf1e'
+         '3c2f95791009f2113f5d3eb54a6577a8')

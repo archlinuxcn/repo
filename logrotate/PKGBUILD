@@ -1,0 +1,45 @@
+# $Id: PKGBUILD 192722 2013-08-14 17:32:14Z pierre $
+# Maintainer: Pierre Schmitz <pierre@archlinux.de>
+
+pkgname=logrotate
+pkgver=3.8.6
+pkgrel=1
+pkgdesc="Rotates system logs automatically"
+arch=('i686' 'x86_64')
+url="https://fedorahosted.org/logrotate/"
+license=('GPL')
+groups=('base')
+depends=('popt' 'gzip' 'acl')
+optdepends=('cron: scheduled log rotation')
+backup=('etc/logrotate.conf')
+source=("https://fedorahosted.org/releases/l/o/logrotate/logrotate-${pkgver}.tar.gz"
+        'paths.patch'
+        'logrotate.conf'
+        'logrotate.cron.daily')
+md5sums=('cd0082bbd7248e627ec659f2442fcdf9'
+         'e76526bcd6fc33c9d921e1cb1eff1ffb'
+         '86209d257c8b8bc0ae34d6f6ef057c0f'
+         '3909380f8a55fa160f62ed976a8bef4b')
+
+build() {
+	cd "$srcdir/${pkgname}-${pkgver}"
+
+	patch -p0 -i "$srcdir/paths.patch"
+
+	make WITH_ACL=yes RPM_OPT_FLAGS="$CFLAGS" EXTRA_LDFLAGS="$LDFLAGS"
+}
+
+check() {
+	cd "$srcdir/${pkgname}-${pkgver}"
+	make test
+}
+
+package() {
+	cd "$srcdir/${pkgname}-${pkgver}"
+	make PREFIX="$pkgdir" MANDIR="/usr/share/man" install
+	mv ${pkgdir}/usr/sbin ${pkgdir}/usr/bin
+
+	install -dm755 "$pkgdir/etc/logrotate.d"
+	install -Dm644 "$srcdir/logrotate.conf" "$pkgdir/etc/logrotate.conf"
+	install -Dm744 "$srcdir/logrotate.cron.daily" "$pkgdir/etc/cron.daily/logrotate"
+}
