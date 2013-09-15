@@ -1,0 +1,58 @@
+diff -Naur zenity-3.8.0.old/src/msg.c zenity-3.8.0/src/msg.c
+--- zenity-3.8.0.old/src/msg.c	2012-09-26 06:46:33.000000000 +0800
++++ zenity-3.8.0/src/msg.c	2013-09-15 16:13:47.109738384 +0800
+@@ -36,7 +36,7 @@
+   cancel_button = gtk_dialog_add_button (GTK_DIALOG (dialog), GTK_STOCK_NO, GTK_RESPONSE_CANCEL);
+   ok_button = gtk_dialog_add_button (GTK_DIALOG (dialog), GTK_STOCK_YES, GTK_RESPONSE_OK);
+ 
+-  gtk_widget_grab_focus (ok_button);
++  gtk_widget_grab_focus (data->default_no ? cancel_button : ok_button);
+ 
+   if (data->cancel_label) {
+     gtk_button_set_label (GTK_BUTTON (cancel_button), data->cancel_label);
+diff -Naur zenity-3.8.0.old/src/option.c zenity-3.8.0/src/option.c
+--- zenity-3.8.0.old/src/option.c	2013-03-14 09:46:04.000000000 +0800
++++ zenity-3.8.0/src/option.c	2013-09-15 16:05:51.684257990 +0800
+@@ -46,6 +46,7 @@
+ static gchar   *zenity_general_ok_button;
+ static gchar   *zenity_general_cancel_button;
+ static gboolean zenity_general_modal;
++static gboolean zenity_general_default_no;
+ 
+ /* Calendar Dialog Options */
+ static gboolean zenity_calendar_active;
+@@ -752,6 +753,15 @@
+     NULL
+   },
+   {
++    "default-no",
++    '\0',
++    G_OPTION_FLAG_NOALIAS,
++    G_OPTION_ARG_NONE,
++    &zenity_general_default_no,
++    N_("Give Cancel button focus by default"),
++    NULL
++  },
++  {
+     "text",
+     '\0',
+     G_OPTION_FLAG_NOALIAS,
+@@ -1878,6 +1888,7 @@
+     results->msg_data->mode = ZENITY_MSG_QUESTION;
+     results->msg_data->no_wrap = zenity_general_dialog_no_wrap;
+     results->msg_data->no_markup = zenity_general_dialog_no_markup;
++    results->data->default_no = zenity_general_default_no;
+   }
+ 
+   return TRUE;
+diff -Naur zenity-3.8.0.old/src/zenity.h zenity-3.8.0/src/zenity.h
+--- zenity-3.8.0.old/src/zenity.h	2013-03-14 09:46:04.000000000 +0800
++++ zenity-3.8.0/src/zenity.h	2013-09-15 15:54:55.440461008 +0800
+@@ -33,6 +33,7 @@
+   gint   exit_code;
+   gint   timeout_delay;
+   gboolean modal;
++  gboolean default_no;
+ } ZenityData;
+ 
+ typedef enum {
