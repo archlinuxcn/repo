@@ -6,6 +6,7 @@
 _makenconfig=		# tweak kernel options prior to a build via nconfig
 _localmodcfg=		# compile ONLY probed modules
 _use_current=		# use the current kernel's .config file
+_BFQ_enable_=           # Enable BFQ as the default I/O scheduler
 _NUMA_off=yes		# Disable NUMA in kernel config
 #MAKEFLAGS=
 
@@ -31,7 +32,7 @@ pkgname=linux-uksm
 true && pkgname=(linux-uksm linux-uksm-headers)
 _kernelname=-uksm
 _srcname=linux-3.11
-pkgver=3.11
+pkgver=3.11.1
 pkgrel=1
 arch=('i686' 'x86_64')
 url="http://kerneldedup.org/"
@@ -40,12 +41,17 @@ options=('!strip')
 makedepends=('kmod' 'inetutils' 'bc')
 _uksmvernel="0.1.2.2"
 _uksmname="v3.10"
+_bfqpath="http://algo.ing.unimo.it/people/paolo/disk_sched/patches/3.11.0-v6r2"
 source=("http://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
-        #"http://www.kernel.org/pub/linux/kernel/v3.x/patch-${pkgver}.xz"
+        "http://www.kernel.org/pub/linux/kernel/v3.x/patch-${pkgver}.xz"
         "http://kerneldedup.org/download/uksm/${_uksmvernel}/uksm-${_uksmvernel}-for-${_uksmname}.patch"
+        "${_bfqpath}/0001-block-cgroups-kconfig-build-bits-for-BFQ-v6r2-3.11.patch"
+        "${_bfqpath}/0002-block-introduce-the-BFQ-v6r2-I-O-sched-for-3.11.patch"
+        "${_bfqpath}/0003-block-bfq-add-Early-Queue-Merge-EQM-to-BFQ-v6r2-for-3.11.0.patch"
         'linux-uksm.preset'
         'change-default-console-loglevel.patch'
-	'criu-no-expert.patch'
+        'criu-no-expert.patch'
+        'revert_skge_commits.patch'
         'config'
         'config.x86_64')
         
@@ -53,7 +59,7 @@ prepare() {
     cd "${srcdir}/${_srcname}"
 
     ### add upstream patch
-    #patch -Np1 -i "${srcdir}/patch-${pkgver}"
+    patch -Np1 -i "${srcdir}/patch-${pkgver}"
 
     ### set DEFAULT_CONSOLE_LOGLEVEL to 4 (same value as the 'quiet' kernel param)
     # remove this when a Kconfig knob is made available by upstream
@@ -64,6 +70,16 @@ prepare() {
     # allow criu without expert option set
     # patch from fedora
     patch -Np1 -i "${srcdir}/criu-no-expert.patch"
+
+    # fix skge driver until upstream fixes it
+    # https://bugs.archlinux.org/task/36865
+    # http://marc.info/?l=linux-netdev&m=1314637884262727796&w=2
+    patch -Np1 -i "${srcdir}/revert_skge_commits.patch"
+
+    msg "Patching source with BFQ patches"
+    for p in $(ls ${srcdir}/000{1,2,3}-block*.patch); do
+        patch -Np1 -i "$p"
+    done
 
     ### Patch source with UKSM
     msg "Patching with UKSM"
@@ -97,6 +113,16 @@ prepare() {
     if [ "${_kernelname}" != "" ]; then
 	sed -i "s|CONFIG_LOCALVERSION=.*|CONFIG_LOCALVERSION=\"${_kernelname}\"|g" ./.config
 	sed -i "s|CONFIG_LOCALVERSION_AUTO=.*|CONFIG_LOCALVERSION_AUTO=n|" ./.config
+    fi
+
+    ### BFQ to be compiled in but not enabled
+    sed -i -e s'/CONFIG_CFQ_GROUP_IOSCHED=y/CONFIG_CFQ_GROUP_IOSCHED=y\nCONFIG_IOSCHED_BFQ=y\nCONFIG_CGROUP_BFQIO=y/' \
+        -i -e s'/CONFIG_DEFAULT_CFQ=y/CONFIG_DEFAULT_CFQ=y\n# CONFIG_DEFAULT_BFQ is not set/' ./.config
+
+    ### Optionally enable BFQ as the default io scheduler
+    if [ -n "$_BFQ_enable_" ]; 	then
+        sed -i -e '/CONFIG_DEFAULT_IOSCHED/ s,cfq,bfq,' \
+        -i -e s'/CONFIG_DEFAULT_CFQ=y/# CONFIG_DEFAULT_CFQ is not set\nCONFIG_DEFAULT_BFQ=y/' ./.config
     fi
 
     # disable NUMA since 99.9% of users do not have multiple CPUs but do have multiple cores in one CPU
@@ -358,9 +384,14 @@ package_linux-uksm-headers() {
 pkgdesc='Linux Kernel and modules with the UKSM patchset'
 
 sha512sums=('b3680d3a45a7308383cf8634a7f1908e94f6e1c6d1cb587332a9418a95fb93bd3c73ab70c6976c7330508d7c8c6b0f43c2a9a2efde5fe1f76e9bfffb1de5686c'
+            '2885a1336fcdf0fb422facd2ba4ee01a36e05c7eaf6cdc32e668305ca2542bb6289209b88fa66acb290c198b7aa252e21992634b96645e15f23a90951f27ac89'
             '41bc23f63e9cfbb50a2f8d3bebc453ead1c120e84a9399f4645111d92eb6851339c3416c5eca4ca94d665bd4bb42f387281b7ac6983c257c3249ef58aa6e638f'
+            'e2f3838de142b9aded33ec1fad6d334d5b90b0249d9d4dd97c5403fb1610063697348a828254b101314912b87dda30b0d49e538d4e7962f4cb82d04e49e32039'
+            '61045cc64952246677a0cee5aeda16969bc35bddb5a5725076d5e4591f8a2374bc0df8ea7ea2343a0af1a0aca2d9af4a138673827443db13e31eb05f52900da9'
+            'c16f6541d44af10aa10d34f50bf5fd8bee998a3786cbe47e757d328cf921270b8ff4eb60367701d99b8d1354692e4bb159401dcbe0f3f3f48d29fcbf9568db85'
             '6b5e2da5be509020134d2acfda8424f1e75fa681f0b8d5e01c6c68089da2f1398cbca58f6a85c05ac701682feec8c0d3fcf8267cefa8da391a7ada253413f771'
             '502192b5ce94c8254205f5ddb85bf50c5f1e78c768817b10dca3a7716a8c59d5e093842631acb51e3805cbf85522e0a9200942656f11bbb4ea1b7d61e24ddd78'
             'fc7b67bad612fdc67f9dd16886188d7bbfe3b8e65eb271672fcd888212e5b9e893c2eafef8070dd6113133b7a0a1a9c0dff90833080b452a2a530166e30587df'
-            '6e385834c0067c9b842a23da09e6f95ec649c123dcb5ccab4d98ca8befd650f6d9b1a58f22390938a587c255418f79fe77ad3e0479f240f1f2e5ca8894520beb'
-            '573ab91a29d89d34e802687d55c3cfc665245486be3181e740bb25fedbc570537386866c8b1b5a95491a6b37345efce9102c8fb0452124ca88065950c046de45')
+            'd28c86dc9db3aa2f2d7a3c889bf955c3071f1aef1b88aabc8cc03cbf4aa3ab21100c547e4e26033cc61686169b978bcf19baafe103f0c8192d6ca8e50a5a2e2d'
+            '5bcd366db8bd75803d448640a102e1f2c3044f3ca3528ec555db3e357e1e1fe1238e49bdae618bb9184379bbabd3bb0222a9d17d6f4f7ede33f1c30622cde6ab'
+            '5c67c8f367c0fdd500f780fbf93ff212d85f1c92273785a436d4b9864e67a3e706a057dc277903e5c98f8c1b4fbb532ddd52420da4d976d7af0e1af955a185dd')
