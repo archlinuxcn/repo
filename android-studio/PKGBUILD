@@ -42,7 +42,7 @@ prepare() {
 
     cd "${srcdir}/${pkgname}"
 
-.    # remove pause after open jdk warning
+    # remove pause after open jdk warning
     sed -i 's/read IGNORE//' bin/studio.sh
 
     # extract the application icon
