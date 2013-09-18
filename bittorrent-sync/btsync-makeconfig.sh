@@ -74,10 +74,7 @@ OPTIONS
 
     --storage-path (~/.config/btsync)
         The directory to store config files and metadata, such as folder
-        keys and indices, in. If you change this, you will need to
-        modify the PIDFile entry in
-        /usr/lib/systemd/system/btsync@.service to point to the sync.pid
-        file in this directory.
+        keys and indices, in.
 
     --check-for-updates (true)
         Whether to check for updates from upstream If set to true, a

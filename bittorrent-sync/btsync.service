@@ -3,12 +3,10 @@ Description=BitTorrent Sync service
 After=network.target
 
 [Service]
-Type=forking
 User=btsync
 Group=btsync
-ExecStart=/usr/bin/btsync-wrapper --config /etc/btsync.conf
+ExecStart=/usr/bin/btsync-wrapper --config /etc/btsync.conf --nodaemon
 Restart=on-abort
-PIDFile=/var/lib/btsync/sync.pid
 
 [Install]
 WantedBy=multi-user.target
