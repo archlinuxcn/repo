@@ -4,11 +4,10 @@
 # Contributor: Lubomir 'Kuci' Kucera <kuci24-at-gmail-dot-com>
 
 pkgname=android-studio
-pkgver=0.2.8
+pkgver=0.2.9
 pkgrel=1
-_build=130.795381
 _build=130.737825
-_patch=132.821530
+_patch=132.830170
 pkgdesc="A new Android development environment based on IntelliJ IDEA."
 arch=(i686 x86_64)
 url="http://developer.android.com/sdk/installing/studio.html"
@@ -24,7 +23,7 @@ test ! -z ${_patch} && source+=("https://dl.google.com/android/studio/patches/AI
 noextract=(AI-${_build}-${_patch}-patch-unix.jar)
 sha256sums=('f7b2c9a9b04984c688d68de6b6da17cce3b46dfc71a14cd4a7a41128a26212e1'
             '2bba1530d217d055441b1075f53f09b172bdb56ae3908ef80201fd2ba766b33d'
-            'a8832d5c7f39ba0f20b179527803642ffa790d23a498c6dc084e25dca15f86e7')
+            '81c23ebdf93f3b0ed266e0534df2e5811d0a0c538af9a5a2d840ad241f4c3c54')
 
 [ $CARCH = "x86_64" ] && depends=('python' 'lib32-fontconfig' 'lib32-mesa' 'lib32-libxrender' 'android-sdk')
 
@@ -43,7 +42,7 @@ prepare() {
 
     cd "${srcdir}/${pkgname}"
 
-    # remove pause after open jdk warning
+.    # remove pause after open jdk warning
     sed -i 's/read IGNORE//' bin/studio.sh
 
     # extract the application icon
