@@ -66,7 +66,6 @@ package() {
   options=('!docs' 'libtool' '!emptydirs')
   provides=("imagemagick=$pkgver")
   conflicts=('imagemagick')
-  replaces=('imagemagick')
 
   cd ImageMagick-${pkgver%.*}-${pkgver##*.}
   make -j1 DESTDIR="${pkgdir}" install
