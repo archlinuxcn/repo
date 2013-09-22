@@ -75,7 +75,7 @@ fi
 
 # Execute the btsync executable
 if [[ $configArgumentAppears == true ]]; then
-	/usr/bin/btsync $@
+	exec /usr/bin/btsync $@
 else
-	/usr/bin/btsync $@ --config $configPath
+	exec /usr/bin/btsync $@ --config $configPath
 fi

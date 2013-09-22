@@ -1,10 +1,3 @@
 /*
  * Configuration file for BitTorrent sync.
- *
- * The systemd daemon provided by the bittorrent-sync AUR package assumes that
- * the storage_path setting is set to "~/.config/btsync" and that the pid_file
- * setting is left at the default (commented out). If you change any of these
- * two settings, you will need to update the PIDFile setting in
- * /usr/lib/systemd/system/btsync@.service to point to the new pid file. By
- * default, it is located at storage_path/sync.pid.
  */

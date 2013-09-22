@@ -1,11 +1,11 @@
-commit cc4c98bf4f0420707a2c95771d3f69d23f365d51
+commit cfb5944e13ca6334ec1cf6ab9d5573adbe47d76c
 Author: John Schoenick <jschoenick@mozilla.com>
-Date:   Fri Aug 30 15:34:02 2013 -0700
+Date:   Fri Sep 13 15:28:20 2013 -0700
 
-    Rebase wine-multimedia onto wine-1.7.1
+    Wine-multimedia for wine 1.7.2
 
 diff --git a/configure b/configure
-index d0f15d0..e4dba75 100755
+index 8ee4819..cc27873 100755
 --- a/configure
 +++ b/configure
 @@ -657,6 +657,8 @@ OSS4INCL
@@ -150,7 +150,7 @@ index d0f15d0..e4dba75 100755
  then
      as_fn_append wine_warnings "|No sound system was found. Windows applications will be silent."
  fi
-@@ -16439,6 +16531,7 @@ wine_fn_config_dll winemp3.acm enable_winemp3_acm
+@@ -16458,6 +16550,7 @@ wine_fn_config_dll winemp3.acm enable_winemp3_acm
  wine_fn_config_dll wineoss.drv enable_wineoss_drv
  wine_fn_config_dll wineps.drv enable_wineps_drv install-lib,po
  wine_fn_config_dll wineps16.drv16 enable_win16
@@ -159,7 +159,7 @@ index d0f15d0..e4dba75 100755
  wine_fn_config_dll winex11.drv enable_winex11_drv
  wine_fn_config_dll wing.dll16 enable_win16
 diff --git a/configure.ac b/configure.ac
-index d8033cf..abb40e9 100644
+index 96af299..69a831c 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -67,6 +67,7 @@ AC_ARG_WITH(oss,       AS_HELP_STRING([--without-oss],[do not use the OSS sound
@@ -218,7 +218,7 @@ index d8033cf..abb40e9 100644
  then
      WINE_WARNING([No sound system was found. Windows applications will be silent.])
  fi
-@@ -3121,6 +3147,7 @@ WINE_CONFIG_DLL(winemp3.acm)
+@@ -3132,6 +3158,7 @@ WINE_CONFIG_DLL(winemp3.acm)
  WINE_CONFIG_DLL(wineoss.drv)
  WINE_CONFIG_DLL(wineps.drv,,[install-lib,po])
  WINE_CONFIG_DLL(wineps16.drv16,enable_win16)

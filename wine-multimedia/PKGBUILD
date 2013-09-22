@@ -6,20 +6,20 @@
 
 pkgname=wine-multimedia
 _basename=wine
-pkgver=1.7.1
+pkgver=1.7.2
 pkgrel=1
 
 _pkgbasever=${pkgver/rc/-rc}
-_multimediasnapshot=20130830
+_multimediasnapshot=20130913
 
 source=(http://prdownloads.sourceforge.net/$_basename/$_basename-$_pkgbasever.tar.bz2{,.sign}
         30-win32-aliases.conf
         winemultimedia_${pkgver}_${_multimediasnapshot}.patch)
 
-sha1sums=('f3a074c277d2eb0789b807755578afa6ad8ec0ae'
+sha1sums=('739f151b7174e2193694bd481fff180e64bb7991'
           'SKIP'
           '023a5c901c6a091c56e76b6a62d141d87cce9fdb'
-          'e448fe5728d37f3eb53c73ff741017aaa2326891')
+          '6fa1b04ff8d7240c0ca47125350f2ab49d2d2551')
 
 pkgdesc="Wine with Maarten Lankhorst's multimedia patches, including PulseAudio support"
 url="http://repo.or.cz/w/wine/multimedia.git"
