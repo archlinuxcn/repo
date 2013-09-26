@@ -1,0 +1,32 @@
+From 6cdcdb793791f776ea9408581b1242b636d43b37 Mon Sep 17 00:00:00 2001
+From: Nell Hardcastle <nell@spicious.com>
+Date: Sun, 30 Jun 2013 22:58:57 +0000
+Subject: intel_pstate: Add Haswell CPU models
+
+Enable the intel_pstate driver for Haswell CPUs. One missing Ivy Bridge
+model (0x3E) is also included. Models referenced from
+tools/power/x86/turbostat/turbostat.c:has_nehalem_turbo_ratio_limit
+
+Signed-off-by: Nell Hardcastle <nell@spicious.com>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Acked-by: Dirk Brandewie <dirk.j.brandewie@intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+index 6efd96c..9733f29 100644
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -522,6 +522,11 @@ static const struct x86_cpu_id intel_pstate_cpu_ids[] = {
+ 	ICPU(0x2a, default_policy),
+ 	ICPU(0x2d, default_policy),
+ 	ICPU(0x3a, default_policy),
++	ICPU(0x3c, default_policy),
++	ICPU(0x3e, default_policy),
++	ICPU(0x3f, default_policy),
++	ICPU(0x45, default_policy),
++	ICPU(0x46, default_policy),
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(x86cpu, intel_pstate_cpu_ids);
+--
+cgit v0.9.2
