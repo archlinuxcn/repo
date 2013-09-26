@@ -5,9 +5,9 @@
 # Contributor: Lee.MaRS <leemars@gmail.com>
 
 pkgname=google-appengine-python
-pkgver=1.8.4
+pkgver=1.8.5
 _zipver=$pkgver
-#_zipver=1.8.3
+#_zipver=1.8.5
 pkgrel=1
 arch=(any)
 pkgdesc="Google App Engine SDK for Python."
@@ -45,4 +45,4 @@ package() {
   find opt/${pkgname} -maxdepth 1 -type f -executable -printf "/opt/${pkgname}/%f\n" | xargs ln -st usr/bin/
 }
 
-sha1sums=('dc7cc042129662489c52d55d36869c9fb783180e')
+sha1sums=('f0d1bd7f8a2be6ca9cfdb465da153ae0d4132267')
