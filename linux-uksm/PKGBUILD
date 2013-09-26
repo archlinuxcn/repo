@@ -33,7 +33,7 @@ true && pkgname=(linux-uksm linux-uksm-headers)
 _kernelname=-uksm
 _srcname=linux-3.11
 pkgver=3.11.1
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 url="http://kerneldedup.org/"
 license=('GPL2')
@@ -53,7 +53,8 @@ source=("http://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
         'criu-no-expert.patch'
         'revert_skge_commits.patch'
         'config'
-        'config.x86_64')
+        'config.x86_64'
+        '3.11-haswell-intel_pstate.patch')
         
 prepare() {
     cd "${srcdir}/${_srcname}"
@@ -75,6 +76,11 @@ prepare() {
     # https://bugs.archlinux.org/task/36865
     # http://marc.info/?l=linux-netdev&m=1314637884262727796&w=2
     patch -Np1 -i "${srcdir}/revert_skge_commits.patch"
+
+    # add intel haswell support to intel_pstate
+    # https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/patch/?id=6cdcdb793791f776ea9408581b1242b636d43b37
+    # will be in 3.12
+    patch -Np1 -i "${srcdir}/3.11-haswell-intel_pstate.patch"
 
     msg "Patching source with BFQ patches"
     for p in $(ls ${srcdir}/000{1,2,3}-block*.patch); do
@@ -394,4 +400,5 @@ sha512sums=('b3680d3a45a7308383cf8634a7f1908e94f6e1c6d1cb587332a9418a95fb93bd3c7
             'fc7b67bad612fdc67f9dd16886188d7bbfe3b8e65eb271672fcd888212e5b9e893c2eafef8070dd6113133b7a0a1a9c0dff90833080b452a2a530166e30587df'
             'd28c86dc9db3aa2f2d7a3c889bf955c3071f1aef1b88aabc8cc03cbf4aa3ab21100c547e4e26033cc61686169b978bcf19baafe103f0c8192d6ca8e50a5a2e2d'
             '5bcd366db8bd75803d448640a102e1f2c3044f3ca3528ec555db3e357e1e1fe1238e49bdae618bb9184379bbabd3bb0222a9d17d6f4f7ede33f1c30622cde6ab'
-            '5c67c8f367c0fdd500f780fbf93ff212d85f1c92273785a436d4b9864e67a3e706a057dc277903e5c98f8c1b4fbb532ddd52420da4d976d7af0e1af955a185dd')
+            '5c67c8f367c0fdd500f780fbf93ff212d85f1c92273785a436d4b9864e67a3e706a057dc277903e5c98f8c1b4fbb532ddd52420da4d976d7af0e1af955a185dd'
+            '4797b26dc1424b51aca8005a83eea6ececeefabe3193d99f9add3ac4fe282dc2bf6b28a3dc8f6bbf93aa5c34812a1776fca970892f0320c028192a4b3d0284c8')
