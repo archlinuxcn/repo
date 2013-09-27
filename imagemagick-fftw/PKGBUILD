@@ -1,8 +1,8 @@
-# $Id: PKGBUILD 193716 2013-08-29 06:22:01Z eric $
+# $Id: PKGBUILD 194676 2013-09-21 18:35:37Z eric $
 # Maintainer: Eric Bélanger <eric@archlinux.org>
 
 pkgname=imagemagick-fftw
-pkgver=6.8.6.9
+pkgver=6.8.6.10
 pkgrel=1
 arch=('i686' 'x86_64')
 url="http://www.imagemagick.org/"
@@ -13,7 +13,7 @@ makedepends=('libltdl' 'lcms2' 'libxt' 'fontconfig' 'libxext' 'ghostscript' \
 #source=(http://www.imagemagick.org/download/ImageMagick-${pkgver%.*}-${pkgver##*.}.tar.xz \
 source=(ftp://ftp.sunet.se/pub/multimedia/graphics/ImageMagick/ImageMagick-${pkgver%.*}-${pkgver##*.}.tar.xz \
         perlmagick.rpath.patch)
-sha1sums=('c1e8b19f6afc19751c7c777688f0005d36917f9e'
+sha1sums=('807380b2221b5fed789bc895e8e4c3758237be9a'
           'e143cf9d530fabf3b58023899b5cc544ba93daec')
 
 prepare() {
