@@ -16,7 +16,7 @@ case "$1" in
             stat_busy "isatapd is already running"
             stat_die
         fi
-        /usr/sbin/isatapd --router $ISATAPD_ROUTER --daemon \
+        /usr/bin/isatapd --router $ISATAPD_ROUTER --daemon \
             --pid $ISATAPD_PID_FILE --quiet
         if [ $? -ne 0 ]; then
             stat_fail

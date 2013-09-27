@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 Type=oneshot
-ExecStart= /usr/sbin/isatapd --router "isatap.tsinghua.edu.cn"  --daemon --pid "/var/run/isatapd.pid" --quiet
+ExecStart= /usr/bin/isatapd --router "isatap.tsinghua.edu.cn"  --daemon --pid "/var/run/isatapd.pid" --quiet
 RemainAfterExit=yes
 
 [Install]
