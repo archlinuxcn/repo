@@ -4,10 +4,10 @@
 # Contributor: Lubomir 'Kuci' Kucera <kuci24-at-gmail-dot-com>
 
 pkgname=android-studio
-pkgver=0.2.9
+pkgver=0.2.10
 pkgrel=1
 _build=130.737825
-_patch=132.830170
+_patch=132.843336
 pkgdesc="A new Android development environment based on IntelliJ IDEA."
 arch=(i686 x86_64)
 url="http://developer.android.com/sdk/installing/studio.html"
@@ -23,7 +23,7 @@ test ! -z ${_patch} && source+=("https://dl.google.com/android/studio/patches/AI
 noextract=(AI-${_build}-${_patch}-patch-unix.jar)
 sha256sums=('f7b2c9a9b04984c688d68de6b6da17cce3b46dfc71a14cd4a7a41128a26212e1'
             '2bba1530d217d055441b1075f53f09b172bdb56ae3908ef80201fd2ba766b33d'
-            '81c23ebdf93f3b0ed266e0534df2e5811d0a0c538af9a5a2d840ad241f4c3c54')
+            '81bb53f19c2d0853ba2dc13c906a9803a43443e022f870bf8735a364f925c4d9')
 
 [ $CARCH = "x86_64" ] && depends=('python' 'lib32-fontconfig' 'lib32-mesa' 'lib32-libxrender' 'android-sdk')
 
