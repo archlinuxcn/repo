@@ -5,7 +5,7 @@
 libname=tor
 pkgname=${libname}k
 pkgver=0.33
-pkgrel=3
+pkgrel=4
 pkgdesc="An anonymity manager for KDE"
 arch=("any")
 url="http://www.anonymityanywhere.com/${pkgname}/"
@@ -31,7 +31,7 @@ build() {
   
   # Source the KDE and QT profiles
   source /etc/profile.d/kde3.sh
-  source /etc/profile.d/qt3.sh
+  #source /etc/profile.d/qt3.sh
 
   msg "Applying patch(es) ..."
   

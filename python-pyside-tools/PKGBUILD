@@ -1,0 +1,35 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+# Maintainer: Hugo Osvaldo Barrera <hugo@osvaldobarrera.com.ar>
+# Contributor: Matthias Maennich <arch@maennich.net>
+# Contributor: Massimiliano Torromeo <massimiliano.torromeo@gmail.com>
+# Contributor: Jan-Erik Meyer-Luetgens <nyan at meyer-luetgens dot de>
+pkgname=python-pyside-tools
+_pkgrealname=pyside-tools
+pkgver=0.2.15
+pkgrel=2
+_pyver=3.3
+pkgdesc="UI Compiler (pyside-uic) plus Qt Resource Compiler (pyside-rcc4) for PySide."
+arch=('i686' 'x86_64')
+license=('LGPL')
+url="http://qt-project.org/wiki/PySide"
+depends=('python-pyside>=1.2.1' 'python')
+replaces=('pyside-tools')
+makedepends=('cmake' 'automoc4' 'shiboken>=1.2.1')
+source=("https://github.com/PySide/Tools/archive/$pkgver.tar.gz")
+md5sums=('e542b9536bd9d35599ede225c9311cc8')
+
+build(){
+    cd $srcdir/Tools-$pkgver
+    mkdir -p build && cd build
+    _pyverflags=$(python3 -c 'import sysconfig; print(sysconfig.get_config_var("SOABI"))')
+    cmake ../ -DCMAKE_INSTALL_PREFIX=/usr \
+              -DCMAKE_BUILD_TYPE=Release \
+              -DPYTHON_SUFFIX=.${_pyverflags}
+    make
+}
+
+package(){
+    cd $srcdir/Tools-$pkgver/build
+    make DESTDIR=$pkgdir install
+}
+

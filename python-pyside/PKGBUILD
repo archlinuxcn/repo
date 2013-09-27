@@ -2,32 +2,85 @@
 # Contributor: Matthias Maennich <arch@maennich.net>
 # Contributor: Massimiliano Torromeo <massimiliano.torromeo@gmail.com>
 # Contributor: Jan-Erik Meyer-Luetgens <nyan at meyer-luetgens dot de>
+pkgbase=python-pyside
 pkgname=python-pyside
+true && pkgname=(python-pyside-common python2-pyside python-pyside)
 _pkgrealname=pyside
-pkgver=1.2.0
-pkgrel=2
-pkgdesc="Provides LGPL Qt bindings for Python and related tools for binding generation."
+pkgver=1.2.1
+pkgrel=5
+pkgdesc="Provides LGPL Qt bindings for Python and related tools for binding generation. Will build for both Python 2 and 3 versions."
 arch=('i686' 'x86_64')
 license=('LGPL')
 url="http://qt-project.org/wiki/PySide"
 _qtver=4.8
-depends=('python' "qt4>=${_qtver}" 'phonon' 'mesa')
-makedepends=("python-shiboken>=$pkgver" 'cmake' 'automoc4')
+makedepends=('cmake' 'automoc4' 'qtwebkit' 'python' 'python2')
+optdepends=('qtwebkit: for PySide.QtWebKit')
 source=("http://download.qt-project.org/official_releases/pyside/${_pkgrealname}-qt${_qtver}+$pkgver.tar.bz2")
-md5sums=('52b8c19485447a3100884f3c79dc5c98')
+md5sums=('34b05faa7cc44d3c24d5ccadd894bd3c')
+
+depends=('python' 'python2' "qt4>=${_qtver}" 'phonon' "shiboken>=$pkgver")
+conflicts=('pyside-python2' 'pyside-python3')
+replaces=('pyside-python2' 'pyside-python3')
 
 build(){
     cd $srcdir/${_pkgrealname}-qt${_qtver}+$pkgver
-    mkdir -p build && cd build
+    mkdir -p build_py3 && cd build_py3
     _pyverflags=$(python -c 'import sysconfig; print(sysconfig.get_config_var("SOABI"))')
     cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=OFF \
       -DQT_PHONON_INCLUDE_DIR=/usr/include/qt4/phonon -DQT_QMAKE_EXECUTABLE=qmake-qt4 \
       -DPYTHON_SUFFIX=.${_pyverflags}
     make
+
+    cd $srcdir/${_pkgrealname}-qt${_qtver}+$pkgver
+    mkdir -p build_py2 && cd build_py2
+    cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=OFF \
+      -DQT_PHONON_INCLUDE_DIR=/usr/include/qt4/phonon -DQT_QMAKE_EXECUTABLE=qmake-qt4
+    make
 }
 
-package(){
-    cd $srcdir/${_pkgrealname}-qt${_qtver}+$pkgver/build
+package_python-pyside-common(){
+    true && depends=("qt4>=${_qtver}" 'phonon' "shiboken>=$pkgver")
+    true && pkgdesc="Provides LGPL Qt bindings for Python and related tools for binding generation. Common Files."
+    true && conflicts=()
+    true && replaces=()
+    true && optdepends=()
+    # cmake will use Python 3 version by default
+    cd $srcdir/${_pkgrealname}-qt${_qtver}+$pkgver/build_py3
     make DESTDIR=$pkgdir install
+
+    rm -rf "$pkgdir"/usr/lib/python* "$pkgdir"/usr/lib/libpyside.* \
+      "$pkgdir"/usr/lib/cmake/PySide-1.2.1/PySideConfig*python*.cmake \
+      "$pkgdir"/usr/lib/pkgconfig/pyside.pc
 }
 
+package_python-pyside(){
+    true && depends=('python' "qt4>=${_qtver}" 'phonon' "shiboken>=$pkgver" "python-pyside-common=$pkgver")
+    true && pkgdesc="Provides LGPL Qt bindings for Python and related tools for binding generation. Python 3 version."
+    true && conflicts=('pyside-python3')
+    true && replaces=('pyside-python3')
+
+    cd $srcdir/${_pkgrealname}-qt${_qtver}+$pkgver/build_py3
+    make DESTDIR=$pkgdir install
+    mv "$pkgdir"/usr/lib/pkgconfig/pyside.pc \
+      "$pkgdir"/usr/lib/pkgconfig/pyside-py3.pc
+    rm -rf "$pkgdir"/usr/include \
+      "$pkgdir"/usr/lib/cmake/PySide-$pkgver/PySideConfig.cmake \
+      "$pkgdir"/usr/lib/cmake/PySide-$pkgver/PySideConfigVersion.cmake \
+      "$pkgdir"/usr/share
+}
+
+package_python2-pyside(){
+    true && depends=('python' "qt4>=${_qtver}" 'phonon' "shiboken>=$pkgver" "python-pyside-common=$pkgver")
+    true && pkgdesc="Provides LGPL Qt bindings for Python and related tools for binding generation. Python 2 version."
+    true && conflicts=('pyside-python2')
+    true && replaces=('pyside-python2')
+
+    cd $srcdir/${_pkgrealname}-qt${_qtver}+$pkgver/build_py2
+    make DESTDIR=$pkgdir install
+    mv "$pkgdir"/usr/lib/pkgconfig/pyside.pc \
+      "$pkgdir"/usr/lib/pkgconfig/pyside-py2.pc
+    rm -rf "$pkgdir"/usr/include \
+      "$pkgdir"/usr/lib/cmake/PySide-$pkgver/PySideConfig.cmake \
+      "$pkgdir"/usr/lib/cmake/PySide-$pkgver/PySideConfigVersion.cmake \
+      "$pkgdir"/usr/share
+}

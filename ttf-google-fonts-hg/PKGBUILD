@@ -1,0 +1,74 @@
+# Maintainer: Jason St. John <jstjohn .. purdue . edu>
+# Contributor: Daniel Micay <danielmicay@gmail.com>
+# Contributor: Michalis Georgiou <mechmg93@gmail.comr>
+# Contributor: Alexander De Sousa <archaur.xandy21@spamgourmet.com>
+
+#
+#     NOTE:
+#        ttf-google-fonts-hg (this package) pulls down the entire
+#        Mercurial repository from the official upstream Web Fonts project.
+#
+#        ttf-google-fonts-git (an alternative package) pulls from a much
+#        smaller and leaner, yet unofficial, repository hosted on GitHub.
+#
+
+pkgname=ttf-google-fonts-hg
+pkgver=3402.fbdf3829d6e8
+pkgrel=1
+pkgdesc='Various TrueType fonts from the Google Fonts project (uses official upstream sources)'
+arch=('any')
+url='https://www.google.com/fonts'
+license=('various')
+depends=('fontconfig'
+         'xorg-fonts-encodings'
+         'xorg-mkfontdir'
+         'xorg-mkfontscale')
+makedepends=('mercurial')
+conflicts=('ttf-google-webfonts'
+           'ttf-google-webfonts-git'
+           'ttf-google-webfonts-hg'
+           'jsmath-fonts'
+           'lohit-fonts'
+           'otf-goudy'
+           'ttf-andika'
+           'ttf-anonymous-pro'
+           'ttf-cantarell'
+           'ttf-cardo'
+           'ttf-chromeos-fonts'
+           'ttf-droid'
+           'ttf-inconsolata'
+           'ttf-kimberly_geswein_print'
+           'ttf-medievalsharp'
+           'ttf-nova'
+           'ttf-oldstandard'
+           'oldstand-font'
+           'ttf-opensans'
+           'ttf-oxygen'
+           'ttf-pt-mono'
+           'ttf-ptsans'
+           'ttf-pt-sans'
+           'ttf-roboto'
+           'ttf-sil-fonts'
+           'ttf-sortsmillgoudy'
+           'ttf-source-code-pro'
+           'ttf-source-sans-pro'
+           'ttf-ubuntu-font-family'
+           'ttf-vollkorn'
+           'cantarell-fonts')
+provides=("${conflicts[@]}" 'ttf-font')
+install=ttf.install
+_hgname=googlefontdirectory
+source=("$_hgname::hg+https://googlefontdirectory.googlecode.com/hg/")
+sha1sums=('SKIP')
+
+pkgver() {
+	cd "$srcdir/$_hgname"
+	hg identify -ni | awk 'BEGIN{OFS=".";} {print $2,$1}'
+}
+
+package() {
+	cd "$srcdir"
+	install -dm755 "$pkgdir/usr/share/fonts/TTF"
+	find . -maxdepth 4 -type f -name \*.ttf -exec install -Dm644 '{}' \
+		"$pkgdir/usr/share/fonts/TTF" \;
+}

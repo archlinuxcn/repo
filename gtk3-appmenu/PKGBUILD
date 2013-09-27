@@ -1,0 +1,68 @@
+# Maintainer: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
+# Contributor: hbdee <hbdee.arch@gmail.com>
+
+pkgname=gtk3-appmenu
+_ubuntu_rel=3.8.2-0ubuntu3 
+pkgver=3.8.4
+pkgrel=2
+pkgdesc="GObject-based multi-platform toolkit (v3) (Last version with appmenu patches)"
+arch=('i686' 'x86_64')
+url="http://www.gtk.org/"
+install=arch_gtk3.install
+depends=('atk' 'cairo' 'gtk-update-icon-cache' 'libcups' 'libxcursor' 'libxinerama' 'libxrandr' 'libxi' 'libxcomposite' 'libxdamage' 'pango' 'shared-mime-info' 'colord' 'at-spi2-atk' 'wayland' 'libxkbcommon')
+makedepends=('gobject-introspection' 'mesa')
+provides=("gtk3=${pkgver}" "gtk3-ubuntu=${pkgver}")
+conflicts=('gtk3' 'gtk3-ubuntu')
+options=('!libtool' '!docs')
+backup=('etc/gtk-3.0/settings.ini')
+license=('LGPL')
+source=("http://ftp.gnome.org/pub/GNOME/sources/gtk+/${pkgver%.*}/gtk+-${pkgver}.tar.xz"
+        "https://launchpad.net/ubuntu/+archive/primary/+files/gtk+3.0_${_ubuntu_rel}.debian.tar.gz"
+        'arch_settings.ini')
+sha512sums=('36bbc6ec08dd7997f1e388b93c5a771e35894d134c2a781fc5fc40b668850ea91c8ab94848cb57de4d109987bc1796c098d67896b5c77d85fb7ad3346b140600'
+            '77987f706693e52e17906e92bacba8c9a34c7ff644a3e72351b2952e530f3f140b9aecd28230e4b2fb518702bfaf543cfa7648764fd06c86047261bd4839788a'
+            '087bf853cb9f6ee8269c60041555ee1546a2d10fbdbe820710c77a74bb9c34735abe8b061e2a0322246932d7a72b21953682fcdca79b09fd555307abb1d88699')
+
+prepare() {
+  cd "${srcdir}/gtk+-${pkgver}"
+
+  echo "043_ubuntu_menu_proxy.patch" > "${srcdir}/debian/patches/series.appmenu"
+
+  for i in $(grep -v '#' "${srcdir}/debian/patches/series.appmenu"); do
+    msg "Applying ${i} ..."
+    patch -p1 -i "${srcdir}/debian/patches/${i}"
+  done
+}
+
+build() {
+  cd "${srcdir}/gtk+-${pkgver}"
+
+  autoreconf -vfi
+
+  #CXX=/bin/false ./configure \
+  ./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --localstatedir=/var \
+    --enable-gtk2-dependency \
+    --disable-schemas-compile \
+    --enable-x11-backend \
+    --enable-broadway-backend \
+    --enable-wayland-backend \
+    --enable-test-print-backend
+
+  #https://bugzilla.gnome.org/show_bug.cgi?id=655517
+  sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
+  
+  make
+}
+
+package() {
+  cd "${srcdir}/gtk+-${pkgver}"
+  make DESTDIR="${pkgdir}" install
+
+  install -Dm644 "${srcdir}/arch_settings.ini" \
+    "${pkgdir}/etc/gtk-3.0/settings.ini"
+}
+
+# vim:set ts=2 sw=2 et:

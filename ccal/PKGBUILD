@@ -1,0 +1,29 @@
+# Maintainer: Daniel YC Lin <dlin at gmail>
+# Contributor: sssslang <xofyarg at gmail>
+# Contributor: kumkee <kumkee at gmail>
+# Contributor: wych42 <ellrywych at gmail>
+pkgname=ccal
+pkgver=2.5.3
+pkgrel=1
+pkgdesc="A console program which writes a calendar together with Chinese calendar to standard output."
+arch=('i686' 'x86_64')
+url="http://ccal.chinesebay.com/ccal/ccal.htm"
+license="GPL,LGPL"
+depends=('gcc-libs')
+makedepends=('gcc')
+source=(http://ccal.chinesebay.com/ccal/$pkgname-$pkgver.tar.gz)
+sha256sums=('3d4cbdc9f905ce02ab484041fbbf7f0b7a319ae6a350c6c16d636e1a5a50df96')
+
+build() {
+    cd $srcdir/$pkgname-$pkgver
+    make
+}
+
+package() {
+    cd $srcdir/$pkgname-$pkgver
+    install -d "$pkgdir/usr/bin"
+    install -Dm755 "ccal" "$pkgdir/usr/bin/ccal"
+    install -Dm755 "ccalpdf" "$pkgdir/usr/bin/ccalpdf"
+    install -Dm644 "ccal.1" "$pkgdir/usr/share/man/man1/ccal.1"
+    install -Dm644 "ccalpdf.1" "$pkgdir/usr/share/man/man1/ccalpdf.1"
+}

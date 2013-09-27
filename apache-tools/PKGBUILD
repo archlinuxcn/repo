@@ -1,25 +1,34 @@
-# Maintainer: Marco A Rojas <marquicus at gmail dot com>
+# Maintainer: Limao Luo <luolimao+AUR@gmail.com>
+# Contributor: Marco A Rojas <marquicus@gmail.com>
 # Contributor: Pavel Larev <pavel@larev.ws>
 
 pkgname=apache-tools
-pkgver=2.2.22
-pkgdesc="Useful Apache tools - htdigest, htpasswd, ab, htdbm"
+pkgver=2.4.6
 pkgrel=1
-arch=("i686" "x86_64")
-url="http://httpd.apache.org/"
-license=('APACHE')
-conflicts=("apache")
-depends=("apr-util" "pcre")
-makedepends=("apr" "apr-util" "pcre" "openssl")
-source=("http://www.apache.org/dist/httpd/httpd-${pkgver}.tar.bz2" "apache-tools-Makefile.patch")
-build() {
-	cd "${srcdir}"/httpd-$pkgver
-	patch -p1 <../apache-tools-Makefile.patch
-	./configure --sbindir=/usr/sbin --prefix=/usr --with-pcre=/usr || return 1 
-	cd support
-	make || return 1
-	make DESTDIR="${pkgdir}" install || return 1
-}
-md5sums=('9fe3093194c8a57f085ff7c3fc43715f'
-         '8fb9720c8adb09357b9c9d41adc55d6f')
+pkgdesc="Useful Apache tools - htdigest, htpasswd, ab, htdbm"
+arch=(i686 x86_64)
+url=http://httpd.apache.org/
+license=(Apache)
+depends=(apr-util pcre)
+conflicts=(apache)
+source=(http://www.apache.org/dist/httpd/httpd-$pkgver.tar.bz2
+    $pkgname-Makefile.patch)
+sha256sums=('dc9f3625ebc08bea55eeb0d16e71fba656f252e6cd0aa244ee7806dc3b022fea'
+    '2dc48d34773b0c873d10e3542f77a4f7b50d5fb9bd8c52e3bb28b76ff9587f3f')
+sha512sums=('8ade7ec5291f07a60e279f7a73a79c11c150dbf09c9e7b059e136fcb250130aa0f381b118f84e230184b065d452d5e946df8a5766991be8cdc6e8f5d4c4bac01'
+    '6e068e7820e852c788a521ad28c367af4c1c22fded51ede7ae3f840a8a04737cfbe4503c2f3f899c89461d984007e84f80376b5a8a27c7eec8ec0fd78155c22b')
 
+prepare() {
+    cd httpd-$pkgver/
+    patch -p1 -i ../$pkgname-Makefile.patch
+}
+
+build() {
+    cd httpd-$pkgver/
+    ./configure --prefix=/usr --sbindir=/usr/bin --with-pcre=/usr
+    make -C support
+}
+
+package() {
+    make -C httpd-$pkgver/support DESTDIR="$pkgdir" install
+}

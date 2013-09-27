@@ -5,7 +5,9 @@
 # Contributor: Lee.MaRS <leemars@gmail.com>
 
 pkgname=google-appengine-python
-pkgver=1.7.5
+pkgver=1.8.5
+_zipver=$pkgver
+#_zipver=1.8.5
 pkgrel=1
 arch=(any)
 pkgdesc="Google App Engine SDK for Python."
@@ -26,15 +28,15 @@ optdepends=(mysql-python
 makedepends=(unzip)
 options=(!strip)
 install=install
-source=(http://googleappengine.googlecode.com/files/google_appengine_${pkgver}.zip)
-noextract=(google_appengine_${pkgver}.zip)
+source=(http://googleappengine.googlecode.com/files/google_appengine_${_zipver}.zip)
+noextract=(google_appengine_${_zipver}.zip)
 
-build() {
+package() {
   cd "$pkgdir"
   mkdir -p opt usr/bin
 
   # Extract with unzip as bsdtar screws up permissions
-  unzip -q "$srcdir/google_appengine_${pkgver}.zip" -d opt
+  unzip -q "$srcdir/google_appengine_${_zipver}.zip" -d opt
   
   mv opt/google_appengine "opt/${pkgname}"
 
@@ -42,4 +44,5 @@ build() {
 
   find opt/${pkgname} -maxdepth 1 -type f -executable -printf "/opt/${pkgname}/%f\n" | xargs ln -st usr/bin/
 }
-md5sums=('03ad2e0f9b242409fe1fc1a0f1d34387')
+
+sha1sums=('f0d1bd7f8a2be6ca9cfdb465da153ae0d4132267')
