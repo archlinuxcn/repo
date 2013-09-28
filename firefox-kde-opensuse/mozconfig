@@ -23,7 +23,6 @@ ac_add_options --disable-libproxy
 
 # Features
 ac_add_options --enable-startup-notification
-#ac_add_options --enable-gstreamer
 ac_add_options --enable-pulseaudio
 
 ac_add_options --disable-gio
@@ -40,8 +39,10 @@ ac_add_options --enable-optimize
 #ac_add_options --enable-jemalloc
 export MOZ_JEMALLOC=1
 
+ac_add_options --with-google-api-keyfile="$PWD/google-api-key"
+
 # PGO
-#mk_add_options PROFILE_GEN_SCRIPT='EXTRA_TEST_ARGS=10 $(MAKE) -C $(MOZ_OBJDIR) pgo-profile-run'
+mk_add_options PROFILE_GEN_SCRIPT='EXTRA_TEST_ARGS=10 $(MAKE) -C $(MOZ_OBJDIR) pgo-profile-run'
 
 export BUILD_OFFICIAL=1
 export MOZILLA_OFFICIAL=1
