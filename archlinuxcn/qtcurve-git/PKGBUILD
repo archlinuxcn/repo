@@ -1,0 +1,82 @@
+# Maintainer: Yichao Yu <yyc1992@gmail.com>
+
+pkgbase=qtcurve
+pkgname=${pkgbase}-git
+_realver=1.8.17
+pkgver=1.8.15.1278.gbbcb3a4
+pkgrel=1
+pkgdesc='A configurable set of widget styles for KDE and Gtk.'
+arch=('i686' 'x86_64')
+url="https://github.com/QtCurve/qtcurve"
+license=('GPL')
+groups=('qtcurve')
+depends=('qt5-base' 'qt5-svg' 'libxcb' 'qt5-x11extras'
+  'kdebase-workspace' 'gtk2' 'libx11' 'gcc-libs')
+makedepends=('cmake' 'automoc4' 'git')
+provides=("${pkgbase}-kde4=${_realver}"
+  "${pkgbase}-gtk2=${_realver}"
+  "${pkgbase}-qt4=${_realver}"
+  "${pkgbase}-qt5=${_realver}")
+conflicts=("${pkgbase}-kde4" "${pkgbase}-qt4"
+  "${pkgbase}-qt5" "${pkgbase}-gtk2")
+options=('debug' 'strip')
+
+_gitname="qtcurve"
+
+_gitroot="git://github.com/QtCurve/qtcurve.git"
+_gitref=master
+
+_fetch_git() {
+  cd "$srcdir"
+
+  if [ -d "$srcdir/$_gitname/.git" ]; then
+    cd "$_gitname"
+    msg "Reset current branch"
+    git reset --hard HEAD
+    git clean -fdx
+    msg "Fetching branch $_gitref from $_gitroot..."
+    git fetch --force --update-head-ok \
+      "$_gitroot" "$_gitref:$_gitref" --
+    msg "Checking out branch $_gitref..."
+    git checkout "$_gitref" --
+    git reset --hard "$_gitref"
+    git clean -fdx
+    msg "The local files are updated."
+  else
+    msg "Cloning branch $_gitref from $_gitroot to $_gitname..."
+    git clone --single-branch --branch "$_gitref" \
+      "$_gitroot" "$_gitname"
+    cd "$_gitname"
+  fi
+  msg "GIT checkout done or server timeout"
+}
+
+pkgver() {
+  local outfile=/dev/null
+  [[ -e /dev/tty ]] && outfile=/dev/tty
+  (_fetch_git &> ${outfile})
+  cd "$srcdir/$_gitname"
+
+  git describe | sed -e 's/-/./g'
+}
+
+build() {
+  (_fetch_git)
+  cd "$srcdir/$_gitname"
+
+  mkdir -p build
+  cd build
+
+  cmake .. \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DQT_QMAKE_EXECUTABLE=qmake-qt4 \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DQTC_KDE4_PREFIX=/usr
+  make
+}
+
+package() {
+  cd "$srcdir/$_gitname/build"
+
+  make DESTDIR="$pkgdir/" install
+}
