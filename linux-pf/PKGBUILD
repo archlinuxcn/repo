@@ -9,7 +9,7 @@ _minor=11
 _basekernel=${_major}.${_minor}
 _srcname=linux-${_major}.${_minor}
 pkgbase=linux-pf
-_pfrel=1
+_pfrel=2
 _kernelname=-pf
 _pfpatchhome="http://pf.natalenko.name/sources/${_basekernel}/"
 _pfpatchname="patch-${_basekernel}.${_pfrel}${_kernelname}"
@@ -65,7 +65,7 @@ _pstates_pat=yes
 pkgname=('linux-pf')
 true && pkgname=('linux-pf' 'linux-pf-headers')
 pkgver=${_basekernel}.${_pfrel}
-pkgrel=2
+pkgrel=1
 arch=('i686' 'x86_64')
 url="http://pf.natalenko.name/"
 license=('GPL2')
@@ -166,7 +166,6 @@ prepare() {
   _arch=$CARCH
 
   
- 
   # disable NUMA since 99.9% of users do not have multiple CPUs but do have multiple cores in one CPU
   # see, https://bugs.archlinux.org/task/31187
   if [ -n "$_NUMA_off" ] && [ "${CARCH}" = "x86_64" ]; then
@@ -296,8 +295,8 @@ build() {
 	export _SUBLEVEL=n
       fi
   else
-      lcpu=`tr '[:upper:]' '[:lower:]' <<< $CPU`
-      lcpu=`sed -e "s/entium//" <<<$lcpu`    
+      lcpu=$(tr '[:upper:]' '[:lower:]' <<< $CPU)
+      lcpu=$(sed -e "s/entium//" <<<$lcpu)
       echo "=============================================================="
       msg "An non-generic CPU was selected for this kernel."
       echo
@@ -315,13 +314,13 @@ build() {
       if [[ "$answer" != "g" ]]; then
 	export _PKGOPT=y
       fi
-      msg "Hit <P>     :  to include the patchlevel number in kernver"
+      msg "Hit <ENTER>  :  to include the patchlevel number in kernver (default)"
       if [[ ${_PKGOPT} != "y" ]]; then
 	msg "               (i.e. linux-pf-${_basekernel}.${_pfrel})"
       else
 	msg "               (i.e. linux-pf-${lcpu}-${_basekernel}.${_pfrel})"
       fi
-      msg "Hit <ENTER> :  to remove the patchlevel number from kernver (default)"
+      msg "Hit <P> :  to remove the patchlevel number from kernver"
       if [[ ${_PKGOPT} != "y" ]]; then
 	msg "               (i.e. linux-pf-${_basekernel})"
       else
@@ -329,7 +328,7 @@ build() {
       fi
       read answer
       shopt -s nocasematch
-      if [[ "$answer" = "p" ]]; then
+      if [[ "$answer" == "p" ]]; then
 	export _SUBLEVEL=n
       fi
     fi
@@ -728,11 +727,11 @@ pkgdesc="Linux kernel and modules with the pf-kernel patch [-ck patchset (BFS in
 
 # makepkg -g >>PKGBUILD
 sha256sums=('803ec8f0ad4b2ddedcb0332a590cd2b5e10dfc57c3b1c95bc9c46af81d51d7f9'
-            'a2f9160482e40c22bd7327fdc187b8bd14370bcca02828faf922def829c4fe58'
-            'ddce0ef6fde3a25bfff8691fe95ef45739ea038ed08665d948851df3aa85b7b4'
+            '837ba531f6594d5e0786bbfe2293c22acdae7d91f652f1a3dff83996ba7717df'
+            '362b338cfbece82a296ca0a0510d41041e14eec09ef75c909e332bab146561ae'
             '82d660caa11db0cd34fd550a049d7296b4a9dcd28f2a50c81418066d6e598864'
             'faced4eb4c47c4eb1a9ee8a5bf8a7c4b49d6b4d78efbe426e410730e6267d182'
             '16c9eab6e83f0f4f035d8f52e17791115d8c01c6199a21525cb2f583aec61b03'
             'd7fada52453d12a24af9634024c36792697f97ce0bc6552939cd7b2344d00cd9'
             'daa75228a4c45a925cc5dbfeba884aa696a973a26af7695adc198c396474cbd5'
-            '62e8b7a4af2f04234d866114b1f9afc0f660cc1a60d215b5bf936f0c41414fa8')
+            '466bed4080e77e00552939ae1df73ab06f8d27419e51c510119dc8c86fd0cea3')
