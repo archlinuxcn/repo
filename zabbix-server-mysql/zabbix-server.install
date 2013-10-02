@@ -1,0 +1,33 @@
+post_install() {
+  mkdir /var/lib/zabbix
+  getent group zabbix > /dev/null || groupadd zabbix > /dev/null
+  getent passwd zabbix > /dev/null || useradd -g zabbix -d /var/lib/zabbix/home zabbix -m > /dev/null
+  chown -R zabbix:zabbix /var/log/zabbix /etc/zabbix /usr/share/zabbix /run/zabbix
+
+cat << EOM
+----------------------------------------------------------------------------------------
+	Read On-line Zabbix documentation is available at
+	  http://www.zabbix.com/documentation/2.0/manual/installation/install
+----------------------------------------------------------------------------------------
+	  For more information see http://www.zabbix.com/documentation.php
+----------------------------------------------------------------------------------------
+EOM
+}
+
+post_remove() {
+   userdel -rf zabbix
+   rm -rf /var/lib/zabbix
+   rm -rf /var/run/zabbix
+}
+
+post_upgrade() {
+cat << EOM
+----------------------------------------------------------------------------------------
+	Read On-line Zabbix documentation is available at
+	  http://www.zabbix.com/documentation/2.0/manual/installation/upgrade
+----------------------------------------------------------------------------------------
+	  For more information see http://www.zabbix.com/documentation.php
+----------------------------------------------------------------------------------------
+EOM
+}
+

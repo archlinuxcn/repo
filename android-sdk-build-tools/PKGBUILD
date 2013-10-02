@@ -1,15 +1,15 @@
 # Maintainer: xgdgsc <xgdgsc @t gmail dot com>
 
 pkgname=android-sdk-build-tools
-pkgver=r18.0.1
-_ver=18.0.1
+pkgver=r18.1
+_ver=18.1
 pkgrel=1
 pkgdesc='Build-Tools for Google Android SDK (aapt, aidl, dexdump, dx, llvm-rs-cc)'
 arch=('i686' 'x86_64')
 url="http://developer.android.com/sdk/index.html"
 license=('custom')
 depends=('gcc-libs' 'zlib')
-optdepends=('android-sdk-build-tools-17')
+optdepends=()
 
 if [[ $CARCH = x86_64 ]]; then
   depends=('lib32-gcc-libs' 'lib32-zlib')
@@ -18,7 +18,7 @@ fi
 _sdk=android-sdk
 
 source=("http://dl-ssl.google.com/android/repository/build-tools_${pkgver}-linux.zip")
-sha1sums=('f11618492b0d2270c332325d45d752d3656a9640')
+sha1sums=('f314a0599e51397f0886fe888b50dd98f2f050d8')
 _android=android-4.3
 options=('!strip')
 

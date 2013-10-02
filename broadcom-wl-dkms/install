@@ -1,0 +1,50 @@
+post_install() {
+	DKMS=`which dkms 2>/dev/null`
+
+	echo ">>> DKMS: Module add, build, and install"
+
+	$DKMS add -m broadcom-wl -v 6.30.223.30
+	$DKMS build -m broadcom-wl -v 6.30.223.30
+	$DKMS install -m broadcom-wl -v 6.30.223.30
+	rmmod b43 2>/dev/null
+	rmmod b43legacy 2>/dev/null
+	rmmod ssb 2>/dev/null
+	rmmod bcm43xx 2>/dev/null
+	rmmod brcm80211 2>/dev/null
+	rmmod brcmfmac 2>/dev/null
+	rmmod brcmsmac 2>/dev/null
+	rmmod bcma 2>/dev/null
+	modprobe wl
+
+	/usr/bin/depmod -a
+
+	cat <<EOF
+==> For more information on this driver, see:
+==> https://bbs.archlinux.org/viewtopic.php?id=145884
+EOF
+}
+
+pre_upgrade() {
+	pre_remove
+}
+
+pre_remove() {
+	DKMS=`which dkms 2>/dev/null`
+	echo ">>> DKMS: Module uninstall"
+
+	line=`$DKMS status -m broadcom-wl`
+	if echo "$line" | grep -E 'added|built|installed'; then
+		version=`echo "$line" | sed "s/broadcom-wl,\([^,]*\)[,:].*/\1/;t;d"`
+		$DKMS remove -m broadcom-wl -v $version --all
+	fi
+
+	/usr/bin/depmod -a
+
+}
+
+post_upgrade() {
+	cd usr/lib/modules
+	for i in extramodules-*; do depmod $(cat "$i/version"); done
+	cd ../..
+}
+

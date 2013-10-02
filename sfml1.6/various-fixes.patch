@@ -1,0 +1,319 @@
+diff -rupN SFML-1.6.orig/include/SFML/System/Resource.hpp SFML-1.6/include/SFML/System/Resource.hpp
+--- SFML-1.6.orig/include/SFML/System/Resource.hpp	2010-01-27 14:53:54.000000000 +0100
++++ SFML-1.6/include/SFML/System/Resource.hpp	2013-02-19 12:54:11.447783682 +0100
+@@ -29,7 +29,7 @@
+ // Headers
+ ////////////////////////////////////////////////////////////
+ #include <set>
+-
++#include <cstddef>
+ 
+ namespace sf
+ {
+diff -rupN SFML-1.6.orig/src/SFML/Audio/Makefile SFML-1.6/src/SFML/Audio/Makefile
+--- SFML-1.6.orig/src/SFML/Audio/Makefile	2010-01-27 15:00:19.000000000 +0100
++++ SFML-1.6/src/SFML/Audio/Makefile	2013-02-19 15:05:11.261967353 +0100
+@@ -8,9 +8,9 @@ ifeq ($(STATIC), yes)
+     LIBNAME = $(LIBPATH)/$(LIB)
+     INSTALL = 
+ else
+-    LIB     = libsfml-audio.so
++    LIB     = libsfml-audio-$(VERSION).so
+     LIBNAME = $(LIBPATH)/$(LIB).$(VERSION)
+-    INSTALL = && $(LN) $(LNFLAGS) $(LIB).$(VERSION) $(DESTLIBDIR)/$(LIB)
++    INSTALL = && $(LN) $(LNFLAGS) $(LIB).$(VERSION) $(DESTDIR)/$(libdir)/$(LIB)
+ endif
+ 
+ all: $(LIB)
+@@ -18,14 +18,14 @@ all: $(LIB)
+ libsfml-audio-s.a: $(OBJ) $(OBJVORBIS)
+ 	$(AR) $(ARFLAGS) $(LIBNAME) $(OBJ) $(OBJVORBIS)
+ 
+-libsfml-audio.so: $(OBJ) $(OBJVORBIS)
++libsfml-audio-$(VERSION).so: $(OBJ) $(OBJVORBIS)
+ 	$(CPP) $(LDFLAGS) -Wl,-soname,$(LIB).$(VERSION) -o $(LIBNAME) $(OBJ) $(OBJVORBIS) -lsndfile -lopenal
+ 
+ $(OBJ): %.o: %.cpp
+ 	$(CPP) -o $@ -c $< $(CFLAGS)
+ 
+ $(OBJVORBIS): %.o: %.c
+-	$(CC) -o $@ -c $< $(CFLAGSEXT)
++	$(CC) -o $@ -c $< $(CFLAGS)
+ 
+ .PHONY: clean mrproper
+ 
+@@ -36,4 +36,4 @@ mrproper: clean
+ 	@rm -rf $(LIBNAME)
+ 
+ install:
+-	@($(CP) $(LIBNAME) $(DESTLIBDIR) $(INSTALL))
++	@($(CP) $(LIBNAME) $(DESTDIR)/$(libdir) $(INSTALL))
+diff -rupN SFML-1.6.orig/src/SFML/Graphics/GraphicsContext.hpp SFML-1.6/src/SFML/Graphics/GraphicsContext.hpp
+--- SFML-1.6.orig/src/SFML/Graphics/GraphicsContext.hpp	2010-01-27 15:00:05.000000000 +0100
++++ SFML-1.6/src/SFML/Graphics/GraphicsContext.hpp	2013-02-19 12:17:01.851731580 +0100
+@@ -30,7 +30,7 @@
+ ////////////////////////////////////////////////////////////
+ #include <SFML/Config.hpp>
+ #include <SFML/System/NonCopyable.hpp>
+-#include <SFML/Graphics/GLEW/glew.h>
++#include <GL/glew.h>
+ #include <iostream>
+ #include <string>
+ 
+diff -rupN SFML-1.6.orig/src/SFML/Graphics/ImageLoader.cpp SFML-1.6/src/SFML/Graphics/ImageLoader.cpp
+--- SFML-1.6.orig/src/SFML/Graphics/ImageLoader.cpp	2010-01-27 15:00:05.000000000 +0100
++++ SFML-1.6/src/SFML/Graphics/ImageLoader.cpp	2013-02-19 14:48:28.967943931 +0100
+@@ -28,11 +28,12 @@
+ #include <SFML/Graphics/ImageLoader.hpp>
+ extern "C"
+ {
+-    #include <SFML/Graphics/libjpeg/jpeglib.h>
+-    #include <SFML/Graphics/libjpeg/jerror.h>
++    #include <jpeglib.h>
++    #include <jerror.h>
+ }
+-#include <SFML/Graphics/libpng/png.h>
+-#include <SFML/Graphics/SOIL/SOIL.h>
++#include <png.h>
++#include <SOIL/SOIL.h>
++#include <cstring>
+ #include <iostream>
+ 
+ 
+@@ -44,7 +44,7 @@ namespace
+     void PngErrorHandler(png_structp Png, png_const_charp Message)
+     {
+         std::cerr << "Failed to write PNG image. Reason : " << Message << std::endl;
+-        longjmp(Png->jmpbuf, 1);
++        longjmp(png_jmpbuf(Png), 1);
+     }
+ }
+ 
+@@ -289,7 +289,7 @@ bool ImageLoader::WritePng(const std::st
+     }
+ 
+     // For proper error handling...
+-    if (setjmp(Png->jmpbuf))
++    if (setjmp(png_jmpbuf(Png)))
+     {
+         png_destroy_write_struct(&Png, &PngInfo);
+         return false;
+diff -rupN SFML-1.6.orig/src/SFML/Graphics/Makefile SFML-1.6/src/SFML/Graphics/Makefile
+--- SFML-1.6.orig/src/SFML/Graphics/Makefile	2010-01-27 15:00:05.000000000 +0100
++++ SFML-1.6/src/SFML/Graphics/Makefile	2013-02-19 15:05:29.344967775 +0100
+@@ -1,47 +1,34 @@
+ SRC     = $(wildcard *.cpp)
+-SRCGLEW = $(wildcard ./GLEW/*.c)
+-SRCJPEG = $(wildcard ./libjpeg/*.c)
+-SRCPNG  = $(wildcard ./libpng/*.c)
+-SRCSOIL = $(wildcard ./SOIL/*.c)
+-SRCZLIB = $(wildcard ./zlib/*.c)
+ OBJ     = $(SRC:.cpp=.o)
+-OBJGLEW = $(SRCGLEW:.c=.o)
+-OBJJPEG = $(SRCJPEG:.c=.o)
+-OBJPNG  = $(SRCPNG:.c=.o)
+-OBJSOIL = $(SRCSOIL:.c=.o)
+-OBJZLIB = $(SRCZLIB:.c=.o)
+ 
+ ifeq ($(STATIC), yes)
+     LIB     = libsfml-graphics-s.a
+     LIBNAME = $(LIBPATH)/$(LIB)
+     INSTALL = 
+ else
+-    LIB     = libsfml-graphics.so
++    LIB     = libsfml-graphics-$(VERSION).so
+     LIBNAME = $(LIBPATH)/$(LIB).$(VERSION)
+-    INSTALL = && $(LN) $(LNFLAGS) $(LIB).$(VERSION) $(DESTLIBDIR)/$(LIB)
++    INSTALL = && $(LN) $(LNFLAGS) $(LIB).$(VERSION) $(DESTDIR)/$(libdir)/$(LIB)
+ endif
+ 
+ all: $(LIB)
+ 
+-libsfml-graphics-s.a: $(OBJ) $(OBJGLEW) $(OBJJPEG) $(OBJPNG) $(OBJSOIL) $(OBJZLIB)
+-	$(AR) $(ARFLAGS) $(LIBNAME) $(OBJ) $(OBJGLEW) $(OBJJPEG) $(OBJPNG) $(OBJSOIL) $(OBJZLIB)
++libsfml-graphics-s.a: $(OBJ)
++	$(AR) $(ARFLAGS) $(LIBNAME) $(OBJ)
+ 
+-libsfml-graphics.so: $(OBJ) $(OBJGLEW) $(OBJJPEG) $(OBJPNG) $(OBJSOIL) $(OBJZLIB)
+-	$(CPP) $(LDFLAGS) -Wl,-soname,$(LIB).$(VERSION) -o $(LIBNAME) $(OBJ) $(OBJGLEW) $(OBJJPEG) $(OBJPNG) $(OBJSOIL) $(OBJZLIB) -lfreetype -lX11 -lGL
++libsfml-graphics-$(VERSION).so: $(OBJ)
++	$(CPP) $(LDFLAGS) -Wl,-soname,$(LIB).$(VERSION) -o $(LIBNAME) $(OBJ) -lGLEW -ljpeg -lpng -lz -lfreetype -lX11 -lGL
+ 
+ $(OBJ): %.o: %.cpp
+ 	$(CPP) -o $@ -c $< $(CFLAGS) -I/usr/include/freetype2
+ 
+-$(OBJGLEW) $(OBJJPEG) $(OBJPNG) $(OBJSOIL) $(OBJZLIB): %.o: %.c
+-	$(CC) -o $@ -c $< $(CFLAGSEXT) -DSTBI_FAILURE_USERMSG
+-
+ .PHONY: clean mrproper
+ 
+ clean:
+-	@rm -rf $(OBJ) $(OBJGLEW) $(OBJJPEG) $(OBJPNG) $(OBJSOIL) $(OBJZLIB)
++	@rm -rf $(OBJ)
+ 
+ mrproper: clean
+ 	@rm -rf $(LIBNAME)
+ 
+ install:
+-	@($(CP) $(LIBNAME) $(DESTLIBDIR) $(INSTALL))
++	@($(CP) $(LIBNAME) $(DESTDIR)/$(libdir) $(INSTALL))
+diff -rupN SFML-1.6.orig/src/SFML/Makefile SFML-1.6/src/SFML/Makefile
+--- SFML-1.6.orig/src/SFML/Makefile	2010-01-27 15:00:37.000000000 +0100
++++ SFML-1.6/src/SFML/Makefile	2013-02-19 14:49:45.105945710 +0100
+@@ -4,7 +4,7 @@ export STATIC     = no
+ ifeq ($(DEBUGBUILD), yes)
+     DEBUGFLAGS = -g -DDEBUG
+ else
+-    DEBUGFLAGS = -O2 -DNDEBUG
++    DEBUGFLAGS = -DNDEBUG
+ endif
+ 
+ ifeq ($(STATIC), no)
+@@ -17,9 +17,9 @@ endif
+ 
+ export CC         = gcc
+ export CPP        = g++
+-export CFLAGS     = -W -Wall -pedantic -I../../../include -I../../ $(DEBUGFLAGS) $(BUILDFLAGS)
++export CFLAGS     += -W -Wall -pedantic -I../../../include -I../../ $(DEBUGFLAGS) $(BUILDFLAGS)
+ export CFLAGSEXT  = -I../../../include -I../.. $(DEBUGFLAGS) $(BUILDFLAGS)
+-export LDFLAGS    = $(LINKFLAGS)
++export LDFLAGS    += $(LINKFLAGS)
+ export LIBPATH    = ../../../lib
+ export VERSION    = 1.6
+ export CP         = cp
+@@ -27,9 +27,12 @@ export LN         = ln
+ export LNFLAGS    = -s -f
+ export AR         = ar
+ export ARFLAGS    = rcs
+-export DESTDIR    = /usr/local
+-export DESTLIBDIR = $(DESTDIR)/lib
+-export DESTINCDIR = $(DESTDIR)/include
++export DESTDIR    =
++ifeq ($(origin prefix), undefined)
++	export prefix = /usr
++endif
++export libdir     = $(prefix)/lib
++export includedir = $(prefix)/include/sfml-1.6
+ 
+ all: sfml-system sfml-window sfml-network sfml-graphics sfml-audio
+ 
+@@ -62,6 +65,6 @@ mrproper: clean
+ 	@(cd ./System && $(MAKE) $@	&& cd ../Window && $(MAKE) $@ && cd ../Network && $(MAKE) $@ && cd ../Graphics && $(MAKE) $@ && cd ../Audio && $(MAKE) $@)
+ 
+ install:
+-	@(mkdir -p $(DESTLIBDIR))
+-	@(mkdir -p $(DESTINCDIR))
+-	@(cd ./System && $(MAKE) $@	&& cd ../Window && $(MAKE) $@ && cd ../Network && $(MAKE) $@ && cd ../Graphics && $(MAKE) $@ && cd ../Audio && $(MAKE) $@ && $(CP) -r ../../../include/SFML/ $(DESTINCDIR)/)
++	@(mkdir -p $(DESTDIR)/$(libdir))
++	@(mkdir -p $(DESTDIR)/$(includedir))
++	@(cd ./System && $(MAKE) $@	&& cd ../Window && $(MAKE) $@ && cd ../Network && $(MAKE) $@ && cd ../Graphics && $(MAKE) $@ && cd ../Audio && $(MAKE) $@ && $(CP) -r ../../../include/SFML/ $(DESTDIR)/$(includedir)/)
+diff -rupN SFML-1.6.orig/src/SFML/Network/Makefile SFML-1.6/src/SFML/Network/Makefile
+--- SFML-1.6.orig/src/SFML/Network/Makefile	2010-01-27 15:00:37.000000000 +0100
++++ SFML-1.6/src/SFML/Network/Makefile	2013-02-19 15:05:48.270968218 +0100
+@@ -6,9 +6,9 @@ ifeq ($(STATIC), yes)
+     LIBNAME = $(LIBPATH)/$(LIB)
+     INSTALL = 
+ else
+-    LIB     = libsfml-network.so
++    LIB     = libsfml-network-$(VERSION).so
+     LIBNAME = $(LIBPATH)/$(LIB).$(VERSION)
+-    INSTALL = && $(LN) $(LNFLAGS) $(LIB).$(VERSION) $(DESTLIBDIR)/$(LIB)
++    INSTALL = && $(LN) $(LNFLAGS) $(LIB).$(VERSION) $(DESTDIR)/$(libdir)/$(LIB)
+ endif
+ 
+ all: $(LIB)
+@@ -16,7 +16,7 @@ all: $(LIB)
+ libsfml-network-s.a: $(OBJ)
+ 	$(AR) $(ARFLAGS) $(LIBNAME) $(OBJ)
+ 
+-libsfml-network.so: $(OBJ)
++libsfml-network-$(VERSION).so: $(OBJ)
+ 	$(CPP) $(LDFLAGS) -Wl,-soname,$(LIB).$(VERSION) -o $(LIBNAME) $(OBJ)
+ 
+ $(OBJ): %.o: %.cpp
+@@ -31,4 +31,4 @@ mrproper: clean
+ 	@rm -rf $(LIBNAME)
+ 
+ install:
+-	@($(CP) $(LIBNAME) $(DESTLIBDIR) $(INSTALL))
++	@($(CP) $(LIBNAME) $(DESTDIR)/$(libdir) $(INSTALL))
+diff -rupN SFML-1.6.orig/src/SFML/System/Makefile SFML-1.6/src/SFML/System/Makefile
+--- SFML-1.6.orig/src/SFML/System/Makefile	2010-01-27 15:00:23.000000000 +0100
++++ SFML-1.6/src/SFML/System/Makefile	2013-02-19 15:06:22.949969028 +0100
+@@ -6,9 +6,9 @@ ifeq ($(STATIC), yes)
+     LIBNAME = $(LIBPATH)/$(LIB)
+     INSTALL = 
+ else
+-    LIB     = libsfml-system.so
++    LIB     = libsfml-system-$(VERSION).so
+     LIBNAME = $(LIBPATH)/$(LIB).$(VERSION)
+-    INSTALL = && $(LN) $(LNFLAGS) $(LIB).$(VERSION) $(DESTLIBDIR)/$(LIB)
++    INSTALL = && $(LN) $(LNFLAGS) $(LIB).$(VERSION) $(DESTDIR)/$(libdir)/$(LIB)
+ endif
+ 
+ all: $(LIB)
+@@ -16,7 +16,7 @@ all: $(LIB)
+ libsfml-system-s.a: $(OBJ)
+ 	$(AR) $(ARFLAGS) $(LIBNAME) $(OBJ)
+ 
+-libsfml-system.so: $(OBJ)
++libsfml-system-$(VERSION).so: $(OBJ)
+ 	$(CPP) $(LDFLAGS) -Wl,-soname,$(LIB).$(VERSION) -o $(LIBNAME) $(OBJ) -lpthread
+ 
+ $(OBJ): %.o: %.cpp
+@@ -31,4 +31,4 @@ mrproper: clean
+ 	@rm -rf $(LIBNAME)
+ 
+ install:
+-	@($(CP) $(LIBNAME) $(DESTLIBDIR) $(INSTALL))
++	@($(CP) $(LIBNAME) $(DESTDIR)/$(libdir) $(INSTALL))
+diff -rupN SFML-1.6.orig/src/SFML/Window/Linux/Joystick.cpp SFML-1.6/src/SFML/Window/Linux/Joystick.cpp
+--- SFML-1.6.orig/src/SFML/Window/Linux/Joystick.cpp	2010-01-27 15:00:27.000000000 +0100
++++ SFML-1.6/src/SFML/Window/Linux/Joystick.cpp	2013-02-19 12:55:16.910785212 +0100
+@@ -27,7 +27,7 @@
+ ////////////////////////////////////////////////////////////
+ #include <SFML/Window/Joystick.hpp>
+ #include <sstream>
+-
++#include <unistd.h>
+ 
+ namespace sf
+ {
+diff -rupN SFML-1.6.orig/src/SFML/Window/Makefile SFML-1.6/src/SFML/Window/Makefile
+--- SFML-1.6.orig/src/SFML/Window/Makefile	2010-01-27 15:00:37.000000000 +0100
++++ SFML-1.6/src/SFML/Window/Makefile	2013-02-19 15:06:47.727969607 +0100
+@@ -1,15 +1,14 @@
+ SRC     = $(wildcard *.cpp ./Linux/*.cpp)
+ OBJ     = $(SRC:.cpp=.o)
+-OBJGLEW = $(SRCGLEW:.c=.o)
+ 
+ ifeq ($(STATIC), yes)
+     LIB     = libsfml-window-s.a
+     LIBNAME = $(LIBPATH)/$(LIB)
+     INSTALL = 
+ else
+-    LIB     = libsfml-window.so
++    LIB     = libsfml-window-$(VERSION).so
+     LIBNAME = $(LIBPATH)/$(LIB).$(VERSION)
+-    INSTALL = && $(LN) $(LNFLAGS) $(LIB).$(VERSION) $(DESTLIBDIR)/$(LIB)
++    INSTALL = && $(LN) $(LNFLAGS) $(LIB).$(VERSION) $(DESTDIR)/$(libdir)/$(LIB)
+ endif
+ 
+ all: $(LIB)
+@@ -17,8 +16,8 @@ all: $(LIB)
+ libsfml-window-s.a: $(OBJ)
+ 	$(AR) $(ARFLAGS) $(LIBNAME) $(OBJ)
+ 
+-libsfml-window.so: $(OBJ)
+-	$(CPP) $(LDFLAGS) -Wl,-soname,$(LIB).$(VERSION) -o $(LIBNAME) $(OBJ) $(OBJGLEW) -lX11 -lXrandr -lGL
++libsfml-window-$(VERSION).so: $(OBJ)
++	$(CPP) $(LDFLAGS) -Wl,-soname,$(LIB).$(VERSION) -o $(LIBNAME) $(OBJ) -lGLEW -lX11 -lXrandr -lGL
+ 
+ $(OBJ): %.o: %.cpp
+ 	$(CPP) -o $@ -c $< $(CFLAGS)
+@@ -32,4 +31,4 @@ mrproper: clean
+ 	@rm -rf $(LIBNAME)
+ 
+ install:
+-	@($(CP) $(LIBNAME) $(DESTLIBDIR) $(INSTALL))
++	@($(CP) $(LIBNAME) $(DESTDIR)/$(libdir) $(INSTALL))

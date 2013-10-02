@@ -1,0 +1,33 @@
+# $Id: PKGBUILD 183472 2013-04-21 22:12:29Z heftig $
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+# Maintainer: Jan de Groot <jgc@archlinux.org>
+
+pkgname=zenity-lily
+pkgver=3.8.0
+pkgrel=1
+pkgdesc="Display graphical dialog boxes from shell scripts. With --default-no patch."
+arch=(i686 x86_64)
+license=('LGPL')
+depends=('gtk3' 'libnotify')
+makedepends=('intltool' 'gtk-doc' 'itstool' 'docbook-xsl')
+url="http://www.gnome.org"
+replaces=(zenity)
+provides=(zenity=$pkgver)
+conflicts=(zenity)
+source=(http://ftp.gnome.org/pub/gnome/sources/${pkgname}/${pkgver%.*}/zenity-${pkgver}.tar.xz
+        default-no.patch)
+sha256sums=('94fbf0b71592f26dce0e2c49b82b4401139c8434084ad24c2c6a61ace1e6563f'
+            '24dd3d5ea0af40c7f64ccea08f8efb9fe667daa7060af79350c220d7e03597e5')
+
+build() {
+  cd zenity-$pkgver
+  patch -Np1 < $srcdir/default-no.patch
+  ./configure --prefix=/usr --sysconfdir=/etc \
+      --localstatedir=/var
+  make
+}
+
+package() {
+  cd zenity-$pkgver
+  make DESTDIR="${pkgdir}" install
+}

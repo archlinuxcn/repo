@@ -1,12 +1,13 @@
 # Maintainer: Philipp 'TamCore' B. <philipp [at] tamcore [dot] eu>
 # Contributor: Jakub Schmidtke <sjakub-at-gmail-dot-com>
 # Contributor: Christoph Brill <egore911-at-gmail-dot-com>
+# Contributor: Lubomir 'Kuci' Kucera <kuci24-at-gmail-dot-com>
 
 pkgname=android-studio
-pkgver=0.2.6
+pkgver=0.2.10
 pkgrel=1
 _build=130.737825
-_patch=130.795381
+_patch=132.843336
 pkgdesc="A new Android development environment based on IntelliJ IDEA."
 arch=(i686 x86_64)
 url="http://developer.android.com/sdk/installing/studio.html"
@@ -16,13 +17,13 @@ makedepends=('unzip' 'xorg-server-xvfb' 'ttf-dejavu')
 optdepends=('android-sdk-platform-tools' 'android-sdk-build-tools')
 options=('!strip')
 install=${pkgname}.install
-source=(http://dl.google.com/android/studio/android-studio-bundle-${_build}-linux.tgz
+source=(https://dl.google.com/android/studio/android-studio-bundle-${_build}-linux.tgz
         ${pkgname}.desktop)
-test ! -z ${_patch} && source+=("http://dl.google.com/android/studio/patches/AI-${_build}-${_patch}-patch-unix.jar")
+test ! -z ${_patch} && source+=("https://dl.google.com/android/studio/patches/AI-${_build}-${_patch}-patch-unix.jar")
 noextract=(AI-${_build}-${_patch}-patch-unix.jar)
-md5sums=('dcd13922f7cf577e3c852b224205d843'
-         '0f77280fd3769b0e04ff60dad547ce5e'
-         '71f56ae9ea245a8e02069e4b8c3041cf')
+sha256sums=('f7b2c9a9b04984c688d68de6b6da17cce3b46dfc71a14cd4a7a41128a26212e1'
+            '2bba1530d217d055441b1075f53f09b172bdb56ae3908ef80201fd2ba766b33d'
+            '81bb53f19c2d0853ba2dc13c906a9803a43443e022f870bf8735a364f925c4d9')
 
 [ $CARCH = "x86_64" ] && depends=('python' 'lib32-fontconfig' 'lib32-mesa' 'lib32-libxrender' 'android-sdk')
 
