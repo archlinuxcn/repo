@@ -1,5 +1,25 @@
+# Some colored makepkg-like functions
+msg_blue() {
+    printf "${BLUE}==>${ALL_OFF}${BOLD} ${1}${ALL_OFF}\n"
+}
+
+note_blue() {
+    printf "${BLUE}==>${ALL_OFF}${BOLD} NOTE${1}:${ALL_OFF} ${2}\n"
+}
+
+ALL_OFF="$(tput sgr0)"
+BOLD="$(tput bold)"
+BLUE="${BOLD}$(tput setaf 4)"
+GREEN="${BOLD}$(tput setaf 2)"
+
 post_install() {
     gtk-update-icon-cache -q -t -f /usr/share/icons/hicolor
+    echo
+    note_blue 1 "This package installs side-by-side with the Stable or Beta Channel."
+    note_blue 2 "The binary is now called 'google-chrome-unstable'."
+    note_blue 3 "To set this browser as the default, use:
+           $ xdg-settings set default-web-browser google-chrome-unstable.desktop"
+    echo
 }
 
 post_remove() {
