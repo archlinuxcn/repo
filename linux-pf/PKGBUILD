@@ -10,7 +10,7 @@ _basekernel=${_major}.${_minor}
 _srcname=linux-${_major}.${_minor}
 pkgbase=linux-pf
 _pfrel=2
-_kernelname=-pf
+_kernelname=${pkgbase#linux}
 _pfpatchhome="http://pf.natalenko.name/sources/${_basekernel}/"
 _pfpatchname="patch-${_basekernel}.${_pfrel}${_kernelname}"
 
@@ -65,7 +65,7 @@ _pstates_pat=yes
 pkgname=('linux-pf')
 true && pkgname=('linux-pf' 'linux-pf-headers')
 pkgver=${_basekernel}.${_pfrel}
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 url="http://pf.natalenko.name/"
 license=('GPL2')
@@ -162,7 +162,7 @@ prepare() {
 
 
   # Set EXTRAVERSION to -pf
-  sed -i "s/EXTRAVERSION = -${_pfrel}/EXTRAVERSION = ${_kernelname}/" Makefile
+  sed -ri "s|^(EXTRAVERSION =).*|\1|" Makefile
   _arch=$CARCH
 
   
@@ -284,17 +284,7 @@ build() {
     
   # Give option to rename package according to CPU
     echo
-    if [[ "$CPU" = "GENERIC" ]]; then
-      msg "Hit <ENTER>     :  to include the patchlevel number in kernver (default)"
-      msg "               (i.e. linux-pf-${_basekernel}.${_pfrel})"
-      msg "Hit <P> :  to remove the patchlevel number from kernver "
-      msg "               (i.e. linux-pf-${_basekernel})"
-      read answer
-      shopt -s nocasematch
-      if [[ "$answer" = "p" ]]; then
-	export _SUBLEVEL=n
-      fi
-  else
+    if [[ "$CPU" != "GENERIC" ]]; then
       lcpu=$(tr '[:upper:]' '[:lower:]' <<< $CPU)
       lcpu=$(sed -e "s/entium//" <<<$lcpu)
       echo "=============================================================="
@@ -314,23 +304,6 @@ build() {
       if [[ "$answer" != "g" ]]; then
 	export _PKGOPT=y
       fi
-      msg "Hit <ENTER>  :  to include the patchlevel number in kernver (default)"
-      if [[ ${_PKGOPT} != "y" ]]; then
-	msg "               (i.e. linux-pf-${_basekernel}.${_pfrel})"
-      else
-	msg "               (i.e. linux-pf-${lcpu}-${_basekernel}.${_pfrel})"
-      fi
-      msg "Hit <P> :  to remove the patchlevel number from kernver"
-      if [[ ${_PKGOPT} != "y" ]]; then
-	msg "               (i.e. linux-pf-${_basekernel})"
-      else
-	msg "               (i.e. linux-pf-${lcpu}-${_basekernel})"
-      fi
-      read answer
-      shopt -s nocasematch
-      if [[ "$answer" == "p" ]]; then
-	export _SUBLEVEL=n
-      fi
     fi
   fi	# batch check ends here
   export CPU
@@ -338,16 +311,10 @@ build() {
 
   # Strip config of uneeded localversion
   if [ "${_kernelname}" != "" ]; then
-    # sed -i "s|CONFIG_LOCALVERSION=.*|CONFIG_LOCALVERSION=\"\"|g" ./.config
+    sed -i "s|CONFIG_LOCALVERSION=.*|CONFIG_LOCALVERSION=\"${_kernelname}\"|g" ./.config
     sed -i "s/CONFIG_LOCALVERSION_AUTO=.*/CONFIG_LOCALVERSION_AUTO=n/" ./.config
   fi
 
-  # Remove the sublevel from Makefile, *if asked*.
-  # This ensures our kernel version is always 3.X-pf
-  # This way, minor kernel updates will not break external modules
-  if [ "${_SUBLEVEL}" = "n" ]; then
-     sed -ri 's|^(SUBLEVEL =).*|\1|' Makefile
-  fi
   # rewrite configuration
   yes "" | make config >/dev/null
 
