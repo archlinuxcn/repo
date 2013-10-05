@@ -5,7 +5,7 @@
 
 if [[ $0 == '/bin/bash' ]]; then
 	echo "It looks like you're sourcing this script."
-	echo "Please execute it directly instead, lest it clutter your shell with variables."
+	echo "Please execute it directly instead, lest it clutter your shell with variables and then fail."
 	return 1
 fi
 
@@ -133,7 +133,7 @@ password=${password:-password}
 ##############################
 # Include the documentation comment from btsync.conf.doc
 
-cat /usr/share/bittorrent-sync/btsync.conf.doc
+cat $(dirname $0)/btsync.conf.doc
 
 ##############################
 # REPLACEMENT

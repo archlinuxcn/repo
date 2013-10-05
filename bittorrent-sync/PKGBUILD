@@ -7,7 +7,7 @@
 
 pkgname=bittorrent-sync
 pkgver=1.1.70
-pkgrel=2
+pkgrel=3
 pkgdesc="BitTorrent Sync - automatically sync files via secure, distributed technology"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h')
 url="http://labs.bittorrent.com/experiments/sync.html"
@@ -26,7 +26,7 @@ source=("${pkgname}.install"
 sha256sums=('70189cc836ed0fd42496dad5ae586e31f65b87efb6f9182061049c1ff271133d'
 	    'f51c4e95b141a6ff6118fcbd26451d6887181bf27ee966f9beeda4bec9014261'
 	    '3d7d58815921c65e3d36beb739e5aaef513945ee713d3f4629e29d3af798efd5'
-	    '551f73b0400427679e3854fa0d043859e00ac38168d6658d27a1306443f2c5d9'
+	    '0db5dd1c362742be47369f8067e891b6b1d8b48df93847234f9aceb97bf56029'
 	    'b45a32bcd0807d2df6e79593d20beb43febbfa6fd83373f9e1a5a7f8571e037e'
 	    'de4f2a124d56ddbaec23535a250dbe9001606f47b74f3c3c97056107b21c7f6e'
 	    'SKIP'
@@ -46,6 +46,7 @@ fi
 
 build() {
 	cd "${srcdir}"
+	PATH="${srcdir}:${PATH}"
 	./btsync-makeconfig.sh --storage-path /var/lib/btsync --login admin --device-name $HOSTNAME > btsync.conf
 }
 
