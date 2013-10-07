@@ -1,0 +1,23 @@
+# Called after package installation
+post_install() {
+	#
+	# ChromeOS looks for libudev.so.0 not libudev.so
+	# so if the library exists we link it to the new name
+	#
+	if [ -f /usr/lib/libudev.so ];
+	then
+		ln -s /usr/lib/libudev.so /usr/lib/libudev.so.0
+	fi
+}
+
+# Called after package remove
+post_remove() {
+	#
+	# ChromeOS looks for libudev.so.0 not libudev.so
+	# we linked it, we need to clean that up
+	#
+	if [ -L /usr/lib/libudev.so.0 ];
+	then
+		unlink /usr/lib/libudev.so.0
+	fi
+}
