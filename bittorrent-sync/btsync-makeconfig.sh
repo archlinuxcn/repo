@@ -4,39 +4,40 @@
 # The config file is written to standard out.
 
 if [[ $0 == '/bin/bash' ]]; then
-	echo "It looks like you're sourcing this script."
-	echo "Please execute it directly instead, lest it clutter your shell with variables and then fail."
-	return 1
+    echo "It looks like you're sourcing this script."
+    echo "Please execute it directly instead, lest it clutter your shell with variables and then fail."
+    return 1
 fi
 
 ##############################
 # READ INPUT
 ##############################
 for arg in $@; do
-	case $previous in
-		--device-name|--hostname)
-			devicename=$arg;;
-		--port)
-			port=$arg;;
-		--storage-path)
-			storagepath=$arg;;
-		--check-for-updates)
-			checkupdates=$arg;;
-		--upnp)
-			upnp=$arg;;
-		--downlimit)
-			downlimit=$arg;;
-		--uplimit)
-			uplimit=$arg;;
-		--webport)
-			webport=$arg;;
-		--login)
-			login=$arg;;
-		--pass|--password)
-			password=$arg;;
-	esac
-	case $arg in -h|--help)
-		cat<<EOF
+    case $previous in
+        --device-name|--hostname)
+            devicename=$arg;;
+        --port)
+            port=$arg;;
+        --storage-path)
+            storagepath=$arg;;
+        --check-for-updates)
+            checkupdates=$arg;;
+        --upnp)
+            upnp=$arg;;
+        --downlimit)
+            downlimit=$arg;;
+        --uplimit)
+            uplimit=$arg;;
+        --webport)
+            webport=$arg;;
+        --login)
+            login=$arg;;
+        --pass|--password)
+            password=$arg;;
+    esac
+    case $arg in
+        -h|--help)
+            cat<<EOF
 Usage: source btsync-makeconfig.sh [-h|--help] | [OPTION OPTION_VALUE] ...
     -h
         Print the short version of this message and exit.
@@ -55,11 +56,11 @@ Common options:
         WebGUI port
 
 EOF
-			# Set exit status to nonzero
-			/bin/false
-			;;&
-		--help)
-		cat<<EOF
+            # Set exit status to nonzero
+            /bin/false
+            ;;&
+        --help)
+            cat<<EOF
 OPTIONS
   These options are accepted, with defaults in parentheses. If an option
   appears more than once, the last occurrence overwrites all previous
@@ -106,11 +107,11 @@ OPTIONS
           GENERATED CONFIG FILE.
 
 EOF
-			# Set exit status to nonzero
-			/bin/false
-		;;
-	esac || exit 0 # Exit if any of the case blocks were executed
-	previous=$arg
+            # Set exit status to nonzero
+            /bin/false
+            ;;
+    esac || exit 0 # Exit if any of the case blocks were executed
+    previous=$arg
 done
 
 ##############################
@@ -141,13 +142,13 @@ cat $(dirname $0)/btsync.conf.doc
 # String parameter values in the LHS are surrounded with "s and searched for as such
 # Non-string parameter values in the LHS are not quoted - use , as delimiter
 btsync --dump-sample-config \
-	| sed 's#"device_name" *: *"[^"]*"#"device_name" : "'$devicename'"#g' \
-	| sed 's#"listening_port" *: *[^,]*#"listening_port" : '$port'#g' \
-	| sed 's#"storage_path" *: *"[^"]*"#"storage_path" : "'$storagepath'"#g' \
-	| sed 's#"check_for_updates" *: *[^,]*#"check_for_updates" : '$checkupdates'#g' \
-	| sed 's#"use_upnp" *: *[^,]*#"use_upnp" : '$upnp'#g' \
-	| sed 's#"download_limit" *: *[^,]*#"download_limit" : '$downlimit'#g' \
-	| sed 's#"upload_limit" *: *[^,]*#"upload_limit" : '$uplimit'#g' \
-	| sed 's#"listen" *: *[^,]*#"listen" : "'$weblisten'"#g' \
-	| sed 's#"login" *: *"[^"]*"#"login" : "'$login'"#g' \
-	| sed 's#"password" *: *"[^"]*"#"password" : "'$password'"#g'
+    | sed 's#"device_name" *: *"[^"]*"#"device_name" : "'$devicename'"#g' \
+    | sed 's#"listening_port" *: *[^,]*#"listening_port" : '$port'#g' \
+    | sed 's#"storage_path" *: *"[^"]*"#"storage_path" : "'$storagepath'"#g' \
+    | sed 's#"check_for_updates" *: *[^,]*#"check_for_updates" : '$checkupdates'#g' \
+    | sed 's#"use_upnp" *: *[^,]*#"use_upnp" : '$upnp'#g' \
+    | sed 's#"download_limit" *: *[^,]*#"download_limit" : '$downlimit'#g' \
+    | sed 's#"upload_limit" *: *[^,]*#"upload_limit" : '$uplimit'#g' \
+    | sed 's#"listen" *: *[^,]*#"listen" : "'$weblisten'"#g' \
+    | sed 's#"login" *: *"[^"]*"#"login" : "'$login'"#g' \
+    | sed 's#"password" *: *"[^"]*"#"password" : "'$password'"#g'

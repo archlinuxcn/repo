@@ -5,7 +5,7 @@ After=network.target
 [Service]
 User=btsync
 Group=btsync
-ExecStart=/usr/bin/btsync-wrapper --config /etc/btsync.conf --nodaemon
+ExecStart=/usr/bin/btsync --config /etc/btsync.conf --nodaemon
 Restart=on-abort
 
 [Install]

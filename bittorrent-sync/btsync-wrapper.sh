@@ -36,46 +36,46 @@ configPath=~/.config/btsync/btsync.conf
 # Parse arguments
 previous=''
 for arg in $@; do
-	if [[ $previous == '--config' ]]; then
-		configPath=$arg
-		configArgumentAppears=true
-		break
-	fi
-	previous=$arg
+    if [[ $previous == '--config' ]]; then
+        configPath=$arg
+        configArgumentAppears=true
+        break
+    fi
+    previous=$arg
 done
 
 if [[ $configArgumentAppears == true ]]; then
-	logger " --config option is given"
+    logger " --config option is given"
 else
-	logger " --config option is not given - using default"
+    logger " --config option is not given - using default"
 fi
 
 logger "Using config file path: $configPath"
 
 # Create config file if necessary
 if [[ ! -f $configPath ]]; then
-	logger "Config file does not exist - will create it"
+    logger "Config file does not exist - will create it"
 
-	if mkdir -p $(dirname $configPath); then
-		if /usr/share/bittorrent-sync/btsync-makeconfig.sh > $configPath; then
-			logger "Config successfully created at $configPath"
-		else
-			logger "Could not create config at $configPath -
+    if mkdir -p $(dirname $configPath); then
+        if /usr/share/bittorrent-sync/btsync-makeconfig.sh > $configPath; then
+            logger "Config successfully created at $configPath"
+        else
+            logger "Could not create config at $configPath -
 exiting"
-			exit 2
-		fi
-	else
-		logger "Could not create directory $(dirname $configPath)
+            exit 2
+        fi
+    else
+        logger "Could not create directory $(dirname $configPath)
 - exiting"
-		exit 1
-	fi
+        exit 1
+    fi
 else
-	logger "Config file already exists"
+    logger "Config file already exists"
 fi
 
 # Execute the btsync executable
 if [[ $configArgumentAppears == true ]]; then
-	exec /usr/bin/btsync $@
+    exec /usr/bin/btsync $@
 else
-	exec /usr/bin/btsync $@ --config $configPath
+    exec /usr/bin/btsync $@ --config $configPath
 fi
