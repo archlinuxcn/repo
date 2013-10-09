@@ -5,7 +5,7 @@
 # or use: $ curl -s https://dl.google.com/linux/chrome/rpm/stable/x86_64/repodata/other.xml.gz | gzip -df | awk -F\" '/pkgid/{ sub(".*-","",$4); print $4": "$10 }'
 
 pkgname=google-chrome-dev
-pkgver=31.0.1650.4
+pkgver=31.0.1650.8
 pkgrel=1
 pkgdesc="An attempt at creating a safer, faster, and more stable browser (Dev Channel)"
 arch=('i686' 'x86_64')
@@ -31,6 +31,7 @@ package() {
   bsdtar -xf data.tar.lzma -C "$pkgdir/"
 
   msg2 "Moving stuff in place"
+  # Desktop
   mv "$pkgdir"/opt/google/chrome-unstable/google-chrome-unstable.desktop "$pkgdir"/usr/share/applications/
 
   # Icons
@@ -49,5 +50,5 @@ package() {
 
   msg2 "Removing the Debian-intended cron job and duplicated images"
   rm -r "$pkgdir"/etc/cron.daily/ "$pkgdir"/opt/google/chrome-unstable/cron/
-  rm "$pkgdir"/opt/google/chrome-unstable/product_logo_*
+  rm "$pkgdir"/opt/google/chrome-unstable/product_logo_*.png
 }
