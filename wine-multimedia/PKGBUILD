@@ -6,20 +6,21 @@
 
 pkgname=wine-multimedia
 _basename=wine
-pkgver=1.7.2
+pkgver=1.7.3
 pkgrel=1
 
 _pkgbasever=${pkgver/rc/-rc}
-_multimediasnapshot=20130913
+_multimediasnapshot=20131009
 
 source=(http://prdownloads.sourceforge.net/$_basename/$_basename-$_pkgbasever.tar.bz2{,.sign}
         30-win32-aliases.conf
         winemultimedia_${pkgver}_${_multimediasnapshot}.patch)
 
-sha1sums=('739f151b7174e2193694bd481fff180e64bb7991'
+sha1sums=('fbcd70cbe7e0163fb69544c668a860b82c73d22f'
           'SKIP'
           '023a5c901c6a091c56e76b6a62d141d87cce9fdb'
-          '6fa1b04ff8d7240c0ca47125350f2ab49d2d2551')
+          '38fed9fc423a4acb5a83e2870003265eb89aa77f')
+
 
 pkgdesc="Wine with Maarten Lankhorst's multimedia patches, including PulseAudio support"
 url="http://repo.or.cz/w/wine/multimedia.git"
@@ -65,7 +66,6 @@ makedepends=(autoconf ncurses bison perl fontforge flex prelink
   # mesa-libgl      lib32-mesa-libgl
   libgl           lib32-libgl
   libcl           lib32-libcl
-  oss
   samba
   opencl-headers
 )
@@ -89,7 +89,7 @@ optdepends=(
   libxinerama     lib32-libxinerama
   ncurses         lib32-ncurses
   libcl           lib32-libcl
-  oss             cups
+  cups
   samba           dosbox
 )
 
