@@ -152,3 +152,5 @@ btsync --dump-sample-config \
     | sed 's#"listen" *: *[^,]*#"listen" : "'$weblisten'"#g' \
     | sed 's#"login" *: *"[^"]*"#"login" : "'$login'"#g' \
     | sed 's#"password" *: *"[^"]*"#"password" : "'$password'"#g'
+
+# vim: ts=4:sw=4:et

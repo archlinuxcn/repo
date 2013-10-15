@@ -79,3 +79,5 @@ if [[ $configArgumentAppears == true ]]; then
 else
     exec /usr/bin/btsync $@ --config $configPath
 fi
+
+# vim: ts=4:sw=4:et

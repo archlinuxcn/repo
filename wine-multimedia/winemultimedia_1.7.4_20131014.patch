@@ -1,14 +1,14 @@
-commit 8955dbcbdbf7c592bc3ded7e6feef9ac6fc43359
+commit 3f00501493943a58bac925f8b958d03c43a1fbf7
 Author: John Schoenick <jschoenick@mozilla.com>
-Date:   Wed Oct 9 14:38:39 2013 -0700
+Date:   Sun Oct 13 15:05:39 2013 -0700
 
-    wine-multimedia for wine-1.7.3
+    wine-multimedia for wine 1.7.4
 
 diff --git a/configure b/configure
-index d17492a..7644a92 100755
+index 683043c..bf5e7f9 100755
 --- a/configure
 +++ b/configure
-@@ -657,6 +657,8 @@ OSS4INCL
+@@ -658,6 +658,8 @@ OSS4INCL
  ALSALIBS
  GSTREAMER_LIBS
  GSTREAMER_CFLAGS
@@ -17,7 +17,7 @@ index d17492a..7644a92 100755
  LIBGETTEXTPO
  ZLIB
  FREETYPE_LIBS
-@@ -840,6 +842,7 @@ with_osmesa
+@@ -834,6 +836,7 @@ with_osmesa
  with_oss
  with_png
  with_pthread
@@ -25,7 +25,7 @@ index d17492a..7644a92 100755
  with_sane
  with_tiff
  with_v4l
-@@ -1561,6 +1564,7 @@ Optional Packages:
+@@ -2044,6 +2047,7 @@ Optional Packages:
    --without-oss           do not use the OSS sound support
    --without-png           do not use PNG
    --without-pthread       do not use the pthread library
@@ -33,7 +33,7 @@ index d17492a..7644a92 100755
    --without-sane          do not use SANE (scanner support)
    --without-tiff          do not use TIFF
    --without-v4l           do not use v4l1 (v4l support)
-@@ -2790,6 +2794,12 @@ if test "${with_pthread+set}" = set; then :
+@@ -3273,6 +3277,12 @@ if test "${with_pthread+set}" = set; then :
  fi
  
  
@@ -46,7 +46,7 @@ index d17492a..7644a92 100755
  # Check whether --with-sane was given.
  if test "${with_sane+set}" = set; then :
    withval=$with_sane;
-@@ -11118,6 +11128,87 @@ esac
+@@ -11710,6 +11720,87 @@ esac
  fi
  fi
  
@@ -134,7 +134,7 @@ index d17492a..7644a92 100755
  if test "x$with_gstreamer" != "xno"
  then
      if test -n "$GSTREAMER_CFLAGS"; then :
-@@ -12395,12 +12486,13 @@ fi
+@@ -12987,12 +13078,13 @@ fi
  
  test -n "$ALSALIBS" || enable_winealsa_drv=${enable_winealsa_drv:-no}
  test -n "$COREAUDIO" || enable_winecoreaudio_drv=${enable_winecoreaudio_drv:-no}
@@ -150,16 +150,16 @@ index d17492a..7644a92 100755
  then
      as_fn_append wine_warnings "|No sound system was found. Windows applications will be silent."
  fi
-@@ -16516,6 +16608,7 @@ wine_fn_config_dll winemp3.acm enable_winemp3_acm
+@@ -17205,6 +17297,7 @@ wine_fn_config_dll winemp3.acm enable_winemp3_acm
  wine_fn_config_dll wineoss.drv enable_wineoss_drv
- wine_fn_config_dll wineps.drv enable_wineps_drv install-lib,po
+ wine_fn_config_dll wineps.drv enable_wineps_drv po
  wine_fn_config_dll wineps16.drv16 enable_win16
 +wine_fn_config_dll winepulse.drv enable_winepulse_drv
  wine_fn_config_dll wineqtdecoder enable_wineqtdecoder
  wine_fn_config_dll winex11.drv enable_winex11_drv
  wine_fn_config_dll wing.dll16 enable_win16
 diff --git a/configure.ac b/configure.ac
-index dacee3a..1f8ddf4 100644
+index fc68e1d..4252e05 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -67,6 +67,7 @@ AC_ARG_WITH(oss,       AS_HELP_STRING([--without-oss],[do not use the OSS sound
@@ -170,7 +170,7 @@ index dacee3a..1f8ddf4 100644
  AC_ARG_WITH(sane,      AS_HELP_STRING([--without-sane],[do not use SANE (scanner support)]))
  AC_ARG_WITH(tiff,      AS_HELP_STRING([--without-tiff],[do not use TIFF]))
  AC_ARG_WITH(v4l,       AS_HELP_STRING([--without-v4l],[do not use v4l1 (v4l support)]))
-@@ -1518,6 +1519,30 @@ then
+@@ -1540,6 +1541,30 @@ then
            [GetText ${notice_platform}development files not found (or too old), po files can't be rebuilt.])
  fi
  
@@ -201,7 +201,7 @@ index dacee3a..1f8ddf4 100644
  dnl **** Check for gstreamer ****
  if test "x$with_gstreamer" != "xno"
  then
-@@ -1736,13 +1761,14 @@ WINE_CHECK_SONAME(odbc,SQLConnect,,[AC_DEFINE_UNQUOTED(SONAME_LIBODBC,["libodbc.
+@@ -1758,13 +1783,14 @@ WINE_CHECK_SONAME(odbc,SQLConnect,,[AC_DEFINE_UNQUOTED(SONAME_LIBODBC,["libodbc.
  dnl **** Disable unsupported winmm drivers ****
  test -n "$ALSALIBS" || enable_winealsa_drv=${enable_winealsa_drv:-no}
  test -n "$COREAUDIO" || enable_winecoreaudio_drv=${enable_winecoreaudio_drv:-no}
@@ -218,9 +218,9 @@ index dacee3a..1f8ddf4 100644
  then
      WINE_WARNING([No sound system was found. Windows applications will be silent.])
  fi
-@@ -3160,6 +3186,7 @@ WINE_CONFIG_DLL(winemp3.acm)
+@@ -3242,6 +3268,7 @@ WINE_CONFIG_DLL(winemp3.acm)
  WINE_CONFIG_DLL(wineoss.drv)
- WINE_CONFIG_DLL(wineps.drv,,[install-lib,po])
+ WINE_CONFIG_DLL(wineps.drv,,[po])
  WINE_CONFIG_DLL(wineps16.drv16,enable_win16)
 +WINE_CONFIG_DLL(winepulse.drv)
  WINE_CONFIG_DLL(wineqtdecoder)
@@ -2029,7 +2029,7 @@ index 0ee7c8c..57fa4b1 100644
      test_marshal();
      trace("Output to a MS-DOS console is particularly slow and disturbs timing.\n");
 diff --git a/dlls/ntdll/server.c b/dlls/ntdll/server.c
-index f77bacf..a15a791 100644
+index 9b3aeef..ceefb5c 100644
 --- a/dlls/ntdll/server.c
 +++ b/dlls/ntdll/server.c
 @@ -79,6 +79,9 @@
@@ -5439,10 +5439,10 @@ index 23adfc0..97849ff 100644
  #define MAPPER_INDEX 0x3F
  
 diff --git a/libs/wine/loader.c b/libs/wine/loader.c
-index 5891a20..cc5f27a 100644
+index f59942d..e936533 100644
 --- a/libs/wine/loader.c
 +++ b/libs/wine/loader.c
-@@ -59,6 +59,10 @@ extern char **environ;
+@@ -63,6 +63,10 @@ extern char **environ;
  #include "winbase.h"
  #include "wine/library.h"
  
@@ -5453,7 +5453,7 @@ index 5891a20..cc5f27a 100644
  /* argc/argv for the Windows application */
  int __wine_main_argc = 0;
  char **__wine_main_argv = NULL;
-@@ -646,7 +650,6 @@ int wine_dll_get_owner( const char *name, char *buffer, int size, int *exists )
+@@ -650,7 +654,6 @@ int wine_dll_get_owner( const char *name, char *buffer, int size, int *exists )
      return ret;
  }
  
@@ -5461,7 +5461,7 @@ index 5891a20..cc5f27a 100644
  /***********************************************************************
   *           set_max_limit
   *
-@@ -657,6 +660,11 @@ static void set_max_limit( int limit )
+@@ -661,6 +664,11 @@ static void set_max_limit( int limit )
  #ifdef HAVE_SETRLIMIT
      struct rlimit rlimit;
  
@@ -5473,8 +5473,8 @@ index 5891a20..cc5f27a 100644
      if (!getrlimit( limit, &rlimit ))
      {
          rlimit.rlim_cur = rlimit.rlim_max;
-@@ -804,6 +812,34 @@ static void apple_main_thread( void (*init_func)(void) )
- 
+@@ -907,6 +915,34 @@ jint JNI_OnLoad( JavaVM *vm, void *reserved )
+ #endif  /* __ANDROID__ */
  
  /***********************************************************************
 + *           set_rttime_limit
@@ -5508,7 +5508,7 @@ index 5891a20..cc5f27a 100644
   *           wine_init
   *
   * Main Wine initialisation.
-@@ -822,6 +858,7 @@ void wine_init( int argc, char *argv[], char *error, int error_size )
+@@ -925,6 +961,7 @@ void wine_init( int argc, char *argv[], char *error, int error_size )
  #ifdef RLIMIT_AS
      set_max_limit( RLIMIT_AS );
  #endif
@@ -5530,17 +5530,16 @@ index 973bd02..1982c93 100644
  }
  
 diff --git a/server/Makefile.in b/server/Makefile.in
-index 2e9bba1..03b13c2 100644
+index 38e79bc..94b2f12 100644
 --- a/server/Makefile.in
 +++ b/server/Makefile.in
-@@ -1,5 +1,6 @@
- DEFS      = -D__WINESRC__
+@@ -1,4 +1,5 @@
  EXTRALIBS = @LIBPOLL@ @LIBRT@
 +EXTRAINCL = @DBUS_CFLAGS@
  
  C_SRCS = \
  	async.c \
-@@ -31,6 +32,7 @@ C_SRCS = \
+@@ -30,6 +31,7 @@ C_SRCS = \
  	region.c \
  	registry.c \
  	request.c \
