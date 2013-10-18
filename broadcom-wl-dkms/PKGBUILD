@@ -1,37 +1,26 @@
 # Maintainer: Frank Vanderham <twelve.eighty (at) gmail.>
-# Contributor: Hsin-Yi Chen (hychen) <hycehn (at) canonical.com>
-# Contributor: Alberto Milone <alberto.milone (at) canonical.com>
-# Contributor: Jasmine Hassan <jasmine.aura (at) gmail.com>
-# Contributor: b3niup
-# Upstream code branches: https://code.launchpad.net/ubuntu/+source/bcmwl
-# https://bugs.launchpad.net/ubuntu/quantal/+source/bcmwl/+bug/923809 for first creation
-# Also see: https://bbs.archlinux.org/viewtopic.php?id=145884
 pkgname=broadcom-wl-dkms
 _pkgname=broadcom-wl
-pkgver=6.30.223.30
+pkgver=6.30.223.141
 pkgrel=1
-pkgdesc="Broadcom 802.11 Linux STA wireless driver BCM43142."
-url="https://bbs.archlinux.org/viewtopic.php?id=145884"
+pkgdesc="Broadcom 802.11 Linux STA wireless driver"
+url='http://www.broadcom.com/support/802.11/linux_sta.php'
 arch=('i686' 'x86_64')
 license=('custom')
-depends=('dkms' 'linux-headers')
-conflicts=('wireless-bcm43142-oneiric-dkms' 'wireless-bcm43142-dkms' 'broadcom-wl6-dkms')
-source=(
-	"https://launchpad.net/ubuntu/+archive/primary/+files/bcmwl_${pkgver}+bdcom.orig.tar.gz"
-	"https://launchpad.net/ubuntu/+archive/primary/+files/bcmwl_${pkgver}+bdcom-0ubuntu2.diff.gz"
+depends=('dkms')
+conflicts=('wireless-bcm43142-oneiric-dkms' 'wireless-bcm43142-dkms' 'broadcom-wl6-dkms' 'broadcom-wl')
+[[ $CARCH = x86_64 ]] && _arch=_64 || _arch=
+source=("http://www.broadcom.com/docs/linux_sta/hybrid-v35${_arch}-nodebug-pcoem-${pkgver//./_}.tar.gz"
 	'broadcom-wl-dkms.conf'
 	'dkms.conf'
-	'001-Arch-Makefile.patch'
-	'002-Module-License.patch'
-)
-sha1sums=(
-	'4a7bd82ad263a4cd407b29088a0c9d7cbd4a674b'
-	'15d45d9ce1fdefab8ddb5a66a11c9043b5bf9c25'
+	'license.patch'
+	'linux-recent.patch')
+sha1sums=('2917d785ffd9663b1d23cfa388b9bd7c9f03cc3b'
 	'a37c5dd9ab279372f0c68595bb2a8f1fe694cd13'
-	'5a4a8bde48eb6f5b5444ab10cb875a353552a14b'
-	'90bc9022532b4769d862dfdca16d1179130111c1'
-	'306bccd26b12c808977cacf630860e7d483d213f'
-)
+	'91926bb064c00a00dbcab0d1d92c7eb976d56032'
+	'81c05d48b234d56ad2e18eaee5ce89b79550ef20'
+	'0d59426647fffe5b8c3835c7c6198ee4074ef1db')
+[[ $CARCH = x86_64 ]] && sha1sums[0]='3a2453c71a07030f41a8fc613c87badf8452848c'
 
 backup=('etc/modprobe.d/broadcom-wl-dkms.conf')
 install=install
@@ -39,37 +28,11 @@ install=install
 build() {
 	cd "${srcdir}"
 
-	# apply diff patch to create the debian/ folder
-	patch -p1 -i bcmwl_${pkgver}+bdcom-0ubuntu2.diff
+	patch -p1 -i linux-recent.patch
+	patch -p1 -i license.patch
 
-	# apply source patches
-	patch -d ./bcmwl-${pkgver}+bdcom/src -p1 -i ../../debian/patches/0001-MODULE_LICENSE.patch 
-	patch -d ./bcmwl-${pkgver}+bdcom -p1 -i ../debian/patches/0002-Makefile.patch
-	patch -d ./bcmwl-${pkgver}+bdcom/src -p1 -i ../../debian/patches/0003-Make-up-for-missing-init_MUTEX.patch
-	patch -d ./bcmwl-${pkgver}+bdcom/src -p1 -i ../../debian/patches/0006-add-support-for-linux-3.8.0.patch
-	patch -d ./bcmwl-${pkgver}+bdcom/src -p1 -i ../../debian/patches/0007-nl80211-move-scan-API-to-wdev.patch
-	patch -d ./bcmwl-${pkgver}+bdcom/src -p1 -i ../../debian/patches/0008-add-support-for-linux-3.9.0.patch
-	patch -d ./bcmwl-${pkgver}+bdcom/src -p1 -i ../../debian/patches/0009-add-support-for-linux-3.10.0.patch
-
-	# patch to replace use of dkpg with uname to detect 64 vs. 32 bit
-	patch -p1 -i 001-Arch-Makefile.patch
-
-	# patch for MODULE_LICENSE
-	patch -d ./bcmwl-${pkgver}+bdcom/src -p1 -i ../../002-Module-License.patch
-
-	# move folders to create Arch specific folder layout
-	mv bcmwl-${pkgver}+bdcom/src/* ./
-
-	# move Makefile to main src/ folder
-	mv ./bcmwl-${pkgver}+bdcom/Makefile ./
-
-	# delete the debian folders and files not needed for packaging
-	rm -R debian/
-	rm -R bcmwl-${pkgver}+bdcom/
-	rm bcmwl_${pkgver}+bdcom.orig.tar.gz
-	rm bcmwl_${pkgver}+bdcom-0ubuntu2.diff.gz
-	rm bcmwl_${pkgver}+bdcom-0ubuntu2.diff
-
+	# delete files not needed for packaging
+	rm hybrid-v35${_arch}-nodebug-pcoem-${pkgver//./_}.tar.gz
 }
 
 package() {

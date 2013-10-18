@@ -3,9 +3,9 @@ post_install() {
 
 	echo ">>> DKMS: Module add, build, and install"
 
-	$DKMS add -m broadcom-wl -v 6.30.223.30
-	$DKMS build -m broadcom-wl -v 6.30.223.30
-	$DKMS install -m broadcom-wl -v 6.30.223.30
+	$DKMS add -m broadcom-wl -v 6.30.223.141
+	$DKMS build -m broadcom-wl -v 6.30.223.141
+	$DKMS install -m broadcom-wl -v 6.30.223.141
 	rmmod b43 2>/dev/null
 	rmmod b43legacy 2>/dev/null
 	rmmod ssb 2>/dev/null
@@ -20,7 +20,7 @@ post_install() {
 
 	cat <<EOF
 ==> For more information on this driver, see:
-==> https://bbs.archlinux.org/viewtopic.php?id=145884
+==> http://www.broadcom.com/support/802.11/linux_sta.php
 EOF
 }
 
