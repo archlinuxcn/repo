@@ -204,7 +204,7 @@ prompt_to_ignore() {
   grep -Eq "^IgnorePkg.*( |=)$pkg( |$)" "$pacman_conf" && return 0
 
   if prompt_yn $"Add $pkg to IgnorePkg in $pacman_conf"; then
-    as_root sed -i "s/^IgnorePkg.*/& $pkg/" "$pacman_conf"
+    as_root sed -i "s/^#\?\(IgnorePkg.*\)/\1 $pkg/" "$pacman_conf"
   fi
 }
 
