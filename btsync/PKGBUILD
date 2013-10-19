@@ -1,0 +1,37 @@
+# Maintainer: ava1ar <mail(at)ava1ar(dot)info>
+
+pkgname=btsync
+pkgver=1.1.82
+pkgrel=2
+pkgdesc="BitTorrent Sync - automatically sync files via secure, distributed technology"
+license=("custom:btsync")
+arch=('i686' 'x86_64' 'armv6' 'armv7')
+url="http://labs.bittorrent.com/experiments/sync.html"
+install=btsync.install
+backup=('etc/btsync.conf')
+source=(btsync.service btsync@.service)
+sha1sums=('9187bafe0cc30895d55b8a8a69074ebdca325e4c' '0e9a7888776958d160f2b719e61257efc60d312a')
+
+if [ "$CARCH" == x86_64 ]; then
+	source+=("${pkgname}_x64-${pkgver}.tar.gz::http://download-lb.utorrent.com/endpoint/btsync/os/linux-x64/track/stable")
+	sha1sums+=('849b0b3dc377a571c01a73eb33b198cfb4b88d3a')
+elif [ "$CARCH" == i686 ]; then
+	source+=("${pkgname}_i386-${pkgver}.tar.gz::http://download-lb.utorrent.com/endpoint/btsync/os/linux-i386/track/stable")
+	sha1sums+=('00ca38023901ce20bfb42ed7e268fdec9da65b0e')
+elif [[ "$CARCH" == armv6 || "$CARCH" == armv7 ]]; then
+	source+=("${pkgname}_arm-${pkgver}.tar.gz::http://download-lb.utorrent.com/endpoint/btsync/os/linux-arm/track/stable")
+	sha1sums+=('1d9be0295ed8ec84c40ceab8520e90150cb5e73f')
+fi
+
+package() {
+	cd ${srcdir}
+	install -Dm755 btsync ${pkgdir}/usr/bin/btsync
+	# generate and install system-wide configand systemd unit
+	mkdir -p ${pkgdir}/etc
+	./btsync --dump-sample-config | sed 's:/home/user/\.sync:/var/lib/btsync:g' > ${pkgdir}/etc/btsync.conf
+	# install systemd units
+	install -Dm644 btsync.service ${pkgdir}/usr/lib/systemd/system/btsync.service
+	install -Dm644 btsync@.service ${pkgdir}/usr/lib/systemd/system/btsync@.service
+	# install license
+	install -Dm644 LICENSE.TXT "${pkgdir}/usr/share/licenses/${pkgname}/license.txt"
+}

@@ -1,0 +1,48 @@
+post_install() {
+    if [ "$(grep btsync /etc/passwd)" == "" ]; then
+        useradd -r -s /bin/sh -d /var/lib/btsync btsync
+    fi
+    mkdir -p /var/lib/btsync && chown -R btsync:btsync /var/lib/btsync
+
+cat << EOF
+
+  Configuration is located at /etc/btsync.conf and contains sample data
+  The corresponding systemd-unit is 'btsync.service'
+  WebGUI can be accessed at http://localhost:8888
+
+  User-specific BTSync configuration
+ 
+  Helps to set ownership to someone other than root for files that are copied
+  with btsync. Copy /etc/btsync/btsync.conf to ~/.config/btsync/btsync.conf for
+  the user you wish to configure btsync as:
+ 
+  mkdir -p ~/.config/btsync
+  cp /etc/btsync.conf ~/.config/btsync/btsync.conf
+ 
+  Replace user-specific references with the appropriate information, including
+  the following settings:
+ 
+  - storage_path:
+  - pid_file
+  - webui.listen
+  - webui.login
+  - webui.password
+ 
+  To start btsync, execute:
+ 
+  systemctl start btsync@user
+ 
+  where 'user' is your username.
+
+EOF
+
+}
+
+post_upgrade() {
+    post_install
+}
+
+post_remove() {
+  userdel btsync
+  echo -e "Please remove /var/lib/btsync folder manually"
+}
