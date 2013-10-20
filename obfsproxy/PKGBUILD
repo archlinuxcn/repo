@@ -1,27 +1,30 @@
-# Maintainer: Jiajun Wang <amesists AT gmail DOT com>
+# Maintainer: Techlive Zheng <techlivezheng@gmail.com>
+# Contributor: mutantmonkey <aur@mutantmonkey.in>
 
 pkgname=obfsproxy
-pkgver=0.1.4
+pkgver=0.2.2
 pkgrel=1
-pkgdesc="A tor-compliant pluggable transports proxy to obfuscate tor traffic"
-arch=('i686' 'x86_64')
-url="https://www.torproject.org/projects/obfsproxy"
-license=('GPL')
-depends=('autoconf' 'autoconf' 'libtool' 'pkg-config' 'libevent' 'openssl')
-makedepends=()
-source=("https://archive.torproject.org/tor-package-archive/${pkgname}/${pkgname}-${pkgver}.tar.gz")
-md5sums=('d3b898b1f5ea21c611bceaeb3c20e0d7')
-optdepends=('tor: you need tor to use this package' )
-
-build() {
-  cd $srcdir/$pkgname-$pkgver
-  mkdir build
-  cd build
-  ../configure --prefix=/usr
-  make
-}
+pkgdesc="A pluggable transport proxy written in Python"
+arch=('any')
+url="https://pypi.python.org/pypi/obfsproxy/0.2.2"
+license=('BSD')
+depends=('python2' 'python2-crypto' 'python2-pyptlib' 'twisted')
+makedepends=('python2-distribute')
+conflicts=('pyobfsproxy' 'obfsproxy-git')
+options=(!emptydirs)
+source=("https://pypi.python.org/packages/source/o/obfsproxy/obfsproxy-${pkgver}.tar.gz"{,.asc}
+        'obfsproxy-0.2.2-argparse.patch')
+sha256sums=('c82c360ff1ff7bffa00d7fdfa8a5237178a4e1d8680ebccfc68a8bd598280cad'
+            'SKIP'
+            '664c57d9327f97b003c2ec743f9f0c7303ee5c12efc48096379ae67b86083b6b')
 
 package() {
-  cd $srcdir/$pkgname-$pkgver/build
-  make DESTDIR=$pkgdir install
+  cd "$srcdir/$pkgname-$pkgver"
+  for p in $srcdir/*.patch; do
+    msg2 "Applying patch ${p##*/}"
+    patch -sp1 < ${p} || return $?
+  done
+  python2 setup.py install --root="$pkgdir/" --optimize=1
 }
+
+# vim:set ts=2 sw=2 et:
