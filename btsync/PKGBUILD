@@ -1,17 +1,20 @@
 # Maintainer: ava1ar <mail(at)ava1ar(dot)info>
+# Contributor: Dalton Miller
+# Contributor: Kilian Lackhove kilian@lackhove.de
+# Contributor: Justin Patera serialhex@gmail.com
 
 pkgname=btsync
 pkgver=1.1.82
-pkgrel=2
+pkgrel=3
 pkgdesc="BitTorrent Sync - automatically sync files via secure, distributed technology"
 license=("custom:btsync")
 arch=('i686' 'x86_64' 'armv6' 'armv7')
 url="http://labs.bittorrent.com/experiments/sync.html"
 install=btsync.install
 backup=('etc/btsync.conf')
+optdepends=("btsync-autoconfig: Auto-create users' config files if needed") 
 source=(btsync.service btsync@.service)
 sha1sums=('9187bafe0cc30895d55b8a8a69074ebdca325e4c' '0e9a7888776958d160f2b719e61257efc60d312a')
-
 if [ "$CARCH" == x86_64 ]; then
 	source+=("${pkgname}_x64-${pkgver}.tar.gz::http://download-lb.utorrent.com/endpoint/btsync/os/linux-x64/track/stable")
 	sha1sums+=('849b0b3dc377a571c01a73eb33b198cfb4b88d3a')
