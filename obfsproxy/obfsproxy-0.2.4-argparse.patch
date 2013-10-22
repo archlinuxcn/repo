@@ -1,5 +1,5 @@
---- obfsproxy-0.2.2/setup.py	2013-04-16 01:33:31.000000000 +0800
-+++ obfsproxy-0.2.2/setup.py	2013-04-16 01:33:31.000000000 +0800
+--- obfsproxy-0.2.4/setup.py	2013-04-16 01:33:31.000000000 +0800
++++ obfsproxy-0.2.4/setup.py	2013-04-16 01:33:31.000000000 +0800
 @@ -10,6 +10,11 @@
  versioneer.tag_prefix = 'obfsproxy-' # tags are like 1.2.0
  versioneer.parentdir_prefix = 'obfsproxy-' # dirname like 'myproject-1.2.0'
@@ -17,7 +17,7 @@
          'PyCrypto',
          'Twisted',
 -        'argparse',
-         'pyptlib'
+         'pyptlib >= 0.0.5'
 -        ],
 +	] + cond_requires,
  )

@@ -1,22 +1,21 @@
-# Maintainer: Techlive Zheng <techlivezheng@gmail.com>
-# Contributor: mutantmonkey <aur@mutantmonkey.in>
-
+# Maintainer: mutantmonkey <aur@mutantmonkey.in>
+# Contributor: Techlive Zheng <techlivezheng@gmail.com>
 pkgname=obfsproxy
-pkgver=0.2.2
+pkgver=0.2.4
 pkgrel=1
 pkgdesc="A pluggable transport proxy written in Python"
 arch=('any')
-url="https://pypi.python.org/pypi/obfsproxy/0.2.2"
+url="https://pypi.python.org/pypi/obfsproxy"
 license=('BSD')
-depends=('python2' 'python2-crypto' 'python2-pyptlib' 'twisted')
+depends=('python2' 'python2-crypto' 'python2-pyptlib>=0.0.5' 'twisted')
 makedepends=('python2-distribute')
 conflicts=('pyobfsproxy' 'obfsproxy-git')
 options=(!emptydirs)
 source=("https://pypi.python.org/packages/source/o/obfsproxy/obfsproxy-${pkgver}.tar.gz"{,.asc}
-        'obfsproxy-0.2.2-argparse.patch')
-sha256sums=('c82c360ff1ff7bffa00d7fdfa8a5237178a4e1d8680ebccfc68a8bd598280cad'
+        'obfsproxy-0.2.4-argparse.patch')
+sha256sums=('b0f34860cb7c9a1e6eedc95c3b3549baf67e90e4c32036bb9c4c015370734e43'
             'SKIP'
-            '664c57d9327f97b003c2ec743f9f0c7303ee5c12efc48096379ae67b86083b6b')
+            '856f0678485fff927115a8e664d49214070651f6190abe9b555daa7d9d987684')
 
 package() {
   cd "$srcdir/$pkgname-$pkgver"
