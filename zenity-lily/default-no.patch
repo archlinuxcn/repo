@@ -1,7 +1,8 @@
-diff -Naur zenity-3.8.0.old/src/msg.c zenity-3.8.0/src/msg.c
---- zenity-3.8.0.old/src/msg.c	2012-09-26 06:46:33.000000000 +0800
-+++ zenity-3.8.0/src/msg.c	2013-09-15 16:13:47.109738384 +0800
-@@ -36,7 +36,7 @@
+diff --git a/src/msg.c b/src/msg.c
+index 53f8a5d..94ff13d 100644
+--- a/src/msg.c
++++ b/src/msg.c
+@@ -36,7 +36,7 @@ zenity_msg_construct_question_dialog (GtkWidget *dialog, ZenityMsgData *msg_data
    cancel_button = gtk_dialog_add_button (GTK_DIALOG (dialog), GTK_STOCK_NO, GTK_RESPONSE_CANCEL);
    ok_button = gtk_dialog_add_button (GTK_DIALOG (dialog), GTK_STOCK_YES, GTK_RESPONSE_OK);
  
@@ -10,18 +11,19 @@ diff -Naur zenity-3.8.0.old/src/msg.c zenity-3.8.0/src/msg.c
  
    if (data->cancel_label) {
      gtk_button_set_label (GTK_BUTTON (cancel_button), data->cancel_label);
-diff -Naur zenity-3.8.0.old/src/option.c zenity-3.8.0/src/option.c
---- zenity-3.8.0.old/src/option.c	2013-03-14 09:46:04.000000000 +0800
-+++ zenity-3.8.0/src/option.c	2013-09-15 16:05:51.684257990 +0800
-@@ -46,6 +46,7 @@
- static gchar   *zenity_general_ok_button;
+diff --git a/src/option.c b/src/option.c
+index 7658e8b..1c3d78a 100644
+--- a/src/option.c
++++ b/src/option.c
+@@ -47,6 +47,7 @@ static gchar   *zenity_general_ok_button;
  static gchar   *zenity_general_cancel_button;
  static gboolean zenity_general_modal;
+ static gint     zenity_general_attach;
 +static gboolean zenity_general_default_no;
  
  /* Calendar Dialog Options */
  static gboolean zenity_calendar_active;
-@@ -752,6 +753,15 @@
+@@ -762,6 +763,15 @@ static GOptionEntry question_options[] = {
      NULL
    },
    {
@@ -37,7 +39,7 @@ diff -Naur zenity-3.8.0.old/src/option.c zenity-3.8.0/src/option.c
      "text",
      '\0',
      G_OPTION_FLAG_NOALIAS,
-@@ -1878,6 +1888,7 @@
+@@ -1890,6 +1900,7 @@ zenity_question_post_callback (GOptionContext *context,
      results->msg_data->mode = ZENITY_MSG_QUESTION;
      results->msg_data->no_wrap = zenity_general_dialog_no_wrap;
      results->msg_data->no_markup = zenity_general_dialog_no_markup;
@@ -45,13 +47,14 @@ diff -Naur zenity-3.8.0.old/src/option.c zenity-3.8.0/src/option.c
    }
  
    return TRUE;
-diff -Naur zenity-3.8.0.old/src/zenity.h zenity-3.8.0/src/zenity.h
---- zenity-3.8.0.old/src/zenity.h	2013-03-14 09:46:04.000000000 +0800
-+++ zenity-3.8.0/src/zenity.h	2013-09-15 15:54:55.440461008 +0800
-@@ -33,6 +33,7 @@
-   gint   exit_code;
+diff --git a/src/zenity.h b/src/zenity.h
+index 501109a..874beb6 100644
+--- a/src/zenity.h
++++ b/src/zenity.h
+@@ -34,6 +34,7 @@ typedef struct {
    gint   timeout_delay;
    gboolean modal;
+   gint   attach;
 +  gboolean default_no;
  } ZenityData;
  

@@ -1,33 +1,37 @@
-# $Id: PKGBUILD 183472 2013-04-21 22:12:29Z heftig $
 # Maintainer: lilydjwg <lilydjwg@gmail.com>
 # Maintainer: Jan de Groot <jgc@archlinux.org>
 
 pkgname=zenity-lily
-pkgver=3.8.0
+pkgver=3.10.0
 pkgrel=1
 pkgdesc="Display graphical dialog boxes from shell scripts. With --default-no patch."
 arch=(i686 x86_64)
 license=('LGPL')
 depends=('gtk3' 'libnotify')
-makedepends=('intltool' 'gtk-doc' 'itstool' 'docbook-xsl')
+makedepends=(intltool gtk-doc itstool docbook-xsl git gnome-common yelp-tools)
 url="http://www.gnome.org"
 replaces=(zenity)
 provides=(zenity=$pkgver)
 conflicts=(zenity)
-source=(http://ftp.gnome.org/pub/gnome/sources/${pkgname}/${pkgver%.*}/zenity-${pkgver}.tar.xz
+source=(git://git.gnome.org/zenity#tag=ZENITY_3_10_0
         default-no.patch)
-sha256sums=('94fbf0b71592f26dce0e2c49b82b4401139c8434084ad24c2c6a61ace1e6563f'
-            '24dd3d5ea0af40c7f64ccea08f8efb9fe667daa7060af79350c220d7e03597e5')
+sha256sums=(SKIP
+            '430b450538a81fe0dc83d3077504adda8801838abb88de9054637321a9a99448')
+
+prepare() {
+  cd zenity
+  git cherry-pick -n 80bc8ce643979fec201c4ebd5cd6405b6310357f
+}
 
 build() {
-  cd zenity-$pkgver
+  cd zenity
   patch -Np1 < $srcdir/default-no.patch
-  ./configure --prefix=/usr --sysconfdir=/etc \
+  ./autogen.sh --prefix=/usr --sysconfdir=/etc \
       --localstatedir=/var
   make
 }
 
 package() {
-  cd zenity-$pkgver
+  cd zenity
   make DESTDIR="${pkgdir}" install
 }
