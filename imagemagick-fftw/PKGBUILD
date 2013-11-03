@@ -1,19 +1,20 @@
-# $Id: PKGBUILD 194676 2013-09-21 18:35:37Z eric $
+# $Id$
 # Maintainer: Eric Bélanger <eric@archlinux.org>
 
 pkgname=imagemagick-fftw
-pkgver=6.8.6.10
-pkgrel=1
+pkgver=6.8.7.4
+pkgrel=2
 arch=('i686' 'x86_64')
 url="http://www.imagemagick.org/"
 license=('custom')
 makedepends=('libltdl' 'lcms2' 'libxt' 'fontconfig' 'libxext' 'ghostscript' \
              'openexr' 'libwmf' 'librsvg' 'libxml2' 'jasper' 'liblqr' \
              'opencl-headers' 'libcl' 'libwebp' 'fftw')
-#source=(http://www.imagemagick.org/download/ImageMagick-${pkgver%.*}-${pkgver##*.}.tar.xz \
-source=(ftp://ftp.sunet.se/pub/multimedia/graphics/ImageMagick/ImageMagick-${pkgver%.*}-${pkgver##*.}.tar.xz \
+#source=(http://www.imagemagick.org/download/ImageMagick-${pkgver%.*}-${pkgver##*.}.tar.xz{,.asc} \
+source=(ftp://ftp.sunet.se/pub/multimedia/graphics/ImageMagick/ImageMagick-${pkgver%.*}-${pkgver##*.}.tar.xz{,.asc} \
         perlmagick.rpath.patch)
-sha1sums=('807380b2221b5fed789bc895e8e4c3758237be9a'
+sha1sums=('88e936a1738967d078a9500f430e9017400a05e9'
+          'SKIP'
           'e143cf9d530fabf3b58023899b5cc544ba93daec')
 
 prepare() {
@@ -25,30 +26,33 @@ prepare() {
 
 build() {
   cd ImageMagick-${pkgver%.*}-${pkgver##*.}
-  ./configure --prefix=/usr --sysconfdir=/etc --with-modules --disable-static \
+  [[ $CARCH = "i686" ]] && EXTRAOPTS="--with-gcc-arch=i686"
+  [[ $CARCH = "x86_64" ]] && EXTRAOPTS="--with-gcc-arch=x86-64"
+
+  ./configure --prefix=/usr --sysconfdir=/etc --with-modules \
     --enable-hdri --with-wmf --with-openexr --with-xml --with-lcms2 --with-jp2 \
     --with-webp --with-gslib --with-gs-font-dir=/usr/share/fonts/Type1 \
     --with-perl --with-perl-options="INSTALLDIRS=vendor" --with-lqr --with-rsvg \
     --enable-opencl --without-gvc --without-djvu --without-autotrace \
-    --without-jbig --without-fpx --without-dps --with-fftw
+    --without-jbig --without-fpx --without-dps --with-fftw $EXTRAOPTS
  make
 }
 
 check() {
   cd ImageMagick-${pkgver%.*}-${pkgver##*.}
- # make check
+#  make check
 }
 
 package() {
   pkgdesc="An image viewing/manipulation program"
   depends=('perl' 'libltdl' 'lcms2' 'libxt' 'fontconfig' 'libxext' 'liblqr' 'libcl' 'fftw')
-  optdepends=('ghostscript: for Ghostscript support'
-              'openexr: for OpenEXR support'
-              'libwmf: for WMF support'
-              'librsvg: for SVG support'
-              'libxml2: for XML support'
-              'jasper: for JPEG-2000 support'
-              'libpng: for PNG support'
+  optdepends=('ghostscript: for Ghostscript support' 
+              'openexr: for OpenEXR support' 
+              'libwmf: for WMF support' 
+              'librsvg: for SVG support' 
+              'libxml2: for XML support' 
+              'jasper: for JPEG-2000 support' 
+              'libpng: for PNG support' 
 	      'libwebp: for WEBP support')
   backup=("etc/ImageMagick-${pkgver%%.*}/coder.xml"
           "etc/ImageMagick-${pkgver%%.*}/colors.xml"
