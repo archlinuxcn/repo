@@ -2,12 +2,12 @@
 # Contributor: Anibal Pacheco <apacheco.uy@gmail.com>
 pkgname="scrapy"
 pkgver=0.18.4
-pkgrel=1
+pkgrel=2
 pkgdesc="A fast high-level scraping and web crawling framework."
 arch=(any)
 license=('BSD')
 url="http://scrapy.org"
-depends=('twisted>=8.0' 'libxml2>=2.6.28' 'python2-w3lib>=1.2' 'python2-lxml' 'python2-queuelib')
+depends=('twisted>=8.0' 'libxml2>=2.6.28' 'python2-w3lib>=1.2' 'python2-lxml' 'python2-queuelib' 'python2-setuptools')
 makedepends=('git')
 optdepends=('python2-pyopenssl: only if you want to crawl secure (HTTPS) pages')
 provides=('scrapy')
