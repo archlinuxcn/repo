@@ -1,0 +1,22 @@
+--- uksm-0.1.2.2-for-v3.10.patch.orig	2013-11-06 21:21:46.701874343 +0800
++++ uksm-0.1.2.2-for-v3.10.patch	2013-11-06 21:26:29.864669833 +0800
+@@ -1291,14 +1291,14 @@
+  	if (flags & MAP_LOCKED)
+  		if (!can_do_mlock())
+  			return -EPERM;
+-@@ -1595,6 +1614,7 @@ munmap_back:
+- 
+- 	vma_link(mm, vma, prev, rb_link, rb_parent);
++@@ -1593,6 +1612,7 @@
++ 	if (vm_flags & VM_DENYWRITE)
++ 		allow_write_access(file);
+  	file = vma->vm_file;
+ +	uksm_vma_add_new(vma);
++ out:
++ 	perf_event_mmap(vma);
+  
+- 	/* Once vma denies write, undo our temporary denial count */
+- 	if (correct_wcount)
+ @@ -1626,6 +1646,7 @@ unmap_and_free_vma:
+  	unmap_region(mm, vma, prev, vma->vm_start, vma->vm_end);
+  	charged = 0;

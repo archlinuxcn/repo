@@ -31,8 +31,8 @@ _NUMA_off=yes		# Disable NUMA in kernel config
 pkgname=linux-uksm
 true && pkgname=(linux-uksm linux-uksm-headers)
 _kernelname=-uksm
-_srcname=linux-3.11
-pkgver=3.11.7
+_srcname=linux-3.12
+pkgver=3.12
 pkgrel=1
 arch=('i686' 'x86_64')
 url="http://kerneldedup.org/"
@@ -41,25 +41,25 @@ options=('!strip')
 makedepends=('kmod' 'inetutils' 'bc')
 _uksmvernel="0.1.2.2"
 _uksmname="v3.10"
-_bfqpath="http://algo.ing.unimo.it/people/paolo/disk_sched/patches/3.11.0-v6r2"
+_bfqpath="http://algo.ing.unimo.it/people/paolo/disk_sched/patches/3.12.0-v6r2"
 source=("http://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
-        "http://www.kernel.org/pub/linux/kernel/v3.x/patch-${pkgver}.xz"
+        #"http://www.kernel.org/pub/linux/kernel/v3.x/patch-${pkgver}.xz"
         "http://kerneldedup.org/download/uksm/${_uksmvernel}/uksm-${_uksmvernel}-for-${_uksmname}.patch"
-        "${_bfqpath}/0001-block-cgroups-kconfig-build-bits-for-BFQ-v6r2-3.11.patch"
-        "${_bfqpath}/0002-block-introduce-the-BFQ-v6r2-I-O-sched-for-3.11.patch"
-        "${_bfqpath}/0003-block-bfq-add-Early-Queue-Merge-EQM-to-BFQ-v6r2-for-3.11.0.patch"
+        "uksm-${_uksmvernel}-for-${_uksmname}.patch.patch"
+        "${_bfqpath}/0001-block-cgroups-kconfig-build-bits-for-BFQ-v6r2-3.12.patch"
+        "${_bfqpath}/0002-block-introduce-the-BFQ-v6r2-I-O-sched-for-3.12.patch"
+        "${_bfqpath}/0003-block-bfq-add-Early-Queue-Merge-EQM-to-BFQ-v6r2-for-3.12.0.patch"
         'linux-uksm.preset'
         'change-default-console-loglevel.patch'
         'criu-no-expert.patch'
         'config'
-        'config.x86_64'
-        '3.11-haswell-intel_pstate.patch')
+        'config.x86_64')
         
 prepare() {
-    cd "${srcdir}/${_srcname}"
+    cd ${_srcname}
 
     ### add upstream patch
-    patch -Np1 -i "${srcdir}/patch-${pkgver}"
+    #patch -Np1 -i "${srcdir}/patch-${pkgver}"
 
     ### set DEFAULT_CONSOLE_LOGLEVEL to 4 (same value as the 'quiet' kernel param)
     # remove this when a Kconfig knob is made available by upstream
@@ -71,11 +71,6 @@ prepare() {
     # patch from fedora
     patch -Np1 -i "${srcdir}/criu-no-expert.patch"
 
-    # add intel haswell support to intel_pstate
-    # https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/patch/?id=6cdcdb793791f776ea9408581b1242b636d43b37
-    # will be in 3.12
-    patch -Np1 -i "${srcdir}/3.11-haswell-intel_pstate.patch"
-
     msg "Patching source with BFQ patches"
     for p in $(ls ${srcdir}/000{1,2,3}-block*.patch); do
         patch -Np1 -i "$p"
@@ -83,7 +78,9 @@ prepare() {
 
     ### Patch source with UKSM
     msg "Patching with UKSM"
-    patch -Np1 -i "${srcdir}/uksm-${_uksmvernel}-for-${_uksmname}.patch"
+    cp "${srcdir}/uksm-${_uksmvernel}-for-${_uksmname}.patch" ./
+    patch -Np0 -i "${srcdir}/uksm-${_uksmvernel}-for-${_uksmname}.patch.patch"
+    patch -Np1 -i ./uksm-${_uksmvernel}-for-${_uksmname}.patch
 
     ### Clean tree and copy ARCH config over
     msg "Running make mrproper to clean source tree"
@@ -114,6 +111,9 @@ prepare() {
 	sed -i "s|CONFIG_LOCALVERSION=.*|CONFIG_LOCALVERSION=\"${_kernelname}\"|g" ./.config
 	sed -i "s|CONFIG_LOCALVERSION_AUTO=.*|CONFIG_LOCALVERSION_AUTO=n|" ./.config
     fi
+
+    ### UKSM to be enabled
+    sed -i -e s'/CONFIG_KSM=y/CONFIG_KSM=y\nCONFIG_UKSM=y/' ./.config
 
     ### BFQ to be compiled in but not enabled
     sed -i -e s'/CONFIG_CFQ_GROUP_IOSCHED=y/CONFIG_CFQ_GROUP_IOSCHED=y\nCONFIG_IOSCHED_BFQ=y\nCONFIG_CGROUP_BFQIO=y/' \
@@ -383,15 +383,14 @@ package_linux-uksm-headers() {
 # Global pkgdesc and depends are here so that they will be picked up by AUR
 pkgdesc='Linux Kernel and modules with the UKSM patchset'
 
-sha512sums=('b3680d3a45a7308383cf8634a7f1908e94f6e1c6d1cb587332a9418a95fb93bd3c73ab70c6976c7330508d7c8c6b0f43c2a9a2efde5fe1f76e9bfffb1de5686c'
-            'd94257c3c0bbd42f70693172bad494400e0f1c07a6404062fbb6c6fb788e94c2920ea76d3b92eba40e389aa7f2164c14555a1757ef8fdd76827d3e10676a39d3'
+sha512sums=('4ba5797e0772726d05c9f2eee66dc6dc2a5033c749ef44764c805a83da739ed5d0c6443b76785e38fe1ef74cc7ade787e48144faed0cfcb6f124f05248c700ff'
             '41bc23f63e9cfbb50a2f8d3bebc453ead1c120e84a9399f4645111d92eb6851339c3416c5eca4ca94d665bd4bb42f387281b7ac6983c257c3249ef58aa6e638f'
-            'e2f3838de142b9aded33ec1fad6d334d5b90b0249d9d4dd97c5403fb1610063697348a828254b101314912b87dda30b0d49e538d4e7962f4cb82d04e49e32039'
-            '61045cc64952246677a0cee5aeda16969bc35bddb5a5725076d5e4591f8a2374bc0df8ea7ea2343a0af1a0aca2d9af4a138673827443db13e31eb05f52900da9'
-            'c16f6541d44af10aa10d34f50bf5fd8bee998a3786cbe47e757d328cf921270b8ff4eb60367701d99b8d1354692e4bb159401dcbe0f3f3f48d29fcbf9568db85'
+            '457f4e9897ef6e7e692f00ddeb7d915dc2e9421de4dc7e2d4e6d707d266eadc425c1fe30d77d3f0eb9a1d76e0286b7c149f6d209b53c4039e6e3198cd2d3184a'
+            '006ab095bd199d771300672bf0863df8b2a631f609898e4182104e85e0f0c8d8124e1e2d1ab6bb8747324afef135554de258965b28b3b71d05fc036463253123'
+            'bffa292c8825250f90851d8ae264ac48c872442b9f1c02a71eb4f81bb811beddc06ea920505b10a41c1c8584ed9c18846a00c3262f063c49610eab534ee8f03d'
+            'c0ebf1ac63307e75742ca2d8a2523ce56694629eec1da5a1f4fe884a78bd330a98b45e6a17d6764470de3af48f94d3866d14a83f8cf58de7746b4165a674a68a'
             '6b5e2da5be509020134d2acfda8424f1e75fa681f0b8d5e01c6c68089da2f1398cbca58f6a85c05ac701682feec8c0d3fcf8267cefa8da391a7ada253413f771'
             '502192b5ce94c8254205f5ddb85bf50c5f1e78c768817b10dca3a7716a8c59d5e093842631acb51e3805cbf85522e0a9200942656f11bbb4ea1b7d61e24ddd78'
             'fc7b67bad612fdc67f9dd16886188d7bbfe3b8e65eb271672fcd888212e5b9e893c2eafef8070dd6113133b7a0a1a9c0dff90833080b452a2a530166e30587df'
-            'e5e337bf3cea57f4f41e375dd7e20b0d4c8fac9a635a27d4cbe062161d4f94bf7b7570d885226a27aad9cb3bf52a25c1eae8e8cec3b78146055db6f8189ca0ec'
-            '52990044d2ce1cb165aeb00368f1a07369907b568b122bf743f1106d0004bb9e0515c207a7cd3e800f45a5d8c8ea251db5c7177c21d4dd0fb83ee6dd9ca26db1'
-            '4797b26dc1424b51aca8005a83eea6ececeefabe3193d99f9add3ac4fe282dc2bf6b28a3dc8f6bbf93aa5c34812a1776fca970892f0320c028192a4b3d0284c8')
+            'd203d2e45bc649f77dcbe39bd9e02ec0b30dccc74c1efb79c4370140b3d70fb540fb4c59f76c4d71662e4025964a9fad1cb635a314751f883cb08b6f79a92ef3'
+            '9177c9cce92c2e51047d6ff05de617671b8dd6fec9afc2a8d5880b8f929d8649c7ab97dcea78071f1a02ad04287f4af93942d84e4eb2b483fa2d8729963bb7c4')
