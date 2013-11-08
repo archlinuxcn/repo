@@ -3,12 +3,12 @@
 
 pkgname=jdk
 _major=7
-_minor=40
-_build=b43
-_pkgver=${_major}u$_minor
-pkgver=$_major.$_minor
+_minor=45
+_build=b18
+_pkgver=${_major}u${_minor}
+pkgver=${_major}.${_minor}
 pkgrel=1
-pkgdesc="Java $_major Development Kit"
+pkgdesc="Java Development Kit"
 arch=('i686' 'x86_64')
 url=http://www.oracle.com/technetwork/java/javase/downloads/index.html
 license=('custom')
@@ -26,22 +26,24 @@ _arch2=i386; [ "$CARCH" = 'x86_64' ] && _arch=x64 && _arch2=amd64
 source=("http://download.oracle.com/otn-pub/java/jdk/$_pkgver-$_build/jdk-$_pkgver-linux-$_arch.tar.gz"
         'derby.conf'
         'derby.service'
+        'java-mission-control.desktop'
         'java-monitoring-and-management-console.desktop'
         'java-policy-settings.desktop'
         'java-visualvm.desktop'
         'javaws-launcher'
         'jdk.csh'
         'jdk.sh')
-md5sums=('0079cecc8c4d0f088ace5d0ea99d0c5c'  # jdk-$_pkgver-linux-i586.tar.gz
+md5sums=('66b47e77d963c5dd652f0c5d3b03cb52'  # jdk-$_pkgver-linux-i586.tar.gz
          '4bdff6982c66d24a879c424aaac3d04d'  # derby.conf
          '77f3b7ddf55c112f97a665a825bf764f'  # derby.service
+         '536ea84bba5eb6bfe8f601b41af9769c'  # java-mission-control.desktop
          'da10de5e6507c392fc9871076ef53ec6'  # java-monitoring-and-management-console.desktop
          'f4e25ef1ccef8d36ff2433c3987a64fe'  # java-policy-settings.desktop
          '35fd89c5c170021d2183593335703703'  # java-visualvm.desktop
          '45c15a6b4767288f2f745598455ea2bf'  # javaws-launcher
          'e81bb7853b071df6adca0b90f0c2ac2d'  # jdk.csh
          'a06d46b277e2926d73d2ee11c9950973') # jdk.sh
-[ "$CARCH" = 'x86_64' ] && md5sums[0]='511ea34e4a42955bc03c28afa4b8f6cf'  # jdk-$_pkgver-linux-x64.tar.gz
+[ "$CARCH" = 'x86_64' ] && md5sums[0]='bea330fcbcff77d31878f21753e09b30'  # jdk-$_pkgver-linux-x64.tar.gz
 # # Alternative mirrors, if your local one is throttled:
 # source[0]="http://uni-smr.ac.ru/archive/dev/java/SDKs/sun/j2se/$_major/jdk-$_pkgver-linux-$_arch.tar.gz"
 # source[0]="http://ftp.wsisiz.edu.pl/pub/pc/pozyteczne%20oprogramowanie/java/jdk-$_pkgver-linux-$_arch.tar.gz"

@@ -9,8 +9,8 @@ pkgname=('linux-rt' 'linux-rt-headers' 'linux-rt-docs') # Build realtime patched
 #pkgname=linux-custom       # Build kernel with a different name
 _kernelname=${pkgname#linux}
 _basekernel=3.10
-_releasever=15
-_rtpatchver=rt11
+_releasever=17
+_rtpatchver=rt12
 pkgrel=1
 _pkgver=${_basekernel}.${_releasever}
 pkgver=${_basekernel}.${_releasever}_${_rtpatchver}
@@ -28,8 +28,8 @@ source=("https://www.kernel.org/pub/linux/kernel/v3.x/linux-${_basekernel}.tar.x
         "${pkgname}.preset"
         'change-default-console-loglevel.patch')
 md5sums=('4f25cd5bec5f8d5a7d935b3f2ccb8481'
-         '70cc9bd12b04382c3783da96edda4562'
-         'b3aafcfa4c1613460b2bd29a2c1c3421'
+         '8431ee4e2467fdfde47e31701813a265'
+         '8b0d7a0ba21f997a381ea710c598a364'
          'd46f49f18b9d0010d40f1c9c1ef38a2f'
          '666b4b91843183f40555b48910020744'
          'eb14dcfd80c00852ef81ded6e826826a'

@@ -8,7 +8,7 @@
 #_pgo=true
 
 pkgname=firefox-kde-opensuse
-pkgver=24.0
+pkgver=25.0
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
@@ -29,7 +29,7 @@ provides=("firefox=${pkgver}")
 conflicts=('firefox')
 install=firefox.install
 options=(!emptydirs)
-_patchrev=4b65b5cfd428
+_patchrev=a15c18cb0ee6
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.bz2
         mozconfig firefox.desktop firefox-install-dir.patch vendor.js kde.js
@@ -129,7 +129,9 @@ build() {
 package() {
   cd mozilla-release
 
-  cp "$srcdir/kde.js" obj-x86_64-unknown-linux-gnu/dist/bin/defaults/pref
+  [[ "$CARCH" == "i686" ]] && cp "$srcdir/kde.js" obj-i686-pc-linux-gnu/dist/bin/defaults/pref
+  [[ "$CARCH" == "x86_64" ]] && cp "$srcdir/kde.js" obj-x86_64-unknown-linux-gnu/dist/bin/defaults/pref
+
   make -f client.mk DESTDIR="$pkgdir" install
 
   install -Dm644 "$srcdir/vendor.js" "$pkgdir/usr/lib/firefox/browser/defaults/preferences/vendor.js"
@@ -164,20 +166,20 @@ package() {
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
 
-sha256sums=('86a6efa501e1b106b597a8506757f3a2db9d3a5cfcc61ea29a9ad0c834bea83b'
+sha256sums=('5463cc625ac2a06d4d33b43dfb6365da830eef11f3ef5c0512714baaded59272'
             '49817a6ecf6fb2c8831cda126cfd5849551865cc7a2049f5ad6ad17b27df8925'
             '175d03cf3d8eb420d24a5a3072be69c9603e3ddacd3a83f68f49754eaecf6c5a'
             'ded67e8204bd5e1c0c5771c0d2c84ff80c998e1543711e7cd804cfe29e8dd1b0'
             '7044b77fb5d4113359144d24beccaf5d1e7cf62c660e3f5c1374bee5b2bf9c00'
             'b8cc5f35ec35fc96ac5c5a2477b36722e373dbb57eba87eb5ad1276e4df7236d'
-            '97da9ddd2110ff74800bcf288947ca6e84b0c7d67f4c8d24524cfd49aa90fcce'
-            '7d2e0acf2301a4120cc77749634d1966560b5f35217c9d278a02866eb9e083cf'
+            'fb852af08b9c597cdd70ea2f143a286d79989e86f7cc706ad749b06cd27c3598'
+            'd0cbca7fbf0a58c0407b4f45efa1157f66de6276b6377c1ca9a890cc99069e17'
             '1fd54e93db3a4d454ece5a6dc788a4ae36805eb497482add82a11ac5cf990562'
-            'dab135c33f8d5e2887ae59b7b123894899060e4acdd4d0b6e800d5247c059441'
+            '0635c4973e21f74db7dbf142eeb0e1c65b6dc9a0d4ab2d8b84d846952d5a2acb'
             '4785bdf086b7d537cb83369fea5c177eddb6fc3d8a69064599c64376bd985051'
             'e368d490192e8c83d2d209faa90a8bb0bff89e7d8d08d728001effe433f28e6f'
             '5bf1f1f661a4598545161f7a22c01713f2c1fdab94a736694e866843ff64c74d'
             '5f6b0970284d68d5ed18e6bb7ee1e9fc0025ab3c10aaa14c283adb21a4a20ee8'
-            'a448afef671142bf30e7a76512a5b079509267b9a1c6b31d739c1831102d9498'
+            '789045ac83ebfdd29d2fe2c18e00c03511be57efe8238fa8691e4e2d6bc07f8b'
             '75a0817c601bbe6b0a89fbc6ea327397ff296ad336d139b764421dab1dbf55cc'
             'aca072853b379201b0d8ac8128eb6e0e8255ab0c955d7bfd48f6273c8bf245d5')

@@ -1,21 +1,30 @@
+# Whether to mention about the -bin32 build.
+_bin32="0"
+
 # Some colored makepkg-like functions
 msg_blue() {
     printf "${BLUE}==>${ALL_OFF}${BOLD} ${1}${ALL_OFF}\n"
 }
 
-note() {
-    printf "${BLUE}==>${ALL_OFF}${BOLD} NOTE:${ALL_OFF} ${1}\n"
-}
+if [ "$_bin32" != "1" ]; then
+    note() {
+        printf "${BLUE}==>${ALL_OFF}${YELLOW} NOTE:${ALL_OFF}${BOLD} ${1}${ALL_OFF}\n"
+    }
+else
+    note() {
+        printf "${BLUE}==>${ALL_OFF}${YELLOW} NOTE${1}:${ALL_OFF}${BOLD} ${2}${ALL_OFF}\n"
+    }
+fi
 
 ALL_OFF="$(tput sgr0)"
 BOLD="$(tput bold)"
 BLUE="${BOLD}$(tput setaf 4)"
-GREEN="${BOLD}$(tput setaf 2)"
+YELLOW="${BOLD}$(tput setaf 3)"
 
 _update() {
-    msg_blue "Updating desktop mime database..."
+    msg_blue "Updating desktop MIME database..."
     update-desktop-database -q
-    msg_blue "Updating mime database..."
+    msg_blue "Updating MIME database..."
     update-mime-database usr/share/mime >/dev/null
     msg_blue "Updating icon cache..."
     xdg-icon-resource forceupdate &>/dev/null
@@ -23,13 +32,21 @@ _update() {
 
 post_install() {
     _update
-    echo
-    note "The binary is called 'google-earth'."
-    echo
+    if [ "$_bin32" != "1" ]; then
+        note "The binary is called 'google-earth'"
+    else
+        note 1 "The binary is called 'google-earth'"
+        note 2 "Using a 32-bit version. You might need to remove ~/.googleearth/Cache/
+           for correct rendering."
+    fi
 }
 
 post_upgrade() {
-    post_install
+    _update
+    if [ "$_bin32" = "1" ]; then
+        note "Using a 32-bit version. You might need to remove ~/.googleearth/Cache/
+           for correct rendering."
+    fi
 }
 
 post_remove() {

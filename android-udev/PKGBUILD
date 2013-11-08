@@ -1,13 +1,13 @@
 # Maintainer: M0Rf30 
 # Contributor: marlock
 pkgname=android-udev
-pkgver=58
+pkgver=66
 pkgrel=1
 pkgdesc='Udev rules to connect Android devices to your linux box'
 arch=('any')
 url="https://github.com/M0Rf30/android-udev-rules"
 license=('GPL')
-source=('android-udev::git://github.com/M0Rf30/android-udev-rules.git')
+source=('android-udev::git+https://github.com/M0Rf30/android-udev-rules.git')
 depends=('systemd' 'libmtp')
 makedepends=('git')
 conflicts=('udev-android-rules')

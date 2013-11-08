@@ -5,7 +5,7 @@
 # or use: $ curl -s https://dl.google.com/linux/chrome/rpm/stable/x86_64/repodata/other.xml.gz | gzip -df | awk -F\" '/pkgid/{ sub(".*-","",$4); print $4": "$10 }'
 
 pkgname=google-chrome-dev
-pkgver=31.0.1650.8
+pkgver=32.0.1685.0
 pkgrel=1
 pkgdesc="An attempt at creating a safer, faster, and more stable browser (Dev Channel)"
 arch=('i686' 'x86_64')
@@ -15,16 +15,18 @@ depends=('alsa-lib' 'gconf' 'gtk2' 'hicolor-icon-theme' 'libpng' 'libxslt' 'libx
 optdepends=('kdebase-kdialog: needed for file dialogs in KDE'
             'ttf-google-fonts-git')
 provides=("google-chrome=$pkgver")
+conflicts=('google-chrome')
 options=('!emptydirs' '!strip')
 install=$pkgname.install
 _channel=unstable
 _arch=i386
 [ "$CARCH" = 'x86_64' ] && _arch=amd64
 source=("google-chrome-${_channel}_${pkgver}_${_arch}.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_${_arch}.deb"
-        "$url/intl/en/eula_text.html")
-md5sums=('86394b71240ad9272f1724dc827039ce'
-         '6d57da7476a4b1b7a81821d9c036425c')
-[ "$CARCH" = 'x86_64' ] && md5sums[0]='925b4593d5b77fd6af9c625dc789e389'
+        'https://www.google.com/intl/en/chrome/browser/privacy/eula_text.html')
+md5sums=('cb2bbbe0c715666bbb204ee78549ebbf'
+         'ba19ea498f294975d320ff0b26a6cd63')
+[ "$CARCH" = 'x86_64' ] && md5sums[0]='9d65f3ef4d00380a78778d97203a7012'
+
 
 package() {
   msg2 "Extracting the data.tar.lzma"
@@ -32,23 +34,23 @@ package() {
 
   msg2 "Moving stuff in place"
   # Desktop
-  mv "$pkgdir"/opt/google/chrome-unstable/google-chrome-unstable.desktop "$pkgdir"/usr/share/applications/
+  mv "$pkgdir"/opt/google/chrome/google-chrome.desktop "$pkgdir"/usr/share/applications/
 
   # Icons
   for i in 16 22 24 32 48 64 128 256; do
-    install -Dm644 "$pkgdir"/opt/google/chrome-unstable/product_logo_${i}.png "$pkgdir"/usr/share/icons/hicolor/${i}x${i}/apps/google-chrome-unstable.png
+    install -Dm644 "$pkgdir"/opt/google/chrome/product_logo_${i}.png "$pkgdir"/usr/share/icons/hicolor/${i}x${i}/apps/google-chrome.png
   done
 
   # Man page
-  gzip "$pkgdir"/usr/share/man/man1/google-chrome-unstable.1
+  gzip "$pkgdir"/usr/share/man/man1/google-chrome.1
 
   # License
-  install -Dm644 eula_text.html "$pkgdir"/usr/share/licenses/google-chrome-unstable/eula_text.html
+  install -Dm644 eula_text.html "$pkgdir"/usr/share/licenses/google-chrome/eula_text.html
 
   msg2 "Symlinking missing Udev lib"
-  ln -s /usr/lib/libudev.so.1 "$pkgdir"/opt/google/chrome-unstable/libudev.so.0
+  ln -s /usr/lib/libudev.so.1 "$pkgdir"/opt/google/chrome/libudev.so.0
 
   msg2 "Removing the Debian-intended cron job and duplicated images"
-  rm -r "$pkgdir"/etc/cron.daily/ "$pkgdir"/opt/google/chrome-unstable/cron/
-  rm "$pkgdir"/opt/google/chrome-unstable/product_logo_*.png
+  rm -r "$pkgdir"/etc/cron.daily/ "$pkgdir"/opt/google/chrome/cron/
+  rm "$pkgdir"/opt/google/chrome/product_logo_*.png
 }

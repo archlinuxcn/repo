@@ -1,9 +1,9 @@
-# Maintainer: phoenixlzx <phoenixlzx at archlinuxcn.org>
+# Maintainer: jcsiv <siviter dot jamie at gmx dot co dot uk>
 # Contributor: ThinCarrotShrimp <christoph.r.martin+arch at gmail dot com>
 
 pkgname=oh-my-zsh-git
-pkgver=20130716_2cc4801
-pkgrel=1
+pkgver=1975.90c28b7
+pkgrel=2
 pkgdesc="A community-driven framework for managing your zsh configuration."
 arch=('any')
 url='https://github.com/robbyrussell/oh-my-zsh'
@@ -20,17 +20,17 @@ md5sums=('SKIP')
 # pacman 4.1 - retrieve version from git
 pkgver() {
   cd $_gitname
- 
-  d="$(git describe --always | sed 's/-/./g')"
-  h="$(git show --format="%h" HEAD)"
- 
-  if [[ "$d" = "$h" ]]; then
-    # If describe just delivers the short hash, set pkgver to <date>_<hash>,
-    # e.g. 20130412_85426a5
-    echo "$(git show --date=short --format="%cd_%h" | sed 's/-//g')"
-  else
-    echo "$d"
-  fi
+  printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)" 
+#  d="$(git describe --always | sed 's/-/./g')"
+#  h="$(git show --format="%h" HEAD)"
+# 
+#  if [[ "$d" = "$h" ]]; then
+#    # If describe just delivers the short hash, set pkgver to <date>_<hash>,
+#    # e.g. 20130412_85426a5
+#    echo "$(git show --date=short --format="%cd_%h" | sed 's/-//g')"
+#  else
+#    echo "$d"
+#  fi
 }
  
 build() {
@@ -43,18 +43,18 @@ build() {
 }
  
 package() {
-  mkdir -p ${pkgdir}/usr/share/oh-my-zsh
+  mkdir -p "${pkgdir}/usr/share/oh-my-zsh"
   cd $_gitname
  
   # We don't need anything related to git in the package.
   rm -rf .git*
  
   # The license should be in /usr/share/licenses.
-  install -D -m644 MIT-LICENSE.txt ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+  install -D -m644 MIT-LICENSE.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
   rm MIT-LICENSE.txt
  
   # Copy everything else.
-  cp -r . ${pkgdir}/usr/share/oh-my-zsh/
+  cp -r . "${pkgdir}/usr/share/oh-my-zsh/"
 }
  
 # vim:set ts=8 sts=2 sw=2 et:
