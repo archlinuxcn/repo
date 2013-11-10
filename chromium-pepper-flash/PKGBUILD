@@ -1,8 +1,8 @@
 # Maintainer: Ner0
 
 pkgname=chromium-pepper-flash
-pkgver=11.9.900.117
-_pkgver=30.0.1588.0
+pkgver=11.9.900.152
+_pkgver=32.0.1700.6
 pkgrel=1
 pkgdesc="Google Chrome's Pepper Flash plugin for Chromium (works with iron-bin)"
 arch=('i686' 'x86_64')
@@ -16,10 +16,10 @@ install=pepper.install
 
 if [ "$CARCH" = 'i686' ]; then
    _arch='i386'
-md5sums=('86394b71240ad9272f1724dc827039ce')
+md5sums=('dc794526b6bec5cf5dfcd913019a634e')
 elif [ "$CARCH" = 'x86_64' ]; then
    _arch='amd64'
-   md5sums=('925b4593d5b77fd6af9c625dc789e389')
+   md5sums=('c0e0fd6aa06a03155c25140d5953d7fd')
 fi
 md5sums[1]='3abf4a038d0525c6d17e5bfefbcfee91'
 
@@ -27,9 +27,9 @@ source=("https://dl.google.com/linux/direct/google-chrome-unstable_current_${_ar
 	'LICENSE.txt')
 
 package() {
-  bsdtar -C "$pkgdir/" -xf data.tar.lzma opt/google/chrome-unstable/PepperFlash
+  bsdtar -C "$pkgdir/" -xf data.tar.lzma opt/google/chrome/PepperFlash
   install -dm755 "$pkgdir/usr/lib/"
-  mv "$pkgdir/opt/google/chrome-unstable/PepperFlash" "$pkgdir/usr/lib/"
+  mv "$pkgdir/opt/google/chrome/PepperFlash" "$pkgdir/usr/lib/"
   install -Dm644 "$srcdir/LICENSE.txt" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
   sed -i "s/flashver=.*/flashver=$pkgver/" "$startdir/pepper.install"
 }
