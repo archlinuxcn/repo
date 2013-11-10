@@ -5,7 +5,7 @@
 # Contributor: Lee.MaRS <leemars@gmail.com>
 
 pkgname=google-appengine-python
-pkgver=1.8.6
+pkgver=1.8.7
 _zipver=$pkgver
 #_zipver=1.8.6
 pkgrel=1
@@ -45,4 +45,4 @@ package() {
   find opt/${pkgname} -maxdepth 1 -type f -executable -printf "/opt/${pkgname}/%f\n" | xargs ln -st usr/bin/
 }
 
-sha1sums=('386850f31a1dd67fb538fdce648efa0285df0f73')
+sha1sums=('bae18f89afd0521ed10ef1245daf5f732f1e5e48')
