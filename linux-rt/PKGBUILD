@@ -9,8 +9,8 @@ pkgname=('linux-rt' 'linux-rt-headers' 'linux-rt-docs') # Build realtime patched
 #pkgname=linux-custom       # Build kernel with a different name
 _kernelname=${pkgname#linux}
 _basekernel=3.10
-_releasever=17
-_rtpatchver=rt12
+_releasever=18
+_rtpatchver=rt14
 pkgrel=1
 _pkgver=${_basekernel}.${_releasever}
 pkgver=${_basekernel}.${_releasever}_${_rtpatchver}
@@ -335,3 +335,10 @@ pkgname=linux-rt
 pkgdesc="The Linux Kernel and modules (with realtime preemption)."
 
 # vim:set ts=8 sts=2 sw=2 et:
+md5sums=('4f25cd5bec5f8d5a7d935b3f2ccb8481'
+         'e39b75595bf61d758087e1ddecd01a12'
+         'cb40a1a152801583e0b1e699c0234417'
+         'd46f49f18b9d0010d40f1c9c1ef38a2f'
+         '666b4b91843183f40555b48910020744'
+         'eb14dcfd80c00852ef81ded6e826826a'
+         'f3def2cefdcbb954c21d8505d23cc83c')
