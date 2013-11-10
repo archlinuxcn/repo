@@ -1,0 +1,2511 @@
+diff -Naur freecad-0.13.1830.orig/cMake/FindCoin3DDoc.cmake freecad-0.13.1830/cMake/FindCoin3DDoc.cmake
+--- freecad-0.13.1830.orig/cMake/FindCoin3DDoc.cmake	2013-10-25 18:49:34.058998056 +0200
++++ freecad-0.13.1830/cMake/FindCoin3DDoc.cmake	2013-10-25 18:49:59.452193823 +0200
+@@ -21,7 +21,7 @@
+     ELSE(APPLE)
+       # Unix systems
+       find_path(COIN3D_DOC_PATH index.html 
+-                /usr/share/doc/libcoin60-doc/html
++                /usr/share/doc/coin/html
+       )
+       IF( EXISTS ${COIN3D_DOC_PATH})
+         message(STATUS "Coin3D doc is installed")
+diff -Naur freecad-0.13.1830.orig/cMake/FreeCadMacros.cmake freecad-0.13.1830/cMake/FreeCadMacros.cmake
+--- freecad-0.13.1830.orig/cMake/FreeCadMacros.cmake	2013-10-25 18:49:34.058998056 +0200
++++ freecad-0.13.1830/cMake/FreeCadMacros.cmake	2013-10-25 18:49:59.452193823 +0200
+@@ -167,70 +167,6 @@
+ #
+ #endmacro(qt4_wrap_ui)
+ 
+-
+-# This is a special version of the built in macro qt4_add_resources that generates .cpp files
+-#
+-#macro(fc_add_resources outfiles )
+-#    #QT4_EXTRACT_OPTIONS(rcc_files rcc_options ${ARGN})
+-#	set(ARGN )
+-#    foreach (it ${rcc_files})
+-#      get_filename_component(outfilename ${it} NAME_WE)
+-#      get_filename_component(infile ${it} ABSOLUTE)
+-#      get_filename_component(rc_path ${infile} PATH)
+-#      set(outfile ${CMAKE_CURRENT_BINARY_DIR}/qrc_${outfilename}.cpp)
+-#      #  parse file for dependencies 
+-#      #  all files are absolute paths or relative to the location of the qrc file
+-#      file(READ "${infile}" _RC_FILE_CONTENTS)
+-#      string(REGEX MATCHALL "<file[^<]+" _RC_FILES "${_RC_FILE_CONTENTS}")
+-#      set(_RC_DEPENDS)
+-#      foreach(_RC_FILE ${_RC_FILES})
+-#        string(REGEX REPLACE "^<file[^>]*>" "" _RC_FILE "${_RC_FILE}")
+-#        string(REGEX MATCH "^/|([A-Za-z]:/)" _ABS_PATH_INDICATOR "${_RC_FILE}")
+-#        if(NOT _ABS_PATH_INDICATOR)
+-#          set(_RC_FILE "${rc_path}/${_RC_FILE}")
+-#        endif(NOT _ABS_PATH_INDICATOR)
+-#        set(_RC_DEPENDS ${_RC_DEPENDS} "${_RC_FILE}")
+-#      endforeach(_RC_FILE)
+-#      add_custom_command(OUTPUT ${outfile}
+-#        COMMAND ${QT_RCC_EXECUTABLE}
+-#        ARGS ${rcc_options} -name ${outfilename} -o ${outfile} ${infile}
+-#        MAIN_DEPENDENCY ${infile}
+-#        DEPENDS ${_RC_DEPENDS})
+-#      set(${outfiles} ${${outfiles}} ${outfile})
+-#    endforeach (it)
+-#endmacro(fc_add_resources)
+-
+-MACRO (fc_add_resources outfiles )
+-  QT4_EXTRACT_OPTIONS(rcc_files rcc_options ${ARGN})
+-
+-  FOREACH (it ${rcc_files})
+-    GET_FILENAME_COMPONENT(outfilename ${it} NAME_WE)
+-    GET_FILENAME_COMPONENT(infile ${it} ABSOLUTE)
+-    GET_FILENAME_COMPONENT(rc_path ${infile} PATH)
+-    SET(outfile ${CMAKE_CURRENT_BINARY_DIR}/qrc_${outfilename}.cpp)
+-    #  parse file for dependencies 
+-    #  all files are absolute paths or relative to the location of the qrc file
+-    FILE(READ "${infile}" _RC_FILE_CONTENTS)
+-    STRING(REGEX MATCHALL "<file[^<]+" _RC_FILES "${_RC_FILE_CONTENTS}")
+-    SET(_RC_DEPENDS)
+-    FOREACH(_RC_FILE ${_RC_FILES})
+-      STRING(REGEX REPLACE "^<file[^>]*>" "" _RC_FILE "${_RC_FILE}")
+-      STRING(REGEX MATCH "^/|([A-Za-z]:/)" _ABS_PATH_INDICATOR "${_RC_FILE}")
+-      IF(NOT _ABS_PATH_INDICATOR)
+-        SET(_RC_FILE "${rc_path}/${_RC_FILE}")
+-      ENDIF(NOT _ABS_PATH_INDICATOR)
+-      SET(_RC_DEPENDS ${_RC_DEPENDS} "${_RC_FILE}")
+-    ENDFOREACH(_RC_FILE)
+-    ADD_CUSTOM_COMMAND(OUTPUT ${outfile}
+-      COMMAND ${QT_RCC_EXECUTABLE}
+-      ARGS ${rcc_options} -name ${outfilename} -o ${outfile} ${infile}
+-      MAIN_DEPENDENCY ${infile}
+-      DEPENDS ${_RC_DEPENDS})
+-    SET(${outfiles} ${${outfiles}} ${outfile})
+-  ENDFOREACH (it)
+-
+-ENDMACRO (fc_add_resources)
+-
+ MACRO(ADD_MSVC_PRECOMPILED_HEADER PrecompiledHeader PrecompiledSource SourcesVar)
+   IF(MSVC)
+     GET_FILENAME_COMPONENT(PrecompiledBasename ${PrecompiledHeader} NAME_WE)
+diff -Naur freecad-0.13.1830.orig/CMakeLists.txt freecad-0.13.1830/CMakeLists.txt
+--- freecad-0.13.1830.orig/CMakeLists.txt	2013-10-25 18:49:34.058998056 +0200
++++ freecad-0.13.1830/CMakeLists.txt	2013-10-25 18:49:59.452193823 +0200
+@@ -314,14 +314,14 @@
+     macro(fc_wrap_cpp outfiles )
+         # get include dirs
+         QT4_GET_MOC_FLAGS(moc_flags)
+-        QT4_EXTRACT_OPTIONS(moc_files moc_options ${ARGN})
++        QT4_EXTRACT_OPTIONS(moc_files moc_options moc_target ${ARGN})
+         # fixes bug 0000585: bug with boost 1.48
+         SET(moc_options ${moc_options} -DBOOST_TT_HAS_OPERATOR_HPP_INCLUDED)
+ 
+         foreach(it ${moc_files})
+             get_filename_component(it ${it} ABSOLUTE)
+             QT4_MAKE_OUTPUT_FILE(${it} moc_ cpp outfile)
+-            QT4_CREATE_MOC_COMMAND(${it} ${outfile} "${moc_flags}" "${moc_options}")
++            QT4_CREATE_MOC_COMMAND(${it} ${outfile} "${moc_flags}" "${moc_options}" "${moc_target}")
+             set(${outfiles} ${${outfiles}} ${outfile})
+             add_file_dependencies(${it} ${outfile})
+         endforeach(it)
+diff -Naur freecad-0.13.1830.orig/CMakeLists.txt.orig freecad-0.13.1830/CMakeLists.txt.orig
+--- freecad-0.13.1830.orig/CMakeLists.txt.orig	1970-01-01 01:00:00.000000000 +0100
++++ freecad-0.13.1830/CMakeLists.txt.orig	2013-02-02 18:09:17.000000000 +0100
+@@ -0,0 +1,552 @@
++project(FreeCAD_trunk)
++set(FREECAD_VERSION "0.13")
++
++# Needed for salomesmesh
++if(CMAKE_COMPILER_IS_GNUCXX)
++ENABLE_LANGUAGE(Fortran)
++endif(CMAKE_COMPILER_IS_GNUCXX)
++
++set(PACKAGE_NAME "FreeCAD")
++set(PACKAGE_VERSION_MAJOR "0")
++set(PACKAGE_VERSION_MINOR "12")
++set(PACKAGE_VERSION_PATCH "2237")
++set(PACKAGE_VERSION "${PACKAGE_VERSION_MAJOR}.${PACKAGE_VERSION_MINOR}.${PACKAGE_VERSION_PATCH}")
++set(PACKAGE_STRING "${PACKAGE_NAME} ${PACKAGE_VERSION}")
++
++cmake_minimum_required(VERSION 2.6.0 FATAL_ERROR)
++
++# include local  modules
++include(AddFileDependencies)
++
++set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cMake")
++
++
++if(COMMAND cmake_policy)
++     cmake_policy(SET CMP0003 NEW)
++endif(COMMAND cmake_policy)
++
++#if(CMAKE_CFG_INTDIR STREQUAL .)
++    # No Debug/Release output paths
++    set(DEBUG_MAIN_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
++    set(RELEASE_MAIN_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
++#else(CMAKE_CFG_INTDIR STREQUAL .)
++#   set(DEBUG_MAIN_OUTPUT_PATH ${CMAKE_BINARY_DIR}/src/Main/Debug)
++#   set(RELEASE_MAIN_OUTPUT_PATH ${CMAKE_BINARY_DIR}/src/Main/Release)
++#endif(CMAKE_CFG_INTDIR STREQUAL .)
++
++if(WIN32)
++    set(PLATFORM_CP xcopy /Y /S)
++    set(PLATFORM_MK mkdir)
++else(WIN32)
++    set(PLATFORM_CP cp)
++    set(PLATFORM_MK mkdir -p)
++endif(WIN32)
++
++
++# ================================================================================
++
++if(CMAKE_COMPILER_IS_GNUCXX)
++    include(cMake/ConfigureChecks.cmake)
++    configure_file(config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h)
++    add_definitions(-DHAVE_CONFIG_H)
++    add_definitions(-Wno-write-strings)
++    add_definitions(-Wno-deprecated)
++    INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
++    # get linker errors as soon as possible and not at runtime e.g. for modules
++    if(UNIX)
++    #    SET(CMAKE_SHARED_LINKER_FLAGS "-Wl,--no-undefined")
++    endif(UNIX)
++endif(CMAKE_COMPILER_IS_GNUCXX)
++
++
++# ================================================================================
++# Output directories for install target
++
++if(WIN32)
++    SET(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install CACHE PATH "Installation root directory")
++else(WIN32)
++    SET(CMAKE_INSTALL_PREFIX "/usr/lib${LIB_SUFFIX}/freecad" CACHE PATH "Installation root directory")
++    SET(INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
++endif(WIN32)
++
++SET(CMAKE_INSTALL_DATADIR data CACHE PATH "Output directory for data and resource files")
++SET(CMAKE_INSTALL_INCLUDEDIR include CACHE PATH "Output directory for header files")
++SET(CMAKE_INSTALL_DOCDIR doc CACHE PATH "Output directory for documentation and license files")
++
++# used as compiler defines
++SET(RESOURCEDIR "${CMAKE_INSTALL_DATADIR}")
++SET(DOCDIR "${CMAKE_INSTALL_DOCDIR}")
++
++MESSAGE( STATUS "prefix: ${CMAKE_INSTALL_PREFIX}")
++MESSAGE(STATUS "datadir: ${CMAKE_INSTALL_DATADIR}")
++MESSAGE(STATUS "docdir: ${CMAKE_INSTALL_DOCDIR}")
++MESSAGE(STATUS "includedir: ${CMAKE_INSTALL_INCLUDEDIR}")
++
++# ==============================================================================
++# == Win32 is default behaviour use the LibPack copied in Source tree ==========
++if(MSVC)
++    OPTION(FREECAD_LIBPACK_USE "Use the LibPack to Build FreeCAD (only Win32 so far)." ON)
++    set(FREECAD_LIBPACK_DIR ${CMAKE_SOURCE_DIR} CACHE PATH  "Directory of the FreeCAD LibPack")
++else(MSVC)
++    OPTION(FREECAD_LIBPACK_USE "Use the LibPack to Build FreeCAD (only Win32 so far)." OFF)
++    set(FREECAD_LIBPACK_DIR ""  CACHE PATH  "Directory of the FreeCAD LibPack")
++endif(MSVC)
++
++# ==============================================================================
++# == All the options for the build process    ============
++
++OPTION(FREECAD_BUILD_GUI "Build FreeCAD Gui. Otherwise you have only the command line and the Python import module." ON)
++OPTION(FREECAD_MAINTAINERS_BUILD "Build FreeCAD for Maintainers, with Docu and 3rd party libs. On Windows the Installer is build." OFF)
++OPTION(FREECAD_BUILD_CAM "Build the FreeCAD CAM module and the needed libs, be aware, unfinished code!" OFF)
++OPTION(FREECAD_BUILD_FEM "Build the FreeCAD FEM module, be aware, unfinished code!" ON)
++OPTION(FREECAD_BUILD_SANDBOX "Build the FreeCAD Sandbox module which is only for testing purposes" OFF)
++OPTION(FREECAD_BUILD_TEMPLATE "Build the FreeCAD template module which is only for testing purposes" OFF)
++OPTION(FREECAD_BUILD_DEBIAN "Prepare for a build of a Debian package" OFF)
++OPTION(FREECAD_USE_EXTERNAL_ZIPIOS "Use system installed zipios++ instead of the bundled." OFF)
++OPTION(FREECAD_USE_EXTERNAL_PIVY "Use system installed python-pivy instead of the bundled." OFF)
++if(MSVC)
++OPTION(FREECAD_USE_3DCONNEXION "Use the 3D connexion SDK to support 3d mouse." ON)
++else(MSVC)
++set(FREECAD_USE_3DCONNEXION OFF)
++endif(MSVC)
++
++# if this is set override some options
++if (FREECAD_BUILD_DEBIAN)
++    set(FREECAD_USE_EXTERNAL_ZIPIOS ON)
++    set(FREECAD_USE_EXTERNAL_PIVY ON)
++endif (FREECAD_BUILD_DEBIAN)
++
++if (NOT EXISTS ${CMAKE_SOURCE_DIR}/src/zipios++)
++    set(FREECAD_USE_EXTERNAL_ZIPIOS ON)
++endif ()
++
++# ==============================================================================
++
++if(FREECAD_LIBPACK_USE)
++    # checking for a unique file in LibPack location to make sure the right version of the LibPack is there
++    find_file(FREECAD_LIBPACK_CHECKFILE6X boost_program_options-vc80-mt-gd.lib ${FREECAD_LIBPACK_DIR}/lib )
++    find_file(FREECAD_LIBPACK_CHECKFILE7X boost_program_options-vc90-mt-gd-1_39.lib ${FREECAD_LIBPACK_DIR}/lib )
++    find_file(FREECAD_LIBPACK_CHECKFILE8X boost_program_options-vc90-mt-gd-1_48.lib ${FREECAD_LIBPACK_DIR}/lib )
++    find_file(FREECAD_LIBPACK_CHECKCUSTOM boost_program_options-vc90-mt-gd-1_41.lib ${FREECAD_LIBPACK_DIR}/lib )
++    IF(FREECAD_LIBPACK_CHECKFILE6X)
++        include(cMake/UseLibPack6x.cmake)
++        set(FREECAD_LIBPACK6 FOUND CACHE STRING "Displays if the libpack has been found")
++        set(FREECAD_LIBPACK7 NOTFOUND CACHE STRING "Displays if the libpack has been found")
++        MARK_AS_ADVANCED(FORCE FREECAD_LIBPACK7)
++    ELSEIF(FREECAD_LIBPACK_CHECKFILE7X)
++        include(cMake/UseLibPack7x.cmake)
++        set(FREECAD_LIBPACK6 NOTFOUND CACHE STRING "Displays if the libpack has been found")
++        MARK_AS_ADVANCED(FORCE FREECAD_LIBPACK6)
++        set(FREECAD_LIBPACK7 FOUND CACHE STRING "Displays if the libpack has been found")	
++    ELSEIF(FREECAD_LIBPACK_CHECKFILE8X)
++        include(cMake/UseLibPack8x.cmake)
++        set(FREECAD_LIBPACK6 NOTFOUND CACHE STRING "Displays if the libpack has been found")
++        set(FREECAD_LIBPACK7 NOTFOUND CACHE STRING "Displays if the libpack has been found")
++        set(SWIG_EXECUTABLE ${FREECAD_LIBPACK_DIR}/tools/swigwin-1.3.40/swig.exe)
++        MARK_AS_ADVANCED(FORCE FREECAD_LIBPACK6)
++        set(FREECAD_LIBPACK8 FOUND CACHE STRING "Displays if the libpack has been found")	
++    ELSEIF(FREECAD_LIBPACK_CHECKCUSTOM)
++        include(cMake/UseLibPackCustom.cmake)
++        set(FREECAD_LIBPACKX FOUND CACHE STRING "Displays if the libpack has been found")	
++    ELSE(FREECAD_LIBPACK_CHECKFILE6X)
++        MARK_AS_ADVANCED(FORCE FREECAD_LIBPACK_CHECKFILE6X FREECAD_LIBPACK_CHECKFILE7X)
++        message(SEND_ERROR  "Could not find neither LibPack 6.x nor 7.x in specified location:" ${FREECAD_LIBPACK_DIR})
++    ENDIF(FREECAD_LIBPACK_CHECKFILE6X)
++
++# -------------------------------- Swig ----------------------------------
++
++    find_package(SWIG)
++
++    IF(NOT SWIG_FOUND)
++        MESSAGE("SWIG was not found, build no SWIG binding for pivy")
++    ENDIF(NOT SWIG_FOUND)
++
++else(FREECAD_LIBPACK_USE)
++
++MARK_AS_ADVANCED(FORCE FREECAD_LIBPACK_CHECKFILE6X FREECAD_LIBPACK_CHECKFILE7X)
++
++
++
++# ================================================================================
++# == for other OSes search the packages ==========================================
++
++
++# -------------------------------- Python --------------------------------
++
++
++    #http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=677598
++    set(Python_ADDITIONAL_VERSIONS "2.3" "2.4" "2.5" "2.6" "2.7" "2.8" "2.9")
++    find_package(PythonInterp REQUIRED)
++    IF (NOT DEFINED PYTHON_VERSION_STRING)
++        find_package(PythonLibs REQUIRED)
++    ELSE (NOT DEFINED PYTHON_VERSION_STRING)
++        find_package(PythonLibs ${PYTHON_VERSION_STRING} EXACT)
++    ENDIF(NOT DEFINED PYTHON_VERSION_STRING)
++
++    IF(NOT PYTHONLIBS_FOUND)
++        MESSAGE("Python not found, install python!")
++    ENDIF(NOT PYTHONLIBS_FOUND)
++
++
++
++# -------------------------------- Boost --------------------------------
++
++    SET( _boost_TEST_VERSIONS ${Boost_ADDITIONAL_VERSIONS} "1.41.0" "1.39.0" "1.38.0" "1.37.0"
++        "1.36.1" "1.36.0" "1.35.1" "1.35.0" "1.35" "1.34.1" "1.34.0" "1.34"
++        "1.33.1" "1.33.0" "1.33" )
++
++    find_package(Boost COMPONENTS filesystem program_options regex signals system thread REQUIRED)
++
++# -------------------------------- XercesC --------------------------------
++
++    find_package(XercesC REQUIRED)
++
++# -------------------------------- ZLIB --------------------------------
++
++    find_package(ZLIB REQUIRED)
++
++# -------------------------------- OpenCasCade --------------------------------
++
++#first, look for OpenCASCADE Community Edition (OCE)
++#if OCE is installed in a nonstandard location, add -DOCE_DIR=/path/to/dir/containing/OCEConfig.cmake
++# when configuring with cmake, i.e. cmake .. -DOCE_DIR=/usr/share/cmake
++	if( NOT DEFINED OCE_DIR ) 
++		if( UNIX )
++			set( OCE_DIR "/usr/local/share/cmake/" )
++		else()
++			set( OCE_DIR "c:/OCE-0.4.0/share/cmake" )
++		endif()
++	endif()
++	find_package ( OCE )
++	if( ${OCE_FOUND} )
++		message("-- OpenCASCADE Community Edition has been found.")
++		add_definitions ( -DHAVE_CONFIG_H )
++		set( OCC_LIBRARIES "TKFeat;TKFillet;TKMesh;TKernel;TKG2d;TKG3d;TKMath;TKIGES;TKSTL;TKShHealing;TKXSBase;TKBool;TKBO;TKBRep;TKTopAlgo;TKGeomAlgo;TKGeomBase;TKOffset;TKPrim;TKSTEP;TKSTEPBase;TKSTEPAttr;TKHLR" ) #lib list copied from FreeCAD's FindOpenCasCade.cmake
++		set( OCC_OCAF_LIBRARIES "TKCAF;TKXCAF;TKLCAF;TKXDESTEP;TKXDEIGES" ) #lib list copied from FreeCAD's FindOpenCasCade.cmake
++		set( OCC_INCLUDE_DIR ${OCE_INCLUDE_DIRS} )
++		set( OCC_FOUND ${OCE_FOUND} )
++	else() #look for OpenCASCADE
++		find_package(OpenCasCade)
++		IF(NOT OCC_FOUND)
++			MESSAGE("Neither OpenCASCADE Community Edition nor OpenCasCade were found: will not build CAD modules!")
++		ELSE()
++			MESSAGE("-- OpenCASCADE include directory: ${OCC_INCLUDE_PATH}")
++			MESSAGE("-- OpenCASCADE shared libraries directory: ${OCC_LIB_PATH}")
++		ENDIF()
++	endif()
++
++# -------------------------------- Salome SMESH --------------------------
++
++    # Salome SMESH sources are under src/3rdParty now
++    IF(OCC_FOUND)
++    set(SMESH_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/src/3rdParty/salomesmesh/inc)
++    set(SMESH_LIBRARIES
++        StdMeshers
++        #MEFISTO2
++        SMESH
++        DriverUNV
++        SMESHDS
++        DriverSTL
++        DriverDAT
++        Driver
++        SMDS
++    )
++    set(SMESH_FOUND TRUE)
++    ENDIF(OCC_FOUND)
++    #find_package(SMESH)
++    #IF(NOT SMESH_FOUND)
++    #    MESSAGE("Salome SMESH was not found!")
++    #ENDIF(NOT SMESH_FOUND)
++
++# -------------------------------- OpenCV --------------------------------
++
++    # not needed at the moment
++    #find_package(OpenCV REQUIRED)
++
++# -------------------------------- Swig ----------------------------------
++
++    find_package(SWIG)
++
++    IF(NOT SWIG_FOUND)
++        MESSAGE("SWIG was not found, build no SWIG binding for pivy")
++    ENDIF(NOT SWIG_FOUND)
++
++# -------------------------------- Eigen --------------------------------
++
++    #find_package(Eigen2)
++    find_package(Eigen3)
++
++# -------------------------------- ODE ----------------------------------
++
++#    find_package(ODE)
++
++# -------------------------------- Qt --------------------------------
++
++# sets ${QT_LIBRARIES}
++
++    SET(QT_MIN_VERSION 4.5.0)
++    set(QT_USE_QTNETWORK TRUE)
++    set(QT_USE_QTXML TRUE)
++    if(FREECAD_BUILD_GUI)
++        set(QT_USE_QTOPENGL TRUE)
++        set(QT_USE_QTSVG TRUE)
++        set(QT_USE_QTUITOOLS TRUE)
++        set(QT_USE_QTWEBKIT TRUE)
++    endif(FREECAD_BUILD_GUI)
++    find_package(Qt4 REQUIRED)
++
++    include(${QT_USE_FILE})
++
++    IF(NOT QT4_FOUND)
++        MESSAGE("Library qt-4.3 or above is not available, install QT or FreeCAD Gui version will not be built")
++    ENDIF(NOT QT4_FOUND)
++
++    IF(NOT QT_QTWEBKIT_FOUND)
++        MESSAGE("Qt Webkit not found, will not build browser integration!")
++    ENDIF(NOT QT_QTWEBKIT_FOUND)
++
++
++    # This is a special version of the built in macro qt4_wrap_cpp
++    # It is required since moc'ed files are now included instead of being added to projects directly
++    # It adds a reverse dependency to solve this
++    # This has the unfortunate side effect that some files are always rebuilt
++    # There is probably a cleaner solution than this
++    macro(fc_wrap_cpp outfiles )
++        # get include dirs
++        QT4_GET_MOC_FLAGS(moc_flags)
++        QT4_EXTRACT_OPTIONS(moc_files moc_options ${ARGN})
++        # fixes bug 0000585: bug with boost 1.48
++        SET(moc_options ${moc_options} -DBOOST_TT_HAS_OPERATOR_HPP_INCLUDED)
++
++        foreach(it ${moc_files})
++            get_filename_component(it ${it} ABSOLUTE)
++            QT4_MAKE_OUTPUT_FILE(${it} moc_ cpp outfile)
++            QT4_CREATE_MOC_COMMAND(${it} ${outfile} "${moc_flags}" "${moc_options}")
++            set(${outfiles} ${${outfiles}} ${outfile})
++            add_file_dependencies(${it} ${outfile})
++        endforeach(it)
++    endmacro(fc_wrap_cpp)
++
++    if(FREECAD_BUILD_GUI)	
++# -------------------------------- OpenGL --------------------------------
++
++        find_package(OpenGL)
++                include(FindPackageMessage)
++                if(OPENGL_GLU_FOUND)
++                    find_package_message(OPENGL_GLU
++                        "Found OpenGLU: ${OPENGL_glu_LIBRARY}"
++                        "[${OPENGL_glu_LIBRARY}][${OEPNGL_INCLUDE_DIR}]")
++                else(OPENGL_GLU_FOUND)
++                    message(FATAL_ERROR "The GLU library is required. Make sure it is installed.")
++                endif(OPENGL_GLU_FOUND)
++
++# -------------------------------- Coin3D --------------------------------
++
++        find_package(Coin3D REQUIRED)
++        find_package(SoQt REQUIRED)
++
++# ------------------------------ Spaceball -------------------------------
++
++        if (WIN32)
++            #future
++        else(WIN32)
++            find_package(Spnav)
++        endif(WIN32)
++
++# ------------------------------ Matplotlib ------------------------------
++
++        find_package(Matplotlib)
++        IF(MATPLOTLIB_FOUND)
++            message("-- matplotlib-${MATPLOTLIB_VERSION} has been found.")
++        ELSE(MATPLOTLIB_FOUND)
++            message("matplotlib not found, Plot module will not available until matplotlib is installed!")
++        ENDIF(MATPLOTLIB_FOUND)
++
++# ------------------------------------------------------------------------
++
++
++    endif(FREECAD_BUILD_GUI)
++
++
++endif(FREECAD_LIBPACK_USE)
++
++# copy build convenient files for M$
++if(WIN32)
++    if (EXISTS BuildAll.bat)
++        configure_file(BuildAll.bat ${CMAKE_BINARY_DIR}/BuildAll.bat COPYONLY)
++    endif (EXISTS BuildAll.bat)
++    #configure_file(BuildAllNice.bat ${CMAKE_BINARY_DIR}/BuildAllNice.bat COPYONLY)
++endif(WIN32)
++
++
++include(cMake/FreeCadMacros.cmake)
++
++
++# ================================================================================
++# == Global Compiler and Linker Settings =========================================
++
++include_directories(${CMAKE_BINARY_DIR}/src
++					${CMAKE_SOURCE_DIR}/src)
++
++# check for 64-bit platform
++IF(CMAKE_SIZEOF_VOID_P EQUAL 8)
++	MESSAGE(STATUS "Platform is 64-bit, set -D_OCC64")
++	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_OCC64")
++	add_definitions(-D_OCC64 )
++ELSE(CMAKE_SIZEOF_VOID_P EQUAL 8)
++	MESSAGE(STATUS "Platform is 32-bit")
++ENDIF(CMAKE_SIZEOF_VOID_P EQUAL 8)
++
++
++
++IF(MSVC)
++	# set default compiler settings
++	#SET (CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /GF /GY")
++	SET (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DFC_DEBUG")
++	# set default libs
++	SET (CMAKE_C_STANDARD_LIBRARIES "kernel32.lib user32.lib gdi32.lib winspool.lib SHFolder.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib ")
++	set (CMAKE_CXX_STANDARD_LIBRARIES "${CMAKE_C_STANDARD_LIBRARIES}")
++	# set linker flag /nodefaultlib
++	set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} /NODEFAULTLIB")
++	SET (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /NODEFAULTLIB")
++
++	# Mark 32 bit executables large address aware so they can use > 2GB address space
++	# NOTE: This setting only has an effect on machines with at least 3GB of RAM, although it sets the linker option it doesn't set the the linker switch 'Enable Large Addresses'
++	IF(CMAKE_SIZEOF_VOID_P EQUAL 4)
++		set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} /LARGEADDRESSAWARE")
++		SET (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /LARGEADDRESSAWARE")
++	ENDIF(CMAKE_SIZEOF_VOID_P EQUAL 4)
++ELSE(MSVC)
++	SET (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DFC_DEBUG")
++	MESSAGE(STATUS "DEBUG: ${CMAKE_CXX_FLAGS_DEBUG}")
++ENDIF(MSVC)
++IF(MINGW)
++	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mthreads")
++	SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mthreads")
++	SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -mthreads -Wl,--export-all-symbols")
++	SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -mthreads -Wl,--export-all-symbols")
++	LINK_LIBRARIES(-lgdi32)
++ENDIF(MINGW)
++# 0000661: cmake build on Mac OS: dealing with dylib versus so
++IF(APPLE)
++	SET(CMAKE_SHARED_LIBRARY_SUFFIX ".so")
++ENDIF(APPLE)
++
++add_subdirectory(src)
++add_subdirectory(data)
++
++# ================================================================================
++# == Packaging ===================================================================
++if(FREECAD_MAINTAINERS_BUILD AND NOT WIN32)
++	set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "An extensible Open Source CAx program")
++	set(CPACK_PACKAGE_VENDOR "FreeCAD development team")
++	if(WIN32)
++		set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README.Win32")
++	else(WIN32)
++		set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README.Linux")
++	endif(WIN32)
++	set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/copying.lib")
++	set(CPACK_PACKAGE_VERSION_MAJOR ${PACKAGE_VERSION_MAJOR})
++	set(CPACK_PACKAGE_VERSION_MINOR ${PACKAGE_VERSION_MINOR})
++	set(CPACK_PACKAGE_VERSION_PATCH ${PACKAGE_VERSION_PATCH})
++	set(CPACK_SOURCE_PACKAGE_FILE_NAME ${PACKAGE_NAME}-${PACKAGE_VERSION})
++
++	#for debian: 'cmake .. -DFREECAD_MAINTAINERS_BUILD=TRUE -DCPACK_GENERATOR="DEB"'
++	IF( CMAKE_SIZEOF_VOID_P EQUAL 4 )
++		set(PKG_ARCH i386)
++	ELSE( CMAKE_SIZEOF_VOID_P EQUAL 4 )
++		set(PKG_ARCH amd64)
++	ENDIF( CMAKE_SIZEOF_VOID_P EQUAL 4 )
++	set(CPACK_DEBIAN_PACKAGE_SECTION "science")
++	set(CPACK_DEBIAN_PACKAGE_DEPENDS "python, oce | opencascade, libqtgui4, libcoin60, libsoqt4-20, libxerces-c3.1, zlib1g, libboost-dev, libeigen2-dev")
++	set(CPACK_PACKAGE_CONTACT "<root@localhost>")
++	set(CPACK_PACKAGE_FILE_NAME "${PACKAGE_NAME}-${PACKAGE_VERSION}_${PKG_ARCH}")
++	
++	if(WIN32)
++		set(CPACK_GENERATOR "ZIP")
++		set(CPACK_SOURCE_GENERATOR "ZIP")
++	else(WIN32)
++		if( CPACK_GENERATOR STREQUAL "" )
++			set(CPACK_GENERATOR "TGZ")
++			set(CPACK_SOURCE_GENERATOR "TGZ")
++		endif()
++	endif(WIN32)
++	file(GLOB DOT ".*")
++	file(GLOB TILD "*~")
++	set(CPACK_SOURCE_IGNORE_FILES
++	  "${DOT}"
++	  "${TILD}"
++	  ".a$"
++	  ".am$"
++	  ".in$"
++	  ".bat$"
++	  ".o$"
++	  ".so$"
++	  ".m4$"
++	  "/_build/"
++	  "/_cmake/"
++	  "/.deps/"
++	  "/.svn/"
++	  "/CMakeFiles/"
++	  "/CVS/"
++	  "/autom4te.cache/"
++	  "/build/"
++	  "/debian/"
++	  "/debug/"
++	  "/docs/"
++	  "/m4/"
++	  "/qt-build/"
++	  "/CxImage/"
++	  "/WindowsInstaller/"
++	  "AdditionalInfo.txt$"
++	  "CMakeCache.txt$"
++	  "Makefile$"
++	  "\\\\.sh$"
++	  "_CPack_"
++	  "config.h$"
++	  "config.log$"
++	  "config.status$"
++	  "configure$"
++	  "configure.ac$"
++	  "Doxyfile"
++	  "html$"
++	  "stamp-h1$"
++	  ".swp$"
++	  "tar.bz2"
++	  "tar.gz"
++	  "~$"
++	)
++	#set(CPACK_SOURCE_IGNORE_FILES
++    #  ${CPACK_SOURCE_IGNORE_FILES}
++	#  "/Pivy-0.5/"
++	#)
++	set(CPACK_SOURCE_STRIP_FILES "")
++	include(CPack)
++
++	#ADD_CUSTOM_TARGET(DIST make package_source)
++
++endif(FREECAD_MAINTAINERS_BUILD AND NOT WIN32)
++    #add_custom_target(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
++    add_custom_target(dist-git
++            COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/src/Tools/makedist.py
++              --srcdir=${CMAKE_SOURCE_DIR} --bindir=${CMAKE_BINARY_DIR}
++              WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
++    )
++    add_custom_target(distdfsg-git
++            COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/src/Tools/makedist.py
++              --srcdir=${CMAKE_SOURCE_DIR} --bindir=${CMAKE_BINARY_DIR} --dfsg
++              WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
++    )
++if(CMAKE_COMPILER_IS_GNUCXX OR MINGW)
++    add_custom_target(distcheck-git
++            COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/src/Tools/makedist.py
++              --srcdir=${CMAKE_SOURCE_DIR} --bindir=${CMAKE_BINARY_DIR} --check
++              WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
++    )
++    add_custom_target(distcheckdfsg-git
++            COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/src/Tools/makedist.py
++              --srcdir=${CMAKE_SOURCE_DIR} --bindir=${CMAKE_BINARY_DIR} --dfsg --check
++              WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
++    )
++endif(CMAKE_COMPILER_IS_GNUCXX OR MINGW)
++
+diff -Naur freecad-0.13.1830.orig/src/Gui/CMakeLists.txt freecad-0.13.1830/src/Gui/CMakeLists.txt
+--- freecad-0.13.1830.orig/src/Gui/CMakeLists.txt	2013-10-25 18:49:34.262330288 +0200
++++ freecad-0.13.1830/src/Gui/CMakeLists.txt	2013-10-25 18:49:59.455527138 +0200
+@@ -562,7 +562,7 @@
+ #SET(Resource_RCS
+ #   Icons/resource.qrc
+ #   Language/translation.qrc)
+-#fc_add_resources(Resource_SRCS ${Resource_RCS})
++#qt4_add_resources(Resource_SRCS ${Resource_RCS})
+ #SET(Resource_SRCS
+ #   ${Resource_SRCS}
+ #   Icons/resource.qrc
+diff -Naur freecad-0.13.1830.orig/src/Gui/CMakeLists.txt.orig freecad-0.13.1830/src/Gui/CMakeLists.txt.orig
+--- freecad-0.13.1830.orig/src/Gui/CMakeLists.txt.orig	1970-01-01 01:00:00.000000000 +0100
++++ freecad-0.13.1830/src/Gui/CMakeLists.txt.orig	2013-02-02 18:09:17.000000000 +0100
+@@ -0,0 +1,878 @@
++#add_subdirectory(Icons)
++
++if(WIN32)
++add_definitions(-DFCGui -DQIIS_MAKEDLL)
++endif(WIN32)
++if (FREECAD_USE_3DCONNEXION)
++add_definitions(-D_USE_3DCONNEXION_SDK)
++endif(FREECAD_USE_3DCONNEXION)
++
++include_directories(
++    ${CMAKE_CURRENT_SOURCE_DIR}
++    ${CMAKE_CURRENT_BINARY_DIR}
++    ${CMAKE_CURRENT_SOURCE_DIR}/..
++    ${CMAKE_CURRENT_BINARY_DIR}/..
++    ${CMAKE_CURRENT_BINARY_DIR}/Language
++    ${CMAKE_CURRENT_BINARY_DIR}/propertyeditor
++    ${CMAKE_CURRENT_BINARY_DIR}/TaskView
++    ${Boost_INCLUDE_DIRS}
++    ${COIN3D_INCLUDE_DIR}
++    ${PYTHON_INCLUDE_PATH}
++    ${SOQT_INCLUDE_DIR}
++    ${XERCESC_INCLUDE_DIR}
++    ${QT_INCLUDE_DIR}
++    ${ZLIB_INCLUDE_DIR}
++)
++
++if(MSVC)
++    set(FreeCADGui_LIBS
++         FreeCADApp
++         debug ${COIN3D_LIBRARY_DEBUG}
++         optimized ${COIN3D_LIBRARY_RELEASE}
++         debug ${SOQT_LIBRARY_DEBUG}
++         optimized ${SOQT_LIBRARY_RELEASE}
++         ${QT_DEBUG_LIBRARIES}
++         ${QT_LIBRARIES}
++         QtUiTools.lib
++         ${OPENGL_gl_LIBRARY}
++    )
++else(MSVC)
++    set(FreeCADGui_LIBS
++        FreeCADBase
++        FreeCADApp
++        ${COIN3D_LIBRARY}
++        ${SOQT_LIBRARIES}
++        ${QT_LIBRARIES}
++        ${Boost_LIBRARIES}
++        ${OPENGL_gl_LIBRARY}
++    )
++endif(MSVC)
++
++IF(SPNAV_FOUND)
++    add_definitions(-DSPNAV_FOUND)
++    include_directories(
++        ${SPNAV_INCLUDE_DIR}
++    )
++    set(FreeCADGui_LIBS
++        ${FreeCADGui_LIBS}
++        ${SPNAV_LIBRARIES}
++    )
++ENDIF(SPNAV_FOUND)
++
++generate_from_xml(DocumentPy)
++generate_from_xml(PythonWorkbenchPy)
++generate_from_xml(ViewProviderPy)
++generate_from_xml(ViewProviderDocumentObjectPy)
++generate_from_xml(ViewProviderPythonFeaturePy)
++generate_from_xml(WorkbenchPy)
++generate_from_xml(SelectionObjectPy)
++
++generate_from_py(FreeCADGuiInit GuiInitScript.h)
++
++# The XML files
++SET(FreeCADGui_XML_SRCS
++    ViewProviderDocumentObjectPy.xml
++    ViewProviderPythonFeaturePy.xml
++    ViewProviderPy.xml
++    PythonWorkbenchPy.xml
++    WorkbenchPy.xml
++    SelectionObjectPy.xml
++    DocumentPy.xml
++)
++SOURCE_GROUP("XML" FILES ${FreeCADApp_XML_SRCS})
++
++# The 3D Connexion SDK files
++if(FREECAD_USE_3DCONNEXION)
++SET(FreeCADGui_SDK_SRCS
++    3Dconnexion/I3dMouseParams.h
++    3Dconnexion/MouseParameters.cpp
++    3Dconnexion/MouseParameters.h
++    3Dconnexion/GuiApplicationNativeEventAwareWin32.cpp
++)
++SOURCE_GROUP("3D connexion SDK" FILES ${FreeCADGui_SDK_SRCS})
++endif(FREECAD_USE_3DCONNEXION)
++
++set(Gui_MOC_HDRS
++    Action.h
++    CallTips.h
++    CombiView.h
++    Control.h
++    DemoMode.h
++    DownloadDialog.h
++    DlgActionsImp.h
++    DlgActivateWindowImp.h
++    DlgCommandsImp.h
++    DlgCustomizeImp.h
++    DlgCustomizeSpaceball.h
++    DlgCustomizeSpNavSettings.h
++    DlgDisplayPropertiesImp.h
++    DlgEditorImp.h
++    DlgGeneralImp.h
++    DlgInputDialogImp.h
++    DlgKeyboardImp.h
++    DlgMacroExecuteImp.h
++    DlgMacroRecordImp.h
++    DlgRunExternal.h
++    DlgEditFileIncludeProptertyExternal.h
++    DlgMaterialPropertiesImp.h
++    DlgOnlineHelpImp.h
++    DlgParameterImp.h
++    DlgPreferencesImp.h
++    DlgProjectUtility.h
++    DlgReportViewImp.h
++    DlgSettings3DViewImp.h
++    DlgSettingsViewColor.h
++    DlgSettingsColorGradientImp.h
++    DlgSettingsDocumentImp.h
++    DlgSettingsImageImp.h
++    DlgSettingsMacroImp.h
++    DlgSettingsUnitsImp.h
++    DlgTipOfTheDayImp.h
++    DlgToolbarsImp.h
++    TaskDlgRelocation.h
++    DlgUndoRedo.h
++    DockWindow.h
++    DockWindowManager.h
++    EditorView.h
++    FileDialog.h
++    Flag.h
++    GuiApplicationNativeEventAware.h
++    HelpView.h
++    InputVector.h
++    MainWindow.h
++    ManualAlignment.h
++    MDIView.h
++    NetworkRetriever.h
++    OnlineDocumentation.h
++    Placement.h
++    PrefWidgets.h
++    ProgressBar.h
++    PropertyPage.h
++    PropertyView.h
++    PythonConsole.h
++    PythonDebugger.h
++    PythonEditor.h
++    ReportView.h
++    SceneInspector.h
++    SelectionView.h
++    SpinBox.h
++    Splashscreen.h
++    TaskPanelView.h
++    TextEdit.h
++    TextureMapping.h
++    ToolBox.h
++    Transform.h
++    Tree.h
++    TreeView.h
++    View3DInventor.h
++    WidgetFactory.h
++    Widgets.h
++    Language/Translator.h
++    propertyeditor/PropertyEditor.h
++    propertyeditor/PropertyItem.h
++    propertyeditor/PropertyItemDelegate.h
++    propertyeditor/PropertyModel.h
++    TaskView/TaskAppearance.h
++    TaskView/TaskSelectLinkProperty.h
++    TaskView/TaskDialog.h
++    TaskView/TaskWatcher.h
++    TaskView/TaskEditControl.h
++    TaskView/TaskView.h
++)
++#qt4_wrap_cpp(Gui_MOC_SRCS ${Gui_MOC_HDRS})
++fc_wrap_cpp(Gui_MOC_SRCS ${Gui_MOC_HDRS})
++#SOURCE_GROUP("Moc" FILES ${Gui_MOC_SRCS})
++
++SET(Gui_UIC_SRCS
++    AboutApplication.ui
++    DemoMode.ui
++    DlgActions.ui
++    DlgActivateWindow.ui
++    DlgAuthorization.ui
++    DlgChooseIcon.ui
++    DlgCommands.ui
++    DlgCustomizeSpNavSettings.ui
++    DlgDisplayProperties.ui
++    DlgEditor.ui
++    DlgGeneral.ui
++    DlgInputDialog.ui
++    DlgKeyboard.ui
++    DlgMacroExecute.ui
++    DlgRunExternal.ui
++    DlgMacroRecord.ui
++    DlgMaterialProperties.ui
++    DlgOnlineHelp.ui
++    DlgParameter.ui
++    DlgPreferences.ui
++    DlgProjectInformation.ui
++    DlgProjectUtility.ui
++    DlgReportView.ui
++    DlgSettings3DView.ui
++    DlgSettingsUnits.ui
++    DlgSettingsViewColor.ui
++    DlgSettingsColorGradient.ui
++    DlgSettingsDocument.ui
++    DlgSettingsImage.ui
++    DlgSettingsMacro.ui
++    DlgTipOfTheDay.ui
++    DlgToolbars.ui
++    DlgTreeWidget.ui
++    DlgLocationAngle.ui
++    DlgLocationPos.ui
++    MouseButtons.ui
++    SceneInspector.ui
++    InputVector.ui
++    Placement.ui
++    TextureMapping.ui
++    TaskView/TaskAppearance.ui
++    TaskView/TaskSelectLinkProperty.ui
++)
++
++SET(Gui_RES_SRCS
++    Icons/resource.qrc
++    Language/translation.qrc
++    iisTaskPanel/src/iisTaskPanel.qrc
++)
++QT4_ADD_RESOURCES(Gui_QRC_SRCS ${Gui_RES_SRCS})
++
++QT4_WRAP_UI(Gui_UIC_HDRS ${Gui_UIC_SRCS})
++SOURCE_GROUP("Uic" FILES ${Gui_UIC_HDRS})
++
++# The command sources
++SET(Command_CPP_SRCS
++    Action.cpp
++    Command.cpp
++    CommandDoc.cpp
++    CommandFeat.cpp
++    CommandMacro.cpp
++    CommandStd.cpp
++    CommandWindow.cpp
++    CommandTest.cpp
++    CommandView.cpp
++)
++SET(Command_SRCS
++    ${Command_CPP_SRCS}
++    Action.h
++    Command.h
++)
++SOURCE_GROUP("Command" FILES ${Command_SRCS})
++
++# The dialog sources
++SET(Dialog_CPP_SRCS
++    DemoMode.cpp
++    DlgActivateWindowImp.cpp
++    DlgDisplayPropertiesImp.cpp
++    DlgInputDialogImp.cpp
++    DlgMacroExecuteImp.cpp
++    DlgRunExternal.cpp
++    DlgEditFileIncludeProptertyExternal.cpp
++    DlgMacroRecordImp.cpp
++    DlgMaterialPropertiesImp.cpp
++    DlgParameterImp.cpp
++    DlgProjectInformationImp.cpp
++    DlgProjectUtility.cpp
++    DlgTipOfTheDayImp.cpp
++    TaskDlgRelocation.cpp
++    DlgUndoRedo.cpp
++    InputVector.cpp
++    Placement.cpp
++    PropertyPage.cpp
++    SceneInspector.cpp
++    TextureMapping.cpp
++    Transform.cpp
++    DownloadDialog.cpp
++)
++
++SET(Dialog_HPP_SRCS
++    DemoMode.h
++    DlgActivateWindowImp.h
++    DlgDisplayPropertiesImp.h
++    DlgInputDialogImp.h
++    DlgMacroExecuteImp.h
++    DlgRunExternal.h
++    DlgEditFileIncludeProptertyExternal.h
++    DlgMacroRecordImp.h
++    DlgMaterialPropertiesImp.h
++    DlgParameterImp.h
++    DlgProjectInformationImp.h
++    DlgProjectUtility.h
++    DlgTipOfTheDayImp.h
++    TaskDlgRelocation.h
++    DlgUndoRedo.h
++    InputVector.h
++    Placement.h
++    PropertyPage.h
++    SceneInspector.h
++    TextureMapping.h
++    Transform.h
++    DownloadDialog.h
++)
++
++SET(Dialog_SRCS
++    ${Dialog_CPP_SRCS}
++    ${Dialog_HPP_SRCS}
++    AboutApplication.ui
++    DemoMode.ui
++    DlgActivateWindow.ui
++    DlgAuthorization.ui
++    DlgDisplayProperties.ui
++    DlgInputDialog.ui
++    DlgMacroExecute.ui
++    DlgRunExternal.ui
++    DlgMacroRecord.ui
++    DlgMaterialProperties.ui
++    DlgParameter.ui
++    DlgProjectInformation.ui
++    DlgProjectUtility.ui
++    DlgTipOfTheDay.ui
++    DlgTreeWidget.ui
++    MouseButtons.ui
++    InputVector.ui
++    Placement.ui
++    SceneInspector.ui
++    TextureMapping.ui
++)
++SOURCE_GROUP("Dialog" FILES ${Dialog_SRCS})
++
++# The customize dialog sources
++SET(Dialog_Customize_CPP_SRCS
++    DlgActionsImp.cpp
++    DlgCommandsImp.cpp
++    DlgCustomizeImp.cpp
++    DlgCustomizeSpaceball.cpp
++    DlgCustomizeSpNavSettings.cpp
++    DlgKeyboardImp.cpp
++    DlgToolbarsImp.cpp
++)
++SET(Dialog_Customize_HPP_SRCS
++    DlgActionsImp.h
++    DlgCommandsImp.h
++    DlgCustomizeImp.h
++    DlgCustomizeSpaceball.h
++    DlgCustomizeSpNavSettings.h
++    DlgKeyboardImp.h
++    DlgToolbarsImp.h
++)
++SET(Dialog_Customize_SRCS
++    ${Dialog_Customize_CPP_SRCS}
++    ${Dialog_Customize_HPP_SRCS}
++    DlgActions.ui
++    DlgChooseIcon.ui
++    DlgCommands.ui
++    DlgCustomizeSpNavSettings.ui
++    DlgKeyboard.ui
++    DlgToolbars.ui
++)
++SOURCE_GROUP("Dialog\\Customize" FILES ${Dialog_Customize_SRCS})
++
++# The settings dialog sources
++SET(Dialog_Settings_CPP_SRCS
++    DlgEditorImp.cpp
++    DlgGeneralImp.cpp
++    DlgOnlineHelpImp.cpp
++    DlgPreferencesImp.cpp
++    DlgReportViewImp.cpp
++    DlgSettings3DViewImp.cpp
++    DlgSettingsUnitsImp.cpp
++    DlgSettingsViewColor.cpp
++    DlgSettingsColorGradientImp.cpp
++    DlgSettingsDocumentImp.cpp
++    DlgSettingsImageImp.cpp
++    DlgSettingsMacroImp.cpp
++)
++SET(Dialog_Settings_HPP_SRCS
++    DlgEditorImp.h
++    DlgGeneralImp.h
++    DlgOnlineHelpImp.h
++    DlgPreferencesImp.h
++    DlgReportViewImp.h
++    DlgSettings3DViewImp.h
++    DlgSettingsUnitsImp.h
++    DlgSettingsViewColor.h
++    DlgSettingsColorGradientImp.h
++    DlgSettingsDocumentImp.h
++    DlgSettingsImageImp.h
++    DlgSettingsMacroImp.h
++)
++SET(Dialog_Settings_SRCS
++    ${Dialog_Settings_CPP_SRCS}
++    ${Dialog_Settings_HPP_SRCS}
++    DlgEditor.ui
++    DlgGeneral.ui
++    DlgOnlineHelp.ui
++    DlgPreferences.ui
++    DlgReportView.ui
++    DlgSettings3DView.ui
++    DlgSettingsUnits.ui
++    DlgSettingsViewColor.ui
++    DlgSettingsColorGradient.ui
++    DlgSettingsDocument.ui
++    DlgSettingsImage.ui
++    DlgSettingsMacro.ui
++)
++SOURCE_GROUP("Dialog\\Settings" FILES ${Dialog_Settings_SRCS})
++
++# The dock windows sources
++SET(Dock_Windows_CPP_SRCS
++    CombiView.cpp
++    DockWindow.cpp
++    HelpView.cpp
++    PropertyView.cpp
++    ReportView.cpp
++    SelectionView.cpp
++    TaskPanelView.cpp
++    ToolBox.cpp
++    Tree.cpp
++    TreeView.cpp
++)
++SET(Dock_Windows_HPP_SRCS
++    CombiView.h
++    DockWindow.h
++    HelpView.h
++    PropertyView.h
++    ReportView.h
++    SelectionView.h
++    TaskPanelView.h
++    ToolBox.h
++    Tree.h
++    TreeView.h
++)
++SET(Dock_Windows_SRCS
++    ${Dock_Windows_CPP_SRCS}
++    ${Dock_Windows_HPP_SRCS}
++)
++SOURCE_GROUP("Dock Windows" FILES ${Dock_Windows_SRCS})
++
++# The editor sources
++SET(Editor_CPP_SRCS
++    CallTips.cpp
++    EditorView.cpp
++    PythonConsole.cpp
++    PythonConsolePy.cpp
++    PythonDebugger.cpp
++    PythonEditor.cpp
++    SyntaxHighlighter.cpp
++    TextEdit.cpp
++)
++SET(Editor_HPP_SRCS
++    CallTips.h
++    EditorView.h
++    PythonConsole.h
++    PythonConsolePy.h
++    PythonDebugger.h
++    PythonEditor.h
++    SyntaxHighlighter.h
++    TextEdit.h
++)
++SET(Editor_SRCS
++    ${Editor_CPP_SRCS}
++    ${Editor_HPP_SRCS}
++)
++SOURCE_GROUP("Editor" FILES ${Editor_SRCS})
++
++# The help system
++SET(Help_CPP_SRCS
++    Assistant.cpp
++    NetworkRetriever.cpp
++    OnlineDocumentation.cpp
++    WhatsThis.cpp
++)
++SET(Help_SRCS
++    ${Help_CPP_SRCS}
++    Assistant.h
++    NetworkRetriever.h
++    OnlineDocumentation.h
++    WhatsThis.h
++)
++SOURCE_GROUP("Help" FILES ${Help_SRCS})
++
++
++# The i18n sources
++SET(Language_SRCS
++    Language/Translator.cpp
++    Language/Translator.h
++)
++SOURCE_GROUP("Language" FILES ${Language_SRCS})
++
++# The property editor
++SET(Propertyeditor_SRCS
++    propertyeditor/PropertyEditor.cpp
++    propertyeditor/PropertyEditor.h
++    propertyeditor/PropertyItem.cpp
++    propertyeditor/PropertyItem.h
++    propertyeditor/PropertyItemDelegate.cpp
++    propertyeditor/PropertyItemDelegate.h
++    propertyeditor/PropertyModel.cpp
++    propertyeditor/PropertyModel.h
++)
++SOURCE_GROUP("Propertyeditor" FILES ${Propertyeditor_SRCS})
++
++# The task view
++SET(Task_View_SRCS
++    TaskView/TaskAppearance.cpp
++    TaskView/TaskAppearance.h
++    TaskView/TaskAppearance.ui
++    TaskView/TaskSelectLinkProperty.cpp
++    TaskView/TaskSelectLinkProperty.h
++    TaskView/TaskSelectLinkProperty.ui
++    TaskView/TaskEditControl.cpp
++    TaskView/TaskEditControl.h
++    TaskView/TaskEditControl.ui
++    TaskView/TaskView.cpp
++    TaskView/TaskView.h
++    TaskView/TaskDialog.cpp
++    TaskView/TaskDialog.h
++    TaskView/TaskDialogPython.cpp
++    TaskView/TaskDialogPython.h
++    TaskView/TaskWatcher.cpp
++    TaskView/TaskWatcher.h
++)
++SOURCE_GROUP("Task View" FILES ${Task_View_SRCS})
++
++SET(iisTaskPanel_SRCS
++    iisTaskPanel/src/iisfreecadscheme.cpp
++    iisTaskPanel/src/iisfreecadscheme.h
++    iisTaskPanel/src/iisiconlabel.cpp
++    iisTaskPanel/src/iisiconlabel.h
++    iisTaskPanel/src/iistaskbox.cpp
++    iisTaskPanel/src/iistaskbox.h
++    iisTaskPanel/src/iistaskgroup.cpp
++    iisTaskPanel/src/iistaskgroup.h
++    iisTaskPanel/src/iistaskheader.cpp
++    iisTaskPanel/src/iistaskheader.h
++    iisTaskPanel/src/iistaskpanel.cpp
++    iisTaskPanel/src/iistaskpanel.h
++    iisTaskPanel/src/iistaskpanelscheme.cpp
++    iisTaskPanel/src/iistaskpanelscheme.h
++    iisTaskPanel/src/iiswinxptaskpanelscheme.cpp
++    iisTaskPanel/src/iiswinxptaskpanelscheme.h
++    iisTaskPanel/src/iistaskpanel_global.h
++)
++SOURCE_GROUP("Widget\\iisTaskPanel" FILES ${iisTaskPanel_SRCS})
++set(iis_MOC_HDRS
++    iisTaskPanel/src/iisiconlabel.h
++    iisTaskPanel/src/iistaskbox.h
++    iisTaskPanel/src/iistaskgroup.h
++    iisTaskPanel/src/iistaskheader.h
++)
++qt4_wrap_cpp(iis_MOC_SRCS ${iis_MOC_HDRS})
++SOURCE_GROUP("Widget\\iisTaskPanel\\Mocs" FILES ${iis_MOC_SRCS})
++
++
++#SET(Resource_RCS
++#   Icons/resource.qrc
++#   Language/translation.qrc)
++#fc_add_resources(Resource_SRCS ${Resource_RCS})
++#SET(Resource_SRCS
++#   ${Resource_SRCS}
++#   Icons/resource.qrc
++#   Language/translation.qrc
++#)
++#SOURCE_GROUP("Resource" FILES ${Resource_SRCS})
++
++# The 3d view
++SET(View3D_CPP_SRCS
++    Flag.cpp
++    MouseSelection.cpp
++    NavigationStyle.cpp
++    InventorNavigationStyle.cpp
++    CADNavigationStyle.cpp
++    BlenderNavigationStyle.cpp
++    TouchpadNavigationStyle.cpp
++    SplitView3DInventor.cpp
++    View.cpp
++    View3DInventor.cpp
++    View3DInventorExamples.cpp
++    View3DInventorViewer.cpp
++    View3DPy.cpp
++)
++SET(View3D_SRCS
++    ${View3D_CPP_SRCS}
++    Flag.h
++    MouseSelection.h
++    NavigationStyle.h
++    SplitView3DInventor.h
++    View.h
++    View3DInventor.h
++    View3DInventorExamples.h
++    View3DInventorViewer.h
++    View3DPy.h
++)
++SOURCE_GROUP("View3D" FILES ${View3D_SRCS})
++
++# The view provider sources
++SET(Viewprovider_CPP_SRCS
++    ViewProvider.cpp
++    ViewProviderAnnotation.cpp
++    ViewProviderDocumentObject.cpp
++    ViewProviderDocumentObjectGroup.cpp
++    ViewProviderDocumentObjectPyImp.cpp
++    ViewProviderPythonFeaturePyImp.cpp
++    ViewProviderExtern.cpp
++    ViewProviderFeature.cpp
++    ViewProviderGeometryObject.cpp
++    ViewProviderInventorObject.cpp
++    ViewProviderMeasureDistance.cpp
++    ViewProviderPyImp.cpp
++    ViewProviderPythonFeature.cpp
++    ViewProviderVRMLObject.cpp
++    ViewProviderBuilder.cpp
++)
++SET(Viewprovider_SRCS
++    ${Viewprovider_CPP_SRCS}
++    ViewProvider.h
++    ViewProviderAnnotation.h
++    ViewProviderDocumentObject.h
++    ViewProviderDocumentObjectGroup.h
++    ViewProviderExtern.h
++    ViewProviderFeature.h
++    ViewProviderGeometryObject.h
++    ViewProviderInventorObject.h
++    ViewProviderMeasureDistance.h
++    ViewProviderPythonFeature.h
++    ViewProviderVRMLObject.h
++    ViewProviderBuilder.h
++)
++SOURCE_GROUP("View3D\\Viewprovider" FILES ${Viewprovider_SRCS})
++
++# The Inventor sources
++SET(Inventor_CPP_SRCS
++    Inventor/SoDrawingGrid.cpp
++    SoFCBackgroundGradient.cpp
++    SoFCBoundingBox.cpp
++    SoFCColorBar.cpp
++    SoFCColorGradient.cpp
++    SoFCColorLegend.cpp
++    SoFCDB.cpp
++    SoFCInteractiveElement.cpp
++    SoFCOffscreenRenderer.cpp
++    SoFCSelection.cpp
++    SoFCUnifiedSelection.cpp
++    SoFCSelectionAction.cpp
++    SoFCVectorizeSVGAction.cpp
++    SoFCVectorizeU3DAction.cpp
++    SoNavigationDragger.cpp
++    SoAxisCrossKit.cpp
++    SoTextLabel.cpp
++)
++SET(Inventor_SRCS
++    ${Inventor_CPP_SRCS}
++    Inventor/SoDrawingGrid.h
++    SoFCBackgroundGradient.h
++    SoFCBoundingBox.h
++    SoFCColorBar.h
++    SoFCColorGradient.h
++    SoFCColorLegend.h
++    SoFCDB.h
++    SoFCInteractiveElement.h
++    SoFCOffscreenRenderer.h
++    SoFCSelection.h
++    SoFCUnifiedSelection.h
++    SoFCSelectionAction.h
++    SoFCVectorizeSVGAction.h
++    SoFCVectorizeU3DAction.h
++    SoNavigationDragger.h
++    SoAxisCrossKit.h
++    SoTextLabel.h
++)
++SOURCE_GROUP("View3D\\Inventor" FILES ${Inventor_SRCS})
++
++# The widget sources
++SET(Widget_CPP_SRCS
++    FileDialog.cpp
++    MainWindow.cpp
++    MDIView.cpp
++    PrefWidgets.cpp
++    ProgressBar.cpp
++    SpinBox.cpp
++    Splashscreen.cpp
++    WidgetFactory.cpp
++    Widgets.cpp
++    Window.cpp
++)
++SET(Widget_HPP_SRCS
++    FileDialog.h
++    MainWindow.h
++    MDIView.h
++    PrefWidgets.h
++    ProgressBar.h
++    SpinBox.h
++    Splashscreen.h
++    WidgetFactory.h
++    Widgets.h
++    Window.h
++)
++SET(Widget_SRCS
++    ${Widget_CPP_SRCS}
++    ${Widget_HPP_SRCS}
++)
++SOURCE_GROUP("Widget" FILES ${Widget_SRCS})
++
++# The workbench sources
++SET(Workbench_CPP_SRCS
++    DockWindowManager.cpp
++    MenuManager.cpp
++    PythonWorkbenchPyImp.cpp
++    ToolBarManager.cpp
++    ToolBoxManager.cpp
++    Workbench.cpp
++    WorkbenchFactory.cpp
++    WorkbenchManager.cpp
++    WorkbenchPyImp.cpp
++)
++SET(Workbench_SRCS
++    ${Workbench_CPP_SRCS}
++    DockWindowManager.h
++    MenuManager.h
++    ToolBarManager.h
++    ToolBoxManager.h
++    Workbench.h
++    WorkbenchFactory.h
++    WorkbenchManager.h
++)
++SOURCE_GROUP("Workbench" FILES ${Workbench_SRCS})
++
++SET(Selection_SRCS
++    SelectionObjectPyImp.cpp
++    SelectionObject.h
++    SelectionObject.cpp
++    Selection.h
++    Selection.cpp
++    SelectionFilter.h
++    SelectionFilter.cpp
++    SelectionFilter.y
++    SelectionFilter.l
++)
++SOURCE_GROUP("Selection" FILES ${Selection_SRCS})
++
++# The FreeCADGui sources
++SET(FreeCADGui_CPP_SRCS
++    Application.cpp
++    ApplicationPy.cpp
++    BitmapFactory.cpp
++    Document.cpp
++    DocumentModel.cpp
++    DocumentPyImp.cpp
++    GuiApplicationNativeEventAware.cpp
++    GuiConsole.cpp
++    Macro.cpp
++    MergeDocuments.cpp
++    resource.cpp
++    Control.cpp
++    SpaceballEvent.cpp
++    Thumbnail.cpp
++    Utilities.cpp
++    WaitCursor.cpp
++    ManualAlignment.cpp
++)
++SET(FreeCADGui_SRCS
++    Application.h
++    BitmapFactory.h
++    Document.h
++    DocumentModel.h
++    FreeCADGuiInit.py
++    GuiApplicationNativeEventAware.h
++    GuiConsole.h
++    InventorAll.h
++    Macro.h
++    MergeDocuments.h
++    PreCompiled.cpp
++    PreCompiled.h
++    Qt4All.h
++    Control.h
++    SpaceballEvent.h
++    Thumbnail.h
++    Utilities.h
++    WaitCursor.h
++    ManualAlignment.h
++)
++
++SET(FreeCADGui_SRCS
++    ${FreeCADGui_SDK_SRCS}
++    ${FreeCADGui_CPP_SRCS}
++    ${FreeCADGui_XML_SRCS}
++    ${iis_MOC_SRCS}
++    ${Gui_QRC_SRCS}
++    ${Gui_UIC_HDRS}
++    ${Command_SRCS}
++    ${Dialog_SRCS}
++    ${Dialog_Customize_SRCS}
++    ${Dialog_Settings_SRCS}
++    ${Dock_Windows_SRCS}
++    ${Editor_SRCS}
++    ${Help_SRCS}
++    ${Inventor_SRCS}
++    ${Language_SRCS}
++    ${Propertyeditor_SRCS}
++    ${Task_View_SRCS}
++    ${iisTaskPanel_SRCS}
++    ${Resource_SRCS}
++    ${View3D_SRCS}
++    ${Viewprovider_SRCS}
++    ${Widget_SRCS}
++    ${Workbench_SRCS}
++    ${Selection_SRCS}
++    ${FreeCADGui_SRCS}
++)
++
++if(MSVC)
++    add_definitions(-D_PreComp_)
++    SET(FreeCADGui_CPP_SRCS
++        Language/Translator.cpp
++        propertyeditor/PropertyEditor.cpp
++        propertyeditor/PropertyItem.cpp
++        propertyeditor/PropertyItemDelegate.cpp
++        propertyeditor/PropertyModel.cpp
++        TaskView/TaskAppearance.cpp
++        TaskView/TaskSelectLinkProperty.cpp
++        TaskView/TaskEditControl.cpp
++        TaskView/TaskView.cpp
++        ${Command_CPP_SRCS}
++        ${Dialog_CPP_SRCS}
++        ${Dialog_Customize_CPP_SRCS}
++        ${Dialog_Settings_CPP_SRCS}
++        ${Dock_Windows_CPP_SRCS}
++        ${Editor_CPP_SRCS}
++        ${Help_CPP_SRCS}
++        ${Inventor_CPP_SRCS}
++        ${View3D_CPP_SRCS}
++        ${Viewprovider_CPP_SRCS}
++        ${Widget_CPP_SRCS}
++        ${Workbench_CPP_SRCS}
++        ${FreeCADGui_CPP_SRCS}
++    )
++    ADD_MSVC_PRECOMPILED_HEADER("PreCompiled.h" "PreCompiled.cpp" FreeCADGui_CPP_SRCS)
++endif(MSVC)
++
++add_library(FreeCADGui SHARED ${FreeCADGui_SRCS})
++
++target_link_libraries(FreeCADGui ${FreeCADGui_LIBS})
++
++# Note this is IDE specific, not necessarily platform specific
++if(MSVC)
++    set_target_properties(FreeCADGui PROPERTIES DEBUG_OUTPUT_NAME "FreeCADGuiD")
++    set_target_properties(FreeCADGui PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
++    # dirty hack to avoid Debug/Release subdirectory
++    set_target_properties(FreeCADGui PROPERTIES PREFIX "../")
++elseif(MINGW)
++    set_target_properties(FreeCADGui PROPERTIES DEBUG_OUTPUT_NAME "FreeCADGuiD")
++    set_target_properties(FreeCADGui PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
++else(MSVC)
++    set_target_properties(FreeCADGui PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
++    set_target_properties(FreeCADGui PROPERTIES INSTALL_RPATH ${INSTALL_RPATH})
++endif(MSVC)
++
++if(WIN32)
++    INSTALL(TARGETS FreeCADGui
++        RUNTIME DESTINATION bin
++        LIBRARY DESTINATION lib
++    )
++else(WIN32)
++    INSTALL(TARGETS FreeCADGui
++        LIBRARY DESTINATION lib
++    )
++    INSTALL(FILES Icons/freecad.xpm Icons/freecad-doc.png
++        DESTINATION ${CMAKE_INSTALL_DATADIR}
++    )
++endif(WIN32)
++
+diff -Naur freecad-0.13.1830.orig/src/Mod/Image/Gui/AppImageGui.cpp freecad-0.13.1830/src/Mod/Image/Gui/AppImageGui.cpp
+--- freecad-0.13.1830.orig/src/Mod/Image/Gui/AppImageGui.cpp	2013-10-25 18:49:34.535662140 +0200
++++ freecad-0.13.1830/src/Mod/Image/Gui/AppImageGui.cpp	2013-10-25 18:49:59.455527138 +0200
+@@ -20,7 +20,7 @@
+ #include <Gui/Language/Translator.h>
+ #include "Workbench.h"
+ #include "ViewProviderImagePlane.h"
+-#include "qrc_Image.cpp"
++#include "qrc_Image.cxx"
+ 
+ // use a different name to CreateCommand()
+ void CreateImageCommands(void);
+diff -Naur freecad-0.13.1830.orig/src/Mod/Image/Gui/CMakeLists.txt freecad-0.13.1830/src/Mod/Image/Gui/CMakeLists.txt
+--- freecad-0.13.1830.orig/src/Mod/Image/Gui/CMakeLists.txt	2013-10-25 18:49:34.538995456 +0200
++++ freecad-0.13.1830/src/Mod/Image/Gui/CMakeLists.txt	2013-10-25 18:49:59.455527138 +0200
+@@ -29,7 +29,7 @@
+     Resources/Image.qrc
+ )
+ 
+-fc_add_resources(ImageGui_QRC_SRCS ${ImageGui_RES_SRCS})
++qt4_add_resources(ImageGui_QRC_SRCS ${ImageGui_RES_SRCS})
+ #QT4_ADD_RESOURCES(ImageGui_QRC_SRCS ${ImageGui_RES_SRCS})
+ 
+ SET(ImageGui_SRCS
+diff -Naur freecad-0.13.1830.orig/src/Mod/Image/Gui/CMakeLists.txt.orig freecad-0.13.1830/src/Mod/Image/Gui/CMakeLists.txt.orig
+--- freecad-0.13.1830.orig/src/Mod/Image/Gui/CMakeLists.txt.orig	1970-01-01 01:00:00.000000000 +0100
++++ freecad-0.13.1830/src/Mod/Image/Gui/CMakeLists.txt.orig	2013-02-02 18:09:17.000000000 +0100
+@@ -0,0 +1,80 @@
++include_directories(
++    ${CMAKE_CURRENT_BINARY_DIR}
++    ${Boost_INCLUDE_DIRS}
++    ${COIN3D_INCLUDE_DIR}
++    #${OPENCV_INCLUDE_DIR}
++    ${QT_INCLUDE_DIR}
++    ${ZLIB_INCLUDE_DIR}
++    ${SOQT_INCLUDE_DIR}
++    ${PYTHON_INCLUDE_PATH}
++    ${XERCESC_INCLUDE_DIR}
++)
++
++set(ImageGui_LIBS
++    Image
++    FreeCADGui
++    #${OpenCV_LIBRARIES}
++    ${OPENGL_glu_LIBRARY}
++)
++
++set(ImageGui_MOC_HDRS
++    ImageView.h
++    GLImageBox.h
++)
++
++fc_wrap_cpp(ImageGui_MOC_SRCS ${ImageGui_MOC_HDRS})
++SOURCE_GROUP("Moc" FILES ${ImageGui_MOC_SRCS})
++
++SET(ImageGui_RES_SRCS
++    Resources/Image.qrc
++)
++
++fc_add_resources(ImageGui_QRC_SRCS ${ImageGui_RES_SRCS})
++#QT4_ADD_RESOURCES(ImageGui_QRC_SRCS ${ImageGui_RES_SRCS})
++
++SET(ImageGui_SRCS
++#   ${ImageGui_MOC_SRCS}
++#   ${ImageGui_QRC_SRCS}
++    AppImageGui.cpp
++    AppImageGuiPy.cpp
++    Command.cpp
++    ViewProviderImagePlane.cpp
++    ViewProviderImagePlane.h
++    GLImageBox.cpp
++    GLImageBox.h
++    Resources/Image.qrc
++    ImageView.cpp
++    ImageView.h
++    PreCompiled.cpp
++    PreCompiled.h
++    Workbench.cpp
++    Workbench.h
++    XpmImages.h
++)
++
++add_library(ImageGui SHARED ${ImageGui_SRCS})
++target_link_libraries(ImageGui ${ImageGui_LIBS})
++
++
++fc_target_copy_resource(ImageGui 
++    ${CMAKE_SOURCE_DIR}/src/Mod/Image
++    ${CMAKE_BINARY_DIR}/Mod/Image
++    InitGui.py)
++
++if(MSVC)
++    set_target_properties(ImageGui PROPERTIES SUFFIX ".pyd")
++    set_target_properties(ImageGui PROPERTIES DEBUG_OUTPUT_NAME "ImageGui_d")
++    set_target_properties(ImageGui PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Mod/Image)
++    set_target_properties(ImageGui PROPERTIES PREFIX "../")
++elseif(MINGW)
++    set_target_properties(ImageGui PROPERTIES SUFFIX ".pyd")
++    set_target_properties(ImageGui PROPERTIES DEBUG_OUTPUT_NAME "ImageGui_d")
++    set_target_properties(ImageGui PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Mod/Image)
++    set_target_properties(ImageGui PROPERTIES PREFIX "")
++else(MSVC)
++    set_target_properties(ImageGui PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Mod/Image)
++    set_target_properties(ImageGui PROPERTIES PREFIX "")
++    set_target_properties(ImageGui PROPERTIES INSTALL_RPATH ${INSTALL_RPATH})
++endif(MSVC)
++
++INSTALL(TARGETS ImageGui DESTINATION lib)
+diff -Naur freecad-0.13.1830.orig/src/Mod/Mesh/Gui/AppMeshGui.cpp freecad-0.13.1830/src/Mod/Mesh/Gui/AppMeshGui.cpp
+--- freecad-0.13.1830.orig/src/Mod/Mesh/Gui/AppMeshGui.cpp	2013-10-25 18:49:34.608995076 +0200
++++ freecad-0.13.1830/src/Mod/Mesh/Gui/AppMeshGui.cpp	2013-10-25 18:49:59.455527138 +0200
+@@ -49,7 +49,7 @@
+ #include "ViewProviderDefects.h"
+ #include "ViewProviderPython.h"
+ #include "Workbench.h"
+-#include "qrc_Mesh.cpp"
++#include "qrc_Mesh.cxx"
+ 
+ 
+ // use a different name to CreateCommand()
+diff -Naur freecad-0.13.1830.orig/src/Mod/Mesh/Gui/AppMeshGui.cpp.orig freecad-0.13.1830/src/Mod/Mesh/Gui/AppMeshGui.cpp.orig
+--- freecad-0.13.1830.orig/src/Mod/Mesh/Gui/AppMeshGui.cpp.orig	1970-01-01 01:00:00.000000000 +0100
++++ freecad-0.13.1830/src/Mod/Mesh/Gui/AppMeshGui.cpp.orig	2013-02-02 18:09:17.000000000 +0100
+@@ -0,0 +1,142 @@
++/***************************************************************************
++ *   Copyright (c) 2004 Werner Mayer <wmayer[at]users.sourceforge.net>     *
++ *                                                                         *
++ *   This file is part of the FreeCAD CAx development system.              *
++ *                                                                         *
++ *   This library is free software; you can redistribute it and/or         *
++ *   modify it under the terms of the GNU Library General Public           *
++ *   License as published by the Free Software Foundation; either          *
++ *   version 2 of the License, or (at your option) any later version.      *
++ *                                                                         *
++ *   This library  is distributed in the hope that it will be useful,      *
++ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
++ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
++ *   GNU Library General Public License for more details.                  *
++ *                                                                         *
++ *   You should have received a copy of the GNU Library General Public     *
++ *   License along with this library; see the file COPYING.LIB. If not,    *
++ *   write to the Free Software Foundation, Inc., 59 Temple Place,         *
++ *   Suite 330, Boston, MA  02111-1307, USA                                *
++ *                                                                         *
++ ***************************************************************************/
++
++
++#include "PreCompiled.h"
++#ifndef _PreComp_
++#endif
++
++#include <Base/Interpreter.h>
++#include <Base/Console.h>
++
++#include <Gui/Application.h>
++#include <Gui/BitmapFactory.h>
++#include <Gui/WidgetFactory.h>
++#include <Gui/Language/Translator.h>
++
++#include <Mod/Mesh/App/MeshProperties.h>
++
++#include "images.h"
++#include "DlgEvaluateMeshImp.h"
++#include "PropertyEditorMesh.h"
++#include "DlgSettingsMeshView.h"
++#include "SoFCMeshObject.h"
++#include "SoFCIndexedFaceSet.h"
++#include "ViewProvider.h"
++#include "ViewProviderMeshFaceSet.h"
++#include "ViewProviderCurvature.h"
++#include "ViewProviderTransform.h"
++#include "ViewProviderTransformDemolding.h"
++#include "ViewProviderDefects.h"
++#include "ViewProviderPython.h"
++#include "Workbench.h"
++#include "qrc_Mesh.cpp"
++
++
++// use a different name to CreateCommand()
++void CreateMeshCommands(void);
++
++void loadMeshResource()
++{
++    // add resources and reloads the translators
++    Q_INIT_RESOURCE(Mesh);
++    Gui::Translator::instance()->refresh();
++}
++
++/* registration table  */
++static struct PyMethodDef MeshGui_methods[] = {
++    {NULL, NULL}                   /* end of table marker */
++};
++
++/* Python entry */
++extern "C" {
++void MeshGuiExport initMeshGui()
++{
++    if (!Gui::Application::Instance) {
++        PyErr_SetString(PyExc_ImportError, "Cannot load Gui module in console application.");
++        return;
++    }
++
++    // load dependent module
++    try {
++        Base::Interpreter().loadModule("Mesh");
++    }
++    catch(const Base::Exception& e) {
++        PyErr_SetString(PyExc_ImportError, e.what());
++        return;
++    }
++    (void) Py_InitModule("MeshGui", MeshGui_methods);   /* mod name, table ptr */
++    Base::Console().Log("Loading GUI of Mesh module... done\n");
++
++    // Register icons
++    Gui::BitmapFactory().addXPM("curv_info", curv_info);
++    Gui::BitmapFactory().addXPM("import_mesh", import_mesh);
++    Gui::BitmapFactory().addXPM("export_mesh", export_mesh);
++    Gui::BitmapFactory().addXPM("solid_mesh", solid_mesh);
++    Gui::BitmapFactory().addXPM("mesh_fillhole", mesh_fillhole);
++    Gui::BitmapFactory().addXPM("mesh_pipette", mesh_pipette);
++
++    // instantiating the commands
++    CreateMeshCommands();
++    (void)new MeshGui::CleanupHandler;
++
++    // register preferences pages
++    (void)new Gui::PrefPageProducer<MeshGui::DlgSettingsMeshView> ("Display");
++
++    MeshGui::SoFCMeshObjectElement              ::initClass();
++    MeshGui::SoSFMeshObject                     ::initClass();
++    MeshGui::SoFCMeshObjectNode                 ::initClass();
++    MeshGui::SoFCMeshObjectShape                ::initClass();
++    MeshGui::SoFCMeshSegmentShape               ::initClass();
++    MeshGui::SoFCMeshObjectBoundary             ::initClass();
++    MeshGui::SoFCIndexedFaceSet                 ::initClass();
++    MeshGui::SoFCMeshPickNode                   ::initClass();
++    MeshGui::SoFCMeshGridNode                   ::initClass();
++    MeshGui::PropertyMeshKernelItem             ::init();
++    MeshGui::ViewProviderMesh                   ::init();
++    MeshGui::ViewProviderMeshObject             ::init();
++    MeshGui::ViewProviderIndexedFaceSet         ::init();
++    MeshGui::ViewProviderMeshFaceSet            ::init();
++    MeshGui::ViewProviderPython                 ::init();
++    MeshGui::ViewProviderExport                 ::init();
++    MeshGui::ViewProviderMeshCurvature          ::init();
++    MeshGui::ViewProviderMeshTransform          ::init();
++    MeshGui::ViewProviderMeshTransformDemolding ::init();
++    MeshGui::ViewProviderMeshDefects            ::init();
++    MeshGui::ViewProviderMeshOrientation        ::init();
++    MeshGui::ViewProviderMeshNonManifolds       ::init();
++    MeshGui::ViewProviderMeshDuplicatedFaces    ::init();
++    MeshGui::ViewProviderMeshDuplicatedPoints   ::init();
++    MeshGui::ViewProviderMeshDegenerations      ::init();
++    MeshGui::ViewProviderMeshIndices            ::init();
++    MeshGui::ViewProviderMeshSelfIntersections  ::init();
++    MeshGui::ViewProviderMeshFolds              ::init();
++    MeshGui::Workbench                          ::init();
++    Gui::ViewProviderBuilder::add(
++        Mesh::PropertyMeshKernel::getClassTypeId(),
++        MeshGui::ViewProviderMeshFaceSet::getClassTypeId());
++
++    // add resources and reloads the translators
++    loadMeshResource();
++}
++
++} // extern "C" {
+diff -Naur freecad-0.13.1830.orig/src/Mod/Mesh/Gui/CMakeLists.txt freecad-0.13.1830/src/Mod/Mesh/Gui/CMakeLists.txt
+--- freecad-0.13.1830.orig/src/Mod/Mesh/Gui/CMakeLists.txt	2013-10-25 18:49:34.608995076 +0200
++++ freecad-0.13.1830/src/Mod/Mesh/Gui/CMakeLists.txt	2013-10-25 18:49:59.455527138 +0200
+@@ -68,7 +68,7 @@
+ )
+ SOURCE_GROUP("Inventor" FILES ${Inventor_SRCS})
+ 
+-fc_add_resources(resource_SRCS Resources/Mesh.qrc)
++qt4_add_resources(resource_SRCS Resources/Mesh.qrc)
+ SET(resource_SRCS
+ #   ${resource_SRCS}
+     Resources/Mesh.qrc
+diff -Naur freecad-0.13.1830.orig/src/Mod/Mesh/Gui/CMakeLists.txt.orig freecad-0.13.1830/src/Mod/Mesh/Gui/CMakeLists.txt.orig
+--- freecad-0.13.1830.orig/src/Mod/Mesh/Gui/CMakeLists.txt.orig	1970-01-01 01:00:00.000000000 +0100
++++ freecad-0.13.1830/src/Mod/Mesh/Gui/CMakeLists.txt.orig	2013-02-02 18:09:17.000000000 +0100
+@@ -0,0 +1,139 @@
++include_directories(
++    ${CMAKE_CURRENT_BINARY_DIR}
++    ${Boost_INCLUDE_DIRS}
++    ${COIN3D_INCLUDE_DIR}
++    ${PYTHON_INCLUDE_PATH}
++    ${ZLIB_INCLUDE_DIR}
++    ${SOQT_INCLUDE_DIR}
++    ${QT_INCLUDE_DIR}
++    ${XERCESC_INCLUDE_DIR}
++)
++
++set(MeshGui_LIBS
++    ${Boost_LIBRARIES}
++    ${OPENGL_glu_LIBRARY}
++    Mesh
++    FreeCADGui
++)
++
++set(Mesh_MOC_HDRS
++    DlgEvaluateMeshImp.h
++    DlgRegularSolidImp.h
++    DlgSettingsMeshView.h
++    DlgSmoothing.h
++    MeshEditor.h
++    PropertyEditorMesh.h
++    RemoveComponents.h
++)
++fc_wrap_cpp(Mesh_MOC_SRCS ${Mesh_MOC_HDRS})
++SOURCE_GROUP("Moc" FILES ${Mesh_MOC_SRCS})
++
++set(Dialogs_UIC_SRCS
++    DlgEvaluateMesh.ui
++    DlgRegularSolid.ui
++    DlgSettingsMeshView.ui
++    DlgSmoothing.ui
++    RemoveComponents.ui
++    Segmentation.ui
++)
++qt4_wrap_ui(Dialogs_UIC_HDRS ${Dialogs_UIC_SRCS})
++SET(Dialogs_SRCS
++    ${Dialogs_UIC_HDRS}
++    DlgEvaluateMesh.ui
++    DlgEvaluateMeshImp.cpp
++    DlgEvaluateMeshImp.h
++    DlgRegularSolid.ui
++    DlgRegularSolidImp.cpp
++    DlgRegularSolidImp.h
++    DlgSettingsMeshView.ui
++    DlgSettingsMeshView.cpp
++    DlgSettingsMeshView.h
++    DlgSmoothing.ui
++    DlgSmoothing.cpp
++    DlgSmoothing.h
++    RemoveComponents.ui
++    RemoveComponents.cpp
++    RemoveComponents.h
++    Segmentation.ui
++    Segmentation.cpp
++    Segmentation.h
++)
++SOURCE_GROUP("Dialogs" FILES ${Dialogs_SRCS})
++
++SET(Inventor_SRCS
++    SoFCIndexedFaceSet.cpp
++    SoFCIndexedFaceSet.h
++    SoFCMeshObject.cpp
++    SoFCMeshObject.h
++)
++SOURCE_GROUP("Inventor" FILES ${Inventor_SRCS})
++
++fc_add_resources(resource_SRCS Resources/Mesh.qrc)
++SET(resource_SRCS
++#   ${resource_SRCS}
++    Resources/Mesh.qrc
++)
++SOURCE_GROUP("resource" FILES ${resource_SRCS})
++
++SET(ViewProvider_SRCS
++    ViewProvider.cpp
++    ViewProvider.h
++    ViewProviderPython.cpp
++    ViewProviderPython.h
++    ViewProviderCurvature.cpp
++    ViewProviderCurvature.h
++    ViewProviderDefects.cpp
++    ViewProviderDefects.h
++    ViewProviderMeshFaceSet.cpp
++    ViewProviderMeshFaceSet.h
++    ViewProviderTransform.cpp
++    ViewProviderTransform.h
++    ViewProviderTransformDemolding.cpp
++    ViewProviderTransformDemolding.h
++)
++SOURCE_GROUP("ViewProvider" FILES ${ViewProvider_SRCS})
++
++SET(MeshGui_SRCS
++    ${Dialogs_SRCS}
++    ${Inventor_SRCS}
++    ${resource_SRCS}
++    ${ViewProvider_SRCS}
++    AppMeshGui.cpp
++    Command.cpp
++    Doxygen.cpp
++    PreCompiled.cpp
++    PreCompiled.h
++    MeshEditor.cpp
++    MeshEditor.h
++    PropertyEditorMesh.cpp
++    PropertyEditorMesh.h
++    Workbench.cpp
++    Workbench.h
++)
++
++add_library(MeshGui SHARED ${MeshGui_SRCS})
++target_link_libraries(MeshGui ${MeshGui_LIBS})
++
++
++fc_target_copy_resource(MeshGui 
++    ${CMAKE_SOURCE_DIR}/src/Mod/Mesh
++    ${CMAKE_BINARY_DIR}/Mod/Mesh
++    InitGui.py)
++
++if(MSVC)
++    set_target_properties(MeshGui PROPERTIES SUFFIX ".pyd")
++    set_target_properties(MeshGui PROPERTIES DEBUG_OUTPUT_NAME "MeshGui_d")
++    set_target_properties(MeshGui PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Mod/Mesh)
++    set_target_properties(MeshGui PROPERTIES PREFIX "../")
++elseif(MINGW)
++    set_target_properties(MeshGui PROPERTIES SUFFIX ".pyd")
++    set_target_properties(MeshGui PROPERTIES DEBUG_OUTPUT_NAME "MeshGui_d")
++    set_target_properties(MeshGui PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Mod/Mesh)
++    set_target_properties(MeshGui PROPERTIES PREFIX "")
++else(MSVC)
++    set_target_properties(MeshGui PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Mod/Mesh)
++    set_target_properties(MeshGui PROPERTIES PREFIX "")
++    set_target_properties(MeshGui PROPERTIES INSTALL_RPATH ${INSTALL_RPATH})
++endif(MSVC)
++
++INSTALL(TARGETS MeshGui DESTINATION lib)
+diff -Naur freecad-0.13.1830.orig/src/Mod/Part/Gui/AppPartGui.cpp freecad-0.13.1830/src/Mod/Part/Gui/AppPartGui.cpp
+--- freecad-0.13.1830.orig/src/Mod/Part/Gui/AppPartGui.cpp	2013-10-25 18:49:34.705661219 +0200
++++ freecad-0.13.1830/src/Mod/Part/Gui/AppPartGui.cpp	2013-10-25 18:49:59.455527138 +0200
+@@ -42,7 +42,7 @@
+ #include "Workbench.h"
+ 
+ #include <Gui/Language/Translator.h>
+-#include "qrc_Part.cpp"
++#include "qrc_Part.cxx"
+ 
+ #include "Resources/icons/PartFeature.xpm"
+ #include "Resources/icons/PartFeatureImport.xpm"
+diff -Naur freecad-0.13.1830.orig/src/Mod/Part/Gui/AppPartGui.cpp.orig freecad-0.13.1830/src/Mod/Part/Gui/AppPartGui.cpp.orig
+--- freecad-0.13.1830.orig/src/Mod/Part/Gui/AppPartGui.cpp.orig	1970-01-01 01:00:00.000000000 +0100
++++ freecad-0.13.1830/src/Mod/Part/Gui/AppPartGui.cpp.orig	2013-02-02 18:09:17.000000000 +0100
+@@ -0,0 +1,138 @@
++/***************************************************************************
++ *                                                                         *
++ *   This program is free software; you can redistribute it and/or modify  *
++ *   it under the terms of the GNU Library General Public License as       *
++ *   published by the Free Software Foundation; either version 2 of the    *
++ *   License, or (at your option) any later version.                       *
++ *   for detail see the LICENCE text file.                                 *
++ *   Jürgen Riegel 2002                                                    *
++ *                                                                         *
++ ***************************************************************************/
++
++
++#include "PreCompiled.h"
++#ifndef _PreComp_
++# include <Standard_math.hxx>
++#endif
++
++#include <Base/Console.h>
++#include <Base/Interpreter.h>
++
++#include <Gui/Application.h>
++#include <Gui/BitmapFactory.h>
++#include <Gui/WidgetFactory.h>
++
++#include <Mod/Part/App/PropertyTopoShape.h>
++
++#include "SoBrepShape.h"
++#include "SoFCShapeObject.h"
++#include "ViewProvider.h"
++#include "ViewProviderExt.h"
++#include "ViewProviderPython.h"
++#include "ViewProviderBox.h"
++#include "ViewProviderCurveNet.h"
++#include "ViewProviderImport.h"
++#include "ViewProviderExtrusion.h"
++#include "ViewProvider2DObject.h"
++#include "ViewProviderMirror.h"
++#include "ViewProviderBoolean.h"
++
++#include "DlgSettingsGeneral.h"
++#include "DlgSettings3DViewPartImp.h"
++#include "Workbench.h"
++
++#include <Gui/Language/Translator.h>
++#include "qrc_Part.cpp"
++
++#include "Resources/icons/PartFeature.xpm"
++#include "Resources/icons/PartFeatureImport.xpm"
++
++// use a different name to CreateCommand()
++void CreatePartCommands(void);
++void CreateSimplePartCommands(void);
++void CreateParamPartCommands(void);
++
++void loadPartResource()
++{
++    // add resources and reloads the translators
++    Q_INIT_RESOURCE(Part);
++    Gui::Translator::instance()->refresh();
++}
++
++/* registration table  */
++static struct PyMethodDef PartGui_methods[] = {
++    {NULL, NULL}                   /* end of table marker */
++};
++
++extern "C" {
++void PartGuiExport initPartGui()
++{
++    if (!Gui::Application::Instance) {
++        PyErr_SetString(PyExc_ImportError, "Cannot load Gui module in console application.");
++        return;
++    }
++
++    // load needed modules
++    try {
++        Base::Interpreter().runString("import Part");
++    }
++    catch(const Base::Exception& e) {
++        PyErr_SetString(PyExc_ImportError, e.what());
++        return;
++    }
++
++    (void) Py_InitModule("PartGui", PartGui_methods);   /* mod name, table ptr */
++    Base::Console().Log("Loading GUI of Part module... done\n");
++
++    PartGui::SoBrepFaceSet              ::initClass();
++    PartGui::SoBrepEdgeSet              ::initClass();
++    PartGui::SoBrepPointSet             ::initClass();
++    PartGui::SoFCControlPoints          ::initClass();
++    PartGui::ViewProviderPartBase       ::init();
++    PartGui::ViewProviderPartExt        ::init();
++    PartGui::ViewProviderPart           ::init();
++    PartGui::ViewProviderEllipsoid      ::init();
++    PartGui::ViewProviderPython         ::init();
++    PartGui::ViewProviderBox            ::init();
++    PartGui::ViewProviderImport         ::init();
++    PartGui::ViewProviderCurveNet       ::init();
++    PartGui::ViewProviderExtrusion      ::init();
++    PartGui::ViewProvider2DObject       ::init();
++    PartGui::ViewProvider2DObjectPython ::init();
++    PartGui::ViewProviderMirror         ::init();
++    PartGui::ViewProviderFillet         ::init();
++    PartGui::ViewProviderChamfer        ::init();
++    PartGui::ViewProviderRevolution     ::init();
++    PartGui::ViewProviderLoft           ::init();
++    PartGui::ViewProviderSweep          ::init();
++    PartGui::ViewProviderOffset         ::init();
++    PartGui::ViewProviderThickness      ::init();
++    PartGui::ViewProviderCustom         ::init();
++    PartGui::ViewProviderCustomPython   ::init();
++    PartGui::ViewProviderBoolean        ::init();
++    PartGui::ViewProviderMultiFuse      ::init();
++    PartGui::ViewProviderMultiCommon    ::init();
++
++    PartGui::Workbench                  ::init();
++
++    // instantiating the commands
++    CreatePartCommands();
++    CreateSimplePartCommands();
++    CreateParamPartCommands();
++
++    // register preferences pages
++    (void)new Gui::PrefPageProducer<PartGui::DlgSettingsGeneral>      ( QT_TRANSLATE_NOOP("QObject","Part design") );
++    (void)new Gui::PrefPageProducer<PartGui::DlgSettings3DViewPart>   ( QT_TRANSLATE_NOOP("QObject","Part design") );
++    Gui::ViewProviderBuilder::add(
++        Part::PropertyPartShape::getClassTypeId(),
++        PartGui::ViewProviderPart::getClassTypeId());
++
++    // add resources and reloads the translators
++    loadPartResource();
++
++    // register bitmaps
++    Gui::BitmapFactoryInst& rclBmpFactory = Gui::BitmapFactory();
++    rclBmpFactory.addXPM("PartFeature",(const char**) PartFeature_xpm);
++    rclBmpFactory.addXPM("PartFeatureImport",(const char**) PartFeatureImport_xpm);
++}
++} // extern "C"
+diff -Naur freecad-0.13.1830.orig/src/Mod/Part/Gui/CMakeLists.txt freecad-0.13.1830/src/Mod/Part/Gui/CMakeLists.txt
+--- freecad-0.13.1830.orig/src/Mod/Part/Gui/CMakeLists.txt	2013-10-25 18:49:34.705661219 +0200
++++ freecad-0.13.1830/src/Mod/Part/Gui/CMakeLists.txt	2013-10-25 18:49:59.455527138 +0200
+@@ -49,7 +49,7 @@
+ fc_wrap_cpp(PartGui_MOC_SRCS ${PartGui_MOC_HDRS})
+ SOURCE_GROUP("Moc" FILES ${PartGui_MOC_SRCS})
+ 
+-fc_add_resources(PartGui_QRC_SRCS Resources/Part.qrc)
++qt4_add_resources(PartGui_QRC_SRCS Resources/Part.qrc)
+ 
+ set(PartGui_UIC_SRCS
+     CrossSections.ui
+diff -Naur freecad-0.13.1830.orig/src/Mod/Part/Gui/CMakeLists.txt.orig freecad-0.13.1830/src/Mod/Part/Gui/CMakeLists.txt.orig
+--- freecad-0.13.1830.orig/src/Mod/Part/Gui/CMakeLists.txt.orig	1970-01-01 01:00:00.000000000 +0100
++++ freecad-0.13.1830/src/Mod/Part/Gui/CMakeLists.txt.orig	2013-02-02 18:09:17.000000000 +0100
+@@ -0,0 +1,207 @@
++if(MSVC)
++    add_definitions(-DHAVE_ACOSH -DHAVE_ATANH -DHAVE_ASINH)
++else(MSVC)
++    add_definitions(-DHAVE_LIMITS_H -DHAVE_CONFIG_H)
++endif(MSVC)
++
++include_directories(
++    ${CMAKE_SOURCE_DIR}/src
++    ${CMAKE_BINARY_DIR}/src
++    ${CMAKE_CURRENT_BINARY_DIR}
++    ${Boost_INCLUDE_DIRS}
++    ${COIN3D_INCLUDE_DIR}
++    ${OCC_INCLUDE_DIR}
++    ${PYTHON_INCLUDE_PATH}
++    ${SOQT_INCLUDE_DIR}
++    ${QT_INCLUDE_DIR}
++    ${XERCESC_INCLUDE_DIR}
++    ${ZLIB_INCLUDE_DIR}
++)
++link_directories(${OCC_LIBRARY_DIR})
++
++set(PartGui_LIBS
++    Part
++    FreeCADGui
++)
++
++set(PartGui_MOC_HDRS
++    CrossSections.h
++    Mirroring.h
++    DlgBooleanOperation.h
++    DlgExtrusion.h
++    DlgFilletEdges.h
++    DlgPartBoxImp.h
++    DlgPartCylinderImp.h
++    DlgPartImportIgesImp.h
++    DlgPartImportStepImp.h
++    DlgPrimitives.h
++    DlgRevolution.h
++    DlgSettings3DViewPartImp.h
++    DlgSettingsGeneral.h
++    TaskFaceColors.h
++    TaskShapeBuilder.h
++    TaskLoft.h
++    TaskOffset.h
++    TaskSweep.h
++    TaskThickness.h
++    TaskCheckGeometry.h
++)
++fc_wrap_cpp(PartGui_MOC_SRCS ${PartGui_MOC_HDRS})
++SOURCE_GROUP("Moc" FILES ${PartGui_MOC_SRCS})
++
++fc_add_resources(PartGui_QRC_SRCS Resources/Part.qrc)
++
++set(PartGui_UIC_SRCS
++    CrossSections.ui
++    Mirroring.ui
++    DlgBooleanOperation.ui
++    DlgExtrusion.ui
++    DlgFilletEdges.ui
++    DlgPartBox.ui
++    DlgPartCylinder.ui
++    DlgPartImportIges.ui
++    DlgPartImportStep.ui
++    DlgPrimitives.ui
++    Location.ui
++    DlgRevolution.ui
++    DlgSettings3DViewPart.ui
++    DlgSettingsGeneral.ui
++    TaskFaceColors.ui
++    TaskShapeBuilder.ui
++    TaskLoft.ui
++    TaskOffset.ui
++    TaskSweep.ui
++)
++qt4_wrap_ui(PartGui_UIC_HDRS ${PartGui_UIC_SRCS})
++
++SET(PartGui_SRCS
++#   ${PartGui_QRC_SRCS}
++    ${PartGui_UIC_HDRS}
++    AppPartGui.cpp
++    Command.cpp
++    CommandSimple.cpp
++    CommandParametric.cpp
++    CrossSections.cpp
++    CrossSections.h
++    CrossSections.ui
++    Mirroring.cpp
++    Mirroring.h
++    Mirroring.ui
++    DlgBooleanOperation.cpp
++    DlgBooleanOperation.h
++    DlgBooleanOperation.ui
++    DlgExtrusion.cpp
++    DlgExtrusion.h
++    DlgExtrusion.ui
++    DlgFilletEdges.cpp
++    DlgFilletEdges.h
++    DlgFilletEdges.ui
++    DlgPartBox.ui
++    DlgPartBoxImp.cpp
++    DlgPartBoxImp.h
++    DlgPartCylinderImp.cpp
++    DlgPartCylinderImp.h
++    DlgPartCylinder.ui
++    DlgPartImportIges.ui
++    DlgPartImportIgesImp.cpp
++    DlgPartImportIgesImp.h
++    DlgPartImportStep.ui
++    DlgPartImportStepImp.cpp
++    DlgPartImportStepImp.h
++    DlgPrimitives.cpp
++    DlgPrimitives.h
++    DlgPrimitives.ui
++    Location.ui
++    DlgRevolution.cpp
++    DlgRevolution.h
++    DlgRevolution.ui
++    DlgSettings3DViewPart.ui
++    DlgSettings3DViewPartImp.cpp
++    DlgSettings3DViewPartImp.h
++    DlgSettingsGeneral.cpp
++    DlgSettingsGeneral.h
++    DlgSettingsGeneral.ui
++    Resources/Part.qrc
++    PreCompiled.cpp
++    PreCompiled.h
++    SoFCShapeObject.cpp
++    SoFCShapeObject.h
++    SoBrepShape.cpp
++    SoBrepShape.h
++    ViewProvider.cpp
++    ViewProvider.h
++    ViewProviderExt.cpp
++    ViewProviderExt.h
++    ViewProviderReference.cpp
++    ViewProviderReference.h
++    ViewProviderBox.cpp
++    ViewProviderBox.h
++    ViewProviderCurveNet.cpp
++    ViewProviderCurveNet.h
++    ViewProviderImport.cpp
++    ViewProviderImport.h
++    ViewProviderExtrusion.cpp
++    ViewProviderExtrusion.h
++    ViewProvider2DObject.cpp
++    ViewProvider2DObject.h
++    ViewProviderMirror.cpp
++    ViewProviderMirror.h
++    ViewProviderPython.cpp
++    ViewProviderPython.h
++    ViewProviderBoolean.cpp
++    ViewProviderBoolean.h
++    Workbench.cpp
++    Workbench.h
++    TaskFaceColors.cpp
++    TaskFaceColors.h
++    TaskFaceColors.ui
++    TaskShapeBuilder.cpp
++    TaskShapeBuilder.h
++    TaskShapeBuilder.ui
++    TaskLoft.cpp
++    TaskLoft.h
++    TaskLoft.ui
++    TaskOffset.cpp
++    TaskOffset.h
++    TaskOffset.ui
++    TaskSweep.cpp
++    TaskSweep.h
++    TaskSweep.ui
++    TaskThickness.cpp
++    TaskThickness.h
++    TaskCheckGeometry.cpp
++    TaskCheckGeometry.h
++)
++
++SET(PartGui_Scripts
++    InitGui.py
++    TestPartGui.py
++)
++
++
++add_library(PartGui SHARED ${PartGui_SRCS})
++target_link_libraries(PartGui ${PartGui_LIBS})
++
++
++fc_target_copy_resource(PartGui 
++    ${CMAKE_SOURCE_DIR}/src/Mod/Part
++    ${CMAKE_BINARY_DIR}/Mod/Part
++    ${PartGui_Scripts})
++
++if(MSVC)
++    set_target_properties(PartGui PROPERTIES SUFFIX ".pyd")
++    set_target_properties(PartGui PROPERTIES DEBUG_OUTPUT_NAME "PartGui_d")
++    set_target_properties(PartGui PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Mod/Part)
++    set_target_properties(PartGui PROPERTIES PREFIX "../")
++elseif(MINGW)
++    set_target_properties(PartGui PROPERTIES SUFFIX ".pyd")
++    set_target_properties(PartGui PROPERTIES DEBUG_OUTPUT_NAME "PartGui_d")
++    set_target_properties(PartGui PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Mod/Part)
++    set_target_properties(PartGui PROPERTIES PREFIX "")
++else(MSVC)
++    set_target_properties(PartGui PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Mod/Part)
++    set_target_properties(PartGui PROPERTIES PREFIX "")
++    set_target_properties(PartGui PROPERTIES INSTALL_RPATH ${INSTALL_RPATH})
++endif(MSVC)
++
++INSTALL(TARGETS PartGui DESTINATION lib)
+diff -Naur freecad-0.13.1830.orig/src/Mod/Points/Gui/AppPointsGui.cpp freecad-0.13.1830/src/Mod/Points/Gui/AppPointsGui.cpp
+--- freecad-0.13.1830.orig/src/Mod/Points/Gui/AppPointsGui.cpp	2013-10-25 18:49:34.868993668 +0200
++++ freecad-0.13.1830/src/Mod/Points/Gui/AppPointsGui.cpp	2013-10-25 18:49:59.455527138 +0200
+@@ -33,7 +33,7 @@
+ 
+ #include "ViewProvider.h"
+ #include "Workbench.h"
+-#include "qrc_Points.cpp"
++#include "qrc_Points.cxx"
+ 
+ // use a different name to CreateCommand()
+ void CreatePointsCommands(void);
+diff -Naur freecad-0.13.1830.orig/src/Mod/Points/Gui/CMakeLists.txt freecad-0.13.1830/src/Mod/Points/Gui/CMakeLists.txt
+--- freecad-0.13.1830.orig/src/Mod/Points/Gui/CMakeLists.txt	2013-10-25 18:49:34.868993668 +0200
++++ freecad-0.13.1830/src/Mod/Points/Gui/CMakeLists.txt	2013-10-25 18:49:59.455527138 +0200
+@@ -32,7 +32,7 @@
+ )
+ SOURCE_GROUP("Dialogs" FILES ${Dialogs_SRCS})
+ 
+-fc_add_resources(Resource_SRCS Resources/Points.qrc)
++qt4_add_resources(Resource_SRCS Resources/Points.qrc)
+ SET(Resource_SRCS
+ #   ${Resource_SRCS}
+     Resources/Points.qrc
+diff -Naur freecad-0.13.1830.orig/src/Mod/Raytracing/Gui/AppRaytracingGui.cpp freecad-0.13.1830/src/Mod/Raytracing/Gui/AppRaytracingGui.cpp
+--- freecad-0.13.1830.orig/src/Mod/Raytracing/Gui/AppRaytracingGui.cpp	2013-10-25 18:49:34.872326983 +0200
++++ freecad-0.13.1830/src/Mod/Raytracing/Gui/AppRaytracingGui.cpp	2013-10-25 18:49:59.455527138 +0200
+@@ -31,7 +31,7 @@
+ 
+ #include "DlgSettingsRayImp.h"
+ #include "Workbench.h"
+-#include "qrc_Raytracing.cpp"
++#include "qrc_Raytracing.cxx"
+ 
+ 
+ using namespace RaytracingGui;
+diff -Naur freecad-0.13.1830.orig/src/Mod/Raytracing/Gui/AppRaytracingGui.cpp.orig freecad-0.13.1830/src/Mod/Raytracing/Gui/AppRaytracingGui.cpp.orig
+--- freecad-0.13.1830.orig/src/Mod/Raytracing/Gui/AppRaytracingGui.cpp.orig	1970-01-01 01:00:00.000000000 +0100
++++ freecad-0.13.1830/src/Mod/Raytracing/Gui/AppRaytracingGui.cpp.orig	2013-02-02 18:09:17.000000000 +0100
+@@ -0,0 +1,81 @@
++/***************************************************************************
++ *   Copyright (c) Jürgen Riegel          (juergen.riegel@web.de) 2002     *
++ *                                                                         *
++ *   This file is part of the FreeCAD CAx development system.              *
++ *                                                                         *
++ *   This library is free software; you can redistribute it and/or         *
++ *   modify it under the terms of the GNU Library General Public           *
++ *   License as published by the Free Software Foundation; either          *
++ *   version 2 of the License, or (at your option) any later version.      *
++ *                                                                         *
++ *   This library  is distributed in the hope that it will be useful,      *
++ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
++ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
++ *   GNU Library General Public License for more details.                  *
++ *                                                                         *
++ *   You should have received a copy of the GNU Library General Public     *
++ *   License along with this library; see the file COPYING.LIB. If not,    *
++ *   write to the Free Software Foundation, Inc., 59 Temple Place,         *
++ *   Suite 330, Boston, MA  02111-1307, USA                                *
++ *                                                                         *
++ ***************************************************************************/
++
++
++#include "PreCompiled.h"
++
++#include <Base/Console.h>
++#include <Base/Interpreter.h>
++#include <Gui/Application.h>
++#include <Gui/WidgetFactory.h>
++#include <Gui/Language/Translator.h>
++
++#include "DlgSettingsRayImp.h"
++#include "Workbench.h"
++#include "qrc_Raytracing.cpp"
++
++
++using namespace RaytracingGui;
++
++// use a different name to CreateCommand()
++void CreateRaytracingCommands(void);
++
++void loadRaytracingResource()
++{
++    // add resources and reloads the translators
++    Q_INIT_RESOURCE(Raytracing);
++    Gui::Translator::instance()->refresh();
++}
++
++extern struct PyMethodDef RaytracingGui_methods[];
++
++
++extern "C" {
++void AppRaytracingGuiExport initRaytracingGui()
++{
++    if (!Gui::Application::Instance) {
++        PyErr_SetString(PyExc_ImportError, "Cannot load Gui module in console application.");
++        return;
++    }
++
++    try {
++        Base::Interpreter().loadModule("Raytracing");
++    }
++    catch(const Base::Exception& e) {
++        PyErr_SetString(PyExc_ImportError, e.what());
++        return;
++    }
++    (void) Py_InitModule("RaytracingGui", RaytracingGui_methods);   /* mod name, table ptr */
++    Base::Console().Log("Loading GUI of Raytracing module... done\n");
++
++    // instantiating the commands
++    CreateRaytracingCommands();
++    RaytracingGui::Workbench::init();
++
++    // register preferences pages
++    new Gui::PrefPageProducer<DlgSettingsRayImp> ("Raytracing");
++
++    // add resources and reloads the translators
++    loadRaytracingResource();
++}
++
++} // extern "C" {
+diff -Naur freecad-0.13.1830.orig/src/Mod/Raytracing/Gui/CMakeLists.txt freecad-0.13.1830/src/Mod/Raytracing/Gui/CMakeLists.txt
+--- freecad-0.13.1830.orig/src/Mod/Raytracing/Gui/CMakeLists.txt	2013-10-25 18:49:34.872326983 +0200
++++ freecad-0.13.1830/src/Mod/Raytracing/Gui/CMakeLists.txt	2013-10-25 18:49:59.455527138 +0200
+@@ -43,7 +43,7 @@
+ fc_wrap_cpp(RaytracingGui_MOC_SRCS ${RaytracingGui_MOC_HDRS})
+ SOURCE_GROUP("Moc" FILES ${RaytracingGui_MOC_SRCS})
+ 
+-fc_add_resources(Resource_SRCS Resources/Raytracing.qrc)
++qt4_add_resources(Resource_SRCS Resources/Raytracing.qrc)
+ SET(Resource_SRCS
+     Resources/Raytracing.qrc
+ )
+diff -Naur freecad-0.13.1830.orig/src/Mod/Test/Gui/AppTestGui.cpp freecad-0.13.1830/src/Mod/Test/Gui/AppTestGui.cpp
+--- freecad-0.13.1830.orig/src/Mod/Test/Gui/AppTestGui.cpp	2013-10-25 18:49:35.178991988 +0200
++++ freecad-0.13.1830/src/Mod/Test/Gui/AppTestGui.cpp	2013-10-25 18:49:59.455527138 +0200
+@@ -28,7 +28,7 @@
+ 
+ #include "UnitTestPy.h"
+ #include "UnitTestImp.h"
+-#include "qrc_Test.cpp"
++#include "qrc_Test.cxx"
+ 
+ #include <Gui/Language/Translator.h>
+ #include <Base/Console.h>
+diff -Naur freecad-0.13.1830.orig/src/Mod/Test/Gui/CMakeLists.txt freecad-0.13.1830/src/Mod/Test/Gui/CMakeLists.txt
+--- freecad-0.13.1830.orig/src/Mod/Test/Gui/CMakeLists.txt	2013-10-25 18:49:35.178991988 +0200
++++ freecad-0.13.1830/src/Mod/Test/Gui/CMakeLists.txt	2013-10-25 18:49:59.455527138 +0200
+@@ -30,7 +30,7 @@
+ )
+ SOURCE_GROUP("Dialogs" FILES ${Dialogs_SRCS})
+ 
+-fc_add_resources(Resource_SRCS Resources/Test.qrc)
++qt4_add_resources(Resource_SRCS Resources/Test.qrc)
+ SET(Resource_SRCS
+ #   ${Resource_SRCS}
+     Resources/Test.qrc
