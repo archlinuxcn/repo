@@ -33,19 +33,18 @@ true && pkgname=(linux-uksm linux-uksm-headers)
 _kernelname=-uksm
 _srcname=linux-3.12
 pkgver=3.12
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 url="http://kerneldedup.org/"
 license=('GPL2')
 options=('!strip')
 makedepends=('kmod' 'inetutils' 'bc')
 _uksmvernel="0.1.2.2"
-_uksmname="v3.10"
+_uksmname="v3.12"
 _bfqpath="http://algo.ing.unimo.it/people/paolo/disk_sched/patches/3.12.0-v6r2"
 source=("http://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
         #"http://www.kernel.org/pub/linux/kernel/v3.x/patch-${pkgver}.xz"
         "http://kerneldedup.org/download/uksm/${_uksmvernel}/uksm-${_uksmvernel}-for-${_uksmname}.patch"
-        "uksm-${_uksmvernel}-for-${_uksmname}.patch.patch"
         "${_bfqpath}/0001-block-cgroups-kconfig-build-bits-for-BFQ-v6r2-3.12.patch"
         "${_bfqpath}/0002-block-introduce-the-BFQ-v6r2-I-O-sched-for-3.12.patch"
         "${_bfqpath}/0003-block-bfq-add-Early-Queue-Merge-EQM-to-BFQ-v6r2-for-3.12.0.patch"
@@ -79,7 +78,7 @@ prepare() {
     ### Patch source with UKSM
     msg "Patching with UKSM"
     cp "${srcdir}/uksm-${_uksmvernel}-for-${_uksmname}.patch" ./
-    patch -Np0 -i "${srcdir}/uksm-${_uksmvernel}-for-${_uksmname}.patch.patch"
+    #patch -Np0 -i "${srcdir}/uksm-${_uksmvernel}-for-${_uksmname}.patch.patch"
     patch -Np1 -i ./uksm-${_uksmvernel}-for-${_uksmname}.patch
 
     ### Clean tree and copy ARCH config over
@@ -87,9 +86,9 @@ prepare() {
     make mrproper
 
     if [ "${CARCH}" = "x86_64" ]; then
-	cat "${srcdir}/config.x86_64" > ./.config
+        cat "${srcdir}/config.x86_64" > ./.config
     else
-	cat "${srcdir}/config" > ./.config
+        cat "${srcdir}/config" > ./.config
     fi
 
     ### Optionally use running kernel's config
@@ -384,8 +383,7 @@ package_linux-uksm-headers() {
 pkgdesc='Linux Kernel and modules with the UKSM patchset'
 
 sha512sums=('4ba5797e0772726d05c9f2eee66dc6dc2a5033c749ef44764c805a83da739ed5d0c6443b76785e38fe1ef74cc7ade787e48144faed0cfcb6f124f05248c700ff'
-            '41bc23f63e9cfbb50a2f8d3bebc453ead1c120e84a9399f4645111d92eb6851339c3416c5eca4ca94d665bd4bb42f387281b7ac6983c257c3249ef58aa6e638f'
-            '457f4e9897ef6e7e692f00ddeb7d915dc2e9421de4dc7e2d4e6d707d266eadc425c1fe30d77d3f0eb9a1d76e0286b7c149f6d209b53c4039e6e3198cd2d3184a'
+            'b420cfa5f108bdd83675de4ecfa3567fb82e7fc8f010dabb4c55ad78a6956b805f8649c2dc186dd58a7ca4d091c5e083e42eb6c8978538ea32cf9905f63c317b'
             '006ab095bd199d771300672bf0863df8b2a631f609898e4182104e85e0f0c8d8124e1e2d1ab6bb8747324afef135554de258965b28b3b71d05fc036463253123'
             'bffa292c8825250f90851d8ae264ac48c872442b9f1c02a71eb4f81bb811beddc06ea920505b10a41c1c8584ed9c18846a00c3262f063c49610eab534ee8f03d'
             'c0ebf1ac63307e75742ca2d8a2523ce56694629eec1da5a1f4fe884a78bd330a98b45e6a17d6764470de3af48f94d3866d14a83f8cf58de7746b4165a674a68a'
