@@ -8,7 +8,7 @@ pkgname=google-appengine-python
 pkgver=1.8.7
 _zipver=$pkgver
 #_zipver=1.8.6
-pkgrel=1
+pkgrel=2
 arch=(any)
 pkgdesc="Google App Engine SDK for Python."
 url=https://developers.google.com/appengine/
@@ -38,7 +38,8 @@ package() {
   # Extract with unzip as bsdtar screws up permissions
   unzip -q "$srcdir/google_appengine_${_zipver}.zip" -d opt
   
-  mv opt/google_appengine "opt/${pkgname}"
+  mv opt/google_appengine opt/${pkgname}
+  rm -rf opt/${pkgname}/php
 
   grep -r -l python "opt/${pkgname}" | xargs sed -i '/#!\/usr\/bin\/env python/s|python|python2|'
 

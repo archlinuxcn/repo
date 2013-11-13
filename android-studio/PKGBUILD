@@ -1,13 +1,14 @@
-# Maintainer: Philipp 'TamCore' B. <philipp [at] tamcore [dot] eu>
+# Maintainer:  danyf90 <daniele.formichelli@gmail.com>
+# Contributor: Philipp 'TamCore' B. <philipp [at] tamcore [dot] eu>
 # Contributor: Jakub Schmidtke <sjakub-at-gmail-dot-com>
 # Contributor: Christoph Brill <egore911-at-gmail-dot-com>
 # Contributor: Lubomir 'Kuci' Kucera <kuci24-at-gmail-dot-com>
 
 pkgname=android-studio
-pkgver=0.3.4
+pkgver=0.3.5
 pkgrel=1
 _build=132.883541
-_patch=132.908450
+_patch=132.910074
 pkgdesc="A new Android development environment based on IntelliJ IDEA."
 arch=(i686 x86_64)
 url="http://developer.android.com/sdk/installing/studio.html"
@@ -17,30 +18,32 @@ makedepends=('unzip' 'xorg-server-xvfb' 'ttf-dejavu')
 optdepends=('android-sdk-platform-tools' 'android-sdk-build-tools')
 options=('!strip')
 install=${pkgname}.install
-source=(https://dl.google.com/android/studio/android-studio-bundle-${_build}-linux.tgz
-        ${pkgname}.desktop)
-test ! -z ${_patch} && source+=("https://dl.google.com/android/studio/patches/AI-${_build}-${_patch}-patch-unix.jar")
-noextract=(AI-${_build}-${_patch}-patch-unix.jar)
-sha256sums=('9463b6fde6cdc1f9ef781f5aab0bad64566c54fdf491d12f714ab2d5aac9b0ce'
-            '2bba1530d217d055441b1075f53f09b172bdb56ae3908ef80201fd2ba766b33d'
-            '6bb75cdb91170d577ee93866b7a8abf2bbc6f2c8ec8e62f94d40b88d504b604b')
+source=(
+	"https://dl.google.com/android/studio/android-studio-bundle-$_build-linux.tgz"
+	"$pkgname.desktop")
+test ! -z $_patch && source+=("https://dl.google.com/android/studio/patches/AI-$_build-$_patch-patch-unix.jar")
+noextract=(AI-$_build-$_patch-patch-unix.jar)
+sha512sums=(
+	'b5c7b4b7d7c692375b13906d933b33ae39efcb6ac8a53937b1a8472b97782ee96666bec11261acb14ca40cc0e56bb8f0627a2a438332cdcd089d2f1b1f77b0b1'
+	'fa3567f328af45d265c4fabf3e41b55d8e8cccfa9675e745f07dd6ae41950dd53a2ef41ef1caee86643f5c2ddf7a7681ee17155e208a7b6fdae6c0537dfc0c94'
+	'8739d373ff2f8bff2f980422afadb2438adeaed96db85c9b501c14b90b615efaeba5f9d1cc3c11367e1144138c25c2fd9f65dab86433426f6b261b67a02c71b4')
 
-[ $CARCH = "x86_64" ] && depends=('python' 'lib32-fontconfig' 'lib32-mesa' 'lib32-libxrender' 'android-sdk')
+[ $CARCH = "x86_64" ] && depends=('python' 'lib32-fontconfig' 'lib32-mesa' 'lib32-libxrender')
 
 prepare() {
     echo "Performing update..."
 
-    if [ ! -z "${_patch}" ]
+    if [ ! -z $_patch ]
     then
-        xvfb-run java -classpath "${srcdir}/AI-${_build}-${_patch}-patch-unix.jar" com.intellij.updater.Runner install "${srcdir}/${pkgname}" || ret="${?}"
+        xvfb-run java -classpath $srcdir/AI-$_build-$_patch-patch-unix.jar com.intellij.updater.Runner install $srcdir/$pkgname || ret="${?}"
 
-        if [ "${ret}" != "42" ]; then
-            echo "Update process failed with code: ${ret}"
+        if [ $ret != "42" ]; then
+            echo "Update process failed with code: $ret"
             exit 1
         fi
     fi
 
-    cd "${srcdir}/${pkgname}"
+    cd $srcdir/$pkgname
 
     # remove pause after open jdk warning
     sed -i 's/read IGNORE//' bin/studio.sh
@@ -50,24 +53,22 @@ prepare() {
 
     # enable anti aliasing
     for f in bin/*.vmoptions; do
-      echo "-Dawt.useSystemAAFontSettings=lcd" >> ${f}
-      echo "-Dswing.aatext=true" >> ${f}
+      echo "-Dawt.useSystemAAFontSettings=lcd" >> $f
+      echo "-Dswing.aatext=true" >> $f
     done
 }
 
 package() {
-    cd "${srcdir}/${pkgname}"
+    cd $srcdir/$pkgname
 
     # application stuff
-    mkdir -p "${pkgdir}/opt/${pkgname}"
-    cp -a bin lib plugins "${pkgdir}/opt/${pkgname}"
-
-    mkdir -p "${pkgdir}/usr/bin"
-    ln -s /opt/android-studio/bin/studio.sh "${pkgdir}/usr/bin/android-studio"
+    install -d $pkgdir/{opt/$pkgname,usr/bin}
+    cp -a bin lib plugins $pkgdir/opt/$pkgname
+    ln -s /opt/android-studio/bin/studio.sh $pkgdir/usr/bin/android-studio
 
     # starter stuff
-    install -Dm655 artwork/icon_AS_128.png "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
-    install -Dm655 "${srcdir}/${pkgname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+    install -Dm655 artwork/icon_AS_128.png $pkgdir/usr/share/pixmaps/$pkgname.png
+    install -Dm655 $srcdir/$pkgname.desktop $pkgdir/usr/share/applications/$pkgname.desktop
 
-    chmod -R ugo+rX "${pkgdir}/opt"
+    chmod -R ugo+rX $pkgdir/opt
 }
