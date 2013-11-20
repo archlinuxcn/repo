@@ -1,0 +1,35 @@
+# Maintainer: jack meow <ellrywych@gmail.com> 
+
+pkgname=mysql-python3
+pkgver=1.2.3
+pkgrel=1
+pkgdesc="MySQL support for Python3,"
+arch=("i686" "x86_64")
+url="https://github.com/davispuh/MySQL-for-Python-3"
+license=('GPL2')
+depends=('python' 'libmariadbclient')
+makedepends=('mariadb')
+
+gitroot="https://github.com/davispuh/MySQL-for-Python-3.git"
+gitname=${pkgname}
+
+build() {
+  cd ${srcdir}
+  msg "Connecting to GIT server...."
+
+  if [[ -d "$gitname"  ]]; then
+      cd "$gitname" && git pull origin
+      msg "The local files are updated."
+  else
+      git clone "$gitroot" "$gitname"
+  fi
+
+  cd "${srcdir}/${gitname}"
+  python setup.py build
+}
+
+package() {
+    cd "${srcdir}/${gitname}"
+    python setup.py install --root=${pkgdir}
+}
+
