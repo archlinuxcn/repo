@@ -5,10 +5,10 @@
 # Contributor: Lubomir 'Kuci' Kucera <kuci24-at-gmail-dot-com>
 
 pkgname=android-studio
-pkgver=0.3.5
+pkgver=0.3.6
 pkgrel=1
 _build=132.883541
-_patch=132.910074
+_patch=132.917931
 pkgdesc="A new Android development environment based on IntelliJ IDEA."
 arch=(i686 x86_64)
 url="http://developer.android.com/sdk/installing/studio.html"
@@ -26,9 +26,9 @@ noextract=(AI-$_build-$_patch-patch-unix.jar)
 sha512sums=(
 	'b5c7b4b7d7c692375b13906d933b33ae39efcb6ac8a53937b1a8472b97782ee96666bec11261acb14ca40cc0e56bb8f0627a2a438332cdcd089d2f1b1f77b0b1'
 	'fa3567f328af45d265c4fabf3e41b55d8e8cccfa9675e745f07dd6ae41950dd53a2ef41ef1caee86643f5c2ddf7a7681ee17155e208a7b6fdae6c0537dfc0c94'
-	'8739d373ff2f8bff2f980422afadb2438adeaed96db85c9b501c14b90b615efaeba5f9d1cc3c11367e1144138c25c2fd9f65dab86433426f6b261b67a02c71b4')
+	'dc054e2535a44541de98d14c32da18643ffa80378b984f73f7821856a7bee905cd9d6c00006120447518f38aa349fd773611896bc26da2b29a2d9d8f9fe72c10')
 
-[ $CARCH = "x86_64" ] && depends=('python' 'lib32-fontconfig' 'lib32-mesa' 'lib32-libxrender')
+[ $CARCH = "x86_64" ] && depends=('python' 'lib32-fontconfig' 'lib32-mesa' 'lib32-libxrender' 'android-sdk')
 
 prepare() {
     echo "Performing update..."
