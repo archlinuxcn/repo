@@ -1,0 +1,41 @@
+# Maintainer: Andrew Webley <unsuspectinghero@gmail.com>
+# Contributor: Dmitriy Morozov <archlinux@foxcub.org>
+
+pkgname="chromium-libpdf"
+#The pkgver is the same as for google chrome dev. The library isn't meant to be distributed on its own so no other version information exists.
+pkgver="33.0.1711.3"
+pkgrel="1"
+pkgdesc="A PDF Viewer for Chromium and Chromium based browsers"
+url="http://wiki.archlinux.org/index.php/Chromium#libpdf.so"
+arch=("i686" "x86_64")
+license=("custom:chrome")
+depends=("gcc-libs")
+optdepends=("chromium: default browser to use plugin in (one of the optional dependencies needs to be installed to use the library)"
+            "chromium-dev: development version of default browser, requires modifying the PKGBUILD"
+            "iron-bin: alternate google-chrome based browser, requires modifying the PKGBUILD")
+sha512sums=("395118e45e8c43cf491c48d932c9c49d056153d52d961d2812169b39256c398b6f16f37e2124ebf1daff31a625006f92225c537547b2e11605ce132ea4e2fa81")
+source=("LICENSE")
+if [ "$CARCH" = "i686" ]; then
+  source+=("https://dl.google.com/linux/direct/google-chrome-unstable_current_i386.rpm")
+  sha512sums+=("c754fbeb522961fd81c2568ce0e790b7d090b392e10a848743a1abfbb6c3cdcc04a150202eefbc12a0034534438e85fd3878e5525f5a1e6e948bd9b5e0cc078c")
+elif [ "$CARCH" = "x86_64" ]; then
+  source+=("https://dl.google.com/linux/direct/google-chrome-unstable_current_x86_64.rpm")
+  sha512sums+=("66daaae8672fc1a298df1df47fb61406350f8aa7a242eff3aaae99c5bcd9ce270108a26bde8c0d3dca1c0d566cd0685741fcba8397be7270f606270541da6f95")
+fi
+
+package(){
+	#Uncomment the relevant line below to install the library in the correct place if you're running something other than chromium.
+
+  #chromium
+  install -Dm755 "$srcdir/opt/google/chrome/libpdf.so" "$pkgdir/usr/lib/chromium/libpdf.so"
+
+  #chromium-dev
+  #install -Dm755 "$srcdir/opt/google/chrome/libpdf.so" "$pkgdir/usr/lib/chromium-dev/libpdf.so"
+
+  #iron-browser
+  #install -Dm755 "$srcdir/opt/google/chrome/libpdf.so" "$pkgdir/opt/iron/libpdf.so"
+
+  install -Dm755 "$srcdir/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
+# vim:set ts=2 sw=2 et:
