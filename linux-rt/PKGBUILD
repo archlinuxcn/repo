@@ -9,8 +9,8 @@ pkgname=('linux-rt' 'linux-rt-headers' 'linux-rt-docs') # Build realtime patched
 #pkgname=linux-custom       # Build kernel with a different name
 _kernelname=${pkgname#linux}
 _basekernel=3.10
-_releasever=18
-_rtpatchver=rt14
+_releasever=20
+_rtpatchver=rt17
 pkgrel=1
 _pkgver=${_basekernel}.${_releasever}
 pkgver=${_basekernel}.${_releasever}_${_rtpatchver}
@@ -28,8 +28,8 @@ source=("https://www.kernel.org/pub/linux/kernel/v3.x/linux-${_basekernel}.tar.x
         "${pkgname}.preset"
         'change-default-console-loglevel.patch')
 md5sums=('4f25cd5bec5f8d5a7d935b3f2ccb8481'
-         '8431ee4e2467fdfde47e31701813a265'
-         '8b0d7a0ba21f997a381ea710c598a364'
+         '6762bab77ec96530b8915728f3bfb813'
+         'ce551c2d06151e2662f078b6a7dad405'
          'd46f49f18b9d0010d40f1c9c1ef38a2f'
          '666b4b91843183f40555b48910020744'
          'eb14dcfd80c00852ef81ded6e826826a'
@@ -335,10 +335,3 @@ pkgname=linux-rt
 pkgdesc="The Linux Kernel and modules (with realtime preemption)."
 
 # vim:set ts=8 sts=2 sw=2 et:
-md5sums=('4f25cd5bec5f8d5a7d935b3f2ccb8481'
-         'e39b75595bf61d758087e1ddecd01a12'
-         'cb40a1a152801583e0b1e699c0234417'
-         'd46f49f18b9d0010d40f1c9c1ef38a2f'
-         '666b4b91843183f40555b48910020744'
-         'eb14dcfd80c00852ef81ded6e826826a'
-         'f3def2cefdcbb954c21d8505d23cc83c')
