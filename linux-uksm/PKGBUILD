@@ -33,7 +33,7 @@ true && pkgname=(linux-uksm linux-uksm-headers)
 _kernelname=-uksm
 _srcname=linux-3.12
 pkgver=3.12.1
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 url="http://kerneldedup.org/"
 license=('GPL2')
@@ -50,6 +50,7 @@ source=("http://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
         "${_bfqpath}/0003-block-bfq-add-Early-Queue-Merge-EQM-to-BFQ-v6r2-for-3.12.0.patch"
         'linux-uksm.preset'
         'change-default-console-loglevel.patch'
+        'btrfs-relocate-csums-properly-with-prealloc-ext.patch'
         'criu-no-expert.patch'
         'config'
         'config.x86_64')
@@ -69,6 +70,12 @@ prepare() {
     # allow criu without expert option set
     # patch from fedora
     patch -Np1 -i "${srcdir}/criu-no-expert.patch"
+
+    # fix critical flaw in btrfs balance code
+    # thanks for wonderwoffy  for bring this to my attention
+    # other major distros have included thiss patch, for example fedora
+    # http://kojipkgs.fedoraproject.org//packages/kernel/3.12.0/2.fc21/data/logs/x86_64/build.log
+    patch -Np1 -i "${srcdir}/btrfs-relocate-csums-properly-with-prealloc-ext.patch"
 
     msg "Patching source with BFQ patches"
     for p in $(ls ${srcdir}/000{1,2,3}-block*.patch); do
@@ -390,6 +397,7 @@ sha512sums=('4ba5797e0772726d05c9f2eee66dc6dc2a5033c749ef44764c805a83da739ed5d0c
             'c0ebf1ac63307e75742ca2d8a2523ce56694629eec1da5a1f4fe884a78bd330a98b45e6a17d6764470de3af48f94d3866d14a83f8cf58de7746b4165a674a68a'
             '6b5e2da5be509020134d2acfda8424f1e75fa681f0b8d5e01c6c68089da2f1398cbca58f6a85c05ac701682feec8c0d3fcf8267cefa8da391a7ada253413f771'
             '502192b5ce94c8254205f5ddb85bf50c5f1e78c768817b10dca3a7716a8c59d5e093842631acb51e3805cbf85522e0a9200942656f11bbb4ea1b7d61e24ddd78'
+            '35b3036ecd15d6d89c78a9709c9fc1edbc17497b1a04caf71e3501135fa04b4b87b586d224af63ea21545e865d1c54b86243327e0ddad887e847245e861b6f55'
             'fc7b67bad612fdc67f9dd16886188d7bbfe3b8e65eb271672fcd888212e5b9e893c2eafef8070dd6113133b7a0a1a9c0dff90833080b452a2a530166e30587df'
             'd203d2e45bc649f77dcbe39bd9e02ec0b30dccc74c1efb79c4370140b3d70fb540fb4c59f76c4d71662e4025964a9fad1cb635a314751f883cb08b6f79a92ef3'
             '9177c9cce92c2e51047d6ff05de617671b8dd6fec9afc2a8d5880b8f929d8649c7ab97dcea78071f1a02ad04287f4af93942d84e4eb2b483fa2d8729963bb7c4')
