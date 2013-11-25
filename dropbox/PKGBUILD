@@ -3,7 +3,7 @@
 # Contributor: David Manouchehri <d@32t.ca>
 
 pkgname=dropbox
-pkgver=2.4.6
+pkgver=2.4.7
 pkgrel=1
 pkgdesc="A free service that lets you bring your photos, docs, and videos anywhere and share them easily."
 arch=("i686" "x86_64")
@@ -19,12 +19,12 @@ options=('!strip' '!upx')
 _source_arch="x86"
 [ "$CARCH" = "x86_64" ] && _source_arch="x86_64"
 
-sha512sums=('09886323087e690320f6d42ce8517c9a4f40d3c93dbfc6bc31de1448fbf34c0d1d7d2545c6e4cca58ef1760cad7f98734902279f54354431946df14a4e0fdcdb'
+sha512sums=('9a9d0ac84f21a8cce80d8703d4439b0d3cfaf25bc476993bf0c6774e0622c110aa5188a3d26d02ac06a261ecd956231b7b2558994ae2758336d7f208bead78b4'
             'f480b7d8940c163a721d84db8fe7df8ec9e60d150b7119c9ec9d87f5af003c9a1fe88cdb1c6349d87ba2f23e56115d1a1f081e6e1107ce6e56b64a8efdbdc97b'
             'b3e0701afe90693b99d5e23bad6b8637bc27611a42c695d12b3b990d98bf010371b266322cd54c60ffd654ed44f56a85b1fcb51b30db991af60043dc22bf1897'
             '55b4b0c024c69787045a200f08129bdaaf450446c588b14f1044269021613c756e1422ece33c16c38b612183332dbdcdfb638859480717801285b7476fe5392b'
             'b08a50766681a55e3bf9f1721549218996dd4dbef183dce4967622a98a52fdcc47325de99794b40462692213bbe390f659cf48023b407ae4fce81997af4d46e2')
-[ "$CARCH" = "x86_64" ] && sha512sums[0]='0a20e293b5775781105956aca4fdb821e8da502e6b376d97b083565e393ee8e0963fb220c87a903acabb26eb48761d123e96e3c1a567708a62e55d775b8d26c7'
+[ "$CARCH" = "x86_64" ] && sha512sums[0]='6d5dc1ad1a2bc75d6a86dd48ac3fa6923ba7fa65be106cbdf589ba5a771d2e543f798817468a46e03a3b56a944e6ee89d51ea11630330ff840a47eb49852dc0a'
 
 source=("https://dl-web.dropbox.com/u/17/${pkgname}-lnx.${_source_arch}-${pkgver}.tar.gz"
         "dropbox.png"
