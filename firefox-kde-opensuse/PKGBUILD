@@ -8,7 +8,7 @@
 #_pgo=true
 
 pkgname=firefox-kde-opensuse
-pkgver=25.0
+pkgver=25.0.1
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
@@ -21,9 +21,10 @@ makedepends=('unzip' 'zip' 'diffutils' 'python2' 'yasm' 'mesa' 'imake'
              'xorg-server-xvfb' 'libpulse' 'gstreamer0.10-base')
 optdepends=('networkmanager: Location detection via available WiFi networks'
             'gstreamer0.10-base-plugins: vorbis decoding, ogg demuxing'
-            'gstreamer0.10-bad-plugins: aac, vp8 and opus decoding'
             'gstreamer0.10-good-plugins: webm and mp4 demuxing'
-            'gstreamer0.10-ugly-plugins: h.264 decoding'
+            'gstreamer0.10-bad-plugins: aac, vp8 and opus decoding'
+            'gstreamer0.10-ugly-plugins: h.264 and mp3 decoding'
+	    'gstreamer0.10-ffmpeg: more decoders'
             'libpulse: PulseAudio audio driver')
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
@@ -32,7 +33,7 @@ options=(!emptydirs)
 _patchrev=a15c18cb0ee6
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.bz2
-        mozconfig firefox.desktop firefox-install-dir.patch vendor.js kde.js
+        mozconfig firefox.desktop firefox-install-dir.patch vendor.js kde.js firefox-20.0.1-fixed-loading-icon.png
 	# Firefox patchset
 	$_patchurl/firefox-browser-css.patch
 	$_patchurl/firefox-kde.patch
@@ -89,10 +90,15 @@ prepare() {
   # WebRTC build tries to execute "python" and expects Python 2
   mkdir -p "$srcdir/path"
   ln -s /usr/bin/python2 "$srcdir/path/python"
+
+  # Fix tab loading icon (flickers with libpng 1.6)
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=841734
+  cp "$srcdir/firefox-20.0.1-fixed-loading-icon.png" \
+    browser/themes/linux/tabbrowser/loading.png
 }
 
 build() {
-  if [ -e /usr/bin/firefox ]; then
+  if pacman -T firefox && ! pacman -T "firefox=$pkgver"; then
     error "Please uninstall firefox temporarily before building it (pacman -Rdd ...)"
     exit 1
   fi
@@ -166,12 +172,13 @@ package() {
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
 
-sha256sums=('5463cc625ac2a06d4d33b43dfb6365da830eef11f3ef5c0512714baaded59272'
+sha256sums=('e5d0667faeec3a0372831b23d0c6804524e134d1ebc4b7e080042491678d4f0b'
             '49817a6ecf6fb2c8831cda126cfd5849551865cc7a2049f5ad6ad17b27df8925'
             '175d03cf3d8eb420d24a5a3072be69c9603e3ddacd3a83f68f49754eaecf6c5a'
             'ded67e8204bd5e1c0c5771c0d2c84ff80c998e1543711e7cd804cfe29e8dd1b0'
             '7044b77fb5d4113359144d24beccaf5d1e7cf62c660e3f5c1374bee5b2bf9c00'
             'b8cc5f35ec35fc96ac5c5a2477b36722e373dbb57eba87eb5ad1276e4df7236d'
+            '68e3a5b47c6d175cc95b98b069a15205f027cab83af9e075818d38610feb6213'
             'fb852af08b9c597cdd70ea2f143a286d79989e86f7cc706ad749b06cd27c3598'
             'd0cbca7fbf0a58c0407b4f45efa1157f66de6276b6377c1ca9a890cc99069e17'
             '1fd54e93db3a4d454ece5a6dc788a4ae36805eb497482add82a11ac5cf990562'
