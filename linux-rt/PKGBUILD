@@ -8,17 +8,18 @@ pkgbase=linux-rt
 pkgname=('linux-rt' 'linux-rt-headers' 'linux-rt-docs') # Build realtime patched -rt kernel
 #pkgname=linux-custom       # Build kernel with a different name
 _kernelname=${pkgname#linux}
-_basekernel=3.10
-_releasever=20
-_rtpatchver=rt17
+_basekernel=3.12
+_releasever=1
+_rtpatchver=rt4
 pkgrel=1
 _pkgver=${_basekernel}.${_releasever}
 pkgver=${_basekernel}.${_releasever}_${_rtpatchver}
 arch=('i686' 'x86_64')
 url="http://rt.wiki.kernel.org/"
 license=('GPL2')
-makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc' 'ncurses')
+makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc')
 options=('!strip')
+
 source=("https://www.kernel.org/pub/linux/kernel/v3.x/linux-${_basekernel}.tar.xz"
         "https://www.kernel.org/pub/linux/kernel/v3.x/patch-${_pkgver}.xz"
         "https://www.kernel.org/pub/linux/kernel/projects/rt/${_basekernel}/patch-${_pkgver}-${_rtpatchver}.patch.xz"
@@ -26,14 +27,16 @@ source=("https://www.kernel.org/pub/linux/kernel/v3.x/linux-${_basekernel}.tar.x
         'config' 'config.x86_64'
         # standard config files for mkinitcpio ramdisk
         "${pkgname}.preset"
-        'change-default-console-loglevel.patch')
-md5sums=('4f25cd5bec5f8d5a7d935b3f2ccb8481'
-         '6762bab77ec96530b8915728f3bfb813'
-         'ce551c2d06151e2662f078b6a7dad405'
-         'd46f49f18b9d0010d40f1c9c1ef38a2f'
-         '666b4b91843183f40555b48910020744'
+        'change-default-console-loglevel.patch'
+        'criu-no-expert.patch')
+md5sums=('cc6ee608854e0da4b64f6c1ff8b6398c'
+         '5a8cb5a659baeeb6df3fe22de8d32df6'
+         '51903e8f56e0447ef995420dd76c5929'
+         '8fd4828d23f35c169d9d81bb80a19c02'
+         '5c7f7fac55a50d3926f144a143756c24'
          'eb14dcfd80c00852ef81ded6e826826a'
-         'f3def2cefdcbb954c21d8505d23cc83c')
+         '98beb36f9b8cf16e58de2483ea9985e3'
+         'd50c1ac47394e9aec637002ef3392bd1')
 
 prepare() {
   cd "${srcdir}/linux-${_basekernel}"
@@ -54,7 +57,12 @@ prepare() {
   # (relevant patch sent upstream: https://lkml.org/lkml/2011/7/26/227)
   msg "applying change-default-console-loglevel.patch"
   patch -Np1 -i "${srcdir}/change-default-console-loglevel.patch"
-  
+
+  # allow criu without expert option set
+  # patch from fedora
+  msg "applying criu-no-expert.patch"
+  patch -Np1 -i "${srcdir}/criu-no-expert.patch"
+
   msg "All patches have successfully been applied"
 
   if [ "${CARCH}" = "x86_64" ]; then
@@ -117,9 +125,9 @@ package_linux-rt() {
   #groups=('base')
   depends=('coreutils' 'linux-firmware' 'kmod' 'mkinitcpio>=0.7')
   optdepends=('crda: to set the correct wireless channels of your country')
-  provides=('kernel26rt')
-  conflicts=('kernel26rt')
-  replaces=('kernel26rt')
+  #provides=('kernel26rt')
+  #conflicts=('kernel26rt')
+  #replaces=('kernel26rt')
   backup=("etc/mkinitcpio.d/${pkgname}.preset")
   install=${pkgname}.install
 
@@ -331,7 +339,7 @@ package_linux-rt-docs() {
 }
 
 # workaround for AUR not accepting split packages
-pkgname=linux-rt
+pkgname=${pkgbase}
 pkgdesc="The Linux Kernel and modules (with realtime preemption)."
 
 # vim:set ts=8 sts=2 sw=2 et:
