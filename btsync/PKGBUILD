@@ -4,11 +4,11 @@
 # Contributor: Justin Patera serialhex@gmail.com
 
 pkgname=btsync
-pkgver=1.2.73
-pkgrel=2
+pkgver=1.2.82
+pkgrel=1
 pkgdesc="BitTorrent Sync - automatically sync files via secure, distributed technology"
 license=("custom:btsync")
-arch=('i686' 'x86_64' 'armv6' 'armv7' 'armv6h' 'armv7h')
+arch=('i686' 'x86_64' 'arm' 'armv6' 'armv7' 'armv6h' 'armv7h')
 url="http://www.bittorrent.com/sync"
 install=btsync.install
 backup=('etc/btsync.conf')
@@ -17,13 +17,13 @@ source=(btsync.service btsync@.service)
 sha1sums=('9187bafe0cc30895d55b8a8a69074ebdca325e4c' '0e9a7888776958d160f2b719e61257efc60d312a')
 if [ "$CARCH" == x86_64 ]; then
 	source+=("${pkgname}_x64-${pkgver}.tar.gz::http://download-lb.utorrent.com/endpoint/btsync/os/linux-x64/track/stable")
-	sha1sums+=('6c71ff2dc7f58b9832906653bcb29ad0491275b4')
+	sha1sums+=('4965cb7ed5154613ab27cc51c846b89ec53a53a0')
 elif [ "$CARCH" == i686 ]; then
 	source+=("${pkgname}_i386-${pkgver}.tar.gz::http://download-lb.utorrent.com/endpoint/btsync/os/linux-i386/track/stable")
-	sha1sums+=('2ce780e800ac3cefd5eea61a35696007bd95d377')
-elif [[ "$CARCH" == armv6 || "$CARCH" == armv6h || "$CARCH" == armv7 || "$CARCH" == armv7h ]]; then
+	sha1sums+=('7c36a2eca2545cb3c2ac43981b5c42ace4cf2e18')
+elif [[ "$CARCH" == arm ||  "$CARCH" == armv6 || "$CARCH" == armv6h || "$CARCH" == armv7 || "$CARCH" == armv7h ]]; then
 	source+=("${pkgname}_arm-${pkgver}.tar.gz::http://download-lb.utorrent.com/endpoint/btsync/os/linux-arm/track/stable")
-	sha1sums+=('8164d689ab16b6fd0478f7142958458c670b7f81')
+	sha1sums+=('f5f6506339736d5ce0687865d9696f176bd063dc')
 fi
 
 package() {
