@@ -11,7 +11,7 @@ _kernelname=${pkgname#linux}
 _basekernel=3.12
 _releasever=1
 _rtpatchver=rt4
-pkgrel=1
+pkgrel=2
 _pkgver=${_basekernel}.${_releasever}
 pkgver=${_basekernel}.${_releasever}_${_rtpatchver}
 arch=('i686' 'x86_64')
@@ -32,8 +32,8 @@ source=("https://www.kernel.org/pub/linux/kernel/v3.x/linux-${_basekernel}.tar.x
 md5sums=('cc6ee608854e0da4b64f6c1ff8b6398c'
          '5a8cb5a659baeeb6df3fe22de8d32df6'
          '51903e8f56e0447ef995420dd76c5929'
-         '8fd4828d23f35c169d9d81bb80a19c02'
-         '5c7f7fac55a50d3926f144a143756c24'
+         'dcc0ab80448206e309d0bd7390158ee7'
+         '44f12b268a3394d37be0bb69e4abeb82'
          'eb14dcfd80c00852ef81ded6e826826a'
          '98beb36f9b8cf16e58de2483ea9985e3'
          'd50c1ac47394e9aec637002ef3392bd1')
