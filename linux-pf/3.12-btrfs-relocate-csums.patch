@@ -1,0 +1,63 @@
+From 4577b014d1bc3db386da3246f625888fc48083a9 Mon Sep 17 00:00:00 2001
+From: Josef Bacik <jbacik@fusionio.com>
+Date: Fri, 27 Sep 2013 13:33:09 +0000
+Subject: Btrfs: relocate csums properly with prealloc extents
+
+A user reported a problem where they were getting csum errors when running a
+balance and running systemd's journal.  This is because systemd is awesome and
+fallocate()'s its log space and writes into it.  Unfortunately we assume that
+when we read in all the csums for an extent that they are sequential starting at
+the bytenr we care about.  This obviously isn't the case for prealloc extents,
+where we could have written to the middle of the prealloc extent only, which
+means the csum would be for the bytenr in the middle of our range and not the
+front of our range.  Fix this by offsetting the new bytenr we are logging to
+based on the original bytenr the csum was for.  With this patch I no longer see
+the csum errors I was seeing.  Thanks,
+
+Cc: stable@vger.kernel.org
+Reported-by: Chris Murphy <lists@colorremedies.com>
+Signed-off-by: Josef Bacik <jbacik@fusionio.com>
+Signed-off-by: Chris Mason <chris.mason@fusionio.com>
+---
+diff --git a/fs/btrfs/relocation.c b/fs/btrfs/relocation.c
+index dec4f5a..0359eec 100644
+--- a/fs/btrfs/relocation.c
++++ b/fs/btrfs/relocation.c
+@@ -4472,6 +4472,7 @@ int btrfs_reloc_clone_csums(struct inode *inode, u64 file_pos, u64 len)
+ 	struct btrfs_root *root = BTRFS_I(inode)->root;
+ 	int ret;
+ 	u64 disk_bytenr;
++	u64 new_bytenr;
+ 	LIST_HEAD(list);
+ 
+ 	ordered = btrfs_lookup_ordered_extent(inode, file_pos);
+@@ -4483,13 +4484,24 @@ int btrfs_reloc_clone_csums(struct inode *inode, u64 file_pos, u64 len)
+ 	if (ret)
+ 		goto out;
+ 
+-	disk_bytenr = ordered->start;
+ 	while (!list_empty(&list)) {
+ 		sums = list_entry(list.next, struct btrfs_ordered_sum, list);
+ 		list_del_init(&sums->list);
+ 
+-		sums->bytenr = disk_bytenr;
+-		disk_bytenr += sums->len;
++		/*
++		 * We need to offset the new_bytenr based on where the csum is.
++		 * We need to do this because we will read in entire prealloc
++		 * extents but we may have written to say the middle of the
++		 * prealloc extent, so we need to make sure the csum goes with
++		 * the right disk offset.
++		 *
++		 * We can do this because the data reloc inode refers strictly
++		 * to the on disk bytes, so we don't have to worry about
++		 * disk_len vs real len like with real inodes since it's all
++		 * disk length.
++		 */
++		new_bytenr = ordered->start + (sums->bytenr - disk_bytenr);
++		sums->bytenr = new_bytenr;
+ 
+ 		btrfs_add_ordered_sum(inode, ordered, sums);
+ 	}
+--
+cgit v0.9.2
