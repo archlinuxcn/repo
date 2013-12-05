@@ -1,0 +1,211 @@
+diff -ur nsis-2.43-src/SCons/Config/gnu nsis-2.43-src-64bit-fixes/SCons/Config/gnu
+--- nsis-2.43-src/SCons/Config/gnu	2009-02-05 01:52:28.000000000 +0100
++++ nsis-2.43-src-64bit-fixes/SCons/Config/gnu	2009-02-25 07:59:44.000000000 +0100
+@@ -95,8 +95,6 @@
+ makensis_env.Append(CXXFLAGS = ['-Wall'])                 # all warnings
+ 
+ conf = FlagsConfigure(makensis_env)
+-conf.CheckCompileFlag('-m32')                     #
+-conf.CheckLinkFlag('-m32')                        #
+ conf.CheckLinkFlag('$MAP_FLAG')                   # generate map file
+ if not defenv['DEBUG'] and defenv['STRIP'] and defenv['STRIP_CP']:
+ 	TestStrip(conf)                                 # strip
+@@ -149,8 +147,6 @@
+ ### cross-platform util environment adjustments
+ 
+ conf = FlagsConfigure(cp_util_env)
+-conf.CheckCompileFlag('-m32')
+-conf.CheckLinkFlag('-m32')
+ if not defenv['DEBUG'] and defenv['STRIP'] and defenv['STRIP_CP']:
+ 	TestStrip(conf)                                 # strip
+ conf.Finish()
+@@ -160,8 +156,6 @@
+ test_env = defenv.Clone()
+ test_env.Append(CPPPATH = ['#$BUILD_CONFIG'])
+ conf = FlagsConfigure(test_env)
+-conf.CheckCompileFlag('-m32')
+-conf.CheckLinkFlag('-m32')
+ conf.Finish()
+ 
+ ### weird GCC requirements
+diff -ur nsis-2.43-src/Source/DialogTemplate.cpp nsis-2.43-src-64bit-fixes/Source/DialogTemplate.cpp
+--- nsis-2.43-src/Source/DialogTemplate.cpp	2007-11-30 10:54:13.000000000 +0100
++++ nsis-2.43-src-64bit-fixes/Source/DialogTemplate.cpp	2009-02-25 07:59:44.000000000 +0100
+@@ -74,7 +74,7 @@
+     if (IS_INTRESOURCE(x)) { \
+       *(WORD*)seeker = 0xFFFF; \
+       seeker += sizeof(WORD); \
+-      *(WORD*)seeker = ConvertEndianness(WORD(DWORD(x))); \
++      *(WORD*)seeker = ConvertEndianness(WORD(long(x))); \
+       seeker += sizeof(WORD); \
+     } \
+     else { \
+@@ -622,7 +622,7 @@
+     }
+   }
+ 
+-  assert((DWORD) seeker - (DWORD) pbDlg == dwSize);
++  assert((long) seeker - (long) pbDlg == dwSize);
+ 
+   // DONE!
+   return pbDlg;
+diff -ur nsis-2.43-src/Source/mmap.cpp nsis-2.43-src-64bit-fixes/Source/mmap.cpp
+--- nsis-2.43-src/Source/mmap.cpp	2009-02-01 15:44:30.000000000 +0100
++++ nsis-2.43-src-64bit-fixes/Source/mmap.cpp	2009-02-25 07:59:44.000000000 +0100
+@@ -322,7 +322,7 @@
+   if (!pView)
+     return;
+ 
+-  unsigned int alignment = ((unsigned int)pView) % m_iAllocationGranularity;
++  unsigned int alignment = ((unsigned long)pView) % m_iAllocationGranularity;
+   pView = (char *)pView - alignment;
+   size += alignment;
+ #ifdef _WIN32
+diff -ur nsis-2.43-src/Source/Platform.h nsis-2.43-src-64bit-fixes/Source/Platform.h
+--- nsis-2.43-src/Source/Platform.h	2009-02-01 15:44:30.000000000 +0100
++++ nsis-2.43-src-64bit-fixes/Source/Platform.h	2009-02-25 07:59:44.000000000 +0100
+@@ -166,7 +166,7 @@
+ #    define MAKEINTRESOURCE MAKEINTRESOURCEA
+ #  endif
+ #  ifndef IMAGE_FIRST_SECTION
+-#    define IMAGE_FIRST_SECTION(h) ( PIMAGE_SECTION_HEADER( (DWORD) h + \
++#    define IMAGE_FIRST_SECTION(h) ( PIMAGE_SECTION_HEADER( (long) h + \
+                                      FIELD_OFFSET(IMAGE_NT_HEADERS, OptionalHeader) + \
+                                      FIX_ENDIAN_INT16(PIMAGE_NT_HEADERS(h)->FileHeader.SizeOfOptionalHeader) ) )
+ #  endif
+@@ -198,7 +198,7 @@
+ #endif
+ 
+ #ifndef ULONG_PTR
+-#  define ULONG_PTR DWORD
++#  define ULONG_PTR ULONG
+ #endif
+ 
+ #ifndef IDC_HAND
+@@ -703,7 +703,7 @@
+   WORD e_oemid;
+   WORD e_oeminfo;
+   WORD e_res2[10];
+-  LONG e_lfanew;
++  DWORD e_lfanew;
+ } IMAGE_DOS_HEADER,*PIMAGE_DOS_HEADER;
+ #  pragma pack()
+ #  pragma pack(4)
+diff -ur nsis-2.43-src/Source/Plugins.cpp nsis-2.43-src-64bit-fixes/Source/Plugins.cpp
+--- nsis-2.43-src/Source/Plugins.cpp	2009-02-01 15:44:30.000000000 +0100
++++ nsis-2.43-src-64bit-fixes/Source/Plugins.cpp	2009-02-25 07:59:44.000000000 +0100
+@@ -136,7 +136,7 @@
+         DWORD prd = FIX_ENDIAN_INT32(sections[i].PointerToRawData);
+         PIMAGE_EXPORT_DIRECTORY exports = PIMAGE_EXPORT_DIRECTORY(&dlldata[0] + prd + ExportDirVA - va);
+         DWORD na = FIX_ENDIAN_INT32(exports->AddressOfNames);
+-        unsigned long *names = (unsigned long*)((unsigned long) exports + (char *) na - ExportDirVA);
++        unsigned int *names = (unsigned int*)((unsigned long) exports + (char *) na - ExportDirVA);
+         for (unsigned long j = 0; j < FIX_ENDIAN_INT32(exports->NumberOfNames); j++)
+         {
+           const string name = string((char*)exports + FIX_ENDIAN_INT32(names[j]) - ExportDirVA);
+diff -ur nsis-2.43-src/Source/ResourceEditor.cpp nsis-2.43-src-64bit-fixes/Source/ResourceEditor.cpp
+--- nsis-2.43-src/Source/ResourceEditor.cpp	2009-02-05 01:50:12.000000000 +0100
++++ nsis-2.43-src-64bit-fixes/Source/ResourceEditor.cpp	2009-02-25 07:59:44.000000000 +0100
+@@ -684,7 +684,7 @@
+     rdDir.NumberOfIdEntries = ConvertEndianness(rdDir.NumberOfIdEntries);
+ 
+     CopyMemory(seeker, &rdDir, sizeof(IMAGE_RESOURCE_DIRECTORY));
+-    crd->m_dwWrittenAt = DWORD(seeker);
++    crd->m_dwWrittenAt = long(seeker);
+     seeker += sizeof(IMAGE_RESOURCE_DIRECTORY);
+ 
+     for (int i = 0; i < crd->CountEntries(); i++) {
+@@ -705,7 +705,7 @@
+       rDirE.UName.NameString.NameIsString = (crd->GetEntry(i)->HasName()) ? 1 : 0;
+ 
+       CopyMemory(seeker, &rDirE, sizeof(MY_IMAGE_RESOURCE_DIRECTORY_ENTRY));
+-      crd->GetEntry(i)->m_dwWrittenAt = DWORD(seeker);
++      crd->GetEntry(i)->m_dwWrittenAt = long(seeker);
+       seeker += sizeof(MY_IMAGE_RESOURCE_DIRECTORY_ENTRY);
+     }
+     qDirs.pop();
+@@ -721,7 +721,7 @@
+     rDataE.Size = ConvertEndianness(cRDataE->GetSize());
+ 
+     CopyMemory(seeker, &rDataE, sizeof(IMAGE_RESOURCE_DATA_ENTRY));
+-    cRDataE->m_dwWrittenAt = DWORD(seeker);
++    cRDataE->m_dwWrittenAt = long(seeker);
+     seeker += sizeof(IMAGE_RESOURCE_DATA_ENTRY);
+ 
+     qDataEntries.pop();
+@@ -733,7 +733,7 @@
+   while (!qStrings.empty()) {
+     CResourceDirectoryEntry* cRDirE = qStrings.front();
+ 
+-    PMY_IMAGE_RESOURCE_DIRECTORY_ENTRY(cRDirE->m_dwWrittenAt)->UName.NameString.NameOffset = ConvertEndianness(DWORD(seeker) - DWORD(pbRsrcSec));
++    PMY_IMAGE_RESOURCE_DIRECTORY_ENTRY(cRDirE->m_dwWrittenAt)->UName.NameString.NameOffset = ConvertEndianness(long(seeker) - long(pbRsrcSec));
+ 
+     WCHAR* szName = cRDirE->GetName();
+     WORD iLen = winchar_strlen(szName) + 1;
+@@ -764,7 +764,7 @@
+   /*
+    * Set all of the directory entries offsets.
+    */
+-  SetOffsets(m_cResDir, DWORD(pbRsrcSec));
++  SetOffsets(m_cResDir, long(pbRsrcSec));
+ }
+ 
+ // Sets the offsets in directory entries
+@@ -887,7 +887,7 @@
+ // Returns -1 if can not be found
+ int CResourceDirectory::Find(WCHAR* szName) {
+   if (IS_INTRESOURCE(szName))
+-    return Find((WORD) (DWORD) szName);
++    return Find((WORD) (long) szName);
+   else
+     if (szName[0] == '#')
+       return Find(WORD(winchar_stoi(szName + 1)));
+@@ -965,7 +965,7 @@
+   if (IS_INTRESOURCE(szName)) {
+     m_bHasName = false;
+     m_szName = 0;
+-    m_wId = (WORD) (DWORD) szName;
++    m_wId = (WORD) (long) szName;
+   }
+   else {
+     m_bHasName = true;
+@@ -979,7 +979,7 @@
+   if (IS_INTRESOURCE(szName)) {
+     m_bHasName = false;
+     m_szName = 0;
+-    m_wId = (WORD) (DWORD) szName;
++    m_wId = (WORD) (long) szName;
+   }
+   else {
+     m_bHasName = true;
+diff -ur nsis-2.43-src/Source/util.cpp nsis-2.43-src-64bit-fixes/Source/util.cpp
+--- nsis-2.43-src/Source/util.cpp	2009-02-01 15:44:30.000000000 +0100
++++ nsis-2.43-src-64bit-fixes/Source/util.cpp	2009-02-25 07:59:44.000000000 +0100
+@@ -77,9 +77,9 @@
+   }
+ 
+   if (width != 0) {
+-    LONG biWidth;
++    DWORD biWidth;
+     fseek(f, 18, SEEK_SET); // Seek to the width member of the header
+-    fread(&biWidth, sizeof(LONG), 1, f);
++    fread(&biWidth, sizeof(DWORD), 1, f);
+     FIX_ENDIAN_INT32_INPLACE(biWidth);
+     if (width != biWidth) {
+       fclose(f);
+@@ -88,12 +88,12 @@
+   }
+ 
+   if (height != 0) {
+-    LONG biHeight;
++    DWORD biHeight;
+     fseek(f, 22, SEEK_SET); // Seek to the height member of the header
+-    fread(&biHeight, sizeof(LONG), 1, f);
++    fread(&biHeight, sizeof(DWORD), 1, f);
+     FIX_ENDIAN_INT32_INPLACE(biHeight);
+     // Bitmap height can be negative too...
+-    if (height != abs(biHeight)) {
++    if (height != abs((long int)biHeight)) {
+       fclose(f);
+       return -3;
+     }

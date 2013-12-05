@@ -1,0 +1,22 @@
+diff -ruN nsis-2.46-src/Source/util.cpp nsis-2.46-src-patched/Source/util.cpp
+--- nsis-2.46-src/Source/util.cpp	2012-06-10 09:48:20.070577829 +0100
++++ nsis-2.46-src-patched/Source/util.cpp	2012-06-10 09:49:25.087248267 +0100
+@@ -26,7 +26,6 @@
+ 
+ #ifndef _WIN32
+ #  include <ctype.h>
+-#  include <unistd.h> // for close(2)
+ #  include <fcntl.h> // for open(2)
+ #  include <iconv.h>
+ #  include <locale.h>
+diff -ruN nsis-2.46-src/Source/util.h nsis-2.46-src-patched/Source/util.h
+--- nsis-2.46-src/Source/util.h	2009-03-28 09:47:26.000000000 +0000
++++ nsis-2.46-src-patched/Source/util.h	2012-06-10 09:49:38.440582371 +0100
+@@ -25,6 +25,7 @@
+ #ifndef _WIN32
+ #  include <iconv.h>
+ #  include <stdio.h>
++#  include <unistd.h> // for close(2)
+ #endif
+ 
+ 
