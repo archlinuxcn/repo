@@ -1,11 +1,11 @@
-commit 83c98fc77345c767bc5ec830eb183e114ed8d27c
+commit 64f04b55144e33d6fe81579909704e6c065713ce
 Author: John Schoenick <jschoenick@mozilla.com>
-Date:   Fri Nov 8 11:15:37 2013 -0800
+Date:   Sat Dec 7 11:57:40 2013 -0800
 
-    wine-multimedia for wine-1.7.6
+    Wine multimedia for wine-1.7.8
 
 diff --git a/configure b/configure
-index 5ef21e5..6052147 100755
+index 81a474f..879ef8f 100755
 --- a/configure
 +++ b/configure
 @@ -658,6 +658,8 @@ OSS4INCL
@@ -17,7 +17,7 @@ index 5ef21e5..6052147 100755
  LIBGETTEXTPO
  ZLIB
  FREETYPE_LIBS
-@@ -834,6 +836,7 @@ with_osmesa
+@@ -835,6 +837,7 @@ with_osmesa
  with_oss
  with_png
  with_pthread
@@ -25,7 +25,7 @@ index 5ef21e5..6052147 100755
  with_sane
  with_tiff
  with_v4l
-@@ -2045,6 +2048,7 @@ Optional Packages:
+@@ -2048,6 +2051,7 @@ Optional Packages:
    --without-oss           do not use the OSS sound support
    --without-png           do not use PNG
    --without-pthread       do not use the pthread library
@@ -33,7 +33,7 @@ index 5ef21e5..6052147 100755
    --without-sane          do not use SANE (scanner support)
    --without-tiff          do not use TIFF
    --without-v4l           do not use v4l1 (v4l support)
-@@ -3274,6 +3278,12 @@ if test "${with_pthread+set}" = set; then :
+@@ -3283,6 +3287,12 @@ if test "${with_pthread+set}" = set; then :
  fi
  
  
@@ -46,7 +46,7 @@ index 5ef21e5..6052147 100755
  # Check whether --with-sane was given.
  if test "${with_sane+set}" = set; then :
    withval=$with_sane;
-@@ -11712,6 +11722,87 @@ esac
+@@ -11689,6 +11699,87 @@ esac
  fi
  fi
  
@@ -134,7 +134,7 @@ index 5ef21e5..6052147 100755
  if test "x$with_gstreamer" != "xno"
  then
      if test -n "$GSTREAMER_CFLAGS"; then :
-@@ -12989,12 +13080,13 @@ fi
+@@ -13026,12 +13117,13 @@ fi
  
  test -n "$ALSALIBS" || enable_winealsa_drv=${enable_winealsa_drv:-no}
  test -n "$COREAUDIO" || enable_winecoreaudio_drv=${enable_winecoreaudio_drv:-no}
@@ -150,19 +150,19 @@ index 5ef21e5..6052147 100755
  then
      as_fn_append wine_warnings "|No sound system was found. Windows applications will be silent."
  fi
-@@ -17203,6 +17295,7 @@ wine_fn_config_dll winemp3.acm enable_winemp3_acm
+@@ -17281,6 +17373,7 @@ wine_fn_config_dll winemp3.acm enable_winemp3_acm
  wine_fn_config_dll wineoss.drv enable_wineoss_drv
- wine_fn_config_dll wineps.drv enable_wineps_drv po
+ wine_fn_config_dll wineps.drv enable_wineps_drv clean,po
  wine_fn_config_dll wineps16.drv16 enable_win16
 +wine_fn_config_dll winepulse.drv enable_winepulse_drv
  wine_fn_config_dll wineqtdecoder enable_wineqtdecoder
  wine_fn_config_dll winex11.drv enable_winex11_drv
  wine_fn_config_dll wing.dll16 enable_win16
 diff --git a/configure.ac b/configure.ac
-index 63435d2..3b97b06 100644
+index 0124652..6a3d59c 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -67,6 +67,7 @@ AC_ARG_WITH(oss,       AS_HELP_STRING([--without-oss],[do not use the OSS sound
+@@ -68,6 +68,7 @@ AC_ARG_WITH(oss,       AS_HELP_STRING([--without-oss],[do not use the OSS sound
  AC_ARG_WITH(png,       AS_HELP_STRING([--without-png],[do not use PNG]))
  AC_ARG_WITH(pthread,   AS_HELP_STRING([--without-pthread],[do not use the pthread library]),
              [if test "x$withval" = "xno"; then ac_cv_header_pthread_h=no; fi])
@@ -170,7 +170,7 @@ index 63435d2..3b97b06 100644
  AC_ARG_WITH(sane,      AS_HELP_STRING([--without-sane],[do not use SANE (scanner support)]))
  AC_ARG_WITH(tiff,      AS_HELP_STRING([--without-tiff],[do not use TIFF]))
  AC_ARG_WITH(v4l,       AS_HELP_STRING([--without-v4l],[do not use v4l1 (v4l support)]))
-@@ -1541,6 +1542,30 @@ then
+@@ -1522,6 +1523,30 @@ then
            [GetText ${notice_platform}development files not found (or too old), po files can't be rebuilt.])
  fi
  
@@ -201,7 +201,7 @@ index 63435d2..3b97b06 100644
  dnl **** Check for gstreamer ****
  if test "x$with_gstreamer" != "xno"
  then
-@@ -1759,13 +1784,14 @@ WINE_CHECK_SONAME(odbc,SQLConnect,,[AC_DEFINE_UNQUOTED(SONAME_LIBODBC,["libodbc.
+@@ -1746,13 +1771,14 @@ fi
  dnl **** Disable unsupported winmm drivers ****
  test -n "$ALSALIBS" || enable_winealsa_drv=${enable_winealsa_drv:-no}
  test -n "$COREAUDIO" || enable_winecoreaudio_drv=${enable_winecoreaudio_drv:-no}
@@ -218,9 +218,9 @@ index 63435d2..3b97b06 100644
  then
      WINE_WARNING([No sound system was found. Windows applications will be silent.])
  fi
-@@ -3245,6 +3271,7 @@ WINE_CONFIG_DLL(winemp3.acm)
+@@ -3249,6 +3275,7 @@ WINE_CONFIG_DLL(winemp3.acm)
  WINE_CONFIG_DLL(wineoss.drv)
- WINE_CONFIG_DLL(wineps.drv,,[po])
+ WINE_CONFIG_DLL(wineps.drv,,[clean,po])
  WINE_CONFIG_DLL(wineps16.drv16,enable_win16)
 +WINE_CONFIG_DLL(winepulse.drv)
  WINE_CONFIG_DLL(wineqtdecoder)
@@ -514,7 +514,7 @@ index a8f5f42..b2342e3 100644
      const DSBUFFERDESC *dsbd) DECLSPEC_HIDDEN;
  void primarybuffer_destroy(IDirectSoundBufferImpl *This) DECLSPEC_HIDDEN;
 diff --git a/dlls/dsound/mixer.c b/dlls/dsound/mixer.c
-index 282808e..007180c 100644
+index 43b7dca..007180c 100644
 --- a/dlls/dsound/mixer.c
 +++ b/dlls/dsound/mixer.c
 @@ -251,7 +251,8 @@ static UINT cp_fields_resample(IDirectSoundBufferImpl *dsb, UINT count, float *f
@@ -642,7 +642,7 @@ index 282808e..007180c 100644
  
  				*all_stopped = FALSE;
  			}
-@@ -572,85 +579,29 @@ static void DSOUND_MixToPrimary(const DirectSoundDevice *device, DWORD writepos,
+@@ -572,86 +579,29 @@ static void DSOUND_MixToPrimary(const DirectSoundDevice *device, DWORD writepos,
   * Returns:  None
   */
  
@@ -680,8 +680,6 @@ index 282808e..007180c 100644
 -	if(!prebuf_bytes)
 -		return;
 -
--	device->in_mmdev_bytes += prebuf_bytes;
--
 -	if(prebuf_bytes + read_offs_bytes > device->buflen){
 -		DWORD chunk_bytes = device->buflen - read_offs_bytes;
 -		prebuf_frames = chunk_bytes / device->pwfx->nBlockAlign;
@@ -712,6 +710,8 @@ index 282808e..007180c 100644
  		return;
  	}
  
+-	device->in_mmdev_bytes += prebuf_frames * device->pwfx->nBlockAlign;
+-
 -	/* check if anything wrapped */
 -	if(prebuf_bytes > 0){
 -		prebuf_frames = prebuf_bytes / device->pwfx->nBlockAlign;
@@ -729,6 +729,7 @@ index 282808e..007180c 100644
 -			WARN("ReleaseBuffer failed: %08x\n", hr);
 -			return;
 -		}
+-		device->in_mmdev_bytes += prebuf_frames * device->pwfx->nBlockAlign;
 -	}
 -
 -	TRACE("in_mmdev_bytes now = %i\n", device->in_mmdev_bytes);
@@ -736,7 +737,7 @@ index 282808e..007180c 100644
  }
  
  /**
-@@ -663,12 +614,12 @@ static void DSOUND_WaveQueue(DirectSoundDevice *device, BOOL force)
+@@ -664,12 +614,12 @@ static void DSOUND_WaveQueue(DirectSoundDevice *device, BOOL force)
   * secondary->buffer (secondary format)
   *   =[Resample]=> device->tmp_buffer (float format)
   *   =[Volume]=> device->tmp_buffer (float format)
@@ -752,7 +753,7 @@ index 282808e..007180c 100644
  	HRESULT hr;
  
  	TRACE("(%p)\n", device);
-@@ -682,161 +633,68 @@ static void DSOUND_PerformMix(DirectSoundDevice *device)
+@@ -683,161 +633,68 @@ static void DSOUND_PerformMix(DirectSoundDevice *device)
  		LeaveCriticalSection(&device->mixlock);
  		return;
  	}
@@ -1642,7 +1643,7 @@ index e84fb26..5be8a8d 100644
      hr = IAudioClient_Start(ac);
      ok(hr == S_OK, "Start failed: %08x\n", hr);
 diff --git a/dlls/mmdevapi/tests/render.c b/dlls/mmdevapi/tests/render.c
-index 2755dbf..26bb29d 100644
+index 38495df..19b5b56 100644
 --- a/dlls/mmdevapi/tests/render.c
 +++ b/dlls/mmdevapi/tests/render.c
 @@ -477,6 +477,169 @@ static void test_formats(AUDCLNT_SHAREMODE mode)
@@ -1840,7 +1841,7 @@ index 2755dbf..26bb29d 100644
  
      /* test releasing a playing stream */
      hr = IAudioClient_Start(ac);
-@@ -934,7 +1097,7 @@ static void test_clock(int share)
+@@ -945,7 +1108,7 @@ static void test_clock(int share)
      if (share)
      ok(gbsize == bufsize,
         "BufferSize %u at rate %u\n", gbsize, pwfx->nSamplesPerSec);
@@ -1849,7 +1850,7 @@ index 2755dbf..26bb29d 100644
      ok(gbsize == parts * fragment || gbsize == MulDiv(bufsize, 1, 1024) * 1024,
         "BufferSize %u misfits fragment size %u at rate %u\n", gbsize, fragment, pwfx->nSamplesPerSec);
  
-@@ -954,7 +1117,7 @@ static void test_clock(int share)
+@@ -965,7 +1128,7 @@ static void test_clock(int share)
      trace("Clock Frequency %u\n", (UINT)freq);
  
      /* MSDN says it's arbitrary units, but shared mode is unlikely to change */
@@ -1858,7 +1859,7 @@ index 2755dbf..26bb29d 100644
          ok(freq == pwfx->nSamplesPerSec * pwfx->nBlockAlign,
             "Clock Frequency %u\n", (UINT)freq);
      else
-@@ -982,7 +1145,7 @@ static void test_clock(int share)
+@@ -993,7 +1156,7 @@ static void test_clock(int share)
      ok(hr == S_OK, "GetBuffer failed: %08x\n", hr);
      trace("data at %p\n", data);
  
@@ -1867,7 +1868,7 @@ index 2755dbf..26bb29d 100644
          wave_generate_tone(pwfx, data, avail) : AUDCLNT_BUFFERFLAGS_SILENT);
      ok(hr == S_OK, "ReleaseBuffer failed: %08x\n", hr);
      if(hr == S_OK) sum += avail;
-@@ -1019,8 +1182,7 @@ static void test_clock(int share)
+@@ -1030,8 +1193,7 @@ static void test_clock(int share)
      ok(hr == S_OK, "GetPosition failed: %08x\n", hr);
      ok(pos >= last, "Position %u vs. last %u\n", (UINT)pos,(UINT)last);
      last = pos;
@@ -1877,7 +1878,7 @@ index 2755dbf..26bb29d 100644
  
      hr = IAudioClient_Start(ac); /* #2 */
      ok(hr == S_OK, "Start failed: %08x\n", hr);
-@@ -1053,12 +1215,11 @@ static void test_clock(int share)
+@@ -1064,12 +1226,11 @@ static void test_clock(int share)
      ok(pos * pwfx->nSamplesPerSec <= sum * freq, "Position %u > written %u\n", (UINT)pos, sum);
      /* Prove that Stop must not drop frames (in shared mode). */
      ok(pad ? pos > last : pos >= last, "Position %u vs. last %u\n", (UINT)pos,(UINT)last);
@@ -1893,7 +1894,7 @@ index 2755dbf..26bb29d 100644
      last = pos;
  
      Sleep(100);
-@@ -1086,7 +1247,7 @@ static void test_clock(int share)
+@@ -1097,7 +1258,7 @@ static void test_clock(int share)
      ok(hr == S_OK, "GetBuffer failed: %08x\n", hr);
      trace("data at %p\n", data);
  
@@ -1902,7 +1903,7 @@ index 2755dbf..26bb29d 100644
          wave_generate_tone(pwfx, data, avail) : AUDCLNT_BUFFERFLAGS_SILENT);
      ok(hr == S_OK, "ReleaseBuffer failed: %08x\n", hr);
      if(hr == S_OK) sum += avail;
-@@ -1111,10 +1272,7 @@ static void test_clock(int share)
+@@ -1122,10 +1283,7 @@ static void test_clock(int share)
      trace("position %u past %ums sleep #3\n", (UINT)pos, slept);
      ok(pos > last, "Position %u vs. last %u\n", (UINT)pos,(UINT)last);
      ok(pos * pwfx->nSamplesPerSec <= sum * freq, "Position %u > written %u\n", (UINT)pos, sum);
@@ -1914,7 +1915,7 @@ index 2755dbf..26bb29d 100644
      last = pos;
  
      hr = IAudioClient_Reset(ac);
-@@ -1132,11 +1290,10 @@ static void test_clock(int share)
+@@ -1143,11 +1301,10 @@ static void test_clock(int share)
      ok(pos >= last, "Position %u vs. last %u\n", (UINT)pos,(UINT)last);
      ok(pcpos > pcpos0, "pcpos should increase\n");
      ok(pos * pwfx->nSamplesPerSec <= sum * freq, "Position %u > written %u\n", (UINT)pos, sum);
@@ -1929,7 +1930,7 @@ index 2755dbf..26bb29d 100644
      last = pos;
  
      /* Begin the big loop */
-@@ -1159,19 +1316,17 @@ static void test_clock(int share)
+@@ -1170,19 +1327,17 @@ static void test_clock(int share)
      ok(hr == S_OK, "GetBuffer failed: %08x\n", hr);
      trace("data at %p for prefill %u\n", data, avail);
  
@@ -1957,7 +1958,7 @@ index 2755dbf..26bb29d 100644
  
      /* Despite passed time, data must still point to valid memory... */
      hr = IAudioRenderClient_ReleaseBuffer(arc, avail,
-@@ -1216,14 +1371,13 @@ static void test_clock(int share)
+@@ -1227,14 +1382,13 @@ static void test_clock(int share)
          trace("padding %u position %u/%u slept %ums iteration %d\n", pad, (UINT)pos, sum-pad, slept, i);
          ok(pad ? pos > last : pos >= last, "No position increase at iteration %d\n", i);
          ok(pos * pwfx->nSamplesPerSec <= sum * freq, "Position %u > written %u\n", (UINT)pos, sum);
@@ -1979,7 +1980,7 @@ index 2755dbf..26bb29d 100644
          last = pos;
  
          hr = IAudioClient_GetStreamLatency(ac, &t1);
-@@ -1236,7 +1390,7 @@ static void test_clock(int share)
+@@ -1247,7 +1401,7 @@ static void test_clock(int share)
          /* ok(hr == AUDCLNT_E_BUFFER_TOO_LARGE || (hr == S_OK && i==0) without todo_wine */
          ok(hr == S_OK || hr == AUDCLNT_E_BUFFER_TOO_LARGE,
             "GetBuffer large (%u) failed: %08x\n", avail, hr);
@@ -1988,7 +1989,7 @@ index 2755dbf..26bb29d 100644
          /* Only the first iteration should allow that large a buffer
           * as prefill was drained during the first 350+100ms sleep.
           * Afterwards, only 100ms of data should find room per iteration. */
-@@ -2088,7 +2242,7 @@ static void test_worst_case(void)
+@@ -2099,7 +2253,7 @@ static void test_worst_case(void)
      hr = IAudioClock_GetFrequency(acl, &freq);
      ok(hr == S_OK, "GetFrequency failed: %08x\n", hr);
  
@@ -1997,7 +1998,7 @@ index 2755dbf..26bb29d 100644
          sum = 0;
          trace("Should play %ums continuous tone with fragment size %u.\n",
                (ULONG)(defp/100), fragment);
-@@ -2097,15 +2251,13 @@ static void test_worst_case(void)
+@@ -2108,15 +2262,13 @@ static void test_worst_case(void)
          ok(hr == S_OK, "GetPosition failed: %08x\n", hr);
  
          /* XAudio2 prefills one period, play without it */
@@ -2020,7 +2021,7 @@ index 2755dbf..26bb29d 100644
  
          hr = IAudioClient_Start(ac);
          ok(hr == S_OK, "Start failed: %08x\n", hr);
-@@ -2255,6 +2407,7 @@ START_TEST(render)
+@@ -2266,6 +2418,7 @@ START_TEST(render)
      test_audioclient();
      test_formats(AUDCLNT_SHAREMODE_EXCLUSIVE);
      test_formats(AUDCLNT_SHAREMODE_SHARED);
@@ -2029,7 +2030,7 @@ index 2755dbf..26bb29d 100644
      test_marshal();
      trace("Output to a MS-DOS console is particularly slow and disturbs timing.\n");
 diff --git a/dlls/ntdll/server.c b/dlls/ntdll/server.c
-index f396dd5..00e2a04 100644
+index 59e8ea5..d8503a1 100644
 --- a/dlls/ntdll/server.c
 +++ b/dlls/ntdll/server.c
 @@ -79,6 +79,9 @@
@@ -5408,10 +5409,10 @@ index 0000000..612bf46
 +@ stdcall -private GetAudioEndpoint(ptr ptr ptr) AUDDRV_GetAudioEndpoint
 +@ stdcall -private GetAudioSessionManager(ptr ptr) AUDDRV_GetAudioSessionManager
 diff --git a/dlls/winmm/lolvldrv.c b/dlls/winmm/lolvldrv.c
-index f387323..3b1be27 100644
+index c3b3674..56cfe35 100644
 --- a/dlls/winmm/lolvldrv.c
 +++ b/dlls/winmm/lolvldrv.c
-@@ -543,7 +543,10 @@ static void MMDRV_Init(void)
+@@ -544,7 +544,10 @@ static void MMDRV_Init(void)
      drvA = HeapAlloc(GetProcessHeap(), 0, size);
      WideCharToMultiByte(CP_ACP, 0, pv.u.pwszVal, -1, drvA, size, NULL, NULL);
  
@@ -5424,7 +5425,7 @@ index f387323..3b1be27 100644
      HeapFree(GetProcessHeap(), 0, drvA);
      PropVariantClear(&pv);
 diff --git a/dlls/winmm/waveform.c b/dlls/winmm/waveform.c
-index 8da547c..f8134c5 100644
+index 01a54b4..e8be5fc 100644
 --- a/dlls/winmm/waveform.c
 +++ b/dlls/winmm/waveform.c
 @@ -68,8 +68,8 @@ static const WCHAR muteW[] = {'M','u','t','e',0};
@@ -5530,7 +5531,7 @@ index 973bd02..1982c93 100644
  }
  
 diff --git a/server/Makefile.in b/server/Makefile.in
-index 38e79bc..94b2f12 100644
+index 9711cac..aa4db42 100644
 --- a/server/Makefile.in
 +++ b/server/Makefile.in
 @@ -1,4 +1,5 @@
@@ -5875,7 +5876,7 @@ index 0000000..53e5ce4
 +
 +#endif
 diff --git a/server/thread.c b/server/thread.c
-index 32985ac..61a427a 100644
+index 623a3b3..1d6b141 100644
 --- a/server/thread.c
 +++ b/server/thread.c
 @@ -52,6 +52,8 @@
@@ -5946,7 +5947,7 @@ index 32985ac..61a427a 100644
          else
              set_error( STATUS_INVALID_PARAMETER );
      }
-@@ -1289,6 +1319,10 @@ DECL_HANDLER(init_thread)
+@@ -1296,6 +1326,10 @@ DECL_HANDLER(init_thread)
      }
      debug_level = max( debug_level, req->debug_level );
  
@@ -5958,7 +5959,7 @@ index 32985ac..61a427a 100644
      reply->tid     = get_thread_id( current );
      reply->version = SERVER_PROTOCOL_VERSION;
 diff --git a/server/thread.h b/server/thread.h
-index eddfd30..b9e5645 100644
+index 996d95b..36f09ce 100644
 --- a/server/thread.h
 +++ b/server/thread.h
 @@ -87,6 +87,8 @@ struct thread
