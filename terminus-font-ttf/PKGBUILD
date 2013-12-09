@@ -1,32 +1,26 @@
-# Contributor: Tilman Blumenbach <tilman@ax86.net>
+# Contributor: Tilman Blumenbach <tilman [AT] ax86 [DOT] net>
 
 pkgname='terminus-font-ttf'
-pkgver=4.38
+pkgver=4.38.1
 pkgrel=1
 pkgdesc="Monospaced bitmap font designed for long work with computers (TTF version)"
 arch=('any')
-url="http://www.ax86.net/2009/11/03/generating-up-to-date-ttf-files-for-the-terminus-font"
+url="http://files.ax86.net/terminus-ttf"
 license=('custom:OFL')
 depends=('fontconfig' 'xorg-font-utils')
 install='terminus-font-ttf.install'
-source=("http://files.ax86.net/terminus-ttf/${pkgver}/TerminusBold-${pkgver}.ttf"
-        "http://files.ax86.net/terminus-ttf/${pkgver}/TerminusMedium-${pkgver}.ttf"
-        "http://files.ax86.net/terminus-ttf/${pkgver}/TerminusMediumItalic-${pkgver}.ttf"
-        "http://files.ax86.net/terminus-ttf/${pkgver}/COPYING")
+source=("http://files.ax86.net/terminus-ttf/files/${pkgver}/terminus-ttf-${pkgver}.zip")
 
 build()
 {
-	cd "${srcdir}"
+    cd "${srcdir}/terminus-ttf-${pkgver}"
 
     for i in *.ttf; do
-        local destname="$(echo "$i" | sed 's|-[[:digit:].]\{1,\}\.ttf$|.ttf|')"
+        local destname="$(echo "$i" | sed -E 's|-[[:digit:].]+\.ttf$|.ttf|')"
         install -Dm 644 "$i" "${pkgdir}/usr/share/fonts/TTF/${destname}"
     done
 
     install -Dm 644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
 }
 
-md5sums=('fe81585bec56647171813b64babb1c3c'
-         '9d77e042045dfad349b8aa8bfe72e08f'
-         'a553659e303fc4a6259d216f185fa424'
-         '7b6a7b6ed0cb0cd6e81f088b38738f47')
+md5sums=('bb2ec1a153a43dfd17225ff885bf0a37')

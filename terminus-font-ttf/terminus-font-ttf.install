@@ -1,25 +1,25 @@
 post_upgrade()
 {
-	printf 'Updating font cache... '
+    printf 'Updating font cache... '
 
-	fc-cache -fs
+    fc-cache -fs
     mkfontscale /usr/share/fonts/TTF
     mkfontdir /usr/share/fonts/TTF
 
-	echo 'done.'
+    echo 'done.'
 }
 
 post_remove()
 {
-	post_upgrade
+    post_upgrade
 }
 
 post_install()
 {
-	post_upgrade
+    post_upgrade
 
-	echo
-	echo '> The font files have been installed into /usr/share/fonts/TTF.'
-	echo '> To make them available to Java applications, create symlinks'
-	echo '> in /opt/java/jre/lib/fonts.'
+    echo
+    echo '> The font files have been installed into /usr/share/fonts/TTF.'
+    echo '> To make them available to Java applications, create symlinks'
+    echo '> in /opt/java/jre/lib/fonts.'
 }
