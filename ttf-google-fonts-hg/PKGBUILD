@@ -13,13 +13,15 @@
 #
 
 pkgname=ttf-google-fonts-hg
-pkgver=3414.7feda7df9128
+pkgver=3462.2bbd4f71fa8c
 pkgrel=1
 pkgdesc='Various TrueType fonts from the Google Fonts project (uses official upstream sources)'
 arch=('any')
 url='https://www.google.com/fonts'
 license=('various')
-depends=('fontconfig'
+# see comment in package() function about why "cantarell-fonts" is a dependency
+depends=('cantarell-fonts'
+         'fontconfig'
          'xorg-fonts-encodings'
          'xorg-mkfontdir'
          'xorg-mkfontscale')
@@ -27,6 +29,8 @@ makedepends=('mercurial')
 conflicts=('ttf-google-webfonts'
            'ttf-google-webfonts-git'
            'ttf-google-webfonts-hg'
+           'adobe-source-code-pro-fonts'
+           'adobe-source-sans-pro-fonts'
            'jsmath-fonts'
            'lohit-fonts'
            'otf-goudy'
@@ -35,6 +39,7 @@ conflicts=('ttf-google-webfonts'
            'ttf-cantarell'
            'ttf-cardo'
            'ttf-chromeos-fonts'
+           'ttf-comfortaa'
            'ttf-droid'
            'ttf-inconsolata'
            'ttf-kimberly_geswein_print'
@@ -53,22 +58,35 @@ conflicts=('ttf-google-webfonts'
            'ttf-source-code-pro'
            'ttf-source-sans-pro'
            'ttf-ubuntu-font-family'
-           'ttf-vollkorn'
-           'cantarell-fonts')
+           'ttf-vollkorn')
 provides=("${conflicts[@]}" 'ttf-font')
-install=ttf.install
+install=fonts.install
 _hgname=googlefontdirectory
-source=("$_hgname::hg+https://googlefontdirectory.googlecode.com/hg/")
+source=("${_hgname}::hg+https://googlefontdirectory.googlecode.com/hg/")
 sha1sums=('SKIP')
 
 pkgver() {
-	cd "$srcdir/$_hgname"
+	cd "${srcdir}/${_hgname}"
 	hg identify -ni | awk 'BEGIN{OFS=".";} {print $2,$1}'
 }
 
 package() {
-	cd "$srcdir"
-	install -dm755 "$pkgdir/usr/share/fonts/TTF"
-	find . -maxdepth 4 -type f -name \*.ttf -exec install -Dm644 '{}' \
-		"$pkgdir/usr/share/fonts/TTF" \;
+	cd "${srcdir}/${_hgname}"
+	install -dm755 "${pkgdir}/usr/share/fonts/TTF"
+	find . -maxdepth 3 -type f -name \*.ttf -exec install -Dm644 '{}' \
+		"${pkgdir}/usr/share/fonts/TTF" \;
+
+	# install various font licenses
+	#
+	# each OFL license can be different due to how the OFL.txt files include
+	# the copyright holder's name and Reserved Font Names at the beginning,
+	# so we have to separately install each OFL.txt file
+	find . -maxdepth 3 -type f -name OFL.txt -exec install -Dm644 '{}' \
+		"${pkgdir}/usr/share/licenses/${pkgname}/{}" \;
+	install -Dm644 'ufl/ubuntu/UFL.txt' \
+		"${pkgdir}/usr/share/licenses/${pkgname}/UFL.txt"
+
+	# remove Cantarell fonts because Google ships the original Cantarell
+	# instead of the improved version of Cantarell shipped by the GNOME Project
+	find "${pkgdir}/usr/share/fonts/TTF" -type f -name "Cantarell-*.ttf" -delete
 }

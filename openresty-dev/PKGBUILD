@@ -1,7 +1,7 @@
 # Contributor: Tocer Deng <tocer.deng@gmail.com>
 pkgname=openresty-dev
 _pkgname=ngx_openresty
-pkgver=1.4.2.9
+pkgver=1.4.3.6
 pkgrel=1
 pkgdesc="a powerful web app server by extending nginx. development release."
 arch=('i686' 'x86_64')
@@ -17,7 +17,7 @@ replaces=('openresty')
 backup=()
 options=()
 install=
-source=(http://agentzh.org/misc/nginx/$_pkgname-$pkgver.tar.gz)
+source=(http://openresty.org/download/$_pkgname-$pkgver.tar.gz)
 noextract=()
 
 build() {
