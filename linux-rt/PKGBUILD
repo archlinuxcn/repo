@@ -9,9 +9,9 @@ pkgname=('linux-rt' 'linux-rt-headers' 'linux-rt-docs') # Build realtime patched
 #pkgname=linux-custom       # Build kernel with a different name
 _kernelname=${pkgname#linux}
 _basekernel=3.12
-_releasever=1
-_rtpatchver=rt4
-pkgrel=2
+_releasever=5
+_rtpatchver=rt6
+pkgrel=1
 _pkgver=${_basekernel}.${_releasever}
 pkgver=${_basekernel}.${_releasever}_${_rtpatchver}
 arch=('i686' 'x86_64')
@@ -19,7 +19,6 @@ url="http://rt.wiki.kernel.org/"
 license=('GPL2')
 makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc')
 options=('!strip')
-
 source=("https://www.kernel.org/pub/linux/kernel/v3.x/linux-${_basekernel}.tar.xz"
         "https://www.kernel.org/pub/linux/kernel/v3.x/patch-${_pkgver}.xz"
         "https://www.kernel.org/pub/linux/kernel/projects/rt/${_basekernel}/patch-${_pkgver}-${_rtpatchver}.patch.xz"
@@ -30,10 +29,10 @@ source=("https://www.kernel.org/pub/linux/kernel/v3.x/linux-${_basekernel}.tar.x
         'change-default-console-loglevel.patch'
         'criu-no-expert.patch')
 md5sums=('cc6ee608854e0da4b64f6c1ff8b6398c'
-         '5a8cb5a659baeeb6df3fe22de8d32df6'
-         '51903e8f56e0447ef995420dd76c5929'
-         'dcc0ab80448206e309d0bd7390158ee7'
-         '44f12b268a3394d37be0bb69e4abeb82'
+         '70e456d21f7e7c0dc2f9bd170f1ae4ee'
+         '96246d5b22e9f370e593920475db4b43'
+         '76c342e91dbc7c248535f7ef621b806e'
+         'c8f5638634f1444d6c588a75530e98be'
          'eb14dcfd80c00852ef81ded6e826826a'
          '98beb36f9b8cf16e58de2483ea9985e3'
          'd50c1ac47394e9aec637002ef3392bd1')
@@ -125,9 +124,9 @@ package_linux-rt() {
   #groups=('base')
   depends=('coreutils' 'linux-firmware' 'kmod' 'mkinitcpio>=0.7')
   optdepends=('crda: to set the correct wireless channels of your country')
-  #provides=('kernel26rt')
-  #conflicts=('kernel26rt')
-  #replaces=('kernel26rt')
+#  provides=("kernel26${_kernelname}=${pkgver}")
+#  conflicts=("kernel26${_kernelname}")
+#  replaces=("kernel26${_kernelname}")
   backup=("etc/mkinitcpio.d/${pkgname}.preset")
   install=${pkgname}.install
 
@@ -147,14 +146,16 @@ package_linux-rt() {
   # add vmlinux
   install -D -m644 vmlinux "${pkgdir}/usr/src/linux-${_kernver}/vmlinux"
 
-  # install fallback mkinitcpio.conf file and preset file for kernel
-  install -D -m644 "${srcdir}/${pkgname}.preset" "${pkgdir}/etc/mkinitcpio.d/${pkgname}.preset"
-
   # set correct depmod command for install
+  cp -f "${startdir}/${install}" "${startdir}/${install}.pkg"
+  true && install=${install}.pkg
   sed \
     -e  "s/KERNEL_NAME=.*/KERNEL_NAME=${_kernelname}/" \
     -e  "s/KERNEL_VERSION=.*/KERNEL_VERSION=${_kernver}/" \
-    -i "${startdir}/${pkgname}.install"
+    -i "${startdir}/${install}"
+
+  # install mkinitcpio preset file for kernel
+  install -D -m644 "${srcdir}/${pkgname}.preset" "${pkgdir}/etc/mkinitcpio.d/${pkgname}.preset"
   sed \
     -e "1s|'linux.*'|'${pkgname}'|" \
     -e "s|ALL_kver=.*|ALL_kver=\"/boot/vmlinuz-${pkgname}\"|" \
@@ -183,9 +184,9 @@ package_linux-rt() {
 
 package_linux-rt-headers() {
   pkgdesc="Header files and scripts for building modules for linux kernel (with realtime preemption)."
-  #provides=('kernel26-headers')
-  #conflicts=('kernel26-headers')
-  #replaces=('kernel26-headers')
+#  provides=("kernel26${_kernelname}-headers=${pkgver}")
+#  conflicts=("kernel26${_kernelname}-headers")
+#  replaces=("kernel26${_kernelname}-headers")
 
   install -dm755 "${pkgdir}/usr/lib/modules/${_kernver}"
 
@@ -318,14 +319,14 @@ package_linux-rt-headers() {
   done
 
   # remove unneeded architectures
-  rm -rf "${pkgdir}"/usr/src/linux-${_kernver}/arch/{alpha,arm,arm26,avr32,blackfin,c6x,cris,frv,h8300,hexagon,ia64,m32r,m68k,m68knommu,mips,microblaze,mn10300,openrisc,parisc,powerpc,ppc,s390,score,sh,sh64,sparc,sparc64,tile,unicore32,um,v850,xtensa}
+  rm -rf "${pkgdir}"/usr/src/linux-${_kernver}/arch/{alpha,arc,arm,arm26,arm64,avr32,blackfin,c6x,cris,frv,h8300,hexagon,ia64,m32r,m68k,m68knommu,metag,mips,microblaze,mn10300,openrisc,parisc,powerpc,ppc,s390,score,sh,sh64,sparc,sparc64,tile,unicore32,um,v850,xtensa}
 }
 
 package_linux-rt-docs() {
   pkgdesc="Kernel hackers manual - HTML documentation that comes with the Linux kernel (with realtime preemption)."
-  #provides=('kernel26-docs')
-  #conflicts=('kernel26-docs')
-  #replaces=('kernel26-docs')
+#  provides=("kernel26${_kernelname}-docs=${pkgver}")
+#  conflicts=("kernel26${_kernelname}-docs")
+#  replaces=("kernel26${_kernelname}-docs")
 
   cd "${srcdir}/linux-${_basekernel}"
 
