@@ -3,7 +3,7 @@
 
 pkgname="chromium-libpdf"
 #The pkgver is the same as for google chrome dev. The library isn't meant to be distributed on its own so no other version information exists.
-pkgver="33.0.1736.3"
+pkgver="33.0.1750.3"
 pkgrel="1"
 pkgdesc="A PDF Viewer for Chromium and Chromium based browsers"
 url="http://wiki.archlinux.org/index.php/Chromium#libpdf.so"
@@ -17,10 +17,10 @@ sha512sums=("395118e45e8c43cf491c48d932c9c49d056153d52d961d2812169b39256c398b6f1
 source=("LICENSE")
 if [ "$CARCH" = "i686" ]; then
   source+=("https://dl.google.com/linux/direct/google-chrome-unstable_current_i386.rpm")
-  sha512sums+=("2b72087a81f83d739f2f2b27ac6f32504db579f524ebb7c6c811e689cc59d61adfb4a440234b38ab84269745a99bdc30fcbc3acda44cc764468a11cee72ce030")
+  sha512sums+=("5ccbbbb8848aabd0f48c19ed11a0fb084fe1a70ce93e45fdab53ec00b661ea7d0623b52a26fa164d9da30365ab922723fca9f70f3724d034f93a541134c27505")
 elif [ "$CARCH" = "x86_64" ]; then
   source+=("https://dl.google.com/linux/direct/google-chrome-unstable_current_x86_64.rpm")
-  sha512sums+=("90bf83a63cccdc4f004fcb9c40ffcf324614424cb74c6c661bfa0ceb65e0fd26c500145d58b29276e7ec57971bd87fc509195e8f7aa9b62785baebb1614103b1")
+  sha512sums+=("5fe10a86ff5a70cfcdd24deb919d4f3101fb98bdce3f0fe87ef8da1932098a4ad637810a8e94bef4b92c73d3fe43926dde45120596758c1b5e2367639bfd4323")
 fi
 
 package(){
