@@ -1,6 +1,6 @@
 # Maintainer: Sébastien Luttringer
 pkgname=virtualbox-ext-oracle
-pkgver=4.3.4
+pkgver=4.3.6
 pkgrel=1
 pkgdesc='Oracle VM VirtualBox Extension Pack'
 arch=('any')
@@ -12,7 +12,7 @@ options=('!strip')
 source=("http://download.virtualbox.org/virtualbox/$pkgver/Oracle_VM_VirtualBox_Extension_Pack-$pkgver.vbox-extpack"
         'PUEL')
 install=virtualbox-ext-oracle.install
-md5sums=('f92d187a84bfed22635fc2d6167c5c42'
+md5sums=('957f390ff8d04e1a5d016c59cd79f739'
          '08b28b82d0ebd6962025100d4b5414a1')
 
 package() {
