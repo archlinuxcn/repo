@@ -5,13 +5,13 @@
 # or use: $ curl -s https://dl.google.com/linux/chrome/rpm/stable/x86_64/repodata/other.xml.gz | gzip -df | awk -F\" '/pkgid/{ sub(".*-","",$4); print $4": "$10 }'
 
 pkgname=google-chrome
-pkgver=31.0.1650.57
+pkgver=31.0.1650.63
 pkgrel=1
 pkgdesc="An attempt at creating a safer, faster, and more stable browser (Stable Channel)"
 arch=('i686' 'x86_64')
 url="https://www.google.com/chrome"
 license=('custom:chrome')
-depends=('alsa-lib' 'gconf' 'gtk2' 'hicolor-icon-theme' 'libpng' 'libxslt' 'libxss' 'nss' 'ttf-font' 'xdg-utils')
+depends=('alsa-lib' 'desktop-file-utils' 'gconf' 'gtk2' 'hicolor-icon-theme' 'libpng' 'libxslt' 'libxss' 'libxtst' 'nss' 'ttf-font' 'xdg-utils')
 optdepends=('kdebase-kdialog: needed for file dialogs in KDE'
             'ttf-google-fonts-git')
 provides=("google-chrome=$pkgver")
@@ -23,9 +23,9 @@ _arch=i386
 [ "$CARCH" = 'x86_64' ] && _arch=amd64
 source=("google-chrome-${_channel}_${pkgver}_${_arch}.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_${_arch}.deb"
         'https://www.google.com/intl/en/chrome/browser/privacy/eula_text.html')
-md5sums=('d8fa57226eb5cbd2bf7fcb9d523a96d9'
+md5sums=('ab38ce4980c797b5fefa40d318b02952'
          'ba19ea498f294975d320ff0b26a6cd63')
-[ "$CARCH" = 'x86_64' ] && md5sums[0]='71b197df869c71ec662732b830e4e98d'
+[ "$CARCH" = 'x86_64' ] && md5sums[0]='83c6ddb1c281da8243aba0b5f2e3763f'
 
 package() {
   msg2 "Extracting the data.tar.lzma"
