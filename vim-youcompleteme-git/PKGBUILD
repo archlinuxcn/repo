@@ -2,7 +2,7 @@
 # Contributor: Daniel Micay <danielmicay@gmail.com>
 
 pkgname=vim-youcompleteme-git
-pkgver=951.b288dce
+pkgver=1050.afb70bf
 pkgver() {
   cd "YouCompleteMe"
   echo $(git rev-list --count master).$(git rev-parse --short master)
@@ -31,7 +31,8 @@ install=install
 
 build() {
   cd "YouCompleteMe/cpp"
-  cmake -G "Unix Makefiles" -DUSE_SYSTEM_LIBCLANG=ON
+  cmake -G "Unix Makefiles" \
+    -DEXTERNAL_LIBCLANG_PATH=/usr/lib/libclang.so
   make ycm_core
   make ycm_support_libs
 }
