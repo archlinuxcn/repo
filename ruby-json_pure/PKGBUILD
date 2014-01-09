@@ -2,7 +2,7 @@
 # Maintainer: Alexsandr Pavlov <kidoz at mail dot ru>
 pkgname=ruby-json_pure
 _gemname=${pkgname#ruby-}
-pkgver=1.7.7
+pkgver=1.8.1
 pkgrel=1
 pkgdesc="A ruby implementation of the JSON specification according to RFC 4627."
 arch=('any')
@@ -11,7 +11,7 @@ license=('GPL')
 depends=('ruby' 'rubygems')
 source=(http://rubygems.org/downloads/${_gemname}-${pkgver}.gem)
 noextract=(${_gemname}-${pkgver}.gem)
-sha256sums=('86f22c4fcf2a8c2f06df37a0db271428375f187f6e43db235013f6d4ab02b74b')
+sha512sums=('f635b127cf6ba4af07b8bd133696021e3f47e41b743d5a874af7481679a7031a2c3c9ae8bddbe7d84ff72c929da1302b9cf863a075fda6aeca08688d2032a282')
 
 package() {
   cd "${srcdir}"

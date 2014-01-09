@@ -1,8 +1,8 @@
 # Maintainer: Jochen Schalanda <jochen+aur@schalanda.name>
 _gemname=facter
 pkgname=ruby-$_gemname
-pkgver=1.7.2
-pkgrel=2
+pkgver=1.7.4
+pkgrel=1
 pkgdesc="A library for collecting facts about your system."
 arch=(any)
 url="http://puppetlabs.com/projects/facter/"
@@ -24,4 +24,4 @@ package() {
   gem install --no-user-install --ignore-dependencies -i "$pkgdir$_gemdir" \
     -n "$pkgdir/usr/bin" "$_gemname-$pkgver.gem"
 }
-md5sums=('cdb7eb6008ce8f027e1d92000ff0e539')
+md5sums=('576789044e8738bb42bd05df86992176')
