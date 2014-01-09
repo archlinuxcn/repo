@@ -2,7 +2,7 @@
 # Contributor: Gordin <9ordin @t gmail dot com>
 pkgname=android-sdk
 pkgver=r22.3
-pkgrel=1
+pkgrel=2
 pkgdesc='Google Android SDK'
 arch=('i686' 'x86_64')
 url="http://developer.android.com/sdk/index.html"
@@ -38,8 +38,8 @@ package() {
   install -Dm644 "$srcdir/$pkgname.conf" etc/ld.so.conf.d/$pkgname.conf
   mkdir -p opt
   cp -a "$srcdir/$pkgname-linux" opt/$pkgname
-  install -Dm655 "$srcdir/$pkgname.png" usr/share/pixmaps/$pkgname.png
-  install -Dm655 "$srcdir/$pkgname.desktop" \
+  install -Dm644 "$srcdir/$pkgname.png" usr/share/pixmaps/$pkgname.png
+  install -Dm644 "$srcdir/$pkgname.desktop" \
     usr/share/applications/$pkgname.desktop
   install -Dm644 "$srcdir/license.html" \
     usr/share/licenses/$pkgname/license.html

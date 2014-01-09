@@ -1,12 +1,13 @@
 # Maintainer: Limao Luo <luolimao+AUR@gmail.com>
 
 pkgname=nyancat-git
-pkgver=1.1.11.gd9eaf4c
+pkgver=1.1.15.g837cd32
 pkgrel=1
 pkgdesc="Terminal-based Pop Tart Cat animation"
 arch=(i686 x86_64)
 url=http://miku.acm.uiuc.edu
 license=(NCSA)
+makedepends=(git)
 provides=(${pkgname%-*})
 source=($pkgname::git://github.com/klange/${pkgname%-*}.git)
 sha256sums=('SKIP')

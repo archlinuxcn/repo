@@ -1,24 +1,24 @@
 # Maintainer: lilydjwg <lilydjwg@gmail.com>
 _name=cffi
 pkgname=python-${_name}
-pkgver=0.8
+pkgver=0.8.1
 pkgrel=1
 pkgdesc="Foreign Function Interface for Python calling C code"
 arch=('i686' 'x86_64')
 url="http://cffi.readthedocs.org/"
 license=('MIT')
-depends=('python' 'python-pycparser-git')
+depends=('python' 'python-pycparser')
 makedepends=('python-setuptools')
-md5sums=('e61deb0515311bb42d5d58b9403bc923')
+md5sums=('1a877bf113bfe90fdefedbf9e39310d2')
 source=("http://pypi.python.org/packages/source/c/${_name}/${_name}-${pkgver}.tar.gz")
 
 build() {
   cd "$srcdir/$_name-$pkgver"
 
-  python setup.py build
+  python3 setup.py build
 }
 
 package() {
   cd "$srcdir/$_name-$pkgver"
-  python setup.py install --root=$pkgdir/ --optimize=1
+  python3 setup.py install --root=$pkgdir/ --optimize=1
 }

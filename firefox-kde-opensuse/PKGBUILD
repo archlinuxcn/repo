@@ -8,7 +8,7 @@
 #_pgo=true
 
 pkgname=firefox-kde-opensuse
-pkgver=25.0.1
+pkgver=26.0
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
@@ -30,7 +30,7 @@ provides=("firefox=${pkgver}")
 conflicts=('firefox')
 install=firefox.install
 options=(!emptydirs)
-_patchrev=a15c18cb0ee6
+_patchrev=afcaf2131b0e
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.bz2
         mozconfig firefox.desktop firefox-install-dir.patch vendor.js kde.js firefox-20.0.1-fixed-loading-icon.png
@@ -172,21 +172,21 @@ package() {
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
 
-sha256sums=('e5d0667faeec3a0372831b23d0c6804524e134d1ebc4b7e080042491678d4f0b'
-            '49817a6ecf6fb2c8831cda126cfd5849551865cc7a2049f5ad6ad17b27df8925'
+sha256sums=('31c4fb2792df63ae450e350380a5e18cf1c51487011a9da0b6cc4bffb69d9812'
+            '644f40fc6b81ac213e863cacfb470d64b784033afab27ee87b24a47c0bbef823'
             '175d03cf3d8eb420d24a5a3072be69c9603e3ddacd3a83f68f49754eaecf6c5a'
-            'ded67e8204bd5e1c0c5771c0d2c84ff80c998e1543711e7cd804cfe29e8dd1b0'
+            'bcf224d1f239b73e4ac6d268819c1e94a1606beee99c6d8f851f8192b6444de3'
             '7044b77fb5d4113359144d24beccaf5d1e7cf62c660e3f5c1374bee5b2bf9c00'
             'b8cc5f35ec35fc96ac5c5a2477b36722e373dbb57eba87eb5ad1276e4df7236d'
             '68e3a5b47c6d175cc95b98b069a15205f027cab83af9e075818d38610feb6213'
             'fb852af08b9c597cdd70ea2f143a286d79989e86f7cc706ad749b06cd27c3598'
-            'd0cbca7fbf0a58c0407b4f45efa1157f66de6276b6377c1ca9a890cc99069e17'
+            '98d70ef37b69c45da18ab4e034293d4c5cd0cf2d98ee0d4633093491798d77d1'
             '1fd54e93db3a4d454ece5a6dc788a4ae36805eb497482add82a11ac5cf990562'
             '0635c4973e21f74db7dbf142eeb0e1c65b6dc9a0d4ab2d8b84d846952d5a2acb'
             '4785bdf086b7d537cb83369fea5c177eddb6fc3d8a69064599c64376bd985051'
             'e368d490192e8c83d2d209faa90a8bb0bff89e7d8d08d728001effe433f28e6f'
-            '5bf1f1f661a4598545161f7a22c01713f2c1fdab94a736694e866843ff64c74d'
+            'e8289ea4c1f8191e1e23661312ceee2128b8e790501b9a589d0d7bfc4384553f'
             '5f6b0970284d68d5ed18e6bb7ee1e9fc0025ab3c10aaa14c283adb21a4a20ee8'
-            '789045ac83ebfdd29d2fe2c18e00c03511be57efe8238fa8691e4e2d6bc07f8b'
+            'dbb4a158a24ed7e66465349841d5ed1a405910a5b828f330ab770718503cf41b'
             '75a0817c601bbe6b0a89fbc6ea327397ff296ad336d139b764421dab1dbf55cc'
             'aca072853b379201b0d8ac8128eb6e0e8255ab0c955d7bfd48f6273c8bf245d5')

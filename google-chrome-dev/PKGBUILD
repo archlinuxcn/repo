@@ -5,13 +5,14 @@
 # or use: $ curl -s https://dl.google.com/linux/chrome/rpm/stable/x86_64/repodata/other.xml.gz | gzip -df | awk -F\" '/pkgid/{ sub(".*-","",$4); print $4": "$10 }'
 
 pkgname=google-chrome-dev
-pkgver=33.0.1712.4
+pkgver=33.0.1750.18
 pkgrel=1
 pkgdesc="An attempt at creating a safer, faster, and more stable browser (Dev Channel)"
 arch=('i686' 'x86_64')
 url="https://www.google.com/chrome"
 license=('custom:chrome')
-depends=('alsa-lib' 'gconf' 'gtk2' 'hicolor-icon-theme' 'libpng' 'libxslt' 'libxss' 'libxtst' 'nss' 'ttf-font' 'xdg-utils')
+depends=('alsa-lib' 'desktop-file-utils' 'flac' 'gconf'  'gtk2' 'harfbuzz' 'harfbuzz-icu' 'hicolor-icon-theme' 'icu'
+         'libpng' 'libxss' 'libxtst' 'nss' 'opus' 'snappy' 'speech-dispatcher' 'ttf-font' 'xdg-utils')
 optdepends=('kdebase-kdialog: needed for file dialogs in KDE'
             'ttf-google-fonts-git')
 provides=("google-chrome=$pkgver")
@@ -22,22 +23,23 @@ _channel=unstable
 _arch=i386
 [ "$CARCH" = 'x86_64' ] && _arch=amd64
 source=("google-chrome-${_channel}_${pkgver}_${_arch}.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_${_arch}.deb"
-        'https://www.google.com/intl/en/chrome/browser/privacy/eula_text.html')
-md5sums=('72833908fac4fa9c0f697563e59cb0dd'
-         'ba19ea498f294975d320ff0b26a6cd63')
-[ "$CARCH" = 'x86_64' ] && md5sums[0]='ac5bcaee257b12191100c27eba9ce1dc'
+        'https://www.google.com/intl/en/chrome/browser/privacy/eula_text.html'
+        'libgcrypt-i686.so.11'
+        'libgcrypt-x86_64.so.11')
+md5sums=('adcc01814ceb3eb93a9657cd2f3a2648'
+         'ba19ea498f294975d320ff0b26a6cd63'
+         'd8ceda14734bfc6c33090a16d7b5d9b1'
+         'dfcef54674c42a0d15238ff946760f23')
+[ "$CARCH" = 'x86_64' ] && md5sums[0]='8e0c65c226cab9d53e8b1c15e9f41a10'
 
 package() {
   msg2 "Extracting the data.tar.lzma"
   bsdtar -xf data.tar.lzma -C "$pkgdir/"
 
   msg2 "Moving stuff in place"
-  # Desktop
-  mv "$pkgdir"/opt/google/chrome/google-chrome.desktop "$pkgdir"/usr/share/applications/
-
   # Icons
   for i in 16 22 24 32 48 64 128 256; do
-    install -Dm644 "$pkgdir"/opt/google/chrome/product_logo_${i}.png "$pkgdir"/usr/share/icons/hicolor/${i}x${i}/apps/google-chrome.png
+    install -Dm644 "$pkgdir"/opt/google/chrome-$_channel/product_logo_${i}.png "$pkgdir"/usr/share/icons/hicolor/${i}x${i}/apps/google-chrome.png
   done
 
   # Man page
@@ -47,9 +49,17 @@ package() {
   install -Dm644 eula_text.html "$pkgdir"/usr/share/licenses/google-chrome/eula_text.html
 
   msg2 "Symlinking missing Udev lib"
-  ln -s /usr/lib/libudev.so.1 "$pkgdir"/opt/google/chrome/libudev.so.0
+  ln -s /usr/lib/libudev.so.1 "$pkgdir"/opt/google/chrome-$_channel/libudev.so.0
 
-  msg2 "Removing the Debian-intended cron job and duplicated images"
-  rm -r "$pkgdir"/etc/cron.daily/ "$pkgdir"/opt/google/chrome/cron/
-  rm "$pkgdir"/opt/google/chrome/product_logo_*.png
+  #if [ $(pacman -Q libgcrypt | cut -d " " -f2 | tr -d .-) -ge 1601 ]; then
+  msg2 "Installing compatible Gcrypt lib"
+  install -m755 "$startdir"/libgcrypt-$CARCH.so.11 "$pkgdir"/opt/google/chrome-$_channel/libgcrypt.so.11
+  #fi
+  
+  msg2 "Changing permissions"
+  chmod go+rx "$pkgdir"/opt/google/chrome/
+
+  msg2 "Removing unnecessities (e.g. Debian Cron job)"
+  rm -r "$pkgdir"/etc/cron.daily/ "$pkgdir"/opt/google/chrome-$_channel/cron/
+  rm "$pkgdir"/opt/google/chrome-$_channel/product_logo_*.png
 }

@@ -1,6 +1,6 @@
 pkgname=freenet
 pkgver=0.7.5
-pkgrel=3
+pkgrel=4
 pkgdesc="An encrypted network without censorship"
 url="http://freenetproject.org/"
 license=('GPL2')
@@ -8,11 +8,14 @@ arch=('any')
 depends=('java-runtime')
 install=freenet.install
 source=(https://downloads.freenetproject.org/alpha/installer/${pkgname}07.tar.gz
-        http://www.bouncycastle.org/download/bcprov-jdk15on-147.jar
+        http://www.bouncycastle.org/download/bcprov-jdk15on-150.jar
         freenet.service)
+
+
 sha256sums=('1f9b64e548eca091bfa96d93a7ab83ef78515924a6ba72dca5bd2ec8c5f2efd7'
-            '7fb12d09f041c294f08a0a51a2808438092273b51628eecaf2e0d0030b7556f5'
+            '115b14a02b91fb03cb1866d6b311d33cd5518a9d8524dd63a14f19571e420404'
             '8795005b6485b60756562defa3e72237d709f11e3a2bbcd9602fa426535ec544')
+
 
 build() {
   msg "Nothing to compile for $pkgname"
@@ -21,8 +24,8 @@ build() {
 package() {
   cd "${srcdir}/${pkgname}"
 
-  echo 'wrapper.java.classpath.3=bcprov-jdk15on-147.jar' >> wrapper.conf
-  cp -aL ../bcprov-jdk15on-147.jar .
+  echo 'wrapper.java.classpath.3=bcprov-jdk15on-150.jar' >> wrapper.conf
+  cp -aL ../bcprov-jdk15on-150.jar .
   mkdir -p "${pkgdir}"/opt/${pkgname}
   cp -a . "${pkgdir}"/opt/${pkgname}/.
   chmod -R ug=rwX,o= "${pkgdir}"/opt/freenet
