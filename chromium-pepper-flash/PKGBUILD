@@ -1,8 +1,8 @@
 # Maintainer: Ner0
 
 pkgname=chromium-pepper-flash
-pkgver=12.0.0.38
-_pkgver=33.0.1729.3
+pkgver=12.0.0.41
+_pkgver=33.0.1750.22
 pkgrel=1
 pkgdesc="Google Chrome's Pepper Flash plugin for Chromium (works with iron-bin)"
 arch=('i686' 'x86_64')
@@ -16,10 +16,10 @@ install=pepper.install
 
 if [ "$CARCH" = 'i686' ]; then
    _arch='i386'
-md5sums=('c60a476875ed760395649b2588b2e60c')
+md5sums=('0507ce58525ecca93da9956e9e5f4249')
 elif [ "$CARCH" = 'x86_64' ]; then
    _arch='amd64'
-   md5sums=('94cc6fe1ff6b1f945c4c1f4f4bb2f60f')
+   md5sums=('0e231f56a6ea2855a35c4cafc429c120')
 fi
 md5sums[1]='3abf4a038d0525c6d17e5bfefbcfee91'
 
