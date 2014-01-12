@@ -9,8 +9,8 @@ pkgname=('linux-rt' 'linux-rt-headers' 'linux-rt-docs') # Build realtime patched
 #pkgname=linux-custom       # Build kernel with a different name
 _kernelname=${pkgname#linux}
 _basekernel=3.12
-_releasever=5
-_rtpatchver=rt7
+_releasever=6
+_rtpatchver=rt9
 pkgrel=1
 _pkgver=${_basekernel}.${_releasever}
 pkgver=${_basekernel}.${_releasever}_${_rtpatchver}
@@ -27,15 +27,17 @@ source=("https://www.kernel.org/pub/linux/kernel/v3.x/linux-${_basekernel}.tar.x
         # standard config files for mkinitcpio ramdisk
         "${pkgname}.preset"
         'change-default-console-loglevel.patch'
-        'criu-no-expert.patch')
+        'criu-no-expert.patch'
+        'timers-do-not-raise-softirq-unconditionally.patch')
 md5sums=('cc6ee608854e0da4b64f6c1ff8b6398c'
-         '70e456d21f7e7c0dc2f9bd170f1ae4ee'
-         'd6cf1b2e5097a2c269db72776bf7cf1c'
+         '9e75be8b127e58f1a76c0015eabb12ae'
+         'b6b66c250459a63664e23235153f587c'
          '76c342e91dbc7c248535f7ef621b806e'
          'c8f5638634f1444d6c588a75530e98be'
          'eb14dcfd80c00852ef81ded6e826826a'
          '98beb36f9b8cf16e58de2483ea9985e3'
-         'd50c1ac47394e9aec637002ef3392bd1')
+         'd50c1ac47394e9aec637002ef3392bd1'
+         'a091e206b3cadcd9bcd807f3a0c98922')
 
 prepare() {
   cd "${srcdir}/linux-${_basekernel}"
@@ -48,6 +50,10 @@ prepare() {
   msg "applying patch-${_pkgver}-${_rtpatchver}.patch"
   patch -p1 -i "${srcdir}/patch-${_pkgver}-${_rtpatchver}.patch"
 
+  # revert patch, causing the kernel to hang on very early in the boot process
+  msg "reverting timers-do-not-raise-softirq-unconditionally.patch"
+  patch -p1 -R -i "${srcdir}/timers-do-not-raise-softirq-unconditionally.patch"
+  
   # add latest fixes from stable queue, if needed
   # http://git.kernel.org/?p=linux/kernel/git/stable/stable-queue.git
 
