@@ -1,4 +1,4 @@
-# $Id: PKGBUILD 89660 2013-05-01 21:58:23Z heftig $
+# $Id: PKGBUILD 102960 2013-12-25 03:04:08Z allan $
 # Maintainer: Fantix King <fantix.king@gmail.com>
 # Upstream Maintainer: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 # Contributor: Allan McRae <allan@archlinux.org>
@@ -8,9 +8,10 @@
 
 pkgname='gcc-multilib-x32'
 true && pkgname=('gcc-multilib-x32' 'gcc-libs-multilib-x32' 'libx32-gcc-libs' 'gcc-fortran-multilib-x32' 'gcc-objc-multilib-x32' 'gcc-ada-multilib-x32' 'gcc-go-multilib-x32')
-pkgver=4.8.0_3
+pkgver=4.8.2_7
+_pkgver=4.8
 pkgrel=1
-_snapshot=4.8-20130425
+_snapshot=4.8-20131219
 pkgdesc="The GNU Compiler Collection for multilib with x32 ABI support"
 arch=('x86_64')
 license=('GPL' 'LGPL' 'FDL' 'custom')
@@ -18,10 +19,14 @@ url="http://gcc.gnu.org"
 makedepends=('binutils-multilib>=2.23' 'libmpc' 'cloog' 'gcc-ada-multilib' 'doxygen'
              'lib32-glibc>=2.17' 'libx32-glibc>=2.17')
 checkdepends=('dejagnu' 'inetutils')
-options=('!libtool' '!emptydirs')
-source=(ftp://gcc.gnu.org/pub/gcc/snapshots/${_snapshot}/gcc-${_snapshot}.tar.bz2)
-        #ftp://gcc.gnu.org/pub/gcc/releases/gcc-${pkgver}/gcc-${pkgver}.tar.bz2
-md5sums=('03690556f09991fbecac0467227c5d4e')
+options=('!emptydirs')
+source=(#ftp://gcc.gnu.org/pub/gcc/releases/gcc-${pkgver%_*}/gcc-${pkgver%_*}.tar.bz2
+        ftp://gcc.gnu.org/pub/gcc/snapshots/${_snapshot}/gcc-${_snapshot}.tar.bz2
+        gcc-4.8-filename-output.patch
+        gcc-4.8-lambda-ICE.patch)
+md5sums=('666ef08f87649f941bc5512e13a88fdc'
+         '40cb437805e2f7a006aa0d0c3098ab0f'
+         '6eb6e080dbf7bc6825f53a0aaa6c4ef9')
 
 
 if [ -n "${_snapshot}" ]; then
@@ -29,6 +34,8 @@ if [ -n "${_snapshot}" ]; then
 else
   _basedir=gcc-${pkgver%_*}
 fi
+
+_libdir="usr/lib/gcc/$CHOST/${pkgver%_*}"
 
 prepare() {
   cd ${srcdir}/${_basedir}
@@ -43,6 +50,16 @@ prepare() {
 
   # hack! - some configure tests for header files using "$CPP $CPPFLAGS"
   sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" {libiberty,gcc}/configure
+
+  # http://gcc.gnu.org/bugzilla/show_bug.cgi?id=57653
+  patch -p0 -i ${srcdir}/gcc-4.8-filename-output.patch
+  
+  # http://gcc.gnu.org/bugzilla//show_bug.cgi?id=56710 - commit 3d1f8279
+  patch -p1 -i ${srcdir}/gcc-4.8-lambda-ICE.patch
+
+  # installing libiberty headers is broken
+  # http://gcc.gnu.org/bugzilla/show_bug.cgi?id=56780#c6
+  sed -i 's#@target_header_dir@#libiberty#' libiberty/Makefile.in
 
   mkdir ${srcdir}/gcc-build
 }
@@ -63,20 +80,18 @@ build() {
       --enable-shared --enable-threads=posix \
       --with-system-zlib --enable-__cxa_atexit \
       --disable-libunwind-exceptions --enable-clocale=gnu \
-      --disable-libstdcxx-pch \
+      --disable-libstdcxx-pch --disable-libssp \
       --enable-gnu-unique-object --enable-linker-build-id \
       --enable-cloog-backend=isl --disable-cloog-version-check \
-      --enable-lto --enable-gold --enable-ld=default \
-      --enable-plugin --with-plugin-ld=ld.gold \
-      --with-linker-hash-style=gnu --disable-install-libiberty \
-      --enable-multilib --with-multilib-list=m32,m64,mx32 \
-      --disable-libssp --disable-werror \
+      --enable-lto --enable-plugin --enable-install-libiberty \
+      --with-linker-hash-style=gnu \
+      --enable-multilib --disable-werror \
+      --with-multilib-list=m32,m64,mx32 \
       --enable-checking=release
   make
   
   # make documentation
-  cd $CHOST/libstdc++-v3
-  make doc-man-doxygen
+  make -C $CHOST/libstdc++-v3/doc doc-man-doxygen
 }
 
 check() {
@@ -91,40 +106,79 @@ check() {
   ${srcdir}/${_basedir}/contrib/test_summary
 }
 
+package_libx32-gcc-libs()
+{
+  pkgdesc="Runtime libraries shipped by GCC (x32 ABI)"
+  depends=('libx32-glibc>=2.17')
+  options=('!emptydirs')
+
+  cd ${srcdir}/gcc-build
+
+  make -C $CHOST/x32/libgcc DESTDIR=${pkgdir} install-shared
+  rm ${pkgdir}/${_libdir}/x32/libgcc_eh.a
+
+  for lib in libmudflap \
+             libgomp \
+             libitm \
+             libatomic \
+             libstdc++-v3/src \
+             libquadmath \
+             libgfortran \
+             libsanitizer/asan; do
+    make -C $CHOST/x32/$lib DESTDIR=${pkgdir} install-toolexeclibLTLIBRARIES
+  done
+
+  make -C $CHOST/x32/libobjc DESTDIR=${pkgdir} install-libs
+
+  # remove stuff in gcc-libs-multilib-x32
+  rm -r ${pkgdir}/usr/lib
+
+  # Install Runtime Library Exception
+  install -Dm644 ${srcdir}/${_basedir}/COPYING.RUNTIME \
+    ${pkgdir}/usr/share/licenses/libx32-gcc-libs/RUNTIME.LIBRARY.EXCEPTION
+}
+
 package_gcc-libs-multilib-x32()
 {
   pkgdesc="Runtime libraries shipped by GCC for multilib with x32 ABI support"
   depends=('glibc>=2.17' "lib32-gcc-libs=${pkgver//_/-}" "libx32-gcc-libs=$pkgver-$pkgrel")
   provides=("gcc-libs=${pkgver//_/-}" "gcc-libs-multilib=${pkgver//_/-}")
   conflicts=('gcc-libs')
+  options=('!emptydirs')
   install=gcc-libs.install
 
   cd ${srcdir}/gcc-build
-  make -j1 -C $CHOST/libgcc DESTDIR=${pkgdir} install-shared
-  for lib in libmudflap libgomp libstdc++-v3/src libitm libsanitizer/asan; do
-    make -j1 -C $CHOST/$lib DESTDIR=${pkgdir} install-toolexeclibLTLIBRARIES
+  
+  make -C $CHOST/libgcc DESTDIR=${pkgdir} install-shared
+  rm ${pkgdir}/${_libdir}/libgcc_eh.a
+  
+  for lib in libmudflap \
+             libgomp \
+             libitm \
+             libatomic \
+             libstdc++-v3/src \
+             libquadmath \
+             libgfortran \
+             libsanitizer/asan; do
+    make -C $CHOST/$lib DESTDIR=${pkgdir} install-toolexeclibLTLIBRARIES
   done
 
   [[ $CARCH == "x86_64" ]] && \
-    make -j1 -C $CHOST/libsanitizer/tsan DESTDIR=${pkgdir} install-toolexeclibLTLIBRARIES
+    make -C $CHOST/libsanitizer/tsan DESTDIR=${pkgdir} install-toolexeclibLTLIBRARIES
+
+  make -C $CHOST/libobjc DESTDIR=${pkgdir} install-libs
   
-  make -j1 -C $CHOST/libstdc++-v3/po DESTDIR=${pkgdir} install
-  make -j1 -C $CHOST/libgomp DESTDIR=${pkgdir} install-info
-  make -j1 -C $CHOST/libitm DESTDIR=${pkgdir} install-info
+  make -C $CHOST/libstdc++-v3/po DESTDIR=${pkgdir} install
 
-  make -j1 DESTDIR=${pkgdir} install-target-libquadmath  
-  make -j1 DESTDIR=${pkgdir} install-target-libgfortran
-  make -j1 DESTDIR=${pkgdir} install-target-libobjc
-
-  # remove unnecessary files installed by install-target-{libquadmath,libgfortran,libobjc}
-  rm -r ${pkgdir}/usr/lib/{gcc/,libgfortran.spec}
+  for lib in libgomp \
+             libitm \
+             libquadmath; do
+    make -C $CHOST/$lib DESTDIR=${pkgdir} install-info
+  done
 
   # remove stuff in lib32-gcc-libs and libx32-gcc-libs
   rm -r ${pkgdir}/usr/lib{32,x32}
 
-  # remove static libraries
-  find ${pkgdir} -name *.a -delete
-  
   # Install Runtime Library Exception
   install -Dm644 ${srcdir}/${_basedir}/COPYING.RUNTIME \
     ${pkgdir}/usr/share/licenses/gcc-libs-multilib-x32/RUNTIME.LIBRARY.EXCEPTION
@@ -135,30 +189,65 @@ package_gcc-multilib-x32()
   pkgdesc="The GNU Compiler Collection - C and C++ frontends for multilib with x32 ABI support"
   depends=("gcc-libs-multilib-x32=$pkgver-$pkgrel" 'binutils-multilib>=2.23' 'libmpc' 'cloog')
   groups=('x32-devel')
+  options=('staticlibs')
   provides=("gcc=${pkgver//_/-}" "gcc-multilib=${pkgver//_/-}")
   conflicts=('gcc' 'gcc-x32-seed' 'gcc-multilib')
   install=gcc.install
 
   cd ${srcdir}/gcc-build
+
+  make -C gcc DESTDIR=${pkgdir} install-driver install-cpp install-gcc-ar \
+    c++.install-common install-headers install-plugin install-lto-wrapper
+
+  install -m755 gcc/gcov $pkgdir/usr/bin/
+  install -m755 -t $pkgdir/${_libdir}/ gcc/{cc1,cc1plus,collect2,lto1}
+
+  make -C $CHOST/libgcc DESTDIR=${pkgdir} install
+  make -C $CHOST/32/libgcc DESTDIR=${pkgdir} install
+  make -C $CHOST/x32/libgcc DESTDIR=${pkgdir} install
+  rm ${pkgdir}/usr/lib{,32,x32}/libgcc_s.so*
   
-  make -j1 DESTDIR=${pkgdir} install
+  make -C $CHOST/libstdc++-v3/src DESTDIR=${pkgdir} install
+  make -C $CHOST/libstdc++-v3/include DESTDIR=${pkgdir} install
+  make -C $CHOST/libstdc++-v3/libsupc++ DESTDIR=${pkgdir} install
+  make -C $CHOST/libstdc++-v3/python DESTDIR=${pkgdir} install
+  make -C $CHOST/32/libstdc++-v3/src DESTDIR=${pkgdir} install
+  make -C $CHOST/32/libstdc++-v3/include DESTDIR=${pkgdir} install
+  make -C $CHOST/32/libstdc++-v3/libsupc++ DESTDIR=${pkgdir} install
+  make -C $CHOST/x32/libstdc++-v3/src DESTDIR=${pkgdir} install
+  make -C $CHOST/x32/libstdc++-v3/include DESTDIR=${pkgdir} install
+  make -C $CHOST/x32/libstdc++-v3/libsupc++ DESTDIR=${pkgdir} install
 
   install -d $pkgdir/usr/share/gdb/auto-load/usr/lib
-  mv $pkgdir{,/usr/share/gdb/auto-load}/usr/lib/libstdc++.so.6.0.18-gdb.py
+  mv $pkgdir/usr/lib/libstdc++.so.6.*-gdb.py \
+    $pkgdir/usr/share/gdb/auto-load/usr/lib/
+  rm ${pkgdir}/usr/lib{,32,x32}/libstdc++.so*
 
-  # unfortunately it is much, much easier to install the lot and clean-up the mess...
-  rm $pkgdir/usr/bin/{{$CHOST-,}gfortran,{$CHOST-,}gccgo,gnat*}
-  rm $pkgdir/usr/lib{,32,x32}/*.so*
-  rm $pkgdir/usr/lib{,32,x32}/lib{atomic,gfortran,go{,begin},objc}.a
-  rm $pkgdir/usr/lib/libiberty.a
-  rm $pkgdir/usr/lib{,32,x32}/libgfortran.spec
-  rm -r $pkgdir/usr/lib/gcc/$CHOST/${pkgver%_*}/{{,32/,x32/}ada{include,lib},finclude,include/objc}
-  rm $pkgdir/usr/lib/gcc/$CHOST/${pkgver%_*}/{cc1obj{,plus},f951,gnat1,go1}
-  rm $pkgdir/usr/lib/gcc/$CHOST/${pkgver%_*}/{,32/,x32/}{libcaf_single,libgfortranbegin}.a
-  rm -r $pkgdir/usr/lib{,32,x32}/go
-  rm $pkgdir/usr/share/info/{gccgo,gfortran,gnat*,libgomp,libquadmath,libitm}.info
-  rm $pkgdir/usr/share/locale/{de,fr}/LC_MESSAGES/libstdc++.mo
-  rm $pkgdir/usr/share/man/man1/{gccgo,gfortran}.1
+  make DESTDIR=${pkgdir} install-fixincludes
+  make -C gcc DESTDIR=${pkgdir} install-mkheaders
+  make -C lto-plugin DESTDIR=${pkgdir} install
+
+  make -C $CHOST/libgomp DESTDIR=${pkgdir} install-nodist_toolexeclibHEADERS \
+    install-nodist_libsubincludeHEADERS
+  make -C $CHOST/libitm DESTDIR=${pkgdir} install-nodist_toolexeclibHEADERS
+  make -C $CHOST/libmudflap DESTDIR=${pkgdir} install-nobase_libsubincludeHEADERS
+  make -C $CHOST/libquadmath DESTDIR=${pkgdir} install-nodist_libsubincludeHEADERS
+  make -C $CHOST/libsanitizer/asan DESTDIR=${pkgdir} install-nodist_toolexeclibHEADERS
+  make -C $CHOST/32/libgomp DESTDIR=${pkgdir} install-nodist_toolexeclibHEADERS
+  make -C $CHOST/32/libitm DESTDIR=${pkgdir} install-nodist_toolexeclibHEADERS
+  make -C $CHOST/32/libsanitizer/asan DESTDIR=${pkgdir} install-nodist_toolexeclibHEADERS
+  make -C $CHOST/x32/libgomp DESTDIR=${pkgdir} install-nodist_toolexeclibHEADERS
+  make -C $CHOST/x32/libitm DESTDIR=${pkgdir} install-nodist_toolexeclibHEADERS
+  make -C $CHOST/x32/libsanitizer/asan DESTDIR=${pkgdir} install-nodist_toolexeclibHEADERS
+
+  make -C libiberty DESTDIR=${pkgdir} install
+
+  make -C gcc DESTDIR=${pkgdir} install-man install-info
+  rm ${pkgdir}/usr/share/man/man1/{gccgo,gfortran}.1
+  rm ${pkgdir}/usr/share/info/{gccgo,gfortran,gnat-style,gnat_rm,gnat_ugn}.info
+
+  make -C libcpp DESTDIR=${pkgdir} install
+  make -C gcc DESTDIR=${pkgdir} install-po
 
   # many packages expect this symlinks
   ln -s gcc ${pkgdir}/usr/bin/cc
@@ -193,13 +282,11 @@ EOF
   chmod 755 $pkgdir/usr/bin/c{8,9}9
 
   # install the libstdc++ man pages
-  install -dm755 ${pkgdir}/usr/share/man/man3
-  install -m644 -t ${pkgdir}/usr/share/man/man3 \
-    ${CHOST}/libstdc++-v3/doc/doxygen/man/man3/*.3
+  make -C $CHOST/libstdc++-v3/doc DESTDIR=$pkgdir doc-install-man
 
   # Install Runtime Library Exception
-  install -Dm644 ${srcdir}/${_basedir}/COPYING.RUNTIME \
-    ${pkgdir}/usr/share/licenses/gcc-multilib-x32/RUNTIME.LIBRARY.EXCEPTION
+  install -d ${pkgdir}/usr/share/licenses/gcc-multilib-x32/
+  ln -s ../gcc-libs-multilib-x32/RUNTIME.LIBRARY.EXCEPTION ${pkgdir}/usr/share/licenses/gcc-multilib-x32/
 }
 
 package_gcc-fortran-multilib-x32()
@@ -208,26 +295,21 @@ package_gcc-fortran-multilib-x32()
   depends=("gcc-multilib-x32=$pkgver-$pkgrel")
   provides=("gcc-fortran=${pkgver//_/-}")
   conflicts=('gcc-fortran')
+  options=('staticlibs' '!emptydirs')
   install=gcc-fortran.install
 
   cd ${srcdir}/gcc-build
-  make -j1 DESTDIR=$pkgdir install-target-libgfortran
-  make -j1 -C $CHOST/libgomp DESTDIR=$pkgdir install-nodist_fincludeHEADERS
-  make -j1 -C gcc DESTDIR=$pkgdir fortran.install-{common,man,info}
-  install -Dm755 gcc/f951 $pkgdir/usr/lib/gcc/$CHOST/${pkgver%_*}/f951
+  make -C $CHOST/libgfortran DESTDIR=$pkgdir install-{{caf,my}execlibLTLIBRARIES,toolexeclibDATA}
+  make -C $CHOST/x32/libgfortran DESTDIR=$pkgdir install-{{caf,my}execlibLTLIBRARIES,toolexeclibDATA}
+  make -C $CHOST/libgomp DESTDIR=$pkgdir install-nodist_fincludeHEADERS
+  make -C gcc DESTDIR=$pkgdir fortran.install-{common,man,info}
+  install -Dm755 gcc/f951 $pkgdir/${_libdir}/f951
 
   ln -s gfortran ${pkgdir}/usr/bin/f95
 
-  # remove files included in gcc-libs or gcc
-  rm ${pkgdir}/usr/lib{,32,x32}/lib{gfortran,gcc_s}.so*
-  rm ${pkgdir}/usr/lib{,32,x32}/libquadmath.{a,so*}
-  rm ${pkgdir}/usr/lib/gcc/$CHOST/${pkgver%_*}/{,32/,x32/}{*.o,libgc*}
-  rm ${pkgdir}/usr/share/info/libquadmath.info
-  rm -r ${pkgdir}/usr/lib/gcc/$CHOST/${pkgver%_*}/include
-
   # Install Runtime Library Exception
-  install -Dm644 ${srcdir}/${_basedir}/COPYING.RUNTIME \
-    ${pkgdir}/usr/share/licenses/gcc-fortran-multilib-x32/RUNTIME.LIBRARY.EXCEPTION
+  install -d ${pkgdir}/usr/share/licenses/gcc-fortran-multilib-x32/
+  ln -s ../gcc-libs-multilib-x32/RUNTIME.LIBRARY.EXCEPTION ${pkgdir}/usr/share/licenses/gcc-fortran-multilib-x32/
 }
 
 package_gcc-objc-multilib-x32()
@@ -238,18 +320,13 @@ package_gcc-objc-multilib-x32()
   conflicts=('gcc-objc')
 
   cd ${srcdir}/gcc-build
-  make -j1 DESTDIR=$pkgdir install-target-libobjc
-  install -dm755 $pkgdir/usr/lib/gcc/$CHOST/${pkgver%_*}/
-  install -m755 gcc/cc1obj{,plus} $pkgdir/usr/lib/gcc/$CHOST/${pkgver%_*}/
-
-  # remove files included in gcc-libs or gcc
-  rm ${pkgdir}/usr/lib{,32,x32}/lib{gcc_s,objc}.so*
-  rm $pkgdir/usr/lib/gcc/$CHOST/${pkgver%_*}/{,32/,x32/}{*.o,lib*}
-  rm $pkgdir/usr/lib/gcc/$CHOST/${pkgver%_*}/include/unwind.h
+  make DESTDIR=$pkgdir -C $CHOST/libobjc install-headers
+  install -dm755 $pkgdir/${_libdir}
+  install -m755 gcc/cc1obj{,plus} $pkgdir/${_libdir}/
 
   # Install Runtime Library Exception
-  install -Dm644 ${srcdir}/${_basedir}/COPYING.RUNTIME \
-    ${pkgdir}/usr/share/licenses/gcc-objc-multilib-x32/RUNTIME.LIBRARY.EXCEPTION
+  install -d ${pkgdir}/usr/share/licenses/gcc-objc-multilib-x32/
+  ln -s ../gcc-libs-multilib-x32/RUNTIME.LIBRARY.EXCEPTION ${pkgdir}/usr/share/licenses/gcc-objc-multilib-x32/
 }
 
 package_gcc-ada-multilib-x32()
@@ -258,25 +335,34 @@ package_gcc-ada-multilib-x32()
   depends=("gcc-multilib-x32=$pkgver-$pkgrel")
   provides=("gcc-ada=${pkgver//_/-}")
   conflicts=('gcc-ada')
+  options=('staticlibs' '!emptydirs')
   install=gcc-ada.install
 
   cd ${srcdir}/gcc-build/gcc
-  make -j1 DESTDIR=$pkgdir ada.install-{common,info}
-  install -m755 gnat1 $pkgdir/usr/lib/gcc/$CHOST/${pkgver%_*}
+  make DESTDIR=$pkgdir ada.install-{common,info}
+  install -m755 gnat1 $pkgdir/${_libdir}
 
-  cd ${srcdir}/gcc-build/$CHOST/32/libada
-  make -j1 DESTDIR=${pkgdir} INSTALL="install" \
-    INSTALL_DATA="install -m644" install-gnatlib
-
-  cd ${srcdir}/gcc-build/$CHOST/x32/libada
-  make -j1 DESTDIR=${pkgdir} INSTALL="install" \
+  cd ../$CHOST/x32/libada
+  make DESTDIR=${pkgdir} INSTALL="install" \
     INSTALL_DATA="install -m644" install-gnatlib
 
   ln -s gcc ${pkgdir}/usr/bin/gnatgcc
-  
+
+  # insist on dynamic linking
+  mv ${pkgdir}/${_libdir}/adalib/libgna{rl,t}-${_pkgver}.so ${pkgdir}/usr/lib
+  ln -s libgnarl-${_pkgver}.so ${pkgdir}/usr/lib/libgnarl.so
+  ln -s libgnat-${_pkgver}.so ${pkgdir}/usr/lib/libgnat.so
+  rm ${pkgdir}/${_libdir}/adalib/libgna{rl,t}.*
+
+  install -d ${pkgdir}/usr/libx32/
+  mv ${pkgdir}/${_libdir}/x32/adalib/libgna{rl,t}-${_pkgver}.so ${pkgdir}/usr/libx32
+  ln -s libgnarl-${_pkgver}.so ${pkgdir}/usr/libx32/libgnarl.so
+  ln -s libgnat-${_pkgver}.so ${pkgdir}/usr/libx32/libgnat.so
+  rm ${pkgdir}/${_libdir}/x32/adalib/libgna{rl,t}.*
+
   # Install Runtime Library Exception
-  install -Dm644 ${srcdir}/${_basedir}/COPYING.RUNTIME \
-    ${pkgdir}/usr/share/licenses/gcc-ada-multilib-x32/RUNTIME.LIBRARY.EXCEPTION
+  install -d ${pkgdir}/usr/share/licenses/gcc-ada-multilib-x32/
+  ln -s ../gcc-libs-multilib-x32/RUNTIME.LIBRARY.EXCEPTION ${pkgdir}/usr/share/licenses/gcc-ada-multilib-x32/
 }
 
 package_gcc-go-multilib-x32()
@@ -285,44 +371,18 @@ package_gcc-go-multilib-x32()
   depends=("gcc-multilib-x32=$pkgver-$pkgrel")
   provides=("gcc-go=${pkgver//_/-}")
   conflicts=('gcc-go')
+  options=('staticlibs' '!emptydirs')
   install=gcc-go.install
 
   cd ${srcdir}/gcc-build
-  make -j1 DESTDIR=$pkgdir install-target-libgo
-  make -j1 -C gcc DESTDIR=$pkgdir go.install-{common,man,info}
-  install -Dm755 gcc/go1 $pkgdir/usr/lib/gcc/$CHOST/${pkgver%_*}/go1
+  make -C $CHOST/libgo DESTDIR=$pkgdir install-exec-am
+  make -C $CHOST/x32/libgo DESTDIR=$pkgdir install-exec-am
+  make -C gcc DESTDIR=$pkgdir go.install-{common,man,info}
+  install -Dm755 gcc/go1 $pkgdir/${_libdir}/go1
+
+  rm $pkgdir/usr/lib{,x32}/libgo.a
 
   # Install Runtime Library Exception
-  install -Dm644 ${srcdir}/${_basedir}/COPYING.RUNTIME \
-    ${pkgdir}/usr/share/licenses/gcc-go-multilib-x32/RUNTIME.LIBRARY.EXCEPTION
-}
-
-package_libx32-gcc-libs()
-{
-  pkgdesc="Runtime libraries shipped by GCC (x32 ABI)"
-  depends=('libx32-glibc>=2.17' "gcc-libs>=${pkgver//_/-}")
-
-  cd ${srcdir}/gcc-build
-  make -j1 -C $CHOST/x32/libgcc DESTDIR=${pkgdir} install-shared
-  for lib in libmudflap libgomp libstdc++-v3/src libitm libsanitizer/asan; do
-    make -j1 -C $CHOST/x32/$lib DESTDIR=${pkgdir} install-toolexeclibLTLIBRARIES
-  done
-  
-  make -j1 DESTDIR=${pkgdir} install-target-libquadmath
-  make -j1 DESTDIR=${pkgdir} install-target-libgfortran
-  make -j1 DESTDIR=${pkgdir} install-target-libobjc
-
-  # remove unnecessary files installed by install-target-{libquadmath,libgfortran,libobjc}
-  rm ${pkgdir}/usr/libx32/libgfortran.spec
-
-  # remove stuff in gcc-libs-multilib-x32
-  rm -r ${pkgdir}/usr/lib{,32}
-  rm -r ${pkgdir}/usr/share/info
-
-  # remove static libraries
-  find ${pkgdir} -name *.a -delete
-  
-  # Install Runtime Library Exception
-  install -Dm644 ${srcdir}/${_basedir}/COPYING.RUNTIME \
-    ${pkgdir}/usr/share/licenses/libx32-gcc-libs/RUNTIME.LIBRARY.EXCEPTION
+  install -d ${pkgdir}/usr/share/licenses/gcc-go-multilib-x32/
+  ln -s ../gcc-libs-multilib-x32/RUNTIME.LIBRARY.EXCEPTION ${pkgdir}/usr/share/licenses/gcc-go-multilib-x32/
 }
