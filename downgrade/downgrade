@@ -1,243 +1,99 @@
 #!/usr/bin/env bash
-TEXTDOMAINDIR=/usr/share/locale
-TEXTDOMAIN=downgrade
+. gettext.sh
+export TEXTDOMAIN=downgrade
+export TEXTDOMAINDIR=/usr/share/locale
 
-errorout() { echo $"error: $*" >&2; exit 1; }
+prompt_to_install() {
+  local pkg ans i=1
 
-message() {
-  local exit_code="${1:-0}"
+  (($#)) || return 1
 
-  echo $"usage: downgrade [ -d <dir> ] [ -m <i686|x86_64> ] [ -a | -c ] [ -i ] [ -- ] <pkg> ...
-    options:
-      -d,--pkgdir       set download directory (A.R.M. only), default is \`/tmp'
-      -m,--arch         set search architecture (A.R.M. only), default is determined by \`uname -m\`
-      -a,--noarm        don't search the A.R.M. when nothing's available in cache
-      -c,--nocache      don't look in cache, go directly to A.R.M.
-      -i,--noinstalled  don't show [installed] next to installed versions (speed up)
-      -s,--nosudo       don't use sudo, even when available"
+  gettext 'Available packages:'
+  printf "\n\n"
 
-  exit $exit_code
-}
-
-pacman_cache() {
-  local cache
-
-  read -r cache < <(sed '/^ *CacheDir *= *\(.*\)$/!d;s//\1/' /etc/pacman.conf)
-
-  echo "${cache:-/var/cache/pacman/pkg/}"
-}
-
-is_valid_index() {
-  local i="$1"; shift
-
-  [[ -z "$i"           ]] && return 1 # no index
-  [[ -n "${i//[0-9]/}" ]] && return 1 # not positive integer
-  [[ $i -ge "$#"       ]] && return 1 # out of range
-
-  return 0
-}
-
-as_root() {
-  if ! (( $UID )); then
-    errorout $"please do not run downgrade as root; su/sudo will be used when needed"
-  fi
-
-  if $usesudo && type -p sudo &>/dev/null; then
-    sudo "$@"
-    return $?
-  fi
-
-  printf -v cmd "%q " "$@"
-  su root -c "$cmd"
-}
-
-# first argument is the variable to set with the user's response.
-prompt_with_quit() {
-  local var="$1" msg="$2"
-
-  echo
-  read -r -p $"$msg or [q]uit: " $var
-
-  [[ "${!var}" == $"q" ]] && exit 1
-}
-
-prompt_yn() {
-  local msg="$*" ques=$"y" ans
-
-  echo
-  read -r -p "$msg? [$ques/$"n"] " ans
-
-  [[ "${ans,,}" =~ ^($ques) ]]
-}
-
-local_packages() {
-  local term="$1"
-
-  # we use the $term-[0-9]* glob to disambiguate cases like foo-1.0 and
-  # foo-completion-1.0. the R is a special case for erlang.
-  find "$(pacman_cache)" -name "$term-[0-9R]*.pkg.tar.[gx]z" | LC_ALL='C' sort -rV
-}
-
-arm_api() {
-  local pkgname="$1" url='http://repo-arm.archlinuxcn.org/exact'
-
-  curl \
-    --silent --fail \
-    --data "arch=$arch" \
-    --data-urlencode "pkgname=$term" "$url"
-}
-
-arm_packages() {
-  local term="$1" tmp entry repo pack
-
-  # omit signatures, sort by latest version
-  tmp=($(arm_api "$term" | grep -v sig$ | cut -d '|' -f 5 | sort -rV))
-
-  # remove packages duplicated between testing and non-testing
-  for entry in "${tmp[@]}"; do
-    read -r repo pack < <(format_arm "$entry")
-
-    if [[ "$repo" =~ testing$ ]] && \
-      printf "%s\n" "${tmp[@]}" | grep -Fxv "$entry" | grep -Fq "$pack"; then
-
-      continue
-    fi
-
-    echo "$entry"
+  for entry; do
+    output_package "$((i++))" "$entry"
   done
-}
 
-print_table() {
-  local formatter="$1"; shift
-  local i=0 arg repo pack
+  printf "\n"
+  gettext 'select a package by number: '; read -r ans
+  printf "\n"
 
-  local fmt=" %4.4s)  %-17.17s  %s\n"
-
-  for arg; do
-    read -r repo pack < <($formatter "$arg")
-
-    i=$((i+1))
-    case $pack in
-      ${installed// /-}*) printf "$fmt" "$i" "$repo" $"$pack [installed]" ;;
-      *)                  printf "$fmt" "$i" "$repo" "$pack" ;;
-    esac
-  done
-}
-
-format_local() { echo "local $(basename "$1")"; }
-
-# pull elements out of the url, indexed by forward slash.
-format_arm() { set ${1//\// }; echo "$3 $6"; }
-
-install_pkg() {
-  local pkg="$1"
-  local pacman="${PACMAN:-pacman}"
-
-  as_root "$pacman" -U "$pkg" || errorout $"could not install package $pkg"
-}
-
-check_local_packages() {
-  $searchcache || return 1
-
-  local term="$1" pkg n
-  local locals=( $(local_packages "$term") )
-
-  (( ${#locals[@]} )) || return 1
-
-  echo
-  echo $"The following packages are available in your cache:"
-  echo
-
-  print_table format_local "${locals[@]}"
-
-  if $searcharm; then
-    prompt_with_quit num $"please choose a version, [s]earch A.R.M"
-  else
-    prompt_with_quit num $"please choose a version"
-  fi
-
-  [[ "$num" = $"s" ]] && return 1
-
-  n=$((num-1))
-
-  is_valid_index "$n" "${locals[@]}" || errorout $"invalid choice."
-  install_pkg "${locals[$n]}"
-}
-
-check_arm_packages() {
-  $searcharm || return 1
-
-  [[ "$arch" =~ ^(i686|x86_64)$ ]] || errorout $"$arch is invalid, must be i686 or x86_64"
-
-  local term="$1" url pkg n
-  local arms=( $(arm_packages "$term") )
-
-  (( ${#arms[@]} )) || return 1
-
-  echo
-  echo $"The following packages are available from the A.R.M.:"
-  echo
-
-  print_table format_arm "${arms[@]}"
-
-  prompt_with_quit num $"please choose a version"
-
-  n=$((num-1))
-
-  is_valid_index "$n" "${arms[@]}" || errorout $"invalid choice."
-
-  url=${arms[$n]}
-  pkg="$pkgdir/$(basename $url)"
-
-  if [[ ! -d "$pkgdir" ]]; then
-    mkdir -p "$pkgdir" || errorout $"unable to create $pkgdir"
-  fi
-
-  curl -# "$url" > "$pkg" || errorout "failed downloading $url"
-  install_pkg "$pkg"
+  ((ans > 0 && ans <= $#)) && install_pkg "${!ans}"
 }
 
 prompt_to_ignore() {
-  local pkg="$1"
-  local pacman_conf="${PACMAN_CONF:-/etc/pacman.conf}"
+  local pkg="$1" ans
 
-  grep -Eq "^IgnorePkg.*( |=)$pkg( |$)" "$pacman_conf" && return 0
+  grep -Eq '^IgnorePkg.*( |=)'"$pkg"'( |$)' "$PACMAN_CONF" && return 0
 
-  if prompt_yn $"Add $pkg to IgnorePkg in $pacman_conf"; then
-    as_root sed -i "s/^#\?\(IgnorePkg.*\)/\1 $pkg/" "$pacman_conf"
+  printf "\n"
+  eval_gettext "add \$pkg to IgnorePkg? [y/n] "; read -r ans
+  printf "\n"
+
+  if [[ "${ans,,}" == $(gettext 'y')* ]]; then
+    sudo sed -i "s/^#\?\(IgnorePkg.*\)/\1 $pkg/" "$PACMAN_CONF"
   fi
 }
 
-(( "$#" )) || message 1
+search_packages() {
+  ((NOARM)) || \
+    curl --fail --silent --data "arch=$ARCH" \
+         --data-urlencode "pkgname=$1" "$ARM_URL/exact" | cut -d '|' -f 5
 
-pkgdir='/tmp'
-arch=$(uname -m)
-searcharm=true
-searchcache=true
-showinstalled=true
-usesudo=true
+  ((NOCACHE)) || \
+    find $( sed '/^#\?CacheDir *= *\(.*\)$/!d;s//\1/' "$PACMAN_CONF" ) \
+      -name "$1-[0-9R]*.pkg.tar.[gx]z"
+}
 
-args=()
+sort_packages() {
+  grep -Fv 'testing/' \
+    | awk 'BEGIN { FS="/"; OFS="|" } { print $NF, $0 }' \
+    | sort -rV -t '|' -k 1 | cut -d '|' -f 2-
+}
 
-while [[ -n "$1" ]]; do
-  case "$1" in
-    -d|--pkgdir)      shift; pkgdir="${1/\~/$HOME}" ;;
-    -m|--arch)        shift; arch="$1"              ;;
-    -a|--noarm)       searcharm=false               ;;
-    -c|--nocache)     searchcache=false             ;;
-    -i|--noinstalled) showinstalled=false           ;;
-    -s|--nosudo)      usesudo=false                 ;;
-    -h|--help)        message                       ;;
-    --)               shift; args+=( "$@" ); break  ;;
-    -*)               message 1                     ;;
-    *)                args+=( "$1" )                ;;
-  esac
-  shift
-done
+output_package() {
+  printf "%4.4s) %s\n" "$1" "$(
+    sed 's|http://.*/\([^/]\+\)$|\1 ('"$(gettext 'remote')"')|;
+         s|^/.*/\([^/]\+\)$|\1 ('"$(gettext 'local')"')|;' <<< "$2")"
+}
 
-for term in "${args[@]}"; do
-  $showinstalled && installed=$(pacman -Q $term 2>/dev/null)
-  installed=${installed:-DummyPkg}
+install_pkg() {
+  local pkg="$1" url
 
-  ( check_local_packages "$term" || check_arm_packages "$term" ) && prompt_to_ignore "$term"
+  if [[ "$pkg" == 'http://'* ]]; then
+    url="$pkg"
+    pkg="${url##*/}"
+
+    curl --silent "$url" > "$pkg"
+  fi
+
+  [[ -f "$pkg" ]] && sudo "$PACMAN" -U "$pkg"
+}
+
+ARCH=${ARCH:-$(uname -m)}
+PACMAN="${PACMAN:-pacman}"
+PACMAN_CONF="${PACMAN_CONF:-/etc/pacman.conf}"
+ARM_URL="${ARM_URL:-http://repo-arm.archlinuxcn.org}"
+NOARM=${NOARM:-0}
+NOCACHE=${NOCACHE:-0}
+NOSUDO=${NOSUDO:-0}
+
+if [[ -z "$1" ]] && ((!LIB)); then
+  ( gettext 'usage: downgrade <pkg>, ...'; echo
+    gettext 'see downgrade(8) for details.'; echo
+  ) >&2
+  exit 1
+fi
+
+if ((NOSUDO)) || ! type -p sudo &>/dev/null; then
+  sudo() {
+    printf -v cmd "%q " "$@"
+    su root -c "$cmd"
+  }
+fi
+
+for term; do
+  candidates=( $(search_packages "$term" | sort_packages) )
+  prompt_to_install "${candidates[@]}" && prompt_to_ignore "$term"
 done

@@ -1,21 +1,4 @@
 #compdef downgrade
-
-_downgrade_options=(
-  {-d,--pkgdir}'[Set download directory]:directory:_files -/'
-  {-m,--arch}'[Set search architecture]:arch:_arches'
-  {-a,--noarm}'[Don'\''t search the A.R.M]'
-  {-c,--nocache}'[Don'\''t look in cache]'
-  {-i,--noinstalled}'[Don'\''t show "installed"]'
-  {-s,--nosudo}'[Don'\''t use sudo]'
-  {-h,--help}'[Display help]'
-)
-
-_arches() {
-  local -a arches
-  arches=(x86_64 i686)
-  compadd "$@" -a arches
-}
-
 _packages() {
   local -a packages
   packages=($(pacman -Qsq "^$words[current]" 2>/dev/null))
@@ -23,14 +6,7 @@ _packages() {
 }
 
 _downgrade() {
-  if (( $#words[@] == 2 )); then
-    _arguments -s -w : \
-      "$_downgrade_options[@]"
-  else
-    _arguments -s -w : \
-      "$_downgrade_options[@]" \
-      '*:package:_packages'
-  fi
+  _arguments -s -w : '*:package:_packages'
 }
 
 _downgrade "$@"
