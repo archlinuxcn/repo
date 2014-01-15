@@ -1,6 +1,6 @@
 pkgname=freenet
 pkgver=0.7.5
-pkgrel=4
+pkgrel=6
 pkgdesc="An encrypted network without censorship"
 url="http://freenetproject.org/"
 license=('GPL2')
@@ -8,13 +8,18 @@ arch=('any')
 depends=('java-runtime')
 install=freenet.install
 source=(https://downloads.freenetproject.org/alpha/installer/${pkgname}07.tar.gz
-        http://www.bouncycastle.org/download/bcprov-jdk15on-150.jar
+        http://www.bouncycastle.org/download/bcprov-jdk15on-149.jar
         freenet.service)
 
-
-sha256sums=('1f9b64e548eca091bfa96d93a7ab83ef78515924a6ba72dca5bd2ec8c5f2efd7'
-            '115b14a02b91fb03cb1866d6b311d33cd5518a9d8524dd63a14f19571e420404'
-            '8795005b6485b60756562defa3e72237d709f11e3a2bbcd9602fa426535ec544')
+sha512sums=('29853abf98282109e375b271fd49df9e188b6cac69eae80f2850bf3a924dc8b05a23e5b0387b9b9b10c82b11f1a2a375cd1bdd5852bb3a6f98c46a94195c9bfc'
+            '9e70d413b35e3ca2e639d0ac558d466b59a5183a544fe6efac30a7cab297f2a5c23af3cf17c3218c0557ec5043adfe06cc972aa9e8bc6a722bb1e9d0eba57276'
+            'b6b7717e82d67bd753b9e5b636b70a61fb077ba42b7bc0c28ccbd45efc8d2c256494f418f2a2968b9ef183d57e3e3329261ac21bb3579b905bea0071e7c5a8ce')
+sha1sums=('3a57e280cdd72bae28c61047e24bd7519da59a5b'
+          'f5155f04330459104b79923274db5060c1057b99'
+          '3397dba69a49a205beb2e075d5fdd9fc0cbae794')
+md5sums=('712cde8f51eed472dfee1be027a80b6a'
+         '20f367d41a546f2c844314da5d97ea12'
+         'cb215ebce4f8a57132c9904c0b946c40')
 
 
 build() {
@@ -24,8 +29,8 @@ build() {
 package() {
   cd "${srcdir}/${pkgname}"
 
-  echo 'wrapper.java.classpath.3=bcprov-jdk15on-150.jar' >> wrapper.conf
-  cp -aL ../bcprov-jdk15on-150.jar .
+  echo 'wrapper.java.classpath.3=bcprov-jdk15on-149.jar' >> wrapper.conf
+  cp -aL "${srcdir}"/bcprov-jdk15on-149.jar .
   mkdir -p "${pkgdir}"/opt/${pkgname}
   cp -a . "${pkgdir}"/opt/${pkgname}/.
   chmod -R ug=rwX,o= "${pkgdir}"/opt/freenet
