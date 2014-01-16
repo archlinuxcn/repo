@@ -1,117 +1,51 @@
-# Norwegian Bokmål Translation of downgrade
-# Copyright (C) YEAR pbrisbin
-# This file is distributed under the same license as the PACKAGE package.
+# Norwegian Bokmal translations for downgrade package.
+# Copyright (C) 2013 pbrisbin
+# This file is distributed under the same license as the downgrade package.
 # Håkon Vågsether <hauk142@gmail.com>, 2013.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: downgrade\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-01 18:12+0300\n"
-"PO-Revision-Date: 2013-08-05-22:13+0200\n"
+"POT-Creation-Date: 2013-10-31 12:01-0400\n"
+"PO-Revision-Date: 2013-10-31 12:48-0400\n"
 "Last-Translator: Håkon Vågsether <hauk142@gmail.com>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language-Team: Norwegian Bokmal\n"
 "Language: nb\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=ASCII\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../downgrade:10
-msgid "error: $*"
-msgstr "feil: $*"
+#: downgrade:11
+msgid "Available packages:"
+msgstr "Tilgjengelige pakker:"
 
-#: ../downgrade:15
-msgid ""
-"usage: downgrade [ -d <dir> ] [ -m <i686|x86_64> ] [ -a | -c ] [ -i ] [ -- ] "
-"<pkg> ...\n"
-"    options:\n"
-"      -d,--pkgdir       set download directory (A.R.M. only), default is \\`/"
-"tmp'\n"
-"      -m,--arch         set search architecture (A.R.M. only), default is "
-"determined by \\`uname -m\\`\n"
-"      -a,--noarm        don't search the A.R.M. when nothing's available in "
-"cache\n"
-"      -c,--nocache      don't look in cache, go directly to A.R.M.\n"
-"      -i,--noinstalled  don't show [installed] next to installed versions "
-"(speed up)\n"
-"      -s,--nosudo       don't use sudo, even when available"
-msgstr ""
-"bruk: downgrade [ -d <dir> ] [ -m <i686|x86_64> ] [ -a | -c ] [ -i ] [ -- ] "
-"<pkg> ...\n"
-"    handlinger:\n"
-"      -d,--pkgdir       velg nedlastingsområde (bare for A.R.M.), standard er \\`/"
-"tmp'\n"
-"      -m,--arch         velg arkitektur for søk (bare for A.R.M.), standard er "
-"bestemt av \\`uname -m\\`\n"
-"      -a,--noarm        ikke søk i A.R.M. hvis ingenting er funnet i "
-"mellomlagring\n"
-"      -c,--nocache      ikke let i mellomlagring, gå rett til A.R.M.\n"
-"      -i,--noinstalled  ikke vis [installert] ved installerte versjoner "
-"(raskere)\n"
-"      -s,--nosudo       ikke bruk sudo selv om det er tilgjengelig"
+#: downgrade:19
+msgid "select a package by number: "
+msgstr "velg en pakke ved nummer: "
 
-#: ../downgrade:42
-msgid "please do not run downgrade as root; su/sudo will be used when needed"
-msgstr "vennligst ikke kjør downgrade som superbruker; su/sudo vil bli brukt etter behov"
-
-#: ../downgrade:59
+#: downgrade:31
 #, sh-format
-msgid "$msg or [q]uit: "
-msgstr "$msg eller [a]vslutt"
+msgid "add $pkg to IgnorePkg? [y/n] "
+msgstr "legg til $pkg i IgnorePkg? [j/n]"
 
-#: ../downgrade:61
-msgid "q"
-msgstr "a"
-
-#: ../downgrade:65
+#: downgrade:34
 msgid "y"
 msgstr "j"
 
-#: ../downgrade:122
-#, sh-format
-msgid "$pack [installed]"
-msgstr "$pack [installert]"
+#: downgrade:57
+msgid "remote"
+msgstr "ekstern"
 
-#: ../downgrade:137
-#, sh-format
-msgid "could not install package $pkg"
-msgstr "kunne ikke installere $pkg"
+#: downgrade:58
+msgid "local"
+msgstr "lokal"
 
-#: ../downgrade:150
-msgid "The following packages are available in your cache:"
-msgstr "følgende pakker er tilgjengelige i mellomlagring"
+#: downgrade:82
+msgid "usage: downgrade <pkg>, ..."
+msgstr "bruk: downgrade <pkg>, ..."
 
-#: ../downgrade:156
-msgid "please choose a version, [s]earch A.R.M"
-msgstr "vennligst velg en versjon, [s]øk A.R.M."
-
-#: ../downgrade:158 ../downgrade:186
-msgid "please choose a version"
-msgstr "vennligst velg en versjon"
-
-#: ../downgrade:161
-msgid "s"
-msgstr "s"
-
-#: ../downgrade:165 ../downgrade:190
-msgid "invalid choice."
-msgstr "ugyldig valg."
-
-#: ../downgrade:173
-#, sh-format
-msgid "$arch is invalid, must be i686 or x86_64"
-msgstr "$arch er ugyldig, må være i686 eller x86_64"
-
-#: ../downgrade:181
-msgid "The following packages are available from the A.R.M.:"
-msgstr "Følgende pakker er tilgjengelige fra A.R.M.:"
-
-#: ../downgrade:196
-#, sh-format
-msgid "unable to create $pkgdir"
-msgstr "kan ikke opprette $pkgdir"
-
-#: ../downgrade:212
-#, sh-format
-msgid "Add $pkg to IgnorePkg in $pacman_conf"
-msgstr "Legg til $pkg til IgnorePkg i $pacman_conf"
+#: downgrade:83
+msgid "see downgrade(8) for details."
+msgstr "se downgrade(8) for detaljer."

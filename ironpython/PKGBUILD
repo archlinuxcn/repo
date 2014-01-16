@@ -2,8 +2,7 @@
 # Contributor: Di "thc_flow" Abel <nospam@weedsmoker.im>
 
 pkgname=ironpython
-pkgver=2.7.4a1
-_pkgver=2.7.4-a1
+pkgver=2.7.4
 pkgrel=1
 pkgdesc="Python implementation for the .NET framework"
 arch=("any")
@@ -12,13 +11,13 @@ license=("Apache")
 depends=('mono>=2.10.0')
 makedepends=('xz')
 options=('!strip' 'emptydirs' 'libtool')
-source=("https://github.com/IronLanguages/main/archive/ipy-$_pkgver.zip"
+source=("https://github.com/IronLanguages/main/archive/ipy-$pkgver.zip"
         site.patch)
-md5sums=('55b08157729d73c2acc07d10eed1bd60'
+md5sums=('919a5d42c404f638ad0d156b00476a8e'
          'dd484ca6dfe03277d8a13e7b1cfe6662')
 
 build() {
-	cd "$srcdir/main-ipy-$_pkgver"
+	cd "$srcdir/main-ipy-$pkgver"
 
   sed -i "/TreatWarningsAsErrors/s|true|false|" Solutions/Common.proj
 
@@ -27,9 +26,9 @@ build() {
 
 package() {
 	mkdir -p "$pkgdir/"{opt/ipy,usr/bin}
-  cp -r $srcdir/main-ipy-$_pkgver/bin/Release/* "$pkgdir/opt/ipy"
+  cp -r $srcdir/main-ipy-$pkgver/bin/Release/* "$pkgdir/opt/ipy"
   for bin in ipy ipy64 ipyw ipyw64; do
-		echo -e '#!/bin/sh\nmono /opt/ipy/$x.exe $*' > "$pkgdir/usr/bin/$bin"
+		echo -e "#!/bin/sh\nmono /opt/ipy/$bin.exe \$*" > "$pkgdir/usr/bin/$bin"
 		chmod +x "$pkgdir/usr/bin/$bin"
 	done
 }

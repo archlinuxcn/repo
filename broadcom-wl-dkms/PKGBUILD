@@ -2,12 +2,13 @@
 pkgname=broadcom-wl-dkms
 _pkgname=broadcom-wl
 pkgver=6.30.223.141
-pkgrel=1
+pkgrel=2
 pkgdesc="Broadcom 802.11 Linux STA wireless driver"
 url='http://www.broadcom.com/support/802.11/linux_sta.php'
 arch=('i686' 'x86_64')
 license=('custom')
 depends=('dkms')
+optdepends=('linux-headers')
 conflicts=('wireless-bcm43142-oneiric-dkms' 'wireless-bcm43142-dkms' 'broadcom-wl6-dkms' 'broadcom-wl')
 [[ $CARCH = x86_64 ]] && _arch=_64 || _arch=
 source=("http://www.broadcom.com/docs/linux_sta/hybrid-v35${_arch}-nodebug-pcoem-${pkgver//./_}.tar.gz"
@@ -19,7 +20,7 @@ sha1sums=('2917d785ffd9663b1d23cfa388b9bd7c9f03cc3b'
 	'a37c5dd9ab279372f0c68595bb2a8f1fe694cd13'
 	'91926bb064c00a00dbcab0d1d92c7eb976d56032'
 	'81c05d48b234d56ad2e18eaee5ce89b79550ef20'
-	'0d59426647fffe5b8c3835c7c6198ee4074ef1db')
+	'ce3294d049d851a116591a589c3fa4f8cd83d0a1')
 [[ $CARCH = x86_64 ]] && sha1sums[0]='3a2453c71a07030f41a8fc613c87badf8452848c'
 
 backup=('etc/modprobe.d/broadcom-wl-dkms.conf')

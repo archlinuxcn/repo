@@ -1,0 +1,43 @@
+# $Id: PKGBUILD 199791 2013-11-16 12:36:17Z heftig $
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+# Maintainer: Jan de Groot <jgc@archlinux.org>
+
+pkgname=evince-nodbus
+pkgver=3.10.3
+pkgrel=1
+pkgdesc="Simply a document viewer"
+url="http://projects.gnome.org/evince/"
+arch=(i686 x86_64)
+license=(GPL)
+depends=(gtk3 libgxps libspectre gsfonts poppler-glib djvulibre gnome-icon-theme t1lib libsecret desktop-file-utils dconf gsettings-desktop-schemas)
+makedepends=(itstool libnautilus-extension texlive-bin intltool gobject-introspection docbook-xsl python)
+optdepends=('texlive-bin: DVI support'
+	    'gvfs: bookmark support and session saving'
+            'p7zip: cbz and cb7 compressed comic books'
+            'tar: cbt compressed comic books'
+            'unrar: cbr compressed comic books')
+groups=(gnome)
+conflicts=('evince')
+provides=("evince=$pkgver")
+install=evince.install
+options=('!emptydirs')
+source=(http://ftp.gnome.org/pub/gnome/sources/evince/${pkgver%.*}/evince-$pkgver.tar.xz)
+sha256sums=('b30dcc3a93dd3c682325e685061c48ccd800835af49578f4db813bbaf5f5e9af')
+
+build() {
+  cd "evince-$pkgver"
+  ./configure --prefix=/usr   --sysconfdir=/etc \
+      --localstatedir=/var    --libexecdir=/usr/lib/evince \
+      --disable-static        --enable-nautilus \
+      --enable-pdf            --enable-tiff \
+      --enable-djvu           --enable-dvi \
+      --enable-t1lib          --enable-comics \
+      --disable-scrollkeeper  --disable-schemas-compile \
+      --enable-introspection  --disable-dbus
+  make
+}
+
+package() {
+  cd "evince-$pkgver"
+  make DESTDIR="$pkgdir" install
+}

@@ -137,7 +137,7 @@ diff -rupN SFML-1.6.orig/src/SFML/Graphics/Makefile SFML-1.6/src/SFML/Graphics/M
 -libsfml-graphics.so: $(OBJ) $(OBJGLEW) $(OBJJPEG) $(OBJPNG) $(OBJSOIL) $(OBJZLIB)
 -	$(CPP) $(LDFLAGS) -Wl,-soname,$(LIB).$(VERSION) -o $(LIBNAME) $(OBJ) $(OBJGLEW) $(OBJJPEG) $(OBJPNG) $(OBJSOIL) $(OBJZLIB) -lfreetype -lX11 -lGL
 +libsfml-graphics-$(VERSION).so: $(OBJ)
-+	$(CPP) $(LDFLAGS) -Wl,-soname,$(LIB).$(VERSION) -o $(LIBNAME) $(OBJ) -lGLEW -ljpeg -lpng -lz -lfreetype -lX11 -lGL
++	$(CPP) $(LDFLAGS) -Wl,-soname,$(LIB).$(VERSION) -o $(LIBNAME) $(OBJ) -lGLEW -ljpeg -lpng -lz -lfreetype -lX11 -lGL -lSOIL
  
  $(OBJ): %.o: %.cpp
  	$(CPP) -o $@ -c $< $(CFLAGS) -I/usr/include/freetype2

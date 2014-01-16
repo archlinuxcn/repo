@@ -5,77 +5,43 @@
 .SH SYNOPSIS
 .LP
 .HP
-\fBdowngrade\fR \[lB]OPTION, ...\[rB] \[lB]PACKAGE, ...\[rB]
+\fBdowngrade\fR \[lB]PACKAGE, ...\[rB]
 .LP
 .SH DESCRIPTION
 .LP
 .PP
-Downgrade Arch Linux packages by installing versions found in a local 
-package cache or the Arch Rollback Machine\.
+Downgrade Arch Linux packages\.
 .LP
 .PP
 https:\[sl]\[sl]github\.com\[sl]pbrisbin\[sl]downgrade
 .LP
-.SH OPTIONS
+.SH PACKAGE SOURCES
 .LP
-.TP
-\fB-d\fR,\fB--pkgdir\fR \fIDIRECTORY\fP
-Set download directory (A\.R\.M\. only)\. Default is \fI\[sl]tmp\fP\.
-.LP
-.TP
-\fB-m\fR, \fB--arch\fR \fIx86\[ru]64\fP\[or]\fIi686\fP
-Set search architecture (A\.R\.M\. only)\. Default is determined by 
-\fBuname(1)\fR\.
-.LP
-.TP
-\fB-a\fR, \fB--noarm\fR
-Don\[cq]t search the A\.R\.M\. when nothing is available in cache\.
-.LP
-.TP
-\fB-c\fR, \fB--nocache\fR
-Don\[cq]t look in cache, go directly to the A\.R\.M\.
-.LP
-.TP
-\fB-i\fR, \fB--noinstalled\fR
-Don\[cq]t show \fI\[lB]installed\[rB]\fP next to installed versions (doing so has a 
-minor performance impact)\.
-.LP
-.TP
-\fB-s\fR, \fB--nosudo\fR
-Don\[cq]t use \fBsudo(8)\fR, even if available (\fBsu(1)\fR is used in stead)\.
-.LP
-.SH ARCH ROLLBACK MACHINE
+.SS ARCH ROLLBACK MACHINE (ARM)
 .LP
 .PP
-The Arch Rollback Machine is a community\-hosted set of older packages 
-and an API for searching and retrieving them\.
+Effectively,
 .LP
 .PP
-The A\.R\.M\. is presently located at:
+\fBcurl -d "arch=$(uname -m)" -d "pkgname=${pkg}" "$ARM_URL/exact"\fR
+.LP
+.SS CACHE
 .LP
 .PP
-\fBhttp://repo-arm.archlinuxcn.org\fR
-.LP
-.SH CACHE LOCATION
+Effectively,
 .LP
 .PP
-The location of the local package cache is determined by reading 
-\fI\[Do]PACMAN\[ru]CONF\fP for the \fICacheDir\fP directive\. By default, this value has 
-a trailing slash\. If your cache happens to be a symlink, the trailing 
-slash is required\.
-.LP
-.SH IGNORING PACKAGES
+\fBfind $caches -name "${pkg}-[0-9R]*.pkg.tar.[gx]z"\fR
 .LP
 .PP
-As it is common to add a package to the \fIIgnorePkg\fP directive in one\[cq]s 
-pacman configuration after downgrading, \fBdowngrade\fR offers to do this 
-for you automatically\.
-.LP
-.PP
-The process is skipped if the package name is already present in 
-\fIIgnorePkg\fP\.
+Where \fB$caches\fR is the list of all \fBCacheDir\fRs as defined in 
+\fI\[Do]PACMAN\[ru]CONF\fP (commented or not)\.
 .LP
 .SH ENVIRONMENT VARIABLES
+.LP
+.TP
+\fIARCH\fP
+Target architecture\. Default is determined by \fBuname -m\fR\.
 .LP
 .TP
 \fIPACMAN\fP
@@ -84,6 +50,24 @@ The pacman command\. Default is \fIpacman\fP\.
 .TP
 \fIPACMAN\[ru]CONF\fP
 Your pacman configuration file\. Default is \fI\[sl]etc\[sl]pacman\.conf\fP\.
+.LP
+.TP
+\fIARM\[ru]URL\fP
+The location of an A\.R\.M\. server\. Default is 
+\fIhttp:\[sl]\[sl]repo\-arm\.archlinuxcn\.org\fP\.
+.LP
+.TP
+\fINOARM\fP
+Do not search the A\.R\.M\. Default is \fI0\fP\.
+.LP
+.TP
+\fINOCACHE\fP
+Do not search your local cache\. Default is \fI0\fP\.
+.LP
+.TP
+\fINOSUDO\fP
+Do not use \fBsudo(8)\fR even when available, use \fBsu(1)\fR always\. Default 
+is \fI0\fP\.
 .LP
 .SH AUTHOR
 .LP
@@ -95,4 +79,4 @@ Patrick Brisbin
 .SH SEE ALSO
 .LP
 .PP
-pacman(8), pacman\.conf(5)
+pacman(8), pacman\.conf(5), find(1), sudo(8), su(1)

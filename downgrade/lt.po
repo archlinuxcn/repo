@@ -1,5 +1,5 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# Copyright (C) YEAR pbrisbin
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
@@ -7,112 +7,46 @@ msgid ""
 msgstr ""
 "Project-Id-Version: downgrade\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-01 18:12+0300\n"
-"PO-Revision-Date: 2013-04-01 18:12+0300\n"
+"POT-Creation-Date: 2013-10-31 12:01-0400\n"
+"PO-Revision-Date: 2013-11-01 13:53+0200\n"
 "Last-Translator: Algimantas Margevičius <margevicius.algimantas@gmail.com>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: lt\n"
+"Language-Team: lt <margevicius.algimantas@gmail.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.5.7\n"
+"Language: lt\n"
+"X-Poedit-SourceCharset: UTF-8\n"
 
-#: ../downgrade:10
-msgid "error: $*"
-msgstr "klaida: $*"
+#: downgrade:11
+msgid "Available packages:"
+msgstr "Prieinami paketai:"
 
-#: ../downgrade:15
-msgid ""
-"usage: downgrade [ -d <dir> ] [ -m <i686|x86_64> ] [ -a | -c ] [ -i ] [ -- ] "
-"<pkg> ...\n"
-"    options:\n"
-"      -d,--pkgdir       set download directory (A.R.M. only), default is \\`/"
-"tmp'\n"
-"      -m,--arch         set search architecture (A.R.M. only), default is "
-"determined by \\`uname -m\\`\n"
-"      -a,--noarm        don't search the A.R.M. when nothing's available in "
-"cache\n"
-"      -c,--nocache      don't look in cache, go directly to A.R.M.\n"
-"      -i,--noinstalled  don't show [installed] next to installed versions "
-"(speed up)\n"
-"      -s,--nosudo       don't use sudo, even when available"
-msgstr ""
-"naudojimas: downgrade [ -d <dir> ] [ -m <i686|x86_64> ] [ -a | -c ] [ -i ] [ -- ] "
-"<pkg> ...\n"
-"    parinktys:\n"
-"      -d,--pkgdir       nustatyti parsiuntimo aplanką (tik A.R.M.), "
-"numatytasis yra \\`/tmp'\n"
-"      -m,--arch         nustatyti paieškos architektūrą (tik A.R.M.), "
-"numatytoji nustatoma pagal \\`uname -m\\`\n"
-"      -a,--noarm        jei podėlyje nieko nerasta neieškoti A.R.M.\n"
-"      -c,--nocache      neieškoti podėlyje, eiti tiesiai prie A.R.M.\n"
-"      -i,--noinstalled  nerodyti [įdiegta] šalia įdiegtų versijų (greičiau)\n"
-"      -s,--nosudo      nenaudoti sudo, net jei galima"
+#: downgrade:19
+msgid "select a package by number: "
+msgstr "įveskite paketo numerį:"
 
-#: ../downgrade:42
-msgid "please do not run downgrade as root; su/sudo will be used when needed"
-msgstr ""
-"nevykdykite „downgrade“ kaip root naudotojas; kai reikės su/sudo bus "
-"panaudota"
-
-#: ../downgrade:59
+#: downgrade:31
 #, sh-format
-msgid "$msg or [q]uit: "
-msgstr "$msg arba [i]šeikite: "
+msgid "add $pkg to IgnorePkg? [y/n] "
+msgstr "pridėti $pkg į IgnorePkg? [t/n]"
 
-#: ../downgrade:61
-msgid "q"
-msgstr "i"
-
-#: ../downgrade:65
+#: downgrade:34
 msgid "y"
 msgstr "t"
 
-#: ../downgrade:122
-#, sh-format
-msgid "$pack [installed]"
-msgstr "$pack [įdiegta]"
+#: downgrade:57
+msgid "remote"
+msgstr "nutolęs"
 
-#: ../downgrade:137
-#, sh-format
-msgid "could not install package $pkg"
-msgstr "paketo $pkg įdiegti nepavyko"
+#: downgrade:58
+msgid "local"
+msgstr "vietinis"
 
-#: ../downgrade:150
-msgid "The following packages are available in your cache:"
-msgstr "Iš jūsų podėlio prieinami šie paketai:"
+#: downgrade:82
+msgid "usage: downgrade <pkg>, ..."
+msgstr "naudojimas: downgrade <paketas>,..."
 
-#: ../downgrade:156
-msgid "please choose a version, [s]earch A.R.M"
-msgstr "pasirinkite versiją, [i]eškoti A.R.M"
-
-#: ../downgrade:158 ../downgrade:186
-msgid "please choose a version"
-msgstr "pasirinkite versiją"
-
-#: ../downgrade:161
-msgid "s"
-msgstr "i"
-
-#: ../downgrade:165 ../downgrade:190
-msgid "invalid choice."
-msgstr "netinkamas pasirinkimas."
-
-#: ../downgrade:173
-#, sh-format
-msgid "$arch is invalid, must be i686 or x86_64"
-msgstr "$arch netinkama, turi būti i686 arba x86_64"
-
-#: ../downgrade:181
-msgid "The following packages are available from the A.R.M.:"
-msgstr "Iš A.R.M. prieinami šie paketai :"
-
-#: ../downgrade:196
-#, sh-format
-msgid "unable to create $pkgdir"
-msgstr "nepavyko sukurti $pkgdir"
-
-#: ../downgrade:212
-#, sh-format
-msgid "Add $pkg to IgnorePkg in $pacman_conf"
-msgstr "Pridėti „$pkg“ į IgnorePkg faile $pacman_conf"
+#: downgrade:83
+msgid "see downgrade(8) for details."
+msgstr "išsamiau galite paskaityti downgrade(8)."
