@@ -1,0 +1,50 @@
+Bugzilla: 1037793
+Upstream-status: submitted for 3.14
+
+Currently, it could leak dentry references in some cases. Make sure
+we clean up properly.
+
+Signed-off-by: Jeff Layton <jlayton@redhat.com>
+---
+ net/sunrpc/rpc_pipe.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/net/sunrpc/rpc_pipe.c b/net/sunrpc/rpc_pipe.c
+index 5d973b2..b185548 100644
+--- a/net/sunrpc/rpc_pipe.c
++++ b/net/sunrpc/rpc_pipe.c
+@@ -1369,6 +1369,18 @@ out:
+ 	return pipe_dentry;
+ }
+ 
++static void
++rpc_gssd_dummy_depopulate(struct dentry *pipe_dentry)
++{
++	struct dentry *clnt_dir = pipe_dentry->d_parent;
++	struct dentry *gssd_dir = clnt_dir->d_parent;
++
++	__rpc_rmpipe(clnt_dir->d_inode, pipe_dentry);
++	__rpc_depopulate(clnt_dir, gssd_dummy_info_file, 0, 1);
++	__rpc_depopulate(gssd_dir, gssd_dummy_clnt_dir, 0, 1);
++	dput(pipe_dentry);
++}
++
+ static int
+ rpc_fill_super(struct super_block *sb, void *data, int silent)
+ {
+@@ -1412,7 +1424,7 @@ rpc_fill_super(struct super_block *sb, void *data, int silent)
+ 	return 0;
+ 
+ err_depopulate:
+-	dput(gssd_dentry);
++	rpc_gssd_dummy_depopulate(gssd_dentry);
+ 	blocking_notifier_call_chain(&rpc_pipefs_notifier_list,
+ 					   RPC_PIPEFS_UMOUNT,
+ 					   sb);
+-- 
+1.8.4.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-nfs" in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html

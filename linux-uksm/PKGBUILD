@@ -32,7 +32,7 @@ pkgname=linux-uksm
 true && pkgname=(linux-uksm linux-uksm-headers)
 _kernelname=-uksm
 _srcname=linux-3.12
-pkgver=3.12.7
+pkgver=3.12.8
 pkgrel=1
 arch=('i686' 'x86_64')
 url="http://kerneldedup.org/"
@@ -51,6 +51,12 @@ source=("http://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
         'linux-uksm.preset'
         'change-default-console-loglevel.patch'
         'criu-no-expert.patch'
+        'sunrpc-create-a-new-dummy-pipe-for-gssd-to-hold-open.patch'
+        'sunrpc-replace-gssd_running-with-more-reliable-check.patch'
+        'nfs-check-gssd-running-before-krb5i-auth.patch'
+        'rpc_pipe-remove-the-clntXX-dir-if-creating-the-pipe-fails.patch'
+        'sunrpc-add-an-info-file-for-the-dummy-gssd-pipe.patch'
+        'rpc_pipe-fix-cleanup-of-dummy-gssd-directory-when-notification-fails.patch'
         'config'
         'config.x86_64')
         
@@ -69,6 +75,17 @@ prepare() {
     # allow criu without expert option set
     # patch from fedora
     patch -Np1 -i "${srcdir}/criu-no-expert.patch"
+
+    # fix 15 seocnds nfs delay
+    patch -Np1 -i "${srcdir}/sunrpc-create-a-new-dummy-pipe-for-gssd-to-hold-open.patch"
+    patch -Np1 -i "${srcdir}/sunrpc-replace-gssd_running-with-more-reliable-check.patch"
+    patch -Np1 -i "${srcdir}/nfs-check-gssd-running-before-krb5i-auth.patch"
+    # fix nfs kernel oops
+    # #37866
+    patch -Np1 -i "${srcdir}/rpc_pipe-remove-the-clntXX-dir-if-creating-the-pipe-fails.patch"
+    patch -Np1 -i "${srcdir}/sunrpc-add-an-info-file-for-the-dummy-gssd-pipe.patch"
+
+    patch -Np1 -i "${srcdir}/rpc_pipe-fix-cleanup-of-dummy-gssd-directory-when-notification-fails.patch"
 
     msg "Patching source with BFQ patches"
     for p in $(ls ${srcdir}/000{1,2,3}-block*.patch); do
@@ -383,7 +400,7 @@ package_linux-uksm-headers() {
 pkgdesc='Linux Kernel and modules with the UKSM patchset'
 
 sha512sums=('4ba5797e0772726d05c9f2eee66dc6dc2a5033c749ef44764c805a83da739ed5d0c6443b76785e38fe1ef74cc7ade787e48144faed0cfcb6f124f05248c700ff'
-            '070536e1ed0911e91e96f32038b38efd8d531a306b09eb3074f68ebd7c582cf09574ea712666c3e3dff8443d66d054028a58497dd5e11f66d3bb5eb4570aee78'
+            '27cf39ed82d2b28669a7a63b577814b625e9fa73fce4e15c5f4a35358621356e4364c4892427fb5e02982087090404f5ce871357a04c0372d008b1e55ca55aee'
             'b420cfa5f108bdd83675de4ecfa3567fb82e7fc8f010dabb4c55ad78a6956b805f8649c2dc186dd58a7ca4d091c5e083e42eb6c8978538ea32cf9905f63c317b'
             '006ab095bd199d771300672bf0863df8b2a631f609898e4182104e85e0f0c8d8124e1e2d1ab6bb8747324afef135554de258965b28b3b71d05fc036463253123'
             'bffa292c8825250f90851d8ae264ac48c872442b9f1c02a71eb4f81bb811beddc06ea920505b10a41c1c8584ed9c18846a00c3262f063c49610eab534ee8f03d'
@@ -391,5 +408,11 @@ sha512sums=('4ba5797e0772726d05c9f2eee66dc6dc2a5033c749ef44764c805a83da739ed5d0c
             '6b5e2da5be509020134d2acfda8424f1e75fa681f0b8d5e01c6c68089da2f1398cbca58f6a85c05ac701682feec8c0d3fcf8267cefa8da391a7ada253413f771'
             '502192b5ce94c8254205f5ddb85bf50c5f1e78c768817b10dca3a7716a8c59d5e093842631acb51e3805cbf85522e0a9200942656f11bbb4ea1b7d61e24ddd78'
             'fc7b67bad612fdc67f9dd16886188d7bbfe3b8e65eb271672fcd888212e5b9e893c2eafef8070dd6113133b7a0a1a9c0dff90833080b452a2a530166e30587df'
+            'c32a7897c209056701849f8fe7cedde22e6ddb2dd60ac0178d239ec90931fcc6bd4c732ff16f9aa5a00d429b48c3994daf90fff90b360f318de3d7f68cfa4bac'
+            '3a84623dba1e04060bafea3b323df4698a687dca2f96e45082370ed8bc3ab02b53771a90ce350ffb6437cb7f0c7aaa72df118875801be26f487e609bd5f4339c'
+            '9d90d2c8438006cca1c05fdb2cd00947d1f2fe241fccf0869a1c29d6b574cf91b093fa4da6915d72d9bb34bd7caefb696d15824cbaa43810bd4635b59e9bfa1e'
+            '161b13f04f9da58932550818e0cd299b5ab374e49eff90a2318c3adf8f72748d8558723cf3bc41b335dee4d4f62ec843bd75cd43fa0f13987410bd489ca49076'
+            '6f912d4a3299d2b22ed2f360f8d23821d0f3223510381277c3ae0d1a3ed67b6ef72b232d30b02582ed3da2a374f36602399bd85f054c3c3516431a0bc90f33e4'
+            '4ac100de8a1d1f4b363d196aed342811e6205d3317a21e8117739690eee60e0ed657358a03c1928a2d170bae5daba31ab66f43aed589083ec6dd627c5c173ca1'
             'ef02df7b340cf237c6fdbf58def7793040904df1a403d5b93511cb289777be806cca51971031e389be80997d7ba38db89bd97dafef1459250afc11e19a01a884'
             '02e2156aaeeea7855a3b274626e940c67b2f95ada65f32342868f2b83f8399897fc743f17cbdf8a2261f6fdd249c0060fbf7e20d9dea4d7e0b8e8be88482158c')
