@@ -1,13 +1,13 @@
-# Maintainer: Felix Yan <felixonmars@gmail.com>
+# Maintainer: Sietse van der Molen <sietse@vdmolen.eu>
+# Contributor: Felix Yan <felixonmars@gmail.com>
 # Contributor: pisuka <tekmon@gmail.com>
 # Contributor: Estevao Valadao <estevao@archlinux-br.org>
 # Contributor: Guten <ywzhaifei@gmail.com>
 # Contributor: Lee.MaRS <leemars@gmail.com>
 
 pkgname=google-appengine-python
-pkgver=1.8.8
+pkgver=1.8.9
 _zipver=$pkgver
-#_zipver=1.8.6
 pkgrel=1
 arch=(any)
 pkgdesc="Google App Engine SDK for Python."
@@ -46,4 +46,4 @@ package() {
   find opt/${pkgname} -maxdepth 1 -type f -executable -printf "/opt/${pkgname}/%f\n" | xargs ln -st usr/bin/
 }
 
-sha1sums=('06ec39f53a37e1bbe8cade947a5a45af6eeadaea')
+sha1sums=('6a5a79a81bf0f1fccf5b56dac41be6174888983e')
