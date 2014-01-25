@@ -49,7 +49,6 @@ md5sums=('909d353c1caf6b3b54cc20767a7778ef'  # jdk-$_pkgver-linux-i586.tar.gz
 # source[0]="http://ftp.wsisiz.edu.pl/pub/pc/pozyteczne%20oprogramowanie/java/jdk-$_pkgver-linux-$_arch.tar.gz"
 
 DLAGENTS=('http::/usr/bin/curl -fLC - --retry 3 --retry-delay 3 -O --header "Cookie: gpw_e24=h"')
-PKGEXT='.pkg.tar'
 
 package() {
   msg2 "Creating required dirs"
