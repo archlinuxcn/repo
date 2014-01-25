@@ -5,14 +5,14 @@
 # or use: $ curl -s https://dl.google.com/linux/chrome/rpm/stable/x86_64/repodata/other.xml.gz | gzip -df | awk -F\" '/pkgid/{ sub(".*-","",$4); print $4": "$10 }'
 
 pkgname=google-chrome-dev
-pkgver=33.0.1750.29
+pkgver=34.0.1797.2
 pkgrel=1
 pkgdesc="An attempt at creating a safer, faster, and more stable browser (Dev Channel)"
 arch=('i686' 'x86_64')
 url="https://www.google.com/chrome"
 license=('custom:chrome')
 depends=('alsa-lib' 'desktop-file-utils' 'flac' 'gconf'  'gtk2' 'harfbuzz' 'harfbuzz-icu' 'hicolor-icon-theme' 'icu'
-         'libpng' 'libxss' 'libxtst' 'nss' 'opus' 'snappy' 'speech-dispatcher' 'ttf-font' 'xdg-utils')
+         'libgcrypt15' 'libpng' 'libxss' 'libxtst' 'nss' 'opus' 'snappy' 'speech-dispatcher' 'ttf-font' 'xdg-utils')
 optdepends=('kdebase-kdialog: needed for file dialogs in KDE'
             'ttf-google-fonts-git')
 provides=("google-chrome=$pkgver")
@@ -23,14 +23,10 @@ _channel=unstable
 _arch=i386
 [ "$CARCH" = 'x86_64' ] && _arch=amd64
 source=("google-chrome-${_channel}_${pkgver}_${_arch}.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_${_arch}.deb"
-        'https://www.google.com/intl/en/chrome/browser/privacy/eula_text.html'
-        'libgcrypt-i686.so.11'
-        'libgcrypt-x86_64.so.11')
-md5sums=('d37854ca30d75e3de2c8d6c213b6adc7'
-         'ba19ea498f294975d320ff0b26a6cd63'
-         'd8ceda14734bfc6c33090a16d7b5d9b1'
-         'dfcef54674c42a0d15238ff946760f23')
-[ "$CARCH" = 'x86_64' ] && md5sums[0]='e3ebbf6bf315e3bda5a33c546631d35a'
+        'https://www.google.com/intl/en/chrome/browser/privacy/eula_text.html')
+md5sums=('5013e9f44b9b166f86d25cd8c08a3771'
+         'ba19ea498f294975d320ff0b26a6cd63')
+[ "$CARCH" = 'x86_64' ] && md5sums[0]='555e5c2af6bae57d7e02a11eb0435d76'
 
 package() {
   msg2 "Extracting the data.tar.lzma"
@@ -51,11 +47,6 @@ package() {
   msg2 "Symlinking missing Udev lib"
   ln -s /usr/lib/libudev.so.1 "$pkgdir"/opt/google/chrome-$_channel/libudev.so.0
 
-  #if [ $(pacman -Q libgcrypt | cut -d " " -f2 | tr -d .-) -ge 1601 ]; then
-  msg2 "Installing compatible Gcrypt lib"
-  install -m755 "$startdir"/libgcrypt-$CARCH.so.11 "$pkgdir"/opt/google/chrome-$_channel/libgcrypt.so.11
-  #fi
-  
   msg2 "Changing permissions"
   chmod go+rx "$pkgdir"/opt/google/chrome/
 
