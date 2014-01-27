@@ -58,6 +58,7 @@ source=("http://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
         '0005-sunrpc-add-an-info-file-for-the-dummy-gssd-pipe.patch'
         '0006-rpc_pipe-fix-cleanup-of-dummy-gssd-directory-when-no.patch'
         '0001-syscalls.h-use-gcc-alias-instead-of-assembler-aliase.patch'
+        'i8042-fix-aliases.patch'
         'config'
         'config.x86_64')
         
@@ -94,6 +95,9 @@ prepare() {
 
     # Fix symbols: Revert http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=83460ec8dcac14142e7860a01fa59c267ac4657c
     patch -Rp1 -i "${srcdir}/0001-syscalls.h-use-gcc-alias-instead-of-assembler-aliase.patch"
+
+    # Fix i8042 aliases
+    patch -p1 -i "${srcdir}/i8042-fix-aliases.patch"
 
     msg "Patching source with BFQ patches"
     for p in $(ls ${srcdir}/000{1,2,3}-block*.patch); do
