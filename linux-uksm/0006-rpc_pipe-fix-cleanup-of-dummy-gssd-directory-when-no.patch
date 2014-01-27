@@ -1,10 +1,14 @@
-Bugzilla: 1037793
-Upstream-status: submitted for 3.14
+From 23e66ba97127ff3b064d4c6c5138aa34eafc492f Mon Sep 17 00:00:00 2001
+From: Jeff Layton <jlayton@redhat.com>
+Date: Mon, 9 Dec 2013 09:38:00 -0500
+Subject: [PATCH 6/6] rpc_pipe: fix cleanup of dummy gssd directory when
+ notification fails
 
 Currently, it could leak dentry references in some cases. Make sure
 we clean up properly.
 
 Signed-off-by: Jeff Layton <jlayton@redhat.com>
+Signed-off-by: Trond Myklebust <Trond.Myklebust@netapp.com>
 ---
  net/sunrpc/rpc_pipe.c | 14 +++++++++++++-
  1 file changed, 13 insertions(+), 1 deletion(-)
@@ -42,9 +46,5 @@ index 5d973b2..b185548 100644
  					   RPC_PIPEFS_UMOUNT,
  					   sb);
 -- 
-1.8.4.2
+1.8.5.3
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-nfs" in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
