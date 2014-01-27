@@ -9,8 +9,8 @@ pkgname=('linux-rt' 'linux-rt-headers' 'linux-rt-docs') # Build realtime patched
 #pkgname=linux-custom       # Build kernel with a different name
 _kernelname=${pkgname#linux}
 _basekernel=3.12
-_releasever=6
-_rtpatchver=rt9
+_releasever=8
+_rtpatchver=rt11
 pkgrel=1
 _pkgver=${_basekernel}.${_releasever}
 pkgver=${_basekernel}.${_releasever}_${_rtpatchver}
@@ -28,16 +28,26 @@ source=("https://www.kernel.org/pub/linux/kernel/v3.x/linux-${_basekernel}.tar.x
         "${pkgname}.preset"
         'change-default-console-loglevel.patch'
         'criu-no-expert.patch'
-        'timers-do-not-raise-softirq-unconditionally.patch')
+        'sunrpc-create-a-new-dummy-pipe-for-gssd-to-hold-open.patch'
+        'sunrpc-replace-gssd_running-with-more-reliable-check.patch'
+        'nfs-check-gssd-running-before-krb5i-auth.patch'
+        'rpc_pipe-remove-the-clntXX-dir-if-creating-the-pipe-fails.patch'
+        'sunrpc-add-an-info-file-for-the-dummy-gssd-pipe.patch'
+        'rpc_pipe-fix-cleanup-of-dummy-gssd-directory-when-notification-fails.patch')
 md5sums=('cc6ee608854e0da4b64f6c1ff8b6398c'
-         '9e75be8b127e58f1a76c0015eabb12ae'
-         'b6b66c250459a63664e23235153f587c'
-         '76c342e91dbc7c248535f7ef621b806e'
-         'c8f5638634f1444d6c588a75530e98be'
+         '03d34842e3a1197d17055610f62627b8'
+         '4fcc03762fbc78465951b57ccd0b5a9b'
+         '38567cec912f1e0db6c8417916bdd1e6'
+         '97de19de5c3632988f3e6adaf9d8fad2'
          'eb14dcfd80c00852ef81ded6e826826a'
          '98beb36f9b8cf16e58de2483ea9985e3'
          'd50c1ac47394e9aec637002ef3392bd1'
-         'a091e206b3cadcd9bcd807f3a0c98922')
+         'd4a75f77e6bd5d700dcd534cd5f0dfce'
+         'dc86fdc37615c97f03c1e0c31b7b833a'
+         '88eef9d3b5012ef7e82af1af8cc4e517'
+         'cec0bb8981936eab2943b2009b7a6fff'
+         '88d9cddf9e0050a76ec4674f264fb2a1'
+         'cb9016630212ef07b168892fbcfd4e5d')
 
 prepare() {
   cd "${srcdir}/linux-${_basekernel}"
@@ -50,10 +60,6 @@ prepare() {
   msg "applying patch-${_pkgver}-${_rtpatchver}.patch"
   patch -p1 -i "${srcdir}/patch-${_pkgver}-${_rtpatchver}.patch"
 
-  # revert patch, causing the kernel to hang on very early in the boot process
-  msg "reverting timers-do-not-raise-softirq-unconditionally.patch"
-  patch -p1 -R -i "${srcdir}/timers-do-not-raise-softirq-unconditionally.patch"
-  
   # add latest fixes from stable queue, if needed
   # http://git.kernel.org/?p=linux/kernel/git/stable/stable-queue.git
 
@@ -67,6 +73,24 @@ prepare() {
   # patch from fedora
   msg "applying criu-no-expert.patch"
   patch -Np1 -i "${srcdir}/criu-no-expert.patch"
+  
+  msg "sunrpc-create-a-new-dummy-pipe-for-gssd-to-hold-open.patch"
+  patch -Np1 -i "${srcdir}/sunrpc-create-a-new-dummy-pipe-for-gssd-to-hold-open.patch"
+
+  msg "sunrpc-replace-gssd_running-with-more-reliable-check.patch"
+  patch -Np1 -i "${srcdir}/sunrpc-replace-gssd_running-with-more-reliable-check.patch"
+
+  msg "nfs-check-gssd-running-before-krb5i-auth.patch"
+  patch -Np1 -i "${srcdir}/nfs-check-gssd-running-before-krb5i-auth.patch"
+
+  msg "rpc_pipe-remove-the-clntXX-dir-if-creating-the-pipe-fails.patch"
+  patch -Np1 -i "${srcdir}/rpc_pipe-remove-the-clntXX-dir-if-creating-the-pipe-fails.patch"
+
+  msg "sunrpc-add-an-info-file-for-the-dummy-gssd-pipe.patch"
+  patch -Np1 -i "${srcdir}/sunrpc-add-an-info-file-for-the-dummy-gssd-pipe.patch"
+
+  msg "rpc_pipe-fix-cleanup-of-dummy-gssd-directory-when-notification-fails.patch"
+  patch -Np1 -i "${srcdir}/rpc_pipe-fix-cleanup-of-dummy-gssd-directory-when-notification-fails.patch"
 
   msg "All patches have successfully been applied"
 
