@@ -199,6 +199,7 @@ prepare() {
 }
 
 build() {
+    cd ${_srcname}
     msg "Running make bzImage and modules"
     make ${MAKEFLAGS} LOCALVERSION= bzImage modules
 }
@@ -214,7 +215,7 @@ package_linux-uksm() {
     backup=("etc/mkinitcpio.d/linux-uksm.preset")
     install=linux-uksm.install
 
-    cd "${srcdir}/${_srcname}"
+    cd ${_srcname}
 
     KARCH=x86
 
@@ -276,7 +277,7 @@ package_linux-uksm-headers() {
 
     install -dm755 "${pkgdir}/usr/lib/modules/${_kernver}"
 
-    cd "${srcdir}/${_srcname}"
+    cd ${_srcname}
     install -D -m644 Makefile \
 	    "${pkgdir}/usr/lib/modules/${_kernver}/build/Makefile"
     install -D -m644 kernel/Makefile \
