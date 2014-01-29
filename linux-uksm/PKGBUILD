@@ -32,7 +32,7 @@ pkgname=linux-uksm
 true && pkgname=(linux-uksm linux-uksm-headers)
 _kernelname=-uksm
 _srcname=linux-3.13
-pkgver=3.13
+pkgver=3.13.1
 pkgrel=1
 arch=('i686' 'x86_64')
 url="http://kerneldedup.org/"
@@ -43,7 +43,7 @@ _uksmvernel="0.1.2.2"
 _uksmname="v3.13"
 _bfqpath="http://algo.ing.unimo.it/people/paolo/disk_sched/patches/3.13.0-v7"
 source=("http://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
-        #"http://www.kernel.org/pub/linux/kernel/v3.x/patch-${pkgver}.xz"
+        "http://www.kernel.org/pub/linux/kernel/v3.x/patch-${pkgver}.xz"
         #"http://kerneldedup.org/download/uksm/${_uksmvernel}/uksm-${_uksmvernel}-for-${_uksmname}.patch" # website often went down
         "uksm-${_uksmvernel}-for-${_uksmname}.patch"
         "${_bfqpath}/0001-block-cgroups-kconfig-build-bits-for-BFQ-v7-3.13.patch"
@@ -67,7 +67,7 @@ prepare() {
     cd ${_srcname}
 
     ### add upstream patch
-    #patch -Np1 -i "${srcdir}/patch-${pkgver}"
+    patch -Np1 -i "${srcdir}/patch-${pkgver}"
 
     ### set DEFAULT_CONSOLE_LOGLEVEL to 4 (same value as the 'quiet' kernel param)
     # remove this when a Kconfig knob is made available by upstream
@@ -410,6 +410,7 @@ package_linux-uksm-headers() {
 pkgdesc='Linux Kernel and modules with the UKSM patchset'
 
 sha512sums=('1ba223bb4b885d691a67196d86a8aaf7b4a1c351bf2a762f50f1b0c32da00dd0c28895872a66b49e8d244498d996876609268e64861d28ac4048886ef9f79b87'
+            '164235a15e6a984e9aeaf9fe475a8b2975d5e4c4b28dd4ecf99064b0f0c72eea766d925340f1a7232cabcbd23d26773527c300b6d995bf5cde18a276208fdccc'
             '51d86d26bc9e5e68f613bffbfc0df78a9b6a006155f9eab42fb05d88309605976d55056d26e163d181c0350de0ae85c0d1461317940d57924b9e1093fa0e19e1'
             '2d14c8e7b337e71c8504981c7cf3c0fe5aa10fc52c842ee7429155c34302732cf89c90ec0bc89da20e76180a6c3a858d059c065c8ce2bf8e10f9de84c3f5bbfd'
             '042032e54c3c5a5725f3a465d0dfd6b3fe028f99fec1f9c0568cb0f3061d0197a8ee3ca033374bd6ddca1f81bec11e4646fa13d9e5b3c67cb292788ca401dd49'
