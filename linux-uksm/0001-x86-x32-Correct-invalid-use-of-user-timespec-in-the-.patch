@@ -1,0 +1,80 @@
+From 2def2ef2ae5f3990aabdbe8a755911902707d268 Mon Sep 17 00:00:00 2001
+From: PaX Team <pageexec@freemail.hu>
+Date: Thu, 30 Jan 2014 16:59:25 -0800
+Subject: [PATCH] x86, x32: Correct invalid use of user timespec in the kernel
+
+The x32 case for the recvmsg() timout handling is broken:
+
+  asmlinkage long compat_sys_recvmmsg(int fd, struct compat_mmsghdr __user *mmsg,
+                                      unsigned int vlen, unsigned int flags,
+                                      struct compat_timespec __user *timeout)
+  {
+          int datagrams;
+          struct timespec ktspec;
+
+          if (flags & MSG_CMSG_COMPAT)
+                  return -EINVAL;
+
+          if (COMPAT_USE_64BIT_TIME)
+                  return __sys_recvmmsg(fd, (struct mmsghdr __user *)mmsg, vlen,
+                                        flags | MSG_CMSG_COMPAT,
+                                        (struct timespec *) timeout);
+          ...
+
+The timeout pointer parameter is provided by userland (hence the __user
+annotation) but for x32 syscalls it's simply cast to a kernel pointer
+and is passed to __sys_recvmmsg which will eventually directly
+dereference it for both reading and writing.  Other callers to
+__sys_recvmmsg properly copy from userland to the kernel first.
+
+The bug was introduced by commit ee4fa23c4bfc ("compat: Use
+COMPAT_USE_64BIT_TIME in net/compat.c") and should affect all kernels
+since 3.4 (and perhaps vendor kernels if they backported x32 support
+along with this code).
+
+Note that CONFIG_X86_X32_ABI gets enabled at build time and only if
+CONFIG_X86_X32 is enabled and ld can build x32 executables.
+
+Other uses of COMPAT_USE_64BIT_TIME seem fine.
+
+This addresses CVE-2014-0038.
+
+Signed-off-by: PaX Team <pageexec@freemail.hu>
+Signed-off-by: H. Peter Anvin <hpa@linux.intel.com>
+Cc: <stable@vger.kernel.org> # v3.4+
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+---
+ net/compat.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
+
+diff --git a/net/compat.c b/net/compat.c
+index dd32e34..f50161f 100644
+--- a/net/compat.c
++++ b/net/compat.c
+@@ -780,21 +780,16 @@ asmlinkage long compat_sys_recvmmsg(int fd, struct compat_mmsghdr __user *mmsg,
+ 	if (flags & MSG_CMSG_COMPAT)
+ 		return -EINVAL;
+ 
+-	if (COMPAT_USE_64BIT_TIME)
+-		return __sys_recvmmsg(fd, (struct mmsghdr __user *)mmsg, vlen,
+-				      flags | MSG_CMSG_COMPAT,
+-				      (struct timespec *) timeout);
+-
+ 	if (timeout == NULL)
+ 		return __sys_recvmmsg(fd, (struct mmsghdr __user *)mmsg, vlen,
+ 				      flags | MSG_CMSG_COMPAT, NULL);
+ 
+-	if (get_compat_timespec(&ktspec, timeout))
++	if (compat_get_timespec(&ktspec, timeout))
+ 		return -EFAULT;
+ 
+ 	datagrams = __sys_recvmmsg(fd, (struct mmsghdr __user *)mmsg, vlen,
+ 				   flags | MSG_CMSG_COMPAT, &ktspec);
+-	if (datagrams > 0 && put_compat_timespec(&ktspec, timeout))
++	if (datagrams > 0 && compat_put_timespec(&ktspec, timeout))
+ 		datagrams = -EFAULT;
+ 
+ 	return datagrams;
+-- 
+1.8.5.3
+
