@@ -9,8 +9,8 @@ pkgname=('linux-rt' 'linux-rt-headers' 'linux-rt-docs') # Build realtime patched
 #pkgname=linux-custom       # Build kernel with a different name
 _kernelname=${pkgname#linux}
 _basekernel=3.12
-_releasever=8
-_rtpatchver=rt11
+_releasever=9
+_rtpatchver=rt13
 pkgrel=1
 _pkgver=${_basekernel}.${_releasever}
 pkgver=${_basekernel}.${_releasever}_${_rtpatchver}
@@ -33,10 +33,12 @@ source=("https://www.kernel.org/pub/linux/kernel/v3.x/linux-${_basekernel}.tar.x
         'nfs-check-gssd-running-before-krb5i-auth.patch'
         'rpc_pipe-remove-the-clntXX-dir-if-creating-the-pipe-fails.patch'
         'sunrpc-add-an-info-file-for-the-dummy-gssd-pipe.patch'
-        'rpc_pipe-fix-cleanup-of-dummy-gssd-directory-when-notification-fails.patch')
+        'rpc_pipe-fix-cleanup-of-dummy-gssd-directory-when-notification-fails.patch'
+        '0001-x86-x32-Correct-invalid-use-of-user-timespec-in-the-.patch')
+
 md5sums=('cc6ee608854e0da4b64f6c1ff8b6398c'
-         '03d34842e3a1197d17055610f62627b8'
-         '4fcc03762fbc78465951b57ccd0b5a9b'
+         '0d539fc9bc799663caf0f383d9252d36'
+         '83499dd2bd77368221ba2d6d5d7164ed'
          '38567cec912f1e0db6c8417916bdd1e6'
          '97de19de5c3632988f3e6adaf9d8fad2'
          'eb14dcfd80c00852ef81ded6e826826a'
@@ -47,7 +49,8 @@ md5sums=('cc6ee608854e0da4b64f6c1ff8b6398c'
          '88eef9d3b5012ef7e82af1af8cc4e517'
          'cec0bb8981936eab2943b2009b7a6fff'
          '88d9cddf9e0050a76ec4674f264fb2a1'
-         'cb9016630212ef07b168892fbcfd4e5d')
+         'cb9016630212ef07b168892fbcfd4e5d'
+         '336d2c4afd7ee5f2bdf0dcb1a54df4b2')
 
 prepare() {
   cd "${srcdir}/linux-${_basekernel}"
@@ -91,6 +94,9 @@ prepare() {
 
   msg "rpc_pipe-fix-cleanup-of-dummy-gssd-directory-when-notification-fails.patch"
   patch -Np1 -i "${srcdir}/rpc_pipe-fix-cleanup-of-dummy-gssd-directory-when-notification-fails.patch"
+
+  msg "0001-x86-x32-Correct-invalid-use-of-user-timespec-in-the-.patch"
+  patch -Np1 -i "${srcdir}/0001-x86-x32-Correct-invalid-use-of-user-timespec-in-the-.patch"
 
   msg "All patches have successfully been applied"
 
