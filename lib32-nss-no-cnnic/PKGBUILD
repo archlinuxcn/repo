@@ -6,7 +6,7 @@
 
 _pkgbasename=nss
 pkgname=lib32-${_pkgbasename}-no-cnnic
-pkgver=3.15.3.1
+pkgver=3.15.4
 pkgrel=1
 pkgdesc="Mozilla Network Security Services (32-bit) - Remove Suspect CNNIC ROOT CA"
 arch=('x86_64')
@@ -67,9 +67,9 @@ package() {
   cd "${srcdir}"/${_pkgbasename}-${pkgver}/$_pkgbasename
   install -d "$pkgdir"/usr/lib32/pkgconfig
  
-  NSS_VMAJOR=$(grep '#define.*NSS_VMAJOR' nss/lib/nss/nss.h | awk '{print $3}')
-  NSS_VMINOR=$(grep '#define.*NSS_VMINOR' nss/lib/nss/nss.h | awk '{print $3}')
-  NSS_VPATCH=$(grep '#define.*NSS_VPATCH' nss/lib/nss/nss.h | awk '{print $3}')
+  NSS_VMAJOR=$(grep '#define.*NSS_VMAJOR' lib/nss/nss.h | awk '{print $3}')
+  NSS_VMINOR=$(grep '#define.*NSS_VMINOR' lib/nss/nss.h | awk '{print $3}')
+  NSS_VPATCH=$(grep '#define.*NSS_VPATCH' lib/nss/nss.h | awk '{print $3}')
  
   sed $srcdir/nss.pc.in \
   -e "s,%libdir%,/usr/lib32,g" \
@@ -87,7 +87,7 @@ package() {
   install -t "$pkgdir/usr/lib32" -m644 libcrmf.a *.chk
 }
 
-sha1sums=('4e0f81a1f770447dc5440201a579151b601463e2'
+sha1sums=('c164fac83fcbaff010786767e2a858ca23a89a5b'
           'aa5b2c0aa38d3c1066d511336cf28d1333e3aebd'
           '8a964a744ba098711b80c0d279a2993524e8eb92'
           'be6ef0f124f188ebb76f4d83e13466bdcfb27dd3'
