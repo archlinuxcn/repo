@@ -8,7 +8,7 @@
 #_pgo=true
 
 pkgname=firefox-kde-opensuse
-pkgver=26.0
+pkgver=27.0
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
@@ -30,7 +30,7 @@ provides=("firefox=${pkgver}")
 conflicts=('firefox')
 install=firefox.install
 options=(!emptydirs)
-_patchrev=afcaf2131b0e
+_patchrev=f810fbe5fece
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.bz2
         mozconfig firefox.desktop firefox-install-dir.patch vendor.js kde.js firefox-20.0.1-fixed-loading-icon.png
@@ -172,7 +172,7 @@ package() {
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
 
-sha256sums=('31c4fb2792df63ae450e350380a5e18cf1c51487011a9da0b6cc4bffb69d9812'
+sha256sums=('703be57d85a90fe28636ed7f3d3ae907cec1dd33e847c1d0faf1d6312d66f1a4'
             '644f40fc6b81ac213e863cacfb470d64b784033afab27ee87b24a47c0bbef823'
             '175d03cf3d8eb420d24a5a3072be69c9603e3ddacd3a83f68f49754eaecf6c5a'
             'bcf224d1f239b73e4ac6d268819c1e94a1606beee99c6d8f851f8192b6444de3'
@@ -180,13 +180,13 @@ sha256sums=('31c4fb2792df63ae450e350380a5e18cf1c51487011a9da0b6cc4bffb69d9812'
             'b8cc5f35ec35fc96ac5c5a2477b36722e373dbb57eba87eb5ad1276e4df7236d'
             '68e3a5b47c6d175cc95b98b069a15205f027cab83af9e075818d38610feb6213'
             'fb852af08b9c597cdd70ea2f143a286d79989e86f7cc706ad749b06cd27c3598'
-            '98d70ef37b69c45da18ab4e034293d4c5cd0cf2d98ee0d4633093491798d77d1'
+            '973b19e2801817d3c40d3c64670c8f7a1265e1f7c6596c45b07b4a709c5fa017'
             '1fd54e93db3a4d454ece5a6dc788a4ae36805eb497482add82a11ac5cf990562'
-            '0635c4973e21f74db7dbf142eeb0e1c65b6dc9a0d4ab2d8b84d846952d5a2acb'
+            'd2baac322bc69000353f1825ba5cbcbd3a43af19f28a06fb67b37b116a44791d'
             '4785bdf086b7d537cb83369fea5c177eddb6fc3d8a69064599c64376bd985051'
             'e368d490192e8c83d2d209faa90a8bb0bff89e7d8d08d728001effe433f28e6f'
             'e8289ea4c1f8191e1e23661312ceee2128b8e790501b9a589d0d7bfc4384553f'
             '5f6b0970284d68d5ed18e6bb7ee1e9fc0025ab3c10aaa14c283adb21a4a20ee8'
-            'dbb4a158a24ed7e66465349841d5ed1a405910a5b828f330ab770718503cf41b'
+            '403d03a8a2f413d0f3e07060b25b0b887cf61c5b5ffab0da9766af476b5a65bf'
             '75a0817c601bbe6b0a89fbc6ea327397ff296ad336d139b764421dab1dbf55cc'
             'aca072853b379201b0d8ac8128eb6e0e8255ab0c955d7bfd48f6273c8bf245d5')
