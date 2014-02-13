@@ -1,0 +1,45 @@
+post_install() {
+	dkms_install $1
+}
+
+pre_upgrade() {
+	dkms_remove $2
+}
+
+pre_remove() {
+	dkms_remove $1
+}
+
+post_upgrade() {
+	dkms_install $1
+}
+
+dkms_remove() {
+	local line=`dkms status -m broadcom-wl`
+	# in cases where the passed ${1%%-*} fails, use this as a fallback for detecting
+	# which version is installed:
+	# version=`dkms status broadcom-wl | tr -d ' \n' | awk -F ',' '{print $2}'`
+	if echo "$line" | grep -E 'added|built|installed'; then
+		dkms remove -m broadcom-wl -v ${1%%-*} --all
+	else
+		echo "No current dkms module found, skipping dkms remove"
+	fi
+}
+
+dkms_install() {
+	echo ">>> DKMS: Module install"
+
+	dkms install -m broadcom-wl -v ${1%%-*}
+
+	rmmod b43 2>/dev/null
+	rmmod b43legacy 2>/dev/null
+	rmmod ssb 2>/dev/null
+	rmmod bcm43xx 2>/dev/null
+	rmmod brcm80211 2>/dev/null
+	rmmod brcmfmac 2>/dev/null
+	rmmod brcmsmac 2>/dev/null
+	rmmod bcma 2>/dev/null
+	modprobe wl
+
+	/usr/bin/depmod -a
+}
