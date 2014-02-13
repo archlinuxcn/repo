@@ -2,15 +2,15 @@
 _gemname=hiera-json
 pkgname=ruby-$_gemname
 pkgver=0.4.0
-pkgrel=2
+pkgrel=3
 pkgdesc='Store Hiera data in JSON'
 arch=(any)
 url='http://projects.puppetlabs.com/projects/hiera/'
 license=('MIT')
-depends=('ruby')
-makedepends=('rubygems' 'ruby-hiera')
+depends=('ruby' 'ruby-hiera')
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
+md5sums=('35249e097e82bd119e3709c22bc45fa3')
 
 package() {
   cd "$srcdir"
@@ -21,4 +21,3 @@ package() {
   gem install --no-user-install --ignore-dependencies -i "$pkgdir$_gemdir" \
     -n "$pkgdir/usr/bin" "$_gemname-$pkgver.gem"
 }
-md5sums=('35249e097e82bd119e3709c22bc45fa3')
