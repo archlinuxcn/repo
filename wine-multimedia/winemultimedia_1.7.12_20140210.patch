@@ -1,21 +1,21 @@
-commit d57f49dbd9b35c7c473fc63820ae83d319be112b
+commit 4b2f591bce26b82e7d9ce1a7052a352f5bb182bc
 Author: John Schoenick <jschoenick@mozilla.com>
-Date:   Sun Jan 19 15:06:33 2014 -0800
+Date:   Mon Feb 10 14:39:08 2014 -0800
 
-    Wine-multimedia for wine 1.7.11
+    wine-multimedia for wine-1.7.12
 
 diff --git a/configure b/configure
-index c2d0dd0..b35245a 100755
+index 246b888..d9f6ddd 100755
 --- a/configure
 +++ b/configure
-@@ -652,6 +652,8 @@ OSS4INCL
- ALSALIBS
+@@ -653,6 +653,8 @@ OSS4_CFLAGS
+ ALSA_LIBS
  GSTREAMER_LIBS
  GSTREAMER_CFLAGS
 +PULSEINCL
 +PULSELIBS
- LIBGETTEXTPO
- ZLIB
+ GETTEXTPO_LIBS
+ Z_LIBS
  FREETYPE_LIBS
 @@ -824,6 +826,7 @@ with_osmesa
  with_oss
@@ -25,7 +25,15 @@ index c2d0dd0..b35245a 100755
  with_sane
  with_tiff
  with_v4l
-@@ -2046,6 +2049,7 @@ Optional Packages:
+@@ -1253,6 +1256,7 @@ enable_winemapi
+ enable_winemp3_acm
+ enable_wineoss_drv
+ enable_wineps_drv
++enable_winepulse_drv
+ enable_wineqtdecoder
+ enable_winex11_drv
+ enable_wing32
+@@ -2079,6 +2083,7 @@ Optional Packages:
    --without-oss           do not use the OSS sound support
    --without-png           do not use PNG
    --without-pthread       do not use the pthread library
@@ -33,7 +41,7 @@ index c2d0dd0..b35245a 100755
    --without-sane          do not use SANE (scanner support)
    --without-tiff          do not use TIFF
    --without-v4l           do not use v4l1 (v4l support)
-@@ -3283,6 +3287,12 @@ if test "${with_pthread+set}" = set; then :
+@@ -3320,6 +3325,12 @@ if test "${with_pthread+set}" = set; then :
  fi
  
  
@@ -46,7 +54,7 @@ index c2d0dd0..b35245a 100755
  # Check whether --with-sane was given.
  if test "${with_sane+set}" = set; then :
    withval=$with_sane;
-@@ -12028,6 +12038,87 @@ esac
+@@ -12083,6 +12094,87 @@ esac
  fi
  fi
  
@@ -133,16 +141,17 @@ index c2d0dd0..b35245a 100755
 +
  if test "x$with_gstreamer" != "xno"
  then
-     if test -n "$GSTREAMER_CFLAGS"; then :
-@@ -13365,12 +13456,13 @@ fi
+     if ${GSTREAMER_CFLAGS:+false} :; then :
+@@ -13394,12 +13486,14 @@ fi
  
- test -n "$ALSALIBS" || enable_winealsa_drv=${enable_winealsa_drv:-no}
- test -n "$COREAUDIO" || enable_winecoreaudio_drv=${enable_winecoreaudio_drv:-no}
+ test -n "$ALSA_LIBS" || enable_winealsa_drv=${enable_winealsa_drv:-no}
+ test -n "$COREAUDIO_LIBS" || enable_winecoreaudio_drv=${enable_winecoreaudio_drv:-no}
 +test -n "$PULSELIBS" || enable_winepulse_drv=${enable_winepulse_drv:-no}
  test "x$ac_cv_member_oss_sysinfo_numaudioengines" = xyes || enable_wineoss_drv=${enable_wineoss_drv:-no}
  test "$ac_cv_header_linux_joystick_h" = "yes" || enable_winejoystick_drv=${enable_winejoystick_drv:-no}
  
--if test "x$ALSALIBS$COREAUDIO" = "x" -a \
+-if test "x$ALSA_LIBS$COREAUDIO_LIBS" = "x" -a \
++if test "x$ALSA_LIBS$COREAUDIO_LIBS$PULSELIBS" = "x" -a \
 +if test "x$ALSALIBS$COREAUDIO$PULSELIBS" = "x" -a \
          "x$ac_cv_member_oss_sysinfo_numaudioengines" != xyes -a \
 -        "x$with_alsa$with_coreaudio$with_oss" != xnonono
@@ -150,7 +159,7 @@ index c2d0dd0..b35245a 100755
  then
      as_fn_append wine_warnings "|No sound system was found. Windows applications will be silent."
  fi
-@@ -17074,6 +17166,7 @@ wine_fn_config_dll winemp3.acm enable_winemp3_acm
+@@ -17203,6 +17297,7 @@ wine_fn_config_dll winemp3.acm enable_winemp3_acm
  wine_fn_config_dll wineoss.drv enable_wineoss_drv
  wine_fn_config_dll wineps.drv enable_wineps_drv clean,po
  wine_fn_config_dll wineps16.drv16 enable_win16
@@ -159,7 +168,7 @@ index c2d0dd0..b35245a 100755
  wine_fn_config_dll winex11.drv enable_winex11_drv
  wine_fn_config_dll wing.dll16 enable_win16
 diff --git a/configure.ac b/configure.ac
-index 4f51909..f4745b2 100644
+index de807d2..ec3db46 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -70,6 +70,7 @@ AC_ARG_WITH(oss,       AS_HELP_STRING([--without-oss],[do not use the OSS sound
@@ -170,7 +179,7 @@ index 4f51909..f4745b2 100644
  AC_ARG_WITH(sane,      AS_HELP_STRING([--without-sane],[do not use SANE (scanner support)]))
  AC_ARG_WITH(tiff,      AS_HELP_STRING([--without-tiff],[do not use TIFF]))
  AC_ARG_WITH(v4l,       AS_HELP_STRING([--without-v4l],[do not use v4l1 (v4l support)]))
-@@ -1522,6 +1523,30 @@ then
+@@ -1512,6 +1513,30 @@ then
            [GetText ${notice_platform}development files not found (or too old), po files can't be rebuilt.])
  fi
  
@@ -201,16 +210,17 @@ index 4f51909..f4745b2 100644
  dnl **** Check for gstreamer ****
  if test "x$with_gstreamer" != "xno"
  then
-@@ -1746,13 +1771,14 @@ fi
+@@ -1730,13 +1755,15 @@ fi
  dnl **** Disable unsupported winmm drivers ****
- test -n "$ALSALIBS" || enable_winealsa_drv=${enable_winealsa_drv:-no}
- test -n "$COREAUDIO" || enable_winecoreaudio_drv=${enable_winecoreaudio_drv:-no}
+ test -n "$ALSA_LIBS" || enable_winealsa_drv=${enable_winealsa_drv:-no}
+ test -n "$COREAUDIO_LIBS" || enable_winecoreaudio_drv=${enable_winecoreaudio_drv:-no}
 +test -n "$PULSELIBS" || enable_winepulse_drv=${enable_winepulse_drv:-no}
  test "x$ac_cv_member_oss_sysinfo_numaudioengines" = xyes || enable_wineoss_drv=${enable_wineoss_drv:-no}
  test "$ac_cv_header_linux_joystick_h" = "yes" || enable_winejoystick_drv=${enable_winejoystick_drv:-no}
  
  dnl **** Check for any sound system ****
--if test "x$ALSALIBS$COREAUDIO" = "x" -a \
+-if test "x$ALSA_LIBS$COREAUDIO_LIBS" = "x" -a \
++if test "x$ALSA_LIBS$COREAUDIO_LIBS$PULSELIBS" = "x" -a \
 +if test "x$ALSALIBS$COREAUDIO$PULSELIBS" = "x" -a \
          "x$ac_cv_member_oss_sysinfo_numaudioengines" != xyes -a \
 -        "x$with_alsa$with_coreaudio$with_oss" != xnonono
@@ -218,7 +228,7 @@ index 4f51909..f4745b2 100644
  then
      WINE_WARNING([No sound system was found. Windows applications will be silent.])
  fi
-@@ -3198,6 +3224,7 @@ WINE_CONFIG_DLL(winemp3.acm)
+@@ -3217,6 +3244,7 @@ WINE_CONFIG_DLL(winemp3.acm)
  WINE_CONFIG_DLL(wineoss.drv)
  WINE_CONFIG_DLL(wineps.drv,,[clean,po])
  WINE_CONFIG_DLL(wineps16.drv16,enable_win16)
@@ -2157,13 +2167,13 @@ index f3c6b38..8c48fd2 100644
   *
 diff --git a/dlls/winepulse.drv/Makefile.in b/dlls/winepulse.drv/Makefile.in
 new file mode 100644
-index 0000000..ae66542
+index 0000000..158bbc0
 --- /dev/null
 +++ b/dlls/winepulse.drv/Makefile.in
 @@ -0,0 +1,7 @@
 +MODULE    = winepulse.drv
 +IMPORTS   = dxguid uuid winmm user32 advapi32 ole32
-+EXTRALIBS = @PULSELIBS@ @LIBPTHREAD@
++EXTRALIBS = @PULSELIBS@ $(PTHREAD_LIBS)
 +EXTRAINCL = @PULSEINCL@
 +
 +C_SRCS = \
@@ -5423,7 +5433,7 @@ index c3b3674..56cfe35 100644
      HeapFree(GetProcessHeap(), 0, drvA);
      PropVariantClear(&pv);
 diff --git a/dlls/winmm/waveform.c b/dlls/winmm/waveform.c
-index 01a54b4..e8be5fc 100644
+index 6b259ff..541dc62 100644
 --- a/dlls/winmm/waveform.c
 +++ b/dlls/winmm/waveform.c
 @@ -68,8 +68,8 @@ static const WCHAR muteW[] = {'M','u','t','e',0};
@@ -5529,12 +5539,12 @@ index afd3d96..8bd4562 100644
  }
  
 diff --git a/server/Makefile.in b/server/Makefile.in
-index 1584046..cba08a2 100644
+index 19a4fac..76bdb96 100644
 --- a/server/Makefile.in
 +++ b/server/Makefile.in
 @@ -1,4 +1,5 @@
- EXTRALIBS = @LIBPOLL@ @LIBRT@
-+EXTRAINCL = @DBUS_CFLAGS@
+ EXTRALIBS = $(POLL_LIBS) $(RT_LIBS)
++EXTRAINCL = $(DBUS_CFLAGS)
  
  C_SRCS = \
  	async.c \
@@ -5874,7 +5884,7 @@ index 0000000..53e5ce4
 +
 +#endif
 diff --git a/server/thread.c b/server/thread.c
-index 623a3b3..1d6b141 100644
+index 896ce0f..b56f054 100644
 --- a/server/thread.c
 +++ b/server/thread.c
 @@ -52,6 +52,8 @@
@@ -5905,7 +5915,7 @@ index 623a3b3..1d6b141 100644
      clear_apc_queue( &thread->system_apc );
      clear_apc_queue( &thread->user_apc );
      free( thread->req_data );
-@@ -459,6 +466,15 @@ affinity_t get_thread_affinity( struct thread *thread )
+@@ -460,6 +467,15 @@ affinity_t get_thread_affinity( struct thread *thread )
  #define THREAD_PRIORITY_REALTIME_HIGHEST 6
  #define THREAD_PRIORITY_REALTIME_LOWEST -7
  
@@ -5921,7 +5931,7 @@ index 623a3b3..1d6b141 100644
  /* set all information about a thread */
  static void set_thread_info( struct thread *thread,
                               const struct set_thread_info_request *req )
-@@ -474,8 +490,22 @@ static void set_thread_info( struct thread *thread,
+@@ -475,8 +491,22 @@ static void set_thread_info( struct thread *thread,
          }
          if ((req->priority >= min && req->priority <= max) ||
              req->priority == THREAD_PRIORITY_IDLE ||
@@ -5945,7 +5955,7 @@ index 623a3b3..1d6b141 100644
          else
              set_error( STATUS_INVALID_PARAMETER );
      }
-@@ -1296,6 +1326,10 @@ DECL_HANDLER(init_thread)
+@@ -1297,6 +1327,10 @@ DECL_HANDLER(init_thread)
      }
      debug_level = max( debug_level, req->debug_level );
  
