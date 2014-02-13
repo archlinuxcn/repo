@@ -33,7 +33,7 @@ true && pkgname=(linux-uksm linux-uksm-headers)
 _kernelname=-uksm
 _srcname=linux-3.13
 pkgver=3.13.2
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 url="http://kerneldedup.org/"
 license=('GPL2')
@@ -60,6 +60,7 @@ source=("http://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
         '0006-rpc_pipe-fix-cleanup-of-dummy-gssd-directory-when-no.patch'
         '0001-syscalls.h-use-gcc-alias-instead-of-assembler-aliase.patch'
         'i8042-fix-aliases.patch'
+        '0001-revert-avmfritz-breaker.patch'
         'config'
         'config.x86_64')
         
@@ -99,6 +100,11 @@ prepare() {
 
     # Fix i8042 aliases
     patch -p1 -i "${srcdir}/i8042-fix-aliases.patch"
+
+    # Revert avmfritz breaker
+    # https://git.kernel.org/cgit/linux/kernel/git/stable/linux-stable.git/commit/?id=e0f6dec35f9286e78879fe1ac92803fd69fc4fdc
+    # https://git.kernel.org/cgit/linux/kernel/git/stable/linux-stable.git/commit/?id=0c44c2d0f459cd7e275242b72f500137c4fa834d
+    patch -Rp1 -i "${srcdir}/0001-revert-avmfritz-breaker.patch"
 
     msg "Patching source with BFQ patches"
     for p in $(ls ${srcdir}/000{1,2,3}-block*.patch); do
@@ -426,5 +432,6 @@ sha512sums=('1ba223bb4b885d691a67196d86a8aaf7b4a1c351bf2a762f50f1b0c32da00dd0c28
             'f2e3bb6be690b37cf241ef13bf6b9fdb2cc98e0d64cc32d3902ef2798169bf49006ce0e06ec24aa3d3868653a9ab6afd1fe3f4065ac5b65c87c6d770a1119e42'
             'c7068c07725ae38985723893045804b9e8b1c356bea77cc190df9f329c68110ab26fe50c91c587823d9a782aadf868724e913909708c478ce197088043b1c0d1'
             '57ae61e2d4c3a202715366965e2d4d32cba3c781ba9fa04d5507fb96b94b2094d017598e7b20f993f7d8ff933c08a1f05d7e9f4eb2bf96fdbce32c69f7b2618a'
+            '371f911e507773c72d346ac2697f330687d5e6931557c96e25659b498438f9edf249e1fa4a26f332b07403ef7fb83edffd2ae5afc01b5f516127268dca33c09f'
             '2f893c8c396ad108d7641fa2fd17b835b8d993b93065a78c3f2542ffabefae3a5f2d03c81e36d8cf2a5430b29b0b09512fbcbe0fd51f78bc555eeedd7f5c855b'
             '2e256d9ae1fe1e33b1d99650dda965b36256eea6c08159542fae0c7da4806c8d8a485a0c88e8a548cce53041a044c2477dcd6d72910fd35efd88c9a8d5e6d7e4')
