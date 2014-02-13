@@ -1,17 +1,15 @@
 # Maintainer: Jochen Schalanda <jochen+aur@schalanda.name>
 _gemname=facter
 pkgname=ruby-$_gemname
-pkgver=1.7.4
+pkgver=1.7.5
 pkgrel=1
 pkgdesc="A library for collecting facts about your system."
 arch=(any)
-url="http://puppetlabs.com/projects/facter/"
+url='http://puppetlabs.com/puppet/related-projects/facter'
 license=('MIT')
 depends=('ruby')
-makedepends=('rubygems')
 optdepends=('net-tools: for ifconfig-based facts')
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
-conflicts=('facter')
 provides=('facter')
 noextract=($_gemname-$pkgver.gem)
 
@@ -24,4 +22,4 @@ package() {
   gem install --no-user-install --ignore-dependencies -i "$pkgdir$_gemdir" \
     -n "$pkgdir/usr/bin" "$_gemname-$pkgver.gem"
 }
-md5sums=('576789044e8738bb42bd05df86992176')
+sha256sums=('17d16a67d5286cdd762ef5391b99f117e6c7f6a0b6938a615084a9a1761a0623')
