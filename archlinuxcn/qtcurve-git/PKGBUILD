@@ -2,8 +2,8 @@
 
 pkgbase=qtcurve
 pkgname=${pkgbase}-git
-_realver=1.8.17
-pkgver=1.8.15.1278.gbbcb3a4
+_realver=1.8.18
+pkgver=1.8.18.10.gce86f3b
 pkgrel=1
 pkgdesc='A configurable set of widget styles for KDE and Gtk.'
 arch=('i686' 'x86_64')
@@ -13,10 +13,17 @@ groups=('qtcurve')
 depends=('qt5-base' 'qt5-svg' 'libxcb' 'qt5-x11extras'
   'kdebase-workspace' 'gtk2' 'libx11' 'gcc-libs')
 makedepends=('cmake' 'automoc4' 'git')
-provides=("${pkgbase}-kde4=${_realver}"
+provides=(
+  "${pkgbase}-utils=${_realver}"
   "${pkgbase}-gtk2=${_realver}"
+  "${pkgbase}-kde4=${_realver}"
   "${pkgbase}-qt4=${_realver}"
-  "${pkgbase}-qt5=${_realver}")
+  "${pkgbase}-qt5=${_realver}"
+  "${pkgbase}-utils-git"
+  "${pkgbase}-gtk2-git"
+  "${pkgbase}-kde4-git"
+  "${pkgbase}-qt4-git"
+  "${pkgbase}-qt5-git")
 conflicts=("${pkgbase}-kde4" "${pkgbase}-qt4"
   "${pkgbase}-qt5" "${pkgbase}-gtk2")
 options=('debug' 'strip')
