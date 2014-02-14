@@ -1,28 +1,30 @@
 # Maintainer: mutantmonkey <aur@mutantmonkey.in>
 # Contributor: Techlive Zheng <techlivezheng@gmail.com>
 pkgname=obfsproxy
-pkgver=0.2.4
-pkgrel=2
+pkgver=0.2.6
+pkgrel=1
 pkgdesc="A pluggable transport proxy written in Python"
 arch=('any')
 url="https://pypi.python.org/pypi/obfsproxy"
 license=('BSD')
-depends=('python2' 'python2-crypto' 'python2-pyptlib>=0.0.5' 'twisted')
+depends=('python2>=2.7' 'python2-crypto' 'python2-pyptlib>=0.0.5' 'twisted'
+         'python2-yaml')
 makedepends=('python2-setuptools')
 conflicts=('pyobfsproxy' 'obfsproxy-git')
 options=(!emptydirs)
-source=("https://pypi.python.org/packages/source/o/obfsproxy/obfsproxy-${pkgver}.tar.gz"{,.asc}
-        'obfsproxy-0.2.4-argparse.patch')
-sha256sums=('b0f34860cb7c9a1e6eedc95c3b3549baf67e90e4c32036bb9c4c015370734e43'
-            'SKIP'
-            '856f0678485fff927115a8e664d49214070651f6190abe9b555daa7d9d987684')
+source=("https://pypi.python.org/packages/source/o/obfsproxy/obfsproxy-${pkgver}.tar.gz"{,.asc})
+sha256sums=('415fb9d77f80699afea4af3e09fbfe78b7784f3489316a6025e727d63e57a2d4'
+            'SKIP')
+
+prepare() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  # argparse is part of python 2.7+, so we can remove it from install_requires
+  sed -i "/'argparse',/d" setup.py
+}
 
 package() {
   cd "$srcdir/$pkgname-$pkgver"
-  for p in $srcdir/*.patch; do
-    msg2 "Applying patch ${p##*/}"
-    patch -sp1 < ${p} || return $?
-  done
   python2 setup.py install --root="$pkgdir/" --optimize=1
 }
 
