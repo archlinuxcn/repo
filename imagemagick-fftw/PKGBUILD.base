@@ -1,7 +1,8 @@
-# $Id: PKGBUILD 201665 2013-12-17 20:27:22Z eric $
+# $Id$
 # Maintainer: Eric Bélanger <eric@archlinux.org>
 
-pkgname=imagemagick-fftw
+pkgbase=imagemagick
+pkgname=('imagemagick' 'imagemagick-doc')
 pkgver=6.8.8.7
 pkgrel=1
 arch=('i686' 'x86_64')
@@ -9,7 +10,7 @@ url="http://www.imagemagick.org/"
 license=('custom')
 makedepends=('libltdl' 'lcms2' 'libxt' 'fontconfig' 'libxext' 'ghostscript'
              'openexr' 'libwmf' 'librsvg' 'libxml2' 'liblqr'
-             'opencl-headers' 'libcl' 'libwebp' 'fftw')
+             'opencl-headers' 'libcl' 'libwebp')
 #source=(http://www.imagemagick.org/download/ImageMagick-${pkgver%.*}-${pkgver##*.}.tar.xz{,.asc}
 source=(ftp://ftp.sunet.se/pub/multimedia/graphics/ImageMagick/ImageMagick-${pkgver%.*}-${pkgver##*.}.tar.xz{,.asc}
         perlmagick.rpath.patch)
@@ -34,7 +35,7 @@ build() {
     --with-webp --with-gslib --with-gs-font-dir=/usr/share/fonts/Type1 \
     --with-perl --with-perl-options="INSTALLDIRS=vendor" --with-lqr --with-rsvg \
     --enable-opencl --without-gvc --without-djvu --without-autotrace \
-    --without-jbig --without-fpx --without-dps --with-fftw $EXTRAOPTS
+    --without-jbig --without-fpx --without-dps --without-fftw $EXTRAOPTS
   make
 }
 
@@ -43,7 +44,7 @@ check() {
 #  make check
 }
 
-package() {
+package_imagemagick() {
   pkgdesc="An image viewing/manipulation program"
   depends=('perl' 'libltdl' 'lcms2' 'libxt' 'fontconfig' 'libxext' 'liblqr' 'libcl')
   optdepends=('imagemagick-doc: for additional information'
@@ -68,8 +69,6 @@ package() {
           "etc/ImageMagick-${pkgver%%.*}/type-ghostscript.xml"
           "etc/ImageMagick-${pkgver%%.*}/type-windows.xml")
   options=('!docs' 'libtool' '!emptydirs')
-  provides=("imagemagick=$pkgver")
-  conflicts=('imagemagick')
 
   cd ImageMagick-${pkgver%.*}-${pkgver##*.}
   make -j1 DESTDIR="${pkgdir}" install
@@ -78,4 +77,13 @@ package() {
 
 #Cleaning
   rm -f "${pkgdir}"/usr/lib/*.la
+}
+
+package_imagemagick-doc() {
+  pkgdesc="The ImageMagick documentation (utilities manuals and libraries API)"
+
+  cd ImageMagick-${pkgver%.*}-${pkgver##*.}
+  make DESTDIR="${pkgdir}" install-data-html
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/imagemagick-doc/LICENSE"
+  install -Dm644 NOTICE "${pkgdir}/usr/share/licenses/imagemagick-doc/NOTICE"
 }
