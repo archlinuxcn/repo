@@ -2,7 +2,7 @@
 
 pkgname=chromium-libpdf
 pkgdesc="Google Chrome's PDF plugin for Chromium (stable version)"
-pkgver=32.0.1700.107
+pkgver=33.0.1750.115
 pkgrel=1
 epoch=1
 _verbld=${pkgver}-1
@@ -12,15 +12,15 @@ url="http://www.google.com/chrome"
 license=('custom:chrome')
 depends=('chromium')
 conflicts=('chromium-libpdf-dev' 'chromium-libpdf-stable')
-replaces=('chromium-libpdf-stable')
+install=chromium-libpdf.install
 source=(license.html::http://www.google.com/chrome/intl/en/eula_text.html)
 sha1sums=('SKIP')
 if [ "$CARCH" == x86_64 ]; then
         source+=(https://dl.google.com/linux/chrome/rpm/stable/x86_64/google-chrome-${_channel}-${_verbld}.x86_64.rpm)
-        sha1sums+=('f2d25e71b66c6c07786d8e37c35ecb9799fd15ef')
+        sha1sums+=('60abff6e3322a8f0f07f23a3d887738c6584d417')
 elif [ "$CARCH" == i686 ]; then
         source+=(https://dl.google.com/linux/chrome/rpm/stable/i386/google-chrome-${_channel}-${_verbld}.i386.rpm)
-        sha1sums+=('ae1e903a031ab2f52bf86a3cbb3f8068fcd3b586')
+        sha1sums+=('c5c8460b15983462d578cae91fbd301faa770407')
 fi
 
 package() {
