@@ -4,7 +4,7 @@ After=network.target
  
 [Service]
 User=%i
-ExecStart=/usr/bin/btsync --config %h/.config/btsync/btsync.conf --nodaemon
+ExecStart=/usr/bin/btsync --config /home/%h/.config/btsync/btsync.conf --nodaemon
 Restart=on-abort
 
 [Install]
