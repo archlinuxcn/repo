@@ -8,7 +8,7 @@
 #_pgo=true
 
 pkgname=firefox-kde-opensuse
-pkgver=27.0
+pkgver=27.0.1
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
@@ -30,7 +30,7 @@ provides=("firefox=${pkgver}")
 conflicts=('firefox')
 install=firefox.install
 options=(!emptydirs)
-_patchrev=f810fbe5fece
+_patchrev=72225e57f863
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.bz2
         mozconfig firefox.desktop firefox-install-dir.patch vendor.js kde.js firefox-20.0.1-fixed-loading-icon.png
@@ -172,7 +172,7 @@ package() {
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
 
-sha256sums=('703be57d85a90fe28636ed7f3d3ae907cec1dd33e847c1d0faf1d6312d66f1a4'
+sha256sums=('76057ac365fe60b51915e8dba2960546fb3a60a2b5747207a8c936e4fc280d8f'
             '644f40fc6b81ac213e863cacfb470d64b784033afab27ee87b24a47c0bbef823'
             '175d03cf3d8eb420d24a5a3072be69c9603e3ddacd3a83f68f49754eaecf6c5a'
             'bcf224d1f239b73e4ac6d268819c1e94a1606beee99c6d8f851f8192b6444de3'
