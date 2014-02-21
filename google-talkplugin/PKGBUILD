@@ -2,7 +2,7 @@
 # Maintainer: ava1ar <mail(at)ava1ar(dot)info>
 
 pkgname=google-talkplugin
-pkgver=4.9.1.0
+pkgver=5.1.4.0
 pkgrel=1
 pkgdesc="Video chat browser plug-in for Google Talk"
 arch=('i686' 'x86_64')
@@ -14,10 +14,10 @@ source=(license.html::http://www.google.com/intl/en/policies/terms/index.html)
 sha1sums=('SKIP') 
 if [ "$CARCH" == x86_64 ]; then
 	source+=(https://dl.google.com/linux/talkplugin/rpm/stable/x86_64/${pkgname}-${pkgver}-1.x86_64.rpm)
-	sha1sums+=('b285f4b357e49c2a6ef9aed20d05dd31947331a0')
+	sha1sums+=('9021d01ab9094334c00a32e7f301ec8d13c2f593')
 elif [ "$CARCH" == i686 ]; then
 	source+=(https://dl.google.com/linux/talkplugin/rpm/stable/i386/${pkgname}-${pkgver}-1.i386.rpm)
-	sha1sums+=('f910c05bec9f69266373deca3d4621f66a5ed88f')
+	sha1sums+=('a276bfb9d20c7a4f37582cd083269f0265cf461d')
 fi
 
 package() {
