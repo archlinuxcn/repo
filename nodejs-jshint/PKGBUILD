@@ -1,0 +1,27 @@
+# Author: Anton Kovalyov <anton@kovalyov.net> (http://anton.kovalyov.net/)
+# Maintainer: brentlintner <brent.lintner@gmail.com>
+# Maintainer: antonkovalyov <anton@kovalyov.net>
+_npmname=jshint
+_npmver=2.4.3
+pkgname=nodejs-jshint # All lowercase
+pkgver=2.4.3
+pkgrel=1
+pkgdesc="Static analysis tool for JavaScript"
+arch=(any)
+url="http://jshint.com/"
+license=(MIT)
+depends=('nodejs' )
+optdepends=()
+source=(http://registry.npmjs.org/$_npmname/-/$_npmname-$_npmver.tgz)
+noextract=($_npmname-$_npmver.tgz)
+sha1sums=(1beb074b4d9f817773bb5aa16882fd67164c216a)
+
+package() {
+  cd "$srcdir"
+  local _npmdir="$pkgdir/usr/lib/node_modules/"
+  mkdir -p "$_npmdir"
+  cd "$_npmdir"
+  npm install -g --prefix "$pkgdir/usr" $_npmname@$_npmver
+}
+
+# vim:set ts=2 sw=2 et:
