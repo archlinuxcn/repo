@@ -3,7 +3,7 @@
 
 pkgname="isatapd"
 pkgver="0.9.7"
-pkgrel=1
+pkgrel=2
 pkgdesc="Creates and maintains an ISATAP tunnel (rfc5214) in Linux."
 
 arch=("i686" "x86_64")
@@ -18,7 +18,7 @@ license=('GPL')
 #optdepends=()
 
 #provides=()
-conflicts=('miredo')
+conflicts=('')
 #replaces=()
 
 #backup=()
@@ -27,9 +27,9 @@ conflicts=('miredo')
 #install=
 #changelog=
 
-source=("http://www.saschahlusiak.de/linux/${pkgname}-${pkgver}.tar.gz" "isatapd" "isatapd.service")
+source=("http://www.saschahlusiak.de/linux/${pkgname}-${pkgver}.tar.gz" "isatapd@.service")
 #noextract=()
-md5sums=("79f13a360b9a14cb0afcdf7a2af9c6de" "48c4027c22b5505507ede5f062b22b76" "00e762fbff55beec6148d086c8070d9d")
+md5sums=("79f13a360b9a14cb0afcdf7a2af9c6de" "ea68b108ceac25c5b07dc14780ed1f53")
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
@@ -42,10 +42,8 @@ build() {
 package() {
   cd "${srcdir}/${pkgname}-${pkgver}"
   make DESTDIR="${pkgdir}/" install || return 1
-  mkdir -p "${pkgdir}/etc/rc.d"
-  install -m755 "${srcdir}/${pkgname}" "${pkgdir}/etc/rc.d/"
   mkdir -p "${pkgdir}/usr/lib/systemd/system"
-  install -m755 "${srcdir}/${pkgname}.service" "${pkgdir}/usr/lib/systemd/system"
+  install -m755 "${srcdir}/${pkgname}@.service" "${pkgdir}/usr/lib/systemd/system"
   mkdir -p "${pkgdir}"/usr/bin
   mv "${pkgdir}"/usr/sbin/isatapd "${pkgdir}"/usr/bin/
   rm -rf "${pkgdir}"/usr/sbin/
