@@ -1,0 +1,10 @@
+[Unit]
+Description=isatap daemon
+After=network.target
+
+[Service]
+Type=simple
+ExecStart= /usr/bin/isatapd --router "%I"  --pid "/var/run/isatapd-%I.pid" --quiet
+
+[Install]
+WantedBy=multi-user.target
