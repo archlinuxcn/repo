@@ -32,7 +32,7 @@ pkgname=linux-uksm
 true && pkgname=(linux-uksm linux-uksm-headers)
 _kernelname=-uksm
 _srcname=linux-3.13
-pkgver=3.13.4
+pkgver=3.13.5
 pkgrel=1
 arch=('i686' 'x86_64')
 url="http://kerneldedup.org/"
@@ -61,7 +61,6 @@ source=("http://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
         '0001-SUNRPC-Ensure-that-gss_auth-isn-t-freed-before-its-u.patch'
         '0001-syscalls.h-use-gcc-alias-instead-of-assembler-aliase.patch'
         'i8042-fix-aliases.patch'
-        '0001-quirk-asm_volatile_goto.patch'
         'config'
         'config.x86_64')
         
@@ -105,10 +104,6 @@ prepare() {
 
     # Fix i8042 aliases
     patch -p1 -i "${srcdir}/i8042-fix-aliases.patch"
-
-    # Fix compile issues
-    # http://git.kernel.org/cgit/linux/kernel/git/tip/tip.git/patch/?id=a9f180345f5378ac87d80ed0bea55ba421d83859
-    patch -Np1 -i "${srcdir}/0001-quirk-asm_volatile_goto.patch"
 
     msg "Patching source with BFQ patches"
     for p in $(ls ${srcdir}/000{1,2,3}-block*.patch); do
@@ -420,7 +415,7 @@ package_linux-uksm-headers() {
 pkgdesc='Linux Kernel and modules with the UKSM patchset'
 
 sha512sums=('1ba223bb4b885d691a67196d86a8aaf7b4a1c351bf2a762f50f1b0c32da00dd0c28895872a66b49e8d244498d996876609268e64861d28ac4048886ef9f79b87'
-            '94f0363af650b1a137c59d9ac4d1aac4ed9dff072acd031fa29dc3b319c16ce49b220badef2ced02068ad84a4705f4b7a4ec6c37ee0d81166fd5fdf4b8e8c97b'
+            '4a7dd3dd9adf97225cc7fbbbd88da5e1601a91add153dc168c113ebf1508d4ab563dd108187d761cdb3e74d7a02eb05145d03f9bf1b57405b490975d999c9725'
             '51d86d26bc9e5e68f613bffbfc0df78a9b6a006155f9eab42fb05d88309605976d55056d26e163d181c0350de0ae85c0d1461317940d57924b9e1093fa0e19e1'
             '9565f9bd92fdad408bd1cbcc70441894579e74f7f3d98c231dc8e4c9aa903c397f9d8f7601714bc7b9f7edb4a5e900583e3b15717055746d3c0260a2da7bfcfc'
             'cf23d84dbb16ed5d91995e0d579b0f60f0839a0935812c194207168fd88a52da698db95c0fd588fe52b73ffa45751d512640b810a1f7b18d567e5fbab8f9b37e'
@@ -437,6 +432,5 @@ sha512sums=('1ba223bb4b885d691a67196d86a8aaf7b4a1c351bf2a762f50f1b0c32da00dd0c28
             'b9b216fa2fe79fe37e4af8c5827bdbc7491b2d1728b07679e5d5015f5f5a99027fc153240c35df18dac7a19c5814ae7963ac0fc9ffbb6c9984d1df99ee3e24e2'
             'c7068c07725ae38985723893045804b9e8b1c356bea77cc190df9f329c68110ab26fe50c91c587823d9a782aadf868724e913909708c478ce197088043b1c0d1'
             '57ae61e2d4c3a202715366965e2d4d32cba3c781ba9fa04d5507fb96b94b2094d017598e7b20f993f7d8ff933c08a1f05d7e9f4eb2bf96fdbce32c69f7b2618a'
-            '6a94842126451a512963c70a9427e31ad5b0465d33e6fdb32607896a416114ebda771178ea078853a7c3885a6f3831bc21be08b09b31dce676e8181a5bac2f0f'
             '2f893c8c396ad108d7641fa2fd17b835b8d993b93065a78c3f2542ffabefae3a5f2d03c81e36d8cf2a5430b29b0b09512fbcbe0fd51f78bc555eeedd7f5c855b'
             '2e256d9ae1fe1e33b1d99650dda965b36256eea6c08159542fae0c7da4806c8d8a485a0c88e8a548cce53041a044c2477dcd6d72910fd35efd88c9a8d5e6d7e4')
