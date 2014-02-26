@@ -1,11 +1,11 @@
-commit 4b2f591bce26b82e7d9ce1a7052a352f5bb182bc
+commit 08b15ccdd15daf999d07a4ab1aa3b65290709df2
 Author: John Schoenick <jschoenick@mozilla.com>
-Date:   Mon Feb 10 14:39:08 2014 -0800
+Date:   Tue Feb 25 11:58:32 2014 -0800
 
-    wine-multimedia for wine-1.7.12
+    wine-multimedia for wine 1.7.13
 
 diff --git a/configure b/configure
-index 246b888..d9f6ddd 100755
+index 8333561..5313ea5 100755
 --- a/configure
 +++ b/configure
 @@ -653,6 +653,8 @@ OSS4_CFLAGS
@@ -25,7 +25,7 @@ index 246b888..d9f6ddd 100755
  with_sane
  with_tiff
  with_v4l
-@@ -1253,6 +1256,7 @@ enable_winemapi
+@@ -1255,6 +1258,7 @@ enable_winemapi
  enable_winemp3_acm
  enable_wineoss_drv
  enable_wineps_drv
@@ -33,7 +33,7 @@ index 246b888..d9f6ddd 100755
  enable_wineqtdecoder
  enable_winex11_drv
  enable_wing32
-@@ -2079,6 +2083,7 @@ Optional Packages:
+@@ -2082,6 +2086,7 @@ Optional Packages:
    --without-oss           do not use the OSS sound support
    --without-png           do not use PNG
    --without-pthread       do not use the pthread library
@@ -41,7 +41,7 @@ index 246b888..d9f6ddd 100755
    --without-sane          do not use SANE (scanner support)
    --without-tiff          do not use TIFF
    --without-v4l           do not use v4l1 (v4l support)
-@@ -3320,6 +3325,12 @@ if test "${with_pthread+set}" = set; then :
+@@ -3323,6 +3328,12 @@ if test "${with_pthread+set}" = set; then :
  fi
  
  
@@ -54,7 +54,7 @@ index 246b888..d9f6ddd 100755
  # Check whether --with-sane was given.
  if test "${with_sane+set}" = set; then :
    withval=$with_sane;
-@@ -12083,6 +12094,87 @@ esac
+@@ -12090,6 +12101,87 @@ esac
  fi
  fi
  
@@ -142,7 +142,7 @@ index 246b888..d9f6ddd 100755
  if test "x$with_gstreamer" != "xno"
  then
      if ${GSTREAMER_CFLAGS:+false} :; then :
-@@ -13394,12 +13486,14 @@ fi
+@@ -13401,12 +13493,14 @@ fi
  
  test -n "$ALSA_LIBS" || enable_winealsa_drv=${enable_winealsa_drv:-no}
  test -n "$COREAUDIO_LIBS" || enable_winecoreaudio_drv=${enable_winecoreaudio_drv:-no}
@@ -159,7 +159,7 @@ index 246b888..d9f6ddd 100755
  then
      as_fn_append wine_warnings "|No sound system was found. Windows applications will be silent."
  fi
-@@ -17203,6 +17297,7 @@ wine_fn_config_dll winemp3.acm enable_winemp3_acm
+@@ -17212,6 +17306,7 @@ wine_fn_config_dll winemp3.acm enable_winemp3_acm
  wine_fn_config_dll wineoss.drv enable_wineoss_drv
  wine_fn_config_dll wineps.drv enable_wineps_drv clean,po
  wine_fn_config_dll wineps16.drv16 enable_win16
@@ -168,7 +168,7 @@ index 246b888..d9f6ddd 100755
  wine_fn_config_dll winex11.drv enable_winex11_drv
  wine_fn_config_dll wing.dll16 enable_win16
 diff --git a/configure.ac b/configure.ac
-index de807d2..ec3db46 100644
+index 224b8c5..43498f8 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -70,6 +70,7 @@ AC_ARG_WITH(oss,       AS_HELP_STRING([--without-oss],[do not use the OSS sound
@@ -179,7 +179,7 @@ index de807d2..ec3db46 100644
  AC_ARG_WITH(sane,      AS_HELP_STRING([--without-sane],[do not use SANE (scanner support)]))
  AC_ARG_WITH(tiff,      AS_HELP_STRING([--without-tiff],[do not use TIFF]))
  AC_ARG_WITH(v4l,       AS_HELP_STRING([--without-v4l],[do not use v4l1 (v4l support)]))
-@@ -1512,6 +1513,30 @@ then
+@@ -1513,6 +1514,30 @@ then
            [GetText ${notice_platform}development files not found (or too old), po files can't be rebuilt.])
  fi
  
@@ -210,7 +210,7 @@ index de807d2..ec3db46 100644
  dnl **** Check for gstreamer ****
  if test "x$with_gstreamer" != "xno"
  then
-@@ -1730,13 +1755,15 @@ fi
+@@ -1731,13 +1756,15 @@ fi
  dnl **** Disable unsupported winmm drivers ****
  test -n "$ALSA_LIBS" || enable_winealsa_drv=${enable_winealsa_drv:-no}
  test -n "$COREAUDIO_LIBS" || enable_winecoreaudio_drv=${enable_winecoreaudio_drv:-no}
@@ -228,7 +228,7 @@ index de807d2..ec3db46 100644
  then
      WINE_WARNING([No sound system was found. Windows applications will be silent.])
  fi
-@@ -3217,6 +3244,7 @@ WINE_CONFIG_DLL(winemp3.acm)
+@@ -3220,6 +3247,7 @@ WINE_CONFIG_DLL(winemp3.acm)
  WINE_CONFIG_DLL(wineoss.drv)
  WINE_CONFIG_DLL(wineps.drv,,[clean,po])
  WINE_CONFIG_DLL(wineps16.drv16,enable_win16)
