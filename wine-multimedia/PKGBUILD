@@ -6,20 +6,20 @@
 
 pkgname=wine-multimedia
 _basename=wine
-pkgver=1.7.12
+pkgver=1.7.13
 pkgrel=1
 
 _pkgbasever=${pkgver/rc/-rc}
-_multimediasnapshot=20140210
+_multimediasnapshot=20140225
 
 source=(http://prdownloads.sourceforge.net/$_basename/$_basename-$_pkgbasever.tar.bz2{,.sign}
         30-win32-aliases.conf
         winemultimedia_${pkgver}_${_multimediasnapshot}.patch)
 
-sha1sums=('142def53c2e7e46418fd37426232d1524f09c73b'
+sha1sums=('b74cf9c79e989140e3e981eb2a5c14688fb6630b'
           'SKIP'
           '023a5c901c6a091c56e76b6a62d141d87cce9fdb'
-          '87e182565f43c3d76fee23b2fa47af9f6004a513')
+          '399dbc2af96436554bef26f59c2994960de8dc50')
 
 pkgdesc="Wine with Maarten Lankhorst's multimedia patches, including PulseAudio support"
 url="http://repo.or.cz/w/wine/multimedia.git"
@@ -53,7 +53,7 @@ makedepends=(autoconf ncurses bison perl fontforge flex prelink
   libxxf86vm      lib32-libxxf86vm
   libxml2         lib32-libxml2
   libldap         lib32-libldap
-  lcms            lib32-lcms
+  lcms2           lib32-lcms2
   mpg123          lib32-mpg123
   openal          lib32-openal
   v4l-utils       lib32-v4l-utils
@@ -75,7 +75,7 @@ optdepends=(
   libpng          lib32-libpng
   libldap         lib32-libldap
   gnutls          lib32-gnutls
-  lcms            lib32-lcms
+  lcms2           lib32-lcms2
   libxml2         lib32-libxml2
   mpg123          lib32-mpg123
   openal          lib32-openal

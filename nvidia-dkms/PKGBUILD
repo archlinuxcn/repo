@@ -4,12 +4,12 @@
 # Contributor: Atilla ÖNTAŞ <tarakbumba@gmail.com>
 
 pkgname=nvidia-dkms
-pkgver=331.38
+pkgver=331.49
 pkgrel=2
 pkgdesc='NVIDIA kernel module sources (DKMS)'
 arch=('i686' 'x86_64')
-[[ $CARCH == i686 ]] && _arch=x86 && _pkg=NVIDIA-Linux-${_arch}-${pkgver} && md5sums=('16aa229f7f118c8cafad6fb3f4ac082e')
-[[ $CARCH == x86_64 ]] && _arch=x86_64 && _pkg=NVIDIA-Linux-${_arch}-${pkgver}-no-compat32 && md5sums=('f2059ae373665cb6c8fb826e1173b04d')
+[[ $CARCH == i686 ]] && _arch=x86 && _pkg=NVIDIA-Linux-${_arch}-${pkgver} && md5sums=('176c77f9a10eaa652860dbc24042bff2')
+[[ $CARCH == x86_64 ]] && _arch=x86_64 && _pkg=NVIDIA-Linux-${_arch}-${pkgver}-no-compat32 && md5sums=('d0c944466a36cae8b1e23330b27a721c')
 url="http://www.nvidia.com/"
 license=('custom')
 depends=('bash' 'dkms' "nvidia-utils=${pkgver}")
@@ -18,9 +18,7 @@ optdepends=('linux-headers: Build the module against Arch kernel'
 provides=("nvidia=${pkgver}")
 conflicts=('nvidia' 'nvidia-304xx-dkms')
 install="${pkgname}.install"
-source=("http://us.download.nvidia.com/XFree86/Linux-${_arch}/${pkgver}/${_pkg}.run"
-        "${pkgname%-*}-linux3.13.patch")
-md5sums+=('61d3ec004734f9ecbf42eea98e1dd07d')
+source=("http://us.download.nvidia.com/XFree86/Linux-${_arch}/${pkgver}/${_pkg}.run")
 
 prepare() {
   if [[ -d ${_pkg} ]] ; then
@@ -28,9 +26,6 @@ prepare() {
   fi
 
   sh ${_pkg}.run --extract-only
-
-  cd ${_pkg}
-  patch -Np1 -i ../${pkgname%-*}-linux3.13.patch
 }
 
 package() {
