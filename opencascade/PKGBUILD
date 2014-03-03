@@ -2,7 +2,7 @@
 # Contributor: Brice M<E9>alier <mealier_brice@yahoo.fr>
 # Contributor: Michele Mocciola <mickele>
 pkgname=opencascade
-pkgver=6.6.0
+pkgver=6.7.0
 pkgrel=1
 pkgdesc="Open CASCADE Technology, 3D modeling & numerical simulation"
 arch=('i686' 'x86_64')
@@ -10,17 +10,15 @@ url="http://www.opencascade.org"
 license=('custom')
 depends=('tk' 'mesa' 'java-runtime' 'libxmu' 'ftgl')
 makedepends=('java-environment')
-options=(!libtool)
-source=("http://files.opencascade.com/OCCT/OCC_${pkgver}_release/OpenCASCADE${pkgver//./}.tgz" "env.sh" "opencascade.sh" "opencascade.conf")
-md5sums=('ad698d9b1e370c14999e7ec130575c92'
-         'ebca349379b5e608030b6ad88a9ab855'
+options=(!libtool debug)
+source=("http://files.opencascade.com/OCCT/OCC_${pkgver}_release/$pkgname-${pkgver}.tgz" "env.sh" "opencascade.sh" "opencascade.conf")
+md5sums=('2fa5463d68cdb4350fb0638730102143'
+         'a96f28ee7f4273ae1771ee033a2a3af3'
          'd9368b8d348ced3ec4462012977552d2'
          '2924ecf57c95d25888f51071fdc72ad0')
 
 build() {
-  cd "$srcdir/ros"
-  export CPLUS_INCLUDE_PATH=/usr/include/FTGL:/usr/include/freetype2
-  export CASROOT="$srcdir/ros"
+  cd "$srcdir/$pkgname-$pkgver"
   if [ ! -d $JAVA_HOME/include ]; then
     [ -e /etc/profile.d/openjdk6.sh ] && source /etc/profile.d/openjdk6.sh
     [ -e /etc/profile.d/jdk.sh ] && source /etc/profile.d/jdk.sh
@@ -35,11 +33,13 @@ build() {
 }
 
 package() {
-  cd "$srcdir/ros"
+  cd "$srcdir/$pkgname-$pkgver"
 
   make install
+  cp -r src/UnitsAPI/ "${pkgdir}/opt/$pkgname/src"
   install -D -m644 "${srcdir}/opencascade.conf" "${pkgdir}/etc/ld.so.conf.d/opencascade.conf"
   install -D -m 755 "${srcdir}/opencascade.sh" "${pkgdir}/etc/profile.d/opencascade.sh"
   install -m 755 "${srcdir}/env.sh" "${pkgdir}/opt/$pkgname"
-  install -Dm644 "$srcdir/ros/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/License.txt"
+  install -dm755 "$pkgdir/usr/share/licenses/$pkgname/"
+  install -m644 LICENSE_LGPL_21.txt OCCT_LGPL_EXCEPTION.txt "$pkgdir/usr/share/licenses/$pkgname"
 }
