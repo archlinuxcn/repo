@@ -2,7 +2,7 @@
 # Contributor: Techlive Zheng <techlivezheng@gmail.com>
 pkgname=obfsproxy
 pkgver=0.2.6
-pkgrel=1
+pkgrel=2
 pkgdesc="A pluggable transport proxy written in Python"
 arch=('any')
 url="https://pypi.python.org/pypi/obfsproxy"
@@ -10,6 +10,7 @@ license=('BSD')
 depends=('python2>=2.7' 'python2-crypto' 'python2-pyptlib>=0.0.5' 'twisted'
          'python2-yaml')
 makedepends=('python2-setuptools')
+optdepends=('python2-gmpy: speed up some cryptographic operations')
 conflicts=('pyobfsproxy' 'obfsproxy-git')
 options=(!emptydirs)
 source=("https://pypi.python.org/packages/source/o/obfsproxy/obfsproxy-${pkgver}.tar.gz"{,.asc})
