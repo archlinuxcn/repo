@@ -5,50 +5,52 @@
 # Contributor: Lubomir 'Kuci' Kucera <kuci24-at-gmail-dot-com>
 
 pkgname=android-studio
-pkgver=0.4.6
+pkgver=0.5.0
 pkgrel=1
-_build=133.1028713
+_build=134.1058404
 pkgdesc="A new Android development environment based on IntelliJ IDEA."
 arch=('i686' 'x86_64')
 url="http://developer.android.com/sdk/installing/studio.html"
 license=('APACHE')
-depends=('android-sdk' 'fontconfig' 'java-environment' 'libxrender' 'mesa' 'python')
+depends=('android-sdk' 'java-environment' 'python')
 makedepends=('unzip')
 optdepends=('android-sdk-platform-tools' 'android-sdk-build-tools')
 conflicts=('android-studio-beta' 'android-studio-dev' 'android-studio-canary')
 options=('!strip')
 install=$pkgname.install
-source=(
-	"http://dl.google.com/dl/android/studio/ide-zips/$pkgver/android-studio-ide-$_build-linux.zip"
-	"$pkgname.desktop")
-sha512sums=(
-	'b60b162627fa233d7d90be131c0bfc169c4e5b5223c808e6332caaa93fb68377b9080ac8f11d11f72722be45b9745654e4a4f598a2a0108173bcb24d3ac6d456'
-	'fa3567f328af45d265c4fabf3e41b55d8e8cccfa9675e745f07dd6ae41950dd53a2ef41ef1caee86643f5c2ddf7a7681ee17155e208a7b6fdae6c0537dfc0c94')
+source=("http://dl.google.com/dl/android/studio/ide-zips/$pkgver/android-studio-ide-$_build-linux.zip"
+        "$pkgname.desktop")
+sha512sums=('5c815c689e0a98d2e99c5468f99d65a16823df486353d336044574806c8fa6d1b6ae69b4e3eb09ece4d1827bc4fa7287ea08e308759dc1e212958ea61f28faf1'
+            'fa3567f328af45d265c4fabf3e41b55d8e8cccfa9675e745f07dd6ae41950dd53a2ef41ef1caee86643f5c2ddf7a7681ee17155e208a7b6fdae6c0537dfc0c94')
 
-[ $CARCH = "x86_64" ] && depends=('android-sdk' 'java-environment' 'lib32-fontconfig' 'lib32-libxrender' 'lib32-mesa' 'python')
+if [ $CARCH = "x86_64" ]; then
+  depends+=('lib32-fontconfig' 'lib32-libxrender' 'lib32-mesa')
+else
+  depends+=('fontconfig' 'libxrender' 'mesa')
+fi
 
 prepare() {
-	cd $srcdir/$pkgname
+  cd $srcdir/$pkgname
 
-	# extract the application icon
-	unzip -qo lib/resources.jar artwork/icon_AS_128.png
+  # extract the application icon
+  unzip -qo lib/resources.jar artwork/icon_AS_128.png
 
-	# enable anti aliasing
-	echo "-Dswing.aatext=true" >> studio.vmoptions
-	echo "-Dswing.aatext=true" >> studio64.vmoptions
+  # enable anti aliasing
+  echo "-Dswing.aatext=true" >> studio.vmoptions
+  echo "-Dswing.aatext=true" >> studio64.vmoptions
 }
 
 package() {
 	cd $srcdir/$pkgname
 
-	# application stuff
-	install -d $pkgdir/{opt/$pkgname,usr/bin}
-	cp -a bin lib plugins $pkgdir/opt/$pkgname
-	ln -s /opt/android-studio/bin/studio.sh $pkgdir/usr/bin/android-studio
+  # application stuff
+  install -d $pkgdir/{opt/$pkgname,usr/bin}
+  cp -a bin lib plugins $pkgdir/opt/$pkgname
+  ln -s /opt/android-studio/bin/studio.sh $pkgdir/usr/bin/android-studio
 
-	# starter stuff
-	install -Dm655 artwork/icon_AS_128.png $pkgdir/usr/share/pixmaps/$pkgname.png
-	install -Dm655 $srcdir/$pkgname.desktop $pkgdir/usr/share/applications/$pkgname.desktop
+  # starter stuff
+  install -Dm655 artwork/icon_AS_128.png $pkgdir/usr/share/pixmaps/$pkgname.png
+  install -Dm655 $srcdir/$pkgname.desktop $pkgdir/usr/share/applications/$pkgname.desktop
 
-	chmod -R ugo+rX $pkgdir/opt
+  chmod -R ugo+rX $pkgdir/opt
 }
