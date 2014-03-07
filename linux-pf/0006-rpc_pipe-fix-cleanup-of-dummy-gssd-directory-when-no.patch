@@ -1,0 +1,50 @@
+From 23e66ba97127ff3b064d4c6c5138aa34eafc492f Mon Sep 17 00:00:00 2001
+From: Jeff Layton <jlayton@redhat.com>
+Date: Mon, 9 Dec 2013 09:38:00 -0500
+Subject: [PATCH 6/6] rpc_pipe: fix cleanup of dummy gssd directory when
+ notification fails
+
+Currently, it could leak dentry references in some cases. Make sure
+we clean up properly.
+
+Signed-off-by: Jeff Layton <jlayton@redhat.com>
+Signed-off-by: Trond Myklebust <Trond.Myklebust@netapp.com>
+---
+ net/sunrpc/rpc_pipe.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/net/sunrpc/rpc_pipe.c b/net/sunrpc/rpc_pipe.c
+index 5d973b2..b185548 100644
+--- a/net/sunrpc/rpc_pipe.c
++++ b/net/sunrpc/rpc_pipe.c
+@@ -1369,6 +1369,18 @@ out:
+ 	return pipe_dentry;
+ }
+ 
++static void
++rpc_gssd_dummy_depopulate(struct dentry *pipe_dentry)
++{
++	struct dentry *clnt_dir = pipe_dentry->d_parent;
++	struct dentry *gssd_dir = clnt_dir->d_parent;
++
++	__rpc_rmpipe(clnt_dir->d_inode, pipe_dentry);
++	__rpc_depopulate(clnt_dir, gssd_dummy_info_file, 0, 1);
++	__rpc_depopulate(gssd_dir, gssd_dummy_clnt_dir, 0, 1);
++	dput(pipe_dentry);
++}
++
+ static int
+ rpc_fill_super(struct super_block *sb, void *data, int silent)
+ {
+@@ -1412,7 +1424,7 @@ rpc_fill_super(struct super_block *sb, void *data, int silent)
+ 	return 0;
+ 
+ err_depopulate:
+-	dput(gssd_dentry);
++	rpc_gssd_dummy_depopulate(gssd_dentry);
+ 	blocking_notifier_call_chain(&rpc_pipefs_notifier_list,
+ 					   RPC_PIPEFS_UMOUNT,
+ 					   sb);
+-- 
+1.8.5.3
+

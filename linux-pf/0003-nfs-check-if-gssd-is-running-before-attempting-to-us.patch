@@ -1,0 +1,50 @@
+From 6aa23d76a7b549521a03b63b6d5b7880ea87eab7 Mon Sep 17 00:00:00 2001
+From: Jeff Layton <jlayton@redhat.com>
+Date: Thu, 14 Nov 2013 07:25:19 -0500
+Subject: [PATCH 3/6] nfs: check if gssd is running before attempting to use
+ krb5i auth in SETCLIENTID call
+
+Currently, the client will attempt to use krb5i in the SETCLIENTID call
+even if rpc.gssd isn't running. When that fails, it'll then fall back to
+RPC_AUTH_UNIX. This introduced a delay when mounting if rpc.gssd isn't
+running, and causes warning messages to pop up in the ring buffer.
+
+Check to see if rpc.gssd is running before even attempting to use krb5i
+auth, and just silently skip trying to do so if it isn't. In the event
+that the admin is actually trying to mount with krb5*, it will still
+fail at a later stage of the mount attempt.
+
+Signed-off-by: Jeff Layton <jlayton@redhat.com>
+Signed-off-by: Trond Myklebust <Trond.Myklebust@netapp.com>
+---
+ fs/nfs/nfs4client.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
+index b4a160a..c1b7a80 100644
+--- a/fs/nfs/nfs4client.c
++++ b/fs/nfs/nfs4client.c
+@@ -10,6 +10,7 @@
+ #include <linux/sunrpc/auth.h>
+ #include <linux/sunrpc/xprt.h>
+ #include <linux/sunrpc/bc_xprt.h>
++#include <linux/sunrpc/rpc_pipe_fs.h>
+ #include "internal.h"
+ #include "callback.h"
+ #include "delegation.h"
+@@ -370,7 +371,11 @@ struct nfs_client *nfs4_init_client(struct nfs_client *clp,
+ 		__set_bit(NFS_CS_INFINITE_SLOTS, &clp->cl_flags);
+ 	__set_bit(NFS_CS_DISCRTRY, &clp->cl_flags);
+ 	__set_bit(NFS_CS_NO_RETRANS_TIMEOUT, &clp->cl_flags);
+-	error = nfs_create_rpc_client(clp, timeparms, RPC_AUTH_GSS_KRB5I);
++
++	error = -EINVAL;
++	if (gssd_running(clp->cl_net))
++		error = nfs_create_rpc_client(clp, timeparms,
++					      RPC_AUTH_GSS_KRB5I);
+ 	if (error == -EINVAL)
+ 		error = nfs_create_rpc_client(clp, timeparms, RPC_AUTH_UNIX);
+ 	if (error < 0)
+-- 
+1.8.5.3
+

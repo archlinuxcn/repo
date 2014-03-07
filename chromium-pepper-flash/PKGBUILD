@@ -3,8 +3,8 @@
 pkgname=chromium-pepper-flash
 pkgdesc="Google Chrome's Pepper Flash plugin for Chromium (stable version)"
 pkgver=12.0.0.70
-pkgrel=2
-_verbld=33.0.1750.117-1
+pkgrel=3
+_verbld=33.0.1750.146-1
 _channel='stable'
 arch=('i686' 'x86_64')
 url="http://www.google.com/chrome"
@@ -17,10 +17,10 @@ source=(license.html::http://www.google.com/chrome/intl/en/eula_text.html)
 sha1sums=('SKIP')
 if [ "$CARCH" == x86_64 ]; then
         source+=(https://dl.google.com/linux/chrome/rpm/stable/x86_64/google-chrome-${_channel}-${_verbld}.x86_64.rpm)
-        sha1sums+=('69ffd48d852bcd1796e37edda4ae64c72af66599')
+        sha1sums+=('92dc3f4259509b40a3eeeac64fafa106af4d5aac')
 elif [ "$CARCH" == i686 ]; then
         source+=(https://dl.google.com/linux/chrome/rpm/stable/i386/google-chrome-${_channel}-${_verbld}.i386.rpm)
-        sha1sums+=('456719260dc98ef3665fd80c3088c6cb82181245')
+        sha1sums+=('ead393ef7ef90acf3745c6299f991be97c7d42e5')
 fi
 
 package() {

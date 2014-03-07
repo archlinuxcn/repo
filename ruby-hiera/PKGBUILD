@@ -2,13 +2,13 @@
 # Contributor: Niels Abspoel <aboe76@gmail.com>
 _gemname=hiera
 pkgname=ruby-$_gemname
-pkgver=1.3.1
-pkgrel=2
+pkgver=1.3.2
+pkgrel=1
 pkgdesc="A pluggable data store for hierarcical data."
 arch=(any)
 url='http://projects.puppetlabs.com/projects/hiera/'
 license=('MIT')
-depends=('ruby')
+depends=('ruby' 'ruby-json_pure')
 source=(
         "https://rubygems.org/downloads/$_gemname-$pkgver.gem"
         'hiera.yaml')
@@ -31,5 +31,5 @@ package() {
   install -d $pkgdir/etc
   install -m 644 $srcdir/hiera.yaml $pkgdir/etc/
 }
-md5sums=('07195b8cc7437b5d1da8adae6ba28963'
-         '3c2f95791009f2113f5d3eb54a6577a8')
+sha256sums=('425a4c50d68780a83a82ea8d82ac39b47bbca2ee40bed48f37829d56a8c314db'
+            '814a19b0c7f17a77cfc3449516e1decd0e017c37ed7301aef350193c32d24799')

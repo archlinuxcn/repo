@@ -1,0 +1,32 @@
+From 3396f92f8be606ea485b0a82d4e7749a448b013b Mon Sep 17 00:00:00 2001
+From: Jeff Layton <jlayton@redhat.com>
+Date: Thu, 5 Dec 2013 07:33:49 -0500
+Subject: [PATCH 4/6] rpc_pipe: remove the clntXX dir if creating the pipe
+ fails
+
+In the event that we create the gssd/clntXX dir, but the pipe creation
+subsequently fails, then we should remove the clntXX dir before
+returning.
+
+Signed-off-by: Jeff Layton <jlayton@redhat.com>
+Signed-off-by: Trond Myklebust <Trond.Myklebust@netapp.com>
+---
+ net/sunrpc/rpc_pipe.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/net/sunrpc/rpc_pipe.c b/net/sunrpc/rpc_pipe.c
+index 5cd7ad1..0b74c61 100644
+--- a/net/sunrpc/rpc_pipe.c
++++ b/net/sunrpc/rpc_pipe.c
+@@ -1313,6 +1313,8 @@ rpc_gssd_dummy_populate(struct dentry *root, struct rpc_pipe *pipe_data)
+ 	}
+ 
+ 	pipe_dentry = rpc_mkpipe_dentry(clnt_dentry, "gssd", NULL, pipe_data);
++	if (IS_ERR(pipe_dentry))
++		__rpc_depopulate(gssd_dentry, gssd_dummy_clnt_dir, 0, 1);
+ out:
+ 	dput(clnt_dentry);
+ 	dput(gssd_dentry);
+-- 
+1.8.5.3
+

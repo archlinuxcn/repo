@@ -4,18 +4,18 @@
 # Contributor: Atilla ÖNTAŞ <tarakbumba@gmail.com>
 
 pkgname=nvidia-dkms
-pkgver=331.49
-pkgrel=2
+pkgver=334.21
+pkgrel=1
 pkgdesc='NVIDIA kernel module sources (DKMS)'
 arch=('i686' 'x86_64')
-[[ $CARCH == i686 ]] && _arch=x86 && _pkg=NVIDIA-Linux-${_arch}-${pkgver} && md5sums=('176c77f9a10eaa652860dbc24042bff2')
-[[ $CARCH == x86_64 ]] && _arch=x86_64 && _pkg=NVIDIA-Linux-${_arch}-${pkgver}-no-compat32 && md5sums=('d0c944466a36cae8b1e23330b27a721c')
+[[ $CARCH == i686 ]] && _arch=x86 && _pkg=NVIDIA-Linux-${_arch}-${pkgver} && md5sums=('3b2736dd6ed7e24f71004bad0e55e32e')
+[[ $CARCH == x86_64 ]] && _arch=x86_64 && _pkg=NVIDIA-Linux-${_arch}-${pkgver}-no-compat32 && md5sums=('f96b6708702830fe647a7d11832c514e')
 url="http://www.nvidia.com/"
 license=('custom')
 depends=('bash' 'dkms' "nvidia-utils=${pkgver}")
 optdepends=('linux-headers: Build the module against Arch kernel'
             'linux-lts-headers: Build the module against LTS Arch kernel')
-provides=("nvidia=${pkgver}")
+provides=("nvidia=${pkgver}" "nvidia-uvm=${pkgver}")
 conflicts=('nvidia' 'nvidia-304xx-dkms')
 install="${pkgname}.install"
 source=("http://us.download.nvidia.com/XFree86/Linux-${_arch}/${pkgver}/${_pkg}.run")
@@ -33,7 +33,14 @@ package() {
 
   install -dm 755 "${pkgdir}"/usr/{lib/modprobe.d,share/licenses,src}
   cp -dr --no-preserve=ownership kernel "${pkgdir}"/usr/src/nvidia-${pkgver}
+
+# Blacklist nouveau
   echo "blacklist nouveau" > "${pkgdir}"/usr/lib/modprobe.d/nvidia.conf
+
+# Build the UVM module
+  cat "${pkgdir}"/usr/src/nvidia-${pkgver}/uvm/dkms.conf.fragment >> "${pkgdir}"/usr/src/nvidia-${pkgver}/dkms.conf
+
+# License
   ln -s nvidia "${pkgdir}"/usr/share/licenses/${pkgname}
 }
 
