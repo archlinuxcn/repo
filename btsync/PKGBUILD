@@ -4,8 +4,8 @@
 # Contributor: Justin Patera serialhex@gmail.com
 
 pkgname=btsync
-pkgver=1.2.82
-pkgrel=3
+pkgver=1.2.91
+pkgrel=1
 pkgdesc="BitTorrent Sync - automatically sync files via secure, distributed technology"
 license=("custom:btsync")
 arch=('i686' 'x86_64' 'arm' 'armv6' 'armv7' 'armv6h' 'armv7h')
@@ -18,13 +18,13 @@ sha1sums=('9187bafe0cc30895d55b8a8a69074ebdca325e4c'
           'c4f87b9d65247f4a9033a6039662f4b863a5b03e')
 if [ "$CARCH" == x86_64 ]; then
 	source+=("http://syncapp.bittorrent.com/${pkgver}/${pkgname}_x64-${pkgver}.tar.gz")
-	sha1sums+=('4965cb7ed5154613ab27cc51c846b89ec53a53a0')
+	sha1sums+=('a0600c40cce869d23417996cc22379cd2496d9a0')
 elif [ "$CARCH" == i686 ]; then
 	source+=("http://syncapp.bittorrent.com/${pkgver}/${pkgname}_i386-${pkgver}.tar.gz")
-	sha1sums+=('7c36a2eca2545cb3c2ac43981b5c42ace4cf2e18')
+	sha1sums+=('3e1c023b4020bf7e21859c2db4eef0a2199ae767')
 elif [[ "$CARCH" == arm ||  "$CARCH" == armv6 || "$CARCH" == armv6h || "$CARCH" == armv7 || "$CARCH" == armv7h ]]; then
 	source+=("http://syncapp.bittorrent.com/${pkgver}/${pkgname}_arm-${pkgver}.tar.gz")
-	sha1sums+=('f5f6506339736d5ce0687865d9696f176bd063dc')
+	sha1sums+=('2c562b698a5ffc74a2e63847bd5f4dd60b8de1f4')
 fi
 
 package() {
