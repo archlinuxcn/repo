@@ -2,7 +2,7 @@
 _name=cffi
 pkgname=python-${_name}
 pkgver=0.8.2
-pkgrel=1
+pkgrel=2
 pkgdesc="Foreign Function Interface for Python calling C code"
 arch=('i686' 'x86_64')
 url="http://cffi.readthedocs.org/"
@@ -20,5 +20,6 @@ build() {
 
 package() {
   cd "$srcdir/$_name-$pkgver"
-  python3 setup.py install --root=$pkgdir/ --optimize=1
+  python3 setup.py install --root="$pkgdir/" --optimize=1
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
