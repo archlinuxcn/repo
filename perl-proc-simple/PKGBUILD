@@ -1,0 +1,27 @@
+# Maintainer: Marcus Behrendt <marcus dot behrendt dot 86 [at] gmail dot com>
+
+pkgname=perl-proc-simple
+pkgver=1.31
+pkgrel=1
+pkgdesc="launch and control background processes"
+depends=('perl>=5.10.0' 'glibc')
+license=('GPL' 'PerlArtistic')
+url="http://search.cpan.org/dist/Proc-Simple"
+source=(http://search.cpan.org/CPAN/authors/id/M/MS/MSCHILLI/Proc-Simple-${pkgver}.tar.gz)
+arch=('any')
+sha256sums=('5ed596d70693ebc62a75c56775766aa66808ea917e1765815dcc7cbe5299c3c2')
+
+build() {
+  cd ${srcdir}/Proc-Simple-${pkgver}
+  perl Makefile.PL INSTALLDIRS=vendor
+  make
+
+  # Remove .packlist and perllocal.pod files.
+  # find ${pkgdir} -name '.packlist' -delete
+  # find ${pkgdir} -name 'perllocal.pod' -delete
+}
+
+package() {
+  cd ${srcdir}/Proc-Simple-${pkgver}
+  make DESTDIR=${pkgdir} install
+}
