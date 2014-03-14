@@ -1,7 +1,7 @@
 # Maintainer: PyroDevil <p dot devil at gmail dot com>
 # Contributor: Anibal Pacheco <apacheco.uy@gmail.com>
 pkgname="scrapy"
-pkgver=0.22.1
+pkgver=0.22.2
 pkgrel=1
 pkgdesc="A fast high-level scraping and web crawling framework."
 arch=(any)
@@ -16,7 +16,7 @@ optdepends=('python2-pyopenssl: to enable crawling of secure (HTTPS) pages'
 provides=('scrapy')
 conflicts=('scrapy-hg' 'scrapy-git')
 options=(!emptydirs)
-source=("git://github.com/scrapy/scrapy.git#tag=${pkgver}")
+source=("git+https://github.com/scrapy/scrapy.git#tag=${pkgver}")
 md5sums=('SKIP')
 
 package() {
