@@ -1,0 +1,71 @@
+# Maintainer: Boqun Feng <boqun.feng@gmail.com>
+
+pkgname=beignet-git
+pkgver=0.8.0.38.gc883042
+pkgrel=1
+epoch=1
+pkgdesc="OpenCL Implemenation for Intel IvyBridge"
+arch=('i686' 'x86_64')
+url="http://cgit.freedesktop.org/beignet/"
+license=('LGPL')
+options=('debug' 'strip')
+depends=('clang>=3.3' 'llvm>=3.3' 'ncurses' 'ocl-icd')
+makedepends=('git' 'cmake>=2.6' 'python2')
+
+_gitname=beignet
+
+_gitroot=git://anongit.freedesktop.org/beignet
+_gitref=master
+
+_fetch_git() {
+  cd "$srcdir"
+
+  if [ -d "$srcdir/$_gitname/.git" ]; then
+    cd "$_gitname"
+    msg "Reset current branch"
+    git reset --hard HEAD
+    git clean -fdx
+    msg "Fetching branch $_gitref from $_gitroot..."
+    git fetch --force --update-head-ok \
+      "$_gitroot" "$_gitref:$_gitref" --
+    msg "Checking out branch $_gitref..."
+    git checkout "$_gitref" --
+    git reset --hard "$_gitref"
+    git clean -fdx
+    msg "The local files are updated."
+  else
+    msg "Cloning branch $_gitref from $_gitroot to $_gitname..."
+    git clone --single-branch --branch "$_gitref" \
+      "$_gitroot" "$_gitname"
+    cd "$_gitname"
+  fi
+  msg "GIT checkout done or server timeout"
+}
+
+pkgver() {
+  local outfile=/dev/null
+  [[ -e /dev/tty ]] && outfile=/dev/tty
+  (_fetch_git &> ${outfile})
+  cd "$srcdir/$_gitname"
+
+  git describe --tags | sed -e 's/^[^0-9]*//g' -e 's/-/.0./' -e 's/-/./g'
+}
+
+build() {
+  cd "${srcdir}/${_gitname}"
+
+  mkdir -p build
+  cd build
+  cmake .. \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DPYTHON_EXECUTABLE=/usr/bin/python2 \
+    -DCMAKE_INSTALL_PREFIX=/usr
+  make
+}
+
+package() {
+  cd "${srcdir}/${_gitname}/build"
+
+  make DESTDIR="$pkgdir/" install
+  rm -rf "${pkgdir}/usr/include"
+}
