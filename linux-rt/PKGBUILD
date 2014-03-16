@@ -9,8 +9,8 @@ pkgname=('linux-rt' 'linux-rt-headers' 'linux-rt-docs') # Build realtime patched
 #pkgname=linux-custom       # Build kernel with a different name
 _kernelname=${pkgname#linux}
 _basekernel=3.12
-_releasever=12
-_rtpatchver=rt19
+_releasever=13
+_rtpatchver=rt21
 pkgrel=1
 _pkgver=${_basekernel}.${_releasever}
 pkgver=${_basekernel}.${_releasever}_${_rtpatchver}
@@ -36,8 +36,8 @@ source=("https://www.kernel.org/pub/linux/kernel/v3.x/linux-${_basekernel}.tar.x
         'rpc_pipe-fix-cleanup-of-dummy-gssd-directory-when-notification-fails.patch')
 
 md5sums=('cc6ee608854e0da4b64f6c1ff8b6398c'
-         '7501673a556f9496cea8133afbbc83d3'
-         '97e5652f6039a48544897129c8adaf98'
+         'f387b5cc6663c5ba35ea116defec02be'
+         '60f4b7018bf88ad0ba887b3a492f6b1a'
          '38567cec912f1e0db6c8417916bdd1e6'
          '97de19de5c3632988f3e6adaf9d8fad2'
          'eb14dcfd80c00852ef81ded6e826826a'
