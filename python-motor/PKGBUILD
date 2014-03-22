@@ -8,6 +8,7 @@ arch=('any')
 url="http://pypi.python.org/pypi/${_py_pkgname}"
 license=('Apache')
 depends=('python-tornado' 'python-pymongo' 'python-greenlet')
+makedepends=('python-setuptools')
 source=(http://pypi.python.org/packages/source/m/$_py_pkgname/$_py_pkgname-$pkgver.tar.gz)
 md5sums=('f7477ac6c55046b2345bb91dce63fa83')
 
