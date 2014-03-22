@@ -14,12 +14,12 @@ source=(http://pypi.python.org/packages/source/l/lupa/lupa-$pkgver.tar.gz)
 md5sums=('ab7fb813061ba85314f7d30458ce37c5')
 
 build() {
-  cd $startdir/src/lupa-$pkgver
+  cd "$srcdir/lupa-$pkgver"
   python3 setup.py build
 }
 
 package() {
-  cd $startdir/src/lupa-$pkgver
+  cd "$srcdir/lupa-$pkgver"
 
   python3 setup.py install --root=$pkgdir --optimize=1
 }
