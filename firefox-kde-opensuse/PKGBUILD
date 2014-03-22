@@ -8,7 +8,7 @@
 #_pgo=true
 
 pkgname=firefox-kde-opensuse
-pkgver=27.0.1
+pkgver=28.0
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
@@ -30,7 +30,7 @@ provides=("firefox=${pkgver}")
 conflicts=('firefox')
 install=firefox.install
 options=(!emptydirs)
-_patchrev=72225e57f863
+_patchrev=427ae22e730e
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.bz2
         mozconfig firefox.desktop firefox-install-dir.patch vendor.js kde.js firefox-20.0.1-fixed-loading-icon.png
@@ -79,9 +79,6 @@ prepare() {
   patch -Np1 -i "$srcdir/firefox-kde-114.patch"
   patch -Np1 -i "$srcdir/firefox-no-default-ualocale.patch"
   patch -Np1 -i "$srcdir/firefox-branded-icons.patch"
-
-  # Fix PRE_RELEASE_SUFFIX
-  sed -i '/^PRE_RELEASE_SUFFIX := ""/s/ ""//' browser/base/Makefile.in
 
   # configure script misdetects the preprocessor without an optimization level
   # https://bugs.archlinux.org/task/34644
@@ -172,7 +169,7 @@ package() {
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
 
-sha256sums=('76057ac365fe60b51915e8dba2960546fb3a60a2b5747207a8c936e4fc280d8f'
+sha256sums=('2ffd0484e7eab52166b851681878a86d54223a6764c756721430fae8e1599628'
             '644f40fc6b81ac213e863cacfb470d64b784033afab27ee87b24a47c0bbef823'
             '175d03cf3d8eb420d24a5a3072be69c9603e3ddacd3a83f68f49754eaecf6c5a'
             'bcf224d1f239b73e4ac6d268819c1e94a1606beee99c6d8f851f8192b6444de3'
@@ -180,13 +177,13 @@ sha256sums=('76057ac365fe60b51915e8dba2960546fb3a60a2b5747207a8c936e4fc280d8f'
             'b8cc5f35ec35fc96ac5c5a2477b36722e373dbb57eba87eb5ad1276e4df7236d'
             '68e3a5b47c6d175cc95b98b069a15205f027cab83af9e075818d38610feb6213'
             'fb852af08b9c597cdd70ea2f143a286d79989e86f7cc706ad749b06cd27c3598'
-            '973b19e2801817d3c40d3c64670c8f7a1265e1f7c6596c45b07b4a709c5fa017'
+            'c2a6b961696cbc6a2ae9985da3a550d825dc5ddfb5c9cd89e464cd1e36498de1'
             '1fd54e93db3a4d454ece5a6dc788a4ae36805eb497482add82a11ac5cf990562'
-            'd2baac322bc69000353f1825ba5cbcbd3a43af19f28a06fb67b37b116a44791d'
+            'a42fbe8df5f8dd4f33a881c53da61624a8d6d3af397ae63e99ac077f3cf744af'
             '4785bdf086b7d537cb83369fea5c177eddb6fc3d8a69064599c64376bd985051'
             'e368d490192e8c83d2d209faa90a8bb0bff89e7d8d08d728001effe433f28e6f'
             'e8289ea4c1f8191e1e23661312ceee2128b8e790501b9a589d0d7bfc4384553f'
             '5f6b0970284d68d5ed18e6bb7ee1e9fc0025ab3c10aaa14c283adb21a4a20ee8'
-            '403d03a8a2f413d0f3e07060b25b0b887cf61c5b5ffab0da9766af476b5a65bf'
-            '75a0817c601bbe6b0a89fbc6ea327397ff296ad336d139b764421dab1dbf55cc'
+            '041aa13c736c129a8539250097053973777b3116e85ece80ecd765d03664d522'
+            '86acf2785ec45047cd614bee54e650397aab109da7d5fa70a0df6f11e161998e'
             'aca072853b379201b0d8ac8128eb6e0e8255ab0c955d7bfd48f6273c8bf245d5')
