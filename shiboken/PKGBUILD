@@ -7,7 +7,7 @@ pkgdesc="Support library for Python bindings"
 arch=('i686' 'x86_64')
 license=('LGPL')
 url="http://www.pyside.org"
-depends=("python2" "python3" "qt4>=4.8" 'libxslt')
+depends=("python2" "python" "qt4>=4.8" 'libxslt')
 optdepends=("python-sphinx: Documentation")
 makedepends=('cmake')
 conflicts=("libshiboken")
@@ -46,11 +46,12 @@ build(){
 package(){
     cd $srcdir/shiboken-$pkgver/build
     make DESTDIR=$pkgdir install
+    _pyverflags=$(python -c 'import sysconfig; print(sysconfig.get_config_var("SOABI"))')
 
     cd generator
     install -D -m 755 ../data/ShibokenConfig.cmake "$pkgdir/usr/lib/cmake/Shiboken-$pkgver"
     install -D -m 755 ../data/ShibokenConfigVersion.cmake "$pkgdir/usr/lib/cmake/Shiboken-$pkgver/"
-    install -D -m 755 ../data/ShibokenConfig.cpython-33m.cmake "$pkgdir/usr/lib/cmake/Shiboken-$pkgver/"
+    install -D -m 755 ../data/ShibokenConfig.${_pyverflags}.cmake "$pkgdir/usr/lib/cmake/Shiboken-$pkgver/"
     install -D -m 755 ../data/shiboken.pc $pkgdir/usr/lib/pkgconfig/
 
     cd $srcdir/shiboken-$pkgver/build_python2
