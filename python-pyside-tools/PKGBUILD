@@ -51,6 +51,7 @@ package(){
     sed -e "s/env python/env python2/g" "${pkgdir}/usr/bin/pyside-uic" > "${pkgdir}/usr/bin/pyside-uic-py2"
     chmod +x "${pkgdir}/usr/bin/pyside-uic-py2"
     mkdir -p "${pkgdir}/usr/lib/python2.7/site-packages"
-    ln -s ../../python3.3/site-packages/pysideuic "${pkgdir}/usr/lib/python2.7/site-packages/pysideuic"
+    _pyver=$(python3 -c 'import sys; print(".".join(str(x) for x in sys.version_info[:2]))')
+    ln -s ../../python${_pyver}/site-packages/pysideuic "${pkgdir}/usr/lib/python2.7/site-packages/pysideuic"
 }
 
