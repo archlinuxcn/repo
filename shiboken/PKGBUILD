@@ -2,7 +2,7 @@
 # Contributor: Matthias Maennich <arch@maennich.net>
 pkgname=shiboken
 pkgver=1.2.1
-pkgrel=3
+pkgrel=4
 pkgdesc="Support library for Python bindings"
 arch=('i686' 'x86_64')
 license=('LGPL')
@@ -14,8 +14,6 @@ conflicts=("libshiboken")
 provides=("libshiboken" "shiboken")
 source=("http://download.qt-project.org/official_releases/pyside/$pkgname-$pkgver.tar.bz2"
         "FindPython3Libs.cmake.patch")
-md5sums=('06100e2c91ab4433dbf15c26f5bb6c17'
-         'e21f354434c2c43b8ebdcf582d512de5')
 
 prepare() {
     patch $srcdir/shiboken-$pkgver/cmake/Modules/FindPython3Libs.cmake FindPython3Libs.cmake.patch
@@ -61,3 +59,5 @@ package(){
     install -D -m 755 ../data/ShibokenConfig-python2.7.cmake "$pkgdir/usr/lib/cmake/Shiboken-$pkgver/"
 }
 
+md5sums=('06100e2c91ab4433dbf15c26f5bb6c17'
+         '5d6be2fa4ddde3d6b64f4dda4369268c')
