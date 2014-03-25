@@ -13,6 +13,8 @@ source=("http://ftp.debian.org/debian/pool/main/c/${_pkgname}/${_pkgname}_${pkgv
         'remove-cnnic.patch')
 depends=('bash' 'run-parts' 'openssl' 'findutils' 'coreutils' 'sed')
 makedepends=('python2')
+provides=("$_pkgname=$pkgver")
+conflicts=("$_pkgname")
 install='ca-certificates.install'
 backup=('etc/ca-certificates.conf')
 sha256sums=('815b7cd97200b0d76450bb3e7d9b65997ac494ab6467b17369f65b2ef94bcb0c'
