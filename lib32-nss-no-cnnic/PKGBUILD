@@ -7,7 +7,7 @@
 _pkgbasename=nss
 pkgname=lib32-${_pkgbasename}-no-cnnic
 pkgver=3.15.5
-pkgrel=1
+pkgrel=2
 pkgdesc="Mozilla Network Security Services (32-bit) - Remove Suspect CNNIC ROOT CA"
 arch=('x86_64')
 url="http://www.mozilla.org/projects/security/pki/nss/"
@@ -26,21 +26,16 @@ options=('!strip' '!makeflags')
 source=(ftp://ftp.mozilla.org/pub/security/nss/releases/NSS_${pkgver//./_}_RTM/src/${_pkgbasename}-${pkgver}.tar.gz
         nss.pc.in
         ssl-renegotiate-transitional.patch
-        add_spi+cacert_ca_certs.patch
         remove-cnnic.patch)
 
 prepare() {
   cd "${srcdir}"/${_pkgbasename}-${pkgver}/
   
-  # Add CAcert and spi-inc.org CA certificates.
-  # See http://wiki.cacert.org/NSSLib for how to generate
-  patch -Np1 -i "${srcdir}/add_spi+cacert_ca_certs.patch"
-
   # Adds transitional SSL renegotiate support - patch from Debian
   patch -Np3 -i "${srcdir}/ssl-renegotiate-transitional.patch"
 
   # Remove CNNIC
-  patch -Np3 -i ../remove-cnnic.patch
+  patch -Np1 -i ../remove-cnnic.patch
 
   # Respect LDFLAGS
   sed -e 's/\$(MKSHLIB) -o/\$(MKSHLIB) \$(LDFLAGS) -o/' \
@@ -90,5 +85,4 @@ package() {
 sha1sums=('c8d34a33cf5782d35df1aa78cdb38707d7bfc5fe'
           'aa5b2c0aa38d3c1066d511336cf28d1333e3aebd'
           '8a964a744ba098711b80c0d279a2993524e8eb92'
-          'be6ef0f124f188ebb76f4d83e13466bdcfb27dd3'
-          '49adcd682622d22535d98ba4a6aae429e9c7ff9b')
+          '55f7c0e770ad1cc2577749c49017f2a11849305d')
