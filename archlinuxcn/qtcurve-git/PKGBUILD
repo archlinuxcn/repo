@@ -3,7 +3,7 @@
 pkgbase=qtcurve
 pkgname=${pkgbase}-git
 _realver=1.8.18
-pkgver=1.8.18.10.gce86f3b
+pkgver=1.8.18.11.g9f8d9fc
 pkgrel=1
 pkgdesc='A configurable set of widget styles for KDE and Gtk.'
 arch=('i686' 'x86_64')
@@ -25,7 +25,7 @@ provides=(
   "${pkgbase}-qt4-git"
   "${pkgbase}-qt5-git")
 conflicts=("${pkgbase}-kde4" "${pkgbase}-qt4"
-  "${pkgbase}-qt5" "${pkgbase}-gtk2")
+  "${pkgbase}-qt5" "${pkgbase}-gtk2" "${pkgbase}-utils")
 options=('debug' 'strip')
 
 _gitname="qtcurve"
