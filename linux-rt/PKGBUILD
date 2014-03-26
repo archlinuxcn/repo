@@ -9,8 +9,8 @@ pkgname=('linux-rt' 'linux-rt-headers' 'linux-rt-docs') # Build realtime patched
 #pkgname=linux-custom       # Build kernel with a different name
 _kernelname=${pkgname#linux}
 _basekernel=3.12
-_releasever=13
-_rtpatchver=rt21
+_releasever=14
+_rtpatchver=rt23
 pkgrel=1
 _pkgver=${_basekernel}.${_releasever}
 pkgver=${_basekernel}.${_releasever}_${_rtpatchver}
@@ -36,8 +36,8 @@ source=("https://www.kernel.org/pub/linux/kernel/v3.x/linux-${_basekernel}.tar.x
         'rpc_pipe-fix-cleanup-of-dummy-gssd-directory-when-notification-fails.patch')
 
 md5sums=('cc6ee608854e0da4b64f6c1ff8b6398c'
-         'f387b5cc6663c5ba35ea116defec02be'
-         '60f4b7018bf88ad0ba887b3a492f6b1a'
+         '3c5fa1eaa0fb0c124d2a2fd074041da1'
+         'f6533223cdae66d91fa3667779419ab1'
          '38567cec912f1e0db6c8417916bdd1e6'
          '97de19de5c3632988f3e6adaf9d8fad2'
          'eb14dcfd80c00852ef81ded6e826826a'
@@ -114,10 +114,6 @@ prepare() {
 
   # don't run depmod on 'make install'. We'll do this ourselves in packaging
   sed -i '2iexit 0' scripts/depmod.sh
-}
-
-build() {
-  cd "${srcdir}/linux-${_basekernel}"
 
   # get kernel version
   make prepare
@@ -133,18 +129,15 @@ build() {
   # rewrite configuration
   yes "" | make config >/dev/null
 
-  # save configuration for later reuse
-  if [ "${CARCH}" = "x86_64" ]; then
-    cat .config > "${startdir}/config.x86_64.last"
-  else
-    cat .config > "${startdir}/config.last"
-  fi
-
   ####################
   # stop here
   # this is useful to configure the kernel
   #msg "Stopping build"; return 1
   ####################
+}
+
+build() {
+  cd "${srcdir}/linux-${_basekernel}"
 
   # build!
   make ${MAKEFLAGS} LOCALVERSION= bzImage modules
