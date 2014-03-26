@@ -1,34 +1,62 @@
-# Maintainer: tang0th67
-# Have any improvements? Please change this PKGBUILD and send your code to me.
+# Maintainer: John K. Luebs <jkl@johnluebs.com>
 
-pkgname='balsamiqmockups'
-pkgver=2.2.11
-_releasedate="2013.05.21"
+# I maintain this on github, feel free to submit a pull request to
+# https://github.com/jkl1337/packages-archlinux.git
+
+pkgname=balsamiqmockups
+pkgver=2.2.21
 license=('custom')
 pkgrel=1
 arch=('i686' 'x86_64')
 pkgdesc="The Adobe Air based Mockup client. Not free or open source, there is a 7 day free trial."
 url=('http://balsamiq.com/products/mockups')
-source=("http://builds.balsamiq.com/archives/mockups-desktop/MockupsForDesktop$pkgver-$_releasedate.air" 'balsamiqmockups.desktop')
-noextract=("MockupsForDesktop$pkgver-$_releasedate.air")
-depends=('bash' 'adobe-air-sdk' 'unzip')
+source=("http://builds.balsamiq.com/b/mockups-desktop/MockupsForDesktop.air"
+        "http://media.balsamiq.com/files/BalsamiqEula.pdf"
+        'fix-filetype-mime.patch'
+        'balsamiqmockups.desktop'
+        'vnd.balsamiq.bmml+xml.xml')
+sha1sums=('ffad31a8978f53b8e12ce6289a5e8510cba6440f'
+          '4ac87898420b40ab88957a847efff93c948974ad'
+          '279e15c0c1bcffeabc97d9af3882c849735b5aa9'
+          'cfe7240b7403ff47d63e9f8264581a40112607ff'
+          '6f28b1fcc5758cb46c5f149d7896b53bdd027293')
+noextract=("MockupsForDesktop.air")
+install=balsamiqmockups.install
+depends=(adobe-air-sdk desktop-file-utils)
+makedepends=(unzip)
 conflicts=('balsamiq-mockups')
-md5sums=('236eb8b9f1f02fbc93367b63ccfe1636'
-         'dc0a099ac9c065cb5675ab5605a61215')
 
-package() {
-  cd $srcdir
-  mkdir $pkgdir/opt/
-  mkdir $pkgdir/opt/airapps
-  mkdir $pkgdir/usr/
-  mkdir $pkgdir/usr/bin
-  install $srcdir/MockupsForDesktop$pkgver-$_releasedate.air  $pkgdir/opt/airapps/balsamiqmockups.air
-  mkdir $pkgdir/opt/airapps/balsamiqmockups
-  cd $pkgdir/opt/airapps/balsamiqmockups
-  unzip ../balsamiqmockups.air
-  echo "#!/bin/bash" >> $pkgdir/usr/bin/balsamiqmockups
-  echo "/opt/adobe-air-sdk/bin/adl -nodebug /opt/airapps/balsamiqmockups/META-INF/AIR/application.xml /opt/airapps/balsamiqmockups/" >> $pkgdir/usr/bin/balsamiqmockups
-  chmod +x $pkgdir/usr/bin/balsamiqmockups
-  mkdir -p $pkgdir/usr/share/applications
-  install $srcdir/${pkgname}.desktop $pkgdir/usr/share/applications/ 
+build () {
+  cd "${srcdir}"
+
+  mkdir -p $pkgname
+  cd "${srcdir}/${pkgname}"
+  unzip -o "${srcdir}/MockupsForDesktop.air"
+
+  msg2 "Apply patch fix-filetype-mime.patch"
+  patch -Np1 -i "$srcdir/fix-filetype-mime.patch"
+}
+
+package () {
+  cd "${srcdir}"
+
+  install -dm755 "${pkgdir}/opt/airapps"
+
+  install -Dm644 BalsamiqEula.pdf "${pkgdir}/usr/share/licenses/balsamiqmockups/BalsamiqEula.pdf"
+  install -dm755 "${pkgdir}/opt/airapps"
+  cp -pr "${pkgname}" "${pkgdir}/opt/airapps"
+
+  install -dm755 "${pkgdir}/usr/bin"
+  echo "#!/bin/bash" > "${pkgdir}/usr/bin/balsamiqmockups"
+  echo "/opt/adobe-air-sdk/bin/adl -nodebug /opt/airapps/balsamiqmockups/META-INF/AIR/application.xml /opt/airapps/balsamiqmockups/" >> "${pkgdir}/usr/bin/balsamiqmockups"
+  chmod 755 "${pkgdir}/usr/bin/balsamiqmockups"
+
+  for dim in 16 32 36 48 128 512; do
+    install -d "$pkgdir"/usr/share/icons/hicolor/${dim}x${dim}/{apps,mimetypes}
+    ln -s /opt/airapps/$pkgname/icons/mockups_ico_${dim}.png "${pkgdir}"/usr/share/icons/hicolor/${dim}x${dim}/apps/${pkgname}.png
+    ln -s /opt/airapps/$pkgname/icons/mockups_doc_ico_${dim}.png "${pkgdir}"/usr/share/icons/hicolor/${dim}x${dim}/mimetypes/application-vnd.balsamiq.bmml+xml.png
+  done
+
+  install -Dm644 vnd.balsamiq.bmml+xml.xml "${pkgdir}/usr/share/mime/packages/vnd.balsamiq.bmml+xml.xml"
+  install -Dm644 ${pkgname}.desktop "${pkgdir}/usr/share/applications/${pkgname}.desktop"
 }
