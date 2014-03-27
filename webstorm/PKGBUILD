@@ -1,0 +1,42 @@
+# Contributor: Testuser_01 <arch@nico-siebler.de>
+# Maintainer: Alexsandr Pavlov <kidoz at mail dot ru>
+pkgname=webstorm
+_pkgname=WebStorm
+pkgver=8.0
+_pkgver=135.547
+pkgrel=1
+pkgdesc="Lightweight HTML, JavaScript and CSS editor."
+arch=('i686' 'x86_64')
+options=('!strip')
+url="http://www.jetbrains.com/${pkgname}"
+license=('custom')
+depends=('java-runtime')
+source=(http://download.jetbrains.com/webstorm/${_pkgname}-${pkgver}.tar.gz
+        jetbrains-webstorm
+        jetbrains-webstorm.desktop)
+sha256sums=('2e8d946b3218d6d5754c399ed09633dbad4267daf9b426a293f6162077fb995c'
+            '152a0b551a7955837d0e249b24c69d37282633751fc0f5fc68145edcb7c74711'
+            '15ef28d17976555365f56a11c98cbe1c2bf8753d05df558e8437a1f8295369bf')
+
+package() {
+  cd "${srcdir}"
+  mkdir -p "${pkgdir}/opt/${pkgname}"
+  cp -r ${srcdir}/${_pkgname}-${_pkgver}/* "${pkgdir}/opt/${pkgname}"
+  if [[ $CARCH = 'i686' ]]; then
+    rm -f "${pkgdir}/opt/${pkgname}/bin/libyjpagent-linux64.so"
+    rm -f "${pkgdir}/opt/${pkgname}/bin/fsnotifier64"
+  fi
+  if [[ $CARCH = 'x86_64' ]]; then
+    rm -f "${pkgdir}/opt/${pkgname}/bin/libyjpagent-linux.so"
+    rm -f "${pkgdir}/opt/${pkgname}/bin/fsnotifier"
+  fi
+
+  mkdir -p "${pkgdir}/usr/bin"
+  mkdir -p "${pkgdir}/usr/share/applications"
+  mkdir -p "${pkgdir}/usr/share/pixmaps"
+  mkdir -p "${pkgdir}/usr/share/licenses/${pkgname}"
+  install -m 644 "${startdir}/jetbrains-${pkgname}.desktop" "${pkgdir}/usr/share/applications"
+  install -m 644 "${pkgdir}/opt/${pkgname}/bin/webide.png" "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
+  install -m 644 "${srcdir}/${_pkgname}-${_pkgver}/license/${_pkgname}_license.txt" "${pkgdir}/usr/share/licenses/${pkgname}/${_pkgname}_license.txt"
+  install -m 755 "${startdir}/jetbrains-${pkgname}" "${pkgdir}/usr/bin"
+}
