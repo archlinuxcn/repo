@@ -2,20 +2,18 @@
 # Contributor: Matthias Maennich <arch@maennich.net>
 pkgname=shiboken
 pkgver=1.2.1
-pkgrel=3
+pkgrel=4
 pkgdesc="Support library for Python bindings"
 arch=('i686' 'x86_64')
 license=('LGPL')
 url="http://www.pyside.org"
-depends=("python2" "python3" "qt4>=4.8" 'libxslt')
+depends=("python2" "python" "qt4>=4.8" 'libxslt')
 optdepends=("python-sphinx: Documentation")
 makedepends=('cmake')
 conflicts=("libshiboken")
 provides=("libshiboken" "shiboken")
 source=("http://download.qt-project.org/official_releases/pyside/$pkgname-$pkgver.tar.bz2"
         "FindPython3Libs.cmake.patch")
-md5sums=('06100e2c91ab4433dbf15c26f5bb6c17'
-         'e21f354434c2c43b8ebdcf582d512de5')
 
 prepare() {
     patch $srcdir/shiboken-$pkgver/cmake/Modules/FindPython3Libs.cmake FindPython3Libs.cmake.patch
@@ -46,11 +44,12 @@ build(){
 package(){
     cd $srcdir/shiboken-$pkgver/build
     make DESTDIR=$pkgdir install
+    _pyverflags=$(python -c 'import sysconfig; print(sysconfig.get_config_var("SOABI"))')
 
     cd generator
     install -D -m 755 ../data/ShibokenConfig.cmake "$pkgdir/usr/lib/cmake/Shiboken-$pkgver"
     install -D -m 755 ../data/ShibokenConfigVersion.cmake "$pkgdir/usr/lib/cmake/Shiboken-$pkgver/"
-    install -D -m 755 ../data/ShibokenConfig.cpython-33m.cmake "$pkgdir/usr/lib/cmake/Shiboken-$pkgver/"
+    install -D -m 755 ../data/ShibokenConfig.${_pyverflags}.cmake "$pkgdir/usr/lib/cmake/Shiboken-$pkgver/"
     install -D -m 755 ../data/shiboken.pc $pkgdir/usr/lib/pkgconfig/
 
     cd $srcdir/shiboken-$pkgver/build_python2
@@ -60,3 +59,5 @@ package(){
     install -D -m 755 ../data/ShibokenConfig-python2.7.cmake "$pkgdir/usr/lib/cmake/Shiboken-$pkgver/"
 }
 
+md5sums=('06100e2c91ab4433dbf15c26f5bb6c17'
+         '5d6be2fa4ddde3d6b64f4dda4369268c')

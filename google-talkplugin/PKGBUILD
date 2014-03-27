@@ -2,8 +2,8 @@
 # Maintainer: ava1ar <mail(at)ava1ar(dot)info>
 
 pkgname=google-talkplugin
-pkgver=5.1.5.0
-pkgrel=1
+pkgver=5.2.4.0
+pkgrel=2
 pkgdesc="Video chat browser plug-in for Google Talk"
 arch=('i686' 'x86_64')
 url="http://www.google.com/chat/video"
@@ -14,16 +14,18 @@ source=(license.html::http://www.google.com/intl/en/policies/terms/index.html)
 sha1sums=('SKIP') 
 if [ "$CARCH" == x86_64 ]; then
 	source+=(https://dl.google.com/linux/talkplugin/rpm/stable/x86_64/${pkgname}-${pkgver}-1.x86_64.rpm)
-	sha1sums+=('1907017ef07f0adc1a41c4bb4cd01bb32e126854')
+	sha1sums+=('990d199365e8b87234bce54747c00c8311cdcf67')
 elif [ "$CARCH" == i686 ]; then
 	source+=(https://dl.google.com/linux/talkplugin/rpm/stable/i386/${pkgname}-${pkgver}-1.i386.rpm)
-	sha1sums+=('6b1e820253f2502e1f5058d06a9365779335f10d')
+	sha1sums+=('cac198c167a1fdf8abea8e67b80e0a926d18b04d')
 fi
 
 package() {
     cp -R ${srcdir}/opt ${pkgdir}
     install -d "${pkgdir}/usr/lib"
     cp -R ${srcdir}/usr/lib*/* ${pkgdir}/usr/lib
+    # change /usr/lib/chromium-browser to /usr/lib/chromium
+    mv ${pkgdir}/usr/lib/chromium-browser ${pkgdir}/usr/lib/chromium
     # cleaning up cron update script
     rm -rf ${pkgdir}/opt/google/talkplugin/cron
     # install license file

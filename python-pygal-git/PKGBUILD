@@ -1,0 +1,46 @@
+# Maintainer: Éric Gillet <eric.gillet@linuxw.info>
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+pkgname=python-pygal-git
+_gitname=pygal
+pkgver=20140311
+pkgrel=2
+pkgdesc="A python svg graph plotting library"
+arch=('any')
+url="http://pygal.org/"
+license=('LGPL3')
+groups=()
+depends=('python' 'python-lxml')
+makedepends=('git python-setuptools')
+optdepends=(
+  'python-cairosvg: PNG output'
+  'python-tinycss: PNG output'
+  'python-cssselect: PNG output'
+  'python-scipy: Interpolation support'
+  'python-pytest: Unit testing'
+)
+provides=()
+conflicts=()
+replaces=()
+backup=()
+options=(!emptydirs)
+install=
+source=('git+https://github.com/Kozea/pygal.git')
+md5sums=('SKIP')
+
+
+pkgver() {
+  cd "$srcdir/$_gitname"
+  git log -1 --pretty='%cd' --date=short | tr -d '-'
+}
+
+build() {
+  cd "$srcdir/$_gitname"
+  python setup.py build
+}
+
+package() {
+  cd "$_gitname"
+  python setup.py install --root="$pkgdir/" --optimize=1
+}
+
+# vim:set ts=2 sw=2 et:

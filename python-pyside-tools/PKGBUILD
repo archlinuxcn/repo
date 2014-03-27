@@ -10,7 +10,7 @@
 pkgname=python-pyside-tools
 _pkgrealname=pyside-tools
 pkgver=0.2.15
-pkgrel=3
+pkgrel=6
 pkgdesc="UI Compiler (pyside-uic) plus Qt Resource Compiler (pyside-rcc4) for PySide. For both Python 2 and 3."
 arch=('i686' 'x86_64')
 license=('LGPL')
@@ -51,6 +51,7 @@ package(){
     sed -e "s/env python/env python2/g" "${pkgdir}/usr/bin/pyside-uic" > "${pkgdir}/usr/bin/pyside-uic-py2"
     chmod +x "${pkgdir}/usr/bin/pyside-uic-py2"
     mkdir -p "${pkgdir}/usr/lib/python2.7/site-packages"
-    ln -s ../../python3.3/site-packages/pysideuic "${pkgdir}/usr/lib/python2.7/site-packages/pysideuic"
+    _pyver=$(python3 -c 'import sys; print(".".join(str(x) for x in sys.version_info[:2]))')
+    ln -s ../../python${_pyver}/site-packages/pysideuic "${pkgdir}/usr/lib/python2.7/site-packages/pysideuic"
 }
 

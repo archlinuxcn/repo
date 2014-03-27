@@ -1,0 +1,25 @@
+# Maintainer: Jerome Leclanche <jerome@leclan.ch>
+# Contributor: Matt Harrison <matt at mistbyte dot com>
+# Contributor: Renzo Carbonara <gnuk0001@gmail.com>
+# Contributor: Bogdan Szczurek <thebodzio@gmail.com>
+
+_pkgname=sass
+pkgname=ruby-$_pkgname
+pkgver=3.3.1
+pkgrel=1
+pkgdesc="Tools and Ruby libraries for the CSS3 extension languages: Sass and SCSS."
+arch=('any')
+url="http://sass-lang.com/"
+license=('MIT')
+depends=('ruby' 'ruby-yard' 'ruby-maruku')
+makedepends=('rubygems')
+# optdepends=('ruby-listen')
+source=("http://gems.rubyforge.org/gems/$_pkgname-$pkgver.gem")
+noextract=("$_pkgname-$pkgver.gem")
+sha256sums=('56d02be6a31cced323f4f1d22fb390121e39cf4b3e92eca9ea8b1f81438101a3')
+
+package() {
+	local _gemdir="$(ruby -rubygems -e'puts Gem.default_dir')"
+	gem install --no-user-install --ignore-dependencies -i "$pkgdir$_gemdir" -n "$pkgdir/usr/bin" "$_pkgname-$pkgver.gem"
+	install -D "$pkgdir$_gemdir/gems/$_pkgname-$pkgver/MIT-LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
