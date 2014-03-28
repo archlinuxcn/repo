@@ -3,7 +3,7 @@
 
 pkgname=google-talkplugin
 pkgver=5.2.4.0
-pkgrel=2
+pkgrel=3
 pkgdesc="Video chat browser plug-in for Google Talk"
 arch=('i686' 'x86_64')
 url="http://www.google.com/chat/video"
@@ -25,7 +25,8 @@ package() {
     install -d "${pkgdir}/usr/lib"
     cp -R ${srcdir}/usr/lib*/* ${pkgdir}/usr/lib
     # change /usr/lib/chromium-browser to /usr/lib/chromium
-    mv ${pkgdir}/usr/lib/chromium-browser ${pkgdir}/usr/lib/chromium
+    cp -R ${pkgdir}/usr/lib/chromium-browser ${pkgdir}/usr/lib/chromium
+    cp -R ${pkgdir}/usr/lib/chromium-browser ${pkgdir}/usr/lib/chromium-dev
     # cleaning up cron update script
     rm -rf ${pkgdir}/opt/google/talkplugin/cron
     # install license file
