@@ -1,0 +1,55 @@
+From 4e0e621cf25a685406e87853fe9e4075e0b200f9 Mon Sep 17 00:00:00 2001
+From: Oliver Mangold <o.mangold@gmail.com>
+Date: Sun, 2 Jun 2013 17:21:08 +0200
+Subject: [PATCH] changed usage of contextlib2 to contextlib, as for python3 it
+ does not make sense and produces problems
+
+---
+ bedup/__main__.py | 3 +--
+ bedup/tracking.py | 3 +--
+ setup.py          | 1 -
+ 3 files changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/bedup/__main__.py b/bedup/__main__.py
+index da7d5d5..bf5a43d 100644
+--- a/bedup/__main__.py
++++ b/bedup/__main__.py
+@@ -29,8 +29,7 @@ import warnings
+ import xdg.BaseDirectory  # pyxdg, apt:python-xdg
+ 
+ from collections import defaultdict, OrderedDict
+-from contextlib import closing
+-from contextlib2 import ExitStack
++from contextlib import closing, ExitStack
+ from sqlalchemy.orm import sessionmaker
+ from sqlalchemy.pool import SingletonThreadPool
+ from uuid import UUID
+diff --git a/bedup/tracking.py b/bedup/tracking.py
+index c9b8569..8ecf14a 100644
+--- a/bedup/tracking.py
++++ b/bedup/tracking.py
+@@ -28,8 +28,7 @@ import sys
+ import threading
+ 
+ from collections import defaultdict, namedtuple
+-from contextlib import closing, contextmanager
+-from contextlib2 import ExitStack
++from contextlib import closing, contextmanager, ExitStack
+ from itertools import groupby
+ from sqlalchemy.sql import and_, select, func, literal_column
+ from uuid import UUID
+diff --git a/setup.py b/setup.py
+index 21328e1..3f6de6f 100755
+--- a/setup.py
++++ b/setup.py
+@@ -51,7 +51,6 @@ install_requires = [
+     'pycparser >= 2.9.1',
+     'pyxdg',
+     'SQLAlchemy',
+-    'contextlib2',
+ ]
+ 
+ if version_info < (2, 7):
+-- 
+1.8.3
+

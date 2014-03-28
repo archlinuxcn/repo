@@ -1,0 +1,37 @@
+# Maintainer: Oliver Mangold <o.mangold at gmail dot com>
+pkgname=bedup-git
+pkgver=130806
+pkgrel=2
+pkgdesc="Offline deduplication utility for the BTRFS filesystem"
+arch=('i686' 'x86_64')
+url="https://github.com/g2p/bedup"
+_commit="244cc49b779a81f2dc1bf1df62cbecc53e39d454"
+#_commit="HEAD"
+source=('bedup-contextlib2.patch')
+md5sums=('b6d34b4576def2e96fe430e34ac03630')
+license=('GPL')
+depends=('python' 'python-distribute' 'python-alembic' 'python-cffi' 'python-sqlalchemy' 'python-xdg' 'python-mako')
+makedepends=('gcc' 'btrfs-progs' 'git')
+conflicts=('bedup')
+provides=('bedup')
+
+prepare() {
+  if [ ! -e "${srcdir}/bedup.git" ]; then
+    git clone "$url" "${srcdir}/bedup.git"
+  else
+    (cd "${srcdir}/bedup.git"; git pull origin master)
+  fi
+  cd "${srcdir}/bedup.git"
+  git reset --hard "$_commit"
+  git apply ../bedup-contextlib2.patch
+}
+
+build() {
+  cd "${srcdir}/bedup.git"
+  python setup.py build
+}
+
+package() {
+  cd "${srcdir}/bedup.git"
+  python setup.py install --root "${pkgdir}"
+}
