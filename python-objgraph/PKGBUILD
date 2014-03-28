@@ -1,0 +1,17 @@
+#Maintainer: Randy Heydon <randy.heydon at clockworklab dot net>
+pkgname=python-objgraph
+pkgver=1.7.2
+pkgrel=2
+pkgdesc="Draws Python object reference graphs with graphviz"
+arch=(any)
+url="http://mg.pov.lt/objgraph"
+license=('MIT')
+depends=('python' 'graphviz')
+optdepends=('xdot: interactively view object graphs')
+source=(http://pypi.python.org/packages/source/o/objgraph/objgraph-$pkgver.tar.gz)
+md5sums=('e7422096f2e5bd47e7873a948979e70d')
+
+build() {
+  cd $srcdir/objgraph-$pkgver
+  python ./setup.py install --root=$pkgdir --optimize=1 || return 1
+}
