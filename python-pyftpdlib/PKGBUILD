@@ -1,0 +1,26 @@
+#Submitter: Gustavo Alvarez <sl1pkn07@gmaul.com>
+#Maintainer: Darshit Shah <darnir@gmail.com>
+
+pkgname=python-pyftpdlib
+pkgver=1.3.0
+pkgrel=2
+pkgdesc="Python FTP server library"
+arch=('any')
+url="http://code.google.com/p/pyftpdlib/"
+license=('MIT')
+source=("https://pyftpdlib.googlecode.com/files/pyftpdlib-${pkgver}.tar.gz")
+depends=("python-pyopenssl")
+optdepends=("python-sendfile: used to speedup transfers"
+            "python-pyopenssl: required for SSL/TLS connections")
+md5sums=('69d7fd0503e24088c49af172d79e59ef')
+
+build(){
+  cd ${srcdir}/pyftpdlib-${pkgver}
+  python setup.py build
+}
+
+package(){
+  cd ${srcdir}/pyftpdlib-${pkgver}
+  python setup.py install --root="${pkgdir}/" --optimize=1
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
