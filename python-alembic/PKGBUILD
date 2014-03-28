@@ -1,0 +1,27 @@
+# Maintainer: googol <googol@posteo.de>
+# Former maintainer: Oliver Mangold <o.mangold at gmail dot com>
+pkgname=python-alembic
+pkgver=0.6.3
+pkgrel=2
+pkgdesc="Lightweight dababase migration tool for usage with SQLAlchemy"
+arch=('any')
+license=('MIT')
+url=('https://bitbucket.org/zzzeek/alembic')
+makedepends=('python-distribute')
+source=("https://pypi.python.org/packages/source/a/alembic/alembic-${pkgver}.tar.gz")
+
+sha256sums=('35dfad44254bd0731ac611de211957a37dcc8d53b67a134c187e0b32a8b43842')
+depends=('python' 'python-mako' 'python-sqlalchemy')
+provides=("${pkgname}")
+
+build() {
+  cd "${srcdir}/alembic-${pkgver}"
+  python setup.py build
+}
+
+package() {
+  cd "${srcdir}/alembic-${pkgver}"
+  python setup.py install --root "${pkgdir}"
+  install -m 755 -d "${pkgdir}/usr/share/licenses/${pkgname}"
+  install -m 644 "${srcdir}/alembic-${pkgver}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
