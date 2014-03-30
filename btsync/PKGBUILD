@@ -5,7 +5,7 @@
 
 pkgname=btsync
 pkgver=1.3.67
-pkgrel=1
+pkgrel=2
 pkgdesc="BitTorrent Sync - automatically sync files via secure, distributed technology"
 license=("custom:btsync")
 arch=('i686' 'x86_64' 'arm' 'armv6' 'armv7' 'armv6h' 'armv7h')
@@ -24,7 +24,7 @@ elif [ "$CARCH" == i686 ]; then
 	sha1sums+=('18018b2973e9456cc00a790992725a48abf61906')
 elif [[ "$CARCH" == arm ||  "$CARCH" == armv6 || "$CARCH" == armv6h || "$CARCH" == armv7 || "$CARCH" == armv7h ]]; then
 	source+=("http://syncapp.bittorrent.com/${pkgver}/${pkgname}_arm-${pkgver}.tar.gz")
-	sha1sums+=('eefd74afef739225d8c3c8bb5b4ed7e39afbf074')
+	sha1sums+=('e487975b0132d54387deea0b8172a96e44ccbbe5')
 fi
 
 package() {
