@@ -5,7 +5,7 @@
 
 pkgname=nvidia-dkms
 pkgver=334.21
-pkgrel=2
+pkgrel=3
 pkgdesc='NVIDIA kernel module sources (DKMS)'
 arch=('i686' 'x86_64')
 [[ $CARCH == i686 ]] && _arch=x86 && _pkg=NVIDIA-Linux-${_arch}-${pkgver} && md5sums=('3b2736dd6ed7e24f71004bad0e55e32e')
@@ -32,14 +32,12 @@ package() {
   cd ${_pkg}
 
   install -dm 755 "${pkgdir}"/usr/{lib/modprobe.d,share/licenses,src}
-  cp -dr --no-preserve=ownership kernel "${pkgdir}"/usr/src/nvidia-${pkgver}
+  cp -dr --no-preserve='ownership' kernel "${pkgdir}"/usr/src/nvidia-${pkgver}
 
 # Blacklist nouveau
   echo "blacklist nouveau" > "${pkgdir}"/usr/lib/modprobe.d/nvidia.conf
 
-# CUDA
-  install -dm 755 "${pkgdir}"/usr/bin
-  install -m 4755 nvidia-modprobe "${pkgdir}"/usr/bin/
+# UVM module
   cat "${pkgdir}"/usr/src/nvidia-${pkgver}/uvm/dkms.conf.fragment >> "${pkgdir}"/usr/src/nvidia-${pkgver}/dkms.conf
 
 # License
