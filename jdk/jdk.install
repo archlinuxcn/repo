@@ -29,7 +29,7 @@ post_install() {
     note "Please re-login to include JDK in your PATH."
 
     if [ -f /etc/mailcap ]; then
-      sed -i '/application\/x-java-jnlp-file/d' /etc/mailcap
+        sed -i '/application\/x-java-jnlp-file/d' /etc/mailcap
     fi
     echo 'application/x-java-jnlp-file;/opt/java/jre/bin/javaws %s' >>/etc/mailcap
 }
@@ -42,9 +42,9 @@ post_remove() {
     _update
 
     mailcap=$(grep -v 'application/x-java-jnlp-file' /etc/mailcap)
-    if [ "$mailcap" ]; then
-      sed -i '/application\/x-java-jnlp-file/d' /etc/mailcap
+    if [ "${mailcap}" ]; then
+        sed -i '/application\/x-java-jnlp-file/d' /etc/mailcap
     else
-      rm /etc/mailcap
+        rm /etc/mailcap
     fi
 }
