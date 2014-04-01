@@ -1,0 +1,14 @@
+[Unit]
+Description=CopyAgent
+After=local-fs.target network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/CopyAgent
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+Restart=always
+User=%I
+
+[Install]
+WantedBy=multi-user.target
