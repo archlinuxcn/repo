@@ -1,7 +1,7 @@
 # Maintainer: Daniel Micay <danielmicay@gmail.com>
 # Contributor: Gordin <9ordin @t gmail dot com>
 pkgname=android-sdk
-pkgver=r22.6.1
+pkgver=r22.6.2
 pkgrel=1
 pkgdesc='Google Android SDK'
 arch=('i686' 'x86_64')
@@ -23,13 +23,13 @@ source=(https://dl.google.com/android/${pkgname}_$pkgver-linux.tgz
         $pkgname.csh
         $pkgname.conf
         license.html)
-sha1sums=('535a9c0fcfb9e2793eaee5faca9424c11afdfe69'
-          'c249134310ae91dccce1ad839b3985211674ab71'
-          'e834f53e13d5926ec7be3fd775fa80aa6f328eb6'
-          '78f8574e651c9bf8b7515ecb30c7ef93edbc4a96'
-          '08c85aab7523e22b298891c7047bc0e7adbf3437'
-          '145bdf3eb41a56574b289c1577a24bc47097ec83'
-          'bfb91be7e0b602d765b7a1fcaf0ce1b7e1a93faa')
+md5sums=('ff1541418a44d894bedc5cef10622220'
+         '1379235d0b536096e08ffd162d0feea7'
+         'bae60e64d5f3cab67f01a5b38c44d94b'
+         'bb600506a10eda2cce7f4f72e66825fd'
+         '5cce59de06290eb7779ecbb3c4a2a748'
+         '470daf5b7595a30f18ffccc1139e3ff5'
+         '8bffc1a9d6f1c9a6713ff5a329808047')
 
 package() {
   cd "$pkgdir"
