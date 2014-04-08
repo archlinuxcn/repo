@@ -1,7 +1,7 @@
 post_install() {
 getent group adbusers >> /dev/null || /usr/sbin/groupadd adbusers || return 1
 /bin/cat << EOF
-===> If you have problems with printers or other devices please comment the relative line
+===> If you have problems with printers or other devices please comment the relevant line
 ===> in "/usr/lib/udev/rules.d/51-android.rules"
 EOF
 }
