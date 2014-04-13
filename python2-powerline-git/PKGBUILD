@@ -3,7 +3,7 @@
 _gitname=powerline
 _gitbranch=develop
 pkgname="python2-${_gitname}-git"
-pkgver=800.c1ae7f3
+pkgver=1135.c100c90
 pkgrel=1
 pkgdesc='The ultimate statusline/prompt utility.'
 url='https://github.com/Lokaltog/powerline'
@@ -13,8 +13,7 @@ depends=('python2>=2.6')
 makedepends=('git' 'python2-distribute')
 optdepends=('python2-psutil: improved system information'
 	'python2-pygit2: improved git support'
-	'mercurial: improved mercurial support'
-	'zsh: better shell prompt'
+	'mercurial: improved mercurial support' 'zsh: better shell prompt'
 	'gvim: vim compiled with Python support')
 conflicts=('python-powerline-git')
 replaces=('powerline-git')
