@@ -3,7 +3,7 @@
 # Some lines from  kernel26-bfs and kernel26-ck
 # Credits to respective maintainers
 _major=3
-_minor=13
+_minor=14
 #_patchlevel=0
 #_subversion=1
 _basekernel=${_major}.${_minor}
@@ -12,7 +12,7 @@ pkgbase=linux-pf
 _pfrel=1
 _kernelname=${pkgbase#linux}
 _pfpatchhome="http://pf.natalenko.name/sources/${_basekernel}/"
-_pfpatchname="patch-${_basekernel}.${_pfrel}${_kernelname}"
+_pfpatchname="patch-${_basekernel}${_kernelname}${_pfrel}"
 
 _CPUSUFFIXES_KBUILD=( CORE2 K7 K8 K10 BARCELONA BOBCAT BULLDOZER PILEDRIVER PSC ATOM PENTIUMII PENTIUMIII PENTIUMM PENTIUM4 COREI7 COREI7AVX COREAVXI COREAVX2 )
 _CPUSUFFIXES=( core2 k7 k8 k10 barcelona bobcat bulldozer piledriver psc atom p2 p3 pm p4 nehalem sandybridge ivybridge haswell)
@@ -66,22 +66,21 @@ url="http://pf.natalenko.name/"
 license=('GPL2')
 options=('!strip')
 makedepends=('git' 'xmlto' 'docbook-xsl' 'xz' 'bc')
+_gcc_patch="enable_additional_cpu_optimizations_for_gcc.patch"
 source=("ftp://www.kernel.org/pub/linux/kernel/v${_major}.x/linux-${_basekernel}.tar.xz"
 	'config' 'config.x86_64'		# the main kernel config files
 	'linux.preset'			# standard config files for mkinitcpio ramdisk
 	'change-default-console-loglevel.patch'
         'http://repo-ck.com/source/gcc_patch/enable_additional_cpu_optimizations_for_gcc.patch.gz'
-	'criu-no-expert.patch'
+        '0001-Bluetooth-allocate-static-minor-for-vhci.patch'
+        '0002-module-allow-multiple-calls-to-MODULE_DEVICE_TABLE-p.patch'
+        '0003-module-remove-MODULE_GENERIC_TABLE.patch'
+        '0004-fs-Don-t-return-0-from-get_anon_bdev.patch'
+        '0005-Revert-Bluetooth-Enable-autosuspend-for-Intel-Blueto.patch'
+        '0006-genksyms-fix-typeof-handling.patch'
+        '0007-Fix-the-use-of-code32_start-in-the-EFI-boot-stub.patch'
 	"${_pfpatchhome}${_pfpatchname}.xz"	# the -pf patchset
-	'0001-sunrpc-create-a-new-dummy-pipe-for-gssd-to-hold-open.patch'
-        '0002-sunrpc-replace-sunrpc_net-gssd_running-flag-with-a-m.patch'
-        '0003-nfs-check-if-gssd-is-running-before-attempting-to-us.patch'
-        '0004-rpc_pipe-remove-the-clntXX-dir-if-creating-the-pipe-.patch'
-        '0005-sunrpc-add-an-info-file-for-the-dummy-gssd-pipe.patch'
-        '0006-rpc_pipe-fix-cleanup-of-dummy-gssd-directory-when-no.patch'
-        '0001-SUNRPC-Ensure-that-gss_auth-isn-t-freed-before-its-u.patch'
-        '0001-syscalls.h-use-gcc-alias-instead-of-assembler-aliase.patch'
-        'i8042-fix-aliases.patch'
+	http://repo-ck.com/source/gcc_patch/$_gcc_patch.gz
 )
 
 _aufs3git="http://git.code.sf.net/p/aufs/aufs3-standalone"
@@ -138,36 +137,29 @@ prepare() {
   # (relevant patch sent upstream: https://lkml.org/lkml/2011/7/26/227)
   patch -Np1 -i "${srcdir}/change-default-console-loglevel.patch"
 
-  # allow criu without expert option set
-  # patch from fedora
-  patch -Np1 -i "${srcdir}"/criu-no-expert.patch
+  # Fix vhci warning in kmod (to restore every kernel maintainer's sanity)
+  patch -p1 -i "${srcdir}/0001-Bluetooth-allocate-static-minor-for-vhci.patch"
 
+  # Fix atkbd aliases
+  patch -p1 -i "${srcdir}/0002-module-allow-multiple-calls-to-MODULE_DEVICE_TABLE-p.patch"
+  patch -p1 -i "${srcdir}/0003-module-remove-MODULE_GENERIC_TABLE.patch"
 
-  # fix 15 seocnds nfs delay
-  # http://git.linux-nfs.org/?p=trondmy/linux-nfs.git;a=commitdiff;h=4b9a445e3eeb8bd9278b1ae51c1b3a651e370cd6
-  patch -p1 -i "${srcdir}/0001-sunrpc-create-a-new-dummy-pipe-for-gssd-to-hold-open.patch"
-  # http://git.linux-nfs.org/?p=trondmy/linux-nfs.git;a=commitdiff;h=89f842435c630f8426f414e6030bc2ffea0d6f81
-  patch -p1 -i "${srcdir}/0002-sunrpc-replace-sunrpc_net-gssd_running-flag-with-a-m.patch"
-  # http://git.linux-nfs.org/?p=trondmy/linux-nfs.git;a=commitdiff;h=6aa23d76a7b549521a03b63b6d5b7880ea87eab7
-  patch -p1 -i "${srcdir}/0003-nfs-check-if-gssd-is-running-before-attempting-to-us.patch"
+  # Fix various bugs caused by rootfs having FSID 0
+  # See http://www.spinics.net/lists/kernel/msg1716924.html
+  patch -p1 -i "${srcdir}/0004-fs-Don-t-return-0-from-get_anon_bdev.patch"
 
-  # fix nfs kernel oops
-  # http://git.linux-nfs.org/?p=trondmy/linux-nfs.git;a=commitdiff;h=3396f92f8be606ea485b0a82d4e7749a448b013b
-  patch -p1 -i "${srcdir}/0004-rpc_pipe-remove-the-clntXX-dir-if-creating-the-pipe-.patch"
-  # http://git.linux-nfs.org/?p=trondmy/linux-nfs.git;a=commitdiff;h=e2f0c83a9de331d9352185ca3642616c13127539
-  patch -p1 -i "${srcdir}/0005-sunrpc-add-an-info-file-for-the-dummy-gssd-pipe.patch"
-  # http://git.linux-nfs.org/?p=trondmy/linux-nfs.git;a=commitdiff;h=23e66ba97127ff3b064d4c6c5138aa34eafc492f
-  patch -p1 -i "${srcdir}/0006-rpc_pipe-fix-cleanup-of-dummy-gssd-directory-when-no.patch"
+  # Disable usb autosuspend for intel btusb
+  # See http://www.spinics.net/lists/kernel/msg1716461.html
+  # Until a solution is found, make sure the driver leaves autosuspend alone
+  patch -p1 -i "${srcdir}/0005-Revert-Bluetooth-Enable-autosuspend-for-Intel-Blueto.patch"
 
-  # Fix FS#38921
-  # http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=9eb2ddb48ce3a7bd745c14a933112994647fa3cd
-  patch -p1 -i "${srcdir}/0001-SUNRPC-Ensure-that-gss_auth-isn-t-freed-before-its-u.patch"
+  # Fix generation of symbol CRCs
+  # http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=dc53324060f324e8af6867f57bf4891c13c6ef18
+  patch -p1 -i "${srcdir}/0006-genksyms-fix-typeof-handling.patch"
 
-  # Fix symbols: Revert http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=83460ec8dcac14142e7860a01fa59c267ac4657c
-  patch -Rp1 -i "${srcdir}/0001-syscalls.h-use-gcc-alias-instead-of-assembler-aliase.patch"
-
-  # Fix i8042 aliases
-  patch -p1 -i "${srcdir}/i8042-fix-aliases.patch"
+  # Fix the use of code32_start in the EFI boot stub
+  # http://permalink.gmane.org/gmane.linux.kernel/1679881
+  patch -p1 -i "${srcdir}/0007-Fix-the-use-of-code32_start-in-the-EFI-boot-stub.patch"
 
   # end linux-ARCH patches
 
@@ -176,7 +168,7 @@ prepare() {
 
 
   # added gcc 4.7.1 support for Kconfig and menuconfig
-  #zcat ${srcdir}/enable_additional_cpu_optimizations_for_gcc.patch.gz | patch -Np1
+ # patch -Np1 -i "${srcdir}/${_gcc_patch}"
   if [ "$CARCH" = "x86_64" ]; then
 	cat "${startdir}/config.x86_64" >| .config
   else
@@ -716,20 +708,18 @@ package_linux-pf-headers() {
 pkgdesc="Linux kernel and modules with the pf-kernel patch [-ck patchset (BFS included), TuxOnIce, BFQ] and aufs3"
 
 # makepkg -g >>PKGBUILD
-sha256sums=('4d5e5eee5f276424c32e9591f1b6c971baedc7b49f28ce03d1f48b1e5d6226a2'
-            'cc2bc1423b77d8600e75f0ea9823ce0ee4d5f5b4cdfa0839f18028cb168c1450'
-            'ebe7071fcbfcc83e73d0fd668e1d65e1335a842ee84fc3f7dd8454f393eb131a'
+sha256sums=('61558aa490855f42b6340d1a1596be47454909629327c49a5e4e10268065dffa'
+            '3cd16736c00e61ac939eadad2f8e05b96088fb14b796bfa5fc53d46753e2386a'
+            '7dab2f65185cfde84632fffe6e1d35c7bd4b9eb81be694618b3975d7d38848e0'
             '82d660caa11db0cd34fd550a049d7296b4a9dcd28f2a50c81418066d6e598864'
             'faced4eb4c47c4eb1a9ee8a5bf8a7c4b49d6b4d78efbe426e410730e6267d182'
             '70717f6c64bed9da2450b3a824b25df0a916cdf43ee1e0f537057db3f9a33b8d'
-            'daa75228a4c45a925cc5dbfeba884aa696a973a26af7695adc198c396474cbd5'
-            '7432d903806c9a8952093e9a8270bd1c457dc81ba96c2b447f388afe63e59f67'
-            '6ed0d7b259dca7a3cb4ed5cba10e87d2f9b29ecab6438e47f70d6961cc0eb665'
-            '3e3a2f5531b18fa6494bf1d555be981aef288c5d74480569d907629be06b54b3'
-            '605c9e27fb08cb893e6e3293d431c3421eb14c587adf014d964ccc51cd6d0e6d'
-            'df5c98b5719b97accbee16d387b81781cd9694801cf1f1d831fdf5069942fda1'
-            'ed41c98da84dc0003777edca3101d4923be76701d6b494cd7c512a4da39de710'
-            'b54af31bf32ea47dd47c48113481cc3288c04d844f5b4814663b108f43f415a7'
-            '115095cc4ad447cf5139dd838d833212bd89f7456428b01bd6a66363d6acb19a'
-            '49b947c76b8c4d17fed80a45342e43e4bbd1c2085a43b43c237a8a0d27a51e74'
-            '1e1dc0c380fcfadfe46d396f3efade08c90f53d74fac7037edcfe9bc0a3c8d56')
+            'aa17aa9a5c663552ea047b9d2a9a916207bed361bd387418c122f6611ee576a6'
+            '48c459a2a14e8f161b79943e9ea405c4e98cd5abdab62749c4e9d65e5735382a'
+            'f15a6831736e4c0b8b355fd7887445e770500d439cb851623ea300cc50ba4d97'
+            '4b9aed8d0b7c2389d9413caa2152e6591200630c19dda8224d43eae7d863a0d6'
+            'e0666f75eabc2bbfa668cb35ee72dfbad48e5963828a444fbb50388048a8cd3c'
+            'd2c449d346ae52724d36c3224bd06fcae7775b0698a9096eb89eeaa6dbc092e5'
+            '5a175c698cfdbf942f712afeda2a6af3f4e63a742ec6b6dc3a64bc6a7fb685bb'
+            'de7e7a157cd67de7becb8d35019804f2a7c055d569df8cbbd4c45b93fef16757'
+            '70717f6c64bed9da2450b3a824b25df0a916cdf43ee1e0f537057db3f9a33b8d')
