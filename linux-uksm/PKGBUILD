@@ -33,7 +33,7 @@ true && pkgname=(linux-uksm linux-uksm-headers)
 _kernelname=-uksm
 _srcname=linux-3.14
 pkgver=3.14
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 url="http://kerneldedup.org/"
 license=('GPL2')
@@ -44,8 +44,8 @@ _uksmname="v3.14"
 _bfqpath="http://algo.ing.unimo.it/people/paolo/disk_sched/patches/3.14.0-v7r2"
 source=("http://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
         #"http://www.kernel.org/pub/linux/kernel/v3.x/patch-${pkgver}.xz"
-        #"http://kerneldedup.org/download/uksm/${_uksmvernel}/uksm-${_uksmvernel}-for-${_uksmname}.patch" # website often went down
-        "uksm-${_uksmvernel}-for-${_uksmname}.test.patch"
+        "http://kerneldedup.org/download/uksm/${_uksmvernel}/uksm-${_uksmvernel}-for-${_uksmname}.patch" # website often went down
+        #"uksm-${_uksmvernel}-for-${_uksmname}.test.patch"
         "${_bfqpath}/0001-block-cgroups-kconfig-build-bits-for-BFQ-v7r2-3.14.patch"
         "${_bfqpath}/0002-block-introduce-the-BFQ-v7r2-I-O-sched-for-3.14.patch"
         "${_bfqpath}/0003-block-bfq-add-Early-Queue-Merge-EQM-to-BFQ-v7r2-for-3.14.0.patch"
@@ -54,9 +54,10 @@ source=("http://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
         '0001-Bluetooth-allocate-static-minor-for-vhci.patch'
         '0002-module-allow-multiple-calls-to-MODULE_DEVICE_TABLE-p.patch'
         '0003-module-remove-MODULE_GENERIC_TABLE.patch'
-        '0004-Revert-syscalls.h-use-gcc-alias-instead-of-assembler.patch'
-        '0005-fs-Don-t-return-0-from-get_anon_bdev.patch'
-        '0006-Revert-Bluetooth-Enable-autosuspend-for-Intel-Blueto.patch'
+        '0004-fs-Don-t-return-0-from-get_anon_bdev.patch'
+        '0005-Revert-Bluetooth-Enable-autosuspend-for-Intel-Blueto.patch'
+        '0006-genksyms-fix-typeof-handling.patch'
+        '0007-Fix-the-use-of-code32_start-in-the-EFI-boot-stub.patch'
         'config' 'config.x86_64')
         
 prepare() {
@@ -78,18 +79,22 @@ prepare() {
     patch -p1 -i "${srcdir}/0002-module-allow-multiple-calls-to-MODULE_DEVICE_TABLE-p.patch"
     patch -p1 -i "${srcdir}/0003-module-remove-MODULE_GENERIC_TABLE.patch"
 
-    # Fix symbols: Revert http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=83460ec8dcac14142e7860a01fa59c267ac4657c
-    # For details, see https://lkml.org/lkml/2014/1/26/22
-    patch -p1 -i "${srcdir}/0004-Revert-syscalls.h-use-gcc-alias-instead-of-assembler.patch"
-
     # Fix various bugs caused by rootfs having FSID 0
     # See http://www.spinics.net/lists/kernel/msg1716924.html
-    patch -p1 -i "${srcdir}/0005-fs-Don-t-return-0-from-get_anon_bdev.patch"
+    patch -p1 -i "${srcdir}/0004-fs-Don-t-return-0-from-get_anon_bdev.patch"
 
     # Disable usb autosuspend for intel btusb
     # See http://www.spinics.net/lists/kernel/msg1716461.html
     # Until a solution is found, make sure the driver leaves autosuspend alone
-    patch -p1 -i "${srcdir}/0006-Revert-Bluetooth-Enable-autosuspend-for-Intel-Blueto.patch"
+    patch -p1 -i "${srcdir}/0005-Revert-Bluetooth-Enable-autosuspend-for-Intel-Blueto.patch"
+
+    # Fix generation of symbol CRCs
+    # http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=dc53324060f324e8af6867f57bf4891c13c6ef18
+    patch -p1 -i "${srcdir}/0006-genksyms-fix-typeof-handling.patch"
+
+    # Fix the use of code32_start in the EFI boot stub
+    # http://permalink.gmane.org/gmane.linux.kernel/1679881
+    patch -p1 -i "${srcdir}/0007-Fix-the-use-of-code32_start-in-the-EFI-boot-stub.patch"
 
     msg "Patching source with BFQ patches"
     for p in "${srcdir}"/000{1,2,3}-block*.patch; do
@@ -98,7 +103,7 @@ prepare() {
 
     ### Patch source with UKSM
     msg "Patching with UKSM"
-    patch -Np1 -i "$srcdir/uksm-${_uksmvernel}-for-${_uksmname}.test.patch"
+    patch -Np1 -i "$srcdir/uksm-${_uksmvernel}-for-${_uksmname}.patch"
 
     ### Clean tree and copy ARCH config over
     msg "Running make mrproper to clean source tree"
