@@ -1,0 +1,60 @@
+# Maintainer: Wei-Ning Huang <aitjcize@gmail.com>
+# COntributor: Limao Luo <luolimao+AUR@gmail.com>
+# Contributor: Tom < tomgparchaur at gmail dot com >
+
+pkgname=copy-agent
+pkgver=1.43.0290
+pkgrel=1
+pkgdesc="Copy.com sync agent"
+arch=("i686" "x86_64" "armv6h")
+url="http://www.copy.com"
+license=(custom)
+depends=("qt4" "gtk2" "fuse")
+options=('!strip' '!upx')
+install=$pkgname.install
+sha256sums=('09a93cdd0c5b7c1fc1edcb0c13addef0ad03d27fb2a903d5ea69fa6e084fce32'
+            'ef1767720b5e5eff6567e537f3fed1c1d7da17e4f4248479816cab924f62e431'
+            'b69bc2f8b4315a43d3b60b11ec9c226c2060d14ac4d5702140260961c74620cb'
+            'abbf5d4d6cd9cf5b7645c0ba98ac535e30eb0b634a1ae2d09aa34959823dae47'
+            '4013d824bfd818c38035c16acfd709b159fe77c53b52eb63b4f5e3030421691e'
+            '059995cd96ae09d92681063ffd6d5ee603fa1a4b9fdae9b315494d5becb203c6'
+            'c328ddfce46fb5577b1d3d4f67258aa1caee671214e335d802cdc9a065a1595a')
+
+source=(https://copy.com/install/linux/Copy.tgz
+        $pkgname.desktop
+        $pkgname.png
+        $pkgname.service
+        copy-console.service
+        launch.sh
+        TERMS)
+
+package() {
+  cd ${srcdir}
+  desktop-file-install $pkgname.desktop --dir "$pkgdir/usr/share/applications/"
+  install -Dm0644 $pkgname.png "$pkgdir/usr/share/pixmaps/$pkgname.png"
+  install -Dm0644 $pkgname.service "$pkgdir/usr/lib/systemd/system/$pkgname@.service"
+  install -Dm0644 copy-console.service "$pkgdir/usr/lib/systemd/system/copy-console@.service"
+  install -Dm0644 $pkgname.desktop "$pkgdir/usr/share/applications/$pkgname.desktop"
+  install -Dm644 TERMS "$pkgdir/usr/share/licenses/$pkgname/TERMS"
+
+  if [ "$CARCH" == "x86_64" ]; then
+    cd copy/x86_64
+  elif [ "$CARCH" == "i686" ]; then
+    cd copy/x86
+  else
+    cd copy/armv6h
+  fi
+
+  for i in ca-bundle.crt lib{AgentSync,Brt,CloudSync,Gui}.so; do
+    install -Dm755 $i "$pkgdir/opt/copy/$i"
+  done
+
+  mkdir -p $pkgdir/usr/bin
+  for i in Copy{Agent,Cmd,Console}; do
+    install -Dm755 $i "$pkgdir/opt/copy/$i"
+    install -Dm755 $srcdir/launch.sh $pkgdir/usr/bin/$i
+  done
+
+  install -Dm755 libnautilus-copy.so "$pkgdir/usr/lib/nautilus/extensions-3.0/libnautilus-copy.so"
+  install -Dm755 libcaja-copy.so "$pkgdir/usr/lib/caja/extensions-2.0/libcaja-copy.so"
+}

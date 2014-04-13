@@ -3,8 +3,8 @@
 
 pkgname=ca-certificates-no-cnnic
 _pkgname=ca-certificates
-pkgver=20140223
-pkgrel=2
+pkgver=20140325
+pkgrel=1
 pkgdesc='Common CA certificates - Remove Suspect CNNIC ROOT CA'
 arch=('any')
 url='http://packages.qa.debian.org/c/ca-certificates.html'
@@ -17,7 +17,7 @@ provides=("$_pkgname=$pkgver")
 conflicts=("$_pkgname")
 install='ca-certificates.install'
 backup=('etc/ca-certificates.conf')
-sha256sums=('815b7cd97200b0d76450bb3e7d9b65997ac494ab6467b17369f65b2ef94bcb0c'
+sha256sums=('c0e3d8c517995db2737f7f1a9b69d654b8823fa6d337871c6ce111fcf083454a'
             'c10cdbf2d51bc53d8501b3c61c4a97c2ecef527dc7a70a8340c89ff4ad661184')
 
 prepare() {
