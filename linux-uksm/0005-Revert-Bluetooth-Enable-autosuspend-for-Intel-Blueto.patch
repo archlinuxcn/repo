@@ -1,8 +1,8 @@
 From 71d4f3022d1f625d94187f7cda682d2233a692d8 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Thomas=20B=C3=A4chler?= <thomas@archlinux.org>
 Date: Thu, 3 Apr 2014 23:59:49 +0200
-Subject: [PATCH 5/7] Revert "Bluetooth: Enable autosuspend for Intel Bluetooth
- device"
+Subject: [PATCH 05/10] Revert "Bluetooth: Enable autosuspend for Intel
+ Bluetooth device"
 
 This reverts commit d2bee8fb6e18f6116aada39851918473761f7ab1.
 
@@ -29,5 +29,5 @@ index baeaaed..6d6e09e 100644
  	/* Interface numbers are hardcoded in the specification */
  	data->isoc = usb_ifnum_to_if(data->udev, 1);
 -- 
-1.9.1
+1.9.2
 

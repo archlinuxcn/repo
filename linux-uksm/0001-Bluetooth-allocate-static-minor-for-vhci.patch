@@ -1,7 +1,7 @@
 From 5d77ba2d26110c678b40fd723866a17d4036de12 Mon Sep 17 00:00:00 2001
 From: Lucas De Marchi <lucas.demarchi@intel.com>
 Date: Tue, 18 Feb 2014 02:19:26 -0300
-Subject: [PATCH 1/7] Bluetooth: allocate static minor for vhci
+Subject: [PATCH 01/10] Bluetooth: allocate static minor for vhci
 
 Commit bfacbb9 (Bluetooth: Use devname:vhci module alias for virtual HCI
 driver) added the module alias to hci_vhci module so it's possible to
@@ -70,5 +70,5 @@ index 3737f72..7bb6148 100644
  #define DMAPI_MINOR		140	/* DMAPI */
  #define NVRAM_MINOR		144
 -- 
-1.9.1
+1.9.2
 

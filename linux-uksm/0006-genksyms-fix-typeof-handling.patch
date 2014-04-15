@@ -1,7 +1,7 @@
 From 39a7f4024e3e7d54a3bb49dcb645b3d7af16354e Mon Sep 17 00:00:00 2001
 From: Jan Beulich <JBeulich@suse.com>
 Date: Thu, 3 Apr 2014 14:46:37 -0700
-Subject: [PATCH 6/7] genksyms: fix typeof() handling
+Subject: [PATCH 06/10] genksyms: fix typeof() handling
 
 Recent increased use of typeof() throughout the tree resulted in a
 number of symbols (25 in a typical distro config of ours) not getting a
@@ -1356,5 +1356,5 @@ index 23c3999..b9f4cf2 100644
  	/* References to s/u/e's defined elsewhere.  Rearrange things
  	   so that it is easier to expand the definition fully later.  */
 -- 
-1.9.1
+1.9.2
 

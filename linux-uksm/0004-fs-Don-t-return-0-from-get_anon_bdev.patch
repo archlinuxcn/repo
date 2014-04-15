@@ -1,7 +1,7 @@
 From 835a463e190af87a36df681863db7c3ea7ba0d66 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Thomas=20B=C3=A4chler?= <thomas@archlinux.org>
 Date: Thu, 3 Apr 2014 21:55:37 +0200
-Subject: [PATCH 4/7] fs: Don't return 0 from get_anon_bdev
+Subject: [PATCH 04/10] fs: Don't return 0 from get_anon_bdev
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -40,5 +40,5 @@ index 80d5cf2..7624267 100644
  int get_anon_bdev(dev_t *p)
  {
 -- 
-1.9.1
+1.9.2
 

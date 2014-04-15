@@ -1,7 +1,7 @@
 From 06d2e746733a83469944481cb7f4fb1c7134a8ce Mon Sep 17 00:00:00 2001
 From: Rusty Russell <rusty@rustcorp.com.au>
 Date: Mon, 3 Feb 2014 11:15:13 +1030
-Subject: [PATCH 3/7] module: remove MODULE_GENERIC_TABLE
+Subject: [PATCH 03/10] module: remove MODULE_GENERIC_TABLE
 
 MODULE_DEVICE_TABLE() calles MODULE_GENERIC_TABLE(); make it do the
 work directly.  This also removes a wart introduced in the last patch,
@@ -71,5 +71,5 @@ index ad18f60..5686b37 100644
  /* Version of form [<epoch>:]<version>[-<extra-version>].
   * Or for CVS/RCS ID version, everything but the number is stripped.
 -- 
-1.9.1
+1.9.2
 

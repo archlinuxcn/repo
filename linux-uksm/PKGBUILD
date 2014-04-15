@@ -32,8 +32,8 @@ pkgname=linux-uksm
 true && pkgname=(linux-uksm linux-uksm-headers)
 _kernelname=-uksm
 _srcname=linux-3.14
-pkgver=3.14
-pkgrel=2
+pkgver=3.14.1
+pkgrel=1
 arch=('i686' 'x86_64')
 url="http://kerneldedup.org/"
 license=('GPL2')
@@ -43,7 +43,7 @@ _uksmvernel="0.1.2.2"
 _uksmname="v3.14"
 _bfqpath="http://algo.ing.unimo.it/people/paolo/disk_sched/patches/3.14.0-v7r2"
 source=("http://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
-        #"http://www.kernel.org/pub/linux/kernel/v3.x/patch-${pkgver}.xz"
+        "http://www.kernel.org/pub/linux/kernel/v3.x/patch-${pkgver}.xz"
         "http://kerneldedup.org/download/uksm/${_uksmvernel}/uksm-${_uksmvernel}-for-${_uksmname}.patch" # website often went down
         #"uksm-${_uksmvernel}-for-${_uksmname}.test.patch"
         "${_bfqpath}/0001-block-cgroups-kconfig-build-bits-for-BFQ-v7r2-3.14.patch"
@@ -57,14 +57,15 @@ source=("http://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
         '0004-fs-Don-t-return-0-from-get_anon_bdev.patch'
         '0005-Revert-Bluetooth-Enable-autosuspend-for-Intel-Blueto.patch'
         '0006-genksyms-fix-typeof-handling.patch'
-        '0007-Fix-the-use-of-code32_start-in-the-EFI-boot-stub.patch'
+        '0007-x86-efi-Correct-EFI-boot-stub-use-of-code32_start.patch'
+        '0010-iwlwifi-mvm-delay-enabling-smart-FIFO-until-after-be.patch'
         'config' 'config.x86_64')
         
 prepare() {
     cd ${_srcname}
 
     ### add upstream patch
-    #patch -Np1 -i "${srcdir}/patch-${pkgver}"
+    patch -Np1 -i "${srcdir}/patch-${pkgver}"
 
     ### set DEFAULT_CONSOLE_LOGLEVEL to 4 (same value as the 'quiet' kernel param)
     # remove this when a Kconfig knob is made available by upstream
@@ -94,7 +95,13 @@ prepare() {
 
     # Fix the use of code32_start in the EFI boot stub
     # http://permalink.gmane.org/gmane.linux.kernel/1679881
-    patch -p1 -i "${srcdir}/0007-Fix-the-use-of-code32_start-in-the-EFI-boot-stub.patch"
+    
+    # https://git.kernel.org/cgit/linux/kernel/git/mfleming/efi.git/commit/?h=urgent&id=7e8213c1f3acc064aef37813a39f13cbfe7c3ce7
+    patch -p1 -i "${srcdir}/0007-x86-efi-Correct-EFI-boot-stub-use-of-code32_start.patch"
+
+    # https://git.kernel.org/cgit/linux/kernel/git/iwlwifi/iwlwifi-fixes.git/commit/?id=12f853a89e29f50b17698e17e73c328a35f1498d
+    # FS#39815
+    patch -p1 -i "${srcdir}/0010-iwlwifi-mvm-delay-enabling-smart-FIFO-until-after-be.patch"
 
     msg "Patching source with BFQ patches"
     for p in "${srcdir}"/000{1,2,3}-block*.patch; do
@@ -386,17 +393,20 @@ package_linux-uksm-headers() {
 pkgdesc='Linux Kernel and modules with the UKSM patchset'
 
 sha512sums=('5730d83a7a81134c1e77c0bf89e42dee4f8251ad56c1ac2be20c59e26fdfaa7bea55f277e7af156b637f22e1584914a46089af85039177cb43485089c74ac26e'
+            'dd9de9b4d26b66892ab250439e228cdf6eda60ab37b9fb32545b593daaf0f260c840e57b1a0327f81d1ba4f05448433c0af70a25f873f3f806c4c6147d381541'
             'f741c2c3f593fa6f3c25e1121aa921182bd0c8cdb64478e666e34f9c0093f216d8840e99176b0f473d19bfb2da47d6838a96d5616f8cddc7e2e107e3de77b76c'
             'e7ba033a518278266c350ebd6232ffcff93d9d2ef671f3e0368333559f27cd6f1d6bb6d0d431f61dd0b573fa01f9167475c3f5f41a6f109769863408d8febc02'
             '24d19790b17fa71c30e31cd00ebd556b72e4a990a54f9281cb3829496876008fbd86aa62b2fb6840e521e8a705a87883518dddc645b3d6f3e1ce5474d7a279f6'
             '135724e0ff4e18830f7fb85399b8e70b4de0349aa61981e392ed3e1106fba9e54cf04b0914b6819177430e8b04ada6a062a8df5d8d4281f9d388969b5193448f'
             '6b5e2da5be509020134d2acfda8424f1e75fa681f0b8d5e01c6c68089da2f1398cbca58f6a85c05ac701682feec8c0d3fcf8267cefa8da391a7ada253413f771'
             '502192b5ce94c8254205f5ddb85bf50c5f1e78c768817b10dca3a7716a8c59d5e093842631acb51e3805cbf85522e0a9200942656f11bbb4ea1b7d61e24ddd78'
-            '0bc4bb1a6fcb2b922d7d1d59a10ebc130aaa226086a0a826e70dfc173635f5cc3ab685c36d7236feb2db900e37b09fb6387375d8743afbb9a10eea53a8dc90e3'
-            'c52878c12f745be75f93307c166e995bbcb57c0f94a9bc69730bf83d3f869f03aff9110132b95cf76e1dafd50766711e015e4475b0185fd8a24f276fe3b2cd4e'
-            '391ae373150306a9a39386854a49db623ff353a85663d0f9cef6ccdc7a53c452ff2feae9ebd2eded547630834ed9b03d2f91338d2990b3908beacc83cc19a1ba'
-            '60c6d2e0850c025f3f4c8c093fca8d0c0a5b19330a15c11421241b3d59e6c1736b649c309ade90f93facd234a034ecbea4eded63bc669ba7dfea01e072c65f13'
-            'b13d79477cb477e0e6ff1a8c7b4ca89ad18426dba0eb5161aeeb6a0863b74cdc3fc68a85528780e46fb82e527435c2e11312e0b74cc2d3394536e907ca00b8b9'
-            '36b6ebc6ea6b51d66b1fc6e8658fd0e75dbaab5cb45d94c6c7f60e4039a847a215373554e120b6cfcb939221af68577f69931c87430d398eb2bc1ad61679526c'
-            '2e713d412818c6e6124ba02f489a22764caab303a5aa11c6cb2d882c51f3cd09db76d3e7945d03fada568abe0ef2526cdcf55b5fdcdd3044901b5631926fdf67'
-            '0d4a522ae09af2f4e6da1dfd1e1394a25dea09f97afd527b74f162d16815fda79b2e25de7ed69482f7a3bd34403346320ac61b87cfeafe0124571566b7f9d2ad')
+            'f26306c173e3fc35ae6df4c43e9ddbac33845dcc1fb0def612fe370c2d7b8f904b4c70d267eb52717ade879d1e289695b9e971dfcb1c963dac4c6e2fb5230453'
+            'da69065f317212c7937f5c3110afdef6006da7756b0a2a98c4bff94db12eb503dc89040aa3cd7a1655ba1b0641f47dda4e60933309e231eaecbe9bd79cb06ebd'
+            '4b9fa6afdd1f4f4f6a3a439380cff3376ef33e782aac0ae92421f4b7c40140d57a04d7bc57dfd9fb59fdefb3a0a55fe7e7d6022314b11ef454a1cae4b75cf264'
+            '61addb73b2811a369b72ea097e310c63853f219d1384ea0e2cd2bc7b8389163e2e5679a9a198fe0977017658c18a90be0f73aaf72e9b829cc4a802a4fe7cfba0'
+            'f1c70f387308dc46bf72d8ee2166ae27e0657405c6aed4bf285112caa8503383b597787dc66e79d502058ccb05b52999df03a3cc4c27456f38e30684f1c0ca44'
+            'fdb67e9956d9af1518d0198b86b13150b28f43dd28eb52222a9c43699f7304cd1a56d7f421a0690fa4c0d2c266fd5504da9d6217f83a42d05f35b713fd85e2dd'
+            'fc37a09d3fdea198deff91b1af77e9abc09be4e9e4b7f096475710a67b9e54f8b9d5282d9f63852cff4b098dc17efa247b9312c241218122018cf83febc0cec3'
+            '21ff02db8215e6ba38a0025fed91fb4f8a24d1639e9809529de3a29d93d334d1feff5faf571f809f421b8d180ee4eec43e9da9ca73360d5be433c7dfaaf97520'
+            'c3d4f022d345f439608d566d1a866010f259a24b7b6c6dc61786e88afd1aa5a86a9d5d217538fe59b6c9499ca23e1dceb0661d72ebe372b305013bf519b2536c'
+            '684de0e416cff9b7191de810f8755c6378720d543381888f41f05549716884848862d80d5cb74ea6ea7545165fcd73ff813ff3026cbdf9050da8d84659d12877')

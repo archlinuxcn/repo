@@ -1,8 +1,22 @@
-From ec8ec8362c46fd86571204d0fcce11c03477e5c5 Mon Sep 17 00:00:00 2001
+From 720a9dbf61c88bd57d6f8198ed8ccb2bd4a6abd8 Mon Sep 17 00:00:00 2001
 From: Matt Fleming <matt@console-pimps.org>
 Date: Wed, 9 Apr 2014 10:33:49 +0200
-Subject: [PATCH 7/7] Fix the use of code32_start in the EFI boot stub
+Subject: [PATCH 07/10] x86/efi: Correct EFI boot stub use of code32_start
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+code32_start should point at the start of the protected mode code, and
+*not* at the beginning of the bzImage. This is much easier to do in
+assembly so document that callers of make_boot_params() need to fill out
+code32_start.
+
+The fallout from this bug is that we would end up relocating the image
+but copying the image at some offset, resulting in what appeared to be
+memory corruption.
+
+Reported-by: Thomas Bächler <thomas@archlinux.org>
+Signed-off-by: Matt Fleming <matt.fleming@intel.com>
 ---
  arch/x86/boot/compressed/eboot.c   |  5 +++--
  arch/x86/boot/compressed/head_32.S | 14 ++++++++------
@@ -92,5 +106,5 @@ index c5c1ae0..b10fa66 100644
  	jmp	*%rax
  
 -- 
-1.9.1
+1.9.2
 
