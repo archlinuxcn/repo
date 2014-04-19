@@ -1,11 +1,11 @@
-commit f7081d7c637a8c85b9e854e81c516d160f0a92f2
+commit 1773dc877179d1145515c0c2738181d4ff8ac0dc
 Author: John Schoenick <jschoenick@mozilla.com>
-Date:   Fri Apr 4 13:22:16 2014 -0700
+Date:   Fri Apr 18 12:54:21 2014 -0700
 
-    Wine-multimedia for wine-1.7.16
+    wine-multimedia for wine-1.7.17
 
 diff --git a/configure b/configure
-index 5f4a7c5..d1de482 100755
+index 1bca827..1dd8206 100755
 --- a/configure
 +++ b/configure
 @@ -653,6 +653,8 @@ OSS4_CFLAGS
@@ -25,7 +25,7 @@ index 5f4a7c5..d1de482 100755
  with_sane
  with_tiff
  with_v4l
-@@ -1259,6 +1262,7 @@ enable_winemapi
+@@ -1260,6 +1263,7 @@ enable_winemapi
  enable_winemp3_acm
  enable_wineoss_drv
  enable_wineps_drv
@@ -33,7 +33,7 @@ index 5f4a7c5..d1de482 100755
  enable_wineqtdecoder
  enable_winex11_drv
  enable_wing32
-@@ -2087,6 +2091,7 @@ Optional Packages:
+@@ -2089,6 +2093,7 @@ Optional Packages:
    --without-oss           do not use the OSS sound support
    --without-png           do not use PNG
    --without-pthread       do not use the pthread library
@@ -41,7 +41,7 @@ index 5f4a7c5..d1de482 100755
    --without-sane          do not use SANE (scanner support)
    --without-tiff          do not use TIFF
    --without-v4l           do not use v4l1 (v4l support)
-@@ -3328,6 +3333,12 @@ if test "${with_pthread+set}" = set; then :
+@@ -3330,6 +3335,12 @@ if test "${with_pthread+set}" = set; then :
  fi
  
  
@@ -54,7 +54,7 @@ index 5f4a7c5..d1de482 100755
  # Check whether --with-sane was given.
  if test "${with_sane+set}" = set; then :
    withval=$with_sane;
-@@ -12098,6 +12109,87 @@ esac
+@@ -12100,6 +12111,87 @@ esac
  fi
  fi
  
@@ -142,7 +142,7 @@ index 5f4a7c5..d1de482 100755
  if test "x$with_gstreamer" != "xno"
  then
      if ${GSTREAMER_CFLAGS:+false} :; then :
-@@ -13409,12 +13501,14 @@ fi
+@@ -13411,12 +13503,14 @@ fi
  
  test -n "$ALSA_LIBS" || enable_winealsa_drv=${enable_winealsa_drv:-no}
  test -n "$COREAUDIO_LIBS" || enable_winecoreaudio_drv=${enable_winecoreaudio_drv:-no}
@@ -159,7 +159,7 @@ index 5f4a7c5..d1de482 100755
  then
      as_fn_append wine_warnings "|No sound system was found. Windows applications will be silent."
  fi
-@@ -17252,6 +17346,7 @@ wine_fn_config_dll winemp3.acm enable_winemp3_acm
+@@ -17256,6 +17350,7 @@ wine_fn_config_dll winemp3.acm enable_winemp3_acm
  wine_fn_config_dll wineoss.drv enable_wineoss_drv
  wine_fn_config_dll wineps.drv enable_wineps_drv clean,po
  wine_fn_config_dll wineps16.drv16 enable_win16
@@ -168,7 +168,7 @@ index 5f4a7c5..d1de482 100755
  wine_fn_config_dll winex11.drv enable_winex11_drv
  wine_fn_config_dll wing.dll16 enable_win16
 diff --git a/configure.ac b/configure.ac
-index 44d7224..cf36dda 100644
+index 46602d6..e0481ec 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -70,6 +70,7 @@ AC_ARG_WITH(oss,       AS_HELP_STRING([--without-oss],[do not use the OSS sound
@@ -228,7 +228,7 @@ index 44d7224..cf36dda 100644
  then
      WINE_WARNING([No sound system was found. Windows applications will be silent.])
  fi
-@@ -3231,6 +3258,7 @@ WINE_CONFIG_DLL(winemp3.acm)
+@@ -3233,6 +3260,7 @@ WINE_CONFIG_DLL(winemp3.acm)
  WINE_CONFIG_DLL(wineoss.drv)
  WINE_CONFIG_DLL(wineps.drv,,[clean,po])
  WINE_CONFIG_DLL(wineps16.drv16,enable_win16)
@@ -249,7 +249,7 @@ index 8a11025..4e29abf 100644
  }
  
 diff --git a/dlls/dsound/capture.c b/dlls/dsound/capture.c
-index 40f1702..0fe300c 100644
+index 17b1a04..d997fdc 100644
 --- a/dlls/dsound/capture.c
 +++ b/dlls/dsound/capture.c
 @@ -51,7 +51,7 @@ typedef struct IDirectSoundCaptureBufferImpl
@@ -273,7 +273,7 @@ index 40f1702..0fe300c 100644
  	IDirectSoundCaptureBuffer8_AddRef(iface);
          *ppobj = iface;
          return S_OK;
-@@ -1239,6 +1240,8 @@ static HRESULT WINAPI IDirectSoundCaptureImpl_CreateCaptureBuffer(IDirectSoundCa
+@@ -1234,6 +1235,8 @@ static HRESULT WINAPI IDirectSoundCaptureImpl_CreateCaptureBuffer(IDirectSoundCa
  
      if (hr != DS_OK)
  	WARN("IDirectSoundCaptureBufferImpl_Create failed\n");
@@ -9367,7 +9367,7 @@ index 0000000..53e5ce4
 +
 +#endif
 diff --git a/server/thread.c b/server/thread.c
-index 896ce0f..b56f054 100644
+index b310e93..32b9e7e 100644
 --- a/server/thread.c
 +++ b/server/thread.c
 @@ -52,6 +52,8 @@
