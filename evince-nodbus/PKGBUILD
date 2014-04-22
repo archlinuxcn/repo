@@ -1,12 +1,12 @@
-# $Id: PKGBUILD 199791 2013-11-16 12:36:17Z heftig $
-# Maintainer: lilydjwg <lilydjwg@gmail.com>
+# $Id: PKGBUILD 210428 2014-04-14 20:06:04Z jgc $
 # Maintainer: Jan de Groot <jgc@archlinux.org>
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
 
 pkgname=evince-nodbus
-pkgver=3.10.3
+pkgver=3.12.1
 pkgrel=1
-pkgdesc="Simply a document viewer"
-url="http://projects.gnome.org/evince/"
+pkgdesc="Document viewer (PDF, Postscript, djvu, tiff, dvi, XPS, SyncTex support with gedit, comics books (cbr,cbz,cb7 and cbt))"
+url="https://wiki.gnome.org/Apps/Evince"
 arch=(i686 x86_64)
 license=(GPL)
 depends=(gtk3 libgxps libspectre gsfonts poppler-glib djvulibre gnome-icon-theme t1lib libsecret desktop-file-utils dconf gsettings-desktop-schemas)
@@ -21,8 +21,8 @@ conflicts=('evince')
 provides=("evince=$pkgver")
 install=evince.install
 options=('!emptydirs')
-source=(http://ftp.gnome.org/pub/gnome/sources/evince/${pkgver%.*}/evince-$pkgver.tar.xz)
-sha256sums=('b30dcc3a93dd3c682325e685061c48ccd800835af49578f4db813bbaf5f5e9af')
+source=(http://ftp.gnome.org/pub/gnome/sources/$pkgname/${pkgver:0:4}/$pkgname-$pkgver.tar.xz)
+sha256sums=('ef22cc29a7cbe70d2e7ce8c0b5b7ee774187ea69f3ae49a64c6d4a91559ef137')
 
 build() {
   cd "evince-$pkgver"
