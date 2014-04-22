@@ -21,7 +21,7 @@ conflicts=('evince')
 provides=("evince=$pkgver")
 install=evince.install
 options=('!emptydirs')
-source=(http://ftp.gnome.org/pub/gnome/sources/evince/${pkgver:0:4}/$pkgname-$pkgver.tar.xz)
+source=(http://ftp.gnome.org/pub/gnome/sources/evince/${pkgver:0:4}/evince-$pkgver.tar.xz)
 sha256sums=('ef22cc29a7cbe70d2e7ce8c0b5b7ee774187ea69f3ae49a64c6d4a91559ef137')
 
 build() {
