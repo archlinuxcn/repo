@@ -33,7 +33,7 @@ true && pkgname=(linux-uksm linux-uksm-headers)
 _kernelname=-uksm
 _srcname=linux-3.14
 pkgver=3.14.1
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 url="http://kerneldedup.org/"
 license=('GPL2')
@@ -41,14 +41,14 @@ options=('!strip')
 makedepends=('kmod' 'inetutils' 'bc')
 _uksmvernel="0.1.2.2"
 _uksmname="v3.14"
-_bfqpath="http://algo.ing.unimo.it/people/paolo/disk_sched/patches/3.14.0-v7r2"
+_bfqpath="http://algo.ing.unimo.it/people/paolo/disk_sched/patches/3.14.0-v7r3"
 source=("http://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
         "http://www.kernel.org/pub/linux/kernel/v3.x/patch-${pkgver}.xz"
         "http://kerneldedup.org/download/uksm/${_uksmvernel}/uksm-${_uksmvernel}-for-${_uksmname}.patch" # website often went down
         #"uksm-${_uksmvernel}-for-${_uksmname}.test.patch"
-        "${_bfqpath}/0001-block-cgroups-kconfig-build-bits-for-BFQ-v7r2-3.14.patch"
-        "${_bfqpath}/0002-block-introduce-the-BFQ-v7r2-I-O-sched-for-3.14.patch"
-        "${_bfqpath}/0003-block-bfq-add-Early-Queue-Merge-EQM-to-BFQ-v7r2-for-3.14.0.patch"
+        "${_bfqpath}/0001-block-cgroups-kconfig-build-bits-for-BFQ-v7r3-3.14.patch"
+        "${_bfqpath}/0002-block-introduce-the-BFQ-v7r3-I-O-sched-for-3.14.patch"
+        "${_bfqpath}/0003-block-bfq-add-Early-Queue-Merge-EQM-to-BFQ-v7r3-for-3.14.0.patch"
         'linux-uksm.preset'
         'change-default-console-loglevel.patch'
         '0001-Bluetooth-allocate-static-minor-for-vhci.patch'
@@ -395,9 +395,9 @@ pkgdesc='Linux Kernel and modules with the UKSM patchset'
 sha512sums=('5730d83a7a81134c1e77c0bf89e42dee4f8251ad56c1ac2be20c59e26fdfaa7bea55f277e7af156b637f22e1584914a46089af85039177cb43485089c74ac26e'
             'dd9de9b4d26b66892ab250439e228cdf6eda60ab37b9fb32545b593daaf0f260c840e57b1a0327f81d1ba4f05448433c0af70a25f873f3f806c4c6147d381541'
             'f741c2c3f593fa6f3c25e1121aa921182bd0c8cdb64478e666e34f9c0093f216d8840e99176b0f473d19bfb2da47d6838a96d5616f8cddc7e2e107e3de77b76c'
-            'e7ba033a518278266c350ebd6232ffcff93d9d2ef671f3e0368333559f27cd6f1d6bb6d0d431f61dd0b573fa01f9167475c3f5f41a6f109769863408d8febc02'
-            '24d19790b17fa71c30e31cd00ebd556b72e4a990a54f9281cb3829496876008fbd86aa62b2fb6840e521e8a705a87883518dddc645b3d6f3e1ce5474d7a279f6'
-            '135724e0ff4e18830f7fb85399b8e70b4de0349aa61981e392ed3e1106fba9e54cf04b0914b6819177430e8b04ada6a062a8df5d8d4281f9d388969b5193448f'
+            '310eca4fdacd82a18f07de5700ad5fcf572f9cfbb05f0c9475d108908c9401aa884ab2c6f5912a25caa88a32104c7b313f05fa03d91cdc89f9827e88573c48eb'
+            'beba684e0ae752294c4aed74f1c7abc3568ca8f5640213f39400ea2005ed90aee8770a2f2a27fc95aa109c61cb52ea25c488afad53dffa1b649fec8360ecfe0d'
+            '324eddff5f2b5e838d8aad92be1ccd9b99d8f3e3f10d2dd6ce91aa2e0b6b5088228a61ca3004ef8ab37bdf67ec27af7d59638648bd2bd09e6fde2924b531f7e6'
             '6b5e2da5be509020134d2acfda8424f1e75fa681f0b8d5e01c6c68089da2f1398cbca58f6a85c05ac701682feec8c0d3fcf8267cefa8da391a7ada253413f771'
             '502192b5ce94c8254205f5ddb85bf50c5f1e78c768817b10dca3a7716a8c59d5e093842631acb51e3805cbf85522e0a9200942656f11bbb4ea1b7d61e24ddd78'
             'f26306c173e3fc35ae6df4c43e9ddbac33845dcc1fb0def612fe370c2d7b8f904b4c70d267eb52717ade879d1e289695b9e971dfcb1c963dac4c6e2fb5230453'
