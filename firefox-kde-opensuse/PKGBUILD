@@ -8,7 +8,7 @@
 #_pgo=true
 
 pkgname=firefox-kde-opensuse
-pkgver=28.0
+pkgver=29.0
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
@@ -16,7 +16,7 @@ license=('MPL' 'GPL' 'LGPL')
 url="https://build.opensuse.org/package/show/mozilla:Factory/MozillaFirefox"
 depends=('gtk2' 'mozilla-common' 'libxt' 'startup-notification' 'mime-types'
          'dbus-glib' 'alsa-lib' 'desktop-file-utils' 'hicolor-icon-theme'
-	 'libvpx' 'libevent' 'nss' 'hunspell' 'sqlite' 'libnotify' 'kmozillahelper')
+	 'libvpx' 'icu'  'libevent' 'nss' 'hunspell' 'sqlite' 'libnotify' 'kmozillahelper')
 makedepends=('unzip' 'zip' 'diffutils' 'python2' 'yasm' 'mesa' 'imake'
              'xorg-server-xvfb' 'libpulse' 'gstreamer0.10-base')
 optdepends=('networkmanager: Location detection via available WiFi networks'
@@ -24,29 +24,28 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
             'gstreamer0.10-good-plugins: webm and mp4 demuxing'
             'gstreamer0.10-bad-plugins: aac, vp8 and opus decoding'
             'gstreamer0.10-ugly-plugins: h.264 and mp3 decoding'
-	    'gstreamer0.10-ffmpeg: more decoders'
+            'gstreamer0.10-ffmpeg: more decoders'
             'libpulse: PulseAudio audio driver')
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
 install=firefox.install
 options=(!emptydirs)
-_patchrev=427ae22e730e
+_patchrev=ae78294f6f84
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.bz2
         mozconfig firefox.desktop firefox-install-dir.patch vendor.js kde.js firefox-20.0.1-fixed-loading-icon.png
 	# Firefox patchset
-	$_patchurl/firefox-browser-css.patch
+	$_patchurl/firefox-branded-icons.patch
 	$_patchurl/firefox-kde.patch
 	$_patchurl/firefox-kde-114.patch
 	$_patchurl/firefox-no-default-ualocale.patch
-	$_patchurl/firefox-branded-icons.patch
 	# Gecko/toolkit patchset
-	$_patchurl/toolkit-download-folder.patch
-	$_patchurl/mozilla-nongnome-proxies.patch
-	$_patchurl/mozilla-prefer_plugin_pref.patch
 	$_patchurl/mozilla-kde.patch
-	$_patchurl/mozilla-preferences.patch
 	$_patchurl/mozilla-language.patch
+	$_patchurl/mozilla-nongnome-proxies.patch
+	$_patchurl/mozilla-preferences.patch
+	$_patchurl/mozilla-prefer_plugin_pref.patch
+	$_patchurl/toolkit-download-folder.patch
 )
 
 _google_api_key=AIzaSyDwr302FpOSkGRpLlUpPThNTDPbXcIn_FM
@@ -74,7 +73,6 @@ prepare() {
   patch -Np1 -i "$srcdir/mozilla-preferences.patch"
   patch -Np1 -i "$srcdir/mozilla-language.patch"
 
-  patch -Np1 -i "$srcdir/firefox-browser-css.patch"
   patch -Np1 -i "$srcdir/firefox-kde.patch"
   patch -Np1 -i "$srcdir/firefox-kde-114.patch"
   patch -Np1 -i "$srcdir/firefox-no-default-ualocale.patch"
@@ -135,7 +133,7 @@ package() {
   [[ "$CARCH" == "i686" ]] && cp "$srcdir/kde.js" obj-i686-pc-linux-gnu/dist/bin/defaults/pref
   [[ "$CARCH" == "x86_64" ]] && cp "$srcdir/kde.js" obj-x86_64-unknown-linux-gnu/dist/bin/defaults/pref
 
-  make -f client.mk DESTDIR="$pkgdir" install
+  make -f client.mk DESTDIR="$pkgdir" INSTALL_SDK= install
 
   install -Dm644 "$srcdir/vendor.js" "$pkgdir/usr/lib/firefox/browser/defaults/preferences/vendor.js"
   install -Dm644 "$srcdir/kde.js" "$pkgdir/usr/lib/firefox/browser/defaults/preferences/kde.js"
@@ -161,29 +159,25 @@ package() {
   ln -s /usr/share/hunspell "$pkgdir/usr/lib/firefox/dictionaries"
   ln -s /usr/share/hyphen "$pkgdir/usr/lib/firefox/hyphenation"
 
-  # We don't want the development stuff
-  rm -r "$pkgdir"/usr/{include,lib/firefox-devel,share/idl}
-
   #workaround for now
   #https://bugzilla.mozilla.org/show_bug.cgi?id=658850
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
 
-sha256sums=('2ffd0484e7eab52166b851681878a86d54223a6764c756721430fae8e1599628'
-            '644f40fc6b81ac213e863cacfb470d64b784033afab27ee87b24a47c0bbef823'
+sha256sums=('64402a1f1359f3ea30767a94977ae823ac25b39c6d54f9fe6db444ed127db892'
+            '595963ff516b6e1e2cc5301365cbf4944dd78f89c5b08f60afb1cf3022225868'
             '175d03cf3d8eb420d24a5a3072be69c9603e3ddacd3a83f68f49754eaecf6c5a'
-            'bcf224d1f239b73e4ac6d268819c1e94a1606beee99c6d8f851f8192b6444de3'
+            'd86e41d87363656ee62e12543e2f5181aadcff448e406ef3218e91865ae775cd'
             '7044b77fb5d4113359144d24beccaf5d1e7cf62c660e3f5c1374bee5b2bf9c00'
             'b8cc5f35ec35fc96ac5c5a2477b36722e373dbb57eba87eb5ad1276e4df7236d'
             '68e3a5b47c6d175cc95b98b069a15205f027cab83af9e075818d38610feb6213'
-            'fb852af08b9c597cdd70ea2f143a286d79989e86f7cc706ad749b06cd27c3598'
-            'c2a6b961696cbc6a2ae9985da3a550d825dc5ddfb5c9cd89e464cd1e36498de1'
-            '1fd54e93db3a4d454ece5a6dc788a4ae36805eb497482add82a11ac5cf990562'
-            'a42fbe8df5f8dd4f33a881c53da61624a8d6d3af397ae63e99ac077f3cf744af'
             '4785bdf086b7d537cb83369fea5c177eddb6fc3d8a69064599c64376bd985051'
-            'e368d490192e8c83d2d209faa90a8bb0bff89e7d8d08d728001effe433f28e6f'
+            'cb2816204131ccfb659b75c4aa831ab6060e27a0b756b143ca4c0850c44d8f70'
+            '1fd54e93db3a4d454ece5a6dc788a4ae36805eb497482add82a11ac5cf990562'
+            '3d439f0a65bc285a43284dfd02d71facdfcf172afc19889bd66edc90c59cdc19'
+            '961594b16e534f8c77e1ca7b70d468e166de75e4692b8cb3ea35c4479fa988f5'
+            'aca072853b379201b0d8ac8128eb6e0e8255ab0c955d7bfd48f6273c8bf245d5'
             'e8289ea4c1f8191e1e23661312ceee2128b8e790501b9a589d0d7bfc4384553f'
-            '5f6b0970284d68d5ed18e6bb7ee1e9fc0025ab3c10aaa14c283adb21a4a20ee8'
-            '041aa13c736c129a8539250097053973777b3116e85ece80ecd765d03664d522'
             '86acf2785ec45047cd614bee54e650397aab109da7d5fa70a0df6f11e161998e'
-            'aca072853b379201b0d8ac8128eb6e0e8255ab0c955d7bfd48f6273c8bf245d5')
+            '5f6b0970284d68d5ed18e6bb7ee1e9fc0025ab3c10aaa14c283adb21a4a20ee8'
+            '60ace1c57577878850e05976ccf02f7e71512c4d62a8a9a6d270a7941d9625d3')
