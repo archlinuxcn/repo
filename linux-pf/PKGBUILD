@@ -9,7 +9,7 @@ _minor=14
 _basekernel=${_major}.${_minor}
 _srcname=linux-${_major}.${_minor}
 pkgbase=linux-pf
-_pfrel=1
+_pfrel=2
 _kernelname=${pkgbase#linux}
 _pfpatchhome="http://pf.natalenko.name/sources/${_basekernel}/"
 _pfpatchname="patch-${_basekernel}${_kernelname}${_pfrel}"
@@ -66,12 +66,10 @@ url="http://pf.natalenko.name/"
 license=('GPL2')
 options=('!strip')
 makedepends=('git' 'xmlto' 'docbook-xsl' 'xz' 'bc')
-_gcc_patch="enable_additional_cpu_optimizations_for_gcc.patch"
 source=("ftp://www.kernel.org/pub/linux/kernel/v${_major}.x/linux-${_basekernel}.tar.xz"
 	'config' 'config.x86_64'		# the main kernel config files
 	'linux.preset'			# standard config files for mkinitcpio ramdisk
 	'change-default-console-loglevel.patch'
-        'http://repo-ck.com/source/gcc_patch/enable_additional_cpu_optimizations_for_gcc.patch.gz'
         '0001-Bluetooth-allocate-static-minor-for-vhci.patch'
         '0002-module-allow-multiple-calls-to-MODULE_DEVICE_TABLE-p.patch'
         '0003-module-remove-MODULE_GENERIC_TABLE.patch'
@@ -80,7 +78,6 @@ source=("ftp://www.kernel.org/pub/linux/kernel/v${_major}.x/linux-${_basekernel}
         '0006-genksyms-fix-typeof-handling.patch'
         '0007-Fix-the-use-of-code32_start-in-the-EFI-boot-stub.patch'
 	"${_pfpatchhome}${_pfpatchname}.xz"	# the -pf patchset
-	http://repo-ck.com/source/gcc_patch/$_gcc_patch.gz
 )
 
 _aufs3git="http://git.code.sf.net/p/aufs/aufs3-standalone"
@@ -168,7 +165,7 @@ prepare() {
 
 
   # added gcc 4.7.1 support for Kconfig and menuconfig
- # patch -Np1 -i "${srcdir}/${_gcc_patch}"
+  # now inclued in pf patchset
   if [ "$CARCH" = "x86_64" ]; then
 	cat "${startdir}/config.x86_64" >| .config
   else
@@ -605,25 +602,6 @@ package_linux-pf-headers() {
 
   cp arch/${KARCH}/kernel/asm-offsets.s "${pkgdir}/usr/lib/modules/${_kernver}/build/arch/${KARCH}/kernel/"
 
-  # add headers for lirc package
-  # pci
-  for i in bt8xx cx88 saa7134; do
-    mkdir -p "${pkgdir}/usr/lib/modules/${_kernver}/build/drivers/media/pci/${i}"
-    cp -a drivers/media/pci/${i}/*.h "${pkgdir}/usr/lib/modules/${_kernver}/build/drivers/media/pci/${i}"
-  done
-  # usb
-  for i in cpia2 em28xx pwc sn9c102; do
-    mkdir -p "${pkgdir}/usr/lib/modules/${_kernver}/build/drivers/media/usb/${i}"
-    cp -a drivers/media/usb/${i}/*.h "${pkgdir}/usr/lib/modules/${_kernver}/build/drivers/media/usb/${i}"
-  done
-  # i2c
-  mkdir -p "${pkgdir}/usr/lib/modules/${_kernver}/build/drivers/media/i2c"
-  cp drivers/media/i2c/*.h  "${pkgdir}/usr/lib/modules/${_kernver}/build/drivers/media/i2c/"
-  for i in cx25840; do
-    mkdir -p "${pkgdir}/usr/lib/modules/${_kernver}/build/drivers/media/i2c/${i}"
-    cp -a drivers/media/i2c/${i}/*.h "${pkgdir}/usr/lib/modules/${_kernver}/build/drivers/media/i2c/${i}"
-  done
-
   # add docbook makefile
   install -D -m644 Documentation/DocBook/Makefile \
     "${pkgdir}/usr/lib/modules/${_kernver}/build/Documentation/DocBook/Makefile"
@@ -655,8 +633,9 @@ package_linux-pf-headers() {
   # http://bugs.archlinux.org/task/13146
   mkdir -p "${pkgdir}/usr/lib/modules/${_kernver}/build/drivers/media/dvb-frontends/"
   cp drivers/media/dvb-frontends/lgdt330x.h "${pkgdir}/usr/lib/modules/${_kernver}/build/drivers/media/dvb-frontends/"
+  mkdir -p "${pkgdir}/usr/lib/modules/${_kernver}/build/drivers/media/i2c/"
   cp drivers/media/i2c/msp3400-driver.h "${pkgdir}/usr/lib/modules/${_kernver}/build/drivers/media/i2c/"
-  
+
   # add dvb headers
   # in reference to:
   # http://bugs.archlinux.org/task/20402
@@ -666,7 +645,6 @@ package_linux-pf-headers() {
   cp drivers/media/dvb-frontends/*.h "${pkgdir}/usr/lib/modules/${_kernver}/build/drivers/media/dvb-frontends/"
   mkdir -p "${pkgdir}/usr/lib/modules/${_kernver}/build/drivers/media/tuners"
   cp drivers/media/tuners/*.h "${pkgdir}/usr/lib/modules/${_kernver}/build/drivers/media/tuners/"
- 
 
   # add xfs and shmem for aufs building
   mkdir -p "${pkgdir}/usr/lib/modules/${_kernver}/build/fs/xfs"
@@ -674,14 +652,14 @@ package_linux-pf-headers() {
   cp fs/xfs/xfs_sb.h "${pkgdir}/usr/lib/modules/${_kernver}/build/fs/xfs/xfs_sb.h"
 
   # copy in Kconfig files
-  for i in `find . -name "Kconfig*"`; do
+  for i in $(find . -name "Kconfig*"); do
     mkdir -p "${pkgdir}"/usr/lib/modules/${_kernver}/build/`echo ${i} | sed 's|/Kconfig.*||'`
     cp ${i} "${pkgdir}/usr/lib/modules/${_kernver}/build/${i}"
   done
 
   chown -R root.root "${pkgdir}/usr/lib/modules/${_kernver}/build"
   find "${pkgdir}/usr/lib/modules/${_kernver}/build" -type d -exec chmod 755 {} \;
-
+  
   # strip scripts directory
   find "${pkgdir}/usr/lib/modules/${_kernver}/build/scripts" -type f -perm -u+w 2>/dev/null | while read binary ; do
     case "$(file -bi "${binary}")" in
@@ -693,15 +671,15 @@ package_linux-pf-headers() {
         /usr/bin/strip ${STRIP_BINARIES} "${binary}";;
     esac
   done
-
+  
   # remove unneeded architectures
-  rm -rf "${pkgdir}"/usr/lib/modules/${_kernver}/build/arch/{alpha,arc,arm,arm26,avr32,blackfin,c6x,cris,frv,h8300,hexagon,ia64,m32r,m68k,m68knommu,metag,mips,microblaze,mn10300,openrisc,parisc,powerpc,ppc,s390,score,sh,sh64,sparc,sparc64,tile,unicore32,um,v850,xtensa}
-# end c/p
-
+  rm -rf "${pkgdir}"/usr/lib/modules/${_kernver}/build/arch/{alpha,arc,arm,arm26,arm64,avr32,blackfin,c6x,cris,frv,h8300,hexagon,ia64,m32r,m68k,m68knommu,metag,mips,microblaze,mn10300,openrisc,parisc,powerpc,ppc,s390,score,sh,sh64,sparc,sparc64,tile,unicore32,um,v850,xtensa}
+  # end c/p
+  
   # Add version.h for dumb binary blob installers which aren't
   cd "${pkgdir}/usr/lib/modules/${_kernver}/build/include/linux/"
   [[ -e version.h ]] || ln -s ../generated/uapi/linux/version.h
-
+  
 }
 
 # Work around the AUR parser
@@ -713,7 +691,6 @@ sha256sums=('61558aa490855f42b6340d1a1596be47454909629327c49a5e4e10268065dffa'
             '7dab2f65185cfde84632fffe6e1d35c7bd4b9eb81be694618b3975d7d38848e0'
             '82d660caa11db0cd34fd550a049d7296b4a9dcd28f2a50c81418066d6e598864'
             'faced4eb4c47c4eb1a9ee8a5bf8a7c4b49d6b4d78efbe426e410730e6267d182'
-            '70717f6c64bed9da2450b3a824b25df0a916cdf43ee1e0f537057db3f9a33b8d'
             'aa17aa9a5c663552ea047b9d2a9a916207bed361bd387418c122f6611ee576a6'
             '48c459a2a14e8f161b79943e9ea405c4e98cd5abdab62749c4e9d65e5735382a'
             'f15a6831736e4c0b8b355fd7887445e770500d439cb851623ea300cc50ba4d97'
@@ -721,5 +698,4 @@ sha256sums=('61558aa490855f42b6340d1a1596be47454909629327c49a5e4e10268065dffa'
             'e0666f75eabc2bbfa668cb35ee72dfbad48e5963828a444fbb50388048a8cd3c'
             'd2c449d346ae52724d36c3224bd06fcae7775b0698a9096eb89eeaa6dbc092e5'
             '5a175c698cfdbf942f712afeda2a6af3f4e63a742ec6b6dc3a64bc6a7fb685bb'
-            'de7e7a157cd67de7becb8d35019804f2a7c055d569df8cbbd4c45b93fef16757'
-            '70717f6c64bed9da2450b3a824b25df0a916cdf43ee1e0f537057db3f9a33b8d')
+            '0592bed089fd2d3671fd274e1d20157ae790245a82c0ea4448db4f743ee52705')
