@@ -1,0 +1,84 @@
+pkgname=pypy-numpy-git
+pkgver=11167.46bc2fc
+pkgrel=1
+pkgdesc="Scientific tools for Python, pypy version."
+url="https://bitbucket.org/pypy/numpy"
+arch=('i686' 'x86_64')
+license=('BSD')
+depends=('lapack' 'pypy')
+makedepends=('git')
+provides=('pypy-numpy')
+options=('debug' 'strip')
+
+_gitname=numpy
+
+_gitroot=https://bitbucket.org/pypy/numpy.git
+_gitref=master
+exec 5>&1
+
+_fetch_git() {
+  cd "$srcdir"
+
+  if [ -d "$srcdir/$_gitname/.git" ]; then
+    cd "$_gitname"
+    msg "Reset current branch"
+    git reset --hard HEAD
+    git clean -fdx
+    msg "Fetching branch $_gitref from $_gitroot..."
+    git fetch --force --update-head-ok \
+      "$_gitroot" "$_gitref:$_gitref" --
+    msg "Checking out branch $_gitref..."
+    git checkout "$_gitref" --
+    git reset --hard "$_gitref"
+    git clean -fdx
+    msg "The local files are updated."
+  else
+    msg "Cloning branch $_gitref from $_gitroot to $_gitname..."
+    git clone --single-branch --branch "$_gitref" \
+      "$_gitroot" "$_gitname"
+    cd "$_gitname"
+  fi
+  msg "GIT checkout done or server timeout"
+}
+
+pkgver() {
+  (_fetch_git >&5 2>&1)
+  cd "$srcdir/$_gitname"
+
+  echo "$(git rev-list --count "${_gitref}").$(git rev-parse --short "${_gitref}")"
+}
+
+build() {
+  (_fetch_git)
+  cd "$srcdir/$_gitname"
+
+  export ATLAS=None
+  export LDFLAGS="$LDFLAGS -shared"
+
+  pypy setup.py config_fc --fcompiler=gnu95 build
+}
+
+_fix_numpy_cffi() {
+  cd "${srcdir}"
+  PYTHONPATH="${pkgdir}/opt/pypy/site-packages" pypy -c 'import numpy'
+  rm -rf "${pkgdir}/opt/pypy/site-packages/numpy/fft/__pycache__/"*/
+}
+
+package() {
+  cd "$srcdir/$_gitname"
+
+  export ATLAS=None
+  export LDFLAGS="$LDFLAGS -shared"
+
+  pypy setup.py config_fc --fcompiler=gnu95 install --prefix=/opt/pypy \
+    --root="$pkgdir" --optimize=1
+
+  install -m755 -d "${pkgdir}/usr/share/licenses/pypy-numpy"
+  install -m644 LICENSE.txt "${pkgdir}/usr/share/licenses/pypy-numpy/"
+
+  install -m755 -d "${pkgdir}/opt/pypy/include/pypy"
+  ln -sf /opt/pypy/site-packages/numpy/core/include/numpy \
+    "${pkgdir}/opt/pypy/include/pypy/numpy"
+
+  (_fix_numpy_cffi)
+}
