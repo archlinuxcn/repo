@@ -1,0 +1,40 @@
+diff -ur ipython-2.0.0.orig/IPython/utils/path.py ipython-2.0.0/IPython/utils/path.py
+--- ipython-2.0.0.orig/IPython/utils/path.py	2014-04-01 23:31:01.000000000 -0600
++++ ipython-2.0.0/IPython/utils/path.py	2014-04-03 14:36:45.310409744 -0600
+@@ -271,34 +271,15 @@
+     env = os.environ
+     pjoin = os.path.join
+ 
+-
+-    ipdir_def = '.ipython'
+-
+-    home_dir = get_home_dir()
+     xdg_dir = get_xdg_dir()
+-    
++
+     # import pdb; pdb.set_trace()  # dbg
+     if 'IPYTHON_DIR' in env:
+         warnings.warn('The environment variable IPYTHON_DIR is deprecated. '
+                       'Please use IPYTHONDIR instead.')
+     ipdir = env.get('IPYTHONDIR', env.get('IPYTHON_DIR', None))
+     if ipdir is None:
+-        # not set explicitly, use ~/.ipython
+-        ipdir = pjoin(home_dir, ipdir_def)
+-        if xdg_dir:
+-            # Several IPython versions (up to 1.x) defaulted to .config/ipython
+-            # on Linux. We have decided to go back to using .ipython everywhere
+-            xdg_ipdir = pjoin(xdg_dir, 'ipython')
+-
+-            if _writable_dir(xdg_ipdir):
+-                cu = compress_user
+-                if os.path.exists(ipdir):
+-                    warnings.warn(('Ignoring {0} in favour of {1}. Remove {0} '
+-                    'to get rid of this message').format(cu(xdg_ipdir), cu(ipdir)))
+-                else:
+-                    warnings.warn('Moving {0} to {1}'.format(cu(xdg_ipdir), cu(ipdir)))
+-                    os.rename(xdg_ipdir, ipdir)
+-
++        ipdir = pjoin(xdg_dir, 'ipython')
+     ipdir = os.path.normpath(os.path.expanduser(ipdir))
+ 
+     if os.path.exists(ipdir) and not _writable_dir(ipdir):

@@ -1,0 +1,134 @@
+# $Id: PKGBUILD 108750 2014-04-02 19:21:18Z kkeen $
+# Maintainer: Kyle Keen <keenerd@gmail.com>
+# Contributor: PepeSmith
+# Contributor: Aron Asor <aronasorman at gmail.com>
+# Contributor: Chris Brannon <chris@the-brannons.com>
+# Contributor : Douglas Soares de Andrade <dsa@aur.archlinux.org>
+
+# IPython 2.0 requires python 3.3 but pypy3 provides
+_BUILD_PYPY3=0
+_PATCH_REVERT_XDG=1
+
+pkgbase=pypy-ipython
+pkgname=pypy-ipython
+((_BUILD_PYPY3)) && {
+  true && pkgname=(pypy3-ipython pypy-ipython)
+} || {
+  true && pkgname=(pypy-ipython)
+}
+pkgver=2.0.0
+pkgrel=1
+pkgdesc="An enhanced Interactive Python shell. pypy version"
+arch=('any')
+url="http://ipython.org"
+license=('BSD')
+depends=('pypy' 'sqlite')
+makedepends=('sqlite')
+# optdepends=("wxpython: needed for ipythonx and ipython-wx"
+#             "python-nose: if you want to run IPython's test suite"
+#             "python-pyqt4: for ipython qtconsole"
+#             "python-sip: for ipython qtconsole"
+#             "python-pygments: for ipython qtconsole"
+#             "python-pyzmq: for ipython notebook and ipython qtconcole"
+#             "python-tornado: for ipython notebook"
+#             "python-jinja: for ipython notebook"
+#             "haskell-pandoc: ipython notebook conversion")
+#source=("http://archive.ipython.org/release/$pkgver/ipython-$pkgver.tar.gz")
+source=("https://pypi.python.org/packages/source/i/ipython/ipython-$pkgver.tar.gz"
+  revert-xdg.patch)
+md5sums=('dd209ff8c7b08565478e4fc04bdf33ee'
+         'c35e45916c514957f27ec5278fa86472')
+
+prepare() {
+  cd "$srcdir/ipython-$pkgver"
+  if ((_PATCH_REVERT_XDG)); then
+    patch -Np1 < ../revert-xdg.patch
+  fi
+}
+
+build() {
+  cd "$srcdir"
+  if ((_BUILD_PYPY3)); then
+    cp -r ipython-$pkgver pypy3-ipython-$pkgver
+  fi
+}
+
+package_pypy3-ipython() {
+  pkgdesc="An enhanced Interactive Python shell. pypy3 version."
+  depends=('pypy3' 'sqlite' 'python2-setuptools')
+  cd "$srcdir/pypy3-ipython-$pkgver"
+
+  # see https://github.com/ipython/ipython/issues/2057
+  #export LC_ALL=en_US.UTF-8
+  pypy3 setup.py install --prefix=/opt/pypy --root="$pkgdir" --optimize=0
+  # find "$pkgdir/" -name '*.pyc' -delete
+  # find "$pkgdir/" -type d -empty -delete
+  find "$pkgdir" -name '*.py' -print0 | xargs -0 \
+    sed -i -e 's,^#!/usr/bin/env python$,#!/usr/bin/env pypy3,' \
+    -e 's,^#!/usr/bin/python$,#!/usr/bin/pypy3,'
+
+  install -m755 -d "${pkgdir}/usr"
+  mv "$pkgdir/opt/pypy/"{share,bin} "$pkgdir/usr/"
+
+  install -Dm644 docs/source/about/license_and_copyright.rst \
+    "$pkgdir/usr/share/licenses/pypy3-ipython/LICENSE"
+
+  # hack to get around ipython collision
+  cd "$pkgdir/usr/share/man/man1/"
+  for i in *; do
+    mv $i ${i/%.1/-pypy3.1}
+  done
+  ln -s ipython-pypy3.1 ipypy3.1
+
+  find "$pkgdir/usr/bin/" -type f -regex '.*[^3]$' -delete
+  cd "$pkgdir/usr/bin/"
+  for f in *; do
+    mv $f $f-pypy
+  done
+  ln -s ipython3-pypy ipypy3
+
+  # cd "$srcdir/ipython-$pkgver/examples/IPython Kernel/"
+  # install -Dm644 ipython.desktop \
+  #   "$pkgdir/usr/share/applications/ipython.desktop"
+  # install -Dm644 ipython-qtconsole.desktop \
+  #   "$pkgdir/usr/share/applications/ipython-qtconsole.desktop"
+}
+
+package_pypy-ipython() {
+  cd "$srcdir/ipython-$pkgver"
+
+  pypy setup.py install --prefix=/opt/pypy --root="$pkgdir" --optimize=0
+  rm -rf "$pkgdir/usr/share/doc"
+  find "$pkgdir" -name '*.py' -print0 | xargs -0 \
+    sed -i -e 's,^#!/usr/bin/env python$,#!/usr/bin/env pypy,' \
+    -e 's,^#!/usr/bin/python$,#!/usr/bin/pypy,'
+  # find "$pkgdir/" -name '*.pyc' -delete
+
+  install -m755 -d "${pkgdir}/usr"
+  mv "$pkgdir/opt/pypy/"{share,bin} "$pkgdir/usr/"
+
+  install -Dm644 docs/source/about/license_and_copyright.rst \
+    "$pkgdir/usr/share/licenses/pypy-ipython/LICENSE"
+
+  # hack to get around ipython collision
+  cd "$pkgdir/usr/share/man/man1/"
+  for i in *; do
+    mv $i ${i/%.1/-pypy.1}
+  done
+  ln -s ipython-pypy.1 ipypy2.1
+  ln -s ipython-pypy.1 ipypy.1
+
+  cd "$pkgdir/usr/bin/"
+  for f in *; do
+    mv $f $f-pypy
+  done
+  ln -s ipython-pypy ipypy
+  ln -s ipython2-pypy ipypy2
+
+  # cd "$srcdir/ipython-$pkgver/examples/IPython Kernel/"
+  # sed -i 's/ython/ython2/g' *.desktop
+  # install -Dm644 ipython.desktop \
+  #   "$pkgdir/usr/share/applications/ipython2.desktop"
+  # install -Dm644 ipython-qtconsole.desktop \
+  #   "$pkgdir/usr/share/applications/ipython2-qtconsole.desktop"
+}
