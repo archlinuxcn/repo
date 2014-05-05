@@ -1,8 +1,8 @@
 # Maintainer: Hugo Osvaldo Barrera <hugo@osvaldobarrera.com.ar>
 # Contributor: Matthias Maennich <arch@maennich.net>
 pkgname=shiboken
-pkgver=1.2.1
-pkgrel=4
+pkgver=1.2.2
+pkgrel=1
 pkgdesc="Support library for Python bindings"
 arch=('i686' 'x86_64')
 license=('LGPL')
@@ -12,12 +12,7 @@ optdepends=("python-sphinx: Documentation")
 makedepends=('cmake')
 conflicts=("libshiboken")
 provides=("libshiboken" "shiboken")
-source=("http://download.qt-project.org/official_releases/pyside/$pkgname-$pkgver.tar.bz2"
-        "FindPython3Libs.cmake.patch")
-
-prepare() {
-    patch $srcdir/shiboken-$pkgver/cmake/Modules/FindPython3Libs.cmake FindPython3Libs.cmake.patch
-}
+source=("http://download.qt-project.org/official_releases/pyside/$pkgname-$pkgver.tar.bz2")
 
 build(){
     cd $srcdir/shiboken-$pkgver
@@ -59,5 +54,4 @@ package(){
     install -D -m 755 ../data/ShibokenConfig-python2.7.cmake "$pkgdir/usr/lib/cmake/Shiboken-$pkgver/"
 }
 
-md5sums=('06100e2c91ab4433dbf15c26f5bb6c17'
-         '5d6be2fa4ddde3d6b64f4dda4369268c')
+md5sums=('9f5bee9d414ce51be07ff7a20054a48d')
