@@ -2,7 +2,7 @@
 # Contributor: Brice M<E9>alier <mealier_brice@yahoo.fr>
 # Contributor: Michele Mocciola <mickele>
 pkgname=opencascade
-pkgver=6.7.0
+pkgver=6.7.1
 pkgrel=1
 pkgdesc="Open CASCADE Technology, 3D modeling & numerical simulation"
 arch=('i686' 'x86_64')
@@ -12,7 +12,7 @@ depends=('tk' 'mesa' 'java-runtime' 'libxmu' 'ftgl')
 makedepends=('java-environment')
 options=(!libtool debug)
 source=("http://files.opencascade.com/OCCT/OCC_${pkgver}_release/$pkgname-${pkgver}.tgz" "env.sh" "opencascade.sh" "opencascade.conf")
-md5sums=('2fa5463d68cdb4350fb0638730102143'
+md5sums=('9316150af298a5608d74785c25491fd4'
          'a96f28ee7f4273ae1771ee033a2a3af3'
          'd9368b8d348ced3ec4462012977552d2'
          '2924ecf57c95d25888f51071fdc72ad0')
