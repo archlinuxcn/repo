@@ -31,15 +31,18 @@ dkms_install() {
 
 	dkms install -m broadcom-wl -v ${1%%-*}
 
-	rmmod b43 2>/dev/null
-	rmmod b43legacy 2>/dev/null
-	rmmod ssb 2>/dev/null
-	rmmod bcm43xx 2>/dev/null
-	rmmod brcm80211 2>/dev/null
-	rmmod brcmfmac 2>/dev/null
-	rmmod brcmsmac 2>/dev/null
-	rmmod bcma 2>/dev/null
-	modprobe wl
+cat << EOF
+It's recommended to execute the following commands to load the module:
+rmmod b43 2>/dev/null
+rmmod b43legacy 2>/dev/null
+rmmod ssb 2>/dev/null
+rmmod bcm43xx 2>/dev/null
+rmmod brcm80211 2>/dev/null
+rmmod brcmfmac 2>/dev/null
+rmmod brcmsmac 2>/dev/null
+rmmod bcma 2>/dev/null
+modprobe wl
 
-	/usr/bin/depmod -a
+/usr/bin/depmod -a
+EOF
 }
