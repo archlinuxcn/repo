@@ -6,7 +6,7 @@ pkgbase='pypy-tornado'
 pkgname='pypy-tornado'
 true && pkgname=('pypy3-tornado' 'pypy-tornado')
 pkgver=3.2.1
-pkgrel=1
+pkgrel=2
 pkgdesc='open source version of the scalable, non-blocking web server and tools'
 arch=('i686' 'x86_64')
 url='http://www.tornadoweb.org/'
@@ -16,33 +16,34 @@ source=(https://github.com/facebook/tornado/archive/v3.2.1.tar.gz)
 md5sums=('1c8910c1f6476ab947e6a5136a9961c9')
 
 prepare() {
-  cp -a tornado{,-py2}
+  cp -a tornado-3.2.1{,-py2}
 
   # python -> python2 rename
-  find tornado-py2 -name '*py' \
+  find tornado-3.2.1-py2 -name '*py' \
     -exec sed -e 's_#!/usr/bin/env python_#!/usr/bin/env pypy_' -i {} \;
-  find tornado -name '*py' \
+  find tornado-3.2.1 -name '*py' \
     -exec sed -e 's_#!/usr/bin/env python_#!/usr/bin/env pypy3_' -i {} \;
 }
 
 build() {
-  cd tornado
+  cd tornado-3.2.1
   pypy3 setup.py build
 
-  cd ../tornado-py2
+  cd ../tornado-3.2.1-py2
   pypy setup.py build
 }
 
 package_pypy3-tornado() {
   depends=('pypy3')
 
-  cd tornado
-  pypy3 setup.py install --root="${pkgdir}" --optimize=1
+  cd tornado-3.2.1
+  pypy3 setup.py install --root="${pkgdir}" --optimize=1 \
+     --install-lib=/opt/pypy3/lib/python3.2/site-packages
 }
 
 package_pypy-tornado() {
   depends=('pypy')
 
-  cd tornado-py2
+  cd tornado-3.2.1-py2
   pypy setup.py install --root="${pkgdir}" --optimize=1
 }
