@@ -1,0 +1,20 @@
+# $Id: PKGBUILD 104029 2014-01-14 16:17:33Z fyan $
+# Maintainer: Felix Yan <felixonmars@gmail.com>
+
+pkgname=pypy-backports.ssl_match_hostname
+pkgver=3.4.0.2
+pkgrel=1
+pkgdesc="The ssl.match_hostname() function from Python 3.4"
+arch=(any)
+url="https://bitbucket.org/brandon/backports.ssl_match_hostname"
+license=('PSF')
+makedepends=('pypy-setuptools')
+source=("https://pypi.python.org/packages/source/b/backports.ssl_match_hostname/backports.ssl_match_hostname-${pkgver}.tar.gz")
+md5sums=("788214f20214c64631f0859dc79f23c6")
+
+package() {
+  depends=('pypy')
+
+  cd backports.ssl_match_hostname-${pkgver}
+  pypy setup.py install --root="${pkgdir}" --optimize=1
+}
