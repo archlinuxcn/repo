@@ -17,7 +17,7 @@ pkgname=pypy-ipython
   true && pkgname=(pypy-ipython)
 }
 pkgver=2.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc="An enhanced Interactive Python shell. pypy version"
 arch=('any')
 url="http://ipython.org"
@@ -55,12 +55,16 @@ build() {
 
 package_pypy3-ipython() {
   pkgdesc="An enhanced Interactive Python shell. pypy3 version."
-  depends=('pypy3' 'sqlite' 'python2-setuptools')
+  depends=('pypy3' 'sqlite')
+  optdepends=("pypy3-pyzmq: for ipython notebook and ipython qtconcole"
+    "pypy3-tornado: for ipython notebook"
+    "pypy3-jinja: for ipython notebook")
   cd "$srcdir/pypy3-ipython-$pkgver"
 
   # see https://github.com/ipython/ipython/issues/2057
   #export LC_ALL=en_US.UTF-8
-  pypy3 setup.py install --prefix=/opt/pypy --root="$pkgdir" --optimize=0
+  pypy3 setup.py install --prefix=/opt/pypy --root="$pkgdir" --optimize=1 \
+    --install-lib=/opt/pypy3/lib/python3.2/site-packages
   # find "$pkgdir/" -name '*.pyc' -delete
   # find "$pkgdir/" -type d -empty -delete
   find "$pkgdir" -name '*.py' -print0 | xargs -0 \
@@ -95,9 +99,12 @@ package_pypy3-ipython() {
 }
 
 package_pypy-ipython() {
+  optdepends=("pypy-pyzmq: for ipython notebook and ipython qtconcole"
+    "pypy-tornado: for ipython notebook"
+    "pypy-jinja: for ipython notebook")
   cd "$srcdir/ipython-$pkgver"
 
-  pypy setup.py install --prefix=/opt/pypy --root="$pkgdir" --optimize=0
+  pypy setup.py install --prefix=/opt/pypy --root="$pkgdir" --optimize=1
   rm -rf "$pkgdir/usr/share/doc"
   find "$pkgdir" -name '*.py' -print0 | xargs -0 \
     sed -i -e 's,^#!/usr/bin/env python$,#!/usr/bin/env pypy,' \
