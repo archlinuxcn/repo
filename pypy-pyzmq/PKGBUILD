@@ -4,7 +4,7 @@ pkgbase=pypy-pyzmq
 pkgname=pypy-pyzmq
 true && pkgname=(pypy3-pyzmq pypy-pyzmq)
 pkgver=14.1.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Python bindings for zeromq, pypy version"
 arch=(i686 x86_64)
 url="http://www.zeromq.org/bindings:python"
@@ -34,24 +34,39 @@ build() {
     $(find ./ -name '*.py')
 }
 
-_fix_cffi() {
+_fix_py2_cffi() {
   cd "${srcdir}"
-  mv -v "${pkgdir}/opt/$1/site-packages/zmq/utils/compiler.json" \
-    compiler.json.$1
-  cp compiler.json "${pkgdir}/opt/$1/site-packages/zmq/utils/compiler.json"
-  PYTHONPATH="${pkgdir}/opt/$1/site-packages" $1 -c "import $2"
+  mv -v "${pkgdir}/opt/pypy/site-packages/zmq/utils/compiler.json" \
+    compiler.json.pypy
+  cp compiler.json "${pkgdir}/opt/pypy/site-packages/zmq/utils/compiler.json"
+  PYTHONPATH="${pkgdir}/opt/pypy/site-packages" pypy -c "import $1"
   find "$pkgdir/" -name '*.o' -delete
   find "$pkgdir/" -type d -empty -delete
-  mv -v compiler.json.$1 \
-    "${pkgdir}/opt/$1/site-packages/zmq/utils/compiler.json"
+  mv -v compiler.json.pypy \
+    "${pkgdir}/opt/pypy/site-packages/zmq/utils/compiler.json"
+}
+
+_fix_py3_cffi() {
+  cd "${srcdir}"
+  mv -v \
+    "${pkgdir}/opt/pypy3/lib/python3.2/site-packages/zmq/utils/compiler.json" \
+    compiler.json.pypy3
+  cp compiler.json \
+    "${pkgdir}/opt/pypy3/lib/python3.2/site-packages/zmq/utils/compiler.json"
+  PYTHONPATH="${pkgdir}/opt/pypy3/lib/python3.2/site-packages" \
+    pypy3 -c "import $1"
+  find "$pkgdir/" -name '*.o' -delete
+  find "$pkgdir/" -type d -empty -delete
+  mv -v compiler.json.pypy3 \
+    "${pkgdir}/opt/pypy3/lib/python3.2/site-packages/zmq/utils/compiler.json"
 }
 
 package_pypy-pyzmq() {
   pkgdesc="PyPy bindings for zeromq"
   depends=(zeromq pypy)
   cd "$srcdir/py2zmq-$pkgver"
-  pypy setup.py install --root="$pkgdir" --optimize=0
-  (_fix_cffi pypy zmq)
+  pypy setup.py install --root="$pkgdir" --optimize=1
+  (_fix_py2_cffi zmq)
 }
 
 package_pypy3-pyzmq() {
@@ -59,6 +74,7 @@ package_pypy3-pyzmq() {
   depends=(zeromq pypy3)
 
   cd "$srcdir/pyzmq-$pkgver"
-  pypy3 setup.py install --root="$pkgdir" --optimize=0
-  (_fix_cffi pypy3 zmq)
+  pypy3 setup.py install --root="$pkgdir" --optimize=1 \
+    --install-lib=/opt/pypy3/lib/python3.2/site-packages
+  (_fix_py3_cffi zmq)
 }
