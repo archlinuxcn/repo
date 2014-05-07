@@ -1,0 +1,49 @@
+# $Id: PKGBUILD 211647 2014-04-22 10:43:11Z fyan $
+# Maintainer : Felix Yan <felixonmars@gmail.com>
+# Contributor: Ionut Biru <ibiru@archlinux.org>
+# Contributor: Alex Anthony <alex.anthony28991@gmail.com>
+
+pkgbase='pypy-markupsafe'
+pkgname='pypy-markupsafe'
+true && pkgname=('pypy-markupsafe' 'pypy3-markupsafe')
+pkgver=0.21
+pkgrel=1
+pkgdesc="Implements a XML/HTML/XHTML Markup safe string for Python"
+arch=('i686' 'x86_64')
+url="http://pypi.python.org/pypi/MarkupSafe"
+license=('custom')
+makedepends=('pypy-setuptools' 'pypy3-setuptools')
+source=("http://pypi.python.org/packages/source/M/MarkupSafe/MarkupSafe-${pkgver}.tar.gz")
+sha512sums=('ecedf56be7ad1723c4d7bf799e1aefb8ceb0a28840a1b8ffdc2dee0f734149430cf5dfd5d335591e9934cf223255475e9c04da5ab34ed69e7845298f599d81bc')
+
+build() {
+  cp -r MarkupSafe-${pkgver} python2-MarkupSafe-${pkgver}
+  cd "${srcdir}/MarkupSafe-${pkgver}"
+  pypy3 setup.py build
+
+  cd "${srcdir}/python2-MarkupSafe-${pkgver}"
+  pypy setup.py build
+}
+
+# pypy3 version currently does not work since pypy3 does not support
+# python 3.3. However, it should be fine to keep it since it builds correctly.
+package_pypy3-markupsafe() {
+  depends=('pypy3')
+
+  cd MarkupSafe-${pkgver}
+  pypy3 setup.py install --root="${pkgdir}" --optimize=1 \
+    --install-lib=/opt/pypy3/lib/python3.2/site-packages
+
+  install -D -m644 LICENSE \
+    "${pkgdir}/usr/share/licenses/pypy3-markupsafe/LICENSE"
+}
+
+package_pypy-markupsafe() {
+  depends=('pypy')
+
+  cd python2-MarkupSafe-${pkgver}
+  pypy setup.py install --root="${pkgdir}" --optimize=1
+
+  install -D -m644 LICENSE \
+    "${pkgdir}/usr/share/licenses/pypy-markupsafe/LICENSE"
+}
