@@ -1,0 +1,58 @@
+pkgbase=pypy-setuptools
+true && pkgname=(pypy3-setuptools pypy-setuptools)
+pkgname=pypy-setuptools
+pkgver=3.4.4
+pkgrel=1
+pkgdesc="Easily download, build, install, upgrade, and uninstall Python packages"
+arch=('any')
+license=('PSF')
+url="http://pypi.python.org/pypi/setuptools"
+source=(http://pypi.python.org/packages/source/s/setuptools/setuptools-${pkgver}.tar.gz)
+md5sums=('6ca9e8377b65233c2ff3a1752406a22d')
+
+prepare() {
+  cd "${srcdir}"
+  cp -r setuptools-${pkgver} pypy3-setuptools-${pkgver}
+
+  cd "${srcdir}/"setuptools-${pkgver}
+  sed -i -e "s|^#\!.*/usr/bin/python|#!/usr/bin/pypy3|" \
+    setuptools/tests/test_resources.py
+  sed -i -e "s|^#\!.*/usr/bin/env python|#!/usr/bin/env pypy3|" \
+    setuptools/command/easy_install.py
+
+  cd "${srcdir}/"pypy3-setuptools-${pkgver}
+  sed -i -e "s|^#\!.*/usr/bin/python|#!/usr/bin/pypy|" \
+    setuptools/tests/test_resources.py
+  sed -i -e "s|^#\!.*/usr/bin/env python|#!/usr/bin/env pypy|" \
+    setuptools/command/easy_install.py
+}
+
+build() {
+  cd "${srcdir}"/pypy3-setuptools-${pkgver}
+  pypy3 setup.py build
+
+  cd "${srcdir}"/setuptools-${pkgver}
+  pypy setup.py build
+}
+
+package_pypy-setuptools() {
+  depends=('pypy')
+  cd "${srcdir}/setuptools-${pkgver}"
+  pypy setup.py install --prefix=/opt/pypy \
+    --install-lib=/opt/pypy/lib/python2.7/site-packages \
+    --root="${pkgdir}" --optimize=1 --skip-build
+  cd "${pkgdir}"
+  mkdir -p usr/bin
+  ln -s ../../opt/pypy/bin/easy_install usr/bin/easy_install-pypy
+}
+
+package_pypy3-setuptools() {
+  depends=('pypy3')
+  cd "${srcdir}/pypy3-setuptools-${pkgver}"
+  pypy3 setup.py install --prefix=/opt/pypy3 \
+    --install-lib=/opt/pypy3/lib/python3.2/site-packages \
+    --root="${pkgdir}" --optimize=1 --skip-build
+  cd "${pkgdir}"
+  mkdir -p usr/bin
+  ln -s ../../opt/pypy3/bin/easy_install usr/bin/easy_install-pypy3
+}
