@@ -5,7 +5,7 @@
 
 pkgname=btsync
 pkgver=1.3.94
-pkgrel=1
+pkgrel=3
 pkgdesc="BitTorrent Sync - automatically sync files via secure, distributed technology"
 license=("custom:btsync")
 arch=('i686' 'x86_64' 'arm' 'armv6' 'armv7' 'armv6h' 'armv7h')
@@ -13,8 +13,15 @@ url="http://www.bittorrent.com/sync"
 install=btsync.install
 backup=('etc/btsync.conf')
 optdepends=("btsync-autoconfig: Auto-create users' config files if needed") 
-source=(btsync.service btsync@.service)
-sha1sums=('9187bafe0cc30895d55b8a8a69074ebdca325e4c' 'c4f87b9d65247f4a9033a6039662f4b863a5b03e')
+
+source=(btsync.service
+	btsync@.service
+	btsync_user.service)
+
+sha1sums=('9187bafe0cc30895d55b8a8a69074ebdca325e4c' 
+	  'c4f87b9d65247f4a9033a6039662f4b863a5b03e'
+	  'dd80af8594aef9bbeafa74b7c36b4b980c4c3751')
+
 if [ "$CARCH" == x86_64 ]; then
 	source+=(btsync_x64.tar.gz::http://download-lb.utorrent.com/endpoint/btsync/os/linux-x64/track/stable)
 	sha1sums+=('8394f4653c7b85feac62426c357a423c3f67c00e')
@@ -35,6 +42,7 @@ package() {
 	# install systemd units
 	install -Dm644 btsync.service ${pkgdir}/usr/lib/systemd/system/btsync.service
 	install -Dm644 btsync@.service ${pkgdir}/usr/lib/systemd/system/btsync@.service
+	install -Dm644 btsync_user.service ${pkgdir}/usr/lib/systemd/user/btsync.service
 	# install license
 	install -Dm644 LICENSE.TXT "${pkgdir}/usr/share/licenses/${pkgname}/license.txt"
 }

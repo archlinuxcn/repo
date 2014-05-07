@@ -28,27 +28,10 @@ cat << EOF
   - webui.listen
   - webui.login
   - webui.password
+
+  post_upgrade
  
-  Execute 
-	
-	systemctl daemon-reload
-
-  to reload systemd modules.
-
-  To start btsync, execute:
- 
-	systemctl start btsync@user
- 
-  where 'user' is your username.
-
-  To autostart btsync on system start, execute
-
-	systemctl enable btsync@user
- 
-  where 'user' is your username.
-
 EOF
-
 }
 
 post_upgrade() {
@@ -57,17 +40,33 @@ cat << EOF
 
   WebGUI can be accessed at http://localhost:8888
 
-  To start btsync, execute:
+  Running btsync system instance (will use dedicated btsync:btsync account):
 
-        systemctl start btsync@user
+        To reload system systemd modules, execute
 
-  where 'user' is your username.
+                systemctl daemon-reload
 
-  To autostart btsync on systm start, excute
+        To start btsync, execute:
 
-        systemctl enable btsync@user
+                systemctl start btsync
 
-  where 'user' is your username.
+        To autostart btsync on system start, execute
+
+                systemctl enable btsync
+
+  Running btsync user instance (will used current user account):
+
+        To reload user systemd modules, execute
+
+                systemctl --user daemon-reload
+
+        To start btsync manually, execute:
+
+                systemctl --user start btsync
+
+        To autostart btsync on user login, execute
+
+                systemctl --user enable btsync
 
 EOF
 
