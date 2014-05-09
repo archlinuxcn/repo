@@ -3,7 +3,7 @@
 pkgbase=pypy-pyzmq
 pkgname=pypy-pyzmq
 true && pkgname=(pypy3-pyzmq pypy-pyzmq)
-pkgver=14.1.1
+pkgver=14.3.0
 pkgrel=3
 pkgdesc="Python bindings for zeromq, pypy version"
 arch=(i686 x86_64)
@@ -15,7 +15,7 @@ makedepends=(pypy pypy3 zeromq)
 source=(https://pypi.python.org/packages/source/p/pyzmq/pyzmq-$pkgver.tar.gz
   compiler-pypy.json
   compiler-pypy3.json)
-md5sums=('bea18143c347dcde92cd0409392fbb58'
+md5sums=('92e49cc9be92f0c95a6f790a85309df5'
          '9222c8150542cf09e89ee0a4ebac4ce7'
          '7da00245ab30678eff4b2e58a6a56b13')
 
