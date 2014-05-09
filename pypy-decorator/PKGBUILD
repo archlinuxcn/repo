@@ -1,0 +1,52 @@
+# $Id: PKGBUILD 108440 2014-03-27 14:47:43Z fyan $
+# Maintainer: Thomas Dziedzic < gostrc at gmail >
+# Contributor: Pierre Chapuis <catwell at archlinux dot us>
+
+pkgbase='pypy-decorator'
+pkgname='pypy-decorator'
+pkgname=('pypy3-decorator' 'pypy-decorator')
+pkgver=3.4.0
+pkgrel=1
+pkgdesc='Python Decorator module'
+arch=('any')
+url='http://pypi.python.org/pypi/decorator'
+license=('BSD')
+makedepends=('pypy' 'pypy3' 'pypy-setuptools' 'pypy3-setuptools')
+source=("http://pypi.python.org/packages/source/d/decorator/decorator-${pkgver}.tar.gz"
+        'LICENSE.txt')
+md5sums=('1e8756f719d746e2fc0dd28b41251356'
+         '0ca76d2c707f09dbb04acc425ea1a08b')
+
+build() {
+  # Make python and python2 builds possible
+  cp -r decorator-$pkgver decorator2-$pkgver
+
+  cd "$srcdir/decorator-$pkgver"
+
+  pypy3 setup.py build
+
+  cd "$srcdir/decorator2-$pkgver"
+
+  pypy setup.py build
+}
+
+package_pypy-decorator() {
+  depends=('pypy')
+  cd "${srcdir}/decorator2-${pkgver}"
+
+  pypy setup.py install --root="${pkgdir}" --optimize=1
+
+  install -D -m644 "${srcdir}/LICENSE.txt" \
+    "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+
+package_pypy3-decorator() {
+  depends=('pypy3')
+  cd "${srcdir}/decorator-${pkgver}"
+
+  pypy3 setup.py install --root="${pkgdir}" --optimize=1 \
+    --install-lib=/opt/pypy3/lib/python3.2/site-packages
+
+  install -D -m644 "${srcdir}/LICENSE.txt" \
+    "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
