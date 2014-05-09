@@ -32,7 +32,7 @@ pkgname=linux-uksm
 true && pkgname=(linux-uksm linux-uksm-headers)
 _kernelname=-uksm
 _srcname=linux-3.14
-pkgver=3.14.2
+pkgver=3.14.3
 pkgrel=1
 arch=('i686' 'x86_64')
 url="http://kerneldedup.org/"
@@ -57,7 +57,6 @@ source=("http://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
         '0004-fs-Don-t-return-0-from-get_anon_bdev.patch'
         '0005-Revert-Bluetooth-Enable-autosuspend-for-Intel-Blueto.patch'
         '0006-genksyms-fix-typeof-handling.patch'
-        '0007-x86-efi-Correct-EFI-boot-stub-use-of-code32_start.patch'
         '0010-iwlwifi-mvm-delay-enabling-smart-FIFO-until-after-be.patch'
         '0011-kernfs-fix-removed-error-check.patch'
         '0012-fix-saa7134.patch'
@@ -97,12 +96,6 @@ prepare() {
     # Fix generation of symbol CRCs
     # http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=dc53324060f324e8af6867f57bf4891c13c6ef18
     patch -p1 -i "${srcdir}/0006-genksyms-fix-typeof-handling.patch"
-
-    # Fix the use of code32_start in the EFI boot stub
-    # http://permalink.gmane.org/gmane.linux.kernel/1679881
-    
-    # https://git.kernel.org/cgit/linux/kernel/git/mfleming/efi.git/commit/?h=urgent&id=7e8213c1f3acc064aef37813a39f13cbfe7c3ce7
-    patch -p1 -i "${srcdir}/0007-x86-efi-Correct-EFI-boot-stub-use-of-code32_start.patch"
 
     # https://git.kernel.org/cgit/linux/kernel/git/iwlwifi/iwlwifi-fixes.git/commit/?id=12f853a89e29f50b17698e17e73c328a35f1498d
     # FS#39815
@@ -422,7 +415,7 @@ package_linux-uksm-headers() {
 pkgdesc='Linux Kernel and modules with the UKSM patchset'
 
 sha512sums=('5730d83a7a81134c1e77c0bf89e42dee4f8251ad56c1ac2be20c59e26fdfaa7bea55f277e7af156b637f22e1584914a46089af85039177cb43485089c74ac26e'
-            '72132895aa04bd3e029a490cdf6f6363f672562517afafb6c7b982e2a56b989de3684b7a59df830757025b37bfdb458b26deea03ee4ec1f7e379b97934670988'
+            '1da62f5140965befb39f9565564cb00de189dd83b279632be50d8b1b4a9c59279907435b5d7f3c2fd47c13ba92468b23187f2d0433c7fbb5578f12359ed5584a'
             'f741c2c3f593fa6f3c25e1121aa921182bd0c8cdb64478e666e34f9c0093f216d8840e99176b0f473d19bfb2da47d6838a96d5616f8cddc7e2e107e3de77b76c'
             '310eca4fdacd82a18f07de5700ad5fcf572f9cfbb05f0c9475d108908c9401aa884ab2c6f5912a25caa88a32104c7b313f05fa03d91cdc89f9827e88573c48eb'
             'beba684e0ae752294c4aed74f1c7abc3568ca8f5640213f39400ea2005ed90aee8770a2f2a27fc95aa109c61cb52ea25c488afad53dffa1b649fec8360ecfe0d'
@@ -435,12 +428,11 @@ sha512sums=('5730d83a7a81134c1e77c0bf89e42dee4f8251ad56c1ac2be20c59e26fdfaa7bea5
             '61addb73b2811a369b72ea097e310c63853f219d1384ea0e2cd2bc7b8389163e2e5679a9a198fe0977017658c18a90be0f73aaf72e9b829cc4a802a4fe7cfba0'
             'f1c70f387308dc46bf72d8ee2166ae27e0657405c6aed4bf285112caa8503383b597787dc66e79d502058ccb05b52999df03a3cc4c27456f38e30684f1c0ca44'
             'fdb67e9956d9af1518d0198b86b13150b28f43dd28eb52222a9c43699f7304cd1a56d7f421a0690fa4c0d2c266fd5504da9d6217f83a42d05f35b713fd85e2dd'
-            'fc37a09d3fdea198deff91b1af77e9abc09be4e9e4b7f096475710a67b9e54f8b9d5282d9f63852cff4b098dc17efa247b9312c241218122018cf83febc0cec3'
             '21ff02db8215e6ba38a0025fed91fb4f8a24d1639e9809529de3a29d93d334d1feff5faf571f809f421b8d180ee4eec43e9da9ca73360d5be433c7dfaaf97520'
             'bae01b3cadbb5be30cdf32ac5bbbb5264300fe5d8dd05d4aaad1a29285179562484702d42dee02df6b3206dde4be986c14ecfc9ba75646d854fa08c91521c346'
             '6e59caeff81a9d1370918c1fa55a85ac6f0ba2b4600ce0b74638c0b9d90242e0185af399b7d153c22c772c8be04518c006331e5b2cfaa0ea6ea09978978a1ed1'
             '064e679dc2df2f33cbfe3f719622976f827770e594d5ad28d5cf138482860ca1b9abf21614f9da070274297ea579bda32e2ac3a26e590b213a41116b4bf09d69'
             '87c714687a0dca71f0462a0462d6d7125bf58d1d4e2b7e5bc484b137906c3ef8e2c97d097159264b1d1757fbbe55ffdb17304900beccd3088a4c81f29f97e8e5'
             '5ff4aac8e32b3b65788c150f36043b761729deead93a5618cee61bba8637c9e4ac7d9d55d30c047e266a55dfe9ae84bcdf1d9968e2643eb9bba5a45cdc5c9cbc'
-            'e036ce6e0570587de9e44381819d9da86c01ca7ffc6fe7415b326076209a0430c430abc95b7aad4304e62ddcdc1ea1cbc8002ab6dc854ed7dd8160bb6fad94ad'
-            'b0879a4c797b04b0d53e9d4f53f4c57e0b6cbfdde3c688900c458bf03195ce6c615e6e3bfda47eab933888fbbd784c2f922fbc70ffd3d6d85d0ae4b3202c314c')
+            '6d078f1afb62ab61eb0101eeeafc725aac93afbcf9890aad6f1b98cd379619ac31af61f0c4365b280eb904c0980fc9f14f59b2be3f35c54ff179c32823ad30f7'
+            'c5372aa0e328d0694daae9b722581e414efd9efb8fc735cf1cc8dfc3fde20192746e3f0cd26afcc4cbc53547ecbf09bcef7ea050c56ae99525d17ae9302af4cc')
