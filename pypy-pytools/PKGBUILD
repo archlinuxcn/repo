@@ -1,0 +1,40 @@
+# $Id: PKGBUILD 108485 2014-03-27 14:48:16Z fyan $
+# Maintainer: Felix Yan <felixonmars@gmail.com>
+# Contributor: Stéphane Gaudreault <stephane@archlinux.org>
+
+pkgbase=pypy-pytools
+pkgname=pypy-pytools
+pkgname=('pypy3-pytools' 'pypy-pytools')
+pkgver=2014.1.2
+pkgrel=2
+pkgdesc="A collection of tools for Python"
+arch=('any')
+url="http://mathema.tician.de/software/pytools"
+license=('MIT')
+makedepends=('python2-setuptools' 'python-setuptools')
+source=(http://pypi.python.org/packages/source/p/pytools/pytools-${pkgver}.tar.gz)
+
+build() {
+   cp -a pytools-${pkgver}{,-python2}
+
+   cd "$srcdir/pytools-${pkgver}"
+   pypy3 setup.py build
+
+   cd "${srcdir}/pytools-${pkgver}-python2"
+   pypy setup.py build
+}
+
+package_pypy-pytools() {
+   depends=('pypy' 'pypy-decorator')
+   cd "${srcdir}/pytools-${pkgver}-python2"
+   pypy setup.py install --root="${pkgdir}" --skip-build --optimize=1
+}
+
+package_pypy3-pytools(){
+   depends=('pypy3' 'pypy3-decorator')
+   cd "${srcdir}/pytools-${pkgver}"
+   pypy3 setup.py install --root="${pkgdir}" --skip-build --optimize=1 \
+     --install-lib=/opt/pypy3/lib/python3.2/site-packages
+}
+
+sha512sums=('4c849518223a8257282a448554d38fee44b9583b1567b8f606a7903994d32274c5f67addfe629ea45a73587efaf9a826604c3688147b10914657d692ed9039e6')
