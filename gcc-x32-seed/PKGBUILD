@@ -1,4 +1,4 @@
-# $Id: PKGBUILD 102915 2013-12-24 02:19:21Z heftig $
+# $Id: PKGBUILD 110035 2014-04-23 13:58:04Z heftig $
 # Maintainer: Fantix King <fantix.king@gmail.com>
 # Upstream Maintainer: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 # Contributor: Allan McRae <allan@archlinux.org>
@@ -7,28 +7,26 @@
 # NOTE: libtool requires rebuilt with each new gcc version
 
 pkgname='gcc-x32-seed'
-pkgver=4.8.2_7
-_pkgver=4.8
+pkgver=4.9.0_1
+_pkgver=4.9
 pkgrel=1
-_snapshot=4.8-20131219
+#_snapshot=4.9.0-RC-20140411
 pkgdesc="An incomplete GCC build for building Glibc with x32 ABI support"
 arch=('x86_64')
 license=('GPL' 'LGPL' 'FDL' 'custom')
 url="http://gcc.gnu.org"
-makedepends=('binutils-multilib>=2.23' 'libmpc' 'cloog' 'doxygen'
-             'lib32-glibc>=2.17')
+makedepends=('binutils>=2.24' 'libmpc' 'cloog' 'doxygen'
+             'lib32-glibc>=2.19')
 checkdepends=('dejagnu' 'inetutils')
-depends=('binutils-multilib>=2.23' 'libmpc' 'cloog' 'glibc-x32-seed')
+depends=('binutils>=2.24' 'libmpc' 'cloog' 'glibc-x32-seed')
 provides=("gcc-multilib-x32=${pkgver}-${pkgrel}")
 options=('!emptydirs')
-source=(#ftp://gcc.gnu.org/pub/gcc/releases/gcc-${pkgver%_*}/gcc-${pkgver%_*}.tar.bz2
-        ftp://gcc.gnu.org/pub/gcc/snapshots/${_snapshot}/gcc-${_snapshot}.tar.bz2
+source=(ftp://gcc.gnu.org/pub/gcc/releases/gcc-${pkgver%_*}/gcc-${pkgver%_*}.tar.bz2
+        #ftp://gcc.gnu.org/pub/gcc/snapshots/${_snapshot}/gcc-${_snapshot}.tar.bz2
         gcc-4.8-filename-output.patch
-        gcc-4.8-lambda-ICE.patch
 	https://sites.google.com/site/x32abi/documents/gcc-x32-seed.tar.bz2)
-md5sums=('666ef08f87649f941bc5512e13a88fdc'
+md5sums=('9709b49ae0e904cbb0a6a1b62853b556'
          '40cb437805e2f7a006aa0d0c3098ab0f'
-         '6eb6e080dbf7bc6825f53a0aaa6c4ef9'
          '1672d3283e6827b8b8ff634f85ddf523')
 
 
@@ -57,13 +55,6 @@ prepare() {
   # http://gcc.gnu.org/bugzilla/show_bug.cgi?id=57653
   patch -p0 -i ${srcdir}/gcc-4.8-filename-output.patch
   
-  # http://gcc.gnu.org/bugzilla//show_bug.cgi?id=56710 - commit 3d1f8279
-  patch -p1 -i ${srcdir}/gcc-4.8-lambda-ICE.patch
-
-  # installing libiberty headers is broken
-  # http://gcc.gnu.org/bugzilla/show_bug.cgi?id=56780#c6
-  sed -i 's#@target_header_dir@#libiberty#' libiberty/Makefile.in
-
   mkdir ${srcdir}/gcc-build
 }
 
@@ -93,11 +84,13 @@ build() {
       --enable-checking=release
   make || true
 
+  rmdir fixincludes || true
   ln -s build-*/fixincludes || true
 }
 
 package()
 {
+  options=('staticlibs')
 
   cd ${srcdir}/gcc-build
 
