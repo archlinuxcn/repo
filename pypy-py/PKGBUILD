@@ -1,0 +1,42 @@
+pkgbase=pypy-py
+pkgname=pypy-py
+pkgname=('pypy3-py' 'pypy-py')
+pkgver=1.4.20
+pkgrel=3
+pkgdesc="library with cross-python path, ini-parsing, io, code, log facilities"
+arch=('any')
+license=('MIT')
+url="http://pylib.readthedocs.org/en/latest/"
+makedepends=('pypy-setuptools' 'pypy3-setuptools')
+source=("http://pypi.python.org/packages/source/p/py/py-$pkgver.tar.gz")
+
+prepare() {
+  cp -r py-${pkgver}{,-py2}
+}
+
+build() {
+  cd "$srcdir/py-${pkgver}"
+  pypy3 setup.py build
+
+  cd "$srcdir/py-${pkgver}-py2"
+  pypy setup.py build
+}
+
+package_pypy3-py() {
+  depends=('pypy3')
+
+  cd py-${pkgver}
+  pypy3 setup.py install --root="${pkgdir}" --optimize=1 \
+    --install-lib=/opt/pypy3/lib/python3.2/site-packages
+  install -D -m644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+
+package_pypy-py() {
+  depends=('pypy')
+
+  cd py-${pkgver}-py2
+  pypy setup.py install --root="${pkgdir}" --optimize=1
+  install -D -m644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+
+sha512sums=('db392bd8d52ac2bf7b4785e18aaf58564596f66f15d355ee6f6e4169f6da7847331096ac7118c758ee5ce3f1865502a45f92ca2c99f411c12ee316760ca2b212')
