@@ -33,7 +33,7 @@ true && pkgname=(linux-uksm linux-uksm-headers)
 _kernelname=-uksm
 _srcname=linux-3.14
 pkgver=3.14.3
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 url="http://kerneldedup.org/"
 license=('GPL2')
@@ -44,6 +44,7 @@ _uksmname="v3.14"
 _bfqpath="http://algo.ing.unimo.it/people/paolo/disk_sched/patches/3.14.0-v7r3"
 source=("http://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
         "http://www.kernel.org/pub/linux/kernel/v3.x/patch-${pkgver}.xz"
+        'CVE-2014-0196.patch'
         "http://kerneldedup.org/download/uksm/${_uksmvernel}/uksm-${_uksmvernel}-for-${_uksmname}.patch" # website often went down
         #"uksm-${_uksmvernel}-for-${_uksmname}.test.patch"
         "${_bfqpath}/0001-block-cgroups-kconfig-build-bits-for-BFQ-v7r3-3.14.patch"
@@ -70,6 +71,9 @@ prepare() {
 
     ### add upstream patch
     patch -Np1 -i "${srcdir}/patch-${pkgver}"
+
+    # fix upstream CVE-2014-0196
+    patch -p1 -i "${srcdir}/CVE-2014-0196.patch"
 
     ### set DEFAULT_CONSOLE_LOGLEVEL to 4 (same value as the 'quiet' kernel param)
     # remove this when a Kconfig knob is made available by upstream
@@ -416,6 +420,7 @@ pkgdesc='Linux Kernel and modules with the UKSM patchset'
 
 sha512sums=('5730d83a7a81134c1e77c0bf89e42dee4f8251ad56c1ac2be20c59e26fdfaa7bea55f277e7af156b637f22e1584914a46089af85039177cb43485089c74ac26e'
             '1da62f5140965befb39f9565564cb00de189dd83b279632be50d8b1b4a9c59279907435b5d7f3c2fd47c13ba92468b23187f2d0433c7fbb5578f12359ed5584a'
+            'a926f8b0487fca9d33ce46c2f6acebfb85ef86d4b3e8501bf95dedaa979e0f96ad6cf159d5a5927edf0c3112818d64fffad43514519956c808aa05790e20ec45'
             'f741c2c3f593fa6f3c25e1121aa921182bd0c8cdb64478e666e34f9c0093f216d8840e99176b0f473d19bfb2da47d6838a96d5616f8cddc7e2e107e3de77b76c'
             '310eca4fdacd82a18f07de5700ad5fcf572f9cfbb05f0c9475d108908c9401aa884ab2c6f5912a25caa88a32104c7b313f05fa03d91cdc89f9827e88573c48eb'
             'beba684e0ae752294c4aed74f1c7abc3568ca8f5640213f39400ea2005ed90aee8770a2f2a27fc95aa109c61cb52ea25c488afad53dffa1b649fec8360ecfe0d'
