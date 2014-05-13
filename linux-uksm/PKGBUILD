@@ -32,8 +32,8 @@ pkgname=linux-uksm
 true && pkgname=(linux-uksm linux-uksm-headers)
 _kernelname=-uksm
 _srcname=linux-3.14
-pkgver=3.14.3
-pkgrel=2
+pkgver=3.14.4
+pkgrel=1
 arch=('i686' 'x86_64')
 url="http://kerneldedup.org/"
 license=('GPL2')
@@ -44,7 +44,6 @@ _uksmname="v3.14"
 _bfqpath="http://algo.ing.unimo.it/people/paolo/disk_sched/patches/3.14.0-v7r3"
 source=("http://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
         "http://www.kernel.org/pub/linux/kernel/v3.x/patch-${pkgver}.xz"
-        'CVE-2014-0196.patch'
         "http://kerneldedup.org/download/uksm/${_uksmvernel}/uksm-${_uksmvernel}-for-${_uksmname}.patch" # website often went down
         #"uksm-${_uksmvernel}-for-${_uksmname}.test.patch"
         "${_bfqpath}/0001-block-cgroups-kconfig-build-bits-for-BFQ-v7r3-3.14.patch"
@@ -62,7 +61,6 @@ source=("http://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
         '0011-kernfs-fix-removed-error-check.patch'
         '0012-fix-saa7134.patch'
         '0013-net-Start-with-correct-mac_len-in-skb_network_protocol.patch'
-        '0014-fix-rtl8192se.patch'
         '0015-fix-xsdt-validation.patch'
         'config' 'config.x86_64')
         
@@ -71,9 +69,6 @@ prepare() {
 
     ### add upstream patch
     patch -Np1 -i "${srcdir}/patch-${pkgver}"
-
-    # fix upstream CVE-2014-0196
-    patch -p1 -i "${srcdir}/CVE-2014-0196.patch"
 
     ### set DEFAULT_CONSOLE_LOGLEVEL to 4 (same value as the 'quiet' kernel param)
     # remove this when a Kconfig knob is made available by upstream
@@ -118,11 +113,6 @@ prepare() {
     # https://bugs.archlinux.org/task/40089
     # https://bugzilla.kernel.org/show_bug.cgi?id=74051
     patch -Np1 -i "${srcdir}/0013-net-Start-with-correct-mac_len-in-skb_network_protocol.patch"
-
-    # fix rtl8192se authentification
-    # https://bugs.archlinux.org/task/39858
-    # https://bugzilla.kernel.org/show_bug.cgi?id=74541
-    patch -Np1 -i "${srcdir}/0014-fix-rtl8192se.patch"
 
     # fix xsdt validation bug
     # https://bugs.archlinux.org/task/39811
@@ -419,8 +409,7 @@ package_linux-uksm-headers() {
 pkgdesc='Linux Kernel and modules with the UKSM patchset'
 
 sha512sums=('5730d83a7a81134c1e77c0bf89e42dee4f8251ad56c1ac2be20c59e26fdfaa7bea55f277e7af156b637f22e1584914a46089af85039177cb43485089c74ac26e'
-            '1da62f5140965befb39f9565564cb00de189dd83b279632be50d8b1b4a9c59279907435b5d7f3c2fd47c13ba92468b23187f2d0433c7fbb5578f12359ed5584a'
-            'a926f8b0487fca9d33ce46c2f6acebfb85ef86d4b3e8501bf95dedaa979e0f96ad6cf159d5a5927edf0c3112818d64fffad43514519956c808aa05790e20ec45'
+            '61eca26d57f7d7caa78d157582d4b98fbba1c85af73f1773fb51eab3db4381de53f4fbfbc202083e45297c0b4487bc58880a518e7ee9c0d616cddf0b3909b303'
             'f741c2c3f593fa6f3c25e1121aa921182bd0c8cdb64478e666e34f9c0093f216d8840e99176b0f473d19bfb2da47d6838a96d5616f8cddc7e2e107e3de77b76c'
             '310eca4fdacd82a18f07de5700ad5fcf572f9cfbb05f0c9475d108908c9401aa884ab2c6f5912a25caa88a32104c7b313f05fa03d91cdc89f9827e88573c48eb'
             'beba684e0ae752294c4aed74f1c7abc3568ca8f5640213f39400ea2005ed90aee8770a2f2a27fc95aa109c61cb52ea25c488afad53dffa1b649fec8360ecfe0d'
@@ -437,7 +426,6 @@ sha512sums=('5730d83a7a81134c1e77c0bf89e42dee4f8251ad56c1ac2be20c59e26fdfaa7bea5
             'bae01b3cadbb5be30cdf32ac5bbbb5264300fe5d8dd05d4aaad1a29285179562484702d42dee02df6b3206dde4be986c14ecfc9ba75646d854fa08c91521c346'
             '6e59caeff81a9d1370918c1fa55a85ac6f0ba2b4600ce0b74638c0b9d90242e0185af399b7d153c22c772c8be04518c006331e5b2cfaa0ea6ea09978978a1ed1'
             '064e679dc2df2f33cbfe3f719622976f827770e594d5ad28d5cf138482860ca1b9abf21614f9da070274297ea579bda32e2ac3a26e590b213a41116b4bf09d69'
-            '87c714687a0dca71f0462a0462d6d7125bf58d1d4e2b7e5bc484b137906c3ef8e2c97d097159264b1d1757fbbe55ffdb17304900beccd3088a4c81f29f97e8e5'
             '5ff4aac8e32b3b65788c150f36043b761729deead93a5618cee61bba8637c9e4ac7d9d55d30c047e266a55dfe9ae84bcdf1d9968e2643eb9bba5a45cdc5c9cbc'
             '6d078f1afb62ab61eb0101eeeafc725aac93afbcf9890aad6f1b98cd379619ac31af61f0c4365b280eb904c0980fc9f14f59b2be3f35c54ff179c32823ad30f7'
             'c5372aa0e328d0694daae9b722581e414efd9efb8fc735cf1cc8dfc3fde20192746e3f0cd26afcc4cbc53547ecbf09bcef7ea050c56ae99525d17ae9302af4cc')
