@@ -1,0 +1,71 @@
+From ffe768a90912f9bce43b70a82576b3dc99e3121c Mon Sep 17 00:00:00 2001
+From: Siddhesh Poyarekar <siddhesh@redhat.com>
+Date: Thu, 27 Feb 2014 21:29:16 +0530
+Subject: [PATCH] Fix sign of input to bsloww1 (BZ #16623)
+
+In 84ba214c, I removed some redundant sign computations and in the
+process, I incorrectly got rid of a temporary variable, thus passing
+the absolute value of the input to bsloww1.  This caused #16623.
+
+This fix undoes the incorrect change.
+---
+ sysdeps/ieee754/dbl-64/s_sin.c | 16 ++++++++++------
+ 3 files changed, 18 insertions(+), 7 deletions(-)
+
+diff --git a/sysdeps/ieee754/dbl-64/s_sin.c b/sysdeps/ieee754/dbl-64/s_sin.c
+index 6105e9f..50109b8 100644
+--- a/sysdeps/ieee754/dbl-64/s_sin.c
++++ b/sysdeps/ieee754/dbl-64/s_sin.c
+@@ -447,19 +447,21 @@ __sin (double x)
+ 	    }
+ 	  else
+ 	    {
++	      double t;
+ 	      if (a > 0)
+ 		{
+ 		  m = 1;
++		  t = a;
+ 		  db = da;
+ 		}
+ 	      else
+ 		{
+ 		  m = 0;
+-		  a = -a;
++		  t = -a;
+ 		  db = -da;
+ 		}
+-	      u.x = big + a;
+-	      y = a - (u.x - big);
++	      u.x = big + t;
++	      y = t - (u.x - big);
+ 	      res = do_sin (u, y, db, &cor);
+ 	      cor = (cor > 0) ? 1.035 * cor + eps : 1.035 * cor - eps;
+ 	      retval = ((res == res + cor) ? ((m) ? res : -res)
+@@ -671,19 +673,21 @@ __cos (double x)
+ 	    }
+ 	  else
+ 	    {
++	      double t;
+ 	      if (a > 0)
+ 		{
+ 		  m = 1;
++		  t = a;
+ 		  db = da;
+ 		}
+ 	      else
+ 		{
+ 		  m = 0;
+-		  a = -a;
++		  t = -a;
+ 		  db = -da;
+ 		}
+-	      u.x = big + a;
+-	      y = a - (u.x - big);
++	      u.x = big + t;
++	      y = t - (u.x - big);
+ 	      res = do_sin (u, y, db, &cor);
+ 	      cor = (cor > 0) ? 1.035 * cor + eps : 1.035 * cor - eps;
+ 	      retval = ((res == res + cor) ? ((m) ? res : -res)
+-- 
+1.9.0
+

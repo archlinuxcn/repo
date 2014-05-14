@@ -1,25 +1,21 @@
-# Whether to mention about the -bin32 build.
-_bin32="0"
-
-# Some colored makepkg-like functions
+# Colored makepkg-like functions
 msg_blue() {
-    printf "${BLUE}==>${ALL_OFF}${BOLD} ${1}${ALL_OFF}\n"
+    printf "${BLUE}==>${ALL_OFF}${BOLD} $1${ALL_OFF}\n"
 }
 
-if [ "$_bin32" != "1" ]; then
-    note() {
-        printf "${BLUE}==>${ALL_OFF}${YELLOW} NOTE:${ALL_OFF}${BOLD} ${1}${ALL_OFF}\n"
-    }
-else
-    note() {
-        printf "${BLUE}==>${ALL_OFF}${YELLOW} NOTE${1}:${ALL_OFF}${BOLD} ${2}${ALL_OFF}\n"
-    }
-fi
+note() {
+    printf "${BLUE}==>${ALL_OFF}${YELLOW} NOTE:${ALL_OFF}${BOLD} ${1}${ALL_OFF}\n"
+}
 
 ALL_OFF="$(tput sgr0)"
 BOLD="$(tput bold)"
 BLUE="${BOLD}$(tput setaf 4)"
 YELLOW="${BOLD}$(tput setaf 3)"
+
+# 64-bit?
+if [ $(uname -m) = x86_64 ]; then
+    _64=true
+fi
 
 _update() {
     msg_blue "Updating desktop MIME database..."
@@ -32,20 +28,22 @@ _update() {
 
 post_install() {
     _update
-    if [ "$_bin32" != "1" ]; then
-        note "The binary is called 'google-earth'"
+
+    if [ "${_64}" ]; then
+        note "The binary is called 'google-earth'." "1"
+        note "If experiencing graphical corruption:
+          $ rm -r ~/.googleearth/Cache/" "2"
     else
-        note 1 "The binary is called 'google-earth'"
-        note 2 "Using a 32-bit version. You might need to remove ~/.googleearth/Cache/
-           for correct rendering."
+        note "The binary is called 'google-earth'."
     fi
 }
 
 post_upgrade() {
     _update
-    if [ "$_bin32" = "1" ]; then
-        note "Using a 32-bit version. You might need to remove ~/.googleearth/Cache/
-           for correct rendering."
+
+    if [ "${_64}" ]; then
+        note "If experiencing graphical corruption:
+          $ rm -r ~/.googleearth/Cache/" "2"
     fi
 }
 

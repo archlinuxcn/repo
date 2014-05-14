@@ -4,8 +4,8 @@
 # Contributor: carstene1ns <arch carsten-teibes de>
 
 pkgname=dropbox-cli
-pkgver=1.6.1
-pkgrel=2
+pkgver=1.6.2
+pkgrel=1
 pkgdesc='Command line interface for dropbox'
 arch=('any')
 url='http://www.dropbox.com'
@@ -14,7 +14,7 @@ depends=('python2' 'dropbox')
 makedepends=("patch")
 source=("https://linux.dropbox.com/packages/dropbox.py"
         "$pkgname-arch.patch")
-md5sums=('96e41f2027a3a5da1cc569be489a108b'
+md5sums=('719d6040092cb9be6063de5941242c20'
          'f48ce021cf70cdde419a57656133827a')
 
 build(){

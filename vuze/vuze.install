@@ -1,51 +1,15 @@
 # Original maintainer: td123 <gostrc at gmail.com>
 # Previous maintainer: phoenixlzx < phoenixlzx at phoenixsec.org >
-# Maintainer: Vorbote <palopezv at gmail.com>
+# Maintainer: P. A. López-Valencia <palopezv at gmail.com>
 
-# This PKGBUILD provided to you under the terms of the BSD 2-clause
-# licence.
+# This PKGBUILD is provided to you under the terms of the BSD 2-clause
+# licence.  <http://opensource.org/licenses/BSD-2-Clause>
 
 
 post_install() {
   /usr/bin/gconfpkg --install "vuze"
   update-desktop-database -q
   ln -s /usr/bin/vuze /usr/bin/azureus
-
-echo -e "\a"
-sleep 0.3
-echo -e "\a"
-sleep 0.3
-echo -e "\a"
-sleep 0.3
-echo -e "\a"
-echo ""
-echo "VERY IMPORTANT: Vuze will download and install a new version of SWT "
-echo "but it won't install and enter in an endless loop. To fix this do"
-echo "the following steps:"
-echo ""
-echo "  1. Run Vuze. When it starts up it asks you to download an updated SWT."
-echo ""
-echo "  2. When Vuze restarts, it will ask again to download SWT. Ignore it"
-echo "     and quit Vuze instead."
-echo ""
-echo "  3. Go to /tmp, there you will find a ZIP file called "
-echo "     swt-4403-gtk-linux-i586.zip or swt-4403-gtk-linux-x86_64.zip."
-echo "     Copy it somewhere safe."
-echo ""
-echo "  4. Extract the swt.jar file from the ZIP file and overwrite "
-echo "     /usr/lib/vuze/swt.jar"
-echo ""
-echo "  5. Delete $HOME/.swt"
-echo ""
-echo "  6. Start Vuze."
-echo ""
-echo -ne "\a"
-sleep 0.2
-echo -ne "\a"
-sleep 0.2
-echo -ne "\a"
-sleep 0.2
-echo -ne "\a"
 }
 
 pre_upgrade() {

@@ -1,10 +1,10 @@
-# Some colored makepkg-like functions
-msg_blue() {
-    printf "${BLUE}==>${ALL_OFF}${BOLD} ${1}${ALL_OFF}\n"
-}
-
+# Colored makepkg-like function
 note() {
     printf "${BLUE}==>${ALL_OFF}${YELLOW} NOTE:${ALL_OFF}${BOLD} ${1}${ALL_OFF}\n"
+}
+
+msg_blue() {
+    printf "${BLUE}==>${ALL_OFF}${BOLD} $1${ALL_OFF}\n"
 }
 
 ALL_OFF="$(tput sgr0)"
@@ -24,27 +24,31 @@ _update() {
     xdg-icon-resource forceupdate --theme LowContrast &>/dev/null
 }
 
+_mailcap() {
+    # Obsolete
+    if [ -f /etc/mailcap ]; then
+        sed -i '/java/d' /etc/mailcap
+
+        if [ ! -s /etc/mailcap ]; then
+            rm /etc/mailcap
+        fi
+    fi
+}
+
 post_install() {
     _update
+
     note "Please re-login to include JDK in your PATH."
 
-    if [ -f /etc/mailcap ]; then
-        sed -i '/application\/x-java-jnlp-file/d' /etc/mailcap
-    fi
-    echo 'application/x-java-jnlp-file;/opt/java/jre/bin/javaws %s' >>/etc/mailcap
+    _mailcap
 }
 
 post_upgrade() {
     _update
+
+    _mailcap
 }
 
 post_remove() {
-    _update
-
-    mailcap=$(grep -v 'application/x-java-jnlp-file' /etc/mailcap)
-    if [ "${mailcap}" ]; then
-        sed -i '/application\/x-java-jnlp-file/d' /etc/mailcap
-    else
-        rm /etc/mailcap
-    fi
+    post_upgrade
 }

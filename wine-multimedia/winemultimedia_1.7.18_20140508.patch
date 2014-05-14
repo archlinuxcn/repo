@@ -1,11 +1,430 @@
-commit 1773dc877179d1145515c0c2738181d4ff8ac0dc
-Author: John Schoenick <jschoenick@mozilla.com>
-Date:   Fri Apr 18 12:54:21 2014 -0700
+From ad94d29920b800bbc414221273e99f8f967f249d Mon Sep 17 00:00:00 2001
+From: John Schoenick <jschoenick@mozilla.com>
+Date: Thu, 8 May 2014 14:42:52 -0700
+Subject: [PATCH] Merge wine-multimedia [1] into wine-1.7.18
 
-    wine-multimedia for wine-1.7.17
+[1] http://repo.or.cz/w/wine/multimedia.git
+
+Squashed commit of the following:
+
+commit 5bfcb7795f8fb721b72eb456f9181133bfe03715
+Author: Maarten Lankhorst <wine@mblankhorst.nl>
+Date:   Mon Mar 10 11:38:00 2014 +0100
+
+    winealsa: rewrite to be more mmdevapi-like
+
+commit bf02f1ed5b729bef1c59b081e87796d34b3b1d24
+Author: Maarten Lankhorst <wine@mblankhorst.nl>
+Date:   Mon Mar 10 11:38:00 2014 +0100
+
+    dsound: fixup IDirectSoundCaptureBuffer_QueryInterface
+
+    Don't expose v8, and actually respond to iunknown.
+
+commit 3657a216adde060fe7ebe3e0f41764467d8301d3
+Author: Maarten Lankhorst <wine@mblankhorst.nl>
+Date:   Mon Mar 10 11:38:00 2014 +0100
+
+    Revert "winmm: Increase mmdevapi buffer sizes."
+
+    This reverts commit fdfff7cf6013a030f2b240b13b02831e502d49e7.
+
+    You've got to be kidding me, 1 second latency in winmm because
+    of a driver not used on linux? If the 'upstream' audio devs
+    spent less time on workarounds and more on fixing drivers,
+    this kind of crap wouldn't be needed.
+
+    I cannot believe that winecoreaudio requires .5 second latency,
+    their api allows for very low latency, so it's probably
+    winecoreaudio screwing things up instead.
+
+commit 59b69624cdd316393c7a5a47d2fb60a403d903f0
+Author: Maarten Lankhorst <maarten.lankhorst@canonical.com>
+Date:   Mon Mar 10 11:37:59 2014 +0100
+
+    TESTING -- override pthreads to fix gstreamer v2
+
+    I believe the code is ready and will work properly now in all cases.
+    but please test before cherry picking this patch, and report
+    success or failure to me please.
+
+    Changes since v1:
+      - Call pthread_yield to make sure that we link against libpthread.
+        This fixes the build on saucy.
+
+commit 69b2699aad9a466f1c8d54fb383908551d3a7cda
+Author: Maarten Lankhorst <maarten.lankhorst@canonical.com>
+Date:   Mon Mar 10 11:37:59 2014 +0100
+
+    winepulse: add support for IMarshal
+
+    Fixes bug 32161 for winepulse. Based On Jeff Klein's patches for the
+    other drivers.
+
+commit 55e20aa3e3a5ac167bf0c63a2ef756a54f79d7df
+Author: Maarten Lankhorst <maarten.lankhorst@canonical.com>
+Date:   Mon Mar 10 11:37:59 2014 +0100
+
+    winepulse: use a pi-mutex for serialization.
+
+    The winepulse thread is realtime, to prevent blocking it indefinitely
+    use priority inheritance. Only initialize and release are potentially
+    unsafe, the rest should be ok with -rt.
+
+commit 48d5535bd90cac45c0e7cf6c1cecde5de8156823
+Author: Maarten Lankhorst <maarten.lankhorst@canonical.com>
+Date:   Mon Mar 10 11:37:59 2014 +0100
+
+    dsound: kill unconditional memory allocation in mixing thread
+
+    Unfortunately this doesn't get rid of the memory allocation entirely,
+    but it will decrease the chance of underruns due to locking immensely.
+
+    Signed-off-by: Maarten Lankhorst <maarten.lankhorst@canonical.com>
+
+commit aafc21e99637643cf2429426bcdb621fd026a2b6
+Author: Maarten Lankhorst <maarten.lankhorst@canonical.com>
+Date:   Mon Mar 10 11:37:59 2014 +0100
+
+    dsound: remove state machine from render buffer
+
+    .. wat
+
+commit ab66c1543decc7cdca0da9500a3b2246853ca908
+Author: Maarten Lankhorst <maarten.lankhorst@canonical.com>
+Date:   Mon Mar 10 11:37:59 2014 +0100
+
+    dsound: fixup DSOUND_WaveQueue checks
+
+    If you're going to be silly, you should go all the way. :P
+
+commit 188e782b181760c0835394c6ea2dc93dd66e776d
+Author: Maarten Lankhorst <maarten.lankhorst@canonical.com>
+Date:   Mon Mar 10 11:37:59 2014 +0100
+
+    dsound: fix format handling on invalid format to never fail
+
+    For the users still on oss4 this is probably useful. This is more of
+    a theoretical concern than practical, since nobody uses primary mode.
+    And even if someone did, they would have to find a format that was
+    unsupported, like IEEE float would probably be the easiest to trigger.
+
+    This patch now forces everything to a single call to DSOUND_ReopenDevice,
+    which will either fail and keep previous state, or succeed.
+
+commit 3130d6ca5d2796be05343e2509aa50820f6f9d91
+Author: Maarten Lankhorst <maarten.lankhorst@canonical.com>
+Date:   Mon Mar 10 11:37:59 2014 +0100
+
+    dsound: mix float natively
+
+commit 252af5604632fc3074759f8d32b17f76101df8c3
+Author: Maarten Lankhorst <maarten.lankhorst@canonical.com>
+Date:   Mon Mar 10 11:37:59 2014 +0100
+
+    dsound: rework ugly mixer logic
+
+commit 8c9adc806bafdc024e3470c4644b0ea2cf22ad62
+Author: Maarten Lankhorst <maarten.lankhorst@canonical.com>
+Date:   Mon Mar 10 11:37:59 2014 +0100
+
+    winepulse v23: fixup a invalid free in mmdevapi
+
+    array members of ids should be dynamically allocated, judging from valgrind output.
+
+commit 9fedea59f209559e601bee1275974addb7bc2419
+Author: Maarten Lankhorst <maarten.lankhorst@canonical.com>
+Date:   Mon Mar 10 11:37:59 2014 +0100
+
+    winepulse: fix unneeded free in write..
+
+commit 1c699ad066f6aa133e4004c32c69990e3755b6d4
+Author: Maarten Lankhorst <maarten.lankhorst@canonical.com>
+Date:   Mon Mar 10 11:37:59 2014 +0100
+
+    winepulse v21: return early if padding didn't update
+
+commit 9aae78aa4f88fb61ba553d83a2f1b42f74cb5355
+Author: Maarten Lankhorst <maarten.lankhorst@canonical.com>
+Date:   Mon Mar 10 11:37:58 2014 +0100
+
+    winepulse: fixup IsFormatSupported calls
+
+commit 8d485032a631402d2f03a0fcdbebeaf9950549a7
+Author: Maarten Lankhorst <maarten.lankhorst@canonical.com>
+Date:   Mon Mar 10 11:37:58 2014 +0100
+
+    winepulse v20: fix the checks in IsFormatSupported
+
+    Thanks to DGhost001 for reporting and isolating the issue.
+
+commit e3df227d83aad4429e4ed4c1196e0f12e4821152
+Author: Maarten Lankhorst <maarten.lankhorst@canonical.com>
+Date:   Mon Mar 10 11:37:58 2014 +0100
+
+    winepulse: disable the setevent part of the latency hack
+
+    If you get playback glitches in skyrim or other games as a result of
+    this patch, PLEASE REPORT TO ME!
+
+commit 054499d877ab8a1ec05e3f58e247db7e7268cdcd
+Author: Maarten Lankhorst <maarten.lankhorst@canonical.com>
+Date:   Mon Mar 10 11:37:58 2014 +0100
+
+    winepulse: remove bogus SetEvent from pulse_started_callback
+
+commit 4a7da99e76ea28e53c5ef596a0d27e5e7a864811
+Author: Maarten Lankhorst <maarten.lankhorst@canonical.com>
+Date:   Mon Mar 10 11:37:58 2014 +0100
+
+    winepulse: drop realtime priority before thread destruction
+
+    prevents having to handle a kernel RT Watchdog Timeout.
+
+commit 20d925563c4ded6cfedf54b519fb0d807f3f9372
+Author: Maarten Lankhorst <maarten.lankhorst@canonical.com>
+Date:   Mon Mar 10 11:37:58 2014 +0100
+
+    winepulse: Fix low latency support
+
+    Some games request a 20 ms buffer and will only fill 20 ms.
+    Since 10 ms periods are too long in this case for winepulse,
+    fill change period size to 5 ms and force a trigger if
+    there's still data left to fill.
+
+commit 81bc7be3cf48ca0a4a6298c471dd19df81ee1072
+Author: Juergen Tretthahn <orson@orson.at>
+Date:   Mon Mar 10 11:37:58 2014 +0100
+
+    winepulse: API Compatibility with 1.5.2 onward, v2
+
+    V2: Add winepulse.drv.spec to commit too
+    V1: Original version
+
+    Commit e87cb774d131963d2642d075977571585ec5da8d changed the driver api
+    leave this commit out to build for builds prior to this
+
+    Not needed for: 1.5.1, 1.5 and 1.4 builds
+
+commit 6a81f09f7e6f39c50611d596848c3f1912ea2b41
+Author: Maarten Lankhorst <maarten.lankhorst@canonical.com>
+Date:   Mon Mar 10 11:37:58 2014 +0100
+
+    winepulse v18: Latency and compilation improvements
+
+    Changes since v17:
+    - Remove clock_pulse interpolation
+      * Couldn't work, sadly
+    - Allow 2 * MinimumPeriod for shared buffers
+    - Fix all compiler warnings when compiling with 64-bits
+    - Dynamically select low latency mode if less than 2 default periods are request
+      * This requires the rtkit patch to be useful
+
+commit da57ec9aaa751cbae580f686eb1587b423b68d65
+Author: Maarten Lankhorst <m.b.lankhorst@gmail.com>
+Date:   Mon Mar 10 11:37:58 2014 +0100
+
+    winepulse v17: Fix winmm tests
+
+    Handle dwChannelMask = SPEAKER_ALL better so WAVE_FORMAT_EXTENSIBLE tests pass too
+
+commit d6fcfb6b26ff2d2ce81e7bd65de771f3c5b8a331
+Author: Maarten Lankhorst <m.b.lankhorst@gmail.com>
+Date:   Mon Mar 10 11:37:58 2014 +0100
+
+    winepulse v16: Add official warning wine doesn't want to support winepulse
+
+    And give an alternative place to ask for support.
+    I wish it didn't have to come to this.
+
+commit 7c2bede28a78a736fd814764673afef49434d89c
+Author: Maarten Lankhorst <m.b.lankhorst@gmail.com>
+Date:   Mon Mar 10 11:37:58 2014 +0100
+
+    winepulse v15: Add support for missing formats, and silence an error for missing format tags
+
+commit 20556d714ddf266bce6e14a0a186aebda1f6ec2d
+Author: Maarten Lankhorst <m.b.lankhorst@gmail.com>
+Date:   Mon Mar 10 11:37:58 2014 +0100
+
+    winepulse v12
+
+    Changes since v11:
+    - Fix incorrect assertions which may fail on moving a capture device
+    - Whitespace apply fixes
+
+    Changes since v10:
+    - Make some members static
+    - Fix small memory leak in GetService
+
+commit 3a4bc036f6404e6340c75b035e2819d38521ef33
+Author: Maarten Lankhorst <m.b.lankhorst@gmail.com>
+Date:   Mon Mar 10 11:37:57 2014 +0100
+
+    fix fdels trailing whitespaces
+
+    Happy? :P
+
+commit 487ac35d4b347a790ff68319fbd10170446f433d
+Author: Maarten Lankhorst <m.b.lankhorst@gmail.com>
+Date:   Mon Mar 10 11:37:57 2014 +0100
+
+    winepulse: Add session support
+
+    ---
+    Copied verbatim from winealsa
+
+commit 33f2baf40a8bd4659442fb2ad12db68b246725ef
+Author: Maarten Lankhorst <m.b.lankhorst@gmail.com>
+Date:   Mon Mar 10 11:37:57 2014 +0100
+
+    winepulse: Add audiostreamvolume
+
+    ---
+    Pulse allows streams to set volume, but for various reasons it's
+    better off being disabled by default.
+
+    It can be enabled with HKCU\Software\Wine\Pulse\StreamVol=0x1
+
+commit 75ef1ce261c28632bba85287e727267cc1d88c15
+Author: Maarten Lankhorst <m.b.lankhorst@gmail.com>
+Date:   Mon Mar 10 11:37:57 2014 +0100
+
+    winepulse: Add IAudioClock and IAudioClock2
+
+commit 2bb94b1779e5a6239be5477293f43faedcb98b56
+Author: Maarten Lankhorst <m.b.lankhorst@gmail.com>
+Date:   Mon Mar 10 11:37:57 2014 +0100
+
+    winepulse: Add IAudioRenderClient and IAudioCaptureClient
+
+commit 95534a83e1a2b2e28f343ae5bb18aa4ea9a61a95
+Author: Maarten Lankhorst <m.b.lankhorst@gmail.com>
+Date:   Mon Mar 10 11:37:57 2014 +0100
+
+    winepulse: Add audioclient
+
+    ---
+    Without AudioRenderClient and AudioCaptureClient it won't work,
+    but it's easier to review
+
+commit 0e352e0e2410942d7d64e7da50900cc3f7125dce
+Author: Maarten Lankhorst <m.b.lankhorst@gmail.com>
+Date:   Mon Mar 10 11:37:57 2014 +0100
+
+    winepulse: Add format and period probing
+
+commit 41da011fddffcc8b91ac48ce5293c2062276c6ef
+Author: Maarten Lankhorst <m.b.lankhorst@gmail.com>
+Date:   Mon Mar 10 11:37:57 2014 +0100
+
+    winepulse: Add initial stub for pulseaudio support
+
+    ---
+    Just the basic of initialization and pulseaudio mainloop support is
+    added here.
+
+commit 77ff0eb98ada2a0083d4ec0f342bb3520a0ad2e2
+Author: Maarten Lankhorst <maarten.lankhorst@canonical.com>
+Date:   Mon Mar 10 11:37:57 2014 +0100
+
+    winmm: Load winealsa if winepulse is found
+
+    Fixes midi on winepulse
+
+commit 018d9d76aefbe6e5912936fd47d6b9b88e638390
+Author: Maarten Lankhorst <m.b.lankhorst@gmail.com>
+Date:   Mon Mar 10 11:37:57 2014 +0100
+
+    mmdevapi: be stricter about tests
+
+    Dont care about broken drivers..
+
+commit a55b6964343e82794924dfb2705f3b2c5e769c68
+Author: Maarten Lankhorst <maarten.lankhorst@canonical.com>
+Date:   Mon Mar 10 11:37:57 2014 +0100
+
+    rtkit: add SIGXCPU handling to wineserver
+
+    This is dependent on getting the correct server_pid in the previous commit.
+    Processes now forward SIGXCPU to wineserver, who will attempt to downgrade
+    all threads that were set to realtime priority by avrt first, and if another
+    SIGXCPU is received or none were found it will downgrade all realtime threads.
+
+    Special-thanks-to: tizbac
+
+commit 004f6a13b6a98489f0091d08437d2b3780de7d59
+Author: Maarten Lankhorst <maarten.lankhorst@canonical.com>
+Date:   Mon Mar 10 11:37:57 2014 +0100
+
+    server: Bump priority on server to process messages faster
+
+commit cab8f33c36e06c763a0b920626c974afff09abaf
+Author: Maarten Lankhorst <maarten.lankhorst@canonical.com>
+Date:   Mon Mar 10 11:37:56 2014 +0100
+
+    avrt: Add realtime to stub
+
+commit 71353172f505dc1bcb32e536da04ff8b6b38ad06
+Author: Maarten Lankhorst <m.b.lankhorst@gmail.com>
+Date:   Mon Mar 10 11:37:56 2014 +0100
+
+    server: Use rtkit to set realtime priority, try 4
+
+commit 4a216258f4526f128c6def6403f03d1c7bbab0f7
+Author: Maarten Lankhorst <maarten.lankhorst@canonical.com>
+Date:   Mon Mar 10 11:37:56 2014 +0100
+
+    valgrind prevent crash hack
+
+commit 90f02a4b24fd104fd05a67a381a8eff3588ec5d3
+Author: Maarten Lankhorst <m.b.lankhorst@gmail.com>
+Date:   Mon Mar 10 11:37:56 2014 +0100
+
+    winemenubuilder: silence an err
+---
+ configure                                  |   99 +-
+ configure.ac                               |   32 +-
+ dlls/avrt/main.c                           |    1 +
+ dlls/dsound/capture.c                      |    9 +-
+ dlls/dsound/dsound.c                       |   52 +-
+ dlls/dsound/dsound_convert.c               |   18 -
+ dlls/dsound/dsound_main.c                  |    8 +-
+ dlls/dsound/dsound_private.h               |   13 +-
+ dlls/dsound/mixer.c                        |  305 +--
+ dlls/dsound/primary.c                      |  455 ++--
+ dlls/mmdevapi/main.c                       |    2 +-
+ dlls/mmdevapi/tests/capture.c              |   14 +-
+ dlls/mmdevapi/tests/render.c               |  253 ++-
+ dlls/ntdll/ntdll_misc.h                    |    3 +
+ dlls/ntdll/server.c                        |   94 +-
+ dlls/ntdll/thread.c                        |  261 ++-
+ dlls/winealsa.drv/Makefile.in              |    2 +-
+ dlls/winealsa.drv/mmdevdrv.c               | 1128 +++++-----
+ dlls/winegstreamer/glibthread.c            |   13 +
+ dlls/winepulse.drv/Makefile.in             |    7 +
+ dlls/winepulse.drv/mmdevdrv.c              | 3221 ++++++++++++++++++++++++++++
+ dlls/winepulse.drv/winepulse.drv.spec      |    5 +
+ dlls/winmm/lolvldrv.c                      |    5 +-
+ dlls/winmm/waveform.c                      |    4 +-
+ libs/wine/loader.c                         |   46 +-
+ libs/wine/wine.map                         |    6 +
+ loader/Makefile.in                         |    2 +-
+ loader/main.c                              |   41 +
+ programs/winemenubuilder/winemenubuilder.c |    2 +-
+ server/Makefile.in                         |    2 +
+ server/main.c                              |    4 +
+ server/rtkit.c                             |  292 +++
+ server/thread.c                            |   36 +-
+ server/thread.h                            |    2 +
+ 34 files changed, 5267 insertions(+), 1170 deletions(-)
+ create mode 100644 dlls/winepulse.drv/Makefile.in
+ create mode 100644 dlls/winepulse.drv/mmdevdrv.c
+ create mode 100644 dlls/winepulse.drv/winepulse.drv.spec
+ create mode 100644 server/rtkit.c
 
 diff --git a/configure b/configure
-index 1bca827..1dd8206 100755
+index e5a26d1..727564a 100755
 --- a/configure
 +++ b/configure
 @@ -653,6 +653,8 @@ OSS4_CFLAGS
@@ -168,7 +587,7 @@ index 1bca827..1dd8206 100755
  wine_fn_config_dll winex11.drv enable_winex11_drv
  wine_fn_config_dll wing.dll16 enable_win16
 diff --git a/configure.ac b/configure.ac
-index 46602d6..e0481ec 100644
+index 673323a..3b10193 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -70,6 +70,7 @@ AC_ARG_WITH(oss,       AS_HELP_STRING([--without-oss],[do not use the OSS sound
@@ -9009,7 +9428,7 @@ index ac67290..76609e1 100644
      {
          static char noexec[] = "WINELOADERNOEXEC=1";
 diff --git a/programs/winemenubuilder/winemenubuilder.c b/programs/winemenubuilder/winemenubuilder.c
-index 592487f..69ec358 100644
+index 4675369..84e793d 100644
 --- a/programs/winemenubuilder/winemenubuilder.c
 +++ b/programs/winemenubuilder/winemenubuilder.c
 @@ -2535,7 +2535,7 @@ static BOOL write_freedesktop_association_entry(const char *desktopPath, const c
@@ -9462,3 +9881,6 @@ index 996d95b..36f09ce 100644
  };
  
  struct thread_snapshot
+-- 
+1.9.2
+
