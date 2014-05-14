@@ -8,7 +8,6 @@ Before=shutdown.target
 [Service]
 Type=oneshot
 ExecStart=/etc/rc.local.shutdown
-StandardInput=tty
 RemainAfterExit=yes
 
 [Install]
