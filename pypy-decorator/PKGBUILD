@@ -6,7 +6,7 @@ pkgbase='pypy-decorator'
 pkgname='pypy-decorator'
 pkgname=('pypy3-decorator' 'pypy-decorator')
 pkgver=3.4.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Python Decorator module'
 arch=('any')
 url='http://pypi.python.org/pypi/decorator'
@@ -31,7 +31,7 @@ build() {
 }
 
 package_pypy-decorator() {
-  depends=('pypy')
+  depends=("pypy>=2.3" "pypy<2.4")
   cd "${srcdir}/decorator2-${pkgver}"
 
   pypy setup.py install --root="${pkgdir}" --optimize=1
@@ -41,7 +41,7 @@ package_pypy-decorator() {
 }
 
 package_pypy3-decorator() {
-  depends=('pypy3')
+  depends=("pypy3>=2.1beta1" "pypy3<2.2")
   cd "${srcdir}/decorator-${pkgver}"
 
   pypy3 setup.py install --root="${pkgdir}" --optimize=1 \
