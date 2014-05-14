@@ -17,12 +17,12 @@ pkgname=pypy-ipython
   true && pkgname=(pypy-ipython)
 }
 pkgver=2.0.0
-pkgrel=2
+pkgrel=3
 pkgdesc="An enhanced Interactive Python shell. pypy version"
 arch=('any')
 url="http://ipython.org"
 license=('BSD')
-depends=('pypy' 'sqlite')
+depends=("pypy>=2.3" "pypy<2.4" 'sqlite')
 makedepends=('sqlite')
 # optdepends=("wxpython: needed for ipythonx and ipython-wx"
 #             "python-nose: if you want to run IPython's test suite"
@@ -55,7 +55,7 @@ build() {
 
 package_pypy3-ipython() {
   pkgdesc="An enhanced Interactive Python shell. pypy3 version."
-  depends=('pypy3' 'sqlite')
+  depends=("pypy3>=2.1beta1" "pypy3<2.2" 'sqlite')
   optdepends=("pypy3-pyzmq: for ipython notebook and ipython qtconcole"
     "pypy3-tornado: for ipython notebook"
     "pypy3-jinja: for ipython notebook")
