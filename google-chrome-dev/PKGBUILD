@@ -1,0 +1,53 @@
+# Maintainer: Det <nimetonmaili at gmail a-dot com>
+# Contributors: t3ddy, Lex Rivera aka x-demon, ruario
+
+# Check for new Linux releases in: http://googlechromereleases.blogspot.com/search/label/Dev%20updates
+# or use: $ curl -s https://dl.google.com/linux/chrome/rpm/stable/x86_64/repodata/other.xml.gz | gzip -df | awk -F\" '/pkgid/{ sub(".*-","",$4); print $4": "$10 }'
+
+pkgname=google-chrome-dev
+pkgver=36.0.1985.2
+pkgrel=1
+pkgdesc="An attempt at creating a safer, faster, and more stable browser (Dev Channel)"
+arch=('i686' 'x86_64')
+url="https://www.google.com/chrome"
+license=('custom:chrome')
+depends=('alsa-lib' 'desktop-file-utils' 'flac' 'gconf' 'gtk2' 'harfbuzz' 'harfbuzz-icu' 'hicolor-icon-theme' 'icu'
+         'libgcrypt15' 'libpng' 'libxss' 'libxtst' 'nss' 'opus' 'snappy' 'speech-dispatcher' 'ttf-font' 'xdg-utils')
+optdepends=('kdebase-kdialog: needed for file dialogs in KDE'
+            'ttf-google-fonts-git')
+provides=("google-chrome=${pkgver}")
+options=('!emptydirs' '!strip')
+install=${pkgname}.install
+_channel=unstable
+_arch=i386
+[ "${CARCH}" = 'x86_64' ] && _arch=amd64
+source=("google-chrome-${_channel}_${pkgver}_${_arch}.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_${_arch}.deb")
+md5sums=('a87a8504fa421959932a49f16b3a71e8')
+[ "${CARCH}" = 'x86_64' ] && md5sums[0]='1795aef4eb3bf5ba9718194d667b2321'
+
+package() {
+  msg2 "Extracting the data.tar.lzma"
+  bsdtar -xf data.tar.lzma -C "${pkgdir}/"
+
+  msg2 "Moving stuff in place"
+  # Icons
+  for i in 16 22 24 32 48 64 128 256; do
+    install -Dm644 "${pkgdir}"/opt/google/chrome-${_channel}/product_logo_${i}.png \
+                   "${pkgdir}"/usr/share/icons/hicolor/${i}x${i}/apps/google-chrome-${_channel}.png
+  done
+
+  # Man page
+  gzip "${pkgdir}"/usr/share/man/man1/google-chrome-${_channel}.1
+
+  # License
+  install -d "${pkgdir}"/usr/share/licenses/google-chrome-${_channel}/
+  curl -Ls https://www.google.com/intl/en/chrome/browser/privacy/eula_text.html \
+        -o "${pkgdir}"/usr/share/licenses/google-chrome-${_channel}/eula_text.html
+
+  msg2 "Symlinking missing Udev lib"
+  ln -s /usr/lib/libudev.so.1 "${pkgdir}"/opt/google/chrome-${_channel}/libudev.so.0
+
+  msg2 "Removing unnecessities (e.g. Debian Cron job)"
+  rm -r "${pkgdir}"/etc/cron.daily/ "${pkgdir}"/opt/google/chrome-${_channel}/cron/
+  rm "${pkgdir}"/opt/google/chrome-${_channel}/product_logo_*.png
+}
