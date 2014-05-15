@@ -1,0 +1,32 @@
+# Contributor: Juanma Hernandez <juanmah@gmail.com>
+# Maintainer: Juanma Hernandez <juanmah@gmail.com>
+
+pkgname=zotero
+pkgver=4.0.20
+pkgrel=1
+pkgdesc="Zotero Standalone. Is a free, easy-to-use tool to help you collect, organize, cite, and share your research sources."
+arch=('i686' 'x86_64')
+url="http://www.zotero.org/download"
+license=('GPL3')
+depends=('dbus-glib' 'alsa-lib' 'gtk2' 'gcc-libs' 'nss')
+if [[ $CARCH == "x86_64" ]]
+then
+  _arch=x86_64
+  md5sums=('d9fdd6762b56aa80c40e4ce39f10dca8'
+           'fbb9b387edc4cc7b9e9e18c5bb79d5bb')
+else
+  _arch=i686
+  md5sums=('3d0d32794a231fe2c4227bbf9ef0b2ac'
+           'fbb9b387edc4cc7b9e9e18c5bb79d5bb')
+fi
+install='zotero.install'
+source=("http://download.zotero.org/standalone/$pkgver/Zotero-${pkgver}_linux-${_arch}.tar.bz2"
+        "zotero.desktop")
+        
+package() {
+  mkdir -p "$pkgdir"/usr/{bin,lib/zotero}
+  mv "$srcdir"/Zotero_linux-$_arch/* "$pkgdir"/usr/lib/zotero
+  ln -s /usr/lib/zotero/run-zotero.sh "$pkgdir"/usr/bin/zotero
+  sed -i -e 's|MOZ_PROGRAM=""|MOZ_PROGRAM="/usr/lib/zotero/zotero"|g' "$pkgdir"/usr/lib/zotero/run-zotero.sh
+  install -Dm644 "$srcdir"/zotero.desktop "$pkgdir"/usr/share/applications/zotero.desktop
+}
