@@ -4,7 +4,7 @@ pkgbase=pypy-pyzmq
 pkgname=pypy-pyzmq
 true && pkgname=(pypy3-pyzmq pypy-pyzmq)
 pkgver=14.3.0
-pkgrel=4
+pkgrel=5
 pkgdesc="Python bindings for zeromq, pypy version"
 arch=(i686 x86_64)
 url="http://www.zeromq.org/bindings:python"
@@ -21,6 +21,8 @@ md5sums=('92e49cc9be92f0c95a6f790a85309df5'
 
 build() {
   cd "$srcdir"
+  find "$srcdir" -d -name '__pycache__' -exec rm -vr {} \;
+  find "$srcdir" -name '*.so' -exec rm -v {} \;
   cp -a pyzmq-${pkgver} py2zmq-${pkgver}
   cd "$srcdir/pyzmq-$pkgver"
   # py3 errors added in 2.2.0.1
@@ -44,6 +46,7 @@ _fix_py2_cffi() {
     "${pkgdir}/opt/pypy/site-packages/zmq/utils/compiler.json"
   PYTHONPATH="${pkgdir}/opt/pypy/site-packages" pypy -c "import $1"
   find "$pkgdir/" -name '*.o' -delete
+  find "$pkgdir/" -name '*.c' -delete
   find "$pkgdir/" -type d -empty -delete
   mv -v compiler.json.bak \
     "${pkgdir}/opt/pypy/site-packages/zmq/utils/compiler.json"
@@ -59,6 +62,7 @@ _fix_py3_cffi() {
   PYTHONPATH="${pkgdir}/opt/pypy3/lib/python3.2/site-packages" \
     pypy3 -c "import $1"
   find "$pkgdir/" -name '*.o' -delete
+  find "$pkgdir/" -name '*.c' -delete
   find "$pkgdir/" -type d -empty -delete
   mv -v compiler.json.bak \
     "${pkgdir}/opt/pypy3/lib/python3.2/site-packages/zmq/utils/compiler.json"
