@@ -10,7 +10,7 @@ if ((BUILD_PYPY3)); then
 else
   pkgname=('pypy-pyopencl-git')
 fi
-pkgver=2013.2.0.142.g1e4bd10
+pkgver=2013.2.0.155.g4234f32
 pkgrel=1
 pkgdesc="A complete, object-oriented language binding of OpenCL to Python. PyPy version on top of cffi"
 arch=('i686' 'x86_64')
@@ -26,7 +26,10 @@ sha1sums=('2e6966b3d9b15603ce2c3ff79eeadd63c5d066b7'
 _gitname=pyopencl
 
 _gitroot=https://github.com/yuyichao/pyopencl
-_gitref=cffi
+# _gitref=test
+_gitref=cffi-test
+# _gitroot=https://github.com/pyopencl/pyopencl
+# _gitref=cffi
 exec 5>&1
 
 _fetch_git() {
@@ -42,7 +45,7 @@ _fetch_git() {
       "$_gitroot" "$_gitref:$_gitref" --
     msg "Checking out branch $_gitref..."
     git checkout "$_gitref" --
-    git reset --hard "$_gitref"
+    git reset --hard "$_gitref" --
     git clean -fdx
     msg "The local files are updated."
   else
@@ -52,6 +55,7 @@ _fetch_git() {
     cd "$_gitname"
   fi
   git submodule init
+  git submodule sync
   git submodule update
   msg "GIT checkout done or server timeout"
 }
@@ -100,7 +104,7 @@ _fix_py3_cffi() {
 }
 
 package_pypy3-pyopencl-git() {
-  depends=('libcl' 'opencl-headers' 'mesa' 'pypy3'
+  depends=('libcl' 'opencl-headers' 'mesa' "pypy3>=2.1beta1" "pypy3<2.2"
     'pypy3-mako' 'pypy3-pytools' 'pypy3-setuptools')
 
   cd "${srcdir}/pyopencl"
@@ -113,8 +117,8 @@ package_pypy3-pyopencl-git() {
 }
 
 package_pypy-pyopencl-git() {
-  depends=('libcl' 'opencl-headers' 'mesa' 'pypy' 'pypy-numpy' 'pypy-mako'
-    'pypy-pytools' 'pypy-setuptools' 'gcc-libs')
+  depends=('libcl' 'opencl-headers' 'mesa' "pypy>=2.3" "pypy<2.4"
+    'pypy-numpy' 'pypy-mako' 'pypy-pytools' 'pypy-setuptools' 'gcc-libs')
 
   cd "${srcdir}/pyopencl-python2"
   pypy setup.py install --root="${pkgdir}" --optimize=1 --skip-build
