@@ -10,7 +10,7 @@ if ((BUILD_PYPY3)); then
 else
   pkgname=('pypy-pyopencl-git')
 fi
-pkgver=2013.2.0.155.g4234f32
+pkgver=2013.2.0.159.g4811e6d
 pkgrel=1
 pkgdesc="A complete, object-oriented language binding of OpenCL to Python. PyPy version on top of cffi"
 arch=('i686' 'x86_64')
@@ -26,6 +26,7 @@ sha1sums=('2e6966b3d9b15603ce2c3ff79eeadd63c5d066b7'
 _gitname=pyopencl
 
 _gitroot=https://github.com/yuyichao/pyopencl
+# _gitroot=/home/yuyichao/projects/dev/pyopencl-cffi/
 # _gitref=test
 _gitref=cffi-test
 # _gitroot=https://github.com/pyopencl/pyopencl
