@@ -1,0 +1,59 @@
+# Original author: Sven-Hendrik Haase (svenstaro) <sh@lutzhaase.com>
+# Maintainer: Zack Buhman (buhman) <zack@buhman.org>
+# Contributor: William Giokas (KaiSforza) <1007380@gmail.com>
+
+pkgname=pypy-hg
+pkgver=71564
+pkgrel=1
+pkgdesc="A Python implementation written in Python, JIT enabled"
+url="http://codespeak.net/pypy/"
+arch=('i686' 'x86_64')
+depends=('libffi')
+provides=('python2' 'pypy=2.3')
+options=(!buildflags)
+makedepends=('python2' 'mercurial' 'libtinfo')
+conflicts=('pypy')
+optdepends=('openssl: openssl module'
+            'expat: pyexpat module'
+            'ncurses: ncurses module'
+            'zlib: zlib module'
+            'bzip2: bz2 module')
+license=('custom:MIT')
+
+# Why use python2 or a previous version of pypy to do the translation when we
+# could just as easily use the upstream binary?
+source=('hg+https://bitbucket.org/pypy/pypy#revision=ec637e3'
+        'http://buildbot.pypy.org/nightly/trunk/pypy-c-jit-71543-88e8c347e2e2-linux64.tar.bz2')
+md5sums=('SKIP'
+         '67cf439db19a3ce64223a70ca5c19d47')
+
+pkgver() {
+  cd "${srcdir}"/pypy
+  echo "$(hg id -n)"
+}
+
+build() {
+  cd "${srcdir}/pypy/pypy/goal"
+
+  export CFLAGS="-O1"
+  export CXXFLAGS="-O1"
+
+  "${srcdir}/pypy-c-jit-71543-88e8c347e2e2-linux64/bin/pypy" \
+    ../../rpython/bin/rpython -Ojit targetpypystandalone
+}
+
+package() {
+  cd "${srcdir}"/pypy/pypy/tool/release
+
+  "${srcdir}/pypy-c-jit-71543-88e8c347e2e2-linux64/bin/pypy" \
+    package.py ../../../ pypy pypy-c "${srcdir}"/${pkgname}.tar.bz2
+
+  mkdir -p "${pkgdir}"/opt
+  tar x -C "${pkgdir}"/opt -f "${srcdir}"/${pkgname}.tar.bz2
+
+  mkdir -p "${pkgdir}"/usr/bin
+  ln -s /opt/pypy/bin/pypy-c "${pkgdir}"/usr/bin/pypy
+
+  install -Dm644 "${pkgdir}"/opt/pypy/LICENSE \
+    "${pkgdir}"/usr/share/licenses/pypy/LICENSE
+}
