@@ -11,7 +11,7 @@ arch=('i686' 'x86_64')
 depends=('libffi')
 provides=('python2' 'pypy=2.3')
 options=(!buildflags)
-makedepends=('python2' 'mercurial' 'libtinfo')
+makedepends=('python2' 'mercurial')
 conflicts=('pypy')
 optdepends=('openssl: openssl module'
             'expat: pyexpat module'
@@ -20,12 +20,14 @@ optdepends=('openssl: openssl module'
             'bzip2: bz2 module')
 license=('custom:MIT')
 
-# Why use python2 or a previous version of pypy to do the translation when we
-# could just as easily use the upstream binary?
-source=('hg+https://bitbucket.org/pypy/pypy#revision=ec637e3'
-        'http://buildbot.pypy.org/nightly/trunk/pypy-c-jit-71543-88e8c347e2e2-linux64.tar.bz2')
-md5sums=('SKIP'
-         '67cf439db19a3ce64223a70ca5c19d47')
+# # Why use python2 or a previous version of pypy to do the translation when we
+# # could just as easily use the upstream binary?
+# source=('hg+https://bitbucket.org/pypy/pypy#revision=ec637e3'
+#         'http://buildbot.pypy.org/nightly/trunk/pypy-c-jit-71543-88e8c347e2e2-linux64.tar.bz2')
+# md5sums=('SKIP'
+#          '67cf439db19a3ce64223a70ca5c19d47')
+source=('hg+https://bitbucket.org/pypy/pypy#revision=ec637e3')
+md5sums=('SKIP')
 
 pkgver() {
   cd "${srcdir}"/pypy
@@ -38,15 +40,19 @@ build() {
   export CFLAGS="-O1"
   export CXXFLAGS="-O1"
 
-  "${srcdir}/pypy-c-jit-71543-88e8c347e2e2-linux64/bin/pypy" \
-    ../../rpython/bin/rpython -Ojit targetpypystandalone
+  _PYTHON=python2
+  which pypy 2> /dev/null && _PYTHON=pypy
+
+  $_PYTHON ../../rpython/bin/rpython -Ojit targetpypystandalone
 }
 
 package() {
   cd "${srcdir}"/pypy/pypy/tool/release
 
-  "${srcdir}/pypy-c-jit-71543-88e8c347e2e2-linux64/bin/pypy" \
-    package.py ../../../ pypy pypy-c "${srcdir}"/${pkgname}.tar.bz2
+  _PYTHON=python2
+  which pypy 2> /dev/null && _PYTHON=pypy
+
+  $_PYTHON package.py ../../../ pypy pypy-c "${srcdir}"/${pkgname}.tar.bz2
 
   mkdir -p "${pkgdir}"/opt
   tar x -C "${pkgdir}"/opt -f "${srcdir}"/${pkgname}.tar.bz2
