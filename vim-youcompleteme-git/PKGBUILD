@@ -1,13 +1,18 @@
-# Maintainer: Simon Gomizelj <simongmzlj@gmail.com>
+# Maintainer: Babken Vardanyan <483ken 4tgma1l
+# Contributor: z33ky
+# Contributor: stykr
+# Contributor: Svenstaro
+# Contributor: KaiSforza
+# Contributor: Simon Gomizelj <simongmzlj@gmail.com>
 # Contributor: Daniel Micay <danielmicay@gmail.com>
 
 pkgname=vim-youcompleteme-git
-pkgver=1050.afb70bf
+pkgver=1248.feedc29
 pkgver() {
   cd "YouCompleteMe"
   echo $(git rev-list --count master).$(git rev-parse --short master)
 }
-pkgrel=1
+pkgrel=2
 pkgdesc='A code-completion engine for Vim'
 
 arch=(i686 x86_64)
@@ -15,36 +20,68 @@ url='http://valloric.github.com/YouCompleteMe/'
 license=('GPL3')
 groups=('vim-plugins')
 depends=('vim' 'clang' 'python2')
-makedepends=('git' 'cmake')
+makedepends=('git' 'cmake' 'mono')
 provides=('vim-youcompleteme')
 conflicts=('vim-youcompleteme')
 source=('git+git://github.com/Valloric/YouCompleteMe.git'
+        'git+git://github.com/kennethreitz/requests.git'
+        'git+git://github.com/ross/requests-futures.git'
+        'git+git://github.com/Valloric/ycmd'
         'git+git://github.com/bewest/argparse.git'
         'git+git://github.com/defnull/bottle.git'
         'git+git://github.com/slezica/python-frozendict.git'
         'git+git://github.com/davidhalter/jedi.git'
-        'git+git://github.com/kennethreitz/requests.git'
-        'git+git://github.com/ross/requests-futures.git'
-        'git+git://github.com/Pylons/waitress.git')
-sha1sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
+        'git+git://github.com/Pylons/waitress.git'
+        'git+git://github.com/nosami/OmniSharpServer.git')
+sha1sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
 install=install
 
+prepare() {
+  cd "$srcdir/YouCompleteMe"
+  git submodule init
+  git config submodule.third_party/requests.url "$srcdir/requests"
+  git config submodule.third_party/requests-futures.url \
+    "$srcdir/requests-futures"
+  git config submodule.third_party/ycmd.url "$srcdir/ycmd"
+  git submodule update
+
+  cd "$srcdir/YouCompleteMe/third_party/ycmd"
+  git submodule init
+  git config submodule.third_party/argparse.url "$srcdir/argparse"
+  git config submodule.third_party/bottle.url "$srcdir/bottle"
+  git config submodule.third_party/frozendict.url "$srcdir/python-frozendict"
+  git config submodule.third_party/jedi.url "$srcdir/jedi"
+  git config submodule.third_party/waitress.url "$srcdir/waitress"
+  git config submodule.third_party/OmniSharpServer.url "$srcdir/OmniSharpServer"
+  git submodule update
+}
+
 build() {
-  cd "YouCompleteMe/cpp"
-  cmake -G "Unix Makefiles" \
-    -DEXTERNAL_LIBCLANG_PATH=/usr/lib/libclang.so
-  make ycm_core
+  mkdir -p "$srcdir/ycmd_build"
+  cd "$srcdir/ycmd_build"
+  cmake -G "Unix Makefiles" -DUSE_SYSTEM_LIBCLANG=ON . "$srcdir/YouCompleteMe/third_party/ycmd/cpp"
   make ycm_support_libs
+
+  cd "$srcdir/YouCompleteMe/third_party/ycmd/third_party/OmniSharpServer"
+  xbuild
 }
 
 package() {
-  mkdir -p "$pkgdir/usr/share/vim/vimfiles"
+  mkdir -p "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party/OmniSharpServer/OmniSharp"
 
-  cd "$srcdir/YouCompleteMe"
-  cp -a autoload doc plugin python third_party "$pkgdir/usr/share/vim/vimfiles"
-  ln -sf /usr/lib/llvm/libclang.so "$pkgdir/usr/share/vim/vimfiles/python/"
+  cp -r "$srcdir/YouCompleteMe/"{autoload,doc,plugin,python} \
+    "$pkgdir/usr/share/vim/vimfiles"
+  cp -r "$srcdir/YouCompleteMe/third_party/"{pythonfutures,requests,requests-futures,retries} \
+    "$pkgdir/usr/share/vim/vimfiles/third_party"
+  cp -r "$srcdir/YouCompleteMe/third_party/ycmd/"{ycmd,build.sh,libclang.so,README.md,run_tests.sh,style_format.sh,update_boost.sh,ycm_client_support.so,ycm_core.so} \
+    "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd"
+  cp -r "$srcdir/YouCompleteMe/third_party/ycmd/third_party/"{argparse,bottle,frozendict,jedi,waitress} \
+    "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party"
+  cp -r "$srcdir/YouCompleteMe/third_party/ycmd/third_party/OmniSharpServer/OmniSharp" \
+    "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party/OmniSharpServer"
 
-  cd "$srcdir"
-  cp -a argparse bottle python-frozendict jedi requests requests-futures waitress \
-    "$pkgdir/usr/share/vim/vimfiles/third_party/"
+
+  find "$pkgdir" -name .git -exec rm -fr {} +
 }
+
+# vim:set ts=2 sw=2 et:
