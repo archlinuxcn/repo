@@ -1,8 +1,8 @@
 # Maintainer: xgdgsc <xgdgsc @t gmail dot com>
 
 pkgname=android-sdk-build-tools
-pkgver=r19.0.3
-_ver=19.0.3
+pkgver=r19.1
+_ver=19.1
 pkgrel=1
 pkgdesc='Build-Tools for Google Android SDK (aapt, aidl, dexdump, dx, llvm-rs-cc)'
 arch=('i686' 'x86_64')
@@ -18,7 +18,7 @@ fi
 _sdk=android-sdk
 
 source=("http://dl-ssl.google.com/android/repository/build-tools_${pkgver}-linux.zip")
-sha1sums=('c2d6055478e9d2d4fba476ee85f99181ddd1160c')
+sha1sums=('1ff20ac15fa47a75d00346ec12f180d531b3ca89')
 _android=android-4.4.2
 options=('!strip')
 
@@ -26,10 +26,10 @@ package() {
   
   cd "$pkgdir"
   install -Dm644 "${srcdir}/$_android/NOTICE.txt" usr/share/licenses/$pkgname/NOTICE.txt
-  mkdir -p opt etc/profile.d
-  echo 'export PATH=$PATH:/opt/android-sdk/build-tools/'"$_ver/" > etc/profile.d/${pkgname}.sh
-  echo 'setenv PATH ${PATH}:/opt/android-sdk/build-tools/'"$_ver/" > etc/profile.d/${pkgname}.csh
-  chmod 755 etc/profile.d/${pkgname}.{csh,sh}
+  # mkdir -p opt etc/profile.d
+  # echo 'export PATH=$PATH:/opt/android-sdk/build-tools/'"$_ver/" > etc/profile.d/${pkgname}.sh
+  # echo 'setenv PATH ${PATH}:/opt/android-sdk/build-tools/'"$_ver/" > etc/profile.d/${pkgname}.csh
+  # chmod 755 etc/profile.d/${pkgname}.{csh,sh}
   
   mkdir -p opt/$_sdk/build-tools/$_ver
   cp -r "$srcdir/$_android/"* "$pkgdir/opt/$_sdk/build-tools/$_ver"

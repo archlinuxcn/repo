@@ -1,0 +1,44 @@
+From 835a463e190af87a36df681863db7c3ea7ba0d66 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Thomas=20B=C3=A4chler?= <thomas@archlinux.org>
+Date: Thu, 3 Apr 2014 21:55:37 +0200
+Subject: [PATCH 04/10] fs: Don't return 0 from get_anon_bdev
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Commit 9e30cc9595303b27b48 removed an internal mount. This
+has the side-effect that rootfs now has FSID 0. Many
+userspace utilities assume that st_dev in struct stat
+is never 0, so this change breaks a number of tools in
+early userspace.
+
+Since we don't know how many userspace programs are affected,
+make sure that FSID is at least 1.
+
+References: http://article.gmane.org/gmane.linux.kernel/1666905
+References: http://permalink.gmane.org/gmane.linux.utilities.util-linux-ng/8557
+Cc: 3.14 <stable@vger.kernel.org>
+Signed-off-by: Thomas Bächler <thomas@archlinux.org>
+---
+ fs/super.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/fs/super.c b/fs/super.c
+index 80d5cf2..7624267 100644
+--- a/fs/super.c
++++ b/fs/super.c
+@@ -802,7 +802,10 @@ void emergency_remount(void)
+ 
+ static DEFINE_IDA(unnamed_dev_ida);
+ static DEFINE_SPINLOCK(unnamed_dev_lock);/* protects the above */
+-static int unnamed_dev_start = 0; /* don't bother trying below it */
++/* Many userspace utilities consider an FSID of 0 invalid.
++ * Always return at least 1 from get_anon_bdev.
++ */
++static int unnamed_dev_start = 1;
+ 
+ int get_anon_bdev(dev_t *p)
+ {
+-- 
+1.9.2
+

@@ -1,0 +1,75 @@
+From 06d2e746733a83469944481cb7f4fb1c7134a8ce Mon Sep 17 00:00:00 2001
+From: Rusty Russell <rusty@rustcorp.com.au>
+Date: Mon, 3 Feb 2014 11:15:13 +1030
+Subject: [PATCH 03/10] module: remove MODULE_GENERIC_TABLE
+
+MODULE_DEVICE_TABLE() calles MODULE_GENERIC_TABLE(); make it do the
+work directly.  This also removes a wart introduced in the last patch,
+where the alias is defined to be an unknown struct type "struct
+type##__##name##_device_id" instead of "struct type##_device_id" (it's
+an extern so GCC doesn't care, but it's wrong).
+
+The other user of MODULE_GENERIC_TABLE (ISAPNP_CARD_TABLE) is unused,
+so delete it.
+
+Signed-off-by: Rusty Russell <rusty@rustcorp.com.au>
+---
+ include/linux/isapnp.h |  4 ----
+ include/linux/module.h | 19 ++++++++-----------
+ 2 files changed, 8 insertions(+), 15 deletions(-)
+
+diff --git a/include/linux/isapnp.h b/include/linux/isapnp.h
+index e2d28b0..3c77bf9 100644
+--- a/include/linux/isapnp.h
++++ b/include/linux/isapnp.h
+@@ -56,10 +56,6 @@
+ #define ISAPNP_DEVICE_ID(_va, _vb, _vc, _function) \
+ 		{ .vendor = ISAPNP_VENDOR(_va, _vb, _vc), .function = ISAPNP_FUNCTION(_function) }
+ 
+-/* export used IDs outside module */
+-#define ISAPNP_CARD_TABLE(name) \
+-		MODULE_GENERIC_TABLE(isapnp_card, name)
+-
+ struct isapnp_card_id {
+ 	unsigned long driver_data;	/* data private to the driver */
+ 	unsigned short card_vendor, card_device;
+diff --git a/include/linux/module.h b/include/linux/module.h
+index ad18f60..5686b37 100644
+--- a/include/linux/module.h
++++ b/include/linux/module.h
+@@ -82,15 +82,6 @@ void sort_extable(struct exception_table_entry *start,
+ void sort_main_extable(void);
+ void trim_init_extable(struct module *m);
+ 
+-#ifdef MODULE
+-#define MODULE_GENERIC_TABLE(gtype, name)			\
+-extern const struct gtype##_id __mod_##gtype##_table		\
+-  __attribute__ ((unused, alias(__stringify(name))))
+-
+-#else  /* !MODULE */
+-#define MODULE_GENERIC_TABLE(gtype, name)
+-#endif
+-
+ /* Generic info of form tag = "info" */
+ #define MODULE_INFO(tag, info) __MODULE_INFO(tag, tag, info)
+ 
+@@ -141,8 +132,14 @@ extern const struct gtype##_id __mod_##gtype##_table		\
+ /* What your module does. */
+ #define MODULE_DESCRIPTION(_description) MODULE_INFO(description, _description)
+ 
+-#define MODULE_DEVICE_TABLE(type, name)		\
+-  MODULE_GENERIC_TABLE(type##__##name##_device, name)
++#ifdef MODULE
++/* Creates an alias so file2alias.c can find device table. */
++#define MODULE_DEVICE_TABLE(type, name)					\
++  extern const struct type##_device_id __mod_##type##__##name##_device_table \
++  __attribute__ ((unused, alias(__stringify(name))))
++#else  /* !MODULE */
++#define MODULE_DEVICE_TABLE(type, name)
++#endif
+ 
+ /* Version of form [<epoch>:]<version>[-<extra-version>].
+  * Or for CVS/RCS ID version, everything but the number is stripped.
+-- 
+1.9.2
+
