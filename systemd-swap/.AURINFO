@@ -1,0 +1,20 @@
+pkgbase = systemd-swap
+	pkgdesc = This is script for creating hybrid swap space from zram swaps, swap files and swap partitions. Swap file - auto create dinamic growing swap file and mount it via loop. For enable: sudo systemctl enable systemd-swap. Config in /etc/systemd-swap.cfg
+	pkgver = 2.17
+	pkgrel = 1
+	url = https://github.com/TimofeyTitovets/systemd-swap
+	arch = any
+	license = GPL3
+	makedepends = git
+	depends = systemd
+	depends = bash
+	conflicts = systemd-loop-swapfile
+	conflicts = autoswap
+	conflicts = zramswap
+	conflicts = zram
+	replaces = systemd-loop-swapfile-auto
+	source = systemd-swap::git://github.com/TimofeyTitovets/systemd-swap.git#branch=master
+	backup = etc/systemd-swap.conf
+
+pkgname = systemd-swap
+
