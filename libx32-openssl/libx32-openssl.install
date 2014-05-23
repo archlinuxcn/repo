@@ -1,0 +1,21 @@
+post_install() {
+    mv /usr/include/openssl/opensslconf.h /usr/include/openssl/opensslconf-64.h
+    ln -s opensslconf-stub.h /usr/include/openssl/opensslconf.h
+}
+
+post_upgrade() {
+    if [ ! -L /usr/include/openssl/opensslconf.h ]; then
+        post_install
+    elif [ ${1::-2} != ${2::-2} ]; then
+        echo WARNING: libx32-openssl is upgraded before openssl,
+        echo WARNING: you probably need to reinstall libx32-openssl.
+    fi
+}
+
+post_remove() {
+    if [ -L /usr/include/openssl/opensslconf.h ]; then
+        rm /usr/include/openssl/opensslconf.h
+        mv /usr/include/openssl/opensslconf-64.h /usr/include/openssl/opensslconf.h
+    fi
+}
+
