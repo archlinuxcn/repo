@@ -1,0 +1,22 @@
+--- postgresql-9.2.1/src/Makefile.global.in.orig	2012-10-19 03:45:21.000000000 +0000
++++ postgresql-9.2.1/src/Makefile.global.in	2012-10-19 03:44:59.000000000 +0000
+@@ -105,7 +105,7 @@
+ pkgincludedir = $(includedir)
+ ifeq "$(findstring pgsql, $(pkgincludedir))" ""
+ ifeq "$(findstring postgres, $(pkgincludedir))" ""
+-override pkgincludedir := $(pkgincludedir)/postgresql
++override pkgincludedir := $(pkgincludedir)/postgresql-x32
+ endif
+ endif
+ 
+--- postgresql-9.2.1/src/include/port.h.orig	2012-10-19 06:01:33.000000000 +0000
++++ postgresql-9.2.1/src/include/port.h	2012-10-19 06:01:45.000000000 +0000
+@@ -105,7 +105,7 @@
+ #if defined(WIN32) || defined(__CYGWIN__)
+ #define EXE ".exe"
+ #else
+-#define EXE ""
++#define EXE "-x32"
+ #endif
+ 
+ #if defined(WIN32) && !defined(__CYGWIN__)
