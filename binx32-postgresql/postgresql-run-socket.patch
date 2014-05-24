@@ -1,0 +1,12 @@
+diff -Naur postgresql-9.2.0.sockets/src/include/pg_config_manual.h postgresql-9.2.0/src/include/pg_config_manual.h
+--- postgresql-9.2.0.sockets/src/include/pg_config_manual.h	2012-09-06 17:26:17.000000000 -0400
++++ postgresql-9.2.0/src/include/pg_config_manual.h	2012-09-06 18:13:18.183092471 -0400
+@@ -144,7 +144,7 @@
+  * here's where to twiddle it.  You can also override this at runtime
+  * with the postmaster's -k switch.
+  */
+-#define DEFAULT_PGSOCKET_DIR  "/tmp"
++#define DEFAULT_PGSOCKET_DIR  "/run/postgresql-x32"
+ 
+ /*
+  * The random() function is expected to yield values between 0 and

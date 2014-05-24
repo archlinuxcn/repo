@@ -1,0 +1,26 @@
+[Unit]
+Description=PostgreSQL database server (x32 ABI)
+After=network.target
+
+[Service]
+Type=forking
+TimeoutSec=120
+User=postgres
+Group=postgres
+
+Environment=PGROOT=/var/lib/postgres-x32
+
+SyslogIdentifier=postgres-x32
+PIDFile=/var/lib/postgres-x32/data/postmaster.pid
+
+ExecStartPre=/usr/bin/postgresql-check-db-dir-x32 ${PGROOT}/data
+ExecStart= /usr/bin/pg_ctl-x32 -s -D ${PGROOT}/data start -w -t 120
+ExecReload=/usr/bin/pg_ctl-x32 -s -D ${PGROOT}/data reload
+ExecStop=  /usr/bin/pg_ctl-x32 -s -D ${PGROOT}/data stop -m fast
+
+# Due to PostgreSQL's use of shared memory, OOM killer is often overzealous in
+# killing Postgres, so adjust it downward
+OOMScoreAdjust=-200
+
+[Install]
+WantedBy=multi-user.target

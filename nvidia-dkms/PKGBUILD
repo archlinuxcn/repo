@@ -4,12 +4,12 @@
 # Contributor: Atilla ÖNTAŞ <tarakbumba@gmail.com>
 
 pkgname=nvidia-dkms
-pkgver=337.12
+pkgver=337.19
 pkgrel=1
 pkgdesc='NVIDIA kernel module sources (DKMS)'
 arch=('i686' 'x86_64')
-[[ $CARCH == i686 ]] && _arch=x86 && _pkg=NVIDIA-Linux-${_arch}-${pkgver} && md5sums=('c610d5bff8f7f758dc25fdd51b1b65eb')
-[[ $CARCH == x86_64 ]] && _arch=x86_64 && _pkg=NVIDIA-Linux-${_arch}-${pkgver}-no-compat32 && md5sums=('4c2aaac75c1ff01a09ac8f4ff84084cd')
+[[ $CARCH == i686 ]] && _arch=x86 && _pkg=NVIDIA-Linux-${_arch}-${pkgver} && md5sums=('cf8e88e313928eb7a4d6f652ff287717')
+[[ $CARCH == x86_64 ]] && _arch=x86_64 && _pkg=NVIDIA-Linux-${_arch}-${pkgver}-no-compat32 && md5sums=('5f7ed7eab32fa99c72bb2c30d0a85b9d')
 url="http://www.nvidia.com/"
 license=('custom')
 depends=('bash' 'dkms' "nvidia-utils=${pkgver}")

@@ -1,4 +1,4 @@
-# $Id: PKGBUILD 110036 2014-04-23 14:15:04Z heftig $
+# $Id: PKGBUILD 111334 2014-05-16 22:03:28Z heftig $
 # Maintainer: Fantix King <fantix.king@gmail.com>
 # Upstream Maintainer: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 # Contributor: Jan de Groot <jgc@archlinux.org>
@@ -9,24 +9,29 @@
 
 _pkgbasename=glibc
 pkgname=libx32-$_pkgbasename
-pkgver=2.19_4
+pkgver=2.19_5
 pkgrel=1
-pkgdesc="GNU C Library for x32 ABI"
+pkgdesc="GNU C Library (x32 ABI)"
 arch=('x86_64')
 url="http://www.gnu.org/software/libc"
 license=('GPL' 'LGPL')
-makedepends=('gcc-multilib-x32>=4.7')
+groups=()
+depends=()
+makedepends=('gcc-multilib-x32>=4.8')
+backup=()
 conflicts=('glibc-x32-seed')
 provides=('glibc-x32-seed')
 options=('!strip' '!emptydirs' 'staticlibs')
 source=(http://ftp.gnu.org/gnu/libc/${_pkgbasename}-${pkgver%_*}.tar.xz{,.sig}
         glibc-2.19-xattr_header.patch
         glibc-2.19-fix-sign-in-bsloww1-input.patch
+        glibc-2.19-tzselect-default.patch
         libx32-glibc.conf)
 md5sums=('e26b8cc666b162f999404b03970f14e4'
          'SKIP'
          '39a4876837789e07746f1d84cd8cb46a'
          '755a1a9d7844a5e338eddaa9a5d974cd'
+         'c772dc99ddd8032ecbf43884ae0cf42e'
          '34a4169d2bdc5a3eb83676a0831aae57')
 
 prepare() {
@@ -37,6 +42,9 @@ prepare() {
 
   # fix issues in sin/cos slow path calculation - commit ffe768a9
   patch -p1 -i $srcdir/glibc-2.19-fix-sign-in-bsloww1-input.patch
+
+  # fix tzselect with missing TZDIR - commit 893b4f37/c72399fb
+  patch -p1 -i $srcdir/glibc-2.19-tzselect-default.patch
 
   mkdir ${srcdir}/glibc-build
 }
@@ -103,8 +111,8 @@ check() {
   if [ -x "/opt/gcc-x32-seed/bin/gcc" ]; then
     make -k check || true
   else
-    # only acceptable testsuite error is some small libm ulp failures on i686 with gcc-4.9
-    # TODO: fix upstream and provide patch
+    # ULP failures on i686 are all small and can be ignored
+    # tst-cleanupx4.out failure on i686 needs investigating...
     make -k check || true
   fi
 }

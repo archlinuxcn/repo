@@ -1,0 +1,16 @@
+diff --git a/ThirdParty/mpi4py/vtkmpi4py/CMakeLists.txt b/ThirdParty/mpi4py/vtkmpi4py/CMakeLists.txt
+index 2e6dc66..7d5380c 100644
+--- a/ThirdParty/mpi4py/vtkmpi4py/CMakeLists.txt
++++ b/ThirdParty/mpi4py/vtkmpi4py/CMakeLists.txt
+@@ -165,8 +165,9 @@ SET_TARGET_PROPERTIES(
+   RUNTIME_OUTPUT_DIRECTORY "${mpi4py_BINARY_DIR}"
+   LINKER_LANGUAGE C
+   )
+-TARGET_LINK_LIBRARIES(mpi4py.MPI ${PYTHON_LIBRARY})
+-TARGET_LINK_LIBRARIES(mpi4py.MPI ${MPI_C_LIBRARIES})
++TARGET_LINK_LIBRARIES(mpi4py.MPI ${PYTHON_LIBRARY}
++                                 ${MPI_C_LIBRARIES}
++                                 ${CMAKE_DL_LIBS})
+ 
+ 
+ # --- mpi4py.MPE ---

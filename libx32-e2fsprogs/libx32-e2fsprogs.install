@@ -1,0 +1,21 @@
+post_install() {
+    mv /usr/include/ext2fs/ext2_types.h /usr/include/ext2fs/ext2_types-64.h
+    ln -s ext2_types-stub.h /usr/include/ext2fs/ext2_types.h
+}
+
+post_upgrade() {
+    if [ ! -L /usr/include/ext2fs/ext2_types.h ]; then
+        post_install
+    elif [ ${1::-2} != ${2::-2} ]; then
+        echo WARNING: libx32-e2fsprogs is upgraded before e2fsprogs,
+        echo WARNING: you probably need to reinstall libx32-e2fsprogs.
+    fi
+}
+
+post_remove() {
+    if [ -L /usr/include/ext2fs/ext2_types.h ]; then
+        rm /usr/include/ext2fs/ext2_types.h
+        mv /usr/include/ext2fs/ext2_types-64.h /usr/include/ext2fs/ext2_types.h
+    fi
+}
+

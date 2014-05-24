@@ -1,0 +1,12 @@
+post_install() {
+  touch var/log/redis-x32.log
+  chown redis:redis var/log/redis-x32.log
+  systemd-tmpfiles --create redis-x32.conf
+  install -dm0700 var/lib/redis-x32
+  chown -R redis:redis var/lib/redis-x32
+}
+
+post_upgrade() {
+  post_install
+  echo "Redis starts from redis user by default. Check redis-x32.service file"
+}

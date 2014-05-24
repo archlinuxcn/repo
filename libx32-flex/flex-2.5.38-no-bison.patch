@@ -1,0 +1,52 @@
+--- flex-2.5.37/tests/Makefile.am	2012-10-11 04:49:17.517445461 +0300
++++ flex-2.5.37/tests/Makefile.am	2012-10-11 04:49:58.504048817 +0300
+@@ -35,9 +35,6 @@
+ 	test-rescan-nr \
+ 	test-basic-nr \
+ 	test-basic-r \
+-	test-bison-yylloc \
+-	test-bison-yylval \
+-	test-bison-nr \
+ 	test-multiple-scanners-nr \
+ 	test-multiple-scanners-r \
+ 	test-header-nr \
+@@ -84,9 +81,6 @@
+ 	test-rescan-nr \
+ 	test-basic-nr \
+ 	test-basic-r \
+-	test-bison-yylloc \
+-	test-bison-yylval \
+-	test-bison-nr \
+ 	test-multiple-scanners-nr \
+ 	test-multiple-scanners-r \
+ 	test-header-nr \
+--- flex-2.5.37/tests/Makefile.in	2012-10-11 04:49:35.665941427 +0300
++++ flex-2.5.37/tests/Makefile.in	2012-10-11 04:50:21.048847253 +0300
+@@ -120,7 +120,6 @@
+ AUTOHEADER = @AUTOHEADER@
+ AUTOMAKE = @AUTOMAKE@
+ AWK = @AWK@
+-BISON = @BISON@
+ CC = @CC@
+ CCDEPMODE = @CCDEPMODE@
+ CFLAGS = @CFLAGS@
+@@ -251,9 +250,6 @@
+ 	test-rescan-nr \
+ 	test-basic-nr \
+ 	test-basic-r \
+-	test-bison-yylloc \
+-	test-bison-yylval \
+-	test-bison-nr \
+ 	test-multiple-scanners-nr \
+ 	test-multiple-scanners-r \
+ 	test-header-nr \
+@@ -300,9 +296,6 @@
+ 	test-rescan-nr \
+ 	test-basic-nr \
+ 	test-basic-r \
+-	test-bison-yylloc \
+-	test-bison-yylval \
+-	test-bison-nr \
+ 	test-multiple-scanners-nr \
+ 	test-multiple-scanners-r \
+ 	test-header-nr \

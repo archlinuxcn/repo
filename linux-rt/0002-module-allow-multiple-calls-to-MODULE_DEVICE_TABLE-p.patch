@@ -1,0 +1,93 @@
+From 9bc5b710f5957763d6944f38143b627d127c15ff Mon Sep 17 00:00:00 2001
+From: Tom Gundersen <teg@jklm.no>
+Date: Mon, 3 Feb 2014 11:14:13 +1030
+Subject: [PATCH 02/10] module: allow multiple calls to MODULE_DEVICE_TABLE()
+ per module
+
+Commit 78551277e4df5: "Input: i8042 - add PNP modaliases" had a bug, where the
+second call to MODULE_DEVICE_TABLE() overrode the first resulting in not all
+the modaliases being exposed.
+
+This fixes the problem by including the name of the device_id table in the
+__mod_*_device_table alias, allowing us to export several device_id tables
+per module.
+
+Suggested-by: Kay Sievers <kay@vrfy.org>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Tom Gundersen <teg@jklm.no>
+Signed-off-by: Rusty Russell <rusty@rustcorp.com.au>
+---
+ include/linux/module.h   |  2 +-
+ scripts/mod/file2alias.c | 14 +++++++++-----
+ 2 files changed, 10 insertions(+), 6 deletions(-)
+
+diff --git a/include/linux/module.h b/include/linux/module.h
+index eaf60ff..ad18f60 100644
+--- a/include/linux/module.h
++++ b/include/linux/module.h
+@@ -142,7 +142,7 @@ extern const struct gtype##_id __mod_##gtype##_table		\
+ #define MODULE_DESCRIPTION(_description) MODULE_INFO(description, _description)
+ 
+ #define MODULE_DEVICE_TABLE(type, name)		\
+-  MODULE_GENERIC_TABLE(type##_device, name)
++  MODULE_GENERIC_TABLE(type##__##name##_device, name)
+ 
+ /* Version of form [<epoch>:]<version>[-<extra-version>].
+  * Or for CVS/RCS ID version, everything but the number is stripped.
+diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
+index 25e5cb0..ce16404 100644
+--- a/scripts/mod/file2alias.c
++++ b/scripts/mod/file2alias.c
+@@ -42,7 +42,7 @@ typedef unsigned char	__u8;
+ 
+ /* This array collects all instances that use the generic do_table */
+ struct devtable {
+-	const char *device_id; /* name of table, __mod_<name>_device_table. */
++	const char *device_id; /* name of table, __mod_<name>__*_device_table. */
+ 	unsigned long id_size;
+ 	void *function;
+ };
+@@ -146,7 +146,8 @@ static void device_id_check(const char *modname, const char *device_id,
+ 
+ 	if (size % id_size || size < id_size) {
+ 		fatal("%s: sizeof(struct %s_device_id)=%lu is not a modulo "
+-		      "of the size of section __mod_%s_device_table=%lu.\n"
++		      "of the size of "
++		      "section __mod_%s__<identifier>_device_table=%lu.\n"
+ 		      "Fix definition of struct %s_device_id "
+ 		      "in mod_devicetable.h\n",
+ 		      modname, device_id, id_size, device_id, size, device_id);
+@@ -1206,7 +1207,7 @@ void handle_moddevtable(struct module *mod, struct elf_info *info,
+ {
+ 	void *symval;
+ 	char *zeros = NULL;
+-	const char *name;
++	const char *name, *identifier;
+ 	unsigned int namelen;
+ 
+ 	/* We're looking for a section relative symbol */
+@@ -1217,7 +1218,7 @@ void handle_moddevtable(struct module *mod, struct elf_info *info,
+ 	if (ELF_ST_TYPE(sym->st_info) != STT_OBJECT)
+ 		return;
+ 
+-	/* All our symbols are of form <prefix>__mod_XXX_device_table. */
++	/* All our symbols are of form <prefix>__mod_<name>__<identifier>_device_table. */
+ 	name = strstr(symname, "__mod_");
+ 	if (!name)
+ 		return;
+@@ -1227,7 +1228,10 @@ void handle_moddevtable(struct module *mod, struct elf_info *info,
+ 		return;
+ 	if (strcmp(name + namelen - strlen("_device_table"), "_device_table"))
+ 		return;
+-	namelen -= strlen("_device_table");
++	identifier = strstr(name, "__");
++	if (!identifier)
++		return;
++	namelen = identifier - name;
+ 
+ 	/* Handle all-NULL symbols allocated into .bss */
+ 	if (info->sechdrs[get_secindex(info, sym)].sh_type & SHT_NOBITS) {
+-- 
+1.9.2
+
