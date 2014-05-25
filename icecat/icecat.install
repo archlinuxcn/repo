@@ -1,0 +1,19 @@
+post_install () {
+	update-desktop-database -q
+}
+
+# arg 1:  the new package version
+# arg 2:  the old package version
+post_upgrade() {
+	echo -e "Like old versions, IceCat user profile directory is set to ~/.mozilla/icecat (default upstream is ~/.mozilla/firefox)"
+	update-desktop-database -q
+}
+
+post_remove() {
+	update-desktop-database -q
+}
+
+#op=$1
+#shift
+
+#$op $*
