@@ -1,2 +1,2 @@
 #!/bin/sh
-g++ "$@" -Ofast
+g++ "${@//-Wimplicit/-Wall}" -Ofast -Wall -Wextra -Wunused-result

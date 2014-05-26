@@ -10,8 +10,8 @@ if ((BUILD_PYPY3)); then
 else
   pkgname=('pypy-pyopencl-git')
 fi
-pkgver=2013.2.0.172.g1636d05
-pkgrel=2
+pkgver=2013.2.0.210.gdb1dd59
+pkgrel=1
 pkgdesc="A complete, object-oriented language binding of OpenCL to Python. PyPy version on top of cffi"
 arch=('i686' 'x86_64')
 url="http://mathema.tician.de/software/pyopencl"
@@ -21,7 +21,7 @@ makedepends=('pypy-setuptools' 'pypy3-setuptools' 'libcl' 'opencl-headers'
   'mesa' 'pypy-mako' 'pypy3-mako' 'pypy-numpy')
 source=('LICENSE.txt' 'cc')
 sha1sums=('2e6966b3d9b15603ce2c3ff79eeadd63c5d066b7'
-          '79eeaea1c0bca1d77816e147ede12274ae4c5765')
+          'b7336947a2fbf84cb1e5402fa169c30da0eef535')
 
 _gitname=pyopencl
 
