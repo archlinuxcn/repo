@@ -4,10 +4,15 @@
 # Check for new Linux releases in: http://googlechromereleases.blogspot.com/search/label/Stable%20updates
 # or use: $ curl -s https://dl.google.com/linux/chrome/rpm/stable/x86_64/repodata/other.xml.gz | gzip -df | awk -F\" '/pkgid/{ sub(".*-","",$4); print $4": "$10 }'
 
+# Build Chrome v34 with NPAPI support?: http://blog.chromium.org/2013/09/saying-goodbye-to-our-old-friend-npapi.html
+# "1" to enable.
+_v34=0
+
 pkgname=google-chrome
-pkgver=34.0.1847.137
+pkgver=35.0.1916.114
 pkgrel=1
 pkgdesc="An attempt at creating a safer, faster, and more stable browser (Stable Channel)"
+[ "${_v34}" = '1' ] && pkgdesc="An attempt at creating a safer, faster, and more stable browser (Stable Channel) (v34)"
 arch=('i686' 'x86_64')
 url="https://www.google.com/chrome"
 license=('custom:chrome')
@@ -22,8 +27,13 @@ _channel=stable
 _arch=i386
 [ "${CARCH}" = 'x86_64' ] && _arch=amd64
 source=("google-chrome-${_channel}_${pkgver}_${_arch}.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_${_arch}.deb")
-md5sums=('06388a15d51f815062dd4bcddaeec1cf')
-[ "${CARCH}" = 'x86_64' ] && md5sums[0]='3cc7cd28bbb7bb3e5add19f27a6d0dda'
+md5sums=('c4a88b4234f42c783441f760f5fc6070')
+[ "${CARCH}" = 'x86_64' ] && md5sums[0]='622a495960f247eca2f14eb2eccb5303'
+if [ "${_v34}" = '1' ]; then
+    source=("http://95.31.35.30/chrome/pool/main/g/google-chrome-${_channel}/google-chrome-${_channel}_34.0.1847.137-1_${_arch}.deb")
+    md5sums=('06388a15d51f815062dd4bcddaeec1cf')
+    [ "${CARCH}" = 'x86_64' ] && md5sums[0]='3cc7cd28bbb7bb3e5add19f27a6d0dda'
+fi
 
 package() {
   msg2 "Extracting the data.tar.lzma"
