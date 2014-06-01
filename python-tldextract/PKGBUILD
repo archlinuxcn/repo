@@ -1,0 +1,35 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+# FIXME: download and save /usr/lib/python3.4/site-packages/tldextract/.tld_set while building
+
+_pkgname=tldextract
+pkgname=python-$_pkgname
+pkgver=1.3.1
+pkgrel=2
+pkgdesc="Accurately separate the TLD from the registered domain and subdomains of a URL, using the Public Suffix List."
+arch=('any')
+url="https://github.com/john-kurkowski/tldextract"
+license=('BSD')
+depends=('python')
+source=('https://pypi.python.org/packages/source/t/tldextract/tldextract-1.3.1.tar.gz')
+md5sums=('bb95a1a4fb89c38effe06daad991180d')
+
+build() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  python3 setup.py build
+}
+
+package() {
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python3 setup.py install --root=$pkgdir --optimize=1
+
+  _pyver=$(python -c 'import sysconfig; print(sysconfig.get_python_version())')
+  # use the snapshot version, because generating a new one requires Internat access and root permission
+  ln -s .tld_set_snapshot "$pkgdir/usr/lib/python$_pyver/site-packages/tldextract/.tld_set"
+  # omit in newer version!
+  sed -i -e '/version=/d' \
+         -e '/with open(self.cache_file) as f:/s/)/, "rb")/' \
+  "$pkgdir/usr/lib/python$_pyver/site-packages/tldextract/tldextract.py"
+}
+
+# vim:set sw=2 et:

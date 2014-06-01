@@ -1,4 +1,5 @@
 [ -f etc/chromium-browser/default ] && _default='etc/chromium-browser/default'
+[ -f etc/chromium-dev/default ] && _default='etc/chromium-dev/default'
 [ -f etc/chromium/default ] && _default='etc/chromium/default'
 
 post_upgrade()
