@@ -4,9 +4,8 @@
 # Contributor: Alex Anthony <alex.anthony28991@gmail.com>
 
 pkgbase='pypy-markupsafe'
-pkgname='pypy-markupsafe'
-true && pkgname=('pypy3-markupsafe' 'pypy-markupsafe')
-pkgver=0.21
+pkgname=('pypy3-markupsafe' 'pypy-markupsafe')
+pkgver=0.23
 pkgrel=1
 pkgdesc="Implements a XML/HTML/XHTML Markup safe string for Python"
 arch=('i686' 'x86_64')
@@ -14,7 +13,7 @@ url="http://pypi.python.org/pypi/MarkupSafe"
 license=('custom')
 makedepends=('pypy-setuptools' 'pypy3-setuptools')
 source=("http://pypi.python.org/packages/source/M/MarkupSafe/MarkupSafe-${pkgver}.tar.gz")
-sha512sums=('ecedf56be7ad1723c4d7bf799e1aefb8ceb0a28840a1b8ffdc2dee0f734149430cf5dfd5d335591e9934cf223255475e9c04da5ab34ed69e7845298f599d81bc')
+sha512sums=('4f1fd91ced5e7119584b56cf7b69cfe6fdd9613bd77412368a38e9ef5d1011ba5c76d1d3a0da3d60f9f474627e6c8c8b613a80a668b32d212f09072f8b1f5b28')
 
 build() {
   cp -r MarkupSafe-${pkgver} python2-MarkupSafe-${pkgver}
