@@ -49,7 +49,8 @@ package_pypy3-setuptools() {
   depends=('pypy3')
   cd "${srcdir}/pypy3-setuptools-${pkgver}"
   pypy3 setup.py install \
-    --root="${pkgdir}" --optimize=1 --skip-build
+    --root="${pkgdir}" --optimize=1 --skip-build \
+    --install-lib=/opt/pypy3/lib/python3.2/site-packages
   cd "${pkgdir}"
   mkdir -p usr/bin
   ln -s ../../opt/pypy3/bin/easy_install usr/bin/easy_install-pypy3
