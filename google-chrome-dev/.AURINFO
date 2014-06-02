@@ -1,0 +1,37 @@
+pkgbase = google-chrome-dev
+	pkgdesc = An attempt at creating a safer, faster, and more stable browser (Dev Channel)
+	pkgver = 37.0.2017.2
+	pkgrel = 1
+	url = https://www.google.com/chrome
+	install = google-chrome-dev.install
+	arch = i686
+	arch = x86_64
+	license = custom:chrome
+	depends = alsa-lib
+	depends = desktop-file-utils
+	depends = flac
+	depends = gconf
+	depends = gtk2
+	depends = harfbuzz
+	depends = harfbuzz-icu
+	depends = hicolor-icon-theme
+	depends = icu
+	depends = libgcrypt15
+	depends = libpng
+	depends = libxss
+	depends = libxtst
+	depends = nss
+	depends = opus
+	depends = snappy
+	depends = speech-dispatcher
+	depends = ttf-font
+	depends = xdg-utils
+	optdepends = kdebase-kdialog: needed for file dialogs in KDE
+	optdepends = ttf-google-fonts-git
+	provides = google-chrome=37.0.2017.2
+	source = google-chrome-unstable_37.0.2017.2_i386.deb::https://dl.google.com/linux/direct/google-chrome-unstable_current_i386.deb
+	options = !emptydirs
+	options = !strip
+
+pkgname = google-chrome-dev
+
