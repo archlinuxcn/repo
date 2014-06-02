@@ -1,0 +1,13 @@
+post_install() {
+	xdg-icon-resource forceupdate --theme hicolor
+	update-desktop-database -q
+	update-mime-database usr/share/mime > /dev/null 2>&1
+}
+
+post_upgrade() {
+	post_install $1
+}
+
+post_remove() {
+	post_install $1
+}
