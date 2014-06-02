@@ -1,0 +1,55 @@
+--- a/ui/gtk/graph_analysis.c
++++ b/ui/gtk/graph_analysis.c
+@@ -504,28 +504,34 @@ static void dialog_graph_draw(graph_analysis_data_t *user_data)
+ 
+ #if GTK_CHECK_VERSION(2,22,0)
+ 	/* Paint time title background */
+-	cr = cairo_create (user_data->dlg.surface_time);
+-	gdk_cairo_set_source_pixbuf (cr, bg_pixbuf, 0, 0);
+-	cairo_pattern_set_extend (cairo_get_source (cr), CAIRO_EXTEND_REPEAT);
+-	cairo_rectangle (cr, 0, 0, draw_area_time_alloc.width, top_y_border);
+-	cairo_fill (cr);
+-	cairo_destroy (cr);
++	if ( user_data->dlg.surface_time ) {
++		cr = cairo_create (user_data->dlg.surface_time);
++		gdk_cairo_set_source_pixbuf (cr, bg_pixbuf, 0, 0);
++		cairo_pattern_set_extend (cairo_get_source (cr), CAIRO_EXTEND_REPEAT);
++		cairo_rectangle (cr, 0, 0, draw_area_time_alloc.width, top_y_border);
++		cairo_fill (cr);
++		cairo_destroy (cr);
++	}
+ 
+ 	/* Paint main title background */
+-	cr = cairo_create (user_data->dlg.surface_main);
+-	gdk_cairo_set_source_pixbuf (cr, bg_pixbuf, 0, 0);
+-	cairo_pattern_set_extend (cairo_get_source (cr), CAIRO_EXTEND_REPEAT);
+-	cairo_rectangle (cr, 0, 0, draw_area_alloc.width, top_y_border);
+-	cairo_fill (cr);
+-	cairo_destroy (cr);
++	if ( user_data->dlg.surface_main ) {
++		cr = cairo_create (user_data->dlg.surface_main);
++		gdk_cairo_set_source_pixbuf (cr, bg_pixbuf, 0, 0);
++		cairo_pattern_set_extend (cairo_get_source (cr), CAIRO_EXTEND_REPEAT);
++		cairo_rectangle (cr, 0, 0, draw_area_alloc.width, top_y_border);
++		cairo_fill (cr);
++		cairo_destroy (cr);
++	}
+ 
+ 	/* Paint main comment background */
+-	cr = cairo_create (user_data->dlg.surface_comments);
+-	gdk_cairo_set_source_pixbuf (cr, bg_pixbuf, 0, 0);
+-	cairo_pattern_set_extend (cairo_get_source (cr), CAIRO_EXTEND_REPEAT);
+-	cairo_rectangle (cr, 0, 0, draw_area_comments_alloc.width, top_y_border);
+-	cairo_fill (cr);
+-	cairo_destroy (cr);
++	if ( user_data->dlg.surface_comments ) {
++		cr = cairo_create (user_data->dlg.surface_comments);
++		gdk_cairo_set_source_pixbuf (cr, bg_pixbuf, 0, 0);
++		cairo_pattern_set_extend (cairo_get_source (cr), CAIRO_EXTEND_REPEAT);
++		cairo_rectangle (cr, 0, 0, draw_area_comments_alloc.width, top_y_border);
++		cairo_fill (cr);
++		cairo_destroy (cr);
++	}
+ #else
+ 	/* Paint time title background */
+ 	if ( GDK_IS_DRAWABLE(user_data->dlg.pixmap_time) ) {

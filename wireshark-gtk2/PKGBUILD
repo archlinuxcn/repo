@@ -1,0 +1,59 @@
+# $Id$
+# Maintainer: Timothy Redaelli <timothy.redaelli@gmail.com>
+# Contributor: Guillaume ALAUX <guillaume@archlinux.org>
+# Contributor: Florian Pritz <bluewind at jabber dot ccc dot de>
+pkgname=wireshark-gtk2
+pkgbase=wireshark
+pkgver=1.10.7
+pkgrel=2
+arch=('i686' 'x86_64')
+license=('GPL2')
+makedepends=('gtk2' 'krb5' 'libpcap' 'bash' 'gnutls' 'portaudio'
+             'lua' 'python' 'desktop-file-utils' 'hicolor-icon-theme')
+url='http://www.wireshark.org/'
+source=(http://www.wireshark.org/download/src/${pkgbase}-${pkgver}.tar.bz2
+        wireshark-1.10.5-fix-flow-crash.patch)
+sha256sums=('d98d263b31dd904a0337ba2db6d1a80bb495b4ac419a304f0f25c551d50cafc6'
+            'de630c5dd1aa87749fd33c0f3f94a30215e122b1a7ffffeb9bed213fad0fe3ea')
+
+prepare() {
+  cd ${pkgbase}-${pkgver}
+  patch -p1 -i "${srcdir}"/wireshark-1.10.5-fix-flow-crash.patch
+}
+
+build() {
+  cd ${pkgbase}-${pkgver}
+
+  ./autogen.sh
+  ./configure \
+      --prefix=/usr \
+      --with-pcap \
+      --with-zlib \
+      --with-lua \
+      --with-portaudio \
+      --with-ssl \
+      --with-krb5
+  make all
+}
+
+package() {
+  pkgdesc='a free network protocol analyzer for Unix/Linux and Windows - GTK 2 frontend'
+  depends=('gtk2' 'portaudio' 'wireshark-cli' 'desktop-file-utils' 'hicolor-icon-theme')
+  install=wireshark-gtk.install
+  replaces=(wireshark)
+  conflicts=(wireshark)
+
+  cd ${pkgbase}-${pkgver}
+
+  install -Dm755 .libs/wireshark "${pkgdir}/usr/bin/wireshark"
+  for d in 16 32 48; do
+    install -Dm644 image/hi${d}-app-wireshark.png  \
+                   "${pkgdir}/usr/share/icons/hicolor/${d}x${d}/apps/wireshark.png"
+  done
+
+  for d in 16 24 32 48 64 128 256 ; do
+    install -Dm644 image/WiresharkDoc-${d}.png \
+                   "${pkgdir}/usr/share/icons/hicolor/${d}x${d}/mimetypes/application-vnd.tcpdump.pcap.png"
+  done
+  install -Dm644 wireshark.desktop "${pkgdir}/usr/share/applications/wireshark.desktop"
+}
