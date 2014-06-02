@@ -1,0 +1,48 @@
+# Maintainer: Josh Kropf <josh@slashdev.ca>
+# Contributor: Bartosz Chmura <chmurli at gmail dot com>
+# Contributor: Mikkel Kroman <mk at maero dot dk>
+
+pkgname=sublime-text-3
+pkgver=3059
+pkgrel=1
+pkgdesc="sophisticated text editor for code, html and prose"
+arch=('i686' 'x86_64')
+url="http://www.sublimetext.com/3"
+license=('custom')
+depends=(libpng gtk2 xdg-utils desktop-file-utils)
+install=${pkgname}.install
+_arch=' x64'
+_archurl='_x64'
+
+[[ "${CARCH}" = i686 ]] && _arch='' && _archurl=''
+
+source=(
+    "http://c758482.r82.cf2.rackcdn.com/sublime_text_3_build_${pkgver}${_archurl}.tar.bz2"
+	sublime-text-3.desktop
+	subl3
+)
+
+md5sums=('9fd1828ef4bc71f375b872eb139e9eba'
+         'ac986e40fcb3359d5f3e77c0a36a2b5c'
+         '9b9cb496a35929398adbbb02a6c26d8f')
+
+[[ "${CARCH}" = i686 ]] && md5sums[0]='8d9f21fedb4a7b73137e9f58bc817b98'
+
+package () {
+	cd "${srcdir}"
+
+	install -Dm644 ${pkgname}.desktop \
+		"${pkgdir}/usr/share/applications/${pkgname}.desktop"
+
+	install -dm755 "${pkgdir}/opt"
+	cp --preserve=mode -r "sublime_text_3" \
+		"${pkgdir}/opt/${pkgname}"
+
+	for res in 128x128 16x16 256x256 32x32 48x48; do
+		install -dm755 "${pkgdir}/usr/share/icons/hicolor/${res}/apps"
+		ln -s /opt/${pkgname}/Icon/${res}/sublime_text.png \
+			"${pkgdir}/usr/share/icons/hicolor/${res}/apps/sublime_text.png"
+	done
+
+	install -Dm755 subl3 "${pkgdir}/usr/bin/subl3"
+}
