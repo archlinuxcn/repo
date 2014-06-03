@@ -32,8 +32,8 @@ pkgname=linux-uksm
 true && pkgname=(linux-uksm linux-uksm-headers)
 _kernelname=-uksm
 _srcname=linux-3.14
-pkgver=3.14.4
-pkgrel=2
+pkgver=3.14.5
+pkgrel=1
 arch=('i686' 'x86_64')
 url="http://kerneldedup.org/"
 license=('GPL2')
@@ -54,13 +54,11 @@ source=("http://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
         '0001-Bluetooth-allocate-static-minor-for-vhci.patch'
         '0002-module-allow-multiple-calls-to-MODULE_DEVICE_TABLE-p.patch'
         '0003-module-remove-MODULE_GENERIC_TABLE.patch'
-        '0004-fs-Don-t-return-0-from-get_anon_bdev.patch'
         '0005-Revert-Bluetooth-Enable-autosuspend-for-Intel-Blueto.patch'
         '0006-genksyms-fix-typeof-handling.patch'
         '0010-iwlwifi-mvm-delay-enabling-smart-FIFO-until-after-be.patch'
         '0011-kernfs-fix-removed-error-check.patch'
         '0012-fix-saa7134.patch'
-        '0013-net-Start-with-correct-mac_len-in-skb_network_protocol.patch'
         '0015-fix-xsdt-validation.patch'
         'config' 'config.x86_64')
         
@@ -83,10 +81,6 @@ prepare() {
     patch -p1 -i "${srcdir}/0002-module-allow-multiple-calls-to-MODULE_DEVICE_TABLE-p.patch"
     patch -p1 -i "${srcdir}/0003-module-remove-MODULE_GENERIC_TABLE.patch"
 
-    # Fix various bugs caused by rootfs having FSID 0
-    # See http://www.spinics.net/lists/kernel/msg1716924.html
-    patch -p1 -i "${srcdir}/0004-fs-Don-t-return-0-from-get_anon_bdev.patch"
-
     # Disable usb autosuspend for intel btusb
     # See http://www.spinics.net/lists/kernel/msg1716461.html
     # Until a solution is found, make sure the driver leaves autosuspend alone
@@ -108,11 +102,6 @@ prepare() {
     # https://bugs.archlinux.org/task/39904
     # https://bugzilla.kernel.org/show_bug.cgi?id=73361
     patch -Np1 -i "${srcdir}/0012-fix-saa7134.patch"
-
-    # fix tun/openvpn performance
-    # https://bugs.archlinux.org/task/40089
-    # https://bugzilla.kernel.org/show_bug.cgi?id=74051
-    patch -Np1 -i "${srcdir}/0013-net-Start-with-correct-mac_len-in-skb_network_protocol.patch"
 
     # fix xsdt validation bug
     # https://bugs.archlinux.org/task/39811
