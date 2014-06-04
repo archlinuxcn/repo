@@ -3,14 +3,14 @@
 pkgname=underscorejs
 _script=underscore
 pkgver=1.6.0
-pkgrel=5
+pkgrel=6
 pkgdesc="Underscore is a utility-belt library for JavaScript that provides a lot of the functional programming support that you would expect in Prototype.js (or Ruby), but without extending any of the built-in JavaScript objects."
 arch=(any)
 url=http://underscorejs.org
-srcurl=https://raw.githubusercontent.com/jashkenas/underscore/master
+srcurl=https://raw.githubusercontent.com/jashkenas/underscore/${pkgver}
 license=('MIT')
 source=("${srcurl}/${_script}.js" "${srcurl}/${_script}-min.js" "${srcurl}/LICENSE")
-md5sums=('c332350aaddab9040a42ab7caf6caf2f'
+md5sums=('5ce2a03fcfca229ab3f7252a675695cf'
   'dd9663be9a71f3570bc35f0edba28712'
   '19bf0f8c9bfb3f719f45bda2c3bdbd71')
 
