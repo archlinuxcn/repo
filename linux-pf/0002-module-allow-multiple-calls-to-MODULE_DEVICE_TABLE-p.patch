@@ -1,8 +1,8 @@
 From 9bc5b710f5957763d6944f38143b627d127c15ff Mon Sep 17 00:00:00 2001
 From: Tom Gundersen <teg@jklm.no>
 Date: Mon, 3 Feb 2014 11:14:13 +1030
-Subject: [PATCH 2/7] module: allow multiple calls to MODULE_DEVICE_TABLE() per
- module
+Subject: [PATCH 02/10] module: allow multiple calls to MODULE_DEVICE_TABLE()
+ per module
 
 Commit 78551277e4df5: "Input: i8042 - add PNP modaliases" had a bug, where the
 second call to MODULE_DEVICE_TABLE() overrode the first resulting in not all
@@ -89,5 +89,5 @@ index 25e5cb0..ce16404 100644
  	/* Handle all-NULL symbols allocated into .bss */
  	if (info->sechdrs[get_secindex(info, sym)].sh_type & SHT_NOBITS) {
 -- 
-1.9.1
+1.9.2
 
