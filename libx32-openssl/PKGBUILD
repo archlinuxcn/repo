@@ -1,13 +1,12 @@
-# $Id: PKGBUILD 108953 2014-04-08 03:49:31Z pierre $
+# $Id: PKGBUILD 112722 2014-06-05 15:38:12Z pierre $
 # Upstream Maintainer: Pierre Schmitz <pierre@archlinux.de>
 # Maintainer: Fantix King <fantix.king at gmail.com>
 
 _pkgbasename=openssl
 pkgname=libx32-$_pkgbasename
-_ver=1.0.1g
+_ver=1.0.1h
 # use a pacman compatible version scheme
-pkgver=1.0.1.g
-true && pkgver=${_ver/[a-z]/.${_ver//[0-9.]/}}
+pkgver=${_ver/[a-z]/.${_ver//[0-9.]/}}
 #pkgver=$_ver
 pkgrel=1
 pkgdesc='The Open Source toolkit for Secure Sockets Layer and Transport Layer Security (x32 ABI)'
@@ -25,7 +24,7 @@ source=("https://www.openssl.org/source/${_pkgbasename}-${_ver}.tar.gz"
         'openssl-1.0.1-x32.patch'
         'opensslconf-stub.h'
 )
-md5sums=('de62b43dfcd858e66a74bee1c834e959'
+md5sums=('8d6d684a9430d5cc98a62a5d8fbda8cf'
          'SKIP'
          'dc78d3d06baffc16217519242ce92478'
          '3bf51be3a1bbd262be46dc619f92aa90'
