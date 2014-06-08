@@ -32,7 +32,7 @@ pkgname=linux-uksm
 true && pkgname=(linux-uksm linux-uksm-headers)
 _kernelname=-uksm
 _srcname=linux-3.14
-pkgver=3.14.5
+pkgver=3.14.6
 pkgrel=1
 arch=('i686' 'x86_64')
 url="http://kerneldedup.org/"
@@ -54,12 +54,8 @@ source=("http://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
         '0001-Bluetooth-allocate-static-minor-for-vhci.patch'
         '0002-module-allow-multiple-calls-to-MODULE_DEVICE_TABLE-p.patch'
         '0003-module-remove-MODULE_GENERIC_TABLE.patch'
-        '0005-Revert-Bluetooth-Enable-autosuspend-for-Intel-Blueto.patch'
         '0006-genksyms-fix-typeof-handling.patch'
-        '0010-iwlwifi-mvm-delay-enabling-smart-FIFO-until-after-be.patch'
-        '0011-kernfs-fix-removed-error-check.patch'
         '0012-fix-saa7134.patch'
-        '0015-fix-xsdt-validation.patch'
         'config' 'config.x86_64')
         
 prepare() {
@@ -81,32 +77,14 @@ prepare() {
     patch -p1 -i "${srcdir}/0002-module-allow-multiple-calls-to-MODULE_DEVICE_TABLE-p.patch"
     patch -p1 -i "${srcdir}/0003-module-remove-MODULE_GENERIC_TABLE.patch"
 
-    # Disable usb autosuspend for intel btusb
-    # See http://www.spinics.net/lists/kernel/msg1716461.html
-    # Until a solution is found, make sure the driver leaves autosuspend alone
-    patch -p1 -i "${srcdir}/0005-Revert-Bluetooth-Enable-autosuspend-for-Intel-Blueto.patch"
-
     # Fix generation of symbol CRCs
     # http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=dc53324060f324e8af6867f57bf4891c13c6ef18
     patch -p1 -i "${srcdir}/0006-genksyms-fix-typeof-handling.patch"
-
-    # https://git.kernel.org/cgit/linux/kernel/git/iwlwifi/iwlwifi-fixes.git/commit/?id=12f853a89e29f50b17698e17e73c328a35f1498d
-    # FS#39815
-    patch -p1 -i "${srcdir}/0010-iwlwifi-mvm-delay-enabling-smart-FIFO-until-after-be.patch"
-
-    # fix Xorg crash with i810 chipset due to wrong removed error check
-    # References: http://lkml.kernel.org/g/533D01BD.1010200@googlemail.com
-    patch -Np1 -i "${srcdir}/0011-kernfs-fix-removed-error-check.patch"
 
     # fix saa7134 video
     # https://bugs.archlinux.org/task/39904
     # https://bugzilla.kernel.org/show_bug.cgi?id=73361
     patch -Np1 -i "${srcdir}/0012-fix-saa7134.patch"
-
-    # fix xsdt validation bug
-    # https://bugs.archlinux.org/task/39811
-    # https://bugzilla.kernel.org/show_bug.cgi?id=73911
-    patch -Np1 -i "${srcdir}/0015-fix-xsdt-validation.patch"
 
     msg "Patching source with BFQ patches"
     for p in "${srcdir}"/000{1,2,3}-block*.patch; do
@@ -398,7 +376,7 @@ package_linux-uksm-headers() {
 pkgdesc='Linux Kernel and modules with the UKSM patchset'
 
 sha512sums=('5730d83a7a81134c1e77c0bf89e42dee4f8251ad56c1ac2be20c59e26fdfaa7bea55f277e7af156b637f22e1584914a46089af85039177cb43485089c74ac26e'
-            '068d139063c94f0e3fd4c24217705628b20f996f6e4cce88366c060150a123381babcfc05c953c58023deff0f7b28b4129b8d381b20dd4e3ac80ce4dbc4ec1e3'
+            'ba8784eb4968b639704e225cbd0455768a3d381ade19d37e0cc06cc00606cc9706163b27441f32b1de4a6f71d44b14004e931ea3f9a2d86c20e35dc881e6d451'
             'f741c2c3f593fa6f3c25e1121aa921182bd0c8cdb64478e666e34f9c0093f216d8840e99176b0f473d19bfb2da47d6838a96d5616f8cddc7e2e107e3de77b76c'
             'e89fd2d2b1f902c22d174a3c5d7b7b7056cc9d00facca57de1d045cad81d8a02ce6b581c2adb1d3df9c7614fddb58a0a941782b1e4958667a9185a2fbef1b0bf'
             '3e8be83133b4bc4399d1f065f3d8f7a9978016c9ed9945d10acae264fd6b301246f7bfbc93e46e4bd72fef4386614202e1bba10ecb66ad2e6451ee1bba0ce302'
@@ -408,11 +386,7 @@ sha512sums=('5730d83a7a81134c1e77c0bf89e42dee4f8251ad56c1ac2be20c59e26fdfaa7bea5
             'f26306c173e3fc35ae6df4c43e9ddbac33845dcc1fb0def612fe370c2d7b8f904b4c70d267eb52717ade879d1e289695b9e971dfcb1c963dac4c6e2fb5230453'
             'da69065f317212c7937f5c3110afdef6006da7756b0a2a98c4bff94db12eb503dc89040aa3cd7a1655ba1b0641f47dda4e60933309e231eaecbe9bd79cb06ebd'
             '4b9fa6afdd1f4f4f6a3a439380cff3376ef33e782aac0ae92421f4b7c40140d57a04d7bc57dfd9fb59fdefb3a0a55fe7e7d6022314b11ef454a1cae4b75cf264'
-            'f1c70f387308dc46bf72d8ee2166ae27e0657405c6aed4bf285112caa8503383b597787dc66e79d502058ccb05b52999df03a3cc4c27456f38e30684f1c0ca44'
             'fdb67e9956d9af1518d0198b86b13150b28f43dd28eb52222a9c43699f7304cd1a56d7f421a0690fa4c0d2c266fd5504da9d6217f83a42d05f35b713fd85e2dd'
-            '21ff02db8215e6ba38a0025fed91fb4f8a24d1639e9809529de3a29d93d334d1feff5faf571f809f421b8d180ee4eec43e9da9ca73360d5be433c7dfaaf97520'
-            'bae01b3cadbb5be30cdf32ac5bbbb5264300fe5d8dd05d4aaad1a29285179562484702d42dee02df6b3206dde4be986c14ecfc9ba75646d854fa08c91521c346'
             '6e59caeff81a9d1370918c1fa55a85ac6f0ba2b4600ce0b74638c0b9d90242e0185af399b7d153c22c772c8be04518c006331e5b2cfaa0ea6ea09978978a1ed1'
-            '5ff4aac8e32b3b65788c150f36043b761729deead93a5618cee61bba8637c9e4ac7d9d55d30c047e266a55dfe9ae84bcdf1d9968e2643eb9bba5a45cdc5c9cbc'
-            '6d078f1afb62ab61eb0101eeeafc725aac93afbcf9890aad6f1b98cd379619ac31af61f0c4365b280eb904c0980fc9f14f59b2be3f35c54ff179c32823ad30f7'
-            'c5372aa0e328d0694daae9b722581e414efd9efb8fc735cf1cc8dfc3fde20192746e3f0cd26afcc4cbc53547ecbf09bcef7ea050c56ae99525d17ae9302af4cc')
+            'f03e8656c62708457d8fed0ecad073a27a71c52382f51f89ccd4e7f3a15762e1754a83980250ac5ec5c1630d4f5fc107b77c8c6e31e90638a7ccbd1cd41502c3'
+            'a245ee378f6ae155fd2a59846afa76969f004c6f714fb78d27477f633c2ce3922fb055c8c1944601412129d48d9b7a5418cbe3743629e97b4e16e53e0fa931f1')
