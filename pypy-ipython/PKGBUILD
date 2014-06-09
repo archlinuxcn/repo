@@ -16,8 +16,8 @@ pkgname=pypy-ipython
 } || {
   true && pkgname=(pypy-ipython)
 }
-pkgver=2.0.0
-pkgrel=3
+pkgver=2.1.0
+pkgrel=1
 pkgdesc="An enhanced Interactive Python shell. pypy version"
 arch=('any')
 url="http://ipython.org"
@@ -36,8 +36,8 @@ makedepends=('sqlite')
 #source=("http://archive.ipython.org/release/$pkgver/ipython-$pkgver.tar.gz")
 source=("https://pypi.python.org/packages/source/i/ipython/ipython-$pkgver.tar.gz"
   revert-xdg.patch)
-md5sums=('dd209ff8c7b08565478e4fc04bdf33ee'
-         'c35e45916c514957f27ec5278fa86472')
+md5sums=('785c7b6364c6a0dd34aa4ea970cf83b9'
+         'ea30de2d0ee31d788f3784bc1b2daf0b')
 
 prepare() {
   cd "$srcdir/ipython-$pkgver"

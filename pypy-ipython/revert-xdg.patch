@@ -1,7 +1,7 @@
-diff -ur ipython-2.0.0.orig/IPython/utils/path.py ipython-2.0.0/IPython/utils/path.py
---- ipython-2.0.0.orig/IPython/utils/path.py	2014-04-01 23:31:01.000000000 -0600
-+++ ipython-2.0.0/IPython/utils/path.py	2014-04-03 14:36:45.310409744 -0600
-@@ -271,34 +271,15 @@
+diff -ur ipython-2.1.0.orig/IPython/utils/path.py ipython-2.1.0/IPython/utils/path.py
+--- ipython-2.1.0.orig/IPython/utils/path.py	2014-05-21 15:19:12.000000000 -0400
++++ ipython-2.1.0/IPython/utils/path.py	2014-06-05 00:11:10.988046192 -0400
+@@ -271,37 +271,15 @@
      env = os.environ
      pjoin = os.path.join
  
@@ -29,6 +29,9 @@ diff -ur ipython-2.0.0.orig/IPython/utils/path.py ipython-2.0.0/IPython/utils/pa
 -                cu = compress_user
 -                if os.path.exists(ipdir):
 -                    warnings.warn(('Ignoring {0} in favour of {1}. Remove {0} '
+-                    'to get rid of this message').format(cu(xdg_ipdir), cu(ipdir)))
+-                elif os.path.islink(xdg_ipdir):
+-                    warnings.warn(('{0} is deprecated. Move link to {1} '
 -                    'to get rid of this message').format(cu(xdg_ipdir), cu(ipdir)))
 -                else:
 -                    warnings.warn('Moving {0} to {1}'.format(cu(xdg_ipdir), cu(ipdir)))
