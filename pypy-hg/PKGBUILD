@@ -3,7 +3,7 @@
 # Contributor: William Giokas (KaiSforza) <1007380@gmail.com>
 
 pkgname=pypy-hg
-pkgver=71756
+pkgver=72016
 pkgrel=1
 pkgdesc="A Python implementation written in Python, JIT enabled"
 url="http://codespeak.net/pypy/"
@@ -47,12 +47,18 @@ build() {
 }
 
 package() {
+  cd "${srcdir}"
+  mkdir -p licenses/{libbz2-,openssl}
+  ln -sf /usr/share/licenses/bzip2/LICENSE licenses/libbz2-/copyright
+  ln -sf /usr/share/licenses/openssl/LICENSE licenses/openssl/copyright
+
   cd "${srcdir}"/pypy/pypy/tool/release
 
   _PYTHON=python2
   which pypy 2> /dev/null && _PYTHON=pypy
 
-  $_PYTHON package.py ../../../ pypy pypy-c "${srcdir}"/${pkgname}.tar.bz2
+  $_PYTHON package.py --license_base "${srcdir}"/licenses \
+    ../../../ pypy pypy-c "${srcdir}"/${pkgname}.tar.bz2
 
   mkdir -p "${pkgdir}"/opt
   tar x -C "${pkgdir}"/opt -f "${srcdir}"/${pkgname}.tar.bz2
