@@ -1,4 +1,4 @@
-# $Id: PKGBUILD 111766 2014-05-23 22:38:36Z heftig $
+# $Id: PKGBUILD 112777 2014-06-06 22:12:36Z heftig $
 # Maintainer: Fantix King <fantix.king@gmail.com>
 # Upstream Maintainer: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 # Contributor: Allan McRae <allan@archlinux.org>
@@ -8,10 +8,10 @@
 
 pkgname='gcc-multilib-x32'
 true && pkgname=('gcc-multilib-x32' 'gcc-libs-multilib-x32' 'libx32-gcc-libs' 'gcc-fortran-multilib-x32' 'gcc-objc-multilib-x32' 'gcc-ada-multilib-x32' 'gcc-go-multilib-x32')
-pkgver=4.9.0_3
+pkgver=4.9.0_4
 _pkgver=4.9
 pkgrel=1
-_snapshot=4.9-20140521
+_snapshot=4.9-20140604
 pkgdesc="The GNU Compiler Collection for multilib with x32 ABI support"
 arch=('x86_64')
 license=('GPL' 'LGPL' 'FDL' 'custom')
@@ -23,7 +23,7 @@ options=('!emptydirs')
 source=(#ftp://gcc.gnu.org/pub/gcc/releases/gcc-${pkgver%_*}/gcc-${pkgver%_*}.tar.bz2
         ftp://gcc.gnu.org/pub/gcc/snapshots/${_snapshot}/gcc-${_snapshot}.tar.bz2
         gcc-4.8-filename-output.patch)
-md5sums=('cd3cbe93ebc7207bf65d30e3c9a74a26'
+md5sums=('57aa4ff81c56262dc89994853c4d0149'
          '40cb437805e2f7a006aa0d0c3098ab0f')
 
 if [ -n "${_snapshot}" ]; then
