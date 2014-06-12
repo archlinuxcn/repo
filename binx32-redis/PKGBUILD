@@ -1,4 +1,4 @@
-# $Id: PKGBUILD 112724 2014-06-05 16:37:09Z spupykin $
+# $Id: PKGBUILD 113033 2014-06-11 15:06:18Z spupykin $
 # Upstream Maintainer: Sergej Pupykin <pupykin.s+arch@gmail.com>
 # Upstream Maintainer: Jan-Erik Rediger <badboy at archlinux dot us>
 # Contributor: nofxx <x@<nick>.com>
@@ -6,13 +6,13 @@
 
 _basepkgname=redis
 pkgname=binx32-redis
-pkgver=2.8.10
+pkgver=2.8.11
 pkgrel=1
 pkgdesc="Advanced key-value store (x32 ABI)"
 arch=('x86_64')
 url="http://redis.io/"
 license=('BSD')
-depends=('bash' 'libx32-glibc' "${_basepkgname}=${pkgver}")
+depends=('bash' 'libx32-glibc' "${_basepkgname}")
 makedepends=('gcc-multilib-x32>=3.1' 'make' 'pkgconfig')
 backup=("etc/redis-x32.conf"
 	"etc/logrotate.d/redis-x32")
@@ -21,7 +21,7 @@ source=("http://download.redis.io/releases/redis-$pkgver.tar.gz"
 	"redis.service"
 	"redis.logrotate"
 	"redis.tmpfiles.d")
-md5sums=('54a984a5c61fd1d815625fb1ea9ff5ad'
+md5sums=('196e0cf387d8885439add8a3e1cab469'
          'db421c66570172e780ab6c4c9e41ccca'
          '5a51ae6c10564edb716a93f22e821d67'
          '33b11afbb94d642606fc12ba4dda9985')
