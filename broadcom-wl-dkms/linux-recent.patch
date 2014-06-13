@@ -1,6 +1,21 @@
+diff -Naur a/src/wl/sys/wl_cfg80211_hybrid.c b/src/wl/sys/wl_cfg80211_hybrid.c
+--- a/src/wl/sys/wl_cfg80211_hybrid.c	2013-08-01 00:52:22.000000000 -0600
++++ b/src/wl/sys/wl_cfg80211_hybrid.c	2014-05-03 08:36:50.708972367 -0600
+@@ -1841,7 +1841,11 @@
+ 			wl_get_assoc_ies(wl);
+ 			memcpy(&wl->bssid, &e->addr, ETHER_ADDR_LEN);
+ 			wl_update_bss_info(wl);
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 15, 0)
++			cfg80211_ibss_joined(ndev, (u8 *)&wl->bssid, &wl->conf->channel, GFP_KERNEL);
++#else
+ 			cfg80211_ibss_joined(ndev, (u8 *)&wl->bssid, GFP_KERNEL);
++#endif
+ 			set_bit(WL_STATUS_CONNECTED, &wl->status);
+ 			wl->profile->active = true;
+ 		}
 diff -Naur a/src/wl/sys/wl_linux.c b/src/wl/sys/wl_linux.c
---- a/src/wl/sys/wl_linux.c	2013-08-01 06:52:22.000000000 +0000
-+++ b/src/wl/sys/wl_linux.c	2014-01-03 17:24:56.196678108 +0000
+--- a/src/wl/sys/wl_linux.c	2013-08-01 00:52:22.000000000 -0600
++++ b/src/wl/sys/wl_linux.c	2014-05-03 08:35:03.854790184 -0600
 @@ -3236,7 +3236,12 @@
  wl_tkip_printstats(wl_info_t *wl, bool group_key)
  {
