@@ -1,2 +1,3 @@
 #!/bin/sh
-g++ "${@//-Wimplicit/-Wall}" -Ofast -Wall -Wextra -Wunused-result
+CXX=${CXX:-g++}
+$CXX "${@//-Wimplicit/-Wall}" -Ofast -Wall -Wextra -Wunused-result
