@@ -25,9 +25,9 @@ ac_add_options --disable-libproxy
 # Features
 ac_add_options --enable-startup-notification
 ac_add_options --enable-pulseaudio
-#ac_add_options --enable-gstreamer=1.0
+ac_add_options --enable-gstreamer=1.0
 
-ac_add_options --disable-gio
+#ac_add_options --disable-gio
 ac_add_options --disable-gconf
 ac_add_options --disable-gnomevfs
 ac_add_options --disable-crashreporter
@@ -39,7 +39,7 @@ ac_add_options --disable-debug-symbols
 
 # Optimization
 ac_add_options --enable-optimize
-#ac_add_options --enable-jemalloc
+ac_add_options --enable-jemalloc
 export MOZ_JEMALLOC=1
 
 ac_add_options --with-google-api-keyfile="$PWD/google-api-key"
