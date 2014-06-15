@@ -78,8 +78,13 @@ prepare() {
 
     ### Patch source with UKSM
     msg "Patching with UKSM"
+
+    # https://github.com/pfactum/pf-kernel/commit/793ed4408856bcf8cd121088a7a620486e493e32
+    sed -i '1351s/mm->mmap_cache = NULL;/vmacache_invalidate(mm);/' "$srcdir/uksm-${_uksmvernel}-for-${_uksmname}.patch"
+
     # Remove conflicting part with linux 3.15, which doesn't make sense
     sed -i '1141,1149d' "$srcdir/uksm-${_uksmvernel}-for-${_uksmname}.patch"
+
     patch -Np1 -i "$srcdir/uksm-${_uksmvernel}-for-${_uksmname}.patch"
 
     ### Clean tree and copy ARCH config over
