@@ -1,0 +1,12 @@
+diff --git a/drivers/gpu/drm/i915/i915_gem_execbuffer.c b/drivers/gpu/drm/i915/i915_gem_execbuffer.c
+index a3ba9a8..86c173b 100644
+--- a/drivers/gpu/drm/i915/i915_gem_execbuffer.c
++++ b/drivers/gpu/drm/i915/i915_gem_execbuffer.c
+@@ -995,6 +995,7 @@ i915_gem_do_execbuffer(struct drm_device *dev, void *data,
+ 		return ret;
+ 
+ 	flags = 0;
++	flags |= I915_DISPATCH_SECURE;
+ 	if (args->flags & I915_EXEC_SECURE) {
+ 		if (!file->is_master || !capable(CAP_SYS_ADMIN))
+ 		    return -EPERM;

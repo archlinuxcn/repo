@@ -1,0 +1,110 @@
+From 720a9dbf61c88bd57d6f8198ed8ccb2bd4a6abd8 Mon Sep 17 00:00:00 2001
+From: Matt Fleming <matt@console-pimps.org>
+Date: Wed, 9 Apr 2014 10:33:49 +0200
+Subject: [PATCH 07/10] x86/efi: Correct EFI boot stub use of code32_start
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+code32_start should point at the start of the protected mode code, and
+*not* at the beginning of the bzImage. This is much easier to do in
+assembly so document that callers of make_boot_params() need to fill out
+code32_start.
+
+The fallout from this bug is that we would end up relocating the image
+but copying the image at some offset, resulting in what appeared to be
+memory corruption.
+
+Reported-by: Thomas Bächler <thomas@archlinux.org>
+Signed-off-by: Matt Fleming <matt.fleming@intel.com>
+---
+ arch/x86/boot/compressed/eboot.c   |  5 +++--
+ arch/x86/boot/compressed/head_32.S | 14 ++++++++------
+ arch/x86/boot/compressed/head_64.S |  9 +++------
+ 3 files changed, 14 insertions(+), 14 deletions(-)
+
+diff --git a/arch/x86/boot/compressed/eboot.c b/arch/x86/boot/compressed/eboot.c
+index a7677ba..78cbb2d 100644
+--- a/arch/x86/boot/compressed/eboot.c
++++ b/arch/x86/boot/compressed/eboot.c
+@@ -425,6 +425,9 @@ void setup_graphics(struct boot_params *boot_params)
+  * Because the x86 boot code expects to be passed a boot_params we
+  * need to create one ourselves (usually the bootloader would create
+  * one for us).
++ *
++ * The caller is responsible for filling out ->code32_start in the
++ * returned boot_params.
+  */
+ struct boot_params *make_boot_params(void *handle, efi_system_table_t *_table)
+ {
+@@ -483,8 +486,6 @@ struct boot_params *make_boot_params(void *handle, efi_system_table_t *_table)
+ 	hdr->vid_mode = 0xffff;
+ 	hdr->boot_flag = 0xAA55;
+ 
+-	hdr->code32_start = (__u64)(unsigned long)image->image_base;
+-
+ 	hdr->type_of_loader = 0x21;
+ 
+ 	/* Convert unicode cmdline to ascii */
+diff --git a/arch/x86/boot/compressed/head_32.S b/arch/x86/boot/compressed/head_32.S
+index 9116aac..f45ab7a 100644
+--- a/arch/x86/boot/compressed/head_32.S
++++ b/arch/x86/boot/compressed/head_32.S
+@@ -50,6 +50,13 @@ ENTRY(efi_pe_entry)
+ 	pushl	%eax
+ 	pushl	%esi
+ 	pushl	%ecx
++
++	call	reloc
++reloc:
++	popl	%ecx
++	subl	reloc, %ecx
++	movl	%ecx, BP_code32_start(%eax)
++
+ 	sub	$0x4, %esp
+ 
+ ENTRY(efi_stub_entry)
+@@ -63,12 +70,7 @@ ENTRY(efi_stub_entry)
+ 	hlt
+ 	jmp	1b
+ 2:
+-	call	3f
+-3:
+-	popl	%eax
+-	subl	$3b, %eax
+-	subl	BP_pref_address(%esi), %eax
+-	add	BP_code32_start(%esi), %eax
++	movl	BP_code32_start(%esi), %eax
+ 	leal	preferred_addr(%eax), %eax
+ 	jmp	*%eax
+ 
+diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
+index c5c1ae0..b10fa66 100644
+--- a/arch/x86/boot/compressed/head_64.S
++++ b/arch/x86/boot/compressed/head_64.S
+@@ -217,6 +217,8 @@ ENTRY(efi_pe_entry)
+ 	cmpq	$0,%rax
+ 	je	1f
+ 	mov	%rax, %rdx
++	leaq	startup_32(%rip), %rax
++	movl	%eax, BP_code32_start(%rdx)
+ 	popq	%rsi
+ 	popq	%rdi
+ 
+@@ -230,12 +232,7 @@ ENTRY(efi_stub_entry)
+ 	hlt
+ 	jmp	1b
+ 2:
+-	call	3f
+-3:
+-	popq	%rax
+-	subq	$3b, %rax
+-	subq	BP_pref_address(%rsi), %rax
+-	add	BP_code32_start(%esi), %eax
++	movl	BP_code32_start(%esi), %eax
+ 	leaq	preferred_addr(%rax), %rax
+ 	jmp	*%rax
+ 
+-- 
+1.9.2
+
