@@ -1,14 +1,14 @@
 pkgbase=pypy-setuptools
 pkgname=(pypy3-setuptools pypy-setuptools)
 # pkgname=(pypy-setuptools)
-pkgver=4.0
+pkgver=5.1
 pkgrel=1
 pkgdesc="Easily download, build, install, upgrade, and uninstall Python packages"
 arch=('any')
 license=('PSF')
 url="http://pypi.python.org/pypi/setuptools"
 source=(http://pypi.python.org/packages/source/s/setuptools/setuptools-${pkgver}.tar.gz)
-md5sums=('d7f08bf4fe55312f9f9fbe03d6642bce')
+md5sums=('c26e47ce8d7b46bd354e68301f410fb8')
 makedepends=('pypy' 'pypy3')
 
 prepare() {
