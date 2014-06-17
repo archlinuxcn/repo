@@ -1,0 +1,195 @@
+Index: etc/fonts/conf.avail/41-ttf-arphic-ukai.conf
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- etc/fonts/conf.avail/41-ttf-arphic-ukai.conf	(date 1374680422000)
++++ etc/fonts/conf.avail/41-ttf-arphic-ukai.conf	(date 1374684378000)
+@@ -7,10 +7,25 @@
+  -->
+ 	<alias>
+ 		<family>AR PL ZenKai Uni</family>
++		<default><family>sans-serif</family></default>
++	</alias>
++	<alias>
+ 		<family>AR PL ZenKai Uni MBE</family>
++		<default><family>sans-serif</family></default>
++	</alias>
++	<alias>
+ 		<family>AR PL UKai CN</family>
++		<default><family>sans-serif</family></default>
++	</alias>
++	<alias>
+ 		<family>AR PL UKai HK</family>
++		<default><family>sans-serif</family></default>
++	</alias>
++	<alias>
+ 		<family>AR PL UKai TW</family>
++		<default><family>sans-serif</family></default>
++	</alias>
++	<alias>
+ 		<family>AR PL UKai TW MBE</family>
+ 		<default><family>sans-serif</family></default>
+ 	</alias>
+Index: etc/fonts/conf.avail/41-ttf-arphic-uming.conf
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- etc/fonts/conf.avail/41-ttf-arphic-uming.conf	(date 1374680422000)
++++ etc/fonts/conf.avail/41-ttf-arphic-uming.conf	(date 1374684378000)
+@@ -7,10 +7,25 @@
+  -->
+ 	<alias>
+ 		<family>AR PL ShanHeiSun Uni</family>
++		<default><family>serif</family></default>
++	</alias>
++	<alias>
+ 		<family>AR PL ShanHeiSun Uni MBE</family>
++		<default><family>serif</family></default>
++	</alias>
++	<alias>
+ 		<family>AR PL UMing CN</family>
++		<default><family>serif</family></default>
++	</alias>
++	<alias>
+ 		<family>AR PL UMing HK</family>
++		<default><family>serif</family></default>
++	</alias>
++	<alias>
+ 		<family>AR PL UMing TW</family>
++		<default><family>serif</family></default>
++	</alias>
++	<alias>
+ 		<family>AR PL UMing TW MBE</family>
+ 		<default><family>serif</family></default>
+ 	</alias>
+@@ -19,10 +34,25 @@
+  -->
+ 	<alias>
+ 		<family>AR PL ShanHeiSun Uni</family>
++		<default><family>sans-serif</family></default>
++	</alias>
++	<alias>
+ 		<family>AR PL ShanHeiSun Uni MBE</family>
++		<default><family>sans-serif</family></default>
++	</alias>
++	<alias>
+ 		<family>AR PL UMing CN</family>
++		<default><family>sans-serif</family></default>
++	</alias>
++	<alias>
+ 		<family>AR PL UMing HK</family>
++		<default><family>sans-serif</family></default>
++	</alias>
++	<alias>
+ 		<family>AR PL UMing TW</family>
++		<default><family>sans-serif</family></default>
++	</alias>
++	<alias>
+ 		<family>AR PL UMing TW MBE</family>
+ 		<default><family>sans-serif</family></default>
+ 	</alias>
+@@ -31,10 +61,25 @@
+  -->
+  	<alias>
+ 		<family>AR PL ShanHeiSun Uni</family>
++		<default><family>monospace</family></default>
++	</alias>
++	<alias>
+ 		<family>AR PL ShanHeiSun Uni MBE</family>
++		<default><family>monospace</family></default>
++	</alias>
++	<alias>
+ 		<family>AR PL UMing CN</family>
++		<default><family>monospace</family></default>
++	</alias>
++	<alias>
+ 		<family>AR PL UMing HK</family>
++		<default><family>monospace</family></default>
++	</alias>
++	<alias>
+ 		<family>AR PL UMing TW</family>
++		<default><family>monospace</family></default>
++	</alias>
++	<alias>
+ 		<family>AR PL UMing TW MBE</family>
+ 		<default><family>monospace</family></default>
+ 	</alias>
+Index: etc/fonts/conf.avail/44-wqy-zenhei.conf
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- etc/fonts/conf.avail/44-wqy-zenhei.conf	(date 1374680422000)
++++ etc/fonts/conf.avail/44-wqy-zenhei.conf	(date 1374684378000)
+@@ -6,7 +6,11 @@
+   <match target="font">
+         <test qual="any" name="family">
+                 <string>WenQuanYi Zen Hei</string>
++        </test> 
++        <test qual="any" name="family">
+                 <string>文泉驿正黑</string>
++        </test> 
++        <test qual="any" name="family">
+                 <string>文泉驛正黑</string>
+         </test> 
+         <edit name="globaladvance"><bool>false</bool></edit>
+Index: etc/fonts/conf.avail/69-language-selector-zh-cn.conf
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- etc/fonts/conf.avail/69-language-selector-zh-cn.conf	(date 1374680422000)
++++ etc/fonts/conf.avail/69-language-selector-zh-cn.conf	(date 1374684378000)
+@@ -9,10 +9,13 @@
+ 		<test qual="any" name="family">
+ 			<string>serif</string>
+ 		</test>
+-		<edit name="family" mode="prepend">
++		<edit name="family" mode="prepend" binding="strong">
++			<string>DejaVu Serif</string>
++			<string>Bitstream Vera Serif</string>
+ 			<string>HYSong</string>
+ 			<string>AR PL UMing CN</string>
+ 			<string>AR PL UMing HK</string>
++			<string>AR PL ShanHeiSun Uni</string>
+ 			<string>AR PL New Sung</string>
+ 			<string>WenQuanYi Bitmap Song</string>
+ 			<string>AR PL UKai CN</string>
+@@ -26,12 +29,16 @@
+         <test name="lang">
+             <string>zh-cn</string>
+         </test>
+-		<edit name="family" mode="prepend">
++		<edit name="family" mode="prepend" binding="strong">
++			<string>DejaVu Sans</string>
++			<string>Bitstream Vera Sans</string>
++			<string>WenQuanYi Micro Hei</string>
+ 			<string>WenQuanYi Zen Hei</string>
+ 			<string>Droid Sans Fallback</string>
+ 			<string>HYSong</string>
+ 			<string>AR PL UMing CN</string>
+ 			<string>AR PL UMing HK</string>
++			<string>AR PL ShanHeiSun Uni</string>
+ 			<string>AR PL New Sung</string>
+ 			<string>AR PL UKai CN</string>
+ 			<string>AR PL ZenKai Uni</string>
+@@ -44,12 +51,16 @@
+         <test name="lang">
+             <string>zh-cn</string>
+         </test>
+-		<edit name="family" mode="prepend">
++		<edit name="family" mode="prepend" binding="strong">
++			<string>DejaVu Sans Mono</string>
++			<string>Bitstream Vera Sans Mono</string>
++			<string>WenQuanYi Micro Hei Mono</string>
+ 			<string>WenQuanYi Zen Hei Mono</string>
+ 			<string>Droid Sans Fallback</string>
+ 			<string>HYSong</string>
+ 			<string>AR PL UMing CN</string>
+ 			<string>AR PL UMing HK</string>
++			<string>AR PL ShanHeiSun Uni</string>
+ 			<string>AR PL New Sung</string>
+ 			<string>AR PL UKai CN</string>
+ 			<string>AR PL ZenKai Uni</string>
