@@ -2,8 +2,10 @@
 # Maintainer: Zack Buhman (buhman) <zack@buhman.org>
 # Contributor: William Giokas (KaiSforza) <1007380@gmail.com>
 
+USE_PYPY=1
+
 pkgname=pypy-hg
-pkgver=72046
+pkgver=72082.ecc6b0658fdb
 pkgrel=1
 pkgdesc="A Python implementation written in Python, JIT enabled"
 url="http://codespeak.net/pypy/"
@@ -20,18 +22,12 @@ optdepends=('openssl: openssl module'
             'bzip2: bz2 module')
 license=('custom:MIT')
 
-# # Why use python2 or a previous version of pypy to do the translation when we
-# # could just as easily use the upstream binary?
-# source=('hg+https://bitbucket.org/pypy/pypy#revision=ec637e3'
-#         'http://buildbot.pypy.org/nightly/trunk/pypy-c-jit-71543-88e8c347e2e2-linux64.tar.bz2')
-# md5sums=('SKIP'
-#          '67cf439db19a3ce64223a70ca5c19d47')
 source=('hg+https://bitbucket.org/pypy/pypy')
 md5sums=('SKIP')
 
 pkgver() {
   cd "${srcdir}"/pypy
-  echo "$(hg id -n)"
+  echo "$(hg id -n).$(hg id -i)"
 }
 
 build() {
@@ -41,7 +37,7 @@ build() {
   export CXXFLAGS="-O1"
 
   _PYTHON=python2
-  which pypy 2> /dev/null && _PYTHON=pypy
+  ((USE_PYPY)) && which pypy &> /dev/null && _PYTHON=pypy
 
   $_PYTHON ../../rpython/bin/rpython -Ojit targetpypystandalone
 }
@@ -55,7 +51,7 @@ package() {
   cd "${srcdir}"/pypy/pypy/tool/release
 
   _PYTHON=python2
-  which pypy 2> /dev/null && _PYTHON=pypy
+  ((USE_PYPY)) && which pypy 2> /dev/null && _PYTHON=pypy
 
   $_PYTHON package.py --license_base "${srcdir}"/licenses \
     ../../../ pypy pypy-c "${srcdir}"/${pkgname}.tar.bz2
