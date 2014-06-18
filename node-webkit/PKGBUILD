@@ -1,12 +1,12 @@
 pkgname=node-webkit
 pkgver=0.9.2
 _srcver="0.9.2"
-pkgrel=3
+pkgrel=7
 pkgdesc="node-webkit is an app runtime based on Chromium and node.js."
 arch=("i686" "x86_64")
 url="https://github.com/rogerwang/node-webkit"
 license=("MIT")
-depends=("libudev0" "alsa-lib" "gconf" "gtk2" "nss")
+depends=("alsa-lib" "gconf" "gtk2" "nss" "ttf-font")
 optdepends=("nodejs: npm package support"
 "nw-gyp: native add-on build tool for node-webkit")
 
@@ -18,18 +18,21 @@ if [ "$CARCH" = "x86_64" ]; then
   _arch="x64"
   sha256sums=("56b4de6d117dd8a5df4fe61f17a96949fee5f25e8ad67998ff79dbdef3836911")
 fi
-
-source=( "https://s3.amazonaws.com/${pkgname}/v${_srcver}/${pkgname}-v${_srcver}-linux-${_arch}.tar.gz" )
+# http://dl.node-webkit.org/v0.9.2/node-webkit-v0.9.2-linux-x64.tar.gz
+source=( "http://dl.node-webkit.org/v${_srcver}/${pkgname}-v${_srcver}-linux-${_arch}.tar.gz" )
 
 package() {
   msg2 "create path and copy files"
   mkdir -p $pkgdir/usr/{lib/${pkgname},bin}
+
   cp -R $srcdir/${pkgname}-v${_srcver}-linux-$_arch/* $pkgdir/usr/lib/node-webkit/
-  
+
+  msg2 "replace string udev.so.0 to udev.so.1 in nw binary"
+  sed -i 's/\x75\x64\x65\x76\x2E\x73\x6F\x2E\x30/\x75\x64\x65\x76\x2E\x73\x6F\x2E\x31/g' "$pkgdir/usr/lib/node-webkit/nw"
+
   msg2 "symlink /usr/bin/nw -> /usr/lib/${pkgname}/nw"
   ln -s "/usr/lib/${pkgname}/nw" "$pkgdir/usr/bin/nw"
 
   msg2 "symlink /usr/bin/nwsnapshot -> /usr/lib/${pkgname}/nwsnapshot"
   ln -s "/usr/lib/${pkgname}/nwsnapshot" "$pkgdir/usr/bin/nwsnapshot"
 }
-
