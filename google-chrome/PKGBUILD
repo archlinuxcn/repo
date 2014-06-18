@@ -9,10 +9,10 @@
 _v34=0
 
 pkgname=google-chrome
-pkgver=35.0.1916.114
+pkgver=35.0.1916.153
 pkgrel=1
 pkgdesc="An attempt at creating a safer, faster, and more stable browser (Stable Channel)"
-[ "${_v34}" = '1' ] && pkgdesc="An attempt at creating a safer, faster, and more stable browser (Stable Channel) (v34)"
+[ "$_v34" = '1' ] && pkgdesc="$pkgdesc (v34)"
 arch=('i686' 'x86_64')
 url="https://www.google.com/chrome"
 license=('custom:chrome')
@@ -20,44 +20,48 @@ depends=('alsa-lib' 'desktop-file-utils' 'flac' 'gconf' 'gtk2' 'harfbuzz' 'harfb
          'libgcrypt15' 'libpng' 'libxss' 'libxtst' 'nss' 'opus' 'snappy' 'speech-dispatcher' 'ttf-font' 'xdg-utils')
 optdepends=('kdebase-kdialog: needed for file dialogs in KDE'
             'ttf-google-fonts-git')
-provides=("google-chrome=${pkgver}")
+provides=("google-chrome=$pkgver")
 options=('!emptydirs' '!strip')
-install=${pkgname}.install
+install=$pkgname.install
 _channel=stable
 _arch=i386
-[ "${CARCH}" = 'x86_64' ] && _arch=amd64
-source=("google-chrome-${_channel}_${pkgver}_${_arch}.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_${_arch}.deb")
-md5sums=('c4a88b4234f42c783441f760f5fc6070')
-[ "${CARCH}" = 'x86_64' ] && md5sums[0]='622a495960f247eca2f14eb2eccb5303'
-if [ "${_v34}" = '1' ]; then
-    source=("http://95.31.35.30/chrome/pool/main/g/google-chrome-${_channel}/google-chrome-${_channel}_34.0.1847.137-1_${_arch}.deb")
-    md5sums=('06388a15d51f815062dd4bcddaeec1cf')
-    [ "${CARCH}" = 'x86_64' ] && md5sums[0]='3cc7cd28bbb7bb3e5add19f27a6d0dda'
+[ "$CARCH" = 'x86_64' ] && _arch=amd64
+source=("google-chrome-${_channel}_${pkgver}_$_arch.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_$_arch.deb")
+md5sums=('2e51d1d06b6fdcb95b25042be0b44300')
+[ "$CARCH" = 'x86_64' ] && md5sums[0]='0cf3cbd05f4a8c90e88b597b0c4028a0'
+if [ "$_v34" = '1' ]; then
+  source=("http://95.31.35.30/chrome/pool/main/g/google-chrome-$_channel/google-chrome-${_channel}_34.0.1847.137-1_$_arch.deb")
+  md5sums=('06388a15d51f815062dd4bcddaeec1cf')
+  [ "$CARCH" = 'x86_64' ] && md5sums[0]='3cc7cd28bbb7bb3e5add19f27a6d0dda'
 fi
 
 package() {
   msg2 "Extracting the data.tar.lzma"
-  bsdtar -xf data.tar.lzma -C "${pkgdir}/"
+  bsdtar -xf data.tar.lzma -C "$pkgdir/"
 
   msg2 "Moving stuff in place"
   # Icons
   for i in 16 22 24 32 48 64 128 256; do
-    install -Dm644 "${pkgdir}"/opt/google/chrome/product_logo_${i}.png \
-                   "${pkgdir}"/usr/share/icons/hicolor/${i}x${i}/apps/google-chrome.png
+    install -Dm644 "$pkgdir"/opt/google/chrome/product_logo_$i.png \
+                   "$pkgdir"/usr/share/icons/hicolor/${i}x$i/apps/google-chrome.png
   done
 
   # Man page
-  gzip "${pkgdir}"/usr/share/man/man1/google-chrome.1
+  gzip "$pkgdir"/usr/share/man/man1/google-chrome.1
 
   # License
-  install -d "${pkgdir}"/usr/share/licenses/google-chrome/
+  install -d "$pkgdir"/usr/share/licenses/google-chrome/
   curl -Ls https://www.google.com/intl/en/chrome/browser/privacy/eula_text.html \
-        -o "${pkgdir}"/usr/share/licenses/google-chrome/eula_text.html
+        -o "$pkgdir"/usr/share/licenses/google-chrome/eula_text.html
 
   msg2 "Symlinking missing Udev lib"
-  ln -s /usr/lib/libudev.so.1 "${pkgdir}"/opt/google/chrome/libudev.so.0
+  ln -s /usr/lib/libudev.so.1 "$pkgdir"/opt/google/chrome/libudev.so.0
+
+  msg2 "Fixing Chrome icon resolution"
+  _name=$(echo ${source/_*} | sed 's/.*/\u&/')
+  sed -i "/Exec=/i\StartupWMClass=$_name" "$pkgdir"/usr/share/applications/google-chrome.desktop
 
   msg2 "Removing unnecessities (e.g. Debian Cron job)"
-  rm -r "${pkgdir}"/etc/cron.daily/ "${pkgdir}"/opt/google/chrome/cron/
-  rm "${pkgdir}"/opt/google/chrome/product_logo_*.png
+  rm -r "$pkgdir"/etc/cron.daily/ "$pkgdir"/opt/google/chrome/cron/
+  rm "$pkgdir"/opt/google/chrome/product_logo_*.png
 }
