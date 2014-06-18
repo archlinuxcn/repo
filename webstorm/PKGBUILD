@@ -2,21 +2,23 @@
 # Maintainer: Alexsandr Pavlov <kidoz at mail dot ru>
 pkgname=webstorm
 _pkgname=WebStorm
-pkgver=8.0.3
-_pkgver=135.937
-pkgrel=1
-pkgdesc="Lightweight HTML, JavaScript and CSS editor."
+pkgver=8.0.4
+_pkgver=135.1063
+pkgrel=2
+pkgdesc="JavaScript IDE and HTML editor."
 arch=('i686' 'x86_64')
 options=('!strip')
 url="http://www.jetbrains.com/${pkgname}"
 license=('custom')
 depends=('java-runtime')
 source=(http://download.jetbrains.com/webstorm/${_pkgname}-${pkgver}.tar.gz
+        .AURINFO
         jetbrains-webstorm
         jetbrains-webstorm.desktop)
-sha256sums=('ced54ff565c2b84c1d57f75b89c3a0d414f5199a4487d624f41a50a4faecc4c2'
+sha256sums=('f53a73354337fa1336b1fdc6d5134328394f728deee174d4c332d480f6fbceed'
+            SKIP
             '152a0b551a7955837d0e249b24c69d37282633751fc0f5fc68145edcb7c74711'
-            '15ef28d17976555365f56a11c98cbe1c2bf8753d05df558e8437a1f8295369bf')
+            'b1db75ccf467b58741cb48e6ac0d8abb3b46c6b54361a153bc3e955db31c6b47')
 
 package() {
   cd "${srcdir}"
