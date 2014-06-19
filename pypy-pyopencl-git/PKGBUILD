@@ -14,7 +14,7 @@ else
   makedepends=('pypy-setuptools' 'libcl' 'opencl-headers'
     'mesa' 'pypy-mako' 'pypy-numpy')
 fi
-pkgver=2013.2.0.303.gc60dc75
+pkgver=2014.1.0.238.gadc8a1c
 pkgrel=1
 pkgdesc="A complete, object-oriented language binding of OpenCL to Python. PyPy version on top of cffi"
 arch=('i686' 'x86_64')
@@ -23,7 +23,7 @@ license=('custom')
 epoch=1
 source=('LICENSE.txt' 'cc')
 sha1sums=('2e6966b3d9b15603ce2c3ff79eeadd63c5d066b7'
-          '7fac157115ab3e5ba0c449f4426ea828f45ddc34')
+          '70e53f2b3b32efe852c9d2c266f49dab16df9b20')
 
 _gitname=pyopencl
 
@@ -60,6 +60,7 @@ _fetch_git() {
   git submodule init
   git submodule sync
   git submodule update
+  git fetch --tags
   msg "GIT checkout done or server timeout"
 }
 
