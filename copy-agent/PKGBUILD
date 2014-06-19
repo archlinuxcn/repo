@@ -10,6 +10,7 @@ arch=("i686" "x86_64" "armv6h")
 url="http://www.copy.com"
 license=(custom)
 depends=("fuse")
+makedepends=("desktop-file-utils")
 optdepends=("qt4: GUI support")
 options=('!strip' '!upx')
 install=$pkgname.install
