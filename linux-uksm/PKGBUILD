@@ -33,7 +33,7 @@ true && pkgname=(linux-uksm linux-uksm-headers)
 _kernelname=-uksm
 _srcname=linux-3.15
 pkgver=3.15.1
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 url="http://kerneldedup.org/"
 license=('GPL2')
@@ -41,14 +41,14 @@ options=('!strip')
 makedepends=('kmod' 'inetutils' 'bc')
 _uksmvernel="0.1.2.2"
 _uksmname="v3.14"
-_bfqpath="http://algo.ing.unimo.it/people/paolo/disk_sched/patches/3.15.0-v7r4"
+_bfqpath="http://algo.ing.unimo.it/people/paolo/disk_sched/patches/3.15.0-v7r5"
 source=("http://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
         "http://www.kernel.org/pub/linux/kernel/v3.x/patch-${pkgver}.xz"
         "http://kerneldedup.org/download/uksm/${_uksmvernel}/uksm-${_uksmvernel}-for-${_uksmname}.patch" # website often went down
         #"uksm-${_uksmvernel}-for-${_uksmname}.test.patch"
-        "${_bfqpath}/0001-block-cgroups-kconfig-build-bits-for-BFQ-v7r4-3.15.patch"
-        "${_bfqpath}/0002-block-introduce-the-BFQ-v7r4-I-O-sched-for-3.15.patch"
-        "${_bfqpath}/0003-block-bfq-add-Early-Queue-Merge-EQM-to-BFQ-v7r4-for-3.15.0.patch"
+        "${_bfqpath}/0001-block-cgroups-kconfig-build-bits-for-BFQ-v7r5-3.15.patch"
+        "${_bfqpath}/0002-block-introduce-the-BFQ-v7r5-I-O-sched-for-3.15.patch"
+        "${_bfqpath}/0003-block-bfq-add-Early-Queue-Merge-EQM-to-BFQ-v7r5-for-3.15.0.patch"
         'linux-uksm.preset'
         'change-default-console-loglevel.patch'
         '0012-fix-saa7134.patch'
@@ -370,9 +370,9 @@ pkgdesc='Linux Kernel and modules with the UKSM patchset'
 sha512sums=('d5dc477cad4584e56e2e2ef9e0950c2b22e76e5cf5090a896ba099cb7c5e5db1853a4aeb96b199189653dc66d461557e95198e37516a619f7ddc01ba6b308e02'
             '0951546a3651a0f573d90b835e449eb7ab49cfb3447a05a63d0187f8b9e3a9c873aeeba77af3ff1dd1ea83114ad33c18a4a32b7bba042ac16c4250117cf371e5'
             'f741c2c3f593fa6f3c25e1121aa921182bd0c8cdb64478e666e34f9c0093f216d8840e99176b0f473d19bfb2da47d6838a96d5616f8cddc7e2e107e3de77b76c'
-            'c44e2f9fe607d1c0a5daae44ee41b33b05bdcfd39349cb76c995a1ff1d55002c33f70c109c66558bd1c4f001507f0f039573ef1bc1eb1497baeb1a4bdf0415c5'
-            'c92931e6e7af44f9129a8d78c1aba8c2ce5eadc2a87bb75aae810df9bfb2e3df784ef32aa8e5317aca24dc1775c115222611585837ad84cd3ffe34e88151ead4'
-            '7aae16c37537fc2c128847fce327e8c4e046fb43407302133737d98285eb82f53536dbb8719e789baaa07a55d1fdc34c2fbe622def1d657f5efca334d7e5db1f'
+            '009238524b9e45ba0b0e85b78c5e98c1a54276f5425ab3fc56850d3cd334d0bb4cf75e9d1749f0f0def59c8a1bcc0a12a64787698328e5fd51e0e8158d5c3dc4'
+            'b499354d0244c024ff077aec7a6e9d2d05b4523ddc63fc2a0a688fcbf38ed58ffc30924ff4ba9116530afd9f5e39cfe4f12067d31d2f45a32fdd28f24c6ae07d'
+            'cfaba4e000d89e8cb6722d06d75d26e5396cf799a3e4c6ea169de008d1f97e26449a1af0a1fd5389bea21de248c71ce653f805dd9dfcfc4c74a8f95521f1dd7f'
             '6b5e2da5be509020134d2acfda8424f1e75fa681f0b8d5e01c6c68089da2f1398cbca58f6a85c05ac701682feec8c0d3fcf8267cefa8da391a7ada253413f771'
             '502192b5ce94c8254205f5ddb85bf50c5f1e78c768817b10dca3a7716a8c59d5e093842631acb51e3805cbf85522e0a9200942656f11bbb4ea1b7d61e24ddd78'
             '6e59caeff81a9d1370918c1fa55a85ac6f0ba2b4600ce0b74638c0b9d90242e0185af399b7d153c22c772c8be04518c006331e5b2cfaa0ea6ea09978978a1ed1'
