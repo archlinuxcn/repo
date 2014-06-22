@@ -2,7 +2,7 @@
 
 pkgname='terminus-font-ttf'
 pkgver=4.39
-pkgrel=1
+pkgrel=2
 pkgdesc="Monospaced bitmap font designed for long work with computers (TTF version)"
 arch=('any')
 url="http://files.ax86.net/terminus-ttf"
@@ -11,7 +11,7 @@ depends=('fontconfig' 'xorg-font-utils')
 install='terminus-font-ttf.install'
 source=("http://files.ax86.net/terminus-ttf/files/${pkgver}/terminus-ttf-${pkgver}.zip")
 
-build()
+package()
 {
     cd "${srcdir}/terminus-ttf-${pkgver}"
 
