@@ -2,11 +2,11 @@
 # Author: tuxce <tuxce.net@gmail.com>
 
 pkgname=yaourt
-pkgver=1.3
+pkgver=1.4
 pkgrel=1
 pkgdesc="A pacman wrapper with extended features and AUR support"
 arch=('any')
-url="http://www.archlinux.fr/yaourt-en/"
+url="https://github.com/archlinuxfr/yaourt"
 license=(GPL)
 depends=('diffutils' 'pacman>=4.1' 'package-query>=1.0' 'gettext')
 optdepends=('aurvote: vote for favorite packages from AUR'
@@ -14,7 +14,7 @@ optdepends=('aurvote: vote for favorite packages from AUR'
       'rsync: retrieve PKGBUILD from official repositories')
 backup=('etc/yaourtrc')
 source=(http://mir.archlinux.fr/~tuxce/releases/$pkgname/$pkgname-$pkgver.tar.gz)
-md5sums=('972173967acd160c987c6dce15a431f8')
+md5sums=('75c311c635ebc502dde11dd1d32d3e54')
 
 build() { 
   cd "$srcdir/$pkgname-$pkgver/"
