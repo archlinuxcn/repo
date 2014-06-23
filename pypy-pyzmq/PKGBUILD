@@ -1,10 +1,9 @@
 # $Id: PKGBUILD 109144 2014-04-10 20:30:56Z kkeen $
 # Maintainer: Kyle Keen <keenerd at gmail dot com>
 pkgbase=pypy-pyzmq
-pkgname=pypy-pyzmq
-true && pkgname=(pypy3-pyzmq pypy-pyzmq)
+pkgname=(pypy3-pyzmq pypy-pyzmq)
 pkgver=14.3.0
-pkgrel=5
+pkgrel=6
 pkgdesc="Python bindings for zeromq, pypy version"
 arch=(i686 x86_64)
 url="http://www.zeromq.org/bindings:python"
@@ -17,7 +16,7 @@ source=(https://pypi.python.org/packages/source/p/pyzmq/pyzmq-$pkgver.tar.gz
   compiler-pypy3.json)
 md5sums=('92e49cc9be92f0c95a6f790a85309df5'
          '9222c8150542cf09e89ee0a4ebac4ce7'
-         '7da00245ab30678eff4b2e58a6a56b13')
+         '833310ff1f1bfe9ca0a4d65424142b13')
 
 build() {
   cd "$srcdir"
@@ -32,10 +31,13 @@ build() {
     zmq/green/core.py
   sed -i 's|^#!/usr/bin/env python$|#!/usr/bin/env pypy3|' \
     $(find ./ -name '*.py')
+  pypy3 setup.py build
 
   cd "$srcdir/py2zmq-$pkgver"
   sed -i 's|^#!/usr/bin/env python$|#!/usr/bin/env pypy|' \
     $(find ./ -name '*.py')
+
+  pypy setup.py build
 }
 
 _fix_py2_cffi() {
@@ -53,35 +55,34 @@ _fix_py2_cffi() {
 }
 
 _fix_py3_cffi() {
+  # pypy3_site_path=/opt/pypy3/lib/python3.2/site-packages/
+  pypy3_site_path=/opt/pypy3/site-packages/
   cd "${srcdir}"
-  mv -v \
-    "${pkgdir}/opt/pypy3/lib/python3.2/site-packages/zmq/utils/compiler.json" \
-    compiler.json.bak
-  cp compiler-pypy3.json \
-    "${pkgdir}/opt/pypy3/lib/python3.2/site-packages/zmq/utils/compiler.json"
-  PYTHONPATH="${pkgdir}/opt/pypy3/lib/python3.2/site-packages" \
+  mv -v "${pkgdir}/${pypy3_site_path}/zmq/utils/compiler.json" compiler.json.bak
+  cp compiler-pypy3.json "${pkgdir}/${pypy3_site_path}/zmq/utils/compiler.json"
+  PYTHONPATH="${pkgdir}/${pypy3_site_path}" \
     pypy3 -c "import $1"
   find "$pkgdir/" -name '*.o' -delete
   find "$pkgdir/" -name '*.c' -delete
   find "$pkgdir/" -type d -empty -delete
-  mv -v compiler.json.bak \
-    "${pkgdir}/opt/pypy3/lib/python3.2/site-packages/zmq/utils/compiler.json"
+  mv -v compiler.json.bak "${pkgdir}/${pypy3_site_path}/zmq/utils/compiler.json"
 }
 
 package_pypy-pyzmq() {
   pkgdesc="PyPy bindings for zeromq"
-  depends=(zeromq "pypy>=2.3" "pypy<2.4")
+  depends=(zeromq "pypy>=2.3" "pypy<=2.4")
   cd "$srcdir/py2zmq-$pkgver"
-  pypy setup.py install --root="$pkgdir" --optimize=1
+  pypy setup.py install --skip-build --root="$pkgdir" --optimize=1
   (_fix_py2_cffi zmq)
 }
 
 package_pypy3-pyzmq() {
   pkgdesc="PyPy3 bindings for zeromq"
-  depends=(zeromq "pypy3>=2.1beta1" "pypy3<2.2")
+  depends=(zeromq "pypy3>=2.3" "pypy3<=2.4")
 
   cd "$srcdir/pyzmq-$pkgver"
-  pypy3 setup.py install --root="$pkgdir" --optimize=1 \
-    --install-lib=/opt/pypy3/lib/python3.2/site-packages
+  # pypy3 setup.py install --skip-build --root="$pkgdir" --optimize=1 \
+  #   --install-lib=/opt/pypy3/lib/python3.2/site-packages
+  pypy3 setup.py install --skip-build --root="$pkgdir" --optimize=1
   (_fix_py3_cffi zmq)
 }
