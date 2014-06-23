@@ -5,7 +5,7 @@
 # Contributor: Chris Brannon <chris@the-brannons.com>
 # Contributor : Douglas Soares de Andrade <dsa@aur.archlinux.org>
 
-# IPython 2.0 requires python 3.3 but pypy3 provides
+# IPython 2.1 requires python 3.3 but pypy3 provides 3.2.5
 _BUILD_PYPY3=0
 _PATCH_REVERT_XDG=1
 
@@ -17,12 +17,12 @@ pkgname=pypy-ipython
   true && pkgname=(pypy-ipython)
 }
 pkgver=2.1.0
-pkgrel=1
+pkgrel=2
 pkgdesc="An enhanced Interactive Python shell. pypy version"
 arch=('any')
 url="http://ipython.org"
 license=('BSD')
-depends=("pypy>=2.3" "pypy<2.4" 'sqlite')
+depends=("pypy>=2.3" "pypy<=2.4" 'sqlite')
 makedepends=('sqlite')
 # optdepends=("wxpython: needed for ipythonx and ipython-wx"
 #             "python-nose: if you want to run IPython's test suite"
@@ -35,27 +35,31 @@ makedepends=('sqlite')
 #             "haskell-pandoc: ipython notebook conversion")
 #source=("http://archive.ipython.org/release/$pkgver/ipython-$pkgver.tar.gz")
 source=("https://pypi.python.org/packages/source/i/ipython/ipython-$pkgver.tar.gz"
-  revert-xdg.patch)
+  revert-xdg.patch
+  pypy3-version.patch)
 md5sums=('785c7b6364c6a0dd34aa4ea970cf83b9'
-         'ea30de2d0ee31d788f3784bc1b2daf0b')
+         'ea30de2d0ee31d788f3784bc1b2daf0b'
+         '0b72aadfce0dc7d01da6d3262b28612e')
 
 prepare() {
   cd "$srcdir/ipython-$pkgver"
   if ((_PATCH_REVERT_XDG)); then
     patch -Np1 < ../revert-xdg.patch
   fi
+  patch -Rp0 < ../pypy3-version.patch
 }
 
 build() {
   cd "$srcdir"
   if ((_BUILD_PYPY3)); then
+    rm -rf pypy3-ipython-$pkgver
     cp -r ipython-$pkgver pypy3-ipython-$pkgver
   fi
 }
 
 package_pypy3-ipython() {
   pkgdesc="An enhanced Interactive Python shell. pypy3 version."
-  depends=("pypy3>=2.1beta1" "pypy3<2.2" 'sqlite')
+  depends=("pypy3>=2.3" "pypy3<=2.4" 'sqlite')
   optdepends=("pypy3-pyzmq: for ipython notebook and ipython qtconcole"
     "pypy3-tornado: for ipython notebook"
     "pypy3-jinja: for ipython notebook")
@@ -63,8 +67,9 @@ package_pypy3-ipython() {
 
   # see https://github.com/ipython/ipython/issues/2057
   #export LC_ALL=en_US.UTF-8
-  pypy3 setup.py install --prefix=/opt/pypy --root="$pkgdir" --optimize=1 \
-    --install-lib=/opt/pypy3/lib/python3.2/site-packages
+  # pypy3 setup.py install --prefix=/opt/pypy --root="$pkgdir" --optimize=1 \
+  #   --install-lib=/opt/pypy3/lib/python3.2/site-packages
+  pypy3 setup.py install --prefix=/opt/pypy --root="$pkgdir" --optimize=1
   # find "$pkgdir/" -name '*.pyc' -delete
   # find "$pkgdir/" -type d -empty -delete
   find "$pkgdir" -name '*.py' -print0 | xargs -0 \
