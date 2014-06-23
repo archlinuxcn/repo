@@ -6,7 +6,7 @@
 pkgbase='pypy-markupsafe'
 pkgname=('pypy3-markupsafe' 'pypy-markupsafe')
 pkgver=0.23
-pkgrel=1
+pkgrel=2
 pkgdesc="Implements a XML/HTML/XHTML Markup safe string for Python"
 arch=('i686' 'x86_64')
 url="http://pypi.python.org/pypi/MarkupSafe"
@@ -24,14 +24,13 @@ build() {
   pypy setup.py build
 }
 
-# pypy3 version currently does not work since pypy3 does not support
-# python 3.3. However, it should be fine to keep it since it builds correctly.
 package_pypy3-markupsafe() {
-  depends=('pypy3')
+  depends=("pypy3>=2.3" "pypy3<=2.4")
 
   cd MarkupSafe-${pkgver}
-  pypy3 setup.py install --root="${pkgdir}" --optimize=1 \
-    --install-lib=/opt/pypy3/lib/python3.2/site-packages
+  # pypy3 setup.py install --root="${pkgdir}" --optimize=1 \
+  #   --install-lib=/opt/pypy3/lib/python3.2/site-packages
+  pypy3 setup.py install --root="${pkgdir}" --optimize=1
 
   install -D -m644 LICENSE \
     "${pkgdir}/usr/share/licenses/pypy3-markupsafe/LICENSE"
