@@ -2,7 +2,7 @@ pkgbase='pypy-beaker'
 pkgname='pypy-beaker'
 pkgname=('pypy3-beaker' 'pypy-beaker')
 pkgver=1.6.4
-pkgrel=2
+pkgrel=3
 arch=('any')
 license=('custom')
 pkgdesc="Caching and sessions WSGI middleware for use with web applications and stand-alone Python scripts and applications, pypy version."
@@ -24,16 +24,17 @@ build() {
 }
 
 package_pypy3-beaker() {
-    depends=("pypy3>=2.1beta1" "pypy3<2.2")
+    depends=("pypy3>=2.3" "pypy3<=2.4")
 
     cd "${srcdir}/Beaker-${pkgver}"
-    pypy3 setup.py install --root="${pkgdir}" --optimize=1 \
-      --install-lib=/opt/pypy3/lib/python3.2/site-packages
+    # pypy3 setup.py install --root="${pkgdir}" --optimize=1 \
+    #   --install-lib=/opt/pypy3/lib/python3.2/site-packages
+    pypy3 setup.py install --root="${pkgdir}" --optimize=1
     install -D -m644 LICENSE "${pkgdir}/usr/share/licenses/pypy3-beaker/LICENSE"
 }
 
 package_pypy-beaker() {
-    depends=("pypy>=2.3" "pypy<2.4")
+    depends=("pypy>=2.3" "pypy<=2.4")
 
     cd "${srcdir}/python2-Beaker-${pkgver}"
     pypy setup.py install --root="${pkgdir}" --optimize=1
