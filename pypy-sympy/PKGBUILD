@@ -6,10 +6,9 @@
 # Contributor: Peter Garceau <RockyChimp@gmail.com>
 
 pkgbase=pypy-sympy
-pkgname=pypy-sympy
 pkgname=('pypy3-sympy' 'pypy-sympy')
 pkgver=0.7.5
-pkgrel=1
+pkgrel=2
 arch=('any')
 pkgdesc='Symbolic manipulation package (Computer Algebra System), written in pure Python'
 url='http://sympy.org/en/index.html'
@@ -49,7 +48,7 @@ package_pypy-sympy() {
 
   cd sympy-${pkgver}
 
-  pypy setup.py install --root "${pkgdir}" --optimize=1
+  pypy setup.py install --skip-build --root "${pkgdir}" --optimize=1
 
   install -m755 -d "${pkgdir}/usr"
   mv "$pkgdir/opt/pypy/"{share,bin} "$pkgdir/usr/"
@@ -62,13 +61,14 @@ package_pypy-sympy() {
 }
 
 package_pypy3-sympy() {
-  depends=('pypy3')
+  depends=("pypy3>=2.3" "pypy3<=2.4")
   optdepends=('pypy-ipython: user friendly interface for isympy')
 
   cd py3-sympy-${pkgver}
 
-  pypy3 setup.py install --root "${pkgdir}" --optimize=1 \
-    --install-lib=/opt/pypy3/lib/python3.2/site-packages
+  # pypy3 setup.py install --skip-build --root "${pkgdir}" --optimize=1 \
+  #   --install-lib=/opt/pypy3/lib/python3.2/site-packages
+  pypy3 setup.py install --skip-build --root "${pkgdir}" --optimize=1
 
   install -m755 -d "${pkgdir}/usr"
   mv "$pkgdir/opt/pypy3/"{share,bin} "$pkgdir/usr/"
