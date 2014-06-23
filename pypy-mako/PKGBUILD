@@ -1,8 +1,7 @@
 pkgbase='pypy-mako'
-pkgname='pypy-mako'
 pkgname=('pypy3-mako' 'pypy-mako')
 pkgver=0.9.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Hyperfast and lightweight templating for the Python2 platform"
 arch=('any')
 url="http://www.makotemplates.org/"
@@ -32,21 +31,22 @@ build() {
 }
 
 package_pypy3-mako() {
-    depends=('pypy-markupsafe' 'pypy-beaker')
+    depends=('pypy-markupsafe' 'pypy-beaker' "pypy>=2.3" "pypy<=2.4")
 
     cd Mako-$pkgver
-    pypy3 setup.py install --root="$pkgdir" --optimize=1 \
-      --install-lib=/opt/pypy3/lib/python3.2/site-packages
+    # pypy3 setup.py install --skip-build --root="$pkgdir" --optimize=1 \
+    #   --install-lib=/opt/pypy3/lib/python3.2/site-packages
+    pypy3 setup.py install --skip-build --root="$pkgdir" --optimize=1
     install -D LICENSE "$pkgdir/usr/share/licenses/pypy3-mako/COPYING"
     install -m755 -d "${pkgdir}/usr/bin/"
     mv "${pkgdir}"/opt/pypy3/bin/pypy3-mako-render "${pkgdir}/usr/bin/"
 }
 
 package_pypy-mako() {
-    depends=('pypy-markupsafe' 'pypy-beaker')
+    depends=('pypy-markupsafe' 'pypy-beaker' 'pypy')
 
     cd python2-Mako-$pkgver
-    pypy setup.py install --root="$pkgdir" --optimize=1
+    pypy setup.py install --skip-build --root="$pkgdir" --optimize=1
     install -D LICENSE "$pkgdir/usr/share/licenses/pypy-mako/COPYING"
     install -m755 -d "${pkgdir}/usr/bin/"
     mv "${pkgdir}"/opt/pypy/bin/pypy-mako-render "${pkgdir}/usr/bin/"
