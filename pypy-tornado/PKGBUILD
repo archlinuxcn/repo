@@ -3,10 +3,9 @@
 # Contributor: Thomas Dziedzic < gostrc at gmail >
 
 pkgbase='pypy-tornado'
-pkgname='pypy-tornado'
-true && pkgname=('pypy3-tornado' 'pypy-tornado')
+pkgname=('pypy3-tornado' 'pypy-tornado')
 pkgver=3.2.1
-pkgrel=3
+pkgrel=4
 pkgdesc='open source version of the scalable, non-blocking web server and tools'
 arch=('i686' 'x86_64')
 url='http://www.tornadoweb.org/'
@@ -34,16 +33,17 @@ build() {
 }
 
 package_pypy3-tornado() {
-  depends=('pypy3')
+  depends=("pypy3>=2.3" "pypy3<=2.4")
 
   cd tornado-${pkgver}
-  pypy3 setup.py install --root="${pkgdir}" --optimize=1 \
-    --install-lib=/opt/pypy3/lib/python3.2/site-packages
+  # pypy3 setup.py install --skip-build --root="${pkgdir}" --optimize=1 \
+  #   --install-lib=/opt/pypy3/lib/python3.2/site-packages
+  pypy3 setup.py install --skip-build --root="${pkgdir}" --optimize=1
 }
 
 package_pypy-tornado() {
   depends=('pypy' 'pypy-backports.ssl_match_hostname')
 
   cd tornado-${pkgver}-py2
-  pypy setup.py install --root="${pkgdir}" --optimize=1
+  pypy setup.py install --skip-build --root="${pkgdir}" --optimize=1
 }
