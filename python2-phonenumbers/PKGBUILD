@@ -1,0 +1,20 @@
+# Maintainer: Felix Yan <felixonmars@gmail.com>
+
+pkgname=python2-phonenumbers
+_pkgname=phonenumbers
+pkgver=6.1.0
+pkgrel=1
+pkgdesc="Python version of Google's common library for parsing, formatting, storing and validating international phone numbers"
+arch=('any')
+url="https://github.com/daviddrysdale/python-phonenumbers"
+license=('APACHE')
+makedepends=("python2-setuptools")
+depends=('python2')
+source=("https://pypi.python.org/packages/source/p/$_pkgname/$_pkgname-$pkgver.tar.gz")
+
+package() {
+  cd $_pkgname-$pkgver
+  python2 setup.py install -O1 --root "${pkgdir}"
+}
+
+sha512sums=('f64cdd3e1fc7169cd18c9a194eb912a32356398d5ac896304f10478fb748d8284c942b250a5b359aa76694099f5fb6654dac2174ac9c90bcefab0fbe3439f18e')
