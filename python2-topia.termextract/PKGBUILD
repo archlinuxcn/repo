@@ -1,0 +1,20 @@
+# Maintainer: Felix Yan <felixonmars@gmail.com>
+
+pkgname=python2-topia.termextract
+_pkgname=topia.termextract
+pkgver=1.1.0
+pkgrel=1
+pkgdesc="Content Term Extraction using POS Tagging"
+arch=('any')
+url="https://www.braintreepayments.com/docs/python"
+license=('custom:ZPL')
+makedepends=("python2-distribute")
+depends=('python2')
+source=("https://pypi.python.org/packages/source/t/$_pkgname/$_pkgname-$pkgver.tar.gz")
+
+package() {
+  cd "${srcdir}/$_pkgname-$pkgver"
+  python2 setup.py install --root "${pkgdir}"
+}
+
+sha512sums=('f6894b3faee96085b3a71f665ac9a2648d33eb943f92357b3fa0f30f0faebe4228ae44f2580323955d691ca731d23104ab02f6d09c496c8dbec84d9cda3ce735')
