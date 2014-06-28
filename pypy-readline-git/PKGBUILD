@@ -1,0 +1,91 @@
+# $Id: PKGBUILD 108477 2014-03-27 14:48:11Z fyan $
+# Maintainer: Stéphane Gaudreault <stephane@archlinux.org>
+
+pkgbase=pypy-readline-git
+pkgname=('pypy3-readline-git' 'pypy-readline-git')
+makedepends=('cmake' 'git' 'readline')
+pkgver=0.1
+pkgrel=1
+pkgdesc="Full function readline module for pypy."
+arch=('i686' 'x86_64')
+url="http://github.com/yuyichao/pyreadline-cffi"
+license=('custom')
+epoch=1
+options=('debug' 'strip')
+
+_gitname=pyreadline
+
+_gitroot=https://github.com/yuyichao/pyreadline-cffi
+_gitref=master
+exec 5>&1
+
+_fetch_git() {
+  cd "$srcdir"
+
+  if [ -d "$srcdir/$_gitname/.git" ]; then
+    cd "$_gitname"
+    msg "Reset current branch"
+    git reset --hard HEAD
+    git clean -fdx
+    msg "Fetching branch $_gitref from $_gitroot..."
+    git fetch --force --update-head-ok \
+      "$_gitroot" "$_gitref:$_gitref" --
+    msg "Checking out branch $_gitref..."
+    git checkout "$_gitref" --
+    git reset --hard "$_gitref" --
+    git clean -fdx
+    msg "The local files are updated."
+  else
+    msg "Cloning branch $_gitref from $_gitroot to $_gitname..."
+    git clone --single-branch --branch "$_gitref" \
+      "$_gitroot" "$_gitname"
+    cd "$_gitname"
+  fi
+  git submodule init
+  git submodule sync
+  git submodule update
+  git fetch --tags "$_gitroot"
+  msg "GIT checkout done or server timeout"
+}
+
+pkgver() {
+  (_fetch_git >&5 2>&1)
+  cd "$srcdir/$_gitname"
+
+  git describe | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
+
+build() {
+  (_fetch_git)
+  cd "$srcdir/$_gitname"
+
+  mkdir -p build{,3}
+
+  cd "$srcdir/$_gitname/build3"
+  cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DPYTHON_EXECUTABLE=/usr/bin/pypy3 \
+    -DPYREADLINE_DIR=/opt/pypy3/lib_pypy
+  make
+
+  cd "$srcdir/$_gitname/build"
+  cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DPYTHON_EXECUTABLE=/usr/bin/pypy \
+    -DPYREADLINE_DIR=/opt/pypy/lib_pypy
+  make
+}
+
+package_pypy3-readline-git() {
+  depends=("pypy3>=2.3" "pypy3<=2.4")
+  cd "$srcdir/$_gitname/build3"
+
+  make install DESTDIR="${pkgdir}"
+  mkdir -p "${pkgdir}/opt/pypy3/lib_pypy/pyrepl/"
+  ln -sf '../readline' "${pkgdir}/opt/pypy3/lib_pypy/pyrepl/"
+}
+
+package_pypy-readline-git() {
+  depends=("pypy>=2.3" "pypy<=2.4")
+  cd "$srcdir/$_gitname/build"
+
+  make install DESTDIR="${pkgdir}"
+  mkdir -p "${pkgdir}/opt/pypy/lib_pypy/pyrepl/"
+  ln -sf '../readline' "${pkgdir}/opt/pypy/lib_pypy/pyrepl/"
+}
