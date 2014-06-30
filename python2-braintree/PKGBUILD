@@ -1,0 +1,22 @@
+# Maintainer: Felix Yan <felixonmars@gmail.com>
+
+pkgname=python2-braintree
+_pkgname=braintree
+pkgver=2.29.1
+pkgrel=1
+pkgdesc="Braintree Python Library"
+arch=('any')
+url="https://www.braintreepayments.com/docs/python"
+license=('MIT')
+makedepends=("python2-setuptools")
+depends=('python2')
+source=("https://github.com/braintree/braintree_python/archive/${pkgver}.tar.gz")
+
+package() {
+  cd ${_pkgname}_python-$pkgver
+  python2 setup.py install --root "${pkgdir}"
+
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
+sha512sums=('d3e4228f46a0dfea78a87162c6655d4eb0c717917f78eccbcb14bae906068219097a9b0725ab9f14e1b4765e430d70a25b6b56cbc94bbbb2849a70dd83498650')

@@ -3,13 +3,12 @@
 pkgname=chromium-pepper-flash
 pkgdesc="Google Chrome's Pepper Flash plugin for Chromium (stable version)"
 pkgver=14.0.0.125
-pkgrel=1
+pkgrel=2
 _verbld=35.0.1916.153-1
 _channel='stable'
 arch=('i686' 'x86_64')
 url="http://www.google.com/chrome"
 license=('custom:chrome')
-depends=('chromium')
 conflicts=('chromium-pepper-flash-dev')
 optdepends=('pulseaudio-alsa: For PulseAudio users')
 install=chromium-pepper-flash.install

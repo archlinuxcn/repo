@@ -1,4 +1,4 @@
-# $Id: PKGBUILD 112777 2014-06-06 22:12:36Z heftig $
+# $Id: PKGBUILD 113647 2014-06-26 20:09:32Z heftig $
 # Maintainer: Fantix King <fantix.king@gmail.com>
 # Upstream Maintainer: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 # Contributor: Allan McRae <allan@archlinux.org>
@@ -8,7 +8,7 @@
 
 pkgname='gcc-multilib-x32'
 true && pkgname=('gcc-multilib-x32' 'gcc-libs-multilib-x32' 'libx32-gcc-libs' 'gcc-fortran-multilib-x32' 'gcc-objc-multilib-x32' 'gcc-ada-multilib-x32' 'gcc-go-multilib-x32')
-pkgver=4.9.0_4
+pkgver=4.9.0_5
 _pkgver=4.9
 pkgrel=1
 _snapshot=4.9-20140604
@@ -22,9 +22,11 @@ checkdepends=('dejagnu' 'inetutils')
 options=('!emptydirs')
 source=(#ftp://gcc.gnu.org/pub/gcc/releases/gcc-${pkgver%_*}/gcc-${pkgver%_*}.tar.bz2
         ftp://gcc.gnu.org/pub/gcc/snapshots/${_snapshot}/gcc-${_snapshot}.tar.bz2
-        gcc-4.8-filename-output.patch)
+        gcc-4.8-filename-output.patch
+        gcc-4.9-isl-0.13-hack.patch)
 md5sums=('57aa4ff81c56262dc89994853c4d0149'
-         '40cb437805e2f7a006aa0d0c3098ab0f')
+         '40cb437805e2f7a006aa0d0c3098ab0f'
+         'f26ae06b9cbc8abe86f5ee4dc5737da8')
 
 if [ -n "${_snapshot}" ]; then
   _basedir=gcc-${_snapshot}
@@ -58,6 +60,10 @@ prepare() {
   # http://gcc.gnu.org/bugzilla/show_bug.cgi?id=57653
   patch -p0 -i ${srcdir}/gcc-4.8-filename-output.patch
 
+  # isl-0.13 support - mostly header includes and a function rename
+  # (which does not seem right but causes no testsuite failures...)
+  patch -p1 -i ${srcdir}/gcc-4.9-isl-0.13-hack.patch
+
   mkdir ${srcdir}/gcc-build
 }
 
@@ -79,7 +85,8 @@ build() {
       --disable-libunwind-exceptions --enable-clocale=gnu \
       --disable-libstdcxx-pch --disable-libssp \
       --enable-gnu-unique-object --enable-linker-build-id \
-      --enable-cloog-backend=isl --disable-cloog-version-check \
+      --enable-cloog-backend=isl \
+      --disable-isl-version-check --disable-cloog-version-check \
       --enable-lto --enable-plugin --enable-install-libiberty \
       --with-linker-hash-style=gnu \
       --enable-multilib --disable-werror \

@@ -1,0 +1,19 @@
+# Maintainer: Felix Yan <felixonmars@gmail.com>
+
+pkgname=python2-dict2xml
+_pypiname=dict2xml
+pkgver=1.1
+pkgrel=1
+pkgdesc="Super Simple utility to convert a python dictionary into an xml string"
+arch=('any')
+url="https://github.com/delfick/python-dict2xml"
+license=('GPL2')
+depends=('python2')
+source=("https://pypi.python.org/packages/source/d/dict2xml/${_pypiname}-${pkgver}.tar.gz")
+
+package() {
+  cd "${srcdir}/${_pypiname}-${pkgver}"
+  python2 setup.py install --root "${pkgdir}"
+}
+
+sha512sums=('b5e1318e48c12a20b144403d5fa1798be6df324cba292b90beab63d7c871a8409ecd9934e99dbd41c1d61dd8b1c957d1d5bb7ce592c2a14ecbf0df57a44f7043')

@@ -1,10 +1,10 @@
 # Colored makepkg-like functions
 msg_blue() {
-    printf "${BLUE}==>${ALL_OFF}${BOLD} ${1}${ALL_OFF}\n"
+    printf "${BLUE}==>${ALL_OFF}${BOLD} $1${ALL_OFF}\n"
 }
 
 note() {
-    printf "${BLUE}==>${ALL_OFF}${YELLOW} NOTE:${ALL_OFF}${BOLD} ${1}${ALL_OFF}\n"
+    printf "${BLUE}==>${ALL_OFF}${YELLOW} NOTE:${ALL_OFF}${BOLD} $1${ALL_OFF}\n"
 }
 
 ALL_OFF="$(tput sgr0)"

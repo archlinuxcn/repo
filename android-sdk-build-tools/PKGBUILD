@@ -1,8 +1,8 @@
 # Maintainer: xgdgsc <xgdgsc @t gmail dot com>
 
 pkgname=android-sdk-build-tools
-pkgver=r19.1
-_ver=19.1
+pkgver=r20
+_ver=20
 pkgrel=1
 pkgdesc='Build-Tools for Google Android SDK (aapt, aidl, dexdump, dx, llvm-rs-cc)'
 arch=('i686' 'x86_64')
@@ -17,9 +17,9 @@ fi
 
 _sdk=android-sdk
 
-source=("http://dl-ssl.google.com/android/repository/build-tools_${pkgver}-linux.zip")
-sha1sums=('1ff20ac15fa47a75d00346ec12f180d531b3ca89')
-_android=android-4.4.2
+source=("https://dl-ssl.google.com/android/repository/build-tools_${pkgver}-linux.zip")
+sha1sums=('b688905526a5584d1327a662d871a635ff502758')
+_android=android-4.4W
 options=('!strip')
 
 package() {

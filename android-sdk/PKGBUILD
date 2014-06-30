@@ -1,7 +1,7 @@
 # Maintainer: Daniel Micay <danielmicay@gmail.com>
 # Contributor: Gordin <9ordin @t gmail dot com>
 pkgname=android-sdk
-pkgver=r22.6.4
+pkgver=r23
 pkgrel=1
 pkgdesc='Google Android SDK'
 arch=('i686' 'x86_64')
@@ -17,14 +17,14 @@ install=$pkgname.install
 optdepends=('android-udev: udev rules for Android devices'
             'android-sdk-platform-tools: adb, aapt, aidl, dexdump and dx')
 source=(https://dl-ssl.google.com/android/repository/tools_$pkgver-linux.zip
-        $pkgname.png
+        http://tools.android.com/recent/miscellaneousimprovements-1/android_icon_128.png
         $pkgname.desktop
         $pkgname.sh
         $pkgname.csh
         $pkgname.conf
         license.html)
-sha1sums=('26dd795b3ebcb83d15e229803722c6565d784cd3'
-          'c249134310ae91dccce1ad839b3985211674ab71'
+sha1sums=('860446fd4fec17fb5cf6828a5de486410cfce105'
+          '6497b745f05fc412490f74c66e10b9c5f15e6330'
           'e834f53e13d5926ec7be3fd775fa80aa6f328eb6'
           '78f8574e651c9bf8b7515ecb30c7ef93edbc4a96'
           '08c85aab7523e22b298891c7047bc0e7adbf3437'
@@ -39,7 +39,7 @@ package() {
   mkdir -p opt/$pkgname
   mkdir opt/$pkgname/platforms opt/$pkgname/add-ons
   cp -a "$srcdir/tools" opt/$pkgname
-  install -Dm644 "$srcdir/$pkgname.png" usr/share/pixmaps/$pkgname.png
+  install -Dm644 "$srcdir/android_icon_128.png" usr/share/pixmaps/$pkgname.png
   install -Dm644 "$srcdir/$pkgname.desktop" \
     usr/share/applications/$pkgname.desktop
   install -Dm644 "$srcdir/license.html" \
