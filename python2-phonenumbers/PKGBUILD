@@ -2,7 +2,7 @@
 
 pkgname=python2-phonenumbers
 _pkgname=phonenumbers
-pkgver=6.1.0
+pkgver=6.2.0
 pkgrel=1
 pkgdesc="Python version of Google's common library for parsing, formatting, storing and validating international phone numbers"
 arch=('any')
@@ -17,4 +17,4 @@ package() {
   python2 setup.py install -O1 --root "${pkgdir}"
 }
 
-sha512sums=('f64cdd3e1fc7169cd18c9a194eb912a32356398d5ac896304f10478fb748d8284c942b250a5b359aa76694099f5fb6654dac2174ac9c90bcefab0fbe3439f18e')
+sha512sums=('785dc6724f4f9ef1a27be1eb35f6d93039767b908b404e128a3b3f520fb5987689650540d56a76bd1dc10c60a6da61a6e47d1dfc29963f5b3ff976c60cfe8f77')
