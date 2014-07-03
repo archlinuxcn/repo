@@ -1,0 +1,12 @@
+diff -up Gtk2-Unique-0.05/xs/UniqueMessageData.xs.orig Gtk2-Unique-0.05/xs/UniqueMessageData.xs
+--- Gtk2-Unique-0.05/xs/UniqueMessageData.xs.orig	2010-05-05 09:47:45.000000000 -0600
++++ Gtk2-Unique-0.05/xs/UniqueMessageData.xs	2013-06-18 11:54:05.000000000 -0600
+@@ -38,7 +38,7 @@ SV*
+ unique_message_data_get (UniqueMessageData *message_data)
+ 	PREINIT:
+ 		const guchar *string = NULL;
+-		gint length = 0;
++		gsize length = 0;
+ 		
+ 	CODE:
+ 		string = unique_message_data_get(message_data, &length);
