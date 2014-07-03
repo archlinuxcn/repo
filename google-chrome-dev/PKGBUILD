@@ -5,7 +5,7 @@
 # or use: $ curl -s https://dl.google.com/linux/chrome/rpm/stable/x86_64/repodata/other.xml.gz | gzip -df | awk -F\" '/pkgid/{ sub(".*-","",$4); print $4": "$10 }'
 
 pkgname=google-chrome-dev
-pkgver=37.0.2054.3
+pkgver=37.0.2062.3
 pkgrel=1
 pkgdesc="An attempt at creating a safer, faster, and more stable browser (Dev Channel)"
 arch=('i686' 'x86_64')
@@ -22,8 +22,8 @@ _channel=unstable
 _arch=i386
 [ "$CARCH" = 'x86_64' ] && _arch=amd64
 source=("google-chrome-${_channel}_${pkgver}_$_arch.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_$_arch.deb")
-md5sums=('fdad9d2006e5b870f39ce7d6a8e57373')
-[ "$CARCH" = 'x86_64' ] && md5sums[0]='01d0036b0b13211e65bfc1d92adc7a67'
+md5sums=('f35024bac9faffe9574536d2c8f32429')
+[ "$CARCH" = 'x86_64' ] && md5sums[0]='ba3f6a14b3b13b02bfebff6c8a26593b'
 
 package() {
   msg2 "Extracting the data.tar.lzma"
@@ -50,6 +50,9 @@ package() {
   msg2 "Fixing Chrome icon resolution"
   _name=$(echo ${source/_*} | sed 's/.*/\u&/')
   sed -i "/Exec=/i\StartupWMClass=$_name" "$pkgdir"/usr/share/applications/google-chrome-$_channel.desktop
+
+  msg2 "Adding support for CHROMIUM_USER_FLAGS"
+  sed -i 's/ "$@"/"$CHROMIUM_USER_FLAGS" "$@"/' "$pkgdir"/opt/google/chrome-$_channel/google-chrome-$_channel
 
   msg2 "Removing unnecessities (e.g. Debian Cron job)"
   rm -r "$pkgdir"/etc/cron.daily/ "$pkgdir"/opt/google/chrome-$_channel/cron/

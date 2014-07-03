@@ -2,14 +2,14 @@
 
 pkgname=python2-braintree
 _pkgname=braintree
-pkgver=2.29.1
+pkgver=3.0.0
 pkgrel=1
 pkgdesc="Braintree Python Library"
 arch=('any')
 url="https://www.braintreepayments.com/docs/python"
 license=('MIT')
 makedepends=("python2-setuptools")
-depends=('python2')
+depends=('python2-requests')
 source=("https://github.com/braintree/braintree_python/archive/${pkgver}.tar.gz")
 
 package() {
@@ -19,4 +19,4 @@ package() {
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
-sha512sums=('d3e4228f46a0dfea78a87162c6655d4eb0c717917f78eccbcb14bae906068219097a9b0725ab9f14e1b4765e430d70a25b6b56cbc94bbbb2849a70dd83498650')
+sha512sums=('71975dc595dc4b348da4bd47284c39b91fbc55345a1895b541c67ec6847634bc13c30a78cb3209fe8ca1aa8e707758cfaac037bc36ecd6e76681a5d8e4e01cf5')
