@@ -33,14 +33,14 @@ true && pkgname=(linux-uksm linux-uksm-headers)
 _kernelname=-uksm
 _srcname=linux-3.15
 pkgver=3.15.3
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 url="http://kerneldedup.org/"
 license=('GPL2')
 options=('!strip')
 makedepends=('kmod' 'inetutils' 'bc')
-_uksmvernel="0.1.2.2"
-_uksmname="v3.14"
+_uksmvernel="0.1.2.3"
+_uksmname="v3.15.ge.3"
 _bfqpath="http://algo.ing.unimo.it/people/paolo/disk_sched/patches/3.15.0-v7r5"
 source=("http://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
         "http://www.kernel.org/pub/linux/kernel/v3.x/patch-${pkgver}.xz"
@@ -72,13 +72,6 @@ prepare() {
 
     ### Patch source with UKSM
     msg "Patching with UKSM"
-
-    # https://github.com/pfactum/pf-kernel/commit/793ed4408856bcf8cd121088a7a620486e493e32
-    sed -i '1351s/mm->mmap_cache = NULL;/vmacache_invalidate(mm);/' "$srcdir/uksm-${_uksmvernel}-for-${_uksmname}.patch"
-
-    # Remove conflicting part with linux 3.15, which doesn't make sense
-    sed -i '1141,1149d' "$srcdir/uksm-${_uksmvernel}-for-${_uksmname}.patch"
-
     patch -Np1 -i "$srcdir/uksm-${_uksmvernel}-for-${_uksmname}.patch"
 
     ### Clean tree and copy ARCH config over
@@ -363,7 +356,7 @@ pkgdesc='Linux Kernel and modules with the UKSM patchset'
 
 sha512sums=('d5dc477cad4584e56e2e2ef9e0950c2b22e76e5cf5090a896ba099cb7c5e5db1853a4aeb96b199189653dc66d461557e95198e37516a619f7ddc01ba6b308e02'
             'ef9bcf11241102d744e35c303a1267dc197b8f9ef9f9ecc344327a0d725b36348ebacfd64ef57b47f795bb7db9f101589db57216a5e0aef6741f1fb03a634e29'
-            'f741c2c3f593fa6f3c25e1121aa921182bd0c8cdb64478e666e34f9c0093f216d8840e99176b0f473d19bfb2da47d6838a96d5616f8cddc7e2e107e3de77b76c'
+            'f1ae006353838ce3e4890d253fefa5d8a1ff22e42f523e419b70fa9916c1f68cd09b00df5abf6e268619b3ee77e055edcc48a5215700cf37f615bd9ea074b0f0'
             '009238524b9e45ba0b0e85b78c5e98c1a54276f5425ab3fc56850d3cd334d0bb4cf75e9d1749f0f0def59c8a1bcc0a12a64787698328e5fd51e0e8158d5c3dc4'
             'b499354d0244c024ff077aec7a6e9d2d05b4523ddc63fc2a0a688fcbf38ed58ffc30924ff4ba9116530afd9f5e39cfe4f12067d31d2f45a32fdd28f24c6ae07d'
             'cfaba4e000d89e8cb6722d06d75d26e5396cf799a3e4c6ea169de008d1f97e26449a1af0a1fd5389bea21de248c71ce653f805dd9dfcfc4c74a8f95521f1dd7f'
