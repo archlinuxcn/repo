@@ -36,8 +36,8 @@ build() {
   _PYTHON=python2
   ((USE_PYPY)) && which pypy &> /dev/null && _PYTHON=pypy
 
-  $_PYTHON ../../rpython/bin/rpython -Ojit --shared \
-    --gcrootfinder=shadowstack targetpypystandalone
+  $_PYTHON ../../rpython/bin/rpython -Ojit --shared --output=pypy3-c \
+    --gcrootfinder=shadowstack targetpypystandalone --objspace-std-withtproxy
 }
 
 package() {
@@ -52,19 +52,21 @@ package() {
   ((USE_PYPY)) && which pypy 2> /dev/null && _PYTHON=pypy
 
   LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:../../goal/" $_PYTHON package.py \
-    --license_base "${srcdir}"/licenses ../../../ pypy3 pypy-c \
+    --license_base "${srcdir}"/licenses --override_pypy_c \
+    ../../goal/pypy3-c \
+    ../../../ pypy3 pypy3-c \
     "${srcdir}"/${pkgname}.tar.bz2
 
   mkdir -p "${pkgdir}"/opt
   tar x -C "${pkgdir}"/opt -f "${srcdir}"/${pkgname}.tar.bz2
 
   mkdir -p "${pkgdir}"/opt/pypy3/lib
-  cp ../../goal/libpypy-c.so "${pkgdir}"/opt/pypy3/lib/
+  cp ../../goal/libpypy3-c.so "${pkgdir}"/opt/pypy3/lib/
   mkdir -p "${pkgdir}"/usr/lib
-  ln -s /opt/pypy3/lib/libpypy-c.so "${pkgdir}"/usr/lib/libpypy-c.so
+  ln -s /opt/pypy3/lib/libpypy3-c.so "${pkgdir}"/usr/lib/libpypy3-c.so
 
   mkdir -p "${pkgdir}"/usr/bin
-  ln -s /opt/pypy3/bin/pypy-c "${pkgdir}"/usr/bin/pypy3
+  ln -s /opt/pypy3/bin/pypy3-c "${pkgdir}"/usr/bin/pypy3
 
   install -Dm644 "${pkgdir}"/opt/pypy3/LICENSE \
     "${pkgdir}"/usr/share/licenses/pypy3/LICENSE
