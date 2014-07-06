@@ -1,0 +1,55 @@
+From 941138d3f5f899d5c67363afd5a10e02cbcac54c Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Fri, 4 Jul 2014 22:11:56 +0800
+Subject: [PATCH 2/2] make numpy scalar non-iterable
+
+---
+ pypy/module/micronumpy/boxes.py                        |  6 ++++++
+ pypy/module/test_lib_pypy/numpypy/core/test_numeric.py | 10 ++++++++++
+ 2 files changed, 16 insertions(+)
+
+diff --git a/pypy/module/micronumpy/boxes.py b/pypy/module/micronumpy/boxes.py
+index 35fa51a..be88475 100644
+--- a/pypy/module/micronumpy/boxes.py
++++ b/pypy/module/micronumpy/boxes.py
+@@ -148,6 +148,11 @@ class W_GenericBox(W_Root):
+         raise OperationError(space.w_IndexError, space.wrap(
+             "invalid index to scalar variable"))
+ 
++    def descr_iter(self, space):
++        # Making numpy scalar non-iterable with a valid __getitem__ method
++        raise oefmt(space.w_TypeError,
++                    "'%T' object is not iterable", self)
++
+     def descr_str(self, space):
+         return space.wrap(self.get_dtype(space).itemtype.str_format(self))
+ 
+@@ -550,6 +555,7 @@ W_GenericBox.typedef = TypeDef("numpy.generic",
+     __new__ = interp2app(W_GenericBox.descr__new__.im_func),
+ 
+     __getitem__ = interp2app(W_GenericBox.descr_getitem),
++    __iter__ = interp2app(W_GenericBox.descr_iter),
+     __str__ = interp2app(W_GenericBox.descr_str),
+     __repr__ = interp2app(W_GenericBox.descr_str),
+     __format__ = interp2app(W_GenericBox.descr_format),
+diff --git a/pypy/module/test_lib_pypy/numpypy/core/test_numeric.py b/pypy/module/test_lib_pypy/numpypy/core/test_numeric.py
+index 82a39e3..6e5a154 100644
+--- a/pypy/module/test_lib_pypy/numpypy/core/test_numeric.py
++++ b/pypy/module/test_lib_pypy/numpypy/core/test_numeric.py
+@@ -268,3 +268,13 @@ class AppTestNumeric(BaseNumpyAppTest):
+         t5 = dtype([('x', '<f4'), ('y', '<i4')])
+         t5 = dtype([('y', '<i4'), ('x', '<f4')])
+         assert hash(t5) != hash(t6)
++
++    def test_scalar_iter(self):
++        from numpypy import int8, int16, int32, int64, float32, float64
++        for t in int8, int16, int32, int64, float32, float64:
++            try:
++                iter(t(17))
++            except TypeError:
++                pass
++            else:
++                assert False, "%s object should not be iterable." % t
+-- 
+2.0.1
+

@@ -3,16 +3,18 @@
 # Contributor: William Giokas (KaiSforza) <1007380@gmail.com>
 
 USE_PYPY=1
+USE_SHARED=1
+USE_LTO=1
 
 pkgname=pypy-hg
-pkgver=72130.308e64d3c884
-pkgrel=1
+pkgver=72361.85672cabac67
+pkgrel=5
 pkgdesc="A Python implementation written in Python, JIT enabled"
 url="http://codespeak.net/pypy/"
 arch=('i686' 'x86_64')
 depends=('libffi')
 provides=('python2' 'pypy=2.3')
-options=(!buildflags)
+options=('debug' 'strip')
 makedepends=('python2' 'mercurial')
 conflicts=('pypy')
 optdepends=('openssl: openssl module'
@@ -22,8 +24,12 @@ optdepends=('openssl: openssl module'
             'bzip2: bz2 module')
 license=('custom:MIT')
 
-source=('hg+https://bitbucket.org/pypy/pypy')
-md5sums=('SKIP')
+source=('hg+https://bitbucket.org/pypy/pypy'
+  'numpy-hash.patch'
+  'numpy-scalar-iter.patch')
+md5sums=('SKIP'
+         '9597a408cf206a5b7d938f8667003bbb'
+         '10651460643787bd4504418e9531fe91')
 
 pkgver() {
   cd "${srcdir}"/pypy
@@ -31,15 +37,30 @@ pkgver() {
 }
 
 build() {
-  cd "${srcdir}/pypy/pypy/goal"
+  cd "${srcdir}/pypy"
+  patch -Np1 < ../numpy-hash.patch
+  patch -Np1 < ../numpy-scalar-iter.patch
 
-  export CFLAGS="-O1"
-  export CXXFLAGS="-O1"
+  cd "${srcdir}/pypy/pypy/goal"
 
   _PYTHON=python2
   ((USE_PYPY)) && which pypy &> /dev/null && _PYTHON=pypy
+  export CFLAGS
+  export LDFLAGS
 
-  $_PYTHON ../../rpython/bin/rpython -Ojit targetpypystandalone
+  CFLAGS+=" -g -march=native -O3"
+  translate_options=()
+
+  ((USE_SHARED)) && translate_options+=('--shared')
+
+  ((USE_LTO)) && {
+    CFLAGS+=' -flto -fno-fat-lto-objects'
+    LDFLAGS+=' -g -march=native -flto=8 -fuse-linker-plugin -fuse-ld=gold -O3'
+    translate_options+=('--gcrootfinder=shadowstack')
+  }
+
+  $_PYTHON ../../rpython/bin/rpython -Ojit "${translate_options[@]}" \
+    targetpypystandalone
 }
 
 package() {
@@ -53,11 +74,19 @@ package() {
   _PYTHON=python2
   ((USE_PYPY)) && which pypy 2> /dev/null && _PYTHON=pypy
 
-  $_PYTHON package.py --license_base "${srcdir}"/licenses \
+  LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:../../goal/" $_PYTHON package.py  \
+    --license_base "${srcdir}"/licenses \
     ../../../ pypy pypy-c "${srcdir}"/${pkgname}.tar.bz2
 
   mkdir -p "${pkgdir}"/opt
   tar x -C "${pkgdir}"/opt -f "${srcdir}"/${pkgname}.tar.bz2
+
+  ((USE_SHARED)) && {
+    mkdir -p "${pkgdir}"/opt/pypy/lib
+    cp ../../goal/libpypy-c.so "${pkgdir}"/opt/pypy/lib/
+    mkdir -p "${pkgdir}"/usr/lib
+    ln -s /opt/pypy/lib/libpypy-c.so "${pkgdir}"/usr/lib/libpypy-c.so
+  }
 
   mkdir -p "${pkgdir}"/usr/bin
   ln -s /opt/pypy/bin/pypy-c "${pkgdir}"/usr/bin/pypy

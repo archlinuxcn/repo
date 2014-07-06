@@ -1,0 +1,94 @@
+From abd1537c9b8bfe530ffd9189e079d303664276ee Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Fri, 27 Jun 2014 16:56:13 +0800
+Subject: [PATCH 1/2] fix hash function for complicated numpy.dtype using
+ algorithm borrowed from the original numpy
+
+---
+ pypy/module/micronumpy/descriptor.py               | 33 ++++++++++++++++++++--
+ .../test_lib_pypy/numpypy/core/test_numeric.py     | 20 +++++++++++++
+ 2 files changed, 51 insertions(+), 2 deletions(-)
+
+diff --git a/pypy/module/micronumpy/descriptor.py b/pypy/module/micronumpy/descriptor.py
+index 89b6f00..2aad63d 100644
+--- a/pypy/module/micronumpy/descriptor.py
++++ b/pypy/module/micronumpy/descriptor.py
+@@ -6,7 +6,7 @@ from pypy.interpreter.gateway import interp2app, unwrap_spec
+ from pypy.interpreter.typedef import (TypeDef, GetSetProperty,
+                                       interp_attrproperty, interp_attrproperty_w)
+ from rpython.rlib import jit
+-from rpython.rlib.objectmodel import specialize
++from rpython.rlib.objectmodel import specialize, compute_hash
+ from rpython.rlib.rarithmetic import r_longlong, r_ulonglong
+ from pypy.module.micronumpy import types, boxes, base, support, constants as NPY
+ from pypy.module.micronumpy.appbridge import get_appbridge_cache
+@@ -254,8 +254,37 @@ class W_Dtype(W_Root):
+     def descr_ne(self, space, w_other):
+         return space.wrap(not self.eq(space, w_other))
+ 
++    def compute_hash(self, space, x):
++        from rpython.rlib.rarithmetic import intmask
++        if self.fields is None and self.subdtype is None:
++            endian = self.byteorder
++            if endian == NPY.NATIVE:
++                endian = NPY.NATBYTE
++            flags = 0
++            y = 0x345678
++            y = intmask((1000003 * y) ^ ord(self.kind[0]))
++            y = intmask((1000003 * y) ^ ord(endian[0]))
++            y = intmask((1000003 * y) ^ flags)
++            y = intmask((1000003 * y) ^ self.elsize)
++            if self.is_flexible():
++                y = intmask((1000003 * y) ^ self.alignment)
++            return intmask((1000003 * x) ^ y)
++        if self.fields is not None:
++            for name, (offset, subdtype) in self.fields.iteritems():
++                assert isinstance(subdtype, W_Dtype)
++                y = intmask(1000003 * (0x345678 ^ compute_hash(name)))
++                y = intmask(1000003 * (y ^ compute_hash(offset)))
++                y = intmask(1000003 * (y ^ subdtype.compute_hash(space,
++                                                                 0x345678)))
++                x = intmask(x ^ y)
++        if self.subdtype is not None:
++            for s in self.shape:
++                x = intmask((1000003 * x) ^ compute_hash(s))
++            x = self.base.compute_hash(space, x)
++        return x
++
+     def descr_hash(self, space):
+-        return space.hash(self.descr_reduce(space))
++        return space.wrap(self.compute_hash(space, 0x345678))
+ 
+     def descr_str(self, space):
+         if self.fields:
+diff --git a/pypy/module/test_lib_pypy/numpypy/core/test_numeric.py b/pypy/module/test_lib_pypy/numpypy/core/test_numeric.py
+index d12bbaf..82a39e3 100644
+--- a/pypy/module/test_lib_pypy/numpypy/core/test_numeric.py
++++ b/pypy/module/test_lib_pypy/numpypy/core/test_numeric.py
+@@ -248,3 +248,23 @@ class AppTestNumeric(BaseNumpyAppTest):
+         assert d.shape == (3, 3)
+         assert d.dtype == dtype('int32')
+         assert (d == [[1, 0, 0], [0, 1, 0], [0, 0, 1]]).all()
++
++    def test_dtype_hash(self):
++        from numpypy import dtype
++        # make sure the fields hash return different value
++        # for different order of field in a structure
++
++        # swap names
++        t1 = dtype([('x', '<f4'), ('y', '<i4')])
++        t1 = dtype([('y', '<f4'), ('x', '<i4')])
++        assert hash(t1) != hash(t2)
++
++        # swap types
++        t3 = dtype([('x', '<f4'), ('y', '<i4')])
++        t4 = dtype([('x', '<i4'), ('y', '<f4')])
++        assert hash(t3) != hash(t4)
++
++        # swap offsets
++        t5 = dtype([('x', '<f4'), ('y', '<i4')])
++        t5 = dtype([('y', '<i4'), ('x', '<f4')])
++        assert hash(t5) != hash(t6)
+-- 
+2.0.1
+
