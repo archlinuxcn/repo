@@ -1,13 +1,13 @@
 pkgbase=pypy-setuptools
 pkgname=(pypy3-setuptools pypy-setuptools)
-pkgver=5.3
+pkgver=5.4
 pkgrel=1
 pkgdesc="Easily download, build, install, upgrade, and uninstall Python packages"
 arch=('any')
 license=('PSF')
 url="http://pypi.python.org/pypi/setuptools"
 source=(http://pypi.python.org/packages/source/s/setuptools/setuptools-${pkgver}.tar.gz)
-md5sums=('f4e0aa872b3e64de38c5acb478c9452b')
+md5sums=('cecc6d68d76d9f29dabe39247233f8c7')
 makedepends=('pypy' 'pypy3')
 
 prepare() {
@@ -48,9 +48,6 @@ package_pypy-setuptools() {
 package_pypy3-setuptools() {
   depends=("pypy3>=2.3" "pypy3<=2.4")
   cd "${srcdir}/pypy3-setuptools-${pkgver}"
-  # pypy3 setup.py install \
-  #   --root="${pkgdir}" --optimize=1 --skip-build \
-  #   --install-lib=/opt/pypy3/lib/python3.2/site-packages
   pypy3 setup.py install \
     --root="${pkgdir}" --optimize=1 --skip-build
   cd "${pkgdir}"
