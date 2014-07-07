@@ -4,7 +4,7 @@
 pkgbase=pypy-readline-git
 pkgname=('pypy3-readline-git' 'pypy-readline-git')
 makedepends=('cmake' 'git' 'readline')
-pkgver=0.1.0.4.gc86efcd
+pkgver=0.1.0.5.g864b629
 pkgrel=1
 pkgdesc="Full function readline module for pypy."
 arch=('i686' 'x86_64')
@@ -63,12 +63,12 @@ build() {
 
   cd "$srcdir/$_gitname/build3"
   cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DPYTHON_EXECUTABLE=/usr/bin/pypy3 \
-    -DPYREADLINE_DIR=/opt/pypy3/lib_pypy
+    -DPYREADLINE_DIR=/opt/pypy3/lib_pypy/pyrepl
   make
 
   cd "$srcdir/$_gitname/build"
   cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DPYTHON_EXECUTABLE=/usr/bin/pypy \
-    -DPYREADLINE_DIR=/opt/pypy/lib_pypy
+    -DPYREADLINE_DIR=/opt/pypy/lib_pypy/pyrepl
   make
 }
 
@@ -79,8 +79,6 @@ package_pypy3-readline-git() {
   cd "$srcdir/$_gitname/build3"
 
   make install DESTDIR="${pkgdir}"
-  mkdir -p "${pkgdir}/opt/pypy3/lib_pypy/pyrepl/"
-  ln -sf '../readline' "${pkgdir}/opt/pypy3/lib_pypy/pyrepl/"
 }
 
 package_pypy-readline-git() {
@@ -90,6 +88,4 @@ package_pypy-readline-git() {
   cd "$srcdir/$_gitname/build"
 
   make install DESTDIR="${pkgdir}"
-  mkdir -p "${pkgdir}/opt/pypy/lib_pypy/pyrepl/"
-  ln -sf '../readline' "${pkgdir}/opt/pypy/lib_pypy/pyrepl/"
 }
