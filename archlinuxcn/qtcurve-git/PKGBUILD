@@ -1,9 +1,8 @@
 # Maintainer: Yichao Yu <yyc1992@gmail.com>
 
-pkgbase=qtcurve
-pkgname=${pkgbase}-git
+pkgname=qtcurve-git
 _realver=1.8.18
-pkgver=1.8.18.11.g9f8d9fc
+pkgver=1.8.18.17.gdd45f79
 pkgrel=1
 pkgdesc='A configurable set of widget styles for KDE and Gtk.'
 arch=('i686' 'x86_64')
@@ -14,18 +13,18 @@ depends=('qt5-base' 'qt5-svg' 'libxcb' 'qt5-x11extras'
   'kdebase-workspace' 'gtk2' 'libx11' 'gcc-libs')
 makedepends=('cmake' 'automoc4' 'git')
 provides=(
-  "${pkgbase}-utils=${_realver}"
-  "${pkgbase}-gtk2=${_realver}"
-  "${pkgbase}-kde4=${_realver}"
-  "${pkgbase}-qt4=${_realver}"
-  "${pkgbase}-qt5=${_realver}"
-  "${pkgbase}-utils-git"
-  "${pkgbase}-gtk2-git"
-  "${pkgbase}-kde4-git"
-  "${pkgbase}-qt4-git"
-  "${pkgbase}-qt5-git")
-conflicts=("${pkgbase}-kde4" "${pkgbase}-qt4"
-  "${pkgbase}-qt5" "${pkgbase}-gtk2" "${pkgbase}-utils")
+  "qtcurve-utils=${_realver}"
+  "qtcurve-gtk2=${_realver}"
+  "qtcurve-kde4=${_realver}"
+  "qtcurve-qt4=${_realver}"
+  "qtcurve-qt5=${_realver}"
+  "qtcurve-utils-git"
+  "qtcurve-gtk2-git"
+  "qtcurve-kde4-git"
+  "qtcurve-qt4-git"
+  "qtcurve-qt5-git")
+conflicts=("qtcurve-kde4" "qtcurve-qt4"
+  "qtcurve-qt5" "qtcurve-gtk2" "qtcurve-utils")
 options=('debug' 'strip')
 
 _gitname="qtcurve"
