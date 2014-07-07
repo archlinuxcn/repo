@@ -4,11 +4,11 @@
 
 USE_PYPY=1
 USE_SHARED=1
-USE_LTO=1
+USE_LTO=0
 
 pkgname=pypy-hg
-pkgver=72361.85672cabac67
-pkgrel=5
+pkgver=72371.fbd0dadee790
+pkgrel=1
 pkgdesc="A Python implementation written in Python, JIT enabled"
 url="http://codespeak.net/pypy/"
 arch=('i686' 'x86_64')
@@ -48,13 +48,13 @@ build() {
   export CFLAGS
   export LDFLAGS
 
-  CFLAGS+=" -g -march=native -O3"
+  CFLAGS+=" -g -O3"
   translate_options=()
 
   ((USE_SHARED)) && translate_options+=('--shared')
 
   ((USE_LTO)) && {
-    CFLAGS+=' -flto -fno-fat-lto-objects'
+    CFLAGS+=' -flto -fno-fat-lto-objects -march=native'
     LDFLAGS+=' -g -march=native -flto=8 -fuse-linker-plugin -fuse-ld=gold -O3'
     translate_options+=('--gcrootfinder=shadowstack')
   }
