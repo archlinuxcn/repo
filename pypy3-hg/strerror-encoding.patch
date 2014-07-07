@@ -1,0 +1,132 @@
+From 522b8588273f68cff52d4f6e2e0411361e9c85fb Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Mon, 7 Jul 2014 21:53:30 +0800
+Subject: [PATCH] fix strerror encoding
+
+---
+ pypy/interpreter/error.py         | 12 +++++++++---
+ pypy/module/posix/interp_posix.py |  6 +++---
+ pypy/module/rctime/interp_time.py | 14 ++++++++------
+ 3 files changed, 20 insertions(+), 12 deletions(-)
+
+diff --git a/pypy/interpreter/error.py b/pypy/interpreter/error.py
+index c0b5028..563d360 100644
+--- a/pypy/interpreter/error.py
++++ b/pypy/interpreter/error.py
+@@ -15,6 +15,12 @@ AUTO_DEBUG = os.getenv('PYPY_DEBUG')
+ RECORD_INTERPLEVEL_TRACEBACK = True
+ 
+ 
++def strerror(space, errno):
++    """Translate an error code to a message string."""
++    from pypy.module._codecs.locale import str_decode_locale_surrogateescape
++    return str_decode_locale_surrogateescape(os.strerror(errno))
++
++
+ class OperationError(Exception):
+     """Interpreter-level exception that signals an exception that should be
+     sent to the application level.
+@@ -530,9 +536,9 @@ def wrap_oserror2(space, e, w_filename=None, exception_name='w_OSError',
+         space.getexecutioncontext().checksignals()
+ 
+     try:
+-        msg = os.strerror(errno)
++        msg = strerror(space, errno)
+     except ValueError:
+-        msg = 'error %d' % errno
++        msg = u'error %d' % errno
+     if w_exception_class is None:
+         exc = getattr(space, exception_name)
+     else:
+@@ -562,7 +568,7 @@ def exception_from_errno(space, w_type):
+     from rpython.rlib.rposix import get_errno
+ 
+     errno = get_errno()
+-    msg = os.strerror(errno)
++    msg = strerror(space, errno)
+     w_error = space.call_function(w_type, space.wrap(errno), space.wrap(msg))
+     return OperationError(w_type, w_error)
+ 
+diff --git a/pypy/module/posix/interp_posix.py b/pypy/module/posix/interp_posix.py
+index ea1f6ab..1abdd24 100644
+--- a/pypy/module/posix/interp_posix.py
++++ b/pypy/module/posix/interp_posix.py
+@@ -9,7 +9,8 @@ from rpython.rtyper.module import ll_os_stat
+ from rpython.rtyper.module.ll_os import RegisterOs
+ 
+ from pypy.interpreter.gateway import unwrap_spec, WrappedDefault
+-from pypy.interpreter.error import OperationError, wrap_oserror, wrap_oserror2
++from pypy.interpreter.error import (OperationError, wrap_oserror,
++                                    wrap_oserror2, strerror as _strerror)
+ 
+ 
+ _WIN32 = sys.platform == 'win32'
+@@ -476,11 +477,10 @@ def rmdir(space, w_path):
+ def strerror(space, errno):
+     """Translate an error code to a message string."""
+     try:
+-        text = os.strerror(errno)
++        return space.wrap(_strerror(space, errno))
+     except ValueError:
+         raise OperationError(space.w_ValueError,
+                              space.wrap("strerror() argument out of range"))
+-    return space.wrap(text)
+ 
+ def getlogin(space):
+     """Return the currently logged in user."""
+diff --git a/pypy/module/rctime/interp_time.py b/pypy/module/rctime/interp_time.py
+index 1a9f3af..17c0e4e 100644
+--- a/pypy/module/rctime/interp_time.py
++++ b/pypy/module/rctime/interp_time.py
+@@ -1,6 +1,6 @@
+ from rpython.rtyper.tool import rffi_platform as platform
+ from rpython.rtyper.lltypesystem import rffi
+-from pypy.interpreter.error import OperationError, oefmt
++from pypy.interpreter.error import OperationError, oefmt, strerror as _strerror
+ from pypy.interpreter.gateway import unwrap_spec
+ from rpython.rtyper.lltypesystem import lltype
+ from rpython.rlib.rarithmetic import intmask
+@@ -297,9 +297,9 @@ def _init_timezone(space):
+     _set_module_object(space, 'tzname', space.newtuple(tzname_w))
+     _set_module_object(space, 'altzone', space.wrap(altzone))
+ 
+-def _get_error_msg():
++def _get_error_msg(space):
+     errno = rposix.get_errno()
+-    return os.strerror(errno)
++    return _strerror(space, errno)
+ 
+ if sys.platform != 'win32':
+     @unwrap_spec(secs=float)
+@@ -397,7 +397,7 @@ def _gettmarg(space, w_tup, allowNone=True):
+         lltype.free(t_ref, flavor='raw')
+         if not pbuf:
+             raise OperationError(space.w_ValueError,
+-                space.wrap(_get_error_msg()))
++                space.wrap(_get_error_msg(space)))
+         return pbuf
+ 
+     tup_w = space.fixedview(w_tup)
+@@ -577,7 +577,8 @@ def gmtime(space, w_seconds=None):
+     lltype.free(t_ref, flavor='raw')
+ 
+     if not p:
+-        raise OperationError(space.w_ValueError, space.wrap(_get_error_msg()))
++        raise OperationError(space.w_ValueError,
++                             space.wrap(_get_error_msg(space)))
+     return _tm_to_tuple(space, p)
+ 
+ def localtime(space, w_seconds=None):
+@@ -594,7 +595,8 @@ def localtime(space, w_seconds=None):
+     lltype.free(t_ref, flavor='raw')
+ 
+     if not p:
+-        raise OperationError(space.w_ValueError, space.wrap(_get_error_msg()))
++        raise OperationError(space.w_ValueError,
++                             space.wrap(_get_error_msg(space)))
+     return _tm_to_tuple(space, p)
+ 
+ def mktime(space, w_tup):
+-- 
+2.0.1
+
