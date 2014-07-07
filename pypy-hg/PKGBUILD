@@ -12,16 +12,15 @@ pkgrel=1
 pkgdesc="A Python implementation written in Python, JIT enabled"
 url="http://codespeak.net/pypy/"
 arch=('i686' 'x86_64')
-depends=('libffi')
+depends=('libffi' 'openssl' 'expat' 'ncurses' 'zlib' 'bzip2')
 provides=('python2' 'pypy=2.3')
-options=('debug' 'strip')
-makedepends=('python2' 'mercurial')
+options=('debug' 'strip' '!emptydirs')
+makedepends=('python2' 'mercurial' 'gdbm' 'sqlite' 'tcl' 'tk')
 conflicts=('pypy')
-optdepends=('openssl: openssl module'
-            'expat: pyexpat module'
-            'ncurses: ncurses module'
-            'zlib: zlib module'
-            'bzip2: bz2 module')
+optdepends=('sqlite: sqlite3 module'
+            'gdbm: gdbm module'
+            'tk: lib-tk modules'
+            'tcl: lib-tk modules')
 license=('custom:MIT')
 
 source=('hg+https://bitbucket.org/pypy/pypy'
