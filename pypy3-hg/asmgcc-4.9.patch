@@ -1,0 +1,25 @@
+From 4e7a86309d228ac34bdede194ffcc8d1e7d46238 Mon Sep 17 00:00:00 2001
+From: Armin Rigo <arigo@tunes.org>
+Date: Sat, 5 Jul 2014 17:31:38 +0200
+Subject: [PATCH 11/13] One more ignored instruction
+
+---
+ rpython/translator/c/gcc/trackgcroot.py | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/rpython/translator/c/gcc/trackgcroot.py b/rpython/translator/c/gcc/trackgcroot.py
+index 0b84e45..fd1b408 100755
+--- a/rpython/translator/c/gcc/trackgcroot.py
++++ b/rpython/translator/c/gcc/trackgcroot.py
+@@ -523,6 +523,8 @@ class FunctionGcRootTracker(object):
+         'movnt', 'mfence', 'lfence', 'sfence',
+         # bit manipulations
+         'andn', 'bextr', 'blsi', 'blsmask', 'blsr', 'tzcnt', 'lzcnt',
++        # uh, this can occur with a 'call' on the following line...
++        'rex64',
+     ])
+ 
+     # a partial list is hopefully good enough for now; it's all to support
+-- 
+2.0.1
+

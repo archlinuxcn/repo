@@ -1,26 +1,26 @@
 USE_PYPY=1
 
 pkgname=pypy3-hg
-pkgrel=1
+pkgrel=2
 pkgver=r72146.aca5ce9b7a02
 _realver=2.3
 pkgdesc="A Python3 implementation written in Python, JIT enabled, hg version"
 url="http://pypy.org"
 arch=('i686' 'x86_64')
-depends=('libffi')
-provides=("pypy3=${_realver}")
+depends=('libffi' 'openssl' 'expat' 'ncurses' 'zlib' 'bzip2')
+provides=("python" "pypy3=${_realver}")
+options=('debug' 'strip' '!emptydirs')
+makedepends=('python2' 'mercurial' 'gdbm' 'sqlite' 'tcl' 'tk')
 conflicts=('pypy3')
-options=(!buildflags)
-makedepends=('python' 'mercurial' 'python2' 'tk')
-optdepends=('openssl: openssl module'
-            'expat: pyexpat module'
-            'ncurses: ncurses module'
-            'zlib: zlib module'
-            'bzip2: bz2 module'
-            'tk: tk module')
+optdepends=('sqlite: sqlite3 module'
+            'gdbm: dbm module'
+            'tk: tkinter module'
+            'tcl: tkinter module')
 license=('custom:MIT')
-source=("hg+https://bitbucket.org/pypy/pypy#branch=py3k")
-md5sums=('SKIP')
+source=("hg+https://bitbucket.org/pypy/pypy#branch=py3k"
+  'asmgcc-4.9.patch')
+md5sums=('SKIP'
+  '498393844e67c47ae1166b209d9a79e6')
 
 pkgver() {
   cd "${srcdir}"/pypy
@@ -28,16 +28,18 @@ pkgver() {
 }
 
 build() {
+  cd "${srcdir}/pypy"
+  patch -Np1 < ../asmgcc-4.9.patch
+
   cd "${srcdir}"/pypy/pypy/goal
 
-  export CFLAGS="-O1"
-  export CXXFLAGS="-O1"
+  export CFLAGS+=" -g -O3"
 
   _PYTHON=python2
   ((USE_PYPY)) && which pypy &> /dev/null && _PYTHON=pypy
 
   $_PYTHON ../../rpython/bin/rpython -Ojit --shared --output=pypy3-c \
-    --gcrootfinder=shadowstack targetpypystandalone --objspace-std-withtproxy
+    targetpypystandalone
 }
 
 package() {
