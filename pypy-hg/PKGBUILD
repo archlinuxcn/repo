@@ -4,10 +4,9 @@
 
 USE_PYPY=1
 USE_SHARED=1
-USE_LTO=0
 
 pkgname=pypy-hg
-pkgver=72371.fbd0dadee790
+pkgver=72382.30e15663c576
 pkgrel=1
 pkgdesc="A Python implementation written in Python, JIT enabled"
 url="http://codespeak.net/pypy/"
@@ -23,12 +22,8 @@ optdepends=('sqlite: sqlite3 module'
             'tcl: lib-tk modules')
 license=('custom:MIT')
 
-source=('hg+https://bitbucket.org/pypy/pypy'
-  'numpy-hash.patch'
-  'numpy-scalar-iter.patch')
-md5sums=('SKIP'
-         '9597a408cf206a5b7d938f8667003bbb'
-         '10651460643787bd4504418e9531fe91')
+source=('hg+https://bitbucket.org/pypy/pypy')
+md5sums=('SKIP')
 
 pkgver() {
   cd "${srcdir}"/pypy
@@ -36,27 +31,17 @@ pkgver() {
 }
 
 build() {
-  cd "${srcdir}/pypy"
-  patch -Np1 < ../numpy-hash.patch
-  patch -Np1 < ../numpy-scalar-iter.patch
-
   cd "${srcdir}/pypy/pypy/goal"
 
-  _PYTHON=python2
-  ((USE_PYPY)) && which pypy &> /dev/null && _PYTHON=pypy
   export CFLAGS
   export LDFLAGS
 
-  CFLAGS+=" -g -O3"
+  _PYTHON=python2
+  CFLAGS+=" -O3"
   translate_options=()
 
+  ((USE_PYPY)) && which pypy &> /dev/null && _PYTHON=pypy
   ((USE_SHARED)) && translate_options+=('--shared')
-
-  ((USE_LTO)) && {
-    CFLAGS+=' -flto -fno-fat-lto-objects -march=native'
-    LDFLAGS+=' -g -march=native -flto=8 -fuse-linker-plugin -fuse-ld=gold -O3'
-    translate_options+=('--gcrootfinder=shadowstack')
-  }
 
   $_PYTHON ../../rpython/bin/rpython -Ojit "${translate_options[@]}" \
     targetpypystandalone
