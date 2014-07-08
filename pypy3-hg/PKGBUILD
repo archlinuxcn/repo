@@ -1,7 +1,7 @@
 USE_PYPY=1
 
 pkgname=pypy3-hg
-pkgrel=3
+pkgrel=4
 pkgver=r72146.aca5ce9b7a02
 _realver=2.3
 pkgdesc="A Python3 implementation written in Python, JIT enabled, hg version"
@@ -19,10 +19,12 @@ optdepends=('sqlite: sqlite3 module'
 license=('custom:MIT')
 source=("hg+https://bitbucket.org/pypy/pypy#branch=py3k"
   'asmgcc-4.9.patch'
-  'strerror-encoding.patch')
+  'strerror-encoding.patch'
+  'reset-locale.patch')
 md5sums=('SKIP'
   '498393844e67c47ae1166b209d9a79e6'
-  'e83bb40483fede2779e7f76362df43a8')
+  '6311d174c98900c32eb7f044a8cd0267'
+  '64cb75bfbd03194d41a3c9b3889d7748')
 
 pkgver() {
   cd "${srcdir}"/pypy
@@ -33,6 +35,7 @@ build() {
   cd "${srcdir}/pypy"
   patch -Np1 < ../asmgcc-4.9.patch
   patch -Np1 < ../strerror-encoding.patch
+  patch -Np1 < ../reset-locale.patch
 
   cd "${srcdir}"/pypy/pypy/goal
 
