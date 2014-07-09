@@ -1,31 +1,13 @@
 diff --git a/pypy/goal/targetpypystandalone.py b/pypy/goal/targetpypystandalone.py
-index 77b714d..9409a62 100644
+index 77b714d..0be54de 100644
 --- a/pypy/goal/targetpypystandalone.py
 +++ b/pypy/goal/targetpypystandalone.py
-@@ -55,14 +55,23 @@ def create_entry_point(space, w_dict):
-         try:
-             try:
+@@ -57,7 +57,7 @@ def create_entry_point(space, w_dict):
                  space.call_function(w_run_toplevel, w_call_startup_gateway)
-+                oldlocale = None
                  if rlocale.HAVE_LANGINFO:
                      try:
-+                        oldlocale = rlocale.setlocale(rlocale.LC_ALL, None)
-                         rlocale.setlocale(rlocale.LC_ALL, '')
+-                        rlocale.setlocale(rlocale.LC_ALL, '')
++                        rlocale.setlocale(rlocale.LC_CTYPE, '')
                      except rlocale.LocaleError:
                          pass
--                w_executable = space.fsdecode(space.wrapbytes(argv[0]))
--                w_argv = space.newlist([space.fsdecode(space.wrapbytes(s))
--                                        for s in argv[1:]])
-+                try:
-+                    w_executable = space.fsdecode(space.wrapbytes(argv[0]))
-+                    w_argv = space.newlist([space.fsdecode(space.wrapbytes(s))
-+                                            for s in argv[1:]])
-+                finally:
-+                    if oldlocale is not None:
-+                        try:
-+                            rlocale.setlocale(rlocale.LC_ALL, oldlocale)
-+                        except rlocale.LocaleError:
-+                            pass
-                 w_exitcode = space.call_function(w_entry_point, w_executable, w_argv)
-                 exitcode = space.int_w(w_exitcode)
-                 # try to pull it all in
+                 w_executable = space.fsdecode(space.wrapbytes(argv[0]))

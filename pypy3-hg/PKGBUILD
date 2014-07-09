@@ -1,7 +1,7 @@
 USE_PYPY=1
 
 pkgname=pypy3-hg
-pkgrel=4
+pkgrel=5
 pkgver=r72146.aca5ce9b7a02
 _realver=2.3
 pkgdesc="A Python3 implementation written in Python, JIT enabled, hg version"
@@ -22,9 +22,9 @@ source=("hg+https://bitbucket.org/pypy/pypy#branch=py3k"
   'strerror-encoding.patch'
   'reset-locale.patch')
 md5sums=('SKIP'
-  '498393844e67c47ae1166b209d9a79e6'
-  '6311d174c98900c32eb7f044a8cd0267'
-  '64cb75bfbd03194d41a3c9b3889d7748')
+         '498393844e67c47ae1166b209d9a79e6'
+         '6311d174c98900c32eb7f044a8cd0267'
+         '09a3c6dc9abe94664190c697bce38197')
 
 pkgver() {
   cd "${srcdir}"/pypy
