@@ -33,7 +33,7 @@ true && pkgname=(linux-uksm linux-uksm-headers)
 _kernelname=-uksm
 _srcname=linux-3.15
 pkgver=3.15.5
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 url="http://kerneldedup.org/"
 license=('GPL2')
@@ -51,8 +51,9 @@ source=("http://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
         "${_bfqpath}/0003-block-bfq-add-Early-Queue-Merge-EQM-to-BFQ-v7r5-for-3.15.0.patch"
         'linux-uksm.preset'
         'change-default-console-loglevel.patch'
+        '0013-efistub-fix.patch'
         'config' 'config.x86_64')
-        
+
 prepare() {
     cd ${_srcname}
 
@@ -64,6 +65,10 @@ prepare() {
     # (relevant patch sent upstream: https://lkml.org/lkml/2011/7/26/227)
     msg "Patching set DEFAULT_CONSOLE_LOGLEVEL to 4"
     patch -p1 -i "${srcdir}/change-default-console-loglevel.patch"
+
+    # fix efistub hang #33745
+    # https://git.kernel.org/cgit/linux/kernel/git/mfleming/efi.git/patch/?id=c7fb93ec51d462ec3540a729ba446663c26a0505
+    patch -Np1 -i "${srcdir}/0013-efistub-fix.patch"
 
     msg "Patching source with BFQ patches"
     for p in "${srcdir}"/000{1,2,3}-block*.patch; do
@@ -362,5 +367,6 @@ sha512sums=('d5dc477cad4584e56e2e2ef9e0950c2b22e76e5cf5090a896ba099cb7c5e5db1853
             'cfaba4e000d89e8cb6722d06d75d26e5396cf799a3e4c6ea169de008d1f97e26449a1af0a1fd5389bea21de248c71ce653f805dd9dfcfc4c74a8f95521f1dd7f'
             '6b5e2da5be509020134d2acfda8424f1e75fa681f0b8d5e01c6c68089da2f1398cbca58f6a85c05ac701682feec8c0d3fcf8267cefa8da391a7ada253413f771'
             '502192b5ce94c8254205f5ddb85bf50c5f1e78c768817b10dca3a7716a8c59d5e093842631acb51e3805cbf85522e0a9200942656f11bbb4ea1b7d61e24ddd78'
+            'ee4386dc4f590ffb591d8235e3e3d15cba6496badd029bf17e9cdf98ececa15c4f3571d52ec95ae3e04ed2a4cbd439998a57c28eaac6fbfb6314fe5d8abe0dc1'
             '9421682ee00e96c2bde8d575653fa4ece2b54989dc052c43a441ad35f8fc145dc1cc500c91fa7ffc5e9101efa6b0260089a4c8565d81dfb9f73c1c2b6d796d41'
             'd414ada0590d197a04390763afa0f7771a17f59ed0e777ba99261422eaa57690f67f6e416329248e3dea021f6de4580c9df487c2bcc6a68fb3b04b4ab2c1c8dc')
