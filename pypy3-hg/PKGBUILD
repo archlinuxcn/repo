@@ -2,7 +2,7 @@ USE_PYPY=1
 
 pkgname=pypy3-hg
 pkgrel=1
-pkgver=r72395.bd92f95fcd54
+pkgver=r72428.bf8917ab2b8a
 _realver=2.3
 pkgdesc="A Python3 implementation written in Python, JIT enabled, hg version"
 url="http://pypy.org"
@@ -19,12 +19,10 @@ optdepends=('sqlite: sqlite3 module'
 license=('custom:MIT')
 source=("hg+https://bitbucket.org/pypy/pypy#branch=py3k"
   'asmgcc-4.9.patch'
-  'strerror-encoding.patch'
-  'readlink.patch')
+  'str-type.patch')
 md5sums=('SKIP'
          '498393844e67c47ae1166b209d9a79e6'
-         '6311d174c98900c32eb7f044a8cd0267'
-         'a608e1b15261f3cd26b2e2ab39655bff')
+         'c92f2d37e89844ef24a400854e77c92a')
 
 pkgver() {
   cd "${srcdir}"/pypy
@@ -34,8 +32,7 @@ pkgver() {
 build() {
   cd "${srcdir}/pypy"
   patch -Np1 < ../asmgcc-4.9.patch
-  patch -Np1 < ../strerror-encoding.patch
-  patch -Np1 < ../readlink.patch
+  patch -Np1 < ../str-type.patch
 
   cd "${srcdir}"/pypy/pypy/goal
 
@@ -60,10 +57,8 @@ package() {
   ((USE_PYPY)) && which pypy 2> /dev/null && _PYTHON=pypy
 
   LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:../../goal/" $_PYTHON package.py \
-    --license_base "${srcdir}"/licenses --override_pypy_c \
-    ../../goal/pypy3-c \
-    ../../../ pypy3 pypy3-c \
-    "${srcdir}"/${pkgname}.tar.bz2
+    --license_base "${srcdir}"/licenses --override_pypy_c ../../goal/pypy3-c \
+    ../../../ pypy3 pypy3-c "${srcdir}"/${pkgname}.tar.bz2
 
   mkdir -p "${pkgdir}"/opt
   tar x -C "${pkgdir}"/opt -f "${srcdir}"/${pkgname}.tar.bz2
