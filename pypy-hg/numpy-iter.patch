@@ -1,0 +1,69 @@
+From eb5662b912c0064997d02cff20726e581425b3de Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sun, 13 Jul 2014 09:38:51 +0800
+Subject: [PATCH] fix numpy.void iter
+
+---
+ pypy/module/micronumpy/boxes.py            | 8 +++++---
+ pypy/module/micronumpy/test/test_scalar.py | 1 -
+ 2 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/pypy/module/micronumpy/boxes.py b/pypy/module/micronumpy/boxes.py
+index 596335e..730c63c 100644
+--- a/pypy/module/micronumpy/boxes.py
++++ b/pypy/module/micronumpy/boxes.py
+@@ -153,12 +153,10 @@ class W_GenericBox(W_NumpyObject):
+         raise OperationError(space.w_IndexError, space.wrap(
+             "invalid index to scalar variable"))
+ 
+-    '''    
+     def descr_iter(self, space):
+         # Making numpy scalar non-iterable with a valid __getitem__ method
+         raise oefmt(space.w_TypeError,
+                     "'%T' object is not iterable", self)
+-    '''
+ 
+     def descr_str(self, space):
+         return space.wrap(self.get_dtype(space).itemtype.str_format(self))
+@@ -513,6 +511,9 @@ class W_VoidBox(W_FlexibleBox):
+             return space.wrap(dtype.itemtype.to_str(read_val))
+         return read_val
+ 
++    def descr_iter(self, space):
++        return space.newseqiter(self)
++
+     def descr_setitem(self, space, w_item, w_value):
+         if space.isinstance_w(w_item, space.w_basestring):
+             item = space.str_w(w_item)
+@@ -562,7 +563,7 @@ W_GenericBox.typedef = TypeDef("numpy.generic",
+     __new__ = interp2app(W_GenericBox.descr__new__.im_func),
+ 
+     __getitem__ = interp2app(W_GenericBox.descr_getitem),
+-    #__iter__ = interp2app(W_GenericBox.descr_iter),
++    __iter__ = interp2app(W_GenericBox.descr_iter),
+     __str__ = interp2app(W_GenericBox.descr_str),
+     __repr__ = interp2app(W_GenericBox.descr_str),
+     __format__ = interp2app(W_GenericBox.descr_format),
+@@ -784,6 +785,7 @@ W_VoidBox.typedef = TypeDef("numpy.void", W_FlexibleBox.typedef,
+     __new__ = interp2app(W_VoidBox.descr__new__.im_func),
+     __getitem__ = interp2app(W_VoidBox.descr_getitem),
+     __setitem__ = interp2app(W_VoidBox.descr_setitem),
++    __iter__ = interp2app(W_VoidBox.descr_iter),
+ )
+ 
+ W_CharacterBox.typedef = TypeDef("numpy.character", W_FlexibleBox.typedef,
+diff --git a/pypy/module/micronumpy/test/test_scalar.py b/pypy/module/micronumpy/test/test_scalar.py
+index 6caafcc..7b59867 100644
+--- a/pypy/module/micronumpy/test/test_scalar.py
++++ b/pypy/module/micronumpy/test/test_scalar.py
+@@ -292,7 +292,6 @@ class AppTestScalar(BaseNumpyAppTest):
+             assert np.isnan(b/a)
+ 
+     def test_scalar_iter(self):
+-        skip('not implemented yet')
+         from numpypy import int8, int16, int32, int64, float32, float64
+         for t in int8, int16, int32, int64, float32, float64:
+             try:
+-- 
+2.0.1
+
