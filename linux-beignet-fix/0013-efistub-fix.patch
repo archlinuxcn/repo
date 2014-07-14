@@ -1,0 +1,177 @@
+From c7fb93ec51d462ec3540a729ba446663c26a0505 Mon Sep 17 00:00:00 2001
+From: Michael Brown <mbrown@fensystems.co.uk>
+Date: Thu, 10 Jul 2014 12:26:20 +0100
+Subject: x86/efi: Include a .bss section within the PE/COFF headers
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The PE/COFF headers currently describe only the initialised-data
+portions of the image, and result in no space being allocated for the
+uninitialised-data portions.  Consequently, the EFI boot stub will end
+up overwriting unexpected areas of memory, with unpredictable results.
+
+Fix by including a .bss section in the PE/COFF headers (functionally
+equivalent to the init_size field in the bzImage header).
+
+Signed-off-by: Michael Brown <mbrown@fensystems.co.uk>
+Cc: Thomas Bächler <thomas@archlinux.org>
+Cc: Josh Boyer <jwboyer@fedoraproject.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Matt Fleming <matt.fleming@intel.com>
+
+diff --git a/arch/x86/boot/header.S b/arch/x86/boot/header.S
+index 84c2234..7a6d43a 100644
+--- a/arch/x86/boot/header.S
++++ b/arch/x86/boot/header.S
+@@ -91,10 +91,9 @@ bs_die:
+ 
+ 	.section ".bsdata", "a"
+ bugger_off_msg:
+-	.ascii	"Direct floppy boot is not supported. "
+-	.ascii	"Use a boot loader program instead.\r\n"
++	.ascii	"Use a boot loader.\r\n"
+ 	.ascii	"\n"
+-	.ascii	"Remove disk and press any key to reboot ...\r\n"
++	.ascii	"Remove disk and press any key to reboot...\r\n"
+ 	.byte	0
+ 
+ #ifdef CONFIG_EFI_STUB
+@@ -108,7 +107,7 @@ coff_header:
+ #else
+ 	.word	0x8664				# x86-64
+ #endif
+-	.word	3				# nr_sections
++	.word	4				# nr_sections
+ 	.long	0 				# TimeDateStamp
+ 	.long	0				# PointerToSymbolTable
+ 	.long	1				# NumberOfSymbols
+@@ -250,6 +249,25 @@ section_table:
+ 	.word	0				# NumberOfLineNumbers
+ 	.long	0x60500020			# Characteristics (section flags)
+ 
++	#
++	# The offset & size fields are filled in by build.c.
++	#
++	.ascii	".bss"
++	.byte	0
++	.byte	0
++	.byte	0
++	.byte	0
++	.long	0
++	.long	0x0
++	.long	0				# Size of initialized data
++						# on disk
++	.long	0x0
++	.long	0				# PointerToRelocations
++	.long	0				# PointerToLineNumbers
++	.word	0				# NumberOfRelocations
++	.word	0				# NumberOfLineNumbers
++	.long	0xc8000080			# Characteristics (section flags)
++
+ #endif /* CONFIG_EFI_STUB */
+ 
+ 	# Kernel attributes; used by setup.  This is part 1 of the
+diff --git a/arch/x86/boot/tools/build.c b/arch/x86/boot/tools/build.c
+index 1a2f212..a7661c4 100644
+--- a/arch/x86/boot/tools/build.c
++++ b/arch/x86/boot/tools/build.c
+@@ -143,7 +143,7 @@ static void usage(void)
+ 
+ #ifdef CONFIG_EFI_STUB
+ 
+-static void update_pecoff_section_header(char *section_name, u32 offset, u32 size)
++static void update_pecoff_section_header_fields(char *section_name, u32 vma, u32 size, u32 datasz, u32 offset)
+ {
+ 	unsigned int pe_header;
+ 	unsigned short num_sections;
+@@ -164,10 +164,10 @@ static void update_pecoff_section_header(char *section_name, u32 offset, u32 siz
+ 			put_unaligned_le32(size, section + 0x8);
+ 
+ 			/* section header vma field */
+-			put_unaligned_le32(offset, section + 0xc);
++			put_unaligned_le32(vma, section + 0xc);
+ 
+ 			/* section header 'size of initialised data' field */
+-			put_unaligned_le32(size, section + 0x10);
++			put_unaligned_le32(datasz, section + 0x10);
+ 
+ 			/* section header 'file offset' field */
+ 			put_unaligned_le32(offset, section + 0x14);
+@@ -179,6 +179,11 @@ static void update_pecoff_section_header(char *section_name, u32 offset, u32 siz
+ 	}
+ }
+ 
++static void update_pecoff_section_header(char *section_name, u32 offset, u32 size)
++{
++	update_pecoff_section_header_fields(section_name, offset, size, size, offset);
++}
++
+ static void update_pecoff_setup_and_reloc(unsigned int size)
+ {
+ 	u32 setup_offset = 0x200;
+@@ -203,9 +208,6 @@ static void update_pecoff_text(unsigned int text_start, unsigned int file_sz)
+ 
+ 	pe_header = get_unaligned_le32(&buf[0x3c]);
+ 
+-	/* Size of image */
+-	put_unaligned_le32(file_sz, &buf[pe_header + 0x50]);
+-
+ 	/*
+ 	 * Size of code: Subtract the size of the first sector (512 bytes)
+ 	 * which includes the header.
+@@ -220,6 +222,22 @@ static void update_pecoff_text(unsigned int text_start, unsigned int file_sz)
+ 	update_pecoff_section_header(".text", text_start, text_sz);
+ }
+ 
++static void update_pecoff_bss(unsigned int file_sz, unsigned int init_sz)
++{
++	unsigned int pe_header;
++	unsigned int bss_sz = init_sz - file_sz;
++
++	pe_header = get_unaligned_le32(&buf[0x3c]);
++
++	/* Size of uninitialized data */
++	put_unaligned_le32(bss_sz, &buf[pe_header + 0x24]);
++
++	/* Size of image */
++	put_unaligned_le32(init_sz, &buf[pe_header + 0x50]);
++
++	update_pecoff_section_header_fields(".bss", file_sz, bss_sz, 0, 0);
++}
++
+ static int reserve_pecoff_reloc_section(int c)
+ {
+ 	/* Reserve 0x20 bytes for .reloc section */
+@@ -259,6 +277,8 @@ static void efi_stub_entry_update(void)
+ static inline void update_pecoff_setup_and_reloc(unsigned int size) {}
+ static inline void update_pecoff_text(unsigned int text_start,
+ 				      unsigned int file_sz) {}
++static inline void update_pecoff_bss(unsigned int file_sz,
++				     unsigned int init_sz) {}
+ static inline void efi_stub_defaults(void) {}
+ static inline void efi_stub_entry_update(void) {}
+ 
+@@ -310,7 +330,7 @@ static void parse_zoffset(char *fname)
+ 
+ int main(int argc, char ** argv)
+ {
+-	unsigned int i, sz, setup_sectors;
++	unsigned int i, sz, setup_sectors, init_sz;
+ 	int c;
+ 	u32 sys_size;
+ 	struct stat sb;
+@@ -376,7 +396,9 @@ int main(int argc, char ** argv)
+ 	buf[0x1f1] = setup_sectors-1;
+ 	put_unaligned_le32(sys_size, &buf[0x1f4]);
+ 
+-	update_pecoff_text(setup_sectors * 512, sz + i + ((sys_size * 16) - sz));
++	update_pecoff_text(setup_sectors * 512, i + (sys_size * 16));
++	init_sz = get_unaligned_le32(&buf[0x260]);
++	update_pecoff_bss(i + (sys_size * 16), init_sz);
+ 
+ 	efi_stub_entry_update();
+ 
+-- 
+cgit v0.10.1
+
