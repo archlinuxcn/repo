@@ -3,7 +3,7 @@ Arch Linux Chinese Community Repository
 
 ###Usage
 
-Add
+Add repo
 
 ```
 [archlinuxcn]
@@ -12,7 +12,14 @@ Server = http://repo.archlinuxcn.org/$arch
 ```
 to your /etc/pacman.conf .
 
-Currently we don't have any signature requirement to our maintainers. This option will be updated here after we've done it.
+Add PGP Key
+
+```bash
+for key in 47CD9E46 95FF0792 403F63E; do
+  sudo pacman-key -r $key
+  sudo pacman-key --lsign-key $key
+done
+```
 
 ###PKGLIST
 

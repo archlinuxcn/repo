@@ -7,8 +7,9 @@
 # Contributor: flying sheep <flying-sheep@web.de>
 
 pkgname=coffee-script
+_pkgname=coffeescript
 pkgver=1.7.1
-pkgrel=2
+pkgrel=3
 pkgdesc='CoffeeScript is a little language that compiles into JavaScript.'
 arch=(any)
 url='http://coffeescript.org'
@@ -17,16 +18,16 @@ makedepends=()
 depends=(nodejs 'nodejs-mkdirp' underscorejs)
 optdepends=('nodejs-profile: to load coffee-script in node')
 source=(https://github.com/jashkenas/coffee-script/archive/$pkgver.tar.gz)
-sha256sums=('3d484f965811f3f7728d9bf36e88bb6ffec794ec8a3b6244e56eb18da04fcf91')
+sha256sums=('26f201860d8bcc8512782844401e2240a7fa15eb8500f453d79957f79ab1c906')
 
 check() {
   export NODE_PATH=/usr/share/underscorejs:$NODE_PATH
-  cd $pkgname-$pkgver
+  cd $_pkgname-$pkgver
   bin/cake test:browser
 }
 
 package() {
-  cd $pkgname-$pkgver
+  cd $_pkgname-$pkgver
   export NODE_PATH=/usr/share/underscorejs:$NODE_PATH
   # cake writes bullshit to ~/.noode-libraries, so set HOME to local dir
   HOME="$PWD" bin/cake --prefix "$pkgdir/usr/" install
@@ -37,3 +38,4 @@ package() {
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
   install -Dm644 README "$pkgdir/usr/share/doc/$pkgname/README"
 }
+

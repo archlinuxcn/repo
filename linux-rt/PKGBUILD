@@ -9,8 +9,8 @@ pkgname=('linux-rt' 'linux-rt-headers' 'linux-rt-docs') # Build realtime patched
 #pkgname=linux-custom       # Build kernel with a different name
 _kernelname=${pkgname#linux}
 _basekernel=3.14
-_releasever=3
-_rtpatchver=rt5
+_releasever=10
+_rtpatchver=rt7
 pkgrel=1
 _pkgver=${_basekernel}.${_releasever}
 pkgver=${_basekernel}.${_releasever}_${_rtpatchver}
@@ -31,39 +31,20 @@ source=("https://www.kernel.org/pub/linux/kernel/v3.x/linux-${_basekernel}.tar.x
         '0001-Bluetooth-allocate-static-minor-for-vhci.patch'
         '0002-module-allow-multiple-calls-to-MODULE_DEVICE_TABLE-p.patch'
         '0003-module-remove-MODULE_GENERIC_TABLE.patch'
-        '0004-fs-Don-t-return-0-from-get_anon_bdev.patch'
-        '0005-Revert-Bluetooth-Enable-autosuspend-for-Intel-Blueto.patch'
-        '0006-genksyms-fix-typeof-handling.patch'
-        '0010-iwlwifi-mvm-delay-enabling-smart-FIFO-until-after-be.patch'
-        '0011-kernfs-fix-removed-error-check.patch'
-        '0012-fix-saa7134.patch'
-        '0013-net-Start-with-correct-mac_len-in-skb_network_protocol.patch'
-        '0014-fix-rtl8192se.patch'
-        '0015-fix-xsdt-validation.patch'
-        'Fix-n_tty_write-crash-when-echoing-in-raw-mode.patch'
-        )
+        '0006-genksyms-fix-typeof-handling.patch')
 
 md5sums=('b621207b3f6ecbb67db18b13258f8ea8'
-         '92a784cdb150c798e122ac080dc0f455'
-         '55c20f9971e1104c7e8bd45ed098555e'
+         '13d435d77d719cd845fb82627aa07974'
+         '820c8d67fa2dc30e8339f9f0c0307b2a'
          '0c27345e34e944d4bc1c512f14742209'
-         'eb8787ab6751e3d7310497763e761ce1'
-         'e0aa00bc84f8c3edc0abbf4ef8dc91a3'
+         'a8126ad28c0a902a575397cacd099db2'
+         '843119a441c942efc5ec4b73c3c6ced5'
          'eb14dcfd80c00852ef81ded6e826826a'
          '98beb36f9b8cf16e58de2483ea9985e3'
          '6839ddec74a5300beff1709a81b0e4f3'
          '706549e8a05f33f7fc697f28c0ca71d2'
          'd23fc66be93ebce698bd7da844789de1'
-         'b240cc8ebb4b5d74e94b4c72d033f726'
-         'a89d593774ccb955eb8368d3bc87ce26'
-         '16a161979f846b049e90daea907c35dd'
-         '353b553d69da810ef954618aca60e1e2'
-         'b3f98eba6322463ed6644784c56893be'
-         '4f547d79fa1b2bb855dc2996be2a515e'
-         '21d25aef69f9da33c6087b7ffd97783e'
-         'de37a66f5ebcccbc13208515ccc081cb'
-         '278417ab07b6f5fe8e3e0ed656f35f3e'
-         'e51097ae51f1bec0478eff8799501993')
+         '16a161979f846b049e90daea907c35dd')
 
 prepare() {
   cd "${srcdir}/linux-${_basekernel}"
@@ -72,86 +53,33 @@ prepare() {
   msg "apply patch-${_pkgver}" 
   patch -p1 -i "${srcdir}/patch-${_pkgver}"
 
-  # fix CVE-2014-0196
-  msg "applying Fix-n_tty_write-crash-when-echoing-in-raw-mode.patch"
-  patch -Np1 -i "${srcdir}/Fix-n_tty_write-crash-when-echoing-in-raw-mode.patch"
-
   # add realtime patch
   msg "applying patch-${_pkgver}-${_rtpatchver}.patch"
   patch -p1 -i "${srcdir}/patch-${_pkgver}-${_rtpatchver}.patch"
 
-  # revert a few troublesome patches
-  msg "applying revert_timers-dont_raise_softirq_unconditionally_and_fixes.patch"
-  patch -p1 -i "${srcdir}/revert_timers-dont_raise_softirq_unconditionally_and_fixes.patch"
-  
   # add latest fixes from stable queue, if needed
   # http://git.kernel.org/?p=linux/kernel/git/stable/stable-queue.git
 
   # set DEFAULT_CONSOLE_LOGLEVEL to 4 (same value as the 'quiet' kernel param)
   # remove this when a Kconfig knob is made available by upstream
   # (relevant patch sent upstream: https://lkml.org/lkml/2011/7/26/227)
-  msg "applying change-default-console-loglevel.patch"
-  patch -Np1 -i "${srcdir}/change-default-console-loglevel.patch"
+  msg "change-default-console-loglevel.patch"
+  patch -p1 -i "${srcdir}/change-default-console-loglevel.patch"
 
   # Fix vhci warning in kmod (to restore every kernel maintainer's sanity)
-  msg "applying 0001-Bluetooth-allocate-static-minor-for-vhci.patch"
+  msg "0001-Bluetooth-allocate-static-minor-for-vhci.patch"
   patch -p1 -i "${srcdir}/0001-Bluetooth-allocate-static-minor-for-vhci.patch"
 
   # Fix atkbd aliases
-  msg "applying 0002-module-allow-multiple-calls-to-MODULE_DEVICE_TABLE-p.patch"
+  msg "0002-module-allow-multiple-calls-to-MODULE_DEVICE_TABLE-p.patch"
   patch -p1 -i "${srcdir}/0002-module-allow-multiple-calls-to-MODULE_DEVICE_TABLE-p.patch"
-  msg "applying 0003-module-remove-MODULE_GENERIC_TABLE.patch"
+  msg "0003-module-remove-MODULE_GENERIC_TABLE.patch"
   patch -p1 -i "${srcdir}/0003-module-remove-MODULE_GENERIC_TABLE.patch"
-
-  # Fix various bugs caused by rootfs having FSID 0
-  # See http://www.spinics.net/lists/kernel/msg1716924.html
-  msg "applying 0004-fs-Don-t-return-0-from-get_anon_bdev.patch"
-  patch -p1 -i "${srcdir}/0004-fs-Don-t-return-0-from-get_anon_bdev.patch"
-
-  # Disable usb autosuspend for intel btusb
-  # See http://www.spinics.net/lists/kernel/msg1716461.html
-  # Until a solution is found, make sure the driver leaves autosuspend alone
-  msg "applying 0005-Revert-Bluetooth-Enable-autosuspend-for-Intel-Blueto.patch"
-  patch -p1 -i "${srcdir}/0005-Revert-Bluetooth-Enable-autosuspend-for-Intel-Blueto.patch"
 
   # Fix generation of symbol CRCs
   # http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=dc53324060f324e8af6867f57bf4891c13c6ef18
-  msg "applying 0006-genksyms-fix-typeof-handling.patch"
+  msg "0006-genksyms-fix-typeof-handling.patch"
   patch -p1 -i "${srcdir}/0006-genksyms-fix-typeof-handling.patch"
-
-  # https://git.kernel.org/cgit/linux/kernel/git/iwlwifi/iwlwifi-fixes.git/commit/?id=12f853a89e29f50b17698e17e73c328a35f1498d
-  # FS#39815
-  msg "applying 0010-iwlwifi-mvm-delay-enabling-smart-FIFO-until-after-be.patch"
-  patch -p1 -i "${srcdir}/0010-iwlwifi-mvm-delay-enabling-smart-FIFO-until-after-be.patch"
-  
-  # fix Xorg crash with i810 chipset due to wrong removed error check
-  # References: http://lkml.kernel.org/g/533D01BD.1010200@googlemail.com
-  msg "applying 0011-kernfs-fix-removed-error-check.patch"
-  patch -Np1 -i "${srcdir}/0011-kernfs-fix-removed-error-check.patch"
-
-  # fix saa7134 video
-  # https://bugs.archlinux.org/task/39904
-  # https://bugzilla.kernel.org/show_bug.cgi?id=73361
-  msg "applying 0012-fix-saa7134.patch"
-  patch -Np1 -i "${srcdir}/0012-fix-saa7134.patch"
-
-  # fix tun/openvpn performance
-  # https://bugs.archlinux.org/task/40089
-  # https://bugzilla.kernel.org/show_bug.cgi?id=74051
-  msg "applying 0013-net-Start-with-correct-mac_len-in-skb_network_protocol.patch"
-  patch -Np1 -i "${srcdir}/0013-net-Start-with-correct-mac_len-in-skb_network_protocol.patch"
-
-  # fix rtl8192se authentification
-  # https://bugs.archlinux.org/task/39858
-  # https://bugzilla.kernel.org/show_bug.cgi?id=74541
-  msg "applying 0014-fix-rtl8192se.patch"
-  patch -Np1 -i "${srcdir}/0014-fix-rtl8192se.patch"
-
-  # fix xsdt validation bug
-  # https://bugs.archlinux.org/task/39811
-  # https://bugzilla.kernel.org/show_bug.cgi?id=73911
-  msg "applying 0015-fix-xsdt-validation.patch"
-  patch -Np1 -i "${srcdir}/0015-fix-xsdt-validation.patch"
 
   msg "All patches have successfully been applied"
 
@@ -199,7 +127,6 @@ prepare() {
 build() {
   cd "${srcdir}/linux-${_basekernel}"
 
-  # build!
   make ${MAKEFLAGS} LOCALVERSION= bzImage modules
 }
 
@@ -404,9 +331,5 @@ package_linux-rt-docs() {
   # remove a file already in linux package
   rm -f "${pkgdir}/usr/src/linux-${_kernver}/Documentation/DocBook/Makefile"
 }
-
-# workaround for AUR not accepting split packages
-pkgname=${pkgbase}
-pkgdesc="The Linux Kernel and modules (with realtime preemption)."
 
 # vim:set ts=8 sts=2 sw=2 et:
