@@ -156,7 +156,7 @@ _package() {
   # add vmlinux
   install -D -m644 vmlinux "${pkgdir}/usr/lib/modules/${_kernver}/build/vmlinux" 
   # for systemtap
-  install -D -m644 System.map "${pkgdir}/boot/System.map-${_basekernel}${_kernelname:--ARCH}"
+  install -D -m644 System.map "${pkgdir}/boot/System.map-${_kernver}"
 }
 
 _package-headers() {
