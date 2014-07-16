@@ -5,14 +5,14 @@
 
 pkgname=nvidia-dkms
 pkgver=340.24
-pkgrel=0
+pkgrel=1
 pkgdesc='NVIDIA kernel module sources (DKMS)'
 arch=('i686' 'x86_64')
 [[ $CARCH == i686 ]] && _arch=x86 && _pkg=NVIDIA-Linux-${_arch}-${pkgver} && sha1sums=('5ba2af551c7a94b9cabcf6cdf603251267477d7b')
 [[ $CARCH == x86_64 ]] && _arch=x86_64 && _pkg=NVIDIA-Linux-${_arch}-${pkgver}-no-compat32 && sha1sums=('974c6bc1c9b5395caabbe31cbaa766e0c3a93001')
 url='http://www.nvidia.com/'
 license=('custom')
-depends=('bash' 'dkms' "nvidia-utils=${pkgver}")
+depends=('dkms' "nvidia-utils=${pkgver}")
 optdepends=('linux-headers: Build the module against Arch kernel'
             'linux-lts-headers: Build the module against LTS Arch kernel')
 provides=("nvidia=${pkgver}" "nvidia-uvm=${pkgver}")
