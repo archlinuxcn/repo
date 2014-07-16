@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [ -z "$@" ]; then
+if [ ! "$@" ]; then
   exec javaws -viewer
 else
   exec javaws "$@"
