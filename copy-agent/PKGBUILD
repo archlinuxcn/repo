@@ -10,7 +10,6 @@ arch=("i686" "x86_64" "armv6h")
 url="http://www.copy.com"
 license=(custom)
 depends=("fuse")
-makedepends=("desktop-file-utils")
 optdepends=("qt4: GUI support")
 options=('!strip' '!upx')
 install=$pkgname.install
@@ -20,6 +19,7 @@ sha256sums=('4334b6f75533366ed964ce2e810dcb4804edaf429e99f92aa879e83d4810649a'
             'abbf5d4d6cd9cf5b7645c0ba98ac535e30eb0b634a1ae2d09aa34959823dae47'
             '4013d824bfd818c38035c16acfd709b159fe77c53b52eb63b4f5e3030421691e'
             '059995cd96ae09d92681063ffd6d5ee603fa1a4b9fdae9b315494d5becb203c6'
+            '66c78061b73da76b651b12614a84ef9e703edd1f6abe663da0556c387715adfd'
             'c328ddfce46fb5577b1d3d4f67258aa1caee671214e335d802cdc9a065a1595a')
 
 source=(https://copy.com/install/linux/Copy.tgz
@@ -28,6 +28,7 @@ source=(https://copy.com/install/linux/Copy.tgz
         $pkgname.service
         copy-console.service
         launch.sh
+        copy.conf
         TERMS)
 
 package() {
@@ -47,16 +48,37 @@ package() {
     cd copy/armv6h
   fi
 
-  for i in ca-bundle.crt lib{AgentSync,Brt,CloudSync,Gui}.so; do
+  for i in ca-bundle.crt lib{AgentSync,Brt,CloudSync}.so; do
     install -Dm755 $i "$pkgdir/opt/copy/$i"
   done
 
-  mkdir -p $pkgdir/usr/bin
-  for i in Copy{Agent,Cmd,Console}; do
+  for i in Copy{Cmd,Console}; do
     install -Dm755 $i "$pkgdir/opt/copy/$i"
-    install -Dm755 $srcdir/launch.sh $pkgdir/usr/bin/$i
+    install -Dm755 $srcdir/launch.sh "$pkgdir/usr/bin/$i"
   done
 
-  install -Dm755 libnautilus-copy.so "$pkgdir/usr/lib/nautilus/extensions-3.0/libnautilus-copy.so"
-  install -Dm755 libcaja-copy.so "$pkgdir/usr/lib/caja/extensions-2.0/libcaja-copy.so"
+  install -Dm644 $srcdir/copy.conf "$pkgdir/etc/ld.so.conf.d/copy.conf"
+
+
+  if [ "$CARCH" != "armv6h" ]; then
+    install -Dm755 libGui.so "$pkgdir/opt/copy/libGui.so"
+
+    install -Dm755 CopyAgent "$pkgdir/opt/copy/CopyAgent"
+    install -Dm755 $srcdir/launch.sh "$pkgdir/usr/bin/CopyAgent"
+
+    install -Dm755 libnautilus-copy.so "$pkgdir/usr/lib/nautilus/extensions-3.0/libnautilus-copy.so"
+    install -Dm755 libcaja-copy.so "$pkgdir/usr/lib/caja/extensions-2.0/libcaja-copy.so"
+  fi
+}
+
+post_install() {
+  ldconfig
+}
+
+post_remove() {
+  ldconfig
+}
+
+post_upgrade() {
+  ldconfig
 }
