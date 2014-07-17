@@ -4,22 +4,17 @@
 
 post_upgrade()
 {
-
-  if [[ $(cat "$_default") != *enable-print-preview* ]]; then
-    sed -i '/CHROMIUM_FLAGS/s|"$| --enable-print-preview"|' "$_default"
-  fi
-
+	if [[ $(cat "${_default}") != *enable-print-preview* ]]; then
+		sed -i '/CHROMIUM_FLAGS/s|"$| --enable-print-preview"|' "${_default}"
+	fi
 }
 
 post_install() {
-
-  post_upgrade
-
+	post_upgrade
 }
 
 post_remove() {
-
-  if [ -f "$_default" ]; then
-    sed -i 's| --enable-print-preview||' "$_default"
-  fi
+	if [ -f "${_default}" ]; then
+    	sed -i 's| --enable-print-preview||' "${_default}"
+	fi
 }
