@@ -9,8 +9,8 @@ pkgname=('linux-rt' 'linux-rt-headers' 'linux-rt-docs') # Build realtime patched
 #pkgname=linux-custom       # Build kernel with a different name
 _kernelname=${pkgname#linux}
 _basekernel=3.14
-_releasever=10
-_rtpatchver=rt7
+_releasever=12
+_rtpatchver=rt9
 pkgrel=1
 _pkgver=${_basekernel}.${_releasever}
 pkgver=${_basekernel}.${_releasever}_${_rtpatchver}
@@ -23,7 +23,6 @@ source=("https://www.kernel.org/pub/linux/kernel/v3.x/linux-${_basekernel}.tar.x
         "https://www.kernel.org/pub/linux/kernel/v3.x/patch-${_pkgver}.xz"
         "https://www.kernel.org/pub/linux/kernel/projects/rt/${_basekernel}/patch-${_pkgver}-${_rtpatchver}.patch.xz"
         # the main kernel config files
-		'revert_timers-dont_raise_softirq_unconditionally_and_fixes.patch'
         'config' 'config.x86_64'
         # standard config files for mkinitcpio ramdisk
         "${pkgname}.preset"
@@ -34,13 +33,12 @@ source=("https://www.kernel.org/pub/linux/kernel/v3.x/linux-${_basekernel}.tar.x
         '0006-genksyms-fix-typeof-handling.patch')
 
 md5sums=('b621207b3f6ecbb67db18b13258f8ea8'
-         '13d435d77d719cd845fb82627aa07974'
-         '820c8d67fa2dc30e8339f9f0c0307b2a'
-         '0c27345e34e944d4bc1c512f14742209'
+         '89a5af1f3609d0c27e63fea298dd80ed'
+         '2aa3614e488efa939007a1c428406c30'
          'a8126ad28c0a902a575397cacd099db2'
          '843119a441c942efc5ec4b73c3c6ced5'
          'eb14dcfd80c00852ef81ded6e826826a'
-         '98beb36f9b8cf16e58de2483ea9985e3'
+         '6623d69fdc936d707990ca060dabd2ce'
          '6839ddec74a5300beff1709a81b0e4f3'
          '706549e8a05f33f7fc697f28c0ca71d2'
          'd23fc66be93ebce698bd7da844789de1'
