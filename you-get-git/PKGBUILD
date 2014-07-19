@@ -1,7 +1,7 @@
 # Maintainer: lilydjwg <lilydjwg@gmail.com>
 pkgname=you-get-git
 pkgdesc="A YouTube/Youku/Sohu/Tudou/QQ/Sina/PPTV/Xiami/YouTube/Vimeo/ifeng/AcFun/bilibili/CNTV/... video downloader written in Python 3."
-pkgver=0.3.29.20140622
+pkgver=0.3.30dev.20140716
 pkgrel=1
 arch=('any')
 url="http://www.soimort.org/you-get/"
@@ -17,8 +17,7 @@ _repo_name=you-get
 
 pkgver() {
   cd "$srcdir/$_repo_name"
-  echo $(python -c "exec(compile(open('src/you_get/version.py').read(), 'version.py', 'exec')); print(__version__)").$(git log -1 --format='%ad' --date=short|tr -d '-')
-  # git log -1 --format="%cd" --date=short | tr -d -
+  python3 -c "exec(compile(open('src/you_get/version.py').read(), 'version.py', 'exec')); print(__version__)" | tr '-' '.'
 }
 
 build() {
@@ -27,10 +26,10 @@ build() {
   msg "GIT checkout done or server timeout"
   msg "Starting make..."
 
-  python setup.py build
+  python3 setup.py build
 }
 
 package() {
   cd "$srcdir/$_repo_name"
-  python setup.py install --root=$pkgdir/ --optimize=1
+  python3 setup.py install --root=$pkgdir/ --optimize=1
 }
