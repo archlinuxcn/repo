@@ -9,7 +9,7 @@
 _v34=0
 
 pkgname=google-chrome
-pkgver=35.0.1916.153
+pkgver=36.0.1985.125
 pkgrel=1
 pkgdesc="An attempt at creating a safer, faster, and more stable browser (Stable Channel)"
 [ "$_v34" = '1' ] && pkgdesc="$pkgdesc (v34)"
@@ -24,15 +24,15 @@ provides=("google-chrome=$pkgver")
 options=('!emptydirs' '!strip')
 install=$pkgname.install
 _channel=stable
-_arch=i386
-[ "$CARCH" = 'x86_64' ] && _arch=amd64
+_arch=amd64
+[ "$CARCH" = 'i686' ] && _arch=i386
 source=("google-chrome-${_channel}_${pkgver}_$_arch.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_$_arch.deb")
-md5sums=('2e51d1d06b6fdcb95b25042be0b44300')
-[ "$CARCH" = 'x86_64' ] && md5sums[0]='0cf3cbd05f4a8c90e88b597b0c4028a0'
+md5sums=('f51f648786dab44538f3115bfde67ee5')
+[ "$CARCH" = 'i686' ] && md5sums=('906053c2e5b12c870c1f510c9680609c')
 if [ "$_v34" = '1' ]; then
   source=("http://95.31.35.30/chrome/pool/main/g/google-chrome-$_channel/google-chrome-${_channel}_34.0.1847.137-1_$_arch.deb")
-  md5sums=('06388a15d51f815062dd4bcddaeec1cf')
-  [ "$CARCH" = 'x86_64' ] && md5sums[0]='3cc7cd28bbb7bb3e5add19f27a6d0dda'
+  md5sums=('3cc7cd28bbb7bb3e5add19f27a6d0dda')
+  [ "$CARCH" = 'i686' ] && md5sums=('06388a15d51f815062dd4bcddaeec1cf')
 fi
 
 package() {
@@ -60,6 +60,9 @@ package() {
   msg2 "Fixing Chrome icon resolution"
   _name=$(echo ${source/_*} | sed 's/.*/\u&/')
   sed -i "/Exec=/i\StartupWMClass=$_name" "$pkgdir"/usr/share/applications/google-chrome.desktop
+
+  msg2 "Adding support for CHROMIUM_USER_FLAGS"
+  sed -i 's/ "$@"/"$CHROMIUM_USER_FLAGS" "$@"/' "$pkgdir"/opt/google/chrome/google-chrome
 
   msg2 "Removing unnecessities (e.g. Debian Cron job)"
   rm -r "$pkgdir"/etc/cron.daily/ "$pkgdir"/opt/google/chrome/cron/
