@@ -1,15 +1,14 @@
 pkgbase=pypy-pytest
-pkgname=pypy-pytest
 pkgname=('pypy3-pytest' 'pypy-pytest')
-pkgver=2.5.2
-pkgrel=4
+pkgver=2.6.0
+pkgrel=1
 pkgdesc="Simple powerful testing with Python"
 arch=('any')
 license=('MIT')
 url="http://pytest.org/"
 makedepends=('pypy3-setuptools' 'pypy-setuptools' 'pypy3-py' 'pypy-py')
 source=("http://pypi.python.org/packages/source/p/pytest/pytest-$pkgver.tar.gz")
-sha512sums=('d291f229f4c0a2132c437dde6ca04bf87701fe270c2fa314104badad9221ab866251890c66387d23fefd3ab1f928ee3b290dac21e3d62e7660af8903e85a2f36')
+sha512sums=('c5a4b8fdf178832a05fe97259e0ae110c06547c7783c513fd8f631b1f4cc2d63def10beb05243c01a328e69576604560b6becd42d61c6226f9bff7ea5492fa33')
 
 prepare() {
   cp -r pytest-${pkgver}{,-py2}
@@ -27,8 +26,6 @@ package_pypy3-pytest() {
   depends=("pypy3>=2.3" "pypy3<=2.4" 'pypy3-py' 'pypy3-setuptools')
 
   cd pytest-${pkgver}
-  # pypy3 setup.py install --root="${pkgdir}" --optimize=1 \
-  #   --install-lib=/opt/pypy3/lib/python3.2/site-packages
   pypy3 setup.py install --root="${pkgdir}" --optimize=1
   install -D -m644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 
