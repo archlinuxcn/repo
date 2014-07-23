@@ -15,7 +15,7 @@ to your /etc/pacman.conf .
 Add PGP Key
 
 ```bash
-for key in 47CD9E46 95FF0792 403F63E; do
+for key in 47CD9E46 95FF0792 A403F63E; do
   sudo pacman-key -r $key
   sudo pacman-key --lsign-key $key
 done
