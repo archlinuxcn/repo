@@ -13,7 +13,7 @@ license=('LGPL')
 url="http://qt-project.org/wiki/PySide"
 _qtver=4.8
 depends=('python' 'python2' "qt4>=${_qtver}" "shiboken>=$pkgver")
-makedepends=('cmake' 'automoc4' 'qtwebkit' 'python' 'python2' 'phonon')
+makedepends=('cmake' 'automoc4' 'qtwebkit' 'phonon')
 optdepends=('qtwebkit: for PySide.QtWebKit'
             'phonon: for PySide.phonon')
 source=("http://download.qt-project.org/official_releases/pyside/${_pkgrealname}-qt${_qtver}+$pkgver.tar.bz2")
