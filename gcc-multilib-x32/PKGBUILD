@@ -1,4 +1,4 @@
-# $Id: PKGBUILD 113647 2014-06-26 20:09:32Z heftig $
+# $Id: PKGBUILD 115931 2014-07-18 21:30:35Z heftig $
 # Maintainer: Fantix King <fantix.king@gmail.com>
 # Upstream Maintainer: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 # Contributor: Allan McRae <allan@archlinux.org>
@@ -6,12 +6,11 @@
 # toolchain build order: linux-api-headers->glibc->binutils->gcc->binutils->glibc
 # NOTE: libtool requires rebuilt with each new gcc version
 
-pkgname='gcc-multilib-x32'
-true && pkgname=('gcc-multilib-x32' 'gcc-libs-multilib-x32' 'libx32-gcc-libs' 'gcc-fortran-multilib-x32' 'gcc-objc-multilib-x32' 'gcc-ada-multilib-x32' 'gcc-go-multilib-x32')
-pkgver=4.9.0_5
+pkgname=('gcc-multilib-x32' 'gcc-libs-multilib-x32' 'libx32-gcc-libs' 'gcc-fortran-multilib-x32' 'gcc-objc-multilib-x32' 'gcc-ada-multilib-x32' 'gcc-go-multilib-x32')
+pkgver=4.9.1_1
 _pkgver=4.9
 pkgrel=1
-_snapshot=4.9-20140604
+#_snapshot=4.9-20140604
 pkgdesc="The GNU Compiler Collection for multilib with x32 ABI support"
 arch=('x86_64')
 license=('GPL' 'LGPL' 'FDL' 'custom')
@@ -20,11 +19,11 @@ makedepends=('binutils>=2.24' 'libmpc' 'cloog' 'gcc-ada-multilib' 'doxygen'
              'lib32-glibc>=2.19' 'libx32-glibc>=2.19')
 checkdepends=('dejagnu' 'inetutils')
 options=('!emptydirs')
-source=(#ftp://gcc.gnu.org/pub/gcc/releases/gcc-${pkgver%_*}/gcc-${pkgver%_*}.tar.bz2
-        ftp://gcc.gnu.org/pub/gcc/snapshots/${_snapshot}/gcc-${_snapshot}.tar.bz2
+source=(ftp://gcc.gnu.org/pub/gcc/releases/gcc-${pkgver%_*}/gcc-${pkgver%_*}.tar.bz2
+        #ftp://gcc.gnu.org/pub/gcc/snapshots/${_snapshot}/gcc-${_snapshot}.tar.bz2
         gcc-4.8-filename-output.patch
         gcc-4.9-isl-0.13-hack.patch)
-md5sums=('57aa4ff81c56262dc89994853c4d0149'
+md5sums=('fddf71348546af523353bd43d34919c1'
          '40cb437805e2f7a006aa0d0c3098ab0f'
          'f26ae06b9cbc8abe86f5ee4dc5737da8')
 
