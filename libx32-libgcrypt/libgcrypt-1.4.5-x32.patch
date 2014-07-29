@@ -1,0 +1,7 @@
+--- libgcrypt-1.4.6/mpi/amd64/mpi-asm-defs.h.x32	2012-01-05 14:23:06.944404382 -0800
++++ libgcrypt-1.4.6/mpi/amd64/mpi-asm-defs.h	2012-01-05 14:23:33.342268091 -0800
+@@ -0,0 +1,4 @@
++/* This file defines some basic constants for the MPI machinery.  We
++ * need to define the types on a per-CPU basis, so it is done with
++ * this file here.  */
++#define BYTES_PER_MPI_LIMB  8
