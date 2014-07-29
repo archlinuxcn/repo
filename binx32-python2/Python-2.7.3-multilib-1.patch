@@ -1,0 +1,400 @@
+Submitted By: William Harrington <kb0iic at cross-lfs dot org>
+Date: 2012-09-19
+Initial Package Version: 2.7.3
+Upstream Status: Unknown
+Origin: appzer0
+Description: Makes changes so we can fix the lib directories
+             for multilib builds with the following sed.
+
+sed -i 's|/lib/python|/@@MULTILIB_DIR@@/python|g' Lib/distutils/command/install.py
+sed -i 's|"lib", "python"|"@@MULTILIB_DIR@@", "python"|g' Lib/distutils/sysconfig.py
+sed -i 's|basedir = os.path.join(sys.exec_prefix, "lib",|basedir = os.path.join(sys.exec_prefix, "@@MULTILIB_DIR@@",|g' Lib/pydoc.py
+sed -i 's|"lib"|"@@MULTILIB_DIR@@"|g' Lib/site.py
+sed -i 's|lib/python|@@MULTILIB_DIR@@/python|g' Lib/sysconfig.py
+sed -i 's|lib/libc|@@MULTILIB_DIR@@/libc|g' Lib/test/test_dl.py
+sed -i "s|'xoxo', 'lib'|'xoxo', '@@MULTILIB_DIR@@'|g" Lib/test/test_site.py
+sed -i 's|sys.prefix, "lib"|sys.prefix, "@@MULTILIB_DIR@@"|g' Lib/trace.py
+
+sed -i -e 's|-o $@ $(srcdir)/Python/getplatform.c|-DLIB="@@MULTILIB_DIR@@" -o $@ $(srcdir)/Python/getplatform.c|' \
+        -e 's|prefix)/lib|prefix)/@@MULTILIB_DIR@@|g' Makefile.pre.in
+
+sed -i -e 's|/lib/python|/@@MULTILIB_DIR@@/python|g' \
+        -e 's|lib/lib-dynloadModules/getpath.c|@@MULTILIB_DIR@@/lib-dynloadModules/getpath.c|' Modules/getpath.c
+
+sed -i -e 's|/usr/local/lib|/usr/local/@@MULTILIB_DIR@@|' \
+        -e "s|'/lib64', '/usr/lib64'|'/@@MULTILIB_DIR@@', '/usr/@@MULTILIB_DIR@@'|g" \
+        -e "s|'/lib', '/usr/lib'|'/@@MULTILIB_DIR@@', '/usr/@@MULTILIB_DIR@@'|g" \
+        -e 's|/usr/lib/termcap|/usr/@@MULTILIB_DIR@@/termcap|g' \
+        -e 's|/usr/openwin/lib|/usr/openwin/@@MULTILIB_DIR@@|' \
+        -e 's|/usr/X11R6/lib64|/usr/X11R6/@@MULTILIB_DIR@@|' \
+        -e 's|/usr/X11R6/lib|/usr/X11R6/@@MULTILIB_DIR@@|' \
+        -e 's|/usr/X11R5/lib|/usr/X11R5/@@MULTILIB_DIR@@|' \
+        -e 's|/usr/X11/lib|/usr/X11/@@MULTILIB_DIR@@|' \
+        setup.py
+
+diff -Naur Python-2.7.3.orig/Lib/distutils/command/install.py Python-2.7.3/Lib/distutils/command/install.py
+--- Python-2.7.3.orig/Lib/distutils/command/install.py	2012-04-09 23:07:29.000000000 +0000
++++ Python-2.7.3/Lib/distutils/command/install.py	2012-09-19 01:54:29.000000000 +0000
+@@ -41,15 +41,15 @@
+ 
+ INSTALL_SCHEMES = {
+     'unix_prefix': {
+-        'purelib': '$base/lib/python$py_version_short/site-packages',
+-        'platlib': '$platbase/lib/python$py_version_short/site-packages',
++        'purelib': '$base/@@MULTILIB_DIR@@/python$py_version_short/site-packages',
++        'platlib': '$platbase/@@MULTILIB_DIR@@/python$py_version_short/site-packages',
+         'headers': '$base/include/python$py_version_short/$dist_name',
+         'scripts': '$base/bin',
+         'data'   : '$base',
+         },
+     'unix_home': {
+-        'purelib': '$base/lib/python',
+-        'platlib': '$base/lib/python',
++        'purelib': '$base/@@MULTILIB_DIR@@/python',
++        'platlib': '$base/@@MULTILIB_DIR@@/python',
+         'headers': '$base/include/python/$dist_name',
+         'scripts': '$base/bin',
+         'data'   : '$base',
+diff -Naur Python-2.7.3.orig/Lib/distutils/sysconfig.py Python-2.7.3/Lib/distutils/sysconfig.py
+--- Python-2.7.3.orig/Lib/distutils/sysconfig.py	2012-04-09 23:07:29.000000000 +0000
++++ Python-2.7.3/Lib/distutils/sysconfig.py	2012-09-19 01:54:30.000000000 +0000
+@@ -115,7 +115,7 @@
+ 
+     if os.name == "posix":
+         libpython = os.path.join(prefix,
+-                                 "lib", "python" + get_python_version())
++                                 "@@MULTILIB_DIR@@", "python" + get_python_version())
+         if standard_lib:
+             return libpython
+         else:
+@@ -237,7 +237,7 @@
+         config_h = 'config.h'
+     else:
+         # The name of the config.h file changed in 2.2
+-        config_h = 'pyconfig.h'
++        config_h = 'pyconfig-x32.h'
+     return os.path.join(inc_dir, config_h)
+ 
+ 
+diff -Naur Python-2.7.3.orig/Lib/pydoc.py Python-2.7.3/Lib/pydoc.py
+--- Python-2.7.3.orig/Lib/pydoc.py	2012-04-09 23:07:31.000000000 +0000
++++ Python-2.7.3/Lib/pydoc.py	2012-09-19 01:54:30.000000000 +0000
+@@ -352,7 +352,7 @@
+ 
+         docloc = os.environ.get("PYTHONDOCS",
+                                 "http://docs.python.org/library")
+-        basedir = os.path.join(sys.exec_prefix, "lib",
++        basedir = os.path.join(sys.exec_prefix, "@@MULTILIB_DIR@@",
+                                "python"+sys.version[0:3])
+         if (isinstance(object, type(os)) and
+             (object.__name__ in ('errno', 'exceptions', 'gc', 'imp',
+diff -Naur Python-2.7.3.orig/Lib/site.py Python-2.7.3/Lib/site.py
+--- Python-2.7.3.orig/Lib/site.py	2012-04-09 23:07:31.000000000 +0000
++++ Python-2.7.3/Lib/site.py	2012-09-19 01:54:30.000000000 +0000
+@@ -300,13 +300,13 @@
+         if sys.platform in ('os2emx', 'riscos'):
+             sitepackages.append(os.path.join(prefix, "Lib", "site-packages"))
+         elif os.sep == '/':
+-            sitepackages.append(os.path.join(prefix, "lib",
++            sitepackages.append(os.path.join(prefix, "@@MULTILIB_DIR@@",
+                                         "python" + sys.version[:3],
+                                         "site-packages"))
+-            sitepackages.append(os.path.join(prefix, "lib", "site-python"))
++            sitepackages.append(os.path.join(prefix, "@@MULTILIB_DIR@@", "site-python"))
+         else:
+             sitepackages.append(prefix)
+-            sitepackages.append(os.path.join(prefix, "lib", "site-packages"))
++            sitepackages.append(os.path.join(prefix, "@@MULTILIB_DIR@@", "site-packages"))
+         if sys.platform == "darwin":
+             # for framework builds *only* we add the standard Apple
+             # locations.
+diff -Naur Python-2.7.3.orig/Lib/sysconfig.py Python-2.7.3/Lib/sysconfig.py
+--- Python-2.7.3.orig/Lib/sysconfig.py	2012-04-09 23:07:31.000000000 +0000
++++ Python-2.7.3/Lib/sysconfig.py	2012-09-19 01:54:30.000000000 +0000
+@@ -7,20 +7,20 @@
+ 
+ _INSTALL_SCHEMES = {
+     'posix_prefix': {
+-        'stdlib': '{base}/lib/python{py_version_short}',
+-        'platstdlib': '{platbase}/lib/python{py_version_short}',
+-        'purelib': '{base}/lib/python{py_version_short}/site-packages',
+-        'platlib': '{platbase}/lib/python{py_version_short}/site-packages',
++        'stdlib': '{base}/@@MULTILIB_DIR@@/python{py_version_short}',
++        'platstdlib': '{platbase}/@@MULTILIB_DIR@@/python{py_version_short}',
++        'purelib': '{base}/@@MULTILIB_DIR@@/python{py_version_short}/site-packages',
++        'platlib': '{platbase}/@@MULTILIB_DIR@@/python{py_version_short}/site-packages',
+         'include': '{base}/include/python{py_version_short}',
+         'platinclude': '{platbase}/include/python{py_version_short}',
+         'scripts': '{base}/bin',
+         'data': '{base}',
+         },
+     'posix_home': {
+-        'stdlib': '{base}/lib/python',
+-        'platstdlib': '{base}/lib/python',
+-        'purelib': '{base}/lib/python',
+-        'platlib': '{base}/lib/python',
++        'stdlib': '{base}/@@MULTILIB_DIR@@/python',
++        'platstdlib': '{base}/@@MULTILIB_DIR@@/python',
++        'purelib': '{base}/@@MULTILIB_DIR@@/python',
++        'platlib': '{base}/@@MULTILIB_DIR@@/python',
+         'include': '{base}/include/python',
+         'platinclude': '{base}/include/python',
+         'scripts': '{base}/bin',
+@@ -47,10 +47,10 @@
+         'data'   : '{base}',
+         },
+     'os2_home': {
+-        'stdlib': '{userbase}/lib/python{py_version_short}',
+-        'platstdlib': '{userbase}/lib/python{py_version_short}',
+-        'purelib': '{userbase}/lib/python{py_version_short}/site-packages',
+-        'platlib': '{userbase}/lib/python{py_version_short}/site-packages',
++        'stdlib': '{userbase}/@@MULTILIB_DIR@@/python{py_version_short}',
++        'platstdlib': '{userbase}/@@MULTILIB_DIR@@/python{py_version_short}',
++        'purelib': '{userbase}/@@MULTILIB_DIR@@/python{py_version_short}/site-packages',
++        'platlib': '{userbase}/@@MULTILIB_DIR@@/python{py_version_short}/site-packages',
+         'include': '{userbase}/include/python{py_version_short}',
+         'scripts': '{userbase}/bin',
+         'data'   : '{userbase}',
+@@ -65,19 +65,19 @@
+         'data'   : '{userbase}',
+         },
+     'posix_user': {
+-        'stdlib': '{userbase}/lib/python{py_version_short}',
+-        'platstdlib': '{userbase}/lib/python{py_version_short}',
+-        'purelib': '{userbase}/lib/python{py_version_short}/site-packages',
+-        'platlib': '{userbase}/lib/python{py_version_short}/site-packages',
++        'stdlib': '{userbase}/@@MULTILIB_DIR@@/python{py_version_short}',
++        'platstdlib': '{userbase}/@@MULTILIB_DIR@@/python{py_version_short}',
++        'purelib': '{userbase}/@@MULTILIB_DIR@@/python{py_version_short}/site-packages',
++        'platlib': '{userbase}/@@MULTILIB_DIR@@/python{py_version_short}/site-packages',
+         'include': '{userbase}/include/python{py_version_short}',
+         'scripts': '{userbase}/bin',
+         'data'   : '{userbase}',
+         },
+     'osx_framework_user': {
+-        'stdlib': '{userbase}/lib/python',
+-        'platstdlib': '{userbase}/lib/python',
+-        'purelib': '{userbase}/lib/python/site-packages',
+-        'platlib': '{userbase}/lib/python/site-packages',
++        'stdlib': '{userbase}/@@MULTILIB_DIR@@/python',
++        'platstdlib': '{userbase}/@@MULTILIB_DIR@@/python',
++        'purelib': '{userbase}/@@MULTILIB_DIR@@/python/site-packages',
++        'platlib': '{userbase}/@@MULTILIB_DIR@@/python/site-packages',
+         'include': '{userbase}/include',
+         'scripts': '{userbase}/bin',
+         'data'   : '{userbase}',
+@@ -358,7 +358,7 @@
+             inc_dir = _PROJECT_BASE
+     else:
+         inc_dir = get_path('platinclude')
+-    return os.path.join(inc_dir, 'pyconfig.h')
++    return os.path.join(inc_dir, 'pyconfig-x32.h')
+ 
+ def get_scheme_names():
+     """Returns a tuple containing the schemes names."""
+diff -Naur Python-2.7.3.orig/Lib/test/test_dl.py Python-2.7.3/Lib/test/test_dl.py
+--- Python-2.7.3.orig/Lib/test/test_dl.py	2012-04-09 23:07:31.000000000 +0000
++++ Python-2.7.3/Lib/test/test_dl.py	2012-09-19 01:54:30.000000000 +0000
+@@ -7,10 +7,10 @@
+ dl = import_module('dl', deprecated=True)
+ 
+ sharedlibs = [
+-    ('/usr/lib/libc.so', 'getpid'),
+-    ('/lib/libc.so.6', 'getpid'),
++    ('/usr@@MULTILIB_DIR@@/libc.so', 'getpid'),
++    ('@@MULTILIB_DIR@@/libc.so.6', 'getpid'),
+     ('/usr/bin/cygwin1.dll', 'getpid'),
+-    ('/usr/lib/libc.dylib', 'getpid'),
++    ('/usr@@MULTILIB_DIR@@/libc.dylib', 'getpid'),
+     ]
+ 
+ def test_main():
+diff -Naur Python-2.7.3.orig/Lib/test/test_site.py Python-2.7.3/Lib/test/test_site.py
+--- Python-2.7.3.orig/Lib/test/test_site.py	2012-04-09 23:07:32.000000000 +0000
++++ Python-2.7.3/Lib/test/test_site.py	2012-09-19 01:54:30.000000000 +0000
+@@ -242,16 +242,16 @@
+         elif os.sep == '/':
+             # OS X non-framwework builds, Linux, FreeBSD, etc
+             self.assertEqual(len(dirs), 2)
+-            wanted = os.path.join('xoxo', 'lib', 'python' + sys.version[:3],
++            wanted = os.path.join('xoxo', '@@MULTILIB_DIR@@', 'python' + sys.version[:3],
+                                   'site-packages')
+             self.assertEqual(dirs[0], wanted)
+-            wanted = os.path.join('xoxo', 'lib', 'site-python')
++            wanted = os.path.join('xoxo', '@@MULTILIB_DIR@@', 'site-python')
+             self.assertEqual(dirs[1], wanted)
+         else:
+             # other platforms
+             self.assertEqual(len(dirs), 2)
+             self.assertEqual(dirs[0], 'xoxo')
+-            wanted = os.path.join('xoxo', 'lib', 'site-packages')
++            wanted = os.path.join('xoxo', '@@MULTILIB_DIR@@', 'site-packages')
+             self.assertEqual(dirs[1], wanted)
+ 
+ class PthFile(object):
+diff -Naur Python-2.7.3.orig/Lib/trace.py Python-2.7.3/Lib/trace.py
+--- Python-2.7.3.orig/Lib/trace.py	2012-04-09 23:07:32.000000000 +0000
++++ Python-2.7.3/Lib/trace.py	2012-09-19 01:54:30.000000000 +0000
+@@ -754,7 +754,7 @@
+                 # should I also call expanduser? (after all, could use $HOME)
+ 
+                 s = s.replace("$prefix",
+-                              os.path.join(sys.prefix, "lib",
++                              os.path.join(sys.prefix, "@@MULTILIB_DIR@@",
+                                            "python" + sys.version[:3]))
+                 s = s.replace("$exec_prefix",
+                               os.path.join(sys.exec_prefix, "lib",
+diff -Naur Python-2.7.3.orig/Makefile.pre.in Python-2.7.3/Makefile.pre.in
+--- Python-2.7.3.orig/Makefile.pre.in	2012-04-09 23:07:33.000000000 +0000
++++ Python-2.7.3/Makefile.pre.in	2012-09-19 01:54:30.000000000 +0000
+@@ -97,7 +97,7 @@
+ MANDIR=		@mandir@
+ INCLUDEDIR=	@includedir@
+ CONFINCLUDEDIR=	$(exec_prefix)/include
+-SCRIPTDIR=	$(prefix)/lib
++SCRIPTDIR=	$(prefix)/@@MULTILIB_DIR@@
+ 
+ # Detailed destination directories
+ BINLIBDEST=	$(LIBDIR)/python$(VERSION)
+@@ -484,7 +484,7 @@
+ 	fi
+ 
+ libpython$(VERSION).dylib: $(LIBRARY_OBJS)
+-	 $(CC) -dynamiclib -Wl,-single_module $(LDFLAGS) -undefined dynamic_lookup -Wl,-install_name,$(prefix)/lib/libpython$(VERSION).dylib -Wl,-compatibility_version,$(VERSION) -Wl,-current_version,$(VERSION) -o $@ $(LIBRARY_OBJS) $(SHLIBS) $(LIBC) $(LIBM) $(LDLAST); \
++	 $(CC) -dynamiclib -Wl,-single_module $(LDFLAGS) -undefined dynamic_lookup -Wl,-install_name,$(prefix)/@@MULTILIB_DIR@@/libpython$(VERSION).dylib -Wl,-compatibility_version,$(VERSION) -Wl,-current_version,$(VERSION) -o $@ $(LIBRARY_OBJS) $(SHLIBS) $(LIBC) $(LIBM) $(LDLAST); \
+ 
+ 
+ libpython$(VERSION).sl: $(LIBRARY_OBJS)
+@@ -567,7 +567,7 @@
+ Python/compile.o Python/symtable.o Python/ast.o: $(GRAMMAR_H) $(AST_H)
+ 
+ Python/getplatform.o: $(srcdir)/Python/getplatform.c
+-		$(CC) -c $(PY_CFLAGS) -DPLATFORM='"$(MACHDEP)"' -o $@ $(srcdir)/Python/getplatform.c
++		$(CC) -c $(PY_CFLAGS) -DPLATFORM='"$(MACHDEP)"' -DLIB="@@MULTILIB_DIR@@" -o $@ $(srcdir)/Python/getplatform.c
+ 
+ Python/importdl.o: $(srcdir)/Python/importdl.c
+ 		$(CC) -c $(PY_CFLAGS) -I$(DLINCLDIR) -o $@ $(srcdir)/Python/importdl.c
+@@ -1092,7 +1092,7 @@
+ 		exit 1; \
+ 	else true; \
+ 	fi
+-	@for i in $(prefix)/Resources/English.lproj $(prefix)/lib; do\
++	@for i in $(prefix)/Resources/English.lproj $(prefix)/@@MULTILIB_DIR@@; do\
+ 		if test ! -d $(DESTDIR)$$i; then \
+ 			echo "Creating directory $(DESTDIR)$$i"; \
+ 			$(INSTALL) -d -m $(DIRMODE) $(DESTDIR)$$i; \
+@@ -1111,9 +1111,9 @@
+ # Install a number of symlinks to keep software that expects a normal unix
+ # install (which includes python-config) happy.
+ frameworkinstallmaclib:
+-	ln -fs "../../../$(PYTHONFRAMEWORK)" "$(DESTDIR)$(prefix)/lib/python$(VERSION)/config/libpython$(VERSION).a"
+-	ln -fs "../../../$(PYTHONFRAMEWORK)" "$(DESTDIR)$(prefix)/lib/python$(VERSION)/config/libpython$(VERSION).dylib"
+-	ln -fs "../$(PYTHONFRAMEWORK)" "$(DESTDIR)$(prefix)/lib/libpython$(VERSION).dylib"
++	ln -fs "../../../$(PYTHONFRAMEWORK)" "$(DESTDIR)$(prefix)/@@MULTILIB_DIR@@/python$(VERSION)/config/libpython$(VERSION).a"
++	ln -fs "../../../$(PYTHONFRAMEWORK)" "$(DESTDIR)$(prefix)/@@MULTILIB_DIR@@/python$(VERSION)/config/libpython$(VERSION).dylib"
++	ln -fs "../$(PYTHONFRAMEWORK)" "$(DESTDIR)$(prefix)/@@MULTILIB_DIR@@/libpython$(VERSION).dylib"
+ 	cd Mac && $(MAKE) installmacsubtree DESTDIR="$(DESTDIR)"
+ 
+ # This installs the IDE, the Launcher and other apps into /Applications
+diff -Naur Python-2.7.3.orig/Modules/getpath.c Python-2.7.3/Modules/getpath.c
+--- Python-2.7.3.orig/Modules/getpath.c	2012-04-09 23:07:34.000000000 +0000
++++ Python-2.7.3/Modules/getpath.c	2012-09-19 01:54:30.000000000 +0000
+@@ -117,8 +117,8 @@
+ #endif
+ 
+ #ifndef PYTHONPATH
+-#define PYTHONPATH PREFIX "/lib/python" VERSION ":" \
+-              EXEC_PREFIX "/lib/python" VERSION "/lib-dynload"
++#define PYTHONPATH PREFIX "/@@MULTILIB_DIR@@/python" VERSION ":" \
++              EXEC_PREFIX "/@@MULTILIB_DIR@@/python" VERSION "/lib-dynload"
+ #endif
+ 
+ #ifndef LANDMARK
+@@ -129,7 +129,7 @@
+ static char exec_prefix[MAXPATHLEN+1];
+ static char progpath[MAXPATHLEN+1];
+ static char *module_search_path = NULL;
+-static char lib_python[] = "lib/python" VERSION;
++static char lib_python[] = "libx32/python" VERSION;
+ 
+ static void
+ reduce(char *dir)
+@@ -528,7 +528,7 @@
+     }
+     else
+         strncpy(zip_path, PREFIX, MAXPATHLEN);
+-    joinpath(zip_path, "lib/python00.zip");
++    joinpath(zip_path, "libx32/python00.zip");
+     bufsz = strlen(zip_path);   /* Replace "00" with version */
+     zip_path[bufsz - 6] = VERSION[0];
+     zip_path[bufsz - 5] = VERSION[2];
+@@ -630,7 +630,7 @@
+     }
+ 
+     /* Reduce prefix and exec_prefix to their essence,
+-     * e.g. /usr/local/lib/python1.5 is reduced to /usr/local.
++     * e.g. /usr/local/@@MULTILIB_DIR@@/python1.5 is reduced to /usr/local.
+      * If we're loading relative to the build directory,
+      * return the compiled-in defaults instead.
+      */
+diff -Naur Python-2.7.3.orig/setup.py Python-2.7.3/setup.py
+--- Python-2.7.3.orig/setup.py	2012-04-09 23:07:36.000000000 +0000
++++ Python-2.7.3/setup.py	2012-09-19 01:54:32.000000000 +0000
+@@ -438,7 +438,7 @@
+     def detect_modules(self):
+         # Ensure that /usr/local is always used
+         if not cross_compiling:
+-            add_dir_to_list(self.compiler.library_dirs, '/usr/local/lib')
++            add_dir_to_list(self.compiler.library_dirs, '/usr/local/@@MULTILIB_DIR@@')
+             add_dir_to_list(self.compiler.include_dirs, '/usr/local/include')
+         if cross_compiling:
+             self.add_gcc_paths()
+@@ -505,8 +505,8 @@
+                 ):
+                 add_dir_to_list(inc_dirs, d)
+             for d in (
+-                '/lib64', '/usr/lib64',
+-                '/lib', '/usr/lib',
++                '/@@MULTILIB_DIR@@', '/usr/@@MULTILIB_DIR@@',
++                '/@@MULTILIB_DIR@@', '/usr/@@MULTILIB_DIR@@',
+                 ):
+                 add_dir_to_list(lib_dirs, d)
+         exts = []
+@@ -677,11 +677,11 @@
+             elif curses_library:
+                 readline_libs.append(curses_library)
+             elif self.compiler.find_library_file(lib_dirs +
+-                                                     ['/usr/lib/termcap'],
++                                                     ['/usr/@@MULTILIB_DIR@@/termcap'],
+                                                      'termcap'):
+                 readline_libs.append('termcap')
+             exts.append( Extension('readline', ['readline.c'],
+-                                   library_dirs=['/usr/lib/termcap'],
++                                   library_dirs=['/usr/@@MULTILIB_DIR@@/termcap'],
+                                    extra_link_args=readline_extra_link_args,
+                                    libraries=readline_libs) )
+         else:
+@@ -1753,18 +1753,18 @@
+         # Check for various platform-specific directories
+         if platform == 'sunos5':
+             include_dirs.append('/usr/openwin/include')
+-            added_lib_dirs.append('/usr/openwin/lib')
++            added_lib_dirs.append('/usr/openwin/@@MULTILIB_DIR@@')
+         elif os.path.exists('/usr/X11R6/include'):
+             include_dirs.append('/usr/X11R6/include')
+-            added_lib_dirs.append('/usr/X11R6/lib64')
+-            added_lib_dirs.append('/usr/X11R6/lib')
++            added_lib_dirs.append('/usr/X11R6/@@MULTILIB_DIR@@')
++            added_lib_dirs.append('/usr/X11R6/@@MULTILIB_DIR@@')
+         elif os.path.exists('/usr/X11R5/include'):
+             include_dirs.append('/usr/X11R5/include')
+-            added_lib_dirs.append('/usr/X11R5/lib')
++            added_lib_dirs.append('/usr/X11R5/@@MULTILIB_DIR@@')
+         else:
+             # Assume default location for X11
+             include_dirs.append('/usr/X11/include')
+-            added_lib_dirs.append('/usr/X11/lib')
++            added_lib_dirs.append('/usr/X11/@@MULTILIB_DIR@@')
+ 
+         # If Cygwin, then verify that X is installed before proceeding
+         if platform == 'cygwin':
