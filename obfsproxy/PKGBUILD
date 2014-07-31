@@ -1,8 +1,8 @@
 # Maintainer: mutantmonkey <aur@mutantmonkey.in>
 # Contributor: Techlive Zheng <techlivezheng@gmail.com>
 pkgname=obfsproxy
-pkgver=0.2.9
-pkgrel=2
+pkgver=0.2.11
+pkgrel=1
 pkgdesc="A pluggable transport proxy written in Python"
 arch=('any')
 url="https://pypi.python.org/pypi/obfsproxy"
@@ -14,7 +14,7 @@ optdepends=('python2-gmpy: speed up some cryptographic operations')
 conflicts=('pyobfsproxy' 'obfsproxy-git')
 options=(!emptydirs)
 source=("https://pypi.python.org/packages/source/o/obfsproxy/obfsproxy-${pkgver}.tar.gz"{,.asc})
-sha256sums=('603bde8db72324a7fdbd8c4abaebb7546f1515cdc7aedc1d7fef21d9c499de9f'
+sha256sums=('121a0e5869e5233e3130ab8355f9cda94bb366e845556cb03b5beb63fb26cb94'
             'SKIP')
 
 prepare() {
