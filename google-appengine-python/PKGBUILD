@@ -1,4 +1,5 @@
-# Maintainer: Sietse van der Molen <sietse@vdmolen.eu>
+# Maintainer: Raphaël Doursenaud <rdoursenaud@gpcsolutions.fr>
+# Contributor: Sietse van der Molen <sietse@vdmolen.eu>
 # Contributor: Felix Yan <felixonmars@gmail.com>
 # Contributor: pisuka <tekmon@gmail.com>
 # Contributor: Estevao Valadao <estevao@archlinux-br.org>
@@ -6,11 +7,11 @@
 # Contributor: Lee.MaRS <leemars@gmail.com>
 
 pkgname=google-appengine-python
-pkgver=1.8.9
+pkgver=1.9.8
 _zipver=$pkgver
 pkgrel=1
 arch=(any)
-pkgdesc="Google App Engine SDK for Python."
+pkgdesc="Google App Engine SDK for Python"
 url=https://developers.google.com/appengine/
 license=(APACHE)
 depends=(python2)
@@ -18,9 +19,9 @@ optdepends=(mysql-python
 	python-imaging=1.1.7
 	python2-numpy=1.6.1
 	pycrypto=2.6
-	python-lxml=2.3
-	django=1.4
-	python-jinja2=2.6
+	python2-lxml=2.3
+	python2-django=1.5.8
+	python2-jinja=2.6
 	python2-markupsafe=0.15
 	python2-webapp2=2.3
 	python2-webob=1.1.1
@@ -28,7 +29,8 @@ optdepends=(mysql-python
 makedepends=(unzip)
 options=(!strip)
 install=install
-source=(http://googleappengine.googlecode.com/files/google_appengine_${_zipver}.zip)
+source=(https://storage.googleapis.com/appengine-sdks/featured/google_appengine_${_zipver}.zip)
+sha1sums=('9835547cd2566ab1eaffe15e4697724eba08831f')
 noextract=(google_appengine_${_zipver}.zip)
 
 package() {
@@ -46,4 +48,3 @@ package() {
   find opt/${pkgname} -maxdepth 1 -type f -executable -printf "/opt/${pkgname}/%f\n" | xargs ln -st usr/bin/
 }
 
-sha1sums=('6a5a79a81bf0f1fccf5b56dac41be6174888983e')
