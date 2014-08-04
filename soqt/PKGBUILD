@@ -5,7 +5,7 @@
 
 pkgname=soqt
 pkgver=1.5.0
-pkgrel=5
+pkgrel=6
 pkgdesc='A library which provides the glue between Coin and Qt'
 arch=('i686' 'x86_64')
 url='http://www.coin3d.org/lib/soqt/'
@@ -14,9 +14,13 @@ depends=('coin' 'qt4')
 makedepends=('doxygen')
 options=('!libtool')
 source=("https://bitbucket.org/Coin3D/coin/downloads/SoQt-${pkgver}.tar.gz")
+sha256sums=('f6a34b4c19e536c00f21aead298cdd274a7a0b03a31826fbe38fc96f3d82ab91')
 
 build() {
-  cd ${srcdir}/SoQt-${pkgver}
+  cd "${srcdir}/SoQt-${pkgver}/"
+
+  # fix prefix in soqt-config
+  sed -i '/^prefix/c prefix="/usr/"' src/Inventor/Qt/common/sogui-config.in
 
   ./configure --prefix=/usr \
     --enable-optimization \
@@ -33,9 +37,7 @@ build() {
 }
 
 package() {
-  cd SoQt-${pkgver}
+  cd "${srcdir}/SoQt-${pkgver}/"
 
-  make DESTDIR=${pkgdir} install
+  make "DESTDIR=${pkgdir}" install
 }
-
-sha256sums=('f6a34b4c19e536c00f21aead298cdd274a7a0b03a31826fbe38fc96f3d82ab91')
