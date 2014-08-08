@@ -1,10 +1,10 @@
-# $Id: PKGBUILD 112722 2014-06-05 15:38:12Z pierre $
-# Upstream Maintainer: Pierre Schmitz <pierre@archlinux.de>
-# Maintainer: Fantix King <fantix.king at gmail.com>
+# $Id: PKGBUILD 116952 2014-08-07 08:19:38Z bluewind $
+# Maintainer: Pierre Schmitz <pierre@archlinux.de>
+# x32 Maintainer: Fantix King <fantix.king at gmail.com>
 
 _pkgbasename=openssl
 pkgname=libx32-$_pkgbasename
-_ver=1.0.1h
+_ver=1.0.1i
 # use a pacman compatible version scheme
 pkgver=${_ver/[a-z]/.${_ver//[0-9.]/}}
 #pkgver=$_ver
@@ -24,7 +24,7 @@ source=("https://www.openssl.org/source/${_pkgbasename}-${_ver}.tar.gz"
         'openssl-1.0.1-x32.patch'
         'opensslconf-stub.h'
 )
-md5sums=('8d6d684a9430d5cc98a62a5d8fbda8cf'
+md5sums=('c8dc151a671b9b92ff3e4c118b174972'
          'SKIP'
          'dc78d3d06baffc16217519242ce92478'
          '3bf51be3a1bbd262be46dc619f92aa90'
