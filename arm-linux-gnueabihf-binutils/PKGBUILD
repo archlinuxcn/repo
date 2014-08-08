@@ -1,0 +1,65 @@
+# Contributor: Alexander 'hatred' Drozdov <adrozdoff@gmail.com>
+# Maintainer: Erico Nunes <nunes dot erico at gmail>
+
+_target="arm-linux-gnueabihf"
+pkgbase=${_target}-binutils
+pkgname=(${_target}-binutils-ldscripts ${_target}-binutils)
+pkgver=2.24
+pkgrel=2
+pkgdesc="A set of programs to assemble and manipulate binary and object files (${_target})"
+arch=(i686 x86_64)
+license=(GPL)
+options=(!libtool !buildflags !emptydirs)
+url="http://sources.redhat.com/binutils"
+depends=('glibc')
+source=(ftp://ftp.gnu.org/gnu/binutils/binutils-${pkgver}.tar.bz2)
+md5sums=('e0f71a7b2ddab0f8612336ac81d9636b')
+
+build() {
+  cd "$srcdir/binutils-${pkgver}"
+
+  find -name config.cache -exec rm {} \;
+
+  [ $NOEXTRACT -eq 1 ] || ./configure \
+    --prefix=/usr \
+    --program-prefix=${_target}- \
+    --enable-shared \
+    --disable-multilib \
+    --with-lib-path=/usr/lib/binutils/${_target} \
+    --with-local-prefix=/usr/lib/${_target} \
+    --with-sysroot=/usr/${_target} \
+    --disable-nls \
+    --target=${_target} \
+    --host=$CHOST \
+    --build=$CHOST \
+    --disable-werror
+
+  make configure-host
+  make
+
+  local pkgdir="${srcdir}/pkg"
+  rm -rf "$pkgdir"
+
+  make prefix="$pkgdir/usr" tooldir="$pkgdir/usr" install
+
+  rm -f "$pkgdir"/usr/bin/{ar,as,ld,nm,objdump,ranlib,strip,objcopy}
+  rm -f "$pkgdir"/usr/lib/libiberty.a
+  rm -rf "$pkgdir"/usr/{share,man}
+}
+
+package_arm-linux-gnueabihf-binutils-ldscripts() {
+  privides=(arm-linux-gnueabi-binutils-ldscripts)
+  conflicts=(arm-linux-gnueabi-binutils-ldscripts)
+  cd "$srcdir"
+
+  mkdir -p "$pkgdir/usr/lib/"
+  cp -a pkg/usr/lib/ldscripts "$pkgdir/usr/lib/"
+}
+
+package_arm-linux-gnueabihf-binutils() {
+  depends+=(arm-linux-gnueabi-binutils-ldscripts)
+  cd "$srcdir"
+
+  cp -a pkg/usr "$pkgdir/"
+  rm -rf "$pkgdir/usr/lib/ldscripts"
+}
