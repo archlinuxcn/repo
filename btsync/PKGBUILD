@@ -5,7 +5,7 @@
 
 pkgname=btsync
 pkgver=1.3.109
-pkgrel=1
+pkgrel=2
 pkgdesc="BitTorrent Sync - automatically sync files via secure, distributed technology"
 license=("custom:btsync")
 arch=('i686' 'x86_64' 'arm' 'armv6' 'armv7' 'armv6h' 'armv7h')
@@ -13,10 +13,8 @@ url="http://www.bittorrent.com/sync"
 install=btsync.install
 backup=('etc/btsync.conf')
 optdepends=("btsync-autoconfig: Auto-create users' config files if needed") 
-source=(btsync.service
-	btsync_user.service)
-sha1sums=('9187bafe0cc30895d55b8a8a69074ebdca325e4c' 
-	'dd80af8594aef9bbeafa74b7c36b4b980c4c3751')
+source=(btsync.service btsync_user.service)
+sha1sums=('05038b03a673dd0207b2758a2e01db5d28c409d1' 'd30deb7e41ba1d163b4a5e442b8d8118758d312a')
 if [ "$CARCH" == x86_64 ]; then
 	source+=(http://syncapp.bittorrent.com/${pkgver}/${pkgname}_x64-${pkgver}.tar.gz)
 	sha1sums+=('321597f1411583a726451278433e9ef560ef91ca')
