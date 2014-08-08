@@ -1,0 +1,39 @@
+# Contributor: Alexander 'hatred' Drozdov <adrozdoff@gmail.com>
+# Maintainer: Erico Nunes <nunes dot erico at gmail>
+
+# toolchain build order: linux-api-headers->glibc->binutils->gcc->binutils->glibc
+
+_target_arch=arm
+_target=${_target_arch}-linux-gnueabihf
+pkgname=${_target}-linux-api-headers
+pkgver=3.16
+_basever=3.16
+pkgrel=1
+pkgdesc="Kernel headers sanitized for use in userspace (${_target})"
+arch=(any)
+url="http://www.gnu.org/software/libc"
+license=('GPL2')
+provides=("${_target}-linux-api-headers=${_basever}"
+  "${_target}-linux-api-headers30")
+conflicts=("${_target}-linux-api-headers26")
+source=("http://www.kernel.org/pub/linux/kernel/v3.x/linux-${pkgver}.tar.xz")
+md5sums=('5c569ed649a0c9711879f333e90c5386')
+
+build() {
+  cd "${srcdir}/linux-${pkgver}"
+
+  make ARCH=${_target_arch} mrproper
+  make ARCH=${_target_arch} headers_check
+}
+
+package() {
+  cd "${srcdir}/linux-${pkgver}"
+
+  make INSTALL_HDR_PATH="${pkgdir}/usr/${_target}/" ARCH=${_target_arch} V=0 \
+    headers_install
+
+  # use headers from libdrm
+  #rm -rf ${pkgdir}/usr/include/drm
+  # clean-up unnecessary files generated during install
+  find "${pkgdir}" -name .install -or -name ..install.cmd | xargs rm -f
+}
