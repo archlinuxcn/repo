@@ -1,12 +1,11 @@
-diff -upr linux-3.0.orig/kernel/printk.c linux-3.0/kernel/printk.c
---- linux-3.0.orig/kernel/printk/printk.c	2011-07-22 05:17:23.000000000 +0300
-+++ linux-3.0/kernel/printk/printk.c	2011-07-27 14:43:07.000000000 +0300
-@@ -58,7 +58,7 @@ void asmlinkage __attribute__((weak)) ea
- 
- /* We show everything that is MORE important than this.. */
- #define MINIMUM_CONSOLE_LOGLEVEL 1 /* Minimum loglevel we let people use */
--#define DEFAULT_CONSOLE_LOGLEVEL 7 /* anything MORE serious than KERN_DEBUG */
-+#define DEFAULT_CONSOLE_LOGLEVEL 4 /* anything MORE serious than KERN_WARNING */
- 
- DECLARE_WAIT_QUEUE_HEAD(log_wait);
+--- linux-3.16/include/linux/printk.h.old	2014-08-04 18:48:30.686043266 +0200
++++ linux-3.16/include/linux/printk.h	2014-08-04 18:48:47.706218528 +0200
+@@ -37,7 +37,7 @@
+ #define CONSOLE_LOGLEVEL_SILENT  0 /* Mum's the word */
+ #define CONSOLE_LOGLEVEL_MIN	 1 /* Minimum loglevel we let people use */
+ #define CONSOLE_LOGLEVEL_QUIET	 4 /* Shhh ..., when booted with "quiet" */
+-#define CONSOLE_LOGLEVEL_DEFAULT 7 /* anything MORE serious than KERN_DEBUG */
++#define CONSOLE_LOGLEVEL_DEFAULT 4 /* anything MORE serious than KERN_DEBUG */
+ #define CONSOLE_LOGLEVEL_DEBUG	10 /* issue debug messages */
+ #define CONSOLE_LOGLEVEL_MOTORMOUTH 15	/* You can't shut this one up */
  
