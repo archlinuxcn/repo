@@ -3,13 +3,13 @@
 
 pkgname=nvidia-beignet-fix
 pkgver=340.24
-_extramodules=extramodules-3.15-beignet-fix
-pkgrel=1
+_extramodules=extramodules-3.16-beignet-fix
+pkgrel=2
 pkgdesc="NVIDIA drivers for linux"
 arch=('i686' 'x86_64')
 url="http://www.nvidia.com/"
-depends=('linux-beignet-fix>=3.15' 'linux-beignet-fix<3.16' "nvidia-libgl" "nvidia-utils=${pkgver}")
-makedepends=('linux-beignet-fix-headers>=3.15' 'linux-beignet-fix-headers<3.16')
+depends=('linux-beignet-fix>=3.16' 'linux-beignet-fix<3.17' "nvidia-libgl" "nvidia-utils=${pkgver}")
+makedepends=('linux-beignet-fix-headers>=3.16' 'linux-beignet-fix-headers<3.17')
 conflicts=('nvidia-96xx' 'nvidia-173xx')
 license=('custom')
 install=nvidia.install
@@ -17,7 +17,7 @@ options=(!strip)
 source=("ftp://download.nvidia.com/XFree86/Linux-x86/${pkgver}/NVIDIA-Linux-x86-${pkgver}.run"
         "ftp://download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run")
 md5sums=('edd4c618265d22ef4d2b28baf070c6ff'
-  'b71118e3e3ae9b227bf6f17a2cc8c726')
+         'b71118e3e3ae9b227bf6f17a2cc8c726')
 
 [[ "$CARCH" = "i686" ]] && _pkg="NVIDIA-Linux-x86-${pkgver}"
 [[ "$CARCH" = "x86_64" ]] && _pkg="NVIDIA-Linux-x86_64-${pkgver}-no-compat32"
