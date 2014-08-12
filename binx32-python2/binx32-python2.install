@@ -1,0 +1,21 @@
+post_install() {
+    mv /usr/include/python2.7/pyconfig.h /usr/include/python2.7/pyconfig-64.h
+    ln -s pyconfig-stub.h /usr/include/python2.7/pyconfig.h
+}
+
+post_upgrade() {
+    if [ ! -L /usr/include/python2.7/pyconfig.h ]; then
+        post_install
+    elif [ ${1::-2} != ${2::-2} ]; then
+        echo WARNING: binx32-python2 is upgraded before python2,
+        echo WARNING: you probably need to reinstall binx32-python2.
+    fi
+}
+
+post_remove() {
+    if [ -L /usr/include/python2.7/pyconfig.h ]; then
+        rm /usr/include/python2.7/pyconfig.h
+        mv /usr/include/python2.7/pyconfig-64.h /usr/include/python2.7/pyconfig.h
+    fi
+}
+

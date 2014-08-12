@@ -4,8 +4,8 @@
 # Contributor: Justin Patera serialhex@gmail.com
 
 pkgname=btsync
-pkgver=1.3.106
-pkgrel=1
+pkgver=1.3.109
+pkgrel=2
 pkgdesc="BitTorrent Sync - automatically sync files via secure, distributed technology"
 license=("custom:btsync")
 arch=('i686' 'x86_64' 'arm' 'armv6' 'armv7' 'armv6h' 'armv7h')
@@ -13,21 +13,17 @@ url="http://www.bittorrent.com/sync"
 install=btsync.install
 backup=('etc/btsync.conf')
 optdepends=("btsync-autoconfig: Auto-create users' config files if needed") 
-source=(btsync.service
-	btsync@.service
-	btsync_user.service)
-sha1sums=('9187bafe0cc30895d55b8a8a69074ebdca325e4c' 
-	  'c4f87b9d65247f4a9033a6039662f4b863a5b03e'
-	  'dd80af8594aef9bbeafa74b7c36b4b980c4c3751')
+source=(btsync.service btsync_user.service)
+sha1sums=('05038b03a673dd0207b2758a2e01db5d28c409d1' 'd30deb7e41ba1d163b4a5e442b8d8118758d312a')
 if [ "$CARCH" == x86_64 ]; then
-        source+=(http://syncapp.bittorrent.com/${pkgver}/${pkgname}_x64-${pkgver}.tar.gz)
-        sha1sums+=('68f5e0efbe153025759f3e83be77f08a8307ea22')
+	source+=(http://syncapp.bittorrent.com/${pkgver}/${pkgname}_x64-${pkgver}.tar.gz)
+	sha1sums+=('321597f1411583a726451278433e9ef560ef91ca')
 elif [ "$CARCH" == i686 ]; then
-        source+=(http://syncapp.bittorrent.com/${pkgver}/${pkgname}_i386-${pkgver}.tar.gz)
-        sha1sums+=('1bb8ffaa6be37d7ef0cffc0085ad3f18d0895893')
+	source+=(http://syncapp.bittorrent.com/${pkgver}/${pkgname}_i386-${pkgver}.tar.gz)
+	sha1sums+=('3c5b8cc02adc3e0c6038c6c826d912aeb0d9c3ee')
 elif [[ "$CARCH" == arm ||  "$CARCH" == armv6 || "$CARCH" == armv6h || "$CARCH" == armv7 || "$CARCH" == armv7h ]]; then
-        source+=(http://syncapp.bittorrent.com/${pkgver}/${pkgname}_arm-${pkgver}.tar.gz)
-        sha1sums+=('eeead86fa1653164d35663a8350365c29d00dd55')
+	source+=(http://syncapp.bittorrent.com/${pkgver}/${pkgname}_arm-${pkgver}.tar.gz)
+	sha1sums+=('c468a0dc95ca784b7e90c7ceda340aee9117f631')
 fi
 
 package() {
@@ -38,7 +34,6 @@ package() {
 	./btsync --dump-sample-config | sed 's:/home/user/\.sync:/var/lib/btsync:g' > ${pkgdir}/etc/btsync.conf
 	# install systemd units
 	install -Dm644 btsync.service ${pkgdir}/usr/lib/systemd/system/btsync.service
-	install -Dm644 btsync@.service ${pkgdir}/usr/lib/systemd/system/btsync@.service
 	install -Dm644 btsync_user.service ${pkgdir}/usr/lib/systemd/user/btsync.service
 	# install license
 	install -Dm644 LICENSE.TXT "${pkgdir}/usr/share/licenses/${pkgname}/license.txt"

@@ -1,0 +1,102 @@
+From 3b72a2c9d1d656c74c691a45689e1d637f669e3a Mon Sep 17 00:00:00 2001
+From: Kenneth Graunke <kenneth@whitecape.org>
+Date: Fri, 03 Jan 2014 23:08:33 +0000
+Subject: Force XCB event structures with 64-bit extended fields to be packed.
+
+With the advent of the Present extension, some events (such as
+PresentCompleteNotify) now use native 64-bit types on the wire.
+
+For XGE events, we insert an extra "uint32_t full_sequence" field
+immediately after the first 32 bytes of data.  Normally, this causes
+the subsequent fields to be shifted over by 4 bytes, and the structure
+to grow in size by 4 bytes.  Everything works fine.
+
+However, if event contains 64-bit extended fields, this may result in
+the compiler adding an extra 4 bytes of padding so that those fields
+remain aligned on 64-bit boundaries.  This causes the structure to grow
+by 8 bytes, not 4.  Unfortunately, XCB doesn't realize this, and
+always believes that the length only increased by 4.  read_packet()
+then fails to malloc enough memory to hold the event, and the event
+processing code uses the wrong offsets.
+
+To fix this, mark any event structures containing 64-bit extended
+fields with __attribute__((__packed__)).
+
+v2: Use any(...) instead of True in (...), as suggested by
+    Daniel Martin.
+
+v3 (Alan Coopersmith): Fix build with Solaris Studio 12.3 by moving the
+attribute to after the structure definition.
+
+Signed-off-by: Kenneth Graunke <kenneth@whitecape.org>
+Reviewed-by: Keith Packard <keithp@keithp.com> [v1]
+Reviewed-by: Josh Triplett <josh@joshtriplett.org> [v1]
+Reviewed-by: Daniel Martin <consume.noise@gmail.com>
+Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+---
+diff --git a/src/c_client.py b/src/c_client.py
+index 99fd307..45de544 100644
+--- a/src/c_client.py
++++ b/src/c_client.py
+@@ -1762,7 +1762,7 @@ def c_simple(self, name):
+         # Iterator
+         _c_iterator(self, name)
+ 
+-def _c_complex(self):
++def _c_complex(self, force_packed = False):
+     '''
+     Helper function for handling all structure types.
+     Called for all structs, requests, replies, events, errors.
+@@ -1817,7 +1817,7 @@ def _c_complex(self):
+             if b.type.has_name:
+                 _h('    } %s;', b.c_field_name)
+ 
+-    _h('} %s;', self.c_type)
++    _h('} %s%s;', 'XCB_PACKED ' if force_packed else '', self.c_type)
+ 
+ def c_struct(self, name):
+     '''
+@@ -2902,6 +2902,7 @@ def c_event(self, name):
+     # events while generating the structure for them. Otherwise we would read
+     # garbage (the internal full_sequence) when accessing normal event fields
+     # there.
++    force_packed = False
+     if hasattr(self, 'is_ge_event') and self.is_ge_event and self.name == name:
+         event_size = 0
+         for field in self.fields:
+@@ -2911,6 +2912,11 @@ def c_event(self, name):
+                 full_sequence = Field(tcard32, tcard32.name, 'full_sequence', False, True, True)
+                 idx = self.fields.index(field)
+                 self.fields.insert(idx + 1, full_sequence)
++
++                # If the event contains any 64-bit extended fields, they need
++                # to remain aligned on a 64-bit boundary.  Adding full_sequence
++                # would normally break that; force the struct to be packed.
++                force_packed = any(f.type.size == 8 and f.type.is_simple for f in self.fields[(idx+1):])
+                 break
+ 
+     _c_type_setup(self, name, ('event',))
+@@ -2920,7 +2926,7 @@ def c_event(self, name):
+ 
+     if self.name == name:
+         # Structure definition
+-        _c_complex(self)
++        _c_complex(self, force_packed)
+     else:
+         # Typedef
+         _h('')
+diff --git a/src/xcb.h b/src/xcb.h
+index e62c985..73c77a3 100644
+--- a/src/xcb.h
++++ b/src/xcb.h
+@@ -51,6 +51,8 @@ extern "C" {
+  * @file xcb.h
+  */
+ 
++#define XCB_PACKED __attribute__((__packed__))
++
+ /**
+  * @defgroup XCB_Core_API XCB Core API
+  * @brief Core API of the XCB library.
+--
+cgit v0.9.0.2-2-gbebe

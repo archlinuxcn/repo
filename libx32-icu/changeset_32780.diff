@@ -1,0 +1,67 @@
+Index: /icu/trunk/source/test/intltest/strtest.cpp
+===================================================================
+--- /icu/trunk/source/test/intltest/strtest.cpp	(revision 32779)
++++ /icu/trunk/source/test/intltest/strtest.cpp	(revision 32780)
+@@ -1,5 +1,5 @@
+ /********************************************************************
+  * COPYRIGHT: 
+- * Copyright (c) 1997-2011, International Business Machines Corporation and
++ * Copyright (c) 1997-2012, International Business Machines Corporation and
+  * others. All Rights Reserved.
+  ********************************************************************/
+@@ -95,5 +95,5 @@
+ StringTest::Test_U_STRING() {
+     U_STRING_INIT(ustringVar, "aZ0 -", 5);
+-    if( sizeof(ustringVar)/sizeof(*ustringVar)!=6 ||
++    if( u_strlen(ustringVar)!=5 ||
+         ustringVar[0]!=0x61 ||
+         ustringVar[1]!=0x5a ||
+Index: /icu/trunk/source/common/unicode/ustring.h
+===================================================================
+--- /icu/trunk/source/common/unicode/ustring.h	(revision 32779)
++++ /icu/trunk/source/common/unicode/ustring.h	(revision 32780)
+@@ -940,5 +940,5 @@
+  */
+ #if defined(U_DECLARE_UTF16)
+-#   define U_STRING_DECL(var, cs, length) static const UChar var[(length)+1]=U_DECLARE_UTF16(cs)
++#   define U_STRING_DECL(var, cs, length) static const UChar *var=(const UChar *)U_DECLARE_UTF16(cs)
+     /**@stable ICU 2.0 */
+ #   define U_STRING_INIT(var, cs, length)
+Index: /icu/trunk/source/common/unicode/platform.h
+===================================================================
+--- /icu/trunk/source/common/unicode/platform.h	(revision 32779)
++++ /icu/trunk/source/common/unicode/platform.h	(revision 32780)
+@@ -665,7 +665,7 @@
+      * gcc 4.4 defines the __CHAR16_TYPE__ macro to a usable type but
+      * does not support u"abc" string literals.
+-     * C++11 requires support for UTF-16 literals
++     * C++11 and C11 require support for UTF-16 literals
+      */
+-#   if (defined(__cplusplus) && __cplusplus >= 201103L)
++#   if (defined(__cplusplus) && __cplusplus >= 201103L) || (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L)
+ #       define U_HAVE_CHAR16_T 1
+ #   else
+Index: /icu/trunk/source/common/unicode/umachine.h
+===================================================================
+--- /icu/trunk/source/common/unicode/umachine.h	(revision 32779)
++++ /icu/trunk/source/common/unicode/umachine.h	(revision 32780)
+@@ -257,5 +257,5 @@
+ /**
+  * \var UChar
+- * Define UChar to be char16_t, if available,
++ * Define UChar to be UCHAR_TYPE, if that is #defined (for example, to char16_t),
+  * or wchar_t if that is 16 bits wide; always assumed to be unsigned.
+  * If neither is available, then define UChar to be uint16_t.
+@@ -267,8 +267,8 @@
+  * @stable ICU 4.4
+  */
+-
+-/* Define UChar to be compatible with char16_t or wchar_t if possible. */
+-#if U_HAVE_CHAR16_T
+-    typedef char16_t UChar;
++#if defined(UCHAR_TYPE)
++    typedef UCHAR_TYPE UChar;
++/* Not #elif U_HAVE_CHAR16_T -- because that is type-incompatible with pre-C++11 callers
++    typedef char16_t UChar;  */
+ #elif U_SIZEOF_WCHAR_T==2
+     typedef wchar_t UChar;

@@ -1,80 +1,68 @@
 post_install() {
 
-  if [ "$(grep btsync /etc/passwd)" == "" ]; then
-      useradd -r -s /bin/sh -d /var/lib/btsync btsync
-  fi
-  mkdir -p /var/lib/btsync && chown -R btsync:btsync /var/lib/btsync
+	if [ "$(grep btsync /etc/passwd)" == "" ]; then
+		useradd -r -s /bin/sh -d /var/lib/btsync btsync
+	fi
+	mkdir -p /var/lib/btsync && chown -R btsync:btsync /var/lib/btsync
 
 cat << EOF
 
-  Configuration is located at /etc/btsync.conf and contains sample data
-  The corresponding systemd-unit is 'btsync.service'
-  WebGUI can be accessed at http://localhost:8888
+	Configuration is located at /etc/btsync.conf and contains sample data
+	The corresponding systemd-unit is 'btsync.service'
+	WebGUI can be accessed at http://localhost:8888
 
-  User-specific BTSync configuration
+	User-specific BTSync configuration
  
-  Helps to set ownership to someone other than root for files that are copied
-  with btsync. Copy /etc/btsync/btsync.conf to ~/.config/btsync/btsync.conf for
-  the user you wish to configure btsync as:
+	Helps to set ownership to someone other than root for files that are copied
+	with btsync. Copy /etc/btsync/btsync.conf to ~/.config/btsync/btsync.conf for
+ 	the user you wish to configure btsync as:
  	
 	mkdir -p ~/.config/btsync	
 	cp /etc/btsync.conf ~/.config/btsync/btsync.conf
  
-  Replace user-specific references with the appropriate information, including
-  the following settings:
+	Replace user-specific references with the appropriate information, including
+	the following settings:
  
-  - storage_path:
-  - pid_file
-  - webui.listen
-  - webui.login
-  - webui.password
+	- storage_path
+	- pid_file
+	- webui.listen
+	- webui.login
+	- webui.password
 
-  post_upgrade
+	Make sure folder you specified as storage_path and folder where pid_file will
+	be located both exist in the filesystem, since btsync will not create it for you.
+
+	post_upgrade
  
 EOF
+
 }
 
 post_upgrade() {
 
 cat << EOF
 
-  WebGUI can be accessed at http://localhost:8888
+	WebGUI can be accessed at http://localhost:8888
 
-  Running btsync system instance (will use dedicated btsync:btsync account):
+	Running btsync system instance (using dedicated btsync:btsync account).
+	Execute:
 
-        To reload system systemd modules, execute
+		to reload system systemd modules:     systemctl daemon-reload
+		to start btsync manually:             systemctl start btsync
+		to autostart btsync on system start:  systemctl enable btsync
 
-                systemctl daemon-reload
+	Running btsync user instance (will used current user account).
+	Execute:
 
-        To start btsync, execute:
-
-                systemctl start btsync
-
-        To autostart btsync on system start, execute
-
-                systemctl enable btsync
-
-  Running btsync user instance (will used current user account):
-
-        To reload user systemd modules, execute
-
-                systemctl --user daemon-reload
-
-        To start btsync manually, execute:
-
-                systemctl --user start btsync
-
-        To autostart btsync on user login, execute
-
-                systemctl --user enable btsync
+		to reload user systemd modules:       systemctl --user daemon-reload
+		to start btsync manually:             systemctl --user start btsync
+		to autostart btsync on user login:    systemctl --user enable btsync
 
 EOF
 
 }
 
 post_remove() {
-  
-  userdel btsync
-  echo -e "Please remove /var/lib/btsync folder manually"
-
+	userdel btsync
+	echo -e "Please remove /var/lib/btsync folder manually"
 }

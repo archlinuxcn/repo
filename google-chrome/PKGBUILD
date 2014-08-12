@@ -39,6 +39,9 @@ package() {
   msg2 "Extracting the data.tar.lzma"
   bsdtar -xf data.tar.lzma -C "$pkgdir/"
 
+  msg2 "Fix /usr/share/doc/google-chrome-stable permission"
+  chmod 0755 "$pkgdir"/usr/share/doc/google-chrome-stable
+
   msg2 "Moving stuff in place"
   # Icons
   for i in 16 22 24 32 48 64 128 256; do

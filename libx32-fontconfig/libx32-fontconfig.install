@@ -1,0 +1,11 @@
+post_install() {
+  echo -n "updating font cache... "
+  /usr/bin/fc-cache-x32 -f
+  echo "done."
+}
+
+post_upgrade() {
+  echo -n "updating font cache... "
+  /usr/bin/fc-cache-x32 -f
+  echo "done."
+}
