@@ -2,20 +2,7 @@
 [ -f etc/chromium-dev/default ] && _default='etc/chromium-dev/default'
 [ -f etc/chromium/default ] && _default='etc/chromium/default'
 
-flashver=14.0.0.145
-
-instructions() {
-
-cat << EOF
-
-	Disable all other flash plugins:
-	  1. Type chrome://plugins/ in the adress bar and press Enter
-	  2. Click on Details button on the top right
-	  3. Click on Disable near all the Flash plugins except the first one
-
-EOF
-
-}
+flashver=14.0.0.177
 
 post_upgrade()
 {
@@ -28,7 +15,6 @@ post_upgrade()
 
 post_install() {
   post_upgrade
-  instructions
 }
 
 post_remove() {
