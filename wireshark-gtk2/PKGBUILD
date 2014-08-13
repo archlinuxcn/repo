@@ -1,24 +1,22 @@
-# $Id$
+# $Id: PKGBUILD 116885 2014-08-05 07:52:37Z tredaelli $
 # Maintainer: Timothy Redaelli <timothy.redaelli@gmail.com>
 # Contributor: Guillaume ALAUX <guillaume@archlinux.org>
 # Contributor: Florian Pritz <bluewind at jabber dot ccc dot de>
 pkgname=wireshark-gtk2
 pkgbase=wireshark
-pkgver=1.10.7
-pkgrel=2
+pkgver=1.12.0
+pkgrel=1
 arch=('i686' 'x86_64')
 license=('GPL2')
 makedepends=('gtk2' 'krb5' 'libpcap' 'bash' 'gnutls' 'portaudio'
              'lua' 'python' 'desktop-file-utils' 'hicolor-icon-theme')
 url='http://www.wireshark.org/'
-source=(http://www.wireshark.org/download/src/${pkgbase}-${pkgver}.tar.bz2
-        wireshark-1.10.5-fix-flow-crash.patch)
-sha256sums=('d98d263b31dd904a0337ba2db6d1a80bb495b4ac419a304f0f25c551d50cafc6'
-            'de630c5dd1aa87749fd33c0f3f94a30215e122b1a7ffffeb9bed213fad0fe3ea')
+source=(http://www.wireshark.org/download/src/${pkgbase}-${pkgver}.tar.bz2)
+sha256sums=('0f59fea1c5b35de90af681067e49113fee0dd7a901750a97fa25f4256dbf13c7')
 
 prepare() {
   cd ${pkgbase}-${pkgver}
-  patch -p1 -i "${srcdir}"/wireshark-1.10.5-fix-flow-crash.patch
+  sed -i 's/$(AM_V_RCC)rcc/&-qt4/p' ui/qt/Makefile.am
 }
 
 build() {
@@ -30,6 +28,7 @@ build() {
       --with-pcap \
       --with-zlib \
       --with-lua \
+      --with-gtk2 \
       --with-portaudio \
       --with-ssl \
       --with-krb5
