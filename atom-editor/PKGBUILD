@@ -5,7 +5,7 @@
 # https://github.com/jreese/arch
 
 pkgname=atom-editor
-pkgver=0.120.0
+pkgver=0.121.0
 pkgrel=1
 pkgdesc="Chrome-based text editor from Github"
 arch=('x86_64' 'i686')
@@ -14,10 +14,10 @@ license=('MIT')
 conflicts=('atom-editor-git')
 depends=('alsa-lib' 'gconf' 'gtk2' 'libatomic_ops' 'libgcrypt' 'libgnome-keyring' 'libnotify' 'libxtst' 'nodejs' 'nss' 'python2')
 source=("https://github.com/atom/atom/archive/v${pkgver}.tar.gz" 'atom-python.patch')
-sha256sums=('f99b0a3848ad4aced68f83c17027d02fbff1d2c7a14c1079d0534ac8a641a31f' '18a19b895afbb5c72fe73b1efb37a662e8e8fa0f4731c9fa634f58c341c5ec3b')
+sha256sums=('6d463b87fa0bd0dc8007e60f9ce5ca38fb035d23a9421970671176172cef3e2a' '18a19b895afbb5c72fe73b1efb37a662e8e8fa0f4731c9fa634f58c341c5ec3b')
 makedepends=('git')
 
-_gitref='b3c241757801cf7a90d9e119f42e7a8ac498db10'
+_gitref='59fb4a839edca12fcd634bf7675b920e08cef619'
 _gitbranch='master'
 
 package() {
