@@ -1,0 +1,31 @@
+--- a/uksm-0.1.2.3-for-v3.15.ge.3.patch	2014-08-14 18:35:46.800008469 +0800
++++ b/uksm-0.1.2.3-for-v3.15.ge.3.patch	2014-08-14 18:39:02.104963106 +0800
+@@ -1139,15 +1139,6 @@
+  			if (unlikely(details) && details->nonlinear_vma
+  			    && linear_page_index(details->nonlinear_vma,
+  						addr) != page->index) {
+-@@ -1772,7 +1801,7 @@ long __get_user_pages(struct task_struct *tsk, struct mm_struct *mm,
+- 				page = vm_normal_page(vma, start, *pte);
+- 				if (!page) {
+- 					if (!(gup_flags & FOLL_DUMP) &&
+--					     is_zero_pfn(pte_pfn(*pte)))
+-+					    (is_zero_pfn(pte_pfn(*pte))))
+- 						page = pte_page(*pte);
+- 					else {
+- 						pte_unmap(pte);
+ @@ -2627,8 +2656,10 @@ static inline void cow_user_page(struct page *dst, struct page *src, unsigned lo
+  			clear_page(kaddr);
+  		kunmap_atomic(kaddr);
+@@ -1185,10 +1176,10 @@
+ index b1202cf..2cdb96c 100644
+ --- a/mm/mmap.c
+ +++ b/mm/mmap.c
+-@@ -37,6 +37,7 @@
+- #include <linux/sched/sysctl.h>
++@@ -40,6 +40,7 @@
+  #include <linux/notifier.h>
+  #include <linux/memory.h>
++ #include <linux/printk.h>
+ +#include <linux/ksm.h>
+  
+  #include <asm/uaccess.h>
