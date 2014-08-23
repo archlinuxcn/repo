@@ -1,7 +1,19 @@
-diff -ur ipython-2.1.0.orig/IPython/utils/path.py ipython-2.1.0/IPython/utils/path.py
---- ipython-2.1.0.orig/IPython/utils/path.py	2014-05-21 15:19:12.000000000 -0400
-+++ ipython-2.1.0/IPython/utils/path.py	2014-06-05 00:11:10.988046192 -0400
-@@ -271,37 +271,15 @@
+From 92a2e60b825127b1d81cc4f11df6c37a3db2c198 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sat, 23 Aug 2014 14:47:27 -0400
+Subject: [PATCH] read config from .config again
+
+Conflicts:
+	IPython/utils/path.py
+---
+ IPython/utils/path.py | 26 ++------------------------
+ 1 file changed, 2 insertions(+), 24 deletions(-)
+
+diff --git a/IPython/utils/path.py b/IPython/utils/path.py
+index 4fcf37d..f34b102 100644
+--- a/IPython/utils/path.py
++++ b/IPython/utils/path.py
+@@ -263,37 +263,15 @@ def get_ipython_dir():
      env = os.environ
      pjoin = os.path.join
  
@@ -35,9 +47,12 @@ diff -ur ipython-2.1.0.orig/IPython/utils/path.py ipython-2.1.0/IPython/utils/pa
 -                    'to get rid of this message').format(cu(xdg_ipdir), cu(ipdir)))
 -                else:
 -                    warnings.warn('Moving {0} to {1}'.format(cu(xdg_ipdir), cu(ipdir)))
--                    os.rename(xdg_ipdir, ipdir)
+-                    shutil.move(xdg_ipdir, ipdir)
 -
 +        ipdir = pjoin(xdg_dir, 'ipython')
      ipdir = os.path.normpath(os.path.expanduser(ipdir))
  
      if os.path.exists(ipdir) and not _writable_dir(ipdir):
+-- 
+2.1.0
+

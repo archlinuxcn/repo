@@ -12,12 +12,12 @@ _PATCH_REVERT_XDG=1
 pkgbase=pypy-ipython
 pkgname=pypy-ipython
 ((_BUILD_PYPY3)) && {
-  true && pkgname=(pypy3-ipython pypy-ipython)
+  pkgname=(pypy3-ipython pypy-ipython)
 } || {
-  true && pkgname=(pypy-ipython)
+  pkgname=(pypy-ipython)
 }
-pkgver=2.1.0
-pkgrel=2
+pkgver=2.2.0
+pkgrel=1
 pkgdesc="An enhanced Interactive Python shell. pypy version"
 arch=('any')
 url="http://ipython.org"
@@ -37,8 +37,8 @@ makedepends=('sqlite')
 source=("https://pypi.python.org/packages/source/i/ipython/ipython-$pkgver.tar.gz"
   revert-xdg.patch
   pypy3-version.patch)
-md5sums=('785c7b6364c6a0dd34aa4ea970cf83b9'
-         'ea30de2d0ee31d788f3784bc1b2daf0b'
+md5sums=('b91d3724f655a8e16d022772f696cfd5'
+         'f252c7449083c5b4a59dab260f5466c6'
          '0b72aadfce0dc7d01da6d3262b28612e')
 
 prepare() {
