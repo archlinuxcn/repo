@@ -1,7 +1,7 @@
 # Maintainer: Massimiliano Torromeo <massimiliano.torromeo@gmail.com>
 
 pkgname=zsh-completions-git
-pkgver=0.10.0.55.g1d6a2aa
+pkgver=0.10.0.108.g3280bc4
 pkgrel=1
 pkgdesc="Additional completion definitions for Zsh"
 arch=(any)
@@ -16,12 +16,15 @@ source=('git://github.com/zsh-users/zsh-completions.git')
 md5sums=('SKIP')
 
 pkgver() {
-  cd "$srcdir/zsh-completions"
-  git describe --tags --always | sed 's|-|.|g'
+	cd "$srcdir"/zsh-completions
+	git describe --tags --always | sed 's|-|.|g'
 }
 
 package() {
-	cd "$srcdir/zsh-completions/src"
-	install -m0755 -d "$pkgdir/usr/share/zsh/site-functions"
-	install -m0644 _* "$pkgdir/usr/share/zsh/site-functions"
+	cd "$srcdir"/zsh-completions/src
+	install -m0755 -d "$pkgdir"/usr/share/zsh/site-functions
+	install -m0644 _* "$pkgdir"/usr/share/zsh/site-functions
+
+	cd "$pkgdir"/usr/share/zsh/site-functions
+	rm -f _mpv
 }
