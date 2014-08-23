@@ -3,8 +3,8 @@
 export TEXTDOMAIN=downgrade
 export TEXTDOMAINDIR=/usr/share/locale
 
-prompt_to_install() {
-  local pkg ans i=1
+present_packages() {
+  local i=1
 
   (($#)) || return 1
 
@@ -16,24 +16,57 @@ prompt_to_install() {
   done
 
   printf "\n"
-  gettext 'select a package by number: '; read -r ans
-  printf "\n"
+  gettext 'select a package by number: '
+}
 
-  ((ans > 0 && ans <= $#)) && install_pkg "${!ans}"
+read_selection() {
+  local ans
+
+  read -r ans
+
+  ((ans > 0 && ans <= $#)) && printf "%s" "${!ans}"
+}
+
+download_when_remote() {
+  local pkg="$1" url
+
+  if [[ "$pkg" == 'http://'* ]]; then
+    url="$pkg"
+    pkg="${url##*/}"
+
+    if ! curl --silent "$url" > "$pkg"; then
+      rm "$pkg"
+      return 1
+    fi
+  fi
+
+  [[ -f "$pkg" ]] && printf "%s" "$pkg"
 }
 
 prompt_to_ignore() {
-  local pkg="$1" ans
+  local pkg ans ln
 
-  grep -Eq '^IgnorePkg.*( |=)'"$pkg"'( |$)' "$PACMAN_CONF" && return 0
+  for pkg; do
+    grep -Eq '^IgnorePkg.*( |=)'"$pkg"'( |$)' "$PACMAN_CONF" && return 0
 
-  printf "\n"
-  eval_gettext "add \$pkg to IgnorePkg? [y/n] "; read -r ans
-  printf "\n"
+    eval_gettext "add \$pkg to IgnorePkg? [y/n] "; read -r ans
 
-  if [[ "${ans,,}" == $(gettext 'y')* ]]; then
-    sudo sed -i "s/^#\?\(IgnorePkg.*\)/\1 $pkg/" "$PACMAN_CONF"
-  fi
+    if [[ "${ans,,}" == $(gettext 'y')* ]]; then
+      ln="$(grep -n -m 1 '^ *IgnorePkg' "$PACMAN_CONF" | cut -d : -f 1)"
+      if [ -n "$ln" ]; then
+        sudo sed -i "$ln s/.*/& $pkg/" "$PACMAN_CONF"
+        continue
+      fi
+
+      ln="$(grep -n '^# *IgnorePkg' "$PACMAN_CONF" | tail -n 1 | cut -d : -f 1)"
+      if [ -n "$ln" ]; then
+        sudo sed -i "$ln s/.*/&\nIgnorePkg = $pkg/" "$PACMAN_CONF"
+        continue
+      fi
+
+      sudo printf "IgnorePkg = %s\n" "$pkg" >> "$PACMAN_CONF"
+    fi
+  done
 }
 
 search_packages() {
@@ -58,17 +91,28 @@ output_package() {
          s|^/.*/\([^/]\+\)$|\1 ('"$(gettext 'local')"')|;' <<< "$2")"
 }
 
-install_pkg() {
-  local pkg="$1" url
+main() {
+  local term candidates choice pkg exit_code=0
 
-  if [[ "$pkg" == 'http://'* ]]; then
-    url="$pkg"
-    pkg="${url##*/}"
+  (($#)) || return 1
 
-    curl --silent "$url" > "$pkg"
-  fi
+  for term; do
+    candidates=( $(search_packages "$term" | sort_packages) )
 
-  [[ -f "$pkg" ]] && sudo "$PACMAN" -U "$pkg"
+    if present_packages "${candidates[@]}"; then
+      if choice="$(read_selection "${candidates[@]}")"; then
+        if pkg="$(download_when_remote "$choice")"; then
+          to_ignore+=( "$term" )
+          to_install+=( "$pkg" )
+          continue
+        fi
+      fi
+    fi
+
+    exit_code=1
+  done
+
+  return $exit_code
 }
 
 ARCH=${ARCH:-$(uname -m)}
@@ -79,8 +123,20 @@ NOARM=${NOARM:-0}
 NOCACHE=${NOCACHE:-0}
 NOSUDO=${NOSUDO:-0}
 
-if [[ -z "$1" ]] && ((!LIB)); then
-  ( gettext 'usage: downgrade <pkg>, ...'; echo
+declare -a terms
+declare -a to_ignore
+declare -a to_install
+declare -a pacman_args
+
+while [[ -n "$1" ]]; do
+  case "$1" in
+    --) shift; pacman_args=( "$@" ); break ;;
+    *)  terms+=( "$1" ); shift ;;
+  esac
+done
+
+if (( ! "${#terms[@]}" )) && ((!LIB)); then
+  ( gettext 'usage: downgrade <pkg>, ... [-- <pacman options>]'; echo
     gettext 'see downgrade(8) for details.'; echo
   ) >&2
   exit 1
@@ -93,7 +149,8 @@ if ((NOSUDO)) || ! type -p sudo &>/dev/null; then
   }
 fi
 
-for term; do
-  candidates=( $(search_packages "$term" | sort_packages) )
-  prompt_to_install "${candidates[@]}" && prompt_to_ignore "$term"
-done
+if main "${terms[@]}"; then
+  if sudo pacman -U "${pacman_args[@]}" "${to_install[@]}"; then
+    prompt_to_ignore "${to_ignore[@]}"
+  fi
+fi
