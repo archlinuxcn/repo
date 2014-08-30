@@ -39,8 +39,7 @@ package() {
   pkgdesc='a free network protocol analyzer for Unix/Linux and Windows - GTK 2 frontend'
   depends=('gtk2' 'portaudio' 'wireshark-cli' 'desktop-file-utils' 'hicolor-icon-theme')
   install=wireshark-gtk.install
-  replaces=(wireshark)
-  conflicts=(wireshark)
+  conflicts=(wireshark-gtk)
 
   cd ${pkgbase}-${pkgver}
 
