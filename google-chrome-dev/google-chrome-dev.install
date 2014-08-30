@@ -1,16 +1,16 @@
 # Colored makepkg-like functions
 msg_blue() {
-    printf "${BLUE}==>${ALL_OFF}${BOLD} $1${ALL_OFF}\n"
+    printf "${blue}==>${bold} $1${all_off}\n"
 }
 
 note() {
-    printf "${BLUE}==>${ALL_OFF}${YELLOW} NOTE:${ALL_OFF}${BOLD} $1${ALL_OFF}\n"
+    printf "${blue}==>${yellow} NOTE:${bold} $1${all_off}\n"
 }
 
-ALL_OFF="$(tput sgr0)"
-BOLD="$(tput bold)"
-BLUE="${BOLD}$(tput setaf 4)"
-YELLOW="${BOLD}$(tput setaf 3)"
+all_off="$(tput sgr0)"
+bold="${all_off}$(tput bold)"
+blue="${bold}$(tput setaf 4)"
+yellow="${bold}$(tput setaf 3)"
 
 _update() {
     msg_blue "Updating desktop MIME database..."

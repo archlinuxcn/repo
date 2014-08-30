@@ -3,8 +3,8 @@
 
 pkgname=jdk
 _major=8
-_minor=11
-_build=b12
+_minor=20
+_build=b26
 pkgver=${_major}u$_minor
 pkgrel=1
 pkgdesc="Java Development Kit"
@@ -19,10 +19,10 @@ conflicts=("${provides[@]}" "${provides[@]/$_major/7}")
 backup=('etc/derby.conf'
         'opt/java/jre/lib/security/java.policy')
 install=$pkgname.install
-if [ "$CARCH" = 'x86_64' ]; then
-  _arch=x64
-  _arch2=amd64
-else
+# Archs
+_arch=x64
+_arch2=amd64
+if [[ "$CARCH" = 'i686' ]]; then
   _arch=i586
   _arch2=i386
 fi

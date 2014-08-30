@@ -33,19 +33,18 @@ true && pkgname=(linux-uksm linux-uksm-headers)
 _kernelname=-uksm
 _srcname=linux-3.16
 pkgver=3.16.1
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 url="http://kerneldedup.org/"
 license=('GPL2')
 options=('!strip')
 makedepends=('kmod' 'inetutils' 'bc')
 _uksmvernel="0.1.2.3"
-_uksmname="v3.15.ge.3"
+_uksmname="v3.16.ge.1"
 _bfqpath="http://algo.ing.unimo.it/people/paolo/disk_sched/patches/3.16.0-v7r5"
 source=("http://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
         "http://www.kernel.org/pub/linux/kernel/v3.x/patch-${pkgver}.xz"
         "http://kerneldedup.org/download/uksm/${_uksmvernel}/uksm-${_uksmvernel}-for-${_uksmname}.patch" # website often went down
-        uksm-0.1.2.3-for-v3.15.ge.3.patch.3.16.patch
         #"uksm-${_uksmvernel}-for-${_uksmname}.test.patch"
         "${_bfqpath}/0001-block-cgroups-kconfig-build-bits-for-BFQ-v7r5-3.16.patch"
         "${_bfqpath}/0002-block-introduce-the-BFQ-v7r5-I-O-sched-for-3.16.patch"
@@ -78,7 +77,7 @@ prepare() {
     ### Patch source with UKSM
     msg "Patching with UKSM"
     cp "$srcdir/uksm-${_uksmvernel}-for-${_uksmname}.patch" ./
-    patch -p1 -i "$srcdir/uksm-0.1.2.3-for-v3.15.ge.3.patch.3.16.patch"
+    #patch -p1 -i "$srcdir/uksm-0.1.2.3-for-v3.15.ge.3.patch.3.16.patch"
     patch -Np1 -i uksm-${_uksmvernel}-for-${_uksmname}.patch
 
     ### Clean tree and copy ARCH config over
@@ -363,8 +362,7 @@ pkgdesc='Linux Kernel and modules with the UKSM patchset'
 
 sha512sums=('64033e741d3f42ed06010e63e69d66e1d3d9414ef20f76834508878d4218b72619541a18ef4fd377204af2859e52198310998109b20ed9b67722586b28c9a231'
             '01715f6c276611184c2a41d0736c4b91b155daa5c3b67e0f3646e5a795ec22b9ff8cd4db8508eac71b0eb6a3c194fbf02b7bdeeb09626931bf34ebc03d224026'
-            'f1ae006353838ce3e4890d253fefa5d8a1ff22e42f523e419b70fa9916c1f68cd09b00df5abf6e268619b3ee77e055edcc48a5215700cf37f615bd9ea074b0f0'
-            'a49c1cf13d0be6ce413e62e9065c8a885a42ee12e26d2be752c00c5176866f9427236302c810dbd564492aee1f3a2a0306f6bd66ce33f1fbdfaa6ab53a4124f1'
+            '1151ac7669ad0f0502ecf3b6146092b9a7f4055eaf9a01ab4b474cbb9dd56c33d33b1606d458f7f46285f2d739cc1c3eac02e3cf3d663ce72c0633d4ea9cb2f1'
             'fd484e55bbff30f37e8d4b4c652bfce8d1e9a1bd2221e2d965ce18bd3eb929a3109fc02910535735b4af88f2f4700980f167dd7429b89a0fefdc24e778522473'
             '63db43b6ce1d43f9cf4bc1736378eae3a53b396d684eb40502889e272f291208bacbcfcc2bdbab84ece472133a3b35ee4cdb11bc0bb0986d7f9fbad0b40d8ba1'
             'b645b483623b2a5fa2806991e2f73df83faf4ecd5a331624e38c671ed462bf124b884caad2fc76c8eaa326e3645d2e3efe2d2c06da90410db4ff6798e3305326'
