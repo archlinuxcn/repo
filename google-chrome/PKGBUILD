@@ -5,14 +5,14 @@
 # or use: $ curl -s https://dl.google.com/linux/chrome/rpm/stable/x86_64/repodata/other.xml.gz | gzip -df | awk -F\" '/pkgid/{ sub(".*-","",$4); print $4": "$10 }'
 
 pkgname=google-chrome
-pkgver=36.0.1985.143
+pkgver=37.0.2062.94
 pkgrel=1
 pkgdesc="An attempt at creating a safer, faster, and more stable browser (Stable Channel)"
 arch=('i686' 'x86_64')
 url="https://www.google.com/chrome"
 license=('custom:chrome')
-depends=('alsa-lib' 'desktop-file-utils' 'flac' 'gconf' 'gtk2' 'harfbuzz' 'harfbuzz-icu' 'hicolor-icon-theme' 'icu'
-         'libgcrypt15' 'libpng' 'libxss' 'libxtst' 'nss' 'opus' 'snappy' 'speech-dispatcher' 'ttf-font' 'xdg-utils')
+depends=('alsa-lib' 'desktop-file-utils' 'flac' 'gconf' 'gtk2' 'harfbuzz' 'harfbuzz-icu' 'hicolor-icon-theme'
+         'icu' 'libpng' 'libxss' 'libxtst' 'nss' 'opus' 'snappy' 'speech-dispatcher' 'ttf-font' 'xdg-utils')
 optdepends=('kdebase-kdialog: needed for file dialogs in KDE'
             'ttf-google-fonts-git')
 provides=("google-chrome=$pkgver")
@@ -22,8 +22,8 @@ _channel=stable
 _arch=amd64
 [[ "$CARCH" = 'i686' ]] && _arch=i386
 source=("google-chrome-${_channel}_${pkgver}_$_arch.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_$_arch.deb")
-md5sums=('b00bd4f59950583da013fc79e06db340')
-[[ "$CARCH" = 'i686' ]] && md5sums=('5892a4e89e76c6ae3037d593a9724468')
+md5sums=('61914c34dafcb13455c69a2d76b9dba1')
+[[ "$CARCH" = 'i686' ]] && md5sums=('1be0321bc4318ce518dd867e6fae5d03')
 
 package() {
   msg2 "Extracting the data.tar.lzma"
