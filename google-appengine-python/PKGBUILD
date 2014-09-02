@@ -7,7 +7,7 @@
 # Contributor: Lee.MaRS <leemars@gmail.com>
 
 pkgname=google-appengine-python
-pkgver=1.9.8
+pkgver=1.9.10
 _zipver=$pkgver
 pkgrel=1
 arch=(any)
@@ -20,7 +20,7 @@ optdepends=(mysql-python
 	python2-numpy=1.6.1
 	pycrypto=2.6
 	python2-lxml=2.3
-	python2-django=1.5.8
+	python2-django=1.4
 	python2-jinja=2.6
 	python2-markupsafe=0.15
 	python2-webapp2=2.3
@@ -30,7 +30,7 @@ makedepends=(unzip)
 options=(!strip)
 install=install
 source=(https://storage.googleapis.com/appengine-sdks/featured/google_appengine_${_zipver}.zip)
-sha1sums=('9835547cd2566ab1eaffe15e4697724eba08831f')
+sha1sums=('790fee21ee697434586d3cd36fd2e59f6899a2c3')
 noextract=(google_appengine_${_zipver}.zip)
 
 package() {
