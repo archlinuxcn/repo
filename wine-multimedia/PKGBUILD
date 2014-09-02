@@ -7,7 +7,7 @@
 pkgname=wine-multimedia
 _basename=wine
 pkgver=1.7.24
-pkgrel=1
+pkgrel=2
 
 _pkgbasever=${pkgver/rc/-rc}
 _multimediasnapshot=20140808
@@ -105,7 +105,6 @@ else
   makedepends=(${makedepends[@]} ${_depends[@]})
   provides=("bin32-wine=$pkgver" "wine-wow64=$pkgver" "wine=$pkgver")
   conflicts=('bin32-wine' 'wine-wow64' 'wine')
-  replaces=('bin32-wine' 'wine')
 fi
 
 prepare() {
