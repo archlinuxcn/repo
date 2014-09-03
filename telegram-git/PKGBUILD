@@ -2,13 +2,13 @@
 # Contributor: Andy Weidenbaum <archbaum@gmail.com>
 
 pkgname=telegram-git
-pkgver=r466.7ce6dbb
+pkgver=r479.6800cf4
 pkgrel=1
 pkgdesc="Telegram messenger CLI"
 arch=('i686' 'x86_64')
 url="https://github.com/vysheng/tg"
 license=('GPL2')
-depends=('libconfig' 'lua' 'openssl')
+depends=('libconfig' 'libevent' 'lua')
 makedepends=('git')
 conflicts=('telegram')
 provides=('telegram')
@@ -17,23 +17,18 @@ source=("$pkgname"::'git+https://github.com/vysheng/tg')
 sha256sums=('SKIP')
 
 pkgver() {
-  cd "$srcdir/$pkgname"
-  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
-}
-
-prepare() {
-  cd "$srcdir/$pkgname"
-  sed -i 's|\${AUTO}$||g' Makefile.in
+    cd "$srcdir/$pkgname"
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 build() {
-  cd "$srcdir/$pkgname"
-  ./configure --prefix=/usr --sbindir=/usr/bin --libexecdir=/usr/bin --sysconfdir=/etc --sharedstatedir=/etc --localstatedir=/etc
-  make
+    cd "$srcdir/$pkgname"
+    ./configure
+    make
 }
 
 package() {
-  cd "$srcdir/$pkgname"
-  install -Dm644 tg-server.pub ${pkgdir}/etc/telegram-cli/server.pub
-  install -Dm755 bin/telegram-cli ${pkgdir}/usr/bin/telegram-cli
+    cd "$srcdir/$pkgname"
+    install -Dm644 tg-server.pub ${pkgdir}/etc/telegram-cli/server.pub
+    install -Dm755 bin/telegram-cli ${pkgdir}/usr/bin/telegram-cli
 }
