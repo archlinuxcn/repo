@@ -7,31 +7,6 @@ post_install() {
 
 cat << EOF
 
-	Configuration is located at /etc/btsync.conf and contains sample data
-	The corresponding systemd-unit is 'btsync.service'
-	WebGUI can be accessed at http://localhost:8888
-
-	User-specific BTSync configuration
- 
-	Helps to set ownership to someone other than root for files that are copied
-	with btsync. Copy /etc/btsync/btsync.conf to ~/.config/btsync/btsync.conf for
- 	the user you wish to configure btsync as:
- 	
-	mkdir -p ~/.config/btsync	
-	cp /etc/btsync.conf ~/.config/btsync/btsync.conf
- 
-	Replace user-specific references with the appropriate information, including
-	the following settings:
- 
-	- storage_path
-	- pid_file
-	- webui.listen
-	- webui.login
-	- webui.password
-
-	Make sure folder you specified as storage_path and folder where pid_file will
-	be located both exist in the filesystem, since btsync will not create it for you.
-
 	post_upgrade
  
 EOF
@@ -42,21 +17,47 @@ post_upgrade() {
 
 cat << EOF
 
-	WebGUI can be accessed at http://localhost:8888
+	WebGUI can be accessed via following URL: http://localhost:8888
+	
+	* Running btsync system instance (using dedicated btsync:btsync account)
 
-	Running btsync system instance (using dedicated btsync:btsync account).
-	Execute:
+  	  System instance of btsync is preconfigured (configuration file located
+	  at /etc/btsync.conf) and can be used directly after installation.
 
-		to reload system systemd modules:     systemctl daemon-reload
-		to start btsync manually:             systemctl start btsync
-		to autostart btsync on system start:  systemctl enable btsync
+	  Execute:
 
-	Running btsync user instance (will used current user account).
-	Execute:
+	    to reload system systemd modules:     systemctl daemon-reload
+	    to start btsync manually:             systemctl start btsync
+	    to autostart btsync on system start:  systemctl enable btsync
 
-		to reload user systemd modules:       systemctl --user daemon-reload
-		to start btsync manually:             systemctl --user start btsync
-		to autostart btsync on user login:    systemctl --user enable btsync
+	* Running btsync user instance (using current user account)
+
+	  User instance MUST be configured before use. To perform configuration, 
+	  install btsync-autoconfig package or follow manual configuration steps:
+
+  	    1. Copy /etc/btsync/btsync.conf to ~/.config/btsync/btsync.conf for
+ 	    the user you wish to configure btsync:
+ 	
+	      mkdir -p ~/.config/btsync	
+	      cp /etc/btsync.conf ~/.config/btsync/btsync.conf
+ 
+	    2. Replace user-specific references with the appropriate information,
+	    including the following settings:
+ 
+	      - storage_path
+	      - pid_file
+	      - webui.listen
+	      - webui.login
+	      - webui.password
+
+	    3. Make sure folder you specified as storage_path and folder where pid_file will
+	    be located both exist in the filesystem, since btsync will not create it for you.
+
+	  Execute:
+
+	    to reload user systemd modules:       systemctl --user daemon-reload
+	    to start btsync manually:             systemctl --user start btsync
+	    to autostart btsync on user login:    systemctl --user enable btsync
 
 EOF
 

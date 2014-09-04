@@ -4,7 +4,7 @@
 # Contributor: Justin Patera serialhex@gmail.com
 
 pkgname=btsync
-pkgver=1.4.72
+pkgver=1.4.75
 pkgrel=1
 pkgdesc="BitTorrent Sync - automatically sync files via secure, distributed technology"
 license=("custom:btsync")
@@ -17,13 +17,13 @@ source=(btsync.service btsync_user.service)
 sha1sums=('05038b03a673dd0207b2758a2e01db5d28c409d1' 'd30deb7e41ba1d163b4a5e442b8d8118758d312a')
 if [ "$CARCH" == x86_64 ]; then
 	_arch=x64
-	sha1sums+=('0ce793b52d57a57fbe3817c1258fe8fd82030ebe')
+	sha1sums+=('b0bd808f8ad3901909ac63fbcf30169c2e396957')
 elif [ "$CARCH" == i686 ]; then
 	_arch=i386
-	sha1sums+=('a047a4102b58d77cfeda2dad1f98d37641fa21ae')
+	sha1sums+=('ceeb2aada5c34a31c3e80bf1b476e4eb223939c4')
 elif [[ "$CARCH" == arm ||  "$CARCH" == armv6 || "$CARCH" == armv6h || "$CARCH" == armv7 || "$CARCH" == armv7h ]]; then
 	_arch=arm
-	sha1sums+=('18f2f323c1b733ed273502b22d110e2f43d0f653')
+	sha1sums+=('7ef06e506cc31155b0511a0b493f047ecd2c164a')
 fi
 source+=(${pkgname}_${_arch}-${pkgver}.tar.gz::http://download-new.utorrent.com/endpoint/btsync/os/linux-${_arch}/track/stable)
 
