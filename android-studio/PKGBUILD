@@ -5,9 +5,9 @@
 # Contributor: Lubomir 'Kuci' Kucera <kuci24-at-gmail-dot-com>
 
 pkgname=android-studio
-pkgver=0.8.8
+pkgver=0.8.9
 pkgrel=1
-_build=135.1391024
+_build=135.1404660
 pkgdesc="A new Android development environment based on IntelliJ IDEA."
 arch=('i686' 'x86_64')
 url="http://developer.android.com/sdk/installing/studio.html"
@@ -20,10 +20,10 @@ options=('!strip')
 install=$pkgname.install
 source=("https://dl.google.com/dl/android/studio/ide-zips/$pkgver/android-studio-ide-$_build-linux.zip"
         "$pkgname.desktop")
-sha512sums=('b44c2563949a1ca231abba020d87ff598421fb393a2a2569e9840a78a00f5b4fd311e51af13669e9fc3f7adcf133df738beafe89e5bffb7d386d5aa5bc499bd8'
+sha512sums=('b4ccd920f2360e4a0bed455765e34ca751f14599fa91f2de71654f26f17d7f7b227911cd54277c9bf708206eb9e6ba51c6daf44c2dc619b38e1deb8b0437ccc9'
             'fa3567f328af45d265c4fabf3e41b55d8e8cccfa9675e745f07dd6ae41950dd53a2ef41ef1caee86643f5c2ddf7a7681ee17155e208a7b6fdae6c0537dfc0c94')
 
-if [ $CARCH = "x86_64" ]; then
+if [ $CARCH = x86_64 ]; then
   depends+=('lib32-fontconfig' 'lib32-libxrender' 'lib32-mesa')
 else
   depends+=('fontconfig' 'libxrender' 'mesa')
