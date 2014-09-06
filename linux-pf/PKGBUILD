@@ -3,13 +3,13 @@
 # Some lines from  kernel26-bfs and kernel26-ck
 # Credits to respective maintainers
 _major=3
-_minor=15
+_minor=16
 #_patchlevel=0
 #_subversion=1
 _basekernel=${_major}.${_minor}
 _srcname=linux-${_major}.${_minor}
 pkgbase=linux-pf
-_pfrel=5
+_pfrel=1
 _kernelname=-pf
 _pfpatchhome="http://pf.natalenko.name/sources/${_basekernel}/"
 _pfpatchname="patch-${_basekernel}${_kernelname}${_pfrel}"
@@ -60,7 +60,7 @@ _NUMA_off=yes		# Disable NUMA in kernel config
 pkgname=('linux-pf')
 true && pkgname=('linux-pf' 'linux-pf-headers')
 pkgver=${_basekernel}.${_pfrel}
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 url="http://pf.natalenko.name/"
 license=('GPL2')
@@ -70,7 +70,9 @@ source=("ftp://www.kernel.org/pub/linux/kernel/v${_major}.x/linux-${_basekernel}
 	'config' 'config.x86_64'		# the main kernel config files
 	'linux.preset'			# standard config files for mkinitcpio ramdisk
 	'change-default-console-loglevel.patch'
+	'compal-laptop-hwmon-fix.patch'
 	"${_pfpatchhome}${_pfpatchname}.xz"	# the -pf patchset
+	'https://gist.githubusercontent.com/pfactum/0f4810df61f98579e6e1/raw/57c6b5de17882d422374c912718f42fe4ba811ad/0001-toi-fixes-3.16-another-attempt-to-fix-resume_file-un.patch'
 )
 
 _aufs3git="http://git.code.sf.net/p/aufs/aufs3-standalone"
@@ -118,6 +120,8 @@ prepare() {
 
   # linux-ARCH patches
 
+  # #41458 fix hwmon for compal-laptop module 
+  patch -p1 -i "${srcdir}/compal-laptop-hwmon-fix.patch"
   # add latest fixes from stable queue, if needed
   # http://git.kernel.org/?p=linux/kernel/git/stable/stable-queue.git
   
@@ -130,7 +134,7 @@ prepare() {
   # end linux-ARCH patches
 
 
-
+  patch -Np1 -i "${srcdir}/0001-toi-fixes-3.16-another-attempt-to-fix-resume_file-un.patch"
 
 
   # added gcc 4.7.1 support for Kconfig and menuconfig
@@ -656,9 +660,11 @@ package_linux-pf-headers() {
 pkgdesc="Linux kernel and modules with the pf-kernel patch [-ck patchset (BFS included), TuxOnIce, BFQ] and aufs3"
 
 # makepkg -g >>PKGBUILD
-sha256sums=('c3927e87be4040fa8aca1b58663dc0776aaf00485604ff88a623be2f3fb07794'
-            '592cc3fc28e365f0d1913a10a4db36b4754a8014bcfcb688cdba94a316214b91'
-            'b3f432143bee1f21af69e211b6a20724211e6101af9c2f91eb1191c3cf196963'
+sha256sums=('4813ad7927a7d92e5339a873ab16201b242b2748934f12cb5df9ba2cfe1d77a0'
+            '24e7efa033099b28813c4284a8c85da5522770ffcc719b5f23d5bed337d9e442'
+            '5512bb54bd221ddfbc4c17ec65b87cca8306031c7e5c14f52f0faa1bde6087ec'
             '82d660caa11db0cd34fd550a049d7296b4a9dcd28f2a50c81418066d6e598864'
-            'faced4eb4c47c4eb1a9ee8a5bf8a7c4b49d6b4d78efbe426e410730e6267d182'
-            '4f625dc39c23bedf5e8a484704175ec0dec59d2703f674d236acda8102d686cc')
+            '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99'
+            'f36f61a0a72bcb0a9c04264343503bfbf927c9ea0db819e66734a3933b060588'
+            '59bf998b88c921a658477199f735e1529c707ef874d2cf63d041555fd130d235'
+            '2a942437076dac63d92e4a42198d985efff3c7ff0a2017ccc0ad91571723a4ee')
