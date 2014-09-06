@@ -1,0 +1,13 @@
+[Unit]
+Description=Apache Derby Database Network Server
+After=network.target
+
+[Service]
+EnvironmentFile=/etc/derby.conf
+Environment=CLASSPATH=/opt/java/db/lib/derby.jar:/opt/java/db/lib/derbynet.jar:/opt/java/db/lib/derbytools.jar:/opt/java/db/lib/derbyclient.jar
+StandardOutput=syslog
+ExecStart=/opt/java/bin/java $DERBY_OPTS org.apache.derby.drda.NetworkServerControl start
+ExecStop=/opt/java/bin/java $DERBY_OPTS org.apache.derby.drda.NetworkServerControl shutdown
+
+[Install]
+WantedBy=multi-user.target
