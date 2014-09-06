@@ -1,0 +1,28 @@
+# Maintainer: Alfonso Saavedra "Son Link" <sonlink.dourden@gmail.com>
+pkgname=megasync
+pkgver=1.0.29
+pkgrel=6
+pkgdesc="Sync your files to your Mega account. Official app"
+arch=('i686' 'x86_64')
+url="http://mega.co.nz"
+license=('custom:The Clarified Artistic License')
+conflicts=('megatools')
+depends=('openssl' 'c-ares' 'libgcrypt' 'crypto++' 'qt4' 'libpng' 'qtchooser')
+if [ "${CARCH}" = 'x86_64' ]; then
+	ARCH=amd64
+	md5sums=('922af79dd70c48207cd982895a064fa3')
+elif [ "${CARCH}" = 'i686' ]; then
+	ARCH=i386
+	md5sums=('4fef9db2128c15cf4dbea9b6bb5e579f')  
+fi
+source=("https://mega.co.nz/linux/MEGAsync/Debian_7.0/${ARCH}/${pkgname}_${pkgver}_${ARCH}.deb")
+install="${pkgname}.install"
+options=(!strip)
+package (){
+	cd "${srcdir}"
+	pwd
+	tar -xzf data.tar.gz -C ${pkgdir}
+	rm -r ${pkgdir}/usr/share/doc
+	mkdir -p ${pkgdir}/usr/lib
+	ln -s /usr/lib/libcryptopp.so ${pkgdir}/usr/lib/libcrypto++.so.9
+}
