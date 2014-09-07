@@ -7,6 +7,8 @@ from lilaclib import *
 
 g = SimpleNamespace()
 
+build_prefix = 'extra-x86_64'
+
 def pre_build():
   g.oldfiles = clean_directory()
   g.files = download_official_pkgbuild('imagemagick')
