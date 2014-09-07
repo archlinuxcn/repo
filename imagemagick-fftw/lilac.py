@@ -45,4 +45,4 @@ def post_build():
   git_commit()
 
 if __name__ == '__main__':
-  pre_build()
+  lilac_build()
