@@ -9,7 +9,7 @@ _minor=16
 _basekernel=${_major}.${_minor}
 _srcname=linux-${_major}.${_minor}
 pkgbase=linux-pf
-_pfrel=1
+_pfrel=2
 _kernelname=-pf
 _pfpatchhome="http://pf.natalenko.name/sources/${_basekernel}/"
 _pfpatchname="patch-${_basekernel}${_kernelname}${_pfrel}"
@@ -60,7 +60,7 @@ _NUMA_off=yes		# Disable NUMA in kernel config
 pkgname=('linux-pf')
 true && pkgname=('linux-pf' 'linux-pf-headers')
 pkgver=${_basekernel}.${_pfrel}
-pkgrel=2
+pkgrel=1
 arch=('i686' 'x86_64')
 url="http://pf.natalenko.name/"
 license=('GPL2')
@@ -72,7 +72,6 @@ source=("ftp://www.kernel.org/pub/linux/kernel/v${_major}.x/linux-${_basekernel}
 	'change-default-console-loglevel.patch'
 	'compal-laptop-hwmon-fix.patch'
 	"${_pfpatchhome}${_pfpatchname}.xz"	# the -pf patchset
-	'https://gist.githubusercontent.com/pfactum/0f4810df61f98579e6e1/raw/57c6b5de17882d422374c912718f42fe4ba811ad/0001-toi-fixes-3.16-another-attempt-to-fix-resume_file-un.patch'
 )
 
 _aufs3git="http://git.code.sf.net/p/aufs/aufs3-standalone"
@@ -132,10 +131,6 @@ prepare() {
   patch -Np1 -i "${srcdir}/change-default-console-loglevel.patch"
 
   # end linux-ARCH patches
-
-
-  patch -Np1 -i "${srcdir}/0001-toi-fixes-3.16-another-attempt-to-fix-resume_file-un.patch"
-
 
   # added gcc 4.7.1 support for Kconfig and menuconfig
   # now inclued in pf patchset
@@ -661,10 +656,9 @@ pkgdesc="Linux kernel and modules with the pf-kernel patch [-ck patchset (BFS in
 
 # makepkg -g >>PKGBUILD
 sha256sums=('4813ad7927a7d92e5339a873ab16201b242b2748934f12cb5df9ba2cfe1d77a0'
-            '24e7efa033099b28813c4284a8c85da5522770ffcc719b5f23d5bed337d9e442'
-            '5512bb54bd221ddfbc4c17ec65b87cca8306031c7e5c14f52f0faa1bde6087ec'
+            'ff7885dc9c3b56ab749c7fe3ffa4631fad6c979381eabef645dfff9f73df3cdf'
+            'fc5e836a4604a0a55a6aca6a111128f648426bdd90752af407308982b52632f8'
             '82d660caa11db0cd34fd550a049d7296b4a9dcd28f2a50c81418066d6e598864'
             '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99'
             'f36f61a0a72bcb0a9c04264343503bfbf927c9ea0db819e66734a3933b060588'
-            '59bf998b88c921a658477199f735e1529c707ef874d2cf63d041555fd130d235'
-            '2a942437076dac63d92e4a42198d985efff3c7ff0a2017ccc0ad91571723a4ee')
+            '56ac8d6efd5c2068eea331fe8fa89daa2b128093b2d878e967799d77cdb6efe9')
