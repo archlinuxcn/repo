@@ -1,9 +1,8 @@
-# $Id: PKGBUILD 210428 2014-04-14 20:06:04Z jgc $
+# $Id$
 # Maintainer: Jan de Groot <jgc@archlinux.org>
-# Maintainer: lilydjwg <lilydjwg@gmail.com>
 
 pkgname=evince-nodbus
-pkgver=3.12.1
+pkgver=3.12.2
 pkgrel=1
 pkgdesc="Document viewer (PDF, Postscript, djvu, tiff, dvi, XPS, SyncTex support with gedit, comics books (cbr,cbz,cb7 and cbt))"
 url="https://wiki.gnome.org/Apps/Evince"
@@ -16,16 +15,16 @@ optdepends=('texlive-bin: DVI support'
             'p7zip: cbz and cb7 compressed comic books'
             'tar: cbt compressed comic books'
             'unrar: cbr compressed comic books')
-groups=(gnome)
-conflicts=('evince')
+groups=(gnome)conflicts=('evince')
 provides=("evince=$pkgver")
+
 install=evince.install
 options=('!emptydirs')
 source=(http://ftp.gnome.org/pub/gnome/sources/evince/${pkgver:0:4}/evince-$pkgver.tar.xz)
-sha256sums=('ef22cc29a7cbe70d2e7ce8c0b5b7ee774187ea69f3ae49a64c6d4a91559ef137')
+sha256sums=('30c243bbfde56338c25a39003b4848143be42157177e2163a368f14139909f7d')
 
 build() {
-  cd "evince-$pkgver"
+  cd evince-$pkgver
   ./configure --prefix=/usr   --sysconfdir=/etc \
       --localstatedir=/var    --libexecdir=/usr/lib/evince \
       --disable-static        --enable-nautilus \
@@ -38,6 +37,6 @@ build() {
 }
 
 package() {
-  cd "evince-$pkgver"
+  cd evince-$pkgver
   make DESTDIR="$pkgdir" install
 }
