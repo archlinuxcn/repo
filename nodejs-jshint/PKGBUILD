@@ -2,10 +2,11 @@
 # Maintainer: brentlintner <brent.lintner@gmail.com>
 # Maintainer: antonkovalyov <anton@kovalyov.net>
 # Maintainer: cracoucass14
+# Maintainer: jnbek
 _npmname=jshint
-_npmver=2.5.3
+_npmver=2.5.4
 pkgname=nodejs-jshint # All lowercase
-pkgver=2.5.3
+pkgver=2.5.4
 pkgrel=1
 pkgdesc="Static analysis tool for JavaScript"
 arch=(any)
@@ -15,7 +16,7 @@ depends=('nodejs')
 optdepends=()
 source=(http://registry.npmjs.org/$_npmname/-/$_npmname-$_npmver.tgz)
 noextract=($_npmname-$_npmver.tgz)
-sha1sums=('821c14ff5ccaa458ae1b34a2caa70bf753f963ea')
+md5sums=('d9faa55672a4f9809965b838b351869d')
 
 package() {
   cd "$srcdir"
