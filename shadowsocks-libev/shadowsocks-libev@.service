@@ -1,0 +1,12 @@
+[Unit]
+Description=Shadowsocks-Libev Client Service
+After=network.target
+
+[Service]
+Type=simple
+User=nobody
+ExecStart=/usr/bin/ss-local -c /etc/shadowsocks/%i.json
+
+[Install]
+WantedBy=multi-user.target
+
