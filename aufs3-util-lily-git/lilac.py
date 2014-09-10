@@ -9,7 +9,7 @@ depends = ['python2-netlib-git']
 post_build = aur_post_build
 
 patch = '''\
-  lilyver=$(pacman -Q linux-lily | awk '{print $2}')
+  lilyver=$(pacman -Q linux-lily-headers | awk '{print $2}')
   mkdir -p libau/linux
   cp "/lib/modules/${lilyver}-lily/build/include/uapi/linux/aufs_type.h" libau/linux
   sed -i 's/__user//g' libau/linux/aufs_type.h
@@ -29,7 +29,7 @@ def pre_build():
       elif line.startswith('pkgname='):
         line = 'pkgname=aufs3-util-lily-git'
       elif line.startswith('makedepends'):
-        line = "makedepends=('linux-lily' 'git')"
+        line = "makedepends=('linux-lily-headers' 'git')"
       print(line)
 
 if __name__ == '__main__':
