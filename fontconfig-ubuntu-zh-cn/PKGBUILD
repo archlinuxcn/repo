@@ -16,15 +16,17 @@ license=('unknown')
 depends=('wqy-zenhei' 'ttf-arphic-ukai' 'ttf-arphic-uming' 'fontconfig-ubuntu')
 install=fontconfig.install
 source=(
-  "http://archive.ubuntu.com/ubuntu/pool/main/l/language-selector/language-selector_${_language_selector}.tar.xz"
+  "http://archive.ubuntu.com/ubuntu/pool/main/l/language-selector/language-selector_${_language_selector}.tar.gz"
   "http://archive.ubuntu.com/ubuntu/pool/main/t/ttf-arphic-ukai/ttf-arphic-ukai_${_ttf_arphic_ukai}.orig.tar.gz"
   "http://archive.ubuntu.com/ubuntu/pool/main/t/ttf-arphic-uming/ttf-arphic-uming_${_ttf_arphic_uming}.orig.tar.gz"
   "http://archive.ubuntu.com/ubuntu/pool/main/t/ttf-wqy-zenhei/ttf-wqy-zenhei_${_ttf_wqy_zenhei}.orig.tar.gz"
+  "original.patch"
 )
 md5sums=('930e3f986188ccfed3e3814a594e9d10'
          '4d3beb55db000bfedd18c9c7d6e631d8'
          'd219fcaf953f3eb1889399955a00379f'
-         '4c6c3f4e902dd5ee0a121e8c41d040bd')
+         '4c6c3f4e902dd5ee0a121e8c41d040bd'
+         'c5de97d0b699afc98a50826b9c00f4cf')
 #generate with 'makepkg -g'
 
 build(){
@@ -49,4 +51,6 @@ build(){
   done
 
   rm $pkgdir/etc/fonts/conf.avail/43-wqy-zenhei-sharp.conf
+  cd "$pkgdir/etc/fonts/conf.avail/"
+  patch -u  < ${startdir}/original.patch
 }
