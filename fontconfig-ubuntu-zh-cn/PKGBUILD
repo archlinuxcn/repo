@@ -51,6 +51,4 @@ build(){
   done
 
   rm $pkgdir/etc/fonts/conf.avail/43-wqy-zenhei-sharp.conf
-  cd "$pkgdir/etc/fonts/conf.avail/"
-  patch -u  < ${startdir}/original.patch
 }
