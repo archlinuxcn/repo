@@ -1,6 +1,6 @@
 # Maintainer: lilydjwg <lilydjwg@gmail.com>
 
-pkgbase=vim-lilly
+pkgbase=vim-lily
 pkgname=(gvim-lily vim-runtime-lily vim-lily)
 pkgver=7.4.430
 pkgrel=1
@@ -32,6 +32,8 @@ pkgver() {
 }
 
 build() {
+  cd vim
+
   # define the place for the global (g)vimrc file (set to /etc/vimrc)
   sed -i 's|^.*\(#define SYS_.*VIMRC_FILE.*"\) .*$|\1|' \
     src/feature.h
