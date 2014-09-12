@@ -32,8 +32,4 @@ def post_build():
   git_commit()
 
 if __name__ == '__main__':
-  import os
-  lilac_build(
-    build_prefix = 'makepkg',
-    repodir = os.path.dirname(os.path.dirname(__file__))
-  )
+  single_main()
