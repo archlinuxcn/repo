@@ -12,6 +12,8 @@ makedepends=('gpm' 'gtk2' 'perl' 'python2' 'python>=3.0.0' 'ruby' 'gettext' 'pkg
 source=(gvim.desktop)
 md5sums=('d90413bd21f400313a785bb4010120cd')
 options=('debug')
+source=("git://localhost/vim")
+md5sums=(SKIP)
 
 pkgver() {
   echo 7.4.$(sed -n '/ included_patches\[\]/,+3p' src/version.c | sed '/[^,]$/d;s/\s*\|,//g')
