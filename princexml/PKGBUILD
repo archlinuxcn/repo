@@ -1,0 +1,38 @@
+# vim:set ts=2 sw=2 et:
+# Maintainer: Kai Hendry <hendry@iki.fi>
+# Contributor: Dogukan Korkmazturk <d.korkmazturk@gmail.com>
+# Contributor: Arvid Ephraim Picciani <aep@exys.org>
+# Contributor: Firmicus <francois.archlinux.org>
+pkgname=princexml
+pkgver=9.0r5
+pkgrel=1
+pkgdesc="converts XML and HTML into PDF documents using the CSS print spec"
+arch=(i686 x86_64)
+url="http://www.princexml.com"
+license=('custom')
+depends=("ca-certificates")
+if test "$CARCH" = "i686"
+then
+  _suffix=linux-static
+  source=(http://www.princexml.com/download/prince-${pkgver}-${_suffix}.tar.gz)
+  md5sums=('8c9486c9a8bc3dde95eb0d4b94bd8e97')
+else
+  _suffix=linux-amd64-static
+  source=(http://www.princexml.com/download/prince-${pkgver}-${_suffix}.tar.gz)
+  md5sums=('9b2ee4970078b74bacbd43d8001b385b')
+fi
+
+build() {
+  mkdir -p $pkgdir/opt/prince
+  cd ${srcdir}/prince-${pkgver}-${_suffix}
+  cp -a lib/prince/* $pkgdir/opt/prince
+
+  mkdir -p $pkgdir/usr/bin
+  echo "#!/bin/sh" > $pkgdir/usr/bin/prince
+  echo "/opt/prince/bin/prince \$*" >> $pkgdir/usr/bin/prince
+  chmod +x $pkgdir/usr/bin/prince
+
+  install -D -m644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  # use system-wide certificates
+  ln -sf ../../../etc/ssl/certs/ca-certificates.crt "${pkgdir}"/opt/prince/etc/curl-ca-bundle.crt
+}
