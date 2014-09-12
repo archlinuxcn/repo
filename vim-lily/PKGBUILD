@@ -84,7 +84,6 @@ package_vim-lily() {
   optdepends=('luajit' 'ruby' 'python' 'python2' 'perl')
   conflicts=('vim' 'gvim' 'vim-python3' 'gvim-python3' 'vim-minimal')
   provides=("vim=${pkgver}-${pkgrel}" "vim-python3=${pkgver}-${pkgrel}")
-  install=${pkgname%%-*}.install
 
   cd "${srcdir}"/vim-build
   make -j1 VIMRCLOC=/etc DESTDIR="${pkgdir}" install
