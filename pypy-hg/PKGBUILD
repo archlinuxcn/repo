@@ -6,16 +6,16 @@ USE_PYPY=1
 USE_SHARED=1
 
 pkgname=pypy-hg
-pkgver=72464.24db6697b691
+pkgver=73461.22e1280d5d03
 pkgrel=1
 pkgdesc="A Python implementation written in Python, JIT enabled"
 url="http://codespeak.net/pypy/"
 arch=('i686' 'x86_64')
 depends=('libffi' 'openssl' 'expat' 'ncurses' 'zlib' 'bzip2')
-provides=('python2' 'pypy=2.3')
 options=('debug' 'strip' '!emptydirs')
 makedepends=('python2' 'mercurial' 'gdbm' 'sqlite' 'tcl' 'tk')
 conflicts=('pypy')
+provides=('python2' 'pypy=2.3')
 optdepends=('sqlite: sqlite3 module'
             'gdbm: gdbm module'
             'tk: lib-tk modules'
@@ -24,6 +24,9 @@ license=('custom:MIT')
 
 source=('hg+https://bitbucket.org/pypy/pypy')
 md5sums=('SKIP')
+
+_PYTHON=python2
+((USE_PYPY)) && which pypy &> /dev/null && _PYTHON=pypy
 
 pkgver() {
   cd "${srcdir}"/pypy
@@ -36,14 +39,8 @@ build() {
 
   cd "${srcdir}/pypy/pypy/goal"
 
-  export CFLAGS
-  export LDFLAGS
-
-  _PYTHON=python2
-  CFLAGS+=" -O3"
   translate_options=()
 
-  ((USE_PYPY)) && which pypy &> /dev/null && _PYTHON=pypy
   ((USE_SHARED)) && translate_options+=('--shared')
 
   $_PYTHON ../../rpython/bin/rpython -Ojit "${translate_options[@]}" \
@@ -52,14 +49,11 @@ build() {
 
 package() {
   cd "${srcdir}"
-  mkdir -p licenses/{libbz2-,openssl}
-  ln -sf /usr/share/licenses/bzip2/LICENSE licenses/libbz2-/copyright
+  mkdir -p licenses/{libbz2-dev,openssl}
+  ln -sf /usr/share/licenses/bzip2/LICENSE licenses/libbz2-dev/copyright
   ln -sf /usr/share/licenses/openssl/LICENSE licenses/openssl/copyright
 
   cd "${srcdir}"/pypy/pypy/tool/release
-
-  _PYTHON=python2
-  ((USE_PYPY)) && which pypy 2> /dev/null && _PYTHON=pypy
 
   LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:../../goal/" $_PYTHON package.py  \
     --license_base "${srcdir}"/licenses \
