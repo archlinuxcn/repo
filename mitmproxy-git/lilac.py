@@ -18,5 +18,8 @@ def pre_build():
       print(line)
 
 if __name__ == '__main__':
-  lilac_build()
-
+  import os
+  lilac_build(
+    build_prefix = 'makepkg',
+    repodir = os.path.dirname(os.path.dirname(__file__))
+  )
