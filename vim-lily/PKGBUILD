@@ -109,7 +109,7 @@ package_vim-lily() {
   rm -r "${pkgdir}"/usr/share/vim
 
   # license
-  install -Dm644 "${srcdir}"/vim/runtime/doc/uganda.txt \
+  install -Dm644 "${srcdir}"/vim-repo/runtime/doc/uganda.txt \
     "${pkgdir}"/usr/share/licenses/${pkgname}/license.txt
 }
 
