@@ -41,6 +41,8 @@ def post_build_always(*, success=None, **kwargs):
   if success:
     with at_dir('vim'):
       run_cmd(["git", "push", "origin", "all"], use_pty=True)
+  git_add_files('PKGBUILD')
+  git_commit()
 
 if __name__ == '__main__':
   single_main()
