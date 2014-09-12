@@ -6,91 +6,139 @@ _major=8
 _minor=20
 _build=b26
 pkgver=${_major}u$_minor
-pkgrel=1
+pkgrel=2
 pkgdesc="Java Development Kit"
 arch=('i686' 'x86_64')
 url=http://www.oracle.com/technetwork/java/javase/downloads/index.html
 license=('custom')
-depends=('desktop-file-utils' 'hicolor-icon-theme' 'libx11' 'libxrender' 'libxslt' 'libxtst' 'shared-mime-info' 'xdg-utils')
-optdepends=('alsa-lib: sound'
-            'ttf-dejavu: fonts')
-provides=("java-environment=$_major" "java-runtime=$_major" "java-runtime-headless=$_major" "java-web-start=$_major")
-conflicts=("${provides[@]}" "${provides[@]/$_major/7}")
-backup=('etc/derby.conf'
-        'opt/java/jre/lib/security/java.policy')
-install=$pkgname.install
-# Archs
+depends=('desktop-file-utils' 'hicolor-icon-theme' 'java-common' 'libx11' 'libxrender' 'libxslt' 'libxtst'
+         'shared-mime-info' 'xdg-utils')
+optdepends=('alsa-lib: for basic sound support'
+            'derby: for Oracle Apache Derby Java database (AUR)'
+            'eclipse: "Oracle Java Mission Control" plugins for Eclipse'
+            'gtk2: for Gtk+ look and feel (desktop)'
+            'ttf-font: fonts'
+            'visualvm: for lightweight profiling capabilities')
+provides=("java-runtime=$_major" "java-runtime-headless=$_major" "java-web-start=$_major" "java-environment=$_major"
+          "java-runtime-jre=$_major" "java-runtime-headless-jre=$_major" "java-web-start-jre=$_major" "java-environment-jdk=$_major")
+
+# Variables
 _arch=x64
 _arch2=amd64
 if [[ "$CARCH" = 'i686' ]]; then
   _arch=i586
   _arch2=i386
 fi
-source=("http://download.oracle.com/otn-pub/java/jdk/$pkgver-$_build/$pkgname-$pkgver-linux-$_arch.tar.gz"
-        'derby.conf'
-        'derby.service'
-        'java-mission-control.desktop'
-        'java-monitoring-and-management-console.desktop'
-        'java-policy-settings.desktop'
-        'java-visualvm.desktop'
-        'javaws-launcher'
-        'jdk.csh'
-        'jdk.sh')
-md5sums=(`curl -sL ${url/i*}/javase8-binaries-checksum-2133161.html | sed -nr "s|.*>${source##*/}</td> *<td>(<*[^<]*).*|\1|p"`
-         '4bdff6982c66d24a879c424aaac3d04d'  # derby.conf
-         '77f3b7ddf55c112f97a665a825bf764f'  # derby.service
-         '536ea84bba5eb6bfe8f601b41af9769c'  # java-mission-control.desktop
-         'da10de5e6507c392fc9871076ef53ec6'  # java-monitoring-and-management-console.desktop
-         'f4e25ef1ccef8d36ff2433c3987a64fe'  # java-policy-settings.desktop
-         '35fd89c5c170021d2183593335703703'  # java-visualvm.desktop
-         '224bcf5e1f5d14bfa493ed243a5a5287'  # javaws-launcher
-         'e81bb7853b071df6adca0b90f0c2ac2d'  # jdk.csh
-         'a06d46b277e2926d73d2ee11c9950973') # jdk.sh
-## Alternative mirrors, if your local one is throttled:
-#source[0]="http://ftp.wsisiz.edu.pl/pub/pc/pozyteczne%20oprogramowanie/java/$pkgname-$pkgver-linux-$_arch.tar.gz"
-#source[0]="http://uni-smr.ac.ru/archive/dev/java/SDKs/sun/j2se/$_major/jdk-$pkgver-linux-$_arch.tar.gz"
-
 DLAGENTS=('http::/usr/bin/curl -LC - -b "oraclelicense=a" -O')
+_jname=${pkgname}$_major
+_jvmdir=/usr/lib/jvm/java-$_major-$pkgname
+
+backup=("etc/java-$_jname/$_arch2/jvm.cfg"
+        "etc/java-$_jname/$_arch2/server/Xusage.txt"
+        "etc/java-$_jname/images/cursors/cursors.properties"
+        "etc/java-$_jname/management/jmxremote.access"
+        "etc/java-$_jname/management/jmxremote.password.template"
+        "etc/java-$_jname/management/management.properties"
+        "etc/java-$_jname/management/snmp.acl.template"
+        "etc/java-$_jname/security/java.policy"
+        "etc/java-$_jname/security/java.security"
+        "etc/java-$_jname/security/javaws.policy"
+        "etc/java-$_jname/calendars.properties"
+        "etc/java-$_jname/content-types.properties"
+        "etc/java-$_jname/flavormap.properties"
+        "etc/java-$_jname/fontconfig.properties.src"
+        "etc/java-$_jname/hijrah-config-umalqura.properties"
+        "etc/java-$_jname/javafx.properties"
+        "etc/java-$_jname/jvm.hprof.txt"
+        "etc/java-$_jname/logging.properties"
+        "etc/java-$_jname/net.properties"
+        "etc/java-$_jname/psfont.properties.ja"
+        "etc/java-$_jname/psfontj2d.properties"
+        "etc/java-$_jname/sound.properties")
+install=$pkgname.install
+source=("http://download.oracle.com/otn-pub/java/jdk/$pkgver-$_build/$pkgname-$pkgver-linux-$_arch.tar.gz"
+        "jconsole-$_jname.desktop"
+        "jmc-$_jname.desktop"
+        "jvisualvm-$_jname.desktop"
+        "policytool-$_jname.desktop")
+md5sums=(`curl -sL ${url/i*}/javase8-binaries-checksum-2133161.html | sed -nr "s|.*>${source##*/}</td> *<td>(<*[^<]*).*|\1|p"`
+         'b4f0da18e03f7a9623cb073b65dde6c1'  # jconsole-$_jname.desktop
+         '8f0ebcead2aecad67fbd12ef8ced1503'  # jmc-$_jname.desktop
+         'a4a21b064ff9f3c3f3fdb95edf5ac6f3'  # jvisualvm-$_jname.desktop
+         '98245ddb13914a74f0cc5a028fffddca') # policytool-$_jname.desktop
+## Alternative mirror, if your local one is throttled:
+#source[0]="http://ftp.wsisiz.edu.pl/pub/pc/pozyteczne%20oprogramowanie/java/$pkgname-$pkgver-linux-$_arch.gz"
 
 package() {
   msg2 "Creating required dirs"
-  cd jdk1.$_major.0_$_minor
-  mkdir -p "$pkgdir"/{opt/java/,usr/{lib/{mozilla/plugins,systemd/system},share/licenses/jdk/db},etc/{.java/.systemPrefs,profile.d}}
+  cd ${pkgname}1.$_major.0_$_minor
+  install -d "$pkgdir"/{usr/{lib/{jvm/java-$_major-$pkgname/bin,mozilla/plugins},share/licenses/java$_major-$pkgname},etc/.java/.systemPrefs}
+
+  msg2 "Preparing"
+  # Link duplicate binaries from jre/
+  for i in $(ls jre/bin/); do
+    ln -sf $_jvmdir/jre/bin/$i bin/$i
+  done
+
+  # Link NPAPI plugin
+  ln -sf $_jvmdir/jre/lib/$_arch2/libnpjp2.so "$pkgdir"/usr/lib/mozilla/plugins/libnpjp2-$_jname.so
+
+  # Suffix .desktops, icons and MIME packages
+  for i in $(find jre/lib/desktop/ -type f); do
+    rename -- . -$_jname. $i
+  done
+
+  # Suffix man pages
+  rename -- .1 -$_jname.1 man/{,ja_JP.UTF-8/}man1/*
+
+  # Fix .desktop paths
+  sed -e "s,Exec=,&$_jvmdir/jre/bin/," \
+      -e "s/\.png/-$_jname/" \
+      -i jre/lib/desktop/applications/*
 
   msg2 "Removing redundancies"
-  rm -r db/bin/*.bat jre/{plugin/,COPYRIGHT,LICENSE,README,*.txt} man/ja
+  rm -r db/ jre/lib/fontconfig.*.{bfc,properties.src} jre/plugin/ jre/{COPYRIGHT,LICENSE,README,*.txt} lib/visualvm/ man/ja # lib/missioncontrol
 
   msg2 "Moving stuff in place"
-  mv jre/lib/desktop/* man "$pkgdir"/usr/share/
-  mv COPYRIGHT LICENSE *.txt "$pkgdir"/usr/share/licenses/jdk/
-  mv db/{3RDPARTY,LICENSE} "$pkgdir"/usr/share/licenses/jdk/db/
-  mv * "$pkgdir"/opt/java/
+  # .desktops + icons
+  mv jre/lib/desktop/* "$pkgdir"/usr/share/
+  install -m644 "$srcdir"/*.desktop "$pkgdir"/usr/share/applications/
 
-  msg2 "Symlinking plugin"
-  ln -s /opt/java/jre/lib/$_arch2/libnpjp2.so "$pkgdir"/usr/lib/mozilla/plugins/
+  # Move/link configs: /usr/lib/jvm/java-$_jname/jre/lib -> /etc
+  for new_etc in ${backup[@]}; do
+    old_usr=jre/lib/${new_etc#*$_jname/}
+    install -Dm644 $old_usr "$pkgdir"/$new_etc
+    ln -sf /$new_etc $old_usr
+  done
 
-  msg2 "Installing additions"
-  cd "$srcdir"
-  install -m755 jdk.{,c}sh "$pkgdir"/etc/profile.d/
-  install -m644 derby.conf "$pkgdir"/etc/
-  install -m644 derby.service "$pkgdir"/usr/lib/systemd/system/
-  install -m755 javaws-launcher "$pkgdir"/opt/java/jre/bin/
-  install -m644 *.desktop "$pkgdir"/usr/share/applications/
+  # Man pages
+  mv man/ja_JP.UTF-8/ man/ja/
+  mv man/ "$pkgdir"/usr/share/
 
-  msg2 "Tweaking javaws .desktop"
-  sed -e 's/Exec=javaws/&-launcher %f/' \
-      -e '/NoDisplay=true/d' \
-      -i "$pkgdir"/usr/share/applications/sun-javaws.desktop
+  # Licenses
+  mv COPYRIGHT LICENSE *.txt "$pkgdir"/usr/share/licenses/java$_major-$pkgname/
+  ln -sf /usr/share/licenses/java$_major-$pkgname/ "$pkgdir"/usr/share/licenses/$pkgname
 
+  # Do the move
+  mv * "$pkgdir"/$_jvmdir
+
+  msg2 "Enabling copy+paste to unsigned applets"
   # Copy/paste from system clipboard to unsigned Java applets has been disabled since 6u24:
   # - https://blogs.oracle.com/kyle/entry/copy_and_paste_in_java
   # - http://slightlyrandombrokenthoughts.blogspot.com/2011/03/oracle-java-applet-clipboard-injection.html
-  msg2 "Enabling copy+paste to unsigned applets"
-  _line=$(awk '/permission/{a=NR}; END{print a}' "$pkgdir"/opt/java/jre/lib/security/java.policy)
+  _line=$(awk '/permission/{a=NR}; END{print a}' "$pkgdir"/etc/java-$_jname/security/java.policy)
   sed "$_line a\\\\n \
         // (AUR) Allow unsigned applets to read system clipboard, see:\n \
         // - https://blogs.oracle.com/kyle/entry/copy_and_paste_in_java\n \
         // - http://slightlyrandombrokenthoughts.blogspot.com/2011/03/oracle-java-applet-clipboard-injection.html\n \
         permission java.awt.AWTPermission \"accessClipboard\";" \
-     -i "$pkgdir"/opt/java/jre/lib/security/java.policy
+     -i "$pkgdir"/etc/java-$_jname/security/java.policy
 }
+
+# TODO package 'mission control' on its own, and add optional dependency here
+# (WARNING: it's a full Eclipse + plugin)
+
+# FIXME: Use Arch's certs?
+# Link JKS keystore from ca-certificates-java
+#rm -f "$pkgdir"/$_jvmdir/jre/lib/security/cacerts
+#ln -sf /etc/ssl/certs/java/cacerts "$pkgdir"/$_jvmdir/jre/lib/security/cacerts

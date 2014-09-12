@@ -1,19 +1,24 @@
 post_install() {
 
+	# add btsync user and group if doesn't exist
 	if [ "$(grep btsync /etc/passwd)" == "" ]; then
 		useradd -r -s /bin/sh -d /var/lib/btsync btsync
 	fi
+	# create btsync dir
 	mkdir -p /var/lib/btsync && chown -R btsync:btsync /var/lib/btsync
 
-cat << EOF
-
 	post_upgrade
- 
-EOF
-
 }
 
 post_upgrade() {
+	
+	# following will be moved to post_install eventually
+
+	# create tmpdirs
+	systemd-tmpfiles --create btsync.conf
+	# adjust owner and permissions for config file
+    chown btsync:btsync /etc/btsync.conf
+    chmod 600 /etc/btsync.conf
 
 cat << EOF
 
