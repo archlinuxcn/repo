@@ -27,6 +27,7 @@ pkgver() {
     git fetch uptream
     git merge uptream/master
   } >&2
+  # XXX: redirection won't work in build env. why?
 
   echo 7.4.$(sed -n '/ included_patches\[\]/,+3p' src/version.c | sed '/[^,]$/d;s/\s*\|,//g')
 }
@@ -50,7 +51,7 @@ build() {
   make clean || true
   make distclean || true
   CFLAGS='-g -O2' STRIP=true ./configure --prefix=/usr --localstatedir=/var/lib/vim \
-      --mandir=/usr/share/man \
+      --mandir=/usr/share/man --with-luajit \
       --disable-gui --without-x --disable-fontset --disable-xsmp \
       --enable-python3interp --enable-rubyinterp=dynamic --enable-pythoninterp \
       --enable-luainterp=dynamic --enable-perlinterp=dynamic \
