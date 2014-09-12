@@ -15,7 +15,7 @@ def pre_build():
   with at_dir('vim'):
     run_cmd(["git", "reset", "--hard"])
     run_cmd(["git", "fetch", "upstream"], use_pty=True)
-    run_cmd(["git", "merge", "--no-edit", "uptream/master"])
+    run_cmd(["git", "merge", "--no-edit", "upstream/master"])
 
 def post_build():
   with at_dir('vim'):
