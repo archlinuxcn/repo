@@ -4,7 +4,7 @@ pkgbase=vim-lilly
 pkgname=(gvim-lily vim-runtime-lily vim-lily)
 pkgver=7.4.430
 pkgrel=1
-_versiondir="vim${${pkgver%.*}//./}"
+_versiondir="vim$(echo $pkgver | awk -F. '{print $1$2}')"
 arch=('i686' 'x86_64')
 license=('custom:vim')
 url="http://www.vim.org"
@@ -14,22 +14,24 @@ md5sums=('d90413bd21f400313a785bb4010120cd')
 options=('debug')
 
 pkgver() {
+  {
+    if [[ ! -d vim ]]; then
+      mkdir vim
+      git clone -b all git://github.com/lilydjwg/vim.git
+      git remote add upstream git://github.com/vim-jp/vim.git
+      cd "$srcdir"
+    fi
+
+    cd vim
+    git reset --hard
+    git fetch uptream
+    git merge uptream/master
+  } >&2
+
   echo 7.4.$(sed -n '/ included_patches\[\]/,+3p' src/version.c | sed '/[^,]$/d;s/\s*\|,//g')
 }
 
 build() {
-  if [[ ! -d vim ]]; then
-    mkdir vim
-    git clone -b all git://github.com/lilydjwg/vim.git
-    git remote add upstream git://github.com/vim-jp/vim.git
-    cd "$srcdir"
-  fi
-
-  cd vim
-  git reset --hard
-  git fetch uptream
-  git merge uptream/master
-
   # define the place for the global (g)vimrc file (set to /etc/vimrc)
   sed -i 's|^.*\(#define SYS_.*VIMRC_FILE.*"\) .*$|\1|' \
     src/feature.h
