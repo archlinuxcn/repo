@@ -156,9 +156,9 @@ package_gvim-lily() {
   rm -r "${pkgdir}"/usr/share/vim
 
   # freedesktop links
-  install -Dm644 ${srcdir}/gvim.desktop \
-    ${pkgdir}/usr/share/applications/gvim.desktop
-  install -Dm644 ${srcdir}/runtime/vim48x48.png ${pkgdir}/usr/share/pixmaps/gvim.png
+  install -Dm644 "${srcdir}"/gvim.desktop \
+    "${pkgdir}"/usr/share/applications/gvim.desktop
+  install -Dm644 runtime/vim48x48.png "${pkgdir}"/usr/share/pixmaps/gvim.png
 
   # license
   install -Dm644 "${srcdir}"/vim/runtime/doc/uganda.txt \
