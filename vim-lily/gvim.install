@@ -1,0 +1,15 @@
+update_desktop_database() {
+  update-desktop-database --quiet
+}
+
+post_install() {
+  update_desktop_database
+}
+
+post_upgrade() {
+  update_desktop_database
+}
+
+post_remove() {
+  update_desktop_database
+}
