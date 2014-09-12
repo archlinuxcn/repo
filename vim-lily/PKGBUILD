@@ -39,13 +39,13 @@ build() {
   make clean || true
   make distclean || true
   CFLAGS='-g -O2' STRIP=true ./configure --prefix=/usr --localstatedir=/var/lib/vim \
-      --mandir=/usr/share/man --with-luajit \
-      --disable-gui --without-x --disable-fontset --disable-xsmp \
-      --enable-python3interp --enable-rubyinterp=dynamic --enable-pythoninterp \
-      --enable-luainterp=dynamic --enable-perlinterp=dynamic \
-      --enable-cscope --enable-multibyte --with-features=huge \
-      --enable-fail-if-missing \
-      --with-compiledby=百合仙子 --with-modified-by=百合仙子
+    --mandir=/usr/share/man --with-luajit \
+    --enable-acl --disable-gui --without-x --disable-fontset --disable-xsmp \
+    --enable-python3interp --enable-rubyinterp=dynamic --enable-pythoninterp \
+    --enable-luainterp=dynamic --enable-perlinterp=dynamic \
+    --enable-cscope --enable-multibyte --with-features=huge \
+    --enable-fail-if-missing \
+    --with-compiledby=百合仙子 --with-modified-by=百合仙子
 
   msg2 'Building...'
   make
@@ -61,7 +61,7 @@ build() {
   make distclean || true
   CFLAGS='-g -O2' STRIP=true ./configure --prefix=/usr --localstatedir=/var/lib/vim \
     --mandir=/usr/share/man --with-luajit \
-    --enable-gui=gtk2 --enable-fontset --enable-xsmp \
+    --enable-acl --enable-gui=gtk2 --enable-fontset --enable-xsmp \
     --enable-python3interp --enable-rubyinterp=dynamic --enable-pythoninterp \
     --enable-luainterp=dynamic --enable-perlinterp=dynamic \
     --enable-cscope --enable-multibyte --with-features=huge \
@@ -80,7 +80,7 @@ build() {
 
 package_vim-lily() {
   pkgdesc='Vi Improved, a highly configurable, improved version of the vi text editor with additional scripting support'
-  depends=('gpm' 'vim-runtime')
+  depends=('gpm' 'vim-runtime' 'acl')
   optdepends=('luajit' 'ruby' 'python' 'python2' 'perl')
   conflicts=('vim' 'gvim' 'vim-python3' 'gvim-python3' 'vim-minimal')
   provides=("vim=${pkgver}-${pkgrel}" "vim-python3=${pkgver}-${pkgrel}")
@@ -114,7 +114,7 @@ package_vim-lily() {
 
 package_gvim-lily() {
   pkgdesc='Vi Improved, a highly configurable, improved version of the vi text editor (with advanced features, such as a GUI) with additional scripting support'
-  depends=('gpm' 'gtk2' 'vim-runtime')
+  depends=('gpm' 'gtk2' 'vim-runtime' 'desktop-file-utils')
   optdepends=('luajit' 'ruby' 'python' 'python2' 'perl')
   conflicts=('vim' 'gvim' 'vim-python3' 'gvim-python3' 'vim-minimal')
   provides=("gvim=${pkgver}-${pkgrel}" "gvim-python3=${pkgver}-${pkgrel}")
@@ -154,6 +154,7 @@ package_gvim-lily() {
 
 package_vim-runtime-lily() {
   pkgdesc='Runtime for vim and gvim'
+  arch=('any')
 
   # Install the runtime split from gvim
   install -dm755 "${pkgdir}"/usr/share
