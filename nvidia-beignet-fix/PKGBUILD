@@ -2,7 +2,7 @@
 # Maintainer : Thomas Baechler <thomas@archlinux.org>
 
 pkgname=nvidia-beignet-fix
-pkgver=340.24
+pkgver=340.32
 _extramodules=extramodules-3.16-beignet-fix
 pkgrel=2
 pkgdesc="NVIDIA drivers for linux"
@@ -15,35 +15,37 @@ license=('custom')
 install=nvidia.install
 options=(!strip)
 source=("ftp://download.nvidia.com/XFree86/Linux-x86/${pkgver}/NVIDIA-Linux-x86-${pkgver}.run"
-        "ftp://download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run")
-md5sums=('edd4c618265d22ef4d2b28baf070c6ff'
-         'b71118e3e3ae9b227bf6f17a2cc8c726')
+  "ftp://download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run")
+md5sums=('423ea1a6938dbf226bb84504746fc646'
+         'baea4c968a06d3eddec8fb1287bb38bb')
 
 [[ "$CARCH" = "i686" ]] && _pkg="NVIDIA-Linux-x86-${pkgver}"
 [[ "$CARCH" = "x86_64" ]] && _pkg="NVIDIA-Linux-x86_64-${pkgver}-no-compat32"
 
 prepare() {
-    sh "${_pkg}.run" --extract-only
-    cd "${_pkg}"
-    # patches here
+  cd "${srcdir}"
+  rm -rf "${_pkg}/"
+  sh "${_pkg}.run" --extract-only
+  cd "${_pkg}"
+  # patches here
 }
 
 build() {
-    _kernver="$(cat /usr/lib/modules/${_extramodules}/version)"
-    cd "${_pkg}"/kernel
-    make SYSSRC=/usr/lib/modules/"${_kernver}/build" module
+  _kernver="$(cat /usr/lib/modules/${_extramodules}/version)"
+  cd "${_pkg}"/kernel
+  make KERNEL_UNAME=${_kernver} module
 
-    cd uvm
-    make SYSSRC=/usr/lib/modules/"${_kernver}/build" module
+  cd uvm
+  make KERNEL_UNAME=${_kernver} module
 }
 
 package() {
-    install -D -m644 "${srcdir}/${_pkg}/kernel/nvidia.ko" \
-        "${pkgdir}/usr/lib/modules/${_extramodules}/nvidia.ko"
-    install -D -m644 "${srcdir}/${_pkg}/kernel/uvm/nvidia-uvm.ko" \
-        "${pkgdir}/usr/lib/modules/${_extramodules}/nvidia-uvm.ko"
-    gzip "${pkgdir}/usr/lib/modules/${_extramodules}/"*.ko
-    install -d -m755 "${pkgdir}/usr/lib/modprobe.d"
-    echo "blacklist nouveau" >> "${pkgdir}/usr/lib/modprobe.d/nvidia-beignet-fix.conf"
-    sed -i -e "s/EXTRAMODULES='.*'/EXTRAMODULES='${_extramodules}'/" "${startdir}/nvidia.install"
+  install -D -m644 "${srcdir}/${_pkg}/kernel/nvidia.ko" \
+    "${pkgdir}/usr/lib/modules/${_extramodules}/nvidia.ko"
+  install -D -m644 "${srcdir}/${_pkg}/kernel/uvm/nvidia-uvm.ko" \
+    "${pkgdir}/usr/lib/modules/${_extramodules}/nvidia-uvm.ko"
+  gzip "${pkgdir}/usr/lib/modules/${_extramodules}/"*.ko
+  install -d -m755 "${pkgdir}/usr/lib/modprobe.d"
+  echo "blacklist nouveau" >> "${pkgdir}/usr/lib/modprobe.d/nvidia-beignet-fix.conf"
+  sed -i -e "s/EXTRAMODULES='.*'/EXTRAMODULES='${_extramodules}'/" "${startdir}/nvidia.install"
 }
