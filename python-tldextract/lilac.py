@@ -9,7 +9,7 @@ build_prefix = 'extra-x86_64'
 def pre_build():
   info = get_pypi_info('tldextract')
   pkgver = info['info']['version']
-  release = [x for x in info['releases'][pkgver] if x['packagetype'] == 'sdist']
+  release = [x for x in info['releases'][pkgver] if x['packagetype'] == 'sdist'][0]
   md5sum = release['md5_digest']
   url = release['url']
 
