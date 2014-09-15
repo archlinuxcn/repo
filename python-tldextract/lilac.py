@@ -29,6 +29,7 @@ def pre_build():
         line = 'source=(%s)' % url
       elif line.startswith('md5sums='):
         line = 'md5sums=(%s)' % md5sum
+    print(line)
 
 def post_build():
   git_add_files('PKGBUILD')
