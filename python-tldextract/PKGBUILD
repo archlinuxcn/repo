@@ -1,5 +1,4 @@
 # Maintainer: lilydjwg <lilydjwg@gmail.com>
-# FIXME: download and save /usr/lib/python3.4/site-packages/tldextract/.tld_set while building
 
 _pkgname=tldextract
 pkgname=python-$_pkgname
@@ -26,9 +25,6 @@ package() {
   _pyver=$(python -c 'import sysconfig; print(sysconfig.get_python_version())')
   # use the snapshot version, because generating a new one requires Internat access and root permission
   ln -s .tld_set_snapshot "$pkgdir/usr/lib/python$_pyver/site-packages/tldextract/.tld_set"
-  # omit in newer version!
-  sed -i -e '/version=/d' \
-         -e '/with open(self.cache_file) as f:/s/)/, "rb")/' \
   "$pkgdir/usr/lib/python$_pyver/site-packages/tldextract/tldextract.py"
 }
 
