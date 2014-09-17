@@ -1,50 +1,53 @@
-# $Id: PKGBUILD 111334 2014-05-16 22:03:28Z heftig $
-# Maintainer: Fantix King <fantix.king@gmail.com>
-# Upstream Maintainer: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
+# $Id: PKGBUILD 118950 2014-09-14 08:30:52Z heftig $
+# Maintainer: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 # Contributor: Jan de Groot <jgc@archlinux.org>
 # Contributor: Allan McRae <allan@archlinux.org>
+# x32 Maintainer: Fantix King <fantix.king@gmail.com>
 
 # toolchain build order: linux-api-headers->glibc->binutils->gcc->binutils->glibc
-# NOTE: valgrind requires rebuilt with each major glibc version
 
 _pkgbasename=glibc
 pkgname=libx32-$_pkgbasename
-pkgver=2.19_5
-pkgrel=1
+pkgver=2.20
+pkgrel=2.1
 pkgdesc="GNU C Library (x32 ABI)"
 arch=('x86_64')
 url="http://www.gnu.org/software/libc"
 license=('GPL' 'LGPL')
 groups=()
 depends=()
-makedepends=('gcc-multilib-x32>=4.8')
+makedepends=('gcc-multilib-x32>=4.9')
 backup=()
 conflicts=('glibc-x32-seed')
 provides=('glibc-x32-seed')
-options=('!strip' '!emptydirs' 'staticlibs')
-source=(http://ftp.gnu.org/gnu/libc/${_pkgbasename}-${pkgver%_*}.tar.xz{,.sig}
-        glibc-2.19-xattr_header.patch
-        glibc-2.19-fix-sign-in-bsloww1-input.patch
-        glibc-2.19-tzselect-default.patch
+
+
+options=('!strip' 'staticlibs' '!emptydirs')
+
+source=(http://ftp.gnu.org/gnu/libc/${_pkgbasename}-${pkgver}.tar.xz{,.sig}
+	glibc-2.20-getifaddrs_internal-segfault.patch
+	glibc-2.20-linux-3.16-additions.patch
+	glibc-2.20-do_ftell_wide-memleak.patch
         libx32-glibc.conf)
-md5sums=('e26b8cc666b162f999404b03970f14e4'
+md5sums=('948a6e06419a01bd51e97206861595b0'
          'SKIP'
-         '39a4876837789e07746f1d84cd8cb46a'
-         '755a1a9d7844a5e338eddaa9a5d974cd'
-         'c772dc99ddd8032ecbf43884ae0cf42e'
+         '1c5d5c2017445c75dbc5c6d0c1e45ddb'
+         '8f1059f431b842e54b12bde689620df8'
+         'b50feeab78fa6ce0a8cfb41ee8dc1fd8'
          '34a4169d2bdc5a3eb83676a0831aae57')
 
 prepare() {
-  cd ${srcdir}/${_pkgbasename}-${pkgver%_*}
-   
-  # fix for {linux,sys}/xattr.h incompatibility - commit fdbe8eae
-  patch -p1 -i $srcdir/glibc-2.19-xattr_header.patch
+  cd ${srcdir}/glibc-${pkgver}
 
-  # fix issues in sin/cos slow path calculation - commit ffe768a9
-  patch -p1 -i $srcdir/glibc-2.19-fix-sign-in-bsloww1-input.patch
-
-  # fix tzselect with missing TZDIR - commit 893b4f37/c72399fb
-  patch -p1 -i $srcdir/glibc-2.19-tzselect-default.patch
+  # fix segfault in getifaddrs_internal
+  # https://sourceware.org/ml/libc-alpha/2014-09/msg00312.html
+  patch -p1 -i $srcdir/glibc-2.20-getifaddrs_internal-segfault.patch
+  
+  # linux 3.16 additions - commit 0bd72468
+  patch -p1 -i $srcdir/glibc-2.20-linux-3.16-additions.patch
+  
+  # plug memory leak - commit 984c0ea9
+  patch -p1 -i $srcdir/glibc-2.20-do_ftell_wide-memleak.patch
 
   mkdir ${srcdir}/glibc-build
 }
@@ -69,6 +72,7 @@ build() {
     export CXX="g++ -mx32"
   fi
   echo "slibdir=/usr/libx32" >> configparms
+  echo "rtlddir=/usr/libx32" >> configparms
   echo "sbindir=/usr/bin" >> configparms
   echo "rootsbindir=/usr/bin" >> configparms
 
@@ -76,11 +80,11 @@ build() {
   CFLAGS=${CFLAGS/-fstack-protector-strong/}
   CPPFLAGS=${CPPFLAGS/-D_FORTIFY_SOURCE=2/}
 
-  ${srcdir}/${_pkgbasename}-${pkgver%_*}/configure --prefix=/usr \
+  ${srcdir}/${_pkgbasename}-${pkgver}/configure --prefix=/usr \
       --libdir=/usr/libx32 --libexecdir=/usr/libx32 \
       --with-headers=/usr/include \
       --with-bugurl=https://bugs.archlinux.org/ \
-      --enable-add-ons=nptl,libidn \
+      --enable-add-ons \
       --enable-obsolete-rpc \
       --enable-kernel=2.6.32 \
       --enable-bind-now --disable-profile \
@@ -100,7 +104,7 @@ build() {
   make
 
   # remove harding in preparation to run test-suite
-  sed -i '4,6d' configparms
+  sed -i '5,7d' configparms
 }
 
 check() {
@@ -108,12 +112,12 @@ check() {
   LDFLAGS=${LDFLAGS/--as-needed,/}
 
   cd ${srcdir}/glibc-build
+
   if [ -x "/opt/gcc-x32-seed/bin/gcc" ]; then
-    make -k check || true
+    make check || true
   else
-    # ULP failures on i686 are all small and can be ignored
-    # tst-cleanupx4.out failure on i686 needs investigating...
-    make -k check || true
+    # tst-cleanupx4 failure on i686 is "expected"
+    make check || true
   fi
 }
 
