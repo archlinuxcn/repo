@@ -1,29 +1,29 @@
-# $Id: PKGBUILD 115931 2014-07-18 21:30:35Z heftig $
-# Maintainer: Fantix King <fantix.king@gmail.com>
-# Upstream Maintainer: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
+# $Id: PKGBUILD 118721 2014-09-09 21:04:47Z heftig $
+# Maintainer: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 # Contributor: Allan McRae <allan@archlinux.org>
+# x32 Maintainer: Fantix King <fantix.king@gmail.com>
 
 # toolchain build order: linux-api-headers->glibc->binutils->gcc->binutils->glibc
 # NOTE: libtool requires rebuilt with each new gcc version
 
 pkgname=('gcc-multilib-x32' 'gcc-libs-multilib-x32' 'libx32-gcc-libs' 'gcc-fortran-multilib-x32' 'gcc-objc-multilib-x32' 'gcc-ada-multilib-x32' 'gcc-go-multilib-x32')
-pkgver=4.9.1_1
+pkgver=4.9.1_2
 _pkgver=4.9
-pkgrel=1
-#_snapshot=4.9-20140604
+pkgrel=2
+_snapshot=4.9-20140903
 pkgdesc="The GNU Compiler Collection for multilib with x32 ABI support"
 arch=('x86_64')
 license=('GPL' 'LGPL' 'FDL' 'custom')
 url="http://gcc.gnu.org"
 makedepends=('binutils>=2.24' 'libmpc' 'cloog' 'gcc-ada-multilib' 'doxygen'
-             'lib32-glibc>=2.19' 'libx32-glibc>=2.19')
+             'lib32-glibc>=2.20' 'libx32-glibc>=2.20')
 checkdepends=('dejagnu' 'inetutils')
 options=('!emptydirs')
-source=(ftp://gcc.gnu.org/pub/gcc/releases/gcc-${pkgver%_*}/gcc-${pkgver%_*}.tar.bz2
-        #ftp://gcc.gnu.org/pub/gcc/snapshots/${_snapshot}/gcc-${_snapshot}.tar.bz2
+source=(#ftp://gcc.gnu.org/pub/gcc/releases/gcc-${pkgver%_*}/gcc-${pkgver%_*}.tar.bz2
+        ftp://gcc.gnu.org/pub/gcc/snapshots/${_snapshot}/gcc-${_snapshot}.tar.bz2
         gcc-4.8-filename-output.patch
         gcc-4.9-isl-0.13-hack.patch)
-md5sums=('fddf71348546af523353bd43d34919c1'
+md5sums=('24dfd67139fda4746d2deff18182611d'
          '40cb437805e2f7a006aa0d0c3098ab0f'
          'f26ae06b9cbc8abe86f5ee4dc5737da8')
 
@@ -112,8 +112,8 @@ check() {
 package_libx32-gcc-libs()
 {
   pkgdesc="Runtime libraries shipped by GCC (x32 ABI)"
-  depends=('libx32-glibc>=2.19')
-  options=('!emptydirs')
+  depends=('libx32-glibc>=2.20')
+  options=('!emptydirs' '!strip')
 
   cd ${srcdir}/gcc-build
 
@@ -145,10 +145,10 @@ package_libx32-gcc-libs()
 package_gcc-libs-multilib-x32()
 {
   pkgdesc="Runtime libraries shipped by GCC for multilib with x32 ABI support"
-  depends=('glibc>=2.19' "lib32-gcc-libs=${pkgver//_/-}" "libx32-gcc-libs=$pkgver-$pkgrel")
+  depends=('glibc>=2.20' "lib32-gcc-libs=${pkgver//_/-}" "libx32-gcc-libs=$pkgver-$pkgrel")
   provides=("gcc-libs=${pkgver//_/-}" "gcc-libs-multilib=${pkgver//_/-}")
   conflicts=('gcc-libs')
-  options=('!emptydirs')
+  options=('!emptydirs' '!strip')
   install=gcc-libs.install
 
   cd ${srcdir}/gcc-build

@@ -1,9 +1,9 @@
-# Maintainer: Felix Yan <felixonmars@gmail.com>
+# Maintainer: Felix Yan <felixonmars@archlinux.org>
 
 pkgbase=python-braintree
 pkgname=(python-braintree python2-braintree)
 _pkgname=braintree
-pkgver=3.4.0
+pkgver=3.4.1
 pkgrel=1
 pkgdesc="Braintree Python Library"
 arch=('any')
@@ -34,4 +34,4 @@ package_python2-braintree() {
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
-sha512sums=('deae36accf3a5fafeb4cf08838532de7ec6920a85394aedc92953647edfe6fb388948d41ad872ad22eda1e8210176792f0b075bb16ce5a91642e996a7e8301ba')
+sha512sums=('3ea5535d70deb79c3c12bab4d42c0bc87d2bb274b3f2b850f1fa1257921f4f9f41c15e93def5df4a33049c1751d69ff413a9358aac0202391ec948bab49881f4')
