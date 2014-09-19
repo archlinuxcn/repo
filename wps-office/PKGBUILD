@@ -4,7 +4,7 @@
 pkgname=wps-office
 pkgver=9.1.0.4751_a15
 _pkgver=9.1.0.4751~a15_x86
-pkgrel=1
+pkgrel=2
 pkgdesc="Kingsoft Office (WPS Office) is an office productivity suite"
 arch=('i686' 'x86_64')
 license=("custom")
@@ -13,14 +13,16 @@ conflicts=('kingsoft-office')
 options=('!emptydirs')
 install=${pkgname}.install
 source=("http://kdl.cc.ksosoft.com/wps-community/download/a15/wps-office_${_pkgver}.tar.xz")
-sha1sums=('966c56181cb448178243090811aea1cc2429567b')
+sha1sums=('d27e6a4240e3df0fed4be3b9661df080a2ee4a28')
 
 if [ "$CARCH" = "i686" ]; then
     depends=('fontconfig' 'libpng12' 'glib2' 'libsm' 'libxext' 'libxrender' 'glu' 'libxml2')
-    optdepends=('cups: for printing support')
+    optdepends=('cups: for printing support'
+                'pango: for complex (right-to-left) text support')
 elif [ "$CARCH" = "x86_64" ]; then
     depends=('lib32-fontconfig' 'lib32-libpng12' 'lib32-glib2' 'lib32-libsm' 'lib32-libxext' 'lib32-libxrender' 'lib32-glu' 'lib32-libxml2')
-    optdepends=('lib32-libcups: for printing support')
+    optdepends=('lib32-libcups: for printing support'
+                'lib32-pango: for complex (right-to-left) text support')
 fi
 depends+=('desktop-file-utils' 'shared-mime-info' 'xdg-utils')
 
