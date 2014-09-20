@@ -3,6 +3,7 @@
 from lilaclib import *
 
 build_prefix = 'extra-x86_64'
+depends = ['cld2-svn']
 
 def pre_build():
   run_cmd(['makepkg', '-o'])
