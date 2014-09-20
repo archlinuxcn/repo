@@ -1,12 +1,24 @@
+From 9daecaf57d049fe8bb6a509a0bc1d36de3d1ed15 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sat, 20 Sep 2014 12:13:37 -0400
+Subject: [PATCH 1/2] fix for pch
+
+---
+ CMakeLists.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d4758c4..8d97a2b 100644
+index 2cb5133..50a67ef 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -364,6 +364,7 @@ if (MINGW)
+@@ -368,6 +368,7 @@ if (MINGW)
  else (MINGW)
    set(BUILD_PCH true)
  endif(MINGW)
 +set(BUILD_PCH false)
+ 
  precompiled_header(QT_INCLUDES all ${BUILD_PCH})
- ADD_CUSTOM_TARGET(mops1 DEPENDS ${PROJECT_BINARY_DIR}/all.h)
- ADD_CUSTOM_TARGET(mops2 DEPENDS ${PCH})
+ 
+-- 
+2.1.0
+
