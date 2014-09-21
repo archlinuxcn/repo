@@ -1,0 +1,24 @@
+# Maintainer: Jerome Leclanche <jerome@leclan.ch>
+# Contributor: Matt Harrison <matt at mistbyte dot com>
+# Contributor: Renzo Carbonara <gnuk0001@gmail.com>
+
+_gemname=yard
+pkgname=ruby-$_gemname
+pkgver=0.8.7.4
+pkgrel=1
+pkgdesc="Documentation tool for consistent and usable documentation in Ruby."
+arch=('any')
+url="http://yardoc.org"
+license=('MIT')
+depends=('ruby')
+makedepends=('rubygems')
+source=("http://gems.rubyforge.org/gems/$_gemname-$pkgver.gem")
+noextract=("$_gemname-$pkgver.gem")
+sha256sums=('e65a26f9b9dc6e2aa9b1d1d2e1a45bee3edf540a6a7e6c30fa6aa1df7f7a29b4')
+
+package() {
+	cd "$srcdir"
+	local _gemdir="$(ruby -rubygems -e'puts Gem.default_dir')"
+	gem install --no-user-install --ignore-dependencies -i "$pkgdir$_gemdir" -n "$pkgdir/usr/bin" "$_gemname-$pkgver.gem"
+	install -D "$pkgdir$_gemdir/gems/${_gemname}-$pkgver/LICENSE" "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
+}
