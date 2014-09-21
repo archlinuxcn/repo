@@ -5,21 +5,21 @@
 
 _pkgname=sass
 pkgname=ruby-$_pkgname
-pkgver=3.3.1
+pkgver=3.3.9
 pkgrel=1
 pkgdesc="Tools and Ruby libraries for the CSS3 extension languages: Sass and SCSS."
-arch=('any')
+arch=("any")
 url="http://sass-lang.com/"
-license=('MIT')
-depends=('ruby' 'ruby-yard' 'ruby-maruku')
-makedepends=('rubygems')
-# optdepends=('ruby-listen')
+license=("MIT")
+depends=("ruby" "ruby-yard" "ruby-maruku")
+makedepends=("rubygems")
+# optdepends=("ruby-listen")
 source=("http://gems.rubyforge.org/gems/$_pkgname-$pkgver.gem")
 noextract=("$_pkgname-$pkgver.gem")
-sha256sums=('56d02be6a31cced323f4f1d22fb390121e39cf4b3e92eca9ea8b1f81438101a3')
+sha256sums=("bfce1f74e41f135d32a346dff35358424ddd7062d371f20f487120318edc294c")
 
 package() {
-	local _gemdir="$(ruby -rubygems -e'puts Gem.default_dir')"
+	local _gemdir="$(ruby -rubygems -e"puts Gem.default_dir")"
 	gem install --no-user-install --ignore-dependencies -i "$pkgdir$_gemdir" -n "$pkgdir/usr/bin" "$_pkgname-$pkgver.gem"
 	install -D "$pkgdir$_gemdir/gems/$_pkgname-$pkgver/MIT-LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
