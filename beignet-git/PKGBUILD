@@ -1,7 +1,7 @@
 # Maintainer: Boqun Feng <boqun.feng@gmail.com>
 
 pkgname=beignet-git
-pkgver=0.9.1.0.135.g4d7dbc7
+pkgver=0.9.1.0.139.gc0ba37d
 pkgrel=1
 epoch=1
 pkgdesc="OpenCL Implemenation for Intel IvyBridge and Haswell"
@@ -71,5 +71,5 @@ package() {
   cd "${srcdir}/${_gitname}/build"
 
   make DESTDIR="$pkgdir/" install
-  rm -rf "${pkgdir}/usr/include"
+  rm "${pkgdir}/usr/include/CL/"*.{h,hpp}
 }
