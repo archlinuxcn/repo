@@ -1,11 +1,11 @@
 pkgname=pypy-numpy-git
-pkgver=11177.11311ef
+pkgver=11178.d09320f
 pkgrel=1
 pkgdesc="Scientific tools for Python, pypy version."
 url="https://bitbucket.org/pypy/numpy"
 arch=('i686' 'x86_64')
 license=('BSD')
-depends=('lapack' 'blas' "pypy>=2.3" "pypy<2.4")
+depends=('lapack' 'blas' "pypy>=2.4" "pypy<2.5")
 makedepends=('git' 'gcc-fortran')
 provides=('pypy-numpy')
 options=('debug' 'strip')
