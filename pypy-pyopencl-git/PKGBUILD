@@ -94,7 +94,7 @@ build() {
 }
 
 package_pypy3-pyopencl-git() {
-  depends=('libcl' 'opencl-headers' 'mesa' "pypy3>=2.1beta1" "pypy3<2.2"
+  depends=('libcl' 'opencl-headers' 'mesa' "pypy3>=2.3" "pypy3<2.4"
     'pypy3-mako' 'pypy3-pytools' 'pypy3-setuptools')
 
   cd "${srcdir}/pyopencl"
@@ -106,7 +106,7 @@ package_pypy3-pyopencl-git() {
 }
 
 package_pypy-pyopencl-git() {
-  depends=('libcl' 'opencl-headers' 'mesa' "pypy>=2.3" "pypy<2.4"
+  depends=('libcl' 'opencl-headers' 'mesa' "pypy>=2.4" "pypy<2.5"
     'pypy-numpy' 'pypy-mako' 'pypy-pytools' 'pypy-setuptools' 'gcc-libs')
 
   cd "${srcdir}/pyopencl-python2"
