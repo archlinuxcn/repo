@@ -2,8 +2,8 @@
 # Contributor: Stefan Husmann <stefan-husmann@t-online.de>
 # Maintainer: Yichao Yu <yyc1992@gmail.com>
 
-pkgbase=musescore
-pkgname=${pkgbase}-git
+_pkgname=musescore
+pkgname=${_pkgname}-git
 _realver=2.0.0
 pkgver=6692.5f30234
 pkgrel=1
@@ -18,8 +18,8 @@ depends=('shared-mime-info' 'alsa-lib' 'zlib' 'libvorbis'
   'portaudio' 'libpulse' 'libsndfile' 'libogg' 'gcc-libs')
 makedepends=('cmake' 'doxygen' 'git')
 optdepends=('jack')
-conflicts=("${pkgbase}" 'mscore' 'musescore-svn')
-provides=("${pkgbase}=${_realver}" 'musescore-svn')
+conflicts=("${_pkgname}" 'mscore' 'musescore-svn')
+provides=("${_pkgname}=${_realver}" 'musescore-svn')
 replaces=('musescore-svn')
 source=('mime.xml'
   '0001-fix-for-pch.patch'
