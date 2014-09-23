@@ -1,0 +1,40 @@
+# Submitter: Alex Chamberlain <alex@alexchamberlain.co.uk>
+# Maintainer: Kars Wang <jaklsy@gmail.com>
+
+pkgname=jq-git
+_gitname='jq'
+pkgver=1.3.254.gff5cf0a
+pkgrel=1
+pkgdesc='Command-line JSON processor'
+arch=('i686' 'x86_64')
+url='http://stedolan.github.io/jq/'
+license=('custom')
+groups=()
+depends=()
+makedepends=('python2' 'git' 'autoconf' 'automake' 'bison' 'flex' 'glibc' 'oniguruma')
+checkdepends=()
+optdepends=()
+provides=()
+conflicts=('jq')
+source=('git+https://github.com/stedolan/jq.git')
+md5sums=(SKIP)
+
+pkgver() {
+    cd "$_gitname"
+    git describe --long | sed -e 's/^jq-//' -e 's/-/./g'
+}
+
+
+build() {
+    cd "$_gitname"
+
+    autoreconf -i
+    ./configure --prefix=/usr
+    make
+}
+
+package() {
+    cd "$_gitname"
+    make DESTDIR="$pkgdir" prefix=/usr install
+    install -Dm644 COPYING "${pkgdir}/usr/share/licenses/jq"
+}
