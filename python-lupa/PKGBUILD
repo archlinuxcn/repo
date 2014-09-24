@@ -1,27 +1,24 @@
-# Maintainer: lilydjwg <lilydjwg@gmail.com>
-pkgname=python-lupa
-pkgver=0.21
-pkgrel=2
-pkgdesc="Intergrate the LuaJIT2 runtime into CPython"
-arch=('i686' 'x86_64')
-url="http://pypi.python.org/pypi/lupa"
+_pkgname=lupa
+pkgname=python-$_pkgname
+pkgver=1.0b1
+pkgrel=1
+pkgdesc="Python wrapper around Lua and LuaJIT"
+arch=('any')
+url="https://github.com/scoder/lupa"
 license=('MIT')
-depends=('luajit>=2.0.0b9' 'python')
-provides=('python-lupa')
-conflicts=('python-lupa-git')
-replaces=('python-lupa-git')
-source=(http://pypi.python.org/packages/source/l/lupa/lupa-$pkgver.tar.gz)
-md5sums=('ab7fb813061ba85314f7d30458ce37c5')
+depends=('python' 'luajit')
+source=('https://pypi.python.org/packages/source/l/lupa/lupa-1.0b1.tar.gz')
+md5sums=('8ae6de8db76ea3f71609ee33cfd91875')
 
 build() {
-  cd "$srcdir/lupa-$pkgver"
+  cd "$srcdir/$_pkgname-$pkgver"
   python3 setup.py build
 }
 
 package() {
-  cd "$srcdir/lupa-$pkgver"
+  cd "$srcdir/$_pkgname-$pkgver"
 
-  python3 setup.py install --root=$pkgdir --optimize=1
+  python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 }
 
-# vim:set ts=2 sw=2 et:
+# vim:set sw=2 et:
