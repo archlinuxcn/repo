@@ -5,7 +5,7 @@ from lilaclib import *
 build_prefix = 'extra-x86_64'
 
 def pre_build():
-  pypi_pre_build()
+  pypi_pre_build(depends=['python-pyparsing'])
 
 post_build = pypi_post_build
 
