@@ -27,8 +27,10 @@ source=('hg+https://bitbucket.org/pypy/pypy'
 md5sums=('SKIP'
          'b5809df0d0ab63f42d208d471a572522')
 
-_PYTHON=python2
-((USE_PYPY)) && which pypy &> /dev/null && _PYTHON=pypy
+_check_python() {
+  _PYTHON=python2
+  ((USE_PYPY)) && which pypy &> /dev/null && _PYTHON=pypy
+}
 
 pkgver() {
   cd "${srcdir}"/pypy
@@ -40,6 +42,8 @@ build() {
   patch -Np1 < ../generic-item.patch
 
   cd "${srcdir}/pypy/pypy/goal"
+
+  _check_python
 
   translate_options=()
 
@@ -56,6 +60,8 @@ package() {
   ln -sf /usr/share/licenses/openssl/LICENSE licenses/openssl/copyright
 
   cd "${srcdir}"/pypy/pypy/tool/release
+
+  _check_python
 
   LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:../../goal/" $_PYTHON package.py  \
     --license_base "${srcdir}"/licenses \
