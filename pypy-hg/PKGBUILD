@@ -6,7 +6,7 @@ USE_PYPY=1
 USE_SHARED=1
 
 pkgname=pypy-hg
-pkgver=73648.302f635e170f
+pkgver=73722.4e6dddc6d1ed
 pkgrel=1
 pkgdesc="A Python implementation written in Python, JIT enabled"
 url="http://codespeak.net/pypy/"
@@ -22,8 +22,10 @@ optdepends=('sqlite: sqlite3 module'
             'tcl: lib-tk modules')
 license=('custom:MIT')
 
-source=('hg+https://bitbucket.org/pypy/pypy')
-md5sums=('SKIP')
+source=('hg+https://bitbucket.org/pypy/pypy'
+  generic-item.patch)
+md5sums=('SKIP'
+         'b5809df0d0ab63f42d208d471a572522')
 
 _PYTHON=python2
 ((USE_PYPY)) && which pypy &> /dev/null && _PYTHON=pypy
@@ -35,7 +37,7 @@ pkgver() {
 
 build() {
   cd "${srcdir}/pypy"
-  # patch -Np1 < ../numpy-iter.patch
+  patch -Np1 < ../generic-item.patch
 
   cd "${srcdir}/pypy/pypy/goal"
 

@@ -1,0 +1,258 @@
+diff -r 0cfa9e069a4c pypy/module/micronumpy/boxes.py
+--- a/pypy/module/micronumpy/boxes.py	Fri Sep 19 14:29:23 2014 +0300
++++ b/pypy/module/micronumpy/boxes.py	Tue Sep 23 23:56:06 2014 -0400
+@@ -16,6 +16,7 @@
+ from pypy.module.micronumpy.base import W_NDimArray, W_NumpyObject
+ from pypy.module.micronumpy.concrete import VoidBoxStorage
+ from pypy.module.micronumpy.flagsobj import W_FlagsObject
++from pypy.module.micronumpy import support
+ 
+ MIXIN_32 = (W_IntObject.typedef,) if LONG_BIT == 32 else ()
+ MIXIN_64 = (W_IntObject.typedef,) if LONG_BIT == 64 else ()
+@@ -144,6 +145,34 @@
+     def item(self, space):
+         return self.get_dtype(space).itemtype.to_builtin_type(space, self)
+ 
++    def descr_item(self, space, args_w):
++        if len(args_w) == 1 and space.isinstance_w(args_w[0], space.w_tuple):
++            args_w = space.fixedview(args_w[0])
++        if len(args_w) > 1:
++            raise oefmt(space.w_ValueError,
++                        "incorrect number of indices for array")
++        elif len(args_w) == 1:
++            try:
++                idx = support.index_w(space, args_w[0])
++            except OperationError:
++                raise oefmt(space.w_TypeError, "an integer is required")
++            if idx != 0:
++                raise oefmt(space.w_IndexError,
++                            "index %d is out of bounds for size 1", idx)
++        return self.item(space)
++
++    def descr_transpose(self, space, args_w):
++        if len(args_w) == 1 and space.isinstance_w(args_w[0], space.w_tuple):
++            args_w = space.fixedview(args_w[0])
++        if len(args_w) >= 1:
++            for w_arg in args_w:
++                try:
++                    idx = support.index_w(space, w_arg)
++                except OperationError:
++                    raise oefmt(space.w_TypeError, "an integer is required")
++            raise oefmt(space.w_ValueError, "axes don't match array")
++        return self.item(space)
++
+     def descr_getitem(self, space, w_item):
+         from pypy.module.micronumpy.base import convert_to_array
+         if space.is_w(w_item, space.w_Ellipsis) or \
+@@ -374,6 +403,10 @@
+         w_meth = space.getattr(self.descr_ravel(space), space.wrap('reshape'))
+         return space.call_args(w_meth, __args__)
+ 
++    def descr_nd_nonzero(self, space, __args__):
++        w_meth = space.getattr(self.descr_ravel(space), space.wrap('nonzero'))
++        return space.call_args(w_meth, __args__)
++
+     def descr_get_real(self, space):
+         return self.get_dtype(space).itemtype.real(self)
+ 
+@@ -387,6 +420,13 @@
+             self.w_flags = W_FlagsObject(self)
+         return self.w_flags
+ 
++    @unwrap_spec(axis1=int, axis2=int)
++    def descr_swapaxes(self, space, axis1, axis2):
++        return self.item(space)
++
++    def descr_fill(self, space, w_value):
++        self.get_dtype(space).coerce(space, w_value)
++
+ class W_BoolBox(W_GenericBox, PrimitiveBox):
+     descr__new__, _get_dtype, descr_reduce = new_dtype_getter(NPY.BOOL)
+ 
+@@ -619,6 +659,8 @@
+     __hash__ = interp2app(W_GenericBox.descr_hash),
+ 
+     tolist = interp2app(W_GenericBox.item),
++    item = interp2app(W_GenericBox.descr_item),
++    transpose = interp2app(W_GenericBox.descr_transpose),
+     min = interp2app(W_GenericBox.descr_self),
+     max = interp2app(W_GenericBox.descr_self),
+     argmin = interp2app(W_GenericBox.descr_zero),
+@@ -630,13 +672,18 @@
+     ravel = interp2app(W_GenericBox.descr_ravel),
+     round = interp2app(W_GenericBox.descr_round),
+     conjugate = interp2app(W_GenericBox.descr_conjugate),
++    conj = interp2app(W_GenericBox.descr_conjugate),
+     astype = interp2app(W_GenericBox.descr_astype),
+     view = interp2app(W_GenericBox.descr_view),
+     squeeze = interp2app(W_GenericBox.descr_self),
+     copy = interp2app(W_GenericBox.descr_copy),
+     byteswap = interp2app(W_GenericBox.descr_byteswap),
+     tostring = interp2app(W_GenericBox.descr_tostring),
++    tobytes = interp2app(W_GenericBox.descr_tostring),
+     reshape = interp2app(W_GenericBox.descr_reshape),
++    swapaxes = interp2app(W_GenericBox.descr_swapaxes),
++    nonzero = interp2app(W_GenericBox.descr_nd_nonzero),
++    fill = interp2app(W_GenericBox.descr_fill),
+ 
+     dtype = GetSetProperty(W_GenericBox.descr_get_dtype),
+     size = GetSetProperty(W_GenericBox.descr_get_size),
+diff -r 0cfa9e069a4c pypy/module/micronumpy/ndarray.py
+--- a/pypy/module/micronumpy/ndarray.py	Fri Sep 19 14:29:23 2014 +0300
++++ b/pypy/module/micronumpy/ndarray.py	Tue Sep 23 23:56:06 2014 -0400
+@@ -470,8 +470,7 @@
+     def descr_get_flatiter(self, space):
+         return space.wrap(W_FlatIterator(self))
+ 
+-    def descr_item(self, space, __args__):
+-        args_w, kw_w = __args__.unpack()
++    def descr_item(self, space, args_w):
+         if len(args_w) == 1 and space.isinstance_w(args_w[0], space.w_tuple):
+             args_w = space.fixedview(args_w[0])
+         shape = self.get_shape()
+@@ -1408,6 +1407,7 @@
+ 
+     fill = interp2app(W_NDimArray.descr_fill),
+     tostring = interp2app(W_NDimArray.descr_tostring),
++    tobytes = interp2app(W_NDimArray.descr_tostring),
+ 
+     mean = interp2app(W_NDimArray.descr_mean),
+     sum = interp2app(W_NDimArray.descr_sum),
+diff -r 0cfa9e069a4c pypy/module/micronumpy/test/test_ndarray.py
+--- a/pypy/module/micronumpy/test/test_ndarray.py	Fri Sep 19 14:29:23 2014 +0300
++++ b/pypy/module/micronumpy/test/test_ndarray.py	Tue Sep 23 23:56:06 2014 -0400
+@@ -3017,6 +3017,7 @@
+         assert a.item((1, 1, 1)) == 16
+         exc = raises(ValueError, a.item, 1, 1, 1, 1)
+         assert str(exc.value) == "incorrect number of indices for array"
++        raises(TypeError, "array([1]).item(a=1)")
+ 
+     def test_itemset(self):
+         import numpy as np
+diff -r 0cfa9e069a4c pypy/module/micronumpy/test/test_scalar.py
+--- a/pypy/module/micronumpy/test/test_scalar.py	Fri Sep 19 14:29:23 2014 +0300
++++ b/pypy/module/micronumpy/test/test_scalar.py	Tue Sep 23 23:56:06 2014 -0400
+@@ -293,10 +293,116 @@
+ 
+     def test_scalar_iter(self):
+         from numpypy import int8, int16, int32, int64, float32, float64
+-        for t in int8, int16, int32, int64, float32, float64:
+-            try:
+-                iter(t(17))
+-            except TypeError:
+-                pass
+-            else:
+-                assert False, "%s object should not be iterable." % t
++        from numpypy import complex64, complex128
++        for t in (int8, int16, int32, int64, float32, float64,
++                  complex64, complex128):
++            raises(TypeError, iter, t(17))
++
++    def test_item_tolist(self):
++        from numpypy import int8, int16, int32, int64, float32, float64
++        from numpypy import complex64, complex128
++
++        def _do_test(np_type, py_type, orig_val, exp_val):
++            val = np_type(orig_val)
++            assert val == orig_val
++            assert val.item() == exp_val
++            assert val.tolist() == exp_val
++            assert type(val.item()) == py_type
++            assert type(val.tolist()) == py_type
++            val.item(0)
++            val.item(())
++            val.item((0,))
++            raises(ValueError, val.item, 0, 1)
++            raises(ValueError, val.item, 0, '')
++            raises(TypeError, val.item, '')
++            raises(IndexError, val.item, 2)
++
++        for t in int8, int16, int32, int64:
++            _do_test(t, int, 17, 17)
++
++        for t in float32, float64:
++            _do_test(t, float, 17, 17)
++
++        for t in complex64, complex128:
++            _do_test(t, complex, 17j, 17j)
++
++    def test_transpose(self):
++        from numpypy import int8, int16, int32, int64, float32, float64
++        from numpypy import complex64, complex128
++
++        def _do_test(np_type, py_type, orig_val, exp_val):
++            val = np_type(orig_val)
++            assert val == orig_val
++            assert val.transpose() == exp_val
++            assert type(val.transpose()) == py_type
++            val.transpose(())
++            raises(ValueError, val.transpose, 0, 1)
++            raises(TypeError, val.transpose, 0, '')
++            raises(ValueError, val.transpose, 0)
++
++        for t in int8, int16, int32, int64:
++            _do_test(t, int, 17, 17)
++
++        for t in float32, float64:
++            _do_test(t, float, 17, 17)
++
++        for t in complex64, complex128:
++            _do_test(t, complex, 17j, 17j)
++
++    def test_swapaxes(self):
++        from numpypy import int8, int16, int32, int64, float32, float64
++        from numpypy import complex64, complex128
++
++        def _do_test(np_type, py_type, orig_val, exp_val):
++            val = np_type(orig_val)
++            assert val == orig_val
++            assert val.swapaxes(10, 20) == exp_val
++            assert type(val.swapaxes(0, 1)) == py_type
++            raises(TypeError, val.swapaxes, 0, ())
++
++        for t in int8, int16, int32, int64:
++            _do_test(t, int, 17, 17)
++
++        for t in float32, float64:
++            _do_test(t, float, 17, 17)
++
++        for t in complex64, complex128:
++            _do_test(t, complex, 17j, 17j)
++
++    def test_nonzero(self):
++        from numpypy import int8, int16, int32, int64, float32, float64
++        from numpypy import complex64, complex128
++
++        for t in (int8, int16, int32, int64, float32, float64,
++                  complex64, complex128):
++            res, = t(17).nonzero()
++            assert len(res) == 1
++            assert res[0] == 0
++            res, = t(0).nonzero()
++            assert len(res) == 0
++
++    def test_fill(self):
++        from numpypy import int8, int16, int32, int64, float32, float64
++        from numpypy import complex64, complex128
++
++        for t in (int8, int16, int32, int64, float32, float64,
++                  complex64, complex128):
++            t(17).fill(2)
++            raises(ValueError, t(17).fill, '')
++
++    def test_conj(self):
++        from numpypy import int8, int16, int32, int64, float32, float64
++        from numpypy import complex64, complex128
++
++        def _do_test(np_type, orig_val, exp_val):
++            val = np_type(orig_val)
++            assert val == orig_val
++            assert val.conj() == exp_val
++            assert val.conjugate() == exp_val
++
++        for t in (int8, int16, int32, int64, float32, float64,
++                  complex64, complex128):
++            _do_test(t, 17, 17)
++
++        for t in complex64, complex128:
++            _do_test(t, 17j, -17j)
