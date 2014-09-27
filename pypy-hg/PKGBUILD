@@ -1,0 +1,77 @@
+# Original author: Sven-Hendrik Haase (svenstaro) <sh@lutzhaase.com>
+# Maintainer: Zack Buhman (buhman) <zack@buhman.org>
+# Contributor: William Giokas (KaiSforza) <1007380@gmail.com>
+
+USE_PYPY=1
+USE_SHARED=1
+
+pkgname=pypy-hg
+pkgver=73648.302f635e170f
+pkgrel=1
+pkgdesc="A Python implementation written in Python, JIT enabled"
+url="http://codespeak.net/pypy/"
+arch=('i686' 'x86_64')
+depends=('libffi' 'openssl' 'expat' 'ncurses' 'zlib' 'bzip2')
+options=('debug' 'strip' '!emptydirs')
+makedepends=('python2' 'mercurial' 'gdbm' 'sqlite' 'tcl' 'tk')
+conflicts=('pypy')
+provides=('python2' 'pypy=2.4')
+optdepends=('sqlite: sqlite3 module'
+            'gdbm: gdbm module'
+            'tk: lib-tk modules'
+            'tcl: lib-tk modules')
+license=('custom:MIT')
+
+source=('hg+https://bitbucket.org/pypy/pypy')
+md5sums=('SKIP')
+
+_PYTHON=python2
+((USE_PYPY)) && which pypy &> /dev/null && _PYTHON=pypy
+
+pkgver() {
+  cd "${srcdir}"/pypy
+  echo "$(hg id -n).$(hg id -i)"
+}
+
+build() {
+  cd "${srcdir}/pypy"
+  # patch -Np1 < ../numpy-iter.patch
+
+  cd "${srcdir}/pypy/pypy/goal"
+
+  translate_options=()
+
+  ((USE_SHARED)) && translate_options+=('--shared')
+
+  $_PYTHON ../../rpython/bin/rpython -Ojit "${translate_options[@]}" \
+    targetpypystandalone
+}
+
+package() {
+  cd "${srcdir}"
+  mkdir -p licenses/{libbz2-dev,openssl}
+  ln -sf /usr/share/licenses/bzip2/LICENSE licenses/libbz2-dev/copyright
+  ln -sf /usr/share/licenses/openssl/LICENSE licenses/openssl/copyright
+
+  cd "${srcdir}"/pypy/pypy/tool/release
+
+  LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:../../goal/" $_PYTHON package.py  \
+    --license_base "${srcdir}"/licenses \
+    ../../../ pypy pypy-c "${srcdir}"/${pkgname}.tar.bz2
+
+  mkdir -p "${pkgdir}"/opt
+  tar x -C "${pkgdir}"/opt -f "${srcdir}"/${pkgname}.tar.bz2
+
+  ((USE_SHARED)) && {
+    mkdir -p "${pkgdir}"/opt/pypy/lib
+    cp ../../goal/libpypy-c.so "${pkgdir}"/opt/pypy/lib/
+    mkdir -p "${pkgdir}"/usr/lib
+    ln -s /opt/pypy/lib/libpypy-c.so "${pkgdir}"/usr/lib/libpypy-c.so
+  }
+
+  mkdir -p "${pkgdir}"/usr/bin
+  ln -s /opt/pypy/bin/pypy-c "${pkgdir}"/usr/bin/pypy
+
+  install -Dm644 "${pkgdir}"/opt/pypy/LICENSE \
+    "${pkgdir}"/usr/share/licenses/pypy/LICENSE
+}
