@@ -6,7 +6,7 @@ pkgdesc="Hyperfast and lightweight templating for the Python2 platform"
 arch=('any')
 url="http://www.makotemplates.org/"
 license=('MIT')
-makedepends=('pypy-setuptools' 'pypy3-setuptools' 'python') # for 2to3
+makedepends=('pypy-setuptools' 'pypy3-setuptools' 'python>=3.4') # for 2to3
 source=(https://pypi.python.org/packages/source/M/Mako/Mako-$pkgver.tar.gz{,.asc})
 sha1sums=('aa01bafca5a835eb92a9048be92414fa83da102b'
           'SKIP')
@@ -31,11 +31,9 @@ build() {
 }
 
 package_pypy3-mako() {
-    depends=('pypy-markupsafe' 'pypy-beaker' "pypy>=2.3" "pypy<=2.4")
+    depends=('pypy3-markupsafe' 'pypy3-beaker' 'pypy3')
 
     cd Mako-$pkgver
-    # pypy3 setup.py install --skip-build --root="$pkgdir" --optimize=1 \
-    #   --install-lib=/opt/pypy3/lib/python3.2/site-packages
     pypy3 setup.py install --skip-build --root="$pkgdir" --optimize=1
     install -D LICENSE "$pkgdir/usr/share/licenses/pypy3-mako/COPYING"
     install -m755 -d "${pkgdir}/usr/bin/"
