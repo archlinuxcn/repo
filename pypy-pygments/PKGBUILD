@@ -1,0 +1,71 @@
+# $Id: PKGBUILD 114650 2014-07-02 15:02:24Z foutrelis $
+# Maintainer: Evangelos Foutras <evangelos@foutrelis.com>
+# Contributor: Timm Preetz <timm@preetz.us>
+
+pkgbase=pypy-pygments
+pkgname=('pypy3-pygments' 'pypy-pygments')
+pkgver=1.6
+pkgrel=4
+pkgdesc="Python syntax highlighter"
+arch=('any')
+url="http://pygments.org/"
+license=('BSD')
+makedepends=('pypy3-setuptools' 'pypy-setuptools')
+options=('!emptydirs')
+source=(https://pypi.python.org/packages/source/P/Pygments/Pygments-$pkgver.tar.gz
+        make-pygments.lexers.guess_lexer_for_filename-py3-compatible.patch)
+sha256sums=('799ed4caf77516e54440806d8d9cd82a7607dfdf4e4fb643815171a4b5c921c0'
+            '15cf8323ce343d32cbf78d35ab20001ce3204abe90b68a80607c7aea41499f07')
+
+prepare() {
+  cd "$srcdir/Pygments-$pkgver"
+
+  patch -Np1 -i \
+    "$srcdir/make-pygments.lexers.guess_lexer_for_filename-py3-compatible.patch"
+}
+
+build() {
+  cd "$srcdir"
+
+  rm -rf pypy{,3}-build
+  for pypy_name in pypy{,3}; do
+    cp -r Pygments-$pkgver ${pypy_name}-build
+    pushd ${pypy_name}-build
+    ${pypy_name} setup.py build
+    popd
+  done
+}
+
+package_pypy3-pygments() {
+  depends=('pypy3-setuptools')
+
+  cd "$srcdir/pypy3-build"
+
+  pypy3 setup.py install --root="$pkgdir" -O1
+
+  rm "$pkgdir/opt/pypy3/bin/pygmentize"
+
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
+package_pypy-pygments() {
+  depends=('pypy-setuptools')
+
+  cd "$srcdir/pypy-build"
+
+  pypy setup.py install --root="$pkgdir" -O1
+
+  install -dm755 "${pkgdir}/usr/bin"
+  mv "${pkgdir}/opt/pypy/bin/pygmentize" "${pkgdir}/usr/bin/pygmentize-pypy"
+
+  sed -i '1s,^#! \?/usr/bin/\(env \|\)python$,#!/usr/bin/pypy,' \
+    "${pkgdir}/usr/bin/pygmentize-pypy"
+
+  install -Dm644 external/pygments.bashcomp \
+    "$pkgdir/usr/share/bash-completion/completions/pygmentize-pypy"
+
+  sed -i 's/pygmentize/pygmentize-pypy/g' \
+    "$pkgdir/usr/share/bash-completion/completions/pygmentize-pypy"
+
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

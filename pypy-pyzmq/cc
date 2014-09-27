@@ -1,0 +1,6 @@
+#!/bin/sh
+CC=${CC:-gcc}
+[[ $CC =~ clang ]] && set -- "${@//-fvar-tracking-assignments/-g}"
+$CC "${@}" -I"${__PYZMQ_PKGDIR}/opt/pypy3/site-packages/zmq/utils" \
+    -I"${__PYZMQ_PKGDIR}/opt/pypy3/site-packages/zmq/backend/cython" \
+    -I"${__PYZMQ_PKGDIR}/opt/pypy3/site-packages/zmq/devices"
