@@ -13,9 +13,9 @@ url="http://codespeak.net/pypy/"
 arch=('i686' 'x86_64')
 depends=('libffi' 'openssl' 'expat' 'ncurses' 'zlib' 'bzip2')
 options=('debug' 'strip' '!emptydirs')
-makedepends=('python2' 'mercurial' 'gdbm' 'sqlite' 'tcl' 'tk')
+makedepends=('python2>=2.7' 'mercurial' 'gdbm' 'sqlite' 'tcl' 'tk')
 conflicts=('pypy')
-provides=('python2' 'pypy=2.4')
+provides=('pypy=2.4')
 optdepends=('sqlite: sqlite3 module'
             'gdbm: gdbm module'
             'tk: lib-tk modules'
