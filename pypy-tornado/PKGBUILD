@@ -1,48 +1,54 @@
-# $Id: PKGBUILD 110749 2014-05-06 04:31:01Z fyan $
-# Maintainer: Felix Yan <felixonmars@gmail.com>
+# Maintainer: Yichao Yu <yyc1992@gmail.com>
+# Contributor: Felix Yan <felixonmars@gmail.com>
 # Contributor: Thomas Dziedzic < gostrc at gmail >
 
 pkgbase='pypy-tornado'
 pkgname=('pypy3-tornado' 'pypy-tornado')
-pkgver=4.0.0
+pkgver=4.0.2
 pkgrel=1
 pkgdesc='open source version of the scalable, non-blocking web server and tools'
 arch=('i686' 'x86_64')
 url='http://www.tornadoweb.org/'
 license=('Apache')
 makedepends=('pypy-setuptools' 'pypy3-setuptools'
-  'pypy-backports.ssl_match_hostname' 'pypy-certifi' 'pypy3-certifi')
-source=(https://github.com/facebook/tornado/archive/v${pkgver}.tar.gz)
-md5sums=('fa1592ec213a4d265af23fdc0b14c989')
+  'pypy-backports.ssl_match_hostname' 'git')
+source=("git+https://github.com/facebook/tornado.git#tag=v$pkgver"
+        use_system_ca_certificates.patch)
+sha512sums=('SKIP'
+            '6e50e9ecf361d54d9f67e1f12185cf58863ad0eae72fbe7cc24e8eaf94874255009a030249bb51adf06e98c7ed0b17d8c6d9ee65190ebc341d6857c0efbc7840')
 
 prepare() {
-  cp -a tornado-${pkgver}{,-py2}
+  cd tornado
+  patch -p1 -i ../use_system_ca_certificates.patch
 
-  # python -> python2 rename
-  find tornado-${pkgver}-py2 -name '*py' \
+  cd "$srcdir"
+  cp -a tornado{,-py2}
+
+  # python -> pypy rename
+  find tornado-py2 -name '*py' \
     -exec sed -e 's_#!/usr/bin/env python_#!/usr/bin/env pypy_' -i {} \;
-  find tornado-${pkgver} -name '*py' \
+  find tornado -name '*py' \
     -exec sed -e 's_#!/usr/bin/env python_#!/usr/bin/env pypy3_' -i {} \;
 }
 
 build() {
-  cd tornado-${pkgver}
+  cd tornado
   pypy3 setup.py build
 
-  cd ../tornado-${pkgver}-py2
+  cd ../tornado-py2
   pypy setup.py build
 }
 
 package_pypy3-tornado() {
   depends=("pypy3>=2.3" "pypy3<=2.4")
 
-  cd tornado-${pkgver}
+  cd tornado
   pypy3 setup.py install --skip-build --root="${pkgdir}" --optimize=1
 }
 
 package_pypy-tornado() {
   depends=('pypy' 'pypy-backports.ssl_match_hostname')
 
-  cd tornado-${pkgver}-py2
+  cd tornado-py2
   pypy setup.py install --skip-build --root="${pkgdir}" --optimize=1
 }
