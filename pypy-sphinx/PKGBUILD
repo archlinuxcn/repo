@@ -5,8 +5,8 @@
 
 pkgbase=pypy-sphinx
 pkgname=('pypy3-sphinx' 'pypy-sphinx')
-pkgver=1.2.2
-pkgrel=3
+pkgver=1.2.3
+pkgrel=1
 arch=('any')
 url='http://sphinx.pocoo.org/'
 license=('GPL')
@@ -26,7 +26,7 @@ checkdepends=(
   'texlive-latexextra'
 )
 source=("http://pypi.python.org/packages/source/S/Sphinx/Sphinx-$pkgver.tar.gz")
-md5sums=('3dc73ccaa8d0bfb2d62fb671b1f7e8a4')
+md5sums=('a98c93124035b4cd7183604aec656cb3')
 
 prepare() {
   # souce duplication is required because makefile modify source code
@@ -64,10 +64,12 @@ check() {
   msg2 'PyPy 3 version'
   cd "$srcdir"/Sphinx-$pkgver
   make PYTHON=pypy3 test
+  rm -r build/lib/tests
 
   msg2 'PyPy 2 version'
   cd "$srcdir"/Sphinx-${pkgver}2
   make PYTHON=pypy test
+  rm -r build/lib/tests
 }
 
 package_pypy3-sphinx() {
