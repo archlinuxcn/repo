@@ -9,7 +9,7 @@ depends = ['oniguruma']
 post_build = aur_post_build
 
 def pre_build():
-  aur_pre_build()
+  aur_pre_build(do_vcs_update=False)
 
   with fileinput.input(files=('PKGBUILD',), inplace=True) as f:
     for line in f:
@@ -19,6 +19,8 @@ def pre_build():
       elif line.lstrip().startswith('git describe'):
         line = line.replace('describe', 'describe --tags')
       print(line)
+
+  vcs_update()
 
 if __name__ == '__main__':
   single_main()
