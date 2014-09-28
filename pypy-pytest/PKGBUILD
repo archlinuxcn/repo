@@ -23,7 +23,7 @@ build() {
 }
 
 package_pypy3-pytest() {
-  depends=("pypy3>=2.3" "pypy3<=2.4" 'pypy3-py' 'pypy3-setuptools')
+  depends=("pypy3>=2.3" "pypy3<2.4" 'pypy3-py' 'pypy3-setuptools')
 
   cd pytest-${pkgver}
   pypy3 setup.py install --root="${pkgdir}" --optimize=1
