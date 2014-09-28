@@ -1,0 +1,42 @@
+# Maintainer: WorMzy Tykashi <wormzy.tykashi@gmail.com>
+# Contributor: OK100 <ok100 at lavabit dot com>
+# Contributor: Valère Monseur <valere dot monseur at ymail dot com>
+
+pkgname=compton-git
+_gitname=compton
+pkgver=0.1_beta2.27.gef58e4e
+pkgrel=1
+pkgdesc="X Compositor (a fork of xcompmgr-dana) (git-version)"
+arch=(i686 x86_64)
+url="https://github.com/chjj/compton"
+license=('MIT')
+depends=('libgl' 'libdbus' 'libxcomposite' 'libxdamage' 'libxrandr' 'pcre' 'libconfig' 'libxinerama')
+makedepends=('git' 'asciidoc' 'mesa')
+optdepends=('dbus:          To control compton via D-Bus'
+            'xorg-xwininfo: For compton-trans'
+            'xorg-xprop:    For compton-trans')
+source=("git://github.com/chjj/compton.git")
+md5sums=("SKIP")
+
+pkgver() {
+    cd "${srcdir}/${_gitname}"
+    git describe --tags | sed -e 's:v::' -e 's/-/./g'
+}
+
+build() {
+  cd "$srcdir/$_gitname"
+  make PREFIX=/usr
+  make docs
+}
+
+package() {
+  cd "$srcdir/$_gitname"
+
+  make PREFIX="$pkgdir/usr" install
+
+  # install license
+  install -D -m644 "LICENSE" "$pkgdir/usr/share/licenses/$_gitname/LICENSE"
+
+  # example conf
+  install -D -m644 "compton.sample.conf" "$pkgdir/etc/xdg/compton.conf.example"
+}
