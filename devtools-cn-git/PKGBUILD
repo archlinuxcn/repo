@@ -1,0 +1,34 @@
+pkgname=devtools-cn-git
+pkgver=1.6302cc3
+pkgrel=1
+pkgdesc='Library and command line tools for XZ and LZMA compressed files - git checkout'
+arch=('any')
+url='http://tukaani.org/xz/'
+license=('GPL')
+depends=('devtools')
+makedepends=('cmake' 'git')
+provides=('devtools-cn')
+conflicts=('devtools-cn')
+source=('git://github.com/yuyichao/devtools-cn.git')
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "$srcdir/devtools-cn"
+
+  echo "$(git rev-list --count master).$(git rev-parse --short master)"
+}
+
+build() {
+  cd devtools-cn
+  mkdir -p build
+  cd build
+
+  cmake .. -DCMAKE_INSTALL_PREFIX=/usr
+  make
+}
+
+package() {
+  cd devtools-cn/build
+
+  make DESTDIR="${pkgdir}" install
+}
