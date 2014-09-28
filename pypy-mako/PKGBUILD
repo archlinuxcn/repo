@@ -1,25 +1,20 @@
 pkgbase='pypy-mako'
 pkgname=('pypy3-mako' 'pypy-mako')
-pkgver=0.9.1
-pkgrel=2
-pkgdesc="Hyperfast and lightweight templating for the Python2 platform"
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="Hyperfast and lightweight templating for the Python platform"
 arch=('any')
 url="http://www.makotemplates.org/"
 license=('MIT')
-makedepends=('pypy-setuptools' 'pypy3-setuptools' 'python>=3.4') # for 2to3
+makedepends=('pypy-setuptools' 'pypy3-setuptools' 'python>=3.4' # for 2to3
+  'pypy-markupsafe' 'pypy3-markupsafe' 'pypy-beaker' 'pypy3-beaker')
 source=(https://pypi.python.org/packages/source/M/Mako/Mako-$pkgver.tar.gz{,.asc})
-sha1sums=('aa01bafca5a835eb92a9048be92414fa83da102b'
+sha1sums=('580b3a8043833e3c3340d4b661a33f6ccc6a35d5'
           'SKIP')
 options=('!emptydirs')
 
 prepare() {
     cp -r Mako-$pkgver python2-Mako-$pkgver
-    mv python2-Mako-$pkgver/scripts/{,pypy-}mako-render
-    sed -i 's/mako-render/pypy-mako-render/' python2-Mako-$pkgver/setup.py
-
-    mv Mako-$pkgver/scripts/{,pypy3-}mako-render
-    2to3 -nw Mako-$pkgver/scripts/pypy3-mako-render
-    sed -i 's/mako-render/pypy3-mako-render/' Mako-$pkgver/setup.py
 }
 
 build() {
@@ -37,7 +32,8 @@ package_pypy3-mako() {
     pypy3 setup.py install --skip-build --root="$pkgdir" --optimize=1
     install -D LICENSE "$pkgdir/usr/share/licenses/pypy3-mako/COPYING"
     install -m755 -d "${pkgdir}/usr/bin/"
-    mv "${pkgdir}"/opt/pypy3/bin/pypy3-mako-render "${pkgdir}/usr/bin/"
+    mv "${pkgdir}"/opt/pypy3/bin/mako-render \
+      "${pkgdir}/usr/bin/pypy3-mako-render"
 }
 
 package_pypy-mako() {
@@ -47,5 +43,6 @@ package_pypy-mako() {
     pypy setup.py install --skip-build --root="$pkgdir" --optimize=1
     install -D LICENSE "$pkgdir/usr/share/licenses/pypy-mako/COPYING"
     install -m755 -d "${pkgdir}/usr/bin/"
-    mv "${pkgdir}"/opt/pypy/bin/pypy-mako-render "${pkgdir}/usr/bin/"
+    mv "${pkgdir}"/opt/pypy/bin/mako-render \
+      "${pkgdir}/usr/bin/pypy-mako-render"
 }
