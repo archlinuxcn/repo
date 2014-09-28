@@ -3,14 +3,14 @@
 
 pkgname=jq-git
 _gitname='jq'
-pkgver=1.3.360.gf7a2af7
-pkgrel=2
+pkgver=1.4.140.gf7a2af7
+pkgrel=1
 pkgdesc='Command-line JSON processor'
 arch=('i686' 'x86_64')
 url='http://stedolan.github.io/jq/'
 license=('custom')
 groups=()
-depends=()
+depends=("oniguruma" )
 makedepends=('python2' 'git' 'autoconf' 'automake' 'bison' 'flex' 'glibc' 'oniguruma')
 checkdepends=()
 optdepends=()
@@ -21,7 +21,7 @@ md5sums=(SKIP)
 
 pkgver() {
     cd "$_gitname"
-    git describe --long | sed -e 's/^jq-//' -e 's/-/./g'
+    git describe --tags --long | sed -e 's/^jq-//' -e 's/-/./g'
 }
 
 
