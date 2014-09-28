@@ -5,8 +5,8 @@
 pkgbase='pypy-jinja'
 pkgname='pypy-jinja'
 pkgname=('pypy3-jinja' 'pypy-jinja')
-pkgver=2.7.2
-pkgrel=4
+pkgver=2.7.3
+pkgrel=1
 pkgdesc="A simple pythonic template language written in Python"
 arch=('any')
 url="http://jinja.pocoo.org/"
@@ -14,7 +14,7 @@ license=('BSD')
 makedepends=('pypy-setuptools' 'pypy3-setuptools' 'pypy-markupsafe'
              'pypy3-markupsafe')
 source=(http://pypi.python.org/packages/source/J/Jinja2/Jinja2-$pkgver.tar.gz)
-sha256sums=('310a35fbccac3af13ebf927297f871ac656b9da1d248b1fe6765affa71b53235')
+sha256sums=('2e24ac5d004db5714976a04ac0e80c6df6e47e98c354cb2c0d82f8879d4f8fdb')
 
 build() {
   cd "$srcdir"
