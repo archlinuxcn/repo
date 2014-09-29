@@ -6,7 +6,7 @@ USE_PYPY=1
 USE_SHARED=1
 
 pkgname=pypy-hg
-pkgver=73722.4e6dddc6d1ed
+pkgver=73744.1083964c3070
 pkgrel=1
 pkgdesc="A Python implementation written in Python, JIT enabled"
 url="http://codespeak.net/pypy/"
@@ -14,6 +14,7 @@ arch=('i686' 'x86_64')
 depends=('libffi' 'openssl' 'expat' 'ncurses' 'zlib' 'bzip2')
 options=('debug' 'strip' '!emptydirs')
 makedepends=('python2>=2.7' 'mercurial' 'gdbm' 'sqlite' 'tcl' 'tk')
+((USE_PYPY)) && makedepends+=('pypy')
 conflicts=('pypy')
 provides=('pypy=2.4')
 optdepends=('sqlite: sqlite3 module'
