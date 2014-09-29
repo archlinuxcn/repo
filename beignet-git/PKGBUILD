@@ -10,9 +10,8 @@ url="http://cgit.freedesktop.org/beignet/"
 license=('LGPL')
 options=('debug' 'strip')
 depends=('clang>=3.3' 'llvm>=3.3' 'ncurses' 'ocl-icd' 'libsm' 'libice' 'libx11'
-  'libxext' 'libxfixes' 'libdrm' 'libgl' 'gcc-libs' 'zlib' 'libffi'
-  'opencl-headers20')
-makedepends=('git' 'cmake>=2.6' 'python2')
+  'libxext' 'libxfixes' 'libdrm' 'libgl' 'gcc-libs' 'zlib' 'libffi')
+makedepends=('git' 'cmake>=2.6' 'python2' 'opencl-headers20')
 
 _gitname=beignet
 
@@ -60,6 +59,14 @@ build() {
   # CFLAGS=${CFLAGS//-fvar-tracking-assignments}
   # CXXFLAGS=${CXXFLAGS//-fvar-tracking-assignments}
 
+  mkdir -p include.bak
+
+  file_moved=()
+  for f in include/CL/*; do
+    [[ $f =~ intel ]] && continue
+    mv "$f" include.bak/
+    file_moved=("${file_moved[@]}" "$(basename "$f")")
+  done
   mkdir -p build
   cd build
   cmake .. \
@@ -67,11 +74,17 @@ build() {
     -DPYTHON_EXECUTABLE=/usr/bin/python2 \
     -DCMAKE_INSTALL_PREFIX=/usr
   make
+  for f in "${file_moved[@]}"; do
+    mv include.bak/"$f" include/CL/
+  done
 }
 
 package() {
   cd "${srcdir}/${_gitname}/build"
 
   make DESTDIR="$pkgdir/" install
-  rm "${pkgdir}/usr/include/CL/"*.{h,hpp}
+  for f in "${pkgdir}/usr/include/CL/"*.{h,hpp}; do
+    [[ $f =~ intel ]] && continue
+    rm -v "$f"
+  done
 }
