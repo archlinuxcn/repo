@@ -12,7 +12,9 @@ Server = http://repo.archlinuxcn.org/$arch
 ```
 to your /etc/pacman.conf .
 
-Add PGP Key
+For mirrors (mainly in China), see https://github.com/archlinuxcn/mirrorlist-repo.
+
+Add PGP Keys
 
 ```bash
 for key in 47CD9E46 95FF0792 A403F63E; do
