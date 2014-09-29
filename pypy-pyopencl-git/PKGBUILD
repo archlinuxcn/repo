@@ -7,11 +7,12 @@ BUILD_PYPY3=0
 pkgbase=pypy-pyopencl-git
 if ((BUILD_PYPY3)); then
   pkgname=('pypy3-pyopencl-git' 'pypy-pyopencl-git')
-  makedepends=('pypy-setuptools' 'pypy3-setuptools' 'libcl' 'opencl-headers'
-    'mesa' 'pypy-mako' 'pypy3-mako' 'pypy-numpy' 'pypy3-numpy' 'git')
+  makedepends=('pypy-setuptools' 'pypy3-setuptools' 'libcl>=1.2'
+    'opencl-headers12' 'mesa' 'pypy-mako' 'pypy3-mako' 'pypy-numpy'
+    'pypy3-numpy' 'git')
 else
   pkgname=('pypy-pyopencl-git')
-  makedepends=('pypy-setuptools' 'libcl' 'opencl-headers'
+  makedepends=('pypy-setuptools' 'libcl>=1.2' 'opencl-headers12'
     'mesa' 'pypy-mako' 'pypy-numpy' 'git')
 fi
 pkgver=2014.1.0.363.g3b531d1
@@ -94,7 +95,7 @@ build() {
 }
 
 package_pypy3-pyopencl-git() {
-  depends=('libcl' 'opencl-headers' 'mesa' "pypy3>=2.3" "pypy3<2.4"
+  depends=('libcl>=1.2' 'opencl-headers12' 'mesa' "pypy3>=2.3" "pypy3<2.4"
     'pypy3-mako' 'pypy3-pytools' 'pypy3-setuptools')
 
   cd "${srcdir}/pyopencl"
@@ -106,7 +107,7 @@ package_pypy3-pyopencl-git() {
 }
 
 package_pypy-pyopencl-git() {
-  depends=('libcl' 'opencl-headers' 'mesa' "pypy>=2.4" "pypy<2.5"
+  depends=('libcl>=1.2' 'opencl-headers12' 'mesa' "pypy>=2.4" "pypy<2.5"
     'pypy-numpy' 'pypy-mako' 'pypy-pytools' 'pypy-setuptools' 'gcc-libs')
 
   cd "${srcdir}/pyopencl-python2"
