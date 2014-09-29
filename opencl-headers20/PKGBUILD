@@ -4,7 +4,7 @@
 
 pkgname=opencl-headers20
 pkgver=2.0.r28348
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc='OpenCL 2.0 (Open Computing Language) header files'
 arch=('any')
@@ -12,7 +12,7 @@ url='http://www.khronos.org/registry/cl/'
 license=('custom')
 makedepends=('subversion')
 optdepends=('libcl: OpenCL library')
-provides=('opencl-headers=2:2.0')
+provides=('opencl-headers=2:2.0' 'opencl-headers12=1:2.0')
 conflicts=('opencl-headers')
 source=("$pkgname::svn+https://cvs.khronos.org/svn/repos/registry/trunk/public/cl/api/2.0/")
 md5sums=('SKIP')
