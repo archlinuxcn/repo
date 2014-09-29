@@ -75,7 +75,7 @@ build() {
     -DCMAKE_INSTALL_PREFIX=/usr
   make
   for f in "${file_moved[@]}"; do
-    mv ../include.bak/"$f" include/CL/
+    mv ../include.bak/"$f" ../include/CL/
   done
 }
 
