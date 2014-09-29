@@ -1,7 +1,7 @@
 # Maintainer: Boqun Feng <boqun.feng@gmail.com>
 
 pkgname=beignet-git
-pkgver=0.9.1.0.139.gc0ba37d
+pkgver=0.9.1.0.144.g2a3b5ab
 pkgrel=1
 epoch=1
 pkgdesc="OpenCL Implemenation for Intel IvyBridge and Haswell"
@@ -9,7 +9,8 @@ arch=('i686' 'x86_64')
 url="http://cgit.freedesktop.org/beignet/"
 license=('LGPL')
 options=('debug' 'strip')
-depends=('clang>=3.3' 'llvm>=3.3' 'ncurses' 'ocl-icd')
+depends=('clang>=3.3' 'llvm>=3.3' 'ncurses' 'ocl-icd' 'libsm' 'libice' 'libx11'
+  'libxext' 'libxfixes' 'libdrm' 'libgl' 'gcc-libs' 'zlib' 'libffi')
 makedepends=('git' 'cmake>=2.6' 'python2')
 
 _gitname=beignet
