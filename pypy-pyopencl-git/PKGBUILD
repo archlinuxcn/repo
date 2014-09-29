@@ -8,11 +8,11 @@ pkgbase=pypy-pyopencl-git
 if ((BUILD_PYPY3)); then
   pkgname=('pypy3-pyopencl-git' 'pypy-pyopencl-git')
   makedepends=('pypy-setuptools' 'pypy3-setuptools' 'libcl>=1.2'
-    'opencl-headers12' 'mesa' 'pypy-mako' 'pypy3-mako' 'pypy-numpy'
+    'opencl-headers>=2:1.2' 'mesa' 'pypy-mako' 'pypy3-mako' 'pypy-numpy'
     'pypy3-numpy' 'git')
 else
   pkgname=('pypy-pyopencl-git')
-  makedepends=('pypy-setuptools' 'libcl>=1.2' 'opencl-headers12'
+  makedepends=('pypy-setuptools' 'libcl>=1.2' 'opencl-headers>=2:1.2'
     'mesa' 'pypy-mako' 'pypy-numpy' 'git')
 fi
 pkgver=2014.1.0.363.g3b531d1
