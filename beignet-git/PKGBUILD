@@ -61,11 +61,9 @@ build() {
 
   mkdir -p include.bak
 
-  file_moved=()
   for f in include/CL/*; do
     [[ $f =~ intel ]] && continue
-    mv "$f" include.bak/
-    file_moved=("${file_moved[@]}" "$(basename "$f")")
+    mv -i "$f" include.bak/
   done
   mkdir -p build
   cd build
@@ -74,17 +72,10 @@ build() {
     -DPYTHON_EXECUTABLE=/usr/bin/python2 \
     -DCMAKE_INSTALL_PREFIX=/usr
   make
-  for f in "${file_moved[@]}"; do
-    mv ../include.bak/"$f" ../include/CL/
-  done
 }
 
 package() {
   cd "${srcdir}/${_gitname}/build"
 
   make DESTDIR="$pkgdir/" install
-  for f in "${pkgdir}/usr/include/CL/"*.{h,hpp}; do
-    [[ $f =~ intel ]] && continue
-    rm -v "$f"
-  done
 }
