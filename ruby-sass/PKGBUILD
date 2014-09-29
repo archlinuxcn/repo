@@ -5,7 +5,7 @@
 
 _pkgname=sass
 pkgname=ruby-$_pkgname
-pkgver=3.3.9
+pkgver=3.4.5
 pkgrel=1
 pkgdesc="Tools and Ruby libraries for the CSS3 extension languages: Sass and SCSS."
 arch=("any")
@@ -16,10 +16,10 @@ makedepends=("rubygems")
 # optdepends=("ruby-listen")
 source=("http://gems.rubyforge.org/gems/$_pkgname-$pkgver.gem")
 noextract=("$_pkgname-$pkgver.gem")
-sha256sums=("bfce1f74e41f135d32a346dff35358424ddd7062d371f20f487120318edc294c")
 
 package() {
 	local _gemdir="$(ruby -rubygems -e"puts Gem.default_dir")"
 	gem install --no-user-install --ignore-dependencies -i "$pkgdir$_gemdir" -n "$pkgdir/usr/bin" "$_pkgname-$pkgver.gem"
 	install -D "$pkgdir$_gemdir/gems/$_pkgname-$pkgver/MIT-LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
+md5sums=('bb5ff245219889ba0a39f1f97b6da686')
