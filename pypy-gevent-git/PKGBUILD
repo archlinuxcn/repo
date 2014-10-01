@@ -6,7 +6,7 @@ pkgdesc="Python network library that uses greenlet and libev for easy and scalab
 license=("MIT")
 url="http://www.gevent.org/"
 depends=('pypy>=2.4' 'pypy<2.5')
-makedepends=('git')
+makedepends=('git' 'pypy-setuptools')
 source=("git://github.com/surfly/gevent.git"
   0001-use-system-install-path-for-ffi.verify.patch
   cc)
