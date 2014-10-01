@@ -1,0 +1,12 @@
+diff -ruN cuda_memtest-1.2-o/ocl_memtest.cpp cuda_memtest-1.2/ocl_memtest.cpp
+--- cuda_memtest-1.2-o/ocl_memtest.cpp	2011-06-25 01:08:38.000000000 +0200
++++ cuda_memtest-1.2/ocl_memtest.cpp	2011-06-25 01:09:08.000000000 +0200
+@@ -18,7 +18,7 @@
+ 
+ 
+ 
+-#define KERNEL_FILE "ocl_memtest_kernels.cpp"
++#define KERNEL_FILE "/usr/share/cuda_memtest/ocl_memtest_kernels.cpp"
+ 
+ #define MAX_KERNEL_FILE_SIZE (1024*1024)
+ 

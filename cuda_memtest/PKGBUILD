@@ -1,0 +1,35 @@
+pkgname=cuda_memtest
+pkgver=1.2.3
+pkgrel=1
+pkgdesc="A GPU memory test utility for NVIDIA and AMD GPUs. OpenCL version."
+arch=('i686' 'x86_64')
+url="http://cudagpumemtest.sourceforge.net/"
+license="Illinois Open Source License"
+depends=('libcl')
+makedepends=('opencl-headers')
+source=("http://downloads.sourceforge.net/project/cudagpumemtest/$pkgname-$pkgver.tar.gz"
+  "path.patch")
+md5sums=('b81b80fa5d16e7b64a01d3e8b142b62a'
+  '6a591ecced8b512adf7fecfdf277b363')
+options=('debug' 'strip')
+
+prepare() {
+  cd $pkgname-$pkgver
+
+  patch -p1 -i ../path.patch
+}
+
+build() {
+  cd $pkgname-$pkgver
+
+  make ocl_memtest
+}
+
+package() {
+  cd $pkgname-$pkgver
+
+  install -d "$pkgdir/usr/bin"
+  install ocl_memtest "$pkgdir/usr/bin"
+  install -d "$pkgdir/usr/share/$pkgname"
+  install -m644 ocl_memtest_kernels.cpp "$pkgdir/usr/share/$pkgname"
+}
