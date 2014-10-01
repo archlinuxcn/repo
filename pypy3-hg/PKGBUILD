@@ -2,27 +2,28 @@ USE_PYPY=1
 
 pkgname=pypy3-hg
 pkgrel=1
-pkgver=r72428.bf8917ab2b8a
-_realver=2.3
+pkgver=r73724.5f38597ef8a9
+_realver=2.3.1
 pkgdesc="A Python3 implementation written in Python, JIT enabled, hg version"
 url="http://pypy.org"
 arch=('i686' 'x86_64')
 depends=('libffi' 'openssl' 'expat' 'ncurses' 'zlib' 'bzip2')
-provides=("python" "pypy3=${_realver}")
-options=('debug' 'strip' '!emptydirs')
-makedepends=('python2' 'mercurial' 'gdbm' 'sqlite' 'tcl' 'tk')
+provides=("pypy3=${_realver}")
 conflicts=('pypy3')
+options=('debug' 'strip' '!emptydirs')
+# Force cpython2 to be installed for mercurial
+makedepends=('python2>=2.7' 'mercurial' 'gdbm' 'sqlite' 'tcl' 'tk')
+((USE_PYPY)) && makedepends+=('pypy')
 optdepends=('sqlite: sqlite3 module'
             'gdbm: dbm module'
             'tk: tkinter module'
             'tcl: tkinter module')
 license=('custom:MIT')
-source=("hg+https://bitbucket.org/pypy/pypy#branch=py3k"
-  'asmgcc-4.9.patch'
-  'str-type.patch')
-md5sums=('SKIP'
-         '498393844e67c47ae1166b209d9a79e6'
-         'c92f2d37e89844ef24a400854e77c92a')
+source=("hg+https://bitbucket.org/pypy/pypy#branch=py3k")
+md5sums=('SKIP')
+
+_PYTHON=python2
+((USE_PYPY)) && which pypy 2> /dev/null && _PYTHON=pypy
 
 pkgver() {
   cd "${srcdir}"/pypy
@@ -30,16 +31,9 @@ pkgver() {
 }
 
 build() {
-  cd "${srcdir}/pypy"
-  patch -Np1 < ../asmgcc-4.9.patch
-  patch -Np1 < ../str-type.patch
-
   cd "${srcdir}"/pypy/pypy/goal
 
-  export CFLAGS+=" -g -O3"
-
-  _PYTHON=python2
-  ((USE_PYPY)) && which pypy &> /dev/null && _PYTHON=pypy
+  export CFLAGS+=" -g -O2"
 
   $_PYTHON ../../rpython/bin/rpython -Ojit --shared --output=pypy3-c \
     targetpypystandalone
@@ -47,14 +41,11 @@ build() {
 
 package() {
   cd "${srcdir}"
-  mkdir -p licenses/{libbz2-,openssl}
-  ln -sf /usr/share/licenses/bzip2/LICENSE licenses/libbz2-/copyright
+  mkdir -p licenses/{libbz2-dev,openssl}
+  ln -sf /usr/share/licenses/bzip2/LICENSE licenses/libbz2-dev/copyright
   ln -sf /usr/share/licenses/openssl/LICENSE licenses/openssl/copyright
 
   cd "${srcdir}"/pypy/pypy/tool/release
-
-  _PYTHON=python2
-  ((USE_PYPY)) && which pypy 2> /dev/null && _PYTHON=pypy
 
   LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:../../goal/" $_PYTHON package.py \
     --license_base "${srcdir}"/licenses --override_pypy_c ../../goal/pypy3-c \
