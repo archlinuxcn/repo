@@ -1,0 +1,67 @@
+USE_PYPY=1
+
+pkgname=pypy3-hg
+pkgrel=1
+pkgver=r73724.5f38597ef8a9
+_realver=2.3.1
+pkgdesc="A Python3 implementation written in Python, JIT enabled, hg version"
+url="http://pypy.org"
+arch=('i686' 'x86_64')
+depends=('libffi' 'openssl' 'expat' 'ncurses' 'zlib' 'bzip2')
+provides=("pypy3=${_realver}")
+conflicts=('pypy3')
+options=('debug' 'strip' '!emptydirs')
+# Force cpython2 to be installed for mercurial
+makedepends=('python2>=2.7' 'mercurial' 'gdbm' 'sqlite' 'tcl' 'tk')
+((USE_PYPY)) && makedepends+=('pypy')
+optdepends=('sqlite: sqlite3 module'
+            'gdbm: dbm module'
+            'tk: tkinter module'
+            'tcl: tkinter module')
+license=('custom:MIT')
+source=("hg+https://bitbucket.org/pypy/pypy#branch=py3k")
+md5sums=('SKIP')
+
+_PYTHON=python2
+((USE_PYPY)) && which pypy 2> /dev/null && _PYTHON=pypy
+
+pkgver() {
+  cd "${srcdir}"/pypy
+  echo "r$(hg id -n).$(hg id -i)"
+}
+
+build() {
+  cd "${srcdir}"/pypy/pypy/goal
+
+  export CFLAGS+=" -g -O2"
+
+  $_PYTHON ../../rpython/bin/rpython -Ojit --shared --output=pypy3-c \
+    targetpypystandalone
+}
+
+package() {
+  cd "${srcdir}"
+  mkdir -p licenses/{libbz2-dev,openssl}
+  ln -sf /usr/share/licenses/bzip2/LICENSE licenses/libbz2-dev/copyright
+  ln -sf /usr/share/licenses/openssl/LICENSE licenses/openssl/copyright
+
+  cd "${srcdir}"/pypy/pypy/tool/release
+
+  LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:../../goal/" $_PYTHON package.py \
+    --license_base "${srcdir}"/licenses --override_pypy_c ../../goal/pypy3-c \
+    ../../../ pypy3 pypy3-c "${srcdir}"/${pkgname}.tar.bz2
+
+  mkdir -p "${pkgdir}"/opt
+  tar x -C "${pkgdir}"/opt -f "${srcdir}"/${pkgname}.tar.bz2
+
+  mkdir -p "${pkgdir}"/opt/pypy3/lib
+  cp ../../goal/libpypy3-c.so "${pkgdir}"/opt/pypy3/lib/
+  mkdir -p "${pkgdir}"/usr/lib
+  ln -s /opt/pypy3/lib/libpypy3-c.so "${pkgdir}"/usr/lib/libpypy3-c.so
+
+  mkdir -p "${pkgdir}"/usr/bin
+  ln -s /opt/pypy3/bin/pypy3-c "${pkgdir}"/usr/bin/pypy3
+
+  install -Dm644 "${pkgdir}"/opt/pypy3/LICENSE \
+    "${pkgdir}"/usr/share/licenses/pypy3/LICENSE
+}

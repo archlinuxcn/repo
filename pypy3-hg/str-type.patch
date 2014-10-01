@@ -1,0 +1,4053 @@
+diff --git a/pypy/doc/objspace.rst b/pypy/doc/objspace.rst
+index d78d09f..2b09df4 100644
+--- a/pypy/doc/objspace.rst
++++ b/pypy/doc/objspace.rst
+@@ -75,6 +75,7 @@ Administrative Functions
+ 
+ ``getbuiltinmodule(name):``
+   Return a Module object for the built-in module given by name
++  'name' must be a ascii only string.
+   (`pypy/interpreter/module.py`_).
+ 
+ Operations on Objects in the Object Space
+diff --git a/pypy/goal/targetpypystandalone.py b/pypy/goal/targetpypystandalone.py
+index 0be54de..1136c4e 100644
+--- a/pypy/goal/targetpypystandalone.py
++++ b/pypy/goal/targetpypystandalone.py
+@@ -147,7 +147,7 @@ def create_entry_point(space, w_dict):
+         res = _pypy_execute_source(source)
+         before = rffi.aroundstate.before
+         if before: before()
+-        return rffi.cast(rffi.INT, res)        
++        return rffi.cast(rffi.INT, res)
+ 
+     @entrypoint('main', [], c_name='pypy_init_threads')
+     def pypy_init_threads():
+diff --git a/pypy/interpreter/argument.py b/pypy/interpreter/argument.py
+index b77fc80..9b0a7d2 100644
+--- a/pypy/interpreter/argument.py
++++ b/pypy/interpreter/argument.py
+@@ -283,7 +283,7 @@ class Arguments(object):
+                     missing += 1
+                     continue
+                 name = signature.kwonlyargnames[i - co_argcount]
+-                w_def = self.space.finditem_str(w_kw_defs, name)
++                w_def = self.space.finditem_utf8(w_kw_defs, name)
+                 if w_def is not None:
+                     scope_w[i] = w_def
+                 else:
+diff --git a/pypy/interpreter/astcompiler/astbuilder.py b/pypy/interpreter/astcompiler/astbuilder.py
+index a0cab86..5eb44ad 100644
+--- a/pypy/interpreter/astcompiler/astbuilder.py
++++ b/pypy/interpreter/astcompiler/astbuilder.py
+@@ -5,6 +5,9 @@ from pypy.interpreter.pyparser.pygram import syms, tokens
+ from pypy.interpreter.pyparser.error import SyntaxError
+ from pypy.interpreter.pyparser import parsestring
+ 
++from rpython.rlib.rstring import check_ascii
++from rpython.rlib.runicode import str_decode_utf_8
++
+ 
+ def ast_from_node(space, node, compile_info):
+     """Turn a parse tree, node, to AST."""
+@@ -115,7 +118,8 @@ class ASTBuilder(object):
+         try:
+             misc.check_forbidden_name(name)
+         except misc.ForbiddenNameAssignment, e:
+-            self.error("cannot assign to %s" % (e.name,), node)
++            check_ascii(e.name)
++            self.error(u"cannot assign to %s" % e.name.decode('ascii'), node)
+ 
+     def new_identifier(self, name):
+         return misc.new_identifier(self.space, name)
+@@ -125,9 +129,12 @@ class ASTBuilder(object):
+         try:
+             expr.set_context(ctx)
+         except ast.UnacceptableExpressionContext, e:
+-            self.error_ast(e.msg, e.node)
++            check_ascii(e.msg)
++            self.error_ast(e.msg.decode('ascii'), e.node)
+         except misc.ForbiddenNameAssignment, e:
+-            self.error_ast("cannot assign to %s" % (e.name,), e.node)
++            check_ascii(e.name)
++            self.error_ast((u"cannot assign to %s" %
++                            e.name.decode('ascii')), e.node)
+ 
+     def handle_del_stmt(self, del_node):
+         targets = self.handle_exprlist(del_node.children[1], ast.Del)
+@@ -237,7 +244,7 @@ class ASTBuilder(object):
+             elif after_import_type == syms.import_as_names:
+                 names_node = import_node.children[i]
+                 if len(names_node.children) % 2 == 0:
+-                    self.error("trailing comma is only allowed with "
++                    self.error(u"trailing comma is only allowed with "
+                                "surronding parenthesis", names_node)
+             else:
+                 raise AssertionError("unknown import node")
+@@ -562,7 +569,7 @@ class ASTBuilder(object):
+         vararg = None
+         varargann = None
+         if n_pos + n_kwdonly > 255:
+-            self.error("more than 255 arguments", arguments_node)
++            self.error(u"more than 255 arguments", arguments_node)
+         # process args
+         i = 0
+         have_default = False
+@@ -577,13 +584,13 @@ class ASTBuilder(object):
+                     i += 2
+                     have_default = True
+                 elif have_default:
+-                    msg = "non-default argument follows default argument"
++                    msg = u"non-default argument follows default argument"
+                     self.error(msg, arguments_node)
+                 pos.append(self.handle_arg(arg))
+                 i += 2
+             elif arg_type == tokens.STAR:
+                 if i + 1 >= child_count:
+-                    self.error("named arguments must follow bare *",
++                    self.error(u"named arguments must follow bare *",
+                                arguments_node)
+                 name_node = arguments_node.children[i + 1]
+                 keywordonly_args = []
+@@ -619,7 +626,7 @@ class ASTBuilder(object):
+ 
+     def handle_keywordonly_args(self, arguments_node, i, kwonly, kwdefaults):
+         if kwonly is None:
+-            self.error("named arguments must follows bare *",
++            self.error(u"named arguments must follows bare *",
+                        arguments_node.children[i])
+         child_count = len(arguments_node.children)
+         while i < child_count:
+@@ -732,7 +739,7 @@ class ASTBuilder(object):
+             for i in range(0, len(stmt.children) - 2, 2):
+                 target_node = stmt.children[i]
+                 if target_node.type == syms.yield_expr:
+-                    self.error("assignment to yield expression not possible",
++                    self.error(u"assignment to yield expression not possible",
+                                target_node)
+                 target_expr = self.handle_testlist(target_node)
+                 self.set_context(target_expr, ast.Store)
+@@ -863,9 +870,9 @@ class ASTBuilder(object):
+             elif comp_type == tokens.NOTEQUAL:
+                 flufl = self.compile_info.flags & consts.CO_FUTURE_BARRY_AS_BDFL
+                 if flufl and comp_node.value == '!=':
+-                    self.error('invalid comparison', comp_node)
++                    self.error(u'invalid comparison', comp_node)
+                 elif not flufl and comp_node.value == '<>':
+-                    self.error('invalid comparison', comp_node)
++                    self.error(u'invalid comparison', comp_node)
+                 return ast.NotEq
+             elif comp_type == tokens.NAME:
+                 if comp_node.value == "is":
+@@ -1008,10 +1015,10 @@ class ASTBuilder(object):
+                     keyword_count += 1
+         if generator_count > 1 or \
+                 (generator_count and (keyword_count or arg_count)):
+-            self.error("Generator expression must be parenthesized "
++            self.error(u"Generator expression must be parenthesized "
+                        "if not sole argument", args_node)
+         if arg_count + keyword_count + generator_count > 255:
+-            self.error("more than 255 arguments", args_node)
++            self.error(u"more than 255 arguments", args_node)
+         args = []
+         keywords = []
+         used_keywords = {}
+@@ -1025,10 +1032,10 @@ class ASTBuilder(object):
+                 if len(argument.children) == 1:
+                     expr_node = argument.children[0]
+                     if keywords:
+-                        self.error("non-keyword arg after keyword arg",
++                        self.error(u"non-keyword arg after keyword arg",
+                                    expr_node)
+                     if variable_arg:
+-                        self.error("only named arguments may follow "
++                        self.error(u"only named arguments may follow "
+                                    "*expression", expr_node)
+                     args.append(self.handle_expr(expr_node))
+                 elif argument.children[1].type == syms.comp_for:
+@@ -1037,14 +1044,14 @@ class ASTBuilder(object):
+                     keyword_node = argument.children[0]
+                     keyword_expr = self.handle_expr(keyword_node)
+                     if isinstance(keyword_expr, ast.Lambda):
+-                        self.error("lambda cannot contain assignment",
++                        self.error(u"lambda cannot contain assignment",
+                                    keyword_node)
+                     elif not isinstance(keyword_expr, ast.Name):
+-                        self.error("keyword can't be an expression",
++                        self.error(u"keyword can't be an expression",
+                                    keyword_node)
+                     keyword = keyword_expr.id
+                     if keyword in used_keywords:
+-                        self.error("keyword argument repeated", keyword_node)
++                        self.error(u"keyword argument repeated", keyword_node)
+                     used_keywords[keyword] = None
+                     self.check_forbidden_name(keyword, keyword_node)
+                     keyword_value = self.handle_expr(argument.children[2])
+@@ -1126,7 +1133,9 @@ class ASTBuilder(object):
+                         e.match(space, space.w_ValueError)):
+                     raise
+                 # Unicode/ValueError in literal: turn into SyntaxError
+-                self.error(e.errorstr(space), atom_node)
++                err_str = e.errorstr(space)
++                self.error(str_decode_utf_8(err_str, len(err_str),
++                                            'replace')[0], atom_node)
+                 sub_strings_w = [] # please annotator
+             # Implement implicit string concatenation.
+             w_string = sub_strings_w[0]
+@@ -1136,8 +1145,8 @@ class ASTBuilder(object):
+                 except error.OperationError, e:
+                     if not e.match(space, space.w_TypeError):
+                         raise
+-                    self.error("cannot mix bytes and nonbytes literals",
+-                              atom_node)
++                    self.error(u"cannot mix bytes and nonbytes literals",
++                               atom_node)
+                 # UnicodeError in literal: turn into SyntaxError
+             strdata = space.isinstance_w(w_string, space.w_unicode)
+             node = ast.Str if strdata else ast.Bytes
+diff --git a/pypy/interpreter/astcompiler/codegen.py b/pypy/interpreter/astcompiler/codegen.py
+index 1f7a274..4e5955c 100644
+--- a/pypy/interpreter/astcompiler/codegen.py
++++ b/pypy/interpreter/astcompiler/codegen.py
+@@ -337,7 +337,7 @@ class PythonCodeGenerator(assemble.PythonCodeMaker):
+         l = len(names)
+         if l:
+             if l > 65534:
+-                self.error("too many annotations", func)
++                self.error(u"too many annotations", func)
+             w_tup = space.newtuple([space.wrap(name.decode('utf-8'))
+                                     for name in names])
+             self.load_const(w_tup)
+@@ -432,7 +432,7 @@ class PythonCodeGenerator(assemble.PythonCodeMaker):
+             self.emit_op(self._op_for_augassign(assign.op))
+             self.name_op(target.id, ast.Store)
+         else:
+-            self.error("illegal expression for augmented assignment", assign)
++            self.error(u"illegal expression for augmented assignment", assign)
+ 
+     def visit_Assert(self, asrt):
+         self.update_position(asrt.lineno)
+@@ -494,13 +494,13 @@ class PythonCodeGenerator(assemble.PythonCodeMaker):
+             if f_block[0] == F_BLOCK_LOOP:
+                 break
+         else:
+-            self.error("'break' outside loop", br)
++            self.error(u"'break' outside loop", br)
+         self.emit_op(ops.BREAK_LOOP)
+ 
+     def visit_Continue(self, cont):
+         self.update_position(cont.lineno, True)
+         if not self.frame_blocks:
+-            self.error("'continue' not properly in loop", cont)
++            self.error(u"'continue' not properly in loop", cont)
+         current_block, block = self.frame_blocks[-1]
+         # Continue cannot be in a finally block.
+         if current_block == F_BLOCK_LOOP:
+@@ -513,12 +513,12 @@ class PythonCodeGenerator(assemble.PythonCodeMaker):
+                     self.emit_jump(ops.CONTINUE_LOOP, block, True)
+                     break
+                 if f_type == F_BLOCK_FINALLY_END:
+-                    self.error("'continue' not supported inside 'finally' "
+-                                   "clause", cont)
++                    self.error(u"'continue' not supported inside 'finally' "
++                               "clause", cont)
+             else:
+-                self.error("'continue' not properly in loop", cont)
++                self.error(u"'continue' not properly in loop", cont)
+         elif current_block == F_BLOCK_FINALLY_END:
+-            self.error("'continue' not supported inside 'finally' clause", cont)
++            self.error(u"'continue' not supported inside 'finally' clause", cont)
+ 
+     def visit_For(self, fr):
+         self.update_position(fr.lineno, True)
+@@ -710,18 +710,18 @@ class PythonCodeGenerator(assemble.PythonCodeMaker):
+             last_line, last_offset = self.compile_info.last_future_import
+             if imp.lineno > last_line or \
+                     imp.lineno == last_line and imp.col_offset > last_offset:
+-                self.error("__future__ statements must appear at beginning "
+-                               "of file", imp)
++                self.error(u"__future__ statements must appear at beginning "
++                           "of file", imp)
+             if star_import:
+-                self.error("* not valid in __future__ imports", imp)
++                self.error(u"* not valid in __future__ imports", imp)
+             compiler = space.createcompiler()
+             for alias in imp.names:
+                 assert isinstance(alias, ast.alias)
+                 if alias.name not in compiler.future_flags.compiler_features:
+                     if alias.name == "braces":
+-                        self.error("not a chance", imp)
+-                    self.error("future feature %s is not defined" %
+-                               (alias.name,), imp)
++                        self.error(u"not a chance", imp)
++                    self.error(u"future feature %s is not defined" %
++                               alias.name.decode('utf-8'), imp)
+         self.load_const(space.wrap(imp.level))
+         names_w = [None]*len(imp.names)
+         for i in range(len(imp.names)):
+@@ -980,14 +980,14 @@ class PythonCodeGenerator(assemble.PythonCodeMaker):
+                 is_starred = isinstance(elt, ast.Starred)
+                 if is_starred and not seen_star:
+                     if i >= 1 << 8 or elt_count - i - 1 >= (C_INT_MAX >> 8):
+-                        self.error("too many expressions in star-unpacking "
++                        self.error(u"too many expressions in star-unpacking "
+                                    "assignment", node)
+                     self.emit_op_arg(ops.UNPACK_EX,
+                                      i + ((elt_count - i - 1) << 8))
+                     seen_star = True
+                     elts[i] = elt.value
+                 elif is_starred:
+-                    self.error("two starred expressions in assignment", node)
++                    self.error(u"two starred expressions in assignment", node)
+             if not seen_star:
+                 self.emit_op_arg(ops.UNPACK_SEQUENCE, elt_count)
+         self.visit_sequence(elts)
+@@ -996,9 +996,9 @@ class PythonCodeGenerator(assemble.PythonCodeMaker):
+ 
+     def visit_Starred(self, star):
+         if star.ctx != ast.Store:
+-            self.error("can use starred expression only as assignment target",
++            self.error(u"can use starred expression only as assignment target",
+                        star)
+-        self.error("starred assignment target must be in a list or tuple", star)
++        self.error(u"starred assignment target must be in a list or tuple", star)
+ 
+     def visit_Tuple(self, tup):
+         self.update_position(tup.lineno)
+diff --git a/pypy/interpreter/astcompiler/misc.py b/pypy/interpreter/astcompiler/misc.py
+index 99bce21..cdbf784 100644
+--- a/pypy/interpreter/astcompiler/misc.py
++++ b/pypy/interpreter/astcompiler/misc.py
+@@ -1,6 +1,7 @@
+ from pypy.interpreter import gateway
+ from rpython.rlib.objectmodel import we_are_translated
+ from rpython.rlib.unroll import unrolling_iterable
++from rpython.rlib.rstring import assert_ascii
+ 
+ 
+ app = gateway.applevel("""
+@@ -71,7 +72,7 @@ class ForbiddenNameAssignment(Exception):
+ def check_forbidden_name(name, node=None):
+     """Raise an error if the name cannot be assigned to."""
+     if name in ("None", "__debug__"):
+-        raise ForbiddenNameAssignment(name, node)
++        raise ForbiddenNameAssignment(assert_ascii(name), node)
+     # XXX Warn about using True and False
+ 
+ 
+diff --git a/pypy/interpreter/astcompiler/symtable.py b/pypy/interpreter/astcompiler/symtable.py
+index b278534..5d4341f 100644
+--- a/pypy/interpreter/astcompiler/symtable.py
++++ b/pypy/interpreter/astcompiler/symtable.py
+@@ -3,7 +3,7 @@ Symbol tabling building.
+ """
+ 
+ from pypy.interpreter.astcompiler import ast, misc
+-from pypy.interpreter.pyparser.error import SyntaxError
++from pypy.interpreter.pyparser.error import SyntaxError, syntax_error_utf8
+ 
+ # These are for internal use only:
+ SYM_BLANK = 0
+@@ -67,9 +67,10 @@ class Scope(object):
+         if mangled in self.roles:
+             old_role = self.roles[mangled]
+             if old_role & SYM_PARAM and role & SYM_PARAM:
+-                err = "duplicate argument '%s' in function definition" % \
+-                    (identifier,)
+-                raise SyntaxError(err, self.lineno, self.col_offset)
++                # TODO
++                fmt = u"duplicate argument '%s' in function definition"
++                raise syntax_error_utf8(fmt, identifier, self.lineno,
++                                        self.col_offset)
+             new_role |= old_role
+         self.roles[mangled] = new_role
+         if role & SYM_PARAM:
+@@ -86,12 +87,12 @@ class Scope(object):
+ 
+     def note_yield(self, yield_node):
+         """Called when a yield is found."""
+-        raise SyntaxError("'yield' outside function", yield_node.lineno,
++        raise SyntaxError(u"'yield' outside function", yield_node.lineno,
+                           yield_node.col_offset)
+ 
+     def note_return(self, ret):
+         """Called when a return statement is found."""
+-        raise SyntaxError("return outside function", ret.lineno,
++        raise SyntaxError(u"return outside function", ret.lineno,
+                           ret.col_offset)
+ 
+     def note_import_star(self, imp):
+@@ -113,11 +114,11 @@ class Scope(object):
+         """Decide on the scope of a name."""
+         if flags & SYM_GLOBAL:
+             if flags & SYM_PARAM:
+-                err = "name '%s' is parameter and global" % (name,)
+-                raise SyntaxError(err, self.lineno, self.col_offset)
++                fmt = u"name '%s' is parameter and global"
++                raise syntax_error_utf8(fmt, name, self.lineno, self.col_offset)
+             if flags & SYM_NONLOCAL:
+-                err = "name '%s' is nonlocal and global" % (name,)
+-                raise SyntaxError(err, self.lineno, self.col_offset)
++                fmt = u"name '%s' is nonlocal and global"
++                raise syntax_error_utf8(fmt, name, self.lineno, self.col_offset)
+             self.symbols[name] = SCOPE_GLOBAL_EXPLICIT
+             globs[name] = None
+             if bound:
+@@ -127,14 +128,14 @@ class Scope(object):
+                     pass
+         elif flags & SYM_NONLOCAL:
+             if flags & SYM_PARAM:
+-                err = "name '%s' is parameter and nonlocal" % (name,)
+-                raise SyntaxError(err, self.lineno, self.col_offset)
++                fmt = u"name '%s' is parameter and nonlocal"
++                raise syntax_error_utf8(fmt, name, self.lineno, self.col_offset)
+             if bound is None:
+-                err = "nonlocal declaration not allowed at module level"
++                err = u"nonlocal declaration not allowed at module level"
+                 raise SyntaxError(err, self.lineno, self.col_offset)
+             if name not in bound:
+-                err = "no binding for nonlocal '%s' found" % (name,)
+-                raise SyntaxError(err, self.lineno, self.col_offset)
++                fmt = u"no binding for nonlocal '%s' found"
++                raise syntax_error_utf8(fmt, name, self.lineno, self.col_offset)
+             self.symbols[name] = SCOPE_FREE
+             free[name] = None
+         elif flags & SYM_BOUND:
+@@ -245,7 +246,7 @@ class FunctionScope(Scope):
+ 
+     def note_yield(self, yield_node):
+         if self.return_with_value:
+-            raise SyntaxError("'return' with argument inside generator",
++            raise SyntaxError(u"'return' with argument inside generator",
+                               self.ret.lineno, self.ret.col_offset)
+         self.is_generator = True
+         if self._in_try_body_depth > 0:
+@@ -254,7 +255,7 @@ class FunctionScope(Scope):
+     def note_return(self, ret):
+         if ret.value:
+             if self.is_generator:
+-                raise SyntaxError("'return' with argument inside generator",
++                raise SyntaxError(u"'return' with argument inside generator",
+                                   ret.lineno, ret.col_offset)
+             self.return_with_value = True
+             self.ret = ret
+@@ -401,7 +402,7 @@ class SymtableBuilder(ast.GenericASTVisitor):
+         for alias in imp.names:
+             if self._visit_alias(alias):
+                 if self.scope.note_import_star(imp):
+-                    msg = "import * only allowed at module level"
++                    msg = u"import * only allowed at module level"
+                     raise SyntaxError(msg, imp.lineno, imp.col_offset,
+                                       filename=self.compile_info.filename)
+ 
+diff --git a/pypy/interpreter/baseobjspace.py b/pypy/interpreter/baseobjspace.py
+index 7cbb1d4..28f3f3f 100644
+--- a/pypy/interpreter/baseobjspace.py
++++ b/pypy/interpreter/baseobjspace.py
+@@ -2,7 +2,7 @@ import sys
+ 
+ from rpython.rlib.cache import Cache
+ from rpython.tool.uid import HUGEVAL_BYTES
+-from rpython.rlib import jit, types
++from rpython.rlib import jit, types, rstring
+ from rpython.rlib.buffer import StringBuffer
+ from rpython.rlib.debug import make_sure_not_resized
+ from rpython.rlib.objectmodel import (we_are_translated, newlist_hint,
+@@ -38,7 +38,7 @@ class W_Root(object):
+     def getdictvalue(self, space, attr):
+         w_dict = self.getdict(space)
+         if w_dict is not None:
+-            return space.finditem_str(w_dict, attr)
++            return space.finditem_utf8(w_dict, attr)
+         return None
+ 
+     def setdictvalue(self, space, attr, w_value):
+@@ -70,7 +70,8 @@ class W_Root(object):
+ 
+     def setclass(self, space, w_subtype):
+         raise OperationError(space.w_TypeError,
+-                             space.wrap("__class__ assignment: only for heap types"))
++                             space.wrap(u"__class__ assignment: only for "
++                                        "heap types"))
+ 
+     def user_setup(self, space, w_subtype):
+         raise NotImplementedError("only for interp-level user subclasses "
+@@ -78,7 +79,7 @@ class W_Root(object):
+ 
+     def getname(self, space):
+         try:
+-            return space.unicode_w(space.getattr(self, space.wrap('__name__')))
++            return space.unicode_w(space.getattr(self, space.wrap(u'__name__')))
+         except OperationError, e:
+             if e.match(space, space.w_TypeError) or e.match(space, space.w_AttributeError):
+                 return u'?'
+@@ -359,6 +360,7 @@ class ObjSpace(object):
+             config = get_pypy_config(translating=False)
+         self.config = config
+ 
++        # names of builtin modules must be ASCII strings
+         self.builtin_modules = {}
+         self.reloading_modules = {}
+ 
+@@ -436,12 +438,14 @@ class ObjSpace(object):
+         else:
+             name = importname
+ 
++        rstring.check_ascii(name)
+         mod = Module(self, self.wrap(name))
+         mod.install()
+ 
+         return name
+ 
+     def getbuiltinmodule(self, name, force_init=False, reuse=True):
++        rstring.check_ascii(name)
+         w_name = self.wrap(name)
+         w_modules = self.sys.get('modules')
+         if not force_init:
+@@ -529,26 +533,26 @@ class ObjSpace(object):
+         "NOT_RPYTHON: only for initializing the space."
+ 
+         from pypy.module.exceptions import Module
+-        w_name = self.wrap('__exceptions__')
++        w_name = self.wrap(u'__exceptions__')
+         self.exceptions_module = Module(self, w_name)
+         self.exceptions_module.install()
+ 
+         from pypy.module.imp import Module
+-        w_name = self.wrap('imp')
++        w_name = self.wrap(u'imp')
+         mod = Module(self, w_name)
+         mod.install()
+ 
+         from pypy.module.sys import Module
+-        w_name = self.wrap('sys')
++        w_name = self.wrap(u'sys')
+         self.sys = Module(self, w_name)
+         self.sys.install()
+ 
+         from pypy.module.__builtin__ import Module
+-        w_name = self.wrap('builtins')
++        w_name = self.wrap(u'builtins')
+         self.builtin = Module(self, w_name)
+         w_builtin = self.wrap(self.builtin)
+         w_builtin.install()
+-        self.setitem(self.builtin.w_dict, self.wrap('__builtins__'), w_builtin)
++        self.setitem(self.builtin.w_dict, self.wrap(u'__builtins__'), w_builtin)
+ 
+         # exceptions was bootstrapped as '__exceptions__' but still
+         # lives in pypy/module/exceptions, we rename it below for
+@@ -562,6 +566,7 @@ class ObjSpace(object):
+         types_w = (self.get_builtin_types().items() +
+                    exception_types_w.items())
+         for name, w_type in types_w:
++            rstring.check_ascii(name)
+             self.setitem(self.builtin.w_dict, self.wrap(name), w_type)
+ 
+         # install mixed modules
+@@ -572,11 +577,14 @@ class ObjSpace(object):
+         installed_builtin_modules.remove('exceptions')
+         installed_builtin_modules.append('__exceptions__')
+         installed_builtin_modules.sort()
++        for fn in installed_builtin_modules:
++            rstring.check_ascii(fn)
++
+         w_builtin_module_names = self.newtuple(
+             [self.wrap(fn) for fn in installed_builtin_modules])
+ 
+         # force this value into the dict without unlazyfying everything
+-        self.setitem(self.sys.w_dict, self.wrap('builtin_module_names'),
++        self.setitem(self.sys.w_dict, self.wrap(u'builtin_module_names'),
+                      w_builtin_module_names)
+ 
+     def get_builtin_types(self):
+@@ -689,7 +697,7 @@ class ObjSpace(object):
+             return rthread.allocate_lock()
+         except rthread.error:
+             raise OperationError(self.w_RuntimeError,
+-                                 self.wrap("out of resources"))
++                                 self.wrap(u"out of resources"))
+ 
+     # Following is a friendly interface to common object space operations
+     # that can be defined in term of more primitive ones.  Subclasses
+@@ -734,11 +742,20 @@ class ObjSpace(object):
+         return self.int_w(self.len(w_obj))
+ 
+     def setitem_str(self, w_obj, key, w_value):
++        rstring.check_ascii(key)
+         return self.setitem(w_obj, self.wrap(key), w_value)
+ 
+     def finditem_str(self, w_obj, key):
++        rstring.check_ascii(key)
+         return self.finditem(w_obj, self.wrap(key))
+ 
++    def finditem_utf8(self, w_obj, key):
++        try:
++            w_key = self.wrap(key.decode('utf-8'))
++        except UnicodeDecodeError:
++            return None
++        return self.finditem(w_obj, w_key)
++
+     def finditem(self, w_obj, w_key):
+         try:
+             return self.getitem(w_obj, w_key)
+@@ -781,9 +798,21 @@ class ObjSpace(object):
+             return self.interned_strings[s]
+         except KeyError:
+             pass
++        rstring.check_ascii(s)
+         w_s = self.interned_strings[s] = self.wrap(s)
+         return w_s
+ 
++    def new_interned_str_utf8(self, s):
++        if not we_are_translated():
++            assert type(s) is str
++        try:
++            return self.interned_strings[s]
++        except KeyError:
++            pass
++        rstring.check_utf8(s)
++        w_s = self.interned_strings[s] = self.wrap(s.decode('utf-8'))
++        return w_s
++
+     def descr_self_interp_w(self, RequiredClass, w_obj):
+         if not isinstance(w_obj, RequiredClass):
+             raise DescrMismatch()
+@@ -937,7 +966,7 @@ class ObjSpace(object):
+         hint = self.int_w(w_hint)
+         if hint < 0:
+             raise OperationError(self.w_ValueError, self.wrap(
+-                    "__length_hint__() should return >= 0"))
++                    u"__length_hint__() should return >= 0"))
+         return hint
+ 
+     def fixedview(self, w_iterable, expected_length=-1):
+@@ -1076,6 +1105,7 @@ class ObjSpace(object):
+         return w_res
+ 
+     def call_method(self, w_obj, methname, *arg_w):
++        rstring.check_ascii(methname)
+         w_meth = self.getattr(w_obj, self.wrap(methname))
+         return self.call_function(w_meth, *arg_w)
+ 
+@@ -1085,7 +1115,7 @@ class ObjSpace(object):
+ 
+     def lookup(self, w_obj, name):
+         w_type = self.type(w_obj)
+-        w_mro = self.getattr(w_type, self.wrap("__mro__"))
++        w_mro = self.getattr(w_type, self.wrap(u"__mro__"))
+         for w_supertype in self.fixedview(w_mro):
+             w_value = w_supertype.getdictvalue(self, name)
+             if w_value is not None:
+@@ -1096,7 +1126,7 @@ class ObjSpace(object):
+         return self.wrap(self.lookup(w_obj, "__call__") is not None)
+ 
+     def issequence_w(self, w_obj):
+-        return (self.findattr(w_obj, self.wrap("__getitem__")) is not None)
++        return (self.findattr(w_obj, self.wrap(u"__getitem__")) is not None)
+ 
+     # The code below only works
+     # for the simple case (new-style instance).
+@@ -1165,7 +1195,7 @@ class ObjSpace(object):
+                                          hidden_applevel=hidden_applevel)
+         if not isinstance(statement, PyCode):
+             raise TypeError('space.exec_(): expected a string, code or PyCode object')
+-        w_key = self.wrap('__builtins__')
++        w_key = self.wrap(u'__builtins__')
+         if not self.is_true(self.contains(w_globals, w_key)):
+             self.setitem(w_globals, w_key, self.wrap(self.builtin))
+         return statement.exec_code(self, w_globals, w_locals)
+@@ -1230,7 +1260,7 @@ class ObjSpace(object):
+                 start += seqlength
+             if not (0 <= start < seqlength):
+                 raise OperationError(self.w_IndexError,
+-                                     self.wrap("index out of range"))
++                                     self.wrap(u"index out of range"))
+             stop = 0
+             step = 0
+         return start, stop, step
+@@ -1251,7 +1281,7 @@ class ObjSpace(object):
+                 start += seqlength
+             if not (0 <= start < seqlength):
+                 raise OperationError(self.w_IndexError,
+-                                     self.wrap("index out of range"))
++                                     self.wrap(u"index out of range"))
+             stop = 0
+             step = 0
+             length = 1
+@@ -1308,7 +1338,7 @@ class ObjSpace(object):
+             return bigint.tolonglong()
+         except OverflowError:
+             raise OperationError(self.w_OverflowError,
+-                                 self.wrap('integer too large'))
++                                 self.wrap(u'integer too large'))
+ 
+     def r_ulonglong_w(self, w_obj, allow_conversion=True):
+         bigint = self.bigint_w(w_obj, allow_conversion)
+@@ -1316,10 +1346,10 @@ class ObjSpace(object):
+             return bigint.toulonglong()
+         except OverflowError:
+             raise OperationError(self.w_OverflowError,
+-                                 self.wrap('integer too large'))
++                                 self.wrap(u'integer too large'))
+         except ValueError:
+             raise OperationError(self.w_ValueError,
+-                                 self.wrap('cannot convert negative integer '
++                                 self.wrap(u'cannot convert negative integer '
+                                            'to unsigned int'))
+ 
+     BUF_SIMPLE   = 0x0000
+@@ -1453,7 +1483,7 @@ class ObjSpace(object):
+         """
+         if w_obj is unicode, call identifier_w() (i.e., return the UTF-8
+         encoded string). Else, call bytes_w().
+-        
++
+         Maybe we should kill str_w completely and manually substitute it with
+         identifier_w/bytes_w at all call sites?
+         """
+@@ -1467,20 +1497,18 @@ class ObjSpace(object):
+ 
+     def str0_w(self, w_obj):
+         "Like str_w, but rejects strings with NUL bytes."
+-        from rpython.rlib import rstring
+         result = self.str_w(w_obj)
+         if '\x00' in result:
+             raise OperationError(self.w_TypeError, self.wrap(
+-                    'argument must be a string without NUL characters'))
++                    u'argument must be a string without NUL characters'))
+         return rstring.assert_str0(result)
+ 
+     def bytes0_w(self, w_obj):
+         "Like bytes_w, but rejects strings with NUL bytes."
+-        from rpython.rlib import rstring
+         result = self.bytes_w(w_obj)
+         if '\x00' in result:
+             raise OperationError(self.w_TypeError, self.wrap(
+-                    'argument must be a string without NUL characters'))
++                    u'argument must be a string without NUL characters'))
+         return rstring.assert_str0(result)
+ 
+     def int_w(self, w_obj, allow_conversion=True):
+@@ -1521,7 +1549,7 @@ class ObjSpace(object):
+         # Like str_w, but only works if w_obj is really of type 'str'.
+         if not self.isinstance_w(w_obj, self.w_str):
+             raise OperationError(self.w_TypeError,
+-                                 self.wrap('argument must be a string'))
++                                 self.wrap(u'argument must be a string'))
+         return self.str_w(w_obj)
+ 
+     def unicode_w(self, w_obj):
+@@ -1529,11 +1557,11 @@ class ObjSpace(object):
+ 
+     def unicode0_w(self, w_obj):
+         "Like unicode_w, but rejects strings with NUL bytes."
+-        from rpython.rlib import rstring
+         result = w_obj.unicode_w(self)
+         if u'\x00' in result:
+             raise OperationError(self.w_TypeError, self.wrap(
+-                    'argument must be a unicode string without NUL characters'))
++                u'argument must be a unicode string '
++                'without NUL characters'))
+         return rstring.assert_str0(result)
+ 
+     def realunicode_w(self, w_obj):
+@@ -1541,7 +1569,7 @@ class ObjSpace(object):
+         # 'unicode'.
+         if not self.isinstance_w(w_obj, self.w_unicode):
+             raise OperationError(self.w_TypeError,
+-                                 self.wrap('argument must be a unicode'))
++                                 self.wrap(u'argument must be a unicode'))
+         return self.unicode_w(w_obj)
+ 
+     def identifier_w(self, w_obj):
+@@ -1587,7 +1615,7 @@ class ObjSpace(object):
+     def gateway_r_uint_w(self, w_obj):
+         if self.isinstance_w(w_obj, self.w_float):
+             raise OperationError(self.w_TypeError,
+-                            self.wrap("integer argument expected, got float"))
++                            self.wrap(u"integer argument expected, got float"))
+         return self.uint_w(self.int(w_obj))
+ 
+     def gateway_nonnegint_w(self, w_obj):
+@@ -1596,7 +1624,7 @@ class ObjSpace(object):
+         value = self.gateway_int_w(w_obj)
+         if value < 0:
+             raise OperationError(self.w_ValueError,
+-                                 self.wrap("expected a non-negative integer"))
++                                 self.wrap(u"expected a non-negative integer"))
+         return value
+ 
+     def c_int_w(self, w_obj):
+@@ -1605,7 +1633,7 @@ class ObjSpace(object):
+         value = self.gateway_int_w(w_obj)
+         if value < INT_MIN or value > INT_MAX:
+             raise OperationError(self.w_OverflowError,
+-                                 self.wrap("expected a 32-bit integer"))
++                                 self.wrap(u"expected a 32-bit integer"))
+         return value
+ 
+     def c_uint_w(self, w_obj):
+@@ -1614,7 +1642,7 @@ class ObjSpace(object):
+         value = self.uint_w(w_obj)
+         if value > UINT_MAX:
+             raise OperationError(self.w_OverflowError,
+-                              self.wrap("expected an unsigned 32-bit integer"))
++                              self.wrap(u"expected an unsigned 32-bit integer"))
+         return value
+ 
+     def c_nonnegint_w(self, w_obj):
+@@ -1624,10 +1652,10 @@ class ObjSpace(object):
+         value = self.int_w(w_obj)
+         if value < 0:
+             raise OperationError(self.w_ValueError,
+-                                 self.wrap("expected a non-negative integer"))
++                                 self.wrap(u"expected a non-negative integer"))
+         if value > INT_MAX:
+             raise OperationError(self.w_OverflowError,
+-                                 self.wrap("expected a 32-bit integer"))
++                                 self.wrap(u"expected a 32-bit integer"))
+         return value
+ 
+     def c_short_w(self, w_obj):
+@@ -1669,18 +1697,18 @@ class ObjSpace(object):
+         # with a fileno(), but not an object with an __int__().
+         if not self.isinstance_w(w_fd, self.w_int):
+             try:
+-                w_fileno = self.getattr(w_fd, self.wrap("fileno"))
++                w_fileno = self.getattr(w_fd, self.wrap(u"fileno"))
+             except OperationError, e:
+                 if e.match(self, self.w_AttributeError):
+                     raise OperationError(self.w_TypeError,
+-                        self.wrap("argument must be an int, or have a fileno() "
+-                            "method.")
++                        self.wrap(u"argument must be an int, or have a fileno() "
++                                  "method.")
+                     )
+                 raise
+             w_fd = self.call_function(w_fileno)
+             if not self.isinstance_w(w_fd, self.w_int):
+                 raise OperationError(self.w_TypeError,
+-                    self.wrap("fileno() returned a non-integer")
++                    self.wrap(u"fileno() returned a non-integer")
+                 )
+         fd = self.c_int_w(w_fd)  # Can raise w_OverflowError
+         if fd < 0:
+@@ -1707,7 +1735,7 @@ class AppExecCache(SpaceCache):
+         source = py.code.Source("def anonymous%s\n" % source)
+         w_glob = space.newdict(module=True)
+         space.exec_(str(source), w_glob, w_glob)
+-        return space.getitem(w_glob, space.wrap('anonymous'))
++        return space.getitem(w_glob, space.wrap(u'anonymous'))
+ 
+ 
+ # Table describing the regular part of the interface of object spaces,
+diff --git a/pypy/interpreter/error.py b/pypy/interpreter/error.py
+index c0b5028..f4439ad 100644
+--- a/pypy/interpreter/error.py
++++ b/pypy/interpreter/error.py
+@@ -5,7 +5,7 @@ import sys
+ import traceback
+ from errno import EINTR
+ 
+-from rpython.rlib import jit
++from rpython.rlib import jit, rstring
+ from rpython.rlib.objectmodel import we_are_translated, specialize
+ 
+ from pypy.interpreter import debug
+@@ -15,6 +15,12 @@ AUTO_DEBUG = os.getenv('PYPY_DEBUG')
+ RECORD_INTERPLEVEL_TRACEBACK = True
+ 
+ 
++def strerror(errno):
++    """Translate an error code to a message string."""
++    from pypy.module._codecs.locale import str_decode_locale_surrogateescape
++    return str_decode_locale_surrogateescape(os.strerror(errno))
++
++
+ class OperationError(Exception):
+     """Interpreter-level exception that signals an exception that should be
+     sent to the application level.
+@@ -403,6 +409,7 @@ def decompose_valuefmt(valuefmt):
+     return tuple(parts), tuple(formats)
+ 
+ def get_operrcls2(valuefmt):
++    rstring.check_ascii(valuefmt)
+     valuefmt = valuefmt.decode('ascii')
+     strings, formats = decompose_valuefmt(valuefmt)
+     assert len(strings) == len(formats) + 1
+@@ -530,9 +537,9 @@ def wrap_oserror2(space, e, w_filename=None, exception_name='w_OSError',
+         space.getexecutioncontext().checksignals()
+ 
+     try:
+-        msg = os.strerror(errno)
++        msg = strerror(errno)
+     except ValueError:
+-        msg = 'error %d' % errno
++        msg = u'error %d' % errno
+     if w_exception_class is None:
+         exc = getattr(space, exception_name)
+     else:
+@@ -562,7 +569,7 @@ def exception_from_errno(space, w_type):
+     from rpython.rlib.rposix import get_errno
+ 
+     errno = get_errno()
+-    msg = os.strerror(errno)
++    msg = strerror(errno)
+     w_error = space.call_function(w_type, space.wrap(errno), space.wrap(msg))
+     return OperationError(w_type, w_error)
+ 
+diff --git a/pypy/interpreter/gateway.py b/pypy/interpreter/gateway.py
+index f51a190..60febbc 100644
+--- a/pypy/interpreter/gateway.py
++++ b/pypy/interpreter/gateway.py
+@@ -27,6 +27,7 @@ from rpython.rlib import rstackovf
+ from rpython.rlib.objectmodel import we_are_translated
+ from rpython.rlib.rarithmetic import r_longlong, r_int, r_ulonglong, r_uint
+ from rpython.tool.sourcetools import func_with_new_name, compile2
++from rpython.rlib.rstring import check_ascii
+ 
+ 
+ # internal non-translatable parts:
+@@ -135,6 +136,9 @@ class UnwrapSpec_Check(UnwrapSpecRecipe):
+     def visit_str0(self, el, app_sig):
+         self.checked_space_method(el, app_sig)
+ 
++    def visit_unicode0(self, el, app_sig):
++        self.checked_space_method(el, app_sig)
++
+     def visit_fsencode(self, el, app_sig):
+         self.checked_space_method(el, app_sig)
+ 
+@@ -254,6 +258,9 @@ class UnwrapSpec_EmitRun(UnwrapSpecEmit):
+     def visit_str0(self, typ):
+         self.run_args.append("space.str0_w(%s)" % (self.scopenext(),))
+ 
++    def visit_unicode0(self, typ):
++        self.run_args.append("space.unicode0_w(%s)" % (self.scopenext(),))
++
+     def visit_fsencode(self, typ):
+         self.run_args.append("space.fsencode_w(%s)" % (self.scopenext(),))
+ 
+@@ -397,6 +404,9 @@ class UnwrapSpec_FastFunc_Unwrap(UnwrapSpecEmit):
+     def visit_str0(self, typ):
+         self.unwrap.append("space.str0_w(%s)" % (self.nextarg(),))
+ 
++    def visit_unicode0(self, typ):
++        self.unwrap.append("space.unicode0_w(%s)" % (self.nextarg(),))
++
+     def visit_fsencode(self, typ):
+         self.unwrap.append("space.fsencode_w(%s)" % (self.nextarg(),))
+ 
+@@ -619,6 +629,7 @@ class BuiltinCode(Code):
+         w_mod = space.getbuiltinmodule('_pickle_support')
+         mod = space.interp_w(MixedModule, w_mod)
+         builtin_code = mod.get('builtin_code')
++        check_ascii(self.identifier)
+         return space.newtuple([builtin_code,
+                                space.newtuple([space.wrap(self.identifier)])])
+ 
+@@ -631,6 +642,7 @@ class BuiltinCode(Code):
+         return self.sig
+ 
+     def getdocstring(self, space):
++        check_ascii(self.docstring)
+         return space.wrap(self.docstring)
+ 
+     def funcrun(self, func, args):
+@@ -670,7 +682,8 @@ class BuiltinCode(Code):
+         except rstackovf.StackOverflow, e:
+             rstackovf.check_stack_overflow()
+             raise OperationError(space.w_RuntimeError,
+-                                space.wrap("maximum recursion depth exceeded"))
++                                 space.wrap(u"maximum recursion "
++                                            "depth exceeded"))
+         except RuntimeError:   # not on top of py.py
+             raise OperationError(space.w_RuntimeError, space.w_None)
+ 
+@@ -727,7 +740,7 @@ class BuiltinCode0(BuiltinCode):
+             w_result = self.fastfunc_0(space)
+         except DescrMismatch:
+             raise OperationError(space.w_SystemError,
+-                                 space.wrap("unexpected DescrMismatch error"))
++                                 space.wrap(u"unexpected DescrMismatch error"))
+         except Exception, e:
+             self.handle_exception(space, e)
+             w_result = None
+@@ -1023,10 +1036,12 @@ class ApplevelClass:
+ 
+     def buildmodule(self, space, name='applevel'):
+         from pypy.interpreter.module import Module
++        check_ascii(name)
+         return Module(space, space.wrap(name), self.getwdict(space))
+ 
+     def wget(self, space, name):
+         w_globals = self.getwdict(space)
++        check_ascii(name)
+         return space.getitem(w_globals, space.wrap(name))
+ 
+     def interphook(self, name):
+@@ -1077,7 +1092,8 @@ class ApplevelCache(SpaceCache):
+ def build_applevel_dict(self, space):
+     "NOT_RPYTHON"
+     w_glob = space.newdict(module=True)
+-    space.setitem(w_glob, space.wrap('__name__'), space.wrap(self.modname))
++    check_ascii(self.modname)
++    space.setitem(w_glob, space.wrap(u'__name__'), space.wrap(self.modname))
+     space.exec_(self.source, w_glob, w_glob,
+                 hidden_applevel=self.hidden_applevel,
+                 filename=self.filename)
+diff --git a/pypy/interpreter/mixedmodule.py b/pypy/interpreter/mixedmodule.py
+index 698c7ca..bccc89c 100644
+--- a/pypy/interpreter/mixedmodule.py
++++ b/pypy/interpreter/mixedmodule.py
+@@ -3,6 +3,9 @@ from pypy.interpreter.function import Function, BuiltinFunction
+ from pypy.interpreter import gateway
+ from pypy.interpreter.error import OperationError
+ from pypy.interpreter.baseobjspace import W_Root
++
++from rpython.rlib import rstring
++
+ import os, sys
+ 
+ class MixedModule(Module):
+@@ -49,8 +52,9 @@ class MixedModule(Module):
+             space.call_method(self.w_dict, 'update', self.w_initialdict)
+ 
+         for w_submodule in self.submodules_w:
+-            name = space.str0_w(w_submodule.w_name)
+-            space.setitem(self.w_dict, space.wrap(name.split(".")[-1]), w_submodule)
++            name = rstring.assert_ascii(space.str0_w(w_submodule.w_name))
++            space.setitem(self.w_dict, space.wrap(name.split(".")[-1]),
++                          w_submodule)
+             space.getbuiltinmodule(name)
+ 
+         if self.w_initialdict is None:
+@@ -80,18 +84,21 @@ class MixedModule(Module):
+         return self.space.call_function(w_builtin, *args_w)
+ 
+     def getdictvalue(self, space, name):
+-        w_value = space.finditem_str(self.w_dict, name)
++        w_value = space.finditem_utf8(self.w_dict, name)
+         if self.lazy and w_value is None:
+             return self._load_lazily(space, name)
+         return w_value
+ 
+     def _load_lazily(self, space, name):
+-        w_name = space.new_interned_str(name)
++        for n in self.loaders:
++            rstring.check_ascii(n)
+         try:
+             loader = self.loaders[name]
+         except KeyError:
+             return None
+         else:
++            name = rstring.assert_ascii(name)
++            w_name = space.new_interned_str(name)
+             w_value = loader(space)
+             # the idea of the following code is that all functions that are
+             # directly in a mixed-module are "builtin", e.g. they get a
+@@ -140,8 +147,10 @@ class MixedModule(Module):
+             if cls.submodule_name is not None:
+                 appname += '.%s' % (cls.submodule_name,)
+             for name, spec in cls.interpleveldefs.items():
++                rstring.check_ascii(name)
+                 loaders[name] = getinterpevalloader(pkgroot, spec)
+             for name, spec in cls.appleveldefs.items():
++                rstring.check_ascii(name)
+                 loaders[name] = getappfileloader(pkgroot, appname, spec)
+             assert '__file__' not in loaders
+             if cls.expose__file__attribute:
+diff --git a/pypy/interpreter/module.py b/pypy/interpreter/module.py
+index 62fba1c..bd45a0f 100644
+--- a/pypy/interpreter/module.py
++++ b/pypy/interpreter/module.py
+@@ -5,6 +5,7 @@ Module objects.
+ from pypy.interpreter.baseobjspace import W_Root
+ from pypy.interpreter.error import OperationError
+ from rpython.rlib.objectmodel import we_are_translated
++from rpython.rlib import rstring
+ 
+ 
+ class Module(W_Root):
+@@ -32,7 +33,7 @@ class Module(W_Root):
+     def install(self):
+         """NOT_RPYTHON: installs this module into space.builtin_modules"""
+         w_mod = self.space.wrap(self)
+-        modulename = self.space.str0_w(self.w_name)
++        modulename = rstring.assert_ascii(self.space.str0_w(self.w_name))
+         self.space.builtin_modules[modulename] = w_mod
+ 
+     def setup_after_space_initialization(self):
+@@ -79,7 +80,7 @@ class Module(W_Root):
+         space.setitem(self.w_dict, space.new_interned_str('__doc__'), w_doc)
+ 
+     def descr__reduce__(self, space):
+-        w_name = space.finditem(self.w_dict, space.wrap('__name__'))
++        w_name = space.finditem(self.w_dict, space.wrap(u'__name__'))
+         if (w_name is None or
+             not space.isinstance_w(w_name, space.w_unicode)):
+             # maybe raise exception here (XXX this path is untested)
+@@ -103,7 +104,7 @@ class Module(W_Root):
+                 w_name,
+                 space.w_None,
+                 space.w_None,
+-                space.newtuple([space.wrap('')])
++                space.newtuple([space.wrap(u'')])
+             ])
+         ]
+ 
+@@ -118,7 +119,7 @@ class Module(W_Root):
+         if isinstance(self, MixedModule):
+             return space.wrap(u"<module %s (built-in)>" % name)
+         try:
+-            w___file__ = space.getattr(self, space.wrap('__file__'))
++            w___file__ = space.getattr(self, space.wrap(u'__file__'))
+             __file__ = space.unicode_w(space.repr(w___file__))
+         except OperationError:
+             __file__ = u'?'
+diff --git a/pypy/interpreter/pycode.py b/pypy/interpreter/pycode.py
+index 809c106..4ecf650 100644
+--- a/pypy/interpreter/pycode.py
++++ b/pypy/interpreter/pycode.py
+@@ -293,13 +293,16 @@ class PyCode(eval.Code):
+         return space.newtuple(self.co_names_w)
+ 
+     def fget_co_varnames(self, space):
+-        return space.newtuple([space.wrap(name) for name in self.co_varnames])
++        return space.newtuple([space.wrap(name.decode('utf-8'))
++                               for name in self.co_varnames])
+ 
+     def fget_co_cellvars(self, space):
+-        return space.newtuple([space.wrap(name) for name in self.co_cellvars])
++        return space.newtuple([space.wrap(name.decode('utf-8'))
++                               for name in self.co_cellvars])
+ 
+     def fget_co_freevars(self, space):
+-        return space.newtuple([space.wrap(name) for name in self.co_freevars])
++        return space.newtuple([space.wrap(name.decode('utf-8'))
++                               for name in self.co_freevars])
+ 
+     def descr_code__eq__(self, w_other):
+         space = self.space
+@@ -361,16 +364,19 @@ class PyCode(eval.Code):
+                           magic=default_magic):
+         if argcount < 0:
+             raise OperationError(space.w_ValueError,
+-                                 space.wrap("code: argcount must not be negative"))
++                                 space.wrap(u"code: argcount must "
++                                            "not be negative"))
+         if kwonlyargcount < 0:
+             raise OperationError(space.w_ValueError,
+-                                 space.wrap("code: kwonlyargcount must not be negative"))
++                                 space.wrap(u"code: kwonlyargcount must "
++                                            "not be negative"))
+         if nlocals < 0:
+             raise OperationError(space.w_ValueError,
+-                                 space.wrap("code: nlocals must not be negative"))
++                                 space.wrap(u"code: nlocals must "
++                                            "not be negative"))
+         if not space.isinstance_w(w_constants, space.w_tuple):
+             raise OperationError(space.w_TypeError,
+-                                 space.wrap("Expected tuple for constants"))
++                                 space.wrap(u"Expected tuple for constants"))
+         consts_w = space.fixedview(w_constants)
+         names = unpack_str_tuple(space, w_names)
+         varnames = unpack_str_tuple(space, w_varnames)
+@@ -402,13 +408,13 @@ class PyCode(eval.Code):
+             space.wrapbytes(self.co_code),
+             space.newtuple(self.co_consts_w),
+             space.newtuple(self.co_names_w),
+-            space.newtuple([w(v) for v in self.co_varnames]),
+-            w(self.co_filename),
+-            w(self.co_name),
++            self.fget_co_varnames(space),
++            space.fsdecode(space.wrapbytes(self.co_filename)),
++            w(self.co_name.decode('utf-8')),
+             w(self.co_firstlineno),
+             space.wrapbytes(self.co_lnotab),
+-            space.newtuple([w(v) for v in self.co_freevars]),
+-            space.newtuple([w(v) for v in self.co_cellvars]),
++            self.fget_co_freevars(space),
++            self.fget_co_cellvars(space),
+             w(self.magic),
+         ]
+         return space.newtuple([new_inst, space.newtuple(tup)])
+diff --git a/pypy/interpreter/pyframe.py b/pypy/interpreter/pyframe.py
+index e1b3590..b7e7184 100644
+--- a/pypy/interpreter/pyframe.py
++++ b/pypy/interpreter/pyframe.py
+@@ -548,7 +548,7 @@ class PyFrame(W_Root):
+ 
+         for i in range(min(len(varnames), numlocals)):
+             name = varnames[i]
+-            w_value = self.space.finditem_str(self.w_locals, name)
++            w_value = self.space.finditem_utf8(self.w_locals, name)
+             if w_value is not None:
+                 new_fastlocals_w[i] = w_value
+ 
+@@ -558,7 +558,7 @@ class PyFrame(W_Root):
+         for i in range(len(freevarnames)):
+             name = freevarnames[i]
+             cell = self.cells[i]
+-            w_value = self.space.finditem_str(self.w_locals, name)
++            w_value = self.space.finditem_utf8(self.w_locals, name)
+             if w_value is not None:
+                 cell.set(w_value)
+ 
+diff --git a/pypy/interpreter/pyopcode.py b/pypy/interpreter/pyopcode.py
+index 5af432a..6a7163a 100644
+--- a/pypy/interpreter/pyopcode.py
++++ b/pypy/interpreter/pyopcode.py
+@@ -832,7 +832,7 @@ class __extend__(pyframe.PyFrame):
+         w_varname = self.getname_w(nameindex)
+         varname = self.space.identifier_w(w_varname)
+         if self.w_locals is not self.w_globals:
+-            w_value = self.space.finditem_str(self.w_locals, varname)
++            w_value = self.space.finditem_utf8(self.w_locals, varname)
+             if w_value is not None:
+                 self.pushvalue(w_value)
+                 return
+@@ -844,7 +844,7 @@ class __extend__(pyframe.PyFrame):
+         self.pushvalue(w_value)
+ 
+     def _load_global(self, varname):
+-        w_value = self.space.finditem_str(self.w_globals, varname)
++        w_value = self.space.finditem_utf8(self.w_globals, varname)
+         if w_value is None:
+             # not in the globals, now look in the built-ins
+             w_value = self.get_builtin().getdictvalue(self.space, varname)
+diff --git a/pypy/interpreter/pyparser/automata.py b/pypy/interpreter/pyparser/automata.py
+index ad09c06..55bd36f 100644
+--- a/pypy/interpreter/pyparser/automata.py
++++ b/pypy/interpreter/pyparser/automata.py
+@@ -21,6 +21,7 @@ DEFAULT = "\00default" # XXX hack, the rtyper does not support dict of with str|
+                        # anyway using dicts doesn't seem the best final way to store these char indexed tables
+ # PYPY Modification : removed all automata functions (any, maybe,
+ #                     newArcPair, etc.)
++from rpython.rlib.rstring import check_utf8
+ 
+ class DFA:
+     # ____________________________________________________________
+@@ -31,6 +32,7 @@ class DFA:
+ 
+     # ____________________________________________________________
+     def recognize (self, inVec, pos = 0): # greedy = True
++        check_utf8(inVec)
+         crntState = self.start
+         lastAccept = False
+         i = pos
+diff --git a/pypy/interpreter/pyparser/error.py b/pypy/interpreter/pyparser/error.py
+index c4e9686..42e0e10 100644
+--- a/pypy/interpreter/pyparser/error.py
++++ b/pypy/interpreter/pyparser/error.py
+@@ -1,3 +1,23 @@
++from rpython.rlib.objectmodel import specialize
++from rpython.rlib.rstring import check_ascii
++from rpython.rlib.runicode import str_decode_utf_8
++
++
++@specialize.arg(0)
++def syntax_error_utf8(fmt, s, lineno=0, offset=0, text=None, filename=None,
++                      lastlineno=0):
++    return SyntaxError(fmt % str_decode_utf_8(s, len(s), 'replace')[0],
++                       lineno=lineno, offset=offset, text=text,
++                       filename=filename, lastlineno=lastlineno)
++
++
++@specialize.arg(0)
++def syntax_error_ascii(fmt, s, lineno=0, offset=0, text=None, filename=None,
++                       lastlineno=0):
++    check_ascii(s)
++    return SyntaxError(fmt % s.decode('ascii'), lineno=lineno, offset=offset,
++                       text=text, filename=filename, lastlineno=lastlineno)
++
+ 
+ class SyntaxError(Exception):
+     """Base class for exceptions raised by the parser."""
+@@ -39,8 +59,9 @@ class IndentationError(SyntaxError):
+ class TabError(IndentationError):
+     def __init__(self, lineno=0, offset=0, text=None, filename=None,
+                  lastlineno=0):
+-        msg = "inconsistent use of tabs and spaces in indentation"
+-        IndentationError.__init__(self, msg, lineno, offset, text, filename, lastlineno)
++        msg = u"inconsistent use of tabs and spaces in indentation"
++        IndentationError.__init__(self, msg, lineno, offset, text,
++                                  filename, lastlineno)
+ 
+ class ASTError(Exception):
+     def __init__(self, msg, ast_node ):
+diff --git a/pypy/interpreter/pyparser/future.py b/pypy/interpreter/pyparser/future.py
+index cd16fe7..f58dbbd 100644
+--- a/pypy/interpreter/pyparser/future.py
++++ b/pypy/interpreter/pyparser/future.py
+@@ -1,4 +1,5 @@
+ from pypy.tool import stdlib___future__ as future
++from rpython.rlib import rstring
+ 
+ class FutureFlags(object):
+ 
+@@ -42,6 +43,8 @@ class TokenIterator:
+         index = self.index
+         self.index = index + 1
+         self.tok = self.tokens[index]
++        rstring.check_utf8(self.tok[1])
++        rstring.check_utf8(self.tok[4])
+ 
+     def skip(self, n):
+         if self.tok[0] == n:
+diff --git a/pypy/interpreter/pyparser/parsestring.py b/pypy/interpreter/pyparser/parsestring.py
+index 4ad6360..cc21123 100644
+--- a/pypy/interpreter/pyparser/parsestring.py
++++ b/pypy/interpreter/pyparser/parsestring.py
+@@ -1,7 +1,7 @@
+ # coding: utf-8
+ from pypy.interpreter.error import OperationError, oefmt
+ from pypy.interpreter import unicodehelper
+-from rpython.rlib.rstring import StringBuilder
++from rpython.rlib.rstring import StringBuilder, check_ascii
+ 
+ 
+ def parsestr(space, encoding, s):
+@@ -38,19 +38,19 @@ def parsestr(space, encoding, s):
+         quote = s[ps]
+         rawmode = True
+     if quote != "'" and quote != '"':
+-        raise_app_valueerror(space,
+-                             'Internal error: parser passed unquoted literal')
++        raise_app_valueerror(space, (u'Internal error: parser passed '
++                                     'unquoted literal'))
+     ps += 1
+     q = len(s) - 1
+     if s[q] != quote:
+-        raise_app_valueerror(space, 'Internal error: parser passed unmatched '
+-                                    'quotes in literal')
++        raise_app_valueerror(space, (u'Internal error: parser passed '
++                                     'unmatched quotes in literal'))
+     if q-ps >= 4 and s[ps] == quote and s[ps+1] == quote:
+         # triple quotes
+         ps += 2
+         if s[q-1] != quote or s[q-2] != quote:
+-            raise_app_valueerror(space, 'Internal error: parser passed '
+-                                        'unmatched triple quotes in literal')
++            raise_app_valueerror(space, (u'Internal error: parser passed '
++                                         'unmatched triple quotes in literal'))
+         q -= 2
+ 
+     if unicode_literal and not rawmode: # XXX Py_UnicodeFlag is ignored for now
+@@ -145,7 +145,7 @@ def PyString_DecodeEscape(space, s, errors, recode_encoding):
+ 
+         ps += 1
+         if ps == end:
+-            raise_app_valueerror(space, 'Trailing \\ in string')
++            raise_app_valueerror(space, u'Trailing \\ in string')
+         prevps = ps
+         ch = s[ps]
+         ps += 1
+@@ -192,7 +192,7 @@ def PyString_DecodeEscape(space, s, errors, recode_encoding):
+             else:
+                 if errors == 'strict':
+                     raise_app_valueerror(
+-                        space, "invalid \\x escape at position %d" % (ps - 2))
++                        space, u"invalid \\x escape at position %d" % (ps - 2))
+                 elif errors == 'replace':
+                     builder.append('?')
+                 elif errors == 'ignore':
+diff --git a/pypy/interpreter/pyparser/pyparse.py b/pypy/interpreter/pyparser/pyparse.py
+index 59095f6..42b5f4f 100644
+--- a/pypy/interpreter/pyparser/pyparse.py
++++ b/pypy/interpreter/pyparser/pyparse.py
+@@ -5,13 +5,12 @@ from pypy.interpreter.astcompiler import consts
+ from rpython.rlib import rstring
+ 
+ 
+-def recode_to_utf8(space, bytes, encoding=None):
+-    if encoding == 'utf-8':
+-        return bytes
++def recode_to_utf8(space, bytes, encoding):
++    rstring.check_ascii(encoding)
+     w_text = space.call_method(space.wrapbytes(bytes), "decode",
+                                space.wrap(encoding))
+     w_recoded = space.call_method(w_text, "encode", space.wrap("utf-8"))
+-    return space.bytes_w(w_recoded)
++    return rstring.assert_utf8(space.bytes_w(w_recoded))
+ 
+ def _normalize_encoding(encoding):
+     """returns normalized name for <encoding>
+@@ -88,6 +87,14 @@ _targets = {
+ 'exec' : pygram.syms.file_input,
+ }
+ 
++def check_source_utf8(src, info):
++    pos = rstring.find_invalid_utf8_str(src)
++    if pos >= 0:
++        raise error.SyntaxError(u"invalid byte %x in position %d" %
++                                (ord(src[pos]), pos),
++                                filename=info.filename)
++    return rstring.assert_utf8(src)
++
+ class PythonParser(parser.Parser):
+ 
+     def __init__(self, space, future_flags=future.futureFlags_3_2,
+@@ -108,37 +115,49 @@ class PythonParser(parser.Parser):
+             enc = 'utf-8'
+ 
+         if compile_info.flags & consts.PyCF_IGNORE_COOKIE:
+-            textsrc = bytessrc
++            textsrc = check_source_utf8(bytessrc, compile_info)
+         elif bytessrc.startswith("\xEF\xBB\xBF"):
+             bytessrc = bytessrc[3:]
+             enc = 'utf-8'
+             # If an encoding is explicitly given check that it is utf-8.
+             decl_enc = _check_for_encoding(bytessrc)
+             if decl_enc and decl_enc != "utf-8":
+-                raise error.SyntaxError("UTF-8 BOM with %s coding cookie" % decl_enc,
+-                                        filename=compile_info.filename)
+-            textsrc = bytessrc
++                raise error.syntax_error_ascii(
++                    u"UTF-8 BOM with %s coding cookie",
++                    decl_enc, filename=compile_info.filename)
++            textsrc = check_source_utf8(bytessrc, compile_info)
+         else:
+             enc = _normalize_encoding(_check_for_encoding(bytessrc))
+             if enc is None:
+                 enc = 'utf-8'
+             try:
+-                textsrc = recode_to_utf8(self.space, bytessrc, enc)
++                if enc == 'utf-8':
++                    textsrc = check_source_utf8(bytessrc, compile_info)
++                else:
++                    textsrc = recode_to_utf8(self.space, bytessrc, enc)
+             except OperationError, e:
+                 # if the codec is not found, LookupError is raised.  we
+                 # check using 'is_w' not to mask potential IndexError or
+                 # KeyError
+                 space = self.space
+                 if e.match(space, space.w_LookupError):
+-                    raise error.SyntaxError("Unknown encoding: %s" % enc,
+-                                            filename=compile_info.filename)
++                    raise error.syntax_error_ascii(
++                        u"Unknown encoding: %s", enc,
++                        filename=compile_info.filename)
+                 # Transform unicode errors into SyntaxError
+                 if e.match(space, space.w_UnicodeDecodeError):
+                     e.normalize_exception(space)
+                     w_message = space.str(e.get_w_value(space))
+-                    raise error.SyntaxError(space.str_w(w_message))
++                    if space.isinstance_w(w_message, space.w_unicode):
++                        raise error.SyntaxError(space.unicode_w(w_message))
++                    msg = space.bytes_w(w_message)
++                    from rpython.rlib.runicode import str_decode_utf_8
++                    raise error.SyntaxError(str_decode_utf_8(msg, len(msg),
++                                                             'replace')[0])
+                 raise
+ 
++        rstring.check_utf8(textsrc)
++
+         flags = compile_info.flags
+ 
+         # The tokenizer is very picky about how it wants its input.
+@@ -174,12 +193,12 @@ class PythonParser(parser.Parser):
+                 # SyntaxError.
+                 new_err = error.IndentationError
+                 if tp == pygram.tokens.INDENT:
+-                    msg = "unexpected indent"
++                    msg = u"unexpected indent"
+                 elif e.expected == pygram.tokens.INDENT:
+-                    msg = "expected an indented block"
++                    msg = u"expected an indented block"
+                 else:
+                     new_err = error.SyntaxError
+-                    msg = "invalid syntax"
++                    msg = u"invalid syntax"
+                 raise new_err(msg, e.lineno, e.column, e.line,
+                               compile_info.filename)
+             else:
+diff --git a/pypy/interpreter/pyparser/pytokenizer.py b/pypy/interpreter/pyparser/pytokenizer.py
+index 588f17b..646ffa2 100644
+--- a/pypy/interpreter/pyparser/pytokenizer.py
++++ b/pypy/interpreter/pyparser/pytokenizer.py
+@@ -6,6 +6,9 @@ from pypy.interpreter.pyparser.pytokenize import tabsize, alttabsize, whiteSpace
+     triple_quoted, endDFAs, single_quoted, pseudoDFA
+ from pypy.interpreter.astcompiler import consts
+ 
++from rpython.rlib.rstring import (assert_ascii, check_utf8, assert_utf8,
++                                  is_ascii_str)
++
+ NAMECHARS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_'
+ NUMCHARS = '0123456789'
+ ALNUMCHARS = NAMECHARS + NUMCHARS
+@@ -40,16 +43,14 @@ def match_encoding_declaration(comment):
+         else:
+             break
+     if encoding != '':
+-        return encoding
++        return assert_ascii(encoding)
+     return None
+ 
+ 
+ def verify_identifier(token):
+-    for c in token:
+-        if ord(c) > 0x80:
+-            break
+-    else:
++    if is_ascii_str(token):
+         return True
++    check_utf8(token)
+     try:
+         u = token.decode('utf-8')
+     except UnicodeDecodeError:
+@@ -103,20 +104,21 @@ def generate_tokens(lines, flags):
+     lines.append("")
+     strstart = (0, 0, "")
+     for line in lines:
++        check_utf8(line)
+         lnum = lnum + 1
+         pos, max = 0, len(line)
+ 
+         if contstr:
+             if not line:
+                 raise TokenError(
+-                    "EOF while scanning triple-quoted string literal",
++                    u"EOF while scanning triple-quoted string literal",
+                     strstart[2], strstart[0], strstart[1]+1,
+                     token_list, lnum-1)
+             endmatch = endDFA.recognize(line)
+             if endmatch >= 0:
+                 pos = end = endmatch
+-                tok = (tokens.STRING, contstr + line[:end], strstart[0],
+-                       strstart[1], line)
++                tok = (tokens.STRING, contstr + assert_utf8(line[:end]),
++                       strstart[0], strstart[1], line)
+                 token_list.append(tok)
+                 last_comment = ''
+                 contstr, needcont = '', 0
+@@ -165,7 +167,8 @@ def generate_tokens(lines, flags):
+                     raise TabError(lnum, pos, line)
+                 indents.append(column)
+                 altindents.append(altcolumn)
+-                token_list.append((tokens.INDENT, line[:pos], lnum, 0, line))
++                token_list.append((tokens.INDENT, assert_utf8(line[:pos]),
++                                   lnum, 0, line))
+                 last_comment = ''
+             else:
+                 while column < indents[-1]:
+@@ -174,7 +177,7 @@ def generate_tokens(lines, flags):
+                     token_list.append((tokens.DEDENT, '', lnum, pos, line))
+                     last_comment = ''
+                 if column != indents[-1]:
+-                    err = "unindent does not match any outer indentation level"
++                    err = u"unindent does not match any outer indentation level"
+                     raise TokenIndentationError(err, line, lnum, 0, token_list)
+                 if altcolumn != altindents[-1]:
+                     raise TabError(lnum, pos, line)
+@@ -183,9 +186,9 @@ def generate_tokens(lines, flags):
+             if not line:
+                 if parenlev > 0:
+                     lnum1, start1, line1 = parenlevstart
+-                    raise TokenError("parenthesis is never closed", line1,
++                    raise TokenError(u"parenthesis is never closed", line1,
+                                      lnum1, start1 + 1, token_list, lnum)
+-                raise TokenError("EOF in multi-line statement", line,
++                raise TokenError(u"EOF in multi-line statement", line,
+                                  lnum, 0, token_list)
+             continued = 0
+ 
+@@ -199,11 +202,11 @@ def generate_tokens(lines, flags):
+                 end = pseudomatch
+ 
+                 if start == end:
+-                    raise TokenError("Unknown character", line,
++                    raise TokenError(u"Unknown character", line,
+                                      lnum, start + 1, token_list)
+ 
+                 pos = end
+-                token, initial = line[start:end], line[start]
++                token, initial = assert_utf8(line[start:end]), line[start]
+                 if (initial in numchars or \
+                    (initial == '.' and token != '.' and token != '...')):
+                     # ordinary number
+@@ -222,13 +225,13 @@ def generate_tokens(lines, flags):
+                     endmatch = endDFA.recognize(line, pos)
+                     if endmatch >= 0:                     # all on one line
+                         pos = endmatch
+-                        token = line[start:pos]
++                        token = assert_utf8(line[start:pos])
+                         tok = (tokens.STRING, token, lnum, start, line)
+                         token_list.append(tok)
+                         last_comment = ''
+                     else:
+                         strstart = (lnum, start, line)
+-                        contstr = line[start:]
++                        contstr = assert_utf8(line[start:])
+                         contline = line
+                         break
+                 elif initial in single_quoted or \
+@@ -238,7 +241,7 @@ def generate_tokens(lines, flags):
+                         strstart = (lnum, start, line)
+                         endDFA = (endDFAs[initial] or endDFAs[token[1]] or
+                                    endDFAs[token[2]])
+-                        contstr, needcont = line[start:], 1
++                        contstr, needcont = assert_utf8(line[start:]), 1
+                         contline = line
+                         break
+                     else:                                  # ordinary string
+@@ -248,7 +251,7 @@ def generate_tokens(lines, flags):
+                 elif (initial in namechars or              # ordinary name
+                       ord(initial) >= 0x80):               # unicode identifier
+                     if not verify_identifier(token):
+-                        raise TokenError("invalid character in identifier",
++                        raise TokenError(u"invalid character in identifier",
+                                          line, lnum, start + 1, token_list)
+                     token_list.append((tokens.NAME, token, lnum, start, line))
+                     last_comment = ''
+@@ -262,8 +265,9 @@ def generate_tokens(lines, flags):
+                     elif initial in ')]}':
+                         parenlev = parenlev - 1
+                         if parenlev < 0:
+-                            raise TokenError("unmatched '%s'" % initial, line,
+-                                             lnum, start + 1, token_list)
++                            raise TokenError((u"unmatched '%s'" %
++                                              initial.decode('ascii')),
++                                             line, lnum, start + 1, token_list)
+                     if token in python_opmap:
+                         punct = python_opmap[token]
+                     else:
+@@ -274,13 +278,20 @@ def generate_tokens(lines, flags):
+                 start = whiteSpaceDFA.recognize(line, pos)
+                 if start < 0:
+                     start = pos
+-                if start<max and line[start] in single_quoted:
+-                    raise TokenError("EOL while scanning string literal",
+-                             line, lnum, start+1, token_list)
+-                tok = (tokens.ERRORTOKEN, line[pos], lnum, pos, line)
++                if start < max and line[start] in single_quoted:
++                    raise TokenError(u"EOL while scanning string literal",
++                                     line, lnum, start + 1, token_list)
++                from rpython.rlib.runicode import utf8_code_length
++                char_len = utf8_code_length[ord(line[pos])]
++                if not char_len:
++                    raise TokenError(u"Invalid byte while scanning "
++                                     "string literal", line, lnum, start + 1,
++                                     token_list)
++                tok = (tokens.ERRORTOKEN, assert_utf8(line[pos:pos + char_len]),
++                       lnum, pos, line)
+                 token_list.append(tok)
+                 last_comment = ''
+-                pos = pos + 1
++                pos = pos + char_len
+ 
+     lnum -= 1
+     if not (flags & consts.PyCF_DONT_IMPLY_DEDENT):
+@@ -293,4 +304,7 @@ def generate_tokens(lines, flags):
+     token_list.append(tok)
+ 
+     token_list.append((tokens.ENDMARKER, '', lnum, pos, line))
++    for tok in token_list:
++        check_utf8(tok[1])
++        check_utf8(tok[4])
+     return token_list
+diff --git a/pypy/interpreter/typedef.py b/pypy/interpreter/typedef.py
+index e510300..88d6af6 100644
+--- a/pypy/interpreter/typedef.py
++++ b/pypy/interpreter/typedef.py
+@@ -9,6 +9,7 @@ from pypy.interpreter.gateway import (interp2app, BuiltinCode, unwrap_spec,
+ from rpython.rlib.jit import promote
+ from rpython.rlib.objectmodel import compute_identity_hash, specialize
+ from rpython.tool.sourcetools import compile2, func_with_new_name
++from rpython.rlib.rstring import check_ascii, check_utf8
+ 
+ 
+ class TypeDef(object):
+@@ -341,7 +342,7 @@ def _builduserclswithfeature(config, supercls, *features):
+ def check_new_dictionary(space, w_dict):
+     if not space.isinstance_w(w_dict, space.w_dict):
+         raise OperationError(space.w_TypeError,
+-                space.wrap("setting dictionary to a non-dict"))
++                             space.wrap(u"setting dictionary to a non-dict"))
+     from pypy.objspace.std import dictmultiobject
+     assert isinstance(w_dict, dictmultiobject.W_DictMultiObject)
+     return w_dict
+@@ -407,7 +408,7 @@ def _make_descr_typecheck_wrapper(tag, func, extraargs, cls, use_closure):
+ def unknown_objclass_getter(space):
+     # NB. this is an AttributeError to make inspect.py happy
+     raise OperationError(space.w_AttributeError,
+-                         space.wrap("generic property has no __objclass__"))
++                         space.wrap(u"generic property has no __objclass__"))
+ 
+ @specialize.arg(0)
+ def make_objclass_getter(tag, func, cls):
+@@ -482,7 +483,7 @@ class GetSetProperty(W_Root):
+         fset = self.fset
+         if fset is None:
+             raise OperationError(space.w_AttributeError,
+-                                 space.wrap("readonly attribute"))
++                                 space.wrap(u"readonly attribute"))
+         try:
+             fset(self, space, w_obj, w_value)
+         except DescrMismatch:
+@@ -498,7 +499,7 @@ class GetSetProperty(W_Root):
+         fdel = self.fdel
+         if fdel is None:
+             raise OperationError(space.w_AttributeError,
+-                                 space.wrap("cannot delete attribute"))
++                                 space.wrap(u"cannot delete attribute"))
+         try:
+             fdel(self, space, w_obj)
+         except DescrMismatch:
+@@ -516,6 +517,12 @@ def interp_attrproperty(name, cls, doc=None):
+         return space.wrap(getattr(obj, name))
+     return GetSetProperty(fget, cls=cls, doc=doc)
+ 
++def interp_attrproperty_utf8(name, cls, doc=None):
++    "NOT_RPYTHON: initialization-time only"
++    def fget(space, obj):
++        return space.wrap(getattr(obj, name).decode('utf-8'))
++    return GetSetProperty(fget, cls=cls, doc=doc)
++
+ def interp_attrproperty_bytes(name, cls, doc=None):
+     "NOT_RPYTHON: initialization-time only"
+     def fget(space, obj):
+@@ -556,6 +563,7 @@ class Member(W_Root):
+     _immutable_ = True
+ 
+     def __init__(self, index, name, w_cls):
++        check_utf8(name)
+         self.index = index
+         self.name = name
+         self.w_cls = w_cls
+@@ -575,8 +583,10 @@ class Member(W_Root):
+             self.typecheck(space, w_obj)
+             w_result = w_obj.getslotvalue(self.index)
+             if w_result is None:
++                check_utf8(self.name)
++                # XXX better message
+                 raise OperationError(space.w_AttributeError,
+-                                     space.wrap(self.name)) # XXX better message
++                                     space.wrap(self.name.decode('utf-8')))
+             return w_result
+ 
+     def descr_member_set(self, space, w_obj, w_value):
+@@ -591,15 +601,17 @@ class Member(W_Root):
+         self.typecheck(space, w_obj)
+         success = w_obj.delslotvalue(self.index)
+         if not success:
++            check_utf8(self.name)
++            # XXX better message
+             raise OperationError(space.w_AttributeError,
+-                                 space.wrap(self.name)) # XXX better message
++                                 space.wrap(self.name.decode('utf-8')))
+ 
+ Member.typedef = TypeDef(
+     "member_descriptor",
+     __get__ = interp2app(Member.descr_member_get),
+     __set__ = interp2app(Member.descr_member_set),
+     __delete__ = interp2app(Member.descr_member_del),
+-    __name__ = interp_attrproperty('name', cls=Member),
++    __name__ = interp_attrproperty_utf8('name', cls=Member),
+     __objclass__ = interp_attrproperty_w('w_cls', cls=Member),
+     )
+ Member.typedef.acceptable_as_base_class = False
+@@ -659,7 +671,8 @@ descr_generic_ne = interp2app(generic_ne)
+ 
+ # co_xxx interface emulation for built-in code objects
+ def fget_co_varnames(space, code): # unwrapping through unwrap_spec
+-    return space.newtuple([space.wrap(name) for name in code.getvarnames()])
++    return space.newtuple([space.wrap(name.decode('utf-8'))
++                           for name in code.getvarnames()])
+ 
+ def fget_co_argcount(space, code): # unwrapping through unwrap_spec
+     return space.wrap(code.signature().num_argnames())
+diff --git a/pypy/module/_io/interp_io.py b/pypy/module/_io/interp_io.py
+index 49833c4..b282735 100644
+--- a/pypy/module/_io/interp_io.py
++++ b/pypy/module/_io/interp_io.py
+@@ -41,7 +41,7 @@ DEFAULT_BUFFER_SIZE = 8 * 1024
+              encoding="str_or_None", errors="str_or_None",
+              newline="str_or_None", closefd=bool)
+ def open(space, w_file, mode="r", buffering=-1, encoding=None, errors=None,
+-    newline=None, closefd=True):
++         newline=None, closefd=True):
+     from pypy.module._io.interp_bufferedio import (W_BufferedRandom,
+         W_BufferedWriter, W_BufferedReader)
+ 
+diff --git a/pypy/module/cpyext/dictobject.py b/pypy/module/cpyext/dictobject.py
+index e2455c4..56560c9 100644
+--- a/pypy/module/cpyext/dictobject.py
++++ b/pypy/module/cpyext/dictobject.py
+@@ -52,7 +52,8 @@ def PyDict_GetItemString(space, w_dict, key):
+     """This is the same as PyDict_GetItem(), but key is specified as a
+     char*, rather than a PyObject*."""
+     try:
+-        w_res = space.finditem_str(w_dict, rffi.charp2str(key))
++        w_key = space.wrap(rffi.charp2str(key).decode('utf-8'))
++        w_res = space.getitem(w_dict, w_key)
+     except:
+         w_res = None
+     if w_res is None:
+diff --git a/pypy/module/cpyext/import_.py b/pypy/module/cpyext/import_.py
+index 21abb01..52fec3b 100644
+--- a/pypy/module/cpyext/import_.py
++++ b/pypy/module/cpyext/import_.py
+@@ -2,12 +2,14 @@ from pypy.interpreter import module
+ from pypy.module.cpyext.api import (
+     generic_cpy_call, cpython_api, PyObject, CONST_STRING)
+ from pypy.module.cpyext.pyobject import borrow_from
+-from rpython.rtyper.lltypesystem import lltype, rffi
+ from pypy.interpreter.error import OperationError
+ from pypy.interpreter.module import Module
+ from pypy.interpreter.pycode import PyCode
+ from pypy.module.imp import importing
+ 
++from rpython.rtyper.lltypesystem import lltype, rffi
++from rpython.rlib import rstring
++
+ @cpython_api([PyObject], PyObject)
+ def PyImport_Import(space, w_name):
+     """
+@@ -71,7 +73,13 @@ def PyImport_AddModule(space, name):
+     not already present."""
+     from pypy.module.imp.importing import check_sys_modules_w
+     modulename = rffi.charp2str(name)
+-    w_modulename = space.wrap(modulename)
++    try:
++        u_modulename = modulename.decode('utf-8')
++    except UnicodeDecodeError:
++        raise OperationError(space.w_ValueError,
++                             space.wrap(u"Invalid modulename."))
++    modulename = rstring.assert_utf8(modulename)
++    w_modulename = space.wrap(u_modulename)
+     w_mod = check_sys_modules_w(space, modulename)
+     if not w_mod or space.is_w(w_mod, space.w_None):
+         w_mod = Module(space, w_modulename)
+diff --git a/pypy/module/cpyext/sysmodule.py b/pypy/module/cpyext/sysmodule.py
+index cc33c92..08447db 100644
+--- a/pypy/module/cpyext/sysmodule.py
++++ b/pypy/module/cpyext/sysmodule.py
+@@ -7,9 +7,12 @@ from pypy.module.cpyext.pyobject import PyObject, borrow_from
+ def PySys_GetObject(space, name):
+     """Return the object name from the sys module or NULL if it does
+     not exist, without setting an exception."""
+-    name = rffi.charp2str(name)
+     w_dict = space.sys.getdict(space)
+-    w_obj = space.finditem_str(w_dict, name)
++    try:
++        w_name = space.wrap(rffi.charp2str(name).decode('utf-8'))
++        w_obj = space.getitem(w_dict, w_name)
++    except:
++        w_obj = None
+     return borrow_from(None, w_obj)
+ 
+ @cpython_api([CONST_STRING, PyObject], rffi.INT_real, error=-1)
+diff --git a/pypy/module/cpyext/typeobject.py b/pypy/module/cpyext/typeobject.py
+index 5dc0c06..2a5c1ef 100644
+--- a/pypy/module/cpyext/typeobject.py
++++ b/pypy/module/cpyext/typeobject.py
+@@ -2,7 +2,7 @@ import os
+ 
+ from rpython.rlib import jit
+ from rpython.rlib.objectmodel import specialize
+-from rpython.rlib.rstring import rsplit
++from rpython.rlib.rstring import rsplit, assert_utf8, is_utf8_str
+ from rpython.rtyper.annlowlevel import llhelper
+ from rpython.rtyper.lltypesystem import rffi, lltype
+ 
+@@ -292,9 +292,13 @@ class W_PyCTypeObject(W_TypeObject):
+         convert_member_defs(space, dict_w, pto.c_tp_members, self)
+ 
+         name = rffi.charp2str(pto.c_tp_name)
++        if not is_utf8_str(name):
++            raise OperationError(space.w_TypeError,
++                                 space.wrap(u"Invalid type name"))
++        name = assert_utf8(name)
+ 
+         W_TypeObject.__init__(self, space, name,
+-            bases_w or [space.w_object], dict_w)
++                              bases_w or [space.w_object], dict_w)
+         if not space.is_true(space.issubtype(self, space.w_type)):
+             self.flag_cpytype = True
+         self.flag_heaptype = False
+@@ -651,4 +655,3 @@ def PyType_Modified(space, w_obj):
+         return
+     if w_obj.is_cpytype():
+         w_obj.mutated(None)
+-
+diff --git a/pypy/module/imp/importing.py b/pypy/module/imp/importing.py
+index 0e9fb0d..04e7f61 100644
+--- a/pypy/module/imp/importing.py
++++ b/pypy/module/imp/importing.py
+@@ -15,7 +15,7 @@ from rpython.rlib import streamio, jit
+ from rpython.rlib.streamio import StreamErrors
+ from rpython.rlib.objectmodel import we_are_translated, specialize
+ from rpython.rlib.signature import signature
+-from rpython.rlib import rposix, types
++from rpython.rlib import rposix, types, rstring
+ from pypy.module.sys.version import PYPY_VERSION
+ 
+ _WIN32 = sys.platform == 'win32'
+@@ -43,6 +43,7 @@ def get_so_extension(space):
+         soabi = space.config.objspace.soabi
+     else:
+         soabi = DEFAULT_SOABI
++    rstring.check_ascii(soabi)
+ 
+     if not soabi:
+         return SO
+@@ -52,6 +53,16 @@ def get_so_extension(space):
+ 
+     return '.' + soabi + SO
+ 
++def fsdecode(space, s):
++    try:
++        # ascii encoding works at initialization time
++        return space.wrap(s.decode('ascii'))
++    except UnicodeDecodeError:
++        return space.fsdecode(space.wrapbytes(s))
++
++def fsdecode_w(space, s):
++    return space.unicode0_w(space.fsdecode(space.wrapbytes(s)))
++
+ def file_exists(path):
+     """Tests whether the given path is an existing regular file."""
+     return os.path.isfile(path) and case_ok(path)
+@@ -97,8 +108,8 @@ else:
+         if index < 0:
+             directory = os.curdir
+         else:
+-            directory = filename[:index+1]
+-            filename = filename[index+1:]
++            directory = filename[:index + 1]
++            filename = filename[index + 1:]
+         try:
+             return filename in os.listdir(directory)
+         except OSError:
+@@ -116,19 +127,41 @@ def check_sys_modules(space, w_modulename):
+     return space.finditem(space.sys.get('modules'), w_modulename)
+ 
+ def check_sys_modules_w(space, modulename):
+-    return space.finditem_str(space.sys.get('modules'), modulename)
++    rstring.check_utf8(modulename)
++    return space.finditem(space.sys.get('modules'),
++                          space.wrap(modulename.decode('utf-8')))
+ 
+ @jit.elidable
+ def _get_dot_position(str, n):
+     # return the index in str of the '.' such that there are n '.'-separated
+     # strings after it
++    rstring.check_utf8(str)
+     result = len(str)
+     while n > 0 and result >= 0:
+         n -= 1
+         result = str.rfind('.', 0, result)
+     return result
+ 
++def _convert_utf8(space, w_value):
++    if space.isinstance_w(w_value, space.w_unicode):
++        try:
++            u_value = space.unicode_w(w_value)
++            value = u_value.encode('utf-8')
++            return value, rstring.assert_utf8(u_value)
++        except UnicodeEncodeError:
++            pass
++    return None, None
++
++def _convert_unicode_attr(space, w_value, name):
++    value, u_value = _convert_utf8(space, w_value)
++    if value is not None and '\x00' not in value:
++        return rstring.assert_str0(value), rstring.assert_str0(u_value)
++    raise OperationError(space.w_ValueError,
++                         space.wrap(u"%s set to non-string" % name))
++
+ def _get_relative_name(space, modulename, level, w_globals):
++    rstring.check_utf8(modulename)
++
+     w = space.wrap
+     ctxt_w_package = space.finditem_str(w_globals, '__package__')
+     ctxt_w_package = jit.promote(ctxt_w_package)
+@@ -136,13 +169,8 @@ def _get_relative_name(space, modulename, level, w_globals):
+ 
+     ctxt_package = None
+     if ctxt_w_package is not None and ctxt_w_package is not space.w_None:
+-        try:
+-            ctxt_package = space.str0_w(ctxt_w_package)
+-        except OperationError, e:
+-            if not e.match(space, space.w_TypeError):
+-                raise
+-            raise OperationError(space.w_ValueError, space.wrap(
+-                "__package__ set to non-string"))
++        ctxt_package, ctxt_u_package = _convert_unicode_attr(
++            space, ctxt_w_package, u'__package__')
+ 
+     if ctxt_package is not None:
+         # __package__ is set, so use it
+@@ -152,9 +180,9 @@ def _get_relative_name(space, modulename, level, w_globals):
+         dot_position = _get_dot_position(ctxt_package, level - 1)
+         if dot_position < 0:
+             if len(ctxt_package) == 0:
+-                msg = "Attempted relative import in non-package"
++                msg = u"Attempted relative import in non-package"
+             else:
+-                msg = "Attempted relative import beyond toplevel package"
++                msg = u"Attempted relative import beyond toplevel package"
+             raise OperationError(space.w_ValueError, w(msg))
+ 
+         # Try to import parent package
+@@ -164,15 +192,15 @@ def _get_relative_name(space, modulename, level, w_globals):
+             if not e.match(space, space.w_ImportError):
+                 raise
+             if level > 0:
+-                raise OperationError(space.w_SystemError, space.wrap(
+-                    "Parent module '%s' not loaded, "
+-                    "cannot perform relative import" % ctxt_package))
++                msg = (u"Parent module '%s' not loaded, "
++                       "cannot perform relative import" % ctxt_u_package)
++                raise OperationError(space.w_SystemError, w(msg))
+             else:
+-                msg = ("Parent module '%s' not found while handling absolute "
+-                       "import" % ctxt_package)
+-                space.warn(space.wrap(msg), space.w_RuntimeWarning)
++                msg = (u"Parent module '%s' not found while handling absolute "
++                       "import" % ctxt_u_package)
++                space.warn(w(msg), space.w_RuntimeWarning)
+ 
+-        rel_modulename = ctxt_package[:dot_position]
++        rel_modulename = rstring.assert_utf8(ctxt_package[:dot_position])
+         rel_level = rel_modulename.count('.') + 1
+         if modulename:
+             rel_modulename += '.' + modulename
+@@ -184,11 +212,8 @@ def _get_relative_name(space, modulename, level, w_globals):
+         ctxt_w_name = jit.promote(ctxt_w_name)
+         ctxt_name = None
+         if ctxt_w_name is not None:
+-            try:
+-                ctxt_name = space.str0_w(ctxt_w_name)
+-            except OperationError, e:
+-                if not e.match(space, space.w_TypeError):
+-                    raise
++            ctxt_name, ctxt_u_name = _convert_unicode_attr(
++                space, ctxt_w_name, u'__name__')
+ 
+         if not ctxt_name:
+             return None, 0
+@@ -199,25 +224,25 @@ def _get_relative_name(space, modulename, level, w_globals):
+         dot_position = _get_dot_position(ctxt_name, m)
+         if dot_position < 0:
+             if level > 0:
+-                msg = "Attempted relative import in non-package"
++                msg = u"Attempted relative import in non-package"
+                 raise OperationError(space.w_ValueError, w(msg))
+             rel_modulename = ''
+             rel_level = 0
+         else:
+-            rel_modulename = ctxt_name[:dot_position]
++            rel_modulename = rstring.assert_utf8(ctxt_name[:dot_position])
+             rel_level = rel_modulename.count('.') + 1
+ 
+         if ctxt_w_path is not None:
+             # __path__ is set, so __name__ is already the package name
+-            space.setitem(w_globals, w("__package__"), ctxt_w_name)
++            space.setitem(w_globals, w(u"__package__"), ctxt_w_name)
+         else:
+             # Normal module, so work out the package name if any
+             last_dot_position = ctxt_name.rfind('.')
+             if last_dot_position < 0:
+-                space.setitem(w_globals, w("__package__"), space.w_None)
++                space.setitem(w_globals, w(u"__package__"), space.w_None)
+             else:
+-                space.setitem(w_globals, w("__package__"),
+-                              w(ctxt_name[:last_dot_position]))
++                space.setitem(w_globals, w(u"__package__"),
++                              w(ctxt_name[:last_dot_position].decode('utf-8')))
+ 
+         if modulename:
+             if rel_modulename:
+@@ -225,18 +250,20 @@ def _get_relative_name(space, modulename, level, w_globals):
+             else:
+                 rel_modulename = modulename
+ 
++    rstring.check_utf8(rel_modulename)
+     return rel_modulename, rel_level
+ 
+ 
+-@unwrap_spec(name='str0', level=int)
+-def importhook(space, name, w_globals=None,
+-               w_locals=None, w_fromlist=None, level=-1):
+-    modulename = name
+-    if not modulename and level < 0:
+-        raise OperationError(
+-            space.w_ValueError,
+-            space.wrap("Empty module name"))
++@unwrap_spec(name='unicode0', level=int)
++def importhook(space, name, w_globals=None, w_locals=None,
++               w_fromlist=None, level=-1):
+     w = space.wrap
++    try:
++        modulename = name.encode('utf-8')
++    except UnicodeEncodeError:
++        raise OperationError(space.w_ValueError, w(u"Invalid module name"))
++    if not modulename and level < 0:
++        raise OperationError(space.w_ValueError, w(u"Empty module name"))
+ 
+     if w_fromlist is not None and space.is_true(w_fromlist):
+         fromlist_w = space.fixedview(w_fromlist)
+@@ -272,7 +299,9 @@ def importhook(space, name, w_globals=None,
+ 
+     w_mod = absolute_import(space, modulename, 0, fromlist_w, tentative=0)
+     if rel_modulename is not None:
+-        space.setitem(space.sys.get('modules'), w(rel_modulename), space.w_None)
++        rstring.check_utf8(rel_modulename)
++        space.setitem(space.sys.get('modules'),
++                      w(rel_modulename.decode('utf-8')), space.w_None)
+     return w_mod
+ 
+ def absolute_import(space, modulename, baselevel, fromlist_w, tentative):
+@@ -282,6 +311,7 @@ def absolute_import(space, modulename, baselevel, fromlist_w, tentative):
+     # should be followed by the JIT and turned into not much code.  But
+     # if the import lock is currently held by another thread, then we
+     # have to wait, and so shouldn't use the fast path.
++    rstring.check_utf8(modulename)
+     if not getimportlock(space).lock_held_by_someone_else():
+         w_mod = absolute_import_try(space, modulename, baselevel, fromlist_w)
+         if w_mod is not None and not space.is_w(w_mod, space.w_None):
+@@ -306,11 +336,12 @@ def absolute_import_try(space, modulename, baselevel, fromlist_w):
+     """
+     w_path = None
+     last_dot = 0
++    rstring.check_utf8(modulename)
+     if '.' not in modulename:
+         w_mod = check_sys_modules_w(space, modulename)
+         first = w_mod
+         if fromlist_w is not None and w_mod is not None:
+-            w_path = try_getattr(space, w_mod, space.wrap('__path__'))
++            w_path = try_getattr(space, w_mod, space.wrap(u'__path__'))
+     else:
+         level = 0
+         first = None
+@@ -319,19 +350,20 @@ def absolute_import_try(space, modulename, baselevel, fromlist_w):
+             if last_dot < 0:
+                 w_mod = check_sys_modules_w(space, modulename)
+             else:
+-                w_mod = check_sys_modules_w(space, modulename[:last_dot])
++                w_mod = check_sys_modules_w(
++                    space, rstring.assert_utf8(modulename[:last_dot]))
+             if w_mod is None or space.is_w(w_mod, space.w_None):
+                 return None
+             if level == baselevel:
+                 first = w_mod
+             if fromlist_w is not None:
+-                w_path = try_getattr(space, w_mod, space.wrap('__path__'))
++                w_path = try_getattr(space, w_mod, space.wrap(u'__path__'))
+             level += 1
+     if fromlist_w is not None:
+         if w_path is not None:
+             if len(fromlist_w) == 1 and space.eq_w(fromlist_w[0],
+-                                                   space.wrap('*')):
+-                w_all = try_getattr(space, w_mod, space.wrap('__all__'))
++                                                   space.wrap(u'*')):
++                w_all = try_getattr(space, w_mod, space.wrap(u'__all__'))
+                 if w_all is not None:
+                     fromlist_w = space.fixedview(w_all)
+             for w_name in fromlist_w:
+@@ -344,10 +376,11 @@ def _absolute_import(space, modulename, baselevel, fromlist_w, tentative):
+     w = space.wrap
+ 
+     if '/' in modulename or '\\' in modulename:
+-        raise OperationError(space.w_ImportError, space.wrap(
+-            "Import by filename is not supported."))
++        raise OperationError(space.w_ImportError,
++                             w(u"Import by filename is not supported."))
+ 
+     w_mod = None
++    rstring.check_utf8(modulename)
+     parts = modulename.split('.')
+     prefix = []
+     w_path = None
+@@ -356,6 +389,7 @@ def _absolute_import(space, modulename, baselevel, fromlist_w, tentative):
+     level = 0
+ 
+     for part in parts:
++        rstring.check_utf8(part)
+         w_mod = load_part(space, w_path, prefix, part, w_mod,
+                           tentative=tentative)
+         if w_mod is None:
+@@ -365,19 +399,24 @@ def _absolute_import(space, modulename, baselevel, fromlist_w, tentative):
+             first = w_mod
+             tentative = 0
+         prefix.append(part)
+-        w_path = try_getattr(space, w_mod, w('__path__'))
++        w_path = try_getattr(space, w_mod, w(u'__path__'))
+         level += 1
+ 
+     if fromlist_w is not None:
+         if w_path is not None:
+-            if len(fromlist_w) == 1 and space.eq_w(fromlist_w[0],w('*')):
+-                w_all = try_getattr(space, w_mod, w('__all__'))
++            if len(fromlist_w) == 1 and space.eq_w(fromlist_w[0], w(u'*')):
++                w_all = try_getattr(space, w_mod, w(u'__all__'))
+                 if w_all is not None:
+                     fromlist_w = space.fixedview(w_all)
+             for w_name in fromlist_w:
+                 if try_getattr(space, w_mod, w_name) is None:
+-                    load_part(space, w_path, prefix, space.str0_w(w_name),
+-                              w_mod, tentative=1)
++                    name, u_name = _convert_utf8(space, w_name)
++                    if name is None or "\x00" in name:
++                        raise OperationError(
++                            space.w_ValueError,
++                            space.wrap(u"Attribute name must be string"))
++                    name = rstring.assert_str0(name)
++                    load_part(space, w_path, prefix, name, w_mod, tentative=1)
+         return w_mod
+     else:
+         return first
+@@ -423,7 +462,8 @@ def find_in_path_hooks(space, w_modulename, w_pathitem):
+     w_importer = _getimporter(space, w_pathitem)
+     if w_importer is not None and space.is_true(w_importer):
+         try:
+-            w_loader = space.call_method(w_importer, "find_module", w_modulename)
++            w_loader = space.call_method(w_importer, "find_module",
++                                         w_modulename)
+         except OperationError, e:
+             if e.match(space, space.w_ImportError):
+                 return None
+@@ -449,8 +489,8 @@ class W_NullImporter(W_Root):
+     def _descr_init(self, space, w_path, win32):
+         path = space.unicode0_w(w_path) if win32 else space.fsencode_w(w_path)
+         if not path:
+-            raise OperationError(space.w_ImportError, space.wrap(
+-                "empty pathname"))
++            raise OperationError(space.w_ImportError,
++                                 space.wrap(u"empty pathname"))
+ 
+         # Directory should not exist
+         try:
+@@ -459,8 +499,8 @@ class W_NullImporter(W_Root):
+             pass
+         else:
+             if stat.S_ISDIR(st.st_mode):
+-                raise OperationError(space.w_ImportError, space.wrap(
+-                    "existing directory"))
++                raise OperationError(space.w_ImportError,
++                                     space.wrap(u"existing directory"))
+ 
+     def find_module_w(self, space, __args__):
+         return space.wrap(None)
+@@ -475,6 +515,7 @@ W_NullImporter.typedef = TypeDef(
+ class FindInfo:
+     def __init__(self, modtype, filename, stream,
+                  suffix="", filemode="", w_loader=None):
++        rstring.check_ascii(filemode)
+         self.modtype = modtype
+         self.filename = filename
+         self.stream = stream
+@@ -503,6 +544,7 @@ def find_module(space, modulename, w_modulename, partname, w_path,
+     if w_path is None:
+         # check the builtin modules
+         if modulename in space.builtin_modules:
++            modulename = rstring.assert_ascii(modulename)
+             delayed_builtin = FindInfo(C_BUILTIN, modulename, None)
+             # a "real builtin module xx" shadows every file "xx.py" there
+             # could possibly be; a "pseudo-extension module" does not, and
+@@ -527,7 +569,18 @@ def find_module(space, modulename, w_modulename, partname, w_path,
+                 if w_loader:
+                     return FindInfo.fromLoader(w_loader)
+ 
+-            path = space.str0_w(w_pathitem)
++            if not space.isinstance_w(w_pathitem, space.w_unicode):
++                raise OperationError(space.w_ValueError,
++                                     space.wrap(u"Path item must be string"))
++            try:
++                path = space.unicode_w(w_pathitem).encode('ascii')
++            except UnicodeEncodeError:
++                path = space.fsencode_w(w_pathitem)
++            if '\x00' in path:
++                raise OperationError(space.w_TypeError, space.wrap(
++                    u'argument must be a unicode string '
++                    'without NUL characters'))
++            path = rstring.assert_str0(path)
+             filepart = os.path.join(path, partname)
+             if os.path.isdir(filepart) and case_ok(filepart):
+                 initfile = os.path.join(filepart, '__init__')
+@@ -535,8 +588,8 @@ def find_module(space, modulename, w_modulename, partname, w_path,
+                 if modtype in (PY_SOURCE, PY_COMPILED):
+                     return FindInfo(PKG_DIRECTORY, filepart, None)
+                 else:
+-                    msg = ("Not importing directory '%s' missing __init__.py" %
+-                           (filepart,))
++                    msg = (u"Not importing directory '%s' missing __init__.py" %
++                           fsdecode_w(space, filepart))
+                     space.warn(space.wrap(msg), space.w_ImportWarning)
+             modtype, suffix, filemode = find_modtype(space, filepart)
+             try:
+@@ -545,7 +598,8 @@ def find_module(space, modulename, w_modulename, partname, w_path,
+                     filename = filepart + suffix
+                     stream = streamio.open_file_as_stream(filename, filemode)
+                     try:
+-                        return FindInfo(modtype, filename, stream, suffix, filemode)
++                        return FindInfo(modtype, filename, stream,
++                                        suffix, filemode)
+                     except:
+                         stream.close()
+                         raise
+@@ -559,10 +613,11 @@ def find_module(space, modulename, w_modulename, partname, w_path,
+ def _prepare_module(space, w_mod, filename, pkgdir):
+     w = space.wrap
+     space.sys.setmodule(w_mod)
+-    space.setattr(w_mod, w('__file__'), space.wrap(filename))
+-    space.setattr(w_mod, w('__doc__'), space.w_None)
++    space.setattr(w_mod, w(u'__file__'), fsdecode(space, filename))
++    space.setattr(w_mod, w(u'__doc__'), space.w_None)
+     if pkgdir is not None:
+-        space.setattr(w_mod, w('__path__'), space.newlist([w(pkgdir)]))
++        space.setattr(w_mod, w(u'__path__'),
++                      space.newlist([fsdecode(space, pkgdir)]))
+ 
+ def add_module(space, w_name):
+     w_mod = check_sys_modules(space, w_name)
+@@ -577,17 +632,31 @@ def load_c_extension(space, filename, modulename):
+     from pypy.module.cpyext.api import load_extension_module
+     load_extension_module(space, filename, modulename)
+ 
++def load_c_extension_w(space, filename, w_modulename):
++    modulename, u_modulename = _convert_utf8(space, w_modulename)
++    if modulename is None or '\x00' in modulename:
++        raise OperationError(
++            space.w_ValueError,
++            space.wrap(u"Invalid module name %s" % u_modulename))
++    load_c_extension(space, filename, modulename)
++
+ @jit.dont_look_inside
+ def load_module(space, w_modulename, find_info, reuse=False):
+     if find_info is None:
+         return
+ 
+     if find_info.w_loader:
+-        return space.call_method(find_info.w_loader, "load_module", w_modulename)
++        return space.call_method(find_info.w_loader,
++                                 "load_module", w_modulename)
+ 
+     if find_info.modtype == C_BUILTIN:
+-        return space.getbuiltinmodule(find_info.filename, force_init=True,
+-                                      reuse=reuse)
++        if find_info.filename not in space.builtin_modules:
++            # This is closer (although still not identical) to CPython behavior
++            # (CPython seems to ignore filename for c_builtin modules)
++            # and returns None if nothing is found
++            return
++        return space.getbuiltinmodule(rstring.assert_ascii(find_info.filename),
++                                      force_init=True, reuse=reuse)
+ 
+     if find_info.modtype in (PY_SOURCE, PY_COMPILED, C_EXTENSION, PKG_DIRECTORY):
+         w_mod = None
+@@ -615,12 +684,13 @@ def load_module(space, w_modulename, find_info, reuse=False):
+             elif find_info.modtype == PY_COMPILED:
+                 magic = _r_long(find_info.stream)
+                 timestamp = _r_long(find_info.stream)
+-                load_compiled_module(space, w_modulename, w_mod, find_info.filename,
+-                                     magic, timestamp, find_info.stream.readall())
++                load_compiled_module(space, w_modulename, w_mod,
++                                     find_info.filename, magic, timestamp,
++                                     find_info.stream.readall())
+                 return w_mod
+             elif find_info.modtype == PKG_DIRECTORY:
+-                w_path = space.newlist([space.wrap(find_info.filename)])
+-                space.setattr(w_mod, space.wrap('__path__'), w_path)
++                w_path = space.newlist([fsdecode(space, find_info.filename)])
++                space.setattr(w_mod, space.wrap(u'__path__'), w_path)
+                 find_info = find_module(space, "__init__", None, "__init__",
+                                         w_path, use_loader=False)
+                 if find_info is None:
+@@ -632,8 +702,9 @@ def load_module(space, w_modulename, find_info, reuse=False):
+                 # fetch the module again, in case of "substitution"
+                 w_mod = check_sys_modules(space, w_modulename)
+                 return w_mod
+-            elif find_info.modtype == C_EXTENSION and space.config.objspace.usemodules.cpyext:
+-                load_c_extension(space, find_info.filename, space.str_w(w_modulename))
++            elif (find_info.modtype == C_EXTENSION and
++                  space.config.objspace.usemodules.cpyext):
++                load_c_extension_w(space, find_info.filename, w_modulename)
+                 return check_sys_modules(space, w_modulename)
+         except OperationError:
+             w_mods = space.sys.get('modules')
+@@ -643,7 +714,9 @@ def load_module(space, w_modulename, find_info, reuse=False):
+ def load_part(space, w_path, prefix, partname, w_parent, tentative):
+     w = space.wrap
+     modulename = '.'.join(prefix + [partname])
+-    w_modulename = w(modulename)
++    rstring.check_utf8(modulename)
++    u_modulename = modulename.decode('utf-8')
++    w_modulename = w(u_modulename)
+     w_mod = check_sys_modules(space, w_modulename)
+ 
+     if w_mod is not None:
+@@ -664,7 +737,7 @@ def load_part(space, w_path, prefix, partname, w_parent, tentative):
+                         raise
+                     raise OperationError(space.w_ImportError, w_modulename)
+                 if w_parent is not None:
+-                    space.setattr(w_parent, space.wrap(partname), w_mod)
++                    space.setattr(w_parent, w(partname), w_mod)
+                 return w_mod
+         finally:
+             if find_info:
+@@ -676,7 +749,9 @@ def load_part(space, w_path, prefix, partname, w_parent, tentative):
+         return None
+     else:
+         # ImportError
+-        raise oefmt(space.w_ImportError, "No module named %s", modulename)
++        raise OperationError(
++            space.w_ImportError,
++            space.wrap(u"No module named %s" % u_modulename))
+ 
+ @jit.dont_look_inside
+ def reload(space, w_module):
+@@ -685,13 +760,15 @@ def reload(space, w_module):
+     if not space.is_w(space.type(w_module), space.type(space.sys)):
+         raise OperationError(
+             space.w_TypeError,
+-            space.wrap("reload() argument must be module"))
++            space.wrap(u"reload() argument must be module"))
+ 
+-    w_modulename = space.getattr(w_module, space.wrap("__name__"))
+-    modulename = space.str0_w(w_modulename)
++    w_modulename = space.getattr(w_module, space.wrap(u"__name__"))
++    modulename, u_modulename = _convert_unicode_attr(space, w_modulename,
++                                                     u'__name__')
+     if not space.is_w(check_sys_modules(space, w_modulename), w_module):
+-        raise oefmt(space.w_ImportError,
+-                    "reload(): module %s not in sys.modules", modulename)
++        raise OperationError(space.w_ImportError,
++                             space.wrap(u"reload(): module %s not in "
++                                        "sys.modules" % u_modulename))
+ 
+     try:
+         w_mod = space.reloading_modules[modulename]
+@@ -706,21 +783,25 @@ def reload(space, w_module):
+         subname = namepath[-1]
+         parent_name = '.'.join(namepath[:-1])
+         if parent_name:
++            rstring.check_utf8(parent_name)
+             w_parent = check_sys_modules_w(space, parent_name)
+             if w_parent is None:
+-                raise oefmt(space.w_ImportError,
+-                            "reload(): parent %s not in sys.modules",
+-                            parent_name)
+-            w_path = space.getattr(w_parent, space.wrap("__path__"))
++                raise OperationError(space.w_ImportError,
++                                     space.wrap(u"reload(): parent %s not in "
++                                                "sys.modules" %
++                                                parent_name.decode('utf-8')))
++            w_path = space.getattr(w_parent, space.wrap(u"__path__"))
+         else:
+             w_path = None
+ 
+-        find_info = find_module(
+-            space, modulename, w_modulename, subname, w_path)
++        find_info = find_module(space, modulename, w_modulename,
++                                subname, w_path)
+ 
+         if not find_info:
+             # ImportError
+-            raise oefmt(space.w_ImportError, "No module named %s", modulename)
++            raise OperationError(space.w_ImportError,
++                                 space.wrap(u"No module named %s" %
++                                            u_modulename))
+ 
+         try:
+             try:
+@@ -790,7 +871,7 @@ class ImportRLock:
+                 return
+             space = self.space
+             raise OperationError(space.w_RuntimeError,
+-                                 space.wrap("not holding the import lock"))
++                                 space.wrap(u"not holding the import lock"))
+         assert self.lockcounter > 0
+         self.lockcounter -= 1
+         if self.lockcounter == 0:
+@@ -863,17 +944,18 @@ def parse_source_module(space, pathname, source):
+ 
+ def exec_code_module(space, w_mod, code_w, pathname, cpathname,
+                      write_paths=True):
+-    w_dict = space.getattr(w_mod, space.wrap('__dict__'))
++    w_dict = space.getattr(w_mod, space.wrap(u'__dict__'))
+     space.call_method(w_dict, 'setdefault',
+-                      space.wrap('__builtins__'),
++                      space.wrap(u'__builtins__'),
+                       space.wrap(space.builtin))
+     if write_paths:
+         if pathname is not None:
+             w_pathname = get_sourcefile(space, pathname)
+         else:
+-            w_pathname = space.wrap(code_w.co_filename)
+-        space.setitem(w_dict, space.wrap("__file__"), w_pathname)
+-        space.setitem(w_dict, space.wrap("__cached__"), space.wrap(cpathname))
++            w_pathname = fsdecode(code_w.co_filename)
++        space.setitem(w_dict, space.wrap(u"__file__"), w_pathname)
++        space.setitem(w_dict, space.wrap(u"__cached__"),
++                      space.wrap(cpathname))
+     code_w.exec_code(space, w_dict, w_dict)
+ 
+ def rightmost_sep(filename):
+@@ -902,7 +984,7 @@ def make_compiled_pathname(pathname):
+     for i in range(len(fname)):
+         if fname[i] == '.':
+             ext = fname[:i + 1]
+-    
++
+     result = (pathname[:lastpos] + "__pycache__" + lastsep +
+               ext + PYC_TAG + '.pyc')
+     return result
+@@ -940,7 +1022,7 @@ def get_sourcefile(space, filename):
+     start = len(filename) - 4
+     stop = len(filename) - 1
+     if not 0 <= start <= stop or filename[start:stop].lower() != ".py":
+-        return space.wrap(filename)
++        return fsdecode(space, filename)
+     py = make_source_pathname(filename)
+     if py is None:
+         py = filename[:-1]
+@@ -950,8 +1032,8 @@ def get_sourcefile(space, filename):
+         pass
+     else:
+         if stat.S_ISREG(st.st_mode):
+-            return space.wrap(py)
+-    return space.wrap(filename)
++            return fsdecode(space, py)
++    return fsdecode(space, filename)
+ 
+ @jit.dont_look_inside
+ def load_source_module(space, w_modulename, w_mod, pathname, source, fd,
+@@ -1073,7 +1155,9 @@ def read_compiled_module(space, cpathname, strbuf):
+     w_marshal = space.getbuiltinmodule('marshal')
+     w_code = space.call_method(w_marshal, 'loads', space.wrapbytes(strbuf))
+     if not isinstance(w_code, Code):
+-        raise oefmt(space.w_ImportError, "Non-code object in %s", cpathname)
++        raise OperationError(space.w_ImportError,
++                             space.wrap(u"Non-code object in %s" %
++                                        fsdecode_w(space, cpathname)))
+     return w_code
+ 
+ @jit.dont_look_inside
+@@ -1084,7 +1168,9 @@ def load_compiled_module(space, w_modulename, w_mod, cpathname, magic,
+     module object.
+     """
+     if magic != get_pyc_magic(space):
+-        raise oefmt(space.w_ImportError, "Bad magic number in %s", cpathname)
++        raise OperationError(space.w_ImportError,
++                             space.wrap(u"Bad magic number in %s" %
++                                        fsdecode_w(space, cpathname)))
+     #print "loading pyc file:", cpathname
+     code_w = read_compiled_module(space, cpathname, source)
+     try:
+diff --git a/pypy/module/imp/interp_imp.py b/pypy/module/imp/interp_imp.py
+index 2f676c7..bf90190 100644
+--- a/pypy/module/imp/interp_imp.py
++++ b/pypy/module/imp/interp_imp.py
+@@ -1,5 +1,5 @@
+ from pypy.module.imp import importing
+-from rpython.rlib import streamio
++from rpython.rlib import streamio, rstring
+ from rpython.rlib.streamio import StreamErrors
+ from pypy.interpreter.error import OperationError, oefmt
+ from pypy.interpreter.module import Module
+@@ -57,6 +57,8 @@ def get_file(space, w_file, filename, filemode):
+         return streamio.fdopen_as_stream(fd, filemode)
+ 
+ def find_module(space, w_name, w_path=None):
++    if not space.isinstance_w(w_name, space.unicode_w):
++        raise oefmt(space.w_TypeError, "name must be a str, not %T", w_name)
+     name = space.fsencode_w(w_name)
+     if space.is_none(w_path):
+         w_path = None
+@@ -64,9 +66,11 @@ def find_module(space, w_name, w_path=None):
+     find_info = importing.find_module(
+         space, name, w_name, name, w_path, use_loader=False)
+     if not find_info:
+-        raise oefmt(space.w_ImportError, "No module named %s", name)
++        raise OperationError(space.w_ImportError,
++                             space.wrap(u"No module named %s" %
++                                        space.unicode_w(w_name)))
+ 
+-    w_filename = space.fsdecode(space.wrapbytes(find_info.filename))
++    w_filename = importing.fsdecode(space, find_info.filename)
+     stream = find_info.stream
+ 
+     if stream is not None:
+@@ -106,22 +110,35 @@ def load_module(space, w_name, w_file, w_filename, w_info):
+     w_suffix, w_filemode, w_modtype = space.unpackiterable(w_info, 3)
+ 
+     filename = space.fsencode_w(w_filename)
+-    filemode = space.str_w(w_filemode)
++    if w_filemode is not space.w_None:
++        filemode = None
++    elif not space.isinstance_w(w_filemode, space.w_unicode):
++        raise oefmt(space.w_ValueError, "filemode must be str not %T",
++                    w_filemode)
++    else:
++        u_filemode = space.unicode_w(w_filemode)
++        try:
++            filemode = u_filemode.encode('ascii')
++        except UnicodeEncodeError:
++            raise OperationError(space.w_ValueError,
++                                 space.wrap(u"Invalid filemode %s" %
++                                            u_filemode))
+     if space.is_w(w_file, space.w_None):
+         stream = None
+     else:
+         stream = get_file(space, w_file, filename, filemode)
+ 
+-    find_info = importing.FindInfo(
+-        space.int_w(w_modtype),
+-        filename,
+-        stream,
+-        space.str_w(w_suffix),
+-        filemode)
+-    return importing.load_module(
+-        space, w_name, find_info, reuse=True)
++    find_info = importing.FindInfo(space.int_w(w_modtype), filename, stream,
++                                   space.fsencode_w(w_suffix), filemode)
++    return importing.load_module(space, w_name, find_info, reuse=True)
+ 
+ def load_source(space, w_modulename, w_filename, w_file=None):
++    if not space.isinstance_w(w_modulename, space.unicode_w):
++        raise oefmt(space.w_TypeError, "modulename must be a str, not %T",
++                    w_modulename)
++    if not space.isinstance_w(w_filename, space.unicode_w):
++        raise oefmt(space.w_TypeError, "filename must be a str, not %T",
++                    w_filename)
+     filename = space.fsencode_w(w_filename)
+ 
+     stream = get_file(space, w_file, filename, 'U')
+@@ -161,9 +178,9 @@ def load_compiled(space, w_modulename, filename, w_file=None):
+ @unwrap_spec(filename='fsencode')
+ def load_dynamic(space, w_modulename, filename, w_file=None):
+     if not space.config.objspace.usemodules.cpyext:
+-        raise OperationError(space.w_ImportError, space.wrap(
+-            "Not implemented"))
+-    importing.load_c_extension(space, filename, space.str_w(w_modulename))
++        raise OperationError(space.w_ImportError,
++                             space.wrap(u"Not implemented"))
++    importing.load_c_extension_w(space, filename, w_modulename)
+     return importing.check_sys_modules(space, w_modulename)
+ 
+ def new_module(space, w_name):
+@@ -176,8 +193,8 @@ def init_builtin(space, w_name):
+     if space.finditem(space.sys.get('modules'), w_name) is not None:
+         raise OperationError(
+             space.w_ImportError,
+-            space.wrap("cannot initialize a built-in module twice in PyPy"))
+-    return space.getbuiltinmodule(name)
++            space.wrap(u"cannot initialize a built-in module twice in PyPy"))
++    return space.getbuiltinmodule(rstring.assert_ascii(name))
+ 
+ def init_frozen(space, w_name):
+     return None
+diff --git a/pypy/module/posix/interp_posix.py b/pypy/module/posix/interp_posix.py
+index ea1f6ab..6ce0645 100644
+--- a/pypy/module/posix/interp_posix.py
++++ b/pypy/module/posix/interp_posix.py
+@@ -1,7 +1,7 @@
+ import os
+ import sys
+ 
+-from rpython.rlib import rposix, objectmodel, rurandom
++from rpython.rlib import rposix, objectmodel, rurandom, rstring
+ from rpython.rlib.objectmodel import specialize
+ from rpython.rlib.rarithmetic import r_longlong
+ from rpython.rlib.unroll import unrolling_iterable
+@@ -9,7 +9,8 @@ from rpython.rtyper.module import ll_os_stat
+ from rpython.rtyper.module.ll_os import RegisterOs
+ 
+ from pypy.interpreter.gateway import unwrap_spec, WrappedDefault
+-from pypy.interpreter.error import OperationError, wrap_oserror, wrap_oserror2
++from pypy.interpreter.error import (OperationError, wrap_oserror,
++                                    wrap_oserror2, strerror as _strerror)
+ 
+ 
+ _WIN32 = sys.platform == 'win32'
+@@ -238,7 +239,7 @@ def build_stat_result(space, st):
+ 
+     w_tuple = space.newtuple(lst)
+     w_stat_result = space.getattr(space.getbuiltinmodule(os.name),
+-                                  space.wrap('stat_result'))
++                                  space.wrap(u'stat_result'))
+     return space.call_function(w_stat_result, w_tuple, w_keywords)
+ 
+ 
+@@ -247,7 +248,8 @@ def build_statvfs_result(space, st):
+     for i, (name, _) in STATVFS_FIELDS:
+         vals_w[i] = space.wrap(getattr(st, name))
+     w_tuple = space.newtuple(vals_w)
+-    w_statvfs_result = space.getattr(space.getbuiltinmodule(os.name), space.wrap('statvfs_result'))
++    w_statvfs_result = space.getattr(space.getbuiltinmodule(os.name),
++                                     space.wrap(u'statvfs_result'))
+     return space.call_function(w_statvfs_result, w_tuple)
+ 
+ 
+@@ -476,11 +478,10 @@ def rmdir(space, w_path):
+ def strerror(space, errno):
+     """Translate an error code to a message string."""
+     try:
+-        text = os.strerror(errno)
++        return space.wrap(_strerror(errno))
+     except ValueError:
+         raise OperationError(space.w_ValueError,
+                              space.wrap("strerror() argument out of range"))
+-    return space.wrap(text)
+ 
+ def getlogin(space):
+     """Return the currently logged in user."""
+@@ -488,8 +489,7 @@ def getlogin(space):
+         cur = os.getlogin()
+     except OSError, e:
+         raise wrap_oserror(space, e)
+-    else:
+-        return space.wrap(cur)
++    return space.fsdecode(space.wrapbytes(cur))
+ 
+ # ____________________________________________________________
+ 
+@@ -693,14 +693,21 @@ def symlink(space, w_src, w_dst):
+     except OSError, e:
+         raise wrap_oserror(space, e)
+ 
+-@unwrap_spec(path='fsencode')
+-def readlink(space, path):
++def readlink(space, w_path):
+     "Return a string representing the path to which the symbolic link points."
++    is_unicode = space.isinstance_w(w_path, space.w_unicode)
++    if is_unicode:
++        path = space.fsencode_w(w_path)
++    else:
++        path = space.bytes0_w(w_path)
+     try:
+         result = os.readlink(path)
+     except OSError, e:
+-        raise wrap_oserror(space, e, path)
+-    return space.wrap(result)
++        raise wrap_oserror2(space, e, w_path)
++    w_result = space.wrapbytes(result)
++    if is_unicode:
++        return space.fsdecode(w_result)
++    return w_result
+ 
+ before_fork_hooks = []
+ after_fork_child_hooks = []
+@@ -890,7 +897,8 @@ def uname(space):
+         r = os.uname()
+     except OSError, e:
+         raise wrap_oserror(space, e)
+-    l_w = [space.wrap(i) for i in [r[0], r[1], r[2], r[3], r[4]]]
++    l_w = [space.fsdecode(space.wrapbytes(i))
++           for i in [r[0], r[1], r[2], r[3], r[4]]]
+     return space.newtuple(l_w)
+ 
+ def getuid(space):
+@@ -1217,7 +1225,7 @@ for name in RegisterOs.w_star:
+ @unwrap_spec(fd=c_int)
+ def ttyname(space, fd):
+     try:
+-        return space.wrap(os.ttyname(fd))
++        return space.fsdecode(space.wrapbytes(os.ttyname(fd)))
+     except OSError, e:
+         raise wrap_oserror(space, e)
+ 
+@@ -1352,7 +1360,7 @@ def ctermid(space):
+ 
+     Return the name of the controlling terminal for this process.
+     """
+-    return space.wrap(os.ctermid())
++    return space.fsdecode(space.wrapbytes(os.ctermid()))
+ 
+ @unwrap_spec(fd=c_int)
+ def device_encoding(space, fd):
+diff --git a/pypy/module/rctime/interp_time.py b/pypy/module/rctime/interp_time.py
+index 1a9f3af..4a3d9fd 100644
+--- a/pypy/module/rctime/interp_time.py
++++ b/pypy/module/rctime/interp_time.py
+@@ -1,6 +1,6 @@
+ from rpython.rtyper.tool import rffi_platform as platform
+ from rpython.rtyper.lltypesystem import rffi
+-from pypy.interpreter.error import OperationError, oefmt
++from pypy.interpreter.error import OperationError, oefmt, strerror as _strerror
+ from pypy.interpreter.gateway import unwrap_spec
+ from rpython.rtyper.lltypesystem import lltype
+ from rpython.rlib.rarithmetic import intmask
+@@ -299,7 +299,7 @@ def _init_timezone(space):
+ 
+ def _get_error_msg():
+     errno = rposix.get_errno()
+-    return os.strerror(errno)
++    return _strerror(errno)
+ 
+ if sys.platform != 'win32':
+     @unwrap_spec(secs=float)
+@@ -397,7 +397,7 @@ def _gettmarg(space, w_tup, allowNone=True):
+         lltype.free(t_ref, flavor='raw')
+         if not pbuf:
+             raise OperationError(space.w_ValueError,
+-                space.wrap(_get_error_msg()))
++                                 space.wrap(_get_error_msg()))
+         return pbuf
+ 
+     tup_w = space.fixedview(w_tup)
+diff --git a/pypy/module/sys/vm.py b/pypy/module/sys/vm.py
+index c9e0285..0a20110 100644
+--- a/pypy/module/sys/vm.py
++++ b/pypy/module/sys/vm.py
+@@ -258,5 +258,5 @@ Return the string itself or the previously interned string object with the
+ same value."""
+     if space.is_w(space.type(w_str), space.w_unicode):
+         return space.new_interned_w_str(w_str)
+-    raise OperationError(space.w_TypeError, space.wrap("intern() argument must be string."))
+-
++    raise OperationError(space.w_TypeError,
++                         space.wrap(u"intern() argument must be string."))
+diff --git a/pypy/objspace/std/mapdict.py b/pypy/objspace/std/mapdict.py
+index 04344d9..5a8af5f 100644
+--- a/pypy/objspace/std/mapdict.py
++++ b/pypy/objspace/std/mapdict.py
+@@ -1,6 +1,6 @@
+ import weakref
+ 
+-from rpython.rlib import jit, objectmodel, debug, rerased
++from rpython.rlib import jit, objectmodel, debug, rerased, rstring
+ from rpython.rlib.rarithmetic import intmask, r_uint
+ 
+ from pypy.interpreter.baseobjspace import W_Root
+@@ -242,7 +242,7 @@ class DevolvedDictTerminator(Terminator):
+         if selector[1] == DICT:
+             space = self.space
+             w_dict = obj.getdict(space)
+-            return space.finditem_str(w_dict, selector[0])
++            return space.finditem_utf8(w_dict, selector[0])
+         return Terminator._read_terminator(self, obj, selector)
+ 
+     def _write_terminator(self, obj, selector, w_value):
+@@ -332,7 +332,8 @@ class PlainAttribute(AbstractAttribute):
+         return new_obj
+ 
+     def __repr__(self):
+-        return "<PlainAttribute %s %s %r>" % (self.selector, self.storageindex, self.back)
++        return "<PlainAttribute %s %s %r>" % (self.selector,
++                                              self.storageindex, self.back)
+ 
+ def _become(w_obj, new_obj):
+     # this is like the _become method, really, but we cannot use that due to
+diff --git a/pypy/objspace/std/newformat.py b/pypy/objspace/std/newformat.py
+index 6480f6f..a1919ae 100644
+--- a/pypy/objspace/std/newformat.py
++++ b/pypy/objspace/std/newformat.py
+@@ -719,7 +719,7 @@ def make_formatting_class():
+             for c in s:
+                 index = ord(c)
+                 if ord("a") <= index <= ord("z"):
+-                    c = chr(index - 32)
++                    c = rstring.assert_ascii(chr(index - 32))
+                 buf.append(c)
+             return self.empty.join(buf)
+ 
+diff --git a/pypy/objspace/std/stdtypedef.py b/pypy/objspace/std/stdtypedef.py
+index c083e5e..4ebac1b 100644
+--- a/pypy/objspace/std/stdtypedef.py
++++ b/pypy/objspace/std/stdtypedef.py
+@@ -6,7 +6,7 @@ from pypy.interpreter.baseobjspace import SpaceCache
+ from pypy.objspace.std import model
+ from pypy.objspace.std.model import StdObjSpaceMultiMethod
+ from pypy.objspace.std.multimethod import FailedToImplement
+-from rpython.rlib import jit
++from rpython.rlib import jit, rstring
+ from rpython.tool.sourcetools import compile2
+ 
+ __all__ = ['StdTypeDef', 'SMM']
+@@ -235,7 +235,7 @@ def wrap_trampoline_in_gateway(func, methname, multimethod):
+     return gateway.interp2app(func, app_name=methname)
+ 
+ def slicemultimethod(space, multimethod, typedef, result, local=False):
+-    """NOT_RPYTHON"""    
++    """NOT_RPYTHON"""
+     for i in range(len(multimethod.specialnames)):
+         methname = multimethod.specialnames[i]
+         if methname in result:
+diff --git a/pypy/objspace/std/typeobject.py b/pypy/objspace/std/typeobject.py
+index 10a87ac..98d987c 100644
+--- a/pypy/objspace/std/typeobject.py
++++ b/pypy/objspace/std/typeobject.py
+@@ -14,6 +14,7 @@ from rpython.rlib.jit import (promote, elidable_promote, we_are_jitted,
+      promote_string, elidable, dont_look_inside, unroll_safe)
+ from rpython.rlib.objectmodel import current_object_addr_as_int, compute_hash
+ from rpython.rlib.rarithmetic import intmask, r_uint
++from rpython.rlib.rstring import assert_utf8, check_utf8
+ 
+ 
+ class TypeCell(W_Root):
+@@ -89,8 +90,8 @@ class W_TypeObject(W_Object):
+     w_new_function = None
+ 
+     @dont_look_inside
+-    def __init__(w_self, space, name, bases_w, dict_w,
+-                 overridetypedef=None):
++    def __init__(w_self, space, name, bases_w, dict_w, overridetypedef=None):
++        check_utf8(name)
+         w_self.space = space
+         w_self.name = name
+         w_self.bases_w = bases_w
+@@ -266,7 +267,7 @@ class W_TypeObject(W_Object):
+             raise oefmt(space.w_TypeError,
+                         "can't set attributes on type object '%N'", w_self)
+         if name == "__del__" and name not in w_self.dict_w:
+-            msg = ("a __del__ method added to an existing type will not be "
++            msg = (u"a __del__ method added to an existing type will not be "
+                    "called")
+             space.warn(space.wrap(msg), space.w_RuntimeWarning)
+         if space.config.objspace.std.withtypeversion:
+@@ -476,20 +477,22 @@ class W_TypeObject(W_Object):
+         if self.is_heaptype():
+             return self.getdictvalue(space, '__module__')
+         else:
++            check_utf8(self.name)
+             dot = self.name.find('.')
+             if dot >= 0:
+-                mod = self.name[:dot]
++                mod = assert_utf8(self.name[:dot])
+             else:
+                 mod = "builtins"
+             return space.wrap(mod)
+ 
+     def getname(self, space):
++        check_utf8(self.name)
+         if self.is_heaptype():
+             result = self.name
+         else:
+             dot = self.name.find('.')
+             if dot >= 0:
+-                result = self.name[dot+1:]
++                result = assert_utf8(self.name[dot + 1:])
+             else:
+                 result = self.name
+         return result.decode('utf-8')
+@@ -522,7 +525,7 @@ class W_TypeObject(W_Object):
+     def get_subclasses(w_self):
+         space = w_self.space
+         if not space.config.translation.rweakref:
+-            msg = ("this feature requires weakrefs, "
++            msg = (u"this feature requires weakrefs, "
+                    "which are not available in this build of PyPy")
+             raise OperationError(space.w_RuntimeError,
+                                  space.wrap(msg))
+@@ -563,18 +566,29 @@ def _create_new_type(space, w_typetype, w_name, w_bases, w_dict):
+     # this is in its own function because we want the special case 'type(x)'
+     # above to be seen by the jit.
+     if w_bases is None or w_dict is None:
+-        raise OperationError(space.w_TypeError, space.wrap("type() takes 1 or 3 arguments"))
++        raise OperationError(space.w_TypeError,
++                             space.wrap(u"type() takes 1 or 3 arguments"))
+ 
+     bases_w = space.fixedview(w_bases)
+ 
+     w_winner = _calculate_metaclass(space, w_typetype, bases_w)
+     if not space.is_w(w_winner, w_typetype):
+-        newfunc = space.getattr(w_winner, space.wrap('__new__'))
+-        if not space.is_w(newfunc, space.getattr(space.w_type, space.wrap('__new__'))):
++        newfunc = space.getattr(w_winner, space.wrap(u'__new__'))
++        if not space.is_w(newfunc, space.getattr(space.w_type,
++                                                 space.wrap(u'__new__'))):
+             return space.call_function(newfunc, w_winner, w_name, w_bases, w_dict)
+         w_typetype = w_winner
+ 
+-    name = space.str_w(w_name)
++    if not space.isinstance_w(w_name, space.w_unicode):
++        raise OperationError(space.w_TypeError,
++                             space.wrap(u"type() argument 1 must be str, "
++                                        "not bytes"))
++
++    try:
++        name = space.unicode_w(w_name).encode('utf-8')
++    except UnicodeEncodeError:
++        raise OperationError(space.w_TypeError,
++                             space.wrap(u"Invalid type name"))
+     assert isinstance(name, str)
+     dict_w = {}
+     dictkeys_w = space.listview(w_dict)
+@@ -597,7 +611,7 @@ def _calculate_metaclass(space, w_metaclass, bases_w):
+         if space.is_true(space.issubtype(w_typ, w_winner)):
+             w_winner = w_typ
+             continue
+-        msg = ("metaclass conflict: the metaclass of a derived class must be "
++        msg = (u"metaclass conflict: the metaclass of a derived class must be "
+                "a (non-strict) subclass of the metaclasses of all its bases")
+         raise OperationError(space.w_TypeError, space.wrap(msg))
+     return w_winner
+@@ -612,7 +626,7 @@ def _precheck_for_new(space, w_type):
+ def _check(space, w_type, w_msg=None):
+     if not isinstance(w_type, W_TypeObject):
+         if w_msg is None:
+-            w_msg = space.wrap("descriptor is for 'type'")
++            w_msg = space.wrap(u"descriptor is for 'type'")
+         raise OperationError(space.w_TypeError, w_msg)
+     return w_type
+ 
+@@ -625,7 +639,13 @@ def descr_set__name__(space, w_type, w_value):
+     w_type = _check(space, w_type)
+     if not w_type.is_heaptype():
+         raise oefmt(space.w_TypeError, "can't set %N.__name__", w_type)
+-    name = space.str_w(w_value)
++    try:
++        name = space.unicode_w(w_value).encode('utf-8')
++    except UnicodeEncodeError:
++        raise OperationError(space.w_TypeError,
++                             space.wrap(u"Invalid type name"))
++    # This is the same behavior with CPython3, which is funny because
++    # the constructor does accept null bytes. May be a bug?
+     if '\x00' in name:
+         raise oefmt(space.w_ValueError, "__name__ must not contain null bytes")
+     w_type.name = name
+@@ -636,7 +656,7 @@ def descr_get__mro__(space, w_type):
+ 
+ def descr_mro(space, w_type):
+     """Return a type's method resolution order."""
+-    w_type = _check(space, w_type, space.wrap("expected type"))
++    w_type = _check(space, w_type, space.wrap(u"expected type"))
+     return space.newlist(w_type.compute_default_mro())
+ 
+ def descr_get__bases__(space, w_type):
+@@ -669,7 +689,7 @@ def descr_set__bases__(space, w_type, w_value):
+         if isinstance(w_newbase, W_TypeObject):
+             if w_type in w_newbase.compute_default_mro():
+                 raise OperationError(space.w_TypeError,
+-                                     space.wrap("a __bases__ item causes"
++                                     space.wrap(u"a __bases__ item causes"
+                                                 " an inheritance cycle"))
+ 
+     w_oldbestbase = check_and_find_best_base(space, w_type.bases_w)
+@@ -719,7 +739,7 @@ def descr__base(space, w_type):
+ 
+ def descr__doc(space, w_type):
+     if space.is_w(w_type, space.w_type):
+-        return space.wrap("""type(object) -> the object's type
++        return space.wrap(u"""type(object) -> the object's type
+ type(name, bases, dict) -> a new type""")
+     w_type = _check(space, w_type)
+     if not w_type.is_heaptype():
+@@ -761,7 +781,7 @@ def descr_get___abstractmethods__(space, w_type):
+         if w_result is not None:
+             return w_result
+     raise OperationError(space.w_AttributeError,
+-                         space.wrap("__abstractmethods__"))
++                         space.wrap(u"__abstractmethods__"))
+ 
+ def descr_set___abstractmethods__(space, w_type, w_new):
+     w_type = _check(space, w_type)
+@@ -772,7 +792,7 @@ def descr_del___abstractmethods__(space, w_type):
+     w_type = _check(space, w_type)
+     if not w_type.deldictvalue(space, "__abstractmethods__"):
+         raise OperationError(space.w_AttributeError,
+-                             space.wrap("__abstractmethods__"))
++                             space.wrap(u"__abstractmethods__"))
+     w_type.set_abstract(False)
+ 
+ def descr___subclasses__(space, w_type):
+@@ -877,7 +897,7 @@ def check_and_find_best_base(space, bases_w):
+     w_bestbase = find_best_base(space, bases_w)
+     if w_bestbase is None:
+         raise OperationError(space.w_TypeError,
+-                             space.wrap("a new-style class can't have "
++                             space.wrap(u"a new-style class can't have "
+                                         "only classic bases"))
+     if not w_bestbase.instancetypedef.acceptable_as_base_class:
+         raise oefmt(space.w_TypeError,
+@@ -890,8 +910,8 @@ def check_and_find_best_base(space, bases_w):
+             w_layout = w_base.w_same_layout_as or w_base
+             if not issublayout(w_bestlayout, w_layout):
+                 raise OperationError(space.w_TypeError,
+-                                     space.wrap("instance layout conflicts in "
+-                                                "multiple inheritance"))
++                                     space.wrap(u"instance layout conflicts "
++                                                "in multiple inheritance"))
+     return w_bestbase
+ 
+ def copy_flags_from_bases(w_self, w_bestbase):
+@@ -916,23 +936,31 @@ def create_all_slots(w_self, hasoldstylebase):
+         wantdict = False
+         wantweakref = False
+         w_slots = dict_w['__slots__']
+-        if (space.isinstance_w(w_slots, space.w_str) or
+-            space.isinstance_w(w_slots, space.w_unicode)):
++        if space.isinstance_w(w_slots, space.w_str):
++            raise OperationError(space.w_TypeError,
++                                 space.wrap(u"__slots__ items must be "
++                                            "strings, not 'int'"))
++        elif space.isinstance_w(w_slots, space.w_unicode):
+             slot_names_w = [w_slots]
+         else:
+             slot_names_w = space.unpackiterable(w_slots)
+         for w_slot_name in slot_names_w:
+-            slot_name = space.str_w(w_slot_name)
+-            if slot_name == '__dict__':
++            if not space.isinstance_w(w_slot_name, space.w_unicode):
++                raise OperationError(
++                    space.w_TypeError,
++                    space.wrap(u"__slots__ items must be strings, not '%s'" %
++                               space.type(w_slot_name).name.decode('utf-8')))
++            slot_name = space.unicode_w(w_slot_name)
++            if slot_name == u'__dict__':
+                 if wantdict or w_self.hasdict:
+                     raise OperationError(space.w_TypeError,
+-                            space.wrap("__dict__ slot disallowed: "
++                            space.wrap(u"__dict__ slot disallowed: "
+                                        "we already got one"))
+                 wantdict = True
+-            elif slot_name == '__weakref__':
++            elif slot_name == u'__weakref__':
+                 if wantweakref or w_self.weakrefable:
+                     raise OperationError(space.w_TypeError,
+-                            space.wrap("__weakref__ slot disallowed: "
++                            space.wrap(u"__weakref__ slot disallowed: "
+                                        "we already got one"))
+                 wantweakref = True
+             else:
+@@ -946,15 +974,17 @@ def create_all_slots(w_self, hasoldstylebase):
+         w_self.needsdel = True
+ 
+ def create_slot(w_self, slot_name):
++    assert isinstance(slot_name, unicode)
+     space = w_self.space
+     if not valid_slot_name(slot_name):
+         raise OperationError(space.w_TypeError,
+-                             space.wrap('__slots__ must be identifiers'))
++                             space.wrap(u'__slots__ must be identifiers'))
+     # create member
+-    slot_name = mangle(slot_name, w_self.name)
++    check_utf8(w_self.name)
++    slot_name = assert_utf8(mangle(slot_name.encode('utf-8'), w_self.name))
+     if slot_name not in w_self.dict_w:
+         # Force interning of slot names.
+-        slot_name = space.str_w(space.new_interned_str(slot_name))
++        space.new_interned_str_utf8(slot_name)
+         # in cpython it is ignored less, but we probably don't care
+         member = Member(w_self.nslots, slot_name, w_self)
+         w_self.dict_w[slot_name] = space.wrap(member)
+@@ -973,12 +1003,8 @@ def create_weakref_slot(w_self):
+         w_self.weakrefable = True
+ 
+ def valid_slot_name(slot_name):
+-    if len(slot_name) == 0 or slot_name[0].isdigit():
+-        return False
+-    for c in slot_name:
+-        if not c.isalnum() and c != '_':
+-            return False
+-    return True
++    from pypy.objspace.std.unicodeobject import _isidentifier
++    return _isidentifier(slot_name)
+ 
+ def setup_user_defined_type(w_self):
+     if len(w_self.bases_w) == 0:
+@@ -1028,7 +1054,7 @@ def ensure_module_attr(w_self):
+         caller = space.getexecutioncontext().gettopframe_nohidden()
+         if caller is not None:
+             w_globals = caller.w_globals
+-            w_name = space.finditem(w_globals, space.wrap('__name__'))
++            w_name = space.finditem(w_globals, space.wrap(u'__name__'))
+             if w_name is not None:
+                 w_self.dict_w['__module__'] = w_name
+ 
+@@ -1058,7 +1084,7 @@ def validate_custom_mro(space, mro_w):
+     for w_class in mro_w:
+         if not space.abstract_isclass_w(w_class):
+             raise OperationError(space.w_TypeError,
+-                                 space.wrap("mro() returned a non-class"))
++                                 space.wrap(u"mro() returned a non-class"))
+     return mro_w
+ 
+ def is_mro_purely_of_types(mro_w):
+@@ -1098,7 +1124,7 @@ def call__Type(space, w_type, __args__):
+         w_result = space.get_and_call_args(w_descr, w_newobject, __args__)
+         if not space.is_w(w_result, space.w_None):
+             raise OperationError(space.w_TypeError,
+-                                 space.wrap("__init__() should return None"))
++                                 space.wrap(u"__init__() should return None"))
+     return w_newobject
+ 
+ def _issubtype(w_sub, w_type):
+diff --git a/pypy/tool/ann_override.py b/pypy/tool/ann_override.py
+index 56036dd..930f565 100644
+--- a/pypy/tool/ann_override.py
++++ b/pypy/tool/ann_override.py
+@@ -2,6 +2,7 @@
+ from rpython.annotator.policy import AnnotatorPolicy
+ from rpython.flowspace.model import Constant
+ from rpython.annotator import specialize
++from rpython.rlib.rstring import assert_ascii
+ 
+ 
+ 
+@@ -40,7 +41,7 @@ class PyPyAnnotatorPolicy(AnnotatorPolicy):
+ 
+                     def fold():
+                         if typ is str and isidentifier(x):
+-                            return space.new_interned_str(x)
++                            return space.new_interned_str(assert_ascii(x))
+                         else:
+                             return space.wrap(x)
+                     builder = specialize.make_constgraphbuilder(2, factory=fold,
+diff --git a/pypy/tool/pytest/objspace.py b/pypy/tool/pytest/objspace.py
+index 2719e8a..55119c0 100644
+--- a/pypy/tool/pytest/objspace.py
++++ b/pypy/tool/pytest/objspace.py
+@@ -143,4 +143,3 @@ class TinyObjSpace(object):
+ 
+     def is_w(self, obj1, obj2):
+         return obj1 is obj2
+-
+diff --git a/rpython/annotator/binaryop.py b/rpython/annotator/binaryop.py
+index 97e2287..43e22c6 100644
+--- a/rpython/annotator/binaryop.py
++++ b/rpython/annotator/binaryop.py
+@@ -12,7 +12,7 @@ from rpython.annotator.model import (
+     SomeByteArray, SomeWeakRef, SomeSingleFloat,
+     SomeLongFloat, SomeType, SomeConstantType, unionof, UnionError,
+     read_can_only_throw, add_knowntypedata,
+-    merge_knowntypedata,)
++    merge_knowntypedata, UNKNOWN_STR, UTF8_STR, ASCII_STR,)
+ from rpython.annotator.bookkeeper import getbookkeeper, immutablevalue
+ from rpython.flowspace.model import Variable, Constant
+ from rpython.flowspace.operation import op
+@@ -373,11 +373,14 @@ class __extend__(pairtype(SomeString, SomeString)):
+     def union((str1, str2)):
+         can_be_None = str1.can_be_None or str2.can_be_None
+         no_nul = str1.no_nul and str2.no_nul
+-        return SomeString(can_be_None=can_be_None, no_nul=no_nul)
++        str_type = min(str1.str_type, str2.str_type)
++        return SomeString(can_be_None=can_be_None, no_nul=no_nul,
++                          str_type=str_type)
+ 
+     def add((str1, str2)):
+         # propagate const-ness to help getattr(obj, 'prefix' + const_name)
+-        result = SomeString(no_nul=str1.no_nul and str2.no_nul)
++        result = SomeString(no_nul=str1.no_nul and str2.no_nul,
++                            str_type=min(str1.str_type, str2.str_type))
+         if str1.is_immutable_constant() and str2.is_immutable_constant():
+             result.const = str1.const + str2.const
+         return result
+@@ -408,20 +411,30 @@ class __extend__(pairtype(SomeChar, SomeChar)):
+ 
+     def union((chr1, chr2)):
+         no_nul = chr1.no_nul and chr2.no_nul
+-        return SomeChar(no_nul=no_nul)
++        str_type = min(chr1.str_type, chr2.str_type)
++        return SomeChar(no_nul=no_nul, str_type=str_type)
+ 
+ 
+ class __extend__(pairtype(SomeChar, SomeUnicodeCodePoint),
+                  pairtype(SomeUnicodeCodePoint, SomeChar)):
+     def union((uchr1, uchr2)):
+-        return SomeUnicodeCodePoint()
++        if ((uchr1.str_type != ASCII_STR and isinstance(uchr1, SomeChar)) or
++            (uchr2.str_type != ASCII_STR and isinstance(uchr2, SomeChar))):
++            raise UnionError(uchr1, uchr2)
++        no_nul = uchr1.no_nul and uchr2.no_nul
++        str_type = min(uchr1.str_type, uchr2.str_type)
++        return SomeUnicodeCodePoint(no_nul=no_nul, str_type=str_type)
+ 
+ class __extend__(pairtype(SomeUnicodeCodePoint, SomeUnicodeCodePoint)):
+     def union((uchr1, uchr2)):
+-        return SomeUnicodeCodePoint()
++        no_nul = uchr1.no_nul and uchr2.no_nul
++        str_type = min(uchr1.str_type, uchr2.str_type)
++        return SomeUnicodeCodePoint(no_nul=no_nul, str_type=str_type)
+ 
+     def add((chr1, chr2)):
+-        return SomeUnicodeString()
++        no_nul = uchr1.no_nul and uchr2.no_nul
++        str_type = min(uchr1.str_type, uchr2.str_type)
++        return SomeUnicodeString(no_nul=no_nul, str_type=str_type)
+ 
+ class __extend__(pairtype(SomeString, SomeUnicodeString),
+                  pairtype(SomeUnicodeString, SomeString)):
+@@ -433,6 +446,8 @@ class __extend__(pairtype(SomeString, SomeUnicodeString),
+ class __extend__(pairtype(SomeString, SomeTuple),
+                  pairtype(SomeUnicodeString, SomeTuple)):
+     def mod((s_string, s_tuple)):
++        if not s_string.is_immutable_constant():
++            raise AnnotatorError("string formatting with non constant format")
+         is_string = isinstance(s_string, SomeString)
+         is_unicode = isinstance(s_string, SomeUnicodeString)
+         assert is_string or is_unicode
+@@ -443,22 +458,33 @@ class __extend__(pairtype(SomeString, SomeTuple),
+                 raise AnnotatorError(
+                     "string formatting mixing strings and unicode not supported")
+         no_nul = s_string.no_nul
++        str_type = s_string.str_type
+         for s_item in s_tuple.items:
+             if isinstance(s_item, SomeFloat):
+-                pass   # or s_item is a subclass, like SomeInteger
+-            elif (isinstance(s_item, SomeString) or
+-                  isinstance(s_item, SomeUnicodeString)) and s_item.no_nul:
+-                pass
++                continue   # or s_item is a subclass, like SomeInteger
++            elif isinstance(s_item, (SomeString, SomeUnicodeString)):
++                if not s_item.no_nul:
++                    no_nul = False
++                str_type = min(str_type, s_item.str_type)
+             else:
+                 no_nul = False
++                str_type = UNKNOWN_STR
+                 break
+-        return s_string.__class__(no_nul=no_nul)
++        return s_string.__class__(no_nul=no_nul, str_type=str_type)
+ 
+ 
+ class __extend__(pairtype(SomeString, SomeObject),
+                  pairtype(SomeUnicodeString, SomeObject)):
+ 
+     def mod((s_string, args)):
++        if not s_string.is_immutable_constant():
++            raise AnnotatorError("string formatting with non constant format")
++        if isinstance(args, SomeFloat):
++            return s_string.tobasestring()
++        if isinstance(args, (SomeString, SomeUnicodeString)):
++            no_nul = s_string.no_nul and args.no_nul
++            str_type = min(s_string.str_type, args.str_type)
++            return s_string.__class__(no_nul=no_nul, str_type=str_type)
+         return s_string.__class__()
+ 
+ class __extend__(pairtype(SomeFloat, SomeFloat)):
+@@ -616,52 +642,59 @@ class __extend__(pairtype(SomeList, SomeInteger)):
+ class __extend__(pairtype(SomeString, SomeInteger)):
+ 
+     def getitem((str1, int2)):
+-        return SomeChar(no_nul=str1.no_nul)
++        str_type = ASCII_STR if str1.str_type == ASCII_STR else UNKNOWN_STR
++        return SomeChar(no_nul=str1.no_nul, str_type=str_type)
+     getitem.can_only_throw = []
+ 
+     getitem_key = getitem
+ 
+     def getitem_idx((str1, int2)):
+-        return SomeChar(no_nul=str1.no_nul)
++        str_type = ASCII_STR if str1.str_type == ASCII_STR else UNKNOWN_STR
++        return SomeChar(no_nul=str1.no_nul, str_type=str_type)
+     getitem_idx.can_only_throw = [IndexError]
+ 
+     getitem_idx_key = getitem_idx
+ 
+     def mul((str1, int2)): # xxx do we want to support this
+-        return SomeString(no_nul=str1.no_nul)
++        return str1.tobasestring()
+ 
+ class __extend__(pairtype(SomeUnicodeString, SomeInteger)):
+     def getitem((str1, int2)):
+-        return SomeUnicodeCodePoint()
++        return SomeUnicodeCodePoint(no_nul=str1.no_nul,
++                                    str_type=str1.str_type)
+     getitem.can_only_throw = []
+ 
+     getitem_key = getitem
+ 
+     def getitem_idx((str1, int2)):
+-        return SomeUnicodeCodePoint()
++        return SomeUnicodeCodePoint(no_nul=str1.no_nul,
++                                    str_type=str1.str_type)
+     getitem_idx.can_only_throw = [IndexError]
+ 
+     getitem_idx_key = getitem_idx
+ 
+     def mul((str1, int2)): # xxx do we want to support this
+-        return SomeUnicodeString()
++        return str1.tobasestring()
+ 
+ class __extend__(pairtype(SomeInteger, SomeString),
+                  pairtype(SomeInteger, SomeUnicodeString)):
+ 
+     def mul((int1, str2)): # xxx do we want to support this
+-        return str2.basestringclass()
++        return str2.tobasestring()
+ 
+ class __extend__(pairtype(SomeUnicodeCodePoint, SomeUnicodeString),
+                  pairtype(SomeUnicodeString, SomeUnicodeCodePoint),
+                  pairtype(SomeUnicodeString, SomeUnicodeString)):
+     def union((str1, str2)):
+         return SomeUnicodeString(can_be_None=str1.can_be_none() or
+-                                 str2.can_be_none())
++                                 str2.can_be_none(),
++                                 no_nul=str1.no_nul and str2.no_nul,
++                                 str_type=min(str1.str_type, str2.str_type))
+ 
+     def add((str1, str2)):
+         # propagate const-ness to help getattr(obj, 'prefix' + const_name)
+-        result = SomeUnicodeString()
++        result = SomeUnicodeString(no_nul=str1.no_nul and str2.no_nul,
++                                   str_type=min(str1.str_type, str2.str_type))
+         if str1.is_immutable_constant() and str2.is_immutable_constant():
+             result.const = str1.const + str2.const
+         return result
+diff --git a/rpython/annotator/bookkeeper.py b/rpython/annotator/bookkeeper.py
+index 3a1864c..8bf740a 100644
+--- a/rpython/annotator/bookkeeper.py
++++ b/rpython/annotator/bookkeeper.py
+@@ -230,16 +230,33 @@ class Bookkeeper(object):
+             else:
+                 raise Exception("seeing a prebuilt long (value %s)" % hex(x))
+         elif issubclass(tp, str): # py.lib uses annotated str subclasses
++            from rpython.rlib.rstring import is_ascii_str, is_utf8_str
++            from rpython.annotator.model import UTF8_STR, ASCII_STR, UNKNOWN_STR
+             no_nul = not '\x00' in x
++            if is_ascii_str(x):
++                str_type = ASCII_STR
++            elif is_utf8_str(x):
++                str_type = UTF8_STR
++            else:
++                str_type = UNKNOWN_STR
+             if len(x) == 1:
+-                result = SomeChar(no_nul=no_nul)
++                result = SomeChar(no_nul=no_nul, str_type=str_type)
+             else:
+-                result = SomeString(no_nul=no_nul)
++                result = SomeString(no_nul=no_nul, str_type=str_type)
+         elif tp is unicode:
++            from rpython.rlib.rstring import is_ascii_str, is_utf8_unicode
++            from rpython.annotator.model import UTF8_STR, ASCII_STR, UNKNOWN_STR
++            no_nul = not '\x00' in x
++            if is_ascii_str(x):
++                str_type = ASCII_STR
++            elif is_utf8_unicode(x):
++                str_type = UTF8_STR
++            else:
++                str_type = UNKNOWN_STR
+             if len(x) == 1:
+-                result = SomeUnicodeCodePoint()
++                result = SomeUnicodeCodePoint(no_nul=no_nul, str_type=str_type)
+             else:
+-                result = SomeUnicodeString()
++                result = SomeUnicodeString(no_nul=no_nul, str_type=str_type)
+         elif tp is bytearray:
+             result = SomeByteArray()
+         elif tp is tuple:
+diff --git a/rpython/annotator/classdef.py b/rpython/annotator/classdef.py
+index 9074940..b351ffa 100644
+--- a/rpython/annotator/classdef.py
++++ b/rpython/annotator/classdef.py
+@@ -455,4 +455,3 @@ except ImportError:
+ else:
+     FORCE_ATTRIBUTES_INTO_CLASSES[termios.error] = \
+         {'args': SomeTuple([SomeInteger(), SomeString()])}
+-
+diff --git a/rpython/annotator/model.py b/rpython/annotator/model.py
+index 51ab0ca..9fda3cf 100644
+--- a/rpython/annotator/model.py
++++ b/rpython/annotator/model.py
+@@ -43,6 +43,7 @@ class State(object):
+     # A global attribute :-(  Patch it with 'True' to enable checking of
+     # the no_nul attribute...
+     check_str_without_nul = False
++    check_str_type = False
+ TLS = State()
+ 
+ class SomeObject(object):
+@@ -217,6 +218,11 @@ class SomeBool(SomeInteger):
+             self.knowntypedata = knowntypedata
+ 
+ 
++UNKNOWN_STR = 0
++UTF8_STR = 1
++ASCII_STR = 2
++
++
+ class SomeStringOrUnicode(SomeObject):
+     """Base class for shared implementation of SomeString,
+     SomeUnicodeString and SomeByteArray.
+@@ -226,14 +232,17 @@ class SomeStringOrUnicode(SomeObject):
+     immutable = True
+     can_be_None = False
+     no_nul = False  # No NUL character in the string.
++    str_type = UNKNOWN_STR
+ 
+-    def __init__(self, can_be_None=False, no_nul=False):
++    def __init__(self, can_be_None=False, no_nul=False, str_type=UNKNOWN_STR):
+         assert type(self) is not SomeStringOrUnicode
+         if can_be_None:
+             self.can_be_None = True
+         if no_nul:
+             assert self.immutable   #'no_nul' cannot be used with SomeByteArray
+             self.no_nul = True
++        if str_type != UNKNOWN_STR:
++            self.str_type = str_type
+ 
+     def can_be_none(self):
+         return self.can_be_None
+@@ -243,35 +252,42 @@ class SomeStringOrUnicode(SomeObject):
+             return False
+         d1 = self.__dict__
+         d2 = other.__dict__
+-        if not TLS.check_str_without_nul:
++        if not TLS.check_str_without_nul or not TLS.check_str_type:
+             d1 = d1.copy()
+-            d1['no_nul'] = 0
+             d2 = d2.copy()
+-            d2['no_nul'] = 0
++            if not TLS.check_str_without_nul:
++                d1['no_nul'] = 0
++                d2['no_nul'] = 0
++            if not TLS.check_str_type:
++                d1['str_type'] = 0
++                d2['str_type'] = 0
+         return d1 == d2
+ 
+     def nonnoneify(self):
+-        return self.__class__(can_be_None=False, no_nul=self.no_nul)
++        return self.__class__(no_nul=self.no_nul, str_type=self.str_type)
+ 
+     def nonnulify(self):
+-        return self.__class__(can_be_None=self.can_be_None, no_nul=True)
++        return self.__class__(can_be_None=self.can_be_None, no_nul=True,
++                              str_type=self.str_type)
++
++    def tobasestring(self, no_nul=True, str_type=ASCII_STR):
++        return self.basestringclass(no_nul=self.no_nul and no_nul,
++                                    str_type=min(self.str_type, str_type))
++
++    def noneify(self):
++        return self.basestringclass(can_be_None=True, no_nul=self.no_nul,
++                                    str_type=self.str_type)
+ 
+ 
+ class SomeString(SomeStringOrUnicode):
+     "Stands for an object which is known to be a string."
+     knowntype = str
+ 
+-    def noneify(self):
+-        return SomeString(can_be_None=True, no_nul=self.no_nul)
+-
+ 
+ class SomeUnicodeString(SomeStringOrUnicode):
+     "Stands for an object which is known to be an unicode string"
+     knowntype = unicode
+ 
+-    def noneify(self):
+-        return SomeUnicodeString(can_be_None=True, no_nul=self.no_nul)
+-
+ 
+ class SomeByteArray(SomeStringOrUnicode):
+     immutable = False
+@@ -282,18 +298,24 @@ class SomeChar(SomeString):
+     "Stands for an object known to be a string of length 1."
+     can_be_None = False
+ 
+-    def __init__(self, no_nul=False):    # no 'can_be_None' argument here
++    def __init__(self, no_nul=False,
++                 str_type=UNKNOWN_STR): # no 'can_be_None' argument here
+         if no_nul:
+             self.no_nul = True
++        if str_type != UNKNOWN_STR:
++            self.str_type = str_type
+ 
+ 
+ class SomeUnicodeCodePoint(SomeUnicodeString):
+     "Stands for an object known to be a unicode codepoint."
+     can_be_None = False
+ 
+-    def __init__(self, no_nul=False):    # no 'can_be_None' argument here
++    def __init__(self, no_nul=False,
++                 str_type=UNKNOWN_STR):    # no 'can_be_None' argument here
+         if no_nul:
+             self.no_nul = True
++        if str_type != UNKNOWN_STR:
++            self.str_type = str_type
+ 
+ SomeString.basestringclass = SomeString
+ SomeString.basecharclass = SomeChar
+diff --git a/rpython/annotator/test/test_annrpython.py b/rpython/annotator/test/test_annrpython.py
+index 5d1961c..9d0e38a 100644
+--- a/rpython/annotator/test/test_annrpython.py
++++ b/rpython/annotator/test/test_annrpython.py
+@@ -1495,7 +1495,8 @@ class TestAnnotateTestCase:
+             return e,c
+         a = self.RPythonAnnotator()
+         s = a.build_types(f, [int, str, a.bookkeeper.immutablevalue(1.0), a.bookkeeper.immutablevalue('d'), a.bookkeeper.immutablevalue('e')])
+-        assert s == annmodel.SomeTuple([annmodel.SomeChar(), a.bookkeeper.immutablevalue(1.0)])
++        assert s == annmodel.SomeTuple([annmodel.SomeChar(
++            str_type=annmodel.ASCII_STR), a.bookkeeper.immutablevalue(1.0)])
+ 
+     def test_bool_coalesce2(self):
+         def f(a,b,a1,b1,c,d,e):
+@@ -1508,8 +1509,9 @@ class TestAnnotateTestCase:
+                               a.bookkeeper.immutablevalue(1.0),
+                               a.bookkeeper.immutablevalue('d'),
+                               a.bookkeeper.immutablevalue('e')])
+-        assert s == annmodel.SomeTuple([annmodel.SomeChar(),
+-                                        a.bookkeeper.immutablevalue(1.0)])
++        assert s == annmodel.SomeTuple([
++            annmodel.SomeChar(str_type=annmodel.ASCII_STR),
++            a.bookkeeper.immutablevalue(1.0)])
+ 
+     def test_bool_coalesce_sanity(self):
+         def f(a):
+@@ -2125,6 +2127,43 @@ class TestAnnotateTestCase:
+         assert isinstance(s, annmodel.SomeString)
+         assert s.no_nul
+ 
++    def test_iteritems_ascii(self):
++        def it(d):
++            return d.iteritems()
++        def f():
++            d0 = {'1a': '2a', '3': '4'}
++            for item in it(d0):
++                return "%s=%s" % item
++            raise ValueError
++        a = self.RPythonAnnotator()
++        s = a.build_types(f, [])
++        assert isinstance(s, annmodel.SomeString)
++        assert s.str_type == annmodel.ASCII_STR
++
++    def test_mul_ascii(self):
++        def f(s):
++            return s * 10
++        a = self.RPythonAnnotator()
++        s = a.build_types(f, [annmodel.SomeString(str_type=annmodel.ASCII_STR)])
++        assert isinstance(s, annmodel.SomeString)
++        assert s.str_type == annmodel.ASCII_STR
++
++    def test_getitem_ascii(self):
++        def f(s, n):
++            if n == 1:
++                return s[0]
++            elif n == 2:
++                return s[1]
++            elif n == 3:
++                return s[1:]
++            return s
++        a = self.RPythonAnnotator()
++
++        s = a.build_types(f, [annmodel.SomeString(str_type=annmodel.ASCII_STR),
++                              annmodel.SomeInteger()])
++        assert isinstance(s, annmodel.SomeString)
++        assert s.str_type
++
+     def test_non_none_and_none_with_isinstance(self):
+         class A(object):
+             pass
+@@ -4197,6 +4236,57 @@ class TestAnnotateTestCase:
+         assert isinstance(s, annmodel.SomeTuple)
+         assert s.items[1].const == 42
+ 
++    def test_assert_ascii(self):
++        from rpython.rlib.rstring import assert_ascii
++
++        def f(x):
++            return assert_ascii(x)
++
++        a = self.RPythonAnnotator()
++        s = a.build_types(f, [str])
++        assert isinstance(s, annmodel.SomeString)
++        assert s.str_type == annmodel.ASCII_STR
++
++    def test_encode_ascii(self):
++        def f(x):
++            return x.encode('ascii')
++
++        a = self.RPythonAnnotator()
++        s = a.build_types(f, [unicode])
++        assert isinstance(s, annmodel.SomeString)
++        assert s.str_type == annmodel.ASCII_STR
++
++    def test_encode_utf8(self):
++        def f(x):
++            return x.encode('utf-8')
++
++        a = self.RPythonAnnotator()
++        s = a.build_types(f, [unicode])
++        assert isinstance(s, annmodel.SomeString)
++        assert s.str_type == annmodel.UTF8_STR
++
++    def test_union_utf8(self):
++        def g(x):
++            return x.encode('utf-8')
++
++        def f(i, x, s):
++            from rpython.rlib import rstring
++            if i == 0:
++                return g(x)
++            elif i == 1:
++                return rstring.assert_utf8(s)
++            elif i == 2:
++                return ""
++            elif i == 3:
++                return rstring.assert_utf8(s) + 'abd'
++            else:
++                return rstring.assert_ascii(s)
++
++        a = self.RPythonAnnotator()
++        s = a.build_types(f, [int, unicode, str])
++        assert isinstance(s, annmodel.SomeString)
++        assert s.str_type == annmodel.UTF8_STR
++
+ 
+ def g(n):
+     return [0, 1, 2, n]
+diff --git a/rpython/annotator/unaryop.py b/rpython/annotator/unaryop.py
+index 470e509..170fa1d 100644
+--- a/rpython/annotator/unaryop.py
++++ b/rpython/annotator/unaryop.py
+@@ -10,7 +10,8 @@ from rpython.annotator.model import (SomeObject, SomeInteger, SomeBool,
+     SomeUnicodeCodePoint, SomeInstance, SomeBuiltin, SomeBuiltinMethod,
+     SomeFloat, SomeIterator, SomePBC, SomeNone, SomeType, s_ImpossibleValue,
+     s_Bool, s_None, unionof, add_knowntypedata,
+-    HarmlesslyBlocked, SomeWeakRef, SomeUnicodeString, SomeByteArray)
++    HarmlesslyBlocked, SomeWeakRef, SomeUnicodeString, SomeByteArray,
++    ASCII_STR, UTF8_STR, UNKNOWN_STR)
+ from rpython.annotator.bookkeeper import getbookkeeper, immutablevalue
+ from rpython.annotator import builtin
+ from rpython.annotator.binaryop import _clone ## XXX where to put this?
+@@ -165,6 +166,21 @@ class __extend__(SomeObject):
+ 
+ class __extend__(SomeFloat):
+ 
++    def str(self):
++        return SomeString(no_nul=True, str_type=ASCII_STR)
++
++    def unicode(self):
++        return SomeUnicodeString(no_nul=True, str_type=ASCII_STR)
++
++    def repr(self):
++        return SomeString(no_nul=True, str_type=ASCII_STR)
++
++    def hex(self):
++        return SomeString(no_nul=True, str_type=ASCII_STR)
++
++    def oct(self):
++        return SomeString(no_nul=True, str_type=ASCII_STR)
++
+     def pos(self):
+         return self
+ 
+@@ -459,12 +475,18 @@ class __extend__(SomeString,
+         return SomeInteger(nonneg=True)
+ 
+     def method_strip(self, chr=None):
++        if self.str_type in (UNKNOWN_STR, ASCII_STR) or chr is None:
++            return self.tobasestring()
+         return self.basestringclass(no_nul=self.no_nul)
+ 
+     def method_lstrip(self, chr=None):
++        if self.str_type in (UNKNOWN_STR, ASCII_STR) or chr is None:
++            return self.tobasestring()
+         return self.basestringclass(no_nul=self.no_nul)
+ 
+     def method_rstrip(self, chr=None):
++        if self.str_type in (UNKNOWN_STR, ASCII_STR) or chr is None:
++            return self.tobasestring()
+         return self.basestringclass(no_nul=self.no_nul)
+ 
+     def method_join(self, s_list):
+@@ -475,8 +497,8 @@ class __extend__(SomeString,
+             if isinstance(self, SomeUnicodeString):
+                 return immutablevalue(u"")
+             return immutablevalue("")
+-        no_nul = self.no_nul and s_item.no_nul
+-        return self.basestringclass(no_nul=no_nul)
++        return self.tobasestring(no_nul=s_item.no_nul,
++                                 str_type=s_item.str_type)
+ 
+     def iter(self):
+         return SomeIterator(self)
+@@ -486,24 +508,48 @@ class __extend__(SomeString,
+         return self.basecharclass()
+ 
+     def method_split(self, patt, max=-1):
+-        if max == -1 and patt.is_constant() and patt.const == "\0":
+-            no_nul = True
++        if (isinstance(self, SomeUnicodeString) or
++            self.str_type in (ASCII_STR, UNKNOWN_STR)):
++            str_type = ASCII_STR
++        elif patt.str_type >= UTF8_STR:
++            str_type = ASCII_STR
+         else:
+-            no_nul = self.no_nul
+-        s_item = self.basestringclass(no_nul=no_nul)
++            str_type = UNKNOWN_STR
++        s_item = self.tobasestring(str_type=str_type)
++        if max == -1 and patt.is_constant() and patt.const == "\0":
++            s_item.no_nul = True
+         return getbookkeeper().newlist(s_item)
+ 
+     def method_rsplit(self, patt, max=-1):
+-        s_item = self.basestringclass(no_nul=self.no_nul)
++        if (isinstance(self, SomeUnicodeString) or
++            self.str_type in (ASCII_STR, UNKNOWN_STR)):
++            str_type = ASCII_STR
++        elif patt.str_type >= UTF8_STR:
++            str_type = ASCII_STR
++        else:
++            str_type = UNKNOWN_STR
++        s_item = self.tobasestring(str_type=str_type)
++        if max == -1 and patt.is_constant() and patt.const == "\0":
++            s_item.no_nul = True
+         return getbookkeeper().newlist(s_item)
+ 
+     def method_replace(self, s1, s2):
+-        return self.basestringclass(no_nul=self.no_nul and s2.no_nul)
++        if (isinstance(self, SomeUnicodeString) or
++            self.str_type in (ASCII_STR, UNKNOWN_STR)):
++            str_type = s2.str_type
++        elif patt.str_type >= UTF8_STR:
++            str_type = s2.str_type
++        else:
++            str_type = UNKNOWN_STR
++        s_res = self.tobasestring(no_nul=s2.no_nul, str_type=str_type)
++        if s1.is_constant() and s1.const == "\0" and s2.no_nul:
++            s_res.no_nul = True
++        return s_res
+ 
+     def getslice(self, s_start, s_stop):
+         check_negative_slice(s_start, s_stop)
+-        result = self.basestringclass(no_nul=self.no_nul)
+-        return result
++        str_type = ASCII_STR if self.str_type == ASCII_STR else UNKNOWN_STR
++        return self.tobasestring(str_type=str_type)
+ 
+     def op_contains(self, s_element):
+         if s_element.is_constant() and s_element.const == "\0":
+@@ -534,7 +580,13 @@ class __extend__(SomeUnicodeString):
+         enc = s_enc.const
+         if enc not in ('ascii', 'latin-1', 'utf-8'):
+             raise AnnotatorError("Encoding %s not supported for unicode" % (enc,))
+-        return SomeString()
++        if enc == 'ascii':
++            str_type = ASCII_STR
++        elif enc == 'utf-8':
++            str_type = UTF8_STR
++        else:
++            str_type = UNKNOWN_STR
++        return SomeString(no_nul=self.no_nul, str_type=str_type)
+     method_encode.can_only_throw = [UnicodeEncodeError]
+ 
+ 
+@@ -549,13 +601,13 @@ class __extend__(SomeString):
+         return s_Bool
+ 
+     def method_upper(self):
+-        return SomeString()
++        return self.nonnoneify()
+ 
+     def method_lower(self):
+-        return SomeString()
++        return self.nonnoneify()
+ 
+     def method_splitlines(self, s_keep_newlines=None):
+-        s_list = getbookkeeper().newlist(self.basestringclass())
++        s_list = getbookkeeper().newlist(self.tobasestring())
+         # Force the list to be resizable because ll_splitlines doesn't
+         # preallocate the list.
+         s_list.listdef.listitem.resize()
+@@ -567,7 +619,13 @@ class __extend__(SomeString):
+         enc = s_enc.const
+         if enc not in ('ascii', 'latin-1', 'utf-8'):
+             raise AnnotatorError("Encoding %s not supported for strings" % (enc,))
+-        return SomeUnicodeString()
++        if enc == 'ascii':
++            str_type = ASCII_STR
++        elif enc == 'utf-8':
++            str_type = UTF8_STR
++        else:
++            str_type = UNKNOWN_STR
++        return SomeUnicodeString(no_nul=self.no_nul, str_type=str_type)
+     method_decode.can_only_throw = [UnicodeDecodeError]
+ 
+ class __extend__(SomeChar, SomeUnicodeCodePoint):
+diff --git a/rpython/rlib/rstring.py b/rpython/rlib/rstring.py
+index 16c8484..1039c0e 100644
+--- a/rpython/rlib/rstring.py
++++ b/rpython/rlib/rstring.py
+@@ -3,7 +3,8 @@
+ import sys
+ 
+ from rpython.annotator.model import (SomeObject, SomeString, s_None, SomeChar,
+-    SomeInteger, SomeUnicodeCodePoint, SomeUnicodeString, SomePBC)
++    SomeInteger, SomeUnicodeCodePoint, SomeUnicodeString, SomePBC, UTF8_STR,
++    ASCII_STR)
+ from rpython.rtyper.llannotation import SomePtr
+ from rpython.rlib import jit
+ from rpython.rlib.objectmodel import newlist_hint, specialize
+@@ -555,3 +556,162 @@ class Entry(ExtRegistryEntry):
+         hop.exception_cannot_occur()
+ 
+ 
++#___________________________________________________________________
++# Support functions for SomeString.str_type
++
++def is_ascii_str(s):
++    for c in s:
++        if ord(c) >= 128:
++            return False
++    return True
++
++
++def assert_ascii(s):
++    assert is_ascii_str(s), 'Non-Ascii byte in string'
++    return s
++
++
++class Entry(ExtRegistryEntry):
++    _about_ = assert_ascii
++
++    def compute_result_annotation(self, s_obj):
++        if s_None.contains(s_obj):
++            return s_obj
++        assert isinstance(s_obj, (SomeString, SomeUnicodeString))
++        if s_obj.str_type >= ASCII_STR:
++            return s_obj
++        new_s_obj = SomeObject.__new__(s_obj.__class__)
++        new_s_obj.__dict__ = s_obj.__dict__.copy()
++        new_s_obj.str_type = ASCII_STR
++        return new_s_obj
++
++    def specialize_call(self, hop):
++        hop.exception_cannot_occur()
++        return hop.inputarg(hop.args_r[0], arg=0)
++
++
++def check_ascii(s):
++    """A 'probe' to trigger a failure at translation time, if the
++    string was not proved to only contain ASCII characters."""
++    assert is_ascii_str(s), 'Non-Ascii byte in string'
++
++
++class Entry(ExtRegistryEntry):
++    _about_ = check_ascii
++
++    def compute_result_annotation(self, s_obj):
++        if not isinstance(s_obj, (SomeString, SomeUnicodeString)):
++            return s_obj
++        if s_obj.str_type < ASCII_STR:
++            raise ValueError("Value is not ascii only")
++
++    def specialize_call(self, hop):
++        hop.exception_cannot_occur()
++
++
++def find_invalid_utf8_str(s):
++    from rpython.rlib.runicode import utf8_code_length
++    size = len(s)
++    if size == 0:
++        return -1
++    pos = 0
++    while pos < size:
++        ordch1 = ord(s[pos])
++        if ordch1 < 0x80:
++            pos += 1
++            continue
++
++        n = utf8_code_length[ordch1]
++        if pos + n > size:
++            return pos
++        if n == 2:
++            ordch2 = ord(s[pos + 1])
++            if (ordch2 >> 6) != 0x2:   # 0b10
++                return pos
++        elif n == 3:
++            ordch2 = ord(s[pos + 1])
++            ordch3 = ord(s[pos + 2])
++            if (ordch2 >> 6 != 0x2 or ordch3 >> 6 != 0x2 or    # 0b10
++                (ordch1 == 0xe0 and ordch2 < 0xa0) or
++                (ordch1 == 0xed and ordch2 > 0x9f)):
++                return pos
++        elif n == 4:
++            ordch2 = ord(s[pos + 1])
++            ordch3 = ord(s[pos + 2])
++            ordch4 = ord(s[pos + 3])
++            if (ordch2 >> 6 != 0x2 or ordch3 >> 6 != 0x2 or
++                ordch4 >> 6 != 0x2 or (ordch1 == 0xf0 and ordch2 < 0x90) or
++                (ordch1 == 0xf4 and ordch2 > 0x8f)):
++                return pos
++        else:
++            # Shouldn't get here but whatever...
++            return pos
++        pos += n
++    return -1
++
++
++def is_utf8_str(s):
++    return find_invalid_utf8_str(s) == -1
++
++
++def is_utf8_unicode(s):
++    for c in s:
++        if 0xD800 <= ord(c) <= 0xDFFF:
++            return False
++    return True
++
++
++def is_utf8(s):
++    """check if the string is a valid utf-8 string
++    (return True for None, False for other non-string objects)
++    """
++    if isinstance(s, str):
++        return is_utf8_str(s)
++    elif isinstance(s, unicode):
++        return is_utf8_unicode(s)
++    elif s is None:
++        return True
++    return False
++
++
++def assert_utf8(s):
++    assert is_utf8(s), 'Non-Utf8 byte in string'
++    return s
++
++
++class Entry(ExtRegistryEntry):
++    _about_ = assert_utf8
++
++    def compute_result_annotation(self, s_obj):
++        if s_None.contains(s_obj):
++            return s_obj
++        assert isinstance(s_obj, (SomeString, SomeUnicodeString))
++        if s_obj.str_type >= UTF8_STR:
++            return s_obj
++        new_s_obj = SomeObject.__new__(s_obj.__class__)
++        new_s_obj.__dict__ = s_obj.__dict__.copy()
++        new_s_obj.str_type = UTF8_STR
++        return new_s_obj
++
++    def specialize_call(self, hop):
++        hop.exception_cannot_occur()
++        return hop.inputarg(hop.args_r[0], arg=0)
++
++
++def check_utf8(s):
++    """A 'probe' to trigger a failure at translation time, if the
++    string was not proved to only contain UTF8 characters."""
++    assert is_utf8(s), 'Non-Utf8 byte in string'
++
++
++class Entry(ExtRegistryEntry):
++    _about_ = check_utf8
++
++    def compute_result_annotation(self, s_obj):
++        if not isinstance(s_obj, (SomeString, SomeUnicodeString)):
++            return s_obj
++        if s_obj.str_type < UTF8_STR:
++            raise ValueError("Value is not utf8_only")
++
++    def specialize_call(self, hop):
++        hop.exception_cannot_occur()
+diff --git a/rpython/rlib/runicode.py b/rpython/rlib/runicode.py
+index 498ae1d..d2f7a7f 100644
+--- a/rpython/rlib/runicode.py
++++ b/rpython/rlib/runicode.py
+@@ -1,6 +1,7 @@
+ import sys
+ from rpython.rlib.objectmodel import specialize, we_are_translated
+-from rpython.rlib.rstring import StringBuilder, UnicodeBuilder
++from rpython.rlib.rstring import (StringBuilder, UnicodeBuilder,
++                                  assert_ascii, assert_utf8)
+ from rpython.rlib.rarithmetic import r_uint, intmask
+ from rpython.rlib.unicodedata import unicodedb
+ from rpython.rtyper.lltypesystem import lltype, rffi
+@@ -1051,7 +1052,7 @@ def unicode_encode_latin_1(p, size, errors, errorhandler=None):
+ 
+ def unicode_encode_ascii(p, size, errors, errorhandler=None):
+     res = unicode_encode_ucs1_helper(p, size, errors, errorhandler, 128)
+-    return res
++    return assert_ascii(res)
+ 
+ # ____________________________________________________________
+ # Charmap
