@@ -13,6 +13,7 @@ url="http://codespeak.net/pypy/"
 arch=('i686' 'x86_64')
 depends=('libffi' 'openssl' 'expat' 'ncurses' 'zlib' 'bzip2')
 options=('debug' 'strip' '!emptydirs')
+# Force cpython2 to be installed for mercurial
 makedepends=('python2>=2.7' 'mercurial' 'gdbm' 'sqlite' 'tcl' 'tk')
 ((USE_PYPY)) && makedepends+=('pypy')
 conflicts=('pypy')
