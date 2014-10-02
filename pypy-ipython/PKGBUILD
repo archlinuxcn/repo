@@ -59,7 +59,7 @@ build() {
 
 package_pypy3-ipython() {
   pkgdesc="An enhanced Interactive Python shell. pypy3 version."
-  depends=("pypy3>=2.3" "pypy3<2.4" 'sqlite')
+  depends=("pypy3>=2.4" "pypy3<2.5" 'sqlite')
   optdepends=("pypy3-pyzmq: for ipython notebook and ipython qtconcole"
     "pypy3-tornado: for ipython notebook"
     "pypy3-jinja: for ipython notebook")
@@ -67,8 +67,6 @@ package_pypy3-ipython() {
 
   # see https://github.com/ipython/ipython/issues/2057
   #export LC_ALL=en_US.UTF-8
-  # pypy3 setup.py install --prefix=/opt/pypy --root="$pkgdir" --optimize=1 \
-  #   --install-lib=/opt/pypy3/lib/python3.2/site-packages
   pypy3 setup.py install --prefix=/opt/pypy --root="$pkgdir" --optimize=1
   # find "$pkgdir/" -name '*.pyc' -delete
   # find "$pkgdir/" -type d -empty -delete
