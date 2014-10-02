@@ -6,7 +6,7 @@ pkgbase='pypy-jinja'
 pkgname='pypy-jinja'
 pkgname=('pypy3-jinja' 'pypy-jinja')
 pkgver=2.7.3
-pkgrel=2
+pkgrel=3
 pkgdesc="A simple pythonic template language written in Python"
 arch=('any')
 url="http://jinja.pocoo.org/"
@@ -29,7 +29,7 @@ build() {
 }
 
 package_pypy3-jinja() {
-  depends=('pypy3-setuptools' 'pypy3-markupsafe' "pypy3>=2.3" "pypy3<2.4")
+  depends=('pypy3-markupsafe' "pypy3>=2.4" "pypy3<2.5")
 
   cd "$srcdir/pypy3-build"
 
@@ -39,7 +39,7 @@ package_pypy3-jinja() {
 }
 
 package_pypy-jinja() {
-  depends=('pypy-setuptools' 'pypy-markupsafe' "pypy")
+  depends=('pypy-markupsafe' "pypy")
 
   cd "$srcdir/pypy-build"
 
