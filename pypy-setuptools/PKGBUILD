@@ -8,7 +8,8 @@ license=('PSF')
 url="http://pypi.python.org/pypi/setuptools"
 source=(http://pypi.python.org/packages/source/s/setuptools/setuptools-${pkgver}.tar.gz)
 md5sums=('b79fab610e362fe8e3a9cb92fb9d95ef')
-makedepends=('pypy' 'pypy3')
+_pypy3_deps=('pypy3>=2.4' 'pypy3<2.5')
+makedepends=('pypy' "${_pypy3_deps[@]}")
 
 prepare() {
   cd "${srcdir}"
@@ -46,7 +47,7 @@ package_pypy-setuptools() {
 }
 
 package_pypy3-setuptools() {
-  depends=("pypy3>=2.4" "pypy3<2.5")
+  depends=("${_pypy3_deps[@]}")
   cd "${srcdir}/pypy3-setuptools-${pkgver}"
   pypy3 setup.py install \
     --root="${pkgdir}" --optimize=1 --skip-build
