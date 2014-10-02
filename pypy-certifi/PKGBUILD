@@ -2,7 +2,7 @@ pkgbase=pypy-certifi
 pkgname=('pypy3-certifi' 'pypy-certifi')
 _libname=${pkgbase/pypy-/}
 pkgver=14.05.14
-pkgrel=1
+pkgrel=2
 pkgdesc="Mozilla's SSL Certs"
 arch=(any)
 url="http://pypi.python.org/pypi/certifi"
@@ -30,7 +30,7 @@ build() {
 }
 
 package_pypy3-certifi() {
-  depends=('pypy3')
+  depends=('pypy3>=2.4' 'pypy3<2.5')
 
   cd "$srcdir/$_libname-$pkgver"
   pypy3 setup.py install --skip-build -O1 --root="$pkgdir"
