@@ -2,14 +2,14 @@
 pkgname=python2-netlib-git
 _pyname=netlib
 _gitname=netlib
-pkgver=257.e73a2db
+pkgver=258.aee8acb
 pkgrel=1
 pkgdesc='A collection of network utilities used by pathod and mitmproxy'
 arch=('any')
 url='https://github.com/cortesi/netlib'
 license=('MIT')
 depends=('python2')
-makedepends=('git')
+makedepends=('git' 'python2-setuptools')
 options=(!emptydirs)
 provides=('python2-netlib')
 conflicts=('python2-netlib')
