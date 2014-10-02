@@ -5,7 +5,7 @@ pkgbase=pypy-readline-git
 pkgname=('pypy3-readline-git' 'pypy-readline-git')
 makedepends=('cmake' 'git' 'readline' 'pypy' 'pypy3')
 pkgver=0.2.0.2.gc71facf
-pkgrel=1
+pkgrel=2
 pkgdesc="Full function readline module for pypy."
 arch=('i686' 'x86_64')
 url="http://github.com/yuyichao/pyreadline-cffi"
@@ -73,7 +73,7 @@ build() {
 }
 
 package_pypy3-readline-git() {
-  depends=("pypy3>=2.3" "pypy3<2.4")
+  depends=("pypy3>=2.4" "pypy3<2.5")
   provides=("pypy3-readline")
   conflicts=("pypy3-readline")
   cd "$srcdir/$_gitname/build3"
