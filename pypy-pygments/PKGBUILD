@@ -10,7 +10,8 @@ pkgdesc="Python syntax highlighter"
 arch=('any')
 url="http://pygments.org/"
 license=('BSD')
-makedepends=('pypy3-setuptools' 'pypy-setuptools')
+_pypy3_deps=('pypy3>=2.4' 'pypy3<2.5')
+makedepends=('pypy3-setuptools' 'pypy-setuptools' "${_pypy3_deps[@]}")
 options=('!emptydirs')
 source=(https://pypi.python.org/packages/source/P/Pygments/Pygments-$pkgver.tar.gz
         make-pygments.lexers.guess_lexer_for_filename-py3-compatible.patch)
@@ -37,7 +38,7 @@ build() {
 }
 
 package_pypy3-pygments() {
-  depends=('pypy3>=2.4' 'pypy3<2.5')
+  depends=("${_pypy3_deps[@]}")
 
   cd "$srcdir/pypy3-build"
 
