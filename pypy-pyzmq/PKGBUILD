@@ -3,13 +3,13 @@
 pkgbase=pypy-pyzmq
 pkgname=(pypy3-pyzmq pypy-pyzmq)
 pkgver=14.3.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Python bindings for zeromq, pypy version"
 arch=(i686 x86_64)
 url="http://www.zeromq.org/bindings:python"
 license=('LGPL')
 _pypy2_deps=("pypy>=2.4" "pypy<2.5")
-_pypy3_deps=("pypy3>=2.3" "pypy3<2.4")
+_pypy3_deps=("pypy3>=2.4" "pypy3<2.5")
 depends=(zeromq "${_pypy2_deps[@]}" "${_pypy3_deps[@]}")
 makedepends=(pypy pypy3 zeromq)
 #source=(https://github.com/zeromq/pyzmq/downloads/pyzmq-$pkgver.tar.gz)
@@ -86,8 +86,6 @@ package_pypy3-pyzmq() {
   depends=(zeromq "${_pypy3_deps[@]}")
 
   cd "$srcdir/pyzmq-$pkgver"
-  # pypy3 setup.py install --skip-build --root="$pkgdir" --optimize=1 \
-  #   --install-lib=/opt/pypy3/lib/python3.2/site-packages
   pypy3 setup.py install --skip-build --root="$pkgdir" --optimize=1
   (_fix_py3_cffi zmq)
 }
