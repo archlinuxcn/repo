@@ -4,7 +4,7 @@
 pkgbase=pypy-six
 pkgname=('pypy-six' 'pypy3-six')
 pkgver=1.8.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Python 2 and 3 compatibility utilities"
 arch=('any')
 url="http://pypi.python.org/pypi/six/"
@@ -27,7 +27,7 @@ check() {
 }
 
 package_pypy3-six() {
-  depends=('pypy3')
+  depends=('pypy3>=2.4' 'pypy3<2.5')
   cd "$srcdir/six-$pkgver"
   pypy3 setup.py install --root "${pkgdir}" --optimize=1
   install -Dm644 "${srcdir}/six-${pkgver}/LICENSE" \
