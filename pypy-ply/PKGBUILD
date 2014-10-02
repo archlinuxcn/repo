@@ -1,7 +1,7 @@
 pkgbase=pypy-ply
 pkgname=(pypy3-ply pypy-ply)
 pkgver=3.4
-pkgrel=1
+pkgrel=2
 pkgdesc='Implementation of lex and yacc parsing tools'
 arch=('any')
 url='http://www.dabeaz.com/ply/'
@@ -15,7 +15,7 @@ prepare() {
 }
 
 package_pypy3-ply() {
-  depends=('pypy3>=2.3' 'pypy3<2.4')
+  depends=('pypy3>=2.4' 'pypy3<2.5')
 
   cd "ply-$pkgver"
 
