@@ -6,7 +6,8 @@ arch=('any')
 license=('custom')
 pkgdesc="Caching and sessions WSGI middleware for use with web applications and stand-alone Python scripts and applications, pypy version."
 url="http://beaker.groovie.org/"
-makedepends=('pypy-setuptools' 'pypy3-setuptools' 'sqlite')
+_pypy3_deps=('pypy3>=2.4' 'pypy3<2.5')
+makedepends=('pypy-setuptools' 'pypy3-setuptools' 'sqlite' "${_pypy3_deps[@]}")
 source=("http://cheeseshop.python.org/packages/source/B/Beaker/Beaker-${pkgver}.tar.gz")
 md5sums=('c2e102870ed4c53104dec48ceadf8e9d')
 
@@ -23,7 +24,7 @@ build() {
 }
 
 package_pypy3-beaker() {
-    depends=("pypy3>=2.4" "pypy3<2.5")
+    depends=("${_pypy3_deps[@]}")
 
     cd "${srcdir}/Beaker-${pkgver}"
     pypy3 setup.py install --root="${pkgdir}" --optimize=1
