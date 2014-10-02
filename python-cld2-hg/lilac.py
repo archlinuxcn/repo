@@ -13,6 +13,7 @@ def pre_build():
 
 def post_build():
   git_add_files('PKGBUILD')
+  mkaurball()
   git_commit()
 
 if __name__ == '__main__':

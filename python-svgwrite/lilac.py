@@ -7,7 +7,9 @@ build_prefix = 'extra-x86_64'
 def pre_build():
   pypi_pre_build(depends=['python-pyparsing'])
 
-post_build = pypi_post_build
+def post_build():
+  mkaurball()
+  pypi_post_build()
 
 if __name__ == '__main__':
   single_main()
