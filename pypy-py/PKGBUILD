@@ -1,7 +1,7 @@
 pkgbase=pypy-py
 pkgname=('pypy3-py' 'pypy-py')
 pkgver=1.4.25
-pkgrel=1
+pkgrel=2
 pkgdesc="library with cross-python path, ini-parsing, io, code, log facilities"
 arch=('any')
 license=('MIT')
@@ -23,7 +23,7 @@ build() {
 }
 
 package_pypy3-py() {
-  depends=("pypy3>=2.3" "pypy3<2.4")
+  depends=("pypy3>=2.4" "pypy3<2.5")
 
   cd py-${pkgver}
   pypy3 setup.py install --root="${pkgdir}" --optimize=1
