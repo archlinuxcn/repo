@@ -10,6 +10,7 @@ pkgrel=2
 arch=('any')
 url='http://sphinx.pocoo.org/'
 license=('GPL')
+_pypy3_deps=('pypy3>=2.4' 'pypy3<2.5')
 makedepends=(
   'pypy3-setuptools'
   'pypy3-docutils'
@@ -19,6 +20,7 @@ makedepends=(
   'pypy-docutils'
   'pypy-jinja'
   'pypy-pygments'
+  "${_pypy3_deps[@]}"
 )
 checkdepends=(
   'pypy3-nose'
@@ -74,8 +76,7 @@ check() {
 
 package_pypy3-sphinx() {
   pkgdesc='Pypy3 documentation generator'
-  depends=('pypy3-jinja' 'pypy3-pygments' 'pypy3-docutils'
-    'pypy3>=2.4' 'pypy3<2.5')
+  depends=('pypy3-jinja' 'pypy3-pygments' 'pypy3-docutils' "${_pypy3_deps[@]}")
   optdepends=('texlive-latexextra: for generation of PDF documentation')
 
   cd Sphinx-$pkgver
