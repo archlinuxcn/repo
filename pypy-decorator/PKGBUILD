@@ -3,10 +3,9 @@
 # Contributor: Pierre Chapuis <catwell at archlinux dot us>
 
 pkgbase='pypy-decorator'
-pkgname='pypy-decorator'
 pkgname=('pypy3-decorator' 'pypy-decorator')
 pkgver=3.4.0
-pkgrel=4
+pkgrel=5
 pkgdesc='Python Decorator module'
 arch=('any')
 url='http://pypi.python.org/pypi/decorator'
@@ -41,7 +40,7 @@ package_pypy-decorator() {
 }
 
 package_pypy3-decorator() {
-  depends=("pypy3>=2.3" "pypy3<2.4")
+  depends=("pypy3>=2.4" "pypy3<2.5")
   cd "${srcdir}/decorator-${pkgver}"
 
   pypy3 setup.py install --root="${pkgdir}" --optimize=1
