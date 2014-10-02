@@ -6,7 +6,9 @@ pkgdesc="Simple powerful testing with Python"
 arch=('any')
 license=('MIT')
 url="http://pytest.org/"
-makedepends=('pypy3-setuptools' 'pypy-setuptools' 'pypy3-py' 'pypy-py')
+_pypy3_deps=('pypy3>=2.4' 'pypy3<2.5')
+makedepends=('pypy3-setuptools' 'pypy-setuptools' 'pypy3-py' 'pypy-py'
+  "${_pypy3_deps[@]}")
 source=("http://pypi.python.org/packages/source/p/pytest/pytest-$pkgver.tar.gz")
 sha512sums=('44fe4c7af804530160a1827b837d35be9492eebb6a382391c820568f492ce7ca50837a47e92873b014ee1655d83a8cb270e0c4149e683efedc25135791733c7a')
 
@@ -23,7 +25,7 @@ build() {
 }
 
 package_pypy3-pytest() {
-  depends=("pypy3>=2.4" "pypy3<2.5" 'pypy3-py')
+  depends=('pypy3-py' "${_pypy3_deps[@]}")
 
   cd pytest-${pkgver}
   pypy3 setup.py install --root="${pkgdir}" --optimize=1
