@@ -3,6 +3,7 @@
 import os
 import subprocess
 import atexit
+import time
 
 from lilaclib import *
 
@@ -36,19 +37,20 @@ def pre_build():
        old_master, "upstream/master", "--", "runtime/"])
     run_cmd(["git", "merge", "--no-edit", "upstream/master"])
 
+  cmd = ["git", "daemon", "--export-all", "--reuseaddr", "--base-path=.", "--listen=127.0.0.1", "--", "./vim"]
+  p = subprocess.Popen(cmd)
+  if p.poll():
+    raise subprocess.CalledProcessError(p.returncode, cmd, '(not captured)')
+
   try:
+    time.sleep(1) # wait a while for git daemon
     vcs_update()
     if not runtime_changed:
       packages = ['vim-lily', 'gvim-lily']
   except RuntimeError:
     # only runtime updated; source remains the same
     update_pkgrel()
-    packages = ['vim-lily-runtime']
-
-  cmd = ["git", "daemon", "--export-all", "--reuseaddr", "--base-path=.", "--listen=127.0.0.1", "--", "./vim"]
-  p = subprocess.Popen(cmd)
-  if p.poll():
-    raise subprocess.CalledProcessError(p.returncode, cmd, '(not captured)')
+    packages = ['vim-runtime-lily']
 
 def post_build_always(*, success=None, **kwargs):
   bye_git_daemon()
