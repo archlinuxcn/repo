@@ -7,7 +7,7 @@
 pkgbase=pypy-pycparser
 pkgname=(pypy3-pycparser pypy-pycparser)
 pkgver=2.10
-pkgrel=1
+pkgrel=2
 pkgdesc='C parser and AST generator written in Python'
 url='https://github.com/eliben/pycparser'
 makedepends=('pypy3-ply' 'pypy-ply')
@@ -35,7 +35,7 @@ build() {
 }
 
 package_pypy3-pycparser() {
-  depends=('pypy3>=2.3' 'pypy3<2.4' 'pypy3-ply')
+  depends=('pypy3>=2.4' 'pypy3<2.5' 'pypy3-ply')
 
   cd pycparser-release_v${pkgver}
 
