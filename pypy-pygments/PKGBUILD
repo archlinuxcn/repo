@@ -5,7 +5,7 @@
 pkgbase=pypy-pygments
 pkgname=('pypy3-pygments' 'pypy-pygments')
 pkgver=1.6
-pkgrel=4
+pkgrel=5
 pkgdesc="Python syntax highlighter"
 arch=('any')
 url="http://pygments.org/"
@@ -37,7 +37,7 @@ build() {
 }
 
 package_pypy3-pygments() {
-  depends=('pypy3-setuptools')
+  depends=('pypy3>=2.4' 'pypy3<2.5')
 
   cd "$srcdir/pypy3-build"
 
@@ -49,7 +49,7 @@ package_pypy3-pygments() {
 }
 
 package_pypy-pygments() {
-  depends=('pypy-setuptools')
+  depends=('pypy')
 
   cd "$srcdir/pypy-build"
 
