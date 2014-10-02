@@ -1,7 +1,7 @@
 pkgbase=pypy-pyserial
 pkgname=('pypy3-pyserial' 'pypy-pyserial')
 pkgver=2.7
-pkgrel=4
+pkgrel=5
 pkgdesc="Multiplatform Serial Port Module for Python"
 arch=('any')
 url="http://pyserial.sf.net"
@@ -15,7 +15,7 @@ build() {
 }
 
 package_pypy3-pyserial() {
-  depends=('pypy3>=2.3' 'pypy3<2.4')
+  depends=('pypy3>=2.4' 'pypy3<2.5')
 
   cd "$srcdir"/pyserial-$pkgver
   pypy3 setup.py install --root="$pkgdir"
