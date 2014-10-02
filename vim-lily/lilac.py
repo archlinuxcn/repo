@@ -7,6 +7,7 @@ import atexit
 from lilaclib import *
 
 build_prefix = 'extra-x86_64'
+packages = None
 p = None
 
 def bye_git_daemon():
@@ -18,7 +19,7 @@ def bye_git_daemon():
 atexit.register(bye_git_daemon)
 
 def pre_build():
-  global p
+  global p, packages
 
   if not os.path.isdir('vim'):
     os.mkdir('vim')
@@ -28,8 +29,21 @@ def pre_build():
 
   with at_dir('vim'):
     run_cmd(["git", "reset", "--hard"])
+    old_master = git_last_commit('upstream/master')
     run_cmd(["git", "fetch", "upstream"], use_pty=True)
+    runtime_changed = run_cmd(
+      ["git", "diff", "--name-only",
+       old_master, "upstream/master", "--", "runtime/"])
     run_cmd(["git", "merge", "--no-edit", "upstream/master"])
+
+  try:
+    vcs_update()
+    if not runtime_changed:
+      packages = ['vim-lily', 'gvim-lily']
+  except RuntimeError:
+    # only runtime updated; source remains the same
+    update_pkgrel()
+    packages = ['vim-lily-runtime']
 
   cmd = ["git", "daemon", "--export-all", "--reuseaddr", "--base-path=.", "--listen=127.0.0.1", "--", "./vim"]
   p = subprocess.Popen(cmd)
