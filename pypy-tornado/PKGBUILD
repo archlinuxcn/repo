@@ -5,13 +5,14 @@
 pkgbase='pypy-tornado'
 pkgname=('pypy3-tornado' 'pypy-tornado')
 pkgver=4.0.2
-pkgrel=3
+pkgrel=4
 pkgdesc='open source version of the scalable, non-blocking web server and tools'
 arch=('any')
 url='http://www.tornadoweb.org/'
 license=('Apache')
+_pypy3_deps=('pypy3>=2.4' 'pypy3<2.5')
 makedepends=('pypy-setuptools' 'pypy3-setuptools'
-  'pypy-backports.ssl_match_hostname' 'git')
+  'pypy-backports.ssl_match_hostname' 'git' "${_pypy3_deps[@]}")
 source=("git+https://github.com/facebook/tornado.git#tag=v$pkgver"
         use_system_ca_certificates.patch)
 sha512sums=('SKIP'
@@ -40,7 +41,7 @@ build() {
 }
 
 package_pypy3-tornado() {
-  depends=("pypy3>=2.3" "pypy3<2.4")
+  depends=("${_pypy3_deps[@]}")
 
   cd tornado
   pypy3 setup.py install --skip-build --root="${pkgdir}" --optimize=1
