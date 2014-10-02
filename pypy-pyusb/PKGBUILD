@@ -1,7 +1,7 @@
 pkgbase=pypy-pyusb
 pkgname=(pypy3-pyusb pypy-pyusb)
 pkgver=1.0.0b1
-pkgrel=1
+pkgrel=2
 pkgdesc="A pure Python module which provides USB access."
 arch=('any')
 url="https://github.com/walac/pyusb"
@@ -23,7 +23,7 @@ build() {
 }
 
 package_pypy3-pyusb() {
-  depends=('pypy3>=2.3' 'pypy3<2.4')
+  depends=('pypy3>=2.4' 'pypy3<2.5')
   cd "$srcdir/pyusb-$pkgver"
 
   pypy3 setup.py install --root="$pkgdir"
