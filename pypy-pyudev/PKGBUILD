@@ -11,7 +11,8 @@ pkgrel=2
 arch=('any')
 url='http://pyudev.readthedocs.org/en/latest/index.html'
 license=('LGPL')
-makedepends=('pypy3-setuptools' 'pypy-setuptools')
+_pypy3_deps=('pypy3>=2.4' 'pypy3<2.5')
+makedepends=('pypy3-setuptools' 'pypy-setuptools' "${_pypy3_deps[@]}")
 source=("http://pypi.python.org/packages/source/p/pyudev/pyudev-${pkgver}.tar.gz")
 md5sums=('4034de584b6d9efcbfc590a047c63285')
 
@@ -21,7 +22,7 @@ build() {
 
 package_pypy3-pyudev() {
   pkgdesc='A pure Python 3.x binding to libudev'
-  depends=('pypy3>=2.4' 'pypy3<2.5' 'udev')
+  depends=('udev' "${_pypy3_deps[@]}")
 
   cd pyudev-${pkgver}
   pypy3 setup.py install --root "${pkgdir}" --optimize=1
