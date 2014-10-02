@@ -1,0 +1,18 @@
+--- mplayer/libmpdemux/demux_gif.c 2013-07-21 22:23:16.573369706 +0200
++++ mplayer/libmpdemux/demux_gif.c 2013-07-21 22:56:15.760063365 +0200
+@@ -32,6 +32,15 @@
+ #include "stheader.h"
+ 
+ #include <gif_lib.h>
++
++/* In giflib 4.2 PrintGifError was removed. */
++#if (GIFLIB_MAJOR>=4) && (GIFLIB_MINOR>=2)
++ void PrintGifError(void)
++ {
++ fprintf(stderr, "%s\n", GifErrorString());
++ }
++#endif
++
+ #include "libvo/fastmemcpy.h"
+ typedef struct {
+   int current_pts;

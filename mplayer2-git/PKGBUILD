@@ -1,0 +1,105 @@
+# Maintainer:  Matt Monaco <net 0x01b dgbaley27>
+# Contributor: Matej Lach <matej.lach@gmail.com>
+# Contributor: cantabile <cantabile dot desu at gmail dot com>
+# Contributor: extcake < extcake@gmail.com >
+
+# Modified by Stephen Zhang
+
+pkgname=mplayer2-git
+pkgver=v2.0.726.g6c87a98
+pkgrel=2
+pkgdesc="An advanced general-purpose video player."
+url="http://www.mplayer2.org"
+license=(GPL3)
+arch=(x86_64 i686)
+install="$pkgname.install"
+source=(
+	git://git.mplayer2.org/mplayer2-build.git
+	git://repo.or.cz/mplayer.git
+	git://repo.or.cz/libass.git
+	git://repo.or.cz/FFMpeg-mirror/mplayer-patches.git
+	"$pkgname.install"
+	giflib-build-fix.patch
+	include-samba-4.0.patch)
+sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP'
+	'3e5da31a81fe57510fbe8d614a7e18f0acc67f7951fea1cc36809b6795fddd15'
+	'bf6949e66b939e30b1d537ff3738d390d567b5b6a916fa57cc1ea121b2fb0963'
+	'169eb47b3b838ea95e50c871bdbbfb6fe0b9349b054da830f55f3b4d5055e4f3')
+
+backup=(
+	etc/mplayer/codecs.conf
+	etc/mplayer/input.conf
+)
+depends=(
+	'desktop-file-utils' 'enca' 'libxss' 'a52dec' 'lirc-utils' 'libmng' 'libdca'
+	'fontconfig' 'libxinerama' 'libvdpau' 'libpulse' 'smbclient' 'xvidcore' 'jack'
+	'libmad' 'sdl' 'libtheora' 'libcaca' 'fribidi' 'libjpeg' 'faad2' 'mpg123'
+	'libxxf86vm' 'libbluray' 'libcdio-paranoia' 'freetype2' 'libxv')
+makedepends=('libxxf86dga' 'libxxf86vm' 'libmad' 'libxinerama' 'sdl' 'lame' 'libtheora'
+	'xvidcore' 'libmng' 'libxss' 'libgl' 'smbclient' 'aalib' 'jack' 'libcaca'
+	'x264' 'faac' 'faad2' 'lirc-utils'  'libxvmc' 'enca' 'libvdpau' 'opencore-amr'
+	'libdca' 'a52dec' 'schroedinger' 'libvpx' 'libpulse' 'fribidi' 'unzip' 'mesa'
+	'live-media' 'yasm' 'git' 'fontconfig' 'mpg123' 'ladspa' 'libass' 'libbluray'
+	'libcdio-paranoia' 'opus' 'python' 'python-docutils')
+optdepends=('ttf-dejavu: for subtitle font support')
+conflicts=(mplayer mplayer2)
+provides=(mplayer mplayer2)
+options=(!emptydirs)
+
+pkgver()
+{
+	cd "$srcdir/mplayer"
+	local ver=$(git describe --tags )
+	echo ${ver//-/.}
+}
+
+prepare()
+{
+	cd "$srcdir/mplayer"
+	patch -p1 -i ../include-samba-4.0.patch
+	cd "$srcdir/mplayer2-build"
+	git submodule init
+	git config submodule.mplayer.url "$srcdir/mplayer"
+	git config submodule.libass.url  "$srcdir/libass"
+	git config submodule.libav.url   "$srcdir/mplayer-patches"
+}
+
+build()
+{
+	cd "$srcdir/mplayer2-build"
+	cat > mplayer_options <<EOF
+--enable-runtime-cpudetection
+--disable-speex
+--disable-openal
+--disable-libdv
+--disable-musepack
+--enable-radio
+--enable-radio-capture
+--enable-smb
+--language=all
+--prefix=/usr
+--confdir=/etc/mplayer
+EOF
+	./init
+	patch -p0 -i "$srcdir"/giflib-build-fix.patch
+	cd "$srcdir/mplayer2-build/mplayer"
+	patch -p1 -i ../../include-samba-4.0.patch
+	cd "$srcdir/mplayer2-build"
+	make
+}
+
+package()
+{
+	cd "$srcdir/mplayer2-build"
+
+	make DESTDIR="$pkgdir" install
+
+	install -m644 mplayer/etc/{codecs,input,example}.conf "$pkgdir/etc/mplayer"
+	install -dm755 "$pkgdir/usr/share/mplayer"
+	ln -s "../fonts/TTF/DejaVuSans.ttf" "$pkgdir/usr/share/mplayer/subfont.ttf"
+	sed -i 's/gmplayer/mplayer/g' "mplayer/etc/mplayer.desktop"
+	install -Dm644 "mplayer/etc/mplayer.desktop" "$pkgdir/usr/share/applications/mplayer.desktop"
+	install -Dm644 "mplayer/etc/mplayer.xpm" "$pkgdir/usr/share/pixmaps/mplayer.xpm"
+}
+
+# vim: set noet :
