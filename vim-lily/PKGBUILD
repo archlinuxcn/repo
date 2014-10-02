@@ -159,6 +159,11 @@ package_vim-runtime-lily() {
   conflicts=('vim-runtime')
   provides=("vim-runtime=${pkgver}-${pkgrel}")
 
+  if [ ! -d "${srcdir}"/runtime-install ]; then
+    package_gvim-lily
+    rm -rf "$pkgdir"
+  fi
+
   # Install the runtime split from gvim
   install -dm755 "${pkgdir}"/usr/share
   mv "${srcdir}"/runtime-install "${pkgdir}"/usr/share/vim
