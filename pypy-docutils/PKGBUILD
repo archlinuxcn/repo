@@ -6,7 +6,7 @@
 pkgbase=pypy-docutils
 pkgname=('pypy3-docutils' 'pypy-docutils')
 pkgver=0.12
-pkgrel=2
+pkgrel=3
 pkgdesc='Set of tools for processing plaintext docs into formats such as HTML, XML, or LaTeX'
 arch=('any')
 url='http://docutils.sourceforge.net'
@@ -47,7 +47,7 @@ check() {
 }
 
 package_pypy3-docutils() {
-  depends=('pypy3>=2.3' 'pypy3<2.4')
+  depends=('pypy3>=2.4' 'pypy3<2.5')
 
   cd docutils-$pkgver
   pypy3 setup.py build --build-lib=build/pypy3 \
