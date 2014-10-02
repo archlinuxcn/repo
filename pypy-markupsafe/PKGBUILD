@@ -6,7 +6,7 @@
 pkgbase='pypy-markupsafe'
 pkgname=('pypy3-markupsafe' 'pypy-markupsafe')
 pkgver=0.23
-pkgrel=4
+pkgrel=5
 pkgdesc="Implements a XML/HTML/XHTML Markup safe string for Python"
 arch=('any')
 url="http://pypi.python.org/pypi/MarkupSafe"
@@ -25,7 +25,7 @@ build() {
 }
 
 package_pypy3-markupsafe() {
-  depends=("pypy3>=2.3" "pypy3<2.4")
+  depends=("pypy3>=2.4" "pypy3<2.5")
 
   cd MarkupSafe-${pkgver}
   pypy3 setup.py install --root="${pkgdir}" --optimize=1
