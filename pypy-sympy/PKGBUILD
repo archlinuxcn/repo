@@ -8,7 +8,7 @@
 pkgbase=pypy-sympy
 pkgname=('pypy3-sympy' 'pypy-sympy')
 pkgver=0.7.5
-pkgrel=3
+pkgrel=4
 arch=('any')
 pkgdesc='Symbolic manipulation package (Computer Algebra System), written in pure Python'
 url='http://sympy.org/en/index.html'
@@ -61,8 +61,8 @@ package_pypy-sympy() {
 }
 
 package_pypy3-sympy() {
-  depends=("pypy3>=2.3" "pypy3<2.4")
-  optdepends=('pypy-ipython: user friendly interface for isympy')
+  depends=("pypy3>=2.4" "pypy3<2.5")
+  optdepends=('pypy3-ipython: user friendly interface for isympy')
 
   cd py3-sympy-${pkgver}
 
