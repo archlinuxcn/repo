@@ -10,8 +10,7 @@ url="http://www.zeromq.org/bindings:python"
 license=('LGPL')
 _pypy2_deps=("pypy>=2.4" "pypy<2.5")
 _pypy3_deps=("pypy3>=2.4" "pypy3<2.5")
-depends=(zeromq "${_pypy2_deps[@]}" "${_pypy3_deps[@]}")
-makedepends=(pypy pypy3 zeromq)
+makedepends=(zeromq "${_pypy2_deps[@]}" "${_pypy3_deps[@]}")
 #source=(https://github.com/zeromq/pyzmq/downloads/pyzmq-$pkgver.tar.gz)
 source=(https://pypi.python.org/packages/source/p/pyzmq/pyzmq-$pkgver.tar.gz
   compiler-pypy.json
