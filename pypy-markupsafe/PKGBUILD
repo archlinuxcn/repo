@@ -11,7 +11,8 @@ pkgdesc="Implements a XML/HTML/XHTML Markup safe string for Python"
 arch=('any')
 url="http://pypi.python.org/pypi/MarkupSafe"
 license=('custom')
-makedepends=('pypy-setuptools' 'pypy3-setuptools')
+_pypy3_deps=('pypy3>=2.4' 'pypy3<2.5')
+makedepends=('pypy-setuptools' 'pypy3-setuptools' "${_pypy3_deps[@]}")
 source=("http://pypi.python.org/packages/source/M/MarkupSafe/MarkupSafe-${pkgver}.tar.gz")
 sha512sums=('4f1fd91ced5e7119584b56cf7b69cfe6fdd9613bd77412368a38e9ef5d1011ba5c76d1d3a0da3d60f9f474627e6c8c8b613a80a668b32d212f09072f8b1f5b28')
 
@@ -25,7 +26,7 @@ build() {
 }
 
 package_pypy3-markupsafe() {
-  depends=("pypy3>=2.4" "pypy3<2.5")
+  depends=("${_pypy3_deps[@]}")
 
   cd MarkupSafe-${pkgver}
   pypy3 setup.py install --root="${pkgdir}" --optimize=1
