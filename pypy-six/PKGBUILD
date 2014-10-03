@@ -9,7 +9,8 @@ pkgdesc="Python 2 and 3 compatibility utilities"
 arch=('any')
 url="http://pypi.python.org/pypi/six/"
 license=('MIT')
-makedepends=('pypy3' 'pypy')
+_pypy3_deps=('pypy3>=2.4' 'pypy3<2.5')
+makedepends=("${_pypy3_deps[@]}" 'pypy')
 source=(http://pypi.python.org/packages/source/s/six/six-$pkgver.tar.gz)
 md5sums=('1626eb24cc889110c38f7e786ec69885')
 
@@ -27,7 +28,7 @@ check() {
 }
 
 package_pypy3-six() {
-  depends=('pypy3>=2.4' 'pypy3<2.5')
+  depends=("${_pypy3_deps[@]}")
   cd "$srcdir/six-$pkgver"
   pypy3 setup.py install --root "${pkgdir}" --optimize=1
   install -Dm644 "${srcdir}/six-${pkgver}/LICENSE" \
