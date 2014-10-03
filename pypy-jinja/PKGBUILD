@@ -11,8 +11,9 @@ pkgdesc="A simple pythonic template language written in Python"
 arch=('any')
 url="http://jinja.pocoo.org/"
 license=('BSD')
+_pypy3_deps=('pypy3>=2.4' 'pypy3<2.5')
 makedepends=('pypy-setuptools' 'pypy3-setuptools' 'pypy-markupsafe'
-             'pypy3-markupsafe')
+             'pypy3-markupsafe' "${_pypy3_deps[@]}")
 source=(http://pypi.python.org/packages/source/J/Jinja2/Jinja2-$pkgver.tar.gz)
 sha256sums=('2e24ac5d004db5714976a04ac0e80c6df6e47e98c354cb2c0d82f8879d4f8fdb')
 
@@ -29,7 +30,7 @@ build() {
 }
 
 package_pypy3-jinja() {
-  depends=('pypy3-markupsafe' "pypy3>=2.4" "pypy3<2.5")
+  depends=('pypy3-markupsafe' "${_pypy3_deps[@]}")
 
   cd "$srcdir/pypy3-build"
 
