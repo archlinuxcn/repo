@@ -6,7 +6,8 @@ pkgdesc="A pure Python module which provides USB access."
 arch=('any')
 url="https://github.com/walac/pyusb"
 license=('custom')
-makedepends=('pypy3-setuptools' 'pypy-setuptools')
+_pypy3_deps=('pypy3>=2.4' 'pypy3<2.5')
+makedepends=("${_pypy3_deps[@]}" 'pypy3-setuptools' 'pypy-setuptools')
 optdepends=('libusb-compat: for libusb0.1 backend'
   'libusb: for libusb1.0 backend')
 source=("https://github.com/walac/pyusb/archive/${pkgver}.tar.gz")
@@ -23,7 +24,7 @@ build() {
 }
 
 package_pypy3-pyusb() {
-  depends=('pypy3>=2.4' 'pypy3<2.5')
+  depends=("${_pypy3_deps[@]}")
   cd "$srcdir/pyusb-$pkgver"
 
   pypy3 setup.py install --root="$pkgdir"
