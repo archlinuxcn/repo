@@ -6,7 +6,8 @@ pkgdesc='Implementation of lex and yacc parsing tools'
 arch=('any')
 url='http://www.dabeaz.com/ply/'
 license=('BSD')
-makedepends=('pypy3-setuptools' 'pypy-setuptools')
+_pypy3_deps=('pypy3>=2.4' 'pypy3<2.5')
+makedepends=('pypy3-setuptools' 'pypy-setuptools' "${_pypy3_deps[@]}")
 source=("${url}ply-$pkgver.tar.gz")
 sha256sums=('af435f11b7bdd69da5ffbc3fecb8d70a7073ec952e101764c88720cdefb2546b')
 
@@ -15,7 +16,7 @@ prepare() {
 }
 
 package_pypy3-ply() {
-  depends=('pypy3>=2.4' 'pypy3<2.5')
+  depends=("${_pypy3_deps[@]}")
 
   cd "ply-$pkgver"
 
