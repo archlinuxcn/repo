@@ -10,7 +10,8 @@ pkgdesc='Python Decorator module'
 arch=('any')
 url='http://pypi.python.org/pypi/decorator'
 license=('BSD')
-makedepends=('pypy' 'pypy3' 'pypy-setuptools' 'pypy3-setuptools')
+_pypy3_deps=('pypy3>=2.4' 'pypy3<2.5')
+makedepends=('pypy' 'pypy-setuptools' 'pypy3-setuptools' "${_pypy3_deps[@]}")
 source=("http://pypi.python.org/packages/source/d/decorator/decorator-${pkgver}.tar.gz"
         'LICENSE.txt')
 md5sums=('1e8756f719d746e2fc0dd28b41251356'
@@ -40,7 +41,7 @@ package_pypy-decorator() {
 }
 
 package_pypy3-decorator() {
-  depends=("pypy3>=2.4" "pypy3<2.5")
+  depends=("${_pypy3_deps[@]}")
   cd "${srcdir}/decorator-${pkgver}"
 
   pypy3 setup.py install --root="${pkgdir}" --optimize=1
