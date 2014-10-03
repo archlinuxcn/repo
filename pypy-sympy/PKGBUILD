@@ -13,7 +13,8 @@ arch=('any')
 pkgdesc='Symbolic manipulation package (Computer Algebra System), written in pure Python'
 url='http://sympy.org/en/index.html'
 license=('BSD')
-makedepends=('pypy' 'pypy3' 'git')
+_pypy3_deps=('pypy3>=2.4' 'pypy3<2.5')
+makedepends=('pypy' "${_pypy3_deps[@]}" 'git')
 source=("https://github.com/sympy/sympy/releases/download/sympy-${pkgver}/sympy-${pkgver}.tar.gz")
 md5sums=('7de1adb49972a15a3dd975e879a2bea9')
 
@@ -61,7 +62,7 @@ package_pypy-sympy() {
 }
 
 package_pypy3-sympy() {
-  depends=("pypy3>=2.4" "pypy3<2.5")
+  depends=("${_pypy3_deps[@]}")
   optdepends=('pypy3-ipython: user friendly interface for isympy')
 
   cd py3-sympy-${pkgver}
