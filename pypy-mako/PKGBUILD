@@ -6,7 +6,9 @@ pkgdesc="Hyperfast and lightweight templating for the Python platform"
 arch=('any')
 url="http://www.makotemplates.org/"
 license=('MIT')
-makedepends=('pypy-setuptools' 'pypy3-setuptools' 'python>=3.4' # for 2to3
+_pypy3_deps=('pypy3>=2.4' 'pypy3<2.5')
+makedepends=("${_pypy3_deps[@]}" 'pypy-setuptools' 'pypy3-setuptools'
+  'python>=3.4' # for 2to3
   'pypy-markupsafe' 'pypy3-markupsafe' 'pypy-beaker' 'pypy3-beaker')
 source=(https://pypi.python.org/packages/source/M/Mako/Mako-$pkgver.tar.gz{,.asc})
 sha1sums=('580b3a8043833e3c3340d4b661a33f6ccc6a35d5'
@@ -26,7 +28,7 @@ build() {
 }
 
 package_pypy3-mako() {
-    depends=('pypy3-markupsafe' 'pypy3-beaker' 'pypy3>=2.4' 'pypy3<2.5')
+    depends=("${_pypy3_deps[@]}" 'pypy3-markupsafe' 'pypy3-beaker')
 
     cd Mako-$pkgver
     pypy3 setup.py install --skip-build --root="$pkgdir" --optimize=1
