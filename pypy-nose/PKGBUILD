@@ -12,7 +12,8 @@ pkgdesc="A discovery-based unittest extension"
 arch=('any')
 url='http://readthedocs.org/docs/nose/'
 license=('LGPL2.1')
-makedepends=('pypy' 'pypy-setuptools' 'pypy3' 'pypy-setuptools' 'pypy-sphinx')
+_pypy3_deps=('pypy3>=2.4' 'pypy3<2.5')
+makedepends=('pypy' "${_pypy3_deps[@]}" 'pypy-sphinx')
 source=("http://pypi.python.org/packages/source/n/nose/nose-${pkgver}.tar.gz")
 md5sums=('6ed7169887580ddc9a8e16048d38274d')
 
@@ -29,7 +30,7 @@ build() {
 }
 
 package_pypy3-nose() {
-  depends=('pypy3<2.5' 'pypy3>=2.4')
+  depends=("${_pypy3_deps[@]}")
 
   cd "$srcdir/nose-$pkgver"
   pypy3 setup.py install --root="${pkgdir}" -O1 --skip-build
