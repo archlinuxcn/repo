@@ -7,7 +7,8 @@ pkgdesc="Mozilla's SSL Certs"
 arch=(any)
 url="http://pypi.python.org/pypi/certifi"
 license=('GPL')
-makedepends=('pypy3-setuptools' 'pypy-setuptools')
+_pypy3_deps=('pypy3>=2.4' 'pypy3<2.5')
+makedepends=("${_pypy3_deps[@]}" 'pypy3-setuptools' 'pypy-setuptools')
 source=("http://pypi.python.org/packages/source/${_libname:0:1}/$_libname/$_libname-$pkgver.tar.gz")
 sha512sums=('5edba0cc432c27212e31085fb3c2f2ded6fa177d716116111517c25b980d9fc206a9a6d47e2c001762e951ff50203b269d0eb245a039df20188b1136f3b700b2')
 
@@ -30,7 +31,7 @@ build() {
 }
 
 package_pypy3-certifi() {
-  depends=('pypy3>=2.4' 'pypy3<2.5')
+  depends=("${_pypy3_deps[@]}")
 
   cd "$srcdir/$_libname-$pkgver"
   pypy3 setup.py install --skip-build -O1 --root="$pkgdir"
