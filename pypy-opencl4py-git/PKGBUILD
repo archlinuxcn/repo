@@ -7,7 +7,8 @@ pkgdesc="Python cffi OpenCL bindings and helper classes. pypy version"
 url="https://github.com/ajkxyz/opencl4py"
 arch=('i686' 'x86_64')
 license=('BSD')
-makedepends=('git' 'pypy' 'pypy3')
+_pypy3_deps=('pypy3>=2.4' 'pypy3<2.5')
+makedepends=('git' "${_pypy3_deps[@]}" 'pypy')
 source=(git://github.com/ajkxyz/opencl4py)
 md5sums=('SKIP')
 
@@ -23,7 +24,7 @@ build() {
 }
 
 package_pypy3-opencl4py-git() {
-  depends=('pypy3>=2.4' 'pypy3<2.5')
+  depends=("${_pypy3_deps[@]}")
   provides=('pypy3-opencl4py')
   cd opencl4py
 
