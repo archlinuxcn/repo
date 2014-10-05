@@ -1,7 +1,7 @@
 # Maintainer: Lukas Jirkovsky <l.jirkovsky@gmail.com>
 pkgname=ocl-icd
-pkgver=2.2.0
-_pkgver=595
+pkgver=2.2.3
+_pkgver=598
 pkgrel=1
 pkgdesc="OpenCL ICD Bindings"
 arch=('i686' 'x86_64')
@@ -12,7 +12,7 @@ makedepends=('ruby' 'opencl-headers20')
 provides=('libcl=1.2')
 conflicts=('libcl')
 source=(http://forge.imag.fr/frs/download.php/$_pkgver/$pkgname-$pkgver.tar.gz)
-md5sums=('b2ca7e78259fb955c731b84b7288925f')
+md5sums=('6b4733e72c67bb28f4e27272ced6fb3d')
 options=(debug strip !libtool !staticlibs)
 
 build() {
