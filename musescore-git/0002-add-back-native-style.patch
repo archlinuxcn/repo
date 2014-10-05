@@ -1,0 +1,105 @@
+From 74d7e582c8d8d048e281e66c7a6912a4e45600f6 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sat, 20 Sep 2014 12:29:23 -0400
+Subject: [PATCH 2/2] add back native style
+
+---
+ mscore/miconengine.cpp |  6 ++++--
+ mscore/preferences.cpp | 13 ++++++++++---
+ mscore/preferences.h   |  3 ++-
+ mscore/prefsdialog.ui  |  5 +++++
+ 4 files changed, 21 insertions(+), 6 deletions(-)
+
+diff --git a/mscore/miconengine.cpp b/mscore/miconengine.cpp
+index 45f912c..875d002 100644
+--- a/mscore/miconengine.cpp
++++ b/mscore/miconengine.cpp
+@@ -121,7 +121,8 @@ void MIconEnginePrivate::loadDataForModeAndState(QSvgRenderer* renderer, QIcon::
+                   f.open(QIODevice::ReadOnly);
+                   QByteArray ba = f.readAll();
+                   if (mode == QIcon::Disabled) {
+-                        if (Ms::preferences.globalStyle == Ms::MuseScoreStyleType::LIGHT) {
++                        if (Ms::preferences.globalStyle == Ms::MuseScoreStyleType::LIGHT ||
++                            Ms::preferences.globalStyle == Ms::MuseScoreStyleType::NATIVE) {
+                               if (state == QIcon::On)
+                                     ba.replace("fill:#3b3f45", "fill:#8daac7");
+                               else
+@@ -135,7 +136,8 @@ void MIconEnginePrivate::loadDataForModeAndState(QSvgRenderer* renderer, QIcon::
+                               }
+                         }
+                   else {
+-                        if (Ms::preferences.globalStyle == Ms::MuseScoreStyleType::LIGHT) {
++                        if (Ms::preferences.globalStyle == Ms::MuseScoreStyleType::LIGHT ||
++                            Ms::preferences.globalStyle == Ms::MuseScoreStyleType::NATIVE) {
+                               if (state == QIcon::On)
+                                     ba.replace("fill:#3b3f45", "fill:#4171a2");
+                               }
+diff --git a/mscore/preferences.cpp b/mscore/preferences.cpp
+index d84281d..bc13353 100644
+--- a/mscore/preferences.cpp
++++ b/mscore/preferences.cpp
+@@ -458,10 +458,13 @@ void Preferences::read()
+       useOsc                 = s.value("useOsc", useOsc).toBool();
+       oscPort                = s.value("oscPort", oscPort).toInt();
+       styleName              = s.value("style", styleName).toString();
+-      if (styleName == "dark")
++      if (styleName == "dark") {
+             globalStyle  = MuseScoreStyleType::DARK;
+-      else
++      } else if (styleName == "light") {
+             globalStyle  = MuseScoreStyleType::LIGHT;
++      } else {
++            globalStyle  = MuseScoreStyleType::NATIVE;
++      }
+ 
+       animations       = s.value("animations",       animations).toBool();
+       singlePalette    = s.value("singlePalette",    singlePalette).toBool();
+@@ -1422,10 +1425,14 @@ void PreferenceDialog::apply()
+             prefs.styleName = "dark";
+             prefs.globalStyle = MuseScoreStyleType::DARK;
+             }
+-      else {
++      else if (styleName->currentIndex() == int(MuseScoreStyleType::LIGHT)) {
+             prefs.styleName = "light";
+             prefs.globalStyle = MuseScoreStyleType::LIGHT;
+             }
++      else {
++            prefs.styleName = "native";
++            prefs.globalStyle = MuseScoreStyleType::NATIVE;
++            }
+ 
+       prefs.animations = animations->isChecked();
+       MgStyleConfigData::animationsEnabled = prefs.animations;
+diff --git a/mscore/preferences.h b/mscore/preferences.h
+index b48da38..c11ad86 100644
+--- a/mscore/preferences.h
++++ b/mscore/preferences.h
+@@ -54,7 +54,8 @@ enum {
+ 
+ enum class MuseScoreStyleType : char {
+       DARK,
+-      LIGHT
++      LIGHT,
++      NATIVE
+       };
+ 
+ // MusicXML export break values
+diff --git a/mscore/prefsdialog.ui b/mscore/prefsdialog.ui
+index 34a5a79..aa6f646 100644
+--- a/mscore/prefsdialog.ui
++++ b/mscore/prefsdialog.ui
+@@ -777,6 +777,11 @@
+               <string>light</string>
+              </property>
+             </item>
++            <item>
++             <property name="text">
++              <string>native</string>
++             </property>
++            </item>
+            </widget>
+           </item>
+           <item row="2" column="2">
+-- 
+2.1.0
+
