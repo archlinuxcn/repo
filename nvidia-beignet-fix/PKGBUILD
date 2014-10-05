@@ -16,8 +16,8 @@ install=nvidia.install
 options=(!strip)
 source=("ftp://download.nvidia.com/XFree86/Linux-x86/${pkgver}/NVIDIA-Linux-x86-${pkgver}.run"
   "ftp://download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run")
-md5sums=('423ea1a6938dbf226bb84504746fc646'
-         'baea4c968a06d3eddec8fb1287bb38bb')
+md5sums=('696d0bfa7195e22e0c4bd858fff2abb6'
+         '3d98eaa01a94e86abb04723ae2a702b1')
 
 [[ "$CARCH" = "i686" ]] && _pkg="NVIDIA-Linux-x86-${pkgver}"
 [[ "$CARCH" = "x86_64" ]] && _pkg="NVIDIA-Linux-x86_64-${pkgver}-no-compat32"
