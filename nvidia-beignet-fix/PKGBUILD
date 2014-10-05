@@ -2,15 +2,15 @@
 # Maintainer : Thomas Baechler <thomas@archlinux.org>
 
 pkgname=nvidia-beignet-fix
-pkgver=340.32
+pkgver=343.22
 _extramodules=extramodules-3.16-beignet-fix
-pkgrel=2
+pkgrel=1
 pkgdesc="NVIDIA drivers for linux"
 arch=('i686' 'x86_64')
 url="http://www.nvidia.com/"
-depends=('linux-beignet-fix>=3.16' 'linux-beignet-fix<3.17' "nvidia-libgl" "nvidia-utils=${pkgver}")
+depends=('linux-beignet-fix>=3.16' 'linux-beignet-fix<3.17'
+  "nvidia-libgl" "nvidia-utils=${pkgver}")
 makedepends=('linux-beignet-fix-headers>=3.16' 'linux-beignet-fix-headers<3.17')
-conflicts=('nvidia-96xx' 'nvidia-173xx')
 license=('custom')
 install=nvidia.install
 options=(!strip)
@@ -47,5 +47,4 @@ package() {
   gzip "${pkgdir}/usr/lib/modules/${_extramodules}/"*.ko
   install -d -m755 "${pkgdir}/usr/lib/modprobe.d"
   echo "blacklist nouveau" >> "${pkgdir}/usr/lib/modprobe.d/nvidia-beignet-fix.conf"
-  sed -i -e "s/EXTRAMODULES='.*'/EXTRAMODULES='${_extramodules}'/" "${startdir}/nvidia.install"
 }
