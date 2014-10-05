@@ -4,8 +4,8 @@
 
 pkgbase=pypy-pytools
 pkgname=('pypy3-pytools' 'pypy-pytools')
-pkgver=2014.3
-pkgrel=3
+pkgver=2014.3.1
+pkgrel=1
 pkgdesc="A collection of tools for Python"
 arch=('any')
 url="http://mathema.tician.de/software/pytools"
@@ -13,7 +13,7 @@ license=('MIT')
 _pypy3_deps=('pypy3>=2.4' 'pypy3<2.5')
 makedepends=("${_pypy3_deps[@]}" 'pypy-setuptools' 'pypy3-setuptools')
 source=(http://pypi.python.org/packages/source/p/pytools/pytools-${pkgver}.tar.gz)
-sha512sums=('8c94e185ff6f22b2051518d209373db92d2c9f993e3de803928f588a43d893259bdc378b0d65faef27301aa794c7d86afeea8cf055e19401182f87bd119af137')
+sha512sums=('2bcd02c50ef389dae7cc98c0a16cd16b6a13ab71200304c8a97a816bf6385b616ff4fc15a7a2172450ea6c56895ec220929a2296318814e097c264c92833e58d')
 
 build() {
    cp -a pytools-${pkgver}{,-python2}
