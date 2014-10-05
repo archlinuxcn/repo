@@ -16,28 +16,30 @@ pkgname=pypy-ipython
 } || {
   pkgname=(pypy-ipython)
 }
-pkgver=2.2.0
-pkgrel=2
+pkgver=2.3.0
+pkgrel=1
 pkgdesc="An enhanced Interactive Python shell. pypy version"
 arch=('any')
 url="http://ipython.org"
 license=('BSD')
 depends=("pypy" 'sqlite')
 makedepends=('sqlite')
-# optdepends=("wxpython: needed for ipythonx and ipython-wx"
-#             "python-nose: if you want to run IPython's test suite"
-#             "python-pyqt4: for ipython qtconsole"
-#             "python-sip: for ipython qtconsole"
-#             "python-pygments: for ipython qtconsole"
-#             "python-pyzmq: for ipython notebook and ipython qtconcole"
-#             "python-tornado: for ipython notebook"
-#             "python-jinja: for ipython notebook"
-#             "haskell-pandoc: ipython notebook conversion")
+optdepends=(
+  "wxpython: needed for ipythonx and ipython-wx"
+  "pypy-nose: if you want to run IPython's test suite"
+  # "pypy-pyqt4: for ipython qtconsole"
+  # "pypy-sip: for ipython qtconsole"
+  "pypy-pygments: for ipython qtconsole"
+  "pypy-pyzmq: for ipython notebook and ipython qtconcole"
+  "pypy-tornado: for ipython notebook"
+  "pypy-jinja: for ipython notebook"
+  "haskell-pandoc: ipython notebook conversion"
+  "pypy-readline: for better command line interaction support")
 #source=("http://archive.ipython.org/release/$pkgver/ipython-$pkgver.tar.gz")
 source=("https://pypi.python.org/packages/source/i/ipython/ipython-$pkgver.tar.gz"
   revert-xdg.patch
   pypy3-version.patch)
-md5sums=('b91d3724f655a8e16d022772f696cfd5'
+md5sums=('222eecd3a8299c0119c56954c79e4d0f'
          'f252c7449083c5b4a59dab260f5466c6'
          '0b72aadfce0dc7d01da6d3262b28612e')
 
