@@ -2,18 +2,22 @@
 
 pkgname=nodejs-mkdirp
 _npmname=mkdirp
-pkgver=0.3.5
-pkgrel=1
+pkgver=0.5.0
+pkgrel=2
 pkgdesc="Recursively mkdir, like mkdir -p, but in node.js"
 arch=('any')
 depends=('nodejs')
 url="https://github.com/substack/node-mkdirp"
 license=('MIT')
 provides=('nodejs-mkdirp')
+source=(".AURINFO")
+md5sums=('SKIP')
 
 package() {
   local _npmdir="$pkgdir/usr/lib/node_modules/"
   mkdir -p $_npmdir
   cd $_npmdir
+  npm config set strict-ssl false
   npm install --user root -g --prefix "$pkgdir/usr" $_npmname@$pkgver
+  npm config set strict-ssl true
 }
