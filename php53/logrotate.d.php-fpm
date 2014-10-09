@@ -1,0 +1,6 @@
+/var/log/php-fpm.log {
+	missingok
+	postrotate
+	/etc/rc.d/php-fpm logrotate >/dev/null || true
+	endscript
+}
