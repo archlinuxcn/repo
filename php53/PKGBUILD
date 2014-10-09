@@ -2,12 +2,8 @@
 # Maintainer: Felix Yan <felixonmars@archlinux.org>
 # Contributor: Pierre Schmitz <pierre@archlinux.de>
 
-# AUR split packages no likey.
-# This will shove 'em down its throat.
-pkgname=php53
-
-true && pkgbase=php53
-true && pkgname=('php53'
+pkgbase=php53
+pkgname=('php53'
          'php53-cgi'
          'php53-apache'
          'php53-fpm'
@@ -210,10 +206,10 @@ build() {
     make
 }
 
-check() {
-    cd ${srcdir}/build-php
-    make test
-}
+# check() {
+#     cd ${srcdir}/build-php
+#     make test
+# }
 
 package_php53() {
     pkgdesc='An HTML-embedded scripting language - Legacy 5.3 version'
