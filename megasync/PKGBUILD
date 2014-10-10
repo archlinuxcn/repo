@@ -1,6 +1,6 @@
 # Maintainer: Alfonso Saavedra "Son Link" <sonlink.dourden@gmail.com>
 pkgname=megasync
-pkgver=1.0.31
+pkgver=1.0.33
 pkgrel=1
 pkgdesc="Sync your files to your Mega account. Official app"
 arch=('i686' 'x86_64')
@@ -10,10 +10,10 @@ conflicts=('megatools')
 depends=('openssl' 'c-ares' 'libgcrypt' 'crypto++' 'qt4' 'libpng' 'qtchooser')
 if [ "${CARCH}" = 'x86_64' ]; then
 	ARCH=amd64
-	md5sums=('f26f0ab526ad20950a079e9d0c9d6038')
+	md5sums=('c55e060aa75f62588677b7075947880e')
 elif [ "${CARCH}" = 'i686' ]; then
 	ARCH=i386
-	md5sums=('5ad6faffbbeb78dff7bd3e3ee4496b72')  
+	md5sums=('d35d10cd46a2d9ea496bf453d4e80093')  
 fi
 source=("https://mega.co.nz/linux/MEGAsync/Debian_7.0/${ARCH}/${pkgname}_${pkgver}_${ARCH}.deb")
 install="${pkgname}.install"
