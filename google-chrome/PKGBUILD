@@ -5,11 +5,11 @@
 # or use: $ curl -s https://dl.google.com/linux/chrome/rpm/stable/x86_64/repodata/other.xml.gz | gzip -df | awk -F\" '/pkgid/{ sub(".*-","",$4); print $4": "$10 }'
 
 pkgname=google-chrome
-pkgver=37.0.2062.120
+pkgver=38.0.2125.101
 pkgrel=1
 pkgdesc="An attempt at creating a safer, faster, and more stable browser (Stable Channel)"
 arch=('i686' 'x86_64')
-url="https://www.google.com/chrome"
+url="https://www.google.com/chrome/index.html"
 license=('custom:chrome')
 depends=('alsa-lib' 'desktop-file-utils' 'flac' 'gconf' 'gtk2' 'harfbuzz' 'harfbuzz-icu' 'hicolor-icon-theme'
          'icu' 'libpng' 'libxss' 'libxtst' 'nss' 'opus' 'snappy' 'speech-dispatcher' 'ttf-font' 'xdg-utils')
@@ -20,10 +20,12 @@ options=('!emptydirs' '!strip')
 install=$pkgname.install
 _channel=stable
 _arch=amd64
-[[ "$CARCH" = 'i686' ]] && _arch=i386
-source=("google-chrome-${_channel}_${pkgver}_$_arch.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_$_arch.deb")
-md5sums=('ad13b2cd986933a57cf348dc0efc50cf')
-[[ "$CARCH" = 'i686' ]] && md5sums=('fc4fd42aa00222a7df9ad89417f8d219')
+[[ $CARCH = i686 ]] && _arch=i386
+source=("google-chrome-${_channel}_${pkgver}_$_arch.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_$_arch.deb"
+        'eula_text.html')
+md5sums=('d5fdcb11298d5cfc73ea52b42d8d826a'
+         'b7e752f549b215ac77f284b6486794b6')
+[[ $CARCH = i686 ]] && md5sums[0]='84353f292685c20e19c3cd9a6d8712db'
 
 package() {
   msg2 "Extracting the data.tar.lzma"
@@ -40,9 +42,7 @@ package() {
   gzip "$pkgdir"/usr/share/man/man1/google-chrome.1
 
   # License
-  install -d "$pkgdir"/usr/share/licenses/google-chrome/
-  curl -Ls https://www.google.com/intl/en/chrome/browser/privacy/eula_text.html \
-        -o "$pkgdir"/usr/share/licenses/google-chrome/eula_text.html
+  install -Dm644 eula_text.html "$pkgdir"/usr/share/licenses/google-chrome/eula_text.html
 
   msg2 "Symlinking missing Udev lib"
   ln -s /usr/lib/libudev.so.1 "$pkgdir"/opt/google/chrome/libudev.so.0
