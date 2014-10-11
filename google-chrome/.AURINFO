@@ -1,8 +1,8 @@
 pkgbase = google-chrome
 	pkgdesc = An attempt at creating a safer, faster, and more stable browser (Stable Channel)
-	pkgver = 37.0.2062.94
+	pkgver = 38.0.2125.101
 	pkgrel = 1
-	url = https://www.google.com/chrome
+	url = https://www.google.com/chrome/index.html
 	install = google-chrome.install
 	arch = i686
 	arch = x86_64
@@ -27,10 +27,13 @@ pkgbase = google-chrome
 	depends = xdg-utils
 	optdepends = kdebase-kdialog: needed for file dialogs in KDE
 	optdepends = ttf-google-fonts-git
-	provides = google-chrome=37.0.2062.94
-	source = google-chrome-stable_37.0.2062.94_amd64.deb::https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+	provides = google-chrome=38.0.2125.101
 	options = !emptydirs
 	options = !strip
+	source = google-chrome-stable_38.0.2125.101_amd64.deb::https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+	source = eula_text.html
+	md5sums = d5fdcb11298d5cfc73ea52b42d8d826a
+	md5sums = b7e752f549b215ac77f284b6486794b6
 
 pkgname = google-chrome
 

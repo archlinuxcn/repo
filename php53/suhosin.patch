@@ -1,0 +1,13 @@
+--- suhosin-patch-5.3.9-0.9.10.patch	2012-04-01 11:55:46.699676255 +0200
++++ suhosin-patch-5.3.9-0.9.10.patch	2012-04-01 11:56:19.322146479 +0200
+@@ -4515,8 +4515,8 @@
+ +#define SUHOSIN_PATCH 1
+ +EOF
+
+-   echo $ac_n "checking for declared timezone""... $ac_c" 1>&6
+- echo "configure:19377: checking for declared timezone" >&5
++   echo "$as_me:$LINENO: checking for declared timezone" >&5
++ echo $ECHO_N "checking for declared timezone... $ECHO_C" >&6
+ @@ -115830,7 +115833,7 @@
+         php_ini.c SAPI.c rfc1867.c php_content_types.c strlcpy.c \
+         strlcat.c mergesort.c reentrancy.c php_variables.c php_ticks.c \
