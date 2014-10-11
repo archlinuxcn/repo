@@ -1,6 +1,6 @@
-diff -r 0cfa9e069a4c pypy/module/micronumpy/boxes.py
---- a/pypy/module/micronumpy/boxes.py	Fri Sep 19 14:29:23 2014 +0300
-+++ b/pypy/module/micronumpy/boxes.py	Tue Sep 23 23:56:06 2014 -0400
+diff -r c03e0be0ab7c pypy/module/micronumpy/boxes.py
+--- a/pypy/module/micronumpy/boxes.py	Sat Oct 11 20:05:09 2014 +0100
++++ b/pypy/module/micronumpy/boxes.py	Sat Oct 11 17:34:12 2014 -0400
 @@ -16,6 +16,7 @@
  from pypy.module.micronumpy.base import W_NDimArray, W_NumpyObject
  from pypy.module.micronumpy.concrete import VoidBoxStorage
@@ -44,18 +44,21 @@ diff -r 0cfa9e069a4c pypy/module/micronumpy/boxes.py
      def descr_getitem(self, space, w_item):
          from pypy.module.micronumpy.base import convert_to_array
          if space.is_w(w_item, space.w_Ellipsis) or \
-@@ -374,6 +403,10 @@
-         w_meth = space.getattr(self.descr_ravel(space), space.wrap('reshape'))
-         return space.call_args(w_meth, __args__)
+@@ -372,6 +401,13 @@
  
+     def descr_reshape(self, space, __args__):
+         w_meth = space.getattr(self.descr_ravel(space), space.wrap('reshape'))
++        w_res = space.call_args(w_meth, __args__)
++        if isinstance(w_res, W_NDimArray) and len(w_res.get_shape()) == 0:
++            return w_res.get_scalar_value()
++        return w_res
++
 +    def descr_nd_nonzero(self, space, __args__):
 +        w_meth = space.getattr(self.descr_ravel(space), space.wrap('nonzero'))
-+        return space.call_args(w_meth, __args__)
-+
-     def descr_get_real(self, space):
-         return self.get_dtype(space).itemtype.real(self)
+         return space.call_args(w_meth, __args__)
  
-@@ -387,6 +420,13 @@
+     def descr_get_real(self, space):
+@@ -387,6 +423,13 @@
              self.w_flags = W_FlagsObject(self)
          return self.w_flags
  
@@ -69,7 +72,7 @@ diff -r 0cfa9e069a4c pypy/module/micronumpy/boxes.py
  class W_BoolBox(W_GenericBox, PrimitiveBox):
      descr__new__, _get_dtype, descr_reduce = new_dtype_getter(NPY.BOOL)
  
-@@ -619,6 +659,8 @@
+@@ -619,6 +662,8 @@
      __hash__ = interp2app(W_GenericBox.descr_hash),
  
      tolist = interp2app(W_GenericBox.item),
@@ -78,7 +81,7 @@ diff -r 0cfa9e069a4c pypy/module/micronumpy/boxes.py
      min = interp2app(W_GenericBox.descr_self),
      max = interp2app(W_GenericBox.descr_self),
      argmin = interp2app(W_GenericBox.descr_zero),
-@@ -630,13 +672,18 @@
+@@ -630,13 +675,18 @@
      ravel = interp2app(W_GenericBox.descr_ravel),
      round = interp2app(W_GenericBox.descr_round),
      conjugate = interp2app(W_GenericBox.descr_conjugate),
@@ -97,11 +100,11 @@ diff -r 0cfa9e069a4c pypy/module/micronumpy/boxes.py
  
      dtype = GetSetProperty(W_GenericBox.descr_get_dtype),
      size = GetSetProperty(W_GenericBox.descr_get_size),
-diff -r 0cfa9e069a4c pypy/module/micronumpy/ndarray.py
---- a/pypy/module/micronumpy/ndarray.py	Fri Sep 19 14:29:23 2014 +0300
-+++ b/pypy/module/micronumpy/ndarray.py	Tue Sep 23 23:56:06 2014 -0400
-@@ -470,8 +470,7 @@
-     def descr_get_flatiter(self, space):
+diff -r c03e0be0ab7c pypy/module/micronumpy/ndarray.py
+--- a/pypy/module/micronumpy/ndarray.py	Sat Oct 11 20:05:09 2014 +0100
++++ b/pypy/module/micronumpy/ndarray.py	Sat Oct 11 17:34:12 2014 -0400
+@@ -483,8 +483,7 @@
+         from .flatiter import W_FlatIterator
          return space.wrap(W_FlatIterator(self))
  
 -    def descr_item(self, space, __args__):
@@ -110,18 +113,10 @@ diff -r 0cfa9e069a4c pypy/module/micronumpy/ndarray.py
          if len(args_w) == 1 and space.isinstance_w(args_w[0], space.w_tuple):
              args_w = space.fixedview(args_w[0])
          shape = self.get_shape()
-@@ -1408,6 +1407,7 @@
- 
-     fill = interp2app(W_NDimArray.descr_fill),
-     tostring = interp2app(W_NDimArray.descr_tostring),
-+    tobytes = interp2app(W_NDimArray.descr_tostring),
- 
-     mean = interp2app(W_NDimArray.descr_mean),
-     sum = interp2app(W_NDimArray.descr_sum),
-diff -r 0cfa9e069a4c pypy/module/micronumpy/test/test_ndarray.py
---- a/pypy/module/micronumpy/test/test_ndarray.py	Fri Sep 19 14:29:23 2014 +0300
-+++ b/pypy/module/micronumpy/test/test_ndarray.py	Tue Sep 23 23:56:06 2014 -0400
-@@ -3017,6 +3017,7 @@
+diff -r c03e0be0ab7c pypy/module/micronumpy/test/test_ndarray.py
+--- a/pypy/module/micronumpy/test/test_ndarray.py	Sat Oct 11 20:05:09 2014 +0100
++++ b/pypy/module/micronumpy/test/test_ndarray.py	Sat Oct 11 17:34:12 2014 -0400
+@@ -3074,6 +3074,7 @@
          assert a.item((1, 1, 1)) == 16
          exc = raises(ValueError, a.item, 1, 1, 1, 1)
          assert str(exc.value) == "incorrect number of indices for array"
@@ -129,10 +124,18 @@ diff -r 0cfa9e069a4c pypy/module/micronumpy/test/test_ndarray.py
  
      def test_itemset(self):
          import numpy as np
-diff -r 0cfa9e069a4c pypy/module/micronumpy/test/test_scalar.py
---- a/pypy/module/micronumpy/test/test_scalar.py	Fri Sep 19 14:29:23 2014 +0300
-+++ b/pypy/module/micronumpy/test/test_scalar.py	Tue Sep 23 23:56:06 2014 -0400
-@@ -293,10 +293,116 @@
+diff -r c03e0be0ab7c pypy/module/micronumpy/test/test_scalar.py
+--- a/pypy/module/micronumpy/test/test_scalar.py	Sat Oct 11 20:05:09 2014 +0100
++++ b/pypy/module/micronumpy/test/test_scalar.py	Sat Oct 11 17:34:12 2014 -0400
+@@ -254,6 +254,7 @@
+         assert np.int64(123).reshape((1,)).shape == (1,)
+         exc = raises(ValueError, "np.int64(123).reshape((2,))")
+         assert exc.value[0] == 'total size of new array must be unchanged'
++        assert type(np.int64(123).reshape(())) == np.int64
+ 
+     def test_complex_scalar_complex_cast(self):
+         import numpy as np
+@@ -293,10 +294,116 @@
  
      def test_scalar_iter(self):
          from numpypy import int8, int16, int32, int64, float32, float64
