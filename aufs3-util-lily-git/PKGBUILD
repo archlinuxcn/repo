@@ -2,13 +2,13 @@
 
 pkgname=aufs3-util-lily-git
 _gitbranch=3.9
-pkgver=20140811
+pkgver=20140327
 pkgrel=1
 pkgdesc="Another Unionfs Implementation that supports NFS branches"
 arch=('i686' 'x86_64')
 url="http://aufs.sourceforge.net/"
 license=('GPL2')
-makedepends=('linux-lily' 'git')
+makedepends=('linux-lily-headers' 'git')
 replaces=('aufs2-util')
 source=("${pkgname}::git://git.code.sf.net/p/aufs/aufs-util#branch=aufs${_gitbranch}")
 md5sums=('SKIP')
@@ -25,8 +25,7 @@ prepare() {
 
 build() {
   cd "${srcdir}/${pkgname}"
-
-  lilyver=$(pacman -Q linux-lily | awk '{print $2}')
+  lilyver=$(pacman -Q linux-lily-headers | awk '{print $2}')
   mkdir -p libau/linux
   cp "/lib/modules/${lilyver}-lily/build/include/uapi/linux/aufs_type.h" libau/linux
   sed -i 's/__user//g' libau/linux/aufs_type.h

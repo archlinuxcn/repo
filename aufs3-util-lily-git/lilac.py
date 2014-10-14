@@ -19,7 +19,7 @@ patch = '''\
 '''
 
 def pre_build():
-  aur_pre_build()
+  aur_pre_build('aufs3-util')
   with fileinput.input(files=('PKGBUILD',), inplace=True) as f:
     for line in f:
       line = line.rstrip('\n')
