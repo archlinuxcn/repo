@@ -4,8 +4,7 @@ import fileinput
 
 from lilaclib import *
 
-build_prefix = 'extra-x86_64'
-depends = ['python2-netlib-git']
+build_prefix = 'archlinuxcn-x86_64-build'
 post_build = aur_post_build
 
 patch = '''\
