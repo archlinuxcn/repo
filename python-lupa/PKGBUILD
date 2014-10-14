@@ -1,14 +1,14 @@
 _pkgname=lupa
 pkgname=python-$_pkgname
-pkgver=1.0
-pkgrel=1
+pkgver=1.0.1
+pkgrel=1.0
 pkgdesc="Python wrapper around Lua and LuaJIT"
 arch=('any')
 url="https://github.com/scoder/lupa"
 license=('MIT')
 depends=('python' 'luajit' 'python-setuptools')
-source=('https://pypi.python.org/packages/source/l/lupa/lupa-1.0.tar.gz')
-md5sums=('ad9e40099c58b6e8261711d59696e4ed')
+source=('https://pypi.python.org/packages/source/l/lupa/lupa-1.0.1.tar.gz')
+md5sums=('7248922e150db99d49130440e5e22ed5')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
