@@ -5,14 +5,14 @@ pkgname=jdk
 _major=8
 _minor=20
 _build=b26
-pkgver=${_major}u$_minor
-pkgrel=2
-pkgdesc="Java Development Kit"
+pkgver=${_major}u${_minor}
+pkgrel=3
+pkgdesc="Oracle Java Development Kit"
 arch=('i686' 'x86_64')
 url=http://www.oracle.com/technetwork/java/javase/downloads/index.html
 license=('custom')
-depends=('desktop-file-utils' 'hicolor-icon-theme' 'java-common' 'libx11' 'libxrender' 'libxslt' 'libxtst'
-         'shared-mime-info' 'xdg-utils')
+depends=('ca-certificates-java' 'desktop-file-utils' 'hicolor-icon-theme' 'java-environment-common'
+         'java-runtime-common' 'libx11' 'libxrender' 'libxslt' 'libxtst' 'shared-mime-info' 'xdg-utils')
 optdepends=('alsa-lib: for basic sound support'
             'derby: for Oracle Apache Derby Java database (AUR)'
             'eclipse: "Oracle Java Mission Control" plugins for Eclipse'
@@ -25,12 +25,12 @@ provides=("java-runtime=$_major" "java-runtime-headless=$_major" "java-web-start
 # Variables
 _arch=x64
 _arch2=amd64
-if [[ "$CARCH" = 'i686' ]]; then
+if [[ $CARCH = i686 ]]; then
   _arch=i586
   _arch2=i386
 fi
 DLAGENTS=('http::/usr/bin/curl -LC - -b "oraclelicense=a" -O')
-_jname=${pkgname}$_major
+_jname=${pkgname}${_major}
 _jvmdir=/usr/lib/jvm/java-$_major-$pkgname
 
 backup=("etc/java-$_jname/$_arch2/jvm.cfg"
@@ -83,13 +83,16 @@ package() {
   # Link NPAPI plugin
   ln -sf $_jvmdir/jre/lib/$_arch2/libnpjp2.so "$pkgdir"/usr/lib/mozilla/plugins/libnpjp2-$_jname.so
 
+  # Replace JKS keystore with 'ca-certificates-java'
+  ln -sf /etc/ssl/certs/java/cacerts jre/lib/security/cacerts
+
   # Suffix .desktops, icons and MIME packages
   for i in $(find jre/lib/desktop/ -type f); do
-    rename -- . -$_jname. $i
+    rename -- "." "-$_jname." $i
   done
 
   # Suffix man pages
-  rename -- .1 -$_jname.1 man/{,ja_JP.UTF-8/}man1/*
+  rename -- ".1" "-$_jname.1" man/{,ja_JP.UTF-8/}man1/*
 
   # Fix .desktop paths
   sed -e "s,Exec=,&$_jvmdir/jre/bin/," \
@@ -137,8 +140,3 @@ package() {
 
 # TODO package 'mission control' on its own, and add optional dependency here
 # (WARNING: it's a full Eclipse + plugin)
-
-# FIXME: Use Arch's certs?
-# Link JKS keystore from ca-certificates-java
-#rm -f "$pkgdir"/$_jvmdir/jre/lib/security/cacerts
-#ln -sf /etc/ssl/certs/java/cacerts "$pkgdir"/$_jvmdir/jre/lib/security/cacerts
