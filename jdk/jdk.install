@@ -39,11 +39,11 @@ post_install() {
             note "${NAME} ('${THIS_JDK}') set as default Java environment."
             ;;
         *)
-            note "Default Java environment is already set to '${default}'.
-          To use ${NAME} ('${THIS_JDK}'), run:
-            # archlinux-java set ${THIS_JDK}
-          For status, use:
-            $ archlinux-java status"
+            note "Default Java environment already set to '${default}'.
+                   To use ${NAME} ('${THIS_JDK}'), run:
+                     # archlinux-java set ${THIS_JDK}
+                   For status, use:
+                     $ archlinux-java status"
             ;;
     esac
 

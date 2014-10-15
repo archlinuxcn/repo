@@ -3,10 +3,10 @@
 
 pkgname=jdk
 _major=8
-_minor=20
-_build=b26
+_minor=25
+_build=b17
 pkgver=${_major}u${_minor}
-pkgrel=3
+pkgrel=1
 pkgdesc="Oracle Java Development Kit"
 arch=('i686' 'x86_64')
 url=http://www.oracle.com/technetwork/java/javase/downloads/index.html
@@ -61,7 +61,7 @@ source=("http://download.oracle.com/otn-pub/java/jdk/$pkgver-$_build/$pkgname-$p
         "jmc-$_jname.desktop"
         "jvisualvm-$_jname.desktop"
         "policytool-$_jname.desktop")
-md5sums=(`curl -sL ${url/i*}/javase8-binaries-checksum-2133161.html | sed -nr "s|.*>${source##*/}</td> *<td>(<*[^<]*).*|\1|p"`
+md5sums=(`curl -sL ${url/te*}/webfolder/s/digest/${pkgver}checksum.html | grep -Po ">${source##*/}</td><td>\K[^<]*"`
          'b4f0da18e03f7a9623cb073b65dde6c1'  # jconsole-$_jname.desktop
          '8f0ebcead2aecad67fbd12ef8ced1503'  # jmc-$_jname.desktop
          'a4a21b064ff9f3c3f3fdb95edf5ac6f3'  # jvisualvm-$_jname.desktop
@@ -71,7 +71,7 @@ md5sums=(`curl -sL ${url/i*}/javase8-binaries-checksum-2133161.html | sed -nr "s
 
 package() {
   msg2 "Creating required dirs"
-  cd ${pkgname}1.$_major.0_$_minor
+  cd ${pkgname}1.${_major}.0_${_minor}
   install -d "$pkgdir"/{usr/{lib/{jvm/java-$_major-$pkgname/bin,mozilla/plugins},share/licenses/java$_major-$pkgname},etc/.java/.systemPrefs}
 
   msg2 "Preparing"
