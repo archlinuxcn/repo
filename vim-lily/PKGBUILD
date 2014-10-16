@@ -102,7 +102,6 @@ package_vim-lily() {
     while read _mandir; do
     cd ${_mandir}
     rm -f ex.1 view.1 # provided by (n)vi
-    rm -f evim.1 eview.1   # this does not make sense if we have no GUI
   done
 
   # Runtime provided by runtime package
