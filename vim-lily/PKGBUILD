@@ -3,7 +3,7 @@
 pkgbase=vim-lily
 pkgname=(gvim-lily vim-runtime-lily vim-lily)
 pkgver=7.4.477
-pkgrel=1
+pkgrel=2
 _versiondir="vim$(echo $pkgver | awk -F. '{print $1$2}')"
 arch=('i686' 'x86_64')
 license=('custom:vim')
@@ -102,7 +102,7 @@ package_vim-lily() {
     while read _mandir; do
     cd ${_mandir}
     rm -f ex.1 view.1 # provided by (n)vi
-    rm -f evim.1    # this does not make sense if we have no GUI
+    rm -f evim.1 eview.1   # this does not make sense if we have no GUI
   done
 
   # Runtime provided by runtime package
@@ -137,7 +137,6 @@ package_gvim-lily() {
     while read _mandir; do
     cd ${_mandir}
     rm -f ex.1 view.1 # provided by (n)vi
-    rm -f evim.1    # this does not make sense if we have no GUI
   done
 
   # Move the runtime for later packaging
