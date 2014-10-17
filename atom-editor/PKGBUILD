@@ -5,8 +5,8 @@
 # https://github.com/jreese/arch
 
 pkgname=atom-editor
-pkgver=0.136.0
-pkgrel=1
+pkgver=0.137.0
+pkgrel=2
 pkgdesc="Chrome-based text editor from Github"
 arch=('x86_64' 'i686')
 url="https://github.com/atom/atom"
@@ -14,10 +14,10 @@ license=('MIT')
 conflicts=('atom-editor-git')
 depends=('alsa-lib' 'gconf' 'gtk2' 'libatomic_ops' 'libgcrypt' 'libgnome-keyring' 'libnotify' 'libxtst' 'nodejs' 'nss' 'python2')
 source=("https://github.com/atom/atom/archive/v${pkgver}.tar.gz" 'atom-python.patch')
-sha256sums=('efb41bdbffcf91bc0eb51bf142a19bdf99570b644962c562f0806f9072696903' '18a19b895afbb5c72fe73b1efb37a662e8e8fa0f4731c9fa634f58c341c5ec3b')
+sha256sums=('fd2e33d5c03ce20a78b0c22ba2a4db5a7eeb2df93d5020d5b8b81e0a4fc2e9ba' '18a19b895afbb5c72fe73b1efb37a662e8e8fa0f4731c9fa634f58c341c5ec3b')
 makedepends=('git')
 
-_gitref='a1dc7daf484ba20a35df9b847985fd6e2ca0ced7'
+_gitref='bfbc0b1c46cec75ca8d9bdc5d92f59f81eccb6e7'
 _gitbranch='master'
 
 package() {
@@ -36,7 +36,7 @@ package() {
   sed -e "s/<%= description %>/$pkgdesc/" \
     -e "s|<%= installDir %>/share/atom/atom|/usr/bin/atom|"\
     -e "s|<%= iconName %>|atom|"\
-    resources/linux/Atom.desktop.in > resources/linux/Atom.desktop
+    resources/linux/atom.desktop.in > resources/linux/Atom.desktop
   install -Dm644 resources/linux/Atom.desktop "$pkgdir/usr/share/applications/Atom.desktop"
 
   install -Dm644 resources/atom.png "$pkgdir/usr/share/pixmaps/atom.png"
