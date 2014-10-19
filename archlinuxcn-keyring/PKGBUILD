@@ -1,0 +1,20 @@
+# This file is part of Arch Linux CN ( http://www.archlinuxcn.org ).
+# See COPYING for license details.
+
+pkgname='archlinuxcn-keyring'
+pkgver='20141019'
+pkgrel=1
+pkgdesc='Arch Linux CN PGP keyring'
+arch=('any')
+url='https://github.com/archlinuxcn/repo'
+license=('GPL')
+install="archlinuxcn-keyring.install"
+source=("https://github.com/hzy199411/archlinuxcn-keyring/archive/$pkgver.tar.gz")
+sha1sums=('8215506e3c31b012e7ca9fb1b78e4f3086ba4c8d')
+
+package() {
+  cd "$srcdir/archlinuxcn-keyring-$pkgver"
+
+  make PREFIX=/usr "DESTDIR=$pkgdir" install
+}
+
