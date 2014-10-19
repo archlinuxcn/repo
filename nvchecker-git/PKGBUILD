@@ -1,0 +1,32 @@
+# Maintainer: Stephen Zhang <zsrkmyn at gmail dot com>
+pkgname=nvchecker-git
+pkgver=v0.3.r25.gad31a14
+pkgrel=2
+pkgdesc="a tool for checking if a new version of some software has been released."
+arch=('any')
+url="https://github.com/lilydjwg/nvchecker"
+license=('MIT')
+depends=('python' 'python-tornado')
+makedepends=('git' 'python-setuptools')
+optdepends=('python-pycurl: better HTTP client support')
+source=('git://github.com/lilydjwg/nvchecker.git')
+md5sums=('SKIP')
+
+_gitroot=nvchecker
+
+pkgver() {
+  cd "$srcdir/$_gitroot"
+  git describe --long | sed -r 's/([^-]*-g)/r\1/;s/-/./g'
+}
+
+build() {
+  cd $srcdir/$_gitroot
+  python3 setup.py build
+}
+
+package() {
+  cd $srcdir/$_gitroot
+  python3 setup.py install --root="$pkgdir" --optimize=1 --skip-build
+}
+
+# vim:set ts=2 sw=2 et:
