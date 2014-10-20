@@ -1,0 +1,11 @@
+[Unit]
+Description=System monitor Services Provided by Newrelic
+After=network.target
+
+[Service]
+Type=forking
+PIDFile=/run/nrsysmond.pid
+ExecStart=/usr/bin/nrsysmond -c /etc/newrelic/nrsysmond.cfg -p /run/nrsysmond.pid
+
+[Install]
+WantedBy=multi-user.target
