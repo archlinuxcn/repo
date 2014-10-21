@@ -1,8 +1,8 @@
-# Maintainer: Felix Yan <felixonmars@gmail.com>
+# Maintainer: Felix Yan <felixonmars@archlinux.org>
 
 _pkgname=jieba
 pkgname=python2-$_pkgname
-pkgver=0.33
+pkgver=0.34
 pkgrel=1
 pkgdesc="JieBa Chinese Words Segment Library based on HMM model for Python"
 arch=('any')
@@ -16,4 +16,4 @@ package() {
   python2 setup.py install -O1 --root="$pkgdir"
 }
 
-sha512sums=('efc8969e3842d9a91d144562e1ccf62373c3102e3d3540c0aba3d4144dfeb6764f06b5468f38449f3df112f80fe766cb549b81b98d92e580379e2d570c445ac9')
+sha512sums=('75bff2411a30025c5ad460c4d6cb8720dd40bfe0fe810071ec2caacb9a00a53ca330196f7982e1db4b697861b1a5582135f095ed1ab4e482717eaa4ab9ae5bdc')
