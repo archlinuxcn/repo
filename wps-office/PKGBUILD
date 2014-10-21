@@ -4,7 +4,7 @@
 pkgname=wps-office
 pkgver=9.1.0.4885_a16
 _pkgver=9.1.0.4885~a16_x86
-pkgrel=1
+pkgrel=2
 pkgdesc="Kingsoft Office (WPS Office) is an office productivity suite"
 arch=('i686' 'x86_64')
 license=("custom")
@@ -16,11 +16,11 @@ source=("http://kdl.cc.ksosoft.com/wps-community/download/a16/wps-office_${_pkgv
 sha1sums=('0db9c0ef8073f4141ca35f0b83d4e489f53f9871')
 
 if [ "$CARCH" = "i686" ]; then
-    depends=('fontconfig' 'libpng12' 'glib2' 'libsm' 'libxext' 'libxrender' 'glu' 'libxml2')
+    depends=('fontconfig' 'libpng12' 'glib2' 'libsm' 'libxext' 'libxrender' 'libxml2')
     optdepends=('cups: for printing support'
                 'pango: for complex (right-to-left) text support')
 elif [ "$CARCH" = "x86_64" ]; then
-    depends=('lib32-fontconfig' 'lib32-libpng12' 'lib32-glib2' 'lib32-libsm' 'lib32-libxext' 'lib32-libxrender' 'lib32-glu' 'lib32-libxml2')
+    depends=('lib32-fontconfig' 'lib32-libpng12' 'lib32-glib2' 'lib32-libsm' 'lib32-libxext' 'lib32-libxrender' 'lib32-libxml2')
     optdepends=('lib32-libcups: for printing support'
                 'lib32-pango: for complex (right-to-left) text support')
 fi
