@@ -4,7 +4,7 @@
 pkgname=wps-office
 pkgver=9.1.0.4885_a16
 _pkgver=9.1.0.4885~a16_x86
-pkgrel=2
+pkgrel=3
 pkgdesc="Kingsoft Office (WPS Office) is an office productivity suite"
 arch=('i686' 'x86_64')
 license=("custom")
@@ -13,7 +13,7 @@ conflicts=('kingsoft-office')
 options=('!emptydirs')
 install=${pkgname}.install
 source=("http://kdl.cc.ksosoft.com/wps-community/download/a16/wps-office_${_pkgver}.tar.xz")
-sha1sums=('0db9c0ef8073f4141ca35f0b83d4e489f53f9871')
+sha1sums=('7ec90d7dd75cd2783e5a7d4c578b70f288a57198')
 
 if [ "$CARCH" = "i686" ]; then
     depends=('fontconfig' 'libpng12' 'glib2' 'libsm' 'libxext' 'libxrender' 'libxml2')
@@ -27,16 +27,6 @@ fi
 depends+=('desktop-file-utils' 'shared-mime-info' 'xdg-utils')
 
 PKGEXT=".pkg.tar"
-
-prepare() {
-  # Remove BOM in desktop files
-  cd wps-office_${_pkgver}/resource/applications
-  for file in wps-office-et.desktop wps-office-wpp.desktop wps-office-wps.desktop; do
-    mv $file{,.bak}
-    tail -c +4 $file.bak > $file
-    rm $file.bak
-  done
-}
 
 package() {
   #bsdtar -xf data.tar.xz
