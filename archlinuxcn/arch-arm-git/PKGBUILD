@@ -1,0 +1,38 @@
+#Maintainer: Yichao Yu <yyc1992@gmail.com>
+#Contributor: Yichao Yu <yyc1992@gmail.com>
+
+pkgname=arch-arm-git
+pkgver=14.75ba15b
+pkgrel=1
+pkgdesc="Archlinux ARM cross compiling tools"
+arch=('i686' 'x86_64')
+provides=('arch-arm')
+conflicts=('arch-arm')
+url="https://github.com/yuyichao/arch-arm"
+license=('GPLv3')
+depends=('qemu')
+makedepends=('git' 'cmake')
+options=('debug' 'strip')
+source=('git://github.com/yuyichao/arch-arm')
+md5sums=('SKIP')
+
+pkgver() {
+  cd "$srcdir/arch-arm"
+
+  echo "$(git rev-list --count master).$(git rev-parse --short master)"
+}
+
+build() {
+  cd "$srcdir/arch-arm"
+
+  mkdir -p build
+  cd build
+  cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib
+  make
+}
+
+package() {
+  cd "${srcdir}/arch-arm/build"
+
+  make install DESTDIR="${pkgdir}"
+}
