@@ -1,0 +1,8 @@
+post_install() {
+  systemctl restart systemd-binfmt 
+}
+
+post_remove() {
+  echo "-- binfmt binary formats will be updated at reboot"
+}
+
