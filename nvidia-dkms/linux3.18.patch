@@ -1,0 +1,14 @@
+diff -rupN kernel.orig/nv-drm.c kernel/nv-drm.c
+--- kernel.orig/nv-drm.c	2014-10-21 15:33:31.410395364 +0200
++++ kernel/nv-drm.c	2014-10-21 15:34:23.612022752 +0200
+@@ -17,6 +17,10 @@
+ #if defined(NV_DRM_AVAILABLE)
+ 
+ #include <drm/drmP.h>
++
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 18, 0)
++#include <drm/drm_gen.h>
++#endif
+ 
+ extern nv_linux_state_t *nv_linux_devices;
+ 
