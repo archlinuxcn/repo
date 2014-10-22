@@ -8,7 +8,7 @@
 #_pgo=true
 
 pkgname=firefox-kde-opensuse
-pkgver=32.0.3
+pkgver=33.0
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
@@ -16,7 +16,7 @@ license=('MPL' 'GPL' 'LGPL')
 url="https://build.opensuse.org/package/show/mozilla:Factory/MozillaFirefox"
 depends=('gtk2' 'mozilla-common' 'libxt' 'startup-notification' 'mime-types'
          'dbus-glib' 'alsa-lib' 'desktop-file-utils' 'hicolor-icon-theme'
-	 'libvpx' 'icu'  'libevent' 'nss>=3.16.2' 'nspr>=4.10.6' 'hunspell' 
+	 'libvpx' 'icu'  'libevent' 'nss>=3.17.1' 'nspr>=4.10.7' 'hunspell' 
 	 'sqlite' 'libnotify' 'kmozillahelper')
 makedepends=('unzip' 'zip' 'diffutils' 'python2' 'yasm' 'mesa' 'imake'
              'xorg-server-xvfb' 'libpulse' 'gst-plugins-base-libs' 'inetutils')
@@ -26,8 +26,8 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
 install=firefox.install
-options=('!emptydirs')
-_patchrev=b2ae89c6dea9
+options=('!emptydirs' '!makeflags')
+_patchrev=f1c5ccf4d1a7
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.bz2
         mozconfig firefox.desktop firefox-install-dir.patch vendor.js kde.js firefox-fixed-loading-icon.png
@@ -45,6 +45,10 @@ source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/
 	$_patchurl/toolkit-download-folder.patch
 )
 
+# Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
+# Note: These are for Arch Linux use ONLY. For your own distribution, please
+# get your own set of keys. Feel free to contact foutrelis@archlinux.org for
+# more information.
 _google_api_key=AIzaSyDwr302FpOSkGRpLlUpPThNTDPbXcIn_FM
 
 prepare() {
@@ -56,7 +60,7 @@ prepare() {
   echo -n "$_google_api_key" > google-api-key
 
   # https://bugs.archlinux.org/task/41689
-  patch -Np1 -i "$srcdir/rhbz-966424.patch"
+  patch -Np2 -i "$srcdir/rhbz-966424.patch"
 
   msg "Patching for KDE"
   patch -Np1 -i "$srcdir/toolkit-download-folder.patch"
@@ -80,7 +84,7 @@ prepare() {
 
   # Fix tab loading icon (flickers with libpng 1.6)
   # https://bugzilla.mozilla.org/show_bug.cgi?id=841734
-  # TODO: Remove this; Firefox 34 might use CSS animations for the loading icon
+  # TODO: Remove this; Firefox 36 might use CSS animations for the loading icon
   # https://bugzilla.mozilla.org/show_bug.cgi?id=759252
   cp "$srcdir/firefox-fixed-loading-icon.png" \
     browser/themes/linux/tabbrowser/loading.png
@@ -148,19 +152,19 @@ package() {
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
 
-sha256sums=('ae2aa20538d03b392a04663593fb106c0aec2d8bbb78ddac84a88ce7617b1efe'
+sha256sums=('1018c2fae8c54c8a45f5a3ce348a2617a3f8039a789b09b7cfa5a27be069b229'
             '94410d3e8bfe74b79ecd9dace9c4a339c25fa10908a7471001f533d843b582c9'
             '175d03cf3d8eb420d24a5a3072be69c9603e3ddacd3a83f68f49754eaecf6c5a'
             'd86e41d87363656ee62e12543e2f5181aadcff448e406ef3218e91865ae775cd'
             '4b50e9aec03432e21b44d18c4c97b2630bace606b033f7d556c9d3e3eb0f4fa4'
             'b8cc5f35ec35fc96ac5c5a2477b36722e373dbb57eba87eb5ad1276e4df7236d'
             '68e3a5b47c6d175cc95b98b069a15205f027cab83af9e075818d38610feb6213'
-            '746cb474c5a2c26fc474256e430e035e604b71b27df1003d4af85018fa263f4a'
-            'd445b6e75938d511eb1bd8e6652ee2966321d72953e8090ef544819accbd2ca5'
-            '259f4add2b2969a821051041ee1eeea9b5310f87d84787daf66aa357a761a3aa'
+            '4f0046b39a8d98f6e4fc3360ec490cb2416e38c7b3e92699f7e511c206c2c961'
+            '9e67a4505deaefca2be253cd4f77f6089af76edd9507c1d54a1570cd51415b39'
+            '681eaa30b78aa40ac5cd7c5435d1088344067a90e0c7e698ccdb0b13ffe9e88f'
             '1fd54e93db3a4d454ece5a6dc788a4ae36805eb497482add82a11ac5cf990562'
-            'd2bd2cbf423dffd0bc665d3a23103fef5b78e74375ddbbfd5ac7222842ef2caf'
-            '9a2c489131fef4a34e879a8f9522d802bf76dc32dc80a5f6bc59f92acad59ea6'
+            '4b4359947813234af46bf1fdc98a85a3f9b78483d5c4dbd840ac783d2fa9182f'
+            '6aafb4bc964f6c497676c3cf89cfc09c2b7de2ea1e5fbf0c088089044f16abe2'
             '15ba009c12b76c20744cbc8d7d1840b979a5962b536f01798bb0c4bf04500bfb'
             'e8289ea4c1f8191e1e23661312ceee2128b8e790501b9a589d0d7bfc4384553f'
             '5f6b0970284d68d5ed18e6bb7ee1e9fc0025ab3c10aaa14c283adb21a4a20ee8'
