@@ -13,6 +13,7 @@ license=('custom')
 depends=('tcl' 'lib32-zlib')
 source=(http://downloads.sourceforge.net/sourceforge/tcl/tcl${pkgver}-src.tar.gz)
 md5sums=('8103eaf6d71acb716a64224492f09d5f')
+options=('staticlibs')
 
 prepare() {
   cd tcl${pkgver}
