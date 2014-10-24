@@ -21,9 +21,11 @@ def pre_build():
       elif '$pkgname' in line:
         line = line.replace('$pkgname', 'evince')
       elif line.startswith('groups='):
-        line = line + '''conflicts=('evince')\nprovides=("evince=$pkgver")\n'''
+        line = line + '''\nconflicts=('evince')\nprovides=("evince=$pkgver")\n'''
       elif '--enable-introspection' in line:
         line += '  --disable-dbus'
+      elif line.strip() == 'make':
+        line = '''  sed -i '/"win.reload",/a          "win.show-properties",	"<Alt>Return", NULL,' shell/ev-application.c\n''' + line
       print(line)
 
 def post_build():
