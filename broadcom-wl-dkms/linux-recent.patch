@@ -1,5 +1,5 @@
---- a/src/wl/sys/wl_cfg80211_hybrid.c	2014-06-26 10:42:08.000000000 +0000
-+++ b/src/wl/sys/wl_cfg80211_hybrid.c	2014-07-17 22:49:58.707134487 +0000
+--- a/src/wl/sys/wl_cfg80211_hybrid.c	2014-06-26 12:42:08.000000000 +0200
++++ b/src/wl/sys/wl_cfg80211_hybrid.c	2014-10-08 18:47:07.549476082 +0200
 @@ -2071,7 +2071,22 @@
  			wl_get_assoc_ies(wl);
  			memcpy(&wl->bssid, &e->addr, ETHER_ADDR_LEN);
@@ -24,8 +24,8 @@
  			set_bit(WL_STATUS_CONNECTED, &wl->status);
  			wl->profile->active = true;
  		}
---- a/src/wl/sys/wl_linux.c	2014-06-26 10:42:08.000000000 +0000
-+++ b/src/wl/sys/wl_linux.c	2014-07-17 22:51:14.738622782 +0000
+--- a/src/wl/sys/wl_linux.c	2014-06-26 12:42:08.000000000 +0200
++++ b/src/wl/sys/wl_linux.c	2014-10-08 18:47:19.526693719 +0200
 @@ -878,7 +878,7 @@
  static SIMPLE_DEV_PM_OPS(wl_pm_ops, wl_suspend, wl_resume);
  #endif
@@ -35,3 +35,16 @@
  	.name =		"wl",
  	.probe =	wl_pci_probe,
  	.remove =	__devexit_p(wl_remove),
+@@ -1307,7 +1307,12 @@
+ 	dev->priv = priv_link;
+ #else
+ 
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 17, 0))
+ 	dev = alloc_netdev(sizeof(priv_link_t), intf_name, ether_setup);
++#else
++	dev = alloc_netdev(sizeof(priv_link_t), intf_name, NET_NAME_UNKNOWN,
++			   ether_setup);
++#endif
+ 	if (!dev) {
+ 		WL_ERROR(("wl%d: %s: alloc_netdev failed\n",
+ 			(wl->pub)?wl->pub->unit:wlif->subunit, __FUNCTION__));
