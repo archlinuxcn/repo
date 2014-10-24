@@ -1,0 +1,25 @@
+# $Id: PKGBUILD 104268 2014-01-16 18:44:14Z flexiondotorg $
+# Maintainer: Martin Wimpress <code@flexion.org>
+
+pkgname=liboobs
+pkgver=3.0.0
+pkgrel=3
+pkgdesc="GObject based interface to system-tools-backends - shared library"
+arch=('i686' 'x86_64')
+url="http://developer.gnome.org/liboobs/"
+license=('GPL2')
+depends=('system-tools-backends')
+source=("ftp://ftp.gnome.org/pub/GNOME/sources/liboobs/3.0/${pkgname}-${pkgver}.tar.bz2")
+sha256sums=('1e7a327df7dcfa30e0cd3e0d2ffcd9a2c91c7870291dd30434b5da907945c00a')
+
+build() {
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    ./configure \
+        --prefix=/usr \
+        --disable-static
+    make
+}
+package() {
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    make DESTDIR="${pkgdir}" install
+}
