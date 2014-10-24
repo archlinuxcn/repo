@@ -1,0 +1,21 @@
+_depmod() {
+	EXTRAMODULES='extramodules-3.16-pf'
+	depmod $(cat /usr/lib/modules/$EXTRAMODULES/version)
+}
+
+post_install() {
+	cat << EOF
+===> You may want to load vboxguest, vboxsf and vboxvideo
+EOF
+	_depmod
+}
+
+post_upgrade() {
+	_depmod
+}
+
+post_remove() {
+	_depmod
+}
+
+# vim:set ts=2 sw=2 et:
