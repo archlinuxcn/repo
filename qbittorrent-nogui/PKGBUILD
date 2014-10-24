@@ -1,0 +1,29 @@
+# Mantainer: Martin Villagra <mvillagra0@gmail.com>
+
+pkgname=qbittorrent-nogui
+pkgver=3.1.10
+pkgrel=1
+pkgdesc="A bittorrent client written in C++ / Qt4 using the good libtorrent library, w/o gui, stable version"
+arch=('i686' 'x86_64')
+url="http://www.qbittorrent.org/"
+license=('GPL')
+depends=('libtorrent-rasterbar' 'boost-libs' 'qt4')
+makedepends=('boost' 'which')
+conflicts=('qbittorrent-git-nogui')
+source=("http://downloads.sourceforge.net/sourceforge/qbittorrent/qbittorrent-${pkgver}.tar.xz"
+        'qbittorrent.service')
+
+build() {
+  cd  "${srcdir}/${pkgname/-nogui/}-${pkgver}"
+  ./configure --prefix=/usr --disable-gui
+  make
+}
+
+package() {
+  cd  "${srcdir}/${pkgname/-nogui/}-${pkgver}"
+  make INSTALL_ROOT=${pkgdir} install
+
+  install -D -m0755 "$srcdir/qbittorrent.service" "$pkgdir/usr/lib/systemd/system/qbittorrent.service"
+}
+sha256sums=('e65dc14abe71e034d49787fed7a8715b1b49a5e64172d3cb4abbe49042a41876'
+            '69b3b5c8fe206969df9a8ff5e1d92c217ae82d043d36cecc8855ae105b345146')

@@ -1,0 +1,23 @@
+_depmod() {
+	EXTRAMODULES='extramodules-3.16-pf'
+	depmod $(cat /usr/lib/modules/$EXTRAMODULES/version)
+}
+
+post_install() {
+	cat << EOF
+===> You must load vboxdrv module before starting VirtualBox:
+===> # modprobe vboxdrv
+EOF
+	_depmod
+}
+
+post_upgrade() {
+	_depmod
+	echo 'In order to use the new version, reload all virtualbox modules manually.'
+}
+
+post_remove() {
+	_depmod
+}
+
+# vim:set ts=2 sw=2 et:
