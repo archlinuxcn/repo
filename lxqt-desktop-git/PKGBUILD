@@ -1,0 +1,54 @@
+# Maintainer: Jerome Leclanche <jerome@leclan.ch>
+
+_pkgname=lxqt-desktop
+pkgname=$_pkgname-git
+pkgver=0.8.0.2.g1214fe5
+pkgrel=1
+pkgdesc="The LXQt desktop"
+arch=("i686" "x86_64")
+url="http://lxqt.org"
+license=("GPL2")
+depends=(
+	"lxqt-globalkeys-git"
+	"lxqt-notificationd-git"
+	# components
+	"lxqt-panel-git"
+	"lxqt-session-git"
+	"lxqt-runner-git"
+	"lxqt-qtplugin-git"
+	"lxqt-policykit-git"
+	"lxqt-powermanagement-git"
+	"lxqt-admin-git"
+	"lxqt-config-git"
+	"lxqt-about-git"
+	"lxqt-common-git"
+)
+optdepends=(
+	"pcmanfm-qt-git: The LXQt file manager"
+	"lximage-qt-git: The LXQt image viewer"
+	"lxqt-openssh-askpass-git: OpenSSH Askpass module"
+	"openbox: Recommended window manager"
+	"sddm: Recommended display manager"
+	"qterminal: Pure Qt terminal"
+	"juffed: Pure Qt text editor (Kate clone)"
+	"screengrab: Screenshot capture"
+	"qps: Task Monitoring"
+)
+makedepends=("git")
+provides=("$_pkgname")
+conflicts=("$_pkgname")
+source=("$_pkgname::git+https://github.com/lxde/lxde-qt.git")
+sha256sums=("SKIP")
+
+pkgver() {
+	cd "$srcdir/$_pkgname"
+	git describe --always | sed "s/-/./g"
+}
+
+build() {
+	msg2 "This is a metapackage. Nothing will be built."
+}
+
+package() {
+	msg2 "This is a metapackage. Nothing will be installed."
+}
