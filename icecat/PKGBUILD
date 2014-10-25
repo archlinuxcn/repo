@@ -6,68 +6,66 @@
 # Contributor: Muhammad 'MJ' Jassim <UnbreakableMJ@gmail.com> 
 
 pkgname=icecat
-pkgver=24.0
-pkgverbase=24
+pkgver=31.2.0
+_pkgverbase=${pkgver%%.*}
 pkgrel=1
 pkgdesc="GNU version of the Firefox browser."
 arch=(i686 x86_64)
 url="http://www.gnu.org/software/gnuzilla/"
 license=('GPL' 'MPL' 'LGPL')
-depends=('gtk2' 'mozilla-common' 'libxt' 'startup-notification' 'mime-types'
-         'dbus-glib' 'alsa-lib' 'desktop-file-utils' 'hicolor-icon-theme'
-         'libvpx' 'libevent' 'nss' 'hunspell' 'sqlite')
+depends=('gtk2' 'libxt' 'startup-notification'
+         'dbus-glib' 'alsa-lib' 'desktop-file-utils'
+         'libvpx' 'icu' 'libevent' 'nss' 'hunspell')
 makedepends=('unzip' 'zip' 'diffutils' 'python2' 'yasm' 'mesa' 'imake'
-             'libpulse' 'gstreamer0.10-base' 'inetutils')
-#             'xorg-server-xvfb' 'libpulse' 'gstreamer0.10-base'
+             'libpulse' 'gst-plugins-base-libs' 'inetutils' 'autoconf2.13')
 optdepends=('networkmanager: Location detection via available WiFi networks'
-            'gstreamer0.10-base-plugins: vorbis decoding, ogg demuxing'
-            'gstreamer0.10-good-plugins: webm and mp4 demuxing'
-            'gstreamer0.10-bad-plugins: aac, vp8 and opus decoding'
-            'gstreamer0.10-ugly-plugins: h.264 and mp3 decoding'
-            'gstreamer0.10-ffmpeg: more decoders'
-            'libpulse: PulseAudio audio driver')
+            'gst-plugins-good: h.264 video'
+            'gst-libav: h.264 video')
 
 install=icecat.install
-source=(http://ftp.gnu.org/gnu/gnuzilla/${pkgverbase}/${pkgname}-${pkgver}.tar.gz
+source=(http://ftp.gnu.org/gnu/gnuzilla/${pkgver}/${pkgname}-${pkgver}.tar.xz
+#source=(http://mirrors.kernel.org/gnu/gnuzilla/${pkgver}/${pkgname}-${pkgver}.tar.xz      ## Good mirror
         mozconfig
         icecat.desktop
         icecat-safe.desktop
         shared-libs.patch
-        vendor.js
-        fix-freetype.patch)
+        rhbz-966424.patch
+        vendor.js)
 
-md5sums=('0d3fdcec3f5fde494dedb595387e8f21'
-         '050555f9d9efb9748ac0bae07d5dfc4f'
+md5sums=('52f310b515cf185636e889d55f9d615d'
+         '0967f59d5485300844def52ccb0bc509'
          'e81ad01dbc16ba28bf92ba4b7c309ca7'
          'd93fe402b87cd000a869e1fd6badc6c9'
          '7c735fa78c674496db1ca0f31a0c8be5'
-         '0d053487907de4376d67d8f499c5502b'
-         'a7f96586373f11ce51e91a79dcf171a8')
+         '8c1578232b7a60fa1caa9a0b322d1e2b'
+         '0d053487907de4376d67d8f499c5502b')
 
 prepare() {
 
-  cd "${srcdir}/${pkgname}-${pkgver}/"
+  cd "${srcdir}/${pkgname}-${pkgver}"
 
   # Patch to move files directly to /usr/lib/icecat. No more symlinks.
-  sed -e 's;$(libdir)/$(MOZ_APP_NAME)-$(MOZ_APP_VERSION);$(libdir)/$(MOZ_APP_NAME);g' -i config/baseconfig.mk -i js/src/config/baseconfig.mk
-  sed -e 's;$(libdir)/$(MOZ_APP_NAME)-devel-$(MOZ_APP_VERSION);$(libdir)/$(MOZ_APP_NAME)-devel;g' -i config/baseconfig.mk -i js/src/config/baseconfig.mk
+#  sed -e 's;$(libdir)/$(MOZ_APP_NAME)-$(MOZ_APP_VERSION);$(libdir)/$(MOZ_APP_NAME);g' -i config/baseconfig.mk -i js/src/config/baseconfig.mk
+#  sed -e 's;$(libdir)/$(MOZ_APP_NAME)-devel-$(MOZ_APP_VERSION);$(libdir)/$(MOZ_APP_NAME)-devel;g' -i config/baseconfig.mk -i js/src/config/baseconfig.mk
+  sed -e 's;$(libdir)/$(MOZ_APP_NAME)-$(MOZ_APP_VERSION);$(libdir)/$(MOZ_APP_NAME);g' -i config/baseconfig.mk
+  sed -e 's;$(libdir)/$(MOZ_APP_NAME)-devel-$(MOZ_APP_VERSION);$(libdir)/$(MOZ_APP_NAME)-devel;g' -i config/baseconfig.mk
 
   # Patch from Firefox in [extra]
   patch -Np1 -i ../shared-libs.patch
 
-  # Patch for freetype fix https://bug944454.bugzilla.mozilla.org/attachment.cgi?id=8340117
-  patch -Np1 -i ../fix-freetype.patch
+  # https://bugs.archlinux.org/task/41689
+  patch -Np1 -i ../rhbz-966424.patch
 
   # Patch to change default home directory to ~/.gnuzilla
   sed -e 's/^MOZ_USER_DIR=".mozilla"/MOZ_USER_DIR=".gnuzilla"/g' -i configure.in
 
   msg2 "Starting build..."
 
-  cp ../mozconfig .mozconfig
+  cp -v ${srcdir}/mozconfig .mozconfig
 
   # Fix PRE_RELEASE_SUFFIX
-  sed -i '/^PRE_RELEASE_SUFFIX := ""/s/ ""//' \
-    browser/base/Makefile.in
+#  sed -i '/^PRE_RELEASE_SUFFIX := ""/s/ ""//' \
+#    browser/base/Makefile.in
 
   # WebRTC build tries to execute "python" and expects Python 2
   mkdir "$srcdir/path"
@@ -75,14 +73,18 @@ prepare() {
 
   # configure script misdetects the preprocessor without an optimization level
   # https://bugs.archlinux.org/task/34644
-  sed -i '/ac_cpp=/s/$CPPFLAGS/& -O2/' configure
+#  sed -i '/ac_cpp=/s/$CPPFLAGS/& -O2/' configure
 
 }
 
 build() {
 
-  cd "${srcdir}/${pkgname}-${pkgver}/"
+  cd "${srcdir}/${pkgname}-${pkgver}"
   ICECATDIR="/usr/lib/${pkgname}" && export ICECATDIR
+
+  # Workaround to build 31.0. Fails otherwise.
+  unset CPPFLAGS
+
   export PATH="$srcdir/path:$PATH"
   export LDFLAGS="$LDFLAGS -Wl,-rpath,$ICECATDIR"
   export PYTHON="/usr/bin/python2"
@@ -94,19 +96,24 @@ build() {
 
 package () {
 
-  cd "${srcdir}/${pkgname}-${pkgver}/"
+  cd "${srcdir}/${pkgname}-${pkgver}"
   make -j1 -f client.mk DESTDIR="${pkgdir}" install
 
   msg2 "Finishing..."
   install -m755 -d ${pkgdir}/usr/share/applications
   install -m755 -d ${pkgdir}/usr/share/pixmaps
-  install -m644 ${srcdir}/${pkgname}-${pkgver}/browser/branding/unofficial/default48.png ${pkgdir}/usr/share/pixmaps/icecat.png
-  install -m644 ${srcdir}/icecat.desktop ${pkgdir}/usr/share/applications/
-  install -m644 ${srcdir}/icecat-safe.desktop ${pkgdir}/usr/share/applications/
+
+  for i in 16 32 48; do
+      install -Dm644 ${srcdir}/${pkgname}-${pkgver}/browser/branding/official/default${i}.png \
+      "$pkgdir/usr/share/icons/hicolor/${i}x${i}/apps/icecat.png"
+  done
+  install -Dm644 ${srcdir}/${pkgname}-${pkgver}/browser/branding/official/default48.png ${pkgdir}/usr/share/pixmaps/icecat.png
+  install -Dm644 ${srcdir}/icecat.desktop ${pkgdir}/usr/share/applications/
+  install -Dm644 ${srcdir}/icecat-safe.desktop ${pkgdir}/usr/share/applications/
 
   # implement vendor.js setting the locale to match the os don't disable our languages extensions
   # https://projects.archlinux.org/svntogit/packages.git/commit/trunk/PKGBUILD?h=packages/firefox&id=281a95c2cca0db88904603d7808936f52797a690
-  install -m644 "${srcdir}"/vendor.js "${pkgdir}${ICECATDIR}/defaults/pref"
+  install -Dm644 "${srcdir}"/vendor.js "${pkgdir}${ICECATDIR}/browser/defaults/preferences/vendor.js"
 
   # We don't want the development stuff
   rm -rv "$pkgdir"/usr/{include,lib/icecat-devel,share/idl}

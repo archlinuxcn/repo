@@ -3,6 +3,8 @@
 ac_add_options --prefix=/usr
 ac_add_options --libdir=/usr/lib
 
+ac_add_options --enable-official-branding
+
 # System libraries
 ac_add_options --with-system-nspr
 ac_add_options --with-system-nss
@@ -12,25 +14,23 @@ ac_add_options --with-system-bz2
 ac_add_options --with-system-png
 ac_add_options --with-system-libevent
 ac_add_options --with-system-libvpx
+ac_add_options --with-system-icu
 ac_add_options --enable-system-hunspell
 ac_add_options --enable-system-sqlite
 ac_add_options --enable-system-ffi
 #ac_add_options --enable-system-cairo
 ac_add_options --enable-system-pixman
-ac_add_options --with-pthreads
 
 # Features
-ac_add_options --with-branding=browser/branding/unofficial
-ac_add_options --disable-official-branding
 ac_add_options --enable-startup-notification
-ac_add_options --enable-gio
-#ac_add_options --enable-gstreamer
+ac_add_options --enable-pulseaudio
+ac_add_options --enable-gstreamer=1.0
 
-ac_add_options --disable-gnomevfs
 ac_add_options --disable-crashreporter
 ac_add_options --disable-updater
 ac_add_options --disable-tests
 ac_add_options --disable-installer
+ac_add_options --disable-debug-symbols
 
 ac_add_options --with-app-basename=icecat
 ac_add_options --with-app-name=icecat
