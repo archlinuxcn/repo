@@ -1,10 +1,11 @@
-From 7e30eaa393bc2ca10e58d87ebcefee4cc33566ca Mon Sep 17 00:00:00 2001
+From 34207993daeeb5783c7523c32d77087c9f2afbb7 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
-Date: Sun, 26 Oct 2014 14:31:37 -0400
+Date: Sun, 26 Oct 2014 16:23:18 -0400
 Subject: [PATCH] fix lib path and compiler
 
 ---
  Lib/distutils/command/install.py |  8 ++++----
+ Lib/distutils/sysconfig.py       |  5 +++--
  Lib/distutils/unixccompiler.py   | 10 +++++-----
  Lib/site.py                      | 16 ++++++++--------
  Lib/sysconfig.py                 | 40 ++++++++++++++++++++--------------------
@@ -12,7 +13,7 @@ Subject: [PATCH] fix lib path and compiler
  Modules/getpath.c                | 14 +++++++-------
  configure                        |  2 +-
  setup.py                         |  3 +--
- 8 files changed, 52 insertions(+), 53 deletions(-)
+ 9 files changed, 55 insertions(+), 55 deletions(-)
 
 diff --git a/Lib/distutils/command/install.py b/Lib/distutils/command/install.py
 index b9f1c6c..aa76447 100644
@@ -38,6 +39,29 @@ index b9f1c6c..aa76447 100644
          'headers': '$base/include/python/$dist_name',
          'scripts': '$base/bin',
          'data'   : '$base',
+diff --git a/Lib/distutils/sysconfig.py b/Lib/distutils/sysconfig.py
+index 4aa9334..bcccfae 100644
+--- a/Lib/distutils/sysconfig.py
++++ b/Lib/distutils/sysconfig.py
+@@ -90,7 +90,8 @@ def get_python_inc(plat_specific=0, prefix=None):
+                 # Include is located in the srcdir
+                 inc_dir = os.path.join(srcdir, "Include")
+             return inc_dir
+-        return os.path.join(prefix, "include", "python" + get_python_version())
++        return os.path.join(prefix, "include",
++                            "python" + get_python_version() + "-32")
+     elif os.name == "nt":
+         return os.path.join(prefix, "include")
+     elif os.name == "os2":
+@@ -120,7 +121,7 @@ def get_python_lib(plat_specific=0, standard_lib=0, prefix=None):
+ 
+     if os.name == "posix":
+         libpython = os.path.join(prefix,
+-                                 "lib", "python" + get_python_version())
++                                 "lib32", "python" + get_python_version())
+         if standard_lib:
+             return libpython
+         else:
 diff --git a/Lib/distutils/unixccompiler.py b/Lib/distutils/unixccompiler.py
 index 2aa1cb1..9266710 100644
 --- a/Lib/distutils/unixccompiler.py

@@ -6,7 +6,7 @@
 
 pkgname=lib32-python2
 pkgver=2.7.8
-pkgrel=4
+pkgrel=5
 _pybasever=2.7
 pkgdesc="A high-level scripting language"
 arch=('i686' 'x86_64')
@@ -21,7 +21,7 @@ conflicts=('lib32-python<3')
 source=(http://www.python.org/ftp/python/${pkgver%rc?}/Python-${pkgver}.tar.xz
   0001-fix-lib-path-and-compiler.patch)
 sha1sums=('9c6281eeace0c3646fa556c8087bb1b7e033c9c4'
-          '77db0f82c515b70155afdbbe1af3796971450455')
+          'ab4409215def8bf3cebc3a73b337cfd14ef01789')
 
 prepare() {
   cd Python-${pkgver}
@@ -30,13 +30,13 @@ prepare() {
 
   # Temporary workaround for FS#22322
   # See http://bugs.python.org/issue10835 for upstream report
-  sed -i "/progname =/s/python/python${_pybasever}/" Python/pythonrun.c
+  sed -i "/progname =/s/python/python${_pybasever}-32/" Python/pythonrun.c
 
   # Enable built-in SQLite module to load extensions (fix FS#22122)
   sed -i "/SQLITE_OMIT_LOAD_EXTENSION/d" setup.py
 
   # FS#23997
-  sed -i -e "s|^#.* /usr/local/bin/python|#!/usr/bin/python2|" Lib/cgi.py
+  sed -i -e "s|^#.* /usr/local/bin/python|#!/usr/bin/python2-32|" Lib/cgi.py
 
   sed -i "s/python2.3/python2/g" Lib/distutils/tests/test_build_scripts.py \
     Lib/distutils/tests/test_install_scripts.py
@@ -49,7 +49,7 @@ prepare() {
 
   # clean up #!s
   find . -name '*.py' | \
-    xargs sed -i "s|#[ ]*![ ]*/usr/bin/env python$|#!/usr/bin/env python2|"
+    xargs sed -i "s|#[ ]*![ ]*/usr/bin/env python$|#!/usr/bin/env python2-32|"
 
   # Workaround asdl_c.py error after we touched the shebangs
   touch Include/Python-ast.h Python/Python-ast.c
@@ -60,6 +60,8 @@ build() {
 
   export CC='gcc -m32'
   export CXX='g++ -m32'
+  CFLAGS+=' -march=i686'
+  CXXFLAGS+=' -march=i686'
 
   export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
   export OPT="${CFLAGS}"
@@ -123,7 +125,7 @@ package() {
   rm "${pkgdir}"/usr/bin/pydoc
   rm "${pkgdir}"/usr/bin/2to3
 
-  rm -rf "${pkgdir}"/usr/include
+  mv "${pkgdir}"/usr/include/python2.7 "${pkgdir}"/usr/include/python2.7-32
   rm -rf "${pkgdir}"/usr/share/man
 
   # clean up #!s
