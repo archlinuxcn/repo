@@ -1,0 +1,41 @@
+pkgname=corebird-git
+pkgver=2376+g336d394
+pkgrel=1
+_realver=0.7
+pkgdesc="Native Gtk+ Twitter Client"
+arch=('i686' 'x86_64')
+license=('GPL')
+url="https://github.com/baedert/corebird"
+depends=('gtk3>=3.12'
+     'glib2>=2.40'
+     'rest>=0.7'
+     'libgee'
+     'sqlite3'
+     'libsoup>=2.4'
+     'json-glib'
+     'intltool'
+     'gstreamer'
+     'gst-plugins-good'
+     'gst-plugins-bad'
+     'gst-libav')
+makedepends=('vala>=0.24' 'git' 'automake')
+source=(git+https://github.com/baedert/corebird)
+sha1sums=(SKIP)
+install=corebird.install
+
+pkgver() {
+  cd corebird
+  echo $(git rev-list --count HEAD)+g$(git rev-parse --short HEAD)
+}
+
+build() {
+  cd corebird
+  # Add --disable-video here if you don't like the gstreamer deps
+  ./autogen.sh --prefix=/usr
+  make
+}
+
+package() {
+  cd corebird
+  make DESTDIR=$pkgdir install
+}
