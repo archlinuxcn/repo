@@ -1,0 +1,138 @@
+# $Id: PKGBUILD 222924 2014-09-24 11:17:23Z fyan $
+# Maintainer: Felix Yan <felixonmars@gmail.com>
+# Contributor: Stéphane Gaudreault <stephane@archlinux.org>
+# Contributor: Allan McRae <allan@archlinux.org>
+# Contributor: Jason Chu <jason@archlinux.org>
+
+pkgname=lib32-python2
+pkgver=2.7.8
+pkgrel=2
+_pybasever=2.7
+pkgdesc="A high-level scripting language"
+arch=('i686' 'x86_64')
+license=('PSF')
+url="http://www.python.org/"
+depends=('lib32-bzip2' 'lib32-gdbm' 'lib32-openssl' 'lib32-zlib'
+  'lib32-expat' 'lib32-sqlite' 'lib32-libffi')
+makedepends=('lib32-tk' 'gcc-multilib')
+# makedepends=('lib32-tk' 'lib32-bluez-libs' 'gcc-multilib')
+optdepends=('lib32-tk: for IDLE')
+conflicts=('lib32-python<3')
+source=(http://www.python.org/ftp/python/${pkgver%rc?}/Python-${pkgver}.tar.xz
+  0001-fix-lib-path.patch)
+sha1sums=('9c6281eeace0c3646fa556c8087bb1b7e033c9c4'
+          '269f706c7eb5ec5a5bf912f82b5c79016f5eb8a3')
+
+prepare() {
+  cd Python-${pkgver}
+
+  patch -Np1 < ../0001-fix-lib-path.patch
+
+  # Temporary workaround for FS#22322
+  # See http://bugs.python.org/issue10835 for upstream report
+  sed -i "/progname =/s/python/python${_pybasever}/" Python/pythonrun.c
+
+  # Enable built-in SQLite module to load extensions (fix FS#22122)
+  sed -i "/SQLITE_OMIT_LOAD_EXTENSION/d" setup.py
+
+  # FS#23997
+  sed -i -e "s|^#.* /usr/local/bin/python|#!/usr/bin/python2|" Lib/cgi.py
+
+  sed -i "s/python2.3/python2/g" Lib/distutils/tests/test_build_scripts.py \
+    Lib/distutils/tests/test_install_scripts.py
+
+  # Ensure that we are using the system copy of various libraries (expat, zlib and libffi),
+  # rather than copies shipped in the tarball
+  rm -r Modules/expat
+  rm -r Modules/zlib
+  rm -r Modules/_ctypes/{darwin,libffi}*
+
+  # clean up #!s
+  find . -name '*.py' | \
+    xargs sed -i "s|#[ ]*![ ]*/usr/bin/env python$|#!/usr/bin/env python2|"
+
+  # Workaround asdl_c.py error after we touched the shebangs
+  touch Include/Python-ast.h Python/Python-ast.c
+}
+
+build() {
+  cd "${srcdir}/Python-${pkgver}"
+
+  export CC='gcc -m32'
+  export CXX='g++ -m32'
+
+  export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
+  export OPT="${CFLAGS}"
+  ./configure --prefix=/usr \
+    --enable-shared \
+    --with-threads \
+    --enable-ipv6 \
+    --enable-unicode=ucs4 \
+    --with-system-expat \
+    --with-system-ffi \
+    --with-dbmliborder=gdbm:ndbm \
+    --libdir=/usr/lib32 \
+    --libexecdir=/usr/lib32 \
+    CC='gcc -m32' \
+    CXX='g++ -m32'
+
+  make PYTHONPATH='/usr/lib32/python2.7:/usr/lib32/python2.7/lib-dynload'
+}
+
+# check() {
+#   # As of 2.7.7, 1 test failed:
+#   # test_uuid
+#   # Besides, test_thread disabled as it will stuck
+
+#   cd Python-${pkgver}
+#   LD_LIBRARY_PATH="${srcdir}/Python-${pkgver}":${LD_LIBRARY_PATH} \
+#     "${srcdir}/Python-${pkgver}/python" \
+#     -m test.regrtest -uall -x test_thread || warning "Tests failed"
+# }
+
+package() {
+  cd Python-${pkgver}
+  make DESTDIR="${pkgdir}" altinstall maninstall
+
+  mv "${pkgdir}"/usr/bin/python${_pybasever} \
+    "${pkgdir}"/usr/bin/python${_pybasever}-32
+  mv "${pkgdir}"/usr/bin/python${_pybasever}-config \
+    "${pkgdir}"/usr/bin/python${_pybasever}-32-config
+  ln -sf python${_pybasever}-32 "${pkgdir}"/usr/bin/python2-32
+  ln -sf python${_pybasever}-32-config "${pkgdir}"/usr/bin/python2-32-config
+
+  # FS#33954
+  ln -sf python-${_pybasever}.pc \
+    "${pkgdir}"/usr/lib32/pkgconfig/python2.pc
+
+  ln -sf ../../libpython${_pybasever}.so \
+    "${pkgdir}"/usr/lib32/python${_pybasever}/config/libpython${_pybasever}.so
+
+  mv "${pkgdir}"/usr/bin/smtpd.py "${pkgdir}"/usr/lib32/python${_pybasever}/
+
+  # some useful "stuff"
+  install -dm755 "${pkgdir}"/usr/lib32/python${_pybasever}/Tools/{i18n,scripts}
+  install -m755 Tools/i18n/{msgfmt,pygettext}.py \
+    "${pkgdir}"/usr/lib32/python${_pybasever}/Tools/i18n/
+  install -m755 Tools/scripts/{README,*py} \
+    "${pkgdir}"/usr/lib32/python${_pybasever}/Tools/scripts/
+
+  # fix conflicts with python
+  rm "${pkgdir}"/usr/bin/idle
+  rm "${pkgdir}"/usr/bin/pydoc
+  rm "${pkgdir}"/usr/bin/2to3
+
+  rm -rf "${pkgdir}"/usr/include
+  rm -rf "${pkgdir}"/usr/share/man
+
+  # clean up #!s
+  find ${pkgdir}/usr/lib32/python2.7/ -name '*.py' | \
+    xargs sed -i "s|#[ ]*![ ]*/usr/bin/env python$|#!/usr/bin/env python2|"
+
+  # clean-up reference to build directory
+  sed -i "s#${srcdir}/Python-${pkgver}:##" \
+    "${pkgdir}"/usr/lib32/python${_pybasever}/config/Makefile
+
+  # license
+  install -Dm644 LICENSE "${pkgdir}"/usr/share/licenses/${pkgname}/LICENSE
+}
