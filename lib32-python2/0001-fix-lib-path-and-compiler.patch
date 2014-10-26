@@ -1,17 +1,18 @@
-From 46c5fcb529780f5540367e1c3e141659b47c9df4 Mon Sep 17 00:00:00 2001
+From 7e30eaa393bc2ca10e58d87ebcefee4cc33566ca Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
-Date: Sun, 26 Oct 2014 12:18:18 -0400
-Subject: [PATCH] fix lib path
+Date: Sun, 26 Oct 2014 14:31:37 -0400
+Subject: [PATCH] fix lib path and compiler
 
 ---
  Lib/distutils/command/install.py |  8 ++++----
+ Lib/distutils/unixccompiler.py   | 10 +++++-----
  Lib/site.py                      | 16 ++++++++--------
  Lib/sysconfig.py                 | 40 ++++++++++++++++++++--------------------
  Makefile.pre.in                  | 12 ++++++------
  Modules/getpath.c                | 14 +++++++-------
  configure                        |  2 +-
  setup.py                         |  3 +--
- 7 files changed, 47 insertions(+), 48 deletions(-)
+ 8 files changed, 52 insertions(+), 53 deletions(-)
 
 diff --git a/Lib/distutils/command/install.py b/Lib/distutils/command/install.py
 index b9f1c6c..aa76447 100644
@@ -37,6 +38,27 @@ index b9f1c6c..aa76447 100644
          'headers': '$base/include/python/$dist_name',
          'scripts': '$base/bin',
          'data'   : '$base',
+diff --git a/Lib/distutils/unixccompiler.py b/Lib/distutils/unixccompiler.py
+index 2aa1cb1..9266710 100644
+--- a/Lib/distutils/unixccompiler.py
++++ b/Lib/distutils/unixccompiler.py
+@@ -56,11 +56,11 @@ class UnixCCompiler(CCompiler):
+     # (eg. using information discovered by the sysconfig about building
+     # Python extensions).
+     executables = {'preprocessor' : None,
+-                   'compiler'     : ["cc"],
+-                   'compiler_so'  : ["cc"],
+-                   'compiler_cxx' : ["cc"],
+-                   'linker_so'    : ["cc", "-shared"],
+-                   'linker_exe'   : ["cc"],
++                   'compiler'     : ["cc", "-m32"],
++                   'compiler_so'  : ["cc", "-m32"],
++                   'compiler_cxx' : ["cc", "-m32"],
++                   'linker_so'    : ["cc", "-m32", "-shared"],
++                   'linker_exe'   : ["cc", "-m32"],
+                    'archiver'     : ["ar", "-cr"],
+                    'ranlib'       : None,
+                   }
 diff --git a/Lib/site.py b/Lib/site.py
 index d2e18f1..fb35da7 100644
 --- a/Lib/site.py

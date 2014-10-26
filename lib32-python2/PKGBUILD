@@ -6,7 +6,7 @@
 
 pkgname=lib32-python2
 pkgver=2.7.8
-pkgrel=3
+pkgrel=4
 _pybasever=2.7
 pkgdesc="A high-level scripting language"
 arch=('i686' 'x86_64')
@@ -19,14 +19,14 @@ makedepends=('lib32-tk' 'gcc-multilib')
 optdepends=('lib32-tk: for IDLE')
 conflicts=('lib32-python<3')
 source=(http://www.python.org/ftp/python/${pkgver%rc?}/Python-${pkgver}.tar.xz
-  0001-fix-lib-path.patch)
+  0001-fix-lib-path-and-compiler.patch)
 sha1sums=('9c6281eeace0c3646fa556c8087bb1b7e033c9c4'
-          '0e724a3d5fe3e6ea5e12ced8f343eb73b7c6e409')
+          '77db0f82c515b70155afdbbe1af3796971450455')
 
 prepare() {
   cd Python-${pkgver}
 
-  patch -Np1 < ../0001-fix-lib-path.patch
+  patch -Np1 < ../0001-fix-lib-path-and-compiler.patch
 
   # Temporary workaround for FS#22322
   # See http://bugs.python.org/issue10835 for upstream report
