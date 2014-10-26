@@ -76,7 +76,8 @@ build() {
     CC='gcc -m32' \
     CXX='g++ -m32'
 
-  make PYTHONPATH='/usr/lib32/python2.7:/usr/lib32/python2.7/lib-dynload'
+  # export PYTHONHOME=/usr/lib32
+  make
 }
 
 # check() {
