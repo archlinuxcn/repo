@@ -6,7 +6,7 @@
 
 pkgname=lib32-python2
 pkgver=2.7.8
-pkgrel=2
+pkgrel=3
 _pybasever=2.7
 pkgdesc="A high-level scripting language"
 arch=('i686' 'x86_64')
@@ -14,14 +14,14 @@ license=('PSF')
 url="http://www.python.org/"
 depends=('lib32-bzip2' 'lib32-gdbm' 'lib32-openssl' 'lib32-zlib'
   'lib32-expat' 'lib32-sqlite' 'lib32-libffi')
-makedepends=('lib32-tk' 'gcc-multilib' 'lib32-python2')
+makedepends=('lib32-tk' 'gcc-multilib')
 # makedepends=('lib32-tk' 'lib32-bluez-libs' 'gcc-multilib')
 optdepends=('lib32-tk: for IDLE')
 conflicts=('lib32-python<3')
 source=(http://www.python.org/ftp/python/${pkgver%rc?}/Python-${pkgver}.tar.xz
   0001-fix-lib-path.patch)
 sha1sums=('9c6281eeace0c3646fa556c8087bb1b7e033c9c4'
-          '269f706c7eb5ec5a5bf912f82b5c79016f5eb8a3')
+          '0e724a3d5fe3e6ea5e12ced8f343eb73b7c6e409')
 
 prepare() {
   cd Python-${pkgver}
@@ -76,7 +76,8 @@ build() {
     CC='gcc -m32' \
     CXX='g++ -m32'
 
-  make PYTHONPATH='/usr/lib32/python2.7:/usr/lib32/python2.7/lib-dynload'
+  export PYTHONHOME=/usr/lib32
+  make
 }
 
 # check() {

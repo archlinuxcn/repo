@@ -1,6 +1,6 @@
-From 461ee4cc0621feba1515e1ef5378eafa3f34616e Mon Sep 17 00:00:00 2001
+From 46c5fcb529780f5540367e1c3e141659b47c9df4 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
-Date: Thu, 23 Oct 2014 16:02:27 -0400
+Date: Sun, 26 Oct 2014 12:18:18 -0400
 Subject: [PATCH] fix lib path
 
 ---
@@ -8,10 +8,10 @@ Subject: [PATCH] fix lib path
  Lib/site.py                      | 16 ++++++++--------
  Lib/sysconfig.py                 | 40 ++++++++++++++++++++--------------------
  Makefile.pre.in                  | 12 ++++++------
- Modules/getpath.c                |  6 +++---
+ Modules/getpath.c                | 14 +++++++-------
  configure                        |  2 +-
  setup.py                         |  3 +--
- 7 files changed, 43 insertions(+), 44 deletions(-)
+ 7 files changed, 47 insertions(+), 48 deletions(-)
 
 diff --git a/Lib/distutils/command/install.py b/Lib/distutils/command/install.py
 index b9f1c6c..aa76447 100644
@@ -211,9 +211,20 @@ index bcd83bf..d2ffa81 100644
  
  # This installs the IDE, the Launcher and other apps into /Applications
 diff --git a/Modules/getpath.c b/Modules/getpath.c
-index de96d47..9553ad7 100644
+index de96d47..427313c 100644
 --- a/Modules/getpath.c
 +++ b/Modules/getpath.c
+@@ -51,8 +51,8 @@
+  * Modules/Setup.  If the landmark is found, we're done.
+  *
+  * For the remaining steps, the prefix landmark will always be
+- * lib/python$VERSION/os.py and the exec_prefix will always be
+- * lib/python$VERSION/lib-dynload, where $VERSION is Python's version
++ * lib32/python$VERSION/os.py and the exec_prefix will always be
++ * lib32/python$VERSION/lib-dynload, where $VERSION is Python's version
+  * number as supplied by the Makefile.  Note that this means that no more
+  * build directory checking is performed; if the first step did not find
+  * the landmarks, the assumption is that python is running from an
 @@ -117,8 +117,8 @@
  #endif
  
@@ -225,6 +236,24 @@ index de96d47..9553ad7 100644
  #endif
  
  #ifndef LANDMARK
+@@ -129,7 +129,7 @@ static char prefix[MAXPATHLEN+1];
+ static char exec_prefix[MAXPATHLEN+1];
+ static char progpath[MAXPATHLEN+1];
+ static char *module_search_path = NULL;
+-static char lib_python[] = "lib/python" VERSION;
++static char lib_python[] = "lib32/python" VERSION;
+ 
+ static void
+ reduce(char *dir)
+@@ -543,7 +543,7 @@ calculate_path(void)
+     }
+     else
+         strncpy(zip_path, PREFIX, MAXPATHLEN);
+-    joinpath(zip_path, "lib/python00.zip");
++    joinpath(zip_path, "lib32/python00.zip");
+     bufsz = strlen(zip_path);   /* Replace "00" with version */
+     zip_path[bufsz - 6] = VERSION[0];
+     zip_path[bufsz - 5] = VERSION[2];
 @@ -553,7 +553,7 @@ calculate_path(void)
              fprintf(stderr,
                  "Could not find platform dependent libraries <exec_prefix>\n");
