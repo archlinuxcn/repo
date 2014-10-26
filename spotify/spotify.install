@@ -1,0 +1,13 @@
+post_install() {
+    cd /usr/share/spotify/spotify-client
+    ./register.sh
+}
+
+post_upgrade() {
+	post_install
+}
+
+pre_remove() {
+    cd /usr/share/spotify/spotify-client
+    ./unregister.sh
+}
