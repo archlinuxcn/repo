@@ -14,7 +14,7 @@ license=('PSF')
 url="http://www.python.org/"
 depends=('lib32-bzip2' 'lib32-gdbm' 'lib32-openssl' 'lib32-zlib'
   'lib32-expat' 'lib32-sqlite' 'lib32-libffi')
-makedepends=('lib32-tk' 'gcc-multilib')
+makedepends=('lib32-tk' 'gcc-multilib' 'lib32-python2')
 # makedepends=('lib32-tk' 'lib32-bluez-libs' 'gcc-multilib')
 optdepends=('lib32-tk: for IDLE')
 conflicts=('lib32-python<3')
@@ -76,8 +76,7 @@ build() {
     CC='gcc -m32' \
     CXX='g++ -m32'
 
-  # export PYTHONHOME=/usr/lib32
-  make
+  make PYTHONPATH='/usr/lib32/python2.7:/usr/lib32/python2.7/lib-dynload'
 }
 
 # check() {
