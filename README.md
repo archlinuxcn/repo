@@ -17,10 +17,7 @@ For mirrors (mainly in China), see https://github.com/archlinuxcn/mirrorlist-rep
 Add PGP Keys
 
 ```bash
-for key in 47CD9E46 95FF0792 A403F63E; do
-  sudo pacman-key -r $key
-  sudo pacman-key --lsign-key $key
-done
+sudo pacman -Syy && sudo pacman -S archlinuxcn-keyring
 ```
 
 ###PKGLIST
