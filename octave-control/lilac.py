@@ -2,7 +2,6 @@
 
 from lilaclib import *
 import fileinput
-import requests
 import re
 
 build_prefix = 'archlinuxcn-x86_64'
@@ -10,7 +9,7 @@ build_prefix = 'archlinuxcn-x86_64'
 post_build = aur_post_build
 
 def _get_new_version():
-  web = requests.get('http://octave.sourceforge.net/control/index.html')
+  web = s.get('http://octave.sourceforge.net/control/index.html')
   return re.search(r'\d\.\d\.\d', web.text).group()
 
 def pre_build():
@@ -26,7 +25,7 @@ def pre_build():
       print(l)
 
   run_cmd('sh  -c  makepkg -g >> PKGBUILD'.split('  '))
-      
+
 
 if __name__ == '__main__':
   single_main()
