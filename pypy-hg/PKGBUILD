@@ -6,7 +6,7 @@ USE_PYPY=1
 USE_SHARED=1
 
 pkgname=pypy-hg
-pkgver=73904.c03e0be0ab7c
+pkgver=74241.3d8fe96dc4d9
 pkgrel=1
 pkgdesc="A Python implementation written in Python, JIT enabled"
 url="http://codespeak.net/pypy/"
@@ -15,7 +15,9 @@ depends=('libffi' 'openssl' 'expat' 'ncurses' 'zlib' 'bzip2')
 options=('debug' 'strip' '!emptydirs')
 # Force cpython2 to be installed for mercurial
 makedepends=('python2>=2.7' 'mercurial' 'gdbm' 'sqlite' 'tcl' 'tk')
-((USE_PYPY)) && makedepends+=('pypy')
+if ((USE_PYPY)); then
+    makedepends+=('pypy')
+fi
 conflicts=('pypy')
 provides=('pypy=2.5')
 optdepends=('sqlite: sqlite3 module'
@@ -24,14 +26,14 @@ optdepends=('sqlite: sqlite3 module'
             'tcl: lib-tk modules')
 license=('custom:MIT')
 
-source=('hg+https://bitbucket.org/pypy/pypy'
-  generic-item.patch)
-md5sums=('SKIP'
-         'b5485145368633a21a2edbe8f53ac42a')
+source=('hg+https://bitbucket.org/pypy/pypy')
+md5sums=('SKIP')
 
 _check_python() {
   _PYTHON=python2
-  ((USE_PYPY)) && which pypy &> /dev/null && _PYTHON=pypy
+  if ((USE_PYPY)) && which pypy &> /dev/null; then
+      _PYTHON=pypy
+  fi
 }
 
 pkgver() {
@@ -40,44 +42,37 @@ pkgver() {
 }
 
 build() {
-  cd "${srcdir}/pypy"
-  patch -Np1 < ../generic-item.patch
-
   cd "${srcdir}/pypy/pypy/goal"
 
   _check_python
 
   translate_options=()
 
-  ((USE_SHARED)) && translate_options+=('--shared')
+  if ((USE_SHARED)); then
+      translate_options+=('--shared')
+  fi
 
   $_PYTHON ../../rpython/bin/rpython -Ojit "${translate_options[@]}" \
     targetpypystandalone
 }
 
 package() {
-  cd "${srcdir}"
-  mkdir -p licenses/{libbz2-dev,openssl}
-  ln -sf /usr/share/licenses/bzip2/LICENSE licenses/libbz2-dev/copyright
-  ln -sf /usr/share/licenses/openssl/LICENSE licenses/openssl/copyright
-
   cd "${srcdir}"/pypy/pypy/tool/release
 
   _check_python
 
-  LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:../../goal/" $_PYTHON package.py  \
-    --license_base "${srcdir}"/licenses \
+  LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:../../goal/" $_PYTHON package.py \
     ../../../ pypy pypy-c "${srcdir}"/${pkgname}.tar.bz2
 
   mkdir -p "${pkgdir}"/opt
   tar x -C "${pkgdir}"/opt -f "${srcdir}"/${pkgname}.tar.bz2
 
-  ((USE_SHARED)) && {
-    mkdir -p "${pkgdir}"/opt/pypy/lib
-    cp ../../goal/libpypy-c.so "${pkgdir}"/opt/pypy/lib/
-    mkdir -p "${pkgdir}"/usr/lib
-    ln -s /opt/pypy/lib/libpypy-c.so "${pkgdir}"/usr/lib/libpypy-c.so
-  }
+  if ((USE_SHARED)); then
+      mkdir -p "${pkgdir}"/opt/pypy/lib
+      cp ../../goal/libpypy-c.so "${pkgdir}"/opt/pypy/lib/
+      mkdir -p "${pkgdir}"/usr/lib
+      ln -s /opt/pypy/lib/libpypy-c.so "${pkgdir}"/usr/lib/libpypy-c.so
+  fi
 
   mkdir -p "${pkgdir}"/usr/bin
   ln -s /opt/pypy/bin/pypy-c "${pkgdir}"/usr/bin/pypy

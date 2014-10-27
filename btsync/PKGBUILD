@@ -4,7 +4,7 @@
 # Contributor: Justin Patera serialhex@gmail.com
 
 pkgname=btsync
-pkgver=1.4.91
+pkgver=1.4.93
 pkgrel=1
 pkgdesc="BitTorrent Sync - automatically sync files via secure, distributed technology"
 license=("custom:btsync")
@@ -17,13 +17,13 @@ source=(btsync.service btsync_user.service btsync.conf)
 sha1sums=('05038b03a673dd0207b2758a2e01db5d28c409d1' 'd30deb7e41ba1d163b4a5e442b8d8118758d312a' 'bf7d6bd7ffe2d23cce51a51e92fac3b82a7c87bb')
 if [ "$CARCH" == x86_64 ]; then
 	_arch=x64
-	sha1sums+=('16294aaf95c4f12bb415509b98ec92bf162a5599')
+	sha1sums+=('0fc765deb736fb49f1b9a6c08e4782f3cbd48cd7')
 elif [ "$CARCH" == i686 ]; then
 	_arch=i386
-	sha1sums+=('a742e1a1503927e793bfb714c6033b6e09610516')
+	sha1sums+=('2a8b32f3b0fdf9816dde480ee019062138ca3073')
 elif [[ "$CARCH" == arm ||  "$CARCH" == armv6 || "$CARCH" == armv6h || "$CARCH" == armv7 || "$CARCH" == armv7h ]]; then
 	_arch=arm
-	sha1sums+=('e06a34056a4b931cd241cd62ebf832e94371f3b1')
+	sha1sums+=('63950533094a19aa06d069d34dc2da5a6e8381b9')
 fi
 source+=("http://syncapp.bittorrent.com/${pkgver}/btsync_${_arch}-${pkgver}.tar.gz")
 
