@@ -4,6 +4,10 @@ from lilaclib import *
 import fileinput
 import re
 
+depends = [
+        'archlinuxcn-keyring'
+        ]
+
 build_prefix = 'archlinuxcn-x86_64'
 
 post_build = aur_post_build
