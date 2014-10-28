@@ -1,0 +1,33 @@
+From 6a058ffcc348509ac8976458f8e91bde7cba0aa0 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sun, 26 Oct 2014 17:16:40 -0400
+Subject: [PATCH] fix compiler
+
+---
+ lib-python/2.7/distutils/unixccompiler.py | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/lib-python/2.7/distutils/unixccompiler.py b/lib-python/2.7/distutils/unixccompiler.py
+index b55bfd7..92c317a 100644
+--- a/lib-python/2.7/distutils/unixccompiler.py
++++ b/lib-python/2.7/distutils/unixccompiler.py
+@@ -56,11 +56,11 @@ class UnixCCompiler(CCompiler):
+     # (eg. using information discovered by the sysconfig about building
+     # Python extensions).
+     executables = {'preprocessor' : None,
+-                   'compiler'     : ["cc"],
+-                   'compiler_so'  : ["cc"],
+-                   'compiler_cxx' : ["cc"],
+-                   'linker_so'    : ["cc", "-shared"],
+-                   'linker_exe'   : ["cc"],
++                   'compiler'     : ["cc", "-m32"],
++                   'compiler_so'  : ["cc", "-m32"],
++                   'compiler_cxx' : ["cc", "-m32"],
++                   'linker_so'    : ["cc", "-m32", "-shared"],
++                   'linker_exe'   : ["cc", "-m32"],
+                    'archiver'     : ["ar", "-cr"],
+                    'ranlib'       : None,
+                   }
+-- 
+2.1.2
+
