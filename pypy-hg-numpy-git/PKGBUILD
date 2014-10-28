@@ -10,7 +10,7 @@ makedepends=('git' 'gcc-fortran')
 provides=('pypy-numpy')
 conflicts=('pypy-numpy')
 options=('debug' 'strip')
-source=(https://bitbucket.org/pypy/numpy.git)
+source=(git+https://bitbucket.org/pypy/numpy.git)
 md5sum=('SKIP')
 
 pkgver() {
