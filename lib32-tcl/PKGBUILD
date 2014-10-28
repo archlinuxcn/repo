@@ -5,7 +5,7 @@
 _pkgbasename=tcl
 pkgname=lib32-${_pkgbasename}
 pkgver=8.6.2
-pkgrel=1
+pkgrel=2
 pkgdesc="The Tcl scripting language (32-bit runtime)"
 arch=('x86_64')
 url="http://tcl.sourceforge.net/"
@@ -44,7 +44,7 @@ package() {
   cd tcl${pkgver}/unix
   make INSTALL_ROOT="${pkgdir}" install install-private-headers
   find "${pkgdir}" -name '*.a' -type f -exec chmod 644 {} \;
-  ln -sf tclsh8.6 "${pkgdir}/usr/bin/tclsh"
+  ln -sf libtcl8.6.so "${pkgdir}/usr/lib32/libtcl.so"
 
   # remove 64-bit and unarched stuff
   rm -rf "${pkgdir}"/usr/{include,share,bin,lib}
