@@ -567,7 +567,7 @@ diff --git a/lib/Makefile b/lib/Makefile
 index 84000ec..932fcb0 100644
 --- a/lib/Makefile
 +++ b/lib/Makefile
-@@ -8,7 +8,7 @@ KBUILD_CFLAGS = $(subst -pg,,$(ORIG_CFLAGS))
+@@ -11,7 +11,7 @@ KBUILD_CFLAGS = $(subst -pg,,$(ORIG_CFLAGS))
  endif
  
  lib-y := ctype.o string.o vsprintf.o cmdline.o \
@@ -575,7 +575,7 @@ index 84000ec..932fcb0 100644
 +	 rbtree.o radix-tree.o sradix-tree.o dump_stack.o timerqueue.o\
  	 idr.o int_sqrt.o extable.o \
  	 sha1.o md5.o irq_regs.o reciprocal_div.o argv_split.o \
- 	 proportions.o flex_proportions.o ratelimit.o show_mem.o \
+ 	 proportions.o flex_proportions.o prio_heap.o ratelimit.o show_mem.o \
 diff --git a/lib/sradix-tree.c b/lib/sradix-tree.c
 new file mode 100644
 index 0000000..8d06329
@@ -6931,14 +6931,14 @@ index 1b12d39..2fa9631 100644
 --- a/mm/vmstat.c
 +++ b/mm/vmstat.c
 @@ -795,6 +795,9 @@ const char * const vmstat_text[] = {
+ 	"workingset_nodereclaim",
  	"nr_anon_transparent_hugepages",
  	"nr_free_cma",
- 
 +#ifdef CONFIG_UKSM
 +       "nr_uksm_zero_pages",
 +#endif
- 	/* enum writeback_stat_item counters */
  	"nr_dirty_threshold",
  	"nr_dirty_background_threshold",
+ 
 -- 
 2.1.2
