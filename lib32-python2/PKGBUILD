@@ -6,7 +6,7 @@
 
 pkgname=lib32-python2
 pkgver=2.7.8
-pkgrel=5
+pkgrel=6
 _pybasever=2.7
 pkgdesc="A high-level scripting language"
 arch=('i686' 'x86_64')
@@ -14,9 +14,11 @@ license=('PSF')
 url="http://www.python.org/"
 depends=('lib32-bzip2' 'lib32-gdbm' 'lib32-openssl' 'lib32-zlib'
   'lib32-expat' 'lib32-sqlite' 'lib32-libffi')
-makedepends=('lib32-tk' 'gcc-multilib')
+makedepends=('lib32-tk' 'gcc-multilib' 'lib32-ncurses' 'lib32-readline')
 # makedepends=('lib32-tk' 'lib32-bluez-libs' 'gcc-multilib')
-optdepends=('lib32-tk: for IDLE')
+optdepends=('lib32-tk: for IDLE'
+            'lib32-ncurses: for ncurses'
+            'lib32-readline: readline')
 conflicts=('lib32-python<3')
 source=(http://www.python.org/ftp/python/${pkgver%rc?}/Python-${pkgver}.tar.xz
   0001-fix-lib-path-and-compiler.patch)
