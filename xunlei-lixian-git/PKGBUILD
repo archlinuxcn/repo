@@ -1,48 +1,41 @@
-# Maintainer: cuihao <cuihao dot leo at gmail dot com>
+# Maintainer: Dazzy Ding <h at dazzyd.org>
+# Contributor: cuihao <cuihao dot leo at gmail dot com>
 
 pkgname=xunlei-lixian-git
-pkgver=20120724
+pkgver=609.f20f497
 pkgrel=1
-pkgdesc="Python script for Xunlei (Thunder) cloud."
+pkgdesc="A python script for Xunlei lixian."
 arch=('any')
-url="https://github.com/iambus/xunlei-lixian"
+url="https://github.com/iambus/xunlei-lixian/"
 license=('MIT')
-depends=("python2")
+depends=('python2' 'wget')
+optdepends=('aria2: better download performance'
+            'axel: better download performance')
 makedepends=('git')
+source=("git+https://github.com/iambus/xunlei-lixian.git"
+        "xunlei-lixian-git.install")
+sha256sums=('SKIP'
+            '9d806e9a4dc66105c052a5941de67c8f51f62f25de5a218cb47936d47434bb75')
+install='xunlei-lixian-git.install'
+_gitname='xunlei-lixian'
 
-_gitname="xunlei-lixian"
-_gitroot="https://github.com/iambus/xunlei-lixian.git"
-
-_insdir="/opt/$_gitname"
-
-build() {
-    cd $srcdir
-    msg "Connecting to the GIT server...."
-  
-    if [ -d $_gitname ]; then
-        cd $_gitname && git pull origin && cd ..
-        msg "The local files are updated."
-    else
-        git clone $_gitroot $_gitname
-    fi
-    
-    msg "GIT checkout done"
-    
-    mkdir -p "$pkgdir/$_insdir"
-    mkdir -p "$pkgdir/usr/share/licenses/$pkgname"
-    cp -rf "$_gitname/"* "$pkgdir/$_insdir"
-    cd "$pkgdir/$_insdir"
-    mv LICENSE "$pkgdir/usr/share/licenses/$pkgname"
-    rm -rf tests .git*
-    # python2 fix
-    sed -i '1 i#\!/usr/bin/python2' lixian_{batch,cli,hash}.py
-
-    mkdir -p "$pkgdir/usr/bin"
-    cd "$pkgdir/usr/bin"
-    # some links
-    ln -s "$_insdir/lixian_batch.py" lixian_batch
-    ln -s "$_insdir/lixian_cli.py" lixian_cli
-    ln -s "$_insdir/lixian_hash.py" lixian_hash
-    # ln -s "$_insdir/lixian_cli.py" lx
+pkgver() {
+    cd $_gitname
+    echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
 }
 
+package() {
+    cd $_gitname
+
+    sed -i -r "s|^#!/usr/bin/env python|#!/usr/bin/env python2|" lixian_{batch,cli,hash}.py
+
+    mkdir -p "$pkgdir/usr/share/$pkgname/"
+    cp -r lixian* "$pkgdir/usr/share/$pkgname/"
+    mkdir -p "$pkgdir/usr/share/licenses/$pkgname/"
+    cp LICENSE "$pkgdir/usr/share/licenses/$pkgname/"
+
+    mkdir -p "$pkgdir/usr/bin/"
+    ln -sf "/usr/share/$pkgname/lixian_cli.py" "$pkgdir/usr/bin/lixian"
+    ln -sf "/usr/share/$pkgname/lixian_batch.py" "$pkgdir/usr/bin/lixian-batch"
+    ln -sf "/usr/share/$pkgname/lixian_hash.py" "$pkgdir/usr/bin/lixian-hash"
+}
