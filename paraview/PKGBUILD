@@ -5,8 +5,8 @@
 # Contributor: Simon Zilliken <simon____AT____zilliken____DOT____name>
 
 pkgname=paraview
-pkgver=4.1.0
-pkgrel=3
+pkgver=4.2.0
+pkgrel=2
 pkgdesc='Parallel Visualization Application using VTK'
 arch=('i686' 'x86_64')
 url='http://www.paraview.org'
@@ -19,27 +19,14 @@ optdepends=('python2-matplotlib: Needed to support equation rendering using Math
 changelog="$pkgname.changelog"
 source=("http://paraview.org/files/v${pkgver:0:3}/ParaView-v${pkgver}-source.tar.gz"
 	'paraview.png'
-	'paraview.desktop'
-	'0001-Cleanup-dependencies-on-some-core-modules.patch'
-	'0002-dlopen-in-mpi4py.patch')
-sha1sums=('866ec0428c3de4dbb3d3050c56375813fcdc9640'
+	'paraview.desktop')
+sha1sums=('a440ba9912549bdd23a949e22add41696715dd32'
           'a2dff014e1235dfaa93cd523286f9c97601d3bbc'
-          '1f94c8ff79bb2bd2c02d6b403ea1f4599616531b'
-          'e1b0dce0626260cddd86eb3d90b4e88fc8c9d831'
-          'd05d2a65e387f315bc19e26caa298c51b2647931')
+          '1f94c8ff79bb2bd2c02d6b403ea1f4599616531b')
 
 build() {
-  cd "${srcdir}/ParaView-v${pkgver}"
+  cd "${srcdir}/ParaView-v${pkgver}-source"
 
-  #Patch for mpi4py, see
-  # http://www.paraview.org/pipermail/paraview/2014-February/030517.html
-  patch -p1 < "${srcdir}/0002-dlopen-in-mpi4py.patch"
-  
-  # Patch for using local tiff library
-  cd "Utilities/VisItBridge"
-  patch -p1 < "${srcdir}/0001-Cleanup-dependencies-on-some-core-modules.patch"
-  cd "${srcdir}/ParaView-v${pkgver}"
-  
   rm -rf "${srcdir}/build"
   mkdir "${srcdir}/build"
   cd "${srcdir}/build"
@@ -83,7 +70,7 @@ build() {
    ${cmake_system_flags} \
    ${cmake_system_python_flags} \
    ${ffmpeg_compat_flags} \
-   ../ParaView-v${pkgver}
+   ../ParaView-v${pkgver}-source
 
    make
 }
@@ -94,7 +81,7 @@ package() {
   make DESTDIR="${pkgdir}" install
 
   #Install license
-  install -Dm644 "${srcdir}/ParaView-v${pkgver}/License_v1.2.txt" "${pkgdir}/usr/share/licenses/paraview/LICENSE"
+  install -Dm644 "${srcdir}/ParaView-v${pkgver}-source/License_v1.2.txt" "${pkgdir}/usr/share/licenses/paraview/LICENSE"
 
   #Install desktop shortcuts
   install -Dm644 "${srcdir}/paraview.png" "${pkgdir}/usr/share/pixmaps/paraview.png"

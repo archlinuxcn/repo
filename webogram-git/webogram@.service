@@ -1,0 +1,10 @@
+[Unit]
+Description=Telegram unofficial web app
+
+[Service]
+WorkingDirectory=/opt/webogram
+ExecStart=/bin/sh -c '/usr/bin/node server.js %i > /dev/null 2>&1'
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
