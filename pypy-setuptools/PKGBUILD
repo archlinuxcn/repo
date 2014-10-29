@@ -43,7 +43,7 @@ build() {
 
 package_pypy-setuptools() {
   depends=(pypy)
-  provides=(pypy-${_pypyabi}-setuptools=${pkgver}-${pkgrel})
+  # provides=(pypy-${_pypyabi}-setuptools=${pkgver}-${pkgrel})
   cd setuptools-${pkgver}
   pypy setup.py install \
        --root="${pkgdir}" --optimize=1 --skip-build
