@@ -1,25 +1,29 @@
+# Maintainer: Yichao Yu <yyc1992@gmail.com>
+# Contributor: Sven-Hendrik Haase <sh@lutzhaase.com>
+
 USE_PYPY=1
 
 pkgname=pypy3-hg
+pkgver=74271.5a19346c71a9
 pkgrel=1
-pkgver=r74260.620dfe2c1035
-_realver=2.5
+epoch=1
 pkgdesc="A Python3 implementation written in Python, JIT enabled, hg version"
 url="http://pypy.org"
 arch=('i686' 'x86_64')
 depends=('libffi' 'openssl' 'expat' 'ncurses' 'zlib' 'bzip2')
-provides=("pypy3=${_realver}")
-conflicts=('pypy3')
-options=('debug' 'strip' '!emptydirs')
 # Force cpython2 to be installed for mercurial
 makedepends=('python2>=2.7' 'mercurial' 'gdbm' 'sqlite' 'tcl' 'tk')
 if ((USE_PYPY)); then
     makedepends+=('pypy')
 fi
+conflicts=('pypy3')
+# TODO: provides can be calculated in the package function.
+provides=("pypy3" "pypy3-25")
 optdepends=('sqlite: sqlite3 module'
             'gdbm: dbm module'
             'tk: tkinter module'
             'tcl: tkinter module')
+options=('debug' 'strip' '!emptydirs')
 license=('custom:MIT')
 source=("hg+https://bitbucket.org/pypy/pypy#branch=py3k")
 md5sums=('SKIP')
@@ -32,31 +36,23 @@ _check_python() {
 }
 
 pkgver() {
-  cd "${srcdir}"/pypy
-  echo "r$(hg id -n).$(hg id -i)"
+  cd pypy
+  echo "$(hg id -n).$(hg id -i)"
 }
 
 build() {
-  cd "${srcdir}"/pypy/pypy/goal
+  cd pypy/pypy/goal
 
   _check_python
-
-  export CFLAGS+=" -g -O2"
 
   $_PYTHON ../../rpython/bin/rpython -Ojit --shared --output=pypy3-c \
            targetpypystandalone
 }
 
 package() {
-  cd "${srcdir}"
+  cd pypy/pypy/tool/release
 
   _check_python
-
-  mkdir -p licenses/{libbz2-dev,openssl}
-  ln -sf /usr/share/licenses/bzip2/LICENSE licenses/libbz2-dev/copyright
-  ln -sf /usr/share/licenses/openssl/LICENSE licenses/openssl/copyright
-
-  cd "${srcdir}"/pypy/pypy/tool/release
 
   LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:../../goal/" $_PYTHON package.py \
                  --license_base "${srcdir}"/licenses --override_pypy_c \
