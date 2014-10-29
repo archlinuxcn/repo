@@ -55,8 +55,7 @@ package() {
   _check_python
 
   LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:../../goal/" $_PYTHON package.py \
-                 --license_base "${srcdir}"/licenses --override_pypy_c \
-                 ../../goal/pypy3-c ../../../ pypy3 pypy3-c \
+                 --override_pypy_c ../../goal/pypy3-c ../../../ pypy3 pypy3-c \
                  "${srcdir}"/${pkgname}.tar.bz2
 
   mkdir -p "${pkgdir}"/opt
