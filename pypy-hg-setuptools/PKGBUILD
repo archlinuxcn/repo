@@ -43,8 +43,9 @@ build() {
 
 package_pypy-hg-setuptools() {
   depends=(pypy)
-  provides=(pypy-setuptools=${pkgver}-${pkgrel}
-            pypy-${_pypyabi}-setuptools=${pkgver}-${pkgrel})
+  # provides=(pypy-setuptools=${pkgver}-${pkgrel}
+  #           pypy-${_pypyabi}-setuptools=${pkgver}-${pkgrel})
+  provides=(pypy-setuptools=${pkgver}-${pkgrel})
   conflicts=(pypy-setuptools)
   cd setuptools-${pkgver}
   pypy setup.py install \
