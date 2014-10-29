@@ -5,7 +5,7 @@ pkgdesc="Scientific tools for Python, pypy version."
 url="https://bitbucket.org/pypy/numpy"
 arch=('i686' 'x86_64')
 license=('BSD')
-depends=('lapack' 'blas' "pypy>=2.5" "pypy<2.6")
+depends=('lapack' 'blas' "pypy-25")
 makedepends=('git' 'gcc-fortran')
 provides=('pypy-numpy')
 conflicts=('pypy-numpy')
