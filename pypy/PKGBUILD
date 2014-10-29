@@ -60,11 +60,17 @@ build() {
 }
 
 package() {
+  cd "${srcdir}"
+  mkdir -p licenses/{libbz2-dev,openssl}
+  ln -sf /usr/share/licenses/bzip2/LICENSE licenses/libbz2-dev/copyright
+  ln -sf /usr/share/licenses/openssl/LICENSE licenses/openssl/copyright
+
   cd pypy/pypy/tool/release
 
   _check_python
 
   LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:../../goal/" $_PYTHON package.py \
+                 --license_base "${srcdir}"/licenses \
                  ../../../ pypy pypy-c "${srcdir}"/${pkgname}.tar.bz2
 
   mkdir -p "${pkgdir}"/opt
