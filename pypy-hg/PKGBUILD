@@ -1,31 +1,32 @@
-# Original author: Sven-Hendrik Haase (svenstaro) <sh@lutzhaase.com>
-# Maintainer: Zack Buhman (buhman) <zack@buhman.org>
+# Maintainer: Yichao Yu <yyc1992@gmail.com>
+# Contributor: Zack Buhman (buhman) <zack@buhman.org>
 # Contributor: William Giokas (KaiSforza) <1007380@gmail.com>
+# Original author: Sven-Hendrik Haase (svenstaro) <sh@lutzhaase.com>
 
 USE_PYPY=1
 USE_SHARED=1
 
 pkgname=pypy-hg
-pkgver=74241.3d8fe96dc4d9
+pkgver=74273.b7ed5b05e428
 pkgrel=1
 pkgdesc="A Python implementation written in Python, JIT enabled"
-url="http://codespeak.net/pypy/"
+url="http://pypy.org"
 arch=('i686' 'x86_64')
 depends=('libffi' 'openssl' 'expat' 'ncurses' 'zlib' 'bzip2')
-options=('debug' 'strip' '!emptydirs')
 # Force cpython2 to be installed for mercurial
 makedepends=('python2>=2.7' 'mercurial' 'gdbm' 'sqlite' 'tcl' 'tk')
 if ((USE_PYPY)); then
     makedepends+=('pypy')
 fi
 conflicts=('pypy')
-provides=('pypy=2.5')
+# TODO: provides can be calculated in the package function.
+provides=('pypy' 'pypy-25')
 optdepends=('sqlite: sqlite3 module'
             'gdbm: gdbm module'
             'tk: lib-tk modules'
             'tcl: lib-tk modules')
+options=('debug' 'strip' '!emptydirs')
 license=('custom:MIT')
-
 source=('hg+https://bitbucket.org/pypy/pypy')
 md5sums=('SKIP')
 
@@ -37,12 +38,12 @@ _check_python() {
 }
 
 pkgver() {
-  cd "${srcdir}"/pypy
+  cd pypy
   echo "$(hg id -n).$(hg id -i)"
 }
 
 build() {
-  cd "${srcdir}/pypy/pypy/goal"
+  cd pypy/pypy/goal
 
   _check_python
 
@@ -53,16 +54,16 @@ build() {
   fi
 
   $_PYTHON ../../rpython/bin/rpython -Ojit "${translate_options[@]}" \
-    targetpypystandalone
+           targetpypystandalone
 }
 
 package() {
-  cd "${srcdir}"/pypy/pypy/tool/release
+  cd pypy/pypy/tool/release
 
   _check_python
 
   LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:../../goal/" $_PYTHON package.py \
-    ../../../ pypy pypy-c "${srcdir}"/${pkgname}.tar.bz2
+                 ../../../ pypy pypy-c "${srcdir}"/${pkgname}.tar.bz2
 
   mkdir -p "${pkgdir}"/opt
   tar x -C "${pkgdir}"/opt -f "${srcdir}"/${pkgname}.tar.bz2
@@ -78,5 +79,5 @@ package() {
   ln -s /opt/pypy/bin/pypy-c "${pkgdir}"/usr/bin/pypy
 
   install -Dm644 "${pkgdir}"/opt/pypy/LICENSE \
-    "${pkgdir}"/usr/share/licenses/pypy/LICENSE
+          "${pkgdir}"/usr/share/licenses/pypy/LICENSE
 }
