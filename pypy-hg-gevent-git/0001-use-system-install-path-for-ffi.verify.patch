@@ -1,0 +1,25 @@
+From fc1f481eca14a91e14a61667fffc34b05b48d622 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Wed, 1 Oct 2014 08:10:13 -0400
+Subject: [PATCH] use system install path for ffi.verify
+
+---
+ gevent/corecffi.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/gevent/corecffi.py b/gevent/corecffi.py
+index 0cba31c..b93a30c 100644
+--- a/gevent/corecffi.py
++++ b/gevent/corecffi.py
+@@ -206,7 +206,7 @@ void ev_sleep (ev_tstamp delay); /* sleep for a while */
+ """)
+ 
+ 
+-thisdir = os.path.dirname(os.path.realpath(__file__))
++thisdir = '/opt/pypy/site-packages/gevent/'
+ include_dirs = [thisdir, os.path.join(thisdir, 'libev')]
+ libev = C = ffi.verify("""   // passed to the real C compiler
+ #define LIBEV_EMBED 1
+-- 
+2.1.2
+
