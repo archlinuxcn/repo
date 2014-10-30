@@ -1,12 +1,12 @@
-# $Id: PKGBUILD 216781 2014-07-11 05:01:13Z tpowa $
+# $Id: PKGBUILD 225198 2014-10-22 21:34:38Z thomas $
 # Maintainer: Tobias Powalowski <tpowa@archlinux.org>
 # Maintainer: Thomas Baechler <thomas@archlinux.org>
 
 pkgbase=linux-lily               # Build stock -ARCH kernel
 #pkgbase=linux-custom       # Build kernel with a different name
-_srcname=linux-3.15
-pkgver=3.15.5
-pkgrel=2
+_srcname=linux-3.17
+pkgver=3.17.1
+pkgrel=1
 arch=('i686' 'x86_64')
 url="http://www.kernel.org/"
 license=('GPL2')
@@ -21,10 +21,10 @@ source=(
         'change-default-console-loglevel.patch'
         )
 sha256sums=(
-            'ec593326ac4dad420b0b45a472ba3d6be2ce66b9b4d7cccf1453d02d5eb01b19'
-            'cf10550fe511c534ec7f820f12c3345086b1ef64ac7f3b8b0d8d49bc3ea1f166'
+            '0f1cd431115a2ce84629298d054d5e6f6e78095a3aeda4d1335740c9402efb7e'
+            'fb688bc7ccfa636990b26aecfe62500bc1e0f6c410a837eef03014c161df2ec8'
             'f0d90e756f14533ee67afda280500511a62465b4f76adcc5effa95a40045179c'
-            'faced4eb4c47c4eb1a9ee8a5bf8a7c4b49d6b4d78efbe426e410730e6267d182')
+            '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99')
 
 _kernelname=${pkgbase#linux}
 
@@ -88,7 +88,7 @@ build() {
 }
 
 _package() {
-  pkgdesc="The ${pkgbase/linux/Linux} kernel and modules, with aufs3, latencytop, cjktty and uksm support"
+  pkgdesc="The ${pkgbase/linux/Linux} kernel and modules, with x32, aufs3, latencytop, kgdb, cjktty and uksm support"
   [ "${pkgbase}" = "linux" ] && groups=('base')
   depends=('coreutils' 'linux-firmware' 'kmod' 'mkinitcpio>=0.7')
   optdepends=('crda: to set the correct wireless channels of your country')
@@ -135,11 +135,10 @@ _package() {
   export dbgdir="$pkgdir-debug/usr/lib/debug"
   mkdir -p "$dbgdir"
   pushd "$pkgdir"
-  find . -name '*.ko' -print0 | parallel -0 kostrip
+  find . -name '*.ko' -print0 | parallel -j20 -0 kostrip
   popd
   # gzip -9 all modules to save 100MB of space
-  find "${pkgdir}" -name '*.ko' -print0 | parallel -0 gzip -9
-  # find "${pkgdir}" -name '*.ko' -exec gzip -9 {} \;
+  find "${pkgdir}" -name '*.ko' -print0 | parallel -j8 -0 gzip -9
   # make room for external modules
   ln -s "../extramodules-${_basekernel}${_kernelname:--ARCH}" "${pkgdir}/lib/modules/${_kernver}/extramodules"
   # add real version for building modules and running depmod from post_install/upgrade
@@ -259,7 +258,8 @@ _package-headers() {
   # add xfs and shmem for aufs building
   mkdir -p "${pkgdir}/usr/lib/modules/${_kernver}/build/fs/xfs"
   mkdir -p "${pkgdir}/usr/lib/modules/${_kernver}/build/mm"
-  cp fs/xfs/xfs_sb.h "${pkgdir}/usr/lib/modules/${_kernver}/build/fs/xfs/xfs_sb.h"
+  # removed in 3.17 series
+  # cp fs/xfs/xfs_sb.h "${pkgdir}/usr/lib/modules/${_kernver}/build/fs/xfs/xfs_sb.h"
 
   # copy in Kconfig files
   for i in $(find . -name "Kconfig*"); do
@@ -306,6 +306,7 @@ _package-docs() {
 pkgname=("${pkgbase}" "${pkgbase}-headers") # "${pkgbase}-docs")
 for _p in ${pkgname[@]}; do
   eval "package_${_p}() {
+    $(declare -f "_package${_p#${pkgbase}}")
     _package${_p#${pkgbase}}
   }"
 done
