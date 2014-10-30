@@ -6,7 +6,7 @@
 
 pkgname=lib32-python2
 pkgver=2.7.8
-pkgrel=6
+pkgrel=7
 _pybasever=2.7
 pkgdesc="A high-level scripting language"
 arch=('i686' 'x86_64')
@@ -23,7 +23,7 @@ conflicts=('lib32-python<3')
 source=(http://www.python.org/ftp/python/${pkgver%rc?}/Python-${pkgver}.tar.xz
   0001-fix-lib-path-and-compiler.patch)
 sha1sums=('9c6281eeace0c3646fa556c8087bb1b7e033c9c4'
-          'ab4409215def8bf3cebc3a73b337cfd14ef01789')
+          '424dfe006adea9057dedae6c5654458f60de8c87')
 
 prepare() {
   cd Python-${pkgver}
