@@ -2,10 +2,10 @@
 # Contributor: Felix Yan <felixonmars@gmail.com>
 # Contributor: Thomas Dziedzic < gostrc at gmail >
 
-_pypyname=pypy
-_pypyabi=24
-_pypy3name=pypy3
-_pypy3abi=24
+_pypyname=pypy-hg
+_pypyabi=25
+_pypy3name=pypy3-hg
+_pypy3abi=25
 
 pkgbase=${_pypyname}-tornado
 pkgname=(${_pypy3name}-tornado ${_pypyname}-tornado)
@@ -43,16 +43,20 @@ build() {
    pypy setup.py build)
 }
 
-package_pypy3-tornado() {
+package_pypy3-hg-tornado() {
   depends=(pypy3-${_pypy3abi})
-  provides=(pypy3-${_pypy3abi}-tornado=${pkgver}-${pkgrel})
+  conflicts=(pypy3-tornado)
+  provides=(pypy3-${_pypy3abi}-tornado=${pkgver}-${pkgrel}
+            pypy3-tornado=${pkgver}-${pkgrel})
 
   cd tornado
   pypy3 setup.py install --skip-build --root="${pkgdir}" --optimize=1
 }
 
-package_pypy-tornado() {
+package_pypy-hg-tornado() {
   depends=(pypy pypy-backports.ssl_match_hostname)
+  conflicts=(pypy-tornado)
+  provides=(pypy-tornado=${pkgver}-${pkgrel})
 
   cd tornado-py2
   pypy setup.py install --skip-build --root="${pkgdir}" --optimize=1
