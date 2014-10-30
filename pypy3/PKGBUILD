@@ -6,7 +6,7 @@ USE_PYPY=1
 pkgname=pypy3
 pkgver=2.4.0
 _pkgver=2.4.0
-pkgrel=2
+pkgrel=3
 pkgdesc="A Python3 implementation written in Python, JIT enabled"
 url="http://pypy.org"
 arch=('i686' 'x86_64')
@@ -73,7 +73,10 @@ package() {
   install -Dm644 "${pkgdir}"/opt/pypy3/LICENSE \
           "${pkgdir}"/usr/share/licenses/pypy3/LICENSE
 
-  # Generate bytecode (currently impossibru)
-  #"${pkgdir}"/opt/pypy3/bin/pypy-c -m compileall "${pkgdir}"/opt/pypy3
-  #"${pkgdir}"/opt/pypy3/bin/pypy-c -O -m compileall "${pkgdir}"/opt/pypy3
+  # Generate bytecode
+  # The `|| true` is necessary so that the test compilation that are expected
+  # to fail does not break the build.
+  "${pkgdir}"/opt/pypy3/bin/pypy3-c -m compileall "${pkgdir}"/opt/pypy3 || true
+  "${pkgdir}"/opt/pypy3/bin/pypy3-c -O \
+             -m compileall "${pkgdir}"/opt/pypy3 || true
 }
