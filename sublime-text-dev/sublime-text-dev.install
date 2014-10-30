@@ -1,0 +1,19 @@
+post_install() {
+  # Update icon cache.
+  gtk-update-icon-cache -f '/usr/share/icons/hicolor' > /dev/null 2>&1
+
+  # Note admin after install/update on how to change th update_check setting.
+  cat << _EOF
+
+  ==> sublime-text-dev install/upgrade note:
+  ------------------------------------------------------------------------------
+    To disable in-application reminders about new Sublime Text dev versions,
+    add the following setting to your User Preferences file:
+    "update_check": false
+
+_EOF
+}
+
+post_upgrade() {
+  post_install
+}

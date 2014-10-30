@@ -1,0 +1,66 @@
+# Maintainer: Firef0x <Firefgx (at} gmail {dot) com>
+# Contributor: Firef0x <Firefgx (at} gmail {dot) com>
+# Contributor: Sander Boom <sander at inflowmotion dot nl> (From sublime-text-dev)
+# Contributor: realitygaps <realitygaps at yahoo dot com> (From sublime-text-dev)
+# Contributor: ska <skatiger (at} gmail {dot) com> (From sublime-text-imfix)
+
+_pkgname=sublime_text_3
+
+pkgname=sublime-text-dev-imfix
+pkgver=3.3065
+pkgrel=1
+pkgdesc="Sophisticated text editor for code, HTML and prose , a dry fixed for development build, which supported Fcitx input method"
+arch=('i686' 'x86_64')
+url="http://www.sublimetext.com/3"
+license=('custom')
+depends=('gtk2' 'desktop-file-utils')
+provides=('sublime-text-dev' 'sublime-text-nightly')
+conflicts=('sublime-text-dev' 'sublime-text-nightly')
+options=('!strip')
+install=${pkgname}.install
+changelog=README.md
+
+_archurl='x64'
+
+[[ "${CARCH}" = i686 ]] && _archurl='x32'
+
+source=("http://c758482.r82.cf2.rackcdn.com/${_pkgname}_build_${pkgver:2}_${_archurl}.tar.bz2"
+		"${_pkgname}.desktop"
+		"subl3"
+		"sublime_imfix.c"
+		"LICENSE")
+md5sums=('466ae754d2cd6aa80dd8dd8b571b4cac'
+         '832dcc3705358c47540e6cdb5d435858'
+         '70b182c165360e69dcaac167e40e2096'
+         'b9cfc9418af10b5c8b509f98f310da7f'
+         'ee96c697ef707e92077d0c55ec14922a')
+
+[[ "${CARCH}" = i686 ]] && md5sums[0]='d0456b04a1f425f9119aa0615fbc4ceb'
+
+build() {
+	gcc -shared -o libsublime-imfix.so sublime_imfix.c  `pkg-config --libs --cflags gtk+-2.0` -fPIC
+}
+
+package() {
+	install -dm755 "${pkgdir}/opt"
+	cp --preserve=mode -r "${_pkgname}" "${pkgdir}/opt/${_pkgname}"
+
+	cp --preserve=mode -r libsublime-imfix.so \
+	${pkgdir}/opt/${_pkgname}/libsublime-imfix.so
+
+	for res in 128x128 16x16 256x256 32x32 48x48; do
+		install -dm755 "${pkgdir}/usr/share/icons/hicolor/${res}/apps"
+		ln -s "/opt/${_pkgname}/Icon/${res}/sublime-text.png" \
+		"${pkgdir}/usr/share/icons/hicolor/${res}/apps/sublime-text.png"
+	done
+
+	install -dm755 "${pkgdir}/usr/share/applications"
+	install -Dm644 ${_pkgname}.desktop \
+	"${pkgdir}/usr/share/applications/${_pkgname}.desktop"
+
+	install -dm755 "${pkgdir}/usr/share/licenses/${pkgname}"
+	install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+
+	install -dm755 "${pkgdir}/usr/bin"
+	install -Dm755 subl3 "${pkgdir}/usr/bin/subl3"
+}
