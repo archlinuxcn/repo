@@ -22,7 +22,8 @@ provides=("pypy3" "pypy3-25")
 optdepends=('sqlite: sqlite3 module'
             'gdbm: dbm module'
             'tk: tkinter module'
-            'tcl: tkinter module')
+            'tcl: tkinter module'
+            'pypy3-readline: better readline module')
 options=('debug' 'strip' '!emptydirs')
 license=('custom:MIT')
 source=("hg+https://bitbucket.org/pypy/pypy#branch=py3k")

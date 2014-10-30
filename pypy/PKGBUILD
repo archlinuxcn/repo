@@ -23,7 +23,8 @@ provides=('pypy-24')
 optdepends=('sqlite: sqlite3 module'
             'gdbm: gdbm module'
             'tk: lib-tk modules'
-            'tcl: lib-tk modules')
+            'tcl: lib-tk modules'
+            'pypy-readline: better readline module')
 options=('debug' 'strip' '!emptydirs')
 license=('custom:MIT')
 source=("hg+https://bitbucket.org/pypy/pypy#tag=release-${pkgver}"

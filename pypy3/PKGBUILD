@@ -21,7 +21,8 @@ provides=("pypy3-24")
 optdepends=('sqlite: sqlite3 module'
             'gdbm: dbm module'
             'tk: tkinter module'
-            'tcl: tkinter module')
+            'tcl: tkinter module'
+            'pypy3-readline: better readline module')
 options=('debug' 'strip' '!emptydirs')
 license=('custom:MIT')
 source=("https://bitbucket.org/pypy/pypy/downloads/$pkgname-$_pkgver-src.tar.bz2")
