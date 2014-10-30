@@ -2,10 +2,10 @@
 # Contributer: Jelle van der Waa <jelle@vdwaa.nl>
 # Contributer: Allan McRae <allan@archlinux.org>
 
-_pypyname=pypy
-_pypyabi=24
-_pypy3name=pypy3
-_pypy3abi=24
+_pypyname=pypy-hg
+_pypyabi=25
+_pypy3name=pypy3-hg
+_pypy3abi=25
 
 pkgbase=${_pypyname}-six
 pkgname=(${_pypyname}-six ${_pypy3name}-six)
@@ -31,9 +31,11 @@ check() {
    pypy setup.py check)
 }
 
-package_pypy3-six() {
+package_pypy3-hg-six() {
   depends=(pypy3-${_pypy3abi})
-  provides=(pypy3-${_pypy3abi}-six=${pkgver}-${pkgrel})
+  conflicts=(pypy3-six)
+  provides=(pypy3-${_pypy3abi}-six=${pkgver}-${pkgrel}
+            pypy3-six=${pkgver}-${pkgrel})
 
   cd six-$pkgver
   pypy3 setup.py install --root "${pkgdir}" --optimize=1
@@ -41,8 +43,10 @@ package_pypy3-six() {
           "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
 
-package_pypy-six() {
+package_pypy-hg-six() {
   depends=(pypy)
+  conflicts=(pypy-six)
+  provides=(pypy-six=${pkgver}-${pkgrel})
 
   cd six2-$pkgver
   pypy setup.py install --root "${pkgdir}" --optimize=1

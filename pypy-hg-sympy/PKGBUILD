@@ -6,10 +6,10 @@
 # Contributor: Angel 'angvp' Velasquez <angvp[at]archlinux.com.ve>
 # Contributor: Peter Garceau <RockyChimp@gmail.com>
 
-_pypyname=pypy
-_pypyabi=24
-_pypy3name=pypy3
-_pypy3abi=24
+_pypyname=pypy-hg
+_pypyabi=25
+_pypy3name=pypy3-hg
+_pypy3abi=25
 
 pkgbase=${_pypyname}-sympy
 pkgname=(${_pypy3name}-sympy ${_pypyname}-sympy)
@@ -47,8 +47,9 @@ build() {
    pypy3 setup.py build)
 }
 
-package_pypy-sympy() {
+package_pypy-hg-sympy() {
   depends=(pypy)
+  conflicts=(pypy-sympy)
   optdepends=("${_pypyname}-pyglet: plotting"
               "${_pypyname}-ipython: user friendly interface for isympy")
 
@@ -66,9 +67,11 @@ package_pypy-sympy() {
   install -D -m644 LICENSE "${pkgdir}"/usr/share/licenses/${pkgname}/LICENSE
 }
 
-package_pypy3-sympy() {
+package_pypy3-hg-sympy() {
   depends=(pypy3-${_pypy3abi})
-  provides=(pypy3-${_pypy3abi}-sympy=${pkgver}-${pkgrel})
+  conflicts=(pypy3-sympy)
+  provides=(pypy3-${_pypy3abi}-sympy=${pkgver}-${pkgrel}
+            pypy3-sympy=${pkgver}-${pkgrel})
   optdepends=("${_pypy3name}-ipython: user friendly interface for isympy")
 
   cd py3-sympy-${pkgver}
