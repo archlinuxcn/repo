@@ -45,6 +45,7 @@ build() {
 
 package_pypy3-hg-tornado() {
   depends=(pypy3-${_pypy3abi})
+  conflicts=(pypy3-tornado)
   provides=(pypy3-${_pypy3abi}-tornado=${pkgver}-${pkgrel}
             pypy3-tornado=${pkgver}-${pkgrel})
 
@@ -54,6 +55,7 @@ package_pypy3-hg-tornado() {
 
 package_pypy-hg-tornado() {
   depends=(pypy pypy-backports.ssl_match_hostname)
+  conflicts=(pypy-tornado)
   provides=(pypy-tornado=${pkgver}-${pkgrel})
 
   cd tornado-py2
