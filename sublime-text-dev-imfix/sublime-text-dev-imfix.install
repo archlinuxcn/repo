@@ -1,7 +1,8 @@
 post_install() {
 	# Update icon cache.
 	gtk-update-icon-cache -q -t -f usr/share/icons/hicolor
-
+    # Update mime type database
+    update-desktop-database -q
 	# Note admin after install/update on how to change th update_check setting.
 	cat << _EOF
 
