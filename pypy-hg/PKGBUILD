@@ -93,6 +93,6 @@ package_pypy-hg() {
   "${pkgdir}"/opt/pypy/bin/pypy-c -m compileall "${pkgdir}"/opt/pypy || true
   "${pkgdir}"/opt/pypy/bin/pypy-c -O -m compileall "${pkgdir}"/opt/pypy || true
 
-  pypyabi=$(pypy -c 'import sys; ver = sys.pypy_version_info; print("pypy-%s%s" % (ver[0], ver[1]))')
+  pypyabi=$("${pkgdir}"/opt/pypy/bin/pypy-c -c 'import sys; ver = sys.pypy_version_info; print("pypy-%s%s" % (ver[0], ver[1]))')
   provides+=("${pypyabi}")
 }
