@@ -37,7 +37,7 @@ package_pypy-pytools() {
 }
 
 package_pypy3-pytools(){
-  depends=(pypy3-${_pypy3abi} pypy3-decorator)
+  depends=(pypy3-${_pypy3abi} pypy3-${_pypy3abi}-decorator)
   provides=(pypy3-${_pypy3abi}-pytools=${pkgver}-${pkgrel})
   cd pytools-${pkgver}
 
