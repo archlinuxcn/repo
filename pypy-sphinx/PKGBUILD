@@ -1,5 +1,5 @@
-# $Id: PKGBUILD 108502 2014-03-27 14:48:28Z fyan $
-# Maintainer: Sébastien Luttringer
+# Maintainer: Yichao Yu <yyc1992@gmail.com>
+# Contributor: Sébastien Luttringer
 # Contributor: Angel Velasquez <angvp@archlinux.org>
 # Contributor: Fabio Volpe <volpefabio@gmail.com>
 
@@ -78,7 +78,7 @@ package_pypy3-sphinx() {
   pkgdesc='Pypy3 documentation generator'
   depends=(pypy3-${_pypy3abi}-jinja pypy3-${_pypy3abi}-pygments
            pypy3-${_pypy3abi}-docutils pypy3-${_pypy3abi})
-  provides=(pypy3-${_pypy3abi}-sphinx)
+  provides=(pypy3-${_pypy3abi}-sphinx=${pkgver})
   optdepends=('texlive-latexextra: for generation of PDF documentation')
 
   cd Sphinx-$pkgver
