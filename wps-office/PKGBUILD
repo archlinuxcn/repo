@@ -2,9 +2,9 @@
 # Contributor: Jove Yu <yushijun110 [at] gmail.com>
 
 pkgname=wps-office
-pkgver=9.1.0.4885_a16
-_pkgver=9.1.0.4885~a16_x86
-pkgrel=3
+pkgver=9.1.0.4909_a16
+_pkgver=9.1.0.4909~a16p1_x86
+pkgrel=1
 pkgdesc="Kingsoft Office (WPS Office) is an office productivity suite"
 arch=('i686' 'x86_64')
 license=("custom")
@@ -13,7 +13,7 @@ conflicts=('kingsoft-office')
 options=('!emptydirs')
 install=${pkgname}.install
 source=("http://kdl.cc.ksosoft.com/wps-community/download/a16/wps-office_${_pkgver}.tar.xz")
-sha1sums=('7ec90d7dd75cd2783e5a7d4c578b70f288a57198')
+sha1sums=('6e800f02cda7547158fb80e820f163e9dd5db31e')
 
 if [ "$CARCH" = "i686" ]; then
     depends=('fontconfig' 'libpng12' 'glib2' 'libsm' 'libxext' 'libxrender' 'libxml2')
