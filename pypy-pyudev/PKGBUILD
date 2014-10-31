@@ -1,18 +1,23 @@
-# $Id: PKGBUILD 108513 2014-03-27 14:48:36Z fyan $
-# Maintainer: Andrea Scarpino <andrea@archlinux.org>
+# Maintainer: Yichao Yu <yyc1992@gmail.com>
+# Contributor: Andrea Scarpino <andrea@archlinux.org>
 # Contributor: examon <examon.mail[at]gmail[dot]com>
 # Contributor: Sebastian Wiesner <lunaryorn googlemail com>
 # Contributor: Dwight Schauer <dschauer@ti.com>
 
-pkgbase=pypy-pyudev
-pkgname=('pypy3-pyudev' 'pypy-pyudev')
+_pypyname=pypy
+_pypyabi=24
+_pypy3name=pypy3
+_pypy3abi=24
+
+pkgbase=${_pypyname}-pyudev
+pkgname=(${_pypy3name}-pyudev ${_pypyname}-pyudev)
 pkgver=0.16.1
-pkgrel=2
+pkgrel=3
 arch=('any')
 url='http://pyudev.readthedocs.org/en/latest/index.html'
 license=('LGPL')
-_pypy3_deps=('pypy3>=2.4' 'pypy3<2.5')
-makedepends=('pypy3-setuptools' 'pypy-setuptools' "${_pypy3_deps[@]}")
+makedepends=(pypy pypy3-${_pypy3abi}
+             pypy3-${_pypy3abi}-setuptools pypy-setuptools)
 source=("http://pypi.python.org/packages/source/p/pyudev/pyudev-${pkgver}.tar.gz")
 md5sums=('4034de584b6d9efcbfc590a047c63285')
 
@@ -22,16 +27,17 @@ build() {
 
 package_pypy3-pyudev() {
   pkgdesc='A pure Python 3.x binding to libudev'
-  depends=('udev' "${_pypy3_deps[@]}")
-
+  depends=(udev pypy3-${_pypy3abi})
+  provides=(pypy3-${_pypy3abi}-pyudev)
   cd pyudev-${pkgver}
+
   pypy3 setup.py install --root "${pkgdir}" --optimize=1
 }
 
 package_pypy-pyudev() {
   pkgdesc='A pure Python 2.x binding to libudev'
-  depends=('pypy' 'udev')
-
+  depends=(udev pypy)
   cd py2udev-${pkgver}
+
   pypy setup.py install --root "${pkgdir}" --optimize=1
 }

@@ -1,17 +1,22 @@
-# $Id: PKGBUILD 108440 2014-03-27 14:47:43Z fyan $
-# Maintainer: Thomas Dziedzic < gostrc at gmail >
+# Maintainer: Yichao Yu <yyc1992@gmail.com>
+# Contributor: Thomas Dziedzic <gostrc at gmail>
 # Contributor: Pierre Chapuis <catwell at archlinux dot us>
 
-pkgbase='pypy-decorator'
-pkgname=('pypy3-decorator' 'pypy-decorator')
+_pypyname=pypy
+_pypyabi=24
+_pypy3name=pypy3
+_pypy3abi=24
+
+pkgbase=${_pypyname}-decorator
+pkgname=(${_pypy3name}-decorator ${_pypyname}-decorator)
 pkgver=3.4.0
-pkgrel=5
+pkgrel=6
 pkgdesc='Python Decorator module'
 arch=('any')
 url='http://pypi.python.org/pypi/decorator'
 license=('BSD')
-_pypy3_deps=('pypy3>=2.4' 'pypy3<2.5')
-makedepends=('pypy' 'pypy-setuptools' 'pypy3-setuptools' "${_pypy3_deps[@]}")
+makedepends=(pypy pypy-setuptools pypy3-${_pypy3abi}-setuptools
+             pypy3-${_pypy3abi})
 source=("http://pypi.python.org/packages/source/d/decorator/decorator-${pkgver}.tar.gz"
         'LICENSE.txt')
 md5sums=('1e8756f719d746e2fc0dd28b41251356'
@@ -21,31 +26,30 @@ build() {
   # Make python and python2 builds possible
   cp -r decorator-$pkgver decorator2-$pkgver
 
-  cd "$srcdir/decorator-$pkgver"
+  (cd decorator-$pkgver
+   pypy3 setup.py build)
 
-  pypy3 setup.py build
-
-  cd "$srcdir/decorator2-$pkgver"
-
-  pypy setup.py build
+  (cd decorator2-$pkgver
+   pypy setup.py build)
 }
 
 package_pypy-decorator() {
-  depends=("pypy")
-  cd "${srcdir}/decorator2-${pkgver}"
+  depends=(pypy)
+  cd decorator2-${pkgver}
 
   pypy setup.py install --root="${pkgdir}" --optimize=1
 
   install -D -m644 "${srcdir}/LICENSE.txt" \
-    "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+          "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
 
 package_pypy3-decorator() {
-  depends=("${_pypy3_deps[@]}")
-  cd "${srcdir}/decorator-${pkgver}"
+  depends=(pypy3-${_pypy3abi})
+  provides=(pypy3-${_pypy3abi}-decorator=${pkgver}-${pkgrel})
+  cd decorator-${pkgver}
 
   pypy3 setup.py install --root="${pkgdir}" --optimize=1
 
   install -D -m644 "${srcdir}/LICENSE.txt" \
-    "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+          "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }

@@ -1,19 +1,21 @@
-From 34207993daeeb5783c7523c32d77087c9f2afbb7 Mon Sep 17 00:00:00 2001
+From 0a204f0a5b38bd14a799f62228128bb401bb8638 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
-Date: Sun, 26 Oct 2014 16:23:18 -0400
+Date: Thu, 30 Oct 2014 09:14:50 -0400
 Subject: [PATCH] fix lib path and compiler
 
 ---
  Lib/distutils/command/install.py |  8 ++++----
  Lib/distutils/sysconfig.py       |  5 +++--
  Lib/distutils/unixccompiler.py   | 10 +++++-----
+ Lib/pydoc.py                     |  2 +-
  Lib/site.py                      | 16 ++++++++--------
  Lib/sysconfig.py                 | 40 ++++++++++++++++++++--------------------
+ Lib/trace.py                     |  4 ++--
  Makefile.pre.in                  | 12 ++++++------
  Modules/getpath.c                | 14 +++++++-------
  configure                        |  2 +-
- setup.py                         |  3 +--
- 9 files changed, 55 insertions(+), 55 deletions(-)
+ setup.py                         |  7 +++----
+ 11 files changed, 60 insertions(+), 60 deletions(-)
 
 diff --git a/Lib/distutils/command/install.py b/Lib/distutils/command/install.py
 index b9f1c6c..aa76447 100644
@@ -83,6 +85,19 @@ index 2aa1cb1..9266710 100644
                     'archiver'     : ["ar", "-cr"],
                     'ranlib'       : None,
                    }
+diff --git a/Lib/pydoc.py b/Lib/pydoc.py
+index 218fd30..eddfd0e 100755
+--- a/Lib/pydoc.py
++++ b/Lib/pydoc.py
+@@ -383,7 +383,7 @@ class Doc:
+ 
+         docloc = os.environ.get("PYTHONDOCS",
+                                 "http://docs.python.org/library")
+-        basedir = os.path.join(sys.exec_prefix, "lib",
++        basedir = os.path.join(sys.exec_prefix, "lib32",
+                                "python"+sys.version[0:3])
+         if (isinstance(object, type(os)) and
+             (object.__name__ in ('errno', 'exceptions', 'gc', 'imp',
 diff --git a/Lib/site.py b/Lib/site.py
 index d2e18f1..fb35da7 100644
 --- a/Lib/site.py
@@ -212,6 +227,23 @@ index aa69351..7f8fdf4 100644
          'include': '{userbase}/include',
          'scripts': '{userbase}/bin',
          'data'   : '{userbase}',
+diff --git a/Lib/trace.py b/Lib/trace.py
+index 38a13e2..558aa8d 100755
+--- a/Lib/trace.py
++++ b/Lib/trace.py
+@@ -754,10 +754,10 @@ def main(argv=None):
+                 # should I also call expanduser? (after all, could use $HOME)
+ 
+                 s = s.replace("$prefix",
+-                              os.path.join(sys.prefix, "lib",
++                              os.path.join(sys.prefix, "lib32",
+                                            "python" + sys.version[:3]))
+                 s = s.replace("$exec_prefix",
+-                              os.path.join(sys.exec_prefix, "lib",
++                              os.path.join(sys.exec_prefix, "lib32",
+                                            "python" + sys.version[:3]))
+                 s = os.path.normpath(s)
+                 ignore_dirs.append(s)
 diff --git a/Makefile.pre.in b/Makefile.pre.in
 index bcd83bf..d2ffa81 100644
 --- a/Makefile.pre.in
@@ -323,7 +355,7 @@ index 2c1c82d..f3d10ac 100755
  mandir='${datarootdir}/man'
  
 diff --git a/setup.py b/setup.py
-index a46bf35..cb24ec1 100644
+index a46bf35..f5cdbe3 100644
 --- a/setup.py
 +++ b/setup.py
 @@ -505,8 +505,7 @@ class PyBuildExt(build_ext):
@@ -336,6 +368,20 @@ index a46bf35..cb24ec1 100644
                  ):
                  add_dir_to_list(lib_dirs, d)
          exts = []
+@@ -760,11 +759,11 @@ class PyBuildExt(build_ext):
+             elif curses_library:
+                 readline_libs.append(curses_library)
+             elif self.compiler.find_library_file(lib_dirs +
+-                                                     ['/usr/lib/termcap'],
++                                                     ['/usr/lib32/termcap'],
+                                                      'termcap'):
+                 readline_libs.append('termcap')
+             exts.append( Extension('readline', ['readline.c'],
+-                                   library_dirs=['/usr/lib/termcap'],
++                                   library_dirs=['/usr/lib32/termcap'],
+                                    extra_link_args=readline_extra_link_args,
+                                    libraries=readline_libs) )
+         else:
 -- 
 2.1.2
 

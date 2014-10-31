@@ -1,56 +1,29 @@
-pkgname=pypy-numpy-git
-pkgver=12393.4296d30
-pkgrel=1
+_pypyname=pypy
+_pypyabi=24
+
+pkgname=${_pypyname}-numpy-git
+pkgver=12394.33ef4b5
+pkgrel=2
 pkgdesc="Scientific tools for Python, pypy version."
 url="https://bitbucket.org/pypy/numpy"
 arch=('i686' 'x86_64')
 license=('BSD')
-depends=('lapack' 'blas' "pypy>=2.4" "pypy<2.5")
+depends=('lapack' 'blas' "pypy-${_pypyabi}")
 makedepends=('git' 'gcc-fortran')
-provides=('pypy-numpy')
+provides=('pypy-numpy' "pypy-${_pypyabi}-numpy")
+conflicts=('pypy-numpy')
 options=('debug' 'strip')
-
-_gitname=numpy
-
-_gitroot=https://bitbucket.org/pypy/numpy.git
-_gitref=master
-exec 5>&1
-
-_fetch_git() {
-  cd "$srcdir"
-
-  if [ -d "$srcdir/$_gitname/.git" ]; then
-    cd "$_gitname"
-    msg "Reset current branch"
-    git reset --hard HEAD
-    git clean -fdx
-    msg "Fetching branch $_gitref from $_gitroot..."
-    git fetch --force --update-head-ok \
-      "$_gitroot" "$_gitref:$_gitref" --
-    msg "Checking out branch $_gitref..."
-    git checkout "$_gitref" --
-    git reset --hard "$_gitref"
-    git clean -fdx
-    msg "The local files are updated."
-  else
-    msg "Cloning branch $_gitref from $_gitroot to $_gitname..."
-    git clone --single-branch --branch "$_gitref" \
-      "$_gitroot" "$_gitname"
-    cd "$_gitname"
-  fi
-  msg "GIT checkout done or server timeout"
-}
+source=(git+https://bitbucket.org/pypy/numpy.git)
+md5sums=('SKIP')
 
 pkgver() {
-  (_fetch_git >&5 2>&1)
-  cd "$srcdir/$_gitname"
+  cd "$srcdir/numpy"
 
-  echo "$(git rev-list --count "${_gitref}").$(git rev-parse --short "${_gitref}")"
+  echo "$(git rev-list --count master).$(git rev-parse --short master)"
 }
 
 build() {
-  (_fetch_git)
-  cd "$srcdir/$_gitname"
+  cd "$srcdir/numpy"
 
   export ATLAS=None
   export LDFLAGS="$LDFLAGS -shared"
@@ -65,7 +38,7 @@ _fix_numpy_cffi() {
 }
 
 package() {
-  cd "$srcdir/$_gitname"
+  cd "$srcdir/numpy"
 
   export ATLAS=None
   export LDFLAGS="$LDFLAGS -shared"
