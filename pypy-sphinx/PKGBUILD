@@ -3,30 +3,30 @@
 # Contributor: Angel Velasquez <angvp@archlinux.org>
 # Contributor: Fabio Volpe <volpefabio@gmail.com>
 
-pkgbase=pypy-sphinx
-pkgname=('pypy3-sphinx' 'pypy-sphinx')
+_pypyname=pypy
+_pypyabi=24
+_pypy3name=pypy3
+_pypy3abi=24
+
+pkgbase=${_pypyname}-sphinx
+pkgname=(${_pypy3name}-sphinx ${_pypyname}-sphinx)
 pkgver=1.2.3
-pkgrel=2
+pkgrel=3
 arch=('any')
 url='http://sphinx.pocoo.org/'
 license=('GPL')
-_pypy3_deps=('pypy3>=2.4' 'pypy3<2.5')
-makedepends=(
-  'pypy3-setuptools'
-  'pypy3-docutils'
-  'pypy3-jinja'
-  'pypy3-pygments'
-  'pypy-setuptools'
-  'pypy-docutils'
-  'pypy-jinja'
-  'pypy-pygments'
-  "${_pypy3_deps[@]}"
-)
-checkdepends=(
-  'pypy3-nose'
-  'pypy-nose'
-  'texlive-latexextra'
-)
+makedepends=(pypy3-${_pypy3abi}-setuptools
+             pypy3-${_pypy3abi}-docutils
+             pypy3-${_pypy3abi}-jinja
+             pypy3-${_pypy3abi}-pygments
+             pypy-setuptools
+             pypy-docutils
+             pypy-jinja
+             pypy-pygments
+             pypy3-${_pypy3abi})
+checkdepends=(pypy3-${_pypy3abi}-nose
+              pypy-nose
+              texlive-latexextra)
 source=("http://pypi.python.org/packages/source/S/Sphinx/Sphinx-$pkgver.tar.gz")
 md5sums=('a98c93124035b4cd7183604aec656cb3')
 
@@ -37,46 +37,48 @@ prepare() {
 
   # change pypy interpreter
   find Sphinx-${pkgver}2 -type f -exec \
-    sed -i '1s,^#! \?/usr/bin/\(env \|\)python$,#!/usr/bin/pypy,' {} \;
+       sed -i '1s,^#! \?/usr/bin/\(env \|\)python$,#!/usr/bin/pypy,' {} \;
 
   # change sphinx-binaries name in source code
   find Sphinx-${pkgver}2 -type f -name '*.py' -exec \
-    sed -ri 's,(sphinx-(:?build|apidoc|autogen|quickstart)),\1-pypy,' {} \;
+       sed -ri 's,(sphinx-(:?build|apidoc|autogen|quickstart)),\1-pypy,' {} \;
 
   # change pypy interpreter
   find Sphinx-${pkgver} -type f -exec \
-    sed -i '1s,^#! \?/usr/bin/\(env \|\)python$,#!/usr/bin/pypy3,' {} \;
+       sed -i '1s,^#! \?/usr/bin/\(env \|\)python$,#!/usr/bin/pypy3,' {} \;
 
   # change sphinx-binaries name in source code
   find Sphinx-${pkgver} -type f -name '*.py' -exec \
-    sed -ri 's,(sphinx-(:?build|apidoc|autogen|quickstart)),\1-pypy3,' {} \;
+       sed -ri 's,(sphinx-(:?build|apidoc|autogen|quickstart)),\1-pypy3,' {} \;
 }
 
 build() {
   msg2 'PyPy 3 version'
-  cd "$srcdir"/Sphinx-$pkgver
-  make PYTHON=pypy3 build
+  (cd Sphinx-$pkgver
+   make PYTHON=pypy3 build)
 
   msg2 'PyPy 2 version'
-  cd "$srcdir"/Sphinx-${pkgver}2
-  make PYTHON=pypy build
+  (cd Sphinx-${pkgver}2
+   make PYTHON=pypy build)
 }
 
 check() {
   msg2 'PyPy 3 version'
-  cd "$srcdir"/Sphinx-$pkgver
-  make PYTHON=pypy3 test
-  rm -r build/lib/tests
+  (cd Sphinx-$pkgver
+   make PYTHON=pypy3 test
+   rm -r build/lib/tests)
 
   msg2 'PyPy 2 version'
-  cd "$srcdir"/Sphinx-${pkgver}2
-  make PYTHON=pypy test
-  rm -r build/lib/tests
+  (cd Sphinx-${pkgver}2
+   make PYTHON=pypy test
+   rm -r build/lib/tests)
 }
 
 package_pypy3-sphinx() {
   pkgdesc='Pypy3 documentation generator'
-  depends=('pypy3-jinja' 'pypy3-pygments' 'pypy3-docutils' "${_pypy3_deps[@]}")
+  depends=(pypy3-${_pypy3abi}-jinja pypy3-${_pypy3abi}-pygments
+           pypy3-${_pypy3abi}-docutils pypy3-${_pypy3abi})
+  provides=(pypy3-${_pypy3abi}-sphinx)
   optdepends=('texlive-latexextra: for generation of PDF documentation')
 
   cd Sphinx-$pkgver
@@ -88,7 +90,7 @@ package_pypy3-sphinx() {
 
 package_pypy-sphinx() {
   pkgdesc='Pypy documentation generator'
-  depends=('pypy-jinja' 'pypy-pygments' 'pypy-docutils')
+  depends=(pypy-jinja pypy-pygments pypy-docutils)
   optdepends=('texlive-latexextra: for generation of PDF documentation')
 
   cd Sphinx-${pkgver}2
