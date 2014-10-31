@@ -7,15 +7,15 @@ _pypy3abi=24
 
 pkgbase=${_pypyname}-py
 pkgname=(${_pypy3name}-py ${_pypyname}-py)
-pkgver=1.4.25
-pkgrel=3
+pkgver=1.4.26
+pkgrel=1
 pkgdesc="library with cross-python path, ini-parsing, io, code, log facilities"
 arch=('any')
 license=('MIT')
 url="http://pylib.readthedocs.org/en/latest/"
 makedepends=(pypy-setuptools pypy3-${_pypy3abi}-setuptools pypy3-${_pypy3abi})
 source=("http://pypi.python.org/packages/source/p/py/py-$pkgver.tar.gz")
-sha512sums=('7e24a9d57298cf98fc246fbda7db81f6cd9d16b78425266c24d00ab1db77146ffab38820630b2dddb49bca7d864c2366d45fdb3e81bb284e509a309d4c1b5b98')
+sha512sums=('5772893d754e4f3fee5de9fdb0eca2c654ac5288eba5c89dac88fd4d9acb2c0795bae61e0c43b37a14471536a1649c9138ac1c4374cd5697307e74062e9813f3')
 
 prepare() {
   cp -a py-${pkgver}{,-py2}
