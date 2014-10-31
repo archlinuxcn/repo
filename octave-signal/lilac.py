@@ -4,9 +4,7 @@ from lilaclib import *
 import fileinput
 import re
 
-depends = [
-        'archlinuxcn-keyring'
-        ]
+depends = ['octave-control', 'octave-general']
 
 build_prefix = 'archlinuxcn-x86_64'
 
