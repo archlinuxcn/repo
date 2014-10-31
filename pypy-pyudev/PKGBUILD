@@ -28,6 +28,7 @@ build() {
 package_pypy3-pyudev() {
   pkgdesc='A pure Python 3.x binding to libudev'
   depends=(udev pypy3-${_pypy3abi})
+  provides=(pypy3-${_pypy3abi}-pyudev)
   cd pyudev-${pkgver}
 
   pypy3 setup.py install --root "${pkgdir}" --optimize=1
