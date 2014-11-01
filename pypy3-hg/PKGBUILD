@@ -78,6 +78,9 @@ package_pypy3-hg() {
   install -Dm644 "${pkgdir}"/opt/pypy3/LICENSE \
           "${pkgdir}"/usr/share/licenses/pypy3/LICENSE
 
+  export LD_LIBRARY_PATH
+  LD_LIBRARY_PATH="${pkgdir}/usr/lib:${pkgdir}/opt/pypy3/lib:${LD_LIBRARY_PATH}"
+
   # Generate bytecode
   # The `|| true` is necessary so that the test compilation that are expected
   # to fail does not break the build.
