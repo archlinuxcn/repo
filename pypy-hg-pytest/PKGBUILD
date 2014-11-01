@@ -8,7 +8,7 @@ _pypy3abi=25
 pkgbase=${_pypyname}-pytest
 pkgname=(${_pypy3name}-pytest ${_pypyname}-pytest)
 pkgver=2.6.4
-pkgrel=1
+pkgrel=2
 pkgdesc="Simple powerful testing with Python"
 arch=('any')
 license=('MIT')
@@ -34,7 +34,7 @@ package_pypy3-hg-pytest() {
   depends=(pypy3-${_pypy3abi} pypy3-${_pypy3abi}-py)
   provides=(pypy3-pytest=${pkgver}
             pypy3-${_pypy3abi}-pytest=${pkgver})
-  conflictss=(pypy3-pytest)
+  conflicts=(pypy3-pytest)
   cd pytest-${pkgver}
 
   pypy3 setup.py install --root="${pkgdir}" --optimize=1
@@ -47,7 +47,7 @@ package_pypy3-hg-pytest() {
 package_pypy-hg-pytest() {
   depends=(pypy pypy-py)
   provides=(pypy-pytest=${pkgver})
-  conflictss=(pypy-pytest)
+  conflicts=(pypy-pytest)
   cd pytest-${pkgver}-py2
 
   pypy setup.py install --root="${pkgdir}" --optimize=1
