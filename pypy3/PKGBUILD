@@ -46,7 +46,7 @@ build() {
            targetpypystandalone
 }
 
-package() {
+package_pypy3() {
   cd "${srcdir}"
   mkdir -p licenses/{libbz2-dev,openssl}
   ln -sf /usr/share/licenses/bzip2/LICENSE licenses/libbz2-dev/copyright
