@@ -1,0 +1,40 @@
+diff -ru IPython/__init__.py IPython/__init__.py
+--- IPython/__init__.py	2014-06-24 07:32:43.018351492 +0800
++++ IPython/__init__.py	2014-05-22 03:19:12.000000000 +0800
+@@ -27,6 +27,12 @@
+ # Setup everything
+ #-----------------------------------------------------------------------------
+ 
++# Don't forget to also update setup.py when this changes!
++v = sys.version_info
++if v[:2] < (2,7) or (v[0] >= 3 and v[:2] < (3,3)):
++    raise ImportError('IPython requires Python version 2.7 or 3.3 or above.')
++del v
++
+ # Make it easy to import extensions - they are always directly on pythonpath.
+ # Therefore, non-IPython modules can be added to extensions directory.
+ # This should probably be in ipapp.py.
+@@ -138,4 +144,4 @@
+     """
+     from IPython.kernel.zmq.kernelapp import launch_new_instance
+     return launch_new_instance(argv=argv, **kwargs)
+-    
++    
+\ No newline at end of file
+diff -ru setup.py setup.py
+--- setup.py	2014-06-24 07:32:53.788351634 +0800
++++ setup.py	2014-05-22 03:19:12.000000000 +0800
+@@ -24,7 +24,13 @@
+ 
+ import sys
+ 
++# This check is also made in IPython/__init__, don't forget to update both when
++# changing Python version requirements.
+ v = sys.version_info
++if v[:2] < (2,7) or (v[0] >= 3 and v[:2] < (3,3)):
++    error = "ERROR: IPython requires Python version 2.7 or 3.3 or above."
++    print(error, file=sys.stderr)
++    sys.exit(1)
+ 
+ PY3 = (sys.version_info[0] >= 3)
+ 
