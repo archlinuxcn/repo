@@ -1,86 +1,79 @@
-# $Id: PKGBUILD 108750 2014-04-02 19:21:18Z kkeen $
-# Maintainer: Kyle Keen <keenerd@gmail.com>
+# Maintainer: Yichao Yu <yyc1992@gmail.com>
+# Contributor: Kyle Keen <keenerd@gmail.com>
 # Contributor: PepeSmith
 # Contributor: Aron Asor <aronasorman at gmail.com>
 # Contributor: Chris Brannon <chris@the-brannons.com>
-# Contributor : Douglas Soares de Andrade <dsa@aur.archlinux.org>
+# Contributor: Douglas Soares de Andrade <dsa@aur.archlinux.org>
+
+_pypyname=pypy
+_pypyabi=24
+_pypy3name=pypy3
+_pypy3abi=24
 
 # IPython 2.1 requires python 3.3 but pypy3 provides 3.2.5
 _BUILD_PYPY3=0
 _PATCH_REVERT_XDG=1
 
-pkgbase=pypy-ipython
-pkgname=pypy-ipython
-((_BUILD_PYPY3)) && {
-  pkgname=(pypy3-ipython pypy-ipython)
-} || {
-  pkgname=(pypy-ipython)
-}
+pkgbase=${_pypyname}-ipython
+pkgname=(${_pypyname}-ipython)
 pkgver=2.3.0
-pkgrel=1
+pkgrel=2
 pkgdesc="An enhanced Interactive Python shell. pypy version"
 arch=('any')
 url="http://ipython.org"
 license=('BSD')
-depends=("pypy" 'sqlite')
-makedepends=('sqlite')
-optdepends=(
-  "wxpython: needed for ipythonx and ipython-wx"
-  "pypy-nose: if you want to run IPython's test suite"
-  # "pypy-pyqt4: for ipython qtconsole"
-  # "pypy-sip: for ipython qtconsole"
-  "pypy-pygments: for ipython qtconsole"
-  "pypy-pyzmq: for ipython notebook and ipython qtconcole"
-  "pypy-tornado: for ipython notebook"
-  "pypy-jinja: for ipython notebook"
-  "haskell-pandoc: ipython notebook conversion"
-  "pypy-readline: for better command line interaction support")
-#source=("http://archive.ipython.org/release/$pkgver/ipython-$pkgver.tar.gz")
+makedepends=(sqlite pypy)
+if ((_BUILD_PYPY3)); then
+    pkgname+=(${_pypy3name}-ipython)
+    makedepends+=(pypy-${_pypy3abi})
+fi
 source=("https://pypi.python.org/packages/source/i/ipython/ipython-$pkgver.tar.gz"
-  revert-xdg.patch
-  pypy3-version.patch)
+        revert-xdg.patch
+        pypy3-version.patch)
 md5sums=('222eecd3a8299c0119c56954c79e4d0f'
          'f252c7449083c5b4a59dab260f5466c6'
          '0b72aadfce0dc7d01da6d3262b28612e')
 
 prepare() {
-  cd "$srcdir/ipython-$pkgver"
+  cd ipython-$pkgver
   if ((_PATCH_REVERT_XDG)); then
-    patch -Np1 < ../revert-xdg.patch
+      patch -Np1 < ../revert-xdg.patch
   fi
   patch -Rp0 < ../pypy3-version.patch
-}
-
-build() {
-  cd "$srcdir"
   if ((_BUILD_PYPY3)); then
-    rm -rf pypy3-ipython-$pkgver
-    cp -r ipython-$pkgver pypy3-ipython-$pkgver
+      rm -rf pypy3-ipython-$pkgver
+      cp -r ipython-$pkgver pypy3-ipython-$pkgver
   fi
 }
 
 package_pypy3-ipython() {
   pkgdesc="An enhanced Interactive Python shell. pypy3 version."
-  depends=("pypy3>=2.4" "pypy3<2.5" 'sqlite')
-  optdepends=("pypy3-pyzmq: for ipython notebook and ipython qtconcole"
-    "pypy3-tornado: for ipython notebook"
-    "pypy3-jinja: for ipython notebook")
-  cd "$srcdir/pypy3-ipython-$pkgver"
+  depends=(pypy3-${_pypy3abi} sqlite)
+  provides=(pypy3-${_pypy3abi}=${pkgver})
+  optdepends=("pypy3-nose: if you want to run IPython's test suite"
+              # "pypy3-pyqt4: for ipython qtconsole"
+              # "pypy3-sip: for ipython qtconsole"
+              # "wxpython: needed for ipythonx and ipython-wx"
+              "pypy3-pygments: for ipython qtconsole"
+              "pypy3-pyzmq: for ipython notebook and ipython qtconcole"
+              "pypy3-tornado: for ipython notebook"
+              "pypy3-jinja: for ipython notebook"
+              "haskell-pandoc: ipython notebook conversion"
+              "pypy3-readline: for better command line interaction support")
+  cd pypy3-ipython-$pkgver
 
   # see https://github.com/ipython/ipython/issues/2057
-  #export LC_ALL=en_US.UTF-8
-  pypy3 setup.py install --prefix=/opt/pypy --root="$pkgdir" --optimize=1
-  # find "$pkgdir/" -name '*.pyc' -delete
-  # find "$pkgdir/" -type d -empty -delete
-  find "$pkgdir" -name '*.py' -print0 | xargs -0 \
-    sed -i -e 's,^#!/usr/bin/env python$,#!/usr/bin/env pypy3,' \
-    -e 's,^#!/usr/bin/python$,#!/usr/bin/pypy3,'
+  export LC_ALL=en_US.UTF-8
+  pypy3 setup.py install --root="$pkgdir" --optimize=1
+  find "$pkgdir" -name '*.py' -print0 | \
+      xargs -0 sed -i -e 's,^#!/usr/bin/env python$,#!/usr/bin/env pypy3,' \
+            -e 's,^#!/usr/bin/python$,#!/usr/bin/pypy3,'
 
   install -m755 -d "${pkgdir}/usr"
   mv "$pkgdir/opt/pypy/"{share,bin} "$pkgdir/usr/"
 
   install -Dm644 docs/source/about/license_and_copyright.rst \
-    "$pkgdir/usr/share/licenses/pypy3-ipython/LICENSE"
+          "$pkgdir/usr/share/licenses/pypy3-ipython/LICENSE"
 
   # hack to get around ipython collision
   cd "$pkgdir/usr/share/man/man1/"
@@ -104,23 +97,30 @@ package_pypy3-ipython() {
 }
 
 package_pypy-ipython() {
-  optdepends=("pypy-pyzmq: for ipython notebook and ipython qtconcole"
-    "pypy-tornado: for ipython notebook"
-    "pypy-jinja: for ipython notebook")
-  cd "$srcdir/ipython-$pkgver"
+  depends=(pypy sqlite)
+  optdepends=("pypy-nose: if you want to run IPython's test suite"
+              # "pypy-pyqt4: for ipython qtconsole"
+              # "pypy-sip: for ipython qtconsole"
+              # "wxpython: needed for ipythonx and ipython-wx"
+              "pypy-pygments: for ipython qtconsole"
+              "pypy-pyzmq: for ipython notebook and ipython qtconcole"
+              "pypy-tornado: for ipython notebook"
+              "pypy-jinja: for ipython notebook"
+              "haskell-pandoc: ipython notebook conversion"
+              "pypy-readline: for better command line interaction support")
+  cd ipython-$pkgver
 
-  pypy setup.py install --prefix=/opt/pypy --root="$pkgdir" --optimize=1
+  pypy setup.py install --root="$pkgdir" --optimize=1
   rm -rf "$pkgdir/usr/share/doc"
-  find "$pkgdir" -name '*.py' -print0 | xargs -0 \
-    sed -i -e 's,^#!/usr/bin/env python$,#!/usr/bin/env pypy,' \
-    -e 's,^#!/usr/bin/python$,#!/usr/bin/pypy,'
-  # find "$pkgdir/" -name '*.pyc' -delete
+  find "$pkgdir" -name '*.py' -print0 | \
+      xargs -0 sed -i -e 's,^#!/usr/bin/env python$,#!/usr/bin/env pypy,' \
+            -e 's,^#!/usr/bin/python$,#!/usr/bin/pypy,'
 
   install -m755 -d "${pkgdir}/usr"
   mv "$pkgdir/opt/pypy/"{share,bin} "$pkgdir/usr/"
 
   install -Dm644 docs/source/about/license_and_copyright.rst \
-    "$pkgdir/usr/share/licenses/pypy-ipython/LICENSE"
+          "$pkgdir/usr/share/licenses/pypy-ipython/LICENSE"
 
   # hack to get around ipython collision
   cd "$pkgdir/usr/share/man/man1/"
