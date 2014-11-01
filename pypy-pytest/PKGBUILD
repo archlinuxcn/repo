@@ -1,33 +1,40 @@
-pkgbase=pypy-pytest
-pkgname=('pypy3-pytest' 'pypy-pytest')
-pkgver=2.6.3
-pkgrel=2
+# Maintainer: Yichao Yu <yyc1992@gmail.com>
+
+_pypyname=pypy
+_pypyabi=24
+_pypy3name=pypy3
+_pypy3abi=24
+
+pkgbase=${_pypyname}-pytest
+pkgname=(${_pypy3name}-pytest ${_pypyname}-pytest)
+pkgver=2.6.4
+pkgrel=1
 pkgdesc="Simple powerful testing with Python"
 arch=('any')
 license=('MIT')
 url="http://pytest.org/"
-_pypy3_deps=('pypy3>=2.4' 'pypy3<2.5')
-makedepends=('pypy3-setuptools' 'pypy-setuptools' 'pypy3-py' 'pypy-py'
-  "${_pypy3_deps[@]}")
+makedepends=(pypy3-${_pypy3abi}-setuptools pypy-setuptools
+             pypy3-${_pypy3abi}-py pypy-py pypy3-${_pypy3abi})
 source=("http://pypi.python.org/packages/source/p/pytest/pytest-$pkgver.tar.gz")
-sha512sums=('44fe4c7af804530160a1827b837d35be9492eebb6a382391c820568f492ce7ca50837a47e92873b014ee1655d83a8cb270e0c4149e683efedc25135791733c7a')
+sha512sums=('b17f79b0f3c0f6051bedb0d7acadc5d569b3b90b2fce2eddda06a21b654f6077f934aaa9617152d6b2f8babb95c37494f18e050841af601f7f37de25c15b32fd')
 
 prepare() {
   cp -a pytest-${pkgver}{,-py2}
 }
 
 build() {
-  cd "$srcdir/pytest-${pkgver}"
-  pypy3 setup.py build
+  (cd pytest-${pkgver}
+   pypy3 setup.py build)
 
-  cd "$srcdir/pytest-${pkgver}-py2"
-  pypy setup.py build
+  (cd pytest-${pkgver}-py2
+   pypy setup.py build)
 }
 
 package_pypy3-pytest() {
-  depends=('pypy3-py' "${_pypy3_deps[@]}")
-
+  depends=(pypy3-${_pypy3abi} pypy3-${_pypy3abi}-py)
+  provides=(pypy3-${_pypy3abi}-pytest=${pkgver})
   cd pytest-${pkgver}
+
   pypy3 setup.py install --root="${pkgdir}" --optimize=1
   install -D -m644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 
@@ -36,9 +43,9 @@ package_pypy3-pytest() {
 }
 
 package_pypy-pytest() {
-  depends=('pypy' 'pypy-py')
-
+  depends=(pypy pypy-py)
   cd pytest-${pkgver}-py2
+
   pypy setup.py install --root="${pkgdir}" --optimize=1
   install -D -m644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 
