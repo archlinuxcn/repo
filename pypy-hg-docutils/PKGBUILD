@@ -3,10 +3,10 @@
 # Contributor: Ionut Biru <ibiru@archlinux.org>
 # Contributor: Sergej Pupykin <pupykin.s+arch@gmail.com>
 
-_pypyname=pypy
-_pypyabi=24
-_pypy3name=pypy3
-_pypy3abi=24
+_pypyname=pypy-hg
+_pypyabi=25
+_pypy3name=pypy3-hg
+_pypy3abi=25
 
 pkgbase=${_pypyname}-docutils
 pkgname=(${_pypy3name}-docutils ${_pypyname}-docutils)
@@ -51,9 +51,11 @@ check() {
   # PYTHONPATH="$PWD/build/pypy/" pypy test/alltests.py
 }
 
-package_pypy3-docutils() {
+package_pypy3-hg-docutils() {
   depends=(pypy3-${_pypy3abi})
-  provides=(pypy3-${_pypy3abi}-docutils=${pkgver}-${pkgrel})
+  provides=(pypy3-docutils=${pkgver}-${pkgrel}
+            pypy3-${_pypy3abi}-docutils=${pkgver}-${pkgrel})
+  conflicts=(pypy3-docutils)
 
   cd docutils-$pkgver
   pypy3 setup.py build --build-lib=build/pypy3 \
@@ -77,8 +79,10 @@ package_pypy3-docutils() {
   install -D -m644 licenses/python* "$pkgdir/usr/share/licenses/$pkgname/"
 }
 
-package_pypy-docutils() {
+package_pypy-hg-docutils() {
   depends=(pypy)
+  provides=(pypy-docutils=${pkgver}-${pkgrel})
+  conflicts=(pypy-docutils)
 
   cd docutils-$pkgver
   pypy setup.py build --build-lib=build/pypy \

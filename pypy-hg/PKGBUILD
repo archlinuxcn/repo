@@ -7,8 +7,8 @@ USE_PYPY=1
 USE_SHARED=1
 
 pkgname=pypy-hg
-pkgver=74282.60d682352d46
-pkgrel=2
+pkgver=74313.a9747c9fca35
+pkgrel=1
 pkgdesc="A Python implementation written in Python, JIT enabled, hg version"
 url="http://pypy.org"
 arch=('i686' 'x86_64')
@@ -19,8 +19,7 @@ if ((USE_PYPY)); then
     makedepends+=('pypy')
 fi
 conflicts=('pypy')
-# TODO: provides can be calculated in the package function.
-provides=('pypy' 'pypy-25')
+provides=('pypy')
 optdepends=('sqlite: sqlite3 module'
             'gdbm: gdbm module'
             'tk: lib-tk modules'
@@ -61,7 +60,7 @@ build() {
            targetpypystandalone
 }
 
-package() {
+package_pypy-hg() {
   cd pypy/pypy/tool/release
 
   _check_python
@@ -93,4 +92,7 @@ package() {
   # to fail does not break the build.
   "${pkgdir}"/opt/pypy/bin/pypy-c -m compileall "${pkgdir}"/opt/pypy || true
   "${pkgdir}"/opt/pypy/bin/pypy-c -O -m compileall "${pkgdir}"/opt/pypy || true
+
+  pypyabi=$("${pkgdir}"/opt/pypy/bin/pypy-c -c 'import sys; ver = sys.pypy_version_info; print("pypy-%s%s" % (ver[0], ver[1]))')
+  provides+=("${pypyabi}")
 }

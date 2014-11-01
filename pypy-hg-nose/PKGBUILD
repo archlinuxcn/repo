@@ -4,10 +4,10 @@
 # Contributor: Douglas Soares de Andrade <douglas@archlinux.org>
 # Contributor: Cilyan Olowen <gaknar@gmail.com>
 
-_pypyname=pypy
-_pypyabi=24
-_pypy3name=pypy3
-_pypy3abi=24
+_pypyname=pypy-hg
+_pypyabi=25
+_pypy3name=pypy3-hg
+_pypy3abi=25
 
 pkgbase=${_pypyname}-nose
 pkgname=(${_pypy3name}-nose ${_pypyname}-nose ${_pypyname}-nose-doc)
@@ -32,9 +32,11 @@ build() {
    pypy setup.py build)
 }
 
-package_pypy3-nose() {
+package_pypy3-hg-nose() {
   depends=(pypy3-${_pypy3abi})
-  provides=(pypy3-${_pypy3abi}-nose=${pkgver})
+  provides=(pypy3-${_pypy3abi}-nose=${pkgver}
+            pypy3-nose=${pkgver})
+  conflicts=(pypy3-nose)
   cd nose-$pkgver
 
   pypy3 setup.py install --root="${pkgdir}" -O1 --skip-build
@@ -45,8 +47,10 @@ package_pypy3-nose() {
   mv "$pkgdir/usr/bin/nosetests-3.2" "$pkgdir/usr/bin/nosetests-pypy3.2"
 }
 
-package_pypy-nose() {
+package_pypy-hg-nose() {
   depends=(pypy)
+  provides=(pypy-nose=${pkgver})
+  conflicts=(pypy-nose)
   cd nose2-$pkgver
 
   pypy setup.py install --root="${pkgdir}" -O1 --skip-build
@@ -58,7 +62,7 @@ package_pypy-nose() {
   rm -rf "$pkgdir/usr/share"
 }
 
-package_pypy-nose-doc(){
+package_pypy-hg-nose-doc(){
   pkgdesc="Nose documentation and examples"
   provides=(python-nose-doc)
   conflicts=(python-nose-doc)

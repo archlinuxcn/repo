@@ -6,7 +6,7 @@ USE_PYPY=1
 pkgname=pypy3
 pkgver=2.4.0
 _pkgver=2.4.0
-pkgrel=3
+pkgrel=4
 pkgdesc="A Python3 implementation written in Python, JIT enabled"
 url="http://pypy.org"
 arch=('i686' 'x86_64')
@@ -16,8 +16,7 @@ makedepends=('python2>=2.7' 'mercurial' 'gdbm' 'sqlite' 'tcl' 'tk')
 if ((USE_PYPY)); then
     makedepends+=('pypy')
 fi
-# TODO: provides can be calculated in the package function.
-provides=("pypy3-24")
+provides=()
 optdepends=('sqlite: sqlite3 module'
             'gdbm: dbm module'
             'tk: tkinter module'
@@ -47,7 +46,7 @@ build() {
            targetpypystandalone
 }
 
-package() {
+package_pypy3() {
   cd "${srcdir}"
   mkdir -p licenses/{libbz2-dev,openssl}
   ln -sf /usr/share/licenses/bzip2/LICENSE licenses/libbz2-dev/copyright
@@ -85,4 +84,7 @@ package() {
   "${pkgdir}"/opt/pypy3/bin/pypy3-c -m compileall "${pkgdir}"/opt/pypy3 || true
   "${pkgdir}"/opt/pypy3/bin/pypy3-c -O \
              -m compileall "${pkgdir}"/opt/pypy3 || true
+
+  pypyabi=$("${pkgdir}"/opt/pypy3/bin/pypy3-c -c 'import sys; ver = sys.pypy_version_info; print("pypy3-%s%s" % (ver[0], ver[1]))')
+  provides+=("${pypyabi}")
 }

@@ -8,7 +8,7 @@ USE_SHARED=1
 
 pkgname=pypy
 pkgver=2.4.0
-pkgrel=3
+pkgrel=4
 pkgdesc="A Python implementation written in Python, JIT enabled"
 url="http://pypy.org"
 arch=('i686' 'x86_64')
@@ -18,8 +18,7 @@ makedepends=('python2>=2.7' 'mercurial' 'gdbm' 'sqlite' 'tcl' 'tk')
 if ((USE_PYPY)); then
     makedepends+=('pypy')
 fi
-# TODO: provides can be calculated in the package function.
-provides=('pypy-24')
+provides=()
 optdepends=('sqlite: sqlite3 module'
             'gdbm: gdbm module'
             'tk: lib-tk modules'
@@ -63,7 +62,7 @@ build() {
            targetpypystandalone
 }
 
-package() {
+package_pypy() {
   cd "${srcdir}"
   mkdir -p licenses/{libbz2-dev,openssl}
   ln -sf /usr/share/licenses/bzip2/LICENSE licenses/libbz2-dev/copyright
@@ -101,4 +100,7 @@ package() {
   # to fail does not break the build.
   "${pkgdir}"/opt/pypy/bin/pypy-c -m compileall "${pkgdir}"/opt/pypy || true
   "${pkgdir}"/opt/pypy/bin/pypy-c -O -m compileall "${pkgdir}"/opt/pypy || true
+
+  pypyabi=$("${pkgdir}"/opt/pypy/bin/pypy-c -c 'import sys; ver = sys.pypy_version_info; print("pypy-%s%s" % (ver[0], ver[1]))')
+  provides+=("${pypyabi}")
 }

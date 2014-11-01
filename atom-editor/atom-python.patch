@@ -1,4 +1,4 @@
---- atom.sh.orig	2014-07-24 18:49:00.022810114 -0700
+--- atom.sh	2014-07-24 18:49:00.022810114 -0700
 +++ atom.sh	2014-07-24 18:49:15.993257782 -0700
 @@ -70,6 +70,7 @@
    USR_DIRECTORY=$(readlink -f $(dirname $SCRIPT)/..)
@@ -6,5 +6,4 @@
    DOT_ATOM_DIR="$HOME/.atom"
 +  export PYTHON=python2
  
-   if [ ! -d "$DOT_ATOM_DIR" ]; then
-     mkdir -p "$DOT_ATOM_DIR"
+   mkdir -p "$DOT_ATOM_DIR"

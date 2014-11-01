@@ -1,9 +1,9 @@
 # Maintainer: Yichao Yu <yyc1992@gmail.com>
 
-_pypyname=pypy
-_pypyabi=24
-_pypy3name=pypy3
-_pypy3abi=24
+_pypyname=pypy-hg
+_pypyabi=25
+_pypy3name=pypy3-hg
+_pypy3abi=25
 
 pkgbase=${_pypyname}-ply
 pkgname=(${_pypy3name}-ply ${_pypyname}-ply)
@@ -21,9 +21,11 @@ prepare() {
   cp -r ply-$pkgver{,-py2}
 }
 
-package_pypy3-ply() {
+package_pypy3-hg-ply() {
   depends=(pypy3-${_pypy3abi})
-  provides=(pypy3-${_pypy3abi}-ply=${pkgver})
+  provides=(pypy3-ply=${pkgver}
+            pypy3-${_pypy3abi}-ply=${pkgver})
+  conflicts=(pypy3-ply)
   cd ply-$pkgver
 
   pypy3 setup.py install --root="$pkgdir"
@@ -32,8 +34,10 @@ package_pypy3-ply() {
   head -n30 README > "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
-package_pypy-ply() {
+package_pypy-hg-ply() {
   depends=(pypy)
+  provides=(pypy-ply=${pkgver})
+  conflicts=(pypy-ply)
   cd ply-$pkgver-py2
 
   pypy setup.py install --root="$pkgdir"

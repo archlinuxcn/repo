@@ -2,10 +2,10 @@
 # Contributor: Thomas Dziedzic <gostrc at gmail>
 # Contributor: Pierre Chapuis <catwell at archlinux dot us>
 
-_pypyname=pypy
-_pypyabi=24
-_pypy3name=pypy3
-_pypy3abi=24
+_pypyname=pypy-hg
+_pypyabi=25
+_pypy3name=pypy3-hg
+_pypy3abi=25
 
 pkgbase=${_pypyname}-decorator
 pkgname=(${_pypy3name}-decorator ${_pypyname}-decorator)
@@ -33,8 +33,10 @@ build() {
    pypy setup.py build)
 }
 
-package_pypy-decorator() {
+package_pypy-hg-decorator() {
   depends=(pypy)
+  provides=(pypy-decorator=${pkgver}-${pkgrel})
+  conflicts=(pypy-decorator)
   cd decorator2-${pkgver}
 
   pypy setup.py install --root="${pkgdir}" --optimize=1
@@ -43,9 +45,11 @@ package_pypy-decorator() {
           "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
 
-package_pypy3-decorator() {
+package_pypy3-hg-decorator() {
   depends=(pypy3-${_pypy3abi})
-  provides=(pypy3-${_pypy3abi}-decorator=${pkgver}-${pkgrel})
+  provides=(pypy3-decorator=${pkgver}-${pkgrel}
+            pypy3-${_pypy3abi}-decorator=${pkgver}-${pkgrel})
+  conflicts=(pypy3-decorator)
   cd decorator-${pkgver}
 
   pypy3 setup.py install --root="${pkgdir}" --optimize=1

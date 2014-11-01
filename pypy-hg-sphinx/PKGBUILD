@@ -3,10 +3,10 @@
 # Contributor: Angel Velasquez <angvp@archlinux.org>
 # Contributor: Fabio Volpe <volpefabio@gmail.com>
 
-_pypyname=pypy
-_pypyabi=24
-_pypy3name=pypy3
-_pypy3abi=24
+_pypyname=pypy-hg
+_pypyabi=25
+_pypy3name=pypy3-hg
+_pypy3abi=25
 
 pkgbase=${_pypyname}-sphinx
 pkgname=(${_pypy3name}-sphinx ${_pypyname}-sphinx)
@@ -74,11 +74,13 @@ check() {
    rm -r build/lib/tests)
 }
 
-package_pypy3-sphinx() {
+package_pypy3-hg-sphinx() {
   pkgdesc='Pypy3 documentation generator'
   depends=(pypy3-${_pypy3abi}-jinja pypy3-${_pypy3abi}-pygments
            pypy3-${_pypy3abi}-docutils pypy3-${_pypy3abi})
-  provides=(pypy3-${_pypy3abi}-sphinx=${pkgver})
+  provides=(pypy3-sphinx=${pkgver}
+            pypy3-${_pypy3abi}-sphinx=${pkgver})
+  conflicts=(pypy3-sphinx)
   optdepends=('texlive-latexextra: for generation of PDF documentation')
 
   cd Sphinx-$pkgver
@@ -88,9 +90,11 @@ package_pypy3-sphinx() {
   mv "${pkgdir}/opt/pypy3/bin" "${pkgdir}/usr"
 }
 
-package_pypy-sphinx() {
+package_pypy-hg-sphinx() {
   pkgdesc='Pypy documentation generator'
   depends=(pypy-jinja pypy-pygments pypy-docutils)
+  provides=(pypy-sphinx)
+  conflicts=(pypy-sphinx)
   optdepends=('texlive-latexextra: for generation of PDF documentation')
 
   cd Sphinx-${pkgver}2

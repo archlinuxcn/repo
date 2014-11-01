@@ -3,10 +3,10 @@
 # Contributor: Ionut Biru <ibiru@archlinux.org>
 # Contributor: Alex Anthony <alex.anthony28991@gmail.com>
 
-_pypyname=pypy
-_pypyabi=24
-_pypy3name=pypy3
-_pypy3abi=24
+_pypyname=pypy-hg
+_pypyabi=25
+_pypy3name=pypy3-hg
+_pypy3abi=25
 
 pkgbase=${_pypyname}-markupsafe
 pkgname=(${_pypy3name}-markupsafe ${_pypyname}-markupsafe)
@@ -31,9 +31,11 @@ build() {
    pypy setup.py build)
 }
 
-package_pypy3-markupsafe() {
+package_pypy3-hg-markupsafe() {
   depends=(pypy3-${_pypy3abi})
-  provides=(pypy3-${_pypy3abi}-markupsafe=${pkgver}-${pkgrel})
+  provides=(pypy3-${_pypy3abi}-markupsafe=${pkgver}-${pkgrel}
+            pypy3-markupsafe=${pkgver}-${pkgrel})
+  conflicts=(pypy3-markupsafe)
 
   cd MarkupSafe-${pkgver}
   pypy3 setup.py install --root="${pkgdir}" --optimize=1
@@ -42,8 +44,10 @@ package_pypy3-markupsafe() {
           "${pkgdir}/usr/share/licenses/pypy3-markupsafe/LICENSE"
 }
 
-package_pypy-markupsafe() {
+package_pypy-hg-markupsafe() {
   depends=(pypy)
+  provides=(pypy-markupsafe=${pkgver}-${pkgrel})
+  conflicts=(pypy-markupsafe)
 
   cd python2-MarkupSafe-${pkgver}
   pypy setup.py install --root="${pkgdir}" --optimize=1

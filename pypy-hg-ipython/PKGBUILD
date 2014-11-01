@@ -5,10 +5,10 @@
 # Contributor: Chris Brannon <chris@the-brannons.com>
 # Contributor: Douglas Soares de Andrade <dsa@aur.archlinux.org>
 
-_pypyname=pypy
-_pypyabi=24
-_pypy3name=pypy3
-_pypy3abi=24
+_pypyname=pypy-hg
+_pypyabi=25
+_pypy3name=pypy3-hg
+_pypy3abi=25
 
 # IPython 2.1 requires python 3.3 but pypy3 provides 3.2.5
 _BUILD_PYPY3=0
@@ -46,10 +46,12 @@ prepare() {
   fi
 }
 
-package_pypy3-ipython() {
+package_pypy3-hg-ipython() {
   pkgdesc="An enhanced Interactive Python shell. pypy3 version."
   depends=(pypy3-${_pypy3abi} sqlite)
-  provides=(pypy3-${_pypy3abi}-ipython=${pkgver})
+  provides=(pypy3-${_pypy3abi}-ipython=${pkgver}
+            pypy3-ipython=${pkgver})
+  conflicts=(pypy3-ipython)
   optdepends=("pypy3-nose: if you want to run IPython's test suite"
               # "pypy3-pyqt4: for ipython qtconsole"
               # "pypy3-sip: for ipython qtconsole"
@@ -96,8 +98,10 @@ package_pypy3-ipython() {
   #   "$pkgdir/usr/share/applications/ipython-qtconsole.desktop"
 }
 
-package_pypy-ipython() {
+package_pypy-hg-ipython() {
   depends=(pypy sqlite)
+  provides=(pypy-ipython=${pkgver})
+  conflicts=(pypy-ipython)
   optdepends=("pypy-nose: if you want to run IPython's test suite"
               # "pypy-pyqt4: for ipython qtconsole"
               # "pypy-sip: for ipython qtconsole"

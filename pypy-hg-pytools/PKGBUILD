@@ -2,10 +2,10 @@
 # Contributor: Felix Yan <felixonmars@gmail.com>
 # Contributor: Stéphane Gaudreault <stephane@archlinux.org>
 
-_pypyname=pypy
-_pypyabi=24
-_pypy3name=pypy3
-_pypy3abi=24
+_pypyname=pypy-hg
+_pypyabi=25
+_pypy3name=pypy3-hg
+_pypy3abi=25
 
 pkgbase=${_pypyname}-pytools
 pkgname=(${_pypy3name}-pytools ${_pypyname}-pytools)
@@ -29,16 +29,20 @@ build() {
    pypy setup.py build)
 }
 
-package_pypy-pytools() {
+package_pypy-hg-pytools() {
   depends=(pypy pypy-decorator)
+  provides=(pypy-pytools=${pkgver}-${pkgrel})
+  conflicts=(pypy-pytools)
   cd pytools-${pkgver}-python2
 
   pypy setup.py install --root="${pkgdir}" --skip-build --optimize=1
 }
 
-package_pypy3-pytools(){
+package_pypy3-hg-pytools(){
   depends=(pypy3-${_pypy3abi} pypy3-${_pypy3abi}-decorator)
-  provides=(pypy3-${_pypy3abi}-pytools=${pkgver}-${pkgrel})
+  provides=(pypy3-${_pypy3abi}-pytools=${pkgver}-${pkgrel}
+            pypy3-pytools=${pkgver}-${pkgrel})
+  conflicts=(pypy3-pytools)
   cd pytools-${pkgver}
 
   pypy3 setup.py install --root="${pkgdir}" --skip-build --optimize=1

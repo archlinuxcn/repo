@@ -4,8 +4,8 @@
 USE_PYPY=1
 
 pkgname=pypy3-hg
-pkgver=74297.7c10b6d1febb
-pkgrel=2
+pkgver=74316.2f8363781b3f
+pkgrel=1
 epoch=1
 pkgdesc="A Python3 implementation written in Python, JIT enabled, hg version"
 url="http://pypy.org"
@@ -16,9 +16,8 @@ makedepends=('python2>=2.7' 'mercurial' 'gdbm' 'sqlite' 'tcl' 'tk')
 if ((USE_PYPY)); then
     makedepends+=('pypy')
 fi
-conflicts=('pypy3')
-# TODO: provides can be calculated in the package function.
-provides=("pypy3" "pypy3-25")
+conflicts=(pypy3)
+provides=(pypy3)
 optdepends=('sqlite: sqlite3 module'
             'gdbm: dbm module'
             'tk: tkinter module'
@@ -53,7 +52,7 @@ build() {
            targetpypystandalone
 }
 
-package() {
+package_pypy3-hg() {
   cd pypy/pypy/tool/release
 
   _check_python
@@ -85,4 +84,7 @@ package() {
   "${pkgdir}"/opt/pypy3/bin/pypy3-c -m compileall "${pkgdir}"/opt/pypy3 || true
   "${pkgdir}"/opt/pypy3/bin/pypy3-c -O \
              -m compileall "${pkgdir}"/opt/pypy3 || true
+
+  pypyabi=$("${pkgdir}"/opt/pypy3/bin/pypy3-c -c 'import sys; ver = sys.pypy_version_info; print("pypy3-%s%s" % (ver[0], ver[1]))')
+  provides+=("${pypyabi}")
 }

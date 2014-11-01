@@ -4,10 +4,10 @@
 # Contributor: Sebastian Wiesner <lunaryorn googlemail com>
 # Contributor: Dwight Schauer <dschauer@ti.com>
 
-_pypyname=pypy
-_pypyabi=24
-_pypy3name=pypy3
-_pypy3abi=24
+_pypyname=pypy-hg
+_pypyabi=25
+_pypy3name=pypy3-hg
+_pypy3abi=25
 
 pkgbase=${_pypyname}-pyudev
 pkgname=(${_pypy3name}-pyudev ${_pypyname}-pyudev)
@@ -25,18 +25,22 @@ build() {
   cp -rf "${srcdir}/pyudev-${pkgver}" "${srcdir}/py2udev-${pkgver}"
 }
 
-package_pypy3-pyudev() {
+package_pypy3-hg-pyudev() {
   pkgdesc='A pure Python 3.x binding to libudev'
   depends=(udev pypy3-${_pypy3abi})
-  provides=(pypy3-${_pypy3abi}-pyudev)
+  provides=(pypy3-pyudev=${pkgver}-${pkgrel}
+            pypy3-${_pypy3abi}-pyudev=${pkgver}-${pkgrel})
+  conflicts=(pypy3-pyudev)
   cd pyudev-${pkgver}
 
   pypy3 setup.py install --root "${pkgdir}" --optimize=1
 }
 
-package_pypy-pyudev() {
+package_pypy-hg-pyudev() {
   pkgdesc='A pure Python 2.x binding to libudev'
   depends=(udev pypy)
+  provides=(pypy-pyudev=${pkgver}-${pkgrel})
+  conflicts=(pypy-pyudev)
   cd py2udev-${pkgver}
 
   pypy setup.py install --root "${pkgdir}" --optimize=1
