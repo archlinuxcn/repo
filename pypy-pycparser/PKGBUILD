@@ -1,17 +1,21 @@
-# $Id: PKGBUILD 208854 2014-03-27 14:43:36Z fyan $
-# Maintainer: Felix Yan <felixonmars@gmail.com>
+# Maintainer: Yichao Yu <yyc1992@gmail.com>
+# Contributor: Felix Yan <felixonmars@gmail.com>
 # Contributor: Justin Dray <justin@dray.be>
 # Contributor: Alexander Rødseth <rodseth@gmail.com>
 # Contributor: lang2 <wenzhi.liang@gmail.com>
 
-pkgbase=pypy-pycparser
-pkgname=(pypy3-pycparser pypy-pycparser)
+_pypyname=pypy
+_pypyabi=24
+_pypy3name=pypy3
+_pypy3abi=24
+
+pkgbase=${_pypyname}-pycparser
+pkgname=(${_pypy3name}-pycparser ${_pypyname}-pycparser)
 pkgver=2.10
-pkgrel=2
+pkgrel=3
 pkgdesc='C parser and AST generator written in Python'
 url='https://github.com/eliben/pycparser'
-_pypy3_deps=('pypy3>=2.4' 'pypy3<2.5')
-makedepends=("${_pypy3_deps[@]}" 'pypy3-ply' 'pypy-ply')
+makedepends=(pypy3-${_pypy3abi}-ply pypy-ply pypy3-${_pypy3abi})
 arch=('any')
 license=('BSD')
 source=('https://github.com/eliben/pycparser/archive/release_v2.10.zip')
@@ -22,22 +26,22 @@ prepare() {
 }
 
 build() {
-  cd pycparser-release_v${pkgver}
-  pypy3 setup.py build
+  (cd pycparser-release_v${pkgver}
+   pypy3 setup.py build
 
-  cd pycparser
-  pypy3 _build_tables.py
+   cd pycparser
+   pypy3 _build_tables.py)
 
-  cd "$srcdir/pycparser-release_v${pkgver}-py2"
-  pypy setup.py build
+  (cd pycparser-release_v${pkgver}-py2
+   pypy setup.py build
 
-  cd pycparser
-  pypy _build_tables.py
+   cd pycparser
+   pypy _build_tables.py)
 }
 
 package_pypy3-pycparser() {
-  depends=("${_pypy3_deps[@]}" 'pypy3-ply')
-
+  depends=(pypy3-${_pypy3abi}-ply pypy3-${_pypy3abi})
+  provides=(pypy3-${_pypy3abi}-pycparser=${pkgver})
   cd pycparser-release_v${pkgver}
 
   pypy3 setup.py install --root="$pkgdir" --optimize=1
@@ -45,8 +49,7 @@ package_pypy3-pycparser() {
 }
 
 package_pypy-pycparser() {
-  depends=('pypy-ply')
-
+  depends=(pypy-ply)
   cd pycparser-release_v${pkgver}-py2
 
   pypy setup.py install --root="$pkgdir" --optimize=1
