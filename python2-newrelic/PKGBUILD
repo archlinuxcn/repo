@@ -1,7 +1,7 @@
 # Maintainer: Felix Yan <felixonmars@gmail.com>
 
 pkgname=python2-newrelic
-pkgver=2.32.0.28
+pkgver=2.36.0.30
 pkgrel=1
 pkgdesc="Python agent for the New Relic web application performance monitoring service."
 arch=('i686' 'x86_64')
@@ -19,5 +19,5 @@ package() {
   install -Dm644 "$srcdir/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
 
-sha512sums=('819f23478f6e883e4ec1c1b697eead53918086f9c41953620257afb035b6403ddc5ffbbee6cace89227382f86811b2c44130f3dbfcaa967476b8116ec195356b'
+sha512sums=('67e98c38d9cc2adc2570f87759d0cf2a8f85df7a9a6ce86a5a555d1c47391b51e7365eccbc1db603660a3435d9ba1304d46fc1d71a8ec1881ca7af45fe70cc47'
             'a9d8e4cf71c6bbb372aeb62fca5ced760ea00f406938d28cff57b9d9097abff1580649585f760e0131d59ff764aa2f5249b0ef19233981800211ede66633402b')
