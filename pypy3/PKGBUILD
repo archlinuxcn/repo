@@ -16,8 +16,7 @@ makedepends=('python2>=2.7' 'mercurial' 'gdbm' 'sqlite' 'tcl' 'tk')
 if ((USE_PYPY)); then
     makedepends+=('pypy')
 fi
-# TODO: provides can be calculated in the package function.
-provides=("pypy3-24")
+provides=()
 optdepends=('sqlite: sqlite3 module'
             'gdbm: dbm module'
             'tk: tkinter module'
@@ -85,4 +84,7 @@ package() {
   "${pkgdir}"/opt/pypy3/bin/pypy3-c -m compileall "${pkgdir}"/opt/pypy3 || true
   "${pkgdir}"/opt/pypy3/bin/pypy3-c -O \
              -m compileall "${pkgdir}"/opt/pypy3 || true
+
+  pypyabi=$("${pkgdir}"/opt/pypy3/bin/pypy3-c -c 'import sys; ver = sys.pypy_version_info; print("pypy3-%s%s" % (ver[0], ver[1]))')
+  provides+=("${pypyabi}")
 }
