@@ -1,6 +1,6 @@
 # Maintainer: Daniel Micay <danielmicay@gmail.com>
 pkgname=termite
-pkgver=8
+pkgver=9
 pkgrel=1
 pkgdesc="A simple VTE-based terminal"
 arch=('i686' 'x86_64')
@@ -10,10 +10,7 @@ depends=('vte3-select-text>=0.38.0-1')
 makedepends=('git')
 backup=(etc/xdg/termite/config)
 source=("git://github.com/thestinger/termite#tag=v$pkgver")
-md5sums=(SKIP)
-
-__gitroot=https://github.com/thestinger/termite
-__gitname=termite
+md5sums=('SKIP')
 
 build() {
   cd $pkgname
