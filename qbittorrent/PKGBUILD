@@ -5,7 +5,7 @@
 # Contributor: Geoffroy Carrier <geoffroy.carrier@koon.fr>
 
 pkgname=qbittorrent
-pkgver=3.1.10
+pkgver=3.1.11
 pkgrel=1
 pkgdesc="A bittorrent client written in C++ / Qt4 using the good libtorrent library"
 arch=('i686' 'x86_64')
@@ -16,7 +16,7 @@ makedepends=('boost')
 optdepends=('python: needed for torrent search tab')
 install=$pkgname.install
 source=("http://downloads.sourceforge.net/sourceforge/qbittorrent/$pkgname-$pkgver.tar.xz")
-sha256sums=('e65dc14abe71e034d49787fed7a8715b1b49a5e64172d3cb4abbe49042a41876')
+sha256sums=('71105ed99e58b9dd96da6f7f2340f4a56b5d675903fad213d76905305d447f63')
 
 build() {
   cd $pkgname-$pkgver
