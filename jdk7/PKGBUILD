@@ -1,80 +1,141 @@
 # Maintainer: Jochen Schalanda <jochen+aur@schalanda.name>
 # Contributor: Det
 # Based on jre: https://aur.archlinux.org/packages.php?ID=51908
-pkgname=jdk7
+
+_pkgname=jdk
+pkgname=${_pkgname}7
 _major=7
-_minor=67
-_build=b01
+_minor=72
+_build=b14
 _pkg=${_major}u$_minor
 pkgver=$_major.$_minor
 pkgrel=1
-pkgdesc="Java $_major Development Kit"
+pkgdesc="Oracle Java $_major Development Kit"
 arch=('i686' 'x86_64')
 url=http://www.oracle.com/technetwork/java/javase/downloads/index.html
 license=('custom')
-depends=('desktop-file-utils' 'hicolor-icon-theme' 'libx11' 'libxrender' 'libxslt' 'libxtst' 'shared-mime-info' 'xdg-utils')
-optdepends=('alsa-lib: sound'
-            'ttf-dejavu: fonts'
-            'jdk7-docs: JDK 7 documentation'
+depends=('ca-certificates-java' 'desktop-file-utils' 'hicolor-icon-theme' 'java-environment-common'
+         'java-runtime-common' 'libx11' 'libxrender' 'libxslt' 'libxtst' 'shared-mime-info' 'xdg-utils')
+optdepends=('alsa-lib: for basic sound support'
+            'derby: for Oracle Apache Derby Java database (AUR)'
+            'eclipse: "Oracle Java Mission Control" plugins for Eclipse'
+            'gtk2: for Gtk+ look and feel (desktop)'
+            'ttf-font: fonts'
+            'visualvm: for lightweight profiling capabilities'
+            'jdk7-docs: Oracle JDK 7 documentation'
             'java7-jce_ustrength: Unrestricted cryptographic libraries')
-provides=("java-environment=$_major" "java-runtime=$_major" "java-runtime-headless=$_major" "java-web-start=$_major")
-conflicts=('java-environment' 'java-runtime' 'java-runtime-headless' 'java-web-start')
-backup=('etc/derby.conf'
-        'etc/profile.d/jdk.csh'
-        'etc/profile.d/jdk.sh')
-install=jdk.install
-_arch=i586  # Workaround for the AUR Web interface Source parser
-_arch2=i386; [ "$CARCH" = 'x86_64' ] && _arch=x64 && _arch2=amd64
-source=("http://download.oracle.com/otn-pub/java/jdk/$_pkg-$_build/jdk-$_pkg-linux-$_arch.tar.gz"
-        'derby.conf'
-        'derby.service'
-        'java-mission-control.desktop'
-        'java-monitoring-and-management-console.desktop'
-        'java-policy-settings.desktop'
-        'java-visualvm.desktop'
-        'javaws-launcher'
-        'jdk.csh'
-        'jdk.sh')
-md5sums=('715b0e8ba2a06bded75f6a92427e2701'
-         '4bdff6982c66d24a879c424aaac3d04d'
-         '77f3b7ddf55c112f97a665a825bf764f'
-         '536ea84bba5eb6bfe8f601b41af9769c'
-         'da10de5e6507c392fc9871076ef53ec6'
-         'f4e25ef1ccef8d36ff2433c3987a64fe'
-         '35fd89c5c170021d2183593335703703'
-         '45c15a6b4767288f2f745598455ea2bf'
-         'e81bb7853b071df6adca0b90f0c2ac2d'
-         'a06d46b277e2926d73d2ee11c9950973')
-[ "$CARCH" = 'x86_64' ] && md5sums[0]='81e3e2df33e13781e5fac5756ed90e67'  # jdk-$_pkg-linux-x64.tar.gz
+provides=("java-runtime=$_major" "java-runtime-headless=$_major" "java-web-start=$_major" "java-environment=$_major"
+          "java-runtime-jre=$_major" "java-runtime-headless-jre=$_major" "java-web-start-jre=$_major" "java-environment-jdk=$_major")
+
+# Variables
+_arch=x64
+_arch2=amd64
+if [[ $CARCH = i686 ]]; then
+  _arch=i586
+  _arch2=i386
+fi
 DLAGENTS=('http::/usr/bin/curl -LC - -b "oraclelicense=a" -O')
+_jname=jdk${_major}
+_jvmdir=/usr/lib/jvm/java-$_major-${_pkgname}
+backup=("etc/java-$_jname/$_arch2/jvm.cfg"
+        "etc/java-$_jname/$_arch2/server/Xusage.txt"
+        "etc/java-$_jname/images/cursors/cursors.properties"
+        "etc/java-$_jname/management/jmxremote.access"
+        "etc/java-$_jname/management/jmxremote.password.template"
+        "etc/java-$_jname/management/management.properties"
+        "etc/java-$_jname/management/snmp.acl.template"
+        "etc/java-$_jname/security/java.policy"
+        "etc/java-$_jname/security/java.security"
+        "etc/java-$_jname/security/javaws.policy"
+        "etc/java-$_jname/calendars.properties"
+        "etc/java-$_jname/content-types.properties"
+        "etc/java-$_jname/flavormap.properties"
+        "etc/java-$_jname/fontconfig.properties.src"
+        "etc/java-$_jname/javafx.properties"
+        "etc/java-$_jname/jvm.hprof.txt"
+        "etc/java-$_jname/logging.properties"
+        "etc/java-$_jname/net.properties"
+        "etc/java-$_jname/psfont.properties.ja"
+        "etc/java-$_jname/psfontj2d.properties"
+        "etc/java-$_jname/sound.properties")
+install=jdk.install
+source=("http://download.oracle.com/otn-pub/java/${_pkgname}/$_pkg-$_build/${_pkgname}-$_pkg-linux-$_arch.tar.gz"
+        "jconsole-$_jname.desktop"
+        "jmc-$_jname.desktop"
+        "jvisualvm-$_jname.desktop"
+        "policytool-$_jname.desktop")
+sha256sums=('dd1d438e1b7d4b9bb5ea4659f2103b577d1568da51b53f97b736b3232eeade8e'
+            'ab4a2e49825df4e6055e90283f9d0b432e28a6d66f0f7ed659985e7c53847751'
+            '535d86adeb183340442c307e0ba579d0f7718b30fe6ed319bdc91bb2cee47763'
+            'cf20cdf39583e1a992a85ab366437b80217951aeb9dec6b2ee54b77b4d0af6be'
+            'af15efe8b471d0ab147f4a88215aed3fc50b1a605ce31100dfa7a404f29e85b1')
+[ "$CARCH" = 'i686' ] && sha256sums[0]='0376c8a0280752b4389b6cb193d463826c55c821587d0278b7fea665a140f407'
 
 package() {
   msg2 "Creating required dirs"
-  cd jdk1.$_major.0_$_minor
-  mkdir -p "$pkgdir"/{opt/java/,usr/{bin,lib/{mozilla/plugins,systemd/system},share/licenses/jdk},etc/{.java/.systemPrefs,profile.d}}
+  cd ${_pkgname}1.${_major}.0_${_minor}
+  install -d "$pkgdir"/{usr/{lib/{jvm/java-$_major-$_pkgname/bin,mozilla/plugins},share/licenses/java$_major-$_pkgname},etc/.java/.systemPrefs}
 
-  msg2 "Removing the redundancies"
-  rm -r db/bin/*.bat jre/{plugin/,COPYRIGHT,LICENSE,*.txt} man/ja # lib/{desktop,visualvm/platform/docs}
+  msg2 "Preparing"
+  # Link duplicate binaries from jre/
+  for i in $(ls jre/bin/); do
+    ln -sf $_jvmdir/jre/bin/$i bin/$i
+  done
+
+  # Link NPAPI plugin
+  ln -sf $_jvmdir/jre/lib/$_arch2/libnpjp2.so "$pkgdir"/usr/lib/mozilla/plugins/libnpjp2-$_jname.so
+
+  # Replace JKS keystore with 'ca-certificates-java'
+  ln -sf /etc/ssl/certs/java/cacerts jre/lib/security/cacerts
+
+  # Suffix .desktops, icons and MIME packages
+  for i in $(find jre/lib/desktop/ -type f); do
+    rename -- "." "-$_jname." $i
+  done
+
+  # Suffix man pages
+  rename -- ".1" "-$_jname.1" man/{,ja_JP.UTF-8/}man1/*
+
+  # Fix .desktop paths
+  sed -e "s,Exec=,&$_jvmdir/jre/bin/," \
+      -e "s/\.png/-$_jname/" \
+      -i jre/lib/desktop/applications/*
+
+  msg2 "Removing redundancies"
+  rm -r db/ jre/lib/fontconfig.*.{bfc,properties.src} jre/plugin/ jre/{COPYRIGHT,LICENSE,README,*.txt} lib/visualvm/ man/ja
 
   msg2 "Moving stuff in place"
-  mv jre/lib/desktop/* man "$pkgdir"/usr/share/
-  mv COPYRIGHT LICENSE *.txt "$pkgdir"/usr/share/licenses/jdk/
-  mv * "$pkgdir"/opt/java/
+  # .desktops + icons
+  mv jre/lib/desktop/* "$pkgdir"/usr/share/
+  install -m644 "$srcdir"/*.desktop "$pkgdir"/usr/share/applications/
 
-  msg2 "Symlinking the binaries"
-  find ${pkgdir}/opt/java/bin -type f -printf "%f\n" | while read file; do ln -s /opt/java/bin/${file} "${pkgdir}"/usr/bin/; done
+  # Move/link configs: /usr/lib/jvm/java-$_jname/jre/lib -> /etc
+  for new_etc in ${backup[@]}; do
+    old_usr=jre/lib/${new_etc#*$_jname/}
+    install -Dm644 $old_usr "$pkgdir"/$new_etc
+    ln -sf /$new_etc $old_usr
+  done
 
-  msg2 "Symlinking the plugin"
-  ln -s /opt/java/jre/lib/$_arch2/libnpjp2.so "$pkgdir"/usr/lib/mozilla/plugins/
+  # Man pages
+  mv man/ja_JP.UTF-8/ man/ja/
+  mv man/ "$pkgdir"/usr/share/
 
-  msg2 "Installing the scripts, .conf, .service and .desktops of our own"
-  cd "$srcdir"
-  install -m755 jdk.{,c}sh "$pkgdir"/etc/profile.d/
-  install -m644 derby.conf "$pkgdir"/etc/
-  install -m644 derby.service "$pkgdir"/usr/lib/systemd/system/
-  install -m755 javaws-launcher "$pkgdir"/opt/java/jre/bin/
-  install -m644 *.desktop "$pkgdir"/usr/share/applications/
+  # Licenses
+  mv COPYRIGHT LICENSE *.txt "$pkgdir"/usr/share/licenses/java$_major-$_pkgname/
+  ln -sf /usr/share/licenses/java$_major-$pkgname/ "$pkgdir"/usr/share/licenses/$pkgname
 
-  msg2 "Tweaking the javaws .desktop file"
-  sed -e 's/Exec=javaws/&-launcher %f/' -e '/NoDisplay=true/d' -i "$pkgdir"/usr/share/applications/sun-javaws.desktop
+  # Do the move
+  mv * "$pkgdir"/$_jvmdir
+
+  msg2 "Enabling copy+paste to unsigned applets"
+  # Copy/paste from system clipboard to unsigned Java applets has been disabled since 6u24:
+  # - https://blogs.oracle.com/kyle/entry/copy_and_paste_in_java
+  # - http://slightlyrandombrokenthoughts.blogspot.com/2011/03/oracle-java-applet-clipboard-injection.html
+  _line=$(awk '/permission/{a=NR}; END{print a}' "$pkgdir"/etc/java-$_jname/security/java.policy)
+  sed "$_line a\\\\n \
+        // (AUR) Allow unsigned applets to read system clipboard, see:\n \
+        // - https://blogs.oracle.com/kyle/entry/copy_and_paste_in_java\n \
+        // - http://slightlyrandombrokenthoughts.blogspot.com/2011/03/oracle-java-applet-clipboard-injection.html\n \
+        permission java.awt.AWTPermission \"accessClipboard\";" \
+     -i "$pkgdir"/etc/java-$_jname/security/java.policy
 }
