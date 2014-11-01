@@ -95,6 +95,9 @@ package_pypy() {
   install -Dm644 "${pkgdir}"/opt/pypy/LICENSE \
           "${pkgdir}"/usr/share/licenses/pypy/LICENSE
 
+  export LD_LIBRARY_PATH
+  LD_LIBRARY_PATH="${pkgdir}/usr/lib:${pkgdir}/opt/pypy/lib:${LD_LIBRARY_PATH}"
+
   # Generate bytecode
   # The `|| true` is necessary so that the test compilation that are expected
   # to fail does not break the build.
