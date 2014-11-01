@@ -49,7 +49,7 @@ prepare() {
 package_pypy3-ipython() {
   pkgdesc="An enhanced Interactive Python shell. pypy3 version."
   depends=(pypy3-${_pypy3abi} sqlite)
-  provides=(pypy3-${_pypy3abi}=${pkgver})
+  provides=(pypy3-${_pypy3abi}-ipython=${pkgver})
   optdepends=("pypy3-nose: if you want to run IPython's test suite"
               # "pypy3-pyqt4: for ipython qtconsole"
               # "pypy3-sip: for ipython qtconsole"
