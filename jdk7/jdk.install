@@ -1,54 +1,83 @@
-# Colors
+THIS_JDK='java-7-jdk'
+NAME='JDK'
+
 note() {
-    printf "${BLUE}==>${ALL_OFF}${BOLD} NOTE:${ALL_OFF} ${1}\n"
+    printf "${blue}::${yellow} archlinux-java:${bold} $1${all_off}\n"
 }
 
-ALL_OFF="$(tput sgr0)"
-BOLD="$(tput bold)"
-BLUE="${BOLD}$(tput setaf 4)"
-GREEN="${BOLD}$(tput setaf 2)"
+all_off="$(tput sgr0)"
+bold="${all_off}$(tput bold)"
+blue="${bold}$(tput setaf 4)"
+yellow="${bold}$(tput setaf 3)"
 
-_update() {
-    xdg-icon-resource forceupdate 2>/dev/null
-    xdg-icon-resource forceupdate --theme HighContrast 2>/dev/null
-    xdg-icon-resource forceupdate --theme HighContrastInverse 2>/dev/null
-    xdg-icon-resource forceupdate --theme LowContrast 2>/dev/null
-    update-mime-database /usr/share/mime >/dev/null
+update_desktop() {
     update-desktop-database -q
+    update-mime-database /usr/share/mime >/dev/null
+    xdg-icon-resource forceupdate &>/dev/null
+    xdg-icon-resource forceupdate --theme HighContrast &>/dev/null
+    xdg-icon-resource forceupdate --theme HighContrastInverse &>/dev/null
+    xdg-icon-resource forceupdate --theme LowContrast &>/dev/null
 }
 
-_derby() {
-    note "To start the Apache Derby Server, use:
-          # systemctl start derby\n"
+fix_default() {
+    if [[ -x /usr/bin/java ]]; then
+        archlinux-java get
+    else
+        archlinux-java unset
+    fi
 }
 
 post_install() {
-    _update
+    default=$(fix_default)
+    case ${default} in
+        "")
+            archlinux-java set ${THIS_JDK}
+            note "${NAME} ('${THIS_JDK}') set as default Java environment."
+            ;;
+        ${THIS_JDK})
+            # Nothing
+            note "${NAME} ('${THIS_JDK}') set as default Java environment."
+            ;;
+        *)
+            note "Default Java environment already set to '${default}'.
+                   To use ${NAME} ('${THIS_JDK}'), run:
+                     # archlinux-java set ${THIS_JDK}
+                   For status, use:
+                     $ archlinux-java status"
+            ;;
+    esac
 
-    echo
-    note "Please re-login to include JDK in your PATH."
-    _derby 
-
-    if [ -f /etc/mailcap ] ; then
-      sed -e '/application\/x-java-jnlp-file/d' -i /etc/mailcap
+    if [[ ! -f /etc/ssl/certs/java/cacerts ]]; then
+        init-jks-keystore
     fi
-    echo 'application/x-java-jnlp-file;/opt/java/jre/bin/javaws %s' >>/etc/mailcap
+
+    update_desktop
 }
 
 post_upgrade() {
-    _update
+    post_install
+}
 
-    echo
-    _derby
+pre_remove() {
+    default=$(fix_default)
+    if [[ ${default} = ${THIS_JDK} ]]; then
+        archlinux-java unset
+    fi
 }
 
 post_remove() {
-    _update
-
-    mailcap=$(grep -v 'application/x-java-jnlp-file' /etc/mailcap)
-    if [ "$mailcap" != "" ] ; then
-      sed -e '/application\/x-java-jnlp-file/d' -i /etc/mailcap
+    default=$(fix_default) # reassign
+    if [[ ${default} ]]; then
+        note "Default Java environment is '${default}'."
     else
-      rm /etc/mailcap
+        archlinux-java fix
+        default=$(fix_default) # re-reassign
+        if [[ ${default} ]]; then
+            note "Default Java environment left as '${default}'."
+        else
+            note "Java environment unset."
+        fi
     fi
+
+    update_desktop
 }
