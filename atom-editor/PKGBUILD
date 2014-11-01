@@ -6,19 +6,32 @@
 
 pkgname=atom-editor
 pkgver=0.141.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Chrome-based text editor from Github"
 arch=('x86_64' 'i686')
 url="https://github.com/atom/atom"
 license=('MIT')
-conflicts=('atom-editor-git')
 depends=('alsa-lib' 'gconf' 'gtk2' 'libatomic_ops' 'libgcrypt' 'libgnome-keyring' 'libnotify' 'libxtst' 'nodejs' 'nss' 'python2')
-source=("https://github.com/atom/atom/archive/v${pkgver}.tar.gz" 'atom-python.patch')
-sha256sums=('f837181b72eac7b09a128045b376a621f65ab2bd75748fd531c6ca8f35cece52' '18a19b895afbb5c72fe73b1efb37a662e8e8fa0f4731c9fa634f58c341c5ec3b')
 makedepends=('git')
+source=("https://github.com/atom/atom/archive/v${pkgver}.tar.gz"
+	'atom-python.patch')
+sha256sums=('f837181b72eac7b09a128045b376a621f65ab2bd75748fd531c6ca8f35cece52'
+            '222a63a9773c4c406d6fbe7fc06f05535696168a32d39e9be65118a67b935ce6')
 
 _gitref='205095a198e0dd9bf7cf66fbeaff68bd1c6ddaee'
 _gitbranch='master'
+
+
+prepare() {
+  cd "atom-$pkgver"
+
+  patch -Np0 -i "$srcdir/atom-python.patch"
+
+  sed -e "s/<%= description %>/$pkgdesc/" \
+    -e "s|<%= installDir %>/share/atom/atom|/usr/bin/atom|"\
+    -e "s|<%= iconName %>|atom|"\
+    resources/linux/atom.desktop.in > resources/linux/Atom.desktop
+}
 
 package() {
   cd "$srcdir/atom-$pkgver"
@@ -31,14 +44,7 @@ package() {
   script/build --install-dir=$pkgdir/usr
   script/grunt install
 
-  patch "$pkgdir/usr/bin/atom" < "$srcdir/atom-python.patch"
-
-  sed -e "s/<%= description %>/$pkgdesc/" \
-    -e "s|<%= installDir %>/share/atom/atom|/usr/bin/atom|"\
-    -e "s|<%= iconName %>|atom|"\
-    resources/linux/atom.desktop.in > resources/linux/Atom.desktop
-  install -Dm644 resources/linux/Atom.desktop "$pkgdir/usr/share/applications/Atom.desktop"
-
+  install -Dm644 resources/linux/Atom.desktop "$pkgdir/usr/share/applications/atom.desktop"
   install -Dm644 resources/atom.png "$pkgdir/usr/share/pixmaps/atom.png"
   install -Dm644 LICENSE.md "$pkgdir/usr/share/licenses/$pkgname/LICENSE.md"
 }
