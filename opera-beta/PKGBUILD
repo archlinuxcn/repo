@@ -1,7 +1,7 @@
 # Maintainer: Christian Hesse <mail@eworm.de>
 
 pkgname=opera-beta
-pkgver=25.0.1614.54
+pkgver=26.0.1656.8
 pkgrel=1
 pkgdesc='A fast and secure web browser and Internet suite - beta stream'
 arch=('x86_64')
@@ -19,10 +19,11 @@ if [[ "${CARCH}" == 'i686' ]]; then
 	sha256sums=()
 elif [[ "${CARCH}" == 'x86_64' ]]; then
 	_arch="${CARCH}"
-	source=("http://get.geo.opera.com/pub/opera-beta/${pkgver}/linux/opera-beta_${pkgver}_amd64.deb")
+	source=("http://get.geo.opera.com/pub/${pkgname}/${pkgver}/linux/${pkgname}_${pkgver}_amd64.deb")
 	# alternative download
-	#source=("ftp://ftp.opera.com/pub/opera-beta/${pkgver}/linux/opera-beta_${pkgver}_amd64.deb")
-	sha256sums=('c6975e7ec6ee92dc26110bc42a17c3231ba42977596b844b082498b387f6c920')
+	#source=("ftp://ftp.opera.com/pub/${pkgname}/${pkgver}/linux/${pkgname}_${pkgver}_amd64.deb")
+	#source=("http://deb.opera.com/${pkgname}/pool/non-free/o/${pkgname}/${pkgname}_${pkgver}_amd64.deb"
+	sha256sums=('a1788e882e0dbb813977bb0a7af88f97dcd6af6548f16f9821ca01035bb68e6f')
 fi
 
 prepare() {
