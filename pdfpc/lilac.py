@@ -6,7 +6,7 @@
 
 from lilaclib import *
 
-depends = ["vte3-select-text"]
+depends = ["libgee06"]
 
 build_prefix = 'extra-x86_64'
 pre_build = aur_pre_build
