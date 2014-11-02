@@ -1,0 +1,79 @@
+# Maintainer: Yichao Yu <yyc1992@gmail.com>
+# Contributor: Jonas Heinrich <onny@project-insanity.org>
+# Contributor: Jordi De Groof <jordi (dot) degroof (at) gmail (dot) com>
+# Contributor: mickele
+# Contributor: manwithgrenade
+# Contributor: bricem13
+# Contributor: gborzi
+
+pkgname=freecad
+pkgver=0.14.3702
+pkgrel=4
+pkgdesc='A general purpose 3D CAD modeler'
+arch=('i686' 'x86_64')
+url='http://www.freecadweb.org/'
+license=('LGPL')
+depends=(curl 'opencascade>=6.6.0' python2-pivy xerces-c libspnav
+         shared-mime-info hicolor-icon-theme python2-matplotlib python2-pyside
+         shiboken qtwebkit)
+makedepends=(boost eigen gcc-fortran swig desktop-file-utils
+             cmake 'coin>=3.1.3')
+optdepends=('pycollada-git' 'python2-pyqt4')
+options=(!libtool !staticlibs debug strip)
+install=freecad.install
+source=("http://downloads.sourceforge.net/sourceforge/free-cad/freecad-${pkgver}.tar.gz"
+        "${pkgname}.desktop"
+        "${pkgname}.xml")
+md5sums=('234747bdff47a62fd10cb902f3dd772b'
+         '2b1ede09011c16872495cec58e54bede'
+         'c2f4154c8e4678825411de8e7fa54c6b')
+
+build() {
+  cd freecad-${pkgver}
+  mkdir -p build
+  cd build
+  export CXXFLAGS+=" -DBOOST_SIGNALS_NO_DEPRECATION_WARNING"
+
+  cmake .. \
+        -Wno-dev -DCMAKE_INSTALL_PREFIX=/usr/lib/freecad \
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+        -DCMAKE_INSTALL_DOCDIR=/usr/share/freecad/doc \
+        -DCMAKE_INSTALL_INCLUDEDIR=/usr/include \
+        -DOCC_INCLUDE_DIR=/usr/include/oce/ \
+        -DPYTHON_EXECUTABLE=/usr/bin/python2 \
+        -DFREECAD_USE_EXTERNAL_PIVY=ON \
+        -DOCE_DIR=/usr/lib/oce-0.17-dev/
+  # -DCMAKE_INSTALL_DATADIR=/usr/share/freecad
+  make
+}
+
+package_freecad() {
+  cd freecad-${pkgver}/build
+
+  # Install main program
+  make DESTDIR="${pkgdir}" install
+
+  # Symlink to /usr/bin
+  mkdir -p "${pkgdir}/usr/bin/"
+  ln -sf "../lib/freecad/bin/FreeCAD" "${pkgdir}/usr/bin/freecad"
+  ln -sf "../lib/freecad/bin/FreeCADCmd" "${pkgdir}/usr/bin/freecadcmd"
+
+  # Install pixmaps and desktop shortcut
+  desktop-file-install \
+      --dir="${pkgdir}/usr/share/applications" \
+      "${srcdir}/${pkgname}.desktop"
+
+  # Mime info
+  install -D -m644 "${srcdir}/${pkgname}.xml" \
+          "${pkgdir}/usr/share/mime/packages/${pkgname}.xml"
+
+  boostver=$(objdump -p /usr/lib/libboost_system.so | \
+                  grep SONAME | sed -e 's/.*boost_system\.so\.//')
+  [[ $boostver =~ ^([0-9]*)\.([0-9]*)\.([0-9]*) ]]
+  maj_ver=${BASH_REMATCH[1]}
+  min_ver=${BASH_REMATCH[2]}
+  patch_ver=${BASH_REMATCH[3]}
+  ((next_min=min_ver + 1))
+  depends+=("boost-libs>=${maj_ver}.${min_ver}.${patch_ver}"
+            "boost-libs<${maj_ver}.${next_min}.0")
+}
