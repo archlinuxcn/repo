@@ -1,0 +1,41 @@
+# Maintainer: Yichao Yu <yyc1992@gmail.com>
+# Contributor: marcus fritzsch <fritschy@googlemail.com>
+# Contributor: Xyne
+# Contributor: Mrbit
+
+pkgname=simage
+pkgver=1.7.0
+pkgrel=5
+pkgdesc="provides support for loading and saving images, sound and video"
+url="http://www.coin3d.org/lib/simage"
+license="GPL"
+depends=(libsndfile libogg libvorbis jasper libtiff libpng zlib
+         libjpeg-turbo libsm libice libx11 qt4)
+
+arch=('i686' 'x86_64')
+source=("https://bitbucket.org/Coin3D/coin/downloads/$pkgname-$pkgver.tar.gz")
+md5sums=('c479cc27fc80ffc39142318a233c6ae2')
+
+prepare() {
+  cd $pkgname-$pkgver
+  sed -i '326s/(setjmp(png_ptr->jmpbuf)/(setjmp(png_jmpbuf(png_ptr))/' \
+      src/simage_png.c
+}
+
+build() {
+  mkdir -p $pkgname-$pkgver-build
+  cd $pkgname-$pkgver-build
+  # coin does not seem to be compatible with current giflib api.
+  CFLAGS+=' -Wno-unused-result'
+  ../$pkgname-$pkgver/configure \
+      --prefix=/usr --enable-optimization --enable-threadsafe --enable-html \
+      --enable-man --enable-exceptions --with-targa --with-rgb --with-pic \
+      --with-xwd --with-eps --enable-qimage --with-mpeg2enc --without-gif
+  make
+}
+
+package() {
+  cd $pkgname-$pkgver-build
+
+  make DESTDIR="$pkgdir" install
+}
