@@ -7,8 +7,8 @@ pkgdesc='Wallet management tool'
 arch=('i686' 'x86_64')
 url='http://www.kde.org/applications/system/kwalletmanager/'
 license=('LGPL')
-depends=('kwallet' 'kdelibs4support' 'hicolor-icon-theme')
-makedepends=('extra-cmake-modules' 'git' 'python' 'kdoctools' 'kcmutils')
+depends=('kwallet' 'hicolor-icon-theme' 'kdelibs4support')
+makedepends=('extra-cmake-modules' 'git' 'kdoctools' 'kcmutils' 'python')
 conflicts=('kwalletmanager' 'kdeutils-kwalletmanager')
 provides=('kwalletmanager')
 source=('git://anongit.kde.org/kwalletmanager.git#branch=frameworks')
