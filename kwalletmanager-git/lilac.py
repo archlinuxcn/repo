@@ -45,4 +45,4 @@ post_build = aur_post_build
 #   pass
 
 if __name__ == '__main__':
-  single_main()
+  single_main(build_prefix)
