@@ -1,0 +1,60 @@
+# Maintainer: Rouven Rastetter <r3ddr4gon@firaweb.de>
+# Contributor: Tom Englund <tomenglund26@gmail.com>
+# Original arch package by: Thomas Baechler <thomas@archlinux.org>
+
+pkgname=nvidia-mainline
+pkgver=343.22
+_extramodules=extramodules-3.18-mainline
+pkgrel=2
+pkgdesc="NVIDIA drivers for linux-mainline"
+arch=('i686' 'x86_64')
+url="http://www.nvidia.com/"
+depends=('linux-mainline>=3.17' 'linux-mainline<3.19' "nvidia-libgl" "nvidia-utils=${pkgver}")
+makedepends=('linux-mainline-headers>=3.17' 'linux-mainline-headers<3.19')
+conflicts=('nvidia-96xx' 'nvidia-173xx')
+license=('custom')
+install=nvidia.install
+options=(!strip)
+
+if [ "$CARCH" = "i686" ]; then
+    _arch='x86'
+    _pkg="NVIDIA-Linux-${_arch}-${pkgver}"
+    source=("ftp://download.nvidia.com/XFree86/Linux-x86/${pkgver}/NVIDIA-Linux-x86-${pkgver}.run"
+		    "nv-drm.patch")
+    md5sums=('696d0bfa7195e22e0c4bd858fff2abb6'
+		     '79671a27131da619a33eb02ed0c2c031')
+elif [ "$CARCH" = "x86_64" ]; then
+    _arch='x86_64'
+   _pkg="NVIDIA-Linux-${_arch}-${pkgver}-no-compat32"
+    source=("ftp://download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run"
+		    "nv-drm.patch")
+    md5sums=('3d98eaa01a94e86abb04723ae2a702b1'
+		     '79671a27131da619a33eb02ed0c2c031')
+fi
+
+prepare() {
+    sh "${_pkg}.run" --extract-only
+    cd "${_pkg}"
+    # patches here
+    patch kernel/nv-drm.c ../../nv-drm.patch
+}
+
+build() {
+    _kernver="$(cat /usr/lib/modules/${_extramodules}/version)"
+    cd "${_pkg}"/kernel
+    make SYSSRC=/usr/lib/modules/"${_kernver}/build" module
+
+    cd uvm
+    make SYSSRC=/usr/lib/modules/"${_kernver}/build" module
+}
+
+package() {
+    install -D -m644 "${srcdir}/${_pkg}/kernel/nvidia.ko" \
+        "${pkgdir}/usr/lib/modules/${_extramodules}/nvidia.ko"
+    install -D -m644 "${srcdir}/${_pkg}/kernel/uvm/nvidia-uvm.ko" \
+        "${pkgdir}/usr/lib/modules/${_extramodules}/nvidia-uvm.ko"
+    gzip "${pkgdir}/usr/lib/modules/${_extramodules}/"*.ko
+    install -d -m755 "${pkgdir}/usr/lib/modprobe.d"
+    echo "blacklist nouveau" >> "${pkgdir}/usr/lib/modprobe.d/nvidia-mainline.conf"
+    sed -i -e "s/EXTRAMODULES='.*'/EXTRAMODULES='${_extramodules}'/" "${startdir}/nvidia.install"
+}
