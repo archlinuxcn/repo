@@ -5,14 +5,14 @@
 
 pkgname=soqt
 pkgver=1.5.0
-pkgrel=6
+pkgrel=7
 pkgdesc='A library which provides the glue between Coin and Qt'
 arch=('i686' 'x86_64')
 url='http://www.coin3d.org/lib/soqt/'
 license=('GPL')
 depends=('coin' 'qt4')
 makedepends=('doxygen')
-options=('!libtool')
+options=('!libtool' debug strip)
 source=("https://bitbucket.org/Coin3D/coin/downloads/SoQt-${pkgver}.tar.gz")
 sha256sums=('f6a34b4c19e536c00f21aead298cdd274a7a0b03a31826fbe38fc96f3d82ab91')
 
@@ -26,7 +26,7 @@ build() {
     --enable-optimization \
     --enable-man \
     --enable-exceptions \
-    --disable-debug \
+    --enable-debug \
     --disable-maintainer-mode \
     --disable-dependency-tracking \
     --enable-shared \
