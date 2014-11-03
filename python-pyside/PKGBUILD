@@ -39,6 +39,7 @@ package_python-pyside-common(){
     depends=()
     pkgdesc="Provides LGPL Qt bindings for Python and related tools for binding generation. Common Files."
     optdepends=()
+    arch=('any')
     # cmake will use Python 3 version by default
     cd $srcdir/${_pkgrealname}-qt${_qtver}+$pkgver/build_py3
     make DESTDIR=$pkgdir install
