@@ -20,7 +20,7 @@ bfq_patches = [
 bfq_baseurl = 'http://algo.ing.unimo.it/people/paolo/disk_sched/patches/'
 
 def prepare_source(version):
-  config = os.path.join(os.getcwd(), 'config_x86_64')
+  config = os.path.join(os.getcwd(), 'config.x86_64')
   mypatch = os.path.join(os.getcwd(), 'config.diff.3.17.1')
 
   with at_dir(os.path.expanduser('~/linux-git')):
