@@ -8,8 +8,10 @@ build_prefix = 'archlinuxcn-x86_64'
 
 post_build = aur_post_build
 
+_pkg = 'general'
+
 def _get_new_version():
-  web = s.get('http://octave.sourceforge.net/general/index.html')
+  web = s.get('http://octave.sourceforge.net/%s/index.html' % _pkg)
   return re.search(r'\d\.\d\.\d', web.text).group()
 
 def pre_build():
@@ -20,11 +22,18 @@ def pre_build():
       l = l.rstrip('\n')
       if l.startswith('pkgver='):
         l = 'pkgver=' + ver
-      if l.startswith('md5sums='):
+      print(l)
+
+  with fileinput.input(files=('octave-%s.install' % _pkg), inplace=1) as f:
+    for l in f:
+      l = l.rstrip('\n')
+      if l.startswith('  octave'):
+        l = re.sub(r'\$(?=[^_])', '$_', l)
+      if l.startswith('#'):
         continue
       print(l)
 
-  run_cmd('sh  -c  makepkg -g >> PKGBUILD'.split('  '))
+  run_cmd(['updpkgsums'])
 
 
 if __name__ == '__main__':
