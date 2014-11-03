@@ -8,7 +8,7 @@
 
 pkgname=freecad
 pkgver=0.14.3702
-pkgrel=4
+pkgrel=5
 pkgdesc='A general purpose 3D CAD modeler'
 arch=('i686' 'x86_64')
 url='http://www.freecadweb.org/'
@@ -22,10 +22,10 @@ optdepends=('pycollada-git' 'python2-pyqt4')
 options=(!libtool !staticlibs debug strip)
 install=freecad.install
 source=("http://downloads.sourceforge.net/sourceforge/free-cad/freecad-${pkgver}.tar.gz"
-        "${pkgname}.desktop"
-        "${pkgname}.xml")
+        "freecad.desktop"
+        "freecad.xml")
 md5sums=('234747bdff47a62fd10cb902f3dd772b'
-         '2b1ede09011c16872495cec58e54bede'
+         '4b9656e677b277a3c7babf70b21670e8'
          'c2f4154c8e4678825411de8e7fa54c6b')
 
 build() {
@@ -37,13 +37,13 @@ build() {
   cmake .. \
         -Wno-dev -DCMAKE_INSTALL_PREFIX=/usr/lib/freecad \
         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+        -DCMAKE_INSTALL_DATADIR=/usr/share/freecad \
         -DCMAKE_INSTALL_DOCDIR=/usr/share/freecad/doc \
         -DCMAKE_INSTALL_INCLUDEDIR=/usr/include \
         -DOCC_INCLUDE_DIR=/usr/include/oce/ \
         -DPYTHON_EXECUTABLE=/usr/bin/python2 \
         -DFREECAD_USE_EXTERNAL_PIVY=ON \
         -DOCE_DIR=/usr/lib/oce-0.17-dev/
-  # -DCMAKE_INSTALL_DATADIR=/usr/share/freecad
   make
 }
 
