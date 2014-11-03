@@ -124,6 +124,7 @@ def pre_build():
 def post_build():
   removing = [x for x in g.files if x != 'PKGBUILD']
   run_cmd(["rm", "--"] + removing)
+  run_cmd(["sh", "-c", 'rm -f -- linux-lily-headers-debug*'])
   git_add_files('PKGBUILD')
   git_commit()
 
