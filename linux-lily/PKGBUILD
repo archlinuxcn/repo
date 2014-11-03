@@ -1,11 +1,11 @@
-# $Id: PKGBUILD 225198 2014-10-22 21:34:38Z thomas $
+# $Id$
 # Maintainer: Tobias Powalowski <tpowa@archlinux.org>
 # Maintainer: Thomas Baechler <thomas@archlinux.org>
 
 pkgbase=linux-lily               # Build stock -ARCH kernel
 #pkgbase=linux-custom       # Build kernel with a different name
 _srcname=linux-3.17
-pkgver=3.17.1
+pkgver=3.17.2
 pkgrel=1
 arch=('i686' 'x86_64')
 url="http://www.kernel.org/"
@@ -29,7 +29,7 @@ sha256sums=(
 _kernelname=${pkgbase#linux}
 
 prepare() {
-  cd ${startdir}/../linux-git
+  cd ~/linux-git
 
   # add upstream patch
   #patch -p1 -i "${srcdir}/patch-${pkgver}"
@@ -42,11 +42,6 @@ prepare() {
   # (relevant patch sent upstream: https://lkml.org/lkml/2011/7/26/227)
   patch -p1 -i "${srcdir}/change-default-console-loglevel.patch"
 
-  # if [ "${CARCH}" = "x86_64" ]; then
-  #   cat "${srcdir}/config.x86_64" > ./.config
-  # else
-  #   cat "${srcdir}/config" > ./.config
-  # fi
 
   if [ "${_kernelname}" != "" ]; then
     sed -i "s|CONFIG_LOCALVERSION=.*|CONFIG_LOCALVERSION=\"${_kernelname}\"|g" ./.config
@@ -75,20 +70,13 @@ prepare() {
 }
 
 build() {
-  cd ${startdir}/../linux-git
-  # save configuration for later reuse
-  if [ "${CARCH}" = "x86_64" ]; then
-    cat .config > "${startdir}/config.x86_64.last"
-  else
-    cat .config > "${startdir}/config.last"
-  fi
-
+  cd ~/linux-git
 
   make ${MAKEFLAGS} LOCALVERSION= bzImage modules
 }
 
 _package() {
-  pkgdesc="The ${pkgbase/linux/Linux} kernel and modules, with x32, aufs3, latencytop, kgdb, cjktty and uksm support"
+  pkgdesc="The ${pkgbase/linux/Linux} kernel and modules, with x32, aufs3, latencytop, kgdb, cjktty, uksm and bfq support"
   [ "${pkgbase}" = "linux" ] && groups=('base')
   depends=('coreutils' 'linux-firmware' 'kmod' 'mkinitcpio>=0.7')
   optdepends=('crda: to set the correct wireless channels of your country')
@@ -98,7 +86,7 @@ _package() {
   backup=("etc/mkinitcpio.d/${pkgbase}.preset")
   install=linux.install
 
-  cd ${startdir}/../linux-git
+  cd ~/linux-git
 
   KARCH=x86
 
@@ -166,15 +154,14 @@ _package-headers() {
 
   KARCH=x86
 
-  cd ${startdir}/../linux-git
+  cd ~/linux-git
   # get kernel version
   _kernver="$(make LOCALVERSION= kernelrelease)"
   _basekernel=${_kernver%%-*}
   _basekernel=${_basekernel%.*}
-
   install -dm755 "${pkgdir}/usr/lib/modules/${_kernver}"
 
-  cd ${startdir}/../linux-git
+  cd ~/linux-git
   install -D -m644 Makefile \
     "${pkgdir}/usr/lib/modules/${_kernver}/build/Makefile"
   install -D -m644 kernel/Makefile \
@@ -292,7 +279,7 @@ _package-docs() {
   conflicts=("kernel26${_kernelname}-docs")
   replaces=("kernel26${_kernelname}-docs")
 
-  cd ${startdir}/../linux-git
+  cd ~/linux-git
 
   mkdir -p "${pkgdir}/usr/lib/modules/${_kernver}/build"
   cp -al Documentation "${pkgdir}/usr/lib/modules/${_kernver}/build"
