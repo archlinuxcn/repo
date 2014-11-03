@@ -24,6 +24,7 @@ install=$pkgname.install
 _archive=$_pack-$pkgver.tar.gz
 source=("http://downloads.sourceforge.net/octave/$_archive")
 noextract=("$_archive")
+md5sums=('d0a0bd2e1ae0d265355546151d03e189')
 
 build() {
   cd "$srcdir"
@@ -36,4 +37,3 @@ package() {
   mkdir -p "$pkgdir/usr/lib/octave/packages"
   cp "$srcdir/builddir/$_archive" "$pkgdir/usr/share/octave/$_pack.tar.gz"
 }
-md5sums=('d0a0bd2e1ae0d265355546151d03e189')
