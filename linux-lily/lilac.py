@@ -110,7 +110,7 @@ def pre_build():
       line = '''\
   KARCH=x86
 
-  cd ${startdir}/../linux-git
+  cd ~/linux-git
   # get kernel version
   _kernver="$(make LOCALVERSION= kernelrelease)"
   _basekernel=${_kernver%%-*}
