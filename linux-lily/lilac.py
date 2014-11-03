@@ -8,6 +8,7 @@ g = SimpleNamespace()
 
 build_prefix = 'makepkg'
 
+config_version = '3.17.2'
 cjktty_version = '3.17'
 aufs_version = '3.17'
 bfq_version = '3.17.0-v7r6'
@@ -21,7 +22,7 @@ bfq_baseurl = 'http://algo.ing.unimo.it/people/paolo/disk_sched/patches/'
 
 def prepare_source(version):
   config = os.path.join(os.getcwd(), 'config.x86_64')
-  mypatch = os.path.join(os.getcwd(), 'config.diff.3.17.1')
+  mypatch = os.path.join(os.getcwd(), 'config.diff.' + config_version)
 
   with at_dir(os.path.expanduser('~/linux-git')):
     git_reset_hard()
