@@ -1,6 +1,6 @@
 from lilaclib import *
 
-build_prefix = ['archlinuxcn-i686', 'archlinuxcn-x86_64']
+build_prefix = ['multilib-archlinuxcn']
 
 pre_build = vcs_update
 
