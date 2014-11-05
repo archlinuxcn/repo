@@ -3,13 +3,13 @@
 # Some lines from  kernel26-bfs and kernel26-ck
 # Credits to respective maintainers
 _major=3
-_minor=16
+_minor=17
 #_patchlevel=0
 #_subversion=1
 _basekernel=${_major}.${_minor}
 _srcname=linux-${_major}.${_minor}
 pkgbase=linux-pf
-_pfrel=4
+_pfrel=1
 _kernelname=-pf
 _pfpatchhome="http://pf.natalenko.name/sources/${_basekernel}/"
 _pfpatchname="patch-${_basekernel}${_kernelname}${_pfrel}"
@@ -70,7 +70,6 @@ source=("ftp://www.kernel.org/pub/linux/kernel/v${_major}.x/linux-${_basekernel}
 	'config' 'config.x86_64'		# the main kernel config files
 	'linux.preset'			# standard config files for mkinitcpio ramdisk
 	'change-default-console-loglevel.patch'
-	'compal-laptop-hwmon-fix.patch'
 	"${_pfpatchhome}${_pfpatchname}.xz"	# the -pf patchset
 )
 
@@ -120,7 +119,7 @@ prepare() {
   # linux-ARCH patches
 
   # #41458 fix hwmon for compal-laptop module 
-  patch -p1 -i "${srcdir}/compal-laptop-hwmon-fix.patch"
+  #patch -p1 -i "${srcdir}/compal-laptop-hwmon-fix.patch"
   # add latest fixes from stable queue, if needed
   # http://git.kernel.org/?p=linux/kernel/git/stable/stable-queue.git
   
@@ -618,7 +617,7 @@ package_linux-pf-headers() {
   # add xfs and shmem for aufs building
   mkdir -p "${pkgdir}/usr/lib/modules/${_kernver}/build/fs/xfs"
   mkdir -p "${pkgdir}/usr/lib/modules/${_kernver}/build/mm"
-  cp fs/xfs/xfs_sb.h "${pkgdir}/usr/lib/modules/${_kernver}/build/fs/xfs/xfs_sb.h"
+  cp fs/xfs/libxfs/xfs_sb.h "${pkgdir}/usr/lib/modules/${_kernver}/build/fs/xfs/xfs_sb.h"
 
   # copy in Kconfig files
   for i in $(find . -name "Kconfig*"); do
@@ -655,10 +654,9 @@ package_linux-pf-headers() {
 pkgdesc="Linux kernel and modules with the pf-kernel patch [-ck patchset (BFS included), TuxOnIce, BFQ] and aufs3"
 
 # makepkg -g >>PKGBUILD
-sha256sums=('4813ad7927a7d92e5339a873ab16201b242b2748934f12cb5df9ba2cfe1d77a0'
-            '7940d29cb2da027cd334dc7a55b65a2c204d6f4bb3d341dcfd0afa236a1075fc'
-            '9d4389ae7416b92a9153b12852ffcc609e52b5f8c495c1bb269fc028d57c489c'
+sha256sums=('f5153ec93c5fcd41b247950e6a9bcbc63fa87beafd112c133a622439a0f76251'
+            'bc372a7134adb14a11123288f8ae00b3610a94b1f73fd3076e7511175f981015'
+            '361c7f39b26f782579122d11f91b9a94c66a3b3988485aff18f5fc7b3ac676c3'
             '82d660caa11db0cd34fd550a049d7296b4a9dcd28f2a50c81418066d6e598864'
             '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99'
-            'f36f61a0a72bcb0a9c04264343503bfbf927c9ea0db819e66734a3933b060588'
-            'cd65577aab78ae613f670a85232b4e36c0421e8e6392de5ba921464effb84f67')
+            '0a8e3c7e3b7fd92e3b02a72044cb0b5ec7f6f26aa04f7ee27828e2086539582b')
