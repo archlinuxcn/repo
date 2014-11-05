@@ -6,13 +6,13 @@
 pkgbase=(virtualbox-pf-modules)
 pkgname=(virtualbox-pf-host-modules virtualbox-pf-guest-modules)
 pkgver=4.3.18
-pkgrel=2
+pkgrel=3
 arch=('i686' 'x86_64')
 url='http://virtualbox.org'
 license=('GPL')
 makedepends=('linux-pf-headers' "virtualbox-host-dkms>=$pkgver" "virtualbox-guest-dkms>=$pkgver" 'dkms')
 
-_extramodules=extramodules-3.16-pf
+_extramodules=extramodules-3.17-pf
 _kernver="$(cat /usr/lib/modules/${_extramodules}/version)"
 
 build() {
@@ -28,10 +28,10 @@ build() {
 }
 
 package_virtualbox-pf-host-modules() {
-	_Hpkgdesc='Host kernel modules for VirtualBox running under Linux-ck.'
+	_Hpkgdesc='Host kernel modules for VirtualBox running under Linux-pf.'
 	pkgdesc="${_Hpkgdesc}"
 	provides=("virtualbox-host-modules")
-	depends=('linux-pf>=3.16' 'linux-pf<3.17')
+	depends=('linux-pf>=3.17' 'linux-pf<3.18')
 	install=host.install
 
 	install -dm755 "$pkgdir/usr/lib/modules/$_extramodules"
@@ -42,11 +42,11 @@ package_virtualbox-pf-host-modules() {
 }
 
 package_virtualbox-pf-guest-modules() {
-	_Gpkgdesc='Guest kernel modules for VirtualBox running under Linux-ck.'
+	_Gpkgdesc='Guest kernel modules for VirtualBox running under Linux-pf.'
 	pkgdesc="${_Gpkgdesc}"
 	license=('GPL')
 	provides=("virtualbox-guest-modules")
-	depends=('linux-pf>=3.16' 'linux-pf<3.17')
+	depends=('linux-pf>=3.17' 'linux-pf<3.18')
 	install=guest.install
 
 	install -dm755 "$pkgdir/usr/lib/modules/$_extramodules"
