@@ -1,0 +1,42 @@
+#Maintainer: Michael Lass <bevan@bi-co.net>
+#Contributor: Sebastian Wolf < sebastian at melonkru dot de >
+#Contributor: gost < gostrc at gmail dot com >
+#Contributor: Mikolaj Pastuszko <deluminathor@gmail.com>
+#Contributor: Stefan Seemayer < mail at semicolonsoftware dot de >
+#Contributor: Gordin < 9ordin @t gmail dot com >
+
+pkgname=yed
+pkgver=3.13
+pkgrel=1
+pkgdesc='Very powerful graph editor written in java'
+arch=('any')
+url='http://www.yworks.com/en/products_yed_about.html'
+license=('custom')
+depends=('java-runtime')
+source=("http://www.yworks.com/products/yed/demo/yEd-${pkgver}.zip"
+        'yed.desktop'
+        'yed')
+md5sums=('2dbea407cad3a0d396adbf2384754f5d'
+         'b9ac9c843104170a5939f3cafc1df840'
+         '64d9d8842704ba58b24d2972bec64edb')
+
+install=${pkgname}.install
+ 
+package() {
+  # Install jar
+  install -Dm644 ${srcdir}/yed-${pkgver}/yed.jar ${pkgdir}/usr/share/yed/yed.jar
+  install -dm755 ${pkgdir}/usr/share/yed/lib
+  install -m644 ${srcdir}/yed-${pkgver}/lib/* ${pkgdir}/usr/share/yed/lib/
+  
+  # Install license
+  install -Dm644 ${srcdir}/yed-${pkgver}/license.html ${pkgdir}/usr/share/licenses/yed/license.html
+  
+  # Install icon
+  install -Dm644 ${srcdir}/yed-${pkgver}/icons/yicon32.png ${pkgdir}/usr/share/pixmaps/yed.png
+  
+  # Install .desktop file
+  install -Dm644 ${srcdir}/yed.desktop ${pkgdir}/usr/share/applications/yed.desktop
+  
+  # Install run script
+  install -Dm755 ${srcdir}/yed ${pkgdir}/usr/bin/yed
+}
