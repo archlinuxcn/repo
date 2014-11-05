@@ -6,7 +6,7 @@
 
 pkgname=google-chrome
 pkgver=38.0.2125.111
-pkgrel=1
+pkgrel=2
 pkgdesc="An attempt at creating a safer, faster, and more stable browser (Stable Channel)"
 arch=('i686' 'x86_64')
 url="https://www.google.com/chrome/index.html"
@@ -50,6 +50,9 @@ package() {
   msg2 "Fixing Chrome icon resolution"
   _name=$(echo ${source/_*} | sed 's/.*/\u&/')
   sed -i "/Exec=/i\StartupWMClass=$_name" "$pkgdir"/usr/share/applications/google-chrome.desktop
+
+  msg2 "Fixing permissions of documentation folder"
+  chmod 755 "$pkgdir"/usr/share/doc/google-chrome-$_channel/
 
   msg2 "Adding support for CHROMIUM_USER_FLAGS"
   sed -i 's/ "$@"/"$CHROMIUM_USER_FLAGS" "$@"/' "$pkgdir"/opt/google/chrome/google-chrome
