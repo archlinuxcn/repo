@@ -6,10 +6,6 @@
 
 from lilaclib import *
 
-depends = ["libdbusmenu-gtk2",
-           ('libindicator', 'libindicator-gtk2'),
-           ('libindicator', 'libindicator-gtk3')]
-
 build_prefix = ['extra-x86_64', 'extra-i686']
 pre_build = aur_pre_build
 post_build = aur_post_build
