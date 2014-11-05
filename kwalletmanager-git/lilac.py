@@ -19,24 +19,25 @@
 
 from lilaclib import *
 
-build_prefix = 'extra-x86_64'
-# depends = []
+build_prefix = ['extra-x86_64', 'extra-i686']
+
 
 def pre_build():
-  aur_pre_build()
+    aur_pre_build()
 
-  for line in edit_file('PKGBUILD'):
-    # edit PKGBUILD
-    if line.strip().startswith("depends="):
-        words = line.split(" ")
-        words.insert(-1,"'hicolor-icon-theme'")
-        line = " ".join(words)
-    if line.strip().startswith("makedepends="):
-        words = line.split(" ")
-        words.insert(-1,"'kdoctools'")
-        words.insert(-1,"'kcmutils'")
-        line = " ".join(words)
-    print(line)
+    for line in edit_file('PKGBUILD'):
+        # edit PKGBUILD
+        if line.strip().startswith("depends="):
+            words = line.split(" ")
+            words.insert(-1, "'hicolor-icon-theme'")
+            line = " ".join(words)
+        if line.strip().startswith("makedepends="):
+            words = line.split(" ")
+            words.insert(-1, "'kdoctools'")
+            words.insert(-1, "'kcmutils'")
+            line = " ".join(words)
+        print(line)
+
 
 post_build = aur_post_build
 
@@ -45,4 +46,4 @@ post_build = aur_post_build
 #   pass
 
 if __name__ == '__main__':
-  single_main(build_prefix)
+    single_main(build_prefix)
