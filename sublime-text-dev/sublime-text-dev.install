@@ -1,9 +1,9 @@
 post_install() {
   # Update icon cache.
   gtk-update-icon-cache -f '/usr/share/icons/hicolor' > /dev/null 2>&1
-  # Update mime database
-  update-desktop-database -q
+
   # Note admin after install/update on how to change th update_check setting.
+update-desktop-database -q
   cat << _EOF
 
   ==> sublime-text-dev install/upgrade note:
