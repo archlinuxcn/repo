@@ -5,7 +5,6 @@ USE_PYPY=1
 
 pkgname=pypy3
 pkgver=2.4.0
-_pkgver=2.4.0
 pkgrel=4
 pkgdesc="A Python3 implementation written in Python, JIT enabled"
 url="http://pypy.org"
@@ -24,7 +23,7 @@ optdepends=('sqlite: sqlite3 module'
             'pypy3-readline: better readline module')
 options=('debug' 'strip' '!emptydirs')
 license=('custom:MIT')
-source=("https://bitbucket.org/pypy/pypy/downloads/$pkgname-$_pkgver-src.tar.bz2")
+source=("https://bitbucket.org/pypy/pypy/downloads/$pkgname-$pkgver-src.tar.bz2")
 md5sums=('96ba72916114d16904e12562b5d84e51')
 
 _check_python() {
@@ -35,7 +34,7 @@ _check_python() {
 }
 
 build() {
-  cd ${pkgname}-${_pkgver}-src/pypy/goal
+  cd ${pkgname}-${pkgver}-src/pypy/goal
 
   _check_python
 
@@ -52,7 +51,7 @@ package_pypy3() {
   ln -sf /usr/share/licenses/bzip2/LICENSE licenses/libbz2-dev/copyright
   ln -sf /usr/share/licenses/openssl/LICENSE licenses/openssl/copyright
 
-  cd ${pkgname}-${_pkgver}-src/pypy/tool/release
+  cd ${pkgname}-${pkgver}-src/pypy/tool/release
 
   _check_python
 
