@@ -2,7 +2,7 @@
 # Maintainer: Zack Buhman (buhman) <zack@buhman.org>
 # Contributor: William Giokas (KaiSforza) <1007380@gmail.com>
 
-USE_PYPY=0
+USE_PYPY=1
 USE_SHARED=1
 
 pkgname=lib32-pypy-hg
@@ -23,7 +23,7 @@ else
     makedepends+=('lib32-python2')
 fi
 conflicts=('lib32-pypy')
-provides=('lib32-pypy=2.5')
+provides=('lib32-pypy')
 optdepends=('lib32-sqlite: sqlite3 module'
             'lib32-gdbm: gdbm module'
             'lib32-tk: lib-tk modules'
@@ -114,4 +114,18 @@ package() {
 
   install -Dm644 "${pkgdir}"/opt/pypy-32/LICENSE \
           "${pkgdir}"/usr/share/licenses/pypy-32/LICENSE
+
+  export LD_LIBRARY_PATH
+  LD_LIBRARY_PATH="${pkgdir}/usr/lib32:${pkgdir}/opt/pypy-32/lib:${LD_LIBRARY_PATH}"
+
+  # Generate bytecode
+  # The `|| true` is necessary so that the test compilation that are expected
+  # to fail does not break the build.
+  "${pkgdir}"/opt/pypy-32/bin/pypy-c-32 \
+             -m compileall "${pkgdir}"/opt/pypy-32 || true
+  # "${pkgdir}"/opt/pypy-32/bin/pypy-c -O \
+  #            -m compileall "${pkgdir}"/opt/pypy-32 || true
+
+  pypyabi=$("${pkgdir}"/opt/pypy-32/bin/pypy-c-32 -c 'import sys; ver = sys.pypy_version_info; print("lib32-pypy-%s%s" % (ver[0], ver[1]))')
+  provides+=("${pypyabi}")
 }
