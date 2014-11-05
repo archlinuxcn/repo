@@ -1,0 +1,13 @@
+post_upgrade() {
+	post_install $1
+}
+
+post_install() {
+	echo ">>> You have to read and accept the license agreement under"
+	echo ">>> /usr/share/licenses/yed/license.html before using yEd."
+}
+
+op=$1
+shift
+$op $*
+
