@@ -1,6 +1,6 @@
 # -*- sh -*-
 post_install() {
-    EXTRAMODULES='extramodules-3.16-pf'
+    EXTRAMODULES='extramodules-3.17-pf'
     depmod $(cat /usr/lib/modules/$EXTRAMODULES/version)
 }
 
