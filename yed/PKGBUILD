@@ -12,7 +12,7 @@ pkgdesc='Very powerful graph editor written in java'
 arch=('any')
 url='http://www.yworks.com/en/products_yed_about.html'
 license=('custom')
-depends=('java-runtime')
+depends=('java-runtime' 'java-environment' 'bash')
 source=("http://www.yworks.com/products/yed/demo/yEd-${pkgver}.zip"
         'yed.desktop'
         'yed')
