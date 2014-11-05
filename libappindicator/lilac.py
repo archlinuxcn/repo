@@ -6,9 +6,7 @@
 
 from lilaclib import *
 
-depends = [("libdbusmenu", "libdbusmenu-gtk3"),
-           ("libdbusmenu", "libdbusmenu-glib"),
-           "libdbusmenu-gtk2"]
+depends = ["libdbusmenu-gtk2"]
 
 build_prefix = ['extra-x86_64', 'extra-i686']
 pre_build = aur_pre_build
