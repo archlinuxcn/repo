@@ -3,7 +3,7 @@
 
 pkgname=shadowsocks-libev
 pkgver=1.5.0
-pkgrel=1
+pkgrel=2
 pkgdesc='A lightweight secured scoks5 proxy for embedded devices and low end boxes'
 arch=('i686' 'x86_64')
 url='https://github.com/madeye/shadowsocks-libev'
@@ -13,6 +13,19 @@ makedepends=('git')
 source=("git://github.com/madeye/shadowsocks-libev.git#tag=v$pkgver"
         'shadowsocks-libev@.service'
         'shadowsocks-libev-server@.service')
+
+prepare() {
+  cd $pkgname
+  rm -r libev
+  sed -e 's|libev/Makefile||' \
+      -e 's|m4_include(\[libev/libev.m4\])||' \
+      -i configure.ac
+  sed -e 's| libev | |' \
+      -i Makefile.am
+  sed -e 's|\$(top_builddir)/libev/libev.la||' \
+      -e 's|-I\$(top_srcdir)/libev|-lev -lm|' \
+      -i src/Makefile.am
+}
 
 build() {
   cd $pkgname
