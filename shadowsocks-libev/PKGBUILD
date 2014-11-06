@@ -8,7 +8,7 @@ pkgdesc='A lightweight secured scoks5 proxy for embedded devices and low end box
 arch=('i686' 'x86_64')
 url='https://github.com/madeye/shadowsocks-libev'
 license=('GPL3')
-depends=('openssl')
+depends=('openssl' 'libev')
 makedepends=('git')
 source=("git://github.com/madeye/shadowsocks-libev.git#tag=v$pkgver"
         'shadowsocks-libev@.service'
