@@ -1,14 +1,14 @@
-# mkinitcpio preset file for the 'linux' package
+# mkinitcpio preset file for the 'linux-rt' package
 
 ALL_config="/etc/mkinitcpio.conf"
-ALL_kver="/boot/vmlinuz-linux"
+ALL_kver="/boot/vmlinuz-linux-rt"
 
 PRESETS=('default' 'fallback')
 
 #default_config="/etc/mkinitcpio.conf"
-default_image="/boot/initramfs-linux.img"
+default_image="/boot/initramfs-linux-rt.img"
 #default_options=""
 
 #fallback_config="/etc/mkinitcpio.conf"
-fallback_image="/boot/initramfs-linux-fallback.img" 
+fallback_image="/boot/initramfs-linux-rt-fallback.img"
 fallback_options="-S autodetect"

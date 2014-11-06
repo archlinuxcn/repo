@@ -1,0 +1,59 @@
+-NOTE: this patch is a rebase of John Blackwood's patch. On his kernel, he must be using 
+-an older simple wait patch - as his applies to kernel/sched/core.c, while the simple wait
+-completion code lives in kernel/sched/completion.c ... I have ported this to test with 
+-nvidia, as i would like to see if it fixes the semaphore issues i have seen. 
+
+-I've kept the original patch comment in tact;
+
+I'm not 100% sure that the patch below will fix your problem, but we
+saw something that sounds pretty familiar to your issue involving the
+nvidia driver and the preempt-rt patch.  The nvidia driver uses the
+completion support to create their own driver's notion of an internally
+used semaphore.
+
+Fix a race in the PRT wait for completion simple wait code. 
+
+A wait_for_completion() waiter task can be awoken by a task calling
+complete(), but fail to consume the 'done' completion resource if it
+looses a race with another task calling wait_for_completion() just as
+it is waking up.
+
+In this case, the awoken task will call schedule_timeout() again
+without being in the simple wait queue.
+
+So if the awoken task is unable to claim the 'done' completion resource,
+check to see if it needs to be re-inserted into the wait list before
+waiting again in schedule_timeout().
+
+Fix-by: John Blackwood <john.blackwood@ccur.com>
+
+--- linux-3.14/kernel/sched/completion.c	2014-05-22 14:01:03.879734869 -0400
++++ linux-3.14/kernel/sched/completion.c	2014-05-22 14:13:59.181688658 -0400
+@@ -61,11 +61,19 @@
+ do_wait_for_common(struct completion *x,
+ 		   long (*action)(long), long timeout, int state)
+ {
++        int again = 0;
++
+ 	if (!x->done) {
+ 		DEFINE_SWAITER(wait);
+ 
+ 		swait_prepare_locked(&x->wait, &wait);
+ 		do {
++                       /* Check to see if we lost race for 'done' and are
++                        * no longer in the wait list.
++                        */
++                       if (unlikely(again) && list_empty(&wait.node))
++                               swait_prepare_locked(&x->wait, &wait);
++
+ 			if (signal_pending_state(state, current)) {
+ 				timeout = -ERESTARTSYS;
+ 				break;
+@@ -74,6 +82,7 @@
+ 			raw_spin_unlock_irq(&x->wait.lock);
+ 			timeout = action(timeout);
+ 			raw_spin_lock_irq(&x->wait.lock);
++                        again = 1;
+ 		} while (!x->done && timeout);
+ 		swait_finish_locked(&x->wait, &wait);
+ 		if (!x->done)
