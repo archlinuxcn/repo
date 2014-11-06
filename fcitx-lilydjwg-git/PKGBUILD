@@ -34,6 +34,7 @@ options=('debug')
 install="$_pkgname.install"
 _gitname="fcitx"
 source=("${_gitname}::git://localhost/fcitx-repo")
+md5sums=(SKIP)
 
 pkgver() {
   cd "$srcdir/$_gitname"
