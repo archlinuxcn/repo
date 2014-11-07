@@ -2,14 +2,14 @@
 
 _pkgname=lxqt-panel
 pkgname=$_pkgname-git
-pkgver=0.8.0.7.g3b879b7
+pkgver=0.8.0.41.ga56ceb8
 pkgrel=1
 pkgdesc="The LXQt desktop panel"
 arch=("i686" "x86_64" "armv6h")
 url="http://lxqt.org"
 license=("GPL2")
 depends=(
-	"icu" "kwindowsystem" "liblxqt-mount-git" "libsysstat-git"
+	"kwindowsystem" "kguiaddons" "liblxqt-mount-git" "libsysstat-git"
 	"lxqt-globalkeys-git" "menu-cache" "libxcomposite" "lxmenu-data"
 )
 optdepends=(
@@ -33,7 +33,7 @@ build() {
 	cd "$srcdir/$_pkgname"
 	mkdir -p build
 	cd build
-	cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Debug ..
+	cmake -DCMAKE_INSTALL_PREFIX=/usr ..
 	make
 }
 
