@@ -2,13 +2,12 @@
 
 _pkgname=lxqt-common
 pkgname=$_pkgname-git
-pkgver=0.8.0
+pkgver=0.8.0.28.g4efb320
 pkgrel=1
 pkgdesc="Common data to run a LXQt session."
 arch=("i686" "x86_64" "armv6h")
 url="http://lxqt.org"
 license=("GPL2")
-depends=("liblxqt-git")
 makedepends=("git" "cmake")
 provides=("$_pkgname")
 conflicts=("$_pkgname")
@@ -21,15 +20,13 @@ pkgver() {
 }
 
 build() {
-	cd "$srcdir/$_pkgname"
 	mkdir -p build
 	cd build
-	cmake -DCMAKE_INSTALL_PREFIX=/usr -DUSE_QT5=true ..
+	cmake -DCMAKE_INSTALL_PREFIX=/usr "$srcdir/$_pkgname"
 	make
 }
 
 package() {
-	cd "$srcdir/$_pkgname"
 	cd build
 	make DESTDIR="$pkgdir" install
 }
