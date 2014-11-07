@@ -2,7 +2,7 @@
 
 _pkgname=lxqt-config
 pkgname=$_pkgname-git
-pkgver=0.8.0
+pkgver=0.8.0.8.g964d65c
 pkgrel=1
 pkgdesc="LXQt system configuration."
 arch=("i686" "x86_64" "armv6h")
@@ -21,15 +21,13 @@ pkgver() {
 }
 
 build() {
-	cd "$srcdir/$_pkgname"
 	mkdir -p build
 	cd build
-	cmake -DCMAKE_INSTALL_PREFIX=/usr -DUSE_QT5=true ..
+	cmake -DCMAKE_INSTALL_PREFIX=/usr "$srcdir/$_pkgname"
 	make
 }
 
 package() {
-	cd "$srcdir/$_pkgname"
 	cd build
 	make DESTDIR="$pkgdir" install
 }
