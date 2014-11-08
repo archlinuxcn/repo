@@ -4,7 +4,7 @@
 
 _pkgname=fcitx
 pkgname=$_pkgname-lilydjwg-git
-pkgver=4.2.8.5.20141106
+pkgver=4.2.8.20141106
 _realver=4.2.8
 pkgrel=1
 epoch=2
@@ -16,7 +16,7 @@ depends=('pango' 'libxinerama' 'shared-mime-info' 'hicolor-icon-theme'
   'desktop-file-utils' 'icu' 'libxkbfile' 'iso-codes' 'libxml2'
   "gtk2>=2.24.20" 'gtk3' 'dbus-core')
 makedepends=('git' 'gettext' 'cmake' 'gobject-introspection' 'coreutils'
-  'sh' 'qt4' 'lua')
+  'sh' 'qt4' 'lua' 'python2') # python2 is for gobject-introspection
 conflicts=('fcitx' 'fcitx-qt' 'fcitx-qt4' 'fcitx-gtk2' 'fcitx-gtk3'
   'fcitx-keyboard')
 provides=("fcitx=${_realver}" "fcitx-qt=${_realver}" "fcitx-qt4=${_realver}"

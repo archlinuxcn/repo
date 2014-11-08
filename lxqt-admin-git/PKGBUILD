@@ -3,7 +3,7 @@
 
 _pkgname=lxqt-admin
 pkgname=$_pkgname-git
-pkgver=0.8.0.1.g9acb125
+pkgver=0.8.0.7.gf182cb4
 pkgrel=1
 pkgdesc="LXQt system administration"
 arch=("i686" "x86_64" "armv6h")
@@ -22,15 +22,13 @@ pkgver() {
 }
 
 build() {
-	cd "$srcdir/$_pkgname"
 	mkdir -p build
 	cd build
-	cmake -DCMAKE_INSTALL_PREFIX=/usr -DUSE_QT5=true ..
+	cmake -DCMAKE_INSTALL_PREFIX=/usr "$srcdir/$_pkgname"
 	make
 }
 
 package() {
-	cd "$srcdir/$_pkgname"
 	cd build
 	make DESTDIR="$pkgdir" install
 }

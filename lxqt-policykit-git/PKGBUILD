@@ -2,7 +2,7 @@
 
 _pkgname=lxqt-policykit
 pkgname=$_pkgname-git
-pkgver=0.8.0.1.g356ebc6
+pkgver=0.8.0.3.gd9d6fb6
 pkgrel=1
 pkgdesc="The LXQt policykit authentication agent"
 arch=("i686" "x86_64" "armv6h")
@@ -21,15 +21,13 @@ pkgver() {
 }
 
 build() {
-	cd "$srcdir/$_pkgname"
 	mkdir -p build
 	cd build
-	cmake -DCMAKE_INSTALL_PREFIX=/usr ..
+	cmake -DCMAKE_INSTALL_PREFIX=/usr "$srcdir/$_pkgname"
 	make
 }
 
 package() {
-	cd "$srcdir/$_pkgname"
 	cd build
 	make DESTDIR="$pkgdir" install
 }
