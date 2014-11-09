@@ -1,0 +1,43 @@
+# Maintainer:
+# Contributor: Jaroslaw Swierczynski <swiergot@aur.archlinux.org>
+# Contributor: William Rea <sillywilly@gmail.com>
+
+pkgname=preload
+pkgver=0.6.4
+pkgrel=6
+arch=('i686' 'x86_64')
+pkgdesc="Makes applications run faster by prefetching binaries and shared objects"
+url="http://sourceforge.net/projects/preload"
+license=('GPL2')
+depends=('glib2' 'bash')
+makedepends=('help2man')
+backup=('etc/preload.conf')
+options=('!makeflags')
+install=$pkgname.install
+source=("http://downloads.sourceforge.net/sourceforge/preload/$pkgname-$pkgver.tar.gz"
+        service)
+md5sums=('10786287b55afd3a2b433b4f898809f4'
+         'b4871a6ade86968322b3bdf3fce88e99')
+
+build() {
+  cd $pkgname-$pkgver
+  ./configure --prefix=/usr \
+              --sysconfdir=/etc \
+              --mandir=/usr/share/man \
+              --sbindir=/usr/bin \
+              --localstatedir=/var
+  make
+}
+
+package() {
+  cd $pkgname-$pkgver
+  make DESTDIR="${pkgdir}" sysconfigdir=/etc/conf.d install
+  
+  install -Dm644 "${srcdir}"/service "${pkgdir}"/usr/lib/systemd/system/preload.service
+
+  rm -rf "${pkgdir}"/etc/rc.d
+  rm -rf "${pkgdir}"/var/lib/preload/preload.state
+  rm -rf "${pkgdir}"/var/log/preload.log
+
+  sed -r -i 's#^((map|exe)prefix =) (.+)$#\1 /opt;\3#' "${pkgdir}"/etc/preload.conf
+}
