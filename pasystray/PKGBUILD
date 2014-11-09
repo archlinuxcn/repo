@@ -1,0 +1,38 @@
+# Maintainer: Christoph Gysin <christoph.gysin@gmail.com>
+pkgname=pasystray
+pkgver=0.4.0
+pkgrel=3
+pkgdesc="PulseAudio system tray (a replacement for padevchooser)"
+arch=('i686' 'x86_64')
+url="https://github.com/christophgysin/pasystray"
+license=('LGPL')
+groups=('multimedia')
+depends=('libpulse' 'gtk3' 'libnotify' 'avahi' 'libx11' 'gnome-icon-theme')
+makedepends=('pkg-config' )
+optdepends=(
+    'paman: Launch PulseAudio manager from tray icon'
+    'pavucontrol: Launch PulseAudio mixer from tray icon'
+    'pavumeter: Launch PulseAudio volume meter from tray icon'
+    'paprefs: Launch PulseAudio preferences from tray icon'
+)
+provides=('pasystray')
+conflicts=('pasystray')
+replaces=('pasystray')
+source=("https://github.com/christophgysin/${pkgname}/archive/${pkgname}-${pkgver}.tar.gz")
+md5sums=('0a7ee0842064f3d3c8585c414cb50a1c')
+
+build() {
+    cd $srcdir/$pkgname-$pkgname-$pkgver
+
+    aclocal
+    autoconf
+    autoheader
+    automake --add-missing
+    ./configure --prefix=/usr
+    make
+}
+
+package() {
+    cd $srcdir/$pkgname-$pkgname-$pkgver
+    make DESTDIR="$pkgdir/" install
+}
