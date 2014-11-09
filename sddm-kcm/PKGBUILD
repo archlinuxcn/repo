@@ -1,0 +1,34 @@
+# Maintainer: Antonio Rojas
+
+pkgname=sddm-kcm
+pkgver=0.1.0.git4bb7a71
+pkgrel=1
+pkgdesc="SDDM configuration module for KDE"
+arch=('i686' 'x86_64')
+url='https://projects.kde.org/projects/kdereview/sddm-kcm/'
+license=('GPL')
+depends=('sddm' 'kdelibs4support' 'libxcursor')
+makedepends=('extra-cmake-modules' 'kdoctools' 'qt5-tools')
+source=("http://quickgit.kde.org/?p=sddm-kcm.git&a=snapshot&h=4bb7a71b8331117bbe0e0331134627761a27e7b0&fmt=tgz")
+md5sums=('e92b45714f677121cca811b08486d741')
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake ../$pkgname \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DLIB_INSTALL_DIR=lib \
+    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
+    -DSYSCONF_INSTALL_DIR=/etc
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR="${pkgdir}" install
+}
+
