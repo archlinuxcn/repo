@@ -1,0 +1,32 @@
+# Maintainer: Jerome Leclanche <jerome.leclanche+arch@gmail.com>
+
+pkgname=screengrab-git
+pkgver=1.0.7.gff47d27
+pkgrel=1
+pkgdesc="Crossplatform tool for grabbing screenshots of your desktop."
+arch=('i686' 'x86_64')
+url="http://screengrab.doomer.org/"
+license=('GPL2')
+depends=('qt4')
+makedepends=('git' 'cmake')
+provides=('screengrab')
+conflicts=('screengrab')
+source=("git://github.com/DOOMer/screengrab")
+sha256sums=('SKIP')
+_gitname="screengrab"
+
+pkgver() {
+	cd "$srcdir/$_gitname"
+	echo "$(git describe --always | sed 's/-/./g')"
+}
+
+build() {
+	cd "$srcdir/$_gitname"
+	cmake -DCMAKE_INSTALL_PREFIX=/usr
+	make
+}
+
+package() {
+	cd "$srcdir/$_gitname"
+	make install DESTDIR="$pkgdir"
+}
