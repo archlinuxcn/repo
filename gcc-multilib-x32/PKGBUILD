@@ -1,4 +1,4 @@
-# $Id: PKGBUILD 118721 2014-09-09 21:04:47Z heftig $
+# $Id: PKGBUILD 121740 2014-11-03 11:56:45Z allan $
 # Maintainer: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 # Contributor: Allan McRae <allan@archlinux.org>
 # x32 Maintainer: Fantix King <fantix.king@gmail.com>
@@ -7,33 +7,37 @@
 # NOTE: libtool requires rebuilt with each new gcc version
 
 pkgname=('gcc-multilib-x32' 'gcc-libs-multilib-x32' 'libx32-gcc-libs' 'gcc-fortran-multilib-x32' 'gcc-objc-multilib-x32' 'gcc-ada-multilib-x32' 'gcc-go-multilib-x32')
-pkgver=4.9.1_2
+pkgver=4.9.2
 _pkgver=4.9
-pkgrel=2
-_snapshot=4.9-20140903
+_islver=0.12.2
+_cloogver=0.18.1
+pkgrel=1.1
+#_snapshot=4.9-20140903
 pkgdesc="The GNU Compiler Collection for multilib with x32 ABI support"
 arch=('x86_64')
 license=('GPL' 'LGPL' 'FDL' 'custom')
 url="http://gcc.gnu.org"
-makedepends=('binutils>=2.24' 'libmpc' 'cloog' 'gcc-ada-multilib' 'doxygen'
+makedepends=('binutils>=2.24' 'libmpc' 'gcc-ada-multilib' 'doxygen'
              'lib32-glibc>=2.20' 'libx32-glibc>=2.20')
 checkdepends=('dejagnu' 'inetutils')
 options=('!emptydirs')
-source=(#ftp://gcc.gnu.org/pub/gcc/releases/gcc-${pkgver%_*}/gcc-${pkgver%_*}.tar.bz2
-        ftp://gcc.gnu.org/pub/gcc/snapshots/${_snapshot}/gcc-${_snapshot}.tar.bz2
-        gcc-4.8-filename-output.patch
-        gcc-4.9-isl-0.13-hack.patch)
-md5sums=('24dfd67139fda4746d2deff18182611d'
-         '40cb437805e2f7a006aa0d0c3098ab0f'
-         'f26ae06b9cbc8abe86f5ee4dc5737da8')
+source=(ftp://gcc.gnu.org/pub/gcc/releases/gcc-${pkgver}/gcc-${pkgver}.tar.bz2
+        #ftp://gcc.gnu.org/pub/gcc/snapshots/${_snapshot}/gcc-${_snapshot}.tar.bz2
+        http://isl.gforge.inria.fr/isl-${_islver}.tar.bz2
+        http://www.bastoul.net/cloog/pages/download/cloog-${_cloogver}.tar.gz
+        gcc-4.8-filename-output.patch)
+md5sums=('4df8ee253b7f3863ad0b86359cd39c43'
+         'e039bfcfb6c2ab039b8ee69bf883e824'
+         'e34fca0540d840e5d0f6427e98c92252'
+         '6810bb9b2252f03e6c98d9a671d94589')
 
 if [ -n "${_snapshot}" ]; then
   _basedir=gcc-${_snapshot}
 else
-  _basedir=gcc-${pkgver%_*}
+  _basedir=gcc-${pkgver}
 fi
 
-_libdir="usr/lib/gcc/$CHOST/${pkgver%_*}"
+_libdir="usr/lib/gcc/$CHOST/${pkgver}"
 
 prepare() {
   if [ ! `zgrep CONFIG_X86_X32=y /proc/config.gz` ]; then
@@ -45,23 +49,24 @@ prepare() {
 
   cd ${srcdir}/${_basedir}
 
+  # link isl/cloog for in-tree builds
+  ln -s ../isl-${_islver} isl
+  ln -s ../cloog-${_cloogver} cloog
+
   # Do not run fixincludes
   sed -i 's@\./fixinc\.sh@-c true@' gcc/Makefile.in
 
   # Arch Linux installs x86_64 libraries /lib
   [[ $CARCH == "x86_64" ]] && sed -i '/m64=/s/lib64/lib/' gcc/config/i386/t-linux64
 
-  echo ${pkgver%_*} > gcc/BASE-VER
+  echo ${pkgver} > gcc/BASE-VER
 
   # hack! - some configure tests for header files using "$CPP $CPPFLAGS"
   sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" {libiberty,gcc}/configure
 
   # http://gcc.gnu.org/bugzilla/show_bug.cgi?id=57653
-  patch -p0 -i ${srcdir}/gcc-4.8-filename-output.patch
-
-  # isl-0.13 support - mostly header includes and a function rename
-  # (which does not seem right but causes no testsuite failures...)
-  patch -p1 -i ${srcdir}/gcc-4.9-isl-0.13-hack.patch
+  # https://gcc.gnu.org/git/?p=gcc.git;a=patch;h=9140d56f
+  patch -p1 -i ${srcdir}/gcc-4.8-filename-output.patch
 
   mkdir ${srcdir}/gcc-build
 }
@@ -85,7 +90,6 @@ build() {
       --disable-libstdcxx-pch --disable-libssp \
       --enable-gnu-unique-object --enable-linker-build-id \
       --enable-cloog-backend=isl \
-      --disable-isl-version-check --disable-cloog-version-check \
       --enable-lto --enable-plugin --enable-install-libiberty \
       --with-linker-hash-style=gnu \
       --enable-multilib --disable-werror \
@@ -145,8 +149,8 @@ package_libx32-gcc-libs()
 package_gcc-libs-multilib-x32()
 {
   pkgdesc="Runtime libraries shipped by GCC for multilib with x32 ABI support"
-  depends=('glibc>=2.20' "lib32-gcc-libs=${pkgver//_/-}" "libx32-gcc-libs=$pkgver-$pkgrel")
-  provides=("gcc-libs=${pkgver//_/-}" "gcc-libs-multilib=${pkgver//_/-}")
+  depends=('glibc>=2.20' "lib32-gcc-libs=$pkgver-${pkgrel%.*}" "libx32-gcc-libs=$pkgver-$pkgrel")
+  provides=("gcc-libs=$pkgver-${pkgrel%.*}" "gcc-libs-multilib=$pkgver-${pkgrel%.*}")
   conflicts=('gcc-libs')
   options=('!emptydirs' '!strip')
   install=gcc-libs.install
@@ -192,10 +196,10 @@ package_gcc-libs-multilib-x32()
 package_gcc-multilib-x32()
 {
   pkgdesc="The GNU Compiler Collection - C and C++ frontends for multilib with x32 ABI support"
-  depends=("gcc-libs-multilib-x32=$pkgver-$pkgrel" 'binutils>=2.24' 'libmpc' 'cloog')
+  depends=("gcc-libs-multilib-x32=$pkgver-$pkgrel" 'binutils>=2.24' 'libmpc')
   groups=('x32-devel')
   options=('staticlibs')
-  provides=("gcc=${pkgver//_/-}" "gcc-multilib=${pkgver//_/-}")
+  provides=("gcc=$pkgver-${pkgrel%.*}" "gcc-multilib=$pkgver-${pkgrel%.*}")
   conflicts=('gcc' 'gcc-x32-seed' 'gcc-multilib')
   install=gcc.install
 
@@ -307,7 +311,7 @@ package_gcc-fortran-multilib-x32()
 {
   pkgdesc="Fortran front-end for GCC for multilib with x32 ABI support"
   depends=("gcc-multilib-x32=$pkgver-$pkgrel")
-  provides=("gcc-fortran=${pkgver//_/-}" "gcc-fortran-multilib=${pkgver//_/-}")
+  provides=("gcc-fortran=$pkgver-${pkgrel%.*}" "gcc-fortran-multilib=$pkgver-${pkgrel%.*}")
   conflicts=('gcc-fortran')
   options=('staticlibs' '!emptydirs')
   install=gcc-fortran.install
@@ -331,7 +335,7 @@ package_gcc-objc-multilib-x32()
 {
   pkgdesc="Objective-C front-end for GCC for multilib with x32 ABI support"
   depends=("gcc-multilib-x32=$pkgver-$pkgrel")
-  provides=("gcc-objc=${pkgver//_/-}" "gcc-objc-multilib=${pkgver//_/-}")
+  provides=("gcc-objc=$pkgver-${pkgrel%.*}" "gcc-objc-multilib=$pkgver-${pkgrel%.*}")
   conflicts=('gcc-objc')
 
   cd ${srcdir}/gcc-build
@@ -348,7 +352,7 @@ package_gcc-ada-multilib-x32()
 {
   pkgdesc="Ada front-end for GCC (GNAT) for multilib with x32 ABI support"
   depends=("gcc-multilib-x32=$pkgver-$pkgrel")
-  provides=("gcc-ada=${pkgver//_/-}" "gcc-ada-multilib=${pkgver//_/-}")
+  provides=("gcc-ada=$pkgver-${pkgrel%.*}" "gcc-ada-multilib=$pkgver-${pkgrel%.*}")
   conflicts=('gcc-ada')
   options=('staticlibs' '!emptydirs')
   install=gcc-ada.install
@@ -394,7 +398,7 @@ package_gcc-go-multilib-x32()
 {
   pkgdesc="Go front-end for GCC for multilib with x32 ABI support"
   depends=("gcc-multilib-x32=$pkgver-$pkgrel")
-  provides=("gcc-go=${pkgver//_/-}" "gcc-go-multilib=${pkgver//_/-}")
+  provides=("gcc-go=$pkgver-${pkgrel%.*}" "gcc-go-multilib=$pkgver-${pkgrel%.*}")
   conflicts=('gcc-go')
   options=('staticlibs' '!emptydirs')
   install=gcc-go.install
