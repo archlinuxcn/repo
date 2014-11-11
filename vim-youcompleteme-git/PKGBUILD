@@ -1,4 +1,6 @@
-# Maintainer: Babken Vardanyan <483ken 4tgma1l
+# Maintainer: Erik Beran <eberan AT_gmail_DOT com>
+# Contributor: Babken Vardanyan <483ken 4tgma1l
+# Contributor: mikezackles
 # Contributor: z33ky
 # Contributor: stykr
 # Contributor: Svenstaro
@@ -7,12 +9,12 @@
 # Contributor: Daniel Micay <danielmicay@gmail.com>
 
 pkgname=vim-youcompleteme-git
-pkgver=1248.feedc29
+pkgver=1345.9714201
 pkgver() {
   cd "YouCompleteMe"
   echo $(git rev-list --count master).$(git rev-parse --short master)
 }
-pkgrel=2
+pkgrel=1
 pkgdesc='A code-completion engine for Vim'
 
 arch=(i686 x86_64)
@@ -26,14 +28,16 @@ conflicts=('vim-youcompleteme')
 source=('git+git://github.com/Valloric/YouCompleteMe.git'
         'git+git://github.com/kennethreitz/requests.git'
         'git+git://github.com/ross/requests-futures.git'
-        'git+git://github.com/Valloric/ycmd'
+        'git+git://github.com/Valloric/ycmd.git'
         'git+git://github.com/bewest/argparse.git'
         'git+git://github.com/defnull/bottle.git'
         'git+git://github.com/slezica/python-frozendict.git'
         'git+git://github.com/davidhalter/jedi.git'
         'git+git://github.com/Pylons/waitress.git'
-        'git+git://github.com/nosami/OmniSharpServer.git')
-sha1sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
+        'git+git://github.com/nosami/OmniSharpServer.git'
+        'git+git://github.com/icsharpcode/NRefactory.git'
+        'git+git://github.com/jbevain/cecil.git')
+sha1sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
 install=install
 
 prepare() {
@@ -54,15 +58,22 @@ prepare() {
   git config submodule.third_party/waitress.url "$srcdir/waitress"
   git config submodule.third_party/OmniSharpServer.url "$srcdir/OmniSharpServer"
   git submodule update
+
+  cd "$srcdir/YouCompleteMe/third_party/ycmd/third_party/OmniSharpServer"
+  git submodule init
+  git config submodule.NRefactory.url "$srcdir/NRefactory"
+  git config submodule.cecil.url "$srcdir/cecil"
+  git submodule update
 }
 
 build() {
   mkdir -p "$srcdir/ycmd_build"
   cd "$srcdir/ycmd_build"
-  cmake -G "Unix Makefiles" -DUSE_SYSTEM_LIBCLANG=ON . "$srcdir/YouCompleteMe/third_party/ycmd/cpp"
+  cmake -G "Unix Makefiles" -DEXTERNAL_LIBCLANG_PATH=/usr/lib/libclang.so . "$srcdir/YouCompleteMe/third_party/ycmd/cpp"
   make ycm_support_libs
 
   cd "$srcdir/YouCompleteMe/third_party/ycmd/third_party/OmniSharpServer"
+  pwd
   xbuild
 }
 
@@ -79,7 +90,6 @@ package() {
     "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party"
   cp -r "$srcdir/YouCompleteMe/third_party/ycmd/third_party/OmniSharpServer/OmniSharp" \
     "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party/OmniSharpServer"
-
 
   find "$pkgdir" -name .git -exec rm -fr {} +
 }
