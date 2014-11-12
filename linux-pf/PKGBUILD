@@ -60,7 +60,7 @@ _NUMA_off=yes		# Disable NUMA in kernel config
 pkgname=('linux-pf')
 true && pkgname=('linux-pf' 'linux-pf-headers')
 pkgver=${_basekernel}.${_pfrel}
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 url="http://pf.natalenko.name/"
 license=('GPL2')
@@ -118,8 +118,6 @@ prepare() {
 
   # linux-ARCH patches
 
-  # #41458 fix hwmon for compal-laptop module 
-  #patch -p1 -i "${srcdir}/compal-laptop-hwmon-fix.patch"
   # add latest fixes from stable queue, if needed
   # http://git.kernel.org/?p=linux/kernel/git/stable/stable-queue.git
   
@@ -617,7 +615,8 @@ package_linux-pf-headers() {
   # add xfs and shmem for aufs building
   mkdir -p "${pkgdir}/usr/lib/modules/${_kernver}/build/fs/xfs"
   mkdir -p "${pkgdir}/usr/lib/modules/${_kernver}/build/mm"
-  cp fs/xfs/libxfs/xfs_sb.h "${pkgdir}/usr/lib/modules/${_kernver}/build/fs/xfs/xfs_sb.h"
+  # removed in 3.17 series
+  # cp fs/xfs/xfs_sb.h "${pkgdir}/usr/lib/modules/${_kernver}/build/fs/xfs/xfs_sb.h"
 
   # copy in Kconfig files
   for i in $(find . -name "Kconfig*"); do
@@ -655,8 +654,8 @@ pkgdesc="Linux kernel and modules with the pf-kernel patch [-ck patchset (BFS in
 
 # makepkg -g >>PKGBUILD
 sha256sums=('f5153ec93c5fcd41b247950e6a9bcbc63fa87beafd112c133a622439a0f76251'
-            'bc372a7134adb14a11123288f8ae00b3610a94b1f73fd3076e7511175f981015'
-            '361c7f39b26f782579122d11f91b9a94c66a3b3988485aff18f5fc7b3ac676c3'
+            '52819e63d47318ff5fcc1bb46bb7637de9eb09f964965b8ed60772e0c9893841'
+            '7602a6c523b73960a95d7325e46f8d0d00fa15ffd8f3f26e89c7ab0403732783'
             '82d660caa11db0cd34fd550a049d7296b4a9dcd28f2a50c81418066d6e598864'
             '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99'
             '0a8e3c7e3b7fd92e3b02a72044cb0b5ec7f6f26aa04f7ee27828e2086539582b')
