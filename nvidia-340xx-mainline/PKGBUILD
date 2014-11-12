@@ -35,7 +35,7 @@ prepare() {
     sh "${_pkg}.run" --extract-only
     cd "${_pkg}"
     # patches here
-    patch kernel/nv-drm.c ../../nv-drm.patch
+    patch kernel/nv-drm.c ../nv-drm.patch
 }
 
 build() {
