@@ -1,0 +1,20 @@
+post_install() {
+  echo ""
+  echo "Please create ~/.config/chrome-remote-desktop folder manually, if it doesn't exist, or else you can't use CRD."
+  echo "The needed files are created by the Chrome app, inside the chrome-remote-desktop folder, after Enabling Remote Connections."
+  echo "To {enable,start} the service use systemctl --user {enable,start} chrome-remote-desktop"
+  echo ""
+  echo "You may need to create a ~/.chrome-remote-desktop-session file with commands to start your session"
+  echo ""
+  echo "Go to https://support.google.com/chrome/answer/1649523 for more information."
+}
+ 
+post_upgrade() {
+  post_install
+}
+ 
+post_remove() {
+  echo ""
+  echo "Please remove ~/.config/chrome-remote-desktop folder manually"
+  echo ""
+}

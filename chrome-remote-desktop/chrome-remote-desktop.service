@@ -1,0 +1,14 @@
+[Unit]
+Description="Chrome Remote Desktop host daemon"
+ConditionDirectoryNotEmpty=%h/.config/chrome-remote-desktop
+ConditionPathExistsGlob=%h/.config/chrome-remote-desktop/host#*.json
+
+[Service]
+Type=forking
+ExecStart=/opt/google/chrome-remote-desktop/chrome-remote-desktop --start
+ExecStop=/opt/google/chrome-remote-desktop/chrome-remote-desktop --stop
+ExecReload=/opt/google/chrome-remote-desktop/chrome-remote-desktop --reload
+
+[Install]
+Alias=chromoting.service
+WantedBy=default.target
