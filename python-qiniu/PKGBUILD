@@ -1,0 +1,39 @@
+# Maintainer: Felix Yan <felixonmars@archlinux.org>
+
+pkgbase=python-qiniu
+#pkgname=(python-qiniu python2-qiniu)
+pkgname=(python2-qiniu)
+_pkgname=qiniu
+pkgver=6.1.8
+pkgrel=1
+pkgdesc="Qiniu Resource Storage SDK for Python"
+arch=('any')
+url='https://github.com/qiniu/python-sdk'
+license=('MIT')
+makedepends=('python-setuptools' 'python2-setuptools')
+source=("https://pypi.python.org/packages/source/q/qiniu/qiniu-$pkgver.tar.gz"
+        LICENSE)
+sha512sums=('e1d73bcec25012a1f3ee0ebcc086393c83c89a8cd8248d8f076f59d7328b2465d88071bb43b5705e057efbd42a00d2abad087eb7ca5b320cf340efec02254efd'
+            '4fbb1090b3ee0d230d40b45db7bcd164873872d1860bd83b51197ed5d03e9d4be7785a400f1d314d6e3c0a6fcba7e1afdf3fdab04ae9970df59f96b18862c529')
+
+prepare() {
+  cp -a ${_pkgname}-$pkgver{,-py2}
+}
+
+package_python-qiniu() {
+  depends=('python-requests')
+
+  cd ${_pkgname}-$pkgver
+  python setup.py install -O1 --root "${pkgdir}"
+
+  install -Dm644 ../LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
+package_python2-qiniu() {
+  depends=('python2-requests')
+
+  cd ${_pkgname}-$pkgver-py2
+  python2 setup.py install -O1 --root "${pkgdir}"
+
+  install -Dm644 ../LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
