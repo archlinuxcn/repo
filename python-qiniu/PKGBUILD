@@ -1,10 +1,9 @@
 # Maintainer: Felix Yan <felixonmars@archlinux.org>
 
 pkgbase=python-qiniu
-#pkgname=(python-qiniu python2-qiniu)
-pkgname=(python2-qiniu)
+pkgname=(python-qiniu python2-qiniu)
 _pkgname=qiniu
-pkgver=6.1.9
+pkgver=7.0.0
 pkgrel=1
 pkgdesc="Qiniu Resource Storage SDK for Python"
 arch=('any')
@@ -13,7 +12,7 @@ license=('MIT')
 makedepends=('python-setuptools' 'python2-setuptools')
 source=("https://pypi.python.org/packages/source/q/qiniu/qiniu-$pkgver.tar.gz"
         LICENSE)
-sha512sums=('a5c08d6085bcad9dd89e23cbb35cefceeb4dd8f20792caafba2fc0e0ac64082d01c82e3db27ddf2465a6bc0b7b6607f1b0ab71252e304702d18b8ad59b298cec'
+sha512sums=('45d24ce2b76e34be4df126a405f917bde32061cf6bcbc8489cd32afdd3a539caa759b226ee99dcc01afc975990f7052b0ea2e92e1e935ed64e6d05c10d3fb45a'
             '4fbb1090b3ee0d230d40b45db7bcd164873872d1860bd83b51197ed5d03e9d4be7785a400f1d314d6e3c0a6fcba7e1afdf3fdab04ae9970df59f96b18862c529')
 
 prepare() {
