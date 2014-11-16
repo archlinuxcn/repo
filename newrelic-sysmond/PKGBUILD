@@ -1,8 +1,8 @@
-# Maintainer: Felix Yan <felixonmars@gmail.com>
+# Maintainer: Felix Yan <felixonmars@archlinux.org>
 # Contributor: Preston <pentie [at] gmail.com>
 
 pkgname=newrelic-sysmond
-pkgver=1.5.0.81
+pkgver=1.5.1.93
 pkgrel=1
 pkgdesc="system monitor services provided by newrelic"
 arch=('i686' 'x86_64')
@@ -41,6 +41,6 @@ package() {
   install -v -Dm644 ../newrelic-sysmond.service $pkgdir/usr/lib/systemd/system/
 }
 
-md5sums=('c1ff9364dab6212e2d77f80e07c3802d'
+md5sums=('059b8bc5418a664c8ba3d31117cce457'
          'f4ebc44c550896309d6121455a8669f3'
          'aa0022b03b291c97f5f4b3cb2d24104d')

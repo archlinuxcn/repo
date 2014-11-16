@@ -1,0 +1,31 @@
+# Maintainer: Panagiotis Mavrogiorgos (pmav99) <> (gmail)
+
+_name=Wand
+pkgname=python2-wand
+pkgver=0.3.8
+pkgrel=1
+pkgdesc="A ctypes-based simple ImageMagick binding for Python."
+arch=(any)
+url="http://wand-py.org/"
+license=('BSD')
+depends=('python2' 'imagemagick')
+optdepends=()
+provides=('wand')
+conflicts=()
+replaces=()
+backup=()
+options=(!emptydirs)
+source=(http://pypi.python.org/packages/source/W/Wand/$_name-$pkgver.tar.gz)
+md5sums=('1763bb44338e2a04fe10af79512e04cb')
+
+package()
+{
+  # Install using setup.py
+  cd "$srcdir/$_name-$pkgver"
+  python2 setup.py install --root="${pkgdir}/" --optimize=1
+
+  # The README file conflicts with the README file of the python3-wand package.
+  mv $pkgdir/usr/README.rst README-wand2.rst
+
+}
+# vim: sw=2 ts=2 et:

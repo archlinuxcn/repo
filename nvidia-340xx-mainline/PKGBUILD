@@ -2,7 +2,7 @@
 # Original arch package <nvidia-340xx-ck> by: graysky <graysky AT archlnux.us>
 
 pkgname=nvidia-340xx-mainline
-pkgver=340.46
+pkgver=340.58
 _extramodules=extramodules-3.18-mainline
 pkgrel=1
 pkgdesc="NVIDIA drivers for linux-mainline, 340xx legacy branch."
@@ -15,18 +15,27 @@ license=('custom')
 install=nvidia.install
 options=(!strip)
 
-source=("ftp://download.nvidia.com/XFree86/Linux-x86/${pkgver}/NVIDIA-Linux-x86-${pkgver}.run"
-        "ftp://download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run")
-md5sums=('7c70a15c53a97ed0bbec76e80bf53f05'
-         'bf40adc20ac9819b5f86cd91f6409e39')
+if [ "$CARCH" = "i686" ]; then
+    _arch='x86'
+    _pkg="NVIDIA-Linux-${_arch}-${pkgver}"
+    source=("ftp://download.nvidia.com/XFree86/Linux-x86/${pkgver}/NVIDIA-Linux-x86-${pkgver}.run"
+	    	"nv-drm.patch")
+    md5sums=('b993f9fc59434140f560e32fd7bd2b3d'
+	    	 '79671a27131da619a33eb02ed0c2c031')
+elif [ "$CARCH" = "x86_64" ]; then
+    _arch='x86_64'
+   _pkg="NVIDIA-Linux-${_arch}-${pkgver}-no-compat32"
+    source=("ftp://download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run"
+	    	"nv-drm.patch")
+    md5sums=('26e75f80df3f49ac2fe35c65b9de709e'
+	    	 '79671a27131da619a33eb02ed0c2c031')
+fi
 
-[[ "$CARCH" = "i686" ]] && _pkg="NVIDIA-Linux-x86-${pkgver}"
-[[ "$CARCH" = "x86_64" ]] && _pkg="NVIDIA-Linux-x86_64-${pkgver}-no-compat32"
 prepare() {
     sh "${_pkg}.run" --extract-only
     cd "${_pkg}"
     # patches here
-    patch kernel/nv-drm.c ../../nv-drm.patch
+    patch kernel/nv-drm.c ../nv-drm.patch
 }
 
 build() {

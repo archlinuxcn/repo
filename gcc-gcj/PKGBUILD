@@ -4,20 +4,20 @@
 # Based on a modified version of the gcc PKGBUILD
 
 pkgname=gcc-gcj
-pkgver=4.9.1
+pkgver=4.9.2
 pkgrel=1
 pkgdesc="The GNU Compiler for Java"
 arch=('i686' 'x86_64')
 license=('GPL' 'LGPL')
 url="http://gcc.gnu.org"
 depends=('gtk2' 'libxtst' 'alsa-lib' 'cloog>=0.16.2-1' 'libmpc>=0.8.2-2' 'classpath')
-makedepends=('mpfr>=2.4.2-2' 'elfutils' 'jack' 'zip' 'gcc' 'libart-lgpl')
+makedepends=('mpfr>=2.4.2-2' 'elfutils' 'jack' 'zip' 'gcc=4.9.2' 'libart-lgpl')
 optdepends=('python2: for running /usr/bin/aot-compile'
   'java-environment: for runnig some jars')
 options=('!libtool')
 install=$pkgname.install
 source=("ftp://gcc.gnu.org/pub/gcc/releases/gcc-${pkgver}/gcc-${pkgver}.tar.bz2")
-md5sums=('fddf71348546af523353bd43d34919c1')
+sha512sums=('e96cba06d572dbe7f382a2b00fd9297dcf9f9219d46a9ad0bd904dc36d5e7db3335e422640b79a27fed6fde91b0731732b94a0e2fbcd47344d6779f8ba1f4f9c')
 
 build() {
   cd "$srcdir"/gcc-${pkgver}

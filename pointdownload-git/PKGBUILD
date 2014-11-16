@@ -1,0 +1,54 @@
+# Maintainer: Stephen Zhang <zsrkmyn at gmail dot com>
+pkgname=pointdownload-git
+pkgver=r129.1413deb
+pkgrel=1
+pkgdesc="A downloader supporting http, ftp, bt, magnet and thunder protocol"
+arch=('x86_64' 'i686')
+url="https://github.com/PointTeam/PointDownload"
+license=('GPL3')
+depends=('gcc-libs' 'qt5-base' 'qt5-webkit' 'qt5-declarative' 'qt5-multimedia' 'qt5-graphicaleffects')
+makedepends=('git')
+conflicts=('pointdownload')
+provides=('pointdownload')
+install=pointdownload.install
+source=('git://github.com/PointTeam/PointDownload')
+md5sums=('SKIP')
+
+pkgver() {
+	cd "$srcdir/PointDownload"
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+	cd $srcdir/PointDownload
+	qmake-qt5
+	make
+}
+
+package() {
+	cd $srcdir/PointDownload
+	INSTALL_ROOT=$pkgdir/ make install
+	install -d $pkgdir/usr/share/applications
+	install -d $pkgdir/opt/Point/PointDownload
+	install -d $pkgdir/opt/Point/PopupWindow
+	install -Dm644 pointpopup.desktop $pkgdir/usr/share/applications
+	install -Dm644 pointdownload.desktop $pkgdir/usr/share/applications
+	install -Dm644 point.png $pkgdir/opt/Point/PointDownload
+
+	cd $pkgdir
+	mv opt/PointDownload/bin/PointDownload opt/Point/PointDownload
+	mv opt/XwareStartUp/bin/XwareStartUp opt/Point/PointDownload
+	mv opt/PointPopup/bin/PointPopup opt/Point/PopupWindow
+	rm -r opt/PointDownload
+	rm -r opt/PointPopup
+	rm -r opt/XwareStartUp
+
+	install -d $pkgdir/usr/bin
+	
+	cat > $pkgdir/usr/bin/pointdownload <<"EOF"
+#!/bin/sh
+/opt/Point/PointDownload/PointDownload $@
+EOF
+
+	chmod +x $pkgdir/usr/bin/pointdownload
+}

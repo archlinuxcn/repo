@@ -1,0 +1,11 @@
+post_install() {
+  [[ -x /usr/bin/update-desktop-database ]] && update-desktop-database -q || true
+}
+
+post_upgrade() {
+  post_install
+}
+
+post_remove() {
+  post_install
+}
