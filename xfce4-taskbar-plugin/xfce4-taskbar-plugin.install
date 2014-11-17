@@ -1,0 +1,9 @@
+post_install() { post_upgrade "${@}"; }
+post_remove() { post_upgrade "${@}"; }
+
+post_upgrade() {
+    cat <<'MSG'
+>>> Restart the panel for changes to take effect:
+    $ xfce4-panel -r
+MSG
+}
