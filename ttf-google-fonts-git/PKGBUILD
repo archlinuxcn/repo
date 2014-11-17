@@ -10,7 +10,7 @@
 # Contributor: Alexander De Sousa <archaur.xandy21@spamgourmet.com>
 
 pkgname=ttf-google-fonts-git
-pkgver=20131111
+pkgver=20141114
 pkgrel=1
 pkgdesc="TrueType fonts from the Google Fonts project"
 arch=('any')
@@ -57,7 +57,13 @@ conflicts=('googlefontdirectory'
            'ttf-source-code-pro'
            'ttf-source-sans-pro'
            'ttf-ubuntu-font-family'
-           'ttf-vollkorn')
+           'ttf-vollkorn'
+	   'ttf-lato'
+	   'openarch_fonts'
+	   'ttf-oxygen-git'
+	   'otf-bitter'
+	   'ttf-lekton'
+	   'ttf-lato')
 provides=("${conflicts[@]}" 'ttf-font')
 source=("git://github.com/w0ng/googlefontdirectory.git")
 md5sums=('SKIP')
