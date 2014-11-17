@@ -1,0 +1,81 @@
+diff -ru xfce4-mpc-plugin-0.4.2.orig/panel-plugin/xfce4-mpc-plugin.c xfce4-mpc-plugin-0.4.2/panel-plugin/xfce4-mpc-plugin.c
+--- xfce4-mpc-plugin-0.4.2.orig/panel-plugin/xfce4-mpc-plugin.c	2012-04-14 21:30:06.000000000 -0700
++++ xfce4-mpc-plugin-0.4.2/panel-plugin/xfce4-mpc-plugin.c	2012-04-14 22:42:20.000000000 -0700
+@@ -31,6 +31,7 @@
+ #define DEFAULT_MPD_HOST "localhost"
+ #define DEFAULT_MPD_PORT 6600
+ #define DIALOG_ENTRY_WIDTH 20
++#define TIMEOUT 1000
+ 
+ #include "xfce4-mpc-plugin.h"
+ 
+@@ -581,6 +582,37 @@
+    g_string_free(str, TRUE);
+ }
+ 
++static gint
++mpc_timer(t_mpc* mpc)
++{
++   GtkWidget *image;
++
++   switch (mpd_player_get_state(mpc->mo)) {
++      case MPD_PLAYER_PLAY:
++         if (!(mpc->button_says_playing)) {
++	    image = gtk_container_get_children(GTK_CONTAINER(mpc->toggle))->data;
++	    gtk_widget_destroy(image);
++	    image = xfce_panel_image_new_from_source("media-playback-pause");
++	    gtk_container_add(GTK_CONTAINER(mpc->toggle), image);
++	    gtk_widget_show(image);
++            mpc->button_says_playing = TRUE;
++	 }
++	 break;
++      default:
++	 if (mpc->button_says_playing) {
++	    image = gtk_container_get_children(GTK_CONTAINER(mpc->toggle))->data;
++	    gtk_widget_destroy(image);
++	    image = xfce_panel_image_new_from_source("media-playback-start");
++	    gtk_container_add(GTK_CONTAINER(mpc->toggle), image);
++	    gtk_widget_show(image);
++	    mpc->button_says_playing = FALSE;
++	 }
++	 break;
++   }
++
++   return TRUE;
++}
++
+ static void
+ toggle(GtkWidget *widget, GdkEventButton* event, t_mpc* mpc)
+ {
+@@ -741,7 +773,8 @@
+    mpc->stop = new_button_with_cbk(plugin, mpc->box, "media-playback-stop", G_CALLBACK(stop), mpc);
+    mpc->toggle = new_button_with_cbk(plugin, mpc->box, "media-playback-pause", G_CALLBACK(toggle), mpc);
+    mpc->next = new_button_with_cbk(plugin, mpc->box, "media-skip-forward", G_CALLBACK(next), mpc);
+-
++   
++   mpc->button_says_playing = TRUE;
+    mpc->random = gtk_check_menu_item_new_with_label (_("Random"));
+    g_signal_connect (G_OBJECT(mpc->random), "toggled", G_CALLBACK (mpc_random_toggled), mpc);
+    mpc->repeat = gtk_check_menu_item_new_with_label (_("Repeat"));
+@@ -818,7 +851,8 @@
+ 
+    /* create a connection*/
+    mpc->mo = mpd_new(mpc->mpd_host,mpc->mpd_port,mpc->mpd_password);
+-
++   
++   g_timeout_add (TIMEOUT, (GtkFunction) mpc_timer, mpc);
+    gtk_container_add (GTK_CONTAINER (plugin), mpc->frame);
+    gtk_frame_set_shadow_type (GTK_FRAME (mpc->frame), ((mpc->show_frame) ? GTK_SHADOW_IN : GTK_SHADOW_NONE));
+ 
+diff -ru xfce4-mpc-plugin-0.4.2.orig/panel-plugin/xfce4-mpc-plugin.h xfce4-mpc-plugin-0.4.2/panel-plugin/xfce4-mpc-plugin.h
+--- xfce4-mpc-plugin-0.4.2.orig/panel-plugin/xfce4-mpc-plugin.h	2012-04-14 21:30:06.000000000 -0700
++++ xfce4-mpc-plugin-0.4.2/panel-plugin/xfce4-mpc-plugin.h	2012-04-14 22:37:42.000000000 -0700
+@@ -51,6 +51,7 @@
+    gchar * playlist_format;
+    gboolean mpd_repeat;
+    gboolean mpd_random;
++   gboolean button_says_playing;
+    gint nb_outputs;
+    t_mpd_output ** mpd_outputs;
+ } t_mpc;
+
