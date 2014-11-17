@@ -9,7 +9,7 @@ _minor=17
 _basekernel=${_major}.${_minor}
 _srcname=linux-${_major}.${_minor}
 pkgbase=linux-pf
-_pfrel=1
+_pfrel=2
 _kernelname=-pf
 _pfpatchhome="http://pf.natalenko.name/sources/${_basekernel}/"
 _pfpatchname="patch-${_basekernel}${_kernelname}${_pfrel}"
@@ -60,7 +60,7 @@ _NUMA_off=yes		# Disable NUMA in kernel config
 pkgname=('linux-pf')
 true && pkgname=('linux-pf' 'linux-pf-headers')
 pkgver=${_basekernel}.${_pfrel}
-pkgrel=2
+pkgrel=1
 arch=('i686' 'x86_64')
 url="http://pf.natalenko.name/"
 license=('GPL2')
@@ -658,4 +658,4 @@ sha256sums=('f5153ec93c5fcd41b247950e6a9bcbc63fa87beafd112c133a622439a0f76251'
             '7602a6c523b73960a95d7325e46f8d0d00fa15ffd8f3f26e89c7ab0403732783'
             '82d660caa11db0cd34fd550a049d7296b4a9dcd28f2a50c81418066d6e598864'
             '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99'
-            '0a8e3c7e3b7fd92e3b02a72044cb0b5ec7f6f26aa04f7ee27828e2086539582b')
+            '5f95ef50d7b86e8affe9f1eb9617a8bbbfcdc3cf3c6ed3529f2067f646bf95f3')
