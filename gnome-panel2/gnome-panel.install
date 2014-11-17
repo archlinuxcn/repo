@@ -1,0 +1,24 @@
+pkgname=gnome-panel
+
+post_install() {
+  usr/sbin/gconfpkg --install ${pkgname}
+  usr/bin/glib-compile-schemas usr/share/glib-2.0/schemas
+  gtk-update-icon-cache -q -t -f usr/share/icons/hicolor
+}
+
+pre_upgrade() {
+  pre_remove
+}
+
+post_upgrade() {
+  post_install
+}
+
+pre_remove() {
+  usr/sbin/gconfpkg --uninstall ${pkgname}
+}
+
+post_remove() {
+  usr/bin/glib-compile-schemas usr/share/glib-2.0/schemas
+  gtk-update-icon-cache -q -t -f usr/share/icons/hicolor
+}
