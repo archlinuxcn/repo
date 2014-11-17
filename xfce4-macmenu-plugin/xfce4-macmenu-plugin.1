@@ -1,0 +1,20 @@
+.TH "xfce4-macmenu-plugin" "1" "1.0.15" "AquilaDeus" "General Commands Manual"
+.SH "NAME"
+.LP 
+xfce4\-macmenu\-plugin \- Mac\-style Menu Bar for Xfce
+.SH "DESCRIPTION"
+.LP 
+\fBxfce4\-macmenu\-plugin\fP is an Xfce applet that provides a Mac\-style menubar for gtk2 and gtk3 applications, if the patched versions of these libraries are installed. Search for gtk{2,3}\-aqd.
+.SH "FILES"
+.LP 
+\fI$HOME/.macmenu\-tslist\fP provides a list of string translations for window names, e.g. "Xfce Terminal=Terminal".
+
+.SH "ENVIRONMENT VARIABLES"
+.LP 
+.TP 
+\fBGTK_MENUBAR_NO_MAC\fP
+let you set a list app executable names to disable mac menubar for, separated by space. This variable actually affects the patched gtk libraries, not the applet.
+
+.SH "AUTHORS"
+.LP 
+AquilaDeus <https://sites.google.com/site/aquiladeus/>
