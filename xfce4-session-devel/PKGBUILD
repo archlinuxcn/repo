@@ -1,0 +1,56 @@
+# Maintainer: twa022 <twa022 at gmail dot com>
+
+_pkgname=xfce4-session
+pkgname=${_pkgname}-devel
+pkgver=4.11.0
+pkgrel=1
+pkgdesc="A session manager for Xfce"
+arch=('i686' 'x86_64')
+url="http://www.xfce.org/"
+license=('GPL2')
+groups=('xfce4')
+depends=('libxfce4ui' 'libwnck' 'libsm' 'xorg-iceauth' 'upower' 'xorg-xinit'
+         'xorg-xrdb' 'hicolor-icon-theme')
+makedepends=('intltool' 'xfce4-dev-tools')
+optdepends=('gnome-keyring: for keyring support when GNOME compatibility is enabled'
+            'xscreensaver: for locking screen with xflock4'
+            'gnome-screensaver: for locking screen with xflock4'
+            'xlockmore: for locking screen with xflock4')
+provides=("${_pkgname}=${pkgver}")
+conflicts=("${_pkgname}")
+replaces=('xfce-utils')
+install=$_pkgname.install
+source=(http://archive.xfce.org/src/xfce/$_pkgname/${pkgver%.*}/$_pkgname-$pkgver.tar.bz2
+        xfce4-session-4.10.1-logind-support-for-suspend-hibernate.patch)
+sha256sums=('c68905b5124382e30e90f7e4f080fd7e24d58a065991eba9cfcb99e5d59a7c8e'
+            '1fc10b6495624ddfb9e18419c835f7b929ad738c602a64ee7aab8327d3aac981')
+
+prepare() {
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  # Use logind interfaces for suspend and hibernate
+  # https://bugzilla.xfce.org/show_bug.cgi?id=9952
+  patch -Np1 -i "$srcdir/xfce4-session-4.10.1-logind-support-for-suspend-hibernate.patch"
+
+  xdt-autogen
+}
+
+build() {
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  ./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --libexecdir=/usr/lib/xfce4 \
+    --localstatedir=/var \
+    --disable-static \
+    --disable-debug \
+    --enable-systemd
+  make
+}
+
+package() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  make DESTDIR="$pkgdir" install
+}
+
