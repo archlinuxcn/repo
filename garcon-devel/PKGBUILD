@@ -11,7 +11,7 @@ arch=('i686' 'x86_64')
 url="http://www.xfce.org/"
 license=('LGPL')
 groups=('xfce4')
-depends=('glib2' 'libxfce4util')
+depends=('glib2' 'libxfce4util' 'gtk2' 'libxfce4ui>=4.10')
 makedepends=('pkgconfig' 'intltool' 'xfce4-dev-tools')
 replaces=('libxfce4menu')
 conflicts=("${_pkgname}")
