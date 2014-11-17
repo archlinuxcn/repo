@@ -1,0 +1,31 @@
+# Maintainer: Cedric Leporcq <cedric at gmail dot com>
+
+pkgname=xfce4-windowck-plugin
+pkgver=0.3.0
+pkgrel=1
+pkgdesc="Xfce panel plugin which allows to put the maximized window title and buttons on the panel."
+arch=('i686' 'x86_64')
+url="https://github.com/cedl38/xfce4-windowck-plugin"
+license=('GPL3')
+groups=('xfce4')
+depends=('xfce4-panel')
+optdepends=('xfwm-titleless: Xfce window manager with patch to hide title on maximized windows.' 'xfwm-titleless+: Xfce window manager with hide title on maximized windows with bugfixs and improvement.' 'xfwm-titleless-dev: same as xfwm-titleless+ but provide developpment version of xfwm4.')
+makedepends=('intltool' 'xfce4-dev-tools')
+options=('!libtool')
+install=$pkgname.install
+source=("$pkgname-$pkgver.tar.gz::https://github.com/cedl38/$pkgname/archive/v$pkgver.tar.gz")
+sha256sums=('0175bb9f8e594e0af23ce77f236e78724d58d328af719b271e2b047bc7ce9093')
+
+build() {
+  cd "$srcdir/${pkgname}-$pkgver"
+
+    ./autogen.sh \
+    --prefix=/usr 
+
+  make
+}
+
+package() {
+  cd "$srcdir/${pkgname}-$pkgver"
+  make DESTDIR="$pkgdir" install
+}
