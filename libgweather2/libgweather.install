@@ -1,0 +1,22 @@
+pkgname=libgweather2
+
+post_install() {
+  usr/sbin/gconfpkg --install ${pkgname}
+  gtk-update-icon-cache -q -t -f usr/share/icons/gnome
+}
+
+pre_upgrade() {
+  pre_remove $1
+}
+
+post_upgrade() {
+  post_install $1
+}
+
+pre_remove() {
+  usr/sbin/gconfpkg --uninstall ${pkgname}
+}
+
+post_remove() {
+  gtk-update-icon-cache -q -t -f usr/share/icons/gnome
+}
