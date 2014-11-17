@@ -1,0 +1,52 @@
+# Maintainer: twa022 <twa022 at gmail dot com>
+
+_pkgname=xfce4-settings
+pkgname=${_pkgname}-devel
+pkgver=4.11.3
+pkgrel=2
+pkgdesc="Settings manager for xfce"
+arch=('i686' 'x86_64')
+url="http://www.xfce.org/"
+license=('GPL2')
+groups=('xfce4')
+depends=('exo' 'garcon' 'libxfce4ui>=4.11.0' 'libnotify' 'libxklavier'
+         'gnome-icon-theme' 'gtk-engines')
+makedepends=('intltool')
+optdepends=('libcanberra: for sound control')
+provides=("${_pkgname}=${pkgver}")
+conflicts=("${_pkgname}")
+source=(http://archive.xfce.org/src/xfce/$_pkgname/${pkgver%.*}/$_pkgname-$pkgver.tar.bz2)
+#        xfce4-settings-xml-4.10.0.patch)
+
+prepare() {
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  # enable gnome icon theme, clearlooks theme and font hinting by default
+  # (taken from Fedora)
+  #patch -Np1 -i "$srcdir/xfce4-settings-xml-4.10.0.patch"
+}
+
+build() {
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  ./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --localstatedir=/var \
+    --disable-static \
+    --enable-xrandr \
+    --enable-xcursor \
+    --enable-libnotify \
+    --enable-libxklavier \
+    --enable-pluggable-dialogs \
+    --enable-sound-settings \
+    --disable-debug
+  make
+}
+
+package() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  make DESTDIR="$pkgdir" install
+}
+
+sha256sums=('f9e40c039f3a06111b5b596abfe462ee067d98e46c6640bf33d3b6e76bc6cd34')
