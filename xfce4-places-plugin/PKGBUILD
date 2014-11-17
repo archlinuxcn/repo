@@ -1,0 +1,28 @@
+# Maintainer: Alessio Sergi <asergi at archlinux dot us>
+
+pkgname=xfce4-places-plugin
+pkgver=1.6.0
+pkgrel=1
+pkgdesc="Places menu plugin for the Xfce panel"
+arch=('i686' 'x86_64')
+url="http://goodies.xfce.org/projects/panel-plugins/xfce4-places-plugin"
+license=('GPL2')
+depends=('libnotify' 'xfce4-panel')
+makedepends=('intltool')
+source=("http://archive.xfce.org/src/panel-plugins/$pkgname/${pkgver%.*}/${pkgname}-${pkgver}.tar.bz2")
+sha1sums=('4cee0b16c31116061d28e32f0992ad3f586e7c67')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  ./configure --prefix=/usr --sysconfdir=/etc \
+              --libexecdir=/usr/lib \
+              --localstatedir=/var \
+              --disable-static \
+              --disable-debug
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make DESTDIR="$pkgdir" install
+}
