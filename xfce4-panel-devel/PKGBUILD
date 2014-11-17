@@ -9,7 +9,7 @@ arch=('i686' 'x86_64')
 url="http://www.xfce.org/"
 license=('GPL2')
 groups=('xfce4')
-depends=('exo' 'garcon-devel' 'libxfce4ui' 'libwnck' 'hicolor-icon-theme'
+depends=('exo' 'garcon-devel' 'libxfce4ui>=4.11' 'libwnck' 'hicolor-icon-theme'
          'desktop-file-utils')
 makedepends=('intltool' 'gtk-doc')
 provides=("${_pkgname}=${pkgver}")
