@@ -1,4 +1,5 @@
-# Maintainer: der_FeniX <derfenix@gmail.com>
+# Maintainer: sloppybench <sloppybench@eml.cc>
+# Contributor: der_FeniX <derfenix@gmail.com>
 # Contributor: Anatol Pomozov <anatol.pomozov@gmail.com>
 # Contributor: Gordin <9ordin @t gmail dot com>
 # Contributor: Simon Lipp <aur@simon.lipp.name>
@@ -8,8 +9,8 @@
 
 pkgname=coffee-script
 _pkgname=coffeescript
-pkgver=1.7.1
-pkgrel=3
+pkgver=1.8.0
+pkgrel=1
 pkgdesc='CoffeeScript is a little language that compiles into JavaScript.'
 arch=(any)
 url='http://coffeescript.org'
@@ -17,8 +18,8 @@ license=(MIT)
 makedepends=()
 depends=(nodejs 'nodejs-mkdirp' underscorejs)
 optdepends=('nodejs-profile: to load coffee-script in node')
-source=(https://github.com/jashkenas/coffee-script/archive/$pkgver.tar.gz)
-sha256sums=('26f201860d8bcc8512782844401e2240a7fa15eb8500f453d79957f79ab1c906')
+source=(https://github.com/jashkenas/coffeescript/archive/$pkgver.tar.gz)
+sha256sums=('ea4ea92977e0eeb055e5dfec9694b6f4afcf7bc0b2709d665c5e598a84cba191')
 
 check() {
   export NODE_PATH=/usr/share/underscorejs:$NODE_PATH
