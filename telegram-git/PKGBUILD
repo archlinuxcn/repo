@@ -2,7 +2,7 @@
 # Contributor: Andy Weidenbaum <archbaum@gmail.com>
 
 pkgname=telegram-git
-pkgver=r540.83be082
+pkgver=r700.5405d18
 pkgrel=1
 pkgdesc="Telegram messenger CLI"
 arch=('i686' 'x86_64')
@@ -23,6 +23,7 @@ pkgver() {
 
 build() {
     cd "$srcdir/$pkgname"
+    git submodule update --init --recursive
     ./configure
     make
 }
