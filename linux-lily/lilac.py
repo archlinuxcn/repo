@@ -49,7 +49,9 @@ def prepare_source(version):
 def pre_build():
   g.files = download_official_pkgbuild('linux')
   prepare_source(_G.newver)
+  edit_PKGBUILD()
 
+def edit_PKGBUILD():
   source_count = 0
   ignoring = False
   for line in edit_file('PKGBUILD'):
