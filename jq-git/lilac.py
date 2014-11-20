@@ -5,7 +5,6 @@ import fileinput
 from lilaclib import *
 
 build_prefix = 'extra-x86_64'
-depends = ['oniguruma']
 post_build = aur_post_build
 
 def pre_build():
