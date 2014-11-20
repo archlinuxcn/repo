@@ -2,7 +2,7 @@
 # Contributor: Ionut Biru <ibiru@archlinux.org>
 
 pkgname=vte3-select-text
-pkgver=0.38.1
+pkgver=0.38.2
 pkgrel=1
 pkgdesc="Virtual Terminal Emulator widget for use with GTK3"
 arch=('i686' 'x86_64')
@@ -13,7 +13,7 @@ makedepends=('intltool' 'gobject-introspection' 'gtk3' 'python2' 'vala')
 url="http://www.gnome.org"
 source=(http://download.gnome.org/sources/vte/${pkgver::4}/vte-$pkgver.tar.xz
         expose_select_text.patch)
-sha256sums=('b57a93bd5ef354d3f5b86a6c3bb5a570b7ed1ff37a60a177f878d24a57d62bcc'
+sha256sums=('b2daba79229c84de3fbc41fcbb160c8d7ca50523fc01dedefada27e75ecc7de5'
             '3389d31b69740fed3b658ca07d89b77b78ab4fbb9fe4786951c186ba889cb524')
 provides=(vte3)
 conflicts=(vte3)
