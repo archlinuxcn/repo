@@ -1,0 +1,18 @@
+# colored makepkg-like function
+note() {
+    printf "${BLUE}==>${ALL_OFF}${YELLOW} NOTE:${ALL_OFF}${BOLD} ${1}${ALL_OFF}\n"
+}
+
+ALL_OFF="$(tput sgr0)"
+BOLD="$(tput bold)"
+BLUE="${BOLD}$(tput setaf 4)"
+YELLOW="${BOLD}$(tput setaf 3)"
+
+post_install() {
+    note "The command is 'silentcast'. See /usr/share/docs/silentcast/README.md or https://github.com/colinkeenan/silentcast/#silentcast for full instructions and tips."
+}
+
+
+post_upgrade() {
+    post_install
+}
