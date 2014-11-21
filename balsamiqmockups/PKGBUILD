@@ -1,10 +1,11 @@
 # Maintainer: John K. Luebs <jkl@johnluebs.com>
+# Contributor: Vojtěch Kusý <https://github.com/wojtha>
 
 # I maintain this on github, feel free to submit a pull request to
 # https://github.com/jkl1337/packages-archlinux.git
 
 pkgname=balsamiqmockups
-pkgver=2.2.23
+pkgver=2.2.24
 license=('custom')
 pkgrel=1
 arch=('any')
@@ -15,14 +16,14 @@ source=("http://s3.amazonaws.com/build_production/mockups-desktop/MockupsForDesk
         'fix-filetype-mime.patch'
         'balsamiqmockups.desktop'
         'vnd.balsamiq.bmml+xml.xml')
-sha1sums=('9966df382bd265ea9dc4563361913037557fc24c'
+sha1sums=('c9f39fc13ac5bfef2a523c870685dd0808220bf6'
           '4ac87898420b40ab88957a847efff93c948974ad'
           '279e15c0c1bcffeabc97d9af3882c849735b5aa9'
           'cfe7240b7403ff47d63e9f8264581a40112607ff'
           '6f28b1fcc5758cb46c5f149d7896b53bdd027293')
 noextract=("MockupsForDesktop.air")
 install=balsamiqmockups.install
-depends=(adobe-air-sdk desktop-file-utils)
+depends=(adobe-air-sdk desktop-file-utils lib32-libgl)
 makedepends=(unzip)
 conflicts=('balsamiq-mockups')
 
