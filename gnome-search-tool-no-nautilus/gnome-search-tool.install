@@ -1,0 +1,31 @@
+# Some colored makepkg-like functions
+msg_blue() {
+    printf "${BLUE}==>${ALL_OFF}${BOLD} ${1}${ALL_OFF}\n"
+}
+
+note() {
+    printf "${BLUE}==>${ALL_OFF}${YELLOW} NOTE:${ALL_OFF}${BOLD} ${1}${ALL_OFF}\n"
+}
+
+ALL_OFF="$(tput sgr0)"
+BOLD="$(tput bold)"
+BLUE="${BOLD}$(tput setaf 4)"
+YELLOW="${BOLD}$(tput setaf 3)"
+
+post_install() {
+    glib-compile-schemas usr/share/glib-2.0/schemas
+    note "The command is just 'gnome-search-tool' (without '-no-nautilus')"
+}
+
+pre_upgrade() {
+  (( $(vercmp $2 3.6.0) < 0 )) && gconfpkg --uninstall gnome-search-tool
+  return 0
+}
+
+post_upgrade() {
+  post_install
+}
+
+post_remove() {
+  post_install
+}
