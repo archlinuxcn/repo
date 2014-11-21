@@ -1,0 +1,20 @@
+post_install() {
+echo "Now you can get gnome-search-tool for Xfce without nautilus/gnome-desktop.
+ 
+Either install gnome-search-tool-no-nautilus from AUR, 
+or
+use abs as follows: 
+
+sudo abs extra/gnome-search-tool
+mkdir ~/abs
+cp -r /var/abs/extra/gnome-search-tool/ ~/abs
+cd ~/abs/gnome-search-tool 
+[edit PKGBUILD and change depends=('nautilus' ...) to depends=('nautilus-data' ...)] 
+makepkg -si
+
+The advantage of gnome-search-tool-no-nautilus from AUR over rebuilding with abs is that upgrades will be easier."
+}
+
+post_upgrade() {
+  post_install
+}
