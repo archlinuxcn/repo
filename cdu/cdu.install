@@ -1,0 +1,9 @@
+post_install() {
+  /bin/cat << EOF
+
+For better comfort, you can define alias in your ~/.bashrc file.
+
+ alias du='cdu -idh'
+
+EOF
+}

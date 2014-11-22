@@ -1,0 +1,30 @@
+# Maintainer: Dave Reisner <d@falconindy.com>
+
+pkgname=cower
+pkgver=11
+pkgrel=3
+pkgdesc="A simple AUR agent with a pretentious name"
+arch=('i686' 'x86_64')
+url="http://github.com/falconindy/cower"
+license=('MIT')
+depends=('curl' 'openssl' 'pacman' 'yajl')
+makedepends=('perl')
+source=("http://code.falconindy.com/archive/$pkgname/$pkgname-$pkgver.tar.gz"{,.sig})
+md5sums=('7e2f3c5a8bc258ee129098aca5bfda9e'
+         'SKIP')
+
+build() {
+  cd "$pkgname-$pkgver"
+
+  make
+  sed '/^$/q' cower.c >LICENSE
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  make PREFIX=/usr DESTDIR="$pkgdir" install
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
+# vim: ft=sh syn=sh

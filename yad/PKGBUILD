@@ -1,0 +1,29 @@
+# Maintainer: Steven Allen <steven@stebalien.com>
+# Contributor: trile7 at gmail dot com
+# Contributor: Ernia <monghitri@aruba.it>
+
+pkgname=yad
+pkgver=0.27.0
+pkgrel=1
+pkgdesc="A fork of zenity - display graphical dialogs from shell scripts or command line"
+url="http://sourceforge.net/projects/yad-dialog"
+arch=('x86_64' 'i686')
+license=('GPL3')
+depends=('gtk2' 'hicolor-icon-theme')
+makedepends=('intltool')
+install='yad.install'
+source=($url/files/${pkgname}-${pkgver}.tar.xz)
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  make DESTDIR="${pkgdir}" install
+
+}
+
+sha1sums=('4103435128b1ffc9605f44e640645604e441e5b9')

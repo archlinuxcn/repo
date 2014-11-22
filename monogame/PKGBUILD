@@ -1,0 +1,70 @@
+pkgname=monogame
+pkgver=3.2
+pkgrel=4
+pkgdesc="XNA Implementation for Mono based platforms"
+arch=(any)
+license=("MSPL")
+depends=(opentk sdl_mixer sdl_ttf sdl_image sdl_net smpeg sdl_gfx)
+makedepends=(nant nvidia-texture-tools dos2unix monodevelop sharpfont assimp-net)
+url="http://www.monogame.net"
+optdepends=("assimp-net: content pipeline"
+"sharpfont: content pipeline"
+"nvidia-texture-tools: content pipeline"
+"monodevelop: Project templates")
+conflicts=(tao-framework)
+source=("https://github.com/mono/MonoGame/archive/v$pkgver.tar.gz"
+"Dependencies.zip::https://github.com/Mono-Game/MonoGame.Dependencies/archive/420b75d6d5b2c966bfc85a46b4de860a3ae7ab38.zip"
+"monogame.pc.in"
+"mgcb.sh")
+md5sums=('265cd5479b73d8e2b24e90e2e6bba44b'
+         'f3ea91749b98b219e900188bf9b93958'
+         'ca37d66293d3aac43cac32628ed5d6b6'
+         '3cad3825e124ea7b7d060ba492adee47')
+         
+_mdver=`monodevelop --help | grep "MonoDevelop\s" | awk '{print $2}'`
+
+prepare() {
+	cd "$srcdir/MonoGame.Dependencies-"*
+	find . -type f -exec dos2unix {} \;
+	cd ../MonoGame-$pkgver/ThirdParty/Libs
+	cp -r ../../../MonoGame.Dependencies-*/* .
+	cd ../..
+	find . -name '*.csproj' -exec sed -i 's,<DebugType>none,<DebugType>pdbonly,g' {} \;
+	cd ProjectTemplates/MonoDevelop/MonoDevelop.MonoGame/MonoDevelop.MonoGame
+	sed -i -e "s,assemblies/WindowsGL,/usr/lib/monogame,g" -e "s,\"3\.0\",\"${_mdver}\",g" MonoDevelop.MonoGame.addin.xml
+}
+
+build() {
+  cd "$srcdir/MonoGame-$pkgver"
+  nant buildlinux
+  nant buildcontentpipeline
+  cd ProjectTemplates/MonoDevelop/MonoDevelop.MonoGame
+  xbuild MonoDevelop.MonoGame.sln /p:Configuration=ReleaseLinux
+  cd ../../../Tools/MGCB
+  xbuild MGCB.Linux.sln /p:Configuration=Release
+}
+
+package() {
+  cd "$srcdir/MonoGame-$pkgver/MonoGame.ContentPipeline"
+  install -Dm644 MonoGame.ContentPipeline.targets "$pkgdir/usr/lib/mono/xbuild/MonoGame.ContentPipeline.targets"
+  cd ../MonoGame.Framework/bin/Linux/Release
+  find . -name 'MonoGame.Framework.dll*' -exec install -Dm644 {} "$pkgdir/usr/lib/monogame/"{} \;
+  find . -name 'Lidgren.Network.dll*' -exec install -m644 {} "$pkgdir/usr/lib/monogame/"{} \;
+  find . -name 'Tao.Sdl.dll*' -exec install -m644 {} "$pkgdir/usr/lib/monogame/"{} \;
+  find . -name '*.mgfxo' -exec install -m644 {} "$pkgdir/usr/lib/monogame/"{} \;
+  cd "$srcdir/MonoGame-$pkgver/MonoGame.Framework.Content.Pipeline/bin/Linux/Release"
+  find . -name 'MonoGame.Framework.Content.Pipeline.dll*' -exec install -m644 {} "$pkgdir/usr/lib/monogame/"{} \;
+  find . -name 'Nvidia.TextureTools.dll*' -exec install -m644 {} "$pkgdir/usr/lib/monogame/"{} \;
+  install -m644 ManagedPVRTC.dll "$pkgdir/usr/lib/monogame/"
+  install -m644 NAudio.dll "$pkgdir/usr/lib/monogame/"
+  cd "$srcdir/MonoGame-$pkgver/ProjectTemplates/MonoDevelop/MonoDevelop.MonoGame/MonoDevelop.MonoGame/bin/Linux/Release"
+  find . -type f -exec install -Dm644 {} "$pkgdir/usr/lib/monodevelop/AddIns/MonoDevelop.MonoGame/"{} \;
+  cd "$srcdir/MonoGame-$pkgver/Tools/MGCB/bin/Release"
+  find . -name 'MGCB.Linux.exe*' -exec install -m644 {} "$pkgdir/usr/lib/monogame/"{} \;
+  cd "$pkgdir/usr/lib/monogame"
+  gacutil -i Tao.Sdl.dll -root "$pkgdir/usr/lib"
+  install -Dm644 "$srcdir/MonoGame-$pkgver/LICENSE.txt" "$pkgdir/usr/share/licenses/monogame/LICENSE.txt"
+  install -Dm755 "$srcdir/mgcb.sh" "$pkgdir/usr/bin/mgcb"
+  install -Dm644 "$srcdir/monogame.pc.in" "$pkgdir/usr/lib/pkgconfig/monogame.pc"
+  sed -i "s|@VERSION@|$pkgver|" "$pkgdir/usr/lib/pkgconfig/monogame.pc"
+}

@@ -1,0 +1,9 @@
+prefix=/usr
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+
+Name: OpenTK
+Description: Open source game development toolkit for .Net/Mono.
+Version: @VERSION@
+Requires: opentk
+Libs: -r:${libdir}/opentk/OpenTK.Compatibility.dll
