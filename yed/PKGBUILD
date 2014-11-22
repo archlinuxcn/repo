@@ -7,7 +7,7 @@
 
 pkgname=yed
 pkgver=3.13
-pkgrel=1
+pkgrel=2
 pkgdesc='Very powerful graph editor written in java'
 arch=('any')
 url='http://www.yworks.com/en/products_yed_about.html'
@@ -17,13 +17,13 @@ source=("http://www.yworks.com/products/yed/demo/yEd-${pkgver}.zip"
         'yed.desktop'
         'yed')
 md5sums=('2dbea407cad3a0d396adbf2384754f5d'
-         'b9ac9c843104170a5939f3cafc1df840'
+         'fa7d4ebb8b9fcfbe5a35dda695ba6f3f'
          '64d9d8842704ba58b24d2972bec64edb')
 
 install=${pkgname}.install
  
 package() {
-  # Install jar
+  # Install jars
   install -Dm644 ${srcdir}/yed-${pkgver}/yed.jar ${pkgdir}/usr/share/yed/yed.jar
   install -dm755 ${pkgdir}/usr/share/yed/lib
   install -m644 ${srcdir}/yed-${pkgver}/lib/* ${pkgdir}/usr/share/yed/lib/
