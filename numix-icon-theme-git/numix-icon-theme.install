@@ -1,0 +1,14 @@
+post-install() {
+  gtk-update-icon-cache -ftq usr/share/icons/Numix
+  gtk-update-icon-cache -ftq usr/share/icons/Numix-Light
+}
+
+post-upgrade() {
+  post-install
+}
+
+post-remove() {
+  post-install
+}
+
+# vim: ts=2 sw=2 et:

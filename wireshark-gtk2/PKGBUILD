@@ -1,10 +1,10 @@
-# $Id: PKGBUILD 116885 2014-08-05 07:52:37Z tredaelli $
+# $Id$
 # Maintainer: Timothy Redaelli <timothy.redaelli@gmail.com>
 # Contributor: Guillaume ALAUX <guillaume@archlinux.org>
 # Contributor: Florian Pritz <bluewind at jabber dot ccc dot de>
 pkgname=wireshark-gtk2
 pkgbase=wireshark
-pkgver=1.12.0
+pkgver=1.12.2
 pkgrel=1
 arch=('i686' 'x86_64')
 license=('GPL2')
@@ -12,7 +12,7 @@ makedepends=('gtk2' 'krb5' 'libpcap' 'bash' 'gnutls' 'portaudio'
              'lua' 'python' 'desktop-file-utils' 'hicolor-icon-theme')
 url='http://www.wireshark.org/'
 source=(http://www.wireshark.org/download/src/${pkgbase}-${pkgver}.tar.bz2)
-sha256sums=('0f59fea1c5b35de90af681067e49113fee0dd7a901750a97fa25f4256dbf13c7')
+sha1sums=('0598fe285725f97045d7d08e6bde04686044b335')
 
 prepare() {
   cd ${pkgbase}-${pkgver}
@@ -25,15 +25,16 @@ build() {
   ./autogen.sh
   ./configure \
       --prefix=/usr \
+      --with-gtk2 \
       --with-pcap \
       --with-zlib \
       --with-lua \
-      --with-gtk2 \
       --with-portaudio \
       --with-ssl \
       --with-krb5
   make all
 }
+
 
 package() {
   pkgdesc='a free network protocol analyzer for Unix/Linux and Windows - GTK 2 frontend'
@@ -55,3 +56,4 @@ package() {
   done
   install -Dm644 wireshark.desktop "${pkgdir}/usr/share/applications/wireshark.desktop"
 }
+
