@@ -1,0 +1,45 @@
+# $Id: PKGBUILD 215459 2014-06-25 21:33:31Z daniel $
+# Maintainer: Daniel Isenmann <daniel@archlinux.org>
+# Contributor: Timm Preetz <timm@preetz.us>
+# Contributor: Giovanni Scafora <giovanni@archlinux.org>
+
+pkgname=monodevelop
+pkgver=5.0.1
+pkgrel=1
+pkgdesc="An IDE primarily designed for C# and other .NET languages"
+
+# should probably changed to "any" - no ELF files - OpenSUSE builds it as NOARCH 
+arch=('i686' 'x86_64')
+
+url="http://www.monodevelop.com"
+license=('GPL')
+depends=('mono>=3.2.8' 'mono-addins>=0.6.2' 'gnome-sharp' 'desktop-file-utils' 'hicolor-icon-theme')
+makedepends=('rsync' 'git')
+options=(!makeflags)
+install=monodevelop.install
+source=(http://origin-download.mono-project.com/sources/${pkgname}/${pkgname}-${pkgver}-0.tar.bz2
+        monodevelop-core-addins.pc.in.patch)
+md5sums=('5f68aa384c7aa473fdd36da2f70117b4'
+         '8466d032735130e37d4091a793a7966c')
+
+build() {
+  export MONO_SHARED_DIR=$srcdir/src/.wabi
+  mkdir -p $MONO_SHARED_DIR
+
+  cd $srcdir/$pkgname-$pkgver
+  # fix location for MonoDevelop.Gettext.dll - breaks gdb build
+  # patch -Np0 -i ${srcdir}/monodevelop-core-addins.pc.in.patch
+  
+  ./configure --prefix=/usr
+  LD_PRELOAD="" make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  
+  LD_PRELOAD="" make DESTDIR=$pkgdir install
+  # delete conflicting files
+  find $pkgdir/usr/share/mime/ -type f -exec rm {} \;
+  rm -r $MONO_SHARED_DIR
+}
+

@@ -1,0 +1,25 @@
+# $Id: PKGBUILD 356 2008-04-18 22:56:27Z aaron $
+# Contributor: Ali H. Caliskan <ali.h.caliskan AT gmail DOT com>
+# Contributor: Arjan Timmerman <arjan@soulfly.nl>
+# Contributor: Daniel 'maniel' Kaminski <maniel.rulez//gmail.com>
+
+pkgname=nant
+pkgver=0.92
+pkgrel=5
+pkgdesc="A free .NET build tool, like make but without make's problems"
+arch=('i686' 'x86_64')
+url="http://nant.sourceforge.net"
+license="GPL"
+depends=('mono')
+makedepends=('pkgconfig')
+source=("http://downloads.sourceforge.net/nant/$pkgname-$pkgver-bin.tar.gz")
+md5sums=('1bcac3e7fab283240b78d21efa07f036')
+build() {
+  export MONO_SHARED_DIR=$srcdir/.wabi
+  mkdir -p "${MONO_SHARED_DIR}"
+  mkdir $pkgdir/usr $pkgdir/usr/share $pkgdir/usr/share/NAnt $pkgdir/usr/bin
+
+  cp -R $srcdir/$pkgname-$pkgver/* $pkgdir/usr/share/NAnt/
+  echo '/usr/bin/mono /usr/share/NAnt/bin/NAnt.exe "$@"' > $pkgdir/usr/bin/nant
+  chmod +x $pkgdir/usr/bin/nant
+}
