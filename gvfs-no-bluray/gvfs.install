@@ -1,0 +1,14 @@
+post_install() {
+  gio-querymodules /usr/lib/gio/modules
+  glib-compile-schemas /usr/share/glib-2.0/schemas
+  killall -USR1 gvfsd >&/dev/null || :
+}
+
+post_upgrade() {
+  post_install
+}
+
+post_remove() {
+  gio-querymodules /usr/lib/gio/modules
+  glib-compile-schemas /usr/share/glib-2.0/schemas
+}
