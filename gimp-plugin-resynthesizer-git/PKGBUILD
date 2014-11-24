@@ -1,0 +1,41 @@
+# Maintainer: Lex Black (autumn-wind at web.de)
+# Contributor: andre.vmatos
+
+_pkgname=resynthesizer
+pkgname=gimp-plugin-$_pkgname-git
+pkgver=2.0.9
+pkgrel=1
+pkgdesc="Suite of gimp plugins for texture synthesis (like heal-selection). Git-Version"
+arch=('i686' 'x86_64')
+url="https://github.com/bootchk/resynthesizer"
+license=('GPL2')
+depends=('gimp')
+makedepends=('git' 'intltool')
+conflicts=('gimp-resynth' 'gimp-resynth-git')
+options=('!emptydirs')
+source=('git://github.com/bootchk/resynthesizer#branch=master')
+md5sums=('SKIP')
+
+
+pkgver() {
+	cd $_pkgname
+	git describe | sed -e 's|-|.|g' -e 's|v||'
+}
+
+prepare() {
+    cd $_pkgname
+    sed -i 's|/usr/bin/env python|/usr/bin/env python2|' PluginScripts/*.py
+}
+
+build() {
+	cd $_pkgname
+
+	./configure --disable-maintainer-mode --prefix=/usr
+	make
+}
+
+package() {
+	cd $_pkgname
+	
+	make DESTDIR="$pkgdir/" install
+}
