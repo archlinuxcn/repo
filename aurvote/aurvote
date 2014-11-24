@@ -20,7 +20,7 @@
 #
 
 NAME='aurvote'
-VERSION=1.6
+VERSION=1.7
 
 TMPDIR=${TMPDIR:-/tmp}
 AV_TMP="$TMPDIR/aurvote-$USER"
@@ -31,6 +31,7 @@ AUR_URL="https://aur.archlinux.org"
 AUR_URL_LOGIN="$AUR_URL/login/"
 AUR_URL_PKG_INFO="$AUR_URL/rpc.php"
 AUR_URL_PKG_PAGE="$AUR_URL/packages/"
+AUR_URL_PKG_ACTION="$AUR_URL/pkgbase/"
 AUR_DOMAIN="aur.archlinux.org"
 AUR_COOKIE="AURSID"
 AUR_COOKIE_VALUE=""
@@ -128,7 +129,7 @@ aur_vote() {
     for pkg in "${pkgnames[@]}"; do
         [[ ! $AUR_TOKEN ]] && aur_set_token "$pkg"
         curl $CURL_OPT -fs -b "$COOKIE_FILE" \
-             "${AUR_URL_PKG_PAGE}${pkg}${vote}" \
+             "${AUR_URL_PKG_ACTION}${pkg}${vote}" \
              -d token="$AUR_TOKEN" \
              -d "$action"="(Un)Vote" \
              -o /dev/null
