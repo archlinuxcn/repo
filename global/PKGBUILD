@@ -10,6 +10,7 @@ arch=('i686' 'x86_64')
 url="http://www.gnu.org/software/global/"
 license=('GPL')
 depends=('libltdl' 'bash' 'perl')
+makedepends=("python2")
 optdepends=('idutils' 'ctags' 'python2-pygments')
 options=(!emptydirs !libtool)
 install=global.install
