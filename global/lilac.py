@@ -9,7 +9,7 @@ def pre_build():
   aur_pre_build()
   for line in edit_file('PKGBUILD'):
     if line.startswith('depends='):
-      line = line + '\nmakedepends=("python2")'
+      line = line + '\nmakedepends=("python2" "python2-pygments")'
     print(line)
 
 if __name__ == '__main__':
