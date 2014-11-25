@@ -1,0 +1,12 @@
+post_install() {
+    update-desktop-database -q
+    xdg-icon-resource forceupdate --theme hicolor &> /dev/null
+}
+
+post_update() {
+    post_install
+}
+
+post_remove() {
+    post_install
+}
