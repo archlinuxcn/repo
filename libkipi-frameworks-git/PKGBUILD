@@ -1,0 +1,43 @@
+# Maintainer: Gustavo Alvarez <sl1pkn07@gmail.com>
+
+pkgname=libkipi-frameworks-git
+pkgver=r1012.c8da6e4
+pkgrel=1
+pkgdesc="A interface to use kipi-plugins from a KDE image management program like digiKam. KF5 Frameworks branch (GIT version)"
+url=' http://www.digikam.org/sharedlibs'
+arch=('x86_64')
+license=('GPL' 'LGPL' 'FDL')
+depends=('kdelibs4support')
+makedepends=('extra-cmake-modules' 'kdoctools' 'git')
+conflicts=('libkipi')
+source=("git://anongit.kde.org/libkipi#branch=frameworks")
+sha1sums=('SKIP')
+install="libkipi-frameworks-git.install"
+_gitname=libkipi
+
+pkgver() {
+  cd "${_gitname}"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  rm -fr build
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake "../${_gitname}" \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DLIB_INSTALL_DIR=lib \
+    -DBUILD_TESTING=OFF
+  make
+}
+
+package() {
+  cd build
+
+  make DESTDIR=${pkgdir} install
+}
+
