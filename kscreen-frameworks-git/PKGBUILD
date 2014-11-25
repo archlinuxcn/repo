@@ -1,0 +1,40 @@
+# Maintainer: Antonio Rojas
+
+pkgname=kscreen-frameworks-git
+pkgver=r500.88b2a3f
+pkgrel=1
+pkgdesc='KDE screen management software'
+arch=('i686' 'x86_64')
+url='https://projects.kde.org/projects/extragear/libs/libkscreen'
+license=('LGPL')
+depends=('kxmlgui' 'libkscreen-frameworks')
+makedepends=('extra-cmake-modules' 'git' 'qt5-declarative' 'python')
+provides=('kscreen-frameworks')
+conflicts=('kscreen-frameworks' 'kscreen')
+source=('git://anongit.kde.org/kscreen.git#branch=frameworks')
+md5sums=('SKIP')
+
+pkgver() {
+  cd kscreen
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake ../kscreen \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DLIB_INSTALL_DIR=lib \
+    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
+    -DBUILD_TESTING=OFF
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR="${pkgdir}" install
+}
