@@ -1,0 +1,42 @@
+# Maintainer: Baptiste Jonglez <baptiste--aur at jonglez dot org>
+# Contributor: acieroid
+# Contributor: spider-mario <spidermario@free.fr>
+# Contributor: Thomas Dziedzic < gostrc at gmail >
+# Contributor: George Giorgidze <giorgidze@gmail.com>
+pkgname=coq
+pkgver=8.4pl5
+pkgrel=1
+pkgdesc='Formal proof management system. Full version that includes CoqIDE.'
+arch=('i686' 'x86_64')
+url='http://coq.inria.fr/'
+license=('GPL')
+options=('!emptydirs')
+depends=('gtk2' 'ocaml' 'camlp4' 'gtksourceview2')
+makedepends=('ocaml-findlib' 'lablgtk2')
+optdepends=('coq-doc')
+source=("http://coq.inria.fr/distrib/V$pkgver/files/coq-$pkgver.tar.gz")
+md5sums=('7839005b48527a85149da950bd2ac006')
+sha1sums=('107717cbaef3a469e8ff775ae54dbbc457935816')
+sha256sums=('35815ab78a58d72799eacaab155427620ab071677882ca6c98d7bfec97d25245')
+
+build() {
+  cd "$srcdir/coq-$pkgver"
+
+  ./configure \
+    -prefix '/usr' \
+    -mandir '/usr/share/man' \
+    -configdir '/etc/xdg/coq/' \
+    -opt \
+    -coqide opt \
+    -usecamlp4 \
+    -with-doc no
+
+  make world
+}
+
+package() {
+  cd "$srcdir/coq-$pkgver"
+  echo "$pkgver" > revision
+
+  make COQINSTALLPREFIX="$pkgdir" install
+}
