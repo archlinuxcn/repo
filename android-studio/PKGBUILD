@@ -7,13 +7,13 @@
 pkgname=android-studio
 pkgver=1.0.0
 _pkgver=$pkgver-rc1
-pkgrel=1
+pkgrel=2
 _build=135.1598475
 pkgdesc="A new Android development environment based on IntelliJ IDEA."
 arch=('i686' 'x86_64')
 url="http://developer.android.com/sdk/installing/studio.html"
 license=('APACHE')
-depends=('android-sdk' 'java-environment' 'python' 'ttf-dejavu')
+depends=('android-sdk' 'java-environment' 'python' 'ttf-font')
 makedepends=('unzip')
 optdepends=('android-sdk-platform-tools' 'android-sdk-build-tools')
 conflicts=('android-studio-beta' 'android-studio-dev' 'android-studio-canary')
