@@ -20,7 +20,7 @@
 #
 
 NAME='aurvote'
-VERSION=1.7
+VERSION=1.8
 
 TMPDIR=${TMPDIR:-/tmp}
 AV_TMP="$TMPDIR/aurvote-$USER"
@@ -29,7 +29,7 @@ CONFIGFILE=${XDG_CONFIG_HOME:-~/.config}/aurvote
 
 AUR_URL="https://aur.archlinux.org"
 AUR_URL_LOGIN="$AUR_URL/login/"
-AUR_URL_PKG_INFO="$AUR_URL/rpc.php"
+AUR_URL_PKG_INFO="$AUR_URL/rpc.php?type=info&arg="
 AUR_URL_PKG_PAGE="$AUR_URL/packages/"
 AUR_URL_PKG_ACTION="$AUR_URL/pkgbase/"
 AUR_DOMAIN="aur.archlinux.org"
@@ -118,7 +118,7 @@ aur_check_vote() {
 
 
 aur_vote() {
-    local pkg vote action
+    local pkg vote action ret pkgbase
     if (($1)); then
         vote="/vote/"
         action=do_Vote
@@ -133,7 +133,17 @@ aur_vote() {
              -d token="$AUR_TOKEN" \
              -d "$action"="(Un)Vote" \
              -o /dev/null
-        if (($?)); then
+        ret=$?
+        if ((ret == 22)); then
+            pkgbase=$(curl $CURL_OPT -fs "${AUR_URL_PKG_INFO}${pkg}" | sed -e 's|.*"PackageBase": *"\([^"]*\)".*|\1|')
+            [[ $pkgbase ]] && curl $CURL_OPT -fs -b "$COOKIE_FILE" \
+                 "${AUR_URL_PKG_ACTION}${pkgbase}${vote}" \
+                 -d token="$AUR_TOKEN" \
+                 -d "$action"="(Un)Vote" \
+                 -o /dev/null
+            ret=$?
+        fi
+        if ((ret)); then
             echo "Error: Can't (un)vote for $pkg"
         else
             echo "$pkg : vote changed"
