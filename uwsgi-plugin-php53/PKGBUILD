@@ -8,18 +8,19 @@
 pkgname=uwsgi-plugin-php53
 pkgdesc="Plugin for PHP 5.3 support"
 pkgver=2.0.7
-pkgrel=1
+pkgrel=2
 arch=(i686 x86_64)
 url="http://projects.unbit.it/uwsgi"
 license=(GPL2)
-depends=('uwsgi-plugin-common' 'php53-embed' 'libyaml' 'jansson')
+depends=('php53-embed' 'libyaml' 'jansson')
+makedepends=('python2')
 source=(http://projects.unbit.it/downloads/uwsgi-$pkgver.tar.gz
         archlinux.ini
         uwsgi_fix_rpath.patch
         uwsgi_trick_chroot.patch)
 
 md5sums=('c18da6536f2f47a204814225ba695042'
-         'dec47bb8bb0dc8caf79331151879f3a0'
+         'e4d8e243b2faff21ec1353e9b1408103'
          '1a4516d5cdcf5b95b036f4eae2d0c152'
          '0c09a52fdb88f08c36a8b380f451ce6d')
 
