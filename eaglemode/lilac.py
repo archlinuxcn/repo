@@ -27,11 +27,13 @@ def pre_build():
 
     for line in edit_file('PKGBUILD'):
         # edit PKGBUILD
-        if line.strip().startswith("sha1sum="):
-            pass
+        if line.strip().startswith("sha256sum="):
+            continue
         if line.strip() == "pkgver=0.85.0":
             line = "pkgver=0.86.0"
         print(line)
+
+    run_cmd(['sh', '-c', 'makepkg -g >> PKGBUILD'])
 
 
 post_build = aur_post_build
