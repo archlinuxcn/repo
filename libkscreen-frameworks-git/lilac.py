@@ -18,24 +18,21 @@
 #
 
 from lilaclib import *
+import re
 
 build_prefix = ['extra-x86_64']
-
-depends = ['libkscreen-frameworks-git']
 
 def pre_build():
     aur_pre_build()
 
     for line in edit_file('PKGBUILD'):
         # edit PKGBUILD
-        if line.strip() == "depends=('kxmlgui' 'libkscreen-frameworks')":
-            line = "depends=('kxmlgui' 'libkscreen-frameworks-git')"
-        if line.strip().startswith("makedepends="):
-            words = line.split(" ")
-            words.insert(-1, "'qt5-declarative'")
-            line = " ".join(words)
+        if line.strip().startswith("depends="):
+            depends = re.findall("depends=\s*\((.*)\)", line)[0]
+            words = depends.split(" ")
+            words.append("'hicolor-icon-theme'")
+            line = "depends=(%s)" % (" ".join(words))
         print(line)
-
 
 post_build = aur_post_build
 
