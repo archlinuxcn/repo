@@ -1,7 +1,7 @@
 # Maintainer: Jaroslav Lichtblau <dragonlord@aur.archlinux.org>
 
 pkgname=eaglemode
-pkgver=0.85.0
+pkgver=0.86.0
 pkgrel=1
 pkgdesc="Visit almost everything in your PC simply by zooming in"
 arch=('i686' 'x86_64')
@@ -30,3 +30,4 @@ package() {
   install -D -m644 "${srcdir}"/$pkgname-$pkgver/res/icons/${pkgname}48.png \
     "${pkgdir}"/usr/share/icons/hicolor/48x48/apps/${pkgname}.png
 }
+sha256sums=('8ed41149f637ed924b5f3ac572a09db46a2e1d699c5cf23020e7953499ff50a8')
