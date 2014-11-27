@@ -5,7 +5,7 @@
 #pkgbase=opencv
 pkgname=opencv-docs
 _realname=opencv
-pkgver=2.4.8
+pkgver=2.4.10
 pkgrel=1
 pkgdesc="Open Source Computer Vision Library docs"
 arch=('any')
@@ -15,7 +15,7 @@ depends=('')
 makedepends=('cmake'  'python2-sphinx' 'texlive-bin' 'texlive-latexextra' 'texlive-fontsextra')
 
 source=("http://downloads.sourceforge.net/opencvlibrary/$_realname-$pkgver.zip")
-md5sums=('50cc1433b3654074206f5b3dbfd49848')
+md5sums=('ec63952d3a3dff965d5fdde765926821')
 
 _cmakeopts=(
             '-D BUILD_DOCS=ON'
