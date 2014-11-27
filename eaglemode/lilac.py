@@ -19,7 +19,7 @@
 
 from lilaclib import *
 
-build_prefix = ['extra-x86_64']
+build_prefix = ['extra-x86_64', 'extra-i686']
 
 
 def pre_build():
