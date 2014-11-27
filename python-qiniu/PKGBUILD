@@ -3,8 +3,8 @@
 pkgbase=python-qiniu
 pkgname=(python-qiniu python2-qiniu)
 _pkgname=qiniu
-pkgver=7.0.0
-pkgrel=1
+pkgver=7.0.1
+pkgrel=2
 pkgdesc="Qiniu Resource Storage SDK for Python"
 arch=('any')
 url='https://github.com/qiniu/python-sdk'
@@ -12,7 +12,7 @@ license=('MIT')
 makedepends=('python-setuptools' 'python2-setuptools')
 source=("https://pypi.python.org/packages/source/q/qiniu/qiniu-$pkgver.tar.gz"
         LICENSE)
-sha512sums=('45d24ce2b76e34be4df126a405f917bde32061cf6bcbc8489cd32afdd3a539caa759b226ee99dcc01afc975990f7052b0ea2e92e1e935ed64e6d05c10d3fb45a'
+sha512sums=('d30996678e964e9f28718f58026e97430cffe92418e17836ef171983d1fb8c930307e1fc6892cf046afe85a1f790c27bbc5b13d160da0421ff94cec3fc28b571'
             '4fbb1090b3ee0d230d40b45db7bcd164873872d1860bd83b51197ed5d03e9d4be7785a400f1d314d6e3c0a6fcba7e1afdf3fdab04ae9970df59f96b18862c529')
 
 prepare() {
@@ -35,4 +35,7 @@ package_python2-qiniu() {
   python2 setup.py install -O1 --root "${pkgdir}"
 
   install -Dm644 ../LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+  # Don't conflict with python 3.x version
+  mv "$pkgdir"/usr/bin/qiniupy{,2}
 }

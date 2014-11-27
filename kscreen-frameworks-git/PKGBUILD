@@ -1,13 +1,13 @@
 # Maintainer: Antonio Rojas
 
 pkgname=kscreen-frameworks-git
-pkgver=r500.88b2a3f
+pkgver=r518.ccf52c4
 pkgrel=1
 pkgdesc='KDE screen management software'
 arch=('i686' 'x86_64')
 url='https://projects.kde.org/projects/extragear/libs/libkscreen'
 license=('LGPL')
-depends=('kxmlgui' 'libkscreen-frameworks')
+depends=('kxmlgui' 'libkscreen-frameworks-git')
 makedepends=('extra-cmake-modules' 'git' 'qt5-declarative' 'python')
 provides=('kscreen-frameworks')
 conflicts=('kscreen-frameworks' 'kscreen')

@@ -21,11 +21,15 @@ from lilaclib import *
 
 build_prefix = ['extra-x86_64']
 
+depends = ['libkscreen-frameworks-git']
+
 def pre_build():
     aur_pre_build()
 
     for line in edit_file('PKGBUILD'):
         # edit PKGBUILD
+        if line.strip() == "depends=('kxmlgui' 'libkscreen-frameworks')":
+            line = "depends=('kxmlgui' 'libkscreen-frameworks-git')"
         if line.strip().startswith("makedepends="):
             words = line.split(" ")
             words.insert(-1, "'qt5-declarative'")
