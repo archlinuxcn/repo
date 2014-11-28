@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from types import SimpleNamespace
+import os
 
 from lilaclib import *
 
@@ -100,8 +101,8 @@ def edit_PKGBUILD():
   export dbgdir="$pkgdir-debug/usr/lib/debug"
   mkdir -p "$dbgdir"
   pushd "$pkgdir"
-  find . -name '*.ko' -print0 | parallel -j20 -0 kostrip
-  popd\n''' + line
+  find . -name '*.ko' -print0 | parallel -j20 -0 %s/kostrip
+  popd\n''' % os.path.abspath(os.getcwd()) + line
     elif 'gzip -9 {}' in line:
       line = '''  find "${pkgdir}" -name '*.ko' -print0 | parallel -j8 -0 gzip -9'''
     elif '-m644 vmlinux' in line:
