@@ -1,0 +1,31 @@
+--- configure.ac.orig	2009-10-31 21:32:47.000000000 +0100
++++ configure.ac	2011-10-02 15:38:19.199127197 +0200
+@@ -38,7 +38,6 @@
+ 
+ # misc defines
+ AC_DEFINE(WNCK_I_KNOW_THIS_IS_UNSTABLE, 1, [libwnck is happy with this])
+-AC_DEFINE(GMENU_I_KNOW_THIS_IS_UNSTABLE, 1,[libgnome-menus is happy with this])
+ AC_DEFINE(GDataTestFunc, void*, [Workaround GDataTestFunc problem])
+ 
+ # intl
+@@ -83,9 +82,6 @@
+ AC_SUBST(WNCK_CFLAGS)
+ AC_SUBST(WNCK_LIBS)
+ 
+-PKG_CHECK_MODULES(GMENU, libgnome-menu >= $GMENU_REQUIRED)
+-AC_SUBST(GMENU_CFLAGS)
+-AC_SUBST(GMENU_LIBS)
+ 
+ PKG_CHECK_MODULES(X11, x11 >= $X11_REQUIRED)
+ AC_SUBST(X11_CFLAGS)
+@@ -150,8 +146,8 @@
+ 		with_xfce4_panel=true;
+ 		AC_SUBST(XFCE4_PANEL_CFLAGS)
+ 		AC_SUBST(XFCE4_PANEL_LIBS)
+-		XFCE4_PANEL_PLUGIN_DIR="$($PKG_CONFIG --variable=libexecdir libxfce4panel-1.0)/xfce4/panel-plugins"
+-		XFCE4_PANEL_DESKTOP_DIR="$($PKG_CONFIG --variable=datadir libxfce4panel-1.0)/xfce4/panel-plugins"
++		XFCE4_PANEL_PLUGIN_DIR="$($PKG_CONFIG --variable=libdir libxfce4panel-1.0)/xfce4/panel-plugins"
++		XFCE4_PANEL_DESKTOP_DIR="$($PKG_CONFIG --variable=prefix libxfce4panel-1.0)/share/xfce4/panel-plugins"
+ 		AC_SUBST(XFCE4_PANEL_PLUGIN_DIR)
+ 		AC_SUBST(XFCE4_PANEL_DESKTOP_DIR)
+ 		],

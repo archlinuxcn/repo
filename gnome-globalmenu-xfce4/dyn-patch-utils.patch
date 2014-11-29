@@ -1,0 +1,130 @@
+--- ./gtk-modules/globalmenu/dyn-patch-utils.c.orig	2014-05-02 17:17:04.626746706 +0200
++++ ./gtk-modules/globalmenu/dyn-patch-utils.c	2014-05-02 17:16:54.326746659 +0200
+@@ -9,7 +9,7 @@
+ extern GTimer * timer;
+ extern GHashTable * notifiers;
+ 
+-static GStaticRecMutex _menubar_mutex = G_STATIC_REC_MUTEX_INIT;
++static GRecMutex _menubar_mutex;
+ 
+ static gulong buffered_changes = 0;
+ static gboolean _dyn_patch_emit_changed(GtkMenuBar * menubar);
+@@ -19,7 +19,7 @@
+ static void dyn_patch_set_menubar(GtkWidget * widget, GtkMenuBar * menubar);
+ 
+ void dyn_patch_discover_menubars(DiscoverMode mode) {
+-	g_static_rec_mutex_lock(&_menubar_mutex);
++	g_rec_mutex_lock(&_menubar_mutex);
+ 	GList * toplevels = gtk_window_list_toplevels();
+ 	GList * iter;
+ 	for(iter = toplevels; iter; iter = iter->next) {
+@@ -27,17 +27,17 @@
+ 		dpdm_transverse(GTK_WIDGET(window), &mode);
+ 	}
+ 	g_list_free(toplevels);
+-	g_static_rec_mutex_unlock(&_menubar_mutex);
++	g_rec_mutex_unlock(&_menubar_mutex);
+ }
+ 
+ void dyn_patch_queue_changed(GtkMenuBar * menubar, GtkWidget * widget) {
+-	g_static_rec_mutex_lock(&_menubar_mutex);
++	g_rec_mutex_lock(&_menubar_mutex);
+ 	guint source_id;
+ 	buffered_changes++;
+ 	/* if their is a pending notifier, do nothing. wait for that notifier
+ 	 * to notifier the changes of the menubar.*/
+ 	if(g_hash_table_lookup(notifiers, menubar)) {
+-		g_static_rec_mutex_unlock(&_menubar_mutex);
++		g_rec_mutex_unlock(&_menubar_mutex);
+ 		return;
+ 	}
+ 	g_debug("created a timeout (200ms) to update menubar %p", menubar);
+@@ -51,36 +51,36 @@
+ 	} else {
+ 		/* should never get to here */
+ 	}
+-	g_static_rec_mutex_unlock(&_menubar_mutex);
++	g_rec_mutex_unlock(&_menubar_mutex);
+ }
+ 
+ GtkMenuBar * dyn_patch_get_menubar(GtkWidget * widget) {
+ 	GtkMenuBar * rt = NULL;
+-	g_static_rec_mutex_lock(&_menubar_mutex);
++	g_rec_mutex_lock(&_menubar_mutex);
+ 	if(GTK_IS_MENU_BAR(widget)) rt = GTK_MENU_BAR(widget);
+ 	rt = g_object_get_qdata((GObject*)widget, __MENUBAR__);
+-	g_static_rec_mutex_unlock(&_menubar_mutex);
++	g_rec_mutex_unlock(&_menubar_mutex);
+ 	return rt;
+ }
+ 
+ 
+ 
+ void dyn_patch_attach_menubar(GtkWindow * window, GtkMenuBar * menubar) {
+-	g_static_rec_mutex_lock(&_menubar_mutex);
++	g_rec_mutex_lock(&_menubar_mutex);
+ 	g_object_ref(window);
+ 	/** Protect the window so that it doesn't get freed if the old toplevel is the same **/
+ 	g_object_set_qdata_full(G_OBJECT(menubar), __TOPLEVEL__, g_object_ref(window), g_object_unref);
+ 	g_object_set_qdata_full(G_OBJECT(window), __MENUBAR__, g_object_ref(menubar), g_object_unref);
+ 	g_signal_emit_by_name(menubar, "dyn-patch-attached", window, NULL);
+ 	g_object_unref(window);
+-	g_static_rec_mutex_unlock(&_menubar_mutex);
++	g_rec_mutex_unlock(&_menubar_mutex);
+ }
+ void dyn_patch_detach_menubar(GtkWindow * window, GtkMenuBar * menubar) {
+-	g_static_rec_mutex_lock(&_menubar_mutex);
++	g_rec_mutex_lock(&_menubar_mutex);
+ 	g_signal_emit_by_name(menubar, "dyn-patch-detached", window, NULL);
+ 	g_object_set_qdata(G_OBJECT(window), __MENUBAR__, NULL);
+ 	g_object_set_qdata(G_OBJECT(menubar), __TOPLEVEL__, NULL);
+-	g_static_rec_mutex_unlock(&_menubar_mutex);
++	g_rec_mutex_unlock(&_menubar_mutex);
+ }
+ 
+ GtkWindow * dyn_patch_get_window(GtkMenuBar * menubar) {
+@@ -88,7 +88,7 @@
+ }
+ void dyn_patch_set_menubar_r(GtkWidget * widget, GtkMenuBar * menubar) {
+ 	g_timer_continue(timer);
+-	g_static_rec_mutex_lock(&_menubar_mutex);
++	g_rec_mutex_lock(&_menubar_mutex);
+ 	GtkMenuBar * old = dyn_patch_get_menubar(widget);
+ 	if(old && old != menubar) {
+ 		g_debug("Detaching hooks on Widget %p of menubar %p", widget, old);
+@@ -115,7 +115,7 @@
+ 	if(menubar != NULL) {
+ 		gboolean local = dyn_patch_get_is_local(menubar);
+ 		if(local) {
+-			g_static_rec_mutex_unlock(&_menubar_mutex);
++			g_rec_mutex_unlock(&_menubar_mutex);
+ 			return;
+ 		}
+ 	}
+@@ -157,7 +157,7 @@
+ 		}
+ 	}
+ 	g_timer_stop(timer);
+-	g_static_rec_mutex_unlock(&_menubar_mutex);
++	g_rec_mutex_unlock(&_menubar_mutex);
+ }
+ 
+ static void dpdm_transverse(GtkWidget * widget, DiscoverMode * mode) {
+@@ -203,7 +203,7 @@
+ 
+ static gboolean _dyn_patch_emit_changed(GtkMenuBar * menubar) {
+ 	GDK_THREADS_ENTER();
+-	g_static_rec_mutex_lock(&_menubar_mutex);
++	g_rec_mutex_lock(&_menubar_mutex);
+ 	g_debug("Changed: %p", menubar);
+ 	g_object_set_qdata((GObject*)menubar, __DIRTY__, NULL);
+ 	g_signal_emit_by_name(menubar, "dyn-patch-changed", NULL);
+@@ -217,7 +217,7 @@
+ 	/* The reference on the menubar by this notifier is removed after
+ 	 * the source is removed by the hash table.*/
+ 	g_hash_table_remove(notifiers, menubar);
+-	g_static_rec_mutex_unlock(&_menubar_mutex);
++	g_rec_mutex_unlock(&_menubar_mutex);
+ 	GDK_THREADS_LEAVE();
+ 	/*already removed, do'nt want glib get into troubles for removing the
+ 	 * source again.*/
