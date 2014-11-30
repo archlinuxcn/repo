@@ -1,6 +1,6 @@
 # Maintainer: Stephen Zhang <zsrkmyn at gmail dot com>
 pkgname=pointdownload-git
-pkgver=r129.1413deb
+pkgver=r130.122083c
 pkgrel=1
 pkgdesc="A downloader supporting http, ftp, bt, magnet and thunder protocol"
 arch=('x86_64' 'i686')
@@ -11,7 +11,7 @@ makedepends=('git')
 conflicts=('pointdownload')
 provides=('pointdownload')
 install=pointdownload.install
-source=('git://github.com/PointTeam/PointDownload')
+source=('git://github.com/PointTeam/PointDownload#branch=develop')
 md5sums=('SKIP')
 
 pkgver() {
