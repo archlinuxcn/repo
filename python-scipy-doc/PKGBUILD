@@ -1,0 +1,21 @@
+# Maintainer: Patrice Peterson <runiq at archlinux dot us>
+
+pkgname=python-scipy-doc
+pkgver=0.14.0
+pkgrel=1
+pkgdesc="Documentation for SciPy"
+makedepends=('unzip')
+arch=('any')
+url=('http://docs.scipy.org')
+license=('BSD')
+source=("$pkgname-$pkgver.zip::http://docs.scipy.org/doc/scipy/scipy-html-$pkgver.zip")
+noextract=("$pkgname-$pkgver.zip")
+
+package()
+{
+  install -d "$pkgdir/usr/share/doc/python-scipy/html"
+  unzip -qd "$pkgdir/usr/share/doc/python-scipy/html" "$srcdir/$pkgname-$pkgver.zip"
+  find "$pkgdir/usr/share/doc/python-scipy/html" -type d -exec chmod 755 \{\} \;
+  find "$pkgdir/usr/share/doc/python-scipy/html" -type f -exec chmod 644 \{\} \;
+}
+sha256sums=('7ab54cb9aeea1a168f30f321f38fee7b232612e70d5c92812139dddd822001bf')
