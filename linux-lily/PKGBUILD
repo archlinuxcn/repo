@@ -5,7 +5,7 @@
 pkgbase=linux-lily               # Build stock -ARCH kernel
 #pkgbase=linux-custom       # Build kernel with a different name
 _srcname=linux-3.17
-pkgver=3.17.2
+pkgver=3.17.4
 pkgrel=1
 arch=('i686' 'x86_64')
 url="http://www.kernel.org/"
@@ -19,12 +19,14 @@ source=(
         # standard config files for mkinitcpio ramdisk
         'linux.preset'
         'change-default-console-loglevel.patch'
+        'fix_CPU0_microcode_on_resume.patch'
         )
 sha256sums=(
-            '0f1cd431115a2ce84629298d054d5e6f6e78095a3aeda4d1335740c9402efb7e'
-            'fb688bc7ccfa636990b26aecfe62500bc1e0f6c410a837eef03014c161df2ec8'
+            'ea9de72fe335055f6e8eebd1d85cad150a47a81004bb27d78f18f2591fd3bbd5'
+            '66fc95823d3c99167532f37c07e9582d305961103997fcc61cfc7f6a86b34130'
             'f0d90e756f14533ee67afda280500511a62465b4f76adcc5effa95a40045179c'
-            '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99')
+            '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99'
+            '43668fe46147fe93f41b919db673574427ce5a8c376cd28ddddcbf3a00326491')
 
 _kernelname=${pkgbase#linux}
 
@@ -41,6 +43,10 @@ prepare() {
   # remove this when a Kconfig knob is made available by upstream
   # (relevant patch sent upstream: https://lkml.org/lkml/2011/7/26/227)
   patch -p1 -i "${srcdir}/change-default-console-loglevel.patch"
+
+  # Fix FS#42689
+  # https://bugzilla.kernel.org/show_bug.cgi?id=88001
+  patch -p1 -i "${srcdir}/fix_CPU0_microcode_on_resume.patch"
 
 
   if [ "${_kernelname}" != "" ]; then
@@ -123,7 +129,7 @@ _package() {
   export dbgdir="$pkgdir-debug/usr/lib/debug"
   mkdir -p "$dbgdir"
   pushd "$pkgdir"
-  find . -name '*.ko' -print0 | parallel -j20 -0 kostrip
+  find . -name '*.ko' -print0 | parallel -j20 -0 /home/lilydjwg/archgitrepo/linux-lily/kostrip
   popd
   # gzip -9 all modules to save 100MB of space
   find "${pkgdir}" -name '*.ko' -print0 | parallel -j8 -0 gzip -9
@@ -299,3 +305,9 @@ for _p in ${pkgname[@]}; do
 done
 
 # vim:set ts=8 sts=2 sw=2 et:
+sha256sums=(
+            'ea9de72fe335055f6e8eebd1d85cad150a47a81004bb27d78f18f2591fd3bbd5'
+            '66fc95823d3c99167532f37c07e9582d305961103997fcc61cfc7f6a86b34130'
+            'f0d90e756f14533ee67afda280500511a62465b4f76adcc5effa95a40045179c'
+            '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99'
+            '43668fe46147fe93f41b919db673574427ce5a8c376cd28ddddcbf3a00326491')

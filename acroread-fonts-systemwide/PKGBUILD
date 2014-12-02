@@ -1,0 +1,48 @@
+# Maintainer: Marcel Korpel <marcel[dot]korpel[at]gmail>
+# Contributor: Roger Braun <davinelulinvega@gmail.com>
+# Based on work by: Lee.MaRS <leemars@gmail.com>
+# Contributor: kevku <kevku@gmx.com>
+# Contributor: Andrzej Giniewicz <gginiu@gmail.com>
+
+pkgname=acroread-fonts-systemwide
+pkgver=11.0.09
+_fontpackver=11.0.09
+_nodotver=${pkgver//.}
+_fontpacknodotver=${_fontpackver//.}
+_first=${pkgver%%.*}
+pkgrel=1
+pkgdesc="Fonts from Adobe Reader ${_first}"
+arch=('any')
+url="http://www.adobe.com/products/acrobat/acrrasianfontpack.html"
+license=('custom')
+depends=('fontconfig' 'xorg-fonts-encodings' 'xorg-font-utils')
+makedepends=('p7zip')
+conflicts=('ttf-adobe-fonts'
+           'ttf-adobe-fonts-cjkext'
+           'acroread-fonts'
+           'acroread-font-chinese-simplified')
+install=$pkgname.install
+source=("http://ardownload.adobe.com/pub/adobe/reader/win/${_first}.x/${_fontpackver}/misc/FontPack${_fontpacknodotver}_XtdAlf_Lang.msi"
+        "http://ardownload.adobe.com/pub/adobe/reader/win/${_first}.x/${pkgver}/en_US/AdbeRdr${_nodotver}_en_US.exe")
+noextract=("AdbeRdr${_nodotver}_en_US.exe")
+sha256sums=('84462e21027c92e2ddb638449caac662b2e4256bf3f8de4a782026a12f195b0f'
+            '85cde7e9ce54aacda39c2403c3e30e126cda6a5e9269b422adb845eb9c7b2913')
+
+prepare() {
+  cd "$srcdir"
+
+  7z -yir!131 e AdbeRdr${_nodotver}_en_US.exe
+  7z -i!Data1.cab e 131
+  7z -i!*.otf e Data1.cab
+  7z -i!license.html19 e Data1.cab
+  7z -i\!*.o* e FontPack${_fontpacknodotver}_XtdAlf_Lang.msi
+  mv adobedevanagari_bolditalic.o adobedevanagari_bolditalic.otf
+}
+
+package() {
+  cd "$srcdir"
+
+  install -d "$pkgdir/usr/share/fonts/OTF"
+  install -m644 *.otf "$pkgdir/usr/share/fonts/OTF"
+  install -Dm644 license.html19 "$pkgdir/usr/share/licenses/$pkgname/license.html"
+}
