@@ -28,9 +28,10 @@
 +      if (_socket_obfs_padlen < 0) 
 +       msg(M_ERR, "--obfs-padlen must be positive");
 +    }
-   else
+   else if (streq (p[0], "peer-id"))
      {
-       if (file)
+       VERIFY_PERMISSION (OPT_P_PEER_ID);
+       options->use_peer_id = true;
 --- src/openvpn/socket.c.orig	2012-12-13 23:46:01.000000000 +0800
 +++ src/openvpn/socket.c	2013-03-07 23:24:43.943121487 +0800
 @@ -41,6 +41,10 @@
