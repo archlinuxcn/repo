@@ -1,5 +1,5 @@
 post_install() {
-  echo "The Teamviewer daemon must be running for Teamviewer 9 to work."
+  echo "The Teamviewer daemon must be running for Teamviewer 10 to work."
   echo "Execute 'sudo systemctl enable teamviewerd' in a terminal."
 }
 
@@ -8,7 +8,7 @@ post_upgrade() {
 }
 
 post_remove() {
-  rm -rf /opt/teamviewer9
+  rm -rf /opt/teamviewer
 }
 
 # vim: ts=2 sw=2 et:
