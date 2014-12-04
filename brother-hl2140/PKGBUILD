@@ -1,9 +1,9 @@
 # Maintainer: Facundo Tuesca <facutuesca at gmail dot com>
 pkgname="brother-hl2140"
 pkgver="2.0.2_1"
-pkgrel=2
+pkgrel=3
 pkgdesc="LPR and CUPS driver for the Brother HL2140"
-arch=('i686' 'x86_64' 'armv6h')
+arch=('i686' 'x86_64')
 url="http://solutions.brother.com/linux/en_us/"
 license=('custom:brother commercial license')
 depends=('cups')
@@ -14,12 +14,10 @@ source=(
 	'cupswrapper-license.txt'
 	'lpr-license.txt'
 )
-md5sums=(
-	'0c4bbdc943c987c101266c832d6c8b7a'
-	'931035c9b7a8e7ee667efefba4bba168'
-	'97ad0cffd216059e9d1d3121899d8646'
-	'5e87a3dc0f3e3438c088eda0f3565f0d'
-)
+md5sums=('0c4bbdc943c987c101266c832d6c8b7a'
+         '931035c9b7a8e7ee667efefba4bba168'
+         '97ad0cffd216059e9d1d3121899d8646'
+         '5e87a3dc0f3e3438c088eda0f3565f0d')
 if test "$CARCH" == x86_64; then
   depends+=('lib32-glibc')
 fi
