@@ -1,0 +1,8 @@
+post_install() {
+
+    echo "For bash users, source /usr/share/pinyin-completion/shell/pinyin-comp.bash in your ~/.bashrc"
+    echo "For bash users, source /usr/share/pinyin-completion/shell/pinyin-comp.zsh in your ~/.zshrc"
+    echo -e "\n"
+    echo "If you feel the default pinyin_initial.py is too big, which cause sensible delay and un-wanted ambigurous,just use you favourite editor to modify tools/unicode-han-pinyin.txt, then regenerate pinyin_initial.py by running:"
+    echo "/usr/share/pinyin-completion-git/tools/table-generator.py > pinyin_initial.py"
+}
