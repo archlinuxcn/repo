@@ -1,4 +1,4 @@
-# $Id: PKGBUILD 118950 2014-09-14 08:30:52Z heftig $
+# $Id: PKGBUILD 123441 2014-12-04 13:19:00Z heftig $
 # Maintainer: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 # Contributor: Jan de Groot <jgc@archlinux.org>
 # Contributor: Allan McRae <allan@archlinux.org>
@@ -9,7 +9,7 @@
 _pkgbasename=glibc
 pkgname=libx32-$_pkgbasename
 pkgver=2.20
-pkgrel=2.1
+pkgrel=4.1
 pkgdesc="GNU C Library (x32 ABI)"
 arch=('x86_64')
 url="http://www.gnu.org/software/libc"
@@ -25,29 +25,18 @@ provides=('glibc-x32-seed')
 options=('!strip' 'staticlibs' '!emptydirs')
 
 source=(http://ftp.gnu.org/gnu/libc/${_pkgbasename}-${pkgver}.tar.xz{,.sig}
-	glibc-2.20-getifaddrs_internal-segfault.patch
-	glibc-2.20-linux-3.16-additions.patch
-	glibc-2.20-do_ftell_wide-memleak.patch
+	glibc-2.20-roundup.patch
         libx32-glibc.conf)
 md5sums=('948a6e06419a01bd51e97206861595b0'
          'SKIP'
-         '1c5d5c2017445c75dbc5c6d0c1e45ddb'
-         '8f1059f431b842e54b12bde689620df8'
-         'b50feeab78fa6ce0a8cfb41ee8dc1fd8'
+         '8cfa2a0fa2a9aad8b86a138587d6261f'
          '34a4169d2bdc5a3eb83676a0831aae57')
 
 prepare() {
   cd ${srcdir}/glibc-${pkgver}
 
-  # fix segfault in getifaddrs_internal
-  # https://sourceware.org/ml/libc-alpha/2014-09/msg00312.html
-  patch -p1 -i $srcdir/glibc-2.20-getifaddrs_internal-segfault.patch
-  
-  # linux 3.16 additions - commit 0bd72468
-  patch -p1 -i $srcdir/glibc-2.20-linux-3.16-additions.patch
-  
-  # plug memory leak - commit 984c0ea9
-  patch -p1 -i $srcdir/glibc-2.20-do_ftell_wide-memleak.patch
+  # glibc-2.20..d73ac1bb
+  patch -p1 -i $srcdir/glibc-2.20-roundup.patch
 
   mkdir ${srcdir}/glibc-build
 }
