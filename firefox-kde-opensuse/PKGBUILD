@@ -8,7 +8,7 @@
 #_pgo=true
 
 pkgname=firefox-kde-opensuse
-pkgver=33.1.1
+pkgver=34.0.5
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
@@ -16,7 +16,7 @@ license=('MPL' 'GPL' 'LGPL')
 url="https://build.opensuse.org/package/show/mozilla:Factory/MozillaFirefox"
 depends=('gtk2' 'mozilla-common' 'libxt' 'startup-notification' 'mime-types'
          'dbus-glib' 'alsa-lib' 'desktop-file-utils' 'hicolor-icon-theme'
-	 'libvpx' 'icu'  'libevent' 'nss>=3.17.1' 'nspr>=4.10.7' 'hunspell' 
+	 'libvpx' 'icu'  'libevent' 'nss>=3.17.2' 'nspr>=4.10.7' 'hunspell' 
 	 'sqlite' 'libnotify' 'kmozillahelper')
 makedepends=('unzip' 'zip' 'diffutils' 'python2' 'yasm' 'mesa' 'imake'
              'xorg-server-xvfb' 'libpulse' 'gst-plugins-base-libs' 'inetutils')
@@ -27,7 +27,7 @@ provides=("firefox=${pkgver}")
 conflicts=('firefox')
 install=firefox.install
 options=('!emptydirs' '!makeflags')
-_patchrev=6c8dd9468bcc
+_patchrev=9e3063dcc69e
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.bz2
         mozconfig firefox.desktop firefox-install-dir.patch vendor.js kde.js firefox-fixed-loading-icon.png
@@ -99,7 +99,6 @@ build() {
   cd mozilla-release
 
   export PATH="$srcdir/path:$PATH"
-#  export LDFLAGS="$LDFLAGS -Wl,-rpath,/usr/lib/firefox"
   export PYTHON="/usr/bin/python2"
 
   if [[ -n $_lowmem || $CARCH == i686 ]]; then
@@ -152,7 +151,7 @@ package() {
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
 
-sha256sums=('ce67fab494acb56b9dc18896e9ea481b1a1ba61ca88ce3438f96d21cc554b9a9'
+sha256sums=('1680191ff7d4c465c0e6a5d7d6ff7a426f5bfa64f8d6d68a4bdfa9ac4ee459c8'
             'd6468f627873bdfade1d62a3d84fbb3f53f57b233e691e4d28cda3d7e3e5096e'
             '175d03cf3d8eb420d24a5a3072be69c9603e3ddacd3a83f68f49754eaecf6c5a'
             'd86e41d87363656ee62e12543e2f5181aadcff448e406ef3218e91865ae775cd'
@@ -161,11 +160,11 @@ sha256sums=('ce67fab494acb56b9dc18896e9ea481b1a1ba61ca88ce3438f96d21cc554b9a9'
             '68e3a5b47c6d175cc95b98b069a15205f027cab83af9e075818d38610feb6213'
             '4f0046b39a8d98f6e4fc3360ec490cb2416e38c7b3e92699f7e511c206c2c961'
             '9e67a4505deaefca2be253cd4f77f6089af76edd9507c1d54a1570cd51415b39'
-            '681eaa30b78aa40ac5cd7c5435d1088344067a90e0c7e698ccdb0b13ffe9e88f'
-            '1fd54e93db3a4d454ece5a6dc788a4ae36805eb497482add82a11ac5cf990562'
-            '4b4359947813234af46bf1fdc98a85a3f9b78483d5c4dbd840ac783d2fa9182f'
-            '6aafb4bc964f6c497676c3cf89cfc09c2b7de2ea1e5fbf0c088089044f16abe2'
-            '15ba009c12b76c20744cbc8d7d1840b979a5962b536f01798bb0c4bf04500bfb'
+            '172a9595c7ab437c4de5a5b27f4d991412e26d6e25e5852666c6edc69c8d419c'
+            '8a4c5a2dd56a80ddb83ece96192e23c1b078dd1a0672b6fd408ae37d1c6712f5'
+            '8a7b0814d0c0648475950117bddf666b30d649e354393879ce547def104d889e'
+            '6f93cb83a87c245ec2a8b09ed56a6abbcbe388a9ea961b50e2d84d307b71a344'
+            'b9feb66a33dc1644d7d277dc3fc166c655735de7100bc4e93f1fe44567f35345'
             'e8289ea4c1f8191e1e23661312ceee2128b8e790501b9a589d0d7bfc4384553f'
             '5f6b0970284d68d5ed18e6bb7ee1e9fc0025ab3c10aaa14c283adb21a4a20ee8'
             '60ace1c57577878850e05976ccf02f7e71512c4d62a8a9a6d270a7941d9625d3')
