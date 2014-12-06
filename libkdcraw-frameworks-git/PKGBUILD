@@ -1,7 +1,7 @@
 # Maintainer: Gustavo Alvarez <sl1pkn07@gmail.com>
 
 pkgname=libkdcraw-frameworks-git
-pkgver=r1020.7108009
+pkgver=r1024.0cd0005
 pkgrel=1
 pkgdesc="A C++ interface used to decode RAW picture. KF5 Frameworks branch (GIT version)"
 url='https://projects.kde.org/projects/kde/kdegraphics/libs/libkdcraw'
@@ -10,6 +10,7 @@ license=('GPL' 'LGPL' 'FDL')
 depends=('kio' 'libraw')
 makedepends=('extra-cmake-modules' 'kdoctools' 'git')
 conflicts=('libkdcraw')
+provides=('libkdcraw')
 source=("git://anongit.kde.org/libkdcraw#branch=frameworks")
 sha1sums=('SKIP')
 _gitname=libkdcraw
