@@ -2,7 +2,7 @@
 
 _pkgname=xfce4-session
 pkgname=${_pkgname}-devel
-pkgver=4.11.0
+pkgver=4.11.1
 pkgrel=1
 pkgdesc="A session manager for Xfce"
 arch=('i686' 'x86_64')
@@ -20,17 +20,11 @@ provides=("${_pkgname}=${pkgver}")
 conflicts=("${_pkgname}")
 replaces=('xfce-utils')
 install=$_pkgname.install
-source=(http://archive.xfce.org/src/xfce/$_pkgname/${pkgver%.*}/$_pkgname-$pkgver.tar.bz2
-        xfce4-session-4.10.1-logind-support-for-suspend-hibernate.patch)
-sha256sums=('c68905b5124382e30e90f7e4f080fd7e24d58a065991eba9cfcb99e5d59a7c8e'
-            '1fc10b6495624ddfb9e18419c835f7b929ad738c602a64ee7aab8327d3aac981')
+source=(http://archive.xfce.org/src/xfce/$_pkgname/${pkgver%.*}/$_pkgname-$pkgver.tar.bz2)
+sha256sums=('2ce40531bfe83e3e58795b07e0baf8e7622fd76f3f3db18dc1557b333ec8dece')
 
 prepare() {
   cd "$srcdir/$_pkgname-$pkgver"
-
-  # Use logind interfaces for suspend and hibernate
-  # https://bugzilla.xfce.org/show_bug.cgi?id=9952
-  patch -Np1 -i "$srcdir/xfce4-session-4.10.1-logind-support-for-suspend-hibernate.patch"
 
   xdt-autogen
 }
