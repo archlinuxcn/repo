@@ -2,7 +2,7 @@
 
 pkgname=clup
 pkgver=1.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Clickable/configurable Update of Arch Linux"
 arch=('any')
 url="https://github.com/colinkeenan/clup"

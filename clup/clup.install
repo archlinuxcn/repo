@@ -13,11 +13,13 @@ BLUE="${BOLD}$(tput setaf 4)"
 YELLOW="${BOLD}$(tput setaf 3)"
 
 post_install() {
-    note "
-    The script is named 'clup' and the desktop calls it 'Clickable Update (clup)'.
-    Find it in the 'System' category or by seraching for update.
-    Add 'Clickable Update (clup)' to your panel for one-click system updating.
-    Change the commands used by clup by editing the configuration file /etc/clup.conf" 
+    note "The script is named 'clup' and 
+    the desktop calls it 'Clickable Update (clup)'.
+    Find it in the 'System' category. Also find it from
+    the search box using 'update' or 'clup'. For one-
+    click system updating, add it to your panel. To
+    change the commands used by clup, edit the config
+    file: /etc/clup.conf" 
 }
 
 
