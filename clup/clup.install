@@ -1,0 +1,27 @@
+# Some colored makepkg-like functions
+msg_blue() {
+    printf "${BLUE}==>${ALL_OFF}${BOLD} ${1}${ALL_OFF}\n"
+}
+
+note() {
+    printf "${BLUE}==>${ALL_OFF}${YELLOW} NOTE:${ALL_OFF}${BOLD} ${1}${ALL_OFF}\n"
+}
+
+ALL_OFF="$(tput sgr0)"
+BOLD="$(tput bold)"
+BLUE="${BOLD}$(tput setaf 4)"
+YELLOW="${BOLD}$(tput setaf 3)"
+
+post_install() {
+    note "
+    The script is named 'clup' and the desktop calls it 'Clickable Update (clup)'.
+    Find it in the 'System' category or by seraching for update.
+    Add 'Clickable Update (clup)' to your panel for one-click system updating.
+    Change the commands used by clup by editing the configuration file /etc/clup.conf" 
+}
+
+
+post_upgrade() {
+    post_install
+}
+
