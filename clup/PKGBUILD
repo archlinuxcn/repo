@@ -2,7 +2,7 @@
 
 pkgname=clup
 pkgver=1.1
-pkgrel=2
+pkgrel=3
 pkgdesc="Clickable/configurable Update of Arch Linux"
 arch=('any')
 url="https://github.com/colinkeenan/clup"
@@ -17,7 +17,7 @@ md5sums=('7450016149f28def649bf4fa22adef6c'
          '0abe59259a20e473417204c8f31543f9')
 
 package() {
-  install -D -m755 ${pkgname}.conf "$pkgdir/etc/${pkgname}.conf"
-  install -D -m755 ${pkgname}.desktop "$pkgdir/usr/share/applications/${pkgname}.desktop"
+  install -D -m644 ${pkgname}.conf "$pkgdir/etc/${pkgname}.conf"
+  install -D -m644 ${pkgname}.desktop "$pkgdir/usr/share/applications/${pkgname}.desktop"
   install -D -m755 ${pkgname} "$pkgdir/usr/bin/${pkgname}"
 }
