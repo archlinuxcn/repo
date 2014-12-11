@@ -5,7 +5,7 @@ from lilaclib import *
 build_prefix = 'extra-x86_64'
 
 def pre_build():
-  pypi_pre_build(depends=['python-psutil'], pypi_name='memory_profiler')
+  pypi_pre_build(depends=['python-psutil'])
 
 def post_build():
   mkaurball()
