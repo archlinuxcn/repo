@@ -1,0 +1,15 @@
+#!/usr/bin/env python3
+
+from lilaclib import *
+
+build_prefix = 'extra-x86_64'
+
+def pre_build():
+  pypi_pre_build(depends=['python-psutil'], pypi_name='memory_profiler')
+
+def post_build():
+  mkaurball()
+  pypi_post_build()
+
+if __name__ == '__main__':
+  single_main()
