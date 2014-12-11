@@ -1,25 +1,24 @@
-# Maintainer: lilydjwg <lilydjwg@gmail.com>
-# Modified From: python2-memoryprofiler by Rich Lindsley <richli.ff at gmail dot com>
-pkgname=python-memoryprofiler
-_py_pkgname=memory_profiler # The pypi package name
-pkgver=0.31
+_pkgname=memory_profiler
+pkgname=python-$_pkgname
+pkgver=0.32
 pkgrel=2
-pkgdesc="A module for monitoring memory usage of a python program. Python 3 version."
+pkgdesc="A module for monitoring memory usage of a python program"
 arch=('any')
 url="http://pypi.python.org/pypi/memory_profiler"
-license=('BSD')
-depends=('python' 'python-psutil')
-options=(!emptydirs)
-source=(http://pypi.python.org/packages/source/m/$_py_pkgname/$_py_pkgname-$pkgver.tar.gz)
+license=('Simplified')
+depends=('python' 'python-psutil' 'python-setuptools')
+source=('https://pypi.python.org/packages/source/m/memory_profiler/memory_profiler-0.32.tar.gz')
+md5sums=('c65310467e05d8db4b10fa65534f3e5d')
 
-package() {
-  cd "$srcdir/$_py_pkgname-$pkgver"
-  python3 setup.py install --root="$pkgdir/" --optimize=1
-  mv "$pkgdir/usr/bin/mprof" "$pkgdir/usr/bin/mprof3"
+build() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  python3 setup.py build
 }
 
-# vim:set ts=2 sw=2 et:
+package() {
+  cd "$srcdir/$_pkgname-$pkgver"
 
-md5sums=('ab10ff2485a4258cd39237a0bf4b0295')
-sha1sums=('884340c8dec155089ca5687eac47588e019f81d6')
-sha256sums=('b492467608dc1a4594b7b578dc1aab46c1c926731baf293b1f494eeda0a1a35f')
+  python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+}
+
+# vim:set sw=2 et:
