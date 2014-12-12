@@ -1,0 +1,100 @@
+--- a/pkgs/conda-3.7.0-py34_0/lib/python3.4/site-packages/conda/install.py	2014-11-12 23:40:26.234512044 +0100
++++ b/pkgs/conda-3.7.0-py34_0/lib/python3.4/site-packages/conda/install.py	2014-11-12 23:43:17.176561770 +0100
+@@ -242,21 +242,23 @@
+     return res
+ 
+ def update_prefix(path, new_prefix, placeholder=prefix_placeholder,
+-                  mode='text'):
++                  mode='text', instdir=None):
++    if instdir is None:
++        instdir = new_prefix
+     if on_win and (placeholder != prefix_placeholder) and ('/' in placeholder):
+         # original prefix uses unix-style path separators
+         # replace with unix-style path separators
+-        new_prefix = new_prefix.replace('\\', '/')
++        instdir = instdir.replace('\\', '/')
+ 
+     path = os.path.realpath(path)
+     with open(path, 'rb') as fi:
+         data = fi.read()
+     if mode == 'text':
+         new_data = data.replace(placeholder.encode('utf-8'),
+-                                new_prefix.encode('utf-8'))
++                                instdir.encode('utf-8'))
+     elif mode == 'binary':
+         new_data = binary_replace(data, placeholder.encode('utf-8'),
+-                                  new_prefix.encode('utf-8'))
++                                  instdir.encode('utf-8'))
+     else:
+         sys.exit("Invalid mode:" % mode)
+ 
+@@ -473,7 +475,7 @@
+         return None
+ 
+ 
+-def link(pkgs_dir, prefix, dist, linktype=LINK_HARD, index=None):
++def link(pkgs_dir, prefix, dist, linktype=LINK_HARD, index=None, instdir=None):
+     '''
+     Set up a package in a specified (environment) prefix.  We assume that
+     the package has been extracted (using extract() above).
+@@ -487,6 +489,8 @@
+         # linking or unlinking some packages
+         log.warn('Ignored: %s' % dist)
+         return
++    if instdir is None:
++        instdir = prefix
+ 
+     source_dir = join(pkgs_dir, dist)
+     if not run_script(source_dir, dist, 'pre-link', prefix):
+@@ -525,7 +529,7 @@
+         for f in sorted(has_prefix_files):
+             placeholder, mode = has_prefix_files[f]
+             try:
+-                update_prefix(join(prefix, f), prefix, placeholder, mode)
++                update_prefix(join(prefix, f), prefix, placeholder, mode, instdir=instdir)
+             except PaddingError:
+                 sys.exit("ERROR: placeholder '%s' too short in: %s\n" %
+                          (placeholder, dist))
+@@ -643,6 +647,10 @@
+                  default=sys.prefix,
+                  help="prefix (defaults to %default)")
+ 
++    p.add_option('--instdir',
++                 action="store",
++                 help="install dir (defaults to prefix)")
++
+     p.add_option('--pkgs-dir',
+                  action="store",
+                  default=join(sys.prefix, 'pkgs'),
+@@ -672,9 +680,14 @@
+ 
+     pkgs_dir = opts.pkgs_dir
+     prefix = opts.prefix
++    if not opts.instdir:
++        instdir = prefix
++    else:
++        instdir = opts.instdir
+     if opts.verbose:
+         print("pkgs_dir: %r" % pkgs_dir)
+         print("prefix  : %r" % prefix)
++        print("instdir : %r" % instdir)
+ 
+     if opts.list:
+         pprint(sorted(linked(prefix)))
+@@ -689,14 +702,14 @@
+         for dist in dists:
+             if opts.verbose or linktype == LINK_COPY:
+                 print("linking: %s" % dist)
+-            link(pkgs_dir, prefix, dist, linktype)
++            link(pkgs_dir, prefix, dist, linktype, instdir=instdir)
+         messages(prefix)
+ 
+     elif opts.extract:
+         extract(pkgs_dir, dist)
+ 
+     elif opts.link:
+-        link(pkgs_dir, prefix, dist)
++        link(pkgs_dir, prefix, dist, instdir=instdir)
+ 
+     elif opts.unlink:
+         unlink(prefix, dist)
