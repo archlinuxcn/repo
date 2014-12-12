@@ -2,10 +2,13 @@
 [ -f etc/chromium-dev/default ] && _default='etc/chromium-dev/default'
 [ -f etc/chromium/default ] && _default='etc/chromium/default'
 
-flashver=15.0.0.239
+flashver=16.0.0.235
 
 post_upgrade()
 {
+	# for users of package without chromium browser
+	[ -f $_default ] || return 0
+
 	if [[ $(cat "$_default") == *ppapi* ]]; then
 		sed -i "s/ppapi-flash-version=.*[0-9]/ppapi-flash-version=$flashver/g" "$_default"
 	else

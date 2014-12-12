@@ -1,0 +1,23 @@
+# Some colored makepkg-like functions
+msg_blue() {
+    printf "${BLUE}==>${ALL_OFF}${BOLD} ${1}${ALL_OFF}\n"
+}
+
+note() {
+    printf "${BLUE}==>${ALL_OFF}${YELLOW} NOTE:${ALL_OFF}${BOLD} ${1}${ALL_OFF}\n"
+}
+
+ALL_OFF="$(tput sgr0)"
+BOLD="$(tput bold)"
+BLUE="${BOLD}$(tput setaf 4)"
+YELLOW="${BOLD}$(tput setaf 3)"
+
+post_install() {
+    note "The script is named 'cla' and the desktop calls it 'Close Active'. This is meant to live on a panel in a launcher. Click to close the active window. Keep clicking until the desktop is active. Click again, and it will logout of the desktop." 
+}
+
+
+post_upgrade() {
+    post_install
+}
+
