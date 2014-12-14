@@ -2,13 +2,13 @@
 # Contributor: 4679kun <admin at 4679 dot us>
 
 pkgname=shadowsocks-libev
-pkgver=1.5.3
+pkgver=1.6.1
 pkgrel=1
 pkgdesc='A lightweight secured scoks5 proxy for embedded devices and low end boxes'
 arch=('i686' 'x86_64')
 url='https://github.com/madeye/shadowsocks-libev'
 license=('GPL3')
-depends=('openssl' 'libev')
+depends=('openssl' 'libev' 'libsodium')
 makedepends=('git')
 source=("git://github.com/madeye/shadowsocks-libev.git#tag=v$pkgver"
         'shadowsocks-libev@.service'
@@ -16,14 +16,19 @@ source=("git://github.com/madeye/shadowsocks-libev.git#tag=v$pkgver"
 
 prepare() {
   cd $pkgname
-  rm -r libev
+  rm -r libev libsodium
+
   sed -e 's|libev/Makefile||' \
       -e 's|m4_include(\[libev/libev.m4\])||' \
+      -e 's|AC_CONFIG_SUBDIRS(\[libsodium\])||' \
       -i configure.ac
   sed -e 's| libev | |' \
+      -e 's| libsodium | |' \
       -i Makefile.am
   sed -e 's|\$(top_builddir)/libev/libev.la||' \
       -e 's|-I\$(top_srcdir)/libev|-lev -lm|' \
+      -e 's|\$(top_builddir)/libsodium/src/libsodium/libsodium.la||' \
+      -e 's|-I\$(top_srcdir)/libsodium/src/libsodium/include|-lsodium|' \
       -i src/Makefile.am
 }
 
