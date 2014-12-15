@@ -12,10 +12,6 @@ install=beautifuldnsd.install
 source=(${pkgname}-${pkgver}.tar.gz::https://github.com/lilydjwg/beautifuldnsd/archive/v${pkgver}.tar.gz)
 md5sums=('6ea587621dfec77d9360364b986008b1')
 
-build() {
-  true
-}
-
 package() {
   cd "${srcdir}/${pkgname}-${pkgver}"
   install -D -m644 systemd/beautifuldnsd.service "${pkgdir}/usr/lib/systemd/system/${pkgname}.service"
