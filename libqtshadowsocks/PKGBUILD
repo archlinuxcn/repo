@@ -10,8 +10,8 @@ url="https://github.com/librehat/$_pkgname"
 license=("GPL3")
 depends=("qt5-base>=5.2" "botan>=1.10")
 makedepends=("git" "make" "qtchooser")
-provides=("$_pkgname")
-conflicts=("$_pkgname" "$_pkgname-git")
+provides=("$pkgname")
+conflicts=("$pkgname" "$pkgname-git")
 source=("https://github.com/librehat/$_pkgname/archive/v$pkgver.tar.gz")
 sha256sums=("d55f24e0ad4ef5c70c3e7b3bb41f9fd14cb6d4d253fde52718660317eb719d2f")
 
