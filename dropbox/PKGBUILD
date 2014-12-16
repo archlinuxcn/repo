@@ -4,12 +4,12 @@
 
 pkgname=dropbox
 pkgver=3.0.3
-pkgrel=1
+pkgrel=2
 pkgdesc="A free service that lets you bring your photos, docs, and videos anywhere and share them easily."
 arch=("i686" "x86_64")
 url="http://www.dropbox.com"
 license=(custom)
-depends=("dbus-glib" "gtk2" "libsm")
+depends=("dbus-glib" "libsm")
 optdepends=(
     'ufw-extras: ufw rules for dropbox'
     'perl-file-mimeinfo: opening dropbox folder on some desktop environments'
@@ -23,7 +23,7 @@ _source_arch="x86"
 sha256sums=('a78187cf5cf2806fd8fad1018e01d9a35d7f63e840063a7d005dfe0e8ff28181'
             'e7d245f5d1a3d5322614b61400ae2913a8caef44bc86717ff7d8197a15dd7f01'
             'dd8fdb362c0bba8d789010594f021671ff00e535fc75e13da855f43bc7a4b3aa'
-            '513d7b8395ade6f573b1397acf300326c8dc97e868bca0bc219fb3336b0d4533'
+            'c39d63bcfc0d40002a5df052298feb79f2e8dd3d93da27ef31eb672b8d2fc70e'
             '2dc647035f4537b7286adb39a71c629353a57f8df03ab81283a3f110579a80aa'
             '1db4b5c19121932d606142642109af4703f211393afe58566c7ec43499d25169')
 [ "$CARCH" = "x86_64" ] && sha256sums[0]='e314646fcee7f37c750f60ffd8f93dfcf56b83e19d4002c9bbe38700b3a76d56'
