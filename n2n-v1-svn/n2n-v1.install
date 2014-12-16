@@ -1,0 +1,7 @@
+post_install() {
+        echo "Program names are edgev1 and supernodev1 to differ from v2."
+}
+
+post_upgrade() {
+  post_install
+}
