@@ -18,26 +18,41 @@
 #
 
 from lilaclib import *
-import re
 
 build_prefix = ['extra-x86_64', 'extra-i686']
 
 
+def apply_linewise_patch(filename, patch):
+    patch_lines = patch.split('\n')
+    del_lines = list(map(lambda x: x[1:], filter(lambda x: x.startswith("-"), patch_lines)))
+    add_lines = list(map(lambda x: x[1:], filter(lambda x: x.startswith("+"), patch_lines)))
+    for line in edit_file(filename):
+        found = False
+        for d, a in zip(del_lines, add_lines):
+            if line.strip() == d.strip():
+                print(a)
+                found = True
+                break
+        if not found:
+            print(line)
+
+
 def pre_build():
     aur_pre_build()
+    # patch PKGBUILD, fixing conflict CARCH filenames
+    apply_linewise_patch("PKGBUILD", r"""
+-depends=('desktop-file-utils' 'libpng' 'gtk2')
++depends=('desktop-file-utils' 'libpng' 'gtk2' 'desktop-file-utils')
+-        "https://raw.githubusercontent.com/Firef0x/SublimeText-zh-CN/master/dist/${CARCH}/libsublime-imfix.so"
++        "libsublime-imfix-${CARCH}.so::https://raw.githubusercontent.com/Firef0x/SublimeText-zh-CN/master/dist/${CARCH}/libsublime-imfix.so"
+-        "https://raw.githubusercontent.com/Firef0x/SublimeText-zh-CN/master/dist/${CARCH}/sublime_text"
++        "sublime_text-${CARCH}::https://raw.githubusercontent.com/Firef0x/SublimeText-zh-CN/master/dist/${CARCH}/sublime_text"
+-  install -Dm755 libsublime-imfix.so \
++  install -Dm755 libsublime-imfix-${CARCH}.so \
+-    install -Dm755 sublime_text \
++    install -Dm755 sublime_text-${CARCH} \
+""")
 
-    for line in edit_file('PKGBUILD'):
-        # edit PKGBUILD
-        if line.strip().startswith("depends="):
-            depends = re.findall("depends=\s*\((.*)\)", line)[0]
-            words = depends.split(" ")
-            words.append("'desktop-file-utils'")
-            line = "depends=(%s)" % (" ".join(words))
-        print(line)
-    for line in edit_file('sublime-text-dev-imfix.install'):
-        if line.strip().startswith("cat"):
-            print("update-desktop-database -q")
-        print(line)
 
 post_build = aur_post_build
 

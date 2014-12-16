@@ -7,7 +7,7 @@ flashver=16.0.0.235
 post_upgrade()
 {
 	# for users of package without chromium browser
-	[ -f $_default ] || return 0
+	[ $_default ] || return 0
 
 	if [[ $(cat "$_default") == *ppapi* ]]; then
 		sed -i "s/ppapi-flash-version=.*[0-9]/ppapi-flash-version=$flashver/g" "$_default"
@@ -17,13 +17,9 @@ post_upgrade()
 }
 
 post_install() {
-  post_upgrade
+	post_upgrade
 }
 
 post_remove() {
-	if [ -f "$_default" ]; then
-		sed -i 's| --ppapi-flash-path=/usr/lib/PepperFlash/libpepflashplayer.so --ppapi-flash-version=1.*[0-999]||' "$_default"
-	else
-		: # do nothing
-	fi
+	[ $_default ] && sed -i 's| --ppapi-flash-path=/usr/lib/PepperFlash/libpepflashplayer.so --ppapi-flash-version=1.*[0-999]||' "$_default"
 }

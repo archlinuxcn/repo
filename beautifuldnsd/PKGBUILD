@@ -1,0 +1,23 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+pkgname=beautifuldnsd
+pkgver=0.1
+pkgrel=1
+pkgdesc="Quick and clean DNS proxy, especially useful for users with poor ISPs"
+arch=('any')
+url=https://github.com/programmervy/beautifuldnsd
+license=("public domain")
+depends=('python>=3.4' 'python-dnslib' 'python-yaml')
+optdepends=('dnsmasq: DNS cache')
+backup=("etc/${pkgname}.yaml")
+install=beautifuldnsd.install
+source=(${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz)
+md5sums=('6c888e8b4d40a10de483af7e99f91c6e')
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  install -D -m644 systemd/beautifuldnsd.service "${pkgdir}/usr/lib/systemd/system/${pkgname}.service"
+  install -D -m644 systemd/tmpfiles.conf "${pkgdir}/usr/lib/tmpfiles.d/${pkgname}.conf"
+  install -D -m644 beautifuldnsd.yaml "${pkgdir}/etc/${pkgname}.yaml"
+  install -D -m755 beautifuldnsd "${pkgdir}/usr/bin/${pkgname}"
+}
+

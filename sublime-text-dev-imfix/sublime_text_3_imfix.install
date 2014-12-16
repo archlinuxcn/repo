@@ -1,0 +1,66 @@
+post_install() {
+  # Update desktop entries.
+  update-desktop-database -q
+
+  # Update icon cache.
+  gtk-update-icon-cache -q -t -f usr/share/icons/hicolor
+
+  # Note admin after install/update on how to change th update_check setting.
+  cat << _EOF
+
+  ==> Sublime Text 3 Dev install/upgrade note:
+  ------------------------------------------------------------------------------
+
+  From Build 3065, the launch script 'subl3' is split into two launch scripts
+  'sublime_text_3' and 'sublime_text_3_imfix'. 'sublime_text_3' would launch
+  the original executable 'sublime_text' without loading the library
+  'libsublime-imfix.so'.
+  '/usr/bin/subl3' is a symlink to '/usr/bin/sublime_text_3_imfix' as default,
+  and you could re-link it to '/usr/bin/sublime_text_3' if you like. (Or re-link
+  it to '/usr/bin/vim' or '/usr/bin/emacs' if you like O(^_^)O)
+
+  The desktop entry 'sublime_text_3.desktop' is also split into two desktop
+  entries 'sublime_text_3.desktop' and 'sublime_text_3_imfix.desktop'. Note that
+  'sublime_text_3_imfix.desktop' is corresponding to 'sublime_text_3.desktop'
+  in previous version.
+
+  To disable in-application reminders about new Sublime Text 3 Dev versions,
+  add the following setting to your User Preferences file:
+
+  "update_check": false
+
+  The following is Simplified Chinese translation.
+
+  ==> Sublime Text 3 开发版安装/升级注意事项:
+  ------------------------------------------------------------------------------
+
+  从构建版本 3065 开始，运行脚本 "subl3" 分为两个运行脚本 "sublime_text_3" 和
+  "sublime_text_3_imfix"。"sublime_text_3" 将不加载链接库 "libsublime-imfix.so"
+  直接运行原来的可执行文件 "sublime_text"。
+  "/usr/bin/subl3" 默认为一个指向 "/usr/bin/sublime_text_3_imfix" 的符号链接。
+  只要您愿意，您可以重新链接到 "/usr/bin/sublime_text_3" 。(或者重新链接到
+  "/usr/bin/vim" 或者 "/usr/bin/emacs" ，如果您愿意的话。O(^_^)O)
+
+  桌面图标 "sublime_text_3.desktop" 同样分为两个桌面图标 "sublime_text_3.desktop"
+  和 "sublime_text_3_imfix.desktop"。请注意，"sublime_text_3_imfix.desktop"
+  对应于之前版本的 "sublime_text_3.desktop"。
+
+  要禁止 Sublime Text 3 开发版的应用内升级提醒，请在您的用户配置
+  文件中添加以下内容:
+
+  "update_check": false
+
+_EOF
+}
+
+post_upgrade() {
+  post_install $1
+}
+
+post_remove() {
+  # Update desktop entries.
+  update-desktop-database -q
+
+  # Update icon cache.
+  gtk-update-icon-cache -q -t -f usr/share/icons/hicolor
+}
