@@ -1,0 +1,30 @@
+# Maintainer: shmilee <shmilee.zju@gmail.com>
+# Maintainer: MJsaka <qiuxuenan@gmail.com>
+
+pkgname=kwplayer
+pkgver=3.4.6
+pkgrel=1
+pkgdesc='An elegant music player which can get songs from kuwo.cn'
+arch=('any')
+license=('GPL3')
+url="https://github.com/LiuLang/kwplayer"
+depends=('python-dbus' 'python-gobject' 'python-ply' 'gst-libav' 'gst-plugins-base' 'gst-plugins-good' 'gst-plugins-ugly' 'gnome-icon-theme-symbolic')
+optdepends=('python-mutagenx: convert ID3 tag from GBK to UTF-8'
+            'plyvel: use leveldb for cache data'
+            'python3-keybinder: global keyboard shortcuts')
+conflicts=(kwplayer-git)
+source=("https://pypi.python.org/packages/source/k/kwplayer/${pkgname}-${pkgver}.tar.gz")
+md5sums=('91415ec957df4d5a81f041cbd64d4834')
+
+build() {
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    python setup.py build
+}
+
+package() {
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    python setup.py install --root="$pkgdir"
+    #sed -i 's/Icon=kwplayer/Icon=kwplayer.png/' "$pkgdir"/usr/share/applications/kwplayer.desktop
+}
+
+
