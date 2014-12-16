@@ -18,9 +18,6 @@
 #
 
 from lilaclib import *
-import re
-import os
-import os.path
 
 build_prefix = ['extra-x86_64', 'extra-i686']
 
