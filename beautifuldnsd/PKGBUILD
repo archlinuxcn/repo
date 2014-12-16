@@ -2,16 +2,16 @@
 pkgname=beautifuldnsd
 pkgver=0.1
 pkgrel=1
-pkgdesc="Quick and clean DNS proxy, especially useful for China mainland users"
+pkgdesc="Quick and clean DNS proxy, especially useful for users with poor ISPs"
 arch=('any')
-url=https://github.com/lilydjwg/beautifuldnsd
+url=https://github.com/programmervy/beautifuldnsd
 license=("public domain")
 depends=('python>=3.4' 'python-dnslib' 'python-yaml')
 optdepends=('dnsmasq: DNS cache')
 backup=("etc/${pkgname}.yaml")
 install=beautifuldnsd.install
-source=(${pkgname}-${pkgver}.tar.gz::https://github.com/lilydjwg/beautifuldnsd/archive/v${pkgver}.tar.gz)
-md5sums=('6ea587621dfec77d9360364b986008b1')
+source=(${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz)
+md5sums=('6c888e8b4d40a10de483af7e99f91c6e')
 
 package() {
   cd "${srcdir}/${pkgname}-${pkgver}"
