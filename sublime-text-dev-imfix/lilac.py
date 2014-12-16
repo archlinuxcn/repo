@@ -34,10 +34,6 @@ def pre_build():
             words.append("'desktop-file-utils'")
             line = "depends=(%s)" % (" ".join(words))
         print(line)
-    for line in edit_file('sublime-text-dev-imfix.install'):
-        if line.strip().startswith("cat"):
-            print("update-desktop-database -q")
-        print(line)
 
 post_build = aur_post_build
 

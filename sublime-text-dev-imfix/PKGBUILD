@@ -1,66 +1,116 @@
-# Maintainer: Firef0x <Firefgx (at} gmail {dot) com>
+# Maintainer : Firef0x <Firefgx (at} gmail {dot) com>
 # Contributor: Firef0x <Firefgx (at} gmail {dot) com>
 # Contributor: Sander Boom <sander at inflowmotion dot nl> (From sublime-text-dev)
 # Contributor: realitygaps <realitygaps at yahoo dot com> (From sublime-text-dev)
 # Contributor: ska <skatiger (at} gmail {dot) com> (From sublime-text-imfix)
 
-_pkgname=sublime_text_3
-
-pkgname=sublime-text-dev-imfix
+pkgname=('sublime-text-dev-imfix' 'sublime-text-dev-zh-cn')
 pkgver=3.3065
-pkgrel=1
-pkgdesc="Sophisticated text editor for code, HTML and prose , a dry fixed for development build, which supported Fcitx input method"
+pkgrel=2
 arch=('i686' 'x86_64')
 url="http://www.sublimetext.com/3"
 license=('custom')
-depends=('libpng' 'gtk2' 'desktop-file-utils')
-provides=('sublime-text-dev' 'sublime-text-nightly')
+depends=('desktop-file-utils' 'libpng' 'gtk2')
+provides=("sublime-text-dev=${pkgver}" 'sublime-text-nightly')
 conflicts=('sublime-text-dev' 'sublime-text-nightly')
 options=('!strip')
-install=${pkgname}.install
 changelog=README.md
 
 _archurl='x64'
+_pkgname=sublime_text_3
+_pkgname1="${_pkgname}_imfix"
+_rplexe=1
 
-[[ "${CARCH}" = i686 ]] && _archurl='x32'
+[[ "${CARCH}" = "i686" ]] && _archurl='x32'
 
+install=${_pkgname1}.install
+noextract=("Default.sublime-package")
 source=("http://c758482.r82.cf2.rackcdn.com/${_pkgname}_build_${pkgver:2}_${_archurl}.tar.bz2"
-		"${_pkgname}.desktop"
-		"subl3"
-		"sublime_imfix.c"
-		"LICENSE")
+        "https://raw.githubusercontent.com/Firef0x/SublimeText-zh-CN/master/dist/${CARCH}/libsublime-imfix.so"
+        "https://raw.githubusercontent.com/Firef0x/SublimeText-zh-CN/master/dist/${CARCH}/sublime_text"
+        "https://raw.githubusercontent.com/Firef0x/SublimeText-zh-CN/master/dist/any/Default.sublime-package"
+        "${_pkgname}.desktop"
+        "${_pkgname1}.desktop"
+        "${_pkgname}.sh"
+        "${_pkgname1}.sh"
+        "LICENSE"
+        "LICENSE.translation")
 md5sums=('466ae754d2cd6aa80dd8dd8b571b4cac'
-         '832dcc3705358c47540e6cdb5d435858'
-         '70b182c165360e69dcaac167e40e2096'
-         'b9cfc9418af10b5c8b509f98f310da7f'
-         'ee96c697ef707e92077d0c55ec14922a')
+         '6e45f6aee03a727c9f09b4136e0b8c9e'
+         '901cd838b215f814e2f260a3bdfb6179'
+         '268459fae3adaeae9362c7ebfb7d7f33'
+         '5ac1509ebee5509261f5d081e0e02297'
+         'b5bacba8ee2573688361d1cc25e2f74d'
+         'fa22069242e91e9a7a9dc4023ebf9bf5'
+         '7be7d93a1062a9975f34661d66b72ff0'
+         'ee96c697ef707e92077d0c55ec14922a'
+         'f7e48316f800b0e1e0153111b1c80302')
 
-[[ "${CARCH}" = i686 ]] && md5sums[0]='d0456b04a1f425f9119aa0615fbc4ceb'
+if [[ "${CARCH}" == "i686" ]]; then
+  md5sums[0]='d0456b04a1f425f9119aa0615fbc4ceb'
+  md5sums[1]='9c52cabd468301706be2fea8a7379161'
+  md5sums[2]='9e65dda3f3760bf80915f755f2183519'
+fi
 
-build() {
-	gcc -shared -o libsublime-imfix.so sublime_imfix.c  `pkg-config --libs --cflags gtk+-2.0` -fPIC
+_package_common() {
+  # Copy everything
+  install -dm755 "${pkgdir}/opt"
+  cp --preserve=mode -r "${_pkgname}" "${pkgdir}/opt/${_pkgname}"
+
+  # Install IM fix library
+  install -Dm755 libsublime-imfix.so \
+    ${pkgdir}/opt/${_pkgname}/libsublime-imfix.so
+
+  # Install icons and desktop shortcuts
+  for res in 128x128 16x16 256x256 32x32 48x48; do
+    install -dm755 "${pkgdir}/usr/share/icons/hicolor/${res}/apps"
+    ln -sf "/opt/${_pkgname}/Icon/${res}/sublime-text.png" \
+    "${pkgdir}/usr/share/icons/hicolor/${res}/apps/sublime-text.png"
+  done
+
+  install -dm755 "${pkgdir}/usr/share/applications"
+  install -Dm644 ${_pkgname}.desktop \
+    "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
+  install -Dm644 ${_pkgname1}.desktop \
+    "${pkgdir}/usr/share/applications/${_pkgname1}.desktop"
+
+  # Install bin file
+  install -dm755 "${pkgdir}/usr/bin"
+  install -Dm755 ${_pkgname}.sh "${pkgdir}/usr/bin/${_pkgname}"
+  install -Dm755 ${_pkgname1}.sh "${pkgdir}/usr/bin/${_pkgname1}"
+
+  # Make symbolic links
+  ln -sf "/usr/bin/${_pkgname1}" "${pkgdir}/usr/bin/subl3"
+
+  # Install license file
+  install -dm755 "${pkgdir}/usr/share/licenses/${pkgname}"
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
 
-package() {
-	install -dm755 "${pkgdir}/opt"
-	cp --preserve=mode -r "${_pkgname}" "${pkgdir}/opt/${_pkgname}"
+package_sublime-text-dev-imfix() {
+  pkgdesc="Sophisticated text editor for code, HTML and prose , a dry fixed for development build, which supported Fcitx input method"
 
-	cp --preserve=mode -r libsublime-imfix.so \
-	${pkgdir}/opt/${_pkgname}/libsublime-imfix.so
-
-	for res in 128x128 16x16 256x256 32x32 48x48; do
-		install -dm755 "${pkgdir}/usr/share/icons/hicolor/${res}/apps"
-		ln -s "/opt/${_pkgname}/Icon/${res}/sublime-text.png" \
-		"${pkgdir}/usr/share/icons/hicolor/${res}/apps/sublime-text.png"
-	done
-
-	install -dm755 "${pkgdir}/usr/share/applications"
-	install -Dm644 ${_pkgname}.desktop \
-	"${pkgdir}/usr/share/applications/${_pkgname}.desktop"
-
-	install -dm755 "${pkgdir}/usr/share/licenses/${pkgname}"
-	install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
-
-	install -dm755 "${pkgdir}/usr/bin"
-	install -Dm755 subl3 "${pkgdir}/usr/bin/subl3"
+  _package_common
 }
+
+package_sublime-text-dev-zh-cn() {
+  pkgrel=1
+  pkgdesc="Sophisticated text editor for code, HTML and prose, development build with Simplified Chinese translation and Fcitx input method support"
+
+  if [ ${_rplexe} -eq 1 ]; then
+    rm "${_pkgname}/sublime_text"
+    install -Dm755 sublime_text \
+      ${_pkgname}/sublime_text
+  fi
+
+  rm "${_pkgname}/Packages/Default.sublime-package"
+  install -Dm644 Default.sublime-package \
+    ${_pkgname}/Packages/Default.sublime-package
+
+  _package_common
+
+  # Install license file
+  install -Dm644 LICENSE.translation "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE.translation"
+}
+
+# vim:set ts=2 sw=2 et:
