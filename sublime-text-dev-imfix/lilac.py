@@ -19,21 +19,16 @@
 
 from lilaclib import *
 import re
+import os
+import os.path
 
 build_prefix = ['extra-x86_64', 'extra-i686']
 
 
 def pre_build():
     aur_pre_build()
-
-    for line in edit_file('PKGBUILD'):
-        # edit PKGBUILD
-        if line.strip().startswith("depends="):
-            depends = re.findall("depends=\s*\((.*)\)", line)[0]
-            words = depends.split(" ")
-            words.append("'desktop-file-utils'")
-            line = "depends=(%s)" % (" ".join(words))
-        print(line)
+    # patch PKGBUILD, fixing conflict CARCH filenames
+    rum_cmd(['sh', '-c', "patch <PKGBUILD.patch"])
 
 post_build = aur_post_build
 
