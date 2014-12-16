@@ -2,7 +2,7 @@
 # Contributor: Daniel Micay <danielmicay@gmail.com>
 
 pkgname=android-ndk
-pkgver=r10c
+pkgver=r10d
 pkgrel=2
 pkgdesc='Android C/C++ developer kit'
 arch=('x86_64' 'i686')
@@ -12,13 +12,20 @@ options=('!strip' 'staticlibs')
 backup=('etc/profile.d/android-ndk.sh')
 install="$pkgname.install"
 
-if [[ $CARCH != x86_64 ]]; then
-  source=("${pkgname}_$CARCH.bin::http://dl.google.com/android/ndk/${pkgname}-$pkgver-linux-x86.bin" 'android-ndk.sh')
-  md5sums=('d1595d9ca5e15484e047f1ac326c4ceb' '372f74400bfa061642c4b4175f2ddb48')
+if [[ $CARCH == i686 ]]; then
+  source=("${pkgname}_i686.bin::http://dl.google.com/android/ndk/${pkgname}-$pkgver-linux-x86.bin" 'android-ndk.sh')
+md5sums=('70ed6d8c34e7e620c145b791e8eeef89'
+         '372f74400bfa061642c4b4175f2ddb48')
 else
-  source=("${pkgname}_$CARCH.bin::http://dl.google.com/android/ndk/${pkgname}-$pkgver-linux-x86_64.bin" 'android-ndk.sh')
-  md5sums=('792c61706cd9ec6713fa1b69b2f42996' '372f74400bfa061642c4b4175f2ddb48')
+ source=("${pkgname}_x86_64.bin::http://dl.google.com/android/ndk/${pkgname}-$pkgver-linux-x86_64.bin" 'android-ndk.sh')
+md5sums=('263b83071e6bca15f67898548d8d236e'
+         '372f74400bfa061642c4b4175f2ddb48')
 fi
+
+prepare() {
+  chmod +x ${pkgname}_$CARCH.bin
+  ./${pkgname}_$CARCH.bin
+}
 
 package() {
   provides=('android-ndk')
