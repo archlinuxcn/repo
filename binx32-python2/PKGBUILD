@@ -7,7 +7,7 @@
 
 _basepkgname=python2
 pkgname=binx32-python2
-pkgver=2.7.8
+pkgver=2.7.9
 pkgrel=1
 _pybasever=2.7
 pkgdesc="A high-level scripting language (x32 ABI)"
@@ -15,7 +15,7 @@ arch=('x86_64')
 license=('PSF')
 url="http://www.python.org/"
 depends=("${_basepkgname}=${pkgver}" 'libx32-bzip2' 'libx32-gdbm' 'libx32-openssl' 'libx32-zlib' 'libx32-expat' 'libx32-sqlite' 'libx32-libffi')
-makedepends=('binx32-tk' 'bluez-libs')
+makedepends=('gcc-multilib-x32' 'binx32-tk' 'bluez-libs')
 optdepends=('binx32-tk: for IDLE')
 conflicts=('python2-x32')
 replaces=('python2-x32')
@@ -25,7 +25,7 @@ source=(
     Python-2.7.3-multilib-1.patch
     pyconfig-stub.h
 )
-sha1sums=('9c6281eeace0c3646fa556c8087bb1b7e033c9c4'
+sha1sums=('3172f6e957713c2d9fca462cc16068222fd1b9d3'
           '533eb9f7d78feff1f5d73887a968ddc5ec486bc2'
           '0ad4a8f98b0d111b603323aad7327fcc349927bc')
 
