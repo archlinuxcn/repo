@@ -6,6 +6,7 @@ pkgver=r10d
 pkgrel=2
 pkgdesc='Android C/C++ developer kit'
 arch=('x86_64' 'i686')
+makedepends=('p7zip')
 url='http://developer.android.com/sdk/ndk/'
 license=('GPL' 'LGPL' 'custom')
 options=('!strip' 'staticlibs')
@@ -23,8 +24,7 @@ md5sums=('263b83071e6bca15f67898548d8d236e'
 fi
 
 prepare() {
-  chmod +x ${pkgname}_$CARCH.bin
-  ./${pkgname}_$CARCH.bin
+7z x ${pkgname}_$CARCH.bin
 }
 
 package() {
