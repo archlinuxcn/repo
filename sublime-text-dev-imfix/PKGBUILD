@@ -10,7 +10,7 @@ pkgrel=2
 arch=('i686' 'x86_64')
 url="http://www.sublimetext.com/3"
 license=('custom')
-depends=('desktop-file-utils' 'libpng' 'gtk2')
+depends=('desktop-file-utils' 'gtk2' 'libpng')
 provides=("sublime-text-dev=${pkgver}" 'sublime-text-nightly')
 conflicts=('sublime-text-dev' 'sublime-text-nightly')
 options=('!strip')
@@ -26,8 +26,8 @@ _rplexe=1
 install=${_pkgname1}.install
 noextract=("Default.sublime-package")
 source=("http://c758482.r82.cf2.rackcdn.com/${_pkgname}_build_${pkgver:2}_${_archurl}.tar.bz2"
-        "https://raw.githubusercontent.com/Firef0x/SublimeText-zh-CN/master/dist/${CARCH}/libsublime-imfix.so"
-        "https://raw.githubusercontent.com/Firef0x/SublimeText-zh-CN/master/dist/${CARCH}/sublime_text"
+        "https://raw.githubusercontent.com/Firef0x/SublimeText-zh-CN/master/dist/${CARCH}/libsublime-imfix.${CARCH}.so"
+        "https://raw.githubusercontent.com/Firef0x/SublimeText-zh-CN/master/dist/${CARCH}/sublime_text.${CARCH}"
         "https://raw.githubusercontent.com/Firef0x/SublimeText-zh-CN/master/dist/any/Default.sublime-package"
         "${_pkgname}.desktop"
         "${_pkgname1}.desktop"
@@ -58,7 +58,7 @@ _package_common() {
   cp --preserve=mode -r "${_pkgname}" "${pkgdir}/opt/${_pkgname}"
 
   # Install IM fix library
-  install -Dm755 libsublime-imfix.so \
+  install -Dm755 libsublime-imfix.${CARCH}.so \
     ${pkgdir}/opt/${_pkgname}/libsublime-imfix.so
 
   # Install icons and desktop shortcuts
@@ -99,7 +99,7 @@ package_sublime-text-dev-zh-cn() {
 
   if [ ${_rplexe} -eq 1 ]; then
     rm "${_pkgname}/sublime_text"
-    install -Dm755 sublime_text \
+    install -Dm755 sublime_text.${CARCH} \
       ${_pkgname}/sublime_text
   fi
 
