@@ -7,7 +7,7 @@ post_build = aur_post_build
 
 def pre_build():
   # delete old source files as they have same names each version
-  run_cmd(["rm", "-f", "android-ndk_x85_64.bin", "android-ndk_i686.bin"])
+  run_cmd(["rm", "-f", "android-ndk_x86_64.bin", "android-ndk_i686.bin"])
   aur_pre_build()
 
   remove_lines = ["chmod +x ${pkgname}_$CARCH.bin",
