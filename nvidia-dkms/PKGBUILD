@@ -17,11 +17,9 @@ provides=('nvidia')
 conflicts=('nvidia')
 install='nvidia-dkms.install'
 source=("http://us.download.nvidia.com/XFree86/Linux-x86/${pkgver}/NVIDIA-Linux-x86-${pkgver}.run"
-        "http://us.download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run"
-        'linux3.18.patch')
+        "http://us.download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run")
 sha256sums=('8cc1c99fbda29b3258f57dbdacef11921aca2e3ac106ef591f0815716e1b829e'
-            '27f18ac4fcf4faceec14594adf81c88a8b2967403fe3e8dfdd2e7f5579825b36'
-            '98b55c0558d660506edd9737900be3a1adf75848a6de2e3d0facd07cd9ac229f')
+            '27f18ac4fcf4faceec14594adf81c88a8b2967403fe3e8dfdd2e7f5579825b36')
 
 [[ $CARCH == i686 ]] && _pkg=NVIDIA-Linux-x86-${pkgver}
 [[ $CARCH == x86_64 ]] && _pkg=NVIDIA-Linux-x86_64-${pkgver}-no-compat32
@@ -32,9 +30,6 @@ prepare() {
   fi
 
   sh ${_pkg}.run --extract-only
-
-  cd NVIDIA*/kernel
-  patch -Np1 -i ../../linux3.18.patch
 }
 
 package() {
