@@ -1,0 +1,29 @@
+# Maintainer: Arthur Zamarin <arthurzam@gmail.com>
+# Contributor: Stéphane Marguet (Stemp) <smarguet@gmail.com>
+# Contributor: scippio <scippio [at] berounet.cz>
+# Contributor: Angel 'angvp' Velasquez <angvp[at]archlinux.com.ve>
+# Contributor: Corrado Primier <bardo@aur.archlinux.org>
+# Contributor: Rubin Simons <rubin@xs4all.nl>
+
+pkgname=eclipse-emf
+pkgver=2.10.1
+_reldate=201409011055
+pkgrel=1
+pkgdesc="EMF and XSD frameworks for the Eclipse platform"
+arch=('any')
+url="http://www.eclipse.org/modeling/emf/"
+license=('EPL')
+depends=('eclipse>=3.5')
+_mirror="http://www.eclipse.org/downloads/download.php?r=1&file="
+source=("$_mirror/modeling/emf/emf/downloads/drops/${pkgver}/R${_reldate}/emf-runtime-${pkgver}.zip"
+	"$_mirror/modeling/emf/emf/downloads/drops/${pkgver}/R${_reldate}/xsd-runtime-${pkgver}.zip")
+sha256sums=('67ce80d6c33f179f64472c10102ad54f0c48325bbe1a34a3e17ee71a88021c5f'
+            '62fa9893dc431e5cdf7eb326d9fdb27a5250f86ee9922623ec9ce41b65474245')
+
+package() {
+	_dest="${pkgdir}"/usr/share/eclipse/dropins/${pkgname/eclipse-}/eclipse
+	cd "${srcdir}/eclipse"
+	find . -type f | while read f ; do
+		install -Dm644 ${f} "${_dest}/${f}"
+	done
+}
