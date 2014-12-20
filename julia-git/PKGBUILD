@@ -2,29 +2,23 @@
 # Contributor: Michael Jakl <jakl.michael@gmail.com>
 # With contributions from many kind people at https://aur.archlinux.org/packages/julia-git/
 
-BUILD_DOC=1
-
 _pkgbase=julia
 pkgbase=${_pkgbase}-git
-makedepends=('gcc-fortran' 'arpack' 'fftw' 'git' 'gmp' 'libunwind' 'llvm'
-  'mpfr' 'pcre' 'zlib')
-if ((BUILD_DOC)); then
-  makedepends+=('python2-sphinx' 'python2-sphinx_rtd_theme'
-    'texlive-langcjk' 'texlive-latexextra')
-  # 'python2-pip'
-  pkgname=('julia-git' 'julia-doc-git')
-else
-  pkgname=('julia-git')
-fi
-pkgver=0.3.0.rc2.11.g0038e08
+pkgname=('julia-git' 'julia-doc-git')
+pkgver=0.3.0.rc3.2214.gddaff3c
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
-arch=('i686' 'x86_64')
+arch=('any' 'i686' 'x86_64')
 url="http://julialang.org"
 license=('GPL')
-options=('!emptydirs' 'staticlibs' 'debug' 'strip')
+makedepends=('gcc-fortran' 'arpack' 'fftw' 'git' 'gmp' 'libgit2' 'libunwind'
+             'llvm' 'mpfr' 'pcre')
+makedepends+=('python2-sphinx' 'python2-sphinx_rtd_theme' 'python2-pip'
+              'texlive-langcjk' 'texlive-latexextra') # For the doc
+options=('!emptydirs' 'staticlibs')
 source=('git://github.com/JuliaLang/julia.git')
 md5sums=('SKIP')
+
 
 pkgver() {
   cd $_pkgbase
@@ -36,20 +30,11 @@ prepare() {
   cd $_pkgbase/doc
 
   # They use the Python2 version for sphinx which has on Arch a different name
-  sed s/sphinx-build/sphinx-build2/g -i Makefile
-}
-
-__build_doc() {
-  cd "$srcdir/$_pkgbase/doc"
-
-  make man
-  make html
-  make latexpdf
-  make info
+  sed 's/pip /pip2 /g' -i Makefile
 }
 
 build() {
-  cd "$srcdir/$_pkgbase"
+  cd $_pkgbase
 
   make prefix=/usr sysconfdir=/etc \
     USE_SYSTEM_LLVM=1 \
@@ -66,29 +51,36 @@ build() {
     USE_SYSTEM_MPFR=1 \
     USE_SYSTEM_ARPACK=1 \
     USE_SYSTEM_SUITESPARSE=0 \
-    USE_SYSTEM_ZLIB=1 \
-    USE_SYSTEM_GRISU=0 \
     USE_SYSTEM_RMATH=0 \
     USE_SYSTEM_LIBUV=0 \
     USE_SYSTEM_UTF8PROC=0 \
+    USE_SYSTEM_MOJIBAKE=0 \
+    USE_SYSTEM_LIBGIT2=1 \
     USE_INTEL_MKL=0 \
     USE_BLAS64=0 \
     USE_LLVM_SHLIB=0
 
-  ((BUILD_DOC)) && __build_doc
+  # Building doc
+  cd doc
+  make helpdb.jl
+  make man
+  make html
+  make latexpdf
+  make info
 }
 
 package_julia-git() {
   arch=('i686' 'x86_64')
-  depends=('arpack' 'fftw' 'git' 'gmp' 'libunwind' 'llvm' 'mpfr'
-    'pcre' 'zlib') # 'suitesparse'  'utf8proc' (AUR) 'intel-mkl' (AUR)
+  depends=('arpack' 'fftw' 'gmp' 'libgit2' 'libunwind' 'llvm' 'mpfr' 'pcre'
+           'hicolor-icon-theme' 'xdg-utils') # 'suitesparse'  'utf8proc' (AUR) 'intel-mkl' (AUR)
   optdepends=('gnuplot: If using the Gaston Package from julia')
+  install=julia.install
   provides=('julia')
   conflicts=('julia')
 
   cd $_pkgbase
 
-  make DESTDIR="$pkgdir" prefix=/usr sysconfdir=/etc \
+  make DESTDIR=$pkgdir prefix=/usr sysconfdir=/etc \
     USE_SYSTEM_LLVM=1 \
     USE_SYSTEM_LIBUNWIND=1 \
     USE_SYSTEM_PCRE=1 \
@@ -103,18 +95,18 @@ package_julia-git() {
     USE_SYSTEM_MPFR=1 \
     USE_SYSTEM_ARPACK=1 \
     USE_SYSTEM_SUITESPARSE=0 \
-    USE_SYSTEM_ZLIB=1 \
-    USE_SYSTEM_GRISU=0 \
     USE_SYSTEM_RMATH=0 \
     USE_SYSTEM_LIBUV=0 \
     USE_SYSTEM_UTF8PROC=0 \
+    USE_SYSTEM_MOJIBAKE=0 \
+    USE_SYSTEM_LIBGIT2=1 \
     USE_INTEL_MKL=0 \
     USE_BLAS64=0 \
     USE_LLVM_SHLIB=0 \
     install
 
-  # Remove doc files
-  rm -vr "$pkgdir"/usr/share/julia/doc
+    # Remove doc files
+    rm -r $pkgdir/usr/share/doc/julia
 }
 
 package_julia-doc-git() {
@@ -126,10 +118,11 @@ package_julia-doc-git() {
   cd $_pkgbase/doc/_build
 
   install -D -m644 man/julialanguage.1 \
-    "$pkgdir/usr/share/man/man1/julialanguage.1"
+          "$pkgdir"/usr/share/man/man1/julialanguage.1
   install -D -m644 texinfo/JuliaLanguage.info \
-    "$pkgdir/usr/share/info/julialanguage.info"
+          "$pkgdir"/usr/share/info/julialanguage.info
   install -D -m644 latex/JuliaLanguage.pdf \
-    "$pkgdir/usr/share/julia/doc/julialanguage.pdf"
-  cp -dpr --no-preserve=ownership html "$pkgdir/usr/share/julia/doc/"
+          "$pkgdir"/usr/share/doc/julia/julialanguage.pdf
+  cp -dpr --no-preserve=ownership html "$pkgdir"/usr/share/doc/julia/
+  install ../helpdb.jl "$pkgdir"/usr/share/doc/julia/helpdb.jl
 }
