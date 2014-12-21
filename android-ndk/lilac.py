@@ -16,7 +16,7 @@ def pre_build():
   for line in edit_file('PKGBUILD'):
       if line.strip() in remove_lines:
           if first_time:
-            print("7z x ${pkgname}_$CARCH.bin")
+            print("7z x -y ${pkgname}_$CARCH.bin")
             first_time = False
       else:
           print(line)
