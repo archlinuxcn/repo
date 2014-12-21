@@ -1,19 +1,27 @@
 # Maintainer: Marcin Kulik <m@ku1ik.com>
+
 pkgname=asciinema
-pkgver=0.9.8
-pkgrel=2
-pkgdesc="Command line recorder for asciinema.org service"
-arch=(any)
-url="https://github.com/sickill/asciinema"
-license=('MIT')
-depends=('python-requests>=1.1.0', 'python-setuptools')
-makedepends=('python-distribute')
-source=(https://pypi.python.org/packages/source/a/asciinema/asciinema-${pkgver}.tar.gz)
-md5sums=('ae8662d033af0e973d5864a247117e7f')
+pkgver=0.9.9
+pkgrel=1
+pkgdesc="Record and share your terminal sessions, the right way"
+arch=('x86_64' 'i686' 'arm')
+url="https://asciinema.org/"
+license=('GPLv3')
+if [ "$CARCH" = "i686" ]; then
+  _PKGARCH=386
+  sha1sums=('3d55788c1307a6bdcbc01082bed361ac1a96505e')
+elif [ "$CARCH" = "arm" ]; then
+  _PKGARCH=arm
+  sha1sums=('d9fcd1e62f19c0e7e148324c8d6aa627784e6a6f')
+else
+  _PKGARCH=amd64
+  sha1sums=('5639dea31a5e71b64b00b1b5cfc492d23006efc4')
+fi
+source=("https://github.com/asciinema/asciinema-cli/releases/download/v${pkgver}/${pkgname}-${pkgver}-linux-${_PKGARCH}.tar.gz")
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1
-}
+  cd ${pkgname}-${pkgver}-linux-${_PKGARCH}
 
-# vim:set ts=2 sw=2 et:
+  install -Dm755 ${pkgname} "${pkgdir}/usr/bin/${pkgname}"
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
