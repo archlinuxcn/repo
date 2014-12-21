@@ -24,7 +24,7 @@ md5sums=('263b83071e6bca15f67898548d8d236e'
 fi
 
 prepare() {
-7z x ${pkgname}_$CARCH.bin
+7z x -y ${pkgname}_$CARCH.bin
 }
 
 package() {
