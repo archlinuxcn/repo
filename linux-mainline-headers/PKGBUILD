@@ -5,8 +5,8 @@
 pkgbase=linux-mainline               # Build stock -ARCH kernel
 #pkgbase=linux-custom       # Build kernel with a different name
 _srcname=linux-3.18
-#_patchname=patch-3.18-rc7
-pkgver=3.18
+_patchname=patch-3.19-rc1
+pkgver=3.19rc1
 pkgrel=1
 arch=('i686' 'x86_64')
 url="http://www.kernel.org/"
@@ -14,7 +14,9 @@ license=('GPL2')
 makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc')
 options=('!strip')
 source=("https://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
-        #"https://www.kernel.org/pub/linux/kernel/v3.x/testing/${_patchname}.xz"
+        "https://www.kernel.org/pub/linux/kernel/v3.x/testing/${_patchname}.xz"
+        #"https://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.sign"
+        #"https://www.kernel.org/pub/linux/kernel/v3.x/testing/${_patchname}.sign"
         # the main kernel config files
         'config' 'config.x86_64'
         # standard config files for mkinitcpio ramdisk
@@ -23,10 +25,15 @@ source=("https://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
         )
 
 sha256sums=('becc413cc9e6d7f5cc52a3ce66d65c3725bc1d1cc1001f4ce6c32b69eb188cbd'
-            '0f1cd431115a2ce84629298d054d5e6f6e78095a3aeda4d1335740c9402efb7e'
-            'fb688bc7ccfa636990b26aecfe62500bc1e0f6c410a837eef03014c161df2ec8'
+            '42ba3005a984e397c11b8fcdfbb3310e005293ce9ce79e8e2d0e70fcf8c4f180'
+            'd3794c8b2cd11b71914b41f7a4e861369d4fa3c29fdd9e1d677ff0c2167eeb52'
+            'df7886f5d57f8f85e89987066dfa5c316e922dc0b22e6e6ad01331333db52377'
             'f0d90e756f14533ee67afda280500511a62465b4f76adcc5effa95a40045179c'
             '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99')
+validpgpkeys=(
+              'ABAF11C65A2970B130ABE3C479BE3E4300411886' # Linux Torvalds
+              '647F28654894E3BD457199BE38DBBDC86092693E' # Greg Kroah-Hartman
+             )
 
 _kernelname=${pkgbase#linux}
 
@@ -36,7 +43,7 @@ prepare() {
   # add latest fixes from stable queue, if needed
   # http://git.kernel.org/?p=linux/kernel/git/stable/stable-queue.git
 
-  #patch -p1 -i "${srcdir}/${_patchname}"
+  patch -p1 -i "${srcdir}/${_patchname}"
 
   # set DEFAULT_CONSOLE_LOGLEVEL to 4 (same value as the 'quiet' kernel param)
   # remove this when a Kconfig knob is made available by upstream
