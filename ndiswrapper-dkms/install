@@ -1,0 +1,39 @@
+post_install() {
+	DKMS=`which dkms 2>/dev/null`
+
+	echo ">>> DKMS: Module add, build, and install"
+
+	$DKMS add -m ndiswrapper -v 1.59
+	$DKMS build -m ndiswrapper -v 1.59
+	$DKMS install -m ndiswrapper -v 1.59
+
+	/usr/bin/depmod -a
+
+	cat <<EOF
+==> For more information on this driver, see:
+==> https://aur.archlinux.org/packages/ndiswrapper-dkms
+EOF
+}
+
+pre_upgrade() {
+	pre_remove
+}
+
+pre_remove() {
+	DKMS=`which dkms 2>/dev/null`
+	echo ">>> DKMS: Module uninstall"
+
+	line=`$DKMS status -m ndiswrapper`
+	if echo "$line" | grep -E 'added|built|installed'; then
+		version="1.59"
+		$DKMS remove ndiswrapper/$version --all
+	fi
+
+	/usr/bin/depmod -a
+
+}
+
+post_upgrade() {
+	post_install "$1"
+}
+
