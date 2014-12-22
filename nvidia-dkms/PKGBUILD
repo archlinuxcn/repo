@@ -5,7 +5,7 @@
 
 pkgname=nvidia-dkms
 pkgver=343.36
-pkgrel=2
+pkgrel=3
 pkgdesc='NVIDIA kernel module sources (DKMS)'
 arch=('i686' 'x86_64')
 url='http://www.nvidia.com/'
@@ -18,10 +18,10 @@ conflicts=('nvidia')
 install='nvidia-dkms.install'
 source=("http://us.download.nvidia.com/XFree86/Linux-x86/${pkgver}/NVIDIA-Linux-x86-${pkgver}.run"
         "http://us.download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run"
-        nv-drm.patch)
+        'linux3.18.patch')
 sha256sums=('8cc1c99fbda29b3258f57dbdacef11921aca2e3ac106ef591f0815716e1b829e'
             '27f18ac4fcf4faceec14594adf81c88a8b2967403fe3e8dfdd2e7f5579825b36'
-            'c9986c306f452614fcf23990c55ffe12bdc451bcbd65a5200269f90a722a3d35')
+            '63a52af60e2ee36a2efa41022780802de7eec5b315aa1580a2fa1eb208d8fa87')
 
 [[ $CARCH == i686 ]] && _pkg=NVIDIA-Linux-x86-${pkgver}
 [[ $CARCH == x86_64 ]] && _pkg=NVIDIA-Linux-x86_64-${pkgver}-no-compat32
@@ -32,8 +32,10 @@ prepare() {
   fi
 
   sh ${_pkg}.run --extract-only
+
   cd ${_pkg}
-  patch -p0 -i ../nv-drm.patch
+
+  patch -Np0 -i ../linux3.18.patch
 }
 
 package() {
