@@ -1,0 +1,16 @@
+post_install() {
+    echo -n "Updating vim help tags..."
+    /usr/bin/vim --noplugins -u NONE -U NONE \
+        --cmd ":helptags /usr/share/vim/vimfiles/doc" --cmd ":q" > /dev/null 2>&1
+    echo "done."
+}
+
+post_upgrade() {
+  true
+  # post_install $1
+}
+
+post_remove() {
+  true
+  post_install
+}
