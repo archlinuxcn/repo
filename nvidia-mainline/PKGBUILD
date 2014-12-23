@@ -5,7 +5,7 @@
 pkgname=nvidia-mainline
 pkgver=343.36
 _extramodules=extramodules-3.18-mainline
-pkgrel=1
+pkgrel=2
 pkgdesc="NVIDIA drivers for linux-mainline"
 arch=('i686' 'x86_64')
 url="http://www.nvidia.com/"
@@ -18,19 +18,24 @@ options=(!strip)
 if [ "$CARCH" = "i686" ]; then
     _arch='x86'
     _pkg="NVIDIA-Linux-${_arch}-${pkgver}"
-    source=("ftp://download.nvidia.com/XFree86/Linux-x86/${pkgver}/NVIDIA-Linux-x86-${pkgver}.run")
-    md5sums=('eae5d5407df0b371929a76f96aec4020')
+    source=("ftp://download.nvidia.com/XFree86/Linux-x86/${pkgver}/NVIDIA-Linux-x86-${pkgver}.run"
+            "nv-drm.patch")
+    md5sums=('eae5d5407df0b371929a76f96aec4020'
+             '79671a27131da619a33eb02ed0c2c031')
 elif [ "$CARCH" = "x86_64" ]; then
     _arch='x86_64'
    _pkg="NVIDIA-Linux-${_arch}-${pkgver}-no-compat32"
-    source=("ftp://download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run")
-    md5sums=('dfdf53ee8787455fe92a760ffa6badcb')
+    source=("ftp://download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run"
+            "nv-drm.patch")
+    md5sums=('dfdf53ee8787455fe92a760ffa6badcb'
+             '79671a27131da619a33eb02ed0c2c031')
 fi
 
 prepare() {
     sh "${_pkg}.run" --extract-only
     cd "${_pkg}"
     # patches here
+    patch kernel/nv-drm.c ../../nv-drm.patch
 }
 
 build() {
