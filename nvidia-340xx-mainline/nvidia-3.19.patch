@@ -1,0 +1,51 @@
+diff -Npur NVIDIA-Linux-x86_64-343.orig/kernel/nv.c NVIDIA-Linux-x86_64-343.36-no-compat32/kernel/nv.c
+--- NVIDIA-Linux-x86_64-343.orig/kernel/nv.c	2014-12-02 00:26:56.000000000 +0100
++++ NVIDIA-Linux-x86_64-343.36-no-compat32/kernel/nv.c	2014-12-21 17:41:28.881358753 +0100
+@@ -30,7 +30,7 @@
+ 
+ #if defined(NV_VMWARE) || (NV_BUILD_MODULE_INSTANCES != 0)
+ #if defined(MODULE_LICENSE)
+-MODULE_LICENSE("NVIDIA");
++MODULE_LICENSE("GPL\0NVIDIA");
+ #endif
+ #if defined(MODULE_INFO)
+ MODULE_INFO(supported, "external");
+@@ -1824,7 +1824,7 @@ nvidia_unlocked_ioctl(
+     unsigned long i_arg
+ )
+ {
+-    return nvidia_ioctl(file->f_dentry->d_inode, file, cmd, i_arg);
++    return nvidia_ioctl(file->f_path.dentry->d_inode, file, cmd, i_arg);
+ }
+ 
+ /*
+diff -Npur NVIDIA-Linux-x86_64-343.orig/kernel/nv-frontend.c NVIDIA-Linux-x86_64-343.36-no-compat32/kernel/nv-frontend.c
+--- NVIDIA-Linux-x86_64-343.orig/kernel/nv-frontend.c	2014-12-02 00:26:56.000000000 +0100
++++ NVIDIA-Linux-x86_64-343.36-no-compat32/kernel/nv-frontend.c	2014-12-21 17:41:28.884693753 +0100
+@@ -15,7 +15,7 @@
+ #include "nv-frontend.h"
+ 
+ #if defined(MODULE_LICENSE)
+-MODULE_LICENSE("NVIDIA");
++MODULE_LICENSE("GPL\0NVIDIA");
+ #endif
+ #if defined(MODULE_INFO)
+ MODULE_INFO(supported, "external");
+@@ -327,7 +327,7 @@ long nvidia_frontend_unlocked_ioctl(
+     unsigned long i_arg
+ )
+ {
+-    return nvidia_frontend_ioctl(file->f_dentry->d_inode, file, cmd, i_arg);
++    return nvidia_frontend_ioctl(file->f_path.dentry->d_inode, file, cmd, i_arg);
+ }
+ 
+ long nvidia_frontend_compat_ioctl(
+@@ -336,7 +336,7 @@ long nvidia_frontend_compat_ioctl(
+     unsigned long i_arg
+ )
+ {
+-    return nvidia_frontend_ioctl(file->f_dentry->d_inode, file, cmd, i_arg);
++    return nvidia_frontend_ioctl(file->f_path.dentry->d_inode, file, cmd, i_arg);
+ }
+ 
+ int nvidia_frontend_mmap(
