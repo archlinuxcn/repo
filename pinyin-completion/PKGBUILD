@@ -1,14 +1,14 @@
 # Maintainer: Petron <petron@archlinuxcn.org>
 pkgname=pinyin-completion
-pkgver=30.48dd34c
+pkgver=34.68173f0
 pkgrel=1
 pkgdesc="complete path name based upon the pinyin acronym of Chinese characters"
 arch=('any')
-url="https://github.com/adaptee/pinyin-completion"
+url="https://github.com/petronny/pinyin-completion"
 license=('GPL3')
 depends=('python2')
 makedepends=('git')
-source=("git+https://github.com/adaptee/pinyin-completion"
+source=("git+https://github.com/petronny/pinyin-completion"
         "pinyin-completion.install")
 sha256sums=('SKIP'
             'f6dbcc8fc15c6de71897281f1d64f05df7dfd1e5ec3b1a70bd46a4f3078f9f13')
@@ -26,8 +26,6 @@ build() {
 
 package() {
     cd $pkgname
-
-    sed -i -r "s|^#!/usr/bin/env python|#!/usr/bin/env python2|" setup.py pinyin-comp tools/*.py pinyin/*.py
 
     mkdir -p "$pkgdir/usr/share/$pkgname/"
     cp -r shell "$pkgdir/usr/share/$pkgname/"
