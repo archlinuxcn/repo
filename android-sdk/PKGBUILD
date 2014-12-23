@@ -3,13 +3,12 @@
 # Contributor: Gordin <9ordin @t gmail dot com>
 
 pkgname=android-sdk
-pkgver=r24.0.1
+pkgver=r24.0.2
 pkgrel=1
 pkgdesc='Google Android SDK'
 arch=('i686' 'x86_64')
 url="http://developer.android.com/sdk/index.html"
 license=('custom')
-replaces=('android-sdk')
 depends=('java-environment' 'alsa-lib' 'openal' 'libstdc++5' 'libxv'
          'ncurses' 'sdl' 'swt' 'zlib')
 if [[ $CARCH = x86_64 ]]; then
@@ -26,7 +25,7 @@ source=("https://dl-ssl.google.com/android/repository/tools_$pkgver-linux.zip"
         "$pkgname.csh"
         "$pkgname.conf"
         'license.html')
-sha1sums=('95a07a817aa117f5c3510c58de1fe6a7bcf52620'
+sha1sums=('39630fe57c48cd06593902c55e5d96c52913bf16'
           '6497b745f05fc412490f74c66e10b9c5f15e6330'
           'e834f53e13d5926ec7be3fd775fa80aa6f328eb6'
           '78f8574e651c9bf8b7515ecb30c7ef93edbc4a96'
