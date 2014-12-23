@@ -8,7 +8,7 @@ pkgrel=4
 pkgdesc="NVIDIA drivers for linux-mainline, 340xx legacy branch."
 arch=('i686' 'x86_64')
 url="http://www.nvidia.com/"
-depends=('linux-mainline>=3.19rc1' 'linux-mainline<3.20rc1 "nvidia-340xx-libgl" "nvidia-340xx-utils=${pkgver}")
+depends=('linux-mainline>=3.19rc1' 'linux-mainline<3.20rc1' "nvidia-340xx-libgl" "nvidia-340xx-utils=${pkgver}")
 makedepends=('linux-mainline-headers>=3.19rc1' 'linux-mainline-headers<3.20rc1')
 conflicts=('nvidia-96xx' 'nvidia-173xx' 'nvidia-mainline')
 license=('custom')
