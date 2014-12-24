@@ -1,0 +1,20 @@
+msg_blue() {
+    printf "${blue}==>${bold} $1${all_off}\n"
+}
+
+_update() {
+    msg_blue "Updating icon cache.."
+    gtk-update-icon-cache -q -t -f /usr/share/icons/hicolor
+}
+
+post_install() {
+    _update
+}
+
+post_upgrade() {
+    _update
+}
+
+post_remove() {
+    _update
+}
