@@ -1,14 +1,14 @@
 # Contributor: tuxce <tuxce.net@gmail.com>
 pkgname=package-query
-pkgver=1.4
-pkgrel=3
+pkgver=1.5
+pkgrel=1
 pkgdesc="Query ALPM and AUR"
 arch=('i686' 'x86_64' 'mips64el' 'armv6h' 'armv7h' 'arm')
 url="https://github.com/archlinuxfr/package-query/"
 license=('GPL')
-depends=('pacman>=4.1' 'pacman<4.2' curl 'yajl>=2.0')
+depends=('pacman>=4.1' 'pacman<4.3' curl 'yajl>=2.0')
 source=(http://mir.archlinux.fr/~tuxce/releases/$pkgname/$pkgname-$pkgver.tar.gz)
-md5sums=('045a49b5121b3d469b6546fc271d002a')
+md5sums=('3ad043d6aa87c497a1e6f0a5d2543e33')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
