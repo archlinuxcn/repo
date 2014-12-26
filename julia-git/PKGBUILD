@@ -90,9 +90,10 @@ package_julia-git() {
   # Remove doc files
   rm -r "$pkgdir/usr/share/doc/julia"
 
-  ver=$("$pkgdir/usr/bin/julia" -e 'print(VERSION.major, ".", VERSION.minor)')
+  ver=$("$pkgdir/usr/bin/julia" \
+            -f -e 'print(VERSION.major, ".", VERSION.minor, ".", VERSION.patch)')
 
-  provides=("julia=$ver")
+  provides=("julia=2:$ver")
 }
 
 package_julia-doc-git() {
