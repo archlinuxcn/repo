@@ -1,0 +1,64 @@
+# Maintainer: Reihar <reihar@necronomicon.fr>
+# Contributor: Nick Hu <nickhu00@gmail.com>
+# Contributor: Fernando Carmona Varo <ferkiwi @t gmail dot com>
+pkgname=cataclysm-dda-ncurses
+pkgver=0.B
+pkgrel=1
+pkgdesc="Cataclysm: Dark Days Ahead is an actively maintained roguelike set in a post-apocalyptic world, forked from the original. (ncurses only)"
+arch=('i686' 'x86_64')
+url="http://www.cataclysmdda.com/"
+license=('CCPL:by-sa')
+
+depends=('gcc-libs' 'glibc' 'zlib' 'bzip2')
+makedepends=('gettext' 'clang')
+optdepends=('lua51')
+conflicts=('cataclysm-dda' 'cataclysm-dda-git')
+
+install='cataclysm-dda-ncurses.install'
+source=("https://github.com/CleverRaven/Cataclysm-DDA/archive/${pkgver}.tar.gz")
+md5sums=('145a7b39997c29dd7ac245c8cfcdf258')
+
+build() {
+
+  #Due to build problems with gcc, we'll be using clang for a while
+  cd "$srcdir/Cataclysm-DDA-${pkgver}"
+  make RELEASE=1 USE_HOME_DIR=1 CLANG=1
+}
+
+package() {
+  cd "$srcdir/Cataclysm-DDA-${pkgver}"
+
+  local instdir=/usr/share/cataclysm-dda
+
+  install -dm755 "$pkgdir/${instdir}/"{data,gfx,doc}
+  cp -ru --no-preserve=ownership data gfx doc "$pkgdir/${instdir}/"
+
+
+  local instdir="/usr/share/cataclysm-dda"
+
+  install -dm755 "$pkgdir/${instdir}/"
+  install -Dm755 cataclysm cataclysm-launcher "$pkgdir/${instdir}/"
+
+  install -dm775 -g games "$pkgdir/${instdir}/data/"
+  cp -r data/* "$pkgdir/${instdir}/data"
+
+  #User default mod list needs to be writeable
+  [ -f "$srcdir/user-default-mods.json" ] || echo "{}" > $srcdir/user-default-mods.json
+  install -Dm775 -g games "$srcdir/user-default-mods.json" "$pkgdir/var/games/cataclysm-dda/data/mods/user-default-mods.json"
+  ln -s "/var/games/cataclysm-dda/data/mods/user-default-mods.json" "$pkgdir/${instdir}/data/mods/user-default-mods.json"
+
+  #The doc goes in /usr/share/doc  
+  install -dm755 "$pkgdir/usr/share/doc/cataclysm-dda"
+  cp -r *.txt doc/* "$pkgdir/usr/share/doc/cataclysm-dda/"
+
+  # License file
+  install -Dm644 LICENSE.txt "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
+
+  #Launcher symlinks
+  install -dm755  "$pkgdir/usr/bin/"
+  ln -s "${instdir}/cataclysm-launcher" "$pkgdir/usr/bin/cataclysm"
+
+  # Localization
+install -dm755 -g games "$pkgdir/${instdir}/lang/mo"
+LOCALE_DIR="$pkgdir/${instdir}/lang/mo" lang/compile_mo.sh
+}
