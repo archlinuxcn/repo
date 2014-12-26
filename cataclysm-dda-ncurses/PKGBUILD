@@ -59,6 +59,6 @@ package() {
   ln -s "${instdir}/cataclysm-launcher" "$pkgdir/usr/bin/cataclysm"
 
   # Localization
-install -dm755 -g games "$pkgdir/${instdir}/lang/mo"
-LOCALE_DIR="$pkgdir/${instdir}/lang/mo" lang/compile_mo.sh
+  install -dm755 -g games "$pkgdir/${instdir}/lang/mo"
+  LOCALE_DIR="$pkgdir/${instdir}/lang/mo" lang/compile_mo.sh
 }
