@@ -1,0 +1,36 @@
+# Maintainer: kusakata <shohei atmark kusakata period com>
+
+pkgname=openspecfun-git
+pkgver=0.4.7.g381db9b
+pkgrel=1
+pkgdesc="A collection of special mathematical functions"
+arch=('i686' 'x86_64')
+url="https://github.com/JuliaLang/openspecfun"
+license=('custom')
+depends=('gcc-libs')
+provides=(openspecfun)
+conflicts=(openspecfun)
+makedepends=('gcc-fortran')
+options=('!emptydirs')
+source=('git://github.com/JuliaLang/openspecfun')
+md5sums=('SKIP')
+
+pkgver() {
+  cd openspecfun
+
+  git describe --tags | sed 's/^v//;s/-/./g'
+}
+
+build() {
+  cd openspecfun
+
+  make prefix=/usr bindir=/usr/bin libdir=/usr/lib includedir=/usr/include
+}
+
+package() {
+  cd openspecfun
+
+  make DESTDIR="$pkgdir" prefix=/usr bindir=/usr/bin libdir=/usr/lib \
+       includedir=/usr/include install
+  install -Dm644 LICENSE.md "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
