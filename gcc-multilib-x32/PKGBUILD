@@ -1,4 +1,4 @@
-# $Id: PKGBUILD 121740 2014-11-03 11:56:45Z allan $
+# $Id: PKGBUILD 124658 2014-12-27 06:20:58Z heftig $
 # Maintainer: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 # Contributor: Allan McRae <allan@archlinux.org>
 # x32 Maintainer: Fantix King <fantix.king@gmail.com>
@@ -11,22 +11,22 @@ pkgver=4.9.2
 _pkgver=4.9
 _islver=0.12.2
 _cloogver=0.18.1
-pkgrel=1.1
-#_snapshot=4.9-20140903
+pkgrel=2.1
+_snapshot=4.9-20141224
 pkgdesc="The GNU Compiler Collection for multilib with x32 ABI support"
 arch=('x86_64')
 license=('GPL' 'LGPL' 'FDL' 'custom')
 url="http://gcc.gnu.org"
-makedepends=('binutils>=2.24' 'libmpc' 'gcc-ada-multilib' 'doxygen'
+makedepends=('binutils>=2.25' 'libmpc' 'gcc-ada-multilib' 'doxygen'
              'lib32-glibc>=2.20' 'libx32-glibc>=2.20')
 checkdepends=('dejagnu' 'inetutils')
 options=('!emptydirs')
-source=(ftp://gcc.gnu.org/pub/gcc/releases/gcc-${pkgver}/gcc-${pkgver}.tar.bz2
-        #ftp://gcc.gnu.org/pub/gcc/snapshots/${_snapshot}/gcc-${_snapshot}.tar.bz2
+source=(#ftp://gcc.gnu.org/pub/gcc/releases/gcc-${pkgver}/gcc-${pkgver}.tar.bz2
+        ftp://gcc.gnu.org/pub/gcc/snapshots/${_snapshot}/gcc-${_snapshot}.tar.bz2
         http://isl.gforge.inria.fr/isl-${_islver}.tar.bz2
         http://www.bastoul.net/cloog/pages/download/cloog-${_cloogver}.tar.gz
         gcc-4.8-filename-output.patch)
-md5sums=('4df8ee253b7f3863ad0b86359cd39c43'
+md5sums=('064bc3224ed492c1b2751c313f8278b0'
          'e039bfcfb6c2ab039b8ee69bf883e824'
          'e34fca0540d840e5d0f6427e98c92252'
          '6810bb9b2252f03e6c98d9a671d94589')
@@ -196,7 +196,7 @@ package_gcc-libs-multilib-x32()
 package_gcc-multilib-x32()
 {
   pkgdesc="The GNU Compiler Collection - C and C++ frontends for multilib with x32 ABI support"
-  depends=("gcc-libs-multilib-x32=$pkgver-$pkgrel" 'binutils>=2.24' 'libmpc')
+  depends=("gcc-libs-multilib-x32=$pkgver-$pkgrel" 'binutils>=2.25' 'libmpc')
   groups=('x32-devel')
   options=('staticlibs')
   provides=("gcc=$pkgver-${pkgrel%.*}" "gcc-multilib=$pkgver-${pkgrel%.*}")
@@ -313,7 +313,7 @@ package_gcc-fortran-multilib-x32()
   depends=("gcc-multilib-x32=$pkgver-$pkgrel")
   provides=("gcc-fortran=$pkgver-${pkgrel%.*}" "gcc-fortran-multilib=$pkgver-${pkgrel%.*}")
   conflicts=('gcc-fortran')
-  options=('staticlibs' '!emptydirs')
+  options=('!emptydirs')
   install=gcc-fortran.install
 
   cd ${srcdir}/gcc-build
@@ -400,7 +400,7 @@ package_gcc-go-multilib-x32()
   depends=("gcc-multilib-x32=$pkgver-$pkgrel")
   provides=("gcc-go=$pkgver-${pkgrel%.*}" "gcc-go-multilib=$pkgver-${pkgrel%.*}")
   conflicts=('gcc-go')
-  options=('staticlibs' '!emptydirs')
+  options=('!emptydirs')
   install=gcc-go.install
 
   cd ${srcdir}/gcc-build
@@ -409,8 +409,6 @@ package_gcc-go-multilib-x32()
   make -C $CHOST/x32/libgo DESTDIR=$pkgdir install-exec-am
   make -C gcc DESTDIR=$pkgdir go.install-{common,man,info}
   install -Dm755 gcc/go1 $pkgdir/${_libdir}/go1
-
-  rm $pkgdir/usr/lib{,32,x32}/libgo.a
 
   # Install Runtime Library Exception
   install -d ${pkgdir}/usr/share/licenses/gcc-go-multilib-x32/
