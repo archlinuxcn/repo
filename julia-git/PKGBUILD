@@ -4,20 +4,19 @@
 
 pkgbase=julia-git
 pkgname=('julia-git' 'julia-doc-git' 'emacs-julia-mode-git')
-pkgver=0.3.0.rc3.2267.gbe2971e
+pkgver=0.3.0.rc3.2272.gc9c89a4
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64')
 url="http://julialang.org"
 license=('GPL')
 makedepends=('gcc-fortran' 'arpack' 'fftw' 'git' 'gmp' 'libgit2' 'libunwind'
-             'llvm' 'mpfr' 'pcre' 'suitesparse')
-makedepends+=('python2-sphinx' 'python2-sphinx_rtd_theme' 'python2-pip'
-              'texlive-langcjk' 'texlive-latexextra' 'emacs')
+             'llvm' 'mpfr' 'pcre' 'suitesparse' 'python2-sphinx'
+             'python2-sphinx_rtd_theme' 'python2-pip' 'texlive-langcjk'
+             'texlive-latexextra' 'emacs' 'openspecfun')
 options=('!emptydirs' 'staticlibs' 'debug' 'strip')
 source=('git://github.com/JuliaLang/julia.git')
 md5sums=('SKIP')
-
 
 pkgver() {
   cd julia
@@ -32,28 +31,28 @@ prepare() {
   sed 's/pip /pip2 /g' -i Makefile
 }
 
-julia_opts=(USE_SYSTEM_LLVM=1 \
-                           USE_SYSTEM_LIBUNWIND=1 \
-                           USE_SYSTEM_PCRE=1 \
-                           USE_SYSTEM_LIBM=1 \
-                           USE_SYSTEM_OPENLIBM=0 \
-                           USE_SYSTEM_OPENSPECFUN=0 \
-                           USE_SYSTEM_DSFMT=0 \
-                           USE_SYSTEM_BLAS=1 \
-                           USE_SYSTEM_LAPACK=1 \
-                           USE_SYSTEM_FFTW=1 \
-                           USE_SYSTEM_GMP=1 \
-                           USE_SYSTEM_MPFR=1 \
-                           USE_SYSTEM_ARPACK=1 \
-                           USE_SYSTEM_SUITESPARSE=1 \
-                           USE_SYSTEM_RMATH=0 \
-                           USE_SYSTEM_LIBUV=0 \
-                           USE_SYSTEM_UTF8PROC=0 \
-                           USE_SYSTEM_MOJIBAKE=0 \
-                           USE_SYSTEM_LIBGIT2=1 \
-                           USE_INTEL_MKL=0 \
-                           USE_BLAS64=0 \
-                           USE_LLVM_SHLIB=0)
+julia_opts=(USE_SYSTEM_LLVM=1
+            USE_SYSTEM_LIBUNWIND=1
+            USE_SYSTEM_PCRE=1
+            USE_SYSTEM_LIBM=1
+            USE_SYSTEM_OPENLIBM=0
+            USE_SYSTEM_OPENSPECFUN=1
+            USE_SYSTEM_DSFMT=0
+            USE_SYSTEM_BLAS=1
+            USE_SYSTEM_LAPACK=1
+            USE_SYSTEM_FFTW=1
+            USE_SYSTEM_GMP=1
+            USE_SYSTEM_MPFR=1
+            USE_SYSTEM_ARPACK=1
+            USE_SYSTEM_SUITESPARSE=1
+            USE_SYSTEM_RMATH=0
+            USE_SYSTEM_LIBUV=0
+            USE_SYSTEM_UTF8PROC=0
+            USE_SYSTEM_MOJIBAKE=0
+            USE_SYSTEM_LIBGIT2=1
+            USE_INTEL_MKL=0
+            USE_BLAS64=0
+            USE_LLVM_SHLIB=0)
 
 build() {
   cd julia
@@ -78,7 +77,7 @@ build() {
 package_julia-git() {
   arch=('i686' 'x86_64')
   depends=('arpack' 'fftw' 'gmp' 'libgit2' 'libunwind' 'llvm' 'mpfr' 'pcre'
-           'hicolor-icon-theme' 'xdg-utils' 'suitesparse')
+           'hicolor-icon-theme' 'xdg-utils' 'suitesparse' 'openspecfun')
   optdepends=('gnuplot: If using the Gaston Package from julia')
   install=julia.install
   conflicts=('julia')
