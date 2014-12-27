@@ -1,8 +1,23 @@
 diff --git a/ChangeLog b/ChangeLog
-index f343428..ac7d980 100644
+index f343428..e416cd0 100644
 --- a/ChangeLog
 +++ b/ChangeLog
-@@ -1,3 +1,94 @@
+@@ -1,3 +1,109 @@
++2014-12-16  Florian Weimer  <fweimer@redhat.com>
++
++	[BZ #17630]
++	* resolv/nss_dns/dns-network.c (getanswer_r): Iterate over alias
++	names.
++
++2014-12-15  Jeff Law  <law@redhat.com>
++
++	[BZ #16617]
++	* stdio-common/vfprintf.c (vfprintf): Allocate large specs array
++	on the heap.  (CVE-2012-3406)
++	* stdio-common/bug23-2.c, stdio-common/bug23-3.c: New file.
++	* stdio-common/bug23-4.c: New file.  Test case by Joseph Myers.
++	* stdio-common/Makefile (tests): Add bug23-2, bug23-3, bug23-4.
++
 +2014-11-24  Siddhesh Poyarekar  <siddhesh@redhat.com>
 +
 +	[BZ #17266]
@@ -98,10 +113,10 @@ index f343428..ac7d980 100644
  
  	* version.h (RELEASE): Set to "stable".
 diff --git a/NEWS b/NEWS
-index 721b457..3de92cd 100644
+index 721b457..9bc835c 100644
 --- a/NEWS
 +++ b/NEWS
-@@ -5,6 +5,19 @@ See the end for copying conditions.
+@@ -5,6 +5,25 @@ See the end for copying conditions.
  Please send GNU C library bug reports via <http://sourceware.org/bugzilla/>
  using `glibc' in the "product" field.
  
@@ -109,7 +124,7 @@ index 721b457..3de92cd 100644
 +
 +* The following bugs are resolved with this release:
 +
-+  17266, 17370, 17371, 17460, 17485, 17555, 17625.
++  16617, 17266, 17370, 17371, 17460, 17485, 17555, 17625, 17630.
 +
 +* CVE-2104-7817 The wordexp function could ignore the WRDE_NOCMD flag
 +  under certain input conditions resulting in the execution of a shell for
@@ -117,6 +132,12 @@ index 721b457..3de92cd 100644
 +  implementation now checks WRDE_NOCMD immediately before executing the
 +  shell and returns the error WRDE_CMDSUB as expected.
 +
++* CVE-2012-3406 printf-style functions could run into a stack overflow when
++  processing format strings with a large number of format specifiers.
++
++* CVE-2014-9402 The nss_dns implementation of getnetbyname could run into an
++  infinite loopif the DNS response contained a PTR record of an unexpected
++  format.
 +
  Version 2.20
  
@@ -528,6 +549,280 @@ index b6b65dd..26f3a26 100644
  	++words_offset;
  	error = parse_backtick (&word, &word_length, &max_length, words,
  				&words_offset, flags, pwordexp, ifs,
+diff --git a/resolv/nss_dns/dns-network.c b/resolv/nss_dns/dns-network.c
+index 0a77c8b..08cf0a6 100644
+--- a/resolv/nss_dns/dns-network.c
++++ b/resolv/nss_dns/dns-network.c
+@@ -398,8 +398,8 @@ getanswer_r (const querybuf *answer, int anslen, struct netent *result,
+ 
+ 	case BYNAME:
+ 	  {
+-	    char **ap = result->n_aliases++;
+-	    while (*ap != NULL)
++	    char **ap;
++	    for (ap = result->n_aliases; *ap != NULL; ++ap)
+ 	      {
+ 		/* Check each alias name for being of the forms:
+ 		   4.3.2.1.in-addr.arpa		= net 1.2.3.4
+diff --git a/stdio-common/Makefile b/stdio-common/Makefile
+index 5f8e534..e5e45b6 100644
+--- a/stdio-common/Makefile
++++ b/stdio-common/Makefile
+@@ -57,7 +57,7 @@ tests := tstscanf test_rdwr test-popen tstgetln test-fseek \
+ 	 bug19 bug19a tst-popen2 scanf13 scanf14 scanf15 bug20 bug21 bug22 \
+ 	 scanf16 scanf17 tst-setvbuf1 tst-grouping bug23 bug24 \
+ 	 bug-vfprintf-nargs tst-long-dbl-fphex tst-fphex-wide tst-sprintf3 \
+-	 bug25 tst-printf-round bug26
++	 bug25 tst-printf-round bug23-2 bug23-3 bug23-4 bug26
+ 
+ test-srcs = tst-unbputc tst-printf
+ 
+diff --git a/stdio-common/bug23-2.c b/stdio-common/bug23-2.c
+new file mode 100644
+index 0000000..9e0cfe6
+--- /dev/null
++++ b/stdio-common/bug23-2.c
+@@ -0,0 +1,70 @@
++#include <stdio.h>
++#include <string.h>
++#include <stdlib.h>
++
++static const char expected[] = "\
++\n\
++a\n\
++abbcd55\
++\n\
++a\n\
++abbcd55\
++\n\
++a\n\
++abbcd55\
++\n\
++a\n\
++abbcd55\
++\n\
++a\n\
++abbcd55\
++\n\
++a\n\
++abbcd55\
++\n\
++a\n\
++abbcd55\
++\n\
++a\n\
++abbcd55\
++\n\
++a\n\
++abbcd55\
++\n\
++a\n\
++abbcd55\
++\n\
++a\n\
++abbcd55\
++\n\
++a\n\
++abbcd55\
++\n\
++a\n\
++abbcd55%%%%%%%%%%%%%%%%%%%%%%%%%%\n";
++
++static int
++do_test (void)
++{
++  char *buf = malloc (strlen (expected) + 1);
++  snprintf (buf, strlen (expected) + 1,
++	    "\n%1$s\n" "%1$s" "%2$s" "%2$s" "%3$s" "%4$s" "%5$d" "%5$d"
++	    "\n%1$s\n" "%1$s" "%2$s" "%2$s" "%3$s" "%4$s" "%5$d" "%5$d"
++	    "\n%1$s\n" "%1$s" "%2$s" "%2$s" "%3$s" "%4$s" "%5$d" "%5$d"
++	    "\n%1$s\n" "%1$s" "%2$s" "%2$s" "%3$s" "%4$s" "%5$d" "%5$d"
++	    "\n%1$s\n" "%1$s" "%2$s" "%2$s" "%3$s" "%4$s" "%5$d" "%5$d"
++	    "\n%1$s\n" "%1$s" "%2$s" "%2$s" "%3$s" "%4$s" "%5$d" "%5$d"
++	    "\n%1$s\n" "%1$s" "%2$s" "%2$s" "%3$s" "%4$s" "%5$d" "%5$d"
++	    "\n%1$s\n" "%1$s" "%2$s" "%2$s" "%3$s" "%4$s" "%5$d" "%5$d"
++	    "\n%1$s\n" "%1$s" "%2$s" "%2$s" "%3$s" "%4$s" "%5$d" "%5$d"
++	    "\n%1$s\n" "%1$s" "%2$s" "%2$s" "%3$s" "%4$s" "%5$d" "%5$d"
++	    "\n%1$s\n" "%1$s" "%2$s" "%2$s" "%3$s" "%4$s" "%5$d" "%5$d"
++	    "\n%1$s\n" "%1$s" "%2$s" "%2$s" "%3$s" "%4$s" "%5$d" "%5$d"
++	    "\n%1$s\n" "%1$s" "%2$s" "%2$s" "%3$s" "%4$s" "%5$d" "%5$d"
++	    "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n",
++	    "a", "b", "c", "d", 5);
++  return strcmp (buf, expected) != 0;
++}
++
++#define TEST_FUNCTION do_test ()
++#include "../test-skeleton.c"
+diff --git a/stdio-common/bug23-3.c b/stdio-common/bug23-3.c
+new file mode 100644
+index 0000000..57c8cef
+--- /dev/null
++++ b/stdio-common/bug23-3.c
+@@ -0,0 +1,50 @@
++#include <stdio.h>
++#include <string.h>
++#include <stdlib.h>
++
++int
++do_test (void)
++{
++  size_t instances = 16384;
++#define X0 "\n%1$s\n" "%1$s" "%2$s" "%2$s" "%3$s" "%4$s" "%5$d" "%5$d"
++  const char *item = "\na\nabbcd55";
++#define X3 X0 X0 X0 X0 X0 X0 X0 X0
++#define X6 X3 X3 X3 X3 X3 X3 X3 X3
++#define X9 X6 X6 X6 X6 X6 X6 X6 X6
++#define X12 X9 X9 X9 X9 X9 X9 X9 X9
++#define X14 X12 X12 X12 X12
++#define TRAILER "%%%%%%%%%%%%%%%%%%%%%%%%%%"
++#define TRAILER2 TRAILER TRAILER
++  size_t length = instances * strlen (item) + strlen (TRAILER) + 1;
++
++  char *buf = malloc (length + 1);
++  snprintf (buf, length + 1,
++	    X14 TRAILER2 "\n",
++	    "a", "b", "c", "d", 5);
++
++  const char *p = buf;
++  size_t i;
++  for (i = 0; i < instances; ++i)
++    {
++      const char *expected;
++      for (expected = item; *expected; ++expected)
++	{
++	  if (*p != *expected)
++	    {
++	      printf ("mismatch at offset %zu (%zu): expected %d, got %d\n",
++		      (size_t) (p - buf), i, *expected & 0xFF, *p & 0xFF);
++	      return 1;
++	    }
++	  ++p;
++	}
++    }
++  if (strcmp (p, TRAILER "\n") != 0)
++    {
++      printf ("mismatch at trailer: [%s]\n", p);
++      return 1;
++    }
++  free (buf);
++  return 0;
++}
++#define TEST_FUNCTION do_test ()
++#include "../test-skeleton.c"
+diff --git a/stdio-common/bug23-4.c b/stdio-common/bug23-4.c
+new file mode 100644
+index 0000000..a478564
+--- /dev/null
++++ b/stdio-common/bug23-4.c
+@@ -0,0 +1,31 @@
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <sys/resource.h>
++
++#define LIMIT 1000000
++
++int
++main (void)
++{
++  struct rlimit lim;
++  getrlimit (RLIMIT_STACK, &lim);
++  lim.rlim_cur = 1048576;
++  setrlimit (RLIMIT_STACK, &lim);
++  char *fmtstr = malloc (4 * LIMIT + 1);
++  if (fmtstr == NULL)
++    abort ();
++  char *output = malloc (LIMIT + 1);
++  if (output == NULL)
++    abort ();
++  for (size_t i = 0; i < LIMIT; i++)
++    memcpy (fmtstr + 4 * i, "%1$d", 4);
++  fmtstr[4 * LIMIT] = '\0';
++  int ret = snprintf (output, LIMIT + 1, fmtstr, 0);
++  if (ret != LIMIT)
++    abort ();
++  for (size_t i = 0; i < LIMIT; i++)
++    if (output[i] != '0')
++      abort ();
++  return 0;
++}
+diff --git a/stdio-common/vfprintf.c b/stdio-common/vfprintf.c
+index c4ff833..429a3d1 100644
+--- a/stdio-common/vfprintf.c
++++ b/stdio-common/vfprintf.c
+@@ -263,6 +263,12 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
+   /* For the argument descriptions, which may be allocated on the heap.  */
+   void *args_malloced = NULL;
+ 
++  /* For positional argument handling.  */
++  struct printf_spec *specs;
++
++  /* Track if we malloced the SPECS array and thus must free it.  */
++  bool specs_malloced = false;
++
+   /* This table maps a character into a number representing a
+      class.  In each step there is a destination label for each
+      class.  */
+@@ -1679,8 +1685,8 @@ do_positional:
+     size_t nspecs = 0;
+     /* A more or less arbitrary start value.  */
+     size_t nspecs_size = 32 * sizeof (struct printf_spec);
+-    struct printf_spec *specs = alloca (nspecs_size);
+ 
++    specs = alloca (nspecs_size);
+     /* The number of arguments the format string requests.  This will
+        determine the size of the array needed to store the argument
+        attributes.  */
+@@ -1721,11 +1727,39 @@ do_positional:
+ 	if (nspecs * sizeof (*specs) >= nspecs_size)
+ 	  {
+ 	    /* Extend the array of format specifiers.  */
++	    if (nspecs_size * 2 < nspecs_size)
++	      {
++		__set_errno (ENOMEM);
++		done = -1;
++		goto all_done;
++	      }
+ 	    struct printf_spec *old = specs;
+-	    specs = extend_alloca (specs, nspecs_size, 2 * nspecs_size);
++	    if (__libc_use_alloca (2 * nspecs_size))
++	      specs = extend_alloca (specs, nspecs_size, 2 * nspecs_size);
++	    else
++	      {
++		nspecs_size *= 2;
++		specs = malloc (nspecs_size);
++		if (specs == NULL)
++		  {
++		    __set_errno (ENOMEM);
++		    specs = old;
++		    done = -1;
++		    goto all_done;
++		  }
++	      }
+ 
+ 	    /* Copy the old array's elements to the new space.  */
+ 	    memmove (specs, old, nspecs * sizeof (*specs));
++
++	    /* If we had previously malloc'd space for SPECS, then
++	       release it after the copy is complete.  */
++	    if (specs_malloced)
++	      free (old);
++
++	    /* Now set SPECS_MALLOCED if needed.  */
++	    if (!__libc_use_alloca (nspecs_size))
++	      specs_malloced = true;
+ 	  }
+ 
+ 	/* Parse the format specifier.  */
+@@ -2046,6 +2080,8 @@ do_positional:
+   }
+ 
+ all_done:
++  if (specs_malloced)
++    free (specs);
+   if (__glibc_unlikely (args_malloced != NULL))
+     free (args_malloced);
+   if (__glibc_unlikely (workstart != NULL))
 diff --git a/sysdeps/aarch64/start.S b/sysdeps/aarch64/start.S
 index 35d603a..69b45ea 100644
 --- a/sysdeps/aarch64/start.S
