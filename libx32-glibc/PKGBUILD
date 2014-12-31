@@ -1,4 +1,4 @@
-# $Id: PKGBUILD 123441 2014-12-04 13:19:00Z heftig $
+# $Id: PKGBUILD 124659 2014-12-27 06:26:39Z heftig $
 # Maintainer: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 # Contributor: Jan de Groot <jgc@archlinux.org>
 # Contributor: Allan McRae <allan@archlinux.org>
@@ -9,7 +9,7 @@
 _pkgbasename=glibc
 pkgname=libx32-$_pkgbasename
 pkgver=2.20
-pkgrel=4.1
+pkgrel=6.1
 pkgdesc="GNU C Library (x32 ABI)"
 arch=('x86_64')
 url="http://www.gnu.org/software/libc"
@@ -25,17 +25,17 @@ provides=('glibc-x32-seed')
 options=('!strip' 'staticlibs' '!emptydirs')
 
 source=(http://ftp.gnu.org/gnu/libc/${_pkgbasename}-${pkgver}.tar.xz{,.sig}
-	glibc-2.20-roundup.patch
+        glibc-2.20-roundup.patch
         libx32-glibc.conf)
 md5sums=('948a6e06419a01bd51e97206861595b0'
          'SKIP'
-         '8cfa2a0fa2a9aad8b86a138587d6261f'
+         'f7a5faf2911ae7c13f584bd60c802873'
          '34a4169d2bdc5a3eb83676a0831aae57')
 
 prepare() {
   cd ${srcdir}/glibc-${pkgver}
 
-  # glibc-2.20..d73ac1bb
+  # glibc-2.20..f80af766
   patch -p1 -i $srcdir/glibc-2.20-roundup.patch
 
   mkdir ${srcdir}/glibc-build
