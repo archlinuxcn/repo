@@ -2,26 +2,21 @@
 
 pkgname=chromium-pepper-flash
 pkgdesc="Google Chrome's Pepper Flash plugin for Chromium (stable version)"
+_verbld=39.0.2171.95-1
 pkgver=16.0.0.235
-pkgrel=2
+pkgrel=3
 epoch=1
 arch=('i686' 'x86_64')
 url="http://www.google.com/chrome"
 license=('custom:chrome')
 conflicts=('chromium-pepper-flash-dev')
 install=chromium-pepper-flash.install
-source=(license.html::http://www.google.com/chrome/intl/en/eula_text.html)
-sha1sums=('SKIP')
-if [ "$CARCH" == x86_64 ]; then
-	_arch=x86_64
-	sha1sums+=('66b59c537b4cc835183a9521fc301e6048954c0a')
-elif [ "$CARCH" == i686 ]; then
-	_arch=i386
-	sha1sums+=('c6f7d16c86ee07a3c41e922d4623da302c32d3dc')
-fi
-_verbld=39.0.2171.95-1
-_channel='stable'
-source+=(https://dl.google.com/linux/chrome/rpm/stable/${_arch}/google-chrome-${_channel}-${_verbld}.${_arch}.rpm)
+source=(license.html::https://www.google.com/chrome/intl/en/eula_text.html)
+sha256sums=('c714679be9b1de35475bfcd58b4d2fa5baf87c00eb049185ec062de276203d13')
+source_i686+=("https://dl.google.com/linux/chrome/rpm/stable/i386/google-chrome-stable-${_verbld}.i386.rpm")
+source_x86_64+=(https://dl.google.com/linux/chrome/rpm/stable/x86_64/google-chrome-stable-${_verbld}.x86_64.rpm)
+sha256sums_i686+=('ad727e69efd3f51cc7de047b5f795d5a9b93a30110836ec55df72aea6c70dd5c')
+sha256sums_x86_64+=('c9040dd16dae059d8181775d2e155f757966527c36fbc466fd8081d84ea1e5e9')
 
 package() {
 	install -d "${pkgdir}/usr/lib/PepperFlash"
