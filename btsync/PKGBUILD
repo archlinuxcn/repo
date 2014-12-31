@@ -5,27 +5,22 @@
 
 pkgname=btsync
 pkgver=1.4.103
-pkgrel=1
+pkgrel=2
 pkgdesc="BitTorrent Sync - automatically sync files via secure, distributed technology"
 license=("custom:btsync")
-arch=('i686' 'x86_64' 'arm' 'armv6' 'armv7' 'armv6h' 'armv7h')
+arch=('i686' 'x86_64' 'arm')
 url="http://www.bittorrent.com/sync"
 install=btsync.install
 backup=('etc/btsync.conf')
 optdepends=("btsync-autoconfig: Auto-create users' config files if needed") 
 source=(btsync.service btsync_user.service btsync.conf)
 sha1sums=('05038b03a673dd0207b2758a2e01db5d28c409d1' 'd30deb7e41ba1d163b4a5e442b8d8118758d312a' 'bf7d6bd7ffe2d23cce51a51e92fac3b82a7c87bb')
-if [ "$CARCH" == x86_64 ]; then
-	_arch=x64
-	sha1sums+=('a772dedfb0548de39f297c177fd80ddbc988cd67')
-elif [ "$CARCH" == i686 ]; then
-	_arch=i386
-	sha1sums+=('7b8c9b86cbbbf98aecb1f2365a16282a09e4dc0d')
-elif [[ "$CARCH" == arm ||  "$CARCH" == armv6 || "$CARCH" == armv6h || "$CARCH" == armv7 || "$CARCH" == armv7h ]]; then
-	_arch=arm
-	sha1sums+=('a31935cf13bb6fd0c7ef874025d226b2c9da0b31')
-fi
-source+=("http://syncapp.bittorrent.com/${pkgver}/btsync_${_arch}-${pkgver}.tar.gz")
+source_arm+=("http://syncapp.bittorrent.com/${pkgver}/btsync_arm-${pkgver}.tar.gz")
+source_i686+=("http://syncapp.bittorrent.com/${pkgver}/btsync_i386-${pkgver}.tar.gz")
+source_x86_64+=("http://syncapp.bittorrent.com/${pkgver}/btsync_x64-${pkgver}.tar.gz")
+sha1sums_arm+=('a31935cf13bb6fd0c7ef874025d226b2c9da0b31')
+sha1sums_i686+=('7b8c9b86cbbbf98aecb1f2365a16282a09e4dc0d')
+sha1sums_x86_64+=('a772dedfb0548de39f297c177fd80ddbc988cd67')
 
 package() {
 	cd ${srcdir}
