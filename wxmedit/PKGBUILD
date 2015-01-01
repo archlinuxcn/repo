@@ -1,7 +1,7 @@
 # Maintainer: codestation <codestation404 at gmail dot com>
 
 pkgname=wxmedit
-pkgver=2.9.8
+pkgver=2.9.9
 pkgrel=1
 pkgdesc="Cross-platform Text/Hex Editor, a fork of MadEdit with bug fixes and improvements"
 arch=("i686" "x86_64")
@@ -10,7 +10,7 @@ license=('GPL')
 depends=('wxgtk2.8' 'icu' 'desktop-file-utils' 'boost')
 source=("http://downloads.sourceforge.net/project/$pkgname/$pkgver/wxMEdit-$pkgver.tar.gz")
 install=wxmedit.install
-md5sums=('a0f911bf493e57c22164296c30723e0d')
+md5sums=('b718c9a2f35e3435aa90392653b30853')
 
 build() {
   cd "$srcdir/wxMEdit-$pkgver"
