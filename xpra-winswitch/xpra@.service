@@ -1,0 +1,9 @@
+[Unit]
+Description=xpra server on display :%i
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/xpra --no-daemon start :%i
+
+[Install]
+WantedBy=multi-user.target
