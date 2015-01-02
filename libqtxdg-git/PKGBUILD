@@ -33,4 +33,8 @@ package() {
 	cd "$srcdir/$_pkgname"
 	cd build
 	make DESTDIR="$pkgdir" install
+    
+    #fix /usr/lib64 exists error
+    cd "$pkgdir/usr"
+    mv "lib64" "lib"
 }
