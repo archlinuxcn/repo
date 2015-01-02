@@ -36,5 +36,7 @@ package() {
     
     #fix /usr/lib64 exists error
     cd "$pkgdir/usr"
-    mv "lib64" "lib"
+    if [ -d lib64 ]; then
+        mv "lib64" "lib"
+    fi
 }
