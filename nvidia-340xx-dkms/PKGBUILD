@@ -6,7 +6,7 @@
 
 
 pkgname=nvidia-340xx-dkms
-pkgver=340.58
+pkgver=340.65
 pkgrel=1
 pkgdesc='NVIDIA kernel module sources (DKMS)'
 arch=('i686' 'x86_64')
@@ -20,8 +20,8 @@ conflicts=('nvidia-340xx' 'nvidia-dkms')
 install="${pkgname}.install"
 source=("http://us.download.nvidia.com/XFree86/Linux-x86/${pkgver}/NVIDIA-Linux-x86-${pkgver}.run"
         "http://us.download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run")
-sha256sums=('7cc48ff0681667aad8213a4dd3cf7695cad29a5a23a3110d22566c362c76fb5b'
-            '06202c57bd9b41bf6d48e041b8c7db52b4ffd27451886ea0ea217b1f56e5e840')
+sha256sums=('e78511435d7794cac09916b98857d98d0c36607ac4dfde0b05ea4aef26ecd973'
+            '03c2c8d2041d4734d57e831e2b703bbed4a6152d3e25de3fad586035da704b79')
 [[ $CARCH == i686 ]] && _pkg=NVIDIA-Linux-x86-${pkgver}
 [[ $CARCH == x86_64 ]] && _pkg=NVIDIA-Linux-x86_64-${pkgver}-no-compat32
 
