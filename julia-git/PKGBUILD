@@ -4,7 +4,7 @@
 
 pkgbase=julia-git
 pkgname=('julia-git' 'julia-doc-git' 'emacs-julia-mode-git')
-pkgver=0.3.0.rc3.2369.gbab9ec5
+pkgver=0.3.0.rc3.2444.g62b5eef
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64')
@@ -25,7 +25,13 @@ pkgver() {
 }
 
 prepare() {
-  cd julia/doc
+  cd julia
+
+  git submodule init
+  git submodule sync
+  git submodule update
+
+  cd doc
 
   # They use the Python2 version for sphinx which has on Arch a different name
   sed 's/pip /pip2 /g' -i Makefile
