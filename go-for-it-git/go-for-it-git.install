@@ -1,0 +1,34 @@
+# Colored makepkg-like functions
+msg_blue() {
+    printf "${blue}==>${bold} $1${all_off}\n"
+}
+
+note() {
+    printf "${blue}==>${yellow} NOTE:${bold} $1${all_off}\n"
+}
+
+all_off="$(tput sgr0)"
+bold="${all_off}$(tput bold)"
+blue="${bold}$(tput setaf 4)"
+yellow="${bold}$(tput setaf 3)"
+
+_update() {
+    msg_blue "Updating desktop MIME database..."
+    update-desktop-database -q
+    msg_blue "Updating icon cache.."
+    gtk-update-icon-cache -q -t -f /usr/share/icons/hicolor
+}
+
+post_install() {
+    _update
+}
+
+
+post_upgrade() {
+    _update
+}
+
+
+post_remove() {
+    _update
+}

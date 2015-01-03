@@ -1,0 +1,39 @@
+# Maintainer: yk < yk at archlinuxcn dot org >
+
+_pkgname=go-for-it
+_gitname=Go-For-It
+pkgname=go-for-it-git
+pkgver=v1.2.12.g078b1a8
+pkgrel=1
+pkgdesc="A simple and stylish productivity app, featuring a to-do list, merged with a timer that keeps your focus on the current task."
+arch=("i686" "x86_64")
+url="http://manuel-kehl.de/projects/go-for-it"
+license=("GPL3")
+depends=("gtk3")
+makedepends=("vala")
+provides=("$_pkgname")
+conflicts=("$_pkgname")
+install=$pkgname.install
+source=("git+https://github.com/mank319/$_gitname.git")
+sha256sums=("SKIP")
+pkgver() {
+	cd "$srcdir/$_gitname"
+	git describe --always | cut -d"_" -f2 |sed "s/-/./g"
+}
+
+build() {
+	cd "$srcdir/$_gitname"
+	mkdir -p build
+	cd build
+	cmake ..
+	make
+}
+
+package() {
+	cd "$srcdir/$_gitname/build"
+	make DESTDIR="$pkgdir" install
+	cd "$pkgdir"
+	mv usr/local/bin usr/
+	mv usr/local/share usr/
+	rm -rf usr/local
+}
