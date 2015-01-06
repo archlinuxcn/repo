@@ -2,19 +2,19 @@
 # Contributor: Preston <pentie [at] gmail.com>
 
 pkgname=newrelic-sysmond
-pkgver=1.5.1.93
+pkgver=2.0.0.103
 pkgrel=1
 pkgdesc="system monitor services provided by newrelic"
 arch=('i686' 'x86_64')
 url="http://newrelic.com/"
 license=('non-free')
-depends=(glibc)
-makedepends=(binutils)
+depends=('glibc' 'bash')
+makedepends=('binutils')
 backup=('etc/newrelic/nrsysmond.cfg')
-install=.install
+install=newrelic-sysmond.install
 source=("http://download.newrelic.com/server_monitor/release/$pkgname"-"$pkgver"-"linux.tar.gz"
         "newrelic-sysmond.service"
-        ".install")
+        "newrelic-sysmond.install")
 
 build() {
   cd "$srcdir/$pkgname-$pkgver-linux"
@@ -22,25 +22,25 @@ build() {
 
 package() {
   cd "$srcdir/$pkgname-$pkgver-linux" 
-  mkdir -p $pkgdir/usr/bin/ \
-            $pkgdir/etc/newrelic/ \
-            $pkgdir/etc/default/ \
-            $pkgdir/usr/share/doc/newrelic/ \
-            $pkgdir/usr/lib/systemd/system/;
+  mkdir -p "$pkgdir"/usr/bin/ \
+           "$pkgdir"/etc/newrelic/ \
+           "$pkgdir"/etc/default/ \
+           "$pkgdir"/usr/share/doc/newrelic/ \
+           "$pkgdir"/usr/lib/systemd/system/;
 
   if [ $CARCH == i686 ]; then
-     install -v -Dm755 ./daemon/nrsysmond.x86 $pkgdir/usr/bin/nrsysmond
+     install -v -Dm755 ./daemon/nrsysmond.x86 "$pkgdir"/usr/bin/nrsysmond
   else
-     install -v -Dm755 ./daemon/nrsysmond.x64 $pkgdir/usr/bin/nrsysmond
+     install -v -Dm755 ./daemon/nrsysmond.x64 "$pkgdir"/usr/bin/nrsysmond
   fi
 
-  install -v -Dm644 ./nrsysmond.cfg $pkgdir/etc/newrelic/
-  install -v -Dm755 ./scripts/nrsysmond-config $pkgdir/usr/bin/
-  install -v -Dm644 ./scripts/newrelic-sysmond.default.debian $pkgdir/etc/default/newrelic-sysmond
-  install -v -Dm644 INSTALL.txt LICENSE.txt $pkgdir/usr/share/doc/newrelic/
-  install -v -Dm644 ../newrelic-sysmond.service $pkgdir/usr/lib/systemd/system/
+  install -v -Dm644 ./nrsysmond.cfg "$pkgdir"/etc/newrelic/
+  install -v -Dm755 ./scripts/nrsysmond-config "$pkgdir"/usr/bin/
+  install -v -Dm644 ./scripts/newrelic-sysmond.default.debian "$pkgdir"/etc/default/newrelic-sysmond
+  install -v -Dm644 INSTALL.txt LICENSE.txt "$pkgdir"/usr/share/doc/newrelic/
+  install -v -Dm644 ../newrelic-sysmond.service "$pkgdir"/usr/lib/systemd/system/
 }
 
-md5sums=('059b8bc5418a664c8ba3d31117cce457'
+md5sums=('745ca2a7349a9c6275b5862318e99c85'
          'f4ebc44c550896309d6121455a8669f3'
          'aa0022b03b291c97f5f4b3cb2d24104d')
