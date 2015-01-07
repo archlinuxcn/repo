@@ -2,7 +2,7 @@
 # Contributor: Preston <pentie [at] gmail.com>
 
 pkgname=newrelic-sysmond
-pkgver=2.0.0.103
+pkgver=2.0.0.105
 pkgrel=1
 pkgdesc="system monitor services provided by newrelic"
 arch=('i686' 'x86_64')
@@ -41,6 +41,6 @@ package() {
   install -v -Dm644 ../newrelic-sysmond.service "$pkgdir"/usr/lib/systemd/system/
 }
 
-md5sums=('745ca2a7349a9c6275b5862318e99c85'
+md5sums=('9154bf6cd86f42640b22c7a0a346c174'
          'f4ebc44c550896309d6121455a8669f3'
          'aa0022b03b291c97f5f4b3cb2d24104d')
