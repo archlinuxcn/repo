@@ -2,7 +2,7 @@
 
 _gitname="mitmproxy"
 pkgname=mitmproxy-git
-pkgver=v0.10.r194.g1a41c15
+pkgver=v0.11.3.r21.g812ea90
 pkgrel=1
 pkgdesc="mitmproxy is an SSL-capable, intercepting HTTP proxy. It provides a console interface that allows traffic flows to be inspected and edited on the fly."
 arch=('any')
@@ -20,7 +20,7 @@ pkgver() {
   git describe --tags | sed -E 's/([^-]*-g)/r\1/;s/-/./g'
 }
 
-build() {
+package() {
   cd "$_gitname"
   python2 setup.py install --root=${pkgdir} || return 1
 }
