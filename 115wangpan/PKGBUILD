@@ -1,0 +1,22 @@
+pkgname=115wangpan
+pkgver=4.0
+pkgrel=3
+pkgdesc='The 115 Wangpan client'
+arch=('any')
+url='http://pc.115.com/linux.html'
+license=('unknown')
+depends=('libx11')
+source=("http://pc.115.com/download/linux/115wangpan_linux_v${pkgver}.deb")
+sha1sums=('167f1eee8f18b7b746474eb297cc5b1bab8fed59')
+
+package(){
+	cd ${pkgdir}
+	tar xvf ${srcdir}/data.tar.gz
+	rm -r usr/lib
+	mkdir -p usr/lib
+	mv lib/fonts usr/lib
+	rm -r lib
+	mkdir -p opt/115wangpan
+	mv usr/bin/115pan usr/bin/qt.conf opt/115wangpan
+	ln -s /opt/115wangpan/115pan usr/bin/115pan
+}
