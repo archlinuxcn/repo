@@ -1,0 +1,47 @@
+# Maintainer: Procyon
+# Contributor: Thayer Williams <thayer@archlinux.org>
+# Contributor: Douglas Soares de Andrade <douglas@archlinux.org>
+# Contributor: Robson Peixoto
+
+pkgname=unzip-iconv
+pkgver=6.0
+pkgrel=1
+pkgdesc="Unpacks .zip archives such as those made by PKZIP. With iconv patch for -O / -I goodness."
+arch=('i686' 'x86_64')
+url="http://www.info-zip.org/"
+license=('custom')
+depends=('bzip2' 'bash')
+provides=('unzip')
+conflicts=('unzip')
+source=('http://downloads.sourceforge.net/infozip/unzip60.tar.gz'
+	'unzip60-alt-iconv-utf8.patch')
+md5sums=('62b490407489521db863b523a7f86375'
+	 '4dcfb2084e9db5a3f411f470d92ab2a4')
+
+build() {
+  cd ${srcdir}/unzip${pkgver/./}
+
+  # iconv patch
+  patch -Np1 -i ${srcdir}/unzip60-alt-iconv-utf8.patch
+
+  # set CFLAGS -- from Debian
+  export CFLAGS="$CFLAGS -D_FILE_OFFSET_BITS=64 -DACORN_FTYPE_NFS \
+  -DWILD_STOP_AT_DIR -DLARGE_FILE_SUPPORT -DUNICODE_SUPPORT \
+  -DUNICODE_WCHAR -DUTF8_MAYBE_NATIVE -DNO_LCHMOD -DDATE_FORMAT=DF_YMD \
+  -DUSE_BZIP2 -DNATIVE"
+
+  # make -- from Debian
+  make -f unix/Makefile LOCAL_UNZIP="$CFLAGS" prefix=/usr LF2="" \
+  D_USE_BZ2=-DUSE_BZIP2 L_BZ2=-lbz2 unzips || return 1
+
+  # install -- from Debian
+  make -f unix/Makefile prefix=${pkgdir}/usr INSTALL_PROGRAM="install" install || return 1
+
+  # install the license file
+  install -Dm644 LICENSE ${pkgdir}/usr/share/licenses/unzip/LICENSE || return 1
+
+  # fix manpage location
+  mkdir -p ${pkgdir}/usr/share || return 1
+  mv ${pkgdir}/usr/man ${pkgdir}/usr/share/ || return 1
+}
+
