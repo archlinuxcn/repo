@@ -2,7 +2,7 @@
 # Maintainer: Eric Bélanger <eric@archlinux.org>
 
 pkgname=imagemagick-fftw
-pkgver=6.9.0.2
+pkgver=6.9.0.3
 pkgrel=1
 arch=('i686' 'x86_64')
 url="http://www.imagemagick.org/"
@@ -12,12 +12,10 @@ makedepends=('libltdl' 'lcms2' 'libxt' 'fontconfig' 'libxext' 'ghostscript'
              'opencl-headers' 'libcl' 'libwebp' 'subversion' 'fftw')
 #source=(http://www.imagemagick.org/download/ImageMagick-${pkgver%.*}-${pkgver##*.}.tar.xz{,.asc}
 source=(ftp://ftp.sunet.se/pub/multimedia/graphics/ImageMagick/ImageMagick-${pkgver%.*}-${pkgver##*.}.tar.xz{,.asc}
-        perlmagick.rpath.patch imagemagick-palm.diff imagemagick-rle.diff)
-sha1sums=('da0ad71290bf92a848ceddbbcf67d765542febd5'
+        perlmagick.rpath.patch)
+sha1sums=('c7bb4eebef59544d0411ed56bda64f34fafb11f3'
           'SKIP'
-          'e143cf9d530fabf3b58023899b5cc544ba93daec'
-	  '34f4e402963e83f5c6e6da79d75d1f43afdbca86'
-	  '75534ddcb9f787ee270bdeb0899983fc95eb33a5')
+          'e143cf9d530fabf3b58023899b5cc544ba93daec')
 validpgpkeys=('D8272EF51DA223E4D05B466989AB63D48277377A')
 
 prepare() {
@@ -25,8 +23,6 @@ prepare() {
   sed '/AC_PATH_XTRA/d' -i configure.ac
   autoreconf --force --install
   patch -p0 -i "${srcdir}/perlmagick.rpath.patch"
-  patch -p3 -i "${srcdir}/imagemagick-palm.diff"
-  patch -p3 -i "${srcdir}/imagemagick-rle.diff"
 }
 
 build() {
