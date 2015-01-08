@@ -1,33 +1,31 @@
 # Maintainer: Gustavo Alvarez <sl1pkn07@gmail.com>
 
 pkgname=libkdcraw-frameworks-git
-pkgver=r1024.0cd0005
+pkgver=r1037.668f197
 pkgrel=1
 pkgdesc="A C++ interface used to decode RAW picture. KF5 Frameworks branch (GIT version)"
 url='https://projects.kde.org/projects/kde/kdegraphics/libs/libkdcraw'
-arch=('x86_64')
+arch=('i686' 'x86_64')
 license=('GPL' 'LGPL' 'FDL')
 depends=('kio' 'libraw')
-makedepends=('extra-cmake-modules' 'kdoctools' 'git')
+makedepends=('extra-cmake-modules' 'kdoctools' 'git' 'cmake')
 conflicts=('libkdcraw')
 provides=('libkdcraw')
 source=("git://anongit.kde.org/libkdcraw#branch=frameworks")
 sha1sums=('SKIP')
-_gitname=libkdcraw
 
 pkgver() {
-  cd "${_gitname}"
+  cd libkdcraw
   printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 prepare() {
-  rm -fr build
   mkdir -p build
 }
 
 build() {
   cd build
-  cmake "../${_gitname}" \
+  cmake ../libkdcraw \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
     -DLIB_INSTALL_DIR=lib \
@@ -37,6 +35,6 @@ build() {
 }
 
 package() {
-  make -C build DESTDIR=${pkgdir} install
+  make -C build DESTDIR="${pkgdir}" install
 }
 
