@@ -33,10 +33,11 @@ package() {
 	cd "$srcdir/$_pkgname"
 	cd build
 	make DESTDIR="$pkgdir" install
+
 	#fix /usr/lib64 exists error
 	cd "$pkgdir/usr"
 	if [ -d lib64 ]; then
-		mv "lib64/cmake" "lib/cmake"
-        rm -rf lib64
+        	cp -R lib64/* lib/
+        	rm -rf lib64
 	fi
 }

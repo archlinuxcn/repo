@@ -31,4 +31,10 @@ build() {
 package() {
 	cd build
 	make DESTDIR="$pkgdir" install
+    #fix /usr/lib64 exists error
+    cd "$pkgdir/usr"
+    if [ -d lib64 ]; then
+        cp -R lib64/* lib/
+        rm -rf lib64
+    fi
 }

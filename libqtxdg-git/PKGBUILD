@@ -10,6 +10,7 @@ url="http://lxqt.org"
 license=("GPL2")
 depends=("qt5-base" "qt5-tools")
 makedepends=("git" "cmake")
+groups=('lxqt')
 provides=("$_pkgname")
 conflicts=("$_pkgname-qt5-git" "$_pkgname")
 replaces=("$_pkgname-qt5-git")
@@ -37,6 +38,7 @@ package() {
     #fix /usr/lib64 exists error
     cd "$pkgdir/usr"
     if [ -d lib64 ]; then
-        mv "lib64" "lib"
+        cp -R lib64/* lib/
+        rm -rf lib64
     fi
 }
