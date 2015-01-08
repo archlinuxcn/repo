@@ -28,11 +28,29 @@ def pre_build():
 
   for line in edit_file('PKGBUILD'):
     # edit PKGBUILD
+    if 'arch=' in line:
+        line='arch=(\'x86_64\' \'i686\')'
+    elif 'depends=' in line:
+        print('if test "$CARCH" == x86_64; then')
+        print('\tdepends=(\'lib32-libx11\' \'lib32-gcc-libs\')')
+        print('elif test "$CARCH" == i686; then')
+        print('\tdepends=(\'libx11\')')
+        line='fi'
+    elif 'package()' in line:
+        print('build(){')
+        print('\tcd ${srcdir}')
+        print('\ttar xvf data.tar.gz')
+        print('}\n')
+        print(line)
+        print('\tinstall -dm755 "${pkgdir}/usr/lib"')
+        print('\tcp -r "${srcdir}/lib/fonts" "${pkgdir}/usr/lib"')
+        print('\tinstall -dm755 "${pkgdir}/usr/share/115wangpan"')
+        print('\tinstall -Dm755 "${srcdir}/usr/bin/115pan" "${srcdir}/usr/bin/qt.conf" "${pkgdir}/usr/share/115wangpan"')
+        print('\tinstall -dm755  "$pkgdir/usr/bin/"')
+        print('\tln -s /usr/share/115wangpan/115pan "${pkgdir}/usr/bin/115pan"')
+        print('}')
+        break
     print(line)
-    if 'rm -r usr/lib' in line:
-        print('\tmkdir -p usr/lib')
-        print('\tmv lib/fonts usr/lib')
-        print('\trm -r lib')
 
 def post_build():
   # do something after the package has successfully been built
