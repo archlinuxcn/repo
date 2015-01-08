@@ -43,6 +43,7 @@ package() {
 	#fix /usr/lib64 exists error
 	cd "$pkgdir/usr"
 	if [ -d lib64 ]; then
-		mv "lib64" "lib"
+		mv "lib64/cmake" "lib/cmake"
+        rm -rf lib64
 	fi
 }
