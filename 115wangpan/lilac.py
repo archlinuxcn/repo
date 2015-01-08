@@ -48,6 +48,10 @@ def pre_build():
         print('\tinstall -Dm755 "${srcdir}/usr/bin/115pan" "${srcdir}/usr/bin/qt.conf" "${pkgdir}/usr/share/115wangpan"')
         print('\tinstall -dm755  "$pkgdir/usr/bin/"')
         print('\tln -s /usr/share/115wangpan/115pan "${pkgdir}/usr/bin/115pan"')
+        print('\tinstall -dm755  "$pkgdir/usr/share/pixmaps"')
+        print('\tcp "${srcdir}/usr/share/pixmaps/115pan.png" "${pkgdir}/usr/share/pixmaps"')
+        print('\tinstall -dm755  "$pkgdir/usr/share/applications"')
+        print('\tcp "${srcdir}/usr/share/applications/115pan.desktop" "${pkgdir}/usr/share/applications"')
         print('}')
         break
     print(line)
