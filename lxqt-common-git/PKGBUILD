@@ -34,6 +34,7 @@ package() {
     #fix /usr/lib64 exists error
     cd "$pkgdir/usr"
     if [ -d lib64 ]; then
+	ls lib||mkdir lib
         cp -R lib64/* lib/
         rm -rf lib64
     fi
