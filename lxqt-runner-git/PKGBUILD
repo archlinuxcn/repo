@@ -10,6 +10,7 @@ url="http://lxqt.org"
 license=("GPL2")
 depends=("kwindowsystem" "lxqt-globalkeys-git" "menu-cache" "qt5-script")
 makedepends=("git" "cmake")
+groups=('lxqt')
 provides=("$_pkgname")
 conflicts=("$_pkgname")
 source=("git+https://github.com/lxde/$_pkgname.git")
