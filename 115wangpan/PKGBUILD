@@ -2,21 +2,27 @@ pkgname=115wangpan
 pkgver=4.0
 pkgrel=3
 pkgdesc='The 115 Wangpan client'
-arch=('any')
+arch=('x86_64' 'i686')
 url='http://pc.115.com/linux.html'
 license=('unknown')
-depends=('libx11')
+if test "$CARCH" == x86_64; then
+	depends=('lib32-libx11' 'lib32-gcc-libs')
+elif test "$CARCH" == i686; then
+	depends=('libx11')
+fi
 source=("http://pc.115.com/download/linux/115wangpan_linux_v${pkgver}.deb")
 sha1sums=('167f1eee8f18b7b746474eb297cc5b1bab8fed59')
 
+build(){
+	cd ${srcdir}
+	tar xvf data.tar.gz
+}
+
 package(){
-	cd ${pkgdir}
-	tar xvf ${srcdir}/data.tar.gz
-	rm -r usr/lib
-	mkdir -p usr/lib
-	mv lib/fonts usr/lib
-	rm -r lib
-	mkdir -p opt/115wangpan
-	mv usr/bin/115pan usr/bin/qt.conf opt/115wangpan
-	ln -s /opt/115wangpan/115pan usr/bin/115pan
+	install -dm755 "${pkgdir}/usr/lib"
+	cp -r "${srcdir}/lib/fonts" "${pkgdir}/usr/lib"
+	install -dm755 "${pkgdir}/usr/share/115wangpan"
+	install -Dm755 "${srcdir}/usr/bin/115pan" "${srcdir}/usr/bin/qt.conf" "${pkgdir}/usr/share/115wangpan"
+	install -dm755  "$pkgdir/usr/bin/"
+	ln -s /usr/share/115wangpan/115pan "${pkgdir}/usr/bin/115pan"
 }
