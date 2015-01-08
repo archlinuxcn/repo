@@ -34,6 +34,9 @@ build() {
   make -f unix/Makefile LOCAL_UNZIP="$CFLAGS" prefix=/usr LF2="" \
   D_USE_BZ2=-DUSE_BZIP2 L_BZ2=-lbz2 unzips || return 1
 
+}
+package(){
+  cd ${srcdir}/unzip${pkgver/./}
   # install -- from Debian
   make -f unix/Makefile prefix=${pkgdir}/usr INSTALL_PROGRAM="install" install || return 1
 
