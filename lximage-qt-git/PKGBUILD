@@ -10,6 +10,7 @@ url="http://lxqt.org"
 license=("GPL2")
 depends=("pcmanfm-qt-git")
 makedepends=("git" "cmake" "pcmanfm-qt-git" "qt5-x11extras")
+groups=('lxqt')
 provides=("$_pkgname")
 conflicts=("$_pkgname")
 install="$_pkgname.install"
@@ -33,4 +34,11 @@ package() {
 	cd "$srcdir/$_pkgname"
 	cd build
 	make DESTDIR="$pkgdir" install
+    #fix /usr/lib64 exists error
+    cd "$pkgdir/usr"
+    if [ -d lib64 ]; then
+	ls lib||mkdir lib
+        cp -R lib64/* lib/
+        rm -rf lib64
+    fi
 }

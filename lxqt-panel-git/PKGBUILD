@@ -19,6 +19,7 @@ optdepends=(
 	"libstatgrab: Recompile for network and CPU monitor plugin"
 )
 makedepends=("git" "cmake")
+groups=('lxqt')
 provides=("$_pkgname")
 conflicts=("$_pkgname")
 source=("git+https://github.com/lxde/$_pkgname.git")
@@ -43,6 +44,9 @@ package() {
 	#fix /usr/lib64 exists error
 	cd "$pkgdir/usr"
 	if [ -d lib64 ]; then
-		mv "lib64" "lib"
+		ls lib||mkdir lib
+		cp -R lib64/* lib/
+		rm -rf lib64
 	fi
+
 }

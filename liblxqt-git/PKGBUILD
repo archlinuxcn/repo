@@ -10,6 +10,7 @@ url="http://lxqt.org"
 license=("GPL2")
 depends=("qt5-base" "qt5-x11extras" "qt5-tools" "libqtxdg-git" "kwindowsystem")
 makedepends=("git" "cmake")
+groups=('lxqt')
 provides=("$_pkgname")
 conflicts=("$_pkgname")
 source=("git+https://github.com/lxde/$_pkgname.git")
@@ -34,6 +35,8 @@ package() {
     #fix /usr/lib64 exists error
     cd "$pkgdir/usr"
     if [ -d lib64 ]; then
-        mv "lib64" "lib"
+	ls lib||mkdir lib
+        cp -R lib64/* lib/
+        rm -rf lib64
     fi
 }

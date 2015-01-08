@@ -8,6 +8,7 @@ pkgdesc="LXQt about dialog."
 arch=("i686" "x86_64" "armv6h")
 url="http://lxqt.org"
 license=("GPL2")
+groups=('lxqt')
 depends=("liblxqt-git")
 makedepends=("git" "cmake")
 provides=("$_pkgname")
@@ -30,4 +31,11 @@ build() {
 package() {
 	cd build
 	make DESTDIR="$pkgdir" install
+    #fix /usr/lib64 exists error
+    cd "$pkgdir/usr"
+    if [ -d lib64 ]; then
+	ls lib||mkdir lib
+        cp -R lib64/* lib/
+        rm -rf lib64
+    fi
 }
