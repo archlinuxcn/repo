@@ -2,13 +2,13 @@
 
 _gitname="mitmproxy"
 pkgname=mitmproxy-git
-pkgver=v0.11.3.r21.g812ea90
+pkgver=v0.11.3.r23.g72690f2
 pkgrel=1
 pkgdesc="mitmproxy is an SSL-capable, intercepting HTTP proxy. It provides a console interface that allows traffic flows to be inspected and edited on the fly."
 arch=('any')
 url="https://github.com/cortesi/mitmproxy"
 license=('GPL')
-depends=('openssl' 'python2-urwid' 'python2-netlib-git' 'python2-pyopenssl' 'python2-pyasn1' 'python2-imaging' 'python2-lxml' 'python2-flask' 'python2-requests' 'python2-passlib')
+depends=('openssl' 'python2-urwid' 'python2-netlib-git' 'python2-pyopenssl' 'python2-pyasn1' 'python2-imaging' 'python2-lxml' 'python2-flask' 'python2-requests' 'python2-passlib' 'python2-configargparse')
 conflicts=('mitmproxy')
 source=("git://github.com/cortesi/mitmproxy.git")
 makedepends=('git')
