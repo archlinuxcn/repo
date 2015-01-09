@@ -1,26 +1,23 @@
-# Maintainer: Artem Vorotnikov <skybon@gmail.com>
+# Maintainer: Artem Vorotnikov <artem@vorotnikov.me>
 # Contributor: Abi Hafshin <abi@hafs.in>
 
 pkgname=xfce4-indicator-plugin
-pkgver=0.3.0.0
-_major=0.3
+pkgver=1.0.0
+_major=1.0
 pkgrel=1
 pkgdesc="Plugin to display information from applications in the Xfce4 panel"
 arch=('i686' 'x86_64')
 url="http://goodies.xfce.org/projects/panel-plugins/xfce4-indicator-plugin"
 license=('GPL')
-depends=('xfce4-panel' 'libindicator' 'hicolor-icon-theme' 'xdg-utils')
+depends=('xfce4-panel' 'libindicator-gtk2' 'hicolor-icon-theme' 'xdg-utils')
 makedepends=('intltool' 'xfce4-dev-tools')
 optdepends=('indicator-application-gtk2: take menus from applications and place them in the panel'
             'indicator-sound-gtk2: unified sound menu')
 install=$pkgname.install
-source=( \
-  http://archive.xfce.org/src/panel-plugins/xfce4-indicator-plugin/${_major}/${pkgname}-${pkgver}.tar.bz2 \
-  libindicator-0.4.patch)
+source=(http://archive.xfce.org/src/panel-plugins/xfce4-indicator-plugin/${_major}/${pkgname}-${pkgver}.tar.bz2)
 
 prepare() {
   cd "$srcdir/$pkgname-$pkgver"
-  patch -N < ../libindicator-0.4.patch
 }
 
 build() {
@@ -36,5 +33,4 @@ package() {
   make DESTDIR="$pkgdir/" install
 }
 
-md5sums=('2e1c8eb93fd22515e97783a97d8a12cf'
-         '88fa28fdecd6f22d7f079a17a79ba688')
+sha256sums=('c914b684929de8324cbd6f01f4c0656cfe81f3aaf349e147a0d5ac0d98946822')
