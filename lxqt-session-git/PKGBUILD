@@ -10,6 +10,7 @@ url="http://lxqt.org"
 license=("GPL2")
 depends=("liblxqt-git")
 makedepends=("git" "cmake")
+groups=('lxqt')
 provides=("$_pkgname")
 conflicts=("$_pkgname")
 source=("git+https://github.com/lxde/$_pkgname.git")
@@ -32,6 +33,13 @@ package() {
 	cd "$srcdir/$_pkgname"
 	cd build
 	make DESTDIR="$pkgdir" install
+	#fix /usr/lib64 exists error		
+ 	cd "$pkgdir/usr"		
+ 	if [ -d lib64 ]; then		
+ 		ls lib||mkdir lib		
+ 		cp -R lib64/* lib/		
+ 		rm -rf lib64		
+ 	fi
 	# We don't need the custom lxqt xdg tools on Arch
 	rm -rf "$pkgdir/usr/lib64/lxqt-xdg-tools"
 }
