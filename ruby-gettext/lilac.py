@@ -5,7 +5,7 @@ import fileinput
 from lilaclib import *
 
 build_prefix = 'extra-x86_64'
-
+depends = ['ruby-locale', 'ruby-levenshtein']
 def pre_build():
   aur_pre_build()
   for line in edit_file('PKGBUILD'):
