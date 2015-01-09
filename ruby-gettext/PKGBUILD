@@ -8,7 +8,7 @@ _ruby="/usr/bin/ruby"
 _gem="/usr/bin/gem"
 pkgname="ruby-gettext"
 pkgver="2.3.7"
-pkgrel=4
+pkgrel=1
 pkgdesc="Gettext is a pure Ruby libary and tools to localize messages."
 arch=("any")
 url="http://ruby-gettext.github.com/"
@@ -140,7 +140,7 @@ _rbconfig() {
   $_ruby -e "require 'rbconfig'; puts RbConfig::CONFIG['$1']"
 }
 
-build() {
+package() {
   # Directories defined inside build() because if ruby is not installed on the system
   # makepkg will barf when sourcing the PKGBUILD
   _gemdestdir=$($_gem environment gemdir)
