@@ -16,10 +16,10 @@ makedepends=("rubygems")
 # optdepends=("ruby-listen")
 source=("http://gems.rubyforge.org/gems/$_pkgname-$pkgver.gem")
 noextract=("$_pkgname-$pkgver.gem")
+sha256sums=("ce9d5b515f09bafff156076314173778e1d3ed819b09da837bfad16c730ce86d")
 
 package() {
 	local _gemdir="$(ruby -rubygems -e"puts Gem.default_dir")"
 	gem install --no-user-install --ignore-dependencies -i "$pkgdir$_gemdir" -n "$pkgdir/usr/bin" "$_pkgname-$pkgver.gem"
 	install -D "$pkgdir$_gemdir/gems/$_pkgname-$pkgver/MIT-LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
-md5sums=('b50ec4877b2af7cb05c1535752e47e12')
