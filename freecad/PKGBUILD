@@ -6,7 +6,7 @@
 # Contributor: bricem13
 # Contributor: gborzi
 
-pkgname=freecad
+pkgname=freecad-oce
 pkgver=0.14.3702
 pkgrel=6
 pkgdesc='A general purpose 3D CAD modeler'
@@ -47,8 +47,10 @@ build() {
   make
 }
 
-package_freecad() {
+package_freecad-oce() {
   cd freecad-${pkgver}/build
+  provides=('freecad')
+  conflicts=('freecad')
 
   # Install main program
   make DESTDIR="${pkgdir}" install
@@ -61,11 +63,11 @@ package_freecad() {
   # Install pixmaps and desktop shortcut
   desktop-file-install \
       --dir="${pkgdir}/usr/share/applications" \
-      "${srcdir}/${pkgname}.desktop"
+      "${srcdir}/freecad.desktop"
 
   # Mime info
-  install -D -m644 "${srcdir}/${pkgname}.xml" \
-          "${pkgdir}/usr/share/mime/packages/${pkgname}.xml"
+  install -D -m644 "${srcdir}/freecad.xml" \
+          "${pkgdir}/usr/share/mime/packages/freecad.xml"
 
   boostver=$(objdump -p /usr/lib/libboost_system.so | \
                   grep SONAME | sed -e 's/.*boost_system\.so\.//')
