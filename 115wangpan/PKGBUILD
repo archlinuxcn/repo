@@ -25,4 +25,8 @@ package(){
 	install -Dm755 "${srcdir}/usr/bin/115pan" "${srcdir}/usr/bin/qt.conf" "${pkgdir}/usr/share/115wangpan"
 	install -dm755  "$pkgdir/usr/bin/"
 	ln -s /usr/share/115wangpan/115pan "${pkgdir}/usr/bin/115pan"
+	install -dm755  "$pkgdir/usr/share/pixmaps"
+	cp "${srcdir}/usr/share/pixmaps/115pan.png" "${pkgdir}/usr/share/pixmaps"
+	install -dm755  "$pkgdir/usr/share/applications"
+	cp "${srcdir}/usr/share/applications/115pan.desktop" "${pkgdir}/usr/share/applications"
 }
