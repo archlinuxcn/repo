@@ -1,24 +1,22 @@
 # Maintainer: yk <yk at archlinuxcn dot org>
 
 pkgname=shadowsocks-qt5
-pkgver=0.7.0
-pkgrel=6
+pkgver=0.8.0
+pkgrel=1
 pkgdesc="A fast, reliable and cross-platform GUI fronted for Shadowsocks."
 arch=("i686" "x86_64")
 url="http://github.com/librehat/$pkgname"
 license=("GPL3")
-depends=("qt5-base>=5.2" "botan-1.10" "qrencode" "libqtshadowsocks")
+depends=("qt5-base>=5.2" "botan-1.10" "qrencode" "libqtshadowsocks>=1.2")
 makedepends=("qtchooser" "git" "make")
 provides=("$pkgname")
 conflicts=("$pkgname")
 install=$pkgname.install
-optdepends=(
-    'libsodium: salsa20 encryption method support'
-)
+
 source=("http://github.com/librehat/$pkgname/archive/v$pkgver.tar.gz"
         "shadowsocks-qt5.install"
 )
-sha256sums=('3f01946124c9d3d918bd5122293aad4db351e3381793b340432241ff853086e3'
+sha256sums=('763bc13771fdcbe5119eabe2ca06d5b7eb0b331d40cc9684d9097ec6c9872353'
         '7a61a54c38042192e77636914d9950cefcc18ad4e22925ead101e2b7d9e072b9'
 )
 
