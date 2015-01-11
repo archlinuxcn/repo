@@ -3,36 +3,36 @@
 
 pkgname=metasploit
 pkgver=4.10.0
-pkgrel=1
+pkgrel=2
 pkgdesc="An advanced open-source platform for developing, testing, and using exploit code"
-depends=('ruby1.9' 'libpcap' 'postgresql-libs')
+depends=('ruby1.9' 'libpcap' 'postgresql-libs' 'ruby1.9-bundler')
 optdepends=('java-runtime: msfgui' 'dradis' 'ruby-pg: database support') #sqlite
 provides=('metasploit')
-conflicts=('metasploit-git')
 options=('!strip')
-makedepends=('subversion' 'ruby1.9-bundler')
+makedepends=('subversion')
 source=("http://downloads.metasploit.com/data/releases/archive/framework-${pkgver}.tar.bz2")
 install="${pkgname}.install"
 url="http://www.metasploit.com/"
 license=('BSD')
 arch=('any')
-
-md5sums=('SKIP')
+sha512sums=('91f51e17623d2d68871dc24e4410c8fb5222a1a15d5e9264f67f23c1b6274b5360052176c7e748cd1219f534f9fc620aa636c3c0f31291b96b589d48f2c2b11a')
 
 package() {
-	mkdir -p "$pkgdir/usr/share" "$pkgdir/usr/bin"
-	install -Dm644 "$srcdir/msf3/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-	install -Dm644 "$srcdir/msf3/COPYING" "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+	mkdir -p "${pkgdir}/opt" "${pkgdir}/usr/bin"
+	install -Dm644 msf3/LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+	install -Dm644 msf3/COPYING "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
 
-	mv "$srcdir/msf3" "$pkgdir/usr/share/$pkgname"
+	cp -r msf3 "${pkgdir}/opt/${pkgname}"
 
-	for f in $pkgdir/usr/share/$pkgname/msf*; do
-      local _msffile="$pkgdir/usr/bin/`basename "$f"`"
-      echo "ruby-1.9 /usr/share/$pkgname/`basename "$f"` \"\$@\"" > $_msffile
-      chmod 755 $_msffile
+	for f in ${pkgdir}/opt/${pkgname}/msf*; do
+    local _msffile="${pkgdir}/usr/bin/`basename "${f}"`"
+    echo "BUNDLE_GEMFILE=/opt/${pkgname}/Gemfile bundle-1.9 exec ruby-1.9 /opt/${pkgname}/`basename "${f}"` \"\$@\"" > ${_msffile}
+    chmod 755 ${_msffile}
 	done;
 
 	# Removes all .svn directories - but after it is not possible to use msfupdate tool
 	#echo "Removing all .svn directories..."
 	#find $pkgdir/opt/$pkgname -name ".svn" -type d -exec rm -fr {} +
 }
+
+# vim: ts=2 sw=2 et:
