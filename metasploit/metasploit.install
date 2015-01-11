@@ -1,16 +1,25 @@
 update_ruby_deps() {
-	cd /usr/share/metasploit
-	bundle-1.9 install
+  cd /opt/metasploit
+  bundle-1.9 install --path vendor/bundle
 }
 
 
 post_install() {
-	echo 'Installing necessary ruby dependencies with ruby-bundle'
-	update_ruby_deps
+  echo 'Installing necessary ruby dependencies with ruby-bundle'
+  update_ruby_deps
 }
 
 
 post_upgrade() {
-	echo 'Updating ruby dependencies with ruby-bundle'
-	update_ruby_deps
+  echo 'Updating ruby dependencies with ruby-bundle'
+  update_ruby_deps
 }
+
+post_remove() {
+  echo 'Deleting metasploit folder to remove locally installed gems'
+  # remove old location
+  rm -rf /usr/share/metasploit
+  rm -rf /opt/metasploit
+}
+
+# vim: ts=2 sw=2 et:
