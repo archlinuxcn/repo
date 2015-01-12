@@ -2,7 +2,7 @@
 
 pkgname=opera-developer
 pkgver=28.0.1738.0
-pkgrel=3
+pkgrel=4
 pkgdesc='A fast and secure web browser and Internet suite - developer stream'
 arch=('x86_64')
 url='http://www.opera.com/browser/'
@@ -17,26 +17,22 @@ source=("http://get.geo.opera.com/pub/${pkgname}/${pkgver}/linux/${pkgname}_${pk
 #source=("http://deb.opera.com/${pkgname}/pool/non-free/o/${pkgname}/${pkgname}_${pkgver}_amd64.deb"
 sha256sums=('4d4a3fdcb625dac7b3c89e1f5e943610e26c7f7ebbf93f9daf5672eb8be23741')
 
-prepare() {
-	cd ${srcdir}/
-
-	# this is nested archive, so extract the inner tarball
-	tar xJf data.tar.xz
-}
-
 package() {
 	cd ${srcdir}/
 
-	# copy to pkgdir
-	cp -a usr/ "${pkgdir}/"
+	# this is nested archive with final directory structure,
+	# so extract the inner tarball to ${pkgdir}
+	tar xJf data.tar.xz -C "${pkgdir}/"
 
-	# ffmpeg compatibility symlinks
-	#install -d -m0755 "${pkgdir}/usr/lib/x86_64-linux-gnu/opera-developer/lib/"
-	#ln -s ../../../libavcodec.so.56 "${pkgdir}/usr/lib/x86_64-linux-gnu/opera-developer/lib/libavcodec.so.55"
-	#ln -s ../../../libavformat.so.56 "${pkgdir}/usr/lib/x86_64-linux-gnu/opera-developer/lib/libavformat.so.55"
-	#ln -s ../../../libavutil.so.54 "${pkgdir}/usr/lib/x86_64-linux-gnu/opera-developer/lib/libavutil.so.52"
+	# create ffmpeg compatibility symlinks if necessary
+	for LIBAV in $(strings "${pkgdir}/usr/lib/x86_64-linux-gnu/${pkgname}/${pkgname}" | egrep 'libav[[:alpha:]]+.so'); do
+		[ -s "/usr/lib/${LIBAV}" ] && continue
+
+		install -d -m0755 "${pkgdir}/usr/lib/x86_64-linux-gnu/${pkgname}/lib/"
+		ln -s ../../../$(basename "${LIBAV%.*}") "${pkgdir}/usr/lib/x86_64-linux-gnu/${pkgname}/lib/${LIBAV}"
+	done
 
 	# set suid bit for Opera sandbox
-	chmod 4755 "${pkgdir}/usr/lib/x86_64-linux-gnu/opera-developer/opera_sandbox"
+	chmod 4755 "${pkgdir}/usr/lib/x86_64-linux-gnu/${pkgname}/opera_sandbox"
 }
 
