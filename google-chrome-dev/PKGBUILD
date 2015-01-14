@@ -5,7 +5,7 @@
 # or use: $ curl -s https://dl.google.com/linux/chrome/rpm/stable/x86_64/repodata/other.xml.gz | gzip -df | awk -F\" '/pkgid/{ sub(".*-","",$4); print $4": "$10 }'
 
 pkgname=google-chrome-dev
-pkgver=41.0.2267.0
+pkgver=41.0.2272.3
 pkgrel=1
 pkgdesc="An attempt at creating a safer, faster, and more stable browser (Dev Channel)"
 arch=('i686' 'x86_64')
@@ -23,9 +23,12 @@ _arch=amd64
 [[ $CARCH = i686 ]] && _arch=i386
 source=("google-chrome-${_channel}_${pkgver}_${_arch}.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_${_arch}.deb"
         'eula_text.html')
-md5sums=('72bf3ce06c2440a7f161b472c1e149f2'
+md5sums=('d16807e475a901b08bd0ffed9f8ac293'
          'b7e752f549b215ac77f284b6486794b6')
-[[ $CARCH = i686 ]] && md5sums[0]='6c11c62cdbd61b6003647440758fabc8'
+[[ $CARCH = i686 ]] && md5sums[0]='48e342779214378a3301794aa176b95b'
+## Previous build:
+#source[0]="http://mirror.pcbeta.com/google/chrome/deb/pool/main/g/google-chrome-unstable/google-chrome-unstable_41.0.2267.0-1_${_arch}.deb"
+#md5sums[0]='SKIP'
 
 package() {
   msg2 "Extracting the data.tar.xz"
@@ -44,15 +47,12 @@ package() {
   # License
   install -Dm644 eula_text.html "$pkgdir"/usr/share/licenses/google-chrome-$_channel/eula_text.html
 
-  msg2 "Symlinking missing Udev lib"
-  ln -s /usr/lib/libudev.so.1 "$pkgdir"/opt/google/chrome-$_channel/libudev.so.0
-
   msg2 "Fixing Chrome icon resolution"
   _name=$(echo ${source/_*} | sed 's/.*/\u&/')
   sed -i "/Exec=/i\StartupWMClass=$_name" "$pkgdir"/usr/share/applications/google-chrome-$_channel.desktop
 
   msg2 "Adding support for CHROMIUM_USER_FLAGS"
-  sed -i 's/ "$@"/"$CHROMIUM_USER_FLAGS" "$@"/' "$pkgdir"/opt/google/chrome-$_channel/google-chrome-$_channel
+  sed -i 's/ "$@"/ $CHROMIUM_USER_FLAGS "$@"/' "$pkgdir"/opt/google/chrome-$_channel/google-chrome-$_channel
 
   msg2 "Removing unnecessities (e.g. Debian Cron job)"
   rm -r "$pkgdir"/etc/cron.daily/ "$pkgdir"/opt/google/chrome-$_channel/cron/
