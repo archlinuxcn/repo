@@ -1,4 +1,10 @@
 post_install() {
+  # Create chrome-remote-desktop group
+  groupadd --gid $GID chrome-remote-desktop
+  # Instruct to create $HOME/.config/chrome-remote-desktop
+  # Instruct to add self to CRD group
+  # Instruct order to install CRD extension and enable CRD user service unit
+  
   echo ""
   echo "Please create ~/.config/chrome-remote-desktop folder manually, if it doesn't exist, or else you can't use CRD."
   echo "The needed files are created by the Chrome app, inside the chrome-remote-desktop folder, after Enabling Remote Connections."
