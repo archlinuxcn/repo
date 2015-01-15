@@ -27,10 +27,15 @@ def pre_build():
 
     for line in edit_file('PKGBUILD'):
         # edit PKGBUILD
-        if line.strip().startswith("source="):
-            line = line.strip()
-            pos = len('source=("')
-            line = line[:pos] + "sddm-kcm.tgz::" + line[pos:]
+        if line.strip().startswith("depends="):
+            words = line.split(" ")
+            words.insert(-1, "'kio'")
+            line = " ".join(words)
+        if line.strip().startswith("makedepends="):
+            words = line.split(" ")
+            words.insert(-1, "'qt5-x11extras'")
+            words.insert(-1, "'python'")
+            line = " ".join(words)
         print(line)
 
 
