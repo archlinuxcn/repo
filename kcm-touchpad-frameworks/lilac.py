@@ -28,6 +28,7 @@ def pre_build():
     for line in edit_file('PKGBUILD'):
         # edit PKGBUILD
         if line.strip().startswith("makedepends="):
+            words = line.split(" ")
             words.insert(-1, "'kded'")
             line = " ".join(words)
         print(line)
