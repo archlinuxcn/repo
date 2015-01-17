@@ -1,0 +1,33 @@
+# Maintainer: Antonio Rojas <arojas@archlinux.org>
+# Contributor: Alexander Mezin <mezin.alexander@gmail.com>
+
+pkgname=kcm-touchpad-frameworks
+pkgver=5.1.95
+pkgrel=1
+pkgdesc='KCM, daemon and applet for touchpad'
+arch=('i686' 'x86_64')
+url='https://projects.kde.org/projects/kde/workspace/kcm-touchpad'
+license=('GPL')
+depends=('xf86-input-synaptics' 'xcb-util-cursor' 'plasma-framework' 'knotifyconfig' 'kinit')
+makedepends=('extra-cmake-modules' 'xorg-server-devel' 'git')
+conflicts=('kcm-touchpad')
+source=("http://download.kde.org/unstable/plasma/$pkgver/kcm-touchpad-$pkgver.tar.xz")
+md5sums=('25f22612196f820dafe395cdf2fdf0a8')
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake ../kcm-touchpad-$pkgver \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR="$pkgdir" install
+}
