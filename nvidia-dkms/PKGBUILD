@@ -4,8 +4,8 @@
 # Contributor: Atilla ÖNTAŞ <tarakbumba@gmail.com>
 
 pkgname=nvidia-dkms
-pkgver=343.36
-pkgrel=3
+pkgver=346.35
+pkgrel=1
 pkgdesc='NVIDIA kernel module sources (DKMS)'
 arch=('i686' 'x86_64')
 url='http://www.nvidia.com/'
@@ -19,8 +19,8 @@ install='nvidia-dkms.install'
 source=("http://us.download.nvidia.com/XFree86/Linux-x86/${pkgver}/NVIDIA-Linux-x86-${pkgver}.run"
         "http://us.download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run"
         'linux3.18.patch')
-sha256sums=('8cc1c99fbda29b3258f57dbdacef11921aca2e3ac106ef591f0815716e1b829e'
-            '27f18ac4fcf4faceec14594adf81c88a8b2967403fe3e8dfdd2e7f5579825b36'
+sha256sums=('bba63c30c730ad7b8500a77c81cae58562b9f9b57cd576b61f37a2d8bc45df25'
+            '7dae481224fddc711c2478e92ae0efd032acb0a002c85a44fa99ad9e54322afd'
             '63a52af60e2ee36a2efa41022780802de7eec5b315aa1580a2fa1eb208d8fa87')
 
 [[ $CARCH == i686 ]] && _pkg=NVIDIA-Linux-x86-${pkgver}
