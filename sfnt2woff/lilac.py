@@ -9,7 +9,7 @@ def pre_build():
 
   for line in edit_file('PKGBUILD'):
     if line.startwith('license'):
-        line = "license=('MPL' 'GPL2' 'LGPL2.1')\ndepends=('zlib')"
+      line = "license=('MPL' 'GPL2' 'LGPL2.1')\ndepends=('zlib')"
     print(line)
 
 
