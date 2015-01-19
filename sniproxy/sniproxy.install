@@ -1,0 +1,7 @@
+post_install() {
+	systemd-tmpfiles --create sniproxy.conf
+}
+
+post_upgrade() {
+	systemd-tmpfiles --create sniproxy.conf
+}

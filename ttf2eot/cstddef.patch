@@ -1,0 +1,11 @@
+--- ttf2eot-0.0.2-2/OpenTypeUtilities.h	2009-04-30 12:18:46.000000000 +0300
++++ new/OpenTypeUtilities.h	2011-12-13 14:03:02.697670526 +0200
+@@ -28,6 +28,8 @@
+ #ifndef OpenTypeUtilities_h
+ #define OpenTypeUtilities_h
+ 
++#include <cstddef>
++
+ using std::vector;
+ 
+ bool getEOTHeader(unsigned char * fontData, size_t fontSize, vector<uint8_t>& eotHeader, size_t& overlayDst, size_t& overlaySrc, size_t& overlayLength);
