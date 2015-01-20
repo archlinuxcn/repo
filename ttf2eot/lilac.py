@@ -8,7 +8,7 @@ def pre_build():
   aur_pre_build('ttf2eot')
 
   for line in edit_file('PKGBUILD'):
-    if line.startwith('depends'):
+    if line.startswith('depends'):
       line = "depends=('gcc-libs')"
     print(line)
 

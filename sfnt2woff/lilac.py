@@ -8,7 +8,7 @@ def pre_build():
   aur_pre_build('sfnt2woff')
 
   for line in edit_file('PKGBUILD'):
-    if line.startwith('license'):
+    if line.startswith('license'):
       line = "license=('MPL' 'GPL2' 'LGPL2.1')\ndepends=('zlib')"
     print(line)
 

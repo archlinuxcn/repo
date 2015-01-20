@@ -1,0 +1,45 @@
+# Maintainer: Arthur Țițeică arthur.titeica/gmail/com
+
+pkgname=ttfautohint
+pkgver=1.1
+pkgrel=1
+pkgdesc="Provides automated hinting process for web fonts"
+arch=('i686' 'x86_64')
+url="http://www.freetype.org/ttfautohint/"
+license=('GPL' 'custom')
+depends=('freetype2' 'qt4')
+# makedepends=('qt4')
+optdepends=('texlive-bin: generate docs'
+            'pandoc: generate docs'
+            'ghc: pandoc filter')
+source=(http://download.savannah.gnu.org/releases/freetype/$pkgname-$pkgver.tar.gz{,.sig})
+sha256sums=('e85a47ea5f758292291040ac674cf697a64ff0c02b4d4b5bf03a84249eba31ff'
+            'SKIP')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  export QMAKE='/usr/bin/qmake-qt4'
+  export MOC='/usr/bin/moc-qt4'
+  export UIC='/usr/bin/uic-qt4'
+  export RCC='/usr/bin/rcc-qt4'
+  # export QTDIR='/usr/lib/qt4'
+  # CFLAGS="-I/usr/include/qt4" 
+  ./configure --prefix=/usr --with-qt=/usr/lib/qt4
+  make
+}
+
+check() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make -k check
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make DESTDIR="$pkgdir/" install
+
+  install -Dm644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
+  install -Dm644 FTL.TXT "${pkgdir}/usr/share/licenses/${pkgname}/FTL.TXT"
+}
+
+# vim:set ts=2 sw=2 et:
+validpgpkeys=(58E0C111E39F5408C5D3EC76C1A60EACE707FDA5)
