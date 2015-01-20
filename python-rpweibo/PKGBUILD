@@ -1,0 +1,19 @@
+# Maintainer: Tom Li <biergaizi@member.fsf.org>
+# Contributor: Tom Li <biergaizi@member.fsf.org>
+
+pkgname=python-rpweibo
+pkgver=0.01
+_pkgver=0.01
+pkgrel=1
+pkgdesc="A Weibo API wrapper based on cURL + Python."
+arch=('any')
+url="https://github.com/WeCase/rpweibo"
+license=('LGPL3')
+depends=('python' 'python-pycurl')
+source=("rpweibo-${_pkgver}.tar.gz::https://github.com/WeCase/rpweibo/archive/${_pkgver}.tar.gz")
+md5sums=('ce81ab414a19dad98f11b8433447d076')
+
+package() {
+  cd "$srcdir/rpweibo-${_pkgver}"
+  python setup.py install --root="$pkgdir/" --optimize=1
+}
