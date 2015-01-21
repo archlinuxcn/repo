@@ -117,7 +117,7 @@
  #define WL_APSTA_UPDN(args)
 --- a/src/wl/sys/wl_linux.c	2014-06-26 10:42:08.000000000 +0000
 +++ b/src/wl/sys/wl_linux.c	2014-12-30 17:02:03.841957446 +0000
-@@ -878,7 +878,7 @@
+@@ -878,7 +878,7 @@ wl_remove(struct pci_dev *pdev)
  static SIMPLE_DEV_PM_OPS(wl_pm_ops, wl_suspend, wl_resume);
  #endif
  
@@ -126,7 +126,7 @@
  	.name =		"wl",
  	.probe =	wl_pci_probe,
  	.remove =	__devexit_p(wl_remove),
-@@ -1270,6 +1270,7 @@
+@@ -1270,6 +1270,7 @@ wl_free_if(wl_info_t *wl, wl_if_t *wlif)
  		MFREE(wl->osh, wlif->dev, sizeof(struct net_device));
  #else
  		free_netdev(wlif->dev);
@@ -134,7 +134,7 @@
  #endif 
  	}
  
-@@ -1307,7 +1308,12 @@
+@@ -1307,7 +1308,12 @@ wl_alloc_linux_if(wl_if_t *wlif)
  	dev->priv = priv_link;
  #else
  
@@ -147,7 +147,7 @@
  	if (!dev) {
  		WL_ERROR(("wl%d: %s: alloc_netdev failed\n",
  			(wl->pub)?wl->pub->unit:wlif->subunit, __FUNCTION__));
-@@ -1651,11 +1657,7 @@
+@@ -1651,11 +1657,7 @@ wl_ioctl(struct net_device *dev, struct
  	}
  
  	WL_LOCK(wl);
@@ -160,7 +160,17 @@
  	WL_UNLOCK(wl);
  
  done1:
-@@ -2455,8 +2457,10 @@
+@@ -2157,8 +2159,8 @@ wl_start(struct sk_buff *skb, struct net
+ 	wlif = WL_DEV_IF(dev);
+ 	wl = WL_INFO(dev);
+ 
++	skb->prev = NULL;
+ 	if (WL_ALL_PASSIVE_ENAB(wl) || (WL_RTR() && WL_CONFIG_SMP())) {
+-		skb->prev = NULL;
+ 
+ 		TXQ_LOCK(wl);
+ 
+@@ -2455,8 +2457,10 @@ wl_monitor(wl_info_t *wl, wl_rxsts_t *rx
  		p80211msg_t *phdr;
  
  		len = sizeof(p80211msg_t) + oskb->len - D11_PHY_HDR_LEN;
@@ -172,7 +182,7 @@
  
  		skb_put(skb, len);
  		phdr = (p80211msg_t*)skb->data;
-@@ -2535,8 +2539,10 @@
+@@ -2535,8 +2539,10 @@ wl_monitor(wl_info_t *wl, wl_rxsts_t *rx
  			rtap_len = sizeof(wl_radiotap_ht_brcm_2_t);
  
  		len = rtap_len + (oskb->len - D11_PHY_HDR_LEN);
@@ -184,7 +194,7 @@
  
  		skb_put(skb, len);
  
-@@ -2664,8 +2670,10 @@
+@@ -2664,8 +2670,10 @@ wl_monitor(wl_info_t *wl, wl_rxsts_t *rx
  			len += amsdu_len;
  		}
  
@@ -196,7 +206,7 @@
  
  		skb_put(skb, len);
  
-@@ -2990,7 +2998,7 @@
+@@ -2990,7 +2998,7 @@ _wl_del_monitor(wl_task_t *task)
  }
  
  void
@@ -205,7 +215,7 @@
  {
  	const char *devname;
  	wl_if_t *wlif;
-@@ -3224,42 +3232,75 @@
+@@ -3224,42 +3232,75 @@ wl_linux_watchdog(void *ctx)
  #if LINUX_VERSION_CODE < KERNEL_VERSION(3, 10, 0)
  static int
  wl_proc_read(char *buffer, char **start, off_t offset, int length, int *eof, void *data)
@@ -297,7 +307,7 @@
  	int from_user = 0;
  	int bcmerror;
  
-@@ -3270,7 +3311,11 @@
+@@ -3270,7 +3311,11 @@ wl_proc_write(struct file *filp, const c
  	}
  	if (copy_from_user(&from_user, buff, 1)) {
  		WL_ERROR(("%s: copy from user failed\n", __FUNCTION__));
@@ -310,7 +320,7 @@
  	}
  
  	if (from_user >= 0x30)
-@@ -3280,10 +3325,15 @@
+@@ -3280,10 +3325,15 @@ wl_proc_write(struct file *filp, const c
  	bcmerror = wlc_ioctl(wl->wlc, WLC_SET_MONITOR, &from_user, sizeof(int), NULL);
  	WL_UNLOCK(wl);
  
@@ -327,7 +337,7 @@
  	return length;
  }
  
-@@ -3304,8 +3354,8 @@
+@@ -3304,8 +3354,8 @@ wl_reg_proc_entry(wl_info_t *wl)
  	if ((wl->proc_entry = create_proc_entry(tmp, 0644, NULL)) == NULL) {
  		WL_ERROR(("%s: create_proc_entry %s failed\n", __FUNCTION__, tmp));
  #else
