@@ -38,18 +38,3 @@ index c9b8569..8ecf14a 100644
  from itertools import groupby
  from sqlalchemy.sql import and_, select, func, literal_column
  from uuid import UUID
-diff --git a/setup.py b/setup.py
-index 21328e1..3f6de6f 100755
---- a/setup.py
-+++ b/setup.py
-@@ -51,7 +51,6 @@ install_requires = [
-     'pycparser >= 2.9.1',
-     'pyxdg',
-     'SQLAlchemy',
--    'contextlib2',
- ]
- 
- if version_info < (2, 7):
--- 
-1.8.3
-

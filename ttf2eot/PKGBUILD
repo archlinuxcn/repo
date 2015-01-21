@@ -5,7 +5,7 @@ arch=('i686' 'x86_64')
 pkgdesc="Utility to convert TTF files to EOT"
 url="http://code.google.com/p/ttf2eot/"
 license=('GPL')
-depends=()
+depends=('gcc-libs')
 makedepends=()
 source=(http://$pkgname.googlecode.com/files/$pkgname-$pkgver-$pkgrel.tar.gz
 	cstddef.patch)
