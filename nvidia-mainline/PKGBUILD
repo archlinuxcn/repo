@@ -6,9 +6,9 @@
 # Original arch package by: Thomas Baechler <thomas@archlinux.org>
 
 pkgname=nvidia-mainline
-pkgver=343.36
+pkgver=346.35
 _extramodules=extramodules-3.19-mainline
-pkgrel=3
+pkgrel=1
 pkgdesc="NVIDIA drivers for linux-mainline"
 arch=('i686' 'x86_64')
 url="http://www.nvidia.com/"
@@ -17,28 +17,28 @@ makedepends=('linux-mainline-headers>=3.19rc1' 'linux-mainline-headers<3.20rc1')
 license=('custom')
 install=nvidia.install
 options=(!strip)
-source=('nvidia-3.18.patch' 'nvidia-3.19.patch')
-sha256sums=('c9986c306f452614fcf23990c55ffe12bdc451bcbd65a5200269f90a722a3d35'
-            'ab04f61c52fa2e0caf133cb5bfd8f42ed124af82d8cafd73f11e2e5ddc685056')
+source=('nvidia-3.18.patch'
+        'nvidia-3.19.patch')
+sha256sums=('f50876e5f7f250516da9c502ea2165928311ab52daa629b3c43a0a0c88dbc695'
+            'c5c03af3c38c5e6bfbfd867e905ba74e96ecd43851fe3833a6c443643003a0ff')
 
 if [ "$CARCH" = "i686" ]; then
     _arch='x86'
     _pkg="NVIDIA-Linux-${_arch}-${pkgver}"
     source+=("http://us.download.nvidia.com/XFree86/Linux-${_arch}/${pkgver}/${_pkg}.run")
-    sha256sums+=('8cc1c99fbda29b3258f57dbdacef11921aca2e3ac106ef591f0815716e1b829e')
+    sha256sums+=('bba63c30c730ad7b8500a77c81cae58562b9f9b57cd576b61f37a2d8bc45df25')
 elif [ "$CARCH" = "x86_64" ]; then
     _arch='x86_64'
     _pkg="NVIDIA-Linux-${_arch}-${pkgver}-no-compat32"
     source+=("http://us.download.nvidia.com/XFree86/Linux-${_arch}/${pkgver}/${_pkg}.run")
-    sha256sums+=('27f18ac4fcf4faceec14594adf81c88a8b2967403fe3e8dfdd2e7f5579825b36')
+    sha256sums+=('7dae481224fddc711c2478e92ae0efd032acb0a002c85a44fa99ad9e54322afd')
 fi
 
 prepare() {
     sh "${_pkg}.run" --extract-only
     cd "${_pkg}"
     # patches here
-    # https://devtalk.nvidia.com/default/topic/783364/343-22-driver-incompatible-with-linux-3-18-/
-    patch -Np0 -i ${srcdir}/nvidia-3.18.patch
+    patch -Np1 -i ${srcdir}/nvidia-3.18.patch
     patch -Np1 -i ${srcdir}/nvidia-3.19.patch
 }
 
