@@ -1,16 +1,17 @@
-# Maintainer: Det <nimetonmaili at gmail a-dot com>
+# Maintainer: Det <nimetonmaili g-mail>
 # Contributors: t3ddy, Lex Rivera aka x-demon, ruario
 
 # Check for new Linux releases in: http://googlechromereleases.blogspot.com/search/label/Dev%20updates
 # or use: $ curl -s https://dl.google.com/linux/chrome/rpm/stable/x86_64/repodata/other.xml.gz | gzip -df | awk -F\" '/pkgid/{ sub(".*-","",$4); print $4": "$10 }'
 
 pkgname=google-chrome-dev
-pkgver=41.0.2272.3
+pkgver=41.0.2272.12
 pkgrel=1
 pkgdesc="An attempt at creating a safer, faster, and more stable browser (Dev Channel)"
 arch=('i686' 'x86_64')
 url="https://www.google.com/chrome/index.html"
 license=('custom:chrome')
+makedepends=('pacman>=4.2.0')
 depends=('alsa-lib' 'desktop-file-utils' 'flac' 'gconf' 'gtk2' 'harfbuzz' 'harfbuzz-icu' 'hicolor-icon-theme'
          'icu' 'libpng' 'libxss' 'libxtst' 'nss' 'opus' 'snappy' 'speech-dispatcher' 'ttf-font' 'xdg-utils')
 optdepends=('kdebase-kdialog: needed for file dialogs in KDE'
@@ -19,22 +20,21 @@ provides=("google-chrome=$pkgver")
 options=('!emptydirs' '!strip')
 install=$pkgname.install
 _channel=unstable
-_arch=amd64
-[[ $CARCH = i686 ]] && _arch=i386
-source=("google-chrome-${_channel}_${pkgver}_${_arch}.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_${_arch}.deb"
-        'eula_text.html')
-md5sums=('d16807e475a901b08bd0ffed9f8ac293'
-         'b7e752f549b215ac77f284b6486794b6')
-[[ $CARCH = i686 ]] && md5sums[0]='48e342779214378a3301794aa176b95b'
-## Previous build:
-#source[0]="http://mirror.pcbeta.com/google/chrome/deb/pool/main/g/google-chrome-unstable/google-chrome-unstable_41.0.2267.0-1_${_arch}.deb"
-#md5sums[0]='SKIP'
+source_x86_64=("google-chrome-${_channel}_${pkgver}_amd64.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_amd64.deb")
+source_i686=("google-chrome-${_channel}_${pkgver}_i386.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_i386.deb")
+source=('eula_text.html')
+md5sums_x86_64=('e29da179eac31f6f8d2f144f6651c56a')
+md5sums_i686=('7dacba5e9a923e71ae080198e49f1f2f')
+md5sums=('b7e752f549b215ac77f284b6486794b6')
+## Previous build (also see: /var/cache/pacman/pkg/google-chrome-dev-*):
+#source_x86_64=('http://mirror.pcbeta.com/google/chrome/deb/pool/main/g/google-chrome-unstable/google-chrome-unstable_41.0.2272.3-1_amd64.deb')
+#md5sums_x86_64=('d16807e475a901b08bd0ffed9f8ac293')
 
 package() {
-  msg2 "Extracting the data.tar.xz"
+  msg2 "Extracting the data.tar.xz..."
   bsdtar -xf data.tar.xz -C "$pkgdir/"
 
-  msg2 "Moving stuff in place"
+  msg2 "Moving stuff in place..."
   # Icons
   for i in 16 22 24 32 48 64 128 256; do
     install -Dm644 "$pkgdir"/opt/google/chrome-$_channel/product_logo_$i.png \
@@ -47,14 +47,14 @@ package() {
   # License
   install -Dm644 eula_text.html "$pkgdir"/usr/share/licenses/google-chrome-$_channel/eula_text.html
 
-  msg2 "Fixing Chrome icon resolution"
+  msg2 "Fixing Chrome icon resolution..."
   _name=$(echo ${source/_*} | sed 's/.*/\u&/')
   sed -i "/Exec=/i\StartupWMClass=$_name" "$pkgdir"/usr/share/applications/google-chrome-$_channel.desktop
 
-  msg2 "Adding support for CHROMIUM_USER_FLAGS"
+  msg2 "Adding support for CHROMIUM_USER_FLAGS..."
   sed -i 's/ "$@"/ $CHROMIUM_USER_FLAGS "$@"/' "$pkgdir"/opt/google/chrome-$_channel/google-chrome-$_channel
 
-  msg2 "Removing unnecessities (e.g. Debian Cron job)"
+  msg2 "Removing unnecessities (e.g. Debian Cron job)..."
   rm -r "$pkgdir"/etc/cron.daily/ "$pkgdir"/opt/google/chrome-$_channel/cron/
   rm "$pkgdir"/opt/google/chrome-$_channel/product_logo_*.png
 }
