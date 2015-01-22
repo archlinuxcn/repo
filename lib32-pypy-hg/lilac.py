@@ -2,7 +2,7 @@ from lilaclib import *
 
 build_prefix = ['multilib-archlinuxcn']
 
-pre_build = lambda: run_cmd(['makepkg', '-o'], use_pty=True)
+pre_build = vcs_update
 
 def post_build():
     git_add_files('PKGBUILD')

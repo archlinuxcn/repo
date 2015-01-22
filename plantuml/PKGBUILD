@@ -1,0 +1,25 @@
+# Contributor: Juan Diego Tascon
+
+pkgname=plantuml
+pkgver=8015
+pkgrel=1
+pkgdesc="PlantUML is a component that allows to quickly write uml diagrams"
+arch=(any)
+url="http://plantuml.sourceforge.net/"
+license=('GPL')
+depends=("java-runtime" "graphviz")
+makedepends=("apache-ant" "java-environment")
+source=(http://downloads.sourceforge.net/project/$pkgname/$pkgname-$pkgver.tar.gz "$pkgname.run")
+
+package() {
+  install -m 755 -D "$pkgname.run" "$pkgdir/usr/bin/$pkgname"
+  
+  cd "$srcdir/$pkgname-$pkgver"
+  ant dist
+  install -m 644 -D "$pkgname.jar" "$pkgdir/opt/$pkgname/$pkgname.jar"
+}
+
+sha256sums=('5e9ebb9e93d4f9ccffe1f6cf90eb382309ce456a'
+          '5e89cc2c3fe119ccb7f3ac7c311fe8f18fa526cd')
+sha256sums=('336541c5a289c9ca151cb65efbc23c1aa7720fb015b424240b262caa16362459'
+            'dff39e4d8dd8eedb58c1b0a0cf64ab2c404b713e3a42fa5fdf0b6792ca382ed5')

@@ -1,6 +1,6 @@
 # Author: Patrick Brisbin <pbrisbin@gmail.com>
 pkgname=downgrade
-pkgver=5.1.1
+pkgver=5.1.2
 pkgrel=1
 pkgdesc="Bash script for downgrading one or more packages to a version in your cache or the A.R.M."
 arch=('any')
@@ -23,4 +23,4 @@ package() {
 
   make PREFIX=/usr DESTDIR="$pkgdir" install
 }
-md5sums=('4e6d1844842c994cafede0dabf53c9d5')
+md5sums=('d335e12db6b390052a78ecff80610ff3')

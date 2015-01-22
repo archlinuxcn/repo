@@ -1,37 +1,42 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
 # Maintainer: Oliver Mangold <o.mangold at gmail dot com>
 pkgname=bedup-git
-pkgver=130806
-pkgrel=2
+pkgver=0.9.0.30.g14d3a6d
+pkgrel=1
 pkgdesc="Offline deduplication utility for the BTRFS filesystem"
 arch=('i686' 'x86_64')
 url="https://github.com/g2p/bedup"
-_commit="244cc49b779a81f2dc1bf1df62cbecc53e39d454"
-#_commit="HEAD"
-source=('bedup-contextlib2.patch')
-md5sums=('b6d34b4576def2e96fe430e34ac03630')
+source=('bedup-contextlib2.patch'
+        "git+$url")
+md5sums=('0603c504dd948caf814ce3f74c2f18b1'
+         'SKIP')
 license=('GPL')
-depends=('python' 'python-distribute' 'python-alembic' 'python-cffi' 'python-sqlalchemy' 'python-xdg' 'python-mako')
+depends=('python' 'python-setuptools' 'python-alembic' 'python-cffi'
+         'python-sqlalchemy' 'python-xdg' 'python-mako')
 makedepends=('gcc' 'btrfs-progs' 'git')
 conflicts=('bedup')
 provides=('bedup')
+epoch=1
+_repo_name=bedup
+
+pkgver() {
+  cd "$srcdir/$_repo_name"
+  git describe --tags | sed -e 's/v//' -e 's/-/./g'
+}
 
 prepare() {
-  if [ ! -e "${srcdir}/bedup.git" ]; then
-    git clone "$url" "${srcdir}/bedup.git"
-  else
-    (cd "${srcdir}/bedup.git"; git pull origin master)
-  fi
-  cd "${srcdir}/bedup.git"
-  git reset --hard "$_commit"
+  cd "$srcdir/$_repo_name"
+  git reset --hard
   git apply ../bedup-contextlib2.patch
+  sed -i '/contextlib2/d' setup.py
 }
 
 build() {
-  cd "${srcdir}/bedup.git"
-  python setup.py build
+  cd "$srcdir/$_repo_name"
+  python3 setup.py build
 }
 
 package() {
-  cd "${srcdir}/bedup.git"
-  python setup.py install --root "${pkgdir}"
+  cd "$srcdir/$_repo_name"
+  python3 setup.py install --root "${pkgdir}" --optimize=1
 }

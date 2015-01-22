@@ -1,0 +1,11 @@
+[Unit]
+Description=TLS/SNI proxy
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/sniproxy -c /etc/sniproxy.conf
+PIDFile=/run/sniproxy/sniproxy.pid
+
+[Install]
+WantedBy=multi-user.target
