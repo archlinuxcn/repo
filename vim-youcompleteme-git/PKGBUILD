@@ -9,7 +9,7 @@
 # Contributor: Daniel Micay <danielmicay@gmail.com>
 
 pkgname=vim-youcompleteme-git
-pkgver=1372.d4da2d9
+pkgver=1390.8260e15
 pkgver() {
   cd "YouCompleteMe"
   echo $(git rev-list --count master).$(git rev-parse --short master)
@@ -25,18 +25,18 @@ depends=('vim' 'clang' 'python2')
 makedepends=('git' 'cmake' 'mono')
 provides=('vim-youcompleteme')
 conflicts=('vim-youcompleteme')
-source=('git+git://github.com/Valloric/YouCompleteMe.git'
-        'git+git://github.com/kennethreitz/requests.git'
-        'git+git://github.com/ross/requests-futures.git'
-        'git+git://github.com/Valloric/ycmd.git'
-        'git+git://github.com/bewest/argparse.git'
-        'git+git://github.com/defnull/bottle.git'
-        'git+git://github.com/slezica/python-frozendict.git'
-        'git+git://github.com/davidhalter/jedi.git'
-        'git+git://github.com/Pylons/waitress.git'
-        'git+git://github.com/nosami/OmniSharpServer.git'
-        'git+git://github.com/icsharpcode/NRefactory.git'
-        'git+git://github.com/jbevain/cecil.git')
+source=('git+https://github.com/Valloric/YouCompleteMe.git'
+        'git+https://github.com/kennethreitz/requests.git'
+        'git+https://github.com/ross/requests-futures.git'
+        'git+https://github.com/Valloric/ycmd.git'
+        'git+https://github.com/bewest/argparse.git'
+        'git+https://github.com/defnull/bottle.git'
+        'git+https://github.com/slezica/python-frozendict.git'
+        'git+https://github.com/davidhalter/jedi.git'
+        'git+https://github.com/Pylons/waitress.git'
+        'git+https://github.com/nosami/OmniSharpServer.git'
+        'git+https://github.com/icsharpcode/NRefactory.git'
+        'git+https://github.com/jbevain/cecil.git')
 sha1sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
 install=install
 
@@ -84,7 +84,7 @@ package() {
     "$pkgdir/usr/share/vim/vimfiles"
   cp -r "$srcdir/YouCompleteMe/third_party/"{pythonfutures,requests,requests-futures,retries} \
     "$pkgdir/usr/share/vim/vimfiles/third_party"
-  cp -r "$srcdir/YouCompleteMe/third_party/ycmd/"{ycmd,build.sh,libclang.so,README.md,run_tests.sh,style_format.sh,update_boost.sh,ycm_client_support.so,ycm_core.so} \
+  cp -r "$srcdir/YouCompleteMe/third_party/ycmd/"{ycmd,build.py,libclang.so,README.md,run_tests.sh,style_format.sh,update_boost.sh,ycm_client_support.so,ycm_core.so} \
     "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd"
   cp -r "$srcdir/YouCompleteMe/third_party/ycmd/third_party/"{argparse,bottle,frozendict,jedi,waitress} \
     "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party"
