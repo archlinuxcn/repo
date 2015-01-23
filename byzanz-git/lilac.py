@@ -32,6 +32,10 @@ def pre_build():
             words.insert(-1, "'git'")
             line = " ".join(words)
         print(line)
+    for line in edit_file('byzanz.install'):
+        if "gconfpkg" in line:
+            continue
+        print(line)
 
 
 post_build = aur_post_build
