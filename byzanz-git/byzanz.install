@@ -1,0 +1,22 @@
+pkgname=byzanz
+
+post_install() {
+  gconfpkg --install $pkgname
+  xdg-icon-resource forceupdate
+}
+
+pre_upgrade() {
+  pre_remove $1
+}
+
+post_upgrade() {
+  post_install $1
+}
+
+pre_remove() {
+  gconfpkg --uninstall $pkgname
+}
+
+post_remove() {
+  xdg-icon-resource forceupdate
+}
