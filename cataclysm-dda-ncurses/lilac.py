@@ -31,7 +31,8 @@ def pre_build():
     if 'install -dm755 "$pkgdir/usr/share/locale"' in line:
         print('  install -dm755 -g games "$pkgdir/${instdir}/lang/mo"')
     elif 'LOCALE_DIR="$pkgdir/usr/share/locale" lang/compile_mo.sh' in line:
-        print('  LOCALE_DIR="$pkgdir/${instdir}/lang/mo" lang/compile_mo.sh')
+        print('  LOCALE_DIR="$pkgdir/${instdir}/lang/mo" lang/compile_mo.sh\n')
+        print('  install -dm775 -g games "$pkgdir/${instdir}/memorial/"')
     else:
         print(line)
 
