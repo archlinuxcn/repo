@@ -1,7 +1,7 @@
 # Maintainer: Patrice Peterson <runiq at archlinux dot us>
 
 pkgname=python-scipy-doc
-pkgver=0.14.0
+pkgver=0.15.1
 pkgrel=1
 pkgdesc="Documentation for SciPy"
 makedepends=('unzip')
@@ -10,6 +10,7 @@ url=('http://docs.scipy.org')
 license=('BSD')
 source=("$pkgname-$pkgver.zip::http://docs.scipy.org/doc/scipy/scipy-html-$pkgver.zip")
 noextract=("$pkgname-$pkgver.zip")
+sha256sums=('c27d3656ffed1b988890cf192c692f646b00d02a0716122dcf447eff5f186cf2')
 
 package()
 {
@@ -18,4 +19,3 @@ package()
   find "$pkgdir/usr/share/doc/python-scipy/html" -type d -exec chmod 755 \{\} \;
   find "$pkgdir/usr/share/doc/python-scipy/html" -type f -exec chmod 644 \{\} \;
 }
-sha256sums=('7ab54cb9aeea1a168f30f321f38fee7b232612e70d5c92812139dddd822001bf')
