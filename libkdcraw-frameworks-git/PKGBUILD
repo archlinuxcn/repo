@@ -1,7 +1,7 @@
 # Maintainer: Gustavo Alvarez <sl1pkn07@gmail.com>
 
 pkgname=libkdcraw-frameworks-git
-pkgver=r1044.b68741b
+pkgver=r1045.b91e30f
 pkgrel=1
 pkgdesc="A C++ interface used to decode RAW picture. KF5 Frameworks branch (GIT version)"
 url='https://projects.kde.org/projects/kde/kdegraphics/libs/libkdcraw'
@@ -21,7 +21,6 @@ pkgver() {
 
 prepare() {
   mkdir -p build
-  sed 's|"${CMAKE_CURRENT_BINARY_DIR}/libkdcraw_version.h"|"${CMAKE_BINARY_DIR}/libkdcraw_version.h"|' -i libkdcraw/src/CMakeLists.txt
 }
 
 build() {
