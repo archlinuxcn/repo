@@ -2,7 +2,7 @@
 
 pkgname='terminus-font-ttf'
 pkgver=4.39
-pkgrel=2
+pkgrel=3
 pkgdesc="Monospaced bitmap font designed for long work with computers (TTF version)"
 arch=('any')
 url="http://files.ax86.net/terminus-ttf"
