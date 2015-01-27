@@ -1,14 +1,14 @@
-THIS_JDK='java-8-jdk'
+THIS_JAVA='java-8-jdk'
 NAME='JDK'
-
-note() {
-    printf "${blue}::${yellow} archlinux-java:${bold} $1${all_off}\n"
-}
 
 all_off="$(tput sgr0)"
 bold="${all_off}$(tput bold)"
 blue="${bold}$(tput setaf 4)"
 yellow="${bold}$(tput setaf 3)"
+
+note() {
+    printf "${blue}::${yellow} archlinux-java:${bold} $1${all_off}\n"
+}
 
 update_desktop() {
     update-desktop-database -q
@@ -19,36 +19,27 @@ update_desktop() {
     xdg-icon-resource forceupdate --theme LowContrast &>/dev/null
 }
 
-fix_default() {
-    if [[ -x /usr/bin/java ]]; then
-        archlinux-java get
-    else
-        archlinux-java unset
-    fi
-}
-
 post_install() {
-    default=$(fix_default)
+    default=$(archlinux-java get)
     case ${default} in
         "")
-            archlinux-java set ${THIS_JDK}
-            note "${NAME} ('${THIS_JDK}') set as default Java environment."
+            archlinux-java set ${THIS_JAVA}
+            note "${NAME} ('${THIS_JAVA}') set as default Java environment."
             ;;
-        ${THIS_JDK})
-            # Nothing
-            note "${NAME} ('${THIS_JDK}') set as default Java environment."
+        ${THIS_JAVA})
+            note "${NAME} ('${THIS_JAVA}') set as default Java environment."
             ;;
         *)
             note "Default Java environment already set to '${default}'.
-                   To use ${NAME} ('${THIS_JDK}'), run:
-                     # archlinux-java set ${THIS_JDK}
+                   To use ${NAME} ('${THIS_JAVA}'), run:
+                     # archlinux-java set ${THIS_JAVA}
                    For status, use:
                      $ archlinux-java status"
             ;;
     esac
 
     if [[ ! -f /etc/ssl/certs/java/cacerts ]]; then
-        init-jks-keystore
+        update-ca-trust
     fi
 
     update_desktop
@@ -59,19 +50,19 @@ post_upgrade() {
 }
 
 pre_remove() {
-    default=$(fix_default)
-    if [[ ${default} = ${THIS_JDK} ]]; then
+    default=$(archlinux-java get)
+    if [[ ${default} = ${THIS_JAVA} ]]; then
         archlinux-java unset
     fi
 }
 
 post_remove() {
-    default=$(fix_default) # reassign
+    default=$(archlinux-java get) # reassign
     if [[ ${default} ]]; then
         note "Default Java environment is '${default}'."
     else
         archlinux-java fix
-        default=$(fix_default) # re-reassign
+        default=$(archlinux-java get) # re-reassign
         if [[ ${default} ]]; then
             note "Default Java environment left as '${default}'."
         else
