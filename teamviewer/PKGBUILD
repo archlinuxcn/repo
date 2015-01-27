@@ -4,8 +4,8 @@
 # Contributor: Hilinus <itahilinus at hotmail dot it>
 
 pkgname=teamviewer
-pkgver=10.0.36281
-pkgrel=2
+pkgver=10.0.37742
+pkgrel=1
 pkgdesc="All-In-One Software for Remote Support and Online Meetings"
 arch=('i686' 'x86_64')
 url="http://www.teamviewer.com"
@@ -16,11 +16,11 @@ install=${pkgname}.install
 
 if [[ $CARCH == 'i686' ]]; then
   source=("teamviewer_linux-${pkgver}.deb::http://download.teamviewer.com/download/teamviewer_i386.deb")
-  md5sums=('d87cb34d21595a5bc3f9906f28f92c31')
+  md5sums=('abe6eac56fd9cf0afa664147ee93830f')
   depends+=('alsa-lib' 'gcc-libs' 'libxdamage' 'libxtst' 'zlib' 'freetype2' 'libxrandr')
 elif [[ $CARCH == 'x86_64' ]]; then
   source=("teamviewer_linux_x64-${pkgver}.deb::http://download.teamviewer.com/download/teamviewer_amd64.deb")
-  md5sums=('c702eec31351096fda56fdef9f1e4916')
+  md5sums=('099c53e8d1eae3635505992a12958e8a')
   depends+=('lib32-gcc-libs' 'lib32-alsa-lib' 'lib32-libxtst' 'lib32-libxdamage' 'lib32-zlib' 'lib32-freetype2' 'lib32-libxrandr')
 fi
 
