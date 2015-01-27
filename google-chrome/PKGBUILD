@@ -5,17 +5,17 @@
 # or use: $ curl -s https://dl.google.com/linux/chrome/rpm/stable/x86_64/repodata/other.xml.gz | gzip -df | awk -F\" '/pkgid/{ sub(".*-","",$4); print $4": "$10 }'
 
 pkgname=google-chrome
-pkgver=40.0.2214.91
+pkgver=40.0.2214.93
 pkgrel=1
 pkgdesc="An attempt at creating a safer, faster, and more stable browser (Stable Channel)"
 arch=('i686' 'x86_64')
 url="https://www.google.com/chrome/index.html"
 license=('custom:chrome')
-makedepends=('pacman>=4.2.0')
 depends=('alsa-lib' 'desktop-file-utils' 'flac' 'gconf' 'gtk2' 'harfbuzz' 'harfbuzz-icu' 'hicolor-icon-theme'
          'icu' 'libpng' 'libxss' 'libxtst' 'nss' 'opus' 'snappy' 'speech-dispatcher' 'ttf-font' 'xdg-utils')
 optdepends=('kdebase-kdialog: needed for file dialogs in KDE'
             'ttf-liberation: fix fonts for some PDFs')
+makedepends=('pacman>=4.2.0')
 provides=("google-chrome=$pkgver")
 options=('!emptydirs' '!strip')
 install=$pkgname.install
@@ -23,8 +23,8 @@ _channel=stable
 source_x86_64=("google-chrome-${_channel}_${pkgver}_amd64.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_amd64.deb")
 source_i686=("google-chrome-${_channel}_${pkgver}_i386.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_i386.deb")
 source=('eula_text.html')
-md5sums_x86_64=('0bd66eeac16d62778ad7cb33d608eb68')
-md5sums_i686=('f9f3e964c252250044e6e8e9943ec80b')
+md5sums_x86_64=('ac0e961f5001a38c087942570ac65178')
+md5sums_i686=('a5513a8712eb0bd3e54f794e62e6e2a0')
 md5sums=('b7e752f549b215ac77f284b6486794b6')
 
 package() {
