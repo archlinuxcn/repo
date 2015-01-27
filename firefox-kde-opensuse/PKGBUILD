@@ -8,7 +8,7 @@
 #_pgo=true
 
 pkgname=firefox-kde-opensuse
-pkgver=34.0.5
+pkgver=35.0
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
@@ -16,7 +16,7 @@ license=('MPL' 'GPL' 'LGPL')
 url="https://build.opensuse.org/package/show/mozilla:Factory/MozillaFirefox"
 depends=('gtk2' 'mozilla-common' 'libxt' 'startup-notification' 'mime-types'
          'dbus-glib' 'alsa-lib' 'desktop-file-utils' 'hicolor-icon-theme'
-	 'libvpx' 'icu'  'libevent' 'nss>=3.17.2' 'nspr>=4.10.7' 'hunspell' 
+	 'libvpx' 'icu'  'libevent' 'nss>=3.17.3' 'nspr>=4.10.7' 'hunspell' 
 	 'sqlite' 'libnotify' 'kmozillahelper')
 makedepends=('unzip' 'zip' 'diffutils' 'python2' 'yasm' 'mesa' 'imake'
              'xorg-server-xvfb' 'libpulse' 'gst-plugins-base-libs' 'inetutils')
@@ -27,7 +27,7 @@ provides=("firefox=${pkgver}")
 conflicts=('firefox')
 install=firefox.install
 options=('!emptydirs' '!makeflags')
-_patchrev=9e3063dcc69e
+_patchrev=677ef48cf29b
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.bz2
         mozconfig firefox.desktop firefox-install-dir.patch vendor.js kde.js firefox-fixed-loading-icon.png
@@ -35,7 +35,6 @@ source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/
 	# Firefox patchset
 	$_patchurl/firefox-branded-icons.patch
 	$_patchurl/firefox-kde.patch
-	$_patchurl/firefox-kde-114.patch
 	$_patchurl/firefox-no-default-ualocale.patch
 	# Gecko/toolkit patchset
 	$_patchurl/mozilla-kde.patch
@@ -52,6 +51,13 @@ source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/
 _google_api_key=AIzaSyDwr302FpOSkGRpLlUpPThNTDPbXcIn_FM
 
 prepare() {
+  # check whether previous firefox version is installed
+  # firefox will not build if old /usr/bin/firefox exists
+  if pacman -T firefox && ! pacman -T "firefox=$pkgver"; then
+    error "Please uninstall firefox temporarily before building it (pacman -Rdd ...)"
+    exit 1
+  fi
+
   cd mozilla-release
 
   cp "$srcdir/mozconfig" .mozconfig
@@ -70,10 +76,9 @@ prepare() {
   patch -Np1 -i "$srcdir/mozilla-language.patch"
 
   patch -Np1 -i "$srcdir/firefox-kde.patch"
-  patch -Np1 -i "$srcdir/firefox-kde-114.patch"
   patch -Np1 -i "$srcdir/firefox-no-default-ualocale.patch"
   patch -Np1 -i "$srcdir/firefox-branded-icons.patch"
-
+  
   # configure script misdetects the preprocessor without an optimization level
   # https://bugs.archlinux.org/task/34644
   sed -i '/ac_cpp=/s/$CPPFLAGS/& -O2/' configure
@@ -91,11 +96,6 @@ prepare() {
 }
 
 build() {
-  if pacman -T firefox && ! pacman -T "firefox=$pkgver"; then
-    error "Please uninstall firefox temporarily before building it (pacman -Rdd ...)"
-    exit 1
-  fi
-
   cd mozilla-release
 
   export PATH="$srcdir/path:$PATH"
@@ -151,7 +151,7 @@ package() {
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
 
-sha256sums=('1680191ff7d4c465c0e6a5d7d6ff7a426f5bfa64f8d6d68a4bdfa9ac4ee459c8'
+sha256sums=('bedeb5bbd8b49e5b286497ef7732542c6e7441088fd8cd577d7ca8af4c871e81'
             'd6468f627873bdfade1d62a3d84fbb3f53f57b233e691e4d28cda3d7e3e5096e'
             '175d03cf3d8eb420d24a5a3072be69c9603e3ddacd3a83f68f49754eaecf6c5a'
             'd86e41d87363656ee62e12543e2f5181aadcff448e406ef3218e91865ae775cd'
@@ -160,10 +160,9 @@ sha256sums=('1680191ff7d4c465c0e6a5d7d6ff7a426f5bfa64f8d6d68a4bdfa9ac4ee459c8'
             '68e3a5b47c6d175cc95b98b069a15205f027cab83af9e075818d38610feb6213'
             '4f0046b39a8d98f6e4fc3360ec490cb2416e38c7b3e92699f7e511c206c2c961'
             '9e67a4505deaefca2be253cd4f77f6089af76edd9507c1d54a1570cd51415b39'
-            '172a9595c7ab437c4de5a5b27f4d991412e26d6e25e5852666c6edc69c8d419c'
-            '8a4c5a2dd56a80ddb83ece96192e23c1b078dd1a0672b6fd408ae37d1c6712f5'
-            '8a7b0814d0c0648475950117bddf666b30d649e354393879ce547def104d889e'
-            '6f93cb83a87c245ec2a8b09ed56a6abbcbe388a9ea961b50e2d84d307b71a344'
+            'f1f9bd347a7abacd0f11a6871b7510eefdcd4e06f0628cc163e79946de4f8933'
+            'a5f3a801478e73524a2ac12d376108cb330d5d74652f3466a679d54d3878902e'
+            'f8d475b3ea66d1872ca45b2be721d6a1e7fb714f06475ea5bbb1dc1c21d3655d'
             'b9feb66a33dc1644d7d277dc3fc166c655735de7100bc4e93f1fe44567f35345'
             'e8289ea4c1f8191e1e23661312ceee2128b8e790501b9a589d0d7bfc4384553f'
             '5f6b0970284d68d5ed18e6bb7ee1e9fc0025ab3c10aaa14c283adb21a4a20ee8'

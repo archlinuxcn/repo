@@ -5,7 +5,7 @@
 
 pkgname=nvidia-dkms
 pkgver=346.35
-pkgrel=1
+pkgrel=2
 pkgdesc='NVIDIA kernel module sources (DKMS)'
 arch=('i686' 'x86_64')
 url='http://www.nvidia.com/'
@@ -16,12 +16,12 @@ optdepends=('linux-headers: Build the module for Arch kernel'
 provides=('nvidia')
 conflicts=('nvidia')
 install='nvidia-dkms.install'
-source=("http://us.download.nvidia.com/XFree86/Linux-x86/${pkgver}/NVIDIA-Linux-x86-${pkgver}.run"
-        "http://us.download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run"
-        'linux3.18.patch')
-sha256sums=('bba63c30c730ad7b8500a77c81cae58562b9f9b57cd576b61f37a2d8bc45df25'
-            '7dae481224fddc711c2478e92ae0efd032acb0a002c85a44fa99ad9e54322afd'
-            '63a52af60e2ee36a2efa41022780802de7eec5b315aa1580a2fa1eb208d8fa87')
+source=('linux3.18.patch')
+source_i686=("http://us.download.nvidia.com/XFree86/Linux-x86/${pkgver}/NVIDIA-Linux-x86-${pkgver}.run")
+source_x86_64=("http://us.download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run")
+sha256sums=('63a52af60e2ee36a2efa41022780802de7eec5b315aa1580a2fa1eb208d8fa87')
+sha256sums_i686=('bba63c30c730ad7b8500a77c81cae58562b9f9b57cd576b61f37a2d8bc45df25')
+sha256sums_x86_64=('7dae481224fddc711c2478e92ae0efd032acb0a002c85a44fa99ad9e54322afd')
 
 [[ $CARCH == i686 ]] && _pkg=NVIDIA-Linux-x86-${pkgver}
 [[ $CARCH == x86_64 ]] && _pkg=NVIDIA-Linux-x86_64-${pkgver}-no-compat32
@@ -36,6 +36,8 @@ prepare() {
   cd ${_pkg}
 
   patch -Np0 -i ../linux3.18.patch
+
+  [[ $CARCH == x86_64 ]] && cat kernel/uvm/dkms.conf.fragment >> kernel/dkms.conf
 }
 
 package() {
@@ -44,9 +46,7 @@ package() {
   install -dm 755 "${pkgdir}"/usr/{lib/modprobe.d,share/licenses,src}
   cp -dr --no-preserve='ownership' kernel "${pkgdir}"/usr/src/nvidia-${pkgver}
 
-  cat "${pkgdir}"/usr/src/nvidia-${pkgver}/uvm/dkms.conf.fragment >> "${pkgdir}"/usr/src/nvidia-${pkgver}/dkms.conf
   echo 'blacklist nouveau' > "${pkgdir}"/usr/lib/modprobe.d/nvidia.conf
-
 
   ln -s nvidia "${pkgdir}"/usr/share/licenses/nvidia-dkms
 }

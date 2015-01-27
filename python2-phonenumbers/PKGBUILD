@@ -1,8 +1,8 @@
-# Maintainer: Felix Yan <felixonmars@gmail.com>
+# Maintainer: Felix Yan <felixonmars@archlinux.org>
 
 pkgname=python2-phonenumbers
 _pkgname=phonenumbers
-pkgver=7.0.1
+pkgver=7.0.2
 pkgrel=1
 pkgdesc="Python version of Google's common library for parsing, formatting, storing and validating international phone numbers"
 arch=('any')
@@ -11,10 +11,9 @@ license=('APACHE')
 makedepends=("python2-setuptools")
 depends=('python2')
 source=("https://pypi.python.org/packages/source/p/$_pkgname/$_pkgname-$pkgver.tar.gz")
+sha512sums=('036bf99c98a787ec64bc0fd63913fb59276bab344f2a5d7b3712040388b530aaeadbd1ebc6b6395b19b18123b9e9f66d5ad806ad0f4ffeccbd0504be3cd0b33e')
 
 package() {
   cd $_pkgname-$pkgver
   python2 setup.py install -O1 --root "${pkgdir}"
 }
-
-sha512sums=('6c9ef6d0ffd5d438ea80f51ab1d1cea06712a710f4951488dfaeab738b99768ecd52b02a459299db7c812c0858034c84da546f52b5374e50269e98e2b47534d0')

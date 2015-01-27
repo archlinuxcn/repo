@@ -5,11 +5,12 @@
 # Contributor: Estevao Valadao <estevao@archlinux-br.org>
 # Contributor: Guten <ywzhaifei@gmail.com>
 # Contributor: Lee.MaRS <leemars@gmail.com>
+# Contributor: Mikkel Oscar Lyderik <mikkeloscar@gmail.com>
 
 pkgname=google-appengine-python
 pkgver=1.9.17
 _zipver=$pkgver
-pkgrel=1
+pkgrel=3
 arch=(any)
 pkgdesc="Google App Engine SDK for Python"
 url=https://cloud.google.com/appengine/downloads
@@ -29,22 +30,39 @@ optdepends=(mysql-python
 makedepends=(unzip)
 options=(!strip)
 install=install
-source=(https://storage.googleapis.com/appengine-sdks/featured/google_appengine_${_zipver}.zip)
-sha1sums=('eec50aaf922d3b21623fda1b90e199c3ffa9e16e')
+source=(https://storage.googleapis.com/appengine-sdks/featured/google_appengine_${_zipver}.zip
+        'python279.patch')
+sha1sums=('eec50aaf922d3b21623fda1b90e199c3ffa9e16e'
+          'e3f53902c34856213b25c30b3350dbed121f7b16')
 noextract=(google_appengine_${_zipver}.zip)
 
-package() {
-  cd "$pkgdir"
-  mkdir -p opt usr/bin
+prepare() {
+  cd ${srcdir}
 
   # Extract with unzip as bsdtar screws up permissions
-  unzip -q "$srcdir/google_appengine_${_zipver}.zip" -d opt
-  
-  mv opt/google_appengine opt/${pkgname}
-  rm -rf opt/${pkgname}/php
+  unzip -qq "google_appengine_${_zipver}.zip" -d "${pkgname}-${pkgver}"
 
-  grep -r -l python "opt/${pkgname}" | xargs sed -i '/#!\/usr\/bin\/env python/s|python|python2|'
+  # Patch for Python 2.7.9
+  cd "${pkgname}-${pkgver}/google_appengine"
+  patch -p1 -i ${srcdir}/python279.patch
 
-  find opt/${pkgname} -maxdepth 1 -type f -executable -printf "/opt/${pkgname}/%f\n" | xargs ln -st usr/bin/
+  # Cleanup PHP files
+  rm -rf php
+  rm -rf demos/php
+  rm -f _php_runtime.py
+  rm -f php_cli.py
+
+  # Fix python binary
+  grep -r -l python | xargs sed -i '/#!\/usr\/bin\/env python/s|python|python2|'
 }
 
+package() {
+  cd "${pkgdir}"
+  mkdir -p opt usr/bin
+
+  # Install
+  mv "${srcdir}/${pkgname}-${pkgver}/google_appengine" "opt/${pkgname}"
+
+  # Move main binary
+  find opt/${pkgname} -maxdepth 1 -type f -executable -printf "/opt/${pkgname}/%f\n" | xargs ln -st usr/bin/
+}

@@ -5,8 +5,8 @@
 _pkgname=jdk
 pkgname=${_pkgname}7
 _major=7
-_minor=72
-_build=b14
+_minor=76
+_build=b13
 _pkg=${_major}u$_minor
 pkgver=$_major.$_minor
 pkgrel=1
@@ -34,7 +34,7 @@ if [[ $CARCH = i686 ]]; then
   _arch=i586
   _arch2=i386
 fi
-DLAGENTS=('http::/usr/bin/curl -LC - -b "oraclelicense=a" -O')
+DLAGENTS=('http::/usr/bin/curl -LC - -b oraclelicense=a -O')
 _jname=jdk${_major}
 _jvmdir=/usr/lib/jvm/java-$_major-${_pkgname}
 backup=("etc/java-$_jname/$_arch2/jvm.cfg"
@@ -64,12 +64,12 @@ source=("http://download.oracle.com/otn-pub/java/${_pkgname}/$_pkg-$_build/${_pk
         "jmc-$_jname.desktop"
         "jvisualvm-$_jname.desktop"
         "policytool-$_jname.desktop")
-sha256sums=('dd1d438e1b7d4b9bb5ea4659f2103b577d1568da51b53f97b736b3232eeade8e'
+sha256sums=('ce8ff4fed2cd16aea432edf8e94f21ccfe29e9d4a659bbbef3551982769e0c8c'
             'ab4a2e49825df4e6055e90283f9d0b432e28a6d66f0f7ed659985e7c53847751'
             '535d86adeb183340442c307e0ba579d0f7718b30fe6ed319bdc91bb2cee47763'
             'cf20cdf39583e1a992a85ab366437b80217951aeb9dec6b2ee54b77b4d0af6be'
             'af15efe8b471d0ab147f4a88215aed3fc50b1a605ce31100dfa7a404f29e85b1')
-[ "$CARCH" = 'i686' ] && sha256sums[0]='0376c8a0280752b4389b6cb193d463826c55c821587d0278b7fea665a140f407'
+[ "$CARCH" = 'i686' ] && sha256sums[0]='c339ac04e88b2e0d61c1a1a9f21541f3ce6082fdb38500cf2b8bb0ac5eb9a814'
 
 package() {
   msg2 "Creating required dirs"
