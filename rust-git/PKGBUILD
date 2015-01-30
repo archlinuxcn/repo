@@ -1,0 +1,68 @@
+# Maintainer: Daniel Micay <danielmicay@gmail.com>
+_gitname=rust
+pkgname=rust-git
+pkgver=0.9.434.gde57a22
+pkgrel=1
+arch=('i686' 'x86_64')
+pkgdesc='A safe, concurrent, practical language'
+url='http://www.rust-lang.org/'
+license=('MIT' 'Apache')
+depends=(gcc shared-mime-info)
+makedepends=(libffi perl python2 curl git)
+source=('git://github.com/rust-lang/rust.git')
+md5sums=(SKIP)
+install=${pkgname}.install
+provides=(rust)
+conflicts=(rust)
+options=(staticlibs)
+
+pkgver() {
+  cd $_gitname
+  git describe | sed s/-/./g
+}
+
+build() {
+  cd rust
+
+  ./configure --prefix=/usr --disable-debug --disable-docs --disable-verify-install
+
+  # avoid python makedepend (force fallback to python2)
+  sed -i 's/^PYTHONVERSION.*/PYTHONVERSION := 3/' src/llvm/Makefile.rules
+
+  make
+}
+
+#check() {
+  #cd rust
+  #make check
+#}
+
+package() {
+  cd rust
+  make DESTDIR="$pkgdir" install
+
+  mkdir -p "$pkgdir/usr/share/vim" "$pkgdir/usr/share/licenses/$pkgname"
+
+  cp -a src/etc/vim "$pkgdir/usr/share/vim/vimfiles"
+  find "$pkgdir/usr/share/vim" -type f -exec chmod 644 {} +
+  find "$pkgdir/usr/share/vim" -type d -exec chmod 755 {} +
+
+  install -Dm644 src/etc/zsh/_rust "$pkgdir/usr/share/zsh/site-functions/_rust"
+  install -Dm644 src/etc/kate/rust.xml "$pkgdir/usr/share/apps/katepart/syntax/rust.xml"
+  install -Dm644 src/etc/gedit/share/mime/packages/rust.xml \
+    "$pkgdir/usr/share/mime/packages/rust.xml"
+  install -Dm644 src/etc/gedit/share/gtksourceview-3.0/language-specs/rust.lang \
+    "$pkgdir/usr/share/gtksourceview-3.0/language-specs/rust.lang"
+
+  install -m644 LICENSE-APACHE "$pkgdir/usr/share/licenses/$pkgname"
+  install -m644 LICENSE-MIT "$pkgdir/usr/share/licenses/$pkgname"
+
+  cd src/etc/emacs
+  install -Dm644 rust-mode.el "$pkgdir/usr/share/emacs/site-lisp/rust-mode.el"
+
+  cd "$pkgdir/usr"
+
+  cd lib
+  rm rustlib/{components,manifest-rustc,rust-installer-version}
+  ln -sf rustlib/$CARCH-unknown-linux-gnu/lib/*.so .
+}
