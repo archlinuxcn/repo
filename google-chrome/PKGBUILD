@@ -5,8 +5,8 @@
 # or use: $ curl -s https://dl.google.com/linux/chrome/rpm/stable/x86_64/repodata/other.xml.gz | gzip -df | awk -F\" '/pkgid/{ sub(".*-","",$4); print $4": "$10 }'
 
 pkgname=google-chrome
-pkgver=40.0.2214.93
-pkgrel=1
+pkgver=40.0.2214.94
+pkgrel=2
 pkgdesc="An attempt at creating a safer, faster, and more stable browser (Stable Channel)"
 arch=('i686' 'x86_64')
 url="https://www.google.com/chrome/index.html"
@@ -20,12 +20,12 @@ provides=("google-chrome=$pkgver")
 options=('!emptydirs' '!strip')
 install=$pkgname.install
 _channel=stable
-source_x86_64=("google-chrome-${_channel}_${pkgver}_amd64.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_amd64.deb")
-source_i686=("google-chrome-${_channel}_${pkgver}_i386.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_i386.deb")
 source=('eula_text.html')
-md5sums_x86_64=('ac0e961f5001a38c087942570ac65178')
-md5sums_i686=('a5513a8712eb0bd3e54f794e62e6e2a0')
+source_i686=("google-chrome-${_channel}_${pkgver}_i386.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_i386.deb")
+source_x86_64=("google-chrome-${_channel}_${pkgver}_amd64.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_amd64.deb")
 md5sums=('b7e752f549b215ac77f284b6486794b6')
+md5sums_i686=('91a2a8c55de9d30546e5730282c2b4e1')
+md5sums_x86_64=('022b0f3b52ebd7734804a89aed080882')
 
 package() {
   msg2 "Extracting the data.tar.lzma..."
@@ -48,8 +48,7 @@ package() {
   ln -s /usr/lib/libudev.so.1 "$pkgdir"/opt/google/chrome/libudev.so.0
 
   msg2 "Fixing Chrome icon resolution..."
-  _name=$(echo ${source/_*} | sed 's/.*/\u&/')
-  sed -i "/Exec=/i\StartupWMClass=$_name" "$pkgdir"/usr/share/applications/google-chrome.desktop
+  sed -i "/Exec=/i\StartupWMClass=Google-chrome-$_channel" "$pkgdir"/usr/share/applications/google-chrome.desktop
 
   msg2 "Fixing permissions of documentation folder..."
   chmod 755 "$pkgdir"/usr/share/doc/google-chrome-$_channel/
