@@ -30,7 +30,8 @@ prepare() {
 
 build() {
   cd cargo
-  ./configure --prefix=/usr --disable-verify-install
+  sed -i -e '/"$$(CARGO)" --version/a\	"$$(CARGO)" update' Makefile.in
+  ./configure --prefix=/usr --disable-verify-install --enable-optimize
   make
 }
 
