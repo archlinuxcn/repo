@@ -1,3 +1,4 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
 # Maintainer: Daniel Micay <danielmicay@gmail.com>
 _gitname=rust
 pkgname=rust-git
@@ -9,9 +10,11 @@ url='http://www.rust-lang.org/'
 license=('MIT' 'Apache')
 depends=(gcc shared-mime-info)
 makedepends=(libffi perl python2 curl git)
-source=('git://github.com/rust-lang/rust.git')
-md5sums=(SKIP)
-install=${pkgname}.install
+# editor support has been removed, see
+# 017b3a543182006fa64bdc8c721969ae38c125f9
+source=('git://github.com/rust-lang/rust.git'
+        'git://github.com/rust-lang/zsh-config')
+md5sums=(SKIP SKIP)
 provides=(rust)
 conflicts=(rust)
 options=(staticlibs)
@@ -43,22 +46,10 @@ package() {
 
   mkdir -p "$pkgdir/usr/share/vim" "$pkgdir/usr/share/licenses/$pkgname"
 
-  cp -a src/etc/vim "$pkgdir/usr/share/vim/vimfiles"
-  find "$pkgdir/usr/share/vim" -type f -exec chmod 644 {} +
-  find "$pkgdir/usr/share/vim" -type d -exec chmod 755 {} +
-
-  install -Dm644 src/etc/zsh/_rust "$pkgdir/usr/share/zsh/site-functions/_rust"
-  install -Dm644 src/etc/kate/rust.xml "$pkgdir/usr/share/apps/katepart/syntax/rust.xml"
-  install -Dm644 src/etc/gedit/share/mime/packages/rust.xml \
-    "$pkgdir/usr/share/mime/packages/rust.xml"
-  install -Dm644 src/etc/gedit/share/gtksourceview-3.0/language-specs/rust.lang \
-    "$pkgdir/usr/share/gtksourceview-3.0/language-specs/rust.lang"
+  install -Dm644 "$srcdir"/zsh-config/_rust "$pkgdir/usr/share/zsh/site-functions/_rust"
 
   install -m644 LICENSE-APACHE "$pkgdir/usr/share/licenses/$pkgname"
   install -m644 LICENSE-MIT "$pkgdir/usr/share/licenses/$pkgname"
-
-  cd src/etc/emacs
-  install -Dm644 rust-mode.el "$pkgdir/usr/share/emacs/site-lisp/rust-mode.el"
 
   cd "$pkgdir/usr"
 
