@@ -1,9 +1,8 @@
-# $Id: pkgbuild-mode.el,v 1.23 2007/10/20 16:02:14 juergen Exp $
-# Maintainer: Nick Lanham <nick@nick>
+# Maintainer: Brian Bidulock <bidulock@openss7.org>
 pkgname=pnmixer
 pkgver=0.5.1
-pkgrel=2
-pkgdesc="PNMixer is a GTK volume mixer applet that runs in the system tray."
+pkgrel=3
+pkgdesc="GTK volume mixer applet that runs in the system tray."
 arch=('i686' 'x86_64')
 license=('GPL')
 url="https://github.com/nicklan/pnmixer"
@@ -14,11 +13,14 @@ source=(https://github.com/downloads/nicklan/pnmixer/pnmixer-${pkgver}.tar.gz pn
 md5sums=('2288af95ab280721b39b7c33601d5dd4'
          'd7aef8eb1cec18858fb2faefe6584276')
 build() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd $pkgname-$pkgver
 
   patch -Np0 -i ../pnmixer-0.5.1-configure.in.patch
-  ./autogen.sh || return 1
-  ./configure --prefix=/usr || return 1
-  make || return 1
-  make DESTDIR="$pkgdir" install || return 1
+  ./autogen.sh
+  ./configure --prefix=/usr
+  make
+}
+package() {
+  cd $pkgname-$pkgver
+  make DESTDIR="$pkgdir" install
 }
