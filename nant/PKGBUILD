@@ -3,9 +3,11 @@
 # Contributor: Arjan Timmerman <arjan@soulfly.nl>
 # Contributor: Daniel 'maniel' Kaminski <maniel.rulez//gmail.com>
 
+# I know this PKGBUILD is stupid but it was abandoned and I just wanted to make it installable
+
 pkgname=nant
 pkgver=0.92
-pkgrel=5
+pkgrel=6
 pkgdesc="A free .NET build tool, like make but without make's problems"
 arch=('i686' 'x86_64')
 url="http://nant.sourceforge.net"
@@ -17,6 +19,9 @@ md5sums=('1bcac3e7fab283240b78d21efa07f036')
 build() {
   export MONO_SHARED_DIR=$srcdir/.wabi
   mkdir -p "${MONO_SHARED_DIR}"
+}
+
+package() {
   mkdir $pkgdir/usr $pkgdir/usr/share $pkgdir/usr/share/NAnt $pkgdir/usr/bin
 
   cp -R $srcdir/$pkgname-$pkgver/* $pkgdir/usr/share/NAnt/
