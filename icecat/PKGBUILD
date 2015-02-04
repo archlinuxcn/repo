@@ -6,7 +6,7 @@
 # Contributor: Muhammad 'MJ' Jassim <UnbreakableMJ@gmail.com> 
 
 pkgname=icecat
-pkgver=31.2.0
+pkgver=31.4.0
 _pkgverbase=${pkgver%%.*}
 pkgrel=1
 pkgdesc="GNU version of the Firefox browser."
@@ -23,20 +23,18 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
             'gst-libav: h.264 video')
 
 install=icecat.install
-source=(http://ftp.gnu.org/gnu/gnuzilla/${pkgver}/${pkgname}-${pkgver}.tar.xz
+source=(http://ftp.gnu.org/gnu/gnuzilla/${pkgver}/${pkgname}-${pkgver}.tar.bz2
 #source=(http://mirrors.kernel.org/gnu/gnuzilla/${pkgver}/${pkgname}-${pkgver}.tar.xz      ## Good mirror
         mozconfig
         icecat.desktop
         icecat-safe.desktop
-        shared-libs.patch
         rhbz-966424.patch
         vendor.js)
 
-md5sums=('52f310b515cf185636e889d55f9d615d'
+md5sums=('f0e9e46415fba8b7acb8e30b08b98d56'
          '0967f59d5485300844def52ccb0bc509'
          'e81ad01dbc16ba28bf92ba4b7c309ca7'
          'd93fe402b87cd000a869e1fd6badc6c9'
-         '7c735fa78c674496db1ca0f31a0c8be5'
          '8c1578232b7a60fa1caa9a0b322d1e2b'
          '0d053487907de4376d67d8f499c5502b')
 
@@ -49,9 +47,6 @@ prepare() {
 #  sed -e 's;$(libdir)/$(MOZ_APP_NAME)-devel-$(MOZ_APP_VERSION);$(libdir)/$(MOZ_APP_NAME)-devel;g' -i config/baseconfig.mk -i js/src/config/baseconfig.mk
   sed -e 's;$(libdir)/$(MOZ_APP_NAME)-$(MOZ_APP_VERSION);$(libdir)/$(MOZ_APP_NAME);g' -i config/baseconfig.mk
   sed -e 's;$(libdir)/$(MOZ_APP_NAME)-devel-$(MOZ_APP_VERSION);$(libdir)/$(MOZ_APP_NAME)-devel;g' -i config/baseconfig.mk
-
-  # Patch from Firefox in [extra]
-  patch -Np1 -i ../shared-libs.patch
 
   # https://bugs.archlinux.org/task/41689
   patch -Np1 -i ../rhbz-966424.patch
@@ -97,7 +92,7 @@ build() {
 package () {
 
   cd "${srcdir}/${pkgname}-${pkgver}"
-  make -j1 -f client.mk DESTDIR="${pkgdir}" install
+  make -f client.mk DESTDIR="${pkgdir}" install
 
   msg2 "Finishing..."
   install -m755 -d ${pkgdir}/usr/share/applications
