@@ -1,7 +1,7 @@
 # Maintainer: Christian Hesse <mail@eworm.de>
 
 pkgname=opera-beta
-pkgver=27.0.1689.44
+pkgver=28.0.1750.15
 pkgrel=1
 pkgdesc='A fast and secure web browser and Internet suite - beta stream'
 arch=('x86_64')
@@ -15,7 +15,7 @@ source=("http://get.geo.opera.com/pub/${pkgname}/${pkgver}/linux/${pkgname}_${pk
 # alternative download
 #source=("ftp://ftp.opera.com/pub/${pkgname}/${pkgver}/linux/${pkgname}_${pkgver}_amd64.deb")
 #source=("http://deb.opera.com/${pkgname}/pool/non-free/o/${pkgname}/${pkgname}_${pkgver}_amd64.deb"
-sha256sums=('efdcaa39e3e1213664ed65469926185a9c67b2e2b1591a5f337ff3e3a9981f25')
+sha256sums=('1a68312c3c88400fead5796f7a804497f9225e2238136453644af3d266c6ca05')
 
 package() {
 	cd ${srcdir}/
@@ -31,10 +31,6 @@ package() {
 		install -d -m0755 "${pkgdir}/usr/lib/x86_64-linux-gnu/${pkgname}/lib/"
 		ln -s ../../../$(basename "${LIBAV%.*}") "${pkgdir}/usr/lib/x86_64-linux-gnu/${pkgname}/lib/${LIBAV}"
 	done
-
-	# fix opera to use libudev.so.1
-	sed -i -e 's/libudev.so.0/libudev.so.1/g' \
-		"${pkgdir}/usr/lib/x86_64-linux-gnu/${pkgname}/${pkgname}"
 
 	# set suid bit for Opera sandbox
 	chmod 4755 "${pkgdir}/usr/lib/x86_64-linux-gnu/${pkgname}/opera_sandbox"
