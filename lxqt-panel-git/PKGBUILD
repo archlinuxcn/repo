@@ -8,10 +8,7 @@ pkgdesc="The LXQt desktop panel"
 arch=("i686" "x86_64" "armv6h")
 url="http://lxqt.org"
 license=("GPL2")
-depends=(
-	"kwindowsystem" "kguiaddons" "liblxqt-mount-git" "libsysstat-git"
-	"lxqt-globalkeys-git" "menu-cache" "libxcomposite" "lxmenu-data"
-)
+depends=( "kwindowsystem" "kguiaddons" "liblxqt-mount-git" "libsysstat-git" "lxqt-globalkeys-git" "menu-cache" "libxcomposite" "lxmenu-data" )
 optdepends=(
 	"alsa-lib: Recompile for Alsa support in volume control plugin"
 	"libpulse: Recompile for PulseAudio support in volume control plugin"

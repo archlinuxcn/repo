@@ -5,27 +5,27 @@
 # or use: $ curl -s https://dl.google.com/linux/chrome/rpm/stable/x86_64/repodata/other.xml.gz | gzip -df | awk -F\" '/pkgid/{ sub(".*-","",$4); print $4": "$10 }'
 
 pkgname=google-chrome
-pkgver=40.0.2214.91
+pkgver=40.0.2214.111
 pkgrel=1
 pkgdesc="An attempt at creating a safer, faster, and more stable browser (Stable Channel)"
 arch=('i686' 'x86_64')
 url="https://www.google.com/chrome/index.html"
 license=('custom:chrome')
-makedepends=('pacman>=4.2.0')
 depends=('alsa-lib' 'desktop-file-utils' 'flac' 'gconf' 'gtk2' 'harfbuzz' 'harfbuzz-icu' 'hicolor-icon-theme'
          'icu' 'libpng' 'libxss' 'libxtst' 'nss' 'opus' 'snappy' 'speech-dispatcher' 'ttf-font' 'xdg-utils')
 optdepends=('kdebase-kdialog: needed for file dialogs in KDE'
             'ttf-liberation: fix fonts for some PDFs')
+makedepends=('pacman>=4.2.0')
 provides=("google-chrome=$pkgver")
 options=('!emptydirs' '!strip')
 install=$pkgname.install
 _channel=stable
-source_x86_64=("google-chrome-${_channel}_${pkgver}_amd64.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_amd64.deb")
-source_i686=("google-chrome-${_channel}_${pkgver}_i386.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_i386.deb")
 source=('eula_text.html')
-md5sums_x86_64=('0bd66eeac16d62778ad7cb33d608eb68')
-md5sums_i686=('f9f3e964c252250044e6e8e9943ec80b')
-md5sums=('b7e752f549b215ac77f284b6486794b6')
+source_i686=("google-chrome-${_channel}_${pkgver}_i386.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_i386.deb")
+source_x86_64=("google-chrome-${_channel}_${pkgver}_amd64.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_amd64.deb")
+sha256sums=('af48d6467196286e5450f52fd4fd819f9f5c631b322eeac3e23944403d06fcff')
+sha256sums_i686=('e511110eea8f49540370f83b2ed75a982493853543dea7e4921faefde1a87818')
+sha256sums_x86_64=('0a1f0a1ff5b4472430b69f48ab77bf9f535a5a87074d15410ea017d796831544')
 
 package() {
   msg2 "Extracting the data.tar.lzma..."
@@ -35,7 +35,7 @@ package() {
   # Icons
   for i in 16 22 24 32 48 64 128 256; do
     install -Dm644 "$pkgdir"/opt/google/chrome/product_logo_$i.png \
-                   "$pkgdir"/usr/share/icons/hicolor/${i}x$i/apps/google-chrome.png
+                   "$pkgdir"/usr/share/icons/hicolor/${i}x${i}/apps/google-chrome.png
   done
 
   # Man page
@@ -48,8 +48,7 @@ package() {
   ln -s /usr/lib/libudev.so.1 "$pkgdir"/opt/google/chrome/libudev.so.0
 
   msg2 "Fixing Chrome icon resolution..."
-  _name=$(echo ${source/_*} | sed 's/.*/\u&/')
-  sed -i "/Exec=/i\StartupWMClass=$_name" "$pkgdir"/usr/share/applications/google-chrome.desktop
+  sed -i "/Exec=/i\StartupWMClass=Google-chrome-$_channel" "$pkgdir"/usr/share/applications/google-chrome.desktop
 
   msg2 "Fixing permissions of documentation folder..."
   chmod 755 "$pkgdir"/usr/share/doc/google-chrome-$_channel/

@@ -1,7 +1,7 @@
 # Maintainer: Antonio Rojas 
 
 pkgname=kmix-git
-pkgver=r1961.8c7d33c
+pkgver=r1972.9814a23
 pkgrel=1
 pkgdesc='KDE volume control program'
 arch=('i686' 'x86_64')
@@ -22,6 +22,9 @@ pkgver() {
 
 prepare() {
   mkdir -p build
+  
+  cd kmix
+  sed -e 's|CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR}|CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR} ${CMAKE_SOURCE_DIR}/cmake/modules|' -i CMakeLists.txt
 }
 
 build() { 
@@ -31,8 +34,7 @@ build() {
     -DCMAKE_BUILD_TYPE=Release \
     -DKMIX_KF5_BUILD=ON \
     -DLIB_INSTALL_DIR=lib \
-    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
-    -DSYSCONF_INSTALL_DIR=/etc
+    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON
   make
 }
 

@@ -1,29 +1,33 @@
-# Maintainer: Gordin <9ordin @t gmail dot com>
 # Contributor: Tomas Hetmer <tomas at hetmer dot net>
+# Maintainer: Thomas Sarboni <max-k@post.com>
 
 pkgname=qtadb
 pkgver=0.8.1
-pkgrel=6
+pkgrel=7
 pkgdesc="GUI for Android SDK/ADB, Android phone manager"
 arch=('i686' 'x86_64')
 url="http://qtadb.wordpress.com/"
-license=('custom:"Proprietary"')
+license=('custom:proprietary')
 install=${pkgname}.install
 depends=('qt4' 'android-sdk-platform-tools')
-#source=('http://motyczko.pl/qtadb/QtADB_0.8.1_src.zip'
-source=('https://github.com/triochi/QtAdb/archive/master.zip'
-        'qtadb.desktop'
-        'qtadb.png')
-sha256sums=('647a66eed7c45acc97fe4fe6522565be00a2adc6b5df85db36627fe4a959542d'
-            'c85aac6d113ae832efdfa70e221c4681967e973a5cd798275d295f2cbc137cc3'
-            '43b1ec5bda16bb4110de0f11c1220d3e2eac73ef1bc5d0e6062025e49546bd68')
+source=("http://motyczko.pl/${pkgname}/${pkgname}_src.tgz"
+        "${pkgname}.desktop"
+        "${pkgname}.png")
+md5sums=('e2aa83cbdc4eb40fc4c274ce25cf0761'
+         '75874703002c52e58e98412362987f94'
+         'e27b5da6b0b6ad185201ea073857da28')
 
 build() {
-    cd $srcdir/QtAdb-master/
+    cd ${srcdir}/${pkgname}/
     qmake-qt4 || return 1
     make || return 1
-    install -Dm755 QtADB "$pkgdir/usr/bin/qtadb"
-    install -Dm644 otherFiles/qtadb.apk /"$pkgdir/usr/share/qtadb/qtadb.apk"
-    install -Dm644 $startdir/qtadb.png "$pkgdir/usr/share/pixmaps/$pkgname.png"
-    install -Dm644 $startdir/qtadb.desktop "$pkgdir/usr/share/applications/$pkgname.desktop"
 }
+
+package() {
+    cd ${srcdir}/${pkgname}/
+    install -Dm755 QtADB "${pkgdir}/usr/bin/${pkgname}"
+    install -Dm644 otherFiles/qtadb.apk "${pkgdir}/usr/share/${pkgname}/qtadb.apk"
+    install -Dm644 ${srcdir}/qtadb.png "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
+    install -Dm644 ${srcdir}/qtadb.desktop "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+}
+# vim:set ts=4 sw=4 et:

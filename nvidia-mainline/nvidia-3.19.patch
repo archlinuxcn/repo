@@ -1,27 +1,13 @@
-From 5ca2d8015d18d8a1d84978d8dfb90af8ca20024e Mon Sep 17 00:00:00 2001
+From 33aaea3164ff48b87a533dbba0314e45ed95ec50 Mon Sep 17 00:00:00 2001
 From: Rouven Rastetter <rouven.rastetter@firaweb.de>
 Date: Mon, 19 Jan 2015 21:31:01 +0100
-Subject: [PATCH] GPL only patch & NV_FILE_INODE patch
+Subject: [PATCH] NV_FILE_INODE patch
 
 ---
- kernel/nv-frontend.c | 2 +-
- kernel/nv-linux.h    | 2 +-
- kernel/nv.c          | 4 ++--
- 3 files changed, 4 insertions(+), 4 deletions(-)
+ kernel/nv-linux.h | 2 +-
+ kernel/nv.c       | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/nv-frontend.c b/kernel/nv-frontend.c
-index 65bbb1b..be39c8d 100644
---- a/kernel/nv-frontend.c
-+++ b/kernel/nv-frontend.c
-@@ -15,7 +15,7 @@
- #include "nv-frontend.h"
- 
- #if defined(MODULE_LICENSE)
--MODULE_LICENSE("NVIDIA");
-+MODULE_LICENSE("GPL\0NVIDIA");
- #endif
- #if defined(MODULE_INFO)
- MODULE_INFO(supported, "external");
 diff --git a/kernel/nv-linux.h b/kernel/nv-linux.h
 index f1bf6e9..ce330e9 100644
 --- a/kernel/nv-linux.h
@@ -36,18 +22,9 @@ index f1bf6e9..ce330e9 100644
  
  /* Stub out UVM in multi-RM builds */
 diff --git a/kernel/nv.c b/kernel/nv.c
-index 2686203..f350d9f 100644
+index 2686203..b728169 100644
 --- a/kernel/nv.c
 +++ b/kernel/nv.c
-@@ -31,7 +31,7 @@
- 
- #if defined(NV_VMWARE) || (NV_BUILD_MODULE_INSTANCES != 0)
- #if defined(MODULE_LICENSE)
--MODULE_LICENSE("NVIDIA");
-+MODULE_LICENSE("GPL\0NVIDIA");
- #endif
- #if defined(MODULE_INFO)
- MODULE_INFO(supported, "external");
 @@ -2740,7 +2740,7 @@ nvidia_probe
  
      if (rm_get_cpu_type(sp, &nv_cpu_type) != NV_OK)

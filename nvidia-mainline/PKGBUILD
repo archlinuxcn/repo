@@ -8,19 +8,19 @@
 pkgname=nvidia-mainline
 pkgver=346.35
 _extramodules=extramodules-3.19-mainline
-pkgrel=1
+pkgrel=2
 pkgdesc="NVIDIA drivers for linux-mainline"
 arch=('i686' 'x86_64')
 url="http://www.nvidia.com/"
-depends=('linux-mainline>=3.19rc1' 'linux-mainline<3.20rc1' "nvidia-libgl" "nvidia-utils=${pkgver}")
-makedepends=('linux-mainline-headers>=3.19rc1' 'linux-mainline-headers<3.20rc1')
+depends=('linux-mainline>=3.19rc6' 'linux-mainline<3.20rc1' "nvidia-libgl" "nvidia-utils=${pkgver}")
+makedepends=('linux-mainline-headers>=3.19rc6' 'linux-mainline-headers<3.20rc1')
 license=('custom')
 install=nvidia.install
 options=(!strip)
 source=('nvidia-3.18.patch'
         'nvidia-3.19.patch')
 sha256sums=('f50876e5f7f250516da9c502ea2165928311ab52daa629b3c43a0a0c88dbc695'
-            'c5c03af3c38c5e6bfbfd867e905ba74e96ecd43851fe3833a6c443643003a0ff')
+            '8ca1e172fac9fbacaf2337214d6a1df6222a33826eb485b14cf70a96531f397b')
 
 if [ "$CARCH" = "i686" ]; then
     _arch='x86'

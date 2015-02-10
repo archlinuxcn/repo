@@ -1,4 +1,4 @@
-# $Id: PKGBUILD 124659 2014-12-27 06:26:39Z heftig $
+# $Id: PKGBUILD 127242 2015-02-07 13:22:34Z heftig $
 # Maintainer: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 # Contributor: Jan de Groot <jgc@archlinux.org>
 # Contributor: Allan McRae <allan@archlinux.org>
@@ -8,8 +8,8 @@
 
 _pkgbasename=glibc
 pkgname=libx32-$_pkgbasename
-pkgver=2.20
-pkgrel=6.1
+pkgver=2.21
+pkgrel=1.1
 pkgdesc="GNU C Library (x32 ABI)"
 arch=('x86_64')
 url="http://www.gnu.org/software/libc"
@@ -25,18 +25,16 @@ provides=('glibc-x32-seed')
 options=('!strip' 'staticlibs' '!emptydirs')
 
 source=(http://ftp.gnu.org/gnu/libc/${_pkgbasename}-${pkgver}.tar.xz{,.sig}
-        glibc-2.20-roundup.patch
         libx32-glibc.conf)
-md5sums=('948a6e06419a01bd51e97206861595b0'
+md5sums=('9cb398828e8f84f57d1f7d5588cf40cd'
          'SKIP'
-         'f7a5faf2911ae7c13f584bd60c802873'
          '34a4169d2bdc5a3eb83676a0831aae57')
 
 prepare() {
   cd ${srcdir}/glibc-${pkgver}
 
-  # glibc-2.20..f80af766
-  patch -p1 -i $srcdir/glibc-2.20-roundup.patch
+  # glibc-2.21..
+  #patch -p1 -i $srcdir/glibc-2.21-roundup.patch
 
   mkdir ${srcdir}/glibc-build
 }
@@ -79,8 +77,10 @@ build() {
       --enable-bind-now --disable-profile \
       --enable-stackguard-randomization \
       --enable-lock-elision \
-      --target=x86_64-x32-linux --build=x86_64-linux --host=x86_64-x32-linux \
-      --enable-multi-arch x86_64-x32-linux
+      --enable-multi-arch \
+      --disable-werror \
+      x86_64-unknown-linux-gnux32
+      #--target=x86_64-x32-linux --build=x86_64-linux --host=x86_64-x32-linux \
 
   # build libraries with hardening disabled
   echo "build-programs=no" >> configparms

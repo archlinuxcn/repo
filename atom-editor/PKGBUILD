@@ -1,11 +1,12 @@
-# Maintainer: John Reese <john@noswap.com>
+# Maintainer: Sebastian Jug <sebastian.jug@gmail.com>
+# Contributor: John Reese <jreese@noswap.com>
 # Upstream URL: https://github.com/atom/atom
 #
 # For improvements/fixes to this package, please send a pull request:
-# https://github.com/jreese/arch
+# https://github.com/sjug/arch
 
 pkgname=atom-editor
-pkgver=0.174.0
+pkgver=0.177.0
 pkgrel=1
 pkgdesc="Chrome-based text editor from Github"
 arch=('x86_64' 'i686')
@@ -15,10 +16,10 @@ depends=('alsa-lib' 'gconf' 'gtk2' 'libgnome-keyring' 'libnotify' 'libxtst' 'nod
 makedepends=('git')
 source=("https://github.com/atom/atom/archive/v${pkgver}.tar.gz"
         'atom-python.patch')
-sha256sums=('2144cbb8589c9678a6428459b4c667da210e9ba5315f6c1608d08f1ed76631e8'
+sha256sums=('928c7520132db3279b854cbc35831b7b2141b037482003e809bb9ad449a65553'
             '5cc1a3e30334e92aaea88389d653c20b717ef7c205474705e9f5a356143d18a4')
 
-_gitref='2f765974f83235e84bc0db39c3df8fc8b6958cea'
+_getref='5cae6f20c448fddea5dd8beeae1b26df77b05919'
 _gitbranch='master'
 
 prepare() {
@@ -50,5 +51,3 @@ package() {
   install -Dm644 resources/atom.png "$pkgdir/usr/share/pixmaps/atom.png"
   install -Dm644 LICENSE.md "$pkgdir/usr/share/licenses/$pkgname/LICENSE.md"
 }
-
-# vim:set ts=2 sw=2 et:
