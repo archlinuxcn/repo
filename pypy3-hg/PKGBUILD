@@ -48,7 +48,7 @@ build() {
   CFLAGS+=' -O3 -g'
   export CFLAGS
 
-  $_PYTHON ../../rpython/bin/rpython -Ojit --shared --output=pypy3-c \
+  $_PYTHON ../../rpython/bin/rpython -Ojit --shared \
            targetpypystandalone
 }
 
