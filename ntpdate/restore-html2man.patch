@@ -1,0 +1,39 @@
+diff -Naur ntp-dev-4.2.7p444.orig/configure ntp-dev-4.2.7p444/configure
+--- ntp-dev-4.2.7p444.orig/configure	2014-05-19 11:24:45.000000000 +0200
++++ ntp-dev-4.2.7p444/configure	2014-06-08 15:35:06.854519261 +0200
+@@ -35946,6 +35946,8 @@
+ 
+ ac_config_files="$ac_config_files scripts/summary"
+ 
++ac_config_files="$ac_config_files scripts/html2man"
++
+ ac_config_files="$ac_config_files scripts/build/Makefile"
+ 
+ ac_config_files="$ac_config_files tests/Makefile"
+@@ -37184,6 +37186,7 @@
+     "scripts/ntpver") CONFIG_FILES="$CONFIG_FILES scripts/ntpver" ;;
+     "scripts/plot_summary") CONFIG_FILES="$CONFIG_FILES scripts/plot_summary" ;;
+     "scripts/summary") CONFIG_FILES="$CONFIG_FILES scripts/summary" ;;
++    "scripts/html2man") CONFIG_FILES="$CONFIG_FILES scripts/html2man" ;;
+     "scripts/build/Makefile") CONFIG_FILES="$CONFIG_FILES scripts/build/Makefile" ;;
+     "tests/Makefile") CONFIG_FILES="$CONFIG_FILES tests/Makefile" ;;
+     "tests/libntp/Makefile") CONFIG_FILES="$CONFIG_FILES tests/libntp/Makefile" ;;
+@@ -38730,6 +38733,7 @@
+     "scripts/ntpver":F) chmod +x scripts/ntpver ;;
+     "scripts/plot_summary":F) chmod +x scripts/plot_summary ;;
+     "scripts/summary":F) chmod +x scripts/summary ;;
++    "scripts/html2man":F) chmod +x scripts/html2man ;;
+ 
+   esac
+ done # for ac_tag
+diff -Naur ntp-dev-4.2.7p444.orig/scripts/deprecated/html2man.in ntp-dev-4.2.7p444/scripts/deprecated/html2man.in
+--- ntp-dev-4.2.7p444.orig/scripts/deprecated/html2man.in	2013-12-21 12:12:06.000000000 +0100
++++ ntp-dev-4.2.7p444/scripts/deprecated/html2man.in	2014-06-08 15:35:38.591185697 +0200
+@@ -51,6 +51,7 @@
+ mkdir $MANDIR, 0777;
+ mkdir "$MANDIR/man8", 0777;
+ mkdir "$MANDIR/man5", 0777;
++mkdir "$MANDIR/man1", 0777;
+ 
+ # Do the actual processing
+ foreach $file (keys %manfiles) {
