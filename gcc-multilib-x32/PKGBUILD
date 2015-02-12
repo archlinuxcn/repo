@@ -1,4 +1,4 @@
-# $Id: PKGBUILD 124658 2014-12-27 06:20:58Z heftig $
+# $Id: PKGBUILD 127241 2015-02-07 13:14:13Z heftig $
 # Maintainer: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 # Contributor: Allan McRae <allan@archlinux.org>
 # x32 Maintainer: Fantix King <fantix.king@gmail.com>
@@ -11,8 +11,8 @@ pkgver=4.9.2
 _pkgver=4.9
 _islver=0.12.2
 _cloogver=0.18.1
-pkgrel=2.1
-_snapshot=4.9-20141224
+pkgrel=3.1
+_snapshot=4.9-20150204
 pkgdesc="The GNU Compiler Collection for multilib with x32 ABI support"
 arch=('x86_64')
 license=('GPL' 'LGPL' 'FDL' 'custom')
@@ -26,7 +26,7 @@ source=(#ftp://gcc.gnu.org/pub/gcc/releases/gcc-${pkgver}/gcc-${pkgver}.tar.bz2
         http://isl.gforge.inria.fr/isl-${_islver}.tar.bz2
         http://www.bastoul.net/cloog/pages/download/cloog-${_cloogver}.tar.gz
         gcc-4.8-filename-output.patch)
-md5sums=('064bc3224ed492c1b2751c313f8278b0'
+md5sums=('5a59c19c4ff7acd3db7f8d94843f7f85'
          'e039bfcfb6c2ab039b8ee69bf883e824'
          'e34fca0540d840e5d0f6427e98c92252'
          '6810bb9b2252f03e6c98d9a671d94589')
