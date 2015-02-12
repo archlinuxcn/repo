@@ -3,7 +3,7 @@
 # Contributor: David Manouchehri <d@32t.ca>
 
 pkgname=dropbox
-pkgver=3.0.5
+pkgver=3.2.6
 pkgrel=1
 pkgdesc="A free service that lets you bring your photos, docs, and videos anywhere and share them easily."
 arch=("i686" "x86_64")
@@ -17,25 +17,25 @@ optdepends=(
 conflicts=("dropbox-experimental")
 options=('!strip' '!upx')
 
-_source_arch="x86"
-[ "$CARCH" = "x86_64" ] && _source_arch="x86_64"
+source=("dropbox.png" "dropbox.desktop" "terms.txt" "dropbox.service" "dropbox@.service")
+source_i686=("https://dl.dropboxusercontent.com/u/17/${pkgname}-lnx.x86-${pkgver}.tar.gz")
+source_x86_64=("https://dl.dropboxusercontent.com/u/17/${pkgname}-lnx.x86_64-${pkgver}.tar.gz")
 
-sha256sums=('2924f104ac372819fa6d3e1c9ba224aef76105fb35c9376c48fc32f581e295c2'
-            'e7d245f5d1a3d5322614b61400ae2913a8caef44bc86717ff7d8197a15dd7f01'
+sha256sums=('e7d245f5d1a3d5322614b61400ae2913a8caef44bc86717ff7d8197a15dd7f01'
             'dd8fdb362c0bba8d789010594f021671ff00e535fc75e13da855f43bc7a4b3aa'
             'c39d63bcfc0d40002a5df052298feb79f2e8dd3d93da27ef31eb672b8d2fc70e'
             '2dc647035f4537b7286adb39a71c629353a57f8df03ab81283a3f110579a80aa'
             '1db4b5c19121932d606142642109af4703f211393afe58566c7ec43499d25169')
-[ "$CARCH" = "x86_64" ] && sha256sums[0]='ebe31f46fb2caa821a23a9f025be8c96656d69f48b5883f7e3bef87792b16262'
-
-source=("https://dl.dropboxusercontent.com/u/17/${pkgname}-lnx.${_source_arch}-${pkgver}.tar.gz"
-        "dropbox.png"
-        "dropbox.desktop"
-        "terms.txt"
-        "dropbox.service"
-        "dropbox@.service")
+sha256sums_i686=('7f91ecd2ab9810db306a48836ab8da71e5059cec103a139408c3c2ddc590dd5a')
+sha256sums_x86_64=('3eeb212959989bdfeae9c8d44139e273ba9773c389d82a37d2a9778d5f2330de')
 
 package() {
+	if [ "$CARCH" = "x86_64" ]; then
+		_source_arch="x86_64"
+	else
+		_source_arch="x86"
+	fi
+
 	install -d "$pkgdir"/opt
 	cp -R "$srcdir"/.dropbox-dist/dropbox-lnx.$_source_arch-$pkgver "$pkgdir"/opt/dropbox
 
