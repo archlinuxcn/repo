@@ -1,0 +1,12 @@
+[Unit]
+Description=Update system time using NTP
+After=network.target nss-lookup.target
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/conf.d/ntpdate.conf
+ExecStartPre=/usr/bin/sleep $NTP_CLIENT_DELAY
+ExecStart=/usr/bin/ntpdate $NTP_CLIENT_OPTION -t $NTPCLIENT_TIMEOUT $NTP_CLIENT_SERVER
+
+[Install]
+WantedBy=multi-user.target

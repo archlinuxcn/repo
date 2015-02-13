@@ -3,7 +3,7 @@
 
 pkgname=android-ndk
 pkgver=r10d
-pkgrel=2
+pkgrel=3
 pkgdesc='Android C/C++ developer kit'
 arch=('x86_64' 'i686')
 makedepends=('p7zip')
@@ -12,25 +12,20 @@ license=('GPL' 'LGPL' 'custom')
 options=('!strip' 'staticlibs')
 backup=('etc/profile.d/android-ndk.sh')
 install="$pkgname.install"
-
-if [[ $CARCH == i686 ]]; then
-  source=("${pkgname}_i686.bin::http://dl.google.com/android/ndk/${pkgname}-$pkgver-linux-x86.bin" 'android-ndk.sh')
-md5sums=('70ed6d8c34e7e620c145b791e8eeef89'
+provides=('android-ndk')
+replaces=('android-ndk32' 'android-ndk64')
+source_x86_64=("${pkgname}_x86_64.bin::http://dl.google.com/android/ndk/${pkgname}-$pkgver-linux-x86_64.bin" 'android-ndk.sh')
+source_i686=("${pkgname}_i686.bin::http://dl.google.com/android/ndk/${pkgname}-$pkgver-linux-x86.bin" 'android-ndk.sh')
+md5sums_x86_64=('263b83071e6bca15f67898548d8d236e'
          '372f74400bfa061642c4b4175f2ddb48')
-else
- source=("${pkgname}_x86_64.bin::http://dl.google.com/android/ndk/${pkgname}-$pkgver-linux-x86_64.bin" 'android-ndk.sh')
-md5sums=('263b83071e6bca15f67898548d8d236e'
+md5sums_i686=('70ed6d8c34e7e620c145b791e8eeef89'
          '372f74400bfa061642c4b4175f2ddb48')
-fi
 
 prepare() {
 7z x -y ${pkgname}_$CARCH.bin
 }
 
 package() {
-  provides=('android-ndk')
-  replaces=('android-ndk32' 'android-ndk64')
-
   install -d "$pkgdir/opt"
   mv "$pkgname-$pkgver" "$pkgdir/opt/$pkgname"
 
