@@ -11,12 +11,13 @@ license=('Apache')
 provides=('cld2' 'cld2-hg')
 replaces=('cld2-hg')
 conflicts=('cld2-hg' 'cld2')
+makedepends=('subversion')
 source=('cld2::svn+http://cld2.googlecode.com/svn/trunk/')
 md5sums=('SKIP')
 
 pkgver() {
   cd "$srcdir/$_pkgname"
-  svnversion | tr -d [A-z]
+  svnversion | tr -d A-z
 }
 
 build() {
@@ -27,13 +28,13 @@ build() {
 
 package() {
   cd "$srcdir/$_pkgname"
-  install -Dm755 internal/libcld2.so ${pkgdir}/usr/lib/libcld2.so
-  install -Dm755 internal/libcld2_full.so ${pkgdir}/usr/lib/libcld2_full.so
+  install -Dm755 internal/libcld2.so "${pkgdir}/usr/lib/libcld2.so"
+  install -Dm755 internal/libcld2_full.so "${pkgdir}/usr/lib/libcld2_full.so"
 
   for header in internal/*.h public/*.h; do
-    install -Dm644 $header ${pkgdir}/usr/include/cld2/$header
+    install -Dm644 "$header" "${pkgdir}/usr/include/cld2/$header"
   done
 
-  install -Dm644 LICENSE ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
 
