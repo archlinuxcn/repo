@@ -1,8 +1,30 @@
-CHANGELOG 更新日志
-==========
+#CHANGELOG
+#更新日志
+#更新日誌
 
-3.3065-2
+
+### 2015-02-12 Fernando "Firef0x" G.P. da Silva <firefgx { aT ) gmail [ d0t } com>
+
+## 3.3065-3
 ----------
+
+	* Add package `sublime-text-dev-zh-tw` providing Traditional Chinese translation
+	* 添加软件包 `sublime-text-dev-zh-tw` 以提供繁体中文翻译
+	* 新增軟體套件 `sublime-text-dev-zh-tw` 以提供繁體中文翻譯
+	* Refine desktop entries
+	* 完善桌面图标
+	* 完善桌面圖示
+
+### 2014-12-15 Fernando "Firef0x" G.P. da Silva <firefgx { aT ) gmail [ d0t } com>
+
+## 3.3065-2
+----------
+
+	* Add package `sublime-text-dev-zh-cn` providing Simplified Chinese translation
+	* 添加软件包 `sublime-text-dev-zh-cn` 以提供简体中文翻译
+	* 新增軟體套件 `sublime-text-dev-zh-cn` 以提供簡體中文翻譯
+
+--------------------------------------------------------------------------------
 
 From `Build 3065`, the launch script [subl3][1] is split into two launch scripts
 [sublime_text_3][2] and [sublime_text_3_imfix][3].
@@ -17,21 +39,37 @@ entries [sublime_text_3.desktop][6] and [sublime_text_3_imfix.desktop][7]. Note
 that [sublime_text_3_imfix.desktop][7] is corresponding to
 [sublime_text_3.desktop][5] in previous version.
 
-从`构建版本 3065`开始，运行脚本 [subl3][1] 分为两个运行脚本 [sublime_text_3][2]
+--------------------------------------------------------------------------------
+
+从`构建版本 3065` 开始，运行脚本 [subl3][1] 分为两个运行脚本 [sublime_text_3][2]
 和 [sublime_text_3_imfix][3]。[sublime_text_3][2] 将不加载链接库
 [libsublime-imfix.so][4] 直接运行原来的可执行文件 `sublime_text`。
 `/usr/bin/subl3` 默认为一个指向 `/usr/bin/sublime_text_3_imfix` 的符号链接。
-只要您愿意，您可以重新链接到 `/usr/bin/sublime_text_3` 。(或者重新链接到
-`/usr/bin/vim` 或者 `/usr/bin/emacs` ，如果您愿意的话。O(^_^)O)
+只要您愿意，您可以重新链接到 `/usr/bin/sublime_text_3`。（或者重新链接到
+`/usr/bin/vim` 或者 `/usr/bin/emacs`，如果您愿意的话。O(^_^)O）
 
 桌面图标 [sublime_text_3.desktop][5] 同样分为两个桌面图标 [sublime_text_3.desktop][6]
 和 [sublime_text_3_imfix.desktop][7]。请注意，[sublime_text_3_imfix.desktop][7]
 对应于之前版本的 [sublime_text_3.desktop][5]。
 
-----------
+--------------------------------------------------------------------------------
+
+從`構建版本 3065` 開始，啟動指令碼 [subl3][1] 分為兩個啟動指令碼
+[sublime_text_3][2] 和 [sublime_text_3_imfix][3]。[sublime_text_3][2] 將不載入連
+結庫 [libsublime-imfix.so][4] 直接運行原來的可執行檔案 `sublime_text`。
+`/usr/bin/subl3` 預設為一個指向 `/usr/bin/sublime_text_3_imfix` 的符號連結。
+只要您願意，您可以重新連結到 `/usr/bin/sublime_text_3`。（或者重新連結到
+`/usr/bin/vim` 或者 `/usr/bin/emacs`，如果您願意的話。O(^_^)O）
+
+桌面圖示 [sublime_text_3.desktop][5] 同樣分為兩個桌面圖示 [sublime_text_3.desktop][6]
+和 [sublime_text_3_imfix.desktop][7]。請注意，[sublime_text_3_imfix.desktop][7]
+對應於之前版本的 [sublime_text_3.desktop][5]。
+
+--------------------------------------------------------------------------------
 
 ## The following is the changelog for the latest build:
 ## 以下是最新版本的更新日志：
+## 以下是最新版本的更新日誌：
 
 Sublime Text 3 is currently in beta. The latest build is 3065.
 ----------
@@ -115,7 +153,7 @@ For more changelog and information, please visit http://www.sublimetext.com/3
 [1]: https://github.com/Firef0x/AUR-Firef0x/blob/75afa8662d4185afd15cdbbab0c8418a39e85b20/aur/sublime-text-dev-imfix/subl3
 [2]: https://github.com/Firef0x/AUR-Firef0x/blob/master/aur/sublime-text-dev-imfix/sublime_text_3.sh
 [3]: https://github.com/Firef0x/AUR-Firef0x/blob/master/aur/sublime-text-dev-imfix/sublime_text_3_imfix.sh
-[4]: https://github.com/Firef0x/SublimeText-zh-CN/blob/master/dist/x86_64/libsublime-imfix.so
+[4]: https://github.com/Firef0x/SublimeText-i18n-zh/blob/master/dist/x86_64/libsublime-imfix.x86_64.so
 [5]: https://github.com/Firef0x/AUR-Firef0x/blob/377934551a2476668ddc41e4e074f14c2e98294d/aur/sublime-text-dev-imfix/sublime_text_3.desktop
-[6]: https://github.com/Firef0x/AUR-Firef0x/blob/master/aur/sublime-text-dev-imfix/sublime_text_3.desktop
-[7]: https://github.com/Firef0x/AUR-Firef0x/blob/master/aur/sublime-text-dev-imfix/sublime_text_3_imfix.desktop
+[6]: https://github.com/Firef0x/SublimeText-i18n-zh/blob/master/dist/any/desktop/sublime_text_3.desktop
+[7]: https://github.com/Firef0x/SublimeText-i18n-zh/blob/master/dist/any/desktop/sublime_text_3_imfix.desktop
