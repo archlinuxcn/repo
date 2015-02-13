@@ -6,15 +6,16 @@ pkgbase=linux-mainline               # Build stock -ARCH kernel
 #pkgbase=linux-custom       # Build kernel with a different name
 #_srcname=linux-3.18
 #_patchname=patch-3.19-rc6
-_srcname=linux-3.19-rc7
-pkgver=3.19rc7
+_srcname=linux-3.19
+pkgver=3.19
 pkgrel=1
 arch=('i686' 'x86_64')
 url="http://www.kernel.org/"
 license=('GPL2')
 makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc')
 options=('!strip')
-source=("https://www.kernel.org/pub/linux/kernel/v3.x/testing/${_srcname}.tar.xz"
+source=("https://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
+        #"https://www.kernel.org/pub/linux/kernel/v3.x/testing/${_srcname}.tar.xz"
         #"https://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
         #"https://www.kernel.org/pub/linux/kernel/v3.x/testing/${_patchname}.xz"
         #"https://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.sign"
@@ -26,7 +27,7 @@ source=("https://www.kernel.org/pub/linux/kernel/v3.x/testing/${_srcname}.tar.xz
         'change-default-console-loglevel.patch'
         )
 
-sha256sums=('3de13b01c7f0421e4949a9a9ff48f982b33e87d0fde7998f08bd6dbf9e95fd00'
+sha256sums=('be42511fe5321012bb4a2009167ce56a9e5fe362b4af43e8c371b3666859806c'
             'd3794c8b2cd11b71914b41f7a4e861369d4fa3c29fdd9e1d677ff0c2167eeb52'
             'df7886f5d57f8f85e89987066dfa5c316e922dc0b22e6e6ad01331333db52377'
             'f0d90e756f14533ee67afda280500511a62465b4f76adcc5effa95a40045179c'
