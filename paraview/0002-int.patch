@@ -1,0 +1,22 @@
+--- a/VTK/Rendering/FreeType/vtkFreeTypeTools.cxx	2014-09-23 16:47:11.000000000 +0200
++++ b/VTK/Rendering/FreeType/vtkFreeTypeTools.cxx	2014-12-22 11:04:14.003492645 +0100
+@@ -1183,7 +1183,7 @@
+     if (bitmap)
+       {
+       metaData.ascent = std::max(bitmapGlyph->top - 1, metaData.ascent);
+-      metaData.descent = std::min(-(bitmap->rows - (bitmapGlyph->top - 1)),
++      metaData.descent = std::min(-int((bitmap->rows - (bitmapGlyph->top - 1))),
+                                   metaData.descent);
+       }
+     ++heightString;
+@@ -1950,8 +1950,8 @@
+     if (bitmap)
+       {
+       bbox[0] = std::min(bbox[0], pen[0] + bitmapGlyph->left);
+-      bbox[1] = std::max(bbox[1], pen[0] + bitmapGlyph->left + bitmap->width);
+-      bbox[2] = std::min(bbox[2], pen[1] + bitmapGlyph->top - 1 - bitmap->rows);
++      bbox[1] = std::max(bbox[1], int(pen[0] + bitmapGlyph->left + bitmap->width));
++      bbox[2] = std::min(bbox[2], int(pen[1] + bitmapGlyph->top - 1 - bitmap->rows));
+       bbox[3] = std::max(bbox[3], pen[1] + bitmapGlyph->top - 1);
+       }
+     else
