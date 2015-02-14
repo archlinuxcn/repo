@@ -30,7 +30,7 @@ prepare() {
 build() {
 	cd $_pkgname
 
-        ./autogen.sh
+	./autogen.sh
 	./configure --disable-maintainer-mode --prefix=/usr
 	make
 }
