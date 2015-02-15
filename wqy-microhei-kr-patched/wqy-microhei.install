@@ -1,0 +1,21 @@
+post_install() {
+	echo -n "Updating font cache... "
+	mkfontscale /usr/share/fonts/wenquanyi/wqy-microhei
+	mkfontdir /usr/share/fonts/wenquanyi/wqy-microhei
+	fc-cache -s /usr/share/fonts/wenquanyi/wqy-microhei
+	echo "done."
+}
+
+post_upgrade() {
+	post_install $1
+}
+
+post_remove() {
+	rm -r /usr/share/fonts/wenquanyi/wqy-microhei
+	rmdir --ignore-fail-on-non-empty /usr/share/fonts/wenquanyi/
+}
+
+op=$1
+shift
+
+$op $*
