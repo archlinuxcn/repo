@@ -10,14 +10,15 @@ g = SimpleNamespace()
 build_prefix = 'makepkg'
 
 config_version = '3.17.2'
-cjktty_version = '3.17'
-aufs_version = '3.17'
-bfq_version = '3.17.0-v7r6'
+cjktty_version = '3.18'
+aufs_version = '3.18.1+'
+bfq_version = '3.18.0-v7r7'
 bfq_patches = [
-  '0001-block-cgroups-kconfig-build-bits-for-BFQ-v7r6-3.17.patch',
-  '0002-block-introduce-the-BFQ-v7r6-I-O-sched-for-3.17.patch',
-  '0003-block-bfq-add-Early-Queue-Merge-EQM-to-BFQ-v7r6-for-3.17.0.patch',
+  '0001-block-cgroups-kconfig-build-bits-for-BFQ-v7r7-3.18.patch',
+  '0002-block-introduce-the-BFQ-v7r7-I-O-sched-for-3.18.patch',
+  '0003-block-bfq-add-Early-Queue-Merge-EQM-to-BFQ-v7r7-for-3.18.0.patch',
 ]
+uksm_file = 'uksm-0.1.2.3-for-v3.18.patch'
 
 bfq_baseurl = 'http://algo.ing.unimo.it/people/paolo/disk_sched/patches/'
 
@@ -32,7 +33,7 @@ def prepare_source(version):
     run_cmd(["git", "merge", "--no-edit", 'cjktty/%s-utf8' % cjktty_version])
     run_cmd(["git", "merge", "--no-edit", 'aufs/aufs%s' % aufs_version])
 
-    run_cmd(["sh", "-c", 'patch -p1 < ~/uksm-0.1.2.3-for-v3.17.patch'])
+    run_cmd(["sh", "-c", 'patch -p1 < ~/%s' % uksm_file])
     run_cmd(["git", "add", "."])
     run_cmd(["git", "commit", "-m", 'apply uksm patch'])
 
