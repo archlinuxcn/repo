@@ -24,10 +24,13 @@ post_install() {
   'sublime_text_3_imfix.desktop' is corresponding to 'sublime_text_3.desktop'
   in previous version.
 
-  To disable in-application reminders about new Sublime Text 3 Dev versions,
-  add the following setting to your User Preferences file:
+  To disable in-application reminders about new Sublime Text 3 Dev versions, add
+  the following setting to your User Preferences file:
 
   "update_check": false
+
+
+
 
   The following is Simplified Chinese translation.
 
@@ -38,17 +41,44 @@ post_install() {
   "sublime_text_3_imfix"。"sublime_text_3" 将不加载链接库 "libsublime-imfix.so"
   直接运行原来的可执行文件 "sublime_text"。
   "/usr/bin/subl3" 默认为一个指向 "/usr/bin/sublime_text_3_imfix" 的符号链接。
-  只要您愿意，您可以重新链接到 "/usr/bin/sublime_text_3" 。(或者重新链接到
-  "/usr/bin/vim" 或者 "/usr/bin/emacs" ，如果您愿意的话。O(^_^)O)
+  只要您愿意，您可以重新链接到 "/usr/bin/sublime_text_3"。（或者重新链接到
+  "/usr/bin/vim" 或者 "/usr/bin/emacs"，如果您愿意的话。O(^_^)O）
 
   桌面图标 "sublime_text_3.desktop" 同样分为两个桌面图标 "sublime_text_3.desktop"
   和 "sublime_text_3_imfix.desktop"。请注意，"sublime_text_3_imfix.desktop"
   对应于之前版本的 "sublime_text_3.desktop"。
 
-  要禁止 Sublime Text 3 开发版的应用内升级提醒，请在您的用户配置
-  文件中添加以下内容:
+  要禁止 Sublime Text 3 开发版的应用内升级提醒，请在您的用户配置文件中添加以下
+  内容:
 
   "update_check": false
+
+
+
+
+  The following is Traditional Chinese translation.
+
+  ==> Sublime Text 3 開發版安裝/升級注意事項:
+  ------------------------------------------------------------------------------
+
+  從構建版本 3065 開始，啟動指令碼 "subl3" 分為兩個啟動指令碼 "sublime_text_3"
+  和 "sublime_text_3_imfix"。"sublime_text_3" 將不載入連結庫
+  "libsublime-imfix.so" 直接運行原來的可執行檔案 "sublime_text"。
+  "/usr/bin/subl3" 預設為一個指向 "/usr/bin/sublime_text_3_imfix" 的符號連結。
+  只要您願意，您可以重新連結到 "/usr/bin/sublime_text_3"。（或者重新連結到
+  "/usr/bin/vim" 或者 "/usr/bin/emacs"，如果您願意的話。O(^_^)O）
+
+  桌面圖示 "sublime_text_3.desktop" 同樣分為兩個桌面圖示 "sublime_text_3.desktop"
+  和 "sublime_text_3_imfix.desktop"。請注意，"sublime_text_3_imfix.desktop"
+  對應於之前版本的 "sublime_text_3.desktop"。
+
+  要禁止 Sublime Text 3 開發版的應用內升級提醒，請在您的用戶設定檔案中新增以下
+  內容:
+
+  "update_check": false
+
+
+
 
 _EOF
 }

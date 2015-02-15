@@ -1,12 +1,12 @@
-# Maintainer : Firef0x <Firefgx (at} gmail {dot) com>
-# Contributor: Firef0x <Firefgx (at} gmail {dot) com>
-# Contributor: Sander Boom <sander at inflowmotion dot nl> (From sublime-text-dev)
-# Contributor: realitygaps <realitygaps at yahoo dot com> (From sublime-text-dev)
-# Contributor: ska <skatiger (at} gmail {dot) com> (From sublime-text-imfix)
+# Maintainer  : Fernando "Firef0x" G.P. da Silva <firefgx { aT ) gmail [ d0t } com>
+# Contributor : Fernando "Firef0x" G.P. da Silva <firefgx { aT ) gmail [ d0t } com>
+# Contributor : Sander Boom <sander at inflowmotion dot nl> (From sublime-text-dev)
+# Contributor : realitygaps <realitygaps at yahoo dot com> (From sublime-text-dev)
+# Contributor : ska <skatiger (at} gmail {dot) com> (From sublime-text-imfix)
 
-pkgname=('sublime-text-dev-imfix' 'sublime-text-dev-zh-cn')
+pkgname=('sublime-text-dev-imfix' 'sublime-text-dev-zh-cn' 'sublime-text-dev-zh-tw')
 pkgver=3.3065
-pkgrel=2
+pkgrel=3
 arch=('i686' 'x86_64')
 url="http://www.sublimetext.com/3"
 license=('custom')
@@ -16,45 +16,65 @@ conflicts=('sublime-text-dev' 'sublime-text-nightly')
 options=('!strip')
 changelog=README.md
 
-_archurl='x64'
 _pkgname=sublime_text_3
 _pkgname1="${_pkgname}_imfix"
 _rplexe=1
 
-[[ "${CARCH}" = "i686" ]] && _archurl='x32'
-
 install=${_pkgname1}.install
-noextract=("Default.sublime-package")
-source=("http://c758482.r82.cf2.rackcdn.com/${_pkgname}_build_${pkgver:2}_${_archurl}.tar.bz2"
-        "https://raw.githubusercontent.com/Firef0x/SublimeText-zh-CN/master/dist/${CARCH}/libsublime-imfix.${CARCH}.so"
-        "https://raw.githubusercontent.com/Firef0x/SublimeText-zh-CN/master/dist/${CARCH}/sublime_text.${CARCH}"
-        "https://raw.githubusercontent.com/Firef0x/SublimeText-zh-CN/master/dist/any/Default.sublime-package"
-        "${_pkgname}.desktop"
-        "${_pkgname1}.desktop"
-        "${_pkgname}.sh"
-        "${_pkgname1}.sh"
-        "LICENSE"
-        "LICENSE.translation")
-md5sums=('466ae754d2cd6aa80dd8dd8b571b4cac'
-         '6e45f6aee03a727c9f09b4136e0b8c9e'
-         '901cd838b215f814e2f260a3bdfb6179'
-         '268459fae3adaeae9362c7ebfb7d7f33'
-         '5ac1509ebee5509261f5d081e0e02297'
-         'b5bacba8ee2573688361d1cc25e2f74d'
-         'fa22069242e91e9a7a9dc4023ebf9bf5'
-         '7be7d93a1062a9975f34661d66b72ff0'
-         'ee96c697ef707e92077d0c55ec14922a'
-         'f7e48316f800b0e1e0153111b1c80302')
-
-if [[ "${CARCH}" == "i686" ]]; then
-  md5sums[0]='d0456b04a1f425f9119aa0615fbc4ceb'
-  md5sums[1]='9c52cabd468301706be2fea8a7379161'
-  md5sums[2]='9e65dda3f3760bf80915f755f2183519'
-fi
+noextract=("Default.zh_CN.sublime-package"
+           "Default.zh_TW.sublime-package")
+source_i686=("http://c758482.r82.cf2.rackcdn.com/${_pkgname}_build_${pkgver:2}_x32.tar.bz2"
+             "https://raw.githubusercontent.com/Firef0x/SublimeText-i18n-zh/master/dist/i686/libsublime-imfix.i686.so"
+             "https://raw.githubusercontent.com/Firef0x/SublimeText-i18n-zh/master/dist/i686/sublime_text.i686"
+             "https://raw.githubusercontent.com/Firef0x/SublimeText-i18n-zh/master/dist/any/zh_CN/Default.zh_CN.sublime-package"
+             "https://raw.githubusercontent.com/Firef0x/SublimeText-i18n-zh/master/dist/any/zh_TW/Default.zh_TW.sublime-package"
+             "https://raw.githubusercontent.com/Firef0x/SublimeText-i18n-zh/master/dist/any/desktop/${_pkgname}.desktop"
+             "https://raw.githubusercontent.com/Firef0x/SublimeText-i18n-zh/master/dist/any/desktop/${_pkgname1}.desktop"
+             "LICENSE"
+             "https://raw.githubusercontent.com/Firef0x/SublimeText-i18n-zh/master/dist/any/zh_CN/LICENSE.zh_CN"
+             "https://raw.githubusercontent.com/Firef0x/SublimeText-i18n-zh/master/dist/any/zh_TW/LICENSE.zh_TW"
+             "${_pkgname}.sh"
+             "${_pkgname1}.sh")
+source_x86_64=("http://c758482.r82.cf2.rackcdn.com/${_pkgname}_build_${pkgver:2}_x64.tar.bz2"
+               "https://raw.githubusercontent.com/Firef0x/SublimeText-i18n-zh/master/dist/x86_64/libsublime-imfix.x86_64.so"
+               "https://raw.githubusercontent.com/Firef0x/SublimeText-i18n-zh/master/dist/x86_64/sublime_text.x86_64"
+               "https://raw.githubusercontent.com/Firef0x/SublimeText-i18n-zh/master/dist/any/zh_CN/Default.zh_CN.sublime-package"
+               "https://raw.githubusercontent.com/Firef0x/SublimeText-i18n-zh/master/dist/any/zh_TW/Default.zh_TW.sublime-package"
+               "https://raw.githubusercontent.com/Firef0x/SublimeText-i18n-zh/master/dist/any/desktop/${_pkgname}.desktop"
+               "https://raw.githubusercontent.com/Firef0x/SublimeText-i18n-zh/master/dist/any/desktop/${_pkgname1}.desktop"
+               "LICENSE"
+               "https://raw.githubusercontent.com/Firef0x/SublimeText-i18n-zh/master/dist/any/zh_CN/LICENSE.zh_CN"
+               "https://raw.githubusercontent.com/Firef0x/SublimeText-i18n-zh/master/dist/any/zh_TW/LICENSE.zh_TW"
+               "${_pkgname}.sh"
+               "${_pkgname1}.sh")
+md5sums_i686=('d0456b04a1f425f9119aa0615fbc4ceb'
+              '9c52cabd468301706be2fea8a7379161'
+              '9e65dda3f3760bf80915f755f2183519'
+              'fd0cdc32940eb11a904801e839ced06e'
+              '8c990622d60c65c6af0db661be8052da'
+              '208a4b2ee9c8740e0d022b8050cedcbc'
+              '540175c597fdb98364c944551a4d08f1'
+              'ee96c697ef707e92077d0c55ec14922a'
+              'f7e48316f800b0e1e0153111b1c80302'
+              '6d473f472e643abe3549730b9fbd2b10'
+              'fa22069242e91e9a7a9dc4023ebf9bf5'
+              '7be7d93a1062a9975f34661d66b72ff0')
+md5sums_x86_64=('466ae754d2cd6aa80dd8dd8b571b4cac'
+                '6e45f6aee03a727c9f09b4136e0b8c9e'
+                '901cd838b215f814e2f260a3bdfb6179'
+                'fd0cdc32940eb11a904801e839ced06e'
+                '8c990622d60c65c6af0db661be8052da'
+                '208a4b2ee9c8740e0d022b8050cedcbc'
+                '540175c597fdb98364c944551a4d08f1'
+                'ee96c697ef707e92077d0c55ec14922a'
+                'f7e48316f800b0e1e0153111b1c80302'
+                '6d473f472e643abe3549730b9fbd2b10'
+                'fa22069242e91e9a7a9dc4023ebf9bf5'
+                '7be7d93a1062a9975f34661d66b72ff0')
 
 _package_common() {
   # Copy everything
-  install -dm755 "${pkgdir}/opt"
+  install -d "${pkgdir}/opt"
   cp --preserve=mode -r "${_pkgname}" "${pkgdir}/opt/${_pkgname}"
 
   # Install IM fix library
@@ -62,20 +82,20 @@ _package_common() {
     ${pkgdir}/opt/${_pkgname}/libsublime-imfix.so
 
   # Install icons and desktop shortcuts
-  for res in 128x128 16x16 256x256 32x32 48x48; do
-    install -dm755 "${pkgdir}/usr/share/icons/hicolor/${res}/apps"
+  for res in 16x16 32x32 48x48 128x128 256x256; do
+    install -d "${pkgdir}/usr/share/icons/hicolor/${res}/apps"
     ln -sf "/opt/${_pkgname}/Icon/${res}/sublime-text.png" \
     "${pkgdir}/usr/share/icons/hicolor/${res}/apps/sublime-text.png"
   done
 
-  install -dm755 "${pkgdir}/usr/share/applications"
+  install -d "${pkgdir}/usr/share/applications"
   install -Dm644 ${_pkgname}.desktop \
     "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
   install -Dm644 ${_pkgname1}.desktop \
     "${pkgdir}/usr/share/applications/${_pkgname1}.desktop"
 
   # Install bin file
-  install -dm755 "${pkgdir}/usr/bin"
+  install -d "${pkgdir}/usr/bin"
   install -Dm755 ${_pkgname}.sh "${pkgdir}/usr/bin/${_pkgname}"
   install -Dm755 ${_pkgname1}.sh "${pkgdir}/usr/bin/${_pkgname1}"
 
@@ -83,18 +103,17 @@ _package_common() {
   ln -sf "/usr/bin/${_pkgname1}" "${pkgdir}/usr/bin/subl3"
 
   # Install license file
-  install -dm755 "${pkgdir}/usr/share/licenses/${pkgname}"
+  install -d "${pkgdir}/usr/share/licenses/${pkgname}"
   install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
 
 package_sublime-text-dev-imfix() {
-  pkgdesc="Sophisticated text editor for code, HTML and prose , a dry fixed for development build, which supported Fcitx input method"
+  pkgdesc="Sophisticated text editor for code, HTML and prose, development build with Fcitx input method support"
 
   _package_common
 }
 
 package_sublime-text-dev-zh-cn() {
-  pkgrel=1
   pkgdesc="Sophisticated text editor for code, HTML and prose, development build with Simplified Chinese translation and Fcitx input method support"
 
   if [ ${_rplexe} -eq 1 ]; then
@@ -104,13 +123,32 @@ package_sublime-text-dev-zh-cn() {
   fi
 
   rm "${_pkgname}/Packages/Default.sublime-package"
-  install -Dm644 Default.sublime-package \
+  install -Dm644 Default.zh_CN.sublime-package \
     ${_pkgname}/Packages/Default.sublime-package
 
   _package_common
 
   # Install license file
-  install -Dm644 LICENSE.translation "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE.translation"
+  install -Dm644 LICENSE.zh_CN "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE.zh_CN"
+}
+
+package_sublime-text-dev-zh-tw() {
+  pkgdesc="Sophisticated text editor for code, HTML and prose, development build with Traditional Chinese translation and Fcitx input method support"
+
+  if [ ${_rplexe} -eq 1 ]; then
+    rm "${_pkgname}/sublime_text"
+    install -Dm755 sublime_text.${CARCH} \
+      ${_pkgname}/sublime_text
+  fi
+
+  rm "${_pkgname}/Packages/Default.sublime-package"
+  install -Dm644 Default.zh_TW.sublime-package \
+    ${_pkgname}/Packages/Default.sublime-package
+
+  _package_common
+
+  # Install license file
+  install -Dm644 LICENSE.zh_TW "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE.zh_TW"
 }
 
 # vim:set ts=2 sw=2 et:

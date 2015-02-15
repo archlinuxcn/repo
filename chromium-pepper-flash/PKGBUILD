@@ -2,8 +2,8 @@
 
 pkgname=chromium-pepper-flash
 pkgdesc="Google Chrome's Pepper Flash plugin for Chromium (stable version)"
-_verbld=40.0.2214.94-1
-pkgver=16.0.0.296
+_verbld=40.0.2214.111-1
+pkgver=16.0.0.305
 pkgrel=1
 epoch=1
 arch=('i686' 'x86_64')
@@ -17,8 +17,8 @@ source=(license.html::https://www.google.com/chrome/intl/en/eula_text.html)
 source_i686+=("https://dl.google.com/linux/chrome/rpm/stable/i386/google-chrome-stable-${_verbld}.i386.rpm")
 source_x86_64+=(https://dl.google.com/linux/chrome/rpm/stable/x86_64/google-chrome-stable-${_verbld}.x86_64.rpm)
 sha256sums=('c714679be9b1de35475bfcd58b4d2fa5baf87c00eb049185ec062de276203d13')
-sha256sums_i686=('433a23f04e170ff2000f00a72c4bc8dce271404e8c1466578710f629f9a86187')
-sha256sums_x86_64=('a18ea1ee836dd1be7fb0ffc81aea69fb20fce014be99a669eda8a029498792dd')
+sha256sums_i686=('e43ec5e42d2834ccfdaa356b3ff833e6749847330d5b10b93700459ac1348ed4')
+sha256sums_x86_64=('4b5bc3233aa8ac9396d34dfe5bfa31c328e14143721a27d7d56880131f99093f')
 
 package() {
 	# create required directories
