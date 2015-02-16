@@ -30,8 +30,6 @@ prepare() {
 
 build() {
   cd cargo
-  sed -i -e '/"$$(CARGO)" --version/a\	"$$(CARGO)" update' Makefile.in
-  sed -i -e 's/log = "0.1"/log = "*"/' Cargo.toml
   ./configure --prefix=/usr --disable-verify-install --enable-optimize
   make
 }
