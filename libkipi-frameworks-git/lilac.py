@@ -32,6 +32,10 @@ def pre_build():
             words = depends.split(" ")
             words.append("'hicolor-icon-theme'")
             line = "depends=(%s)" % (" ".join(words))
+        if line.strip().startswith("makedepends="):
+            words = line.split(" ")
+            words.insert(-1, "'python'")
+            line = " ".join(words)
         print(line)
 
 post_build = aur_post_build

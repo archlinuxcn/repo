@@ -3,7 +3,7 @@
 
 _pkgname=resynthesizer
 pkgname=gimp-plugin-$_pkgname-git
-pkgver=2.0.9.gd3730b7
+pkgver=2.0.13.g251eedc
 pkgrel=1
 pkgdesc="Suite of gimp plugins for texture synthesis (like heal-selection). Git-Version"
 arch=('i686' 'x86_64')
@@ -30,6 +30,7 @@ prepare() {
 build() {
 	cd $_pkgname
 
+	./autogen.sh
 	./configure --disable-maintainer-mode --prefix=/usr
 	make
 }
