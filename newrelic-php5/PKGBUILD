@@ -1,8 +1,8 @@
-# Maintainer: Felix Yan <felixonmars@gmail.com>
+# Maintainer: Felix Yan <felixonmars@archlinux.org>
 # Contributor: Vinh Nguyen <kurei [at] axcoto.com>
 
 pkgname=newrelic-php5
-pkgver=4.17.0.83
+pkgver=4.18.0.89
 _libver=20131226
 pkgrel=1
 pkgdesc="NewRelic PHP"
@@ -14,7 +14,7 @@ backup=('etc/php/conf.d/newrelic.ini')
 install=$pkgname.install
 source=("https://download.newrelic.com/php_agent/release/$pkgname"-"$pkgver"-"linux.tar.gz"
         "newrelic-daemon.service")
-md5sums=('0b0e38e8d7bed2f415d4ab5f96228032'
+md5sums=('6a658d89fbeb459f7f491ba16fba0a92'
          '4fc78347663adcb32ed28eddb546619c')
 
 build() {
