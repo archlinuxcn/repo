@@ -1,4 +1,4 @@
-# Contributor: Meow < a.li.devtty at gmail dot com >
+# Maintainer: Meow < a.li.devtty at gmail dot com >
 
 # Get download links and md5 sums for latest version of RStudio desktop
 cat <<_EOF_ >/dev/null
@@ -12,7 +12,7 @@ print(cbind(links,md5sums))
 _EOF_
 
 pkgname=rstudio-desktop-bin
-pkgver=0.98.1091
+pkgver=0.98.1102
 pkgrel=1
 pkgdesc="A new integrated development environment (IDE) for R (binary version from RStudio official website)"
 arch=('i686' 'x86_64')
@@ -25,8 +25,8 @@ provides=("rstudio-desktop=${pkgver}")
 
 
 
-_x86md5=0bc579cbee43a514e3fb4569959a0ada
-_x64md5=1e88e6775993daa8cf7d4d89f76af7e0
+_x86md5=90ba83bf5a791ca3bcc12e1faf37d5ae
+_x64md5=f4d479f62352c5a709d330f67ef310dc
 case "$CARCH" in
 	'i686')
 		_arch=i386
