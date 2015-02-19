@@ -2,7 +2,7 @@
 
 _pkgname=xfce4-dev-tools
 pkgname=${_pkgname}-devel
-pkgver=4.11.0
+pkgver=4.11.1
 pkgrel=1
 pkgdesc="Xfce developer tools"
 arch=('i686' 'x86_64')
@@ -13,7 +13,7 @@ provides=("${_pkgname}=${pkgver}")
 conflicts=("${_pkgname}")
 source=(http://archive.xfce.org/src/xfce/xfce4-dev-tools/${pkgver%.*}/$_pkgname-$pkgver.tar.bz2
         xfce4-dev-tools-4.10.0-remove-FORTIFY_SOURCE-2.patch)
-sha256sums=('2dccdd4935716a97db28464ba2403572ce03134fd7adf294e1a59eaf297e6555'
+sha256sums=('21bff408eb48154b3383bde8fb71a6c9359f93e5752b0af284e0af3bf6a56218'
             '4ecfdf8cdb0940ce1044349bdb6646192dffd2b7f4e890f0ef5f00bfdfad7676')
 
 prepare() {
