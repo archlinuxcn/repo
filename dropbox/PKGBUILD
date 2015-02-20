@@ -4,7 +4,7 @@
 
 pkgname=dropbox
 pkgver=3.2.6
-pkgrel=1
+pkgrel=2
 pkgdesc="A free service that lets you bring your photos, docs, and videos anywhere and share them easily."
 arch=("i686" "x86_64")
 url="http://www.dropbox.com"
@@ -22,10 +22,10 @@ source_i686=("https://dl.dropboxusercontent.com/u/17/${pkgname}-lnx.x86-${pkgver
 source_x86_64=("https://dl.dropboxusercontent.com/u/17/${pkgname}-lnx.x86_64-${pkgver}.tar.gz")
 
 sha256sums=('e7d245f5d1a3d5322614b61400ae2913a8caef44bc86717ff7d8197a15dd7f01'
-            'dd8fdb362c0bba8d789010594f021671ff00e535fc75e13da855f43bc7a4b3aa'
+            '541f2fd2de0d601a08cde7853e404062f542af21e6e7106825b5e68177168e0f'
             'c39d63bcfc0d40002a5df052298feb79f2e8dd3d93da27ef31eb672b8d2fc70e'
-            '2dc647035f4537b7286adb39a71c629353a57f8df03ab81283a3f110579a80aa'
-            '1db4b5c19121932d606142642109af4703f211393afe58566c7ec43499d25169')
+            '6c67a9c8c95c08fafafd2f1d828074b13e3347b05d2e4f4bf4e62746115d7477'
+            '98581e65a91ae1f19ed42edcdaaa52e102298b5da0d71b50089393d364474d3d')
 sha256sums_i686=('7f91ecd2ab9810db306a48836ab8da71e5059cec103a139408c3c2ddc590dd5a')
 sha256sums_x86_64=('3eeb212959989bdfeae9c8d44139e273ba9773c389d82a37d2a9778d5f2330de')
 
@@ -44,7 +44,7 @@ package() {
 	chmod 755 "$pkgdir"/opt/dropbox/dropbox
 
 	install -d "$pkgdir"/usr/bin
-	ln -s ../../opt/dropbox/dropboxd "$pkgdir"/usr/bin/dropboxd
+	ln -s ../../opt/dropbox/dropbox "$pkgdir"/usr/bin/dropbox
 
 	install -Dm644 "$srcdir"/dropbox.desktop "$pkgdir"/usr/share/applications/dropbox.desktop
 	install -Dm644 "$srcdir"/dropbox.png "$pkgdir"/usr/share/pixmaps/dropbox.png
