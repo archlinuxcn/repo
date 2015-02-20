@@ -11,7 +11,7 @@
  def start_dropbox():
      db_path = os.path.expanduser(u"~/.dropbox-dist/dropboxd").encode(sys.getfilesystemencoding())
 +    if not os.path.exists(db_path):
-+        db_path = u"/usr/bin/dropboxd"
++        db_path = u"/usr/bin/dropbox"
      if os.access(db_path, os.X_OK):
          f = open("/dev/null", "w")
          # we don't reap the child because we're gonna die anyway, let init do it

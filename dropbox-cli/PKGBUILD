@@ -5,17 +5,18 @@
 
 pkgname=dropbox-cli
 pkgver=2.10.0
-pkgrel=1
+pkgrel=3
 pkgdesc='Command line interface for dropbox'
 arch=('any')
 url='http://www.dropbox.com'
 license=('GPL')
+install='dropbox-cli.install'
 depends=('python2' 'dropbox')
 makedepends=("patch")
 source=("https://linux.dropbox.com/packages/dropbox.py"
         "$pkgname-arch.patch")
 md5sums=('b094beab191d84bc0117fa5c3dbeaa2c'
-         'f48ce021cf70cdde419a57656133827a')
+         '0cb7114774490c31e7cc10f86692ac70')
 
 build(){
     mkdir -p "$srcdir/build"
@@ -25,5 +26,5 @@ build(){
 }
 
 package() {
-    install -D -m 755 "$srcdir/build/dropbox.py" "$pkgdir/usr/bin/dropbox"
+    install -D -m 755 "$srcdir/build/dropbox.py" "$pkgdir/usr/bin/dropbox-cli"
 }
