@@ -4,38 +4,51 @@
 _target="arm-linux-gnueabihf"
 pkgbase=${_target}-binutils
 pkgname=(${_target}-binutils-ldscripts ${_target}-binutils)
-pkgver=2.24
-pkgrel=2
+pkgver=2.25
+pkgrel=1
 pkgdesc="A set of programs to assemble and manipulate binary and object files (${_target})"
 arch=(i686 x86_64)
 license=(GPL)
 options=(!libtool !buildflags !emptydirs)
 url="http://sources.redhat.com/binutils"
 depends=('glibc')
-source=(ftp://ftp.gnu.org/gnu/binutils/binutils-${pkgver}.tar.bz2)
-md5sums=('e0f71a7b2ddab0f8612336ac81d9636b')
+source=(ftp://ftp.gnu.org/gnu/binutils/binutils-${pkgver}.tar.bz2
+        binutils-${pkgver}-roundup.patch)
+md5sums=('d9f3303f802a5b6b0bb73a335ab89d66'
+         'e7046b004c975a7c3765b8f6758aeb76')
+
+prepare() {
+  cd binutils-${pkgver}
+
+  # binutils-2_25..6c1c6764
+  patch -p1 -i "${srcdir}"/binutils-${pkgver}-roundup.patch
+
+  # hack! - libiberty configure tests for header files using "$CPP $CPPFLAGS"
+  sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" libiberty/configure
+
+  rm -rf "${srcdir}"/binutils-${pkgver}-build
+  mkdir -p "${srcdir}"/binutils-${pkgver}-build
+}
 
 build() {
-  cd "$srcdir/binutils-${pkgver}"
+  cd binutils-${pkgver}-build
 
-  find -name config.cache -exec rm {} \;
-
-  [ $NOEXTRACT -eq 1 ] || ./configure \
-    --prefix=/usr \
-    --program-prefix=${_target}- \
-    --enable-shared \
-    --disable-multilib \
-    --with-lib-path=/usr/lib/binutils/${_target} \
-    --with-local-prefix=/usr/lib/${_target} \
-    --with-sysroot=/usr/${_target} \
-    --disable-nls \
-    --target=${_target} \
-    --host=$CHOST \
-    --build=$CHOST \
-    --disable-werror
+  ../binutils-${pkgver}/configure \
+              --prefix=/usr \
+              --with-lib-path=/usr/lib/binutils/${_target} \
+              --program-prefix=${_target}- \
+              --enable-shared \
+              --disable-multilib \
+              --with-local-prefix=/usr/lib/${_target} \
+              --with-sysroot=/usr/${_target} \
+              --disable-nls \
+              --target=${_target} \
+              --host=$CHOST \
+              --build=$CHOST \
+              --disable-werror
 
   make configure-host
-  make
+  make tooldir=/usr
 
   local pkgdir="${srcdir}/pkg"
   rm -rf "$pkgdir"
@@ -50,7 +63,6 @@ build() {
 package_arm-linux-gnueabihf-binutils-ldscripts() {
   privides=(arm-linux-gnueabi-binutils-ldscripts)
   conflicts=(arm-linux-gnueabi-binutils-ldscripts)
-  cd "$srcdir"
 
   mkdir -p "$pkgdir/usr/lib/"
   cp -a pkg/usr/lib/ldscripts "$pkgdir/usr/lib/"
@@ -58,7 +70,6 @@ package_arm-linux-gnueabihf-binutils-ldscripts() {
 
 package_arm-linux-gnueabihf-binutils() {
   depends+=(arm-linux-gnueabi-binutils-ldscripts)
-  cd "$srcdir"
 
   cp -a pkg/usr "$pkgdir/"
   rm -rf "$pkgdir/usr/lib/ldscripts"
