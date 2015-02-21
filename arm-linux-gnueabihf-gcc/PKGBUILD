@@ -3,20 +3,20 @@
 
 _target="arm-linux-gnueabihf"
 pkgname=${_target}-gcc
-pkgver=4.9.1
+pkgver=4.9.2
 pkgrel=1
 pkgdesc="The GNU Compiler Collection (${_target})"
 arch=(i686 x86_64)
 license=('GPL' 'LGPL')
 url="http://gcc.gnu.org"
-depends=("${_target}-binutils" "${_target}-eglibc" 'libmpc' 'elfutils')
+depends=("${_target}-binutils" "${_target}-glibc" 'libmpc' 'elfutils')
 options=('!buildflags' '!libtool' '!emptydirs' 'zipman' 'docs'
   '!strip' 'staticlibs')
 conflicts=("${_target}-gcc-stage1" "${_target}-gcc-stage2")
 replaces=("${_target}-gcc-stage1" "${_target}-gcc-stage2")
 provides=("${_target}-gcc-stage1=${pkgver}" "${_target}-gcc-stage2=${pkgver}")
 source=(ftp://gcc.gnu.org/pub/gcc/releases/gcc-${pkgver}/gcc-${pkgver}.tar.bz2)
-md5sums=('fddf71348546af523353bd43d34919c1')
+md5sums=('4df8ee253b7f3863ad0b86359cd39c43')
 
 build() {
   cd "${srcdir}/gcc-${pkgver}"
