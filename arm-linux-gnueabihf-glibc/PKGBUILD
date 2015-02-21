@@ -4,7 +4,7 @@
 _target="arm-linux-gnueabihf"
 pkgname=${_target}-glibc
 pkgver=2.21
-pkgrel=1
+pkgrel=2
 pkgdesc="GNU C Library (${_target})"
 arch=(any)
 url="http://www.gnu.org/software/libc"
@@ -82,9 +82,6 @@ package() {
   rm -rf "${pkgdir}"/usr/${_target}/{bin,sbin,etc,share,var}
 
   for f in "${pkgdir}"/usr/${_target}/lib/lib{c,pthread}.so; do
-    sed -i "$f" -e "s://lib:/usr/${_target}/lib:g"
+    sed -i "$f" -e "s://lib/l:l:g"
   done
-
-  mkdir -p "${pkgdir}"/usr/${_target}/usr
-  ln -sf .. "${pkgdir}"/usr/${_target}/usr/${_target}
 }
