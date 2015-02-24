@@ -2,9 +2,15 @@
 # Contributor: Michael Jakl <jakl.michael@gmail.com>
 # With contributions from many kind people at https://aur.archlinux.org/packages/julia-git/
 
+BUILD_EXTRA=0
+
 pkgbase=julia-git
-pkgname=('julia-git' 'julia-doc-git' 'emacs-julia-mode-git')
-pkgver=0.3.0.rc3.2444.g62b5eef
+if ((BUILD_EXTRA)); then
+   pkgname=('julia-git' 'julia-doc-git' 'emacs-julia-mode-git')
+else
+   pkgname=('julia-git')
+fi
+pkgver=0.3.0.rc3.3479.g79f2185
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64')
@@ -15,8 +21,18 @@ makedepends=('gcc-fortran' 'arpack' 'fftw' 'git' 'gmp' 'libgit2' 'libunwind'
              'python2-sphinx_rtd_theme' 'python2-pip' 'texlive-langcjk'
              'texlive-latexextra' 'emacs' 'openspecfun')
 options=('!emptydirs' 'staticlibs' 'debug' 'strip')
-source=('git://github.com/JuliaLang/julia.git')
-md5sums=('SKIP')
+source=('git://github.com/yuyichao/julia#branch=upstream'
+        'git://github.com/JuliaLang/libuv'
+        'git://github.com/JuliaLang/openlibm'
+        'git://github.com/JuliaLang/openspecfun'
+        'git://github.com/JuliaLang/Rmath'
+        'git://github.com/JuliaLang/libmojibake')
+md5sums=('SKIP'
+         'SKIP'
+         'SKIP'
+         'SKIP'
+         'SKIP'
+         'SKIP')
 
 pkgver() {
   cd julia
@@ -26,6 +42,11 @@ pkgver() {
 
 prepare() {
   cd julia
+
+  git reset --hard HEAD
+  git clean -fdx
+
+  sed -e "s=git://github.com/JuliaLang/\(.*\).git=${srcdir}/\1=g" -i .gitmodules
 
   git submodule init
   git submodule sync
@@ -37,7 +58,8 @@ prepare() {
   sed 's/pip /pip2 /g' -i Makefile
 }
 
-julia_opts=(USE_SYSTEM_LLVM=1
+julia_opts=(prefix=/usr sysconfdir=/etc
+            USE_SYSTEM_LLVM=1
             USE_SYSTEM_LIBUNWIND=1
             USE_SYSTEM_PCRE=1
             USE_SYSTEM_LIBM=1
@@ -63,7 +85,16 @@ julia_opts=(USE_SYSTEM_LLVM=1
 build() {
   cd julia
 
-  make prefix=/usr sysconfdir=/etc "${julia_opts[@]}"
+  export CC='gcc -flto'
+  export CXX='g++ -flto'
+
+  make "${PWD}/usr/bin/stringreplace" "${julia_opts[@]}"
+  make release "${julia_opts[@]}"
+  make debug "${julia_opts[@]}"
+
+  if ! ((BUILD_EXTRA)); then
+     return
+  fi
 
   (# Building doc
     cd doc
@@ -90,7 +121,7 @@ package_julia-git() {
 
   cd julia
 
-  make install DESTDIR="$pkgdir" prefix=/usr sysconfdir=/etc "${julia_opts[@]}"
+  make install DESTDIR="$pkgdir" "${julia_opts[@]}"
 
   # Remove doc files
   rm -r "$pkgdir/usr/share/doc/julia"
