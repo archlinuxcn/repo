@@ -2,8 +2,8 @@
 
 _pkgname=libxfce4ui
 pkgname=${_pkgname}-devel
-pkgver=4.11.1
-pkgrel=2
+pkgver=4.11.2
+pkgrel=1
 pkgdesc="Commonly used Xfce widgets among Xfce applications"
 arch=('i686' 'x86_64')
 url="http://www.xfce.org/"
@@ -38,4 +38,4 @@ package() {
   make DESTDIR="$pkgdir" install
 }
 
-sha256sums=('bf0a847d7f60c55b6e906e4dffbc2444e290c958edc96484a701edba7e58245d')
+sha256sums=('6fefbc8f4f9710f061c3607db352880628aa858d7d816762286f011a5e4fa4da')
