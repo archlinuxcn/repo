@@ -2,7 +2,7 @@
 #Contributor: Yichao Yu <yyc1992@gmail.com>
 
 pkgname=arch-arm-git
-pkgver=23.a9d3309
+pkgver=33.869f296
 pkgrel=1
 pkgdesc="Archlinux ARM cross compiling tools"
 arch=('i686' 'x86_64')
@@ -20,7 +20,7 @@ backup=('etc/pacman.d/mirrorlist-arm-cross')
 pkgver() {
   cd "$srcdir/arch-arm"
 
-  echo "$(git rev-list --count master).$(git rev-parse --short master)"
+  echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
 }
 
 build() {
