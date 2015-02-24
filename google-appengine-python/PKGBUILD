@@ -8,9 +8,9 @@
 # Contributor: Mikkel Oscar Lyderik <mikkeloscar@gmail.com>
 
 pkgname=google-appengine-python
-pkgver=1.9.17
+pkgver=1.9.18
 _zipver=$pkgver
-pkgrel=3
+pkgrel=1
 arch=(any)
 pkgdesc="Google App Engine SDK for Python"
 url=https://cloud.google.com/appengine/downloads
@@ -30,10 +30,8 @@ optdepends=(mysql-python
 makedepends=(unzip)
 options=(!strip)
 install=install
-source=(https://storage.googleapis.com/appengine-sdks/featured/google_appengine_${_zipver}.zip
-        'python279.patch')
-sha1sums=('eec50aaf922d3b21623fda1b90e199c3ffa9e16e'
-          'e3f53902c34856213b25c30b3350dbed121f7b16')
+source=(https://storage.googleapis.com/appengine-sdks/featured/google_appengine_${_zipver}.zip)
+sha1sums=('8f53e67826faa1fc884792da9535c1a8722bb656')
 noextract=(google_appengine_${_zipver}.zip)
 
 prepare() {
@@ -41,10 +39,6 @@ prepare() {
 
   # Extract with unzip as bsdtar screws up permissions
   unzip -qq "google_appengine_${_zipver}.zip" -d "${pkgname}-${pkgver}"
-
-  # Patch for Python 2.7.9
-  cd "${pkgname}-${pkgver}/google_appengine"
-  patch -p1 -i ${srcdir}/python279.patch
 
   # Cleanup PHP files
   rm -rf php
