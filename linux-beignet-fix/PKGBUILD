@@ -3,8 +3,8 @@
 
 # pkgbase=linux               # Build stock -ARCH kernel
 pkgbase=linux-beignet-fix       # Build kernel with a different name
-_srcname=linux-3.17
-pkgver=3.17
+_srcname=linux-3.19
+pkgver=3.19
 pkgrel=1
 arch=('i686' 'x86_64')
 url="http://www.kernel.org/"
@@ -12,7 +12,9 @@ license=('GPL2')
 makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc')
 options=('!strip')
 source=("https://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
+        # "https://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.sign"
         #"https://www.kernel.org/pub/linux/kernel/v3.x/patch-${pkgver}.xz"
+        #"https://www.kernel.org/pub/linux/kernel/v3.x/patch-${pkgver}.sign"
         # the main kernel config files
         'config' 'config.x86_64'
         # standard config files for mkinitcpio ramdisk
@@ -20,12 +22,17 @@ source=("https://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
         'change-default-console-loglevel.patch'
         'disable-batchbuffer-security.patch'
         )
-sha256sums=('f5153ec93c5fcd41b247950e6a9bcbc63fa87beafd112c133a622439a0f76251'
-            'a66e1cab5c41a83fb0e9e04dfa5c7097ab3ca61aa03a50bc5c67390d859c4c3a'
-            '719279c08f6d421c66f2bd58843b985c35291f8c3d3dbd25b3580f456f534cc2'
+sha256sums=('be42511fe5321012bb4a2009167ce56a9e5fe362b4af43e8c371b3666859806c'
+            # 'SKIP'
+            '704a479de77c9022e5c7a797d2cd7fd0e4ba1f52f9039ec8a80efd57f7e9f0d8'
+            '59830f47c1be39f874640d762dca55f972aca549a7a65ba2f1dac184251dabb2'
             'f0d90e756f14533ee67afda280500511a62465b4f76adcc5effa95a40045179c'
             '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99'
             '87e23817f647af755f11283a0be4b6fee8a0ca6a95c9d90f20e18ec34b93fc12')
+# validpgpkeys=(
+#               'ABAF11C65A2970B130ABE3C479BE3E4300411886' # Linus Torvalds
+#               '647F28654894E3BD457199BE38DBBDC86092693E' # Greg Kroah-Hartman
+#              )
 
 _kernelname=${pkgbase#linux}
 
@@ -129,8 +136,6 @@ _package() {
   rm -f "${pkgdir}"/lib/modules/${_kernver}/{source,build}
   # remove the firmware
   rm -rf "${pkgdir}/lib/firmware"
-  # gzip -9 all modules to save 100MB of space
-  find "${pkgdir}" -name '*.ko' -exec gzip -9 {} \;
   # make room for external modules
   ln -s "../extramodules-${_basekernel}${_kernelname:--ARCH}" "${pkgdir}/lib/modules/${_kernver}/extramodules"
   # add real version for building modules and running depmod from post_install/upgrade
