@@ -1,6 +1,6 @@
 pkgname=sharpfont
 pkgdesc="Cross-platform FreeType bindings for .NET"
-pkgver=2.5.0.1
+pkgver=2.5.3
 pkgrel=1
 arch=(any)
 license=("MIT")
@@ -8,15 +8,8 @@ url="https://github.com/Robmaister/SharpFont"
 source=("https://github.com/Robmaister/SharpFont/archive/v$pkgver.tar.gz"
 "sharpfont.pc.in")
 depends=(mono freetype2)
-sha1sums=('497a3bd4d8f23fd95ba8daf3e342271869009b33'
+sha1sums=('92ed464ac91c7b484de1ccfa9bc197aa2cc0aa98'
           '06f0b1549c5ecb11fef7a40e77e9a4c90cf1e3c7')
-
-prepare() {
-  cd "${srcdir}/SharpFont-$pkgver/SharpFont/TrueType"
-  mv EncodingID.cs EncodingId.cs
-  mv PCLT.cs Pclt.cs
-  mv PlatformID.cs PlatformId.cs
-}
           
 build() {
 	cd "${srcdir}/SharpFont-$pkgver"
