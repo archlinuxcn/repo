@@ -5,7 +5,7 @@
 # Contributor: Andrzej Giniewicz <gginiu@gmail.com>
 
 pkgname=acroread-fonts-systemwide
-pkgver=11.0.09
+pkgver=11.0.10
 _fontpackver=11.0.09
 _nodotver=${pkgver//.}
 _fontpacknodotver=${_fontpackver//.}
@@ -16,7 +16,7 @@ arch=('any')
 url="http://www.adobe.com/products/acrobat/acrrasianfontpack.html"
 license=('custom')
 depends=('fontconfig' 'xorg-fonts-encodings' 'xorg-font-utils')
-makedepends=('p7zip')
+makedepends=('p7zip920')
 conflicts=('ttf-adobe-fonts'
            'ttf-adobe-fonts-cjkext'
            'acroread-fonts'
@@ -26,7 +26,7 @@ source=("http://ardownload.adobe.com/pub/adobe/reader/win/${_first}.x/${_fontpac
         "http://ardownload.adobe.com/pub/adobe/reader/win/${_first}.x/${pkgver}/en_US/AdbeRdr${_nodotver}_en_US.exe")
 noextract=("AdbeRdr${_nodotver}_en_US.exe")
 sha256sums=('84462e21027c92e2ddb638449caac662b2e4256bf3f8de4a782026a12f195b0f'
-            '85cde7e9ce54aacda39c2403c3e30e126cda6a5e9269b422adb845eb9c7b2913')
+            'c438ac343381031cd47dd4ed966c8e86b2bcd5a1959f55c1c7d8c61920dd18bc')
 
 prepare() {
   cd "$srcdir"
