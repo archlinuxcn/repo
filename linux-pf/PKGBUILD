@@ -3,7 +3,7 @@
 # Some lines from  kernel26-bfs and kernel26-ck
 # Credits to respective maintainers
 _major=3
-_minor=18
+_minor=19
 #_patchlevel=0
 #_subversion=1
 _basekernel=${_major}.${_minor}
@@ -22,7 +22,7 @@ _CPUSUFFIXES=( core2 k7 k8 k10 barcelona bobcat bulldozer piledriver psc atom p2
 # Set these variables to ANYTHING (yes or no or 1 or 0 or "I like icecream") to enable them
 #
 
-_NUMA_off=yes		# Disable NUMA in kernel config
+_NUMA_off=no		# Disable NUMA in kernel config
 
 ### DOCS
 # Starting with the 3.6.6-3 release, this package ships with the kernel-3x-gcc47-x.patch.
@@ -71,7 +71,7 @@ source=("ftp://www.kernel.org/pub/linux/kernel/v${_major}.x/linux-${_basekernel}
 	'linux.preset'			# standard config files for mkinitcpio ramdisk
 	'change-default-console-loglevel.patch'
 	"${_pfpatchhome}${_pfpatchname}.xz"	# the -pf patchset
-        "git+$_aufs3#branch=aufs3.18.1+"
+        "git+$_aufs3#branch=aufs3.19"
 )
 
 
@@ -487,8 +487,6 @@ package_linux-pf() {
   rm -f "${pkgdir}"/lib/modules/${_kernver}/{source,build}
   # remove the firmware
   rm -rf "${pkgdir}/lib/firmware"
-  # gzip -9 all modules to save 100MB of space
-  find "${pkgdir}" -name '*.ko' -exec gzip -9 {} \;
   # make room for external modules
   ln -s "../extramodules-${_basekernel}${_kernelname:--ARCH}" "${pkgdir}/lib/modules/${_kernver}/extramodules"
   # add real version for building modules and running depmod from post_install/upgrade
@@ -587,9 +585,16 @@ package_linux-pf-headers() {
   cp drivers/media/dvb-core/*.h "${pkgdir}/usr/lib/modules/${_kernver}/build/drivers/media/dvb-core/"
   # and...
   # http://bugs.archlinux.org/task/11194
-  mkdir -p "${pkgdir}/usr/lib/modules/${_kernver}/build/include/config/dvb/"
-  cp include/config/dvb/*.h "${pkgdir}/usr/lib/modules/${_kernver}/build/include/config/dvb/"
-
+  ###
+  ### DO NOT MERGE OUT THIS IF STATEMENT
+  ### IT AFFECTS USERS WHO STRIP OUT THE DVB STUFF SO THE OFFICIAL ARCH CODE HAS A CP
+  ### LINE THAT CAUSES MAKEPKG TO END IN AN ERROR
+  ###
+  if [ -d include/config/dvb/ ]; then
+      mkdir -p "${pkgdir}/usr/lib/modules/${_kernver}/build/include/config/dvb/"
+      cp include/config/dvb/*.h "${pkgdir}/usr/lib/modules/${_kernver}/build/include/config/dvb/"
+  fi
+  
   # add dvb headers for http://mcentral.de/hg/~mrec/em28xx-new
   # in reference to:
   # http://bugs.archlinux.org/task/13146
@@ -649,9 +654,9 @@ package_linux-pf-headers() {
 pkgdesc="Linux kernel and modules with the pf-kernel patch [-ck patchset (BFS included), TuxOnIce, BFQ] and aufs3"
 
 # makepkg -g >>PKGBUILD
-sha256sums=('becc413cc9e6d7f5cc52a3ce66d65c3725bc1d1cc1001f4ce6c32b69eb188cbd'
-            '12d366c6d70eaefba8feaa9b0e8e3c4e29f5a00fdb0bcb4837105ac0bb9822a2'
+sha256sums=('be42511fe5321012bb4a2009167ce56a9e5fe362b4af43e8c371b3666859806c'
+            'bddab3e11f9c1986552b67feca7cd2613fce33893a33aece95bf00bffbb39278'
             '82d660caa11db0cd34fd550a049d7296b4a9dcd28f2a50c81418066d6e598864'
             '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99'
-            'c42075bfc8a99ea10bd6ec1e3765b827c93060325640c1aa6b48c6094db4074b'
+            'e9576c84d13c286f5a7659ad5fa0221105ebf023c2cab6ef20cff0f8c48478ef'
             'SKIP')
