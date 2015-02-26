@@ -1,4 +1,4 @@
-# $Id: PKGBUILD 127242 2015-02-07 13:22:34Z heftig $
+# $Id: PKGBUILD 127583 2015-02-12 00:16:48Z heftig $
 # Maintainer: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 # Contributor: Jan de Groot <jgc@archlinux.org>
 # Contributor: Allan McRae <allan@archlinux.org>
@@ -9,7 +9,7 @@
 _pkgbasename=glibc
 pkgname=libx32-$_pkgbasename
 pkgver=2.21
-pkgrel=1.1
+pkgrel=2.1
 pkgdesc="GNU C Library (x32 ABI)"
 arch=('x86_64')
 url="http://www.gnu.org/software/libc"
@@ -25,16 +25,19 @@ provides=('glibc-x32-seed')
 options=('!strip' 'staticlibs' '!emptydirs')
 
 source=(http://ftp.gnu.org/gnu/libc/${_pkgbasename}-${pkgver}.tar.xz{,.sig}
+        glibc-2.21-roundup.patch
         libx32-glibc.conf)
 md5sums=('9cb398828e8f84f57d1f7d5588cf40cd'
          'SKIP'
+         'bf9d96b11c76b113606aae102da63d9d'
          '34a4169d2bdc5a3eb83676a0831aae57')
+validpgpkeys=('F37CDAB708E65EA183FD1AF625EF0A436C2A4AFF')  # Carlos O'Donell
 
 prepare() {
   cd ${srcdir}/glibc-${pkgver}
 
-  # glibc-2.21..
-  #patch -p1 -i $srcdir/glibc-2.21-roundup.patch
+  # glibc-2.21..75adf430
+  patch -p1 -i $srcdir/glibc-2.21-roundup.patch
 
   mkdir ${srcdir}/glibc-build
 }
