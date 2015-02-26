@@ -1,25 +1,18 @@
-# $Id: PKGBUILD 113590 2014-06-26 09:15:49Z lcarlier $
+# $Id: PKGBUILD 123858 2014-12-13 21:59:05Z thestinger $
 # Maintainer: Jan de Groot <jgc@archlinux.org>
 # x32 Maintainer: Fantix King <fantix.king at gmail.com>
 
 pkgname=libx32-libffi
-pkgver=3.1
-pkgrel=1
+pkgver=3.2.1
+pkgrel=1.1
 pkgdesc="A portable, high level programming interface to various calling conventions (x32 ABI)"
 arch=('x86_64')
 license=('MIT')
 url="http://sourceware.org/libffi/"
 depends=('libx32-glibc')
 checkdepends=('dejagnu')
-source=(ftp://sourceware.org/pub/libffi/libffi-${pkgver}.tar.gz
-        0001-Fix-paths-in-libffi.pc.in.patch)
-sha1sums=('cb373ef2115ec7c57913b84ca72eee14b10ccdc3'
-          '85b406c5208a7b8fdba9c8a4782ab524f5c5eec4')
-
-prepare() {
-  cd libffi-${pkgver}
-  patch -p1 -i ../0001-Fix-paths-in-libffi.pc.in.patch
-}
+source=(ftp://sourceware.org/pub/libffi/libffi-${pkgver}.tar.gz)
+sha1sums=('280c265b789e041c02e5c97815793dfc283fb1e6')
 
 build() {
   cd libffi-${pkgver}
@@ -28,7 +21,8 @@ build() {
 
   ./configure --prefix=/usr \
     --libdir=/usr/libx32 --libexecdir=/usr/libx32 \
-    --disable-static --host=x86_64-unknown-linux-gnux32
+    --disable-static --enable-pax_emutramp \
+    --host=x86_64-unknown-linux-gnux32
 
   make
 }
