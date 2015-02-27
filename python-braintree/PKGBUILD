@@ -3,7 +3,7 @@
 pkgbase=python-braintree
 pkgname=(python-braintree python2-braintree)
 _pkgname=braintree
-pkgver=3.11.0
+pkgver=3.11.1
 pkgrel=1
 pkgdesc="Braintree Python Library"
 arch=('any')
@@ -12,7 +12,7 @@ license=('MIT')
 makedepends=('python-setuptools' 'python2-setuptools')
 checkdepends=('python-nose' 'python2-nose')
 source=("$pkgbase-$pkgver::https://github.com/braintree/braintree_python/archive/${pkgver}.tar.gz")
-sha512sums=('c914b70f12496d53aef873076fa0b2f100c95039cf1cc33bf49e0f6768a1805f1f4f670befe6b037d89a78b8e033a03ba533fbef39b920db1f0d723c4c5c9240')
+sha512sums=('29f4cfa3142d66cd6dfb2eb1f1e657fed60c33c2089f089aa21e8478adef5082a7b02c5617d16340113e311e491aa6b2e5cacd6124918e3ad61641a48cd1c4b1')
 
 prepare() {
   cp -a ${_pkgname}_python-$pkgver{,-py2}
@@ -20,8 +20,7 @@ prepare() {
 
 check() {
   cd ${_pkgname}_python-$pkgver
-  # https://github.com/braintree/braintree_python/issues/46https://github.com/braintree/braintree_python/issues/46
-  nosetests3 tests/unit || warning "Tests failed"
+  nosetests3 tests/unit
 
   cd ../${_pkgname}_python-$pkgver-py2
   nosetests2 tests/unit
