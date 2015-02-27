@@ -33,7 +33,7 @@ package() {
   provides=("gvfs")
   depends=('avahi' 'dconf' 'fuse' 'libarchive' 'libcdio-paranoia' 'libsoup' 'udisks2' 'libsecret')
   conflicts=('gvfs')
-  replaces=('gvfs' 'gvfs-obexftp')
+  replaces=('gvfs-obexftp')
   optdepends=('gvfs-afc: AFC (mobile devices) support'
               'gvfs-smb: SMB/CIFS (Windows client) support'
               'gvfs-gphoto2: gphoto2 (PTP camera/MTP media player) support'
