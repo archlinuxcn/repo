@@ -4,7 +4,7 @@
 pkgname=spotify
 pkgver=0.9.11.27
 _anotherpkgver=.g2b1a638.81-1
-pkgrel=1
+pkgrel=2
 pkgdesc="A proprietary peer-to-peer music streaming service"
 arch=('x86_64' 'i686')
 license=('custom:"Copyright (c) 2006-2013 Spotify Ltd"')
@@ -17,24 +17,30 @@ conflicts=('spotify-beta')
 if [ "${CARCH}" = "x86_64" ]; then
   md5sums=('778a0150fc9c0205f06a620a60f1365c')
   _carch=_amd64
-  pkgrel=1
 elif [ "${CARCH}" = "i686" ]; then
   md5sums=('20113ac3d6760ded6940fef8143fa9a3')
   _carch=_i386
   pkgver=0.9.4.183
   _anotherpkgver=.g644e24e.428-1
+  pkgrel=1
 fi
+
+source=("http://repository.spotify.com/pool/non-free/s/${pkgname}/${pkgname}-client_${pkgver}${_anotherpkgver}${_carch}.deb"
+'spotify'
+'spotify.protocol')
 
 md5sums+=('8d7059f889257fca61edb926bf419111'
 'ef25ddc5b6bf8fe1a0d64cbd79e1f7b4')
+
+if [ "${CARCH}" = "x86_64" ]; then
+  source+=("http://seblu.net/a/arm/packages/g/gtk2/gtk2-2.24.24-1-x86_64.pkg.tar.xz")
+  md5sums+=('fe9682217264ea780a7a56552f304a36')
+fi
 
 depends=("alsa-lib>=1.0.14" "glibc>=2.6" "libxss" "qtwebkit" "gconf" "nspr>=4.0"
          "nspr<5.0" "nss" "dbus" "systemd" "libgcrypt15" "gtk2")
 optdepends=('desktop-file-utils: Adds URI support to compatible desktop environments'
             'ffmpeg-compat: Adds support for playback of local files')
-source=("http://repository.spotify.com/pool/non-free/s/${pkgname}/${pkgname}-client_${pkgver}${_anotherpkgver}${_carch}.deb"
-'spotify'
-'spotify.protocol')
 
 package() {
   cd "${srcdir}"
@@ -51,7 +57,13 @@ package() {
   # Bin Script
   install -Dm755 "${srcdir}/spotify" "${pkgdir}/usr/bin/spotify"
 
-  if [ "${CARCH}" = "i686" ]; then
+  if [ "${CARCH}" = "x86_64" ]; then
+    install -D "${srcdir}/usr/lib/libgdk-x11-2.0.so.0.2400.24" "${pkgdir}/usr/share/spotify/libs/libgdk-x11-2.0.so.0.2400.24"
+    ln -s "/usr/share/spotify/libs/libgdk-x11-2.0.so.0.2400.24" "${pkgdir}/usr/share/spotify/libs/libgdk-x11-2.0.so.0"
+
+    install -D "${srcdir}/usr/lib/libgtk-x11-2.0.so.0.2400.24" "${pkgdir}/usr/share/spotify/libs/libgtk-x11-2.0.so.0.2400.24"
+    ln -s "/usr/share/spotify/libs/libgtk-x11-2.0.so.0.2400.24"  "${pkgdir}/usr/share/spotify/libs/libgtk-x11-2.0.so.0"
+  elif [ "${CARCH}" = "i686" ]; then
     # libplc4.so
     ln -s /usr/lib/libplc4.so "${pkgdir}/usr/share/spotify/libs/libplc4.so.0d"
 
