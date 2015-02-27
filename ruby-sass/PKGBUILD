@@ -5,18 +5,19 @@
 
 _pkgname=sass
 pkgname=ruby-$_pkgname
-pkgver=3.4.9
-pkgrel=2
+pkgver=3.4.13
+pkgrel=1
 pkgdesc="Tools and Ruby libraries for the CSS3 extension languages: Sass and SCSS."
 arch=("any")
 url="http://sass-lang.com/"
 license=("MIT")
-depends=("ruby" "ruby-yard" "ruby-maruku")
+depends=("ruby-yard" "ruby-maruku")
 makedepends=("rubygems")
 # optdepends=("ruby-listen")
 source=("http://gems.rubyforge.org/gems/$_pkgname-$pkgver.gem")
 noextract=("$_pkgname-$pkgver.gem")
-sha256sums=("ce9d5b515f09bafff156076314173778e1d3ed819b09da837bfad16c730ce86d")
+sha256sums=("2f1e913f5845e6d3a6beebca01a25dd703bccde68b19109dbde7e41e4895b373")
+
 
 package() {
 	local _gemdir="$(ruby -rubygems -e"puts Gem.default_dir")"
