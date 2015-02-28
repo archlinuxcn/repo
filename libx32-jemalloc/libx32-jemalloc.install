@@ -1,0 +1,21 @@
+post_install() {
+    mv /usr/include/jemalloc/jemalloc.h /usr/include/jemalloc/jemalloc-64.h
+    ln -s jemalloc-stub.h /usr/include/jemalloc/jemalloc.h
+}
+
+post_upgrade() {
+    if [ ! -L /usr/include/jemalloc/jemalloc.h ]; then
+        post_install
+    elif [ ${1::-2} != ${2::-2} ]; then
+        echo WARNING: libx32-jemalloc is upgraded before jemalloc,
+        echo WARNING: you probably need to reinstall libx32-jemalloc.
+    fi
+}
+
+post_remove() {
+    if [ -L /usr/include/jemalloc/jemalloc.h ]; then
+        rm /usr/include/jemalloc/jemalloc.h
+        mv /usr/include/jemalloc/jemalloc-64.h /usr/include/jemalloc/jemalloc.h
+    fi
+}
+
