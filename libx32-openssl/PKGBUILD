@@ -1,14 +1,14 @@
-# $Id: PKGBUILD 116952 2014-08-07 08:19:38Z bluewind $
+# $Id: PKGBUILD 126573 2015-01-25 14:11:25Z pierre $
 # Maintainer: Pierre Schmitz <pierre@archlinux.de>
 # x32 Maintainer: Fantix King <fantix.king at gmail.com>
 
 _pkgbasename=openssl
 pkgname=libx32-$_pkgbasename
-_ver=1.0.1i
+_ver=1.0.2
 # use a pacman compatible version scheme
 pkgver=${_ver/[a-z]/.${_ver//[0-9.]/}}
 #pkgver=$_ver
-pkgrel=1
+pkgrel=1.1
 pkgdesc='The Open Source toolkit for Secure Sockets Layer and Transport Layer Security (x32 ABI)'
 arch=('x86_64')
 url='https://www.openssl.org'
@@ -21,21 +21,17 @@ source=("https://www.openssl.org/source/${_pkgbasename}-${_ver}.tar.gz"
         "https://www.openssl.org/source/${_pkgbasename}-${_ver}.tar.gz.asc"
         'no-rpath.patch'
         'ca-dir.patch'
-        'openssl-1.0.1-x32.patch'
         'opensslconf-stub.h'
 )
-md5sums=('c8dc151a671b9b92ff3e4c118b174972'
+validpgpkeys=(8657ABB260F056B1E5190839D9C4D26D0E604491)
+md5sums=('38373013fc85c790aabf8837969c5eba'
          'SKIP'
          'dc78d3d06baffc16217519242ce92478'
          '3bf51be3a1bbd262be46dc619f92aa90'
-         '10d0cebf2d9c0f64c307e82542f519e3'
          'dbb0b2e285f9ba95f189a0eaf3586011')
 
 prepare() {
 	cd $srcdir/$_pkgbasename-$_ver
-
-    # x32 patch
-    patch -p1 -i $srcdir/openssl-1.0.1-x32.patch
 
 	# remove rpath: http://bugs.archlinux.org/task/14367
 	patch -p0 -i $srcdir/no-rpath.patch
