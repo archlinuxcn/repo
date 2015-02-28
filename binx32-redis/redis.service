@@ -3,13 +3,18 @@ Description=Advanced key-value store (x32 ABI)
 After=network.target
 
 [Service]
-Type=forking
 User=redis
-PIDFile=/run/redis-x32/redis-x32.pid
-ExecStartPre=/bin/mkdir -p /var/lib/redis-x32
+Group=redis
 ExecStart=/usr/bin/redis-server-x32 /etc/redis-x32.conf
 ExecStop=/usr/bin/redis-cli-x32 shutdown
-Restart=always
+CapabilityBoundingSet=
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=full
+ProtectHome=true
+NoNewPrivileges=true
+RuntimeDirectory=redis
+RuntimeDirectoryMode=700
 
 [Install]
 WantedBy=multi-user.target

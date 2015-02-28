@@ -1,57 +1,56 @@
-# $Id: PKGBUILD 113033 2014-06-11 15:06:18Z spupykin $
-# Upstream Maintainer: Sergej Pupykin <pupykin.s+arch@gmail.com>
-# Upstream Maintainer: Jan-Erik Rediger <badboy at archlinux dot us>
+# $Id: PKGBUILD 128281 2015-02-26 14:56:57Z spupykin $
+# Maintainer:  Sergej Pupykin <pupykin.s+arch@gmail.com>
+# Maintainer:  Bartłomiej Piotrowski <bpiotrowski@archlinux.org>
+# Contributor: Jan-Erik Rediger <badboy at archlinux dot us>
 # Contributor: nofxx <x@<nick>.com>
-# Maintainer: Fantix King <fantix.king at gmail.com>
+# x32 Maintainer: Fantix King <fantix.king at gmail.com>
 
 _basepkgname=redis
 pkgname=binx32-redis
-pkgver=2.8.11
-pkgrel=1
-pkgdesc="Advanced key-value store (x32 ABI)"
+pkgver=2.8.19
+pkgrel=1.1
+pkgdesc='Advanced key-value store (x32 ABI)'
 arch=('x86_64')
-url="http://redis.io/"
+url='http://redis.io/'
 license=('BSD')
-depends=('bash' 'libx32-glibc' "${_basepkgname}")
-makedepends=('gcc-multilib-x32>=3.1' 'make' 'pkgconfig')
-backup=("etc/redis-x32.conf"
-	"etc/logrotate.d/redis-x32")
+depends=('libx32-jemalloc' 'grep' 'shadow' 'libx32-glibc' "${_basepkgname}")
+backup=('etc/redis-x32.conf'
+        'etc/logrotate.d/redis-x32')
 install=redis.install
-source=("http://download.redis.io/releases/redis-$pkgver.tar.gz"
-	"redis.service"
-	"redis.logrotate"
-	"redis.tmpfiles.d")
-md5sums=('196e0cf387d8885439add8a3e1cab469'
-         'db421c66570172e780ab6c4c9e41ccca'
+source=(http://download.redis.io/releases/redis-$pkgver.tar.gz
+        redis.service
+        redis.logrotate redis.tmpfiles.d
+        redis.conf-sane-defaults.patch
+        redis-2.8.11-use-system-jemalloc.patch)
+md5sums=('3794107224043465603f48941f5c86a7'
+         'f6674d7e0d391740b1e80ade2087b367'
          '5a51ae6c10564edb716a93f22e821d67'
-         '33b11afbb94d642606fc12ba4dda9985')
+         '33b11afbb94d642606fc12ba4dda9985'
+         'cab5413181e8d11c779bdf1e404a98ae'
+         '2ae176578f538e37a67a463258302bc6')
 
 prepare() {
-  cd "$srcdir/${_basepkgname}-${pkgver}"
-  sed -i 's|# bind 127.0.0.1|bind 127.0.0.1|' redis.conf
-  sed -i 's|daemonize no|daemonize yes|' redis.conf
-  sed -i 's|dir \./|dir /var/lib/redis-x32/|' redis.conf
-  sed -i 's|pidfile .*|pidfile /run/redis-x32/redis-x32.pid|' redis.conf
-  sed -i 's|logfile stdout|logfile /var/log/redis-x32.log|' redis.conf
-  sed -i 's|port 6379|port 6378|' redis.conf
+  cd $_basepkgname-$pkgver
+  patch -p1 -i ../redis.conf-sane-defaults.patch
+  patch -p1 -i ../redis-2.8.11-use-system-jemalloc.patch
 }
 
 build() {
-  cd "$srcdir/${_basepkgname}-${pkgver}"
-  make MALLOC=libc CC="gcc -mx32"
+  make -C $_basepkgname-$pkgver CC="gcc -mx32"
 }
 
 package() {
-  cd "$srcdir/${_basepkgname}-${pkgver}"
-  mkdir -p $pkgdir/usr/bin
-  make INSTALL_BIN="$pkgdir/usr/bin" PREFIX=/usr install
+  cd $_basepkgname-$pkgver
+  make PREFIX="$pkgdir"/usr install
 
   for _x in ${pkgdir}/usr/bin/*; do mv $_x $_x-x32; done
   
-  install -Dm644 "$srcdir"/redis.service "$pkgdir"/usr/lib/systemd/system/redis-x32.service
-  install -Dm644 "$srcdir/redis.logrotate" "$pkgdir/etc/logrotate.d/redis-x32"
-  install -Dm644 "$srcdir/${_basepkgname}-${pkgver}/redis.conf" "$pkgdir/etc/redis-x32.conf"
-  install -Dm644 "$srcdir/redis.tmpfiles.d" "$pkgdir/usr/lib/tmpfiles.d/redis-x32.conf"
+  install -Dm644 redis.conf "$pkgdir"/etc/redis-x32.conf
+  install -Dm644 ../redis.service "$pkgdir"/usr/lib/systemd/system/redis-x32.service
+
+  # files kept for compatibility with installations made before 2.8.13-2
+  install -Dm644 ../redis.logrotate "$pkgdir"/etc/logrotate.d/redis-x32
+  install -Dm644 ../redis.tmpfiles.d "$pkgdir"/usr/lib/tmpfiles.d/redis-x32.conf
 
   # install license
   install -dm755 "$pkgdir"/usr/share/licenses
