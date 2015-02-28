@@ -1,30 +1,35 @@
-# $Id: PKGBUILD 104719 2014-01-24 21:00:48Z bluewind $
-# Upstream Maintainer: Florian Pritz <flo@xinu.at>
+# $Id: PKGBUILD 127768 2015-02-16 02:18:22Z fyan $
+# Maintainer: Florian Pritz <flo@xinu.at>
 # Contributor: Stéphane Gaudreault <stephane@archlinux.org>
-# Maintainer: Fantix King <fantix.king at gmail.com>
+# x32 Maintainer: Fantix King <fantix.king at gmail.com>
 
 _pkgbasename=krb5
 pkgname=libx32-$_pkgbasename
-pkgver=1.12.1
-pkgrel=1
+pkgver=1.13.1
+pkgrel=1.1
 pkgdesc="The Kerberos network authentication system (x32 ABI)"
 arch=('x86_64')
 url="http://web.mit.edu/kerberos/"
 license=('custom')
 depends=('libx32-e2fsprogs' 'libx32-libldap' 'libx32-keyutils' "$_pkgbasename")
 makedepends=('perl' 'gcc-multilib-x32' 'bison')
-source=("http://web.mit.edu/kerberos/dist/${_pkgbasename}/1.12/${_pkgbasename}-${pkgver}-signed.tar"
-        krb5-config_LDFLAGS.patch)
-sha1sums=('d59e8dc0fc9e1890e109cd033756539984e3d3fe'
-          '09e478cddfb9d46d2981dd25ef96b8c3fd91e1aa')
+source=("http://web.mit.edu/kerberos/dist/${_pkgbasename}/1.13/${_pkgbasename}-${pkgver}-signed.tar"
+        krb5-config_LDFLAGS.patch
+        krb5-1.13.1-x32.patch)
+sha1sums=('2832695845d6c4cb0e7a622df4885f18acbd94cf'
+          'f125824ed37f31e6fd2fdb6a437be8ff1c3700ab'
+          '928c1367fd48e055fa4ffcad01fd70d1beea22af')
 options=('!emptydirs')
 
 prepare() {
    tar zxvf ${_pkgbasename}-${pkgver}.tar.gz
-   cd "${srcdir}/${_pkgbasename}-${pkgver}/src"
+   cd "${srcdir}/${_pkgbasename}-${pkgver}"
 
    # cf https://bugs.gentoo.org/show_bug.cgi?id=448778
-   (cd build-tools; patch -Np2 -i "${srcdir}"/krb5-config_LDFLAGS.patch; cd ..)
+   patch -p1 -i "${srcdir}"/krb5-config_LDFLAGS.patch
+
+   # x32
+   patch -p1 -i "${srcdir}"/krb5-1.13.1-x32.patch
 }
 
 build() {

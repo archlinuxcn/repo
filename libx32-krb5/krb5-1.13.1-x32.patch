@@ -1,0 +1,12 @@
+diff -ru krb5-1.13.1.orig/src/configure krb5-1.13.1/src/configure
+--- krb5-1.13.1.orig/src/configure	2015-02-12 11:17:07.000000000 +0800
++++ krb5-1.13.1/src/configure	2015-02-28 16:25:56.867892499 +0800
+@@ -8687,7 +8687,7 @@
+     *-*-linux* | *-*-gnu* | *-*-*bsd* | *-*-solaris*)
+ 	# All Unix-like platforms need -D__linux__ for iaesx64.s to
+ 	# use the System V x86-64 calling convention.
+-	aesni_flags="-D__linux__ -f elf -m $aesni_machine"
++	aesni_flags="-D__linux__ -f elfx32 -m x32"
+ 	;;
+     esac
+     if test "x$aesni_obj" != x && test "x$aesni_flags" != x; then
