@@ -1,11 +1,11 @@
-# $Id: PKGBUILD 106864 2014-03-09 12:49:17Z bpiotrowski $
+# $Id: PKGBUILD 117893 2014-08-26 08:57:32Z bluewind $
 # Maintainer: Andreas Radke <andyrtr@archlinux.org>
 # x32 Maintainer: Fantix King <fantix.king at gmail.com>
 
 _pkgbasename=libgcrypt
 pkgname=libx32-$_pkgbasename
-pkgver=1.6.1
-pkgrel=1
+pkgver=1.6.2
+pkgrel=1.1
 pkgdesc="General purpose cryptographic library based on the code from GnuPG (x32 ABI)"
 arch=(x86_64)
 url="http://www.gnupg.org"
@@ -15,7 +15,7 @@ makedepends=(gcc-multilib-x32 libtool-multilib)
 source=(ftp://ftp.gnupg.org/gcrypt/${_pkgbasename}/${_pkgbasename}-${pkgver}.tar.bz2
   libgcrypt-1.4.5-x32.patch
 )
-sha1sums=('f03d9b63ac3b17a6972fc11150d136925b702f02'
+sha1sums=('cc31aca87e4a3769cb86884a3f5982b2cc8eb7ec'
           '0d23f2f17b9f4f6461abb4f8f5115f9db3143841')
 
 build() {
