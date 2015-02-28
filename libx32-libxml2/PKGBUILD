@@ -1,12 +1,12 @@
-# $Id: PKGBUILD 90461 2013-05-12 20:21:58Z bluewind $
-# Upstream Maintainer: Jan de Groot <jgc@archlinux.org>
+# $Id: PKGBUILD 122173 2014-11-07 23:22:36Z bluewind $
+# Maintainer: Jan de Groot <jgc@archlinux.org>
 # Contributor: John Proctor <jproctor@prium.net>
-# Maintainer: Fantix King <fantix.king at gmail.com>
+# x32 Maintainer: Fantix King <fantix.king at gmail.com>
 
 _pkgbasename=libxml2
 pkgname=libx32-$_pkgbasename
-pkgver=2.9.1
-pkgrel=1
+pkgver=2.9.2
+pkgrel=1.1
 pkgdesc="XML parsing library, version 2 (x32 ABI)"
 arch=(x86_64)
 license=('custom')
@@ -15,7 +15,7 @@ makedepends=(gcc-multilib-x32 autoconf automake libtool-multilib)
 options=('!libtool')
 url="http://www.xmlsoft.org/"
 source=(ftp://ftp.xmlsoft.org/${_pkgbasename}/${_pkgbasename}-${pkgver}.tar.gz)
-md5sums=('9c0cfef285d5c4a5c80d00904ddab380')
+md5sums=('9e6a9aca9d155737868b3dc5fd82f788')
 
 build() {
   export CC="gcc -mx32"
