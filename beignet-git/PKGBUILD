@@ -2,7 +2,7 @@
 
 pkgname=beignet-git
 pkgver=1.0.0.0.231.g6b42a08
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc="OpenCL Implemenation for Intel IvyBridge and Haswell"
 arch=('i686' 'x86_64')
@@ -39,7 +39,8 @@ build() {
   cmake .. \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DPYTHON_EXECUTABLE=/usr/bin/python2 \
-    -DCMAKE_INSTALL_PREFIX=/usr
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=lib
   make
 }
 
