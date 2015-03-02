@@ -4,12 +4,12 @@
 
 pkgname=binx32-tcl
 pkgver=8.6.3
-pkgrel=1.1
+pkgrel=1.2
 pkgdesc="The Tcl scripting language (x32 ABI)"
 arch=('x86_64')
 url="http://tcl.sourceforge.net/"
 license=('custom')
-depends=('zlib' 'tcl')
+depends=('libx32-zlib' 'tcl')
 makedepends=("gcc-multilib-x32")
 options=('staticlibs')
 source=(http://downloads.sourceforge.net/sourceforge/tcl/tcl${pkgver}-src.tar.gz)
