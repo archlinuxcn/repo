@@ -1,5 +1,5 @@
-# $Id: PKGBUILD 216192 2014-07-02 07:39:22Z fyan $
-# Maintainer: Felix Yan <felixonmars@gmail.com>
+# $Id: PKGBUILD 227422 2014-12-11 05:55:04Z fyan $
+# Maintainer: Felix Yan <felixonmars@archlinux.org>
 # Contributor: Stéphane Gaudreault <stephane@archlinux.org>
 # Contributor: Allan McRae <allan@archlinux.org>
 # Contributor: Jason Chu <jason@archlinux.org>
@@ -8,14 +8,15 @@
 _basepkgname=python2
 pkgname=binx32-python2
 pkgver=2.7.9
-pkgrel=1
+pkgrel=1.1
 _pybasever=2.7
 pkgdesc="A high-level scripting language (x32 ABI)"
 arch=('x86_64')
 license=('PSF')
 url="http://www.python.org/"
 depends=("${_basepkgname}=${pkgver}" 'libx32-bzip2' 'libx32-gdbm' 'libx32-openssl' 'libx32-zlib' 'libx32-expat' 'libx32-sqlite' 'libx32-libffi')
-makedepends=('gcc-multilib-x32' 'binx32-tk' 'bluez-libs')
+makedepends=('binx32-tk' 'bluez-libs')
+checkdepends=('gdb')
 optdepends=('binx32-tk: for IDLE')
 conflicts=('python2-x32')
 replaces=('python2-x32')
@@ -62,7 +63,12 @@ prepare() {
   sed -i -e "s|^#.* /usr/local/bin/python|#!/usr/bin/python2-x32|" Lib/cgi.py
 
   sed -i "s/python2.3/python2-x32/g" Lib/distutils/tests/test_build_scripts.py \
-     Lib/distutils/tests/test_install_scripts.py
+    Lib/distutils/tests/test_install_scripts.py
+
+  # TODO: Still not passed
+  # Silent test_gdb failures on 'no symbol table loaded'.
+  #sed -i '/ignore_patterns = (/a "No symbol table is loaded.  Use the \\"file\\" command.",' \
+  #  Lib/test/test_gdb.py
 
   # Ensure that we are using the system copy of various libraries (expat, zlib and libffi),
   # rather than copies shipped in the tarball
@@ -85,25 +91,27 @@ build() {
   export CC="gcc -mx32"
   export CXX="g++ -mx32"
   ./configure --prefix=/usr \
+              --libdir=/usr/libx32 \
               --enable-shared \
               --with-threads \
               --enable-ipv6 \
               --enable-unicode=ucs4 \
               --with-system-expat \
               --with-system-ffi \
-              --with-dbmliborder=gdbm:ndbm --libdir=/usr/libx32
+              --with-dbmliborder=gdbm:ndbm \
+              --without-ensurepip
 
   make
 }
 
 check() {
-  # As of 2.7.7, 1 test failed:
-  # test_uuid
+  # As of 2.7.9, 2 tests failed:
+  # test_gdb test_mhlib
   # Besides, test_thread disabled as it will stuck
 
   cd Python-${pkgver}
   LD_LIBRARY_PATH="${srcdir}/Python-${pkgver}":${LD_LIBRARY_PATH} \
-    "${srcdir}/Python-${pkgver}/python" -m test.regrtest -uall -x test_thread || warning "Tests failed"
+    "${srcdir}/Python-${pkgver}/python" -m test.regrtest -v -uall -x test_thread || warning "Tests failed"
 }
 
 package() {
