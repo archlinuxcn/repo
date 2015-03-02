@@ -1,14 +1,13 @@
-# $Id: PKGBUILD 208312 2014-03-20 14:12:59Z dan $
-# Upstream Maintainer: Dan McGee <dan@archlinux.org>
-# Maintainer: Fantix King <fantix.king at gmail.com>
+# $Id: PKGBUILD 230840 2015-02-05 20:20:07Z dan $
+# Maintainer: Dan McGee <dan@archlinux.org>
+# x32 Maintainer: Fantix King <fantix.king at gmail.com>
 
 _pkgbase=postgresql
 pkgbase=binx32-postgresql
-pkgname='binx32-postgresql'
-true && pkgname=('libx32-postgresql-libs' 'binx32-postgresql')
-pkgver=9.3.4
+pkgname=('libx32-postgresql-libs' 'binx32-postgresql')
+pkgver=9.4.1
 _majorver=${pkgver%.*}
-pkgrel=1
+pkgrel=1.1
 arch=('x86_64')
 url="http://www.postgresql.org/"
 license=('custom:PostgreSQL')
@@ -19,22 +18,22 @@ source=(http://ftp.postgresql.org/pub/source/v${pkgver}/postgresql-${pkgver}.tar
         postgresql-run-socket.patch
         postgresql.pam postgresql.logrotate
         postgresql.service postgresql.tmpfiles.conf postgresql-check-db-dir)
-md5sums=('d0a41f54c377b2d2fab4a003b0dac762'
+md5sums=('2cf30f50099ff1109d0aa517408f8eff'
          'e7fcec0b799f776e06c7400fab13302a'
          '170486b408ad3b6b24ae91b9196cb004'
          '96f82c38f3f540b53f3e5144900acf17'
          '951d1306d84450d603c47318833bb99d'
          '22809c2ab5f733b51abcef82f315b31c'
          '4ad974e4659d4474a40c54995ed5a809'
-         '2511a2d467e032080c22e20c43a17a7d')
-sha256sums=('9ee819574dfc8798a448dc23a99510d2d8924c2f8b49f8228cd77e4efc8a6621'
+         'eb6a2a084db77e9bb9ebb203b712fae5')
+sha256sums=('29ddb77c820095b8f52e5455e9c6c6c20cf979b0834ed1986a8857b84888c3a6'
             '15e068dd4896f56eaafd405945c5b57d0b9812e790328d8fc96dc1cbcb3cb10e'
             'f8c444140755e99b1ffd808404bda77c360c2843d13f6270b8dbd067d129b33a'
             '57dfd072fd7ef0018c6b0a798367aac1abb5979060ff3f9df22d1048bb71c0d5'
             'cc766679b3f1dd1e1fe1d4428b747ab44b8778c4127dc011cafd491842756e41'
             '89b061802eee198218c2936ca02ac61be90c46a3e76ebbe2ffa2f60c1cf07cba'
             '27f3ef84f59a008ee9a2324730386e11f68a9b10bbcd7ee4bbdbf4693b08d00d'
-            '745182b5977aff117109705a84558c1ce7d83bd369949c4138da71cd039de492')
+            'aa3802f39e2ba5cbaf373c7217894e2212e72a33f4247fe2cc5c1bfc6aad1986')
 
 build() {
   cd "${srcdir}/postgresql-${pkgver}"
@@ -46,22 +45,22 @@ build() {
   patch -Np1 < ../postgresql-run-socket.patch
   patch -Np1 < ../x32.patch
 
-  ./configure --prefix=/usr \
-  --libdir=/usr/libx32 \
-  --mandir=/usr/share/man \
-  --datadir=/usr/share/postgresql \
-  --sysconfdir=/etc \
-  --with-krb5 \
-  --with-libxml \
-  --with-openssl \
-  --without-perl \
-  --without-python \
-  --without-tcl \
-  --with-pam \
-  --with-system-tzdata=/usr/share/zoneinfo \
-  --with-pgport=5433 \
-  --enable-nls \
-  --enable-thread-safety
+  ./configure \
+    --prefix=/usr \
+    --libdir=/usr/libx32 \
+    --mandir=/usr/share/man \
+    --datadir=/usr/share/postgresql \
+    --sysconfdir=/etc \
+    --with-gssapi \
+    --with-libxml \
+    --with-openssl \
+    --without-perl \
+    --without-python \
+    --without-tcl \
+    --with-pam \
+    --with-system-tzdata=/usr/share/zoneinfo \
+    --enable-nls \
+    --enable-thread-safety
 
   make world
 }
@@ -74,8 +73,8 @@ package_libx32-postgresql-libs() {
 
   cd "${srcdir}/postgresql-${pkgver}"
 
-  # install libs
-  for dir in src/interfaces src/bin/pg_config src/bin/psql src/bin/pg_dump; do
+  # install libs and non-server binaries
+  for dir in src/interfaces src/bin/pg_config src/bin/pg_dump src/bin/psql src/bin/scripts; do
     make -C ${dir} DESTDIR="${pkgdir}" install
   done
 
@@ -99,7 +98,7 @@ package_libx32-postgresql-libs() {
 package_binx32-postgresql() {
   pkgdesc="A sophisticated object-relational DBMS (x32 ABI)"
   backup=('etc/pam.d/postgresql-x32' 'etc/logrotate.d/postgresql-x32')
-  depends=("libx32-postgresql-libs>=${pkgver}" 'libx32-krb5' 'libx32-libxml2' 'libx32-readline>=6.0' 'libx32-openssl>=1.0.0' "${_pkgbase}>=9.3")
+  depends=("libx32-postgresql-libs>=${pkgver}" 'libx32-krb5' 'libx32-libxml2' 'libx32-readline>=6.0' 'libx32-openssl>=1.0.0' 'libx32-pam' "${_pkgbase}>=9.3")
   optdepends=('postgresql-old-upgrade: upgrade from previous major version using pg_upgrade')
   options=('staticlibs')
   install=postgresql.install
@@ -112,7 +111,7 @@ package_binx32-postgresql() {
   make -C doc/src/sgml DESTDIR="${pkgdir}" install-man
 
   # we don't want these, they are in the -libs package
-  for dir in src/interfaces src/bin/pg_config src/bin/psql src/bin/pg_dump; do
+  for dir in src/interfaces src/bin/pg_config src/bin/pg_dump src/bin/psql src/bin/scripts; do
     make -C ${dir} DESTDIR="${pkgdir}" uninstall
   done
 
