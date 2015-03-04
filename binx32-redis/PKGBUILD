@@ -8,7 +8,7 @@
 _basepkgname=redis
 pkgname=binx32-redis
 pkgver=2.8.19
-pkgrel=1.1
+pkgrel=1.2
 pkgdesc='Advanced key-value store (x32 ABI)'
 arch=('x86_64')
 url='http://redis.io/'
@@ -23,7 +23,7 @@ source=(http://download.redis.io/releases/redis-$pkgver.tar.gz
         redis.conf-sane-defaults.patch
         redis-2.8.11-use-system-jemalloc.patch)
 md5sums=('3794107224043465603f48941f5c86a7'
-         'f6674d7e0d391740b1e80ade2087b367'
+         '1b5a10c639f3449867f3592b6635d9f2'
          '5a51ae6c10564edb716a93f22e821d67'
          '33b11afbb94d642606fc12ba4dda9985'
          'cab5413181e8d11c779bdf1e404a98ae'
