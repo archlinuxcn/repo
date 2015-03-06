@@ -7,7 +7,7 @@ USE_PYPY=1
 USE_SHARED=1
 
 pkgname=pypy
-pkgver=2.4.0
+pkgver=2.5.0
 pkgrel=1
 pkgdesc="A Python implementation written in Python, JIT enabled"
 url="http://pypy.org"
@@ -26,10 +26,8 @@ optdepends=('sqlite: sqlite3 module'
             'pypy-readline: better readline module')
 options=('debug' 'strip' '!emptydirs')
 license=('custom:MIT')
-source=("hg+https://bitbucket.org/pypy/pypy#tag=release-${pkgver}"
-        generic-item.patch)
-md5sums=('SKIP'
-         'b5485145368633a21a2edbe8f53ac42a')
+source=("hg+https://bitbucket.org/pypy/pypy#tag=release-${pkgver}")
+md5sums=('SKIP')
 
 _check_python() {
   _PYTHON=python2
@@ -40,8 +38,6 @@ _check_python() {
 
 prepare() {
   cd pypy
-
-  patch -Np1 < ../generic-item.patch
 }
 
 build() {
