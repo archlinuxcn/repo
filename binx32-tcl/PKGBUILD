@@ -1,19 +1,19 @@
-# $Id: PKGBUILD 197356 2013-10-25 02:52:58Z allan $
+# $Id: PKGBUILD 226131 2014-11-12 18:46:40Z eric $
 # Maintainer: Eric Bélanger <eric@archlinux.org>
 # x32 Maintainer: Fantix King <fantix.king at gmail.com>
 
 pkgname=binx32-tcl
-pkgver=8.6.1
-pkgrel=1
+pkgver=8.6.3
+pkgrel=1.2
 pkgdesc="The Tcl scripting language (x32 ABI)"
 arch=('x86_64')
 url="http://tcl.sourceforge.net/"
 license=('custom')
-depends=('zlib' 'tcl')
+depends=('libx32-zlib' 'tcl')
 makedepends=("gcc-multilib-x32")
 options=('staticlibs')
 source=(http://downloads.sourceforge.net/sourceforge/tcl/tcl${pkgver}-src.tar.gz)
-sha1sums=('5c83d44152cc0496cc0847a2495f659502a30e40')
+sha1sums=('026b4b6330205bdc49af12332ee17c2b01f76d37')
 
 prepare() {
   cd tcl${pkgver}
@@ -59,14 +59,16 @@ package() {
       -e "s#${srcdir}/tcl${pkgver}#/usr/include#" \
       -i "${pkgdir}/usr/libx32/tclConfig.sh"
 
-  sed -e "s#${srcdir}/tcl${pkgver}/unix/pkgs/tdbc1.0.0#/usr/libx32/tdbc1.0.0#" \
-      -e "s#${srcdir}/tcl${pkgver}/pkgs/tdbc1.0.0/generic#/usr/include#" \
-      -e "s#${srcdir}/tcl${pkgver}/pkgs/tdbc1.0.0/library#/usr/libx32/tcl${pkgver%.*}#" \
-      -e "s#${srcdir}/tcl${pkgver}/pkgs/tdbc1.0.0#/usr/include#" \
-      -i "${pkgdir}/usr/libx32/tdbc1.0.0/tdbcConfig.sh"
+  tdbcver=tdbc1.0.2
+  sed -e "s#${srcdir}/tcl${pkgver}/unix/pkgs/$tdbcver#/usr/libx32/$tdbcver#" \
+      -e "s#${srcdir}/tcl${pkgver}/pkgs/$tdbcver/generic#/usr/include#" \
+      -e "s#${srcdir}/tcl${pkgver}/pkgs/$tdbcver/library#/usr/libx32/tcl${pkgver%.*}#" \
+      -e "s#${srcdir}/tcl${pkgver}/pkgs/$tdbcver#/usr/include#" \
+      -i "${pkgdir}/usr/libx32/$tdbcver/tdbcConfig.sh"
 
-  sed -e "s#${srcdir}/tcl${pkgver}/unix/pkgs/itcl4.0.0#/usr/libx32/itcl4.0.0#" \
-      -e "s#${srcdir}/tcl${pkgver}/pkgs/itcl4.0.0/generic#/usr/include#" \
-      -e "s#${srcdir}/tcl${pkgver}/pkgs/itcl4.0.0#/usr/include#" \
-      -i "${pkgdir}/usr/libx32/itcl4.0.0/itclConfig.sh"
+  itclver=itcl4.0.2
+  sed -e "s#${srcdir}/tcl${pkgver}/unix/pkgs/$itclver#/usr/libx32/$itclver#" \
+      -e "s#${srcdir}/tcl${pkgver}/pkgs/$itclver/generic#/usr/include#" \
+      -e "s#${srcdir}/tcl${pkgver}/pkgs/$itclver#/usr/include#" \
+      -i "${pkgdir}/usr/libx32/$itclver/itclConfig.sh"
 }

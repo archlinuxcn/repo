@@ -13,3 +13,5 @@ post_upgrade() {
 pre_remove() {
   dkms remove -m nvidia/${1%-*} --all
 }
+
+# vim: ts=2 sw=2 et:

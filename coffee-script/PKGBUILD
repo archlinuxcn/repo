@@ -9,7 +9,7 @@
 
 pkgname=coffee-script
 _pkgname=coffeescript
-pkgver=1.9.0
+pkgver=1.9.1
 pkgrel=1
 pkgdesc='CoffeeScript is a little language that compiles into JavaScript.'
 arch=(any)
@@ -19,12 +19,12 @@ makedepends=()
 depends=(nodejs 'nodejs-mkdirp' underscorejs)
 optdepends=('nodejs-profile: to load coffee-script in node')
 source=(https://github.com/jashkenas/coffeescript/archive/$pkgver.tar.gz)
-sha256sums=('da49b6f5fc63bdde6ac3225c0b63a31a67d909a036ec6eda3f14827e78a160b0')
+sha256sums=('a5afbf376d38e9f1daf3b3f9e914b5dcf6e89e769f0dc81c63e567b931abba84')
 
 check() {
   export NODE_PATH=/usr/share/underscorejs:$NODE_PATH
   cd $_pkgname-$pkgver
-  bin/cake test:browser
+  bin/cake test:browser || return 1
 }
 
 package() {

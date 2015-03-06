@@ -1,9 +1,8 @@
-# Author: Anton Kovalyov <anton@kovalyov.net> (http://anton.kovalyov.net/)
-# Maintainer: jnbek
+# Maintainer: John D Jones III jnbek1972 __AT__ $mailservice_by_google __DOT__ com
 _npmname=jshint
-_npmver=2.5.10
+_npmver=2.6.0
 pkgname=nodejs-jshint # All lowercase
-pkgver=2.5.10
+pkgver=2.6.0
 pkgrel=1
 pkgdesc="Static analysis tool for JavaScript"
 arch=(any)
@@ -13,7 +12,7 @@ depends=('nodejs')
 optdepends=()
 source=(http://registry.npmjs.org/$_npmname/-/$_npmname-$_npmver.tgz)
 noextract=($_npmname-$_npmver.tgz)
-sha1sums=('2fef47ee0901914e31832123d5d3f434c28060ef')
+md5sums=('89d4f1ad7b9c65f666ccdf639ff026c1')
 
 package() {
   cd "$srcdir"

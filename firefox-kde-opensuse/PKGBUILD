@@ -8,7 +8,7 @@
 #_pgo=true
 
 pkgname=firefox-kde-opensuse
-pkgver=35.0.1
+pkgver=36.0
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
@@ -16,7 +16,7 @@ license=('MPL' 'GPL' 'LGPL')
 url="https://build.opensuse.org/package/show/mozilla:Factory/MozillaFirefox"
 depends=('gtk2' 'mozilla-common' 'libxt' 'startup-notification' 'mime-types'
          'dbus-glib' 'alsa-lib' 'desktop-file-utils' 'hicolor-icon-theme'
-	 'libvpx' 'icu'  'libevent' 'nss>=3.17.3' 'nspr>=4.10.7' 'hunspell' 
+	 'libvpx' 'icu>=54.1'  'libevent' 'nss>=3.17.4' 'nspr>=4.10.8' 'hunspell'
 	 'sqlite' 'libnotify' 'kmozillahelper')
 makedepends=('unzip' 'zip' 'diffutils' 'python2' 'yasm' 'mesa' 'imake'
              'xorg-server-xvfb' 'libpulse' 'gst-plugins-base-libs' 'inetutils')
@@ -27,10 +27,11 @@ provides=("firefox=${pkgver}")
 conflicts=('firefox')
 install=firefox.install
 options=('!emptydirs' '!makeflags')
-_patchrev=4372fb79b4d5
+_patchrev=e7e5b3d0f1b3
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
-source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.bz2
-        mozconfig firefox.desktop firefox-install-dir.patch vendor.js kde.js firefox-fixed-loading-icon.png
+source=(http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.bz2
+	#http://download.cdn.mozilla.net/pub/mozilla.org/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.bz2
+	mozconfig firefox.desktop firefox-install-dir.patch vendor.js kde.js firefox-fixed-loading-icon.png
 	rhbz-966424.patch
 	# Firefox patchset
 	$_patchurl/firefox-branded-icons.patch
@@ -42,6 +43,9 @@ source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/
 	$_patchurl/mozilla-nongnome-proxies.patch
 	$_patchurl/mozilla-prefer_plugin_pref.patch
 	$_patchurl/toolkit-download-folder.patch
+#	add_missing_pgo_rule.patch
+#	add_support_for_libnotify_again.patch
+#	unity-menubar.patch
 )
 
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
@@ -51,13 +55,6 @@ source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/
 _google_api_key=AIzaSyDwr302FpOSkGRpLlUpPThNTDPbXcIn_FM
 
 prepare() {
-  # check whether previous firefox version is installed
-  # firefox will not build if old /usr/bin/firefox exists
-  if pacman -T firefox && ! pacman -T "firefox=$pkgver"; then
-    error "Please uninstall firefox temporarily before building it (pacman -Rdd ...)"
-    exit 1
-  fi
-
   cd mozilla-release
 
   cp "$srcdir/mozconfig" .mozconfig
@@ -78,7 +75,14 @@ prepare() {
   patch -Np1 -i "$srcdir/firefox-kde.patch"
   patch -Np1 -i "$srcdir/firefox-no-default-ualocale.patch"
   patch -Np1 -i "$srcdir/firefox-branded-icons.patch"
-  
+
+  # add globalmenu support
+  #patch -Np1 -i "$srcdir/unity-menubar.patch"
+  # add support for libnotify once again #858919
+  #patch -Np1 -i "$srcdir/add_support_for_libnotify_again.patch"
+  # add missing rule for pgo builds
+  #patch -Np1 -i "$srcdir/add_missing_pgo_rule.patch"
+
   # configure script misdetects the preprocessor without an optimization level
   # https://bugs.archlinux.org/task/34644
   sed -i '/ac_cpp=/s/$CPPFLAGS/& -O2/' configure
@@ -151,7 +155,7 @@ package() {
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
 
-sha256sums=('c92b34e08e39e2d482a61194e79255478331a54bf86bf144dc38f3d4bfbc507a'
+sha256sums=('d1db20e5c9674ccc9c463ac3d52c9e8e465eef4b01c822a166458a7d0d5b4cf2'
             'd6468f627873bdfade1d62a3d84fbb3f53f57b233e691e4d28cda3d7e3e5096e'
             '175d03cf3d8eb420d24a5a3072be69c9603e3ddacd3a83f68f49754eaecf6c5a'
             'd86e41d87363656ee62e12543e2f5181aadcff448e406ef3218e91865ae775cd'
@@ -159,10 +163,10 @@ sha256sums=('c92b34e08e39e2d482a61194e79255478331a54bf86bf144dc38f3d4bfbc507a'
             'b8cc5f35ec35fc96ac5c5a2477b36722e373dbb57eba87eb5ad1276e4df7236d'
             '68e3a5b47c6d175cc95b98b069a15205f027cab83af9e075818d38610feb6213'
             '4f0046b39a8d98f6e4fc3360ec490cb2416e38c7b3e92699f7e511c206c2c961'
-            '9e67a4505deaefca2be253cd4f77f6089af76edd9507c1d54a1570cd51415b39'
-            'f1f9bd347a7abacd0f11a6871b7510eefdcd4e06f0628cc163e79946de4f8933'
+            '1f0afb90e47395c5221a89e72950f5eea4bb7b880757158e04bbb634d78f0b3b'
+            '7934a0d95f8c1a4d4b9acc81a58f9667fca7ce9b250fe78dbc995c7ecc0c3613'
             'a5f3a801478e73524a2ac12d376108cb330d5d74652f3466a679d54d3878902e'
-            'f8d475b3ea66d1872ca45b2be721d6a1e7fb714f06475ea5bbb1dc1c21d3655d'
+            '88cdf436143fcd63340dd896c9028c5482d8afab7573ce905968a3d03239c632'
             'b9feb66a33dc1644d7d277dc3fc166c655735de7100bc4e93f1fe44567f35345'
             'e8289ea4c1f8191e1e23661312ceee2128b8e790501b9a589d0d7bfc4384553f'
             '5f6b0970284d68d5ed18e6bb7ee1e9fc0025ab3c10aaa14c283adb21a4a20ee8'

@@ -1,39 +1,43 @@
-# Maintainer: yk < yk at archlinuxcn dot org >
+# Maintainer: Marcin Tydelski <marcin.tydelski@gmail.com> 
+# Contributor: Manuel Kehl <https://launchpad.net/~mank319, https://github.com/mank319/>
 
-_pkgname=go-for-it
-_gitname=Go-For-It
 pkgname=go-for-it-git
-pkgver=v1.2.12.g078b1a8
+pkgver=121.72e0d9a
 pkgrel=1
-pkgdesc="A simple and stylish productivity app, featuring a to-do list, merged with a timer that keeps your focus on the current task."
-arch=("i686" "x86_64")
-url="http://manuel-kehl.de/projects/go-for-it"
-license=("GPL3")
-depends=("gtk3")
-makedepends=("vala" "git" "cmake")
-provides=("$_pkgname")
-conflicts=("$_pkgname")
-install=$pkgname.install
-source=("git+https://github.com/mank319/$_gitname.git")
-sha256sums=("SKIP")
+_gitname=Go-For-It
+pkgdesc='A stylish to-do list with built-in productivity timer.'
+arch=('i686' 'x86_64')
+url='https://github.com/mank319/Go-For-It'
+license=('GPL3')
+depends=('gtk3' 'granite')
+optdepends=()
+makedepends=('vala' 'git' 'cmake')
+provides=("${pkgname%}")
+conflicts=("${pkgname%}")
+install="${pkgname%-*}.install"
+source=('git+https://github.com/mank319/Go-For-It.git')
+sha256sums=('SKIP')
+
 pkgver() {
-	cd "$srcdir/$_gitname"
-	git describe --always | cut -d"_" -f2 |sed "s/-/./g"
+  cd $_gitname
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
 }
 
 build() {
-	cd "$srcdir/$_gitname"
-	mkdir -p build
-	cd build
-	cmake ..
-	make
+  cd $_gitname
+
+  if [[ -d build ]]; then
+    rm -rf build
+  fi
+  mkdir build && cd build
+  cmake .. -DCMAKE_INSTALL_PREFIX=/usr
+  make
 }
 
 package() {
-	cd "$srcdir/$_gitname/build"
-	make DESTDIR="$pkgdir" install
-	cd "$pkgdir"
-	mv usr/local/bin usr/
-	mv usr/local/share usr/
-	rm -rf usr/local
+  cd $_gitname/build
+
+  make DESTDIR="${pkgdir}" install
 }
+
+# vim: ts=2 sw=2 et:

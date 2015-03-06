@@ -1,10 +1,10 @@
-# $Id: PKGBUILD 197362 2013-10-25 02:54:27Z allan $
+# $Id: PKGBUILD 226133 2014-11-12 19:06:51Z eric $
 # Maintainer: Eric Bélanger <eric@archlinux.org>
 # x32 Maintainer: Fantix King <fantix.king at gmail.com>
 
 pkgname=binx32-tk
-pkgver=8.6.1
-pkgrel=1
+pkgver=8.6.3
+pkgrel=1.1
 pkgdesc="A windowing toolkit for use with tcl (x32 ABI)"
 arch=('x86_64')
 url="http://tcl.sourceforge.net/"
@@ -13,7 +13,7 @@ depends=("tk" "binx32-tcl=${pkgver}" 'libx32-libxss' 'libx32-libxft')
 makedepends=("gcc-multilib-x32")
 options=('staticlibs')
 source=(http://downloads.sourceforge.net/sourceforge/tcl/tk${pkgver}-src.tar.gz)
-sha1sums=('ecfcc20833c04d6890b14a7920a04d16f2123a51')
+sha1sums=('244ddc0f64cc3d429c9d86135d0bbe2cf06c9360')
 
 build() {
   cd tk${pkgver}/unix

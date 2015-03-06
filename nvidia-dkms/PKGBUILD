@@ -4,8 +4,8 @@
 # Contributor: Atilla ÖNTAŞ <tarakbumba@gmail.com>
 
 pkgname=nvidia-dkms
-pkgver=346.35
-pkgrel=2
+pkgver=346.47
+pkgrel=1
 pkgdesc='NVIDIA kernel module sources (DKMS)'
 arch=('i686' 'x86_64')
 url='http://www.nvidia.com/'
@@ -16,12 +16,14 @@ optdepends=('linux-headers: Build the module for Arch kernel'
 provides=('nvidia')
 conflicts=('nvidia')
 install='nvidia-dkms.install'
-source=('linux3.18.patch')
+source=('linux3.18.patch'
+        'linux4.0.patch')
 source_i686=("http://us.download.nvidia.com/XFree86/Linux-x86/${pkgver}/NVIDIA-Linux-x86-${pkgver}.run")
 source_x86_64=("http://us.download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run")
-sha256sums=('63a52af60e2ee36a2efa41022780802de7eec5b315aa1580a2fa1eb208d8fa87')
-sha256sums_i686=('bba63c30c730ad7b8500a77c81cae58562b9f9b57cd576b61f37a2d8bc45df25')
-sha256sums_x86_64=('7dae481224fddc711c2478e92ae0efd032acb0a002c85a44fa99ad9e54322afd')
+sha256sums=('63a52af60e2ee36a2efa41022780802de7eec5b315aa1580a2fa1eb208d8fa87'
+            '0b2594eec2ed869245041ead9a3cbe92e5b9b2461c3ede7406004ffae240d6e2')
+sha256sums_i686=('bb21527dfcd9855e3ae53ae5b56c29456902354c79f76d859d007068cdf76a6e')
+sha256sums_x86_64=('d1b6672a9ddef2a01a527902b524dec232792cf9b61d3fa7bd0189488a961677')
 
 [[ $CARCH == i686 ]] && _pkg=NVIDIA-Linux-x86-${pkgver}
 [[ $CARCH == x86_64 ]] && _pkg=NVIDIA-Linux-x86_64-${pkgver}-no-compat32
@@ -36,6 +38,7 @@ prepare() {
   cd ${_pkg}
 
   patch -Np0 -i ../linux3.18.patch
+  patch -Np0 -i ../linux4.0.patch
 
   [[ $CARCH == x86_64 ]] && cat kernel/uvm/dkms.conf.fragment >> kernel/dkms.conf
 }
