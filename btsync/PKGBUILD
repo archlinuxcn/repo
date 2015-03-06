@@ -4,7 +4,7 @@
 # Maintainer: ava1ar <mail(at)ava1ar(dot)me>
 
 pkgname=btsync
-pkgver=1.4.110
+pkgver=2.0.81
 pkgrel=1
 pkgdesc="BitTorrent Sync - automatically sync files via secure, distributed technology"
 license=("custom:btsync")
@@ -13,6 +13,7 @@ url="http://www.bittorrent.com/sync"
 install=btsync.install
 backup=('etc/btsync.conf')
 optdepends=("btsync-autoconfig: Auto-create users' config files if needed") 
+conflicts=('btsync-1.4')
 source=(btsync.service btsync_user.service btsync.conf)
 source_arm+=("http://syncapp.bittorrent.com/${pkgver}/btsync_arm-${pkgver}.tar.gz")
 source_armv6h+=("http://syncapp.bittorrent.com/${pkgver}/btsync_arm-${pkgver}.tar.gz")
@@ -22,13 +23,11 @@ source_x86_64+=("http://syncapp.bittorrent.com/${pkgver}/btsync_x64-${pkgver}.ta
 sha1sums=('05038b03a673dd0207b2758a2e01db5d28c409d1'
           'd30deb7e41ba1d163b4a5e442b8d8118758d312a'
           'bf7d6bd7ffe2d23cce51a51e92fac3b82a7c87bb')
-sha1sums_i686=('60e36a8b3738235ae04d430da898621ce7da5dd1')
-sha1sums_x86_64=('459d25511dd4bb15ae36d5927576f574c27d54d1')
-sha1sums_arm=('02d2e44935403693d7f30df6fdd107bf9a6ae149')
-sha1sums_armv6h=('02d2e44935403693d7f30df6fdd107bf9a6ae149')
-sha1sums_armv7h=('02d2e44935403693d7f30df6fdd107bf9a6ae149')
-# temporary to enforce upgrade to pacman 4.2
-makedepends=('pacman>=4.2')
+sha1sums_i686=('0307bb0b5ca4731f7333e95e8e78587be1ea18e1')
+sha1sums_x86_64=('2f1e3e64c57873dcaf2139e7f3c7b0f592008174')
+sha1sums_arm=('4c22fc56e263ef15f1ffc7b6d21377e71761b431')
+sha1sums_armv6h=('4c22fc56e263ef15f1ffc7b6d21377e71761b431')
+sha1sums_armv7h=('4c22fc56e263ef15f1ffc7b6d21377e71761b431')
 
 package() {
 	# install main binary
