@@ -6,7 +6,7 @@
 # UNLICENCE <http://unlicense.org/>
 
 pkgname=vuze
-pkgver=5.5.0.0
+pkgver=5.6.0.0
 pkgrel=1
 _ver=${pkgver//./} 
 _extra="" # sometimes Azureus devs add letters at the end.
@@ -26,7 +26,7 @@ optdepends=(
   )
 noextract=("Vuze_${_ver}${_extra}.jar") 
 source=("http://downloads.sourceforge.net/azureus/vuze/Vuze_${_ver}/Vuze_${_ver}_linux.tar.bz2")
-sha256sums=('784d9f311d9642b9ffa95a28bcdbce5ee0cf67966dcb19173ad7dec59da7ebd2')
+sha256sums=('0c7f0300420d840cb9e569325c97735acdb042ddfc47e4fb4e4b257e5acc4df8')
 
 package() {
   cd "$srcdir/$pkgname"
