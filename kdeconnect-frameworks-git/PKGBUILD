@@ -8,7 +8,7 @@ arch=(i686 x86_64)
 url='https://projects.kde.org/projects/playground/base/kdeconnect-kde'
 license=(GPL2)
 depends=(kio qca-qt5 libfakekey hicolor-icon-theme)
-makedepends=(extra-cmake-modules git python)
+makedepends=(extra-cmake-modules git 'kcmutils' python)
 provides=(kdeconnect-frameworks)
 conflicts=(kdeconnect-frameworks kdeconnect)
 source=("git://anongit.kde.org/kdeconnect-kde.git#branch=frameworks")
