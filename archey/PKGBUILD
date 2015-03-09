@@ -20,7 +20,7 @@ source=('archey::git+http://github.com/djmelik/archey')
 
 pkgver() {
   cd "$srcdir/$pkgname"
-  git describe --long | sed -r 's/([^-]*g)/r\l/;s/-/./g'
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 build() {
