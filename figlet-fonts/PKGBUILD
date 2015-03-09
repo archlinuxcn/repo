@@ -20,7 +20,7 @@ md5sums=('ecfc312b626df0d04936200d074d2508'
          '6e2dec4499f7a7fe178522e02e0b6cd1'
          'b2d53f7e251014adcdb4d407c47f90ef'
          '49aa57ab989e8d952be037414b0bbbe4')
-build() {
+package() {
 	msg 'Copying figlet fonts...'
 	mkdir -p ${pkgdir}/usr/share/figlet/fonts/
 	find ${srcdir} | grep -i flf$ | while read font; do
