@@ -2,21 +2,21 @@
 # Contributor: Nick Hu <nickhu00@gmail.com>
 # Contributor: Fernando Carmona Varo <ferkiwi @t gmail dot com>
 pkgname=cataclysm-dda-ncurses
-pkgver=0.B
+pkgver=0.C
 pkgrel=1
 pkgdesc="Cataclysm: Dark Days Ahead is an actively maintained roguelike set in a post-apocalyptic world, forked from the original. (ncurses only)"
 arch=('i686' 'x86_64')
 url="http://www.cataclysmdda.com/"
 license=('CCPL:by-sa')
 
-depends=('gcc-libs' 'glibc' 'zlib' 'bzip2')
+depends=('glibc' 'zlib' 'bzip2')
 makedepends=('gettext' 'clang')
 optdepends=('lua51')
 conflicts=('cataclysm-dda' 'cataclysm-dda-git')
 
 install='cataclysm-dda-ncurses.install'
 source=("https://github.com/CleverRaven/Cataclysm-DDA/archive/${pkgver}.tar.gz")
-md5sums=('145a7b39997c29dd7ac245c8cfcdf258')
+md5sums=('805132ab7651ba93e5247ced7fe1fc97')
 
 build() {
 
@@ -39,7 +39,7 @@ package() {
   install -dm755 "$pkgdir/${instdir}/"
   install -Dm755 cataclysm cataclysm-launcher "$pkgdir/${instdir}/"
 
-  install -dm775 -g games "$pkgdir/${instdir}/memorial/"
+  install -dm775 -g games "$pkgdir/${instdir}/data/"
   cp -r data/* "$pkgdir/${instdir}/data"
 
   #User default mod list needs to be writeable
@@ -61,4 +61,6 @@ package() {
   # Localization
   install -dm755 -g games "$pkgdir/${instdir}/lang/mo"
   LOCALE_DIR="$pkgdir/${instdir}/lang/mo" lang/compile_mo.sh
+
+  install -dm775 -g games "$pkgdir/${instdir}/memorial/"
 }
