@@ -1,20 +1,20 @@
 # Maintainer: Yichao Yu <yyc1992@gmail.com>
 
 _pypyname=pypy
-# _pypyabi=-24
 _pypy3name=pypy3
-# _pypy3abi=-24
+_pypyabi=-25
+_pypy3abi=-24
 
 pkgbase=${_pypyname}-setuptools
 pkgname=(${_pypy3name}-setuptools ${_pypyname}-setuptools)
-pkgver=12.0.3
+pkgver=13.0.2
 pkgrel=1
 pkgdesc="Easily download, build, install, upgrade, and uninstall Python packages"
 arch=('any')
 license=('PSF')
 url="http://pypi.python.org/pypi/setuptools"
 source=(http://pypi.python.org/packages/source/s/setuptools/setuptools-${pkgver}.tar.gz)
-md5sums=('f07e4b0f4c1c9368fcd980d888b29a65')
+md5sums=('2f324593ce5f67fc6ae97bf28739d7c3')
 makedepends=(pypy pypy3${_pypy3abi})
 
 prepare() {
