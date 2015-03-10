@@ -6,8 +6,8 @@ pkgbase=linux-mainline               # Build stock -ARCH kernel
 #pkgbase=linux-custom       # Build kernel with a different name
 #_srcname=linux-3.18
 #_patchname=patch-3.19-rc6
-_srcname=linux-4.0-rc2
-pkgver=4.0rc2
+_srcname=linux-4.0-rc3
+pkgver=4.0rc3
 pkgrel=1
 arch=('i686' 'x86_64')
 url="http://www.kernel.org/"
@@ -25,14 +25,13 @@ source=("https://www.kernel.org/pub/linux/kernel/v4.x/testing/${_srcname}.tar.xz
         'linux.preset'
         'change-default-console-loglevel.patch'
         )
-
-sha256sums=('49ca726462ad6f1d233d7310df2796c9d45b49878e845f6e93ad1df1c2a052da'
-            'd3794c8b2cd11b71914b41f7a4e861369d4fa3c29fdd9e1d677ff0c2167eeb52'
-            'df7886f5d57f8f85e89987066dfa5c316e922dc0b22e6e6ad01331333db52377'
+sha256sums=('6de5f352b3701e4fb40e2a5177426fee4921354e577ab0722cdbf2d3b2332de9'
+            '704a479de77c9022e5c7a797d2cd7fd0e4ba1f52f9039ec8a80efd57f7e9f0d8'
+            '59830f47c1be39f874640d762dca55f972aca549a7a65ba2f1dac184251dabb2'
             'f0d90e756f14533ee67afda280500511a62465b4f76adcc5effa95a40045179c'
             '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99')
 validpgpkeys=(
-              'ABAF11C65A2970B130ABE3C479BE3E4300411886' # Linux Torvalds
+              'ABAF11C65A2970B130ABE3C479BE3E4300411886' # Linus Torvalds
               '647F28654894E3BD457199BE38DBBDC86092693E' # Greg Kroah-Hartman
              )
 
@@ -135,8 +134,6 @@ _package() {
   rm -f "${pkgdir}"/lib/modules/${_kernver}/{source,build}
   # remove the firmware
   rm -rf "${pkgdir}/lib/firmware"
-  # gzip -9 all modules to save 100MB of space
-  find "${pkgdir}" -name '*.ko' -exec gzip -9 {} \;
   # make room for external modules
   ln -s "../extramodules-${_basekernel}${_kernelname:--ARCH}" "${pkgdir}/lib/modules/${_kernver}/extramodules"
   # add real version for building modules and running depmod from post_install/upgrade
