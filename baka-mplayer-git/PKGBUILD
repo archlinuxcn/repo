@@ -1,28 +1,30 @@
 # Maintainer: u8sand <u8sand@gmail.com>
 pkgname=baka-mplayer-git
-pkgver=2.0.1
+pkgver=2.0.2
 pkgrel=1
 pkgdesc="Baka MPlayer is a free and open source, cross-platform, libmpv based multimedia player."
 url="http://bakamplayer.u8sand.net/"
 arch=('x86_64' 'i686')
 license=('GPLv2')
 depends=('mpv' 'qt5-base' 'qt5-declarative' 'qt5-svg' 'qt5-x11extras')
-makedepends=('git' 'make' 'pkg-config')
+makedepends=('git' 'make' 'pkg-config' 'qt5-tools')
 optdepends=(
+  'qt5-translations: qt5 dialog translations'
+  'mpv-git: bleeding-edge mpv features'
   'youtube-dl: support for remote video streaming'
 )
 conflicts=('bakamplayer' 'baka-mplayer')
 provides=('baka-mplayer')
 
-_gitroot="git://github.com/u8sand/Baka-MPlayer.git"
+_gitroot="https://github.com/u8sand/Baka-MPlayer.git"
 _gitname="master"
 
 build() {
   cd "$srcdir"
   git clone ${_gitroot} -b ${_gitname} ${pkgname}
   cd "$pkgname"
-	./configure INSTROOT="$pkgdir" CONFIG+=install_translations
-	make -j `grep -c ^processor /proc/cpuinfo`
+  ./configure INSTROOT="$pkgdir" CONFIG+=install_translations
+  make -j `grep -c ^processor /proc/cpuinfo`
 }
 
 package() {

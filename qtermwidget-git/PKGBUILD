@@ -4,7 +4,7 @@
 
 _pkgname=qtermwidget
 pkgname=$_pkgname-git
-pkgver=0.6.0
+pkgver=0.6.0.11.g3ce99c7
 pkgrel=1
 pkgdesc="A terminal widget for Qt"
 arch=("i686" "x86_64")
@@ -14,7 +14,7 @@ provides=("$_pkgname")
 conflicts=("$_pkgname")
 depends=("qt5-base")
 makedepends=("git" "cmake")
-source=("git://github.com/qterminal/$_pkgname.git")
+source=("git+https://github.com/qterminal/$_pkgname.git")
 sha256sums=("SKIP")
 
 pkgver() {
@@ -27,6 +27,7 @@ build() {
 	cd build
 	cmake "$srcdir/$_pkgname" \
 		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_INSTALL_LIBDIR=lib \
 		-DCMAKE_BUILD_TYPE=Release \
 		-DBUILD_DESIGNER_PLUGIN=0 \
 		-DUSE_QT5=true

@@ -9,13 +9,18 @@ _minor=19
 _basekernel=${_major}.${_minor}
 _srcname=linux-${_major}.${_minor}
 pkgbase=linux-pf
-_pfrel=1
+_pfrel=2
 _kernelname=-pf
 _pfpatchhome="http://pf.natalenko.name/sources/${_basekernel}/"
 _pfpatchname="patch-${_basekernel}${_kernelname}${_pfrel}"
 _aufs3="http://git.code.sf.net/p/aufs/aufs3-standalone"
-_CPUSUFFIXES_KBUILD=( CORE2 K7 K8 K10 BARCELONA BOBCAT BULLDOZER PILEDRIVER PSC ATOM PENTIUMII PENTIUMIII PENTIUMM PENTIUM4 COREI7 COREI7AVX COREAVXI COREAVX2 )
-_CPUSUFFIXES=( core2 k7 k8 k10 barcelona bobcat bulldozer piledriver psc atom p2 p3 pm p4 nehalem sandybridge ivybridge haswell)
+_CPUSUFFIXES_KBUILD=(
+  CORE2 K7 K8 K10 BARCELONA BOBCAT BULLDOZER PILEDRIVER PSC
+  ATOM PENTIUMII PENTIUMIII PENTIUMM PENTIUM4 NEHALEM SANDYBRIDGE
+  IVYBRIDGE HASWELL BROADWELL)
+_CPUSUFFIXES=( core2 k7 k8 k10 barcelona bobcat
+	       bulldozer piledriver psc atom p2 p3 pm p4
+	       nehalem sandybridge ivybridge haswell broadwell)
 
 ### PATCH AND BUILD OPTIONS
 # taken from graysky linux-ck see: https://aur.archlinux.org/packages/linux-ck
@@ -61,7 +66,7 @@ pkgname=('linux-pf')
 true && pkgname=('linux-pf' 'linux-pf-headers')
 pkgver=${_basekernel}.${_pfrel}
 pkgrel=1
-arch=('x86_64')
+arch=('i686' 'x86_64')
 url="http://pf.natalenko.name/"
 license=('GPL2')
 options=('!strip')
@@ -395,21 +400,25 @@ package_linux-pf() {
          pkgname="${pkgbase}-p4"
          pkgdesc="${_pkgdesc} Intel Pentium4 optimized."
          ;;
-     COREI7)
+     NEHALEM)
 	 pkgname="${pkgbase}-nehalem"
          pkgdesc="${_pkgdesc} Intel Core Nehalem optimized."
 	 ;;
-     COREI7AVX)
+     SANDYBRIDGE)
          pkgname="${pkgbase}-sandybridge"
          pkgdesc="${_pkgdesc} Intel 2nd Gen Core processors including Sandy Bridge."
 	 ;;
-     COREAVXI)
+     IVYBRIDGE)
          pkgname="${pkgbase}-ivybridge"
          pkgdesc="${_pkgdesc} Intel 3rd Gen Core processors including Ivy Bridge."
 	 ;;
-     COREAVX2)
+     HASWELL)
          pkgname="${pkgbase}-haswell"
-         pkgdesc="${_pkgdesc} Intel AVX-2 processors including Haswell."
+         pkgdesc="${_pkgdesc} 4th Gen Core processors including Haswell."
+	 ;;
+     BROADWELL)
+         pkgname="${pkgbase}-broadwell"
+         pkgdesc="${_pkgdesc} 5th Gen Core processors including Broadwell."
 	 ;;
      default)
   # Note to me: DO NOT EVER REMOVE THIS. It's for the AUR PKGBUILD parser.
@@ -655,8 +664,8 @@ pkgdesc="Linux kernel and modules with the pf-kernel patch [-ck patchset (BFS in
 
 # makepkg -g >>PKGBUILD
 sha256sums=('be42511fe5321012bb4a2009167ce56a9e5fe362b4af43e8c371b3666859806c'
-            'bddab3e11f9c1986552b67feca7cd2613fce33893a33aece95bf00bffbb39278'
+            'acf7575bf448696ce095682df2eddb01854a0ef7b08bac716eaf44251ac46d21'
             '82d660caa11db0cd34fd550a049d7296b4a9dcd28f2a50c81418066d6e598864'
             '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99'
-            'e9576c84d13c286f5a7659ad5fa0221105ebf023c2cab6ef20cff0f8c48478ef'
+            'ea25fa1677818343b710ff07c7cef9a3379aa9405005f54b776ddf5c204d946d'
             'SKIP')
