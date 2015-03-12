@@ -1,0 +1,14 @@
+post_install() {
+  if [[ -x /usr/bin/update-desktop-database ]]
+  then
+    /usr/bin/update-desktop-database -q
+  fi
+}
+
+post_upgrade() {
+  post_install
+}
+
+post_remove() {
+  post_install
+}
