@@ -6,6 +6,7 @@
 
 from lilaclib import *
 
+depends = ["lua51-doc"]
 
 build_prefix = ['extra-x86_64', 'extra-i686']
 pre_build = aur_pre_build
