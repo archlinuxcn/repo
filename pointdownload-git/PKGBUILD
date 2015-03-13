@@ -29,22 +29,13 @@ package() {
 	cd $srcdir/PointDownload
 	INSTALL_ROOT=$pkgdir/ make install
 	install -d $pkgdir/usr/share/applications
-	install -d $pkgdir/opt/Point/PointDownload
-	install -d $pkgdir/opt/Point/PopupWindow
 	install -Dm644 pointpopup.desktop $pkgdir/usr/share/applications
 	install -Dm644 pointdownload.desktop $pkgdir/usr/share/applications
-	install -Dm644 point.png $pkgdir/opt/Point/PointDownload
 
 	cd $pkgdir
-	mv opt/PointDownload/bin/PointDownload opt/Point/PointDownload
-	mv opt/XwareStartUp/bin/XwareStartUp opt/Point/PointDownload
-	mv opt/PointPopup/bin/PointPopup opt/Point/PopupWindow
-	rm -r opt/PointDownload
-	rm -r opt/PointPopup
-	rm -r opt/XwareStartUp
 
 	install -d $pkgdir/usr/bin
-	
+
 	cat > $pkgdir/usr/bin/pointdownload <<"EOF"
 #!/bin/sh
 /opt/Point/PointDownload/PointDownload $@
