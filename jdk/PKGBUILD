@@ -3,10 +3,10 @@
 
 pkgname=jdk
 _major=8
-_minor=31
-_build=b13
+_minor=40
+_build=b25
 pkgver=${_major}u${_minor}
-pkgrel=2
+pkgrel=1
 pkgdesc="Oracle Java Development Kit"
 arch=('i686' 'x86_64')
 url=http://www.oracle.com/technetwork/java/javase/downloads/index.html
@@ -44,18 +44,18 @@ backup=("etc/java-$_jname/amd64/jvm.cfg"
 [[ $CARCH = i686 ]] && backup[0]="etc/java-$_jname/i386/jvm.cfg"
 options=('!strip') # JDK debug-symbols
 install=$pkgname.install
-source_x86_64=("http://download.oracle.com/otn-pub/java/jdk/$pkgver-$_build/$pkgname-$pkgver-linux-x64.tar.gz")
-source_i686=("http://download.oracle.com/otn-pub/java/jdk/$pkgver-$_build/$pkgname-$pkgver-linux-i586.tar.gz")
 source=("jconsole-$_jname.desktop"
         "jmc-$_jname.desktop"
         "jvisualvm-$_jname.desktop"
         "policytool-$_jname.desktop")
-md5sums_x86_64=('173e24bc2d5d5ca3469b8e34864a80da')
-md5sums_i686=('4e9aec24367672412c7d10105a2a2bbb')
-md5sums=('b78e61e404d0189d7622c093966dc8d9'  # jconsole-$_jname.desktop
-         'bee5f2ad4ed589a1bebbb5768e74f434'  # jmc-$_jname.desktop
-         '7206dcf95cd3fd194ae45a1cb82d0b50'  # jvisualvm-$_jname.desktop
-         '3f4f5290cdce3d326fd77ba7954dcac6') # policytool-$_jname.desktop
+source_i686=("http://download.oracle.com/otn-pub/java/jdk/$pkgver-$_build/$pkgname-$pkgver-linux-i586.tar.gz")
+source_x86_64=("http://download.oracle.com/otn-pub/java/jdk/$pkgver-$_build/$pkgname-$pkgver-linux-x64.tar.gz")
+md5sums=('b4f0da18e03f7a9623cb073b65dde6c1'
+         '8f0ebcead2aecad67fbd12ef8ced1503'
+         'a4a21b064ff9f3c3f3fdb95edf5ac6f3'
+         '98245ddb13914a74f0cc5a028fffddca')
+md5sums_i686=('1c4b119e7f25da30fa1d0ba62deb66f9')
+md5sums_x86_64=('159a3186bb88b77b4eb9ff9971222736')
 ## Alternative mirror, if your local one is throttled:
 #source_x86_64=("http://ftp.wsisiz.edu.pl/pub/pc/pozyteczne%20oprogramowanie/java/$pkgname-$pkgver-linux-x64.gz")
 
@@ -105,7 +105,7 @@ package() {
     mv jre/lib/desktop/* "$pkgdir"/usr/share/
     install -m644 "$srcdir"/*.desktop "$pkgdir"/usr/share/applications/
 
-    # Move configs to /etc and link back to /usr: /usr/lib/jvm/java-$_jname/jre/lib -> /etc
+    # Move confs to /etc and link back to /usr: /usr/lib/jvm/java-$_jname/jre/lib -> /etc
     for new_etc_path in ${backup[@]}; do
         # Old location
         old_usr_path="jre/lib/${new_etc_path#*$_jname/}"
