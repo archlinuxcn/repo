@@ -2,8 +2,8 @@
 
 pkgname=chromium-pepper-flash
 pkgdesc="Google Chrome's Pepper Flash plugin for Chromium (stable version)"
-_verbld=40.0.2214.111-1
-pkgver=16.0.0.305
+_verbld=41.0.2272.89-1
+pkgver=17.0.0.134
 pkgrel=1
 epoch=1
 arch=('i686' 'x86_64')
@@ -11,14 +11,12 @@ url="http://www.google.com/chrome"
 license=('custom:chrome')
 conflicts=('chromium-pepper-flash-dev')
 install=chromium-pepper-flash.install
-# temporary to enforce upgrade to pacman 4.2
-makedepends=('pacman>=4.2')
 source=(license.html::https://www.google.com/chrome/intl/en/eula_text.html)
 source_i686+=("https://dl.google.com/linux/chrome/rpm/stable/i386/google-chrome-stable-${_verbld}.i386.rpm")
 source_x86_64+=(https://dl.google.com/linux/chrome/rpm/stable/x86_64/google-chrome-stable-${_verbld}.x86_64.rpm)
 sha256sums=('c714679be9b1de35475bfcd58b4d2fa5baf87c00eb049185ec062de276203d13')
-sha256sums_i686=('e43ec5e42d2834ccfdaa356b3ff833e6749847330d5b10b93700459ac1348ed4')
-sha256sums_x86_64=('4b5bc3233aa8ac9396d34dfe5bfa31c328e14143721a27d7d56880131f99093f')
+sha256sums_i686=('450f9be70b4c104fe157e8ec6afeedfd37ece86d7dff03330c98aca2bfe37e5b')
+sha256sums_x86_64=('ab54c02be9f4570c43468839642cab173e528945195faaad75186429df7266fc')
 
 package() {
 	# create required directories
