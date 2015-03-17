@@ -4,7 +4,7 @@
 # Maintainer: ava1ar <mail(at)ava1ar(dot)me>
 
 pkgname=btsync
-pkgver=2.0.81
+pkgver=2.0.85
 pkgrel=1
 pkgdesc="BitTorrent Sync - automatically sync files via secure, distributed technology"
 license=("custom:btsync")
@@ -15,19 +15,19 @@ backup=('etc/btsync.conf')
 optdepends=("btsync-autoconfig: Auto-create users' config files if needed") 
 conflicts=('btsync-1.4')
 source=(btsync.service btsync_user.service btsync.conf)
-source_arm+=("http://syncapp.bittorrent.com/${pkgver}/btsync_arm-${pkgver}.tar.gz")
-source_armv6h+=("http://syncapp.bittorrent.com/${pkgver}/btsync_arm-${pkgver}.tar.gz")
-source_armv7h+=("http://syncapp.bittorrent.com/${pkgver}/btsync_arm-${pkgver}.tar.gz")
-source_i686+=("http://syncapp.bittorrent.com/${pkgver}/btsync_i386-${pkgver}.tar.gz")
-source_x86_64+=("http://syncapp.bittorrent.com/${pkgver}/btsync_x64-${pkgver}.tar.gz")
+source_arm+=("https://download-cdn.getsyncapp.com/${pkgver}/linux-arm/BitTorrent-Sync_arm.tar.gz")
+source_armv6h+=("https://download-cdn.getsyncapp.com/${pkgver}/linux-arm/BitTorrent-Sync_arm.tar.gz")
+source_armv7h+=("https://download-cdn.getsyncapp.com/${pkgver}/linux-arm/BitTorrent-Sync_arm.tar.gz")
+source_i686+=("https://download-cdn.getsyncapp.com/${pkgver}/linux-i386/BitTorrent-Sync_i386.tar.gz")
+source_x86_64+=("https://download-cdn.getsyncapp.com/${pkgver}/linux-x64/BitTorrent-Sync_x64.tar.gz")
 sha1sums=('05038b03a673dd0207b2758a2e01db5d28c409d1'
           'd30deb7e41ba1d163b4a5e442b8d8118758d312a'
           'bf7d6bd7ffe2d23cce51a51e92fac3b82a7c87bb')
-sha1sums_i686=('0307bb0b5ca4731f7333e95e8e78587be1ea18e1')
-sha1sums_x86_64=('2f1e3e64c57873dcaf2139e7f3c7b0f592008174')
-sha1sums_arm=('4c22fc56e263ef15f1ffc7b6d21377e71761b431')
-sha1sums_armv6h=('4c22fc56e263ef15f1ffc7b6d21377e71761b431')
-sha1sums_armv7h=('4c22fc56e263ef15f1ffc7b6d21377e71761b431')
+sha1sums_i686=('e1a90fba6041655d0df2589debf6dbd105f54e4e')
+sha1sums_x86_64=('be0aa418c415c9410b1c7e2f2f8a1338217f53bc')
+sha1sums_arm=('25773dc23b6ca63ea7258cccf02bc8f887c42cf1')
+sha1sums_armv6h=('25773dc23b6ca63ea7258cccf02bc8f887c42cf1')
+sha1sums_armv7h=('25773dc23b6ca63ea7258cccf02bc8f887c42cf1')
 
 package() {
 	# install main binary

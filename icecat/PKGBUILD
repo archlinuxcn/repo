@@ -6,7 +6,7 @@
 # Contributor: Muhammad 'MJ' Jassim <UnbreakableMJ@gmail.com> 
 
 pkgname=icecat
-pkgver=31.4.0
+pkgver=31.5.0
 _pkgverbase=${pkgver%%.*}
 pkgrel=1
 pkgdesc="GNU version of the Firefox browser."
@@ -31,7 +31,7 @@ source=(http://ftp.gnu.org/gnu/gnuzilla/${pkgver}/${pkgname}-${pkgver}.tar.bz2
         rhbz-966424.patch
         vendor.js)
 
-md5sums=('f0e9e46415fba8b7acb8e30b08b98d56'
+md5sums=('8d80d83abbd1d2dd3733be591d98ce30'
          '0967f59d5485300844def52ccb0bc509'
          'e81ad01dbc16ba28bf92ba4b7c309ca7'
          'd93fe402b87cd000a869e1fd6badc6c9'
@@ -43,32 +43,19 @@ prepare() {
   cd "${srcdir}/${pkgname}-${pkgver}"
 
   # Patch to move files directly to /usr/lib/icecat. No more symlinks.
-#  sed -e 's;$(libdir)/$(MOZ_APP_NAME)-$(MOZ_APP_VERSION);$(libdir)/$(MOZ_APP_NAME);g' -i config/baseconfig.mk -i js/src/config/baseconfig.mk
-#  sed -e 's;$(libdir)/$(MOZ_APP_NAME)-devel-$(MOZ_APP_VERSION);$(libdir)/$(MOZ_APP_NAME)-devel;g' -i config/baseconfig.mk -i js/src/config/baseconfig.mk
   sed -e 's;$(libdir)/$(MOZ_APP_NAME)-$(MOZ_APP_VERSION);$(libdir)/$(MOZ_APP_NAME);g' -i config/baseconfig.mk
   sed -e 's;$(libdir)/$(MOZ_APP_NAME)-devel-$(MOZ_APP_VERSION);$(libdir)/$(MOZ_APP_NAME)-devel;g' -i config/baseconfig.mk
 
   # https://bugs.archlinux.org/task/41689
   patch -Np1 -i ../rhbz-966424.patch
 
-  # Patch to change default home directory to ~/.gnuzilla
-  sed -e 's/^MOZ_USER_DIR=".mozilla"/MOZ_USER_DIR=".gnuzilla"/g' -i configure.in
-
   msg2 "Starting build..."
 
   cp -v ${srcdir}/mozconfig .mozconfig
 
-  # Fix PRE_RELEASE_SUFFIX
-#  sed -i '/^PRE_RELEASE_SUFFIX := ""/s/ ""//' \
-#    browser/base/Makefile.in
-
   # WebRTC build tries to execute "python" and expects Python 2
   mkdir "$srcdir/path"
   ln -s /usr/bin/python2 "$srcdir/path/python"
-
-  # configure script misdetects the preprocessor without an optimization level
-  # https://bugs.archlinux.org/task/34644
-#  sed -i '/ac_cpp=/s/$CPPFLAGS/& -O2/' configure
 
 }
 

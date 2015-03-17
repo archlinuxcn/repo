@@ -1,0 +1,10 @@
+post_install() {
+    echo "An example config is provided in /etc/mpdscribble.conf.example"
+    echo
+    echo "For a system-wide config, copy this file to /etc/mpdscribble.conf"
+    echo "For a per-user config, copy this file to ~/.mpdscribble/mpdscribble.conf"
+}
+
+op="$1"
+shift
+$op $*

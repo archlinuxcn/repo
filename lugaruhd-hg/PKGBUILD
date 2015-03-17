@@ -2,15 +2,15 @@
 # Contributor: Humbert Julien <julroy67 [AT] gmail.com>
 _hgname=lugaru
 pkgname="${_hgname}hd-hg"
-pkgver=506.e435472cb42f
-pkgrel=1
-pkgdesc="A open-source third-persion action game with revamped graphics featuring a unique close-range combat system"
+pkgver=550.2aac6aa9913f
+pkgrel=2
+pkgdesc="An open-source third-persion action game featuring a unique close-range combat system"
 arch=('i686' 'x86_64')
 license=('GPL' 'CCPL:cc-by-sa' 'custom')
-url="http://code.google.com/p/lugaru"
+url='https://bitbucket.org/osslugaru/lugaru'
 depends=('sdl' 'openal' 'libjpeg' 'libpng' 'libvorbis')
 makedepends=('mercurial' 'gcc-libs' 'sdl' 'openal' 'cmake' 'libjpeg' 'libpng' 'libvorbis')
-source=("${_hgname}::hg+https://${_hgname}.googlecode.com/hg"
+source=("${_hgname}::hg+https://bitbucket.org/osslugaru/${_hgname}"
         "${_hgname}.launcher"
         "${_hgname}.desktop")
 sha256sums=('SKIP'
@@ -31,7 +31,7 @@ build() {
 package() {
     cd "${_hgname}"
     make PREFIX=/usr DESTDIR="${pkgdir}" install
-	
+
     cd "${srcdir}"
 	install -Dm755 "${_hgname}.launcher" "${pkgdir}/usr/bin/${_hgname}"
 	install -Dm644 "${_hgname}/Source/win-res/${_hgname//l/L}.png" "${pkgdir}/usr/share/pixmaps/${_hgname//l/L}.png"

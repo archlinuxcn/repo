@@ -1,0 +1,126 @@
+diff -Nur awesome-3.4.14-orig/color.h awesome-3.4.14/color.h
+--- awesome-3.4.14-orig/color.h	2012-12-24 22:36:05.000000000 +0800
++++ awesome-3.4.14/color.h	2013-01-08 15:45:25.411397999 +0800
+@@ -25,7 +25,7 @@
+ 
+ #include <xcb/xcb.h>
+ #include <stdbool.h>
+-#include <lua.h>
++#include <lua5.1/lua.h>
+ 
+ typedef struct
+ {
+diff -Nur awesome-3.4.14-orig/common/lualib.h awesome-3.4.14/common/lualib.h
+--- awesome-3.4.14-orig/common/lualib.h	2012-12-24 22:36:05.000000000 +0800
++++ awesome-3.4.14/common/lualib.h	2013-01-08 15:44:52.001572007 +0800
+@@ -22,7 +22,7 @@
+ #ifndef AWESOME_COMMON_LUALIB
+ #define AWESOME_COMMON_LUALIB
+ 
+-#include <lauxlib.h>
++#include <lua5.1/lauxlib.h>
+ #include "common/util.h"
+ 
+ /** Lua function to call on dofuction() error */
+diff -Nur awesome-3.4.14-orig/keygrabber.h awesome-3.4.14/keygrabber.h
+--- awesome-3.4.14-orig/keygrabber.h	2012-12-24 22:36:05.000000000 +0800
++++ awesome-3.4.14/keygrabber.h	2013-01-08 15:52:15.105936999 +0800
+@@ -22,7 +22,7 @@
+ #ifndef AWESOME_KEYGRABBER_H
+ #define AWESOME_KEYGRABBER_H
+ 
+-#include <lua.h>
++#include <lua5.1/lua.h>
+ #include <xcb/xcb.h>
+ 
+ int luaA_keygrabber_stop(lua_State *);
+diff -Nur awesome-3.4.14-orig/luaa.c awesome-3.4.14/luaa.c
+--- awesome-3.4.14-orig/luaa.c	2012-12-24 22:36:05.000000000 +0800
++++ awesome-3.4.14/luaa.c	2013-01-08 15:54:41.725175461 +0800
+@@ -23,9 +23,9 @@
+ 
+ #include <ev.h>
+ 
+-#include <lua.h>
+-#include <lauxlib.h>
+-#include <lualib.h>
++#include <lua5.1/lua.h>
++#include <lua5.1/lauxlib.h>
++#include <lua5.1/lualib.h>
+ 
+ #include <basedir_fs.h>
+ 
+diff -Nur awesome-3.4.14-orig/luaa.h awesome-3.4.14/luaa.h
+--- awesome-3.4.14-orig/luaa.h	2012-12-24 22:36:05.000000000 +0800
++++ awesome-3.4.14/luaa.h	2013-01-08 15:50:49.319715490 +0800
+@@ -24,8 +24,8 @@
+ 
+ #include <ev.h>
+ 
+-#include <lua.h>
+-#include <lauxlib.h>
++#include <lua5.1/lua.h>
++#include <lua5.1/lauxlib.h>
+ 
+ #include <basedir.h>
+ 
+diff -Nur awesome-3.4.14-orig/mousegrabber.h awesome-3.4.14/mousegrabber.h
+--- awesome-3.4.14-orig/mousegrabber.h	2012-12-24 22:36:05.000000000 +0800
++++ awesome-3.4.14/mousegrabber.h	2013-01-08 15:52:29.932526670 +0800
+@@ -22,7 +22,7 @@
+ #ifndef AWESOME_MOUSEGRABBER_H
+ #define AWESOME_MOUSEGRABBER_H
+ 
+-#include <lua.h>
++#include <lua5.1/lua.h>
+ #include <xcb/xcb.h>
+ 
+ int luaA_mousegrabber_stop(lua_State *);
+diff -Nur awesome-3.4.14-orig/mouse.h awesome-3.4.14/mouse.h
+--- awesome-3.4.14-orig/mouse.h	2012-12-24 22:36:05.000000000 +0800
++++ awesome-3.4.14/mouse.h	2013-01-08 15:45:40.977983706 +0800
+@@ -24,7 +24,7 @@
+ 
+ #include <stdbool.h>
+ #include <xcb/xcb.h>
+-#include <lua.h>
++#include <lua5.1/lua.h>
+ 
+ bool mouse_query_pointer(xcb_window_t, int16_t *, int16_t *, xcb_window_t *, uint16_t *);
+ int luaA_mouse_pushstatus(lua_State *, int, int, uint16_t);
+diff -Nur awesome-3.4.14-orig/selection.h awesome-3.4.14/selection.h
+--- awesome-3.4.14-orig/selection.h	2012-12-24 22:36:05.000000000 +0800
++++ awesome-3.4.14/selection.h	2013-01-08 15:52:44.329118460 +0800
+@@ -22,7 +22,7 @@
+ #ifndef AWESOME_SELECTION_H
+ #define AWESOME_SELECTION_H
+ 
+-#include <lua.h>
++#include <lua5.1/lua.h>
+ 
+ int luaA_selection_get(lua_State *);
+ 
+diff -Nur awesome-3.4.14-orig/strut.h awesome-3.4.14/strut.h
+--- awesome-3.4.14-orig/strut.h	2012-12-24 22:36:05.000000000 +0800
++++ awesome-3.4.14/strut.h	2013-01-08 15:49:34.413437104 +0800
+@@ -22,7 +22,7 @@
+ #ifndef AWESOME_STRUT_H
+ #define AWESOME_STRUT_H
+ 
+-#include <lua.h>
++#include <lua5.1/lua.h>
+ #include <stdint.h>
+ #include <stdbool.h>
+ 
+diff -Nur awesome-3.4.14-orig/timer.h awesome-3.4.14/timer.h
+--- awesome-3.4.14-orig/timer.h	2012-12-24 22:36:05.000000000 +0800
++++ awesome-3.4.14/timer.h	2013-01-08 15:53:01.432362856 +0800
+@@ -22,7 +22,7 @@
+ #ifndef AWESOME_TIMER
+ #define AWESOME_TIMER
+ 
+-#include <lua.h>
++#include <lua5.1/lua.h>
+ 
+ void timer_class_setup(lua_State *);
+ 
