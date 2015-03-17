@@ -1,0 +1,22 @@
+# Maintainer: Steven Honeyman <stevenhoneyman at gmail com>
+
+pkgname=obkey-git
+pkgver=20140525
+pkgrel=1
+pkgdesc="Openbox Key Editor - converted to PyGObject."
+arch=('i686' 'x86_64')
+url="https://github.com/stevenhoneyman/obkey"
+license=('GPL2')
+depends=('python2' 'python2-gobject')
+makedepends=('git')
+conflicts=('obkey')
+provides=('obkey')
+source=('git://github.com/stevenhoneyman/obkey.git')
+md5sums=('SKIP')
+package() {
+  cd $srcdir/obkey
+  install -Dm755 obkey "$pkgdir"/usr/bin/obkey
+  install -Dm755 obkey_classes.py "$pkgdir"/usr/lib/python2.7/site-packages/obkey_classes.py
+  mkdir -p "$pkgdir"/usr/share/obkey/icons/
+  install -Dm644 icons/add_{child,sibling}.png "$pkgdir"/usr/share/obkey/icons/
+}
