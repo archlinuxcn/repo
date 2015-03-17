@@ -1,0 +1,11 @@
+--- obapps	2015-01-02 11:22:44.440143442 +0100
++++ obapps	2015-01-02 11:22:49.320143725 +0100
+@@ -29,6 +29,8 @@
+ '''
+ 
+ import obaxutils
++import wxversion
++wxversion.select('2.8')
+ import wx
+ import wx.lib.mixins.listctrl as mix
+ import sys
