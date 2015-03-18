@@ -2,10 +2,11 @@
 # Contributor: Thayer Williams <thayer@archlinux.org>
 # Contributor: Douglas Soares de Andrade <douglas@archlinux.org>
 # Contributor: Robson Peixoto
+# Contributor: shiracha
 
 pkgname=unzip-iconv
 pkgver=6.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Unpacks .zip archives such as those made by PKZIP. With iconv patch for -O / -I goodness."
 arch=('i686' 'x86_64')
 url="http://www.info-zip.org/"
@@ -19,10 +20,10 @@ md5sums=('62b490407489521db863b523a7f86375'
 	 '4dcfb2084e9db5a3f411f470d92ab2a4')
 
 build() {
-  cd ${srcdir}/unzip${pkgver/./}
+  cd "${srcdir}"/unzip${pkgver/./}
 
   # iconv patch
-  patch -Np1 -i ${srcdir}/unzip60-alt-iconv-utf8.patch
+  patch -Np1 -i "${srcdir}"/unzip60-alt-iconv-utf8.patch
 
   # set CFLAGS -- from Debian
   export CFLAGS="$CFLAGS -D_FILE_OFFSET_BITS=64 -DACORN_FTYPE_NFS \
@@ -32,19 +33,19 @@ build() {
 
   # make -- from Debian
   make -f unix/Makefile LOCAL_UNZIP="$CFLAGS" prefix=/usr LF2="" \
-  D_USE_BZ2=-DUSE_BZIP2 L_BZ2=-lbz2 unzips || return 1
+  D_USE_BZ2=-DUSE_BZIP2 L_BZ2=-lbz2 unzips
+  }
 
-}
-package(){
-  cd ${srcdir}/unzip${pkgver/./}
+package() {
+  cd "${srcdir}"/unzip${pkgver/./}
+
   # install -- from Debian
-  make -f unix/Makefile prefix=${pkgdir}/usr INSTALL_PROGRAM="install" install || return 1
+  make -f unix/Makefile prefix="${pkgdir}"/usr INSTALL_PROGRAM="install" install
 
   # install the license file
-  install -Dm644 LICENSE ${pkgdir}/usr/share/licenses/unzip/LICENSE || return 1
+  install -Dm644 LICENSE "${pkgdir}"/usr/share/licenses/unzip/LICENSE
 
   # fix manpage location
-  mkdir -p ${pkgdir}/usr/share || return 1
-  mv ${pkgdir}/usr/man ${pkgdir}/usr/share/ || return 1
+  mkdir -p "${pkgdir}"/usr/share
+  mv "${pkgdir}"/usr/man "${pkgdir}"/usr/share/
 }
-
