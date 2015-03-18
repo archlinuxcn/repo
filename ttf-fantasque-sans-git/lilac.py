@@ -3,7 +3,7 @@ from lilaclib import *
 build_prefix = 'extra-x86_64'
 
 pre_build = vcs_update
-depends = ['ttf2eot' 'ttfautohint' 'sfnt2woff']
+depends = ['ttf2eot', 'ttfautohint', 'sfnt2woff']
 
 def post_build():
   git_add_files('PKGBUILD')
