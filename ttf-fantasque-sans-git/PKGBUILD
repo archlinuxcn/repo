@@ -22,6 +22,11 @@ pkgver() {
     printf "%s.r%s.%s" "$p1" "$p2" "$p3"
 }
 
+prepare() {
+    cd "$srcdir/repo"
+    sed -i 's/^print\s\+\(\S*\)/print(\1)/' validate-generate
+}
+
 build() {
     cd "$srcdir/repo"
     make
