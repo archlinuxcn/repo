@@ -14,7 +14,7 @@ pkgver=20150318
 pkgrel=1
 pkgdesc="TrueType fonts from the Google Fonts project"
 arch=('any')
-url="https://github.com/w0ng/googlefontdirectory"
+url="https://github.com/google/fonts"
 license=('various')
 # see comment in package() function about why "cantarell-fonts" is a dependency
 depends=('cantarell-fonts'
@@ -65,12 +65,12 @@ conflicts=('googlefontdirectory'
 	   'ttf-lekton'
 	   'ttf-lato')
 provides=("${conflicts[@]}" 'ttf-font')
-source=("git://github.com/w0ng/googlefontdirectory.git")
+source=("git://github.com/google/fonts")
 md5sums=('SKIP')
 install=font.install
 
 # git variables
-_gitname="googlefontdirectory"
+_gitname="fonts"
 
 pkgver() {
   cd "$srcdir/$_gitname"
