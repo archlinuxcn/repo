@@ -1,0 +1,21 @@
+_pkgname=naked
+pkgname=python2-$_pkgname
+pkgver=386.236b076
+pkgrel=1
+pkgdesc="Naked is a MIT licensed Python command line application framework that is in development. The current release is a stable, open testing version."
+arch=('any')
+url="https://github.com/chrissimpkins/$_pkgname"
+license=('MIT')
+makedepends=('git')
+source=("git+https://github.com/chrissimpkins/$_pkgname")
+sha256sums=('SKIP')
+
+pkgver() {
+    cd $_pkgname
+    echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+package() {
+  cd "$srcdir/$_pkgname"
+  python2 setup.py install -O1 --root="$pkgdir"
+}
