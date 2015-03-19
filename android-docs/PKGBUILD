@@ -2,7 +2,7 @@
 # Contributor: Figo.zhang <figo1802@gmail.com>
 
 _rev=r01
-_ver=21
+_ver=22
 pkgname=android-docs
 pkgver=${_ver}_${_rev}
 pkgrel=1
@@ -12,7 +12,7 @@ url="http://developer.android.com"
 license=('Apache')
 options=(!strip)
 source=("http://dl-ssl.google.com/android/repository/docs-${_ver}_${_rev}.zip")
-sha1sums=('1c71f97ffb97e77120c1a73c8a29d3783c65f86d')
+sha1sums=('419791c49fa0a305a06966fd1734cf5b0498ea1a')
 
 package() {
   mkdir -p "${pkgdir}/opt/android-sdk/"

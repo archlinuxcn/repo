@@ -2,7 +2,7 @@
 
 pkgname=terminusmod
 pkgver=1.9.9
-pkgrel=1
+pkgrel=2
 pkgdesc="Modified Terminus Font"
 arch=('any')
 url="http://sourceforge.net/projects/terminusmod"
@@ -11,7 +11,7 @@ depends=('fontconfig' 'xorg-fonts-encodings' 'xorg-font-utils')
 install=terminusmod.install
 source=("http://sourceforge.net/projects/terminusmod/files/$pkgname-$pkgver.tar.gz")
 
-build () {
+package () {
   cd "$srcdir/$pkgname-$pkgver"
 
   install -d "$pkgdir/usr/share/fonts/local"

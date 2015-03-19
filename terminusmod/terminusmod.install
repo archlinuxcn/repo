@@ -1,9 +1,10 @@
 # arg 1: the new package version
 post_install() {
-  echo "Updating font cache... " 
-  fc-cache -f >/dev/null 2>&1
+  echo -n "Updating font cache... "
+  fc-cache -s >/dev/null 2>&1
   mkfontscale /usr/share/fonts/local
   mkfontdir /usr/share/fonts/local
+  echo "done"
   echo "See README.terminusmod in /usr/share/doc/terminusmod for more info and changes."
 }
 
@@ -15,7 +16,7 @@ post_upgrade() {
 
 # arg 1: the old package version
 post_remove() {
-  fc-cache -f >/dev/null 2>&1
+  fc-cache -s >/dev/null 2>&1
   mkfontscale /usr/share/fonts/local
   mkfontdir /usr/share/fonts/local
 }

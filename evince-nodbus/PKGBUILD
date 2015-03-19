@@ -2,7 +2,7 @@
 # Maintainer: Jan de Groot <jgc@archlinux.org>
 
 pkgname=evince-nodbus
-pkgver=3.14.1
+pkgver=3.14.2
 pkgrel=1
 pkgdesc="Document viewer (PDF, Postscript, djvu, tiff, dvi, XPS, SyncTex support with gedit, comics books (cbr,cbz,cb7 and cbt))"
 url="https://wiki.gnome.org/Apps/Evince"
@@ -15,13 +15,14 @@ optdepends=('texlive-bin: DVI support'
             'p7zip: cbz and cb7 compressed comic books'
             'tar: cbt compressed comic books'
             'unrar: cbr compressed comic books')
-groups=(gnome)conflicts=('evince')
+groups=(gnome)
+conflicts=('evince')
 provides=("evince=$pkgver")
 
 install=evince.install
 options=('!emptydirs')
 source=(http://ftp.gnome.org/pub/gnome/sources/evince/${pkgver:0:4}/evince-$pkgver.tar.xz)
-sha256sums=('13ec728d6957aa18ba21a3a66504dd52b8607596337f30f0908b62b5fcc14507')
+sha256sums=('4c591d0b879092a5f6c9140b75f15bdea3665a332e9b384957c453fd67bf0070')
 
 build() {
   cd evince-$pkgver
@@ -32,7 +33,8 @@ build() {
       --enable-djvu           --enable-dvi \
       --enable-t1lib          --enable-comics \
       --disable-scrollkeeper  --disable-schemas-compile \
-      --enable-introspection  --disable-dbus
+      --enable-introspection --disable-browser-plugin  --disable-dbus
+  sed -i '/"win.reload",/a          "win.show-properties",	"<Alt>Return", NULL,' shell/ev-application.c
   make
 }
 

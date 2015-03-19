@@ -1,6 +1,6 @@
 # Maintainer: Parantapa Bhattacharya <pb at parantapa dot net>
 pkgname=ttf-fantasque-sans-git
-pkgver=1.6.5.r117.85142fe
+pkgver=1.6.5.r119.b424798
 pkgrel=1
 pkgdesc="A font family with a great monospaced variant for programmers."
 arch=('any')
@@ -20,6 +20,11 @@ pkgver() {
     p2="$(git rev-list --count HEAD)"
     p3="$(git rev-parse --short HEAD)"
     printf "%s.r%s.%s" "$p1" "$p2" "$p3"
+}
+
+prepare() {
+    cd "$srcdir/repo"
+    sed -i 's/^print\s\+\(\S*\)/print(\1)/' validate-generate
 }
 
 build() {

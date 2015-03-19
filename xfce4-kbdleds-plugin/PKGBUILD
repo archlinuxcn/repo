@@ -3,7 +3,7 @@
 # Contributor: Gour-Gadadhara Dasa <gour@atmarama.net>
 pkgname=xfce4-kbdleds-plugin
 pkgver=0.0.6
-pkgrel=7
+pkgrel=8
 pkgdesc="Xfce keyboard LEDs panel plugin"
 arch=('i686' 'x86_64')
 url="http://goodies.xfce.org/projects/panel-plugins/xfce4-kbdleds-plugin"
@@ -13,7 +13,7 @@ depends=('xfce4-panel')
 makedepends=('intltool')
 source=("http://git.xfce.org/panel-plugins/${pkgname}/snapshot/${pkgname}-${pkgver}.tar.bz2")
 install="${pkgname}.install"
-md5sums=('f4d65f93eb2cea99df11ea431f3c3138')
+sha256sums=('2c36c6ac5ef2bd564058e6040888b21a67939ba79041249d10a9ccc2b6b6bca2')
 
 build() {
 	cd "${pkgname}-${pkgver}"

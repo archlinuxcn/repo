@@ -5,7 +5,7 @@ post_install () {
 # arg 1:  the new package version
 # arg 2:  the old package version
 post_upgrade() {
-	echo -e "Like old versions, IceCat user profile directory is set to ~/.mozilla/icecat (default upstream is ~/.mozilla/firefox)"
+	echo -e "  IceCat user profile directory is set to ~/.gnu/icecat\n  Please, consider to move your profile directory if you want to keep your settings.\n  ==> mv ~/.mozilla/icecat ~/.gnu/"
 	update-desktop-database -q
 }
 
