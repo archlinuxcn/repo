@@ -1,12 +1,12 @@
 pkgname=corebird-git
-pkgver=2376+g336d394
+pkgver=3405+g80ca816
 pkgrel=1
-_realver=0.7
+_realver=1.0
 pkgdesc="Native Gtk+ Twitter Client"
 arch=('i686' 'x86_64')
 license=('GPL')
 url="https://github.com/baedert/corebird"
-depends=('gtk3>=3.12'
+depends=('gtk3>=3.14'
      'glib2>=2.40'
      'rest>=0.7'
      'libgee'
@@ -18,7 +18,7 @@ depends=('gtk3>=3.12'
      'gst-plugins-good'
      'gst-plugins-bad'
      'gst-libav')
-makedepends=('vala>=0.24' 'git' 'automake')
+makedepends=('vala>=0.26' 'git' 'automake')
 source=(git+https://github.com/baedert/corebird)
 sha1sums=(SKIP)
 install=corebird.install
