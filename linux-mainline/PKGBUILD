@@ -6,8 +6,8 @@ pkgbase=linux-mainline               # Build stock -ARCH kernel
 #pkgbase=linux-custom       # Build kernel with a different name
 #_srcname=linux-3.18
 #_patchname=patch-3.19-rc6
-_srcname=linux-4.0-rc4
-pkgver=4.0rc4
+_srcname=linux-4.0-rc5
+pkgver=4.0rc5
 pkgrel=1
 arch=('i686' 'x86_64')
 url="http://www.kernel.org/"
@@ -25,7 +25,7 @@ source=("https://www.kernel.org/pub/linux/kernel/v4.x/testing/${_srcname}.tar.xz
         'linux.preset'
         'change-default-console-loglevel.patch'
         )
-sha256sums=('b681cdacb526e87547e2155895fe019188a6123d023e7dd3f1f485d66f1d5606'
+sha256sums=('81fe910ceba39fc8b28cca676a7f93b7ea6e20458487ffb822ea745500ac444e'
             '704a479de77c9022e5c7a797d2cd7fd0e4ba1f52f9039ec8a80efd57f7e9f0d8'
             '59830f47c1be39f874640d762dca55f972aca549a7a65ba2f1dac184251dabb2'
             'f0d90e756f14533ee67afda280500511a62465b4f76adcc5effa95a40045179c'
