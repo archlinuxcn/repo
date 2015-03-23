@@ -7,7 +7,7 @@ depends = ['filter_audio-git',
            'tox-git']
 
 build_prefix = 'extra-x86_64'
-pre_build = vcs_update
+pre_build = aur_pre_build
 post_build = aur_post_build
 
 if __name__ == '__main__':
