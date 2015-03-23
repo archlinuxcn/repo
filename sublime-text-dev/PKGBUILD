@@ -3,28 +3,24 @@
 
 pkgname=sublime-text-dev
 pkgver=3.3065
-pkgrel=1
+pkgrel=2
 pkgdesc="Sophisticated text editor for code, html and prose - dev build"
 arch=('i686' 'x86_64')
 url="http://www.sublimetext.com/3"
 license=('custom')
-depends=(libpng gtk2 'desktop-file-utils')
-conflicts=(sublime-text-nightly)
-provides=(sublime-text-nightly)
+depends=('libpng' 'gtk2' 'desktop-file-utils')
+optdepends=('gksu: sudo-save support')
+conflicts=('sublime-text' 'sublime-text-nightly')
+provides=('sublime-text' 'sublime-text-nightly')
 install=${pkgname}.install
 
-_archurl='x64'
+source=('sublime_text_3.desktop')
+source_x86_64=("http://c758482.r82.cf2.rackcdn.com/sublime_text_3_build_${pkgver:2}_x64.tar.bz2")
+source_i686=("http://c758482.r82.cf2.rackcdn.com/sublime_text_3_build_${pkgver:2}_x32.tar.bz2")
 
-[[ "${CARCH}" = i686 ]] && _archurl='x32'
-
-source=(
-  "http://c758482.r82.cf2.rackcdn.com/sublime_text_3_build_${pkgver:2}_${_archurl}.tar.bz2"
-  "sublime_text_3.desktop"
-)
-md5sums=('466ae754d2cd6aa80dd8dd8b571b4cac'
-         '89594b9c6b9a8c7e6a8ce414a0e58243')
-
-[[ "${CARCH}" = i686 ]] && md5sums[0]='d0456b04a1f425f9119aa0615fbc4ceb'
+md5sums=('89594b9c6b9a8c7e6a8ce414a0e58243')
+md5sums_i686=('d0456b04a1f425f9119aa0615fbc4ceb')
+md5sums_x86_64=('466ae754d2cd6aa80dd8dd8b571b4cac')
 
 package() {
   cd "${srcdir}"
