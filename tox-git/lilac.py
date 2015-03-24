@@ -2,7 +2,7 @@
 
 from lilaclib import *
 
-depends = ['openal-soft-tox']
+depends = ['openal-soft-tox-git']
 
 build_prefix = 'extra-x86_64'
 pre_build = aur_pre_build
