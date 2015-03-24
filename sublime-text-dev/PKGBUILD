@@ -2,8 +2,8 @@
 # Contributor: realitygaps <realitygaps at yahoo dot com>
 
 pkgname=sublime-text-dev
-pkgver=3.3065
-pkgrel=2
+pkgver=3.3080
+pkgrel=1
 pkgdesc="Sophisticated text editor for code, html and prose - dev build"
 arch=('i686' 'x86_64')
 url="http://www.sublimetext.com/3"
@@ -19,8 +19,8 @@ source_x86_64=("http://c758482.r82.cf2.rackcdn.com/sublime_text_3_build_${pkgver
 source_i686=("http://c758482.r82.cf2.rackcdn.com/sublime_text_3_build_${pkgver:2}_x32.tar.bz2")
 
 md5sums=('89594b9c6b9a8c7e6a8ce414a0e58243')
-md5sums_i686=('d0456b04a1f425f9119aa0615fbc4ceb')
-md5sums_x86_64=('466ae754d2cd6aa80dd8dd8b571b4cac')
+md5sums_i686=('9d01cdbdb3976bf0c2bc135f619af94d')
+md5sums_x86_64=('d10f9bdaddc8973cb45a48f1a24ebcbc')
 
 package() {
   cd "${srcdir}"
