@@ -5,17 +5,17 @@
 
 _gemname=bundler
 pkgname=ruby-$_gemname
-pkgver=1.8.0
+pkgver=1.9.1
 pkgrel=1
 pkgdesc="Is manages an application's dependencies through its entire life, across many machines, systematically and repeatably"
 arch=(any)
-url='http://gembundler.com'
+url='http://bundler.io/'
 license=(MIT)
 depends=(ruby)
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
-sha256sums=('98522906ac94a4d78de6c724f3e1e201681c4397b359d87fd2f4a491798b74b6')
+sha256sums=('55a9d7e34133130614c4552886fa4a480a33fb44f2479ebbee3b6ea33d2888ab')
 
 package() {
   local _gemdir="$(ruby -e'puts Gem.default_dir')"
