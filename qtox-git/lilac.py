@@ -3,7 +3,7 @@
 from lilaclib import *
 
 depends = ['filter_audio-git',
-           'openal-soft-tox-git',
+           'openal-soft-tox',
            'tox-git']
 
 build_prefix = 'extra-x86_64'
