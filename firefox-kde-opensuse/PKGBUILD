@@ -8,7 +8,7 @@
 #_pgo=true
 
 pkgname=firefox-kde-opensuse
-pkgver=36.0
+pkgver=36.0.4
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
@@ -27,7 +27,7 @@ provides=("firefox=${pkgver}")
 conflicts=('firefox')
 install=firefox.install
 options=('!emptydirs' '!makeflags')
-_patchrev=e7e5b3d0f1b3
+_patchrev=6fabac5939cb
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 source=(http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.bz2
 	#http://download.cdn.mozilla.net/pub/mozilla.org/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.bz2
@@ -43,9 +43,8 @@ source=(http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/f
 	$_patchurl/mozilla-nongnome-proxies.patch
 	$_patchurl/mozilla-prefer_plugin_pref.patch
 	$_patchurl/toolkit-download-folder.patch
-#	add_missing_pgo_rule.patch
-#	add_support_for_libnotify_again.patch
-#	unity-menubar.patch
+	add_missing_pgo_rule.patch
+	unity-menubar.patch
 )
 
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
@@ -76,12 +75,8 @@ prepare() {
   patch -Np1 -i "$srcdir/firefox-no-default-ualocale.patch"
   patch -Np1 -i "$srcdir/firefox-branded-icons.patch"
 
-  # add globalmenu support
-  #patch -Np1 -i "$srcdir/unity-menubar.patch"
-  # add support for libnotify once again #858919
-  #patch -Np1 -i "$srcdir/add_support_for_libnotify_again.patch"
-  # add missing rule for pgo builds
-  #patch -Np1 -i "$srcdir/add_missing_pgo_rule.patch"
+  patch -Np1 -i "$srcdir/unity-menubar.patch"
+  patch -Np1 -i "$srcdir/add_missing_pgo_rule.patch"
 
   # configure script misdetects the preprocessor without an optimization level
   # https://bugs.archlinux.org/task/34644
@@ -155,9 +150,9 @@ package() {
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
 
-sha256sums=('d1db20e5c9674ccc9c463ac3d52c9e8e465eef4b01c822a166458a7d0d5b4cf2'
+sha256sums=('9143bddc64746bf6471b5ae55b9013586b0ffd6c5515c5566b4015e0bf1e16ab'
             'd6468f627873bdfade1d62a3d84fbb3f53f57b233e691e4d28cda3d7e3e5096e'
-            '175d03cf3d8eb420d24a5a3072be69c9603e3ddacd3a83f68f49754eaecf6c5a'
+            '7eefe43ba2b4249a4ea2d04a739b80945583aaa5a3d6872a1b7ea7a3d190f882'
             'd86e41d87363656ee62e12543e2f5181aadcff448e406ef3218e91865ae775cd'
             '4b50e9aec03432e21b44d18c4c97b2630bace606b033f7d556c9d3e3eb0f4fa4'
             'b8cc5f35ec35fc96ac5c5a2477b36722e373dbb57eba87eb5ad1276e4df7236d'
@@ -170,4 +165,6 @@ sha256sums=('d1db20e5c9674ccc9c463ac3d52c9e8e465eef4b01c822a166458a7d0d5b4cf2'
             'b9feb66a33dc1644d7d277dc3fc166c655735de7100bc4e93f1fe44567f35345'
             'e8289ea4c1f8191e1e23661312ceee2128b8e790501b9a589d0d7bfc4384553f'
             '5f6b0970284d68d5ed18e6bb7ee1e9fc0025ab3c10aaa14c283adb21a4a20ee8'
-            '60ace1c57577878850e05976ccf02f7e71512c4d62a8a9a6d270a7941d9625d3')
+            '60ace1c57577878850e05976ccf02f7e71512c4d62a8a9a6d270a7941d9625d3'
+            'f9067f62a25a7a77276e15f91cc9e7ba6576315345cfc6347b1b2e884becdb0c'
+            'c38037d7ad9ee8053df755cf7e8f62b85ba8e7ca8d9994dee98800253e2f5f92')
