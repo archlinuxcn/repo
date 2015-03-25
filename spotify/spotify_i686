@@ -1,0 +1,6 @@
+#!/bin/sh
+#
+# Uses alternative libs
+# Passes all parameters to spotify
+
+LD_LIBRARY_PATH=/usr/share/spotify/libs/ /usr/share/spotify/spotify-client/spotify "$@"
