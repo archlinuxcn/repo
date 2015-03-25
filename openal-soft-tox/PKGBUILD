@@ -18,8 +18,8 @@ arch=(i686 x86_64)
 url="https://github.com/irungentoo/openal-soft-tox"
 license=(LGPL)
 depends=(glibc)
-conflicts=($_pkgname)
-conflicts=($_pkgname)
+conflicts=$_pkgname
+provides=$_pkgname
 makedepends=(alsa-lib pkgconfig cmake libpulse qt4 fluidsynth portaudio git)
 optdepends=('qt4: alsoft-config GUI Configurator'
             'fluidsynth: MIDI rendering')
