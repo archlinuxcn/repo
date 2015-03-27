@@ -11,7 +11,7 @@ def pre_build():
         l = l.rstrip('\n')
         if l.startswith('provides='):
             l = 'provides=("$_pkgname")'
-        elif l.startswith('conflicts=')
+        elif l.startswith('conflicts='):
             l = 'conflicts=("$_pkgname")'
         print(l)
     vcs_update()
