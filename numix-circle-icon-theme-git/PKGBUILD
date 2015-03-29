@@ -1,7 +1,7 @@
 # Maintainer: Maxime Gauduin <alucryd@archlinux.org>
 
 pkgname=numix-circle-icon-theme-git
-pkgver=0.r956.6761f32
+pkgver=0.r1677.fe74d83
 pkgrel=1
 pkgdesc='Circle icon theme from the Numix project'
 arch=('any')
@@ -9,10 +9,8 @@ url='http://numixproject.org/'
 license=('GPL3')
 depends=('numix-icon-theme-git')
 makedepends=('git')
-provides=('numix-circle-icon-theme' 'numix-circle-games-icon-theme'
-          'numix-circle-light-icon-theme')
-conflicts=('numix-circle-icon-theme' 'numix-circle-games-icon-theme'
-           'numix-circle-light-icon-theme')
+provides=('numix-circle-icon-theme' 'numix-circle-light-icon-theme')
+conflicts=('numix-circle-icon-theme' 'numix-circle-light-icon-theme')
 options=('!strip')
 install='numix-circle-icon-theme.install'
 source=('numix-circle-icon-theme::git+https://github.com/numixproject/numix-icon-theme-circle.git')
