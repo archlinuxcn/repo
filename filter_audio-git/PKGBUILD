@@ -1,13 +1,14 @@
 # Maintainer: Ivan Shapovalov <intelfx100@gmail.com>
 
 pkgname=filter_audio-git
-pkgver=r67.02d6a58
+pkgver=r70.a649f17
 pkgrel=1
 pkgdesc="An easy to use audio filtering library made from webrtc code"
 arch=('i686' 'x86_64')
 url="https://github.com/irungentoo/filter_audio"
 license=('custom:BSD')
 makedepends=('git')
+depends=("openal")
 provides=("filter_audio")
 conflicts=("filter_audio")
 source=("git://github.com/irungentoo/filter_audio.git"
