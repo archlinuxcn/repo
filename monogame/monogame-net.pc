@@ -1,0 +1,9 @@
+prefix=/usr
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+
+Name: MonoGame.Framework.Net
+Description: XNA Implementation for Mono based platforms
+Version: @VERSION@
+Requires: monogame
+Libs: -r:${libdir}/monogame/MonoGame.Framework.Net.dll -r:${libdir}/monogame/Lidgren.Network.dll
