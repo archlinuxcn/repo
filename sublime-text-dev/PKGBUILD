@@ -3,15 +3,15 @@
 
 pkgname=sublime-text-dev
 pkgver=3.3083
-pkgrel=1
+pkgrel=2
 pkgdesc="Sophisticated text editor for code, html and prose - dev build"
 arch=('i686' 'x86_64')
 url="http://www.sublimetext.com/3"
 license=('custom')
 depends=('libpng' 'gtk2' 'desktop-file-utils')
 optdepends=('gksu: sudo-save support')
-conflicts=('sublime-text' 'sublime-text-nightly')
-provides=('sublime-text' 'sublime-text-nightly')
+conflicts=('sublime-text-nightly')
+provides=('sublime-text-nightly')
 install=${pkgname}.install
 
 source=('sublime_text_3.desktop')
