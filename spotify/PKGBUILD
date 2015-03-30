@@ -2,9 +2,9 @@
 # Contributor: Eothred <yngve.levinsen@gmail.com>
 
 pkgname=spotify
-pkgver=0.9.11.27
-_anotherpkgver=.g2b1a638.81-1
-pkgrel=3
+pkgver=0.9.17.1
+_anotherpkgver=.g9b85d43.7-1
+pkgrel=1
 pkgdesc="A proprietary peer-to-peer music streaming service"
 arch=('x86_64' 'i686')
 license=('custom:"Copyright (c) 2006-2013 Spotify Ltd"')
@@ -15,7 +15,7 @@ options=('!strip')
 conflicts=('spotify-beta')
 
 if [ "${CARCH}" = "x86_64" ]; then
-  md5sums=('778a0150fc9c0205f06a620a60f1365c')
+  md5sums=('6cac4995a58f1a8627865f034df42800')
   _carch=_amd64
 elif [ "${CARCH}" = "i686" ]; then
   md5sums=('20113ac3d6760ded6940fef8143fa9a3')
@@ -26,10 +26,12 @@ elif [ "${CARCH}" = "i686" ]; then
 fi
 
 source=("http://repository.spotify.com/pool/non-free/s/${pkgname}/${pkgname}-client_${pkgver}${_anotherpkgver}${_carch}.deb"
-'spotify'
+'spotify_i686'
+'spotify_amd64'
 'spotify.protocol')
 
-md5sums+=('8d7059f889257fca61edb926bf419111'
+md5sums+=('0a5cbc4cf9acf5e3d4dcec9656eb5774'
+'d443873ef440a6b59d2e3deef64ab74b'
 'ef25ddc5b6bf8fe1a0d64cbd79e1f7b4')
 
 depends=("alsa-lib>=1.0.14" "glibc>=2.6" "libxss" "qtwebkit" "gconf" "nspr>=4.0"
@@ -41,18 +43,18 @@ package() {
   cd "${srcdir}"
 
   ar x "${pkgname}-client_${pkgver}${_anotherpkgver}${_carch}.deb" > /dev/null
-  tar -xzf data.tar.gz -C "${pkgdir}"
+  tar -xJf data.tar.xz -C "${pkgdir}"
 
   install -d "${pkgdir}/usr/share/"
   mv "${pkgdir}/opt/spotify" "${pkgdir}/usr/share/"
   rm -r "${pkgdir}/opt"
 
-  install -d "${pkgdir}/usr/share/spotify/libs/"
-
   # Bin Script
-  install -Dm755 "${srcdir}/spotify" "${pkgdir}/usr/bin/spotify"
+  install -Dm755 "${srcdir}/spotify${_carch}" "${pkgdir}/usr/bin/spotify"
 
   if [ "${CARCH}" = "i686" ]; then
+  	install -d "${pkgdir}/usr/share/spotify/libs/"
+
     # libplc4.so
     ln -s /usr/lib/libplc4.so "${pkgdir}/usr/share/spotify/libs/libplc4.so.0d"
 
@@ -71,10 +73,10 @@ package() {
     # openssl
     ln -s /usr/lib/libssl.so "${pkgdir}/usr/share/spotify/libs/libssl.so.0.9.8"
     ln -s /usr/lib/libcrypto.so "${pkgdir}/usr/share/spotify/libs/libcrypto.so.0.9.8"
-  fi
 
-  # libudev.so
-  ln -s /usr/lib/libudev.so "${pkgdir}/usr/share/spotify/libs/libudev.so.0"
+		# libudev.so
+		ln -s /usr/lib/libudev.so "${pkgdir}/usr/share/spotify/libs/libudev.so.0"
+  fi
 
   # Copy license
   install -Dm644 "${pkgdir}/usr/share/doc/${pkgname}-client/copyright" "${pkgdir}/usr/share/licenses/${pkgname}/copyright"

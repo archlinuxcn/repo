@@ -3,7 +3,7 @@
 # Contributor: Fernando Carmona Varo <ferkiwi @t gmail dot com>
 pkgname=cataclysm-dda-ncurses
 pkgver=0.C
-pkgrel=1
+pkgrel=2
 pkgdesc="Cataclysm: Dark Days Ahead is an actively maintained roguelike set in a post-apocalyptic world, forked from the original. (ncurses only)"
 arch=('i686' 'x86_64')
 url="http://www.cataclysmdda.com/"
@@ -15,14 +15,25 @@ optdepends=('lua51')
 conflicts=('cataclysm-dda' 'cataclysm-dda-git')
 
 install='cataclysm-dda-ncurses.install'
-source=("https://github.com/CleverRaven/Cataclysm-DDA/archive/${pkgver}.tar.gz")
-md5sums=('805132ab7651ba93e5247ced7fe1fc97')
+source=("https://github.com/CleverRaven/Cataclysm-DDA/archive/${pkgver}.tar.gz"
+       'clang36.patch::https://github.com/narc0tiq/Cataclysm-DDA/commit/2e12a15fdbb32b5941d597e3cc774030445d483a.patch')
+md5sums=('805132ab7651ba93e5247ced7fe1fc97'
+         '4b57e948da3daae3753a23200482c497')
+
+prepare() {
+  #We need to "patch" cataclysm for it to build with clang>=3.6.
+  #Hopefully, this will be corrected in the next release version.
+  #See https://github.com/CleverRaven/Cataclysm-DDA/issues/11805 for details.
+  cd "$srcdir/Cataclysm-DDA-${pkgver}"
+  patch -Np1 -i $srcdir/clang36.patch
+  
+}
 
 build() {
 
   #Due to build problems with gcc, we'll be using clang for a while
   cd "$srcdir/Cataclysm-DDA-${pkgver}"
-  make RELEASE=1 USE_HOME_DIR=1 CLANG=1
+  make USE_HOME_DIR=1 CLANG=1 RELEASE=1
 }
 
 package() {

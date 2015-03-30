@@ -2,7 +2,7 @@
 
 _pkgname=jieba
 pkgname=python2-$_pkgname
-pkgver=0.35
+pkgver=0.36
 pkgrel=1
 pkgdesc="JieBa Chinese Words Segment Library based on HMM model for Python"
 arch=('any')
@@ -16,4 +16,4 @@ package() {
   python2 setup.py install -O1 --root="$pkgdir"
 }
 
-sha512sums=('320d03270fc90c2e5d2952c2f98c975d792f3e071807e64cff30184384836794db4767fd06c3e09357478d9a2d56190e0efdd7f58fd2b02130fb5dee17a7c18b')
+sha512sums=('d281e8a7e2672a132a766291fa8dd61e8a37bb21bde1c7c2165bcd96b3e50f96950995c3ed745910ec38747f2557dcfb42e4d4d777cbbc387eb0934e9e46568e')

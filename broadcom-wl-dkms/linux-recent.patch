@@ -99,6 +99,32 @@
  
  	wl_deinit_cfg80211_priv(wl);
  	wl_free_wdev(wl);
+--- a/src/wl/sys/wl_cfg80211_hybrid.c	2015-03-16 14:39:29.899350026 +0100
++++ b/src/wl/sys/wl_cfg80211_hybrid.c	2015-03-16 14:39:06.732682365 +0100
+@@ -1452,7 +1452,11 @@
+ 		WL_DBG(("Could not get rate (%d)\n", err));
+ 	} else {
+ 		rate = dtoh32(rate);
++		#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 0, 0)
++		sinfo->filled |= BIT(NL80211_STA_INFO_TX_BITRATE);
++		#else
+ 		sinfo->filled |= STATION_INFO_TX_BITRATE;
++		#endif
+ 		sinfo->txrate.legacy = rate * 5;
+ 		WL_DBG(("Rate %d Mbps\n", (rate / 2)));
+ 	}
+@@ -1465,7 +1469,11 @@
+ 			return err;
+ 		}
+ 		rssi = dtoh32(scb_val.val);
++		#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 0, 0)
++		sinfo->filled |= BIT(NL80211_STA_INFO_SIGNAL);
++		#else
+ 		sinfo->filled |= STATION_INFO_SIGNAL;
++		#endif
+ 		sinfo->signal = rssi;
+ 		WL_DBG(("RSSI %d dBm\n", rssi));
+ 	}
 --- a/src/wl/sys/wl_dbg.h	2014-06-26 10:42:08.000000000 +0000
 +++ b/src/wl/sys/wl_dbg.h	2014-12-30 17:02:03.840957429 +0000
 @@ -55,10 +55,12 @@

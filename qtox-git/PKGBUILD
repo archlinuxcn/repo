@@ -1,0 +1,65 @@
+# Maintainer: Kevin MacMartin <prurigro at gmail dot com>
+
+_pkgname=qtox
+pkgname=$_pkgname-git
+pkgver=r2615.f55fd40
+pkgrel=1
+pkgdesc='Powerful QT Tox client that tries to follow the Tox UI guidlines'
+arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h')
+url='https://github.com/tux3/qTox'
+license=('GPL3')
+depends=(
+  'tox-git>=r3147'
+  'desktop-file-utils'
+  'filter_audio-git'
+  'libxkbcommon-x11'
+  'libxss'
+  'opencv'
+  'qt5-svg'
+  'openal-soft-tox'
+  'qrencode'
+)
+makedepends=('git' 'qt5-tools')
+provides=("$_pkgname")
+conflicts=("$_pkgname")
+install=$pkgname.install
+source=("$_pkgname::git+$url")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $_pkgname
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd $_pkgname
+  [[ -d './libs' ]] && rm -rf ./libs
+  install -d libs
+  ln -s /usr/lib libs/
+  ln -s /usr/include libs/
+}
+
+build() {
+  cd $_pkgname
+  install -d build
+  cd build
+  qmake-qt5 ..
+  make
+}
+
+package() {
+  # executable
+  cd $_pkgname
+  install -Dm755 build/$_pkgname "$pkgdir/usr/bin/$_pkgname"
+
+  # xdg desktop file
+  install -Dm644 qTox.desktop "$pkgdir/usr/share/applications/qTox.desktop"
+
+  # icons
+  cd img/icons
+  for _icon in *.png; do
+    _size=$(sed 's|^[^-]*-||;s|\.png||' <<< "$_icon")
+    install -Dm644 "$_icon" "$pkgdir/usr/share/icons/hicolor/$_size/apps/$_pkgname.png"
+  done
+  install -Dm644 $_pkgname.svg "$pkgdir/usr/share/icons/hicolor/scalable/apps/$_pkgname.png"
+}
