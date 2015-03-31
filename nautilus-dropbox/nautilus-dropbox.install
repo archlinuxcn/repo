@@ -1,0 +1,16 @@
+post_install() {
+  gtk-update-icon-cache -q -t -f usr/share/icons/hicolor
+  cat <<-EndOfMessage
+
+==> Restart nautilus with 'nautilus -q'
+
+EndOfMessage
+}
+
+post_upgrade() {
+  post_install $1
+}
+
+post_remove() {
+  post_install $1
+}
