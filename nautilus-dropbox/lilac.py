@@ -6,9 +6,7 @@
 
 from lilaclib import *
 
-depends = ["dropbox"]
-
-build_prefix = ['extra-x86_64', 'extra-i686']
+build_prefix = ['archlinuxcn-x86_64', 'archlinuxcn-i686']
 pre_build = aur_pre_build
 post_build = aur_post_build
 
