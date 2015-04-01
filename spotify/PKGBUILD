@@ -14,25 +14,24 @@ changelog='spotify.changelog'
 options=('!strip')
 conflicts=('spotify-beta')
 
-if [ "${CARCH}" = "x86_64" ]; then
-  md5sums=('6cac4995a58f1a8627865f034df42800')
-  _carch=_amd64
-elif [ "${CARCH}" = "i686" ]; then
-  md5sums=('20113ac3d6760ded6940fef8143fa9a3')
-  _carch=_i386
+if [ "${CARCH}" = "i686" ]; then
   pkgver=0.9.4.183
   _anotherpkgver=.g644e24e.428-1
   pkgrel=1
 fi
 
-source=("http://repository.spotify.com/pool/non-free/s/${pkgname}/${pkgname}-client_${pkgver}${_anotherpkgver}${_carch}.deb"
-'spotify_i686'
-'spotify_amd64'
-'spotify.protocol')
+source=('spotify.protocol')
+md5sums=('ef25ddc5b6bf8fe1a0d64cbd79e1f7b4')
 
-md5sums+=('0a5cbc4cf9acf5e3d4dcec9656eb5774'
-'d443873ef440a6b59d2e3deef64ab74b'
-'ef25ddc5b6bf8fe1a0d64cbd79e1f7b4')
+source_x86_64=("http://repository.spotify.com/pool/non-free/s/${pkgname}/${pkgname}-client_${pkgver}${_anotherpkgver}_amd64.deb"
+'spotify_x86_64')
+md5sums_x86_64=('6cac4995a58f1a8627865f034df42800'
+'d443873ef440a6b59d2e3deef64ab74b')
+
+source_i686=("http://repository.spotify.com/pool/non-free/s/${pkgname}/${pkgname}-client_0.9.4.183.g644e24e.428-1_i386.deb"
+'spotify_i686')
+md5sums_i686=('20113ac3d6760ded6940fef8143fa9a3'
+'0a5cbc4cf9acf5e3d4dcec9656eb5774')
 
 depends=("alsa-lib>=1.0.14" "glibc>=2.6" "libxss" "qtwebkit" "gconf" "nspr>=4.0"
          "nspr<5.0" "nss" "dbus" "systemd" "libgcrypt15" "gtk2")
@@ -42,15 +41,20 @@ optdepends=('desktop-file-utils: Adds URI support to compatible desktop environm
 package() {
   cd "${srcdir}"
 
-  ar x "${pkgname}-client_${pkgver}${_anotherpkgver}${_carch}.deb" > /dev/null
-  tar -xJf data.tar.xz -C "${pkgdir}"
+	if [ "${CARCH}" = "x86_64" ]; then
+		ar x "${pkgname}-client_${pkgver}${_anotherpkgver}_amd64.deb" > /dev/null
+		tar -xJf data.tar.xz -C "${pkgdir}"
+	elif [ "${CARCH}" = "i686" ]; then
+		ar x "${pkgname}-client_0.9.4.183.g644e24e.428-1_i386.deb" > /dev/null
+		tar -xvf data.tar.gz -C "${pkgdir}"
+	fi
 
   install -d "${pkgdir}/usr/share/"
   mv "${pkgdir}/opt/spotify" "${pkgdir}/usr/share/"
   rm -r "${pkgdir}/opt"
 
   # Bin Script
-  install -Dm755 "${srcdir}/spotify${_carch}" "${pkgdir}/usr/bin/spotify"
+  install -Dm755 "${srcdir}/spotify_${CARCH}" "${pkgdir}/usr/bin/spotify"
 
   if [ "${CARCH}" = "i686" ]; then
   	install -d "${pkgdir}/usr/share/spotify/libs/"
