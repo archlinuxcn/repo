@@ -4,64 +4,158 @@
 _target="arm-linux-gnueabihf"
 pkgname=${_target}-gcc
 pkgver=4.9.2
-pkgrel=1
+_pkgver=4.9
+_islver=0.12.2
+_cloogver=0.18.1
+pkgrel=4
+_snapshot=4.9-20150204
 pkgdesc="The GNU Compiler Collection (${_target})"
 arch=(i686 x86_64)
-license=('GPL' 'LGPL')
+license=('GPL' 'LGPL' 'FDL' 'custom')
 url="http://gcc.gnu.org"
 depends=("${_target}-binutils" "${_target}-glibc" 'libmpc' 'elfutils')
 options=('!buildflags' '!libtool' '!emptydirs' 'zipman' 'docs'
-  '!strip' 'staticlibs')
+         '!strip' 'staticlibs')
 conflicts=("${_target}-gcc-stage1" "${_target}-gcc-stage2")
 replaces=("${_target}-gcc-stage1" "${_target}-gcc-stage2")
 provides=("${_target}-gcc-stage1=${pkgver}" "${_target}-gcc-stage2=${pkgver}")
-source=(ftp://gcc.gnu.org/pub/gcc/releases/gcc-${pkgver}/gcc-${pkgver}.tar.bz2)
-md5sums=('4df8ee253b7f3863ad0b86359cd39c43')
+source=(
+  #ftp://gcc.gnu.org/pub/gcc/releases/gcc-${pkgver}/gcc-${pkgver}.tar.bz2
+  ftp://gcc.gnu.org/pub/gcc/snapshots/${_snapshot}/gcc-${_snapshot}.tar.bz2
+  http://isl.gforge.inria.fr/isl-${_islver}.tar.bz2
+  http://www.bastoul.net/cloog/pages/download/cloog-${_cloogver}.tar.gz
+)
+md5sums=('5a59c19c4ff7acd3db7f8d94843f7f85'
+         'e039bfcfb6c2ab039b8ee69bf883e824'
+         'e34fca0540d840e5d0f6427e98c92252')
 
-build() {
-  cd "${srcdir}/gcc-${pkgver}"
+if [ -n "${_snapshot}" ]; then
+    _basedir=gcc-${_snapshot}
+else
+  _basedir=gcc-${pkgver}
+fi
 
-  export CFLAGS="-O2 -pipe"
-  export CXXFLAGS="-O2 -pipe"
+_libdir="usr/lib/gcc/${_target}/$pkgver"
+
+prepare() {
+  cd ${_basedir}
+
+  # link isl/cloog for in-tree builds
+  ln -s ../isl-${_islver} isl
+  ln -s ../cloog-${_cloogver} cloog
+
+  # Do not run fixincludes
+  sed -i 's@\./fixinc\.sh@-c true@' gcc/Makefile.in
 
   echo ${pkgver} > gcc/BASE-VER
 
-  [[ -d gcc-build ]] || mkdir gcc-build
+  # hack! - some configure tests for header files using "$CPP $CPPFLAGS"
+  sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" {libiberty,gcc}/configure
+
+  mkdir -p "${srcdir}"/gcc-build
+}
+
+build() {
   cd gcc-build
 
-  [ $NOEXTRACT -eq 1 ] || ../configure \
-    --prefix=/usr \
-    --program-prefix=${_target}- \
-    --target=${_target} \
-    --host=$CHOST \
-    --build=$CHOST \
-    --enable-shared \
-    --disable-nls \
-    --enable-threads=posix \
-    --enable-languages=c,c++ \
-    --enable-multilib \
-    --with-sysroot=/usr/${_target} \
-    --with-build-sysroot=/usr/${_target} \
-    --with-as=/usr/bin/${_target}-as \
-    --with-ld=/usr/bin/${_target}-ld \
-    --with-float=hard \
-    --enable-interwork \
-    --disable-libgomp \
-    --enable-__cxa_atexit \
-    --enable-addons
+  export CFLAGS="-O2"
+  export CXXFLAGS="-O2"
 
+  ../${_basedir}/configure \
+     --prefix=/usr \
+     --program-prefix=${_target}- \
+     --target=${_target} \
+     --host=$CHOST \
+     --build=$CHOST \
+     --with-sysroot=/usr/${_target} \
+     --with-build-sysroot=/usr/${_target} \
+     --with-as=/usr/bin/${_target}-as \
+     --with-ld=/usr/bin/${_target}-ld \
+     --enable-languages=c,c++,fortran \
+     --enable-shared \
+     --enable-threads=posix \
+     --enable-__cxa_atexit \
+     --disable-libunwind-exceptions \
+     --enable-clocale=gnu \
+     --disable-libstdcxx-pch \
+     --disable-libssp \
+     --enable-gnu-unique-object \
+     --enable-linker-build-id \
+     --enable-cloog-backend=isl \
+     --enable-lto \
+     --enable-plugin \
+     --enable-install-libiberty \
+     --with-linker-hash-style=gnu \
+     --disable-multilib \
+     --disable-werror \
+     --enable-checking=release \
+     --disable-nls \
+     --with-float=hard \
+     --enable-interwork \
+     --enable-addons
   make all-gcc all-target-libgcc all-target-libstdc++-v3
+
+  make
 }
 
 package() {
-  cd "${srcdir}/gcc-${pkgver}"/gcc-build
+  export CFLAGS="-O2"
+  export CXXFLAGS="-O2"
 
-  export CFLAGS="-O2 -pipe"
-  export CXXFLAGS="-O2 -pipe"
+  cd gcc-build
 
-  make "DESTDIR=$pkgdir" install-gcc install-target-libgcc \
-    install-target-libstdc++-v3
+  # gcc libs
+  make -C ${_target}/libgcc DESTDIR="${pkgdir}" install-shared
 
+  for lib in libatomic \
+             libgfortran \
+             libgomp \
+             libitm \
+             libquadmath \
+             libsanitizer/{a,l,ub}san \
+             libstdc++-v3/src; do
+    make -C $_target/$lib DESTDIR="${pkgdir}" install-toolexeclibLTLIBRARIES
+  done
+
+  # gcc
+  make -C gcc DESTDIR="${pkgdir}" install-driver install-cpp install-gcc-ar \
+       c++.install-common install-headers install-plugin install-lto-wrapper
+  make -C $_target/libgcc DESTDIR="${pkgdir}" install
+
+  make -C $_target/libstdc++-v3/src DESTDIR="${pkgdir}" install
+  make -C $_target/libstdc++-v3/include DESTDIR="${pkgdir}" install
+  make -C $_target/libstdc++-v3/libsupc++ DESTDIR="${pkgdir}" install
+  make -C $_target/libstdc++-v3/python DESTDIR="${pkgdir}" install
+
+  make DESTDIR="${pkgdir}" install-fixincludes
+  make -C gcc DESTDIR="${pkgdir}" install-mkheaders
+  make -C lto-plugin DESTDIR="${pkgdir}" install
+
+  make -C $_target/libgomp DESTDIR=${pkgdir} install-nodist_toolexeclibHEADERS \
+    install-nodist_libsubincludeHEADERS
+  make -C $_target/libitm DESTDIR=${pkgdir} install-nodist_toolexeclibHEADERS
+  make -C $_target/libquadmath DESTDIR=${pkgdir} install-nodist_libsubincludeHEADERS
+  make -C $_target/libsanitizer DESTDIR=${pkgdir} install-nodist_toolexeclibHEADERS
+  make -C $_target/libsanitizer/asan DESTDIR=${pkgdir} install-nodist_toolexeclibHEADERS
+
+  make -C libiberty DESTDIR="${pkgdir}" install
+  mkdir -p "${pkgdir}"/usr/${_target}/include
+  mv "${pkgdir}"/usr/include/libiberty "${pkgdir}"/usr/${_target}/include
+  # install PIC version of libiberty
+  install -m644 "${srcdir}"/gcc-build/libiberty/pic/libiberty.a "${pkgdir}"/usr/${_target}/lib
+
+  make -C libcpp DESTDIR="${pkgdir}" install
+
+  # Fortran
+  make -C $_target/libgfortran DESTDIR=$pkgdir install-{{caf,my}execlibLTLIBRARIES,toolexeclibDATA}
+  make -C $_target/libgomp DESTDIR=$pkgdir install-nodist_fincludeHEADERS
+  make -C gcc DESTDIR=$pkgdir fortran.install-{common,man,info}
+
+  # old gcc
+  make DESTDIR="$pkgdir" install-gcc install-target-libgcc \
+       install-target-libstdc++-v3
+
+  rm "$pkgdir"/usr/lib/libiberty.a
   rm -rf "$pkgdir"/usr/share/{man/man7,info}/
 
   cp -r "$pkgdir"/usr/libexec/* "$pkgdir/usr/lib/"
@@ -72,5 +166,5 @@ package() {
   # strip it manually
   strip "$pkgdir"/usr/bin/* 2>/dev/null || true
   find "$pkgdir"/usr/lib -type f -exec /usr/bin/${_target}-strip \
-    --strip-unneeded {} \; 2>/dev/null || true
+       --strip-unneeded {} \; 2>/dev/null || true
 }
