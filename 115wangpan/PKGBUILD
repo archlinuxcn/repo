@@ -1,17 +1,30 @@
 pkgname=115wangpan
-pkgver=4.0
-pkgrel=3
+pkgver=4.0.1
+pkgrel=1
 pkgdesc='The 115 Wangpan client'
 arch=('x86_64' 'i686')
 url='http://pc.115.com/linux.html'
 license=('unknown')
 if test "$CARCH" == x86_64; then
+if test "$CARCH" == x86_64; then
 	depends=('lib32-libx11' 'lib32-gcc-libs')
 elif test "$CARCH" == i686; then
 	depends=('libx11')
 fi
-source=("http://pc.115.com/download/linux/115wangpan_linux_v${pkgver}.deb")
-sha1sums=('167f1eee8f18b7b746474eb297cc5b1bab8fed59')
+elif test "$CARCH" == i686; then
+if test "$CARCH" == x86_64; then
+	depends=('lib32-libx11' 'lib32-gcc-libs')
+elif test "$CARCH" == i686; then
+	depends=('libx11')
+fi
+fi
+source=("http://pc.115.com/download/linux/115yun_linux_v${pkgver}.deb")
+sha1sums=('66c74d7fd69bd86de52da66a41883156ba0c3e40')
+
+build(){
+	cd ${srcdir}
+	tar xvf data.tar.gz
+}
 
 build(){
 	cd ${srcdir}
