@@ -1,0 +1,14 @@
+--- configure.ac	2015-03-14 10:52:22.187482157 -0500
++++ configure.ac	2015-03-14 10:53:01.040495936 -0500
+@@ -1531,7 +1531,10 @@
+ if test "$have_gtk" = "yes" ; then
+ 	# If we have GTK then add flags for it.
+ 
+-	CPPFLAGS="-DGDK_PIXBUF_DISABLE_DEPRECATED $CPPFLAGS"
++	# 2015-03-04 - disabled to fix SegFault, see
++	# https://trac.macports.org/ticket/46850
++	# https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=195980#c45
++	#CPPFLAGS="-DGDK_PIXBUF_DISABLE_DEPRECATED $CPPFLAGS"
+ 	CPPFLAGS="-DGDK_DISABLE_DEPRECATED $CPPFLAGS"
+ 	if test \( $gtk_config_major_version -eq 3 -a $gtk_config_minor_version -ge 10 \) ; then
+ 		## Allow use of deprecated & disable deprecated warnings if Gtk >= 3.10;

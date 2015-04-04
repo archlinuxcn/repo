@@ -11,12 +11,15 @@ license=('GPL2')
 makedepends=('gtk2' 'krb5' 'libpcap' 'bash' 'gnutls' 'portaudio'
              'lua' 'python' 'desktop-file-utils' 'hicolor-icon-theme')
 url='http://www.wireshark.org/'
-source=(http://www.wireshark.org/download/src/${pkgbase}-${pkgver}.tar.bz2)
-sha1sums=('dbbd4090c02fe170f35b26fa26d8aba0b399c659')
+source=(http://www.wireshark.org/download/src/${pkgbase}-${pkgver}.tar.bz2
+        configure-pixmap-fix.diff)
+sha1sums=('dbbd4090c02fe170f35b26fa26d8aba0b399c659'
+          'c383bad83442d75f44afe1737848b9dee4f35b8f')
 
 prepare() {
   cd ${pkgbase}-${pkgver}
   sed -i 's/$(AM_V_RCC)rcc/&-qt4/p' ui/qt/Makefile.am
+  patch -uNp0 -i ../configure-pixmap-fix.diff
 }
 
 build() {
