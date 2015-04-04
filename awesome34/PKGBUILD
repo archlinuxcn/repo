@@ -6,7 +6,7 @@
 
 pkgname=awesome34
 pkgver=3.4.15
-pkgrel=3
+pkgrel=1
 pkgdesc='Highly configurable framework window manager'
 arch=('i686' 'x86_64')
 url='http://awesome.naquadah.org/'
@@ -17,6 +17,7 @@ depends=(
   'imlib2'
   'libev'
   'libxdg-basedir'
+  'libxcursor'
   'lua51'
   'pango'
   'startup-notification'
@@ -52,7 +53,7 @@ md5sums=('4e3a14bed1e6a0d424fc79aba03d981e'
 
 build() {
   cd awesome-$pkgver
-  patch -p1 < ../../awesome-lua51.patch
+  patch -p1 < ../awesome-lua51.patch
 #  patch -p1 < ../../xlib-avoid-xkb.patch
   make CMAKE_ARGS=' -DCMAKE_INSTALL_PREFIX=/usr -DSYSCONFDIR=/etc -DCMAKE_BUILD_TYPE=RELEASE'
 }
