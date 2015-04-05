@@ -1,0 +1,11 @@
+post_remove() {
+	if getent group yubikey > /dev/null 2>&1; then
+		groupdel yubikey
+		udevadm control --reload
+	fi
+}
+
+post_upgrade() {
+	post_remove
+}
+
