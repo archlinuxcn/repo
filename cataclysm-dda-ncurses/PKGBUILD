@@ -3,13 +3,13 @@
 # Contributor: Fernando Carmona Varo <ferkiwi @t gmail dot com>
 pkgname=cataclysm-dda-ncurses
 pkgver=0.C
-pkgrel=2
+pkgrel=3
 pkgdesc="Cataclysm: Dark Days Ahead is an actively maintained roguelike set in a post-apocalyptic world, forked from the original. (ncurses only)"
 arch=('i686' 'x86_64')
 url="http://www.cataclysmdda.com/"
 license=('CCPL:by-sa')
 
-depends=('glibc' 'zlib' 'bzip2')
+depends=('glibc' 'gcc-libs' 'sh')
 makedepends=('gettext' 'clang')
 optdepends=('lua51')
 conflicts=('cataclysm-dda' 'cataclysm-dda-git')
@@ -22,11 +22,10 @@ md5sums=('805132ab7651ba93e5247ced7fe1fc97'
 
 prepare() {
   #We need to "patch" cataclysm for it to build with clang>=3.6.
-  #Hopefully, this will be corrected in the next release version.
+  #This will be corrected in the next release version.
   #See https://github.com/CleverRaven/Cataclysm-DDA/issues/11805 for details.
   cd "$srcdir/Cataclysm-DDA-${pkgver}"
   patch -Np1 -i $srcdir/clang36.patch
-  
 }
 
 build() {
@@ -41,27 +40,22 @@ package() {
 
   local instdir=/usr/share/cataclysm-dda
 
-  install -dm755 "$pkgdir/${instdir}/"{data,gfx,doc}
-  cp -ru --no-preserve=ownership data gfx doc "$pkgdir/${instdir}/"
+  install -dm755 "$pkgdir/${instdir}/"{data,gfx}
+  cp -r --no-preserve=ownership data gfx "$pkgdir/${instdir}/"
 
 
   local instdir="/usr/share/cataclysm-dda"
 
   install -dm755 "$pkgdir/${instdir}/"
   install -Dm755 cataclysm cataclysm-launcher "$pkgdir/${instdir}/"
-
-  install -dm775 -g games "$pkgdir/${instdir}/data/"
-  cp -r data/* "$pkgdir/${instdir}/data"
-
-  #User default mod list needs to be writeable
-  [ -f "$srcdir/user-default-mods.json" ] || echo "{}" > $srcdir/user-default-mods.json
-  install -Dm775 -g games "$srcdir/user-default-mods.json" "$pkgdir/var/games/cataclysm-dda/data/mods/user-default-mods.json"
-  ln -s "/var/games/cataclysm-dda/data/mods/user-default-mods.json" "$pkgdir/${instdir}/data/mods/user-default-mods.json"
+  install -dm755 data "$pkgdir/${instdir}/"
 
   #The doc goes in /usr/share/doc  
   install -dm755 "$pkgdir/usr/share/doc/cataclysm-dda"
+  unlink doc/JSON_LOADING_ORDER.md
+  cp -T data/json/LOADING_ORDER.md doc/JSON_LOADING_ORDER.md
   cp -r *.txt doc/* "$pkgdir/usr/share/doc/cataclysm-dda/"
-
+  
   # License file
   install -Dm644 LICENSE.txt "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
 
