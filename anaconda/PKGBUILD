@@ -2,30 +2,30 @@
 # Contributor : Martin Wimpress <code@flexion.org>
 
 pkgname=anaconda
-pkgver=2.1.0
+pkgver=2.2.0
 pkgrel=1
 pkgdesc="Completely free enterprise-ready Python distribution for large-scale data processing, predictive analytics, and scientific computing."
 arch=('x86' 'x86_64')
 url="https://store.continuum.io/cshop/anaconda/"
 license=("custom")
 makedepends=('patch')
-source=("http://repo.continuum.io/anaconda3/Anaconda3-${pkgver}-Linux-x86_64.sh"
+source=("https://3230d63b5fc54e62148e-c95ac804525aac4b6dba79b00b39d1d3.ssl.cf1.rackcdn.com/Anaconda3-${pkgver}-Linux-x86_64.sh"
         "installer_sh_x86.patch"
         "installer_sh_x86_64.patch"
         "conda_install.patch")
-options=(!strip)
-sha256sums=('af3225ccbe8df0ffb918939e009aa57740e35058ebf9dfcf5fec794a77556c3c'
-            '5f7bcde6f9580212bf6dd86d8b62c61bbada68a3e1ef9989169ba8a43de092c1'
-            'aacb20eb47b85430c9ec30ee09ada2f148cb43166be39b6998ae864e7fd17127'
-            '2ca6eeef44065f3ea0b4761bf2f40557af9db70eedae890e436be4a28f713c5c')
-_pythonver='3.4.1-4'
-_condaver='3.7.0'
+options=(!strip libtool)
+sha256sums=('4aac68743e7706adb93f042f970373a6e7e087dbf4b02ac467c94ca4ce33d2d1'
+            'e304a2cbf3f6cddd80abc1a21488e6e20798ccdc714e999e68c24f937704ed4c'
+            'e5f90b6210926704f110cbab0e57c8dd06ca05cbdf5e697a97ffbb184d35ea26'
+            'de91d0b08d24f632c7d282ed6457ffe2e3d5ecab5967b8e3c000fcf5091e3711')
+_pythonver='3.4.3-0'
+_condaver='3.10.0'
 
 _pkgarch=`uname -m`
 if [ "$CARCH" == "i686" ]; then
     _pkgarch="x86"
-    sha256sums[0]='657cb599004c21e37ce693515ea33922e0084fd7c159ef1b96b57c86eed8385f'
-    source[0]="http://repo.continuum.io/anaconda3/Anaconda3-${pkgver}-Linux-x86.sh"
+    sha256sums[0]='223655cd256aa912dfc83ab24570e47bb3808bc3b0c6bd21b5db0fcf2750883e'
+    source[0]="https://3230d63b5fc54e62148e-c95ac804525aac4b6dba79b00b39d1d3.ssl.cf1.rackcdn.com/Anaconda3-${pkgver}-Linux-x86.sh"
 fi
 
 prepare() {

@@ -1,6 +1,6 @@
---- a/pkgs/conda-3.7.0-py34_0/lib/python3.4/site-packages/conda/install.py	2014-11-12 23:40:26.234512044 +0100
-+++ b/pkgs/conda-3.7.0-py34_0/lib/python3.4/site-packages/conda/install.py	2014-11-12 23:43:17.176561770 +0100
-@@ -242,21 +242,23 @@
+--- a/pkgs/conda-3.10.0-py34_0/lib/python3.4/site-packages/conda/install.py	2015-04-06 18:15:53.455377831 +0200
++++ b/pkgs/conda-3.10.0-py34_0/lib/python3.4/site-packages/conda/install.py	2015-04-06 18:16:14.235119572 +0200
+@@ -244,21 +244,23 @@
      return res
  
  def update_prefix(path, new_prefix, placeholder=prefix_placeholder,
@@ -28,7 +28,7 @@
      else:
          sys.exit("Invalid mode:" % mode)
  
-@@ -473,7 +475,7 @@
+@@ -490,7 +492,7 @@
          return None
  
  
@@ -37,7 +37,7 @@
      '''
      Set up a package in a specified (environment) prefix.  We assume that
      the package has been extracted (using extract() above).
-@@ -487,6 +489,8 @@
+@@ -504,6 +506,8 @@
          # linking or unlinking some packages
          log.warn('Ignored: %s' % dist)
          return
@@ -46,7 +46,7 @@
  
      source_dir = join(pkgs_dir, dist)
      if not run_script(source_dir, dist, 'pre-link', prefix):
-@@ -525,7 +529,7 @@
+@@ -542,7 +546,7 @@
          for f in sorted(has_prefix_files):
              placeholder, mode = has_prefix_files[f]
              try:
@@ -55,7 +55,7 @@
              except PaddingError:
                  sys.exit("ERROR: placeholder '%s' too short in: %s\n" %
                           (placeholder, dist))
-@@ -643,6 +647,10 @@
+@@ -667,6 +671,10 @@
                   default=sys.prefix,
                   help="prefix (defaults to %default)")
  
@@ -66,7 +66,7 @@
      p.add_option('--pkgs-dir',
                   action="store",
                   default=join(sys.prefix, 'pkgs'),
-@@ -672,9 +680,14 @@
+@@ -696,9 +704,14 @@
  
      pkgs_dir = opts.pkgs_dir
      prefix = opts.prefix
@@ -81,7 +81,7 @@
  
      if opts.list:
          pprint(sorted(linked(prefix)))
-@@ -689,14 +702,14 @@
+@@ -713,14 +726,14 @@
          for dist in dists:
              if opts.verbose or linktype == LINK_COPY:
                  print("linking: %s" % dist)
