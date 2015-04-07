@@ -7,21 +7,21 @@
 pkgname=balsamiqmockups
 pkgver=2.2.24
 license=('custom')
-pkgrel=2
+pkgrel=3
 arch=('any')
 pkgdesc="The Adobe Air based Mockup client. Not free or open source, there is a 7 day free trial."
 url=('http://balsamiq.com/products/mockups')
-source=("http://s3.amazonaws.com/build_production/mockups-desktop/MockupsForDesktop.air"
+source=("https://build_archives.s3.amazonaws.com/mockups-desktop/2.2.24/MockupsForDesktop2.2.24-2014.11.06.air"
         "http://media.balsamiq.com/files/BalsamiqEula.pdf"
         'fix-filetype-mime.patch'
         'balsamiqmockups.desktop'
         'vnd.balsamiq.bmml+xml.xml')
 sha1sums=('c9f39fc13ac5bfef2a523c870685dd0808220bf6'
-          '46f4441306f72f33f9d67620f7c64c232b28faaa'
+          'f22bd93c1b8d94d70a9cfd511050c3b10b23880b'
           '279e15c0c1bcffeabc97d9af3882c849735b5aa9'
           'cfe7240b7403ff47d63e9f8264581a40112607ff'
           '6f28b1fcc5758cb46c5f149d7896b53bdd027293')
-noextract=("MockupsForDesktop.air")
+noextract=("MockupsForDesktop2.2.24-2014.11.06.air")
 install=balsamiqmockups.install
 depends=(adobe-air-sdk desktop-file-utils lib32-libgl)
 makedepends=(unzip)
@@ -32,7 +32,7 @@ build () {
 
   mkdir -p $pkgname
   cd "${srcdir}/${pkgname}"
-  unzip -o "${srcdir}/MockupsForDesktop.air"
+  unzip -o "${srcdir}/MockupsForDesktop2.2.24-2014.11.06.air"
 
   msg2 "Apply patch fix-filetype-mime.patch"
   patch -Np1 -i "$srcdir/fix-filetype-mime.patch"
