@@ -5,7 +5,7 @@ post_install () {
 # arg 1:  the new package version
 # arg 2:  the old package version
 post_upgrade() {
-	echo -e "  IceCat user profile directory is set to ~/.gnu/icecat\n  Please, consider to move your profile directory if you want to keep your settings.\n  ==> mv ~/.mozilla/icecat ~/.gnu/"
+	echo -e "  Caused by an upstream mistake (not a feature) IceCat user profile directory is set back to ~/.mozilla/icecat\n  Please, consider to move your profile directory if you want to keep your settings.\n  ==> mv ~/.gnu/icecat ~/.mozilla/"
 	update-desktop-database -q
 }
 

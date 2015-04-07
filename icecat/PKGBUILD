@@ -6,24 +6,26 @@
 # Contributor: Muhammad 'MJ' Jassim <UnbreakableMJ@gmail.com> 
 
 pkgname=icecat
-pkgver=31.5.0
+pkgver=31.6.0
+_pkgver=31.6.0-gnu1
 _pkgverbase=${pkgver%%.*}
-pkgrel=1
+pkgrel=2
 pkgdesc="GNU version of the Firefox browser."
 arch=(i686 x86_64)
 url="http://www.gnu.org/software/gnuzilla/"
 license=('GPL' 'MPL' 'LGPL')
-depends=('gtk2' 'libxt' 'startup-notification'
-         'dbus-glib' 'alsa-lib' 'desktop-file-utils'
-         'libvpx' 'icu' 'libevent' 'nss' 'hunspell')
+depends=('gtk2' 'mozilla-common' 'libxt' 'startup-notification' 'mime-types'
+         'dbus-glib' 'alsa-lib' 'desktop-file-utils' 'hicolor-icon-theme'
+         'libvpx' 'icu' 'libevent' 'nss' 'hunspell' 'sqlite')
 makedepends=('unzip' 'zip' 'diffutils' 'python2' 'yasm' 'mesa' 'imake'
-             'libpulse' 'gst-plugins-base-libs' 'inetutils' 'autoconf2.13')
+             'libpulse' 'gst-plugins-base-libs' 'inetutils')
 optdepends=('networkmanager: Location detection via available WiFi networks'
             'gst-plugins-good: h.264 video'
-            'gst-libav: h.264 video')
+            'gst-libav: h.264 video'
+            'upower: Battery API')
 
 install=icecat.install
-source=(http://ftp.gnu.org/gnu/gnuzilla/${pkgver}/${pkgname}-${pkgver}.tar.bz2
+source=(http://ftp.gnu.org/gnu/gnuzilla/${pkgver}/${pkgname}-${_pkgver}.tar.bz2
 #source=(http://mirrors.kernel.org/gnu/gnuzilla/${pkgver}/${pkgname}-${pkgver}.tar.xz      ## Good mirror
         mozconfig
         icecat.desktop
@@ -31,7 +33,7 @@ source=(http://ftp.gnu.org/gnu/gnuzilla/${pkgver}/${pkgname}-${pkgver}.tar.bz2
         rhbz-966424.patch
         vendor.js)
 
-md5sums=('8d80d83abbd1d2dd3733be591d98ce30'
+md5sums=('f59604143b42a2e5112f5c4cef6d04c2'
          '0967f59d5485300844def52ccb0bc509'
          'e81ad01dbc16ba28bf92ba4b7c309ca7'
          'd93fe402b87cd000a869e1fd6badc6c9'
