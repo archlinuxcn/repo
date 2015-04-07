@@ -1,8 +1,8 @@
-# Maintainer: John D Jones III jnbek1972 __AT__ $mailservice_by_google __DOT__ com
+# Maintainer: John D Jones III AKA jnbek <jnbek1972 -_AT_- g m a i l -_Dot_- com>
 _npmname=jshint
-_npmver=2.6.0
+_npmver=2.6.3
 pkgname=nodejs-jshint # All lowercase
-pkgver=2.6.0
+pkgver=2.6.3
 pkgrel=1
 pkgdesc="Static analysis tool for JavaScript"
 arch=(any)
@@ -12,7 +12,7 @@ depends=('nodejs')
 optdepends=()
 source=(http://registry.npmjs.org/$_npmname/-/$_npmname-$_npmver.tgz)
 noextract=($_npmname-$_npmver.tgz)
-md5sums=('89d4f1ad7b9c65f666ccdf639ff026c1')
+sha1sums=('84b470b8e5d5cd7adf0a3bd4975250443c9d311a')
 
 package() {
   cd "$srcdir"
