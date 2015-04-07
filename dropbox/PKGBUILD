@@ -4,12 +4,12 @@
 
 pkgname=dropbox
 pkgver=3.2.9
-pkgrel=1
+pkgrel=2
 pkgdesc="A free service that lets you bring your photos, docs, and videos anywhere and share them easily."
 arch=("i686" "x86_64")
 url="http://www.dropbox.com"
 license=(custom)
-depends=("libsm")
+depends=("libsm" "libxslt" "libxmu")
 optdepends=(
     'ufw-extras: ufw rules for dropbox'
     'perl-file-mimeinfo: opening dropbox folder on some desktop environments'
