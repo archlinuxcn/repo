@@ -9,8 +9,8 @@ url="http://pypi.python.org/pypi/$_name"
 license=('Apache')
 depends=('python>=3.4' 'cython')
 makedepends=('python-setuptools')
-source=("https://pypi.python.org/packages/source/a/$_name/$_name-$pkgver.tar.gz")
-md5sums=('d8034fcee1e9f286e811b77055688474')
+source=(https://pypi.python.org/packages/source/a/aiohttp/aiohttp-0.15.1.tar.gz)
+md5sums=(d8034fcee1e9f286e811b77055688474)
 
 package() {
 	cd "$srcdir/$_name-$pkgver"
