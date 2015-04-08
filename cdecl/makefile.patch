@@ -1,0 +1,20 @@
+diff -Naur cdecl-2.5_orig/Makefile cdecl-2.5/Makefile
+--- cdecl-2.5_orig/Makefile	1996-01-15 23:36:38.000000000 -0600
++++ cdecl-2.5/Makefile	2010-09-04 03:18:43.000000000 -0500
+@@ -17,11 +17,12 @@
+ 
+ CFLAGS= -s -O2 -DUSE_READLINE
+ CC= gcc
+-LIBS= -lreadline -ltermcap
++LIBS= -lreadline
+ ALLFILES= makefile cdgram.y cdlex.l cdecl.c cdecl.1 testset testset++
+-BINDIR= /usr/bin
+-MANDIR= /usr/man/man1
+-CATDIR= /usr/man/cat1
++PREFIX=/usr/local
++BINDIR= $(PREFIX)/bin
++MANDIR= $(PREFIX)/share/man/man1
++CATDIR= $(PREFIX)/share/man/cat1
+ INSTALL= install -c
+ INSTALL_DATA= install -c -m 644
+ 

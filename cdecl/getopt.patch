@@ -1,0 +1,11 @@
+diff -ru cdecl-2.5_orig/cdecl.c cdecl-2.5/cdecl.c
+--- cdecl-2.5_orig/cdecl.c	2008-07-02 11:36:14.854458119 +0200
++++ cdecl-2.5/cdecl.c	2008-07-02 11:36:59.101943479 +0200
+@@ -124,7 +124,6 @@
+ 
+ #if __STDC__
+   char *ds(char *), *cat(char *, ...), *visible(int);
+-  int getopt(int,char **,char *);
+   int main(int, char **);
+   int yywrap(void);
+   int dostdin(void);

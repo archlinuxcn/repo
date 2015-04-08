@@ -1,0 +1,30 @@
+diff -Naur cdecl-2.5/cdecl.c cdecl-2.5-new/cdecl.c
+--- cdecl-2.5/cdecl.c	1996-01-15 21:54:46.000000000 -0600
++++ cdecl-2.5-new/cdecl.c	2010-09-04 03:12:43.000000000 -0500
+@@ -90,7 +90,7 @@
+ #ifdef USE_READLINE
+ # include <readline/readline.h>
+   /* prototypes for functions related to readline() */
+-  char * getline();
++  char * our_getline(void);
+   char ** attempt_completion(char *, int, int);
+   char * keyword_completion(char *, int);
+   char * command_completion(char *, int);
+@@ -375,7 +375,7 @@
+ static char *line_read = NULL;
+ 
+ /* Read a string, and return a pointer to it.  Returns NULL on EOF. */
+-char * getline ()
++char * our_getline (void)
+ {
+   /* If the buffer has already been allocated, return the memory
+      to the free pool. */
+@@ -887,7 +887,7 @@
+ 
+ 	if (!quiet) (void) printf("Type `help' or `?' for help\n");
+ 	ret = 0;
+-	while ((line = getline())) {
++	while ((line = our_getline())) {
+ 	    if (!strcmp(line, "quit") || !strcmp(line, "exit")) {
+ 		free(line);
+ 		return ret;
