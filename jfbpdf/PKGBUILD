@@ -1,0 +1,46 @@
+# Maintainer: Chuan Ji <jichuan89@gmail.com>
+
+pkgname=jfbpdf
+pkgver=20140423
+pkgrel=1
+pkgdesc="Fast framebuffer PDF viewer"
+arch=('i686' 'x86_64')
+url="http://seasonofcode.com/pages/jfbview.html"
+license=('Apache')
+depends=('mupdf>=1.4' 'openjpeg2' 'jbig2dec')
+makedepends=('git')
+
+_gitroot="git://github.com/jichuan89/JFBView.git"
+_gitname="jfbpdf"
+
+build(){
+  cd "${srcdir}"
+  msg "Connecting to GIT server...."
+  
+  if [[ -d ${_gitname} ]]; then
+    cd "${_gitname}"
+    git pull origin
+    msg "The local files are updated."
+  else
+    git clone "${_gitroot}" "${_gitname}"
+    cd "${_gitname}"
+  fi
+  msg "Checkout done or server timeout"
+  rm -rf "${srcdir}/${_gitname}-build"
+  git clone "${srcdir}/${_gitname}" "${srcdir}/${_gitname}-build"
+
+  cd "${srcdir}/${_gitname}-build"
+  msg "Starting make..."
+  make ${_gitname}
+}
+
+package(){
+  cd "${srcdir}/${_gitname}-build"
+  install -Dm755 "./${_gitname}" "${pkgdir}/usr/bin/${_gitname}"
+  install -Dm644 "./README" "$pkgdir/usr/share/doc/${_gitname}/README"
+  cp "./jfbview.1" "./${_gitname}.1"
+  cat "./${_gitname}.1" | gzip > "./${_gitname}.1.gz"
+  install -Dm644 "./${_gitname}.1.gz" "$pkgdir/usr/share/man/man1/${_gitname}.1.gz"
+}
+
+# vim:set ts=2 sw=2 et:
