@@ -1,0 +1,35 @@
+_pkgname=ujson
+pkgname=python-$_pkgname-git
+pkgver=1.34.20150409
+pkgrel=1
+pkgdesc="Ultra fast JSON encoder and decoder for Python"
+arch=('any')
+url="http://www.esn.me"
+license=('BSD')
+depends=('python' 'python-setuptools')
+provides=("python-ujson=${pkgver%.*}")
+conflicts=('python-ujson')
+source=('git+https://github.com/esnme/ultrajson.git')
+md5sums=('SKIP')
+
+_gitname=ultrajson
+
+pkgver() {
+  cd "$srcdir/$_gitname"
+  _author_ver=$(awk '$2 == "UJSON_VERSION" {print substr($3, 2, length($3)-2)}' python/version.h)
+  _last_commit_date=$(git log -1 --pretty='%cd' --date=short | tr -d '-')
+  echo $_author_ver.$_last_commit_date
+}
+
+build() {
+  cd "$srcdir/$_gitname"
+  python3 setup.py build
+}
+
+package() {
+  cd "$srcdir/$_gitname"
+
+  python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+}
+
+# vim:set sw=2 et:
