@@ -21,10 +21,11 @@ pkgver() {
   echo $_author_ver.$_last_commit_date
 }
 
-build() {
-  cd "$srcdir/$_gitname"
-  python3 setup.py build_ext
-}
+# This is redundant and use "--skip-build" will result in no modules install. don't know why.
+# build() {
+#   cd "$srcdir/$_gitname"
+#   python3 setup.py build_ext
+# }
 
 package() {
   cd "$srcdir/$_gitname"
