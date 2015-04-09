@@ -23,13 +23,13 @@ pkgver() {
 
 build() {
   cd "$srcdir/$_gitname"
-  python3 setup.py build
+  python3 setup.py build_ext
 }
 
 package() {
   cd "$srcdir/$_gitname"
 
-  python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+  python3 setup.py install --root=$pkgdir --optimize=1
 }
 
 # vim:set sw=2 et:
