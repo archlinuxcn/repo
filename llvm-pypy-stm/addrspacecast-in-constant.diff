@@ -1,0 +1,13 @@
+Index: lib/CodeGen/AsmPrinter/AsmPrinter.cpp
+===================================================================
+--- lib/CodeGen/AsmPrinter/AsmPrinter.cpp	(revision 201645)
++++ lib/CodeGen/AsmPrinter/AsmPrinter.cpp	(working copy)
+@@ -1617,6 +1617,8 @@
+                                    Ctx);
+   }
+ 
++  case Instruction::AddrSpaceCast:
++    // XXX???  I *think* it is correct at least in PyPy's case
+   case Instruction::Trunc:
+     // We emit the value and depend on the assembler to truncate the generated
+     // expression properly.  This is important for differences between

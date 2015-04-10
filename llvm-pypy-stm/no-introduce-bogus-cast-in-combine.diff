@@ -1,0 +1,35 @@
+Index: lib/Transforms/InstCombine/InstCombineLoadStoreAlloca.cpp
+===================================================================
+--- lib/Transforms/InstCombine/InstCombineLoadStoreAlloca.cpp	(revision 201645)
++++ lib/Transforms/InstCombine/InstCombineLoadStoreAlloca.cpp	(working copy)
+@@ -299,6 +299,17 @@
+ 
+     Type *SrcPTy = SrcTy->getElementType();
+ 
++    // XXX note that we might end up with a bogus cast: if the original
++    // cast in 'load (cast P)' is between "foo addrspace1 **" and "foo
++    // addrspace2 **", then we cannot re-express the two operations as
++    // 'cast (load P)' because that would be casting a "foo addrspace1 *"
++    // to "foo addrspace2 *".  While nothing is really wrong about that
++    // cast, llvm forbids it even in internally-generated operations.
++    if (SrcPTy->isPointerTy() && DestPTy->isPointerTy() &&
++         cast<PointerType>(DestPTy)->getAddressSpace() !=
++         cast<PointerType>(SrcPTy)->getAddressSpace())
++      return 0;
++
+     if (DestPTy->isIntegerTy() || DestPTy->isPointerTy() ||
+          DestPTy->isVectorTy()) {
+       // If the source is an array, the code below will not succeed.  Check to
+@@ -510,6 +521,12 @@
+       IC.getDataLayout()->getTypeSizeInBits(DestPTy))
+     return 0;
+ 
++  // XXX this is similar to the issue in InstCombineLoadCast
++  if (SrcPTy->isPointerTy() && DestPTy->isPointerTy() &&
++       cast<PointerType>(DestPTy)->getAddressSpace() !=
++       cast<PointerType>(SrcPTy)->getAddressSpace())
++    return 0;
++
+   // Okay, we are casting from one integer or pointer type to another of
+   // the same size.  Instead of casting the pointer before
+   // the store, cast the value to be stored.

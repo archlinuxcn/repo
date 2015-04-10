@@ -1,0 +1,16 @@
+Index: lib/Transforms/Scalar/MemCpyOptimizer.cpp
+===================================================================
+--- lib/Transforms/Scalar/MemCpyOptimizer.cpp	(revision 201645)
++++ lib/Transforms/Scalar/MemCpyOptimizer.cpp	(working copy)
+@@ -368,6 +368,11 @@
+                                              Value *StartPtr, Value *ByteVal) {
+   if (TD == 0) return 0;
+ 
++  // We have to check for address space < 256, since llvm.memset only supports
++  // user defined address spaces.
++  if (cast<PointerType>(StartPtr->getType())->getAddressSpace() >= 256)
++    return 0;
++
+   // Okay, so we now have a single store that can be splatable.  Scan to find
+   // all subsequent stores of the same value to offset from the same pointer.
+   // Join these together into ranges, so we can decide whether contiguous blocks
