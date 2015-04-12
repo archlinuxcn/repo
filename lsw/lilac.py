@@ -7,7 +7,7 @@
 from lilaclib import *
 
 build_prefix = ['extra-x86_64', 'extra-i686']
-PATCH="""
+PATCH=b"""
 diff --git a/lsw/PKGBUILD b/lsw/PKGBUILD
 index 728c100..2ed092b 100644
 --- a/lsw/PKGBUILD
@@ -53,7 +53,7 @@ import subprocess
 
 def pre_build():
     aur_pre_build()
-    patch_proc = subprocess.Popen(["patch", "-p1"], stdin=subprocess.PIPE)
+    patch_proc = subprocess.Popen(["patch", "-p1", "PKGBUILD"], stdin=subprocess.PIPE)
     patch_proc.communicate(PATCH)
 
 if __name__ == '__main__':
