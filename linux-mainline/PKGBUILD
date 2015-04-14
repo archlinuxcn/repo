@@ -6,15 +6,15 @@ pkgbase=linux-mainline               # Build stock -ARCH kernel
 #pkgbase=linux-custom       # Build kernel with a different name
 #_srcname=linux-3.18
 #_patchname=patch-3.19-rc6
-_srcname=linux-4.0-rc7
-pkgver=4.0rc7
+_srcname=linux-4.0
+pkgver=4.0
 pkgrel=1
 arch=('i686' 'x86_64')
-url="http://www.kernel.org/"
+url="http://www.hurrdurr.org/"
 license=('GPL2')
 makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc')
 options=('!strip')
-source=("https://www.kernel.org/pub/linux/kernel/v4.x/testing/${_srcname}.tar.xz"
+source=("https://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.xz"
         #"https://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
         #"https://www.kernel.org/pub/linux/kernel/v3.x/testing/${_patchname}.xz"
         #"https://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.sign"
@@ -25,7 +25,7 @@ source=("https://www.kernel.org/pub/linux/kernel/v4.x/testing/${_srcname}.tar.xz
         'linux.preset'
         'change-default-console-loglevel.patch'
         )
-sha256sums=('71e2e7fca435e747e58dcecbb34933c48b677b6a1a2d04dc3b58e9fa09b9c188'
+sha256sums=('0f2f7d44979bc8f71c4fc5d3308c03499c26a824dd311fdf6eef4dee0d7d5991'
             '704a479de77c9022e5c7a797d2cd7fd0e4ba1f52f9039ec8a80efd57f7e9f0d8'
             '59830f47c1be39f874640d762dca55f972aca549a7a65ba2f1dac184251dabb2'
             'f0d90e756f14533ee67afda280500511a62465b4f76adcc5effa95a40045179c'
