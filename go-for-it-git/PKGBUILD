@@ -2,14 +2,14 @@
 # Contributor: Manuel Kehl <https://launchpad.net/~mank319, https://github.com/mank319/>
 
 pkgname=go-for-it-git
-pkgver=121.72e0d9a
+pkgver=260.92d1308
 pkgrel=1
 _gitname=Go-For-It
 pkgdesc='A stylish to-do list with built-in productivity timer.'
 arch=('i686' 'x86_64')
 url='https://github.com/mank319/Go-For-It'
 license=('GPL3')
-depends=('gtk3' 'granite')
+depends=('gtk3' 'libnotify')
 optdepends=()
 makedepends=('vala' 'git' 'cmake')
 provides=("${pkgname%}")
