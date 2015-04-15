@@ -27,9 +27,13 @@ def pre_build():
 
     for line in edit_file('PKGBUILD'):
         # edit PKGBUILD
+        if line.strip().startswith("depends="):
+            words = line.split(" ")
+            words.remove("kcmutils-git")
+            line = " ".join(words)
         if line.strip().startswith("makedepends="):
             words = line.split(" ")
-            words.insert(-1, "'kcmutils'")
+            words.insert(-1, "'kcmutils>=5.9'")
             line = " ".join(words)
         print(line)
 
