@@ -1,0 +1,4 @@
+post_install() {
+    echo "Ensure you have a file with 'tun' in folder /etc/modules-load.d"
+    echo "To install the module now, run 'sudo modprobe tun'"
+}
