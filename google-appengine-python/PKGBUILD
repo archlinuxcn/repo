@@ -8,9 +8,9 @@
 # Contributor: Mikkel Oscar Lyderik <mikkeloscar@gmail.com>
 
 pkgname=google-appengine-python
-pkgver=1.9.18
+pkgver=1.9.19
 _zipver=$pkgver
-pkgrel=2
+pkgrel=1
 arch=(any)
 pkgdesc="Google App Engine SDK for Python"
 url=https://cloud.google.com/appengine/downloads
@@ -31,7 +31,7 @@ makedepends=(unzip)
 options=(!strip)
 install=install
 source=(https://storage.googleapis.com/appengine-sdks/featured/google_appengine_${_zipver}.zip)
-sha1sums=('823b6402241b354450ba20ae86ea578197995b4c')
+sha1sums=('2a0b7c286858a0f97e56192f6c9c0e4793961f4a')
 noextract=(google_appengine_${_zipver}.zip)
 
 prepare() {
