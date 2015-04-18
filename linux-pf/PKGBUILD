@@ -2,14 +2,14 @@
 # PKGBUILD assembled from kernel26
 # Some lines from  kernel26-bfs and kernel26-ck
 # Credits to respective maintainers
-_major=3
-_minor=19
+_major=4
+_minor=0
 #_patchlevel=0
 #_subversion=1
 _basekernel=${_major}.${_minor}
 _srcname=linux-${_major}.${_minor}
 pkgbase=linux-pf
-_pfrel=4
+_pfrel=1
 _kernelname=-pf
 _pfpatchhome="http://pf.natalenko.name/sources/${_basekernel}/"
 _pfpatchname="patch-${_basekernel}${_kernelname}${_pfrel}"
@@ -76,7 +76,7 @@ source=("ftp://www.kernel.org/pub/linux/kernel/v${_major}.x/linux-${_basekernel}
 	'linux.preset'			# standard config files for mkinitcpio ramdisk
 	'change-default-console-loglevel.patch'
 	"${_pfpatchhome}${_pfpatchname}.xz"	# the -pf patchset
-        "git+$_aufs3#branch=aufs3.19"
+        "git+$_aufs3#branch=aufs3.x-rcN"
 )
 
 
@@ -500,6 +500,7 @@ package_linux-pf() {
   rm -f "${pkgdir}"/lib/modules/${_kernver}/{source,build}
   # remove the firmware
   rm -rf "${pkgdir}/lib/firmware"
+
   # make room for external modules
   ln -s "../extramodules-${_basekernel}${_kernelname:--ARCH}" "${pkgdir}/lib/modules/${_kernver}/extramodules"
   # add real version for building modules and running depmod from post_install/upgrade
@@ -512,7 +513,7 @@ package_linux-pf() {
   mkdir -p "${pkgdir}/usr"
   mv "$pkgdir/lib" "$pkgdir/usr"
   # add vmlinux
-  install -D -m644 vmlinux "${pkgdir}/usr/lib/modules/build/${_kernver}/vmlinux"
+  install -D -m644 vmlinux "${pkgdir}/usr/lib/modules/${_kernver}/build/vmlinux"
 
 # end c/p
 
@@ -667,9 +668,9 @@ package_linux-pf-headers() {
 pkgdesc="Linux kernel and modules with the pf-kernel patch [-ck patchset (BFS included), TuxOnIce, BFQ] and aufs3"
 
 # makepkg -g >>PKGBUILD
-sha256sums=('be42511fe5321012bb4a2009167ce56a9e5fe362b4af43e8c371b3666859806c'
-            '70535ae3d498f4c8198d69e3fc6f6bc9cc1e5cfc6b2f57e45047ac27f8a3b187'
+sha256sums=('0f2f7d44979bc8f71c4fc5d3308c03499c26a824dd311fdf6eef4dee0d7d5991'
+            'c2ebcd9d2a7fa248d4e0847ef02e5fa9253f6c48d20230b6995ea73d6b186b89'
             '82d660caa11db0cd34fd550a049d7296b4a9dcd28f2a50c81418066d6e598864'
             '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99'
-            '486a611d0aba9380928d252a9df0fec478cb34ef2262cd673e8388a9b646bca0'
+            'fae33c66f380eb424895f03058b43b92970d627c0aec090d8cd3bded5736c0a4'
             'SKIP')
