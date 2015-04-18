@@ -1,14 +1,14 @@
 # Maintainer: Antonio Rojas <arojas@archlinux.org>
 
 pkgname=kdeconnect-frameworks-git
-pkgver=r793.2e58f34
+pkgver=r797.e553d97
 pkgrel=1
 pkgdesc='Adds communication between KDE and your smartphone'
 arch=(i686 x86_64)
 url='https://projects.kde.org/projects/playground/base/kdeconnect-kde'
 license=(GPL2)
-depends=(kio qca-qt5 libfakekey hicolor-icon-theme)
-makedepends=(extra-cmake-modules git 'kcmutils>=5.9' python)
+depends=(kio kcmutils qca-qt5 libfakekey hicolor-icon-theme)
+makedepends=(extra-cmake-modules git python)
 provides=(kdeconnect-frameworks)
 conflicts=(kdeconnect-frameworks kdeconnect)
 source=("git://anongit.kde.org/kdeconnect-kde.git")
