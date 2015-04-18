@@ -10,7 +10,7 @@ if ((BUILD_EXTRA)); then
 else
    pkgname=('julia-git')
 fi
-pkgver=0.3.0.rc3.3479.g79f2185
+pkgver=0.3.0.rc3.4342.g061e648
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64')
@@ -21,18 +21,8 @@ makedepends=('gcc-fortran' 'arpack' 'fftw' 'git' 'gmp' 'libgit2' 'libunwind'
              'python2-sphinx_rtd_theme' 'python2-pip' 'texlive-langcjk'
              'texlive-latexextra' 'emacs' 'openspecfun')
 options=('!emptydirs' 'staticlibs' 'debug' 'strip')
-source=('git://github.com/yuyichao/julia#branch=upstream'
-        'git://github.com/JuliaLang/libuv'
-        'git://github.com/JuliaLang/openlibm'
-        'git://github.com/JuliaLang/openspecfun'
-        'git://github.com/JuliaLang/Rmath'
-        'git://github.com/JuliaLang/libmojibake')
-md5sums=('SKIP'
-         'SKIP'
-         'SKIP'
-         'SKIP'
-         'SKIP'
-         'SKIP')
+source=('git://github.com/JuliaLang/julia')
+md5sums=('SKIP')
 
 pkgver() {
   cd julia
@@ -45,8 +35,6 @@ prepare() {
 
   git reset --hard HEAD
   git clean -fdx
-
-  sed -e "s=git://github.com/JuliaLang/\(.*\).git=${srcdir}/\1=g" -i .gitmodules
 
   git submodule init
   git submodule sync
