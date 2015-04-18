@@ -1,6 +1,7 @@
 update_ruby_deps() {
   cd /opt/metasploit
-  bundle-1.9 install --path vendor/bundle
+  bundle install --path vendor/bundle
+  find /opt/metasploit/vendor/bundle/ruby -name robots.rb -exec chmod o+r '{}' \;
 }
 
 
