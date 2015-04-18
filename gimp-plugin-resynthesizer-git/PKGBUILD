@@ -3,8 +3,8 @@
 
 _pkgname=resynthesizer
 pkgname=gimp-plugin-$_pkgname-git
-pkgver=2.0.13.g251eedc
-pkgrel=1
+pkgver=2.0.r13.g251eedc
+pkgrel=2
 pkgdesc="Suite of gimp plugins for texture synthesis (like heal-selection). Git-Version"
 arch=('i686' 'x86_64')
 url="https://github.com/bootchk/resynthesizer"
@@ -18,25 +18,25 @@ md5sums=('SKIP')
 
 
 pkgver() {
-	cd $_pkgname
-	git describe | sed -e 's|-|.|g' -e 's|v||'
+    cd $_pkgname
+    git describe | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/^v//'
 }
 
 prepare() {
     cd $_pkgname
     sed -i 's|/usr/bin/env python|/usr/bin/env python2|' PluginScripts/*.py
+    sed -i 's/--enable-maintainer-mode//g' autogen.sh
 }
 
 build() {
-	cd $_pkgname
+    cd $_pkgname
 
-	./autogen.sh
-	./configure --disable-maintainer-mode --prefix=/usr
-	make
+    ./autogen.sh --disable-maintainer-mode --prefix=/usr
+    make
 }
 
 package() {
-	cd $_pkgname
-	
-	make DESTDIR="$pkgdir/" install
+    cd $_pkgname
+
+    make DESTDIR="$pkgdir/" install
 }
