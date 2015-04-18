@@ -8,7 +8,7 @@
 
 _pack=communications
 pkgname=octave-$_pack
-pkgver=1.2.0
+pkgver=1.2.1
 pkgrel=1
 pkgdesc="Digital Communications, Error Correcting Codes (Channel Code), Source Code functions, Modulation and Galois Fields"
 arch=(any)
@@ -24,7 +24,7 @@ install=$pkgname.install
 _archive=$_pack-$pkgver.tar.gz
 source=("http://downloads.sourceforge.net/octave/$_archive")
 noextract=("$_archive")
-md5sums=('7ee2cda2611ed43e5c354f0b7d73fb1a')
+md5sums=('cf5ad84af0c3221199b2e04109946562')
 
 build() {
   cd "$srcdir"
