@@ -4,7 +4,7 @@ from lilaclib import *
 
 build_prefix = 'extra-x86_64'
 
-depends = ['rust-git']
+depends = [('rust-git', 'rust-git')]
 
 pre_build = vcs_update
 
