@@ -1,5 +1,5 @@
 _depmod() {
-	EXTRAMODULES='extramodules-3.19-pf'
+	EXTRAMODULES='extramodules-4.0-pf'
 	depmod $(cat /usr/lib/modules/$EXTRAMODULES/version)
 }
 
