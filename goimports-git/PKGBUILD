@@ -5,7 +5,7 @@ _pkgname=goimports
 pkgver=20141212
 pkgrel=1
 pkgdesc="Tool to fix (add, remove) your Go imports automatically."
-arch=("any")
+arch=("x86_64")
 url="https://github.com/bradfitz/goimports"
 license=('Other')
 makedepends=('git' 'go' 'mercurial')
@@ -21,7 +21,7 @@ pkgver() {
 build() {
     cd "${_pkgname}"
     export GOPATH=${srcdir}
-    go get "code.google.com/p/go.tools/imports"
+    go get "golang.org/x/tools/cmd/goimports"
     go build -o "${_pkgname}"
 }
 
