@@ -7,16 +7,11 @@
 from lilaclib import *
 
 build_prefix = 'extra-x86_64'
-
 PATCH = b"""
---- PKGBUILD	2014-10-18 21:58:26.000000000 +0900
+--- PKGBUILD	2015-04-19 20:50:44.843350277 +0900
 +++ /home/farseerfc/repo/work/goimports-git/PKGBUILD	2015-04-19 20:38:25.113344590 +0900
-@@ -2,10 +2,10 @@
-
- pkgname=goimports-git
- _pkgname=goimports
--pkgver=20141009
-+pkgver=20141212
+@@ -5,7 +5,7 @@
+ pkgver=20141212
  pkgrel=1
  pkgdesc="Tool to fix (add, remove) your Go imports automatically."
 -arch=("any")
@@ -44,5 +39,6 @@ def pre_build():
 
 if __name__ == '__main__':
     single_main(build_prefix)
+
 
 

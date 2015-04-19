@@ -21,7 +21,7 @@ pkgver() {
 build() {
     cd "${_pkgname}"
     export GOPATH=${srcdir}
-    go get "golang.org/x/tools/cmd/goimports"
+    go get "code.google.com/p/go.tools/imports"
     go build -o "${_pkgname}"
 }
 
