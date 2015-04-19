@@ -20,7 +20,7 @@
 from lilaclib import *
 import re
 
-build_prefix = ['extra-x86_64', 'extra-i686']
+build_prefix = 'extra-x86_64'
 
 depends=['libkipi-frameworks-git']
 

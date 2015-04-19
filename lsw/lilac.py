@@ -6,7 +6,7 @@
 
 from lilaclib import *
 
-build_prefix = ['extra-x86_64', 'extra-i686']
+build_prefix = 'extra-x86_64'
 PATCH = b"""
 diff --git a/lsw/PKGBUILD b/lsw/PKGBUILD
 index 728c100..2ed092b 100644

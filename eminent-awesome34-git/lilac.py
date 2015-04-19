@@ -21,7 +21,7 @@ from lilaclib import *
 
 depends = ['awesome34']
 
-build_prefix = ['extra-x86_64', 'extra-i686']
+build_prefix = 'extra-x86_64'
 
 
 def pre_build():
