@@ -1,6 +1,6 @@
 from lilaclib import *
 
-build_prefix = ['archlinuxcn-i686', 'archlinuxcn-x86_64']
+build_prefix = 'archlinuxcn-x86_64'
 
 def pre_build():
     newver = _G.newver
