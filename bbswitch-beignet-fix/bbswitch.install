@@ -1,5 +1,5 @@
 post_install() {
-    EXTRAMODULES='extramodules-3.19-beignet-fix'
+    EXTRAMODULES='extramodules-4.0-beignet-fix'
     depmod $(cat /usr/lib/modules/$EXTRAMODULES/version)
 }
 
