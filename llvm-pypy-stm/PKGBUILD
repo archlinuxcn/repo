@@ -11,7 +11,7 @@ pkgbase=llvm-pypy-stm
 pkgname=('llvm-pypy-stm' 'llvm-libs-pypy-stm' 'clang-pypy-stm' 'clang-analyzer-pypy-stm' 'clang-tools-extra-pypy-stm')
 _pkgname='llvm'
 pkgver=201645
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 url="http://llvm.org"
 license=('custom:University of Illinois')
@@ -104,7 +104,6 @@ package_llvm-pypy-stm() {
     pkgdesc="Low Level Virtual Machine, patched for pypy-stm"
     depends=("llvm-libs-pypy-stm" 'perl')
     provides=('llvm')
-    replaces=('llvm')
     conflicts=('llvm')
 
     cd "${srcdir}/${_pkgname}"
@@ -157,7 +156,6 @@ package_llvm-libs-pypy-stm() {
     pkgdesc="Low Level Virtual Machine (runtime library), patched for pypy-stm"
     depends=('gcc-libs' 'zlib' 'libffi' 'ncurses')
     provides=('llvm-libs')
-    replaces=('llvm-libs')
     conflicts=('llvm-libs')
 
     install -m755 -d "${pkgdir}"/usr/lib/
@@ -177,7 +175,6 @@ package_clang-pypy-stm() {
     url="http://clang.llvm.org/"
     depends=("llvm-pypy-stm" 'gcc')
     provides=('clang')
-    replaces=('clang')
     conflicts=('clang')
 
     sed -e 's:$(PROJ_prefix)/share/doc/llvm:$(PROJ_prefix)/share/doc/clang:' \
@@ -234,7 +231,6 @@ package_clang-analyzer-pypy-stm() {
     url="http://clang-analyzer.llvm.org/"
     depends=("clang-pypy-stm" 'python2')
     provides=('clang-analyzer')
-    replaces=('clang-analyzer')
     conflicts=('clang-analyzer')
 
     cd "${srcdir}/${_pkgname}/tools/clang"
@@ -271,7 +267,6 @@ package_clang-tools-extra-pypy-stm() {
     url="http://clang.llvm.org/"
     depends=("clang-pypy-stm")
     provides=('clang-tools-extra')
-    replaces=('clang-tools-extra')
     conflicts=('clang-tools-extra')
 
     cd "${srcdir}/${_pkgname}/tools/clang/tools/extra"
