@@ -10,7 +10,7 @@ if ((BUILD_EXTRA)); then
 else
    pkgname=('julia-git')
 fi
-pkgver=0.3.0.rc3.4342.g061e648
+pkgver=0.3.0.rc3.4409.gbf2ae5c
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64')
@@ -39,6 +39,8 @@ prepare() {
   git submodule init
   git submodule sync
   git submodule update
+
+  # patch -Np1 < ../.patch
 
   cd doc
 
