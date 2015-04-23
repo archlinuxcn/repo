@@ -21,15 +21,13 @@ from lilaclib import *
 
 build_prefix = 'extra-x86_64'
 
-depends = ['vte3-select-text']
-
 def pre_build():
     aur_pre_build()
 
     for line in edit_file('PKGBUILD'):
         # edit PKGBUILD
-        if line.strip().startswith("pkgrel=1"):
-            line = 'pkgrel=2'
+        if line.strip().startswith("PKGEXT"):
+            continue
         print(line)
 
 
