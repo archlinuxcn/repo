@@ -4,10 +4,9 @@ pkgrel=2
 arch=('i686' 'x86_64')
 pkgdesc='VHDL simulator'
 url='http://sourceforge.net/projects/ghdl-updates/'
-license=('GPL2')
+license=('GPLv2')
 
 makedepends=('gcc-ada' 'mercurial')
-depends=('zlib' 'libmpc')
 install=ghdl.install
 options=(!emptydirs staticlibs)
 
