@@ -1,0 +1,24 @@
+pkgname=glmark2
+pkgver=2014.03
+pkgrel=1
+pkgdesc="OpenGL (ES) 2.0 benchmark"
+arch=('i686' 'x86_64')
+url="https://launchpad.net/glmark2"
+license=('GPL' 'zlib' 'custom')
+groups=()
+depends=('libjpeg-turbo' 'libpng12' 'libx11' 'libxcb' 'libgl' 'python2')
+makedepends=()
+optdepends=()
+source=(https://launchpad.net/glmark2/trunk/$pkgver/+download/$pkgname-$pkgver.tar.gz)
+md5sums=('739859cf57d4c8a23452c43e84f66e56')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  python2 ./waf configure --prefix=/usr --with-flavors x11-gl,x11-glesv2
+  python2 ./waf
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  python2 ./waf install --destdir="$pkgdir/"
+}
