@@ -2,8 +2,8 @@
 # Contributor: Kevin MacMartin <prurigro at gmail dot com>
 
 _pkgname=qtox
-pkgname=$_pkgname-git
-pkgver=r2647.3223707
+pkgname=qtox-git
+pkgver=r2712.2fed672
 pkgrel=1
 pkgdesc='Powerful Tox client written in C++/Qt that follows the Tox design guidelines.'
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h')
@@ -24,7 +24,7 @@ makedepends=('git' 'qt5-tools')
 provides=("$_pkgname")
 conflicts=("$_pkgname")
 install=$pkgname.install
-source=("$_pkgname::git+https://github.com/tux3/qTox.git#branch=back_in_the_game")
+source=("$_pkgname::git+https://github.com/tux3/qTox.git")
 sha512sums=('SKIP')
 
 pkgver() {
