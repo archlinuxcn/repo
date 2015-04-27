@@ -1,0 +1,8 @@
+diff -Naur orig/95-ipad_charge.rules src/95-ipad_charge.rules
+--- orig/95-ipad_charge.rules	2011-05-10 22:57:11.000000000 +0300
++++ src/95-ipad_charge.rules	2011-07-05 00:33:47.797987569 +0300
+@@ -1,2 +1,4 @@
+ ENV{DEVTYPE}=="usb_device", ACTION=="add", BUS=="usb", SYSFS{idVendor}=="05ac", SYSFS{idProduct}=="129a", RUN+="/usr/bin/ipad_charge"
+ ENV{DEVTYPE}=="usb_device", ACTION=="add", BUS=="usb", SYSFS{idVendor}=="05ac", SYSFS{idProduct}=="129f", RUN+="/usr/bin/ipad_charge"
++ENV{DEVTYPE}=="usb_device", ACTION=="add", BUS=="usb", SYSFS{idVendor}=="05ac", SYSFS{idProduct}=="12a2", RUN+="/usr/bin/ipad_charge"
++ENV{DEVTYPE}=="usb_device", ACTION=="add", BUS=="usb", SYSFS{idVendor}=="05ac", SYSFS{idProduct}=="12a4", RUN+="/usr/bin/ipad_charge"
