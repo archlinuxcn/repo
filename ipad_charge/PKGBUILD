@@ -10,7 +10,7 @@ source=("http://www.rainbow-software.org/linux_files/${pkgname}_${pkgver}.tar.gz
 "95-ipad_charge.rules.patch"
 "ipad_charge.c.patch"
 )
-depends=('udev')
+depends=('udev' 'libusb')
 makedepends=('gcc')
 md5sums=('09b8c600efd747a36c9cc320516326cf'
          'bfc9325716cc8fcedc04f13fcf7c8693'
