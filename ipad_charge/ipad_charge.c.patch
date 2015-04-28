@@ -1,0 +1,22 @@
+diff -Naur orig/ipad_charge.c src/ipad_charge.c
+--- orig/ipad_charge.c	2011-05-10 22:59:12.000000000 +0300
++++ src/ipad_charge.c	2011-07-05 00:32:16.494656512 +0300
+@@ -12,6 +12,7 @@
+ #define VENDOR_APPLE	0x05ac
+ #define PRODUCT_IPAD	0x129a
+ #define PRODUCT_IPAD2	0x129f
++#define PRODUCT_IPAD2_3G	0x12a2
+ 
+ int set_charging_mode(libusb_device *dev, bool enable) {
+ 	int ret;
+@@ -130,7 +131,9 @@
+ 				continue;
+ 			}
+ 			if (desc.idVendor == VENDOR_APPLE && 
+-			    (desc.idProduct == PRODUCT_IPAD || desc.idProduct == PRODUCT_IPAD2)) {
++			    (desc.idProduct == PRODUCT_IPAD ||
++                 desc.idProduct == PRODUCT_IPAD2 || 
++                 desc.idProduct == PRODUCT_IPAD2_3G)) {
+ 				if (set_charging_mode(dev, enable) < 0)
+ 					fprintf(stderr, "ipad_charge: error setting charge mode\n");
+ 				else
