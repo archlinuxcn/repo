@@ -23,6 +23,8 @@ index 6802cd1..55bc6b7 100644
           'bfc9325716cc8fcedc04f13fcf7c8693'
 """
 
+import subprocess
+
 def apply_patch(filename, patch):
     patch_proc = subprocess.Popen(["patch", "-p1", filename], stdin=subprocess.PIPE)
     patch_proc.communicate(patch)
