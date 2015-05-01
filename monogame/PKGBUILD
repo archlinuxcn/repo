@@ -1,6 +1,6 @@
 pkgname=monogame
-pkgver=3.3
-pkgrel=2
+pkgver=3.4
+pkgrel=1
 pkgdesc="MonoGame is an open source implementation of the Microsoft XNA 4.x Framework."
 arch=(any)
 license=("MSPL")
@@ -10,10 +10,10 @@ optdepends=(gtk-sharp-2 sharpfont assimp-net ffmpeg nvidia-texture-tools)
 url="http://www.monogame.net/"
 conflicts=(tao-framework)
 source=("https://github.com/mono/MonoGame/archive/v$pkgver.tar.gz"
-"Dependencies.zip::https://github.com/Mono-Game/MonoGame.Dependencies/archive/a3b075f8d5f76a74d51bec6fc6490d262c7f0ddd.zip"
+"Dependencies.zip::https://github.com/Mono-Game/MonoGame.Dependencies/archive/6abfe822dceb3469494ac49075dd8a322e8e104c.zip"
 "monogame.pc" "mgcb.sh" "pipeline.sh" "pipeline.desktop" "pipeline.png" "monogame-net.pc")
-md5sums=('f41f5ca7a9c283931d89fd5c12ae6159'
-         '029f3f3fdc8bcfb64d9fb56331d21e36'
+md5sums=('71cc08c46267a074e51031ea8600fb4b'
+         'f4f85c05096cdba8f4891239235db317'
          '0f3f9882d92fc458c7d0e9731db02f3c'
          'a0ff773f5647651148ecb443a29b9ea9'
          '46a2caa68e21fd99aa4b30b78ab1a109'
