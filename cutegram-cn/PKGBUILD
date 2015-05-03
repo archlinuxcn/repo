@@ -1,0 +1,52 @@
+# Maintainer in AUR: Jiachen Yang <farseerfc@gmail.com>
+# Contributor to AUR by: Llumex03
+# Maintainer in Chakra: gnastyle
+# Contributor in Chakra: FranzMari from Chakra
+# Contributor in Chakra: danyf90 <daniele.formihelli@gmail.com>
+# Contributor in Chakra: totoloco <totoloco@gmx.com>
+
+pkgname=cutegram-cn
+_pkgname=Cutegram
+pkgver=2.1.0
+pkgrel=1
+pkgdesc="A different telegram client from Aseman team, with Chinese translations"
+arch=('i686' 'x86_64')
+url="http://aseman.co/en/"
+license=('GPL')
+depends=('qt5-base' 'qt5-declarative' 'qt5-multimedia' 'qt5-quick1'
+'qt5-graphicaleffects' 'qt5-quickcontrols' 'libqtelegram-bzr')
+makedepends=('gcc' 'cmake')
+conflicts=('cutegram-git' 'sigram-git' 'sigram' 'cutegram')
+provides=('cutegram')
+
+source=("https://github.com/Aseman-Land/Cutegram/archive/v$pkgver-stable.tar.gz"
+        "lang-zh_CN.ts"
+        "lang-zh_CN.qm"
+        "cutegram.pro.patch")
+
+sha256sums=('dd5ce57fd4286c0aab28b7dbd005bed6a876f618bda4c983273e1f99043c9734'
+            'c583563ddd76e7647dbd77fc32297e7b974a834ea507ac81eea3b10ffbcd0a54'
+            '049ade0e6f62b0eec34a518ec1cabfebf5f3616fd4ae053082eb5f4aae56ee8d'
+            '58b7fc3094bad6ee03a962ee95dfd85ad0d5321ff5f3a9b20fe72e6d464e53ae')
+
+build() {
+  cd $_pkgname-$pkgver-stable
+
+  cd Cutegram
+  # patching for Chinese translations
+  cp ../../lang-zh_CN.qm translations/
+  cp ../../lang-zh_CN.ts translations_sources/
+  patch -N < ../../cutegram.pro.patch
+  cd ..
+
+  mkdir build && cd build
+  qmake-qt5 -r .. PREFIX=/usr
+  make
+
+}
+
+package() {
+  cd $_pkgname-$pkgver-stable/build
+  make INSTALL_ROOT="$pkgdir" install
+}
+
