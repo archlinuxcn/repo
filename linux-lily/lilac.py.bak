@@ -11,7 +11,6 @@ build_prefix = 'makepkg'
 
 config_version = '3.18.7'
 cjktty_version = '3.19'
-aufs_version = '3.19'
 bfq_version = '4.0.0-v7r7'
 bfq_patches = [
    '0001-block-cgroups-kconfig-build-bits-for-BFQ-v7r7-4.0.patch',
@@ -31,7 +30,6 @@ def prepare_source(version):
     run_cmd(["git", "fetch", "--all"])
     run_cmd(["git", "checkout", "-b", 'v%s-lily' % version, "v" + version])
     run_cmd(["git", "merge", "--no-edit", 'cjktty/%s-utf8' % cjktty_version])
-    run_cmd(["git", "merge", "--no-edit", 'aufs/aufs%s' % aufs_version])
 
     run_cmd(["sh", "-c", 'patch -p1 < ~/%s' % uksm_file])
     run_cmd(["git", "add", "."])
@@ -90,7 +88,7 @@ def edit_PKGBUILD():
       ignoring = False
       continue
     elif 'pkgdesc="The' in line:
-      line = '  pkgdesc="The ${pkgbase/linux/Linux} kernel and modules, with x32, aufs3, latencytop, kgdb, cjktty, uksm, bfq and userns support"'
+      line = '  pkgdesc="The ${pkgbase/linux/Linux} kernel and modules, with x32, latencytop, kgdb, cjktty, uksm, bfq and userns support"'
     elif line.strip() == 'provides=("kernel26${_kernelname}=${pkgver}")':
       line = '  provides=("kernel26${_kernelname}=${pkgver}" "linux=${pkgver}")'
     elif line.strip() == 'provides=("kernel26${_kernelname}-headers=${pkgver}")':
