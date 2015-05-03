@@ -90,22 +90,21 @@ def edit_PKGBUILD():
       ignoring = False
       continue
     elif 'pkgdesc="The' in line:
-      line = '  pkgdesc="The ${pkgbase/linux/Linux} kernel and modules, with x32, aufs3, latencytop, kgdb, cjktty, uksm and bfq support"'
+      line = '  pkgdesc="The ${pkgbase/linux/Linux} kernel and modules, with x32, aufs3, latencytop, kgdb, cjktty, uksm, bfq and userns support"'
     elif line.strip() == 'provides=("kernel26${_kernelname}=${pkgver}")':
       line = '  provides=("kernel26${_kernelname}=${pkgver}" "linux=${pkgver}")'
     elif line.strip() == 'provides=("kernel26${_kernelname}-headers=${pkgver}")':
       line = '  provides=("kernel26${_kernelname}-headers=${pkgver}" "linux-headers=${pkgver}")'
     elif line.strip() == 'provides=("kernel26${_kernelname}-docs=${pkgver}")':
       line = '  provides=("kernel26${_kernelname}-docs=${pkgver}" "linux-docs=${pkgver}")'
-    elif '# gzip -9 all modules' in line:
+    elif 'call depmod' in line:
       line = '''\
   export dbgdir="$pkgdir-debug/usr/lib/debug"
   mkdir -p "$dbgdir"
   pushd "$pkgdir"
   find . -name '*.ko' -print0 | parallel -j20 -0 %s/kostrip
-  popd\n''' % os.path.abspath(os.getcwd()) + line
-    elif 'gzip -9 {}' in line:
-      line = '''  find "${pkgdir}" -name '*.ko' -print0 | parallel -j8 -0 gzip -9'''
+  popd
+  find "${pkgdir}" -name '*.ko' -print0 | parallel -j8 -0 gzip -9\n''' % os.path.abspath(os.getcwd()) + line
     elif '-m644 vmlinux' in line:
       line += '''
   # for systemtap
