@@ -1,15 +1,16 @@
 # Maintainer: Jochen Schalanda <jochen+aur@schalanda.name>
 # Contributor: Det
+# Contributor: isiachi <isiachi@rhyeworld.it>
 # Based on jre: https://aur.archlinux.org/packages.php?ID=51908
 
 _pkgname=jdk
 pkgname=${_pkgname}7
 _major=7
-_minor=76
-_build=b13
+_minor=80
+_build=b15
 _pkg=${_major}u$_minor
 pkgver=$_major.$_minor
-pkgrel=1
+pkgrel=2
 pkgdesc="Oracle Java $_major Development Kit"
 arch=('i686' 'x86_64')
 url=http://www.oracle.com/technetwork/java/javase/downloads/index.html
@@ -64,12 +65,12 @@ source=("http://download.oracle.com/otn-pub/java/${_pkgname}/$_pkg-$_build/${_pk
         "jmc-$_jname.desktop"
         "jvisualvm-$_jname.desktop"
         "policytool-$_jname.desktop")
-sha256sums=('ce8ff4fed2cd16aea432edf8e94f21ccfe29e9d4a659bbbef3551982769e0c8c'
+sha256sums=('bad9a731639655118740bee119139c1ed019737ec802a630dd7ad7aab4309623'
             'ab4a2e49825df4e6055e90283f9d0b432e28a6d66f0f7ed659985e7c53847751'
             '535d86adeb183340442c307e0ba579d0f7718b30fe6ed319bdc91bb2cee47763'
             'cf20cdf39583e1a992a85ab366437b80217951aeb9dec6b2ee54b77b4d0af6be'
             'af15efe8b471d0ab147f4a88215aed3fc50b1a605ce31100dfa7a404f29e85b1')
-[ "$CARCH" = 'i686' ] && sha256sums[0]='c339ac04e88b2e0d61c1a1a9f21541f3ce6082fdb38500cf2b8bb0ac5eb9a814'
+[ "$CARCH" = 'i686' ] && sha256sums[0]='9ded1318a7223cf6e09ac4b6ee4db1f4c5d1aef1d3d291f6db8491a32eaa57ba'
 
 package() {
   msg2 "Creating required dirs"
