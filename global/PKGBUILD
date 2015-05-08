@@ -1,9 +1,9 @@
-# Maintainer: Miguel Revilla <yo@miguelrevilla.com>
+# Maintainer: Peter Vasil <mail@petervasil.net>
 # Contributor: Lucas De Marchi <lucas.de.marchi@gmail.com>
 # Contributor: Matthias Meulien orontee@gmail.com
 
 pkgname=global
-pkgver=6.3.4
+pkgver=6.4
 pkgrel=1
 pkgdesc="A source code tag system"
 arch=('i686' 'x86_64')
@@ -15,6 +15,8 @@ optdepends=('idutils' 'ctags' 'python2-pygments')
 options=(!emptydirs !libtool)
 install=global.install
 source=(http://tamacom.com/global/${pkgname}-${pkgver}.tar.gz)
+md5sums=('34987ce863661bfceddc1ac016d19195')
+sha256sums=('315bf69bf2b4dbe661ff2800967e5f1171edfb83a0f17424612baa673aff248e')
 
 prepare() {
     cd "${srcdir}/${pkgname}-${pkgver}"
@@ -41,5 +43,3 @@ package() {
 	ln -s ../../gtags/gtags.el "${pkgdir}/usr/share/emacs/site-lisp/gtags.el"
 }
 
-md5sums=('06aee2306ac2113e6347043066679eea')
-sha256sums=('05b1b8a1f3658dfed8b0e371829727b8952548308afee75113c449ef15a39741')
