@@ -6,9 +6,9 @@
 pkgname=nixnote-beta
 _pkgname=nixnote2
 pkgver=2.0
-_pkgver="NixNote2%20-%20Beta%202"
-_beta_release=beta2
-pkgrel=5
+_pkgver="NixNote2%20-%20Beta%203"
+_beta_release=beta3
+pkgrel=6
 pkgdesc="Formerly called nevernote, nixnote is a clone of Evernote designed to run on Linux."
 url="http://www.sourceforge.net/projects/nevernote/"
 arch=('x86_64')
@@ -26,7 +26,7 @@ depends=(
 provides=(nixnote2)
 conflicts=(nixnote nixnote2-git)
 replaces=(nixnote)
-md5sums=('8a34f643665ac67e839a5b3545c23bfb')
+md5sums=('45af55ae3880934b9a3f974ad3cce32a')
 source="http://sourceforge.net/projects/nevernote/files/${_pkgver}/${_pkgname}-${pkgver}-${_beta_release}_${_arch}.tar.gz/download"
 
 package()
