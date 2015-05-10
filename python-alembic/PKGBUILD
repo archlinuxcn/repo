@@ -1,7 +1,7 @@
 # Maintainer: googol <googol@posteo.de>
 # Former maintainer: Oliver Mangold <o.mangold at gmail dot com>
 pkgname=python-alembic
-pkgver=0.7.4
+pkgver=0.7.6
 pkgrel=1
 pkgdesc="Lightweight dababase migration tool for usage with SQLAlchemy"
 arch=('any')
@@ -11,7 +11,7 @@ makedepends=('python-distribute')
 source=(https://pypi.python.org/packages/source/a/alembic/alembic-${pkgver}.tar.gz)
         #https://pypi.python.org/packages/source/a/alembic/alembic-${pkgver}.tar.gz.asc)
 
-sha256sums=('550f10b2266f689778eced2fed899bfd05755737478454b97fb99385f2e780e5')
+sha256sums=('864fa461265d6c97bcefee603e9ef0b6385bda9063d41b3db3e010abbba5ef61')
             #'c1391272683e3ff178b4a87930a2e18fe348b3bb72703f75e5e9510e13042c48')
 depends=('python' 'python-mako' 'python-sqlalchemy')
 provides=("${pkgname}")
