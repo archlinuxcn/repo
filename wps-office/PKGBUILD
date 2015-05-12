@@ -1,38 +1,39 @@
-# Maintainer: Felix Yan <felixonmars@gmail.com>
+# Maintainer: Felix Yan <felixonmars@archlinux.org>
 # Contributor: Jove Yu <yushijun110 [at] gmail.com>
 
 pkgname=wps-office
-pkgver=9.1.0.4945_a16p3
-_pkgver=9.1.0.4945~a16p3_x86
+pkgver=9.1.0.4952_a18
+_pkgver=9.1.0.4952~a18
 pkgrel=1
 pkgdesc="Kingsoft Office (WPS Office) is an office productivity suite"
 arch=('i686' 'x86_64')
 license=("custom")
 url="http://wps-community.org/"
+depends=('fontconfig' 'libpng12' 'glib2' 'libsm' 'libxext' 'libxrender' 'libxml2' 'desktop-file-utils' 'shared-mime-info' 'xdg-utils')
+optdepends=('cups: for printing support'
+            'pango: for complex (right-to-left) text support')
 conflicts=('kingsoft-office')
 options=('!emptydirs')
 install=${pkgname}.install
-source=("http://kdl.cc.ksosoft.com/wps-community/download/a16/wps-office_${_pkgver}.tar.xz")
-sha1sums=('4e4f11b59a7ad655d54abf44134d123342a263c6')
-
-if [ "$CARCH" = "i686" ]; then
-    depends=('fontconfig' 'libpng12' 'glib2' 'libsm' 'libxext' 'libxrender' 'libxml2')
-    optdepends=('cups: for printing support'
-                'pango: for complex (right-to-left) text support')
-elif [ "$CARCH" = "x86_64" ]; then
-    depends=('lib32-fontconfig' 'lib32-libpng12' 'lib32-glib2' 'lib32-libsm' 'lib32-libxext' 'lib32-libxrender' 'lib32-libxml2')
-    optdepends=('lib32-libcups: for printing support'
-                'lib32-pango: for complex (right-to-left) text support')
-fi
-depends+=('desktop-file-utils' 'shared-mime-info' 'xdg-utils')
+[[ "$CARCH" = "i686" ]] && _archext=x86 || _archext=x86_64
+source_i686=("http://kdl.cc.ksosoft.com/wps-community/download/a18/wps-office_${_pkgver}_x86.tar.xz")
+source_x86_64=("http://kdl.cc.ksosoft.com/wps-community/download/a18/wps-office_${_pkgver}_x86_64.tar.xz")
+sha512sums_i686=('33c96ffd253ddb9cd9562839f8a7d5075cf5d041ccaceb399e4d301dcadef57732b3064c45beff08eb2aa02661d6e1d1765b979a53b42de62f3df94ec7b04e1c')
+sha512sums_x86_64=('13405ac960714c6cb89076d8e3481b262768d1d802aecb24f7c4bd0030d095712d8c99dd55253d4347d52c3534c72d5fbe2d5cd44b778bb11b48973a891f1fa7')
 
 PKGEXT=".pkg.tar"
 
-package() {
-  cd wps-office_${_pkgver}
+prepare() {
+  cd wps-office_${_pkgver}_$_archext
 
-  install -d "$pkgdir/opt/kingsoft/wps-office"
-  cp -r office6 "$pkgdir/opt/kingsoft/wps-office"
+  sed -i 's|/opt/kingsoft/wps-office|/usr/lib|' wps wpp et
+}
+
+package() {
+  cd wps-office_${_pkgver}_$_archext
+
+  install -d "$pkgdir/usr/lib"
+  cp -r office6 "$pkgdir/usr/lib"
 
   install -d "$pkgdir/usr/bin"
   install -m755 wps wpp et wps_error_check.sh "$pkgdir/usr/bin"
