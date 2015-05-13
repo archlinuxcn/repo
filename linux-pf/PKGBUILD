@@ -9,7 +9,7 @@ _minor=0
 _basekernel=${_major}.${_minor}
 _srcname=linux-${_major}.${_minor}
 pkgbase=linux-pf
-_pfrel=3
+_pfrel=4
 _kernelname=-pf
 _pfpatchhome="http://pf.natalenko.name/sources/${_basekernel}/"
 _pfpatchname="patch-${_basekernel}${_kernelname}${_pfrel}"
@@ -36,7 +36,7 @@ _CPUSUFFIXES=( core2 k7 k8 k10 barcelona bobcat
 #
 # http://en.gentoo-wiki.com/wiki/Safe_Cflags/Intel
 # http://en.gentoo-wiki.com/wiki/Safe_Cflags/AMD
-# http://www.linuxforge.net/docs/linux/linux-gcc.php 
+# http://www.linuxforge.net/docs/linux/linux-gcc.php
 # http://gcc.gnu.org/onlinedocs/gcc/i386-and-x86_002d64-Options.html
 
 
@@ -48,7 +48,7 @@ _CPUSUFFIXES=( core2 k7 k8 k10 barcelona bobcat
 # WARNING - make CERTAIN that all modules are modprobed BEFORE you begin making the pkg!
 #
 # To keep track of which modules are needed for your specific system/hardware, give my module_db script
-# a try: http://aur.archlinux.org/packages.php?ID=41689  Note that if you use my script, this PKGBUILD 
+# a try: http://aur.archlinux.org/packages.php?ID=41689  Note that if you use my script, this PKGBUILD
 # will auto run the 'sudo modprobed_db reload' for you to probe all the modules you have logged!
 #
 # More at this wiki page ---> https://wiki.archlinux.org/index.php/Modprobed_db
@@ -111,7 +111,7 @@ prepare() {
     	echo
     fi
   fi
-  
+
   # Interactive governor patch
   # broken for now
   #   msg "Interactice CPU governor patch"
@@ -122,7 +122,7 @@ prepare() {
 
   # add latest fixes from stable queue, if needed
   # http://git.kernel.org/?p=linux/kernel/git/stable/stable-queue.git
-  
+
 
   # set DEFAULT_CONSOLE_LOGLEVEL to 4 (same value as the 'quiet' kernel param)
   # remove this when a Kconfig knob is made available by upstream
@@ -146,7 +146,7 @@ prepare() {
   sed -ri "s|^(EXTRAVERSION =).*|\1|" Makefile
   _arch=$CARCH
 
-  
+
   # disable NUMA since 99.9% of users do not have multiple CPUs but do have multiple cores in one CPU
   # see, https://bugs.archlinux.org/task/31187
   if [ -n "$_NUMA_off" ] && [ "${CARCH}" = "x86_64" ]; then
@@ -220,12 +220,12 @@ build() {
     else
       msg "Using stock ARCH kernel .config (with BFS, BFQ and TuxOnIce enabled)."
     fi
-    
+
     # Make some good use of MAKEFLAGS
     # MAKEFLAGS=`grep -v '#' /etc/makepkg.conf | grep MAKEFLAGS= | sed s/MAKEFLAGS=// | sed s/\"//g`
-    
+
     # make prepare
-    
+
     # Options for additional configuration
     echo
     msg "Kernel configuration options before build:"
@@ -262,7 +262,7 @@ build() {
     CPU=$(sed -e "s/CONFIG_GENERIC_CPU=y/GENERIC/" <<<$CPU)
     CPU=$(sed -e "s/^686$/GENERIC/" <<<$CPU)
     cp -f .config ${startdir}/config.$CPU-$CARCH
-    
+
   # Give option to rename package according to CPU
     echo
     if [[ "$CPU" != "GENERIC" ]]; then
@@ -316,7 +316,6 @@ package_linux-pf() {
 	    'tuxonice-userui: TuxOnIce userspace user interface'
 	    'hibernate-script: set of scripts for managing TuxOnIce, hibernation and suspend to RAM'
 	    'nvidia-pf: NVIDIA drivers for linux-pf'
-	    'nvidia-beta-all: NVIDIA drivers for all installed kernels'
 	    'modprobed_db: Keeps track of EVERY kernel module that has ever been probed. Useful for make localmodconfig.')
  #provides=(${pkgbase}=${_basekernel} 'aufs3')	# for $pkgname-optimized
  provides=(${pkgbase}=${_basekernel} 'aufs3')
@@ -325,8 +324,8 @@ package_linux-pf() {
  # If generic build, then conflict with all optimized ones
  conflicts=()
  for _cpusuffix in $_CPUSUFFIXES ; do
-   conflicts+=(${pkgbase}-${_cpusuffix}) 
- done  
+   conflicts+=(${pkgbase}-${_cpusuffix})
+ done
  replaces=('kernel26-pf' 'aufs3')
  backup=("etc/mkinitcpio.d/${pkgbase}.preset")
  install='linux.install'
@@ -353,7 +352,7 @@ package_linux-pf() {
         pkgdesc="${_pkgdesc} AMD K7 optimized."
         ;;
      K8)
-         pkgname="${pkgbase}-k8" 
+         pkgname="${pkgbase}-k8"
          pkgdesc="${_pkgdesc} AMD K8 optimized."
 	 ;;
      K10)
@@ -525,7 +524,7 @@ package_linux-pf() {
 ### package_linux-pf-headers
 package_linux-pf-headers() {
   pkgdesc="Header files and scripts for building modules for linux-pf kernel."
-  depends=('linux-pf') 
+  depends=('linux-pf')
   conflicts=( ${_conflicts[@]} )
   for _cpusuffix in $_CPUSUFFIXES ; do
     conflicts+=(linux-pf-headers-$_cpusuffix)
@@ -608,7 +607,7 @@ package_linux-pf-headers() {
       mkdir -p "${pkgdir}/usr/lib/modules/${_kernver}/build/include/config/dvb/"
       cp include/config/dvb/*.h "${pkgdir}/usr/lib/modules/${_kernver}/build/include/config/dvb/"
   fi
-  
+
   # add dvb headers for http://mcentral.de/hg/~mrec/em28xx-new
   # in reference to:
   # http://bugs.archlinux.org/task/13146
@@ -641,7 +640,7 @@ package_linux-pf-headers() {
 
   chown -R root.root "${pkgdir}/usr/lib/modules/${_kernver}/build"
   find "${pkgdir}/usr/lib/modules/${_kernver}/build" -type d -exec chmod 755 {} \;
-  
+
   # strip scripts directory
   find "${pkgdir}/usr/lib/modules/${_kernver}/build/scripts" -type f -perm -u+w 2>/dev/null | while read binary ; do
     case "$(file -bi "${binary}")" in
@@ -653,15 +652,15 @@ package_linux-pf-headers() {
         /usr/bin/strip ${STRIP_BINARIES} "${binary}";;
     esac
   done
-  
+
   # remove unneeded architectures
   rm -rf "${pkgdir}"/usr/lib/modules/${_kernver}/build/arch/{alpha,arc,arm,arm26,arm64,avr32,blackfin,c6x,cris,frv,h8300,hexagon,ia64,m32r,m68k,m68knommu,metag,mips,microblaze,mn10300,openrisc,parisc,powerpc,ppc,s390,score,sh,sh64,sparc,sparc64,tile,unicore32,um,v850,xtensa}
   # end c/p
-  
+
   # Add version.h for dumb binary blob installers which aren't
-  cd "${pkgdir}/usr/lib/modules/${_kernver}/build/include/linux/"
-  [[ -e version.h ]] || ln -s ../generated/uapi/linux/version.h
-  
+  #cd "${pkgdir}/usr/lib/modules/${_kernver}/build/include/linux/"
+  #[[ -e version.h ]] || ln -s ../generated/uapi/linux/version.h
+
 }
 
 # Work around the AUR parser
@@ -669,8 +668,8 @@ pkgdesc="Linux kernel and modules with the pf-kernel patch [-ck patchset (BFS in
 
 # makepkg -g >>PKGBUILD
 sha256sums=('0f2f7d44979bc8f71c4fc5d3308c03499c26a824dd311fdf6eef4dee0d7d5991'
-            'e3efd71ac4916ba31a6911ae67274d431c8ee08b42ea0253ce5ce7a8bbd7c8a5'
+            '7952798d895291f70aaf701fb30df05d4b9e80bea640620ae25b3b3cf6c6aa03'
             '82d660caa11db0cd34fd550a049d7296b4a9dcd28f2a50c81418066d6e598864'
             '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99'
-            '92f20a1f7ba751fb964c3f060457afba0717884ae53c0966bbb14dcdf7bf1d23'
+            '7363588c086ac9c0d0b6e8860289b71155e2afb42b2a93343643169fe746df86'
             'SKIP')
