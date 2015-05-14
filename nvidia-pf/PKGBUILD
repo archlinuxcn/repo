@@ -3,7 +3,7 @@
 pkgname=nvidia-pf
 pkgver=349.16
 _extramodules=extramodules-4.0-pf
-pkgrel=4
+pkgrel=5
 pkgdesc="NVIDIA drivers for linux-pf"
 arch=('i686' 'x86_64')
 url="http://www.nvidia.com/"
@@ -13,11 +13,9 @@ license=('custom')
 install=nvidia.install
 options=(!strip)
 source=("ftp://download.nvidia.com/XFree86/Linux-x86/${pkgver}/NVIDIA-Linux-x86-${pkgver}.run"
-        "ftp://download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run"
-        nv-drm-343.36.patch)
+        "ftp://download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run")
 md5sums=('59597d5dfaaf0fc83a5e78d29a97ccac'
-         '3e04208affde8c35a8b96975eec0486b'
-         'ff8a5f979e4428f8c847423fb007042c')
+         '3e04208affde8c35a8b96975eec0486b')
 
 [[ "$CARCH" = "i686" ]] && _pkg="NVIDIA-Linux-x86-${pkgver}"
 [[ "$CARCH" = "x86_64" ]] && _pkg="NVIDIA-Linux-x86_64-${pkgver}-no-compat32"
@@ -26,7 +24,6 @@ prepare() {
     sh "${_pkg}.run" --extract-only
     cd "${_pkg}"
     # patches here
-    patch -p1 -i ../nv-drm-343.36.patch
 }
 
 build() {
