@@ -2,12 +2,12 @@
 
 pkgname=opera-developer
 pkgver=31.0.1857.0
-pkgrel=1
+pkgrel=2
 pkgdesc='A fast and secure web browser and Internet suite - developer stream'
 arch=('x86_64' 'i686')
 url='http://www.opera.com/browser/'
 license=('custom:opera')
-depends=('alsa-lib' 'nss' 'gtk2' 'gconf' 'libxss' 'libxtst' 'desktop-file-utils')
+depends=('alsa-lib' 'nss' 'gtk2' 'gconf' 'libnotify' 'libxss' 'libxtst' 'desktop-file-utils')
 optdepends=('ffmpeg: HTML5 H264 and mp3 playback')
 install=opera.install
 options=(!strip)
