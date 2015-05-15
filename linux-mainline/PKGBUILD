@@ -5,8 +5,8 @@
 pkgbase=linux-mainline               # Build stock -ARCH kernel
 #pkgbase=linux-custom       # Build kernel with a different name
 _srcname=linux-4.0
-_patchname=patch-4.1-rc2
-pkgver=4.1rc2
+_patchname=patch-4.1-rc3
+pkgver=4.1rc3
 pkgrel=1
 arch=('i686' 'x86_64')
 url="http://www.hurrdurr.org/"
@@ -24,7 +24,7 @@ source=("https://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.xz"
         'change-default-console-loglevel.patch'
         )
 sha256sums=('0f2f7d44979bc8f71c4fc5d3308c03499c26a824dd311fdf6eef4dee0d7d5991'
-            '141f223cbd5813d9f94497761fc66e85a2e7ae9eb0beb476705b6eda56d429cd'
+            '0f6ed001abfa0ca5a8fc6fa4c6d65adbba2423b0242fb8c9e50e078ca417e88c'
             '514aa8a9d03d2419c8084725fcdb2b5b4ce07966f5bd6a51224a5f7a5f8c3694'
             'b268b03a042e3f604a12a80c6e24c42006e4d9bf4a6d9b3201eb006942718128'
             'f0d90e756f14533ee67afda280500511a62465b4f76adcc5effa95a40045179c'
