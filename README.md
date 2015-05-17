@@ -7,7 +7,7 @@ Add repo
 
 ```
 [archlinuxcn]
-SigLevel = Optional TrustAll
+SigLevel = Optional TrustedOnly
 Server = http://repo.archlinuxcn.org/$arch
 ```
 to your /etc/pacman.conf .
