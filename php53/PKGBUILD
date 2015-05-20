@@ -25,7 +25,7 @@ pkgname=('php53'
          'php53-xsl')
 pkgver=5.3.29
 _suhosinver=5.3.9-0.9.10
-pkgrel=3
+pkgrel=4
 arch=('i686' 'x86_64')
 license=('PHP')
 url='http://www.php.net'
@@ -35,8 +35,14 @@ makedepends=('apache' 'c-client' 'postgresql-libs' 'libldap' 'postfix'
              'curl' 'libxslt' 'openssl' 'bzip2' 'db' 'gmp' 'freetype2' 'sed')
 source=("http://www.php.net/distributions/${pkgbase%53}-${pkgver}.tar.bz2"
         "http://download.suhosin.org/suhosin-patch-${_suhosinver}.patch.gz"
-        'php.ini.patch' 'apache.conf' 'php-fpm.conf.in.patch'
-        'logrotate.d.php-fpm' 'suhosin.patch' 'freetype-path.patch')
+        php.ini.patch apache.conf php-fpm.conf.in.patch
+        logrotate.d.php-fpm suhosin.patch freetype-path.patch
+        CVE-2014-3587.patch CVE-2014-3597.patch CVE-2014-3668.patch
+        CVE-2014-3669.patch CVE-2014-3670.patch curl_embedded_null.patch
+        CVE-2014-8142.patch CVE-2015-0231.patch CVE-2014-9705.patch
+        CVE-2015-0273.patch CVE-2015-2301.patch CVE-2015-2305.patch
+        CVE-2015-2783.patch CVE-2015-2787.patch CVE-2015-3330.patch
+        CVE-2015-3329.patch)
 
 build() {
     phpconfig="--srcdir=../${pkgbase%53}-${pkgver} \
@@ -136,6 +142,25 @@ build() {
     sed -i 's/1997-2012/1997-2014/g' ${srcdir}/suhosin-patch-${_suhosinver}.patch
 
     cd ${srcdir}/${pkgbase%53}-${pkgver}
+
+    # TODO: some doesn't apply
+    msg "Applying security patches (from Ubuntu)"
+    # patch -p1 -i ../CVE-2014-3587.patch
+    # patch -p1 -i ../CVE-2014-3597.patch
+    patch -p1 -i ../CVE-2014-3668.patch
+    patch -p1 -i ../CVE-2014-3669.patch
+    patch -p1 -i ../CVE-2014-3670.patch
+    patch -p1 -i ../curl_embedded_null.patch
+    patch -p1 -i ../CVE-2014-8142.patch
+    patch -p1 -i ../CVE-2015-0231.patch
+    patch -p1 -i ../CVE-2014-9705.patch
+    # patch -p1 -i ../CVE-2015-0273.patch
+    patch -p1 -i ../CVE-2015-2301.patch
+    patch -p1 -i ../CVE-2015-2305.patch
+    patch -p1 -i ../CVE-2015-2783.patch
+    patch -p1 -i ../CVE-2015-2787.patch
+    patch -p1 -i ../CVE-2015-3330.patch
+    patch -p1 -i ../CVE-2015-3329.patch
 
     msg "Applying suhosin patch"
     patch -F3 -p1 -i ${srcdir}/suhosin-patch-${_suhosinver}.patch
@@ -418,7 +443,23 @@ sha1sums=('6e9e492c6d5853d063ddb9a4dbef60b8e5d87444'
           'ea9a9101b9678a8461d9dddfc0df2a4412a4cb5d'
           'b6a661523535a8e7e60d4a0c054d8f6066edf63e'
           '4d9fea0b7ab856c59ddbf722fe6c95b8e479af9b'
-          '8f19ee0e351aa2cdc9b110db4e33b4c8f6131b12')
+          '8f19ee0e351aa2cdc9b110db4e33b4c8f6131b12'
+          'b5caa85fd1b76a3ece056ab5441852330989640b'
+          '9f2aa7c2514cb66204f9f5c3dc5f8ebdda238c78'
+          '4672c18ece397b2f99ad0c992f61220e210b2dc1'
+          '454e96af5cab1f649fceca61c0afb46ae73179f5'
+          '2f368143bcdaae4659a65103ffdeb71cac12c5cf'
+          'ede78d11b7d4d6c304253bfd358607e160a3918a'
+          'e97ea93d37ffbf6c3025281202d2e807facb4e7e'
+          '0ab48f282d62058318d08c44607aac89912f78d6'
+          'b535103d79ba9791c22a841d5d72497dec3dd93d'
+          '7cb38769807eb7d35ff7f3eaf1cce408d8ad2676'
+          '066fe3a84e1aabaf45afe26470cd769b9e3ab79a'
+          '4968abe76ab18c15f85111b3e78dba0059f948ce'
+          '18e3f12ad04adf4cc59aa5862628ab0d032c76ef'
+          '4d9551ec6c2462cde45d0e556edf6d9e792c15b4'
+          '248dc92602721c193f3906f3eb7d98cd5499ba40'
+          '40fc97494110e9b312ea0f5bade8aa0b7043f40e')
 
 # Fix for AUR
 pkgdesc='An HTML-embedded scripting language - Legacy 5.3 version'
