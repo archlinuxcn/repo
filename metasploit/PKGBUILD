@@ -3,7 +3,7 @@
 # Contributor: Tobias Veit - nIcE <m.on.key.tobi[at]gmail[dot]com>
 
 pkgname=metasploit
-pkgver=4.11.1
+pkgver=4.11.2
 pkgrel=1
 pkgdesc="An advanced open-source platform for developing, testing, and using exploit code"
 url="https://www.metasploit.com/"
@@ -17,7 +17,7 @@ optdepends=(
 options=('!strip')
 install="${pkgname}.install"
 source=(${pkgname}-${pkgver}.tar.gz::https://github.com/rapid7/metasploit-framework/archive/${pkgver}.tar.gz)
-sha512sums=('94f063f057ec72c08abc5698b1d3d47bf222b949de9bb0ad29d4512b11a0127853f75e7e491918f7962089c1003442f73655e53267ea94ecee122bd60109d6c5')
+sha512sums=('8c5340683f6618946d5c3ebefd59cd5167dba8c8fd8334b5a12f8dc3e515e7d814dda4029d7577b5d6e2615362a8a33965dfc09b8f5dae728abfdb84bd89e2a2')
 
 package() {
   cd metasploit-framework-${pkgver}
