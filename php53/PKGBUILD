@@ -11,6 +11,7 @@ pkgname=('php53'
          'php53-pear'
          'php53-enchant'
          'php53-gd'
+         'php53-imap'
          'php53-intl'
          'php53-ldap'
          'php53-mcrypt'
@@ -24,11 +25,11 @@ pkgname=('php53'
          'php53-xsl')
 pkgver=5.3.29
 _suhosinver=5.3.9-0.9.10
-pkgrel=2
+pkgrel=3
 arch=('i686' 'x86_64')
 license=('PHP')
 url='http://www.php.net'
-makedepends=('apache' 'imap' 'postgresql-libs' 'libldap' 'postfix'
+makedepends=('apache' 'c-client' 'postgresql-libs' 'libldap' 'postfix'
              'sqlite' 'unixodbc' 'net-snmp' 'libzip' 'enchant' 'file' 'freetds'
              'libmcrypt' 'tidyhtml' 'aspell' 'libltdl' 'libpng' 'libjpeg' 'icu'
              'curl' 'libxslt' 'openssl' 'bzip2' 'db' 'gmp' 'freetype2' 'sed')
@@ -87,7 +88,10 @@ build() {
         --with-gmp=shared \
         --with-iconv=shared \
         --with-icu-dir=/usr \
+        --with-imap-ssl=shared,/usr \
+        --with-imap=shared,/usr \
         --with-jpeg-dir=shared,/usr \
+        --with-kerberos=/usr \
         --with-ldap=shared \
         --with-ldap-sasl \
         --with-mcrypt=shared \
@@ -117,9 +121,6 @@ build() {
         --without-db2 \
         --without-db3 \
         "
-        # Not working, lemme know how to fix it :)
-        # --with-imap=shared \
-        # --with-imap-ssl=shared \
 
     EXTENSION_DIR=/usr/lib/php/modules
     export EXTENSION_DIR
@@ -143,6 +144,9 @@ build() {
     patch -p0 -i ${srcdir}/php.ini.patch
     patch -p0 -i ${srcdir}/php-fpm.conf.in.patch
     patch -p1 -i ${srcdir}/freetype-path.patch
+
+    # To workaround c-client linking problem
+    export IMAP_SHARED_LIBADD="-lssl"
 
     # php
     mkdir ${srcdir}/build-php
@@ -228,7 +232,7 @@ package_php53() {
     # remove static modules
     rm -f ${pkgdir}/usr/lib/php/modules/*.a
     # remove modules provided by sub packages
-    rm -f ${pkgdir}/usr/lib/php/modules/{enchant,gd,intl,ldap,mcrypt,mssql,odbc,pdo_odbc,pgsql,pdo_pgsql,pspell,snmp,sqlite3,pdo_sqlite,tidy,xsl}.so
+    rm -f ${pkgdir}/usr/lib/php/modules/{enchant,gd,imap,intl,ldap,mcrypt,mssql,odbc,pdo_odbc,pgsql,pdo_pgsql,pspell,snmp,sqlite3,pdo_sqlite,tidy,xsl}.so
     # remove empty directory
     rmdir ${pkgdir}/usr/include/php/include
 }
@@ -306,6 +310,14 @@ package_php53-gd() {
     provides=('php-gd')
     pkgdesc='gd module for PHP'
     install -D -m755 ${srcdir}/build-php/modules/gd.so ${pkgdir}/usr/lib/php/modules/gd.so
+}
+
+package_php53-imap() {
+    depends=('php53' 'c-client')
+    conflicts=('php-imap')
+    provides=('php-imap')
+
+    install -D -m755 ${srcdir}/build-php/modules/imap.so ${pkgdir}/usr/lib/php/modules/imap.so
 }
 
 package_php53-intl() {
