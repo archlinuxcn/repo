@@ -1,0 +1,48 @@
+# Maintainer: all3fox <all3fox [at] gmail __DoT_ com>
+# Contributor: eolianoe <eolianoe [at] gmail [DoT] com>
+# Contributor: Jiaxi Hu <sftrytry _AT_ gmail _DOT_ com>
+# Contributor: Giuseppe Borzi <gborzi _AT_ ieee _DOT_ org>
+
+pkgname=openblas-lapack-git
+_pkgname=OpenBLAS
+pkgver=v0.2.9.rc1.r622.ga11555c
+pkgrel=1
+pkgdesc="Optimized BLAS library based on GotoBLAS2 1.13 BSD"
+arch=('i686' 'x86_64')
+url="http://xianyi.github.com/OpenBLAS/"
+license=('BSD')
+depends=('gcc-libs')
+makedepends=('git' 'perl' 'gcc-fortran')
+provides=('openblas')
+conflicts=('openblas')
+options=(!emptydirs)
+source=("git://github.com/xianyi/OpenBLAS")
+md5sums=('SKIP')
+
+_config=('SMP=1' 'USE_OPENMP=1' 'USE_THREAD=1' 'MAJOR_VERSION=3'
+         'NO_LAPACK=0' 'NUM_THREAD=32' 'DYNAMIC_ARCH=1')
+
+pkgver() {
+  cd "${_pkgname}"
+  git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+  cd "${_pkgname}"
+  make "${_config[@]}" libs netlib shared
+}
+
+package() {
+  cd "${_pkgname}"
+
+  make "${_config[@]}" PREFIX="${pkgdir}/usr" install
+
+  # Install license
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+
+  # Remove reference to ${pkgdir}
+  sed -i -e "s%${pkgdir}%%" \
+      "${pkgdir}/usr/lib/cmake/openblas/OpenBLASConfig.cmake"
+
+  rm "${pkgdir}/usr/include/lapacke"*
+}
