@@ -5,8 +5,8 @@
 # Original uploader in AUR: á¸¶á¸·umex03
 # Fixes in AUR by: ogarcia
 
-pkgname=libqtelegram-ae-git
-pkgver=r8.b536019
+pkgname=libqtelegram-ae
+pkgver=API_18.r0.gfd03011
 pkgrel=1
 pkgdesc="Telegram library written in Qt based on telegram-cli code"
 arch=('x86_64' 'x64')
@@ -16,7 +16,7 @@ provides=('libqtelegram-ae')
 conflicts=('libqtelegram-ae')
 depends=('qt5-base' 'qt5-multimedia')
 makedepends=('cmake' 'git')
-source=("$pkgname"::"git+https://github.com/Aseman-Land/libqtelegram-aseman-edition.git")
+source=("$pkgname"::"git+https://github.com/Aseman-Land/libqtelegram-aseman-edition.git#tag=API_18")
 md5sums=('SKIP')
 
 pkgver() {
