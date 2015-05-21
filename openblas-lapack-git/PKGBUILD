@@ -3,7 +3,8 @@
 # Contributor: Jiaxi Hu <sftrytry _AT_ gmail _DOT_ com>
 # Contributor: Giuseppe Borzi <gborzi _AT_ ieee _DOT_ org>
 
-pkgname=openblas-lapack-git
+pkgbase=openblas-git
+pkgname=(openblas-git openblas-lapack-git)
 _pkgname=OpenBLAS
 pkgver=v0.2.9.rc1.r622.ga11555c
 pkgrel=1
@@ -32,7 +33,7 @@ build() {
   make "${_config[@]}" libs netlib shared
 }
 
-package() {
+package_openblas-git() {
   cd "${_pkgname}"
 
   make "${_config[@]}" PREFIX="${pkgdir}/usr" install
@@ -44,5 +45,31 @@ package() {
   sed -i -e "s%${pkgdir}%%" \
       "${pkgdir}/usr/lib/cmake/openblas/OpenBLASConfig.cmake"
 
-  rm "${pkgdir}/usr/include/lapacke"*
+  rm "${pkgdir}/usr/include/"{lapacke,cblas}*
+}
+
+package_openblas-lapack-git() {
+  depends=('openblas-git')
+  provides=('blas=3.5.0' 'lapack=3.5.0' 'cblas')
+  conflicts=('blas' 'lapack' 'cblas')
+  rm -rf pkg
+  mkdir -p "${pkgdir}/usr/"{include,lib}/
+  cd "${_pkgname}"
+
+  make "${_config[@]}" PREFIX="${srcdir}/pkg" install
+
+  mv "${srcdir}/pkg/include/"{lapacke,cblas}* "${pkgdir}/usr/include/"
+
+  # Symlink to provide blas, cblas and lapack
+  cd "${pkgdir}/usr/lib/"
+  # BLAS
+  ln -sf libopenblas.so libblas.so
+  ln -sf libopenblas.so libblas.so.3
+  ln -sf libopenblas.so libblas.so.3.5.0
+  # CBLAS
+  ln -sf libopenblas.so libcblas.so
+  # LAPACK
+  ln -sf libopenblas.so liblapack.so
+  ln -sf libopenblas.so liblapack.so.3
+  ln -sf libopenblas.so liblapack.so.3.5.0
 }
