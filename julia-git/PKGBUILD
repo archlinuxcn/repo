@@ -10,7 +10,7 @@ if ((BUILD_EXTRA)); then
 else
    pkgname=('julia-git')
 fi
-pkgver=0.3.0.rc3.4911.g4c2f908
+pkgver=0.3.0.rc3.4922.g9f1a5d8
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64')
@@ -19,7 +19,7 @@ license=('GPL')
 makedepends=('gcc-fortran' 'arpack' 'fftw' 'git' 'gmp' 'libgit2' 'libunwind'
              'llvm' 'mpfr' 'pcre' 'suitesparse' 'python2-sphinx'
              'python2-sphinx_rtd_theme' 'python2-pip' 'texlive-langcjk'
-             'texlive-latexextra' 'emacs' 'openspecfun')
+             'texlive-latexextra' 'emacs' 'openspecfun' 'openblas')
 options=('!emptydirs' 'staticlibs' 'debug' 'strip')
 source=('git://github.com/JuliaLang/julia')
 md5sums=('SKIP')
@@ -70,7 +70,11 @@ julia_opts=(prefix=/usr sysconfdir=/etc
             USE_INTEL_MKL=0
             USE_BLAS64=0
             USE_LLVM_SHLIB=0
-            MARCH=${CARCH//_/-})
+            MARCH=${CARCH//_/-}
+            LIBBLASNAME=libopenblas
+            LIBBLAS=-lopenblas
+            LIBLAPACKNAME=libopenblas
+            LIBLAPACK=-lopenblas)
 
 build() {
   cd julia
@@ -104,7 +108,8 @@ build() {
 package_julia-git() {
   arch=('i686' 'x86_64')
   depends=('arpack' 'fftw' 'gmp' 'libgit2' 'libunwind' 'llvm' 'mpfr' 'pcre'
-           'hicolor-icon-theme' 'xdg-utils' 'suitesparse' 'openspecfun')
+           'hicolor-icon-theme' 'xdg-utils' 'suitesparse' 'openspecfun'
+           'openblas')
   optdepends=('gnuplot: If using the Gaston Package from julia')
   install=julia.install
   conflicts=('julia')
