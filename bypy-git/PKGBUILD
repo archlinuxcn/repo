@@ -3,7 +3,8 @@
 
 pkgname=bypy-git
 _pkgname=bypy
-pkgver=20150405
+_github_addr=houtianze/bypy
+pkgver=20150509
 pkgrel=1
 pkgdesc="Python client for Baidu Yun (Personal Cloud Storage) 百度云/百度网盘 Python 客户端"
 arch=("any")
@@ -14,7 +15,7 @@ makedepends=('git' 'python2-setuptools')
 #depends=('python2-requests' 'python2-certifi' 'python2-urllib3')
 depends=('python2-requests' 'python2-certifi' 'python2-urllib3' 'python2-setuptools')
 provides=('bypy')
-source=("${_pkgname}"::'git+https://github.com/houtianze/bypy.git')
+source=("${_pkgname}"::"git+https://github.com/$_github_addr")
 md5sums=('SKIP')
 
 pkgver() {

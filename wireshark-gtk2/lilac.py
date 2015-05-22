@@ -4,7 +4,7 @@ from lilaclib import *
 
 g = SimpleNamespace()
 
-build_prefix = ['extra-x86_64', 'extra-i686']
+build_prefix = 'extra-x86_64'
 
 def pre_build():
   g.oldfiles = clean_directory()

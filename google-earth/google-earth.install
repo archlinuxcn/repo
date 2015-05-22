@@ -1,19 +1,19 @@
 # Colored makepkg-like functions
 msg_blue() {
-    printf "${BLUE}==>${ALL_OFF}${BOLD} $1${ALL_OFF}\n"
+    printf "${blue}==>${bold} $1${all_off}\n"
 }
 
 note() {
-    printf "${BLUE}==>${ALL_OFF}${YELLOW} NOTE:${ALL_OFF}${BOLD} ${1}${ALL_OFF}\n"
+    printf "${blue}==>${yellow} NOTE:$2${bold} $1${all_off}\n"
 }
 
-ALL_OFF="$(tput sgr0)"
-BOLD="$(tput bold)"
-BLUE="${BOLD}$(tput setaf 4)"
-YELLOW="${BOLD}$(tput setaf 3)"
+all_off="$(tput sgr0)"
+bold="${all_off}$(tput bold)"
+blue="${bold}$(tput setaf 4)"
+yellow="${bold}$(tput setaf 3)"
 
 # 64-bit?
-if [ $(uname -m) = x86_64 ]; then
+if [[ $(uname -m) = x86_64 ]]; then
     _64=true
 fi
 
@@ -28,8 +28,7 @@ _update() {
 
 post_install() {
     _update
-
-    if [ "${_64}" ]; then
+    if [[ $_64 ]]; then
         note "The binary is called 'google-earth'." "1"
         note "If experiencing graphical corruption:
           $ rm -r ~/.googleearth/Cache/" "2"
@@ -40,10 +39,9 @@ post_install() {
 
 post_upgrade() {
     _update
-
-    if [ "${_64}" ]; then
+    if [[ $_64 ]]; then
         note "If experiencing graphical corruption:
-          $ rm -r ~/.googleearth/Cache/" "2"
+          $ rm -r ~/.googleearth/Cache/"
     fi
 }
 

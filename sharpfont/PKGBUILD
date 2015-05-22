@@ -1,6 +1,6 @@
 pkgname=sharpfont
 pkgdesc="Cross-platform FreeType bindings for .NET"
-pkgver=3.0.0
+pkgver=3.0.1
 pkgrel=1
 arch=(any)
 license=("MIT")
@@ -9,7 +9,7 @@ source=("https://github.com/Robmaister/SharpFont/archive/v$pkgver.tar.gz"
 "deps.zip::https://github.com/Robmaister/SharpFont.Dependencies/archive/9db9d1c4c8ab4832d25765904ca0e78963810884.zip"
 "sharpfont.pc")
 depends=(mono freetype2)
-sha1sums=('c746bda3cde4fee9a1dc608afe0ce05d67999b2a'
+sha1sums=('78ed473d66cb9d1771032b98931579534d08f61e'
           '18356b7e32152d372fbe59405ec3a1dcb7c64db2'
           '06f0b1549c5ecb11fef7a40e77e9a4c90cf1e3c7')
 prepare() {

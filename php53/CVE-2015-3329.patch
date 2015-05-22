@@ -1,0 +1,35 @@
+From f59b67ae50064560d7bfcdb0d6a8ab284179053c Mon Sep 17 00:00:00 2001
+From: Stanislav Malyshev <stas@php.net>
+Date: Tue, 14 Apr 2015 00:03:50 -0700
+Subject: [PATCH] Fix bug #69441 (Buffer Overflow when parsing tar/zip/phar in
+ phar_set_inode)
+
+---
+ ext/phar/phar_internal.h     |   9 ++++++---
+ ext/phar/tests/bug69441.phar | Bin 0 -> 5780 bytes
+ ext/phar/tests/bug69441.phpt |  21 +++++++++++++++++++++
+ 3 files changed, 27 insertions(+), 3 deletions(-)
+ create mode 100644 ext/phar/tests/bug69441.phar
+ create mode 100644 ext/phar/tests/bug69441.phpt
+
+Index: php5-5.3.10/ext/phar/phar_internal.h
+===================================================================
+--- php5-5.3.10.orig/ext/phar/phar_internal.h	2015-04-17 06:25:17.074639244 -0400
++++ php5-5.3.10/ext/phar/phar_internal.h	2015-04-17 06:25:17.070639210 -0400
+@@ -618,10 +618,13 @@
+ {
+ 	char tmp[MAXPATHLEN];
+ 	int tmp_len;
++	size_t len;
+ 
+-	tmp_len = entry->filename_len + entry->phar->fname_len;
+-	memcpy(tmp, entry->phar->fname, entry->phar->fname_len);
+-	memcpy(tmp + entry->phar->fname_len, entry->filename, entry->filename_len);
++	tmp_len = MIN(MAXPATHLEN, entry->filename_len + entry->phar->fname_len);
++	len = MIN(entry->phar->fname_len, tmp_len);
++	memcpy(tmp, entry->phar->fname, len);
++	len = MIN(tmp_len - len, entry->filename_len);
++	memcpy(tmp + entry->phar->fname_len, entry->filename, len);
+ 	entry->inode = (unsigned short)zend_get_hash_value(tmp, tmp_len);
+ }
+ /* }}} */

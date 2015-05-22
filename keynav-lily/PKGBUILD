@@ -1,7 +1,8 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
 # Contributor: Jan Fader <jan.fader@web.de>
 pkgname=keynav-lily
 pkgver=0.20110708.0
-pkgrel=3
+pkgrel=4
 pkgdesc="Ingenious and fast way to move the (mouse) pointer on the screen with keystrokes. Patched version."
 url="http://www.semicomplete.com/projects/keynav/"
 license=('BSD')
@@ -11,16 +12,23 @@ provides=(keynav=$pkgver)
 conflicts=(keynav)
 install=
 source=(http://semicomplete.googlecode.com/files/keynav-${pkgver}.tar.gz
-        ungrab.patch)
+        ungrab.patch
+        xdo3.patch)
 md5sums=('d1b273d72b15fc9c28270c28f644e7c6'
-	       '9cb3193692adb8c50f79ac8b91a3084a')
+	       '9cb3193692adb8c50f79ac8b91a3084a'
+         'cf9de002b0a468bd862de8b3b2dd4929')
 
 build() {
   cd "$srcdir/keynav-$pkgver"
 
   patch -N keynav.c $srcdir/ungrab.patch
+  patch -N keynav.c $srcdir/xdo3.patch
 
   make keynav
+}
+
+package() {
+  cd "$srcdir/keynav-$pkgver"
   install -D keynav   "$pkgdir/usr/bin/keynav"
   install -D keynavrc "$pkgdir/etc/keynavrc"
 }

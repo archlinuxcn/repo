@@ -1,0 +1,41 @@
+# Maintainer: John Jenkins <twodopeshaggy@gmail.com>
+
+pkgname=drive
+pkgver=0.1.8
+pkgrel=1
+pkgdesc="Pull or push Google Drive files"
+arch=('x86_64' 'i686' 'arm' 'armv6h' 'armv7h')
+url="http://github.com/odeke-em/drive"
+license=('Apache')
+makedepends=('go' 'git' 'mercurial')
+conflicts=('drive-git')
+options=('!strip' '!emptydirs')
+source=("https://github.com/odeke-em/$pkgname/archive/v$pkgver.tar.gz")
+sha256sums=('4679f58513157b058ee406e5b1259b76fd9bd614a0c1acf8ae4947a2a27305bd')
+
+prepare() {
+ mkdir -p "$srcdir/go"
+ export GOPATH="$srcdir/go"
+ go get github.com/odeke-em/drive/cmd/drive
+ go get github.com/odeke-em/drive/config
+ go get github.com/rakyll/command
+}
+
+build() {
+  export GOPATH="$srcdir/go"
+  cd "$pkgname-$pkgver/cmd/drive"
+
+  msg2 'Building drive'
+  go build -o "$pkgname" main.go
+
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver/cmd/drive"
+
+  install -Dm755 "$pkgname" "$pkgdir/usr/bin/$pkgname"
+  cd "$srcdir/$pkgname-$pkgver"
+  mkdir -p $pkgdir/usr/share/licenses/$pkgname
+  install -m 0644 LICENSE $pkgdir/usr/share/licenses/$pkgname/
+}
+# vim:set ts=2 sw=2 et:

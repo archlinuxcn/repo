@@ -14,9 +14,6 @@ update_desktop() {
     update-desktop-database -q
     update-mime-database /usr/share/mime >/dev/null
     xdg-icon-resource forceupdate &>/dev/null
-    xdg-icon-resource forceupdate --theme HighContrast &>/dev/null
-    xdg-icon-resource forceupdate --theme HighContrastInverse &>/dev/null
-    xdg-icon-resource forceupdate --theme LowContrast &>/dev/null
 }
 
 post_install() {

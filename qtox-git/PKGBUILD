@@ -1,29 +1,30 @@
-# Maintainer: Kevin MacMartin <prurigro at gmail dot com>
+# Maintainer: Håvard Pettersson <mail@haavard.me>
+# Contributor: Kevin MacMartin <prurigro at gmail dot com>
 
 _pkgname=qtox
-pkgname=$_pkgname-git
-pkgver=r2615.f55fd40
+pkgname=qtox-git
+pkgver=r2920.a841224
 pkgrel=1
-pkgdesc='Powerful QT Tox client that tries to follow the Tox UI guidlines'
+pkgdesc='Powerful Tox client written in C++/Qt that follows the Tox design guidelines.'
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h')
 url='https://github.com/tux3/qTox'
 license=('GPL3')
 depends=(
-  'tox-git>=r3147'
   'desktop-file-utils'
-  'filter_audio-git'
+  'libfilteraudio-git'
   'libxkbcommon-x11'
   'libxss'
   'opencv'
+  'openal'
   'qt5-svg'
-  'openal-soft-tox'
   'qrencode'
+  'tox-git'
 )
 makedepends=('git' 'qt5-tools')
 provides=("$_pkgname")
 conflicts=("$_pkgname")
 install=$pkgname.install
-source=("$_pkgname::git+$url")
+source=("$_pkgname::git+https://github.com/tux3/qTox.git")
 sha512sums=('SKIP')
 
 pkgver() {
@@ -31,19 +32,11 @@ pkgver() {
   printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
-prepare() {
-  cd $_pkgname
-  [[ -d './libs' ]] && rm -rf ./libs
-  install -d libs
-  ln -s /usr/lib libs/
-  ln -s /usr/include libs/
-}
-
 build() {
   cd $_pkgname
   install -d build
   cd build
-  qmake-qt5 ..
+  qmake-qt5 ENABLE_SYSTRAY_UNITY_BACKEND=NO ..
   make
 }
 
@@ -61,5 +54,5 @@ package() {
     _size=$(sed 's|^[^-]*-||;s|\.png||' <<< "$_icon")
     install -Dm644 "$_icon" "$pkgdir/usr/share/icons/hicolor/$_size/apps/$_pkgname.png"
   done
-  install -Dm644 $_pkgname.svg "$pkgdir/usr/share/icons/hicolor/scalable/apps/$_pkgname.png"
+  install -Dm644 $_pkgname.svg "$pkgdir/usr/share/icons/hicolor/scalable/apps/$_pkgname.svg"
 }

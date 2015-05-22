@@ -1,0 +1,11 @@
+diff -Nu htmldoc-1.8.28/htmldoc/http-addrlist.c htmldoc-1.8.28_fixed/htmldoc/http-addrlist.c
+--- htmldoc-1.8.28/htmldoc/http-addrlist.c 2011-12-30 02:41:10.000000000 -0500
++++ htmldoc-1.8.28_fixed/htmldoc/http-addrlist.c 2014-02-27 18:08:04.000000000 -0500
+@@ -28,6 +28,7 @@
+ #  include <resolv.h>
+ #endif /* HAVE_RESOLV_H */
+
++#include <errno.h>
+
+ /*
+  * 'httpAddrConnect()' - Connect to any of the addresses in the list.

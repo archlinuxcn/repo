@@ -3,36 +3,36 @@
 
 # pkgbase=linux               # Build stock -ARCH kernel
 pkgbase=linux-beignet-fix       # Build kernel with a different name
-_srcname=linux-3.19
-pkgver=3.19
-pkgrel=1
+_srcname=linux-4.0
+pkgver=4.0
+pkgrel=2
 arch=('i686' 'x86_64')
 url="http://www.kernel.org/"
 license=('GPL2')
 makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc')
 options=('!strip')
-source=("https://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
-        # "https://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.sign"
-        #"https://www.kernel.org/pub/linux/kernel/v3.x/patch-${pkgver}.xz"
-        #"https://www.kernel.org/pub/linux/kernel/v3.x/patch-${pkgver}.sign"
+source=("https://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.xz"
+        # "https://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.sign"
+        # "https://www.kernel.org/pub/linux/kernel/v3.x/patch-${pkgver}.xz"
+        # "https://www.kernel.org/pub/linux/kernel/v3.x/patch-${pkgver}.sign"
         # the main kernel config files
         'config' 'config.x86_64'
         # standard config files for mkinitcpio ramdisk
         'linux.preset'
         'change-default-console-loglevel.patch'
         'disable-batchbuffer-security.patch'
-        )
-sha256sums=('be42511fe5321012bb4a2009167ce56a9e5fe362b4af43e8c371b3666859806c'
+       )
+sha256sums=('0f2f7d44979bc8f71c4fc5d3308c03499c26a824dd311fdf6eef4dee0d7d5991'
             # 'SKIP'
-            '704a479de77c9022e5c7a797d2cd7fd0e4ba1f52f9039ec8a80efd57f7e9f0d8'
-            '59830f47c1be39f874640d762dca55f972aca549a7a65ba2f1dac184251dabb2'
+            '514aa8a9d03d2419c8084725fcdb2b5b4ce07966f5bd6a51224a5f7a5f8c3694'
+            'b268b03a042e3f604a12a80c6e24c42006e4d9bf4a6d9b3201eb006942718128'
             'f0d90e756f14533ee67afda280500511a62465b4f76adcc5effa95a40045179c'
             '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99'
             '87e23817f647af755f11283a0be4b6fee8a0ca6a95c9d90f20e18ec34b93fc12')
 # validpgpkeys=(
-#               'ABAF11C65A2970B130ABE3C479BE3E4300411886' # Linus Torvalds
-#               '647F28654894E3BD457199BE38DBBDC86092693E' # Greg Kroah-Hartman
-#              )
+#   'ABAF11C65A2970B130ABE3C479BE3E4300411886' # Linus Torvalds
+#   '647F28654894E3BD457199BE38DBBDC86092693E' # Greg Kroah-Hartman
+# )
 
 _kernelname=${pkgbase#linux}
 
@@ -54,14 +54,14 @@ prepare() {
   patch -p1 -i "${srcdir}/disable-batchbuffer-security.patch"
 
   if [ "${CARCH}" = "x86_64" ]; then
-    cat "${srcdir}/config.x86_64" > ./.config
+      cat "${srcdir}/config.x86_64" > ./.config
   else
     cat "${srcdir}/config" > ./.config
   fi
 
   if [ "${_kernelname}" != "" ]; then
-    sed -i "s|CONFIG_LOCALVERSION=.*|CONFIG_LOCALVERSION=\"${_kernelname}\"|g" ./.config
-    sed -i "s|CONFIG_LOCALVERSION_AUTO=.*|CONFIG_LOCALVERSION_AUTO=n|" ./.config
+      sed -i "s|CONFIG_LOCALVERSION=.*|CONFIG_LOCALVERSION=\"${_kernelname}\"|g" ./.config
+      sed -i "s|CONFIG_LOCALVERSION_AUTO=.*|CONFIG_LOCALVERSION_AUTO=n|" ./.config
   fi
 
   # set extraversion to pkgrel
@@ -119,18 +119,18 @@ _package() {
   cp -f "${startdir}/${install}" "${startdir}/${install}.pkg"
   true && install=${install}.pkg
   sed \
-    -e  "s/KERNEL_NAME=.*/KERNEL_NAME=${_kernelname}/" \
-    -e  "s/KERNEL_VERSION=.*/KERNEL_VERSION=${_kernver}/" \
-    -i "${startdir}/${install}"
+      -e  "s/KERNEL_NAME=.*/KERNEL_NAME=${_kernelname}/" \
+      -e  "s/KERNEL_VERSION=.*/KERNEL_VERSION=${_kernver}/" \
+      -i "${startdir}/${install}"
 
   # install mkinitcpio preset file for kernel
   install -D -m644 "${srcdir}/linux.preset" "${pkgdir}/etc/mkinitcpio.d/${pkgbase}.preset"
   sed \
-    -e "1s|'linux.*'|'${pkgbase}'|" \
-    -e "s|ALL_kver=.*|ALL_kver=\"/boot/vmlinuz-${pkgbase}\"|" \
-    -e "s|default_image=.*|default_image=\"/boot/initramfs-${pkgbase}.img\"|" \
-    -e "s|fallback_image=.*|fallback_image=\"/boot/initramfs-${pkgbase}-fallback.img\"|" \
-    -i "${pkgdir}/etc/mkinitcpio.d/${pkgbase}.preset"
+      -e "1s|'linux.*'|'${pkgbase}'|" \
+      -e "s|ALL_kver=.*|ALL_kver=\"/boot/vmlinuz-${pkgbase}\"|" \
+      -e "s|default_image=.*|default_image=\"/boot/initramfs-${pkgbase}.img\"|" \
+      -e "s|fallback_image=.*|fallback_image=\"/boot/initramfs-${pkgbase}-fallback.img\"|" \
+      -i "${pkgdir}/etc/mkinitcpio.d/${pkgbase}.preset"
 
   # remove build and source links
   rm -f "${pkgdir}"/lib/modules/${_kernver}/{source,build}
@@ -150,7 +150,7 @@ _package() {
   mv "${pkgdir}/lib" "${pkgdir}/usr/"
 
   # add vmlinux
-  install -D -m644 vmlinux "${pkgdir}/usr/lib/modules/${_kernver}/build/vmlinux" 
+  install -D -m644 vmlinux "${pkgdir}/usr/lib/modules/${_kernver}/build/vmlinux"
 }
 
 _package-headers() {
@@ -163,16 +163,16 @@ _package-headers() {
 
   cd "${srcdir}/${_srcname}"
   install -D -m644 Makefile \
-    "${pkgdir}/usr/lib/modules/${_kernver}/build/Makefile"
+          "${pkgdir}/usr/lib/modules/${_kernver}/build/Makefile"
   install -D -m644 kernel/Makefile \
-    "${pkgdir}/usr/lib/modules/${_kernver}/build/kernel/Makefile"
+          "${pkgdir}/usr/lib/modules/${_kernver}/build/kernel/Makefile"
   install -D -m644 .config \
-    "${pkgdir}/usr/lib/modules/${_kernver}/build/.config"
+          "${pkgdir}/usr/lib/modules/${_kernver}/build/.config"
 
   mkdir -p "${pkgdir}/usr/lib/modules/${_kernver}/build/include"
 
   for i in acpi asm-generic config crypto drm generated keys linux math-emu \
-    media net pcmcia scsi sound trace uapi video xen; do
+                media net pcmcia scsi sound trace uapi video xen; do
     cp -a include/${i} "${pkgdir}/usr/lib/modules/${_kernver}/build/include/"
   done
 
@@ -193,14 +193,14 @@ _package-headers() {
   cp arch/${KARCH}/Makefile "${pkgdir}/usr/lib/modules/${_kernver}/build/arch/${KARCH}/"
 
   if [ "${CARCH}" = "i686" ]; then
-    cp arch/${KARCH}/Makefile_32.cpu "${pkgdir}/usr/lib/modules/${_kernver}/build/arch/${KARCH}/"
+      cp arch/${KARCH}/Makefile_32.cpu "${pkgdir}/usr/lib/modules/${_kernver}/build/arch/${KARCH}/"
   fi
 
   cp arch/${KARCH}/kernel/asm-offsets.s "${pkgdir}/usr/lib/modules/${_kernver}/build/arch/${KARCH}/kernel/"
 
   # add docbook makefile
   install -D -m644 Documentation/DocBook/Makefile \
-    "${pkgdir}/usr/lib/modules/${_kernver}/build/Documentation/DocBook/Makefile"
+          "${pkgdir}/usr/lib/modules/${_kernver}/build/Documentation/DocBook/Makefile"
 
   # add dm headers
   mkdir -p "${pkgdir}/usr/lib/modules/${_kernver}/build/drivers/md"
@@ -259,15 +259,15 @@ _package-headers() {
 
   # strip scripts directory
   find "${pkgdir}/usr/lib/modules/${_kernver}/build/scripts" -type f -perm -u+w 2>/dev/null | while read binary ; do
-    case "$(file -bi "${binary}")" in
-      *application/x-sharedlib*) # Libraries (.so)
-        /usr/bin/strip ${STRIP_SHARED} "${binary}";;
-      *application/x-archive*) # Libraries (.a)
-        /usr/bin/strip ${STRIP_STATIC} "${binary}";;
-      *application/x-executable*) # Binaries
-        /usr/bin/strip ${STRIP_BINARIES} "${binary}";;
-    esac
-  done
+                                                                                                case "$(file -bi "${binary}")" in
+                                                                                                  *application/x-sharedlib*) # Libraries (.so)
+                                                                                                    /usr/bin/strip ${STRIP_SHARED} "${binary}";;
+                                                                                                  *application/x-archive*) # Libraries (.a)
+                                                                                                    /usr/bin/strip ${STRIP_STATIC} "${binary}";;
+                                                                                                  *application/x-executable*) # Binaries
+                                                                                                    /usr/bin/strip ${STRIP_BINARIES} "${binary}";;
+                                                                                                esac
+                                                                                              done
 
   # remove unneeded architectures
   rm -rf "${pkgdir}"/usr/lib/modules/${_kernver}/build/arch/{alpha,arc,arm,arm26,arm64,avr32,blackfin,c6x,cris,frv,h8300,hexagon,ia64,m32r,m68k,m68knommu,metag,mips,microblaze,mn10300,openrisc,parisc,powerpc,ppc,s390,score,sh,sh64,sparc,sparc64,tile,unicore32,um,v850,xtensa}

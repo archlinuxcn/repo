@@ -1,4 +1,5 @@
 # Maintainer: Yichao Yu <yyc1992@gmail.com>
+# Contributor: Florian Pritz <bluewind@xinu.at>
 # Contributor: Jonas Heinrich <onny@project-insanity.org>
 # Contributor: Jordi De Groof <jordi (dot) degroof (at) gmail (dot) com>
 # Contributor: mickele
@@ -7,26 +8,33 @@
 # Contributor: gborzi
 
 pkgname=freecad-oce
-pkgver=0.14.3702
-pkgrel=6
+pkgver=0.15.4671
+pkgrel=2
 pkgdesc='A general purpose 3D CAD modeler'
 arch=('i686' 'x86_64')
 url='http://www.freecadweb.org/'
 license=('LGPL')
-depends=(curl 'opencascade>=6.6.0' python2-pivy xerces-c libspnav
-         shared-mime-info hicolor-icon-theme python2-matplotlib python2-pyside
-         shiboken qtwebkit)
-makedepends=(boost eigen gcc-fortran swig desktop-file-utils
-             cmake 'coin>=3.1.3')
+depends=(curl oce python2-pivy xerces-c libspnav shared-mime-info
+         hicolor-icon-theme python2-matplotlib python2-shiboken
+         python2-pyside-tools pyside-tools-common qtwebkit)
+makedepends=(boost eigen gcc-fortran swig xerces-c desktop-file-utils
+             cmake 'coin>=3.1.3-9')
+# TODO add reasons
 optdepends=('pycollada-git' 'python2-pyqt4')
 options=(!libtool !staticlibs debug strip)
 install=freecad.install
-source=("http://downloads.sourceforge.net/sourceforge/free-cad/freecad-${pkgver}.tar.gz"
+source=("http://downloads.sourceforge.net/sourceforge/free-cad/freecad_${pkgver}.tar.gz"
         "freecad.desktop"
         "freecad.xml")
-md5sums=('234747bdff47a62fd10cb902f3dd772b'
+md5sums=('7afa95d3e8cd845bef83202e76db7f24'
          '4b9656e677b277a3c7babf70b21670e8'
          'c2f4154c8e4678825411de8e7fa54c6b')
+
+prepare() {
+  sed -i \
+      -e 's|\bpyside-uic\b|python2-pyside-uic|' \
+      $srcdir/freecad-$pkgver/cMake/FindPySideTools.cmake
+}
 
 build() {
   cd freecad-${pkgver}

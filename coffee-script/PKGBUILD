@@ -9,7 +9,7 @@
 
 pkgname=coffee-script
 _pkgname=coffeescript
-pkgver=1.9.1
+pkgver=1.9.2
 pkgrel=1
 pkgdesc='CoffeeScript is a little language that compiles into JavaScript.'
 arch=(any)
@@ -19,7 +19,7 @@ makedepends=()
 depends=(nodejs 'nodejs-mkdirp' underscorejs)
 optdepends=('nodejs-profile: to load coffee-script in node')
 source=(https://github.com/jashkenas/coffeescript/archive/$pkgver.tar.gz)
-sha256sums=('a5afbf376d38e9f1daf3b3f9e914b5dcf6e89e769f0dc81c63e567b931abba84')
+sha256sums=('056ca6de58804071e535ca6a99be68c78fc1950a9abd706aa8aecddebe54f5be')
 
 check() {
   export NODE_PATH=/usr/share/underscorejs:$NODE_PATH
@@ -37,6 +37,6 @@ package() {
   ln -sf /usr/lib/node_modules/coffee-script/bin/{cake,coffee} "$pkgdir/usr/bin/"
 
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-  install -Dm644 README "$pkgdir/usr/share/doc/$pkgname/README"
+  install -Dm644 README.md "$pkgdir/usr/share/doc/$pkgname/README.md"
 }
 

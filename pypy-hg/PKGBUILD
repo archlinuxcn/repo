@@ -3,16 +3,16 @@
 # Contributor: William Giokas (KaiSforza) <1007380@gmail.com>
 # Original author: Sven-Hendrik Haase (svenstaro) <sh@lutzhaase.com>
 
-USE_PYPY=1
+USE_PYPY=0
 USE_SHARED=1
 
 pkgname=pypy-hg
-pkgver=75132.035393735c13
+pkgver=77456.55654cba5990
 pkgrel=1
 pkgdesc="A Python implementation written in Python, JIT enabled, hg version"
 url="http://pypy.org"
 arch=('i686' 'x86_64')
-depends=('libffi' 'openssl' 'expat' 'ncurses' 'zlib' 'bzip2')
+depends=('libffi' 'openssl' 'expat' 'ncurses' 'zlib' 'bzip2' 'libunwind')
 # Force cpython2 to be installed for mercurial
 makedepends=('python2>=2.7' 'mercurial' 'gdbm' 'sqlite' 'tcl' 'tk')
 if ((USE_PYPY)); then

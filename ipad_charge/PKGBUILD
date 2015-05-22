@@ -1,0 +1,33 @@
+# Maintainer: zlowly <zlowly AT  gmail DOT com>
+pkgname=ipad_charge
+pkgver=1.1
+pkgrel=4
+pkgdesc="iPad USB charging control utility"
+arch=("i686" "x86_64")
+url="http://www.rainbow-software.org/linux/"
+license=('GPL2')
+source=("http://www.rainbow-software.org/linux_files/${pkgname}_${pkgver}.tar.gz"
+"95-ipad_charge.rules.patch"
+"ipad_charge.c.patch"
+)
+depends=('udev' 'libusb')
+makedepends=('gcc')
+md5sums=('09b8c600efd747a36c9cc320516326cf'
+         'bfc9325716cc8fcedc04f13fcf7c8693'
+         '45d28ae05281b4fa0739d858fc01d324')
+build() {
+  cd $srcdir/${pkgname}-${pkgver}
+  patch -p1 -i ${srcdir}/95-ipad_charge.rules.patch
+  sed -i -e "s/SYSFS/ATTRS/g" -e "s/BUS/SUBSYSTEMS/g" 95-ipad_charge.rules
+  patch -p1 -i ${srcdir}/ipad_charge.c.patch
+  gcc -Wall -Wextra ipad_charge.c -lusb-1.0 -o ipad_charge
+}
+package() {
+  mkdir -p $pkgdir/usr/bin
+  mkdir -p $pkgdir/etc/udev/rules.d
+  cd $srcdir/${pkgname}-${pkgver}
+  install -m755 -s ipad_charge $pkgdir/usr/bin/
+  install -m644 95-ipad_charge.rules $pkgdir/etc/udev/rules.d/
+}
+
+# vim:set ts=2 sw=2 et:

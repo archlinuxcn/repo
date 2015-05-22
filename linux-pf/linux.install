@@ -3,7 +3,7 @@
 # arg 2:  the old package version
 
 KERNEL_NAME=-pf
-KERNEL_VERSION=3.19.3-pf
+KERNEL_VERSION=4.0.4-pf
 
 # set a sane PATH to ensure that critical utils like depmod will be found
 export PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
@@ -14,7 +14,7 @@ post_install () {
     depmod ${KERNEL_VERSION}
     echo ">>> Generating initial ramdisk, using mkinitcpio.  Please wait..."
     mkinitcpio -p linux${KERNEL_NAME}
-    
+
     # compat symlinks for the official kernels only
     if [ -z "${KERNEL_NAME}" -o "${KERNEL_NAME}" = "-lts" ]; then
 	loaders="$(find /boot -name syslinux.cfg -or -name extlinux.conf -or -name grub.cfg -or -name menu.lst)"
@@ -47,11 +47,11 @@ post_upgrade() {
 	fi
 	echo ">>>"
     fi
-    
+
     if findmnt --fstab -uno SOURCE /boot &>/dev/null && ! mountpoint -q /boot; then
 	echo "WARNING: /boot appears to be a separate partition but is not mounted."
     fi
-    
+
     # updating module dependencies
     echo ">>> Updating module dependencies. Please wait ..."
     depmod ${KERNEL_VERSION}

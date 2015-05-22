@@ -1,13 +1,13 @@
 # Maintainer: Antonio Rojas 
 
 pkgname=ksnapshot-frameworks-git
-pkgver=r677.8662ada
+pkgver=r694.2503aac
 pkgrel=1
 pkgdesc='Screen Capture Program'
 arch=('i686' 'x86_64')
 url='http://kde.org/applications/graphics/ksnapshot/'
 license=('GPL')
-depends=('libkipi-frameworks-git' 'hicolor-icon-theme')
+depends=('libkipi-frameworks-git' 'kparts' 'hicolor-icon-theme')
 makedepends=('extra-cmake-modules' 'git' 'kdoctools' 'python')
 conflicts=('kdegraphics-ksnapshot' 'ksnapshot')
 provides=('ksnapshot')

@@ -9,10 +9,10 @@ arch=('i686' 'x86_64')
 url="http://www.cataclysmdda.com/"
 license=('CCPL:by-sa')
 
-depends=('glibc' 'gcc-libs' 'sh')
+depends=('glibc' 'gcc-libs' 'sh' 'ncurses')
 makedepends=('gettext' 'clang')
 optdepends=('lua51')
-conflicts=('cataclysm-dda' 'cataclysm-dda-git')
+conflicts=('cataclysm-dda' 'cataclysm-dda-git' 'cataclysm-dda-ncurses-bin')
 
 install='cataclysm-dda-ncurses.install'
 source=("https://github.com/CleverRaven/Cataclysm-DDA/archive/${pkgver}.tar.gz"

@@ -3,7 +3,7 @@
 # Contributor: Gordin <9ordin @t gmail dot com>
 
 pkgname=android-sdk
-pkgver=r24.1.2
+pkgver=24.2.0
 pkgrel=1
 pkgdesc='Google Android SDK'
 arch=('x86_64' 'i686')
@@ -16,14 +16,14 @@ depends_i686=('java-environment' 'alsa-lib' 'openal' 'libstdc++5' 'libxv'
 install="$pkgname.install"
 optdepends=('android-udev: udev rules for Android devices'
             'android-sdk-platform-tools: adb, aapt, aidl, dexdump and dx')
-source=("https://dl-ssl.google.com/android/repository/tools_$pkgver-linux.zip"
+source=("https://dl-ssl.google.com/android/repository/tools_r${pkgver%.0}-linux.zip"
         'http://tools.android.com/recent/miscellaneousimprovements-1/android_icon_128.png'
         "$pkgname.desktop"
         "$pkgname.sh"
         "$pkgname.csh"
         "$pkgname.conf"
         'license.html')
-sha1sums=('c7c30f6da6eff6323260f0353ccaacc984ea6b3e'
+sha1sums=('4dd9d54af10eb999efe606899d3007cb6b1eaa78'
           '6497b745f05fc412490f74c66e10b9c5f15e6330'
           'e834f53e13d5926ec7be3fd775fa80aa6f328eb6'
           '78f8574e651c9bf8b7515ecb30c7ef93edbc4a96'
@@ -56,4 +56,5 @@ package() {
   find "$pkgdir/opt/$pkgname" -perm 744 -exec chmod 755 {} +
 }
 
+# getver: developer.android.com/tools/sdk/tools-notes.html
 # vim:set ts=2 sw=2 et:

@@ -4,8 +4,8 @@
 # Contributor: Florian Pritz <bluewind at jabber dot ccc dot de>
 pkgname=wireshark-gtk2
 pkgbase=wireshark
-pkgver=1.12.4
-pkgrel=2
+pkgver=1.12.5
+pkgrel=1
 arch=('i686' 'x86_64')
 license=('GPL2')
 makedepends=('gtk2' 'krb5' 'libpcap' 'bash' 'gnutls' 'portaudio'
@@ -13,7 +13,7 @@ makedepends=('gtk2' 'krb5' 'libpcap' 'bash' 'gnutls' 'portaudio'
 url='http://www.wireshark.org/'
 source=(http://www.wireshark.org/download/src/${pkgbase}-${pkgver}.tar.bz2
         configure-pixmap-fix.diff)
-sha1sums=('dbbd4090c02fe170f35b26fa26d8aba0b399c659'
+sha1sums=('379686f0b6355ae2e6b3f7055578317a07ce5590'
           'c383bad83442d75f44afe1737848b9dee4f35b8f')
 
 prepare() {

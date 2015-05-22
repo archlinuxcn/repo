@@ -1,16 +1,16 @@
-# Maintainer: Chuan Ji <jichuan89@gmail.com>
+# Maintainer: Chuan Ji <ji@chu4n.com>
 
 pkgname=jfbpdf
-pkgver=20140423
+pkgver=0.5.1
 pkgrel=1
 pkgdesc="Fast framebuffer PDF viewer"
 arch=('i686' 'x86_64')
 url="http://seasonofcode.com/pages/jfbview.html"
 license=('Apache')
-depends=('mupdf>=1.4' 'openjpeg2' 'jbig2dec')
+depends=('mupdf>=1.7' 'openjpeg2' 'jbig2dec')
 makedepends=('git')
 
-_gitroot="git://github.com/jichuan89/JFBView.git"
+_gitroot="git://github.com/jichu4n/JFBView.git"
 _gitname="jfbpdf"
 
 build(){
@@ -30,6 +30,7 @@ build(){
   git clone "${srcdir}/${_gitname}" "${srcdir}/${_gitname}-build"
 
   cd "${srcdir}/${_gitname}-build"
+  git checkout $pkgver
   msg "Starting make..."
   make ${_gitname}
 }

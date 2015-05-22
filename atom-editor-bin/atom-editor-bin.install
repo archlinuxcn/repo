@@ -1,0 +1,21 @@
+# Colored makepkg-like functions
+msg_blue() {
+  printf "${blue}==>${bold} $1${all_off}\n"
+}
+
+_update() {
+  msg_blue "Updating desktop MIME database..."
+  update-desktop-database -q
+}
+
+post_install() {
+  _update
+}
+
+post_upgrade() {
+  _update
+}
+
+post_remove() {
+  _update
+}

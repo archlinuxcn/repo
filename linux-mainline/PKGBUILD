@@ -4,10 +4,9 @@
 
 pkgbase=linux-mainline               # Build stock -ARCH kernel
 #pkgbase=linux-custom       # Build kernel with a different name
-#_srcname=linux-3.18
-#_patchname=patch-3.19-rc6
 _srcname=linux-4.0
-pkgver=4.0
+_patchname=patch-4.1-rc3
+pkgver=4.1rc3
 pkgrel=1
 arch=('i686' 'x86_64')
 url="http://www.hurrdurr.org/"
@@ -15,8 +14,7 @@ license=('GPL2')
 makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc')
 options=('!strip')
 source=("https://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.xz"
-        #"https://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
-        #"https://www.kernel.org/pub/linux/kernel/v3.x/testing/${_patchname}.xz"
+        "https://www.kernel.org/pub/linux/kernel/v4.x/testing/${_patchname}.xz"
         #"https://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.sign"
         #"https://www.kernel.org/pub/linux/kernel/v3.x/testing/${_patchname}.sign"
         # the main kernel config files
@@ -26,8 +24,9 @@ source=("https://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.xz"
         'change-default-console-loglevel.patch'
         )
 sha256sums=('0f2f7d44979bc8f71c4fc5d3308c03499c26a824dd311fdf6eef4dee0d7d5991'
-            '704a479de77c9022e5c7a797d2cd7fd0e4ba1f52f9039ec8a80efd57f7e9f0d8'
-            '59830f47c1be39f874640d762dca55f972aca549a7a65ba2f1dac184251dabb2'
+            '0f6ed001abfa0ca5a8fc6fa4c6d65adbba2423b0242fb8c9e50e078ca417e88c'
+            '514aa8a9d03d2419c8084725fcdb2b5b4ce07966f5bd6a51224a5f7a5f8c3694'
+            'b268b03a042e3f604a12a80c6e24c42006e4d9bf4a6d9b3201eb006942718128'
             'f0d90e756f14533ee67afda280500511a62465b4f76adcc5effa95a40045179c'
             '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99')
 validpgpkeys=(
@@ -40,10 +39,10 @@ _kernelname=${pkgbase#linux}
 prepare() {
   cd "${srcdir}/${_srcname}"
 
+  patch -p1 -i "${srcdir}/${_patchname}"
+
   # add latest fixes from stable queue, if needed
   # http://git.kernel.org/?p=linux/kernel/git/stable/stable-queue.git
-
-  #patch -p1 -i "${srcdir}/${_patchname}"
 
   # set DEFAULT_CONSOLE_LOGLEVEL to 4 (same value as the 'quiet' kernel param)
   # remove this when a Kconfig knob is made available by upstream
@@ -243,6 +242,8 @@ _package-headers() {
   # add xfs and shmem for aufs building
   mkdir -p "${pkgdir}/usr/lib/modules/${_kernver}/build/fs/xfs"
   mkdir -p "${pkgdir}/usr/lib/modules/${_kernver}/build/mm"
+  # removed in 3.17 series
+  # cp fs/xfs/xfs_sb.h "${pkgdir}/usr/lib/modules/${_kernver}/build/fs/xfs/xfs_sb.h"
 
   # copy in Kconfig files
   for i in $(find . -name "Kconfig*"); do

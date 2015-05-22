@@ -1,26 +1,26 @@
-# Maintainer: Kevin MacMartin <prurigro at gmail dot com>
-# Contributor: Boohbah <boohbah at gmail.com>
+# Maintainer: Håvard Pettersson <mail@haavard.me>
 # Contributor: naxuroqa <naxuroqa at gmail.com>
+# Contributor: Boohbah <boohbah at gmail.com>
+# Contributor: Kevin MacMartin <prurigro at gmail dot com>
 
 _pkgname=tox
-pkgname=$_pkgname-git
-pkgver=r3156.4ad7649
+pkgname=tox-git
+pkgver=r3371.8760aba
 pkgrel=1
 pkgdesc='Secure, configuration-free, P2P Skype replacement backend'
-arch=('i686' 'x86_64' 'armv6h' 'armv7h')
+arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h')
 url='https://tox.im'
 license=('GPL3')
 depends=(
-  'libsodium'
-  'opus'
+  'libconfig>=1.4'
+  'libsodium>=1.0'
   'libvpx'
-  'libconfig'
-  'openal-soft-tox'
+  'opus'
 )
 makedepends=('git' 'check')
-optdepends=('qtox-git: qt-based frontend'
-            'utox-git: lightweight tox client'
-            'toxic-git: ncurses-based frontend')
+optdepends=('qtox-git: qt-based Tox client'
+            'utox-git: lightweight Tox client'
+            'toxic-git: ncurses-based Tox client')
 conflicts=("$_pkgname")
 provides=("$_pkgname")
 replaces=("$_pkgname")
@@ -34,7 +34,7 @@ pkgver() {
 
 build() {
   cd $_pkgname
-  ./autogen.sh
+  autoreconf -if
   ./configure \
     --prefix=/usr \
     --enable-daemon \

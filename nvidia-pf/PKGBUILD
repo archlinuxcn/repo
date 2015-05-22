@@ -1,23 +1,21 @@
 # Maintainer : Zuyi Hu <hzy068808@gmail.com>
 
 pkgname=nvidia-pf
-pkgver=346.59
-_extramodules=extramodules-3.19-pf
+pkgver=352.09
+_extramodules=extramodules-4.0-pf
 pkgrel=1
 pkgdesc="NVIDIA drivers for linux-pf"
 arch=('i686' 'x86_64')
 url="http://www.nvidia.com/"
-depends=('linux-pf>=3.19' 'linux-pf<3.20' "nvidia-libgl" "nvidia-utils=${pkgver}")
-makedepends=('linux-pf-headers>=3.19' 'linux-pf-headers<3.20')
+depends=('linux-pf>=4.0' 'linux-pf<4.1' "nvidia-libgl" "nvidia-utils=${pkgver}")
+makedepends=('linux-pf-headers>=4.0' 'linux-pf-headers<4.1')
 license=('custom')
 install=nvidia.install
 options=(!strip)
 source=("ftp://download.nvidia.com/XFree86/Linux-x86/${pkgver}/NVIDIA-Linux-x86-${pkgver}.run"
-        "ftp://download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run"
-        nv-drm-343.36.patch)
-md5sums=('565800c3d9bf347eb35a393f48a6b7f3'
-         'db1cebc2a78eac85777bb4c7c2c8c70c'
-         'ff8a5f979e4428f8c847423fb007042c')
+        "ftp://download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run")
+md5sums=('0e009686400c522209eaa8ab835ff81f'
+         'eb5ad6a07dc03e0a19d5f6fa069c494b')
 
 [[ "$CARCH" = "i686" ]] && _pkg="NVIDIA-Linux-x86-${pkgver}"
 [[ "$CARCH" = "x86_64" ]] && _pkg="NVIDIA-Linux-x86_64-${pkgver}-no-compat32"
@@ -26,7 +24,6 @@ prepare() {
     sh "${_pkg}.run" --extract-only
     cd "${_pkg}"
     # patches here
-    patch -p1 -i ../nv-drm-343.36.patch
 }
 
 build() {

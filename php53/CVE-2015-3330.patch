@@ -1,0 +1,22 @@
+From 809610f5ea38a83b284e1125d1fff129bdd615e7 Mon Sep 17 00:00:00 2001
+From: Stanislav Malyshev <stas@php.net>
+Date: Sat, 4 Apr 2015 15:03:46 -0700
+Subject: [PATCH] Fix bug #68486 and bug #69218 (segfault in apache2handler
+ with apache 2.4)
+
+---
+ sapi/apache2handler/sapi_apache2.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+Index: php5-5.3.10/sapi/apache2handler/sapi_apache2.c
+===================================================================
+--- php5-5.3.10.orig/sapi/apache2handler/sapi_apache2.c	2015-04-17 06:25:08.218560975 -0400
++++ php5-5.3.10/sapi/apache2handler/sapi_apache2.c	2015-04-17 06:25:08.214560939 -0400
+@@ -708,6 +708,7 @@
+ } zend_end_try();
+ 		}
+ 		apr_brigade_cleanup(brigade);
++		apr_pool_cleanup_run(r->pool, (void *)&SG(server_context), php_server_context_cleanup);
+ 	} else {
+ 		ctx->r = parent_req;
+ 	}

@@ -3,21 +3,21 @@
 # Contributor: Tobias Veit - nIcE <m.on.key.tobi[at]gmail[dot]com>
 
 pkgname=metasploit
-pkgver=4.11.0
+pkgver=4.11.2
 pkgrel=1
 pkgdesc="An advanced open-source platform for developing, testing, and using exploit code"
 url="https://www.metasploit.com/"
 arch=('any')
 license=('BSD')
-depends=('ruby1.9' 'libpcap' 'postgresql-libs' 'ruby1.9-bundler')
+depends=('ruby' 'libpcap' 'postgresql-libs' 'ruby-bundler')
 optdepends=(
   'java-runtime: msfgui support'
   'ruby-pg: database support'
 )
 options=('!strip')
 install="${pkgname}.install"
-source=(https://github.com/rapid7/metasploit-framework/archive/${pkgver}.tar.gz)
-sha512sums=('9462c2727a26fdfa5e626bb8bbf49229df7c736303d887c15f4dc6870d731fe4e6431a1bc2855b5f42f2f8bee5283d8559169bd2b7e8f18b86c0ff4d07f31889')
+source=(${pkgname}-${pkgver}.tar.gz::https://github.com/rapid7/metasploit-framework/archive/${pkgver}.tar.gz)
+sha512sums=('8c5340683f6618946d5c3ebefd59cd5167dba8c8fd8334b5a12f8dc3e515e7d814dda4029d7577b5d6e2615362a8a33965dfc09b8f5dae728abfdb84bd89e2a2')
 
 package() {
   cd metasploit-framework-${pkgver}
@@ -27,7 +27,7 @@ package() {
 
   for f in ${pkgdir}/opt/${pkgname}/msf*; do
     local _msffile="${pkgdir}/usr/bin/`basename "${f}"`"
-    echo "BUNDLE_GEMFILE=/opt/${pkgname}/Gemfile bundle-1.9 exec ruby-1.9 /opt/${pkgname}/`basename "${f}"` \"\$@\"" > ${_msffile}
+    echo "BUNDLE_GEMFILE=/opt/${pkgname}/Gemfile bundle exec ruby /opt/${pkgname}/`basename "${f}"` \"\$@\"" > ${_msffile}
     chmod 755 ${_msffile}
   done
   

@@ -19,10 +19,20 @@
 
 from lilaclib import *
 
-build_prefix = ['extra-x86_64', 'extra-i686']
+build_prefix = 'extra-x86_64'
 
 pre_build = aur_pre_build
 post_build = aur_post_build
+
+remove_files = ["Default.zh_CN.sublime-package",
+                "Default.zh_TW.sublime-package"]
+
+def pre_build():
+    aur_pre_build()
+
+    for filename in remove_files:
+        if os.path.isfile(filename):
+            os.remove(filename)
 
 # do some cleanup here after building the package, regardless of result
 # def post_build_always(success):

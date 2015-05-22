@@ -1,24 +1,23 @@
-# Maintainer : Thomas Baechler <thomas@archlinux.org>
+# Maintainer: Sven-Hendrik Haase <sh@lutzhaase.com>
+# Maintainer: Thomas Baechler <thomas@archlinux.org>
 
 pkgname=nvidia-beignet-fix
-pkgver=346.35
-_extramodules=extramodules-3.19-beignet-fix
+pkgver=349.16
+_extramodules=extramodules-4.0-beignet-fix
 pkgrel=1
 pkgdesc="NVIDIA drivers for linux"
 arch=('i686' 'x86_64')
 url="http://www.nvidia.com/"
-depends=('linux-beignet-fix>=3.19' 'linux-beignet-fix<4.0'
+depends=('linux-beignet-fix>=4.0' 'linux-beignet-fix<4.1'
          "nvidia-libgl" "nvidia-utils=${pkgver}")
-makedepends=('linux-beignet-fix-headers>=3.19' 'linux-beignet-fix-headers<4.0')
+makedepends=('linux-beignet-fix-headers>=4.0' 'linux-beignet-fix-headers<4.1')
 license=('custom')
 install=nvidia.install
 options=(!strip)
 source=("ftp://download.nvidia.com/XFree86/Linux-x86/${pkgver}/NVIDIA-Linux-x86-${pkgver}.run"
-        "ftp://download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run"
-        nv-drm-343.36.patch)
-md5sums=('d2b8f7f90ef5037f03f94519f9809511'
-         '9ca9f07f91361362f304ca8317ddd453'
-         'ff8a5f979e4428f8c847423fb007042c')
+        "ftp://download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run")
+md5sums=('59597d5dfaaf0fc83a5e78d29a97ccac'
+         '3e04208affde8c35a8b96975eec0486b')
 
 [[ "$CARCH" = "i686" ]] && _pkg="NVIDIA-Linux-x86-${pkgver}"
 [[ "$CARCH" = "x86_64" ]] && _pkg="NVIDIA-Linux-x86_64-${pkgver}-no-compat32"
@@ -27,7 +26,6 @@ prepare() {
   sh "${_pkg}.run" --extract-only
   cd "${_pkg}"
   # patches here
-  patch -p1 -i ../nv-drm-343.36.patch
 }
 
 build() {

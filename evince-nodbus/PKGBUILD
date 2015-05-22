@@ -2,14 +2,14 @@
 # Maintainer: Jan de Groot <jgc@archlinux.org>
 
 pkgname=evince-nodbus
-pkgver=3.14.2
+pkgver=3.16.0
 pkgrel=1
 pkgdesc="Document viewer (PDF, Postscript, djvu, tiff, dvi, XPS, SyncTex support with gedit, comics books (cbr,cbz,cb7 and cbt))"
 url="https://wiki.gnome.org/Apps/Evince"
 arch=(i686 x86_64)
 license=(GPL)
 depends=(gtk3 libgxps libspectre gsfonts poppler-glib djvulibre t1lib libsecret desktop-file-utils dconf gsettings-desktop-schemas gnome-desktop)
-makedepends=(itstool libnautilus-extension texlive-bin intltool gobject-introspection docbook-xsl python python2)
+makedepends=(itstool libnautilus-extension texlive-bin intltool gobject-introspection docbook-xsl python)
 optdepends=('texlive-bin: DVI support'
 	    'gvfs: bookmark support and session saving'
             'p7zip: cbz and cb7 compressed comic books'
@@ -22,7 +22,7 @@ provides=("evince=$pkgver")
 install=evince.install
 options=('!emptydirs')
 source=(http://ftp.gnome.org/pub/gnome/sources/evince/${pkgver:0:4}/evince-$pkgver.tar.xz)
-sha256sums=('4c591d0b879092a5f6c9140b75f15bdea3665a332e9b384957c453fd67bf0070')
+sha256sums=('5138e2d05ccfe5e40df0c840b34f334c1f2bc03e5456aa954e64673d504ccd04')
 
 build() {
   cd evince-$pkgver

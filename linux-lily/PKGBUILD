@@ -4,8 +4,8 @@
 
 pkgbase=linux-lily               # Build stock -ARCH kernel
 #pkgbase=linux-custom       # Build kernel with a different name
-_srcname=linux-3.18
-pkgver=3.18.7
+_srcname=linux-4.0
+pkgver=4.0.1
 pkgrel=1
 arch=('i686' 'x86_64')
 url="http://www.kernel.org/"
@@ -14,19 +14,18 @@ makedepends=('kmod' 'inetutils' 'bc' 'parallel')
 options=('strip' 'debug')
 STRIP_BINARIES=-S
 source=(
-        "https://www.kernel.org/pub/linux/kernel/v3.x/patch-${pkgver}.xz"
-        "https://www.kernel.org/pub/linux/kernel/v3.x/patch-${pkgver}.sign"
+        "https://www.kernel.org/pub/linux/kernel/v4.x/patch-${pkgver}.xz"
+        "https://www.kernel.org/pub/linux/kernel/v4.x/patch-${pkgver}.sign"
         # the main kernel config files
         'config' 'config.x86_64'
         # standard config files for mkinitcpio ramdisk
         'linux.preset'
-        'change-default-console-loglevel.patch'
-        )
+        'change-default-console-loglevel.patch')
 sha256sums=(
-            '84046931be1a0024eb7d2817480efe62e6b5e651257f4ed4114ddcbce92a23bb'
+            '9b4b47eb6584dc39aaa5db46843b83f7c60975abecbda4dc106a8722eabe96fb'
             'SKIP'
-            'd3794c8b2cd11b71914b41f7a4e861369d4fa3c29fdd9e1d677ff0c2167eeb52'
-            'df7886f5d57f8f85e89987066dfa5c316e922dc0b22e6e6ad01331333db52377'
+            '514aa8a9d03d2419c8084725fcdb2b5b4ce07966f5bd6a51224a5f7a5f8c3694'
+            'b268b03a042e3f604a12a80c6e24c42006e4d9bf4a6d9b3201eb006942718128'
             'f0d90e756f14533ee67afda280500511a62465b4f76adcc5effa95a40045179c'
             '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99')
 validpgpkeys=(
@@ -84,7 +83,7 @@ build() {
 }
 
 _package() {
-  pkgdesc="The ${pkgbase/linux/Linux} kernel and modules, with x32, aufs3, latencytop, kgdb, cjktty, uksm and bfq support"
+  pkgdesc="The ${pkgbase/linux/Linux} kernel and modules, with x32, latencytop, kgdb, cjktty, uksm, bfq and userns support"
   [ "${pkgbase}" = "linux" ] && groups=('base')
   depends=('coreutils' 'linux-firmware' 'kmod' 'mkinitcpio>=0.7')
   optdepends=('crda: to set the correct wireless channels of your country')
@@ -128,19 +127,18 @@ _package() {
   rm -f "${pkgdir}"/lib/modules/${_kernver}/{source,build}
   # remove the firmware
   rm -rf "${pkgdir}/lib/firmware"
-  export dbgdir="$pkgdir-debug/usr/lib/debug"
-  mkdir -p "$dbgdir"
-  pushd "$pkgdir"
-  find . -name '*.ko' -print0 | parallel -j20 -0 /home/lilydjwg/archgitrepo/linux-lily/kostrip
-  popd
-  # gzip -9 all modules to save 100MB of space
-  find "${pkgdir}" -name '*.ko' -print0 | parallel -j8 -0 gzip -9
   # make room for external modules
   ln -s "../extramodules-${_basekernel}${_kernelname:--ARCH}" "${pkgdir}/lib/modules/${_kernver}/extramodules"
   # add real version for building modules and running depmod from post_install/upgrade
   mkdir -p "${pkgdir}/lib/modules/extramodules-${_basekernel}${_kernelname:--ARCH}"
   echo "${_kernver}" > "${pkgdir}/lib/modules/extramodules-${_basekernel}${_kernelname:--ARCH}/version"
 
+  export dbgdir="$pkgdir-debug/usr/lib/debug"
+  mkdir -p "$dbgdir"
+  pushd "$pkgdir"
+  find . -name '*.ko' -print0 | parallel -j20 -0 /home/lilydjwg/archgitrepo/linux-lily/kostrip
+  popd
+  find "${pkgdir}" -name '*.ko' -print0 | parallel -j8 -0 gzip -9
   # Now we call depmod...
   depmod -b "${pkgdir}" -F System.map "${_kernver}"
 

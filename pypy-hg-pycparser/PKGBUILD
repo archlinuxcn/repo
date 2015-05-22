@@ -5,14 +5,14 @@
 # Contributor: lang2 <wenzhi.liang@gmail.com>
 
 _pypyname=pypy-hg
-_pypyabi=25
+_pypyabi=26
 _pypy3name=pypy3-hg
 _pypy3abi=25
 
 pkgbase=${_pypyname}-pycparser
 pkgname=(${_pypy3name}-pycparser ${_pypyname}-pycparser)
 pkgver=2.10
-pkgrel=3
+pkgrel=4
 pkgdesc='C parser and AST generator written in Python'
 url='https://github.com/eliben/pycparser'
 makedepends=(pypy3-${_pypy3abi}-ply pypy-ply pypy3-${_pypy3abi})

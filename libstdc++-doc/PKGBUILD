@@ -1,0 +1,19 @@
+# Maintainer: Hilton Medeiros <medeiros.hilton@gmail.com>
+
+pkgname=libstdc++-doc
+_pkgname=libstdc++-api
+pkgver=20140403
+pkgrel=1
+pkgdesc="A set of doxygen generated HTML documentation for the GNU Standard C++ Library"
+arch=('any')
+url="http://gcc.gnu.org/libstdc++/"
+license=('GPL')
+options=('docs' '!strip')
+source=("ftp://gcc.gnu.org/pub/gcc/libstdc++/doxygen/$_pkgname.$pkgver.html.tar.bz2")
+md5sums=('366a9fd94b10d988292187bc365ed6c0')
+
+package() {
+  cd "$srcdir/$_pkgname.$pkgver.html"
+  install -d "$pkgdir/usr/share/doc/libstdc++"
+  cp -rf * "$pkgdir/usr/share/doc/libstdc++"
+}

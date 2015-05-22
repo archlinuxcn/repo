@@ -1,7 +1,7 @@
 # Maintainer: Yichao Yu <yyc1992@gmail.com>
 
 _pypyname=pypy-hg
-_pypyabi=25
+_pypyabi=26
 _pypy3name=pypy3-hg
 _pypy3abi=25
 
@@ -9,7 +9,7 @@ pkgbase=${_pypyname}-readline-git
 pkgname=(${_pypy3name}-readline-git ${_pypyname}-readline-git)
 makedepends=('cmake' 'git' 'readline' pypy pypy3-${_pypy3abi})
 pkgver=0.2.0.2.gc71facf
-pkgrel=3
+pkgrel=4
 epoch=1
 pkgdesc="Full function readline module for pypy."
 arch=('i686' 'x86_64')
