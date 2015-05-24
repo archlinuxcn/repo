@@ -2,88 +2,46 @@
 # Contributor: Eothred <yngve.levinsen@gmail.com>
 
 pkgname=spotify
-pkgver=0.9.17.1
-_anotherpkgver=.g9b85d43.7-1
+pkgver=0.9.17.8
+_anotherpkgver=.gd06432d.31-1
 pkgrel=1
 pkgdesc="A proprietary peer-to-peer music streaming service"
-arch=('x86_64' 'i686')
-license=('custom:"Copyright (c) 2006-2013 Spotify Ltd"')
+arch=('x86_64')
+license=('custom:"Copyright (c) 2006-2010 Spotify Ltd"')
 install=spotify.install
 url="http://www.spotify.com"
 changelog='spotify.changelog'
 options=('!strip')
 conflicts=('spotify-beta')
 
-if [ "${CARCH}" = "i686" ]; then
-  pkgver=0.9.4.183
-  _anotherpkgver=.g644e24e.428-1
-  pkgrel=1
-fi
+source=("http://repository.spotify.com/pool/non-free/s/${pkgname}/${pkgname}-client-0.9.17_${pkgver}${_anotherpkgver}_amd64.deb"
+'spotify'
+'spotify.protocol'
+)
+md5sums=('69a320368ded33cfcc4e3bb4cc71575c'
+'d443873ef440a6b59d2e3deef64ab74b'
+'ef25ddc5b6bf8fe1a0d64cbd79e1f7b4')
 
-source=('spotify.protocol')
-md5sums=('ef25ddc5b6bf8fe1a0d64cbd79e1f7b4')
-
-source_x86_64=("http://repository.spotify.com/pool/non-free/s/${pkgname}/${pkgname}-client_${pkgver}${_anotherpkgver}_amd64.deb"
-'spotify_x86_64')
-md5sums_x86_64=('6cac4995a58f1a8627865f034df42800'
-'d443873ef440a6b59d2e3deef64ab74b')
-
-source_i686=("http://repository.spotify.com/pool/non-free/s/${pkgname}/${pkgname}-client_0.9.4.183.g644e24e.428-1_i386.deb"
-'spotify_i686')
-md5sums_i686=('20113ac3d6760ded6940fef8143fa9a3'
-'0a5cbc4cf9acf5e3d4dcec9656eb5774')
-
-depends=("alsa-lib>=1.0.14" "glibc>=2.6" "libxss" "qtwebkit" "gconf" "nspr>=4.0"
-         "nspr<5.0" "nss" "dbus" "systemd" "libgcrypt15" "gtk2")
+depends=("alsa-lib>=1.0.14" "glibc>=2.6" "libxss>=1.2.0" "qt4>=4.5.0" "openssl" "nspr>=4.0" "nspr<5.0" "gconf" "nss" "dbus" "systemd" "libgcrypt15" "gtk2")
 optdepends=('desktop-file-utils: Adds URI support to compatible desktop environments'
-            'ffmpeg-compat: Adds support for playback of local files')
+            'ffmpeg-compat: Adds support for playback of local files'
+						'libnotify: Adds desktop notifications'
+						)
 
 package() {
   cd "${srcdir}"
 
-	if [ "${CARCH}" = "x86_64" ]; then
-		ar x "${pkgname}-client_${pkgver}${_anotherpkgver}_amd64.deb" > /dev/null
-		tar -xJf data.tar.xz -C "${pkgdir}"
-	elif [ "${CARCH}" = "i686" ]; then
-		ar x "${pkgname}-client_0.9.4.183.g644e24e.428-1_i386.deb" > /dev/null
-		tar -xvf data.tar.gz -C "${pkgdir}"
-	fi
+	tar -xJf data.tar.xz -C "${pkgdir}"
 
   install -d "${pkgdir}/usr/share/"
   mv "${pkgdir}/opt/spotify" "${pkgdir}/usr/share/"
   rm -r "${pkgdir}/opt"
 
   # Bin Script
-  install -Dm755 "${srcdir}/spotify_${CARCH}" "${pkgdir}/usr/bin/spotify"
-
-  if [ "${CARCH}" = "i686" ]; then
-  	install -d "${pkgdir}/usr/share/spotify/libs/"
-
-    # libplc4.so
-    ln -s /usr/lib/libplc4.so "${pkgdir}/usr/share/spotify/libs/libplc4.so.0d"
-
-    # libnspr4.so
-    ln -s /usr/lib/libnspr4.so "${pkgdir}/usr/share/spotify/libs/libnspr4.so.0d"
-
-    # libnss3.so
-    ln -s /usr/lib/libnss3.so "${pkgdir}/usr/share/spotify/libs/libnss3.so.1d"
-
-    # libnssutil3.so
-    ln -s /usr/lib/libnssutil3.so "${pkgdir}/usr/share/spotify/libs/libnssutil3.so.1d"
-
-    # libsmime3.so
-    ln -s /usr/lib/libsmime3.so "${pkgdir}/usr/share/spotify/libs/libsmime3.so.1d"
-
-    # openssl
-    ln -s /usr/lib/libssl.so "${pkgdir}/usr/share/spotify/libs/libssl.so.0.9.8"
-    ln -s /usr/lib/libcrypto.so "${pkgdir}/usr/share/spotify/libs/libcrypto.so.0.9.8"
-
-		# libudev.so
-		ln -s /usr/lib/libudev.so "${pkgdir}/usr/share/spotify/libs/libudev.so.0"
-  fi
+  install -Dm755 "${srcdir}/spotify" "${pkgdir}/usr/bin/spotify"
 
   # Copy license
-  install -Dm644 "${pkgdir}/usr/share/doc/${pkgname}-client/copyright" "${pkgdir}/usr/share/licenses/${pkgname}/copyright"
+  install -Dm644 "${pkgdir}/usr/share/doc/${pkgname}-client-0.9.17/copyright" "${pkgdir}/usr/share/licenses/${pkgname}/copyright"
 
   # Copy protocol file if KDE is installed
   if [ -f /usr/bin/startkde ]; then
