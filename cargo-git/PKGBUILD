@@ -1,14 +1,14 @@
 # Maintainer: Daniel Micay <danielmicay@gmail.com>
 _pkgname=cargo
 pkgname=cargo-git
-pkgver=r1823.a483581
+pkgver=r1844.a1778ef
 pkgrel=1
 pkgdesc='Rust package manager'
 arch=('i686' 'x86_64')
 url="http://crates.io/"
 license=('MIT' 'Apache')
 makedepends=('cmake' 'python')
-depends=('git' 'rust-git')
+depends=('git' 'rust')
 provides=('cargo')
 conflicts=('cargo')
 source=('git+https://github.com/rust-lang/cargo.git'

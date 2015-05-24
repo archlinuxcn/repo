@@ -6,8 +6,11 @@
 
 from lilaclib import *
 
-depends = [('llvm-pypy-stm', 'llvm-pypy-stm'),
-           ('llvm-pypy-stm', 'clang-pypy-stm')]
+depends = [
+    ('llvm-pypy-stm', 'llvm-libs-pypy-stm'),
+    ('llvm-pypy-stm', 'llvm-pypy-stm'),
+    ('llvm-pypy-stm', 'clang-pypy-stm')
+]
 
 build_prefix = 'extra-x86_64'
 pre_build = aur_pre_build

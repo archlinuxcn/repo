@@ -2,13 +2,13 @@
 # Contributor: Andy Weidenbaum <archbaum@gmail.com>
 
 pkgname=telegram-git
-pkgver=r700.5405d18
+pkgver=r806.3ced7bb
 pkgrel=1
 pkgdesc="Telegram messenger CLI"
 arch=('i686' 'x86_64')
 url="https://github.com/vysheng/tg"
 license=('GPL2')
-depends=('libconfig' 'libevent' 'lua')
+depends=('libconfig' 'libevent' 'lua' 'jansson')
 makedepends=('git')
 conflicts=('telegram')
 provides=('telegram')

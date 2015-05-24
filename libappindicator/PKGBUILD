@@ -6,14 +6,14 @@
 pkgbase=libappindicator
 pkgname=('libappindicator-gtk2' 'libappindicator-gtk3' 'libappindicator-sharp')
 pkgver=12.10.0
-pkgrel=4
+pkgrel=5
 pkgdesc='Allow applications to export a menu into the Unity Menu bar'
 arch=('i686' 'x86_64')
 url='https://launchpad.net/libappindicator'
 license=('LGPL')
 makedepends=('dbus-glib' 'gobject-introspection' 'gtk-sharp-2'
              'libdbusmenu-gtk2' 'libdbusmenu-gtk3' 'libindicator-gtk2'
-             'libindicator-gtk3' 'perl-xml-libxml' 'pygtk' 'vala')
+             'libindicator-gtk3' 'mono' 'perl-xml-libxml' 'pygtk' 'vala')
 options=('!emptydirs')
 source=("http://launchpad.net/libappindicator/${pkgver%.*}/${pkgver}/+download/libappindicator-${pkgver}.tar.gz")
 sha256sums=('d5907c1f98084acf28fd19593cb70672caa0ca1cf82d747ba6f4830d4cc3b49f')
@@ -33,6 +33,7 @@ build() {
   cd libappindicator-${pkgver}
 
   export CFLAGS="$CFLAGS -Wno-deprecated-declarations"
+  export CSC='/usr/bin/mcs'
 
   ./configure --prefix='/usr' --sysconfdir='/etc' --localstatedir='/var' \
               --disable-{gtk-doc-html,mono-test,static,tests} --with-gtk='3'
