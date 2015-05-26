@@ -7,8 +7,9 @@
 
 pkgname=libqtelegram-ae
 _pkgname=libqtelegram-aseman-edition
+epoch=1
 pkgver=3.3
-pkgrel=1
+pkgrel=2
 pkgdesc="Telegram library written in Qt based on telegram-cli code"
 arch=('x86_64' 'x64')
 license=('GPL3')
