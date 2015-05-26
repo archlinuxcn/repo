@@ -1,0 +1,47 @@
+# $Id$
+# Maintainer: Eric Bélanger <eric@archlinux.org>
+
+pkgname=wget-lily
+pkgver=1.16.3
+pkgrel=1
+pkgdesc="A network utility to retrieve files from the Web"
+arch=('i686' 'x86_64')
+url="http://www.gnu.org/software/wget/wget.html"
+license=('GPL3')
+depends=('openssl' 'libidn' 'libutil-linux')
+checkdepends=('perl-http-daemon' 'perl-io-socket-ssl' 'python')
+optdepends=('ca-certificates: HTTPS downloads')
+conflicts=('wget')
+provides=("wget=$pkgver")
+backup=('etc/wgetrc')
+install=wget.install
+source=(ftp://ftp.gnu.org/gnu/wget/wget-${pkgver}.tar.xz{,.sig} wget.patch)
+sha1sums=('a7d24a8512720893b0a8c5c436f324e9ed43874d'
+          'SKIP' 50d39b440b755ab411cf30128cd001bf4233c329)
+validpgpkeys=('AC404C1C0BF735C63FF4D562263D6DF2E163E1EA')
+
+prepare() {
+  cd wget-${pkgver}
+  cat >> doc/sample.wgetrc <<EOF
+
+# default root certs location
+ca_certificate=/etc/ssl/certs/ca-certificates.crt
+EOF
+  patch -p1 -i "${srcdir}/wget.patch"
+}
+
+build() {
+  cd wget-${pkgver}
+  ./configure --prefix=/usr --sysconfdir=/etc --enable-nls --with-ssl=openssl
+  make
+}
+
+check() {
+  cd wget-${pkgver}
+  make check
+}
+
+package() {
+  cd wget-${pkgver}
+  make DESTDIR="${pkgdir}" install
+}
