@@ -46,7 +46,7 @@ prepare() {
 build() {
   cd rust
 
-  ./configure --prefix=/usr --disable-rpath
+  ./configure --prefix=/usr
 
   # avoid python makedepend (force fallback to python2)
   sed -i 's/^PYTHONVERSION.*/PYTHONVERSION := 3/' src/llvm/Makefile.rules
