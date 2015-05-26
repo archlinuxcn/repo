@@ -1,0 +1,23 @@
+# Maintainer: vinoca <supoingo@163.com>
+# Contributor: vinoca <supoingo@163.com>
+
+pkgname=cdate
+pkgver=1.0.5
+pkgrel=1
+pkgdesc="Show Chinese lunisolar calender date"
+arch=('i686' 'x86_64')
+url="http://www.vinoca.org/"
+license=('BSD')
+depends=()
+source=(http://vincasrcfiles.googlecode.com/files/$pkgname-$pkgver.tar.gz)
+sha1sums=('8d799b29e9be809fb222f0e6e523a9f43a568ff4')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  ./configure --prefix=/usr
+  make || return 1
+  make DESTDIR="$pkgdir" install || return 1
+}
+
+# vim:set ts=2 sw=2 et:
