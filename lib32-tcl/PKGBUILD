@@ -5,7 +5,7 @@
 _pkgbasename=tcl
 pkgname=lib32-${_pkgbasename}
 pkgver=8.6.4
-pkgrel=1
+pkgrel=2
 pkgdesc="The Tcl scripting language (32-bit runtime)"
 arch=('x86_64')
 url="http://tcl.sourceforge.net/"
@@ -49,19 +49,19 @@ package() {
   ln -s $_pkgbasename "${pkgdir}/usr/share/licenses/${pkgname}"
 
   # remove buildroot traces
-  sed -e "s#${srcdir}/tcl${pkgver}/unix#/usr/lib#" \
+  sed -e "s#${srcdir}/tcl${pkgver}/unix#/usr/lib32#" \
       -e "s#${srcdir}/tcl${pkgver}#/usr/include#" \
       -i "${pkgdir}/usr/lib32/tclConfig.sh"
 
   tdbcver=tdbc1.0.3
-  sed -e "s#${srcdir}/tcl${pkgver}/unix/pkgs/$tdbcver#/usr/lib/$tdbcver#" \
+  sed -e "s#${srcdir}/tcl${pkgver}/unix/pkgs/$tdbcver#/usr/lib32/$tdbcver#" \
       -e "s#${srcdir}/tcl${pkgver}/pkgs/$tdbcver/generic#/usr/include#" \
       -e "s#${srcdir}/tcl${pkgver}/pkgs/$tdbcver/library#/usr/lib/tcl${pkgver%.*}#" \
       -e "s#${srcdir}/tcl${pkgver}/pkgs/$tdbcver#/usr/include#" \
       -i "${pkgdir}/usr/lib32/$tdbcver/tdbcConfig.sh"
 
   itclver=itcl4.0.3
-  sed -e "s#${srcdir}/tcl${pkgver}/unix/pkgs/$itclver#/usr/lib/$itclver#" \
+  sed -e "s#${srcdir}/tcl${pkgver}/unix/pkgs/$itclver#/usr/lib32/$itclver#" \
       -e "s#${srcdir}/tcl${pkgver}/pkgs/$itclver/generic#/usr/include#" \
       -e "s#${srcdir}/tcl${pkgver}/pkgs/$itclver#/usr/include#" \
       -i "${pkgdir}/usr/lib32/$itclver/itclConfig.sh"
