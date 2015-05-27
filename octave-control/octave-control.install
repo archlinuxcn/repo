@@ -1,9 +1,7 @@
 _pack=control
-_prefix=/usr/share/octave/packages
-_libdir=/usr/lib/octave/packages
 
 post_install() {
-  octave -q -f --eval "pkg prefix $_prefix $_libdir; pkg install -verbose -global /usr/share/octave/$_pack.tar.gz"
+  octave -q -f --eval "pkg install -verbose -global /usr/share/octave/$_pack.tar.gz"
 }
 
 post_upgrade() {
@@ -12,5 +10,5 @@ post_upgrade() {
 }
 
 post_remove() {
-  octave -q -f --eval "pkg prefix $_prefix $_libdir; pkg uninstall $_pack; pkg rebuild -global"
+  octave -q -f --eval "pkg uninstall $_pack; pkg rebuild -global"
 }
