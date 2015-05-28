@@ -1,7 +1,7 @@
 # Maintainer: Phil Schaf <flying-sheep@web.de>
 _name=aiohttp
 pkgname=python-aiohttp
-pkgver=0.16.1
+pkgver=0.16.2
 pkgrel=1
 pkgdesc='http client/server for asyncio'
 arch=('any')
@@ -9,8 +9,8 @@ url="http://pypi.python.org/pypi/$_name"
 license=('Apache')
 depends=('python>=3.4' 'cython')
 makedepends=('python-setuptools')
-source=(https://pypi.python.org/packages/source/a/aiohttp/aiohttp-0.16.1.tar.gz)
-md5sums=(a451c256d1e9bbcbc2cf9aa6a2a6fec0)
+source=(https://pypi.python.org/packages/source/a/aiohttp/aiohttp-0.16.2.tar.gz)
+md5sums=(62a3ba19c40dfe9b0687986268cac06d)
 
 package() {
 	cd "$srcdir/$_name-$pkgver"
