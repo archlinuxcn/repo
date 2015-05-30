@@ -9,7 +9,6 @@ g = SimpleNamespace()
 build_prefix = 'extra-x86_64'
 
 def pre_build():
-  g.oldfiles = clean_directory()
   g.files = download_official_pkgbuild('wget')
 
   prepare = False
@@ -34,7 +33,6 @@ provides=("wget=$pkgver")'''
     print(line)
 
 def post_build():
-  git_rm_files(g.oldfiles)
   git_add_files(g.files)
   git_commit()
 
