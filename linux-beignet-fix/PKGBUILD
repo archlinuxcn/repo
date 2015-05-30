@@ -4,8 +4,8 @@
 # pkgbase=linux               # Build stock -ARCH kernel
 pkgbase=linux-beignet-fix       # Build kernel with a different name
 _srcname=linux-4.0
-pkgver=4.0
-pkgrel=2
+pkgver=4.0.4
+pkgrel=1
 arch=('i686' 'x86_64')
 url="http://www.kernel.org/"
 license=('GPL2')
@@ -13,20 +13,24 @@ makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc')
 options=('!strip')
 source=("https://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.xz"
         # "https://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.sign"
-        # "https://www.kernel.org/pub/linux/kernel/v3.x/patch-${pkgver}.xz"
-        # "https://www.kernel.org/pub/linux/kernel/v3.x/patch-${pkgver}.sign"
+        "https://www.kernel.org/pub/linux/kernel/v4.x/patch-${pkgver}.xz"
+        # "https://www.kernel.org/pub/linux/kernel/v4.x/patch-${pkgver}.sign"
         # the main kernel config files
         'config' 'config.x86_64'
         # standard config files for mkinitcpio ramdisk
         'linux.preset'
+        'md-raid0-fix-restore-to-sector-variable-in-raid0_mak.patch'
         'change-default-console-loglevel.patch'
         'disable-batchbuffer-security.patch'
        )
 sha256sums=('0f2f7d44979bc8f71c4fc5d3308c03499c26a824dd311fdf6eef4dee0d7d5991'
             # 'SKIP'
-            '514aa8a9d03d2419c8084725fcdb2b5b4ce07966f5bd6a51224a5f7a5f8c3694'
-            'b268b03a042e3f604a12a80c6e24c42006e4d9bf4a6d9b3201eb006942718128'
+            'c268985a82483fe75f0f397217208e262f85a356d1d9f34b9e22255e549d7ce9'
+            # 'SKIP'
+            'e8d639582697f22333a96aa1614bcf5d9bcf2e6683a3d5296f9cfc64843606f1'
+            '5dadd75693e512b77f87f5620e470405b943373613eaf4df561037e9296453be'
             'f0d90e756f14533ee67afda280500511a62465b4f76adcc5effa95a40045179c'
+            'bc83293e64653d60793708a0e277741f57c018f5ea3551a8aff3a220df917ceb'
             '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99'
             '87e23817f647af755f11283a0be4b6fee8a0ca6a95c9d90f20e18ec34b93fc12')
 # validpgpkeys=(
@@ -40,10 +44,13 @@ prepare() {
   cd "${srcdir}/${_srcname}"
 
   # add upstream patch
-  # patch -p1 -i "${srcdir}/patch-${pkgver}"
+  patch -p1 -i "${srcdir}/patch-${pkgver}"
 
   # add latest fixes from stable queue, if needed
   # http://git.kernel.org/?p=linux/kernel/git/stable/stable-queue.git
+
+  # https://bugzilla.kernel.org/show_bug.cgi?id=98501
+  patch -Np1 -i "${srcdir}/md-raid0-fix-restore-to-sector-variable-in-raid0_mak.patch"
 
   # set DEFAULT_CONSOLE_LOGLEVEL to 4 (same value as the 'quiet' kernel param)
   # remove this when a Kconfig knob is made available by upstream
@@ -259,15 +266,15 @@ _package-headers() {
 
   # strip scripts directory
   find "${pkgdir}/usr/lib/modules/${_kernver}/build/scripts" -type f -perm -u+w 2>/dev/null | while read binary ; do
-                                                                                                case "$(file -bi "${binary}")" in
-                                                                                                  *application/x-sharedlib*) # Libraries (.so)
-                                                                                                    /usr/bin/strip ${STRIP_SHARED} "${binary}";;
-                                                                                                  *application/x-archive*) # Libraries (.a)
-                                                                                                    /usr/bin/strip ${STRIP_STATIC} "${binary}";;
-                                                                                                  *application/x-executable*) # Binaries
-                                                                                                    /usr/bin/strip ${STRIP_BINARIES} "${binary}";;
-                                                                                                esac
-                                                                                              done
+    case "$(file -bi "${binary}")" in
+      *application/x-sharedlib*) # Libraries (.so)
+        /usr/bin/strip ${STRIP_SHARED} "${binary}";;
+      *application/x-archive*) # Libraries (.a)
+        /usr/bin/strip ${STRIP_STATIC} "${binary}";;
+      *application/x-executable*) # Binaries
+        /usr/bin/strip ${STRIP_BINARIES} "${binary}";;
+    esac
+  done
 
   # remove unneeded architectures
   rm -rf "${pkgdir}"/usr/lib/modules/${_kernver}/build/arch/{alpha,arc,arm,arm26,arm64,avr32,blackfin,c6x,cris,frv,h8300,hexagon,ia64,m32r,m68k,m68knommu,metag,mips,microblaze,mn10300,openrisc,parisc,powerpc,ppc,s390,score,sh,sh64,sparc,sparc64,tile,unicore32,um,v850,xtensa}
