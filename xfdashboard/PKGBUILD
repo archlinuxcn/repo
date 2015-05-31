@@ -1,9 +1,9 @@
-# Maintainer: Rob McCathie <archaur at rmcc dot com dot au>
+# Maintainer: Rob McCathie <korrode AT gmail>
 
 pkgname=xfdashboard
 _series=0.4
-pkgver=${_series}.0
-pkgrel=2
+pkgver=${_series}.1
+pkgrel=1
 pkgdesc="Maybe a Gnome shell like dashboard for Xfce"
 arch=('i686' 'x86_64')
 url="http://goodies.xfce.org/projects/applications/${pkgname}/start"
@@ -11,7 +11,7 @@ license=('GPL')
 depends=('clutter>=1.12' 'dbus-glib>=0.98' 'garcon>=0.2.0' 'glib2>=2.32' 'libwnck3' 'xfconf>=4.10.0' 'gtk3>=3.2')
 makedepends=('xfce4-dev-tools')
 source=("http://archive.xfce.org/src/apps/${pkgname}/${_series}/${pkgname}-${pkgver}.tar.bz2")
-sha1sums=('bb3a21ab7370e22305976258d5c2a23c546c1564')
+sha256sums=('26f349899fa267d76266981c8e6d4af7ded90e7c459ddb1a6d823e857d5f27f6')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
