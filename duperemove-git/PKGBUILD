@@ -7,8 +7,9 @@ pkgdesc="Btrfs extent deduplication utility"
 arch=('any')
 url="https://github.com/markfasheh/duperemove"
 license=('GPL')
+depends=('glib2' 'sqlite')
 makedepends=('git')
-depends=('sqlite')
+conflicts=('duperemove')
 source=("$pkgname"::'git://github.com/markfasheh/duperemove.git#branch=master')
 md5sums=( 'SKIP' )
 
@@ -18,7 +19,7 @@ pkgver() {
 }
 
 build() {
-  cd $srcdir/$pkgname
+  cd "$srcdir/$pkgname"
   make
 }
 
