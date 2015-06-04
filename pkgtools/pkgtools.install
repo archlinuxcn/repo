@@ -1,0 +1,42 @@
+is_update_from() {
+	res="`vercmp $1 $2`"
+	case $res in
+		'-1'|'0') return 0;;
+		'1') return 1;;
+	esac
+}
+
+## arg 1:  the new package version
+## arg 2:  the old package version
+post_upgrade() {
+	if is_update_from $2 15-1; then
+		echo " - pkgtools now uses \$XDG_CONFIG_HOME for all user-specific configuration."
+		echo "   run «mv ~/.pkgtools \"\$XDG_CONFIG_HOME/pkgtools\"»"
+	fi
+	if is_update_from $2 18-1; then
+		echo " - newpkg has been rewritten to be completely modular. See here for more info:"
+		echo "   http://github.com/Daenyth/pkgtools/commit/2d37197"
+	fi
+	if is_update_from $2 22-1; then
+		echo " - This is the largest release in a long time. This updates all python scripts"
+		echo "   to py3k."
+		echo " - This version of pkgtools includes a new tool called gem2arch, for automating"
+		echo "   ruby gem packaging"
+	fi
+	if is_update_from $2 24-2; then
+		echo " - pkgtools no longer provides the pkgfile command.  This is now provided by the"
+		echo "   'pkgfile' package."
+		echo " - you may want to clean /var/cache/pkgtools/lists"
+	fi
+	if is_update_from $2 25-4; then
+		echo " - As pactree can print reverse dependency tree since the release of pacman 3.4,"
+		echo "   whoneeds is just a small wrapper around pactree now."
+	fi
+}
+
+## arg 1:  the old package version
+post_remove() {
+	cat << _EOM
+ - You may want to clean /var/cache/pkgtools/lists
+_EOM
+}
