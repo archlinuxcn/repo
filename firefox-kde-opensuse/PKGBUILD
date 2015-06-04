@@ -8,7 +8,7 @@
 _pgo=true
 
 pkgname=firefox-kde-opensuse
-pkgver=38.0.1
+pkgver=38.0.5
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
@@ -16,7 +16,7 @@ license=('MPL' 'GPL' 'LGPL')
 url="https://build.opensuse.org/package/show/mozilla:Factory/MozillaFirefox"
 depends=('gtk2' 'mozilla-common' 'libxt' 'startup-notification' 'mime-types'
          'dbus-glib' 'alsa-lib' 'desktop-file-utils' 'hicolor-icon-theme'
-	 'libvpx' 'icu'  'libevent' 'nss>=3.16.2' 'nspr>=4.10.6' 'hunspell' 
+	 'libvpx' 'icu'  'libevent' 'nss>=3.18.1' 'nspr>=4.10.6' 'hunspell' 
 	 'sqlite' 'libnotify' 'kmozillahelper')
 makedepends=('unzip' 'zip' 'diffutils' 'python2' 'yasm' 'mesa' 'imake'
              'xorg-server-xvfb' 'libpulse' 'gst-plugins-base-libs' 'inetutils')
@@ -26,7 +26,7 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
 install=firefox.install
-_patchrev=e11af0d6cb48
+_patchrev=cf7e96afbe3a
 options=('!emptydirs')
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.bz2
@@ -154,7 +154,7 @@ package() {
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
 
-sha256sums=('aeccd6ea6eebb3bd0fd259758aeb8831ec1e1c42a707813e77f8642625491a88'
+sha256sums=('4f53506d1e8a724a165ee509d9448fa7c9b7203183f53ae313063eb144a403b6'
             '94410d3e8bfe74b79ecd9dace9c4a339c25fa10908a7471001f533d843b582c9'
             'c202e5e18da1eeddd2e1d81cb3436813f11e44585ca7357c4c5f1bddd4bec826'
             'd86e41d87363656ee62e12543e2f5181aadcff448e406ef3218e91865ae775cd'
@@ -163,7 +163,7 @@ sha256sums=('aeccd6ea6eebb3bd0fd259758aeb8831ec1e1c42a707813e77f8642625491a88'
             '68e3a5b47c6d175cc95b98b069a15205f027cab83af9e075818d38610feb6213'
             '746cb474c5a2c26fc474256e430e035e604b71b27df1003d4af85018fa263f4a'
             '1f0afb90e47395c5221a89e72950f5eea4bb7b880757158e04bbb634d78f0b3b'
-            'e0c45b55d157ea9bfc8a32ae88b89fd93949b69fe19ca0b5c2813930079b6417'
+            '6c268390d699cafaf2386d590a01a081a0802e87b262462e5c2877a0695f96b4'
             '39ae2b6d99cc0b7373576065448b5584e9bc0619aa5924507b0e27a99e62f29e'
             'e5b9fad06870ce32deebce43fdd43d1b28b69f5ddb955bf7c986d9c6dc23a137'
             'b9feb66a33dc1644d7d277dc3fc166c655735de7100bc4e93f1fe44567f35345'
