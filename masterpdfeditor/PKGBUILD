@@ -2,38 +2,35 @@
 # Contributor: Ferik <djferik at gmail dot com>
 
 pkgname=masterpdfeditor
-pkgver=2.2.15
+pkgver=3.0.6
 pkgrel=1
 pkgdesc="A complete solution for creation and editing PDF files. (Free for non-commercial use)"
 url="http://code-industry.net/free-pdf-editor.php"
 arch=('i686' 'x86_64')
 license=('custom')
 depends=('qt4')
-source=(${pkgname}.desktop)
 install=${pkgname}.install
-md5sums=('9d84557df67a18725343f37eee5af16a')
 
-if [[ $CARCH == 'i686' ]]; then
-   source+=(http://code-industry.net/public/master-pdf-editor_${pkgver}_i386.tar.gz)
-   md5sums+=('4bde4a5a55e97ff21c333a34e7bde177')
-elif [[ $CARCH == 'x86_64' ]]; then
-   source+=(http://code-industry.net/public/master-pdf-editor_${pkgver}_amd64.tar.gz)
-   md5sums+=('78dec29461065e24a90c866bdae51494')
-fi
+source=(${pkgname}.desktop)
+source_i686=(http://code-industry.net/public/master-pdf-editor-${pkgver}_i386.tar.gz)
+source_x86_64=(http://code-industry.net/public/master-pdf-editor-${pkgver}_amd64.tar.gz)
+
+sha256sums=('29218c206e5b78776bc3ec44a760773273274bb56baee5e19e06c3ec55db59fd')
+sha256sums_i686=('dbee6f1d65381d8517975761750fd4626aaa0b03eb8eac84395808a23eb40a64')
+sha256sums_x86_64=('4e5fb7329ff92a1c8a3553220a19acf3b48d0cfbc82ed4db02b1435479037a5b')
 
 package() {
 	mkdir -p "${pkgdir}/opt/masterpdfeditor"
-	cd "${srcdir}/master-pdf-editor"
+	cd "${srcdir}/master-pdf-editor-3"
 	/bin/tar cf - * | ( cd "${pkgdir}"/opt/masterpdfeditor; tar xfp - )
-	install -D -m755 "${srcdir}"/master-pdf-editor/lang/*.qm "${pkgdir}"/opt/masterpdfeditor/lang
-	install -D -m755 "${srcdir}"/master-pdf-editor/lang/*.ts "${pkgdir}"/opt/masterpdfeditor/lang
-	install -D -m644 "${srcdir}"/master-pdf-editor/License.txt "${pkgdir}"/usr/share/licenses/masterpdfeditor/LICENSE
-	install -D -m644 "${srcdir}"/master-pdf-editor/master-pdf-editor.png "${pkgdir}"/usr/share/pixmaps/pdfeditor.png
+	install -D -m755 "${srcdir}"/master-pdf-editor-3/lang/*.qm "${pkgdir}"/opt/masterpdfeditor/lang
+	install -D -m755 "${srcdir}"/master-pdf-editor-3/lang/*.ts "${pkgdir}"/opt/masterpdfeditor/lang
+	install -D -m644 "${srcdir}"/master-pdf-editor-3/license.txt "${pkgdir}"/usr/share/licenses/masterpdfeditor/LICENSE
+	install -D -m644 "${srcdir}"/master-pdf-editor-3/masterpdfeditor3.png "${pkgdir}"/usr/share/pixmaps/pdfeditor.png
 	install -D -m644 "${srcdir}"/masterpdfeditor.desktop "${pkgdir}"/usr/share/applications/masterpdfeditor.desktop
-	rm "${pkgdir}"/opt/masterpdfeditor/License.txt
-	chmod 644 "${pkgdir}"/opt/masterpdfeditor/changelog
+	rm "${pkgdir}"/opt/masterpdfeditor/license.txt
 	chmod 644 "${pkgdir}"/opt/masterpdfeditor/lang/*
 	chmod 755 "${pkgdir}"/opt/masterpdfeditor/lang
 	mkdir -p "${pkgdir}"/usr/bin
-	ln -s /opt/masterpdfeditor/master-pdf-editor "${pkgdir}"/usr/bin/pdfeditor
+	ln -s /opt/masterpdfeditor/masterpdfeditor3 "${pkgdir}"/usr/bin/pdfeditor
 }
