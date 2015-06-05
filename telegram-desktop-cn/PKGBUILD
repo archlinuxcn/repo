@@ -1,0 +1,75 @@
+_qtver=5.4.0
+pkgname=telegram-desktop-cn
+pkgver=r516.3ed98814
+pkgrel=1
+pkgdesc='fixed The Official desktop version of Telegram messaging app with suport the input method (liked fcitx or ibus) and added the the Chinese language.'
+arch=('i686' 'x86_64')
+url="https://desktop.telegram.org/"
+license=('GPL3')
+depends=(fontconfig icu jasper libexif libjpeg-turbo libmng libsm libwebp libxi libxkbcommon-x11 mesa mtdev openal opusfile fcitx)
+makedepends=(git libunity libappindicator-gtk2 xorg-server-xvfb)
+source=(http://download.qt-project.org/official_releases/qt/${_qtver%.*}/$_qtver/single/qt-everywhere-opensource-src-$_qtver.tar.xz
+        git+https://github.com/aphuse/tdesktop.git)
+
+pkgver() {
+  cd "tdesktop"
+  ( set -o pipefail
+    git describe --long 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  )
+}
+
+prepare() {
+  if ! [ -d Libraries ]; then
+    mkdir Libraries
+    mv qt-everywhere-opensource-src-$_qtver Libraries/QtStatic
+    cp tdesktop/Telegram/_qt_${_qtver//./_}_patch.diff Libraries/QtStatic
+    cp -r tdesktop/Telegram/fcitx-qt5 Libraries/QtStatic/qtbase/src/plugins/platforminputcontexts/fcitx
+    cd Libraries/QtStatic
+    git apply _qt_${_qtver//./_}_patch.diff
+    cd qtbase/src/plugins/platforminputcontexts
+    git apply fcitx/platforminputcontexts.pro.patch.diff
+  fi
+
+  sed -i 's/CUSTOM_API_ID//g' "$srcdir"/tdesktop/Telegram/Telegram.pro
+
+  # FIXME qmake (for Telegram.pro) does not generate the correct paths if the files does not exists
+  #mkdir -p "$srcdir"/tdesktop/Telegram/GeneratedFiles
+  #awk -v srcdir="$srcdir" '$1 == "PRE_TARGETDEPS" { for (i=3; i <= NF; i++) print "touch -t 197001010000", srcdir "/tdesktop/Telegram/" $i }' "$srcdir"/tdesktop/Telegram/Telegram.pro | sh -s
+}
+
+build() {
+  local x _type
+  # Building patched Qt
+  cd Libraries/QtStatic
+  ./configure -prefix "$srcdir/qt" -release -opensource -confirm-license -qt-xcb -no-opengl -static -nomake examples -nomake tests -skip qtquick1 -skip qtdeclarative
+  make module-qtbase module-qtimageformats
+  make module-qtbase-install_subtargets module-qtimageformats-install_subtargets
+
+  export PATH="$srcdir/qt/bin:$PATH"
+
+  mkdir -p "$srcdir"/tdesktop/Linux/{Debug,Release}Intermediate{Style,Emoji,Lang,Updater,}
+
+  for _type in debug release; do
+    for x in Style Lang; do
+      cd "$srcdir"/tdesktop/Linux/${_type^}Intermediate$x
+      qmake CONFIG+=${_type} ../../Telegram/Meta$x.pro
+      make
+    done
+    cd "$srcdir"/tdesktop/Linux/${_type^}Intermediate
+    # FIXME upstream likes broken things
+    if ! [ -d "$srcdir"/tdesktop/Telegram/GeneratedFiles ]; then
+      qmake CONFIG+=${_type} ../../Telegram/Telegram.pro
+      awk '$1 == "PRE_TARGETDEPS" { $1=$2="" ; print }' "$srcdir"/tdesktop/Telegram/Telegram.pro | xargs xvfb-run -a make
+    fi
+    qmake CONFIG+=${_type} ../../Telegram/Telegram.pro
+    xvfb-run -a make
+  done
+}
+
+package() {
+  install -dm755 "$pkgdir"/opt/telegram
+  install -Dm755 "$srcdir"/tdesktop/Linux/Release/Telegram "$pkgdir"/opt/telegram
+}
+md5sums=('21843b00ecde8956217faab391bc007b'
+         'SKIP')
