@@ -6,7 +6,7 @@ pkgdesc='fixed The Official desktop version of Telegram messaging app with supor
 arch=('i686' 'x86_64')
 url="https://desktop.telegram.org/"
 license=('GPL3')
-depends=(fontconfig icu jasper libexif libjpeg-turbo libmng libsm libwebp libxi libxkbcommon-x11 mesa mtdev openal opusfile fcitx)
+depends=(fontconfig icu jasper libexif libjpeg-turbo libmng libsm libwebp libxi libxkbcommon-x11 mesa mtdev openal opusfile fcitx ffmpeg)
 makedepends=(git libunity libappindicator-gtk2 xorg-server-xvfb)
 source=(http://download.qt-project.org/official_releases/qt/${_qtver%.*}/$_qtver/single/qt-everywhere-opensource-src-$_qtver.tar.xz
         git+https://github.com/aphuse/tdesktop.git)
