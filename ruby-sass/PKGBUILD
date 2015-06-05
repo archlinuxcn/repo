@@ -1,11 +1,8 @@
 # Maintainer: Jerome Leclanche <jerome@leclan.ch>
-# Contributor: Matt Harrison <matt at mistbyte dot com>
-# Contributor: Renzo Carbonara <gnuk0001@gmail.com>
-# Contributor: Bogdan Szczurek <thebodzio@gmail.com>
 
 _pkgname=sass
 pkgname=ruby-$_pkgname
-pkgver=3.4.13
+pkgver=3.4.14
 pkgrel=1
 pkgdesc="Tools and Ruby libraries for the CSS3 extension languages: Sass and SCSS."
 arch=("any")
@@ -16,7 +13,7 @@ makedepends=("rubygems")
 # optdepends=("ruby-listen")
 source=("http://gems.rubyforge.org/gems/$_pkgname-$pkgver.gem")
 noextract=("$_pkgname-$pkgver.gem")
-sha256sums=("2f1e913f5845e6d3a6beebca01a25dd703bccde68b19109dbde7e41e4895b373")
+sha256sums=("f33dd19fb5f85991b6bac1903aabbce2f8c7bfebb69bbd5b23faa016af795574")
 
 
 package() {
