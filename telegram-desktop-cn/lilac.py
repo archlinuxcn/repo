@@ -6,7 +6,7 @@
 
 from lilaclib import *
 
-depends=["dee", "libunity", ("libappindicator", "libappindicator-gtk2")]
+depends=["dee", "libunity", "libdbusmenu-gtk2", ('libindicator', 'libindicator-gtk2'), ("libappindicator", "libappindicator-gtk2")]
 
 build_prefix = 'extra-x86_64'
 pre_build = aur_pre_build
