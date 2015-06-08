@@ -1,7 +1,7 @@
 # Contributor: noonov <noonov@gmail.com>
 
 pkgname=ttf-ume
-pkgver=0.500
+pkgver=0.510
 _pkgver=${pkgver:2}
 pkgrel=1
 pkgdesc="Free Japanese Gothic/Mincho Font"
@@ -12,8 +12,8 @@ depends=('fontconfig' 'xorg-font-utils')
 install=ttf.install
 _mirror="jaist" # keihanna, jaist, iij, osdn
 source=(http://${_mirror}.dl.sourceforge.jp/ume-font/22212/umefont_${_pkgver}.tar.xz)
-md5sums=('08ffd58127ce1957b3d24df3a5453c5a')
-sha256sums=('01dbbd14e18d3d8584e591512a7a2d982f9a4c7fd5ff605a25ab322e4e52e042')
+md5sums=('a23e8ff6a5654ead1618476937f5c697')
+sha256sums=('47748da742a5885219dfb9cce7ed15428c60bf81e3901ecd378f5e49e5d9d1d0')
 
 package() {
   cd ${srcdir}
@@ -22,5 +22,5 @@ package() {
   install -m644 umefont_${_pkgver}/*.ttf ${pkgdir}/usr/share/fonts/TTF
 
   install -D -m644 umefont_${_pkgver}/license.html \
-    ${pkgdir}/usr/share/licenses/${pkgname}/COPYING.html
+          ${pkgdir}/usr/share/licenses/${pkgname}/COPYING.html
 }
