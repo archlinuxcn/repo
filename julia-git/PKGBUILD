@@ -48,6 +48,15 @@ prepare() {
   sed 's/pip /pip2 /g' -i Makefile
 }
 
+case "$CARCH" in
+  x86_64)
+    _march=x86-64
+    ;;
+  i686)
+    _march=pentium4
+    ;;
+esac
+
 julia_opts=(prefix=/usr sysconfdir=/etc
             USE_SYSTEM_LLVM=1
             USE_SYSTEM_LIBUNWIND=1
@@ -70,7 +79,7 @@ julia_opts=(prefix=/usr sysconfdir=/etc
             USE_INTEL_MKL=0
             USE_BLAS64=0
             USE_LLVM_SHLIB=0
-            MARCH=${CARCH//_/-}
+            MARCH=$_march
             LIBBLASNAME=libopenblas
             LIBBLAS=-lopenblas
             LIBLAPACKNAME=libopenblas
