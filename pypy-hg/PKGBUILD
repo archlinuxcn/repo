@@ -57,7 +57,8 @@ build() {
   fi
 
   $_PYTHON ../../rpython/bin/rpython -Ojit "${translate_options[@]}" \
-           targetpypystandalone
+           targetpypystandalone \
+           --gcrootfinder=shadowstack
 }
 
 package_pypy-hg() {
