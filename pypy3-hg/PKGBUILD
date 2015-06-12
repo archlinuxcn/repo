@@ -49,8 +49,8 @@ build() {
   export CFLAGS
 
   $_PYTHON ../../rpython/bin/rpython -Ojit --shared \
-           targetpypystandalone \
-           --gcrootfinder=shadowstack
+           --gcrootfinder=shadowstack \
+           targetpypystandalone
 }
 
 package_pypy3-hg() {
