@@ -1,0 +1,14 @@
+post_install() {
+  echo ">>> Qtile Example Config at"
+  echo ">>> /usr/share/doc/qtile/default_config.py"
+}
+
+post_upgrade() {
+  echo ">>> Qtile Example Config at"
+  echo ">>> /usr/share/doc/qtile/default_config.py"
+  echo ">>> Since qtile 0.9 qtile.spawn() doesn't use a shell anymore so redirects like > don't work"
+  echo ">>> WARNING: Since 0.9.1 this package moved to python3, if you want to keep using python2, install qtile-python2"
+  echo ">>> WARNING: Maybe you want to run 2to3 ~/.config/qtile/conf.py on your config to try to convert your config to python3"
+}
+
+# vim:set ts=2 sw=2 et:
