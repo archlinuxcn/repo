@@ -4,8 +4,8 @@
 
 pkgname=pandoc-static
 _pkgname=pandoc
-pkgver=1.13.2.1
-pkgrel=2
+pkgver=1.14
+pkgrel=1
 pkgdesc='Conversion between markup formats (no Haskell libraries)'
 url='http://johnmacfarlane.net/pandoc/'
 license=('GPL')
@@ -20,14 +20,16 @@ optdepends=('texlive-most: for PDF creation')
 options=(strip !makeflags !distcc !emptydirs)
 source=(https://repo.parabola.nu/other/${pkgname}/${pkgname}-${pkgver}-${pkgrel}.tar.xz{,.sig})
 validpgpkeys=('49F707A1CB366C580E625B3C456032D717A4CD9C')
-sha512sums=('1368894ff2382a4b5e5461dbc70e7267635a9cf44e2b0b6d4fef7c70556060920e447f9254a9af9ef1c983ba9360116e463299d4d5ec12a08f6f48dde6b26c2e'
+sha512sums=('8e6974a0fcc3c9ef307fda6a6c255bc6ff7ded8ca1aa78d36f13376bf34849214e774d3c2ed5f40b864aabbb3bbe1c3b30668f2b09af3d9ba1bec83239271f04'
             'SKIP')
 
 declare -gA _flags
 _flags[pandoc]='https make-pandoc-man-pages'
 _flags[pandoc_citeproc]='small_base bibutils hexpat unicode_collation'
 
-_packages=(hs-bibutils network hexpat text text-icu hsb2hs
+# securemem 0.1.8 depends on memory, which doesn't build
+# https://github.com/vincenthz/hs-memory/issues/6
+_packages=(securemem-0.1.7 hs-bibutils network hexpat text text-icu hsb2hs
   http-client-tls http-types
   pandoc-${pkgver} pandoc-citeproc)
 mkdepends=('ghc' 'cabal-install')

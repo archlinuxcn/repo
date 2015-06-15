@@ -1,0 +1,50 @@
+From a81157768a00e8cf8a7b43b5ea5cac931262374f Mon Sep 17 00:00:00 2001
+From: Eric Work <work.eric@gmail.com>
+Date: Mon, 18 May 2015 23:26:23 -0700
+Subject: [PATCH] md/raid0: fix restore to sector variable in
+ raid0_make_request
+
+The variable "sector" in "raid0_make_request()" was improperly updated
+by a call to "sector_div()" which modifies its first argument in place.
+Commit 47d68979cc968535cb87f3e5f2e6a3533ea48fbd restored this variable
+after the call for later re-use.  Unfortunetly the restore was done after
+the referenced variable "bio" was advanced.  This lead to the original
+value and the restored value being different.  Here we move this line to
+the proper place.
+
+One observed side effect of this bug was discarding a file though
+unlinking would cause an unrelated file's contents to be discarded.
+
+Signed-off-by: NeilBrown <neilb@suse.de>
+Fixes: 47d68979cc96 ("md/raid0: fix bug with chunksize not a power of 2.")
+Cc: stable@vger.kernel.org (any that received above backport)
+URL: https://bugzilla.kernel.org/show_bug.cgi?id=98501
+---
+ drivers/md/raid0.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
+index 6a68ef5..efb654e 100644
+--- a/drivers/md/raid0.c
++++ b/drivers/md/raid0.c
+@@ -524,6 +524,9 @@ static void raid0_make_request(struct mddev *mddev, struct bio *bio)
+ 			 ? (sector & (chunk_sects-1))
+ 			 : sector_div(sector, chunk_sects));
+ 
++		/* Restore due to sector_div */
++		sector = bio->bi_iter.bi_sector;
++
+ 		if (sectors < bio_sectors(bio)) {
+ 			split = bio_split(bio, sectors, GFP_NOIO, fs_bio_set);
+ 			bio_chain(split, bio);
+@@ -531,7 +534,6 @@ static void raid0_make_request(struct mddev *mddev, struct bio *bio)
+ 			split = bio;
+ 		}
+ 
+-		sector = bio->bi_iter.bi_sector;
+ 		zone = find_zone(mddev->private, &sector);
+ 		tmp_dev = map_sector(mddev, zone, sector, &sector);
+ 		split->bi_bdev = tmp_dev->bdev;
+-- 
+2.4.1
+

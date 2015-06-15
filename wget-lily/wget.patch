@@ -1,0 +1,28 @@
+diff -Naur wget-1.15-orig/src/url.c wget-1.15/src/url.c
+--- wget-1.15-orig/src/url.c	2014-01-04 20:49:47.000000000 +0800
++++ wget-1.15/src/url.c	2014-07-29 14:20:56.800568954 +0800
+@@ -1602,9 +1602,9 @@
+ 
+       /* Append "?query" to the file name, even if empty,
+        * and create fname_len_check. */
+-      if (u->query)
+-        fname_len_check = concat_strings (u_file, FN_QUERY_SEP_STR, u->query, NULL);
+-      else
++      /* if (u->query)
++       *   fname_len_check = concat_strings (u_file, FN_QUERY_SEP_STR, u->query, NULL);
++       * else                                                                           */
+         fname_len_check = strdupdelim (u_file, u_file + strlen (u_file));
+     }
+   else
+diff -Naur wget-1.15-orig/src/recur.c wget-1.15/src/recur.c
+--- wget-1.15-orig/src/recur.c	2014-01-04 20:49:47.000000000 +0800
++++ wget-1.15/src/recur.c	2014-09-16 13:33:08.970157023 +0800
+@@ -625,7 +625,7 @@
+ 
+   /* 7. */
+   if (schemes_are_similar_p (u->scheme, parent->scheme))
+-    if (!opt.spanhost && 0 != strcasecmp (parent->host, u->host))
++    if (!opt.spanhost && 0 != strcasecmp (parent->host, u->host) && (!opt.page_requisites || !upos->link_inline_p))
+       {
+         DEBUGP (("This is not the same hostname as the parent's (%s and %s).\n",
+                  u->host, parent->host));

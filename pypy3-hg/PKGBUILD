@@ -4,7 +4,7 @@
 USE_PYPY=1
 
 pkgname=pypy3-hg
-pkgver=75216.b85a8b82049d
+pkgver=77998.55d423041e00
 pkgrel=1
 epoch=1
 pkgdesc="A Python3 implementation written in Python, JIT enabled, hg version"
@@ -49,6 +49,7 @@ build() {
   export CFLAGS
 
   $_PYTHON ../../rpython/bin/rpython -Ojit --shared \
+           --gcrootfinder=shadowstack \
            targetpypystandalone
 }
 

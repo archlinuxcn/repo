@@ -1,0 +1,79 @@
+diff -up src/xrdp-0.8.0/instfiles/Makefile.am.orig src/xrdp-0.8.0/instfiles/Makefile.am
+--- src/xrdp-0.8.0/instfiles/Makefile.am.orig	2014-05-19 23:41:42.000000000 -0600
++++ src/xrdp-0.8.0/instfiles/Makefile.am	2015-05-26 17:22:39.000000000 -0600
+@@ -28,5 +28,7 @@ startscript_DATA = \
+ # must be tab below
+ install-data-hook:
+ 	chmod 755 $(DESTDIR)$(sysconfdir)/xrdp/xrdp.sh
+-	chmod 755 $(DESTDIR)$(sysconfdir)/init.d/xrdp
+-	sed -i 's|__BASE__|$(prefix)|' $(DESTDIR)$(sysconfdir)/init.d/xrdp;
++	if [ -f $(DESTDIR)$(sysconfdir)/init.d/xrdp ]; then \
++	  chmod 755 $(DESTDIR)$(sysconfdir)/init.d/xrdp; \
++	  sed -i 's|__BASE__|$(prefix)|' $(DESTDIR)$(sysconfdir)/init.d/xrdp; \
++	fi
+diff -up src/xrdp-0.8.0/instfiles/pam.d/xrdp-sesman.orig src/xrdp-0.8.0/instfiles/pam.d/xrdp-sesman
+--- src/xrdp-0.8.0/instfiles/pam.d/xrdp-sesman.orig	2014-05-19 23:41:42.000000000 -0600
++++ src/xrdp-0.8.0/instfiles/pam.d/xrdp-sesman	2015-05-26 17:22:39.000000000 -0600
+@@ -1,5 +1,9 @@
+ #%PAM-1.0
+-@include common-auth
+-@include common-account
+-@include common-session
+-@include common-password
++#@include common-auth
++#@include common-account
++#@include common-session
++#@include common-password
++auth include system-auth
++account include system-auth
++password include system-auth
++session include system-auth
+diff -up src/xrdp-0.8.0/sesman/startwm.sh.orig src/xrdp-0.8.0/sesman/startwm.sh
+--- src/xrdp-0.8.0/sesman/startwm.sh.orig	2014-05-19 23:41:42.000000000 -0600
++++ src/xrdp-0.8.0/sesman/startwm.sh	2015-05-26 17:22:39.000000000 -0600
+@@ -8,6 +8,17 @@ wm_start()
+     export LANG LANGUAGE
+   fi
+ 
++  # arch user
++  if [ -r ~/.xinitrc ]; then
++    . ~/.xinitrc
++    exit 0
++  fi
++  # arch
++  if [ -r /etc/X11/xinit/xinitrc ]; then
++    . /etc/X11/xinit/xinitrc
++    exit 0
++  fi
++
+   # debian
+   if [ -r /etc/X11/Xsession ]; then
+     . /etc/X11/Xsession
+diff -up src/xrdp-0.8.0/xrdp/xrdp.ini.orig src/xrdp-0.8.0/xrdp/xrdp.ini
+--- src/xrdp-0.8.0/xrdp/xrdp.ini.orig	2014-05-19 23:41:42.000000000 -0600
++++ src/xrdp-0.8.0/xrdp/xrdp.ini	2015-05-26 17:25:17.000000000 -0600
+@@ -36,7 +36,7 @@ grey=dedede
+ #red=ff0000
+ #green=00ff00
+ #background=626c72
+-#autorun=xrdp1
++autorun=xrdp2
+ #hidelogwindow=yes
+ 
+ # when true, userid/password *must* be passed on cmd line
+@@ -119,6 +119,15 @@ xrdpvr=true
+ # for debugging xrdp, add following line to section xrdp1
+ # chansrvport=/tmp/.xrdp/xrdp_chansrv_socket_7210
+ 
++[xrdp0]
++name=sesman-Xvnc-delay
++lib=libvnc.so
++username=ask
++password=ask
++ip=127.0.0.1
++port=-1
++delay_ms=2000
++
+ [xrdp1]
+ name=sesman-X11rdp
+ lib=libxup.so

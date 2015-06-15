@@ -1,17 +1,19 @@
 # Maintainer: John Jenkins <twodopeshaggy@gmail.com>
 
 pkgname=drive
-pkgver=0.1.8
+pkgver=0.2.3
 pkgrel=1
 pkgdesc="Pull or push Google Drive files"
 arch=('x86_64' 'i686' 'arm' 'armv6h' 'armv7h')
 url="http://github.com/odeke-em/drive"
 license=('Apache')
-makedepends=('go' 'git' 'mercurial')
+depends=('hicolor-icon-theme' 'gtk-update-icon-cache')
+makedepends=('go' 'git')
 conflicts=('drive-git')
 options=('!strip' '!emptydirs')
+install=$pkgname.install
 source=("https://github.com/odeke-em/$pkgname/archive/v$pkgver.tar.gz")
-sha256sums=('4679f58513157b058ee406e5b1259b76fd9bd614a0c1acf8ae4947a2a27305bd')
+sha256sums=('b03c2125c1655ca5d30bd1dddbbe265d85152afda72027399233061f22d8a9f9')
 
 prepare() {
  mkdir -p "$srcdir/go"
@@ -19,23 +21,25 @@ prepare() {
  go get github.com/odeke-em/drive/cmd/drive
  go get github.com/odeke-em/drive/config
  go get github.com/rakyll/command
-}
-
-build() {
-  export GOPATH="$srcdir/go"
-  cd "$pkgname-$pkgver/cmd/drive"
-
-  msg2 'Building drive'
-  go build -o "$pkgname" main.go
-
+ go get github.com/odeke-em/drive/src
+ go get github.com/odeke-em/ripper/src
+ go get github.com/odeke-em/xon/pkger/src
+ export GOPATH="$srcdir/$pkgname-$pkgver"
+ go get github.com/odeke-em/drive/drive-gen
+ cd $srcdir/$pkgname-$pkgver/bin/
+ ./drive-gen
 }
 
 package() {
-  cd "$srcdir/$pkgname-$pkgver/cmd/drive"
-
+  cd $srcdir/$pkgname-$pkgver/bin/
   install -Dm755 "$pkgname" "$pkgdir/usr/bin/$pkgname"
   cd "$srcdir/$pkgname-$pkgver"
   mkdir -p $pkgdir/usr/share/licenses/$pkgname
   install -m 0644 LICENSE $pkgdir/usr/share/licenses/$pkgname/
+  mkdir -p "$pkgdir/usr/share/icons/hicolor/128x128/mimetypes"
+  cp $srcdir/$pkgname-$pkgver/icons/*.png $pkgdir/usr/share/icons/hicolor/128x128/mimetypes
+  mkdir -p "$pkgdir/usr/share/icons/hicolor/scalable/mimetypes"
+  cp $srcdir/$pkgname-$pkgver/icons/*.svg $pkgdir/usr/share/icons/hicolor/scalable/mimetypes
+  rm -r  "$srcdir/go"
 }
 # vim:set ts=2 sw=2 et:
