@@ -1,41 +1,31 @@
-# Maintainer: Hugo Osvaldo Barrera <hugo@barrera.io>
-# Contributor: Jesus Jerez <jhuss@archlinux.org.ve>
+# Maintainer: Arthur Zamarin <arthurzam@gmail.com>
+# Contributor: Shanto <shanto@hotmail.com>
+# Contributor: Jonathan Wiersma <archaur at jonw dot org>
 
-pkgname=eclipse-wtp-wst
-pkgver=3.6.0
-_pkgbuild=20140602160322
+pkgname=eclipse-wtp
+pkgver=3.6.3
+_pkgdate=20150216091848
 pkgrel=1
-pkgdesc="Web Developer Tools for the Eclipse platform - part of webtools, includes enough to do web development (e.g. HTML, CSS, Javascript, and XML)"
+pkgdesc="Webtools framework for the Eclipse platform"
 url="http://www.eclipse.org/webtools/"
+license="Eclipse Public License"
 arch=('any')
-license=('EPL')
-depends=('eclipse-emf' 'eclipse-gef')
-makedepends=('unzip')
-conflicts=('eclipse-wtp')
-provides=('eclipse-wtp')
-#changelog=$pkgname.changelog
-source=("http://www.eclipse.org/downloads/download.php?r=1&file=/webtools/downloads/drops/R${pkgver}/R-$pkgver-${_pkgbuild}/wtp4x-sdk-R-$pkgver-${_pkgbuild}.zip")
-sha256sums=('1cfd0c6370d624401fcbdaa99ce16e9148479b2ba35c8ceacff1aa7f209dedca')
+depends=( 'eclipse' 'eclipse-emf' 'eclipse-gef' 'java-runtime>=5' )
+optdepends=("java-environment>=5" "eclipse-dtp")
+provides=('eclipse-wtp-wst')
+options=(!strip)
+_mirror="http://www.eclipse.org/downloads/download.php?r=1&mirror_id=1&file="
+source=("$_mirror/webtools/downloads/drops/R$pkgver/R-$pkgver-$_pkgdate/wtp4x-repo-R-$pkgver-$_pkgdate.zip")
+sha256sums=('3dd7f464c7abee2e3d4e76a3ebfd9590145169ce9eb26ca739659875019204cf')
 
 package() {
+  _dest="$pkgdir/usr/share/eclipse/dropins/wtp/"
+  
+  cd "$srcdir"
+  mkdir -p "${_dest}"
+  
+  cp -r {features,plugins} "$_dest/"
 
-  _dest=${pkgdir}/usr/share/eclipse/dropins/${pkgname/eclipse-}/eclipse
-
-  cd ${srcdir}/eclipse
-
-  # Features
-  find features -type f | while read _feature ; do
-    if [[ ${_feature} =~ (.*\.jar$) ]] ; then
-      install -dm755 ${_dest}/${_feature%*.jar}
-      cd ${_dest}/${_feature/.jar}
-      jar xf ${srcdir}/${_feature} || return 1
-    else
-      install -Dm644 ${_feature} ${_dest}/${_feature}
-    fi
-  done
-
-  # Plugins
-  find plugins -type f | while read _plugin ; do
-    install -Dm644 ${_plugin} ${_dest}/${_plugin}
-  done
+  find "$pkgdir/usr/share/eclipse" -type d -exec chmod 755 {} \;
+  find "$pkgdir/usr/share/eclipse" -type f -exec chmod 644 {} \;
 }
