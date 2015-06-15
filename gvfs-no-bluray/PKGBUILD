@@ -7,14 +7,14 @@
 
 pkgbase=gvfs-no-bluray
 pkgname=$pkgbase
-pkgver=1.24.0
+pkgver=1.24.1
 pkgrel=1
 arch=('i686' 'x86_64')
 license=('LGPL')
 makedepends=('avahi' 'dbus' 'fuse' 'intltool' 'libarchive' 'libcdio-paranoia' 'libgphoto2' 'libimobiledevice' 'libsoup' 'smbclient' 'udisks2' 'libsecret' 'docbook-xsl' 'gtk3' 'libmtp')
 url="http://www.gnome.org"
 source=(http://ftp.gnome.org/pub/gnome/sources/gvfs/${pkgver:0:4}/gvfs-$pkgver.tar.xz)
-sha256sums=('4b79617f9d95e1999b2cb06a27030e7b91aa6d73fac75c7ec8a3a7af00495217')
+sha256sums=('d38367ce189415c36fd19dca478bc9b80694b495c3458e74fb0f13d1ac9df1f9')
 
 build() {
   cd "gvfs-$pkgver"

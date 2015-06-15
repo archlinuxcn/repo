@@ -1,14 +1,14 @@
 # Contributor: Weng Xuetian <wengxt@gmail.com>
-# Maintainer: Yegorius <yegorius@domic.us>
+# Maintainer: Thaodan <theodorstormgrade@gmail.com>
 
 # enable this if you run out of memory during linking
 #_lowmem=true
 
 # try to build with PGO
-#_pgo=true
+_pgo=true
 
 pkgname=firefox-kde-opensuse
-pkgver=37.0.1
+pkgver=38.0.5
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
@@ -16,23 +16,22 @@ license=('MPL' 'GPL' 'LGPL')
 url="https://build.opensuse.org/package/show/mozilla:Factory/MozillaFirefox"
 depends=('gtk2' 'mozilla-common' 'libxt' 'startup-notification' 'mime-types'
          'dbus-glib' 'alsa-lib' 'desktop-file-utils' 'hicolor-icon-theme'
-	 'libvpx' 'icu>=54.1'  'libevent' 'nss>=3.18-3' 'hunspell'
+	 'libvpx' 'icu'  'libevent' 'nss>=3.18.1' 'nspr>=4.10.6' 'hunspell' 
 	 'sqlite' 'libnotify' 'kmozillahelper')
 makedepends=('unzip' 'zip' 'diffutils' 'python2' 'yasm' 'mesa' 'imake'
              'xorg-server-xvfb' 'libpulse' 'gst-plugins-base-libs' 'inetutils')
 optdepends=('networkmanager: Location detection via available WiFi networks'
 	    'gst-plugins-good: h.264 video'
-	    'gst-libav: h.264 video'
-		'upower: Battery API')
+	    'gst-libav: h.264 video')
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
 install=firefox.install
-options=('!emptydirs' '!makeflags')
-_patchrev=0d861c33ec70
+_patchrev=cf7e96afbe3a
+options=('!emptydirs')
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
-source=(http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.bz2
-	#http://download.cdn.mozilla.net/pub/mozilla.org/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.bz2
-	mozconfig firefox.desktop firefox-install-dir.patch vendor.js kde.js firefox-fixed-loading-icon.png
+source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.bz2
+        mozconfig firefox.desktop firefox-install-dir.patch vendor.js kde.js firefox-fixed-loading-icon.png
+	rhbz-966424.patch
 	# Firefox patchset
 	$_patchurl/firefox-branded-icons.patch
 	$_patchurl/firefox-kde.patch
@@ -43,14 +42,11 @@ source=(http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/f
 	$_patchurl/mozilla-nongnome-proxies.patch
 	$_patchurl/mozilla-prefer_plugin_pref.patch
 	$_patchurl/toolkit-download-folder.patch
-	add_missing_pgo_rule.patch
 	unity-menubar.patch
+	add_missing_pgo_rule.patch
+        pgo_fix_missing_kdejs.patch 
 )
 
-# Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
-# Note: These are for Arch Linux use ONLY. For your own distribution, please
-# get your own set of keys. Feel free to contact foutrelis@archlinux.org for
-# more information.
 _google_api_key=AIzaSyDwr302FpOSkGRpLlUpPThNTDPbXcIn_FM
 
 prepare() {
@@ -60,6 +56,9 @@ prepare() {
 
   patch -Np1 -i "$srcdir/firefox-install-dir.patch"
   echo -n "$_google_api_key" > google-api-key
+
+  # https://bugs.archlinux.org/task/41689
+  patch -Np1 -i "$srcdir/rhbz-966424.patch"
 
   msg "Patching for KDE"
   patch -Np1 -i "$srcdir/toolkit-download-folder.patch"
@@ -71,10 +70,15 @@ prepare() {
   patch -Np1 -i "$srcdir/firefox-kde.patch"
   patch -Np1 -i "$srcdir/firefox-no-default-ualocale.patch"
   patch -Np1 -i "$srcdir/firefox-branded-icons.patch"
-
+  # add globalmenu support
   patch -Np1 -i "$srcdir/unity-menubar.patch"
-  patch -Np1 -i "$srcdir/add_missing_pgo_rule.patch"
 
+  # add missing rule for pgo builds
+  patch -Np1 -i "$srcdir"/add_missing_pgo_rule.patch
+
+  # add missing file Makefile for pgo builds
+  patch -Np1 -i "$srcdir"/pgo_fix_missing_kdejs.patch
+  
   # configure script misdetects the preprocessor without an optimization level
   # https://bugs.archlinux.org/task/34644
   sed -i '/ac_cpp=/s/$CPPFLAGS/& -O2/' configure
@@ -85,14 +89,20 @@ prepare() {
 
   # Fix tab loading icon (flickers with libpng 1.6)
   # https://bugzilla.mozilla.org/show_bug.cgi?id=841734
-  cp "$srcdir/firefox-fixed-loading-icon.png" browser/themes/linux/tabbrowser/loading.png
+  # TODO: Remove this; Firefox 34 might use CSS animations for the loading icon
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=759252
+  cp "$srcdir/firefox-fixed-loading-icon.png" \
+    browser/themes/linux/tabbrowser/loading.png
 }
 
 build() {
+
   cd mozilla-release
 
   export PATH="$srcdir/path:$PATH"
+  export LDFLAGS="$LDFLAGS -Wl,-rpath,/usr/lib/firefox"
   export PYTHON="/usr/bin/python2"
+  export CPPFLAGS="$CPPFLAGS -mno-avx"
 
   if [[ -n $_lowmem || $CARCH == i686 ]]; then
     LDFLAGS+=" -Wl,--no-keep-memory"
@@ -144,20 +154,22 @@ package() {
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
 
-sha256sums=('8d10aab49017f0222dbbe4811b953d2ce61737ba612b13a98dcd4379510e18e6'
-            'd6468f627873bdfade1d62a3d84fbb3f53f57b233e691e4d28cda3d7e3e5096e'
+sha256sums=('4f53506d1e8a724a165ee509d9448fa7c9b7203183f53ae313063eb144a403b6'
+            '94410d3e8bfe74b79ecd9dace9c4a339c25fa10908a7471001f533d843b582c9'
             'c202e5e18da1eeddd2e1d81cb3436813f11e44585ca7357c4c5f1bddd4bec826'
             'd86e41d87363656ee62e12543e2f5181aadcff448e406ef3218e91865ae775cd'
             '4b50e9aec03432e21b44d18c4c97b2630bace606b033f7d556c9d3e3eb0f4fa4'
             'b8cc5f35ec35fc96ac5c5a2477b36722e373dbb57eba87eb5ad1276e4df7236d'
             '68e3a5b47c6d175cc95b98b069a15205f027cab83af9e075818d38610feb6213'
+            '746cb474c5a2c26fc474256e430e035e604b71b27df1003d4af85018fa263f4a'
             '1f0afb90e47395c5221a89e72950f5eea4bb7b880757158e04bbb634d78f0b3b'
-            '4e892be11314e7ab7c72631be1314711d6b5ecb214f5e1aaa5c405c683092a1f'
-            'a5f3a801478e73524a2ac12d376108cb330d5d74652f3466a679d54d3878902e'
-            '477dc99ffb6b312a45b5ab1f2938e9410c3d05f3dc6328439647b366adf32e42'
+            '6c268390d699cafaf2386d590a01a081a0802e87b262462e5c2877a0695f96b4'
+            '39ae2b6d99cc0b7373576065448b5584e9bc0619aa5924507b0e27a99e62f29e'
+            'e5b9fad06870ce32deebce43fdd43d1b28b69f5ddb955bf7c986d9c6dc23a137'
             'b9feb66a33dc1644d7d277dc3fc166c655735de7100bc4e93f1fe44567f35345'
             'e8289ea4c1f8191e1e23661312ceee2128b8e790501b9a589d0d7bfc4384553f'
             '5f6b0970284d68d5ed18e6bb7ee1e9fc0025ab3c10aaa14c283adb21a4a20ee8'
             '03246750d62244262ae78675d869735f642a96231cf72b1f65c9112e67f2acca'
+            '5fd329439480d861eb37edcca47fb3e05801f5a48b4d6c2afa17fb4c71c65fa1'
             'f9067f62a25a7a77276e15f91cc9e7ba6576315345cfc6347b1b2e884becdb0c'
-            '637f19d782f56a143af10a6448f9780d8cfd00a49446a0ce554ab4714e2a73f5')
+            '2c9c97bff07cc71b3f6d35f3edfaddaf8180a1f533ee4682adf18a8f86d29264')

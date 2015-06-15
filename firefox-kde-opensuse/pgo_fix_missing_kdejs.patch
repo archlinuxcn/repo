@@ -1,0 +1,10 @@
+--- mozilla-release/browser/app/Makefile.in	2015-04-23 09:20:26.806627368 +0200
++++ mozilla-release/browser/app/Makefile.in	2015-04-23 09:07:04.000000000 +0200
+@@ -79,6 +79,7 @@
+ libs:: $(srcdir)/profile/channel-prefs.js
+ 	$(NSINSTALL) -D $(DIST)/bin/defaults/pref
+ 	$(call py_action,preprocessor,-Fsubstitution $(PREF_PPFLAGS) $(ACDEFINES) $^ -o $(DIST)/bin/defaults/pref/channel-prefs.js)
++	cp $(topsrcdir)/../kde.js $(DIST)/bin/defaults/pref/kde.js
+ endif
+ 
+ ifeq (cocoa,$(MOZ_WIDGET_TOOLKIT))

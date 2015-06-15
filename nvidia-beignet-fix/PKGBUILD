@@ -2,7 +2,7 @@
 # Maintainer: Thomas Baechler <thomas@archlinux.org>
 
 pkgname=nvidia-beignet-fix
-pkgver=349.16
+pkgver=352.09
 _extramodules=extramodules-4.0-beignet-fix
 pkgrel=1
 pkgdesc="NVIDIA drivers for linux"
@@ -16,8 +16,8 @@ install=nvidia.install
 options=(!strip)
 source=("ftp://download.nvidia.com/XFree86/Linux-x86/${pkgver}/NVIDIA-Linux-x86-${pkgver}.run"
         "ftp://download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run")
-md5sums=('59597d5dfaaf0fc83a5e78d29a97ccac'
-         '3e04208affde8c35a8b96975eec0486b')
+md5sums=('0e009686400c522209eaa8ab835ff81f'
+         'eb5ad6a07dc03e0a19d5f6fa069c494b')
 
 [[ "$CARCH" = "i686" ]] && _pkg="NVIDIA-Linux-x86-${pkgver}"
 [[ "$CARCH" = "x86_64" ]] && _pkg="NVIDIA-Linux-x86_64-${pkgver}-no-compat32"

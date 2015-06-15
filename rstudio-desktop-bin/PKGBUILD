@@ -12,21 +12,21 @@ print(cbind(links,md5sums))
 _EOF_
 
 pkgname=rstudio-desktop-bin
-pkgver=0.98.1103
-pkgrel=1
+pkgver=0.99.441
+pkgrel=2
 pkgdesc="A new integrated development environment (IDE) for R (binary version from RStudio official website)"
 arch=('i686' 'x86_64')
 license=('GPL')
 url="http://www.rstudio.org/"
-depends=('r>=2.11.1' 'qtwebkit' 'shared-mime-info')
+depends=('r>=2.11.1' 'shared-mime-info' 'qt5-webkit' 'qt5-svg')
 conflicts=('rstudio-desktop' 'rstudio-desktop-git' 'rstudio-desktop-preview-bin')
 provides=("rstudio-desktop=${pkgver}")
 #options=(!strip)
 
 
 
-_x86md5=723fdcb28dac8cd004c06855d1421c24
-_x64md5=4426d2797e27c7b6dd0394c180685a8e
+_x86md5=69337bf40062da23b441bbaff6753667
+_x64md5=6a5dc03fac32df8725c9f57e3608e029
 case "$CARCH" in
 	'i686')
 		_arch=i386
@@ -49,5 +49,6 @@ package() {
   rm lib*.so.*
   cd "$pkgdir/usr/bin"
   ln -s -f ../lib/rstudio/bin/rstudio rstudio-bin
+  find "$pkgdir/usr" -type d -print0 | xargs -0 chmod 755
 }
 # vim:ft=sh tabstop=2 expandtab
