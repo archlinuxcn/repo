@@ -5,9 +5,9 @@
 # Contributor: Lubomir 'Kuci' Kucera <kuci24-at-gmail-dot-com>
 
 pkgname=android-studio
-pkgver=1.2.1.1
+pkgver=1.2.2.0
 pkgrel=1
-_build=141.1903250
+_build=141.1980579
 pkgdesc="A new Android development environment based on IntelliJ IDEA."
 arch=('i686' 'x86_64')
 url="http://developer.android.com/sdk/installing/studio.html"
@@ -20,7 +20,7 @@ options=('!strip')
 install=$pkgname.install
 source=("https://dl.google.com/dl/android/studio/ide-zips/$pkgver/android-studio-ide-$_build-linux.zip"
         "$pkgname.desktop")
-sha512sums=('a0baac0fd7406c16277f09662b798c2340725d0d11333aa1834c095e2041d74bb4e75096dfe146491dfbb330d3a17b5c00e70cc1a921fd230c18d7b3e0d6e9a3'
+sha512sums=('54a83e6a54cd07ade1bfd3756bdff9c3431594412a01809ac3d2b1b5b2fb1719b8dd4f980516eeba5f7016c7757950c93a1d368ad1034d1300b9fe44577a1bcd'
             'fa3567f328af45d265c4fabf3e41b55d8e8cccfa9675e745f07dd6ae41950dd53a2ef41ef1caee86643f5c2ddf7a7681ee17155e208a7b6fdae6c0537dfc0c94')
 
 if [[ $CARCH == "x86_64" ]]; then

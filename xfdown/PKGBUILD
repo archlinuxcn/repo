@@ -1,4 +1,4 @@
-pkgname=xfdown-git
+pkgname=xfdown
 pkgver=72.24925b1
 pkgrel=1
 pkgdesc="A python script for QQDownload lixian. Forked from /xfdown."
@@ -8,10 +8,10 @@ license=('GPL3')
 depends=('python2' 'aria2' 'python2-urwid')
 makedepends=('git')
 source=("git+https://github.com/kikyous/xfdown"
-        "xfdown-git.install")
+        "xfdown.install")
 sha256sums=('SKIP'
             'c7d79d1b06714f9c73fc87984f56f41da6e0625976aaa25726869922460b03c2')
-install='xfdown-git.install'
+install='xfdown.install'
 _gitname='xfdown'
 
 pkgver() {

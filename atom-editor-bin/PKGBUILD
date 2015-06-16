@@ -5,7 +5,7 @@
 # Upstream URL: https://github.com/atom/atom
 
 pkgname=atom-editor-bin
-pkgver=0.208.0
+pkgver=0.209.0
 pkgrel=1
 pkgdesc="Chrome-based text editor from Github - Precompiled binary from official repository"
 arch=('x86_64')
@@ -16,7 +16,7 @@ depends=('git' 'gconf' 'gtk2' 'libnotify' 'libxtst' 'nss' 'python2' 'gvfs' 'xdg-
 conflicts=('atom-editor' 'atom-editor-git' 'atom-editor-git-tagged')
 install=$pkgname.install
 
-md5sums=('22ba49ccb8bc12b47e5e5912ff5d1efe'
+md5sums=('273a71b8540b595ba832cacbfb8775c1'
          'dbb685607dea46517de0a27e24085bf4')
 source=("https://github.com/atom/atom/releases/download/v${pkgver}/atom-amd64.deb"
          atom-python.patch)

@@ -9,7 +9,8 @@ license=('GPL3')
 depends=(ffmpeg icu jasper libexif libmng libwebp libxkbcommon-x11 mtdev openal fcitx)
 makedepends=(git libunity libappindicator-gtk2 xorg-server-xvfb)
 source=(http://download.qt-project.org/official_releases/qt/${_qtver%.*}/$_qtver/single/qt-everywhere-opensource-src-$_qtver.tar.xz
-        git+https://github.com/aphuse/tdesktop.git)
+        git+https://github.com/aphuse/tdesktop.git
+		telegram)
 
 pkgver() {
   cd "tdesktop"
@@ -69,7 +70,10 @@ build() {
 
 package() {
   install -dm755 "$pkgdir"/opt/telegram
+  install -dm755 "$pkgdir"/usr/bin
   install -Dm755 "$srcdir"/tdesktop/Linux/Release/Telegram "$pkgdir"/opt/telegram
+  install -Dm755 "$srcdir"/telegram "$pkgdir"/usr/bin
 }
 md5sums=('21843b00ecde8956217faab391bc007b'
-         'SKIP')
+         'SKIP'
+         '0d90edb512fb65d7c9711f189ddf6189')
