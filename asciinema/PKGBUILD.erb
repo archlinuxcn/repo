@@ -1,7 +1,7 @@
 # Maintainer: Marcin Kulik <m@ku1ik.com>
 
 pkgname=asciinema
-pkgver=1.1.1
+pkgver=<%= VERSION %>
 pkgrel=1
 pkgdesc="Record and share your terminal sessions, the right way"
 arch=('x86_64' 'i686' 'arm')
@@ -9,13 +9,13 @@ url="https://asciinema.org/"
 license=('GPLv3')
 if [ "$CARCH" = "i686" ]; then
   _PKGARCH=386
-  sha1sums=('82eb3ad53cbd0615bdfdd6f7ecaf7202cd17ed69')
+  sha1sums=('<%= SHA1_386 %>')
 elif [ "$CARCH" = "arm" ]; then
   _PKGARCH=arm
-  sha1sums=('7e224c345a7ba5a6c44364d4b5664f2927a44651')
+  sha1sums=('<%= SHA1_ARM %>')
 else
   _PKGARCH=amd64
-  sha1sums=('4edfb204e8e92245b0154b57b61f4502eec00157')
+  sha1sums=('<%= SHA1_AMD64 %>')
 fi
 source=("https://github.com/asciinema/asciinema/releases/download/v${pkgver}/${pkgname}-${pkgver}-linux-${_PKGARCH}.tar.gz")
 
