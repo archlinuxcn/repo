@@ -26,7 +26,7 @@ provides=("$_pkgname")
 replaces=("$_pkgname")
 source=("$_pkgname::git+https://github.com/irungentoo/toxcore.git")
 sha512sums=('SKIP')
-backup=('/etc/tox-bootstrapd.conf')
+backup=('etc/tox-bootstrapd.conf')
 
 pkgver() {
   cd $_pkgname
