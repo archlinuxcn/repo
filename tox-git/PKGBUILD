@@ -6,7 +6,7 @@
 _pkgname=tox
 pkgname=tox-git
 pkgver=r3429.a0e7832
-pkgrel=1
+pkgrel=2
 pkgdesc='Secure, configuration-free, P2P Skype replacement backend'
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h')
 url='https://tox.im'
@@ -26,6 +26,7 @@ provides=("$_pkgname")
 replaces=("$_pkgname")
 source=("$_pkgname::git+https://github.com/irungentoo/toxcore.git")
 sha512sums=('SKIP')
+backup=('/etc/tox-bootstrapd.conf')
 
 pkgver() {
   cd $_pkgname
@@ -52,4 +53,5 @@ package() {
   cd $_pkgname
   make DESTDIR="$pkgdir" install
   install -Dm644 ./other/bootstrap_daemon/tox-bootstrapd.service "$pkgdir/usr/lib/systemd/system/tox-bootstrapd.service"
+  install -Dm644 ./other/bootstrap_daemon/tox-bootstrapd.conf  "$pkgdir/etc/tox-bootstrapd.conf"
 }
