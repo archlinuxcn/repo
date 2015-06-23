@@ -1,0 +1,34 @@
+# Maintainer: Jiachen Yang <farseerfc@gmail.com>
+pkgname=notify-desktop-git
+_gitname=notify-desktop
+pkgver=r21.aa0b446
+pkgrel=1
+pkgdesc="A replacement for notify-send with replaces-id support and less dependencies"
+arch=(x86_64 i686)
+url="https://github.com/nowrep/$_gitname"
+license=('GPL2')
+depends=('libdbus')
+makedepends=('git')
+options=(!emptydirs)
+source=("git+https://github.com/nowrep/$_gitname")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd $_gitname
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+  cd "$srcdir/$_gitname"
+  mkdir bin
+  mkdir build
+  cd src
+  make
+}
+
+package() {
+  cd "$srcdir/$_gitname"
+  install -m755 -D bin/$_gitname "$pkgdir/usr/bin/$_gitname"
+}
+
+# vim:set ts=2 sw=2 et:

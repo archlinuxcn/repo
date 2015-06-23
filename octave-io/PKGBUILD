@@ -8,7 +8,7 @@
 
 _pack=io
 pkgname=octave-$_pack
-pkgver=2.2.7
+pkgver=2.2.8
 pkgrel=1
 pkgdesc="Input/Output in external formats."
 arch=(any)
@@ -24,7 +24,7 @@ install=$pkgname.install
 _archive=$_pack-$pkgver.tar.gz
 source=("http://downloads.sourceforge.net/octave/$_archive")
 noextract=("$_archive")
-md5sums=('3907ddb7049baa8c4ba3a2995162ad0e')
+md5sums=('eee1bc60f74eb2a3f5846b04bb0089fd')
 
 build() {
   cd "$srcdir"
