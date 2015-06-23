@@ -7,7 +7,7 @@
 
 pkgname=vuze
 pkgver=5.6.1.2
-pkgrel=1
+pkgrel=2
 _ver=${pkgver//./} 
 _extra="" # sometimes Azureus devs add letters at the end.
 pkgdesc="The java-based bittorrent kitchen-sink servlet."
@@ -20,9 +20,9 @@ makedepends=('unzip')
 install="$pkgname.install"
 options=(!strip)
 optdepends=(
-  'webkitgtk: For for a fully functional Vuze GUI. GTK3 based.'
-  'mldht: Talk DHT to uTorrent, Transmission, etc. Install with internal plugin manager, it autoupdates.'
-  'i2phelper: I2P support. Install with internal plugin manager, it autoupdates.'
+  'webkitgtk: For fully functional Vuze GUI. GTK3 based.'
+  'mldht: Talk DHT to uTorrent, Transmission, etc. Install with internal plugin manager. It autoupdates.'
+  'i2phelper: I2P support. Install with internal plugin manager. It autoupdates!'
   )
 noextract=("Vuze_${_ver}${_extra}.jar") 
 source=("http://downloads.sourceforge.net/azureus/vuze/Vuze_${_ver}/Vuze_${_ver}_linux.tar.bz2")
