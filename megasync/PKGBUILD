@@ -1,7 +1,7 @@
 # Maintainer: Alfonso Saavedra "Son Link" <sonlink.dourden@gmail.com>
 pkgname=megasync
 pkgver=2.0.0
-pkgrel=1
+pkgrel=4
 pkgdesc="Sync your files to your Mega account. Official app"
 arch=('i686' 'x86_64')
 url="https://mega.co.nz/#sync"
@@ -10,8 +10,8 @@ conflicts=('megatools')
 depends=('openssl' 'c-ares' 'libgcrypt' 'crypto++' 'qt4' 'libpng' 'qtchooser' 'sqlite')
 source_i686=("https://mega.co.nz/linux/MEGAsync/Debian_7.0/i386/${pkgname}_${pkgver}_i386.deb")
 source_x86_64=("https://mega.co.nz/linux/MEGAsync/Debian_7.0/amd64/${pkgname}_${pkgver}_amd64.deb")
-md5sums_i686=('161855aacbbf736791ad8a39a0d3c2d0')
-md5sums_x86_64=('fd39456080e087cf1c46d91fb67fad13')
+md5sums_i686=('7142ca6fdf46aae2f030ab11d2525d9a')
+md5sums_x86_64=('a96197054f4c4a9fbc74185704a34c94')
 install="${pkgname}.install"
 options=(!strip)
 package (){
@@ -20,5 +20,8 @@ package (){
 	tar -xzf data.tar.gz -C ${pkgdir}
 	rm -r ${pkgdir}/usr/share/doc
 	mkdir -p ${pkgdir}/usr/lib
-	ln -s /usr/lib/libcryptopp.so ${pkgdir}/usr/lib/libcrypto++.so.9
+	ln -s /usr/lib/libcrypto++.so ${pkgdir}/usr/lib/libcrypto++.so.10
+        ln -s /usr/lib/libcryptopp.so ${pkgdir}/usr/lib/libcryptopp.so.6
+        ln -s /usr/lib/libcrypto.so ${pkgdir}/usr/lib/libcrypto.so.10
+        ln -s /usr/lib/libssl.so.1.0.0 ${pkgdir}/usr/lib/libssl.so.10
 }
