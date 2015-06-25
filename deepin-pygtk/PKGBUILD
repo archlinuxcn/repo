@@ -1,0 +1,45 @@
+# $Id$
+# Maintainer: Jan de Groot <jgc@archlinux.org>
+# Contributor: Sarah Hay <sarahhay@mb.sympatico.ca>
+
+pkgname=deepin-pygtk
+_pkgname=pygtk
+pkgver=2.24.0
+pkgrel=5
+pkgdesc="Python bindings for the GTK widget set - with patches to fix memory leak for deepin-ui"
+arch=('i686' 'x86_64')
+license=('LGPL')
+depends=('libglade' 'python2-cairo' 'pygobject')
+makedepends=('python2-numpy' 'pygobject2-devel')
+provides=("pygtk=$pkgver")
+conflicts=("pygtk")
+url="http://www.pygtk.org/"
+source=(http://ftp.gnome.org/pub/gnome/sources/$_pkgname/${pkgver%.*}/$_pkgname-${pkgver}.tar.bz2
+        10_fix_create_layout_unref.patch
+        python27.patch)
+sha256sums=('cd1c1ea265bd63ff669e92a2d3c2a88eb26bcd9e5363e0f82c896e649f206912'
+            '283836d6fe8eda2a1bd32f551b2677e1b9e6e3cee8e48e6c4b861375810d8712'
+            '39a30456cba055a452bb55c74ef1ff2f5f7bfaad22855b4dd569ab009b56b682')
+
+prepare() {
+  cd "${srcdir}/$_pkgname-${pkgver}"
+
+  #https://bugzilla.gnome.org/show_bug.cgi?id=623965
+  patch -Np1 -i "${srcdir}/python27.patch"
+  patch -Np1 -i "${srcdir}/10_fix_create_layout_unref.patch"
+
+  sed -i -e 's#env python$#env python2#' examples/pygtk-demo/{,demos/}*.py
+}
+
+build() {
+  cd "${srcdir}/$_pkgname-${pkgver}"
+
+  PYTHON=/usr/bin/python2 ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "${srcdir}/$_pkgname-${pkgver}"
+  make DESTDIR="${pkgdir}" install
+  install -m644 gtk/gtk-extrafuncs.defs "${pkgdir}/usr/share/pygtk/2.0/defs/"
+}
