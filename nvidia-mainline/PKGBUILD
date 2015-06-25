@@ -6,7 +6,7 @@
 # Original arch package by: Thomas Baechler <thomas@archlinux.org>
 
 pkgname=nvidia-mainline
-pkgver=352.09
+pkgver=352.21
 _extramodules=extramodules-4.1-mainline
 pkgrel=1
 pkgdesc="NVIDIA drivers for linux-mainline"
@@ -22,12 +22,12 @@ if [ "$CARCH" = "i686" ]; then
     _arch='x86'
     _pkg="NVIDIA-Linux-${_arch}-${pkgver}"
     source=("http://us.download.nvidia.com/XFree86/Linux-${_arch}/${pkgver}/${_pkg}.run")
-    sha256sums=('a799e5e9016f23dd7f69a74844652dcebdf0f655bf2d8b72370e22b19e8b98d3')
+    sha256sums=('616382a5f47e62c8f35509ce684a6ebc94e4a62c51208a11c5976517123040d0')
 elif [ "$CARCH" = "x86_64" ]; then
     _arch='x86_64'
     _pkg="NVIDIA-Linux-${_arch}-${pkgver}-no-compat32"
     source=("http://us.download.nvidia.com/XFree86/Linux-${_arch}/${pkgver}/${_pkg}.run")
-    sha256sums=('385137b4e6492710890f621cc09a0ef14f0ab5d90829a1f9b14c689b0b663848')
+    sha256sums=('cfccf25135bf5c33f68eb892e341b35126f6561f257b32893ccd055d624964eb')
 fi
 
 prepare() {
