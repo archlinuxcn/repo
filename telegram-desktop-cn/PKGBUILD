@@ -1,6 +1,6 @@
 _qtver=5.4.0
 pkgname=telegram-desktop-cn
-pkgver=r556.f296e89
+pkgver=r653.66d2654
 pkgrel=1
 pkgdesc='fixed The Official desktop version of Telegram messaging app with suport the input method (liked fcitx or ibus) and added the the Chinese language.'
 arch=('i686' 'x86_64')
