@@ -1,0 +1,30 @@
+# Maintainer: Martin Wimpress <code@flexion.org>
+
+_pkgname=paper-gtk-theme
+pkgname=${_pkgname}-git
+pkgver=20.5ea8abb
+pkgrel=1
+pkgdesc="A modern desktop theme suite. It's design is mostly flat with a minimal use of shadows for depth."
+arch=('any')
+url="https://github.com/snwh/paper-gtk-theme"
+license=('GPL3')
+depends=('gnome-themes-standard' 'gtk-engine-murrine')
+makedepends=('git')
+conflicts=("${_pkgname}")
+provides=("${_pkgname}")
+replaces=("${_pkgname}")
+options=(!strip)
+source=(${_pkgname}::"git+https://github.com/snwh/${_pkgname}.git")
+sha256sums=('SKIP')
+
+pkgver() {
+    cd ${srcdir}/${_pkgname}
+    echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+package() {
+    install -d -m 755 "${pkgdir}"/usr/share/themes/Paper
+    cp -dr --no-preserve=ownership "${_pkgname}"/Paper "${pkgdir}"/usr/share/themes/
+    find "${pkgdir}"/usr/share/themes/ -type d -exec chmod 755 {} \;
+    find "${pkgdir}"/usr/share/themes/ -type f -exec chmod 644 {} \;
+}
