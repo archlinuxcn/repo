@@ -1,0 +1,42 @@
+# Maintainer: Josip Ponjavic <josipponjavic at gmail dot com>
+# Maintainer: Xu Fasheng <fasheng.xu[AT]gmail.com>
+
+pkgname=python2-deepin-utils-git
+_gitname=deepin-utils
+pkgver=36.475a59e
+pkgrel=1
+pkgdesc='Basic utils for all project in Linux Deepin.'
+arch=('i686' 'x86_64')
+url="https://gitcafe.com/Deepin/deepin-utils"
+groups=('deepin')
+depends=('deepin-pygtk' 'python2-cairo' 'freetype2' 'webkitgtk2'
+         'python2-xlib' 'pywebkitgtk')
+makedepends=('python2-setuptools')
+license=('GPL3')
+provides=('python2-deepin-utils')
+conflicts=('python2-deepin-utils')
+source=("git+https://gitcafe.com/Deepin/$_gitname")
+sha256sums=('SKIP')
+
+pkgver() {
+    cd $_gitname
+    echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+prepare() {
+    cd $_gitname
+
+  # fix python version
+  find -iname "*.py" | xargs sed -i 's=\(^#! */usr/bin.*\)python *$=\1python2='
+}
+
+build() {
+    cd $_gitname
+
+  python2 setup.py build
+}
+
+package() {
+    cd $_gitname
+  python2 setup.py install --root="$pkgdir" --optimize=1
+}
