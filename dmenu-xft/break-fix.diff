@@ -1,0 +1,23 @@
+diff -upr dmenu-4.5-xft/dmenu.c dmenu-4.5-break/dmenu.c
+--- dmenu-4.5-xft/dmenu.c	2014-05-04 17:32:10.896300286 -0600
++++ dmenu-4.5-break/dmenu.c	2014-05-04 17:31:41.406300227 -0600
+@@ -337,8 +337,9 @@ keypress(XKeyEvent *ev) {
+ 		sel = matchend;
+ 		break;
+ 	case XK_Escape:
+-        ret = EXIT_FAILURE;
+-        running = False;
++		ret = EXIT_FAILURE;
++		running = False;
++		break;
+ 	case XK_Home:
+ 		if(sel == matches) {
+ 			cursor = 0;
+@@ -378,6 +379,7 @@ keypress(XKeyEvent *ev) {
+ 		puts((sel && !(ev->state & ShiftMask)) ? sel->text : text);
+ 		ret = EXIT_SUCCESS;
+ 		running = False;
++		break;
+ 	case XK_Right:
+ 		if(text[cursor] != '\0') {
+ 			cursor = nextrune(+1);
