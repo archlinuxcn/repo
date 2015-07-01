@@ -1,38 +1,41 @@
-# vim:set ts=2 sw=2 et:
-# Maintainer: Kai Hendry <hendry@iki.fi>
-# Contributor: Dogukan Korkmazturk <d.korkmazturk@gmail.com>
-# Contributor: Arvid Ephraim Picciani <aep@exys.org>
-# Contributor: Firmicus <francois.archlinux.org>
+# Maintainer: Chris Morgan <me@chrismorgan.info>
+
 pkgname=princexml
-pkgver=9.0r5
+pkgver=10r2
 pkgrel=1
-pkgdesc="converts XML and HTML into PDF documents using the CSS print spec"
+pkgdesc="Convert HTML documents to PDF with CSS"
 arch=(i686 x86_64)
-url="http://www.princexml.com"
-license=('custom')
+url="http://www.princexml.com/"
+depends=(fontconfig libidn libxml2)
+license=(custom)
 depends=("ca-certificates")
 if test "$CARCH" = "i686"
 then
-  _suffix=linux-static
-  source=(http://www.princexml.com/download/prince-${pkgver}-${_suffix}.tar.gz)
-  md5sums=('8c9486c9a8bc3dde95eb0d4b94bd8e97')
+	md5sums=('ca6c74d30d11d33e4bba2b6b65bd6479')
 else
-  _suffix=linux-amd64-static
-  source=(http://www.princexml.com/download/prince-${pkgver}-${_suffix}.tar.gz)
-  md5sums=('9b2ee4970078b74bacbd43d8001b385b')
+	md5sums=('64db57c92cf83e6a460a4c023de2632b')
 fi
+source=(http://www.princexml.com/download/prince-${pkgver}-linux-generic-${CARCH}.tar.gz)
 
-build() {
-  mkdir -p $pkgdir/opt/prince
-  cd ${srcdir}/prince-${pkgver}-${_suffix}
-  cp -a lib/prince/* $pkgdir/opt/prince
+package() {
+	mkdir -p $pkgdir/opt/prince
 
-  mkdir -p $pkgdir/usr/bin
-  echo "#!/bin/sh" > $pkgdir/usr/bin/prince
-  echo "/opt/prince/bin/prince \$*" >> $pkgdir/usr/bin/prince
-  chmod +x $pkgdir/usr/bin/prince
+	cd ${srcdir}/prince-${pkgver}-linux-generic-${CARCH}/lib/prince
+	for file in `find -type f`; do
+		if [ -x "$file" ]; then
+			install -D "$file" "$pkgdir/opt/prince/$file"
+		else
+			install -D -m 644 "$file" "$pkgdir/opt/prince/$file"
+		fi
+	done
 
-  install -D -m644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+	mkdir -p $pkgdir/usr/bin
+	echo "#!/bin/sh" > $pkgdir/usr/bin/prince
+	echo 'exec /opt/prince/bin/prince --prefix=/opt/prince "$@"' >> $pkgdir/usr/bin/prince
+	chmod +x $pkgdir/usr/bin/prince
+
+	cd ../..
+	install -D -m644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
   # use system-wide certificates
   ln -sf ../../../etc/ssl/certs/ca-certificates.crt "${pkgdir}"/opt/prince/etc/curl-ca-bundle.crt
 }
