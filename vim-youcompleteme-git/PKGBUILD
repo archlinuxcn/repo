@@ -90,6 +90,8 @@ package() {
     "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party"
   cp -r "$srcdir/YouCompleteMe/third_party/ycmd/third_party/OmniSharpServer/OmniSharp" \
     "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party/OmniSharpServer"
+  cp -r "$srcdir/YouCompleteMe/third_party/ycmd/"{ycmd,ycm_client_support.so,ycm_core.so,check_core_version.py,EXPECTED_CORE_VERSION} \
+    "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd"
 
   find "$pkgdir" -name .git -exec rm -fr {} +
 }
