@@ -1,7 +1,7 @@
 # Contributor: Bug <bug2000@gmail.com>
 # Maintainer: Bug <bug2000@gmail.com>
 pkgname=xpra-winswitch
-pkgver=0.15.0
+pkgver=0.15.2
 pkgrel=1
 pkgdesc="Modified version of xpra by Winswitch"
 arch=('i686' 'x86_64')
@@ -18,7 +18,7 @@ install=xpra-winswitch.install
 source=("https://xpra.org/src/xpra-$pkgver.tar.xz"
         "xpra-winswitch.install"
         'xpra@.service')
-sha256sums=('bfa12806b245697b799a157f7882d0fa6abcb242a9937c3b0837cc779c0c519c'
+sha256sums=('30a123cf6b9a6db69de555e45482fc9311fc5d55a791e5f210c4c636947a4a33'
             '1b1f8c58e1e8e5aa9816bffb1611a8a704a482ddfe789512159d5727035468f0'
             'b882f72380ca6bdee9580e839440dd5bd3523b9db804095887127b9cce6cfaf2')
 
