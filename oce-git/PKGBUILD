@@ -10,7 +10,7 @@ pkgdesc="Open CASCADE community edition, 3D modeling & numerical simulation"
 arch=('i686' 'x86_64')
 url="http://www.opencascade.org"
 license=('custom')
-depends=(freeimage freetype2 mesa libgl glu 'libcl>=1.2' libx11 tk)
+depends=(freeimage freetype2 mesa libgl glu libcl libx11 tk)
 makedepends=(cmake git opencl-headers12)
 optdepends=(java-runtime)
 provides=("opencascade=6.8.0" 'oce')
