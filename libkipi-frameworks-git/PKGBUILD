@@ -1,23 +1,23 @@
 # Maintainer: Gustavo Alvarez <sl1pkn07@gmail.com>
 
 pkgname=libkipi-frameworks-git
-pkgver=5.0.0.r1103.1a65688
+pkgver=5.0.0.r1105.e87bb40
 pkgrel=1
-pkgdesc="A interface to use kipi-plugins from a KDE image management program like digiKam. KF5 Frameworks branch (GIT version)"
-url='http://www.digikam.org/sharedlibs'
+pkgdesc="A interface to use kipi-plugins from a KDE image management program like digiKam. KF5 Frameworks branch. (GIT version)"
 arch=('i686' 'x86_64')
+url='http://www.digikam.org/sharedlibs'
 license=('GPL' 'LGPL' 'FDL')
 depends=('kxmlgui' 'hicolor-icon-theme' 'hicolor-icon-theme')
-makedepends=('extra-cmake-modules' 'kdoctools' 'python' 'git')
+makedepends=('extra-cmake-modules' 'kdoctools' 'git' 'python' 'python')
 conflicts=('libkipi')
-source=("git://anongit.kde.org/libkipi#branch=frameworks")
+source=('git://anongit.kde.org/libkipi#branch=frameworks')
 sha1sums=('SKIP')
-install="libkipi-frameworks-git.install"
+install=libkipi-frameworks-git.install
 
 pkgver() {
   cd libkipi
-  _ver="$(cat CMakeLists.txt | grep -e KIPI_LIB_MAJOR_VERSION -e KIPI_LIB_MINOR_VERSION -e KIPI_LIB_PATCH_VERSION | head -n3 | cut -d '"' -f2)"
-  echo "$(echo ${_ver} | tr ' ' .).r$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+  _ver="$(cat CMakeLists.txt | grep -m3 -e _LIB_MAJOR_VERSION -e _LIB_MINOR_VERSION -e _LIB_PATCH_VERSION | cut -d '"' -f2 | paste -sd'.')"
+  echo "${_ver}.r$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
 }
 
 prepare() {
@@ -38,4 +38,3 @@ build() {
 package() {
   make -C build DESTDIR="${pkgdir}" install
 }
-
