@@ -1,7 +1,7 @@
 # Maintainer: Adam Reichold <adam.reichold@t-online.de>
 
 pkgname=qpdfview
-pkgver=0.4.14
+pkgver=0.4.15
 pkgrel=1
 pkgdesc='A tabbed PDF viewer using the poppler library.'
 arch=('i686' 'x86_64')
@@ -12,7 +12,7 @@ optdepends=('libspectre: for PostScript support (required at build time)' 'djvul
 makedepends=('qt5-tools')
 install='qpdfview.install'
 source=("http://launchpad.net/$pkgname/trunk/$pkgver/+download/$pkgname-$pkgver.tar.gz")
-md5sums=('f87802101e2a888f86b45ee28b802d2f')
+md5sums=('d7e4066f9062a00380e9aa78c12a882e')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"

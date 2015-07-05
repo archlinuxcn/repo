@@ -6,7 +6,7 @@
 # Contributor: Mathias R. <pu154r@overlinux.org>
 pkgname=xrdp
 pkgver=0.8.0
-pkgrel=2
+pkgrel=3
 pkgdesc="An open source remote desktop protocol (RDP) server"
 url="http://xrdp.sourceforge.net/"
 arch=('i686' 'x86_64' 'armv6h')
@@ -40,7 +40,7 @@ build() {
               --sysconfdir=/etc \
               --localstatedir=/var \
               --sbindir=/usr/bin \
-              --with-systemdsystemdunitdir=/usr/lib/systemd/system \
+              --with-systemdsystemunitdir=/usr/lib/systemd/system \
               --enable-jpeg \
               --enable-simplesound \
               --enable-fuse \

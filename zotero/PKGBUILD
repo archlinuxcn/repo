@@ -2,7 +2,7 @@
 # Maintainer: Juanma Hernandez <juanmah@gmail.com>
 
 pkgname=zotero
-pkgver=4.0.26.3
+pkgver=4.0.27
 pkgrel=1
 pkgdesc="Zotero Standalone. Is a free, easy-to-use tool to help you collect, organize, cite, and share your research sources."
 arch=('i686' 'x86_64')
@@ -12,11 +12,11 @@ depends=('dbus-glib' 'alsa-lib' 'gtk2' 'gcc-libs' 'nss')
 if [[ $CARCH == "x86_64" ]]
 then
   _arch=x86_64
-  md5sums=('d46e52c7c4952aa97b2f27cebb462247'
+  md5sums=('0888be82c7fb690e0965135742b3d7f9'
            'f227abe95940abd63367716928c6e379')
 else
   _arch=i686
-  md5sums=('ea0d2b7151e9b610651d3a8fe7c1f1bd'
+  md5sums=('44d385a903b40625496600f22ac6e920'
            'f227abe95940abd63367716928c6e379')
 fi
 install='zotero.install'

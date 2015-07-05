@@ -1,13 +1,15 @@
 # Original maintainer: td123 <gostrc at gmail.com>
 # Previous maintainer: phoenixlzx < phoenixlzx at phoenixsec.org >
-# Maintaner: Vorbote
+# Maintaner: See AUR interface of current maintainer.
 
 # This PKGBUILD is provided to you under the terms of the 
 # UNLICENSE <http://unlicense.org/>
 
 
 post_install() {
-  /usr/bin/gconfpkg --install "vuze"
+  if [[ -x /usr/bin/gconfpkg ]]; then
+    /usr/bin/gconfpkg --install "vuze"
+  fi
   update-desktop-database -q
   ln -s /usr/bin/vuze /usr/bin/azureus
 }

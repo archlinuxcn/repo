@@ -1,0 +1,33 @@
+# Maintainer: Bharani Deepan <bharanideepan at_ gmail >
+pkgname=dmenu-xft
+pkgver=4.5
+pkgrel=5
+pkgdesc="Dynamic X menu - with xft support"
+url="http://tools.suckless.org/dmenu/"
+arch=('any')
+license=('MIT')
+depends=('sh' 'libxinerama' 'libxft')
+conflicts=('dmenu')
+provides=('dmenu')
+source=(http://dl.suckless.org/tools/dmenu-$pkgver.tar.gz
+        dmenu-4.5-xft.diff
+        break-fix.diff)
+sha256sums=('082cd698d82125ca0b3989006fb84ac4675c2a5585bf5bb8af0ea09cfb95a850'
+            '2bb738db3c4ad2e2841db17f6bfd748eba957f0c147059966d85b94c2b152389'
+            '4c14ff3bc6bd6f4b1987c244bb3359beb716dab441088a1ab8fff81285636608')
+prepare() {
+	cd $srcdir/dmenu-$pkgver
+	patch -p1 < ../dmenu-$pkgver-xft.diff
+	patch -p1 < ../break-fix.diff
+}
+build() {
+	cd $srcdir/dmenu-$pkgver
+	make
+}
+package()
+{
+    cd "$srcdir/dmenu-$pkgver"
+    make DESTDIR=$pkgdir PREFIX=/usr install
+    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+}
