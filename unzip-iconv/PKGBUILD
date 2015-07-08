@@ -1,51 +1,61 @@
-# Maintainer: Procyon
-# Contributor: Thayer Williams <thayer@archlinux.org>
+# $Id$
+# Maintainer: Gaetan Bisson <bisson@archlinux.org>
 # Contributor: Douglas Soares de Andrade <douglas@archlinux.org>
 # Contributor: Robson Peixoto
-# Contributor: shiracha
 
 pkgname=unzip-iconv
+_pkgname=unzip
 pkgver=6.0
-pkgrel=2
+_pkgver=${pkgver/./}
+pkgrel=10
 pkgdesc="Unpacks .zip archives such as those made by PKZIP. With iconv patch for -O / -I goodness."
+url='http://www.info-zip.org/UnZip.html'
 arch=('i686' 'x86_64')
-url="http://www.info-zip.org/"
 license=('custom')
-depends=('bzip2' 'bash')
 provides=('unzip')
 conflicts=('unzip')
-source=('http://downloads.sourceforge.net/infozip/unzip60.tar.gz'
-	'unzip60-alt-iconv-utf8.patch')
-md5sums=('62b490407489521db863b523a7f86375'
-	 '4dcfb2084e9db5a3f411f470d92ab2a4')
+source=("http://downloads.sourceforge.net/infozip/$_pkgname${_pkgver}.tar.gz"
+        unzip60-alt-iconv-utf8.patch
+        'overflow-fsize.patch'
+        'cve20149636.patch'
+        'test_compr_eb.patch'
+        'getZip64Data.patch'
+        'crc32.patch')
+sha1sums=('abf7de8a4018a983590ed6f5cbd990d4740f8a22'
+            '7cb046b09becd96a3901b8ac35f77741695c4a8a'
+          '2852ce1a9db8d646516f8828436a44d34785a0b3'
+          'e8c0bc17c63eeed97ad62b86845d75c849bcf4f8'
+          '614c3e7fa7d6da7c60ea2aa79e36f4cbd17c3824'
+          '691d0751bf0bc98cf9f9889dee39baccabefdc4d'
+          '82c9fe9172779a0ee92a187d544e74e8f512b013')
+
+prepare() {
+	cd "${srcdir}/$_pkgname${_pkgver}"
+	sed -i "/MANDIR =/s#)/#)/share/#" unix/Makefile
+	patch -p1 -i ../overflow-fsize.patch #FS#44171
+	patch -p1 -i ../cve20149636.patch #FS#44171
+	patch -i ../test_compr_eb.patch # FS#43391
+	patch -i ../getZip64Data.patch # FS#43300
+	patch -i ../crc32.patch # FS#43300
+	patch -Np1 -i "${srcdir}"/unzip60-alt-iconv-utf8.patch
+}
 
 build() {
-  cd "${srcdir}"/unzip${pkgver/./}
+	cd "${srcdir}/$_pkgname${_pkgver}"
 
-  # iconv patch
-  patch -Np1 -i "${srcdir}"/unzip60-alt-iconv-utf8.patch
+	# DEFINES, make, and install args from Debian
+	DEFINES='-DACORN_FTYPE_NFS -DWILD_STOP_AT_DIR -DLARGE_FILE_SUPPORT \
+		-DUNICODE_SUPPORT -DUNICODE_WCHAR -DUTF8_MAYBE_NATIVE -DNO_LCHMOD \
+		-DDATE_FORMAT=DF_YMD -DUSE_BZIP2 -DNOMEMCPY -DNO_WORKING_ISPRINT'
 
-  # set CFLAGS -- from Debian
-  export CFLAGS="$CFLAGS -D_FILE_OFFSET_BITS=64 -DACORN_FTYPE_NFS \
-  -DWILD_STOP_AT_DIR -DLARGE_FILE_SUPPORT -DUNICODE_SUPPORT \
-  -DUNICODE_WCHAR -DUTF8_MAYBE_NATIVE -DNO_LCHMOD -DDATE_FORMAT=DF_YMD \
-  -DUSE_BZIP2 -DNATIVE"
-
-  # make -- from Debian
-  make -f unix/Makefile LOCAL_UNZIP="$CFLAGS" prefix=/usr LF2="" \
-  D_USE_BZ2=-DUSE_BZIP2 L_BZ2=-lbz2 unzips
-  }
+	make -f unix/Makefile prefix=/usr \
+		D_USE_BZ2=-DUSE_BZIP2 L_BZ2=-lbz2 \
+		LF2="$LDFLAGS" CF="$CFLAGS $CPPFLAGS -I. $DEFINES" \
+		unzips
+}
 
 package() {
-  cd "${srcdir}"/unzip${pkgver/./}
-
-  # install -- from Debian
-  make -f unix/Makefile prefix="${pkgdir}"/usr INSTALL_PROGRAM="install" install
-
-  # install the license file
-  install -Dm644 LICENSE "${pkgdir}"/usr/share/licenses/unzip/LICENSE
-
-  # fix manpage location
-  mkdir -p "${pkgdir}"/usr/share
-  mv "${pkgdir}"/usr/man "${pkgdir}"/usr/share/
+	cd "${srcdir}/$_pkgname${_pkgver}"
+	make -f unix/Makefile prefix="${pkgdir}"/usr install
+	install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/$_pkgname/LICENSE"
 }
