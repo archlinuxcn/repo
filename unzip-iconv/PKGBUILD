@@ -15,14 +15,14 @@ license=('custom')
 provides=('unzip')
 conflicts=('unzip')
 source=("http://downloads.sourceforge.net/infozip/$_pkgname${_pkgver}.tar.gz"
-        unzip60-alt-iconv-utf8.patch
+        'unzip60-alt-iconv-utf8.patch'
         'overflow-fsize.patch'
         'cve20149636.patch'
         'test_compr_eb.patch'
         'getZip64Data.patch'
         'crc32.patch')
 sha1sums=('abf7de8a4018a983590ed6f5cbd990d4740f8a22'
-            '7cb046b09becd96a3901b8ac35f77741695c4a8a'
+          '7cb046b09becd96a3901b8ac35f77741695c4a8a'
           '2852ce1a9db8d646516f8828436a44d34785a0b3'
           'e8c0bc17c63eeed97ad62b86845d75c849bcf4f8'
           '614c3e7fa7d6da7c60ea2aa79e36f4cbd17c3824'
