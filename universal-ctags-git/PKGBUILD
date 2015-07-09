@@ -1,0 +1,44 @@
+# Maintainer: Stephen Zhang <echo 'moc tod liamg ta nymkrsz'|rev>
+# Maintainer: Youmu <condy0919 at gmail dot com>
+
+pkgname=universal-ctags-git
+pkgver=r2364.72f2408
+pkgrel=1
+pkgdesc="multilanguage reimplementation of the Unix ctags utility"
+arch=('x86_64' 'i686')
+url="http://ctags.io/"
+license=('GPL')
+depends=('bash')
+makedepends=('git')
+provides=('ctags')
+conflicts=('ctags')
+source=("git://github.com/universal-ctags/ctags.git")
+md5sums=('SKIP')
+
+_gitname=ctags
+
+pkgver() {
+  cd "$srcdir/$_gitname"
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+  cd "$srcdir"
+
+  rm -rf "$srcdir/$_gitname-build"
+  git clone "$srcdir/$_gitname" "$srcdir/$_gitname-build"
+  cd "$srcdir/$_gitname-build"
+
+  autoreconf -vfi
+  ./configure --prefix=/usr \
+    --libexecdir=/usr/lib \
+    --sysconfdir=/etc
+  make
+}
+
+package() {
+  cd "$srcdir/$_gitname-build"
+  make DESTDIR="$pkgdir/" install
+}
+
+# vim:set ts=2 sw=2 et:
