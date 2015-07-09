@@ -1,0 +1,38 @@
+--- include/libudffs.h	2004-02-23 04:33:11.000000000 +0100
++++ include/libudffs.h	2015-07-07 12:52:45.169862003 +0200
+@@ -169,8 +169,8 @@
+ struct udf_data *alloc_data(void *, int);
+ 
+ /* desc.c */
+-inline struct impUseVolDescImpUse *query_iuvdiu(struct udf_disc *);
+-inline struct logicalVolIntegrityDescImpUse *query_lvidiu(struct udf_disc *);
++struct impUseVolDescImpUse *query_iuvdiu(struct udf_disc *);
++struct logicalVolIntegrityDescImpUse *query_lvidiu(struct udf_disc *);
+ 
+ /* file.c */
+ tag query_tag(struct udf_disc *, struct udf_extent *, struct udf_desc *, uint16_t);
+--- include/udf_endian.h	2002-11-26 08:18:51.000000000 +0100
++++ include/udf_endian.h	2015-07-07 12:53:19.751141862 +0200
+@@ -24,6 +24,7 @@
+ #define __UDF_ENDIAN_H
+ 
+ #include "bswap.h"
++#include "string.h"
+ 
+ static inline lb_addr lelb_to_cpu(lb_addr in)
+ {
+--- wrudf/wrudf.h	2002-11-26 08:18:51.000000000 +0100
++++ wrudf/wrudf.h	2015-07-07 12:56:31.074892197 +0200
+@@ -23,9 +23,12 @@
+ #include <sys/time.h>
+ #include <time.h>
+ #include <stdint.h>
++#include <string.h>
++#include <stdlib.h>
+ 
+ #include "ecma_167.h"
+ #include "osta_udf.h"
++#include "libudffs.h"
+ 
+ struct generic_desc
+ {
