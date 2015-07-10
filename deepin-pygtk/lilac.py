@@ -15,6 +15,7 @@ def pre_build():
     elif 'pkgdesc' in line:
         print('pkgdesc="Python bindings for the GTK widget set - with patches to fix memory leak for deepin-ui"')
     elif 'optdepends=' in line:
+        print(line)
         print('provides=("pygtk=$pkgver")')
         print('conflicts=("pygtk")')
     elif 'source=' in line:
