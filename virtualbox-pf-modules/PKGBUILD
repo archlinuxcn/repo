@@ -6,15 +6,15 @@
 pkgbase=(virtualbox-pf-modules)
 pkgname=(virtualbox-pf-host-modules virtualbox-pf-guest-modules)
 pkgver=4.3.28
-pkgrel=3
-goodver=4.0
-badver=4.1
+pkgrel=4
+goodver=4.1
+badver=4.2
 arch=('i686' 'x86_64')
 url='http://virtualbox.org'
 license=('GPL')
 makedepends=('linux-pf-headers' "virtualbox-host-dkms>=$pkgver" "virtualbox-guest-dkms>=$pkgver" 'dkms')
 
-_extramodules=extramodules-4.0-pf
+_extramodules=extramodules-$goodver-pf
 _kernver="$(cat /usr/lib/modules/${_extramodules}/version)"
 
 build() {
