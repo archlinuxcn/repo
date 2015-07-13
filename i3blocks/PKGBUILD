@@ -4,9 +4,9 @@
 
 pkgname=i3blocks
 pkgver=1.4
-pkgrel=1
+pkgrel=2
 pkgdesc='Define blocks for your i3bar status line'
-arch=('any')
+arch=('i686' 'x86_64')
 group=('i3')
 url="https://github.com/vivien/i3blocks"
 license=('GPL3')
@@ -25,5 +25,5 @@ build () {
 
 package () {
   cd "$pkgname-$pkgver"
-  make VERSION="$pkgver" PREFIX=/usr DESTDIR="$pkgdir" install
+  make VERSION="$pkgver" PREFIX=/usr LIBEXECDIR=/usr/lib DESTDIR="$pkgdir" install
 }
