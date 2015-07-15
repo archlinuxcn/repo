@@ -12,7 +12,6 @@ depends=('python')
 makedepends=('python-setuptools')
 optdepends=(
 	'python-psycopg2: for PostgreSQL database support'
-	'mysql-python: for MySQL database support'
 	'python-pymysql: for MySQL database support'
 	)
 source=(http://pypi.python.org/packages/source/p/peewee/peewee-$pkgver.tar.gz)
@@ -29,5 +28,4 @@ package() {
   install -D -m644 LICENSE $pkgdir/usr/share/licenses/$pkgname/COPYING
   install -D -m644 README.rst $pkgdir/usr/share/$pkgname/README.rst
   install -D -m644 TODO.rst $pkgdir/usr/share/$pkgname/TODO.rst
-  cd $pkgdir/usr/bin
 }

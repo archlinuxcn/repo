@@ -13,9 +13,12 @@ makedepends=('unzip' 'python-distribute')
 source=("http://pypi.python.org/packages/source/W/WTForms/WTForms-${pkgver}.zip")
 md5sums=('613cf723ab40537705bec02733c78d95')
 
+build() {
+  cd $srcdir/peewee-$pkgver
+  python setup.py build
+}
+
 package() {
     cd ${srcdir}/WTForms-${pkgver}
     python setup.py install --root=${pkgdir}/ --optimize=1
-}
-
 }

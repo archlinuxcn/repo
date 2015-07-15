@@ -1,21 +1,15 @@
 #!/usr/bin/env python3
-#
-# This file is for pypi package building.
-#
-# You don't need to edit most things except 'depends=[]'.
-#
-# It is too simple to say something more :)
-#
 
 from lilaclib import *
 
 build_prefix = 'extra-x86_64'
 
-def pre_build():
-  pypi_pre_build(depends=['setuptools', 'wtforms', 'peewee'])
+pre_build = vcs_update
+depends = ['python-wtforms', 'python-peewee']
 
 def post_build():
-  pypi_post_build()
+  git_add_files('PKGBUILD')
+  git_commit()
 
 if __name__ == '__main__':
   single_main()
