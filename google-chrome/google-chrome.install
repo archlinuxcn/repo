@@ -15,20 +15,20 @@ yellow="${bold}$(tput setaf 3)"
 _update() {
     msg_blue "Updating desktop MIME database..."
     update-desktop-database -q
+    
     msg_blue "Updating icon cache.."
     xdg-icon-resource forceupdate --theme hicolor &>/dev/null
 }
 
 post_install() {
     _update
+    
     note "The launcher is called: 'google-chrome-stable'"
 }
-
 
 post_upgrade() {
     post_install
 }
-
 
 post_remove() {
     _update
