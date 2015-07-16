@@ -5,13 +5,13 @@ pkgname=telegramqml
 _pkgname=TelegramQML
 pkgver=0.8.0
 _pkgtar=$pkgver-stable
-pkgrel=1
+pkgrel=2
 pkgdesc="Telegram API tools for QtQml and Qml"
 arch=('i686' 'x86_64')
 url="https://github.com/Aseman-Land/TelegramQML"
 license=('GPL')
-depends=('qt5-quick1' 'qt5-webengine' 'qt5-imageformats' 'qt5-graphicaleffects' 
-         'qt5-quickcontrols' 'libqtelegram-ae>=2:0.5.0')
+depends=('qt5-quick1' 'qt5-webkit>=5.5' 'qt5-imageformats' 'qt5-graphicaleffects'
+         'qt5-quickcontrols' 'libqtelegram-ae>=2:5.0')
 source=("https://github.com/Aseman-Land/TelegramQML/archive/v$_pkgtar.tar.gz")
 sha256sums=('38d4cd7cc26f6ea6852c94bb0c9b4648fbeef7db281053a99f2a2bd3327082d0')
 
