@@ -1,7 +1,7 @@
 # Maintainer: John Jenkins <twodopeshaggy@gmail.com>
 
 pkgname=drive
-pkgver=0.2.5
+pkgver=0.2.6
 pkgrel=1
 pkgdesc="Pull or push Google Drive files"
 arch=('x86_64' 'i686' 'arm' 'armv6h' 'armv7h')
@@ -13,7 +13,7 @@ conflicts=('drive-git')
 options=('!strip' '!emptydirs')
 install=$pkgname.install
 source=("https://github.com/odeke-em/$pkgname/archive/v$pkgver.tar.gz")
-sha256sums=('54b3f188ff682ba5f246f472183e01630316ee0372f1cfe08e5cc7db540c21e1')
+sha256sums=('f342da13797f039472586e0474997279318a7e80d34fb8de32b2e7a5f44a06c6')
 
 prepare() {
  mkdir -p "$srcdir/go"
