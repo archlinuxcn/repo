@@ -1,0 +1,26 @@
+# Maintainer: inknml <i [at] inkn [dot] ml>
+# Submitter: inknml <i [at] inkn [dot] ml>
+
+pkgname=python-flask-peewee
+pkgver=0.6.6
+pkgrel=1
+pkgdesc="Peewee integration for flask"
+arch=(any)
+url="http://pypi.python.org/pypi/flask-peewee"
+license=("BSD")
+depends=('python' 'python-flask' 'python-peewee' 'python-wtf-peewee')
+source=("http://pypi.python.org/packages/source/f/flask-peewee/flask-peewee-$pkgver.tar.gz")
+makedepends=('python-setuptools')
+md5sums=('823c81242bc1826a947f774a84788b1b')
+
+build() {
+  cd $srcdir/flask-peewee-$pkgver
+  python setup.py build
+}
+
+package() {
+  cd $srcdir/flask-peewee-$pkgver
+  python setup.py install --root="$pkgdir" --optimize=1
+
+  install -D -m644 $srcdir/flask-peewee-$pkgver/LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

@@ -9,7 +9,6 @@ pkgdesc='Broadcom 802.11abgn hybrid Linux networking device driver'
 url='http://www.broadcom.com/support/802.11/linux_sta.php'
 arch=('i686' 'x86_64')
 license=('custom')
-depends=('linux')
 makedepends=('linux-headers')
 [[ $CARCH = x86_64 ]] && _arch=_64 || _arch=
 source=("http://www.broadcom.com/docs/linux_sta/hybrid-v35${_arch}-nodebug-pcoem-${pkgver//./_}.tar.gz"

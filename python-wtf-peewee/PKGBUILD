@@ -1,0 +1,24 @@
+# Maintainer: inknml <i [at] inkn [dot] ml>
+# Submitter: inknml <i [at] inkn [dot] ml>
+
+pkgname=python-wtf-peewee
+pkgver=0.2.3
+pkgrel=1
+pkgdesc="WTForms integration for peewee models"
+arch=(any)
+url="http://pypi.python.org/pypi/wtf-peewee"
+license=("MIT")
+depends=("python" "python-peewee" "python-wtforms")
+makedepends=("python-distribute")
+source=("http://pypi.python.org/packages/source/w/wtf-peewee/wtf-peewee-$pkgver.tar.gz")
+md5sums=('80fefb50c9e8c1c5ce5cfadf8eecb4cc')
+
+build() {
+  cd "$srcdir/wtf-peewee-$pkgver"
+  python setup.py build
+}
+
+package() {
+  cd "$srcdir/wtf-peewee-$pkgver"
+  python setup.py install --root="$pkgdir" --optimize=1
+}
