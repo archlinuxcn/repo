@@ -1,31 +1,24 @@
-# Maintainer: inknml <i [at] inkn [dot] ml>
-# Submitter: inknml <i [at] inkn [dot] ml>
-
-pkgname=python-peewee
+_pkgname=peewee
+pkgname=python-$_pkgname
 pkgver=2.6.3
 pkgrel=1
 pkgdesc="a little orm"
-url="https://pypi.python.org/pypi/peewee/"
 arch=('any')
-license=('MIT')
-depends=('python')
-makedepends=('python-setuptools')
-optdepends=(
-	'python-psycopg2: for PostgreSQL database support'
-	'python-pymysql: for MySQL database support'
-	)
-source=(http://pypi.python.org/packages/source/p/peewee/peewee-$pkgver.tar.gz)
+url="http://github.com/coleifer/peewee/"
+license=('UNKNOWN')
+depends=('python' 'python-setuptools')
+source=('https://pypi.python.org/packages/source/p/peewee/peewee-2.6.3.tar.gz')
 md5sums=('663465329a123060e4af4392f8a7077f')
 
 build() {
-  cd $srcdir/peewee-$pkgver
-  python setup.py build
+  cd "$srcdir/$_pkgname-$pkgver"
+  python3 setup.py build
 }
 
 package() {
-  cd $srcdir/peewee-$pkgver
-  python setup.py install --root=$pkgdir --optimize=1
-  install -D -m644 LICENSE $pkgdir/usr/share/licenses/$pkgname/COPYING
-  install -D -m644 README.rst $pkgdir/usr/share/$pkgname/README.rst
-  install -D -m644 TODO.rst $pkgdir/usr/share/$pkgname/TODO.rst
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 }
+
+# vim:set sw=2 et:
