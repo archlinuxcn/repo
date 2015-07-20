@@ -3,7 +3,7 @@
 # Contributer: Eric Belanger <eric@archlinux.org>
 
 pkgname=xscreensaver-arch-logo
-pkgver=5.32
+pkgver=5.33
 pkgrel=1
 pkgdesc="Screen saver and locker for the X Window System with Arch Linux branding"
 arch=('i686' 'x86_64')
@@ -18,7 +18,7 @@ backup=('etc/pam.d/xscreensaver')
 source=(http://www.jwz.org/xscreensaver/${pkgname%%-*}-${pkgver}.tar.gz
 xscreensaver-add-electricsheep.diff LICENSE
 logo-50.xpm logo-180.xpm logo-50.png logo-180.png)
-sha256sums=('4252a6079d2d2f5b342e8bdd172cbad5f0af73daf4e412b61a68344d91ca93bd'
+sha256sums=('d4a0c1619219f2843fa8b68d4ae337ab0e9fcb79a6d231540adeb16b3d313f4d'
             'c78db4518d1e439811e177638015c7152c5714f13d1cdb32e5d1f53695c52fec'
             '164903ea70ff499c32a54a940d08cd0510893decbabed7707f6c29a5887ec730'
             '82366926a2a81bd08459327936ba144e8b3ea5ee4a386c268bd898e1791ab1a0'
