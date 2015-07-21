@@ -6,16 +6,17 @@
 # Contributor in Chakra: totoloco <totoloco@gmx.com>
 
 pkgname=cutegram-git
-pkgver=2.5.0.stable.r2.g865c835
+pkgver=2.5.0.stable.r14.g2083574
 pkgrel=1
 pkgdesc="Telegram client by Aseman Land"
 arch=('i686' 'x86_64')
 url="http://aseman.co/cutegram"
 license=('GPL')
 depends=('qt5-base' 'qt5-declarative' 'qt5-multimedia' 'qt5-quick1'
-         'qt5-webengine' 'qt5-imageformats' 'qt5-graphicaleffects' 
-         'gstreamer0.10-base-plugins' 'gstreamer0.10-good-plugins'
+         'qt5-webkit>=5.5' 'qt5-imageformats' 'qt5-graphicaleffects'
          'qt5-quickcontrols' 'telegramqml')
+optdepends=('gst-plugins-good: for audio and notification support'
+            'gst-plugins-bad: for audio support')
 makedepends=('git')
 source=("${pkgname}"::"git+https://github.com/Aseman-Land/Cutegram.git")
 md5sums=('SKIP')
@@ -35,7 +36,7 @@ prepare() {
 
 build() {
   cd "${srcdir}/${pkgname}/build"
-  qmake-qt5 -r .. PREFIX=/usr DEFINES+=WEBENGINE_ASEMAN_WEBGRABBER
+  qmake-qt5 -r .. PREFIX=/usr
   make
 }
 
