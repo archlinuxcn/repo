@@ -5,7 +5,7 @@ from lilaclib import *
 build_prefix = 'extra-x86_64'
 
 def pre_build():
-  pypi_pre_build(depends=['python-flask', 'python-WTForms', 'python-peewee', 'python-wtf-peewee'])
+  pypi_pre_build(depends=['python-flask', 'python-wtforms', 'python-peewee', 'python-wtf-peewee'])
 
 def post_build():
   pypi_post_build()
