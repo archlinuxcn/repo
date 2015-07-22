@@ -2,22 +2,23 @@
 
 _pkgname=cld2
 _reponame=chromium-compact-language-detector
-pkgname=python-${_pkgname}-hg
-pkgver=90.2b2f08a61f14
+pkgname=python-${_pkgname}-git
+pkgver=20141111
 pkgrel=1
 pkgdesc='C++ library and Python bindings for detecting language from UTF8 text, extracted from the Chromium browser'
 arch=('i686' 'x86_64')
-url='https://code.google.com/p/chromium-compact-language-detector/'
+url='https://github.com/mikemccand/chromium-compact-language-detector'
 license=('BSD3')
 depends=('cld2-svn' 'python')
-makedepends=('mercurial')
+makedepends=('git')
 provides=("python-${_pkgname}=0.2")
-source=('hg+https://code.google.com/p/chromium-compact-language-detector/')
+replaces=('python-cld2-hg')
+source=('git+https://github.com/mikemccand/chromium-compact-language-detector')
 md5sums=('SKIP')
 
 pkgver() {
   cd "$srcdir/$_reponame"
-  echo $(hg identify -n).$(hg identify -i)
+  git log -1 --pretty='%cd' --date=short | tr -d '-'
 }
 
 build() {

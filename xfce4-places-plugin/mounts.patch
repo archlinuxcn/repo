@@ -1,0 +1,12 @@
+diff -Nur original/panel-plugin/model_volumes.c modified/panel-plugin/model_volumes.c
+--- original/panel-plugin/model_volumes.c	2013-12-28 11:30:18.000000000 +0000
++++ modified/panel-plugin/model_volumes.c	2015-06-25 09:59:34.324437370 +0100
+@@ -380,7 +380,7 @@
+         g_object_unref(mount);
+     }
+ 
+-    return has_media && !is_shadowed;
++    return /*has_media &&*/ !is_shadowed;
+ }
+ 
+ static inline gboolean

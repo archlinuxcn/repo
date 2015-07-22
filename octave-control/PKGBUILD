@@ -8,7 +8,7 @@
 
 _pack=control
 pkgname=octave-$_pack
-pkgver=2.8.2
+pkgver=2.8.3
 pkgrel=1
 pkgdesc="Computer-Aided Control System Design (CACSD) Tools for GNU Octave, based on the proven SLICOT Library"
 arch=(any)
@@ -24,7 +24,7 @@ install=$pkgname.install
 _archive=$_pack-$pkgver.tar.gz
 source=("http://downloads.sourceforge.net/octave/$_archive")
 noextract=("$_archive")
-md5sums=('4534af51f913f70dd71b79c88ffcd4a9')
+md5sums=('ed35d0f4c7633cd2ce4f85dcf1ed0081')
 
 _install_dir() {
 	src=$1

@@ -11,6 +11,7 @@ arch=('i686' 'x86_64')
 license=('LGPL')
 depends=('libglade' 'python2-cairo' 'pygobject')
 makedepends=('python2-numpy' 'pygobject2-devel')
+optdepends=('python2-numpy')
 provides=("pygtk=$pkgver")
 conflicts=("pygtk")
 url="http://www.pygtk.org/"

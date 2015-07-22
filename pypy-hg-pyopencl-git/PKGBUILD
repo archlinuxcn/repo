@@ -11,7 +11,7 @@ BUILD_PYPY3=0
 
 pkgbase=${_pypyname}-pyopencl-git
 pkgname=(${_pypyname}-pyopencl-git)
-makedepends=("pypy-${_pypyabi}" 'pypy-setuptools' 'libcl>=1.2'
+makedepends=("pypy-${_pypyabi}" 'pypy-setuptools' 'libcl'
              'opencl-headers>=2:1.2' 'mesa' 'pypy-mako'
              "pypy-${_pypyabi}-numpy" "pypy-pytools" 'git')
 if ((BUILD_PYPY3)); then
@@ -67,7 +67,7 @@ build() {
 }
 
 package_pypy3-hg-pyopencl-git() {
-  depends=('libcl>=1.2' 'mesa' "pypy3-${_pypy3abi}" 'gcc-libs'
+  depends=('libcl' 'mesa' "pypy3-${_pypy3abi}" 'gcc-libs'
            "pypy3-${_pypy3abi}-setuptools" "pypy3-${_pypy3abi}-mako"
            "pypy3-${_pypy3abi}-numpy" "pypy3-${_pypy3abi}-pytools")
   provides=(pypy3-pyopencl pypy3-${_pypy3abi}-pyopencl)
@@ -81,7 +81,7 @@ package_pypy3-hg-pyopencl-git() {
 }
 
 package_pypy-hg-pyopencl-git() {
-  depends=('libcl>=1.2' 'mesa' "pypy-${_pypyabi}" 'pypy-setuptools'
+  depends=('libcl' 'mesa' "pypy-${_pypyabi}" 'pypy-setuptools'
            'pypy-mako' "pypy-${_pypyabi}-numpy" "pypy-pytools" 'gcc-libs')
   provides=(pypy-pyopencl pypy-${_pypyabi}-pyopencl)
   conflicts=(pypy-pyopencl)

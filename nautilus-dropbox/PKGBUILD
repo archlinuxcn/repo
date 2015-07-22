@@ -6,7 +6,7 @@
 # Contributor: Gordin <9ordin @t gmail.com>
 
 pkgname=nautilus-dropbox
-pkgver=2.10.0
+pkgver=2015.02.12
 pkgrel=1
 pkgdesc="Dropbox for Linux - Nautilus extension"
 arch=('i686' 'x86_64')
@@ -17,7 +17,7 @@ makedepends=('python2-docutils' 'python2' 'pygtk' 'pkg-config')
 install=${pkgname}.install
 options=('!libtool' '!emptydirs')
 source=("https://linux.dropbox.com/packages/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('8fdaa58878cacebc00e84e4b89a8f823')
+md5sums=('bac2adbfc3bbcf1bb1cb28dcc975a090')
 
 build() {
   cd "${pkgname}-${pkgver}/"

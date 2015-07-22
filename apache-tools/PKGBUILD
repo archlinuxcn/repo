@@ -3,7 +3,7 @@
 # Contributor: Pavel Larev <pavel@larev.ws>
 
 pkgname=apache-tools
-pkgver=2.4.10
+pkgver=2.4.12
 pkgrel=1
 pkgdesc="Useful Apache tools - htdigest, htpasswd, ab, htdbm"
 arch=(i686 x86_64)
@@ -12,11 +12,11 @@ license=(Apache)
 depends=(apr-util pcre)
 conflicts=(apache)
 source=(http://www.apache.org/dist/httpd/httpd-$pkgver.tar.bz2
-    $pkgname-Makefile.patch)
-sha256sums=('176c4dac1a745f07b7b91e7f4fd48f9c48049fa6f088efe758d61d9738669c6a'
-    '2dc48d34773b0c873d10e3542f77a4f7b50d5fb9bd8c52e3bb28b76ff9587f3f')
-sha512sums=('e251f5b330da17a8920c589b9e0326d6dd45db28923167718db27b0af2edf769607e9ae6fbb859afbf0c345937fd59053423a2d74bd18ff2272a0f6a19a6496f'
-    '6e068e7820e852c788a521ad28c367af4c1c22fded51ede7ae3f840a8a04737cfbe4503c2f3f899c89461d984007e84f80376b5a8a27c7eec8ec0fd78155c22b')
+        $pkgname-Makefile.patch)
+sha256sums=('ad6d39edfe4621d8cc9a2791f6f8d6876943a9da41ac8533d77407a2e630eae4'
+            '2dc48d34773b0c873d10e3542f77a4f7b50d5fb9bd8c52e3bb28b76ff9587f3f')
+sha512sums=('f69db14b421f0e1e4861fe4d8b652688d50ca9eb41c622242d11ae55687eb6c2142a8505a8c3fb6f2bd53167be535bc0a77ca1af97e0720930fc7f20f4c1f8e8'
+            '6e068e7820e852c788a521ad28c367af4c1c22fded51ede7ae3f840a8a04737cfbe4503c2f3f899c89461d984007e84f80376b5a8a27c7eec8ec0fd78155c22b')
 
 prepare() {
     cd httpd-$pkgver/

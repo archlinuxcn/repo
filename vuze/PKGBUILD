@@ -1,83 +1,73 @@
-# Original maintainer: td123 <gostrc AT gmail DOT com>
-# Previous maintainer: phoenixlzx < phoenixlzx AT phoenixsec DOT org >
-# See AUR interface for current maintainer.
-
-# This file is provided to you under the terms of the
-# UNLICENCE <http://unlicense.org/>
+# Maintainer: josephgbr <rffontenelle AT gmail DOT com>
+# Co-maintainer: Det <nimetonmaili gmail a-dot com>
+# Contributor: vorbote <palopezv AT gmail DOT com >
+# Contributor: td123 <gostrc AT gmail DOT com>
+# Contributor: phoenixlzx < phoenixlzx AT phoenixsec DOT org >
 
 pkgname=vuze
 pkgver=5.6.1.2
-pkgrel=2
+pkgrel=3
 _ver=${pkgver//./} 
-_extra="" # sometimes Azureus devs add letters at the end.
-pkgdesc="The java-based bittorrent kitchen-sink servlet."
-provides=("azureus")
+pkgdesc="A feature-rich Java-based BitTorrent client (previously called 'Azureus')"
 arch=('i686' 'x86_64')
-url="http://azureus.sourceforge.net/"
+url="http://sourceforge.net/projects/azureus/"
 license=('GPL')
-depends=('java-runtime' 'desktop-file-utils')
-makedepends=('unzip')
-install="$pkgname.install"
-options=(!strip)
-optdepends=(
-  'webkitgtk: For fully functional Vuze GUI. GTK3 based.'
-  'mldht: Talk DHT to uTorrent, Transmission, etc. Install with internal plugin manager. It autoupdates.'
-  'i2phelper: I2P support. Install with internal plugin manager. It autoupdates!'
-  )
-noextract=("Vuze_${_ver}${_extra}.jar") 
+depends=('desktop-file-utils' 'java-runtime')
+optdepends=('vuze-plugin-countrylocator: Country flags for the "Peers" tab'
+            'vuze-plugin-mldht: The alternative Distributed Hash Table implementation (DHT) used by µTorrent'
+            'xulrunner192: Needed for the channels GUI')
+options=('!strip')
+install=$pkgname.install
 source=("http://downloads.sourceforge.net/azureus/vuze/Vuze_${_ver}/Vuze_${_ver}_linux.tar.bz2")
-sha256sums=('66198316ec111cfb82e00f229d3f863a3a3716fa92241f1370e953cfc2e0fcdd')
+md5sums=('c20397aa00614ab8b271afef93c877bc')
 
 package() {
-  cd "$srcdir/$pkgname"
+  cd vuze
 
-  # Create target directories
-  install -d "$pkgdir/usr/bin"
-  install -d "$pkgdir/usr/lib/vuze"
-  install -d "$pkgdir/usr/share/vuze"
-  install -d "$pkgdir/usr/share/applications"
-  install -d "$pkgdir/usr/share/gconf/schemas"
-  install -d "$pkgdir/usr/share/pixmaps"
-  install -d "$pkgdir/usr/share/licenses/vuze"
+  msg2 "Creating directory structure..."
+  install -d "$pkgdir"/opt/vuze/
+  install -d "$pkgdir"/usr/bin/
+  install -d "$pkgdir"/usr/share/applications/
+  install -d "$pkgdir"/usr/share/licenses/vuze/
+  install -d "$pkgdir"/usr/share/pixmaps/
 
-  # Install desktop entries
-  install -m644 vuze.desktop      -t "$pkgdir/usr/share/applications"
+  msg2 "Moving stuff in place..."
+  # Launchers
+  mv vuze "$pkgdir"/usr/bin/vuze
+  ln -s vuze "$pkgdir"/usr/bin/azureus
 
-  # Install icons
-  install -pm644 vuze.png         -t "$pkgdir/usr/share/pixmaps"
-  install -pm644 vuze.torrent.png -t "$pkgdir/usr/share/pixmaps"
-  install -pm644 vuze.schemas     -t "$pkgdir/usr/share/gconf/schemas"
+  # swt.jar
+  case "$CARCH" in
+    i686)   mv swt/swt32.jar "$pkgdir"/opt/vuze/swt.jar ;;
+    x86_64) mv swt/swt64.jar "$pkgdir"/opt/vuze/swt.jar ;;
+  esac
 
-  # Add magnet mime-type to desktop file and fix exec invocation.
-  sed -i \
-   -e 's#\(x-bittorrent\)#\1;x-scheme-handler/magnet;#' \
-   -e 's#^\(Exec=vuze \)%f#\1%U#' \
-     "$pkgdir/usr/share/applications/vuze.desktop"
-  
-  # install SWT selecting build architecture.
-  if [[ $CARCH == i686 ]] ; then
-    install -pm644 swt/swt32.jar "$pkgdir/usr/lib/vuze/swt.jar"
-  elif [[ $CARCH == x86_64 ]] ; then
-    install -pm644 swt/swt64.jar "$pkgdir/usr/lib/vuze/swt.jar"
-  fi
+  # Icon and desktop 
+  mv vuze.png "$pkgdir"/usr/share/pixmaps/
+  mv vuze.desktop "$pkgdir"/usr/share/applications/
 
-  # install vuze
-  install -m755 vuze -t "$pkgdir/usr/bin"
+  # Licenses
+  mv GPL.txt      "$pkgdir"/usr/share/licenses/vuze/
+  mv GPLv3.txt    "$pkgdir"/usr/share/licenses/vuze/
+  mv LICENSES.txt "$pkgdir"/usr/share/licenses/vuze/
+  mv TOS.txt      "$pkgdir"/usr/share/licenses/vuze/
 
-  # Fix startup script: adjust internal directory name and make it work 
-  # with the new java-environment-common multiversions setup.
-  sed -i \
-    -e 's|#PROGRAM_DIR="/home/username/apps/azureus"|PROGRAM_DIR="/usr/lib/vuze"|' \
-    -e 's|JAVA_PROGRAM_DIR=""|JAVA_PROGRAM_DIR="$JAVA_HOME/bin/"|' \
-    "$pkgdir/usr/bin/vuze"
+  msg2 "Removing redundancies..."
+  rm -r swt/
+  rm    azureus
+  rm    installer.log
+  rm    README.txt
+  rm    vuze.schemas
 
-  # Install main jar.
-  install -pm644 Azureus2.jar -t "$pkgdir/usr/lib/vuze"
+  msg2 "Installing to /opt..."
+  mv * "$pkgdir"/opt/vuze/
 
-  # Install system-wide plugins
-  cp -a "$srcdir/$pkgname/plugins" "$pkgdir/usr/lib/vuze"
+  msg2 "Fixing paths"
+  sed 's|#PROGRAM_DIR=.*|PROGRAM_DIR="/opt/vuze"|' \
+      -i "$pkgdir"/usr/bin/vuze \
 
-  # install license
-  install -pm644 TOS.txt -t "$pkgdir/usr/share/licenses/vuze"
+  msg2 "Adding support for magnet links..."
+  sed -r -e 's|Exec=vuze %f|Exec=vuze %U|' \
+         -e 's|(x-bittorrent)|\1;x-scheme-handler/magnet;|' \
+      -i "$pkgdir"/usr/share/applications/vuze.desktop
 }
-

@@ -4,16 +4,16 @@
 # Contributor: Florian Pritz <bluewind at jabber dot ccc dot de>
 pkgname=wireshark-gtk2
 pkgbase=wireshark
-pkgver=1.12.5
-pkgrel=1
+pkgver=1.12.6
+pkgrel=2
 arch=('i686' 'x86_64')
 license=('GPL2')
 makedepends=('gtk2' 'krb5' 'libpcap' 'bash' 'gnutls' 'portaudio'
-             'lua' 'python' 'desktop-file-utils' 'hicolor-icon-theme')
+             'lua52' 'python' 'desktop-file-utils' 'hicolor-icon-theme')
 url='http://www.wireshark.org/'
 source=(http://www.wireshark.org/download/src/${pkgbase}-${pkgver}.tar.bz2
         configure-pixmap-fix.diff)
-sha1sums=('379686f0b6355ae2e6b3f7055578317a07ce5590'
+sha1sums=('5b592bd0389b76d3bdee6a7336e9492f8162c94d'
           'c383bad83442d75f44afe1737848b9dee4f35b8f')
 
 prepare() {

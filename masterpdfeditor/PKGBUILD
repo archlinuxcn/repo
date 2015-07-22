@@ -2,7 +2,7 @@
 # Contributor: Ferik <djferik at gmail dot com>
 
 pkgname=masterpdfeditor
-pkgver=3.2.11
+pkgver=3.2.81
 pkgrel=1
 pkgdesc="A complete solution for creation and editing PDF files. (Free for non-commercial use)"
 url="http://code-industry.net/free-pdf-editor.php"
@@ -12,12 +12,12 @@ depends=('qt4')
 install=${pkgname}.install
 
 source=(${pkgname}.desktop)
-source_i686=(http://code-industry.net/public/master-pdf-editor-${pkgver}_i386.tar.gz)
-source_x86_64=(http://code-industry.net/public/master-pdf-editor-${pkgver}_amd64.tar.gz)
+source_i686=(http://get.code-industry.net/public/master-pdf-editor-${pkgver}_i386.tar.gz)
+source_x86_64=(http://get.code-industry.net/public/master-pdf-editor-${pkgver}_amd64.tar.gz)
 
 sha256sums=('29218c206e5b78776bc3ec44a760773273274bb56baee5e19e06c3ec55db59fd')
-sha256sums_i686=('635e5bc246512bd87bf545ab6bf886c6b638c5bd00d5118f5fd89dd60f5a9069')
-sha256sums_x86_64=('f03226634de0b1544659478b175944dda3f26b78b67f4ffb1bc4def84c2215ca')
+sha256sums_i686=('24df764cc4191e23576fdc8ff5b07fe2a9dc37ab4b27a18b4099cbeb3f0813ec')
+sha256sums_x86_64=('42ff2a113ce31bb280f4b8ae8def74bdb73e86369bcde1bfefbd46e9593e4364')
 
 package() {
 	mkdir -p "${pkgdir}/opt/masterpdfeditor"

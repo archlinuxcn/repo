@@ -1,27 +1,25 @@
 # Maintainer: Marcin Kulik <m@ku1ik.com>
 
+_pkgname=asciinema
 pkgname=asciinema
 pkgver=<%= VERSION %>
-pkgrel=1
+pkgrel=2
 pkgdesc="Record and share your terminal sessions, the right way"
-arch=('x86_64' 'i686' 'arm')
 url="https://asciinema.org/"
 license=('GPLv3')
-if [ "$CARCH" = "i686" ]; then
-  _PKGARCH=386
-  sha1sums=('<%= SHA1_386 %>')
-elif [ "$CARCH" = "arm" ]; then
-  _PKGARCH=arm
-  sha1sums=('<%= SHA1_ARM %>')
-else
-  _PKGARCH=amd64
-  sha1sums=('<%= SHA1_AMD64 %>')
-fi
-source=("https://github.com/asciinema/asciinema/releases/download/v${pkgver}/${pkgname}-${pkgver}-linux-${_PKGARCH}.tar.gz")
+arch=('x86_64' 'i686' 'arm')
+source=("https://github.com/asciinema/asciinema/archive/v${pkgver}.tar.gz")
+sha1sums=('c07d84bd0df57cae873bacec1a5c41b9ea5786bc')
+makedepends=('make' 'go')
+
+build() {
+  mkdir -p "${srcdir}/go/src/github.com/asciinema"
+  ln -nfs "${srcdir}/${_pkgname}-${pkgver}" "${srcdir}/go/src/github.com/asciinema/asciinema"
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  GOPATH="${srcdir}/go" go build -o bin/asciinema
+}
 
 package() {
-  cd ${pkgname}-${pkgver}-linux-${_PKGARCH}
-
-  install -Dm755 ${pkgname} "${pkgdir}/usr/bin/${pkgname}"
-  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  PREFIX=${pkgdir}/usr make install
 }

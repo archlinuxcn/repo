@@ -1,19 +1,18 @@
-# Maintainer: Gordin <9ordin @t gmail dot com>
+# Maintainer: Vlad M. <vlad@archlinux.net>
+# Contributor: Gordin <9ordin @t gmail dot com>
 
 pkgname=android-sdk-platform-tools
 pkgver=r22
-pkgrel=2
+pkgrel=3
 pkgdesc='Platform-Tools for Google Android SDK (adb and fastboot)'
 arch=('i686' 'x86_64')
 url="http://developer.android.com/sdk/index.html"
 license=('custom')
-depends=('gcc-libs' 'zlib' 'ncurses')
-if [[ $CARCH = x86_64 ]]; then
-  depends=('lib32-gcc-libs' 'lib32-zlib' 'lib32-ncurses')
-fi
-provides=('adb')
+depends_i686=('gcc-libs' 'zlib' 'ncurses')
+depends_x86_64=('lib32-gcc-libs' 'lib32-zlib' 'lib32-ncurses')
+provides=('adb' 'android-tools')
 conflicts=('adb')
-_sdk=android-sdk
+_sdk="android-sdk"
 _tools="opt/${_sdk}/tools"
 _ptools="opt/${_sdk}/platform-tools"
 
