@@ -2,6 +2,8 @@
 
 from lilaclib import *
 
+depends=['python-wtforms']
+
 build_prefix = 'extra-x86_64'
 
 def pre_build():
