@@ -4,7 +4,7 @@
 
 pkgname=xscreensaver-arch-logo
 pkgver=5.33
-pkgrel=1
+pkgrel=2
 pkgdesc="Screen saver and locker for the X Window System with Arch Linux branding"
 arch=('i686' 'x86_64')
 url="http://www.jwz.org/xscreensaver/"
@@ -17,10 +17,12 @@ provides=('xscreensaver')
 backup=('etc/pam.d/xscreensaver')
 source=(http://www.jwz.org/xscreensaver/${pkgname%%-*}-${pkgver}.tar.gz
 xscreensaver-add-electricsheep.diff LICENSE
+xscreensaver-missingescape.patch
 logo-50.xpm logo-180.xpm logo-50.png logo-180.png)
 sha256sums=('d4a0c1619219f2843fa8b68d4ae337ab0e9fcb79a6d231540adeb16b3d313f4d'
             'c78db4518d1e439811e177638015c7152c5714f13d1cdb32e5d1f53695c52fec'
             '164903ea70ff499c32a54a940d08cd0510893decbabed7707f6c29a5887ec730'
+            '1e098a46673e20daba425dd536dfebab838cd0662f556b9a18a7c363953bd39e'
             '82366926a2a81bd08459327936ba144e8b3ea5ee4a386c268bd898e1791ab1a0'
             '253f0d5bbdd841f21a7bbdbb0fd7ded21f711751d5cb1b7914952bdd6541b36d'
             '8027bdb2b4328d154a8e517bdb94f5ef4a9eb031e79a285dabedd62acfa77317'
@@ -29,6 +31,7 @@ sha256sums=('d4a0c1619219f2843fa8b68d4ae337ab0e9fcb79a6d231540adeb16b3d313f4d'
 prepare() {
   cd "${pkgname%%-*}-${pkgver}"
   patch -p0 -i "${srcdir}/xscreensaver-add-electricsheep.diff"
+	patch -p1 -i "${srcdir}/xscreensaver-missingescape.patch"
 }
 
 build() {
