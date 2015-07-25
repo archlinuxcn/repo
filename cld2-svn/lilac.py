@@ -8,7 +8,6 @@ def pre_build():
   vcs_update()
 
 def post_build():
-  mkaurball()
   git_add_files('PKGBUILD')
   git_commit()
 

@@ -8,7 +8,6 @@ def pre_build():
   pypi_pre_build(depends=['luajit'])
 
 def post_build():
-  mkaurball()
   pypi_post_build()
 
 if __name__ == '__main__':

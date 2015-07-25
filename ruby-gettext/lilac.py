@@ -23,7 +23,6 @@ def pre_build():
 def post_build():
   git_add_files('PKGBUILD')
   git_commit()
-  mksrcball()
 
 if __name__ == '__main__':
   single_main()

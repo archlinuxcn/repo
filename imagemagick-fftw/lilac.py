@@ -39,7 +39,6 @@ def pre_build():
 def post_build():
   git_rm_files(g.oldfiles)
   git_add_files(g.files)
-  mkaurball()
   git_commit()
 
 if __name__ == '__main__':
