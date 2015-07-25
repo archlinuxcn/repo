@@ -1,0 +1,12 @@
+post_install() {
+  useradd -r -U -d /var/lib/archsocks -s /bin/false archsocks &>/dev/null
+  chown -R archsocks:archsocks var/lib/archsocks
+}
+
+post_upgrade() {
+  post_install $1
+}
+
+pre_remove() {
+  userdel -rf archsocks
+}

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if pgrep -f -- '-m archsocks.client' >/dev/null; then
+    echo "error: archsocks is already running." >&2
+    exit 1
+fi
+
+exec python3 -m archsocks_client_updater "$@"

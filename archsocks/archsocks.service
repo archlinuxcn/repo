@@ -1,0 +1,12 @@
+[Unit]
+Description=Archsocks Service
+After=network.target
+
+[Service]
+Type=simple
+User=archsocks
+ExecStart=/usr/bin/archsocks
+
+[Install]
+WantedBy=multi-user.target
+
