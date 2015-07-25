@@ -3,10 +3,10 @@
 
 pkgname=jdk
 _major=8
-_minor=45
-_build=b14
+_minor=51
+_build=b16
 pkgver=${_major}u${_minor}
-pkgrel=1
+pkgrel=2
 pkgdesc="Oracle Java Development Kit"
 arch=('i686' 'x86_64')
 url=http://www.oracle.com/technetwork/java/javase/downloads/index.html
@@ -22,7 +22,7 @@ provides=("java-runtime=$_major" "java-runtime-headless=$_major" "java-web-start
           "java-runtime-jre=$_major" "java-runtime-headless-jre=$_major" "java-web-start-jre=$_major" "java-environment-jdk=$_major")
 
 # Variables
-DLAGENTS=('http::/usr/bin/curl -LC - -b oraclelicense=a -O')
+DLAGENTS=('http::/usr/bin/curl -fLC - --retry 3 --retry-delay 3 -b oraclelicense=a -o %o %u')
 _jname=${pkgname}${_major}
 _jvmdir=/usr/lib/jvm/java-$_major-$pkgname
 
@@ -44,18 +44,20 @@ backup=("etc/java-$_jname/amd64/jvm.cfg"
 [[ $CARCH = i686 ]] && backup[0]="etc/java-$_jname/i386/jvm.cfg"
 options=('!strip') # JDK debug-symbols
 install=$pkgname.install
-source=("jconsole-$_jname.desktop"
+source=("http://download.oracle.com/otn-pub/java/jce/$_major/jce_policy-$_major.zip"
+        "jconsole-$_jname.desktop"
         "jmc-$_jname.desktop"
         "jvisualvm-$_jname.desktop"
         "policytool-$_jname.desktop")
 source_i686=("http://download.oracle.com/otn-pub/java/jdk/$pkgver-$_build/$pkgname-$pkgver-linux-i586.tar.gz")
 source_x86_64=("http://download.oracle.com/otn-pub/java/jdk/$pkgver-$_build/$pkgname-$pkgver-linux-x64.tar.gz")
-md5sums=('b4f0da18e03f7a9623cb073b65dde6c1'
+md5sums=('b3c7031bc65c28c2340302065e7d00d3'
+         'b4f0da18e03f7a9623cb073b65dde6c1'
          '8f0ebcead2aecad67fbd12ef8ced1503'
          'a4a21b064ff9f3c3f3fdb95edf5ac6f3'
          '98245ddb13914a74f0cc5a028fffddca')
-md5sums_i686=('e68241caf30cb81ae4e985be7218bb6d')
-md5sums_x86_64=('1ad9a5be748fb75b31cd3bd3aa339cac')
+md5sums_i686=('742b9151d9190a9ae7d8ed05c7d39850')
+md5sums_x86_64=('b34ff02c5d98b6f372288c17e96c51cf')
 ## Alternative mirror, if your local one is throttled:
 #source_x86_64=("http://ftp.wsisiz.edu.pl/pub/pc/pozyteczne%20oprogramowanie/java/$pkgname-$pkgver-linux-x64.gz")
 
@@ -129,7 +131,7 @@ package() {
 
     # Suffix man pages
     for i in $(find man/ -type f); do
-        mv "${i}" "${i/.1}-${_jname}.1"
+        mv "$i" "${i/.1}-$_jname.1"
     done
 
     # Move man pages
@@ -139,6 +141,15 @@ package() {
     # Move/link licenses
     mv COPYRIGHT LICENSE *.txt "$pkgdir"/usr/share/licenses/java$_major-$pkgname/
     ln -sf /usr/share/licenses/java$_major-$pkgname/ "$pkgdir"/usr/share/licenses/$pkgname
+
+    msg2 "Installing Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files..."
+    # Replace default "strong", but limited, cryptography to get an "unlimited strength" one for
+    # things like 256-bit AES. Enabled by default in OpenJDK:
+    # - http://suhothayan.blogspot.com/2012/05/how-to-install-java-cryptography.html
+    # - http://www.eyrie.org/~eagle/notes/debian/jce-policy.html
+    install -m644 "$srcdir"/UnlimitedJCEPolicyJDK$_major/*.jar jre/lib/security/
+    install -Dm644 "$srcdir"/UnlimitedJCEPolicyJDK$_major/README.txt \
+                   "$pkgdir"/usr/share/doc/$pkgname/README_-_Java_JCE_Unlimited_Strength.txt
 
     msg2 "Enabling copy+paste in unsigned applets..."
     # Copy/paste from system clipboard to unsigned Java applets has been disabled since 6u24:

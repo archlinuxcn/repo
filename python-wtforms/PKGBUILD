@@ -1,24 +1,24 @@
-# Maintainer: inknml <i [at] inkn [dot] ml>
-# Submitter: inknml <i [at] inkn [dot] ml>
-
-pkgname=python-wtforms
+_pkgname=WTForms
+pkgname=python-$_pkgname
 pkgver=2.0.2
 pkgrel=1
-pkgdesc='A flexible forms validation and rendering library for python web development.'
+pkgdesc="A flexible forms validation and rendering library for python web development."
 arch=('any')
-url="http://pypi.python.org/pypi/WTForms"
+url="http://wtforms.simplecodes.com/"
 license=('BSD')
-depends=('python')
-makedepends=('unzip' 'python-distribute')
-source=("http://pypi.python.org/packages/source/W/WTForms/WTForms-${pkgver}.zip")
+depends=('python' 'python-setuptools')
+source=('https://pypi.python.org/packages/source/W/WTForms/WTForms-2.0.2.zip')
 md5sums=('613cf723ab40537705bec02733c78d95')
 
 build() {
-  cd $srcdir/peewee-$pkgver
-  python setup.py build
+  cd "$srcdir/$_pkgname-$pkgver"
+  python3 setup.py build
 }
 
 package() {
-    cd ${srcdir}/WTForms-${pkgver}
-    python setup.py install --root=${pkgdir}/ --optimize=1
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 }
+
+# vim:set sw=2 et:
