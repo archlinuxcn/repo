@@ -8,7 +8,7 @@
 pkgname=eclipse-emf
 pkgver=2.11.0
 _reldate=201506010402
-pkgrel=1
+pkgrel=2
 pkgdesc="EMF and XSD frameworks for the Eclipse platform"
 arch=('any')
 url="http://www.eclipse.org/modeling/emf/"
@@ -20,7 +20,7 @@ source=("$_mirror/modeling/emf/emf/downloads/drops/${pkgver}/R${_reldate}/emf-ru
 sha256sums=('0f84c8348f1ec0c958b3abd0c6509e1ae793fe8394eacd51349ba7338c118052'
             '948be83fe4216bacae2c61189d0bec9097add1e0842a12383f43e28a2be6610f')
 package() {
-	_dest="${pkgdir}"/usr/lib/eclipse/
+    _dest=$pkgdir/usr/lib/eclipse/dropins/${pkgname#eclipse-}/eclipse
 	cd "${srcdir}/eclipse"
 	find . -type f | while read f ; do
 		install -Dm644 ${f} "${_dest}/${f}"
