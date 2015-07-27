@@ -1,6 +1,6 @@
-_qtver=5.4.0
+_qtver=5.5.0
 pkgname=telegram-desktop-cn
-pkgver=r653.66d2654
+pkgver=r754.8e9ed84
 pkgrel=1
 pkgdesc='fixed The Official desktop version of Telegram messaging app with suport the input method (liked fcitx or ibus) and added the the Chinese language.'
 arch=('i686' 'x86_64')
@@ -74,6 +74,6 @@ package() {
   install -Dm755 "$srcdir"/tdesktop/Linux/Release/Telegram "$pkgdir"/opt/telegram
   install -Dm755 "$srcdir"/telegram "$pkgdir"/usr/bin
 }
-md5sums=('21843b00ecde8956217faab391bc007b'
+md5sums=('65d5282f3dee0336da9ed1f77148952f'
          'SKIP'
          '0d90edb512fb65d7c9711f189ddf6189')
