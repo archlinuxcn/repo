@@ -4,10 +4,9 @@
 # Based on a modified version of the gcc PKGBUILD
 
 pkgname=gcc-gcj
-pkgver=5.1.0
+pkgver=5.2.0
 _pkgver=5
 _islver=0.14.1
-_cloogver=0.18.3
 pkgrel=1
 pkgdesc="The GNU Compiler for Java"
 arch=('i686' 'x86_64')
@@ -20,12 +19,10 @@ optdepends=('python2: for running /usr/bin/aot-compile'
 options=('!libtool')
 install=$pkgname.install
 source=("ftp://gcc.gnu.org/pub/gcc/releases/gcc-${pkgver}/gcc-${pkgver}.tar.bz2"
-        "http://isl.gforge.inria.fr/isl-${_islver}.tar.bz2"
-	"http://www.bastoul.net/cloog/pages/download/cloog-${_cloogver}.tar.gz")
-	
-sha512sums=('30f6a94d3adb25bc51fcaddf32a6c41429f569eeb9ed64330445b1296f99998fbfa03277b375be4f7b2b80f519910ef88e4149db7cd9031e2c61a49f501bde94'
-            '0d8e04e4a029a1c382357570d0e58b45cff0c89ef576084af3841dda112a1275575fb85f62e7c0ea6e89a4fccf90cae55cdd12c37b824ce5e8845ed6d31edb2d'
-            '14fc2af0da62cd17b1a9f5a7a1704da6bfe5dc78639928637588203e61847795a652ff788c313c34b6e7dd85fb329678eb4f72e0e1c9c149be6619ebf046cff8')
+        "http://isl.gforge.inria.fr/isl-${_islver}.tar.bz2")
+
+sha512sums=('844120349ec04465dcea52d8ec747f1cbbc9d76a39fe3d8ef5e6b93614e63d718862d60d0a1c1cbf59ffc7815562287d0a2e536a6b220cebcd0b8de4ba35e715'
+            '0d8e04e4a029a1c382357570d0e58b45cff0c89ef576084af3841dda112a1275575fb85f62e7c0ea6e89a4fccf90cae55cdd12c37b824ce5e8845ed6d31edb2d')
 
 prepare() {
   echo "You need at least 10GB of space to compile gcc-gcj,"
@@ -34,20 +31,19 @@ prepare() {
   sleep 5
   cd "$srcdir"/gcc-${pkgver}
 
-  # Link isl/cloog for in-tree builds
+  # Link isl for in-tree builds
   ln -s ../isl-${_islver} isl
-  ln -s ../cloog-${_cloogver} cloog
-  
+
   # Do not install libiberty
   sed -i 's/install_to_$(INSTALL_DEST) //' libiberty/Makefile.in
 
   # Do not run fixincludes
   sed -i 's@\./fixinc\.sh@-c true@' gcc/Makefile.in
-  
+
   # Arch Linux installs x86_64 libraries /lib
   [[ $CARCH == "x86_64" ]] && sed -i '/m64=/s/lib64/lib/' gcc/config/i386/t-linux64
-  
-  # Arch uses python version 3 as default python 
+
+  # Arch uses python version 3 as default python
   sed -i '1s+python+python2+' libjava/contrib/aot-compile.in
 
   echo ${pkgver} > gcc/BASE-VER
@@ -64,9 +60,9 @@ build() {
       --libexecdir=/usr/lib --enable-clocale=gnu --disable-libstdcxx-pch \
       --with-tune=generic --enable-java-awt=gtk --with-java-home="$JAVA_HOME" \
       --enable-libgcj-multifile --disable-plugin --with-system-zlib \
-      --enable-cloog-backend=isl
+      --with-default-libstdcxx-abi=gcc4-compatible
   CPPFLAGS="$CPPFLAGS -O2"
-  make 
+  make
 }
 
 package() {
@@ -104,7 +100,7 @@ package() {
     usr/lib/gcc/x86_64-unknown-linux-gnu/$pkgver/include/unwind.h \
     usr/lib/gcc/x86_64-unknown-linux-gnu/$pkgver/libgcc.a \
     usr/lib/gcc/x86_64-unknown-linux-gnu/$pkgver/libgcc_eh.a \
-    usr/lib/gcc/x86_64-unknown-linux-gnu/$pkgver/libgcov.a 
+    usr/lib/gcc/x86_64-unknown-linux-gnu/$pkgver/libgcov.a
   [[ $CARCH == "i686" ]] && rm usr/lib/libgcc_s.so usr/lib/libgcc_s.so.1 \
     usr/lib/gcc/i686-pc-linux-gnu/$pkgver/crtbegin.o \
     usr/lib/gcc/i686-pc-linux-gnu/$pkgver/crtbeginS.o \
@@ -118,7 +114,7 @@ package() {
     usr/lib/gcc/i686-pc-linux-gnu/$pkgver/include/unwind.h \
     usr/lib/gcc/i686-pc-linux-gnu/$pkgver/libgcc.a \
     usr/lib/gcc/i686-pc-linux-gnu/$pkgver/libgcc_eh.a \
-    usr/lib/gcc/i686-pc-linux-gnu/$pkgver/libgcov.a 
+    usr/lib/gcc/i686-pc-linux-gnu/$pkgver/libgcov.a
 
   find ${pkgdir}/usr/lib -type f -name '*.so.*' -exec strip --strip-unneeded {} \;
 
