@@ -4,7 +4,7 @@
 # Contributor: Thomas Dziedzic < gostrc at gmail >
 # Contributor: George Giorgidze <giorgidze@gmail.com>
 pkgname=coq
-pkgver=8.4pl5
+pkgver=8.4pl6
 pkgrel=1
 pkgdesc='Formal proof management system. Full version that includes CoqIDE.'
 arch=('i686' 'x86_64')
@@ -15,9 +15,9 @@ depends=('gtk2' 'ocaml' 'camlp4' 'gtksourceview2')
 makedepends=('ocaml-findlib' 'lablgtk2')
 optdepends=('coq-doc')
 source=("http://coq.inria.fr/distrib/V$pkgver/files/coq-$pkgver.tar.gz")
-md5sums=('7839005b48527a85149da950bd2ac006')
-sha1sums=('107717cbaef3a469e8ff775ae54dbbc457935816')
-sha256sums=('35815ab78a58d72799eacaab155427620ab071677882ca6c98d7bfec97d25245')
+md5sums=('2334a98b64578cb81d2b4127e327b368')
+sha1sums=('c89525295659a805661ef91da24ecfb94e226953')
+sha256sums=('a540a231a9970a49353ca039f3544616ff86a208966ab1c593779ae13c91ebd6')
 
 build() {
   cd "$srcdir/coq-$pkgver"
