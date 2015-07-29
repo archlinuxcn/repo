@@ -10,7 +10,7 @@
 
 pkgname=uwsgi-plugin-php53
 pkgdesc="Plugin for PHP 5.3 support"
-pkgver=2.0.10
+pkgver=2.0.11.1
 pkgrel=1
 arch=(i686 x86_64)
 url="http://projects.unbit.it/uwsgi"
@@ -22,7 +22,7 @@ source=(http://projects.unbit.it/downloads/uwsgi-$pkgver.tar.gz
         uwsgi_fix_rpath.patch
         uwsgi_trick_chroot.patch)
 
-md5sums=('7a9be0db5f6a8d4150dc5e9e0517ce80'
+md5sums=('087ba7b53bd4afc0f0218f5eb3398809'
          '9aced0faffc5fc04afccf946e8a2a886'
          '1a4516d5cdcf5b95b036f4eae2d0c152'
          '0c09a52fdb88f08c36a8b380f451ce6d')
