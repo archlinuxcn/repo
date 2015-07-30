@@ -10,7 +10,7 @@ if ((BUILD_EXTRA)); then
 else
    pkgname=('julia-git')
 fi
-pkgver=0.3.0.rc3.6350.g9b14a7c
+pkgver=0.3.0.rc3.6404.g592fc7e
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64')
@@ -92,9 +92,6 @@ build() {
   export CXX='g++ -flto'
 
   make "${julia_opts[@]}"
-  # make "${PWD}/usr/bin/stringreplace" "${julia_opts[@]}"
-  # make release "${julia_opts[@]}"
-  # make debug "${julia_opts[@]}"
 
   if ! ((BUILD_EXTRA)); then
      return
