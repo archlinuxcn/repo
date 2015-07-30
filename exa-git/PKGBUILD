@@ -1,0 +1,32 @@
+# Maintainer: tuftedocelot@fastmail.fm
+_pkgname=exa
+pkgname=${_pkgname}-git
+pkgver=440
+pkgrel=1
+pkgdesc='Replacement for ls written in Rust.'
+arch=('i686' 'x86_64')
+url="https://github.com/ogham/exa"
+license='MIT'
+depends=('libssh2' 'libgit2')
+makedepends=('cmake' 'rust')
+source=("git+https://github.com/ogham/exa.git")
+md5sums=('SKIP')
+
+pkgver() {
+    cd "$srcdir/$_pkgname"
+    git rev-list --count HEAD
+}
+
+build() {
+    cd "$srcdir/$_pkgname"
+    # use latest git2, which can use system's libgit2, resulting in a much
+    # smaller executable (and it builds fast because it doesn't clone libgit2)
+    sed -i '/git2-rs\.git/d' Cargo.toml
+    LIBGIT2_SYS_USE_PKG_CONFIG=1 make
+}
+
+package() {
+    cd "$srcdir/$_pkgname"
+    mkdir -p "${pkgdir}/usr/bin" "${pkgdir}/usr/share/man/man1"
+    make install PREFIX="${pkgdir}/usr"
+}
