@@ -11,6 +11,7 @@ arch=('i686' 'x86_64')
 url="http://0pointer.de/lennart/projects/paman"
 license=('GPL')
 depends=('libglademm' 'pulseaudio')
+changelog=ChangeLog
 source=(http://0pointer.de/lennart/projects/paman/${pkgname}-${pkgver}.tar.gz)
 md5sums=('4a77b129b0de8d261f2794ce3db518cc')
 sha1sums=('d51d390a00222a51580c23c3d26547689b6d767b')
