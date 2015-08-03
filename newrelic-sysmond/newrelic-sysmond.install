@@ -1,96 +1,36 @@
-# This is a default template for a post-install scriptlet.
-# Uncomment only required functions and remove any functions
-# you don't need (and this header).
+# Arch Linux install for newrelic-sysmond
 
 ## arg 1:  the new package version
-#pre_install() {
-  # do something here
-#}
-
-## arg 1:  the new package version
-post_install() {
-
-#!/bin/sh
-# Create the newrelic user and group
-useradd --system -M --home / --shell /sbin/nologin newrelic || true
-
-# Kludge the permissions
-mkdir /var/log/newrelic
-chmod 1777 /var/log/newrelic
-
-cfgfile=/etc/newrelic/nrsysmond.cfg
-
-chown root:newrelic ${cfgfile}
-chmod 640 ${cfgfile}
-
-#
-# When first installing the package, the license key will not be set.
-# Instead of throwing an error, we want to whine to the user and then exit cleanly.
-#
-
-if sed -e '/^[        ]*#/d' "${cfgfile}" 2> /dev/null | grep -q 'REPLACE_WITH_REAL_KEY' 2> /dev/null; then
-  if [ -z "${NR_SILENT}" -a -z "${SILENT}" ]; then
-    #
-    # WARNING - This text is duplicated from newrelic-sysmond.init
-    #
-    cat <<EOF
-
-*********************************************************************
-*********************************************************************
-***
-***  Can not start the New Relic Server Monitor until you insert a
-***  valid license key in the following file:
-***
-***     ${cfgfile}
-***
-***  You can do this by running the following command as root:
-***
-***     nrsysmond-config --set license_key=<your_license_key_here>
-***
-***  No data will be reported until the server monitor can start.
-***  You can get your New Relic key from the 'Configuration' section
-***  of the 'Support' menu of your New Relic account (accessible at
-***  https://rpm.newrelic.com).
-***
-*********************************************************************
-*********************************************************************
-
-For systemd users:
-
-    systemctl start newrelic-sysmond.service
-
-EOF
-    fi
-    return 0
-fi
-
-
+pre_install() {
+  :
 }
 
 ## arg 1:  the new package version
 ## arg 2:  the old package version
 pre_upgrade() {
-  # do something here
-  return 0
+  :
 }
 
 ## arg 1:  the new package version
 ## arg 2:  the old package version
 post_upgrade() {
-  # do something here
-  return 0
+  systemctl daemon-reload
+  newrelic-sysmond-inst install
+}
+
+## arg 1:  the new package version
+post_install() {
+  post_upgrade "$1"
 }
 
 ## arg 1:  the old package version
 pre_remove() {
-  # do something here
-  return 0
+  newrelic-sysmond-inst remove
 }
 
 ## arg 1:  the old package version
 post_remove() {
-  # do something here
-  userdel newrelic || true
+  systemctl daemon-reload
 }
 
 # vim:set ts=2 sw=2 et:
