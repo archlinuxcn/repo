@@ -1,0 +1,38 @@
+# Maintainer: Chris Warrick <chris@chriswarrick.com>
+# Contributor: Jan "heftig" Steffens <jan.steffens@gmail.com>
+# Contributor: Corrado Primier <bardo@aur.archlinux.org>
+# Contributor: William Rea <sillywilly@gmail.com>
+# Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
+pkgname=pavumeter
+pkgver=0.9.3
+pkgrel=6
+pkgdesc="A simple GTK volume meter for the PulseAudio sound server"
+arch=(i686 x86_64)
+url="http://git.0pointer.de/pavumeter.git"
+license=(GPL)
+depends=(gtkmm pulseaudio gnome-icon-theme libsigc++)
+makedepends=(lynx git)
+groups=(pulseaudio-gnome)
+source=(git://git.0pointer.net/pavumeter.git
+        pavumeter.desktop
+        pavumeter-record.desktop)
+md5sums=('SKIP'
+         'ead0c02a2af5fcf4acc381da39b836df'
+         '2d784d472cd22dfc5320c30112e1e59d')
+
+build() {
+  cd ${srcdir}/${pkgname}
+  ./autogen.sh
+  ./configure --prefix=/usr
+  make || return 1
+}
+
+package() {
+  cd ${srcdir}/${pkgname}
+  make DESTDIR=${pkgdir} install
+
+  install -Dm644 ${srcdir}/pavumeter.desktop \
+    ${pkgdir}/usr/share/applications/pavumeter.desktop
+  install -Dm644 ${srcdir}/pavumeter-record.desktop \
+    ${pkgdir}/usr/share/applications/pavumeter-record.desktop
+}
