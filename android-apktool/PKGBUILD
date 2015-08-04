@@ -1,6 +1,6 @@
 # Maintainer: Philipp 'TamCore' B. <philipp {at} tamcore {dot} eu>
 pkgname=android-apktool
-pkgver=2.0.0
+pkgver=2.0.1
 pkgrel=1
 pkgdesc="a tool for reengineering Android apk files"
 arch=(i686 x86_64)
@@ -9,7 +9,7 @@ license=('Apache 2.0')
 depends=('java-runtime' 'android-sdk-build-tools')
 source=(apktool.jar::https://bitbucket.org/iBotPeaches/apktool/downloads/apktool_${pkgver}.jar
         'http://android-apktool.googlecode.com/files/apktool-install-linux-r04-brut1.tar.bz2')
-sha256sums=('0dd25996d8e23d8efcca0872dab6498af6f97c5e6cdef10005f5d82a7636f57d'
+sha256sums=('b1e840798b674ec59df870145ad91d866c6be7a17b5aef4fc2717f71a58224c4'
             'cffa5c0a46bab9c66da02cc5db651c3a8321bee98580815e44c802d62a696dfa')
 
 prepare() {
