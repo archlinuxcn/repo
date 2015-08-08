@@ -4,7 +4,7 @@
 
 pkgname=metasploit
 pkgver=4.11.4
-pkgrel=2
+pkgrel=3
 pkgdesc="An advanced open-source platform for developing, testing, and using exploit code"
 url="https://www.metasploit.com/"
 arch=('any')
@@ -22,7 +22,7 @@ sha512sums=('853ed18ab61cc5f5d28cdb0779ba6076dac9a1e310d2d684041039590dc6dc07249
 package() {
   cd ${pkgname}-framework-${pkgver}
 
-  mkdir -p "${pkgdir}/opt" "${pkgdir}/usr/bin"
+  mkdir -p "${pkgdir}/opt/${pkgname}" "${pkgdir}/usr/bin"
   cp -r . "${pkgdir}/opt/${pkgname}"
 
   for f in "${pkgdir}"/opt/${pkgname}/msf*; do
