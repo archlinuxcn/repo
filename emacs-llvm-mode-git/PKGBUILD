@@ -1,0 +1,36 @@
+# Maintainer: Stefan Husmann <stefan-husmann@t-online.de>
+pkgname=emacs-llvm-mode-git
+pkgver=120430.b12f9b3
+pkgrel=1
+pkgdesc="Emacs major mode for llvm IR"
+arch=('any')
+url="http://llvm.org/"
+license=('GPL')
+makedepends=('git' 'emacs')
+provides=('emacs-llvm-mode')
+conflicts=('emacs-llvm-mode')
+source=('git://github.com/llvm-mirror/llvm')
+md5sums=('SKIP')
+
+pkgver() {
+  cd llvm
+
+  echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+}
+
+build() {
+  cd llvm/utils/emacs
+
+  emacs --batch --eval \
+        '(progn
+         (push "." load-path)
+         (byte-compile-file "llvm-mode.el"))'
+}
+
+package() {
+  cd llvm/utils/emacs
+
+  mkdir -p "$pkgdir/usr/share/emacs/site-lisp"
+  install -m644 llvm-mode.el "$pkgdir/usr/share/emacs/site-lisp"
+  install -m644 llvm-mode.elc "$pkgdir/usr/share/emacs/site-lisp"
+}
