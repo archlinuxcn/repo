@@ -1,7 +1,7 @@
-diff -Naur ntp-4.2.8p2.orig/configure ntp-4.2.8p2/configure
---- ntp-4.2.8p2.orig/configure	2015-04-07 10:18:45.000000000 +0200
-+++ ntp-4.2.8p2/configure	2015-06-20 01:12:28.910011543 +0200
-@@ -36528,6 +36528,8 @@
+diff -Naur ntp-4.2.8p3.orig/configure ntp-4.2.8p3/configure
+--- ntp-4.2.8p3.orig/configure	2015-06-29 22:24:26.000000000 +0200
++++ ntp-4.2.8p3/configure	2015-08-09 14:08:31.867103267 +0200
+@@ -37079,6 +37079,8 @@
  
  ac_config_files="$ac_config_files scripts/summary"
  
@@ -9,26 +9,26 @@ diff -Naur ntp-4.2.8p2.orig/configure ntp-4.2.8p2/configure
 +
  ac_config_files="$ac_config_files scripts/update-leap/Makefile"
  
- ac_config_files="$ac_config_files tests/Makefile"
-@@ -37779,6 +37781,7 @@
+ ac_config_files="$ac_config_files scripts/update-leap/update-leap"
+@@ -38338,6 +38340,7 @@
      "scripts/ntpver") CONFIG_FILES="$CONFIG_FILES scripts/ntpver" ;;
      "scripts/plot_summary") CONFIG_FILES="$CONFIG_FILES scripts/plot_summary" ;;
      "scripts/summary") CONFIG_FILES="$CONFIG_FILES scripts/summary" ;;
 +    "scripts/html2man") CONFIG_FILES="$CONFIG_FILES scripts/html2man" ;;
      "scripts/update-leap/Makefile") CONFIG_FILES="$CONFIG_FILES scripts/update-leap/Makefile" ;;
+     "scripts/update-leap/update-leap") CONFIG_FILES="$CONFIG_FILES scripts/update-leap/update-leap" ;;
      "tests/Makefile") CONFIG_FILES="$CONFIG_FILES tests/Makefile" ;;
-     "tests/libntp/Makefile") CONFIG_FILES="$CONFIG_FILES tests/libntp/Makefile" ;;
-@@ -39325,6 +39328,7 @@
+@@ -39886,6 +39889,7 @@
      "scripts/ntpver":F) chmod +x scripts/ntpver ;;
      "scripts/plot_summary":F) chmod +x scripts/plot_summary ;;
      "scripts/summary":F) chmod +x scripts/summary ;;
 +    "scripts/html2man":F) chmod +x scripts/html2man ;;
+     "scripts/update-leap/update-leap":F) chmod +x scripts/update-leap/update-leap ;;
  
    esac
- done # for ac_tag
-diff -Naur ntp-4.2.8p2.orig/scripts/deprecated/html2man.in ntp-4.2.8p2/scripts/deprecated/html2man.in
---- ntp-4.2.8p2.orig/scripts/deprecated/html2man.in	2014-12-19 12:56:54.000000000 +0100
-+++ ntp-4.2.8p2/scripts/deprecated/html2man.in	2015-06-20 01:12:26.876678224 +0200
+diff -Naur ntp-4.2.8p3.orig/scripts/deprecated/html2man.in ntp-4.2.8p3/scripts/deprecated/html2man.in
+--- ntp-4.2.8p3.orig/scripts/deprecated/html2man.in	2014-12-19 12:56:54.000000000 +0100
++++ ntp-4.2.8p3/scripts/deprecated/html2man.in	2015-08-09 14:09:11.343769648 +0200
 @@ -51,6 +51,7 @@
  mkdir $MANDIR, 0777;
  mkdir "$MANDIR/man8", 0777;
