@@ -1,11 +1,11 @@
 post_install() {
-    EXTRAMODULES='extramodules-4.1-mainline'
+    EXTRAMODULES='extramodules-4.2-mainline'
     depmod $(cat /usr/lib/modules/$EXTRAMODULES/version)
     echo 'In order to use nvidia module, reboot the system.'
 }
 
 post_upgrade() {
-    EXTRAMODULES='extramodules-4.1-mainline'
+    EXTRAMODULES='extramodules-4.2-mainline'
     depmod $(cat /usr/lib/modules/$EXTRAMODULES/version)
     if  [ "$(vercmp $2 310.19-2)" -lt 0 ]; then
         echo 'If your card is from the 7xxx series or earlier, install nvidia-304xx'
@@ -13,6 +13,6 @@ post_upgrade() {
 }
 
 post_remove() {
-    EXTRAMODULES='extramodules-4.1-mainline'
+    EXTRAMODULES='extramodules-4.2-mainline'
     depmod $(cat /usr/lib/modules/$EXTRAMODULES/version)
 }

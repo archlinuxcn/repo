@@ -1,18 +1,13 @@
 post_install() {
-    EXTRAMODULES='extramodules-4.0-beignet-fix'
-    depmod $(cat /usr/lib/modules/$EXTRAMODULES/version)
+    EXTRAMODULES='extramodules-4.1-beignet-fix'
+    depmod $(cat /usr/lib/modules/${EXTRAMODULES}/version)
     echo 'In order to use nvidia module, reboot the system.'
 }
 
 post_upgrade() {
-    EXTRAMODULES='extramodules-4.0-beignet-fix'
-    depmod $(cat /usr/lib/modules/$EXTRAMODULES/version)
-    if  [ "$(vercmp $2 310.19-2)" -lt 0 ]; then
-        echo 'If your card is from the 7xxx series or earlier, install nvidia-304xx'
-    fi
+    post_install
 }
 
 post_remove() {
-    EXTRAMODULES='extramodules-4.0-beignet-fix'
-    depmod $(cat /usr/lib/modules/$EXTRAMODULES/version)
+    post_install
 }
