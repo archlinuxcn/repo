@@ -10,7 +10,7 @@ if ((BUILD_EXTRA)); then
 else
    pkgname=('julia-git')
 fi
-pkgver=0.3.0.rc3.6526.gdcc448b
+pkgver=0.3.0.rc3.6555.g783f870
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64')
@@ -79,7 +79,8 @@ julia_opts=(prefix=/usr sysconfdir=/etc
             USE_INTEL_MKL=0
             USE_BLAS64=0
             USE_LLVM_SHLIB=0
-            MARCH=$_march
+            # MARCH=$_march
+            MARCH=native
             LIBBLASNAME=libopenblas
             LIBBLAS=-lopenblas
             LIBLAPACKNAME=libopenblas
