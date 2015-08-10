@@ -4,7 +4,6 @@
  #!/bin/bash
 
 +export PYTHON=python2
-+unset GTK_IM_MODULE QT_IM_MODULE XMODIFIERS
 +
  if [ "$(uname)" == 'Darwin' ]; then
    OS='Mac'
@@ -18,7 +17,7 @@
  Comment=A hackable text editor for the 21st Century.
  GenericName=Text Editor
 -Exec=/usr/share/atom/atom %U
-+Exec=env PYTHON=python2 GTK_IM_MODULE= QT_IM_MODULE= XMODIFIERS= /usr/share/atom/atom %U
++Exec=env PYTHON=python2 /usr/share/atom/atom %U
  Icon=atom
  Type=Application
  StartupNotify=true

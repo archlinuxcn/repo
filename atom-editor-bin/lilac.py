@@ -34,6 +34,13 @@ def pre_build():
             continue
         print(line)
 
+    for line in edit_file("atom-python.patch"):
+        if line.strip().startswith("+unset"):
+            continue
+        if line.strip().startswith("+Exec=env"):
+            line = "+Exec=env PYTHON=python2 /usr/share/atom/atom %U"
+        print(line)
+
 
 post_build = aur_post_build
 
