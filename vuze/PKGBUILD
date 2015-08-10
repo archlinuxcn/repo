@@ -1,12 +1,11 @@
-# Maintainer: josephgbr <rffontenelle AT gmail DOT com>
-# Co-maintainer: Det <nimetonmaili gmail a-dot com>
+# Maintainer: Det <nimetonmaili gmail a-dot com>
 # Contributor: vorbote <palopezv AT gmail DOT com >
 # Contributor: td123 <gostrc AT gmail DOT com>
 # Contributor: phoenixlzx < phoenixlzx AT phoenixsec DOT org >
 
 pkgname=vuze
-pkgver=5.6.1.2
-pkgrel=3
+pkgver=5.6.2.0
+pkgrel=1
 _ver=${pkgver//./} 
 pkgdesc="A feature-rich Java-based BitTorrent client (previously called 'Azureus')"
 arch=('i686' 'x86_64')
@@ -19,7 +18,7 @@ optdepends=('vuze-plugin-countrylocator: Country flags for the "Peers" tab'
 options=('!strip')
 install=$pkgname.install
 source=("http://downloads.sourceforge.net/azureus/vuze/Vuze_${_ver}/Vuze_${_ver}_linux.tar.bz2")
-md5sums=('c20397aa00614ab8b271afef93c877bc')
+md5sums=('498f966b6e56566bd390fe0fd6ead5d9')
 
 package() {
   cd vuze
