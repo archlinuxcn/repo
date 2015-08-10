@@ -3,7 +3,7 @@
 # Contributor: François Charette <firmicus@gmx.net>
 
 pkgname=xz-git
-pkgver=5.2.0.r3.gd2d4846
+pkgver=5.2.1.r27.g0275a53
 pkgrel=1
 pkgdesc='Library and command line tools for XZ and LZMA compressed files - git checkout'
 arch=('i686' 'x86_64')
@@ -11,7 +11,7 @@ url='http://tukaani.org/xz/'
 license=('GPL' 'LGPL' 'custom')
 depends=('sh')
 makedepends=('git')
-provides=('lzma' 'lzma-utils' 'xz-utils' 'xz=5.2.0')
+provides=('lzma' 'lzma-utils' 'xz-utils' "xz=${pkgver%%.r*}")
 replaces=('lzma' 'lzma-utils' 'xz-utils')
 conflicts=('lzma' 'lzma-utils' 'xz-utils' 'xz')
 options=('!libtool')
