@@ -3,7 +3,7 @@
 # Maintainer: alexmo82 <25396682 AT live DOT it>
 
 pkgname=freefilesync
-pkgver=7.2
+pkgver=7.3
 pkgrel=0
 pkgdesc="Visual folder comparison and synchronization"
 arch=('any')
@@ -12,13 +12,13 @@ license=('GPLv3')
 depends=(wxgtk webkitgtk2 boost-libs)
 makedepends=(boost)
 source=("http://downloads.sourceforge.net/project/zenxml/zenXml_2.3.zip"
-	"http://downloads.sourceforge.net/project/freefilesync/FreeFileSync/$pkgver/FreeFileSync_${pkgver}_Source.zip" 
+	"http://www.mediafire.com/download/ick2g29df7rs3c8/FreeFileSync_${pkgver}_Source.zip"
 	FreeFileSync.desktop 
 	ffsicon.png 
 	RealtimeSync.desktop 
 	rtsicon.png)
 md5sums=('58baf96cb8e1136d10e1ada7419921c5'
-         'fd1c9ff39d1685ba8f6c17b1c2cfdce6'
+         '9cac4bd8c71917d42f8c7aab58e201df'
          'a7be7841f47f29d8e6210c8ab592a1e3'
          '1f452dff6f970d95839411008d86250b'
          '90152f1021f2d6fb6ab4fa511dc60fa9'
