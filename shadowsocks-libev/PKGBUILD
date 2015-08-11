@@ -1,52 +1,34 @@
-# Maintainer: Felix Yan <felixonmars@archlinux.org>
-# Contributor: 4679kun <admin at 4679 dot us>
+# Maintainer: jiangxq <jiangxueqian at gmail dot com>
+# Contributor: Felix Yan <felixonmars@archlinux.org>, 4679kun <admin at 4679 dot us>
 
 pkgname=shadowsocks-libev
-pkgver=2.1.3
+pkgver=2.2.3
 pkgrel=1
 pkgdesc='A lightweight secured scoks5 proxy for embedded devices and low end boxes'
 arch=('i686' 'x86_64')
-url='https://github.com/madeye/shadowsocks-libev'
+url='https://github.com/shadowsocks/shadowsocks-libev'
 license=('GPL3')
-depends=('openssl' 'libev' 'libsodium')
-makedepends=('git')
-source=("git://github.com/madeye/shadowsocks-libev.git#tag=v$pkgver"
+depends=('openssl' 'libev')
+makedepends=('gcc' 'make' 'autoconf' 'automake')
+source=("https://github.com/shadowsocks/${pkgname}/archive/v${pkgver}.tar.gz"
         'shadowsocks-libev@.service'
         'shadowsocks-libev-server@.service')
-
-prepare() {
-  cd $pkgname
-  rm -r libev libsodium
-
-  sed -e 's|libev/Makefile||' \
-      -e 's|m4_include(\[libev/libev.m4\])||' \
-      -e 's|AC_CONFIG_SUBDIRS(\[libsodium\])||' \
-      -i configure.ac
-  sed -e 's| libev | |' \
-      -e 's| libsodium | |' \
-      -i Makefile.am
-  sed -e 's|\$(top_builddir)/libev/libev.la||' \
-      -e 's|-I\$(top_srcdir)/libev|-lev -lm|' \
-      -e 's|\$(top_builddir)/libsodium/src/libsodium/libsodium.la||' \
-      -e 's|-I\$(top_srcdir)/libsodium/src/libsodium/include|-lsodium|' \
-      -i src/Makefile.am
-}
+sha512sums=(
+'28e20ce069b456cfc3d52437ded739d2995de7883fcb9b4c3cfde5bc78f33419cb75fa67812660d7456084e5a97e6a6531223486259a650988552494f02ebe9f'
+'96e5c9ba04a8d45fa57728aeb5282cf25fce42baf2c2221c5040cced89196b25d2c212472ba9b3f53bdce93ad1edd5f06e42ec62ef212764349c1dab24dde16a'
+'73925959731b7ab6e2b3900662f4b67a9986b798b1a4a943307c87574c9069e32a0c2298cf6e9adb895fe71316a3bac09cb684c54e8a1350566b2fe7526c1cff'
+)
 
 build() {
-  cd $pkgname
-  ./autogen.sh
-  ./configure --prefix=/usr
-  make
+	cd "$srcdir/$pkgname-$pkgver"
+	./autogen.sh
+	./configure --prefix=/usr --enable-shared
+	make
 }
 
 package() {
-  cd $pkgname
-  make DESTDIR="$pkgdir/" install
-
-  install -Dm644 "$srcdir/shadowsocks-libev@.service" "$pkgdir/usr/lib/systemd/system/shadowsocks-libev@.service"
-  install -Dm644 "$srcdir/shadowsocks-libev-server@.service" "$pkgdir/usr/lib/systemd/system/shadowsocks-libev-server@.service"
+	cd "$srcdir/$pkgname-$pkgver"
+	make DESTDIR="$pkgdir/" install
+	install -Dm644 "$srcdir/shadowsocks-libev@.service" "$pkgdir/usr/lib/systemd/system/shadowsocks-libev@.service"
+	install -Dm644 "$srcdir/shadowsocks-libev-server@.service" "$pkgdir/usr/lib/systemd/system/shadowsocks-libev-server@.service"
 }
-
-sha512sums=('SKIP'
-            '96e5c9ba04a8d45fa57728aeb5282cf25fce42baf2c2221c5040cced89196b25d2c212472ba9b3f53bdce93ad1edd5f06e42ec62ef212764349c1dab24dde16a'
-            '73925959731b7ab6e2b3900662f4b67a9986b798b1a4a943307c87574c9069e32a0c2298cf6e9adb895fe71316a3bac09cb684c54e8a1350566b2fe7526c1cff')
