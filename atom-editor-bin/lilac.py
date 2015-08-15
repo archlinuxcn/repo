@@ -32,11 +32,13 @@ def pre_build():
         # edit PKGBUILD
         if line.strip().startswith("PKGEXT"):
             continue
+        if line.strip().startswith("'dbb685607dea46517de0a27e24085bf4'"):
+            line = " 'ece71b9e7a063c803f930b24b9e58892')"
         print(line)
 
     for line in edit_file("atom-python.patch"):
         if line.strip().startswith("+unset"):
-            continue
+            line = "+ "
         if line.strip().startswith("+Exec=env"):
             line = "+Exec=env PYTHON=python2 /usr/share/atom/atom %U"
         print(line)
