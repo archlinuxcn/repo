@@ -19,7 +19,7 @@
 
 from lilaclib import *
 
-depends = ['lua51-doc']
+depends = ['lua51-logging', 'lua51-doc']
 
 build_prefix = 'extra-x86_64'
 
