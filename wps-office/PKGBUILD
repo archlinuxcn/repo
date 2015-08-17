@@ -2,8 +2,8 @@
 # Contributor: Jove Yu <yushijun110 [at] gmail.com>
 
 pkgname=wps-office
-pkgver=9.1.0.4961_a18p1
-_pkgver=9.1.0.4961~a18p1
+pkgver=9.1.0.4968_a19
+_pkgver=9.1.0.4968~a19
 pkgrel=1
 pkgdesc="Kingsoft Office (WPS Office) is an office productivity suite"
 arch=('i686' 'x86_64')
@@ -16,10 +16,10 @@ conflicts=('kingsoft-office')
 options=('!emptydirs')
 install=${pkgname}.install
 [[ "$CARCH" = "i686" ]] && _archext=x86 || _archext=x86_64
-source_i686=("http://kdl.cc.ksosoft.com/wps-community/download/a18/wps-office_${_pkgver}_x86.tar.xz")
-source_x86_64=("http://kdl.cc.ksosoft.com/wps-community/download/a18/wps-office_${_pkgver}_x86_64.tar.xz")
-sha512sums_i686=('ecb1d3663eb3a37a79bf646dda7ae9f7c739536203047097d34edcfbe5c2ddd3b277900b2569ece24ddfc371fcbc9e6efc2d6581506a7a7b0ed2bd964dbe68d9')
-sha512sums_x86_64=('c035a7ebbe05d51d8800d36084040fa983308637b88e14d394c3172acf8cde47c5bf4bccf8a0520cbfb5266019bc62c329d9d5429128b5c3f49d083c2286a89a')
+source_i686=("http://kdl.cc.ksosoft.com/wps-community/download/a19/wps-office_${_pkgver}_x86.tar.xz")
+source_x86_64=("http://kdl.cc.ksosoft.com/wps-community/download/a19/wps-office_${_pkgver}_x86_64.tar.xz")
+sha512sums_i686=('4a7fd673ec054150af57c8d948c828166218f3a7b2678fa1ba150f5bf5d53788b2b51526b1deefce3409855bf89bdd3e2fa2fe5522964d9830419b42f76ed117')
+sha512sums_x86_64=('6d2c32c86b6a022c226529d321f380e03ec04dbb35274e820cc86ef0ecd397a5119dbcfe89981b22e258d48037a867d525409b067235f4b75bcd9d4bbe36d3f2')
 
 PKGEXT=".pkg.tar"
 
