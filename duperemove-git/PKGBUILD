@@ -20,11 +20,10 @@ pkgver() {
 
 build() {
   cd "$srcdir/$pkgname"
-  make
+  make PREFIX=/usr
 }
 
 package() {
   cd $srcdir/$pkgname
-  install -Dm755 ./duperemove $pkgdir/usr/bin/duperemove
-  install -Dm644 ./duperemove.8 $pkgdir/usr/share/man/man8/duperemove.8
+  make PREFIX=/usr SBINDIR=/usr/bin DESTDIR="${pkgdir}" install
 }
