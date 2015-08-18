@@ -6,8 +6,8 @@
 # Contributor: s1gma,shirokuro
 
 pkgname=scapy-python3
-pkgver=0.11
-pkgrel=2
+pkgver=0.14
+pkgrel=1
 pkgdesc=" Fork of scapy with Python 3 compatibility"
 url="https://github.com/phaethon/scapy"
 depends=('python')
@@ -18,7 +18,7 @@ conflicts=('scapy')
 arch=('any')
 license=('GPL')
 source=("https://pypi.python.org/packages/source/s/$pkgname/$pkgname-${pkgver}.tar.gz")
-md5sums=(132582d3421319a5da8267787bcda259)
+md5sums=(b75335a3aed61f4b4c58b78fefba84ab)
 
 build() {
   cd ${pkgname}-${pkgver}
