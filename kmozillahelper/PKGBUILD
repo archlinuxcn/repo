@@ -1,28 +1,29 @@
+# Contributor: Weng Xuetian <wengxt@gmail.com>
+# Maintainer: Yegorius <yegorius@domic.us>
+
 pkgname=kmozillahelper
 pkgver=0.6.4
-_obsver=b88c72dfdc858f6209feb123227bd7df
-pkgrel=1
+pkgrel=2
 pkgdesc="Mozilla KDE Integration"
-url="http://download.opensuse.org/repositories/home:/bgmerrell:/MozillaFirefox3_5_5/openSUSE_11.2/"
+url="https://build.opensuse.org/package/show/openSUSE:Factory/mozilla-kde4-integration"
 arch=("i686" "x86_64")
-license=("MIT License (or similar)")
-depends=("kdebase-workspace")
+license=('MIT')
+depends=("kdelibs")
 makedepends=("cmake" "automoc4")
+source=("${pkgname}-${pkgver}.tar.bz2::https://build.opensuse.org/source/openSUSE:Factory/mozilla-kde4-integration/${pkgname}-${pkgver}.tar.bz2")
 
-source=("${pkgname}-${pkgver}.tar.bz2::https://api.opensuse.org/public/source/mozilla:Factory/mozilla-kde4-integration/${pkgname}-${pkgver}.tar.bz2?rev=${_obsver}")
 
 build() {
-	cd $srcdir/${pkgname}
+	mkdir "$srcdir/$pkgname-build"
+	cd "$srcdir/$pkgname-build"
 
-	mkdir -p $srcdir/${pkgname}-build
-	cd $srcdir/${pkgname}-build
-
-	cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release ../${pkgname}
+	cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release "$srcdir/$pkgname"
 	make || return 1
 }
 
 package() {
-	cd $srcdir/${pkgname}-build
-	make DESTDIR=$pkgdir install
+	cd "$srcdir/$pkgname-build"
+	make DESTDIR="$pkgdir" install
 }
+
 md5sums=('7db8c8904371204fb4c13e9cd306deb0')
