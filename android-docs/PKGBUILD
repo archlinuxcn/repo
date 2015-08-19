@@ -1,8 +1,9 @@
-# Maintainer: Jakub Schmidtke <sjakub-at-gmail-dot-com>
+# Maintainer: Christoph Bayer <chrbayer@chriby.de>
+# Contributor: Jakub Schmidtke <sjakub-at-gmail-dot-com>
 # Contributor: Figo.zhang <figo1802@gmail.com>
 
 _rev=r01
-_ver=22
+_ver=23
 pkgname=android-docs
 pkgver=${_ver}_${_rev}
 pkgrel=1
@@ -12,7 +13,7 @@ url="http://developer.android.com"
 license=('Apache')
 options=(!strip)
 source=("http://dl-ssl.google.com/android/repository/docs-${_ver}_${_rev}.zip")
-sha1sums=('419791c49fa0a305a06966fd1734cf5b0498ea1a')
+sha1sums=('060ebab2f74861e1ddd9136df26b837312bc087f')
 
 package() {
   mkdir -p "${pkgdir}/opt/android-sdk/"
