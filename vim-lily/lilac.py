@@ -27,7 +27,7 @@ def pre_build():
     os.mkdir(repo_dir)
     run_cmd(["git", "clone", "-b", "all", "git@github.com:lilydjwg/vim.git", repo_dir], use_pty=True)
     with at_dir(repo_dir):
-      run_cmd(["git", "remote", "add", "upstream", "git@github.com:vim-jp/vim.git"])
+      run_cmd(["git", "remote", "add", "-f", "upstream", "git@github.com:vim-jp/vim.git"])
 
   with at_dir(repo_dir):
     run_cmd(["git", "reset", "--hard"])
