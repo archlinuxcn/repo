@@ -2,8 +2,8 @@
 # Contributor: Jove Yu <yushijun110 [at] gmail.com>
 
 pkgname=wps-office
-pkgver=9.1.0.4968_a19
-_pkgver=9.1.0.4968~a19
+pkgver=9.1.0.4975_a19p1
+_pkgver=9.1.0.4975~a19p1
 pkgrel=1
 pkgdesc="Kingsoft Office (WPS Office) is an office productivity suite"
 arch=('i686' 'x86_64')
@@ -18,8 +18,8 @@ install=${pkgname}.install
 [[ "$CARCH" = "i686" ]] && _archext=x86 || _archext=x86_64
 source_i686=("http://kdl.cc.ksosoft.com/wps-community/download/a19/wps-office_${_pkgver}_x86.tar.xz")
 source_x86_64=("http://kdl.cc.ksosoft.com/wps-community/download/a19/wps-office_${_pkgver}_x86_64.tar.xz")
-sha512sums_i686=('4a7fd673ec054150af57c8d948c828166218f3a7b2678fa1ba150f5bf5d53788b2b51526b1deefce3409855bf89bdd3e2fa2fe5522964d9830419b42f76ed117')
-sha512sums_x86_64=('6d2c32c86b6a022c226529d321f380e03ec04dbb35274e820cc86ef0ecd397a5119dbcfe89981b22e258d48037a867d525409b067235f4b75bcd9d4bbe36d3f2')
+sha512sums_i686=('17b5108e35cd6e01072f8a45accc915c987225236a80afdcdf58b8f8cc02e5fcae6f0930f28fa073092f9cc92950aff2745297ec218a994aba769f185c35b560')
+sha512sums_x86_64=('80d36c3b5e8db6771f78dce9a1c23a00a6938d19aeccc43640fab0a1d9759ab501d5221b7c5da1f5f6ea3c0621735a3521ddf5864197a16c3bbbc9950378b8d0')
 
 PKGEXT=".pkg.tar"
 
