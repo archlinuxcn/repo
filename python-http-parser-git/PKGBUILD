@@ -2,7 +2,7 @@
 pkgname=python-http-parser-git
 pkgver=0.8.3
 epoch=1
-pkgrel=2
+pkgrel=3
 pkgdesc="HTTP request/response parser for python in C"
 arch=('x86_64' 'i686')
 url="https://github.com/benoitc/http-parser"
@@ -16,7 +16,7 @@ source=($_gitroot)
 
 pkgver() {
   cd "$srcdir/$_gitname"
-  git describe --tags | sed 's/-/./;s/-/_/g'
+  echo $(git describe --tags | sed 's/-/./;s/-.*//')_$(git log -1 --pretty='%cd' --date=short | tr -d '-')
 }
 
 package() {
