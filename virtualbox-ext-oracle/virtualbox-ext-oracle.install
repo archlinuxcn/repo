@@ -3,11 +3,11 @@ post_install () {
 }
 
 pre_upgrade() {
-  post_remove $*
+  post_remove "$@"
 }
 
 post_upgrade() {
-  post_install $*
+  post_install "$@"
 }
 
 post_remove() {
