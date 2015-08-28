@@ -60,6 +60,7 @@ build() {
     -DCMAKE_SKIP_RPATH=On
   make lrelease -j1
   make manpages -j1
+  make mscore_alias -j1
   make
 }
 
