@@ -2,24 +2,21 @@
 # Contributor:
 pkgname=underscorejs
 _script=underscore
-pkgver=1.8.2
-pkgrel=1
+pkgver=1.8.3
+pkgrel=2
 pkgdesc="Underscore is a utility-belt library for JavaScript that provides a lot of the functional programming support that you would expect in Prototype.js (or Ruby), but without extending any of the built-in JavaScript objects."
 arch=(any)
 url=http://underscorejs.org
-srcurl=https://raw.githubusercontent.com/jashkenas/underscore/${pkgver}
 license=('MIT')
-source=("${srcurl}/${_script}.js" "${srcurl}/${_script}-min.js" "${srcurl}/LICENSE")
-md5sums=('f941b28af01d2c0281af47e3737eb106'
-  'b0e9839a6bb6f12774494fa30c06bcdf'
-  'e5cfca0461b21ca314a0088fd5b2a236')
+source=("${url}/${_script}.js" "${url}/${_script}-min.js")
+md5sums=('f893e294cde60c2462cb19b35aac431b'
+  '543feb1ecaf06ea516f8cec5f9f3f279')
 
 package() {
   cd "${srcdir}"
   mkdir -p "${pkgdir}/usr/share/${pkgname}"
   install -Dm644 "${_script}-min.js" "${pkgdir}/usr/share/${pkgname}/${_script}-min.js"
   install -Dm644 "${_script}.js" "${pkgdir}/usr/share/${pkgname}/${_script}.js"
-  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
 
 # vim:set ts=2 sw=2 et:
