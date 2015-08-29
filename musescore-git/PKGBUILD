@@ -70,7 +70,7 @@ package() {
   make DESTDIR="$pkgdir" install
   install -Dm644 "$srcdir/mime.xml" \
     "$pkgdir/usr/share/mime/packages/x-musescore.xml"
-  ln -s mscore "$pkgdir/usr/bin/musescore"
+  # ln -s mscore "$pkgdir/usr/bin/musescore"
   # install -dm755 "$pkgdir/usr/share/mscore-2.0/manual"
   # mv share/manual/plugins/* \
   #   "$pkgdir/usr/share/mscore-2.0/manual/plugins"
