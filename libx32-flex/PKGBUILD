@@ -11,12 +11,12 @@
 _pkgbasename=flex
 pkgname=libx32-flex
 pkgver=2.5.39
-pkgrel=1
+pkgrel=2
 pkgdesc="A tool for generating text-scanning programs"
 arch=('x86_64')
 url="http://flex.sourceforge.net"
 license=('custom')
-groups=('base-devel')
+groups=()
 depends=('libx32-glibc' 'm4' 'sh' $_pkgbasename)
 options=(libtool staticlibs)
 makedepends=('gcc-multilib-x32')
