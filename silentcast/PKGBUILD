@@ -11,7 +11,7 @@ depends=('bash' 'ffmpeg' 'imagemagick' 'xdotool' 'xorg-xrandr' 'xorg-xwininfo' '
 install=${pkgname}.install
 
 source=($url"/archive/v"$pkgver".tar.gz")
-md5sums=('4638cb6349efd807050df35e1f0a192f')
+md5sums=('b29f57b922a4005a7cbe0712dd60df6e')
 
 package() {
   cd "$pkgname-$pkgver"
