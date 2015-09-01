@@ -1,0 +1,11 @@
+post_install() {
+  xdg-icon-resource forceupdate --theme hicolor || return 1
+}
+
+post_upgrade() {
+  post_install $1
+}
+
+post_remove() {
+  post_install $1
+}
