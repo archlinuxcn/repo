@@ -5,7 +5,7 @@
 # or use: $ curl -s https://dl.google.com/linux/chrome/rpm/stable/x86_64/repodata/other.xml.gz | gzip -df | awk -F\" '/pkgid/{ sub(".*-","",$4); print $4": "$10 }'
 
 pkgname=google-chrome-dev
-pkgver=46.0.2490.6
+pkgver=47.0.2498.0
 pkgrel=1
 pkgdesc="An attempt at creating a safer, faster, and more stable browser (Dev Channel)"
 arch=('i686' 'x86_64')
@@ -26,12 +26,12 @@ source_i686=("google-chrome-${_channel}_${pkgver}_i386.deb::https://dl.google.co
 source_x86_64=("google-chrome-${_channel}_${pkgver}_amd64.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_amd64.deb")
 md5sums=('00541a2eaedf40c2217f17f9345aaa5c'
          'b7e752f549b215ac77f284b6486794b6')
-md5sums_i686=('9728fd151bf1d386056a16e597a61e97')
-md5sums_x86_64=('077c5822311c81f5404efa9c178e1c84')
+md5sums_i686=('f732602aa7427da97ef1bf3ad4d673ed')
+md5sums_x86_64=('d1abecdb85ea5f37236684f75a51fd96')
 
 ## Previous build (also see: /var/cache/pacman/pkg/google-chrome-dev-*):
-#source_x86_64=('http://mirror.pcbeta.com/google/chrome/deb/pool/main/g/google-chrome-unstable/google-chrome-unstable_46.0.2490.4-1_amd64.deb')
-#md5sums_x86_64=('4cbe8b5b5fd11d1ca17c3fa6522c24aa')
+#source_x86_64=('http://mirror.pcbeta.com/google/chrome/deb/pool/main/g/google-chrome-unstable/google-chrome-unstable_46.0.2490.6-1_amd64.deb')
+#md5sums_x86_64=('077c5822311c81f5404efa9c178e1c84')
 
 package() {
   msg2 "Extracting the data.tar.xz..."
