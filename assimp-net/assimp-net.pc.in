@@ -1,0 +1,9 @@
+prefix=/usr
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+
+Name: AssimpNet
+Description: A .NET wrapper for the Open Asset Import Library (Assimp).
+Version: @VERSION@
+Requires: opentk
+Libs: -r:${libdir}/assimp-net/AssimpNet.dll
