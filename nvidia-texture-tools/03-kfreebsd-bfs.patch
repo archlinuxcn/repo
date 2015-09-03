@@ -1,0 +1,115 @@
+DEP: 3
+Subject: Add support for FreeBSD
+Last-Update: 2012-03-31
+Origin: upstream, http://code.google.com/p/nvidia-texture-tools/source/detail?r=907 http://code.google.com/p/nvidia-texture-tools/source/detail?r=1025
+Bug-Debian: http://bugs.debian.org/666252
+
+diff --git a/src/nvcore/Debug.cpp b/src/nvcore/Debug.cpp
+index 0babc0f..922bce7 100644
+--- a/src/nvcore/Debug.cpp
++++ b/src/nvcore/Debug.cpp
+@@ -34,7 +34,7 @@
+ #	endif
+ #endif
+ 
+-#if NV_OS_DARWIN
++#if NV_OS_DARWIN || NV_OS_FREEBSD
+ #	include <unistd.h>	// getpid
+ #	include <sys/types.h>
+ #	include <sys/sysctl.h>	// sysctl
+@@ -199,6 +199,14 @@ namespace
+ 				return (void *) ucp->uc_mcontext->ss.eip;
+ #			endif
+ #		endif
++#	elif NV_OS_FREEBSD
++#		if NV_CPU_X86_64
++			ucontext_t * ucp = (ucontext_t *)secret;
++			return (void *)ucp->uc_mcontext.mc_rip;
++#		elif NV_CPU_X86
++			ucontext_t * ucp = (ucontext_t *)secret;
++			return (void *)ucp->uc_mcontext.mc_eip;
++#		endif
+ #	else
+ #		if NV_CPU_X86_64
+ 			// #define REG_RIP REG_INDEX(rip) // seems to be 16
+diff --git a/src/nvcore/nvcore.h b/src/nvcore/nvcore.h
+index 469f6ad..fe0eaeb 100644
+--- a/src/nvcore/nvcore.h
++++ b/src/nvcore/nvcore.h
+@@ -38,6 +38,9 @@
+ #if defined POSH_OS_LINUX
+ #	define NV_OS_LINUX 1
+ #	define NV_OS_UNIX 1
++#elif defined POSH_OS_FREEBSD
++#	define NV_OS_FREEBSD 1
++#	define NV_OS_UNIX 1
+ #elif defined POSH_OS_CYGWIN32
+ #	define NV_OS_CYGWIN 1
+ #elif defined POSH_OS_MINGW
+@@ -158,7 +161,7 @@
+ #elif NV_CC_GNUC
+ #	if NV_OS_LINUX
+ #		include "DefsGnucLinux.h"
+-#	elif NV_OS_DARWIN
++#	elif NV_OS_DARWIN || NV_OS_FREEBSD
+ #		include "DefsGnucDarwin.h"
+ #	elif NV_OS_MINGW
+ #		include "DefsGnucWin32.h"
+diff --git a/src/nvcore/poshlib/posh.h b/src/nvcore/poshlib/posh.h
+index 3a7c381..f37a764 100644
+--- a/src/nvcore/poshlib/posh.h
++++ b/src/nvcore/poshlib/posh.h
+@@ -293,6 +293,16 @@ Metrowerks:
+ #  define POSH_OS_STRING "Linux"
+ #endif
+ 
++#if defined __FreeBSD__
++#  define POSH_OS_FREEBSD 1
++#  define POSH_OS_STRING "FreeBSD"
++#endif
++
++#if defined __FreeBSD_kernel__
++#  define POSH_OS_FREEBSD 1
++#  define POSH_OS_STRING "kFreeBSD"
++#endif
++
+ #if defined __CYGWIN32__
+ #  define POSH_OS_CYGWIN32 1
+ #  define POSH_OS_STRING "Cygwin"
+diff --git a/src/nvmath/nvmath.h b/src/nvmath/nvmath.h
+index 0318d4e..bedf132 100644
+--- a/src/nvmath/nvmath.h
++++ b/src/nvmath/nvmath.h
+@@ -115,7 +115,7 @@ inline bool isFinite(const float f)
+ {
+ #if NV_OS_WIN32
+ 	return _finite(f) != 0;
+-#elif NV_OS_DARWIN
++#elif NV_OS_DARWIN || NV_OS_FREEBSD
+ 	return isfinite(f);
+ #elif NV_OS_LINUX
+ 	return finitef(f);
+@@ -130,7 +130,7 @@ inline bool isNan(const float f)
+ {
+ #if NV_OS_WIN32
+ 	return _isnan(f) != 0;
+-#elif NV_OS_DARWIN
++#elif NV_OS_DARWIN || NV_OS_FREEBSD
+ 	return isnan(f);
+ #elif NV_OS_LINUX
+ 	return isnanf(f);
+diff --git a/src/nvtt/CMakeLists.txt b/src/nvtt/CMakeLists.txt
+index 9ce93d0..e85ac75 100644
+--- a/src/nvtt/CMakeLists.txt
++++ b/src/nvtt/CMakeLists.txt
+@@ -44,6 +44,10 @@ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
+ ADD_DEFINITIONS(-DNVTT_EXPORTS)
+ 
+ IF(NVTT_SHARED)
++	IF(CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
++		SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-z,origin")
++	ENDIF(CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
++
+ 	ADD_DEFINITIONS(-DNVTT_SHARED=1)
+ 	ADD_LIBRARY(nvtt SHARED ${NVTT_SRCS})
+ ELSE(NVTT_SHARED)

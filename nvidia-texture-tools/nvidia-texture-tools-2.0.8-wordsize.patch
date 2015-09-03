@@ -1,0 +1,26 @@
+diff -up nvidia-texture-tools/src/nvcore/DefsGnucLinux.h.orig nvidia-texture-tools/src/nvcore/DefsGnucLinux.h
+--- nvidia-texture-tools/src/nvcore/DefsGnucLinux.h.orig	2012-05-18 22:17:43.367822764 -0300
++++ nvidia-texture-tools/src/nvcore/DefsGnucLinux.h	2012-05-18 22:19:50.709827759 -0300
+@@ -2,6 +2,8 @@
+ #error "Do not include this file directly."
+ #endif
+ 
++#include <bits/wordsize.h>
++
+ // Function linkage
+ #define DLL_IMPORT
+ #if __GNUC__ >= 4
+@@ -58,8 +60,13 @@ typedef signed short        int16;
+ typedef unsigned int        uint32;
+ typedef signed int          int32;
+ 
++#if __WORDSIZE == 32
+ typedef unsigned long long  uint64;
+ typedef signed long long    int64;
++#else
++typedef unsigned long       uint64;
++typedef signed long         int64;
++#endif
+ 
+ // Aliases
+ typedef uint32              uint;

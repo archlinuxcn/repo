@@ -1,0 +1,18 @@
+DEP: 3
+Subject: Fixed build with libpng1.5
+Last-Update: 2012-03-31
+Origin: upstream, http://code.google.com/p/nvidia-texture-tools/source/detail?r=1248
+
+diff --git a/src/nvimage/ImageIO.cpp b/src/nvimage/ImageIO.cpp
+index 0b24600..22e920a 100644
+--- a/src/nvimage/ImageIO.cpp
++++ b/src/nvimage/ImageIO.cpp
+@@ -603,7 +603,7 @@ static void user_read_data(png_structp png_ptr, png_bytep data, png_size_t lengt
+ {
+ 	nvDebugCheck(png_ptr != NULL);
+ 	
+-	Stream * s = (Stream *)png_ptr->io_ptr;
++	Stream * s = (Stream *)png_get_io_ptr(png_ptr);
+ 	s->serialize(data, (int)length);
+ 	
+ 	if (s->isError()) {
