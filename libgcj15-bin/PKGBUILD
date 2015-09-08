@@ -12,7 +12,7 @@ url=http://gcc.gnu.org/java/
 arch=(i686 x86_64)
 license=(GPL)
 conflicts=(gcc-gcj)
-depends=(zlib)
+depends=(zlib 'gcc-libs')
 
 source_i686=(http://httpredir.debian.org/debian/pool/main/g/gcc-4.9/${pkgname%-*}_${pkgver%_*}-${pkgver##*_}_i386.deb)
 source_x86_64=(http://httpredir.debian.org/debian/pool/main/g/gcc-4.9/${pkgname%-*}_${pkgver%_*}-${pkgver##*_}_amd64.deb)
