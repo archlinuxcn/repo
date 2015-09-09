@@ -69,7 +69,7 @@ build() {
 }
 
 package_arm-linux-gnueabihf-binutils-ldscripts() {
-  privides=(arm-linux-gnueabi-binutils-ldscripts)
+  provides=(arm-linux-gnueabi-binutils-ldscripts)
   conflicts=(arm-linux-gnueabi-binutils-ldscripts)
 
   mkdir -p "$pkgdir/usr/lib/"
