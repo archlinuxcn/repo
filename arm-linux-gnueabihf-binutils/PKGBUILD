@@ -1,52 +1,60 @@
 # Contributor: Alexander 'hatred' Drozdov <adrozdoff@gmail.com>
 # Maintainer: Erico Nunes <nunes dot erico at gmail>
 
+# build from head of release branch as bug fix releases are rare
+
 _target="arm-linux-gnueabihf"
 pkgbase=${_target}-binutils
 pkgname=(${_target}-binutils-ldscripts ${_target}-binutils)
-pkgver=2.25
-pkgrel=1
+pkgver=2.25.1
+pkgrel=3
+_commit=2bd25930
 pkgdesc="A set of programs to assemble and manipulate binary and object files (${_target})"
 arch=(i686 x86_64)
+url="http://www.gnu.org/software/binutils/"
 license=(GPL)
+depends=('glibc>=2.22' 'zlib')
+makedepends=('git')
 options=(!libtool !buildflags !emptydirs)
-url="http://sources.redhat.com/binutils"
-depends=('glibc')
-source=(ftp://ftp.gnu.org/gnu/binutils/binutils-${pkgver}.tar.bz2
-        binutils-${pkgver}-roundup.patch)
-md5sums=('d9f3303f802a5b6b0bb73a335ab89d66'
-         'e7046b004c975a7c3765b8f6758aeb76')
+source=(git://sourceware.org/git/binutils-gdb.git#commit=${_commit}
+        binutils-e9c1bdad.patch)
+md5sums=('SKIP'
+         'eb3aceaab8ed26e06d505f82beb30f8f')
 
 prepare() {
-  cd binutils-${pkgver}
+  cd binutils-gdb
 
-  # binutils-2_25..6c1c6764
-  patch -p1 -i "${srcdir}"/binutils-${pkgver}-roundup.patch
+  # https://sourceware.org/bugzilla/show_bug.cgi?id=16992
+  patch -p1 -i ../binutils-e9c1bdad.patch
 
   # hack! - libiberty configure tests for header files using "$CPP $CPPFLAGS"
   sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" libiberty/configure
 
-  rm -rf "${srcdir}"/binutils-${pkgver}-build
-  mkdir -p "${srcdir}"/binutils-${pkgver}-build
+  rm -rf ../binutils-build
+  mkdir ../binutils-build
 }
 
 build() {
-  cd binutils-${pkgver}-build
+  cd binutils-build
 
-  ../binutils-${pkgver}/configure \
-              --prefix=/usr \
-              --with-lib-path=/usr/lib/binutils/${_target} \
-              --program-prefix=${_target}- \
-              --enable-shared \
-              --disable-multilib \
-              --with-local-prefix=/usr/lib/${_target} \
-              --with-sysroot=/usr/${_target} \
-              --disable-nls \
-              --target=${_target} \
-              --host=$CHOST \
-              --build=$CHOST \
-              --disable-werror
+  ../binutils-gdb/configure \
+      --prefix=/usr \
+      --with-lib-path=/usr/lib/binutils/${_target} \
+      --program-prefix=${_target}- \
+      --enable-shared \
+      --disable-multilib \
+      --with-local-prefix=/usr/lib/${_target} \
+      --with-sysroot=/usr/${_target} \
+      --enable-threads --with-pic \
+      --enable-ld=default --enable-gold --enable-plugins \
+      --disable-nls \
+      --enable-deterministic-archives \
+      --target=${_target} \
+      --host=$CHOST \
+      --build=$CHOST \
+      --disable-werror --disable-gdb
 
+  # check the host environment and makes sure all the necessary tools are available
   make configure-host
   make tooldir=/usr
 
