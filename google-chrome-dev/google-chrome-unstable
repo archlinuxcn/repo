@@ -6,4 +6,4 @@ if [[ -f ~/.config/chrome-dev-flags.conf ]]; then
 fi
 
 # Launch
-exec /opt/google/chrome-unstable/google-chrome-unstable $CHROME_USER_FLAGS $@
+exec /opt/google/chrome-unstable/google-chrome-unstable $CHROME_USER_FLAGS "$@"
