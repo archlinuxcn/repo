@@ -2,7 +2,7 @@
 # Contributor: Michael Jakl <jakl.michael@gmail.com>
 # With contributions from many kind people at https://aur.archlinux.org/packages/julia-git/
 
-BUILD_EXTRA=0
+BUILD_EXTRA=1
 
 pkgbase=julia-git
 if ((BUILD_EXTRA)); then
@@ -10,7 +10,7 @@ if ((BUILD_EXTRA)); then
 else
    pkgname=('julia-git')
 fi
-pkgver=0.3.0.rc3.6555.g783f870
+pkgver=0.4.0.rc1.1.g5416568
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64')
@@ -100,11 +100,7 @@ build() {
 
   (# Building doc
     cd doc
-    make helpdb.jl
-    make man
-    make html
-    make latexpdf
-    make info)
+    make)
 
   (cd contrib
    emacs --batch --eval \
@@ -143,14 +139,8 @@ package_julia-doc-git() {
 
   cd julia/doc/_build
 
-  install -D -m644 man/julialanguage.1 \
-          "$pkgdir"/usr/share/man/man1/julialanguage.1
-  install -D -m644 texinfo/JuliaLanguage.info \
-          "$pkgdir"/usr/share/info/julialanguage.info
-  install -D -m644 latex/JuliaLanguage.pdf \
-          "$pkgdir"/usr/share/doc/julia/julialanguage.pdf
+  mkdir -p "$pkgdir"/usr/share/doc/julia/
   cp -dpr --no-preserve=ownership html "$pkgdir"/usr/share/doc/julia/
-  install ../helpdb.jl "$pkgdir"/usr/share/doc/julia/helpdb.jl
 }
 
 package_emacs-julia-mode-git() {
