@@ -2,7 +2,7 @@
 # Contributor: Ferik <djferik at gmail dot com>
 
 pkgname=masterpdfeditor
-pkgver=3.3.22
+pkgver=3.4.03
 pkgrel=1
 pkgdesc="A complete solution for creation and editing PDF files. (Free for non-commercial use)"
 url="http://code-industry.net/free-pdf-editor.php"
@@ -16,8 +16,8 @@ source_i686=(http://get.code-industry.net/public/master-pdf-editor-${pkgver}_i38
 source_x86_64=(http://get.code-industry.net/public/master-pdf-editor-${pkgver}_amd64.tar.gz)
 
 sha256sums=('29218c206e5b78776bc3ec44a760773273274bb56baee5e19e06c3ec55db59fd')
-sha256sums_i686=('3e759d21adb07677e5d924d325125cc4d83787681d0eee1dd8734b438afc40d7')
-sha256sums_x86_64=('c4728615e847d0f919aaa8ee33c588fc8c3db229eaf5fa39607a3abcb90042da')
+sha256sums_i686=('8ab18c00a94d26614907802dbbde85dbebae90c961b2389695d9a3b388a69463')
+sha256sums_x86_64=('bef348ed741d52c106283f3c074dab6ebb292c4fed7b9811e237b0aa63052c1e')
 
 package() {
 	mkdir -p "${pkgdir}/opt/masterpdfeditor"
