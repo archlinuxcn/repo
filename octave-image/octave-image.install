@@ -1,0 +1,13 @@
+_pack=image
+
+post_install() {
+	octave -q -f --eval "pkg rebuild -global $_pack"
+}
+
+post_upgrade() {
+	post_install
+}
+
+post_remove() {
+	octave -q -f --eval "pkg rebuild -global"
+}
