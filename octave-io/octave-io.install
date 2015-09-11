@@ -1,16 +1,17 @@
 _pack=io
-_prefix=/usr/share/octave/packages
-_libdir=/usr/lib/octave/packages
+
+_octave_run() {
+	octave --no-history --no-init-file --no-window-system -q -f --eval "$*"
+}
 
 post_install() {
-  octave -q -f --eval "pkg prefix $_prefix $_libdir; pkg install -verbose -global /usr/share/octave/$_pack.tar.gz"
+	_octave_run "pkg rebuild -global $_pack"
 }
 
 post_upgrade() {
-  post_remove
-  post_install
+	post_install
 }
 
 post_remove() {
-  octave -q -f --eval "pkg prefix $_prefix $_libdir; pkg uninstall $_pack; pkg rebuild -global"
+	_octave_run "pkg rebuild -global"
 }
