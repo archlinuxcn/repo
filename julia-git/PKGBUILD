@@ -10,7 +10,7 @@ if ((BUILD_EXTRA)); then
 else
    pkgname=('julia-git')
 fi
-pkgver=0.4.0.rc1.1.g5416568
+pkgver=0.4.0.rc1.32.g8f08a1f
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64')
@@ -114,7 +114,6 @@ package_julia-git() {
   depends=('arpack' 'fftw' 'gmp' 'libgit2' 'libunwind' 'llvm' 'mpfr' 'pcre2'
            'hicolor-icon-theme' 'xdg-utils' 'suitesparse' 'openspecfun'
            'openblas')
-  optdepends=('gnuplot: If using the Gaston Package from julia')
   install=julia.install
   conflicts=('julia')
 
@@ -148,6 +147,7 @@ package_emacs-julia-mode-git() {
   pkgdesc="Emacs major mode for the Julia programming language"
   provides=('emacs-julia-mode')
   conflicts=('emacs-julia-mode')
+  depends=('emacs')
 
   cd julia/contrib
 
