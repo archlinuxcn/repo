@@ -29,4 +29,4 @@ def pre_build():
 
 
 if __name__ == '__main__':
-  single_main()
+  single_main(build_prefix)
