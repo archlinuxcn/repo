@@ -1,7 +1,7 @@
 # Maintainer: yk <yk at archlinuxcn dot org>
 
 pkgname=shadowsocks-qt5
-pkgver=2.4.1
+pkgver=2.4.2
 pkgrel=1
 pkgdesc="A fast, reliable and cross-platform GUI fronted for Shadowsocks."
 arch=("i686" "x86_64")
@@ -16,7 +16,7 @@ install=$pkgname.install
 source=("http://github.com/librehat/$pkgname/archive/v$pkgver.tar.gz"
         "shadowsocks-qt5.install"
 )
-sha1sums=('129a6565e362aa32d645d77b4a74a869d2eed487'
+sha1sums=('e3d2fd414a4959fc60f7d8c3564d1c8f4d4146f5'
         'c54b62265d83554e71c98c69511937e1f01911c3'
 )
 
