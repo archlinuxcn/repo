@@ -24,17 +24,8 @@ def pre_build():
         l = 'pkgver=' + ver
       print(l)
 
-  with fileinput.input(files=('octave-%s.install' % _pkg), inplace=1) as f:
-    for l in f:
-      l = l.rstrip('\n')
-      if l.startswith('  octave'):
-        l = re.sub(r'\$(?=[^_])', '$_', l)
-      if l.startswith('#'):
-        continue
-      print(l)
-
   run_cmd(['updpkgsums'])
 
 
 if __name__ == '__main__':
-  single_main()
+  single_main(build_prefix)

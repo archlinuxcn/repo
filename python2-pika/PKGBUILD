@@ -1,7 +1,7 @@
 # Maintainer: Massimiliano Torromeo <massimiliano.torromeo@gmail.com>
 
 pkgname=python2-pika
-pkgver=0.9.14
+pkgver=0.10.0
 pkgrel=1
 _libname=${pkgname/python2-/}
 pkgdesc="Pure-Python implementation of the AMQP 0-9-1"
@@ -22,4 +22,4 @@ package() {
 	python2 setup.py install --skip-build -O1 --root="$pkgdir"
 }
 
-sha256sums=('5e2be3cb4ebdc267abd8e481c09bc30e95919a24e3a5f3f69744959490ead0e3')
+sha256sums=('7277b4d12a99efa4058782614d84138983f9f89d690bdfcea66290d810806459')

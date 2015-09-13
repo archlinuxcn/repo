@@ -1,0 +1,7 @@
+post_install() {
+	while read; do printf '%s\n' "$REPLY"; done <<- EOF
+		Warning! This package requires the pepper flash plugin
+		that is available in one of the packages in the optdepends
+		array! It will not work without one of those!
+	EOF
+}

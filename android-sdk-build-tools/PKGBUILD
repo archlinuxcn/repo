@@ -1,8 +1,8 @@
 # Maintainer: xgdgsc <xgdgsc @t gmail dot com>
 
 pkgname=android-sdk-build-tools
-pkgver=r23
-_ver=23
+pkgver=r23.0.1
+_ver=23.0.1
 pkgrel=1
 pkgdesc='Build-Tools for Google Android SDK (aapt, aidl, dexdump, dx, llvm-rs-cc)'
 arch=('i686' 'x86_64')
@@ -18,7 +18,7 @@ fi
 _sdk=android-sdk
 
 source=("https://dl-ssl.google.com/android/repository/build-tools_${pkgver}-linux.zip")
-sha1sums=('c1d6209212b01469f80fa804e0c1d39a06bc9060')
+sha1sums=('b6ba7c399d5fa487d95289d8832e4ad943aed556')
 _android=android-6.0
 options=('!strip')
 

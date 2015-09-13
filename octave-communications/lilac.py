@@ -10,8 +10,10 @@ build_prefix = 'archlinuxcn-x86_64'
 
 post_build = aur_post_build
 
+_pkg = 'communications'
+
 def _get_new_version():
-  web = s.get('http://octave.sourceforge.net/communications/index.html')
+  web = s.get('http://octave.sourceforge.net/%s/index.html' % _pkg)
   return re.search(r'\d\.\d\.\d', web.text).group()
 
 def pre_build():
@@ -28,4 +30,4 @@ def pre_build():
 
 
 if __name__ == '__main__':
-  single_main()
+  single_main(build_prefix)

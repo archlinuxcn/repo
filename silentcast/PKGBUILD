@@ -1,8 +1,8 @@
 # Maintainer: Colin Keenan <colinnkeenan at gmail dot com>
 
 pkgname=silentcast
-pkgver=2.0
-pkgrel=3
+pkgver=2.1
+pkgrel=1
 pkgdesc="Silent Screencast: video record your screen and make it into an animated gif"
 arch=('any')
 url="https://github.com/colinkeenan/silentcast"
@@ -11,7 +11,7 @@ depends=('bash' 'ffmpeg' 'imagemagick' 'xdotool' 'xorg-xrandr' 'xorg-xwininfo' '
 install=${pkgname}.install
 
 source=($url"/archive/v"$pkgver".tar.gz")
-md5sums=('4638cb6349efd807050df35e1f0a192f')
+md5sums=('3111a345a90e23752ec82b28e55dbbfc')
 
 package() {
   cd "$pkgname-$pkgver"

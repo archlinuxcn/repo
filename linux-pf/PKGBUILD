@@ -9,7 +9,7 @@ _minor=1
 _basekernel=${_major}.${_minor}
 _srcname=linux-${_major}.${_minor}
 pkgbase=linux-pf
-_pfrel=3
+_pfrel=4
 _kernelname=-pf
 _pfpatchhome="http://pf.natalenko.name/sources/${_basekernel}/"
 _pfpatchname="patch-${_basekernel}${_kernelname}${_pfrel}"
@@ -314,7 +314,6 @@ package_linux-pf() {
 	    'crda: to set the correct wireless channels of your country'
 	    'pm-utils: utilities and scripts for suspend and hibernate power management'
 	    'tuxonice-userui: TuxOnIce userspace user interface'
-	    'hibernate-script: set of scripts for managing TuxOnIce, hibernation and suspend to RAM'
 	    'nvidia-pf: NVIDIA drivers for linux-pf'
 	    'modprobed_db: Keeps track of EVERY kernel module that has ever been probed. Useful for make localmodconfig.')
  #provides=(${pkgbase}=${_basekernel} 'aufs3')	# for $pkgname-optimized
@@ -671,5 +670,5 @@ sha256sums=('caf51f085aac1e1cea4d00dbbf3093ead07b551fc07b31b2a989c05f8ea72d9f'
             '1039cedb446a5d98262409afda7a85c15caa46c5bc8730e18c84fdc7f516b0f4'
             '82d660caa11db0cd34fd550a049d7296b4a9dcd28f2a50c81418066d6e598864'
             '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99'
-            '8d4bdcdc7a2b0a944eeb5f890f9d4a70b3848bf1ddc76a5852c1cee6efc5e980'
+            '247c7e2001e4fe28e8cabd0f861240ac13487a942bcb2dbd92ea50302d799414'
             'SKIP')

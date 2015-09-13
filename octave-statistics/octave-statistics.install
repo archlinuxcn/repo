@@ -1,20 +1,13 @@
 _pack=statistics
-_prefix=/usr/share/octave/packages
-_libdir=/usr/lib/octave/packages
 
-## arg 1:  the new package version
 post_install() {
-  octave -q -f --eval "pkg prefix $prefix $libdir; pkg install -verbose -global /usr/share/octave/$_pack.tar.gz"
+	octave -q -f --eval "pkg rebuild -global $_pack"
 }
 
-## arg 1:  the new package version
-## arg 2:  the old package version
 post_upgrade() {
-  post_remove
-  post_install
+	post_install
 }
 
-## arg 1:  the old package version
 post_remove() {
-  octave -q -f --eval "pkg prefix $prefix $libdir; pkg uninstall $_pack; pkg rebuild -global"
+	octave -q -f --eval "pkg rebuild -global"
 }

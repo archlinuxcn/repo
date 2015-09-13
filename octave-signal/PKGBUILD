@@ -9,13 +9,13 @@
 _pack=signal
 pkgname=octave-$_pack
 pkgver=1.3.2
-pkgrel=1
+pkgrel=2
 pkgdesc="Signal processing tools, including filtering, windowing and display functions."
 arch=(any)
 url="http://octave.sourceforge.net/$_pack/"
 license=('custom')
 groups=('octave-forge')
-depends=('octave>=3.8.0' 'octave-control>=2.4.5' 'octave-general>=1.3.2')
+depends=('octave>=3.8.0' 'octave-control>=2.4.5')
 makedepends=()
 optdepends=()
 backup=()
@@ -26,14 +26,29 @@ source=("http://downloads.sourceforge.net/octave/$_archive")
 noextract=("$_archive")
 md5sums=('04a4f1142fe71f14c3b6d7d1d369c215')
 
+_install_dir() {
+	src=$1
+	dst=$2
+	mkdir -p "$(dirname "$dst")"
+	cp -rT "$src" "$dst"
+}
+
 build() {
-  cd "$srcdir"
-  mkdir -p builddir
-  octave -q -f --eval "pkg build -verbose -nodeps builddir $_archive"
+	_prefix="$srcdir"/install_prefix
+	_archprefix="$srcdir"/install_archprefix
+	mkdir -p "$_prefix" "$_archprefix"
+	cd "$srcdir"
+	octave -q -f --eval "$(cat <<-EOF
+		pkg local_list octave_packages;
+		pkg prefix $_prefix $_archprefix;
+		pkg install -verbose -nodeps $_archive;
+		EOF
+		)"
 }
 
 package() {
-  mkdir -p "$pkgdir/usr/share/octave/packages"
-  mkdir -p "$pkgdir/usr/lib/octave/packages"
-  cp "$srcdir/builddir/$_archive" "$pkgdir/usr/share/octave/$_pack.tar.gz"
+	prefix=$pkgdir/usr/share/octave/packages
+	archprefix=$pkgdir/usr/lib/octave/packages
+	_install_dir "$srcdir"/install_prefix "$prefix"
+	_install_dir "$srcdir"/install_archprefix "$archprefix"
 }

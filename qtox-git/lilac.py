@@ -2,8 +2,7 @@
 
 from lilaclib import *
 
-depends = ['libfilteraudio-git',
-           'tox-git']
+depends = ['libfilteraudio-git']
 
 build_prefix = 'extra-x86_64'
 pre_build = aur_pre_build

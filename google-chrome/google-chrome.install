@@ -22,7 +22,7 @@ _update() {
 
 post_install() {
     _update
-    
+    note "Custom flags should be put directly in: ~/.config/chrome-flags.conf"
     note "The launcher is called: 'google-chrome-stable'"
 }
 
