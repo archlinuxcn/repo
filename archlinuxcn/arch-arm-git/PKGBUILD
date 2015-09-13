@@ -3,14 +3,14 @@
 
 pkgname=arch-arm-git
 pkgver=34.48253c3
-pkgrel=1
+pkgrel=2
 pkgdesc="Archlinux ARM cross compiling tools"
 arch=('i686' 'x86_64')
 provides=('arch-arm')
 conflicts=('arch-arm')
 url="https://github.com/yuyichao/arch-arm"
 license=('GPLv3')
-depends=('qemu')
+depends=('qemu-arch-extra')
 makedepends=('git' 'cmake')
 options=('debug' 'strip')
 source=('git://github.com/yuyichao/arch-arm')
