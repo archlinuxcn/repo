@@ -31,7 +31,7 @@ sha512sums=('SKIP'
 
 pkgver() {
   cd rust
-  git describe | sed s/-/./g
+  echo $(make --eval='version:; @echo $(firstword $(CFG_VERSION))' version | tail -n1 | tr '-' '.').$(git log -1 --pretty='%cd' --date=short | tr -d '-')
 }
 
 prepare() {
@@ -41,12 +41,12 @@ prepare() {
     git config submodule.src/${submodule}.url "$srcdir/${submodule}"
   done
   git submodule update
+
+  ./configure --prefix=/usr
 }
 
 build() {
   cd rust
-
-  ./configure --prefix=/usr
 
   # avoid python makedepend (force fallback to python2)
   sed -i 's/^PYTHONVERSION.*/PYTHONVERSION := 3/' src/llvm/Makefile.rules
