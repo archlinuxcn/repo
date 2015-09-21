@@ -35,10 +35,11 @@ ac_add_options --disable-tests
 ac_add_options --disable-updater
 ac_add_options --disable-mochitest
 ac_add_options --disable-installer
-ac_add_options --disable-debug-symbols
+#ac_add_options --disable-debug-symbols
 
 # Optimization
 ac_add_options --enable-optimize
+ac_add_options --disable-debug-symbols
 ac_add_options --enable-jemalloc
 export MOZ_JEMALLOC=1
 
@@ -51,3 +52,5 @@ export BUILD_OFFICIAL=1
 export MOZILLA_OFFICIAL=1
 mk_add_options BUILD_OFFICIAL=1
 mk_add_options MOZILLA_OFFICIAL=1
+
+
