@@ -12,7 +12,7 @@ print(cbind(links,md5sums))
 _EOF_
 
 pkgname=rstudio-desktop-bin
-pkgver=0.99.483
+pkgver=0.99.484
 pkgrel=1
 pkgdesc="A new integrated development environment (IDE) for R (binary version from RStudio official website)"
 arch=('i686' 'x86_64')
@@ -24,8 +24,8 @@ provides=("rstudio-desktop=${pkgver}")
 #options=(!strip)
 
 
-_x86md5=ca0426f7b77d1ce1fd3732bd1793d793
-_x64md5=1d5cab14ebe9424d121c44456f8ff9dd
+_x86md5=fe0c5d879c128c5d3d035bec73150fcc
+_x64md5=ee2a2ab6fce06e3936afd4b5968f7d0c
 
 case "$CARCH" in
 	'i686')
