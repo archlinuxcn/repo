@@ -2,11 +2,12 @@
 
 pkgname=tchrome
 pkgver=1.4
-pkgrel=1
+pkgrel=2
 pkgdesc="Close Chrome browser including background, or launch a version of Google Chrome/Chromium"
 arch=('any')
 url="https://github.com/colinkeenan/tchrome"
 license=('GPL')
+depends=('wmctrl')
 install=${pkgname}.install
 
 source=(https://raw.githubusercontent.com/colinkeenan/${pkgname}/v${pkgver}/${pkgname} 
