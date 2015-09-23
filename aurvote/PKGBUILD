@@ -1,16 +1,21 @@
-# Maintainer: tuxce <tuxce.net@gmail.com>
+# Maintainer: Javier Tia <javier dot tia at gmail dot com>
 pkgname=aurvote
-pkgver=1.8
-pkgrel=1
+pkgver=1.9
+pkgrel=2
 pkgdesc="Tool to vote for favorite AUR packages"
-url="http://git.archlinux.fr/aurvote.git/" 
-license="GPL" 
+url="https://github.com/archlinuxfr/aurvote"
+license="GPL"
 arch=('any')
-depends=('curl') 
-source=($pkgname) 
+depends=('curl')
+conflicts=('aurvote-git')
+replaces=('aurvote-git')
+source=("https://github.com/archlinuxfr/${pkgname}/archive/${pkgver}.tar.gz")
+sha256sums=('bd888c25b376e97bfad1c8f2fd0eefb4db0821ff422356d985009ba287425da7')
 
-package() { 
-  	install -D -m 755 "$srcdir/$pkgname" "$pkgdir/usr/bin/$pkgname"
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  install -Dm 755 aurvote "${pkgdir}/usr/bin/aurvote"
+  install -Dm 644 zsh-completion "${pkgdir}/usr/share/zsh/site-functions/_aurvote"
 }
 
-md5sums=('1cba0a7377b8de6aec9f84b3a5491bda')
+# vim:set ft=sh ts=2 sw=2 et:
