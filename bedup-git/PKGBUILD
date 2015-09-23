@@ -2,14 +2,12 @@
 # Maintainer: Oliver Mangold <o.mangold at gmail dot com>
 pkgname=bedup-git
 pkgver=0.9.0.34.g3c4381a
-pkgrel=1
+pkgrel=2
 pkgdesc="Offline deduplication utility for the BTRFS filesystem"
 arch=('i686' 'x86_64')
 url="https://github.com/g2p/bedup"
-source=('bedup-contextlib2.patch'
-        "git+$url")
-md5sums=('0603c504dd948caf814ce3f74c2f18b1'
-         'SKIP')
+source=("git+$url")
+md5sums=('SKIP')
 license=('GPL')
 depends=('python' 'python-setuptools' 'python-alembic' 'python-cffi'
          'python-sqlalchemy' 'python-xdg' 'python-mako')
@@ -27,8 +25,6 @@ pkgver() {
 prepare() {
   cd "$srcdir/$_repo_name"
   git reset --hard
-  git apply ../bedup-contextlib2.patch
-  sed -i '/contextlib2/d' setup.py
 }
 
 build() {
