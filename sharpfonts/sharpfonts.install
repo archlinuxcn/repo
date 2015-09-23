@@ -1,0 +1,24 @@
+
+post_install() {
+    echo ">>>"
+    echo ">>>> OpenOffice.org/LibreOffice uses its own font-rendering engine, so you have to go through the menu"
+	echo ">>>> 'Tools > Options > OpenOffice.org/LibreOffice > View' and set 'Screen font antialiasing' to '12px'."
+	echo ">>>"
+	echo ">>>> You might also set some of the Desktop and Program Fonts to :'Verdana', 'Arial' or whatever."
+	echo ">>>"
+	echo ">>>> Now log out from your desktop and log back in. Enjoy :)"
+}
+
+post_upgrade() {
+    post_install $1
+}
+
+pre_remove() {
+    /bin/true
+}
+
+op=$1
+shift
+
+$op $*
+
