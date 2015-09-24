@@ -124,7 +124,8 @@ build() {
      --disable-nls \
      --with-float=hard \
      --enable-interwork \
-     --enable-addons
+     --enable-addons \
+     --with-default-libstdcxx-abi=gcc4-compatible
 
   make
 }
