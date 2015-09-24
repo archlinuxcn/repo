@@ -10,7 +10,7 @@ if ((BUILD_EXTRA)); then
 else
    pkgname=('julia-git')
 fi
-pkgver=0.4.0.rc1.337.g2ada02a
+pkgver=0.4.0.rc1.373.g042c4d5
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64')
@@ -53,14 +53,18 @@ prepare() {
 case "$CARCH" in
   x86_64)
     _march=x86-64
+    _cpu=core-avx2
     ;;
   i686)
     _march=pentium4
+    _cpu=pentium4
     ;;
 esac
 
 julia_opts=(prefix=/usr sysconfdir=/etc
-            USE_SYSTEM_LLVM=1
+            # LLVM 3.7 has serious vectorization regressions
+            USE_SYSTEM_LLVM=0
+            LLVM_VER=3.6.2
             USE_SYSTEM_LIBUNWIND=1
             USE_SYSTEM_PCRE=1
             USE_SYSTEM_LIBM=1
@@ -81,8 +85,8 @@ julia_opts=(prefix=/usr sysconfdir=/etc
             USE_INTEL_MKL=0
             USE_BLAS64=0
             USE_LLVM_SHLIB=0
-            # MARCH=$_march
-            MARCH=native
+            MARCH=$_march
+            JULIA_CPU_TARGET=$_cpu
             LIBBLASNAME=libopenblas
             LIBBLAS=-lopenblas
             LIBLAPACKNAME=libopenblas
