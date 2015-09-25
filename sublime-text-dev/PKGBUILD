@@ -1,9 +1,9 @@
-# Maintainer: Sander Boom <sander at inflowmotion dot nl>
+# Maintainer: Sander Boom <sanderboom@gmail.com>
 # Contributor: realitygaps <realitygaps at yahoo dot com>
 
 pkgname=sublime-text-dev
 pkgver=3.3083
-pkgrel=2
+pkgrel=3
 pkgdesc="Sophisticated text editor for code, html and prose - dev build"
 arch=('i686' 'x86_64')
 url="http://www.sublimetext.com/3"
@@ -18,9 +18,9 @@ source=('sublime_text_3.desktop')
 source_x86_64=("http://c758482.r82.cf2.rackcdn.com/sublime_text_3_build_${pkgver:2}_x64.tar.bz2")
 source_i686=("http://c758482.r82.cf2.rackcdn.com/sublime_text_3_build_${pkgver:2}_x32.tar.bz2")
 
-md5sums=('89594b9c6b9a8c7e6a8ce414a0e58243')
-md5sums_i686=('d1be10594fe7093b1b43a888a48c838f')
-md5sums_x86_64=('5da998bea29f9ca02a60d2b3cfc46fea')
+sha256sums=('f355c6bec64e962a5735d0a7d1e11ac39b5b82aacaaf23b222c0bc202e15d866')
+sha256sums_i686=('89e8e2bafa041c263d2c5ffd1b8ea3c36d9727c95a3f7a6603bdf1f6c4cc3165')
+sha256sums_x86_64=('4565c7f607b69ca6efa1751c739a11d42aeaf66d15987fbb9595e97e3ece14ee')
 
 package() {
   cd "${srcdir}"
