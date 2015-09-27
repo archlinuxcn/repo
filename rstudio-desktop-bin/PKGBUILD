@@ -13,16 +13,17 @@ _EOF_
 
 pkgname=rstudio-desktop-bin
 pkgver=0.99.484
-pkgrel=3
+pkgrel=9
 pkgdesc="A new integrated development environment (IDE) for R (binary version from RStudio official website)"
 arch=('i686' 'x86_64')
 license=('GPL')
 url="http://www.rstudio.org/"
-depends=('r>=2.11.1' 'shared-mime-info' 'gstreamer' 'hicolor-icon-theme' 'clang')
+depends=('r' 'gstreamer0.10-base' 'hicolor-icon-theme' 'libxcomposite' 'libxslt' 'shared-mime-info' 'libxrandr' 'gtk2')
+makedepends=('patchelf')
 #'qt5-imageformats' 'qt5-webkit'
 conflicts=('rstudio-desktop' 'rstudio-desktop-git' 'rstudio-desktop-preview-bin')
 provides=("rstudio-desktop=${pkgver}")
-#options=(!strip)
+options=(!strip)
 
 
 _x86md5=fe0c5d879c128c5d3d035bec73150fcc
@@ -54,14 +55,24 @@ package() {
   #ls lib*.so.* | grep -v libedit | grep -v libtinfo | tr \\n \\0 |xargs -0 rm
   #rm -rf plugins
 
+  #cd "$pkgdir/usr/lib/rstudio/bin/rsclang"
+  #ln -sf /usr/lib/libclang.so ./
+
+  cd "$pkgdir/usr/lib/rstudio/bin"
+  ln -sf /usr/lib/libncursesw.so.6 libtinfo.so.5
+  ln -sf /usr/lib/libedit.so.0  libedit.so.2
+
   cd "$pkgdir/usr/lib/rstudio/bin/rsclang"
-  ln -sf /usr/lib/libclang.so ./
+  patchelf --set-rpath '$ORIGIN/..' libclang.so
+
+  cd "$pkgdir/usr/lib/rstudio/bin/plugins"
+  ls */*.so | xargs -n1 patchelf --set-rpath '$ORIGIN/../..'
 
   find "$pkgdir/usr" -type d -print0 | xargs -0 chmod 755
 
   cd "$pkgdir/usr/bin"
   #ln -s -f ../lib/rstudio/bin/rstudio rstudio-bin
-  echo '#!/bin/bash
+  echo '#!/bin/sh
 export QT_DIR=/usr/lib/rstudio/bin
 export QT_PLUGIN_PATH=$QT_DIR/plugins
 export QT_QPA_PLATFORM_PLUGIN_PATH=$QT_PLUGIN_PATH/platforms
