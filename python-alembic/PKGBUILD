@@ -7,8 +7,8 @@ pkgdesc="Alembic is a lightweight database migration tool for usage with the SQL
 arch=('any')
 url='https://bitbucket.org/zzzeek/alembic'
 license=('MIT')
-depends=('python' 'python-mako' 'python-sqlalchemy')
-makedepends=('python-distribute')
+depends=('python' 'python-mako' 'python-sqlalchemy' 'python-editor>=0.3')
+makedepends=('python-setuptools')
 source=(https://pypi.python.org/packages/source/a/alembic/alembic-${pkgver}.tar.gz
         https://pypi.python.org/packages/source/a/alembic/alembic-${pkgver}.tar.gz.asc)
 sha256sums=('a69d65a766801c40e921ca24ae358bf081a990f54b867bbdc3e2a73e975550be'
