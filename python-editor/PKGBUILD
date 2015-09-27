@@ -1,0 +1,25 @@
+_pkgname=python-editor
+pkgname=python-python-editor
+pkgver=0.4
+pkgrel=1
+pkgdesc="Programmatically open an editor, capture the result."
+arch=('any')
+url="https://github.com/fmoo/python-editor"
+makedepends=('python-setuptools')
+license=('Apache')
+depends=('python')
+source=('https://pypi.python.org/packages/source/p/python-editor/python-editor-0.4.tar.gz')
+md5sums=('30de680ec944d073e0c3f18b44d5aa15')
+
+build() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  python3 setup.py build
+}
+
+package() {
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+}
+
+# vim:set sw=2 et:
