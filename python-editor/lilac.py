@@ -7,6 +7,11 @@ post_build = aur_post_build
 
 def pre_build():
   pypi_pre_build()
+  for l in edit_file('PKGBUILD'):
+    if l.startswith('pkgname='):
+      print('pkgname=python-editor')
+    else:
+      print(l)
 
 def post_build():
   pypi_post_build()
