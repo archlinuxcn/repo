@@ -6,9 +6,9 @@
 pkgbase=(virtualbox-pf-modules)
 pkgname=(virtualbox-pf-host-modules virtualbox-pf-guest-modules)
 pkgver=5.0.4
-pkgrel=1
-goodver=4.1
-badver=4.2
+pkgrel=2
+goodver=4.2
+badver=4.3
 arch=('i686' 'x86_64')
 url='http://virtualbox.org'
 license=('GPL')
@@ -58,4 +58,5 @@ package_virtualbox-pf-guest-modules() {
 	sed -i -e "s/EXTRAMODULES='.*'/EXTRAMODULES='$_extramodules'/" "$startdir/guest.install"
 }
 pkgdesc='Kernel modules for VirtualBox running under Linux-pf. No need for dkms with this package!'
+
 
