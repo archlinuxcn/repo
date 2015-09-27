@@ -8,7 +8,10 @@ depends = ['python-editor']
 
 def pre_build():
   # aur_pre_build()
-  pass
+  pypi_pre_build(depends=['python-editor'])
+
+def post_build():
+  pypi_post_build()
 
 if __name__ == '__main__':
   single_main()
