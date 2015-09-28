@@ -1,9 +1,9 @@
 # Maintainer: lilydjwg <lilydjwg@gmail.com>
 # Maintainer: Daniel Micay <danielmicay@gmail.com>
 pkgname=('rust-git' 'rust-doc-git')
-pkgver=1.0.0.beta.5645.g1a1e6b8
+pkgver=1.5.0.dev.20150927
 pkgrel=1
-epoch=1
+epoch=2
 pkgdesc="A safe, concurrent, practical language from Mozilla."
 arch=('i686' 'x86_64')
 url="http://www.rust-lang.org/"
@@ -31,7 +31,8 @@ sha512sums=('SKIP'
 
 pkgver() {
   cd rust
-  git describe | sed s/-/./g
+  ./configure --prefix=/usr 2>/dev/null >&2
+  echo $(make --eval='version:; @echo $(firstword $(CFG_VERSION))' version | tail -n1 | tr '-' '.').$(git log -1 --pretty='%cd' --date=short | tr -d '-')
 }
 
 prepare() {
@@ -47,7 +48,6 @@ build() {
   cd rust
 
   ./configure --prefix=/usr
-
   # avoid python makedepend (force fallback to python2)
   sed -i 's/^PYTHONVERSION.*/PYTHONVERSION := 3/' src/llvm/Makefile.rules
 

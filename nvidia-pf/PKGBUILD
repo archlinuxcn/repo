@@ -2,13 +2,13 @@
 
 pkgname=nvidia-pf
 pkgver=352.41
-_extramodules=extramodules-4.1-pf
-pkgrel=2
+_extramodules=extramodules-4.2-pf
+pkgrel=3
 pkgdesc="NVIDIA drivers for linux-pf"
 arch=('i686' 'x86_64')
 url="http://www.nvidia.com/"
-depends=('linux-pf>=4.1' 'linux-pf<4.2' "nvidia-libgl" "nvidia-utils=${pkgver}")
-makedepends=('linux-pf-headers>=4.1' 'linux-pf-headers<4.2')
+depends=('linux-pf>=4.2' 'linux-pf<4.3' "nvidia-libgl" "nvidia-utils=${pkgver}")
+makedepends=('linux-pf-headers>=4.2' 'linux-pf-headers<4.3')
 license=('custom')
 install=nvidia.install
 options=(!strip)

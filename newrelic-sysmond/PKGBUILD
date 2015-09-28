@@ -19,7 +19,7 @@
 
 set -u
 pkgname='newrelic-sysmond'
-pkgver='2.1.0.124'
+pkgver='2.2.0.125'
 pkgrel='1'
 pkgdesc='collect, monitor, and analyze critical server load metrics including CPU, memory, network, process, disk utilization and capacity'
 arch=('i686' 'x86_64')
@@ -29,12 +29,13 @@ depends=('glibc' 'bash' 'grep' 'sed' 'awk' 'systemd')
 makedepends=('binutils')
 backup=('etc/newrelic/nrsysmond.cfg')
 install="${pkgname}.install"
-source=("http://download.newrelic.com/server_monitor/archive/${pkgver}/${pkgname}-${pkgver}-linux.tar.gz"
+_verwatch=('http://download.newrelic.com/server_monitor/archive/' '\([0-9][^/]\+\)/' 'l')
+source=("${_verwatch[0]}${pkgver}/${pkgname}-${pkgver}-linux.tar.gz"
         "${pkgname}.logrotate"
         "${pkgname}.inst.sh"
         "${pkgname}.service")
 
-sha256sums=('052e42d156e20f77e78f82372123eadf069ef2e5758a1184725a906ead551d9b'
+sha256sums=('92c43cdce10e727e7f17d81c733e421402f62bf7a4b042ce38cb4cb93b5c93f6'
             '02d70a783e30a7b6f8c438b1bae5a57d37d2204d112ccca38eada2b9044a5ebe'
             'bcce083629dcd0827f86247872ee4b42dec2c51349b4cc10c0ce7619f94faf9f'
             '58fade9de4793e22cda75816a74c52d5d9b831ab68bc7b8225aa1bb294b3b31b')
@@ -80,13 +81,16 @@ package() {
   install -Dpm644 "${srcdir}/${pkgname}.logrotate" "${pkgdir}/etc/logrotate.d/${pkgname}"
 
   # Ensure there are no forbidden paths. Place at the end of package() and comment out as you find or need exceptions. (git-aurcheck)
-  ! test -d "${pkgdir}/sbin" || { echo "Forbidden: /sbin"; echo "${}"; }
-  ! test -d "${pkgdir}/usr/sbin" || { echo "Forbidden: /usr/sbin"; echo "${}"; }
-  ! test -d "${pkgdir}/usr/local" || { echo "Forbidden: /usr/local"; echo "${}"; }
-  #! grep -lr "/sbin" "${pkgdir}" || { echo "Forbidden: /sbin"; echo "${}"; }
-  ! grep -lr "/usr/tmp" "${pkgdir}" || { echo "Forbidden: /usr/tmp"; echo "${}"; }
-  #! grep -lr "/usr/local" "${pkgdir}" || { echo "Forbidden: /usr/local"; echo "${}"; }
-  ! pcregrep -lr "(?<!/usr)/bin" "${pkgdir}" || { echo "Forbidden: /bin"; echo "${}"; }
+  ! test -d "${pkgdir}/bin" || { echo "Line ${LINENO} Forbidden: /bin"; false; }
+  ! test -d "${pkgdir}/sbin" || { echo "Line ${LINENO} Forbidden: /sbin"; false; }
+  ! test -d "${pkgdir}/lib" || { echo "Line ${LINENO} Forbidden: /lib"; false; }
+  ! test -d "${pkgdir}/share" || { echo "Line ${LINENO} Forbidden: /share"; false; }
+  ! test -d "${pkgdir}/usr/sbin" || { echo "Line ${LINENO} Forbidden: /usr/sbin"; false; }
+  ! test -d "${pkgdir}/usr/local" || { echo "Line ${LINENO} Forbidden: /usr/local"; false; }
+  #! grep -lr "/sbin" "${pkgdir}" || { echo "Line ${LINENO} Forbidden: /sbin"; false; }
+  ! grep -lr "/usr/tmp" "${pkgdir}" || { echo "Line ${LINENO} Forbidden: /usr/tmp"; false; }
+  #! grep -lr "/usr/local" "${pkgdir}" || { echo "Line ${LINENO} Forbidden: /usr/local"; false; }
+  #! pcre2grep -Ilr "(?<!/usr)/bin" "${pkgdir}" || { echo "Line ${LINENO} Forbidden: /bin"; false; }
   set +u
 }
 

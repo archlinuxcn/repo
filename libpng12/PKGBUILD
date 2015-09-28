@@ -1,4 +1,4 @@
-# Maintainer: Daniel Wallace <danielwallace at gtmanfred dot com>
+# Maintainer: Arthur Zamarin <arthurzam@gmail.com>
 # Contributor:	dorphell			<archlinux.org: dorphell>
 # Contributor:	Travis Willard			<archlinux.org: travis>
 # Contributor:	Douglas Soares de Andrade	<archlinux.org: douglas>
@@ -7,13 +7,13 @@
 pkgname=libpng12
 _realname=libpng
 pkgver=1.2.53
-pkgrel=1
+pkgrel=2
 pkgdesc="A collection of routines used to create PNG format graphics files"
 arch=('i686' 'x86_64' 'armv7h')
 url="http://www.libpng.org/pub/png/libpng.html"
 license=('custom')
 depends=('zlib')
-source=("http://sourceforge.net/projects/libpng/files/libpng-${pkgver}.tar.xz"
+source=("http://sourceforge.net/projects/libpng/files/libpng12/${pkgver}/libpng-${pkgver}.tar.xz"
         "http://sourceforge.net/projects/apng/files/libpng/libpng12/libpng-${pkgver}-apng.patch.gz")
 
 build() {
@@ -46,5 +46,5 @@ package() {
 
 }
 
-md5sums=('7d18a74e6fd2029aee76ccd00e00a9e6'
-         'dc9f72ed91fee9c93f84c4e8d14e206d')
+sha256sums=('b45e49f689e7451bd576569e6a344f7e0d11c02ecbb797f4da0e431526765c0a'
+            '64745f978fd9419a533942181316ddd1cafce63e899bc572f37d6614831c8ed3')

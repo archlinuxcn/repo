@@ -3,7 +3,7 @@
 # Contributor: Ernia <monghitri@aruba.it>
 
 pkgname=yad
-pkgver=0.29.0
+pkgver=0.31.0
 pkgrel=1
 pkgdesc="A fork of zenity - display graphical dialogs from shell scripts or command line"
 url="http://sourceforge.net/projects/yad-dialog"
@@ -12,11 +12,10 @@ license=('GPL3')
 depends=('gtk3' 'hicolor-icon-theme')
 makedepends=('intltool')
 install='yad.install'
-source=($url/files/${pkgname}-${pkgver}.tar.xz disable-html.patch)
+source=($url/files/${pkgname}-${pkgver}.tar.xz)
 
 prepare() {
   cd "${srcdir}/${pkgname}-${pkgver}"
-  patch -Np1 -i "$srcdir/disable-html.patch"
 }
 
 build() {
@@ -31,5 +30,4 @@ package() {
 
 }
 
-sha1sums=('1df3209675ff6a1e3c700eb50871dd267862c2f6'
-          '2abe257235fd4110ccc408bca155eac42cf09d2f')
+sha1sums=('df5fcc1c05575ba9f9ab6818919f5a02df67583f')

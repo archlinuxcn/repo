@@ -5,7 +5,7 @@
 # or use: $ curl -s https://dl.google.com/linux/chrome/rpm/stable/x86_64/repodata/other.xml.gz | gzip -df | awk -F\" '/pkgid/{ sub(".*-","",$4); print $4": "$10 }'
 
 pkgname=google-chrome
-pkgver=45.0.2454.85
+pkgver=45.0.2454.101
 pkgrel=1
 pkgdesc="An attempt at creating a safer, faster, and more stable browser (Stable Channel)"
 arch=('i686' 'x86_64')
@@ -24,10 +24,10 @@ source=('google-chrome-stable'
         'eula_text.html')
 source_i686=("google-chrome-${_channel}_${pkgver}_i386.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_i386.deb")
 source_x86_64=("google-chrome-${_channel}_${pkgver}_amd64.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_amd64.deb")
-md5sums=('9c9bd494c7cc5c98feff767be140a853'
+md5sums=('99fa93d5e7fb5d622cef0f9621f3ffa3'
          'b7e752f549b215ac77f284b6486794b6')
-md5sums_i686=('2fc404c0fdd90c45acb5ed4d2cf38877')
-md5sums_x86_64=('25d88e62552920168e5390040cc062f5')
+md5sums_i686=('7eba15498c9d23ddd7e2d8e8b6513490')
+md5sums_x86_64=('df54ff74c9c9228a5d0bb441f7465e14')
 
 package() {
   msg2 "Extracting the data.tar.lzma..."
@@ -35,7 +35,7 @@ package() {
 
   msg2 "Moving stuff in place..."
   # Launcher
-  install -m755 google-chrome-stable "$pkgdir"/usr/bin/
+  install -m755 google-chrome-$_channel "$pkgdir"/usr/bin/
 
   # Icons
   for i in 16x16 22x22 24x24 32x32 48x48 64x64 128x128 256x256; do
@@ -50,7 +50,7 @@ package() {
   install -Dm644 eula_text.html "$pkgdir"/usr/share/licenses/google-chrome/eula_text.html
 
   msg2 "Fixing Chrome icon resolution..."
-  sed -i "/Exec=/i\StartupWMClass=Google-chrome-$_channel" "$pkgdir"/usr/share/applications/google-chrome.desktop
+  sed -i "/Exec=/i\StartupWMClass=Google-chrome" "$pkgdir"/usr/share/applications/google-chrome.desktop
 
   msg2 "Fixing permissions of documentation folder..."
   chmod 755 "$pkgdir"/usr/share/doc/google-chrome-$_channel/

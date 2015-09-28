@@ -1,15 +1,15 @@
 # Maintainer: Christos Nouskas <nous at archlinux dot us>
-# PKGBUILD assembled from kernel26
-# Some lines from  kernel26-bfs and kernel26-ck
+# PKGBUILD assembled from linux
+# Some lines from  linux-bfs and linux-ck
 # Credits to respective maintainers
 _major=4
-_minor=1
+_minor=2
 #_patchlevel=0
 #_subversion=1
 _basekernel=${_major}.${_minor}
 _srcname=linux-${_major}.${_minor}
 pkgbase=linux-pf
-_pfrel=4
+_pfrel=1
 _kernelname=-pf
 _pfpatchhome="http://pf.natalenko.name/sources/${_basekernel}/"
 _pfpatchname="patch-${_basekernel}${_kernelname}${_pfrel}"
@@ -19,15 +19,15 @@ _CPUSUFFIXES_KBUILD=(
   ATOM PENTIUMII PENTIUMIII PENTIUMM PENTIUM4 NEHALEM SANDYBRIDGE
   IVYBRIDGE HASWELL BROADWELL)
 _CPUSUFFIXES=( core2 k7 k8 k10 barcelona bobcat
-	       bulldozer piledriver psc atom p2 p3 pm p4
-	       nehalem sandybridge ivybridge haswell broadwell)
+               bulldozer piledriver psc atom p2 p3 pm p4
+               nehalem sandybridge ivybridge haswell broadwell)
 
 ### PATCH AND BUILD OPTIONS
 # taken from graysky linux-ck see: https://aur.archlinux.org/packages/linux-ck
 # Set these variables to ANYTHING (yes or no or 1 or 0 or "I like icecream") to enable them
 #
 
-#_NUMA_off=yes		# Disable NUMA in kernel config
+#_NUMA_off=yes          # Disable NUMA in kernel config
 
 ### DOCS
 # Starting with the 3.6.6-3 release, this package ships with the kernel-3x-gcc47-x.patch.
@@ -72,11 +72,16 @@ license=('GPL2')
 options=('!strip')
 makedepends=('git' 'xmlto' 'docbook-xsl' 'xz' 'bc' 'kmod')
 source=("ftp://www.kernel.org/pub/linux/kernel/v${_major}.x/linux-${_basekernel}.tar.xz"
-	'config.x86_64'		# the main kernel config files
-	'linux.preset'		# standard config files for mkinitcpio ramdisk
-	'change-default-console-loglevel.patch'
-	"${_pfpatchhome}${_pfpatchname}.xz"	# the -pf patchset
-        "git+$_aufs4#branch=aufs4.1"
+        'config.x86_64'         # the main kernel config files
+        'linux.preset'          # standard config files for mkinitcpio ramdisk
+        'change-default-console-loglevel.patch'
+        '0001-make_flush_workqueue_non_gpl.patch'
+        '0001-e1000e-Fix-tight-loop-implementation-of-systime-read.patch'
+        '0001-netfilter-conntrack-use-nf_ct_tmpl_free-in-CT-synpro.patch'
+        '0001-fix-bridge-regression.patch'
+        '0001-drm-fbdev-Return-EBUSY-when-oopsing.patch'
+        "${_pfpatchhome}${_pfpatchname}.xz"     # the -pf patchset
+        "git+$_aufs4"
 )
 
 
@@ -86,13 +91,14 @@ prepare() {
   patch -Np1 < ${srcdir}/${_pfpatchname}
   msg "applying aufs4 patches"
   cd "$srcdir/${_aufs4##*/}"
-#  git checkout origin/aufs${_basekernel} || _aufs4checkout=KRAKRA
+  #git checkout origin/aufs4.x-rcN || _aufs4checkout=KRAKRA
+  git checkout origin/aufs${_basekernel} || _aufs4checkout=KRAKRA
   if [[ ${_aufs4checkout} = "KRAKRA" ]]; then
       echo
       msg "AUFS4 not yet ported to version ${_basekernel}!"
       msg "Skipping related patches."
       echo
-      cd ..
+      cd ../linux-${_basekernel}
   else
     #        mkdir -p "${pkgdir}/usr/lib/modules/build/${_kernver}/include"
     #        mv include/linux/Kbuild "${pkgdir}/usr/lib/modules/build/${_kernver}/include/"
@@ -104,11 +110,11 @@ prepare() {
       patch -Np1 -i ${_patch} || _aufs4fail=KRAKRA
     done
     if [[ ${_aufs4fail} = "KRAKRA" ]]; then
-	echo
-    	warning "Not all aufs4 patches applied correctly. Ignore this if you won't use AUFS."
-    	warning "Otherwise, press CTRL-C now and fix manually"
-	warning "Remind me to enable it again if it's aviable again"
-    	echo
+        echo
+        warning "Not all aufs4 patches applied correctly. Ignore this if you won't use AUFS."
+        warning "Otherwise, press CTRL-C now and fix manually"
+        warning "Remind me to enable it again if it's aviable again"
+        echo
     fi
   fi
 
@@ -123,6 +129,25 @@ prepare() {
   # add latest fixes from stable queue, if needed
   # http://git.kernel.org/?p=linux/kernel/git/stable/stable-queue.git
 
+  # fix work_queue symbol to non GPL for nvidia module building
+  # already applied to 4.3 series
+  patch -p1 -i "${srcdir}/0001-make_flush_workqueue_non_gpl.patch"
+
+  # fix hard lockup in e1000e_cyclecounter_read() after 4 hours of uptime
+  # https://lkml.org/lkml/2015/8/18/292
+  patch -p1 -i "${srcdir}/0001-e1000e-Fix-tight-loop-implementation-of-systime-read.patch"
+
+  # add not-yet-mainlined patch to fix network unavailability when iptables
+  # rules are applied during startup - happened with Shorewall; journal had
+  # many instances of this error: nf_conntrack: table full, dropping packet
+  patch -p1 -i "${srcdir}/0001-netfilter-conntrack-use-nf_ct_tmpl_free-in-CT-synpro.patch"
+
+  # add not-yes-mainlined patch to fix bridge code
+  # https://bugzilla.kernel.org/show_bug.cgi?id=104161
+  patch -Np1 -i "${srcdir}/0001-fix-bridge-regression.patch"
+
+  # fix intel gpu card freeze
+  patch -Np1 -i "${srcdir}/0001-drm-fbdev-Return-EBUSY-when-oopsing.patch"
 
   # set DEFAULT_CONSOLE_LOGLEVEL to 4 (same value as the 'quiet' kernel param)
   # remove this when a Kconfig knob is made available by upstream
@@ -134,9 +159,9 @@ prepare() {
   # added gcc 4.7.1 support for Kconfig and menuconfig
   # now inclued in pf patchset
   if [ "$CARCH" = "x86_64" ]; then
-	cat "${startdir}/config.x86_64" >| .config
+        cat "${startdir}/config.x86_64" >| .config
   else
-	cat "${startdir}/config" >| .config
+        cat "${startdir}/config" >| .config
   fi
 
   sed -ri "s|SUBLEVEL = 0|SUBLEVEL = $_pfrel|" Makefile
@@ -174,7 +199,7 @@ prepare() {
 build() {
   cd "${srcdir}/linux-${_basekernel}"
   #----------------------------------------
-  if [[ "$_BATCH" != "y" ]]; then		# for batch building
+  if [[ "$_BATCH" != "y" ]]; then               # for batch building
     echo
     echo "======================================================="
     msg "You might be prompted below for some config options"
@@ -190,30 +215,30 @@ build() {
     shopt -s nocasematch
     if [[ "$answer" = "y" ]]; then
       if [[ -s /proc/config.gz ]]; then
-	msg "Extracting config from /proc/config.gz..."
-	zcat /proc/config.gz >| ./.config
+        msg "Extracting config from /proc/config.gz..."
+        zcat /proc/config.gz >| ./.config
       else
-	msg "running 'sudo modprobe configs'"
-	sudo modprobe configs
+        msg "running 'sudo modprobe configs'"
+        sudo modprobe configs
         if [[ -s /proc/config.gz ]]; then
-	  msg "Extracting config from /proc/config.gz..."
-	  zcat /proc/config.gz >| ./.config
-	else
-	  msg "You kernel was not compiled with IKCONFIG_PROC."
-	  msg "Attempting to run /usr/bin/modprobed_db recall from modprobe_db..."
-	  if [ -e /usr/bin/modprobed_db ]; then
-	    sudo /usr/bin/modprobed_db recall
-	  else
-	    msg "modprobed_db not installed, running make localmodconfig instead..."
-	    make localmodconfig
-	  fi
+          msg "Extracting config from /proc/config.gz..."
+          zcat /proc/config.gz >| ./.config
+        else
+          msg "You kernel was not compiled with IKCONFIG_PROC."
+          msg "Attempting to run /usr/bin/modprobed_db recall from modprobe_db..."
+          if [ -e /usr/bin/modprobed_db ]; then
+            sudo /usr/bin/modprobed_db recall
+          else
+            msg "modprobed_db not installed, running make localmodconfig instead..."
+            make localmodconfig
+          fi
         fi
       fi
     elif [[ "$answer" = "l" ]]; then
-      # Copied from kernel26-ck's PKGBUILD
+      # Copied from linux-ck's PKGBUILD
       msg "Attempting to run /usr/bin/reload_database with sudo from modprobe_db..."
       if [ -e /usr/bin/modprobed_db ]; then
-	sudo /usr/bin/modprobed_db recall
+        sudo /usr/bin/modprobed_db recall
       fi
       msg "Running 'make localmodconfig'..."
       make localmodconfig
@@ -239,23 +264,23 @@ build() {
     read answer
     case "$answer" in
       m) make menuconfig
-	;;
+        ;;
       g) make gconfig
-	;;
+        ;;
       x) make xconfig
-	;;
+        ;;
       n) make nconfig
-	;;
+        ;;
       o) make oldconfig
       ;;
       l) make localyesconfig
-	;;
+        ;;
       default)
-	;;
+        ;;
     esac
     cp -v .config ${startdir}/config.local
     for _cpusuffix_kbuild in ${_CPUSUFFIXES_KBUILD[@]} ; do
-	_egrepstring="${_egrepstring}M${_cpusuffix_kbuild}=y|"
+        _egrepstring="${_egrepstring}M${_cpusuffix_kbuild}=y|"
     done
     CPU=$(egrep "${_egrepstring}CONFIG_GENERIC_CPU=y|M686=y|CONFIG_MNATIVE=y" ./.config)
     CPU=$(sed -e "s/CONFIG_M\(.*\)=y/\1/" <<<$CPU)
@@ -283,10 +308,10 @@ build() {
       read answer
       shopt -s nocasematch
       if [[ "$answer" != "g" ]]; then
-	export _PKGOPT=y
+        export _PKGOPT=y
       fi
     fi
-  fi	# batch check ends here
+  fi    # batch check ends here
   export CPU
   #----------------------------------------
 
@@ -311,12 +336,12 @@ package_linux-pf() {
  backup=(etc/mkinitcpio.d/${pkgbase}.preset)
  depends=('coreutils' 'linux-firmware' 'kmod>=9-2' 'mkinitcpio>=0.7')
  optdepends=('linux-docs: Kernel hackers manual - HTML documentation that comes with the Linux kernel.'
-	    'crda: to set the correct wireless channels of your country'
-	    'pm-utils: utilities and scripts for suspend and hibernate power management'
-	    'tuxonice-userui: TuxOnIce userspace user interface'
-	    'nvidia-pf: NVIDIA drivers for linux-pf'
-	    'modprobed_db: Keeps track of EVERY kernel module that has ever been probed. Useful for make localmodconfig.')
- #provides=(${pkgbase}=${_basekernel} 'aufs3')	# for $pkgname-optimized
+            'crda: to set the correct wireless channels of your country'
+            'pm-utils: utilities and scripts for suspend and hibernate power management'
+            'tuxonice-userui: TuxOnIce userspace user interface'
+            'nvidia-pf: NVIDIA drivers for linux-pf'
+            'modprobed_db: Keeps track of EVERY kernel module that has ever been probed. Useful for make localmodconfig.')
+ #provides=(${pkgbase}=${_basekernel} 'aufs3')  # for $pkgname-optimized
  provides=(${pkgbase}=${_basekernel} 'aufs3')
  # below 'provides' is for when you have no other kernel (which is a bad idea anyway)
  # provides=(${pkgbase}=${_basekernel} 'linux=${pkgver}' 'aufs3')
@@ -325,7 +350,7 @@ package_linux-pf() {
  for _cpusuffix in $_CPUSUFFIXES ; do
    conflicts+=(${pkgbase}-${_cpusuffix})
  done
- replaces=('kernel26-pf' 'aufs3')
+ replaces=('aufs3')
  backup=("etc/mkinitcpio.d/${pkgbase}.preset")
  install='linux.install'
 
@@ -339,8 +364,8 @@ package_linux-pf() {
   # This allows building cpu-optimized packages with according package names.
   # Useful for repo maintainers.
   headers="headers"
-  pkgnameopt="${pkgbase}"		# this MUST be outside the following 'if'
-  if [[ "$_PKGOPT" = "y" ]]; then	# package naming according to optimization
+  pkgnameopt="${pkgbase}"               # this MUST be outside the following 'if'
+  if [[ "$_PKGOPT" = "y" ]]; then       # package naming according to optimization
     case $CPU in
      CORE2)
          pkgname="${pkgbase}-core2"
@@ -353,27 +378,27 @@ package_linux-pf() {
      K8)
          pkgname="${pkgbase}-k8"
          pkgdesc="${_pkgdesc} AMD K8 optimized."
-	 ;;
+         ;;
      K10)
          pkgname="${pkgbase}-k10"
-	 pkgdesc="§{_pkgdesc} AMD K10 optimized"
+         pkgdesc="§{_pkgdesc} AMD K10 optimized"
          ;;
      BARCELONA)
          pkgname="${pkgbase}-barcelona"
          pkgdesc="${_pkgdesc} AMD Barcelona optimized."
-	 ;;
+         ;;
      BOBCAT)
-	 pkgname="${pkgbase}-bobcat"
-	 pkgdesc="${_pkgdesc} AMD Bobcat optimized."
-	 ;;
+         pkgname="${pkgbase}-bobcat"
+         pkgdesc="${_pkgdesc} AMD Bobcat optimized."
+         ;;
      BULLDOZER)
-	 pkgname="${pkgbase}-bulldozer"
-	 pkgdesc="${_pkgdesc} AMD Bulldozer optimized."
-	 ;;
+         pkgname="${pkgbase}-bulldozer"
+         pkgdesc="${_pkgdesc} AMD Bulldozer optimized."
+         ;;
      PILEDRIVER)
-	 pkgname="${pkgbase}-piledriver"
-	 pkgdesc="${_pkgdesc} AMD Piledriver optimized."
-	 ;;
+         pkgname="${pkgbase}-piledriver"
+         pkgdesc="${_pkgdesc} AMD Piledriver optimized."
+         ;;
      PSC)
          pkgname="${pkgbase}-psc"
          pkgdesc="${_pkgdesc} Intel Pentium4/D/Xeon optimized."
@@ -399,25 +424,25 @@ package_linux-pf() {
          pkgdesc="${_pkgdesc} Intel Pentium4 optimized."
          ;;
      NEHALEM)
-	 pkgname="${pkgbase}-nehalem"
+         pkgname="${pkgbase}-nehalem"
          pkgdesc="${_pkgdesc} Intel Core Nehalem optimized."
-	 ;;
+         ;;
      SANDYBRIDGE)
          pkgname="${pkgbase}-sandybridge"
          pkgdesc="${_pkgdesc} Intel 2nd Gen Core processors including Sandy Bridge."
-	 ;;
+         ;;
      IVYBRIDGE)
          pkgname="${pkgbase}-ivybridge"
          pkgdesc="${_pkgdesc} Intel 3rd Gen Core processors including Ivy Bridge."
-	 ;;
+         ;;
      HASWELL)
          pkgname="${pkgbase}-haswell"
          pkgdesc="${_pkgdesc} 4th Gen Core processors including Haswell."
-	 ;;
+         ;;
      BROADWELL)
          pkgname="${pkgbase}-broadwell"
          pkgdesc="${_pkgdesc} 5th Gen Core processors including Broadwell."
-	 ;;
+         ;;
      SILVERMONT)
          pkgname="${pkgbase}-silvermont"
          pkgdesc="${_pkgdesc} 6th Gen Core processors including Silvermont."
@@ -433,14 +458,14 @@ package_linux-pf() {
   # If optimized build, conflict with generic and other optimized ones
 
   if [[ "$pkgname" != "$pkgbase" ]]; then
-	pkgnameopt="${pkgname}"		# this MUST be inside this if-fi
-	pkgname="${pkgbase}"
-	echo pkgname $pkgname
-	cpuopt=`sed -e "s/linux-pf-//" <<<$pkgnameopt`		# get suffix
-	cpuoptdesc=`sed -e "s/${_pkgdesc}//" <<<$pkgdesc`	# get description
-	conflicts=(${conflicts[@]/linux-pf-${cpuopt}/})		# remove current
-	conflicts=(${conflicts[@]/linux-pf-headers-${cpuopt}/})	# remove current's headers
-	export cpuopt cpuoptdesc
+        pkgnameopt="${pkgname}"         # this MUST be inside this if-fi
+        pkgname="${pkgbase}"
+        echo pkgname $pkgname
+        cpuopt=`sed -e "s/linux-pf-//" <<<$pkgnameopt`          # get suffix
+        cpuoptdesc=`sed -e "s/${_pkgdesc}//" <<<$pkgdesc`       # get description
+        conflicts=(${conflicts[@]/linux-pf-${cpuopt}/})         # remove current
+        conflicts=(${conflicts[@]/linux-pf-headers-${cpuopt}/}) # remove current's headers
+        export cpuopt cpuoptdesc
   fi
 
   # second batch check ends here
@@ -448,7 +473,7 @@ package_linux-pf() {
 
  # Pass conflicts array to linux-pf-headers() BEFORE adding generic linux-pf or headers will conflict
  export _conflicts=${conflicts[@]}
- conflicts=('linux-pf' 'kernel26-pf' ${conflicts[@]})	# add generic packages
+ conflicts=('linux-pf' ${conflicts[@]}) # add generic packages
 
   echo
   echo "    ========================================"
@@ -666,9 +691,14 @@ package_linux-pf-headers() {
 pkgdesc="Linux kernel and modules with the pf-kernel patch [-ck patchset (BFS included), TuxOnIce, BFQ] and aufs4"
 
 # makepkg -g >>PKGBUILD
-sha256sums=('caf51f085aac1e1cea4d00dbbf3093ead07b551fc07b31b2a989c05f8ea72d9f'
-            '1039cedb446a5d98262409afda7a85c15caa46c5bc8730e18c84fdc7f516b0f4'
+sha256sums=('cf20e044f17588d2a42c8f2a450b0fd84dfdbd579b489d93e9ab7d0e8b45dbeb'
+            'f205d69f3df12139b03d8635f55ecd65765258ff0431f7743a4dd9ebfc1a3032'
             '82d660caa11db0cd34fd550a049d7296b4a9dcd28f2a50c81418066d6e598864'
             '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99'
-            '247c7e2001e4fe28e8cabd0f861240ac13487a942bcb2dbd92ea50302d799414'
+            '4e776734e2c2185910a6fbb6f333d967b04f4a72b3196310af286c6a779bd97d'
+            '0b1e41ba59ae45f5929963aa22fdc53bc8ffb4534e976cec046269d1a462197b'
+            '6ed9e31ae5614c289c4884620e45698e764c03670ebc45bab9319d741238cbd3'
+            '0a8fe4434e930d393c7983e335842f6cb77ee263af5592a0ca7e14bae7296183'
+            'ec8412826ec08bf357f9aca508372c032d87e98f968ef83f12862b166f0e8155'
+            'e6df3a88bc40ad6da073539c839c2d19f533ef7dd24b5ad53a8969efe003d424'
             'SKIP')
