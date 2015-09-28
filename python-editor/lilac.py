@@ -6,7 +6,7 @@ build_prefix = 'extra-x86_64'
 post_build = aur_post_build
 
 def pre_build():
-  pypi_pre_build()
+  pypi_pre_build(pypi_name='python-editor')
   for l in edit_file('PKGBUILD'):
     if l.startswith('pkgname='):
       print('pkgname=python-editor')
