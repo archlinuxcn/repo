@@ -1,0 +1,33 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+# Contributor: Kyle Keen <keenerd@gmail.com>
+# Contributor: Jan Fader <jan.fader@web.de>
+_pkgname=keynav
+pkgname=${_pkgname}-git
+pkgver=0.20150729
+pkgrel=1
+pkgdesc="Ingenious and fast way to move the mouse pointer on the screen with keystrokes."
+url="http://www.semicomplete.com/projects/keynav/"
+license=('BSD')
+arch=('i686' 'x86_64')
+depends=('xdotool')
+provides=(keynav=$pkgver)
+replaces=(keynav-lily)
+source=(git+https://github.com/jordansissel/keynav)
+md5sums=(SKIP)
+pkgver() {
+  cd "$srcdir/$_pkgname"
+  echo 0.$(git log -1 --pretty='%cd' --date=short | tr -d '-')
+}
+
+build() {
+  cd "$srcdir/$_pkgname"
+  make keynav
+}
+
+package() {
+  cd "$srcdir/$_pkgname"
+  install -D keynav   "$pkgdir/usr/bin/keynav"
+  install -D keynavrc "$pkgdir/etc/keynavrc"
+}
+
+# vim:set ts=2 sw=2 et:
