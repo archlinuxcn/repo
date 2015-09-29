@@ -1,0 +1,24 @@
+_pkgname=Wand
+pkgname=python-wand
+pkgver=0.4.1
+pkgrel=1
+pkgdesc="Ctypes-based simple MagickWand API binding for Python"
+arch=('any')
+url="http://wand-py.org/"
+license=('MIT')
+depends=('python')
+source=('https://pypi.python.org/packages/source/W/Wand/Wand-0.4.1.tar.gz')
+md5sums=('61dc0810a7af51b0bb9684e1c1ec390c')
+
+build() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  python3 setup.py build
+}
+
+package() {
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+}
+
+# vim:set sw=2 et:
