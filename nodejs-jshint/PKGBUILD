@@ -1,8 +1,8 @@
 # Maintainer: John D Jones III AKA jnbek <jnbek1972 -_AT_- g m a i l -_Dot_- com>
 _npmname=jshint
-_npmver=2.7.0
+_npmver=2.8.0
 pkgname=nodejs-jshint # All lowercase
-pkgver=2.7.0
+pkgver=2.8.0
 pkgrel=1
 pkgdesc="Static analysis tool for JavaScript"
 arch=(any)
@@ -12,7 +12,7 @@ depends=('nodejs' 'npm')
 optdepends=()
 source=(http://registry.npmjs.org/$_npmname/-/$_npmname-$_npmver.tgz)
 noextract=($_npmname-$_npmver.tgz)
-sha1sums=('d512bb14731dac09e49f212e6b2f1b0fdbabbc4f')
+sha1sums=('1d09a3bd913c4cadfa81bf18d582bd85bffe0d44')
 
 package() {
   cd "$srcdir"
