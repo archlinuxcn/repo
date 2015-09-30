@@ -10,7 +10,7 @@ if ((BUILD_EXTRA)); then
 else
    pkgname=('julia-git')
 fi
-pkgver=0.4.0.rc1.391.g288686d
+pkgver=0.4.0.rc1.538.g662efbe
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64')
@@ -21,10 +21,8 @@ makedepends=('gcc-fortran' 'arpack' 'fftw' 'git' 'gmp' 'libgit2' 'libunwind'
              'python2-sphinx_rtd_theme' 'python2-pip' 'texlive-langcjk'
              'texlive-latexextra' 'emacs' 'openspecfun' 'openblas')
 options=('!emptydirs' 'staticlibs' 'debug' 'strip')
-source=('git://github.com/JuliaLang/julia'
-        '0001-Use-tbaa_immut-for-getfield-of-immutable-types.patch')
-md5sums=('SKIP'
-         'f09a16d158bcc648fa41f5e2d7b15699')
+source=('git://github.com/JuliaLang/julia')
+md5sums=('SKIP')
 
 pkgver() {
   cd julia
@@ -37,12 +35,6 @@ prepare() {
 
   git reset --hard HEAD
   git clean -fdx
-
-  git submodule init
-  git submodule sync
-  git submodule update
-
-  patch -Np1 < ../0001-Use-tbaa_immut-for-getfield-of-immutable-types.patch
 
   cd doc
 
@@ -62,9 +54,8 @@ case "$CARCH" in
 esac
 
 julia_opts=(prefix=/usr sysconfdir=/etc
-            # LLVM 3.7 has serious vectorization regressions
-            USE_SYSTEM_LLVM=0
-            LLVM_VER=3.6.2
+            USE_SYSTEM_LLVM=1
+            # LLVM_VER=3.6.2
             USE_SYSTEM_LIBUNWIND=1
             USE_SYSTEM_PCRE=1
             USE_SYSTEM_LIBM=1
