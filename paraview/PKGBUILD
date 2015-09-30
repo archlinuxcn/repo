@@ -1,4 +1,5 @@
-# Maintainer: Mathias Anselmann <mathias.anselmann@gmail.com>
+# Maintainer: George Eleftheriou <eleftg>
+# Contributor: Mathias Anselmann <mathias.anselmann@gmail.com>
 # Contributor: Stéphane Gaudreault <stephane@archlinux.org>
 # Contributor: Thomas Dziedzic < gostrc at gmail >
 # Contributor: Michele Mocciola <mickele>
@@ -11,25 +12,29 @@ pkgdesc='Parallel Visualization Application using VTK'
 arch=('i686' 'x86_64')
 url='http://www.paraview.org'
 license=('custom')
-depends=('qtwebkit' 'openmpi' 'python2' 'ffmpeg-compat' 'boost' 'libcgns-paraview'
+depends=('qtwebkit' 'openmpi' 'python2' 'ffmpeg-compat' 'boost' 'cgns'
 	 'expat' 'freetype2' 'hdf5' 'libjpeg' 'libxml2' 'libtheora' 'libpng' 'libtiff' 'zlib')
 makedepends=('cmake' 'mesa')
 optdepends=('python2-matplotlib: Needed to support equation rendering using MathText markup language'
-	    'python2-numpy: Needed for using some filters such as "Python Calculator"')
-changelog="$pkgname.changelog"
+	        'python2-numpy: Needed for using some filters such as "Python Calculator"')
 source=("http://paraview.org/files/v${pkgver:0:3}/ParaView-v${pkgver}-source.tar.gz"
-	'paraview.png'
-	'paraview.desktop')
+	    'paraview.png'
+	    'paraview.desktop')
 sha1sums=('276fc91f2a7aec72b7740c5312b560cc76157370'
           'a2dff014e1235dfaa93cd523286f9c97601d3bbc'
           '1f94c8ff79bb2bd2c02d6b403ea1f4599616531b')
 
-build() {
+prepare() {
   cd "${srcdir}/ParaView-v${pkgver}-source"
+  
   rm -rf "${srcdir}/build"
   mkdir "${srcdir}/build"
   cd "${srcdir}/build"
+}
 
+build() {
+  cd "${srcdir}/build"
+  
   # flags to enable system libs
   # add PROTOBUF when http://www.vtk.org/Bug/view.php?id=13656 gets fixed
   local cmake_system_flags=""
