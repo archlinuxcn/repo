@@ -1,0 +1,10 @@
+post_install() {
+	setcap cap_net_bind_service+ep usr/bin/ss-local  2>/dev/null
+	setcap cap_net_bind_service+ep usr/bin/ss-server 2>/dev/null
+	setcap cap_net_bind_service+ep usr/bin/ss-tunnel 2>/dev/null
+	setcap cap_net_bind_service+ep usr/bin/ss-redir  2>/dev/null
+}
+
+post_upgrade() {
+	post_install "$1"
+}

@@ -1,22 +1,29 @@
-# Maintainer: jiangxq <jiangxueqian at gmail dot com>
+# Maintainer: jiangxq <jiangxueqian at gmail dot com>, zh99998 <zh99998@gmail.com>
 # Contributor: Felix Yan <felixonmars@archlinux.org>, 4679kun <admin at 4679 dot us>
 
 pkgname=shadowsocks-libev
-pkgver=2.3.1
+pkgver=2.4.0
 pkgrel=1
-pkgdesc='A lightweight secured scoks5 proxy for embedded devices and low end boxes'
-arch=('i686' 'x86_64')
+pkgdesc='A lightweight secured socks5 proxy for embedded devices and low end boxes'
+arch=('i686' 'x86_64' 'armv7h')
 url='https://github.com/shadowsocks/shadowsocks-libev'
 license=('GPL3')
-depends=('openssl' 'libev')
+depends=('openssl' 'libev' 'libcap')
 makedepends=('gcc' 'make' 'autoconf' 'automake')
+install=${pkgname}.install
 source=("https://github.com/shadowsocks/${pkgname}/archive/v${pkgver}.tar.gz"
         'shadowsocks-libev@.service'
-        'shadowsocks-libev-server@.service')
+        'shadowsocks-libev-server@.service'
+        'shadowsocks-libev-redir@.service'
+        'shadowsocks-libev-tunnel@.service'
+)
+
 sha512sums=(
-'56d5fd021579baaa147f562eafbd942c90ace84f0f79f207cedf4053119833da515cb1f3895515f196690d253de3cb0a58a2aa7ae132bde244b507c336a635e1'
-'96e5c9ba04a8d45fa57728aeb5282cf25fce42baf2c2221c5040cced89196b25d2c212472ba9b3f53bdce93ad1edd5f06e42ec62ef212764349c1dab24dde16a'
-'73925959731b7ab6e2b3900662f4b67a9986b798b1a4a943307c87574c9069e32a0c2298cf6e9adb895fe71316a3bac09cb684c54e8a1350566b2fe7526c1cff'
+'04f1ccf6f880f5f2158c583cfa55290e59986393f6424eb9c52266b107110272edd28e3260d37a1bba6cb41ae3999a9d831f00f80cdedd966794c06e2e1a3336'
+'SKIP'
+'SKIP'
+'SKIP'
+'SKIP'
 )
 
 build() {
@@ -31,5 +38,7 @@ package() {
 	make DESTDIR="$pkgdir/" install
 	install -Dm644 "$srcdir/shadowsocks-libev@.service" "$pkgdir/usr/lib/systemd/system/shadowsocks-libev@.service"
 	install -Dm644 "$srcdir/shadowsocks-libev-server@.service" "$pkgdir/usr/lib/systemd/system/shadowsocks-libev-server@.service"
+        install -Dm644 "$srcdir/shadowsocks-libev-redir@.service" "$pkgdir/usr/lib/systemd/system/shadowsocks-libev-redir@.service"
+        install -Dm644 "$srcdir/shadowsocks-libev-tunnel@.service" "$pkgdir/usr/lib/systemd/system/shadowsocks-libev-tunnel@.service"
 }
 
