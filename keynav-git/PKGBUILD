@@ -10,6 +10,7 @@ url="http://www.semicomplete.com/projects/keynav/"
 license=('BSD')
 arch=('i686' 'x86_64')
 depends=('xdotool')
+makedepends=('git')
 provides=(keynav=$pkgver)
 replaces=(keynav-lily)
 source=(git+https://github.com/jordansissel/keynav)
