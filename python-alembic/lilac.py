@@ -7,7 +7,7 @@ depends = ['python-editor']
 
 def pre_build():
   # aur_pre_build()
-  pypi_pre_build(depends=['python-editor'])
+  pypi_pre_build(depends=['python-editor', 'python-mako', 'python-sqlalchemy'])
 
 def post_build():
   pypi_post_build()
