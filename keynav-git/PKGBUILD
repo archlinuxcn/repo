@@ -9,7 +9,7 @@ pkgdesc="Ingenious and fast way to move the mouse pointer on the screen with key
 url="http://www.semicomplete.com/projects/keynav/"
 license=('BSD')
 arch=('i686' 'x86_64')
-depends=('xdotool')
+depends=('xdotool' 'glib2')
 makedepends=('git')
 provides=(keynav=$pkgver)
 replaces=(keynav-lily)
