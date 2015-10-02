@@ -3,7 +3,7 @@ from lilaclib import *
 build_prefix = 'extra-x86_64'
 
 pre_build = vcs_update
-depends = ['python-alembic', 'python-editor']
+depends = ['python-editor', 'python-alembic']
 
 def post_build():
   git_add_files('PKGBUILD')
