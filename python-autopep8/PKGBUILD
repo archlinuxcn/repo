@@ -1,27 +1,24 @@
-# Maintainer: Your Name <youremail@domain.com>
 _pkgname=autopep8
 pkgname=python-autopep8
-pkgver=0.9.1
-pkgrel=3
-pkgdesc="Automatically formats Python code to conform to the PEP 8 style guide."
+pkgver=1.2.1
+pkgrel=1
+pkgdesc="A tool that automatically formats Python code to conform to the PEP 8 style guide"
 arch=('any')
-url="http://pypi.python.org/pypi/${_pkgname}/$pkgver"
-license=('MIT')
-groups=()
-depends=('python' 'pep8-python3')
-makedepends=('python-distribute')
-provides=()
-conflicts=()
-replaces=()
-backup=()
-options=(!emptydirs)
-install=
-source=("http://pypi.python.org/packages/source/a/${_pkgname}/${_pkgname}-$pkgver.tar.gz")
-md5sums=('1c03b9d34ebef2f56b8abd636f801dcf')
+url="https://github.com/hhatto/autopep8"
+license=('Expat')
+depends=('python' 'pep8' 'python-setuptools')
+source=('https://pypi.python.org/packages/source/a/autopep8/autopep8-1.2.1.tar.gz')
+md5sums=('4167555f521ddd69b66f13819604f3db')
 
-package() {
-  cd "$srcdir/${_pkgname}-$pkgver"
-  python setup.py install --root="$pkgdir/" --optimize=1
+build() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  python3 setup.py build
 }
 
-# vim:set ts=2 sw=2 et:
+package() {
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+}
+
+# vim:set sw=2 et:
