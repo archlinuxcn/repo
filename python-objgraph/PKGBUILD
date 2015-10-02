@@ -1,17 +1,24 @@
-#Maintainer: Randy Heydon <randy.heydon at clockworklab dot net>
+_pkgname=objgraph
 pkgname=python-objgraph
-pkgver=1.7.2
-pkgrel=3
+pkgver=2.0.1
+pkgrel=1
 pkgdesc="Draws Python object reference graphs with graphviz"
-arch=(any)
-url="http://mg.pov.lt/objgraph"
+arch=('any')
+url="http://mg.pov.lt/objgraph/"
 license=('MIT')
-depends=('python' 'graphviz')
-optdepends=('xdot: interactively view object graphs')
-source=(http://pypi.python.org/packages/source/o/objgraph/objgraph-$pkgver.tar.gz)
-md5sums=('e7422096f2e5bd47e7873a948979e70d')
+depends=('python' 'graphviz' 'python-setuptools')
+source=('https://pypi.python.org/packages/source/o/objgraph/objgraph-2.0.1.tar.gz')
+md5sums=('bea5ee3055e9acf7ae374dac5faf025a')
 
 build() {
-  cd $srcdir/objgraph-$pkgver
-  python ./setup.py install --root=$pkgdir --optimize=1 || return 1
+  cd "$srcdir/$_pkgname-$pkgver"
+  python3 setup.py build
 }
+
+package() {
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+}
+
+# vim:set sw=2 et:
