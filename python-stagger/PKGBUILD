@@ -1,0 +1,26 @@
+_pkgname=stagger
+pkgname=python-stagger
+pkgver=0.4.2
+pkgrel=1
+pkgdesc="ID3v1/ID3v2 tag manipulation package in pure Python 3"
+arch=('any')
+url="http://code.google.com/p/stagger"
+license=('BSD')
+depends=('python')
+source=('https://pypi.python.org/packages/source/s/stagger/stagger-0.4.2.tar.gz')
+md5sums=('7474611b79578fcf0ffbc8501accd248')
+
+build() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  # Use python-setuptools installed as makedepend.
+  sed -i "/distribute_setup/ s/^/#/" setup.py
+  python3 setup.py build
+}
+
+package() {
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+}
+
+# vim:set sw=2 et:
