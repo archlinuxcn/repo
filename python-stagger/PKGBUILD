@@ -6,7 +6,8 @@ pkgdesc="ID3v1/ID3v2 tag manipulation package in pure Python 3"
 arch=('any')
 url="http://code.google.com/p/stagger"
 license=('BSD')
-depends=('python')
+depends=('python' 'python-setuptools')
+replaces=(python3-stagger-svn)
 source=('https://pypi.python.org/packages/source/s/stagger/stagger-0.4.2.tar.gz')
 md5sums=('7474611b79578fcf0ffbc8501accd248')
 
