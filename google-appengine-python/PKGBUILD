@@ -8,7 +8,7 @@
 # Contributor: Mikkel Oscar Lyderik <mikkeloscar@gmail.com>
 
 pkgname=google-appengine-python
-pkgver=1.9.26
+pkgver=1.9.27
 _zipver=$pkgver
 pkgrel=1
 arch=(any)
@@ -31,7 +31,7 @@ makedepends=(unzip)
 options=(!strip)
 install=install
 source=(https://storage.googleapis.com/appengine-sdks/featured/google_appengine_${_zipver}.zip)
-sha1sums=('b0a881aa38c749688682e07a9dc3874416870e37')
+sha1sums=('1803bcfbef8890c175718c89256bcc7fd64e179d')
 noextract=(google_appengine_${_zipver}.zip)
 
 prepare() {
