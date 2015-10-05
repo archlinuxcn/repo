@@ -1,0 +1,135 @@
+#! /bin/bash
+
+if [[ $(whoami) == "root" ]]; then
+  echo "Please run this as a normal user!"
+  exit
+fi
+
+# Adding user, setting up directories
+
+if [[ ! -f $HOME/.config/chrome-remote-desktop/prepped ]]
+then
+  sudo gpasswd -a $USER chrome-remote-desktop
+  echo "Checking working directory and session file are present"
+  echo "That would be $HOME/.config/chrome-remote-desktop and"
+  echo "$HOME/.chrome-remote-desktop-session"
+  [[ -d $HOME/.config/chrome-remote-desktop ]] || mkdir $HOME/.config/chrome-remote-desktop
+  touch $HOME/.chrome-remote-desktop-session
+  echo "$(date -Is)" > $HOME/.config/chrome-remote-desktop/prepped
+fi
+
+# Straightforward toggle – if CRD running, stop, otherwise start
+# This also kills old pulse configuration files as they won't work restarting CRD
+
+crd_status=$(/opt/google/chrome-remote-desktop/chrome-remote-desktop --get-status)
+
+case $1 in
+
+--restart)
+  if [[ $crd_status == "STARTED" ]]
+  then 
+    echo "CRD running, stopping and restarting again"
+    /opt/google/chrome-remote-desktop/chrome-remote-desktop --stop
+  else
+    echo "CRD not running, starting fresh"
+  fi
+  rm -rf $HOME/.config/chrome-remote-desktop/pulseaudio*
+  /opt/google/chrome-remote-desktop/chrome-remote-desktop --start
+  ;;
+  
+--reload)
+  /opt/google/chrome-remote-desktop/chrome-remote-desktop --reload
+  ;;
+
+--stop)
+  if [[ $crd_status == "STARTED" ]] 
+  then
+    echo "CRD running, stopping" 
+    /opt/google/chrome-remote-desktop/chrome-remote-desktop --stop
+  else
+    echo "CRD is not running, nothing to do"
+  fi
+  rm -rf $HOME/.config/chrome-remote-desktop/pulseaudio*
+  ;;
+  
+--start)
+  if [[ ! -f $HOME/.config/chrome-remote-desktop/prepped ]] 
+  then
+    echo "You might want to run crd --setup first if this doesn't seem to work"
+  fi
+  if [[ $crd_status == "STARTED" ]] 
+  then  
+    echo "CRD already running, nothing to do" 
+    exit
+  fi
+  rm -rf $HOME/.config/chrome-remote-desktop/pulseaudio*
+  /opt/google/chrome-remote-desktop/chrome-remote-desktop --start  
+  ;;
+  
+--setup)
+  if [[ ! -f $HOME/.config/chrome-remote-desktop/prepped ]]
+  then
+    sudo gpasswd -a $USER chrome-remote-desktop
+    echo "Checking working directory and session file are present"
+    echo "That would be $HOME/.config/chrome-remote-desktop and"
+    echo "$HOME/.chrome-remote-desktop-session"
+    [[ -d $HOME/.config/chrome-remote-desktop ]] || mkdir $HOME/.config/chrome-remote-desktop
+    touch $HOME/.chrome-remote-desktop-session
+    echo "$(date -Is)" > $HOME/.config/chrome-remote-desktop/prepped
+  else
+    echo "Already set up. If you want to try it again, you will need to delete"
+    echo "$HOME/.config/chrome-remote-desktop/prepped"
+  fi
+  ;;
+
+--help|-h)
+  echo "Usage: crd [option]"
+  echo ""
+  echo "Options:"
+  echo ""
+  echo "--start"
+  echo "Starts CRD after destroying old pulse files"
+  echo ""
+  echo "--stop"
+  echo "Stops CRD if running, deletes old pulse files"
+  echo ""
+  echo "--restart"
+  echo "Stops and restarts CRD, destroying non-functioning pulse files"
+  echo ""
+  echo "--reload"
+  echo "Just reloads CRD"
+  echo ""
+  echo "--help, -h"
+  echo "This help message"
+  echo ""
+  echo "--setup"
+  echo "Sets up CRD for your system by adding folders, sessions, users"
+  echo "and stuff. You should do this first, after a fresh install. This"
+  echo "will be done automatically if you just run crd without options."
+  echo ""
+  echo "No options given"
+  echo "If CRD running, stop it. Otherwise start it. Checks if user"
+  echo "directory and session file is present, and that user $USER is"
+  echo "in the chrome-remote-desktop group, and fixes this if needed."
+  echo ""
+  ;;
+  
+*)
+  crd --setup
+  if [[ $crd_status = "STARTED" ]]
+  then
+    echo "CRD is already running; stopping."
+    /opt/google/chrome-remote-desktop/chrome-remote-desktop --stop
+    rm -rf $HOME/.config/chrome-remote-desktop/pulseaudio*
+    echo "Deleted old pulse audio files"
+    exit
+  else
+    echo "CRD is not running; starting."
+    echo "Deleting old pulse audio files"
+    rm -rf $HOME/.config/chrome-remote-desktop/pulseaudio*
+    /opt/google/chrome-remote-desktop/chrome-remote-desktop --size=1360x768 --start
+    exit
+  fi
+  ;;
+  
+esac

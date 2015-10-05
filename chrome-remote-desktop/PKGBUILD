@@ -15,10 +15,12 @@ depends=('python2' 'python2-psutil' 'gconf' 'gtk2' 'nss'
 
 _arch=i386
 [ "$CARCH" == x86_64 ] && _arch=amd64
-source=("$pkgname.service"
-        "https://dl.google.com/linux/direct/${pkgname}_current_${_arch}.deb")
-md5sums=('cde1758e875ff114cc8153edb7087d2a'
-         'SKIP')
+source=("https://dl.google.com/linux/direct/${pkgname}_current_${_arch}.deb"
+	"$pkgname.service"
+        "crd")
+md5sums=('SKIP' 
+         '6f6083ff37f036f590702c7b1319445b'
+         '73ff65f76f73a5a05746474dabf5ae54')
 
 pkgver() {
   bsdtar -xf control.tar.gz -O control | grep '^Version: ' | cut -f2 -d' '
@@ -57,8 +59,17 @@ package() {
 
   msg2 "Adding systemd user service file"
   install -Dm644 "$pkgname.service" "$pkgdir/usr/lib/systemd/user/$pkgname.service"
+  
+  msg2 "Adding runnable crd command"
+  install -Dm755 "crd" "$pkgdir/usr/bin/crd"
 
   msg2 "Creating symlinks for chromium compatibility"
-  install -dm755 "$pkgdir/etc/chromium"
-  ln -s "/etc/opt/chrome/native-messaging-hosts" "$pkgdir/etc/chromium/native-messaging-hosts"
+  install -dm755 "$pkgdir/etc/chromium/native-messaging-hosts"
+  for _file in $( find "$pkgdir/etc/opt/chrome/native-messaging-hosts" -type f); do
+    _filename=${_file##*/}
+    if [[ ! -f "/etc/chromium/native-messaging-hosts/${_filename}" ]]; then
+      ln -s "/etc/opt/chrome/native-messaging-hosts/${_filename}" \
+	    "$pkgdir/etc/chromium/native-messaging-hosts/${_filename}"
+    fi
+  done
 }

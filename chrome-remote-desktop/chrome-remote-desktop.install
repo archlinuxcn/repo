@@ -1,9 +1,6 @@
 post_install() {
-  # Create chrome-remote-desktop group
-  groupadd --gid $GID chrome-remote-desktop
-  # Instruct to create $HOME/.config/chrome-remote-desktop
-  # Instruct to add self to CRD group
-  # Instruct order to install CRD extension and enable CRD user service unit
+  # Create chrome-remote-desktop group, adds $USER
+  [[ $(cat /etc/group) == *chrome-remote-desktop* ]] || groupadd --gid $GID chrome-remote-desktop
   
   echo ""
   echo "Please create ~/.config/chrome-remote-desktop folder manually, if it doesn't exist, or else you can't use CRD."
@@ -11,6 +8,12 @@ post_install() {
   echo "To {enable,start} the service use systemctl --user {enable,start} chrome-remote-desktop"
   echo ""
   echo "You may need to create a ~/.chrome-remote-desktop-session file with commands to start your session"
+  echo ""
+  echo "You can also start the chrome remote desktop server by executing the command:" 
+  echo ""
+  echo "   $ crd" 
+  echo ""
+  echo "as a normal user. This will add the directory, session file, add you as a user and everything on the first run."
   echo ""
   echo "Go to https://support.google.com/chrome/answer/1649523 for more information."
 }

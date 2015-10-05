@@ -5,9 +5,9 @@ ConditionPathExistsGlob=%h/.config/chrome-remote-desktop/host#*.json
 
 [Service]
 Type=forking
-ExecStart=/opt/google/chrome-remote-desktop/chrome-remote-desktop --start
-ExecStop=/opt/google/chrome-remote-desktop/chrome-remote-desktop --stop
-ExecReload=/opt/google/chrome-remote-desktop/chrome-remote-desktop --reload
+ExecStart=/usr/bin/crd --start
+ExecStop=/usr/bin/crd --stop
+ExecReload=/usr/bin/crd --restart
 
 [Install]
 Alias=chromoting.service
