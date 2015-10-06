@@ -10,7 +10,7 @@ if ((BUILD_EXTRA)); then
 else
    pkgname=('julia-git')
 fi
-pkgver=0.4.0.rc1.624.g02748d1
+pkgver=0.4.0.rc1.638.gb5bebf2
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64')
@@ -21,8 +21,10 @@ makedepends=('gcc-fortran' 'arpack' 'fftw' 'git' 'gmp' 'libgit2' 'libunwind'
              'python2-sphinx_rtd_theme' 'python2-pip' 'texlive-langcjk'
              'texlive-latexextra' 'emacs' 'openspecfun' 'openblas')
 options=('!emptydirs' 'staticlibs' 'debug' 'strip')
-source=('git://github.com/JuliaLang/julia')
-md5sums=('SKIP')
+source=('git://github.com/JuliaLang/julia'
+        '0001-Create-tbaa_gcframe-and-decorate-all-stores-and-load.patch')
+md5sums=('SKIP'
+         '2a64b87dfe52236b11b1d5df26947cb6')
 
 pkgver() {
   cd julia
@@ -35,6 +37,8 @@ prepare() {
 
   git reset --hard HEAD
   git clean -fdx
+
+  patch -Np1 < ../0001-Create-tbaa_gcframe-and-decorate-all-stores-and-load.patch
 
   cd doc
 
