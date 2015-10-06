@@ -25,12 +25,17 @@ build_prefix = 'extra-x86_64'
 def pre_build():
     aur_pre_build()
 
+    need_rebuild = False
     for line in edit_file('PKGBUILD'):
         # edit PKGBUILD
         if line.strip().startswith("depends="):
             words = line.split(" ")
             words.insert(-1, "'python-setuptools'")
             line = " ".join(words)
+        if line.strip().startswith("pkgver=5.1"):
+            need_rebuild = True
+        if need_rebuild and line.strip().startswith("pkgrel=1"):
+            line = "pkgrel=2"
         print(line)
 
 
