@@ -1,13 +1,13 @@
 # Maintainer: Jiachen Yang <farseerfc@gmail.com>
 pkgname=netease-musicbox
 _gitname=musicbox
-pkgver=r140.31ff39b
+pkgver=r244.58cd013
 pkgrel=1
 pkgdesc="A sexy command line interface musicbox for NetEase based on Python"
 arch=(any)
 url="https://github.com/darknessomi/musicbox"
 license=('MIT')
-depends=('python2' 'mpg123' 'python2-beautifulsoup4' 'python2-requests' 'python2-setuptools')
+depends=('python2' 'mpg123' 'python2-beautifulsoup4' 'python2-requests' 'python2-setuptools' 'python2-crypto')
 makedepends=('git')
 options=(!emptydirs)
 source=("git+https://github.com/darknessomi/musicbox")
