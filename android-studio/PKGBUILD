@@ -6,7 +6,7 @@
 
 pkgname=android-studio
 pkgver=1.4.0.10
-pkgrel=1
+pkgrel=2
 _build=141.2288178
 pkgdesc="A new Android development environment based on IntelliJ IDEA."
 arch=('i686' 'x86_64')
@@ -21,7 +21,7 @@ install=$pkgname.install
 source=("https://dl.google.com/dl/android/studio/ide-zips/$pkgver/android-studio-ide-$_build-linux.zip"
         "$pkgname.desktop")
 sha512sums=('afc77575f9261060c28f27ee49b05b88de338c0b2b8d91eea2a8585243dc6404bc2784b7d15b2c05ac504228ceea11ccbbdfd4fa79a1037893232c55cb524b2f'
-            'fa3567f328af45d265c4fabf3e41b55d8e8cccfa9675e745f07dd6ae41950dd53a2ef41ef1caee86643f5c2ddf7a7681ee17155e208a7b6fdae6c0537dfc0c94')
+            '7c1ab152b3f26a0a4796c085bb7bf66aa4711a010910636c0c82a37609155c819b21a732fc3874b55e7d443c989c46f29d51ed54538795829c8eb835308b5aaa')
 
 if [[ $CARCH == "x86_64" ]]; then
   depends+=('lib32-fontconfig' 'lib32-libxrender' 'lib32-mesa')
