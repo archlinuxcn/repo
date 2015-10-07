@@ -4,7 +4,7 @@
 pkgname=python-rpweibo
 pkgver=0.02.2
 _pkgver=0.02.2
-pkgrel=2
+pkgrel=3
 pkgdesc="A Weibo API wrapper based on cURL + Python."
 arch=('any')
 url="https://github.com/WeCase/rpweibo"
