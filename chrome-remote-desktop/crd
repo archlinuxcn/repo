@@ -1,91 +1,111 @@
 #! /bin/bash
 
-if [[ $(whoami) == "root" ]]; then
+if [[ $(whoami) = "root" ]]
+then
   echo "Please run this as a normal user!"
   exit
 fi
 
-# Adding user, setting up directories
+crd_status=$(/opt/google/chrome-remote-desktop/chrome-remote-desktop --get-status)
 
-if [[ ! -f $HOME/.config/chrome-remote-desktop/prepped ]]
-then
+case $1 in
+
+--status)
+  echo "CRD status: ${crd_status}"
+  exit
+  ;;
+
+--restart)
+  /opt/google/chrome-remote-desktop/chrome-remote-desktop --stop
+  rm -rf $HOME/.config/chrome-remote-desktop/pulseaudio*
+  crd_size=$(cat $HOME/.config/chrome-remote-desktop/Size)
+  /opt/google/chrome-remote-desktop/chrome-remote-desktop --size="$crd_size" --start
+  ;;
+  
+--reload)
+  /opt/google/chrome-remote-desktop/chrome-remote-desktop --reload
+  exit
+  ;;
+
+--stop)
+  /opt/google/chrome-remote-desktop/chrome-remote-desktop --stop
+  rm -rf $HOME/.config/chrome-remote-desktop/pulseaudio*
+  exit
+  ;;
+  
+--start)
+  if [[ ! -f $HOME/.chrome-remote-desktop-session || ! -f $HOME/.config/chrome-remote-desktop/Size ]]
+  then
+    echo "Seems like you haven't set this up yet. Try running crd --setup."
+    exit
+  fi
+  
+  rm -rf $HOME/.config/chrome-remote-desktop/pulseaudio*
+  crd_size=$(cat $HOME/.config/chrome-remote-desktop/Size)
+  /opt/google/chrome-remote-desktop/chrome-remote-desktop --size="$crd_size" --start
+  exit
+  ;;
+  
+--setup)
   sudo gpasswd -a $USER chrome-remote-desktop
   echo "Checking working directory and session file are present"
   echo "That would be $HOME/.config/chrome-remote-desktop and"
   echo "$HOME/.chrome-remote-desktop-session"
   [[ -d $HOME/.config/chrome-remote-desktop ]] || mkdir $HOME/.config/chrome-remote-desktop
   touch $HOME/.chrome-remote-desktop-session
-  echo "$(date -Is)" > $HOME/.config/chrome-remote-desktop/prepped
-fi
+  touch $HOME/.config/chrome-remote-desktop/Size
 
-# Straightforward toggle – if CRD running, stop, otherwise start
-# This also kills old pulse configuration files as they won't work restarting CRD
-
-crd_status=$(/opt/google/chrome-remote-desktop/chrome-remote-desktop --get-status)
-
-case $1 in
-
---restart)
-  if [[ $crd_status == "STARTED" ]]
-  then 
-    echo "CRD running, stopping and restarting again"
-    /opt/google/chrome-remote-desktop/chrome-remote-desktop --stop
-  else
-    echo "CRD not running, starting fresh"
-  fi
-  rm -rf $HOME/.config/chrome-remote-desktop/pulseaudio*
-  /opt/google/chrome-remote-desktop/chrome-remote-desktop --start
-  ;;
-  
---reload)
-  /opt/google/chrome-remote-desktop/chrome-remote-desktop --reload
-  ;;
-
---stop)
-  if [[ $crd_status == "STARTED" ]] 
+  if [[ -z $(cat $HOME/.chrome-remote-desktop-session) ]]
   then
-    echo "CRD running, stopping" 
-    /opt/google/chrome-remote-desktop/chrome-remote-desktop --stop
-  else
-    echo "CRD is not running, nothing to do"
+    echo "# You will have to uncomment one of the following lines for CRD to work" > $HOME/.chrome-remote-desktop-session
+    echo "# Remove the # and select ctrl-X to finish." >> $HOME/.chrome-remote-desktop-session
+    echo "# " >> $HOME/.chrome-remote-desktop-session
+    grep -R '^Exec=' /usr/share/xsessions/ | sed 's|/usr/.*=|# exec |' >> $HOME/.chrome-remote-desktop-session
+    echo "Now entering the editor to make the appropriate changes to"
+    echo "your session file."
+    read -rsp $'Press any key to continue...\n' -n1 key
+    nano $HOME/.chrome-remote-desktop-session
   fi
-  rm -rf $HOME/.config/chrome-remote-desktop/pulseaudio*
-  ;;
-  
---start)
-  if [[ ! -f $HOME/.config/chrome-remote-desktop/prepped ]] 
+
+  if [[ -z $(cat $HOME/.config/chrome-remote-desktop/Size) ]]
   then
-    echo "You might want to run crd --setup first if this doesn't seem to work"
+    echo "1366x768" > $HOME/.config/chrome-remote-desktop/Size
+    echo "Default size is set to 1366x768 in"
+    echo "$HOME/.config/chrome-remote-desktop/Size."
+    echo "Change this if you want another screen size on your client."
+    echo "Remember that this will affect all clients you use."
+    echo "Now entering the editor to make the appropriate changes to"
+    echo "your Size file. Do not enter any comments to this file"
+    read -rsp $'Press any key to continue...\n' -n1 key
+    nano $HOME/.config/chrome-remote-desktop/Size
   fi
-  if [[ $crd_status == "STARTED" ]] 
-  then  
-    echo "CRD already running, nothing to do" 
-    exit
-  fi
-  rm -rf $HOME/.config/chrome-remote-desktop/pulseaudio*
-  /opt/google/chrome-remote-desktop/chrome-remote-desktop --start  
-  ;;
   
---setup)
-  if [[ ! -f $HOME/.config/chrome-remote-desktop/prepped ]]
-  then
-    sudo gpasswd -a $USER chrome-remote-desktop
-    echo "Checking working directory and session file are present"
-    echo "That would be $HOME/.config/chrome-remote-desktop and"
-    echo "$HOME/.chrome-remote-desktop-session"
-    [[ -d $HOME/.config/chrome-remote-desktop ]] || mkdir $HOME/.config/chrome-remote-desktop
-    touch $HOME/.chrome-remote-desktop-session
-    echo "$(date -Is)" > $HOME/.config/chrome-remote-desktop/prepped
-  else
-    echo "Already set up. If you want to try it again, you will need to delete"
-    echo "$HOME/.config/chrome-remote-desktop/prepped"
-  fi
+  echo "This completes the setup."
+  echo ""
+  echo "Please remember that you will need to allow Chrome or Chromium"
+  echo "to act as a server for this to work at all."
+  echo ""
+  echo "To do that, open CRD in your chrome or chromium browser"
+  echo "and follow the instructions. Clicking the computer will open"
+  echo "it in the browser window in default resolution."
+  echo "For a more pleasant chromoting experience, just issue the command"
+  echo "crd --restart"
+  echo ""
+  echo "Happy chromoting! :)"
+
+  exit
   ;;
 
 --help|-h)
-  echo "Usage: crd [option]"
+  echo "Note: You will have to go into chrome or chromium to enable remote"
+  echo "connections to this computer before you can run CRD on this machine."
+  echo ""
+  echo "Usage: chrome-remote-desktop [[option]]"
   echo ""
   echo "Options:"
+  echo ""
+  echo "--status"
+  echo "Checks whether CRD is running and returns its status"
   echo ""
   echo "--start"
   echo "Starts CRD after destroying old pulse files"
@@ -108,14 +128,33 @@ case $1 in
   echo "will be done automatically if you just run crd without options."
   echo ""
   echo "No options given"
-  echo "If CRD running, stop it. Otherwise start it. Checks if user"
-  echo "directory and session file is present, and that user $USER is"
-  echo "in the chrome-remote-desktop group, and fixes this if needed."
+  echo "If CRD running, stop it. Otherwise start it. Checks that CRD"
+  echo "has been set up, or it won't start."
   echo ""
+  echo "No sound on client? Try returning the files /etc/pulse/daemon.conf"
+  echo "and /etc/pulse/client.conf to their default values, that is, the"
+  echo "values commented out with a ';' – deleting any uncommented settings"
+  echo "might do the trick, but use your common sense here."
+  echo ""
+  echo "Need another resolution and your Display function on the client "
+  echo "throws an error? You can change the client resolution in th host by"
+  echo "issuing the command:"
+  echo ""
+  echo "nano $HOME/.config/chrome-remote-desktop/Size"
+  echo ""
+  echo "and adjusting it to whatever resolution you need."
+  echo "This will affect all clients though."
+  echo ""
+  exit
   ;;
   
 *)
-  crd --setup
+  if [[ ! -f $HOME/.chrome-remote-desktop-session || ! -f $HOME/.config/chrome-remote-desktop/Size ]]
+  then
+    echo "Seems like you haven't set this up yet. Try running crd --setup."
+    exit
+  fi
+
   if [[ $crd_status = "STARTED" ]]
   then
     echo "CRD is already running; stopping."
@@ -127,7 +166,8 @@ case $1 in
     echo "CRD is not running; starting."
     echo "Deleting old pulse audio files"
     rm -rf $HOME/.config/chrome-remote-desktop/pulseaudio*
-    /opt/google/chrome-remote-desktop/chrome-remote-desktop --size=1360x768 --start
+    crd_size=$(cat $HOME/.config/chrome-remote-desktop/Size)
+    /opt/google/chrome-remote-desktop/chrome-remote-desktop --size="$crd_size" --start
     exit
   fi
   ;;
