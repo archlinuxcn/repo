@@ -4,14 +4,14 @@
 
 pkgname=android-sdk
 pkgver=24.3.4
-pkgrel=1
+pkgrel=2
 pkgdesc='Google Android SDK'
 arch=('x86_64' 'i686')
 url='http://developer.android.com/sdk/'
 license=('custom')
 depends_x86_64=('java-environment' 'lib32-alsa-lib' 'lib32-openal'
   'lib32-libstdc++5' 'lib32-libxv' 'lib32-mesa' 'lib32-ncurses' 'lib32-sdl'
-  'lib32-zlib' 'swt')
+  'lib32-zlib' 'lib32-fontconfig' 'lib32-libpulse' 'swt')
 depends_i686=('java-environment' 'alsa-lib' 'openal' 'libstdc++5' 'libxv' 'sdl'
               'ncurses' 'swt' 'zlib')
 install="$pkgname.install"
