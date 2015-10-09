@@ -23,23 +23,13 @@ build_prefix = 'extra-x86_64'
 
 
 def pre_build():
-    aur_pre_build()
+    vcs_update()
 
-    for line in edit_file('PKGBUILD'):
-        # edit PKGBUILD
-        if line.strip().startswith("makedepends="):
-            words = line.split(" ")
-            words.insert(-1, "'git'")
-            line = " ".join(words)
-        print(line)
-    for line in edit_file('byzanz.install'):
-        if "gconfpkg" in line:
-            print(":") # noop
-        else:
-            print(line)
+def post_build():
+    git_add_files("PKGBUILD")
+    git_commit()
 
 
-post_build = aur_post_build
 
 # do some cleanup here after building the package, regardless of result
 # def post_build_always(success):

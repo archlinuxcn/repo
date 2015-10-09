@@ -2,19 +2,19 @@
 
 _pkgname=byzanz
 pkgname=$_pkgname-git
-pkgver=0.2.1.110.g7908143
+pkgver=0.2.1.115.gbd394f9
 pkgrel=1
 pkgdesc="Record what's happening on your desktop"
 arch=('i686' 'x86_64')
 url="http://blogs.gnome.org/otte/2009/08/30/byzanz-0-2-0/"
 license=('GPL')
-depends=('gtk3' 'gst-plugins-base' 'hicolor-icon-theme' 'gnome-common' 'xdg-utils')
-makedepends=('gnome-common' 'git' 'intltool')
+depends=('gtk3' 'gst-plugins-base' 'hicolor-icon-theme' 'xdg-utils')
+makedepends=('gnome-common' 'intltool' 'git')
 optdepends=('gnome-panel: panel applet')
 provides=('byzanz')
 conflicts=('byzanz')
 install=$_pkgname.install
-source=("$pkgname::git://git.gnome.org/byzanz")
+source=("$pkgname::git+https://github.com/GNOME/byzanz.git")
 pkgver() {
   cd $pkgname
   git describe | sed 's/^release-//; s/-/./g'
