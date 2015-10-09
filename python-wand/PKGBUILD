@@ -19,6 +19,7 @@ package() {
   cd "$srcdir/$_pkgname-$pkgver"
 
   python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+rm $pkgdir/usr/README.rst
 }
 
 # vim:set sw=2 et:
