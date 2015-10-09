@@ -1,4 +1,4 @@
-# Maintainer  : Fernando "Firef0x" G.P. da Silva <firefgx { aT ) gmail [ d0t } com>
+# Maintainer  : farseerfc <farseerfc@archlinuxcn.org>
 # Contributor : Fernando "Firef0x" G.P. da Silva <firefgx { aT ) gmail [ d0t } com>
 # Contributor : Sander Boom <sander at inflowmotion dot nl> (From sublime-text-dev)
 # Contributor : realitygaps <realitygaps at yahoo dot com> (From sublime-text-dev)
@@ -32,13 +32,12 @@ source=("https://raw.githubusercontent.com/Firef0x/SublimeText-i18n-zh/master/di
         "LICENSE"
         "https://raw.githubusercontent.com/Firef0x/SublimeText-i18n-zh/master/dist/any/zh_CN/LICENSE.zh_CN"
         "https://raw.githubusercontent.com/Firef0x/SublimeText-i18n-zh/master/dist/any/zh_TW/LICENSE.zh_TW"
+        "${_pkgname1}.c"
         "${_pkgname}.sh"
         "${_pkgname1}.sh")
 source_i686=("http://c758482.r82.cf2.rackcdn.com/${_pkgname}_build_${pkgver:2}_x32.tar.bz2"
-             "https://raw.githubusercontent.com/Firef0x/SublimeText-i18n-zh/master/dist/i686/libsublime-imfix.i686.so"
              "https://raw.githubusercontent.com/Firef0x/SublimeText-i18n-zh/master/dist/i686/sublime_text.i686")
 source_x86_64=("http://c758482.r82.cf2.rackcdn.com/${_pkgname}_build_${pkgver:2}_x64.tar.bz2"
-               "https://raw.githubusercontent.com/Firef0x/SublimeText-i18n-zh/master/dist/x86_64/libsublime-imfix.x86_64.so"
                "https://raw.githubusercontent.com/Firef0x/SublimeText-i18n-zh/master/dist/x86_64/sublime_text.x86_64")
 
 md5sums=('b21c75fd6922ed383bf4b5ec0b62adb6'
@@ -48,14 +47,17 @@ md5sums=('b21c75fd6922ed383bf4b5ec0b62adb6'
          'ee96c697ef707e92077d0c55ec14922a'
          'f7e48316f800b0e1e0153111b1c80302'
          '6d473f472e643abe3549730b9fbd2b10'
+         'b436432a6223795c14d4aeb91423ab91'
          'fa22069242e91e9a7a9dc4023ebf9bf5'
          '7be7d93a1062a9975f34661d66b72ff0')
 md5sums_i686=('d1be10594fe7093b1b43a888a48c838f'
-              '9c52cabd468301706be2fea8a7379161'
               '9e65dda3f3760bf80915f755f2183519')
 md5sums_x86_64=('5da998bea29f9ca02a60d2b3cfc46fea'
-                '6e45f6aee03a727c9f09b4136e0b8c9e'
                 '901cd838b215f814e2f260a3bdfb6179')
+
+build() {
+  gcc -shared -o libsublime-imfix.so `pkg-config --libs --cflags gtk+-2.0` -fPIC ${_pkgname1}.c
+}
 
 _package_common() {
   # Copy everything
@@ -63,7 +65,7 @@ _package_common() {
   cp --preserve=mode -r "${_pkgname}" "${pkgdir}/opt/${_pkgname}"
 
   # Install IM fix library
-  install -Dm755 libsublime-imfix.${CARCH}.so \
+  install -Dm755 libsublime-imfix.so \
     ${pkgdir}/opt/${_pkgname}/libsublime-imfix.so
 
   # Install icons and desktop shortcuts
