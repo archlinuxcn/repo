@@ -8,7 +8,7 @@ def pre_build():
   pypi_pre_build(pypi_name='Wand')
 
   for l in edit_file('PKGBUILD'):
-    if l.startswith('python3 setup.py install'):
+    if l.lstrip().startswith('python3 setup.py install'):
       l += '\nrm $pkgdir/usr/README.rst'
     print(l)
 
