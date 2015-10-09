@@ -12,8 +12,8 @@ print(cbind(links,md5sums))
 _EOF_
 
 pkgname=rstudio-desktop-bin
-pkgver=0.99.484
-pkgrel=9
+pkgver=0.99.486
+pkgrel=1
 pkgdesc="A new integrated development environment (IDE) for R (binary version from RStudio official website)"
 arch=('i686' 'x86_64')
 license=('GPL')
@@ -26,8 +26,8 @@ provides=("rstudio-desktop=${pkgver}")
 options=(!strip)
 
 
-_x86md5=fe0c5d879c128c5d3d035bec73150fcc
-_x64md5=ee2a2ab6fce06e3936afd4b5968f7d0c
+_x86md5=8512948585a904489eb1a3e4e029a1c8
+_x64md5=6a9f9951f36c7272ccb1d5267670a5cf
 
 case "$CARCH" in
 	'i686')
@@ -45,6 +45,9 @@ source=("http://download1.rstudio.org/rstudio-${pkgver}-${_arch}.deb")
 install="$pkgname".install
 
 package() {
+
+	shopt -s extglob
+
   msg "Converting debian package..."
 
   cd "$srcdir"
@@ -69,6 +72,17 @@ package() {
   ls */*.so | xargs -n1 patchelf --set-rpath '$ORIGIN/../..'
 
   find "$pkgdir/usr" -type d -print0 | xargs -0 chmod 755
+  find "$pkgdir/usr" -type f -name '*.so.*' -print0 | xargs -0 chmod 644
+
+  cd "$pkgdir/usr/lib/rstudio/bin"
+  ls libQt*.so.*| grep '\.[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}$'|
+  while read x;do
+    ln -sf "$x" "${x%.+([0-9]).+([0-9])}"
+  done
+  ls lib*.so.* | grep '\.so\.[0-9]\{1,\}\.[0-9]\{1,\}$'|
+  while read x;do
+    ln -sf "$x" "${x%.+([0-9])}"
+  done
 
   cd "$pkgdir/usr/bin"
   #ln -s -f ../lib/rstudio/bin/rstudio rstudio-bin
