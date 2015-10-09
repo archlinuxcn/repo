@@ -5,23 +5,23 @@
 # https://github.com/jkl1337/packages-archlinux.git
 
 pkgname=balsamiqmockups
-pkgver=2.2.24
+pkgver=2.2.28
 license=('custom')
 pkgrel=4
 arch=('any')
 pkgdesc="The Adobe Air based Mockup client. Not free or open source, there is a 7 day free trial."
 url=('http://balsamiq.com/products/mockups')
-source=("https://build_archives.s3.amazonaws.com/mockups-desktop/2.2.24/MockupsForDesktop2.2.24-2014.11.06.air"
+source=("https://build_archives.s3.amazonaws.com/mockups-desktop/2.2/MockupsForDesktop2.2.28-2015.08.24.air"
         "http://media.balsamiq.com/files/BalsamiqEula.pdf"
         'fix-filetype-mime.patch'
         'balsamiqmockups.desktop'
         'vnd.balsamiq.bmml+xml.xml')
-sha1sums=('c9f39fc13ac5bfef2a523c870685dd0808220bf6'
-          '918917d8621615d07ea3db944c341bcc18f7dd08'
+sha1sums=('4c541244c7214ede9e1e4aa498bf1b8c2df597fd'
+          '1c9ad856fd7596fd8b5505a8ad43a713b16a37dc'
           '279e15c0c1bcffeabc97d9af3882c849735b5aa9'
           'cfe7240b7403ff47d63e9f8264581a40112607ff'
           '6f28b1fcc5758cb46c5f149d7896b53bdd027293')
-noextract=("MockupsForDesktop2.2.24-2014.11.06.air")
+noextract=("MockupsForDesktop2.2.28-2015.08.24.air")
 install=balsamiqmockups.install
 depends=(adobe-air-sdk desktop-file-utils lib32-libgl)
 makedepends=(unzip)
@@ -32,7 +32,7 @@ build () {
 
   mkdir -p $pkgname
   cd "${srcdir}/${pkgname}"
-  unzip -o "${srcdir}/MockupsForDesktop2.2.24-2014.11.06.air"
+  unzip -o "${srcdir}/MockupsForDesktop2.2.28-2015.08.24.air"
 
   msg2 "Apply patch fix-filetype-mime.patch"
   patch -Np1 -i "$srcdir/fix-filetype-mime.patch"
