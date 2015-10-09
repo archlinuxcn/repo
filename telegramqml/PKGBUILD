@@ -3,27 +3,26 @@
 
 pkgname=telegramqml
 _pkgname=TelegramQML
-pkgver=0.8.0
+pkgver=0.9.1
 _pkgtar=$pkgver-stable
-pkgrel=3
+pkgrel=1
 pkgdesc="Telegram API tools for QtQml and Qml"
 arch=('i686' 'x86_64')
 url="https://github.com/Aseman-Land/TelegramQML"
 license=('GPL')
 depends=('qt5-quick1' 'qt5-webkit>=5.5' 'qt5-imageformats' 'qt5-graphicaleffects'
-         'qt5-quickcontrols' 'libqtelegram-ae>=2:5.0')
+         'qt5-quickcontrols' 'libqtelegram-ae>=2:6.0')
 source=("https://github.com/Aseman-Land/TelegramQML/archive/v$_pkgtar.tar.gz")
-sha256sums=('38d4cd7cc26f6ea6852c94bb0c9b4648fbeef7db281053a99f2a2bd3327082d0')
+sha256sums=('00a52f6212460c2cae1dbd8ec4aa21e226552642cee56220802590fd8c4f61e9')
 
 prepare() {
   cd "${srcdir}/${_pkgname}-${_pkgtar}"
-  sed -i 's#target.path = $$PREFIX/lib/$$LIB_PATH#target.path = $$PREFIX/lib#' telegramqml.pro
   mkdir -p build 
 }
 
 build() {
   cd "${srcdir}/${_pkgname}-${_pkgtar}/build"
-  qmake-qt5 -r .. PREFIX=/usr BUILD_MODE+=lib
+  qmake-qt5 -r .. PREFIX=/usr INSTALL_LIBS_PREFIX=/usr/lib INSTALL_HEADERS_PREFIX=/usr/include BUILD_MODE+=lib
   make
 }
 
