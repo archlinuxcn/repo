@@ -3,12 +3,13 @@ _npmname=jshint
 _npmver=2.8.0
 pkgname=nodejs-jshint # All lowercase
 pkgver=2.8.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Static analysis tool for JavaScript"
 arch=(any)
 url="http://jshint.com/"
 license=(MIT)
-depends=('nodejs' 'npm')
+depends=('nodejs')
+makedepends=('npm')
 optdepends=()
 source=(http://registry.npmjs.org/$_npmname/-/$_npmname-$_npmver.tgz)
 noextract=($_npmname-$_npmver.tgz)
@@ -20,4 +21,5 @@ package() {
   mkdir -p "$_npmdir"
   cd "$_npmdir"
   npm install --user root -g --prefix "$pkgdir/usr" $_npmname@$_npmver
+  rmdir "$pkgdir/usr/etc"
 }
