@@ -19,8 +19,8 @@
 
 from lilaclib import *
 
-build_prefix = 'archlinuxcn-x86_64'
-# depends = []
+build_prefix = 'extra-x86_64'
+depends = ['python3-xcpf']
 
 def pre_build():
   # obtain base PKGBUILD, e.g.
