@@ -1,0 +1,54 @@
+From 5206bcaf5cdedda465c15f6cce2a3aecaa1604c1 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sun, 11 Oct 2015 16:56:52 -0400
+Subject: [PATCH] Ignore line number node when counting expressions for
+ inlining. Fix #13551
+
+---
+ base/inference.jl | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/base/inference.jl b/base/inference.jl
+index ed55161..053235a 100644
+--- a/base/inference.jl
++++ b/base/inference.jl
+@@ -1934,6 +1934,7 @@ end
+ function occurs_more(e::ANY, pred, n)
+     if isa(e,Expr)
+         e = e::Expr
++        e.head === :line && return 0
+         c = 0
+         for a = e.args
+             c += occurs_more(a, pred, n)
+@@ -2620,10 +2621,17 @@ function inline_worthy(body::Expr, cost::Integer=1000) # precondition: 0 < cost;
+         return false
+     end
+     symlim = 1000 + 5_000_000 ÷ cost
+-    if length(body.args) < (symlim + 500) ÷ 1000
++    nargs = 0
++    for arg in body.args
++        if (!isa(arg, LineNumberNode) &&
++            !(isa(arg, Expr) && (arg::Expr).head === :line))
++            nargs += 1
++        end
++    end
++    if nargs < (symlim + 500) ÷ 1000
+         symlim *= 16
+         symlim ÷= 1000
+-        if occurs_more(body, e->true, symlim) < symlim
++        if occurs_more(body, e->(!isa(e, LineNumberNode)), symlim) < symlim
+             return true
+         end
+     end
+@@ -2661,7 +2669,7 @@ end
+ const corenumtype = Union{Int32,Int64,Float32,Float64}
+ 
+ function inlining_pass(e::Expr, sv, ast)
+-    if e.head == :method
++    if e.head === :method
+         # avoid running the inlining pass on function definitions
+         return (e,())
+     end
+-- 
+2.6.1
+
