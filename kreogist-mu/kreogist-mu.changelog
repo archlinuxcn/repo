@@ -1,2 +1,32 @@
+0.9:
+
+This is the ninth major release of Kreogist μ. Brand new architecture and new user interface will provide you the best experience ever. With the brand new architecture, we can now load thousands of songs less than 1 second. It's seven times faster than iTunes on Windows. The new multiple condition search will make your life much easier. And new vertical mode of the main player can fit your screen right in size.
+This is the last beta version of Kreogist μ. We provides special version for 64bit Windows users: if you know your processor well, you can choose the special compiled version right for your processor to break the performance seal.
+Here're some of updates and bug fix:
+
+- Simplified the KNPluginManager.
+- Update the KNJsonDatabase module to 3.0. Support fast data reading.
+- Support clear up the image directory when loading the images.
+- Increase the write data operation maximum bound to 400.
+- Support show the current playing playlist.
+- Support change the layout in different layout.
+- Support display codec of the file in main player.
+- Use brand new KNMusicProxyModel for fast searching.
+- Use brand new KNMusicModel module, no more QStandardItemModel.
+- Support multiple condition search.
+- Now search in the artist and genre won't search artists or genre any more. Will search the content of artist or genre.
+- Change the policy to load images from hard disk, optimized the start up speed.
+- Change the policy to parse and find files in music library.
+- Tweak the album art display in Artist and Genre tab.
+- Tweak the album expand size in Album tab.
+- Tweak the album display layout and color.
+- Fixed the album art won't scaled correctly in artist and genre tab.
+- Fixed the drag and drop bug in playlist caused by the QTreeView can only drop one data.
+- Fixed the crashed bug caused by use Qt::AutoConnection and overflow the call stack in the library.
+- Fixed the proxy model sort unstable bug.
+- Fixed the library tree view bug.
+
+
 0.8:
+
 migrate to AUR4
