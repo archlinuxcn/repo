@@ -3,7 +3,7 @@
 # Contributor: agnotek <agnostic.sn [at]gmail.com>
 
 pkgname=telegram-desktop-bin-dev
-pkgver=0.9.3
+pkgver=0.9.4
 pkgrel=1
 _dev=1 # If it is a dev-only version, set this to 1
 pkgdesc="Official desktop version of Telegram messaging app - Static binaries, developement version"
@@ -11,6 +11,11 @@ arch=('i686' 'x86_64')
 url="https://desktop.telegram.org"
 license=('GPL3')
 depends=('libx11' 'libgcrypt' 'libasyncns' 'libsndfile' 'libsystemd' 'libdbus' 'openal' 'libogg' 'opus' 'opusfile' 'portaudio' 'openssl' 'zlib' 'libexif' 'xz')
+optdepends=(
+			'libappindicator-gtk2: to hide Telegram in the tray bar (GTK2-based desktop environment)'
+			'libappindicator-gtk3: to hide Telegram in the tray bar (GTK3-based desktop environment)'
+			'libappindicator-sharp: to hide Telegram in the tray bar (Unity-based desktop environment)'
+			)
 conflicts=('telegram-desktop' 'telegram-desktop-bin')
 provides=('telegram-desktop')
 replaces=('telegram-bin')
@@ -32,8 +37,8 @@ source_x86_64=('https://updates.tdesktop.com/tlinux/tsetup.'${pkgver}${_devsuffi
 sha256sums=('0f2a6e4c2b9b4ff5f4ddb628728be4cc5a419f79695c0151321a5f234099ee59'
             'e3e10fe8620bd4ed8fda41743ad844739757286eeecea5249cf1fcf21a8431bd'
             '4226167b476a75e844ddf0d429068e7e901bbde516810a7d4ca90f8405c01eef')
-sha256sums_i686=('b4941362ba0eed65992dba47aaf749279c318fe3b88f721c953acf741af408b0')
-sha256sums_x86_64=('5451c65b4c27ff5ead8cc3cb83f0e086f5355cb3f83afcceddf8e16d6b61f1be')
+sha256sums_i686=('be0f09a3db8fc4d204e8df3cc5be6240ce98ff213b84a0839cc7195781bdb006')
+sha256sums_x86_64=('1ead2189ef04b1307a60db13bf02d1d5b09c064bddd5e133ea77b3cedf18315e')
 
 package() {
 
