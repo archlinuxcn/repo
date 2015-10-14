@@ -1,0 +1,13 @@
+#!/bin/bash
+
+pkgname=p7zip
+pkgver=9.38.1
+pkgrel=3
+arch=x86_64
+mirror=http://mirrors.kernel.org/archlinux
+
+url=$mirror/extra/os/$arch/$pkgname-$pkgver-$pkgrel-$arch.pkg.tar.xz
+if ! curl -# --head $url | head -n1 | grep -e '200 OK'; then
+  echo also upstream is changed
+  exit 1
+fi

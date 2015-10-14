@@ -1,0 +1,9 @@
+post_upgrade() {
+  if (($(vercmp $2 9.38.1-3) < 0)); then
+    echo ':: The 7zFM graphical frontend is no longer included in this package.'
+    echo '   If you used it, consider installing one of the following packages:'
+    echo '   1) file-roller, 2) engrampa, 3) kdeutils-ark.'
+  fi
+}
+
+# vim:set ts=2 sw=2 et:
