@@ -5,7 +5,7 @@
 # or use: $ curl -s https://dl.google.com/linux/chrome/rpm/stable/x86_64/repodata/other.xml.gz | gzip -df | awk -F\" '/pkgid/{ sub(".*-","",$4); print $4": "$10 }'
 
 pkgname=google-chrome
-pkgver=45.0.2454.101
+pkgver=46.0.2490.71
 pkgrel=1
 pkgdesc="An attempt at creating a safer, faster, and more stable browser (Stable Channel)"
 arch=('i686' 'x86_64')
@@ -26,8 +26,8 @@ source_i686=("google-chrome-${_channel}_${pkgver}_i386.deb::https://dl.google.co
 source_x86_64=("google-chrome-${_channel}_${pkgver}_amd64.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_amd64.deb")
 md5sums=('99fa93d5e7fb5d622cef0f9621f3ffa3'
          'b7e752f549b215ac77f284b6486794b6')
-md5sums_i686=('7eba15498c9d23ddd7e2d8e8b6513490')
-md5sums_x86_64=('df54ff74c9c9228a5d0bb441f7465e14')
+md5sums_i686=('56e0fa8bd1554898e1ee2fc574170f4f')
+md5sums_x86_64=('a793fb54d3f0e2f4fed153fbc18d010b')
 
 package() {
   msg2 "Extracting the data.tar.lzma..."
@@ -50,7 +50,7 @@ package() {
   install -Dm644 eula_text.html "$pkgdir"/usr/share/licenses/google-chrome/eula_text.html
 
   msg2 "Fixing Chrome icon resolution..."
-  sed -i "/Exec=/i\StartupWMClass=Google-chrome" "$pkgdir"/usr/share/applications/google-chrome.desktop
+  sed -i "/Exec=/i\StartupWMClass=google-chrome" "$pkgdir"/usr/share/applications/google-chrome.desktop
 
   msg2 "Fixing permissions of documentation folder..."
   chmod 755 "$pkgdir"/usr/share/doc/google-chrome-$_channel/
