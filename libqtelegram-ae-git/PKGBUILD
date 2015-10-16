@@ -30,13 +30,12 @@ pkgver() {
  
 prepare() {
   cd $pkgname
-  sed -i 's#target.path = $$PREFIX/lib/$$LIB_PATH#target.path = $$PREFIX/lib#' libqtelegram-ae.pro
   mkdir -p build
 }
  
 build() {
   cd $pkgname/build
-  qmake-qt5 -r .. PREFIX=/usr 
+  qmake-qt5 -r .. PREFIX=/usr INSTALL_LIBS_PREFIX=/usr/lib INSTALL_HEADERS_PREFIX=/usr/include
   make
 } 
  
