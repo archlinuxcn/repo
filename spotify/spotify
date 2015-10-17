@@ -1,2 +1,2 @@
 #!/bin/sh
-/usr/share/spotify/spotify-client/spotify "$@"
+LD_PRELOAD=libcurl.so.3 /usr/share/spotify/spotify "$@"
