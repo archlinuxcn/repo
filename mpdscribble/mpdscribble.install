@@ -1,0 +1,22 @@
+post_install() {
+  echo 'An example config is provided in /usr/share/mpdscribble/mpdscribble.conf.example'
+  echo
+  echo 'For system-wide config copy this file to /etc/mpdscribble.conf'
+  echo 'For per-user config copy this file to ~/.mpdscribble/mpdscribble.conf'
+}
+
+## arg 1:  the new package version
+## arg 2:  the old package version
+pre_upgrade() {
+  # removed /etc/mpdscribble.conf on FEB 19 2011
+  # only display warning for people with mpdscribble older then 0.21
+  if (( "$(vercmp 0.21-1 $2)" > 0 )) && [[ -f /etc/mpdscribble.conf ]]
+  then
+    echo "$1 is new $2 is old"
+    cp /etc/mpdscribble.conf /etc/mpdscribble.conf.oldbackup
+    echo 'The package does not provide /etc/mpdscribble.conf anymore.'
+    echo 'Copied /etc/mpdscribble.conf to /etc/mpdscribble.conf.oldbackup'
+    echo
+    echo 'The example file is now located at /etc/mpdscribble.conf.example'
+  fi
+}
