@@ -1,0 +1,35 @@
+# Maintainer: Arthur Zamarin <arthurzam@gmail.com>
+
+pkgname=openlibm-git
+pkgver=0.4.1
+pkgrel=1
+pkgdesc="standalone implementation of C mathematical functions"
+arch=(i686 x86_64)
+url="https://github.com/JuliaLang/openlibm"
+license=('BSD')
+source=("git://github.com/JuliaLang/openlibm")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd julia
+
+  git describe --tags | sed 's/^v//;s/-/./g'
+}
+
+prepare() {
+  cd openlibm
+  git reset --hard HEAD
+  git clean -fdx
+
+  sed -i "s@/usr/local@/usr@" Make.inc
+}
+
+build() {
+  cd openlibm
+  make
+}
+
+package() {
+  cd openlibm
+  make DESTDIR="$pkgdir" install
+}
