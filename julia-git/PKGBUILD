@@ -19,7 +19,8 @@ license=('GPL')
 makedepends=('gcc-fortran' 'arpack' 'fftw' 'git' 'gmp' 'libgit2' 'libunwind'
              'llvm' 'mpfr' 'pcre2' 'suitesparse' 'python2-sphinx'
              'python2-sphinx_rtd_theme' 'python2-pip' 'texlive-langcjk'
-             'texlive-latexextra' 'emacs' 'openspecfun' 'openblas')
+             'texlive-latexextra' 'emacs' 'openspecfun' 'openblas' 'openlibm'
+             'libutf8proc' 'patchelf')
 options=('!emptydirs' 'staticlibs' 'debug' 'strip')
 source=('git://github.com/JuliaLang/julia'
         '0001-Create-tbaa_gcframe-and-decorate-all-stores-and-load.patch')
@@ -59,11 +60,10 @@ esac
 
 julia_opts=(prefix=/usr sysconfdir=/etc
             USE_SYSTEM_LLVM=1
-            # LLVM_VER=3.6.2
             USE_SYSTEM_LIBUNWIND=1
             USE_SYSTEM_PCRE=1
-            USE_SYSTEM_LIBM=1
-            USE_SYSTEM_OPENLIBM=0
+            USE_SYSTEM_LIBM=0
+            USE_SYSTEM_OPENLIBM=1
             USE_SYSTEM_OPENSPECFUN=1
             USE_SYSTEM_DSFMT=0
             USE_SYSTEM_BLAS=1
@@ -73,10 +73,10 @@ julia_opts=(prefix=/usr sysconfdir=/etc
             USE_SYSTEM_MPFR=1
             USE_SYSTEM_ARPACK=1
             USE_SYSTEM_SUITESPARSE=1
-            USE_SYSTEM_RMATH=0
             USE_SYSTEM_LIBUV=0
-            USE_SYSTEM_UTF8PROC=0
+            USE_SYSTEM_UTF8PROC=1
             USE_SYSTEM_LIBGIT2=1
+            USE_SYSTEM_PATCHELF=1
             USE_INTEL_MKL=0
             USE_BLAS64=0
             USE_LLVM_SHLIB=0
@@ -114,7 +114,7 @@ package_julia-git() {
   arch=('i686' 'x86_64')
   depends=('arpack' 'fftw' 'gmp' 'libgit2' 'libunwind' 'llvm' 'mpfr' 'pcre2'
            'hicolor-icon-theme' 'xdg-utils' 'suitesparse' 'openspecfun'
-           'openblas')
+           'openblas' 'openlibm' 'utf8proc')
   install=julia.install
   conflicts=('julia')
 
