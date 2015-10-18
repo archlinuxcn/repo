@@ -1,0 +1,44 @@
+# Maintainer: Alexander Rødseth <rodseth@gmail.com>
+# Contributor: lolilolicon #<moc.liamg@nocilolilol>.reverse
+
+pkgname=libutf8proc-git
+pkgver=1.3.1.g24515cb
+pkgrel=1
+pkgdesc='C library for processing UTF-8 encoded Unicode strings'
+arch=('x86_64' 'i686')
+url='http://julialang.org/utf8proc/'
+license=('custom')
+makedepends=('git')
+conflicts=('libutf8proc')
+replaces=('libutf8proc')
+source=("git://github.com/JuliaLang/utf8proc"
+        'libutf8proc.pc')
+md5sums=('SKIP'
+         'faa6cce1d5696a1126a05f5419d22e37')
+
+pkgver() {
+  cd utf8proc
+
+  git describe --tags | sed 's/^v//;s/-/./g'
+}
+
+prepare() {
+  cd utf8proc
+  git reset --hard HEAD
+  git clean -fdx
+}
+
+build() {
+  cd utf8proc
+
+  make libutf8proc.so
+}
+
+package() {
+  cd utf8proc
+
+  install -Dm755 libutf8proc.so "$pkgdir/usr/lib/libutf8proc.so"
+  install -Dm644 utf8proc.h "$pkgdir/usr/include/$pkgname/utf8proc.h"
+  install -Dm644 ../libutf8proc.pc "$pkgdir/usr/lib/pkgconfig/libutf8proc.pc"
+  install -Dm644 LICENSE.md "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
