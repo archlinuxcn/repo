@@ -1,7 +1,7 @@
 # Maintainer: Arthur Zamarin <arthurzam@gmail.com>
 
 pkgname=openlibm-git
-pkgver=0.4.1
+pkgver=0.4.1.105.g0036d70
 pkgrel=1
 pkgdesc="standalone implementation of C mathematical functions"
 arch=(i686 x86_64)
@@ -11,7 +11,7 @@ source=("git://github.com/JuliaLang/openlibm")
 sha256sums=('SKIP')
 
 pkgver() {
-  cd julia
+  cd openlibm
 
   git describe --tags | sed 's/^v//;s/-/./g'
 }
