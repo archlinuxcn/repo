@@ -38,7 +38,7 @@ package() {
   cd utf8proc
 
   install -Dm755 libutf8proc.so "$pkgdir/usr/lib/libutf8proc.so"
-  install -Dm644 utf8proc.h "$pkgdir/usr/include/$pkgname/utf8proc.h"
+  install -Dm644 utf8proc.h "$pkgdir/usr/include/utf8proc.h"
   install -Dm644 ../libutf8proc.pc "$pkgdir/usr/lib/pkgconfig/libutf8proc.pc"
   install -Dm644 LICENSE.md "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
