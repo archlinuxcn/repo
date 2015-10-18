@@ -9,6 +9,8 @@ url="https://github.com/JuliaLang/openlibm"
 license=('BSD')
 source=("git://github.com/JuliaLang/openlibm")
 sha256sums=('SKIP')
+provides=('openlibm=0.4.1')
+conflicts=('openlibm')
 
 pkgver() {
   cd openlibm
