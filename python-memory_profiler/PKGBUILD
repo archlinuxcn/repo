@@ -1,14 +1,14 @@
 _pkgname=memory_profiler
 pkgname=python-memory_profiler
-pkgver=0.36
-pkgrel=2
+pkgver=0.37
+pkgrel=1
 pkgdesc="A module for monitoring memory usage of a python program"
 arch=('any')
 url="http://pypi.python.org/pypi/memory_profiler"
 license=('BSD')
 depends=('python' 'python-psutil' 'python-setuptools')
-source=('https://pypi.python.org/packages/source/m/memory_profiler/memory_profiler-0.36.tar.gz')
-md5sums=('1e851a290d3cf39b2d538a731565505d')
+source=('https://pypi.python.org/packages/source/m/memory_profiler/memory_profiler-0.37.tar.gz')
+md5sums=('e406d6599557ebf57f1d27ce91539659')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
