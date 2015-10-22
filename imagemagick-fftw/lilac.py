@@ -40,6 +40,7 @@ def post_build():
   git_rm_files(g.oldfiles)
   git_add_files(g.files)
   git_commit()
+  update_aur_repo()
 
 if __name__ == '__main__':
   single_main()
