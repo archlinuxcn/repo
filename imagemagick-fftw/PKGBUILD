@@ -2,18 +2,18 @@
 # Maintainer: Eric Bélanger <eric@archlinux.org>
 
 pkgname=imagemagick-fftw
-pkgver=6.9.2.0
+pkgver=6.9.2.4
 pkgrel=1
 arch=('i686' 'x86_64')
 url="http://www.imagemagick.org/"
 license=('custom')
 makedepends=('libltdl' 'lcms2' 'libxt' 'fontconfig' 'libxext' 'ghostscript'
              'openexr' 'libwmf' 'librsvg' 'libxml2' 'liblqr' 'openjpeg2'
-             'opencl-headers' 'libcl' 'libwebp' 'subversion' 'fftw')
+             'opencl-headers' 'libcl' 'libwebp' 'subversion' 'glu' 'fftw')
 #source=(http://www.imagemagick.org/download/ImageMagick-${pkgver%.*}-${pkgver##*.}.tar.xz{,.asc}
 source=(ftp://ftp.sunet.se/pub/multimedia/graphics/ImageMagick/ImageMagick-${pkgver%.*}-${pkgver##*.}.tar.xz{,.asc}
         perlmagick.rpath.patch)
-sha1sums=('1db8234c996b5dd1f230f8e043fad27851709b8d'
+sha1sums=('3914e51541e2242467dbf848018a417662ce784b'
           'SKIP'
           'e143cf9d530fabf3b58023899b5cc544ba93daec')
 validpgpkeys=('D8272EF51DA223E4D05B466989AB63D48277377A')
@@ -31,7 +31,7 @@ build() {
   [[ $CARCH = "x86_64" ]] && EXTRAOPTS="--with-gcc-arch=x86-64"
 
   ./configure --prefix=/usr --sysconfdir=/etc --with-modules \
-    --enable-hdri --with-wmf --with-openexr --with-xml --with-lcms2 \
+    --enable-hdri --with-wmf --with-openexr --with-xml \
     --with-webp --with-gslib --with-gs-font-dir=/usr/share/fonts/Type1 \
     --with-perl --with-perl-options="INSTALLDIRS=vendor" --with-lqr --with-rsvg \
     --enable-opencl --with-openjp2 --without-gvc --without-djvu --without-autotrace \
