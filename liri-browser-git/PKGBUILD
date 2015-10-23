@@ -2,13 +2,13 @@
 
 _pkgname=liri-browser
 pkgname=$_pkgname-git
-pkgver=0.3.r137.ga12e855
+pkgver=0.3.r141.ge46f823
 pkgrel=1
 pkgdesc="A Web Browser using the QML Material framework from the Papyros Project"
 arch=("i686" "x86_64")
 url="https://github.com/liri-browser/liri-browser"
 license=("GPLv3")
-depends=("qt5-base" "qt5-webengine" 'qt5-multimedia' 'vlc' "qml-material")
+depends=("qt5-base" "qt5-webengine" "qml-material" "qt5-multimedia" 'qt5-multimedia' 'vlc' "vlc")
 makedepends=("git")
 provides=("$_pkgname" "$pkgname")
 conflicts=("$_pkgname")
