@@ -1,7 +1,7 @@
 # Maintainer: Colin Keenan <colinnkeenan at gmail dot com>
 
 pkgname=silentcast
-pkgver=2.1
+pkgver=2.2
 pkgrel=1
 pkgdesc="Silent Screencast: video record your screen and make it into an animated gif"
 arch=('any')
@@ -11,13 +11,13 @@ depends=('bash' 'ffmpeg' 'imagemagick' 'xdotool' 'xorg-xrandr' 'xorg-xwininfo' '
 install=${pkgname}.install
 
 source=($url"/archive/v"$pkgver".tar.gz")
-md5sums=('3111a345a90e23752ec82b28e55dbbfc')
+md5sums=('4a9e181f6b7984435e8ec033ed02b3f8')
 
 package() {
   cd "$pkgname-$pkgver"
   install -D -m755 silentcast "$pkgdir/usr/bin/silentcast"
-  install -D -m755 genffcom "$pkgdir/usr/bin/genffcom"
-  install -D -m755 temptoanim "$pkgdir/usr/bin/temptoanim"
+  install -m755 genffcom "$pkgdir/usr/bin"
+  install -m755 temptoanim "$pkgdir/usr/bin"
   install -D -m755 transparent_window.py "$pkgdir/usr/share/silentcast/transparent_window.py"
   install -m755 unity_indicator.py "$pkgdir/usr/share/silentcast"
   install -m644 stop?.png "$pkgdir/usr/share/silentcast"
@@ -26,4 +26,7 @@ package() {
   install -D -m644 README.md "$pkgdir/usr/share/doc/silentcast/README.md"
   install -m644 *png "$pkgdir/usr/share/doc/silentcast"
   install -m644 *gif "$pkgdir/usr/share/doc/silentcast"
+  install -D -m755 manpages/silentcast.1 "$pkgdir/usr/share/man/man1/silentcast.1"
+  install -m755 manpages/genffcom.1 "$pkgdir/usr/share/man/man1/"
+  install -m755 manpages/temptoanim.1 "$pkgdir/usr/share/man/man1/"
 }
