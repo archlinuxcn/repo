@@ -1,0 +1,27 @@
+From 576107b84d88f8539391bca2057308cf0ebf366e Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sat, 24 Oct 2015 12:46:36 -0400
+Subject: [PATCH] Revert "use LLVM's newer SROA pass. fixes #13366, fixes
+ #9060"
+
+This reverts commit 84a0bc0be585aed64a40a9c1f0deab6366b68e3c.
+---
+ src/codegen.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/codegen.cpp b/src/codegen.cpp
+index b7f77b4..5ec6bc3 100644
+--- a/src/codegen.cpp
++++ b/src/codegen.cpp
+@@ -5820,7 +5820,7 @@ static void init_julia_llvm_env(Module *m)
+ #ifndef INSTCOMBINE_BUG
+     FPM->add(createInstructionCombiningPass()); // Cleanup for scalarrepl.
+ #endif
+-    FPM->add(createSROAPass());                 // Break up aggregate allocas
++    FPM->add(createScalarReplAggregatesPass()); // Break up aggregate allocas
+ #ifndef INSTCOMBINE_BUG
+     FPM->add(createInstructionCombiningPass()); // Cleanup for scalarrepl.
+ #endif
+-- 
+2.6.1
+

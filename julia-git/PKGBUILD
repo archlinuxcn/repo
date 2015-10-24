@@ -23,9 +23,11 @@ makedepends=('gcc-fortran' 'arpack' 'fftw' 'git' 'gmp' 'libgit2' 'libunwind'
              'libutf8proc' 'patchelf')
 options=('!emptydirs' 'staticlibs' 'debug' 'strip')
 source=('git://github.com/JuliaLang/julia'
-        '0001-Create-tbaa_gcframe-and-decorate-all-stores-and-load.patch')
+        '0001-Create-tbaa_gcframe-and-decorate-all-stores-and-load.patch'
+        '0001-Revert-use-LLVM-s-newer-SROA-pass.-fixes-13366-fixes.patch')
 md5sums=('SKIP'
-         '2a64b87dfe52236b11b1d5df26947cb6')
+         '2a64b87dfe52236b11b1d5df26947cb6'
+         '4bb356144fe5222e3a74140ac1acb43b')
 
 pkgver() {
   cd julia
@@ -40,6 +42,7 @@ prepare() {
   git clean -fdx
 
   patch -Np1 < ../0001-Create-tbaa_gcframe-and-decorate-all-stores-and-load.patch
+  patch -Np1 < ../0001-Revert-use-LLVM-s-newer-SROA-pass.-fixes-13366-fixes.patch
 
   cd doc
 
