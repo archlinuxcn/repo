@@ -1,0 +1,59 @@
+From c38d64aa3c12bea271d331b6c52a1130ca758a69 Mon Sep 17 00:00:00 2001
+From: Sebastian Krzyszkowiak <dos@dosowisko.net>
+Date: Sun, 12 Jul 2015 16:25:07 +0200
+Subject: [PATCH] Add support for Activate method for improved Plasma 5 user
+ experience
+
+---
+ src/app-indicator.c             | 3 ++-
+ src/gen-notification-item.xml.c | 4 ++++
+ src/notification-item.xml       | 4 ++++
+ 3 files changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/src/app-indicator.c b/src/app-indicator.c
+index 2e98b48..14be69f 100644
+--- a/src/app-indicator.c
++++ b/src/app-indicator.c
+@@ -1082,7 +1082,8 @@ bus_method_call (GDBusConnection * connection, const gchar * sender,
+ 		delta = ABS(delta);
+ 		g_signal_emit(app, signals[SCROLL_EVENT], 0, delta, direction);
+ 
+-	} else if (g_strcmp0(method, "SecondaryActivate") == 0 ||
++	} else if (g_strcmp0(method, "Activate") == 0 ||
++	           g_strcmp0(method, "SecondaryActivate") == 0 ||
+ 	           g_strcmp0(method, "XAyatanaSecondaryActivate") == 0) {
+ 		GtkWidget *menuitem = priv->sec_activate_target;
+ 		
+diff --git a/src/gen-notification-item.xml.c b/src/gen-notification-item.xml.c
+index 0bc6ab2..18a288b 100644
+--- a/src/gen-notification-item.xml.c
++++ b/src/gen-notification-item.xml.c
+@@ -25,6 +25,10 @@ const char * _notification_item =
+ "			<arg type=\"i\" name=\"delta\" direction=\"in\" />\n"
+ "			<arg type=\"s\" name=\"orientation\" direction=\"in\" />\n"
+ "		</method>\n"
++"		<method name=\"Activate\">\n"
++"			<arg type=\"i\" name=\"x\" direction=\"in\" />\n"
++"			<arg type=\"i\" name=\"y\" direction=\"in\" />\n"
++"		</method>\n"
+ "		<method name=\"SecondaryActivate\">\n"
+ "			<arg type=\"i\" name=\"x\" direction=\"in\" />\n"
+ "			<arg type=\"i\" name=\"y\" direction=\"in\" />\n"
+diff --git a/src/notification-item.xml b/src/notification-item.xml
+index c93afd7..72d36eb 100644
+--- a/src/notification-item.xml
++++ b/src/notification-item.xml
+@@ -24,6 +24,10 @@
+ 			<arg type="i" name="delta" direction="in" />
+ 			<arg type="s" name="orientation" direction="in" />
+ 		</method>
++		<method name="Activate">
++			<arg type="i" name="x" direction="in" />
++			<arg type="i" name="y" direction="in" />
++		</method>
+ 		<method name="SecondaryActivate">
+ 			<arg type="i" name="x" direction="in" />
+ 			<arg type="i" name="y" direction="in" />
+-- 
+2.4.5
+
