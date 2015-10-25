@@ -1,0 +1,662 @@
+#!/bin/bash
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; version 2 of the License.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# Avoid any encoding problems
+export LANG=C
+
+shopt -s extglob
+
+# check if messages are to be printed using color
+unset ALL_OFF BOLD BLUE GREEN RED YELLOW
+if [[ -t 2 ]]; then
+	# prefer terminal safe colored and bold text when tput is supported
+	if tput setaf 0 &>/dev/null; then
+		ALL_OFF="$(tput sgr0)"
+		BOLD="$(tput bold)"
+		BLUE="${BOLD}$(tput setaf 4)"
+		GREEN="${BOLD}$(tput setaf 2)"
+		RED="${BOLD}$(tput setaf 1)"
+		YELLOW="${BOLD}$(tput setaf 3)"
+	else
+		ALL_OFF="\e[1;0m"
+		BOLD="\e[1;1m"
+		BLUE="${BOLD}\e[1;34m"
+		GREEN="${BOLD}\e[1;32m"
+		RED="${BOLD}\e[1;31m"
+		YELLOW="${BOLD}\e[1;33m"
+	fi
+fi
+readonly ALL_OFF BOLD BLUE GREEN RED YELLOW
+
+plain() {
+	local mesg=$1; shift
+	printf "${BOLD}    ${mesg}${ALL_OFF}\n" "$@" >&2
+}
+
+msg() {
+	local mesg=$1; shift
+	printf "${GREEN}==>${ALL_OFF}${BOLD} ${mesg}${ALL_OFF}\n" "$@" >&2
+}
+
+msg2() {
+	local mesg=$1; shift
+	printf "${BLUE}  ->${ALL_OFF}${BOLD} ${mesg}${ALL_OFF}\n" "$@" >&2
+}
+
+warning() {
+	local mesg=$1; shift
+	printf "${YELLOW}==> WARNING:${ALL_OFF}${BOLD} ${mesg}${ALL_OFF}\n" "$@" >&2
+}
+
+error() {
+	local mesg=$1; shift
+	printf "${RED}==> ERROR:${ALL_OFF}${BOLD} ${mesg}${ALL_OFF}\n" "$@" >&2
+}
+
+stat_busy() {
+	local mesg=$1; shift
+	printf "${GREEN}==>${ALL_OFF}${BOLD} ${mesg}...${ALL_OFF}" >&2
+}
+
+stat_done() {
+	printf "${BOLD}done${ALL_OFF}\n" >&2
+}
+
+setup_workdir() {
+	[[ -z $WORKDIR ]] && WORKDIR=$(mktemp -d --tmpdir "${0##*/}.XXXXXXXXXX")
+}
+
+cleanup() {
+	[[ -n $WORKDIR ]] && rm -rf "$WORKDIR"
+	exit ${1:-0}
+}
+
+abort() {
+	error 'Aborting...'
+	cleanup 255
+}
+
+trap_abort() {
+	trap - EXIT INT QUIT TERM HUP
+	abort
+}
+
+trap_exit() {
+	local r=$?
+	trap - EXIT INT QUIT TERM HUP
+	cleanup $r
+}
+
+die() {
+	(( $# )) && error "$@"
+	cleanup 255
+}
+
+trap 'trap_abort' INT QUIT TERM HUP
+trap 'trap_exit' EXIT
+
+##
+#  usage : in_array( $needle, $haystack )
+# return : 0 - found
+#          1 - not found
+##
+in_array() {
+	local needle=$1; shift
+	local item
+	for item in "$@"; do
+		[[ $item = $needle ]] && return 0 # Found
+	done
+	return 1 # Not Found
+}
+
+##
+#  usage : get_full_version( [$pkgname] )
+# return : full version spec, including epoch (if necessary), pkgver, pkgrel
+##
+get_full_version() {
+	# set defaults if they weren't specified in buildfile
+	pkgbase=${pkgbase:-${pkgname[0]}}
+	epoch=${epoch:-0}
+	if [[ -z $1 ]]; then
+		if (( ! epoch )); then
+			echo $pkgver-$pkgrel
+		else
+			echo $epoch:$pkgver-$pkgrel
+		fi
+	else
+		for i in pkgver pkgrel epoch; do
+			local indirect="${i}_override"
+			eval $(declare -f package_$1 | sed -n "s/\(^[[:space:]]*$i=\)/${i}_override=/p")
+			[[ -z ${!indirect} ]] && eval ${indirect}=\"${!i}\"
+		done
+		if (( ! $epoch_override )); then
+			echo $pkgver_override-$pkgrel_override
+		else
+			echo $epoch_override:$pkgver_override-$pkgrel_override
+		fi
+	fi
+}
+
+##
+#  usage : lock( $fd, $file, $message )
+##
+lock() {
+	eval "exec $1>"'"$2"'
+	if ! flock -n $1; then
+		stat_busy "$3"
+		flock $1
+		stat_done
+	fi
+}
+
+##
+#  usage : slock( $fd, $file, $message )
+##
+slock() {
+	eval "exec $1>"'"$2"'
+	if ! flock -sn $1; then
+		stat_busy "$3"
+		flock -s $1
+		stat_done
+	fi
+}
+
+##
+# usage: pkgver_equal( $pkgver1, $pkgver2 )
+##
+pkgver_equal() {
+	local left right
+
+	if [[ $1 = *-* && $2 = *-* ]]; then
+		# if both versions have a pkgrel, then they must be an exact match
+		[[ $1 = "$2" ]]
+	else
+		# otherwise, trim any pkgrel and compare the bare version.
+		[[ ${1%%-*} = "${2%%-*}" ]]
+	fi
+}
+
+##
+#  usage: find_cached_package( $pkgname, $pkgver, $arch )
+#
+#    $pkgver can be supplied with or without a pkgrel appended.
+#    If not supplied, any pkgrel will be matched.
+##
+find_cached_package() {
+	local searchdirs=("$PWD" "$PKGDEST") results=()
+	local targetname=$1 targetver=$2 targetarch=$3
+	local dir pkg pkgbasename pkgparts name ver rel arch size r results
+
+	for dir in "${searchdirs[@]}"; do
+		[[ -d $dir ]] || continue
+
+		for pkg in "$dir"/*.pkg.tar?(.?z); do
+			[[ -f $pkg ]] || continue
+
+			# avoid adding duplicates of the same inode
+			for r in "${results[@]}"; do
+				[[ $r -ef $pkg ]] && continue 2
+			done
+
+			# split apart package filename into parts
+			pkgbasename=${pkg##*/}
+			pkgbasename=${pkgbasename%.pkg.tar?(.?z)}
+
+			arch=${pkgbasename##*-}
+			pkgbasename=${pkgbasename%-"$arch"}
+
+			rel=${pkgbasename##*-}
+			pkgbasename=${pkgbasename%-"$rel"}
+
+			ver=${pkgbasename##*-}
+			name=${pkgbasename%-"$ver"}
+
+			if [[ $targetname = "$name" && $targetarch = "$arch" ]] &&
+					pkgver_equal "$targetver" "$ver-$rel"; then
+				results+=("$pkg")
+			fi
+		done
+	done
+
+	case ${#results[*]} in
+		0)
+			return 1
+			;;
+		1)
+			printf '%s\n' "$results"
+			return 0
+			;;
+		*)
+			error 'Multiple packages found:'
+			printf '\t%s\n' "${results[@]}" >&2
+			return 1
+	esac
+}
+
+##
+#  usage : check_root ("$0" "$@")
+##
+check_root() {
+	(( EUID == 0 )) && return
+	if type -P sudo >/dev/null; then
+		exec sudo -- "$@"
+	else
+		exec su root -c "$(printf ' %q' "$@")"
+	fi
+}
+
+
+shopt -s nullglob
+
+makepkg_args=(-s --noconfirm -L --holdver)
+repack=false
+update_first=false
+clean_first=false
+install_pkg=
+run_namcap=false
+temp_chroot=false
+chrootdir=
+passeddir=
+ccachedir=
+declare -a install_pkgs
+declare -i ret=0
+
+bindmounts_ro=()
+bindmounts_rw=()
+
+copy=$USER
+[[ -n $SUDO_USER ]] && copy=$SUDO_USER
+[[ -z "$copy" || $copy = root ]] && copy=copy
+src_owner=${SUDO_USER:-$USER}
+
+usage() {
+	echo "Usage: ${0##*/} [options] -r <chrootdir> [--] [makepkg args]"
+	echo ' Run this script in a PKGBUILD dir to build a package inside a'
+	echo ' clean chroot. Arguments passed to this script after the'
+	echo ' end-of-options marker (--) will be passed to makepkg.'
+	echo ''
+	echo ' The chroot dir consists of the following directories:'
+	echo ' <chrootdir>/{root, copy} but only "root" is required'
+	echo ' by default. The working copy will be created as needed'
+	echo ''
+	echo 'The chroot "root" directory must be created via the following'
+	echo 'command:'
+	echo '    mkarchroot <chrootdir>/root base-devel'
+	echo ''
+	echo "Default makepkg args: ${makepkg_args[*]}"
+	echo ''
+	echo 'Flags:'
+	echo '-h         This help'
+	echo '-c         Clean the chroot before building'
+	echo '-d <dir>   Bind directory into build chroot as read-write'
+	echo '-D <dir>   Bind directory into build chroot as read-only'
+	echo '-u         Update the working copy of the chroot before building'
+	echo '           This is useful for rebuilds without dirtying the pristine'
+	echo '           chroot'
+	echo '-r <dir>   The chroot dir to use'
+	echo '-I <pkg>   Install a package into the working copy of the chroot'
+	echo '-l <copy>  The directory to use as the working copy of the chroot'
+	echo '           Useful for maintaining multiple copies'
+	echo "           Default: $copy"
+	echo '-n         Run namcap on the package'
+	echo '-T         Build in a temporary directory'
+	echo '-C <dir>   The ccache dir to use'
+	exit 1
+}
+
+# {{{ functions
+load_vars() {
+	local makepkg_conf="$1" var
+
+	[[ -f $makepkg_conf ]] || return 1
+
+	for var in {SRC,SRCPKG,PKG,LOG}DEST MAKEFLAGS PACKAGER; do
+		[[ -z ${!var} ]] && eval $(grep "^${var}=" "$makepkg_conf")
+	done
+
+	return 0
+}
+
+create_chroot() {
+	# Lock the chroot we want to use. We'll keep this lock until we exit.
+	lock 9 "$copydir.lock" "Locking chroot copy [$copy]"
+
+	if [[ ! -d $copydir ]] || $clean_first; then
+		# Get a read lock on the root chroot to make
+		# sure we don't clone a half-updated chroot
+		slock 8 "$chrootdir/root.lock" "Locking clean chroot"
+
+		stat_busy "Creating clean working copy [$copy]"
+		if [[ "$chroottype" == btrfs ]] && ! mountpoint -q "$copydir"; then
+			if [[ -d $copydir ]]; then
+				btrfs subvolume delete "$copydir" >/dev/null ||
+					die "Unable to delete subvolume %s" "$copydir"
+			fi
+			btrfs subvolume snapshot "$chrootdir/root" "$copydir" >/dev/null ||
+				die "Unable to create subvolume %s" "$copydir"
+		else
+			mkdir -p "$copydir"
+			rsync -a --delete -q -W -x "$chrootdir/root/" "$copydir"
+		fi
+		stat_done
+
+		# Drop the read lock again
+		exec 8>&-
+	fi
+
+	# Update mtime
+	touch "$copydir"
+}
+
+clean_temporary() {
+	stat_busy "Removing temporary copy [$copy]"
+	if [[ "$chroottype" == btrfs ]] && ! mountpoint -q "$copydir"; then
+		btrfs subvolume delete "$copydir" >/dev/null ||
+			die "Unable to delete subvolume %s" "$copydir"
+	else
+		# avoid change of filesystem in case of an umount failure
+		rm --recursive --force --one-file-system "$copydir" ||
+			die "Unable to delete %s" "$copydir"
+	fi
+
+	# remove lock file
+	rm -f "$copydir.lock"
+	stat_done
+}
+
+install_packages() {
+	local pkgname
+
+	for install_pkg in "${install_pkgs[@]}"; do
+		pkgname="${install_pkg##*/}"
+		cp "$install_pkg" "$copydir/$pkgname"
+
+		arch-nspawn "$copydir" \
+			"${bindmounts_ro[@]}" "${bindmounts_rw[@]}" \
+			pacman -U /$pkgname --noconfirm
+		(( ret += !! $? ))
+
+		rm "$copydir/$pkgname"
+	done
+
+	# If there is no PKGBUILD we are done
+	[[ -f PKGBUILD ]] || exit $ret
+}
+
+prepare_chroot() {
+	$repack || rm -rf "$copydir/build"
+
+	mkdir -p "$copydir/build"
+	if ! grep -q 'BUILDDIR="/build"' "$copydir/etc/makepkg.conf"; then
+		echo 'BUILDDIR="/build"' >> "$copydir/etc/makepkg.conf"
+	fi
+
+	# Read .makepkg.conf and gnupg pubring
+	if [[ -r $USER_HOME/.gnupg/pubring.kbx ]]; then
+		install -D "$USER_HOME/.gnupg/pubring.kbx" "$copydir/build/.gnupg/pubring.kbx"
+	fi
+	if [[ -r $USER_HOME/.gnupg/pubring.gpg ]]; then
+		install -D "$USER_HOME/.gnupg/pubring.gpg" "$copydir/build/.gnupg/pubring.gpg"
+	fi
+
+	mkdir -p "$copydir/pkgdest"
+	if ! grep -q 'PKGDEST="/pkgdest"' "$copydir/etc/makepkg.conf"; then
+		echo 'PKGDEST="/pkgdest"' >> "$copydir/etc/makepkg.conf"
+	fi
+
+	mkdir -p "$copydir/srcpkgdest"
+	if ! grep -q 'SRCPKGDEST="/srcpkgdest"' "$copydir/etc/makepkg.conf"; then
+		echo 'SRCPKGDEST="/srcpkgdest"' >> "$copydir/etc/makepkg.conf"
+	fi
+
+	mkdir -p "$copydir/logdest"
+	if ! grep -q 'LOGDEST="/logdest"' "$copydir/etc/makepkg.conf"; then
+		echo 'LOGDEST="/logdest"' >> "$copydir/etc/makepkg.conf"
+	fi
+
+	# These two get bind-mounted read-only
+	# XXX: makepkg dislikes having these dirs read-only, so separate them
+	mkdir -p "$copydir/startdir" "$copydir/startdir_host"
+	mkdir -p "$copydir/srcdest" "$copydir/srcdest_host"
+	if ! grep -q 'SRCDEST="/srcdest"' "$copydir/etc/makepkg.conf"; then
+		echo 'SRCDEST="/srcdest"' >> "$copydir/etc/makepkg.conf"
+	fi
+
+	pacman -Sy --config "$copydir/etc/pacman.conf" --noconfirm ccache -r "$copydir"
+	sed -i 's/!ccache/ccache/g' "$copydir/etc/makepkg.conf"
+
+	builduser_uid=${SUDO_UID:-$UID}
+
+	# We can't use useradd without chrooting, otherwise it invokes PAM modules
+	# which we might not be able to load (i.e. when building i686 packages on
+	# an x86_64 host).
+	printf 'builduser:x:%d:100:builduser:/:/usr/bin/nologin\n' "$builduser_uid" >>"$copydir/etc/passwd"
+	chown -R "$builduser_uid" "$copydir"/{build,pkgdest,srcpkgdest,logdest,srcdest,startdir}
+
+	if [[ -n $MAKEFLAGS ]]; then
+		sed -i '/^MAKEFLAGS=/d' "$copydir/etc/makepkg.conf"
+		echo "MAKEFLAGS='${MAKEFLAGS}'" >> "$copydir/etc/makepkg.conf"
+	fi
+
+	if [[ -n $PACKAGER ]]; then
+		sed -i '/^PACKAGER=/d' "$copydir/etc/makepkg.conf"
+		echo "PACKAGER='${PACKAGER}'" >> "$copydir/etc/makepkg.conf"
+	fi
+
+	if [[ ! -f $copydir/etc/sudoers.d/builduser-pacman ]]; then
+		cat > "$copydir/etc/sudoers.d/builduser-pacman" <<EOF
+Defaults env_keep += "HOME"
+builduser ALL = NOPASSWD: /usr/bin/pacman
+EOF
+		chmod 440 "$copydir/etc/sudoers.d/builduser-pacman"
+	fi
+
+	# This is a little gross, but this way the script is recreated every time in the
+	# working copy
+	{
+		printf '#!/bin/bash\n'
+		declare -f _chrootbuild
+		printf '_chrootbuild'
+		printf ' %q' "${makepkg_args[@]}"
+		printf ' || exit\n'
+
+		if $run_namcap; then
+			cat <<'EOF'
+pacman -S --needed --noconfirm namcap
+for pkgfile in /startdir/PKGBUILD /pkgdest/*; do
+	echo "Checking ${pkgfile##*/}"
+	sudo -u builduser namcap "$pkgfile" 2>&1 | tee "/logdest/${pkgfile##*/}-namcap.log"
+done
+EOF
+		fi
+	} >"$copydir/chrootbuild"
+	chmod +x "$copydir/chrootbuild"
+}
+
+download_sources() {
+	local builddir="$(mktemp -d)"
+	chmod 1777 "$builddir"
+
+	# Ensure sources are downloaded
+	if [[ -n $SUDO_USER ]]; then
+		sudo -u $SUDO_USER env SRCDEST="$SRCDEST" BUILDDIR="$builddir" \
+			makepkg --config="$copydir/etc/makepkg.conf" --verifysource -o
+	else
+		( export SRCDEST BUILDDIR="$builddir"
+			makepkg --asroot --config="$copydir/etc/makepkg.conf" --verifysource -o
+		)
+	fi
+	(( $? != 0 )) && die "Could not download sources."
+
+	# Clean up garbage from verifysource
+	rm -rf $builddir
+}
+
+_chrootbuild() {
+	# This function isn't run in makechrootpkg,
+	# so no global variables
+
+	. /etc/profile
+	export HOME=/build
+	shopt -s nullglob
+
+	# XXX: Workaround makepkg disliking read-only dirs
+	ln -sft /srcdest /srcdest_host/*
+	ln -sft /startdir /startdir_host/*
+
+	# XXX: Keep bzr and svn sources writable
+	# Since makepkg 4.1.1 they get checked out via cp -a, copying the symlink
+	for dir in /srcdest /startdir; do
+		for vcs in bzr svn; do
+			cd "$dir"
+			for vcsdir in */.$vcs; do
+				rm "${vcsdir%/.$vcs}"
+				cp -a "${dir}_host/${vcsdir%/.$vcs}" .
+				chown -R builduser "${vcsdir%/.$vcs}"
+			done
+		done
+	done
+
+	cd /startdir
+
+	# XXX: Keep PKGBUILD writable for pkgver()
+	rm PKGBUILD*
+	cp /startdir_host/PKGBUILD* .
+	chown builduser PKGBUILD*
+
+	# Safety check
+	if [[ ! -w PKGBUILD ]]; then
+		echo "Can't write to PKGBUILD!"
+		exit 1
+	fi
+
+	sudo -u builduser makepkg "$@"
+}
+
+move_products() {
+	for pkgfile in "$copydir"/pkgdest/*; do
+		chown "$src_owner" "$pkgfile"
+		mv "$pkgfile" "$PKGDEST"
+	done
+
+	for l in "$copydir"/logdest/*; do
+		[[ $l == */logpipe.* ]] && continue
+		chown "$src_owner" "$l"
+		mv "$l" "$LOGDEST"
+	done
+
+	for s in "$copydir"/srcpkgdest/*; do
+		chown "$src_owner" "$s"
+		mv "$s" "$SRCPKGDEST"
+	done
+}
+# }}}
+
+orig_argv=("$@")
+
+while getopts 'hcur:I:l:C:nTD:d:' arg; do
+	case "$arg" in
+		c) clean_first=true ;;
+		D) bindmounts_ro+=(--bind-ro="$OPTARG") ;;
+		d) bindmounts_rw+=(--bind="$OPTARG") ;;
+		u) update_first=true ;;
+		r) passeddir="$OPTARG" ;;
+		I) install_pkgs+=("$OPTARG") ;;
+		l) copy="$OPTARG" ;;
+		n) run_namcap=true; makepkg_args+=(-i) ;;
+		T) temp_chroot=true; copy+="-$$" ;;
+		C) ccachedir="$OPTARG" ;;
+		h|*) usage ;;
+	esac
+done
+
+[[ ! -f PKGBUILD && -z "${install_pkgs[*]}" ]] && die 'This must be run in a directory containing a PKGBUILD.'
+
+check_root "$0" "${orig_argv[@]}"
+
+# Canonicalize chrootdir, getting rid of trailing /
+chrootdir=$(readlink -e "$passeddir")
+[[ ! -d $chrootdir ]] && die "No chroot dir defined, or invalid path '%s'" "$passeddir"
+[[ ! -d $chrootdir/root ]] && die "Missing chroot dir root directory. Try using: mkarchroot %s/root base-devel" "$chrootdir"
+
+# Detect chrootdir filesystem type
+chroottype=$(stat -f -c %T "$chrootdir")
+
+if [[ ${copy:0:1} = / ]]; then
+	copydir=$copy
+else
+	copydir="$chrootdir/$copy"
+fi
+
+# Pass all arguments after -- right to makepkg
+makepkg_args+=("${@:$OPTIND}")
+
+# See if -R was passed to makepkg
+for arg in "${@:OPTIND}"; do
+	case ${arg%%=*} in
+		-*R*|--repackage)
+			repack=true
+			break 2
+			;;
+	esac
+done
+
+if [[ -n $SUDO_USER ]]; then
+	eval "USER_HOME=~$SUDO_USER"
+else
+	USER_HOME=$HOME
+fi
+
+umask 0022
+
+load_vars "$USER_HOME/.makepkg.conf"
+load_vars /etc/makepkg.conf
+
+# Use PKGBUILD directory if these don't exist
+[[ -d $PKGDEST ]]    || PKGDEST=$PWD
+[[ -d $SRCDEST ]]    || SRCDEST=$PWD
+[[ -d $SRCPKGDEST ]] || SRCPKGDEST=$PWD
+[[ -d $LOGDEST ]]    || LOGDEST=$PWD
+
+create_chroot
+
+$update_first && arch-nspawn "$copydir" \
+		"${bindmounts_ro[@]}" "${bindmounts_rw[@]}" \
+		pacman -Syu --noconfirm
+
+[[ -n ${install_pkgs[*]} ]] && install_packages
+
+download_sources
+
+prepare_chroot
+
+if arch-nspawn "$copydir" \
+	--bind-ro="$PWD:/startdir_host" \
+	--bind-ro="$SRCDEST:/srcdest_host" \
+	"${bindmounts_ro[@]}" "${bindmounts_rw[@]}" \
+	${ccachedir:+"--bind=$ccachedir:/build/.ccache"} \
+	/chrootbuild
+then
+	move_products
+else
+	(( ret += 1 ))
+fi
+
+$temp_chroot && clean_temporary
+
+if (( ret != 0 )); then
+	if $temp_chroot; then
+		die "Build failed"
+	else
+		die "Build failed, check %s/build" "$copydir"
+	fi
+else
+	true
+fi

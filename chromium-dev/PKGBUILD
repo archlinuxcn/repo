@@ -9,36 +9,49 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 
+if pwd | grep "/home/build" >/dev/null; then
+pkgname=$(cat /home/ccache/pkgname)
+else
+pkgname="$(cat /build/.ccache/pkgname)" # chromium-dev or chromium-canary
+fi
+
 function getlatest() {
+if [[ "$pkgname" == "chromium-canary" ]]; then
 curl -s "https://chromium.googlesource.com/chromium/src/+refs" | tr ' ' '\n' | egrep "src\/\+\/[0-9\.]*\.0\"" | cut -d/ -f5 | cut -d\" -f1 | head -n 1
+else
+curl -sL "http://googlechromereleases.blogspot.de/" | grep "The Dev channel has been updated to" | sed -e 's/.*has been updated to //g' | sed -e 's/ .*//g' | head -n 1
+fi
 }
 
-pkgname=chromium-dev
 pkgver="$(getlatest)"
 pkgrel=1
 _launcher_ver=3
-pkgdesc="The open-source project behind Google Chrome, an attempt at creating a safer, faster, and more stable browser"
+pkgdesc="The open-source project behind Google Chrome, an attempt at creating a safer, faster, and more stable browser ($pkgname Branch)"
 arch=('i686' 'x86_64')
 url="http://www.chromium.org/"
 license=('BSD')
 depends=('gtk2' 'nss' 'alsa-lib' 'xdg-utils' 'bzip2' 'libevent' 'libxss' 'icu'
          'libexif' 'libgcrypt' 'ttf-font' 'systemd' 'dbus' 'flac' 'snappy'
          'speech-dispatcher' 'pciutils' 'libpulse' 'harfbuzz' 'libsecret'
-         'perl' 'perl-file-basedir' 'desktop-file-utils' 'hicolor-icon-theme')
+         'perl' 'perl-file-basedir' 'desktop-file-utils' 'hicolor-icon-theme' 'libva')
 makedepends=('python2' 'gperf' 'yasm' 'mesa' 'ninja')
 makedepends_x86_64=('lib32-gcc-libs' 'lib32-zlib')
 optdepends=('kdebase-kdialog: needed for file dialogs in KDE'
             'gnome-keyring: for storing passwords in GNOME keyring'
             'kdeutils-kwalletmanager: for storing passwords in KWallet')
 options=('!strip')
+provides=('chromium')
+conflicts=('chromium')
 install=chromium.install
 source=(https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$pkgver.tar.xz
         chromium-launcher-$_launcher_ver.tar.gz::https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver.tar.gz
         chromium.desktop
+        vaapi.diff
         chromium-widevine.patch)
 sha256sums=("$(curl -sL https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$pkgver.tar.xz.hashes | grep sha256 | cut -d' ' -f3)"
             '8b01fb4efe58146279858a754d90b49e5a38c9a0b36a1f84cbb7d12f92b84c28'
             '028a748a5c275de9b8f776f97909f999a8583a4b77fd1cd600b4fc5c0c3e91e9'
+            'SKIP'
             '379b746e187de28f80f5a7cd19edcfa31859656826f802a1ede054fcb6dfb221')
 
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
@@ -71,6 +84,8 @@ prepare() {
   # (Version string doesn't seem to matter so let's go with "Pinkie Pie")
   sed "s/@WIDEVINE_VERSION@/Pinkie Pie/" ../chromium-widevine.patch |
     patch -Np1
+
+  patch -Np1 < ../vaapi.diff
 
   # Remove bundled ICU; its header files appear to get picked up instead of
   # the system ones, leading to errors during the final link stage.

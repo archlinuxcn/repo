@@ -1,0 +1,36 @@
+#!/bin/bash
+cd $PKGDIR/
+PKGNAME="$(pwd | sed -e 's/.*\///g')" 
+printf "$PKGNAME" > /home/ccache/pkgname
+pkgname=$PKGNAME
+function getcurrent {
+ pacman -Si $PKGNAME 2>/dev/null | grep Version | awk '{print $3;}' | sed -e 's/-.*//g'
+}
+eval "$(grep -A 7 'getlatest()' PKGBUILD)"
+echo "Latest: $(getlatest)"
+echo "Current: $(getcurrent)"
+if ssh $USER@$HOST true; then
+ NOTUPLOADED=$(ssh $USER@$HOST ls "repo/$PKGNAME*" | wc -l)
+ if [[ "$NOTUPLOADED" -gt "0" ]]; then
+  echo "Find not uploaded package"
+  exit
+ fi
+else
+ echo "No Permission to Upload"
+ exit
+fi
+if [[ "$(getlatest)" == "$(getcurrent)" ]]; then
+ exit 0;
+fi
+rm -f *.tar.xz
+multilib-build -- -c -C /home/ccache
+extra-i686-build -- -c -C /home/ccache
+rm *.sig
+for i in $(ls *.pkg.tar.xz); do
+ NEWNAME="$(echo $i | sed -e 's/startdir/$PKGNAME/g')"
+ mv $i $NEWNAME
+ gpg2 --detach-sign $NEWNAME
+done
+rm *.log
+scp $PKGNAME-*.pkg.tar.xz* $USER@$HOST:
+ssh $USER@$HOST mv "$PKGNAME*.pkg.tar.xz*" repo/
