@@ -17,7 +17,7 @@ fi
 
 function getlatest() {
 if [[ "$pkgname" == "chromium-canary" ]]; then
-curl -s "https://chromium.googlesource.com/chromium/src/+refs" | tr ' ' '\n' | egrep "src\/\+\/[0-9\.]*\.0\"" | cut -d/ -f5 | cut -d\" -f1 | head -n 1
+curl -s "https://chromium.googlesource.com/chromium/src/+refs" | tr ' ' '\n' | egrep "src\/\+\/[0-9\.]*\.0\"" | cut -d/ -f5 | cut -d\" -f1 | sort -r -n | head -n 1
 else
 curl -sL "http://googlechromereleases.blogspot.de/" | grep "The Dev channel has been updated to" | sed -e 's/.*has been updated to //g' | sed -e 's/ .*//g' | head -n 1
 fi
