@@ -3,7 +3,7 @@
 pkgbase=vim-lily
 pkgname=(gvim-lily vim-runtime-lily vim-lily)
 pkgver=7.4.896
-pkgrel=1
+pkgrel=2
 _versiondir="vim$(echo $pkgver | awk -F. '{print $1$2}')"
 arch=('i686' 'x86_64')
 license=('custom:vim')
@@ -13,7 +13,7 @@ makedepends=('gpm' 'gtk2' 'perl' 'python2' 'python>=3.0.0' 'ruby' 'gettext'
 source=(gvim.desktop
         tmpfiles.conf
         "vim-repo::git://localhost/vim")
-md5sums=('d90413bd21f400313a785bb4010120cd'
+md5sums=('cc86692087da853fb3d0a667c1c40a25'
          'f084473d4d2f4a644871e5ad7afd3bc5'
         SKIP)
 options=('debug')
