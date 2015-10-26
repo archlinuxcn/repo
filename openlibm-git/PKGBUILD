@@ -11,6 +11,7 @@ source=("git://github.com/JuliaLang/openlibm")
 sha256sums=('SKIP')
 provides=('openlibm=0.4.1')
 conflicts=('openlibm')
+options=('debug' 'strip')
 
 pkgver() {
   cd openlibm
