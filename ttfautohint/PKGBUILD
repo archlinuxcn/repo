@@ -2,8 +2,8 @@
 # Contributor: Arthur Titeica <arthur.titeica at gmail dot com>
 
 pkgname=ttfautohint
-pkgver=1.3
-pkgrel=4
+pkgver=1.4.1
+pkgrel=1
 pkgdesc="Provides automated hinting process for web fonts."
 arch=('i686' 'x86_64')
 url="http://www.freetype.org/ttfautohint/"
@@ -13,7 +13,7 @@ optdepends=('texlive-bin: generate docs'
             'pandoc: generate docs'
             'ghc: pandoc filter')
 source=(http://download.savannah.gnu.org/releases/freetype/$pkgname-$pkgver.tar.gz{,.sig})
-sha256sums=('c39fa03790b2dfe711f66137cf0f0324eb19872932cef91da9c0bddf9e4ce104'
+sha256sums=('46667e0abf9cd0e3db0abb2a46569d251948708f93c82c2b62f25eb46892ce15'
             'SKIP')
 validpgpkeys=('58E0C111E39F5408C5D3EC76C1A60EACE707FDA5')
 
