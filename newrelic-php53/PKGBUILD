@@ -3,7 +3,7 @@
 
 pkgname=newrelic-php53
 _pkgname=newrelic-php5
-pkgver=4.22.0.99
+pkgver=5.0.0.115
 _libver=20090626
 pkgrel=1
 pkgdesc="NewRelic PHP 5.3"
@@ -16,7 +16,7 @@ install=$pkgname.install
 source=("https://download.newrelic.com/php_agent/release/$_pkgname-$pkgver-linux.tar.gz"
         "newrelic-daemon.service"
         "$pkgname.install")
-md5sums=('d120ad145c2b262b7abf4d3b16dfa864'
+md5sums=('d81f12b2b489a6fd65446cd7f5e3b426'
          '4fc78347663adcb32ed28eddb546619c'
          '32167cda26104c489f5a672a87543821')
 
@@ -47,7 +47,7 @@ package() {
     install -v -Dm755 ./agent/x64/newrelic-$_libver.so $pkgdir/usr/lib/php/modules/newrelic-$_libver.so
   fi
 
-  install -v -Dm644 ./README ./LICENSE $pkgdir/usr/share/doc/newrelic-php53/
+  install -v -Dm644 ./README.txt ./LICENSE.txt $pkgdir/usr/share/doc/newrelic-php53/
   
   install -v -Dm644 ./scripts/newrelic.ini.template $pkgdir/etc/php/conf.d/newrelic.ini
   install -v -Dm644 ./scripts/newrelic.ini.template $pkgdir/etc/php/conf.d/newrelic.ini.template
