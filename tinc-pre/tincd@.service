@@ -1,0 +1,12 @@
+[Unit]
+Description=tinc vpn on network %i
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/usr/sbin/tincd --user=nobody --net=%i
+ExecReload=/usr/bin/tinc --net %I reload
+Restart=on-abnormal
+
+[Install]
+WantedBy=multi-user.target

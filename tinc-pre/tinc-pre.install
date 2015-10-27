@@ -1,0 +1,17 @@
+infodir=/usr/share/info
+file=tinc.info
+
+post_install() {
+  [[ -x /usr/bin/install-info ]] || return 0
+  install-info $infodir/$file.gz $infodir/dir
+}
+
+post_upgrade() {
+  post_install $1
+}
+
+pre_remove() {
+  [[ -x /usr/bin/install-info ]] || return 0
+  install-info --delete $infodir/$file.gz $infodir/dir
+}
+
