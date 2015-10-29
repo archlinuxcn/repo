@@ -10,7 +10,7 @@ if ((BUILD_EXTRA)); then
 else
    pkgname=('julia-git')
 fi
-pkgver=0.4.0.rc1.965.g37dad15
+pkgver=0.4.0.rc1.1016.gf8a4340
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64')
@@ -24,10 +24,12 @@ makedepends=('gcc-fortran' 'arpack' 'fftw' 'git' 'gmp' 'libgit2' 'libunwind'
 options=('!emptydirs' 'staticlibs' 'debug' 'strip')
 source=('git://github.com/JuliaLang/julia'
         '0001-Create-tbaa_gcframe-and-decorate-all-stores-and-load.patch'
-        '0001-Revert-use-LLVM-s-newer-SROA-pass.-fixes-13366-fixes.patch')
+        '0001-Improve-generated-debug-info-to-avoid-assertion-in-S.patch'
+        '0001-Try-fixing-jl_generate_fptr-on-MCJIT.patch')
 md5sums=('SKIP'
          '2a64b87dfe52236b11b1d5df26947cb6'
-         '4bb356144fe5222e3a74140ac1acb43b')
+         '376fcffec3f5fba90ac54c2f52044568'
+         'e5f103283999f8d20e76ed7151fd5a37')
 
 pkgver() {
   cd julia
@@ -42,7 +44,8 @@ prepare() {
   git clean -fdx
 
   patch -Np1 < ../0001-Create-tbaa_gcframe-and-decorate-all-stores-and-load.patch
-  patch -Np1 < ../0001-Revert-use-LLVM-s-newer-SROA-pass.-fixes-13366-fixes.patch
+  patch -Np1 < ../0001-Improve-generated-debug-info-to-avoid-assertion-in-S.patch
+  patch -Np1 < ../0001-Try-fixing-jl_generate_fptr-on-MCJIT.patch
 
   cd doc
 
@@ -96,7 +99,12 @@ build() {
   export CC='gcc -flto'
   export CXX='g++ -flto'
 
-  make "${julia_opts[@]}"
+  make "${julia_opts[@]}" release
+  make "${julia_opts[@]}" debug
+
+  # Check to detect issues like JuliaLang/julia#13820
+  usr/bin/julia -e '0'
+  usr/bin/julia-debug -e '0'
 
   if ! ((BUILD_EXTRA)); then
      return
