@@ -10,7 +10,7 @@ if ((BUILD_EXTRA)); then
 else
    pkgname=('julia-git')
 fi
-pkgver=0.4.0.rc1.1016.gf8a4340
+pkgver=0.4.0.rc1.1018.g40e16bf
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64')
@@ -19,17 +19,15 @@ license=('GPL')
 makedepends=('gcc-fortran' 'arpack' 'fftw' 'git' 'gmp' 'libgit2' 'libunwind'
              'llvm' 'mpfr' 'pcre2' 'suitesparse' 'python2-sphinx'
              'python2-sphinx_rtd_theme' 'python2-pip' 'texlive-langcjk'
-             'texlive-latexextra' 'emacs' 'openspecfun' 'openblas' 'openlibm'
+             'texlive-latexextra' 'emacs' 'openspecfun' 'openblas'
              'libutf8proc' 'patchelf')
 options=('!emptydirs' 'staticlibs' 'debug' 'strip')
 source=('git://github.com/JuliaLang/julia'
         '0001-Create-tbaa_gcframe-and-decorate-all-stores-and-load.patch'
-        '0001-Improve-generated-debug-info-to-avoid-assertion-in-S.patch'
-        '0001-Try-fixing-jl_generate_fptr-on-MCJIT.patch')
+        '0001-Improve-generated-debug-info-to-avoid-assertion-in-S.patch')
 md5sums=('SKIP'
          '2a64b87dfe52236b11b1d5df26947cb6'
-         '376fcffec3f5fba90ac54c2f52044568'
-         'e5f103283999f8d20e76ed7151fd5a37')
+         '376fcffec3f5fba90ac54c2f52044568')
 
 pkgver() {
   cd julia
@@ -45,7 +43,6 @@ prepare() {
 
   patch -Np1 < ../0001-Create-tbaa_gcframe-and-decorate-all-stores-and-load.patch
   patch -Np1 < ../0001-Improve-generated-debug-info-to-avoid-assertion-in-S.patch
-  patch -Np1 < ../0001-Try-fixing-jl_generate_fptr-on-MCJIT.patch
 
   cd doc
 
@@ -69,7 +66,8 @@ julia_opts=(prefix=/usr sysconfdir=/etc
             USE_SYSTEM_LIBUNWIND=1
             USE_SYSTEM_PCRE=1
             USE_SYSTEM_LIBM=0
-            USE_SYSTEM_OPENLIBM=1
+            # openlibm-git removed some functions needed by julia
+            USE_SYSTEM_OPENLIBM=0
             USE_SYSTEM_OPENSPECFUN=1
             USE_SYSTEM_DSFMT=0
             USE_SYSTEM_BLAS=1
@@ -125,7 +123,7 @@ package_julia-git() {
   arch=('i686' 'x86_64')
   depends=('arpack' 'fftw' 'gmp' 'libgit2' 'libunwind' 'llvm' 'mpfr' 'pcre2'
            'hicolor-icon-theme' 'xdg-utils' 'suitesparse' 'openspecfun'
-           'openblas' 'openlibm' 'libutf8proc')
+           'openblas' 'libutf8proc')
   install=julia.install
   conflicts=('julia')
 
