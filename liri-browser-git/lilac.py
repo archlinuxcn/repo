@@ -12,6 +12,7 @@ depends = ['qml-material-git']
 post_build = aur_post_build
 
 def pre_build():
+    run_cmd(["git", "clean", "-x", "-d", "-f", "."])
     aur_pre_build()
 
     for line in edit_file('PKGBUILD'):
