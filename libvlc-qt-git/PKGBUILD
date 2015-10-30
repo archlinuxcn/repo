@@ -1,0 +1,33 @@
+# Maintainer: Daniel Nagy <danielnagy at gmx de>
+
+pkgname=libvlc-qt-git
+pkgver=346.893f101
+pkgrel=1
+pkgdesc="A free library used to connect Qt and libvlc libraries"
+arch=('i686' 'x86_64')
+url="http://projects.tano.si/en/library"
+license=('GPL3')
+depends=('vlc' 'qt5-declarative')
+makedepends=('cmake>=2.8')
+provides=('libvlc-qt')
+conflicts=('libvlc-qt')
+source=("git+https://github.com/vlc-qt/vlc-qt")
+md5sums=("SKIP")
+_gitname=vlc-qt
+
+pkgver() {
+  cd "$srcdir/$_gitname"
+  # Use the tag of the last commit
+  printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+  cd "$srcdir/$_gitname"
+  cmake . -DCMAKE_INSTALL_PREFIX=/usr -DQT_QMAKE_EXECUTABLE=/usr/bin/qmake-qt5
+  make
+}
+
+package() {
+  cd "$srcdir/$_gitname"
+  make DESTDIR="$pkgdir" install
+}
