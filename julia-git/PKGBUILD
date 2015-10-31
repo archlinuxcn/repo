@@ -10,7 +10,7 @@ if ((BUILD_EXTRA)); then
 else
    pkgname=('julia-git')
 fi
-pkgver=0.4.0.rc1.1104.gd0f9e12
+pkgver=0.4.0.rc1.1108.g505be93
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64')
@@ -93,6 +93,8 @@ build() {
 
   export CC='gcc -flto'
   export CXX='g++ -flto'
+  export CFLAGS+=' -Wno-pedantic -Wno-clobbered'
+  export CXXFLAGS+=' -Wno-pedantic -Wno-clobbered'
 
   make "${julia_opts[@]}" release
   make "${julia_opts[@]}" debug
