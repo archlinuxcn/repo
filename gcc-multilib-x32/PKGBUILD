@@ -1,4 +1,4 @@
-# $Id: PKGBUILD 128808 2015-03-06 11:34:01Z heftig $
+# $Id: PKGBUILD 138060 2015-08-07 14:12:05Z heftig $
 # Maintainer: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 # Contributor: Allan McRae <allan@archlinux.org>
 # x32 Maintainer: Fantix King <fantix.king@gmail.com>
@@ -7,27 +7,26 @@
 # NOTE: libtool requires rebuilt with each new gcc version
 
 pkgname=('gcc-multilib-x32' 'gcc-libs-multilib-x32' 'libx32-gcc-libs' 'gcc-fortran-multilib-x32' 'gcc-objc-multilib-x32' 'gcc-ada-multilib-x32' 'gcc-go-multilib-x32')
-pkgver=4.9.2
-_pkgver=4.9
-_islver=0.12.2
-_cloogver=0.18.1
-pkgrel=4.1
-_snapshot=4.9-20150304
+pkgver=5.2.0
+_pkgver=5
+_islver=0.14.1
+pkgrel=2.1
+#_snapshot=5-20150623
 pkgdesc="The GNU Compiler Collection for multilib with x32 ABI support"
 arch=('x86_64')
 license=('GPL' 'LGPL' 'FDL' 'custom')
 url="http://gcc.gnu.org"
 makedepends=('binutils>=2.25' 'libmpc' 'gcc-ada-multilib' 'doxygen'
-             'lib32-glibc>=2.20' 'libx32-glibc>=2.20')
+             'lib32-glibc>=2.22' 'libx32-glibc>=2.22')
 checkdepends=('dejagnu' 'inetutils')
 options=('!emptydirs')
-source=(#ftp://gcc.gnu.org/pub/gcc/releases/gcc-${pkgver}/gcc-${pkgver}.tar.bz2
-        ftp://gcc.gnu.org/pub/gcc/snapshots/${_snapshot}/gcc-${_snapshot}.tar.bz2
+source=(ftp://gcc.gnu.org/pub/gcc/releases/gcc-${pkgver}/gcc-${pkgver}.tar.bz2
+        #ftp://gcc.gnu.org/pub/gcc/snapshots/${_snapshot}/gcc-${_snapshot}.tar.bz2
         http://isl.gforge.inria.fr/isl-${_islver}.tar.bz2
-        http://www.bastoul.net/cloog/pages/download/cloog-${_cloogver}.tar.gz)
-md5sums=('863bb9d2a9551c9b7447cfc8b7cc7498'
-         'e039bfcfb6c2ab039b8ee69bf883e824'
-         'e34fca0540d840e5d0f6427e98c92252')
+        pr66035.patch)
+md5sums=('a51bcfeb3da7dd4c623e27207ed43467'
+         '118d1a379abf7606a3334c98a8411c79'
+         '5b980076cd5fcbc3aff6014f306282dd')
 
 if [ -n "${_snapshot}" ]; then
   _basedir=gcc-${_snapshot}
@@ -47,9 +46,8 @@ prepare() {
 
   cd ${srcdir}/${_basedir}
 
-  # link isl/cloog for in-tree builds
+  # link isl for in-tree build
   ln -s ../isl-${_islver} isl
-  ln -s ../cloog-${_cloogver} cloog
 
   # Do not run fixincludes
   sed -i 's@\./fixinc\.sh@-c true@' gcc/Makefile.in
@@ -61,6 +59,9 @@ prepare() {
 
   # hack! - some configure tests for header files using "$CPP $CPPFLAGS"
   sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" {libiberty,gcc}/configure
+
+  # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=66035
+  patch -p1 -i ${srcdir}/pr66035.patch
 
   mkdir ${srcdir}/gcc-build
 }
@@ -78,17 +79,18 @@ build() {
       --mandir=/usr/share/man --infodir=/usr/share/info \
       --with-bugurl=https://bugs.archlinux.org/ \
       --enable-languages=c,c++,ada,fortran,go,lto,objc,obj-c++ \
-      --enable-shared --enable-threads=posix \
-      --with-system-zlib --enable-__cxa_atexit \
+      --enable-shared --enable-threads=posix --enable-libmpx \
+      --with-system-zlib --with-isl --enable-__cxa_atexit \
       --disable-libunwind-exceptions --enable-clocale=gnu \
       --disable-libstdcxx-pch --disable-libssp \
       --enable-gnu-unique-object --enable-linker-build-id \
-      --enable-cloog-backend=isl \
       --enable-lto --enable-plugin --enable-install-libiberty \
-      --with-linker-hash-style=gnu \
+      --with-linker-hash-style=gnu --enable-gnu-indirect-function \
       --enable-multilib --disable-werror \
       --with-multilib-list=m32,m64,mx32 \
-      --enable-checking=release
+      --enable-checking=release \
+      --with-default-libstdcxx-abi=gcc4-compatible
+
   make
   
   # make documentation
@@ -110,7 +112,7 @@ check() {
 package_libx32-gcc-libs()
 {
   pkgdesc="Runtime libraries shipped by GCC (x32 ABI)"
-  depends=('libx32-glibc>=2.20')
+  depends=('libx32-glibc>=2.22')
   options=('!emptydirs' '!strip')
 
   cd ${srcdir}/gcc-build
@@ -120,10 +122,10 @@ package_libx32-gcc-libs()
 
   for lib in libatomic \
              libcilkrts \
+             libquadmath \
              libgfortran \
              libgomp \
              libitm \
-             libquadmath \
              libsanitizer/{a,l,ub}san \
              libstdc++-v3/src \
              libvtv; do
@@ -131,6 +133,9 @@ package_libx32-gcc-libs()
   done
 
   make -C $CHOST/x32/libobjc DESTDIR=${pkgdir} install-libs
+
+  make -C $CHOST/x32/libmpx DESTDIR=${pkgdir} install
+  rm ${pkgdir}/usr/libx32/libmpx.spec || true
 
   # remove stuff in gcc-libs-multilib-x32
   rm -r ${pkgdir}/usr/lib
@@ -143,7 +148,7 @@ package_libx32-gcc-libs()
 package_gcc-libs-multilib-x32()
 {
   pkgdesc="Runtime libraries shipped by GCC for multilib with x32 ABI support"
-  depends=('glibc>=2.20' "lib32-gcc-libs=$pkgver-${pkgrel%.*}" "libx32-gcc-libs=$pkgver-$pkgrel")
+  depends=('glibc>=2.22' "lib32-gcc-libs=$pkgver-${pkgrel%.*}" "libx32-gcc-libs=$pkgver-$pkgrel")
   provides=("gcc-libs=$pkgver-${pkgrel%.*}" "gcc-libs-multilib=$pkgver-${pkgrel%.*}")
   conflicts=('gcc-libs')
   options=('!emptydirs' '!strip')
@@ -170,8 +175,11 @@ package_gcc-libs-multilib-x32()
     make -C $CHOST/libsanitizer/tsan DESTDIR=${pkgdir} install-toolexeclibLTLIBRARIES
 
   make -C $CHOST/libobjc DESTDIR=${pkgdir} install-libs
-  
+
   make -C $CHOST/libstdc++-v3/po DESTDIR=${pkgdir} install
+
+  make -C $CHOST/libmpx DESTDIR=${pkgdir} install
+  rm ${pkgdir}/usr/lib/libmpx.spec
 
   for lib in libgomp \
              libitm \
@@ -202,7 +210,7 @@ package_gcc-multilib-x32()
   make -C gcc DESTDIR=${pkgdir} install-driver install-cpp install-gcc-ar \
     c++.install-common install-headers install-plugin install-lto-wrapper
 
-  install -m755 gcc/gcov $pkgdir/usr/bin/
+  install -m755 -t $pkgdir/usr/bin/ gcc/gcov{,-tool}
   install -m755 -t $pkgdir/${_libdir}/ gcc/{cc1,cc1plus,collect2,lto1}
 
   make -C $CHOST/libgcc DESTDIR=${pkgdir} install
@@ -221,6 +229,7 @@ package_gcc-multilib-x32()
   make -C $CHOST/x32/libstdc++-v3/include DESTDIR=${pkgdir} install
   make -C $CHOST/x32/libstdc++-v3/libsupc++ DESTDIR=${pkgdir} install
 
+  make DESTDIR=${pkgdir} install-libcc1
   install -d $pkgdir/usr/share/gdb/auto-load/usr/lib
   mv $pkgdir/usr/lib/libstdc++.so.6.*-gdb.py \
     $pkgdir/usr/share/gdb/auto-load/usr/lib/
@@ -228,7 +237,11 @@ package_gcc-multilib-x32()
 
   make DESTDIR=${pkgdir} install-fixincludes
   make -C gcc DESTDIR=${pkgdir} install-mkheaders
+
   make -C lto-plugin DESTDIR=${pkgdir} install
+  install -dm755 ${pkgdir}/usr/lib/bfd-plugins/
+  ln -s /usr/lib/gcc/$CHOST/${pkgver}/liblto_plugin.so \
+    ${pkgdir}/usr/lib/bfd-plugins/
 
   make -C $CHOST/libcilkrts DESTDIR=${pkgdir} install-nodist_toolexeclibHEADERS \
     install-nodist_cilkincludeHEADERS
@@ -236,23 +249,25 @@ package_gcc-multilib-x32()
     install-nodist_libsubincludeHEADERS
   make -C $CHOST/libitm DESTDIR=${pkgdir} install-nodist_toolexeclibHEADERS
   make -C $CHOST/libquadmath DESTDIR=${pkgdir} install-nodist_libsubincludeHEADERS
-  make -C $CHOST/libsanitizer DESTDIR=${pkgdir} install-nodist_toolexeclibHEADERS
+  make -C $CHOST/libsanitizer DESTDIR=${pkgdir} install-nodist_{saninclude,toolexeclib}HEADERS
   make -C $CHOST/libsanitizer/asan DESTDIR=${pkgdir} install-nodist_toolexeclibHEADERS
+  make -C $CHOST/libmpx DESTDIR=${pkgdir} install-nodist_toolexeclibHEADERS
   make -C $CHOST/32/libcilkrts DESTDIR=${pkgdir} install-nodist_toolexeclibHEADERS
   make -C $CHOST/32/libgomp DESTDIR=${pkgdir} install-nodist_toolexeclibHEADERS
   make -C $CHOST/32/libitm DESTDIR=${pkgdir} install-nodist_toolexeclibHEADERS
-  make -C $CHOST/32/libsanitizer DESTDIR=${pkgdir} install-nodist_toolexeclibHEADERS
+  make -C $CHOST/32/libsanitizer DESTDIR=${pkgdir} install-nodist_{saninclude,toolexeclib}HEADERS
   make -C $CHOST/32/libsanitizer/asan DESTDIR=${pkgdir} install-nodist_toolexeclibHEADERS
+  make -C $CHOST/32/libmpx DESTDIR=${pkgdir} install-nodist_toolexeclibHEADERS
   make -C $CHOST/x32/libcilkrts DESTDIR=${pkgdir} install-nodist_toolexeclibHEADERS
   make -C $CHOST/x32/libgomp DESTDIR=${pkgdir} install-nodist_toolexeclibHEADERS
   make -C $CHOST/x32/libitm DESTDIR=${pkgdir} install-nodist_toolexeclibHEADERS
-  make -C $CHOST/x32/libsanitizer DESTDIR=${pkgdir} install-nodist_toolexeclibHEADERS
+  make -C $CHOST/x32/libsanitizer DESTDIR=${pkgdir} install-nodist_{saninclude,toolexeclib}HEADERS
   make -C $CHOST/x32/libsanitizer/asan DESTDIR=${pkgdir} install-nodist_toolexeclibHEADERS
+  make -C $CHOST/x32/libmpx DESTDIR=${pkgdir} install-nodist_toolexeclibHEADERS
 
   make -C libiberty DESTDIR=${pkgdir} install
   # install PIC version of libiberty
   install -m644 ${srcdir}/gcc-build/libiberty/pic/libiberty.a ${pkgdir}/usr/lib
-
 
   make -C gcc DESTDIR=${pkgdir} install-man install-info
   rm ${pkgdir}/usr/share/man/man1/{gccgo,gfortran}.1
@@ -299,6 +314,8 @@ EOF
   # Install Runtime Library Exception
   install -d ${pkgdir}/usr/share/licenses/gcc-multilib-x32/
   ln -s ../gcc-libs-multilib-x32/RUNTIME.LIBRARY.EXCEPTION ${pkgdir}/usr/share/licenses/gcc-multilib-x32/
+
+  rm ${pkgdir}/usr/share/man/man3/{random,regex}.3
 }
 
 package_gcc-fortran-multilib-x32()
@@ -311,9 +328,12 @@ package_gcc-fortran-multilib-x32()
   install=gcc-fortran.install
 
   cd ${srcdir}/gcc-build
-  make -C $CHOST/libgfortran DESTDIR=$pkgdir install-{{caf,my}execlibLTLIBRARIES,toolexeclibDATA}
-  make -C $CHOST/32/libgfortran DESTDIR=$pkgdir install-{{caf,my}execlibLTLIBRARIES,toolexeclibDATA}
-  make -C $CHOST/x32/libgfortran DESTDIR=$pkgdir install-{{caf,my}execlibLTLIBRARIES,toolexeclibDATA}
+  make -C $CHOST/libgfortran DESTDIR=$pkgdir install-{caf,my}execlibLTLIBRARIES \
+    install-{toolexeclibDATA,nodist_fincludeHEADERS}
+  make -C $CHOST/32/libgfortran DESTDIR=$pkgdir install-{caf,my}execlibLTLIBRARIES \
+    install-{toolexeclibDATA,nodist_fincludeHEADERS}
+  make -C $CHOST/x32/libgfortran DESTDIR=$pkgdir install-{caf,my}execlibLTLIBRARIES \
+    install-{toolexeclibDATA,nodist_fincludeHEADERS}
   make -C $CHOST/libgomp DESTDIR=$pkgdir install-nodist_fincludeHEADERS
   make -C gcc DESTDIR=$pkgdir fortran.install-{common,man,info}
   install -Dm755 gcc/f951 $pkgdir/${_libdir}/f951
@@ -393,7 +413,7 @@ package_gcc-go-multilib-x32()
   pkgdesc="Go front-end for GCC for multilib with x32 ABI support"
   depends=("gcc-multilib-x32=$pkgver-$pkgrel")
   provides=("gcc-go=$pkgver-${pkgrel%.*}" "gcc-go-multilib=$pkgver-${pkgrel%.*}")
-  conflicts=('gcc-go')
+  conflicts=('go' 'gcc-go')
   options=('!emptydirs')
   install=gcc-go.install
 
@@ -403,6 +423,8 @@ package_gcc-go-multilib-x32()
   make -C $CHOST/x32/libgo DESTDIR=$pkgdir install-exec-am
   make -C gcc DESTDIR=$pkgdir go.install-{common,man,info}
   install -Dm755 gcc/go1 $pkgdir/${_libdir}/go1
+
+  make DESTDIR=${pkgdir} install-gotools
 
   # Install Runtime Library Exception
   install -d ${pkgdir}/usr/share/licenses/gcc-go-multilib-x32/
