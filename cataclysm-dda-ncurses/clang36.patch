@@ -1,0 +1,1667 @@
+From 2e12a15fdbb32b5941d597e3cc774030445d483a Mon Sep 17 00:00:00 2001
+From: Octav Sandulescu <github@narc.ro>
+Date: Fri, 27 Mar 2015 23:07:23 +0000
+Subject: [PATCH] Add override markers.
+
+Just like 008fd6c, this is the result of running clang-modernize-3.6
+with the following command line:
+```
+for i in src/*.{h,cpp}; do \
+    clang-modernize-3.6 $i -include=src/ -add-override -- \
+        -x c++ -DRELEASE -DLOCALIZE -Os -Wall -Wextra \
+        --std=c++11 -MMD -I/usr/include/lua5.2 -DLUA \
+        -I/usr/include/ncursesw; \
+done
+```
+
+NOTE: This is applied to the 0.C release. Do NOT merge this into the
+running CleverRaven master.
+---
+ src/artifact.h        |  12 +++---
+ src/bionics.h         |   4 +-
+ src/character.h       |  18 ++++-----
+ src/clzones.h         |   4 +-
+ src/debug.cpp         |   2 +-
+ src/effect.h          |   4 +-
+ src/enums.h           |   8 ++--
+ src/faction.h         |   4 +-
+ src/gamemode.h        |  24 +++++------
+ src/init.h            |   8 ++--
+ src/item.h            |   4 +-
+ src/item_action.cpp   |   2 +-
+ src/item_group.h      |  22 +++++-----
+ src/itype.h           |  16 ++++----
+ src/iuse_actor.h      |  58 +++++++++++++-------------
+ src/map.h             |  14 +++----
+ src/mapgen.h          |   8 ++--
+ src/mapgenformat.h    |   6 +--
+ src/mission.h         |   4 +-
+ src/monster.h         | 106 ++++++++++++++++++++++++------------------------
+ src/morale.h          |   4 +-
+ src/npc.h             |  54 ++++++++++++-------------
+ src/player.cpp        |   2 +-
+ src/player.h          | 110 +++++++++++++++++++++++++-------------------------
+ src/player_activity.h |   4 +-
+ src/skill.h           |   4 +-
+ src/ui.h              |   6 +--
+ src/uistate.h         |   4 +-
+ src/vehicle.h         |  26 ++++++------
+ src/wish.cpp          |  14 +++----
+ 30 files changed, 278 insertions(+), 278 deletions(-)
+
+diff --git a/src/artifact.h b/src/artifact.h
+index b13cd17..dc4b656 100644
+--- a/src/artifact.h
++++ b/src/artifact.h
+@@ -66,16 +66,16 @@ class it_artifact_tool : public it_tool, public JsonSerializer, public JsonDeser
+         std::vector<art_effect_active>  effects_activated;
+         std::vector<art_effect_passive> effects_carried;
+ 
+-        bool is_artifact() const
++        bool is_artifact() const override
+         {
+             return true;
+         }
+ 
+         using JsonSerializer::serialize;
+-        void serialize(JsonOut &json) const;
++        void serialize(JsonOut &json) const override;
+         using JsonDeserializer::deserialize;
+         void deserialize(JsonObject &jo);
+-        void deserialize(JsonIn &jsin)
++        void deserialize(JsonIn &jsin) override
+         {
+             JsonObject jo = jsin.get_object();
+             deserialize(jo);
+@@ -93,16 +93,16 @@ class it_artifact_armor : public itype, public JsonSerializer, public JsonDeseri
+     public:
+         std::vector<art_effect_passive> effects_worn;
+ 
+-        bool is_artifact() const
++        bool is_artifact() const override
+         {
+             return true;
+         }
+ 
+         using JsonSerializer::serialize;
+-        void serialize(JsonOut &json) const;
++        void serialize(JsonOut &json) const override;
+         using JsonDeserializer::deserialize;
+         void deserialize(JsonObject &jo);
+-        void deserialize(JsonIn &jsin)
++        void deserialize(JsonIn &jsin) override
+         {
+             JsonObject jo = jsin.get_object();
+             deserialize(jo);
+diff --git a/src/bionics.h b/src/bionics.h
+index 9b4704b..0d6a897 100644
+--- a/src/bionics.h
++++ b/src/bionics.h
+@@ -55,7 +55,7 @@ struct bionic : public JsonSerializer, public JsonDeserializer {
+         charge = 0;
+     };
+     using JsonSerializer::serialize;
+-    void serialize(JsonOut &json) const
++    void serialize(JsonOut &json) const override
+     {
+         json.start_object();
+         json.member("id", id);
+@@ -65,7 +65,7 @@ struct bionic : public JsonSerializer, public JsonDeserializer {
+         json.end_object();
+     }
+     using JsonDeserializer::deserialize;
+-    void deserialize(JsonIn &jsin)
++    void deserialize(JsonIn &jsin) override
+     {
+         JsonObject jo = jsin.get_object();
+         id = jo.get_string("id");
+diff --git a/src/character.h b/src/character.h
+index 96fbc49..4a34a5c 100644
+--- a/src/character.h
++++ b/src/character.h
+@@ -12,17 +12,17 @@ class Character : public Creature
+     public:
+         virtual ~Character() override = default;
+ 
+-        field_id bloodType() const;
+-        field_id gibType() const;
++        field_id bloodType() const override;
++        field_id gibType() const override;
+         virtual bool is_warm() const override;
+         virtual const std::string &symbol() const override;
+         
+         /** Processes effects which may prevent the Character from moving (bear traps, crushed, etc.).
+          *  Returns false if movement is stopped. */
+-        virtual bool move_effects();
++        virtual bool move_effects() override;
+         /** Performs any Character-specific modifications to the arguments before passing to Creature::add_effect(). */
+         virtual void add_effect(efftype_id eff_id, int dur, body_part bp = num_bp, bool permanent = false,
+-                                int intensity = 0);
++                                int intensity = 0) override;
+         
+         /** Recalculates HP after a change to max strength */
+         void recalc_hp();
+@@ -46,7 +46,7 @@ class Character : public Creature
+         
+         // In mutation.cpp
+         /** Returns true if the player has the entered trait */
+-        virtual bool has_trait(const std::string &flag) const;
++        virtual bool has_trait(const std::string &flag) const override;
+         /** Returns true if the player has the entered starting trait */
+         bool has_base_trait(const std::string &flag) const;
+         
+@@ -208,7 +208,7 @@ class Character : public Creature
+         
+         int weight_carried() const;
+         int volume_carried() const;
+-        int weight_capacity() const;
++        int weight_capacity() const override;
+         int volume_capacity() const;
+         bool can_pickVolume(int volume) const;
+         bool can_pickWeight(int weight, bool safe = true) const;
+@@ -249,11 +249,11 @@ class Character : public Creature
+          *  nulls out the player's weapon
+          *  Should only be called through player::normalize(), not on it's own!
+          */
+-        virtual void normalize();
+-        virtual void die(Creature *nkiller);
++        virtual void normalize() override;
++        virtual void die(Creature *nkiller) override;
+         
+         /** Resets stats, and applies effects in an idempotent manner */
+-        virtual void reset_stats();
++        virtual void reset_stats() override;
+         
+         /** Returns true if the player has some form of night vision */
+         bool has_nv();
+diff --git a/src/clzones.h b/src/clzones.h
+index 038c265..ecef63e 100644
+--- a/src/clzones.h
++++ b/src/clzones.h
+@@ -131,8 +131,8 @@ class clZones : public JsonSerializer, public JsonDeserializer
+         void cacheZoneData();
+         bool hasZone(const std::string p_sType, const point p_pointInput);
+         using JsonSerializer::serialize;
+-        void serialize(JsonOut &json) const;
+-        void deserialize(JsonIn &jsin);
++        void serialize(JsonOut &json) const override;
++        void deserialize(JsonIn &jsin) override;
+ };
+ 
+ #endif
+diff --git a/src/debug.cpp b/src/debug.cpp
+index c737f80..0dde9d6 100644
+--- a/src/debug.cpp
++++ b/src/debug.cpp
+@@ -78,7 +78,7 @@ void *tracePtrs[TRACE_SIZE];
+ 
+ struct NullBuf : public std::streambuf {
+     NullBuf() {}
+-    int overflow( int c )
++    int overflow( int c ) override
+     {
+         return c;
+     }
+diff --git a/src/effect.h b/src/effect.h
+index 171aa6b..3f4bf93 100644
+--- a/src/effect.h
++++ b/src/effect.h
+@@ -227,9 +227,9 @@ class effect : public JsonSerializer, public JsonDeserializer
+         }
+ 
+         using JsonSerializer::serialize;
+-        void serialize(JsonOut &json) const;
++        void serialize(JsonOut &json) const override;
+         using JsonDeserializer::deserialize;
+-        void deserialize(JsonIn &jsin);
++        void deserialize(JsonIn &jsin) override;
+ 
+     protected:
+         effect_type *eff_type;
+diff --git a/src/enums.h b/src/enums.h
+index 059896a..261012e 100644
+--- a/src/enums.h
++++ b/src/enums.h
+@@ -192,7 +192,7 @@ struct point : public JsonSerializer, public JsonDeserializer {
+     point &operator=(const point &) = default;
+     ~point() {}
+     using JsonSerializer::serialize;
+-    void serialize(JsonOut &jsout) const
++    void serialize(JsonOut &jsout) const override
+     {
+         jsout.start_array();
+         jsout.write(x);
+@@ -200,7 +200,7 @@ struct point : public JsonSerializer, public JsonDeserializer {
+         jsout.end_array();
+     }
+     using JsonDeserializer::deserialize;
+-    void deserialize(JsonIn &jsin)
++    void deserialize(JsonIn &jsin) override
+     {
+         JsonArray ja = jsin.get_array();
+         x = ja.get_int(0);
+@@ -265,7 +265,7 @@ struct tripoint : public JsonSerializer, public JsonDeserializer {
+     tripoint &operator=(const tripoint &) = default;
+     ~tripoint() {}
+     using JsonSerializer::serialize;
+-    void serialize(JsonOut &jsout) const
++    void serialize(JsonOut &jsout) const override
+     {
+         jsout.start_array();
+         jsout.write(x);
+@@ -274,7 +274,7 @@ struct tripoint : public JsonSerializer, public JsonDeserializer {
+         jsout.end_array();
+     }
+     using JsonDeserializer::deserialize;
+-    void deserialize(JsonIn &jsin)
++    void deserialize(JsonIn &jsin) override
+     {
+         JsonArray ja = jsin.get_array();
+         x = ja.get_int(0);
+diff --git a/src/faction.h b/src/faction.h
+index a887c58..eff07e2 100644
+--- a/src/faction.h
++++ b/src/faction.h
+@@ -111,9 +111,9 @@ class faction : public JsonSerializer, public JsonDeserializer
+         ~faction();
+         void load_info(std::string data);
+         using JsonDeserializer::deserialize;
+-        void deserialize(JsonIn &jsin);
++        void deserialize(JsonIn &jsin) override;
+         using JsonSerializer::serialize;
+-        void serialize(JsonOut &jsout) const;
++        void serialize(JsonOut &jsout) const override;
+ 
+         static faction_map _all_faction;
+ 
+diff --git a/src/gamemode.h b/src/gamemode.h
+index 0a0462a..c3443a4 100644
+--- a/src/gamemode.h
++++ b/src/gamemode.h
+@@ -67,15 +67,15 @@ enum tut_lesson {
+ };
+ 
+ struct tutorial_game : public special_game {
+-        virtual special_game_id id()
++        virtual special_game_id id() override
+         {
+             return SGAME_TUTORIAL;
+         };
+-        virtual bool init();
+-        virtual void per_turn();
+-        virtual void pre_action(action_id &act);
+-        virtual void post_action(action_id act);
+-        virtual void game_over() { };
++        virtual bool init() override;
++        virtual void per_turn() override;
++        virtual void pre_action(action_id &act) override;
++        virtual void post_action(action_id act) override;
++        virtual void game_over() override { };
+ 
+     private:
+         void add_message(tut_lesson lesson);
+@@ -124,15 +124,15 @@ enum caravan_category {
+ struct defense_game : public special_game {
+         defense_game();
+ 
+-        virtual special_game_id id()
++        virtual special_game_id id() override
+         {
+             return SGAME_DEFENSE;
+         };
+-        virtual bool init();
+-        virtual void per_turn();
+-        virtual void pre_action(action_id &act);
+-        virtual void post_action(action_id act);
+-        virtual void game_over();
++        virtual bool init() override;
++        virtual void per_turn() override;
++        virtual void pre_action(action_id &act) override;
++        virtual void post_action(action_id act) override;
++        virtual void game_over() override;
+ 
+     private:
+         void init_to_style(defense_style new_style);
+diff --git a/src/init.h b/src/init.h
+index 51e05eb..a47bd21 100644
+--- a/src/init.h
++++ b/src/init.h
+@@ -22,11 +22,11 @@ class StaticFunctionAccessor : public TFunctor
+         void (*_fptr)(JsonObject &jo);
+ 
+     public:
+-        virtual void operator()(JsonObject &jo)
++        virtual void operator()(JsonObject &jo) override
+         {
+             (*_fptr)(jo);
+         }
+-        virtual void Call(JsonObject &jo)
++        virtual void Call(JsonObject &jo) override
+         {
+             (*_fptr)(jo);
+         }
+@@ -48,11 +48,11 @@ template <class TClass> class ClassFunctionAccessor : public TFunctor
+         TClass *ptr_to_obj;
+ 
+     public:
+-        virtual void operator()(JsonObject &jo)
++        virtual void operator()(JsonObject &jo) override
+         {
+             (*ptr_to_obj.*_fptr)(jo);
+         }
+-        virtual void Call(JsonObject &jo)
++        virtual void Call(JsonObject &jo) override
+         {
+             (*ptr_to_obj.*_fptr)(jo);
+         }
+diff --git a/src/item.h b/src/item.h
+index 81e8ac6..2c2915f 100644
+--- a/src/item.h
++++ b/src/item.h
+@@ -175,12 +175,12 @@ class item : public JsonSerializer, public JsonDeserializer
+ 
+     using JsonSerializer::serialize;
+     // give the option not to save recursively, but recurse by default
+-    void serialize(JsonOut &jsout) const { serialize(jsout, true); }
++    void serialize(JsonOut &jsout) const override { serialize(jsout, true); }
+     virtual void serialize(JsonOut &jsout, bool save_contents) const;
+     using JsonDeserializer::deserialize;
+     // easy deserialization from JsonObject
+     virtual void deserialize(JsonObject &jo);
+-    void deserialize(JsonIn &jsin) {
++    void deserialize(JsonIn &jsin) override {
+         JsonObject jo = jsin.get_object();
+         deserialize(jo);
+     }
+diff --git a/src/item_action.cpp b/src/item_action.cpp
+index cff90af..9058aec 100644
+--- a/src/item_action.cpp
++++ b/src/item_action.cpp
+@@ -40,7 +40,7 @@ class actmenu_cb : public uimenu_callback {
+         }
+         ~actmenu_cb() { }
+         
+-        bool key(int ch, int /*num*/, uimenu * /*menu*/) {
++        bool key(int ch, int /*num*/, uimenu * /*menu*/) override {
+             input_event wrap = input_event( ch, CATA_INPUT_KEYBOARD );
+             const std::string action = ctxt.input_to_action( wrap );
+             if( action == "HELP_KEYBINDINGS" ) {
+diff --git a/src/item_group.h b/src/item_group.h
+index 67f0216..d38a5f4 100644
+--- a/src/item_group.h
++++ b/src/item_group.h
+@@ -193,11 +193,11 @@ class Single_item_creator : public Item_spawn_data
+         Type type;
+         std::unique_ptr<Item_modifier> modifier;
+ 
+-        virtual ItemList create(int birthday, RecursionList &rec) const;
+-        virtual item create_single(int birthday, RecursionList &rec) const;
+-        virtual void check_consistency() const;
+-        virtual bool remove_item(const Item_tag &itemid);
+-        virtual bool has_item(const Item_tag &itemid) const;
++        virtual ItemList create(int birthday, RecursionList &rec) const override;
++        virtual item create_single(int birthday, RecursionList &rec) const override;
++        virtual void check_consistency() const override;
++        virtual bool remove_item(const Item_tag &itemid) override;
++        virtual bool has_item(const Item_tag &itemid) const override;
+ };
+ 
+ /**
+@@ -231,11 +231,11 @@ class Item_group : public Item_spawn_data
+         void add_group_entry(const Group_tag &groupid, int probability);
+         void add_entry(std::unique_ptr<Item_spawn_data> &ptr);
+ 
+-        virtual ItemList create(int birthday, RecursionList &rec) const;
+-        virtual item create_single(int birthday, RecursionList &rec) const;
+-        virtual void check_consistency() const;
+-        virtual bool remove_item(const Item_tag &itemid);
+-        virtual bool has_item(const Item_tag &itemid) const;
++        virtual ItemList create(int birthday, RecursionList &rec) const override;
++        virtual item create_single(int birthday, RecursionList &rec) const override;
++        virtual void check_consistency() const override;
++        virtual bool remove_item(const Item_tag &itemid) override;
++        virtual bool has_item(const Item_tag &itemid) const override;
+ 
+     protected:
+         /**
+@@ -250,7 +250,7 @@ class Item_group : public Item_spawn_data
+ 
+     public:
+         // TODO: remove this legacy function
+-        virtual bool guns_have_ammo() const
++        virtual bool guns_have_ammo() const override
+         {
+             return with_ammo;
+         }
+diff --git a/src/itype.h b/src/itype.h
+index 761ced3..d793e3f 100644
+--- a/src/itype.h
++++ b/src/itype.h
+@@ -545,16 +545,16 @@ struct it_comest : public virtual itype {
+     unsigned int grow; //time it takes for a seed to grow (in days, based of off a season length of 91)
+     itype_id tool;      // Tool needed to consume (e.g. lighter for cigarettes)
+ 
+-    virtual bool is_food() const
++    virtual bool is_food() const override
+     {
+         return true;
+     }
+-    virtual std::string get_item_type_string() const
++    virtual std::string get_item_type_string() const override
+     {
+         return "FOOD";
+     }
+ 
+-    virtual bool count_by_charges() const
++    virtual bool count_by_charges() const override
+     {
+         if (phase == LIQUID) {
+             return true;
+@@ -580,23 +580,23 @@ struct it_tool : public virtual itype {
+     std::string revert_to;
+     std::string subtype;
+ 
+-    virtual bool is_tool() const
++    virtual bool is_tool() const override
+     {
+         return true;
+     }
+-    virtual bool is_artifact() const
++    virtual bool is_artifact() const override
+     {
+         return false;
+     }
+-    virtual std::string get_item_type_string() const
++    virtual std::string get_item_type_string() const override
+     {
+         return "TOOL";
+     }
+-    int charges_to_use() const
++    int charges_to_use() const override
+     {
+         return charges_per_use;
+     }
+-    int maximum_charges() const
++    int maximum_charges() const override
+     {
+         return max_charges;
+     }
+diff --git a/src/iuse_actor.h b/src/iuse_actor.h
+index bfb875d..905c26b 100644
+--- a/src/iuse_actor.h
++++ b/src/iuse_actor.h
+@@ -57,8 +57,8 @@ class iuse_transform : public iuse_actor
+         }
+         virtual ~iuse_transform();
+         virtual void load( JsonObject &jo );
+-        virtual long use(player *, item *, bool, point) const;
+-        virtual iuse_actor *clone() const;
++        virtual long use(player *, item *, bool, point) const override;
++        virtual iuse_actor *clone() const override;
+ };
+ 
+ /**
+@@ -88,9 +88,9 @@ class auto_iuse_transform : public iuse_transform
+         {
+         }
+         virtual ~auto_iuse_transform();
+-        virtual void load( JsonObject &jo );
+-        virtual long use(player *, item *, bool, point) const;
+-        virtual iuse_actor *clone() const;
++        virtual void load( JsonObject &jo ) override;
++        virtual long use(player *, item *, bool, point) const override;
++        virtual iuse_actor *clone() const override;
+ };
+ 
+ /**
+@@ -151,8 +151,8 @@ class explosion_iuse : public iuse_actor
+         }
+         virtual ~explosion_iuse();
+         virtual void load( JsonObject &jo );
+-        virtual long use(player *, item *, bool, point) const;
+-        virtual iuse_actor *clone() const;
++        virtual long use(player *, item *, bool, point) const override;
++        virtual iuse_actor *clone() const override;
+ };
+ 
+ /**
+@@ -175,8 +175,8 @@ class unfold_vehicle_iuse : public iuse_actor
+         }
+         virtual ~unfold_vehicle_iuse();
+         virtual void load( JsonObject &jo );
+-        virtual long use(player *, item *, bool, point) const;
+-        virtual iuse_actor *clone() const;
++        virtual long use(player *, item *, bool, point) const override;
++        virtual iuse_actor *clone() const override;
+ };
+ 
+ /** Used in consume_drug_iuse for storing effect data. */
+@@ -213,8 +213,8 @@ class consume_drug_iuse : public iuse_actor
+         consume_drug_iuse() : iuse_actor() { }
+         virtual ~consume_drug_iuse();
+         virtual void load( JsonObject &jo );
+-        virtual long use(player *, item *, bool, point) const;
+-        virtual iuse_actor *clone() const;
++        virtual long use(player *, item *, bool, point) const override;
++        virtual iuse_actor *clone() const override;
+ };
+ 
+ /**
+@@ -242,9 +242,9 @@ class delayed_transform_iuse : public iuse_transform
+ 
+         delayed_transform_iuse() : iuse_transform(), transform_age(0) { }
+         virtual ~delayed_transform_iuse();
+-        virtual void load( JsonObject &jo );
+-        virtual long use( player *, item *, bool, point ) const;
+-        virtual iuse_actor *clone() const;
++        virtual void load( JsonObject &jo ) override;
++        virtual long use( player *, item *, bool, point ) const override;
++        virtual iuse_actor *clone() const override;
+ };
+ 
+ /**
+@@ -273,8 +273,8 @@ class place_monster_iuse : public iuse_actor
+         place_monster_iuse() : iuse_actor(), place_randomly( false ), moves( 100 ), difficulty( 0 ) { }
+         virtual ~place_monster_iuse();
+         virtual void load( JsonObject &jo );
+-        virtual long use(player *, item *, bool, point) const;
+-        virtual iuse_actor *clone() const;
++        virtual long use(player *, item *, bool, point) const override;
++        virtual iuse_actor *clone() const override;
+ };
+ 
+ /**
+@@ -295,8 +295,8 @@ class ups_based_armor_actor : public iuse_actor
+         ups_based_armor_actor() : iuse_actor() { }
+         virtual ~ups_based_armor_actor();
+         virtual void load( JsonObject &jo );
+-        virtual long use(player *, item *, bool, point) const;
+-        virtual iuse_actor *clone() const;
++        virtual long use(player *, item *, bool, point) const override;
++        virtual iuse_actor *clone() const override;
+ };
+ 
+ /**
+@@ -313,8 +313,8 @@ class pick_lock_actor : public iuse_actor
+         pick_lock_actor() : iuse_actor(), pick_quality( 0 ) { }
+         virtual ~pick_lock_actor();
+         virtual void load( JsonObject &jo );
+-        virtual long use(player *, item *, bool, point) const;
+-        virtual iuse_actor *clone() const;
++        virtual long use(player *, item *, bool, point) const override;
++        virtual iuse_actor *clone() const override;
+ };
+ 
+ /**
+@@ -343,8 +343,8 @@ class reveal_map_actor : public iuse_actor
+         reveal_map_actor() : iuse_actor(), radius( 0 ) { }
+         virtual ~reveal_map_actor();
+         virtual void load( JsonObject &jo );
+-        virtual long use(player *, item *, bool, point) const;
+-        virtual iuse_actor *clone() const;
++        virtual long use(player *, item *, bool, point) const override;
++        virtual iuse_actor *clone() const override;
+ };
+ 
+ /**
+@@ -364,9 +364,9 @@ class firestarter_actor : public iuse_actor
+         firestarter_actor() : iuse_actor(), moves_cost( 0 ) { }
+         virtual ~firestarter_actor();
+         virtual void load( JsonObject &jo );
+-        virtual long use( player*, item*, bool, point ) const;
+-        virtual bool can_use( const player*, const item*, bool, const point& ) const;
+-        virtual iuse_actor *clone() const;
++        virtual long use( player*, item*, bool, point ) const override;
++        virtual bool can_use( const player*, const item*, bool, const point& ) const override;
++        virtual iuse_actor *clone() const override;
+ };
+ 
+ /**
+@@ -384,10 +384,10 @@ class extended_firestarter_actor : public firestarter_actor
+ 
+         extended_firestarter_actor() : firestarter_actor(), need_sunlight( false ) { }
+         virtual ~extended_firestarter_actor();
+-        virtual void load( JsonObject &jo );
+-        virtual long use( player*, item*, bool, point ) const;
+-        virtual bool can_use( const player*, const item*, bool, const point& ) const;
+-        virtual iuse_actor *clone() const;
++        virtual void load( JsonObject &jo ) override;
++        virtual long use( player*, item*, bool, point ) const override;
++        virtual bool can_use( const player*, const item*, bool, const point& ) const override;
++        virtual iuse_actor *clone() const override;
+ };
+ 
+ #endif
+diff --git a/src/map.h b/src/map.h
+index 4209f28..f4efe70 100644
+--- a/src/map.h
++++ b/src/map.h
+@@ -53,11 +53,11 @@ class map_stack : public item_stack {
+ public:
+     map_stack( std::list<item> *newstack, point newloc, map *neworigin ) :
+     mystack(newstack), location(newloc), myorigin(neworigin) {};
+-    size_t size() const;
+-    bool empty() const;
+-    std::list<item>::iterator erase( std::list<item>::iterator it );
+-    void push_back( const item &newitem );
+-    void insert_at( std::list<item>::iterator index, const item &newitem );
++    size_t size() const override;
++    bool empty() const override;
++    std::list<item>::iterator erase( std::list<item>::iterator it ) override;
++    void push_back( const item &newitem ) override;
++    void insert_at( std::list<item>::iterator index, const item &newitem ) override;
+     std::list<item>::iterator begin();
+     std::list<item>::iterator end();
+     std::list<item>::const_iterator begin() const;
+@@ -66,8 +66,8 @@ class map_stack : public item_stack {
+     std::list<item>::reverse_iterator rend();
+     std::list<item>::const_reverse_iterator rbegin() const;
+     std::list<item>::const_reverse_iterator rend() const;
+-    item &front();
+-    item &operator[]( size_t index );
++    item &front() override;
++    item &operator[]( size_t index ) override;
+ };
+ 
+ /**
+diff --git a/src/mapgen.h b/src/mapgen.h
+index 78f72c0..3685569 100644
+--- a/src/mapgen.h
++++ b/src/mapgen.h
+@@ -31,7 +31,7 @@ class mapgen_function_builtin : public virtual mapgen_function {
+         weight = w;
+     };
+     mapgen_function_builtin(std::string sptr, int w = 1000);
+-    virtual void generate(map*m, oter_id o, mapgendata mgd, int i, float d) {
++    virtual void generate(map*m, oter_id o, mapgendata mgd, int i, float d) override {
+         (*fptr)(m, o, mgd, i, d);
+     }
+ };
+@@ -164,8 +164,8 @@ class mapgen_function_json : public virtual mapgen_function {
+     void setup_place_group(JsonArray &parray );
+     void setup_place_special(JsonArray &parray );
+     void setup_setmap(JsonArray &parray);
+-    virtual bool setup();
+-    virtual void generate(map*, oter_id, mapgendata, int, float);
++    virtual bool setup() override;
++    virtual void generate(map*, oter_id, mapgendata, int, float) override;
+ 
+     mapgen_function_json(std::string s, int w = 1000) {
+         weight = w;
+@@ -204,7 +204,7 @@ class mapgen_function_lua : public virtual mapgen_function {
+     }
+ #if defined(LUA)
+     // Prevents instantiating this class in non-lua builds
+-    virtual void generate(map*, oter_id, mapgendata, int, float);
++    virtual void generate(map*, oter_id, mapgendata, int, float) override;
+ #endif
+ };
+ /////////////////////////////////////////////////////////
+diff --git a/src/mapgenformat.h b/src/mapgenformat.h
+index e91546a..22d425c 100644
+--- a/src/mapgenformat.h
++++ b/src/mapgenformat.h
+@@ -73,7 +73,7 @@ namespace internal
+         statically_determine_terrain() : id(0) {}
+         statically_determine_terrain(int pid) : id(pid) {}
+         virtual ~statically_determine_terrain() {}
+-        virtual int operator ()(map *, const int /*x*/, const int /*y*/) {
++        virtual int operator ()(map *, const int /*x*/, const int /*y*/) override {
+             return id;
+         }
+     };
+@@ -88,7 +88,7 @@ namespace internal
+         determine_terrain_with_simple_method() : f(NULL) {}
+         determine_terrain_with_simple_method(ter_id_func pf) : f(pf) {}
+         virtual ~determine_terrain_with_simple_method() {}
+-        virtual int operator ()(map *, const int /*x*/, const int /*y*/) {
++        virtual int operator ()(map *, const int /*x*/, const int /*y*/) override {
+             return f();
+         }
+     };
+@@ -102,7 +102,7 @@ namespace internal
+    determine_terrain_with_complex_method():f(NULL) {}
+    determine_terrain_with_complex_method(ter_id (*pf)(map*, const int, const int)):f(pf) {}
+    virtual ~determine_terrain_with_complex_method() {}
+-   virtual int operator ()(map* m, const int x, const int y){return f(m,x,y);}
++   virtual int operator ()(map* m, const int x, const int y) override{return f(m,x,y);}
+  };
+ 
+ 
+diff --git a/src/mission.h b/src/mission.h
+index 6257cdb..7821e6c 100644
+--- a/src/mission.h
++++ b/src/mission.h
+@@ -214,9 +214,9 @@ class mission : public JsonSerializer, public JsonDeserializer
+         std::string name();
+         void load_info(std::ifstream &info);
+         using JsonSerializer::serialize;
+-        void serialize(JsonOut &jsout) const;
++        void serialize(JsonOut &jsout) const override;
+         using JsonDeserializer::deserialize;
+-        void deserialize(JsonIn &jsin);
++        void deserialize(JsonIn &jsin) override;
+ 
+         mission()
+         {
+diff --git a/src/monster.h b/src/monster.h
+index 21fda02..16e9289 100644
+--- a/src/monster.h
++++ b/src/monster.h
+@@ -38,15 +38,15 @@ class monster : public Creature, public JsonSerializer, public JsonDeserializer
+         monster &operator=(const monster &) = default;
+         monster &operator=(monster &&) = default;
+ 
+-        virtual bool is_monster() const
++        virtual bool is_monster() const override
+         {
+             return true;
+         }
+ 
+         void poly(mtype *t);
+         void spawn(int x, int y); // All this does is moves the monster to x,y
+-        m_size get_size() const;
+-        int get_hp( hp_part ) const
++        m_size get_size() const override;
++        int get_hp( hp_part ) const override
+         {
+             return hp;
+         };
+@@ -54,7 +54,7 @@ class monster : public Creature, public JsonSerializer, public JsonDeserializer
+         {
+             return hp;
+         }
+-        int get_hp_max( hp_part ) const
++        int get_hp_max( hp_part ) const override
+         {
+             return type->hp;
+         };
+@@ -62,37 +62,37 @@ class monster : public Creature, public JsonSerializer, public JsonDeserializer
+         {
+             return type->hp;
+         }
+-        std::string get_material() const
++        std::string get_material() const override
+         {
+             return type->mat;
+         };
+-        int hp_percentage() const;
++        int hp_percentage() const override;
+ 
+         // Access
+         std::string name(unsigned int quantity = 1) const; // Returns the monster's formal name
+         std::string name_with_armor() const; // Name, with whatever our armor is called
+         // the creature-class versions of the above
+-        std::string disp_name(bool possessive = false) const;
+-        std::string skin_name() const;
++        std::string disp_name(bool possessive = false) const override;
++        std::string skin_name() const override;
+         void get_HP_Bar(nc_color &color, std::string &text) const;
+         void get_Attitude(nc_color &color, std::string &text) const;
+-        int print_info(WINDOW *w, int vStart, int vLines, int column) const;
++        int print_info(WINDOW *w, int vStart, int vLines, int column) const override;
+ 
+         // Information on how our symbol should appear
+-        nc_color basic_symbol_color() const;
+-        nc_color symbol_color() const;
+-        const std::string &symbol() const;
++        nc_color basic_symbol_color() const override;
++        nc_color symbol_color() const override;
++        const std::string &symbol() const override;
+         bool is_symbol_inverted() const;
+-        bool is_symbol_highlighted() const;
++        bool is_symbol_highlighted() const override;
+ 
+         nc_color color_with_effects() const; // Color with fire, beartrapped, etc.
+         // Inverts color if inv==true
+-        bool has_flag(const m_flag f) const; // Returns true if f is set (see mtype.h)
++        bool has_flag(const m_flag f) const override; // Returns true if f is set (see mtype.h)
+         bool can_see() const;      // MF_SEES and no ME_BLIND
+         bool can_hear() const;     // MF_HEARS and no ME_DEAF
+         bool can_submerge() const; // MF_AQUATIC or MF_SWIMS or MF_NO_BREATH, and not MF_ELECTRONIC
+         bool can_drown() const;    // MF_AQUATIC or MF_SWIMS or MF_NO_BREATHE or MF_FLIES
+-        bool digging() const;      // MF_DIGS or MF_CAN_DIG and diggable terrain
++        bool digging() const override;      // MF_DIGS or MF_CAN_DIG and diggable terrain
+         // Returns false if the monster is stunned, has 0 moves or otherwise wouldn't act this turn
+         bool can_act() const;
+         int sight_range( int light_level ) const override;
+@@ -106,7 +106,7 @@ class monster : public Creature, public JsonSerializer, public JsonDeserializer
+         using JsonSerializer::serialize;
+         virtual void serialize(JsonOut &jsout) const override;
+         using JsonDeserializer::deserialize;
+-        virtual void deserialize(JsonIn &jsin);
++        virtual void deserialize(JsonIn &jsin) override;
+ 
+         void debug(player &u);      // Gives debug info
+ 
+@@ -196,7 +196,7 @@ class monster : public Creature, public JsonSerializer, public JsonDeserializer
+         int group_bash_skill( point target );
+ 
+         void stumble(bool moved);
+-        void knock_back_from(int posx, int posy);
++        void knock_back_from(int posx, int posy) override;
+ 
+         // Combat
+         bool is_fleeing(player &u) const; // True if we're fleeing
+@@ -207,21 +207,21 @@ class monster : public Creature, public JsonSerializer, public JsonDeserializer
+         void process_trigger(monster_trigger trig, int amount); // Single trigger
+         int trigger_sum(std::set<monster_trigger> *triggers) const;
+ 
+-        bool is_underwater() const;
+-        bool is_on_ground() const;
+-        bool is_warm() const;
+-        bool has_weapon() const;
+-        bool is_dead_state() const; // check if we should be dead or not
+-
+-        void absorb_hit(body_part bp, damage_instance &dam);
+-        void dodge_hit(Creature *source, int hit_spread);
+-        bool block_hit(Creature *source, body_part &bp_hit, damage_instance &d);
+-        void melee_attack(Creature &p, bool allow_special = true, matec_id force_technique = "");
+-        virtual int deal_melee_attack(Creature *source, int hitroll);
++        bool is_underwater() const override;
++        bool is_on_ground() const override;
++        bool is_warm() const override;
++        bool has_weapon() const override;
++        bool is_dead_state() const override; // check if we should be dead or not
++
++        void absorb_hit(body_part bp, damage_instance &dam) override;
++        void dodge_hit(Creature *source, int hit_spread) override;
++        bool block_hit(Creature *source, body_part &bp_hit, damage_instance &d) override;
++        void melee_attack(Creature &p, bool allow_special = true, matec_id force_technique = "") override;
++        virtual int deal_melee_attack(Creature *source, int hitroll) override;
+         virtual int deal_projectile_attack(Creature *source, double missed_by,
+-                                           const projectile &proj, dealt_damage_instance &dealt_dam);
+-        virtual void deal_damage_handle_type(const damage_unit &du, body_part bp, int &damage, int &pain);
+-        void apply_damage(Creature *source, body_part bp, int amount);
++                                           const projectile &proj, dealt_damage_instance &dealt_dam) override;
++        virtual void deal_damage_handle_type(const damage_unit &du, body_part bp, int &damage, int &pain) override;
++        void apply_damage(Creature *source, body_part bp, int amount) override;
+         // create gibs/meat chunks/blood etc all over the place, does not kill, can be called on a dead monster.
+         void explode();
+         // Let the monster die and let its body explode into gibs
+@@ -237,24 +237,24 @@ class monster : public Creature, public JsonSerializer, public JsonDeserializer
+         void set_hp( int hp );
+ 
+         /** Processes monster-specific effects effects before calling Creature::process_effects(). */
+-        virtual void process_effects();
++        virtual void process_effects() override;
+         /** Processes effects which may prevent the monster from moving (bear traps, crushed, etc.).
+          *  Returns false if movement is stopped. */
+-        virtual bool move_effects();
++        virtual bool move_effects() override;
+         /** Handles any monster-specific effect application effects before calling Creature::add_eff_effects(). */
+-        virtual void add_eff_effects(effect e, bool reduced);
++        virtual void add_eff_effects(effect e, bool reduced) override;
+         /** Performs any monster-specific modifications to the arguments before passing to Creature::add_effect(). */
+         virtual void add_effect(efftype_id eff_id, int dur, body_part bp = num_bp, bool permanent = false,
+-                                int intensity = 0);
++                                int intensity = 0) override;
+ 
+-        virtual float power_rating() const;
++        virtual float power_rating() const override;
+ 
+-        int  get_armor_cut(body_part bp) const;   // Natural armor, plus any worn armor
+-        int  get_armor_bash(body_part bp) const;  // Natural armor, plus any worn armor
+-        int  get_dodge() const;       // Natural dodge, or 0 if we're occupied
+-        int  get_melee() const; // For determining attack skill when awarding dodge practice.
+-        int  hit_roll() const;  // For the purposes of comparing to player::dodge_roll()
+-        int  dodge_roll();  // For the purposes of comparing to player::hit_roll()
++        int  get_armor_cut(body_part bp) const override;   // Natural armor, plus any worn armor
++        int  get_armor_bash(body_part bp) const override;  // Natural armor, plus any worn armor
++        int  get_dodge() const override;       // Natural dodge, or 0 if we're occupied
++        int  get_melee() const override; // For determining attack skill when awarding dodge practice.
++        int  hit_roll() const override;  // For the purposes of comparing to player::dodge_roll()
++        int  dodge_roll() override;  // For the purposes of comparing to player::hit_roll()
+         int  fall_damage() const; // How much a fall hurts us
+ 
+         /** Resets a given special to its monster type cooldown value, an index of -1 does nothing. */
+@@ -265,7 +265,7 @@ class monster : public Creature, public JsonSerializer, public JsonDeserializer
+         /** Sets a given special to the given value, an index of -1 does nothing. */
+         void set_special(int index, int time);
+ 
+-        void die(Creature *killer); //this is the die from Creature, it calls kill_mon
++        void die(Creature *killer) override; //this is the die from Creature, it calls kill_mon
+         void drop_items_on_death();
+ 
+         // Other
+@@ -274,15 +274,15 @@ class monster : public Creature, public JsonSerializer, public JsonDeserializer
+         void make_friendly();
+         void add_item(item it);     // Add an item to inventory
+ 
+-        bool is_hallucination() const;    // true if the monster isn't actually real
++        bool is_hallucination() const override;    // true if the monster isn't actually real
+ 
+-        field_id bloodType() const;
+-        field_id gibType() const;
++        field_id bloodType() const override;
++        field_id gibType() const override;
+ 
+-        void add_msg_if_npc(const char *msg, ...) const;
+-        void add_msg_if_npc(game_message_type type, const char *msg, ...) const;
+-        void add_msg_player_or_npc(const char *, const char *npc_str, ...) const;
+-        void add_msg_player_or_npc(game_message_type type, const char *, const char *npc_str, ...) const;
++        void add_msg_if_npc(const char *msg, ...) const override;
++        void add_msg_if_npc(game_message_type type, const char *msg, ...) const override;
++        void add_msg_player_or_npc(const char *, const char *npc_str, ...) const override;
++        void add_msg_player_or_npc(game_message_type type, const char *, const char *npc_str, ...) const override;
+ 
+         // TEMP VALUES
+         int wandx, wandy; // Wander destination - Just try to move in that direction
+@@ -305,12 +305,12 @@ class monster : public Creature, public JsonSerializer, public JsonDeserializer
+ 
+         bool setpos(const int x, const int y, const bool level_change = false);
+         bool setpos(const point &p, const bool level_change = false);
+-        const point &pos() const;
+-        inline int posx() const
++        const point &pos() const override;
++        inline int posx() const override
+         {
+             return position.x;
+         }
+-        inline int posy() const
++        inline int posy() const override
+         {
+             return position.y;
+         }
+diff --git a/src/morale.h b/src/morale.h
+index c7c693d..d05cea9 100644
+--- a/src/morale.h
++++ b/src/morale.h
+@@ -87,9 +87,9 @@ class morale_point : public JsonSerializer, public JsonDeserializer
+             type (T), item_type (I), bonus (B), duration(D), decay_start(DS), age(A) {};
+ 
+         using JsonDeserializer::deserialize;
+-        void deserialize(JsonIn &jsin);
++        void deserialize(JsonIn &jsin) override;
+         using JsonSerializer::serialize;
+-        void serialize(JsonOut &json) const;
++        void serialize(JsonOut &json) const override;
+ 
+         std::string name() const;
+ };
+diff --git a/src/npc.h b/src/npc.h
+index d7b1f01..12ece0b 100644
+--- a/src/npc.h
++++ b/src/npc.h
+@@ -150,9 +150,9 @@ struct npc_favor : public JsonSerializer, public JsonDeserializer
+     };
+ 
+     using JsonSerializer::serialize;
+-    void serialize(JsonOut &jsout) const;
++    void serialize(JsonOut &jsout) const override;
+     using JsonDeserializer::deserialize;
+-    void deserialize(JsonIn &jsin);
++    void deserialize(JsonIn &jsin) override;
+ };
+ 
+ struct npc_personality : public JsonSerializer, public JsonDeserializer
+@@ -170,9 +170,9 @@ struct npc_personality : public JsonSerializer, public JsonDeserializer
+  };
+ 
+     using JsonSerializer::serialize;
+-    void serialize(JsonOut &jsout) const;
++    void serialize(JsonOut &jsout) const override;
+     using JsonDeserializer::deserialize;
+-    void deserialize(JsonIn &jsin);
++    void deserialize(JsonIn &jsin) override;
+ };
+ 
+ struct npc_opinion : public JsonSerializer, public JsonDeserializer
+@@ -227,9 +227,9 @@ struct npc_opinion : public JsonSerializer, public JsonDeserializer
+  };
+ 
+     using JsonSerializer::serialize;
+-    void serialize(JsonOut &jsout) const;
++    void serialize(JsonOut &jsout) const override;
+     using JsonDeserializer::deserialize;
+-    void deserialize(JsonIn &jsin);
++    void deserialize(JsonIn &jsin) override;
+ 
+  void load_legacy(std::stringstream &info);
+ };
+@@ -260,9 +260,9 @@ struct npc_combat_rules : public JsonSerializer, public JsonDeserializer
+  void load_legacy(std::istream &data);
+ 
+     using JsonSerializer::serialize;
+-    void serialize(JsonOut &jsout) const;
++    void serialize(JsonOut &jsout) const override;
+     using JsonDeserializer::deserialize;
+-    void deserialize(JsonIn &jsin);
++    void deserialize(JsonIn &jsin) override;
+ };
+ 
+ enum talk_topic {
+@@ -446,9 +446,9 @@ struct npc_chatbin : public JsonSerializer, public JsonDeserializer
+  }
+ 
+     using JsonSerializer::serialize;
+-    void serialize(JsonOut &jsout) const;
++    void serialize(JsonOut &jsout) const override;
+     using JsonDeserializer::deserialize;
+-    void deserialize(JsonIn &jsin);
++    void deserialize(JsonIn &jsin) override;
+ 
+  void load_legacy(std::stringstream &info);
+ };
+@@ -467,8 +467,8 @@ class npc : public player
+  npc &operator=(const npc &) = default;
+  npc &operator=(npc &&) = default;
+  virtual ~npc();
+- virtual bool is_player() const { return false; }
+- virtual bool is_npc() const { return true; }
++ virtual bool is_player() const override { return false; }
++ virtual bool is_npc() const override { return true; }
+ 
+  static void load_npc(JsonObject &jsobj);
+  npc* find_npc(std::string ident);
+@@ -501,18 +501,18 @@ class npc : public player
+  void starting_weapon(npc_class type);
+ 
+ // Save & load
+- virtual void load_legacy(std::stringstream & dump);// Overloaded from player
+- virtual void load_info(std::string data);// Overloaded from player
+- virtual std::string save_info();
++ virtual void load_legacy(std::stringstream & dump) override;// Overloaded from player
++ virtual void load_info(std::string data) override;// Overloaded from player
++ virtual std::string save_info() override;
+ 
+     using player::deserialize;
+-    virtual void deserialize(JsonIn &jsin);
++    virtual void deserialize(JsonIn &jsin) override;
+     using player::serialize;
+     virtual void serialize(JsonOut &jsout) const override;
+ 
+ // Display
+-    virtual nc_color basic_symbol_color() const;
+- int print_info(WINDOW* w, int vStart, int vLines, int column) const;
++    virtual nc_color basic_symbol_color() const override;
++ int print_info(WINDOW* w, int vStart, int vLines, int column) const override;
+  std::string short_description() const;
+  std::string opinion_text() const;
+ 
+@@ -566,7 +566,7 @@ class npc : public player
+  void update_worst_item_value(); // Find the worst value in our inventory
+  int  value(const item &it);
+  bool wear_if_wanted(item it);
+- virtual bool wield(item* it, bool);
++ virtual bool wield(item* it, bool) override;
+  virtual bool wield(item* it);
+  bool has_healing_item();
+  bool has_painkiller();
+@@ -582,7 +582,7 @@ class npc : public player
+  bool is_active() const;
+  void say(std::string line, ...) const;
+  void decide_needs();
+- void die(Creature* killer);
++ void die(Creature* killer) override;
+  bool is_dead() const;
+ /* shift() works much like monster::shift(), and is called when the player moves
+  * from one submap to an adjacent submap.  It updates our position (shifting by
+@@ -649,13 +649,13 @@ class npc : public player
+  void reach_destination(); // We made it!
+ 
+  //message related stuff
+- virtual void add_msg_if_npc(const char* msg, ...) const;
+- virtual void add_msg_player_or_npc(const char* player_str, const char* npc_str, ...) const;
+- virtual void add_msg_if_npc(game_message_type type, const char* msg, ...) const;
+- virtual void add_msg_player_or_npc(game_message_type type, const char* player_str, const char* npc_str, ...) const;
+- virtual void add_msg_if_player(const char *, ...) const{};
+- virtual void add_msg_if_player(game_message_type, const char *, ...) const{};
+- virtual void add_memorial_log(const char*, const char*, ...) {};
++ virtual void add_msg_if_npc(const char* msg, ...) const override;
++ virtual void add_msg_player_or_npc(const char* player_str, const char* npc_str, ...) const override;
++ virtual void add_msg_if_npc(game_message_type type, const char* msg, ...) const override;
++ virtual void add_msg_player_or_npc(game_message_type type, const char* player_str, const char* npc_str, ...) const override;
++ virtual void add_msg_if_player(const char *, ...) const override{};
++ virtual void add_msg_if_player(game_message_type, const char *, ...) const override{};
++ virtual void add_memorial_log(const char*, const char*, ...) override {};
+  virtual void add_miss_reason(const char *, unsigned int) {};
+ 
+ // The preceding are in npcmove.cpp
+diff --git a/src/player.cpp b/src/player.cpp
+index ac30b5b..8f72355 100644
+--- a/src/player.cpp
++++ b/src/player.cpp
+@@ -9711,7 +9711,7 @@ static const std::array<std::string, 4> bio_cqb_styles {{
+ class ma_style_callback : public uimenu_callback
+ {
+ public:
+-    virtual bool key(int key, int entnum, uimenu *menu) {
++    virtual bool key(int key, int entnum, uimenu *menu) override {
+         if( key != '?' ) {
+             return false;
+         }
+diff --git a/src/player.h b/src/player.h
+index 7d00e7d..176f4ce 100644
+--- a/src/player.h
++++ b/src/player.h
+@@ -65,7 +65,7 @@ struct stats : public JsonSerializer, public JsonDeserializer {
+     }
+ 
+     using JsonSerializer::serialize;
+-    void serialize(JsonOut &json) const
++    void serialize(JsonOut &json) const override
+     {
+         json.start_object();
+         json.member("squares_walked", squares_walked);
+@@ -75,7 +75,7 @@ struct stats : public JsonSerializer, public JsonDeserializer {
+         json.end_object();
+     }
+     using JsonDeserializer::deserialize;
+-    void deserialize(JsonIn &jsin)
++    void deserialize(JsonIn &jsin) override
+     {
+         JsonObject jo = jsin.get_object();
+         jo.read("squares_walked", squares_walked);
+@@ -120,28 +120,28 @@ class player : public Character, public JsonSerializer, public JsonDeserializer
+          *  normalizes HP and bodytemperature
+          */
+         
+-        void normalize();
++        void normalize() override;
+ 
+         /** Returns either "you" or the player's name */
+-        std::string disp_name(bool possessive = false) const;
++        std::string disp_name(bool possessive = false) const override;
+         /** Returns the name of the player's outer layer, e.g. "armor plates" */
+-        std::string skin_name() const;
++        std::string skin_name() const override;
+ 
+-        virtual bool is_player() const
++        virtual bool is_player() const override
+         {
+             return true;
+         }
+ 
+         /** Handles human-specific effect application effects before calling Creature::add_eff_effects(). */
+-        virtual void add_eff_effects(effect e, bool reduced);
++        virtual void add_eff_effects(effect e, bool reduced) override;
+         /** Processes human-specific effects effects before calling Creature::process_effects(). */
+-        void process_effects();
++        void process_effects() override;
+         /** Handles the still hard-coded effects. */
+         void hardcoded_effects(effect &it);
+         /** Returns the modifier value used for vomiting effects. */
+         double vomit_mod();
+ 
+-        virtual bool is_npc() const
++        virtual bool is_npc() const override
+         {
+             return false;    // Overloaded for NPCs in npc.h
+         }
+@@ -155,11 +155,11 @@ class player : public Character, public JsonSerializer, public JsonDeserializer
+         /** Outputs a serialized json string for saving */
+         virtual std::string save_info();
+ 
+-        int print_info(WINDOW *w, int vStart, int vLines, int column) const;
++        int print_info(WINDOW *w, int vStart, int vLines, int column) const override;
+ 
+         // populate variables, inventory items, and misc from json object
+         using JsonDeserializer::deserialize;
+-        virtual void deserialize(JsonIn &jsin);
++        virtual void deserialize(JsonIn &jsin) override;
+ 
+         using JsonSerializer::serialize;
+         // by default save all contained info
+@@ -182,9 +182,9 @@ class player : public Character, public JsonSerializer, public JsonDeserializer
+         void disp_status(WINDOW *w, WINDOW *w2);
+ 
+         /** Resets stats, and applies effects in an idempotent manner */
+-        void reset_stats();
++        void reset_stats() override;
+         /** Resets movement points and applies other non-idempotent changes */
+-        void process_turn();
++        void process_turn() override;
+         /** Calculates the various speed bonuses we will get from mutations, etc. */
+         void recalc_speed_bonus();
+         /** Called after every action, invalidates player caches */
+@@ -283,7 +283,7 @@ class player : public Character, public JsonSerializer, public JsonDeserializer
+         /** Removes the mutation's child flag from the player's list */
+         void remove_child_flag(std::string mut);
+ 
+-        const point &pos() const;
++        const point &pos() const override;
+         /** Returns the player's sight range */
+         int sight_range( int light_level ) const override;
+         /** Returns the player maximum vision range factoring in mutations, diseases, and other effects */
+@@ -384,11 +384,11 @@ class player : public Character, public JsonSerializer, public JsonDeserializer
+         /** Returns true if the current martial art works with the player's current weapon */
+         bool can_melee();
+         /** Always returns false, since players can't dig currently */
+-        bool digging() const;
++        bool digging() const override;
+         /** Returns true if the player is knocked over or has broken legs */
+-        bool is_on_ground() const;
++        bool is_on_ground() const override;
+         /** Returns true if the player should be dead */
+-        bool is_dead_state() const;
++        bool is_dead_state() const override;
+ 
+         /** Returns true if the player has technique-based miss recovery */
+         bool has_miss_recovery_tec();
+@@ -405,7 +405,7 @@ class player : public Character, public JsonSerializer, public JsonDeserializer
+         /** Returns true if the player has a weapon with a block technique */
+         bool can_weapon_block();
+         /** Sets up a melee attack and handles melee attack function calls */
+-        void melee_attack(Creature &t, bool allow_special, matec_id technique = "");
++        void melee_attack(Creature &t, bool allow_special, matec_id technique = "") override;
+         /** Returns the player's dispersion modifier based on skill. **/
+         int skill_dispersion( item *weapon, bool random ) const;
+         /** Returns a weapon's modified dispersion value */
+@@ -416,24 +416,24 @@ class player : public Character, public JsonSerializer, public JsonDeserializer
+         void fire_gun(int targetx, int targety, bool burst);
+ 
+         /** Activates any on-dodge effects and checks for dodge counter techniques */
+-        void dodge_hit(Creature *source, int hit_spread);
++        void dodge_hit(Creature *source, int hit_spread) override;
+         /** Checks for valid block abilities and reduces damage accordingly. Returns true if the player blocks */
+-        bool block_hit(Creature *source, body_part &bp_hit, damage_instance &dam);
++        bool block_hit(Creature *source, body_part &bp_hit, damage_instance &dam) override;
+         /** Reduces and mutates du, prints messages about armor taking damage. */
+         void armor_absorb(damage_unit &du, item &armor);
+         /** Runs through all bionics and armor on a part and reduces damage through their armor_absorb */
+-        void absorb_hit(body_part bp, damage_instance &dam);
++        void absorb_hit(body_part bp, damage_instance &dam) override;
+         /** Handles return on-hit effects (spines, electric shields, etc.) */
+-        void on_gethit(Creature *source, body_part bp_hit, damage_instance &dam);
++        void on_gethit(Creature *source, body_part bp_hit, damage_instance &dam) override;
+ 
+         /** Returns the base damage the player deals based on their stats */
+         int base_damage(bool real_life = true, int stat = -999);
+         /** Returns the base to hit chance the player has based on their stats */
+         int base_to_hit(bool real_life = true, int stat = -999);
+         /** Returns Creature::get_hit_base() modified by clothing and weapon skill */
+-        int get_hit_base() const;
++        int get_hit_base() const override;
+         /** Returns the player's basic hit roll that is compared to the target's dodge roll */
+-        int hit_roll() const;
++        int hit_roll() const override;
+         /** Returns true if the player scores a critical hit */
+         bool scored_crit(int target_dodge = 0);
+ 
+@@ -462,13 +462,13 @@ class player : public Character, public JsonSerializer, public JsonDeserializer
+         /** Handles combat effects, returns a string of any valid combat effect messages */
+         std::string melee_special_effects(Creature &t, damage_instance &d, ma_technique &tec);
+         /** Returns Creature::get_dodge_base modified by the player's skill level */
+-        int get_dodge_base() const;   // Returns the players's dodge, modded by clothing etc
++        int get_dodge_base() const override;   // Returns the players's dodge, modded by clothing etc
+         /** Returns Creature::get_dodge() modified by any player effects */
+-        int get_dodge() const;
++        int get_dodge() const override;
+         /** Returns the player's dodge_roll to be compared against an agressor's hit_roll() */
+-        int dodge_roll();
++        int dodge_roll() override;
+         /** Returns melee skill level, to be used to throttle dodge practice. **/
+-        int get_melee() const;
++        int get_melee() const override;
+         /**
+          * Adds a reason for why the player would miss a melee attack.
+          *
+@@ -486,7 +486,7 @@ class player : public Character, public JsonSerializer, public JsonDeserializer
+         const char *get_miss_reason();
+ 
+         /** Handles the uncanny dodge bionic and effects, returns true if the player successfully dodges */
+-        bool uncanny_dodge();
++        bool uncanny_dodge() override;
+         /** ReReturns an unoccupied, safe adjacent point. If none exists, returns player position. */
+         point adjacent_tile();
+ 
+@@ -512,11 +512,11 @@ class player : public Character, public JsonSerializer, public JsonDeserializer
+         int intimidation();
+ 
+         /** Calls Creature::deal_damage and handles damaged effects (waking up, etc.) */
+-        dealt_damage_instance deal_damage(Creature *source, body_part bp, const damage_instance &d);
++        dealt_damage_instance deal_damage(Creature *source, body_part bp, const damage_instance &d) override;
+         /** Actually hurt the player, hurts a body_part directly, no armor reduction */
+-        void apply_damage(Creature *source, body_part bp, int amount);
++        void apply_damage(Creature *source, body_part bp, int amount) override;
+         /** Modifies a pain value by player traits before passing it to Creature::mod_pain() */
+-        void mod_pain(int npain);
++        void mod_pain(int npain) override;
+ 
+         void cough(bool harmful = false, int volume = 4);
+ 
+@@ -533,7 +533,7 @@ class player : public Character, public JsonSerializer, public JsonDeserializer
+         /** Harms all body parts for dam, with armor reduction. If vary > 0 damage to parts are random within vary % (1-100) */
+         int hitall(int dam, int vary, Creature *source);
+         /** Knocks the player back one square from a tile */
+-        void knock_back_from(int x, int y);
++        void knock_back_from(int x, int y) override;
+ 
+         /** Converts a body_part to an hp_part */
+         static hp_part bp_to_hp(body_part bp);
+@@ -541,12 +541,12 @@ class player : public Character, public JsonSerializer, public JsonDeserializer
+         static body_part hp_to_bp(hp_part hpart);
+ 
+         /** Returns overall % of HP remaining */
+-        int hp_percentage() const;
++        int hp_percentage() const override;
+ 
+         /** Handles the chance to be infected by random diseases */
+         void get_sick();
+         /** Handles health fluctuations over time, redirects into Creature::update_health */
+-        void update_health(int base_threshold = 0);
++        void update_health(int base_threshold = 0) override;
+         /** Checks against env_resist of the players armor, if they fail then they become infected with the disease */
+         bool infect(dis_type type, body_part vector, int strength,
+                     int duration, bool permanent = false, int intensity = 1,
+@@ -673,15 +673,15 @@ class player : public Character, public JsonSerializer, public JsonDeserializer
+         /** Returns warmth provided by armor, etc., factoring in layering */
+         int encumb(body_part bp, double &layers, int &armorenc) const;
+         /** Returns overall bashing resistance for the body_part */
+-        int get_armor_bash(body_part bp) const;
++        int get_armor_bash(body_part bp) const override;
+         /** Returns overall cutting resistance for the body_part */
+-        int get_armor_cut(body_part bp) const;
++        int get_armor_cut(body_part bp) const override;
+         /** Returns bashing resistance from the creature and armor only */
+-        int get_armor_bash_base(body_part bp) const;
++        int get_armor_bash_base(body_part bp) const override;
+         /** Returns cutting resistance from the creature and armor only */
+-        int get_armor_cut_base(body_part bp) const;
++        int get_armor_cut_base(body_part bp) const override;
+         /** Returns overall env_resist on a body_part */
+-        int get_env_resist(body_part bp) const;
++        int get_env_resist(body_part bp) const override;
+         /** Returns true if the player is wearing something on the entered body_part */
+         bool wearing_something_on(body_part bp) const;
+         /** Returns true if the player is wearing something on their feet that is not SKINTIGHT */
+@@ -716,7 +716,7 @@ class player : public Character, public JsonSerializer, public JsonDeserializer
+ 
+         std::string weapname(bool charges = true);
+ 
+-        virtual float power_rating() const;
++        virtual float power_rating() const override;
+ 
+         /**
+          * All items that have the given flag (@ref item::has_flag).
+@@ -799,7 +799,7 @@ class player : public Character, public JsonSerializer, public JsonDeserializer
+          */
+         bool has_gun_for_ammo( const ammotype &at ) const;
+ 
+-        bool has_weapon() const;
++        bool has_weapon() const override;
+         // Check if the player can pickup stuff (fails if wielding
+         // certain bionic weapons).
+         // Print a message if print_msg is true and this isn't a NPC
+@@ -859,11 +859,11 @@ class player : public Character, public JsonSerializer, public JsonDeserializer
+         void calculate_portions(int &x, int &y, int &z, int maximum);
+ 
+         // ---------------VALUES-----------------
+-        inline int posx() const
++        inline int posx() const override
+         {
+             return position.x;
+         }
+-        inline int posy() const
++        inline int posy() const override
+         {
+             return position.y;
+         }
+@@ -945,7 +945,7 @@ class player : public Character, public JsonSerializer, public JsonDeserializer
+         //Dumps all memorial events into a single newline-delimited string
+         std::string dump_memorial();
+         //Log an event, to be later written to the memorial file
+-        void add_memorial_log(const char *male_msg, const char *female_msg, ...);
++        void add_memorial_log(const char *male_msg, const char *female_msg, ...) override;
+         //Loads the memorial log from a file
+         void load_memorial_file(std::ifstream &fin);
+         //Notable events, to be printed in memorial
+@@ -954,15 +954,15 @@ class player : public Character, public JsonSerializer, public JsonDeserializer
+         //Record of player stats, for posterity only
+         stats *lifetime_stats();
+         stats get_stats() const; // for serialization
+-        void mod_stat( std::string stat, int modifier );
++        void mod_stat( std::string stat, int modifier ) override;
+ 
+         int getID () const;
+         // sets the ID, will *only* succeed when the current id is 0 (=not initialized)
+         void setID (int i);
+ 
+-        bool is_underwater() const;
++        bool is_underwater() const override;
+         void set_underwater(bool);
+-        bool is_hallucination() const;
++        bool is_hallucination() const override;
+ 
+         void environmental_revert_effect();
+ 
+@@ -975,18 +975,18 @@ class player : public Character, public JsonSerializer, public JsonDeserializer
+         int visibility( bool check_color = false,
+                         int stillness = 0 ) const; // just checks is_invisible for the moment
+ 
+-        m_size get_size() const;
+-        int get_hp( hp_part bp ) const;
+-        int get_hp_max( hp_part bp ) const;
++        m_size get_size() const override;
++        int get_hp( hp_part bp ) const override;
++        int get_hp_max( hp_part bp ) const override;
+ 
+         field_id playerBloodType() const;
+ 
+         //message related stuff
+-        virtual void add_msg_if_player(const char *msg, ...) const;
+-        virtual void add_msg_if_player(game_message_type type, const char *msg, ...) const;
+-        virtual void add_msg_player_or_npc(const char *player_str, const char *npc_str, ...) const;
++        virtual void add_msg_if_player(const char *msg, ...) const override;
++        virtual void add_msg_if_player(game_message_type type, const char *msg, ...) const override;
++        virtual void add_msg_player_or_npc(const char *player_str, const char *npc_str, ...) const override;
+         virtual void add_msg_player_or_npc(game_message_type type, const char *player_str,
+-                                           const char *npc_str, ...) const;
++                                           const char *npc_str, ...) const override;
+ 
+         typedef std::map<tripoint, std::string> trap_map;
+         bool knows_trap(int x, int y) const;
+diff --git a/src/player_activity.h b/src/player_activity.h
+index 07e274e..277b506 100644
+--- a/src/player_activity.h
++++ b/src/player_activity.h
+@@ -100,9 +100,9 @@ class player_activity : public JsonSerializer, public JsonDeserializer
+         bool is_suspendable() const;
+ 
+         using JsonSerializer::serialize;
+-        void serialize(JsonOut &jsout) const;
++        void serialize(JsonOut &jsout) const override;
+         using JsonDeserializer::deserialize;
+-        void deserialize(JsonIn &jsin);
++        void deserialize(JsonIn &jsin) override;
+ 
+         void load_legacy(std::stringstream &dump);
+ 
+diff --git a/src/skill.h b/src/skill.h
+index 967272b..2caab8c 100644
+--- a/src/skill.h
++++ b/src/skill.h
+@@ -174,9 +174,9 @@ class SkillLevel : public JsonSerializer, public JsonDeserializer
+         SkillLevel &operator= (const SkillLevel &rhs);
+ 
+         using JsonSerializer::serialize;
+-        void serialize(JsonOut &jsout) const;
++        void serialize(JsonOut &jsout) const override;
+         using JsonDeserializer::deserialize;
+-        void deserialize(JsonIn &jsin);
++        void deserialize(JsonIn &jsin) override;
+ 
+         // Make skillLevel act like a raw level by default.
+         operator int() const
+diff --git a/src/ui.h b/src/ui.h
+index 327aeeb..7dc9b25 100644
+--- a/src/ui.h
++++ b/src/ui.h
+@@ -178,7 +178,7 @@ class uimenu: public ui_container
+         void filterlist();
+         void apply_scrollbar();
+         std::string inputfilter();
+-        void refresh(bool refresh_callback = true);
++        void refresh(bool refresh_callback = true) override;
+         void redraw(bool redraw_callback = true);
+         void addentry(std::string str);
+         void addentry(const char *format, ...);
+@@ -211,8 +211,8 @@ class pointmenu_cb : public uimenu_callback {
+     public:
+         pointmenu_cb( std::vector< point > &pts );
+         ~pointmenu_cb() { };
+-        void select( int num, uimenu *menu );
+-        void refresh( uimenu *menu );
++        void select( int num, uimenu *menu ) override;
++        void refresh( uimenu *menu ) override;
+ };
+ 
+ #endif
+diff --git a/src/uistate.h b/src/uistate.h
+index 176913e..89a32ba 100644
+--- a/src/uistate.h
++++ b/src/uistate.h
+@@ -98,7 +98,7 @@ class uistatedata : public JsonSerializer, public JsonDeserializer
+         }
+ 
+         using JsonSerializer::serialize;
+-        void serialize(JsonOut &json) const
++        void serialize(JsonOut &json) const override
+         {
+             const unsigned int input_history_save_max = 25;
+             json.start_object();
+@@ -144,7 +144,7 @@ class uistatedata : public JsonSerializer, public JsonDeserializer
+             json.end_object();
+         };
+ 
+-        void deserialize(JsonIn &jsin)
++        void deserialize(JsonIn &jsin) override
+         {
+             JsonObject jo = jsin.get_object();
+             /**** here ****/
+diff --git a/src/vehicle.h b/src/vehicle.h
+index 767b7f6..e757d9a 100644
+--- a/src/vehicle.h
++++ b/src/vehicle.h
+@@ -87,11 +87,11 @@ class vehicle_stack : public item_stack {
+ public:
+ vehicle_stack( std::list<item> *newstack, point newloc, vehicle *neworigin, int part ) :
+     mystack(newstack), location(newloc), myorigin(neworigin), part_num(part) {};
+-    size_t size() const;
+-    bool empty() const;
+-    std::list<item>::iterator erase( std::list<item>::iterator it );
+-    void push_back( const item &newitem );
+-    void insert_at( std::list<item>::iterator index, const item &newitem );
++    size_t size() const override;
++    bool empty() const override;
++    std::list<item>::iterator erase( std::list<item>::iterator it ) override;
++    void push_back( const item &newitem ) override;
++    void insert_at( std::list<item>::iterator index, const item &newitem ) override;
+     std::list<item>::iterator begin();
+     std::list<item>::iterator end();
+     std::list<item>::const_iterator begin() const;
+@@ -100,8 +100,8 @@ vehicle_stack( std::list<item> *newstack, point newloc, vehicle *neworigin, int
+     std::list<item>::reverse_iterator rend();
+     std::list<item>::const_reverse_iterator rbegin() const;
+     std::list<item>::const_reverse_iterator rend() const;
+-    item &front();
+-    item &operator[]( size_t index );
++    item &front() override;
++    item &operator[]( size_t index ) override;
+ };
+ 
+ /**
+@@ -167,9 +167,9 @@ struct vehicle_part : public JsonSerializer, public JsonDeserializer
+ 
+     // json saving/loading
+     using JsonSerializer::serialize;
+-    void serialize(JsonOut &jsout) const;
++    void serialize(JsonOut &jsout) const override;
+     using JsonDeserializer::deserialize;
+-    void deserialize(JsonIn &jsin);
++    void deserialize(JsonIn &jsin) override;
+ 
+     /**
+      * Generate the corresponding item from this vehicle part. It includes
+@@ -213,9 +213,9 @@ struct label : public JsonSerializer, public JsonDeserializer {
+ 
+     // json saving/loading
+     using JsonSerializer::serialize;
+-    void serialize(JsonOut &jsout) const;
++    void serialize(JsonOut &jsout) const override;
+     using JsonDeserializer::deserialize;
+-    void deserialize(JsonIn &jsin);
++    void deserialize(JsonIn &jsin) override;
+ };
+ 
+ /**
+@@ -367,9 +367,9 @@ class vehicle : public JsonSerializer, public JsonDeserializer
+     void save (std::ofstream &stout);
+ 
+     using JsonSerializer::serialize;
+-    void serialize(JsonOut &jsout) const;
++    void serialize(JsonOut &jsout) const override;
+     using JsonDeserializer::deserialize;
+-    void deserialize(JsonIn &jsin);
++    void deserialize(JsonIn &jsin) override;
+ 
+ // Operate vehicle
+     void use_controls();
+diff --git a/src/wish.cpp b/src/wish.cpp
+index 6ad7c1a..e168da8 100644
+--- a/src/wish.cpp
++++ b/src/wish.cpp
+@@ -36,7 +36,7 @@ class wish_mutate_callback: public uimenu_callback
+             vTraits.clear();
+             pTraits.clear();
+         }
+-        virtual bool key(int key, int entnum, uimenu *menu)
++        virtual bool key(int key, int entnum, uimenu *menu) override
+         {
+             if ( key == 't' && p->has_trait( vTraits[ entnum ] ) ) {
+                 if ( p->has_base_trait( vTraits[ entnum ] ) ) {
+@@ -54,7 +54,7 @@ class wish_mutate_callback: public uimenu_callback
+             return false;
+         }
+ 
+-        virtual void select(int entnum, uimenu *menu)
++        virtual void select(int entnum, uimenu *menu) override
+         {
+             if ( ! started ) {
+                 started = true;
+@@ -278,7 +278,7 @@ class wish_monster_callback: public uimenu_callback
+             wrefresh(w_info);
+         }
+ 
+-        virtual bool key(int key, int entnum, uimenu *menu)
++        virtual bool key(int key, int entnum, uimenu *menu) override
+         {
+             (void)entnum; // unused
+             (void)menu;   // unused
+@@ -299,7 +299,7 @@ class wish_monster_callback: public uimenu_callback
+             return false;
+         }
+ 
+-        virtual void select(int entnum, uimenu *menu)
++        virtual void select(int entnum, uimenu *menu) override
+         {
+             if ( ! started ) {
+                 started = true;
+@@ -329,7 +329,7 @@ class wish_monster_callback: public uimenu_callback
+                       _("[/] find, [f]riendly, [h]allucination [i]ncrease group, [d]ecrease group, [q]uit"));
+         }
+ 
+-        virtual void refresh(uimenu *menu)
++        virtual void refresh(uimenu *menu) override
+         {
+             (void)menu; // unused
+             wrefresh(w_info);
+@@ -404,7 +404,7 @@ class wish_item_callback: public uimenu_callback
+             , standard_itype_ids( ids )
+         {
+         }
+-        virtual bool key(int key, int /*entnum*/, uimenu * /*menu*/)
++        virtual bool key(int key, int /*entnum*/, uimenu * /*menu*/) override
+         {
+             if ( key == 'f' ) {
+                 incontainer = !incontainer;
+@@ -413,7 +413,7 @@ class wish_item_callback: public uimenu_callback
+             return false;
+         }
+ 
+-        virtual void select(int entnum, uimenu *menu)
++        virtual void select(int entnum, uimenu *menu) override
+         {
+             const int starty = 3;
+             const int startx = menu->w_width - menu->pad_right;
