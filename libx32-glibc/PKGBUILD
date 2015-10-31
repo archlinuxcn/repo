@@ -1,22 +1,24 @@
-# $Id: PKGBUILD 127583 2015-02-12 00:16:48Z heftig $
+# $Id: PKGBUILD 144552 2015-10-21 09:06:37Z heftig $
 # Maintainer: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 # Contributor: Jan de Groot <jgc@archlinux.org>
 # Contributor: Allan McRae <allan@archlinux.org>
 # x32 Maintainer: Fantix King <fantix.king@gmail.com>
 
 # toolchain build order: linux-api-headers->glibc->binutils->gcc->binutils->glibc
+# NOTE: valgrind-multilib requires rebuild with each major glibc version
+
 
 _pkgbasename=glibc
 pkgname=libx32-$_pkgbasename
-pkgver=2.21
-pkgrel=2.1
+pkgver=2.22
+pkgrel=3.1
 pkgdesc="GNU C Library (x32 ABI)"
 arch=('x86_64')
 url="http://www.gnu.org/software/libc"
 license=('GPL' 'LGPL')
 groups=()
 depends=()
-makedepends=('gcc-multilib-x32>=4.9')
+makedepends=('gcc-multilib-x32>=5.2')
 backup=()
 conflicts=('glibc-x32-seed')
 provides=('glibc-x32-seed')
@@ -25,19 +27,19 @@ provides=('glibc-x32-seed')
 options=('!strip' 'staticlibs' '!emptydirs')
 
 source=(http://ftp.gnu.org/gnu/libc/${_pkgbasename}-${pkgver}.tar.xz{,.sig}
-        glibc-2.21-roundup.patch
+        glibc-2.22-roundup.patch
         libx32-glibc.conf)
-md5sums=('9cb398828e8f84f57d1f7d5588cf40cd'
+md5sums=('e51e02bf552a0a1fbbdc948fb2f5e83c'
          'SKIP'
-         'bf9d96b11c76b113606aae102da63d9d'
+         'b6b7a0e8d6e6520e40e3164ae773631d'
          '34a4169d2bdc5a3eb83676a0831aae57')
 validpgpkeys=('F37CDAB708E65EA183FD1AF625EF0A436C2A4AFF')  # Carlos O'Donell
 
 prepare() {
   cd ${srcdir}/glibc-${pkgver}
 
-  # glibc-2.21..75adf430
-  patch -p1 -i $srcdir/glibc-2.21-roundup.patch
+  # glibc-2.21..01b07c70
+  patch -p1 -i $srcdir/glibc-2.22-roundup.patch
 
   mkdir ${srcdir}/glibc-build
 }
@@ -56,10 +58,12 @@ build() {
     gcc_home=`ls -d /opt/gcc-x32-seed/lib/gcc/x86_64-unknown-linux-gnu/*/`
     export CC="/opt/gcc-x32-seed/bin/gcc -mx32 -B"${gcc_home}
     export CXX="/opt/gcc-x32-seed/bin/g++ -mx32 -B"${gcc_home}
+    seed_params='--target=x86_64-x32-linux --build=x86_64-linux --host=x86_64-x32-linux'
   else
     echo "Using gcc-multilib-x32"
     export CC="gcc -mx32"
     export CXX="g++ -mx32"
+    seed_params=''
   fi
   echo "slibdir=/usr/libx32" >> configparms
   echo "rtlddir=/usr/libx32" >> configparms
@@ -82,8 +86,8 @@ build() {
       --enable-lock-elision \
       --enable-multi-arch \
       --disable-werror \
+      ${seed_params} \
       x86_64-unknown-linux-gnux32
-      #--target=x86_64-x32-linux --build=x86_64-linux --host=x86_64-x32-linux \
 
   # build libraries with hardening disabled
   echo "build-programs=no" >> configparms
@@ -100,27 +104,28 @@ build() {
 }
 
 check() {
-  # the linker commands need to be reordered - fixed in 2.19
-  LDFLAGS=${LDFLAGS/--as-needed,/}
-
   cd ${srcdir}/glibc-build
 
   if [ -x "/opt/gcc-x32-seed/bin/gcc" ]; then
     make check || true
   else
-    # tst-cleanupx4 failure on i686 is "expected"
+    # some failures are "expected"
     make check || true
   fi
 }
 
 package() {
   cd ${srcdir}/glibc-build
+
+
+
+
   make install_root=${pkgdir} install
 
   rm -rf ${pkgdir}/{etc,sbin,usr/{bin,sbin,share},var}
 
-  # We need one x32 ABI specific header file
-  find ${pkgdir}/usr/include -type f -not -name stubs-x32.h -delete
+  # We need to keep x32 ABI specific header files
+  find ${pkgdir}/usr/include -type f -not -name '*-x32.h' -delete
 
 
   # Dynamic linker
@@ -138,6 +143,9 @@ package() {
   # in addition libcrypt appears widely required
   rm $pkgdir/usr/libx32/lib{anl,BrokenLocale,nsl,resolv,rt,util}.a
 
+
+
+
   # Do not strip the following files for improved debugging support
   # ("improved" as in not breaking gdb and valgrind...):
   #   ld-${pkgver}.so
@@ -154,11 +162,11 @@ package() {
 
   strip $STRIP_STATIC usr/libx32/*.a
 
-  strip $STRIP_SHARED usr/libx32/{libanl,libBrokenLocale,libcidn,libcrypt}-*.so \
+  strip $STRIP_SHARED usr/libx32/lib{anl,BrokenLocale,cidn,crypt}-*.so \
                       usr/libx32/libnss_{compat,db,dns,files,hesiod,nis,nisplus}-*.so \
-                      usr/libx32/{libdl,libm,libnsl,libresolv,librt,libutil}-*.so \
-                      usr/libx32/{libmemusage,libpcprofile,libSegFault}.so \
-                      usr/libx32/{audit,gconv}/*.so
+                      usr/libx32/lib{dl,m,nsl,resolv,rt,util}-*.so \
+                      usr/libx32/lib{memusage,pcprofile,SegFault}.so \
+                      usr/libx32/{audit,gconv}/*.so || true
 
   # Fix issue that core/glibc didn't fix the path to /lib/ld-linux-x32.so.2
   ln -s /usr/lib ${pkgdir}/libx32

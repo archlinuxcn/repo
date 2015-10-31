@@ -1,0 +1,666 @@
+diff --git a/ChangeLog b/ChangeLog
+index cb9124e..d0d2cbd 100644
+--- a/ChangeLog
++++ b/ChangeLog
+@@ -1,3 +1,74 @@
++2015-08-31  Brett Neumeier <brett@neumeier.us>
++
++	[BZ #18870]
++	* sysdeps/sparc/sparc32/sem_open.c: Add missing #include
++
++2015-08-28  Mike Frysinger  <vapier@gentoo.org>
++
++	[BZ #18887]
++	* misc/Makefile (tests): Add tst-mntent-blank-corrupt and
++	tst-mntent-blank-passno.
++	* misc/mntent_r.c (__getmntent_r): Do not read past buffer[0].
++	* misc/tst-mntent-blank-corrupt.c: New test.
++	* misc/tst-mntent-blank-passno.c: New test ripped from ...
++	* misc/tst-mntent.c (do_test): ... here.
++
++2015-08-25  Roland McGrath  <roland@hack.frob.com>
++
++	* sysdeps/nacl/start.c (_start): Call __nacl_main instead of main
++	if the weak reference is not null.
++
++2015-08-19  Andrew Senkevich  <andrew.senkevich@intel.com>
++
++	[BZ #18796]
++	* scripts/test-installation.pl: Don't add -lmvec to build options
++	if libmvec wasn't built.
++	* NEWS: Mention this fix.
++
++2015-08-10  Maxim Ostapenko  <m.ostapenko@partner.samsung.com>
++
++	[BZ #18778]
++	* elf/Makefile (tests): Add Add tst-nodelete2.
++	(modules-names): Add tst-nodelete2mod.
++	(tst-nodelete2mod.so-no-z-defs): New.
++	($(objpfx)tst-nodelete2): Likewise.
++	($(objpfx)tst-nodelete2.out): Likewise.
++	(LDFLAGS-tst-nodelete2): Likewise.
++	* elf/dl-close.c (_dl_close_worker): Move DF_1_NODELETE clearing
++	out of loop through all loaded libraries.
++	* elf/tst-nodelete2.c: New file.
++	* elf/tst-nodelete2mod.c: Likewise.
++
++2015-08-10  Andreas Schwab  <schwab@suse.de>
++
++	[BZ #18781]
++	* sysdeps/unix/sysv/linux/openat.c (__OPENAT) [MORE_OFLAGS]: Add
++	MORE_OFLAGS to oflag.
++	* io/test-lfs.c (do_test): Test openat64.
++
++2015-08-08  John David Anglin  <danglin@gcc.gnu.org>
++
++	[BZ #18787]
++	* sysdeps/unix/sysv/linux/hppa/bits/atomic.h (_LWS_CLOBBER): Revise
++	clobber registers.
++	(atomic_compare_and_exchange_val_acq): Use register asms to assign
++	operand registers.  Use register %r20 for EAGAIN and EDEADLOCK checks.
++	Cast return to __typeof (oldval).
++
++2015-08-08  Mike Frysinger  <vapier@gentoo.org>
++
++	* sysdeps/unix/sysv/linux/microblaze/sysdep.h: Wrap the whole file
++	in _LINUX_MICROBLAZE_SYSDEP_H defines.  Include sysdeps/unix/sysdep.h
++	and delete sys/syscall.h include.
++
++2015-08-07  Mike Frysinger  <vapier@gentoo.org>
++
++	* sysdeps/hppa/dl-symaddr.c (_dl_symbol_address): Add rtld_hidden_def.
++
++2015-08-05  Zack Weinberg  <zackw@panix.com>
++
++	* misc/regexp.h: Update comments.
++
+ 2015-08-05  Carlos O'Donell  <carlos@systemhalted.org>
+ 
+ 	* version.h (RELEASE): Set to "stable".
+diff --git a/NEWS b/NEWS
+index 4c31de7..ce0255a 100644
+--- a/NEWS
++++ b/NEWS
+@@ -5,6 +5,12 @@ See the end for copying conditions.
+ Please send GNU C library bug reports via <http://sourceware.org/bugzilla/>
+ using `glibc' in the "product" field.
+ 
++Version 2.22.1
++
++* The following bugs are resolved with this release:
++
++  18778, 18781, 18787, 18796, 18870, 18887.
++
+ Version 2.22
+ 
+ * The following bugs are resolved with this release:
+@@ -84,7 +90,7 @@ Version 2.22
+   release.  Use of this header will trigger a deprecation warning.
+   Application developers should update their code to use <regex.h> instead.
+ 
+-  This header was formerly part of SUSv2, but was deprecated in 1997 and
++  This header was formerly part of SUS, but was deprecated in 1994 and
+   removed from the standard in 2001.  Also, the glibc implementation
+   leaks memory.  See BZ#18681 for more details.
+ 
+diff --git a/elf/Makefile b/elf/Makefile
+index 4ceeaf8..71a18a1 100644
+--- a/elf/Makefile
++++ b/elf/Makefile
+@@ -148,7 +148,8 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
+ 	 tst-unique1 tst-unique2 $(if $(CXX),tst-unique3 tst-unique4 \
+ 	 tst-nodelete) \
+ 	 tst-initorder tst-initorder2 tst-relsort1 tst-null-argv \
+-	 tst-ptrguard1 tst-tlsalign tst-tlsalign-extern tst-nodelete-opened
++	 tst-ptrguard1 tst-tlsalign tst-tlsalign-extern tst-nodelete-opened \
++	 tst-nodelete2
+ #	 reldep9
+ ifeq ($(build-hardcoded-path-in-tests),yes)
+ tests += tst-dlopen-aout
+@@ -218,7 +219,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
+ 		tst-initorder2d \
+ 		tst-relsort1mod1 tst-relsort1mod2 tst-array2dep \
+ 		tst-array5dep tst-null-argv-lib \
+-		tst-tlsalign-lib tst-nodelete-opened-lib
++		tst-tlsalign-lib tst-nodelete-opened-lib tst-nodelete2mod
+ ifeq (yes,$(have-protected-data))
+ modules-names += tst-protected1moda tst-protected1modb
+ tests += tst-protected1a tst-protected1b
+@@ -594,6 +595,7 @@ tst-auditmod9b.so-no-z-defs = yes
+ tst-nodelete-uniquemod.so-no-z-defs = yes
+ tst-nodelete-rtldmod.so-no-z-defs = yes
+ tst-nodelete-zmod.so-no-z-defs = yes
++tst-nodelete2mod.so-no-z-defs = yes
+ 
+ ifeq ($(build-shared),yes)
+ # Build all the modules even when not actually running test programs.
+@@ -1164,6 +1166,11 @@ $(objpfx)tst-nodelete.out: $(objpfx)tst-nodelete-uniquemod.so \
+ LDFLAGS-tst-nodelete = -rdynamic
+ LDFLAGS-tst-nodelete-zmod.so = -Wl,--enable-new-dtags,-z,nodelete
+ 
++$(objpfx)tst-nodelete2: $(libdl)
++$(objpfx)tst-nodelete2.out: $(objpfx)tst-nodelete2mod.so
++
++LDFLAGS-tst-nodelete2 = -rdynamic
++
+ $(objpfx)tst-initorder-cmp.out: tst-initorder.exp $(objpfx)tst-initorder.out
+ 	cmp $^ > $@; \
+ 	$(evaluate-test)
+diff --git a/elf/dl-close.c b/elf/dl-close.c
+index 9105277..c897247 100644
+--- a/elf/dl-close.c
++++ b/elf/dl-close.c
+@@ -144,6 +144,14 @@ _dl_close_worker (struct link_map *map, bool force)
+   char done[nloaded];
+   struct link_map *maps[nloaded];
+ 
++  /* Clear DF_1_NODELETE to force object deletion.  We don't need to touch
++     l_tls_dtor_count because forced object deletion only happens when an
++     error occurs during object load.  Destructor registration for TLS
++     non-POD objects should not have happened till then for this
++     object.  */
++  if (force)
++    map->l_flags_1 &= ~DF_1_NODELETE;
++
+   /* Run over the list and assign indexes to the link maps and enter
+      them into the MAPS array.  */
+   int idx = 0;
+@@ -153,13 +161,6 @@ _dl_close_worker (struct link_map *map, bool force)
+       maps[idx] = l;
+       ++idx;
+ 
+-      /* Clear DF_1_NODELETE to force object deletion.  We don't need to touch
+-	 l_tls_dtor_count because forced object deletion only happens when an
+-	 error occurs during object load.  Destructor registration for TLS
+-	 non-POD objects should not have happened till then for this
+-	 object.  */
+-      if (force)
+-	l->l_flags_1 &= ~DF_1_NODELETE;
+     }
+   assert (idx == nloaded);
+ 
+diff --git a/elf/tst-nodelete2.c b/elf/tst-nodelete2.c
+new file mode 100644
+index 0000000..388e8af
+--- /dev/null
++++ b/elf/tst-nodelete2.c
+@@ -0,0 +1,37 @@
++#include "../dlfcn/dlfcn.h"
++#include <stdio.h>
++#include <stdlib.h>
++#include <gnu/lib-names.h>
++
++static int
++do_test (void)
++{
++  int result = 0;
++
++  printf ("\nOpening pthread library.\n");
++  void *pthread = dlopen (LIBPTHREAD_SO, RTLD_LAZY);
++
++  /* This is a test for correct DF_1_NODELETE clearing when dlopen failure
++     happens.  We should clear DF_1_NODELETE for failed library only, because
++     doing this for others (e.g. libpthread) might cause them to be unloaded,
++     that may lead to some global references (e.g. __rtld_lock_unlock) to be
++     broken.  The dlopen should fail because of undefined symbols in shared
++     library, that cause DF_1_NODELETE to be cleared.  For libpthread, this
++     flag should be set, because if not, SIGSEGV will happen in dlclose.  */
++  if (dlopen ("tst-nodelete2mod.so", RTLD_NOW) != NULL)
++    {
++      printf ("Unique symbols test failed\n");
++      result = 1;
++    }
++
++  if (pthread)
++    dlclose (pthread);
++
++  if (result == 0)
++    printf ("SUCCESS\n");
++
++  return result;
++}
++
++#define TEST_FUNCTION do_test ()
++#include "../test-skeleton.c"
+diff --git a/elf/tst-nodelete2mod.c b/elf/tst-nodelete2mod.c
+new file mode 100644
+index 0000000..e88c756
+--- /dev/null
++++ b/elf/tst-nodelete2mod.c
+@@ -0,0 +1,7 @@
++/* Undefined symbol.  */
++extern int not_exist (void);
++
++int foo (void)
++{
++  return not_exist ();
++}
+diff --git a/elf/tst-znodelete-zlib.cc b/elf/tst-znodelete-zlib.cc
+deleted file mode 100644
+index 1e8f368..0000000
+--- a/elf/tst-znodelete-zlib.cc
++++ /dev/null
+@@ -1,6 +0,0 @@
+-extern int not_exist (void);
+-
+-int foo (void)
+-{
+-  return  not_exist ();
+-}
+diff --git a/io/test-lfs.c b/io/test-lfs.c
+index 539c2a2..b6ebae4 100644
+--- a/io/test-lfs.c
++++ b/io/test-lfs.c
+@@ -144,7 +144,7 @@ test_ftello (void)
+ int
+ do_test (int argc, char *argv[])
+ {
+-  int ret;
++  int ret, fd2;
+   struct stat64 statbuf;
+ 
+   ret = lseek64 (fd, TWO_GB+100, SEEK_SET);
+@@ -195,6 +195,25 @@ do_test (int argc, char *argv[])
+     error (EXIT_FAILURE, 0, "stat reported size %lld instead of %lld.",
+ 	   (long long int) statbuf.st_size, (TWO_GB + 100 + 5));
+ 
++  fd2 = openat64 (AT_FDCWD, name, O_RDWR);
++  if (fd2 == -1)
++    {
++      if (errno == ENOSYS)
++	{
++	  /* Silently ignore this test.  */
++	  error (0, 0, "openat64 is not supported");
++	}
++      else
++	error (EXIT_FAILURE, errno, "openat64 failed to open big file");
++    }
++  else
++    {
++      ret = close (fd2);
++
++      if (ret == -1)
++	error (EXIT_FAILURE, errno, "error closing file");
++    }
++
+   test_ftello ();
+ 
+   return 0;
+diff --git a/misc/Makefile b/misc/Makefile
+index aecb0da..2f5edf6 100644
+--- a/misc/Makefile
++++ b/misc/Makefile
+@@ -76,7 +76,8 @@ install-lib := libg.a
+ gpl2lgpl := error.c error.h
+ 
+ tests := tst-dirname tst-tsearch tst-fdset tst-efgcvt tst-mntent tst-hsearch \
+-	 tst-error1 tst-pselect tst-insremque tst-mntent2 bug-hsearch1
++	 tst-error1 tst-pselect tst-insremque tst-mntent2 bug-hsearch1 \
++	 tst-mntent-blank-corrupt tst-mntent-blank-passno
+ ifeq ($(run-built-tests),yes)
+ tests-special += $(objpfx)tst-error1-mem.out
+ endif
+diff --git a/misc/mntent_r.c b/misc/mntent_r.c
+index 6159873..4f26998 100644
+--- a/misc/mntent_r.c
++++ b/misc/mntent_r.c
+@@ -136,7 +136,9 @@ __getmntent_r (FILE *stream, struct mntent *mp, char *buffer, int bufsiz)
+       end_ptr = strchr (buffer, '\n');
+       if (end_ptr != NULL)	/* chop newline */
+ 	{
+-	  while (end_ptr[-1] == ' ' || end_ptr[-1] == '\t')
++	  /* Do not walk past the start of buffer if it's all whitespace.  */
++	  while (end_ptr != buffer
++		 && (end_ptr[-1] == ' ' || end_ptr[-1] == '\t'))
+             end_ptr--;
+ 	  *end_ptr = '\0';
+ 	}
+diff --git a/misc/regexp.h b/misc/regexp.h
+index 3460989..42394f7 100644
+--- a/misc/regexp.h
++++ b/misc/regexp.h
+@@ -19,10 +19,11 @@
+ #ifndef _REGEXP_H
+ #define _REGEXP_H	1
+ 
+-/* The contents of this header file were standardized in the
+-   Single Unix Specification, Version 2 (1997) but marked as
+-   LEGACY; new applications were already being encouraged to
+-   use <regex.h> instead.  POSIX.1-2001 removed this header.
++/* The contents of this header file were originally standardized in
++   the Single Unix Specification, Issue 3 (1992).  In Issue 4 (1994)
++   the header was marked as TO BE WITHDRAWN, and new applications
++   were encouraged to use <regex.h> instead.  It was officially
++   withdrawn from the standard in Issue 6 (aka POSIX.1-2001).
+ 
+    This header is provided only for backward compatibility.
+    It will be removed in the next release of the GNU C Library.
+diff --git a/misc/tst-mntent-blank-corrupt.c b/misc/tst-mntent-blank-corrupt.c
+new file mode 100644
+index 0000000..92266a3
+--- /dev/null
++++ b/misc/tst-mntent-blank-corrupt.c
+@@ -0,0 +1,45 @@
++/* Make sure blank lines does not cause memory corruption BZ #18887.
++
++   Copyright (C) 2009-2015 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <http://www.gnu.org/licenses/>.  */
++
++#include <mntent.h>
++#include <stdio.h>
++#include <string.h>
++
++/* Make sure blank lines don't trigger memory corruption.  This doesn't happen
++   for all targets though, so it's a best effort test BZ #18887.  */
++static int
++do_test (void)
++{
++  FILE *fp;
++
++  fp = tmpfile ();
++  fputs ("\n \n/foo\\040dir /bar\\040dir auto bind \t \n", fp);
++  rewind (fp);
++
++  /* The corruption happens here ...  */
++  getmntent (fp);
++  /* ... but trigers here.  */
++  endmntent (fp);
++
++  /* If the test failed, we would crash, and not hit this point.  */
++  return 0;
++}
++
++#define TEST_FUNCTION do_test ()
++#include "../test-skeleton.c"
+diff --git a/misc/tst-mntent-blank-passno.c b/misc/tst-mntent-blank-passno.c
+new file mode 100644
+index 0000000..fc04291
+--- /dev/null
++++ b/misc/tst-mntent-blank-passno.c
+@@ -0,0 +1,53 @@
++/* Make sure trailing whitespace is handled properly BZ #17273.
++
++   Copyright (C) 2009-2015 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <http://www.gnu.org/licenses/>.  */
++
++#include <mntent.h>
++#include <stdio.h>
++#include <string.h>
++
++/* Check entries to make sure trailing whitespace is ignored and we return the
++   correct passno value BZ #17273.  */
++static int
++do_test (void)
++{
++  int result = 0;
++  FILE *fp;
++  struct mntent *mnt;
++
++  fp = tmpfile ();
++  fputs ("/foo\\040dir /bar\\040dir auto bind \t \n", fp);
++  rewind (fp);
++
++  mnt = getmntent (fp);
++  if (strcmp (mnt->mnt_fsname, "/foo dir") != 0
++      || strcmp (mnt->mnt_dir, "/bar dir") != 0
++      || strcmp (mnt->mnt_type, "auto") != 0
++      || strcmp (mnt->mnt_opts, "bind") != 0
++      || mnt->mnt_freq != 0
++      || mnt->mnt_passno != 0)
++    {
++      puts ("Error while reading entry with trailing whitespaces");
++      result = 1;
++    }
++
++  return result;
++}
++
++#define TEST_FUNCTION do_test ()
++#include "../test-skeleton.c"
+diff --git a/misc/tst-mntent.c b/misc/tst-mntent.c
+index 876c89f..820b354 100644
+--- a/misc/tst-mntent.c
++++ b/misc/tst-mntent.c
+@@ -73,26 +73,6 @@ main (int argc, char *argv[])
+ 	  puts ("Error while reading written entry back in");
+ 	  result = 1;
+ 	}
+-
+-      /* Part III: Entry with whitespaces at the end of a line. */
+-      rewind (fp);
+-
+-      fputs ("/foo\\040dir /bar\\040dir auto bind \t \n", fp);
+-
+-      rewind (fp);
+-
+-      mnt = getmntent (fp);
+-
+-      if (strcmp (mnt->mnt_fsname, "/foo dir") != 0
+-	  || strcmp (mnt->mnt_dir, "/bar dir") != 0
+-	  || strcmp (mnt->mnt_type, "auto") != 0
+-	  || strcmp (mnt->mnt_opts, "bind") != 0
+-	  || mnt->mnt_freq != 0
+-	  || mnt->mnt_passno != 0)
+-	{
+-	  puts ("Error while reading entry with trailing whitespaces");
+-	  result = 1;
+-	}
+    }
+ 
+   return result;
+diff --git a/scripts/test-installation.pl b/scripts/test-installation.pl
+index cac1562..79b2b3e 100755
+--- a/scripts/test-installation.pl
++++ b/scripts/test-installation.pl
+@@ -80,16 +80,25 @@ arglist: while (@ARGV) {
+ # We expect none or one argument.
+ if ($#ARGV == -1) {
+     $soversions="soversions.mk";
++    $config="config.make";
+ } elsif ($#ARGV == 0) {
+     if (-d $ARGV[0]) {
+       $soversions = "$ARGV[0]/soversions.mk";
++      $config = "$ARGV[0]/config.make";
+     } else {
+-      $soversions = $ARGV[0];
++      $soversions = $dir = $ARGV[0];
++      $dir =~ s!/?[^/]*/*$!!;
++      $config = $dir . "/config.make";
+     }
+ } else {
+     die "Wrong number of arguments.";
+ }
+ 
++if (system ("grep -q \"build-mathvec = yes\" $config") == 0) {
++    $build_mathvec = 1;
++} else {
++    $build_mathvec = 0;
++}
+ 
+ # Read names and versions of all shared libraries that are part of
+ # glibc
+@@ -111,6 +120,8 @@ while (<SOVERSIONS>) {
+     # - libthread_db since it contains unresolved references
+     # - it's just a test NSS module
+     # - We don't provide the libgcc so we don't test it
++    # - libmvec if it wasn't built
++    next if ($build_mathvec == 0 && $name eq "mvec");
+     if ($name ne "nss_ldap" && $name ne "db1"
+ 	&& !($name =~/^nss1_/) && $name ne "thread_db"
+ 	&& $name ne "nss_test1" && $name ne "libgcc_s") {
+diff --git a/sysdeps/hppa/dl-symaddr.c b/sysdeps/hppa/dl-symaddr.c
+index b707c19..89d8baf 100644
+--- a/sysdeps/hppa/dl-symaddr.c
++++ b/sysdeps/hppa/dl-symaddr.c
+@@ -33,3 +33,4 @@ _dl_symbol_address (struct link_map *map, const ElfW(Sym) *ref)
+   else
+     return (void *) value;
+ }
++rtld_hidden_def (_dl_symbol_address)
+diff --git a/sysdeps/nacl/start.c b/sysdeps/nacl/start.c
+index a4b6dd3..8e8bc1a 100644
+--- a/sysdeps/nacl/start.c
++++ b/sysdeps/nacl/start.c
+@@ -44,6 +44,10 @@
+ /* The application defines this, of course.  */
+ extern int main (int argc, char **argv, char **envp);
+ 
++/* But maybe it defines this too, in which case it takes precedence.  */
++extern int __nacl_main (int argc, char **argv, char **envp)
++  __attribute__ ((weak));
++
+ /* These are defined in libc.  */
+ extern int __libc_csu_init (int argc, char **argv, char **envp);
+ extern void __libc_csu_fini (void);
+@@ -59,7 +63,7 @@ _start (uint32_t info[])
+ {
+   /* The generic code actually assumes that envp follows argv.  */
+ 
+-  __libc_start_main (&main,
++  __libc_start_main (&__nacl_main ?: &main,
+ 		     nacl_startup_argc (info),
+ 		     nacl_startup_argv (info),
+ 		     nacl_startup_auxv (info),
+diff --git a/sysdeps/sparc/sparc32/sem_open.c b/sysdeps/sparc/sparc32/sem_open.c
+index 16cb9ad..59df2d7 100644
+--- a/sysdeps/sparc/sparc32/sem_open.c
++++ b/sysdeps/sparc/sparc32/sem_open.c
+@@ -29,6 +29,7 @@
+ #include <sys/mman.h>
+ #include <sys/stat.h>
+ #include "semaphoreP.h"
++#include <futex-internal.h>
+ #include <shm-directory.h>
+ 
+ 
+diff --git a/sysdeps/unix/sysv/linux/hppa/bits/atomic.h b/sysdeps/unix/sysv/linux/hppa/bits/atomic.h
+index abde83e..6e73504 100644
+--- a/sysdeps/unix/sysv/linux/hppa/bits/atomic.h
++++ b/sysdeps/unix/sysv/linux/hppa/bits/atomic.h
+@@ -56,42 +56,41 @@ typedef uintmax_t uatomic_max_t;
+ #define _LWS "0xb0"
+ #define _LWS_CAS "0"
+ /* Note r31 is the link register.  */
+-#define _LWS_CLOBBER "r1", "r26", "r25", "r24", "r23", "r22", "r21", "r20", "r28", "r31", "memory"
++#define _LWS_CLOBBER "r1", "r23", "r22", "r20", "r31", "memory"
+ /* String constant for -EAGAIN.  */
+ #define _ASM_EAGAIN "-11"
+ /* String constant for -EDEADLOCK.  */
+ #define _ASM_EDEADLOCK "-45"
+ 
+ #if __ASSUME_LWS_CAS
+-/* The only basic operation needed is compare and exchange.  */
++/* The only basic operation needed is compare and exchange.  The mem
++   pointer must be word aligned.  */
+ # define atomic_compare_and_exchange_val_acq(mem, newval, oldval)	\
+   ({									\
+-     volatile int lws_errno;						\
+-     __typeof__ (*mem) lws_ret;						\
+-     asm volatile(							\
++     register long lws_errno asm("r21");				\
++     register unsigned long lws_ret asm("r28");				\
++     register unsigned long lws_mem asm("r26") = (unsigned long)(mem);	\
++     register unsigned long lws_old asm("r25") = (unsigned long)(oldval);\
++     register unsigned long lws_new asm("r24") = (unsigned long)(newval);\
++     __asm__ __volatile__(						\
+ 	"0:					\n\t"			\
+-	"copy	%2, %%r26			\n\t"			\
+-	"copy	%3, %%r25			\n\t"			\
+-	"copy	%4, %%r24			\n\t"			\
+ 	"ble	" _LWS "(%%sr2, %%r0)		\n\t"			\
+ 	"ldi	" _LWS_CAS ", %%r20		\n\t"			\
+-	"ldi	" _ASM_EAGAIN ", %%r24		\n\t"			\
+-	"cmpb,=,n %%r24, %%r21, 0b		\n\t"			\
++	"ldi	" _ASM_EAGAIN ", %%r20		\n\t"			\
++	"cmpb,=,n %%r20, %%r21, 0b		\n\t"			\
+ 	"nop					\n\t"			\
+-	"ldi	" _ASM_EDEADLOCK ", %%r25	\n\t"			\
+-	"cmpb,=,n %%r25, %%r21, 0b		\n\t"			\
++	"ldi	" _ASM_EDEADLOCK ", %%r20	\n\t"			\
++	"cmpb,=,n %%r20, %%r21, 0b		\n\t"			\
+ 	"nop					\n\t"			\
+-	"stw	%%r28, %0			\n\t"			\
+-	"stw	%%r21, %1			\n\t"			\
+-	: "=m" (lws_ret), "=m" (lws_errno)				\
+-        : "r" (mem), "r" (oldval), "r" (newval)				\
++	: "=r" (lws_ret), "=r" (lws_errno)				\
++	: "r" (lws_mem), "r" (lws_old), "r" (lws_new)			\
+ 	: _LWS_CLOBBER							\
+      );									\
+ 									\
+-     if(lws_errno == -EFAULT || lws_errno == -ENOSYS)			\
++     if (lws_errno == -EFAULT || lws_errno == -ENOSYS)			\
+ 	ABORT_INSTRUCTION;						\
+ 									\
+-     lws_ret;								\
++     (__typeof (oldval)) lws_ret;					\
+    })
+ 
+ # define atomic_compare_and_exchange_bool_acq(mem, newval, oldval)	\
+diff --git a/sysdeps/unix/sysv/linux/microblaze/sysdep.h b/sysdeps/unix/sysv/linux/microblaze/sysdep.h
+index 83c0340..9d5c542 100644
+--- a/sysdeps/unix/sysv/linux/microblaze/sysdep.h
++++ b/sysdeps/unix/sysv/linux/microblaze/sysdep.h
+@@ -16,8 +16,11 @@
+    License along with the GNU C Library; if not, see
+    <http://www.gnu.org/licenses/>.  */
+ 
++#ifndef _LINUX_MICROBLAZE_SYSDEP_H
++#define _LINUX_MICROBLAZE_SYSDEP_H 1
++
++#include <sysdeps/unix/sysdep.h>
+ #include <sysdeps/microblaze/sysdep.h>
+-#include <sys/syscall.h>
+ 
+ /* Defines RTLD_PRIVATE_ERRNO.  */
+ #include <dl-sysdep.h>
+@@ -305,3 +308,5 @@ SYSCALL_ERROR_LABEL_DCL:                            \
+ # define PTR_DEMANGLE(var) (void) (var)
+ 
+ #endif /* not __ASSEMBLER__ */
++
++#endif /* _LINUX_MICROBLAZE_SYSDEP_H */
+diff --git a/sysdeps/unix/sysv/linux/openat.c b/sysdeps/unix/sysv/linux/openat.c
+index 6777123..ad8e31d 100644
+--- a/sysdeps/unix/sysv/linux/openat.c
++++ b/sysdeps/unix/sysv/linux/openat.c
+@@ -68,6 +68,11 @@ __OPENAT (int fd, const char *file, int oflag, ...)
+       va_end (arg);
+     }
+ 
++  /* We have to add the O_LARGEFILE flag for openat64.  */
++#ifdef MORE_OFLAGS
++  oflag |= MORE_OFLAGS;
++#endif
++
+   return SYSCALL_CANCEL (openat, fd, file, oflag, mode);
+ }
+ libc_hidden_def (__OPENAT)
