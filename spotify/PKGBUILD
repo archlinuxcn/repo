@@ -2,8 +2,8 @@
 # Contributor: Eothred <yngve.levinsen@gmail.com>
 
 pkgname=spotify
-pkgver=1.0.16.104
-_anotherpkgver=.g3b776c9e
+pkgver=1.0.17.75
+_anotherpkgver=.g8f111100
 pkgrel=1
 pkgdesc="A proprietary music streaming service"
 arch=('x86_64' 'i686')
@@ -17,10 +17,10 @@ md5sums=('3f843269e92d536cefdd2f68df11f248'
 'ef25ddc5b6bf8fe1a0d64cbd79e1f7b4')
 
 source_x86_64=("http://repository.spotify.com/pool/non-free/s/spotify-client/spotify-client_${pkgver}${_anotherpkgver}_amd64.deb")
-md5sums_x86_64=('573e4438f3979c102f7fc2bb5e30fb0d')
+md5sums_x86_64=('6e7cdbc4321ddf218bff5f36a565f0c2')
 
 source_i686=("http://repository.spotify.com/pool/non-free/s/spotify-client/spotify-client_${pkgver}${_anotherpkgver}_i386.deb")
-md5sums_i686=('229a7afe41fe3b286a049f4380d3a9c6')
+md5sums_i686=('843743f3706aeb65a122625c1183c859')
 
 depends=("alsa-lib>=1.0.14" "gconf" "gtk2" "glib2" "nss" "libsystemd" "libxtst" "libx11" "libxss" "libcurl-compat")
 optdepends=('desktop-file-utils: Adds URI support to compatible desktop environments'
