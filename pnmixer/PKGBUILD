@@ -1,24 +1,20 @@
 # Maintainer: Brian Bidulock <bidulock@openss7.org>
 pkgname=pnmixer
-pkgver=0.5.1
-pkgrel=3
+pkgver=0.6.1
+pkgrel=2
 pkgdesc="GTK volume mixer applet that runs in the system tray."
 arch=('i686' 'x86_64')
 license=('GPL')
 url="https://github.com/nicklan/pnmixer"
-groups=('pnmixer')
-depends=('gtk2' 'alsa-lib')
-
-source=(https://github.com/downloads/nicklan/pnmixer/pnmixer-${pkgver}.tar.gz pnmixer-0.5.1-configure.in.patch)
-md5sums=('2288af95ab280721b39b7c33601d5dd4'
-         'd7aef8eb1cec18858fb2faefe6584276')
+makedepends=('intltool')
+depends=('gtk2' 'alsa-lib' 'libnotify')
+install="${pkgname}.install"
+source=("https://github.com/nicklan/pnmixer/releases/download/v0.6/pnmixer-${pkgver}.tar.gz")
+md5sums=('42e026df389901cc1e0a72db0d256fd0')
 build() {
   cd $pkgname-$pkgver
-
-  patch -Np0 -i ../pnmixer-0.5.1-configure.in.patch
-  ./autogen.sh
-  ./configure --prefix=/usr
-  make
+  ./autogen.sh --without-gtk3 --prefix=/usr
+  make V=0
 }
 package() {
   cd $pkgname-$pkgver
