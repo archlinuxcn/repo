@@ -2,24 +2,21 @@
 
 _pkgname=liri-browser
 pkgname=$_pkgname-git
-pkgver=0.3.r141.ge46f823
+pkgver=0.3.r183.g54cce59
 pkgrel=1
 pkgdesc="A Web Browser using the QML Material framework from the Papyros Project"
 arch=("i686" "x86_64")
 url="https://github.com/liri-browser/liri-browser"
 license=("GPLv3")
-depends=("qt5-base" "qt5-webengine" "qml-material" "qt5-multimedia" 'qt5-multimedia' 'vlc' "vlc")
+depends=("qt5-base" "qt5-webengine" "qml-material" "qt5-multimedia" "vlc"
+         "libvlc-qt-git")
 makedepends=("git")
 provides=("$_pkgname" "$pkgname")
 conflicts=("$_pkgname")
 install=$pkgname.install
-source=("$pkgname::git+https://github.com/liri-browser/liri-browser.git"
-        "liriplayer::git+https://github.com/pierremtb/liri-player.git"
-        "qmlvlc::git+https://github.com/RSATom/QmlVlc.git"
-        "yalibvlcwrapper::git+https://github.com/RSATom/ya-libvlc-wrapper.git"
-        "libvlcsdk::git+https://github.com/RSATom/libvlc-sdk.git"
+source=("$pkgname::git+https://github.com/liri-project/liri-browser.git"
         "liri-browser.sh" "liri-browser.desktop" "$pkgname.install")
-sha256sums=("SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP")
+sha256sums=("SKIP" "SKIP" "SKIP" "SKIP")
 
 pkgver() {
     cd "$pkgname"
@@ -28,29 +25,6 @@ pkgver() {
 }
 
 build() {
-  pushd $(pwd) >> /dev/null
-
-  cd "$srcdir/$pkgname"
-  git submodule init
-  git config submodule.dependencies/liri-player.url "$srcdir/liriplayer"
-  git submodule update
-
-  cd "dependencies/liri-player"
-  git submodule init
-  git config submodule.dependencies/QmlVlc.url "$srcdir/qmlvlc"
-  git submodule update
-
-  cd "dependencies/QmlVlc"
-  git submodule init
-  git config submodule.libvlc_wrapper.url "$srcdir/yalibvlcwrapper"
-  git submodule update
-
-  cd "libvlc_wrapper"
-  git submodule init
-  git config submodule.libvlc-sdk.url "$srcdir/libvlcsdk"
-  git submodule update
-
-  popd >> /dev/null
 	mkdir -p build
 	cd build
 	qmake "$srcdir/$pkgname"
