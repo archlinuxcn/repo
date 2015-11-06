@@ -14,17 +14,29 @@ depends=('bzip2' 'bash' 'libnatspec')
 conflicts=('unzip')
 provides=('unzip')
 source=('http://downloads.sourceforge.net/infozip/unzip60.tar.gz' 
- unzip-6.0-alt-natspec.patch
- test_compr_eb.patch getZip64Data.patch crc32.patch )
+ 'unzip-6.0-alt-natspec.patch'
+ 'overflow-fsize.patch'
+ 'cve20149636.patch'
+ 'test_compr_eb.patch'
+ 'getZip64Data.patch'
+ 'crc32.patch'
+ 'empty-input.patch'
+ 'csiz-underflow.patch'
+ 'nextbyte-overflow.patch' )
 sha256sums=('036d96991646d0449ed0aa952e4fbe21b476ce994abc276e49d30e686708bd37'
- SKIP SKIP SKIP SKIP )
+ SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP )
 
 build() {
   cd ${srcdir}/${pkgname/-natspec/}${pkgver/./}
   patch -p1 -i ${srcdir}/unzip-6.0-alt-natspec.patch || return 1
+  patch -p1 -i ${srcdir}/overflow-fsize.patch || return 1 #FS#44171
+  patch -p1 -i ${srcdir}/cve20149636.patch || return 1 #FS#44171
   patch -i ${srcdir}/test_compr_eb.patch || return 1 # FS#43391
   patch -i ${srcdir}/getZip64Data.patch || return 1 # FS#43300
   patch -i ${srcdir}/crc32.patch || return 1 # FS#43300
+  patch -p1 -i ${srcdir}/empty-input.patch || return 1 # FS#46955
+  patch -p1 -i ${srcdir}/csiz-underflow.patch || return 1 # FS#46955
+  patch -p1 -i ${srcdir}/nextbyte-overflow.patch || return 1 # FS#46955
   export CFLAGS="$CFLAGS -D_FILE_OFFSET_BITS=64 -DACORN_FTYPE_NFS \
   -DWILD_STOP_AT_DIR -DLARGE_FILE_SUPPORT -DUNICODE_SUPPORT \
   -DUNICODE_WCHAR -DUTF8_MAYBE_NATIVE -DNO_LCHMOD -DDATE_FORMAT=DF_YMD \
