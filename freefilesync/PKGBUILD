@@ -3,38 +3,35 @@
 # Maintainer: alexmo82 <25396682 AT live DOT it>
 
 pkgname=freefilesync
-pkgver=7.5
+pkgver=7.6
 pkgrel=0
-pkgdesc="Visual folder comparison and synchronization"
-arch=('any')
+pkgdesc="Backup software to synchronize files and folders"
+arch=('i686' 'x86_64')
 url="http://www.freefilesync.org/"
 license=('GPLv3')
 depends=(wxgtk webkitgtk2 boost-libs)
 makedepends=(boost)
-source=("http://downloads.sourceforge.net/project/zenxml/zenXml_2.3.zip"
-	"FreeFileSync_${pkgver}_Source.zip::https://db.tt/46y42Ic0"
+source=("http://downloads.sourceforge.net/project/zenxml/zenXml_2.3.zip"	#zen
+	"FreeFileSync_${pkgver}_Source.zip::https://db.tt/FoyRFwLj"		#ffs
 	FreeFileSync.desktop
 	ffsicon.png
 	RealtimeSync.desktop
 	rtsicon.png)
 md5sums=('58baf96cb8e1136d10e1ada7419921c5'	#zen
-         '404695994e45758a4bdf0ebcc0956d01'	#ffs
-         'a7be7841f47f29d8e6210c8ab592a1e3'
+         'edc7436651b0de6ec0d0fb460da45679'	#ffs
+         'eab0ccfc6a88e229a0f07507b93cfcff'
          '1f452dff6f970d95839411008d86250b'
-         '90152f1021f2d6fb6ab4fa511dc60fa9'
+         'cde50b36d7b55c51ab69d5e41cd80a1f'
          'ee5587fa0a8d906ad416564e4daf5a06')
-
 
 build() {
   echo -n "compiled with  "
-  g++ --version			# just in case of compile errors
- 
+  g++ --version		# just in case of compile errors
+
   cd ${srcdir}/FreeFileSync/Source
-  sed -i 's/-std=c++11/-std=c++14/' Makefile
   make launchpad
-  
+
   cd RealtimeSync
-  sed -i 's/-std=c++11/-std=c++14/' Makefile
   make launchpad
 }
 
