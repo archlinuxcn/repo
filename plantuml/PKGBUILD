@@ -1,7 +1,7 @@
 # Maintainer: juantascon <juantascon.aur@horlux.org>
 
 pkgname=plantuml
-pkgver=8031
+pkgver=8032
 pkgrel=1
 pkgdesc="Component that allows to quickly write uml diagrams"
 arch=(any)
@@ -10,7 +10,7 @@ license=('GPL')
 depends=("java-runtime" "graphviz")
 makedepends=("apache-ant" "java-environment")
 source=(http://downloads.sourceforge.net/project/$pkgname/$pkgname-$pkgver.tar.gz "$pkgname.run")
-sha256sums=('be57ee4c181331f93452576aac076fe0fea51b414f69b8ddac9e7a9636236b07'
+sha256sums=('1f634f06d94655188cdfd4bd38761d1cf6d618eefd71a215b20512152290979b'
             'dff39e4d8dd8eedb58c1b0a0cf64ab2c404b713e3a42fa5fdf0b6792ca382ed5')
 
 package() {
