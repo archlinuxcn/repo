@@ -7,7 +7,7 @@ pkgname=unzip-iconv
 _pkgname=unzip
 pkgver=6.0
 _pkgver=${pkgver/./}
-pkgrel=10
+pkgrel=11
 pkgdesc="Unpacks .zip archives such as those made by PKZIP. With iconv patch for -O / -I goodness."
 url='http://www.info-zip.org/UnZip.html'
 arch=('i686' 'x86_64')
@@ -20,14 +20,20 @@ source=("http://downloads.sourceforge.net/infozip/$_pkgname${_pkgver}.tar.gz"
         'cve20149636.patch'
         'test_compr_eb.patch'
         'getZip64Data.patch'
-        'crc32.patch')
+        'crc32.patch'
+        'empty-input.patch'
+        'csiz-underflow.patch'
+        'nextbyte-overflow.patch')
 sha1sums=('abf7de8a4018a983590ed6f5cbd990d4740f8a22'
           '7cb046b09becd96a3901b8ac35f77741695c4a8a'
           '2852ce1a9db8d646516f8828436a44d34785a0b3'
           'e8c0bc17c63eeed97ad62b86845d75c849bcf4f8'
           '614c3e7fa7d6da7c60ea2aa79e36f4cbd17c3824'
           '691d0751bf0bc98cf9f9889dee39baccabefdc4d'
-          '82c9fe9172779a0ee92a187d544e74e8f512b013')
+          '82c9fe9172779a0ee92a187d544e74e8f512b013'
+          '4f77b01454fd2ffa69bfad985bfbdc579ee26010'
+          '9f86b1115c76e527ff7a2c3771d398f024533cf9'
+          'b325fac556abf169264ed5ae364b9136016e43f3')
 
 prepare() {
 	cd "${srcdir}/$_pkgname${_pkgver}"
@@ -38,6 +44,9 @@ prepare() {
 	patch -i ../getZip64Data.patch # FS#43300
 	patch -i ../crc32.patch # FS#43300
 	patch -Np1 -i "${srcdir}"/unzip60-alt-iconv-utf8.patch
+	patch -p1 -i ../empty-input.patch # FS#46955
+	patch -p1 -i ../csiz-underflow.patch # FS#46955
+	patch -p1 -i ../nextbyte-overflow.patch # FS#46955
 }
 
 build() {
