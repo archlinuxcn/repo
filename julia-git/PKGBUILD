@@ -93,6 +93,8 @@ build() {
 
   export CC='gcc -flto'
   export CXX='g++ -flto'
+  CFLAGS=${CFLAGS//-march=i686/-march=pentium4}
+  CXXFLAGS=${CXXFLAGS//-march=i686/-march=pentium4}
   export CFLAGS+=' -Wno-pedantic -Wno-clobbered'
   export CXXFLAGS+=' -Wno-pedantic -Wno-clobbered'
 
