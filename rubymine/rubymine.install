@@ -1,0 +1,25 @@
+_notice() {
+    echo
+    echo "You can buy a license after the 30-day trial period here:"
+    echo "http://www.jetbrains.com/ruby/buy/"
+    echo "For licensing information please read /usr/share/licenses/rubymine/license.txt"
+}
+
+_update_desktop() {
+    gtk-update-icon-cache -q -t -f usr/share/icons/hicolor
+    update-desktop-database -q
+}
+
+post_install() {
+    _update_desktop
+    _notice
+}
+
+post_upgrade() {
+    _update_desktop
+    _notice
+}
+
+post_remove() {
+    _update_desktop
+}

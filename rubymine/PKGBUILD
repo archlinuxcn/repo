@@ -1,46 +1,76 @@
-# Maintainer: Alexsandr Pavlov <kidoz at mail dot ru>
-# Contributor: Ernie Brodeur <ebrodeur@ujami.net>
-# Contributor: Rogof <fake.bios at gmail>
-# Contributor: m4.rc0 <m4.rc0 at o2 (dot) pl>
+# Maintainer: Mario Finelli <mario dot finelli at yahoo dot com>
+# Contributor: Tom Richards <tom at tomrichards dot net>
+# Contributor: Alexsandr Pavlov <kidoz at mail dot ru>
+# Contributor: Ernie Brodeur <ebrodeur at ujami dotnet>
+# Contributor: Rogof <fake dot bios at gmail dot com>
+# Contributor: m4.rc0 <m4 dot rc0 at o2 dot pl>
+
 pkgname=rubymine
 _pkgname=RubyMine
-pkgver=6.3.3
-pkgrel=1
-pkgdesc="Ruby and Rails IDE with the full stack of essential developer tools"
+pkgver=8.0.0
+pkgrel=3
+pkgdesc="Ruby and Rails IDE with the full stack of essential developer tools."
 arch=('i686' 'x86_64')
-options=('!strip')
-url="http://www.jetbrains.com/${pkgname}"
+options=(!strip)
+url="https://www.jetbrains.com/ruby/"
 license=('custom')
-depends=('java-runtime')
-source=(http://download.jetbrains.com/ruby/${_pkgname}-${pkgver}.tar.gz
-        jetbrains-rubymine
-        jetbrains-rubymine.desktop)
-sha256sums=('58d555c2702a93fe62f3809a5cc34e566ecce0c3f1f15daaf87744402157dfac'
-            '0e93c55a66a4af71ee5ea136dbc74ed373f9a1f9a219740289baf2ac2a8bf5bf'
-            '5015dec0c0e504380afb5bc382d1f3d5d403a1f3987f9789a50c43ea098e1b44')
+depends=('java-environment' 'desktop-file-utils' 'gtk-update-icon-cache')
+optdepends=('ruby: Ruby run/debug support')
+install=rubymine.install
+source=(https://download.jetbrains.com/ruby/${_pkgname}-${pkgver}.tar.gz
+        rubymine.desktop
+        rubymine.install)
+sha256sums=('4f242198acf857f680313937e3e90652eadb741c18d7874e15f1e098bc4dbc5d'
+            '72df0e7c605caf7b6c98e9335f4eee9c8bfe8fcc24523634fd8c1ebe019534d6'
+            '7ecadddf2b315b22df3a5c7b90e18be7ea69e2a0d869ee18bf0e031b2c508f76')
 
-package() {
-  cd "${srcdir}"
-  mkdir -p "${pkgdir}/opt/${pkgname}"
-  cp -r ${srcdir}/${_pkgname}-${pkgver}/* "${pkgdir}/opt/${pkgname}"
-  if [[ $CARCH = 'i686' ]]; then
-    rm -f "${pkgdir}/opt/${pkgname}/bin/libyjpagent-linux64.so"
-    rm -f "${pkgdir}/opt/${pkgname}/bin/libbreakgen64.so"
-    rm -f "${pkgdir}/opt/${pkgname}/bin/fsnotifier64"
-  fi
-  if [[ $CARCH = 'x86_64' ]]; then
-    rm -f "${pkgdir}/opt/${pkgname}/bin/libyjpagent-linux.so"
-    rm -f "${pkgdir}/opt/${pkgname}/bin/libbreakgen.so"
-    rm -f "${pkgdir}/opt/${pkgname}/bin/fsnotifier"
-  fi
+prepare() {
+    cd "${srcdir}/${_pkgname}-${pkgver%.*}"
+    # Remove junk
+    rm "build.txt"
+    rm "Install-Linux-tar.txt"
 
-  mkdir -p "${pkgdir}/usr/bin"
-  mkdir -p "${pkgdir}/usr/share/applications"
-  mkdir -p "${pkgdir}/usr/share/pixmaps"
-  mkdir -p "${pkgdir}/usr/share/licenses/${pkgname}"
-  install -m 644 "${startdir}/jetbrains-${pkgname}.desktop" "${pkgdir}/usr/share/applications"
-  install -m 644 "${pkgdir}/opt/${pkgname}/bin/RMlogo.svg" "${pkgdir}/usr/share/pixmaps/${pkgname}.svg"
-  install -m 644 "${srcdir}/${_pkgname}-${pkgver}/license/${_pkgname}_license.txt" "${pkgdir}/usr/share/licenses/${pkgname}/${_pkgname}_license.txt"
-  install -m 755 "${startdir}/jetbrains-${pkgname}" "${pkgdir}/usr/bin"
+    #Remove non-linux libs
+    rm -rf "lib/libpty/macosx"
+    rm -rf "lib/libpty/win"
+
+    #Remove bin/libs if architecture doesn't match
+    if [[ $CARCH = 'i686' ]]; then
+        rm -f "bin/fsnotifier64"
+        rm -f "bin/libbreakgen64.so"
+        rm -f "bin/libyjpagent-linux64.so"
+        rm -f "bin/rubymine64.vmoptions"
+        rm -rf "lib/libpty/linux/x86_64"
+    fi
+    if [[ $CARCH = 'x86_64' ]]; then
+        rm -f "bin/fsnotifier"
+        rm -f "bin/libbreakgen.so"
+        rm -f "bin/libyjpagent-linux.so"
+        rm -f "bin/rubymine.vmoptions"
+        rm -rf "lib/libpty/linux/x86"
+    fi
 }
 
+package() {
+    cd "${srcdir}"
+    [ $CARCH == "x86_64" ] && SUFFIX=64
+
+    #Pre-packaged program files
+    install -d -m 755 "${pkgdir}/usr/share"
+    cp -a "${srcdir}/${_pkgname}-${pkgver%.*}" "${pkgdir}/usr/share/${pkgname}"
+
+    #Desktop application
+    install -Dm644 "${pkgdir}/usr/share/${pkgname}/bin/RMlogo.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/${pkgname}.svg"
+    install -Dm644 "rubymine.desktop" "${pkgdir}/usr/share/applications/rubymine.desktop"
+    install -d -m 755 "${pkgdir}/usr/bin"
+    ln -s "/usr/share/${pkgname}/bin/${pkgname}.sh" "${pkgdir}/usr/bin/jetbrains-${pkgname}"
+
+    #License
+    #install -Dm644 "${srcdir}/${_pkgname}-${pkgver}/license/${_pkgname}_license.txt" "${pkgdir}/usr/share/licenses/${pkgname}/license.txt"
+    install -Dm644 "${srcdir}/${_pkgname}-${pkgver%.*}/license/debug-commons_license.txt" "${pkgdir}/usr/share/licenses/${pkgname}/debug-commons_license.txt"
+    install -Dm644 "${srcdir}/${_pkgname}-${pkgver%.*}/license/LLDB-license.txt" "${pkgdir}/usr/share/licenses/${pkgname}/LLDB-license.txt"
+
+    #Java config
+    sed -i 's/lcd/on/' "${pkgdir}/usr/share/rubymine/bin/rubymine${SUFFIX}.vmoptions"
+    echo "-Dswing.aatext=true" >> "${pkgdir}/usr/share/rubymine/bin/rubymine${SUFFIX}.vmoptions"
+}
