@@ -4,7 +4,7 @@
 pkgname=spotify
 pkgver=1.0.17.75
 _anotherpkgver=.g8f111100
-pkgrel=1
+pkgrel=2
 pkgdesc="A proprietary music streaming service"
 arch=('x86_64' 'i686')
 license=('custom:"Copyright (c) 2006-2010 Spotify Ltd"')
@@ -25,6 +25,7 @@ md5sums_i686=('843743f3706aeb65a122625c1183c859')
 depends=("alsa-lib>=1.0.14" "gconf" "gtk2" "glib2" "nss" "libsystemd" "libxtst" "libx11" "libxss" "libcurl-compat")
 optdepends=('desktop-file-utils: Adds URI support to compatible desktop environments'
             'ffmpeg-compat: Adds support for playback of local files'
+            'zenity: Adds support for importing local files'
 						)
 
 package() {
