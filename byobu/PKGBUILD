@@ -1,12 +1,9 @@
-# -*- shell-script -*-
-# Maintainer: Keith Hughitt <khughitt@umd.edu>
-# Contributor:  Felipe Spychalski <spychalski@gmail.com>
-# Contributor: Neil Perry <nperry at gmail.com>
-# Contributor: Baptiste Jonglez <baptiste--aur at jonglez dot org>
-# Contributor: Adrian C. <anrxc..sysphere.org>
+# Maintainer: Sibren Vasse <arch at sibrenvasse dot nl> 
+# Contributor:  oozyslug <oozyslug at gmail dot com>
+# Submitter: oozyslug <oozyslug at gmail dot com>
 
 pkgname=byobu
-pkgver=5.80
+pkgver=5.98
 pkgrel=1
 pkgdesc="Enhanced profile and useful notifications for tmux/screen"
 arch=("any")
@@ -17,15 +14,20 @@ makedepends=("gettext")
 optdepends=("screen: alternative back-end for byobu (default: tmux)"
             "python2: needed for byobu-config")
 source=("${url}/trunk/${pkgver}/+download/${pkgname}_${pkgver}.orig.tar.gz")
-md5sums=('f8b6ca637a57eba1aee17accb3c29078')
+md5sums=('2e09c9d2f9e3b6e2953bd581b027239c')
+
+prepare() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+
+  # arch-specific screens dir
+  sed -re 's;^SOCKETDIR=.+$;SOCKETDIR="/tmp/screens";' -i etc/byobu/socketdir	
+  sed -re 's;^Icon=byobu+$;Icon=/usr/share/byobu/pixmaps/byobu.svg;' -i usr/share/applications/byobu.desktop
+  ./configure --prefix=/usr --sysconfdir=/etc
+}
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
 
-  # arch-specific screens dir
-  sed -re 's;^SOCKETDIR=.+$;SOCKETDIR="/tmp/screens";' -i etc/byobu/socketdir
-
-  ./configure --prefix=/usr --sysconfdir=/etc
   make
 }
 
