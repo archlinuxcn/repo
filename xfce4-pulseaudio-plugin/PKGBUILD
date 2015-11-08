@@ -2,8 +2,8 @@
 # Maintainer:  <alcasa dot mz at gmail dot com>
 
 pkgname=xfce4-pulseaudio-plugin
-pkgver=0.2.3
-pkgrel=2
+pkgver=0.2.4
+pkgrel=1
 pkgdesc="Pulseaudio plugin for Xfce4 panel"
 arch=('i686' 'x86_64')
 license=('GPL2')
@@ -15,7 +15,7 @@ optdepends=('ido: appindicator support'
 makedepends=('intltool')
 install="${pkgname}.install"
 source=(http://archive.xfce.org/src/panel-plugins/${pkgname}/${pkgver%.*}/${pkgname}-${pkgver}.tar.bz2)
-sha256sums=('e82836bc8cf7d905b4e60d43dc630ba8e32dea785989700c71d4aeee9f583b33')
+sha256sums=('8d9330ddf1d44a864a36d566cce4b76d4f859c5984bba7653d7dc39aa24d5c3e')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
