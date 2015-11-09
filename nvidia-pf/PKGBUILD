@@ -2,20 +2,22 @@
 
 pkgname=nvidia-pf
 pkgver=355.11
-_extramodules=extramodules-4.2-pf
-pkgrel=3
+_extramodules=extramodules-4.3-pf
+pkgrel=4
 pkgdesc="NVIDIA drivers for linux-pf"
 arch=('i686' 'x86_64')
 url="http://www.nvidia.com/"
-depends=('linux-pf>=4.2' 'linux-pf<4.3' "nvidia-libgl" "nvidia-utils=${pkgver}")
-makedepends=('linux-pf-headers>=4.2' 'linux-pf-headers<4.3')
+depends=('linux-pf>=4.3' 'linux-pf<4.4' "nvidia-libgl" "nvidia-utils=${pkgver}")
+makedepends=('linux-pf-headers>=4.3' 'linux-pf-headers<4.4')
 license=('custom')
 install=nvidia.install
 options=(!strip)
 source=("ftp://download.nvidia.com/XFree86/Linux-x86/${pkgver}/NVIDIA-Linux-x86-${pkgver}.run"
-        "ftp://download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run")
+        "ftp://download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run"
+	nvidia-4.3-build.patch)
 md5sums=('16d143ccafe99328a2ca8e5a396fd4bc'
-         '30133d89690f4683c4e289ec6c0247dc')
+         '30133d89690f4683c4e289ec6c0247dc'
+         '1e5f60cf8e77af482345549b9436887a')
 
 [[ "$CARCH" = "i686" ]] && _pkg="NVIDIA-Linux-x86-${pkgver}"
 [[ "$CARCH" = "x86_64" ]] && _pkg="NVIDIA-Linux-x86_64-${pkgver}-no-compat32"
@@ -24,6 +26,7 @@ prepare() {
     sh "${_pkg}.run" --extract-only
     cd "${_pkg}"
     # patches here
+    patch -Np1 -i ${srcdir}/nvidia-4.3-build.patch
 }
 
 build() {
