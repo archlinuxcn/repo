@@ -1,0 +1,85 @@
+# $Id: PKGBUILD 221792 2014-09-16 00:03:06Z allan $
+# Maintainer: Allan McRae <allan@archlinux.org>
+
+# toolchain build order: linux-api-headers->glibc->binutils->gcc->binutils->glibc
+# NOTE: valgrind requires rebuilt with each major glibc version
+
+# NOTE: adjust version in install script when locale files are updated
+
+pkgname=glibc-static
+pkgver=2.22
+pkgrel=1
+pkgdesc="GNU C Library"
+arch=('i686' 'x86_64')
+url="http://www.gnu.org/software/libc"
+license=('GPL' 'LGPL')
+groups=('base')
+depends=('linux-api-headers>=3.16' 'tzdata' 'filesystem>=2013.01')
+makedepends=('gcc>=4.9')
+options=('!strip' 'staticlibs' '!emptydirs')
+validpgpkeys=('F37CDAB708E65EA183FD1AF625EF0A436C2A4AFF')  # Carlos O'Donell
+source=(http://ftp.gnu.org/gnu/libc/glibc-${pkgver}.tar.xz{,.sig})
+md5sums=('e51e02bf552a0a1fbbdc948fb2f5e83c'
+         'SKIP')
+
+build() {
+  mkdir -p ${srcdir}/glibc-build
+  cd ${srcdir}/glibc-build
+
+  if [[ ${CARCH} = "i686" ]]; then
+    # Hack to fix NPTL issues with Xen, only required on 32bit platforms
+    # TODO: make separate glibc-xen package for i686
+    export CFLAGS="${CFLAGS} -mno-tls-direct-seg-refs"
+  fi
+
+  echo "slibdir=/usr/lib" >> configparms
+  echo "rtlddir=/usr/lib" >> configparms
+  echo "sbindir=/usr/bin" >> configparms
+  echo "rootsbindir=/usr/bin" >> configparms
+
+  # remove hardening options for building libraries
+  CFLAGS=${CFLAGS/-fstack-protector-strong/}
+  CPPFLAGS=${CPPFLAGS/-D_FORTIFY_SOURCE=2/}
+
+  ${srcdir}/glibc-${pkgver}/configure --prefix=/usr \
+      --libdir=/usr/lib --libexecdir=/usr/lib \
+      --with-headers=/usr/include \
+      --with-bugurl=https://bugs.archlinux.org/ \
+      --enable-add-ons \
+      --enable-obsolete-rpc \
+      --enable-kernel=2.6.32 \
+      --enable-bind-now --disable-profile \
+      --enable-stackguard-randomization \
+      --enable-lock-elision \
+      --enable-multi-arch \
+      --enable-static \
+      --disable-werror
+
+  # build libraries with hardening disabled
+  echo "build-programs=no" >> configparms
+  make
+
+  # re-enable hardening for programs
+  sed -i "/build-programs=/s#no#yes#" configparms
+  echo "CC += -fstack-protector-strong -D_FORTIFY_SOURCE=2" >> configparms
+  echo "CXX += -fstack-protector-strong -D_FORTIFY_SOURCE=2" >> configparms
+  make
+
+  # remove harding in preparation to run test-suite
+  sed -i '5,7d' configparms
+}
+
+package() {
+  cd ${srcdir}/glibc-build
+
+  install -dm755 ${pkgdir}/etc
+  touch ${pkgdir}/etc/ld.so.conf
+
+  make install_root=${pkgdir} install
+  rm -f ${pkgdir}/etc/ld.so.{cache,conf}
+  pacman -Ql glibc | cut -f2 -d' ' | grep -vE '/$' | while read f; do
+    echo "rm $pkgdir/$f"
+    rm -f $pkgdir/$f
+  done
+  rm -rf $pkgdir/usr/share/info
+}
