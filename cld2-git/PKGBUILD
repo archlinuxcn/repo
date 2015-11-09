@@ -1,23 +1,23 @@
 # Maintainer: lilydjwg <lilydjwg@gmail.com>
 
 _pkgname=cld2
-pkgname=${_pkgname}-svn
+pkgname=${_pkgname}-git
 pkgver=196
 pkgrel=1
 pkgdesc='Compact Language Detector 2'
 arch=('x86_64')
-url='https://code.google.com/p/cld2/'
+url='https://github.com/CLD2Owners/cld2'
 license=('Apache')
-provides=('cld2' 'cld2-hg')
-replaces=('cld2-hg')
-conflicts=('cld2-hg' 'cld2')
-makedepends=('subversion')
-source=('cld2::svn+http://cld2.googlecode.com/svn/trunk/')
+provides=('cld2' 'cld2-hg' 'cld2-svn')
+replaces=('cld2-hg' 'cld2-svn')
+conflicts=('cld2-hg' 'cld2' 'cld2-svn')
+makedepends=('git')
+source=('git+https://github.com/CLD2Owners/cld2.git')
 md5sums=('SKIP')
 
 pkgver() {
-  cd "$srcdir/$_pkgname"
-  svnversion | tr -d A-z
+  cd "$srcdir/$_gitname"
+  git log -1 --pretty='%cd' --date=short | tr -d '-'
 }
 
 build() {
