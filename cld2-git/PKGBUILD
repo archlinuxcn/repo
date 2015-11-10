@@ -16,7 +16,7 @@ source=('git+https://github.com/CLD2Owners/cld2.git')
 md5sums=('SKIP')
 
 pkgver() {
-  cd "$srcdir/$_gitname"
+  cd "$srcdir/$_pkgname"
   git log -1 --pretty='%cd' --date=short | tr -d '-'
 }
 
