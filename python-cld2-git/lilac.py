@@ -3,7 +3,7 @@
 from lilaclib import *
 
 build_prefix = 'extra-x86_64'
-depends = ['cld2-svn']
+depends = ['cld2-git']
 
 def pre_build():
   vcs_update()
