@@ -1,4 +1,4 @@
-# Maintainer: vinoca <supoingo@163.com>
+# Maintainer: farseerfc <farseerfc@archlinuxcn.org>
 # Contributor: vinoca <supoingo@163.com>
 
 pkgname=cdate
@@ -16,12 +16,12 @@ build() {
   cd "$srcdir/$pkgname-$pkgver"
 
   ./configure --prefix=/usr
-  make || return 1
+  make
 }
 
 package() {
   cd "$srcdir/$pkgname-$pkgver"
-  make DESTDIR="$pkgdir" install || return 1
+  make DESTDIR="$pkgdir" install
 }
 
 # vim:set ts=2 sw=2 et:
