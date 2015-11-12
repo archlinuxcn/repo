@@ -1,18 +1,19 @@
 # Maintainer: Arthur Țițeică arthur.titeica/gmail/com
 
 pkgname=pdf2htmlex-git
-pkgver=1721.a296d3b
+pkgver=1723.c9235e5
 pkgrel=1
 epoch=1
 pkgdesc="Convert PDF to HTML without losing format. Text is preserved as much as possible."
 arch=('i686' 'x86_64')
 url="https://github.com/coolwanglu/pdf2htmlEX"
-license=('GPL3' 'MIT' 'custom')
+license=('GPL3' 'custom')
 depends=('poppler' 'fontforge')
 makedepends=('cmake' 'git')
 optdepends=('ttfautohint: Provides automated hinting process for web fonts')
 provides=('pdf2htmlex')
 conflicts=('pdf2htmlex')
+replaces=('pdf2htmlex')
 source=('git://github.com/coolwanglu/pdf2htmlEX.git')
 md5sums=('SKIP')
 
