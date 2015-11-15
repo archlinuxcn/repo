@@ -3,7 +3,7 @@
 # Contributor: Ernia <monghitri@aruba.it>
 
 pkgname=yad
-pkgver=0.31.0
+pkgver=0.31.3
 pkgrel=1
 pkgdesc="A fork of zenity - display graphical dialogs from shell scripts or command line"
 url="http://sourceforge.net/projects/yad-dialog"
@@ -30,4 +30,4 @@ package() {
 
 }
 
-sha1sums=('df5fcc1c05575ba9f9ab6818919f5a02df67583f')
+sha1sums=('78b6feabc3be24c51e3e7cbb8f6b1516da4276e7')
