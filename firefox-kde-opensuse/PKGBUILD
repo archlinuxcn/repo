@@ -7,8 +7,9 @@
 # try to build with PGO
 _pgo=true
 
-pkgname=firefox-kde-opensuse
-pkgver=41.0.2
+_pkgname=firefox
+pkgname=$_pkgname-kde-opensuse
+pkgver=42.0
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
@@ -26,7 +27,7 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
 install=firefox.install
-_patchrev=7aa7715fdc8f
+_patchrev=ee3c462047d5
 options=('!emptydirs'  'strip' )
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz
@@ -40,7 +41,6 @@ source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/
 	$_patchurl/mozilla-kde.patch
 	$_patchurl/mozilla-language.patch
 	$_patchurl/mozilla-nongnome-proxies.patch
-	$_patchurl/toolkit-download-folder.patch
 	unity-menubar.patch
 	add_missing_pgo_rule.patch
         pgo_fix_missing_kdejs.patch 
@@ -49,7 +49,7 @@ source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/
 _google_api_key=AIzaSyDwr302FpOSkGRpLlUpPThNTDPbXcIn_FM
 
 prepare() {
-  cd mozilla-release
+  cd $_pkgname-$pkgver
 
   cp "$srcdir/mozconfig" .mozconfig
 
@@ -60,7 +60,6 @@ prepare() {
   patch -Np1 -i "$srcdir/rhbz-966424.patch"
 
   msg "Patching for KDE"
-  patch -Np1 -i "$srcdir/toolkit-download-folder.patch"
   patch -Np1 -i "$srcdir/mozilla-nongnome-proxies.patch"
   patch -Np1 -i "$srcdir/mozilla-kde.patch"
   patch -Np1 -i "$srcdir/mozilla-language.patch"
@@ -95,7 +94,7 @@ prepare() {
 
 build() {
 
-  cd mozilla-release
+  cd $_pkgname-$pkgver
 
   export PATH="$srcdir/path:$PATH"
   export LDFLAGS="$LDFLAGS -Wl,-rpath,/usr/lib/firefox"
@@ -116,7 +115,7 @@ build() {
 }
 
 package() {
-  cd mozilla-release
+  cd $_pkgname-$pkgver
 
   [[ "$CARCH" == "i686" ]] && cp "$srcdir/kde.js" obj-i686-pc-linux-gnu/dist/bin/defaults/pref
   [[ "$CARCH" == "x86_64" ]] && cp "$srcdir/kde.js" obj-x86_64-unknown-linux-gnu/dist/bin/defaults/pref
@@ -152,7 +151,7 @@ package() {
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
 
-sha256sums=('ff00689f4d2ff54c5eb7b3aa367560a3645800eb0c96e73a795e461461b1970e'
+sha256sums=('994a346699298277b64ec0cab72660b8d3e5b879a2ac79207576f7e6c33da3ae'
             '7659ccd23d0f111c3ed7d4b1624dfe63269a3df0ec90eac2019f0ece01c4d641'
             'c202e5e18da1eeddd2e1d81cb3436813f11e44585ca7357c4c5f1bddd4bec826'
             'd86e41d87363656ee62e12543e2f5181aadcff448e406ef3218e91865ae775cd'
@@ -161,12 +160,11 @@ sha256sums=('ff00689f4d2ff54c5eb7b3aa367560a3645800eb0c96e73a795e461461b1970e'
             '68e3a5b47c6d175cc95b98b069a15205f027cab83af9e075818d38610feb6213'
             '746cb474c5a2c26fc474256e430e035e604b71b27df1003d4af85018fa263f4a'
             '72abd31e89a41cddbd8165b0b9555465184c52c426e0998c9cb7786af94b5532'
-            'fd063e2db91b034a9a985238299b4d99751deb4910480e13e3bde5edb4633d1f'
+            '23ce5dbcff0a9caf8cbf13730f12366c84382ab63e4020136f331df4a7ebe5ed'
             '02e92f84dd31ed079be3e67509cf23d0d351e06bb690fcc091c904d906d2d690'
-            'dc5b64b912e81976e7e431171f3e5d142f15924a83985b1fe93d399d1e1e4756'
+            'efb473d0fbf41bd0a6c388d8d74de719b263675c522ec63b465af040067ecf5e'
             'ce1b7a5bb217c31590bce30653aea5139b6401a01eda7bded7fd2f83a23d397b'
             'e8289ea4c1f8191e1e23661312ceee2128b8e790501b9a589d0d7bfc4384553f'
-            'a87332e4baff50fad86b5a5b7d59076a09725f89113b8fd86dbe28efda103882'
-            '7c1028460b0ebc15b9dc54af6d7ec8d33b72b9bf095e4117558de5a525a29fc2'
+            '18166673c6e00debf56191b1d9b2706e8987814f59cb6122118aef9f2b31413e'
             'f9067f62a25a7a77276e15f91cc9e7ba6576315345cfc6347b1b2e884becdb0c'
             '2c9c97bff07cc71b3f6d35f3edfaddaf8180a1f533ee4682adf18a8f86d29264')
