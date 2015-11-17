@@ -15,6 +15,13 @@ def pre_build():
     run_cmd(["git", "clean", "-x", "-d", "-f", "."])
     aur_pre_build()
 
+    for line in edit_file("PKGBUILD"):
+        if line.strip().startswith("qmake "):
+            line='qmake "$srcdir/$pkgname/$_pkgname.pro"'
+        if line.strip().startswith('license=("GPLv3")')
+            line='license=("GPL3")'
+        print(line)
+
 if __name__ == '__main__':
     single_main(build_prefix)
 
