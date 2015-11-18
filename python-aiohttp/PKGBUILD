@@ -1,18 +1,25 @@
-# Maintainer: Phil Schaf <flying-sheep@web.de>
-_name=aiohttp
+_pkgname=aiohttp
 pkgname=python-aiohttp
 pkgver=0.18.4
 pkgrel=2
-pkgdesc='http client/server for asyncio'
-arch=('any')
-url="http://pypi.python.org/pypi/$_name"
+pkgdesc="http client/server for asyncio"
+arch=('i686' 'x86_64')
+url="https://github.com/KeepSafe/aiohttp/"
 license=('Apache')
-depends=('python>=3.4' 'cython')
-makedepends=('python-setuptools')
-source=(https://pypi.python.org/packages/source/a/aiohttp/aiohttp-0.18.4.tar.gz)
-md5sums=(58eeca340108040a3014955289a9f690)
+depends=('python' 'python-chardet')
+makedepends=('cython' 'python-setuptools')
+source=('https://pypi.python.org/packages/source/a/aiohttp/aiohttp-0.18.4.tar.gz')
+md5sums=('58eeca340108040a3014955289a9f690')
+
+build() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  python3 setup.py build
+}
 
 package() {
-	cd "$srcdir/$_name-$pkgver"
-	python setup.py install --root="$pkgdir" --optimize=1 || return 1
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 }
+
+# vim:set sw=2 et:
