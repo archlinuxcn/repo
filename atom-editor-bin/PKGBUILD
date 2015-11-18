@@ -2,10 +2,11 @@
 # Contributor: Andre Miranda <andreldm1989 AT gmail DOT com>
 # Contributor: Tom Bu <tom.bu AT members.fsf.org>
 # Contributor: John Reese <john@noswap.com>
+# Contributor: Jordan J Klassen <forivall@gmail.com>
 # Upstream URL: https://github.com/atom/atom
 
 pkgname=atom-editor-bin
-pkgver=1.2.0
+pkgver=1.2.1
 pkgrel=1
 pkgdesc="Chrome-based text editor from Github - Precompiled binary from official repository"
 arch=('x86_64')
@@ -16,7 +17,7 @@ depends=('git' 'gconf' 'gtk2' 'libnotify' 'libxtst' 'nss' 'python2' 'gvfs' 'xdg-
 conflicts=('atom-editor' 'atom-editor-git' 'atom-editor-git-tagged')
 install=$pkgname.install
 
-md5sums=('57db82d9b61467f1fd4e9a9e881341c2'
+md5sums=('f950c4fdba332644da7644df83f74007'
  'ece71b9e7a063c803f930b24b9e58892')
 source=("atom-amd64-v${pkgver}.deb::https://github.com/atom/atom/releases/download/v${pkgver}/atom-amd64.deb"
          atom-python.patch)
