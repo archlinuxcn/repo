@@ -1,0 +1,292 @@
+diff --git a/chrome/browser/about_flags.cc b/chrome/browser/about_flags.cc
+index 2abd33b..2a0ac05 100644
+--- a/chrome/browser/about_flags.cc
++++ b/chrome/browser/about_flags.cc
+@@ -1016,7 +1016,7 @@ const FeatureEntry kFeatureEntries[] = {
+      "disable-accelerated-video-decode",
+      IDS_FLAGS_DISABLE_ACCELERATED_VIDEO_DECODE_NAME,
+      IDS_FLAGS_DISABLE_ACCELERATED_VIDEO_DECODE_DESCRIPTION,
+-     kOsMac | kOsWin | kOsCrOS,
++     kOsAll,
+      SINGLE_VALUE_TYPE(switches::kDisableAcceleratedVideoDecode),
+     },
+ #if defined(USE_ASH)
+diff --git a/content/common/gpu/media/gpu_video_decode_accelerator.cc b/content/common/gpu/media/gpu_video_decode_accelerator.cc
+index ed4d179..bc516a9 100644
+--- a/content/common/gpu/media/gpu_video_decode_accelerator.cc
++++ b/content/common/gpu/media/gpu_video_decode_accelerator.cc
+@@ -33,7 +33,7 @@
+ #include "content/common/gpu/media/dxva_video_decode_accelerator.h"
+ #elif defined(OS_MACOSX)
+ #include "content/common/gpu/media/vt_video_decode_accelerator.h"
+-#elif defined(OS_CHROMEOS)
++#elif defined(OS_CHROMEOS) || defined(OS_LINUX)
+ #if defined(USE_V4L2_CODEC)
+ #include "content/common/gpu/media/v4l2_device.h"
+ #include "content/common/gpu/media/v4l2_slice_video_decode_accelerator.h"
+@@ -164,7 +164,7 @@ GpuVideoDecodeAccelerator::GetSupportedProfiles() {
+   // can be initialized by corresponding VDA successfully.
+ #if defined(OS_WIN)
+   profiles = DXVAVideoDecodeAccelerator::GetSupportedProfiles();
+-#elif defined(OS_CHROMEOS)
++#elif defined(OS_CHROMEOS) || defined(OS_LINUX)
+   media::VideoDecodeAccelerator::SupportedProfiles vda_profiles;
+ #if defined(USE_V4L2_CODEC)
+   vda_profiles = V4L2VideoDecodeAccelerator::GetSupportedProfiles();
+@@ -438,7 +438,7 @@ void GpuVideoDecodeAccelerator::BindImage(uint32 client_texture_id,
+ scoped_ptr<media::VideoDecodeAccelerator>
+ GpuVideoDecodeAccelerator::CreateVaapiVDA() {
+   scoped_ptr<media::VideoDecodeAccelerator> decoder;
+-#if defined(OS_CHROMEOS) && defined(ARCH_CPU_X86_FAMILY)
++#if (defined(OS_CHROMEOS) || defined(OS_LINUX)) && defined(ARCH_CPU_X86_FAMILY)
+   decoder.reset(new VaapiVideoDecodeAccelerator(
+       make_context_current_, base::Bind(&GpuVideoDecodeAccelerator::BindImage,
+                                         base::Unretained(this))));
+diff --git a/content/common/sandbox_linux/bpf_gpu_policy_linux.cc b/content/common/sandbox_linux/bpf_gpu_policy_linux.cc
+index e8c3127..3a94566 100644
+--- a/content/common/sandbox_linux/bpf_gpu_policy_linux.cc
++++ b/content/common/sandbox_linux/bpf_gpu_policy_linux.cc
+@@ -21,6 +21,8 @@
+ #include "base/logging.h"
+ #include "base/memory/scoped_ptr.h"
+ #include "build/build_config.h"
++// Auto-generated for dlopen libva libraries
++#include "content/common/gpu/media/va_stubs.h"
+ #include "content/common/sandbox_linux/sandbox_bpf_base_policy_linux.h"
+ #include "content/common/sandbox_linux/sandbox_seccomp_bpf_linux.h"
+ #include "content/common/set_process_title.h"
+@@ -31,6 +33,8 @@
+ #include "sandbox/linux/syscall_broker/broker_file_permission.h"
+ #include "sandbox/linux/syscall_broker/broker_process.h"
+ #include "sandbox/linux/system_headers/linux_syscalls.h"
++#include "third_party/libva/va/va.h"
++#include "third_party/libva/va/va_x11.h"
+ 
+ using sandbox::arch_seccomp_data;
+ using sandbox::bpf_dsl::Allow;
+@@ -40,6 +44,11 @@ using sandbox::syscall_broker::BrokerFilePermission;
+ using sandbox::syscall_broker::BrokerProcess;
+ using sandbox::SyscallSets;
+ 
++using content_common_gpu_media::kModuleVa;
++using content_common_gpu_media::kModuleVa_x11;
++using content_common_gpu_media::InitializeStubs;
++using content_common_gpu_media::StubPathMap;
++
+ namespace content {
+ 
+ namespace {
+@@ -94,7 +103,7 @@ inline bool UseLibV4L2() {
+ 
+ bool IsAcceleratedVaapiVideoEncodeEnabled() {
+   bool accelerated_encode_enabled = false;
+-#if defined(OS_CHROMEOS)
++#if defined(OS_CHROMEOS) || defined(OS_LINUX)
+   const base::CommandLine& command_line =
+       *base::CommandLine::ForCurrentProcess();
+   accelerated_encode_enabled =
+@@ -299,27 +308,41 @@ bool GpuProcessPolicy::PreSandboxHook() {
+     // inside the sandbox, so preload them now.
+     if (IsAcceleratedVaapiVideoEncodeEnabled() ||
+         IsAcceleratedVideoDecodeEnabled()) {
+-      const char* I965DrvVideoPath = NULL;
+-      const char* I965HybridDrvVideoPath = NULL;
+-
+-      if (IsArchitectureX86_64()) {
+-        I965DrvVideoPath = "/usr/lib64/va/drivers/i965_drv_video.so";
+-        I965HybridDrvVideoPath = "/usr/lib64/va/drivers/hybrid_drv_video.so";
+-      } else if (IsArchitectureI386()) {
+-        I965DrvVideoPath = "/usr/lib/va/drivers/i965_drv_video.so";
++      VLOG(1) << "Attempting to enable hardware video acceleration.";
++      StubPathMap paths;
++      paths[kModuleVa].push_back("libva.so.1");
++      paths[kModuleVa_x11].push_back("libva-x11.so.1");
++      if (!InitializeStubs(paths)) {
++        VLOG(1) << "Failed to initialize stubs";
++        return false;
+       }
+ 
+-      dlopen(I965DrvVideoPath, RTLD_NOW|RTLD_GLOBAL|RTLD_NODELETE);
+-      if (I965HybridDrvVideoPath)
+-        dlopen(I965HybridDrvVideoPath, RTLD_NOW|RTLD_GLOBAL|RTLD_NODELETE);
+-      dlopen("libva.so.1", RTLD_NOW|RTLD_GLOBAL|RTLD_NODELETE);
+-#if defined(USE_OZONE)
+-      dlopen("libva-drm.so.1", RTLD_NOW|RTLD_GLOBAL|RTLD_NODELETE);
+-#elif defined(USE_X11)
+-      dlopen("libva-x11.so.1", RTLD_NOW|RTLD_GLOBAL|RTLD_NODELETE);
+-#endif
+-    }
+-  }
++      // libva drivers won't get loaded even above two libraries get dlopened.
++      // Thus, libva calls will fail after post sandbox stage.
++      //
++      // To get the va driver loaded before sandboxing, upstream simply dlopen
++      // the hard-coded va driver path because ChromeOS is the only platform
++      // that Google want to support libva.
++      //
++      // While generic linux distros ship va driver as anywhere they want.
++      // Fortunately, the va driver will be loadded when vaInitialize() get
++      // called.
++      // So the following code is to call vaInitialize() before sandboxing.
++      Display* x_display = XOpenDisplay(NULL);
++      VADisplay va_display = vaGetDisplay(x_display);
++      if (!vaDisplayIsValid(va_display)) {
++        VLOG(1) << "Failed to call vaGetDisplay()";
++        return false;
++      }
++
++      int major_version, minor_version;
++      if (vaInitialize(va_display, &major_version, &minor_version)
++          != VA_STATUS_SUCCESS) {
++        VLOG(1) << "Failed to call vaInitialize()";
++        return false;
++      }
++    }  // end of IsAcceleratedVaapiVideoEncodeEnabled() || IsAcceleratedVideoDecodeEnabled()
++  }  // end of IsArchitectureX86_64() || IsArchitectureI386()
+ 
+   return true;
+ }
+diff --git a/content/content_common.gypi b/content/content_common.gypi
+index 7a04d5e..4c15c4b 100644
+--- a/content/content_common.gypi
++++ b/content/content_common.gypi
+@@ -866,7 +866,7 @@
+         },
+       ],
+     }],
+-    ['chromeos==1', {
++    ['chromeos==1 or desktop_linux==1', {
+       'sources': [
+         'common/gpu/media/accelerated_video_decoder.h',
+         'common/gpu/media/h264_decoder.cc',
+@@ -922,7 +922,7 @@
+         'common/gpu/media/tegra_v4l2_device.h',
+       ],
+     }],
+-    ['target_arch != "arm" and chromeos == 1', {
++    ['target_arch != "arm" and (chromeos == 1 or desktop_linux == 1)', {
+       'dependencies': [
+         '../media/media.gyp:media',
+         '../third_party/libyuv/libyuv.gyp:libyuv',
+diff --git a/content/content_gpu.gypi b/content/content_gpu.gypi
+index 5516ed4..ff2f410 100644
+--- a/content/content_gpu.gypi
++++ b/content/content_gpu.gypi
+@@ -38,7 +38,7 @@
+         ],
+       },
+     }],
+-    ['target_arch!="arm" and chromeos == 1', {
++    ['target_arch!="arm" and (chromeos == 1 or desktop_linux == 1)', {
+       'include_dirs': [
+         '<(DEPTH)/third_party/libva',
+       ],
+diff --git a/content/content_tests.gypi b/content/content_tests.gypi
+index 929915b..1a3d543 100644
+--- a/content/content_tests.gypi
++++ b/content/content_tests.gypi
+@@ -1733,7 +1733,7 @@
+           },
+         ]
+     }],
+-    ['chromeos==1 and target_arch != "arm"', {
++    ['(chromeos==1 or desktop_linux==1) and target_arch != "arm"', {
+       'targets': [
+           {
+             'target_name': 'vaapi_jpeg_decoder_unittest',
+diff --git a/content/gpu/gpu_main.cc b/content/gpu/gpu_main.cc
+index d21c88d..f88dc15 100644
+--- a/content/gpu/gpu_main.cc
++++ b/content/gpu/gpu_main.cc
+@@ -72,7 +72,7 @@
+ #include "content/common/sandbox_mac.h"
+ #endif
+ 
+-#if defined(OS_CHROMEOS) && defined(ARCH_CPU_X86_FAMILY)
++#if (defined(OS_CHROMEOS) || defined(OS_LINUX)) && defined(ARCH_CPU_X86_FAMILY)
+ #include "content/common/gpu/media/vaapi_wrapper.h"
+ #endif
+ 
+@@ -237,7 +237,7 @@ int GpuMain(const MainFunctionParams& parameters) {
+   GetGpuInfoFromCommandLine(gpu_info, command_line);
+   gpu_info.in_process_gpu = false;
+ 
+-#if defined(OS_CHROMEOS) && defined(ARCH_CPU_X86_FAMILY)
++#if (defined(OS_CHROMEOS) || defined(OS_LINUX)) && defined(ARCH_CPU_X86_FAMILY)
+   VaapiWrapper::PreSandboxInitialization();
+ #endif
+ 
+diff --git a/content/public/common/content_switches.cc b/content/public/common/content_switches.cc
+index c449382..05ce87a 100644
+--- a/content/public/common/content_switches.cc
++++ b/content/public/common/content_switches.cc
+@@ -931,7 +931,9 @@ const char kDisableWebAudio[]               = "disable-webaudio";
+ #if defined(OS_CHROMEOS)
+ // Disables panel fitting (used for mirror mode).
+ const char kDisablePanelFitting[]           = "disable-panel-fitting";
++#endif
+ 
++#if defined(OS_CHROMEOS) || defined(OS_LINUX)
+ // Disables VA-API accelerated video encode.
+ const char kDisableVaapiAcceleratedVideoEncode[] =
+     "disable-vaapi-accelerated-video-encode";
+diff --git a/content/public/common/content_switches.h b/content/public/common/content_switches.h
+index 9bd5dbd..68d8a1e 100644
+--- a/content/public/common/content_switches.h
++++ b/content/public/common/content_switches.h
+@@ -275,6 +275,8 @@ CONTENT_EXPORT extern const char kDisableWebAudio[];
+ 
+ #if defined(OS_CHROMEOS)
+ CONTENT_EXPORT extern const char kDisablePanelFitting[];
++#endif
++#if defined(OS_CHROMEOS) || defined(OS_LINUX)
+ CONTENT_EXPORT extern const char kDisableVaapiAcceleratedVideoEncode[];
+ #endif
+ 
+diff --git a/gpu/config/software_rendering_list_json.cc b/gpu/config/software_rendering_list_json.cc
+index 3a8b070..95fb0fc2 100644
+--- a/gpu/config/software_rendering_list_json.cc
++++ b/gpu/config/software_rendering_list_json.cc
+@@ -481,17 +481,6 @@ const char kSoftwareRenderingListJson[] = LONG_STRING_CONST(
+       ]
+     },
+     {
+-      "id": 48,
+-      "description": "Accelerated video decode is unavailable on Linux",
+-      "cr_bugs": [137247],
+-      "os": {
+-        "type": "linux"
+-      },
+-      "features": [
+-        "accelerated_video_decode"
+-      ]
+-    },
+-    {
+       "id": 49,
+       "description": "NVidia GeForce GT 650M can cause the system to hang with flash 3D",
+       "cr_bugs": [140175],
+@@ -1045,6 +1034,11 @@ LONG_STRING_CONST(
+             "type": "android"
+           },
+           "gl_renderer": ".*Google.*"
++        },
++        {
++          "os": {
++            "type": "linux"
++          }
+         }
+       ],
+       "features": [
+diff --git a/media/media.gyp b/media/media.gyp
+index 26760c5..1d497d2 100644
+--- a/media/media.gyp
++++ b/media/media.gyp
+@@ -764,7 +764,7 @@
+           ],
+         }],
+         # For VaapiVideoEncodeAccelerator.
+-        ['target_arch != "arm" and chromeos == 1', {
++        ['target_arch != "arm" and (chromeos == 1 or desktop_linux == 1)', {
+           'sources': [
+             'filters/h264_bitstream_buffer.cc',
+             'filters/h264_bitstream_buffer.h',
