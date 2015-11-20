@@ -8,7 +8,7 @@ post_install () {
   # updating module dependencies
   echo ">>> Updating module dependencies. Please wait ..."
   depmod ${KERNEL_VERSION}
-  echo ">>> Generating initial ramdisk, using mkinitcpio.  Please wait..."
+  echo ">>> Generating initial ramdisk, using mkinitcpio. Please wait..."
   mkinitcpio -p linux${KERNEL_NAME}
 }
 
@@ -20,7 +20,7 @@ post_upgrade() {
   # updating module dependencies
   echo ">>> Updating module dependencies. Please wait ..."
   depmod ${KERNEL_VERSION}
-  echo ">>> Generating initial ramdisk, using mkinitcpio.  Please wait..."
+  echo ">>> Generating initial ramdisk, using mkinitcpio. Please wait..."
   mkinitcpio -p linux${KERNEL_NAME}
 
   if [ $(vercmp $2 3.13) -lt 0 ]; then
