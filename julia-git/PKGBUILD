@@ -10,7 +10,7 @@ if ((BUILD_EXTRA)); then
 else
    pkgname=('julia-git')
 fi
-pkgver=0.4.0.rc1.1297.g1ce01b1
+pkgver=0.4.0.rc1.1376.ge790619
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64')
@@ -19,7 +19,7 @@ license=('GPL')
 makedepends=('gcc-fortran' 'arpack' 'fftw' 'git' 'gmp' 'libgit2' 'libunwind'
              'llvm' 'mpfr' 'pcre2' 'suitesparse' 'python2-sphinx'
              'python2-sphinx_rtd_theme' 'python2-pip' 'texlive-langcjk'
-             'texlive-latexextra' 'emacs' 'openspecfun' 'openblas'
+             'texlive-latexextra' 'emacs' 'openspecfun' 'openlibm' 'openblas'
              'libutf8proc' 'patchelf')
 options=('!emptydirs' 'staticlibs' 'debug' 'strip')
 source=('git://github.com/JuliaLang/julia'
@@ -63,8 +63,7 @@ julia_opts=(prefix=/usr sysconfdir=/etc
             USE_SYSTEM_LIBUNWIND=1
             USE_SYSTEM_PCRE=1
             USE_SYSTEM_LIBM=0
-            # openlibm-git removed some functions needed by julia
-            USE_SYSTEM_OPENLIBM=0
+            USE_SYSTEM_OPENLIBM=1
             USE_SYSTEM_OPENSPECFUN=1
             USE_SYSTEM_DSFMT=0
             USE_SYSTEM_BLAS=1
@@ -124,7 +123,7 @@ package_julia-git() {
   arch=('i686' 'x86_64')
   depends=('arpack' 'fftw' 'gmp' 'libgit2' 'libunwind' 'llvm' 'mpfr' 'pcre2'
            'hicolor-icon-theme' 'xdg-utils' 'suitesparse' 'openspecfun'
-           'openblas' 'libutf8proc')
+           'openlibm' 'openblas' 'libutf8proc')
   install=julia.install
   conflicts=('julia')
 
