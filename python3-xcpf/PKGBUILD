@@ -1,6 +1,6 @@
 #Maintainer: Xyne <ac xunilhcra enyx, backwards>
 pkgname=python3-xcpf
-pkgver=2015.11.12
+pkgver=2015.11.21
 pkgrel=1
 pkgdesc='Xyne'"'"'s common Pacman functions, for internal use.'
 arch=(any)
@@ -8,16 +8,16 @@ license=(GPL)
 url="http://xyne.archlinux.ca/projects/python3-xcpf"
 depends=(python3 pyalpm)
 source=(
-  http://xyne.archlinux.ca/projects/python3-xcpf/src/python3-xcpf-2015.11.12.tar.xz
-  http://xyne.archlinux.ca/projects/python3-xcpf/src/python3-xcpf-2015.11.12.tar.xz.sig
+  http://xyne.archlinux.ca/projects/python3-xcpf/src/python3-xcpf-2015.11.21.tar.xz
+  http://xyne.archlinux.ca/projects/python3-xcpf/src/python3-xcpf-2015.11.21.tar.xz.sig
 )
 sha512sums=(
-  1c09f7b4e12ecf013998d3f1e438768ebbbfccf45c96e3769d323992060790bf6abd26e8d4260bbe44b975b5b63501e917675c627484ddabd59fd10fdc670687
-  ee873ea8b0ffa5d55510814a0e1e70237e590391acf185d0a76b11cda8fba741a483637d69bd08a64142eea2e86d7e55540c31b7697dd55e945629a82dba2ea0
+  6ce813857d26568a1ba8de81ab59ff5312b7089391f969ecf5beb102208b2d97fe4d269e8cb2b45c252f15405c02d352ec4f41540c32701c6a088f439879bb45
+  ddbd9698cf12ee4197370d5f5a7a98916b4cd24406d5d64404ebdc02b94113ab3ed4a1422eff6ec3f2d9f248878c8127c54a352811931c091bfa3d089dbaf792
 )
 md5sums=(
-  515ecea0cf1715c8c75b42ccc03e4642
-  835dbd24252da19a72b3036c3315fe29
+  acc032d3711b293b1526654f73cdd148
+  69fd3ac626d7f6af2486268ff4edbc44
 )
 validpgpkeys=('EC3CBE7F607D11E663149E811D1F0DC78F173680')
 
