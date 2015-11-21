@@ -1,0 +1,33 @@
+pre_install() {
+    return 0
+}
+
+post_install() {
+    # Arch specific
+    update-desktop-database -q
+
+    setcap CAP_SYS_ADMIN=+ep /opt/xware-desktop/chmns
+    chrpath -r /opt/xware-desktop/frontend/Extensions /opt/xware-desktop/frontend/Extensions/DBusTypes.so
+
+    echo "欢迎使用Xware Desktop。"
+    echo "设置方法和注意事项见项目主页。"
+    echo "项目主页 https://github.com/Xinkai/XwareDesktop/wiki"
+    echo "Github https://github.com/Xinkai/XwareDesktop"
+}
+
+pre_upgrade() {
+    return 0
+}
+
+post_upgrade() {
+    post_install
+}
+
+pre_remove() {
+    return 0
+}
+
+post_remove() {
+    echo "Xware Desktop卸载完成。"
+    echo "用户配置文件位于~/.xware-desktop，并未删除。"
+}
