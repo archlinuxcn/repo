@@ -50,6 +50,11 @@ def pre_build():
         front, dest = line.rsplit(None, 1)
         dest = dest.replace('-gtk', '-gtk2')
         line = front + ' ' + dest
+      elif line.strip() == '}':
+        line = '''\
+  sed -i -e 's/GTK+/&2/' -e 's/-gtk/&2/' \\
+         "${pkgdir}/usr/share/applications/wireshark-gtk2.desktop"
+''' + line
 
     print(line)
 
