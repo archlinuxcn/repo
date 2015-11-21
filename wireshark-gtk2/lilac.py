@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from types import SimpleNamespace
 
 from lilaclib import *
@@ -22,15 +24,16 @@ def pre_build():
     if line.startswith('pkgname='):
       line = 'pkgname=wireshark-gtk2'
     elif line.startswith('makedepends=('):
-      line = line.replace("'qt4' 'gtk3'", "'gtk2'")
+      line = line.replace("'qt5-base' 'gtk3'", "'gtk2'")
     elif '--with-qt' in line:
       continue
     elif '--with-gtk3' in line:
       line = '      --with-gtk2 \\'
-    elif line.startswith('package_wireshark-cli('):
-      ignoring = True
-      continue
-    elif line.startswith('package_wireshark-qt('):
+    elif line.startswith((
+      'package_wireshark-cli(',
+      'package_wireshark-qt(',
+      'package_wireshark-common(',
+    )):
       ignoring = True
       continue
     elif line.startswith('package_wireshark-gtk('):
@@ -41,10 +44,12 @@ def pre_build():
         line = line.replace('GTK', 'GTK 2')
       elif line.strip().startswith('depends='):
         line = line.replace('gtk3', 'gtk2')
-      elif line.strip().startswith('replaces='):
+      elif line.strip().startswith(('replaces=', 'conflicts=')):
         continue
-      elif line.strip().startswith('conflicts='):
-        line = '  conflicts=(wireshark-gtk)'
+      elif line.strip().startswith('install '):
+        front, dest = line.rsplit(None, 1)
+        dest = dest.replace('-gtk', '-gtk2')
+        line = front + ' ' + dest
 
     print(line)
 
