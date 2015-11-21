@@ -4,20 +4,16 @@
 # Contributor: Florian Pritz <bluewind at jabber dot ccc dot de>
 pkgname=wireshark-gtk2
 pkgbase=wireshark
-pkgver=1.12.8
+pkgver=2.0.0
 pkgrel=1
 arch=('i686' 'x86_64')
 license=('GPL2')
 makedepends=('gtk2' 'krb5' 'libpcap' 'bash' 'gnutls' 'portaudio'
              'lua52' 'python' 'desktop-file-utils' 'hicolor-icon-theme')
+options=(!emptydirs)
 url='http://www.wireshark.org/'
 source=(http://www.wireshark.org/download/src/${pkgbase}-${pkgver}.tar.bz2)
-sha1sums=('d8c23120525a2f3505e822b7684e7367bcd0ba70')
-
-prepare() {
-  cd ${pkgbase}-${pkgver}
-  sed -i 's/$(AM_V_RCC)rcc/&-qt4/p' ui/qt/Makefile.am
-}
+sha1sums=('f8b226b40e36e4c431b4f70bc3f523b6dd53a501')
 
 build() {
   cd ${pkgbase}-${pkgver}
@@ -36,24 +32,17 @@ build() {
 }
 
 
+
 package() {
   pkgdesc='a free network protocol analyzer for Unix/Linux and Windows - GTK 2 frontend'
-  depends=('gtk2' 'portaudio' 'wireshark-cli' 'desktop-file-utils' 'hicolor-icon-theme')
-  install=wireshark-gtk.install
-  conflicts=(wireshark-gtk)
+  depends=('desktop-file-utils' 'gtk2' 'portaudio' 'wireshark-cli' 'wireshark-common')
+  install=wireshark-gui.install
 
   cd ${pkgbase}-${pkgver}
 
-  install -Dm755 .libs/wireshark "${pkgdir}/usr/bin/wireshark"
-  for d in 16 32 48; do
-    install -Dm644 image/hi${d}-app-wireshark.png  \
-                   "${pkgdir}/usr/share/icons/hicolor/${d}x${d}/apps/wireshark.png"
-  done
-
-  for d in 16 24 32 48 64 128 256 ; do
-    install -Dm644 image/WiresharkDoc-${d}.png \
-                   "${pkgdir}/usr/share/icons/hicolor/${d}x${d}/mimetypes/application-vnd.tcpdump.pcap.png"
-  done
-  install -Dm644 wireshark.desktop "${pkgdir}/usr/share/applications/wireshark.desktop"
+  install -Dm755 .libs/wireshark-gtk "${pkgdir}/usr/bin/wireshark-gtk2"
+  install -Dm644 wireshark-gtk.desktop "${pkgdir}/usr/share/applications/wireshark-gtk2.desktop"
+  sed -i -e 's/GTK+/&2/' -e 's/-gtk/&2/' \
+         "${pkgdir}/usr/share/applications/wireshark-gtk2.desktop"
 }
 
