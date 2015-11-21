@@ -1,25 +1,25 @@
 #Maintainer: Xyne <ac xunilhcra enyx, backwards>
 pkgname=pm2ml
-pkgver=2015.11.15
+pkgver=2015.11.21
 pkgrel=1
 pkgdesc='Generate metalinks for downloading Pacman packages and databases.'
 arch=(any)
 license=(GPL)
 url="http://xyne.archlinux.ca/projects/pm2ml"
 depends=(python3 pyalpm python3-xcpf)
-optdepends=('reflector: Reflector support' 'python3-aur: AUR support' 'aria2: ppl script support.')
+optdepends=('python3-aur: AUR support' 'reflector: Reflector support' 'aria2: ppl script support.')
 backup=(etc/ppl.conf)
 source=(
-  http://xyne.archlinux.ca/projects/pm2ml/src/pm2ml-2015.11.15.tar.xz
-  http://xyne.archlinux.ca/projects/pm2ml/src/pm2ml-2015.11.15.tar.xz.sig
+  http://xyne.archlinux.ca/projects/pm2ml/src/pm2ml-2015.11.21.tar.xz
+  http://xyne.archlinux.ca/projects/pm2ml/src/pm2ml-2015.11.21.tar.xz.sig
 )
 sha512sums=(
-  ebb8664ecbb343edfca3ee91cc94bceddfe6d3c7eb52d7dd3ba664e8427ee7363e7cb6ff959479872760b4e716c291bc2e2c2f0c0c67ac73a652b4942f7a2d56
-  9b78b61690728ce73f94fea602a7c6ce399803f98f218d1085f3aec68da07387fa5342589c980401bc17f00485e76f8b15ff5a9539970eaae7593bbeb86fd9c1
+  67f8d73626a6ba0f1998759f09ded81f78eeb121f8180abdb4ef0331a0aa523b0230f62882aea67e48c3dbf9511123b5a254b49aeaf3914e5ac032bf08adff4c
+  51f8330f6a4a184426e522058dd689c0aaffafb66602130a9a0d164bc63e25f752f250a5d399880626ef68ce5adb9841874883a8f9b4f6aa7172a66cd0808a0d
 )
 md5sums=(
-  029365f6c3cbb9e25b70569cfe10a414
-  36a53d9a16e8b7cd4f4beceedff1b444
+  720d8f40dd922fc7544c5c0670351363
+  8e6eb8ac1560e51d3580b47765819ee2
 )
 validpgpkeys=('EC3CBE7F607D11E663149E811D1F0DC78F173680')
 
