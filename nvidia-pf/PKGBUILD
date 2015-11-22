@@ -1,9 +1,9 @@
 # Maintainer : Zuyi Hu <hzy068808@gmail.com>
 
 pkgname=nvidia-pf
-pkgver=355.11
+pkgver=358.16
 _extramodules=extramodules-4.3-pf
-pkgrel=4
+pkgrel=1
 pkgdesc="NVIDIA drivers for linux-pf"
 arch=('i686' 'x86_64')
 url="http://www.nvidia.com/"
@@ -14,10 +14,9 @@ install=nvidia.install
 options=(!strip)
 source=("ftp://download.nvidia.com/XFree86/Linux-x86/${pkgver}/NVIDIA-Linux-x86-${pkgver}.run"
         "ftp://download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run"
-	nvidia-4.3-build.patch)
-md5sums=('16d143ccafe99328a2ca8e5a396fd4bc'
-         '30133d89690f4683c4e289ec6c0247dc'
-         '1e5f60cf8e77af482345549b9436887a')
+	)
+md5sums=('5dfe11ca13548ca4813b10f3223d6014'
+         'efb1e649c0e0d62e92774bbf2c124488')
 
 [[ "$CARCH" = "i686" ]] && _pkg="NVIDIA-Linux-x86-${pkgver}"
 [[ "$CARCH" = "x86_64" ]] && _pkg="NVIDIA-Linux-x86_64-${pkgver}-no-compat32"
@@ -26,7 +25,6 @@ prepare() {
     sh "${_pkg}.run" --extract-only
     cd "${_pkg}"
     # patches here
-    patch -Np1 -i ${srcdir}/nvidia-4.3-build.patch
 }
 
 build() {
