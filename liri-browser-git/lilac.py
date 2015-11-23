@@ -16,8 +16,6 @@ def pre_build():
     aur_pre_build()
 
     for line in edit_file("PKGBUILD"):
-        if line.strip().startswith("qmake "):
-            line='qmake "$srcdir/$pkgname/$_pkgname.pro"'
         if line.strip().startswith('license=("GPLv3")')
             line='license=("GPL3")'
         print(line)

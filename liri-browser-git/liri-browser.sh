@@ -6,4 +6,4 @@ if [[ -f ~/.config/liri-flags.conf ]]; then
 fi
 
 # Launch
-exec /opt/liri-browser/bin/liri-browser $LIRI_USER_FLAGS $@
+exec /opt/liri-browser-build/liri-browser $LIRI_USER_FLAGS $@

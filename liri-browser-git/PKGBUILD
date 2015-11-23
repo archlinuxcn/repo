@@ -25,14 +25,13 @@ pkgver() {
 }
 
 build() {
-	mkdir -p build
-	cd build
-qmake "$srcdir/$pkgname/$_pkgname.pro"
+  cd "$srcdir/$pkgname"
+	qmake liri-browser.pro
 	make
 }
 
 package() {
-	cd build
+	cd "$srcdir/$pkgname"
 	make INSTALL_ROOT="$pkgdir" install
 
   mkdir -p "$pkgdir"/usr/bin
@@ -42,9 +41,9 @@ package() {
     install -Dm644 "$srcdir"/"$pkgname"/icons/liri-browser.png \
                    "$pkgdir"/usr/share/icons/hicolor/$i/apps/liri-browser.png
   done
-  install -m755 ../liri-browser.sh \
+  install -m755 "$srcdir"/liri-browser.sh \
                 "$pkgdir"/usr/bin/liri-browser
-  install -m755 ../liri-browser.desktop \
+  install -m755 "$srcdir"/liri-browser.desktop \
                 "$pkgdir"/usr/share/applications/liri-browser.desktop
 }
 
