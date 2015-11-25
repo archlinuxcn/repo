@@ -40,8 +40,9 @@ def pre_build():
         print(line)
 
 def post_build():
-  # do something after the package has successfully been built
-  aur_post_build()
+  git_add_files('PKGBUILD')
+  git_add_files('opsu.sh')
+  git_commit()
 
 # do some cleanup here after building the package, regardless of result
 # def post_build_always(success):
