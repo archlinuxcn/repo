@@ -1,6 +1,6 @@
---- a/pkgs/conda-3.14.1-py34_0/lib/python3.4/site-packages/conda/install.py	2015-07-03 11:04:48.348322309 +0200
-+++ b/pkgs/conda-3.14.1-py34_0/lib/python3.4/site-packages/conda/install.py	2015-07-03 11:04:52.078277806 +0200
-@@ -251,21 +251,23 @@
+--- a/pkgs/conda-3.18.3-py35_0/lib/python3.5/site-packages/conda/install.py	2015-11-25 09:59:32.301105554 +0100
++++ b/pkgs/conda-3.18.3-py35_0/lib/python3.5/site-packages/conda/install.py	2015-11-25 10:17:19.506243545 +0100
+@@ -257,21 +257,23 @@
      return res
  
  def update_prefix(path, new_prefix, placeholder=prefix_placeholder,
@@ -28,7 +28,7 @@
      else:
          sys.exit("Invalid mode:" % mode)
  
-@@ -550,7 +552,7 @@
+@@ -586,7 +588,7 @@
  def load_meta(prefix, dist):
      return is_linked(prefix, dist)
  
@@ -37,16 +37,7 @@
      '''
      Set up a package in a specified (environment) prefix.  We assume that
      the package has been extracted (using extract() above).
-@@ -569,6 +571,8 @@
-         # linking or unlinking some packages
-         log.warn('Ignored: %s' % dist)
-         return
-+    if instdir is None:
-+        instdir = prefix
- 
-     source_dir = join(pkgs_dir, dist)
-     if not run_script(source_dir, dist, 'pre-link', prefix):
-@@ -614,7 +618,7 @@
+@@ -639,7 +641,7 @@
          for f in sorted(has_prefix_files):
              placeholder, mode = has_prefix_files[f]
              try:
@@ -55,7 +46,7 @@
              except PaddingError:
                  sys.exit("ERROR: placeholder '%s' too short in: %s\n" %
                           (placeholder, dist))
-@@ -749,6 +753,10 @@
+@@ -767,6 +769,10 @@
                   default=sys.prefix,
                   help="prefix (defaults to %default)")
  
@@ -66,7 +57,7 @@
      p.add_option('--pkgs-dir',
                   action="store",
                   default=join(sys.prefix, 'pkgs'),
-@@ -778,9 +786,14 @@
+@@ -796,9 +802,14 @@
  
      pkgs_dir = opts.pkgs_dir
      prefix = opts.prefix
@@ -81,7 +72,7 @@
  
      if opts.list:
          pprint(sorted(linked(prefix)))
-@@ -795,14 +808,14 @@
+@@ -813,7 +824,7 @@
          for dist in dists:
              if opts.verbose or linktype == LINK_COPY:
                  print("linking: %s" % dist)
@@ -90,11 +81,12 @@
          messages(prefix)
  
      elif opts.extract:
-         extract(pkgs_dir, dist)
- 
-     elif opts.link:
--        link(pkgs_dir, prefix, dist)
-+        link(pkgs_dir, prefix, dist, instdir=instdir)
+@@ -823,7 +834,7 @@
+         linktype = (LINK_HARD
+                     if try_hard_link(pkgs_dir, prefix, dist) else
+                     LINK_COPY)
+-        link(pkgs_dir, prefix, dist, linktype)
++        link(pkgs_dir, prefix, dist, linktype, instdir=instdir)
  
      elif opts.unlink:
          unlink(prefix, dist)
