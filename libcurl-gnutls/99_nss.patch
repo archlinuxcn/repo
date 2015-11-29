@@ -1,0 +1,137 @@
+Description: Build with NSS.
+Origin: vendor
+Forwarded: not-needed
+Author: Ramakrishnan Muthukrishnan <vu3rdd@gmail.com>
+Reviewed-by: Alessandro Ghedini <ghedo@debian.org>
+Last-Update: 2015-08-12
+
+--- a/docs/examples/Makefile.am
++++ b/docs/examples/Makefile.am
+@@ -52,9 +52,9 @@
+ 
+ # Dependencies
+ if USE_EXPLICIT_LIB_DEPS
+-LDADD = $(LIBDIR)/libcurl-gnutls.la @LIBCURL_LIBS@
++LDADD = $(LIBDIR)/libcurl-nss.la @LIBCURL_LIBS@
+ else
+-LDADD = $(LIBDIR)/libcurl-gnutls.la
++LDADD = $(LIBDIR)/libcurl-nss.la
+ endif
+ 
+ # Makefile.inc provides the check_PROGRAMS and COMPLICATED_EXAMPLES defines
+--- a/lib/Makefile.am
++++ b/lib/Makefile.am
+@@ -32,7 +32,7 @@
+  firefox-db2pem.sh config-vxworks.h Makefile.vxworks checksrc.pl	\
+  objnames-test08.sh objnames-test10.sh objnames.inc checksrc.whitelist
+ 
+-lib_LTLIBRARIES = libcurl-gnutls.la
++lib_LTLIBRARIES = libcurl-nss.la
+ 
+ if BUILD_UNITTESTS
+ noinst_LTLIBRARIES = libcurlu.la
+@@ -102,38 +102,38 @@
+ AM_LDFLAGS =
+ AM_CFLAGS =
+ 
+-libcurl_gnutls_la_CPPFLAGS_EXTRA =
+-libcurl_gnutls_la_LDFLAGS_EXTRA =
+-libcurl_gnutls_la_CFLAGS_EXTRA =
++libcurl_nss_la_CPPFLAGS_EXTRA =
++libcurl_nss_la_LDFLAGS_EXTRA =
++libcurl_nss_la_CFLAGS_EXTRA =
+ 
+ if CURL_LT_SHLIB_USE_VERSION_INFO
+-libcurl_gnutls_la_LDFLAGS_EXTRA += $(VERSIONINFO)
++libcurl_nss_la_LDFLAGS_EXTRA += $(VERSIONINFO)
+ endif
+ 
+ if CURL_LT_SHLIB_USE_NO_UNDEFINED
+-libcurl_gnutls_la_LDFLAGS_EXTRA += -no-undefined
++libcurl_nss_la_LDFLAGS_EXTRA += -no-undefined
+ endif
+ 
+ if CURL_LT_SHLIB_USE_MIMPURE_TEXT
+-libcurl_gnutls_la_LDFLAGS_EXTRA += -mimpure-text
++libcurl_nss_la_LDFLAGS_EXTRA += -mimpure-text
+ endif
+ 
+ if CURL_LT_SHLIB_USE_VERSIONED_SYMBOLS
+-libcurl_gnutls_la_LDFLAGS_EXTRA += -Wl,--version-script=libcurl.vers
++libcurl_nss_la_LDFLAGS_EXTRA += -Wl,--version-script=libcurl.vers
+ endif
+ 
+ if USE_CPPFLAG_CURL_STATICLIB
+-libcurl_gnutls_la_CPPFLAGS_EXTRA += -DCURL_STATICLIB
++libcurl_nss_la_CPPFLAGS_EXTRA += -DCURL_STATICLIB
+ endif
+ 
+ if DOING_CURL_SYMBOL_HIDING
+-libcurl_gnutls_la_CPPFLAGS_EXTRA += -DCURL_HIDDEN_SYMBOLS
+-libcurl_gnutls_la_CFLAGS_EXTRA += $(CFLAG_CURL_SYMBOL_HIDING)
++libcurl_nss_la_CPPFLAGS_EXTRA += -DCURL_HIDDEN_SYMBOLS
++libcurl_nss_la_CFLAGS_EXTRA += $(CFLAG_CURL_SYMBOL_HIDING)
+ endif
+ 
+-libcurl_gnutls_la_CPPFLAGS = $(AM_CPPFLAGS) $(libcurl_gnutls_la_CPPFLAGS_EXTRA)
+-libcurl_gnutls_la_LDFLAGS = $(AM_LDFLAGS) $(libcurl_gnutls_la_LDFLAGS_EXTRA) $(LDFLAGS) $(LIBCURL_LIBS)
+-libcurl_gnutls_la_CFLAGS = $(AM_CFLAGS) $(libcurl_gnutls_la_CFLAGS_EXTRA)
++libcurl_nss_la_CPPFLAGS = $(AM_CPPFLAGS) $(libcurl_nss_la_CPPFLAGS_EXTRA)
++libcurl_nss_la_LDFLAGS = $(AM_LDFLAGS) $(libcurl_nss_la_LDFLAGS_EXTRA) $(LDFLAGS) $(LIBCURL_LIBS)
++libcurl_nss_la_CFLAGS = $(AM_CFLAGS) $(libcurl_nss_la_CFLAGS_EXTRA)
+ 
+ libcurlu_la_CPPFLAGS = $(AM_CPPFLAGS) -DCURL_STATICLIB -DUNITTESTS
+ libcurlu_la_LDFLAGS = $(AM_LDFLAGS) -static $(LIBCURL_LIBS)
+@@ -142,7 +142,7 @@
+ # Makefile.inc provides the CSOURCES and HHEADERS defines
+ include Makefile.inc
+ 
+-libcurl_gnutls_la_SOURCES = $(CSOURCES) $(HHEADERS)
++libcurl_nss_la_SOURCES = $(CSOURCES) $(HHEADERS)
+ libcurlu_la_SOURCES = $(CSOURCES) $(HHEADERS)
+ 
+ checksrc:
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -60,14 +60,14 @@
+ LIBS = $(BLANK_AT_MAKETIME)
+ 
+ if USE_EXPLICIT_LIB_DEPS
+-curl_LDADD = $(top_builddir)/lib/libcurl-gnutls.la @LIBMETALINK_LIBS@ @LIBCURL_LIBS@
++curl_LDADD = $(top_builddir)/lib/libcurl-nss.la @LIBMETALINK_LIBS@ @LIBCURL_LIBS@
+ else
+-curl_LDADD = $(top_builddir)/lib/libcurl-gnutls.la @LIBMETALINK_LIBS@ @NSS_LIBS@ @SSL_LIBS@ @ZLIB_LIBS@ @CURL_NETWORK_AND_TIME_LIBS@
++curl_LDADD = $(top_builddir)/lib/libcurl-nss.la @LIBMETALINK_LIBS@ @NSS_LIBS@ @SSL_LIBS@ @ZLIB_LIBS@ @CURL_NETWORK_AND_TIME_LIBS@
+ endif
+ 
+ curl_LDFLAGS = @LIBMETALINK_LDFLAGS@
+ curl_CPPFLAGS = $(AM_CPPFLAGS) $(LIBMETALINK_CPPFLAGS)
+-curl_DEPENDENCIES = $(top_builddir)/lib/libcurl-gnutls.la
++curl_DEPENDENCIES = $(top_builddir)/lib/libcurl-nss.la
+ 
+ # if unit tests are enabled, build a static library to link them with
+ if BUILD_UNITTESTS
+--- a/tests/libtest/Makefile.am
++++ b/tests/libtest/Makefile.am
+@@ -59,16 +59,16 @@
+ LIBS = $(BLANK_AT_MAKETIME)
+ 
+ if USE_EXPLICIT_LIB_DEPS
+-SUPPORTFILES_LIBS = $(top_builddir)/lib/libcurl-gnutls.la @LIBCURL_LIBS@
+-TESTUTIL_LIBS = $(top_builddir)/lib/libcurl-gnutls.la @LIBCURL_LIBS@
++SUPPORTFILES_LIBS = $(top_builddir)/lib/libcurl-nss.la @LIBCURL_LIBS@
++TESTUTIL_LIBS = $(top_builddir)/lib/libcurl-nss.la @LIBCURL_LIBS@
+ else
+-SUPPORTFILES_LIBS = $(top_builddir)/lib/libcurl-gnutls.la @CURL_NETWORK_LIBS@ @NSS_LIBS@
+-TESTUTIL_LIBS = $(top_builddir)/lib/libcurl-gnutls.la @CURL_NETWORK_AND_TIME_LIBS@ @NSS_LIBS@
++SUPPORTFILES_LIBS = $(top_builddir)/lib/libcurl-nss.la @CURL_NETWORK_LIBS@ @NSS_LIBS@
++TESTUTIL_LIBS = $(top_builddir)/lib/libcurl-nss.la @CURL_NETWORK_AND_TIME_LIBS@ @NSS_LIBS@
+ endif
+ 
+ # Dependencies (may need to be overriden)
+ LDADD = $(SUPPORTFILES_LIBS)
+-DEPENDENCIES = $(top_builddir)/lib/libcurl-gnutls.la
++DEPENDENCIES = $(top_builddir)/lib/libcurl-nss.la
+ 
+ # Makefile.inc provides the source defines (TESTUTIL, SUPPORTFILES,
+ # noinst_PROGRAMS, lib*_SOURCES, and lib*_CFLAGS)

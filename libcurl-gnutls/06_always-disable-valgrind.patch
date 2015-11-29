@@ -1,0 +1,17 @@
+Description: Always disable valgrind tests
+Origin: vendor
+Bug-Debian: http://bugs.debian.org/690968
+Forwarded: not-needed
+Last-Update: 2012-10-22
+
+--- a/tests/Makefile.am
++++ b/tests/Makefile.am
+@@ -57,7 +57,7 @@
+ if CROSSCOMPILING
+ TEST = @echo "NOTICE: we can't run the tests when cross-compiling!"
+ else # if not cross-compiling:
+-TEST = srcdir=$(srcdir) $(PERL) $(PERLFLAGS) $(srcdir)/runtests.pl
++TEST = srcdir=$(srcdir) $(PERL) $(PERLFLAGS) $(srcdir)/runtests.pl -n
+ TEST_Q = -a -s
+ TEST_AM = -a -am
+ TEST_F = -a -p -r

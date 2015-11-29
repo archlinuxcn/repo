@@ -1,0 +1,12 @@
+post_install() {
+  ldconfig -r .
+  usr/bin/gio-querymodules-32 usr/lib32/gio/modules
+}
+
+post_upgrade() {
+  post_install
+}
+
+post_remove() {
+  usr/bin/gio-querymodules-32 usr/lib32/gio/modules
+}

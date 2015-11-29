@@ -1,0 +1,98 @@
+Description: Do not disable debug symbols without --enable-debug
+Origin: vendor
+Bug-Debian: http://bugs.debian.org/693110
+Forwarded: not-needed
+Author: Alessandro Ghedini <ghedo@debian.org>
+Reviewed-by: Alessandro Ghedini <ghedo@debian.org>
+Last-Update: 2012-11-16
+
+--- a/m4/curl-compilers.m4
++++ b/m4/curl-compilers.m4
+@@ -97,7 +97,6 @@
+     flags_dbg_all="$flags_dbg_all -gdwarf-2"
+     flags_dbg_all="$flags_dbg_all -gvms"
+     flags_dbg_yes="-g"
+-    flags_dbg_off=""
+     flags_opt_all="-O -O0 -O1 -O2 -Os -O3 -O4"
+     flags_opt_yes="-Os"
+     flags_opt_off="-O0"
+@@ -121,7 +120,6 @@
+     compiler_id="DEC_C"
+     flags_dbg_all="-g -g0 -g1 -g2 -g3"
+     flags_dbg_yes="-g2"
+-    flags_dbg_off=""
+     flags_opt_all="-O -O0 -O1 -O2 -O3 -O4"
+     flags_opt_yes="-O1"
+     flags_opt_off="-O0"
+@@ -157,7 +155,6 @@
+     flags_dbg_all="$flags_dbg_all -gdwarf-2"
+     flags_dbg_all="$flags_dbg_all -gvms"
+     flags_dbg_yes="-g"
+-    flags_dbg_off=""
+     flags_opt_all="-O -O0 -O1 -O2 -O3 -Os"
+     flags_opt_yes="-O2"
+     flags_opt_off="-O0"
+@@ -202,7 +199,6 @@
+     compiler_id="IBM_C"
+     flags_dbg_all="-g -g0 -g1 -g2 -g3"
+     flags_dbg_yes="-g"
+-    flags_dbg_off=""
+     flags_opt_all="-O -O0 -O1 -O2 -O3 -O4 -O5"
+     flags_opt_all="$flags_opt_all -qnooptimize"
+     flags_opt_all="$flags_opt_all -qoptimize=0"
+@@ -236,7 +232,6 @@
+       compiler_id="INTEL_UNIX_C"
+       flags_dbg_all="-g -g0"
+       flags_dbg_yes="-g"
+-      flags_dbg_off=""
+       flags_opt_all="-O -O0 -O1 -O2 -O3 -Os"
+       flags_opt_yes="-O2"
+       flags_opt_off="-O0"
+@@ -274,7 +269,6 @@
+     compiler_id="LCC"
+     flags_dbg_all="-g"
+     flags_dbg_yes="-g"
+-    flags_dbg_off=""
+     flags_opt_all=""
+     flags_opt_yes=""
+     flags_opt_off=""
+@@ -300,7 +294,6 @@
+     compiler_id="SGI_MIPS_C"
+     flags_dbg_all="-g -g0 -g1 -g2 -g3"
+     flags_dbg_yes="-g"
+-    flags_dbg_off=""
+     flags_opt_all="-O -O0 -O1 -O2 -O3 -Ofast"
+     flags_opt_yes="-O2"
+     flags_opt_off="-O0"
+@@ -327,7 +320,6 @@
+     compiler_id="SGI_MIPSPRO_C"
+     flags_dbg_all="-g -g0 -g1 -g2 -g3"
+     flags_dbg_yes="-g"
+-    flags_dbg_off=""
+     flags_opt_all="-O -O0 -O1 -O2 -O3 -Ofast"
+     flags_opt_yes="-O2"
+     flags_opt_off="-O0"
+@@ -371,7 +363,6 @@
+     compiler_id="TINY_C"
+     flags_dbg_all="-g -b"
+     flags_dbg_yes="-g"
+-    flags_dbg_off=""
+     flags_opt_all=""
+     flags_opt_yes=""
+     flags_opt_off=""
+@@ -395,7 +386,6 @@
+       compiler_id="WATCOM_UNIX_C"
+       flags_dbg_all="-g1 -g1+ -g2 -g3"
+       flags_dbg_yes="-g2"
+-      flags_dbg_off=""
+       flags_opt_all="-O0 -O1 -O2 -O3"
+       flags_opt_yes="-O2"
+       flags_opt_off="-O0"
+@@ -403,7 +393,6 @@
+       compiler_id="WATCOM_WINDOWS_C"
+       flags_dbg_all=""
+       flags_dbg_yes=""
+-      flags_dbg_off=""
+       flags_opt_all=""
+       flags_opt_yes=""
+       flags_opt_off=""

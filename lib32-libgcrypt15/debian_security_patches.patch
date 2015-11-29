@@ -1,0 +1,435 @@
+diff -NurbBp libgcrypt-1.4.5.orig/src/libgcrypt-config.in libgcrypt-1.4.5/src/libgcrypt-config.in
+--- libgcrypt-1.4.5.orig/src/libgcrypt-config.in	2009-04-02 11:25:32.000000000 +0200
++++ libgcrypt-1.4.5/src/libgcrypt-config.in	2009-12-12 09:37:05.000000000 +0100
+@@ -151,7 +151,8 @@ if test "$echo_libs" = "yes"; then
+     fi
+ 
+     # Set up `libs_final'.
+-    libs_final="$libs_final $gpg_error_libs"
++    #libs_final="$libs_final $gpg_error_libs"
++    libs_final="-lgcrypt"
+ 
+     tmp=""
+     for i in $libdirs $libs_final; do
+From 410d70bad9a650e3837055e36f157894ae49a57d Mon Sep 17 00:00:00 2001
+From: Werner Koch <wk@gnupg.org>
+Date: Mon, 23 Feb 2015 11:39:58 +0100
+Subject: [PATCH] cipher: Use ciphertext blinding for Elgamal decryption.
+
+* cipher/elgamal.c (USE_BLINDING): New.
+(decrypt): Rewrite to use ciphertext blinding.
+--
+
+CVE-id: CVE-2014-3591
+
+As a countermeasure to a new side-channel attacks on sliding windows
+exponentiation we blind the ciphertext for Elgamal decryption.  This
+is similar to what we are doing with RSA. This patch is a backport of
+the GnuPG 1.4 commit ff53cf06e966dce0daba5f2c84e03ab9db2c3c8b.
+
+Unfortunately, the performance impact of Elgamal blinding is quite
+noticeable (i5-2410M CPU @ 2.30GHz TP 220):
+
+  Algorithm         generate  100*priv  100*public
+  ------------------------------------------------
+  ELG 1024 bit             -     100ms        90ms
+  ELG 2048 bit             -     330ms       350ms
+  ELG 3072 bit             -     660ms       790ms
+
+  Algorithm         generate  100*priv  100*public
+  ------------------------------------------------
+  ELG 1024 bit             -     150ms        90ms
+  ELG 2048 bit             -     520ms       360ms
+  ELG 3072 bit             -    1100ms       800ms
+
+Signed-off-by: Werner Koch <wk@gnupg.org>
+---
+ cipher/elgamal.c | 46 +++++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 41 insertions(+), 5 deletions(-)
+
+--- a/cipher/elgamal.c
++++ b/cipher/elgamal.c
+@@ -38,6 +38,12 @@
+ } ELG_public_key;
+ 
+ 
++/* Blinding is used to mitigate side-channel attacks.  You may undef
++   this to speed up the operation in case the system is secured
++   against physical and network mounted side-channel attacks.  */
++#define USE_BLINDING 1
++
++
+ typedef struct
+ {
+   gcry_mpi_t p;	    /* prime */
+@@ -486,12 +492,42 @@
+ static void
+ decrypt(gcry_mpi_t output, gcry_mpi_t a, gcry_mpi_t b, ELG_secret_key *skey )
+ {
+-  gcry_mpi_t t1 = mpi_alloc_secure( mpi_get_nlimbs( skey->p ) );
++  gcry_mpi_t t1, t2, r;
++  unsigned int nbits = mpi_get_nbits (skey->p);
++
++  t1 = mpi_snew (nbits);
++
++#ifdef USE_BLINDING
++
++  t2 = mpi_snew (nbits);
++  r  = mpi_new (nbits);
++
++  /* We need a random number of about the prime size.  The random
++     number merely needs to be unpredictable; thus we use level 0.  */
++  _gcry_mpi_randomize (r, nbits, GCRY_WEAK_RANDOM);
++
++  /* t1 = r^x mod p */
++  mpi_powm (t1, r, skey->x, skey->p);
++  /* t2 = (a * r)^-x mod p */
++  mpi_mulm (t2, a, r, skey->p);
++  mpi_powm (t2, t2, skey->x, skey->p);
++  mpi_invm (t2, t2, skey->p);
++  /* t1 = (t1 * t2) mod p*/
++  mpi_mulm (t1, t1, t2, skey->p);
++
++  mpi_free (r);
++  mpi_free (t2);
++
++#else /*!USE_BLINDING*/
+ 
+   /* output = b/(a^x) mod p */
+-  gcry_mpi_powm( t1, a, skey->x, skey->p );
+-  mpi_invm( t1, t1, skey->p );
+-  mpi_mulm( output, b, t1, skey->p );
++  mpi_powm (t1, a, skey->x, skey->p);
++  mpi_invm (t1, t1, skey->p);
++
++#endif /*!USE_BLINDING*/
++
++  mpi_mulm (output, b, t1, skey->p);
++
+ #if 0
+   if( DBG_CIPHER )
+     {
+@@ -502,7 +538,7 @@
+       log_mpidump("elg decrypted M= ", output);
+     }
+ #endif
+-  mpi_free(t1);
++  mpi_free (t1);
+ }
+ 
+ 
+From 653a9fa1a3a4c35a4dc1841cb57d7e2a318f3288 Mon Sep 17 00:00:00 2001
+From: NIIBE Yutaka <gniibe@fsij.org>
+Date: Wed, 11 Feb 2015 21:42:22 +0900
+Subject: [PATCH] mpi: Add mpi_set_cond.
+
+* mpi/mpiutil.c (_gcry_mpi_set_cond): New.
+(_gcry_mpi_swap_cond): Fix types.
+* src/mpi.h (mpi_set_cond): New.
+---
+ mpi/mpiutil.c | 33 +++++++++++++++++++++++++++++----
+ src/mpi.h     |  3 +++
+ 2 files changed, 32 insertions(+), 4 deletions(-)
+
+--- a/mpi/mpiutil.c
++++ b/mpi/mpiutil.c
+@@ -386,6 +386,31 @@
+                              / BITS_PER_MPI_LIMB );
+ }
+ 
++gcry_mpi_t
++_gcry_mpi_set_cond (gcry_mpi_t w, const gcry_mpi_t u, unsigned long set)
++{
++  mpi_size_t i;
++  mpi_size_t nlimbs = u->alloced;
++  mpi_limb_t mask = ((mpi_limb_t)0) - !!set;
++  mpi_limb_t x;
++
++  if (w->alloced != u->alloced)
++    log_bug ("mpi_set_cond: different sizes\n");
++
++  for (i = 0; i < nlimbs; i++)
++    {
++      x = mask & (w->d[i] ^ u->d[i]);
++      w->d[i] = w->d[i] ^ x;
++    }
++
++  x = mask & (w->nlimbs ^ u->nlimbs);
++  w->nlimbs = w->nlimbs ^ x;
++
++  x = mask & (w->sign ^ u->sign);
++  w->sign = w->sign ^ x;
++  return w;
++}
++
+ 
+ gcry_mpi_t
+ gcry_mpi_snew( unsigned int nbits )
+--- a/src/mpi.h
++++ b/src/mpi.h
+@@ -116,8 +116,11 @@
+ #define mpi_swap(a,b)         _gcry_mpi_swap ((a),(b))
+ #define mpi_new(n)            _gcry_mpi_new ((n))
+ #define mpi_snew(n)           _gcry_mpi_snew ((n))
++#define mpi_set_cond(w,u,set) _gcry_mpi_set_cond ((w),(u),(set))
+ 
+ void _gcry_mpi_clear( gcry_mpi_t a );
++gcry_mpi_t _gcry_mpi_set_cond( gcry_mpi_t w, const gcry_mpi_t u,
++                               unsigned long swap );
+ gcry_mpi_t  _gcry_mpi_alloc_like( gcry_mpi_t a );
+ gcry_mpi_t  _gcry_mpi_alloc_set_ui( unsigned long u);
+ gcry_err_code_t _gcry_mpi_get_ui (gcry_mpi_t w, ulong *u);
+From 1fa8cdb933505960d4e4b4842b122d4e06953e88 Mon Sep 17 00:00:00 2001
+From: NIIBE Yutaka <gniibe@fsij.org>
+Date: Wed, 11 Feb 2015 22:30:02 +0900
+Subject: [PATCH] mpi: Revise mpi_powm.
+
+* mpi/mpi-pow.c (_gcry_mpi_powm): Rename the table to PRECOMP.
+
+--
+
+The name of precomputed table was b_2i3 which stands for BASE^(2*I+3).
+But it's too cryptic, so, it's renamed.  Besides, we needed to
+distinguish the case of I==0, that was not good.  Since it's OK to
+increase the size of table by one, it's BASE^(2*I+1), now.
+---
+ mpi/mpi-pow.c | 60 ++++++++++++++++++-----------------------------------------
+ 1 file changed, 18 insertions(+), 42 deletions(-)
+
+--- a/mpi/mpi-pow.c
++++ b/mpi/mpi-pow.c
+@@ -381,7 +381,7 @@
+      *xsize_p = rsize + ssize;
+ }
+ 
+-#define SIZE_B_2I3 ((1 << (5 - 1)) - 1)
++#define SIZE_PRECOMP ((1 << (5 - 1)))
+ 
+ /****************
+  * RES = BASE ^ EXPO mod MOD
+@@ -417,8 +417,8 @@
+   unsigned int bp_nlimbs = 0;
+   unsigned int ep_nlimbs = 0;
+   unsigned int xp_nlimbs = 0;
+-  mpi_ptr_t b_2i3[SIZE_B_2I3]; /* Pre-computed array: BASE^3, ^5, ^7, ... */
+-  mpi_size_t b_2i3size[SIZE_B_2I3];
++  mpi_ptr_t precomp[SIZE_PRECOMP]; /* Pre-computed array: BASE^1, ^3, ^5, ... */
++  mpi_size_t precomp_size[SIZE_PRECOMP];
+   mpi_size_t W;
+   mpi_ptr_t base_u;
+   mpi_size_t base_u_size;
+@@ -555,31 +555,23 @@
+     memset( &karactx, 0, sizeof karactx );
+     negative_result = (ep[0] & 1) && bsign;
+ 
+-    /* Precompute B_2I3[], BASE^(2 * i + 3), BASE^3, ^5, ^7, ... */
++    /* Precompute PRECOMP[], BASE^(2 * i + 1), BASE^1, ^3, ^5, ... */
+     if (W > 1)                  /* X := BASE^2 */
+       mul_mod (xp, &xsize, bp, bsize, bp, bsize, mp, msize, &karactx);
+-    for (i = 0; i < (1 << (W - 1)) - 1; i++)
+-      {                         /* B_2I3[i] = BASE^(2 * i + 3) */
+-        if (i == 0)
+-          {
+-            base_u = bp;
+-            base_u_size = bsize;
+-          }
+-        else
+-          {
+-            base_u = b_2i3[i-1];
+-            base_u_size = b_2i3size[i-1];
+-          }
+-
++    base_u = precomp[0] = mpi_alloc_limb_space (bsize, esec);
++    base_u_size = precomp_size[0] = bsize;
++    MPN_COPY (precomp[0], bp, bsize);
++    for (i = 1; i < (1 << (W - 1)); i++)
++      {                         /* PRECOMP[i] = BASE^(2 * i + 1) */
+         if (xsize >= base_u_size)
+           mul_mod (rp, &rsize, xp, xsize, base_u, base_u_size,
+                    mp, msize, &karactx);
+         else
+           mul_mod (rp, &rsize, base_u, base_u_size, xp, xsize,
+                    mp, msize, &karactx);
+-        b_2i3[i] = mpi_alloc_limb_space (rsize, esec);
+-        b_2i3size[i] = rsize;
+-        MPN_COPY (b_2i3[i], rp, rsize);
++        base_u = precomp[i] = mpi_alloc_limb_space (rsize, esec);
++        base_u_size = precomp_size[i] = rsize;
++        MPN_COPY (precomp[i], rp, rsize);
+       }
+ 
+     i = esize - 1;
+@@ -667,16 +659,8 @@
+               rsize = xsize;
+             }
+ 
+-          if (e0 == 0)
+-            {
+-              base_u = bp;
+-              base_u_size = bsize;
+-            }
+-          else
+-            {
+-              base_u = b_2i3[e0 - 1];
+-              base_u_size = b_2i3size[e0 -1];
+-            }
++	  base_u = precomp[e0];
++	  base_u_size = precomp_size[e0];
+ 
+           mul_mod (xp, &xsize, rp, rsize, base_u, base_u_size,
+                    mp, msize, &karactx);
+@@ -703,16 +687,8 @@
+ 
+     if (e != 0)
+       {
+-        if ((e>>1) == 0)
+-          {
+-            base_u = bp;
+-            base_u_size = bsize;
+-          }
+-        else
+-          {
+-            base_u = b_2i3[(e>>1) - 1];
+-            base_u_size = b_2i3size[(e>>1) -1];
+-          }
++	base_u = precomp[(e>>1)];
++	base_u_size = precomp_size[(e>>1)];
+ 
+         mul_mod (xp, &xsize, rp, rsize, base_u, base_u_size,
+                  mp, msize, &karactx);
+@@ -761,8 +737,8 @@
+     MPN_NORMALIZE (rp, rsize);
+ 
+     _gcry_mpih_release_karatsuba_ctx (&karactx );
+-    for (i = 0; i < (1 << (W - 1)) - 1; i++)
+-      _gcry_mpi_free_limb_space( b_2i3[i], esec ? b_2i3size[i] : 0 );
++    for (i = 0; i < (1 << (W - 1)); i++)
++      _gcry_mpi_free_limb_space( precomp[i], esec ? precomp_size[i] : 0 );
+   }
+ 
+   /* Fixup for negative results.  */
+From 6636c4fd0c6ceab9f79827bf96967d1e112c0b82 Mon Sep 17 00:00:00 2001
+From: NIIBE Yutaka <gniibe@fsij.org>
+Date: Thu, 26 Feb 2015 21:07:01 +0900
+Subject: [PATCH] mpi: Avoid data-dependent timing variations in mpi_powm.
+
+* mpi/mpi-pow.c (mpi_powm): Access all data in the table by
+mpi_set_cond.
+
+--
+
+Access to the precomputed table was indexed by a portion of EXPO,
+which could be mounted by a side channel attack.  This change fixes
+this particular data-dependent access pattern.
+
+Cherry-picked from commit  5e72b6c76ebee720f69b8a5c212f52d38eb50287
+in LIBGCRYPT-1-6-BRANCH.
+---
+ mpi/mpi-pow.c | 51 +++++++++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 45 insertions(+), 6 deletions(-)
+
+--- a/mpi/mpi-pow.c
++++ b/mpi/mpi-pow.c
+@@ -422,6 +422,7 @@
+   mpi_size_t W;
+   mpi_ptr_t base_u;
+   mpi_size_t base_u_size;
++  mpi_size_t max_u_size;
+ 
+   esize = expo->nlimbs;
+   msize = mod->nlimbs;
+@@ -540,7 +541,7 @@
+ 
+   /* Main processing.  */
+   {
+-    mpi_size_t i, j;
++    mpi_size_t i, j, k;
+     mpi_ptr_t xp;
+     mpi_size_t xsize;
+     int c;
+@@ -559,7 +560,7 @@
+     if (W > 1)                  /* X := BASE^2 */
+       mul_mod (xp, &xsize, bp, bsize, bp, bsize, mp, msize, &karactx);
+     base_u = precomp[0] = mpi_alloc_limb_space (bsize, esec);
+-    base_u_size = precomp_size[0] = bsize;
++    base_u_size = max_u_size = precomp_size[0] = bsize;
+     MPN_COPY (precomp[0], bp, bsize);
+     for (i = 1; i < (1 << (W - 1)); i++)
+       {                         /* PRECOMP[i] = BASE^(2 * i + 1) */
+@@ -571,9 +572,14 @@
+                    mp, msize, &karactx);
+         base_u = precomp[i] = mpi_alloc_limb_space (rsize, esec);
+         base_u_size = precomp_size[i] = rsize;
++        if (max_u_size < base_u_size)
++          max_u_size = base_u_size;
+         MPN_COPY (precomp[i], rp, rsize);
+       }
+ 
++    base_u = mpi_alloc_limb_space (max_u_size, esec);
++    MPN_ZERO (base_u, max_u_size);
++
+     i = esize - 1;
+ 
+     /* Main loop.
+@@ -659,8 +665,24 @@
+               rsize = xsize;
+             }
+ 
+-	  base_u = precomp[e0];
+-	  base_u_size = precomp_size[e0];
++          /*
++           *  base_u <= precomp[e0]
++           *  base_u_size <= precomp_size[e0]
++           */
++          base_u_size = 0;
++          for (k = 0; k < (1<< (W - 1)); k++)
++            {
++              struct gcry_mpi w, u;
++              w.alloced = w.nlimbs = precomp_size[k];
++              u.alloced = u.nlimbs = precomp_size[k];
++              w.sign = u.sign = 0;
++              w.flags = u.flags = 0;
++              w.d = base_u;
++              u.d = precomp[k];
++
++              mpi_set_cond (&w, &u, k == e0);
++              base_u_size |= (precomp_size[k] & ((mpi_size_t)0 - (k == e0)) );
++            }
+ 
+           mul_mod (xp, &xsize, rp, rsize, base_u, base_u_size,
+                    mp, msize, &karactx);
+@@ -687,8 +709,24 @@
+ 
+     if (e != 0)
+       {
+-	base_u = precomp[(e>>1)];
+-	base_u_size = precomp_size[(e>>1)];
++        /*
++         * base_u <= precomp[(e>>1)]
++         * base_u_size <= precomp_size[(e>>1)]
++         */
++        base_u_size = 0;
++        for (k = 0; k < (1<< (W - 1)); k++)
++          {
++            struct gcry_mpi w, u;
++            w.alloced = w.nlimbs = precomp_size[k];
++            u.alloced = u.nlimbs = precomp_size[k];
++            w.sign = u.sign = 0;
++            w.flags = u.flags = 0;
++            w.d = base_u;
++            u.d = precomp[k];
++
++            mpi_set_cond (&w, &u, k == (e>>1));
++            base_u_size |= (precomp_size[k] & ((mpi_size_t)0 - (k == (e>>1))) );
++          }
+ 
+         mul_mod (xp, &xsize, rp, rsize, base_u, base_u_size,
+                  mp, msize, &karactx);
+@@ -739,6 +777,7 @@
+     _gcry_mpih_release_karatsuba_ctx (&karactx );
+     for (i = 0; i < (1 << (W - 1)); i++)
+       _gcry_mpi_free_limb_space( precomp[i], esec ? precomp_size[i] : 0 );
++    _gcry_mpi_free_limb_space (base_u, esec ? max_u_size : 0);
+   }
+ 
+   /* Fixup for negative results.  */

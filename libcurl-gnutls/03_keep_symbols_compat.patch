@@ -1,0 +1,17 @@
+Description: Keep versioned symbols backwards compatibility.
+Origin: vendor
+Forwarded: not-needed
+Author: Alessandro Ghedini <ghedo@debian.org>
+Last-Update: 2013-04-16
+
+--- a/lib/libcurl.vers.in
++++ b/lib/libcurl.vers.in
+@@ -6,7 +6,7 @@
+     _save*;
+ };
+ 
+-CURL_@CURL_LT_SHLIB_VERSIONED_FLAVOUR@4
++CURL_@CURL_LT_SHLIB_VERSIONED_FLAVOUR@3
+ {
+   global: curl_*;
+   local: *;
