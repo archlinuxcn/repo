@@ -2,6 +2,7 @@
 cd $PKGDIR/
 PKGNAME="$(pwd | sed -e 's/.*\///g')" 
 printf "$PKGNAME" > /home/ccache/pkgname
+printf "$PKGNAME" > pkgname
 pkgname=$PKGNAME
 function getcurrent {
  pacman -Si $PKGNAME 2>/dev/null | grep Version | awk '{print $3;}' | sed -e 's/-.*//g'
@@ -23,8 +24,9 @@ if [[ "$(getlatest)" == "$(getcurrent)" ]]; then
  exit 0;
 fi
 rm -f *.tar.xz
-multilib-build -- -c -C /home/ccache
-extra-i686-build -- -c -C /home/ccache
+#multilib-build -- -c -C /home/ccache
+#extra-i686-build -- -c -C /home/ccache
+multilib-build
 rm *.sig
 for i in $(ls *.pkg.tar.xz); do
  NEWNAME="$(echo $i | sed -e 's/startdir/$PKGNAME/g')"

@@ -1,14 +1,14 @@
 diff --git a/chrome/browser/about_flags.cc b/chrome/browser/about_flags.cc
-index 2abd33b..2a0ac05 100644
+index b8b039e..c04acfb 100644
 --- a/chrome/browser/about_flags.cc
 +++ b/chrome/browser/about_flags.cc
-@@ -1016,7 +1016,7 @@ const FeatureEntry kFeatureEntries[] = {
+@@ -943,7 +943,7 @@ const FeatureEntry kFeatureEntries[] = {
       "disable-accelerated-video-decode",
-      IDS_FLAGS_DISABLE_ACCELERATED_VIDEO_DECODE_NAME,
-      IDS_FLAGS_DISABLE_ACCELERATED_VIDEO_DECODE_DESCRIPTION,
+      IDS_FLAGS_ACCELERATED_VIDEO_DECODE_NAME,
+      IDS_FLAGS_ACCELERATED_VIDEO_DECODE_DESCRIPTION,
 -     kOsMac | kOsWin | kOsCrOS,
 +     kOsAll,
-      SINGLE_VALUE_TYPE(switches::kDisableAcceleratedVideoDecode),
+      SINGLE_DISABLE_VALUE_TYPE(switches::kDisableAcceleratedVideoDecode),
      },
  #if defined(USE_ASH)
 diff --git a/content/common/gpu/media/gpu_video_decode_accelerator.cc b/content/common/gpu/media/gpu_video_decode_accelerator.cc
@@ -147,10 +147,10 @@ index e8c3127..3a94566 100644
    return true;
  }
 diff --git a/content/content_common.gypi b/content/content_common.gypi
-index 7a04d5e..4c15c4b 100644
+index 8af6123..e62e74c 100644
 --- a/content/content_common.gypi
 +++ b/content/content_common.gypi
-@@ -866,7 +866,7 @@
+@@ -869,7 +869,7 @@
          },
        ],
      }],
@@ -159,7 +159,7 @@ index 7a04d5e..4c15c4b 100644
        'sources': [
          'common/gpu/media/accelerated_video_decoder.h',
          'common/gpu/media/h264_decoder.cc',
-@@ -922,7 +922,7 @@
+@@ -925,7 +925,7 @@
          'common/gpu/media/tegra_v4l2_device.h',
        ],
      }],
@@ -182,10 +182,10 @@ index 5516ed4..ff2f410 100644
          '<(DEPTH)/third_party/libva',
        ],
 diff --git a/content/content_tests.gypi b/content/content_tests.gypi
-index 929915b..1a3d543 100644
+index 0c14ccf..5c29633 100644
 --- a/content/content_tests.gypi
 +++ b/content/content_tests.gypi
-@@ -1733,7 +1733,7 @@
+@@ -1739,7 +1739,7 @@
            },
          ]
      }],
@@ -195,10 +195,10 @@ index 929915b..1a3d543 100644
            {
              'target_name': 'vaapi_jpeg_decoder_unittest',
 diff --git a/content/gpu/gpu_main.cc b/content/gpu/gpu_main.cc
-index d21c88d..f88dc15 100644
+index 6c7e8af..1a431a6 100644
 --- a/content/gpu/gpu_main.cc
 +++ b/content/gpu/gpu_main.cc
-@@ -72,7 +72,7 @@
+@@ -73,7 +73,7 @@
  #include "content/common/sandbox_mac.h"
  #endif
  
@@ -207,7 +207,7 @@ index d21c88d..f88dc15 100644
  #include "content/common/gpu/media/vaapi_wrapper.h"
  #endif
  
-@@ -237,7 +237,7 @@ int GpuMain(const MainFunctionParams& parameters) {
+@@ -244,7 +244,7 @@ int GpuMain(const MainFunctionParams& parameters) {
    GetGpuInfoFromCommandLine(gpu_info, command_line);
    gpu_info.in_process_gpu = false;
  
@@ -217,10 +217,10 @@ index d21c88d..f88dc15 100644
  #endif
  
 diff --git a/content/public/common/content_switches.cc b/content/public/common/content_switches.cc
-index c449382..05ce87a 100644
+index 5164717..49eda8b 100644
 --- a/content/public/common/content_switches.cc
 +++ b/content/public/common/content_switches.cc
-@@ -931,7 +931,9 @@ const char kDisableWebAudio[]               = "disable-webaudio";
+@@ -929,7 +929,9 @@ const char kDisableWebAudio[]               = "disable-webaudio";
  #if defined(OS_CHROMEOS)
  // Disables panel fitting (used for mirror mode).
  const char kDisablePanelFitting[]           = "disable-panel-fitting";
@@ -231,7 +231,7 @@ index c449382..05ce87a 100644
  const char kDisableVaapiAcceleratedVideoEncode[] =
      "disable-vaapi-accelerated-video-encode";
 diff --git a/content/public/common/content_switches.h b/content/public/common/content_switches.h
-index 9bd5dbd..68d8a1e 100644
+index 5db9e9d..30ecb01 100644
 --- a/content/public/common/content_switches.h
 +++ b/content/public/common/content_switches.h
 @@ -275,6 +275,8 @@ CONTENT_EXPORT extern const char kDisableWebAudio[];
@@ -244,7 +244,7 @@ index 9bd5dbd..68d8a1e 100644
  #endif
  
 diff --git a/gpu/config/software_rendering_list_json.cc b/gpu/config/software_rendering_list_json.cc
-index 3a8b070..95fb0fc2 100644
+index 6dd06c2..a41532d 100644
 --- a/gpu/config/software_rendering_list_json.cc
 +++ b/gpu/config/software_rendering_list_json.cc
 @@ -481,17 +481,6 @@ const char kSoftwareRenderingListJson[] = LONG_STRING_CONST(
@@ -278,10 +278,10 @@ index 3a8b070..95fb0fc2 100644
        ],
        "features": [
 diff --git a/media/media.gyp b/media/media.gyp
-index 26760c5..1d497d2 100644
+index 5f0fd68..a868df2 100644
 --- a/media/media.gyp
 +++ b/media/media.gyp
-@@ -764,7 +764,7 @@
+@@ -773,7 +773,7 @@
            ],
          }],
          # For VaapiVideoEncodeAccelerator.

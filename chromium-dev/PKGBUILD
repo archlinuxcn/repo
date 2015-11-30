@@ -11,8 +11,10 @@
 
 if pwd | grep "/home/build" >/dev/null; then
 pkgname=$(cat /home/ccache/pkgname)
-else
+elif [[ -d /build/.ccache ]]; then
 pkgname="$(cat /build/.ccache/pkgname)" # chromium-dev or chromium-canary
+else
+pkgname="$(cat pkgname)"
 fi
 
 function getlatest() {
