@@ -34,11 +34,19 @@ case $1 in
   ;;
   
 --start)
-  if [[ ! -f $HOME/.chrome-remote-desktop-session || ! -f $HOME/.config/chrome-remote-desktop/Size ]]
+  if [ ! -f $HOME/.chrome-remote-desktop-session ] | [ ! -f $HOME/.config/chrome-remote-desktop/Size ]
   then
     echo "Seems like you haven't set this up yet. Try running crd --setup."
     exit
   fi
+  
+  if [ ! -f $HOME/.config/chrome-remote-desktop/host#*.json ]
+  then
+    echo "Seems like you haven't activated CRD in your browser. Please do"
+    echo "that before trying to run the server."
+    exit
+  fi
+
   
   rm -rf $HOME/.config/chrome-remote-desktop/pulseaudio*
   crd_size=$(cat $HOME/.config/chrome-remote-desktop/Size)
@@ -51,7 +59,7 @@ case $1 in
   echo "Checking working directory and session file are present"
   echo "That would be $HOME/.config/chrome-remote-desktop and"
   echo "$HOME/.chrome-remote-desktop-session"
-  [[ -d $HOME/.config/chrome-remote-desktop ]] || mkdir $HOME/.config/chrome-remote-desktop
+  [ -d $HOME/.config/chrome-remote-desktop ] || mkdir $HOME/.config/chrome-remote-desktop
   touch $HOME/.chrome-remote-desktop-session
   touch $HOME/.config/chrome-remote-desktop/Size
 
@@ -100,7 +108,7 @@ case $1 in
   echo "Note: You will have to go into chrome or chromium to enable remote"
   echo "connections to this computer before you can run CRD on this machine."
   echo ""
-  echo "Usage: chrome-remote-desktop [[option]]"
+  echo "Usage: crd [option]"
   echo ""
   echo "Options:"
   echo ""
@@ -149,12 +157,19 @@ case $1 in
   ;;
   
 *)
-  if [[ ! -f $HOME/.chrome-remote-desktop-session || ! -f $HOME/.config/chrome-remote-desktop/Size ]]
+  if [ ! -f $HOME/.chrome-remote-desktop-session ] | [ ! -f $HOME/.config/chrome-remote-desktop/Size ]
   then
     echo "Seems like you haven't set this up yet. Try running crd --setup."
     exit
   fi
-
+  
+  if [ ! -f $HOME/.config/chrome-remote-desktop/host#*.json ]
+  then
+    echo "Seems like you haven't activated CRD in your browser. Please do"
+    echo "that before trying to run the server."
+    exit
+  fi
+  
   if [[ $crd_status = "STARTED" ]]
   then
     echo "CRD is already running; stopping."

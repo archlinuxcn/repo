@@ -20,7 +20,7 @@ source=("https://dl.google.com/linux/direct/${pkgname}_current_${_arch}.deb"
         "crd")
 md5sums=('SKIP' 
          '6f6083ff37f036f590702c7b1319445b'
-         '0e95478a978454695a604e97aecf173f')
+         '5e9fa07e85d0d490de675bf258a0c511')
 
 pkgver() {
   bsdtar -xf control.tar.gz -O control | grep '^Version: ' | cut -f2 -d' '
