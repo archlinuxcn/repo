@@ -1,7 +1,7 @@
 #Maintainer:xgdgsc<xgdgsc@gmail.com>
 
 pkgname=mendeleydesktop
-pkgver=1.15.1
+pkgver=1.15.2
 pkgrel=1
 pkgdesc="Academic software for managing and sharing research papers (desktop client)"
 url=http://www.mendeley.com/release-notes/
@@ -14,19 +14,19 @@ md5sums=('' '44c54032370c2a7cbc6667af6d19acf7')
 
 if [[ $CARCH = i686 ]];then
   _arch=i486
-  md5sums[0]='c579a8cfdea46ce7a7573dd090e1772c'
+  md5sums[0]='b2aa40aa35fbd9f8ea5e6904f27ed774'
 
 else
   _arch=$CARCH
-  md5sums[0]='65e526583072c878a22cb11e4e83141d'
+  md5sums[0]='2e4d28e7f0f584d1f2a416e3ac373065'
 fi
 
 if which gconftool-2 &>/dev/null;then
   depends=(${depends[@]} gconf)
 fi
 
-#http://desktop-download.mendeley.com/download/linux/mendeleydesktop-1.14.-linux-i486.tar.bz2
-#http://desktop-download.mendeley.com/download/linux/mendeleydesktop-1.14.-linux-x86_64.tar.bz2
+#http://desktop-download.mendeley.com/download/linux/mendeleydesktop-1.15.-linux-i486.tar.bz2
+#http://desktop-download.mendeley.com/download/linux/mendeleydesktop-1.15.-linux-x86_64.tar.bz2
 source=("http://desktop-download.mendeley.com/download/linux/$pkgname-$pkgver-linux-$_arch.tar.bz2"
         'mendeleydesktop.install')
 
