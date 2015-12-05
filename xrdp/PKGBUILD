@@ -6,7 +6,7 @@
 # Contributor: Mathias R. <pu154r@overlinux.org>
 pkgname=xrdp
 pkgver=0.8.0
-pkgrel=3
+pkgrel=4
 pkgdesc="An open source remote desktop protocol (RDP) server"
 url="http://xrdp.sourceforge.net/"
 arch=('i686' 'x86_64' 'armv6h')
@@ -17,20 +17,11 @@ install=xrdp.install
 source=(https://github.com/neutrinolabs/${pkgname}/archive/v${pkgver}.tar.gz
 	fixups.patch)
 md5sums=('2b0c3affc65ee77ad251514c62896757'
-         '07f35f8700cd9384f5d13117fd3a4e04')
+         'e6985363c6f13e22272afdc6a7dddc96')
 
 prepare() {
   cd "${pkgname}-${pkgver}"
-
-  sed -i 's|/etc/sysconfig/xrdp|/etc/xrdp/xrdp.ini|' instfiles/xrdp.service
-  sed -i 's|/etc/sysconfig/xrdp|/etc/xrdp/xrdp.ini|' instfiles/xrdp-sesman.service
-
-  sed -i 's|/usr/local/sbin|/usr/bin|' instfiles/xrdp.sh
-  sed -i 's|/usr/sbin|/usr/bin|' instfiles/xrdp.service
-  sed -i 's|/usr/sbin|/usr/bin|' instfiles/xrdp-sesman.service
-
   patch -p2 -b -z .orig <../fixups.patch
-
   ./bootstrap
 }
 
