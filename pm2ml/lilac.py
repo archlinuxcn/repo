@@ -7,12 +7,22 @@
 from lilaclib import *
 
 build_prefix = 'extra-x86_64'
+depends = ['python3-xcpf', 'pm2ml']
 
-depends = ['python3-xcpf']
+def pre_build():
+  # obtain base PKGBUILD, e.g.
+  aur_pre_build()
 
-pre_build = aur_pre_build
+  count=0
+  for line in edit_file('PKGBUILD'):
+    # edit PKGBUILD
+    count=count+1
+    if count in {14,18,22,24}:
+        print('#'+line)
+    else:
+        print(line)
+
 post_build = aur_post_build
-
 
 if __name__ == '__main__':
   single_main()
