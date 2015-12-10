@@ -4,16 +4,16 @@
 # Based on a modified version of the gcc PKGBUILD
 
 pkgname=gcc-gcj
-pkgver=5.2.0
+pkgver=5.3.0
 _pkgver=5
-_islver=0.14.1
+_islver=0.15
 pkgrel=1
 pkgdesc="The GNU Compiler for Java"
 arch=('i686' 'x86_64')
 license=('GPL' 'LGPL')
 url="http://gcc.gnu.org"
 depends=('gtk2' 'libxtst' 'alsa-lib' 'libmpc>=0.8.1' 'classpath' 'gcc-gcj-ecj')
-makedepends=('mpfr>=2.4.2' 'elfutils' 'jack' 'zip' 'gcc=5.1.0' 'libart-lgpl')
+makedepends=('mpfr>=2.4.2' 'elfutils' 'jack' 'zip' 'gcc=5.3.0' 'libart-lgpl')
 optdepends=('python2: for running /usr/bin/aot-compile'
   'java-environment: for runnig some jars')
 options=('!libtool')
@@ -21,8 +21,8 @@ install=$pkgname.install
 source=("ftp://gcc.gnu.org/pub/gcc/releases/gcc-${pkgver}/gcc-${pkgver}.tar.bz2"
         "http://isl.gforge.inria.fr/isl-${_islver}.tar.bz2")
 
-sha512sums=('844120349ec04465dcea52d8ec747f1cbbc9d76a39fe3d8ef5e6b93614e63d718862d60d0a1c1cbf59ffc7815562287d0a2e536a6b220cebcd0b8de4ba35e715'
-            '0d8e04e4a029a1c382357570d0e58b45cff0c89ef576084af3841dda112a1275575fb85f62e7c0ea6e89a4fccf90cae55cdd12c37b824ce5e8845ed6d31edb2d')
+sha512sums=('d619847383405fd389f5a2d7225f97fedb01f81478dbb8339047ccba7561a5c20045ab500a8744bffd19ea51892ce09fc37f862f2cfcb42de0f0f8cd8f8da37a'
+            '1e27b7798f7428abcb5e9b2e3fbe3842fede54c03bbd7bd3cf83703e1e4cca7d95c51326ab90253fe55b38c002183e8e78dfbb4d2cf20b0aabe02443c8e7d50f')
 
 prepare() {
   echo "You need at least 10GB of space to compile gcc-gcj,"
@@ -59,8 +59,7 @@ build() {
       --enable-__cxa_atexit  --disable-multilib --libdir=/usr/lib \
       --libexecdir=/usr/lib --enable-clocale=gnu --disable-libstdcxx-pch \
       --with-tune=generic --enable-java-awt=gtk --with-java-home="$JAVA_HOME" \
-      --enable-libgcj-multifile --disable-plugin --with-system-zlib \
-      --with-default-libstdcxx-abi=gcc4-compatible
+      --enable-libgcj-multifile --disable-plugin --with-system-zlib
   CPPFLAGS="$CPPFLAGS -O2"
   make
 }
