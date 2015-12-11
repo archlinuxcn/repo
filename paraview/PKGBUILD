@@ -7,7 +7,7 @@
 
 pkgname=paraview
 pkgver=4.4.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Parallel Visualization Application using VTK'
 arch=('i686' 'x86_64')
 url='http://www.paraview.org'
@@ -19,13 +19,18 @@ optdepends=('python2-matplotlib: Needed to support equation rendering using Math
 	        'python2-numpy: Needed for using some filters such as "Python Calculator"')
 source=("http://paraview.org/files/v${pkgver:0:3}/ParaView-v${pkgver}-source.tar.gz"
 	    'paraview.png'
-	    'paraview.desktop')
+	    'paraview.desktop'
+	    'paraview_32bit.patch')
 sha1sums=('276fc91f2a7aec72b7740c5312b560cc76157370'
           'a2dff014e1235dfaa93cd523286f9c97601d3bbc'
-          '1f94c8ff79bb2bd2c02d6b403ea1f4599616531b')
+          '1f94c8ff79bb2bd2c02d6b403ea1f4599616531b'
+	  'c25134330c582371e1009b51445cdb435144b53f')
 
 prepare() {
   cd "${srcdir}/ParaView-v${pkgver}-source"
+
+  patch -p1 -i ../paraview_32bit.patch
+
   
   rm -rf "${srcdir}/build"
   mkdir "${srcdir}/build"

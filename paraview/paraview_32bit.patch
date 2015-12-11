@@ -1,0 +1,12 @@
+diff -Naur ParaView-v4.4.0-source_org/Utilities/VisItBridge/databases/paraDIS/paraDIS_lib/paradis.C ParaView-v4.4.0-source/Utilities/VisItBridge/databases/paraDIS/paraDIS_lib/paradis.C
+--- ParaView-v4.4.0-source_org/Utilities/VisItBridge/databases/paraDIS/paraDIS_lib/paradis.C	2015-09-11 19:58:54.000000000 +0200
++++ ParaView-v4.4.0-source/Utilities/VisItBridge/databases/paraDIS/paraDIS_lib/paradis.C	2015-12-09 09:24:56.260264846 +0100
+@@ -762,7 +762,7 @@
+     if (mNeighborSegments.size() < 4) 
+       return crossarms; 
+ 
+-   vector<Arm*> armpair(2,NULL); 
++   vector<Arm*> armpair(2,(Arm*)NULL); 
+     vector<bool> matched(mNeighborSegments.size(), false); 
+     // first, identify looped cross arms
+     for (uint32_t segnum = 0; segnum < mNeighborSegments.size()-1; segnum++) {
