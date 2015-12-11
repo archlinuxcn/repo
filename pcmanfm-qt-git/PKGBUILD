@@ -2,15 +2,14 @@
 
 _pkgname=pcmanfm-qt
 pkgname=$_pkgname-git
-pkgver=0.8.0
+pkgver=0.9.0.14.g643dcf6
 pkgrel=1
 pkgdesc="The LXQt file manager, Qt port of PCManFM"
-arch=("i686" "x86_64" "armv6h")
+arch=("i686" "x86_64")
 url="http://lxqt.org"
 license=("GPL2")
-depends=("liblxqt-git" "libfm" "lxmenu-data" "qt5-x11extras" "qt5-tools")
-makedepends=("git" "cmake")
-groups=('lxqt')
+depends=("liblxqt-git" "libfm" "lxmenu-data" "qt5-x11extras")
+makedepends=("git" "cmake" "qt5-tools")
 provides=("$_pkgname")
 conflicts=("$_pkgname")
 install="$_pkgname.install"
@@ -23,21 +22,16 @@ pkgver() {
 }
 
 build() {
-	cd "$srcdir/$_pkgname"
 	mkdir -p build
 	cd build
-	cmake -DCMAKE_INSTALL_PREFIX=/usr -DUSE_QT5=true ..
+
+	cmake "$srcdir/$_pkgname" \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_INSTALL_LIBDIR=lib
 	make
 }
 
 package() {
-	cd "$srcdir/$_pkgname"
 	cd build
 	make DESTDIR="$pkgdir" install
-	
-	#fix /usr/lib64 exists error
-	cd "$pkgdir/usr"
-	if [ -d lib64 ]; then
-		mv "lib64" "lib"
-	fi
 }
