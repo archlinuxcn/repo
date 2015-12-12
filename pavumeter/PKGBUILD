@@ -23,7 +23,7 @@ md5sums=('SKIP'
 build() {
   cd ${srcdir}/${pkgname}
   ./autogen.sh
-  ./configure --prefix=/usr
+  CXXFLAGS="$CXXFLAGS -std=c++11" ./configure --prefix=/usr
   make || return 1
 }
 
