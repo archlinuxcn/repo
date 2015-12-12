@@ -34,8 +34,9 @@ url="http://www.chromium.org/"
 license=('BSD')
 depends=('gtk2' 'nss' 'alsa-lib' 'xdg-utils' 'bzip2' 'libevent' 'libxss' 'icu'
          'libexif' 'libgcrypt' 'ttf-font' 'systemd' 'dbus' 'flac' 'snappy'
-         'speech-dispatcher' 'pciutils' 'libpulse' 'harfbuzz' 'libsecret'
-         'perl' 'perl-file-basedir' 'desktop-file-utils' 'hicolor-icon-theme' 'libva')
+         'pciutils' 'libpulse' 'harfbuzz' 'libsecret'
+         'perl' 'perl-file-basedir' 'desktop-file-utils' 'hicolor-icon-theme' 'libva'
+         'libtinfo' 'libpthread-stubs')
 makedepends=('python2' 'gperf' 'yasm' 'mesa' 'ninja')
 makedepends_x86_64=('lib32-gcc-libs' 'lib32-zlib')
 optdepends=('kdebase-kdialog: needed for file dialogs in KDE'
@@ -125,11 +126,9 @@ build() {
     -Dgoogle_default_client_id=$_google_default_client_id
     -Dgoogle_default_client_secret=$_google_default_client_secret
     -Dwerror=
-    -Dclang=0
     -Dpython_ver=2.7
     -Dlinux_link_gsettings=1
     -Dlinux_link_libpci=1
-    -Dlinux_link_libspeechd=1
     -Dlinux_link_pulseaudio=1
     -Dlinux_strip_binary=1
     -Dlinux_use_bundled_binutils=0
@@ -140,7 +139,6 @@ build() {
     -Dtracing_like_official_build=1
     -Dfieldtrial_testing_like_official_build=1
     -Drelease_extra_cflags="$CFLAGS"
-    -Dlibspeechd_h_prefix=speech-dispatcher/
     -Dffmpeg_branding=Chrome
     -Dproprietary_codecs=1
     -Duse_gnome_keyring=0
@@ -150,7 +148,7 @@ build() {
     -Duse_system_harfbuzz=1
     -Duse_system_icu=1
     -Duse_system_libevent=1
-    -Duse_system_libjpeg=1
+    -Duse_system_libjpeg=0
     -Duse_system_libpng=1
     -Duse_system_libvpx=0
     -Duse_system_libxml=0
@@ -159,6 +157,7 @@ build() {
     -Duse_system_yasm=1
     -Duse_system_zlib=0
     -Dusb_ids_path=/usr/share/hwdata/usb.ids
+    -Duse_sysroot=0
     -Duse_mojo=0
     -Duse_gconf=0
     -Denable_hangout_services_extension=1

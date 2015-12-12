@@ -1,8 +1,8 @@
 diff --git a/chrome/browser/about_flags.cc b/chrome/browser/about_flags.cc
-index b8b039e..c04acfb 100644
+index 0068375..86234fd 100644
 --- a/chrome/browser/about_flags.cc
 +++ b/chrome/browser/about_flags.cc
-@@ -943,7 +943,7 @@ const FeatureEntry kFeatureEntries[] = {
+@@ -891,7 +891,7 @@ const FeatureEntry kFeatureEntries[] = {
       "disable-accelerated-video-decode",
       IDS_FLAGS_ACCELERATED_VIDEO_DECODE_NAME,
       IDS_FLAGS_ACCELERATED_VIDEO_DECODE_DESCRIPTION,
@@ -12,13 +12,13 @@ index b8b039e..c04acfb 100644
      },
  #if defined(USE_ASH)
 diff --git a/content/common/gpu/media/gpu_video_decode_accelerator.cc b/content/common/gpu/media/gpu_video_decode_accelerator.cc
-index ed4d179..bc516a9 100644
+index 2dfe85b..72698c4 100644
 --- a/content/common/gpu/media/gpu_video_decode_accelerator.cc
 +++ b/content/common/gpu/media/gpu_video_decode_accelerator.cc
 @@ -33,7 +33,7 @@
- #include "content/common/gpu/media/dxva_video_decode_accelerator.h"
+ #include "content/common/gpu/media/dxva_video_decode_accelerator_win.h"
  #elif defined(OS_MACOSX)
- #include "content/common/gpu/media/vt_video_decode_accelerator.h"
+ #include "content/common/gpu/media/vt_video_decode_accelerator_mac.h"
 -#elif defined(OS_CHROMEOS)
 +#elif defined(OS_CHROMEOS) || defined(OS_LINUX)
  #if defined(USE_V4L2_CODEC)
@@ -33,7 +33,7 @@ index ed4d179..bc516a9 100644
    media::VideoDecodeAccelerator::SupportedProfiles vda_profiles;
  #if defined(USE_V4L2_CODEC)
    vda_profiles = V4L2VideoDecodeAccelerator::GetSupportedProfiles();
-@@ -438,7 +438,7 @@ void GpuVideoDecodeAccelerator::BindImage(uint32 client_texture_id,
+@@ -439,7 +439,7 @@ void GpuVideoDecodeAccelerator::BindImage(uint32 client_texture_id,
  scoped_ptr<media::VideoDecodeAccelerator>
  GpuVideoDecodeAccelerator::CreateVaapiVDA() {
    scoped_ptr<media::VideoDecodeAccelerator> decoder;
@@ -147,7 +147,7 @@ index e8c3127..3a94566 100644
    return true;
  }
 diff --git a/content/content_common.gypi b/content/content_common.gypi
-index 8af6123..e62e74c 100644
+index b809c35..dc2f97a 100644
 --- a/content/content_common.gypi
 +++ b/content/content_common.gypi
 @@ -869,7 +869,7 @@
@@ -182,10 +182,10 @@ index 5516ed4..ff2f410 100644
          '<(DEPTH)/third_party/libva',
        ],
 diff --git a/content/content_tests.gypi b/content/content_tests.gypi
-index 0c14ccf..5c29633 100644
+index 3bbd37b..a8f42b7 100644
 --- a/content/content_tests.gypi
 +++ b/content/content_tests.gypi
-@@ -1739,7 +1739,7 @@
+@@ -1745,7 +1745,7 @@
            },
          ]
      }],
@@ -195,7 +195,7 @@ index 0c14ccf..5c29633 100644
            {
              'target_name': 'vaapi_jpeg_decoder_unittest',
 diff --git a/content/gpu/gpu_main.cc b/content/gpu/gpu_main.cc
-index 6c7e8af..1a431a6 100644
+index 973b0a0..7fe9abf 100644
 --- a/content/gpu/gpu_main.cc
 +++ b/content/gpu/gpu_main.cc
 @@ -73,7 +73,7 @@
@@ -217,10 +217,10 @@ index 6c7e8af..1a431a6 100644
  #endif
  
 diff --git a/content/public/common/content_switches.cc b/content/public/common/content_switches.cc
-index 5164717..49eda8b 100644
+index 51a0b01..16fd07e 100644
 --- a/content/public/common/content_switches.cc
 +++ b/content/public/common/content_switches.cc
-@@ -929,7 +929,9 @@ const char kDisableWebAudio[]               = "disable-webaudio";
+@@ -925,7 +925,9 @@ const char kDisableWebAudio[]               = "disable-webaudio";
  #if defined(OS_CHROMEOS)
  // Disables panel fitting (used for mirror mode).
  const char kDisablePanelFitting[]           = "disable-panel-fitting";
@@ -231,10 +231,10 @@ index 5164717..49eda8b 100644
  const char kDisableVaapiAcceleratedVideoEncode[] =
      "disable-vaapi-accelerated-video-encode";
 diff --git a/content/public/common/content_switches.h b/content/public/common/content_switches.h
-index 5db9e9d..30ecb01 100644
+index afed374..bcfc88c 100644
 --- a/content/public/common/content_switches.h
 +++ b/content/public/common/content_switches.h
-@@ -275,6 +275,8 @@ CONTENT_EXPORT extern const char kDisableWebAudio[];
+@@ -274,6 +274,8 @@ CONTENT_EXPORT extern const char kDisableWebAudio[];
  
  #if defined(OS_CHROMEOS)
  CONTENT_EXPORT extern const char kDisablePanelFitting[];
@@ -244,10 +244,10 @@ index 5db9e9d..30ecb01 100644
  #endif
  
 diff --git a/gpu/config/software_rendering_list_json.cc b/gpu/config/software_rendering_list_json.cc
-index 6dd06c2..a41532d 100644
+index cb9948d..b0bc268 100644
 --- a/gpu/config/software_rendering_list_json.cc
 +++ b/gpu/config/software_rendering_list_json.cc
-@@ -481,17 +481,6 @@ const char kSoftwareRenderingListJson[] = LONG_STRING_CONST(
+@@ -485,17 +485,6 @@ const char kSoftwareRenderingListJson[] = LONG_STRING_CONST(
        ]
      },
      {
@@ -265,7 +265,7 @@ index 6dd06c2..a41532d 100644
        "id": 49,
        "description": "NVidia GeForce GT 650M can cause the system to hang with flash 3D",
        "cr_bugs": [140175],
-@@ -1045,6 +1034,11 @@ LONG_STRING_CONST(
+@@ -1052,6 +1041,11 @@ LONG_STRING_CONST(
              "type": "android"
            },
            "gl_renderer": ".*Google.*"
@@ -278,10 +278,10 @@ index 6dd06c2..a41532d 100644
        ],
        "features": [
 diff --git a/media/media.gyp b/media/media.gyp
-index 5f0fd68..a868df2 100644
+index 18297a4..af3b547 100644
 --- a/media/media.gyp
 +++ b/media/media.gyp
-@@ -773,7 +773,7 @@
+@@ -762,7 +762,7 @@
            ],
          }],
          # For VaapiVideoEncodeAccelerator.
