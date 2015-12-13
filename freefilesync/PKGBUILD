@@ -17,14 +17,20 @@ source=("http://downloads.sourceforge.net/project/zenxml/zenXml_2.3.zip"	#zen
 	FreeFileSync.desktop
 	ffsicon.png
 	RealtimeSync.desktop
-	rtsicon.png)
+	rtsicon.png
+	fix-gcc-check-zen.patch)
 md5sums=('58baf96cb8e1136d10e1ada7419921c5'	#zen
          '0666a6ba55bc592b89a652c5de5aafea'	#ffs
          'eab0ccfc6a88e229a0f07507b93cfcff'
          '1f452dff6f970d95839411008d86250b'
          'cde50b36d7b55c51ab69d5e41cd80a1f'
-         'ee5587fa0a8d906ad416564e4daf5a06')
+         'ee5587fa0a8d906ad416564e4daf5a06'
+         'bf486aaa085e03b784456f29afc810c6')
 
+prepare() {
+  cd "${srcdir}"
+  patch -Np0 -i fix-gcc-check-zen.patch
+}
 
 build() {
   echo -n "compiled with  "
