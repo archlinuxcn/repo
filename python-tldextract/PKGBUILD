@@ -2,15 +2,15 @@
 
 _pkgname=tldextract
 pkgname=python-$_pkgname
-pkgver=1.7.2
+pkgver=1.7.3
 pkgrel=1
 pkgdesc="Accurately separate the TLD from the registered domain and subdomains of a URL, using the Public Suffix List."
 arch=('any')
 url="https://github.com/john-kurkowski/tldextract"
 license=('BSD')
 depends=('python' 'python-setuptools')
-source=(https://pypi.python.org/packages/source/t/tldextract/tldextract-1.7.2.tar.gz)
-md5sums=(cfc484368245fe40d0aa39ed11f37e57)
+source=(https://pypi.python.org/packages/source/t/tldextract/tldextract-1.7.3.tar.gz)
+md5sums=(ede6620c6224792be56f963d5a96743f)
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
