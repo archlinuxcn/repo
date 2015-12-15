@@ -1,14 +1,14 @@
 _pkgname=WTForms
-pkgname=python-$_pkgname
-pkgver=2.0.2
+pkgname=python-wtforms
+pkgver=2.1
 pkgrel=1
 pkgdesc="A flexible forms validation and rendering library for python web development."
 arch=('any')
 url="http://wtforms.simplecodes.com/"
 license=('BSD')
 depends=('python' 'python-setuptools')
-source=('https://pypi.python.org/packages/source/W/WTForms/WTForms-2.0.2.zip')
-md5sums=('613cf723ab40537705bec02733c78d95')
+source=('https://pypi.python.org/packages/source/W/WTForms/WTForms-2.1.zip')
+md5sums=('6938a541fafd1a1ae2f6b9b88588eef2')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
