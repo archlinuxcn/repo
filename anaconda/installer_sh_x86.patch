@@ -1,32 +1,32 @@
---- a/Anaconda3-2.4.0-Linux-x86.sh	2015-11-25 09:24:34.653797870 +0100
-+++ b/Anaconda3-2.4.0-Linux-x86.sh	2015-11-25 09:51:24.299710869 +0100
+--- a/Anaconda3-2.4.1-Linux-x86.sh	2015-12-14 20:11:17.819411594 +0100
++++ b/Anaconda3-2.4.1-Linux-x86.sh	2015-12-14 20:12:39.158562465 +0100
 @@ -73,9 +73,9 @@
      fi
  fi
  # verify the size of the installer
--wc -c "$THIS_PATH" | grep 290842015 >/dev/null
-+wc -c "$THIS_PATH" | grep 290842022 >/dev/null
+-wc -c "$THIS_PATH" | grep 265518790 >/dev/null
++wc -c "$THIS_PATH" | grep 265518797 >/dev/null
  if (( $? )); then
--    echo "ERROR: size of $THIS_FILE should be 290842015 bytes" >&2
-+    echo "ERROR: size of $THIS_FILE should be 290842022 bytes" >&2
+-    echo "ERROR: size of $THIS_FILE should be 265518790 bytes" >&2
++    echo "ERROR: size of $THIS_FILE should be 265518797 bytes" >&2
      exit 1
  fi
  
-@@ -415,7 +415,7 @@
- extract_dist _cache-0.0-py35_x0
+@@ -426,7 +426,7 @@
+ extract_dist anaconda-2.4.1-np110py35_0
  
  mkdir $PREFIX/envs
 -mkdir $HOME/.continuum 2>/dev/null
 +#mkdir $HOME/.continuum 2>/dev/null
  
- PYTHON="$PREFIX/pkgs/python-3.5.0-1/bin/python -E"
+ PYTHON="$PREFIX/pkgs/python-3.5.1-0/bin/python -E"
  $PYTHON -V
-@@ -425,7 +425,7 @@
+@@ -436,7 +436,7 @@
      uname -a
      exit 1
  fi
 -
 +exit 0
  echo "creating default environment..."
- CONDA_INSTALL="$PREFIX/pkgs/conda-3.18.3-py35_0/lib/python3.5/site-packages/conda/install.py"
+ CONDA_INSTALL="$PREFIX/pkgs/conda-3.18.8-py35_0/lib/python3.5/site-packages/conda/install.py"
  $PYTHON $CONDA_INSTALL --prefix=$PREFIX --pkgs-dir=$PREFIX/pkgs --link-all || exit 1

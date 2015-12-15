@@ -1,6 +1,6 @@
---- a/pkgs/conda-3.18.3-py35_0/lib/python3.5/site-packages/conda/install.py	2015-11-25 09:59:32.301105554 +0100
-+++ b/pkgs/conda-3.18.3-py35_0/lib/python3.5/site-packages/conda/install.py	2015-11-25 10:17:19.506243545 +0100
-@@ -257,21 +257,23 @@
+--- a/pkgs/conda-3.18.8-py35_0/lib/python3.5/site-packages/conda/install.py	2015-12-14 20:17:29.635535906 +0100
++++ b/pkgs/conda-3.18.8-py35_0/lib/python3.5/site-packages/conda/install.py	2015-12-14 20:17:29.638869204 +0100
+@@ -267,21 +267,23 @@
      return res
  
  def update_prefix(path, new_prefix, placeholder=prefix_placeholder,
@@ -28,7 +28,7 @@
      else:
          sys.exit("Invalid mode:" % mode)
  
-@@ -586,7 +588,7 @@
+@@ -588,7 +590,7 @@
  def load_meta(prefix, dist):
      return is_linked(prefix, dist)
  
@@ -37,7 +37,7 @@
      '''
      Set up a package in a specified (environment) prefix.  We assume that
      the package has been extracted (using extract() above).
-@@ -639,7 +641,7 @@
+@@ -641,7 +643,7 @@
          for f in sorted(has_prefix_files):
              placeholder, mode = has_prefix_files[f]
              try:
@@ -46,7 +46,7 @@
              except PaddingError:
                  sys.exit("ERROR: placeholder '%s' too short in: %s\n" %
                           (placeholder, dist))
-@@ -767,6 +769,10 @@
+@@ -769,6 +771,10 @@
                   default=sys.prefix,
                   help="prefix (defaults to %default)")
  
@@ -57,7 +57,7 @@
      p.add_option('--pkgs-dir',
                   action="store",
                   default=join(sys.prefix, 'pkgs'),
-@@ -796,9 +802,14 @@
+@@ -798,9 +804,14 @@
  
      pkgs_dir = opts.pkgs_dir
      prefix = opts.prefix
@@ -72,7 +72,7 @@
  
      if opts.list:
          pprint(sorted(linked(prefix)))
-@@ -813,7 +824,7 @@
+@@ -815,7 +826,7 @@
          for dist in dists:
              if opts.verbose or linktype == LINK_COPY:
                  print("linking: %s" % dist)
@@ -81,7 +81,7 @@
          messages(prefix)
  
      elif opts.extract:
-@@ -823,7 +834,7 @@
+@@ -825,7 +836,7 @@
          linktype = (LINK_HARD
                      if try_hard_link(pkgs_dir, prefix, dist) else
                      LINK_COPY)
