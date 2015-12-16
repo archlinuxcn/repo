@@ -3,7 +3,7 @@
 pkgname=nvidia-pf
 pkgver=358.16
 _extramodules=extramodules-4.3-pf
-pkgrel=2
+pkgrel=3
 pkgdesc="NVIDIA drivers for linux-pf"
 arch=('i686' 'x86_64')
 url="http://www.nvidia.com/"
@@ -36,6 +36,8 @@ build() {
 package() {
     install -D -m644 "${srcdir}/${_pkg}/kernel/nvidia.ko" \
         "${pkgdir}/usr/lib/modules/${_extramodules}/nvidia.ko"
+    install -D -m644 "${srcdir}/${_pkg}/kernel/nvidia-modeset.ko" \
+         "${pkgdir}/usr/lib/modules/${_extramodules}/nvidia-modeset.ko"
 
     if [[ "$CARCH" = "x86_64" ]]; then
         install -D -m644 "${srcdir}/${_pkg}/kernel/nvidia-uvm.ko" \
