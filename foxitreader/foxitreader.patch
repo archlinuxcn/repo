@@ -1,0 +1,46 @@
+diff -Naur pkg.orig/foxitreader/usr/lib/foxitreader/FoxitReader.sh pkg.new/foxitreader/usr/lib/foxitreader/FoxitReader.sh
+--- pkg.orig/foxitreader/usr/lib/foxitreader/FoxitReader.sh	2015-08-04 19:45:59.000000000 +0200
++++ pkg.new/foxitreader/usr/lib/foxitreader/FoxitReader.sh	2015-11-01 18:00:56.153638257 +0100
+@@ -1,14 +1,8 @@
+ #!/bin/sh
+- appname=`basename $0 | sed s,\.sh$,,`
+- selfpath=$(cd "$(dirname "$0")"; pwd)
+- dirname=`dirname $0`
+- tmp="${dirname#?}"
+- 
+- if [ "${dirname%$tmp}" != "/" ]; then
+- dirname=$PWD/$dirname
+- fi
+- LD_LIBRARY_PATH=$selfpath/lib:$selfpath/platforms:$selfpath/printsupport:$selfpath/rmssdk:$selfpath/sensors:$selfpath/imageformats:$selfpath/platforminputcontexts:$LD_LIBRARY_PATH
+- export LD_LIBRARY_PATH
++selfpath="$(dirname $(readlink "$0"))"
++dirname=$(dirname $(readlink "$0"))
+ 
+- chmod +x $dirname/$appname
+- $dirname/$appname "$@"
++LD_LIBRARY_PATH=$selfpath/lib:$selfpath/platforms:$selfpath/printsupport:$selfpath/rmssdk:$selfpath/sensors:$selfpath/imageformats:$selfpath/platforminputcontexts:$LD_LIBRARY_PATH
++export LD_LIBRARY_PATH
++
++"$dirname/FoxitReader" "$@"
+diff -Naur pkg.orig/foxitreader/usr/share/applications/foxitreader.desktop pkg.new/foxitreader/usr/share/applications/foxitreader.desktop
+--- pkg.orig/foxitreader/usr/share/applications/foxitreader.desktop	2015-11-01 18:01:16.606971000 +0100
++++ pkg.new/foxitreader/usr/share/applications/foxitreader.desktop	2015-11-01 18:11:57.038483005 +0100
+@@ -1,15 +1,10 @@
+ [Desktop Entry]
+ Name=Foxit Reader
+-Comment=View pdf documents
+-Keywords=pdf;octet-stream;
++Comment=View PDF documents
+ StartupNotify=true
+ Terminal=false
+ Type=Application
+-#Icon=FoxitReader
+-X-GNOME-DocPath=
+-X-GNOME-Bugzilla-Bugzilla=GNOME
+-X-GNOME-Bugzilla-Product=FoxitReader
+-X-GNOME-Bugzilla-Component=BugBuddyBugs
+-X-GNOME-Bugzilla-Version=3.14.1
++Icon=foxitreader
++Exec=foxitreader %F
+ Categories=GNOME;Viewer;Graphics;2DGraphics;VectorGraphics;
+ MimeType=application/pdf;application/octet-stream;
