@@ -7,7 +7,7 @@
 
 _pkgbasename=libpng
 pkgname=lib32-libpng12
-pkgver=1.2.54
+pkgver=1.2.55
 pkgrel=2
 pkgdesc="A collection of routines used to create PNG format graphics files (32-bit, 1.2 branch)"
 arch=('x86_64')
@@ -53,5 +53,5 @@ package() {
   mkdir -p "${pkgdir}/usr/share/licenses"
   install -D -m644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
-sha256sums=('cf85516482780f2bc2c5b5073902f12b1519019d47bf473326c2018bdff1d272'
-            '2c2f14464890360801ea3ad1b361f7dd7414ecfec26e3be4bb95934a6cc8cc0a')
+sha256sums=('5e5227345676fabbba28558f4396514bb06a239eaf69adba12f3669a1650797e'
+            '91feea57da44f4ebde865d51e45ba277fe42d7d5eba5d2df9f630a84930e255c')
