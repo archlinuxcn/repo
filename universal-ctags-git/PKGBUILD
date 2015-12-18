@@ -2,19 +2,16 @@
 # Maintainer: Youmu <condy0919 at gmail dot com>
 
 pkgname=universal-ctags-git
-pkgver=r3147.9a857f3
+pkgver=r3161.8ed4a2d
 pkgrel=1
 pkgdesc="multilanguage reimplementation of the Unix ctags utility"
 arch=('x86_64' 'i686')
 url="http://ctags.io/"
 license=('GPL')
-groups=()
 depends=('bash')
 makedepends=('git')
 provides=('ctags')
 conflicts=('ctags')
-backup=()
-options=()
 source=("git://github.com/universal-ctags/ctags.git")
 noextract=()
 md5sums=('SKIP')
@@ -33,11 +30,16 @@ build() {
   git clone "$srcdir/$_gitname" "$srcdir/$_gitname-build"
   cd "$srcdir/$_gitname-build"
 
-  autoreconf -vfi
+  ./autogen.sh
   ./configure --prefix=/usr \
     --libexecdir=/usr/lib \
     --sysconfdir=/etc
   make
+}
+
+check() {
+  cd "$srcdir/$_gitname-build"
+  make -k check
 }
 
 package() {
