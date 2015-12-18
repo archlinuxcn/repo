@@ -1,0 +1,39 @@
+# Maintainer: Danny Dutton <duttondj@vt.edu>
+
+pkgname="qt-installer-framework"
+pkgver=2.0.1
+pkgrel=2
+_qtver=5.4.2
+pkgdesc="The Qt Installer Framework used for the Qt SDK installer."
+arch=('i686' 'x86_64')
+url='http://qt-project.org/wiki/Qt-Installer-Framework'
+license=('FDL' 'LGPL')
+makedepends=("qt5-base>=${_qtver}" "qt5-tools>=${_qtver}")
+groups=('qt' 'qt5')
+_pkgfqn="${pkgname}-opensource-${pkgver}-src"
+source=("http://download.qt.io/official_releases/${pkgname}/${pkgver}/${_pkgfqn}.tar.gz")
+md5sums=('0069845a6a37bccfc814a8d5ca7f3b3b')
+
+build() {
+	cd "${srcdir}/${_pkgfqn}"
+	qmake-qt5 ./installerfw.pro
+	make
+	make docs
+	cd "${srcdir}/${_pkgfqn}/tests"
+	qmake-qt5 ./tests.pro
+	make
+}
+
+package() {
+        install -d ${pkgdir}/usr/{bin,lib,share/{${pkgname},doc/{qt,${pkgname}},licenses/${pkgname}}}
+	cd "${srcdir}/${_pkgfqn}"
+	install -m644 LGPL_EXCEPTION.txt "${pkgdir}/usr/share/licenses/${pkgname}/"
+	install -m644 LICENSE.FDL "${pkgdir}/usr/share/licenses/${pkgname}/"
+	install -m644 LICENSE.LGPL* "${pkgdir}/usr/share/licenses/${pkgname}/"
+	cp -a ./bin/*    "${pkgdir}/usr/bin/"
+	cp -a ./lib/*    "${pkgdir}/usr/lib/"
+	cp -a "./doc/html"    "${pkgdir}/usr/share/doc/${pkgname}/"
+	cp    "./doc/ifw.qch" "${pkgdir}/usr/share/doc/qt/"
+	cp -a "./tests"        "${pkgdir}/usr/share/${pkgname}/"
+	cp -a "./examples"    "${pkgdir}/usr/share/${pkgname}/"
+} 
