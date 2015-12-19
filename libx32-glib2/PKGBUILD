@@ -1,4 +1,4 @@
-# $Id: PKGBUILD 122984 2014-11-23 10:25:53Z bluewind $
+# $Id: PKGBUILD 148311 2015-12-04 05:36:13Z fyan $
 # Maintainer:  Ionut Biru <ibiru@archlinux.org>
 # Contributor: Pierre Schmitz <pierre@archlinux.de>
 # Contributor: Mikko Seppälä <t-r-a-y@mbnet.fi>
@@ -6,7 +6,7 @@
 
 _pkgbasename=glib2
 pkgname=libx32-$_pkgbasename
-pkgver=2.42.1
+pkgver=2.46.2
 pkgrel=1.1
 pkgdesc="Common C routines used by GTK+ 2.4 and other libs (x32 ABI)"
 url="http://www.gtk.org/"
@@ -16,13 +16,15 @@ depends=('libx32-dbus' 'libx32-libffi' 'libx32-pcre' 'libx32-zlib' "$_pkgbasenam
 makedepends=('gcc-multilib-x32' 'python2')
 options=('!docs')
 source=("http://ftp.gnome.org/pub/GNOME/sources/glib/${pkgver%.*}/glib-${pkgver}.tar.xz"
-        'revert-warn-glib-compile-schemas.patch')
-sha256sums=('8f3f0865280e45b8ce840e176ef83bcfd511148918cc8d39df2ee89b67dcf89a'
-            '049240975cd2f1c88fbe7deb28af14d4ec7d2640495f7ca8980d873bb710cc97')
+        'revert-warn-glib-compile-schemas.patch' 'memleak.patch')
+sha256sums=('5031722e37036719c1a09163cc6cf7c326e4c4f1f1e074b433c156862bd733db'
+            '049240975cd2f1c88fbe7deb28af14d4ec7d2640495f7ca8980d873bb710cc97'
+            '8337eeba4a32133d41575c8338fca32ac6a867e6e4a4e021355fcdeb606420a6')
 
 prepare() {
   cd "${srcdir}/glib-${pkgver}"
   patch -Rp1 -i ../revert-warn-glib-compile-schemas.patch
+  patch -Np1 -i ../memleak.patch
 }
 
 build() {
