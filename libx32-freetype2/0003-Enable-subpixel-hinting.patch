@@ -1,0 +1,25 @@
+From f96a1d21d787b173d6293330fbf782b977194aa7 Mon Sep 17 00:00:00 2001
+From: "Jan Alexander Steffens (heftig)" <jan.steffens@gmail.com>
+Date: Tue, 23 Jun 2015 08:43:57 +0200
+Subject: [PATCH 3/4] Enable subpixel hinting
+
+---
+ include/freetype/config/ftoption.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/freetype/config/ftoption.h b/include/freetype/config/ftoption.h
+index ab407e3..a2eab6a 100644
+--- a/include/freetype/config/ftoption.h
++++ b/include/freetype/config/ftoption.h
+@@ -602,7 +602,7 @@ FT_BEGIN_HEADER
+   /*   This option requires TT_CONFIG_OPTION_BYTECODE_INTERPRETER to be    */
+   /*   defined.                                                            */
+   /*                                                                       */
+-/* #define TT_CONFIG_OPTION_SUBPIXEL_HINTING */
++#define TT_CONFIG_OPTION_SUBPIXEL_HINTING
+ 
+ 
+   /*************************************************************************/
+-- 
+2.6.0
+

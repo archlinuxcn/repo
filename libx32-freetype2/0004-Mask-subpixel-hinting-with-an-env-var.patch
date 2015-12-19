@@ -1,0 +1,31 @@
+From bb5ece9c6773145c8342107bd32fcacbc4b212ab Mon Sep 17 00:00:00 2001
+From: "Jan Alexander Steffens (heftig)" <jan.steffens@gmail.com>
+Date: Tue, 23 Jun 2015 08:34:54 +0200
+Subject: [PATCH 4/4] Mask subpixel hinting with an env var
+
+---
+ src/truetype/ttobjs.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/src/truetype/ttobjs.c b/src/truetype/ttobjs.c
+index 6060d6f..3fa98e7 100644
+--- a/src/truetype/ttobjs.c
++++ b/src/truetype/ttobjs.c
+@@ -1302,10 +1302,11 @@
+     TT_Driver  driver = (TT_Driver)ttdriver;
+ 
+ #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
+-    driver->interpreter_version = TT_INTERPRETER_VERSION_38;
+-#else
+-    driver->interpreter_version = TT_INTERPRETER_VERSION_35;
++    if ( getenv( "FT2_SUBPIXEL_HINTING" ) )
++      driver->interpreter_version = TT_INTERPRETER_VERSION_38;
++    else
+ #endif
++      driver->interpreter_version = TT_INTERPRETER_VERSION_35;
+ 
+ #else /* !TT_USE_BYTECODE_INTERPRETER */
+ 
+-- 
+2.6.0
+
