@@ -1,23 +1,23 @@
-# $Id: PKGBUILD 116722 2014-08-02 03:14:37Z lcarlier $
+# $Id: PKGBUILD 139577 2015-09-08 08:29:26Z lcarlier $
 # Maintainer: Alexander Baldeck <alexander@archlinux.org>
 # Contributor: Jan de Groot <jgc@archlinux.org>
 # x32 Maintainer: Fantix King <fantix.king at gmail.com>
 
 _pkgbasename=libxcb
 pkgname=libx32-$_pkgbasename
-pkgver=1.11
+pkgver=1.11.1
 pkgrel=1.1
 pkgdesc="X11 client-side library (x32 ABI)"
 arch=(x86_64)
 url="http://xcb.freedesktop.org/"
 depends=('libx32-libxdmcp' 'libx32-libxau' $_pkgbasename)
-makedepends=('pkgconfig' 'libx32-libxslt' 'python' 'xorg-util-macros' 'gcc-multilib-x32'
+makedepends=('pkgconfig' 'libxslt' 'python' 'xorg-util-macros' 'gcc-multilib-x32'
              'autoconf')
 license=('custom')
 source=(${url}/dist/${_pkgbasename}-${pkgver}.tar.bz2
         libxcb-1.1-no-pthread-stubs.patch)
-sha256sums=('03635d70045b9ede90778e67516135828a57de87ac508f987024f43c03620ff7'
-	    '3923bcb1930b851012968435909597d8d5251c72153511cb2982636c97100cc3')
+sha256sums=('b720fd6c7d200e5371affdb3f049cc8f88cff9aed942ff1b824d95eedbf69d30'
+            '3923bcb1930b851012968435909597d8d5251c72153511cb2982636c97100cc3')
 
 prepare() {
   cd "${srcdir}/${_pkgbasename}-${pkgver}"
