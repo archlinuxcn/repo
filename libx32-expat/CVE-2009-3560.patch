@@ -1,0 +1,13 @@
+diff -urNad trunk~/lib/xmlparse.c trunk/lib/xmlparse.c
+--- trunk~/lib/xmlparse.c	2007-05-08 04:25:35.000000000 +0200
++++ trunk/lib/xmlparse.c	2009-12-29 21:57:22.141732904 +0100
+@@ -3703,6 +3703,9 @@
+         return XML_ERROR_UNCLOSED_TOKEN;
+       case XML_TOK_PARTIAL_CHAR:
+         return XML_ERROR_PARTIAL_CHAR;
++      case -XML_TOK_PROLOG_S:
++        tok = -tok;
++        break;
+       case XML_TOK_NONE:
+ #ifdef XML_DTD
+         /* for internal PE NOT referenced between declarations */
