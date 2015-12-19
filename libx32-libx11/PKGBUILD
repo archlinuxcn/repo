@@ -1,11 +1,11 @@
-# $Id: PKGBUILD 97276 2013-09-16 07:35:05Z bluewind $
+# $Id: PKGBUILD 129545 2015-03-18 18:27:18Z lcarlier $
 # Maintainer: Jan de Groot <jgc@archlinux.org>
 # x32 Maintainer: Fantix King <fantix.king at gmail.com>
 
 _pkgbasename=libx11
 pkgname=libx32-$_pkgbasename
-pkgver=1.6.2
-pkgrel=1
+pkgver=1.6.3
+pkgrel=1.1
 pkgdesc="X11 client-side library (x32 ABI)"
 arch=(x86_64)
 url="http://xorg.freedesktop.org/"
@@ -13,8 +13,10 @@ depends=('libx32-libxcb' $_pkgbasename)
 makedepends=('xorg-util-macros' 'xextproto' 'xtrans' 'inputproto' 'gcc-multilib-x32')
 options=('!libtool')
 license=('custom:XFREE86')
-source=(${url}/releases/individual/lib/libX11-${pkgver}.tar.bz2)
-sha256sums=('2aa027e837231d2eeea90f3a4afe19948a6eb4c8b2bec0241eba7dbc8106bd16')
+source=(${url}/releases/individual/lib/libX11-${pkgver}.tar.bz2{,.sig})
+sha256sums=('cf31a7c39f2f52e8ebd0db95640384e63451f9b014eed2bb7f5de03e8adc8111'
+            'SKIP')
+validpgpkeys=('4A193C06D35E7C670FA4EF0BA2FB9E081F2D130E')
 
 build() {
   export CC="gcc -mx32"
