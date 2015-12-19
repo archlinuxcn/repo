@@ -2,7 +2,7 @@
 # Maintainer: Star Brilliant <echo bTEzMjUzQGhvdG1haWwuY29tCg== | base64 -d>
 
 pkgname=sandbox
-pkgver=2.9
+pkgver=2.10
 pkgrel=1
 pkgdesc='Gentoo sandbox tool to run programs in a "sandboxed" sandboxedenvironment'
 arch=('i686' 'x86_64')
@@ -11,7 +11,7 @@ license=('GPL')
 depends=('glibc')
 makedepends=('autoconf' 'autoconf-archive')
 source=(https://gitweb.gentoo.org/proj/sandbox.git/snapshot/${pkgname}-${pkgver}.tar.bz2)
-sha1sums=('5fb5e7ee59ea3538a07642c081cc02e80d6b2429')
+sha1sums=('6991b3e8f11d821db034144c223aeeb08d3b8f64')
 
 build() {
   cd "$srcdir"/$pkgname-$pkgver
