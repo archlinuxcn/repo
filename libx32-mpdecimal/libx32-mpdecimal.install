@@ -1,0 +1,21 @@
+post_install() {
+    mv /usr/include/mpdecimal.h /usr/include/mpdecimal-64.h
+    ln -s mpdecimal-stub.h /usr/include/mpdecimal.h
+}
+
+post_upgrade() {
+    if [ ! -L /usr/include/mpdecimal.h ]; then
+        post_install
+    elif [ ${1::-2} != ${2::-2} ]; then
+        echo WARNING: libx32-mpdecimal is upgraded before mpdecimal,
+        echo WARNING: you probably need to reinstall libx32-mpdecimal.
+    fi
+}
+
+post_remove() {
+    if [ -L /usr/include/mpdecimal.h ]; then
+        rm /usr/include/mpdecimal.h
+        mv /usr/include/mpdecimal-64.h /usr/include/mpdecimal.h
+    fi
+}
+
