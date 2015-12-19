@@ -2,7 +2,7 @@
 # x32 Maintainer: Fantix King <fantix.king at gmail.com>
 
 pkgname=libx32-icu
-pkgver=54.1
+pkgver=56.1
 pkgrel=1.1
 pkgdesc="International Components for Unicode library (x32 ABI)"
 arch=('x86_64')
@@ -12,7 +12,7 @@ depends=('libx32-gcc-libs' 'icu')
 makedepends=('gcc-multilib-x32')
 source=(http://download.icu-project.org/files/icu4c/${pkgver}/icu4c-${pkgver//./_}-src.tgz
         'icu.8198.revert.icu5431.patch')
-md5sums=('e844caed8f2ca24c088505b0d6271bc0'
+md5sums=('c4a2d71ff56aec5ebfab2a3f059be99d'
          '2e0fb97c7a64ea43c29c6142c22da35a')
 
 build() {
