@@ -1,0 +1,21 @@
+post_install() {
+    mv /usr/include/python3.5m/pyconfig.h /usr/include/python3.5m/pyconfig-64.h
+    ln -s pyconfig-stub.h /usr/include/python3.5m/pyconfig.h
+}
+
+post_upgrade() {
+    if [ ! -L /usr/include/python3.5m/pyconfig.h ]; then
+        post_install
+    elif [ ${1::-2} != ${2::-2} ]; then
+        echo WARNING: libx32-python is upgraded before python,
+        echo WARNING: you probably need to reinstall libx32-python.
+    fi
+}
+
+post_remove() {
+    if [ -L /usr/include/python3.5m/pyconfig.h ]; then
+        rm /usr/include/python3.5m/pyconfig.h
+        mv /usr/include/python3.5m/pyconfig-64.h /usr/include/python3.5m/pyconfig.h
+    fi
+}
+

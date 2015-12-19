@@ -1,0 +1,16 @@
+diff --git a/Lib/venv/__init__.py b/Lib/venv/__init__.py
+index 3d606ef..72511e1 100644
+--- a/Lib/venv/__init__.py
++++ b/Lib/venv/__init__.py
+@@ -139,6 +139,11 @@ class EnvBuilder:
+         create_if_needed(path)
+         create_if_needed(libpath)
+         # Issue 21197: create lib64 as a symlink to lib on 64-bit non-OS X POSIX
++        if ((sys.maxsize <= 2**32) and (os.name == 'posix') and
++            (sys.platform != 'darwin')):
++            link_path = os.path.join(env_dir, 'libx32')
++            if not os.path.exists(link_path):   # Issue #21643
++                os.symlink('lib', link_path)
+         if ((sys.maxsize > 2**32) and (os.name == 'posix') and
+             (sys.platform != 'darwin')):
+             link_path = os.path.join(env_dir, 'lib64')
