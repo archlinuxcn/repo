@@ -4,12 +4,15 @@
 # enable this if you run out of memory during linking
 #_lowmem=true
 
+# enable gtk3 (warning: flash or any other plugin  crashes frequently)
+#_gtk3=true
+
 # try to build with PGO
 _pgo=true
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=42.0
+pkgver=43.0.1
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
@@ -27,7 +30,7 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
 install=firefox.install
-_patchrev=ee3c462047d5
+_patchrev=de3a92aed259
 options=('!emptydirs'  'strip' )
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz
@@ -75,7 +78,13 @@ prepare() {
 
   # add missing file Makefile for pgo builds
   patch -Np1 -i "$srcdir"/pgo_fix_missing_kdejs.patch
-  
+  # enable gtk3
+  if [ $_gtk3 ] ; then
+     # fix gtk3 build
+     sed -i 's|parent->group|gtk_window_get_group(const_cast<GtkWindow*>(parent))|g' \
+	 toolkit/xre/nsKDEUtils.cpp
+     echo 'ac_add_options --enable-default-toolkit=cairo-gtk3' >> "$srcdir"/mozconfig
+  fi
   # configure script misdetects the preprocessor without an optimization level
   # https://bugs.archlinux.org/task/34644
   sed -i '/ac_cpp=/s/$CPPFLAGS/& -O2/' configure
@@ -151,8 +160,8 @@ package() {
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
 
-sha256sums=('994a346699298277b64ec0cab72660b8d3e5b879a2ac79207576f7e6c33da3ae'
-            '7659ccd23d0f111c3ed7d4b1624dfe63269a3df0ec90eac2019f0ece01c4d641'
+sha256sums=('b1f9173c6ddbd2bf868d94a815fde364bc37aa46a00981903fd1fe86a8f873d8'
+            '72a6572b9692cbb4a15d83de06e1674c4dbb7228999c5749c4f7ab9db5e0c516'
             'c202e5e18da1eeddd2e1d81cb3436813f11e44585ca7357c4c5f1bddd4bec826'
             'd86e41d87363656ee62e12543e2f5181aadcff448e406ef3218e91865ae775cd'
             '4b50e9aec03432e21b44d18c4c97b2630bace606b033f7d556c9d3e3eb0f4fa4'
@@ -160,11 +169,11 @@ sha256sums=('994a346699298277b64ec0cab72660b8d3e5b879a2ac79207576f7e6c33da3ae'
             '68e3a5b47c6d175cc95b98b069a15205f027cab83af9e075818d38610feb6213'
             '746cb474c5a2c26fc474256e430e035e604b71b27df1003d4af85018fa263f4a'
             '72abd31e89a41cddbd8165b0b9555465184c52c426e0998c9cb7786af94b5532'
-            '23ce5dbcff0a9caf8cbf13730f12366c84382ab63e4020136f331df4a7ebe5ed'
+            '2017e1f7a71e8c3563c11fa48cc96de864388ff4fa8a124da3c30ba6129565a2'
             '02e92f84dd31ed079be3e67509cf23d0d351e06bb690fcc091c904d906d2d690'
-            'efb473d0fbf41bd0a6c388d8d74de719b263675c522ec63b465af040067ecf5e'
+            'cffc199f0d4d684792e6dbeec106077f4a6ac4bdf406b4fc67d46b330c3b4169'
             'ce1b7a5bb217c31590bce30653aea5139b6401a01eda7bded7fd2f83a23d397b'
             'e8289ea4c1f8191e1e23661312ceee2128b8e790501b9a589d0d7bfc4384553f'
-            '18166673c6e00debf56191b1d9b2706e8987814f59cb6122118aef9f2b31413e'
+            '1d3fd85fe760ac3ab454e71322231e671483533be6089ac87f9f4880ee619e48'
             'f9067f62a25a7a77276e15f91cc9e7ba6576315345cfc6347b1b2e884becdb0c'
             '2c9c97bff07cc71b3f6d35f3edfaddaf8180a1f533ee4682adf18a8f86d29264')
