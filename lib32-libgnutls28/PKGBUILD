@@ -7,7 +7,7 @@
 # Contributor: Mikko Seppälä <t-r-a-y@mbnet.fi>
 
 pkgname=lib32-libgnutls28
-pkgver=3.3.17.1
+pkgver=3.3.19
 pkgrel=1
 pkgdesc='A library which provides a secure layer over a reliable transport layer'
 arch=('x86_64')
@@ -16,7 +16,7 @@ license=('GPL3' 'LGPL2.1')
 depends=('lib32-nettle' 'lib32-p11-kit' 'lib32-zlib')
 makedepends=('gcc-multilib' 'lib32-libidn')
 source=("ftp://ftp.gnutls.org/gcrypt/gnutls/v3.3/gnutls-${pkgver}.tar.xz")
-sha256sums=('b40f158030a92f450a07b20300a3996710ca19800848d9f6fd62493170c5bbb4')
+sha256sums=('888d8779b48f21959b33d4d9ad0b546e5ec3dea20abf0d9bb03869d56b1f44cf')
 
 build() {
   cd gnutls-${pkgver}
