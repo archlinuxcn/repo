@@ -3,7 +3,7 @@
 
 _pkgname=qml-material
 pkgname=$_pkgname-git
-pkgver=0.1.r57.g42da3ad
+pkgver=0.1.r76.gb154c19
 pkgrel=1
 pkgdesc="A UI framework for QtQuick implementing Material Design"
 arch=("i686" "x86_64")
@@ -25,6 +25,7 @@ pkgver() {
 build() {
 	mkdir -p build
 	cd build
+sed -i "s/ tests//g" "$srcdir/$pkgname/qml-material.pro" # remove tests
 	qmake "$srcdir/$pkgname"
 	make
 }
