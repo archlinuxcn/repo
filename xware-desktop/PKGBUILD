@@ -2,9 +2,9 @@
 pkgdesc="An attempt to bring Xware (Xunlei on routers) to desktop Linux."
 url="https://github.com/Xinkai/XwareDesktop/wiki"
 
-_commit="ac48031fafa594fdc3ecad1634378626e8efd6dc"
-_md5sums="e654de7bd892bf9b61acb81bffb18cc8"
-pkgver="20151219"
+_commit="b77d20b20bf3a410e2cc9eb3a1da74098cbca4d5"
+_md5sums="99342d8f573581e71ff30d246f1d0f62"
+pkgver="20151221"
 pkgrel=1
 
 pkgname="xware-desktop"
