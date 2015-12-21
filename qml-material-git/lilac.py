@@ -31,6 +31,8 @@ def pre_build(name=None, *, do_vcs_update=True):
       # edit PKGBUILD
       if line.strip().startswith("prepare() {"):
           line="build() {"
+      if line.strip().startswith("qmake "):
+          print('sed -i "s/ tests//g" "$srcdir/$pkgname/qml-material.pro" # remove tests')
       print(line)
 
   if do_vcs_update and name.endswith(('-git', '-hg', '-svn', '-bzr')):
