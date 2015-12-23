@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# ln -s ../../pre-hook .git/hooks
+# pre-hook to check nvchecker.ini
+
+python3 -c "
+from configparser import ConfigParser
+config = ConfigParser(dict_type=dict, allow_no_value=True)
+config.read_file(open('nvchecker.ini'))
+"
+
