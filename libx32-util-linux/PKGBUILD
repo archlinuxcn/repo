@@ -1,11 +1,13 @@
-# $Id: PKGBUILD 128050 2015-02-21 03:05:27Z dreisner $
+# $Id: PKGBUILD 148405 2015-12-04 23:06:44Z dreisner $
 # Maintainer: Dave Reisner <dreisner@archlinux.org>
 # Contributor: judd <jvinet@zeroflux.org>
 # x32 Maintainer: Fantix King <fantix.king at gmail.com>
 
 _pkgbasename=util-linux
 pkgname=libx32-$_pkgbasename
-pkgver=2.26
+pkgver=2.27.1
+_pkgver=(${pkgver//./ })
+_pkgver=${_pkgver[0]}.${_pkgver[1]}
 pkgrel=1.1
 pkgdesc="Miscellaneous system utilities for Linux (x32 ABI)"
 url='http://www.kernel.org/pub/linux/utils/util-linux/'
@@ -15,8 +17,8 @@ provides=('libuuid.so' 'libblkid.so' 'libfdisk.so' 'libmount.so' 'libsmartcols.s
 makedepends=('gcc-multilib-x32')
 license=('GPL2')
 options=('!libtool' '!emptydirs')
-source=("ftp://ftp.kernel.org/pub/linux/utils/util-linux/v2.26/util-linux-$pkgver.tar.xz")
-md5sums=('912c550a4e5c47c0ce9abd0733fa9a64')
+source=("ftp://ftp.kernel.org/pub/linux/utils/util-linux/v${_pkgver}/util-linux-$pkgver.tar.xz")
+md5sums=('3cd2698d1363a2c64091c2dadc974647')
 
 build() {
   cd "$_pkgbasename-$pkgver"
