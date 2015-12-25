@@ -1,4 +1,4 @@
-# $Id: PKGBUILD 152083 2015-12-10 05:33:05Z foutrelis $
+# $Id: PKGBUILD 153820 2015-12-21 11:06:03Z allan $
 # Maintainer: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 # Contributor: Allan McRae <allan@archlinux.org>
 # x32 Maintainer: Fantix King <fantix.king@gmail.com>
@@ -10,7 +10,7 @@ pkgname=('gcc-multilib-x32' 'gcc-libs-multilib-x32' 'libx32-gcc-libs' 'gcc-fortr
 pkgver=5.3.0
 _pkgver=5
 _islver=0.15
-pkgrel=2.1
+pkgrel=3.1
 #_snapshot=5-20150623
 pkgdesc="The GNU Compiler Collection for multilib with x32 ABI support"
 arch=('x86_64')
@@ -118,6 +118,7 @@ package_libx32-gcc-libs()
              libcilkrts \
              libquadmath \
              libgfortran \
+             libgo \
              libgomp \
              libitm \
              libsanitizer/{a,l,ub}san \
@@ -156,6 +157,7 @@ package_gcc-libs-multilib-x32()
   for lib in libatomic \
              libcilkrts \
              libgfortran \
+             libgo \
              libgomp \
              libitm \
              libquadmath \
@@ -309,7 +311,7 @@ EOF
   install -d ${pkgdir}/usr/share/licenses/gcc-multilib-x32/
   ln -s ../gcc-libs-multilib-x32/RUNTIME.LIBRARY.EXCEPTION ${pkgdir}/usr/share/licenses/gcc-multilib-x32/
 
-  rm ${pkgdir}/usr/share/man/man3/{random,regex}.3
+  rm ${pkgdir}/usr/share/man/man3/{random,regex}.3 || true
 }
 
 package_gcc-fortran-multilib-x32()
@@ -415,6 +417,7 @@ package_gcc-go-multilib-x32()
   make -C $CHOST/libgo DESTDIR=$pkgdir install-exec-am
   make -C $CHOST/32/libgo DESTDIR=$pkgdir install-exec-am
   make -C $CHOST/x32/libgo DESTDIR=$pkgdir install-exec-am
+  rm ${pkgdir}/usr/lib/libgo.so* ${pkgdir}/usr/lib32/libgo.so* ${pkgdir}/usr/libx32/libgo.so*
   make -C gcc DESTDIR=$pkgdir go.install-{common,man,info}
   install -Dm755 gcc/go1 $pkgdir/${_libdir}/go1
 
