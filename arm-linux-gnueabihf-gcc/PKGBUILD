@@ -7,7 +7,7 @@ _pkgname=(gcc gcc-libs gcc-fortran
           gcc-objc
           # gcc-go
          )
-pkgver=5.2.0
+pkgver=5.3.0
 _pkgver=5
 _islver=0.14.1
 pkgrel=1
@@ -23,11 +23,9 @@ source=(
   ftp://gcc.gnu.org/pub/gcc/releases/gcc-${pkgver}/gcc-${pkgver}.tar.bz2
   # ftp://gcc.gnu.org/pub/gcc/snapshots/${_snapshot}/gcc-${_snapshot}.tar.bz2
   http://isl.gforge.inria.fr/isl-${_islver}.tar.bz2
-  pr66035.patch
   0001-ARMv5-disable-LDRD-STRD.patch)
-md5sums=('a51bcfeb3da7dd4c623e27207ed43467'
+md5sums=('c9616fd448f980259c31de613e575719'
          '118d1a379abf7606a3334c98a8411c79'
-         '5b980076cd5fcbc3aff6014f306282dd'
          '924a9bcdd7852410667f04ce18c305d7')
 
 if [ -n "${_snapshot}" ]; then
@@ -51,9 +49,6 @@ prepare() {
 
   # hack! - some configure tests for header files using "$CPP $CPPFLAGS"
   sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" {libiberty,gcc}/configure
-
-  # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=66035
-  patch -p1 -i ../pr66035.patch
 
   mkdir -p "${srcdir}"/gcc-build
 
@@ -254,24 +249,3 @@ for pkg in "${_pkgname[@]}"; do
     package_${pkg}
 }"
 done
-
-# package() {
-#   cd gcc-build
-
-#   # old gcc
-#   make DESTDIR="$pkgdir" install-gcc install-target-libgcc \
-#        install-target-libstdc++-v3
-
-#   rm "$pkgdir"/usr/lib/libiberty.a
-#   rm -rf "$pkgdir"/usr/share/{man/man7,info}/
-
-#   cp -r "$pkgdir"/usr/libexec/* "$pkgdir/usr/lib/"
-#   rm -rf "$pkgdir/usr/libexec"
-
-#   rm -rf "$pkgdir/usr/share/gcc-${pkgver}/python"
-
-#   # strip it manually
-#   strip "$pkgdir"/usr/bin/* 2>/dev/null || true
-#   find "$pkgdir"/usr/lib -type f -exec /usr/bin/${_target}-strip \
-#        --strip-unneeded {} \; 2>/dev/null || true
-# }
