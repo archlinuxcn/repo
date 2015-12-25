@@ -1,0 +1,17 @@
+infodir="/usr/share/info"
+
+post_install() {
+  install-info ${infodir}/ledger3.info ${infodir}/dir 2> /dev/null
+  install-info ${infodir}/ledger-mode.info ${infodir}/dir 2> /dev/null
+}
+
+post_upgrade() {
+  post_install $1
+}
+
+pre_remove() {
+  install-info --delete ${infodir}/ledger3.info ${infodir}/dir 2> /dev/null
+  install-info --delete ${infodir}/ledger-mode.info ${infodir}/dir 2> /dev/null
+}
+
+# vim:set ts=2 sw=2 et:
