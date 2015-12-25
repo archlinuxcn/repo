@@ -10,7 +10,7 @@ arch=(any)
 url="http://www.gnu.org/software/libc"
 license=('GPL' 'LGPL')
 depends=("${_target}-linux-api-headers")
-makedepends=("${_target}-gcc-stage2" 'subversion' 'gperf')
+makedepends=("${_target}-gcc-stage2" 'gperf')
 provides=("${_target}-eglibc=${pkgver}" "${_target}-glibc-headers=${pkgver}")
 conflicts=("${_target}-eglibc" "${_target}-glibc-headers")
 replaces=("${_target}-eglibc" "${_target}-glibc-headers")
