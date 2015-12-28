@@ -1,7 +1,7 @@
 # Maintainer: Christian Hesse <mail@eworm.de>
 
 pkgname=opera-developer
-pkgver=36.0.2072.0
+pkgver=36.0.2079.0
 pkgrel=1
 pkgdesc='A fast and secure web browser and Internet suite - developer stream'
 arch=('x86_64' 'i686')
@@ -10,7 +10,7 @@ license=('custom:opera')
 depends=('alsa-lib' 'nss' 'gtk2' 'gconf' 'libxss' 'libxtst' 'desktop-file-utils')
 optdepends=('curl: opera crash reporter and autoupdate checker'
 	'libnotify: native desktop notifications'
-	'opera-developer-ffmpeg-codecs: support h.264 and mp3 codecs')
+	"${pkgname}-ffmpeg-codecs: support h.264 and mp3 codecs")
 install=opera.install
 options=(!strip)
 backup=("etc/${pkgname}/default")
@@ -20,8 +20,8 @@ source_x86_64=("http://get.geo.opera.com/pub/${pkgname}/${pkgver}/linux/${pkgnam
 source_i686=("http://get.geo.opera.com/pub/${pkgname}/${pkgver}/linux/${pkgname}_${pkgver}_i386.deb")
 sha256sums=('508512464e24126fddfb2c41a1e2e86624bdb0c0748084b6a922573b6cf6b9c5'
 	'99fc0d2822edd14e234d451995db47148125e4580221a292598959421d131231')
-sha256sums_x86_64=('e9a553903352120c7b84d8985d7c5dd52a59407cde93b15dcfbc9ac77344cb5a')
-sha256sums_i686=('6aefedb8c25d7e8e2401231b0cd228a905d6b0b09d034034cc0300ec359bc778')
+sha256sums_x86_64=('bbbd0a95fc0a25c82c5c41dd7d28ba67e37480d0b26b7791b05cea6a8c7a0de5')
+sha256sums_i686=('05d908ba11ce2306094da45c9ca987932bf1d578a79a6ef43b05025a200fce2f')
 # alternative download
 #source=("ftp://ftp.opera.com/pub/${pkgname}/${pkgver}/linux/${pkgname}_${pkgver}_amd64.deb")
 #source=("http://deb.opera.com/${pkgname}/pool/non-free/o/${pkgname}/${pkgname}_${pkgver}_amd64.deb")
