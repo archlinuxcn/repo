@@ -6,10 +6,10 @@
 pkgbase=openblas-git
 pkgname=(openblas-git openblas-lapack-git)
 _pkgname=OpenBLAS
-pkgver=v0.2.15.r62.gb9b52c2
+pkgver=v0.2.15.r66.g3857581
 pkgrel=1
 pkgdesc="Optimized BLAS library based on GotoBLAS2 1.13 BSD"
-arch=('i686' 'x86_64' 'armv7h')
+arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://xianyi.github.com/OpenBLAS/"
 license=('BSD')
 depends=('gcc-libs')
@@ -38,6 +38,9 @@ case "$CARCH" in
     ;;
   armv7h)
     _config=("${_config[@]}" 'TARGET=CORTEXA9')
+    ;;
+  aarch64)
+    _config=("${_config[@]}" 'TARGET=ARMV8')
     ;;
   *)
     echo "Unknown CARCH: ${CARCH}"
