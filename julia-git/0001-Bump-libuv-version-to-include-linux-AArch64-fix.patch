@@ -1,0 +1,56 @@
+From 7161449e73d1b42d7db3f2b7d93c50afc778e268 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Wed, 30 Dec 2015 13:48:15 -0500
+Subject: [PATCH] Bump libuv version to include linux AArch64 fix.
+
+---
+ .../checksums/libuv-030481e9d659fd46702ab747caf2cbbe19d537ba.tar.gz/md5 | 1 -
+ .../libuv-030481e9d659fd46702ab747caf2cbbe19d537ba.tar.gz/sha512        | 1 -
+ .../checksums/libuv-07730c4bd595b4d45a498a8ee0bcd53878ff7c10.tar.gz/md5 | 1 +
+ .../libuv-07730c4bd595b4d45a498a8ee0bcd53878ff7c10.tar.gz/sha512        | 1 +
+ deps/libuv.version                                                      | 2 +-
+ 5 files changed, 3 insertions(+), 3 deletions(-)
+ delete mode 100644 deps/checksums/libuv-030481e9d659fd46702ab747caf2cbbe19d537ba.tar.gz/md5
+ delete mode 100644 deps/checksums/libuv-030481e9d659fd46702ab747caf2cbbe19d537ba.tar.gz/sha512
+ create mode 100644 deps/checksums/libuv-07730c4bd595b4d45a498a8ee0bcd53878ff7c10.tar.gz/md5
+ create mode 100644 deps/checksums/libuv-07730c4bd595b4d45a498a8ee0bcd53878ff7c10.tar.gz/sha512
+
+diff --git a/deps/checksums/libuv-030481e9d659fd46702ab747caf2cbbe19d537ba.tar.gz/md5 b/deps/checksums/libuv-030481e9d659fd46702ab747caf2cbbe19d537ba.tar.gz/md5
+deleted file mode 100644
+index b852a83..0000000
+--- a/deps/checksums/libuv-030481e9d659fd46702ab747caf2cbbe19d537ba.tar.gz/md5
++++ /dev/null
+@@ -1 +0,0 @@
+-e2b30e88a1e4589152a1d53ae3c99c23
+diff --git a/deps/checksums/libuv-030481e9d659fd46702ab747caf2cbbe19d537ba.tar.gz/sha512 b/deps/checksums/libuv-030481e9d659fd46702ab747caf2cbbe19d537ba.tar.gz/sha512
+deleted file mode 100644
+index 860e5ae..0000000
+--- a/deps/checksums/libuv-030481e9d659fd46702ab747caf2cbbe19d537ba.tar.gz/sha512
++++ /dev/null
+@@ -1 +0,0 @@
+-046e0c39317cd315f3b47b80a062ac3e0e9186511d98a8c2bdde4acaec85ba9e3f99beda22d34e26c3050e18c203fc1de32420c7b9c51400bd9c7d6b265f46db
+diff --git a/deps/checksums/libuv-07730c4bd595b4d45a498a8ee0bcd53878ff7c10.tar.gz/md5 b/deps/checksums/libuv-07730c4bd595b4d45a498a8ee0bcd53878ff7c10.tar.gz/md5
+new file mode 100644
+index 0000000..5355045
+--- /dev/null
++++ b/deps/checksums/libuv-07730c4bd595b4d45a498a8ee0bcd53878ff7c10.tar.gz/md5
+@@ -0,0 +1 @@
++b05f089b4ac277deaac0d8372b7d4ea6
+diff --git a/deps/checksums/libuv-07730c4bd595b4d45a498a8ee0bcd53878ff7c10.tar.gz/sha512 b/deps/checksums/libuv-07730c4bd595b4d45a498a8ee0bcd53878ff7c10.tar.gz/sha512
+new file mode 100644
+index 0000000..05d4133
+--- /dev/null
++++ b/deps/checksums/libuv-07730c4bd595b4d45a498a8ee0bcd53878ff7c10.tar.gz/sha512
+@@ -0,0 +1 @@
++5bf5a4a026c57a26c8a4cbce2d69b4b12a0d325bd46a83c48ca8a24af1fc8548967f2060258e6cd751c8b86b653c42d41c42512fc6ce2114a06738332fdd243b
+diff --git a/deps/libuv.version b/deps/libuv.version
+index ac2a862..63aee4a 100644
+--- a/deps/libuv.version
++++ b/deps/libuv.version
+@@ -1,2 +1,2 @@
+ LIBUV_BRANCH=julia-uv0.11.26
+-LIBUV_SHA1=030481e9d659fd46702ab747caf2cbbe19d537ba
++LIBUV_SHA1=07730c4bd595b4d45a498a8ee0bcd53878ff7c10
+-- 
+2.6.4
+
