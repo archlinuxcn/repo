@@ -1,4 +1,4 @@
-# $Id: PKGBUILD 119148 2014-09-18 03:10:07Z fyan $
+# $Id: PKGBUILD 142655 2015-10-01 16:33:42Z foutrelis $
 # Maintainer:  Ionut Biru <ibiru@archlinux.org>
 # Contributor: mightyjaym <jm.ambrosino@free.fr>
 # Contributor: Mikko Seppälä <t-r-a-y@mbnet.fi>
@@ -6,7 +6,7 @@
 
 _pkgbasename=e2fsprogs
 pkgname=libx32-e2fsprogs
-pkgver=1.42.12
+pkgver=1.42.13
 pkgrel=1.1
 pkgdesc="Ext2 filesystem libraries (x32 ABI)"
 arch=('x86_64')
@@ -18,7 +18,7 @@ source=(
     "http://downloads.sourceforge.net/sourceforge/${_pkgbasename}/${_pkgbasename}-${pkgver}.tar.gz"
     'ext2_types-stub.h'
 )
-sha1sums=('083c1bb0d1e85672e8038a2fadf70b24e7409db7'
+sha1sums=('77d1412472ac5a67f8954166ec16c37616074c37'
           'c8b86107cea7f508d6dfd16313e4b511b8fc701a')
 
 build() {
