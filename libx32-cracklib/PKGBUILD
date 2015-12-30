@@ -1,40 +1,43 @@
-# Upstream Maintainer: jtts
-# Contributor: josephgbr <rafael.f.f1 at gmail dot com>
+# $Id: PKGBUILD 143653 2015-10-11 15:22:32Z alucryd $
+# Maintainer: Maxime Gauduin <alucryd@archlinux.org>
+# Contributor: jtts <jussaar@mbnet.fi>
+# Contributor: josephgbr <rafael.f.f1@gmail.com>
 # Contributor: Tobias Powalowski <tpowa@archlinux.org>
-# Contributor: Federico Quagliata (quaqo) <quaqo@despammed.com>
-# Maintainer: Fantix King <fantix.king at gmail.com>
+# Contributor: Federico Quagliata <quaqo@despammed.com>
+# x32 Maintainer: Fantix King <fantix.king at gmail.com>
 
-_pkgbase=cracklib
-pkgname=libx32-$_pkgbase
-pkgver=2.9.0
-pkgrel=3
-pkgdesc="Password Checking Library (x32 ABI)"
+pkgname=libx32-cracklib
+pkgver=2.9.4
+pkgrel=1.1
+pkgdesc='Password Checking Library (x32 ABI)'
 arch=('x86_64')
+url='http://sourceforge.net/projects/cracklib'
 license=('GPL')
-url="http://sourceforge.net/projects/cracklib"
-depends=('libx32-glibc' 'libx32-zlib' "$_pkgbase")
+depends=('cracklib' 'libx32-zlib')
 makedepends=('gcc-multilib-x32')
-source=(http://downloads.sourceforge.net/sourceforge/$_pkgbase/$_pkgbase-$pkgver.tar.gz)
-md5sums=('e0f94ac2138fd33c7e77b19c1e9a9390')
+source=("http://downloads.sourceforge.net/sourceforge/cracklib/cracklib-${pkgver}.tar.gz")
+sha256sums=('f2a866b4b9808344228ea6d68b69e3ba9a8a99210e23dfd718d4b95c60be8958')
 
 build() {
-  cd $srcdir/$_pkgbase-$pkgver
-  ./configure --prefix=/usr --sbindir=/usr/bin --libdir=/usr/libx32 --without-python CC='gcc -mx32'
+  cd cracklib-${pkgver}
+
+  export CC='gcc -mx32'
+  export CXX='g++ -mx32'
+  export PKG_CONFIG_PATH='/usr/libx32/pkgconfig'
+
+  ./configure \
+    --prefix='/usr' \
+    --libdir='/usr/libx32' \
+    --sbindir='/usr/bin' \
+    --without-python
   make
 }
 
-#check() {
-#  cd $srcdir/$pkgname-$pkgver
-#  make check
-#}
-
 package() {
-  cd $srcdir/$_pkgbase-$pkgver
-  make DESTDIR=$pkgdir install
-  # symlink cracklib-small #34778
-  #mkdir -p $pkgdir/usr/share/dict
-  #ln -sf /usr/share/cracklib/cracklib-small $pkgdir/usr/share/dict/cracklib-small
-  #sh ./util/cracklib-format dicts/cracklib-small \
-  #  | sh ./util/cracklib-packer $pkgdir/usr/share/cracklib/pw_dict
-  rm -rf "${pkgdir}/usr"/{include,bin,share}
+  cd cracklib-${pkgver}
+
+  make DESTDIR="${pkgdir}" install
+  rm -rf "${pkgdir}"/usr/{include,bin,share}
 }
+
+# vim: ts=2 sw=2 et:
