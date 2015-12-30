@@ -6,8 +6,8 @@
 
 pkgname=libpng12
 _realname=libpng
-pkgver=1.2.55
-pkgrel=2
+pkgver=1.2.56
+pkgrel=1
 pkgdesc="A collection of routines used to create PNG format graphics files"
 arch=('i686' 'x86_64' 'armv7h')
 url="http://www.libpng.org/pub/png/libpng.html"
@@ -46,5 +46,5 @@ package() {
 
 }
 
-sha256sums=('5e5227345676fabbba28558f4396514bb06a239eaf69adba12f3669a1650797e'
-            '91feea57da44f4ebde865d51e45ba277fe42d7d5eba5d2df9f630a84930e255c')
+sha256sums=('24ce54581468b937734a6ecc86f7e121bc46a90d76a0d948dca08f32ee000dbe'
+            '454631947201483930c759ecb3741618258e8143db4ff13b0d938b4238bc8708')
