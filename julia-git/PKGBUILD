@@ -3,6 +3,11 @@
 # With contributions from many kind people at https://aur.archlinux.org/packages/julia-git/
 
 BUILD_EXTRA=1
+USE_OPENLIBM=1
+if [[ "$CARCH" = aarch64 ]]; then
+    # Openlibm doesn't support aarch64 yet.
+    USE_OPENLIBM=0
+fi
 
 pkgbase=julia-git
 if ((BUILD_EXTRA)); then
@@ -10,17 +15,20 @@ if ((BUILD_EXTRA)); then
 else
    pkgname=('julia-git')
 fi
-pkgver=0.4.0.rc1.1878.g1c7f70a
+pkgver=0.4.0.rc1.1923.g01c701f
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
-arch=('any' 'i686' 'x86_64')
+arch=('any' 'i686' 'x86_64' 'aarch64')
 url="http://julialang.org"
 license=('GPL')
 makedepends=('gcc-fortran' 'arpack' 'fftw' 'git' 'gmp' 'libgit2' 'libunwind'
              'llvm' 'mpfr' 'pcre2' 'suitesparse' 'python2-sphinx'
              'python2-sphinx_rtd_theme' 'python2-pip' 'texlive-langcjk'
-             'texlive-latexextra' 'emacs' 'openspecfun' 'openlibm' 'openblas'
+             'texlive-latexextra' 'emacs' 'openspecfun' 'openblas'
              'libutf8proc' 'patchelf')
+if ((USE_OPENLIBM)); then
+    makedepends=("${makedepends[@]}" openlibm)
+fi
 options=('!emptydirs' 'staticlibs' 'debug' 'strip')
 source=('git://github.com/JuliaLang/julia'
         '0001-Create-tbaa_gcframe-and-decorate-all-stores-and-load.patch')
@@ -47,25 +55,11 @@ prepare() {
   sed 's/pip /pip2 /g' -i Makefile
 }
 
-case "$CARCH" in
-  x86_64)
-    _march=x86-64
-    _cpu=core-avx2
-    ;;
-  i686)
-    _march=pentium4
-    _cpu=pentium4
-    ;;
-esac
-
 julia_opts=(prefix=/usr sysconfdir=/etc
             USE_SYSTEM_LLVM=1
             USE_SYSTEM_LIBUNWIND=1
             USE_SYSTEM_PCRE=1
-            USE_SYSTEM_LIBM=0
-            USE_SYSTEM_OPENLIBM=1
             USE_SYSTEM_OPENSPECFUN=1
-            USE_SYSTEM_DSFMT=0
             USE_SYSTEM_BLAS=1
             USE_SYSTEM_LAPACK=1
             USE_SYSTEM_FFTW=1
@@ -73,19 +67,33 @@ julia_opts=(prefix=/usr sysconfdir=/etc
             USE_SYSTEM_MPFR=1
             USE_SYSTEM_ARPACK=1
             USE_SYSTEM_SUITESPARSE=1
-            USE_SYSTEM_LIBUV=0
             USE_SYSTEM_UTF8PROC=1
             USE_SYSTEM_LIBGIT2=1
             USE_SYSTEM_PATCHELF=1
-            USE_INTEL_MKL=0
-            USE_BLAS64=0
-            USE_LLVM_SHLIB=0
             MARCH=$_march
             JULIA_CPU_TARGET=$_cpu
             LIBBLASNAME=libopenblas
             LIBBLAS=-lopenblas
             LIBLAPACKNAME=libopenblas
             LIBLAPACK=-lopenblas)
+
+case "$CARCH" in
+  x86_64)
+    julia_opts=("${julia_opts[@]}" MARCH=x86-64 JULIA_CPU_TARGET=core-avx2)
+    ;;
+  i686)
+    julia_opts=("${julia_opts[@]}" MARCH=pentium4 JULIA_CPU_TARGET=pentium4)
+    ;;
+  aarch64)
+    julia_opts=("${julia_opts[@]}" MARCH=armv8-a JULIA_CPU_TARGET=cortex-a57)
+    ;;
+esac
+
+if ((USE_OPENLIBM)); then
+    julia_opts=("${julia_opts[@]}" USE_SYSTEM_OPENLIBM=1)
+else
+    julia_opts=("${julia_opts[@]}" USE_SYSTEM_LIBM=1)
+fi
 
 build() {
   cd julia
@@ -123,7 +131,10 @@ package_julia-git() {
   arch=('i686' 'x86_64')
   depends=('arpack' 'fftw' 'gmp' 'libgit2' 'libunwind' 'llvm' 'mpfr' 'pcre2'
            'hicolor-icon-theme' 'xdg-utils' 'suitesparse' 'openspecfun'
-           'openlibm' 'openblas' 'libutf8proc')
+           'openblas' 'libutf8proc')
+  if ((USE_OPENLIBM)); then
+      depends=("${depends[@]}" openlibm)
+  fi
   install=julia.install
   conflicts=('julia')
 
