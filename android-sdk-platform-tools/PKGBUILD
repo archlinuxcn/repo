@@ -2,7 +2,7 @@
 # Contributor: Gordin <9ordin @t gmail dot com>
 
 pkgname=android-sdk-platform-tools
-pkgver=r23.0.1
+pkgver=r23.1.0
 pkgrel=1
 pkgdesc='Platform-Tools for Google Android SDK (adb and fastboot)'
 arch=('i686' 'x86_64')
@@ -19,7 +19,7 @@ _ptools="opt/${_sdk}/platform-tools"
 source=("https://dl-ssl.google.com/android/repository/platform-tools_${pkgver}-linux.zip"
         "adb.service"
         "license.html")
-sha256sums=('e19280af36e4753d9d4f0c6f6bdab63f36a0a025742d42cd86adb88d71fc236b'
+sha256sums=('8a4524cced3ebead1ca1d0fa9d82592e42edb538df943af753a66a6609a55a07'
             '1c219abea7584ae13f3f76b04e269ef21c1699d6bd29b7615523f927a9d10deb'
             'a7f3a259290ae6a5dc61bd34ecae36e2b7e2f644865ddc3c7fde5d248b8a7cef')
 
