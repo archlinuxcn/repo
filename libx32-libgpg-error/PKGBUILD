@@ -1,10 +1,10 @@
-# $Id: PKGBUILD 127534 2015-02-10 20:30:52Z bluewind $
+# $Id: PKGBUILD 153589 2015-12-17 13:04:51Z fyan $
 # Maintainer: judd <jvinet@zeroflux.org>
 # x32 Maintainer: Fantix King <fantix.king at gmail.com>
 
 _pkgbasename=libgpg-error
 pkgname=libx32-$_pkgbasename
-pkgver=1.18
+pkgver=1.21
 pkgrel=1.1
 pkgdesc="Support library for libgcrypt (x32 ABI)"
 arch=(x86_64)
@@ -15,7 +15,7 @@ makedepends=(gcc-multilib-x32)
 options=(!libtool)
 source=(ftp://ftp.gnupg.org/gcrypt/libgpg-error/${_pkgbasename}-${pkgver}.tar.bz2)
   #ftp://ftp.franken.de/pub/crypt/mirror/ftp.gnupg.org/gcrypt/libgpg-error/${pkgname}-${pkgver}.tar.bz2)
-sha1sums=('7ba54f939da023af8f5b3e7a421a32eb742909c4')
+sha1sums=('ef1dfb2f8761f019091180596e9e638d8cc37513')
 
 build() {
   export CC="gcc -mx32"
