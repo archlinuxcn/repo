@@ -1,15 +1,15 @@
 # Maintainer: Vlad M. <vlad@archlinux.net>
 # Contributor: Gordin <9ordin @t gmail dot com>
+# Contributor: Christoph Bayer <chrbayer@criby.de>
 
 pkgname=android-sdk-platform-tools
 pkgver=r23.1.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Platform-Tools for Google Android SDK (adb and fastboot)'
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://developer.android.com/sdk/index.html"
 license=('custom')
-depends_i686=('gcc-libs' 'zlib' 'ncurses')
-depends_x86_64=('lib32-gcc-libs' 'lib32-zlib' 'lib32-ncurses')
+depends_x86_64=('zlib' 'ncurses')
 provides=('adb' 'android-tools')
 conflicts=('adb')
 _sdk="android-sdk"
