@@ -1,0 +1,1004 @@
+From 6bf7b5c9213edd2914be481e9a87fd6220fece05 Mon Sep 17 00:00:00 2001
+From: Keno Fischer <kfischer@college.harvard.edu>
+Date: Thu, 17 Dec 2015 14:18:15 +0000
+Subject: [PATCH] Add necessary patches for LLVM 3.7(.1)
+
+And make ORC JIT the default for those LLVM versions. This does
+not activate the new LLVM versions by default yet, to give time
+to update everything on CI, etc., but doing the actual activation
+is a one line change after this.
+---
+ Make.inc                                           |  11 +
+ deps/Makefile                                      |  21 +-
+ deps/checksums/cfe-3.7.0.src.tar.xz/md5            |   1 +
+ deps/checksums/cfe-3.7.0.src.tar.xz/sha512         |   1 +
+ deps/checksums/cfe-3.7.1.src.tar.xz/md5            |   1 +
+ deps/checksums/cfe-3.7.1.src.tar.xz/sha512         |   1 +
+ deps/checksums/compiler-rt-3.7.0.src.tar.xz/md5    |   1 +
+ deps/checksums/compiler-rt-3.7.0.src.tar.xz/sha512 |   1 +
+ deps/checksums/compiler-rt-3.7.1.src.tar.xz/md5    |   1 +
+ deps/checksums/compiler-rt-3.7.1.src.tar.xz/sha512 |   1 +
+ deps/checksums/lldb-3.7.0.src.tar.xz/md5           |   1 +
+ deps/checksums/lldb-3.7.0.src.tar.xz/sha512        |   1 +
+ deps/checksums/llvm-3.7.1.src.tar.xz/md5           |   1 +
+ deps/checksums/llvm-3.7.1.src.tar.xz/sha512        |   1 +
+ deps/llvm-3.7.0.patch                              |  29 ++
+ deps/llvm-3.7.1.patch                              | 550 +++++++++++++++++++++
+ src/codegen.cpp                                    |  81 ++-
+ src/gf.c                                           |  10 +-
+ src/llvm-version.h                                 |  10 +-
+ 19 files changed, 668 insertions(+), 56 deletions(-)
+ create mode 100644 deps/checksums/cfe-3.7.0.src.tar.xz/md5
+ create mode 100644 deps/checksums/cfe-3.7.0.src.tar.xz/sha512
+ create mode 100644 deps/checksums/cfe-3.7.1.src.tar.xz/md5
+ create mode 100644 deps/checksums/cfe-3.7.1.src.tar.xz/sha512
+ create mode 100644 deps/checksums/compiler-rt-3.7.0.src.tar.xz/md5
+ create mode 100644 deps/checksums/compiler-rt-3.7.0.src.tar.xz/sha512
+ create mode 100644 deps/checksums/compiler-rt-3.7.1.src.tar.xz/md5
+ create mode 100644 deps/checksums/compiler-rt-3.7.1.src.tar.xz/sha512
+ create mode 100644 deps/checksums/lldb-3.7.0.src.tar.xz/md5
+ create mode 100644 deps/checksums/lldb-3.7.0.src.tar.xz/sha512
+ create mode 100644 deps/checksums/llvm-3.7.1.src.tar.xz/md5
+ create mode 100644 deps/checksums/llvm-3.7.1.src.tar.xz/sha512
+ create mode 100644 deps/llvm-3.7.0.patch
+ create mode 100644 deps/llvm-3.7.1.patch
+
+diff --git a/Make.inc b/Make.inc
+index b72ef13..22c20da 100644
+--- a/Make.inc
++++ b/Make.inc
+@@ -491,6 +491,10 @@ endif
+ 
+ BUILD_MACHINE := $(shell $(HOSTCC) -dumpmachine)
+ 
++# Clang spells mingw `-windows-gnu`, but autotools, etc
++# don't recognize that, so canonicalize to mingw32
++BUILD_MACHINE := $(subst windows-gnu,mingw32,$(BUILD_MACHINE))
++
+ ifeq ($(ARCH),)
+ override ARCH := $(shell $(CC) -dumpmachine | sed "s/\([^-]*\).*$$/\1/")
+ else
+@@ -618,6 +622,13 @@ CXX_ARG += -m$(BINARY)
+ endif
+ endif
+ 
++ifeq ($(OS),WINNT)
++ifneq ($(ARCH),x86_64)
++JCFLAGS += -mincoming-stack-boundary=2
++JCXXFLAGS += -mincoming-stack-boundary=2
++endif
++endif
++
+ ifeq ($(USEGCC),1)
+ ifeq ($(ISX86),1)
+   SHIPFLAGS += -momit-leaf-frame-pointer
+diff --git a/deps/Makefile b/deps/Makefile
+index 4de02e4..7664d24 100644
+--- a/deps/Makefile
++++ b/deps/Makefile
+@@ -499,27 +499,33 @@ else
+ LLVM_MFLAGS += OPTIONAL_DIRS=
+ endif
+ 
++ifeq ($(LLVM_VER),3.7.1)
++LLVM_SRC_URL := https://s3.amazonaws.com/llvm-3.7.1-sources
++else
++LLVM_SRC_URL := http://llvm.org/releases/$(LLVM_VER)
++endif
++
+ ifneq ($(LLVM_CLANG_TAR),)
+ $(LLVM_CLANG_TAR): | $(SRCDIR)/srccache
+-	$(JLDOWNLOAD) $@ http://llvm.org/releases/$(LLVM_VER)/$(notdir $@)
++	$(JLDOWNLOAD) $@ $(LLVM_SRC_URL)/$(notdir $@)
+ endif
+ ifneq ($(LLVM_COMPILER_RT_TAR),)
+ $(LLVM_COMPILER_RT_TAR): | $(SRCDIR)/srccache
+-	$(JLDOWNLOAD) $@ http://llvm.org/releases/$(LLVM_VER)/$(notdir $@)
++	$(JLDOWNLOAD) $@ $(LLVM_SRC_URL)/$(notdir $@)
+ endif
+ 
+ ifneq ($(LLVM_LIBCXX_TAR),)
+ $(LLVM_LIBCXX_TAR): | $(SRCDIR)/srccache
+-	$(JLDOWNLOAD) $@ http://llvm.org/releases/$(LLVM_VER)/$(notdir $@)
++	$(JLDOWNLOAD) $@ $(LLVM_SRC_URL)/$(notdir $@)
+ endif
+ ifneq ($(LLVM_VER),svn)
+ $(LLVM_TAR): | $(SRCDIR)/srccache
+-	$(JLDOWNLOAD) $@ http://llvm.org/releases/$(LLVM_VER)/$(notdir $@)
++	$(JLDOWNLOAD) $@ $(LLVM_SRC_URL)/$(notdir $@)
+ endif
+ 
+ ifneq ($(LLVM_LLDB_TAR),)
+ $(LLVM_LLDB_TAR): | $(SRCDIR)/srccache
+-	$(JLDOWNLOAD) $@ http://llvm.org/releases/$(LLVM_VER)/$(notdir $@)
++	$(JLDOWNLOAD) $@ $(LLVM_SRC_URL)/$(notdir $@)
+ endif
+ ifeq ($(BUILD_LLDB),1)
+ $(LLVM_SRC_DIR)/tools/lldb:
+@@ -671,6 +677,11 @@ $(eval $(call LLVM_PATCH,win64-int128.llvm-3.3))
+ else ifeq ($(LLVM_VER),3.6.0)
+ $(eval $(call LLVM_PATCH,zerosign-llvm-3.6.0))
+ $(eval $(call LLVM_PATCH,win64-allocas-llvm-3.6.0))
++else ifeq ($(LLVM_VER),3.7.0)
++$(eval $(call LLVM_PATCH,llvm-3.7.0))
++$(eval $(call LLVM_PATCH,llvm-3.7.1))
++else ifeq ($(LLVM_VER),3.7.1)
++$(eval $(call LLVM_PATCH,llvm-3.7.1))
+ endif # LLVM_VER
+ 
+ LLVM_BUILDDIR_withtype := $(LLVM_BUILD_DIR)/build_$(LLVM_BUILDTYPE)
+diff --git a/deps/checksums/cfe-3.7.0.src.tar.xz/md5 b/deps/checksums/cfe-3.7.0.src.tar.xz/md5
+new file mode 100644
+index 0000000..05e1a33
+--- /dev/null
++++ b/deps/checksums/cfe-3.7.0.src.tar.xz/md5
+@@ -0,0 +1 @@
++8f9d27335e7331cf0a4711e952f21f01
+diff --git a/deps/checksums/cfe-3.7.0.src.tar.xz/sha512 b/deps/checksums/cfe-3.7.0.src.tar.xz/sha512
+new file mode 100644
+index 0000000..3f84b7f
+--- /dev/null
++++ b/deps/checksums/cfe-3.7.0.src.tar.xz/sha512
+@@ -0,0 +1 @@
++099d34cb019ea548c6ee85efd22b150beba0aa92061394fa3e423b1ebfe4a5c98c0586e5d56fc5c39e2b1606d36db59f442c056cc59473e32df76c8790c9d0ae
+diff --git a/deps/checksums/cfe-3.7.1.src.tar.xz/md5 b/deps/checksums/cfe-3.7.1.src.tar.xz/md5
+new file mode 100644
+index 0000000..f33d1c3
+--- /dev/null
++++ b/deps/checksums/cfe-3.7.1.src.tar.xz/md5
+@@ -0,0 +1 @@
++4431b5521632918d471da2b3ec553b64
+diff --git a/deps/checksums/cfe-3.7.1.src.tar.xz/sha512 b/deps/checksums/cfe-3.7.1.src.tar.xz/sha512
+new file mode 100644
+index 0000000..6b8e075
+--- /dev/null
++++ b/deps/checksums/cfe-3.7.1.src.tar.xz/sha512
+@@ -0,0 +1 @@
++22dc4047f452b7bb0ba6ea5fa015af334c3a6009acf2c666d1acce7d0ac6fd33dc842b382499e9a4f9cde76786d09d23d85da6d9d81b9551c5b7c817e5cae4d7
+diff --git a/deps/checksums/compiler-rt-3.7.0.src.tar.xz/md5 b/deps/checksums/compiler-rt-3.7.0.src.tar.xz/md5
+new file mode 100644
+index 0000000..72f9deb
+--- /dev/null
++++ b/deps/checksums/compiler-rt-3.7.0.src.tar.xz/md5
+@@ -0,0 +1 @@
++383c10affd513026f08936b5525523f5
+diff --git a/deps/checksums/compiler-rt-3.7.0.src.tar.xz/sha512 b/deps/checksums/compiler-rt-3.7.0.src.tar.xz/sha512
+new file mode 100644
+index 0000000..bc0b953
+--- /dev/null
++++ b/deps/checksums/compiler-rt-3.7.0.src.tar.xz/sha512
+@@ -0,0 +1 @@
++2ba6abb3d6ec7f1469cfe1d48fde2069e9a767d19144f80f05516ac63f353ace90a9df3e9d1c1f708f3c397aba0ec61b12e4f105b25a2e1cd26b25b0dd252bc9
+diff --git a/deps/checksums/compiler-rt-3.7.1.src.tar.xz/md5 b/deps/checksums/compiler-rt-3.7.1.src.tar.xz/md5
+new file mode 100644
+index 0000000..409039d
+--- /dev/null
++++ b/deps/checksums/compiler-rt-3.7.1.src.tar.xz/md5
+@@ -0,0 +1 @@
++3f4514bbb70b9265127ed5c9f529b322
+diff --git a/deps/checksums/compiler-rt-3.7.1.src.tar.xz/sha512 b/deps/checksums/compiler-rt-3.7.1.src.tar.xz/sha512
+new file mode 100644
+index 0000000..f2850be
+--- /dev/null
++++ b/deps/checksums/compiler-rt-3.7.1.src.tar.xz/sha512
+@@ -0,0 +1 @@
++cfe21cf0fd1f5ad4477ec975ba71d2627a51f6fd88b8c5d1bba47d2f965406301c4252c65f836639f4c4fef7703cb6ab61e559eaa103b9af707dca1411eee2c6
+diff --git a/deps/checksums/lldb-3.7.0.src.tar.xz/md5 b/deps/checksums/lldb-3.7.0.src.tar.xz/md5
+new file mode 100644
+index 0000000..169bc27
+--- /dev/null
++++ b/deps/checksums/lldb-3.7.0.src.tar.xz/md5
+@@ -0,0 +1 @@
++e5931740400d1dc3e7db4c7ba2ceff68
+diff --git a/deps/checksums/lldb-3.7.0.src.tar.xz/sha512 b/deps/checksums/lldb-3.7.0.src.tar.xz/sha512
+new file mode 100644
+index 0000000..74bb25d
+--- /dev/null
++++ b/deps/checksums/lldb-3.7.0.src.tar.xz/sha512
+@@ -0,0 +1 @@
++52157782ef13e2c8b7b35ff3ccc05887195fe46ddb6bafcf0707a3c46c1e034734b55342b8dbfc46cae7a8c3cb1012345284e4bedb2344c5016b8d19a12e90df
+diff --git a/deps/checksums/llvm-3.7.1.src.tar.xz/md5 b/deps/checksums/llvm-3.7.1.src.tar.xz/md5
+new file mode 100644
+index 0000000..df0b4bf
+--- /dev/null
++++ b/deps/checksums/llvm-3.7.1.src.tar.xz/md5
+@@ -0,0 +1 @@
++08b836880977430864232a7f3ae2074f
+diff --git a/deps/checksums/llvm-3.7.1.src.tar.xz/sha512 b/deps/checksums/llvm-3.7.1.src.tar.xz/sha512
+new file mode 100644
+index 0000000..31223df
+--- /dev/null
++++ b/deps/checksums/llvm-3.7.1.src.tar.xz/sha512
+@@ -0,0 +1 @@
++844665f157f3a1158de5716a75ccfb20a3419c9b54a0750e92b3c2e0395b4a62f32e34d5d111ca48385302fe890e3c3bd6dd917d4acf2b9e464cef63c49c8e21
+diff --git a/deps/llvm-3.7.0.patch b/deps/llvm-3.7.0.patch
+new file mode 100644
+index 0000000..6ae4383
+--- /dev/null
++++ b/deps/llvm-3.7.0.patch
+@@ -0,0 +1,29 @@
++commit 06e88db43d1ff367d03b731c9c1f4f69da78149b
++Author: Keno Fischer <kfischer@college.harvard.edu>
++Date:   Fri Oct 9 17:24:54 2015 +0000
++
++    Clear SectionSymbols in MCContext::Reset
++    
++    This was just forgotten when SectionSymbols was introduced and could cause
++    corruption if the MCContext was reused after Reset.
++    
++    Reviewers: rafael
++    
++    Subscribers: llvm-commits
++    
++    Differential Revision: http://reviews.llvm.org/D13547
++    
++    git-svn-id: https://llvm.org/svn/llvm-project/llvm/trunk@249854 91177308-0d34-0410-b5e6-96231b3b80d8
++
++diff --git a/lib/MC/MCContext.cpp b/lib/MC/MCContext.cpp
++index ff195d0..2160b4e 100644
++--- a/lib/MC/MCContext.cpp
+++++ b/lib/MC/MCContext.cpp
++@@ -80,6 +80,7 @@ void MCContext::reset() {
++ 
++   UsedNames.clear();
++   Symbols.clear();
+++  SectionSymbols.clear();
++   Allocator.Reset();
++   Instances.clear();
++   CompilationDir.clear();
+diff --git a/deps/llvm-3.7.1.patch b/deps/llvm-3.7.1.patch
+new file mode 100644
+index 0000000..2291b72
+--- /dev/null
++++ b/deps/llvm-3.7.1.patch
+@@ -0,0 +1,550 @@
++diff --git a/include/llvm/ExecutionEngine/SectionMemoryManager.h b/include/llvm/ExecutionEngine/SectionMemoryManager.h
++index 0b0dcb0..7bb96eb 100644
++--- a/include/llvm/ExecutionEngine/SectionMemoryManager.h
+++++ b/include/llvm/ExecutionEngine/SectionMemoryManager.h
++@@ -83,10 +83,28 @@ public:
++   virtual void invalidateInstructionCache();
++ 
++ private:
+++  struct FreeMemBlock {
+++    // The actual block of free memory
+++    sys::MemoryBlock Free;
+++    // If there is a pending allocation from the same reservation right before
+++    // this block, store it's index in PendingMem, to be able to update the
+++    // pending region if part of this block is allocated, rather than having to
+++    // create a new one
+++    unsigned PendingPrefixIndex;
+++  };
+++
++   struct MemoryGroup {
++-      SmallVector<sys::MemoryBlock, 16> AllocatedMem;
++-      SmallVector<sys::MemoryBlock, 16> FreeMem;
++-      sys::MemoryBlock Near;
+++    // PendingMem contains all blocks of memory (subblocks of AllocatedMem)
+++    // which have not yet had their permissions applied, but have been given
+++    // out to the user. FreeMem contains all block of memory, which have
+++    // neither had their permissions applied, nor been given out to the user.
+++    SmallVector<sys::MemoryBlock, 16> PendingMem;
+++    SmallVector<FreeMemBlock, 16> FreeMem;
+++
+++    // All memory blocks that have been requested from the system
+++    SmallVector<sys::MemoryBlock, 16> AllocatedMem;
+++
+++    sys::MemoryBlock Near;
++   };
++ 
++   uint8_t *allocateSection(MemoryGroup &MemGroup, uintptr_t Size,
++@@ -103,4 +121,3 @@ private:
++ }
++ 
++ #endif // LLVM_EXECUTION_ENGINE_SECTION_MEMORY_MANAGER_H
++-
++diff --git a/include/llvm/Support/raw_ostream.h b/include/llvm/Support/raw_ostream.h
++index 28e512c..686e8c8 100644
++--- a/include/llvm/Support/raw_ostream.h
+++++ b/include/llvm/Support/raw_ostream.h
++@@ -485,6 +485,9 @@ public:
++ 
++ /// A raw_ostream that writes to an SmallVector or SmallString.  This is a
++ /// simple adaptor class. This class does not encounter output errors.
+++/// raw_svector_ostream operates without a buffer, delegating all memory
+++/// management to the SmallString. Thus the SmallString is always up-to-date,
+++/// may be used directly and there is no need to call flush().
++ class raw_svector_ostream : public raw_pwrite_stream {
++   SmallVectorImpl<char> &OS;
++ 
++@@ -493,32 +496,24 @@ class raw_svector_ostream : public raw_pwrite_stream {
++ 
++   void pwrite_impl(const char *Ptr, size_t Size, uint64_t Offset) override;
++ 
++-  /// Return the current position within the stream, not counting the bytes
++-  /// currently in the buffer.
+++  /// Return the current position within the stream.
++   uint64_t current_pos() const override;
++ 
++-protected:
++-  // Like the regular constructor, but doesn't call init.
++-  explicit raw_svector_ostream(SmallVectorImpl<char> &O, unsigned);
++-  void init();
++-
++ public:
++   /// Construct a new raw_svector_ostream.
++   ///
++   /// \param O The vector to write to; this should generally have at least 128
++   /// bytes free to avoid any extraneous memory overhead.
++-  explicit raw_svector_ostream(SmallVectorImpl<char> &O);
++-  ~raw_svector_ostream() override;
++-
+++  explicit raw_svector_ostream(SmallVectorImpl<char> &O) : OS(O) {
+++    SetUnbuffered();
+++  }
+++  ~raw_svector_ostream() override {}
++ 
++-  /// This is called when the SmallVector we're appending to is changed outside
++-  /// of the raw_svector_ostream's control.  It is only safe to do this if the
++-  /// raw_svector_ostream has previously been flushed.
++-  void resync();
+++  // FIXME: resync is no-op. Remove it and its users.
+++  void resync() {}
++ 
++-  /// Flushes the stream contents to the target vector and return a StringRef
++-  /// for the vector contents.
++-  StringRef str();
+++  /// Return a StringRef for the vector contents.
+++  StringRef str() { return StringRef(OS.data(), OS.size()); }
++ };
++ 
++ /// A raw_ostream that discards all output.
++@@ -541,9 +536,7 @@ class buffer_ostream : public raw_svector_ostream {
++   SmallVector<char, 0> Buffer;
++ 
++ public:
++-  buffer_ostream(raw_ostream &OS) : raw_svector_ostream(Buffer, 0), OS(OS) {
++-    init();
++-  }
+++  buffer_ostream(raw_ostream &OS) : raw_svector_ostream(Buffer), OS(OS) {}
++   ~buffer_ostream() { OS << str(); }
++ };
++ 
++diff --git a/lib/CodeGen/MachineModuleInfo.cpp b/lib/CodeGen/MachineModuleInfo.cpp
++index 6a20624..53a9ea7 100644
++--- a/lib/CodeGen/MachineModuleInfo.cpp
+++++ b/lib/CodeGen/MachineModuleInfo.cpp
++@@ -227,6 +227,7 @@ bool MachineModuleInfo::doFinalization(Module &M) {
++   AddrLabelSymbols = nullptr;
++ 
++   Context.reset();
+++  FuncInfoMap.clear();
++ 
++   delete ObjFileMMI;
++   ObjFileMMI = nullptr;
++diff --git a/lib/ExecutionEngine/RuntimeDyld/RuntimeDyld.cpp b/lib/ExecutionEngine/RuntimeDyld/RuntimeDyld.cpp
++index 93287a3..93bbd6f 100644
++--- a/lib/ExecutionEngine/RuntimeDyld/RuntimeDyld.cpp
+++++ b/lib/ExecutionEngine/RuntimeDyld/RuntimeDyld.cpp
++@@ -85,20 +85,25 @@ void RuntimeDyldImpl::resolveRelocations() {
++   // First, resolve relocations associated with external symbols.
++   resolveExternalSymbols();
++ 
++-  // Just iterate over the sections we have and resolve all the relocations
++-  // in them. Gross overkill, but it gets the job done.
++-  for (int i = 0, e = Sections.size(); i != e; ++i) {
+++  // Iterate over all outstanding relocations
+++  for (auto it = Relocations.begin(), e = Relocations.end(); it != e; ++it) {
++     // The Section here (Sections[i]) refers to the section in which the
++     // symbol for the relocation is located.  The SectionID in the relocation
++     // entry provides the section to which the relocation will be applied.
++-    uint64_t Addr = Sections[i].LoadAddress;
++-    DEBUG(dbgs() << "Resolving relocations Section #" << i << "\t"
+++    int Idx = it->first;
+++    uint64_t Addr = Sections[Idx].LoadAddress;
+++    DEBUG(dbgs() << "Resolving relocations Section #" << Idx << "\t"
++                  << format("%p", (uintptr_t)Addr) << "\n");
++-    DEBUG(dumpSectionMemory(Sections[i], "before relocations"));
++-    resolveRelocationList(Relocations[i], Addr);
++-    DEBUG(dumpSectionMemory(Sections[i], "after relocations"));
++-    Relocations.erase(i);
+++    resolveRelocationList(it->second, Addr);
++   }
+++  Relocations.clear();
+++
+++  // Print out sections after relocation.
+++  DEBUG(
+++    for (int i = 0, e = Sections.size(); i != e; ++i)
+++      dumpSectionMemory(Sections[i], "after relocations");
+++  );
+++
++ }
++ 
++ void RuntimeDyldImpl::mapSectionAddress(const void *LocalAddress,
++diff --git a/lib/ExecutionEngine/RuntimeDyld/RuntimeDyldImpl.h b/lib/ExecutionEngine/RuntimeDyld/RuntimeDyldImpl.h
++index e085a92..cc12093 100644
++--- a/lib/ExecutionEngine/RuntimeDyld/RuntimeDyldImpl.h
+++++ b/lib/ExecutionEngine/RuntimeDyld/RuntimeDyldImpl.h
++@@ -30,6 +30,7 @@
++ #include "llvm/Support/SwapByteOrder.h"
++ #include "llvm/Support/raw_ostream.h"
++ #include <map>
+++#include <unordered_map>
++ #include <system_error>
++ 
++ using namespace llvm;
++@@ -224,7 +225,7 @@ protected:
++   // Relocations to sections already loaded. Indexed by SectionID which is the
++   // source of the address. The target where the address will be written is
++   // SectionID/Offset in the relocation itself.
++-  DenseMap<unsigned, RelocationList> Relocations;
+++  std::unordered_map<unsigned, RelocationList> Relocations;
++ 
++   // Relocations to external symbols that are not yet resolved.  Symbols are
++   // external when they aren't found in the global symbol table of all loaded
++diff --git a/lib/ExecutionEngine/SectionMemoryManager.cpp b/lib/ExecutionEngine/SectionMemoryManager.cpp
++index 5986084..e2f2208 100644
++--- a/lib/ExecutionEngine/SectionMemoryManager.cpp
+++++ b/lib/ExecutionEngine/SectionMemoryManager.cpp
++@@ -15,6 +15,7 @@
++ #include "llvm/Config/config.h"
++ #include "llvm/ExecutionEngine/SectionMemoryManager.h"
++ #include "llvm/Support/MathExtras.h"
+++#include "llvm/Support/Process.h"
++ 
++ namespace llvm {
++ 
++@@ -48,16 +49,27 @@ uint8_t *SectionMemoryManager::allocateSection(MemoryGroup &MemGroup,
++ 
++   // Look in the list of free memory regions and use a block there if one
++   // is available.
++-  for (int i = 0, e = MemGroup.FreeMem.size(); i != e; ++i) {
++-    sys::MemoryBlock &MB = MemGroup.FreeMem[i];
++-    if (MB.size() >= RequiredSize) {
++-      Addr = (uintptr_t)MB.base();
++-      uintptr_t EndOfBlock = Addr + MB.size();
+++  for (FreeMemBlock &FreeMB : MemGroup.FreeMem) {
+++    if (FreeMB.Free.size() >= RequiredSize) {
+++      Addr = (uintptr_t)FreeMB.Free.base();
+++      uintptr_t EndOfBlock = Addr + FreeMB.Free.size();
++       // Align the address.
++       Addr = (Addr + Alignment - 1) & ~(uintptr_t)(Alignment - 1);
++-      // Store cutted free memory block.
++-      MemGroup.FreeMem[i] = sys::MemoryBlock((void*)(Addr + Size),
++-                                             EndOfBlock - Addr - Size);
+++
+++      if (FreeMB.PendingPrefixIndex == (unsigned)-1) {
+++        // The part of the block we're giving out to the user is now pending
+++        MemGroup.PendingMem.push_back(sys::MemoryBlock((void *)Addr, Size));
+++
+++        // Remember this pending block, such that future allocations can just
+++        // modify it rather than creating a new one
+++        FreeMB.PendingPrefixIndex = MemGroup.PendingMem.size() - 1;
+++      } else {
+++        sys::MemoryBlock &PendingMB = MemGroup.PendingMem[FreeMB.PendingPrefixIndex];
+++        PendingMB = sys::MemoryBlock(PendingMB.base(), Addr + Size - (uintptr_t)PendingMB.base());
+++      }
+++
+++      // Remember how much free space is now left in this block
+++      FreeMB.Free = sys::MemoryBlock((void *)(Addr + Size), EndOfBlock - Addr - Size);
++       return (uint8_t*)Addr;
++     }
++   }
++@@ -85,6 +97,7 @@ uint8_t *SectionMemoryManager::allocateSection(MemoryGroup &MemGroup,
++   // Save this address as the basis for our next request
++   MemGroup.Near = MB;
++ 
+++  // Remember that we allocated this memory
++   MemGroup.AllocatedMem.push_back(MB);
++   Addr = (uintptr_t)MB.base();
++   uintptr_t EndOfBlock = Addr + MB.size();
++@@ -92,11 +105,18 @@ uint8_t *SectionMemoryManager::allocateSection(MemoryGroup &MemGroup,
++   // Align the address.
++   Addr = (Addr + Alignment - 1) & ~(uintptr_t)(Alignment - 1);
++ 
+++  // The part of the block we're giving out to the user is now pending
+++  MemGroup.PendingMem.push_back(sys::MemoryBlock((void *)Addr, Size));
+++
++   // The allocateMappedMemory may allocate much more memory than we need. In
++   // this case, we store the unused memory as a free memory block.
++   unsigned FreeSize = EndOfBlock-Addr-Size;
++-  if (FreeSize > 16)
++-    MemGroup.FreeMem.push_back(sys::MemoryBlock((void*)(Addr + Size), FreeSize));
+++  if (FreeSize > 16) {
+++    FreeMemBlock FreeMB;
+++    FreeMB.Free = sys::MemoryBlock((void*)(Addr + Size), FreeSize);
+++    FreeMB.PendingPrefixIndex = (unsigned)-1;
+++    MemGroup.FreeMem.push_back(FreeMB);
+++  }
++ 
++   // Return aligned address
++   return (uint8_t*)Addr;
++@@ -107,9 +127,6 @@ bool SectionMemoryManager::finalizeMemory(std::string *ErrMsg)
++   // FIXME: Should in-progress permissions be reverted if an error occurs?
++   std::error_code ec;
++ 
++-  // Don't allow free memory blocks to be used after setting protection flags.
++-  CodeMem.FreeMem.clear();
++-
++   // Make code memory executable.
++   ec = applyMemoryGroupPermissions(CodeMem,
++                                    sys::Memory::MF_READ | sys::Memory::MF_EXEC);
++@@ -143,36 +160,62 @@ bool SectionMemoryManager::finalizeMemory(std::string *ErrMsg)
++   return false;
++ }
++ 
+++static sys::MemoryBlock trimBlockToPageSize(sys::MemoryBlock M) {
+++  static const size_t PageSize = sys::Process::getPageSize();
+++
+++  size_t StartOverlap =
+++      (PageSize - ((uintptr_t)M.base() % PageSize)) % PageSize;
+++
+++  size_t TrimmedSize = M.size();
+++  TrimmedSize -= StartOverlap;
+++  TrimmedSize -= TrimmedSize % PageSize;
+++
+++  sys::MemoryBlock Trimmed((void *)((uintptr_t)M.base() + StartOverlap), TrimmedSize);
+++
+++  assert(((uintptr_t)Trimmed.base() % PageSize) == 0);
+++  assert((Trimmed.size() % PageSize) == 0);
+++  assert(M.base() <= Trimmed.base() && Trimmed.size() <= M.size());
+++
+++  return Trimmed;
+++}
+++
+++
++ std::error_code
++ SectionMemoryManager::applyMemoryGroupPermissions(MemoryGroup &MemGroup,
++                                                   unsigned Permissions) {
++-
++-  for (int i = 0, e = MemGroup.AllocatedMem.size(); i != e; ++i) {
++-    std::error_code ec;
++-    ec =
++-        sys::Memory::protectMappedMemory(MemGroup.AllocatedMem[i], Permissions);
++-    if (ec) {
++-      return ec;
++-    }
+++  for (sys::MemoryBlock &MB : MemGroup.PendingMem)
+++    if (std::error_code EC = sys::Memory::protectMappedMemory(MB, Permissions))
+++      return EC;
+++
+++  MemGroup.PendingMem.clear();
+++
+++  // Now go through free blocks and trim any of them that don't span the entire
+++  // page because one of the pending blocks may have overlapped it.
+++  for (FreeMemBlock &FreeMB : MemGroup.FreeMem) {
+++    FreeMB.Free = trimBlockToPageSize(FreeMB.Free);
+++    // We cleared the PendingMem list, so all these pointers are now invalid
+++    FreeMB.PendingPrefixIndex = (unsigned)-1;
++   }
++ 
+++  // Remove all blocks which are now empty
+++  MemGroup.FreeMem.erase(
+++      std::remove_if(MemGroup.FreeMem.begin(), MemGroup.FreeMem.end(),
+++                     [](FreeMemBlock &FreeMB) { return FreeMB.Free.size() == 0; }),
+++      MemGroup.FreeMem.end());
+++
++   return std::error_code();
++ }
++ 
++ void SectionMemoryManager::invalidateInstructionCache() {
++-  for (int i = 0, e = CodeMem.AllocatedMem.size(); i != e; ++i)
++-    sys::Memory::InvalidateInstructionCache(CodeMem.AllocatedMem[i].base(),
++-                                            CodeMem.AllocatedMem[i].size());
+++  for (sys::MemoryBlock &Block : CodeMem.PendingMem)
+++    sys::Memory::InvalidateInstructionCache(Block.base(), Block.size());
++ }
++ 
++ SectionMemoryManager::~SectionMemoryManager() {
++-  for (unsigned i = 0, e = CodeMem.AllocatedMem.size(); i != e; ++i)
++-    sys::Memory::releaseMappedMemory(CodeMem.AllocatedMem[i]);
++-  for (unsigned i = 0, e = RWDataMem.AllocatedMem.size(); i != e; ++i)
++-    sys::Memory::releaseMappedMemory(RWDataMem.AllocatedMem[i]);
++-  for (unsigned i = 0, e = RODataMem.AllocatedMem.size(); i != e; ++i)
++-    sys::Memory::releaseMappedMemory(RODataMem.AllocatedMem[i]);
+++  for (MemoryGroup *Group : {&CodeMem, &RWDataMem, &RODataMem}) {
+++    for (sys::MemoryBlock &Block : Group->AllocatedMem)
+++      sys::Memory::releaseMappedMemory(Block);
+++  }
++ }
++ 
++ } // namespace llvm
++-
++diff --git a/lib/IR/Verifier.cpp b/lib/IR/Verifier.cpp
++index 2a0a4ff..228c09f 100644
++--- a/lib/IR/Verifier.cpp
+++++ b/lib/IR/Verifier.cpp
++@@ -1754,6 +1754,14 @@ void Verifier::visitFunction(const Function &F) {
++   assert(F.hasMetadata() != MDs.empty() && "Bit out-of-sync");
++   VerifyFunctionMetadata(MDs);
++ 
+++  // Check validity of the personality function
+++  if (F.hasPersonalityFn()) {
+++    auto *Per = dyn_cast<Function>(F.getPersonalityFn()->stripPointerCasts());
+++    if (Per)
+++      Assert(Per->getParent() == F.getParent(),
+++             "Referencing personality function in another module!", &F, Per);
+++  }
+++
++   if (F.isMaterializable()) {
++     // Function has a body somewhere we can't see.
++     Assert(MDs.empty(), "unmaterialized function cannot have metadata", &F,
++diff --git a/lib/Support/Unix/Memory.inc b/lib/Support/Unix/Memory.inc
++index c421ee8..33beff5 100644
++--- a/lib/Support/Unix/Memory.inc
+++++ b/lib/Support/Unix/Memory.inc
++@@ -153,6 +153,7 @@ Memory::releaseMappedMemory(MemoryBlock &M) {
++ 
++ std::error_code
++ Memory::protectMappedMemory(const MemoryBlock &M, unsigned Flags) {
+++  static const size_t PageSize = Process::getPageSize();
++   if (M.Address == nullptr || M.Size == 0)
++     return std::error_code();
++ 
++@@ -161,7 +162,7 @@ Memory::protectMappedMemory(const MemoryBlock &M, unsigned Flags) {
++ 
++   int Protect = getPosixProtectionFlags(Flags);
++ 
++-  int Result = ::mprotect(M.Address, M.Size, Protect);
+++  int Result = ::mprotect((void*)((uintptr_t)M.Address & ~(PageSize-1)), PageSize*((M.Size+PageSize-1)/PageSize), Protect);
++   if (Result != 0)
++     return std::error_code(errno, std::generic_category());
++ 
++@@ -181,7 +182,7 @@ Memory::AllocateRWX(size_t NumBytes, const MemoryBlock* NearBlock,
++                     std::string *ErrMsg) {
++   if (NumBytes == 0) return MemoryBlock();
++ 
++-  size_t PageSize = Process::getPageSize();
+++  static const size_t PageSize = Process::getPageSize();
++   size_t NumPages = (NumBytes+PageSize-1)/PageSize;
++ 
++   int fd = -1;
++diff --git a/lib/Support/raw_ostream.cpp b/lib/Support/raw_ostream.cpp
++index 42f830b..3a37987 100644
++--- a/lib/Support/raw_ostream.cpp
+++++ b/lib/Support/raw_ostream.cpp
++@@ -755,72 +755,15 @@ void raw_string_ostream::write_impl(const char *Ptr, size_t Size) {
++ //  raw_svector_ostream
++ //===----------------------------------------------------------------------===//
++ 
++-// The raw_svector_ostream implementation uses the SmallVector itself as the
++-// buffer for the raw_ostream. We guarantee that the raw_ostream buffer is
++-// always pointing past the end of the vector, but within the vector
++-// capacity. This allows raw_ostream to write directly into the correct place,
++-// and we only need to set the vector size when the data is flushed.
+++uint64_t raw_svector_ostream::current_pos() const { return OS.size(); }
++ 
++-raw_svector_ostream::raw_svector_ostream(SmallVectorImpl<char> &O, unsigned)
++-    : OS(O) {}
++-
++-raw_svector_ostream::raw_svector_ostream(SmallVectorImpl<char> &O) : OS(O) {
++-  init();
++-}
++-
++-void raw_svector_ostream::init() {
++-  // Set up the initial external buffer. We make sure that the buffer has at
++-  // least 128 bytes free; raw_ostream itself only requires 64, but we want to
++-  // make sure that we don't grow the buffer unnecessarily on destruction (when
++-  // the data is flushed). See the FIXME below.
++-  OS.reserve(OS.size() + 128);
++-  SetBuffer(OS.end(), OS.capacity() - OS.size());
++-}
++-
++-raw_svector_ostream::~raw_svector_ostream() {
++-  // FIXME: Prevent resizing during this flush().
++-  flush();
++-}
+++void raw_svector_ostream::write_impl(const char *Ptr, size_t Size) {
+++  OS.append(Ptr, Ptr + Size);
+++};
++ 
++ void raw_svector_ostream::pwrite_impl(const char *Ptr, size_t Size,
++                                       uint64_t Offset) {
++-  flush();
++-  memcpy(OS.begin() + Offset, Ptr, Size);
++-}
++-
++-/// resync - This is called when the SmallVector we're appending to is changed
++-/// outside of the raw_svector_ostream's control.  It is only safe to do this
++-/// if the raw_svector_ostream has previously been flushed.
++-void raw_svector_ostream::resync() {
++-  assert(GetNumBytesInBuffer() == 0 && "Didn't flush before mutating vector");
++-
++-  if (OS.capacity() - OS.size() < 64)
++-    OS.reserve(OS.capacity() * 2);
++-  SetBuffer(OS.end(), OS.capacity() - OS.size());
++-}
++-
++-void raw_svector_ostream::write_impl(const char *Ptr, size_t Size) {
++-  if (Ptr == OS.end()) {
++-    // Grow the buffer to include the scratch area without copying.
++-    size_t NewSize = OS.size() + Size;
++-    assert(NewSize <= OS.capacity() && "Invalid write_impl() call!");
++-    OS.set_size(NewSize);
++-  } else {
++-    assert(!GetNumBytesInBuffer());
++-    OS.append(Ptr, Ptr + Size);
++-  }
++-
++-  OS.reserve(OS.size() + 64);
++-  SetBuffer(OS.end(), OS.capacity() - OS.size());
++-}
++-
++-uint64_t raw_svector_ostream::current_pos() const {
++-  return OS.size();
++-}
++-
++-StringRef raw_svector_ostream::str() {
++-  flush();
++-  return StringRef(OS.begin(), OS.size());
+++  memcpy(OS.data() + Offset, Ptr, Size);
++ }
++ 
++ //===----------------------------------------------------------------------===//
++diff --git a/lib/Transforms/Scalar/Sink.cpp b/lib/Transforms/Scalar/Sink.cpp
++index f49f4ea..1bdbf11 100644
++--- a/lib/Transforms/Scalar/Sink.cpp
+++++ b/lib/Transforms/Scalar/Sink.cpp
++@@ -169,7 +169,8 @@ static bool isSafeToMove(Instruction *Inst, AliasAnalysis *AA,
++         return false;
++   }
++ 
++-  if (isa<TerminatorInst>(Inst) || isa<PHINode>(Inst))
+++  if (isa<TerminatorInst>(Inst) || isa<PHINode>(Inst) ||
+++      isa<LandingPadInst>(Inst))
++     return false;
++ 
++   // Convergent operations can only be moved to control equivalent blocks.
++diff --git a/lib/Transforms/Utils/CloneFunction.cpp b/lib/Transforms/Utils/CloneFunction.cpp
++index cc4d6c6..404b007 100644
++--- a/lib/Transforms/Utils/CloneFunction.cpp
+++++ b/lib/Transforms/Utils/CloneFunction.cpp
++@@ -96,6 +96,13 @@ void llvm::CloneFunctionInto(Function *NewFunc, const Function *OldFunc,
++   NewFunc->copyAttributesFrom(OldFunc);
++   NewFunc->setAttributes(NewAttrs);
++ 
+++  // Fix up the personality function that got copied over.
+++  if (OldFunc->hasPersonalityFn())
+++    NewFunc->setPersonalityFn(
+++        MapValue(OldFunc->getPersonalityFn(), VMap,
+++                 ModuleLevelChanges ? RF_None : RF_NoModuleLevelChanges,
+++                 TypeMapper, Materializer));
+++
++   AttributeSet OldAttrs = OldFunc->getAttributes();
++   // Clone any argument attributes that are present in the VMap.
++   for (const Argument &OldArg : OldFunc->args())
++diff --git a/test/Transforms/Sink/landingpad.ll b/test/Transforms/Sink/landingpad.ll
++new file mode 100644
++index 0000000..10548fd
++--- /dev/null
+++++ b/test/Transforms/Sink/landingpad.ll
++@@ -0,0 +1,33 @@
+++; Test that we don't sink landingpads
+++; RUN: opt -sink -S < %s | FileCheck %s
+++
+++declare hidden void @g()
+++declare void @h()
+++declare i32 @__gxx_personality_v0(...)
+++
+++define void @f() personality i8* bitcast (i32 (...)* @__gxx_personality_v0 to i8*) {
+++entry:
+++  invoke void @g()
+++          to label %invoke.cont.15 unwind label %lpad
+++
+++invoke.cont.15:
+++  unreachable
+++
+++; CHECK: lpad:
+++; CHECK: %0 = landingpad { i8*, i32 }
+++lpad:
+++  %0 = landingpad { i8*, i32 }
+++          catch i8* null
+++  invoke void @h()
+++          to label %invoke.cont unwind label %lpad.1
+++
+++; CHECK: invoke.cont
+++; CHECK-NOT: %0 = landingpad { i8*, i32 }
+++invoke.cont:
+++  ret void
+++
+++lpad.1:
+++  %1 = landingpad { i8*, i32 }
+++          cleanup
+++  resume { i8*, i32 } %1
+++}
+diff --git a/src/codegen.cpp b/src/codegen.cpp
+index 9d0f8f7..3323f12 100644
+--- a/src/codegen.cpp
++++ b/src/codegen.cpp
+@@ -873,6 +873,7 @@ static Function *to_function(jl_lambda_info_t *li, jl_cyclectx_t *cyclectx)
+     if (imaging_mode)
+ #endif
+         FPM->run(*f);
++
+     if (old != NULL) {
+         builder.SetInsertPoint(old);
+         builder.SetCurrentDebugLocation(olddl);
+@@ -891,27 +892,42 @@ static Function *to_function(jl_lambda_info_t *li, jl_cyclectx_t *cyclectx)
+     return f;
+ }
+ 
++#ifndef LLVM37
++static Value *getModuleFlag(Module *m, StringRef Key)
++{
++    SmallVector<Module::ModuleFlagEntry, 8> ModuleFlags;
++    m->getModuleFlagsMetadata(ModuleFlags);
++    SmallVector<Module::ModuleFlagEntry, 8>::iterator it = ModuleFlags.begin();
++    for (;it != ModuleFlags.end(); ++it) {
++        if (Key == it->Key->getString())
++            return it->Val;
++    }
++    return NULL;
++}
++#else
++#define getModuleFlag(m,str) m->getModuleFlag(str)
++#endif
++
+ static void jl_setup_module(Module *m)
+ {
+-    m->addModuleFlag(llvm::Module::Warning, "Dwarf Version",2);
++    if (!getModuleFlag(m,"Dwarf Version"))
++        m->addModuleFlag(llvm::Module::Warning, "Dwarf Version",2);
+ #ifdef LLVM34
+-    m->addModuleFlag(llvm::Module::Error, "Debug Info Version",
+-        llvm::DEBUG_METADATA_VERSION);
++    if (!getModuleFlag(m,"Debug Info Version"))
++        m->addModuleFlag(llvm::Module::Error, "Debug Info Version",
++            llvm::DEBUG_METADATA_VERSION);
+ #endif
+ #ifdef LLVM37
+-    if (jl_ExecutionEngine) {
+ #ifdef USE_ORCJIT
+-        m->setDataLayout(jl_ExecutionEngine->getDataLayout());
++    m->setDataLayout(jl_ExecutionEngine->getDataLayout());
+ #elif defined(LLVM38)
+-        m->setDataLayout(jl_ExecutionEngine->getDataLayout().getStringRepresentation());
++    m->setDataLayout(jl_ExecutionEngine->getDataLayout().getStringRepresentation());
+ #else
+-        m->setDataLayout(jl_ExecutionEngine->getDataLayout()->getStringRepresentation());
++    m->setDataLayout(jl_ExecutionEngine->getDataLayout()->getStringRepresentation());
+ #endif
+-        m->setTargetTriple(jl_TargetMachine->getTargetTriple().str());
+-    }
++    m->setTargetTriple(jl_TargetMachine->getTargetTriple().str());
+ #elif defined(LLVM36)
+-    if (jl_ExecutionEngine)
+-        m->setDataLayout(jl_ExecutionEngine->getDataLayout());
++    m->setDataLayout(jl_ExecutionEngine->getDataLayout());
+ #endif
+ }
+ 
+@@ -6212,25 +6228,19 @@ extern "C" void jl_init_codegen(void)
+ #ifdef USE_MCJIT
+     m = shadow_module = new Module("shadow", jl_LLVMContext);
+     builtins_module = new Module("julia_builtins", jl_LLVMContext);
+-    jl_setup_module(shadow_module);
+-    jl_setup_module(builtins_module);
+     if (imaging_mode) {
+         engine_module = new Module("engine_module", jl_LLVMContext);
+-        jl_setup_module(engine_module);
+         active_module = shadow_module;
+     }
+     else {
+         active_module = new Module("julia", jl_LLVMContext);
+-        jl_setup_module(active_module);
+         engine_module = m;
+ #ifdef USE_ORCJIT
+         engine_module = new Module("engine_module", jl_LLVMContext);
+-        jl_setup_module(engine_module);
+ #endif
+     }
+ #else
+     engine_module = m = jl_Module = new Module("julia", jl_LLVMContext);
+-    jl_setup_module(engine_module);
+ #endif
+ 
+     TargetOptions options = TargetOptions();
+@@ -6317,17 +6327,6 @@ extern "C" void jl_init_codegen(void)
+     jl_TargetMachine->setFastISel(true);
+ #endif
+ 
+-#if defined(LLVM38)
+-    engine_module->setDataLayout(jl_TargetMachine->createDataLayout());
+-    active_module->setDataLayout(jl_TargetMachine->createDataLayout());
+-#elif defined(LLVM36) && !defined(LLVM37)
+-    engine_module->setDataLayout(jl_TargetMachine->getSubtargetImpl()->getDataLayout());
+-#elif defined(LLVM35) && !defined(LLVM37)
+-    engine_module->setDataLayout(jl_TargetMachine->getDataLayout());
+-#else
+-    engine_module->setDataLayout(jl_TargetMachine->getDataLayout()->getStringRepresentation());
+-#endif
+-
+ #ifdef USE_ORCJIT
+     jl_ExecutionEngine = new JuliaOJIT(*jl_TargetMachine);
+ #else
+@@ -6346,26 +6345,14 @@ extern "C" void jl_init_codegen(void)
+ 
+     mbuilder = new MDBuilder(getGlobalContext());
+ 
+-#ifdef USE_ORCJIT
+-    m->setDataLayout(jl_ExecutionEngine->getDataLayout());
+-    engine_module->setDataLayout(jl_ExecutionEngine->getDataLayout());
+-    m->setTargetTriple(jl_TargetMachine->getTargetTriple().str());
+-    engine_module->setTargetTriple(jl_TargetMachine->getTargetTriple().str());
+-#else
+-#ifdef LLVM37
+-#ifdef LLVM38
+-    m->setDataLayout(jl_ExecutionEngine->getDataLayout().getStringRepresentation());
+-    engine_module->setDataLayout(jl_ExecutionEngine->getDataLayout().getStringRepresentation());
++    // Now that the execution engine exists, initialize all modules
++#ifdef USE_MCJIT
++    jl_setup_module(engine_module);
++    jl_setup_module(shadow_module);
++    jl_setup_module(active_module);
++    jl_setup_module(builtins_module);
+ #else
+-    m->setDataLayout(jl_ExecutionEngine->getDataLayout()->getStringRepresentation());
+-    engine_module->setDataLayout(jl_ExecutionEngine->getDataLayout()->getStringRepresentation());
+-#endif
+-    m->setTargetTriple(jl_TargetMachine->getTargetTriple().str());
+-    engine_module->setTargetTriple(jl_TargetMachine->getTargetTriple().str());
+-#elif defined(LLVM36)
+-    m->setDataLayout(jl_ExecutionEngine->getDataLayout());
+-    engine_module->setDataLayout(jl_ExecutionEngine->getDataLayout());
+-#endif
++    jl_setup_module(engine_module);
+ #endif
+ 
+     if (imaging_mode)
+diff --git a/src/gf.c b/src/gf.c
+index 91f5dce..9619022 100644
+--- a/src/gf.c
++++ b/src/gf.c
+@@ -11,6 +11,7 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include <assert.h>
++#include <unistd.h>
+ #ifdef _OS_WINDOWS_
+ #include <malloc.h>
+ #endif
+@@ -1391,7 +1392,14 @@ void JL_NORETURN jl_no_method_error_bare(jl_function_t *f, jl_value_t *args)
+         (jl_value_t*)f,
+         args
+     };
+-    jl_throw(jl_apply(jl_module_call_func(jl_base_module), fargs, 3));
++    if (jl_base_module) {
++        jl_throw(jl_apply(jl_module_call_func(jl_base_module), fargs, 3));
++    } else {
++        jl_printf((JL_STREAM*)STDERR_FILENO, "A method error occurred before the base module was defined. Aborting...\n");
++        jl_static_show((JL_STREAM*)STDERR_FILENO,(jl_value_t*)f); jl_printf((JL_STREAM*)STDERR_FILENO,"\n");
++        jl_static_show((JL_STREAM*)STDERR_FILENO,args); jl_printf((JL_STREAM*)STDERR_FILENO,"\n");
++        abort();
++    }
+     // not reached
+ }
+ 
+diff --git a/src/llvm-version.h b/src/llvm-version.h
+index e9c0589..f03e521 100644
+--- a/src/llvm-version.h
++++ b/src/llvm-version.h
+@@ -4,13 +4,17 @@
+ 
+ #if defined(LLVM_VERSION_MAJOR) && LLVM_VERSION_MAJOR == 3 && LLVM_VERSION_MINOR >= 8
+ #define LLVM38 1
++#define USE_ORCJIT
+ #endif
+ 
+ #if defined(LLVM_VERSION_MAJOR) && LLVM_VERSION_MAJOR == 3 && LLVM_VERSION_MINOR >= 7
+ #define LLVM37 1
+-// Experimental:
+-//#define USE_ORCMCJIT
+-//#define USE_ORCJIT
++
++// We enable ORCJIT only if we have our custom patches
++#ifndef SYSTEM_LLVM
++#define USE_ORCJIT
++#endif
++
+ #endif
+ 
+ #if defined(LLVM_VERSION_MAJOR) && LLVM_VERSION_MAJOR == 3 && LLVM_VERSION_MINOR >= 6
+-- 
+2.6.4
+

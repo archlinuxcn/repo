@@ -15,10 +15,10 @@ if ((BUILD_EXTRA)); then
 else
    pkgname=('julia-git')
 fi
-pkgver=0.4.0.rc1.1923.g01c701f
+pkgver=0.4.0.rc1.1973.g00f8e12
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
-arch=('any' 'i686' 'x86_64' 'aarch64')
+arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
 license=('GPL')
 makedepends=('gcc-fortran' 'arpack' 'fftw' 'git' 'gmp' 'libgit2' 'libunwind'
@@ -31,8 +31,10 @@ if ((USE_OPENLIBM)); then
 fi
 options=('!emptydirs' 'staticlibs' 'debug' 'strip')
 source=('git://github.com/JuliaLang/julia'
+        '0001-Add-necessary-patches-for-LLVM-3.7-.1.patch'
         0001-Create-tbaa_gcframe-and-decorate-all-stores-and-load.patch)
 md5sums=('SKIP'
+         'b472c029ca23a6aa9edd2cbe8eb02fee'
          '2a64b87dfe52236b11b1d5df26947cb6')
 
 pkgver() {
@@ -48,6 +50,7 @@ prepare() {
   git clean -fdx
 
   patch -Np1 < ../0001-Create-tbaa_gcframe-and-decorate-all-stores-and-load.patch
+  patch -Np1 < ../0001-Add-necessary-patches-for-LLVM-3.7-.1.patch
 
   cd doc
 
@@ -70,8 +73,6 @@ julia_opts=(prefix=/usr sysconfdir=/etc
             USE_SYSTEM_UTF8PROC=1
             USE_SYSTEM_LIBGIT2=1
             USE_SYSTEM_PATCHELF=1
-            MARCH=$_march
-            JULIA_CPU_TARGET=$_cpu
             LIBBLASNAME=libopenblas
             LIBBLAS=-lopenblas
             LIBLAPACKNAME=libopenblas
@@ -86,6 +87,9 @@ case "$CARCH" in
     ;;
   aarch64)
     julia_opts=("${julia_opts[@]}" MARCH=armv8-a JULIA_CPU_TARGET=cortex-a57)
+    ;;
+  armv7h)
+    julia_opts=("${julia_opts[@]}" MARCH=armv7-a JULIA_CPU_TARGET=cortex-a7)
     ;;
 esac
 
@@ -105,8 +109,9 @@ build() {
   export CFLAGS+=' -Wno-pedantic -Wno-clobbered'
   export CXXFLAGS+=' -Wno-pedantic -Wno-clobbered'
 
-  make "${julia_opts[@]}" release
-  make "${julia_opts[@]}" debug
+  make "${julia_opts[@]}" -C base version_git.jl.phony
+  make "${julia_opts[@]}" -C deps
+  make "${julia_opts[@]}" release debug
 
   # Check to detect issues like JuliaLang/julia#13820
   usr/bin/julia -e '0'
