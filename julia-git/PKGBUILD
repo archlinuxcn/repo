@@ -15,7 +15,7 @@ if ((BUILD_EXTRA)); then
 else
    pkgname=('julia-git')
 fi
-pkgver=0.4.0.rc1.1973.g00f8e12
+pkgver=0.4.0.rc1.1983.gfb73169
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
@@ -31,10 +31,8 @@ if ((USE_OPENLIBM)); then
 fi
 options=('!emptydirs' 'staticlibs' 'debug' 'strip')
 source=('git://github.com/JuliaLang/julia'
-        '0001-Add-necessary-patches-for-LLVM-3.7-.1.patch'
         0001-Create-tbaa_gcframe-and-decorate-all-stores-and-load.patch)
 md5sums=('SKIP'
-         'b472c029ca23a6aa9edd2cbe8eb02fee'
          '2a64b87dfe52236b11b1d5df26947cb6')
 
 pkgver() {
@@ -50,7 +48,6 @@ prepare() {
   git clean -fdx
 
   patch -Np1 < ../0001-Create-tbaa_gcframe-and-decorate-all-stores-and-load.patch
-  patch -Np1 < ../0001-Add-necessary-patches-for-LLVM-3.7-.1.patch
 
   cd doc
 
