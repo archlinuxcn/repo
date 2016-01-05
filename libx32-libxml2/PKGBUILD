@@ -1,21 +1,21 @@
-# $Id: PKGBUILD 122173 2014-11-07 23:22:36Z bluewind $
+# $Id: PKGBUILD 153369 2015-12-15 09:52:04Z fyan $
 # Maintainer: Jan de Groot <jgc@archlinux.org>
 # Contributor: John Proctor <jproctor@prium.net>
 # x32 Maintainer: Fantix King <fantix.king at gmail.com>
 
 _pkgbasename=libxml2
 pkgname=libx32-$_pkgbasename
-pkgver=2.9.2
+pkgver=2.9.3
 pkgrel=1.1
 pkgdesc="XML parsing library, version 2 (x32 ABI)"
 arch=(x86_64)
 license=('custom')
 depends=('libx32-zlib>=1.2.4' 'libx32-readline>=6.1' 'libx32-ncurses>=5.7' $_pkgbasename)
-makedepends=(gcc-multilib-x32 autoconf automake libtool-multilib)
+makedepends=(gcc-multilib-x32)
 options=('!libtool')
 url="http://www.xmlsoft.org/"
 source=(ftp://ftp.xmlsoft.org/${_pkgbasename}/${_pkgbasename}-${pkgver}.tar.gz)
-md5sums=('9e6a9aca9d155737868b3dc5fd82f788')
+md5sums=('daece17e045f1c107610e137ab50c179')
 
 build() {
   export CC="gcc -mx32"
@@ -24,7 +24,10 @@ build() {
 
   cd "${srcdir}/${_pkgbasename}-${pkgver}"
   autoreconf -fi
-  ./configure --prefix=/usr --with-threads --with-history --libdir=/usr/libx32 --without-lzma --without-python
+  ./configure --prefix=/usr --with-threads --with-history --libdir=/usr/libx32 --without-lzma
+  
+  sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0 /g' -e 's/    if test "$export_dynamic" = yes && test -n "$export_dynamic_flag_spec"; then/      func_append compile_command " -Wl,-O1,--as-needed"\n      func_append finalize_command " -Wl,-O1,--as-needed"\n\0/' libtool
+
   make
 }
 

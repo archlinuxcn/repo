@@ -7,6 +7,7 @@ arch=('any')
 url="https://github.com/moskytw/uniout"
 license=('MIT')
 depends=('python2')
+makedepends=('python2-setuptools')
 source=('https://pypi.python.org/packages/source/u/uniout/uniout-0.3.7.tar.gz')
 md5sums=('3df45169da988df040f21608c9c4346b')
 
