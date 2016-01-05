@@ -1,4 +1,4 @@
-From 373eb12bef4fcb0d6a7d109c6193ef981b5ffed3 Mon Sep 17 00:00:00 2001
+From e8933acdf224918b115f81d8a8c41d9e5d05d8b4 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Mon, 4 Jan 2016 23:36:25 -0500
 Subject: [PATCH] Do not use vsub to clear the register values since it doesn't
@@ -41,7 +41,7 @@ Subject: [PATCH] Do not use vsub to clear the register values since it doesn't
  33 files changed, 227 insertions(+), 227 deletions(-)
 
 diff --git a/kernel/arm/asum_vfp.S b/kernel/arm/asum_vfp.S
-index 2b6ceb1..744ef66 100644
+index 2b6ceb1..afa936e 100644
 --- a/kernel/arm/asum_vfp.S
 +++ b/kernel/arm/asum_vfp.S
 @@ -368,11 +368,11 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -50,18 +50,18 @@ index 2b6ceb1..744ef66 100644
  #if defined(DOUBLE)
 -	vsub.f64                d0 , d0 , d0
 -	vsub.f64                d1 , d1 , d1
-+	vldr.f64                d0 , =0.0
-+	vldr.f64                d1 , =0.0
++	vldr.f64                d0 , =0
++	vldr.f64                d1 , =0
  #else
 -	vsub.f32                s0 , s0 , s0
 -	vsub.f32                s1 , s1 , s1
-+	vldr.f32                s0 , =0.0
-+	vldr.f32                s1 , =0.0
++	vldr.f32                s0 , =0
++	vldr.f32                s1 , =0
  #endif
  
  	cmp	N, #0
 diff --git a/kernel/arm/cdot_vfp.S b/kernel/arm/cdot_vfp.S
-index 2ccda33..3740b3d 100644
+index 2ccda33..b8edb49 100644
 --- a/kernel/arm/cdot_vfp.S
 +++ b/kernel/arm/cdot_vfp.S
 @@ -188,10 +188,10 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -72,15 +72,15 @@ index 2ccda33..3740b3d 100644
 -	vsub.f32                s1 , s1 , s1
 -	vsub.f32                s2 , s2 , s2
 -	vsub.f32                s3 , s3 , s3
-+	vldr.f32                s0 , =0.0
-+	vldr.f32                s1 , =0.0
-+	vldr.f32                s2 , =0.0
-+	vldr.f32                s3 , =0.0
++	vldr.f32                s0 , =0
++	vldr.f32                s1 , =0
++	vldr.f32                s2 , =0
++	vldr.f32                s3 , =0
  
  	cmp	N, #0
  	ble	cdot_kernel_L999
 diff --git a/kernel/arm/cgemm_kernel_2x2_vfp.S b/kernel/arm/cgemm_kernel_2x2_vfp.S
-index a059ef5..216cb31 100644
+index a059ef5..d2c6028 100644
 --- a/kernel/arm/cgemm_kernel_2x2_vfp.S
 +++ b/kernel/arm/cgemm_kernel_2x2_vfp.S
 @@ -138,7 +138,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -88,7 +88,7 @@ index a059ef5..216cb31 100644
  .macro INIT2x2
  
 -	vsub.f32		s8 , s8 , s8
-+	vldr.f32		s8 , =0.0
++	vldr.f32		s8 , =0
  	vmov.f32		s9 , s8
  	vmov.f32		s10, s8
  	vmov.f32		s11, s8
@@ -97,7 +97,7 @@ index a059ef5..216cb31 100644
  .macro INIT1x2
  
 -	vsub.f32		s8 , s8 , s8
-+	vldr.f32		s8 , =0.0
++	vldr.f32		s8 , =0
  	vmov.f32		s9 , s8
  	vmov.f32		s12, s8
  	vmov.f32		s13, s8
@@ -106,7 +106,7 @@ index a059ef5..216cb31 100644
  .macro INIT2x1
  
 -	vsub.f32		s8 , s8 , s8
-+	vldr.f32		s8 , =0.0
++	vldr.f32		s8 , =0
  	vmov.f32		s9 , s8
  	vmov.f32		s10, s8
  	vmov.f32		s11, s8
@@ -115,12 +115,12 @@ index a059ef5..216cb31 100644
  .macro INIT1x1
  
 -	vsub.f32		s8 , s8 , s8
-+	vldr.f32		s8 , =0.0
++	vldr.f32		s8 , =0
  	vmov.f32		s9 , s8
  
  .endm
 diff --git a/kernel/arm/cgemm_kernel_2x2_vfpv3.S b/kernel/arm/cgemm_kernel_2x2_vfpv3.S
-index 8bc200c..e5b9597 100644
+index 8bc200c..2460921 100644
 --- a/kernel/arm/cgemm_kernel_2x2_vfpv3.S
 +++ b/kernel/arm/cgemm_kernel_2x2_vfpv3.S
 @@ -147,7 +147,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -128,7 +128,7 @@ index 8bc200c..e5b9597 100644
  .macro INIT2x2
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0.0
++	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  	vmov.f32		s18, s16
  	vmov.f32		s19, s16
@@ -137,7 +137,7 @@ index 8bc200c..e5b9597 100644
  .macro INIT1x2
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0.0
++	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  	vmov.f32		s20, s16
  	vmov.f32		s21, s16
@@ -146,7 +146,7 @@ index 8bc200c..e5b9597 100644
  .macro INIT2x1
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0.0
++	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  	vmov.f32		s18, s16
  	vmov.f32		s19, s16
@@ -155,12 +155,12 @@ index 8bc200c..e5b9597 100644
  .macro INIT1x1
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0.0
++	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  	vmov.f32		s24, s16
  	vmov.f32		s25, s16
 diff --git a/kernel/arm/cgemv_n_vfp.S b/kernel/arm/cgemv_n_vfp.S
-index 712e7f0..5f0ceea 100644
+index 712e7f0..cec818e 100644
 --- a/kernel/arm/cgemv_n_vfp.S
 +++ b/kernel/arm/cgemv_n_vfp.S
 @@ -117,7 +117,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -168,7 +168,7 @@ index 712e7f0..5f0ceea 100644
  
  	pld	[ YO, #Y_PRE ]
 -        vsub.f32                s8 , s8 , s8
-+        vldr.f32                s8 , =0.0
++        vldr.f32                s8 , =0
          vmov.f32                s9 , s8
          vmov.f32                s10, s8
          vmov.f32                s11, s8
@@ -177,7 +177,7 @@ index 712e7f0..5f0ceea 100644
  .macro INIT_F1
  
 -        vsub.f32                s8 , s8 , s8
-+        vldr.f32                s8 , =0.0
++        vldr.f32                s8 , =0
          vmov.f32                s9 , s8
  
  .endm
@@ -186,7 +186,7 @@ index 712e7f0..5f0ceea 100644
  .macro INIT_S4
  
 -        vsub.f32                s8 , s8 , s8
-+        vldr.f32                s8 , =0.0
++        vldr.f32                s8 , =0
          vmov.f32                s9 , s8
          vmov.f32                s10, s8
          vmov.f32                s11, s8
@@ -195,12 +195,12 @@ index 712e7f0..5f0ceea 100644
  .macro INIT_S1
  
 -        vsub.f32                s8 , s8 , s8
-+        vldr.f32                s8 , =0.0
++        vldr.f32                s8 , =0
          vmov.f32                s9 , s8
  
  .endm
 diff --git a/kernel/arm/cgemv_t_vfp.S b/kernel/arm/cgemv_t_vfp.S
-index 52276a0..b998e25 100644
+index 52276a0..c164e95 100644
 --- a/kernel/arm/cgemv_t_vfp.S
 +++ b/kernel/arm/cgemv_t_vfp.S
 @@ -116,10 +116,10 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -211,10 +211,10 @@ index 52276a0..b998e25 100644
 -	vsub.f32	s13, s13, s13
 -	vsub.f32	s14, s14, s14
 -	vsub.f32	s15, s15, s15
-+	vldr.f32	s12, =0.0
-+	vldr.f32	s13, =0.0
-+	vldr.f32	s14, =0.0
-+	vldr.f32	s15, =0.0
++	vldr.f32	s12, =0
++	vldr.f32	s13, =0
++	vldr.f32	s14, =0
++	vldr.f32	s15, =0
  
  .endm
  
@@ -224,8 +224,8 @@ index 52276a0..b998e25 100644
  
 -	vsub.f32	s12, s12, s12
 -	vsub.f32	s13, s13, s13
-+	vldr.f32	s12, =0.0
-+	vldr.f32	s13, =0.0
++	vldr.f32	s12, =0
++	vldr.f32	s13, =0
  
  .endm
  
@@ -237,10 +237,10 @@ index 52276a0..b998e25 100644
 -	vsub.f32	s13, s13, s13
 -	vsub.f32	s14, s14, s14
 -	vsub.f32	s15, s15, s15
-+	vldr.f32	s12, =0.0
-+	vldr.f32	s13, =0.0
-+	vldr.f32	s14, =0.0
-+	vldr.f32	s15, =0.0
++	vldr.f32	s12, =0
++	vldr.f32	s13, =0
++	vldr.f32	s14, =0
++	vldr.f32	s15, =0
  
  .endm
  
@@ -250,13 +250,13 @@ index 52276a0..b998e25 100644
  
 -	vsub.f32	s12, s12, s12
 -	vsub.f32	s13, s13, s13
-+	vldr.f32	s12, =0.0
-+	vldr.f32	s13, =0.0
++	vldr.f32	s12, =0
++	vldr.f32	s13, =0
  
  .endm
  
 diff --git a/kernel/arm/ctrmm_kernel_2x2_vfp.S b/kernel/arm/ctrmm_kernel_2x2_vfp.S
-index a48c860..2a96bd9 100644
+index a48c860..e6b8a99 100644
 --- a/kernel/arm/ctrmm_kernel_2x2_vfp.S
 +++ b/kernel/arm/ctrmm_kernel_2x2_vfp.S
 @@ -136,7 +136,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -264,7 +264,7 @@ index a48c860..2a96bd9 100644
  .macro INIT2x2
  
 -	vsub.f32		s8 , s8 , s8
-+	vldr.f32		s8 , =0.0
++	vldr.f32		s8 , =0
  	vmov.f32		s9 , s8
  	vmov.f32		s10, s8
  	vmov.f32		s11, s8
@@ -276,10 +276,10 @@ index a48c860..2a96bd9 100644
 -	vsub.f32	s5, s5, s5
 -	vsub.f32	s6, s6, s6
 -	vsub.f32	s7, s7, s7
-+	vldr.f32	s4, =0.0
-+	vldr.f32	s5, =0.0
-+	vldr.f32	s6, =0.0
-+	vldr.f32	s7, =0.0
++	vldr.f32	s4, =0
++	vldr.f32	s5, =0
++	vldr.f32	s6, =0
++	vldr.f32	s7, =0
  
  	FMAC_R1 s4 , s0 , s8
  	FMAC_I1 s5 , s0 , s9
@@ -291,10 +291,10 @@ index a48c860..2a96bd9 100644
 -	vsub.f32	s5, s5, s5
 -	vsub.f32	s6, s6, s6
 -	vsub.f32	s7, s7, s7
-+	vldr.f32	s4, =0.0
-+	vldr.f32	s5, =0.0
-+	vldr.f32	s6, =0.0
-+	vldr.f32	s7, =0.0
++	vldr.f32	s4, =0
++	vldr.f32	s5, =0
++	vldr.f32	s6, =0
++	vldr.f32	s7, =0
  
  	FMAC_R1 s4 , s0 , s12
  	FMAC_I1 s5 , s0 , s13
@@ -303,7 +303,7 @@ index a48c860..2a96bd9 100644
  .macro INIT1x2
  
 -	vsub.f32		s8 , s8 , s8
-+	vldr.f32		s8 , =0.0
++	vldr.f32		s8 , =0
  	vmov.f32		s9 , s8
  	vmov.f32		s12, s8
  	vmov.f32		s13, s8
@@ -313,8 +313,8 @@ index a48c860..2a96bd9 100644
  
 -	vsub.f32	s4, s4, s4
 -	vsub.f32	s5, s5, s5
-+	vldr.f32	s4, =0.0
-+	vldr.f32	s5, =0.0
++	vldr.f32	s4, =0
++	vldr.f32	s5, =0
  
  	FMAC_R1 s4 , s0 , s8
  	FMAC_I1 s5 , s0 , s9
@@ -324,8 +324,8 @@ index a48c860..2a96bd9 100644
  
 -	vsub.f32	s4, s4, s4
 -	vsub.f32	s5, s5, s5
-+	vldr.f32	s4, =0.0
-+	vldr.f32	s5, =0.0
++	vldr.f32	s4, =0
++	vldr.f32	s5, =0
  
  	FMAC_R1 s4 , s0 , s12
  	FMAC_I1 s5 , s0 , s13
@@ -334,7 +334,7 @@ index a48c860..2a96bd9 100644
  .macro INIT2x1
  
 -	vsub.f32		s8 , s8 , s8
-+	vldr.f32		s8 , =0.0
++	vldr.f32		s8 , =0
  	vmov.f32		s9 , s8
  	vmov.f32		s10, s8
  	vmov.f32		s11, s8
@@ -346,10 +346,10 @@ index a48c860..2a96bd9 100644
 -	vsub.f32	s5, s5, s5
 -	vsub.f32	s6, s6, s6
 -	vsub.f32	s7, s7, s7
-+	vldr.f32	s4, =0.0
-+	vldr.f32	s5, =0.0
-+	vldr.f32	s6, =0.0
-+	vldr.f32	s7, =0.0
++	vldr.f32	s4, =0
++	vldr.f32	s5, =0
++	vldr.f32	s6, =0
++	vldr.f32	s7, =0
  
  	FMAC_R1 s4 , s0 , s8
  	FMAC_I1 s5 , s0 , s9
@@ -358,7 +358,7 @@ index a48c860..2a96bd9 100644
  .macro INIT1x1
  
 -	vsub.f32		s8 , s8 , s8
-+	vldr.f32		s8 , =0.0
++	vldr.f32		s8 , =0
  	vmov.f32		s9 , s8
  
  .endm
@@ -368,13 +368,13 @@ index a48c860..2a96bd9 100644
  
 -	vsub.f32	s4, s4, s4
 -	vsub.f32	s5, s5, s5
-+	vldr.f32	s4, =0.0
-+	vldr.f32	s5, =0.0
++	vldr.f32	s4, =0
++	vldr.f32	s5, =0
  
  	FMAC_R1 s4 , s0 , s8
  	FMAC_I1 s5 , s0 , s9
 diff --git a/kernel/arm/ctrmm_kernel_2x2_vfpv3.S b/kernel/arm/ctrmm_kernel_2x2_vfpv3.S
-index f06e260..88a131f 100644
+index f06e260..757d5bc 100644
 --- a/kernel/arm/ctrmm_kernel_2x2_vfpv3.S
 +++ b/kernel/arm/ctrmm_kernel_2x2_vfpv3.S
 @@ -134,7 +134,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -382,7 +382,7 @@ index f06e260..88a131f 100644
  .macro INIT2x2
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0.0
++	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  	vmov.f32		s18, s16
  	vmov.f32		s19, s16
@@ -391,7 +391,7 @@ index f06e260..88a131f 100644
  .macro INIT1x2
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0.0
++	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  	vmov.f32		s20, s16
  	vmov.f32		s21, s16
@@ -400,7 +400,7 @@ index f06e260..88a131f 100644
  .macro INIT2x1
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0.0
++	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  	vmov.f32		s18, s16
  	vmov.f32		s19, s16
@@ -409,12 +409,12 @@ index f06e260..88a131f 100644
  .macro INIT1x1
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0.0
++	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  	vmov.f32		s24, s16
  	vmov.f32		s25, s16
 diff --git a/kernel/arm/ddot_vfp.S b/kernel/arm/ddot_vfp.S
-index 71b3c1c..6f29be2 100644
+index 71b3c1c..b402bcc 100644
 --- a/kernel/arm/ddot_vfp.S
 +++ b/kernel/arm/ddot_vfp.S
 @@ -152,8 +152,8 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -423,13 +423,13 @@ index 71b3c1c..6f29be2 100644
  
 -	vsub.f64                d0 , d0 , d0
 -	vsub.f64                d1 , d1 , d1
-+	vldr.f64                d0 , =0.0
-+	vldr.f64                d1 , =0.0
++	vldr.f64                d0 , =0
++	vldr.f64                d1 , =0
  
  	cmp	N, #0
  	ble	ddot_kernel_L999
 diff --git a/kernel/arm/dgemm_kernel_4x2_vfp.S b/kernel/arm/dgemm_kernel_4x2_vfp.S
-index 9fb881d..3e2f104 100644
+index 9fb881d..8bb2bd3 100644
 --- a/kernel/arm/dgemm_kernel_4x2_vfp.S
 +++ b/kernel/arm/dgemm_kernel_4x2_vfp.S
 @@ -85,7 +85,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -437,7 +437,7 @@ index 9fb881d..3e2f104 100644
  .macro INIT4x2
  
 -	vsub.f64		d8 , d8 , d8
-+	vldr.f64		d8 , =0.0
++	vldr.f64		d8 , =0
  	vmov.f64		d9, d8
  	vmov.f64		d10, d8
  	vmov.f64		d11, d8
@@ -446,7 +446,7 @@ index 9fb881d..3e2f104 100644
  .macro INIT2x2
  
 -	vsub.f64		d8 , d8 , d8
-+	vldr.f64		d8 , =0.0
++	vldr.f64		d8 , =0
  	vmov.f64		d9, d8
  	vmov.f64		d12, d8
  	vmov.f64		d13, d8
@@ -455,7 +455,7 @@ index 9fb881d..3e2f104 100644
  .macro INIT1x2
  
 -	vsub.f64		d8 , d8 , d8
-+	vldr.f64		d8 , =0.0
++	vldr.f64		d8 , =0
  	vmov.f64		d12, d8
  
  .endm
@@ -464,7 +464,7 @@ index 9fb881d..3e2f104 100644
  .macro INIT4x1
  
 -	vsub.f64		d8 , d8 , d8
-+	vldr.f64		d8 , =0.0
++	vldr.f64		d8 , =0
  	vmov.f64		d9, d8
  	vmov.f64		d10, d8
  	vmov.f64		d11, d8
@@ -473,7 +473,7 @@ index 9fb881d..3e2f104 100644
  .macro INIT2x1
  
 -	vsub.f64		d8 , d8 , d8
-+	vldr.f64		d8 , =0.0
++	vldr.f64		d8 , =0
  	vmov.f64		d9 , d8
  
  .endm
@@ -482,12 +482,12 @@ index 9fb881d..3e2f104 100644
  .macro INIT1x1
  
 -	vsub.f64		d8 , d8 , d8
-+	vldr.f64		d8 , =0.0
++	vldr.f64		d8 , =0
  
  .endm
  
 diff --git a/kernel/arm/dgemm_kernel_4x4_vfpv3.S b/kernel/arm/dgemm_kernel_4x4_vfpv3.S
-index 7c1dbae..6a18c56 100644
+index 7c1dbae..32f3b69 100644
 --- a/kernel/arm/dgemm_kernel_4x4_vfpv3.S
 +++ b/kernel/arm/dgemm_kernel_4x4_vfpv3.S
 @@ -102,7 +102,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -495,7 +495,7 @@ index 7c1dbae..6a18c56 100644
  .macro INIT4x4
  
 -	vsub.f64		d16 , d16 , d16
-+	vldr.f64		d16 , =0.0
++	vldr.f64		d16 , =0
  	vmov.f64		d17, d16
  	vmov.f64		d18, d16
  	vmov.f64		d19, d16
@@ -504,7 +504,7 @@ index 7c1dbae..6a18c56 100644
  .macro INIT2x4
  
 -	vsub.f64		d16 , d16 , d16
-+	vldr.f64		d16 , =0.0
++	vldr.f64		d16 , =0
  	vmov.f64		d17, d16
  	vmov.f64		d20, d16
  	vmov.f64		d21, d16
@@ -513,7 +513,7 @@ index 7c1dbae..6a18c56 100644
  .macro INIT1x4
  
 -	vsub.f64		d16 , d16 , d16
-+	vldr.f64		d16 , =0.0
++	vldr.f64		d16 , =0
  	vmov.f64		d20, d16
  	vmov.f64		d24, d16
  	vmov.f64		d28, d16
@@ -522,7 +522,7 @@ index 7c1dbae..6a18c56 100644
  .macro INIT4x2
  
 -	vsub.f64		d16 , d16 , d16
-+	vldr.f64		d16 , =0.0
++	vldr.f64		d16 , =0
  	vmov.f64		d17, d16
  	vmov.f64		d18, d16
  	vmov.f64		d19, d16
@@ -531,7 +531,7 @@ index 7c1dbae..6a18c56 100644
  .macro INIT2x2
  
 -	vsub.f64		d16 , d16 , d16
-+	vldr.f64		d16 , =0.0
++	vldr.f64		d16 , =0
  	vmov.f64		d17, d16
  	vmov.f64		d20, d16
  	vmov.f64		d21, d16
@@ -540,7 +540,7 @@ index 7c1dbae..6a18c56 100644
  .macro INIT1x2
  
 -	vsub.f64		d16 , d16 , d16
-+	vldr.f64		d16 , =0.0
++	vldr.f64		d16 , =0
  	vmov.f64		d20, d16
  
  .endm
@@ -549,7 +549,7 @@ index 7c1dbae..6a18c56 100644
  .macro INIT4x1
  
 -	vsub.f64		d16 , d16 , d16
-+	vldr.f64		d16 , =0.0
++	vldr.f64		d16 , =0
  	vmov.f64		d17, d16
  	vmov.f64		d18, d16
  	vmov.f64		d19, d16
@@ -558,7 +558,7 @@ index 7c1dbae..6a18c56 100644
  .macro INIT2x1
  
 -	vsub.f64		d16 , d16 , d16
-+	vldr.f64		d16 , =0.0
++	vldr.f64		d16 , =0
  	vmov.f64		d17, d16
  
  .endm
@@ -567,12 +567,12 @@ index 7c1dbae..6a18c56 100644
  .macro INIT1x1
  
 -	vsub.f64		d16 , d16 , d16
-+	vldr.f64		d16 , =0.0
++	vldr.f64		d16 , =0
  
  .endm
  
 diff --git a/kernel/arm/dtrmm_kernel_4x2_vfp.S b/kernel/arm/dtrmm_kernel_4x2_vfp.S
-index 3528e08..be1f36a 100644
+index 3528e08..45c8c0c 100644
 --- a/kernel/arm/dtrmm_kernel_4x2_vfp.S
 +++ b/kernel/arm/dtrmm_kernel_4x2_vfp.S
 @@ -90,7 +90,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -580,7 +580,7 @@ index 3528e08..be1f36a 100644
  .macro INIT4x2
  
 -	vsub.f64		d8 , d8 , d8
-+	vldr.f64		d8 , =0.0
++	vldr.f64		d8 , =0
  	vmov.f64		d9, d8
  	vmov.f64		d10, d8
  	vmov.f64		d11, d8
@@ -589,7 +589,7 @@ index 3528e08..be1f36a 100644
  .macro INIT2x2
  
 -	vsub.f64		d8 , d8 , d8
-+	vldr.f64		d8 , =0.0
++	vldr.f64		d8 , =0
  	vmov.f64		d9, d8
  	vmov.f64		d12, d8
  	vmov.f64		d13, d8
@@ -598,7 +598,7 @@ index 3528e08..be1f36a 100644
  .macro INIT1x2
  
 -	vsub.f64		d8 , d8 , d8
-+	vldr.f64		d8 , =0.0
++	vldr.f64		d8 , =0
  	vmov.f64		d12, d8
  
  .endm
@@ -607,7 +607,7 @@ index 3528e08..be1f36a 100644
  .macro INIT4x1
  
 -	vsub.f64		d8 , d8 , d8
-+	vldr.f64		d8 , =0.0
++	vldr.f64		d8 , =0
  	vmov.f64		d9, d8
  	vmov.f64		d10, d8
  	vmov.f64		d11, d8
@@ -616,7 +616,7 @@ index 3528e08..be1f36a 100644
  .macro INIT2x1
  
 -	vsub.f64		d8 , d8 , d8
-+	vldr.f64		d8 , =0.0
++	vldr.f64		d8 , =0
  	vmov.f64		d9 , d8
  
  .endm
@@ -625,12 +625,12 @@ index 3528e08..be1f36a 100644
  .macro INIT1x1
  
 -	vsub.f64		d8 , d8 , d8
-+	vldr.f64		d8 , =0.0
++	vldr.f64		d8 , =0
  
  .endm
  
 diff --git a/kernel/arm/dtrmm_kernel_4x4_vfpv3.S b/kernel/arm/dtrmm_kernel_4x4_vfpv3.S
-index 04cc451..0682de0 100644
+index 04cc451..cd11b14 100644
 --- a/kernel/arm/dtrmm_kernel_4x4_vfpv3.S
 +++ b/kernel/arm/dtrmm_kernel_4x4_vfpv3.S
 @@ -89,7 +89,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -638,7 +638,7 @@ index 04cc451..0682de0 100644
  .macro INIT4x4
  
 -	vsub.f64		d16 , d16 , d16
-+	vldr.f64		d16 , =0.0
++	vldr.f64		d16 , =0
  	vmov.f64		d17, d16
  	vmov.f64		d18, d16
  	vmov.f64		d19, d16
@@ -647,7 +647,7 @@ index 04cc451..0682de0 100644
  .macro INIT2x4
  
 -	vsub.f64		d16 , d16 , d16
-+	vldr.f64		d16 , =0.0
++	vldr.f64		d16 , =0
  	vmov.f64		d17, d16
  	vmov.f64		d20, d16
  	vmov.f64		d21, d16
@@ -656,7 +656,7 @@ index 04cc451..0682de0 100644
  .macro INIT1x4
  
 -	vsub.f64		d16 , d16 , d16
-+	vldr.f64		d16 , =0.0
++	vldr.f64		d16 , =0
  	vmov.f64		d20, d16
  	vmov.f64		d24, d16
  	vmov.f64		d28, d16
@@ -665,7 +665,7 @@ index 04cc451..0682de0 100644
  .macro INIT4x2
  
 -	vsub.f64		d16 , d16 , d16
-+	vldr.f64		d16 , =0.0
++	vldr.f64		d16 , =0
  	vmov.f64		d17, d16
  	vmov.f64		d18, d16
  	vmov.f64		d19, d16
@@ -674,7 +674,7 @@ index 04cc451..0682de0 100644
  .macro INIT2x2
  
 -	vsub.f64		d16 , d16 , d16
-+	vldr.f64		d16 , =0.0
++	vldr.f64		d16 , =0
  	vmov.f64		d17, d16
  	vmov.f64		d20, d16
  	vmov.f64		d21, d16
@@ -683,7 +683,7 @@ index 04cc451..0682de0 100644
  .macro INIT1x2
  
 -	vsub.f64		d16 , d16 , d16
-+	vldr.f64		d16 , =0.0
++	vldr.f64		d16 , =0
  	vmov.f64		d20, d16
  
  .endm
@@ -692,7 +692,7 @@ index 04cc451..0682de0 100644
  .macro INIT4x1
  
 -	vsub.f64		d16 , d16 , d16
-+	vldr.f64		d16 , =0.0
++	vldr.f64		d16 , =0
  	vmov.f64		d17, d16
  	vmov.f64		d18, d16
  	vmov.f64		d19, d16
@@ -701,7 +701,7 @@ index 04cc451..0682de0 100644
  .macro INIT2x1
  
 -	vsub.f64		d16 , d16 , d16
-+	vldr.f64		d16 , =0.0
++	vldr.f64		d16 , =0
  	vmov.f64		d17, d16
  
  .endm
@@ -710,12 +710,12 @@ index 04cc451..0682de0 100644
  .macro INIT1x1
  
 -	vsub.f64		d16 , d16 , d16
-+	vldr.f64		d16 , =0.0
++	vldr.f64		d16 , =0
  
  .endm
  
 diff --git a/kernel/arm/gemv_n_vfp.S b/kernel/arm/gemv_n_vfp.S
-index 505033c..66ee4f3 100644
+index 505033c..0e85e2e 100644
 --- a/kernel/arm/gemv_n_vfp.S
 +++ b/kernel/arm/gemv_n_vfp.S
 @@ -79,7 +79,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -723,7 +723,7 @@ index 505033c..66ee4f3 100644
  	pld     [ YO , #Y_PRE+32 ]
  
 -	vsub.f64	d8 , d8 , d8
-+	vldr.f64	d8 , =0.0
++	vldr.f64	d8 , =0
  	vmov.f64	d9  , d8
  	vmov.f64	d10 , d8
  	vmov.f64	d11 , d8
@@ -732,7 +732,7 @@ index 505033c..66ee4f3 100644
  .macro INIT_F1
  
 -	vsub.f64	d12 , d12 , d12
-+	vldr.f64	d12 , =0.0
++	vldr.f64	d12 , =0
  
  .endm
  
@@ -741,7 +741,7 @@ index 505033c..66ee4f3 100644
  .macro INIT_S4
  
 -	vsub.f64	d12 , d12 , d12
-+	vldr.f64	d12 , =0.0
++	vldr.f64	d12 , =0
  	vmov.f64	d13 , d12
  	vmov.f64	d14 , d12
  	vmov.f64	d15 , d12
@@ -750,7 +750,7 @@ index 505033c..66ee4f3 100644
  .macro INIT_S1
  
 -	vsub.f64	d12 , d12 , d12
-+	vldr.f64	d12 , =0.0
++	vldr.f64	d12 , =0
  
  .endm
  
@@ -759,7 +759,7 @@ index 505033c..66ee4f3 100644
  	pld     [ YO , #Y_PRE ]
  
 -	vsub.f32	s8 , s8 , s8
-+	vldr.f32	s8 , =0.0
++	vldr.f32	s8 , =0
  	vmov.f32	s9  , s8
  	vmov.f32	s10 , s8
  	vmov.f32	s11 , s8
@@ -768,7 +768,7 @@ index 505033c..66ee4f3 100644
  .macro INIT_F1
  
 -	vsub.f32	s12 , s12 , s12
-+	vldr.f32	s12 , =0.0
++	vldr.f32	s12 , =0
  
  .endm
  
@@ -777,7 +777,7 @@ index 505033c..66ee4f3 100644
  .macro INIT_S4
  
 -	vsub.f32	s12 , s12 , s12
-+	vldr.f32	s12 , =0.0
++	vldr.f32	s12 , =0
  	vmov.f32	s13 , s12
  	vmov.f32	s14 , s12
  	vmov.f32	s15 , s12
@@ -786,12 +786,12 @@ index 505033c..66ee4f3 100644
  .macro INIT_S1
  
 -	vsub.f32	s12 , s12 , s12
-+	vldr.f32	s12 , =0.0
++	vldr.f32	s12 , =0
  
  .endm
  
 diff --git a/kernel/arm/gemv_n_vfpv3.S b/kernel/arm/gemv_n_vfpv3.S
-index 0e9ba0c..bb3f20a 100644
+index 0e9ba0c..84dbde4 100644
 --- a/kernel/arm/gemv_n_vfpv3.S
 +++ b/kernel/arm/gemv_n_vfpv3.S
 @@ -79,7 +79,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -799,7 +799,7 @@ index 0e9ba0c..bb3f20a 100644
  	pld     [ YO , #Y_PRE+32 ]
  
 -	vsub.f64	d24 , d24 , d24
-+	vldr.f64	d24 , =0.0
++	vldr.f64	d24 , =0
  	vmov.f64	d25 , d24
  	vmov.f64	d26 , d24
  	vmov.f64	d27 , d24
@@ -808,7 +808,7 @@ index 0e9ba0c..bb3f20a 100644
  .macro INIT_F1
  
 -	vsub.f64	d24 , d24 , d24
-+	vldr.f64	d24 , =0.0
++	vldr.f64	d24 , =0
  
  .endm
  
@@ -817,7 +817,7 @@ index 0e9ba0c..bb3f20a 100644
  .macro INIT_S8
  
 -	vsub.f64	d24 , d24 , d24
-+	vldr.f64	d24 , =0.0
++	vldr.f64	d24 , =0
  	vmov.f64	d25 , d24
  	vmov.f64	d26 , d24
  	vmov.f64	d27 , d24
@@ -826,7 +826,7 @@ index 0e9ba0c..bb3f20a 100644
  .macro INIT_S1
  
 -	vsub.f64	d24 , d24 , d24
-+	vldr.f64	d24 , =0.0
++	vldr.f64	d24 , =0
  
  .endm
  
@@ -835,7 +835,7 @@ index 0e9ba0c..bb3f20a 100644
  	pld     [ YO , #Y_PRE ]
  
 -	vsub.f32	s24 , s24 , s24
-+	vldr.f32	s24 , =0.0
++	vldr.f32	s24 , =0
  	vmov.f32	s25 , s24
  	vmov.f32	s26 , s24
  	vmov.f32	s27 , s24
@@ -844,7 +844,7 @@ index 0e9ba0c..bb3f20a 100644
  .macro INIT_F1
  
 -	vsub.f32	s24 , s24 , s24
-+	vldr.f32	s24 , =0.0
++	vldr.f32	s24 , =0
  
  .endm
  
@@ -853,7 +853,7 @@ index 0e9ba0c..bb3f20a 100644
  .macro INIT_S8
  
 -	vsub.f32	s24 , s24 , s24
-+	vldr.f32	s24 , =0.0
++	vldr.f32	s24 , =0
  	vmov.f32	s25 , s24
  	vmov.f32	s26 , s24
  	vmov.f32	s27 , s24
@@ -862,12 +862,12 @@ index 0e9ba0c..bb3f20a 100644
  .macro INIT_S1
  
 -	vsub.f32	s24 , s24 , s24
-+	vldr.f32	s24 , =0.0
++	vldr.f32	s24 , =0
  
  .endm
  
 diff --git a/kernel/arm/gemv_t_vfp.S b/kernel/arm/gemv_t_vfp.S
-index 6a56ae9..faaa95d 100644
+index 6a56ae9..da92e4a 100644
 --- a/kernel/arm/gemv_t_vfp.S
 +++ b/kernel/arm/gemv_t_vfp.S
 @@ -75,8 +75,8 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -876,8 +876,8 @@ index 6a56ae9..faaa95d 100644
  
 -	vsub.f64	d2 , d2 , d2
 -	vsub.f64	d3 , d3 , d3
-+	vldr.f64	d2 , =0.0
-+	vldr.f64	d3 , =0.0
++	vldr.f64	d2 , =0
++	vldr.f64	d3 , =0
  
  .endm
  
@@ -886,7 +886,7 @@ index 6a56ae9..faaa95d 100644
  .macro INIT_F1
  
 -	vsub.f64	d2 , d2 , d2
-+	vldr.f64	d2 , =0.0
++	vldr.f64	d2 , =0
  
  .endm
  
@@ -896,8 +896,8 @@ index 6a56ae9..faaa95d 100644
  
 -	vsub.f64	d2 , d2 , d2
 -	vsub.f64	d3 , d3 , d3
-+	vldr.f64	d2 , =0.0
-+	vldr.f64	d3 , =0.0
++	vldr.f64	d2 , =0
++	vldr.f64	d3 , =0
  
  .endm
  
@@ -906,7 +906,7 @@ index 6a56ae9..faaa95d 100644
  .macro INIT_S1
  
 -	vsub.f64	d2 , d2 , d2
-+	vldr.f64	d2 , =0.0
++	vldr.f64	d2 , =0
  
  .endm
  
@@ -916,8 +916,8 @@ index 6a56ae9..faaa95d 100644
  
 -	vsub.f32	s2 , s2 , s2
 -	vsub.f32	s3 , s3 , s3
-+	vldr.f32	s2 , =0.0
-+	vldr.f32	s3 , =0.0
++	vldr.f32	s2 , =0
++	vldr.f32	s3 , =0
  
  .endm
  
@@ -926,7 +926,7 @@ index 6a56ae9..faaa95d 100644
  .macro INIT_F1
  
 -	vsub.f32	s2 , s2 , s2
-+	vldr.f32	s2 , =0.0
++	vldr.f32	s2 , =0
  
  .endm
  
@@ -936,8 +936,8 @@ index 6a56ae9..faaa95d 100644
  
 -	vsub.f32	s2 , s2 , s2
 -	vsub.f32	s3 , s3 , s3
-+	vldr.f32	s2 , =0.0
-+	vldr.f32	s3 , =0.0
++	vldr.f32	s2 , =0
++	vldr.f32	s3 , =0
  
  .endm
  
@@ -946,12 +946,12 @@ index 6a56ae9..faaa95d 100644
  .macro INIT_S1
  
 -	vsub.f32	s2 , s2 , s2
-+	vldr.f32	s2 , =0.0
++	vldr.f32	s2 , =0
  
  .endm
  
 diff --git a/kernel/arm/gemv_t_vfpv3.S b/kernel/arm/gemv_t_vfpv3.S
-index 7ae5799..73e0319 100644
+index 7ae5799..2612787 100644
 --- a/kernel/arm/gemv_t_vfpv3.S
 +++ b/kernel/arm/gemv_t_vfpv3.S
 @@ -75,8 +75,8 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -960,8 +960,8 @@ index 7ae5799..73e0319 100644
  
 -	vsub.f64	d4 , d4 , d4
 -	vsub.f64	d5 , d5 , d5
-+	vldr.f64	d4 , =0.0
-+	vldr.f64	d5 , =0.0
++	vldr.f64	d4 , =0
++	vldr.f64	d5 , =0
  
  .endm
  
@@ -971,8 +971,8 @@ index 7ae5799..73e0319 100644
  
 -	vsub.f64	d4 , d4 , d4
 -	vsub.f64	d5 , d5 , d5
-+	vldr.f64	d4 , =0.0
-+	vldr.f64	d5 , =0.0
++	vldr.f64	d4 , =0
++	vldr.f64	d5 , =0
  
  .endm
  
@@ -981,7 +981,7 @@ index 7ae5799..73e0319 100644
  .macro INIT_F1
  
 -	vsub.f64	d4 , d4 , d4
-+	vldr.f64	d4 , =0.0
++	vldr.f64	d4 , =0
  
  .endm
  
@@ -990,7 +990,7 @@ index 7ae5799..73e0319 100644
  .macro INIT_S1
  
 -	vsub.f64	d4 , d4 , d4
-+	vldr.f64	d4 , =0.0
++	vldr.f64	d4 , =0
  
  .endm
  
@@ -1000,8 +1000,8 @@ index 7ae5799..73e0319 100644
  
 -	vsub.f32	s4 , s4 , s4
 -	vsub.f32	s5 , s5 , s5
-+	vldr.f32	s4 , =0.0
-+	vldr.f32	s5 , =0.0
++	vldr.f32	s4 , =0
++	vldr.f32	s5 , =0
  
  .endm
  
@@ -1011,8 +1011,8 @@ index 7ae5799..73e0319 100644
  
 -	vsub.f32	s4 , s4 , s4
 -	vsub.f32	s5 , s5 , s5
-+	vldr.f32	s4 , =0.0
-+	vldr.f32	s5 , =0.0
++	vldr.f32	s4 , =0
++	vldr.f32	s5 , =0
  
  .endm
  
@@ -1021,7 +1021,7 @@ index 7ae5799..73e0319 100644
  .macro INIT_F1
  
 -	vsub.f32	s4 , s4 , s4
-+	vldr.f32	s4 , =0.0
++	vldr.f32	s4 , =0
  
  .endm
  
@@ -1030,12 +1030,12 @@ index 7ae5799..73e0319 100644
  .macro INIT_S1
  
 -	vsub.f32	s4 , s4 , s4
-+	vldr.f32	s4 , =0.0
++	vldr.f32	s4 , =0
  
  .endm
  
 diff --git a/kernel/arm/iamax_vfp.S b/kernel/arm/iamax_vfp.S
-index f50c28e..cfd3a68 100644
+index f50c28e..a779805 100644
 --- a/kernel/arm/iamax_vfp.S
 +++ b/kernel/arm/iamax_vfp.S
 @@ -342,9 +342,9 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -1043,15 +1043,15 @@ index f50c28e..cfd3a68 100644
  
  #if defined(DOUBLE)
 -	vsub.f64                d0 , d0 , d0
-+	vldr.f64                d0 , =0.0
++	vldr.f64                d0 , =0
  #else
 -	vsub.f32                s0 , s0 , s0
-+	vldr.f32                s0 , =0.0
++	vldr.f32                s0 , =0
  #endif
  	mov	INDEX, #0
  
 diff --git a/kernel/arm/nrm2_vfp.S b/kernel/arm/nrm2_vfp.S
-index d80179a..ff8933c 100644
+index d80179a..47279df 100644
 --- a/kernel/arm/nrm2_vfp.S
 +++ b/kernel/arm/nrm2_vfp.S
 @@ -446,12 +446,12 @@ nrm2_begin:
@@ -1059,13 +1059,13 @@ index d80179a..ff8933c 100644
  
  #if defined(DOUBLE)
 -	vsub.f64                d0 , d0 , d0		// scale=0.0
-+	vldr.f64                d0 , =0.0		// scale=0.0
++	vldr.f64                d0 , =0		// scale=0.0
  	vldr.64			d1 , znrm2_one		// ssq=1.0
  	vmov.f64		d7 , d1			// value 1.0
  	vmov.f64		d6 , d0			// value 0.0
  #else
 -	vsub.f32                s0 , s0 , s0		// scale=0.0
-+	vldr.f32                s0 , =0.0		// scale=0.0
++	vldr.f32                s0 , =0		// scale=0.0
  	vldr.32			s1 , cnrm2_one		// ssq=1.0
  	vmov.f32		s7 , s1			// value 1.0
  	vmov.f32		s6 , s0			// value 0.0
@@ -1074,18 +1074,18 @@ index d80179a..ff8933c 100644
  
  #if defined(DOUBLE)
 -	vsub.f64                d0 , d0 , d0		// scale=0.0
-+	vldr.f64                d0 , =0.0		// scale=0.0
++	vldr.f64                d0 , =0		// scale=0.0
  	vldr.64			d1 , dnrm2_one		// ssq=1.0
  	vmov.f64		d7 , d1			// value 1.0
  	vmov.f64		d6 , d0			// value 0.0
  #else
 -	vsub.f32                s0 , s0 , s0		// scale=0.0
-+	vldr.f32                s0 , =0.0		// scale=0.0
++	vldr.f32                s0 , =0		// scale=0.0
  	vldr.32			s1 , snrm2_one		// ssq=1.0
  	vmov.f32		s7 , s1			// value 1.0
  	vmov.f32		s6 , s0			// value 0.0
 diff --git a/kernel/arm/nrm2_vfpv3.S b/kernel/arm/nrm2_vfpv3.S
-index 34b251e..ad89657 100644
+index 34b251e..49bd1f9 100644
 --- a/kernel/arm/nrm2_vfpv3.S
 +++ b/kernel/arm/nrm2_vfpv3.S
 @@ -405,12 +405,12 @@ KERNEL_S1_END_\@:
@@ -1093,18 +1093,18 @@ index 34b251e..ad89657 100644
  
  #if defined(DOUBLE)
 -	vsub.f64                d0 , d0 , d0		// scale=0.0
-+	vldr.f64                d0 , =0.0		// scale=0.0
++	vmov.f64                d0 , #0.0		// scale=0.0
  	vmov.f64		d1 , #1.0		// ssq=1.0
  	vmov.f64		d7 , d1			// value 1.0
  	vmov.f64		d6 , d0			// value 0.0
  #else
 -	vsub.f32                s0 , s0 , s0		// scale=0.0
-+	vldr.f32                s0 , =0.0		// scale=0.0
++	vmov.f32                s0 , #0.0		// scale=0.0
  	vmov.f32		s1 , #1.0		// ssq=1.0
  	vmov.f32		s7 , s1			// value 1.0
  	vmov.f32		s6 , s0			// value 0.0
 diff --git a/kernel/arm/sdot_vfp.S b/kernel/arm/sdot_vfp.S
-index a6fcf2a..ae743b0 100644
+index a6fcf2a..0f350e8 100644
 --- a/kernel/arm/sdot_vfp.S
 +++ b/kernel/arm/sdot_vfp.S
 @@ -242,13 +242,13 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -1113,20 +1113,20 @@ index a6fcf2a..ae743b0 100644
  
 -	vsub.f64                d0 , d0 , d0
 -	vsub.f64                d1 , d1 , d1
-+	vldr.f64                d0 , =0.0
-+	vldr.f64                d1 , =0.0
++	vldr.f64                d0 , =0
++	vldr.f64                d1 , =0
  
  #else
  
 -	vsub.f32                s0 , s0 , s0
 -	vsub.f32                s1 , s1 , s1
-+	vldr.f32                s0 , =0.0
-+	vldr.f32                s1 , =0.0
++	vldr.f32                s0 , =0
++	vldr.f32                s1 , =0
  
  #endif
  
 diff --git a/kernel/arm/sgemm_kernel_4x2_vfp.S b/kernel/arm/sgemm_kernel_4x2_vfp.S
-index 4dfb733..1ff0096 100644
+index 4dfb733..bff8a7e 100644
 --- a/kernel/arm/sgemm_kernel_4x2_vfp.S
 +++ b/kernel/arm/sgemm_kernel_4x2_vfp.S
 @@ -85,7 +85,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -1134,7 +1134,7 @@ index 4dfb733..1ff0096 100644
  .macro INIT4x2
  
 -	vsub.f32		s8 , s8 , s8
-+	vldr.f32		s8 , =0.0
++	vldr.f32		s8 , =0
  	vmov.f32		s9, s8
  	vmov.f32		s10, s8
  	vmov.f32		s11, s8
@@ -1143,7 +1143,7 @@ index 4dfb733..1ff0096 100644
  .macro INIT2x2
  
 -	vsub.f32		s8 , s8 , s8
-+	vldr.f32		s8 , =0.0
++	vldr.f32		s8 , =0
  	vmov.f32		s9, s8
  	vmov.f32		s12, s8
  	vmov.f32		s13, s8
@@ -1152,7 +1152,7 @@ index 4dfb733..1ff0096 100644
  .macro INIT1x2
  
 -	vsub.f32		s8 , s8 , s8
-+	vldr.f32		s8 , =0.0
++	vldr.f32		s8 , =0
  	vmov.f32		s12, s8
  
  .endm
@@ -1161,7 +1161,7 @@ index 4dfb733..1ff0096 100644
  .macro INIT4x1
  
 -	vsub.f32		s8 , s8 , s8
-+	vldr.f32		s8 , =0.0
++	vldr.f32		s8 , =0
  	vmov.f32		s9, s8
  	vmov.f32		s10, s8
  	vmov.f32		s11, s8
@@ -1170,7 +1170,7 @@ index 4dfb733..1ff0096 100644
  .macro INIT2x1
  
 -	vsub.f32		s8 , s8 , s8
-+	vldr.f32		s8 , =0.0
++	vldr.f32		s8 , =0
  	vmov.f32		s9 , s8
  
  .endm
@@ -1179,12 +1179,12 @@ index 4dfb733..1ff0096 100644
  .macro INIT1x1
  
 -	vsub.f32		s8 , s8 , s8
-+	vldr.f32		s8 , =0.0
++	vldr.f32		s8 , =0
  
  .endm
  
 diff --git a/kernel/arm/sgemm_kernel_4x4_vfpv3.S b/kernel/arm/sgemm_kernel_4x4_vfpv3.S
-index 078f14a..b3b69bd 100644
+index 078f14a..b1f2664 100644
 --- a/kernel/arm/sgemm_kernel_4x4_vfpv3.S
 +++ b/kernel/arm/sgemm_kernel_4x4_vfpv3.S
 @@ -102,7 +102,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -1192,7 +1192,7 @@ index 078f14a..b3b69bd 100644
  .macro INIT4x4
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0.0
++	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  	vmov.f32		s18, s16
  	vmov.f32		s19, s16
@@ -1201,7 +1201,7 @@ index 078f14a..b3b69bd 100644
  .macro INIT2x4
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0.0
++	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  	vmov.f32		s20, s16
  	vmov.f32		s21, s16
@@ -1210,7 +1210,7 @@ index 078f14a..b3b69bd 100644
  .macro INIT1x4
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0.0
++	vldr.f32		s16 , =0
  	vmov.f32		s20, s16
  	vmov.f32		s24, s16
  	vmov.f32		s28, s16
@@ -1219,7 +1219,7 @@ index 078f14a..b3b69bd 100644
  .macro INIT4x2
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0.0
++	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  	vmov.f32		s18, s16
  	vmov.f32		s19, s16
@@ -1228,7 +1228,7 @@ index 078f14a..b3b69bd 100644
  .macro INIT2x2
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0.0
++	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  	vmov.f32		s20, s16
  	vmov.f32		s21, s16
@@ -1237,7 +1237,7 @@ index 078f14a..b3b69bd 100644
  .macro INIT1x2
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0.0
++	vldr.f32		s16 , =0
  	vmov.f32		s20, s16
  
  .endm
@@ -1246,7 +1246,7 @@ index 078f14a..b3b69bd 100644
  .macro INIT4x1
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0.0
++	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  	vmov.f32		s18, s16
  	vmov.f32		s19, s16
@@ -1255,7 +1255,7 @@ index 078f14a..b3b69bd 100644
  .macro INIT2x1
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0.0
++	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  
  .endm
@@ -1264,12 +1264,12 @@ index 078f14a..b3b69bd 100644
  .macro INIT1x1
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0.0
++	vldr.f32		s16 , =0
  
  .endm
  
 diff --git a/kernel/arm/strmm_kernel_4x2_vfp.S b/kernel/arm/strmm_kernel_4x2_vfp.S
-index e7511ff..9cede68 100644
+index e7511ff..c7ae94d 100644
 --- a/kernel/arm/strmm_kernel_4x2_vfp.S
 +++ b/kernel/arm/strmm_kernel_4x2_vfp.S
 @@ -90,7 +90,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -1277,7 +1277,7 @@ index e7511ff..9cede68 100644
  .macro INIT4x2
  
 -	vsub.f32		s8 , s8 , s8
-+	vldr.f32		s8 , =0.0
++	vldr.f32		s8 , =0
  	vmov.f32		s9, s8
  	vmov.f32		s10, s8
  	vmov.f32		s11, s8
@@ -1286,7 +1286,7 @@ index e7511ff..9cede68 100644
  .macro INIT2x2
  
 -	vsub.f32		s8 , s8 , s8
-+	vldr.f32		s8 , =0.0
++	vldr.f32		s8 , =0
  	vmov.f32		s9, s8
  	vmov.f32		s12, s8
  	vmov.f32		s13, s8
@@ -1295,7 +1295,7 @@ index e7511ff..9cede68 100644
  .macro INIT1x2
  
 -	vsub.f32		s8 , s8 , s8
-+	vldr.f32		s8 , =0.0
++	vldr.f32		s8 , =0
  	vmov.f32		s12, s8
  
  .endm
@@ -1304,7 +1304,7 @@ index e7511ff..9cede68 100644
  .macro INIT4x1
  
 -	vsub.f32		s8 , s8 , s8
-+	vldr.f32		s8 , =0.0
++	vldr.f32		s8 , =0
  	vmov.f32		s9, s8
  	vmov.f32		s10, s8
  	vmov.f32		s11, s8
@@ -1313,7 +1313,7 @@ index e7511ff..9cede68 100644
  .macro INIT2x1
  
 -	vsub.f32		s8 , s8 , s8
-+	vldr.f32		s8 , =0.0
++	vldr.f32		s8 , =0
  	vmov.f32		s9 , s8
  
  .endm
@@ -1322,12 +1322,12 @@ index e7511ff..9cede68 100644
  .macro INIT1x1
  
 -	vsub.f32		s8 , s8 , s8
-+	vldr.f32		s8 , =0.0
++	vldr.f32		s8 , =0
  
  .endm
  
 diff --git a/kernel/arm/strmm_kernel_4x4_vfpv3.S b/kernel/arm/strmm_kernel_4x4_vfpv3.S
-index f6342a0..3a21bfb 100644
+index f6342a0..95d9c14 100644
 --- a/kernel/arm/strmm_kernel_4x4_vfpv3.S
 +++ b/kernel/arm/strmm_kernel_4x4_vfpv3.S
 @@ -88,7 +88,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -1335,7 +1335,7 @@ index f6342a0..3a21bfb 100644
  .macro INIT4x4
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0.0
++	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  	vmov.f32		s18, s16
  	vmov.f32		s19, s16
@@ -1344,7 +1344,7 @@ index f6342a0..3a21bfb 100644
  .macro INIT2x4
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0.0
++	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  	vmov.f32		s20, s16
  	vmov.f32		s21, s16
@@ -1353,7 +1353,7 @@ index f6342a0..3a21bfb 100644
  .macro INIT1x4
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0.0
++	vldr.f32		s16 , =0
  	vmov.f32		s20, s16
  	vmov.f32		s24, s16
  	vmov.f32		s28, s16
@@ -1362,7 +1362,7 @@ index f6342a0..3a21bfb 100644
  .macro INIT4x2
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0.0
++	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  	vmov.f32		s18, s16
  	vmov.f32		s19, s16
@@ -1371,7 +1371,7 @@ index f6342a0..3a21bfb 100644
  .macro INIT2x2
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0.0
++	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  	vmov.f32		s20, s16
  	vmov.f32		s21, s16
@@ -1380,7 +1380,7 @@ index f6342a0..3a21bfb 100644
  .macro INIT1x2
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0.0
++	vldr.f32		s16 , =0
  	vmov.f32		s20, s16
  
  .endm
@@ -1389,7 +1389,7 @@ index f6342a0..3a21bfb 100644
  .macro INIT4x1
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0.0
++	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  	vmov.f32		s18, s16
  	vmov.f32		s19, s16
@@ -1398,7 +1398,7 @@ index f6342a0..3a21bfb 100644
  .macro INIT2x1
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0.0
++	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  
  .endm
@@ -1407,12 +1407,12 @@ index f6342a0..3a21bfb 100644
  .macro INIT1x1
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0.0
++	vldr.f32		s16 , =0
  
  .endm
  
 diff --git a/kernel/arm/zdot_vfp.S b/kernel/arm/zdot_vfp.S
-index 622169b..1612981 100644
+index 622169b..a2327db 100644
 --- a/kernel/arm/zdot_vfp.S
 +++ b/kernel/arm/zdot_vfp.S
 @@ -190,10 +190,10 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -1423,15 +1423,15 @@ index 622169b..1612981 100644
 -	vsub.f64                d1 , d1 , d1
 -	vsub.f64                d2 , d2 , d2
 -	vsub.f64                d3 , d3 , d3
-+	vldr.f64                d0 , =0.0
-+	vldr.f64                d1 , =0.0
-+	vldr.f64                d2 , =0.0
-+	vldr.f64                d3 , =0.0
++	vldr.f64                d0 , =0
++	vldr.f64                d1 , =0
++	vldr.f64                d2 , =0
++	vldr.f64                d3 , =0
  
  	cmp	N, #0
  	ble	zdot_kernel_L999
 diff --git a/kernel/arm/zgemm_kernel_2x2_vfp.S b/kernel/arm/zgemm_kernel_2x2_vfp.S
-index f4134ea..912fbf1 100644
+index f4134ea..28b737a 100644
 --- a/kernel/arm/zgemm_kernel_2x2_vfp.S
 +++ b/kernel/arm/zgemm_kernel_2x2_vfp.S
 @@ -131,7 +131,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -1439,7 +1439,7 @@ index f4134ea..912fbf1 100644
  .macro INIT2x2
  
 -	vsub.f64		d8 , d8 , d8
-+	vldr.f64		d8 , =0.0
++	vldr.f64		d8 , =0
  	vmov.f64		d9 , d8
  	vmov.f64		d10, d8
  	vmov.f64		d11, d8
@@ -1448,7 +1448,7 @@ index f4134ea..912fbf1 100644
  .macro INIT1x2
  
 -	vsub.f64		d8 , d8 , d8
-+	vldr.f64		d8 , =0.0
++	vldr.f64		d8 , =0
  	vmov.f64		d9 , d8
  	vmov.f64		d12, d8
  	vmov.f64		d13, d8
@@ -1457,7 +1457,7 @@ index f4134ea..912fbf1 100644
  .macro INIT2x1
  
 -	vsub.f64		d8 , d8 , d8
-+	vldr.f64		d8 , =0.0
++	vldr.f64		d8 , =0
  	vmov.f64		d9 , d8
  	vmov.f64		d10, d8
  	vmov.f64		d11, d8
@@ -1466,12 +1466,12 @@ index f4134ea..912fbf1 100644
  .macro INIT1x1
  
 -	vsub.f64		d8 , d8 , d8
-+	vldr.f64		d8 , =0.0
++	vldr.f64		d8 , =0
  	vmov.f64		d9 , d8
  
  .endm
 diff --git a/kernel/arm/zgemm_kernel_2x2_vfpv3.S b/kernel/arm/zgemm_kernel_2x2_vfpv3.S
-index 29c3f45..d568e0a 100644
+index 29c3f45..7333a09 100644
 --- a/kernel/arm/zgemm_kernel_2x2_vfpv3.S
 +++ b/kernel/arm/zgemm_kernel_2x2_vfpv3.S
 @@ -147,7 +147,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -1479,7 +1479,7 @@ index 29c3f45..d568e0a 100644
  .macro INIT2x2
  
 -	vsub.f64		d16 , d16 , d16
-+	vldr.f64		d16 , =0.0
++	vldr.f64		d16 , =0
  	vmov.f64		d17, d16
  	vmov.f64		d18, d16
  	vmov.f64		d19, d16
@@ -1488,7 +1488,7 @@ index 29c3f45..d568e0a 100644
  .macro INIT1x2
  
 -	vsub.f64		d16 , d16 , d16
-+	vldr.f64		d16 , =0.0
++	vldr.f64		d16 , =0
  	vmov.f64		d17, d16
  	vmov.f64		d20, d16
  	vmov.f64		d21, d16
@@ -1497,7 +1497,7 @@ index 29c3f45..d568e0a 100644
  .macro INIT2x1
  
 -	vsub.f64		d16 , d16 , d16
-+	vldr.f64		d16 , =0.0
++	vldr.f64		d16 , =0
  	vmov.f64		d17, d16
  	vmov.f64		d18, d16
  	vmov.f64		d19, d16
@@ -1506,12 +1506,12 @@ index 29c3f45..d568e0a 100644
  .macro INIT1x1
  
 -	vsub.f64		d16 , d16 , d16
-+	vldr.f64		d16 , =0.0
++	vldr.f64		d16 , =0
  	vmov.f64		d17, d16
  	vmov.f64		d24, d16
  	vmov.f64		d25, d16
 diff --git a/kernel/arm/zgemv_n_vfp.S b/kernel/arm/zgemv_n_vfp.S
-index d4cab09..1345021 100644
+index d4cab09..9369f98 100644
 --- a/kernel/arm/zgemv_n_vfp.S
 +++ b/kernel/arm/zgemv_n_vfp.S
 @@ -117,7 +117,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -1519,7 +1519,7 @@ index d4cab09..1345021 100644
  
  	pld	[ YO, #Y_PRE ]
 -        vsub.f64                d8 , d8 , d8
-+        vldr.f64                d8 , =0.0
++        vldr.f64                d8 , =0
          vmov.f64                d9 , d8
          vmov.f64                d10, d8
          vmov.f64                d11, d8
@@ -1528,7 +1528,7 @@ index d4cab09..1345021 100644
  .macro INIT_F1
  
 -        vsub.f64                d8 , d8 , d8
-+        vldr.f64                d8 , =0.0
++        vldr.f64                d8 , =0
          vmov.f64                d9 , d8
  
  .endm
@@ -1537,7 +1537,7 @@ index d4cab09..1345021 100644
  .macro INIT_S4
  
 -        vsub.f64                d8 , d8 , d8
-+        vldr.f64                d8 , =0.0
++        vldr.f64                d8 , =0
          vmov.f64                d9 , d8
          vmov.f64                d10, d8
          vmov.f64                d11, d8
@@ -1546,12 +1546,12 @@ index d4cab09..1345021 100644
  .macro INIT_S1
  
 -        vsub.f64                d8 , d8 , d8
-+        vldr.f64                d8 , =0.0
++        vldr.f64                d8 , =0
          vmov.f64                d9 , d8
  
  .endm
 diff --git a/kernel/arm/zgemv_t_vfp.S b/kernel/arm/zgemv_t_vfp.S
-index 500a3b6..18c9d84 100644
+index 500a3b6..789c9d8 100644
 --- a/kernel/arm/zgemv_t_vfp.S
 +++ b/kernel/arm/zgemv_t_vfp.S
 @@ -117,10 +117,10 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -1562,10 +1562,10 @@ index 500a3b6..18c9d84 100644
 -	vsub.f64	d13, d13, d13
 -	vsub.f64	d14, d14, d14
 -	vsub.f64	d15, d15, d15
-+	vldr.f64	d12, =0.0
-+	vldr.f64	d13, =0.0
-+	vldr.f64	d14, =0.0
-+	vldr.f64	d15, =0.0
++	vldr.f64	d12, =0
++	vldr.f64	d13, =0
++	vldr.f64	d14, =0
++	vldr.f64	d15, =0
  
  .endm
  
@@ -1575,8 +1575,8 @@ index 500a3b6..18c9d84 100644
  
 -	vsub.f64	d12, d12, d12
 -	vsub.f64	d13, d13, d13
-+	vldr.f64	d12, =0.0
-+	vldr.f64	d13, =0.0
++	vldr.f64	d12, =0
++	vldr.f64	d13, =0
  
  .endm
  
@@ -1588,10 +1588,10 @@ index 500a3b6..18c9d84 100644
 -	vsub.f64	d13, d13, d13
 -	vsub.f64	d14, d14, d14
 -	vsub.f64	d15, d15, d15
-+	vldr.f64	d12, =0.0
-+	vldr.f64	d13, =0.0
-+	vldr.f64	d14, =0.0
-+	vldr.f64	d15, =0.0
++	vldr.f64	d12, =0
++	vldr.f64	d13, =0
++	vldr.f64	d14, =0
++	vldr.f64	d15, =0
  
  .endm
  
@@ -1601,13 +1601,13 @@ index 500a3b6..18c9d84 100644
  
 -	vsub.f64	d12, d12, d12
 -	vsub.f64	d13, d13, d13
-+	vldr.f64	d12, =0.0
-+	vldr.f64	d13, =0.0
++	vldr.f64	d12, =0
++	vldr.f64	d13, =0
  
  .endm
  
 diff --git a/kernel/arm/ztrmm_kernel_2x2_vfp.S b/kernel/arm/ztrmm_kernel_2x2_vfp.S
-index 109ee07..5f1b45f 100644
+index 109ee07..9b63c11 100644
 --- a/kernel/arm/ztrmm_kernel_2x2_vfp.S
 +++ b/kernel/arm/ztrmm_kernel_2x2_vfp.S
 @@ -140,7 +140,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -1615,7 +1615,7 @@ index 109ee07..5f1b45f 100644
  .macro INIT2x2
  
 -	vsub.f64		d8 , d8 , d8
-+	vldr.f64		d8 , =0.0
++	vldr.f64		d8 , =0
  	vmov.f64		d9 , d8
  	vmov.f64		d10, d8
  	vmov.f64		d11, d8
@@ -1627,10 +1627,10 @@ index 109ee07..5f1b45f 100644
 -	vsub.f64	d5, d5 , d5
 -	vsub.f64	d6, d6 , d6
 -	vsub.f64	d7, d7 , d7
-+	vldr.f64	d4, =0.0
-+	vldr.f64	d5, =0.0
-+	vldr.f64	d6, =0.0
-+	vldr.f64	d7, =0.0
++	vldr.f64	d4, =0
++	vldr.f64	d5, =0
++	vldr.f64	d6, =0
++	vldr.f64	d7, =0
  
  	FMAC_R1 d4 , d0 , d8
  	FMAC_I1 d5 , d0 , d9
@@ -1642,10 +1642,10 @@ index 109ee07..5f1b45f 100644
 -	vsub.f64	d5, d5 , d5
 -	vsub.f64	d6, d6 , d6
 -	vsub.f64	d7, d7 , d7
-+	vldr.f64	d4, =0.0
-+	vldr.f64	d5, =0.0
-+	vldr.f64	d6, =0.0
-+	vldr.f64	d7, =0.0
++	vldr.f64	d4, =0
++	vldr.f64	d5, =0
++	vldr.f64	d6, =0
++	vldr.f64	d7, =0
  
  	FMAC_R1 d4 , d0 , d12
  	FMAC_I1 d5 , d0 , d13
@@ -1654,7 +1654,7 @@ index 109ee07..5f1b45f 100644
  .macro INIT1x2
  
 -	vsub.f64		d8 , d8 , d8
-+	vldr.f64		d8 , =0.0
++	vldr.f64		d8 , =0
  	vmov.f64		d9 , d8
  	vmov.f64		d12, d8
  	vmov.f64		d13, d8
@@ -1664,8 +1664,8 @@ index 109ee07..5f1b45f 100644
  
 -	vsub.f64	d4, d4 , d4
 -	vsub.f64	d5, d5 , d5
-+	vldr.f64	d4, =0.0
-+	vldr.f64	d5, =0.0
++	vldr.f64	d4, =0
++	vldr.f64	d5, =0
  
  	FMAC_R1 d4 , d0 , d8
  	FMAC_I1 d5 , d0 , d9
@@ -1675,8 +1675,8 @@ index 109ee07..5f1b45f 100644
  
 -	vsub.f64	d4, d4 , d4
 -	vsub.f64	d5, d5 , d5
-+	vldr.f64	d4, =0.0
-+	vldr.f64	d5, =0.0
++	vldr.f64	d4, =0
++	vldr.f64	d5, =0
  
  	FMAC_R1 d4 , d0 , d12
  	FMAC_I1 d5 , d0 , d13
@@ -1685,7 +1685,7 @@ index 109ee07..5f1b45f 100644
  .macro INIT2x1
  
 -	vsub.f64		d8 , d8 , d8
-+	vldr.f64		d8 , =0.0
++	vldr.f64		d8 , =0
  	vmov.f64		d9 , d8
  	vmov.f64		d10, d8
  	vmov.f64		d11, d8
@@ -1697,10 +1697,10 @@ index 109ee07..5f1b45f 100644
 -	vsub.f64	d5, d5 , d5
 -	vsub.f64	d6, d6 , d6
 -	vsub.f64	d7, d7 , d7
-+	vldr.f64	d4, =0.0
-+	vldr.f64	d5, =0.0
-+	vldr.f64	d6, =0.0
-+	vldr.f64	d7, =0.0
++	vldr.f64	d4, =0
++	vldr.f64	d5, =0
++	vldr.f64	d6, =0
++	vldr.f64	d7, =0
  
  	FMAC_R1 d4 , d0 , d8
  	FMAC_I1 d5 , d0 , d9
@@ -1709,7 +1709,7 @@ index 109ee07..5f1b45f 100644
  .macro INIT1x1
  
 -	vsub.f64		d8 , d8 , d8
-+	vldr.f64		d8 , =0.0
++	vldr.f64		d8 , =0
  	vmov.f64		d9 , d8
  
  .endm
@@ -1719,13 +1719,13 @@ index 109ee07..5f1b45f 100644
  
 -	vsub.f64	d4, d4 , d4
 -	vsub.f64	d5, d5 , d5
-+	vldr.f64	d4, =0.0
-+	vldr.f64	d5, =0.0
++	vldr.f64	d4, =0
++	vldr.f64	d5, =0
  
  	FMAC_R1 d4 , d0 , d8
  	FMAC_I1 d5 , d0 , d9
 diff --git a/kernel/arm/ztrmm_kernel_2x2_vfpv3.S b/kernel/arm/ztrmm_kernel_2x2_vfpv3.S
-index 761dbcc..ed38eac 100644
+index 761dbcc..db83d43 100644
 --- a/kernel/arm/ztrmm_kernel_2x2_vfpv3.S
 +++ b/kernel/arm/ztrmm_kernel_2x2_vfpv3.S
 @@ -134,7 +134,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -1733,7 +1733,7 @@ index 761dbcc..ed38eac 100644
  .macro INIT2x2
  
 -	vsub.f64		d16 , d16 , d16
-+	vldr.f64		d16 , =0.0
++	vldr.f64		d16 , =0
  	vmov.f64		d17, d16
  	vmov.f64		d18, d16
  	vmov.f64		d19, d16
@@ -1742,7 +1742,7 @@ index 761dbcc..ed38eac 100644
  .macro INIT1x2
  
 -	vsub.f64		d16 , d16 , d16
-+	vldr.f64		d16 , =0.0
++	vldr.f64		d16 , =0
  	vmov.f64		d17, d16
  	vmov.f64		d20, d16
  	vmov.f64		d21, d16
@@ -1751,7 +1751,7 @@ index 761dbcc..ed38eac 100644
  .macro INIT2x1
  
 -	vsub.f64		d16 , d16 , d16
-+	vldr.f64		d16 , =0.0
++	vldr.f64		d16 , =0
  	vmov.f64		d17, d16
  	vmov.f64		d18, d16
  	vmov.f64		d19, d16
@@ -1760,7 +1760,7 @@ index 761dbcc..ed38eac 100644
  .macro INIT1x1
  
 -	vsub.f64		d16 , d16 , d16
-+	vldr.f64		d16 , =0.0
++	vldr.f64		d16 , =0
  	vmov.f64		d17, d16
  	vmov.f64		d24, d16
  	vmov.f64		d25, d16

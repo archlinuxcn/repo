@@ -6,7 +6,7 @@
 pkgbase=openblas-git
 pkgname=(openblas-git openblas-lapack-git)
 _pkgname=OpenBLAS
-pkgver=v0.2.15.r66.g3857581
+pkgver=v0.2.15.r69.g7d144aa
 pkgrel=1
 pkgdesc="Optimized BLAS library based on GotoBLAS2 1.13 BSD"
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -20,7 +20,7 @@ options=(!emptydirs debug strip)
 source=("git://github.com/xianyi/OpenBLAS"
         0001-Do-not-use-vsub-to-clear-the-register-values-since-i.patch)
 md5sums=('SKIP'
-         'ef8a07a95ac61c0a6c56368663ac6800')
+         '160a63b8b041b81dfcf77b490951d7b3')
 
 _config=(
   'SMP=1'
