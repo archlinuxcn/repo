@@ -17,8 +17,10 @@ makedepends=('git' 'perl' 'gcc-fortran')
 provides=('openblas')
 conflicts=('openblas')
 options=(!emptydirs debug strip)
-source=("git://github.com/xianyi/OpenBLAS")
-md5sums=('SKIP')
+source=("git://github.com/xianyi/OpenBLAS"
+        0001-Do-not-use-vsub-to-clear-the-register-values-since-i.patch)
+md5sums=('SKIP'
+         'ef8a07a95ac61c0a6c56368663ac6800')
 
 _config=(
   'SMP=1'
@@ -50,6 +52,12 @@ esac
 pkgver() {
   cd "${_pkgname}"
   git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+  cd ${_pkgname}
+
+  patch -Np1 < ../0001-Do-not-use-vsub-to-clear-the-register-values-since-i.patch
 }
 
 build() {
