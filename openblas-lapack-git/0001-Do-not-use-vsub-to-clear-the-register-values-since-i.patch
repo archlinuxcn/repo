@@ -1,4 +1,4 @@
-From e8933acdf224918b115f81d8a8c41d9e5d05d8b4 Mon Sep 17 00:00:00 2001
+From 635e95a205878c4119eabde5eb5e1d63342fddd3 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Mon, 4 Jan 2016 23:36:25 -0500
 Subject: [PATCH] Do not use vsub to clear the register values since it doesn't
@@ -1085,7 +1085,7 @@ index d80179a..47279df 100644
  	vmov.f32		s7 , s1			// value 1.0
  	vmov.f32		s6 , s0			// value 0.0
 diff --git a/kernel/arm/nrm2_vfpv3.S b/kernel/arm/nrm2_vfpv3.S
-index 34b251e..49bd1f9 100644
+index 34b251e..a7e42f3 100644
 --- a/kernel/arm/nrm2_vfpv3.S
 +++ b/kernel/arm/nrm2_vfpv3.S
 @@ -405,12 +405,12 @@ KERNEL_S1_END_\@:
@@ -1093,13 +1093,13 @@ index 34b251e..49bd1f9 100644
  
  #if defined(DOUBLE)
 -	vsub.f64                d0 , d0 , d0		// scale=0.0
-+	vmov.f64                d0 , #0.0		// scale=0.0
++	vldr.f64                d0 , =0		// scale=0.0
  	vmov.f64		d1 , #1.0		// ssq=1.0
  	vmov.f64		d7 , d1			// value 1.0
  	vmov.f64		d6 , d0			// value 0.0
  #else
 -	vsub.f32                s0 , s0 , s0		// scale=0.0
-+	vmov.f32                s0 , #0.0		// scale=0.0
++	vldr.f32                s0 , =0		// scale=0.0
  	vmov.f32		s1 , #1.0		// ssq=1.0
  	vmov.f32		s7 , s1			// value 1.0
  	vmov.f32		s6 , s0			// value 0.0
