@@ -1,0 +1,27 @@
+# Maintainer: Jingbei Li <i@jingbei.li>
+pkgname=python2-pypandoc-git
+_gitname=pypandoc
+pkgver=1
+pkgrel=1
+pkgdesc="Thin wrapper for pandoc"
+arch=(any)
+url="https://github.com/bebraw/pypandoc"
+license=('MIT')
+depends=('python2' 'pandoc')
+makedepends=('git' 'python2-setuptools')
+source=('git+https://github.com/bebraw/pypandoc')
+md5sums=('SKIP')
+
+pkgver() {
+    cd $_gitname
+    echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+build() {
+  cd "$_gitname"
+  python2 setup.py build
+}
+
+package() {
+	cd "$_gitname"
+	python2 setup.py install --skip-build -O1 --root="$pkgdir"
+}

@@ -20,7 +20,7 @@
 from lilaclib import *
 
 build_prefix = 'extra-x86_64'
-# depends = []
+depends = [python2-pypandoc-git]
 
 def pre_build():
   # obtain base PKGBUILD, e.g.
