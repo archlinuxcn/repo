@@ -1,10 +1,10 @@
-# $Id: PKGBUILD 117893 2014-08-26 08:57:32Z bluewind $
+# $Id: PKGBUILD 142815 2015-10-02 19:14:21Z bluewind $
 # Maintainer: Andreas Radke <andyrtr@archlinux.org>
 # x32 Maintainer: Fantix King <fantix.king at gmail.com>
 
 _pkgbasename=libgcrypt
 pkgname=libx32-$_pkgbasename
-pkgver=1.6.2
+pkgver=1.6.4
 pkgrel=1.1
 pkgdesc="General purpose cryptographic library based on the code from GnuPG (x32 ABI)"
 arch=(x86_64)
@@ -12,11 +12,13 @@ url="http://www.gnupg.org"
 license=('LGPL')
 depends=('libx32-libgpg-error>=1.10-2' $_pkgbasename)
 makedepends=(gcc-multilib-x32 libtool-multilib)
-source=(ftp://ftp.gnupg.org/gcrypt/${_pkgbasename}/${_pkgbasename}-${pkgver}.tar.bz2
+source=(ftp://ftp.gnupg.org/gcrypt/${_pkgbasename}/${_pkgbasename}-${pkgver}.tar.bz2{,.sig}
   libgcrypt-1.4.5-x32.patch
 )
-sha1sums=('cc31aca87e4a3769cb86884a3f5982b2cc8eb7ec'
+sha1sums=('ed52add1ce635deeb2f5c6650e52667debd4ec70'
+          'SKIP'
           '0d23f2f17b9f4f6461abb4f8f5115f9db3143841')
+validpgpkeys=('031EC2536E580D8EA286A9F22071B08A33BD3F06') # "NIIBE Yutaka (GnuPG Release Key) <gniibe@fsij.org>"
 
 build() {
   export CC="gcc -mx32"

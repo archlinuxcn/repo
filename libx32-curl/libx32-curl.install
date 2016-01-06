@@ -1,0 +1,21 @@
+post_install() {
+    mv /usr/include/curl/curlbuild.h /usr/include/curl/curlbuild.h.bak
+    ln -s curlbuild-stub.h /usr/include/curl/curlbuild.h
+}
+
+post_upgrade() {
+    if [ ! -L /usr/include/curl/curlbuild.h ]; then
+        post_install
+    elif [ ${1::-2} != ${2::-2} ]; then
+        echo WARNING: libx32-e2fsprogs is upgraded before e2fsprogs,
+        echo WARNING: you probably need to reinstall libx32-e2fsprogs.
+    fi
+}
+
+post_remove() {
+    if [ -L /usr/include/curl/curlbuild.h ]; then
+        rm /usr/include/curl/curlbuild.h
+        mv /usr/include/curl/curlbuild.h.bak /usr/include/curl/curlbuild.h
+    fi
+}
+
