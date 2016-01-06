@@ -15,7 +15,7 @@ if ((BUILD_EXTRA)); then
 else
    pkgname=('julia-git')
 fi
-pkgver=0.4.0.rc1.1983.gfb73169
+pkgver=0.4.0.rc1.2016.g1457d41
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
@@ -108,7 +108,11 @@ build() {
 
   make "${julia_opts[@]}" -C base version_git.jl.phony
   make "${julia_opts[@]}" -C deps
-  make "${julia_opts[@]}" release debug
+  if ((BUILD_EXTRA)); then
+      make "${julia_opts[@]}" release debug docs
+  else
+      make "${julia_opts[@]}" release debug
+  fi
 
   # Check to detect issues like JuliaLang/julia#13820
   usr/bin/julia -e '0'
@@ -117,10 +121,6 @@ build() {
   if ! ((BUILD_EXTRA)); then
      return
   fi
-
-  (# Building doc
-    cd doc
-    make)
 
   (cd contrib
    emacs --batch --eval \
