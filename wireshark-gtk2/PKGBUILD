@@ -4,16 +4,25 @@
 # Contributor: Florian Pritz <bluewind at jabber dot ccc dot de>
 pkgname=wireshark-gtk2
 pkgbase=wireshark
-pkgver=2.0.0
-pkgrel=2
+pkgver=2.0.1
+pkgrel=1
 arch=('i686' 'x86_64')
 license=('GPL2')
 makedepends=('gtk2' 'krb5' 'libpcap' 'bash' 'gnutls' 'portaudio'
              'lua52' 'python' 'desktop-file-utils' 'hicolor-icon-theme')
 options=(!emptydirs)
 url='http://www.wireshark.org/'
-source=(http://www.wireshark.org/download/src/${pkgbase}-${pkgver}.tar.bz2)
-sha1sums=('f8b226b40e36e4c431b4f70bc3f523b6dd53a501')
+source=(http://www.wireshark.org/download/src/${pkgbase}-${pkgver}.tar.bz2
+        do_not_use_svn_version.patch)
+sha1sums=('6703221128305ac33802f0da13d368476ce90688'
+          '489a176a7b90f7ae6f0985510c0c9038de54d9d6')
+
+prepare() {
+  cd ${pkgbase}-${pkgver}
+
+  # Avoid ugly "svn rev unknown from unknown" version string
+  patch -p1 < "$srcdir"/do_not_use_svn_version.patch
+}
 
 build() {
   cd ${pkgbase}-${pkgver}

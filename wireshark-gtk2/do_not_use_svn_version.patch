@@ -1,0 +1,13 @@
+diff --git a/Makefile.am b/Makefile.am
+index e2a3cc5..b6ec684 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -711,7 +711,7 @@ am__v_PERL_0 = @echo "  PERL    " $@;
+ am__v_PERL_1 =
+ 
+ version.h: FORCE
+-	$(AM_V_PERL)$(PERL) $(srcdir)/make-version.pl $(srcdir)
++	touch $@
+ 
+ #
+ # Build shell scripts by doing variable substitution.
