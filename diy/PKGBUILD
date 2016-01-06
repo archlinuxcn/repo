@@ -1,6 +1,6 @@
 # Maintainer: Boqun Feng <fixme AT archlinuxcn dot org>
 pkgname=diy
-pkgver=7.01
+pkgver=7.02
 pkgrel=1
 pkgdesc='The sofware suite provides tools to design and test weak memory models.'
 arch=('i686' 'x86_64')
@@ -8,7 +8,7 @@ url='http://coq.inria.fr/'
 license=('CeCiLL-B')
 makedepends=('ocaml>=4.01')
 source=("http://diy.inria.fr/sources/diy.tar.gz")
-sha1sums=("1777d0bcf224cf7e02a77337494b3b7a8aae78c4")
+sha1sums=("d9d264e8f2b9629aead934e483785077217a88cf")
 
 build() {
 	cd ${srcdir}/diy-$pkgver
