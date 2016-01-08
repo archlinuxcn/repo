@@ -7,7 +7,7 @@ _name=youtube-dl
 _branch=master
 
 pkgname=$_name-git
-pkgver=2016.01.06.f20756f
+pkgver=2016.01.08.5dbe81a
 pkgrel=1
 
 pkgdesc='A small command-line program to download videos from YouTube.com and a few more sites - git version'
@@ -22,14 +22,14 @@ optdepends=('ffmpeg: for video post-processing')
 provides=("$_name")
 conflicts=("$_name")
 
-source=("https://github.com/rg3/$_name/archive/$_branch.zip")
-sha512sums=(SKIP)
-
 pkgver() { 
   DATE=$(date +%Y.%m.%d)
   HASH=$(git ls-remote -h https://github.com/rg3/$_name $_branch | cut -c1-7)
   echo $DATE.$HASH
 }
+
+source=("$pkgname-$(pkgver).zip::https://github.com/rg3/$_name/archive/$_branch.zip")
+sha512sums=(SKIP)
 
 prepare() {
   cd $_name-$_branch
