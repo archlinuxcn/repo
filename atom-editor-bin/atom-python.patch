@@ -1,15 +1,33 @@
 --- a/usr/bin/atom
 +++ b/usr/bin/atom
-@@ -1,5 +1,8 @@
+@@ -1,5 +1,13 @@
  #!/bin/bash
 
++# Allow users to override command-line options
++if [[ -f ~/.config/atom-editor-flags.conf ]]; then
++  ATOM_USER_FLAGS="$(cat ~/.config/atom-editor-flags.conf)"
++fi
++
 +export PYTHON=python2
 + 
 +
  if [ "$(uname)" == 'Darwin' ]; then
    OS='Mac'
  elif [ "$(expr substr $(uname -s) 1 5)" == 'Linux' ]; then
+@@ -99,11 +107,11 @@ elif [ $OS == 'Linux' ]; then
+   [ -x "$ATOM_PATH" ] || ATOM_PATH="$TMPDIR/atom-build/Atom/atom"
 
+   if [ $EXPECT_OUTPUT ]; then
+-    "$ATOM_PATH" --executed-from="$(pwd)" --pid=$$ "$@"
++    "$ATOM_PATH" --executed-from="$(pwd)" --pid=$$ $ATOM_USER_FLAGS "$@"
+     exit $?
+   else
+     (
+-    nohup "$ATOM_PATH" --executed-from="$(pwd)" --pid=$$ "$@" > "$ATOM_HOME/nohup.out" 2>&1
++    nohup "$ATOM_PATH" --executed-from="$(pwd)" --pid=$$ $ATOM_USER_FLAGS "$@" > "$ATOM_HOME/nohup.out" 2>&1
+     if [ $? -ne 0 ]; then
+       cat "$ATOM_HOME/nohup.out"
+       exit $?
 
 --- a/usr/share/applications/atom.desktop
 +++ b/usr/share/applications/atom.desktop

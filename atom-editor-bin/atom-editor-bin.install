@@ -3,6 +3,10 @@ msg_blue() {
   printf "${blue}==>${bold} $1${all_off}\n"
 }
 
+note() {
+    printf "${blue}==>${yellow} NOTE:${bold} $1${all_off}\n"
+}
+
 _update() {
   msg_blue "Updating desktop MIME database..."
   update-desktop-database -q
@@ -14,6 +18,7 @@ post_install() {
 
 post_upgrade() {
   _update
+  note "Custom flags can now be put directly in: ~/.config/atom-editor-flags.conf"
 }
 
 post_remove() {

@@ -25,15 +25,12 @@ def pre_build():
     aur_pre_build()
 
     # redownload binary package everytime
-    if os.path.exists("atom-amd64.deb"):
-        os.remove("atom-amd64.deb")
-
     for line in edit_file('PKGBUILD'):
         # edit PKGBUILD
         if line.strip().startswith("PKGEXT"):
             continue
-        if line.strip().startswith("'dbb685607dea46517de0a27e24085bf4'"):
-            line = " 'ece71b9e7a063c803f930b24b9e58892')"
+        if line.strip().startswith("'9c752be551429c6ce5946d4fcae24464'"):
+            line = " 'a585d6a76f47f9accdf090379ecb6d1f') "
         print(line)
 
     for line in edit_file("atom-python.patch"):
