@@ -25,9 +25,6 @@ def pre_build():
     aur_pre_build()
 
     # redownload binary package everytime
-    if os.path.exists("atom-amd64.deb"):
-        os.remove("atom-amd64.deb")
-
     for line in edit_file('PKGBUILD'):
         # edit PKGBUILD
         if line.strip().startswith("PKGEXT"):
@@ -52,4 +49,3 @@ post_build = aur_post_build
 
 if __name__ == '__main__':
     single_main(build_prefix)
-atom-python.patch
