@@ -32,8 +32,8 @@ def pre_build():
         # edit PKGBUILD
         if line.strip().startswith("PKGEXT"):
             continue
-        if line.strip().startswith("'dbb685607dea46517de0a27e24085bf4'"):
-            line = " 'ece71b9e7a063c803f930b24b9e58892')"
+        if line.strip().startswith("'9c752be551429c6ce5946d4fcae24464'"):
+            line = " 'a585d6a76f47f9accdf090379ecb6d1f') "
         print(line)
 
     for line in edit_file("atom-python.patch"):
@@ -52,3 +52,4 @@ post_build = aur_post_build
 
 if __name__ == '__main__':
     single_main(build_prefix)
+atom-python.patch
