@@ -11,7 +11,7 @@ arch=("any")
 url="https://github.com/houtianze/bypy"
 license=('GPL')
 makedepends=('git' 'python-setuptools')
-depends=('python' 'python-requests' 'python-pypandoc')
+depends=('python-requests')
 provides=('bypy')
 source=("${_pkgname}"::"git+https://github.com/$_github_addr")
 md5sums=('SKIP')
@@ -23,5 +23,9 @@ pkgver() {
 
 package() {
     cd "${srcdir}/${_pkgname}"
+    sed -i "5,11 s/^/#/" setup.py
+    sed -i "17 s/^/#/" setup.py
+    version=`grep "__version__ =" bypy.py | sed "s/__version__ = //g"`
+    sed -i "s/bypy.__version__/$version/" setup.py
     python setup.py install --root="${pkgdir}" --optimize=1
 }
