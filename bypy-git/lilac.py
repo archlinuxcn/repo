@@ -20,7 +20,6 @@
 from lilaclib import *
 
 build_prefix = 'extra-x86_64'
-depends = ['python-pypandoc']
 
 def pre_build():
   # obtain base PKGBUILD, e.g.
@@ -28,9 +27,9 @@ def pre_build():
 
   for line in edit_file('PKGBUILD'):
     # edit PKGBUILD
-    if 'depends=' in line:
+    if 'makedepends=' in line:
         print('#'+line)
-        print(line.replace(')',' \'python2-setuptools\')'))
+        print(line.replace(')',' \'python-pypandoc\')'))
     else:
         print(line)
 
