@@ -21,7 +21,7 @@ pkgname=(
 )
 _pkgname='llvm'
 
-pkgver=3.8.0svn_r255458
+pkgver=3.8.0svn_r257564
 pkgrel=1
 
 arch=('i686' 'x86_64' 'armv7l' 'aarch64')
@@ -146,8 +146,8 @@ prepare() {
 
     # https://llvm.org/bugs/show_bug.cgi?id=23529
     # http://reviews.llvm.org/D12834
-    patch -N -p1 -d tools/clang -i "${srcdir}/0001-add-gcc-abi_tag-support.patch"
-    patch -N -p1 -d tools/clang -i "${srcdir}/0002-Fix-handling-of-abi_tag-attribute-on-namespaces.patch"
+    # patch -N -p1 -d tools/clang -i "${srcdir}/0001-add-gcc-abi_tag-support.patch"
+    # patch -N -p1 -d tools/clang -i "${srcdir}/0002-Fix-handling-of-abi_tag-attribute-on-namespaces.patch"
 
     mkdir -p "${srcdir}/build"
 }
