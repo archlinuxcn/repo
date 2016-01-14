@@ -50,16 +50,14 @@ source=(
     '0001-add-gcc-abi_tag-support.patch'
     '0002-Fix-handling-of-abi_tag-attribute-on-namespaces.patch'
 )
+sha256sums=('SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            '597dc5968c695bbdbb0eac9e8eb5117fcd2773bc91edf5ec103ecffffab8bc48'
+            'cea6130d231f17e3c98f12f4f7a308879fe69a2d49907127f4ad725d2f88ab6b'
+            '3d19adbd6fe0f4ec4511b7dd3db472c8019aa08b8970059892bd6761c51996c9')
 
-sha256sums=(
-    'SKIP'
-    'SKIP'
-    'SKIP'
-    'SKIP'
-    '597dc5968c695bbdbb0eac9e8eb5117fcd2773bc91edf5ec103ecffffab8bc48'
-    'cea6130d231f17e3c98f12f4f7a308879fe69a2d49907127f4ad725d2f88ab6b'
-    '3d19adbd6fe0f4ec4511b7dd3db472c8019aa08b8970059892bd6761c51996c9'
-)
 
 #
 # BEGIN INTERNAL VARIABLES AND FUNCTIONS
@@ -188,8 +186,7 @@ package_llvm-svn() {
         "llvm-libs-svn=${pkgver}-${pkgrel}"
     )
     groups=('llvm-toolchain-svn')
-    provides=('llvm')
-    replaces=('llvm')
+    provides=('llvm' 'llvm-julia')
     conflicts=('llvm')
 
     cd "${srcdir}/build"
@@ -237,7 +234,6 @@ package_llvm-libs-svn() {
     )
     groups=('llvm-toolchain-svn')
     provides=('llvm-libs')
-    replaces=('llvm-libs')
     conflicts=('llvm-libs')
 
     cd "${srcdir}/build"
@@ -270,7 +266,6 @@ package_llvm-ocaml-svn() {
         'ocaml-ctypes'
     )
     provides=('llvm-ocaml')
-    replaces=('llvm-ocaml')
     conflicts=('llvm-ocaml')
 
     cd "${srcdir}/build"
@@ -297,7 +292,6 @@ package_clang-svn() {
     )
     groups=('llvm-toolchain-svn')
     provides=('clang')
-    replaces=('clang')
     conflicts=('clang')
 
     cd "${srcdir}/build/tools/clang"
@@ -376,7 +370,6 @@ package_clang-analyzer-svn() {
     )
     groups=('llvm-toolchain-svn')
     provides=('clang-analyzer')
-    replaces=('clang-analyzer')
     conflicts=('clang-analyzer')
 
     cd "${srcdir}"
@@ -401,7 +394,6 @@ package_clang-compiler-rt-svn() {
     )
     groups=('llvm-toolchain-svn')
     provides=('clang-compiler-rt')
-    replaces=('clang-compiler-rt')
     conflicts=('clang-compiler-rt')
 
     cd "${srcdir}/build/projects/compiler-rt"
@@ -419,7 +411,6 @@ package_clang-tools-extra-svn() {
     )
     groups=('llvm-toolchain-svn')
     provides=('clang-tools-extra')
-    replaces=('clang-tools-extra')
     conflicts=('clang-tools-extra')
 
     cd "${srcdir}/build/tools/clang/tools/extra"
