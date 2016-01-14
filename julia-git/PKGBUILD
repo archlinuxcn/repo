@@ -15,7 +15,7 @@ if ((BUILD_EXTRA)); then
 else
    pkgname=('julia-git')
 fi
-pkgver=0.4.0.rc1.2099.gfb8c6e9
+pkgver=0.4.0.rc1.2104.g9d14d39
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
@@ -105,6 +105,7 @@ build() {
   CXXFLAGS=${CXXFLAGS//-march=i686/-march=pentium4}
   export CFLAGS+=' -Wno-pedantic -Wno-clobbered -Wl,--no-as-needed'
   export CXXFLAGS+=' -Wno-pedantic -Wno-clobbered -Wl,--no-as-needed'
+  export LDFLAGS=''
 
   make "${julia_opts[@]}" -C base version_git.jl.phony
   make "${julia_opts[@]}" -C deps
