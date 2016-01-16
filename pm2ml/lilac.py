@@ -7,7 +7,7 @@
 from lilaclib import *
 
 build_prefix = 'extra-x86_64'
-depends = ['python3-xcgf', 'python3-xcpf', 'python3-aur']
+depends = ['python3-xcgf', 'python3-xcpf']
 
 def pre_build():
   # obtain base PKGBUILD, e.g.
