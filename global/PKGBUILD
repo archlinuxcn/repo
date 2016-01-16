@@ -12,6 +12,7 @@ license=('GPL')
 depends=('libltdl' 'bash' 'perl')
 makedepends=("python2" "python2-pygments")
 optdepends=('idutils' 'ctags' 'python2-pygments')
+makedepends=('python2')
 options=(!emptydirs !libtool)
 install=global.install
 source=(http://tamacom.com/global/${pkgname}-${pkgver}.tar.gz)

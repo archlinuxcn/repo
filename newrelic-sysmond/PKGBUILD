@@ -19,7 +19,7 @@
 
 set -u
 pkgname='newrelic-sysmond'
-pkgver='2.2.0.125'
+pkgver='2.3.0.129'
 pkgrel='1'
 pkgdesc='collect, monitor, and analyze critical server load metrics including CPU, memory, network, process, disk utilization and capacity'
 arch=('i686' 'x86_64')
@@ -35,7 +35,7 @@ source=("${_verwatch[0]}${pkgver}/${pkgname}-${pkgver}-linux.tar.gz"
         "${pkgname}.inst.sh"
         "${pkgname}.service")
 
-sha256sums=('92c43cdce10e727e7f17d81c733e421402f62bf7a4b042ce38cb4cb93b5c93f6'
+sha256sums=('44b546c53a9a921d0d30dcf23dd74a542b3e99f6aed6e3eaca3840b86bc650fc'
             '02d70a783e30a7b6f8c438b1bae5a57d37d2204d112ccca38eada2b9044a5ebe'
             'bcce083629dcd0827f86247872ee4b42dec2c51349b4cc10c0ce7619f94faf9f'
             '58fade9de4793e22cda75816a74c52d5d9b831ab68bc7b8225aa1bb294b3b31b')
