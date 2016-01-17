@@ -15,14 +15,14 @@ if ((BUILD_EXTRA)); then
 else
    pkgname=('julia-git')
 fi
-pkgver=0.4.0.rc1.2170.ga1fc070
+pkgver=0.4.0.rc1.2171.gb992fe6
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
 license=('GPL')
 makedepends=('gcc-fortran' 'arpack' 'fftw' 'git' 'gmp' 'libgit2' 'libunwind'
-             'llvm' 'mpfr' 'pcre2' 'suitesparse' 'python2-sphinx'
+             'llvm-julia' 'mpfr' 'pcre2' 'suitesparse' 'python2-sphinx'
              'python2-sphinx_rtd_theme' 'python2-pip' 'texlive-langcjk'
              'texlive-latexextra' 'emacs' 'openspecfun' 'openblas'
              'libutf8proc' 'patchelf')
@@ -132,8 +132,8 @@ build() {
 
 package_julia-git() {
   arch=('i686' 'x86_64')
-  depends=('arpack' 'fftw' 'gmp' 'libgit2' 'libunwind' 'llvm' 'mpfr' 'pcre2'
-           'hicolor-icon-theme' 'xdg-utils' 'suitesparse' 'openspecfun'
+  depends=('arpack' 'fftw' 'gmp' 'libgit2' 'libunwind' 'llvm-julia' 'mpfr'
+           'pcre2' 'hicolor-icon-theme' 'xdg-utils' 'suitesparse' 'openspecfun'
            'openblas' 'libutf8proc')
   if ((USE_OPENLIBM)); then
       depends=("${depends[@]}" openlibm)
