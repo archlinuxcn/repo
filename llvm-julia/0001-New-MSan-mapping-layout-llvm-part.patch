@@ -1,0 +1,115 @@
+From 2c87d24da09ecd2c14c38a0b4f7a0e3f332b08ee Mon Sep 17 00:00:00 2001
+From: Evgeniy Stepanov <eugeni.stepanov@gmail.com>
+Date: Thu, 8 Oct 2015 21:35:26 +0000
+Subject: [PATCH] New MSan mapping layout (llvm part).
+
+This is an implementation of
+https://github.com/google/sanitizers/issues/579
+
+It has a number of advantages over the current mapping:
+* Works for non-PIE executables.
+* Does not require ASLR; as a consequence, debugging MSan programs in
+  gdb no longer requires "set disable-randomization off".
+* Supports linux kernels >=4.1.2.
+* The code is marginally faster and smaller.
+
+This is an ABI break. We never really promised ABI stability, but
+this patch includes a courtesy escape hatch: a compile-time macro
+that reverts back to the old mapping layout.
+
+git-svn-id: https://llvm.org/svn/llvm-project/llvm/trunk@249753 91177308-0d34-0410-b5e6-96231b3b80d8
+---
+ lib/Transforms/Instrumentation/MemorySanitizer.cpp | 22 +++++++++++++++-------
+ .../MemorySanitizer/origin-alignment.ll            | 10 ++++++----
+ 2 files changed, 21 insertions(+), 11 deletions(-)
+
+diff --git a/lib/Transforms/Instrumentation/MemorySanitizer.cpp b/lib/Transforms/Instrumentation/MemorySanitizer.cpp
+index 9d4c7de..bc6da5a 100644
+--- a/lib/Transforms/Instrumentation/MemorySanitizer.cpp
++++ b/lib/Transforms/Instrumentation/MemorySanitizer.cpp
+@@ -232,10 +232,17 @@ static const MemoryMapParams Linux_I386_MemoryMapParams = {
+ 
+ // x86_64 Linux
+ static const MemoryMapParams Linux_X86_64_MemoryMapParams = {
++#ifdef MSAN_LINUX_X86_64_OLD_MAPPING
+   0x400000000000,  // AndMask
+   0,               // XorMask (not used)
+   0,               // ShadowBase (not used)
+   0x200000000000,  // OriginBase
++#else
++  0,               // AndMask (not used)
++  0x500000000000,  // XorMask
++  0,               // ShadowBase (not used)
++  0x100000000000,  // OriginBase
++#endif
+ };
+ 
+ // mips64 Linux
+@@ -926,16 +933,17 @@ struct MemorySanitizerVisitor : public InstVisitor<MemorySanitizerVisitor> {
+   ///
+   /// Offset = (Addr & ~AndMask) ^ XorMask
+   Value *getShadowPtrOffset(Value *Addr, IRBuilder<> &IRB) {
++    Value *OffsetLong = IRB.CreatePointerCast(Addr, MS.IntptrTy);
++
+     uint64_t AndMask = MS.MapParams->AndMask;
+-    assert(AndMask != 0 && "AndMask shall be specified");
+-    Value *OffsetLong =
+-      IRB.CreateAnd(IRB.CreatePointerCast(Addr, MS.IntptrTy),
+-                    ConstantInt::get(MS.IntptrTy, ~AndMask));
++    if (AndMask)
++      OffsetLong =
++          IRB.CreateAnd(OffsetLong, ConstantInt::get(MS.IntptrTy, ~AndMask));
+ 
+     uint64_t XorMask = MS.MapParams->XorMask;
+-    if (XorMask != 0)
+-      OffsetLong = IRB.CreateXor(OffsetLong,
+-                                 ConstantInt::get(MS.IntptrTy, XorMask));
++    if (XorMask)
++      OffsetLong =
++          IRB.CreateXor(OffsetLong, ConstantInt::get(MS.IntptrTy, XorMask));
+     return OffsetLong;
+   }
+ 
+diff --git a/test/Instrumentation/MemorySanitizer/origin-alignment.ll b/test/Instrumentation/MemorySanitizer/origin-alignment.ll
+index ce0dbfc..562d194 100644
+--- a/test/Instrumentation/MemorySanitizer/origin-alignment.ll
++++ b/test/Instrumentation/MemorySanitizer/origin-alignment.ll
+@@ -24,7 +24,7 @@ entry:
+ ; CHECK-ORIGINS1: [[ORIGIN:%[01-9a-z]+]] = load {{.*}} @__msan_param_origin_tls
+ ; CHECK-ORIGINS2: [[ORIGIN0:%[01-9a-z]+]] = load {{.*}} @__msan_param_origin_tls
+ ; CHECK-ORIGINS2: [[ORIGIN:%[01-9a-z]+]] = call i32 @__msan_chain_origin(i32 [[ORIGIN0]])
+-; CHECK: store i32 [[ORIGIN]],  i32* inttoptr (i64 add (i64 and (i64 ptrtoint {{.*}} to i32*), align 8
++; CHECK: store i32 [[ORIGIN]], i32* inttoptr (i64 add (i64 xor (i64 ptrtoint (i8* @a8 to i64), i64 {{.*}}), i64 {{.*}}) to i32*), align 8
+ ; CHECK: ret void
+ 
+ 
+@@ -39,7 +39,7 @@ entry:
+ ; CHECK-ORIGINS1: [[ORIGIN:%[01-9a-z]+]] = load {{.*}} @__msan_param_origin_tls
+ ; CHECK-ORIGINS2: [[ORIGIN0:%[01-9a-z]+]] = load {{.*}} @__msan_param_origin_tls
+ ; CHECK-ORIGINS2: [[ORIGIN:%[01-9a-z]+]] = call i32 @__msan_chain_origin(i32 [[ORIGIN0]])
+-; CHECK: store i32 [[ORIGIN]],  i32* inttoptr (i64 add (i64 and (i64 ptrtoint {{.*}} to i32*), align 4
++; CHECK: store i32 [[ORIGIN]], i32* inttoptr (i64 add (i64 xor (i64 ptrtoint (i8* @a4 to i64), i64 {{.*}}), i64 {{.*}}) to i32*), align 4
+ ; CHECK: ret void
+ 
+ 
+@@ -54,7 +54,8 @@ entry:
+ ; CHECK-ORIGINS1: [[ORIGIN:%[01-9a-z]+]] = load {{.*}} @__msan_param_origin_tls
+ ; CHECK-ORIGINS2: [[ORIGIN0:%[01-9a-z]+]] = load {{.*}} @__msan_param_origin_tls
+ ; CHECK-ORIGINS2: [[ORIGIN:%[01-9a-z]+]] = call i32 @__msan_chain_origin(i32 [[ORIGIN0]])
+-; CHECK: store i32 [[ORIGIN]],  i32* inttoptr (i64 and (i64 add (i64 and (i64 ptrtoint {{.*}} i64 -4) to i32*), align 4
++; CHECK: store i32 [[ORIGIN]],  i32* inttoptr (i64 and (i64 add (i64 xor (i64 ptrtoint (i8* @a2 to i64), i64 {{.*}}), i64 {{.*}}), i64 -4) to i32*), align 4
++
+ ; CHECK: ret void
+ 
+ 
+@@ -69,5 +70,6 @@ entry:
+ ; CHECK-ORIGINS1: [[ORIGIN:%[01-9a-z]+]] = load {{.*}} @__msan_param_origin_tls
+ ; CHECK-ORIGINS2: [[ORIGIN0:%[01-9a-z]+]] = load {{.*}} @__msan_param_origin_tls
+ ; CHECK-ORIGINS2: [[ORIGIN:%[01-9a-z]+]] = call i32 @__msan_chain_origin(i32 [[ORIGIN0]])
+-; CHECK: store i32 [[ORIGIN]],  i32* inttoptr (i64 and (i64 add (i64 and (i64 ptrtoint {{.*}} i64 -4) to i32*), align 4
++; CHECK: store i32 [[ORIGIN]], i32* inttoptr (i64 and (i64 add (i64 xor (i64 ptrtoint (i8* @a1 to i64), i64 {{.*}}), i64 {{.*}}), i64 -4) to i32*), align 4
++
+ ; CHECK: ret void
+-- 
+2.6.1
+
