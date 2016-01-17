@@ -32,37 +32,52 @@ arch=('i686' 'x86_64')
 url='http://valloric.github.com/YouCompleteMe/'
 license=('GPL3')
 groups=('vim-plugins')
-depends=('vim' 'python2')
+depends=('mono' 'nodejs' 'python2' 'rust' 'vim')
 # use system's libclang on non-x86_64 architectures
 [[ "${CARCH}" != 'x86_64' ]] && depends+=('clang')
-makedepends=('cmake' 'git' 'go' 'make' 'mono')
+makedepends=('cargo' 'cmake' 'git' 'go' 'make' 'mono' 'npm')
 source=('git+https://github.com/Valloric/YouCompleteMe.git'
         'git+https://github.com/kennethreitz/requests.git'
         'git+https://github.com/ross/requests-futures.git'
         'git+https://github.com/Valloric/ycmd.git'
         'git+https://github.com/bewest/argparse.git'
-        'git+https://github.com/defnull/bottle.git'
+        'git+https://github.com/bottlepy/bottle.git'
         'git+https://github.com/slezica/python-frozendict.git'
         'git+https://github.com/davidhalter/jedi.git'
+        'git+https://github.com/vheon/JediHTTP.git'
         'git+https://github.com/Pylons/waitress.git'
         'git+https://github.com/nsf/gocode.git'
         'git+https://github.com/nosami/OmniSharpServer.git'
         'git+https://github.com/icsharpcode/NRefactory.git'
         'git+https://github.com/jbevain/cecil.git'
-        'git+https://github.com/amoffat/sh.git')
-sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP'
-            'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
+        'git+https://github.com/ternjs/tern.git'
+        'git+https://github.com/jwilm/racerd.git')
+sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP'
+            'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
 if [[ "${CARCH}" == 'x86_64' ]]; then
+  # use bundled libclang on x86_64
   source+=("${_CLANG_URL}/${_CLANG_FILENAME}"{,.sig})
   sha256sums+=('093a94ff8982ae78461f0d2604c98f6b454c15e2ef768d34c235c6676c336460'
                '3251144f5f250b6cbb19041062f84c2c201d231b0f71d15631c65beb67582b0b')
   validpgpkeys=('B6C8F98282B944E3B0D5C2530FC3042E345AD05D')
+  noextract=("${_CLANG_FILENAME}")
+  _COMPLETER="USE_CLANG_COMPLETER"
+else
+  # use system's libclang on non-x86_64
+  depends+=('clang')
+
+  # YCM works best with bundled libclang, but bundled libclang is only
+  # for x86_64 machines
+  # from ycmd source: cpp/ycm/CMakeLists.txt
+  # Clang 3.3 is the last version with pre-built x86 binaries upstream.
+  # That's too old now.
+  _COMPLETER="USE_SYSTEM_LIBCLANG"
 fi
-noextract=("${_CLANG_FILENAME}")
 install=install
 
 prepare() {
   msg2 'Setting up Git submodules...'
+
   cd "$srcdir/YouCompleteMe"
   git submodule init
   git config submodule.third_party/requests-futures.url "$srcdir/requests-futures"
@@ -74,12 +89,20 @@ prepare() {
   git config submodule.third_party/argparse.url "$srcdir/argparse"
   git config submodule.third_party/bottle.url "$srcdir/bottle"
   git config submodule.third_party/frozendict.url "$srcdir/python-frozendict"
-  git config submodule.third_party/jedi.url "$srcdir/jedi"
+  git config submodule.third_party/JediHTTP.url "$srcdir/JediHTTP"
   git config submodule.third_party/waitress.url "$srcdir/waitress"
   git config submodule.third_party/gocode.url "$srcdir/gocode"
   git config submodule.third_party/OmniSharpServer.url "$srcdir/OmniSharpServer"
   git config submodule.third_party/requests.url "$srcdir/requests"
-  git config submodule.third_party/sh.url "$srcdir/sh"
+  git config submodule.third_party/racerd.url "$srcdir/racerd"
+  git config submodule.third_party/tern.url "$srcdir/tern"
+  git submodule update
+
+  cd "$srcdir/YouCompleteMe/third_party/ycmd/third_party/JediHTTP"
+  git submodule init
+  git config submodule.vendor/waitress.url "$srcdir/waitress"
+  git config submodule.vendor/jedi.url "$srcdir/jedi"
+  git config submodule.vendor/bottle.url "$srcdir/bottle"
   git submodule update
 
   cd "$srcdir/YouCompleteMe/third_party/ycmd/third_party/OmniSharpServer"
@@ -95,17 +118,6 @@ prepare() {
       "$srcdir/YouCompleteMe/third_party/ycmd/clang_archives"
   fi
 }
-
-# YCM works best with bundled libclang, but bundled libclang is only
-# for x86_64 machines
-# from ycmd source: cpp/ycm/CMakeLists.txt
-# Clang 3.3 is the last version with pre-built x86 binaries upstream.
-# That's too old now.
-if [[ "${CARCH}" == 'x86_64' ]]; then
-  _COMPLETER="USE_CLANG_COMPLETER"
-else
-  _COMPLETER="USE_SYSTEM_LIBCLANG"
-fi
 
 build() {
   # https://github.com/Valloric/ycmd/blob/master/build.py {{{
@@ -126,12 +138,22 @@ build() {
   pwd
   go build
 
+  msg2 'Building Rust completer...' # BuildRacerd()
+  cd "$srcdir/YouCompleteMe/third_party/ycmd/third_party/racerd"
+  pwd
+  cargo build --release
+
+  msg2 'Building Tern completer...' # SetUpTern()
+  cd "$srcdir/YouCompleteMe/third_party/ycmd/third_party/tern"
+  pwd
+  npm install --production --python=python2
   # }}}
 }
 
 package() {
   mkdir -p "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party/OmniSharpServer/OmniSharp/bin/Release"
   mkdir -p "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party/gocode"
+  mkdir -p "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party/racerd/target/release"
 
   cp -r "$srcdir/YouCompleteMe/"{autoload,doc,plugin,python} \
     "$pkgdir/usr/share/vim/vimfiles"
@@ -139,18 +161,23 @@ package() {
     "$pkgdir/usr/share/vim/vimfiles/third_party"
   cp -r "$srcdir/YouCompleteMe/third_party/ycmd/"{ycmd,ycm_client_support.so,ycm_core.so,check_core_version.py,CORE_VERSION} \
     "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd"
+
   if [[ "${_COMPLETER}" == "USE_CLANG_COMPLETER" ]]; then
     cp "$srcdir/ycmd_build/${_CLANG_DIRNAME}/lib/${_CLANG_LIB_FILENAME}" \
       "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd"
     cp -r "$srcdir/YouCompleteMe/third_party/ycmd/clang_includes" \
       "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/clang_includes"
   fi
-  cp -r "$srcdir/YouCompleteMe/third_party/ycmd/third_party/"{argparse,bottle,frozendict,jedi,requests,waitress} \
+
+  cp -r "$srcdir/YouCompleteMe/third_party/ycmd/third_party/"{argparse,bottle,frozendict,JediHTTP,requests,tern,waitress} \
     "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party"
-  cp     "$srcdir/YouCompleteMe/third_party/ycmd/third_party/gocode/gocode" \
+
+  cp    "$srcdir/YouCompleteMe/third_party/ycmd/third_party/gocode/gocode" \
     "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party/gocode/gocode"
   cp -r "$srcdir/YouCompleteMe/third_party/ycmd/third_party/OmniSharpServer/OmniSharp/bin/Release" \
     "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party/OmniSharpServer/OmniSharp/bin"
+  cp    "$srcdir/YouCompleteMe/third_party/ycmd/third_party/racerd/target/release/racerd" \
+    "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party/racerd/target/release/racerd"
 
   find "$pkgdir" -name .git -exec rm -fr {} +
 }
