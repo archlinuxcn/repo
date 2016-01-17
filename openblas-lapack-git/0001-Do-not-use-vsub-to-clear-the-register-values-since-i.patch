@@ -1,44 +1,44 @@
-From 635e95a205878c4119eabde5eb5e1d63342fddd3 Mon Sep 17 00:00:00 2001
+From 594b9f4c73d314a35ed56a484c42c08a1967c283 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Mon, 4 Jan 2016 23:36:25 -0500
 Subject: [PATCH] Do not use vsub to clear the register values since it doesn't
  work with non-normal numbers.
 
 ---
- kernel/arm/asum_vfp.S               |  8 +++----
- kernel/arm/cdot_vfp.S               |  8 +++----
- kernel/arm/cgemm_kernel_2x2_vfp.S   |  8 +++----
- kernel/arm/cgemm_kernel_2x2_vfpv3.S |  8 +++----
- kernel/arm/cgemv_n_vfp.S            |  8 +++----
- kernel/arm/cgemv_t_vfp.S            | 24 ++++++++++----------
- kernel/arm/ctrmm_kernel_2x2_vfp.S   | 44 ++++++++++++++++++-------------------
- kernel/arm/ctrmm_kernel_2x2_vfpv3.S |  8 +++----
- kernel/arm/ddot_vfp.S               |  4 ++--
- kernel/arm/dgemm_kernel_4x2_vfp.S   | 12 +++++-----
- kernel/arm/dgemm_kernel_4x4_vfpv3.S | 18 +++++++--------
- kernel/arm/dtrmm_kernel_4x2_vfp.S   | 12 +++++-----
- kernel/arm/dtrmm_kernel_4x4_vfpv3.S | 18 +++++++--------
- kernel/arm/gemv_n_vfp.S             | 16 +++++++-------
- kernel/arm/gemv_n_vfpv3.S           | 16 +++++++-------
- kernel/arm/gemv_t_vfp.S             | 24 ++++++++++----------
- kernel/arm/gemv_t_vfpv3.S           | 24 ++++++++++----------
- kernel/arm/iamax_vfp.S              |  4 ++--
- kernel/arm/nrm2_vfp.S               |  8 +++----
- kernel/arm/nrm2_vfpv3.S             |  4 ++--
- kernel/arm/sdot_vfp.S               |  8 +++----
- kernel/arm/sgemm_kernel_4x2_vfp.S   | 12 +++++-----
- kernel/arm/sgemm_kernel_4x4_vfpv3.S | 18 +++++++--------
- kernel/arm/strmm_kernel_4x2_vfp.S   | 12 +++++-----
- kernel/arm/strmm_kernel_4x4_vfpv3.S | 18 +++++++--------
- kernel/arm/zdot_vfp.S               |  8 +++----
- kernel/arm/zgemm_kernel_2x2_vfp.S   |  8 +++----
- kernel/arm/zgemm_kernel_2x2_vfpv3.S |  8 +++----
- kernel/arm/zgemv_n_vfp.S            |  8 +++----
- kernel/arm/zgemv_t_vfp.S            | 24 ++++++++++----------
- kernel/arm/ztrmm_kernel_2x2_vfp.S   | 44 ++++++++++++++++++-------------------
- kernel/arm/ztrmm_kernel_2x2_vfpv3.S |  8 +++----
+ kernel/arm/asum_vfp.S               |  8 +++---
+ kernel/arm/cdot_vfp.S               |  8 +++---
+ kernel/arm/cgemm_kernel_2x2_vfp.S   |  8 +++---
+ kernel/arm/cgemm_kernel_2x2_vfpv3.S | 10 +++++---
+ kernel/arm/cgemv_n_vfp.S            |  8 +++---
+ kernel/arm/cgemv_t_vfp.S            | 24 +++++++++---------
+ kernel/arm/ctrmm_kernel_2x2_vfp.S   | 44 ++++++++++++++++-----------------
+ kernel/arm/ctrmm_kernel_2x2_vfpv3.S | 10 +++++---
+ kernel/arm/ddot_vfp.S               |  4 +--
+ kernel/arm/dgemm_kernel_4x2_vfp.S   | 12 ++++-----
+ kernel/arm/dgemm_kernel_4x4_vfpv3.S | 18 +++++++-------
+ kernel/arm/dtrmm_kernel_4x2_vfp.S   | 12 ++++-----
+ kernel/arm/dtrmm_kernel_4x4_vfpv3.S | 18 +++++++-------
+ kernel/arm/gemv_n_vfp.S             | 16 ++++++------
+ kernel/arm/gemv_n_vfpv3.S           | 16 ++++++------
+ kernel/arm/gemv_t_vfp.S             | 24 +++++++++---------
+ kernel/arm/gemv_t_vfpv3.S           | 24 +++++++++---------
+ kernel/arm/iamax_vfp.S              |  4 +--
+ kernel/arm/nrm2_vfp.S               |  8 +++---
+ kernel/arm/nrm2_vfpv3.S             |  9 +++++--
+ kernel/arm/sdot_vfp.S               |  8 +++---
+ kernel/arm/sgemm_kernel_4x2_vfp.S   | 12 ++++-----
+ kernel/arm/sgemm_kernel_4x4_vfpv3.S | 49 ++++++++++++++++++++++++-------------
+ kernel/arm/strmm_kernel_4x2_vfp.S   | 12 ++++-----
+ kernel/arm/strmm_kernel_4x4_vfpv3.S | 49 +++++++++++++++++++++++++------------
+ kernel/arm/zdot_vfp.S               |  8 +++---
+ kernel/arm/zgemm_kernel_2x2_vfp.S   |  8 +++---
+ kernel/arm/zgemm_kernel_2x2_vfpv3.S |  8 +++---
+ kernel/arm/zgemv_n_vfp.S            |  8 +++---
+ kernel/arm/zgemv_t_vfp.S            | 24 +++++++++---------
+ kernel/arm/ztrmm_kernel_2x2_vfp.S   | 44 ++++++++++++++++-----------------
+ kernel/arm/ztrmm_kernel_2x2_vfpv3.S |  8 +++---
  kernel/generic/zgemmkernel_2x2.c    |  2 +-
- 33 files changed, 227 insertions(+), 227 deletions(-)
+ 33 files changed, 283 insertions(+), 242 deletions(-)
 
 diff --git a/kernel/arm/asum_vfp.S b/kernel/arm/asum_vfp.S
 index 2b6ceb1..afa936e 100644
@@ -120,45 +120,78 @@ index a059ef5..d2c6028 100644
  
  .endm
 diff --git a/kernel/arm/cgemm_kernel_2x2_vfpv3.S b/kernel/arm/cgemm_kernel_2x2_vfpv3.S
-index 8bc200c..2460921 100644
+index 8bc200c..3b64f6c 100644
 --- a/kernel/arm/cgemm_kernel_2x2_vfpv3.S
 +++ b/kernel/arm/cgemm_kernel_2x2_vfpv3.S
-@@ -147,7 +147,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+@@ -147,7 +147,6 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  
  .macro INIT2x2
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  	vmov.f32		s18, s16
  	vmov.f32		s19, s16
-@@ -368,7 +368,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+@@ -368,7 +367,6 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  
  .macro INIT1x2
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  	vmov.f32		s20, s16
  	vmov.f32		s21, s16
-@@ -550,7 +550,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+@@ -550,7 +548,6 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  
  .macro INIT2x1
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  	vmov.f32		s18, s16
  	vmov.f32		s19, s16
-@@ -730,7 +730,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+@@ -730,7 +727,6 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  
  .macro INIT1x1
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  	vmov.f32		s24, s16
  	vmov.f32		s25, s16
+@@ -1008,9 +1004,12 @@ cgemm_kernel_L2_M2_32:
+ 
+ 	b	 cgemm_kernel_L2_M2_44
+ 
++cgemm_f32zero:
++        .word 0x00000000
+ 
+ cgemm_kernel_L2_M2_40:
+ 
++	vldr.f32		s16 , cgemm_f32zero
+ 	INIT2x2
+ 
+ 
+@@ -1044,6 +1043,7 @@ cgemm_kernel_L2_M1_BEGIN:
+ 
+ cgemm_kernel_L2_M1_20:
+ 
++	vldr.f32		s16 , cgemm_f32zero
+ 	INIT1x2
+ 
+ 	mov	BO, BC
+@@ -1219,6 +1219,7 @@ cgemm_kernel_L1_M2_32:
+ 
+ cgemm_kernel_L1_M2_40:
+ 
++	vldr.f32		s16 , =0
+ 	INIT2x1
+ 
+ 
+@@ -1252,6 +1253,7 @@ cgemm_kernel_L1_M1_BEGIN:
+ 
+ cgemm_kernel_L1_M1_20:
+ 
++	vldr.f32		s16 , =0
+ 	INIT1x1
+ 
+ 	mov	BO, BC
 diff --git a/kernel/arm/cgemv_n_vfp.S b/kernel/arm/cgemv_n_vfp.S
 index 712e7f0..cec818e 100644
 --- a/kernel/arm/cgemv_n_vfp.S
@@ -374,45 +407,78 @@ index a48c860..e6b8a99 100644
  	FMAC_R1 s4 , s0 , s8
  	FMAC_I1 s5 , s0 , s9
 diff --git a/kernel/arm/ctrmm_kernel_2x2_vfpv3.S b/kernel/arm/ctrmm_kernel_2x2_vfpv3.S
-index f06e260..757d5bc 100644
+index f06e260..5171c6e 100644
 --- a/kernel/arm/ctrmm_kernel_2x2_vfpv3.S
 +++ b/kernel/arm/ctrmm_kernel_2x2_vfpv3.S
-@@ -134,7 +134,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+@@ -134,7 +134,6 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  
  .macro INIT2x2
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  	vmov.f32		s18, s16
  	vmov.f32		s19, s16
-@@ -351,7 +351,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+@@ -351,7 +350,6 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  
  .macro INIT1x2
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  	vmov.f32		s20, s16
  	vmov.f32		s21, s16
-@@ -529,7 +529,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+@@ -529,7 +527,6 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  
  .macro INIT2x1
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  	vmov.f32		s18, s16
  	vmov.f32		s19, s16
-@@ -706,7 +706,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+@@ -706,7 +703,6 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  
  .macro INIT1x1
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  	vmov.f32		s24, s16
  	vmov.f32		s25, s16
+@@ -1020,9 +1016,12 @@ _L2_M2_32:
+ 
+ 	b	 _L2_M2_44
+ 
++ctrmm_f32zero:
++        .word 0x00000000
+ 
+ _L2_M2_40:
+ 
++	vldr.f32		s16 , ctrmm_f32zero
+ 	INIT2x2
+ 
+ 
+@@ -1074,6 +1073,7 @@ _L2_M1_BEGIN:
+ 
+ _L2_M1_20:
+ 
++	vldr.f32		s16 , ctrmm_f32zero
+ 	INIT1x2
+ 
+ #if  (defined(LEFT) &&  defined(TRANSA)) || \
+@@ -1337,6 +1337,7 @@ _L1_M2_32:
+ 
+ _L1_M2_40:
+ 
++	vldr.f32		s16 , =0
+ 	INIT2x1
+ 
+ 
+@@ -1389,6 +1390,7 @@ _L1_M1_BEGIN:
+ 
+ _L1_M1_20:
+ 
++	vldr.f32		s16 , =0
+ 	INIT1x1
+ 
+ #if  (defined(LEFT) &&  defined(TRANSA)) || \
 diff --git a/kernel/arm/ddot_vfp.S b/kernel/arm/ddot_vfp.S
 index 71b3c1c..b402bcc 100644
 --- a/kernel/arm/ddot_vfp.S
@@ -1085,21 +1151,31 @@ index d80179a..47279df 100644
  	vmov.f32		s7 , s1			// value 1.0
  	vmov.f32		s6 , s0			// value 0.0
 diff --git a/kernel/arm/nrm2_vfpv3.S b/kernel/arm/nrm2_vfpv3.S
-index 34b251e..a7e42f3 100644
+index 34b251e..8c47a5e 100644
 --- a/kernel/arm/nrm2_vfpv3.S
 +++ b/kernel/arm/nrm2_vfpv3.S
-@@ -405,12 +405,12 @@ KERNEL_S1_END_\@:
+@@ -400,17 +400,22 @@ KERNEL_S1_END_\@:
+ * End of macro definitions
+ **************************************************************************************/
+ 
++nrm2_zeros:
++        .align 5
++        .word 0x00000000
++        .word 0x00000000
++
+ 	PROLOGUE
+ 
  	.align 5
  
  #if defined(DOUBLE)
 -	vsub.f64                d0 , d0 , d0		// scale=0.0
-+	vldr.f64                d0 , =0		// scale=0.0
++	vldr.f64                d0 , nrm2_zeros		// scale=0.0
  	vmov.f64		d1 , #1.0		// ssq=1.0
  	vmov.f64		d7 , d1			// value 1.0
  	vmov.f64		d6 , d0			// value 0.0
  #else
 -	vsub.f32                s0 , s0 , s0		// scale=0.0
-+	vldr.f32                s0 , =0		// scale=0.0
++	vldr.f32                s0 , nrm2_zeros		// scale=0.0
  	vmov.f32		s1 , #1.0		// ssq=1.0
  	vmov.f32		s7 , s1			// value 1.0
  	vmov.f32		s6 , s0			// value 0.0
@@ -1184,90 +1260,209 @@ index 4dfb733..bff8a7e 100644
  .endm
  
 diff --git a/kernel/arm/sgemm_kernel_4x4_vfpv3.S b/kernel/arm/sgemm_kernel_4x4_vfpv3.S
-index 078f14a..b1f2664 100644
+index 078f14a..ef0b8fc 100644
 --- a/kernel/arm/sgemm_kernel_4x4_vfpv3.S
 +++ b/kernel/arm/sgemm_kernel_4x4_vfpv3.S
-@@ -102,7 +102,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+@@ -102,7 +102,6 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  
  .macro INIT4x4
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  	vmov.f32		s18, s16
  	vmov.f32		s19, s16
-@@ -349,7 +349,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+@@ -349,7 +348,6 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  
  .macro INIT2x4
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  	vmov.f32		s20, s16
  	vmov.f32		s21, s16
-@@ -443,7 +443,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+@@ -443,7 +441,6 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  
  .macro INIT1x4
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0
  	vmov.f32		s20, s16
  	vmov.f32		s24, s16
  	vmov.f32		s28, s16
-@@ -506,7 +506,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+@@ -506,7 +503,6 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  
  .macro INIT4x2
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  	vmov.f32		s18, s16
  	vmov.f32		s19, s16
-@@ -590,7 +590,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+@@ -590,7 +586,6 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  
  .macro INIT2x2
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  	vmov.f32		s20, s16
  	vmov.f32		s21, s16
-@@ -651,7 +651,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+@@ -651,7 +646,6 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  
  .macro INIT1x2
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0
  	vmov.f32		s20, s16
  
  .endm
-@@ -696,7 +696,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+@@ -696,7 +690,6 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  
  .macro INIT4x1
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  	vmov.f32		s18, s16
  	vmov.f32		s19, s16
-@@ -755,7 +755,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+@@ -755,7 +748,6 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  
  .macro INIT2x1
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  
  .endm
-@@ -799,7 +799,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+@@ -797,13 +789,6 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  
- .macro INIT1x1
+ /******************************************************************************/
  
+-.macro INIT1x1
+-
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0
+-
+-.endm
+-
+-
  
- .endm
+ .macro KERNEL1x1_SUB
  
+@@ -930,9 +915,24 @@ sgemm_kernel_L4_M4_32:
+ 
+ 	b	 sgemm_kernel_L4_M4_44
+ 
++        /* Note on loading zero into a fp register
++         * vsub doesn't work since it cannot handle NaN and infinity
++         * vmov.Fn doesn't work with 0
++         * vmov.In and veor are neon
++         * vldr , =0 doesn't work since the function is larger than 2KB
++         *     and the assembler is not able to insert constant pool inside
++         *     the function body.
++         *
++         * Therefore, the best way I've found is to manually create multiple
++         * copies of the zero constant and `vldr` from different ones depending
++         * on where the instruction is.
++         */
++sgemm_f32zero:
++        .word 0x00000000
+ 
+ sgemm_kernel_L4_M4_40:
+ 
++	vldr.f32		s16 , sgemm_f32zero
+ 	INIT4x4
+ 
+ 
+@@ -969,6 +969,7 @@ sgemm_kernel_L4_M2_BEGIN:
+ 
+ sgemm_kernel_L4_M2_20:
+ 
++	vldr.f32		s16 , sgemm_f32zero
+ 	INIT2x4
+ 
+ 	mov	BO, BC
+@@ -1014,9 +1015,14 @@ sgemm_kernel_L4_M1_BEGIN:
+ 
+ 	tst	I, #1					// I = I % 2
+ 	ble	sgemm_kernel_L4_END
++        b       sgemm_kernel_L4_M1_20
++
++sgemm_f32zero4:
++        .word 0x00000000
+ 
+ sgemm_kernel_L4_M1_20:
+ 
++	vldr.f32		s16 , sgemm_f32zero4
+ 	INIT1x4
+ 
+ 	mov	BO, BC
+@@ -1100,6 +1106,7 @@ sgemm_kernel_L2_M4_BEGIN:
+ 
+ sgemm_kernel_L2_M4_20:
+ 
++	vldr.f32		s16 , sgemm_f32zero3
+ 	INIT4x2
+ 
+ 	mov	BO, BC
+@@ -1121,7 +1128,6 @@ sgemm_kernel_L2_M4_22:
+ 	subs	L, L, #1
+ 	bgt	sgemm_kernel_L2_M4_22
+ 
+-
+ sgemm_kernel_L2_M4_40:
+ 
+ 	ands	L , K1, #7					// L = L % 8
+@@ -1142,7 +1148,10 @@ sgemm_kernel_L2_M4_END:
+ 
+ 	subs	I, I, #1
+ 	bgt	sgemm_kernel_L2_M4_20
++        b       sgemm_kernel_L2_M2_BEGIN
+ 
++sgemm_f32zero3:
++        .word 0x00000000
+ 
+ sgemm_kernel_L2_M2_BEGIN:
+ 
+@@ -1155,6 +1164,7 @@ sgemm_kernel_L2_M2_BEGIN:
+ 
+ sgemm_kernel_L2_M2_20:
+ 
++	vldr.f32		s16 , sgemm_f32zero3
+ 	INIT2x2
+ 
+ 	mov	BO, BC
+@@ -1203,6 +1213,7 @@ sgemm_kernel_L2_M1_BEGIN:
+ 
+ sgemm_kernel_L2_M1_20:
+ 
++	vldr.f32		s16 , sgemm_f32zero3
+ 	INIT1x2
+ 
+ 	mov	BO, BC
+@@ -1278,6 +1289,7 @@ sgemm_kernel_L1_M4_BEGIN:
+ 
+ sgemm_kernel_L1_M4_20:
+ 
++	vldr.f32		s16 , sgemm_f32zero3
+ 	INIT4x1
+ 
+ 	mov	BO, BC
+@@ -1333,6 +1345,7 @@ sgemm_kernel_L1_M2_BEGIN:
+ 
+ sgemm_kernel_L1_M2_20:
+ 
++	vldr.f32		s16 , sgemm_f32zero2
+ 	INIT2x1
+ 
+ 	mov	BO, BC
+@@ -1381,7 +1394,7 @@ sgemm_kernel_L1_M1_BEGIN:
+ 
+ sgemm_kernel_L1_M1_20:
+ 
+-	INIT1x1
++	vldr.f32		s16 , sgemm_f32zero2
+ 
+ 	mov	BO, BC
+ 	asrs	L , K1, #3					// L = L / 8
+@@ -1434,3 +1447,5 @@ sgemm_kernel_L999:
+ 
+ 	EPILOGUE
+ 
++sgemm_f32zero2:
++        .word 0x00000000
 diff --git a/kernel/arm/strmm_kernel_4x2_vfp.S b/kernel/arm/strmm_kernel_4x2_vfp.S
 index e7511ff..c7ae94d 100644
 --- a/kernel/arm/strmm_kernel_4x2_vfp.S
@@ -1327,90 +1522,197 @@ index e7511ff..c7ae94d 100644
  .endm
  
 diff --git a/kernel/arm/strmm_kernel_4x4_vfpv3.S b/kernel/arm/strmm_kernel_4x4_vfpv3.S
-index f6342a0..95d9c14 100644
+index f6342a0..f9b439e 100644
 --- a/kernel/arm/strmm_kernel_4x4_vfpv3.S
 +++ b/kernel/arm/strmm_kernel_4x4_vfpv3.S
-@@ -88,7 +88,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+@@ -88,7 +88,6 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  
  .macro INIT4x4
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  	vmov.f32		s18, s16
  	vmov.f32		s19, s16
-@@ -322,7 +322,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+@@ -322,7 +321,6 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  
  .macro INIT2x4
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  	vmov.f32		s20, s16
  	vmov.f32		s21, s16
-@@ -405,7 +405,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+@@ -405,7 +403,6 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  
  .macro INIT1x4
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0
  	vmov.f32		s20, s16
  	vmov.f32		s24, s16
  	vmov.f32		s28, s16
-@@ -464,7 +464,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+@@ -464,7 +461,6 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  
  .macro INIT4x2
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  	vmov.f32		s18, s16
  	vmov.f32		s19, s16
-@@ -538,7 +538,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+@@ -538,7 +534,6 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  
  .macro INIT2x2
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  	vmov.f32		s20, s16
  	vmov.f32		s21, s16
-@@ -593,7 +593,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+@@ -593,7 +588,6 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  
  .macro INIT1x2
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0
  	vmov.f32		s20, s16
  
  .endm
-@@ -636,7 +636,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+@@ -636,7 +630,6 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  
  .macro INIT4x1
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  	vmov.f32		s18, s16
  	vmov.f32		s19, s16
-@@ -690,7 +690,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+@@ -690,7 +683,6 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  
  .macro INIT2x1
  
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0
  	vmov.f32		s17, s16
  
  .endm
-@@ -731,7 +731,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+@@ -729,13 +721,6 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  
- .macro INIT1x1
+ /******************************************************************************/
  
+-.macro INIT1x1
+-
 -	vsub.f32		s16 , s16 , s16
-+	vldr.f32		s16 , =0
+-
+-.endm
+-
+-
  
- .endm
+ .macro KERNEL1x1_SUB
  
+@@ -955,9 +940,24 @@ _L4_M4_32:
+ 
+ 	b	 _L4_M4_44
+ 
++        /* Note on loading zero into a fp register
++         * vsub doesn't work since it cannot handle NaN and infinity
++         * vmov.Fn doesn't work with 0
++         * vmov.In and veor are neon
++         * vldr , =0 doesn't work since the function is larger than 2KB
++         *     and the assembler is not able to insert constant pool inside
++         *     the function body.
++         *
++         * Therefore, the best way I've found is to manually create multiple
++         * copies of the zero constant and `vldr` from different ones depending
++         * on where the instruction is.
++         */
++strmm_f32zero:
++        .word 0x00000000
+ 
+ _L4_M4_40:
+ 
++	vldr.f32		s16 , strmm_f32zero
+ 	INIT4x4
+ 
+ 
+@@ -1014,6 +1014,7 @@ _L4_M2_BEGIN:
+ 
+ _L4_M2_20:
+ 
++	vldr.f32		s16 , strmm_f32zero
+ 	INIT2x4
+ 
+ #if  (defined(LEFT) &&  defined(TRANSA)) || \
+@@ -1112,6 +1113,7 @@ _L4_M1_BEGIN:
+ 
+ _L4_M1_20:
+ 
++	vldr.f32		s16 , strmm_f32zero3
+ 	INIT1x4
+ 
+ #if  (defined(LEFT) &&  defined(TRANSA)) || \
+@@ -1252,9 +1254,14 @@ _L2_M4_BEGIN:
+ 	ldr	I, M
+ 	asrs	I, I, #2					// I = I / 4
+ 	ble	_L2_M2_BEGIN
++        b       _L2_M4_20
++
++strmm_f32zero3:
++        .word 0x00000000
+ 
+ _L2_M4_20:
+ 
++	vldr.f32		s16 , strmm_f32zero3
+ 	INIT4x2
+ 
+ #if  (defined(LEFT) &&  defined(TRANSA)) || \
+@@ -1360,6 +1367,7 @@ _L2_M2_BEGIN:
+ 
+ _L2_M2_20:
+ 
++	vldr.f32		s16 , strmm_f32zero3
+ 	INIT2x2
+ 
+ #if  (defined(LEFT) &&  defined(TRANSA)) || \
+@@ -1458,6 +1466,7 @@ _L2_M1_BEGIN:
+ 
+ _L2_M1_20:
+ 
++	vldr.f32		s16 , strmm_f32zero4
+ 	INIT1x2
+ 
+ #if  (defined(LEFT) &&  defined(TRANSA)) || \
+@@ -1591,9 +1600,14 @@ _L1_M4_BEGIN:
+ 	ldr	I, M
+ 	asrs	I, I, #2					// I = I / 4
+ 	ble	_L1_M2_BEGIN
++        b       _L1_M4_20
++
++strmm_f32zero4:
++        .word 0x00000000
+ 
+ _L1_M4_20:
+ 
++	vldr.f32		s16 , strmm_f32zero4
+ 	INIT4x1
+ 
+ #if  (defined(LEFT) &&  defined(TRANSA)) || \
+@@ -1700,6 +1714,7 @@ _L1_M2_BEGIN:
+ 
+ _L1_M2_20:
+ 
++	vldr.f32		s16 , strmm_f32zero2
+ 	INIT2x1
+ 
+ #if  (defined(LEFT) &&  defined(TRANSA)) || \
+@@ -1798,7 +1813,7 @@ _L1_M1_BEGIN:
+ 
+ _L1_M1_20:
+ 
+-	INIT1x1
++	vldr.f32		s16 , strmm_f32zero2
+ 
+ #if  (defined(LEFT) &&  defined(TRANSA)) || \
+     (!defined(LEFT) && !defined(TRANSA))
+@@ -1882,3 +1897,5 @@ _L999:
+ 
+ 	EPILOGUE
+ 
++strmm_f32zero2:
++        .word 0x00000000
 diff --git a/kernel/arm/zdot_vfp.S b/kernel/arm/zdot_vfp.S
 index 622169b..a2327db 100644
 --- a/kernel/arm/zdot_vfp.S
