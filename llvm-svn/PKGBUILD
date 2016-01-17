@@ -153,6 +153,13 @@ prepare() {
 build() {
     cd "${srcdir}/build"
 
+    CONFIG=()
+    case $CARCH in
+      arm*)
+        # compiler_rt is not supported on ARM
+        CONFIG=("-DLLVM_EXTERNAL_COMPILER_RT_BUILD=OFF")
+        ;;
+    esac
     export PKG_CONFIG_PATH='/usr/lib/pkgconfig'
 
     # LLVM_BUILD_LLVM_DYLIB: Build the dynamic runtime libraries (e.g. libLLVM.so).
@@ -174,6 +181,7 @@ build() {
         -DLLVM_BUILD_LLVM_DYLIB:BOOL=ON \
         -DLLVM_LINK_LLVM_DYLIB:BOOL=ON \
         -DLLVM_BINUTILS_INCDIR:PATH=/usr/include \
+        "${CONFIG[@]}" \
         "../${_pkgname}"
 
     make
@@ -395,6 +403,13 @@ package_clang-compiler-rt-svn() {
     groups=('llvm-toolchain-svn')
     provides=('clang-compiler-rt')
     conflicts=('clang-compiler-rt')
+
+    case $CARCH in
+      arm*)
+        # compiler_rt is not supported on ARM
+        return
+        ;;
+    esac
 
     cd "${srcdir}/build/projects/compiler-rt"
 
