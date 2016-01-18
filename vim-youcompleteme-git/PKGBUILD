@@ -1,4 +1,5 @@
 # Maintainer: Erik Beran <eberan AT_gmail_DOT com>
+# Contributor: Stephen Zhang <zsrkmyn at gmail dot com>
 # Contributor: Thor K. H. <thor at roht dot no>
 # Contributor: Babken Vardanyan <483ken 4tgma1l
 # Contributor: mikezackles
@@ -13,12 +14,6 @@
 # Contributor: archdria
 # Contributor: Andy Weidenbaum <archbaum@gmail.com>
 
-_CLANG_LIB_FILENAME="libclang.so.3.7"
-_CLANG_VERSION="3.7.0"
-_CLANG_URL="http://llvm.org/releases/${_CLANG_VERSION}"
-_CLANG_DIRNAME="clang+llvm-${_CLANG_VERSION}-x86_64-linux-gnu-ubuntu-14.04"
-_CLANG_FILENAME="${_CLANG_DIRNAME}.tar.xz"
-
 pkgname=vim-youcompleteme-git
 pkgver=1391.ba6e140
 pkgver() {
@@ -32,10 +27,12 @@ arch=('i686' 'x86_64')
 url='http://valloric.github.com/YouCompleteMe/'
 license=('GPL3')
 groups=('vim-plugins')
-depends=('mono' 'nodejs' 'python2' 'rust' 'vim')
-# use system's libclang on non-x86_64 architectures
-[[ "${CARCH}" != 'x86_64' ]] && depends+=('clang')
-makedepends=('cargo' 'cmake' 'git' 'go' 'make' 'mono' 'npm')
+depends=('python2' 'vim')
+optdepends=('mono: for C# completer'
+            'nodejs: for nodejs completer'
+            'rust: for rust completer'
+            'clang: for C/C++/Obj-C completer')
+makedepends=('cargo' 'cmake' 'git' 'go' 'make' 'mono' 'npm' 'nodejs' 'rust' 'clang')
 source=('git+https://github.com/Valloric/YouCompleteMe.git'
         'git+https://github.com/kennethreitz/requests.git'
         'git+https://github.com/ross/requests-futures.git'
@@ -54,26 +51,8 @@ source=('git+https://github.com/Valloric/YouCompleteMe.git'
         'git+https://github.com/jwilm/racerd.git')
 sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP'
             'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
-if [[ "${CARCH}" == 'x86_64' ]]; then
-  # use bundled libclang on x86_64
-  source+=("${_CLANG_URL}/${_CLANG_FILENAME}"{,.sig})
-  sha256sums+=('093a94ff8982ae78461f0d2604c98f6b454c15e2ef768d34c235c6676c336460'
-               '3251144f5f250b6cbb19041062f84c2c201d231b0f71d15631c65beb67582b0b')
-  validpgpkeys=('B6C8F98282B944E3B0D5C2530FC3042E345AD05D')
-  noextract=("${_CLANG_FILENAME}")
-  _COMPLETER="USE_CLANG_COMPLETER"
-else
-  # use system's libclang on non-x86_64
-  depends+=('clang')
-
-  # YCM works best with bundled libclang, but bundled libclang is only
-  # for x86_64 machines
-  # from ycmd source: cpp/ycm/CMakeLists.txt
-  # Clang 3.3 is the last version with pre-built x86 binaries upstream.
-  # That's too old now.
-  _COMPLETER="USE_SYSTEM_LIBCLANG"
-fi
 install=install
+_COMPLETER="USE_CLANG_COMPLETER"
 
 prepare() {
   msg2 'Setting up Git submodules...'
@@ -110,13 +89,6 @@ prepare() {
   git config submodule.NRefactory.url "$srcdir/NRefactory"
   git config submodule.cecil.url "$srcdir/cecil"
   git submodule update
-
-  if [[ "${CARCH}" == 'x86_64' ]]; then
-    msg2 'Setting up bundled libclang...'
-    mkdir -p "$srcdir/YouCompleteMe/third_party/ycmd/clang_archives"
-    cp "$srcdir/${_CLANG_FILENAME}" \
-      "$srcdir/YouCompleteMe/third_party/ycmd/clang_archives"
-  fi
 }
 
 build() {
@@ -161,13 +133,6 @@ package() {
     "$pkgdir/usr/share/vim/vimfiles/third_party"
   cp -r "$srcdir/YouCompleteMe/third_party/ycmd/"{ycmd,ycm_client_support.so,ycm_core.so,check_core_version.py,CORE_VERSION} \
     "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd"
-
-  if [[ "${_COMPLETER}" == "USE_CLANG_COMPLETER" ]]; then
-    cp "$srcdir/ycmd_build/${_CLANG_DIRNAME}/lib/${_CLANG_LIB_FILENAME}" \
-      "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd"
-    cp -r "$srcdir/YouCompleteMe/third_party/ycmd/clang_includes" \
-      "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/clang_includes"
-  fi
 
   cp -r "$srcdir/YouCompleteMe/third_party/ycmd/third_party/"{argparse,bottle,frozendict,JediHTTP,requests,tern,waitress} \
     "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party"
