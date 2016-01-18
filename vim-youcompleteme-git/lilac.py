@@ -4,7 +4,6 @@ build_prefix = 'extra-x86_64'
 
 def pre_build():
     run_cmd(['sh', '-c', 'CARCH="x86_64" recv_gpg_keys'])
-    run_cmd(['rm', '-rf', 'bottle/'])
     vcs_update()
 
 def post_build():
