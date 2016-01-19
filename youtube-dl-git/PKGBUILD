@@ -8,7 +8,7 @@ _name=youtube-dl
 _branch=master
 
 pkgname=$_name-git
-pkgver=2016.01.16.855f90f
+pkgver=2016.01.19.a8776b1
 pkgrel=1
 
 pkgdesc='A small command-line program to download videos from YouTube.com and a few more sites - git version'
@@ -41,7 +41,7 @@ prepare() {
 package() {
  cd $_name-$_branch
 
- LC_ALL=C make bash-completion zsh-completion fish-completion README.txt youtube-dl.1
+ make bash-completion zsh-completion fish-completion README.txt youtube-dl.1
  python setup.py install --root="$pkgdir" --optimize=1
 
  mv "$pkgdir"/usr/share/bash-completion/completions/youtube-dl.bash-completion \
