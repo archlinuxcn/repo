@@ -20,7 +20,7 @@ pkgver() {
   cd "YouCompleteMe"
   echo $(git rev-list --count master).$(git rev-parse --short master)
 }
-pkgrel=1
+pkgrel=2
 pkgdesc="A code-completion engine for Vim"
 
 arch=('i686' 'x86_64')
