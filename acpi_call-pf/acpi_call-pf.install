@@ -1,5 +1,5 @@
 post_install() {
-  _extramodules=extramodules-4.3-pf
+  _extramodules=extramodules-4.4-pf
   depmod $(cat /usr/lib/modules/${_extramodules}/version)
 }
 
