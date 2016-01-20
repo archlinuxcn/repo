@@ -1,0 +1,28 @@
+From 368cb4496b3af87d2f05da02bce7567ade440ce7 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Wed, 20 Jan 2016 17:23:14 +0000
+Subject: [PATCH] Fix LLVM 3.9 API breakage.
+
+---
+ src/jitlayers.cpp | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/src/jitlayers.cpp b/src/jitlayers.cpp
+index ffdc33e..7e5a059 100644
+--- a/src/jitlayers.cpp
++++ b/src/jitlayers.cpp
+@@ -216,7 +216,11 @@ public:
+         auto oit = Objects.begin();
+         auto lit = LOS.begin();
+         while (oit != Objects.end()) {
++#ifdef LLVM39
++            const auto &Object = (*oit)->getBinary();
++#else
+             auto &Object = *oit;
++#endif
+             auto &LO = *lit;
+ 
+             OwningBinary<ObjectFile> SavedObject = LO->getObjectForDebug(*Object);
+-- 
+2.7.0
+
