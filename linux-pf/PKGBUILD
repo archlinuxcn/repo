@@ -3,13 +3,13 @@
 # Some lines from  linux-bfs and linux-ck
 # Credits to respective maintainers
 _major=4
-_minor=3
+_minor=4
 #_patchlevel=0
 #_subversion=1
 _basekernel=${_major}.${_minor}
 _srcname=linux-${_major}.${_minor}
 pkgbase=linux-pf
-_pfrel=4
+_pfrel=1
 _kernelname=-pf
 _pfpatchhome="http://pf.natalenko.name/sources/${_basekernel}/"
 _pfpatchname="patch-${_basekernel}${_kernelname}${_pfrel}"
@@ -75,6 +75,8 @@ source=("ftp://www.kernel.org/pub/linux/kernel/v${_major}.x/linux-${_basekernel}
         'config.x86_64'         # the main kernel config files
         'linux.preset'          # standard config files for mkinitcpio ramdisk
         'change-default-console-loglevel.patch'
+        '0001-sdhci-revert.patch'
+        'tpmdd-devel-v3-base-platform-fix-binding-for-drivers-without-probe-callback.patch'
         "${_pfpatchhome}${_pfpatchname}.xz"     # the -pf patchset
         "git+$_aufs4"
 )
@@ -124,6 +126,15 @@ prepare() {
 
   # add latest fixes from stable queue, if needed
   # http://git.kernel.org/?p=linux/kernel/git/stable/stable-queue.git
+
+  # revert http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=9faac7b95ea4f9e83b7a914084cc81ef1632fd91
+  # fixes #47778 sdhci broken on some boards
+  # https://bugzilla.kernel.org/show_bug.cgi?id=106541
+  patch -Rp1 -i "${srcdir}/0001-sdhci-revert.patch"
+
+  # fixes #47805 kernel panics on platform modules
+  # https://bugzilla.kernel.org/show_bug.cgi?id=110751
+  patch -Np1 -i "${srcdir}/tpmdd-devel-v3-base-platform-fix-binding-for-drivers-without-probe-callback.patch"
 
   # set DEFAULT_CONSOLE_LOGLEVEL to 4 (same value as the 'quiet' kernel param)
   # remove this when a Kconfig knob is made available by upstream
@@ -326,7 +337,6 @@ package_linux-pf() {
  for _cpusuffix in $_CPUSUFFIXES ; do
    conflicts+=(${pkgbase}-${_cpusuffix})
  done
- replaces=('aufs3')
  backup=("etc/mkinitcpio.d/${pkgbase}.preset")
  install='linux.install'
 
@@ -667,9 +677,11 @@ package_linux-pf-headers() {
 pkgdesc="Linux kernel and modules with the pf-kernel patch [-ck patchset (BFS included), TuxOnIce, BFQ] and aufs4"
 
 # makepkg -g >>PKGBUILD
-sha256sums=('4a622cc84b8a3c38d39bc17195b0c064d2b46945dfde0dae18f77b120bc9f3ae'
-            'b45e81b7c428ea6c843b70f978636f65eca59d9376d3b60c57d10cfc2a9920c9'
+sha256sums=('401d7c8fef594999a460d10c72c5a94e9c2e1022f16795ec51746b0d165418b2'
+            '853dff9c34e9916ae9106cc44f7d548cf051cda6115cff66e541514f532e188d'
             '82d660caa11db0cd34fd550a049d7296b4a9dcd28f2a50c81418066d6e598864'
             '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99'
-            '70bc512d6bb05591944d6a17a8a82265436a6fad1597be59bab87cabb4644d5e'
+            '5313df7cb5b4d005422bd4cd0dae956b2dadba8f3db904275aaf99ac53894375'
+            'ab57037ecee0a425c612babdff47c831378bca0bff063a1308599989a350226d'
+            '1641d78646b64bad3887387402c63f997df5493694b1baa0653cac8ec4ae4328'
             'SKIP')
