@@ -10,7 +10,7 @@
 pkgname=libx32-curl
 _pkgname=curl
 pkgver=7.46.0
-pkgrel=1.1
+pkgrel=1.2
 pkgdesc="An URL retrieval utility and library (x32 ABI)"
 arch=('x86_64')
 url="http://curl.haxx.se"
@@ -64,6 +64,6 @@ package() {
 
   # devel
   find "${pkgdir}/usr/include/curl" -type f -not -name curlbuild.h -delete
-  install -Dm644 "${srcdir}/curlbuild-stub.h" "${pkgdir}/usr/include/_$pkgname/curlbuild-stub.h"
+  install -Dm644 "${srcdir}/curlbuild-stub.h" "${pkgdir}/usr/include/$_pkgname/curlbuild-stub.h"
   mv "$pkgdir/usr/include/curl/curlbuild.h" "$pkgdir/usr/include/$_pkgname/curlbuild-x32.h"
 }
