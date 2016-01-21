@@ -1,0 +1,42 @@
+diff --git a/plugins/rack/uwsgiplugin.py b/plugins/rack/uwsgiplugin.py
+index 2375bc9..b908417 100644
+--- a/plugins/rack/uwsgiplugin.py
++++ b/plugins/rack/uwsgiplugin.py
+@@ -10,13 +10,14 @@ except:
+ rbconfig = 'Config'
+ 
+ version = os.popen(RUBYPATH + " -e \"print RUBY_VERSION\"").read().rstrip()
+-v = version.split('.')
+ 
+ GCC_LIST = ['rack_plugin', 'rack_api']
+ 
+-if (v[0] == '1' and v[1] == '9') or v[0] >= '2':
++if version >= '1.9':
+     CFLAGS = os.popen(RUBYPATH + " -e \"require 'rbconfig';print RbConfig::CONFIG['CFLAGS']\"").read().rstrip().split()
+     CFLAGS.append('-DRUBY19')
++    if version >= '2.0':
++        CFLAGS.append('-DRUBY20')
+     CFLAGS.append('-Wno-unused-parameter')
+     rbconfig = 'RbConfig'	 
+ else:
+diff --git a/plugins/ruby19/uwsgiplugin.py b/plugins/ruby19/uwsgiplugin.py
+index 4f35984..156018f 100644
+--- a/plugins/ruby19/uwsgiplugin.py
++++ b/plugins/ruby19/uwsgiplugin.py
+@@ -10,13 +10,14 @@ except:
+ rbconfig = 'Config'
+ 
+ version = os.popen(RUBYPATH + " -e \"print RUBY_VERSION\"").read().rstrip()
+-v = version.split('.')
+ 
+ GCC_LIST = ['../rack/rack_plugin', '../rack/rack_api']
+ 
+-if v[0] == '1' and v[1] == '9':
++if version >= '1.9':
+     CFLAGS = os.popen(RUBYPATH + " -e \"require 'rbconfig';print RbConfig::CONFIG['CFLAGS']\"").read().rstrip().split()
+     CFLAGS.append('-DRUBY19')
++    if version >= '2.0':
++        CFLAGS.append('-DRUBY20')
+     CFLAGS.append('-Wno-unused-parameter')
+     rbconfig = 'RbConfig'	 
+ else:

@@ -1,0 +1,16 @@
+[Unit]
+Description=uWSGI service unit (x32 ABI)
+After=syslog.target
+
+[Service]
+ExecStart=/usr/bin/uwsgi-x32 --ini /etc/uwsgi/%I.ini
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStop=/bin/kill -INT $MAINPID
+Restart=always
+Type=notify
+StandardError=syslog
+NotifyAccess=all
+KillSignal=SIGQUIT
+
+[Install]
+WantedBy=multi-user.target

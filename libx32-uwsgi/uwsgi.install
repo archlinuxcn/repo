@@ -1,0 +1,9 @@
+post_update(){
+    echo "To use uwsgi-x32@.socket and uwsgi-x32@.service:"
+    echo "\tAll you need to do is put the name of your .ini file after the @ sign"
+    echo "\tYou can use either the .socket or .service, but if you use the .socket"
+    echo "\tuwsgi@<sameinifile>.service won't be started until the first time your http"
+    echo "\tserver touches the socket. You will also not need to specify the socket in"
+    echo "\tthe .ini file or in the .service file.  Systemd will handle listening to"
+    echo "\tthe socket for you."
+}
