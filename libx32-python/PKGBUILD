@@ -9,7 +9,7 @@
 _pkgbasename=python
 pkgname=libx32-python
 pkgver=3.5.1
-pkgrel=1.1
+pkgrel=1.2
 _pybasever=3.5
 pkgdesc="Next generation of the python high-level scripting language (x32 ABI)"
 arch=('x86_64')
@@ -28,10 +28,12 @@ options=('!makeflags')
 source=("http://www.python.org/ftp/python/${pkgver%rc*}/Python-${pkgver}.tar.xz"
         pyconfig-stub.h
         venv-x32.patch
+        site.py.patch
         dont-make-libpython-readonly.patch)
 sha1sums=('0186da436db76776196612b98bb9c2f76acfe90e'
           '74e5b55b394b1dfe5c430734e2ce049d595fb50f'
           'af6b854349f4992892471b9cb363e8a6ce19ea6b'
+          'f0fe25082c2b080dccf19400fe998d97f3adf5a4'
           'c22b24324b8e53326702de439c401d97927ee3f2')
 
 prepare() {
@@ -42,6 +44,9 @@ prepare() {
 
   # x32 venv
   patch -p1 -i ../venv-x32.patch
+
+  # site.py
+  patch -p1 -i ../site.py.patch
 
   # FS#23997
   sed -i -e "s|^#.* /usr/local/bin/python|#!/usr/bin/python-x32|" Lib/cgi.py

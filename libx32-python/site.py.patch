@@ -1,0 +1,18 @@
+diff -ru Python-3.5.1/Lib/site.py Python-3.5.1.changed/Lib/site.py
+--- Python-3.5.1/Lib/site.py	2015-12-07 09:39:08.000000000 +0800
++++ Python-3.5.1.changed/Lib/site.py	2016-01-19 23:20:14.729999998 +0800
+@@ -303,12 +303,12 @@
+         seen.add(prefix)
+ 
+         if os.sep == '/':
+-            sitepackages.append(os.path.join(prefix, "lib",
++            sitepackages.append(os.path.join(prefix, "libx32",
+                                         "python" + sys.version[:3],
+                                         "site-packages"))
+         else:
+             sitepackages.append(prefix)
+-            sitepackages.append(os.path.join(prefix, "lib", "site-packages"))
++            sitepackages.append(os.path.join(prefix, "libx32", "site-packages"))
+         if sys.platform == "darwin":
+             # for framework builds *only* we add the standard Apple
+             # locations.
