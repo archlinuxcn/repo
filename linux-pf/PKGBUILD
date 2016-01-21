@@ -65,7 +65,7 @@ _CPUSUFFIXES=( core2 k7 k8 k10 barcelona bobcat
 pkgname=('linux-pf')
 true && pkgname=('linux-pf' 'linux-pf-headers')
 pkgver=${_basekernel}.${_pfrel}
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 url="http://pf.natalenko.name/"
 license=('GPL2')
@@ -77,6 +77,7 @@ source=("ftp://www.kernel.org/pub/linux/kernel/v${_major}.x/linux-${_basekernel}
         'change-default-console-loglevel.patch'
         '0001-sdhci-revert.patch'
         'tpmdd-devel-v3-base-platform-fix-binding-for-drivers-without-probe-callback.patch'
+        'CVE-2016-0728.patch'
         "${_pfpatchhome}${_pfpatchname}.xz"     # the -pf patchset
         "git+$_aufs4"
 )
@@ -140,6 +141,9 @@ prepare() {
   # remove this when a Kconfig knob is made available by upstream
   # (relevant patch sent upstream: https://lkml.org/lkml/2011/7/26/227)
   patch -Np1 -i "${srcdir}/change-default-console-loglevel.patch"
+
+  # fixes #47820 CVE-2016-0728.patch
+  patch -Np1 -i "${srcdir}/CVE-2016-0728.patch"
 
   # end linux-ARCH patches
 
@@ -683,5 +687,6 @@ sha256sums=('401d7c8fef594999a460d10c72c5a94e9c2e1022f16795ec51746b0d165418b2'
             '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99'
             '5313df7cb5b4d005422bd4cd0dae956b2dadba8f3db904275aaf99ac53894375'
             'ab57037ecee0a425c612babdff47c831378bca0bff063a1308599989a350226d'
+            '03bed5b1c6ef34a917e218a46d38cd1347c5ab5693131996113c6cad275dc4e9'
             '1641d78646b64bad3887387402c63f997df5493694b1baa0653cac8ec4ae4328'
             'SKIP')
