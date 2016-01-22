@@ -3,6 +3,7 @@ Description=Advanced key-value store (x32 ABI)
 After=network.target
 
 [Service]
+Type=simple
 User=redis
 Group=redis
 ExecStart=/usr/bin/redis-server-x32 /etc/redis-x32.conf
@@ -14,7 +15,8 @@ ProtectSystem=full
 ProtectHome=true
 NoNewPrivileges=true
 RuntimeDirectory=redis-x32
-RuntimeDirectoryMode=700
+RuntimeDirectoryMode=755
+LimitNOFILE=10032
 
 [Install]
 WantedBy=multi-user.target
