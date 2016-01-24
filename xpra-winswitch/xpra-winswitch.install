@@ -1,5 +1,7 @@
 ## arg 1:  the new package version
 post_install() {
+    systemd-sysusers xpra.conf
+    systemd-tmpfiles --create xpra.conf
     update-desktop-database -q
 }
 
