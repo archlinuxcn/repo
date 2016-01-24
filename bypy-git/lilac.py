@@ -27,11 +27,8 @@ def pre_build():
 
   for line in edit_file('PKGBUILD'):
     # edit PKGBUILD
-    if 'setup.py' in line:
-        print('    sed -i "5,11 s/^/#/" setup.py')
-        print('    sed -i "17 s/^/#/" setup.py')
-        print('    version=`grep "__version__ =" bypy.py | sed "s/__version__ = //g"`')
-        print('    sed -i "s/bypy.__version__/$version/" setup.py')
+    if 'makedepends' in line:
+        print(line.replace(')',' \'python-pypandoc\')'))
     print(line)
 
 def post_build():
