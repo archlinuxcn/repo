@@ -9,7 +9,7 @@ _minor=4
 _basekernel=${_major}.${_minor}
 _srcname=linux-${_major}.${_minor}
 pkgbase=linux-pf
-_pfrel=1
+_pfrel=2
 _kernelname=-pf
 _pfpatchhome="http://pf.natalenko.name/sources/${_basekernel}/"
 _pfpatchname="patch-${_basekernel}${_kernelname}${_pfrel}"
@@ -65,7 +65,7 @@ _CPUSUFFIXES=( core2 k7 k8 k10 barcelona bobcat
 pkgname=('linux-pf')
 true && pkgname=('linux-pf' 'linux-pf-headers')
 pkgver=${_basekernel}.${_pfrel}
-pkgrel=2
+pkgrel=1
 arch=('i686' 'x86_64')
 url="http://pf.natalenko.name/"
 license=('GPL2')
@@ -344,11 +344,7 @@ package_linux-pf() {
  backup=("etc/mkinitcpio.d/${pkgbase}.preset")
  install='linux.install'
 
- #'
   cd "${srcdir}/linux-${_basekernel}"
-
-  # Remove undeeded aufs4 git tree
-  rm -fr aufs4 2>/dev/null
 
   # work around the AUR parser
   # This allows building cpu-optimized packages with according package names.
@@ -688,5 +684,5 @@ sha256sums=('401d7c8fef594999a460d10c72c5a94e9c2e1022f16795ec51746b0d165418b2'
             '5313df7cb5b4d005422bd4cd0dae956b2dadba8f3db904275aaf99ac53894375'
             'ab57037ecee0a425c612babdff47c831378bca0bff063a1308599989a350226d'
             '03bed5b1c6ef34a917e218a46d38cd1347c5ab5693131996113c6cad275dc4e9'
-            '1641d78646b64bad3887387402c63f997df5493694b1baa0653cac8ec4ae4328'
+            '61126a5579f299dd2c493fbaf9884ed5c604ed939b81b52f3f1b74d8f9f53d22'
             'SKIP')
