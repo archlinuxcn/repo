@@ -1,7 +1,7 @@
 # Maintainer: Lizao (Larry) Li <lzlarryli gmail com>
 
 pkgname=lib32-libcurl-gnutls
-pkgver=7.45.0
+pkgver=7.46.0
 pkgrel=0
 pkgdesc='An URL retrieval utility and library'
 arch=('x86_64')
@@ -17,7 +17,7 @@ replaces=()
 backup=()
 options=('!libtool' '!strip')
 source=("http://curl.haxx.se/download/curl-$pkgver.tar.gz"{,.asc})
-md5sums=('be21c6a190d65cfd3eeb749a3dce3947'
+md5sums=('230e682d59bf8ab6eca36da1d39ebd75'
          'SKIP')
 validpgpkeys=('914C533DF9B2ADA2204F586D78E11C6B279D5C91') # Daniel Stenberg
 
