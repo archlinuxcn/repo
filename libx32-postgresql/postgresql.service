@@ -22,5 +22,10 @@ ExecStop=  /usr/bin/pg_ctl-x32 -s -D ${PGROOT}/data stop -m fast
 # killing Postgres, so adjust it downward
 OOMScoreAdjust=-200
 
+# Additional security-related features
+PrivateTmp=true
+ProtectSystem=full
+NoNewPrivileges=true
+
 [Install]
 WantedBy=multi-user.target

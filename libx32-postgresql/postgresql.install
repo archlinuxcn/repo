@@ -11,9 +11,5 @@ post_install() {
 
 post_upgrade() {
   post_install $1
-  if [ $(vercmp $2 '9.2.1-2') -lt 0 ]; then
-    echo "Note: The Unix domain socket location has changed; be sure to"
-    echo "      restart any local applications using libpq.so."
-  fi
 }
 
