@@ -4,12 +4,12 @@
 # Maintainer: ava1ar <mail(at)ava1ar(dot)me>
 
 pkgname=btsync
-pkgver=2.2.7
+pkgver=2.3.0
 pkgrel=1
 pkgdesc="BitTorrent Sync - automatically sync files via secure, distributed technology"
 license=("custom:btsync")
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h')
-url="http://www.bittorrent.com/sync"
+url="https://www.getsync.com"
 install=btsync.install
 backup=('etc/btsync.conf')
 conflicts=('btsync-1.4')
@@ -22,11 +22,11 @@ source_x86_64=("BitTorrent-Sync_x64-${pkgver}-${pkgrel}.tar.gz::https://download
 sha1sums=('05038b03a673dd0207b2758a2e01db5d28c409d1'
           'd30deb7e41ba1d163b4a5e442b8d8118758d312a'
           'bf7d6bd7ffe2d23cce51a51e92fac3b82a7c87bb')
-sha1sums_i686=('84dd340f991477de731b36d09038cb64ec433d40')
-sha1sums_x86_64=('02baa8199f11e1bf322baf430607693e547741a2')
-sha1sums_arm=('04d716c6fbb73d6c93ad2ddecc845ca66132fe53')
-sha1sums_armv6h=('04d716c6fbb73d6c93ad2ddecc845ca66132fe53')
-sha1sums_armv7h=('04d716c6fbb73d6c93ad2ddecc845ca66132fe53')
+sha1sums_i686=('e6477b10b163a8b456bb1d61eb7d13d53b157fc8')
+sha1sums_x86_64=('3d4416139184b7e89c6dff9660e829214cd1a22f')
+sha1sums_arm=('d828193944dc865117ca87a1ac716819cc25a09f')
+sha1sums_armv6h=('d828193944dc865117ca87a1ac716819cc25a09f')
+sha1sums_armv7h=('d828193944dc865117ca87a1ac716819cc25a09f')
 
 package() {
 	# install main binary
