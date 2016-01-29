@@ -132,11 +132,11 @@ build() {
 }
 
 check() {
-  return
-  cd "$srcdir/llvm-$pkgver.src/build"
-  make check
-  make check-clang || warning \
-    'Ignoring Clang test failures caused by name mangling differences'
+  true
+  # cd "$srcdir/llvm-$pkgver.src/build"
+  # make check
+  # make check-clang || warning \
+  #   'Ignoring Clang test failures caused by name mangling differences'
 }
 
 package_llvm() {
