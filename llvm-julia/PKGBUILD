@@ -12,7 +12,7 @@
 pkgname=('llvm' 'llvm-libs' 'llvm-ocaml' 'lldb' 'clang' 'clang-analyzer'
          'clang-tools-extra' 'llvm-julia')
 pkgver=3.7.1
-pkgrel=1
+pkgrel=2
 _ocaml_ver=4.02.3
 arch=('i686' 'x86_64')
 url="http://llvm.org/"
@@ -36,6 +36,7 @@ source=(http://llvm.org/releases/$pkgver/llvm-$pkgver.src.tar.xz
         0001-New-MSan-mapping-layout-compiler-rt-part.patch
         llvm-3.7.1.patch
         llvm-3.7.1_2.patch
+        llvm-3.7.1_3.patch
         llvm-Config-llvm-config.h)
 sha256sums=('be7794ed0cec42d6c682ca8e3517535b54555a3defabec83554dbc74db545ad5'
             '56e2164c7c2a1772d5ed2a3e57485ff73ff06c97dff12edbeea1acc4412b0674'
@@ -51,6 +52,7 @@ sha256sums=('be7794ed0cec42d6c682ca8e3517535b54555a3defabec83554dbc74db545ad5'
             'f44e8fe3cef9b6f706d651f443922261e1dcf53bcaabdd0ac7edb1758e4bc44d'
             '94955c3ff3a53651317c9c6a5f3eb2aa6079e837f06b62755dd4878e560d0386'
             '0be9c28768b8aa0a4c6dfeffd2450119555be792f43ba4bdbce82a613d748e52'
+            'c276f41690de0f38dc1cd2e0d1f8cb318f7f8f2f1155659027ef140c4a22f1f7'
             'baea0a0f7fe956ed94025352098fc1d49eec2badc97b868fed3a23b4c0847c8c')
 
 prepare() {
@@ -68,6 +70,7 @@ prepare() {
 
   patch -p1 < ../llvm-3.7.1.patch
   patch -p1 < ../llvm-3.7.1_2.patch
+  patch -p1 < ../llvm-3.7.1_3.patch
 
   # Backport LLVM_LINK_LLVM_DYLIB option
   # https://bugs.archlinux.org/task/46392
