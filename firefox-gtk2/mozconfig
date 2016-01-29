@@ -1,0 +1,39 @@
+. $topsrcdir/browser/config/mozconfig
+
+ac_add_options --prefix=/usr
+ac_add_options --libdir=/usr/lib
+ac_add_options --enable-release
+ac_add_options --enable-gold
+ac_add_options --enable-pie
+
+ac_add_options --enable-official-branding
+ac_add_options --enable-default-toolkit=cairo-gtk3
+
+# System libraries
+ac_add_options --with-system-nspr
+ac_add_options --with-system-nss
+ac_add_options --with-system-jpeg
+ac_add_options --with-system-zlib
+ac_add_options --with-system-bz2
+ac_add_options --with-system-png
+ac_add_options --with-system-libevent
+ac_add_options --with-system-libvpx
+ac_add_options --with-system-icu
+ac_add_options --enable-system-hunspell
+ac_add_options --enable-system-sqlite
+ac_add_options --enable-system-ffi
+# system cairo without layers acceleration results in choppy video playback
+#ac_add_options --enable-system-cairo
+ac_add_options --enable-system-pixman
+
+# Features
+ac_add_options --enable-startup-notification
+ac_add_options --enable-pulseaudio
+ac_add_options --disable-gstreamer
+
+ac_add_options --disable-crashreporter
+ac_add_options --disable-updater
+ac_add_options --disable-installer
+ac_add_options --disable-debug-symbols
+
+# vim:set ft=sh:
