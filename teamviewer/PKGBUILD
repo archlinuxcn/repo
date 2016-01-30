@@ -2,7 +2,7 @@
 
 pkgname=teamviewer
 pkgver=11.0.53191
-pkgrel=2.0
+pkgrel=2.1
 pkgdesc='All-In-One Software for Remote Support and Online Meetings'
 arch=('i686' 'x86_64')
 url='http://www.teamviewer.com'
@@ -23,8 +23,8 @@ depends_i686=(
 	'libxinerama'
 	'libxrender')
 install=teamviewer.install
-source_x86_64=("http://download.teamviewer.com/download/version_${pkgver%%.*}x/teamviewer_${pkgver}_amd64.deb")
-source_i686=("http://download.teamviewer.com/download/version_${pkgver%%.*}x/teamviewer_${pkgver}_i386.deb")
+source_x86_64=("https://download.teamviewer.com/download/version_${pkgver%%.*}x/teamviewer_${pkgver}_amd64.deb")
+source_i686=("https://download.teamviewer.com/download/version_${pkgver%%.*}x/teamviewer_${pkgver}_i386.deb")
 sha256sums_x86_64=('D624C93679A25B00013A13B74B51746EEEDE674A2C68746C574A086D79A08A48')
 sha256sums_i686=('E37F4FA053648366A73AC7AF684CEE8567F3D5EF580AC5F63CBC7A68DA6124FB')
 
