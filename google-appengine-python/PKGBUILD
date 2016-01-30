@@ -8,30 +8,34 @@
 # Contributor: Mikkel Oscar Lyderik <mikkeloscar@gmail.com>
 
 pkgname=google-appengine-python
-pkgver=1.9.30
-_zipver=$pkgver
+pkgver=1.9.31
+_zipver=${pkgver}
 pkgrel=1
 arch=(any)
 pkgdesc="Google App Engine SDK for Python"
-url=https://cloud.google.com/appengine/downloads
-license=(APACHE)
-depends=(python2)
-optdepends=(mysql-python
-	python-imaging=1.1.7
-	python2-numpy=1.6.1
-	pycrypto=2.6
-	python2-lxml=2.3
-	python2-django=1.4
-	python2-jinja=2.6
-	python2-markupsafe=0.15
-	python2-webapp2=2.3
-	python2-webob=1.1.1
-	python2-yaml=3.10)
-makedepends=(unzip)
+url=https://cloud.google.com/appengine/downloads#Google_App_Engine_SDK_for_Python
+license=('APACHE')
+depends=('python2>=2.7')
+optdepends=('mysql-python: MySQL DB API'
+  'python2-crypto=2.6: cryptography functions'
+  'python2-crcmod=1.7: generating CRC'
+  'python2-django=1.4: full-featured web framework'
+  'python2-jinja=2.6: templating'
+  'python2-lxml=2.3: python binding to libxml2 and libxslt'
+  'python2-matplotlib=1.2.0: 2D plotting'
+  'python2-markupsafe=0.15: XML/HTML/XHTML markup safe string'
+  'python2-numpy=1.6.1: array-processing'
+  'python2-pillow=1.1.7: creating and transforming images'
+  'python2-protorpc=1.0: framework for implementing HTTP-based RPC services'
+  'python2-pyamf=0.6.1: Action Message Format'
+  'python2-setuptools=0.6c11: package and module discovery'
+  'python2-webapp2=2.3: lightweight web framework'
+  'python2-webob=1.2.3: wrappers around WSGI request environment'
+  'python2-yaml=3.10: YAML serialization and deserialization')
 options=(!strip)
 install=install
 source=(https://storage.googleapis.com/appengine-sdks/featured/google_appengine_${_zipver}.zip)
-sha1sums=('2067595f45e1c40d621f6221348d4d03de91fff0')
+sha1sums=('b0981b32bffc06f7fd6d67651ef5e2aa027ccf65')
 noextract=(google_appengine_${_zipver}.zip)
 
 prepare() {
