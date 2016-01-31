@@ -2,8 +2,8 @@
 # Contributor: Ionut Biru <ibiru@archlinux.org>
 
 pkgname=lib32-libvpx
-pkgver=1.4.0
-pkgrel=4
+pkgver=1.5.0
+pkgrel=1
 pkgdesc='VP8 and VP9 codec'
 arch=('x86_64')
 url='http://www.webmproject.org/'
@@ -11,7 +11,7 @@ license=('BSD')
 depends=('lib32-gcc-libs' 'libvpx')
 makedepends=('gcc-multilib' 'git' 'yasm')
 source=("https://storage.googleapis.com/downloads.webmproject.org/releases/webm/libvpx-${pkgver}.tar.bz2")
-sha256sums=('f582d9b2d60a592a4a3d8c32965ca2d2167e9ade38c6c30bac8801ff66a118e4')
+sha256sums=('306d67908625675f8e188d37a81fbfafdf5068b09d9aa52702b6fbe601c76797')
 
 build() {
   cd libvpx-${pkgver}
@@ -24,11 +24,11 @@ build() {
     --prefix='/usr' \
     --libdir='/usr/lib32' \
     --target='x86-linux-gcc' \
-    --enable-pic \
+    --enable-vp{8,9} \
     --enable-postproc \
     --enable-runtime-cpu-detect \
     --enable-shared \
-    --enable-vp{8,9} \
+    --enable-pic \
     --disable-install-{bins,docs,srcs}
   make
 }
