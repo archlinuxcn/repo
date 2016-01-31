@@ -11,7 +11,7 @@ license=('GPL3')
 depends=('java-environment' 'bash')
 makedepends=('java-environment' 'java-web-start' 'gradle' 'gendesk' 'git')
 provides=('opsu')
-conflicts=('opsu')
+conflicts=('opsu-git')
 source=( ${pkgname}::git://github.com/itdelatrisu/opsu.git#tag=${pkgver}
          opsu.sh )
 sha512sums=('SKIP'
