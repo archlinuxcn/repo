@@ -1,4 +1,4 @@
-From 5854308481d5ef5aa41c5858c4c454ae58cb41b5 Mon Sep 17 00:00:00 2001
+From 712414404caf221fd6812f677f27a713c8c2fb8e Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Mon, 5 Oct 2015 21:56:16 -0400
 Subject: [PATCH] Create tbaa_gcframe and decorate all stores and loads from
@@ -9,18 +9,18 @@ Subject: [PATCH] Create tbaa_gcframe and decorate all stores and loads from
  1 file changed, 43 insertions(+)
 
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index c1ca8ad..23a996a 100644
+index fcc2f3b..a373d7d 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
-@@ -246,6 +246,7 @@ static MDNode* tbaa_sveclen;           // The len in a jl_svec_t
- static MDNode* tbaa_func;           // A jl_function_t
- static MDNode* tbaa_datatype;       // A jl_datatype_t
- static MDNode* tbaa_const;          // Memory that is immutable by the time LLVM can see it
-+static MDNode* tbaa_gcframe;        // A GC frame
+@@ -280,6 +280,7 @@ static MDNode *tbaa_sveclen;           // The len in a jl_svec_t
+ static MDNode *tbaa_func;           // A jl_function_t
+ static MDNode *tbaa_datatype;       // A jl_datatype_t
+ static MDNode *tbaa_const;          // Memory that is immutable by the time LLVM can see it
++static MDNode *tbaa_gcframe;        // A GC frame
  
- namespace llvm {
-     extern Pass *createLowerSimdLoopPass();
-@@ -3737,6 +3738,46 @@ static void clear_gc_frame(jl_gcinfo_t *gc)
+ // Basic DITypes
+ #ifdef LLVM37
+@@ -3792,6 +3793,46 @@ static void clear_gc_frame(jl_gcinfo_t *gc)
      il.erase(gc->last_gcframe_inst);
  }
  
@@ -67,15 +67,15 @@ index c1ca8ad..23a996a 100644
  static void
  emit_gcpops(jl_codectx_t *ctx)
  {
-@@ -3783,6 +3824,7 @@ static void finalize_gc_frame(jl_codectx_t *ctx)
+@@ -3838,6 +3879,7 @@ static void finalize_gc_frame(jl_codectx_t *ctx)
          builder.CreateStore(V_null, argTempi);
      }
      emit_gcpops(ctx);
 +    tbaa_decorate_gcframe(ctx);
  }
  
- static Function *gen_cfun_wrapper(jl_function_t *ff, jl_value_t *jlrettype, jl_tupletype_t *argt, int64_t isref)
-@@ -5232,6 +5274,7 @@ static void init_julia_llvm_env(Module *m)
+ // here argt does not include the leading function type argument
+@@ -5223,6 +5265,7 @@ static void init_julia_llvm_env(Module *m)
      tbaa_func = tbaa_make_child("jtbaa_func",tbaa_value);
      tbaa_datatype = tbaa_make_child("jtbaa_datatype",tbaa_value);
      tbaa_const = tbaa_make_child("jtbaa_const",tbaa_root,true);
@@ -84,5 +84,5 @@ index c1ca8ad..23a996a 100644
      // every variable or function mapped in this function must be
      // exported from libjulia, to support static compilation
 -- 
-2.5.3
+2.6.4
 
