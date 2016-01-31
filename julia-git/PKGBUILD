@@ -29,7 +29,7 @@ makedepends=('gcc-fortran' 'arpack' 'fftw' 'git' 'gmp' 'libgit2' 'libunwind'
 if ((USE_OPENLIBM)); then
     makedepends=("${makedepends[@]}" openlibm)
 fi
-options=('!emptydirs' 'staticlibs' 'debug' 'strip')
+options=('!emptydirs' 'staticlibs' 'debug' '!strip')
 source=('git://github.com/JuliaLang/julia'
         0001-Create-tbaa_gcframe-and-decorate-all-stores-and-load.patch)
 md5sums=('SKIP'
