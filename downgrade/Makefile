@@ -9,6 +9,6 @@ release:
 	rm v$(VERSION).tar.gz
 	git add .SRCINFO Makefile PKGBUILD
 	git commit -m "Release v$(VERSION)"
-	echo git push
+	git push
 
 .PHONY: release
