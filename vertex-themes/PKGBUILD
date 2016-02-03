@@ -3,7 +3,7 @@
 
 pkgname=vertex-themes
 pkgver=20150923
-pkgrel=2
+pkgrel=3
 pkgdesc='Vertex Gtk2, Gtk3, Metacity, Xfwm, Cinnamon and GNOME Shell themes (GNOME 3.18 version)'
 _gnomever=3.18
 _releasever=20150923
@@ -13,14 +13,14 @@ license=('GPL3')
 depends=('gtk-engine-murrine')
 conflicts=('vertex-themes-git')
 source=("${pkgname}-${_releasever}.tar.gz::https://github.com/horst3180/Vertex-theme/archive/${_releasever}.tar.gz")
-sha256sums=('8484edaf1e9324676a9ebe76c58bb46e0aacbe289a3ee40d01f717e8fde3eb51')
+sha256sums=('31efb28773d7502bb573fb3130016d98ee1f0aeffc74f39a83b72319f68dd4d3')
 
 build() {
-  cd Vertex-theme-${_releasever}
+  cd vertex-theme-${_releasever}
   ./autogen.sh --prefix=/usr --with-gnome=${_gnomever}
 }
 package() {
-  cd Vertex-theme-${_releasever}
+  cd vertex-theme-${_releasever}
 
   make DESTDIR="$pkgdir" install
   cd extra
