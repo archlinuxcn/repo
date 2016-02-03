@@ -19,7 +19,7 @@
 
 from lilaclib import *
 
-build_prefix = 'extra-x86_64'
+build_prefix = 'archlinuxcn-x86_64'
 depends = ['python3-xcpf', 'python3-xcgf']
 
 def pre_build():
