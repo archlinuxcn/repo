@@ -31,9 +31,11 @@ if ((USE_OPENLIBM)); then
 fi
 options=('!emptydirs' 'staticlibs' 'debug' '!strip')
 source=('git://github.com/JuliaLang/julia'
-        0001-Create-tbaa_gcframe-and-decorate-all-stores-and-load.patch)
+        0001-Create-tbaa_gcframe-and-decorate-all-stores-and-load.patch
+        0001-Fix-compilation-on-llvm-3.9.patch)
 md5sums=('SKIP'
-         '9f27c78e7d4e8494bed92a75d1c87aad')
+         '9f27c78e7d4e8494bed92a75d1c87aad'
+         'd683981883bc1d666ef05f9b6ece4b34')
 
 pkgver() {
   cd julia
@@ -48,6 +50,7 @@ prepare() {
   git clean -fdx
 
   patch -Np1 < ../0001-Create-tbaa_gcframe-and-decorate-all-stores-and-load.patch
+  patch -Np1 < ../0001-Fix-compilation-on-llvm-3.9.patch
 
   cd doc
 
