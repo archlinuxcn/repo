@@ -1,0 +1,20 @@
+--- src/Python-2.7.8/Lib/distutils/sysconfig.py~	2014-06-30 11:05:26.000000000 +0900
++++ src/Python-2.7.8/Lib/distutils/sysconfig.py	2014-08-24 02:16:19.561179848 +0900
+@@ -90,7 +90,7 @@
+                 # Include is located in the srcdir
+                 inc_dir = os.path.join(srcdir, "Include")
+             return inc_dir
+-        return os.path.join(prefix, "include", "python" + get_python_version())
++        return os.path.join(prefix, "lib32/python2.7/include", "python" + get_python_version())
+     elif os.name == "nt":
+         return os.path.join(prefix, "include")
+     elif os.name == "os2":
+@@ -120,7 +120,7 @@
+ 
+     if os.name == "posix":
+         libpython = os.path.join(prefix,
+-                                 "lib", "python" + get_python_version())
++                                 "lib32", "python" + get_python_version())
+         if standard_lib:
+             return libpython
+         else:

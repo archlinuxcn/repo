@@ -1,0 +1,37 @@
+--- src/Python-2.7.8/Makefile.pre.in~	2014-08-19 14:18:58.699646111 +0900
++++ src/Python-2.7.8/Makefile.pre.in	2014-08-19 15:15:04.127819358 +0900
+@@ -859,10 +859,10 @@
+ 	(cd $(DESTDIR)$(BINDIR); $(LN) -s python2$(EXE) $(PYTHON))
+ 	-rm -f $(DESTDIR)$(BINDIR)/python2$(EXE)
+ 	(cd $(DESTDIR)$(BINDIR); $(LN) -s python$(VERSION)$(EXE) python2$(EXE))
+-	-rm -f $(DESTDIR)$(BINDIR)/python2-config
+-	(cd $(DESTDIR)$(BINDIR); $(LN) -s python$(VERSION)-config python2-config)
+-	-rm -f $(DESTDIR)$(BINDIR)/python-config
+-	(cd $(DESTDIR)$(BINDIR); $(LN) -s python2-config python-config)
++	-rm -f $(DESTDIR)$(BINDIR)/python2$(EXE)-config
++	(cd $(DESTDIR)$(BINDIR); $(LN) -s python$(VERSION)$(EXE)-config python2$(EXE)-config)
++	-rm -f $(DESTDIR)$(BINDIR)/python$(EXE)-config
++	(cd $(DESTDIR)$(BINDIR); $(LN) -s python2$(EXE)-config python$(EXE)-config)
+ 	-test -d $(DESTDIR)$(LIBPC) || $(INSTALL) -d -m $(DIRMODE) $(DESTDIR)$(LIBPC)
+ 	-rm -f $(DESTDIR)$(LIBPC)/python2.pc
+ 	(cd $(DESTDIR)$(LIBPC); $(LN) -s python-$(VERSION).pc python2.pc)
+@@ -1052,7 +1052,7 @@
+ python-config: $(srcdir)/Misc/python-config.in
+ 	# Substitution happens here, as the completely-expanded BINDIR
+ 	# is not available in configure
+-	sed -e "s,@EXENAME@,$(BINDIR)/python$(VERSION)$(EXE)," < $(srcdir)/Misc/python-config.in >python-config
++	sed -e "s,@EXENAME@,$(BINDIR)/python$(VERSION)$(EXE)," < $(srcdir)/Misc/python-config.in >python$(EXE)-config
+ 
+ # Install the include files
+ INCLDIRSTOMAKE=$(INCLUDEDIR) $(CONFINCLUDEDIR) $(INCLUDEPY) $(CONFINCLUDEPY)
+@@ -1110,8 +1110,8 @@
+ 	$(INSTALL_DATA) Misc/python.pc $(DESTDIR)$(LIBPC)/python-$(VERSION).pc
+ 	$(INSTALL_SCRIPT) $(srcdir)/Modules/makesetup $(DESTDIR)$(LIBPL)/makesetup
+ 	$(INSTALL_SCRIPT) $(srcdir)/install-sh $(DESTDIR)$(LIBPL)/install-sh
+-	$(INSTALL_SCRIPT) python-config $(DESTDIR)$(BINDIR)/python$(VERSION)-config
+-	rm python-config
++	$(INSTALL_SCRIPT) python$(EXE)-config $(DESTDIR)$(BINDIR)/python$(VERSION)$(EXE)-config
++	rm python$(EXE)-config
+ 	@if [ -s Modules/python.exp -a \
+ 		"`echo $(MACHDEP) | sed 's/^\(...\).*/\1/'`" = "aix" ]; then \
+ 		echo; echo "Installing support files for building shared extension modules on AIX:"; \

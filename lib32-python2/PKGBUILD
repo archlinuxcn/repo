@@ -1,143 +1,106 @@
-# $Id: PKGBUILD 222924 2014-09-24 11:17:23Z fyan $
-# Maintainer: Felix Yan <felixonmars@gmail.com>
-# Contributor: Stéphane Gaudreault <stephane@archlinux.org>
-# Contributor: Allan McRae <allan@archlinux.org>
-# Contributor: Jason Chu <jason@archlinux.org>
+# Maintainer: FadeMind <fademind@gmail.com>
+# Contributor: Que Quotion <quequotion@bugmenot.com>
+# Contributor: Jameson Pugh <imntreal@gmail.com>
 
-pkgname=lib32-python2
-pkgver=2.7.8
-pkgrel=7
+_pkgbasename=python2
+pkgname=lib32-$_pkgbasename
+pkgver=2.7.11
+pkgrel=3
 _pybasever=2.7
-pkgdesc="A high-level scripting language"
-arch=('i686' 'x86_64')
+pkgdesc="A high-level scripting language (32 bit)"
+arch=('x86_64')
 license=('PSF')
 url="http://www.python.org/"
-depends=('lib32-bzip2' 'lib32-gdbm' 'lib32-openssl' 'lib32-zlib'
-  'lib32-expat' 'lib32-sqlite' 'lib32-libffi')
-makedepends=('lib32-tk' 'gcc-multilib' 'lib32-ncurses' 'lib32-readline')
-# makedepends=('lib32-tk' 'lib32-bluez-libs' 'gcc-multilib')
-optdepends=('lib32-tk: for IDLE'
-            'lib32-ncurses: for ncurses'
-            'lib32-readline: readline')
+depends=(lib32-{bzip2,db,expat,gdbm,libffi,openssl,sqlite3,zlib} "${_pkgbasename}>=${pkgver}")
+makedepends=('lib32-tk' 'gcc-multilib')
+optdepends=('lib32-tk: for IDLE')
 conflicts=('lib32-python<3')
-source=(http://www.python.org/ftp/python/${pkgver%rc?}/Python-${pkgver}.tar.xz
-  0001-fix-lib-path-and-compiler.patch)
-sha1sums=('9c6281eeace0c3646fa556c8087bb1b7e033c9c4'
-          '424dfe006adea9057dedae6c5654458f60de8c87')
+options=('!makeflags')
+source=("Python-${pkgver}.tar.xz::http://www.python.org/ftp/python/${pkgver%rc?}/Python-${pkgver}.tar.xz"
+        'python-config-32.patch'
+        'lib32-distutils-sysconfig.patch')
+sha256sums=('962b4c45af50124ea61f11a30deb4342fc0bc21126790fa1d7f6c79809413f46'
+            '227230f73a2144f997c8246576e514783749b4432b45256765eee0193864f1eb'
+            '54b58eb8d0083c9ff751763180e9951b776dfa0c65e6391b000c56a538e20ad9')
 
 prepare() {
-  cd Python-${pkgver}
+  cd "${srcdir}/Python-${pkgver}"
 
-  patch -Np1 < ../0001-fix-lib-path-and-compiler.patch
+  # Just how many places does one have to patch Python?
+  patch -Np2 < ../lib32-distutils-sysconfig.patch
 
-  # Temporary workaround for FS#22322
-  # See http://bugs.python.org/issue10835 for upstream report
-  sed -i "/progname =/s/python/python${_pybasever}-32/" Python/pythonrun.c
+  # Give the configuration script an extention
+  patch -Np2 < ../python-config-32.patch
 
-  # Enable built-in SQLite module to load extensions (fix FS#22122)
-  sed -i "/SQLITE_OMIT_LOAD_EXTENSION/d" setup.py
-
-  # FS#23997
-  sed -i -e "s|^#.* /usr/local/bin/python|#!/usr/bin/python2-32|" Lib/cgi.py
-
-  sed -i "s/python2.3/python2/g" Lib/distutils/tests/test_build_scripts.py \
-    Lib/distutils/tests/test_install_scripts.py
-
-  # Ensure that we are using the system copy of various libraries (expat, zlib and libffi),
-  # rather than copies shipped in the tarball
-  rm -r Modules/expat
-  rm -r Modules/zlib
-  rm -r Modules/_ctypes/{darwin,libffi}*
-
-  # clean up #!s
-  find . -name '*.py' | \
-    xargs sed -i "s|#[ ]*![ ]*/usr/bin/env python$|#!/usr/bin/env python2-32|"
-
-  # Workaround asdl_c.py error after we touched the shebangs
-  touch Include/Python-ast.h Python/Python-ast.c
+  # Fix hard-coded paths
+  sed -i "s|base}/lib|base}/lib32|g" "${srcdir}/Python-${pkgver}/Lib/sysconfig.py"
+  sed -i "s|/include|/lib32/python{py_version_short}/include|g" "${srcdir}/Python-${pkgver}/Lib/sysconfig.py"
+  sed -i "s|lib/|lib32/|g" "${srcdir}/Python-${pkgver}/Modules/getpath.c"
+  sed -i "s|base/lib|base/lib32|g" "${srcdir}/Python-${pkgver}/Lib/distutils/command/install.py"
+  sed -i "s|/include|/lib32/python{py_version_short}/include|g" "${srcdir}/Python-${pkgver}/Lib/distutils/command/install.py"
+  sed -i "s|prefix)/lib|prefix)/lib32|g" "${srcdir}/Python-${pkgver}/Makefile.pre.in"
 }
 
 build() {
-  cd "${srcdir}/Python-${pkgver}"
+    cd "${srcdir}/Python-${pkgver}"
+ 
+    # Temporary workaround for FS#22322
+    # See http://bugs.python.org/issue10835 for upstream report
+    sed -i "/progname =/s/python/python${_pybasever}-32/" Python/pythonrun.c
+ 
+    # Enable built-in SQLite3 module to load extensions (fix FS#22122)
+    sed -i "/SQLITE_OMIT_LOAD_EXTENSION/d" setup.py
+ 
+    # Ensure that we are using the system copy of various libraries (expat, zlib and libffi),
+    # rather than copies shipped in the tarball
+    rm -r Modules/expat
+    rm -r Modules/zlib
+    rm -r Modules/_ctypes/{darwin,libffi}*
 
-  export CC='gcc -m32'
-  export CXX='g++ -m32'
-  CFLAGS+=' -march=i686'
-  CXXFLAGS+=' -march=i686'
+    export CC='gcc -m32'
+    export CXX='g++ -m32'
+    export LDFLAGS='-m32'
+    export PKG_CONFIG_PATH='/usr/lib32/pkgconfig'
 
-  export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
-  export OPT="${CFLAGS}"
-  ./configure --prefix=/usr \
-    --enable-shared \
-    --with-threads \
-    --enable-ipv6 \
-    --enable-unicode=ucs4 \
-    --with-system-expat \
-    --with-system-ffi \
-    --with-dbmliborder=gdbm:ndbm \
-    --libdir=/usr/lib32 \
-    --libexecdir=/usr/lib32 \
-    CC='gcc -m32' \
-    CXX='g++ -m32'
+    export OPT="${CFLAGS}"
 
-  export PYTHONHOME=/usr/lib32
-  make
+    # Includes are also arch-specific, we need them to build things like lib32-gobject-introspection
+    ./configure --prefix=/usr --enable-shared --with-threads --enable-ipv6 \
+                --enable-unicode=ucs4 --with-system-expat --with-system-ffi \
+                --libdir=/usr/lib32 --libexecdir=/usr/lib32 --includedir=/usr/lib32/python${_pybasever}/include \
+                --exec_prefix=/usr/lib32/python${_pybasever}/ --bindir=/usr/bin --sbindir=/usr/sbin --with-suffix='-32'
+    make
 }
-
-# check() {
-#   # As of 2.7.7, 1 test failed:
-#   # test_uuid
-#   # Besides, test_thread disabled as it will stuck
-
-#   cd Python-${pkgver}
-#   LD_LIBRARY_PATH="${srcdir}/Python-${pkgver}":${LD_LIBRARY_PATH} \
-#     "${srcdir}/Python-${pkgver}/python" \
-#     -m test.regrtest -uall -x test_thread || warning "Tests failed"
-# }
-
+ 
 package() {
-  cd Python-${pkgver}
-  make DESTDIR="${pkgdir}" altinstall maninstall
+    cd "${srcdir}/Python-${pkgver}"
+ 
+    make DESTDIR=${pkgdir} altinstall
+ 
+    ln -sf ../../libpython${_pybasever}.so ${pkgdir}/usr/lib32/python${_pybasever}/config/libpython${_pybasever}.so
+ 
+    mv ${pkgdir}/usr/bin/smtpd.py $pkgdir/usr/lib32/python${_pybasever}/
+ 
+    # some useful "stuff"
+    install -dm755 ${pkgdir}/usr/lib32/python${_pybasever}/Tools/{i18n,scripts}
+    install -m755 Tools/i18n/{msgfmt,pygettext}.py  ${pkgdir}/usr/lib32/python${_pybasever}/Tools/i18n/
+    install -m755 Tools/scripts/{README,*py}        ${pkgdir}/usr/lib32/python${_pybasever}/Tools/scripts/
+    
+    # create symlinks
+    ln -s python2.7-32         ${pkgdir}/usr/bin/python2-32
+    ln -s python2.7-32-config  ${pkgdir}/usr/bin/python2-32-config
 
-  mv "${pkgdir}"/usr/bin/python${_pybasever} \
-    "${pkgdir}"/usr/bin/python${_pybasever}-32
-  mv "${pkgdir}"/usr/bin/python${_pybasever}-config \
-    "${pkgdir}"/usr/bin/python${_pybasever}-32-config
-  ln -sf python${_pybasever}-32 "${pkgdir}"/usr/bin/python2-32
-  ln -sf python${_pybasever}-32-config "${pkgdir}"/usr/bin/python2-32-config
+    # clean up #!s
+    find ${pkgdir}/usr/lib32/python2.7/ -name '*.py' | xargs sed -i "s|#[ ]*![ ]*/usr/bin/env python$|#!/usr/bin/env python2.7-32|"
+ 
+    # clean-up reference to build directory
+    sed -i "s#${srcdir}/Python-${pkgver}:##" ${pkgdir}/usr/lib32/python${_pybasever}/config/Makefile
+ 
+    # Clean up
+    rm -rf "${pkgdir}"/{etc,usr/{share,include}} # needs bin/
 
-  # FS#33954
-  ln -sf python-${_pybasever}.pc \
-    "${pkgdir}"/usr/lib32/pkgconfig/python2.pc
-
-  ln -sf ../../libpython${_pybasever}.so \
-    "${pkgdir}"/usr/lib32/python${_pybasever}/config/libpython${_pybasever}.so
-
-  mv "${pkgdir}"/usr/bin/smtpd.py "${pkgdir}"/usr/lib32/python${_pybasever}/
-
-  # some useful "stuff"
-  install -dm755 "${pkgdir}"/usr/lib32/python${_pybasever}/Tools/{i18n,scripts}
-  install -m755 Tools/i18n/{msgfmt,pygettext}.py \
-    "${pkgdir}"/usr/lib32/python${_pybasever}/Tools/i18n/
-  install -m755 Tools/scripts/{README,*py} \
-    "${pkgdir}"/usr/lib32/python${_pybasever}/Tools/scripts/
-
-  # fix conflicts with python
-  rm "${pkgdir}"/usr/bin/idle
-  rm "${pkgdir}"/usr/bin/pydoc
-  rm "${pkgdir}"/usr/bin/2to3
-
-  mv "${pkgdir}"/usr/include/python2.7 "${pkgdir}"/usr/include/python2.7-32
-  rm -rf "${pkgdir}"/usr/share/man
-
-  # clean up #!s
-  find ${pkgdir}/usr/lib32/python2.7/ -name '*.py' | \
-    xargs sed -i "s|#[ ]*![ ]*/usr/bin/env python$|#!/usr/bin/env python2|"
-
-  # clean-up reference to build directory
-  sed -i "s#${srcdir}/Python-${pkgver}:##" \
-    "${pkgdir}"/usr/lib32/python${_pybasever}/config/Makefile
-
-  # license
-  install -Dm644 LICENSE "${pkgdir}"/usr/share/licenses/${pkgname}/LICENSE
+    # Leave the python binary and configure script for depedants to find the headers
+    cd "${pkgdir}"/usr/bin
+    rm pydoc idle 2to3
 }
+
