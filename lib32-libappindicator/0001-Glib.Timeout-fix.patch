@@ -1,0 +1,33 @@
+From f949448c898b2428e146d18e0821fa242a7099f6 Mon Sep 17 00:00:00 2001
+From: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
+Date: Tue, 7 Oct 2014 17:21:42 -0400
+Subject: [PATCH 1/3] Glib.Timeout fix
+
+---
+ example/simple-client-vala.vala | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/example/simple-client-vala.vala b/example/simple-client-vala.vala
+index f8cd874..6d8d71b 100644
+--- a/example/simple-client-vala.vala
++++ b/example/simple-client-vala.vala
+@@ -20,6 +20,7 @@ You should have received a copy of the GNU General Public License along
+ with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+ 
++using GLib;
+ using Gtk;
+ using AppIndicator;
+ 
+@@ -104,7 +105,7 @@ class SimpleClient {
+ 			print(@"Got scroll event! delta: $delta, direction: $direction\n");
+ 		});
+ 
+-		Timeout.add_seconds(1, () => {
++		GLib.Timeout.add_seconds(1, () => {
+ 			percentage = (percentage + 1) % 100;
+ 			if (can_haz_label) {
+ 				ci.set_label(@"$(percentage+1)%", "");
+-- 
+2.1.2
+

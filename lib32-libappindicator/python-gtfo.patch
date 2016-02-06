@@ -1,6 +1,6 @@
-diff -rupN badv2/bindings/Makefile.am good/bindings/Makefile.am
---- badv2/bindings/Makefile.am  2012-07-11 19:28:34.000000000 +0200
-+++ good/bindings/Makefile.am	2012-12-15 11:26:57.000000000 +0100
+diff -rupN orig/bindings/Makefile.am patched/bindings/Makefile.am
+--- orig/bindings/Makefile.am	2014-11-10 17:29:35.000000000 +0100
++++ patched/bindings/Makefile.am	2016-02-03 15:05:47.040153479 +0100
 @@ -3,7 +3,6 @@ SUBDIRS =	\
  	vala
  else
@@ -9,19 +9,19 @@ diff -rupN badv2/bindings/Makefile.am good/bindings/Makefile.am
  	vala
  endif
  
-diff -rupN badv2/bindings/Makefile.in good/bindings/Makefile.in
---- badv2/bindings/Makefile.in	2012-07-11 19:29:07.000000000 +0200
-+++ good/bindings/Makefile.in	2012-12-15 11:27:45.000000000 +0100
-@@ -93,7 +93,7 @@ AM_RECURSIVE_TARGETS = $(RECURSIVE_TARGE
- 	distdir
+diff -rupN orig/bindings/Makefile.in patched/bindings/Makefile.in
+--- orig/bindings/Makefile.in	2016-02-03 15:04:25.949772207 +0100
++++ patched/bindings/Makefile.in	2016-02-03 15:06:18.366965150 +0100
+@@ -157,7 +157,7 @@ am__define_uniq_tagged_files = \
+   done | $(am__uniquify_input)`
  ETAGS = etags
  CTAGS = ctags
 -DIST_SUBDIRS = python vala mono
 +DIST_SUBDIRS = vala mono
+ am__DIST_COMMON = $(srcdir)/Makefile.in
  DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
  am__relativize = \
-   dir0=`pwd`; \
-@@ -301,7 +301,7 @@ target_alias = @target_alias@
+@@ -368,7 +368,7 @@ target_alias = @target_alias@
  top_build_prefix = @top_build_prefix@
  top_builddir = @top_builddir@
  top_srcdir = @top_srcdir@
@@ -30,15 +30,14 @@ diff -rupN badv2/bindings/Makefile.in good/bindings/Makefile.in
  @USE_GTK3_TRUE@SUBDIRS = vala $(am__append_1)
  all: all-recursive
  
-diff -rupN badv2/configure good/configure
---- badv2/configure	2012-07-11 19:29:06.000000000 +0200
-+++ good/configure	2012-12-15 11:28:15.000000000 +0100
-@@ -13904,17 +13904,17 @@ save_CPPFLAGS="$CPPFLAGS"
+diff -rupN orig/configure patched/configure
+--- orig/configure	2016-02-03 15:04:24.733099750 +0100
++++ patched/configure	2016-02-03 15:11:15.358290879 +0100
+@@ -14480,17 +14480,7 @@ save_CPPFLAGS="$CPPFLAGS"
  CPPFLAGS="$CPPFLAGS $PYTHON_INCLUDES"
  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
  /* end confdefs.h.  */
 -#include <Python.h>
-+include <Python.h>
  _ACEOF
 -if ac_fn_c_try_cpp "$LINENO"; then :
 -  { $as_echo "$as_me:${as_lineno-$LINENO}: result: found" >&5
@@ -49,19 +48,10 @@ diff -rupN badv2/configure good/configure
 -$as_echo "not found" >&6; }
 -as_fn_error $? "could not find Python headers" "$LINENO" 5
 -fi
-+#if ac_fn_c_try_cpp "$LINENO"; then :
-+#  { $as_echo "$as_me:${as_lineno-$LINENO}: result: found" >&5
-+#$as_echo "found" >&6; }
-+#
-+#else
-+#  { $as_echo "$as_me:${as_lineno-$LINENO}: result: not found" >&5
-+#$as_echo "not found" >&6; }
-+#as_fn_error $? "could not find Python headers" "$LINENO" 5
-+#fi
  rm -f conftest.err conftest.i conftest.$ac_ext
  CPPFLAGS="$save_CPPFLAGS"
  
-@@ -14358,7 +14358,7 @@ fi
+@@ -14934,7 +14924,7 @@ fi
  # Files
  ###########################
  
@@ -70,7 +60,7 @@ diff -rupN badv2/configure good/configure
  
  
  if test "x$has_mono" = "xtrue" ; then
-@@ -15437,8 +15437,6 @@ do
+@@ -16031,8 +16021,6 @@ do
      "src/appindicator-0.1.pc") CONFIG_FILES="$CONFIG_FILES src/appindicator-0.1.pc" ;;
      "src/appindicator3-0.1.pc") CONFIG_FILES="$CONFIG_FILES src/appindicator3-0.1.pc" ;;
      "bindings/Makefile") CONFIG_FILES="$CONFIG_FILES bindings/Makefile" ;;

@@ -1,0 +1,25 @@
+From 72de73f8d90fa54b884086dddf3b06a1d14b9e59 Mon Sep 17 00:00:00 2001
+From: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
+Date: Tue, 7 Oct 2014 17:22:16 -0400
+Subject: [PATCH 2/3] Fix mono-nunit pkgconfig name
+
+---
+ configure.ac | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index d131c9e..c8e480f 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -160,7 +160,7 @@ AC_ARG_ENABLE([mono-test],
+ 	[enable_mono_test=auto])
+ 
+ if test x"$enable_mono_test" != x"no" ; then
+-   PKG_CHECK_MODULES(NUNIT, nunit >= 2.4.7,
++   PKG_CHECK_MODULES(NUNIT, mono-nunit >= 2.4.7,
+       [have_nunit=yes],
+       [PKG_CHECK_MODULES(MONO_NUNIT, mono-nunit,
+          [have_nunit=yes],
+-- 
+2.1.2
+

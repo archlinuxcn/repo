@@ -1,0 +1,39 @@
+From c31b285b856fdf4a131baab5e0a2397a375ac24f Mon Sep 17 00:00:00 2001
+From: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
+Date: Tue, 7 Oct 2014 17:23:43 -0400
+Subject: [PATCH 3/3] Fix Mono assemblies directory
+
+---
+ bindings/mono/Makefile.am                  | 2 +-
+ bindings/mono/appindicator-sharp-0.1.pc.in | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/bindings/mono/Makefile.am b/bindings/mono/Makefile.am
+index 6f8e8a9..e1bd6e5 100644
+--- a/bindings/mono/Makefile.am
++++ b/bindings/mono/Makefile.am
+@@ -31,7 +31,7 @@ TARGET = \
+ 	$(DLLPOLICY1) \
+ 	$(POLICY1).config
+ 
+-assemblydir = $(libdir)/cli/appindicator-sharp-0.1
++assemblydir = $(libdir)/appindicator-sharp-0.1
+ assembly_DATA = $(TARGET)
+ 
+ CLEANFILES = \
+diff --git a/bindings/mono/appindicator-sharp-0.1.pc.in b/bindings/mono/appindicator-sharp-0.1.pc.in
+index f63c01e..ca09a6d 100644
+--- a/bindings/mono/appindicator-sharp-0.1.pc.in
++++ b/bindings/mono/appindicator-sharp-0.1.pc.in
+@@ -1,7 +1,7 @@
+ prefix=@prefix@
+ exec_prefix=@exec_prefix@
+ libdir=@libdir@
+-assemblies_dir=${prefix}/lib/cli/appindicator-sharp-0.1
++assemblies_dir=${prefix}/lib/appindicator-sharp-0.1
+ 
+ Name: appindicator-sharp
+ Description: application indicators for .NET
+-- 
+2.1.2
+
