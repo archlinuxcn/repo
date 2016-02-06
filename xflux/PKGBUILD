@@ -2,6 +2,7 @@
 # Contributor: Limao Luo <luolimao+AUR@gmail.com>
 # Contributor: Gadget3000 <gadget3000@msn.com>
 # Contributor: CaptainShanks <captainshanks@archlinux.us>
+# Contributor: deusstultus <deusstultus@gmail.com>
 
 pkgname=xflux
 pkgver=20130901
@@ -11,14 +12,24 @@ arch=('i686' 'x86_64')
 url="https://justgetflux.com/"
 license=('custom')
 depends=('gcc-libs' 'libxxf86vm' 'x-server')
-source=(COPYING)
+source=('f.lux-eula.txt' 'f.lux-eula.html::https://justgetflux.com/news/pages/eula/index.html')
 source_i686=('https://justgetflux.com/linux/xflux-pre.tgz')
 source_x86_64=('https://justgetflux.com/linux/xflux64.tgz')
-sha256sums=('1ae33693bd6865ee48656b4a4fe6ebbbd3bf588b9130d6fc38b162fed7e7b925')
+sha256sums=('1d989851f6f02a2eb280faec1e3bbb348ba9a5d1677da22fa89dfc02cb063030'
+            '76eaf1d3fba40574a344ca7e11d0a86de6dc5bfd0ba6e9d50ff2c08decc3ab06'
+)
 sha256sums_i686=('fda5d10c3ca16ba38eddc5fbdecebeccd607c4c95787b4379d1ab372760877b4')
 sha256sums_x86_64=('cc50158fabaeee58c331f006cc1c08fd2940a126e99d37b76c8e878ef20c2021')
 
+#EULA compliance
+#EULA agreement found in original form at https://justgetflux.com/news/pages/eula/
+prepare() {
+    cat $srcdir/f.lux-eula.txt
+    #read -p "Continue?"
+}
+
 package() {
     install -Dm775 $pkgname "$pkgdir"/usr/bin/$pkgname
-    install -Dm644 COPYING "$pkgdir"/usr/share/licenses/$pkgname/COPYING
+    install -Dm644 f.lux-eula.html "$pkgdir"/usr/share/licenses/$pkgname/f.lux-eula.html
+    install -Dm644 f.lux-eula.txt "$pkgdir"/usr/share/licenses/$pkgname/f.lux-eula.txt
 }
