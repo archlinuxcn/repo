@@ -1,8 +1,9 @@
-# Maintainer: Joris Steyn <jorissteyn@gmail.com>
+# Maintainer: brent s. <bts[at]square-r00t[dot]net>
+# Past maintainer: Joris Steyn <jorissteyn@gmail.com>
 # Contributor: Ondrej Kucera <ondrej.kucera@centrum.cz>
 
 pkgname=httping
-pkgver=2.3.4
+pkgver=2.4
 pkgrel=1
 pkgdesc="A 'ping'-like tool for http-requests"
 arch=(i686 x86_64)
@@ -12,7 +13,7 @@ optdepends=("ncurses"
 url=('http://www.vanheusden.com/httping/')
 license=('GPL')
 source=("http://www.vanheusden.com/httping/${pkgname}-${pkgver}.tgz")
-md5sums=('7a71ed513f9f22fe331b783a3d36767e')
+md5sums=('3b4d003276c1346c32629b65262dfd1e')
 
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
