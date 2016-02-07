@@ -1,56 +1,35 @@
-# Maintainer: fand <fandrieu@gmail.com>
+# Maintainer: Frederik Schwan <frederik dot schwan at linux dot com>
+# Contributor: fand <fandrieu@gmail.com>
+
 pkgname=xfce4-taskbar-plugin
 pkgver=20130504
-pkgrel=1
-pkgdesc="Taskbar plugin which mimicks the Windows 7 taskbar (pinning applications, etc)"
+pkgrel=2
+pkgdesc='Taskbar plugin which mimicks the Windows 7 taskbar (pinning applications, etc)'
 arch=('i686' 'x86_64')
-url="http://git.xfce.org/panel-plugins/xfce4-taskbar-plugin/"
+url='http://git.xfce.org/panel-plugins/xfce4-taskbar-plugin/'
 depends=('xfce4-panel>=4.4' 'libwnck' 'gtkhotkey')
-#deb: libgtk2.0-dev libexo-1-dev libxfce4ui-1-dev libxfce4util-dev libxfcegui4-dev libxfconf-0-dev xfce4-panel-dev libwnck-dev libgtkhotkey-dev libxfce4ui-1-dev
-makedepends=('pkgconfig' 'git')
+makedepends=('git')
 options=()
 license=('LGPL')
 install="${pkgname}.install"
-source=()
-md5sums=()
-
-_gitroot="git://git.xfce.org/panel-plugins/${pkgname}"
-_gitname=${pkgname}
-_gitbranch="master"
+source=("git://git.xfce.org/panel-plugins/${pkgname}")
+md5sums=('SKIP')
 
 pkgver() {
-  cd "$srcdir/$_gitname"
+  cd ${srcdir}/${pkgname}
   git log -1 --format="%cd" --date=short | sed 's|-||g'
 }
 
 build() {
-  cd "$srcdir"
-  msg "Connecting to GIT server...."
-
-  if [[ -d "$_gitname" ]]; then
-    cd "$_gitname" && git pull origin
-    msg "The local files are updated."
-  else
-    git clone "$_gitroot" "$_gitname"
-  fi
-
-  msg "GIT checkout done or server timeout"
-  msg "Starting build..."
-
-  rm -rf "$srcdir/$_gitname-build"
-  git clone "$srcdir/$_gitname" "$srcdir/$_gitname-build"
-  cd "$srcdir/$_gitname-build"
-
+  cd ${srcdir}/${pkgname}
   make
 }
 
 package() {
-  cd "$srcdir/$_gitname-build"
+  cd ${srcdir}/${pkgname}
   mkdir -p ${pkgdir}/usr/lib/xfce4/panel-plugins
   mkdir -p ${pkgdir}/usr/share/xfce4/panel/plugins
 
   cp -f libtaskbar.so   ${pkgdir}/usr/lib/xfce4/panel-plugins/
   cp -f taskbar.desktop ${pkgdir}/usr/share/xfce4/panel/plugins/
 }
-
-# vim:set ts=2 sw=2 et:
