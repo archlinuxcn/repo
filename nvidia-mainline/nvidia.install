@@ -1,5 +1,5 @@
 post_install() {
-    EXTRAMODULES='extramodules-4.4-mainline'
+    EXTRAMODULES='extramodules-4.5-mainline'
     depmod $(cat /usr/lib/modules/$EXTRAMODULES/version)
     echo 'In order to use nvidia module, reboot the system.'
 }
@@ -9,6 +9,6 @@ post_upgrade() {
 }
 
 post_remove() {
-    EXTRAMODULES='extramodules-4.4-mainline'
+    EXTRAMODULES='extramodules-4.5-mainline'
     depmod $(cat /usr/lib/modules/$EXTRAMODULES/version)
 }
