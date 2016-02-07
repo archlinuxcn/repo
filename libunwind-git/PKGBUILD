@@ -4,12 +4,11 @@
 # Contributor: keystone <phillip.marvin@gmail.com>
 
 # ALARM: Kevin Mihelich <kevin@archlinuxarm.org>
-#  - aarch64 support patch
 #  - build v5 with system libatomic_ops
 
 pkgname=libunwind-git
 pkgver=1.1.63.gc56fb8f
-pkgrel=1
+pkgrel=3
 pkgdesc='Portable and efficient C programming interface (API) to determine the call-chain of a program'
 arch=('i686' 'x86_64' 'aarch64')
 url='http://www.nongnu.org/libunwind/'
@@ -17,7 +16,7 @@ license=('GPL')
 depends=('glibc' 'xz')
 source=('git://git.savannah.nongnu.org/libunwind')
 md5sums=('SKIP')
-options=('debug' 'strip')
+options=('debug' '!strip')
 provides=(libunwind)
 conflicts=(libunwind)
 
@@ -37,15 +36,20 @@ build() {
   make
 }
 
-check() {
-  cd libunwind
+# check() {
+#   cd libunwind
 
-  # This function is ``supposed'' to fail. Upstream know, but haven't fixed it.
-  make check || return 0
-}
+#   # This function is ``supposed'' to fail. Upstream know, but haven't fixed it.
+#   make check || return 0
+# }
 
 package() {
   cd libunwind
 
   make DESTDIR="$pkgdir/" install
+  cat >> "$pkgdir/usr/include/libunwind.h" <<EOF
+#ifndef JL_UNW_HAS_FORMAT_IP
+#define JL_UNW_HAS_FORMAT_IP 1
+#endif
+EOF
 }
