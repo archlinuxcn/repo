@@ -103,8 +103,8 @@ build() {
   export CXX='g++ -flto'
   CFLAGS=${CFLAGS//-march=i686/-march=pentium4}
   CXXFLAGS=${CXXFLAGS//-march=i686/-march=pentium4}
-  export CFLAGS+=' -Wno-pedantic -Wno-clobbered -funwind-tables -fasynchronous-unwind-tables'
-  export CXXFLAGS+=' -Wno-pedantic -Wno-clobbered -funwind-tables -fasynchronous-unwind-tables'
+  export CFLAGS+=' -Wno-pedantic -Wno-clobbered -fasynchronous-unwind-tables'
+  export CXXFLAGS+=' -Wno-pedantic -Wno-clobbered -fasynchronous-unwind-tables'
 
   make "${julia_opts[@]}" -C base version_git.jl.phony
   make "${julia_opts[@]}" -C deps
