@@ -5,7 +5,7 @@
 # Contributor : ska <skatiger (at} gmail {dot) com> (From sublime-text-imfix)
 
 pkgname=('sublime-text-dev-imfix' 'sublime-text-dev-zh-cn' 'sublime-text-dev-zh-tw')
-pkgver=3.3083
+pkgver=3.3103
 pkgrel=1
 arch=('i686' 'x86_64')
 url="http://www.sublimetext.com/3"
@@ -19,44 +19,30 @@ changelog=README.md
 
 _pkgname=sublime_text_3
 _pkgname1="${_pkgname}_imfix"
-_rplexe=0
+_branchname="SublimeText-i18n-zh-master"
 
 install=${_pkgname1}.install
-noextract=("Default.zh_CN.sublime-package"
-           "Default.zh_TW.sublime-package")
 
-source=("https://raw.githubusercontent.com/Firef0x/SublimeText-i18n-zh/master/dist/any/zh_CN/Default.zh_CN.sublime-package"
-        "https://raw.githubusercontent.com/Firef0x/SublimeText-i18n-zh/master/dist/any/zh_TW/Default.zh_TW.sublime-package"
-        "https://raw.githubusercontent.com/Firef0x/SublimeText-i18n-zh/master/dist/any/desktop/${_pkgname}.desktop"
-        "https://raw.githubusercontent.com/Firef0x/SublimeText-i18n-zh/master/dist/any/desktop/${_pkgname1}.desktop"
+source=("${_branchname}.zip::https://github.com/farseerfc/SublimeText-i18n-zh/archive/master.zip"
         "LICENSE"
-        "https://raw.githubusercontent.com/Firef0x/SublimeText-i18n-zh/master/dist/any/zh_CN/LICENSE.zh_CN"
-        "https://raw.githubusercontent.com/Firef0x/SublimeText-i18n-zh/master/dist/any/zh_TW/LICENSE.zh_TW"
-        "${_pkgname1}.c"
         "${_pkgname}.sh"
         "${_pkgname1}.sh")
-source_i686=("http://c758482.r82.cf2.rackcdn.com/${_pkgname}_build_${pkgver:2}_x32.tar.bz2"
-             "https://raw.githubusercontent.com/Firef0x/SublimeText-i18n-zh/master/dist/i686/sublime_text.i686")
-source_x86_64=("http://c758482.r82.cf2.rackcdn.com/${_pkgname}_build_${pkgver:2}_x64.tar.bz2"
-               "https://raw.githubusercontent.com/Firef0x/SublimeText-i18n-zh/master/dist/x86_64/sublime_text.x86_64")
+source_i686=("https://download.sublimetext.com/${_pkgname}_build_${pkgver:2}_x32.tar.bz2")
+source_x86_64=("http://download.sublimetext.com/${_pkgname}_build_${pkgver:2}_x64.tar.bz2")
 
-md5sums=('b21c75fd6922ed383bf4b5ec0b62adb6'
-         'c13cc732b9007b205b2a6761f82f6564'
-         '208a4b2ee9c8740e0d022b8050cedcbc'
-         '540175c597fdb98364c944551a4d08f1'
-         'ee96c697ef707e92077d0c55ec14922a'
-         'f7e48316f800b0e1e0153111b1c80302'
-         '6d473f472e643abe3549730b9fbd2b10'
-         'b436432a6223795c14d4aeb91423ab91'
-         'fa22069242e91e9a7a9dc4023ebf9bf5'
-         '7be7d93a1062a9975f34661d66b72ff0')
-md5sums_i686=('d1be10594fe7093b1b43a888a48c838f'
-              '9e65dda3f3760bf80915f755f2183519')
-md5sums_x86_64=('5da998bea29f9ca02a60d2b3cfc46fea'
-                '901cd838b215f814e2f260a3bdfb6179')
+sha512sums=('dcdbe5c4aeea56c66f284ca0bd7bc9ff1b31e3e5f63cdc5ae694b90252a6606564e7defa5ad317025b11faa59f962a4d9cc2b3d4355ebd02edbced715892d6f4'
+            '54b356867e6699fe88130c183ec76ea631f4afeab1a15f37e9ecd460f726bc7c80f056fd57637c24a67b865522e9d3bb5156414fe3cc5d091be9e1f21ef0f31f'
+            '32023ae446a981cbf22c1e7c056d1bec76b1a8c4cba1a625d8314331c947ff3d12adaa24f267794f270de76a1170d19405a57100db1054760bfeeb29950bb5a0'
+            '3ed8d47663d6e825ff3321155a65e1afa691fea541b96500d11ac763c55741db5712a307f6695fdf5f6d09a71d195efea494736026612bac5d0e410bc1e43c1f')
+sha512sums_i686=('1ed5225be25208a2cd35a0ed6819aa01fd8253c40cf28b1f9408cceb86c67191afcd7cb519f1c04b8c6f0d0fd700a7de83447d343709da679901d22df2f910bf')
+sha512sums_x86_64=('b51f25c376c06b4261d9e797fb0374532d2fdf86c96af5a7cf0847cb6f7514a7ceda894a4e9b5c63efe0053f6651f52dced9f438a319ddc4991524199a5b65bc')
 
 build() {
-  gcc -shared -o libsublime-imfix.so `pkg-config --libs --cflags gtk+-2.0` -fPIC ${_pkgname1}.c
+  cp "${srcdir}/${_branchname}/dist/any/desktop/"* .
+  cp "${srcdir}/${_branchname}/dist/any/zh_CN/"* .
+  cp "${srcdir}/${_branchname}/dist/any/zh_TW/"* .
+  cp "${srcdir}/${_branchname}/src/fix/imfix/sublime_imfix.c" .
+  gcc -shared -o libsublime-imfix.so `pkg-config --libs --cflags gtk+-2.0` -fPIC sublime_imfix.c
 }
 
 _package_common() {
@@ -103,12 +89,6 @@ package_sublime-text-dev-imfix() {
 package_sublime-text-dev-zh-cn() {
   pkgdesc="Sophisticated text editor for code, HTML and prose, development build with Simplified Chinese translation and Fcitx input method support"
 
-  if [ ${_rplexe} -eq 1 ]; then
-    rm "${_pkgname}/sublime_text"
-    install -Dm755 sublime_text.${CARCH} \
-      ${_pkgname}/sublime_text
-  fi
-
   rm "${_pkgname}/Packages/Default.sublime-package"
   install -Dm644 Default.zh_CN.sublime-package \
     ${_pkgname}/Packages/Default.sublime-package
@@ -121,12 +101,6 @@ package_sublime-text-dev-zh-cn() {
 
 package_sublime-text-dev-zh-tw() {
   pkgdesc="Sophisticated text editor for code, HTML and prose, development build with Traditional Chinese translation and Fcitx input method support"
-
-  if [ ${_rplexe} -eq 1 ]; then
-    rm "${_pkgname}/sublime_text"
-    install -Dm755 sublime_text.${CARCH} \
-      ${_pkgname}/sublime_text
-  fi
 
   rm "${_pkgname}/Packages/Default.sublime-package"
   install -Dm644 Default.zh_TW.sublime-package \
