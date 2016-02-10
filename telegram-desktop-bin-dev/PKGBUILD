@@ -3,19 +3,36 @@
 # Contributor: agnotek <agnostic.sn [at]gmail.com>
 
 pkgname=telegram-desktop-bin-dev
-pkgver=0.9.19
+pkgver=0.9.21
 pkgrel=1
 _dev=1 # If it is a dev-only version, set this to 1
 pkgdesc="Official desktop version of Telegram messaging app - Static binaries, developement version"
 arch=('i686' 'x86_64')
 url="https://desktop.telegram.org"
 license=('GPL3')
-depends=('libx11' 'libgcrypt' 'libasyncns' 'libsndfile' 'libsystemd' 'libdbus' 'openal' 'libogg' 'opus' 'opusfile' 'portaudio' 'openssl' 'zlib' 'libexif' 'xz')
+depends=(
+	'libx11'
+	'libgcrypt'
+	'libasyncns'
+	'libsndfile'
+	'libsystemd'
+	'libdbus'
+	'openal'
+	'libogg'
+	'opus'
+	'opusfile'
+	'portaudio'
+	'openssl'
+	'zlib'
+	'libexif'
+	'xz'
+)
+
 optdepends=(
-			'libappindicator-gtk2: to hide Telegram in the tray bar (GTK2-based desktop environment)'
-			'libappindicator-gtk3: to hide Telegram in the tray bar (GTK3-based desktop environment)'
-			'libappindicator-sharp: to hide Telegram in the tray bar (Unity-based desktop environment)'
-			)
+	'libappindicator-gtk2: to hide Telegram in the tray bar (GTK2-based desktop environment)'
+	'libappindicator-gtk3: to hide Telegram in the tray bar (GTK3-based desktop environment)'
+	'libappindicator-sharp: to hide Telegram in the tray bar (Unity-based desktop environment)'
+)
 conflicts=('telegram-desktop' 'telegram-desktop-bin')
 provides=('telegram-desktop')
 replaces=('telegram-bin')
@@ -37,8 +54,8 @@ source_x86_64=('https://updates.tdesktop.com/tlinux/tsetup.'${pkgver}${_devsuffi
 sha256sums=('0f2a6e4c2b9b4ff5f4ddb628728be4cc5a419f79695c0151321a5f234099ee59'
             'e3e10fe8620bd4ed8fda41743ad844739757286eeecea5249cf1fcf21a8431bd'
             '4226167b476a75e844ddf0d429068e7e901bbde516810a7d4ca90f8405c01eef')
-sha256sums_i686=('ceefd8bcccfb821290da1bce22951774ea87e8432884504ef8b0477faddf25a5')
-sha256sums_x86_64=('ba986479dacc3017d5e0d7db1ffb300e8d7e4ca0573f7d4e36df4d29c4aa13a2')
+sha256sums_i686=('42cac8d5844d16c9d9cc22d0a82fa3eb51884d44ea0ae00d488a27b34bcb9e21')
+sha256sums_x86_64=('1ef9a28c85aa2e613aca06bcdbab3693900385aeec7d8664680f50e2c11ad31b')
 
 package() {
 
