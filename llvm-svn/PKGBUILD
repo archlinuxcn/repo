@@ -39,10 +39,7 @@ makedepends=(
 )
 
 # this is always the latest svn so debug info can be useful
-options=('staticlibs' '!strip')
-if [[ $CARCH =~ arm ]]; then
-    options=("${options[@]}" debug)
-fi
+options=('staticlibs' '!strip' debug)
 
 source=(
   "${_pkgname}::svn+http://llvm.org/svn/llvm-project/llvm/trunk"
