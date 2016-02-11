@@ -21,7 +21,7 @@ pkgname=(
 )
 _pkgname='llvm'
 
-pkgver=3.9.0svn_r260400
+pkgver=3.9.0svn_r260535
 pkgrel=1
 
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -189,7 +189,7 @@ build() {
         "../${_pkgname}"
 
   make
-  make ocaml_doc
+  # make ocaml_doc
 }
 
 package_llvm-svn() {
