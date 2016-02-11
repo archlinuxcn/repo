@@ -2,12 +2,12 @@
 
 pkgname=shadowsocks-qt5
 pkgver=2.6.1
-pkgrel=2
+pkgrel=3
 pkgdesc="A fast, reliable and cross-platform GUI fronted for Shadowsocks."
 arch=("i686" "x86_64")
 url="http://github.com/librehat/$pkgname"
 license=("GPL3")
-depends=("qt5-base>=5.2" "botan-1.10=1.10.12" "qrencode" "libqtshadowsocks>=1.8.4" "zbar" "libappindicator-active-gtk2")
+depends=("qt5-base>=5.2" "botan-1.10=1.10.12" "qrencode" "libqtshadowsocks>=1.8.4" "zbar" "libappindicator-activate-gtk2")
 makedepends=("qtchooser" "git" "make")
 provides=("$pkgname")
 conflicts=("$pkgname")
