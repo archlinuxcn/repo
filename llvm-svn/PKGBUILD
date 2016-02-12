@@ -21,7 +21,7 @@ pkgname=(
 )
 _pkgname='llvm'
 
-pkgver=3.9.0svn_r260535
+pkgver=3.9.0svn_r260631
 pkgrel=1
 
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -143,7 +143,7 @@ prepare() {
       -e 's|^\([[:blank:]]*DESTINATION[[:blank:]]\+\)docs/ocaml/html|\1share/doc/ocaml|' \
       -i docs/CMakeLists.txt
 
-  patch -Np1 < 0001-Export-function-to-clone-function-debug-info-and-aut.patch
+  patch -Np1 < "${srcdir}/0001-Export-function-to-clone-function-debug-info-and-aut.patch"
 
   mkdir -p "${srcdir}/build"
 }
