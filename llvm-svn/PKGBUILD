@@ -47,17 +47,14 @@ source=(
   'clang-tools-extra::svn+http://llvm.org/svn/llvm-project/clang-tools-extra/trunk'
   'compiler-rt::svn+http://llvm.org/svn/llvm-project/compiler-rt/trunk'
   'llvm-Config-llvm-config.h'
-  '0001-add-gcc-abi_tag-support.patch'
-  '0002-Fix-handling-of-abi_tag-attribute-on-namespaces.patch'
+  0001-Export-function-to-clone-function-debug-info-and-aut.patch
 )
 sha256sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
             '597dc5968c695bbdbb0eac9e8eb5117fcd2773bc91edf5ec103ecffffab8bc48'
-            'cea6130d231f17e3c98f12f4f7a308879fe69a2d49907127f4ad725d2f88ab6b'
-            '3d19adbd6fe0f4ec4511b7dd3db472c8019aa08b8970059892bd6761c51996c9')
-
+            'd7056e3025f9f527628a018d63894e7f250f5605921bc6a9f736143e962164c4')
 
 #
 # BEGIN INTERNAL VARIABLES AND FUNCTIONS
@@ -146,10 +143,7 @@ prepare() {
       -e 's|^\([[:blank:]]*DESTINATION[[:blank:]]\+\)docs/ocaml/html|\1share/doc/ocaml|' \
       -i docs/CMakeLists.txt
 
-  # https://llvm.org/bugs/show_bug.cgi?id=23529
-  # http://reviews.llvm.org/D12834
-  # patch -N -p1 -d tools/clang -i "${srcdir}/0001-add-gcc-abi_tag-support.patch"
-  # patch -N -p1 -d tools/clang -i "${srcdir}/0002-Fix-handling-of-abi_tag-attribute-on-namespaces.patch"
+  patch -Np1 < 0001-Export-function-to-clone-function-debug-info-and-aut.patch
 
   mkdir -p "${srcdir}/build"
 }
