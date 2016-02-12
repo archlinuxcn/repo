@@ -8,7 +8,7 @@ Add repo
 ```
 [archlinuxcn]
 SigLevel = Optional TrustedOnly
-Server = http://repo.archlinuxcn.org/$arch
+Server = https://cdn.repo.archlinuxcn.org/$arch
 ```
 to your /etc/pacman.conf .
 
