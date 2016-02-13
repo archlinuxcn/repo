@@ -20,7 +20,7 @@ pkgver() {
   cd "YouCompleteMe"
   echo $(git rev-list --count master).$(git rev-parse --short master)
 }
-pkgrel=2
+pkgrel=1
 pkgdesc="A code-completion engine for Vim"
 
 arch=('i686' 'x86_64')
@@ -44,10 +44,10 @@ source=('git+https://github.com/Valloric/YouCompleteMe.git'
         'git+https://github.com/vheon/JediHTTP.git'
         'git+https://github.com/Pylons/waitress.git'
         'git+https://github.com/nsf/gocode.git'
+        'git+https://github.com/Manishearth/godef.git'
         'git+https://github.com/nosami/OmniSharpServer.git'
         'git+https://github.com/icsharpcode/NRefactory.git'
         'git+https://github.com/jbevain/cecil.git'
-        'git+https://github.com/ternjs/tern.git'
         'git+https://github.com/jwilm/racerd.git')
 sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP'
             'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
@@ -109,6 +109,9 @@ build() {
   cd "$srcdir/YouCompleteMe/third_party/ycmd/third_party/gocode"
   pwd
   go build
+  cd "$srcdir/YouCompleteMe/third_party/ycmd/third_party/godef"
+  pwd
+  go build
 
   msg2 'Building Rust completer...' # BuildRacerd()
   cd "$srcdir/YouCompleteMe/third_party/ycmd/third_party/racerd"
@@ -116,7 +119,7 @@ build() {
   cargo build --release
 
   msg2 'Building Tern completer...' # SetUpTern()
-  cd "$srcdir/YouCompleteMe/third_party/ycmd/third_party/tern"
+  cd "$srcdir/YouCompleteMe/third_party/ycmd/third_party/tern_runtime"
   pwd
   npm install --production --python=python2
   # }}}
@@ -125,6 +128,7 @@ build() {
 package() {
   mkdir -p "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party/OmniSharpServer/OmniSharp/bin/Release"
   mkdir -p "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party/gocode"
+  mkdir -p "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party/godef"
   mkdir -p "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party/racerd/target/release"
 
   cp -r "$srcdir/YouCompleteMe/"{autoload,doc,plugin,python} \
@@ -139,6 +143,8 @@ package() {
 
   cp    "$srcdir/YouCompleteMe/third_party/ycmd/third_party/gocode/gocode" \
     "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party/gocode/gocode"
+  cp    "$srcdir/YouCompleteMe/third_party/ycmd/third_party/godef/godef" \
+    "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party/godef/godef"
   cp -r "$srcdir/YouCompleteMe/third_party/ycmd/third_party/OmniSharpServer/OmniSharp/bin/Release" \
     "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party/OmniSharpServer/OmniSharp/bin"
   cp    "$srcdir/YouCompleteMe/third_party/ycmd/third_party/racerd/target/release/racerd" \
