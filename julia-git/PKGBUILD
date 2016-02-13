@@ -47,7 +47,7 @@ prepare() {
   git reset --hard HEAD
   git clean -fdx
 
-  patch -Np1 < ../0001-Create-tbaa_gcframe-and-decorate-all-stores-and-load.patch
+  # patch -Np1 < ../0001-Create-tbaa_gcframe-and-decorate-all-stores-and-load.patch
 
   cd doc
 
@@ -106,13 +106,16 @@ build() {
   export CFLAGS+=' -Wno-pedantic -Wno-clobbered -fasynchronous-unwind-tables'
   export CXXFLAGS+=' -Wno-pedantic -Wno-clobbered -fasynchronous-unwind-tables'
 
-  make "${julia_opts[@]}" -C base version_git.jl.phony
-  make "${julia_opts[@]}" -C deps
-  if ((BUILD_EXTRA)); then
-      make "${julia_opts[@]}" release debug docs
-  else
+  (
+    ulimit -s 81920
+    make "${julia_opts[@]}" -C base version_git.jl.phony
+    make "${julia_opts[@]}" -C deps
+    if ((BUILD_EXTRA)); then
+        make "${julia_opts[@]}" release debug docs
+    else
       make "${julia_opts[@]}" release debug
-  fi
+    fi
+  )
 
   # Check to detect issues like JuliaLang/julia#13820
   usr/bin/julia -e '0'
