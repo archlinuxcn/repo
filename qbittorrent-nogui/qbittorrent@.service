@@ -1,0 +1,12 @@
+[Unit]
+Description=qbittorrent-nox Daemon
+Documentation=https://github.com/qbittorrent/qBittorrent/wiki
+After=network.target
+
+[Service]
+User=%i
+Type=forking
+ExecStart=/usr/bin/qbittorrent-nox --daemon --webui-port=8080
+
+[Install]
+WantedBy=multi-user.target
