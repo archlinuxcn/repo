@@ -7,5 +7,3 @@
 #else
 #error "Unknown word size"
 #endif
-// Enable ORCJIT in julia =)
-#define USE_ORCJIT

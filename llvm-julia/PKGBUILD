@@ -53,7 +53,7 @@ sha256sums=('be7794ed0cec42d6c682ca8e3517535b54555a3defabec83554dbc74db545ad5'
             '94955c3ff3a53651317c9c6a5f3eb2aa6079e837f06b62755dd4878e560d0386'
             '0be9c28768b8aa0a4c6dfeffd2450119555be792f43ba4bdbce82a613d748e52'
             'c276f41690de0f38dc1cd2e0d1f8cb318f7f8f2f1155659027ef140c4a22f1f7'
-            'baea0a0f7fe956ed94025352098fc1d49eec2badc97b868fed3a23b4c0847c8c')
+            'afa990310c8e2e6397ca4790f7e5ce773cd337df4bbfe1ef22db37bd87b7001f')
 
 prepare() {
   cd "$srcdir/llvm-$pkgver.src"
@@ -160,6 +160,12 @@ package_llvm() {
   mv "$pkgdir/usr/docs/ocaml/html" "$srcdir/ocaml.doc"
   rm -r "$pkgdir/usr/docs"
 
+  cat >> "$pkgdir/usr/include/llvm/Config/llvm-config.h" <<EOF
+// Enable ORCJIT in julia =)
+#ifndef USE_ORCJIT
+#  define USE_ORCJIT
+#endif
+EOF
   if [[ $CARCH == x86_64 ]]; then
     # Needed for multilib (https://bugs.archlinux.org/task/29951)
     # Header stub is taken from Fedora
