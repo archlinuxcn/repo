@@ -71,10 +71,10 @@ prepare() {
   git config submodule.third_party/JediHTTP.url "$srcdir/JediHTTP"
   git config submodule.third_party/waitress.url "$srcdir/waitress"
   git config submodule.third_party/gocode.url "$srcdir/gocode"
+  git config submodule.third_party/godef.url "$srcdir/godef"
   git config submodule.third_party/OmniSharpServer.url "$srcdir/OmniSharpServer"
   git config submodule.third_party/requests.url "$srcdir/requests"
   git config submodule.third_party/racerd.url "$srcdir/racerd"
-  git config submodule.third_party/tern.url "$srcdir/tern"
   git submodule update
 
   cd "$srcdir/YouCompleteMe/third_party/ycmd/third_party/JediHTTP"
@@ -138,7 +138,7 @@ package() {
   cp -r "$srcdir/YouCompleteMe/third_party/ycmd/"{ycmd,ycm_client_support.so,ycm_core.so,check_core_version.py,CORE_VERSION} \
     "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd"
 
-  cp -r "$srcdir/YouCompleteMe/third_party/ycmd/third_party/"{argparse,bottle,frozendict,JediHTTP,requests,tern,waitress} \
+  cp -r "$srcdir/YouCompleteMe/third_party/ycmd/third_party/"{argparse,bottle,frozendict,JediHTTP,requests,tern_runtime,waitress} \
     "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party"
 
   cp    "$srcdir/YouCompleteMe/third_party/ycmd/third_party/gocode/gocode" \
