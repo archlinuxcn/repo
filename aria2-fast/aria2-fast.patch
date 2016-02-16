@@ -1,71 +1,56 @@
---- ../aria2-1.19.1.orig/src/OptionHandlerFactory.cc	2015-09-27 23:09:47.000000000 +0800
-+++ ./src/OptionHandlerFactory.cc	2015-09-29 23:24:46.406091311 +0800
-@@ -507,8 +507,8 @@ std::vector<OptionHandler*> OptionHandle
-     OptionHandler* op(new NumberOptionHandler
-                       (PREF_MAX_CONNECTION_PER_SERVER,
-                        TEXT_MAX_CONNECTION_PER_SERVER,
--                       "1",
--                       1, 16,
-+                       "128",
-+                       1, -1,
-                        'x'));
+--- a/src/OptionHandlerFactory.cc
++++ b/src/OptionHandlerFactory.cc
+@@ -419,7 +419,7 @@ std::vector<OptionHandler*> OptionHandlerFactory::createOptionHandlers()
+   {
+     OptionHandler* op(new NumberOptionHandler(PREF_MAX_CONNECTION_PER_SERVER,
+                                               TEXT_MAX_CONNECTION_PER_SERVER,
+-                                              "1", 1, 16, 'x'));
++                                              "128", 1, -1, 'x'));
      op->addTag(TAG_BASIC);
-     op->addTag(TAG_FTP);
-@@ -573,8 +573,8 @@ std::vector<OptionHandler*> OptionHandle
-     OptionHandler* op(new UnitNumberOptionHandler
-                       (PREF_MIN_SPLIT_SIZE,
-                        TEXT_MIN_SPLIT_SIZE,
--                       "20M",
--                       1_m, 1_g,
-+                       "16K",
-+                       1_k, 1_g,
-                        'k'));
-     op->addTag(TAG_BASIC);
-     op->addTag(TAG_FTP);
-@@ -976,7 +976,7 @@ std::vector<OptionHandler*> OptionHandle
-     OptionHandler* op(new NumberOptionHandler
-                       (PREF_CONNECT_TIMEOUT,
-                        TEXT_CONNECT_TIMEOUT,
--                       "60",
-+                       "30",
-                        1, 600));
      op->addTag(TAG_FTP);
      op->addTag(TAG_HTTP);
-@@ -1027,7 +1027,7 @@ std::vector<OptionHandler*> OptionHandle
-     OptionHandler* op(new NumberOptionHandler
-                       (PREF_MAX_TRIES,
-                        TEXT_MAX_TRIES,
--                       "5",
-+                       "0",
-                        0, -1,
-                        'm'));
+@@ -480,7 +480,7 @@ std::vector<OptionHandler*> OptionHandlerFactory::createOptionHandlers()
+   }
+   {
+     OptionHandler* op(new UnitNumberOptionHandler(
+-        PREF_MIN_SPLIT_SIZE, TEXT_MIN_SPLIT_SIZE, "20M", 1_m, 1_g, 'k'));
++        PREF_MIN_SPLIT_SIZE, TEXT_MIN_SPLIT_SIZE, "4K", 1_k, 1_g, 'k'));
+     op->addTag(TAG_BASIC);
      op->addTag(TAG_FTP);
-@@ -1071,8 +1071,8 @@ std::vector<OptionHandler*> OptionHandle
-     OptionHandler* op(new UnitNumberOptionHandler
-                       (PREF_PIECE_LENGTH,
-                        TEXT_PIECE_LENGTH,
--                       "1M",
--                       1_m, 1_g));
-+                       "16K",
-+                       1_k, 1_g));
+     op->addTag(TAG_HTTP);
+@@ -791,7 +791,7 @@ std::vector<OptionHandler*> OptionHandlerFactory::createOptionHandlers()
+   }
+   {
+     OptionHandler* op(new NumberOptionHandler(
+-        PREF_CONNECT_TIMEOUT, TEXT_CONNECT_TIMEOUT, "60", 1, 600));
++        PREF_CONNECT_TIMEOUT, TEXT_CONNECT_TIMEOUT, "30", 1, 600));
+     op->addTag(TAG_FTP);
+     op->addTag(TAG_HTTP);
+     op->setInitialOption(true);
+@@ -862,7 +862,7 @@ std::vector<OptionHandler*> OptionHandlerFactory::createOptionHandlers()
+   }
+   {
+     OptionHandler* op(new UnitNumberOptionHandler(
+-        PREF_PIECE_LENGTH, TEXT_PIECE_LENGTH, "1M", 1_m, 1_g));
++        PREF_PIECE_LENGTH, TEXT_PIECE_LENGTH, "4k", 1_k, 1_g));
      op->addTag(TAG_ADVANCED);
      op->addTag(TAG_FTP);
      op->addTag(TAG_HTTP);
-@@ -1098,7 +1098,7 @@ std::vector<OptionHandler*> OptionHandle
-     OptionHandler* op(new NumberOptionHandler
-                       (PREF_RETRY_WAIT,
-                        TEXT_RETRY_WAIT,
--                       "0",
-+                       "4",
-                        0, 600));
+@@ -883,7 +883,7 @@ std::vector<OptionHandler*> OptionHandlerFactory::createOptionHandlers()
+   }
+   {
+     OptionHandler* op(
+-        new NumberOptionHandler(PREF_RETRY_WAIT, TEXT_RETRY_WAIT, "0", 0, 600));
++        new NumberOptionHandler(PREF_RETRY_WAIT, TEXT_RETRY_WAIT, "2", 0, 600));
      op->addTag(TAG_FTP);
      op->addTag(TAG_HTTP);
-@@ -1155,7 +1155,7 @@ std::vector<OptionHandler*> OptionHandle
-     OptionHandler* op(new NumberOptionHandler
-                       (PREF_SPLIT,
-                        TEXT_SPLIT,
--                       "5",
-+                       "8",
-                        1, -1,
-                        's'));
+     op->setInitialOption(true);
+@@ -928,7 +928,7 @@ std::vector<OptionHandler*> OptionHandlerFactory::createOptionHandlers()
+   }
+   {
+     OptionHandler* op(
+-        new NumberOptionHandler(PREF_SPLIT, TEXT_SPLIT, "5", 1, -1, 's'));
++        new NumberOptionHandler(PREF_SPLIT, TEXT_SPLIT, "8", 1, -1, 's'));
      op->addTag(TAG_BASIC);
+     op->addTag(TAG_FTP);
+     op->addTag(TAG_HTTP);
