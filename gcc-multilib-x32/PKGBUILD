@@ -1,4 +1,4 @@
-# $Id: PKGBUILD 153820 2015-12-21 11:06:03Z allan $
+# $Id: PKGBUILD 161514 2016-02-14 03:40:35Z allan $
 # Maintainer: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 # Contributor: Allan McRae <allan@archlinux.org>
 # x32 Maintainer: Fantix King <fantix.king@gmail.com>
@@ -10,8 +10,8 @@ pkgname=('gcc-multilib-x32' 'gcc-libs-multilib-x32' 'libx32-gcc-libs' 'gcc-fortr
 pkgver=5.3.0
 _pkgver=5
 _islver=0.15
-pkgrel=3.1
-#_snapshot=5-20150623
+pkgrel=4.1
+_snapshot=5-20160209
 pkgdesc="The GNU Compiler Collection for multilib with x32 ABI support"
 arch=('x86_64')
 license=('GPL' 'LGPL' 'FDL' 'custom')
@@ -20,11 +20,13 @@ makedepends=('binutils>=2.25' 'libmpc' 'gcc-ada-multilib' 'doxygen'
              'lib32-glibc>=2.22' 'libx32-glibc>=2.22')
 checkdepends=('dejagnu' 'inetutils')
 options=('!emptydirs')
-source=(ftp://gcc.gnu.org/pub/gcc/releases/gcc-${pkgver}/gcc-${pkgver}.tar.bz2
-        #ftp://gcc.gnu.org/pub/gcc/snapshots/${_snapshot}/gcc-${_snapshot}.tar.bz2
-        http://isl.gforge.inria.fr/isl-${_islver}.tar.bz2)
-md5sums=('c9616fd448f980259c31de613e575719'
-         '8428efbbc6f6e2810ce5c1ba73ecf98c')
+source=(#ftp://gcc.gnu.org/pub/gcc/releases/gcc-${pkgver}/gcc-${pkgver}.tar.bz2
+        ftp://gcc.gnu.org/pub/gcc/snapshots/${_snapshot}/gcc-${_snapshot}.tar.bz2
+        http://isl.gforge.inria.fr/isl-${_islver}.tar.bz2
+        Unlink-the-response-file.patch)
+md5sums=('499161c65b639aa5c12a14944582b7ec'
+         '8428efbbc6f6e2810ce5c1ba73ecf98c'
+         '1f4d4ef71004261376d26d5ba6a84499')
 
 if [ -n "${_snapshot}" ]; then
   _basedir=gcc-${_snapshot}
@@ -57,6 +59,9 @@ prepare() {
 
   # hack! - some configure tests for header files using "$CPP $CPPFLAGS"
   sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" {libiberty,gcc}/configure
+
+  # https://bugs.archlinux.org/task/47874 - commit f591a95d
+  patch -p1 -i $srcdir/Unlink-the-response-file.patch
 
   mkdir ${srcdir}/gcc-build
 }
