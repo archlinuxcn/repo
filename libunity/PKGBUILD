@@ -12,19 +12,17 @@ license=('LGPL')
 depends=('dee' 'gtk3' 'libdbusmenu-glib')
 makedepends=('bzr' 'gnome-common' 'gobject-introspection' 'intltool' 'vala')
 install="${pkgname}.install"
-source=("${pkgname}-${pkgver}::bzr+lp:${pkgname}#revision=312")
+source=("${pkgname}-${pkgver}::bzr+lp:${pkgname}#revision=318")
 sha256sums=('SKIP')
 
 build() {
   cd ${pkgname}-${pkgver}
-  find . -type f -exec sed -i 's/ListStore/Gtk.ListStore/' {} \;
   ./autogen.sh --prefix='/usr' --sysconfdir='/etc' --localstatedir='/var' --disable-static
   make
 }
 
 package() {
   cd ${pkgname}-${pkgver}
-
   make DESTDIR="${pkgdir}" install
 }
 
