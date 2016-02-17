@@ -8,7 +8,9 @@ from lilaclib import *
 
 depends=["dee"]
 
-build_prefix = 'extra-x86_64'
+# use archlinuxcn build prefix because libdbusmenu-glib is not managed by lilac
+# and will not update in the near future
+build_prefix = 'archlinuxcn-x86_64'
 pre_build = aur_pre_build
 post_build = aur_post_build
 
