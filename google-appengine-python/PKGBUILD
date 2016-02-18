@@ -8,7 +8,7 @@
 # Contributor: Mikkel Oscar Lyderik <mikkeloscar@gmail.com>
 
 pkgname=google-appengine-python
-pkgver=1.9.31
+pkgver=1.9.32
 _zipver=${pkgver}
 pkgrel=1
 arch=(any)
@@ -35,7 +35,7 @@ optdepends=('mysql-python: MySQL DB API'
 options=(!strip)
 install=install
 source=(https://storage.googleapis.com/appengine-sdks/featured/google_appengine_${_zipver}.zip)
-sha1sums=('b0981b32bffc06f7fd6d67651ef5e2aa027ccf65')
+sha1sums=('ad9c5552108afa5926cd80b452d18a108af22deb')
 noextract=(google_appengine_${_zipver}.zip)
 
 prepare() {
