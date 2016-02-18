@@ -6,7 +6,10 @@
 
 from lilaclib import *
 
-depends = ['libunity',
+depends = ['dee',
+           'libunity',
+           'libdbusmenu-gtk2',
+           ('libindicator', 'libindicator-gtk2'),
            ('libappindicator-activate', 'libappindicator-activate-gtk2')]
 
 build_prefix = 'extra-x86_64'
