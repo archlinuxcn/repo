@@ -1,6 +1,6 @@
 # Contributor: Maato <maato softwarebakery com>
 pkgname='thunar-dropbox'
-pkgver=0.2.0
+pkgver=0.2.1
 pkgrel=1
 pkgdesc="Plugin for thunar that adds context-menu items for dropbox."
 arch=('i686' 'x86_64')
@@ -10,7 +10,7 @@ depends=('thunar')
 makedepends=('pkg-config' 'python2')
 install=thunar-dropbox.install
 source=(http://www.softwarebakery.com/maato/files/thunar-dropbox/$pkgname-$pkgver.tar.bz2)
-md5sums=('7a88d3002953890643af86c18c7f2535')
+md5sums=('52bb2caa26afaf80835a56b9ad3d2155')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
