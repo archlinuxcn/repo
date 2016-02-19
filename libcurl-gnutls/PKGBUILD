@@ -3,14 +3,13 @@
 
 pkgname=libcurl-gnutls
 _pkgname=curl
-pkgver=7.46.0
+pkgver=7.47.0
 pkgrel=1
 pkgdesc="An URL retrieval utility and library"
 arch=('i686' 'x86_64')
 url="http://curl.haxx.se"
 license=('MIT')
 depends=('ca-certificates' 'libssh2' 'zlib' 'gnutls')
-conflicts=('libcurl-compat')
 options=('!libtool' '!strip')
 source=("http://curl.haxx.se/download/$_pkgname-$pkgver.tar.gz"
         curlbuild.h
@@ -23,7 +22,7 @@ source=("http://curl.haxx.se/download/$_pkgname-$pkgver.tar.gz"
         90_gnutls.patch
         99_nss.patch)
 
-md5sums=('230e682d59bf8ab6eca36da1d39ebd75'
+md5sums=('5109d1232d208dfd712c0272b8360393'
          '751bd433ede935c8fae727377625a8ae'
          'e6b1f326a81f4a21e829f0a7ce43619f'
          '5cadcf82367cef12738fc3b0ef27483f'
