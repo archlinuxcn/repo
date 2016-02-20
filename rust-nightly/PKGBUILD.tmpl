@@ -1,0 +1,83 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+{% autoescape None %}
+pkgname=(rust-nightly{% for x in stds %}
+         {{ x.name }}{% end %}
+        )
+pkgver={{version + '_' + version_date}}
+pkgrel=1
+pkgdesc="A safe, concurrent, practical language from Mozilla (nightly version)"
+arch=('i686' 'x86_64')
+url="https://www.rust-lang.org/"
+license=('MIT' 'Apache')
+validpgpkeys=('108F66205EAEB0AAA8DD5E1C85AB96E6FA1BE5FE')
+makedepends=('git')
+source=(
+        'https://static.rust-lang.org/dist/rustc-nightly-x86_64-unknown-linux-gnu.tar.gz'
+        'https://static.rust-lang.org/dist/rustc-nightly-x86_64-unknown-linux-gnu.tar.gz.asc'
+        'https://static.rust-lang.org/dist/rust-docs-nightly-x86_64-unknown-linux-gnu.tar.gz'
+        'https://static.rust-lang.org/dist/rust-docs-nightly-x86_64-unknown-linux-gnu.tar.gz.asc'
+{% for x in stds %}
+        {{ "'%s'" % x.url }}
+        {{ "'%s.asc'" % x.url }}{% end %}
+        'git://github.com/rust-lang/zsh-config')
+sha512sums=({% for _ in range(5 + len(stds) * 2) %}
+            'SKIP'{% end %})
+
+build() {
+  true
+}
+
+package_rust-nightly() {
+  depends=("rust-std-nightly-$CARCH-unknown-linux-gnu")
+  optdepends=('rust-docs-nightly: language and API documentation'
+              'vim-rust-git: support for Vim'
+{% for x in stds %}
+              {{ "'%s: cross compile for %s'" % (x.name, x.platform) }}{% end %}
+              'cargo-git: Rust package manager')
+  provides=(rust={{version}})
+  conflicts=(rust)
+  options=(staticlibs)
+
+  cd rustc-nightly-$CARCH-unknown-linux-gnu
+  ./install.sh --destdir="$pkgdir" --prefix=/usr --disable-ldconfig
+
+  install -Dm644 "$srcdir"/zsh-config/_rust "$pkgdir/usr/share/zsh/site-functions/_rust"
+
+  rm "$pkgdir"/usr/lib/rustlib/{components,manifest-rustc,rust-installer-version,install.log,uninstall.sh}
+  rm -r "$pkgdir/usr/share/doc"
+  cd "$pkgdir"/usr/lib
+  for so in *.so; do
+    rm $so
+    ln -s rustlib/"$CARCH"-unknown-linux-gnu/lib/$so .
+  done
+}
+
+package_rust-docs-nightly() {
+  pkgdesc="A safe, concurrent, practical language from Mozilla. (Language and API documentation, for nightly version)"
+  arch=('any')
+  options+=('!strip' '!emptydirs')
+  optdepends=('rust-nightly: to compile and run the programs you can write using this documentation')
+  provides=('rust-doc={{version}}')
+  conflicts=('rust-doc')
+
+  cd rust-docs-nightly-$CARCH-unknown-linux-gnu
+  ./install.sh --destdir="$pkgdir" --prefix=/usr
+
+  rm -r "$pkgdir"/usr/lib
+  chmod -R u=rwX,go=rX "$pkgdir"
+}
+
+{% for x in stds %}
+package_{{x.name}}(){
+  pkgdesc="A safe, concurrent, practical language from Mozilla. (standard library, for nightly version, for (cross-)compiling to and running on {{x.platform}})"
+  arch=('any')
+  options+=('!strip')
+{% if x.optdepends %}
+  optdepends=({{' '.join("'%s'" % y for y in x.optdepends)}}){% end %}
+
+  cd {{x.name}}
+  ./install.sh --destdir="$pkgdir" --prefix=/usr --disable-ldconfig
+  rm "$pkgdir"/usr/lib/rustlib/{components,manifest-*,rust-installer-version,install.log,uninstall.sh}
+  find "$pkgdir"/usr/lib -name '*.so' -exec chmod +x {} +
+}
+{% end %}

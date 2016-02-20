@@ -1,0 +1,162 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+
+pkgname=(rust-nightly
+         rust-std-nightly-arm-unknown-linux-gnueabihf
+         rust-std-nightly-armv7-unknown-linux-gnueabihf
+         rust-std-nightly-x86_64-unknown-linux-gnu
+         rust-std-nightly-i686-pc-windows-gnu
+         rust-std-nightly-x86_64-pc-windows-gnu
+        )
+pkgver=1.8.0_20160217
+pkgrel=1
+pkgdesc="A safe, concurrent, practical language from Mozilla (nightly version)"
+arch=('i686' 'x86_64')
+url="https://www.rust-lang.org/"
+license=('MIT' 'Apache')
+validpgpkeys=('108F66205EAEB0AAA8DD5E1C85AB96E6FA1BE5FE')
+makedepends=('git')
+source=(
+        'https://static.rust-lang.org/dist/rustc-nightly-x86_64-unknown-linux-gnu.tar.gz'
+        'https://static.rust-lang.org/dist/rustc-nightly-x86_64-unknown-linux-gnu.tar.gz.asc'
+        'https://static.rust-lang.org/dist/rust-docs-nightly-x86_64-unknown-linux-gnu.tar.gz'
+        'https://static.rust-lang.org/dist/rust-docs-nightly-x86_64-unknown-linux-gnu.tar.gz.asc'
+
+        'https://static.rust-lang.org/dist/rust-std-nightly-arm-unknown-linux-gnueabihf.tar.gz'
+        'https://static.rust-lang.org/dist/rust-std-nightly-arm-unknown-linux-gnueabihf.tar.gz.asc'
+        'https://static.rust-lang.org/dist/rust-std-nightly-armv7-unknown-linux-gnueabihf.tar.gz'
+        'https://static.rust-lang.org/dist/rust-std-nightly-armv7-unknown-linux-gnueabihf.tar.gz.asc'
+        'https://static.rust-lang.org/dist/rust-std-nightly-x86_64-unknown-linux-gnu.tar.gz'
+        'https://static.rust-lang.org/dist/rust-std-nightly-x86_64-unknown-linux-gnu.tar.gz.asc'
+        'https://static.rust-lang.org/dist/rust-std-nightly-i686-pc-windows-gnu.tar.gz'
+        'https://static.rust-lang.org/dist/rust-std-nightly-i686-pc-windows-gnu.tar.gz.asc'
+        'https://static.rust-lang.org/dist/rust-std-nightly-x86_64-pc-windows-gnu.tar.gz'
+        'https://static.rust-lang.org/dist/rust-std-nightly-x86_64-pc-windows-gnu.tar.gz.asc'
+        'git://github.com/rust-lang/zsh-config')
+sha512sums=(
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP')
+
+build() {
+  true
+}
+
+package_rust-nightly() {
+  depends=("rust-std-nightly-$CARCH-unknown-linux-gnu")
+  optdepends=('rust-docs-nightly: language and API documentation'
+              'vim-rust-git: support for Vim'
+
+              'rust-std-nightly-arm-unknown-linux-gnueabihf: cross compile for arm-unknown-linux-gnueabihf'
+              'rust-std-nightly-armv7-unknown-linux-gnueabihf: cross compile for armv7-unknown-linux-gnueabihf'
+              'rust-std-nightly-x86_64-unknown-linux-gnu: cross compile for x86_64-unknown-linux-gnu'
+              'rust-std-nightly-i686-pc-windows-gnu: cross compile for i686-pc-windows-gnu'
+              'rust-std-nightly-x86_64-pc-windows-gnu: cross compile for x86_64-pc-windows-gnu'
+              'cargo-git: Rust package manager')
+  provides=(rust=1.8.0)
+  conflicts=(rust)
+  options=(staticlibs)
+
+  cd rustc-nightly-$CARCH-unknown-linux-gnu
+  ./install.sh --destdir="$pkgdir" --prefix=/usr --disable-ldconfig
+
+  install -Dm644 "$srcdir"/zsh-config/_rust "$pkgdir/usr/share/zsh/site-functions/_rust"
+
+  rm "$pkgdir"/usr/lib/rustlib/{components,manifest-rustc,rust-installer-version,install.log,uninstall.sh}
+  rm -r "$pkgdir/usr/share/doc"
+  cd "$pkgdir"/usr/lib
+  for so in *.so; do
+    rm $so
+    ln -s rustlib/"$CARCH"-unknown-linux-gnu/lib/$so .
+  done
+}
+
+package_rust-docs-nightly() {
+  pkgdesc="A safe, concurrent, practical language from Mozilla. (Language and API documentation, for nightly version)"
+  arch=('any')
+  options+=('!strip' '!emptydirs')
+  optdepends=('rust-nightly: to compile and run the programs you can write using this documentation')
+  provides=('rust-doc=1.8.0')
+  conflicts=('rust-doc')
+
+  cd rust-docs-nightly-$CARCH-unknown-linux-gnu
+  ./install.sh --destdir="$pkgdir" --prefix=/usr
+
+  rm -r "$pkgdir"/usr/lib
+  chmod -R u=rwX,go=rX "$pkgdir"
+}
+
+
+package_rust-std-nightly-arm-unknown-linux-gnueabihf(){
+  pkgdesc="A safe, concurrent, practical language from Mozilla. (standard library, for nightly version, for (cross-)compiling to and running on arm-unknown-linux-gnueabihf)"
+  arch=('any')
+  options+=('!strip')
+
+
+  cd rust-std-nightly-arm-unknown-linux-gnueabihf
+  ./install.sh --destdir="$pkgdir" --prefix=/usr --disable-ldconfig
+  rm "$pkgdir"/usr/lib/rustlib/{components,manifest-*,rust-installer-version,install.log,uninstall.sh}
+  find "$pkgdir"/usr/lib -name '*.so' -exec chmod +x {} +
+}
+
+package_rust-std-nightly-armv7-unknown-linux-gnueabihf(){
+  pkgdesc="A safe, concurrent, practical language from Mozilla. (standard library, for nightly version, for (cross-)compiling to and running on armv7-unknown-linux-gnueabihf)"
+  arch=('any')
+  options+=('!strip')
+
+
+  cd rust-std-nightly-armv7-unknown-linux-gnueabihf
+  ./install.sh --destdir="$pkgdir" --prefix=/usr --disable-ldconfig
+  rm "$pkgdir"/usr/lib/rustlib/{components,manifest-*,rust-installer-version,install.log,uninstall.sh}
+  find "$pkgdir"/usr/lib -name '*.so' -exec chmod +x {} +
+}
+
+package_rust-std-nightly-x86_64-unknown-linux-gnu(){
+  pkgdesc="A safe, concurrent, practical language from Mozilla. (standard library, for nightly version, for (cross-)compiling to and running on x86_64-unknown-linux-gnu)"
+  arch=('any')
+  options+=('!strip')
+
+
+  cd rust-std-nightly-x86_64-unknown-linux-gnu
+  ./install.sh --destdir="$pkgdir" --prefix=/usr --disable-ldconfig
+  rm "$pkgdir"/usr/lib/rustlib/{components,manifest-*,rust-installer-version,install.log,uninstall.sh}
+  find "$pkgdir"/usr/lib -name '*.so' -exec chmod +x {} +
+}
+
+package_rust-std-nightly-i686-pc-windows-gnu(){
+  pkgdesc="A safe, concurrent, practical language from Mozilla. (standard library, for nightly version, for (cross-)compiling to and running on i686-pc-windows-gnu)"
+  arch=('any')
+  options+=('!strip')
+
+  optdepends=('mingw-w64-gcc')
+
+  cd rust-std-nightly-i686-pc-windows-gnu
+  ./install.sh --destdir="$pkgdir" --prefix=/usr --disable-ldconfig
+  rm "$pkgdir"/usr/lib/rustlib/{components,manifest-*,rust-installer-version,install.log,uninstall.sh}
+  find "$pkgdir"/usr/lib -name '*.so' -exec chmod +x {} +
+}
+
+package_rust-std-nightly-x86_64-pc-windows-gnu(){
+  pkgdesc="A safe, concurrent, practical language from Mozilla. (standard library, for nightly version, for (cross-)compiling to and running on x86_64-pc-windows-gnu)"
+  arch=('any')
+  options+=('!strip')
+
+  optdepends=('mingw-w64-gcc')
+
+  cd rust-std-nightly-x86_64-pc-windows-gnu
+  ./install.sh --destdir="$pkgdir" --prefix=/usr --disable-ldconfig
+  rm "$pkgdir"/usr/lib/rustlib/{components,manifest-*,rust-installer-version,install.log,uninstall.sh}
+  find "$pkgdir"/usr/lib -name '*.so' -exec chmod +x {} +
+}
+
