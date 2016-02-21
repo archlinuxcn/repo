@@ -7,8 +7,9 @@
 from lilaclib import *
 
 depends = ['dee',
-           'libunity',
+           ("libdbusmenu", "libdbusmenu-glib"),
            ('libdbusmenu', 'libdbusmenu-gtk2'),
+           'libunity',
            ('libindicator', 'libindicator-gtk2'),
            ('libappindicator-activate', 'libappindicator-activate-gtk2')]
 
