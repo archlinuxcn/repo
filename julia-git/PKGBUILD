@@ -110,8 +110,9 @@ build() {
     ulimit -s 81920
     make "${julia_opts[@]}" -C base version_git.jl.phony
     make "${julia_opts[@]}" -C deps
+    make "${julia_opts[@]}" julia-ui-release
     if ((BUILD_EXTRA)); then
-        make "${julia_opts[@]}" release debug docs
+      make "${julia_opts[@]}" release debug docs
     else
       make "${julia_opts[@]}" release debug
     fi
