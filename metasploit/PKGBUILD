@@ -3,7 +3,7 @@
 # Contributor: Tobias Veit - nIcE <m.on.key.tobi[at]gmail[dot]com>
 
 pkgname=metasploit
-pkgver=4.11.10
+pkgver=4.11.11
 pkgrel=1
 pkgdesc="An advanced open-source platform for developing, testing, and using exploit code"
 url="https://www.metasploit.com/"
@@ -17,7 +17,7 @@ optdepends=(
 options=('!strip')
 install="${pkgname}.install"
 source=(${pkgname}-${pkgver}.tar.gz::https://github.com/rapid7/metasploit-framework/archive/${pkgver}.tar.gz)
-sha512sums=('f5a930261e0f5e879331ca09ee8f95823f45b233c18a783316b00e732b1ffed61cdb7f7d2f4985075d687f90cd8c6ad261cb62ec6124907b8e39f03602ee292c')
+sha512sums=('cc0a508945672c77ec1ad6bcb176c4aa9d51641ea27f7fe70cd2d3cc40a2e1889c7136bbbe930c77d6deaadb61fd0945b3ad15c925feefde57881b8ef61c4565')
 
 package() {
   cd ${pkgname}-framework-${pkgver}
@@ -30,7 +30,7 @@ package() {
     echo "BUNDLE_GEMFILE=/opt/${pkgname}/Gemfile bundle exec ruby /opt/${pkgname}/`basename "${f}"` \"\$@\"" > ${_msffile}
     chmod 755 ${_msffile}
   done
-  
+
   install -Dm 644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
   install -Dm 644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
 }
