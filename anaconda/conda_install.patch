@@ -1,5 +1,5 @@
---- a/pkgs/conda-3.18.8-py35_0/lib/python3.5/site-packages/conda/install.py	2015-12-14 20:17:29.635535906 +0100
-+++ b/pkgs/conda-3.18.8-py35_0/lib/python3.5/site-packages/conda/install.py	2015-12-14 20:17:29.638869204 +0100
+--- a/pkgs/conda-3.19.1-py35_0/lib/python3.5/site-packages/conda/install.py	2016-02-22 12:40:36.995269570 +0100
++++ b/pkgs/conda-3.19.1-py35_0/lib/python3.5/site-packages/conda/install.py	2016-02-22 12:44:41.749333978 +0100
 @@ -267,21 +267,23 @@
      return res
  
@@ -28,7 +28,7 @@
      else:
          sys.exit("Invalid mode:" % mode)
  
-@@ -588,7 +590,7 @@
+@@ -589,7 +591,7 @@
  def load_meta(prefix, dist):
      return is_linked(prefix, dist)
  
@@ -37,7 +37,7 @@
      '''
      Set up a package in a specified (environment) prefix.  We assume that
      the package has been extracted (using extract() above).
-@@ -641,7 +643,7 @@
+@@ -642,7 +644,7 @@
          for f in sorted(has_prefix_files):
              placeholder, mode = has_prefix_files[f]
              try:
@@ -46,7 +46,7 @@
              except PaddingError:
                  sys.exit("ERROR: placeholder '%s' too short in: %s\n" %
                           (placeholder, dist))
-@@ -769,6 +771,10 @@
+@@ -787,6 +789,10 @@
                   default=sys.prefix,
                   help="prefix (defaults to %default)")
  
@@ -54,39 +54,30 @@
 +                 action="store",
 +                 help="install dir (defaults to prefix)")
 +
-     p.add_option('--pkgs-dir',
-                  action="store",
-                  default=join(sys.prefix, 'pkgs'),
-@@ -798,9 +804,14 @@
+     p.add_option('-v', '--verbose',
+                  action="store_true")
  
-     pkgs_dir = opts.pkgs_dir
+@@ -797,9 +803,14 @@
+     logging.basicConfig()
+ 
      prefix = opts.prefix
 +    if not opts.instdir:
 +        instdir = prefix
 +    else:
 +        instdir = opts.instdir
+     pkgs_dir = join(prefix, 'pkgs')
      if opts.verbose:
-         print("pkgs_dir: %r" % pkgs_dir)
-         print("prefix  : %r" % prefix)
+         print("prefix: %r" % prefix)
 +        print("instdir : %r" % instdir)
  
-     if opts.list:
-         pprint(sorted(linked(prefix)))
+     if opts.file:
+         idists = list(yield_lines(join(prefix, opts.file)))
 @@ -815,7 +826,7 @@
-         for dist in dists:
-             if opts.verbose or linktype == LINK_COPY:
-                 print("linking: %s" % dist)
--            link(pkgs_dir, prefix, dist, linktype)
-+            link(pkgs_dir, prefix, dist, linktype, instdir=instdir)
-         messages(prefix)
- 
-     elif opts.extract:
-@@ -825,7 +836,7 @@
-         linktype = (LINK_HARD
-                     if try_hard_link(pkgs_dir, prefix, dist) else
-                     LINK_COPY)
+     for dist in idists:
+         if opts.verbose:
+             print("linking: %s" % dist)
 -        link(pkgs_dir, prefix, dist, linktype)
 +        link(pkgs_dir, prefix, dist, linktype, instdir=instdir)
  
-     elif opts.unlink:
-         unlink(prefix, dist)
+     messages(prefix)
+ 
