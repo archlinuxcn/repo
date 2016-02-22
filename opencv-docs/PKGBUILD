@@ -5,17 +5,18 @@
 #pkgbase=opencv
 pkgname=opencv-docs
 _realname=opencv
-pkgver=2.4.10
+pkgver=3.1.0
 pkgrel=1
 pkgdesc="Open Source Computer Vision Library docs"
 arch=('any')
 license=('BSD')
 url="http://opencv.org/"
 depends=('')
-makedepends=('cmake'  'python2-sphinx' 'texlive-bin' 'texlive-latexextra' 'texlive-fontsextra')
+#makedepends=('cmake'  'python2-sphinx' 'texlive-bin' 'texlive-latexextra' 'texlive-fontsextra')
+makedepends=('cmake' 'python2-numpy' 'doxygen')
 
-source=("http://downloads.sourceforge.net/opencvlibrary/$_realname-$pkgver.zip")
-md5sums=('ec63952d3a3dff965d5fdde765926821')
+source=("http://downloads.sourceforge.net/opencvlibrary/opencv-unix/$pkgver/$_realname-$pkgver.zip")
+md5sums=('6082ee2124d4066581a7386972bfd52a')
 
 _cmakeopts=(
             '-D BUILD_DOCS=ON'
@@ -28,18 +29,15 @@ build() {
   cmake ${_cmakeopts[@]} .
  # sed -i "s/sphinx-build/sphinx-build2/g" $srcdir/$_realname-$pkgver/doc/CMakeFiles/html_docs.dir/build.make
   #sed -i "s/sphinx-build/sphinx-build2/g" $srcdir/$_realname-$pkgver/doc/CMakeFiles/docs.dir/build.make
-  make html_docs 
-  make docs
+  make doxygen
 }
 
 package() {
   cd "$srcdir/$_realname-$pkgver"
   mkdir -p "$pkgdir/usr/share/doc/opencv/html"
-  
-  cp -r doc/_html/* "$pkgdir/usr/share/doc/opencv/html/"
-  cp  "$srcdir/$_realname-$pkgver"/doc/*.pdf "$pkgdir/usr/share/doc/opencv/"
 
-
+  cp -r doc/doxygen/html/* "$pkgdir/usr/share/doc/opencv/html/"
+  #cp  "$srcdir/$_realname-$pkgver"/doc/*.pdf "$pkgdir/usr/share/doc/opencv/"
 
 }
 
