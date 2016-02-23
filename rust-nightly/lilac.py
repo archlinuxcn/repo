@@ -71,7 +71,7 @@ def pre_build():
     output.write(content)
 
 def post_build():
-  git_add_files(['PKGBUILD', 'package.list'])
+  git_add_files(['PKGBUILD'])
   git_commit()
 
 if __name__ == '__main__':
