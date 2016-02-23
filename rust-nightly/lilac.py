@@ -70,14 +70,6 @@ def pre_build():
   with open('PKGBUILD', 'wb') as output:
     output.write(content)
 
-  with open('package.list', 'w') as f:
-    f.write('''\
-rust-nightly
-rust-doc-nightly
-''')
-    for x in stds:
-      f.write(x.name + '\n')
-
 def post_build():
   git_add_files(['PKGBUILD', 'package.list'])
   git_commit()
