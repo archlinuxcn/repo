@@ -30,7 +30,7 @@ def pre_build():
         if line.strip().startswith("PKGEXT"):
             continue
         if line.strip().startswith("'9c752be551429c6ce5946d4fcae24464'"):
-            line = " 'a585d6a76f47f9accdf090379ecb6d1f') "
+            line = " 'a585d6a76f47f9accdf090379ecb6d1f' "
         print(line)
 
     for line in edit_file("atom-python.patch"):

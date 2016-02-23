@@ -14,11 +14,11 @@ _update() {
 
 post_install() {
   _update
+  note "Custom launch flags can be put in: ~/.config/atom-editor-flags.conf"
 }
 
 post_upgrade() {
   _update
-  note "Custom flags can now be put directly in: ~/.config/atom-editor-flags.conf"
 }
 
 post_remove() {

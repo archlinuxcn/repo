@@ -6,8 +6,8 @@
 # Upstream URL: https://github.com/atom/atom
 
 pkgname=atom-editor-bin
-pkgver=1.5.2
-pkgrel=1
+pkgver=1.5.3
+pkgrel=2
 pkgdesc="Chrome-based text editor from Github - Precompiled binary from official repository"
 arch=('x86_64')
 url="https://github.com/atom/atom"
@@ -18,14 +18,17 @@ optdepends=('gvfs')
 conflicts=('atom-editor' 'atom-editor-git' 'atom-editor-git-tagged')
 install=$pkgname.install
 
-md5sums=('1878c22c10fa097d49ca1808f6bb667f'
- 'a585d6a76f47f9accdf090379ecb6d1f') 
+md5sums=('25fea54d94871237be3559ce38a70627'
+         '9c752be551429c6ce5946d4fcae24464'
+         'd472858970fc4ba6f63197729b65607c')
 source=("atom-amd64-v${pkgver}.deb::https://github.com/atom/atom/releases/download/v${pkgver}/atom-amd64.deb"
-         atom-python.patch)
+         atom-python.patch
+         startupwmclass.patch)
 
 package() {
   bsdtar xf data.tar.gz
   patch -p1 < "${srcdir}"/atom-python.patch
+  patch -p1 < "${srcdir}"/startupwmclass.patch
   sed -i 's|env PYTHON=python2 GTK_IM_MODULE= QT_IM_MODULE= XMODIFIERS= /usr/share/atom/atom|/usr/bin/atom|' usr/share/applications/atom.desktop
   chmod -R g-w usr
   mv usr "${pkgdir}"
