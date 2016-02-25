@@ -9,7 +9,7 @@ from lilaclib import *
 build_prefix = 'extra-x86_64'
 
 def pre_build():
-  pkgver = run_cmd(['sh', '-c', "git ls-remote --tags https://github.com/0k/shyaml | sed -n '${s#^.*tags\/##p}'"]).rstrip()
+  pkgver = run_cmd(['sh', '-c', "git ls-remote --tags https://github.com/facebook/PathPicker | sed -n '${s#^.*tags\/##p}'"]).rstrip()
   run_cmd(['sh', '-c', 'sed -i "/pkgver/s/^.*$/pkgver=' + pkgver + '/" PKGBUILD'])
 
   sha256sums = run_cmd(['sh', '-c', 'makepkg -g 2> /dev/null']).rstrip()
