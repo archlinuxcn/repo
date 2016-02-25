@@ -1,0 +1,24 @@
+# Maintainer: Farkasity <farkaity@gmail.com>
+
+pkgname=fpp
+pkgver=0.7.0
+pkgrel=1
+pkgdesc='A simple command line tool that solves the perpetual problem of selecting files out of bash output.'
+url='https://github.com/facebook/PathPicker'
+license=('BSD')
+source=("https://github.com/facebook/PathPicker/archive/${pkgver}.tar.gz")
+arch=('any')
+
+depends=('python')
+
+conflicts=("fpp-git")
+provides=("fpp")
+sha256sums=('54919aae86c3f36444c25f79e730c4c49551811d85cbf7bfca21fb6c531278cf')
+
+package() {
+  mkdir -p "$pkgdir/opt/PathPicker"
+  mv -T "$srcdir/PathPicker-${pkgver}" "$pkgdir/opt/PathPicker"
+
+  mkdir -p $pkgdir/usr/bin
+  ln -s '/opt/PathPicker/fpp' "$pkgdir/usr/bin/fpp"
+}
