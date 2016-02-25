@@ -140,10 +140,8 @@ package() {
   cp -r "$srcdir/YouCompleteMe/third_party/ycmd/"{ycmd,ycm_client_support.so,ycm_core.so,check_core_version.py,CORE_VERSION} \
     "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd"
 
-  cp -r "$srcdir/YouCompleteMe/third_party/ycmd/third_party/"{argparse,bottle,frozendict,JediHTTP,requests,tern_runtime,waitress} \
+  cp -r "$srcdir/YouCompleteMe/third_party/ycmd/third_party/"{argparse,bottle,frozendict,JediHTTP,requests,tern_runtime,waitress,python-future} \
     "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party"
-  cp -r "$srcdir/YouCompleteMe/third_party/ycmd/third_party/python-future" \
-    "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party/future"
 
   cp    "$srcdir/YouCompleteMe/third_party/ycmd/third_party/gocode/gocode" \
     "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party/gocode/gocode"
