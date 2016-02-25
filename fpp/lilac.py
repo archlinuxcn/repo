@@ -7,8 +7,18 @@
 from lilaclib import *
 
 build_prefix = 'extra-x86_64'
-pre_build = aur_pre_build
-post_build = aur_post_build
+
+def pre_build():
+  pkgver = run_cmd(['sh', '-c', "git ls-remote --tags https://github.com/0k/shyaml | sed -n '${s#^.*tags\/##p}'"]).rstrip()
+  run_cmd(['sh', '-c', 'sed -i "/pkgver/s/^.*$/pkgver=' + pkgver + '/" PKGBUILD'])
+
+  sha256sums = run_cmd(['sh', '-c', 'makepkg -g 2> /dev/null']).rstrip()
+  run_cmd(['sh', '-c', 'sed -i "/sha256sums/s/^.*$/sha256sums=(\'' + sha256sums + '\')/" PKGBUILD'])
+
+
+def post_build():
+  git_add_files('PKGBUILD')
+  git_commit
 
 if __name__ == '__main__':
   single_main()

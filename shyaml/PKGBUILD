@@ -1,0 +1,19 @@
+# Maintainer: Farkasity <farkaity@gmail.com>
+
+pkgname=shyaml
+pkgver=0.4.0
+pkgrel=1
+pkgdesc='Simple scripts that allow read access to YAML files through command line.'
+url='https://github.com/0k/shyaml'
+license=('custom')
+source=("https://github.com/0k/shyaml/archive/${pkgver}.tar.gz")
+arch=('any')
+depends=('python' 'python-yaml')
+sha256sums=('c29f0d3d0058eb6f3511a0d9c456a85855ffdb0b734066fd4ae11a603f088870')
+
+package() {
+    cd "${srcdir}/${pkgname}-${pkgver}"
+
+    install -Dm755 shyaml "${pkgdir}/usr/bin/shyaml"
+    install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/$pkgname/LICENSE"
+}
