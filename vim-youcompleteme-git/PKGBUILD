@@ -15,7 +15,7 @@
 # Contributor: Andy Weidenbaum <archbaum@gmail.com>
 
 pkgname=vim-youcompleteme-git
-pkgver=1391.ba6e140
+pkgver=1517.a2808ee
 pkgver() {
   cd "YouCompleteMe"
   echo $(git rev-list --count master).$(git rev-parse --short master)
@@ -48,9 +48,10 @@ source=('git+https://github.com/Valloric/YouCompleteMe.git'
         'git+https://github.com/nosami/OmniSharpServer.git'
         'git+https://github.com/icsharpcode/NRefactory.git'
         'git+https://github.com/jbevain/cecil.git'
-        'git+https://github.com/jwilm/racerd.git')
+        'git+https://github.com/jwilm/racerd.git'
+        'git+https://github.com/PythonCharmers/python-future.git')
 sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP'
-            'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
+            'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
 install=install
 _COMPLETER="USE_CLANG_COMPLETER"
 
@@ -75,6 +76,7 @@ prepare() {
   git config submodule.third_party/OmniSharpServer.url "$srcdir/OmniSharpServer"
   git config submodule.third_party/requests.url "$srcdir/requests"
   git config submodule.third_party/racerd.url "$srcdir/racerd"
+  git config submodule.third_party/python-future.url "$srcdir/python-future"
   git submodule update
 
   cd "$srcdir/YouCompleteMe/third_party/ycmd/third_party/JediHTTP"
@@ -140,6 +142,8 @@ package() {
 
   cp -r "$srcdir/YouCompleteMe/third_party/ycmd/third_party/"{argparse,bottle,frozendict,JediHTTP,requests,tern_runtime,waitress} \
     "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party"
+  cp -r "$srcdir/YouCompleteMe/third_party/ycmd/third_party/python-future" \
+    "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party/future"
 
   cp    "$srcdir/YouCompleteMe/third_party/ycmd/third_party/gocode/gocode" \
     "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party/gocode/gocode"
