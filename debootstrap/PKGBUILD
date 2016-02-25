@@ -2,7 +2,7 @@
 # Contributor: Abakus <java5 at arcor dot de>
 # Contributor: Michael Lass <bevan@bi-co.net>
 pkgname=debootstrap
-pkgver=1.0.78
+pkgver=1.0.79
 pkgrel=1
 pkgdesc="A tool used to create a Debian base system from scratch, without requiring the availability of dpkg or apt"
 arch=('any')
@@ -14,7 +14,7 @@ optdepends=( 'debian-archive-keyring: checking Debian release signatures'
              'gnupg1:  checking Debian and Ubuntu release signatures' )
 backup=(usr/share/debootstrap/arch)
 source=("http://ftp.debian.org/debian/pool/main/d/${pkgname}/${pkgname}_${pkgver}_all.deb")
-md5sums=('c437ae4757f7a1b8b8d9576b1e0fb21d')
+md5sums=('8d2b787af1e6a5c89376f2eb784d9f1e')
 
 package(){
   tar -xzf "${srcdir}/data.tar.gz" -C "${pkgdir}/"
