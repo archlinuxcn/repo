@@ -4,7 +4,7 @@
 # Contributor: phoenixlzx < phoenixlzx AT phoenixsec DOT org >
 
 pkgname=vuze
-pkgver=5.7.0.0
+pkgver=5.7.1.0
 pkgrel=1
 _ver=${pkgver//./} 
 pkgdesc="A feature-rich Java-based BitTorrent client (previously called 'Azureus')"
@@ -18,7 +18,7 @@ optdepends=('vuze-plugin-countrylocator: Country flags for the "Peers" tab'
 options=('!strip')
 install=$pkgname.install
 source=("http://downloads.sourceforge.net/azureus/vuze/Vuze_${_ver}/Vuze_${_ver}_linux.tar.bz2")
-md5sums=('c847989c36ba37388129f18c376a4f99')
+md5sums=('28a5f9164f91c11121e1bfa8a39aa9ea')
 
 package() {
   cd vuze
@@ -61,7 +61,7 @@ package() {
   msg2 "Installing to /opt..."
   mv * "$pkgdir"/opt/vuze/
 
-  msg2 "Fixing paths"
+  msg2 "Fixing paths..."
   sed 's|#PROGRAM_DIR=.*|PROGRAM_DIR="/opt/vuze"|' \
       -i "$pkgdir"/usr/bin/vuze \
 
