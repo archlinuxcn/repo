@@ -1,4 +1,4 @@
-# $Id: PKGBUILD 144552 2015-10-21 09:06:37Z heftig $
+# $Id: PKGBUILD 163138 2016-02-22 12:25:28Z allan $
 # Maintainer: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 # Contributor: Jan de Groot <jgc@archlinux.org>
 # Contributor: Allan McRae <allan@archlinux.org>
@@ -7,18 +7,17 @@
 # toolchain build order: linux-api-headers->glibc->binutils->gcc->binutils->glibc
 # NOTE: valgrind-multilib requires rebuild with each major glibc version
 
-
-_pkgbasename=glibc
-pkgname=libx32-$_pkgbasename
-pkgver=2.22
-pkgrel=3.1
+pkgname=libx32-glibc
+pkgver=2.23
+pkgrel=1.1
+_commit=e742928c
 pkgdesc="GNU C Library (x32 ABI)"
 arch=('x86_64')
 url="http://www.gnu.org/software/libc"
 license=('GPL' 'LGPL')
 groups=()
 depends=()
-makedepends=('gcc-multilib-x32>=5.2')
+makedepends=('gcc-multilib-x32>=5.2' 'git')
 backup=()
 conflicts=('glibc-x32-seed')
 provides=('glibc-x32-seed')
@@ -26,26 +25,18 @@ provides=('glibc-x32-seed')
 
 options=('!strip' 'staticlibs' '!emptydirs')
 
-source=(http://ftp.gnu.org/gnu/libc/${_pkgbasename}-${pkgver}.tar.xz{,.sig}
-        glibc-2.22-roundup.patch
+source=(git://sourceware.org/git/glibc.git#commit=${_commit}
         libx32-glibc.conf)
-md5sums=('e51e02bf552a0a1fbbdc948fb2f5e83c'
-         'SKIP'
-         'b6b7a0e8d6e6520e40e3164ae773631d'
+
+md5sums=('SKIP'
          '34a4169d2bdc5a3eb83676a0831aae57')
-validpgpkeys=('F37CDAB708E65EA183FD1AF625EF0A436C2A4AFF')  # Carlos O'Donell
 
 prepare() {
-  cd ${srcdir}/glibc-${pkgver}
-
-  # glibc-2.21..01b07c70
-  patch -p1 -i $srcdir/glibc-2.22-roundup.patch
-
-  mkdir ${srcdir}/glibc-build
+  mkdir glibc-build
 }
 
 build() {
-  cd ${srcdir}/glibc-build
+  cd glibc-build
 
   #if [[ ${CARCH} = "i686" ]]; then
     # Hack to fix NPTL issues with Xen, only required on 32bit platforms
@@ -74,7 +65,7 @@ build() {
   CFLAGS=${CFLAGS/-fstack-protector-strong/}
   CPPFLAGS=${CPPFLAGS/-D_FORTIFY_SOURCE=2/}
 
-  ${srcdir}/${_pkgbasename}-${pkgver}/configure --prefix=/usr \
+  ../glibc/configure --prefix=/usr \
       --libdir=/usr/libx32 --libexecdir=/usr/libx32 \
       --with-headers=/usr/include \
       --with-bugurl=https://bugs.archlinux.org/ \
@@ -100,11 +91,11 @@ build() {
   make
 
   # remove harding in preparation to run test-suite
-  sed -i '5,7d' configparms
+  sed -i '/FORTIFY/d' configparms
 }
 
 check() {
-  cd ${srcdir}/glibc-build
+  cd glibc-build
 
   if [ -x "/opt/gcc-x32-seed/bin/gcc" ]; then
     make check || true
@@ -115,10 +106,7 @@ check() {
 }
 
 package() {
-  cd ${srcdir}/glibc-build
-
-
-
+  cd glibc-build
 
   make install_root=${pkgdir} install
 
@@ -126,7 +114,6 @@ package() {
 
   # We need to keep x32 ABI specific header files
   find ${pkgdir}/usr/include -type f -not -name '*-x32.h' -delete
-
 
   # Dynamic linker
   mkdir ${pkgdir}/usr/lib
@@ -142,9 +129,6 @@ package() {
   # libc, libdl, libm and libpthread are required for toolchain testsuites
   # in addition libcrypt appears widely required
   rm $pkgdir/usr/libx32/lib{anl,BrokenLocale,nsl,resolv,rt,util}.a
-
-
-
 
   # Do not strip the following files for improved debugging support
   # ("improved" as in not breaking gdb and valgrind...):
