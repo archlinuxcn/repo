@@ -3,6 +3,8 @@
 ac_add_options --prefix=/usr
 ac_add_options --libdir=/usr/lib
 ac_add_options --enable-pie
+ac_add_options --enable-gold
+
 ac_add_options --enable-release
 
 ac_add_options --enable-official-branding
@@ -28,7 +30,7 @@ ac_add_options --disable-libproxy
 # Features
 ac_add_options --enable-startup-notification
 ac_add_options --enable-pulseaudio
-ac_add_options --enable-gstreamer=1.0
+ac_add_options --disable-gstreamer
 
 #ac_add_options --disable-gio
 ac_add_options --disable-gconf
@@ -44,8 +46,6 @@ ac_add_options --disable-debug-symbols
 ac_add_options --enable-optimize
 #ac_add_options --enable-debug-symbols
 
-ac_add_options --with-google-api-keyfile="$PWD/google-api-key"
-
 # PGO
 mk_add_options PROFILE_GEN_SCRIPT='EXTRA_TEST_ARGS=10 $(MAKE) -C $(MOZ_OBJDIR) pgo-profile-run'
 
@@ -53,5 +53,3 @@ export BUILD_OFFICIAL=1
 export MOZILLA_OFFICIAL=1
 mk_add_options BUILD_OFFICIAL=1
 mk_add_options MOZILLA_OFFICIAL=1
-
-

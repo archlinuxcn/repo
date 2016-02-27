@@ -5,32 +5,35 @@
 #_lowmem=true
 
 # enable gtk3 (warning: flash or any other plugin  crashes frequently)
-#_gtk3=true
+_gtk3=true
 
 # try to build with PGO
-_pgo=true
+_pgo=false
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=43.0.3
-pkgrel=1
+pkgver=44.0.2
+pkgrel=4
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
 url="https://build.opensuse.org/package/show/mozilla:Factory/MozillaFirefox"
 depends=('gtk2' 'mozilla-common' 'libxt' 'startup-notification' 'mime-types'
          'dbus-glib' 'alsa-lib' 'desktop-file-utils' 'hicolor-icon-theme'
-	 'libvpx' 'icu'  'libevent' 'nss>=3.18.1' 'nspr>=4.10.6' 'hunspell' 
-	 'sqlite' 'libnotify' 'kmozillahelper')
+	 'libvpx' 'icu'  'libevent' 'nss>=3.18.1' 'nspr>=4.10.6' 'hunspell'
+	 'sqlite' 'libnotify' 'kmozillahelper' 'ffmpeg' )
+if [ $_gtk3 ] ; then
+    depends+=('gtk3')
+fi
+
 makedepends=('unzip' 'zip' 'diffutils' 'python2' 'yasm' 'mesa' 'imake'
-             'xorg-server-xvfb' 'libpulse' 'gst-plugins-base-libs' 'inetutils')
+             'xorg-server-xvfb' 'libpulse' 'inetutils')
 optdepends=('networkmanager: Location detection via available WiFi networks'
-	    'gst-plugins-good: h.264 video'
-	    'gst-libav: h.264 video')
+	    'upower: Battery API' )
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
 install=firefox.install
-_patchrev=de3a92aed259
+_patchrev=11475705ab0f
 options=('!emptydirs'  'strip' )
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz
@@ -46,10 +49,24 @@ source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/
 	$_patchurl/mozilla-nongnome-proxies.patch
 	unity-menubar.patch
 	add_missing_pgo_rule.patch
-        pgo_fix_missing_kdejs.patch 
+        pgo_fix_missing_kdejs.patch
+	firefox-quicktime.patch
 )
 
+# Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
+# Note: These are for Arch Linux use ONLY. For your own distribution, please
+# get your own set of keys. Feel free to contact foutrelis@archlinux.org for
+# more information.
 _google_api_key=AIzaSyDwr302FpOSkGRpLlUpPThNTDPbXcIn_FM
+_google_default_client_id=413772536636.apps.googleusercontent.com
+_google_default_client_secret=0ZChLK6AxeA3Isu96MkwqDR4
+
+# Mozilla API keys (see https://location.services.mozilla.com/api)
+# Note: These are for Arch Linux use ONLY. For your own distribution, please
+# get your own set of keys. Feel free to contact heftig@archlinux.org for
+# more information.
+_mozilla_api_key=16674381-f021-49de-8622-3021c5942aff
+
 
 prepare() {
   cd $_pkgname-$pkgver
@@ -57,11 +74,24 @@ prepare() {
   cp "$srcdir/mozconfig" .mozconfig
 
   patch -Np1 -i "$srcdir/firefox-install-dir.patch"
-  echo -n "$_google_api_key" > google-api-key
 
+  
+  echo -n "$_google_api_key" >google-api-key
+  echo "ac_add_options --with-google-api-keyfile=\"$PWD/google-api-key\"" >>.mozconfig
+
+  echo -n "$_google_default_client_id $_google_default_client_secret" >google-oauth-api-key
+  echo "ac_add_options --with-google-oauth-api-keyfile=\"$PWD/google-oauth-api-key\"" >>.mozconfig
+
+  echo -n "$_mozilla_api_key" >mozilla-api-key
+  echo "ac_add_options --with-mozilla-api-keyfile=\"$PWD/mozilla-api-key\"" >>.mozconfig
+  
   # https://bugs.archlinux.org/task/41689
   patch -Np1 -i "$srcdir/rhbz-966424.patch"
 
+  # FS#47953 - [firefox] 44.0-1 breaks mp4a audio stream playback capability 
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=1244523
+  patch -Np1 -i "$srcdir"/firefox-quicktime.patch
+  
   msg "Patching for KDE"
   patch -Np1 -i "$srcdir/mozilla-nongnome-proxies.patch"
   patch -Np1 -i "$srcdir/mozilla-kde.patch"
@@ -83,7 +113,7 @@ prepare() {
      # fix gtk3 build
      sed -i 's|parent->group|gtk_window_get_group(const_cast<GtkWindow*>(parent))|g' \
 	 toolkit/xre/nsKDEUtils.cpp
-     echo 'ac_add_options --enable-default-toolkit=cairo-gtk3' >> "$srcdir"/mozconfig
+     echo 'ac_add_options --enable-default-toolkit=cairo-gtk3' >>.mozconfig
   fi
   # configure script misdetects the preprocessor without an optimization level
   # https://bugs.archlinux.org/task/34644
@@ -160,20 +190,21 @@ package() {
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
 
-sha256sums=('15c5222e3b0a6a766f0a1c5452ff5c31498454187165a281448954a5eb462e89'
-            '72a6572b9692cbb4a15d83de06e1674c4dbb7228999c5749c4f7ab9db5e0c516'
+sha256sums=('0bb28841a9268c50cbb239f759f16f55b3a624f679c68965158beaa0a83a2d9e'
+            '633084aa03336088e087f39eb55b212cc97b11d27a4b288a87f75148350be4dd'
             'c202e5e18da1eeddd2e1d81cb3436813f11e44585ca7357c4c5f1bddd4bec826'
             'd86e41d87363656ee62e12543e2f5181aadcff448e406ef3218e91865ae775cd'
             '4b50e9aec03432e21b44d18c4c97b2630bace606b033f7d556c9d3e3eb0f4fa4'
             'b8cc5f35ec35fc96ac5c5a2477b36722e373dbb57eba87eb5ad1276e4df7236d'
             '68e3a5b47c6d175cc95b98b069a15205f027cab83af9e075818d38610feb6213'
             '746cb474c5a2c26fc474256e430e035e604b71b27df1003d4af85018fa263f4a'
-            '72abd31e89a41cddbd8165b0b9555465184c52c426e0998c9cb7786af94b5532'
-            '2017e1f7a71e8c3563c11fa48cc96de864388ff4fa8a124da3c30ba6129565a2'
+            '0ac532cb40be8057225032a000587e1fb7936dd06607e79a69064b10d436afd5'
+            '8255adfb5289505c98c2f0aa534c5e63c4750e867552f6c6f9199e03d2cc9bc8'
             '02e92f84dd31ed079be3e67509cf23d0d351e06bb690fcc091c904d906d2d690'
-            'cffc199f0d4d684792e6dbeec106077f4a6ac4bdf406b4fc67d46b330c3b4169'
-            'ce1b7a5bb217c31590bce30653aea5139b6401a01eda7bded7fd2f83a23d397b'
+            '0d764c620fc2853803fca31e8b9ca1b44620ccfccceffc78f0e9af652ca80ea0'
+            'feede2fb86527c4a5d90bd5458fe582da920ab02dd25ec656236d87caf8888ba'
             'e8289ea4c1f8191e1e23661312ceee2128b8e790501b9a589d0d7bfc4384553f'
-            '1d3fd85fe760ac3ab454e71322231e671483533be6089ac87f9f4880ee619e48'
+            'aaf7d17559777320b7380d185fce0fd0ba455c8bc83140a005dedffcdedfc5d7'
             'f9067f62a25a7a77276e15f91cc9e7ba6576315345cfc6347b1b2e884becdb0c'
-            '2c9c97bff07cc71b3f6d35f3edfaddaf8180a1f533ee4682adf18a8f86d29264')
+            '2797d1e61031d24ee24bf682c9447b3b9c1bca10f8e6cbd597b854af2de1ec54'
+            '6b731ca36e7688aeb24685da702e0af0475e6671072fc96464fbbed49d0bbd50')
