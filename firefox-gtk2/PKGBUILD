@@ -4,7 +4,7 @@
 
 pkgname=firefox-gtk2
 pkgver=44.0.2
-pkgrel=1
+pkgrel=2
 pkgdesc="Standalone web browser from mozilla.org"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -12,12 +12,11 @@ url="https://www.mozilla.org/firefox/"
 conflicts=('firefox')
 provides=("firefox=${pkgver}-${pkgrel}")
 depends=('gtk2' 'mozilla-common' 'libxt' 'startup-notification' 'mime-types'
-         'dbus-glib' 'alsa-lib' 'desktop-file-utils' 'hicolor-icon-theme'
+         'dbus-glib' 'alsa-lib' 'ffmpeg2.8' 'desktop-file-utils' 'hicolor-icon-theme'
          'libvpx' 'icu' 'libevent' 'nss' 'hunspell' 'sqlite' 'ttf-font')
 makedepends=('unzip' 'zip' 'diffutils' 'python2' 'yasm' 'mesa' 'imake' 'gconf'
              'xorg-server-xvfb' 'libpulse' 'inetutils')
 optdepends=('networkmanager: Location detection via available WiFi networks'
-            'ffmpeg: H264/AAC/MP3 decoding'
             'upower: Battery API')
 install=firefox.install
 options=('!emptydirs' '!makeflags')
