@@ -1,31 +1,37 @@
 # Maintainer: Benjamin Chretien <chretien at lirmm dot fr>
 # Contributor: Håvard Espeland <espeland@acm.org>
-pkgname=libpfm4
-pkgver=4.5.0
-conflicts=('libpfm3')
+pkgname=libpfm4-git
+pkgver=4.7.1
+provides=('libpfm4')
+conflicts=('libpfm3' 'libpfm4')
 pkgrel=1
 pkgdesc="Library to encode performance events for use by perf tool"
 arch=('x86_64' 'i686')
 url="http://perfmon2.sourceforge.net/"
 license=('MIT')
 depends=('glibc')
-source=("http://downloads.sourceforge.net/project/perfmon2/libpfm4/libpfm-$pkgver.tar.gz")
-md5sums=('8eda1e3741c8f3359a33ebd553243333')
+source=("git://git.code.sf.net/p/perfmon2/libpfm4")
+md5sums=('SKIP')
+
+pkgver() {
+  cd libpfm4
+  git describe --long --tags | sed -r -e 's/([^-]*-g)/r\1/;s/-/./g;s/^v//'
+}
 
 build() {
-  cd libpfm-$pkgver
+  cd libpfm4
   sed -i 's|PREFIX=/usr/local|PREFIX=/usr|g' config.mk
   sed -i 's|LDCONFIG=ldconfig|LDCONFIG=true|g' config.mk
   make
 }
 
 check () {
-  cd libpfm-$pkgver/tests
+  cd libpfm4/tests
   ./validate
 }
 
 package() {
-  cd libpfm-$pkgver
+  cd libpfm4
 
   # Install libraries
   make DESTDIR="$pkgdir/" install
