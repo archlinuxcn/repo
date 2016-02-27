@@ -1,4 +1,4 @@
-# $Id: PKGBUILD 161514 2016-02-14 03:40:35Z allan $
+# $Id: PKGBUILD 163137 2016-02-22 12:25:27Z allan $
 # Maintainer: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 # Contributor: Allan McRae <allan@archlinux.org>
 # x32 Maintainer: Fantix King <fantix.king@gmail.com>
@@ -10,14 +10,14 @@ pkgname=('gcc-multilib-x32' 'gcc-libs-multilib-x32' 'libx32-gcc-libs' 'gcc-fortr
 pkgver=5.3.0
 _pkgver=5
 _islver=0.15
-pkgrel=4.1
+pkgrel=5.1
 _snapshot=5-20160209
 pkgdesc="The GNU Compiler Collection for multilib with x32 ABI support"
 arch=('x86_64')
 license=('GPL' 'LGPL' 'FDL' 'custom')
 url="http://gcc.gnu.org"
-makedepends=('binutils>=2.25' 'libmpc' 'gcc-ada-multilib' 'doxygen'
-             'lib32-glibc>=2.22' 'libx32-glibc>=2.22')
+makedepends=('binutils>=2.26' 'libmpc' 'gcc-ada-multilib' 'doxygen'
+             'lib32-glibc>=2.23' 'libx32-glibc>=2.23')
 checkdepends=('dejagnu' 'inetutils')
 options=('!emptydirs')
 source=(#ftp://gcc.gnu.org/pub/gcc/releases/gcc-${pkgver}/gcc-${pkgver}.tar.bz2
@@ -111,7 +111,7 @@ check() {
 package_libx32-gcc-libs()
 {
   pkgdesc="Runtime libraries shipped by GCC (x32 ABI)"
-  depends=('libx32-glibc>=2.22')
+  depends=('libx32-glibc>=2.23')
   options=('!emptydirs' '!strip')
 
   cd ${srcdir}/gcc-build
@@ -148,7 +148,7 @@ package_libx32-gcc-libs()
 package_gcc-libs-multilib-x32()
 {
   pkgdesc="Runtime libraries shipped by GCC for multilib with x32 ABI support"
-  depends=('glibc>=2.22' "lib32-gcc-libs=$pkgver-${pkgrel%.*}" "libx32-gcc-libs=$pkgver-$pkgrel")
+  depends=('glibc>=2.23' "lib32-gcc-libs=$pkgver-${pkgrel%.*}" "libx32-gcc-libs=$pkgver-$pkgrel")
   provides=("gcc-libs=$pkgver-${pkgrel%.*}" "gcc-libs-multilib=$pkgver-${pkgrel%.*}")
   conflicts=('gcc-libs')
   options=('!emptydirs' '!strip')
@@ -199,7 +199,7 @@ package_gcc-libs-multilib-x32()
 package_gcc-multilib-x32()
 {
   pkgdesc="The GNU Compiler Collection - C and C++ frontends for multilib with x32 ABI support"
-  depends=("gcc-libs-multilib-x32=$pkgver-$pkgrel" 'binutils>=2.25' 'libmpc')
+  depends=("gcc-libs-multilib-x32=$pkgver-$pkgrel" 'binutils>=2.26' 'libmpc')
   groups=('x32-devel')
   options=('staticlibs')
   provides=("gcc=$pkgver-${pkgrel%.*}" "gcc-multilib=$pkgver-${pkgrel%.*}")
