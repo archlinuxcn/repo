@@ -1,6 +1,7 @@
 # Maintainer: lilydjwg <lilydjwg@gmail.com>
 {% autoescape None %}
-pkgname=(rust-nightly{% for x in stds %}
+pkgname=(rust-nightly
+         rust-docs-nightly{% for x in stds %}
          {{ x.name }}{% end %}
         )
 pkgver={{version + '_' + version_date}}
@@ -66,7 +67,6 @@ package_rust-docs-nightly() {
   rm -r "$pkgdir"/usr/lib
   chmod -R u=rwX,go=rX "$pkgdir"
 }
-
 {% for x in stds %}
 package_{{x.name}}(){
   pkgdesc="A safe, concurrent, practical language from Mozilla. (standard library, for nightly version, for (cross-)compiling to and running on {{x.platform}})"
@@ -80,4 +80,4 @@ package_{{x.name}}(){
   rm "$pkgdir"/usr/lib/rustlib/{components,manifest-*,rust-installer-version,install.log,uninstall.sh}
   find "$pkgdir"/usr/lib -name '*.so' -exec chmod +x {} +
 }
-{% end %}
+{% end %}{# vim: se ft=tornadotmpl: #}
