@@ -1,0 +1,110 @@
+# Maintainer: all3fox <all3fox [at] gmail __DoT_ com>
+# Contributor: eolianoe <eolianoe [at] gmail [DoT] com>
+# Contributor: Jiaxi Hu <sftrytry _AT_ gmail _DOT_ com>
+# Contributor: Giuseppe Borzi <gborzi _AT_ ieee _DOT_ org>
+
+pkgbase=openblas-git
+pkgname=(openblas-git openblas-lapack-git)
+_pkgname=OpenBLAS
+pkgver=v0.2.15.r181.g74b0672
+pkgrel=1
+pkgdesc="Optimized BLAS library based on GotoBLAS2 1.13 BSD"
+arch=('i686' 'x86_64' 'armv7h' 'aarch64')
+url="http://xianyi.github.com/OpenBLAS/"
+license=('BSD')
+depends=('gcc-libs')
+makedepends=('git' 'perl' 'gcc-fortran')
+provides=('openblas')
+conflicts=('openblas')
+options=(!emptydirs debug strip)
+source=("git://github.com/xianyi/OpenBLAS")
+md5sums=('SKIP')
+
+_config=(
+  'SMP=1'
+  'USE_OPENMP=1'
+  'USE_THREAD=1'
+  'MAJOR_VERSION=3'
+  'NO_LAPACK=0'
+  'NUM_THREAD=8'
+)
+
+case "$CARCH" in
+  x86_64)
+    _config=("${_config[@]}" 'DYNAMIC_ARCH=1')
+    ;;
+  i686)
+    _config=("${_config[@]}" 'DYNAMIC_ARCH=1')
+    ;;
+  armv7h)
+    _config=("${_config[@]}" 'TARGET=CORTEXA9')
+    ;;
+  aarch64)
+    _config=("${_config[@]}" 'TARGET=CORTEXA57')
+    ;;
+  *)
+    echo "Unknown CARCH: ${CARCH}"
+    ;;
+esac
+
+pkgver() {
+  cd "${_pkgname}"
+  git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+  cd ${_pkgname}
+
+  # patch -Np1 < ../.patch
+}
+
+build() {
+  cd "${_pkgname}"
+
+  export FFLAGS="-g -O2"
+
+  # The OpenBLAS build system doesn't handle update very well.
+  git clean -fdx
+  make "${_config[@]}" libs netlib shared
+}
+
+package_openblas-git() {
+  cd "${_pkgname}"
+
+  make "${_config[@]}" PREFIX="${pkgdir}/usr" install
+
+  # Install license
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+
+  # Remove reference to ${pkgdir}
+  sed -i -e "s%${pkgdir}%%" \
+      "${pkgdir}/usr/lib/cmake/openblas/OpenBLASConfig.cmake"
+
+  rm "${pkgdir}/usr/include/"{lapacke,cblas}*
+}
+
+package_openblas-lapack-git() {
+  depends=('openblas-git')
+  provides=('blas=3.5.0' 'lapack=3.5.0' 'cblas')
+  conflicts=('blas' 'lapack' 'cblas')
+  rm -rf pkg
+  mkdir -p "${pkgdir}/usr/"{include,lib}/
+  cd "${_pkgname}"
+
+  make "${_config[@]}" PREFIX="${srcdir}/pkg" install
+
+  mv "${srcdir}/pkg/include/"{lapacke,cblas}* "${pkgdir}/usr/include/"
+
+  # Symlink to provide blas, cblas and lapack
+  cd "${pkgdir}/usr/lib/"
+  # BLAS
+  ln -sf libopenblas.so libblas.so
+  ln -sf libopenblas.so libblas.so.3
+  ln -sf libopenblas.so libblas.so.3.5.0
+  # CBLAS
+  ln -sf libopenblas.so libcblas.so
+  # LAPACK
+  ln -sf libopenblas.so liblapack.so
+  ln -sf libopenblas.so liblapack.so.3
+  ln -sf libopenblas.so liblapack.so.3.5.0
+}
