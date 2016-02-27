@@ -12,22 +12,21 @@ print(cbind(links,md5sums))
 _EOF_
 
 pkgname=rstudio-desktop-bin
-pkgver=0.99.878
+pkgver=0.99.891
 pkgrel=1
 pkgdesc="A new integrated development environment (IDE) for R (binary version from RStudio official website)"
 arch=('i686' 'x86_64')
 license=('GPL')
 url="http://www.rstudio.org/"
-depends=('r' 'gstreamer0.10-base' 'hicolor-icon-theme' 'libxcomposite' 'libxslt' 'shared-mime-info' 'libxrandr' 'gtk2')
+depends=('r' 'gstreamer0.10-base' 'hicolor-icon-theme' 'libxcomposite' 'libxslt' 'shared-mime-info' 'libxrandr' 'pandoc' 'pandoc-citeproc')
 makedepends=('patchelf')
-#'qt5-imageformats' 'qt5-webkit'
 conflicts=('rstudio-desktop' 'rstudio-desktop-git' 'rstudio-desktop-preview-bin')
 provides=("rstudio-desktop=${pkgver}")
 options=(!strip)
 
 
-_x86md5=2b8fae049a2d5458107b9ed5e93aa6d9
-_x64md5=0fa7099868e60f5acdb0787ea9312468
+_x86md5=4b5214aefb0e685eaa54e141771252d5
+_x64md5=840a403d91471dffc581964bf8be1827
 
 case "$CARCH" in
 	'i686')
@@ -54,19 +53,16 @@ package() {
   tar zxpf data.tar.gz -C "$pkgdir"
   install -dm755 "$pkgdir/usr/bin"
 
-  #cd "$pkgdir/usr/lib/rstudio/bin"
-  #ls lib*.so.* | grep -v libedit | grep -v libtinfo | tr \\n \\0 |xargs -0 rm
-  #rm -rf plugins
-
-  #cd "$pkgdir/usr/lib/rstudio/bin/rsclang"
-  #ln -sf /usr/lib/libclang.so ./
-
   cd "$pkgdir/usr/lib/rstudio/bin"
   ln -sf /usr/lib/libncursesw.so.6 libtinfo.so.5
   ln -sf /usr/lib/libedit.so.0  libedit.so.2
 
   cd "$pkgdir/usr/lib/rstudio/bin/rsclang"
   patchelf --set-rpath '$ORIGIN/..' libclang.so
+
+  cd "$pkgdir/usr/lib/rstudio/bin/pandoc"
+  ln -sf /usr/bin/pandoc ./
+  ln -sf /usr/bin/pandoc-citeproc ./
 
   cd "$pkgdir/usr/lib/rstudio/bin/plugins"
   ls */*.so | xargs -n1 patchelf --set-rpath '$ORIGIN/../..'
@@ -91,7 +87,7 @@ export QT_DIR=/usr/lib/rstudio/bin
 export QT_PLUGIN_PATH=$QT_DIR/plugins
 export QT_QPA_PLATFORM_PLUGIN_PATH=$QT_PLUGIN_PATH/platforms
 export KDEDIRS=/usr
-exec /usr/lib/rstudio/bin/rstudio
+exec /usr/lib/rstudio/bin/rstudio "$@"
 ' > "$pkgdir/usr/bin/rstudio-bin"
   chmod 755 "$pkgdir/usr/bin/rstudio-bin"
 
