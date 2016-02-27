@@ -10,6 +10,9 @@ url='http://rr-project.org/'
 license=('custom')
 depends=('libpfm4' 'libdisasm' 'python2-pexpect' 'gdb')
 makedepends=('git' 'cmake')
+if [[ $CARCH = x86_64 ]]; then
+    makedepends+=('gcc-multilib')
+fi
 source=(git://github.com/mozilla/rr)
 sha1sums=('SKIP')
 provides=('rr')
