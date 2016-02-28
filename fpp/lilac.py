@@ -13,7 +13,7 @@ def pre_build():
   run_cmd(['sh', '-c', 'sed -i "/pkgver/s/^.*$/pkgver=' + pkgver + '/" PKGBUILD'])
 
   sha256sums = run_cmd(['sh', '-c', 'makepkg -g 2> /dev/null']).rstrip()
-  run_cmd(['sh', '-c', 'sed -i "/sha256sums/s/^.*$/sha256sums=(\'' + sha256sums + '\')/" PKGBUILD'])
+  run_cmd(['sh', '-c', 'sed -i "/sha256sums/s/^.*$/' + sha256sums + '/" PKGBUILD'])
 
 
 def post_build():
