@@ -15,7 +15,7 @@ if ((BUILD_EXTRA)); then
 else
    pkgname=('julia-git')
 fi
-pkgver=0.4.0.rc1.2907.gd3a5846
+pkgver=0.5.0.dev.2913.g7199602
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
@@ -36,9 +36,14 @@ md5sums=('SKIP')
 pkgver() {
   cd julia
 
+  last_tag=$(git describe --tags --abbrev=0)
+
+  #collect the contents
+  commit_short=$(git rev-parse --short HEAD)
+  build_number=$(git rev-list --count HEAD ^$last_tag)
   # Combine version from VERSION file with rev-count and latest commit
   printf "%s.%s.g%s" "$(git show HEAD:VERSION | sed 's/-/./g')" \
-         "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+         "$build_number" "$commit_short"
 }
 
 prepare() {
