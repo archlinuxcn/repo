@@ -26,6 +26,8 @@ source=(
         'https://static.rust-lang.org/dist/rust-std-nightly-arm-unknown-linux-gnueabihf.tar.gz.asc'
         'https://static.rust-lang.org/dist/rust-std-nightly-armv7-unknown-linux-gnueabihf.tar.gz'
         'https://static.rust-lang.org/dist/rust-std-nightly-armv7-unknown-linux-gnueabihf.tar.gz.asc'
+        'https://static.rust-lang.org/dist/rust-std-nightly-i686-unknown-linux-gnu.tar.gz'
+        'https://static.rust-lang.org/dist/rust-std-nightly-i686-unknown-linux-gnu.tar.gz.asc'
         'https://static.rust-lang.org/dist/rust-std-nightly-x86_64-unknown-linux-gnu.tar.gz'
         'https://static.rust-lang.org/dist/rust-std-nightly-x86_64-unknown-linux-gnu.tar.gz.asc'
         'https://static.rust-lang.org/dist/rust-std-nightly-i686-pc-windows-gnu.tar.gz'
@@ -34,6 +36,8 @@ source=(
         'https://static.rust-lang.org/dist/rust-std-nightly-x86_64-pc-windows-gnu.tar.gz.asc'
         'git://github.com/rust-lang/zsh-config')
 sha512sums=(
+            'SKIP'
+            'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
@@ -61,6 +65,7 @@ package_rust-nightly() {
 
               'rust-std-nightly-arm-unknown-linux-gnueabihf: cross compile for arm-unknown-linux-gnueabihf'
               'rust-std-nightly-armv7-unknown-linux-gnueabihf: cross compile for armv7-unknown-linux-gnueabihf'
+              'rust-std-nightly-i686-unknown-linux-gnu: cross compile for i686-unknown-linux-gnu'
               'rust-std-nightly-x86_64-unknown-linux-gnu: cross compile for x86_64-unknown-linux-gnu'
               'rust-std-nightly-i686-pc-windows-gnu: cross compile for i686-pc-windows-gnu'
               'rust-std-nightly-x86_64-pc-windows-gnu: cross compile for x86_64-pc-windows-gnu'
@@ -117,6 +122,18 @@ package_rust-std-nightly-armv7-unknown-linux-gnueabihf(){
 
 
   cd rust-std-nightly-armv7-unknown-linux-gnueabihf
+  ./install.sh --destdir="$pkgdir" --prefix=/usr --disable-ldconfig
+  rm "$pkgdir"/usr/lib/rustlib/{components,manifest-*,rust-installer-version,install.log,uninstall.sh}
+  find "$pkgdir"/usr/lib -name '*.so' -exec chmod +x {} +
+}
+
+package_rust-std-nightly-i686-unknown-linux-gnu(){
+  pkgdesc="A safe, concurrent, practical language from Mozilla. (standard library, for nightly version, for (cross-)compiling to and running on i686-unknown-linux-gnu)"
+  arch=('any')
+  options+=('!strip')
+
+
+  cd rust-std-nightly-i686-unknown-linux-gnu
   ./install.sh --destdir="$pkgdir" --prefix=/usr --disable-ldconfig
   rm "$pkgdir"/usr/lib/rustlib/{components,manifest-*,rust-installer-version,install.log,uninstall.sh}
   find "$pkgdir"/usr/lib -name '*.so' -exec chmod +x {} +
