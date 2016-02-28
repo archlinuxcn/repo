@@ -17,6 +17,7 @@ stds = [
   'arm-unknown-linux-gnueabihf',
   'armv7-unknown-linux-gnueabihf',
   'x86_64-unknown-linux-gnu',
+  'i686-unknown-linux-gnu',
   'i686-pc-windows-gnu', # need libgcc_s_dw2-1.dll
   'x86_64-pc-windows-gnu',
 ]
@@ -31,6 +32,7 @@ build_prefix = 'extra-x86_64'
 toolchain = {
   'x86_64-pc-windows-gnu': ['mingw-w64-gcc'],
   'i686-pc-windows-gnu': ['mingw-w64-gcc'],
+  'i686-unknown-linux-gnu': ['gcc-multilib'],
 }
 
 def get_latest_version():
