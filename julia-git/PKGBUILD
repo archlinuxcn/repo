@@ -36,7 +36,9 @@ md5sums=('SKIP')
 pkgver() {
   cd julia
 
-  git describe --tags | sed 's/^v//;s/-/./g'
+  # Combine version from VERSION file with rev-count and latest commit
+  printf "%s.%s.g%s" "$(git show HEAD:VERSION | sed 's/-/./g')" \
+         "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 prepare() {
