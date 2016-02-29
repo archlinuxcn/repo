@@ -3,7 +3,7 @@
 ac_add_options --prefix=/usr
 ac_add_options --libdir=/usr/lib
 
-ac_add_options --enable-official-branding
+#ac_add_options --enable-official-branding
 
 # System libraries
 ac_add_options --with-system-nspr
@@ -28,10 +28,10 @@ ac_add_options --enable-gstreamer=1.0
 
 ac_add_options --disable-crashreporter
 ac_add_options --disable-updater
-ac_add_options --disable-tests
 ac_add_options --disable-installer
 ac_add_options --disable-debug-symbols
 
 ac_add_options --with-app-basename=icecat
 ac_add_options --with-app-name=icecat
 
+# vim:set ft=sh:

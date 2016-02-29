@@ -6,17 +6,18 @@
 # Contributor: Muhammad 'MJ' Jassim <UnbreakableMJ@gmail.com> 
 
 pkgname=icecat
-pkgver=31.6.0
-_pkgver=31.6.0-gnu1
+pkgver=38.6.0
+_pkgver=38.6.0-gnu1
 _pkgverbase=${pkgver%%.*}
-pkgrel=2
+pkgrel=1
 pkgdesc="GNU version of the Firefox browser."
 arch=(i686 x86_64)
 url="http://www.gnu.org/software/gnuzilla/"
 license=('GPL' 'MPL' 'LGPL')
 depends=('gtk2' 'mozilla-common' 'libxt' 'startup-notification' 'mime-types'
          'dbus-glib' 'alsa-lib' 'desktop-file-utils' 'hicolor-icon-theme'
-         'libvpx' 'icu' 'libevent' 'nss' 'hunspell' 'sqlite')
+         'libvpx' 'icu' 'libevent' 'nss' 'hunspell' 'sqlite' 'pango' 'freetype2' 'libxft' 'libx11')
+
 makedepends=('unzip' 'zip' 'diffutils' 'python2' 'yasm' 'mesa' 'imake'
              'libpulse' 'gst-plugins-base-libs' 'inetutils')
 optdepends=('networkmanager: Location detection via available WiFi networks'
@@ -25,20 +26,23 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
             'upower: Battery API')
 
 install=icecat.install
-source=(http://ftp.gnu.org/gnu/gnuzilla/${pkgver}/${pkgname}-${_pkgver}.tar.bz2
-#source=(http://mirrors.kernel.org/gnu/gnuzilla/${pkgver}/${pkgname}-${pkgver}.tar.xz      ## Good mirror
-        mozconfig
+#source=(http://ftpmirror.gnu.org/gnuzilla/${pkgver}/${pkgname}-${_pkgver}.tar.bz2{,.sig}
+source=(https://ftp.gnu.org/gnu/gnuzilla/${pkgver}/${pkgname}-${_pkgver}.tar.bz2{,.sig}      ## Main upstream download site
+#source=(https://mirrors.kernel.org/gnu/gnuzilla/${pkgver}/${pkgname}-${_pkgver}.tar.bz2      ## Good mirror
+#source=(http://jenkins.trisquel.info/icecat/${pkgname}-${_pkgver}.tar.bz2      ## Official developer (Ruben Rodriguez) site. Probably only has developer releases.
+	mozconfig
         icecat.desktop
         icecat-safe.desktop
-        rhbz-966424.patch
         vendor.js)
 
-md5sums=('f59604143b42a2e5112f5c4cef6d04c2'
-         '0967f59d5485300844def52ccb0bc509'
-         'e81ad01dbc16ba28bf92ba4b7c309ca7'
-         'd93fe402b87cd000a869e1fd6badc6c9'
-         '8c1578232b7a60fa1caa9a0b322d1e2b'
-         '0d053487907de4376d67d8f499c5502b')
+sha256sums=('9d0e10005c28d130d262176280656dc3cf374717723bd715d3d6a3cc5999a42d'
+            'SKIP'
+            '4602066304f0bb10bdaea75405570d500dae3199b77b04a45167d423fdf9bf6f'
+            'c44eab35f71dd3028a74632463710d674b2e8a0682e5e887535e3233a3b7bbb3'
+            '190577ad917bccfc89a9bcafbc331521f551b6f54e190bb6216eada48dcb1303'
+            '4b50e9aec03432e21b44d18c4c97b2630bace606b033f7d556c9d3e3eb0f4fa4')
+
+validpgpkeys=(A57369A8BABC2542B5A0368C3C76EED7D7E04784) # Ruben Rodriguez (GNU IceCat releases key) <ruben@gnu.org>
 
 prepare() {
 
@@ -47,9 +51,6 @@ prepare() {
   # Patch to move files directly to /usr/lib/icecat. No more symlinks.
   sed -e 's;$(libdir)/$(MOZ_APP_NAME)-$(MOZ_APP_VERSION);$(libdir)/$(MOZ_APP_NAME);g' -i config/baseconfig.mk
   sed -e 's;$(libdir)/$(MOZ_APP_NAME)-devel-$(MOZ_APP_VERSION);$(libdir)/$(MOZ_APP_NAME)-devel;g' -i config/baseconfig.mk
-
-  # https://bugs.archlinux.org/task/41689
-  patch -Np1 -i ../rhbz-966424.patch
 
   msg2 "Starting build..."
 
@@ -69,19 +70,32 @@ build() {
   # Workaround to build 31.0. Fails otherwise.
   unset CPPFLAGS
 
+  # Default Arch flags
+  if [ "${CARCH}" = 'x86_64' ]; then
+    export CFLAGS="-march=x86-64 -mtune=generic -O2 -pipe -fstack-protector-strong"
+    export CXXFLAGS="$CFLAGS"
+  elif [ "${CARCH}" = 'i686' ]; then
+    export CFLAGS="-march=i686 -mtune=generic -O2 -pipe -fstack-protector-strong"
+    export CXXFLAGS="$CFLAGS"
+  fi
+
   export PATH="$srcdir/path:$PATH"
   export LDFLAGS="$LDFLAGS -Wl,-rpath,$ICECATDIR"
-  export PYTHON="/usr/bin/python2"
   export MOZ_MAKE_FLAGS="$MAKEFLAGS"
+  export PYTHON=python2
 
   make -f client.mk build
+#  ./configure --with-l10n-base="${srcdir}/${pkgname}-${pkgver}"/l10n -std=gnu89
+#  make
 
 }
 
 package () {
 
   cd "${srcdir}/${pkgname}-${pkgver}"
+
   make -f client.mk DESTDIR="${pkgdir}" install
+#  make DESTDIR="${pkgdir}" install
 
   msg2 "Finishing..."
   install -m755 -d ${pkgdir}/usr/share/applications
