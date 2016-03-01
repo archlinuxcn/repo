@@ -1,31 +1,4 @@
 post_install() {
-  dkms_install $1
-}
-
-pre_upgrade() {
-  dkms_remove $2
-}
-
-post_upgrade() {
-  dkms_install $1
-}
-
-pre_remove() {
-  dkms_remove $1
-}
-
-dkms_remove() {
-  # In case a different version is installed, use "dkms status broadcom-wl"
-  # to list and remove installed versions.
-
-  if [ -n "$(dkms status -m broadcom-wl -v ${1%%-*})" ]; then
-    dkms remove -m broadcom-wl -v ${1%%-*} --all || return 1
-  fi
-}
-
-dkms_install() {
-  dkms install -m broadcom-wl -v ${1%%-*} || return 1
-
   cat << EOF || return 1
 
 To load the new module, run as root:
@@ -34,5 +7,10 @@ To load the new module, run as root:
   modprobe wl
 
 or just reboot the system.
+
 EOF
+}
+
+post_upgrade() {
+  post_install $1
 }

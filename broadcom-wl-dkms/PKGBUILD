@@ -3,7 +3,7 @@
 
 pkgname=broadcom-wl-dkms
 pkgver=6.30.223.271
-pkgrel=4
+pkgrel=5
 pkgdesc="Broadcom 802.11 Linux STA wireless driver"
 arch=('i686' 'x86_64')
 url="https://www.broadcom.com/support/?gid=1"
@@ -12,18 +12,17 @@ depends=('dkms')
 optdepends=('linux-headers: build modules against Arch kernel'
             'linux-lts-headers: build modules against LTS Arch kernel')
 conflicts=('broadcom-wl')
-backup=('etc/modprobe.d/broadcom-wl-dkms.conf')
 install=broadcom-wl-dkms.install
 source=('broadcom-wl-dkms.conf'
         'dkms.conf.in'
         '001-null-pointer-fix.patch'
         '002-rdtscl.patch')
-source_i686=("https://www.broadcom.com/docs/linux_sta/hybrid-v35-nodebug-pcoem-${pkgver//./_}.tar.gz")
-source_x86_64=("https://www.broadcom.com/docs/linux_sta/hybrid-v35_64-nodebug-pcoem-${pkgver//./_}.tar.gz")
+source_i686=("http://www.broadcom.com/docs/linux_sta/hybrid-v35-nodebug-pcoem-${pkgver//./_}.tar.gz")
+source_x86_64=("http://www.broadcom.com/docs/linux_sta/hybrid-v35_64-nodebug-pcoem-${pkgver//./_}.tar.gz")
 sha256sums=('b97bc588420d1542f73279e71975ccb5d81d75e534e7b5717e01d6e6adf6a283'
             'c59c3ccf5238fe93cc671e6fa2f6614c0bfec073dc79bfda4d14e3a5be96eac8'
             '32e505a651fdb9fd5e4870a9d6de21dd703dead768c2b3340a2ca46671a5852f'
-            '29929989d86fde903f98419ce52dbb1d862cd4a11b0b13b2432886eeb6daabea')
+            '4ea03f102248beb8963ad00bd3e36e67519a90fa39244db065e74038c98360dd')
 sha256sums_i686=('4f8b70b293ac8cc5c70e571ad5d1878d0f29d133a46fe7869868d9c19b5058cd')
 sha256sums_x86_64=('5f79774d5beec8f7636b59c0fb07a03108eef1e3fd3245638b20858c714144be')
 
@@ -46,7 +45,7 @@ package() {
   mkdir -p "${pkgdir}/usr/share/licenses/${pkgname}"
   ln -rs "${dest}/lib/LICENSE.txt" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 
-  install -D -m 644 broadcom-wl-dkms.conf "${pkgdir}/etc/modprobe.d/broadcom-wl-dkms.conf"
+  install -D -m 644 broadcom-wl-dkms.conf "${pkgdir}/usr/lib/modprobe.d/broadcom-wl-dkms.conf"
 }
 
 # vim:set ts=2 sw=2 et:
