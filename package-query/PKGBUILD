@@ -1,15 +1,14 @@
 # Contributor: tuxce <tuxce.net@gmail.com>
 # Contributor: Skunnyk <skunnyk@archlinux.fr>
 pkgname=package-query
-pkgver=1.7
-pkgrel=2
+pkgver=1.8
+pkgrel=1
 pkgdesc="Query ALPM and AUR"
 arch=('i686' 'x86_64' 'mips64el' 'armv6h' 'armv7h' 'arm')
 url="https://github.com/archlinuxfr/package-query/"
 license=('GPL')
-depends=('pacman>=4.1' 'pacman<5.1' 'yajl>=2.0')
-source=(http://mir.archlinux.fr/~tuxce/releases/$pkgname/$pkgname-$pkgver.tar.gz)
-md5sums=('16d233dcd2b5072b808cad030fa24e61')
+depends=('pacman>=5.0' 'yajl>=2.0')
+source=(http://mir.archlinux.fr/releases/$pkgname/$pkgname-$pkgver.tar.gz)
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
@@ -24,3 +23,4 @@ package ()
 }
 
 # vim:set ts=2 sw=2 et:
+sha256sums=('ce65626c7555173204757917233d07e3b33c2a0d9328566e71434c16ba2fc3d6')
