@@ -8,7 +8,6 @@ import time
 from lilaclib import *
 
 build_prefix = 'extra-x86_64'
-packages = None
 p = None
 repo_dir = 'vim'
 
@@ -21,7 +20,7 @@ def bye_git_daemon():
 atexit.register(bye_git_daemon)
 
 def pre_build():
-  global p, packages
+  global p
 
   if not os.path.isdir(repo_dir):
     os.mkdir(repo_dir)
@@ -32,11 +31,7 @@ def pre_build():
   with at_dir(repo_dir):
     run_cmd(["git", "reset", "--hard"])
     git_pull()
-    old_master = git_last_commit('upstream/master')
     run_cmd(["git", "fetch", "upstream"], use_pty=True)
-    runtime_changed = run_cmd(
-      ["git", "diff", "--name-only",
-       old_master, "upstream/master", "--", "runtime/"])
     run_cmd(["git", "merge", "--no-edit", "upstream/master"])
 
   cmd = ["git", "daemon", "--export-all", "--reuseaddr", "--base-path=.", "--listen=127.0.0.1", "--",
@@ -48,12 +43,9 @@ def pre_build():
   try:
     time.sleep(1) # wait a while for git daemon
     vcs_update()
-    if not runtime_changed:
-      packages = ['vim-lily', 'gvim-lily']
   except RuntimeError:
     # only runtime updated; source remains the same
     update_pkgrel()
-    packages = ['vim-runtime-lily']
 
 def post_build_always(*, success=None, **kwargs):
   bye_git_daemon()
