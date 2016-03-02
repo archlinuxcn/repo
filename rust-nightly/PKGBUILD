@@ -9,7 +9,7 @@ pkgname=(rust-nightly
          rust-std-nightly-i686-pc-windows-gnu
          rust-std-nightly-x86_64-pc-windows-gnu
         )
-pkgver=1.8.0_20160229
+pkgver=1.9.0_20160302
 pkgrel=1
 pkgdesc="A safe, concurrent, practical language from Mozilla (nightly version)"
 arch=('i686' 'x86_64')
@@ -71,7 +71,7 @@ package_rust-nightly() {
               'rust-std-nightly-i686-pc-windows-gnu: cross compile for i686-pc-windows-gnu'
               'rust-std-nightly-x86_64-pc-windows-gnu: cross compile for x86_64-pc-windows-gnu'
               'cargo-git: Rust package manager')
-  provides=(rust=1.8.0)
+  provides=(rust=1.9.0)
   conflicts=(rust)
   options=(staticlibs)
 
@@ -94,7 +94,7 @@ package_rust-docs-nightly() {
   arch=('any')
   options+=('!strip' '!emptydirs')
   optdepends=('rust-nightly: to compile and run the programs you can write using this documentation')
-  provides=('rust-doc=1.8.0')
+  provides=('rust-doc=1.9.0')
   conflicts=('rust-doc')
 
   cd rust-docs-nightly-$CARCH-unknown-linux-gnu
