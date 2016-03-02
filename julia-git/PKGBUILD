@@ -15,7 +15,7 @@ if ((BUILD_EXTRA)); then
 else
    pkgname=('julia-git')
 fi
-pkgver=0.5.0.dev.2913.g7199602
+pkgver=0.5.0.dev.2975.gb61f660
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
@@ -51,6 +51,9 @@ prepare() {
 
   git reset --hard HEAD
   git clean -fdx
+
+  # Workaround before JuliaLang/julia#15332 is merged.
+  mkdir -p usr/lib/
 
   # patch -Np1 <
 
