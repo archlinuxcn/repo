@@ -3,11 +3,11 @@
 # Contributor: Tobias Veit - nIcE <m.on.key.tobi[at]gmail[dot]com>
 
 pkgname=metasploit
-pkgver=4.11.11
+pkgver=4.11.12
 pkgrel=1
 pkgdesc="An advanced open-source platform for developing, testing, and using exploit code"
 url="https://www.metasploit.com/"
-arch=('any')
+arch=('i686' 'x86_64')
 license=('BSD')
 depends=('ruby' 'libpcap' 'postgresql-libs' 'ruby-bundler' 'sqlite' 'git')
 optdepends=(
@@ -15,9 +15,14 @@ optdepends=(
   'ruby-pg: database support'
 )
 options=('!strip')
-install="${pkgname}.install"
 source=(${pkgname}-${pkgver}.tar.gz::https://github.com/rapid7/metasploit-framework/archive/${pkgver}.tar.gz)
-sha512sums=('cc0a508945672c77ec1ad6bcb176c4aa9d51641ea27f7fe70cd2d3cc40a2e1889c7136bbbe930c77d6deaadb61fd0945b3ad15c925feefde57881b8ef61c4565')
+sha512sums=('5cbf9710e8a57a2bd39803230383019db49bb511e10dc92c6ebf13df53c12096cb4f5183b37b8f3800ca7491cf832e9050562d96493c3fcc7f846d1068367a78')
+
+build() {
+  cd ${pkgname}-framework-${pkgver}
+  bundle install -j"$(nproc)" --no-cache --deployment
+  find vendor/bundle/ruby/*/gems/robots-* -exec chmod o+r '{}' \;
+}
 
 package() {
   cd ${pkgname}-framework-${pkgver}
@@ -27,7 +32,7 @@ package() {
 
   for f in "${pkgdir}"/opt/${pkgname}/msf*; do
     local _msffile="${pkgdir}/usr/bin/`basename "${f}"`"
-    echo "BUNDLE_GEMFILE=/opt/${pkgname}/Gemfile bundle exec ruby /opt/${pkgname}/`basename "${f}"` \"\$@\"" > ${_msffile}
+    echo -e "#!/bin/sh\nBUNDLE_GEMFILE=/opt/${pkgname}/Gemfile bundle exec ruby /opt/${pkgname}/`basename "${f}"` \"\$@\"" > ${_msffile}
     chmod 755 ${_msffile}
   done
 
