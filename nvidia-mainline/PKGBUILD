@@ -1,4 +1,5 @@
-# Maintainer: FadeMind <fademind@gmail.com>
+# Maintainer: Lev Lybin <aur@devtrue.net>
+# Contributor: FadeMind <fademind@gmail.com>
 # Contributor: Rouven Rastetter <r3ddr4gon@firaweb.de>
 # Contributor: Mikael Eriksson <mikael_eriksson@miffe.org>
 # Contributor: Cian Mc Govern <cianmcgovern91@gmail.com>
@@ -6,7 +7,7 @@
 
 pkgbase=nvidia-mainline
 pkgname=(nvidia-mainline nvidia-mainline-dkms)
-pkgver=361.18
+pkgver=361.28
 _extramodules=extramodules-4.5-mainline
 pkgrel=2
 pkgdesc="NVIDIA drivers for linux-mainline"
@@ -17,8 +18,8 @@ license=('custom')
 options=('!strip')
 source_i686=("http://us.download.nvidia.com/XFree86/Linux-x86/${pkgver}/NVIDIA-Linux-x86-${pkgver}.run")
 source_x86_64=("http://us.download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run")
-md5sums_i686=('ade4f7d0a5631ff492088671bc303a0a')
-md5sums_x86_64=('29a88f1538d622cebf751593396053e4')
+md5sums_i686=('d4fc7fcf1204a46f15733d7cc2711ad2')
+md5sums_x86_64=('8799b9a29ea1ef72feb739f1d8290728')
 
 [[ "$CARCH" = "i686" ]] && _pkg="NVIDIA-Linux-x86-${pkgver}"
 [[ "$CARCH" = "x86_64" ]] && _pkg="NVIDIA-Linux-x86_64-${pkgver}-no-compat32"
@@ -80,7 +81,7 @@ package_nvidia-mainline-dkms() {
     cd ${_pkg}
     install -dm 755 "${pkgdir}"/usr/{lib/modprobe.d,src}
     cp -dr --no-preserve='ownership' kernel-dkms "${pkgdir}/usr/src/nvidia-mainline-${pkgver}"
-    if [ ! -f /usr/lib/modprobe.d/nvidia.conf]; then
+    if [ ! -f /usr/lib/modprobe.d/nvidia.conf ]; then
         echo "blacklist nouveau" > "${pkgdir}/usr/lib/modprobe.d/nvidia.conf"
     fi
 }
