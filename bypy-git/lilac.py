@@ -29,7 +29,8 @@ def pre_build():
     # edit PKGBUILD
     if 'makedepends' in line:
         print(line.replace(')',' \'python-pypandoc\')'))
-    print(line)
+    else:
+        print(line)
 
 def post_build():
   # do something after the package has successfully been built
