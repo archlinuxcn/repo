@@ -8,10 +8,14 @@ post_install() {
 ===> You may want to load vboxguest, vboxsf and vboxvideo
 EOF
 	_depmod
+	echo '!!!IMPORTANT: Since binary modules packages are droped in Archlinux official repo,'
+	echo 'You should run "pacman -R virtualbox-pf-guest-modules" to remove this package by yourself.'
 }
 
 post_upgrade() {
 	_depmod
+	echo '!!!IMPORTANT: Since binary modules packages are droped in Archlinux official repo,'
+	echo 'You should run "pacman -R virtualbox-pf-guest-modules" to remove this package by yourself.'
 }
 
 post_remove() {
