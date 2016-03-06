@@ -1,0 +1,19 @@
+--- a/vivaldi-beta	2015-10-09 14:26:29.000000000 +0200
++++ b/vivaldi-beta	2015-10-14 22:57:07.503932016 +0200
+@@ -45,13 +45,9 @@
+ fi
+ 
+ # Find libffmpeg.so with additional codecs.
+-CHR_CODECS_CH="/usr/share/doc/chromium-codecs-ffmpeg-extra/changelog.Debian.gz"
+-if [ -r $CHR_CODECS_CH ]; then
+-  CHR_CODECS_VER=$(gzip -cd $CHR_CODECS_CH |
+-    sed -n '1s/chromium-browser (\(\([0-9]\+\.\)\{3\}\).*/\1/p')
+-  if [ "$CHR_CODECS_VER" = "45.0.2454." ]; then
+-    FFMPEG_LD_LIBRARY_PATH=":/usr/lib/chromium-browser/libs"
+-  fi
++VIV_CODECS_SO="/usr/lib/vivaldi-ffmpeg-codecs/libffmpeg.so"
++if [ -r "$VIV_CODECS_SO" ]; then
++  FFMPEG_LD_LIBRARY_PATH=":/usr/lib/vivaldi-ffmpeg-codecs"
+ fi
+ # Set LD_LIBRARY_PATH to prefer our libs, excluding $HERE/lib/libffmpeg.so if
+ # an alternative ffmpeg was found.
