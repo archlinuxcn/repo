@@ -2,7 +2,7 @@
 # Previous maintainer: Joel Teichroeb <joel@teichroeb.net>
 
 pkgname=rr-git
-pkgver=4.1.0.r119.gee4e2d9
+pkgver=4.1.0.r120.g0e4966e
 pkgrel=1
 pkgdesc='a nondeterministic debugger'
 arch=(i686 x86_64)
@@ -26,8 +26,12 @@ pkgver() {
 prepare() {
   cd rr
   mkdir -p build
-  sed -i~ -e 's/ python / python2 /g' -e 's/-Werror/-Wextra/g' CMakeLists.txt
-  sed -i~ -e 's/^\(#define \)_BSD_SOURCE$/\1_DEFAULT_SOURCE/' src/Command.cc
+  sed -i -e 's/ python / python2 /g' -e 's/-Werror/-Wextra/g' CMakeLists.txt
+  sed -i -e 's/^\(#define \)_BSD_SOURCE$/\1_DEFAULT_SOURCE/' src/Command.cc
+  if [[ $CARCH = i686 ]]; then
+      sed -i -e 's/HEX(request)/(void*)(request)/' src/record_syscall.cc
+      sed -i -e 's/data_.data_()/data_.data()/' src/task.cc
+  fi
 }
 
 build() {
