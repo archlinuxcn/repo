@@ -8,14 +8,15 @@
 # Contributor: Mikkel Oscar Lyderik <mikkeloscar@gmail.com>
 
 pkgname=google-appengine-python
-pkgver=1.9.32
-_zipver=${pkgver}
+_pkgname=google_appengine
+pkgver=1.9.33
 pkgrel=1
 arch=(any)
 pkgdesc="Google App Engine SDK for Python"
 url=https://cloud.google.com/appengine/downloads#Google_App_Engine_SDK_for_Python
 license=('APACHE')
 depends=('python2>=2.7')
+makedepends=('unzip')
 optdepends=('mysql-python: MySQL DB API'
   'python2-crypto=2.6: cryptography functions'
   'python2-crcmod=1.7: generating CRC'
@@ -34,15 +35,15 @@ optdepends=('mysql-python: MySQL DB API'
   'python2-yaml=3.10: YAML serialization and deserialization')
 options=(!strip)
 install=install
-source=(https://storage.googleapis.com/appengine-sdks/featured/google_appengine_${_zipver}.zip)
-sha1sums=('ad9c5552108afa5926cd80b452d18a108af22deb')
-noextract=(google_appengine_${_zipver}.zip)
+source=(https://storage.googleapis.com/appengine-sdks/featured/${_pkgname}_${pkgver}.zip)
+sha1sums=('cd24fa67dc5ce32bb189579661bb899c13cf47f3')
+noextract=(${_pkgname}_${pkgver}.zip)
 
 prepare() {
   cd ${srcdir}
 
   # Extract with unzip as bsdtar screws up permissions
-  unzip -qq "google_appengine_${_zipver}.zip" -d "${pkgname}-${pkgver}"
+  unzip -qq "${_pkgname}_${pkgver}.zip"
 
   # Cleanup PHP files
   rm -rf php
@@ -60,8 +61,8 @@ package() {
   mkdir -p opt usr/bin
 
   # Install
-  mv "${srcdir}/${pkgname}-${pkgver}/google_appengine" "opt/${pkgname}"
+  mv "${srcdir}/${_pkgname}" "opt/${_pkgname}"
 
   # Move main binary
-  find opt/${pkgname} -maxdepth 1 -type f -executable -printf "/opt/${pkgname}/%f\n" | xargs ln -st usr/bin/
+  find opt/${_pkgname} -maxdepth 1 -type f -executable -printf "/opt/${_pkgname}/%f\n" | xargs ln -st usr/bin/
 }
