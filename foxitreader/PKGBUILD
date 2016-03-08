@@ -3,9 +3,9 @@
 
 pkgname=foxitreader
 epoch=1
-pkgver=1.0.1.0925
-_pkgver=1.01.0925
-_pkgrev=189237
+pkgver=1.1.0.0225
+_pkgver=1.10.0225
+_pkgrev=205262
 pkgrel=1
 pkgdesc="A fast, secure and complete PDF viewer"
 arch=('i686' 'x86_64')
@@ -19,9 +19,9 @@ source=("https://www.foxitsoftware.com/products/pdf-reader/eula.html"
 source_i686=("http://cdn01.foxitsoftware.com/pub/foxit/reader/desktop/linux/1.x/${pkgver%.*.*}/en_us/FoxitReader${_pkgver}_Server_x86_enu_Setup.run.tar.gz")
 source_x86_64=("http://cdn01.foxitsoftware.com/pub/foxit/reader/desktop/linux/1.x/${pkgver%.*.*}/en_us/FoxitReader${_pkgver}_Server_x64_enu_Setup.run.tar.gz")
 sha256sums=('a5be3dc1cf27536de2c0fb5a0d640db349be32f48547b3cc56dcb5791fb278be'
-            '95dfbe05398dffbbfd31302f15e1707545512a4abb4b78d0ce843e19759d8586')
-sha256sums_i686=('a4821aee03c2fdac67fbbfef09eda8ab3deb21f97442048e3e11c035ad747ba2')
-sha256sums_x86_64=('49684040892037154d9f53a611c72f9d0e3b9fe9a5b7a3e079063ca01903138f')
+            'cd1c29f50086b9d754d925728207343f5a4d3d6bc13cef3679bb6e86244990a4')
+sha256sums_i686=('16984a9b52537dcb57c2304441fca3a906a8bd7271f1f4919fcdc8a5dbdf9fc8')
+sha256sums_x86_64=('2967571a4844ab834e03f9d63ee89c3df027ac16c8ae25e6f7affee70654c1cf')
 
 build() {
   # Clean installer dir
@@ -32,9 +32,9 @@ build() {
   # Decompress .run installer
   if [ "${CARCH}" = 'x86_64' ]
   then
-    _file_run="FoxitReader.enu.setup.x64.${pkgver}(r${_pkgrev}).run"
+    _file_run="FoxitReader.enu.setup.${pkgver}(r${_pkgrev}).x64.run"
   else
-    _file_run="FoxitReader.enu.setup.x86.${pkgver}(r${_pkgrev}).run"
+    _file_run="FoxitReader.enu.setup.${pkgver}(r${_pkgrev}).x86.run"
   fi
   devtool --dump "${pkgname}-installer" "${_file_run}"
 }
@@ -47,14 +47,19 @@ package() {
   do
     7z x -o"${pkgdir}/usr/lib/${pkgname}" ${file} > /dev/null
   done
-
+  # Apply final patches
+  cd "${pkgdir}"
+  patch -p1 -i "${srcdir}/${pkgname}.patch"
   # Remove useless files
   cd "${pkgdir}/usr/lib/${pkgname}"
-  rm "lib/.directory" "Activation.desktop" "Activation.sh" "installUpdate" \
-     "maintenancetool.sh" "Uninstall.desktop" "Update.desktop" "updater" \
-     "updater.sh" "manual/en_us/FoxitReader1.0_QuickGuide_OSX.pdf"
-  # These files won't exist in every installer
-  [ -e "Foxit Reader Startup.Log" ] && rm "Foxit Reader Startup.Log"
+  rm "lib/.directory" "Activation" "Activation.desktop" "Activation.sh" \
+     "countinstalltion" "countinstalltion.sh" \
+     "FoxitReader.sh" "installUpdate" "ldlibrarypath.sh" \
+     "maintenancetool.sh" "Uninstall.desktop" \
+     "Update.desktop" "updater" "updater.sh" \
+     "manual/en_us/FoxitReader1.0_QuickGuide_Linux.pdf" \
+     "manual/en_us/FoxitReader1.0_QuickGuide_OSX.pdf" \
+     "manual/en_us/FoxitReader1.1_QuickGuide_OSX.pdf"
   # Install icon and desktop files
   install -m 755 -d "${pkgdir}/usr/share/pixmaps"
   install -m 644 "images/FoxitReader.png" \
@@ -68,9 +73,6 @@ package() {
   # Install launcher script
   cd "${pkgdir}"
   install -m 755 -d "${pkgdir}/usr/bin"
-  ln -s "/usr/lib/${pkgname}/FoxitReader.sh" "${pkgdir}/usr/bin/${pkgname}"
-  # Apply final patches
-  cd "${pkgdir}"
-  patch -p2 -i "${srcdir}/${pkgname}.patch"
+  ln -s "/usr/lib/${pkgname}/FoxitReader" "${pkgdir}/usr/bin/${pkgname}"
 }
 
