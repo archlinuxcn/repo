@@ -5,27 +5,26 @@
 # or use: $ curl -s https://dl.google.com/linux/chrome/rpm/stable/x86_64/repodata/other.xml.gz | gzip -df | awk -F\" '/pkgid/{ sub(".*-","",$4); print $4": "$10 }'
 
 pkgname=google-chrome
-pkgver=49.0.2623.75
+pkgver=49.0.2623.87
 pkgrel=1
 pkgdesc="An attempt at creating a safer, faster, and more stable browser (Stable Channel)"
 arch=('x86_64')
-url="https://www.google.com/chrome/index.html"
+url="https://www.google.com/chrome"
 license=('custom:chrome')
 depends=('alsa-lib' 'desktop-file-utils' 'flac' 'gconf' 'gtk2' 'harfbuzz' 'harfbuzz-icu' 'hicolor-icon-theme'
          'icu' 'libpng' 'libxss' 'libxtst' 'nss' 'opus' 'snappy' 'speech-dispatcher' 'ttf-font' 'xdg-utils')
 optdepends=('kdebase-kdialog: needed for file dialogs in KDE'
             'ttf-liberation: fix fonts for some PDFs')
-makedepends=('pacman>=4.2.0')
 provides=('google-chrome' 'pepper-flash')
 options=('!emptydirs' '!strip')
 install=$pkgname.install
 _channel=stable
 source=("google-chrome-${_channel}_${pkgver}_amd64.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_amd64.deb"
-        'google-chrome-stable'
-        'eula_text.html')
-md5sums=('149e09d5f8c64ca4eea0da757e142529'
-         '99fa93d5e7fb5d622cef0f9621f3ffa3'
-         'b7e752f549b215ac77f284b6486794b6')
+        "$url/browser/privacy/eula_text.html"
+        'google-chrome-stable')
+md5sums=('27cb02203490413a766dfa7d1d7599e0'
+         'SKIP'
+         '99fa93d5e7fb5d622cef0f9621f3ffa3')
 
 package() {
   msg2 "Extracting the data.tar.xz..."
