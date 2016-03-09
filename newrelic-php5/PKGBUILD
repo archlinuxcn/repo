@@ -2,7 +2,7 @@
 # Contributor: Vinh Nguyen <kurei [at] axcoto.com>
 
 pkgname=newrelic-php5
-pkgver=5.5.0.154
+pkgver=6.0.0.155
 _libver=20131226
 pkgrel=1
 pkgdesc="NewRelic PHP"
@@ -14,7 +14,7 @@ backup=('etc/php/conf.d/newrelic.ini')
 install=$pkgname.install
 source=("https://download.newrelic.com/php_agent/release/$pkgname"-"$pkgver"-"linux.tar.gz"
         "newrelic-daemon.service")
-md5sums=('dd68e31d6cd4f90746c9750856785fa4'
+md5sums=('d96c4e196fa51d0f8ff09342e43b0f86'
          '4fc78347663adcb32ed28eddb546619c')
 
 build() {

@@ -9,11 +9,15 @@ post_install() {
 ===> # modprobe vboxdrv
 EOF
 	_depmod
+	echo '!!!IMPORTANT: Since binary modules packages are droped in Archlinux official repo,'
+	echo 'You should run "pacman -R virtualbox-pf-host-modules" to remove this package by yourself.'
 }
 
 post_upgrade() {
 	_depmod
 	echo 'In order to use the new version, reload all virtualbox modules manually.'
+	echo '!!!IMPORTANT: Since binary modules packages are droped in Archlinux official repo,'
+	echo 'You should run "pacman -R virtualbox-pf-host-modules" to remove this package by yourself.'
 }
 
 post_remove() {

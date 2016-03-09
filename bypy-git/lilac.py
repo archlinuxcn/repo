@@ -27,8 +27,8 @@ def pre_build():
 
   for line in edit_file('PKGBUILD'):
     # edit PKGBUILD
-    if 'makedepends' in line:
-        print(line.replace(')',' \'python-pypandoc\')'))
+    if 'python setup.py install' in line:
+        print(line.replace('python', 'LANG=en_US.UTF-8 python'))
     else:
         print(line)
 

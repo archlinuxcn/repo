@@ -6,13 +6,13 @@
 pkgbase=(virtualbox-pf-modules)
 pkgname=(virtualbox-pf-host-modules virtualbox-pf-guest-modules)
 pkgver=5.0.14
-pkgrel=4
+pkgrel=5
 goodver=4.4
 badver=4.5
 arch=('i686' 'x86_64')
 url='http://virtualbox.org'
 license=('GPL')
-makedepends=('linux-pf-headers' "virtualbox-host-dkms>=$pkgver" "virtualbox-guest-dkms>=$pkgver" 'dkms')
+makedepends=('linux-pf-headers' "virtualbox-host-dkms>=$pkgver" "virtualbox-guest-dkms>=$pkgver" 'dkms<=2.2.0.3+git151023-1')
 
 _extramodules=extramodules-$goodver-pf
 _kernver="$(cat /usr/lib/modules/${_extramodules}/version)"
@@ -30,7 +30,7 @@ build() {
 }
 
 package_virtualbox-pf-host-modules() {
-	_Hpkgdesc='Host kernel modules for VirtualBox running under Linux-pf.'
+	_Hpkgdesc='Host kernel modules for VirtualBox running under Linux-pf (Never use this package, use virtualbox-host-dkms replace it).'
 	pkgdesc="${_Hpkgdesc}"
 	provides=("virtualbox-host-modules")
 	depends=("linux-pf>=$goodver" "linux-pf<$badver")
@@ -44,7 +44,7 @@ package_virtualbox-pf-host-modules() {
 }
 
 package_virtualbox-pf-guest-modules() {
-	_Gpkgdesc='Guest kernel modules for VirtualBox running under Linux-pf.'
+	_Gpkgdesc='Guest kernel modules for VirtualBox running under Linux-pf (Never use this package, use virtualbox-guest-dkms replace it).'
 	pkgdesc="${_Gpkgdesc}"
 	license=('GPL')
 	provides=("virtualbox-guest-modules")
