@@ -1,0 +1,33 @@
+# Colored makepkg-like functions
+all_off="$(tput sgr0)"
+bold="${all_off}$(tput bold)"
+blue="${bold}$(tput setaf 4)"
+yellow="${bold}$(tput setaf 3)"
+
+msg_blue() {
+    printf "${blue}==>${bold} $1${all_off}\n"
+}
+
+note() {
+    printf "${blue}==>${yellow} NOTE:${bold} $1${all_off}\n"
+}
+
+_update() {
+    msg_blue "Updating desktop MIME database..."
+    update-desktop-database -q
+
+    msg_blue "Updating icon cache.."
+    xdg-icon-resource forceupdate --theme hicolor &>/dev/null
+}
+
+post_install() {
+    _update
+}
+
+post_upgrade() {
+    _update
+}
+
+post_remove() {
+    _update
+}

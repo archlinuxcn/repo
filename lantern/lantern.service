@@ -1,0 +1,9 @@
+[Unit]
+Description=Lantern
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/lantern -headless=true
+
+[Install]
+WantedBy=default.target
