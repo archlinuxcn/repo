@@ -23,11 +23,12 @@ _update() {
 post_install() {
     _update
     msg_blue "Adding user 'lantern'"
-    useradd -r -U -d /usr/lib/lantern -s /bin/false lantern &>/dev/null
+    useradd -r -U -d /var/lib/lantern -s /bin/false lantern &>/dev/null
     chown -R lantern:lantern /usr/lib/lantern
 }
 
 post_upgrade() {
+    post_remove
     post_install
 }
 
