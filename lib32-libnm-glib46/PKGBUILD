@@ -8,7 +8,7 @@
 
 pkgname=lib32-libnm-glib46
 pkgver=0.9.8.10
-pkgrel=1
+pkgrel=2
 pkgdesc='NetworkManager library'
 arch=('x86_64')
 url='http://www.gnome.org/projects/NetworkManager/'
@@ -61,7 +61,7 @@ build() {
     --with-resolvconf='/usr/bin/resolvconf' \
     --with-systemdsystemunitdir='/usr/lib/systemd/system' \
     --with-udev-dir='/usr/lib32/udev' \
-    --with-session-tracking='systemd'
+    --with-session-tracking='no'
   make -C libnm-util
   make -C libnm-glib
 }
