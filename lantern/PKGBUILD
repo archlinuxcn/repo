@@ -3,7 +3,7 @@
 
 pkgname=lantern
 pkgver=2.0.16
-pkgrel=1
+pkgrel=2
 pkgdesc='Lantern is a free desktop application that delivers fast, reliable and secure access to the open Internet. (Stable Channel)'
 arch=('i686' 'x86_64')
 url='https://getlantern.org'
@@ -17,14 +17,14 @@ install=$pkgname.install
 source=('lantern.service')
 source_i686=("lantern-installer-32-bit-$pkgver.deb::https://raw.githubusercontent.com/getlantern/lantern-binaries/master/lantern-installer-32-bit.deb")
 source_x86_64=("lantern-installer-64-bit-$pkgver.deb::https://raw.githubusercontent.com/getlantern/lantern-binaries/master/lantern-installer-64-bit.deb")
-sha1sums=('da705ba2fa3608a17258009b933e8bb58b3172a2')
-sha1sums_i686=('0b07fff3e2de2aa8d12258b17a69366b9ab2b9c5')
-sha1sums_x86_64=('d4f43c13c7e744c4a6272ed8e39a37362751b293')
+sha512sums=('8157c1cdf16b96f15c47626e96d8f0c9f9b974ffcd4ac0137b09ced03878edf9bc4f6c6d00f91cc8be159a068d3f61e2fb16b90225b399cede4fa6daa21a251e')
+sha512sums_i686=('f29b0734e075e9a11f768ec4b7dda72efa0025a3500ad77e9da28829729e34acf32902a0bcfb0a23ac98a05dee921f6b77b075f327078412c6f7ca1df86843d6')
+sha512sums_x86_64=('40fd9f384852bd81eb47fe44adc774e35c454360da3a1fa4c06ef53f7f44f64630339c95cbe0c0b0df96f9d06df7025d2501e3cc88c58d38f860849c65c9cd58')
 
 package() {
     msg2 'Extracting the data.tar.xz...'
     bsdtar -xf data.tar.xz -C "${pkgdir}/"
 
     msg2 'Install systemd service file...'
-    install -Dm644 "${srcdir}/lantern.service" "${pkgdir}/usr/lib/systemd/user/lantern.service"
+    install -Dm644 "${srcdir}/lantern.service" "${pkgdir}/usr/lib/systemd/system/lantern.service"
 }

@@ -4,6 +4,7 @@ After=network.target
 
 [Service]
 ExecStart=/usr/bin/lantern -headless=true
+User=lantern
 
 [Install]
-WantedBy=default.target
+WantedBy=multi-user.target
