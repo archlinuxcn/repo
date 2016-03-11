@@ -22,18 +22,21 @@ _update() {
 
 post_install() {
     _update
-    msg_blue "Adding user 'lantern'"
-    useradd -r -U -d /var/lib/lantern -s /bin/false lantern &>/dev/null
-    chown -R lantern:lantern /usr/lib/lantern
+    if ! getent passwd lantern &>/dev/null; then
+        msg_blue "Adding user 'lantern'"
+        useradd -m -r -U -d /var/lib/lantern -s /bin/false lantern &>/dev/null
+        chown -R lantern:lantern /usr/lib/lantern
+    fi
 }
 
 post_upgrade() {
-    post_remove
-    post_install
+    _update
 }
 
 post_remove() {
     _update
-    msg_blue "Removing user 'lantern'"
-    userdel -rf lantern
+    if getent passwd lantern &>/dev/null; then
+        msg_blue "Removing user 'lantern'"
+        userdel -rf lantern &>/dev/null
+    fi
 }
