@@ -6,19 +6,18 @@
 # Contributor: lubosz
 
 pkgname=pcl
-pkgver=1.8.0rc1
+pkgver=1.8.0rc2
 pkgrel=1
 pkgdesc="A comprehensive open source library for n-D Point Clouds and 3D geometry processing"
 arch=('x86_64' 'i686')
 url='http://www.pointclouds.org'
 license=('BSD')
-depends=('boost' 'eigen' 'flann' 'vtk' 'qhull' 'qt5-base' 'glu' 'qt5-webkit' 'openmpi')
+depends=('boost' 'eigen' 'flann' 'vtk' 'qhull' 'qt5-base' 'glu' 'qt5-webkit'
+  'openmpi' 'python2' 'libxt')
 makedepends=('cmake' 'gl2ps' 'python2' 'libxt')
-optdepends=('cuda' 'openni2' 'python-sphinx')
-source=("https://github.com/PointCloudLibrary/pcl/archive/pcl-${pkgver}.tar.gz"
-        "vtk7.patch")
-sha256sums=('18ff4519026a7885d2fd0ee1d06939a7755e83e082840e4929fb2883948e5142'
-            'eaf5f90ded00d47ae8fbb34c3cc8878e694f44b684038a9c593c432035a0b2c1')
+optdepends=('cuda' 'openni2' 'python2-sphinx')
+source=("pcl-${pkgver}.tar.gz"::"https://github.com/PointCloudLibrary/pcl/archive/pcl-${pkgver}.tar.gz")
+sha256sums=('d5d5e32c73d89b18bc305b4e1a2499638a63da14f26b89f003c84c433132ab42')
 
 prepare() {
   cd "${srcdir}/pcl-pcl-${pkgver}"
@@ -31,31 +30,13 @@ prepare() {
   grep -rl '#include <boost/date_time/posix_time/posix_time.hpp>' . \
     | xargs sed -i "s/#include <boost.*posix_time.hpp>/#ifndef Q_MOC_RUN\n\r#include <boost\\/date_time\\/posix_time\\/posix_time.hpp>\n\r#endif/g"
 
-  patch -p1 < ../vtk7.patch
-
   # [[ -d build ]] && rm -r build
   mkdir -p build && cd build
 
-  # -DBUILD_gpu_people=OFF \ Disable until CUDA npp detection is fixed in cmake
   cmake .. \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DBUILD_apps=ON \
-    -DBUILD_apps_cloud_composer=OFF \
-    -DBUILD_apps_in_hand_scanner=ON \
-    -DBUILD_apps_modeler=ON \
-    -DBUILD_apps_point_cloud_editor=OFF \
-    -DBUILD_examples=ON \
-    -DBUILD_global_tests=OFF \
-    -DBUILD_surface_on_nurbs=ON \
-    -DBUILD_CUDA=ON \
-    -DBUILD_cuda_io=ON \
-    -DBUILD_cuda_apps=ON \
-    -DBUILD_GPU=ON \
-    -DBUILD_gpu_surface=ON \
-    -DBUILD_gpu_tracking=ON \
-    -DBUILD_app_3d_rec_framework=ON \
-    -DBUILD_simulation=ON
+    -DCUDA_HOST_COMPILER=/usr/bin/gcc
 }
 
 build() {
