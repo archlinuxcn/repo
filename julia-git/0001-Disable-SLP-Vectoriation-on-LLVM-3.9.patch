@@ -1,0 +1,25 @@
+From a84f660866d224f58272a189e3ddf85d7583b72a Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sun, 13 Mar 2016 18:43:07 +0000
+Subject: [PATCH] Disable SLP Vectoriation on LLVM 3.9
+
+---
+ src/jitlayers.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/jitlayers.cpp b/src/jitlayers.cpp
+index 42331e0..802073c 100644
+--- a/src/jitlayers.cpp
++++ b/src/jitlayers.cpp
+@@ -101,7 +101,7 @@ static void addOptimizationPasses(T *PM)
+ #endif
+     PM->add(createJumpThreadingPass());         // Thread jumps
+     PM->add(createDeadStoreEliminationPass());  // Delete dead stores
+-#if !defined(INSTCOMBINE_BUG)
++#if !defined(INSTCOMBINE_BUG) && !defined(LLVM39)
+     if (jl_options.opt_level >= 3)
+         PM->add(createSLPVectorizerPass());     // Vectorize straight-line code
+ #endif
+-- 
+2.7.2
+

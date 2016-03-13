@@ -15,7 +15,7 @@ if ((BUILD_EXTRA)); then
 else
    pkgname=('julia-git')
 fi
-pkgver=0.5.0.dev.3106.gbeac4d3
+pkgver=0.5.0.dev.3138.g157fbb5
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
@@ -30,8 +30,10 @@ if ((USE_OPENLIBM)); then
     makedepends=("${makedepends[@]}" openlibm)
 fi
 options=('!emptydirs' 'staticlibs' 'debug' '!strip')
-source=('git://github.com/JuliaLang/julia')
-md5sums=('SKIP')
+source=('git://github.com/JuliaLang/julia'
+        '0001-Disable-SLP-Vectoriation-on-LLVM-3.9.patch')
+md5sums=('SKIP'
+         '9b8d6e56290776f048da603308cdf017')
 
 pkgver() {
   cd julia
@@ -52,10 +54,8 @@ prepare() {
   git reset --hard HEAD
   git clean -fdx
 
-  # Workaround before JuliaLang/julia#15332 is merged.
-  mkdir -p usr/lib/
-
-  # patch -Np1 <
+  # Work around #14998
+  patch -Np1 < ../0001-Disable-SLP-Vectoriation-on-LLVM-3.9.patch
 
   cd doc
 
