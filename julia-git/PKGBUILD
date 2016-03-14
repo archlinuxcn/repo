@@ -30,10 +30,8 @@ if ((USE_OPENLIBM)); then
     makedepends=("${makedepends[@]}" openlibm)
 fi
 options=('!emptydirs' 'staticlibs' 'debug' '!strip')
-source=('git://github.com/JuliaLang/julia'
-        '0001-Fix-compilation-on-LLVM-svn.-Closes-14998.patch')
-md5sums=('SKIP'
-         'd750beb89f9f0ab8035420ef07ed1d92')
+source=('git://github.com/JuliaLang/julia')
+md5sums=('SKIP')
 
 pkgver() {
   cd julia
@@ -54,8 +52,7 @@ prepare() {
   git reset --hard HEAD
   git clean -fdx
 
-  # Fix #14998 (and llvm-svn compilation)
-  patch -Np1 < ../0001-Fix-compilation-on-LLVM-svn.-Closes-14998.patch
+  # patch -Np1 < ../
 
   cd doc
 
@@ -111,8 +108,8 @@ build() {
   export CXX='g++ -flto'
   CFLAGS=${CFLAGS//-march=i686/-march=pentium4}
   CXXFLAGS=${CXXFLAGS//-march=i686/-march=pentium4}
-  export CFLAGS+=' -Wno-pedantic -Wno-clobbered -fasynchronous-unwind-tables'
-  export CXXFLAGS+=' -Wno-pedantic -Wno-clobbered -fasynchronous-unwind-tables'
+  export CFLAGS+=' -Wno-pedantic -Wno-clobbered'
+  export CXXFLAGS+=' -Wno-pedantic -Wno-clobbered'
 
   (
     ulimit -s 81920
