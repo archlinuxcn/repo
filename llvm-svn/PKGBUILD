@@ -21,7 +21,7 @@ pkgname=(
 )
 _pkgname='llvm'
 
-pkgver=3.9.0svn_r260809
+pkgver=3.9.0svn_r263384
 pkgrel=1
 
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -248,6 +248,9 @@ package_llvm-libs-svn() {
 
   # Moved from the llvm-svn package here
   mv "${srcdir}"/{BugpointPasses,LLVMgold}.so "${pkgdir}/usr/lib/"
+
+  # included in llvm-svn
+  rm -rf "${pkgdir}/usr/include/"
 
   # Ref: http://llvm.org/docs/GoldPlugin.html
   install -m755 -d "${pkgdir}/usr/lib/bfd-plugins"
