@@ -53,7 +53,7 @@ sha256sums=('be7794ed0cec42d6c682ca8e3517535b54555a3defabec83554dbc74db545ad5'
             '94955c3ff3a53651317c9c6a5f3eb2aa6079e837f06b62755dd4878e560d0386'
             '0be9c28768b8aa0a4c6dfeffd2450119555be792f43ba4bdbce82a613d748e52'
             'c276f41690de0f38dc1cd2e0d1f8cb318f7f8f2f1155659027ef140c4a22f1f7'
-            'afa990310c8e2e6397ca4790f7e5ce773cd337df4bbfe1ef22db37bd87b7001f')
+            '597dc5968c695bbdbb0eac9e8eb5117fcd2773bc91edf5ec103ecffffab8bc48')
 
 prepare() {
   cd "$srcdir/llvm-$pkgver.src"
@@ -140,7 +140,7 @@ check() {
 }
 
 package_llvm-julia() {
-  pkgdesc="Low Level Virtual Machine"
+  pkgdesc="Low Level Virtual Machine (with patch for julia)"
   depends=("llvm-libs-julia=$pkgver-$pkgrel" 'perl')
   conflicts=("llvm")
   provides=("llvm=$pkgver-$pkgrel")
@@ -180,7 +180,7 @@ EOF
 }
 
 package_llvm-libs-julia() {
-  pkgdesc="Low Level Virtual Machine (runtime libraries)"
+  pkgdesc="Low Level Virtual Machine (runtime libraries) (with patch for julia)"
   depends=('gcc-libs' 'zlib' 'libffi' 'libedit' 'ncurses')
   conflicts=("llvm-libs")
   provides=("llvm-libs=$pkgver-$pkgrel")
@@ -201,7 +201,7 @@ package_llvm-libs-julia() {
 }
 
 package_llvm-ocaml-julia() {
-  pkgdesc="OCaml bindings for LLVM"
+  pkgdesc="OCaml bindings for LLVM (with patch for julia)"
   depends=("llvm-julia=$pkgver-$pkgrel" "ocaml=$_ocaml_ver" 'ocaml-ctypes')
   conflicts=("llvm-ocaml")
   provides=("llvm-ocaml=$pkgver-$pkgrel")
@@ -216,7 +216,7 @@ package_llvm-ocaml-julia() {
 }
 
 package_lldb-julia() {
-  pkgdesc="Next generation, high-performance debugger"
+  pkgdesc="Next generation, high-performance debugger (with patch for julia)"
   url="http://lldb.llvm.org/"
   depends=('libedit' 'libxml2' 'python2')
   conflicts=("lldb")
@@ -234,7 +234,7 @@ package_lldb-julia() {
 }
 
 package_clang-julia() {
-  pkgdesc="C language family frontend for LLVM"
+  pkgdesc="C language family frontend for LLVM (with patch for julia)"
   url="http://clang.llvm.org/"
   depends=("llvm-libs-julia=$pkgver-$pkgrel" 'gcc')
   optdepends=('python2: for git-clang-format')
@@ -265,7 +265,7 @@ package_clang-julia() {
 }
 
 package_clang-analyzer-julia() {
-  pkgdesc="A source code analysis framework"
+  pkgdesc="A source code analysis framework (with patch for julia)"
   url="http://clang-analyzer.llvm.org/"
   depends=("clang-julia=$pkgver-$pkgrel" 'python2')
   conflicts=("clang-analyzer")
@@ -302,7 +302,7 @@ package_clang-analyzer-julia() {
 }
 
 package_clang-tools-extra-julia() {
-  pkgdesc="Extra tools built using Clang's tooling APIs"
+  pkgdesc="Extra tools built using Clang's tooling APIs (with patch for julia)"
   url="http://clang.llvm.org/"
   depends=("clang-julia=$pkgver-$pkgrel")
   conflicts=("clang-tools-extra")
