@@ -14,6 +14,7 @@ arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url='http://www.nongnu.org/libunwind/'
 license=('GPL')
 depends=('glibc' 'xz')
+makedepends=('git')
 source=('git://git.savannah.nongnu.org/libunwind')
 md5sums=('SKIP')
 options=('debug' '!strip')
