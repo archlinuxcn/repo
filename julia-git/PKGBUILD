@@ -21,11 +21,11 @@ pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
 license=('GPL')
-makedepends=('gcc-fortran' 'arpack' 'fftw' 'git' 'gmp' 'libgit2' 'libunwind'
+makedepends=('gcc-fortran' 'arpack' 'fftw' 'git' 'gmp' 'libgit2' 'libunwind-git'
              'llvm-julia' 'mpfr' 'pcre2' 'suitesparse' 'python2-sphinx'
              'python2-sphinx_rtd_theme' 'python2-pip' 'texlive-langcjk'
              'texlive-latexextra' 'emacs' 'openspecfun' 'openblas'
-             'libutf8proc' 'patchelf')
+             'libutf8proc-git' 'patchelf')
 if ((USE_OPENLIBM)); then
     makedepends=("${makedepends[@]}" openlibm)
 fi
@@ -140,9 +140,9 @@ build() {
 
 package_julia-git() {
   arch=('i686' 'x86_64')
-  depends=('arpack' 'fftw' 'gmp' 'libgit2' 'libunwind' 'llvm-julia' 'mpfr'
+  depends=('arpack' 'fftw' 'gmp' 'libgit2' 'libunwind-git' 'llvm-julia' 'mpfr'
            'pcre2' 'hicolor-icon-theme' 'xdg-utils' 'suitesparse' 'openspecfun'
-           'openblas' 'libutf8proc')
+           'openblas' 'libutf8proc-git')
   if ((USE_OPENLIBM)); then
       depends=("${depends[@]}" openlibm)
   fi
