@@ -1,0 +1,9 @@
+diff -upr clang-tools-extra-3.7.0.src.orig/clang-query/tool/CMakeLists.txt clang-tools-extra-3.7.0.src/clang-query/tool/CMakeLists.txt
+--- clang-tools-extra-3.7.0.src.orig/clang-query/tool/CMakeLists.txt	2015-06-20 22:28:07.000000000 +0300
++++ clang-tools-extra-3.7.0.src/clang-query/tool/CMakeLists.txt	2015-09-28 11:51:14.724472237 +0300
+@@ -10,3 +10,5 @@ target_link_libraries(clang-query
+   clangQuery
+   clangTooling
+   )
++
++install(TARGETS clang-query RUNTIME DESTINATION bin)
