@@ -21,7 +21,7 @@ makedepends=('cmake' 'libffi' 'python2' "ocaml=$_ocaml_ver" 'python-sphinx'
              'ocaml-ctypes' 'ocaml-findlib' 'libedit' 'swig')
 # Use gcc-multilib to build 32-bit compiler-rt libraries on x86_64 (FS#41911)
 makedepends_x86_64=('gcc-multilib')
-options=('staticlibs' 'debug' '!strip')
+options=('staticlibs' '!strip')
 source=(http://llvm.org/releases/$pkgver/llvm-$pkgver.src.tar.xz
         http://llvm.org/releases/$pkgver/cfe-$pkgver.src.tar.xz
         http://llvm.org/releases/$pkgver/clang-tools-extra-$pkgver.src.tar.xz
