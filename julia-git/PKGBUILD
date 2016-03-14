@@ -15,7 +15,7 @@ if ((BUILD_EXTRA)); then
 else
    pkgname=('julia-git')
 fi
-pkgver=0.5.0.dev.3138.g157fbb5
+pkgver=0.5.0.dev.3143.g264f856
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
@@ -31,9 +31,9 @@ if ((USE_OPENLIBM)); then
 fi
 options=('!emptydirs' 'staticlibs' 'debug' '!strip')
 source=('git://github.com/JuliaLang/julia'
-        '0001-Disable-SLP-Vectoriation-on-LLVM-3.9.patch')
+        '0001-Fix-compilation-on-LLVM-svn.-Closes-14998.patch')
 md5sums=('SKIP'
-         '9b8d6e56290776f048da603308cdf017')
+         'd750beb89f9f0ab8035420ef07ed1d92')
 
 pkgver() {
   cd julia
@@ -54,8 +54,8 @@ prepare() {
   git reset --hard HEAD
   git clean -fdx
 
-  # Work around #14998
-  patch -Np1 < ../0001-Disable-SLP-Vectoriation-on-LLVM-3.9.patch
+  # Fix #14998 (and llvm-svn compilation)
+  patch -Np1 < ../0001-Fix-compilation-on-LLVM-svn.-Closes-14998.patch
 
   cd doc
 
