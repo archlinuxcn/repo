@@ -29,7 +29,7 @@ makedepends=('gcc-fortran' 'arpack' 'fftw' 'git' 'gmp' 'libgit2' 'libunwind-git'
 if ((USE_OPENLIBM)); then
     makedepends=("${makedepends[@]}" openlibm)
 fi
-options=('!emptydirs' 'staticlibs' 'debug' '!strip')
+options=('debug' '!strip')
 source=('git://github.com/JuliaLang/julia')
 md5sums=('SKIP')
 
