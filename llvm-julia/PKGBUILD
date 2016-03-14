@@ -9,10 +9,10 @@
 # Contributor: Roberto Alsina <ralsina@kde.org>
 # Contributor: Gerardo Exequiel Pozzi <vmlinuz386@yahoo.com.ar>
 
-pkgname=('llvm' 'llvm-libs' 'llvm-ocaml' 'lldb' 'clang' 'clang-analyzer'
-         'clang-tools-extra' 'llvm-julia')
+pkgname=('llvm-julia' 'llvm-libs-julia' 'llvm-ocaml-julia' 'lldb-julia'
+         'clang-julia' 'clang-analyzer-julia' 'clang-tools-extra-julia')
 pkgver=3.7.1
-pkgrel=3
+pkgrel=4
 _ocaml_ver=4.02.3
 arch=('i686' 'x86_64')
 url="http://llvm.org/"
@@ -106,7 +106,7 @@ build() {
   cd "$srcdir/llvm-$pkgver.src/build"
 
   cmake \
-    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DLLVM_BUILD_LLVM_DYLIB=ON \
     -DLLVM_DYLIB_EXPORT_ALL=ON \
@@ -139,9 +139,11 @@ check() {
   #   'Ignoring Clang test failures caused by name mangling differences'
 }
 
-package_llvm() {
+package_llvm-julia() {
   pkgdesc="Low Level Virtual Machine"
-  depends=("llvm-libs=$pkgver-$pkgrel" 'perl')
+  depends=("llvm-libs-julia=$pkgver-$pkgrel" 'perl')
+  conflicts=("llvm")
+  provides=("llvm=$pkgver-$pkgrel")
 
   cd "$srcdir/llvm-$pkgver.src"
 
@@ -177,9 +179,11 @@ EOF
   install -Dm644 LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
-package_llvm-libs() {
+package_llvm-libs-julia() {
   pkgdesc="Low Level Virtual Machine (runtime libraries)"
   depends=('gcc-libs' 'zlib' 'libffi' 'libedit' 'ncurses')
+  conflicts=("llvm-libs")
+  provides=("llvm-libs=$pkgver-$pkgrel")
 
   install -d "$pkgdir/usr/lib"
   cp -P \
@@ -196,9 +200,11 @@ package_llvm-libs() {
     "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
-package_llvm-ocaml() {
+package_llvm-ocaml-julia() {
   pkgdesc="OCaml bindings for LLVM"
-  depends=("llvm=$pkgver-$pkgrel" "ocaml=$_ocaml_ver" 'ocaml-ctypes')
+  depends=("llvm-julia=$pkgver-$pkgrel" "ocaml=$_ocaml_ver" 'ocaml-ctypes')
+  conflicts=("llvm-ocaml")
+  provides=("llvm-ocaml=$pkgver-$pkgrel")
 
   cd "$srcdir/llvm-$pkgver.src"
 
@@ -209,10 +215,12 @@ package_llvm-ocaml() {
   install -Dm644 LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
-package_lldb() {
+package_lldb-julia() {
   pkgdesc="Next generation, high-performance debugger"
   url="http://lldb.llvm.org/"
   depends=('libedit' 'libxml2' 'python2')
+  conflicts=("lldb")
+  provides=("lldb=$pkgver-$pkgrel")
 
   cd "$srcdir/llvm-$pkgver.src"
 
@@ -225,11 +233,13 @@ package_lldb() {
   install -Dm644 tools/lldb/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
-package_clang() {
+package_clang-julia() {
   pkgdesc="C language family frontend for LLVM"
   url="http://clang.llvm.org/"
-  depends=("llvm-libs=$pkgver-$pkgrel" 'gcc')
+  depends=("llvm-libs-julia=$pkgver-$pkgrel" 'gcc')
   optdepends=('python2: for git-clang-format')
+  conflicts=("clang")
+  provides=("clang=$pkgver-$pkgrel")
 
   cd "$srcdir/llvm-$pkgver.src"
 
@@ -254,10 +264,12 @@ package_clang() {
     "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
-package_clang-analyzer() {
+package_clang-analyzer-julia() {
   pkgdesc="A source code analysis framework"
   url="http://clang-analyzer.llvm.org/"
-  depends=("clang=$pkgver-$pkgrel" 'python2')
+  depends=("clang-julia=$pkgver-$pkgrel" 'python2')
+  conflicts=("clang-analyzer")
+  provides=("clang-analyzer=$pkgver-$pkgrel")
 
   cd "$srcdir/llvm-$pkgver.src/tools/clang"
 
@@ -289,10 +301,12 @@ package_clang-analyzer() {
   install -Dm644 LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
-package_clang-tools-extra() {
+package_clang-tools-extra-julia() {
   pkgdesc="Extra tools built using Clang's tooling APIs"
   url="http://clang.llvm.org/"
-  depends=("clang=$pkgver-$pkgrel")
+  depends=("clang-julia=$pkgver-$pkgrel")
+  conflicts=("clang-tools-extra")
+  provides=("clang-tools-extra=$pkgver-$pkgrel")
 
   cd "$srcdir/llvm-$pkgver.src"
 
@@ -306,8 +320,4 @@ package_clang-tools-extra() {
 
   install -Dm644 tools/clang/tools/extra/LICENSE.TXT \
     "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-}
-
-package_llvm-julia() {
-  depends=("llvm=$pkgver-$pkgrel")
 }
