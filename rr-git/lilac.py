@@ -1,6 +1,7 @@
 from lilaclib import *
 
-build_prefix = 'multilib-archlinuxcn'
+build_prefix = 'multilib'
+depends = ['libpfm4-git', 'libdisasm']
 
 pre_build = vcs_update
 
