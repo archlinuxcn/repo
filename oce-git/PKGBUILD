@@ -5,13 +5,13 @@
 
 pkgname=oce-git
 pkgver=0.17.0.63.gc0cdb53
-pkgrel=1
+pkgrel=2
 pkgdesc="Open CASCADE community edition, 3D modeling & numerical simulation"
 arch=('i686' 'x86_64')
 url="http://www.opencascade.org"
 license=('custom')
 depends=(freeimage freetype2 mesa libgl glu libcl libx11 tk)
-makedepends=(cmake git opencl-headers12)
+makedepends=(cmake git opencl-headers)
 optdepends=(java-runtime)
 provides=("opencascade=6.8.0" 'oce')
 conflicts=("opencascade" 'oce')
