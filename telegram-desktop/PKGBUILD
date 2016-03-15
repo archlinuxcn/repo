@@ -1,5 +1,5 @@
 pkgname=telegram-desktop
-pkgver=0.9.28
+pkgver=0.9.32
 pkgrel=1
 _qtver=5.5.1
 pkgdesc='Official desktop version of Telegram messaging app.'
@@ -20,7 +20,7 @@ sha256sums=('SKIP'
 	    '6f028e63d4992be2b4a5526f2ef3bfa2fe28c5c757554b11d9e8d86189652518'
 	    'SKIP'
 	    'SKIP'
-	    '0e936f964fbaa7392a0c58aa919d6ea8c5f931472e1ab59b437523aa1a1d585c'
+	    'adb111ad10872e2858c8ccdd8645a1566736dec8d48deb50a9a7c0fbcae5cfb0'
 	    'd4cdad0d091c7e47811d8a26d55bbee492e7845e968c522e86f120815477e9eb')
 install="$pkgname.install"
 
