@@ -12,7 +12,7 @@
 pkgname=('llvm-julia' 'llvm-libs-julia' 'llvm-ocaml-julia' 'lldb-julia'
          'clang-julia' 'clang-analyzer-julia' 'clang-tools-extra-julia')
 pkgver=3.7.1
-pkgrel=4
+pkgrel=5
 _ocaml_ver=4.02.3
 arch=('i686' 'x86_64')
 url="http://llvm.org/"
@@ -105,8 +105,10 @@ prepare() {
 build() {
   cd "$srcdir/llvm-$pkgver.src/build"
 
+  CXXFLAGS+=' -ggdb1'
+
   cmake \
-    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DLLVM_BUILD_LLVM_DYLIB=ON \
     -DLLVM_DYLIB_EXPORT_ALL=ON \
