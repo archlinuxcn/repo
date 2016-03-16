@@ -1,5 +1,5 @@
 pkgname=pacaur
-pkgver=4.5.4
+pkgver=4.5.5
 pkgrel=1
 pkgdesc="An AUR helper that minimizes user interaction"
 arch=('any')
@@ -9,7 +9,7 @@ depends=('cower' 'expac' 'sudo' 'git')
 makedepends=('perl')
 backup=('etc/xdg/pacaur/config')
 source=("https://github.com/rmarquis/$pkgname/archive/$pkgver.tar.gz")
-md5sums=('d3535c15e0be97b7c203a7cd88ab8b1b')
+md5sums=('2ec788d0acaabdee9eed3bf8908fc075')
 
 build() {
     cd "$pkgname-$pkgver"
@@ -32,7 +32,7 @@ package() {
         $pkgdir/usr/share/zsh/site-functions/_pacaur
     mkdir -p $pkgdir/usr/share/man/man8
     install -D -m644 ./pacaur.8 $pkgdir/usr/share/man/man8/pacaur.8
-    mkdir -p $pkgdir/usr/share/locale/{ca,de,es,fr,hu,it,ja,pl,pt,ru,tr}/LC_MESSAGES/
+    mkdir -p $pkgdir/usr/share/locale/{ca,de,es,fr,hu,it,ja,nl,pl,pt,ru,tr}/LC_MESSAGES/
     msgfmt ./po/ca.po -o $pkgdir/usr/share/locale/ca/LC_MESSAGES/pacaur.mo
     msgfmt ./po/de.po -o $pkgdir/usr/share/locale/de/LC_MESSAGES/pacaur.mo
     msgfmt ./po/es.po -o $pkgdir/usr/share/locale/es/LC_MESSAGES/pacaur.mo
@@ -40,6 +40,7 @@ package() {
     msgfmt ./po/hu.po -o $pkgdir/usr/share/locale/hu/LC_MESSAGES/pacaur.mo
     msgfmt ./po/it.po -o $pkgdir/usr/share/locale/it/LC_MESSAGES/pacaur.mo
     msgfmt ./po/ja.po -o $pkgdir/usr/share/locale/ja/LC_MESSAGES/pacaur.mo
+    msgfmt ./po/nl.po -o $pkgdir/usr/share/locale/nl/LC_MESSAGES/pacaur.mo
     msgfmt ./po/pl.po -o $pkgdir/usr/share/locale/pl/LC_MESSAGES/pacaur.mo
     msgfmt ./po/pt.po -o $pkgdir/usr/share/locale/pt/LC_MESSAGES/pacaur.mo
     msgfmt ./po/ru.po -o $pkgdir/usr/share/locale/ru/LC_MESSAGES/pacaur.mo
