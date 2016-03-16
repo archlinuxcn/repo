@@ -2,7 +2,7 @@
 
 pkgname=teamviewer
 pkgver=11.0.53191
-pkgrel=2.2
+pkgrel=2.3
 pkgdesc='All-In-One Software for Remote Support and Online Meetings'
 arch=('i686' 'x86_64')
 url='http://www.teamviewer.com'
@@ -18,7 +18,7 @@ depends_x86_64=(
 	'lib32-libxrender')
 depends_i686=(
 	'fontconfig'
-	'libpng'
+	'libpng12'
 	'libsm'
 	'libxinerama'
 	'libxrender')
