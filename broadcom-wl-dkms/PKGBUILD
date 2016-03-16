@@ -3,14 +3,16 @@
 
 pkgname=broadcom-wl-dkms
 pkgver=6.30.223.271
-pkgrel=5
+pkgrel=6
 pkgdesc="Broadcom 802.11 Linux STA wireless driver"
 arch=('i686' 'x86_64')
 url="https://www.broadcom.com/support/?gid=1"
 license=('custom')
 depends=('dkms')
-optdepends=('linux-headers: build modules against Arch kernel'
-            'linux-lts-headers: build modules against LTS Arch kernel')
+optdepends=('linux-headers: build modules against the Arch kernel'
+            'linux-lts-headers: build modules against the LTS kernel'
+            'linux-zen-headers: build modules against the ZEN kernel'
+            'linux-grsec-headers: build modules against the GRSEC kernel')
 conflicts=('broadcom-wl')
 install=broadcom-wl-dkms.install
 source=('broadcom-wl-dkms.conf'
