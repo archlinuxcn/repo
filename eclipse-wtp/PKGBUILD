@@ -3,12 +3,12 @@
 # Contributor: Jonathan Wiersma <archaur at jonw dot org>
 
 pkgname=eclipse-wtp
-pkgver=3.7.1
-_pkgdate=20150915020029
+pkgver=3.7.2
+_pkgdate=20160217020110
 pkgrel=1
 pkgdesc="Webtools framework for the Eclipse platform"
 url="http://www.eclipse.org/webtools/"
-license="Eclipse Public License"
+license=("Eclipse Public License")
 arch=('any')
 depends=( 'eclipse' 'eclipse-emf' 'eclipse-gef' 'java-runtime>=5' )
 optdepends=("java-environment>=5" "eclipse-dtp")
@@ -16,7 +16,7 @@ provides=('eclipse-wtp-wst')
 options=(!strip)
 _mirror="http://www.eclipse.org/downloads/download.php?r=1&mirror_id=1&file="
 source=("$_mirror/webtools/downloads/drops/R$pkgver/R-$pkgver-$_pkgdate/wtp-repo-R-$pkgver-$_pkgdate.zip")
-sha256sums=('438ad3d1d05da21679181a2c3d89833b8cfcf96bdf6a0748870d6a85d9e9022a')
+sha256sums=('328abe055fe76d2c03d74ce812319363079d86d9dbe0cc4f631d48a0d4ddbde1')
 
 package() {
   _dest="$pkgdir/usr/lib/eclipse/dropins/wtp/"
