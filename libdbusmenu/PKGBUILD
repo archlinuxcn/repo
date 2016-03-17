@@ -6,33 +6,33 @@
 
 pkgbase=libdbusmenu
 pkgname=("${pkgbase}-glib" "${pkgbase}-gtk"{2,3})
-pkgver=12.10.3.15.04.20150410.2
-pkgrel=2
+pkgver=16.04.0
+pkgrel=1
 pkgdesc="A library for passing menus over DBus"
 arch=('i686' 'x86_64')
 url="https://launchpad.net/libdbusmenu"
-license=('GPL3')
-makedepends=('docbook-xsl' 'gnome-common' 'gnome-doc-utils' 'gobject-introspection' 'gtk2' 'gtk3' 'intltool' 'vala')
+license=('GPL3' 'LGPL2.1' 'LGPL3')
+makedepends=('gnome-common' 'gnome-doc-utils' 'gobject-introspection' 'gtk2' 'gtk3' 'intltool' 'vala' 'valgrind')
 options=('!emptydirs')
-source=("https://launchpad.net/ubuntu/+archive/primary/+files/${pkgbase}_12.10.3+15.04.20150410.2.orig.tar.gz")
-sha512sums=('c15b79464bc6498cb1e912efbe648606b7bf3b5c521c4d4e5c7decf002b4e8362444177922a5abd8a057a803a8cc00e72de6e36209189eb255efb83e2ded0b06')
+source=("https://launchpad.net/${pkgbase}/${pkgver%.?}/${pkgver}/+download/${pkgbase}-${pkgver}.tar.gz")
+sha512sums=('ee9654ac4ed94bdebc94a6db83b126784273a417a645b2881b2ba676a5f67d7fc95dd2bb37bfb0890aa47299ed73cb21ed7de8b75f3fed6b69bfd39065062241')
 
 prepare() {
   cd "${srcdir}"
-  [ -d "${pkgbase}-gtk2-12.10.3+15.04.20150410.2" ] && rm -rf "${pkgbase}-gtk2-12.10.3+15.04.20150410.2"
-  cp -a "${pkgbase}-12.10.3+15.04.20150410.2" "${pkgbase}-gtk2-12.10.3+15.04.20150410.2"
+  [ -d "${pkgbase}-gtk2-${pkgver}" ] && rm -rf "${pkgbase}-gtk2-${pkgver}"
+  cp -a "${pkgbase}-${pkgver}" "${pkgbase}-gtk2-${pkgver}"
 }
 
 build() {
   export HAVE_VALGRIND_TRUE='#'
   export HAVE_VALGRIND_FALSE=''
 
-  cd "${srcdir}/${pkgbase}-12.10.3+15.04.20150410.2"
-  ./autogen.sh --prefix='/usr' --sysconfdir='/etc' --localstatedir='/var' --disable-{dumper,static,tests}
+  cd "${srcdir}/${pkgbase}-${pkgver}"
+  ./configure --prefix='/usr' --sysconfdir='/etc' --localstatedir='/var' --disable-{dumper,static,tests}
   make
 
-  cd "${srcdir}/${pkgbase}-gtk2-12.10.3+15.04.20150410.2"
-  ./autogen.sh --prefix='/usr' --sysconfdir='/etc' --localstatedir='/var' --disable-{dumper,static,tests} --with-gtk='2'
+  cd "${srcdir}/${pkgbase}-gtk2-${pkgver}"
+  ./configure --prefix='/usr' --sysconfdir='/etc' --localstatedir='/var' --disable-{dumper,static,tests} --with-gtk='2'
   make
   
 }
@@ -40,7 +40,7 @@ build() {
 package_libdbusmenu-glib() {
 depends=('glib2')
 
-  cd "${srcdir}/${pkgbase}-12.10.3+15.04.20150410.2"
+  cd "${srcdir}/${pkgbase}-${pkgver}"
 
   make -j1 -C libdbusmenu-glib DESTDIR="${pkgdir}" install
 }
@@ -48,7 +48,7 @@ depends=('glib2')
 package_libdbusmenu-gtk2() {
 depends=('gtk2' 'libdbusmenu-glib')
 
-  cd "${srcdir}/${pkgbase}-gtk2-12.10.3+15.04.20150410.2"
+  cd "${srcdir}/${pkgbase}-gtk2-${pkgver}"
 
   make -j1 -C libdbusmenu-glib DESTDIR="${pkgdir}" install
   make -j1 -C libdbusmenu-gtk DESTDIR="${pkgdir}" install
@@ -58,7 +58,7 @@ depends=('gtk2' 'libdbusmenu-glib')
 package_libdbusmenu-gtk3() {
 depends=('gtk3' 'libdbusmenu-glib')
 
-  cd "${srcdir}/${pkgbase}-12.10.3+15.04.20150410.2"
+  cd "${srcdir}/${pkgbase}-${pkgver}"
 
   make -j1 -C libdbusmenu-glib DESTDIR="${pkgdir}" install
   make -j1 -C libdbusmenu-gtk DESTDIR="${pkgdir}" install
