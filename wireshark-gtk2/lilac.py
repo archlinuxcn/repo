@@ -24,7 +24,7 @@ def pre_build():
     if line.startswith('pkgname='):
       line = 'pkgname=wireshark-gtk2'
     elif line.startswith('makedepends=('):
-      line = line.replace("'qt5-base' 'gtk3'", "'gtk2'")
+      line = line.replace("'qt5-base' 'qt5-multimedia' 'gtk3'", "'gtk2'")
     elif '--with-qt' in line:
       continue
     elif '--with-gtk3' in line:
