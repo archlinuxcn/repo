@@ -4,17 +4,17 @@
 # Contributor: Florian Pritz <bluewind at jabber dot ccc dot de>
 pkgname=wireshark-gtk2
 pkgbase=wireshark
-pkgver=2.0.1
-pkgrel=2
+pkgver=2.0.2
+pkgrel=3
 arch=('i686' 'x86_64')
 license=('GPL2')
-makedepends=('gtk2' 'krb5' 'libpcap' 'bash' 'gnutls' 'portaudio'
-             'lua52' 'python' 'desktop-file-utils' 'hicolor-icon-theme')
+makedepends=('c-ares' 'geoip' 'gtk2' 'krb5' 'libpcap' 'bash'
+             'gnutls' 'portaudio' 'lua52' 'python' 'desktop-file-utils' 'hicolor-icon-theme')
 options=(!emptydirs)
 url='http://www.wireshark.org/'
 source=(http://www.wireshark.org/download/src/${pkgbase}-${pkgver}.tar.bz2
         do_not_use_svn_version.patch)
-sha1sums=('6703221128305ac33802f0da13d368476ce90688'
+sha1sums=('6a5c18710d6da04ddc84975cdc840812e672c0f4'
           '489a176a7b90f7ae6f0985510c0c9038de54d9d6')
 
 prepare() {
@@ -36,7 +36,9 @@ build() {
       --with-lua \
       --with-portaudio \
       --with-ssl \
-      --with-krb5
+      --with-krb5 \
+      --with-c-ares \
+      --with-geoip
   make all
 }
 
