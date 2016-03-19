@@ -6,10 +6,10 @@ pkgrel=1
 pkgdesc='A simple command line tool that solves the perpetual problem of selecting files out of bash output.'
 url='https://github.com/facebook/PathPicker'
 license=('BSD')
-url='https://github.com/facebook/PathPicker/archive/$p'
+source=("https://github.com/facebook/PathPicker/archive/$pkgver.tar.gz")
 arch=('any')
 depends=('python')
-
+sha256sums=('54919aae86c3f36444c25f79e730c4c49551811d85cbf7bfca21fb6c531278cf')
 
 package() {
   mkdir -p "$pkgdir/usr/bin"
