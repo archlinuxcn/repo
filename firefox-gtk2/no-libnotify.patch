@@ -1,0 +1,51 @@
+diff --git i/toolkit/system/gnome/moz.build w/toolkit/system/gnome/moz.build
+index 0ecde07..206d6eb 100644
+--- i/toolkit/system/gnome/moz.build
++++ w/toolkit/system/gnome/moz.build
+@@ -5,9 +5,7 @@
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
+ SOURCES += [
+-    'nsAlertsIconListener.cpp',
+     'nsGnomeModule.cpp',
+-    'nsSystemAlertsService.cpp',
+ ]
+ 
+ if CONFIG['MOZ_ENABLE_GCONF']:
+diff --git i/toolkit/system/gnome/nsGnomeModule.cpp w/toolkit/system/gnome/nsGnomeModule.cpp
+index 6ecebcc..2f193a3 100644
+--- i/toolkit/system/gnome/nsGnomeModule.cpp
++++ w/toolkit/system/gnome/nsGnomeModule.cpp
+@@ -20,8 +20,6 @@ NS_GENERIC_FACTORY_CONSTRUCTOR(nsGIOService)
+ NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(nsGSettingsService, Init)
+ NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(nsPackageKitService, Init)
+ #endif
+-#include "nsSystemAlertsService.h"
+-NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(nsSystemAlertsService, Init)
+ 
+ #ifdef MOZ_ENABLE_GCONF
+ NS_DEFINE_NAMED_CID(NS_GCONFSERVICE_CID);
+@@ -31,7 +29,6 @@ NS_DEFINE_NAMED_CID(NS_GIOSERVICE_CID);
+ NS_DEFINE_NAMED_CID(NS_GSETTINGSSERVICE_CID);
+ NS_DEFINE_NAMED_CID(NS_PACKAGEKITSERVICE_CID);
+ #endif
+-NS_DEFINE_NAMED_CID(NS_SYSTEMALERTSSERVICE_CID);
+ 
+ static const mozilla::Module::CIDEntry kGnomeCIDs[] = {
+ #ifdef MOZ_ENABLE_GCONF
+@@ -42,7 +39,6 @@ static const mozilla::Module::CIDEntry kGnomeCIDs[] = {
+   { &kNS_GSETTINGSSERVICE_CID, false, nullptr, nsGSettingsServiceConstructor },
+   { &kNS_PACKAGEKITSERVICE_CID, false, nullptr, nsPackageKitServiceConstructor },
+ #endif
+-  { &kNS_SYSTEMALERTSSERVICE_CID, false, nullptr, nsSystemAlertsServiceConstructor },
+   { nullptr }
+ };
+ 
+@@ -55,7 +51,6 @@ static const mozilla::Module::ContractIDEntry kGnomeContracts[] = {
+   { NS_GSETTINGSSERVICE_CONTRACTID, &kNS_GSETTINGSSERVICE_CID },
+   { NS_PACKAGEKITSERVICE_CONTRACTID, &kNS_PACKAGEKITSERVICE_CID },
+ #endif
+-  { NS_SYSTEMALERTSERVICE_CONTRACTID, &kNS_SYSTEMALERTSSERVICE_CID },
+   { nullptr }
+ };
+ 
