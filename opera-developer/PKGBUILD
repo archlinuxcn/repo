@@ -1,7 +1,7 @@
 # Maintainer: Christian Hesse <mail@eworm.de>
 
 pkgname=opera-developer
-pkgver=37.0.2163.0
+pkgver=37.0.2171.0
 pkgrel=1
 pkgdesc='A fast and secure web browser and Internet suite - developer stream'
 arch=('x86_64' 'i686')
@@ -20,8 +20,8 @@ source_x86_64=("http://get.geo.opera.com/pub/${pkgname}/${pkgver}/linux/${pkgnam
 source_i686=("http://get.geo.opera.com/pub/${pkgname}/${pkgver}/linux/${pkgname}_${pkgver}_i386.deb")
 sha256sums=('508512464e24126fddfb2c41a1e2e86624bdb0c0748084b6a922573b6cf6b9c5'
 	'99fc0d2822edd14e234d451995db47148125e4580221a292598959421d131231')
-sha256sums_x86_64=('b201bfeaf0393aaece2240be41e8245f8e0503dea73273ca9b812c3c7e5b0475')
-sha256sums_i686=('317fe82a10c1220d87d142588908d0967d36fe641e633bd1799cd771f66357b4')
+sha256sums_x86_64=('c67132a44e10d1851551c2364a8fde4a92152cfb0b341909d1a5fe1c029db031')
+sha256sums_i686=('aede5de76cd1265b215aee45009e573db6689c5afdede626815ccc08f6ee3af7')
 # alternative download
 #source=("ftp://ftp.opera.com/pub/${pkgname}/${pkgver}/linux/${pkgname}_${pkgver}_amd64.deb")
 #source=("http://deb.opera.com/${pkgname}/pool/non-free/o/${pkgname}/${pkgname}_${pkgver}_amd64.deb")
