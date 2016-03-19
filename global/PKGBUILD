@@ -3,7 +3,7 @@
 # Contributor: Matthias Meulien orontee@gmail.com
 
 pkgname=global
-pkgver=6.5.2
+pkgver=6.5.3
 pkgrel=1
 pkgdesc="A source code tag system"
 arch=('i686' 'x86_64')
@@ -16,8 +16,8 @@ makedepends=('python')
 options=(!emptydirs !libtool)
 install=global.install
 source=(http://tamacom.com/global/${pkgname}-${pkgver}.tar.gz)
-md5sums=('c154bc9ba77e7630068e2916cb9531c5')
-sha256sums=('c0fc831c1a54a5ee4f5fc765a7af90ade773e4fb4763416c0b6d4d2e571b1d1f')
+md5sums=('0ca31fc718bb59d3496a4ba32d1ced35')
+sha256sums=('336f91f1d4a84469bc37a0dc7e9dc7cde9154cf677bb1bb5cd220c9b41b80302')
 
 prepare() {
     cd "${srcdir}/${pkgname}-${pkgver}"
@@ -27,7 +27,7 @@ prepare() {
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
 	autoreconf -fi
-	PYTHON=/usr/bin/python ./configure --prefix=/usr --with-exuberant-ctags=/usr/bin/ctags
+	./configure --prefix=/usr --with-exuberant-ctags=/usr/bin/ctags
 	make
 }
 
