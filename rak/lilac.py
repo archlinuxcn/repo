@@ -9,10 +9,9 @@ def pre_build():
   json = s.get('https://rubygems.org/api/v1/versions/rak.json').json()
 
   pkgver = json[0]['number']
-  run_cmd(['sh', '-c', 'sed -i "/pkgver/s/^.*$/pkgver=' + pkgver + '/" PKGBUILD'])
+  run_cmd(['sh', '-c', 'sed -i "/^pkgver/s/^.*$/pkgver=' + pkgver + '/" PKGBUILD'])
 
-  sha256sums = run_cmd(['sh', '-c', 'makepkg -g 2> /dev/null']).rstrip()
-  run_cmd(['sh', '-c', 'sed -i "/sha256sums/s/^.*$/' + sha256sums + '/" PKGBUILD'])
+  run_cmd(['sh', '-c', 'updpkgsums'])
 
 def post_build():
   git_add_files('PKGBUILD')

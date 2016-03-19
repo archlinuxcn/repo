@@ -1,24 +1,26 @@
-# Maintainer: Yichao Yu <yyc1992@gmail.com>
-# Contributor: Miguel Revilla <yo@miguelrevilla.com>
+# $Id$
+# Maintainer: Miguel Revilla <yo@miguelrevilla.com>
 # Contributor: Eric Bélanger <eric@archlinux.org>
 
 _pkgbasename=tcl
 pkgname=lib32-${_pkgbasename}
-pkgver=8.6.4
-pkgrel=3
+pkgver=8.6.5
+pkgrel=1
 pkgdesc="The Tcl scripting language (32-bit runtime)"
 arch=('x86_64')
 url="http://tcl.sourceforge.net/"
 license=('custom')
 depends=('tcl' 'lib32-zlib')
 source=(http://downloads.sourceforge.net/sourceforge/tcl/tcl${pkgver}-src.tar.gz)
-md5sums=('d7cbb91f1ded1919370a30edd1534304')
-options=('staticlibs')
+md5sums=('0e6426a4ca9401825fbc6ecf3d89a326')
 
 prepare() {
   cd tcl${pkgver}
   # we build the tcl sqlite interface in sqlite-tcl package
   rm -rf pkgs/sqlite3*
+
+  sed -i 's/#define DUPTRAVERSE_MAX_DEPTH 500/#define DUPTRAVERSE_MAX_DEPTH 5000/' \
+    generic/regc_nfa.c
 }
 
 build() {
@@ -27,21 +29,20 @@ build() {
   export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
 
   cd tcl${pkgver}/unix
-  ./configure --prefix=/usr --libdir=/usr/lib32 \
-              --mandir=/usr/share/man --enable-threads
+  ./configure --prefix=/usr --libdir=/usr/lib32 --mandir=/usr/share/man --enable-threads
   make
 }
 
 check() {
   cd tcl${pkgver}/unix
-  # make test
+  make test
 }
 
 package() {
   cd tcl${pkgver}/unix
   make INSTALL_ROOT="${pkgdir}" install install-private-headers
   find "${pkgdir}" -name '*.a' -type f -exec chmod 644 {} \;
-  ln -sf libtcl8.6.so "${pkgdir}/usr/lib32/libtcl.so"
+  ln -sf tclsh8.6 "${pkgdir}/usr/bin/tclsh"
 
   # remove 64-bit and unarched stuff
   rm -rf "${pkgdir}"/usr/{include,share,bin,lib}
@@ -49,20 +50,5 @@ package() {
   ln -s $_pkgbasename "${pkgdir}/usr/share/licenses/${pkgname}"
 
   # remove buildroot traces
-  sed -e "s#${srcdir}/tcl${pkgver}/unix#/usr/lib32#" \
-      -e "s#${srcdir}/tcl${pkgver}#/usr/include#" \
-      -i "${pkgdir}/usr/lib32/tclConfig.sh"
-
-  tdbcver=tdbc1.0.3
-  sed -e "s#${srcdir}/tcl${pkgver}/unix/pkgs/$tdbcver#/usr/lib32/$tdbcver#" \
-      -e "s#${srcdir}/tcl${pkgver}/pkgs/$tdbcver/generic#/usr/include#" \
-      -e "s#${srcdir}/tcl${pkgver}/pkgs/$tdbcver/library#/usr/lib/tcl${pkgver%.*}#" \
-      -e "s#${srcdir}/tcl${pkgver}/pkgs/$tdbcver#/usr/include#" \
-      -i "${pkgdir}/usr/lib32/$tdbcver/tdbcConfig.sh"
-
-  itclver=itcl4.0.3
-  sed -e "s#${srcdir}/tcl${pkgver}/unix/pkgs/$itclver#/usr/lib32/$itclver#" \
-      -e "s#${srcdir}/tcl${pkgver}/pkgs/$itclver/generic#/usr/include#" \
-      -e "s#${srcdir}/tcl${pkgver}/pkgs/$itclver#/usr/include#" \
-      -i "${pkgdir}/usr/lib32/$itclver/itclConfig.sh"
+  sed -i "s#${srcdir}#/usr/src#" "${pkgdir}"/usr/lib32/{tcl,tdbc1.0.4/tdbc,itcl4.0.4/itcl}Config.sh
 }

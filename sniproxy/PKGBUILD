@@ -1,5 +1,5 @@
 pkgname=sniproxy
-pkgver=0.3.6
+pkgver=0.4.0
 pkgrel=1
 pkgdesc="TLS SNI proxy"
 arch=(i686 x86_64)
@@ -12,7 +12,7 @@ source=($pkgname-$pkgver.tar.gz::https://github.com/dlundquist/sniproxy/archive/
 	sniproxy.service
 	sniproxy.conf
 	sniproxy.tmpfiles.d)
-md5sums=('52a01eb55ac7712de2dd13f1ba6260e4'
+md5sums=('5cf9afd2701f8c45157ea2a4557f5f0b'
          '4aa83e863200de912b3415daa1adeca0'
          '86deda1006d9b0ac4bb9f057b517f59b'
          '985de392ad947f91a5e3ec4d5e53c087')
