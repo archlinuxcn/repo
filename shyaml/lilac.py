@@ -10,10 +10,9 @@ build_prefix = 'extra-x86_64'
 
 def pre_build():
   ver = run_cmd(['sh', '-c', "git ls-remote --tags https://github.com/0k/shyaml | sed -n '${s#^.*tags\/##p}'"]).rstrip()
-  run_cmd(['sh', '-c', 'sed -i "/pkgver/s/^.*$/pkgver=' + ver + '/" PKGBUILD'])
+  run_cmd(['sh', '-c', 'sed -i "/^pkgver/s/^.*$/pkgver=' + ver + '/" PKGBUILD'])
 
-  sha256sums = run_cmd(['sh', '-c', 'makepkg -g 2> /dev/null']).rstrip()
-  run_cmd(['sh', '-c', 'sed -i "/sha256sums/s/^.*$/' + sha256sums + '/" PKGBUILD'])
+  run_cmd(['sh', '-c', 'updpkgsums'])
 
 def post_build():
   git_add_files('PKGBUILD')

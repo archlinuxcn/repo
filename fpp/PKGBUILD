@@ -6,19 +6,16 @@ pkgrel=1
 pkgdesc='A simple command line tool that solves the perpetual problem of selecting files out of bash output.'
 url='https://github.com/facebook/PathPicker'
 license=('BSD')
-pkgver=0.7.0
+url='https://github.com/facebook/PathPicker/archive/$p'
 arch=('any')
-
 depends=('python')
-
-conflicts=("fpp-git")
-provides=("fpp")
 
 
 package() {
-  mkdir -p "$pkgdir/opt/PathPicker"
-pkgver=0.7.0
+  mkdir -p "$pkgdir/usr/bin"
+  mkdir -p "$pkgdir/opt"
 
-  mkdir -p $pkgdir/usr/bin
+  mv "$srcdir/PathPicker-$pkgver" "$pkgdir/opt/PathPicker"
+
   ln -s '/opt/PathPicker/fpp' "$pkgdir/usr/bin/fpp"
 }
