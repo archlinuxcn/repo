@@ -19,7 +19,8 @@ pkgver() {
   cd "$srcdir/$_repo_name"
   _author_ver=$(git describe | sed -e 's/-.*//' -e 's/v//')
   _last_commit_date=$(git log -1 --pretty='%cd' --date=short | tr -d '-')
-  echo $_author_ver.$_last_commit_date
+  _commit_count="$(git rev-list --count HEAD)"
+  echo $_author_ver.$_last_commit_date.$_commit_count
 }
 
 build() {
