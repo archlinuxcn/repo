@@ -11,7 +11,7 @@ depends = [
   ('android-sdk-platform-tools','android-sdk-platform-tools')
 ]
 
-build_prefix = 'extra-x86_64'
+build_prefix = 'multilib-archlinuxcn'
 pre_build = aur_pre_build
 post_build = aur_post_build
 
