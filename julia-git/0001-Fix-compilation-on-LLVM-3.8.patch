@@ -1,0 +1,48 @@
+From 68dce2613e98d332ddac69073e8b96839dfe1ed9 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sun, 20 Mar 2016 03:42:13 +0000
+Subject: [PATCH] Fix compilation on LLVM 3.8
+
+---
+ src/codegen.cpp   | 5 +----
+ src/debuginfo.cpp | 3 +--
+ 2 files changed, 2 insertions(+), 6 deletions(-)
+
+diff --git a/src/codegen.cpp b/src/codegen.cpp
+index e06211e..d9338d6 100644
+--- a/src/codegen.cpp
++++ b/src/codegen.cpp
+@@ -1510,10 +1510,7 @@ static uint64_t compute_obj_symsize(const object::ObjectFile *obj, uint64_t offs
+         object::SectionRef Section = *I;
+ #endif
+         uint64_t SAddr, SSize;
+-#ifdef LLVM38
+-        SAddr = Section.getAddress().get();
+-        SSize = Section.getSize().get();
+-#elif defined(LLVM36)
++#ifdef LLVM36
+         SAddr = Section.getAddress();
+         SSize = Section.getSize();
+ #else
+diff --git a/src/debuginfo.cpp b/src/debuginfo.cpp
+index cd8f32e..2584f59 100644
+--- a/src/debuginfo.cpp
++++ b/src/debuginfo.cpp
+@@ -377,13 +377,12 @@ public:
+ #endif
+             if (Section == EndSection) continue;
+             if (!Section->isText()) continue;
++            uint64_t SectionAddr = Section->getAddress();
+ #ifdef LLVM38
+-            uint64_t SectionAddr = Section->getAddress().get();
+             uint64_t SectionLoadAddr = L.getSectionLoadAddress(*Section);
+ #else
+             StringRef secName;
+             Section->getName(secName);
+-            uint64_t SectionAddr = Section->getAddress();
+             uint64_t SectionLoadAddr = L.getSectionLoadAddress(secName);
+ #endif
+             Addr -= SectionAddr - SectionLoadAddr;
+-- 
+2.7.4
+
