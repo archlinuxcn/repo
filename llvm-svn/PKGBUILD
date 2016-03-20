@@ -21,7 +21,7 @@ pkgname=(
 )
 _pkgname='llvm'
 
-pkgver=3.9.0svn_r263384
+pkgver=3.9.0svn_r263888
 pkgrel=1
 
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -39,7 +39,7 @@ makedepends=(
 )
 
 # this is always the latest svn so debug info can be useful
-options=('staticlibs' '!strip' debug)
+options=('staticlibs' '!strip')
 
 source=(
   "${_pkgname}::svn+http://llvm.org/svn/llvm-project/llvm/trunk"
@@ -49,12 +49,13 @@ source=(
   'llvm-Config-llvm-config.h'
   0001-Export-function-to-clone-function-debug-info-and-aut.patch
 )
-sha256sums=('SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            '597dc5968c695bbdbb0eac9e8eb5117fcd2773bc91edf5ec103ecffffab8bc48'
-            'd7056e3025f9f527628a018d63894e7f250f5605921bc6a9f736143e962164c4')
+md5sums=('SKIP'
+         'SKIP'
+         'SKIP'
+         'SKIP'
+         '295c343dcd457dc534662f011d7cff1a'
+         '01568447f6962d01dcaa7ea1b6ac1cac')
+
 
 #
 # BEGIN INTERNAL VARIABLES AND FUNCTIONS
@@ -156,6 +157,12 @@ build() {
     arm*)
       # compiler_rt is not supported on ARM
       CONFIG=("-DLLVM_EXTERNAL_COMPILER_RT_BUILD=OFF")
+      CFLAGS+=' -g'
+      CXXFLAGS+=' -g'
+      ;;
+    *)
+      CFLAGS+=' -ggdb1'
+      CXXFLAGS+=' -ggdb1'
       ;;
   esac
   export PKG_CONFIG_PATH='/usr/lib/pkgconfig'
