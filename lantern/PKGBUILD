@@ -3,7 +3,7 @@
 
 pkgname=lantern
 pkgver=2.1.1
-pkgrel=1
+pkgrel=2
 pkgdesc='Lantern is a free desktop application that delivers fast, reliable and secure access to the open Internet. (Stable Channel)'
 arch=('i686' 'x86_64')
 url='https://getlantern.org'
@@ -12,7 +12,7 @@ license=('Apache')
 # neo: I got it by ldd the lantern-binary as deb metadata doesn't provides it,
 # and remove duplicated, like atk required by gtk3
 depends=('hicolor-icon-theme' 'bzip2' 'dbus' 'glib2' 'gtk3' 'libappindicator-gtk3' 'mesa' 'xcb-util' 'xdg-utils' 'zlib')
-options=('!emptydirs' '!strip' '!docs')
+options=('emptydirs' '!strip' '!docs')
 install=$pkgname.install
 source=('lantern.service')
 source_i686=("lantern-installer-32-bit-$pkgver.deb::https://raw.githubusercontent.com/getlantern/lantern-binaries/master/lantern-installer-32-bit.deb")
