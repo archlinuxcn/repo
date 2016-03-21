@@ -6,10 +6,6 @@
 
 from lilaclib import *
 
-depends = [
-  ('android-sdk','android-sdk'),
-  ('android-sdk-platform-tools','android-sdk-platform-tools')
-]
 
 build_prefix = 'multilib-archlinuxcn'
 pre_build = aur_pre_build
