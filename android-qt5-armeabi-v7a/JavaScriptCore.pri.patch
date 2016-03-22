@@ -1,0 +1,10 @@
+--- a/qtscript/src/3rdparty/javascriptcore/JavaScriptCore/JavaScriptCore.pri	2015-10-13 01:35:45.000000000 -0300
++++ b/qtscript/src/3rdparty/javascriptcore/JavaScriptCore/JavaScriptCore.pri	2016-02-29 08:14:22.211014081 -0300
+@@ -45,6 +45,7 @@
+     msvc: DEFINES += _CRT_RAND_S
+     LIBS_PRIVATE += -lwinmm
+ }
++JAVASCRIPTCORE_JIT = no
+ contains(JAVASCRIPTCORE_JIT,yes) {
+     DEFINES+=ENABLE_JIT=1
+     DEFINES+=ENABLE_YARR_JIT=1

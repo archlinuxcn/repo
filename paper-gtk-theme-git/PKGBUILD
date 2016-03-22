@@ -3,7 +3,7 @@
 
 pkgname=paper-gtk-theme-git
 _pkgname=paper-gtk-theme
-pkgver=188.617a6b1
+pkgver=215.bdca59f
 pkgrel=1
 pkgdesc="A modern desktop theme suite. Its design is mostly flat with a minimal use of shadows for depth."
 arch=('any')
@@ -24,14 +24,16 @@ pkgver() {
 	echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
 }
 
+build() {
+	cd "${srcdir}/${_pkgname}"
+
+	chmod +x ./autogen.sh
+	./autogen.sh
+	make
+}
+
 package() {
 	cd "${srcdir}/${_pkgname}"
 
-	install -dm755 "${pkgdir}"/usr/share/themes/Paper
-	cp -dpr --no-preserve=ownership ./Paper "${pkgdir}"/usr/share/themes/
-
-	# Developer scripts explicitly not for end users
-	#install -dm755 "${pkgdir}"/usr/share/"${_pkgname}"
-	#cp -dpr --no-preserve=ownership ./*.py "${pkgdir}"/usr/share/"${_pkgname}"
-	#cp -dpr --no-preserve=ownership ./src "${pkgdir}"/usr/share/"${_pkgname}"
+	make DESTDIR="${pkgdir}" install
 }

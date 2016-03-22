@@ -2,7 +2,7 @@
 # Contributor: nylocx <aur@nyloc.de>
 
 pkgname=telegramqml-git
-pkgver=0.9.2.r13.g177d7bf
+pkgver=0.9.2.r15.gee94751
 pkgrel=1
 pkgdesc="Telegram API tools for QtQml and Qml"
 arch=('i686' 'x86_64')
@@ -27,6 +27,8 @@ pkgver() {
 
 prepare() {
   cd "${srcdir}/${pkgname}"
+  # fixing C++11 error
+  echo "CONFIG += c++11" >> telegramqml.pro
   mkdir -p build 
 }
 

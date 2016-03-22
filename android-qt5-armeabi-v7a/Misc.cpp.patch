@@ -1,0 +1,21 @@
+--- a/qttools/src/assistant/3rdparty/clucene/src/CLucene/util/Misc.cpp	2015-10-13 01:38:13.000000000 -0300
++++ b/qttools/src/assistant/3rdparty/clucene/src/CLucene/util/Misc.cpp	2016-02-28 12:04:12.637069234 -0300
+@@ -10,6 +10,18 @@
+ #include "Misc.h"
+
+ #ifdef _CL_TIME_WITH_SYS_TIME
++#undef _CL_TIME_WITH_SYS_TIME
++#endif
++
++#ifdef _CL_HAVE_SYS_TIME_H
++#undef _CL_HAVE_SYS_TIME_H
++#endif
++
++#ifdef _CL_HAVE_SYS_TIMEB_H
++#undef _CL_HAVE_SYS_TIMEB_H
++#endif
++
++#ifdef _CL_TIME_WITH_SYS_TIME
+ # include <sys/time.h>
+ # include <time.h>
+ #else
