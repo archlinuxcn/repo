@@ -7,10 +7,10 @@ pkgver=1.5.4
 _apiver=11.8.3
 pkgrel=3
 pkgdesc="General purpose cryptographic library based on the code from GnuPG"
-arch=(i686 x86_64)
+arch=(any)
 url="http://www.gnupg.org"
 license=('LGPL')
-depends=('libgpg-error>=1.10-2')
+depends=()
 source=(
   ftp://ftp.gnupg.org/gcrypt/${_pkgname}/${_pkgname}-${pkgver}.tar.bz2
   # HTTP MIRRORS
@@ -22,8 +22,15 @@ source=(
   #
   # Currently, this mirror returns 403
   # http://mirrors.dotsrc.org/gcrypt/${_pkgname}/${_pkgname}-${pkgver}.tar.bz2
+  debian_security_patches.patch
 )
-sha1sums=('bdf4b04a0d2aabc04ab3564fbe38fd094135aa7a')
+sha1sums=('bdf4b04a0d2aabc04ab3564fbe38fd094135aa7a'
+          'eb1b1c3a8afd6705573455b9259ac6ece961d1b3')
+
+prepare() {
+  cd ${_pkgname}-${pkgver}
+  patch -Np1 -i "$srcdir"/debian_security_patches.patch
+}
 
 build() {
   cd ${_pkgname}-${pkgver}
