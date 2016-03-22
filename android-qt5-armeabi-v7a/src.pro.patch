@@ -1,0 +1,12 @@
+--- a/qttools/src/src.pro	2016-02-26 07:07:22.000000000 -0300
++++ b/qttools/src/src.pro	2016-03-20 09:13:46.576256622 -0300
+@@ -14,8 +14,7 @@
+ }
+
+ SUBDIRS += linguist \
+-    qdoc \
+-    qtplugininfo
++    qdoc
+ if(!android|android_app):!ios: SUBDIRS += qtpaths
+
+ mac {
