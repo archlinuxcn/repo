@@ -3,13 +3,13 @@
 
 pkgname=lib32-tk
 pkgver=8.6.4
-pkgrel=2
+pkgrel=3
 pkgdesc="A windowing toolkit for use with tcl"
 arch=('x86_64')
 url="http://tcl.sourceforge.net/"
 license=('custom')
 # "lib32-tcl=${pkgver}"
-depends=('lib32-libxss' 'lib32-libxft' 'tk')
+depends=('lib32-libxss' 'lib32-libxft' 'lib32-tcl>=8.6.4' 'tk')
 options=('staticlibs')
 source=("http://downloads.sourceforge.net/sourceforge/tcl/tk${pkgver}-src.tar.gz")
 md5sums=('261754d7dc2a582f00e35547777e1fea')
