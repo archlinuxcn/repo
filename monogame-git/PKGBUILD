@@ -1,14 +1,14 @@
 # Maintainer: William McKIE <mckie.william@hotmail.co.uk>
 pkgname=monogame-git
 pkgver=3.5
-pkgrel=1
+pkgrel=2
 pkgdesc="Open Source implementation of the Microsoft XNA 4 Framework."
 arch=('any')
 url="http://www.monogame.net/"
 license=('Microsoft Public License (Ms-PL)')
 groups=('any')
 depends=('freeimage' 'ffmpeg' 'gtk-sharp-3' 'openal' 'opentk')
-makedepends=('git' 'nvidia-texture-tools' 'dos2unix' 'monodevelop' 'sharpfonts' 'assimp-net')
+makedepends=('git' 'nvidia-texture-tools' 'dos2unix' 'monodevelop' 'assimp-net')
 conflicts=('monogame' 'tao-framework' 'tao-framework-svn')
 provides=('monogame')
 source=('git+https://github.com/mono/MonoGame.git'
@@ -53,6 +53,7 @@ package() {
 	find . -name 'NVorbis.*' -exec install -Dm644 {} "${pkgdir}/usr/lib/monogame/"{} \;
 	find . -name 'PVRTexLibNET.*' -exec install -Dm644 {} "${pkgdir}/usr/lib/monogame/"{} \;
 	find . -name 'ATI.TextureConverter.*' -exec install -Dm644 {} "${pkgdir}/usr/lib/monogame/"{} \;
+	find . -name 'SharpFont.*' -exec install -Dm644 {} "${pkgdir}/usr/lib/monogame/"{} \;
 
     # AddIns
     cd "${srcdir}/MonoGame/IDE/MonoDevelop/bin/Release"

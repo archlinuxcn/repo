@@ -1,7 +1,7 @@
 # Maintainer: Andrey Vihrov <andrey.vihrov at gmail.com>
 
 pkgname=xfdashboard
-pkgver=0.5.90
+pkgver=0.5.91
 pkgrel=1
 pkgdesc="Maybe a Gnome shell like dashboard for Xfce"
 arch=('i686' 'x86_64')
@@ -10,8 +10,8 @@ license=('GPL')
 depends=('libwnck3' 'clutter' 'garcon' 'xdg-utils')
 makedepends=('intltool')
 install="xfdashboard.install"
-source=("http://archive.xfce.org/src/apps/${pkgname}/0.5/${pkgname}-${pkgver}.tar.bz2")
-sha256sums=('ebbe6423b874134f4c8cc0952bff294f96a49e9a5449d4a95a675782a385e473')
+source=("http://archive.xfce.org/src/apps/${pkgname}/${pkgver%.*}/${pkgname}-${pkgver}.tar.bz2")
+sha256sums=('48033a24b838d52b0f02eae886153cd6188ff55035e3dbcbf01ffd3bb1765bfb')
 
 build() {
   cd "${pkgname}-${pkgver}"
