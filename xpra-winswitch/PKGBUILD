@@ -1,15 +1,17 @@
 # Contributor: Bug <bug2000@gmail.com>
 # Maintainer: Bug <bug2000@gmail.com>
 pkgname=xpra-winswitch
-pkgver=0.16.2
+pkgver=0.16.3
 pkgrel=1
 pkgdesc="Modified version of xpra by Winswitch"
 arch=('i686' 'x86_64')
 url='http://xpra.org/'
 license=('GPL2')
-depends=('python2' 'pygtk' 'libxtst' 'python2-imaging' 'python2-lz4' 'libxkbfile'
-         'ffmpeg' 'libvpx' 'xf86-video-dummy' 'libwebp' 'libxkbfile')
-optdepends=('x264: Codec')
+depends=('python2' 'pygtk' 'libxtst' 'python2-pillow' 'python2-lz4' 'libxkbfile'
+         'ffmpeg' 'libvpx' 'xf86-video-dummy' 'libwebp' 'libxkbfile'
+         'python2-numpy')
+optdepends=('x264: Codec' 'python2-dbus: dbus features'
+            'python2-pycups: Printing support' 'python2-netifaces: mdns')
 conflicts=('parti-all')
 provides=('parti-all')
 makedepends=('python2-setuptools' 'cython2')
@@ -18,7 +20,7 @@ install=xpra-winswitch.install
 source=("https://xpra.org/src/xpra-$pkgver.tar.xz"
         "xpra-winswitch.install"
         'xpra@.service')
-sha256sums=('ce99b941f63aeae465c9d095bcdef857227f8102759df3d013fbfb65c8cea540'
+sha256sums=('1516ab10eb348092077ffb698bce234d06a234a5748e422fdf92f34922fb39ea'
             'ae7cffba6c132517ef4bd41d107ac665d4319dd7f7f606898884e0885cf4ce8f'
             'b882f72380ca6bdee9580e839440dd5bd3523b9db804095887127b9cce6cfaf2')
 
