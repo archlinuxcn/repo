@@ -1,0 +1,9 @@
+[Unit]
+Description=VMware Horizon USB daemon
+
+[Service]
+Type=forking
+ExecStart=/usr/lib/systemd/scripts/vmware-horizon-usb
+
+[Install]
+WantedBy=multi-user.target

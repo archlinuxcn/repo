@@ -1,0 +1,11 @@
+[Unit]
+Description=VMware Horizon virtual printing
+After=org.cups.cupsd.service
+
+[Service]
+Type=forking
+Environment="THNUCLNT_SVC=global:daemon"
+ExecStart=/usr/sbin/thnuclntd
+
+[Install]
+WantedBy=multi-user.target
