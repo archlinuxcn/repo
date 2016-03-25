@@ -3,7 +3,7 @@
 
 pkgname=lantern
 pkgver=2.1.1
-pkgrel=2
+pkgrel=3
 pkgdesc='Lantern is a free desktop application that delivers fast, reliable and secure access to the open Internet. (Stable Channel)'
 arch=('i686' 'x86_64')
 url='https://getlantern.org'
@@ -27,5 +27,5 @@ package() {
 
     msg2 'Install systemd service file...'
     install -Dm644 "${srcdir}/lantern.service" "${pkgdir}/usr/lib/systemd/system/lantern.service"
-    install -dm750 "$pkgdir/var/lib/lantern"
+    install -dm700 "$pkgdir/var/lib/lantern"
 }
