@@ -47,6 +47,15 @@ pkgver() {
 }
 
 prepare() {
+  mkdir -p bin
+
+  for p in cc c++ gcc g++; do
+    cat > bin/$p <<EOF
+exec /usr/bin/$p ${@/#-O0/-Og}
+EOF
+    chmod +x bin/$p
+  done
+
   cd julia
 
   git reset --hard HEAD
@@ -104,8 +113,8 @@ fi
 build() {
   cd julia
 
-  export CC='gcc -flto'
-  export CXX='g++ -flto'
+  export CC="${srcdir}/bin/gcc -flto"
+  export CXX="${srcdir}/bin/g++ -flto"
   CFLAGS=${CFLAGS//-march=i686/-march=pentium4}
   CXXFLAGS=${CXXFLAGS//-march=i686/-march=pentium4}
   export CFLAGS+=' -Wno-pedantic -Wno-clobbered'
