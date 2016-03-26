@@ -51,7 +51,7 @@ prepare() {
 
   for p in cc c++ gcc g++; do
     cat > bin/$p <<EOF
-exec /usr/bin/$p -flto "\${@/#-O0/-Og}"
+exec /usr/bin/$p -flto "\${@/#-O0/-Og}" -fasynchronous-unwind-tables
 EOF
     chmod +x bin/$p
   done
