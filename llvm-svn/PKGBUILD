@@ -54,7 +54,8 @@ md5sums=('SKIP'
          'SKIP'
          'SKIP'
          '295c343dcd457dc534662f011d7cff1a'
-         '01568447f6962d01dcaa7ea1b6ac1cac')
+         '6c43904d744682f5b1a7d798861c1f17')
+
 
 
 #
@@ -144,7 +145,7 @@ prepare() {
       -e 's|^\([[:blank:]]*DESTINATION[[:blank:]]\+\)docs/ocaml/html|\1share/doc/ocaml|' \
       -i docs/CMakeLists.txt
 
-  patch -Np1 < "${srcdir}/0001-Only-replace-one-dead-register-in-ld-p-instructions.patch
+  patch -Np1 < "${srcdir}/0001-Only-replace-one-dead-register-in-ld-p-instructions.patch"
 
   mkdir -p "${srcdir}/build"
 }
