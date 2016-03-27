@@ -1,0 +1,25 @@
+From f6f6abff28d5416f77d3ad45fdcd754082562716 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sun, 27 Mar 2016 01:02:04 -0400
+Subject: [PATCH] Only replace one dead register in ld*p* instructions
+
+---
+ lib/Target/AArch64/AArch64DeadRegisterDefinitionsPass.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/lib/Target/AArch64/AArch64DeadRegisterDefinitionsPass.cpp b/lib/Target/AArch64/AArch64DeadRegisterDefinitionsPass.cpp
+index 576cf4a..deaf98c 100644
+--- a/lib/Target/AArch64/AArch64DeadRegisterDefinitionsPass.cpp
++++ b/lib/Target/AArch64/AArch64DeadRegisterDefinitionsPass.cpp
+@@ -123,6 +123,8 @@ bool AArch64DeadRegisterDefinitions::processMachineBasicBlock(
+         MO.setReg(NewReg);
+         DEBUG(MI.print(dbgs()));
+         ++NumDeadDefsReplaced;
++        // Only replace one dead register
++        break;
+       }
+     }
+   }
+-- 
+2.7.4
+

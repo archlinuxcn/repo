@@ -47,7 +47,7 @@ source=(
   'clang-tools-extra::svn+http://llvm.org/svn/llvm-project/clang-tools-extra/trunk'
   'compiler-rt::svn+http://llvm.org/svn/llvm-project/compiler-rt/trunk'
   'llvm-Config-llvm-config.h'
-  0001-Export-function-to-clone-function-debug-info-and-aut.patch
+  0001-Only-replace-one-dead-register-in-ld-p-instructions.patch
 )
 md5sums=('SKIP'
          'SKIP'
@@ -144,7 +144,7 @@ prepare() {
       -e 's|^\([[:blank:]]*DESTINATION[[:blank:]]\+\)docs/ocaml/html|\1share/doc/ocaml|' \
       -i docs/CMakeLists.txt
 
-  # patch -Np1 < "${srcdir}/0001-Export-function-to-clone-function-debug-info-and-aut.patch"
+  patch -Np1 < "${srcdir}/0001-Only-replace-one-dead-register-in-ld-p-instructions.patch
 
   mkdir -p "${srcdir}/build"
 }
