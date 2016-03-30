@@ -1,0 +1,5 @@
+post_upgrade() {
+  if [ $(vercmp $2 5.000.0-1) -lt 0 ]; then
+    echo "Version 5.000.0 now uses 64-bit integer by default with C++11 compilers. Verify if this impacts your code. This behaviour can be changed in the config.hpp file."
+  fi
+}
