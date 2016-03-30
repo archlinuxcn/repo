@@ -1,8 +1,8 @@
 # Maintainer: XavierCLL <xavier.corredor.llano (a) gmail.com>
 
 pkgname=pycharm-professional
-pkgver=5.0.4
-_pkgver=5.0.4
+pkgver=2016.1
+_pkgver=2016.1
 pkgrel=1
 pkgdesc="Powerful Python and Django IDE. Professional version."
 arch=('any')
@@ -24,8 +24,10 @@ optdepends=('ipython2: For enhanced interactive Python shell v2 inside pycharm'
             'python-setuptools: Packages manager for Python 3, for project interpreter'
             'python2-coverage: For support code coverage measurement for Python 2'
             'python-coverage: For support code coverage measurement for Python 3'
+            'cython2: For performance debugger in Python 2'
+            'cython: For performance debugger in Python 3'
             'vagrant: For support virtualized development environments')
-sha256sums=('8cd7e85435f0ad04a0540037436ae9593608cf7f456bf8ff1d44f659572ec8dc'
+sha256sums=('76f9debcf5621f03a859afa37534e400685d2064664a57af9a47c4859ab407a7'
             '016db1860a8b36d408c827f90aeb04b9d55cf21ea36788a9d8510cc54fae1c49'
             '6442ec9f0690f743da697a2a65b0784017de501e7f39d5de0879153fbf85dc7a'
             'ad59415f8ac2c623f9c61453caf70bf75b6b14db2f09807e4ea339a2dc740be9')
