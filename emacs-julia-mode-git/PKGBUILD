@@ -1,0 +1,43 @@
+# Maintainer: Yichao Yu <yyc1992@gmail.com>
+
+pkgname=emacs-julia-mode-git
+epoch=1
+pkgver=0.244.ge4b3428
+pkgrel=1
+pkgdesc="Emacs major mode for the Julia programming language"
+arch=('any')
+url="http://julialang.org"
+license=('custom:MIT')
+provides=('emacs-julia-mode')
+conflicts=('emacs-julia-mode')
+depends=('emacs')
+source=('git://github.com/JuliaLang/julia-emacs')
+md5sums=('SKIP')
+
+pkgver() {
+  cd julia-emacs
+
+  commit_short=$(git rev-parse --short HEAD)
+  build_number=$(git rev-list --count HEAD)
+  printf "0.%s.g%s" "$build_number" "$commit_short"
+}
+
+build() {
+  cd julia-emacs
+
+  emacs --batch --eval \
+        '(progn
+          (push "." load-path)
+          (byte-compile-file "julia-mode.el"))'
+}
+
+package() {
+  cd julia-emacs
+
+  mkdir -p "$pkgdir/usr/share/emacs/site-lisp"
+  install -m644 julia-mode.el "$pkgdir/usr/share/emacs/site-lisp"
+  install -m644 julia-mode.elc "$pkgdir/usr/share/emacs/site-lisp"
+
+  install -dm755 "${pkgdir}/usr/share/licenses/$pkgname/"
+  install LICENSE.md "${pkgdir}/usr/share/licenses/$pkgname/"
+}
