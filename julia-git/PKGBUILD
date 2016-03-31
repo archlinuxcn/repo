@@ -11,7 +11,7 @@ fi
 
 pkgbase=julia-git
 if ((BUILD_EXTRA)); then
-   pkgname=('julia-git' 'julia-doc-git' 'emacs-julia-mode-git')
+   pkgname=('julia-git' 'julia-doc-git')
 else
    pkgname=('julia-git')
 fi
@@ -24,7 +24,7 @@ license=('GPL')
 makedepends=('gcc-fortran' 'arpack' 'fftw' 'git' 'gmp' 'libgit2' 'libunwind-git'
              'llvm-julia' 'mpfr' 'pcre2' 'suitesparse' 'python2-sphinx'
              'python2-sphinx_rtd_theme' 'python2-pip' 'texlive-langcjk'
-             'texlive-latexextra' 'emacs' 'openspecfun' 'openblas'
+             'texlive-latexextra' 'openspecfun' 'openblas'
              'libutf8proc-git' 'patchelf')
 if ((USE_OPENLIBM)); then
     makedepends=("${makedepends[@]}" openlibm)
@@ -134,16 +134,6 @@ build() {
   # Check to detect issues like JuliaLang/julia#13820
   usr/bin/julia -e '0'
   usr/bin/julia-debug -e '0'
-
-  if ! ((BUILD_EXTRA)); then
-     return
-  fi
-
-  (cd contrib
-   emacs --batch --eval \
-         '(progn
-          (push "." load-path)
-          (byte-compile-file "julia-mode.el"))')
 }
 
 package_julia-git() {
@@ -180,18 +170,4 @@ package_julia-doc-git() {
 
   mkdir -p "$pkgdir"/usr/share/doc/julia/
   cp -dpr --no-preserve=ownership html "$pkgdir"/usr/share/doc/julia/
-}
-
-package_emacs-julia-mode-git() {
-  arch=('any')
-  pkgdesc="Emacs major mode for the Julia programming language"
-  provides=('emacs-julia-mode')
-  conflicts=('emacs-julia-mode')
-  depends=('emacs')
-
-  cd julia/contrib
-
-  mkdir -p "$pkgdir/usr/share/emacs/site-lisp"
-  install -m644 julia-mode.el "$pkgdir/usr/share/emacs/site-lisp"
-  install -m644 julia-mode.elc "$pkgdir/usr/share/emacs/site-lisp"
 }
