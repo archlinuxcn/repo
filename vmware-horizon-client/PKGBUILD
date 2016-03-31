@@ -1,0 +1,213 @@
+# Maintainer: Christian Hesse <mail@eworm.de>
+
+pkgbase=vmware-horizon-client
+pkgname=('vmware-horizon-client' 'vmware-horizon-pcoip' 'vmware-horizon-rtav' 'vmware-horizon-smartcard' 'vmware-horizon-usb' 'vmware-horizon-virtual-printing')
+pkgver=4.0.0
+_build=3617666
+_cart='CART16Q1'
+pkgrel=1
+pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop'
+arch=('i686' 'x86_64')
+url='https://my.vmware.com/web/vmware/info/slug/desktop_end_user_computing/vmware_horizon_clients/4_0'
+license=('custom')
+makedepends=('libxslt')
+source=('http://sources.gentoo.org/cgi-bin/viewvc.cgi/gentoo-x86/eclass/vmware-bundle.eclass'
+	'vmware-horizon-client.desktop'
+	'vmware-horizon-usb'
+	'vmware-horizon-usb.service'
+	'vmware-horizon-usb-tmpfiles.conf'
+	'vmware-horizon-virtual-printing.service')
+source_x86_64=("${pkgbase}-${pkgver}-${_build}-x86_64.bundle::https://download3.vmware.com/software/view/viewclients/${_cart}/VMware-Horizon-Client-${pkgver}-${_build}.x64.bundle")
+source_i686=("${pkgbase}-${pkgver}-${_build}-i686.bundle::https://download3.vmware.com/software/view/viewclients/${_cart}/VMware-Horizon-Client-${pkgver}-${_build}.x86.bundle")
+sha256sums=('d8794c22229afdeb698dae5908b7b2b3880e075b19be38e0b296bb28f4555163'
+            '21927f16cfb92ac07777297787106982b301b5d42ca068e052a01dc3f2cbb208'
+            '7c78953823f7307814104881b322dcf66c36ca02e44e559239ac51abcf1e7a37'
+            '5e737d69e49ea7e039bc94f358b45c8e6d9071b7c041a53800555d3dc21c8dac'
+            'ec763930dd50d6e77a31c40c939909752cfb124cafb0a4ca4f76860375a14d75'
+            'e47e770a1e19ed321de7c2765b2d682f59ac466aef92b2e4ea5e65cacf56de36')
+sha256sums_x86_64=('09fa04fd10e0a82759945ef1dc5f5d61236d8d082666d52db50d5bc87b5849f7')
+sha256sums_i686=('6b7ca09906a02569b4eefcb35cf99fe8a931a9461e88654a94a35401e74a924d')
+
+# VMware bundles old versions of openssl. Usually we can use system openssl.
+# If things break because VMware relies on legacy or buggy code you can use
+# bundled openssl.
+_USE_BUNDLED_OPENSSL=1
+
+# We need these functions for the Gentoo eclass...
+ebegin() {
+	echo -n "Begin ${1}: "
+}
+eend() {
+	echo 'done'
+}
+
+prepare() {
+	# We need this variable for the Gentoo eclass...
+	export T="${srcdir}"
+
+	source "${srcdir}/vmware-bundle.eclass"
+
+	for bundle in "${pkgname[@]}"; do
+	        vmware-bundle_extract-bundle-component "${srcdir}/${pkgbase}-${pkgver}-${_build}-${CARCH}.bundle" "${bundle}" "${srcdir}/extract/${bundle}"
+	done
+}
+
+build() {
+	cd "${srcdir}/extract/"
+
+	# This is a dirty hack, but it works.
+	# Change dynamic section in ELF files to fix dynamic linking.
+	# Make sure the length is not changed!
+	#	libudev.so.0 -> libudev.so.1
+	#
+	# for system openssl:
+	#	libssl.so.1.0.[12] -> libssl.so.1.0.0
+	#	libcrypto.so.1.0.[12] -> libcrypto.so.1.0.0
+	#
+	# for bundled openssl - we use uncommon name to make sure no other application will care:
+	#	libssl.so.1.0.[12] -> libssl-vmw.so.0
+	#	libcrypto.so.1.0.[12] -> libcrypto-vmw.so.0
+
+	for bundle in "${pkgname[@]}"; do
+		for FILE in $(find "${bundle}" -type f); do
+			# executables and libraries only
+			file --mime "${FILE}" | egrep -q "(application/x-(executable|sharedlib)|text/x-shellscript)" || continue
+
+			# make executable
+			chmod +x "${FILE}"
+
+			# ELF executables and libraries only
+			file --mime "${FILE}" | egrep -q "application/x-(executable|sharedlib)" || continue
+
+			# link against libudev.so.1
+			sed -i -e 's/libudev.so.0/libudev.so.1/' "${FILE}"
+
+			# even openssl 1.0.[12].x has library file names ending in .so.1.0.0
+			if [ ${_USE_BUNDLED_OPENSSL:=0} -eq 0 -o "${bundle}" = 'vmware-horizon-client' ]; then
+				sed -i -e 's/libssl.so.1.0.[12]/libssl.so.1.0.0/' \
+					-e 's/libcrypto.so.1.0.[12]/libcrypto.so.1.0.0/' \
+					"${FILE}"
+			else
+				# Some files link against openssl...
+				# Use the bundled version there.
+				sed -i -e 's/libssl.so.1.0.[012]/libssl-vmw.so.0/' \
+					-e 's/libcrypto.so.1.0.[012]/libcrypto-vmw.so.0/' \
+					"${FILE}"
+			fi
+		done
+	done
+
+	# now that we fixed dynamic linking...
+	# ... let's finish the hack
+	if [ ${_USE_BUNDLED_OPENSSL:=0} -eq 0 ]; then
+		rm -f "${srcdir}"/extract/vmware-horizon-pcoip/pcoip/lib/vmware/lib{crypto,ssl}.so.1.0.2
+
+		ln -sf ../libcrypto.so.1.0.0 "${srcdir}"/extract/vmware-horizon-pcoip/pcoip/lib/vmware/libcrypto.so.1.0.0
+		ln -sf ../libssl.so.1.0.0 "${srcdir}"/extract/vmware-horizon-pcoip/pcoip/lib/vmware/libssl.so.1.0.0
+	else
+		rename -- '.so.1.0.2' '-vmw.so.0' \
+			"${srcdir}"/extract/vmware-horizon-pcoip/pcoip/lib/vmware/lib{crypto,ssl}.so.1.0.2
+	fi
+}
+
+package_vmware-horizon-client() {
+	conflicts=('vmware-view-open-client' 'vmware-view-open-client-beta' 'vmware-view-client')
+	depends=('gnome-icon-theme' 'openssl' 'libpng12' 'gtk2' 'libxml2' 'libxss')
+	optdepends=('freerdp: RDP remote desktop connections'
+		'rdesktop: RDP remote desktop connections'
+		'vmware-horizon-pcoip: PCoIP and BLAST remote desktop connections'
+		'vmware-horizon-rtav: Real-Time Audio-Video (webcam and audio-in)'
+		'vmware-horizon-smartcard: smartcard authentication'
+		'vmware-horizon-usb: USB device redirection'
+		'vmware-horizon-virtual-printing: virtual printing')
+	install=vmware-horizon-client.install
+
+	cd "${srcdir}/extract/vmware-horizon-client/"
+
+	mkdir -p "${pkgdir}/usr/"
+	cp -a bin/ "${pkgdir}/usr/"
+	cp -a lib/ "${pkgdir}/usr/"
+	cp -a share/ "${pkgdir}/usr/"
+
+	mkdir -p "${pkgdir}/usr/share/doc/"
+	cp -a doc/ "${pkgdir}/usr/share/doc/vmware-horizon-client"
+	cp -a debug/ "${pkgdir}/usr/share/doc/vmware-horizon-client/"
+
+	install -D -m0644 "${srcdir}/vmware-horizon-client.desktop" "${pkgdir}/usr/share/applications/vmware-horizon-client.desktop"
+}
+
+package_vmware-horizon-pcoip() {
+	pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop - PCoIP and BLAST remote desktop connections'
+	depends=('vmware-horizon-client' 'libxtst')
+	optdepends=('alsa-lib: audio support via alsa'
+		'libpulse: audio support via pulse sound server')
+
+	cd "${srcdir}/extract/vmware-horizon-pcoip/"
+
+	mkdir -p "${pkgdir}/usr/"
+	cp -a pcoip/lib/ "${pkgdir}/usr/lib"
+	cp -a pcoip/bin/ "${pkgdir}/usr/bin"
+}
+
+package_vmware-horizon-rtav() {
+	pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop - Real-Time Audio-Video (webcam and audio-in)'
+	depends=('vmware-horizon-pcoip')
+	cd "${srcdir}/extract/vmware-horizon-rtav/"
+
+	mkdir -p "${pkgdir}/usr/"
+	cp -a lib/ "${pkgdir}/usr/lib"
+}
+
+package_vmware-horizon-smartcard() {
+	pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop - smartcard authentication'
+	depends=('vmware-horizon-pcoip' 'pcsclite')
+
+	cd "${srcdir}/extract/vmware-horizon-smartcard/"
+
+	mkdir -p "${pkgdir}/usr/"
+	cp -a lib/ "${pkgdir}/usr/lib"
+}
+
+package_vmware-horizon-usb() {
+	pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop - USB device redirection'
+	depends=('vmware-horizon-pcoip')
+	install=vmware-horizon-usb.install
+
+	cd "${srcdir}/extract/vmware-horizon-usb/"
+
+	mkdir -p "${pkgdir}/usr/lib/vmware/view/"
+	cp -a bin/ "${pkgdir}/usr/lib/vmware/view/usb"
+
+	install -D -m0755 "${srcdir}/vmware-horizon-usb" "${pkgdir}/usr/lib/systemd/scripts/vmware-horizon-usb"
+	install -D -m0644 "${srcdir}/vmware-horizon-usb.service" "${pkgdir}/usr/lib/systemd/system/vmware-horizon-usb.service"
+	install -D -m0644 "${srcdir}/vmware-horizon-usb-tmpfiles.conf" "${pkgdir}/usr/lib/tmpfiles.d/vmware-horizon-usb.conf"
+}
+
+package_vmware-horizon-virtual-printing() {
+	pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop - virtual printing'
+	depends=('vmware-horizon-pcoip' 'openssl098' 'libcups')
+	install=vmware-horizon-virtual-printing.install
+
+	cd "${srcdir}/extract/vmware-horizon-virtual-printing/"
+
+	mkdir -p "${pkgdir}/usr/bin/"
+
+	case ${CARCH} in
+		x86_64)
+			cp -a bin/x86_64-linux-NOSSL/thnu* "${pkgdir}/usr/bin/"
+			install -D -m0755 bin/x86_64-linux-NOSSL/.thnumod "${pkgdir}/etc/thnuclnt/.thnumod"
+			;;
+		i686)
+			cp -a bin/i586-linux-NOSSL/thnu* "${pkgdir}/usr/bin/"
+			install -D -m0755 bin/i586-linux-NOSSL/.thnumod "${pkgdir}/etc/thnuclnt/.thnumod"
+			;;
+	esac
+
+	install -D -m0755 lib/tprdp.so "${pkgdir}/usr/lib/vmware/rdpvcbridge/tprdp.so"
+
+	install -D -m0644 bin/conf/thnuclnt.convs "${pkgdir}/usr/share/cups/mime/thnuclnt.convs"
+	install -D -m0644 bin/conf/thnuclnt.types "${pkgdir}/usr/share/cups/mime/thnuclnt.types"
+
+	install -D -m0644 "${srcdir}/vmware-horizon-virtual-printing.service" "${pkgdir}/usr/lib/systemd/system/vmware-horizon-virtual-printing.service"
+}
+
