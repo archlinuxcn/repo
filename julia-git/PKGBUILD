@@ -1,8 +1,8 @@
-# Maintainer: Lex Black <autumn-wind at web dot de>
+# Maintainer: Yichao Yu <yyc1992@gmail.com>
+# Contributor: Lex Black <autumn-wind at web dot de>
 # Contributor: Michael Jakl <jakl.michael@gmail.com>
 # With contributions from many kind people at https://aur.archlinux.org/packages/julia-git/
 
-BUILD_EXTRA=1
 USE_OPENLIBM=1
 if [[ "$CARCH" = aarch64 ]]; then
     # Openlibm doesn't support aarch64 yet.
@@ -10,11 +10,7 @@ if [[ "$CARCH" = aarch64 ]]; then
 fi
 
 pkgbase=julia-git
-if ((BUILD_EXTRA)); then
-   pkgname=('julia-git' 'julia-doc-git')
-else
-   pkgname=('julia-git')
-fi
+pkgname=('julia-git' 'julia-doc-git')
 pkgver=0.5.0.dev.3361.g6150510
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
@@ -121,17 +117,10 @@ build() {
   export CFLAGS+=' -Wno-pedantic -Wno-clobbered'
   export CXXFLAGS+=' -Wno-pedantic -Wno-clobbered'
 
-  (
-    ulimit -s 81920
-    make "${julia_opts[@]}" -C base version_git.jl.phony
-    make "${julia_opts[@]}" -C deps
-    make "${julia_opts[@]}" julia-ui-release
-    if ((BUILD_EXTRA)); then
-      make "${julia_opts[@]}" release debug docs
-    else
-      make "${julia_opts[@]}" release debug
-    fi
-  )
+  make "${julia_opts[@]}" -C base version_git.jl.phony
+  make "${julia_opts[@]}" -C deps
+  make "${julia_opts[@]}" julia-ui-release
+  make "${julia_opts[@]}" release debug docs
 
   # Check to detect issues like JuliaLang/julia#13820
   usr/bin/julia -e '0'
@@ -139,7 +128,7 @@ build() {
 }
 
 package_julia-git() {
-  arch=('i686' 'x86_64')
+  arch=('i686' 'x86_64' 'armv7h' 'aarch64')
   depends=('arpack' 'fftw' 'gmp' 'libgit2' 'libunwind-git' 'llvm-julia' 'mpfr'
            'pcre2' 'hicolor-icon-theme' 'xdg-utils' 'suitesparse' 'openspecfun'
            'openblas' 'libutf8proc-git')
