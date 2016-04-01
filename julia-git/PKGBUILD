@@ -10,7 +10,7 @@ if [[ "$CARCH" = aarch64 ]]; then
 fi
 
 pkgbase=julia-git
-pkgname=('julia-git' 'julia-doc-git')
+pkgname=('julia-git' 'julia-git-docs')
 pkgver=0.5.0.dev.3361.g6150510
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
@@ -151,11 +151,12 @@ package_julia-git() {
   provides=("julia=2:$ver")
 }
 
-package_julia-doc-git() {
+package_julia-git-docs() {
   arch=('any')
   pkgdesc+=" (Documents)"
-  provides=('julia-doc')
-  conflicts=('julia-doc')
+  provides=('julia-docs' 'julia-doc')
+  conflicts=('julia-docs' 'julia-doc' 'julia-git-doc' 'julia-doc-git')
+  replaces=('julia-git-doc' 'julia-doc-git')
 
   cd julia/doc/_build
 
