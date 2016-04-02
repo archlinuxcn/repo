@@ -1,7 +1,7 @@
 from lilaclib import *
 
-build_prefix = 'extra-x86_64'
-depends = ['libunwind-git', 'llvm-julia', 'openspecfun-git',
+build_prefix = 'archlinuxcn-x86_64'
+depends = ['libunwind-git', 'openspecfun-git',
            'openblas-lapack-git', 'libutf8proc-git']
 
 pre_build = vcs_update
