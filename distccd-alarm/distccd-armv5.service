@@ -1,0 +1,10 @@
+[Unit]
+Description=A distributed C/C++ compiler for armv5
+Documentation=man:distccd(1)
+
+[Service]
+EnvironmentFile=/etc/conf.d/distccd-armv5
+ExecStart=/usr/bin/distccd-armv5 --daemon --no-detach $DISTCC_ARGS
+
+[Install]
+WantedBy=multi-user.target
