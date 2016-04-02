@@ -1,0 +1,69 @@
+From 1fb29cf79fb4edda2d36afe04e417fc2e0522352 Mon Sep 17 00:00:00 2001
+From: Oscar Blumberg <oscar.blumberg@ens.fr>
+Date: Fri, 1 Apr 2016 16:35:52 -0400
+Subject: [PATCH] avoid rooting in some cases
+
+should fix #15719
+---
+ src/cgutils.cpp | 4 ++--
+ src/codegen.cpp | 8 +++++---
+ 2 files changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/src/cgutils.cpp b/src/cgutils.cpp
+index 20190e6..9af1022 100644
+--- a/src/cgutils.cpp
++++ b/src/cgutils.cpp
+@@ -793,7 +793,7 @@ static jl_cgval_t typed_load(Value *ptr, Value *idx_0based, jl_value_t *jltype,
+ static void typed_store(Value *ptr, Value *idx_0based, const jl_cgval_t &rhs,
+                         jl_value_t *jltype, jl_codectx_t *ctx, MDNode *tbaa,
+                         Value *parent,  // for the write barrier, NULL if no barrier needed
+-                        size_t alignment = 0)
++                        size_t alignment = 0, bool root_box = true) // if the value to store needs a box, should we root it ?
+ {
+     Type *elty = julia_type_to_llvm(jltype);
+     assert(elty != NULL);
+@@ -807,7 +807,7 @@ static void typed_store(Value *ptr, Value *idx_0based, const jl_cgval_t &rhs,
+         r = emit_unbox(elty, rhs, jltype);
+     }
+     else {
+-        r = boxed(rhs, ctx);
++        r = boxed(rhs, ctx, root_box);
+         if (parent != NULL) emit_write_barrier(ctx, parent, r);
+     }
+     Value *data;
+diff --git a/src/codegen.cpp b/src/codegen.cpp
+index b69b901..6bc0cd0 100644
+--- a/src/codegen.cpp
++++ b/src/codegen.cpp
+@@ -2435,7 +2435,7 @@ static bool emit_builtin_call(jl_cgval_t *ret, jl_value_t *f, jl_value_t **args,
+                         emit_expr(args[2], ctx);
+                     }
+                     else {
+-                        jl_cgval_t v = (ety == (jl_value_t*)jl_any_type ? emit_expr(args[2], ctx) : emit_expr(args[2], ctx));
++                        jl_cgval_t v = emit_expr(args[2], ctx);
+                         PHINode *data_owner = NULL; // owner object against which the write barrier must check
+                         if (isboxed) { // if not boxed we don't need a write barrier
+                             assert(ary.isboxed);
+@@ -2477,7 +2477,8 @@ static bool emit_builtin_call(jl_cgval_t *ret, jl_value_t *f, jl_value_t **args,
+                             data_owner->addIncoming(own_ptr, ownedBB);
+                         }
+                         typed_store(emit_arrayptr(ary,args[1],ctx), idx, v,
+-                                    ety, ctx, tbaa_user, data_owner);
++                                    ety, ctx, tbaa_user, data_owner, 0,
++                                    false); // don't need to root the box if we had to make one since it's being stored in the array immediatly
+                     }
+                     *ret = ary;
+                     JL_GC_POP();
+@@ -2977,7 +2978,8 @@ static jl_cgval_t emit_local(int sl, jl_codectx_t *ctx)
+         Value *bp = vi.memloc;
+         if (vi.isArgument || !vi.usedUndef) { // arguments are always defined
+             Instruction *v = builder.CreateLoad(bp, vi.isVolatile);
+-            return mark_julia_type(v, true, vi.value.typ, ctx);
++            return mark_julia_type(v, true, vi.value.typ, ctx,
++                                   vi.isAssigned); // means it's an argument so don't need an additional root
+         }
+         else {
+             jl_cgval_t v = emit_checked_var(bp, sym, ctx, vi.isVolatile);
+-- 
+2.7.4
+

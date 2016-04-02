@@ -11,8 +11,8 @@ fi
 
 pkgbase=julia-git
 pkgname=('julia-git' 'julia-git-docs')
-pkgver=0.5.0.dev.3361.g6150510
-pkgrel=2
+pkgver=0.5.0.dev.3372.g7f177aa
+pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
@@ -26,8 +26,10 @@ if ((USE_OPENLIBM)); then
     makedepends=("${makedepends[@]}" openlibm)
 fi
 options=('debug' '!strip')
-source=('git://github.com/JuliaLang/julia')
-md5sums=('SKIP')
+source=('git://github.com/JuliaLang/julia'
+        '0001-avoid-rooting-in-some-cases.patch')
+md5sums=('SKIP'
+         '75b7f6b1cdda7e384e0354b6dd38ef8a')
 
 pkgver() {
   cd julia
@@ -57,7 +59,7 @@ EOF
   git reset --hard HEAD
   git clean -fdx
 
-  # patch -Np1 < ../
+  patch -Np1 < ../0001-avoid-rooting-in-some-cases.patch
 
   cd doc
 
