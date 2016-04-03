@@ -9,7 +9,6 @@ from lilaclib import *
 build_prefix = 'extra-x86_64'
 
 def pre_build():
-    vcs_update()
     run_cmd(["updpkgsums"])
 
 def post_build():
