@@ -1,5 +1,5 @@
---- a/pkgs/conda-3.19.1-py35_0/lib/python3.5/site-packages/conda/install.py	2016-02-22 12:40:36.995269570 +0100
-+++ b/pkgs/conda-3.19.1-py35_0/lib/python3.5/site-packages/conda/install.py	2016-02-22 12:44:41.749333978 +0100
+--- a/pkgs/conda-4.0.5-py35_0/lib/python3.5/site-packages/conda/install.py	2016-03-16 20:47:12.000000000 +0100
++++ b/pkgs/conda-4.0.5-py35_0/lib/python3.5/site-packages/conda/install.py	2016-04-05 11:34:17.102042633 +0200
 @@ -267,21 +267,23 @@
      return res
  
@@ -28,7 +28,7 @@
      else:
          sys.exit("Invalid mode:" % mode)
  
-@@ -589,7 +591,7 @@
+@@ -604,7 +606,7 @@
  def load_meta(prefix, dist):
      return is_linked(prefix, dist)
  
@@ -37,7 +37,7 @@
      '''
      Set up a package in a specified (environment) prefix.  We assume that
      the package has been extracted (using extract() above).
-@@ -642,7 +644,7 @@
+@@ -657,7 +659,7 @@
          for f in sorted(has_prefix_files):
              placeholder, mode = has_prefix_files[f]
              try:
@@ -46,7 +46,7 @@
              except PaddingError:
                  sys.exit("ERROR: placeholder '%s' too short in: %s\n" %
                           (placeholder, dist))
-@@ -787,6 +789,10 @@
+@@ -802,6 +804,10 @@
                   default=sys.prefix,
                   help="prefix (defaults to %default)")
  
@@ -57,7 +57,7 @@
      p.add_option('-v', '--verbose',
                   action="store_true")
  
-@@ -797,9 +803,14 @@
+@@ -812,9 +818,14 @@
      logging.basicConfig()
  
      prefix = opts.prefix
@@ -72,7 +72,7 @@
  
      if opts.file:
          idists = list(yield_lines(join(prefix, opts.file)))
-@@ -815,7 +826,7 @@
+@@ -830,7 +841,7 @@
      for dist in idists:
          if opts.verbose:
              print("linking: %s" % dist)
