@@ -12,7 +12,6 @@ url='https://my.vmware.com/web/vmware/info/slug/desktop_end_user_computing/vmwar
 license=('custom')
 makedepends=('libxslt')
 source=('http://sources.gentoo.org/cgi-bin/viewvc.cgi/gentoo-x86/eclass/vmware-bundle.eclass'
-	'vmware-horizon-client.desktop'
 	'vmware-horizon-usb'
 	'vmware-horizon-usb.service'
 	'vmware-horizon-usb-tmpfiles.conf'
@@ -20,7 +19,6 @@ source=('http://sources.gentoo.org/cgi-bin/viewvc.cgi/gentoo-x86/eclass/vmware-b
 source_x86_64=("${pkgbase}-${pkgver}-${_build}-x86_64.bundle::https://download3.vmware.com/software/view/viewclients/${_cart}/VMware-Horizon-Client-${pkgver}-${_build}.x64.bundle")
 source_i686=("${pkgbase}-${pkgver}-${_build}-i686.bundle::https://download3.vmware.com/software/view/viewclients/${_cart}/VMware-Horizon-Client-${pkgver}-${_build}.x86.bundle")
 sha256sums=('d8794c22229afdeb698dae5908b7b2b3880e075b19be38e0b296bb28f4555163'
-            '21927f16cfb92ac07777297787106982b301b5d42ca068e052a01dc3f2cbb208'
             '7c78953823f7307814104881b322dcf66c36ca02e44e559239ac51abcf1e7a37'
             '5e737d69e49ea7e039bc94f358b45c8e6d9071b7c041a53800555d3dc21c8dac'
             'ec763930dd50d6e77a31c40c939909752cfb124cafb0a4ca4f76860375a14d75'
@@ -132,8 +130,6 @@ package_vmware-horizon-client() {
 	mkdir -p "${pkgdir}/usr/share/doc/"
 	cp -a doc/ "${pkgdir}/usr/share/doc/vmware-horizon-client"
 	cp -a debug/ "${pkgdir}/usr/share/doc/vmware-horizon-client/"
-
-	install -D -m0644 "${srcdir}/vmware-horizon-client.desktop" "${pkgdir}/usr/share/applications/vmware-horizon-client.desktop"
 }
 
 package_vmware-horizon-pcoip() {
