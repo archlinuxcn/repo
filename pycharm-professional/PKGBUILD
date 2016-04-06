@@ -1,7 +1,7 @@
 # Maintainer: XavierCLL <xavier.corredor.llano (a) gmail.com>
 
 pkgname=pycharm-professional
-pkgver=2016.1
+pkgver=2016.1.1
 pkgrel=1
 pkgdesc="Powerful Python and Django IDE. Professional version."
 arch=('any')
@@ -11,7 +11,7 @@ conflicts=('pycharm' 'pycharm-community')
 provides=('pycharm')
 license=('custom')
 install=${pkgname}.install
-depends=('java-environment' 'ttf-font' 'libxtst' 'libxslt')
+depends=('java-runtime-common' 'java-runtime>=8' 'ttf-font' 'libxtst' 'libxslt')
 source=(https://download.jetbrains.com/python/$pkgname-$pkgver.tar.gz
         'pycharm-professional.desktop'
         'pycharm-professional.install'
@@ -28,7 +28,7 @@ optdepends=('ipython2: For enhanced interactive Python shell v2 inside Pycharm'
             'docker-machine: For support docker inside Pycharm'
             'docker-compose: For support docker inside Pycharm'
             'vagrant: For support virtualized development environments')
-sha256sums=('76f9debcf5621f03a859afa37534e400685d2064664a57af9a47c4859ab407a7'
+sha256sums=('699c898a3b0e6b1df5c36ee6194cc11214276c981bb803da6ccfc9abcf3d6735'
             '016db1860a8b36d408c827f90aeb04b9d55cf21ea36788a9d8510cc54fae1c49'
             '6442ec9f0690f743da697a2a65b0784017de501e7f39d5de0879153fbf85dc7a'
             'ad59415f8ac2c623f9c61453caf70bf75b6b14db2f09807e4ea339a2dc740be9')
