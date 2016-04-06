@@ -120,19 +120,20 @@ esac
 build_in() {
   cd "$1"
 
+  opts=("${@:3}")
   export PATH="${srcdir}/bin:${PATH}"
   CFLAGS=${CFLAGS//-march=i686/-march=pentium4}
   CXXFLAGS=${CXXFLAGS//-march=i686/-march=pentium4}
   export CFLAGS+=' -Wno-pedantic -Wno-clobbered'
   export CXXFLAGS+=' -Wno-pedantic -Wno-clobbered'
 
-  make "${julia_opts[@]}" -C base version_git.jl.phony
-  make "${julia_opts[@]}" -C deps
-  make "${julia_opts[@]}" julia-ui-release
+  make "${opts[@]}" -C base version_git.jl.phony
+  make "${opts[@]}" -C deps
+  make "${opts[@]}" julia-ui-release
   if (($2)); then
-      make "${julia_opts[@]}" release debug docs
+      make "${opts[@]}" release debug docs
   else
-      make "${julia_opts[@]}" release debug
+      make "${opts[@]}" release debug
   fi
 
   # Check to detect issues like JuliaLang/julia#13820
@@ -142,9 +143,9 @@ build_in() {
 
 build() {
   if [[ "$CARCH" = x86_64 ]]; then
-      (build_in julia-avx2 0)
+      (build_in julia-avx2 0 "${julia_avx2_opts[@]}")
   fi
-  (build_in julia 1)
+  (build_in julia 1 "${julia_opts[@]}")
 }
 
 package-julia-in() {
@@ -157,10 +158,11 @@ package-julia-in() {
   fi
   install=julia.install
   conflicts=('julia')
+  opts=("${@:2}")
 
   cd "$1"
 
-  make install DESTDIR="$pkgdir" "${julia_opts[@]}"
+  make install DESTDIR="$pkgdir" "${opts[@]}"
 
   # Remove doc files
   rm -r "$pkgdir/usr/share/doc/julia"
@@ -172,11 +174,11 @@ package-julia-in() {
 }
 
 package_julia-git() {
-  package-julia-in julia
+  package-julia-in julia "${julia_opts[@]}"
 }
 
 package_julia-git-avx2() {
-  package-julia-in julia-avx2
+  package-julia-in julia-avx2 "${julia_avx2_opts[@]}"
 }
 
 package_julia-git-docs() {
