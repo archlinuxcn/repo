@@ -10,7 +10,11 @@ if [[ "$CARCH" = aarch64 ]]; then
 fi
 
 pkgbase=julia-git
-pkgname=('julia-git' 'julia-git-docs')
+if [[ "$CARCH" = x86_64 ]]; then
+    pkgname=('julia-git' 'julia-git-avx2' 'julia-git-docs')
+else
+    pkgname=('julia-git' 'julia-git-docs')
+fi
 pkgver=0.5.0.dev.3385.g1eb8455
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
@@ -52,6 +56,7 @@ EOF
     chmod +x bin/$p
   done
 
+  rm -rf julia-avx2
   cd julia
 
   git reset --hard HEAD
@@ -63,6 +68,11 @@ EOF
 
   # They use the Python2 version for sphinx which has on Arch a different name
   sed 's/pip /pip2 /g' -i Makefile
+
+  if [[ "$CARCH" = x86_64 ]]; then
+      (cd "$srcdir"
+       cp -a julia julia-avx2)
+  fi
 }
 
 julia_opts=(prefix=/usr sysconfdir=/etc
@@ -85,9 +95,16 @@ julia_opts=(prefix=/usr sysconfdir=/etc
             LIBLAPACKNAME=libopenblas
             LIBLAPACK=-lopenblas)
 
+if ((USE_OPENLIBM)); then
+    julia_opts=("${julia_opts[@]}" USE_SYSTEM_OPENLIBM=1)
+else
+    julia_opts=("${julia_opts[@]}" USE_SYSTEM_LIBM=1)
+fi
+
 case "$CARCH" in
   x86_64)
-    julia_opts=("${julia_opts[@]}" MARCH=x86-64 JULIA_CPU_TARGET=core-avx2)
+    julia_avx2_opts=("${julia_opts[@]}" MARCH=x86-64 JULIA_CPU_TARGET=core-avx2)
+    julia_opts=("${julia_opts[@]}" MARCH=x86-64 JULIA_CPU_TARGET=x86-64)
     ;;
   i686)
     julia_opts=("${julia_opts[@]}" MARCH=pentium4 JULIA_CPU_TARGET=pentium4)
@@ -100,14 +117,8 @@ case "$CARCH" in
     ;;
 esac
 
-if ((USE_OPENLIBM)); then
-    julia_opts=("${julia_opts[@]}" USE_SYSTEM_OPENLIBM=1)
-else
-    julia_opts=("${julia_opts[@]}" USE_SYSTEM_LIBM=1)
-fi
-
-build() {
-  cd julia
+build_in() {
+  cd "$1"
 
   export PATH="${srcdir}/bin:${PATH}"
   CFLAGS=${CFLAGS//-march=i686/-march=pentium4}
@@ -118,14 +129,25 @@ build() {
   make "${julia_opts[@]}" -C base version_git.jl.phony
   make "${julia_opts[@]}" -C deps
   make "${julia_opts[@]}" julia-ui-release
-  make "${julia_opts[@]}" release debug docs
+  if (($2)); then
+      make "${julia_opts[@]}" release debug docs
+  else
+      make "${julia_opts[@]}" release debug
+  fi
 
   # Check to detect issues like JuliaLang/julia#13820
   usr/bin/julia -e '0'
   usr/bin/julia-debug -e '0'
 }
 
-package_julia-git() {
+build() {
+  if [[ "$CARCH" = x86_64 ]]; then
+      (built_in julia-avx2 0)
+  fi
+  (built_in julia 1)
+}
+
+package-julia-in() {
   arch=('i686' 'x86_64' 'armv7h' 'aarch64')
   depends=('arpack' 'fftw' 'gmp' 'libgit2' 'libunwind-git' 'llvm-julia' 'mpfr'
            'pcre2' 'hicolor-icon-theme' 'xdg-utils' 'suitesparse' 'openspecfun'
@@ -136,7 +158,7 @@ package_julia-git() {
   install=julia.install
   conflicts=('julia')
 
-  cd julia
+  cd "$1"
 
   make install DESTDIR="$pkgdir" "${julia_opts[@]}"
 
@@ -147,6 +169,14 @@ package_julia-git() {
             -f -e 'print(VERSION.major, ".", VERSION.minor, ".", VERSION.patch)')
 
   provides=("julia=2:$ver")
+}
+
+package_julia-git() {
+  package-julia-in julia
+}
+
+package_julia-git-avx2() {
+  package-julia-in julia-avx2
 }
 
 package_julia-git-docs() {
