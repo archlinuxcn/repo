@@ -15,7 +15,7 @@ if [[ "$CARCH" = x86_64 ]]; then
 else
     pkgname=('julia-git' 'julia-git-docs')
 fi
-pkgver=0.5.0.dev.3385.g1eb8455
+pkgver=0.5.0.dev.3429.g5bbe070
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
@@ -142,9 +142,9 @@ build_in() {
 
 build() {
   if [[ "$CARCH" = x86_64 ]]; then
-      (built_in julia-avx2 0)
+      (build_in julia-avx2 0)
   fi
-  (built_in julia 1)
+  (build_in julia 1)
 }
 
 package-julia-in() {
