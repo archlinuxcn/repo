@@ -1,32 +1,36 @@
-# Maintainer: Jerome Leclanche <jerome.leclanche+arch@gmail.com>
+# Maintainer: Jerome Leclanche <jerome@leclan.ch>
 
-pkgname=screengrab-git
-pkgver=1.0.7.gff47d27
+_pkgname=screengrab
+pkgname=$_pkgname-git
+pkgver=1.95_pr1.19.g4650e76
 pkgrel=1
 pkgdesc="Crossplatform tool for grabbing screenshots of your desktop."
-arch=('i686' 'x86_64')
+arch=("i686" "x86_64")
 url="http://screengrab.doomer.org/"
-license=('GPL2')
-depends=('qt4')
-makedepends=('git' 'cmake')
-provides=('screengrab')
-conflicts=('screengrab')
-source=("git://github.com/DOOMer/screengrab")
-sha256sums=('SKIP')
-_gitname="screengrab"
+license=("GPL2")
+depends=("qt5-base")
+makedepends=("git" "cmake" "qt5-tools")
+provides=("$_pkgname")
+conflicts=("$_pkgname")
+source=("git+https://github.com/QtDesktop/$_pkgname")
+sha256sums=("SKIP")
+
 
 pkgver() {
-	cd "$srcdir/$_gitname"
-	echo "$(git describe --always | sed 's/-/./g')"
+	cd "$srcdir/$_pkgname"
+	git describe --always | sed "s/-/./g"
 }
 
 build() {
-	cd "$srcdir/$_gitname"
-	cmake -DCMAKE_INSTALL_PREFIX=/usr
+	mkdir -p build
+	cd build
+	cmake "$srcdir/$_pkgname" \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_INSTALL_LIBDIR=lib
 	make
 }
 
 package() {
-	cd "$srcdir/$_gitname"
+	cd build
 	make install DESTDIR="$pkgdir"
 }
