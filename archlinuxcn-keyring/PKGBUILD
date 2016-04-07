@@ -2,7 +2,7 @@
 # See COPYING for license details.
 
 pkgname='archlinuxcn-keyring'
-pkgver='20160321'
+pkgver='20160408'
 pkgrel=1
 pkgdesc='Arch Linux CN PGP keyring'
 arch=('any')
@@ -10,7 +10,7 @@ url='https://github.com/archlinuxcn/repo'
 license=('GPL')
 install="archlinuxcn-keyring.install"
 source=("archlinuxcn-keyring-$pkgver.tar.gz::https://github.com/archlinuxcn/archlinuxcn-keyring/archive/$pkgver.tar.gz")
-sha1sums=('efe6775d51d588d70b6cf95204595329e9d1aa6c')
+sha1sums=('97d760374ba37bd38b2ad22ef29133d17371875a')
 
 package() {
   cd "$srcdir/archlinuxcn-keyring-$pkgver"

@@ -1,0 +1,9 @@
+post_install() {
+	echo " > To enable virtual printing you have to launch"
+	echo " > start/enable systemd service vmware-horizon-virtual-printing:"
+	echo " >  $ systemctl start vmware-horizon-virtual-printing"
+}
+
+post_upgrade(){
+	post_install
+}

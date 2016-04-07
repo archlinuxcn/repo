@@ -1,0 +1,12 @@
+post_install() {
+	/sbin/ldconfig -r .
+}
+
+
+post_remove() {
+	/sbin/ldconfig -r .
+}
+
+op=$1
+shift
+$op $*

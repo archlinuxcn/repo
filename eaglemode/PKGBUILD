@@ -1,7 +1,7 @@
 # Maintainer: Jaroslav Lichtblau <dragonlord@aur.archlinux.org>
 
 pkgname=eaglemode
-pkgver=0.89.2
+pkgver=0.90.0
 pkgrel=1
 pkgdesc="Visit almost everything in your PC simply by zooming in"
 arch=('i686' 'x86_64')
@@ -11,7 +11,7 @@ depends=('desktop-file-utils' 'gtk2' 'hicolor-icon-theme' 'libtiff' 'libpng' 'li
 makedepends=('perl')
 install=$pkgname.install
 source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.bz2)
-sha256sums=('6133d0718d9a8255c2b6dafd069f0fbd4cc598faa89409556fef6dff0c6c0560')
+sha256sums=('7c05bea244b11b78a528e75170f5ef45ccd10c03fd3f05c3dae59ee79e9c28ae')
 
 build() {
   cd "${srcdir}"/$pkgname-$pkgver
@@ -30,4 +30,4 @@ package() {
   install -Dm644 "${srcdir}"/$pkgname-$pkgver/res/icons/${pkgname}48.png \
     "${pkgdir}"/usr/share/icons/hicolor/48x48/apps/$pkgname.png
 }
-sha256sums=('6133d0718d9a8255c2b6dafd069f0fbd4cc598faa89409556fef6dff0c6c0560')
+sha256sums=('7c05bea244b11b78a528e75170f5ef45ccd10c03fd3f05c3dae59ee79e9c28ae')

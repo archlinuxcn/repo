@@ -1,7 +1,7 @@
 # Maintainer: BlackEagle < ike DOT devolder AT gmail DOT com >
 
 pkgname=vivaldi-ffmpeg-codecs
-pkgver=48.0.2564.109
+pkgver=49.0.2623.110
 pkgrel=1
 pkgdesc="additional support for proprietary codecs for vivaldi"
 arch=('i686' 'x86_64')
@@ -16,7 +16,7 @@ options=('!strip')
 source=(
   "https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$pkgver.tar.xz"
 )
-sha256sums=('2eb1e5b6dda718a5e501ba26f47015c1629adeb9f2bf2877bd9d8bf346abeb03')
+sha256sums=('41840925d3769555ce4ebd780ee0dc6789ffae27b1684006c9b543bcaa35bbd2')
 
 
 prepare() {
@@ -47,6 +47,7 @@ build() {
     -Dlinux_use_bundled_binutils=0 \
     -Dlinux_use_bundled_gold=0 \
     -Dlinux_use_gold_flags=0 \
+    -Dsysroot='' \
     -Dcomponent=shared_library \
     -Dffmpeg_branding=ChromeOS
 

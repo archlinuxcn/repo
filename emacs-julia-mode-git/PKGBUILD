@@ -3,13 +3,14 @@
 pkgname=emacs-julia-mode-git
 epoch=1
 pkgver=0.244.ge4b3428
-pkgrel=1
+pkgrel=2
 pkgdesc="Emacs major mode for the Julia programming language"
 arch=('any')
 url="http://julialang.org"
 license=('custom:MIT')
 provides=('emacs-julia-mode')
 conflicts=('emacs-julia-mode')
+makedepends=('git')
 depends=('emacs')
 source=('git://github.com/JuliaLang/julia-emacs')
 md5sums=('SKIP')

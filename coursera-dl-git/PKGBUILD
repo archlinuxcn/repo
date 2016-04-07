@@ -6,8 +6,9 @@
 
 pkgname=coursera-dl-git
 _gitname=${pkgname/-git/}
-pkgver=0.5.2.r6.g4bbf7bb
-pkgrel=2
+pkgver=0.5.2.r12.gb8596ea
+pkgrel=1
+epoch=1
 pkgdesc="Script for downloading Coursera.org videos and naming them"
 arch=('any')
 url="https://github.com/coursera-dl/coursera-dl/"
@@ -19,13 +20,13 @@ conflicts=('coursera-dl')
 source=("git://github.com/coursera-dl/$_gitname.git")
 sha256sums=('SKIP')
 
+prepare() {
+  export LC_CTYPE="en_US.UTF-8"
+}
+
 pkgver() {
   cd $_gitname
   git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
-}
-
-prepare() {
-  export LC_CTYPE=en_US.UTF-8
 }
 
 package() {
