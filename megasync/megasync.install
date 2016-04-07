@@ -1,15 +1,12 @@
-# megasync.install
-
-
 post_install() {
+	xdg-icon-resource forceupdate --theme hicolor &> /dev/null
 	update-desktop-database -q
-	gtk-update-icon-cache -q -t -f usr/share/icons/hicolor
 }
-
+ 
 post_upgrade() {
-	gtk-update-icon-cache -q -t -f usr/share/icons/hicolor
+	post_install
 }
-
+ 
 post_remove() {
-	gtk-update-icon-cache -q -t -f usr/share/icons/hicolor
+	post_install
 }
