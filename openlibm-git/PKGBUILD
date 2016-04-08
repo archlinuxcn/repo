@@ -4,10 +4,14 @@ pkgname=openlibm-git
 pkgver=0.5.0.4.g960fdbf
 pkgrel=1
 pkgdesc="standalone implementation of C mathematical functions"
-arch=(i686 x86_64 armv7h)
+arch=(i686 x86_64 armv7h aarch64)
 url="https://github.com/JuliaLang/openlibm"
 license=('BSD')
-source=("git://github.com/JuliaLang/openlibm")
+if [[ "$CARCH" = aarch64 ]]; then
+    source=("git://github.com/ginggs/openlibm#branch=build-on-aarch64")
+else
+    source=("git://github.com/JuliaLang/openlibm")
+fi
 sha256sums=('SKIP')
 provides=('openlibm=0.4.1')
 conflicts=('openlibm')
