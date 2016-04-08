@@ -1,7 +1,7 @@
 # Contributor: David Keogh <davekeogh@archlinux.us>
 
 pkgname=pycharm-community
-pkgver=2016.1
+pkgver=2016.1.1
 pkgrel=1
 pkgdesc="Powerful Python and Django IDE. Community edition."
 arch=('any')
@@ -13,7 +13,7 @@ conflicts=('pycharm' 'pycharm-professional')
 provides=('pycharm')
 source=(http://download.jetbrains.com/python/$pkgname-$pkgver.tar.gz
         'pycharm-community.desktop' )
-sha256sums=('027fa44150cfda2f417a60afab46002a8fc31c224f0f53f16042fbb75c72c606'
+sha256sums=('9d86767d576ee3140de379a99915d99b8dcef98fc370e74b3f15b4ea9655f427'
             '5ce44b5bee632258749ee7d0df0fd08af446d43715f9ef50cb6889b88232de41')
 
 package() {
