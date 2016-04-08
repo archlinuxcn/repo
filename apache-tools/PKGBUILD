@@ -3,20 +3,18 @@
 # Contributor: Pavel Larev <pavel@larev.ws>
 
 pkgname=apache-tools
-pkgver=2.4.16
+pkgver=2.4.18
 pkgrel=1
 pkgdesc="Useful Apache tools - htdigest, htpasswd, ab, htdbm"
-arch=(i686 x86_64)
+arch=("i686" "x86_64" "armv6h" "armv7h")
 url=http://httpd.apache.org/
 license=(Apache)
 depends=(apr-util pcre)
 conflicts=(apache)
 source=(http://www.apache.org/dist/httpd/httpd-$pkgver.tar.bz2
         $pkgname-Makefile.patch)
-sha256sums=('ac660b47aaa7887779a6430404dcb40c0b04f90ea69e7bd49a40552e9ff13743'
+sha256sums=('0644b050de41f5c9f67c825285049b144690421acb709b06fe53eddfa8a9fd4c'
             '2dc48d34773b0c873d10e3542f77a4f7b50d5fb9bd8c52e3bb28b76ff9587f3f')
-sha512sums=('039750ff962c08a7261896acc8272e59874d066f7d52721aaf967ddb737fc5716acc47e1effaf7c4d156ba61bc393e0738f64f8e89cc277ba2651e0f61d56628'
-            '6e068e7820e852c788a521ad28c367af4c1c22fded51ede7ae3f840a8a04737cfbe4503c2f3f899c89461d984007e84f80376b5a8a27c7eec8ec0fd78155c22b')
 
 prepare() {
     cd httpd-$pkgver/
