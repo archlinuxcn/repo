@@ -6,6 +6,7 @@ pkgrel=1
 pkgdesc="A Tiny and Smart Terminal Player of douban.fm."
 url="https://github.com/skyline75489/pyfm"
 depends=('mpg123')
+makedepends=('python-setuptools' 'python2-setuptools')
 optdepends=('libnotify: for system notification')
 license=('MIT')
 arch=('any')
@@ -20,13 +21,13 @@ package_pyfm() {
     depends+=('python-requests' 'python-urwid')
     makedepends=('python-setuptools')
     cd "pyfm-${pkgver}"
-    python setup.py install --root="${pkgdir}" --optimize=1
+    LANG=en_US.UTF-8 python setup.py install --root="${pkgdir}" --optimize=1
 }
 
 package_python2-pyfm() {
     depends+=('python2-requests' 'python2-urwid')
     makedepends=('python2-setuptools')
     cd "pyfm-${pkgver}-python2"
-    python2 setup.py install --root="${pkgdir}" --optimize=1
+    LANG=en_US.UTF-8 python2 setup.py install --root="${pkgdir}" --optimize=1
     mv "${pkgdir}/usr/bin/pyfm"{,2}
 }
