@@ -1,7 +1,7 @@
 # Maintainer: XavierCLL <xavier.corredor.llano (a) gmail.com>
 
 pkgname=pycharm-professional
-pkgver=2016.1.1
+pkgver=2016.1.2
 pkgrel=1
 pkgdesc="Powerful Python and Django IDE. Professional version."
 arch=('any')
@@ -28,7 +28,7 @@ optdepends=('ipython2: For enhanced interactive Python shell v2 inside Pycharm'
             'docker-machine: For support docker inside Pycharm'
             'docker-compose: For support docker inside Pycharm'
             'vagrant: For support virtualized development environments')
-sha256sums=('699c898a3b0e6b1df5c36ee6194cc11214276c981bb803da6ccfc9abcf3d6735'
+sha256sums=('730e994f3582b1cb9754b121457636265515c19199eabd762cd78b0c504b91cf'
             '016db1860a8b36d408c827f90aeb04b9d55cf21ea36788a9d8510cc54fae1c49'
             '6442ec9f0690f743da697a2a65b0784017de501e7f39d5de0879153fbf85dc7a'
             'ad59415f8ac2c623f9c61453caf70bf75b6b14db2f09807e4ea339a2dc740be9')
