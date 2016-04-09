@@ -6,8 +6,8 @@
 # Contributor: Muhammad 'MJ' Jassim <UnbreakableMJ@gmail.com> 
 
 pkgname=icecat
-pkgver=38.6.0
-_pkgver=38.6.0-gnu1
+pkgver=38.7.1
+_pkgver=38.7.1-gnu1
 _pkgverbase=${pkgver%%.*}
 pkgrel=1
 pkgdesc="GNU version of the Firefox browser."
@@ -26,16 +26,16 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
             'upower: Battery API')
 
 install=icecat.install
-#source=(http://ftpmirror.gnu.org/gnuzilla/${pkgver}/${pkgname}-${_pkgver}.tar.bz2{,.sig}
-source=(https://ftp.gnu.org/gnu/gnuzilla/${pkgver}/${pkgname}-${_pkgver}.tar.bz2{,.sig}      ## Main upstream download site
+source=(http://ftpmirror.gnu.org/gnuzilla/${pkgver}/${pkgname}-${_pkgver}.tar.bz2{,.sig}
+#source=(https://ftp.gnu.org/gnu/gnuzilla/${pkgver}/${pkgname}-${_pkgver}.tar.bz2{,.sig}      ## Main upstream download site
 #source=(https://mirrors.kernel.org/gnu/gnuzilla/${pkgver}/${pkgname}-${_pkgver}.tar.bz2      ## Good mirror
 #source=(http://jenkins.trisquel.info/icecat/${pkgname}-${_pkgver}.tar.bz2      ## Official developer (Ruben Rodriguez) site. Probably only has developer releases.
-	mozconfig
+        mozconfig
         icecat.desktop
         icecat-safe.desktop
         vendor.js)
 
-sha256sums=('9d0e10005c28d130d262176280656dc3cf374717723bd715d3d6a3cc5999a42d'
+sha256sums=('0f65fc8a4fc2a4e73fe97249c24edeb5a84335e22d2868d0334365ada069b5f1'
             'SKIP'
             '4602066304f0bb10bdaea75405570d500dae3199b77b04a45167d423fdf9bf6f'
             'c44eab35f71dd3028a74632463710d674b2e8a0682e5e887535e3233a3b7bbb3'
