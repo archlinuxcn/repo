@@ -1,33 +1,61 @@
 # Maintainer: u8sand <u8sand@gmail.com>
-pkgname=baka-mplayer-git
-pkgver=2.0.2
+# Contributor: Alfredo Ramos <alfredo dot ramos at yandex dot com>
+
+_pkgname=baka-mplayer
+pkgname=${_pkgname}-git
+pkgver=2.0.4
 pkgrel=1
-pkgdesc="Baka MPlayer is a free and open source, cross-platform, libmpv based multimedia player."
-url="http://bakamplayer.u8sand.net/"
-arch=('x86_64' 'i686')
-license=('GPLv2')
-depends=('mpv' 'qt5-base' 'qt5-declarative' 'qt5-svg' 'qt5-x11extras')
-makedepends=('git' 'make' 'pkg-config' 'qt5-tools')
+pkgdesc='A free and open source, cross-platform, libmpv based multimedia player. Qt5 build. Development version.'
+arch=('i686' 'x86_64')
+url='http://bakamplayer.u8sand.net/'
+license=('GPL')
+
+depends=('mpv' 'qt5-declarative' 'qt5-svg' 'qt5-x11extras')
 optdepends=(
-  'qt5-translations: qt5 dialog translations'
-  'mpv-git: bleeding-edge mpv features'
-  'youtube-dl: support for remote video streaming'
+	'mpv-git: for bleeding-edge mpv features'
+	'qt5-translations: for Qt5 dialog translations'
+	'youtube-dl: for remote video streaming'
+	'noto-fonts: for proper font support'
 )
-conflicts=('bakamplayer' 'baka-mplayer')
-provides=('baka-mplayer')
+makedepends=('git' 'qt5-tools')
+provides=("${_pkgname}=${pkgver}")
+conflicts=("${_pkgname}")
+replaces=("${_pkgname}")
 
-_gitroot="https://github.com/u8sand/Baka-MPlayer.git"
-_gitname="master"
+source=(
+	"${_pkgname}::git+https://github.com/u8sand/Baka-MPlayer.git"
+)
+sha512sums=(
+	"SKIP"
+)
 
-build() {
-  cd "$srcdir"
-  git clone ${_gitroot} -b ${_gitname} ${pkgname}
-  cd "$pkgname"
-  ./configure INSTROOT="$pkgdir" CONFIG+=install_translations
-  make -j `grep -c ^processor /proc/cpuinfo`
+pkgver() {
+	# Updating package version
+	cd ${srcdir}/${_pkgname}
+	(
+		set -o pipefail
+		git describe --long --tags | sed -r 's/^v//;s/([^-]*-g)/r\1/;s/-/./g' ||
+		printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+	)
+}
+
+prepare() {
+	# Make build directory
+	mkdir ${srcdir}/build
+}
+
+build() {	
+	# Building package
+	cd ${srcdir}/build
+	qmake-qt5 ../${_pkgname}/src \
+		CONFIG+=release \
+		CONFIG+=install_translations \
+		-spec linux-g++
+	make -j $(grep -c ^processor /proc/cpuinfo)
 }
 
 package() {
-  cd "$srcdir/$pkgname"
-  make install
+	# Installing package
+	cd ${srcdir}/build
+	make INSTALL_ROOT=${pkgdir} install
 }

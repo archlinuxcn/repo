@@ -3,8 +3,8 @@ Description=tinc vpn
 After=network.target
 
 [Service]
-Type=forking
-ExecStart=/usr/sbin/tincd --no-detach --user=nobody
+Type=simple
+ExecStart=/usr/sbin/tincd --no-detach
 ExecReload=/usr/bin/tinc reload
 
 [Install]

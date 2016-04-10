@@ -2,18 +2,18 @@
 # Author: horst3180 @ deviantart
 
 pkgname=vertex-themes
-pkgver=20150923
-pkgrel=3
+pkgver=20160329
+pkgrel=1
 pkgdesc='Vertex Gtk2, Gtk3, Metacity, Xfwm, Cinnamon and GNOME Shell themes (GNOME 3.18 version)'
 _gnomever=3.18
-_releasever=20150923
+_releasever=20160329
 arch=('any')
 url='http://horst3180.deviantart.com/art/Vertex-Theme-470663601'
 license=('GPL3')
 depends=('gtk-engine-murrine')
 conflicts=('vertex-themes-git')
 source=("${pkgname}-${_releasever}.tar.gz::https://github.com/horst3180/Vertex-theme/archive/${_releasever}.tar.gz")
-sha256sums=('31efb28773d7502bb573fb3130016d98ee1f0aeffc74f39a83b72319f68dd4d3')
+sha256sums=('c075c9fc059a5b2e30e65242a000083b5f8621a5cdfebb7ac61c31e33c6cbe85')
 
 build() {
   cd vertex-theme-${_releasever}

@@ -1,0 +1,26 @@
+pre_install() {
+  cat <<'EOF'
+NOTE: mpv has several optional features that are automatically enabled if the
+required libraries are present at configure time. This package does not include
+any of the optional features as dependencies by default (but it does add depends
+for whatever is linked against when building the package). If you want to use
+any optional features that require libraries you don't currently have installed,
+please install the relevant libraries and rebuild the package. A frequently
+desired optional feature is Lua support, which is necessary for the on-screen
+controller "GUI", youtube-dl integration, and other extension scripts. Lua
+support can be provided by lua52 or luajit.
+EOF
+}
+
+post_install() {
+  xdg-icon-resource forceupdate --theme hicolor &> /dev/null
+  update-desktop-database -q
+}
+
+post_upgrade() {
+  post_install
+}
+
+post_remove() {
+  post_install
+}
