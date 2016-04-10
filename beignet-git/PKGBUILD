@@ -1,8 +1,8 @@
 # Maintainer: Boqun Feng <boqun.feng@gmail.com>
 
 pkgname=beignet-git
-pkgver=1.0.0.0.542.g2b5c3bf
-pkgrel=2
+pkgver=1.0.0.0.681.g82fdd14
+pkgrel=1
 epoch=1
 pkgdesc="OpenCL Implemenation for Intel IvyBridge and Haswell"
 arch=('i686' 'x86_64')
@@ -10,7 +10,7 @@ url="http://cgit.freedesktop.org/beignet/"
 license=('LGPL')
 options=('debug' 'strip')
 depends=('clang>=3.3' 'llvm>=3.3' 'ncurses' 'ocl-icd' 'libsm' 'libice' 'libx11'
-  'libxext' 'libxfixes' 'libdrm' 'libgl' 'gcc-libs' 'zlib' 'libffi')
+         'libxext' 'libxfixes' 'libdrm' 'libgl' 'gcc-libs' 'zlib' 'libffi')
 makedepends=('git' 'cmake>=2.6' 'python2' 'opencl-headers')
 source=(git://anongit.freedesktop.org/beignet)
 md5sums=('SKIP')
@@ -32,15 +32,16 @@ build() {
 
   for f in include/CL/*; do
     [[ $f =~ intel ]] && continue
+    [[ $f =~ ext ]] && continue
     mv -i "$f" include.bak/
   done
   mkdir -p build
   cd build
   cmake .. \
-    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-    -DPYTHON_EXECUTABLE=/usr/bin/python2 \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_INSTALL_LIBDIR=lib
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+        -DPYTHON_EXECUTABLE=/usr/bin/python2 \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_INSTALL_LIBDIR=lib
   make
 }
 
@@ -48,4 +49,5 @@ package() {
   cd "${srcdir}/beignet/build"
 
   make DESTDIR="$pkgdir/" install
+  rm -rf "$pkgdir/usr/include/CL/"*ext*
 }
