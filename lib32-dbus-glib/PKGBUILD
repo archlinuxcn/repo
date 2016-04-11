@@ -3,7 +3,7 @@
 # Contributor: josephgbr <rafael.f.f1@gmail.com>
 
 pkgname=lib32-dbus-glib
-pkgver=0.104
+pkgver=0.106
 pkgrel=1
 pkgdesc='GLib bindings for DBUS'
 arch=('x86_64')
@@ -13,7 +13,7 @@ depends=('dbus-glib' 'lib32-glib2')
 makedepends=('gcc-multilib')
 options=('!emptydirs')
 source=("http://dbus.freedesktop.org/releases/dbus-glib/dbus-glib-${pkgver}.tar.gz")
-sha256sums=('bfc1f1a82bfc3ec3ecafe04d0e87bab7e999f50dce4f4a34d0b89caf6bd821f6')
+sha256sums=('b38952706dcf68bad9c302999ef0f420b8cf1a2428227123f0ac4764b689c046')
 
 build() {
   cd dbus-glib-${pkgver}
