@@ -7,8 +7,8 @@
 # Contributor: zman0900 <zman0900@gmail.com>
 
 pkgname=freshplayerplugin
-pkgver=0.3.4
-pkgrel=1
+pkgver=0.3.5
+pkgrel=2
 pkgdesc='PPAPI-host NPAPI-plugin adapter.'
 arch=( 'i686' 'x86_64' )
 url='https://github.com/i-rinat/freshplayerplugin'
@@ -47,5 +47,5 @@ package() {
   install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
 
-sha1sums=('765785671a636b14824d633e074ee911205405ac'
+sha1sums=('9f76b38802697576856f880a0672257cc0a9544f'
           '331a3b3877249eaf1c3db917bde1dea6c4d374ab')
