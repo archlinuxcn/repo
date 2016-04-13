@@ -12,7 +12,7 @@ provides=('pycharm')
 license=('custom')
 install=${pkgname}.install
 depends=('java-runtime-common' 'java-runtime>=8' 'ttf-font' 'libxtst' 'libxslt')
-source=(https://download.jetbrains.com/python/$pkgname-$pkgver.tar.gz
+source=(https://download.jetbrains.com/python/$pkgname-$pkgver-no-jdk.tar.gz
         'pycharm-professional.desktop'
         'pycharm-professional.install'
         'pycharm')
@@ -27,8 +27,12 @@ optdepends=('ipython2: For enhanced interactive Python shell v2 inside Pycharm'
             'cython: For performance debugger in Python 3'
             'docker-machine: For support docker inside Pycharm'
             'docker-compose: For support docker inside Pycharm'
-            'vagrant: For support virtualized development environments')
-sha256sums=('730e994f3582b1cb9754b121457636265515c19199eabd762cd78b0c504b91cf'
+            'vagrant: For support virtualized development environments'
+            'python2-pytest: For support testing inside Pycharm with Python 2'
+            'python-pytest: For support testing inside Pycharm with Python 3'
+            'python2-tox: Python environments for testing tool with Python 2'
+            'python-tox: Python environments for testing tool with Python 3')
+sha256sums=('5525914782ab7c0b2e4dafa228d053525494acbe4cb47e84e6a44be2c21a646d'
             '016db1860a8b36d408c827f90aeb04b9d55cf21ea36788a9d8510cc54fae1c49'
             '6442ec9f0690f743da697a2a65b0784017de501e7f39d5de0879153fbf85dc7a'
             'ad59415f8ac2c623f9c61453caf70bf75b6b14db2f09807e4ea339a2dc740be9')
@@ -57,9 +61,6 @@ package() {
     rm -f $pkgdir/opt/$pkgname/bin/libyjpagent-linux64.so
     rm -f $pkgdir/opt/$pkgname/bin/fsnotifier64
   fi
-  
-  # delete bundled JRE inside Pycharm installation
-  rm -rf $pkgdir/opt/$pkgname/jre/
 
   # enable anti-aliasing text in pycharm options
   if [[ $CARCH = 'i686' ]]; then
