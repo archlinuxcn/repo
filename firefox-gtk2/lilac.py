@@ -31,7 +31,7 @@ provides=("firefox=${pkgver}-${pkgrel}")\n""" + line
       continue
     print(line)
 
-  # run_cmd(['updpkgsums'])
+  run_cmd(['updpkgsums'])
 
 def post_build():
   git_rm_files(g.oldfiles)
