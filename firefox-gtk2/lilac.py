@@ -21,6 +21,8 @@ def pre_build():
 provides=("firefox=${pkgver}-${pkgrel}")\n""" + line
     elif '$pkgname' in line:
       line = line.replace('$pkgname', 'firefox')
+    elif '../firefox-gtk3-20.patch' in line:
+      line = '  # ' + line.lstrip()
 
     print(line)
 
@@ -29,7 +31,7 @@ provides=("firefox=${pkgver}-${pkgrel}")\n""" + line
       continue
     print(line)
 
-  run_cmd(['updpkgsums'])
+  # run_cmd(['updpkgsums'])
 
 def post_build():
   git_rm_files(g.oldfiles)
