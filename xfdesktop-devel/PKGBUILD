@@ -3,12 +3,12 @@
 _pkgname=xfdesktop
 pkgname=${_pkgname}-devel
 pkgver=4.11.8
-pkgrel=1
+pkgrel=2
 pkgdesc="A desktop manager for Xfce"
 arch=('i686' 'x86_64')
 url="http://www.xfce.org/"
 license=('GPL2')
-groups=('xfce4')
+#groups=('xfce4')
 depends=('libxfce4ui>=4.11.0' 'thunar' 'garcon' 'hicolor-icon-theme' 'libwnck')
 makedepends=('intltool')
 conflicts=('xfce4-menueditor' "${_pkgname}")
