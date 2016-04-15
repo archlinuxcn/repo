@@ -2,16 +2,16 @@
 # Contributor: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 
 pkgname=lib32-libmbim
-pkgver=1.12.0
+pkgver=1.12.4
 pkgrel=1
 pkgdesc='MBIM modem protocol helper library'
 arch=('x86_64')
 url='http://www.freedesktop.org/wiki/Software/libmbim/'
 license=('GPL2')
-depends=('lib32-systemd' 'libmbim')
+depends=('lib32-glib2' 'lib32-libgudev' 'lib32-systemd' 'libmbim')
 makedepends=('gcc-multilib' 'python')
 source=("http://www.freedesktop.org/software/libmbim/libmbim-${pkgver}.tar.xz")
-sha256sums=('b5b9e72d6b0a4d9e5a92b913c16426946f8f6cf60e648635306ebade44ace553')
+sha256sums=('7bd9af154e88ee1cccaf2fedd05e0f5cb82e3359ab6ad2a75cfec98bf57f973a')
 
 build() {
   cd libmbim-${pkgver}
@@ -27,8 +27,7 @@ build() {
     --localstatedir='/var' \
     --sysconfdir='/etc' \
     --disable-gtk-doc-html \
-    --disable-static \
-    --without-python
+    --disable-static
   make
 }
 
