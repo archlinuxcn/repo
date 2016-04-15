@@ -1,6 +1,7 @@
 # Contributor: Weng Xuetian <wengxt@gmail.com>
 # Maintainer: Thaodan <theodorstormgrade@gmail.com>
 
+
 # enable this if you run out of memory during linking
 #_lowmem=true
 
@@ -12,7 +13,7 @@ _pgo=true
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=45.0.1
+pkgver=45.0.2
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
@@ -33,7 +34,7 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
 install=firefox.install
-_patchrev=6a889427cd4f
+_patchrev=3ccb278a9ceb
 options=('!emptydirs'  'strip' )
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz
@@ -51,6 +52,9 @@ source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/
         pgo_fix_missing_kdejs.patch
 )
 
+if [ $_gtk3 ] ; then
+    source+=($_patchurl/mozilla-gtk3_20.patch)
+fi
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
 # Note: These are for Arch Linux use ONLY. For your own distribution, please
 # get your own set of keys. Feel free to contact foutrelis@archlinux.org for
@@ -103,9 +107,10 @@ prepare() {
   # enable gtk3
   if [ $_gtk3 ] ; then
      # fix gtk3 build
-     sed -i 's|parent->group|gtk_window_get_group(const_cast<GtkWindow*>(parent))|g' \
-	 toolkit/xre/nsKDEUtils.cpp
-     echo 'ac_add_options --enable-default-toolkit=cairo-gtk3' >>.mozconfig
+   #  sed -i 's|parent->group|gtk_window_get_group(const_cast<GtkWindow*>(parent))|g' \
+#	 toolkit/xre/nsKDEUtils.cpp
+      echo 'ac_add_options --enable-default-toolkit=cairo-gtk3' >>.mozconfig
+          patch -Np1 -i "$srcdir"/mozilla-gtk3_20.patch
   fi
   # configure script misdetects the preprocessor without an optimization level
   # https://bugs.archlinux.org/task/34644
@@ -181,20 +186,20 @@ package() {
   #https://bugzilla.mozilla.org/show_bug.cgi?id=658850
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
-
-sha256sums=('d1814ac6d8cd687696bd0d98da3bb525f6df11fe655e0d668742b21fca57d9c8'
-            '633084aa03336088e087f39eb55b212cc97b11d27a4b288a87f75148350be4dd'
-            'c202e5e18da1eeddd2e1d81cb3436813f11e44585ca7357c4c5f1bddd4bec826'
-            'd86e41d87363656ee62e12543e2f5181aadcff448e406ef3218e91865ae775cd'
-            '4b50e9aec03432e21b44d18c4c97b2630bace606b033f7d556c9d3e3eb0f4fa4'
-            'b8cc5f35ec35fc96ac5c5a2477b36722e373dbb57eba87eb5ad1276e4df7236d'
-            '68e3a5b47c6d175cc95b98b069a15205f027cab83af9e075818d38610feb6213'
-            '0778583e04d021d317aede459e47e9393bb164913eaa40aef56453377e2685ea'
-            '661ed67b994605862999a8f650e3b660fae32d39c77f0663ea2d6578578b4a21'
-            '02e92f84dd31ed079be3e67509cf23d0d351e06bb690fcc091c904d906d2d690'
-            '3e7d8d65b481c03eb1da37b2e211f018e6fc9de381433205398e5ddaaff1c44a'
-            'feede2fb86527c4a5d90bd5458fe582da920ab02dd25ec656236d87caf8888ba'
-            'e8289ea4c1f8191e1e23661312ceee2128b8e790501b9a589d0d7bfc4384553f'
-            '6b0e2900be693805388a96e4b2f4ea9a838c1e95322a546388d384a21458cd3f'
-            'f9067f62a25a7a77276e15f91cc9e7ba6576315345cfc6347b1b2e884becdb0c'
-            '2797d1e61031d24ee24bf682c9447b3b9c1bca10f8e6cbd597b854af2de1ec54')
+md5sums=('deda5fcd4a41fc63cb8c14102cb8c561'
+         '3bf79ce63bd0b0c11a9403ecc251c583'
+         '9b02198df96be08f2a0a323ac2e6c2a2'
+         'dbf14588e85812ee769bd735823a0146'
+         '0d053487907de4376d67d8f499c5502b'
+         '05bb69d25fb3572c618e3adf1ee7b670'
+         '6e335a517c68488941340ee1c23f97b0'
+         '98a1b2c0b2450d5c0737dbe8f1e571e0'
+         '3a56df3cc8441da9e3ebd4dbfd184be3'
+         '648958ae7db60bc16dca3f847ee9791b'
+         'e98c962df7a52395459ec8b1a81ce33d'
+         '903307f923a459189a5a6062ff9df38c'
+         '0c684360f1df4536512d51873c1d243d'
+         '06192dd34d7f6078353d4da5725d1d57'
+         'fe24f5ea463013bb7f1c12d12dce41b2'
+         '3fa8bd22d97248de529780f5797178af'
+         'aace13105ee6e53f49c5c43d4eb582bf')
