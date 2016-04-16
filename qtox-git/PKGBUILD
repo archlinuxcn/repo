@@ -3,7 +3,7 @@
 
 _pkgname=qtox
 pkgname=qtox-git
-pkgver=1.3.0.r191.g27c4873
+pkgver=1.3.0.r214.g95794b4
 pkgrel=1
 pkgdesc='Powerful Tox client written in C++/Qt that follows the Tox design guidelines.'
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h')
