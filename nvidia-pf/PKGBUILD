@@ -1,9 +1,9 @@
 # Maintainer : Zuyi Hu <hzy068808@gmail.com>
 
 pkgname=nvidia-pf
-pkgver=361.28
+pkgver=364.16
 _extramodules=extramodules-4.4-pf
-pkgrel=4
+pkgrel=1
 pkgdesc="NVIDIA drivers for linux-pf"
 arch=('i686' 'x86_64')
 url="http://www.nvidia.com/"
@@ -12,14 +12,13 @@ makedepends=('linux-pf-headers>=4.4' 'linux-pf-headers<4.5')
 license=('custom')
 install=nvidia.install
 options=(!strip)
-source=("ftp://download.nvidia.com/XFree86/Linux-x86/${pkgver}/NVIDIA-Linux-x86-${pkgver}.run"
-        "ftp://download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run"
-	)
-md5sums=('d4fc7fcf1204a46f15733d7cc2711ad2'
-         '8799b9a29ea1ef72feb739f1d8290728')
+source_i686=("NVIDIA-Linux-x86-${pkgver}.run::https://developer.nvidia.com/linux32bit")
+source_x86_64=("NVIDIA-Linux-x86_64-${pkgver}.run::https://developer.nvidia.com/linux64bit")
+md5sums_i686=('c25de6f7e328c6eab5305be0cd0b02d5')
+md5sums_x86_64=('5d954bfb0be8532779a4ca1741851493')
 
 [[ "$CARCH" = "i686" ]] && _pkg="NVIDIA-Linux-x86-${pkgver}"
-[[ "$CARCH" = "x86_64" ]] && _pkg="NVIDIA-Linux-x86_64-${pkgver}-no-compat32"
+[[ "$CARCH" = "x86_64" ]] && _pkg="NVIDIA-Linux-x86_64-${pkgver}"
 
 prepare() {
     sh "${_pkg}.run" --extract-only
@@ -38,6 +37,8 @@ package() {
         "${pkgdir}/usr/lib/modules/${_extramodules}/nvidia.ko"
     install -D -m644 "${srcdir}/${_pkg}/kernel/nvidia-modeset.ko" \
          "${pkgdir}/usr/lib/modules/${_extramodules}/nvidia-modeset.ko"
+    install -D -m644 "${srcdir}/${_pkg}/kernel/nvidia-drm.ko" \
+         "${pkgdir}/usr/lib/modules/${_extramodules}/nvidia-drm.ko"
 
     if [[ "$CARCH" = "x86_64" ]]; then
         install -D -m644 "${srcdir}/${_pkg}/kernel/nvidia-uvm.ko" \
