@@ -1,0 +1,86 @@
+diff --git package.json package.json
+--- package.json
++++ package.json
+@@ -12,7 +12,7 @@
+     "url": "https://github.com/atom/atom/issues"
+   },
+   "license": "MIT",
+-  "electronVersion": "0.36.8",
++  "electronVersion": "0.36.12",
+   "dependencies": {
+     "async": "0.2.6",
+     "atom-keymap": "6.3.2",
+@@ -37,7 +37,7 @@
+     "less-cache": "0.23",
+     "line-top-index": "0.2.0",
+     "marked": "^0.3.4",
+-    "nodegit": "0.12.0",
++    "nodegit": "0.12.2",
+     "normalize-package-data": "^2.0.0",
+     "nslog": "^3",
+     "oniguruma": "^5",
+
+diff --git spec/atom-environment-spec.coffee spec/atom-environment-spec.coffee
+--- spec/atom-environment-spec.coffee
++++ spec/atom-environment-spec.coffee
+@@ -365,7 +365,7 @@ describe "AtomEnvironment", ->
+       updateAvailableHandler = jasmine.createSpy("update-available-handler")
+       subscription = atom.onUpdateAvailable updateAvailableHandler
+ 
+-      autoUpdater = require('remote').require('auto-updater')
++      autoUpdater = require('electron').remote.require('auto-updater')
+       autoUpdater.emit 'update-downloaded', null, "notes", "version"
+ 
+       waitsFor ->
+
+diff --git spec/module-cache-spec.coffee spec/module-cache-spec.coffee
+--- spec/module-cache-spec.coffee
++++ spec/module-cache-spec.coffee
+@@ -8,13 +8,13 @@ describe 'ModuleCache', ->
+   beforeEach ->
+     spyOn(Module, '_findPath').andCallThrough()
+ 
+-  it 'resolves atom shell module paths without hitting the filesystem', ->
++  it 'resolves Electron module paths without hitting the filesystem', ->
+     builtins = ModuleCache.cache.builtins
+     expect(Object.keys(builtins).length).toBeGreaterThan 0
+ 
+     for builtinName, builtinPath of builtins
+       expect(require.resolve(builtinName)).toBe builtinPath
+-      expect(fs.isFileSync(require.resolve(builtinName)))
++      expect(fs.isFileSync(require.resolve(builtinName))).toBeTruthy()
+ 
+     expect(Module._findPath.callCount).toBe 0
+ 
+diff --git spec/window-event-handler-spec.coffee spec/window-event-handler-spec.coffee
+--- spec/window-event-handler-spec.coffee
++++ spec/window-event-handler-spec.coffee
+@@ -75,7 +75,7 @@ describe "WindowEventHandler", ->
+ 
+   describe "when a link is clicked", ->
+     it "opens the http/https links in an external application", ->
+-      shell = require 'shell'
++      {shell} = require 'electron'
+       spyOn(shell, 'openExternal')
+ link = document.createElement('a')
+
+diff --git src/module-cache.coffee src/module-cache.coffee
+--- src/module-cache.coffee
++++ src/module-cache.coffee
+@@ -202,13 +202,13 @@ registerBuiltins = (devMode) ->
+ 
+   atomShellRoot = path.join(process.resourcesPath, 'atom.asar')
+ 
+-  commonRoot = path.join(atomShellRoot, 'common', 'api', 'lib')
+-  commonBuiltins = ['callbacks-registry', 'clipboard', 'crash-reporter', 'screen', 'shell']
++  commonRoot = path.join(atomShellRoot, 'common', 'api')
++  commonBuiltins = ['callbacks-registry', 'clipboard', 'crash-reporter', 'shell']
+   for builtin in commonBuiltins
+     cache.builtins[builtin] = path.join(commonRoot, "#{builtin}.js")
+ 
+-  rendererRoot = path.join(atomShellRoot, 'renderer', 'api', 'lib')
+-  rendererBuiltins = ['ipc-renderer', 'remote']
++  rendererRoot = path.join(atomShellRoot, 'renderer', 'api')
++  rendererBuiltins = ['ipc-renderer', 'remote', 'screen']
+   for builtin in rendererBuiltins
+     cache.builtins[builtin] = path.join(rendererRoot, "#{builtin}.js")
