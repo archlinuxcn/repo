@@ -1,25 +1,21 @@
-# Maintainer: fclad <fcladera at fcladera.com>
+# Maintainer: wicastC <wicastchen at hotmail dot com>
 
-_pkgname=plotly.py
+_pkgname=plotly
 pkgname=python-plotly
-pkgver=1.6.12.r715.g20102d6
-pkgrel=1.1
+pkgver=1.9.9
+pkgrel=1
 pkgdesc="An interactive, browser-based charting library for python"
 arch=('i686' 'x86_64')
 url="https://plot.ly/python/"
 license=('MIT')
 depends=('python-requests' 'python-pytz')
 makedepends=('git' 'python' 'python-setuptools')
-source=("git+https://github.com/plotly/plotly.py.git")
-md5sums=('SKIP')
+source=("https://pypi.python.org/packages/source/p/plotly/plotly-1.9.9.tar.gz")
+md5sums=('7dc398b2f45589a4d2abc821f2b0249b')
 
-pkgver() {
-    cd "$srcdir/$_pkgname"
-    git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
-}
 
 build() {
-  cd "$srcdir/$_pkgname"
+  cd "$srcdir/$_pkgname-$pkgver"
 
   #[ -d build ] && rm -rf build
   #mkdir build
@@ -30,6 +26,6 @@ build() {
 }
 
 package() {
-  cd "$srcdir/$_pkgname"
+  cd "$srcdir/$_pkgname-$pkgver"
   python setup.py install --root="${pkgdir}" --prefix=/usr
 }
