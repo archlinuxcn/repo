@@ -1,0 +1,34 @@
+all_off="$(tput sgr0)"
+bold="${all_off}$(tput bold)"
+yellow="${bold}$(tput setaf 3)"
+blue="${bold}$(tput setaf 4)"
+green="${bold}$(tput setaf 2)"
+
+_instructions() {
+  printf "${yellow}==>${all_off} ${bold}ATENTION:${all_off}
+${green}==>${all_off} ${bold}This Chromium package no longer supports custom flags passed via the
+   '/etc/chromium/default' file (or any other files under /etc/chromium/).${all_off}
+
+  ${blue}->${all_off} The new '${bold}/usr/bin/chromium-dev${all_off}' launcher script will automatically detect
+     Pepper Flash (if installed) and pass the correct flags to Chromium.'
+
+  ${blue}->${all_off} If you need to pass extra command-line arguments to Chromium, you
+     can put them in a '${bold}chromium-dev-flags.conf${all_off}' file under '${bold}\x24HOME/.config/${all_off}
+     (or ${bold}\x24XDG_CONFIG_HOME${all_off}). Arguments are split on whitespace and shell
+     quoting rules apply but no further parsing is performed.\n"
+}
+
+post_install() {
+  xdg-icon-resource forceupdate --theme hicolor &> /dev/null
+  update-desktop-database -q
+  _instructions
+}
+
+post_upgrade() {
+  post_install $1
+}
+
+post_remove() {
+  xdg-icon-resource forceupdate --theme hicolor &> /dev/null
+  update-desktop-database -q
+}
