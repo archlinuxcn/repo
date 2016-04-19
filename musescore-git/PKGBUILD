@@ -53,7 +53,7 @@ build() {
   # This patch add (back) an option to use system theme.
   # More patch may be coming adding icon theme support later if necessary.
   patch -Np1 < ../0002-add-back-native-style.patch
-  export CXXFLAGS+=" -std=gnu++0x -Wno-unused-local-typedefs -Wno-unused-parameter -Wno-maybe-uninitialized -Wno-unused-function"
+  export CXXFLAGS+=" -fPIC -std=gnu++11 -Wno-unused-local-typedefs -Wno-unused-parameter -Wno-maybe-uninitialized -Wno-unused-function"
   mkdir -p build.release
   cd build.release
   cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo \
