@@ -3,13 +3,13 @@
 _pkgname=plotly.py
 pkgname=python-plotly
 pkgver=1.6.12.r715.g20102d6
-pkgrel=1
+pkgrel=1.1
 pkgdesc="An interactive, browser-based charting library for python"
 arch=('i686' 'x86_64')
 url="https://plot.ly/python/"
 license=('MIT')
 depends=('python-requests' 'python-pytz')
-makedepends=('git' 'python')
+makedepends=('git' 'python' 'python-setuptools')
 source=("git+https://github.com/plotly/plotly.py.git")
 md5sums=('SKIP')
 
