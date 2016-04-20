@@ -19,7 +19,8 @@
 
 from lilaclib import *
 
-build_prefix = 'extra-x86_64'
+build_prefix = 'archlinuxcn-x86_64'
+depends = ['libgcrypt15']
 
 def pre_build():
   # obtain base PKGBUILD, e.g.
