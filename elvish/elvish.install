@@ -1,0 +1,9 @@
+post_install() {
+  grep -qe '^/usr/bin/elvish$' etc/shells || echo '/usr/bin/elvish' >> etc/shells
+}
+
+pre_remove() {
+  sed -ri '\|^/usr/bin/elvish$|d' etc/shells
+}
+
+# vim:set ts=2 sw=2 et:
