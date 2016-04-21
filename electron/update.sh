@@ -2,7 +2,7 @@
 # PKGBUILD update script for https://aur.archlinux.org/packages/electron/
 # Maintainer: /dev/rs0 <rs0@secretco.de.com>
 
-URL="https://github.com/atom/electron/releases"
+URL="https://github.com/electron/electron/releases"
 VERSION="$(curl -s ${URL}/latest | sed -e 's/.*\/tag\/v//' | cut -d\" -f1)"
 FILE_URL="${URL}/download/v${VERSION}"
 FILE_arm="electron-v${VERSION}-linux-arm.zip"
