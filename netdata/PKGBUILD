@@ -2,8 +2,8 @@
 
 pkgname=netdata
 
-pkgver=1.0.0
-pkgrel=2
+pkgver=1.1.0
+pkgrel=1
 pkgdesc="Real-time performance monitoring, in the greatest possible detail, over the web."
 url="https://github.com/firehol/netdata/wiki"
 arch=('i686' 'x86_64')
@@ -13,14 +13,6 @@ optdepends=('nodejs: Webbox plugin')
 source=("http://firehol.org/download/netdata/releases/v$pkgver/netdata-$pkgver.tar.xz")
 backup=('etc/netdata/netdata.conf' 'etc/netdata/charts.d.conf' 'etc/netdata/apps_groups.conf')
 install="$pkgname.install"
-
-prepare() {
-	cd "$pkgname-$pkgver"
-	sed -i "s#/usr/sbin/netdata#/usr/bin/netdata#" "system/netdata-systemd"
-	sed -i "s#/bin/kill#/usr/bin/kill#" "system/netdata-systemd"
-	# http://article.gmane.org/gmane.comp.security.firewalls.firehol.devel/898
-	# sed -i "s#<script>var netdataTheme = 'slate';</script>##" "web/index.html"
-}
 
 build() {
 	cd "$pkgname-$pkgver"
@@ -43,7 +35,8 @@ package() {
 	make DESTDIR="$pkgdir" install
 
 	touch "$pkgdir/etc/netdata/netdata.conf"
-	install -Dm0644 "system/netdata-systemd" "$pkgdir/usr/lib/systemd/system/netdata.service"
+
+	install -Dm0644 "system/netdata.service" "$pkgdir/usr/lib/systemd/system/netdata.service"
 }
 
-md5sums=('2bc87c905c2e511e9077c92e0d1cba3e')
+md5sums=('19e6d2b142906f824d0951428d0c030e')
