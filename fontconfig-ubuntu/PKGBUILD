@@ -3,8 +3,8 @@
 # Installation order:  freetype2-ubuntu → fontconfig-ubuntu → cairo-ubuntu
 
 pkgname=fontconfig-ubuntu
-pkgver=2.11.1
-_ubver=0ubuntu6
+pkgver=2.11.94
+_ubver=0ubuntu1
 pkgrel=3
 pkgdesc="Library for configuring and customizing font access, with Ubuntu's LCD rendering patches."
 arch=('i686' 'x86_64')
@@ -18,9 +18,9 @@ install=$pkgname.install
 source=("https://launchpad.net/ubuntu/+archive/primary/+files/fontconfig_$pkgver.orig.tar.bz2"
         "https://launchpad.net/ubuntu/+archive/primary/+files/fontconfig_$pkgver-$_ubver.debian.tar.xz"
         '53-monospace-lcd-filter.patch')
-md5sums=('824d000eb737af6e16c826dd3b2d6c90'
-         '5d8e082f4d36d6c82853f6b6a5f6997a'
-         'a17e48be6a06bc056574be6756cb9738')
+sha256sums=('d763c024df434146f3352448bc1f4554f390c8a48340cef7aa9cc44716a159df'
+         '5acde991abf1ac334aa906007ea07e42a569174560d78c675f8b1878312f29c1'
+         'c759702ba66fe88768aa93035637401085bb5c02d898c960b68291aea10daa8d')
 
 prepare() {
   cd fontconfig-$pkgver
