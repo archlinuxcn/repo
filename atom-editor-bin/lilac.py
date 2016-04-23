@@ -17,35 +17,45 @@
 # [3] octave-general/lilac.py
 #
 
+import json
+import urllib.request
+from functools import cmp_to_key
+
+import pyalpm
 from lilaclib import *
 
 build_prefix = 'extra-x86_64'
 
+
+GITHUB_MAX_TAG = 'https://api.github.com/repos/%s/tags'
+
+def get_version():
+    url = GITHUB_MAX_TAG  % "atom/atom"
+    headers = {'Accept': "application/vnd.github.quicksilver-preview+json"}
+    request = urllib.request.Request(url, headers=headers)
+    res = urllib.request.urlopen(request)
+    data = json.loads(res.read().decode("utf-8"))
+    data = [tag["name"] for tag in data if "-beta" not in tag["name"]] # strip beta release
+    data.sort(key=cmp_to_key(pyalpm.vercmp))
+    version = data[-1] # get v1.7.2
+    return version[1:] # return 1.7.2
+
 def pre_build():
-    aur_pre_build()
-
-    # redownload binary package everytime
     for line in edit_file('PKGBUILD'):
-        # edit PKGBUILD
-        if line.strip().startswith("PKGEXT"):
-            continue
-        if line.strip().startswith("'9c752be551429c6ce5946d4fcae24464'"):
-            line = " 'a585d6a76f47f9accdf090379ecb6d1f' "
+        if line.startswith("pkgver="):
+            line="pkgver=" + get_version()
         print(line)
-
-    for line in edit_file("atom-python.patch"):
-        if line.strip().startswith("+unset"):
-            line = "+ "
-        if line.strip().startswith("+Exec=env"):
-            line = "+Exec=env PYTHON=python2 /usr/share/atom/atom %U"
-        print(line)
+    run_cmd(["updpkgsums"])
 
 
-post_build = aur_post_build
+def post_build():
+    git_add_files(['PKGBUILD'])
+    git_commit()
 
 # do some cleanup here after building the package, regardless of result
 # def post_build_always(success):
 #   pass
 
 if __name__ == '__main__':
+    #print(get_version())
     single_main(build_prefix)
