@@ -6,32 +6,44 @@
 # Contributor: Simon Zilliken <simon____AT____zilliken____DOT____name>
 
 pkgname=paraview
-pkgver=4.4.0
-pkgrel=2
+pkgver=5.0.1
+pkgrel=1
 pkgdesc='Parallel Visualization Application using VTK'
 arch=('i686' 'x86_64')
 url='http://www.paraview.org'
 license=('custom')
-depends=('qtwebkit' 'openmpi' 'python2' 'ffmpeg-compat' 'boost' 'cgns'
+depends=('qt5-tools' 'openmpi' 'python2' 'ffmpeg' 'boost' 'cgns' 'glew'
 	 'expat' 'freetype2' 'hdf5' 'libjpeg' 'libxml2' 'libtheora' 'libpng' 'libtiff' 'zlib')
-makedepends=('cmake' 'mesa')
+makedepends=('cmake' 'mesa' 'gcc-fortran' 'desktop-file-utils')
 optdepends=('python2-matplotlib: Needed to support equation rendering using MathText markup language'
-	        'python2-numpy: Needed for using some filters such as "Python Calculator"')
+	    'python2-numpy: Needed for using some filters such as "Python Calculator"')
 source=("http://paraview.org/files/v${pkgver:0:3}/ParaView-v${pkgver}-source.tar.gz"
 	    'paraview.png'
 	    'paraview.desktop'
-	    'paraview_32bit.patch')
-sha1sums=('276fc91f2a7aec72b7740c5312b560cc76157370'
+	    'paraview_32bit.patch'
+	    '0001-find_hdf5.patch'
+	    'ffmpeg3_compat.patch')
+sha1sums=('3d72635df84421c2bc4d59ec4a121348966ec28f'
           'a2dff014e1235dfaa93cd523286f9c97601d3bbc'
           '1f94c8ff79bb2bd2c02d6b403ea1f4599616531b'
-	  'c25134330c582371e1009b51445cdb435144b53f')
+          'c25134330c582371e1009b51445cdb435144b53f'
+          '3f8701c349194cff12f5d1104fbc070a52dd3da1'
+          'a78177f8dd6dedd9ad189fa12730ec53c7d02508')
 
 prepare() {
   cd "${srcdir}/ParaView-v${pkgver}-source"
 
   patch -p1 -i ../paraview_32bit.patch
 
-  
+  # Find HDF before the check (for NetCDF)
+  patch "VTK/ThirdParty/netcdf/vtknetcdf/CMakeLists.txt" \
+    "../0001-find_hdf5.patch"
+
+  cd "${srcdir}/ParaView-v${pkgver}-source/VTK"
+
+  patch -p1 -i ../../ffmpeg3_compat.patch
+
+
   rm -rf "${srcdir}/build"
   mkdir "${srcdir}/build"
   cd "${srcdir}/build"
@@ -39,11 +51,11 @@ prepare() {
 
 build() {
   cd "${srcdir}/build"
-  
+
   # flags to enable system libs
   # add PROTOBUF when http://www.vtk.org/Bug/view.php?id=13656 gets fixed
   local cmake_system_flags=""
-  for lib in EXPAT FREETYPE HDF5 JPEG LIBXML2 OGGTHEORA PNG TIFF ZLIB; do
+  for lib in EXPAT FREETYPE GLEW HDF5 JPEG LIBXML2 OGGTHEORA PNG TIFF ZLIB; do
     cmake_system_flags+="-DVTK_USE_SYSTEM_${lib}:BOOL=ON "
   done
 
@@ -51,13 +63,12 @@ build() {
    local cmake_system_python_flags="-DPYTHON_EXECUTABLE:PATH=/usr/bin/python2 \
    	 -DPYTHON_INCLUDE_DIR:PATH=/usr/include/python2.7 -DPYTHON_LIBRARY:PATH=/usr/lib/libpython2.7.so"
 
-   # flags to use ffmpeg-compat instead of ffmpeg until
-   # http://paraview.org/Bug/view.php?id=14215 gets fixed
-   local ffmpeg_compat_flags="-DFFMPEG_INCLUDE_DIR:PATH=/usr/include/ffmpeg-compat \
-   	 -DFFMPEG_avcodec_LIBRARY=/usr/lib/ffmpeg-compat/libavcodec.so \
-   	 -DFFMPEG_avformat_LIBRARY=/usr/lib/ffmpeg-compat/libavformat.so \
-   	 -DFFMPEG_avutil_LIBRARY=/usr/lib/ffmpeg-compat/libavutil.so \
-   	 -DFFMPEG_swscale_LIBRARY=/usr/lib/ffmpeg-compat/libswscale.so"
+   # flags to use ffmpeg2.8
+   local ffmpeg_compat_flags="-DFFMPEG_INCLUDE_DIR:PATH=/usr/include/ \
+   	 -DFFMPEG_avcodec_LIBRARY=/usr/lib/libavcodec.so \
+   	 -DFFMPEG_avformat_LIBRARY=/usr/lib/libavformat.so \
+   	 -DFFMPEG_avutil_LIBRARY=/usr/lib/libavutil.so \
+   	 -DFFMPEG_swscale_LIBRARY=/usr/lib/libswscale.so"
 
    # enable when http://paraview.org/Bug/view.php?id=12852 gets fixed:
    #-DCMAKE_SKIP_RPATH:BOOL=YES \
@@ -73,9 +84,12 @@ build() {
    -DPARAVIEW_ENABLE_PYTHON:BOOL=ON \
    -DPARAVIEW_USE_MPI:BOOL=ON \
    -DPARAVIEW_USE_VISITBRIDGE:BOOL=ON \
-   -DQT_HELP_GENERATOR:FILEPATH=/usr/lib/qt4/bin/qhelpgenerator \
-   -DQT_QMAKE_EXECUTABLE=qmake-qt4 \
+   -DPARAVIEW_QT_VERSION=5 \
+   -DVTK_QT_VERSION=5 \
+   -DQT_HELP_GENERATOR:FILEPATH=/usr/lib/qt/bin/qhelpgenerator \
+   -DQT_QMAKE_EXECUTABLE=qmake-qt5 \
    -DVISIT_BUILD_READER_CGNS:BOOL=ON \
+   -DVTK_RENDERING_BACKEND:STRING=OpenGL2 \
    ${cmake_system_flags} \
    ${cmake_system_python_flags} \
    ${ffmpeg_compat_flags} \
