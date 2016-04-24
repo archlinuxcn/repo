@@ -3,9 +3,9 @@
 
 pkgname=lib32-libudev0
 pkgver=182
-pkgrel=1
+pkgrel=2
 pkgdesc='Dynamic library to access udev device information (legacy)'
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url='https://www.kernel.org/pub/linux/utils/kernel/hotplug/udev/udev.html'
 license=('GPL')
 depends=('lib32-glibc')
@@ -14,9 +14,12 @@ source=("https://www.kernel.org/pub/linux/utils/kernel/hotplug/udev-${pkgver}.ta
 sha256sums=('adb8892f3b8e4b7163703ed4a545774721a3d55a1062de001f08c477c03d97ab')
 
 prepare() {
-   cd udev-${pkgver}
+  cd udev-${pkgver}
 
-   autoreconf -fi
+  autoreconf -fi
+
+  sed 's/input.h/input-event-codes.h/' -i Makefile.in
+  sed '20a#include <stdint.h>' -i src/mtd_probe/mtd_probe.h
 }
 
 build() {
