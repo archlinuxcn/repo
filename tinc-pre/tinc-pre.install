@@ -8,6 +8,17 @@ post_install() {
 
 post_upgrade() {
   post_install $1
+  echo <<EOF
+Starting from 1.1pre12, tinc ships its own systemd unit files, which are
+different from previous ones:
+
+1. Unit file name changes from tincd(@) to tinc(@)
+2. Network without network name is not supported anymore
+3. tinc.service now serves to start all tinc@.service
+
+Please reload systemd and do appropriate configuration according to these
+changes.
+EOF
 }
 
 pre_remove() {
