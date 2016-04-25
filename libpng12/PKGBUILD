@@ -7,7 +7,7 @@
 pkgname=libpng12
 _realname=libpng
 pkgver=1.2.56
-pkgrel=2
+pkgrel=3
 pkgdesc="A collection of routines used to create PNG format graphics files"
 arch=('i686' 'x86_64' 'armv7h')
 url="http://www.libpng.org/pub/png/libpng.html"
@@ -16,15 +16,21 @@ depends=('zlib')
 source=("http://sourceforge.net/projects/libpng/files/libpng12/${pkgver}/libpng-${pkgver}.tar.xz"
         "http://sourceforge.net/projects/libpng-apng/files/libpng12/${pkgver}/libpng-${pkgver}-apng.patch.gz")
 
+sha256sums=('24ce54581468b937734a6ecc86f7e121bc46a90d76a0d948dca08f32ee000dbe'
+            'b689af23e7c399b1f5d1fc0a7ed0540a5e678bcb665bc70f377d0569b278f3d9')
+prepare() {
+  cd "${srcdir}/${_realname}-${pkgver}"
+  patch -Np1 -i "${srcdir}/libpng-${pkgver}-apng.patch"
+}
+
 build() {
   cd "${srcdir}/${_realname}-${pkgver}"
 
-  patch -Np1 -i "${srcdir}/libpng-${pkgver}-apng.patch"
-
-  libtoolize --force --copy
-  aclocal
-  autoconf
-  automake --add-missing
+  # Removed bacause problems with automake system; Check in future updates
+  #libtoolize --force --copy
+  #aclocal
+  #autoconf
+  #automake --add-missing
 
   ./configure --prefix=/usr
 
@@ -43,8 +49,4 @@ package() {
   rm -rf "${pkgdir}/usr/include/"{pngconf.h,png.h}
 
   install -Dm644 LICENSE $pkgdir/usr/share/licenses/libpng12/LICENSE
-
 }
-
-sha256sums=('24ce54581468b937734a6ecc86f7e121bc46a90d76a0d948dca08f32ee000dbe'
-            'b689af23e7c399b1f5d1fc0a7ed0540a5e678bcb665bc70f377d0569b278f3d9')
