@@ -1,4 +1,4 @@
-# Maintainer: Piotr Gorski <lucjan.lucjanov@gmail.com> PGP-Key: 78695CFD
+# Maintainer: Piotr Gorski <lucjan.lucjanov@gmail.com> PGP-Key: BDB26C5A
 # Contributor: shivik <> PGP-Key: 761E423C
 # Contributor: Michael Duell <mail@akurei.me> PGP-Key: 6EE23EBE
 
@@ -34,7 +34,7 @@ __basekernel=4.5
 _minor=2
 pkgver=${__basekernel}.${_minor}
 pkgrel=2
-lqxrel=1
+lqxrel=2
 _kernelname=-lqx
 pkgbase=linux-lqx
 pkgname=('linux-lqx' 'linux-lqx-headers' 'linux-lqx-docs')
@@ -59,7 +59,7 @@ source=("http://www.kernel.org/pub/linux/kernel/v4.x/linux-${__basekernel}.tar.x
 
 sha512sums=('cb0d5f30baff37dfea40fbc1119a1482182f95858c883e019ee3f81055c8efbdb9dba7dfc02ebcc4216db38f03ece58688e69efc0fce1dade359af30bd5426de'
             'SKIP'
-            '68cd6668780bc9e1b8636da45aa2390c580cf4b30d5e5be60f58ba9d1794a46f5c53d60646ee32d3f2adc04bed915a31ebef4cd2337e662602e43c55231b746b'
+            'fde579ce09a6444ae1ecbca0b353393c0eb71a8d92d12cacb92c69ed276529e6ff4c4d5c1c1caa0ae2da2719256f4feaf7517df88e9f5ee38a4a814645803a9a'
             '72e503fb2ef8526e0f01c72c410438a75f0af1e5b15e136ad4ec88e57ac191df3bfcad6c424af390fb92a4ed9d1dfd59f076283929e88f343684f9efdc24e070'
             'f8183466ace0b0a82419139b53703e0a85fa6469fbd8df4ac397db046cb9f643f7104e1089166378d260e0baa3a5f33db858abe5262c9fa277899a1a2715dfd6'
             'f9c3a09519d3873535ffa1afc84c63c39dccfc4d9dfebc18746a82264a5fcfcc509c63257231ac145fbccfff422bc62a7ce2d2da36c763f4e5262990c08cbcf7'
@@ -390,7 +390,7 @@ _basekernel=${_basekernel%.*}
 
   mkdir -p "${pkgdir}/usr/lib/modules/${_kernver}/build"
   cp -al Documentation "${pkgdir}/usr/lib/modules/${_kernver}/build"
-  find "${pkgdir}" -type f -exec chmod 4.5 {} \;
+  find "${pkgdir}" -type f -exec chmod 444 {} \;
   find "${pkgdir}" -type d -exec chmod 755 {} \;
 
   # remove a file already in linux package
