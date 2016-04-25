@@ -1,19 +1,19 @@
-# Maintainer: Alexander Rødseth <rodseth@gmail.com>
+# Maintainer: Alexander F Rødseth <xyproto@archlinux.org>
 # Contributor: Daniel Micay <danielmicay@gmail.com>
 # Contributor: Gordin <9ordin @t gmail dot com>
 
 pkgname=android-sdk
 pkgver=24.4.1
-pkgrel=3
+pkgrel=4
 pkgdesc='Google Android SDK'
 arch=('x86_64' 'i686')
 url='http://developer.android.com/sdk/'
 license=('custom')
 depends_x86_64=('java-environment' 'lib32-alsa-lib' 'lib32-openal'
   'lib32-libstdc++5' 'lib32-libxv' 'lib32-mesa' 'lib32-ncurses' 'lib32-sdl'
-  'lib32-zlib' 'lib32-fontconfig' 'lib32-libpulse' 'swt')
+  'lib32-zlib' 'lib32-fontconfig' 'lib32-libpulse' 'swt' 'ncurses5-compat-libs')
 depends_i686=('java-environment' 'alsa-lib' 'openal' 'libstdc++5' 'libxv' 'sdl'
-              'ncurses' 'swt' 'zlib')
+              'ncurses' 'swt' 'zlib' 'ncurses5-compat-libs')
 install="$pkgname.install"
 optdepends=('android-udev: udev rules for Android devices'
             'android-sdk-platform-tools: adb, aapt, aidl, dexdump and dx')
