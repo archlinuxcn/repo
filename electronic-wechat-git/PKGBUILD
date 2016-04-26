@@ -2,7 +2,7 @@
 
 pkgname=electronic-wechat-git
 _pkgname=electronic-wechat
-pkgver=1.2.0
+pkgver=1.2.0.2.g0f0d12f
 pkgrel=1
 pkgdesc="An Electron application for WeChat"
 arch=('any')
@@ -18,7 +18,7 @@ _desktop="${_pkgname}.desktop"
 
 pkgver() {
     cd "${srcdir}/${_pkgname}"
-    git describe --tags | sed 's/^v//;s/-/./g'
+    git describe --tags --long | sed 's/^v//;s/-/./g'
 }
 
 prepare() {
