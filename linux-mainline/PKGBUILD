@@ -8,8 +8,8 @@
 pkgbase=linux-mainline               # Build stock -ARCH kernel
 #pkgbase=linux-custom       # Build kernel with a different name
 _srcname=linux-4.5
-_patchname=patch-4.6-rc4
-pkgver=4.6rc4
+_patchname=patch-4.6-rc5
+pkgver=4.6rc5
 pkgrel=1
 arch=('i686' 'x86_64')
 url="http://www.kernel.org/"
@@ -26,9 +26,9 @@ source=("https://cdn.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.xz"
         'linux.preset'
         'change-default-console-loglevel.patch')
 sha256sums=('a40defb401e01b37d6b8c8ad5c1bbab665be6ac6310cdeed59950c96b31a519c'
-            '707e6c719f33e6b3982af1e8943877135a24ec53fc0cec38cf4ecd468ce3713b'
-            '8a8a955f015ee8342701231a63836cec0e300fd7e96d30e8696fde8a383fcdc9'
-            '8b60911aad591306336e300e27071f2d108c5016e66a04327b82ac69acbfefff'
+            '792466e412ed0f3a1401c7563eef138c03bc76e21e6928e220035eb4a0f42e2f'
+            '2355efbab340d16c1b60a7805b987a78e57266809ba6c986ceef68ef7ce71db0'
+            'cee1781f96e55a909757c4533cdacb57c3ffe6f6f01f709e8a5a837dc4a68bba'
             'f0d90e756f14533ee67afda280500511a62465b4f76adcc5effa95a40045179c'
             '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99')
 validpgpkeys=(
