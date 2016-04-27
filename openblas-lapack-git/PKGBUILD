@@ -86,7 +86,7 @@ package_openblas-git() {
 
 package_openblas-lapack-git() {
   depends=('openblas-git')
-  provides=('blas=3.6.0' 'lapack=3.6.0' 'cblas')
+  provides=('openblas-lapack' 'blas=3.6.0' 'lapack=3.6.0' 'cblas')
   conflicts=('blas' 'lapack' 'cblas')
   rm -rf pkg
   mkdir -p "${pkgdir}/usr/"{include,lib}/

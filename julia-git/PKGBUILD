@@ -25,7 +25,7 @@ makedepends=('gcc-fortran' 'arpack' 'fftw' 'git' 'gmp' 'libgit2' 'libunwind-git'
              'llvm-julia' 'mpfr' 'pcre2' 'suitesparse' 'python2-sphinx'
              'python2-sphinx_rtd_theme' 'python2-pip' 'texlive-langcjk'
              'texlive-latexextra' 'openspecfun' 'openblas'
-             'libutf8proc-git' 'patchelf' 'openblas-lapack-git')
+             'libutf8proc-git' 'patchelf' 'openblas-lapack')
 if ((USE_OPENLIBM)); then
     makedepends=("${makedepends[@]}" openlibm)
 fi
@@ -152,7 +152,7 @@ package-julia-in() {
   arch=('i686' 'x86_64' 'armv7h' 'aarch64')
   depends=('arpack' 'fftw' 'gmp' 'libgit2' 'libunwind-git' 'llvm-julia' 'mpfr'
            'pcre2' 'hicolor-icon-theme' 'xdg-utils' 'suitesparse' 'openspecfun'
-           'openblas' 'libutf8proc-git')
+           'openblas' 'libutf8proc-git' 'openblas-lapack')
   if ((USE_OPENLIBM)); then
       depends=("${depends[@]}" openlibm)
   fi
