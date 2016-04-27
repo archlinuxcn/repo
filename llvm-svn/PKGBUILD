@@ -21,7 +21,7 @@ pkgname=(
 )
 _pkgname='llvm'
 
-pkgver=3.9.0svn_r265783
+pkgver=3.9.0svn_r267607
 pkgrel=1
 
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -47,14 +47,12 @@ source=(
   'clang-tools-extra::svn+http://llvm.org/svn/llvm-project/clang-tools-extra/trunk'
   'compiler-rt::svn+http://llvm.org/svn/llvm-project/compiler-rt/trunk'
   'llvm-Config-llvm-config.h'
-  0001-Only-replace-one-dead-register-in-ld-p-instructions.patch
 )
 md5sums=('SKIP'
          'SKIP'
          'SKIP'
          'SKIP'
-         '295c343dcd457dc534662f011d7cff1a'
-         '6c43904d744682f5b1a7d798861c1f17')
+         '295c343dcd457dc534662f011d7cff1a')
 
 
 
@@ -145,7 +143,7 @@ prepare() {
       -e 's|^\([[:blank:]]*DESTINATION[[:blank:]]\+\)docs/ocaml/html|\1share/doc/ocaml|' \
       -i docs/CMakeLists.txt
 
-  patch -Np1 < "${srcdir}/0001-Only-replace-one-dead-register-in-ld-p-instructions.patch"
+  # patch -Np1 < "${srcdir}"
 
   mkdir -p "${srcdir}/build"
 }
