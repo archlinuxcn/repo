@@ -2,8 +2,8 @@
 # Contributor: rayman2200 
 
 pkgname=dockbarx
-pkgver=0.91.4
-pkgrel=2
+pkgver=0.92
+pkgrel=1
 pkgdesc="TaskBar with groupping and group manipulation"
 arch=('i686' 'x86_64')
 url="https://github.com/M7S/dockbarx"
@@ -19,7 +19,7 @@ optdepends=('avant-window-navigator: AWN DockBarX Plugin'
             'cardapio-bzr: required to run menu applet for dockx (standalone dock)')
 conflicts=('dockbarx-bzr')
 source=(${pkgname}-${pkgver}.tar.gz::https://github.com/M7S/dockbarx/archive/${pkgver}.tar.gz )
-sha256sums=('81579ba37a693c4b50efeaa3c41d74a8d2c62d1b4691844742acb2ab8bb66eef')
+sha256sums=('eb7630c0cebeb84ba9f66c60d77ec082afe56b264db4139436913ebdf2b1b7ea')
 
 package() {
   cd ${srcdir}/${pkgname}-${pkgver}
@@ -35,7 +35,4 @@ package() {
   sed -i 's:^Categories=.*:Categories=GTK;GNOME;Settings;X-GNOME-PersonalSettings;:' ${pkgdir}/usr/share/applications/dbx_preference.desktop
   sed -i 's:\(/usr/bin/python\)\([^2]\):\12\2:' ${pkgdir}/usr/bin/{dockbarx_factory,dbx_preference,dockx}
 
-  # python2-pillow 3.0.0 fix, thanks 12blac
-  sed -i "s:s = im.tostring('raw', 'BGRA'):s = im.tobytes('raw', 'BGRA'):" ${pkgdir}/usr/lib/python2.7/site-packages/dockbarx/iconfactory.py
 }
-
