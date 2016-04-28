@@ -1,31 +1,24 @@
-# Maintainer: wicastC <wicastchen at hotmail dot com>
-
 _pkgname=plotly
 pkgname=python-plotly
-pkgver=1.9.9
+pkgver=1.9.10
 pkgrel=1
-pkgdesc="An interactive, browser-based charting library for python"
-arch=('i686' 'x86_64')
+pkgdesc="Python plotting library for collaborative, interactive, publication-quality graphs."
+arch=('any')
 url="https://plot.ly/python/"
 license=('MIT')
-depends=('python-requests' 'python-pytz')
-makedepends=('git' 'python' 'python-setuptools')
-source=("https://pypi.python.org/packages/source/p/plotly/plotly-${pkgver}.tar.gz")
-md5sums=('7dc398b2f45589a4d2abc821f2b0249b')
-
+depends=('python' 'python-requests' 'python-pytz' 'python-setuptools')
+source=('https://pypi.python.org/packages/c9/99/9752fa71e938d67273a6ff8840b3514e59898d8112c238fc9ded6a7ad782/plotly-1.9.10.tar.gz')
+md5sums=('dfe0a30041f115b940587b8bf26134dd')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
-
-  #[ -d build ] && rm -rf build
-  #mkdir build
-  #cd build
-
-  #python config.py -auto
-  python setup.py build
+  python3 setup.py build
 }
 
 package() {
   cd "$srcdir/$_pkgname-$pkgver"
-  python setup.py install --root="${pkgdir}" --prefix=/usr
+
+  python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 }
+
+# vim:set sw=2 et:
