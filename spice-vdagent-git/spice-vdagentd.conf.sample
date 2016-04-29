@@ -1,0 +1,13 @@
+# Sample configuration file to pass arbitrary command line options to spice-vdagentd
+#
+# This file is optionally sourced by directive EnvironmentFile of systemd unit
+# spice-vdagentd.service which passes the value of environment variable
+# $SPICE_VDAGENTD_EXTRA_ARGS as command line options to binary spice-vdagentd.
+#
+# It's basically file /etc/sysconfig/spice-vdagentd proposed by upstream, see man (1)
+# spice-vdagentd, with some modified path.
+# 
+# To make use of it, copy the file to /etc/spice/spice-vdagentd.conf, uncomment
+# the variable below and adjust the options to your needs.
+
+# SPICE_VDAGENTD_EXTRA_ARGS="-d -u /dev/alternate/path"
