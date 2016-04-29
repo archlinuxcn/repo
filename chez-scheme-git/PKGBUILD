@@ -23,7 +23,8 @@ replaces=(petite-chez-scheme)
 backup=()
 options=()
 install=
-source=()
+source=("$pkgname::git+https://github.com/cisco/ChezScheme.git")
+md5sums=("SKIP")
 noextract=()
 #generate with 'makepkg -g'
 
@@ -31,7 +32,7 @@ _gitroot=https://github.com/cisco/ChezScheme.git
 _gitname=chez
 
 pkgver() {
-  cd "$srcdir/$_gitname-build"
+	cd "$srcdir/${pkgname}"
   printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
