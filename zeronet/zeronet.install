@@ -33,11 +33,4 @@ post_upgrade() {
     chown -R zeronet:zeronet /opt/zeronet
     chown zeronet:zeronet /var/lib/zeronet
     chown zeronet:zeronet /var/log/zeronet
-
-    # TODO: remove this after a couple releases go by
-    if [ -d /opt/zeronet/data ]
-    then
-	    echo ">>> MANUAL ACTION REQUIRED: data directory is now /var/lib/zeronet"
-	    echo ">>>   mv /opt/zeronet/data/* /var/lib/zeronet/"
-    fi
 }

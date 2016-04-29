@@ -1,8 +1,8 @@
 # Maintainer: redfish <redfish at galactica dot pw>
 
 pkgname='zeronet'
-pkgver=0.3.5
-pkgrel=3
+pkgver=0.3.6
+pkgrel=1
 arch=('any')
 url="https://zeronet.io/"
 depends=('python2>=2.7.10'
@@ -14,7 +14,7 @@ pkgdesc="Decentralized websites using Bitcoin crypto and the BitTorrent network.
 source=("https://github.com/HelloZeroNet/ZeroNet/archive/v$pkgver.tar.gz"
         "zeronet.conf"
         "zeronet.service")
-md5sums=('879a0882fcbd3618020a78a56bb6597f'
+md5sums=('a81944dc3c25918f438b993fb67e7f0b'
          'c5216860cfc435a4861c55fd3933391c'
          '5404c37540131f41f10e9be873d11fcc')
 install="zeronet.install"
