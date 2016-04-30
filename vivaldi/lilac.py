@@ -5,10 +5,15 @@
 #
 
 from lilaclib import *
-
+import glob
 
 build_prefix = 'extra-x86_64'
-pre_build = aur_pre_build
+
+def pre_build():
+    aur_pre_build()
+    for f in glob.glob(".*"):
+        os.unlink(f)
+
 post_build = aur_post_build
 
 if __name__ == '__main__':
