@@ -4,18 +4,13 @@
 # With contributions from many kind people at https://aur.archlinux.org/packages/julia-git/
 
 USE_OPENLIBM=1
-if [[ "$CARCH" = aarch64 ]]; then
-    # Openlibm doesn't support aarch64 yet.
-    USE_OPENLIBM=0
-fi
-
 pkgbase=julia-git
 if [[ "$CARCH" = x86_64 ]]; then
     pkgname=('julia-git' 'julia-git-avx2' 'julia-git-docs')
 else
     pkgname=('julia-git' 'julia-git-docs')
 fi
-pkgver=0.5.0.dev.3764.g9e7a240
+pkgver=0.5.0.dev.3831.g5c4058e
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
