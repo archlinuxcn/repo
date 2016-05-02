@@ -1,6 +1,7 @@
 # Maintainer: Piotr Gorski <lucjan.lucjanov@gmail.com> PGP-Key: BDB26C5A
 # Contributor: shivik <> PGP-Key: 761E423C
 # Contributor: Michael Duell <mail@akurei.me> PGP-Key: 6EE23EBE
+# A special thanks to Steven Barrett for very important sugestions 
 
 ###########################################################################################################
 #                                          Patch and Build Options
@@ -42,11 +43,18 @@ _lqxpatchname="${pkgver}-${lqxrel}.patch"
 arch=('i686' 'x86_64')
 license=('GPL2')
 url="http://liquorix.net/"
+
+num_cores="$(grep -E '^processor\s+:\s+[0-9]+$' /proc/cpuinfo | wc -l)"
+if [[ num_cores -eq 0 ]]; then
+   num_cores=1 # Just in-case the regex breaks
+fi
+
 if [ "$_custom" = "x" ]; then
    makedepends=('qt5-base' 'kmod' 'inetutils' 'bc')
 else
    makedepends=('kmod' 'inetutils' 'bc')
 fi
+
 options=(!strip)
 install='linux-lqx.install'
 source=("http://www.kernel.org/pub/linux/kernel/v4.x/linux-${__basekernel}.tar.xz"
@@ -125,7 +133,7 @@ prepare() {
   sed -ri "s|^(SUBLEVEL =).*|\1 ${_minor}|" Makefile
 
   msg "Running make prepare"
-  make prepare
+  make -j ${num_cores} prepare
 
 ### Optionally load needed modules for the make localmodconfig
  # See https://aur.archlinux.org/packages/modprobed-db/
@@ -167,7 +175,7 @@ prepare() {
 build() {
   cd ${srcdir}/linux-${__basekernel}
   msg "Starting build."
-  make ${MAKEFLAGS} LOCALVERSION=${_append_kernel_custom_string} bzImage modules
+  make -j ${num_cores} ${MAKEFLAGS} LOCALVERSION=${_append_kernel_custom_string} bzImage modules
 }
 
 package_linux-lqx() {
@@ -187,7 +195,7 @@ _basekernel=${_kernver%%-*}
 _basekernel=${_basekernel%.*}
 
 mkdir -p "${pkgdir}"/{lib/modules,lib/firmware,boot}
-make LOCALVERSION=${_append_kernel_custom_string} INSTALL_MOD_PATH="${pkgdir}" modules_install
+make -j ${num_cores} LOCALVERSION=${_append_kernel_custom_string} INSTALL_MOD_PATH="${pkgdir}" modules_install
 cp arch/$KARCH/boot/bzImage "${pkgdir}/boot/vmlinuz-linux-lqx"
 
 ############## add vmlinux
