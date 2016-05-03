@@ -9,7 +9,7 @@ arch=('i686' 'x86_64')
 url='https://github.com/lxde/libfm-qt'
 license=('LGPL')
 depends=('qt5-x11extras' 'libfm>=1.2.0')
-makedepends=('cmake' 'qt5-tools')
+makedepends=('cmake' 'qt5-tools' 'git')
 provides=("$_pkgname")
 conflicts=("$_pkgname")
 source=('git+https://github.com/lxde/libfm-qt.git')
