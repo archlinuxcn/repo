@@ -1,17 +1,18 @@
 # Maintainer: Colin Keenan <colinnkeenan at gmail dot com>
 
 pkgname=silentcast
-pkgver=2.2
+pkgver=2.3
 pkgrel=1
 pkgdesc="Silent Screencast: video record your screen and make it into an animated gif"
 arch=('any')
 url="https://github.com/colinkeenan/silentcast"
 license=('GPL')
 depends=('bash' 'ffmpeg' 'imagemagick' 'xdotool' 'xorg-xrandr' 'xorg-xwininfo' 'wmctrl' 'python-gobject' 'python-cairo' 'xdg-utils' 'yad')
+optdepends=('libappindicator-activate-gtk3: necessary when running KDE Plasma 5 desktop to enable the right-click->done option from the systray icon')
 install=${pkgname}.install
 
 source=($url"/archive/v"$pkgver".tar.gz")
-md5sums=('4a9e181f6b7984435e8ec033ed02b3f8')
+md5sums=('f7ce00817cfa11a22a65d324fedcce78')
 
 package() {
   cd "$pkgname-$pkgver"
