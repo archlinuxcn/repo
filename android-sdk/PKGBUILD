@@ -3,8 +3,8 @@
 # Contributor: Gordin <9ordin @t gmail dot com>
 
 pkgname=android-sdk
-pkgver=24.4.1
-pkgrel=4
+pkgver=25.1.1
+pkgrel=1
 pkgdesc='Google Android SDK'
 arch=('x86_64' 'i686')
 url='http://developer.android.com/sdk/'
@@ -24,7 +24,7 @@ source=("https://dl.google.com/android/repository/tools_r${pkgver}-linux.zip"
         "$pkgname.csh"
         "$pkgname.conf"
         'license.html')
-sha1sums=('7e00ea3715f2cf666296ce22058764ec7ecb3b7e'
+sha1sums=('f1a0a0c21e495888fdd8c03501dee3b6d6a48821'
           'b8726c63294a23e5fea066a36061164e583b5732'
           '8f886de363ad91a7f93a0c6ded993e99bef3e1a7'
           '78f8574e651c9bf8b7515ecb30c7ef93edbc4a96'
