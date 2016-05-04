@@ -1,8 +1,8 @@
 # Contributor: Tilman Blumenbach <tilman [AT] ax86 [DOT] net>
 
 pkgname='terminus-font-ttf'
-pkgver=4.39
-pkgrel=3
+pkgver=4.40
+pkgrel=2
 pkgdesc="Monospaced bitmap font designed for long work with computers (TTF version)"
 arch=('any')
 url="http://files.ax86.net/terminus-ttf"
@@ -23,4 +23,5 @@ package()
     install -Dm 644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
 }
 
-md5sums=('6925c62e7b33de8d2fe252799140d4e4')
+md5sums=('c5dabc9853ae9fa15e484501f9832703')
+sha384sums=('dce2835135e7e2028fa78360cf2a1108f3c07defb435c364f6765966ecc825c6e8f5c4b512616a0f1222bcb9ce0fad9f')
