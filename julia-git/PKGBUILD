@@ -10,7 +10,7 @@ if [[ "$CARCH" = x86_64 ]]; then
 else
     pkgname=('julia-git' 'julia-git-docs')
 fi
-pkgver=0.5.0.dev.3831.g5c4058e
+pkgver=0.5.0.dev.3878.ga0f4920
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
@@ -151,7 +151,6 @@ package-julia-in() {
   if ((USE_OPENLIBM)); then
       depends=("${depends[@]}" openlibm)
   fi
-  install=julia.install
   conflicts=('julia')
   opts=("${@:2}")
 
