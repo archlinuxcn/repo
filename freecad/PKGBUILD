@@ -45,9 +45,9 @@ build() {
   cmake .. \
         -Wno-dev -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-        -DCMAKE_INSTALL_DOCDIR=share/freecad/doc \
-        -DCMAKE_INSTALL_DATADIR=share/freecad \
-        -DCMAKE_INSTALL_LIBDIR=lib/freecad \
+        -DCMAKE_INSTALL_DOCDIR=/usr/share/freecad/doc \
+        -DCMAKE_INSTALL_DATADIR=/usr/share/freecad \
+        -DCMAKE_INSTALL_LIBDIR=/usr/lib/freecad \
         -DCMAKE_INSTALL_INCLUDEDIR=/usr/include \
         -DOCC_INCLUDE_DIR=/usr/include/oce/ \
         -DPYTHON_EXECUTABLE=/usr/bin/python2 \
@@ -57,7 +57,7 @@ build() {
 }
 
 package_freecad-oce() {
-  cd FreeCAD-${pkgver}
+  cd FreeCAD-${pkgver}/build
   provides=('freecad')
   conflicts=('freecad')
 
