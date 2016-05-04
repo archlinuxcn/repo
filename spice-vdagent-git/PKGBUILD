@@ -3,12 +3,12 @@
 _pkgname=spice-vdagent
 pkgname=$_pkgname-git
 pkgver=0.16.0.17.gb1b8b71
-pkgrel=1
+pkgrel=1.1
 pkgdesc='SPICE VDAgent for Linux'
 arch=('i686' 'x86_64')
 url='http://www.spice-space.org'
 license=('GPL')
-depends=('glib2' 'alsa-lib' 'libpciaccess' 'libxfixes' 'libxrandr' 'libxinerama')
+depends=('glib2' 'dbus' 'alsa-lib' 'libpciaccess' 'libxfixes' 'libxrandr' 'libxinerama')
 makedepends=('git' 'spice-protocol')
 provides=("$_pkgname")
 conflicts=("$_pkgname")
