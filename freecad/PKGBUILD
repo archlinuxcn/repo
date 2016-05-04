@@ -31,11 +31,6 @@ md5sums=('6e992c98ae2b8448bcf428e3e9efb02f'
 
 prepare() {
   cd FreeCAD-${pkgver}
-
-  sed -i \
-      -e 's|\bpyside-uic\b|python2-pyside-uic|' \
-      cMake/FindPySideTools.cmake
-
   # http://www.freecadweb.org/tracker/view.php?id=2347
   sed -i 's/boost::re_detail/boost::BOOST_REGEX_DETAIL_NS/' \
       src/Mod/Drawing/App/FeaturePage.cpp
