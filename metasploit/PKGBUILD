@@ -3,7 +3,7 @@
 # Contributor: Tobias Veit - nIcE <m.on.key.tobi[at]gmail[dot]com>
 
 pkgname=metasploit
-pkgver=4.11.22
+pkgver=4.11.25
 pkgrel=1
 pkgdesc="An advanced open-source platform for developing, testing, and using exploit code"
 url="https://www.metasploit.com/"
@@ -16,12 +16,12 @@ optdepends=(
 )
 options=('!strip')
 source=(${pkgname}-${pkgver}.tar.gz::https://github.com/rapid7/metasploit-framework/archive/${pkgver}.tar.gz)
-sha512sums=('9a9d99bc4c13cfb016e2401ecce8a78225b2cbc8aa77950fcaca7e3a332382a2b34dc7e4196e9e9226654770741a209c0bc9de04f0ead3ddca7cd6d932faacc8')
+sha512sums=('b2b77ae56b50653bcd04cec8801a39d733731edb7f70a13ea610acd671e514736554a6e2a00af5100453a3deccf769a304aafa865ff0637a151bad4018deb938')
 
 build() {
   cd ${pkgname}-framework-${pkgver}
   bundle install -j"$(nproc)" --no-cache --deployment
-  find vendor/bundle/ruby/*/gems/robots-* -exec chmod o+r '{}' \;
+  find vendor/bundle/ruby -exec chmod o+r '{}' \;
 }
 
 package() {
