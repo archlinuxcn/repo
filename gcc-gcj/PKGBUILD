@@ -4,32 +4,39 @@
 # Based on a modified version of the gcc PKGBUILD
 
 pkgname=gcc-gcj
-pkgver=5.3.0
-_pkgver=5
-_islver=0.15
+pkgver=6.1.1
+_pkgver=6
+_islver=0.16.1
 pkgrel=1
+_snapshot=6-20160428
 pkgdesc="The GNU Compiler for Java"
 arch=('i686' 'x86_64')
 license=('GPL' 'LGPL')
 url="http://gcc.gnu.org"
 depends=('gtk2' 'libxtst' 'alsa-lib' 'libmpc>=0.8.1' 'classpath' 'gcc-gcj-ecj')
-makedepends=('mpfr>=2.4.2' 'elfutils' 'jack' 'zip' 'gcc=5.3.0' 'libart-lgpl')
+makedepends=('mpfr>=2.4.2' 'elfutils' 'jack' 'zip' 'gcc=6.1.1' 'libart-lgpl')
 optdepends=('python2: for running /usr/bin/aot-compile'
   'java-environment: for runnig some jars')
 options=('!libtool')
-install=$pkgname.install
-source=("ftp://gcc.gnu.org/pub/gcc/releases/gcc-${pkgver}/gcc-${pkgver}.tar.bz2"
+source=(#"ftp://gcc.gnu.org/pub/gcc/releases/gcc-${pkgver}/gcc-${pkgver}.tar.bz2"
+        ftp://gcc.gnu.org/pub/gcc/snapshots/${_snapshot}/gcc-${_snapshot}.tar.bz2
         "http://isl.gforge.inria.fr/isl-${_islver}.tar.bz2")
 
-sha512sums=('d619847383405fd389f5a2d7225f97fedb01f81478dbb8339047ccba7561a5c20045ab500a8744bffd19ea51892ce09fc37f862f2cfcb42de0f0f8cd8f8da37a'
-            '1e27b7798f7428abcb5e9b2e3fbe3842fede54c03bbd7bd3cf83703e1e4cca7d95c51326ab90253fe55b38c002183e8e78dfbb4d2cf20b0aabe02443c8e7d50f')
+sha512sums=('052c525be31ee832ee4736468be74806d4afd3a1140fb58b2feebe20a59d0673346b0ddd1ad02feedf49458ce18ef40b26174593ca12b23c49b4526693c37cc7'
+            'c188667a84dc5bdddb4ab7c35f89c91bf15a8171f4fcaf41301cf285fb7328846d9a367c096012fec4cc69d244f0bc9e95d84c09ec097394cd4093076f2a041b')
+
+if [ -n "${_snapshot}" ]; then
+  _basedir=gcc-${_snapshot}
+else
+  _basedir=gcc-${pkgver}
+fi
 
 prepare() {
   echo "You need at least 10GB of space to compile gcc-gcj,"
   echo "and it will take a lot of time (~ hours)."
   echo "It is better to compile it using makepkg directly."
   sleep 5
-  cd "$srcdir"/gcc-${pkgver}
+  cd "$srcdir"/${_basedir}
 
   # Link isl for in-tree builds
   ln -s ../isl-${_islver} isl
@@ -52,7 +59,7 @@ prepare() {
 
 build() {
 
-  cd $srcdir/gcc-$pkgver/build
+  cd $srcdir/${_basedir}/build
 
   ../configure --prefix=/usr --enable-shared --enable-languages=java \
       --enable-threads=posix --mandir=/usr/share/man --infodir=/usr/share/info \
@@ -65,7 +72,7 @@ build() {
 }
 
 package() {
-  cd "$srcdir"/gcc-${pkgver}/build
+  cd "$srcdir"/${_basedir}/build
   make -j1 DESTDIR=${pkgdir} install-target-libjava
 
   cd gcc
@@ -77,7 +84,7 @@ package() {
   # Remove files which belong to the base gcc package
   rm -f ${pkgdir}/usr/bin/{c,g}++
   if [ "${CARCH}" = "x86_64" ]; then
-    rm -f ${pkgdir}/usr/bin/x86_64-unknown-linux-gnu-{c,g}++
+    rm -f ${pkgdir}/usr/bin/x86_64-pc-linux-gnu-{c,g}++
    else
     rm -f ${pkgdir}/usr/bin/i686-pc-linux-gnu-{c,g}++
   fi
@@ -87,19 +94,19 @@ package() {
   mv ${pkgdir}/usr/share/man/man1/gjdoc.1 ${pkgdir}/usr/share/man/man1/gjdoc.gcj.1
   cd $pkgdir
   [[ $CARCH == "x86_64" ]] && rm usr/lib/libgcc_s.so usr/lib/libgcc_s.so.1 \
-    usr/lib/gcc/x86_64-unknown-linux-gnu/$pkgver/crtbegin.o \
-    usr/lib/gcc/x86_64-unknown-linux-gnu/$pkgver/crtbeginS.o \
-    usr/lib/gcc/x86_64-unknown-linux-gnu/$pkgver/crtbeginT.o \
-    usr/lib/gcc/x86_64-unknown-linux-gnu/$pkgver/crtend.o \
-    usr/lib/gcc/x86_64-unknown-linux-gnu/$pkgver/crtendS.o \
-    usr/lib/gcc/x86_64-unknown-linux-gnu/$pkgver/crtfastmath.o \
-    usr/lib/gcc/x86_64-unknown-linux-gnu/$pkgver/crtprec32.o \
-    usr/lib/gcc/x86_64-unknown-linux-gnu/$pkgver/crtprec64.o \
-    usr/lib/gcc/x86_64-unknown-linux-gnu/$pkgver/crtprec80.o \
-    usr/lib/gcc/x86_64-unknown-linux-gnu/$pkgver/include/unwind.h \
-    usr/lib/gcc/x86_64-unknown-linux-gnu/$pkgver/libgcc.a \
-    usr/lib/gcc/x86_64-unknown-linux-gnu/$pkgver/libgcc_eh.a \
-    usr/lib/gcc/x86_64-unknown-linux-gnu/$pkgver/libgcov.a
+    usr/lib/gcc/x86_64-pc-linux-gnu/$pkgver/crtbegin.o \
+    usr/lib/gcc/x86_64-pc-linux-gnu/$pkgver/crtbeginS.o \
+    usr/lib/gcc/x86_64-pc-linux-gnu/$pkgver/crtbeginT.o \
+    usr/lib/gcc/x86_64-pc-linux-gnu/$pkgver/crtend.o \
+    usr/lib/gcc/x86_64-pc-linux-gnu/$pkgver/crtendS.o \
+    usr/lib/gcc/x86_64-pc-linux-gnu/$pkgver/crtfastmath.o \
+    usr/lib/gcc/x86_64-pc-linux-gnu/$pkgver/crtprec32.o \
+    usr/lib/gcc/x86_64-pc-linux-gnu/$pkgver/crtprec64.o \
+    usr/lib/gcc/x86_64-pc-linux-gnu/$pkgver/crtprec80.o \
+    usr/lib/gcc/x86_64-pc-linux-gnu/$pkgver/include/unwind.h \
+    usr/lib/gcc/x86_64-pc-linux-gnu/$pkgver/libgcc.a \
+    usr/lib/gcc/x86_64-pc-linux-gnu/$pkgver/libgcc_eh.a \
+    usr/lib/gcc/x86_64-pc-linux-gnu/$pkgver/libgcov.a
   [[ $CARCH == "i686" ]] && rm usr/lib/libgcc_s.so usr/lib/libgcc_s.so.1 \
     usr/lib/gcc/i686-pc-linux-gnu/$pkgver/crtbegin.o \
     usr/lib/gcc/i686-pc-linux-gnu/$pkgver/crtbeginS.o \
