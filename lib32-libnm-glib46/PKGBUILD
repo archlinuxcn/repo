@@ -8,12 +8,13 @@
 
 pkgname=lib32-libnm-glib46
 pkgver=0.9.8.10
-pkgrel=2
+pkgrel=3
 pkgdesc='NetworkManager library'
 arch=('x86_64')
 url='http://www.gnome.org/projects/NetworkManager/'
 license=('GPL2' 'LGPL2.1')
-depends=('lib32-dbus-glib' 'lib32-systemd' 'lib32-nss')
+depends=('lib32-dbus-glib' 'lib32-glib2' 'lib32-glibc' 'lib32-libdbus'
+         'lib32-libgudev' 'lib32-nspr' 'lib32-nss' 'lib32-util-linux')
 makedepends=('dhcpcd' 'dhclient' 'dhcp-client' 'gtk-doc' 'intltool' 'iproute2'
              'iptables' 'lib32-libmm-glib' 'lib32-libndp' 'lib32-libnewt'
              'lib32-libnl' 'lib32-polkit' 'lib32-libsoup' 'lib32-libteam'
