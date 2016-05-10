@@ -228,7 +228,7 @@ package_clang-julia() {
   sed -i 's|/usr/bin/env python|&2|' \
       "$pkgdir/usr/bin/scan-view" \
       "$pkgdir/usr/bin/git-clang-format" \
-      "$pkgdir/usr/share/$pkgname/clang-format-diff.py"
+      "$pkgdir/usr/share/clang/clang-format-diff.py"
 
   # Compile Python scripts
   python2 -m compileall "$pkgdir"
