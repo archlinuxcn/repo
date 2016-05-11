@@ -1,6 +1,13 @@
-post_install() {
-    /bin/cat << EOF
+update_cache() {
+  update-desktop-database -q
+  gtk-update-icon-cache -q -t -f /usr/share/icons/hicolor
+  update-mime-database /usr/share/mime > /dev/null
+}
 
+post_install() {
+  update_cache
+  
+  /bin/cat << EOF
 ===>
 ===> Please set the Anti-aliasing font settings for Java app
 ===> adding the following line to the user's file ~/.bash_profile
@@ -14,10 +21,13 @@ post_install() {
 ===> Please read the following link for more options: 
 ===> https://wiki.archlinux.org/index.php/Java_Runtime_Environment_Fonts
 ===> 
-
 EOF
 }
 
 post_upgrade() {
-        post_install
+  update_cache
+}
+
+post_remove() {
+  update_cache
 }
