@@ -1,0 +1,39 @@
+From 3e85286e75224fa3f08bdad20e78c8327742634e Mon Sep 17 00:00:00 2001
+From: Dave Chinner <david@fromorbit.com>
+Date: Tue, 19 Jan 2016 08:21:46 +1100
+Subject: Revert "xfs: clear PF_NOFREEZE for xfsaild kthread"
+
+This reverts commit 24ba16bb3d499c49974669cd8429c3e4138ab102 as it
+prevents machines from suspending. This regression occurs when the
+xfsaild is idle on entry to suspend, and so there s no activity to
+wake it from it's idle sleep and hence see that it is supposed to
+freeze. Hence the freezer times out waiting for it and suspend is
+cancelled.
+
+There is no obvious fix for this short of freezing the filesystem
+properly, so revert this change for now.
+
+cc: <stable@vger.kernel.org> # 4.4
+Signed-off-by: Dave Chinner <david@fromorbit.com>
+Acked-by: Jiri Kosina <jkosina@suse.cz>
+Reviewed-by: Brian Foster <bfoster@redhat.com>
+Signed-off-by: Dave Chinner <david@fromorbit.com>
+---
+ fs/xfs/xfs_trans_ail.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/fs/xfs/xfs_trans_ail.c b/fs/xfs/xfs_trans_ail.c
+index aa67339..4f18fd9 100644
+--- a/fs/xfs/xfs_trans_ail.c
++++ b/fs/xfs/xfs_trans_ail.c
+@@ -497,7 +497,6 @@ xfsaild(
+ 	long		tout = 0;	/* milliseconds */
+ 
+ 	current->flags |= PF_MEMALLOC;
+-	set_freezable();
+ 
+ 	while (!kthread_should_stop()) {
+ 		if (tout && tout <= 20)
+-- 
+cgit v0.12
+
