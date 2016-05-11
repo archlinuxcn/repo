@@ -11,9 +11,9 @@ license=('GPL2')
 makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc')
 options=('!strip')
 source=("https://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.xz"
-        "https://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.sign"
+#        "https://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.sign"
         "https://www.kernel.org/pub/linux/kernel/v4.x/patch-${pkgver}.xz"
-        "https://www.kernel.org/pub/linux/kernel/v4.x/patch-${pkgver}.sign"
+#        "https://www.kernel.org/pub/linux/kernel/v4.x/patch-${pkgver}.sign"
         # the main kernel config files
         'config' 'config.x86_64'
         # standard config files for mkinitcpio ramdisk
@@ -29,9 +29,9 @@ source=("https://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.xz"
 	'touchscreen_multitouch_fixes2.patch')
 
 sha256sums=('401d7c8fef594999a460d10c72c5a94e9c2e1022f16795ec51746b0d165418b2'
-            'SKIP'
+#            'SKIP'
             'c0218043e61da3921cd14579ae4a8774a6fdad91667a9fdb851d0a35f62edb48'
-            'SKIP'
+#            'SKIP'
             'fbbae1d873900e84d1b7ef00593fbb94fc79f078a34b22ee824bab8b0a92be64'
             '756a168bbc3bb582f0df45b977c32af53658f21d62fe15171c9ac85f52d8852a'
             'f0d90e756f14533ee67afda280500511a62465b4f76adcc5effa95a40045179c'
@@ -45,10 +45,10 @@ sha256sums=('401d7c8fef594999a460d10c72c5a94e9c2e1022f16795ec51746b0d165418b2'
             'cc78e8844d9ec4bd29cce392a3e4683061646e1ad7c100c4958a5cadabb25b52'
             '34b4e00ffcf9efc43ab47444d14febb94432d340d0f1d5bcd56153879d1be113')
 
-validpgpkeys=(
-              'ABAF11C65A2970B130ABE3C479BE3E4300411886' # Linus Torvalds
-              '647F28654894E3BD457199BE38DBBDC86092693E' # Greg Kroah-Hartman
-             )
+#validpgpkeys=(
+#              'ABAF11C65A2970B130ABE3C479BE3E4300411886' # Linus Torvalds
+#              '647F28654894E3BD457199BE38DBBDC86092693E' # Greg Kroah-Hartman
+#             )
 multitouch='y'
 
 _kernelname=${pkgbase#linux}
