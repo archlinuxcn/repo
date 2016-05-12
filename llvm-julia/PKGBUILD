@@ -1,4 +1,3 @@
-# $Id: PKGBUILD 258368 2016-01-16 20:44:09Z foutrelis $
 # Maintainer: Evangelos Foutras <evangelos@foutrelis.com>
 # Contributor: Jan "heftig" Steffens <jan.steffens@gmail.com>
 # Contributor: Sebastian Nowicki <sebnow@gmail.com>
@@ -10,9 +9,9 @@
 # Contributor: Gerardo Exequiel Pozzi <vmlinuz386@yahoo.com.ar>
 
 pkgname=('llvm-julia' 'llvm-libs-julia' 'llvm-ocaml-julia' 'lldb-julia'
-         'clang-julia' 'clang-analyzer-julia' 'clang-tools-extra-julia')
-pkgver=3.7.1
-pkgrel=5
+         'clang-julia' 'clang-tools-extra-julia')
+pkgver=3.8.0
+pkgrel=1
 _ocaml_ver=4.02.3
 arch=('i686' 'x86_64')
 url="http://llvm.org/"
@@ -27,32 +26,22 @@ source=(http://llvm.org/releases/$pkgver/llvm-$pkgver.src.tar.xz
         http://llvm.org/releases/$pkgver/clang-tools-extra-$pkgver.src.tar.xz
         http://llvm.org/releases/$pkgver/compiler-rt-$pkgver.src.tar.xz
         http://llvm.org/releases/$pkgver/lldb-$pkgver.src.tar.xz
-        llvm-3.7.0-link-tools-against-libLLVM.patch
-        llvm-3.7.0-export-more-symbols.patch
-        clang-3.7.0-add-gcc-abi-tag-support.patch
-        clang-tools-extra-3.7.0-install-clang-query.patch
-        lldb-3.7.0-avoid-linking-to-libLLVM.patch
-        0001-New-MSan-mapping-layout-llvm-part.patch
-        0001-New-MSan-mapping-layout-compiler-rt-part.patch
-        llvm-3.7.1.patch
-        llvm-3.7.1_2.patch
+        D17567-PR23529-Sema-part-of-attrbute-abi_tag-support.patch
+        D18035-PR23529-Mangler-part-of-attrbute-abi_tag-support.patch
         llvm-3.7.1_3.patch
+        llvm-D14260.patch
+        llvm-D17165-D18583.patch
         llvm-Config-llvm-config.h)
-sha256sums=('be7794ed0cec42d6c682ca8e3517535b54555a3defabec83554dbc74db545ad5'
-            '56e2164c7c2a1772d5ed2a3e57485ff73ff06c97dff12edbeea1acc4412b0674'
-            '4a91edaccad1ce984c7c49a4a87db186b7f7b21267b2b03bcf4bd7820715bc6b'
-            '9d4769e4a927d3824bcb7a9c82b01e307c68588e6de4e7f04ab82d82c5af8181'
-            '9a0bc315ef55f44c98cdf92d064df0847f453ed156dd0ef6a87e04f5fd6a0e01'
-            'cf9c8b4d70b4547eda162644658c5c203c3139fcea6c75003b6cd7dc11a8cccc'
-            'a1c9f36b97c639666ab6a1bd647a08a027e93e3d3cfd6f5af9c36e757599ce81'
-            '5ed52d54612829402b63bc500bfefae75b3dc444a1524849c26cadf7e0ae4b7d'
-            '3abf85430c275ecb8dbb526ecb82b1c9f4b4f782a8a43b5a06d040ec0baba7e7'
-            '2d53b6ed4c7620eeade87e7761b98093a0434801ddd599056daed7881141fb01'
-            'c5f4e329143bef36b623ba5daf311b5a73fa99ab05fed4ba506c1c3bc4cf5ee7'
-            'f44e8fe3cef9b6f706d651f443922261e1dcf53bcaabdd0ac7edb1758e4bc44d'
-            '94955c3ff3a53651317c9c6a5f3eb2aa6079e837f06b62755dd4878e560d0386'
-            '0be9c28768b8aa0a4c6dfeffd2450119555be792f43ba4bdbce82a613d748e52'
+sha256sums=('555b028e9ee0f6445ff8f949ea10e9cd8be0d084840e21fbbe1d31d51fc06e46'
+            '04149236de03cf05232d68eb7cb9c50f03062e339b68f4f8a03b650a11536cf9'
+            'afbda810106a6e64444bc164b921be928af46829117c95b996f2678ce4cb1ec4'
+            'c8d3387e55f229543dac1941769120f24dc50183150bf19d1b070d53d29d56b0'
+            'e3f68f44147df0433e7989bf6ed1c58ff28d7c68b9c47553cb9915f744785a35'
+            '406754764e83d58bc3b859ab4b7893abd48c760278c4619cf4341ef9b9b75c85'
+            'd71f8677882c86accddb8a5b720f298a4d7a2ad3bce6091951a46396b8f14da1'
             'c276f41690de0f38dc1cd2e0d1f8cb318f7f8f2f1155659027ef140c4a22f1f7'
+            'f1518946ba1697a9d8144cb05103de1abf6a673bb8507728811d555fe148b755'
+            'f3e8ff172f5da025a3eaa949602149ebbedd8ad8e3604f581cbf5effc20469c5'
             '597dc5968c695bbdbb0eac9e8eb5117fcd2773bc91edf5ec103ecffffab8bc48')
 
 prepare() {
@@ -68,36 +57,13 @@ prepare() {
 
   mv "$srcdir/lldb-$pkgver.src" tools/lldb
 
-  patch -p1 < ../llvm-3.7.1.patch
-  patch -p1 < ../llvm-3.7.1_2.patch
   patch -p1 < ../llvm-3.7.1_3.patch
-
-  # Backport LLVM_LINK_LLVM_DYLIB option
-  # https://bugs.archlinux.org/task/46392
-  patch -Np1 -i ../llvm-3.7.0-link-tools-against-libLLVM.patch
-
-  # https://llvm.org/bugs/show_bug.cgi?id=24157
-  patch -Np2 -i ../llvm-3.7.0-export-more-symbols.patch
+  patch -p1 < ../llvm-D14260.patch
+  patch -p1 < ../llvm-D17165-D18583.patch
 
   # https://llvm.org/bugs/show_bug.cgi?id=23529
-  # http://reviews.llvm.org/D12834
-  patch -d tools/clang -Np0 <../clang-3.7.0-add-gcc-abi-tag-support.patch
-
-  # https://llvm.org/bugs/show_bug.cgi?id=24046
-  # Upstreamed - http://reviews.llvm.org/D13206
-  patch -d tools/clang/tools/extra -Np1 <../clang-tools-extra-3.7.0-install-clang-query.patch
-
-  # https://llvm.org/bugs/show_bug.cgi?id=24953
-  patch -d tools/lldb -Np1 <../lldb-3.7.0-avoid-linking-to-libLLVM.patch
-
-  # https://llvm.org/bugs/show_bug.cgi?id=24155
-  patch -Np1 -i ../0001-New-MSan-mapping-layout-llvm-part.patch
-  patch -d projects/compiler-rt -Np1 <../0001-New-MSan-mapping-layout-compiler-rt-part.patch
-
-  # Use Python 2
-  find tools/lldb -name Makefile -exec sed -i 's/python-config/python2-config/' {} +
-  sed -i 's|/usr/bin/env python|&2|' \
-    tools/lldb/scripts/Python/{build-swig-Python,finish-swig-Python-LLDB}.sh
+  patch -d tools/clang -Np2 <../D17567-PR23529-Sema-part-of-attrbute-abi_tag-support.patch
+  patch -d tools/clang -Np0 <../D18035-PR23529-Mangler-part-of-attrbute-abi_tag-support.patch
 
   mkdir build
 }
@@ -108,21 +74,21 @@ build() {
   CXXFLAGS+=' -ggdb1'
 
   cmake \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DLLVM_BUILD_LLVM_DYLIB=ON \
-    -DLLVM_DYLIB_EXPORT_ALL=ON \
-    -DLLVM_LINK_LLVM_DYLIB=ON \
-    -DLLVM_ENABLE_RTTI=ON \
-    -DLLVM_ENABLE_FFI=ON \
-    -DLLVM_BUILD_TESTS=ON \
-    -DLLVM_BUILD_DOCS=ON \
-    -DLLVM_ENABLE_SPHINX=ON \
-    -DLLVM_ENABLE_DOXYGEN=OFF \
-    -DSPHINX_WARNINGS_AS_ERRORS=OFF \
-    -DFFI_INCLUDE_DIR=$(pkg-config --variable=includedir libffi) \
-    -DLLVM_BINUTILS_INCDIR=/usr/include \
-    ..
+      -DCMAKE_BUILD_TYPE=Release \
+      -DCMAKE_INSTALL_PREFIX=/usr \
+      -DLLVM_BUILD_LLVM_DYLIB=ON \
+      -DLLVM_DYLIB_EXPORT_ALL=ON \
+      -DLLVM_LINK_LLVM_DYLIB=ON \
+      -DLLVM_ENABLE_RTTI=ON \
+      -DLLVM_ENABLE_FFI=ON \
+      -DLLVM_BUILD_TESTS=ON \
+      -DLLVM_BUILD_DOCS=ON \
+      -DLLVM_ENABLE_SPHINX=ON \
+      -DLLVM_ENABLE_DOXYGEN=OFF \
+      -DSPHINX_WARNINGS_AS_ERRORS=OFF \
+      -DFFI_INCLUDE_DIR=$(pkg-config --variable=includedir libffi) \
+      -DLLVM_BINUTILS_INCDIR=/usr/include \
+      ..
 
   make
   make ocaml_doc
@@ -137,8 +103,7 @@ check() {
   true
   # cd "$srcdir/llvm-$pkgver.src/build"
   # make check
-  # make check-clang || warning \
-  #   'Ignoring Clang test failures caused by name mangling differences'
+  # make check-clang
 }
 
 package_llvm-julia() {
@@ -155,7 +120,7 @@ package_llvm-julia() {
   rm -r "$pkgdir"/usr/share/doc/llvm/html/{_sources,.buildinfo}
 
   # The runtime libraries go into llvm-libs
-  mv -f "$pkgdir"/usr/lib/lib{LLVM,LTO}.so* "$srcdir"
+  mv -f "$pkgdir"/usr/lib/lib{LLVM,LTO}*.so "$srcdir"
   mv -f "$pkgdir"/usr/lib/LLVMgold.so "$srcdir"
 
   # OCaml bindings go to a separate package
@@ -164,18 +129,12 @@ package_llvm-julia() {
   mv "$pkgdir/usr/docs/ocaml/html" "$srcdir/ocaml.doc"
   rm -r "$pkgdir/usr/docs"
 
-  cat >> "$pkgdir/usr/include/llvm/Config/llvm-config.h" <<EOF
-// Enable ORCJIT in julia =)
-#ifndef USE_ORCJIT
-#  define USE_ORCJIT
-#endif
-EOF
   if [[ $CARCH == x86_64 ]]; then
-    # Needed for multilib (https://bugs.archlinux.org/task/29951)
-    # Header stub is taken from Fedora
-    mv "$pkgdir/usr/include/llvm/Config/llvm-config"{,-64}.h
-    cp "$srcdir/llvm-Config-llvm-config.h" \
-      "$pkgdir/usr/include/llvm/Config/llvm-config.h"
+      # Needed for multilib (https://bugs.archlinux.org/task/29951)
+      # Header stub is taken from Fedora
+      mv "$pkgdir/usr/include/llvm/Config/llvm-config"{,-64}.h
+      cp "$srcdir/llvm-Config-llvm-config.h" \
+         "$pkgdir/usr/include/llvm/Config/llvm-config.h"
   fi
 
   install -Dm644 LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
@@ -189,9 +148,9 @@ package_llvm-libs-julia() {
 
   install -d "$pkgdir/usr/lib"
   cp -P \
-    "$srcdir"/lib{LLVM,LTO}.so* \
-    "$srcdir"/LLVMgold.so \
-    "$pkgdir/usr/lib/"
+     "$srcdir"/lib{LLVM,LTO}*.so \
+     "$srcdir"/LLVMgold.so \
+     "$pkgdir/usr/lib/"
 
   # Symlink LLVMgold.so from /usr/lib/bfd-plugins
   # https://bugs.archlinux.org/task/28479
@@ -199,7 +158,7 @@ package_llvm-libs-julia() {
   ln -s ../LLVMgold.so "$pkgdir/usr/lib/bfd-plugins/LLVMgold.so"
 
   install -Dm644 "$srcdir/llvm-$pkgver.src/LICENSE.TXT" \
-    "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+          "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
 package_llvm-ocaml-julia() {
@@ -220,13 +179,16 @@ package_llvm-ocaml-julia() {
 package_lldb-julia() {
   pkgdesc="Next generation, high-performance debugger (with patch for julia)"
   url="http://lldb.llvm.org/"
-  depends=('libedit' 'libxml2' 'python2')
+  depends=('libedit' 'libxml2' 'python2' 'python2-six')
   conflicts=("lldb")
   provides=("lldb=$pkgver-$pkgrel")
 
   cd "$srcdir/llvm-$pkgver.src"
 
   make -C build/tools/lldb DESTDIR="$pkgdir" install
+
+  # Remove bundled six library
+  rm "$pkgdir/usr/lib/python2.7/site-packages/six.py"
 
   # Compile Python scripts
   python2 -m compileall "$pkgdir/usr/lib/python2.7/site-packages/lldb"
@@ -238,10 +200,12 @@ package_lldb-julia() {
 package_clang-julia() {
   pkgdesc="C language family frontend for LLVM (with patch for julia)"
   url="http://clang.llvm.org/"
-  depends=("llvm-libs-julia=$pkgver-$pkgrel" 'gcc')
-  optdepends=('python2: for git-clang-format')
-  conflicts=("clang")
-  provides=("clang=$pkgver-$pkgrel")
+  depends=("llvm-libs-julia=$pkgver-$pkgrel" 'gcc' 'libxml2')
+  optdepends=('openmp: OpenMP support in clang with -fopenmp'
+              'python2: for scan-view and git-clang-format')
+  provides=("clang=$pkgver-$pkgrel" "clang-analyzer=$pkgver")
+  conflicts=('clang' 'clang-analyzer')
+  replaces=('clang-analyzer-julia')
 
   cd "$srcdir/llvm-$pkgver.src"
 
@@ -251,64 +215,35 @@ package_clang-julia() {
   # Remove documentation sources
   rm -r "$pkgdir"/usr/share/doc/clang/html/{_sources,.buildinfo}
 
+  # Move analyzer scripts out of /usr/libexec
+  mv "$pkgdir"/usr/libexec/{ccc,c++}-analyzer "$pkgdir/usr/lib/clang/"
+  rmdir "$pkgdir/usr/libexec"
+  sed -i 's|libexec|lib/clang|' "$pkgdir/usr/bin/scan-build"
+
   # Install Python bindings
   install -d "$pkgdir/usr/lib/python2.7/site-packages"
   cp -a tools/clang/bindings/python/clang "$pkgdir/usr/lib/python2.7/site-packages/"
-  python2 -m compileall "$pkgdir/usr/lib/python2.7/site-packages/clang"
-  python2 -O -m compileall "$pkgdir/usr/lib/python2.7/site-packages/clang"
 
   # Use Python 2
   sed -i 's|/usr/bin/env python|&2|' \
-    "$pkgdir/usr/bin/git-clang-format" \
-    "$pkgdir/usr/share/clang/clang-format-diff.py"
-
-  install -Dm644 tools/clang/LICENSE.TXT \
-    "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-}
-
-package_clang-analyzer-julia() {
-  pkgdesc="A source code analysis framework (with patch for julia)"
-  url="http://clang-analyzer.llvm.org/"
-  depends=("clang-julia=$pkgver-$pkgrel" 'python2')
-  conflicts=("clang-analyzer")
-  provides=("clang-analyzer=$pkgver-$pkgrel")
-
-  cd "$srcdir/llvm-$pkgver.src/tools/clang"
-
-  install -d "$pkgdir"/usr/{bin,lib/clang-analyzer}
-  for _tool in scan-{build,view}; do
-    cp -a tools/$_tool "$pkgdir/usr/lib/clang-analyzer/"
-    ln -s /usr/lib/clang-analyzer/$_tool/$_tool "$pkgdir/usr/bin/"
-  done
-
-  # scan-build looks for clang within the same directory
-  ln -s /usr/bin/clang "$pkgdir/usr/lib/clang-analyzer/scan-build/"
-
-  # Relocate man page
-  install -d "$pkgdir/usr/share/man/man1"
-  mv "$pkgdir/usr/lib/clang-analyzer/scan-build/scan-build.1" \
-    "$pkgdir/usr/share/man/man1/"
-
-  # Use Python 2
-  sed -i \
-    -e 's|env python$|&2|' \
-    -e 's|/usr/bin/python$|&2|' \
-    "$pkgdir/usr/lib/clang-analyzer/scan-view/scan-view" \
-    "$pkgdir/usr/lib/clang-analyzer/scan-build/set-xcode-analyzer"
+      "$pkgdir/usr/bin/scan-view" \
+      "$pkgdir/usr/bin/git-clang-format" \
+      "$pkgdir/usr/share/clang/clang-format-diff.py"
 
   # Compile Python scripts
-  python2 -m compileall "$pkgdir/usr/lib/clang-analyzer"
-  python2 -O -m compileall "$pkgdir/usr/lib/clang-analyzer"
+  python2 -m compileall "$pkgdir"
+  python2 -O -m compileall "$pkgdir"
 
-  install -Dm644 LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 tools/clang/LICENSE.TXT \
+          "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
 package_clang-tools-extra-julia() {
   pkgdesc="Extra tools built using Clang's tooling APIs (with patch for julia)"
   url="http://clang.llvm.org/"
   depends=("clang-julia=$pkgver-$pkgrel")
-  conflicts=("clang-tools-extra")
   provides=("clang-tools-extra=$pkgver-$pkgrel")
+  conflicts=("clang-tools-extra")
 
   cd "$srcdir/llvm-$pkgver.src"
 
@@ -316,10 +251,10 @@ package_clang-tools-extra-julia() {
 
   # Use Python 2
   sed -i \
-    -e 's|env python$|&2|' \
-    -e 's|/usr/bin/python$|&2|' \
-    "$pkgdir"/usr/share/clang/{clang-tidy-diff,run-clang-tidy}.py
+      -e 's|env python$|&2|' \
+      -e 's|/usr/bin/python$|&2|' \
+      "$pkgdir"/usr/share/clang/{clang-tidy-diff,run-clang-tidy}.py
 
   install -Dm644 tools/clang/tools/extra/LICENSE.TXT \
-    "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+          "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
