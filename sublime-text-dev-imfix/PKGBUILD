@@ -6,7 +6,7 @@
 
 pkgname=('sublime-text-dev-imfix' 'sublime-text-dev-zh-cn' 'sublime-text-dev-zh-tw')
 pkgver=3.3114
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 url="http://www.sublimetext.com/3"
 license=('custom')
