@@ -138,10 +138,13 @@ package() {
     "$pkgdir/usr/share/vim/vimfiles"
   cp -r "$srcdir/YouCompleteMe/third_party/"{pythonfutures,requests-futures,retries} \
     "$pkgdir/usr/share/vim/vimfiles/third_party"
-  cp -r "$srcdir/YouCompleteMe/third_party/ycmd/"{ycmd,ycm_core.so,check_core_version.py,CORE_VERSION} \
+  cp -r "$srcdir/YouCompleteMe/third_party/ycmd/"{ycmd,ycm_core.so,CORE_VERSION} \
     "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd"
 
-  cp -r "$srcdir/YouCompleteMe/third_party/ycmd/third_party/"{argparse,bottle,frozendict,JediHTTP,requests,tern_runtime,waitress,python-future} \
+  cp -r "$srcdir/YouCompleteMe/third_party/ycmd/clang_includes" \
+    "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/clang_includes"
+
+  cp -r "$srcdir/YouCompleteMe/third_party/ycmd/third_party/"{argparse,bottle,frozendict,JediHTTP,python-future,requests,tern_runtime,waitress} \
     "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party"
 
   cp    "$srcdir/YouCompleteMe/third_party/ycmd/third_party/gocode/gocode" \
@@ -155,5 +158,4 @@ package() {
 
   find "$pkgdir" -name .git -exec rm -fr {} +
 }
-
 # vim:set ts=2 sw=2 et:
