@@ -1,10 +1,4 @@
 post_install() {
-  # Update desktop entries.
-  update-desktop-database -q
-
-  # Update icon cache.
-  gtk-update-icon-cache -q -t -f usr/share/icons/hicolor
-
   # Note admin after install/update on how to change th update_check setting.
   cat << _EOF
 
@@ -88,9 +82,4 @@ post_upgrade() {
 }
 
 post_remove() {
-  # Update desktop entries.
-  update-desktop-database -q
-
-  # Update icon cache.
-  gtk-update-icon-cache -q -t -f usr/share/icons/hicolor
 }
