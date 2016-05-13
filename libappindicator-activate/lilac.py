@@ -6,7 +6,9 @@
 
 from lilaclib import *
 
-depends = [("libdbusmenu", "libdbusmenu-gtk2"),
+depends = [
+           ("libdbusmenu", "libdbusmenu-glib"),
+           ("libdbusmenu", "libdbusmenu-gtk2"),
            ('libindicator', 'libindicator-gtk2'),
            ('libindicator', 'libindicator-gtk3')]
 
