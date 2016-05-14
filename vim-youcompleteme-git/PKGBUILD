@@ -17,20 +17,19 @@
 pkgname=vim-youcompleteme-git
 pkgver=1793.6a81436
 _CLANG_VERSION=3.8.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A code-completion engine for Vim"
 arch=('i686' 'x86_64')
 url='http://valloric.github.com/YouCompleteMe/'
 license=('GPL3')
 groups=('vim-plugins')
-depends=('python2' 'vim'
+depends=('python2' 'vim' 'clang='$_CLANG_VERSION
          'python2-bottle' 'python2-future' 'python2-requests'
          'python2-waitress' 'python2-jedi' 'python2-futures')
 optdepends=('mono: for C# completer'
             'nodejs: for nodejs completer'
-            'rust: for rust completer'
-            'clang: for C/C++/Obj-C completer')
-makedepends=('cargo' 'cmake' 'git' 'go' 'make' 'mono' 'npm' 'nodejs' 'rust' 'clang='${_CLANG_VERSION})
+            'rust: for rust completer')
+makedepends=('cargo' 'cmake' 'git' 'go' 'make' 'mono' 'npm' 'nodejs' 'rust')
 source=('git+https://github.com/Valloric/YouCompleteMe.git'
         'git+https://github.com/ross/requests-futures.git'
         'git+https://github.com/Valloric/ycmd.git'
