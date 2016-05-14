@@ -15,15 +15,10 @@
 # Contributor: Andy Weidenbaum <archbaum@gmail.com>
 
 pkgname=vim-youcompleteme-git
-pkgver=1391.ba6e140
+pkgver=1793.6a81436
 _CLANG_VERSION=3.8.0
-pkgver() {
-  cd "YouCompleteMe"
-  echo $(git rev-list --count master).$(git rev-parse --short master)
-}
-pkgrel=2
+pkgrel=1
 pkgdesc="A code-completion engine for Vim"
-
 arch=('i686' 'x86_64')
 url='http://valloric.github.com/YouCompleteMe/'
 license=('GPL3')
@@ -53,6 +48,11 @@ sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP'
 install=install
 _COMPLETER="USE_CLANG_COMPLETER"
 _SYSTEM_LIBCLANG="USE_SYSTEM_LIBCLANG"
+
+pkgver() {
+  cd "$srcdir/YouCompleteMe"
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
 
 prepare() {
   msg2 'Setting up Git submodules...'
