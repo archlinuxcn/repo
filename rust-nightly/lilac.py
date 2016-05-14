@@ -10,8 +10,8 @@ from pkg_resources import parse_version
 from lilaclib import *
 
 debug = False
-_version = '1.8.0'
-_version_date = '2016-02-17'
+_version = '1.10.0'
+_version_date = '2016-05-13'
 
 stds = [
   'arm-unknown-linux-gnueabihf',
