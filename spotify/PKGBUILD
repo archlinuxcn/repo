@@ -26,7 +26,6 @@ depends=("alsa-lib>=1.0.14" "gconf" "gtk2" "glib2" "nss" "libsystemd" "libxtst" 
 optdepends=('ffmpeg0.10: Adds support for playback of local files'
             'zenity: Adds support for importing local files'
 						)
-install=spotify.install
 
 package() {
   cd "${srcdir}"
