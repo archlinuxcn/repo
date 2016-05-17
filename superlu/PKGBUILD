@@ -1,6 +1,7 @@
+# Maintainer: Joey Dumont <joey.dumont@gmail.com>
 # Contributor: Giuseppe Borzi <gborzi@ieee.org>
 pkgname=superlu
-pkgver=4.3
+pkgver=5.2.0
 pkgrel=1
 pkgdesc="Set of subroutines to solve a sparse linear system"
 arch=('i686' 'x86_64')
@@ -11,14 +12,14 @@ makedepends=('gcc-fortran' 'tcsh')
 install=${pkgname}.install
 source=(${url}${pkgname}_$pkgver.tar.gz ${url}License.txt
         ${url}superlu_ug.pdf)
-md5sums=('b72c6309f25e9660133007b82621ba7c'
-         'f78e2ac527dbb50f53766475a9c542bd'
-         '0097d559fa73f8fc182ac05635537454')
+sha512sums=('d38fd891afc50c3854e3cfc96d03e931743aa36769c2f7bbb35f5f2e5d0421a85b5f95974b28585a3df2fc155c46f2025bbc77d3c7a2cad0fa0718ce9094d4de'
+            '10d4e497b4cc3aa2aaa2807e75641f9c0046f38876587adda33202546b7218a5d77843742e43ceca917726be0b985e7364b924e40d7377efafeba27bbbb5b7de'
+            '2601258c06e5f9f88654adb662ebeb2641d03f0d12e13fd1c8470880290ea00043557b05443d55e19efe3832283ae2d6cf7bd2aa9a8519528f50f12ce86af2fd')
 
 build() {
   cd "$srcdir/SuperLU_$pkgver"
-
-  mkdir shared static
+  cp MAKE_INC/make.linux make.inc
+  mkdir -p shared static
   msg "Building shared library..."
   cd shared
   make -f ../SRC/Makefile VPATH=../SRC srcdir=../SRC CC=cc \
@@ -28,7 +29,8 @@ build() {
           SUPERLULIB=$srcdir/SuperLU_$pkgver/lib/lib$pkgname.a
   gcc -shared -Wl,-soname,lib$pkgname.so.4 -o ../lib/lib$pkgname.so.$pkgver \
       *.o -lblas -lm -lgfortran
-  cd ../static
+
+cd ../static
   msg "Building static library..."
   make -f ../SRC/Makefile VPATH=../SRC srcdir=../SRC CC=cc \
           CFLAGS="$CFLAGS" FORTRAN=gfortran FFLAGS="$CFLAGS" \
@@ -67,4 +69,3 @@ package() {
   install -m644 $srcdir/License.txt $pkgdir/usr/share/licenses/$pkgname
 }
 
-# vim:set ts=2 sw=2 et:
