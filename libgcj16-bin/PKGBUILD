@@ -4,8 +4,8 @@
 # Contributor: Roberto Calabrese <robertocalabrese75 [at] gmail.com>
 
 pkgname=libgcj16-bin
-pkgver=5.3.1_17
-pkgrel=2
+pkgver=5.3.1_19
+pkgrel=1
 pkgdesc="Dynamically load and interpret java class files. Built from binary \
 executables available in Debian repositories."
 url=http://gcc.gnu.org/java/
@@ -17,8 +17,8 @@ replaces=(libgcj)
 
 source_i686=(http://httpredir.debian.org/debian/pool/main/g/gcc-5/${pkgname%-*}_${pkgver%_*}-${pkgver##*_}_i386.deb)
 source_x86_64=(http://httpredir.debian.org/debian/pool/main/g/gcc-5/${pkgname%-*}_${pkgver%_*}-${pkgver##*_}_amd64.deb)
-sha1sums_i686=('54862282ab0c19fb136e78c4cb2924cae8128408')
-sha1sums_x86_64=('bd8855a14054a1a5ce993d44ae47c0a23b0f62ae')
+sha1sums_i686=('6acd4ead7e352e959fe0a2bfc30ecfd47903793d')
+sha1sums_x86_64=('df2056daadd88bc7236a8884e03c51b4a2f8d247')
 
 prepare() {
   tar xf data.tar.*
