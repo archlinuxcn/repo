@@ -1,7 +1,7 @@
 # Maintainer: D. Can Celasun <dcelasun[at]gmail[dot]com>
 
 pkgname=visual-studio-code
-pkgver=1.1.0
+pkgver=1.1.1
 pkgrel=1
 pkgdesc="Editor for building and debugging modern web and cloud applications"
 arch=('x86_64' 'i686')
@@ -9,16 +9,16 @@ url="https://code.visualstudio.com/"
 license=('custom: commercial')
 provides=('vscode','visualstudiocode')
 depends=(fontconfig libxtst gtk2 python cairo alsa-lib gconf nss gcc-libs)
-_release=c212f0908f3d29933317bbc3233568fbca7944b1
+_release=def9e32467ad6e4f48787d38caf190acbfee5880
 source_x86_64=(VSCode-linux64_${pkgver}.zip::https://az764295.vo.msecnd.net/stable/$_release/VSCode-linux-x64-stable.zip
                ${pkgname}.desktop
                )
 source_i686=(VSCode-linux32_${pkgver}.zip::https://az764295.vo.msecnd.net/stable/$_release/VSCode-linux-ia32-stable.zip
               ${pkgname}.desktop
               )
-md5sums_x86_64=('7372aec7f6339019caf4f0f34ab703bc'
+md5sums_x86_64=('4fcac208668193c80d1eb167f6ccc6be'
                 'd1d9b35d20de511be44b686b0178874a')
-md5sums_i686=('75f654a0becbdf381e7399575ebd9cbd'
+md5sums_i686=('fb8f777bbbb244ea469808db628a878a'
               'd1d9b35d20de511be44b686b0178874a')
 package() {
   _pkg=VSCode-linux-x64
