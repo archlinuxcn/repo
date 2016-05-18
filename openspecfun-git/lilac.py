@@ -1,5 +1,7 @@
 from lilaclib import *
 
+depends = ['openlibm-git']
+
 build_prefix = 'archlinuxcn-x86_64'
 
 pre_build = vcs_update
