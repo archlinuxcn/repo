@@ -3,14 +3,13 @@
 # Contributor: Michael Jakl <jakl.michael@gmail.com>
 # With contributions from many kind people at https://aur.archlinux.org/packages/julia-git/
 
-USE_OPENLIBM=1
 pkgbase=julia-git
 if [[ "$CARCH" = x86_64 ]]; then
     pkgname=('julia-git' 'julia-git-avx2' 'julia-git-docs')
 else
     pkgname=('julia-git' 'julia-git-docs')
 fi
-pkgver=0.5.0.dev.3971.g26cebb6
+pkgver=0.5.0.dev.4147.gf5593f8
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
@@ -20,10 +19,7 @@ makedepends=('gcc-fortran' 'arpack' 'fftw' 'git' 'gmp' 'libgit2' 'libunwind-git'
              'llvm-julia' 'mpfr' 'pcre2' 'suitesparse' 'python2-sphinx'
              'python2-sphinx_rtd_theme' 'python2-pip' 'texlive-langcjk'
              'texlive-latexextra' 'openspecfun' 'openblas'
-             'libutf8proc-git' 'patchelf' 'openblas-lapack')
-if ((USE_OPENLIBM)); then
-    makedepends=("${makedepends[@]}" openlibm)
-fi
+             'libutf8proc-git' 'patchelf' 'openblas-lapack' openlibm)
 options=('debug' '!strip')
 source=('git://github.com/JuliaLang/julia')
 md5sums=('SKIP')
@@ -41,12 +37,54 @@ pkgver() {
          "$build_number" "$commit_short"
 }
 
+julia_opts=(prefix=/usr sysconfdir=/etc
+            USE_SYSTEM_LLVM=1
+            USE_SYSTEM_OPENLIBM=1
+            USE_SYSTEM_LIBUNWIND=1
+            USE_SYSTEM_PCRE=1
+            USE_SYSTEM_OPENSPECFUN=1
+            USE_SYSTEM_BLAS=1
+            USE_SYSTEM_LAPACK=1
+            USE_SYSTEM_FFTW=1
+            USE_SYSTEM_GMP=1
+            USE_SYSTEM_MPFR=1
+            USE_SYSTEM_ARPACK=1
+            USE_SYSTEM_SUITESPARSE=1
+            USE_SYSTEM_UTF8PROC=1
+            USE_SYSTEM_LIBGIT2=1
+            USE_SYSTEM_PATCHELF=1
+            LIBBLASNAME=libopenblas
+            LIBBLAS=-lopenblas
+            LIBLAPACKNAME=libopenblas
+            LIBLAPACK=-lopenblas)
+
+_FLTO='-flto'
+
+case "$CARCH" in
+  x86_64)
+    julia_avx2_opts=("${julia_opts[@]}" MARCH=x86-64 JULIA_CPU_TARGET=core-avx2)
+    julia_opts=("${julia_opts[@]}" MARCH=x86-64 JULIA_CPU_TARGET=x86-64)
+    ;;
+  i686)
+    julia_opts=("${julia_opts[@]}" MARCH=pentium4 JULIA_CPU_TARGET=pentium4)
+    ;;
+  aarch64)
+    julia_opts=("${julia_opts[@]}" MARCH=armv8-a JULIA_CPU_TARGET=cortex-a57)
+    # GCC 6.1.1 internal error
+    _FLTO=''
+    ;;
+  armv7h)
+    julia_opts=("${julia_opts[@]}" MARCH=armv7-a JULIA_CPU_TARGET=cortex-a7)
+    ;;
+esac
+
 prepare() {
-  mkdir -p bin
+  rm -rf bin/
+  mkdir -p bin/
 
   for p in cc c++ gcc g++; do
     cat > bin/$p <<EOF
-exec /usr/bin/$p -flto "\${@/#-O0/-Og}" -fasynchronous-unwind-tables
+exec /usr/bin/$p $_FLTO "\${@/#-O0/-Og}" -fasynchronous-unwind-tables
 EOF
     chmod +x bin/$p
   done
@@ -69,48 +107,6 @@ EOF
        cp -a julia julia-avx2)
   fi
 }
-
-julia_opts=(prefix=/usr sysconfdir=/etc
-            USE_SYSTEM_LLVM=1
-            USE_SYSTEM_LIBUNWIND=1
-            USE_SYSTEM_PCRE=1
-            USE_SYSTEM_OPENSPECFUN=1
-            USE_SYSTEM_BLAS=1
-            USE_SYSTEM_LAPACK=1
-            USE_SYSTEM_FFTW=1
-            USE_SYSTEM_GMP=1
-            USE_SYSTEM_MPFR=1
-            USE_SYSTEM_ARPACK=1
-            USE_SYSTEM_SUITESPARSE=1
-            USE_SYSTEM_UTF8PROC=1
-            USE_SYSTEM_LIBGIT2=1
-            USE_SYSTEM_PATCHELF=1
-            LIBBLASNAME=libopenblas
-            LIBBLAS=-lopenblas
-            LIBLAPACKNAME=libopenblas
-            LIBLAPACK=-lopenblas)
-
-if ((USE_OPENLIBM)); then
-    julia_opts=("${julia_opts[@]}" USE_SYSTEM_OPENLIBM=1)
-else
-    julia_opts=("${julia_opts[@]}" USE_SYSTEM_LIBM=1)
-fi
-
-case "$CARCH" in
-  x86_64)
-    julia_avx2_opts=("${julia_opts[@]}" MARCH=x86-64 JULIA_CPU_TARGET=core-avx2)
-    julia_opts=("${julia_opts[@]}" MARCH=x86-64 JULIA_CPU_TARGET=x86-64)
-    ;;
-  i686)
-    julia_opts=("${julia_opts[@]}" MARCH=pentium4 JULIA_CPU_TARGET=pentium4)
-    ;;
-  aarch64)
-    julia_opts=("${julia_opts[@]}" MARCH=armv8-a JULIA_CPU_TARGET=cortex-a57)
-    ;;
-  armv7h)
-    julia_opts=("${julia_opts[@]}" MARCH=armv7-a JULIA_CPU_TARGET=cortex-a7)
-    ;;
-esac
 
 build_in() {
   cd "$1"
@@ -147,10 +143,7 @@ package-julia-in() {
   arch=('i686' 'x86_64' 'armv7h' 'aarch64')
   depends=('arpack' 'fftw' 'gmp' 'libgit2' 'libunwind-git' 'llvm-julia' 'mpfr'
            'pcre2' 'hicolor-icon-theme' 'xdg-utils' 'suitesparse' 'openspecfun'
-           'openblas' 'libutf8proc-git' 'openblas-lapack')
-  if ((USE_OPENLIBM)); then
-      depends=("${depends[@]}" openlibm)
-  fi
+           'openblas' 'libutf8proc-git' 'openblas-lapack' openlibm)
   conflicts=('julia')
   opts=("${@:2}")
 
