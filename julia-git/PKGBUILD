@@ -9,7 +9,7 @@ if [[ "$CARCH" = x86_64 ]]; then
 else
     pkgname=('julia-git' 'julia-git-docs')
 fi
-pkgver=0.5.0.dev.4221.g2885958
+pkgver=0.5.0.dev.4239.gb45adc5
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
@@ -53,6 +53,7 @@ julia_opts=(prefix=/usr sysconfdir=/etc
             USE_SYSTEM_UTF8PROC=1
             USE_SYSTEM_LIBGIT2=1
             USE_SYSTEM_PATCHELF=1
+            USE_LLVM_SHLIB=1
             LIBBLASNAME=libopenblas
             LIBBLAS=-lopenblas
             LIBLAPACKNAME=libopenblas
