@@ -4,7 +4,7 @@
 
 pkgname=android-sdk
 pkgver=25.1.1
-pkgrel=1
+pkgrel=2
 pkgdesc='Google Android SDK'
 arch=('x86_64' 'i686')
 url='http://developer.android.com/sdk/'
@@ -55,6 +55,11 @@ package() {
   # Fix broken permissions
   chmod -R o=g "$pkgdir/opt/$pkgname"
   find "$pkgdir/opt/$pkgname" -perm 744 -exec chmod 755 {} +
+
+  # Remove libstd* from the tools directory
+  for kw in libstd; do
+    find "$pkgdir/opt/$pkgname/tools" -name "$kw*" -type f -delete
+  done
 }
 
 # getver: developer.android.com/tools/sdk/tools-notes.html

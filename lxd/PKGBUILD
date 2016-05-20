@@ -1,13 +1,13 @@
 # Maintainer: Maikel Wever <maikelwever@gmail.com>
 
 pkgname=lxd
-pkgver=2.0.0
+pkgver=2.0.1
 pkgrel=1
 pkgdesc="REST API, command line tool and OpenStack integration plugin for LXC."
 arch=('x86_64')
 url="https://github.com/lxc/lxd"
 license=('APACHE')
-depends=('go' 'lxc')
+depends=('go' 'lxc') 
 makedepends=('git')
 options=('!strip' '!emptydirs')
 optdepends=(
@@ -19,9 +19,21 @@ optdepends=(
 source=(
     "https://github.com/lxc/$pkgname/archive/$pkgname-$pkgver.tar.gz"
     "lxd.service"
+
+    "dnsmasq-lxd.conf"
+    "dnsmasq@lxd.service"
+    "lxd.netctl"
+    "dbus-dnsmasq-lxd.conf"
+    "networkmanager-dnsmasq-lxd.conf"
 )
-md5sums=('2a6bcb8e01bc21d1a376d2059eadf572'
-         'b1780c0e01e404895e35ac277aa597c4')
+
+md5sums=('415d11233d4bf6e0b73751d50ce45196'
+         'b1780c0e01e404895e35ac277aa597c4'
+         'b1fd16933c1b24aaa9ccc8f5a0e6478c'
+         'e164eaad33795310c024b21764679afb'
+         '52c641ea0ba5477f5c1a1b857c03dda9'
+         'c9b5c98497e4ddc47d0c078b5b500f93'
+         '427926fddb1537f7a65d0a7274106df5')
 
 _gourl=github.com/lxc/lxd
 
@@ -40,7 +52,6 @@ package() {
 
   mkdir -p "$pkgdir/usr/bin"
   mkdir -p "$pkgdir/usr/lib/lxd/"
-  mkdir -p "$pkgdir/usr/share/lxd/"
 
   install -p -m755 "$srcdir/bin/"* "$pkgdir/usr/bin"
   mv "$pkgdir/usr/bin/lxd-bridge-proxy" "$pkgdir/usr/lib/lxd/"
@@ -57,6 +68,21 @@ package() {
 
   install -D -m644 "${srcdir}/lxd.service" \
       "${pkgdir}/usr/lib/systemd/system/lxd.service"
+
+
+  # Example configuration files.
+  mkdir -p "$pkgdir/usr/share/lxd/"
+  mkdir -p "$pkgdir/usr/share/lxd/systemd/system/"
+  mkdir -p "$pkgdir/usr/share/lxd/netctl/"
+  mkdir -p "$pkgdir/usr/share/lxd/dbus-1/system.d/"
+  mkdir -p "$pkgdir/usr/share/lxd/NetworkManager/dnsmasq.d/"
+
+  install -Dm644 "${srcdir}/dnsmasq-lxd.conf" "${pkgdir}/usr/share/lxd/dnsmasq-lxd.conf"
+  install -Dm644 "${srcdir}/dnsmasq@lxd.service" "${pkgdir}/usr/share/lxd/systemd/system/dnsmasq@lxd.service"
+  install -Dm644 "${srcdir}/lxd.netctl" "${pkgdir}/usr/share/lxd/netctl/lxd"
+  install -Dm644 "${srcdir}/dbus-dnsmasq-lxd.conf" "${pkgdir}/usr/share/lxd/dbus-1/system.d/dnsmasq-lxd.conf"
+  install -Dm644 "${srcdir}/networkmanager-dnsmasq-lxd.conf" "${pkgdir}/usr/share/lxd/NetworkManager/dnsmasq.d/lxd.conf"
+
 }
 
 # vim:set ts=2 sw=2 et:

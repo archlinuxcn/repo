@@ -2,7 +2,7 @@
 
 pkgname=visual-studio-code
 pkgver=1.1.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Editor for building and debugging modern web and cloud applications"
 arch=('x86_64' 'i686')
 url="https://code.visualstudio.com/"
@@ -40,5 +40,5 @@ package() {
   rm -f "${srcdir}"/${_pkg}.zip
   
   cp -r "${srcdir}/${_pkg}/"* "${pkgdir}/opt/${pkgname}" -R
-  ln -s /opt/${pkgname}/code "${pkgdir}"/usr/bin/visual-studio-code
+  ln -s /opt/${pkgname}/bin/code "${pkgdir}"/usr/bin/visual-studio-code
 }
