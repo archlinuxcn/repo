@@ -40,5 +40,5 @@ package() {
   rm -f "${srcdir}"/${_pkg}.zip
   
   cp -r "${srcdir}/${_pkg}/"* "${pkgdir}/opt/${pkgname}" -R
-  ln -s /opt/${pkgname}/code "${pkgdir}"/usr/bin/visual-studio-code
+  ln -s /opt/${pkgname}/bin/code "${pkgdir}"/usr/bin/visual-studio-code
 }
