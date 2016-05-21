@@ -142,9 +142,9 @@ build() {
 
 package-julia-in() {
   arch=('i686' 'x86_64' 'armv7h' 'aarch64')
-  depends=('arpack' 'fftw' 'gmp' 'libgit2' 'libunwind-git' 'llvm-julia' 'mpfr'
-           'pcre2' 'hicolor-icon-theme' 'xdg-utils' 'suitesparse' 'openspecfun'
-           'openblas' 'libutf8proc-git' 'openblas-lapack' openlibm)
+  depends=(arpack fftw gmp libgit2 libunwind-git llvm-libs-julia
+           mpfr pcre2 hicolor-icon-theme xdg-utils suitesparse
+           openspecfun openblas libutf8proc-git openblas-lapack openlibm)
   conflicts=('julia')
   opts=("${@:2}")
 
