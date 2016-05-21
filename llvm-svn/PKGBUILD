@@ -21,7 +21,7 @@ pkgname=(
 )
 _pkgname='llvm'
 
-pkgver=3.9.0svn_r269845
+pkgver=3.9.0svn_r270321
 pkgrel=1
 
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -53,8 +53,6 @@ md5sums=('SKIP'
          'SKIP'
          'SKIP'
          '295c343dcd457dc534662f011d7cff1a')
-
-
 
 #
 # BEGIN INTERNAL VARIABLES AND FUNCTIONS
@@ -158,6 +156,11 @@ build() {
       CONFIG=("-DLLVM_EXTERNAL_COMPILER_RT_BUILD=OFF")
       CFLAGS+=' -g'
       CXXFLAGS+=' -g'
+      if [[ $CARCH = armv7h ]]; then
+          # Work around GCC bug
+          CFLAGS=${CFLAGS//-mfpu=vfpv3-d16/-mfpu=neon}
+          CXXFLAGS=${CXXFLAGS//-mfpu=vfpv3-d16/-mfpu=neon}
+      fi
       ;;
     *)
       CFLAGS+=' -ggdb1'
