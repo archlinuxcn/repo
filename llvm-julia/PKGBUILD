@@ -11,7 +11,7 @@
 pkgname=('llvm-julia' 'llvm-libs-julia' 'llvm-ocaml-julia' 'lldb-julia'
          'clang-julia' 'clang-tools-extra-julia')
 pkgver=3.8.0
-pkgrel=1
+pkgrel=2
 _ocaml_ver=4.02.3
 arch=('i686' 'x86_64')
 url="http://llvm.org/"
@@ -31,6 +31,7 @@ source=(http://llvm.org/releases/$pkgver/llvm-$pkgver.src.tar.xz
         llvm-3.7.1_3.patch
         llvm-D14260.patch
         llvm-D17165-D18583.patch
+        0001-Fix-load-alignement-when-unpacking-aggregates-struct.patch
         llvm-Config-llvm-config.h)
 sha256sums=('555b028e9ee0f6445ff8f949ea10e9cd8be0d084840e21fbbe1d31d51fc06e46'
             '04149236de03cf05232d68eb7cb9c50f03062e339b68f4f8a03b650a11536cf9'
@@ -60,6 +61,7 @@ prepare() {
   patch -p1 < ../llvm-3.7.1_3.patch
   patch -p1 < ../llvm-D14260.patch
   patch -p1 < ../llvm-D17165-D18583.patch
+  patch -p1 < ../0001-Fix-load-alignement-when-unpacking-aggregates-struct.patch
 
   # https://llvm.org/bugs/show_bug.cgi?id=23529
   patch -d tools/clang -Np2 <../D17567-PR23529-Sema-part-of-attrbute-abi_tag-support.patch
