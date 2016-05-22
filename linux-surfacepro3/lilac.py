@@ -29,7 +29,7 @@ def pre_build():
   for line in edit_file('PKGBUILD'):
     # edit PKGBUILD
     count=count+1
-    if count in {14,16,32,34,48,49,50,51}:
+    if count in {14,28,38,39,40,41}:
         print('#'+line)
     else:
         print(line)
