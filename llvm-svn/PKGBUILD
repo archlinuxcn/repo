@@ -248,7 +248,7 @@ package_llvm-libs-svn() {
     'zlib'
   )
   groups=('llvm-toolchain-svn')
-  provides=('llvm-libs')
+  provides=('llvm-libs' 'llvm-libs-julia')
   conflicts=('llvm-libs')
 
   cd "${srcdir}/build"
@@ -283,7 +283,7 @@ package_llvm-ocaml-svn() {
     "ocaml=$(_ocamlver)"
     'ocaml-ctypes'
   )
-  provides=('llvm-ocaml')
+  provides=('llvm-ocaml' 'llvm-ocaml-julia')
   conflicts=('llvm-ocaml')
 
   cd "${srcdir}/build"
@@ -309,7 +309,7 @@ package_clang-svn() {
     'python2: git-clang-format and clang-format-diff.py support'
   )
   groups=('llvm-toolchain-svn')
-  provides=('clang')
+  provides=('clang' 'clang-julia')
   conflicts=('clang')
 
   cd "${srcdir}/build/tools/clang"
@@ -387,7 +387,7 @@ package_clang-analyzer-svn() {
     'python2'
   )
   groups=('llvm-toolchain-svn')
-  provides=('clang-analyzer')
+  provides=('clang-analyzer' 'clang-analyzer-julia')
   conflicts=('clang-analyzer')
 
   cd "${srcdir}"
@@ -411,7 +411,7 @@ package_clang-compiler-rt-svn() {
     "clang-svn=${pkgver}-${pkgrel}"
   )
   groups=('llvm-toolchain-svn')
-  provides=('clang-compiler-rt')
+  provides=('clang-compiler-rt' 'clang-compiler-rt-julia')
   conflicts=('clang-compiler-rt')
 
   case $CARCH in
@@ -435,7 +435,7 @@ package_clang-tools-extra-svn() {
     "clang-svn=${pkgver}-${pkgrel}"
   )
   groups=('llvm-toolchain-svn')
-  provides=('clang-tools-extra')
+  provides=('clang-tools-extra' 'clang-tools-extra-julia')
   conflicts=('clang-tools-extra')
 
   cd "${srcdir}/build/tools/clang/tools/extra"
