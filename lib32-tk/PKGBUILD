@@ -3,7 +3,7 @@
 
 pkgname=lib32-tk
 pkgver=8.6.4
-pkgrel=3
+pkgrel=4
 pkgdesc="A windowing toolkit for use with tcl"
 arch=('x86_64')
 url="http://tcl.sourceforge.net/"
@@ -19,7 +19,7 @@ cd tk${pkgver}/unix
 export CC='gcc -m32'
 export CXX='g++ -m32'
 export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
-export LDFLAGS+='-L/usr/lib32'
+export LDFLAGS+=' -L/usr/lib32'
 ./configure --prefix=/usr --mandir=/usr/share/man \
   --enable-threads --disable-rpath \
   --libdir=/usr/lib32 \
