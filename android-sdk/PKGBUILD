@@ -3,8 +3,8 @@
 # Contributor: Gordin <9ordin @t gmail dot com>
 
 pkgname=android-sdk
-pkgver=25.1.1
-pkgrel=2
+pkgver=25.1.7
+pkgrel=1
 pkgdesc='Google Android SDK'
 arch=('x86_64' 'i686')
 url='http://developer.android.com/sdk/'
@@ -24,7 +24,7 @@ source=("https://dl.google.com/android/repository/tools_r${pkgver}-linux.zip"
         "$pkgname.csh"
         "$pkgname.conf"
         'license.html')
-sha1sums=('f1a0a0c21e495888fdd8c03501dee3b6d6a48821'
+sha1sums=('36869e6c81cda18f862959a92301761f81bc06b8'
           'b8726c63294a23e5fea066a36061164e583b5732'
           '8f886de363ad91a7f93a0c6ded993e99bef3e1a7'
           '78f8574e651c9bf8b7515ecb30c7ef93edbc4a96'
@@ -63,4 +63,5 @@ package() {
 }
 
 # getver: developer.android.com/tools/sdk/tools-notes.html
+# see https://dl.google.com/android/repository/repository-11.xml for new versions
 # vim:set ts=2 sw=2 et:
