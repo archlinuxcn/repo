@@ -1,0 +1,19 @@
+Index: io-bmp.c
+===================================================================
+RCS file: /cvs/gnome/gtk+/gdk-pixbuf/io-bmp.c,v
+retrieving revision 1.41
+diff -u -p -r1.41 io-bmp.c
+--- gdk-pixbuf/io-bmp.c	13 Aug 2004 02:26:57 -0000	1.41
++++ gdk-pixbuf/io-bmp.c	20 Aug 2004 00:18:14 -0000
+@@ -876,8 +876,10 @@ DoCompressed(struct bmp_progressive_stat
+ 	guchar c;
+ 	gint idx;
+ 
+-	if (context->compr.y >= context->Header.height)
++	if (context->compr.y >= context->Header.height) {
++		context->BufferDone = 0;
+ 		return TRUE;
++	}
+ 
+ 	y = context->compr.y;
+ 
