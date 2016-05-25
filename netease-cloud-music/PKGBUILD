@@ -5,14 +5,13 @@ pkgrel=2
 pkgdesc="Netease Cloud Music, converted from .deb package"
 arch=("x86_64")
 url="http://music.163.com/"
-license=('commercial')
+license=('EULA')
 depends=("alsa-lib" "atk" "glibc" "cairo" "libcups" "libdbus" "expat" "fontconfig"
-	"freetype2" "gcc-libs" "gdk-pixbuf" "glib2" "gtk2" "nspr" "nss" "pango"
+	"freetype2" "gcc-libs" "gdk-pixbuf2" "glib2" "gtk2" "nspr" "nss" "pango"
 	"qt5-base" "qt5-multimedia" "qt5-x11extras" "sqlite" "taglib" "libx11" "libxcursor"
 	"libxext" "libxfixes" "libxi" "libxrandr" "libxrender" "libxss" "libxtst" "zlib"
 	"gstreamer0.10-ugly-plugins"
 )
-provides=()
 source=(
 	"http://s1.music.126.net/download/pc/${pkgname}_${pkgver}-${pkgrel}_amd64.deb"
 	"http://security.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.0.0_1.0.2g-1ubuntu4.1_amd64.deb"
