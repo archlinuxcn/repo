@@ -1,16 +1,16 @@
 # Maintainer: Justin Wong <justin.w.xd at gmail dot com>
 pkgname=netease-cloud-music
 pkgver=0.9.0_2
-pkgrel=2
+pkgrel=3
 pkgdesc="Netease Cloud Music, converted from .deb package"
 arch=("x86_64")
 url="http://music.163.com/"
-license=('EULA')
-depends=("alsa-lib" "glibc" "libdbus"
-	"gcc-libs" "gdk-pixbuf2" "glib2" "gtk2" "nss" 
-	"qt5-base" "qt5-multimedia" "qt5-x11extras" "sqlite" "taglib"
-	"libxss" "zlib" "gstreamer0.10-ugly-plugins"
-	"gst-plugins-ugly" "gst-plugins-good"
+license=('custom')
+depends=(
+	"alsa-lib" "gtk2" "nss" "libxss"
+	"qt5-multimedia" "qt5-x11extras"
+	"gst-libav" "gst-plugins-base"
+	"gst-plugins-good" "gst-plugins-ugly" 
 )
 source=(
 	"http://s1.music.126.net/download/pc/${pkgname}_${pkgver/_/-}_amd64.deb"
@@ -30,7 +30,7 @@ md5sums=('24c44fe5e71e69cd7ac252c2ce611270'
          '849fa0561f7713aa062c1fc4cbc269e3')
 
 prepare() {
-	tar -xvf data.tar.xz
+	tar xf data.tar.xz
 	(mkdir -p libcue && cd libcue && ar xf ../libcue1_1.4.0-1_amd64.deb && tar xf data.tar.gz)
 	(mkdir -p libssl && cd libssl && ar xf ../libssl1.0.0_1.0.2g-1ubuntu4.1_amd64.deb && tar xf data.tar.xz)
 }
@@ -39,7 +39,7 @@ package() {
   cd ${srcdir}
   cp -aR usr ${pkgdir}
   mkdir -p ${pkgdir}/usr/share/licenses/netease-cloud-music/
-  install -m644 service.html ${pkgdir}/usr/share/licenses/netease-cloud-music/license.html
+  install -m644 service.html ${pkgdir}/usr/share/licenses/$pkgname/license.html
   install -m755 libcue/usr/lib/libcue.so.1.0.4 ${pkgdir}/usr/lib/netease-cloud-music/libcue.so.1
   install -m755 libssl/lib/x86_64-linux-gnu/libcrypto.so.1.0.0 ${pkgdir}/usr/lib/netease-cloud-music/libcrypto.so.1.0.0
   install -m755 libssl/lib/x86_64-linux-gnu/libssl.so.1.0.0 ${pkgdir}/usr/lib/netease-cloud-music/libssl.so.1.0.0
