@@ -4,9 +4,9 @@
 
 pkgname=libcurl-compat
 _pkgname=curl
-pkgver=7.48.0
+pkgver=7.49.0
 pkgrel=1
-pkgdesc="An URL retrieval library (old version)"
+pkgdesc="An URL retrieval library (without versioned symbols)"
 arch=('i686' 'x86_64')
 url="http://curl.haxx.se"
 license=('MIT')
@@ -14,7 +14,7 @@ depends=('ca-certificates' 'gnutls' 'openssl' 'zlib' 'libidn' 'libssh2' 'krb5')
 options=('strip')
 #conflicts=('libcurl-gnutls')
 source=("http://curl.haxx.se/download/${_pkgname}-$pkgver.tar.gz")
-md5sums=('b2cac71029d28cb989150bac72aafab5')
+md5sums=('a50a3b683d7a785e3035e5ce611160e2')
 install=libcurl-compat.install
 
 build() {
@@ -54,6 +54,10 @@ package() {
   rm $pkgdir/usr/lib/libcurl.so{,.4}
   rm -rf $pkgdir/etc
   ln -s libcurl-compat.so.4.4.0  $pkgdir/usr/lib/libcurl.so.3
+  ln -s libcurl-compat.so.4.4.0  $pkgdir/usr/lib/libcurl.so.4.0.0
+  ln -s libcurl-compat.so.4.4.0  $pkgdir/usr/lib/libcurl.so.4.1.0
+  ln -s libcurl-compat.so.4.4.0  $pkgdir/usr/lib/libcurl.so.4.2.0
+  ln -s libcurl-compat.so.4.4.0  $pkgdir/usr/lib/libcurl.so.4.3.0
   #ln -s libcurl-gnutls-compat.so.4.4.0  $pkgdir/usr/lib/libcurl-gnutls.so.3
 
   # license
