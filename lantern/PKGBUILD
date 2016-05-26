@@ -2,8 +2,8 @@
 # Maintainer: Kars Wang <jaklsy g-mail>
 
 pkgname=lantern
-pkgver=2.1.1
-pkgrel=3
+pkgver=2.2.4
+pkgrel=1
 pkgdesc='Lantern is a free desktop application that delivers fast, reliable and secure access to the open Internet. (Stable Channel)'
 arch=('i686' 'x86_64')
 url='https://getlantern.org'
@@ -18,8 +18,8 @@ source=('lantern.service')
 source_i686=("lantern-installer-32-bit-$pkgver.deb::https://raw.githubusercontent.com/getlantern/lantern-binaries/master/lantern-installer-32-bit.deb")
 source_x86_64=("lantern-installer-64-bit-$pkgver.deb::https://raw.githubusercontent.com/getlantern/lantern-binaries/master/lantern-installer-64-bit.deb")
 sha512sums=('8157c1cdf16b96f15c47626e96d8f0c9f9b974ffcd4ac0137b09ced03878edf9bc4f6c6d00f91cc8be159a068d3f61e2fb16b90225b399cede4fa6daa21a251e')
-sha512sums_i686=('aa75ed9f0be6bb80fe21e7b842c95123a3e1282a08dccfd06efdec5cb5d1968cc4e2519386c1c39962cd209917e9f71bf0bf6faeee33014627f640c95a53d58e')
-sha512sums_x86_64=('077b4acdf5f1df9d4c1d4e1f0d1de44d61b2b5bc9b1399476ba012a75f31e3c15ce2c7d3344a5d6e8891585b97434f3de9f58c381e13c756af2074d99fc1ef90')
+sha512sums_i686=('2b484a3294a6b481fdcc17116a22afbfb0152a2386e56b5d22d0304a8ee563057b1ad4d8ae09849a08589f2dbdb2ef51219494b5f64e5fb0b8488d86218deff7')
+sha512sums_x86_64=('45b0b0658b14eec77b39bccb7feb29e3f70ec1e0203895f2d18bc7e5b5e88a8d26b4a0b3273caa96c0113a6172105e38e8c53ce2c8d41e727578796ad8020341')
 
 package() {
     msg2 'Extracting the data.tar.xz...'

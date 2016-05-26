@@ -13,11 +13,6 @@ note() {
 }
 
 _update() {
-    msg_blue "Updating desktop MIME database..."
-    update-desktop-database -q
-
-    msg_blue "Updating icon cache.."
-    xdg-icon-resource forceupdate --theme hicolor &>/dev/null
     chown -R lantern:lantern /var/lib/lantern
 }
 
