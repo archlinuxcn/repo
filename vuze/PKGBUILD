@@ -6,7 +6,7 @@
 pkgname=vuze
 pkgver=5.7.2.0
 pkgrel=2
-_ver=${pkgver//./}
+_ver=${pkgver//./} 
 pkgdesc="A feature-rich Java-based BitTorrent client (previously called 'Azureus')"
 arch=('i686' 'x86_64')
 url="http://sourceforge.net/projects/azureus/"
@@ -41,7 +41,7 @@ package() {
     x86_64) mv swt/swt64.jar "$pkgdir"/opt/vuze/swt.jar ;;
   esac
 
-  # Icon and desktop
+  # Icon and desktop 
   mv vuze.png "$pkgdir"/usr/share/pixmaps/
   mv vuze.desktop "$pkgdir"/usr/share/applications/
 
