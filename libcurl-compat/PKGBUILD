@@ -4,7 +4,7 @@
 
 pkgname=libcurl-compat
 _pkgname=curl
-pkgver=7.49.0
+pkgver=7.49.1
 pkgrel=1
 pkgdesc="An URL retrieval library (without versioned symbols)"
 arch=('i686' 'x86_64')
@@ -14,7 +14,7 @@ depends=('ca-certificates' 'gnutls' 'openssl' 'zlib' 'libidn' 'libssh2' 'krb5')
 options=('strip')
 #conflicts=('libcurl-gnutls')
 source=("http://curl.haxx.se/download/${_pkgname}-$pkgver.tar.gz")
-md5sums=('a50a3b683d7a785e3035e5ce611160e2')
+md5sums=('2feb3767b958add6a177c6602ff21e8c')
 install=libcurl-compat.install
 
 build() {
