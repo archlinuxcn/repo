@@ -1,7 +1,7 @@
 from lilaclib import *
 
 build_prefix = 'multilib-archlinuxcn'
-depends = ['libpfm4-git']
+depends = []
 
 pre_build = vcs_update
 

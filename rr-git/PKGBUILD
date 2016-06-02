@@ -2,18 +2,20 @@
 # Previous maintainer: Joel Teichroeb <joel@teichroeb.net>
 
 pkgname=rr-git
-pkgver=4.2.0.r288.gf074540
+pkgver=4.2.0.r289.gff03a2e
 pkgrel=1
 pkgdesc='a nondeterministic debugger'
 arch=(i686 x86_64)
 url='http://rr-project.org/'
 license=('custom')
-depends=('libpfm4' 'libdisasm' 'python2-pexpect' 'gdb')
+depends=('python2-pexpect' 'gdb')
 makedepends=('git' 'cmake')
 if [[ $CARCH = x86_64 ]]; then
     makedepends+=('gcc-multilib')
 fi
-source=(git://github.com/mozilla/rr)
+# Last good commit for
+# https://github.com/mozilla/rr/issues/1719
+source=('git://github.com/mozilla/rr#commit=ff03a2e15a66604fb9b47c04f0826aee786c5afb')
 sha1sums=('SKIP')
 provides=('rr')
 conflicts=('rr')
@@ -25,6 +27,7 @@ pkgver() {
 
 prepare() {
   cd rr
+  # cp third-party/gdb/* .
   mkdir -p build
   sed -i -e 's/ python / python2 /g' -e 's/-Werror/-Wextra/g' CMakeLists.txt
   sed -i -e 's/^\(#define \)_BSD_SOURCE$/\1_DEFAULT_SOURCE/' src/Command.cc
