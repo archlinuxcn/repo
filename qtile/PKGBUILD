@@ -1,7 +1,7 @@
 # Maintainer: roger rogerduran at gmail
 
 pkgname=qtile
-pkgver=0.10.5
+pkgver=0.10.6
 pkgrel=1
 pkgdesc="A full-featured, pure-Python tiling window manager."
 arch=('any')
@@ -13,7 +13,7 @@ optdepends=('python-setproctitle: change the process name to qtile')
 conflicts=('qtile-git')
 install=${pkgname}.install
 source=("https://github.com/qtile/qtile/archive/v${pkgver}.tar.gz")
-md5sums=('2c15662b78a0b393c8d4faea2048540b')
+md5sums=('c0c42fb746f21f6f9d6b549595f6e16e')
 
 package() {
   cd "$srcdir/$pkgname-$pkgver/"

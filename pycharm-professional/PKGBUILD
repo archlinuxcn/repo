@@ -1,7 +1,7 @@
 # Maintainer: XavierCLL <xavier.corredor.llano (a) gmail.com>
 
 pkgname=pycharm-professional
-pkgver=2016.1.3
+pkgver=2016.1.4
 pkgrel=1
 pkgdesc="Powerful Python and Django IDE. Professional version."
 arch=('any')
@@ -34,7 +34,7 @@ optdepends=('ipython2: For enhanced interactive Python shell v2 inside Pycharm'
             'python-pytest: For support testing inside Pycharm with Python 3'
             'python2-tox: Python environments for testing tool with Python 2'
             'python-tox: Python environments for testing tool with Python 3')
-sha256sums=('36d615f795e9fb62c82c7d9d988ee6c529f9c09aac228f9b45fd832a9fb482a8'
+sha256sums=('bd23323f5bcf1983e7c9c5f141b2649c6f772b31952fb74c8b0d0e0cee89b628'
             '016db1860a8b36d408c827f90aeb04b9d55cf21ea36788a9d8510cc54fae1c49'
             'c1a74303d9e870918bd8068f761c8251b996694b1b96b3537fbca317679c4958'
             'ad59415f8ac2c623f9c61453caf70bf75b6b14db2f09807e4ea339a2dc740be9'
@@ -68,15 +68,6 @@ package() {
   if [[ $CARCH = 'i686' ]]; then
     rm -f $pkgdir/opt/$pkgname/bin/libyjpagent-linux64.so
     rm -f $pkgdir/opt/$pkgname/bin/fsnotifier64
-  fi
-
-  # enable anti-aliasing text in pycharm options
-  if [[ $CARCH = 'i686' ]]; then
-    #echo '-Dawt.useSystemAAFontSettings=on' >> $pkgdir/opt/$pkgname/bin/pycharm.vmoptions
-    echo '-Dswing.aatext=true' >> $pkgdir/opt/$pkgname/bin/pycharm.vmoptions
-  else
-    #echo '-Dawt.useSystemAAFontSettings=on' >> $pkgdir/opt/$pkgname/bin/pycharm64.vmoptions
-    echo '-Dswing.aatext=true' >> $pkgdir/opt/$pkgname/bin/pycharm64.vmoptions
   fi
   
 }

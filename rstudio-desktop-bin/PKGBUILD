@@ -1,18 +1,18 @@
-# Maintainer: Meow < a.li.devtty at gmail dot com >
+# Maintainer: Meow < leon.tty1 at gmail dot com >
 
 # Get download links and md5 sums for latest version of RStudio desktop
-cat <<_EOF_ >/dev/null
 ## R code #############
-require(XML)
-page = htmlTreeParse("http://www.rstudio.com/products/rstudio/download/",useInternalNodes = T)
-links = sapply(getNodeSet(page,'//table[@class="downloads"]/thead/tr/th[text()="Installers"]/../../..//a[contains(@href,".deb")]'),xmlGetAttr,'href')
-md5sums = sapply(getNodeSet(page,'//table[@class="downloads"]/thead/tr/th[text()="Installers"]/../../..//a[contains(@href,".deb")]/../..//code'),xmlValue)
-print(cbind(links,md5sums))
+#
+#  require(XML)
+#  page = htmlTreeParse("http://www.rstudio.com/products/rstudio/download/",useInternalNodes = T)
+#  links = sapply(getNodeSet(page,'//table[@class="downloads"]/thead/tr/th[text()="Installers"]/../../..//a[contains(@href,".deb")]'),xmlGetAttr,'href')
+#  md5sums = sapply(getNodeSet(page,'//table[@class="downloads"]/thead/tr/th[text()="Installers"]/../../..//a[contains(@href,".deb")]/../..//code'),xmlValue)
+#  print(cbind(links,md5sums))
+#
 #######################
-_EOF_
 
 pkgname=rstudio-desktop-bin
-pkgver=0.99.896
+pkgver=0.99.902
 pkgrel=1
 pkgdesc="A new integrated development environment (IDE) for R (binary version from RStudio official website)"
 arch=('i686' 'x86_64')
@@ -25,8 +25,8 @@ provides=("rstudio-desktop=${pkgver}")
 options=(!strip)
 
 
-_x86md5=94f8742df675e0c076a24406d37df868
-_x64md5=d7c4933a4a523c2168b6d5784eb4f8d2
+_x86md5=363952616a10553aa51f3a9129b9adeb
+_x64md5=d035622f39928246048972ed2064c89a
 
 case "$CARCH" in
 	'i686')
