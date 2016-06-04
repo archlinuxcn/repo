@@ -36,7 +36,7 @@ def pre_build():
   except FileNotFoundError:
     return
   with open(install_file, 'wb') as f:
-    f.write(dotinstall)
+    f.write(dotinstall.encode())
 
 if __name__ == '__main__':
   single_main(build_prefix)
