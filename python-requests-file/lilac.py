@@ -9,7 +9,7 @@ build_prefix = 'extra-x86_64'
 def pre_build():
   pypi_pre_build(
     pypi_name='requests-file',
-    depends=['python-requests'],
+    depends=['python-requests', 'python-six'],
   )
 
 def post_build():
