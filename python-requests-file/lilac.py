@@ -5,12 +5,11 @@ import fileinput
 from lilaclib import *
 
 build_prefix = 'extra-x86_64'
-depends = ['python-requests-file']
 
 def pre_build():
   pypi_pre_build(
-    pypi_name='tldextract',
-    depends=['python-idna', 'python-requests-file'],
+    pypi_name='requests-file',
+    depends=['python-requests', 'python-six'],
   )
 
 def post_build():

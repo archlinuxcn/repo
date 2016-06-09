@@ -3,7 +3,7 @@
 
 pkgname=imagemagick-fftw
 pkgver=6.9.4.6
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 url="http://www.imagemagick.org/"
 license=('custom')
