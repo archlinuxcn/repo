@@ -1,6 +1,6 @@
 from lilaclib import *
 
-build_prefix = 'multilib-archlinuxcn'
+build_prefix = 'multilib'
 depends = []
 
 pre_build = vcs_update
