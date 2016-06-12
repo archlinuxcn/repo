@@ -38,7 +38,7 @@ package(){
     rmdir "$pkgdir/usr/lib/${_LIB_DIR}"
 
     # Avoid "No such key 'Gtk/IMModule' in schema 'org.gnome.settings-daemon.plugins.xsettings'" warning
-    sed -i '/Gtk\/IMModule=fcitx/d' "$pkgdir/usr/share/glib-2.0/schemas/50_sogoupinyin.gschema.override"
+    sed -i "s#Gtk/IMModule=fcitx#overrides={'Gtk/IMModule':<'fcitx'>}#" "$pkgdir"/usr/share/glib-2.0/schemas/50_sogoupinyin.gschema.override
 
     rm -r "$pkgdir"/usr/share/keyrings
 
