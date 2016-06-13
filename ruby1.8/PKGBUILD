@@ -3,7 +3,7 @@ pkgname=ruby1.8
 _pkgname='ruby'
 pkgver=1.8.7_p374
 _pkgver="${pkgver/_/-}"
-pkgrel=2
+pkgrel=3
 pkgdesc='The obsolete version of the ruby programming language. Consider 2.x instead.'
 arch=('i686' 'x86_64' 'arm')
 license=('custom')
@@ -14,8 +14,10 @@ makedepends=('tk')
 depends=('gdbm' 'db' 'openssl' 'zlib' 'readline')
 optdepends=('tk: for Ruby/TK')
 
-source=("ftp://ftp.ruby-lang.org/pub/ruby/1.8/$_pkgname-$_pkgver.tar.bz2" "fix.patch")
-md5sums=('83c92e2b57ea08f31187060098b2200b' 'f560402603b3dca36d4a6abfcb180cb9')
+source=("ftp://ftp.ruby-lang.org/pub/ruby/1.8/$_pkgname-$_pkgver.tar.bz2"
+        "fix.patch")
+md5sums=('83c92e2b57ea08f31187060098b2200b'
+         'f560402603b3dca36d4a6abfcb180cb9')
 
 _optimal_make_jobs() {
 	if [ -r /proc/cpuinfo ]; then
@@ -56,6 +58,7 @@ build() {
 
 	msg 'Applying patch...'
 	patch -Np1 < ${srcdir}/fix.patch
+    sed -i "/[(]SSLv3/d" ${srcdir}/ruby-1.8.7-p374/ext/openssl/ossl_ssl.c
 
 	msg 'Running make...'
 	make -j$(_optimal_make_jobs)
