@@ -3,13 +3,13 @@
 # Some lines from  linux-bfs and linux-ck
 # Credits to respective maintainers
 _major=4
-_minor=5
+_minor=6
 #_patchlevel=0
 #_subversion=1
 _basekernel=${_major}.${_minor}
 _srcname=linux-${_major}.${_minor}
 pkgbase=linux-pf
-_pfrel=4
+_pfrel=1
 _kernelname=-pf
 _pfpatchhome="http://pf.natalenko.name/sources/${_basekernel}/"
 _pfpatchname="patch-${_basekernel}${_kernelname}${_pfrel}"
@@ -70,13 +70,15 @@ arch=('i686' 'x86_64')
 url="http://pf.natalenko.name/"
 license=('GPL2')
 options=('!strip')
-makedepends=('git' 'xmlto' 'docbook-xsl' 'xz' 'bc' 'kmod')
+makedepends=('git' 'xmlto' 'docbook-xsl' 'xz' 'bc' 'kmod' 'inetutils' 'elfutils')
 source=("ftp://www.kernel.org/pub/linux/kernel/v${_major}.x/linux-${_basekernel}.tar.xz"
         'config.x86_64'         # the main kernel config files
         'linux.preset'          # standard config files for mkinitcpio ramdisk
         'change-default-console-loglevel.patch'
         "${_pfpatchhome}${_pfpatchname}.xz"     # the -pf patchset
         "git+$_aufs4"
+        "https://raw.githubusercontent.com/dolohow/uksm/master/uksm-4.6.patch"
+        "0001-linux-4.6-rtlwifi-fix-atomic.patch"
 )
 
 
@@ -84,6 +86,11 @@ prepare() {
   cd "${srcdir}/linux-${_basekernel}"
   msg "Applying pf-kernel patch"
   patch -Np1 < ${srcdir}/${_pfpatchname}
+
+  msg "applying uksm patches"
+  # since linux-pf-4.6 uksm is seperate
+  patch -Np1 -i "$srcdir"/uksm-4.6.patch
+
   msg "applying aufs4 patches"
   cd "$srcdir/${_aufs4##*/}"
   #git checkout origin/aufs4.x-rcN || _aufs4checkout=KRAKRA
@@ -95,8 +102,6 @@ prepare() {
       echo
       cd ../linux-${_basekernel}
   else
-    #        mkdir -p "${pkgdir}/usr/lib/modules/build/${_kernver}/include"
-    #        mv include/linux/Kbuild "${pkgdir}/usr/lib/modules/build/${_kernver}/include/"
     rm include/uapi/linux/Kbuild
     cp -a {Documentation,fs,include} ${srcdir}/linux-${_basekernel}/
     cd ../linux-${_basekernel}
@@ -129,6 +134,10 @@ prepare() {
   # remove this when a Kconfig knob is made available by upstream
   # (relevant patch sent upstream: https://lkml.org/lkml/2011/7/26/227)
   patch -Np1 -i "${srcdir}/change-default-console-loglevel.patch"
+
+  # fix rtlwifi atomic
+  # https://bugs.archlinux.org/task/49401
+  patch -p1 -i "${srcdir}/0001-linux-4.6-rtlwifi-fix-atomic.patch"
 
   # end linux-ARCH patches
 
@@ -307,14 +316,13 @@ build() {
 }
 
 package_linux-pf() {
- _pkgdesc="Linux kernel and modules with the pf-kernel patch [-ck patchset (BFS included), TuxOnIce, BFQ] and aufs4."
+ _pkgdesc="Linux kernel and modules with the pf-kernel patch [-ck patchset (BFS included), BFQ], uksm and aufs4."
  pkgdesc=${_pkgdesc}
  backup=(etc/mkinitcpio.d/${pkgbase}.preset)
  depends=('coreutils' 'linux-firmware' 'kmod>=9-2' 'mkinitcpio>=0.7')
  optdepends=('linux-docs: Kernel hackers manual - HTML documentation that comes with the Linux kernel.'
             'crda: to set the correct wireless channels of your country'
             'pm-utils: utilities and scripts for suspend and hibernate power management'
-            'tuxonice-userui: TuxOnIce userspace user interface'
             'nvidia-pf: NVIDIA drivers for linux-pf'
             'modprobed_db: Keeps track of EVERY kernel module that has ever been probed. Useful for make localmodconfig.')
  #provides=(${pkgbase}=${_basekernel} 'aufs3')  # for $pkgname-optimized
@@ -544,7 +552,7 @@ package_linux-pf-headers() {
   mkdir -p "${pkgdir}/usr/lib/modules/${_kernver}/build/include"
 
   for i in acpi asm-generic config crypto drm generated keys linux math-emu \
-    media net pcmcia scsi sound trace uapi video xen; do
+    media net pcmcia scsi soc sound trace uapi video xen; do
     cp -a include/${i} "${pkgdir}/usr/lib/modules/${_kernver}/build/include/"
   done
 
@@ -633,6 +641,12 @@ package_linux-pf-headers() {
     cp ${i} "${pkgdir}/usr/lib/modules/${_kernver}/build/${i}"
   done
 
+  # add objtool for external module building and enabled VALIDATION_STACK option
+  if [ -f tools/objtool/objtool ];  then
+    mkdir -p "${pkgdir}/usr/lib/modules/${_kernver}/build/tools/objtool"
+    cp -a tools/objtool/objtool ${pkgdir}/usr/lib/modules/${_kernver}/build/tools/objtool/
+  fi
+
   chown -R root.root "${pkgdir}/usr/lib/modules/${_kernver}/build"
   find "${pkgdir}/usr/lib/modules/${_kernver}/build" -type d -exec chmod 755 {} \;
 
@@ -662,9 +676,11 @@ package_linux-pf-headers() {
 pkgdesc="Linux kernel and modules with the pf-kernel patch [-ck patchset (BFS included), TuxOnIce, BFQ] and aufs4"
 
 # makepkg -g >>PKGBUILD
-sha256sums=('a40defb401e01b37d6b8c8ad5c1bbab665be6ac6310cdeed59950c96b31a519c'
-            '1b4d27cdcf19e41dae8561505cce2878d64fcffbaa8e68bc530086e69c1c2d58'
+sha256sums=('a93771cd5a8ad27798f22e9240538dfea48d3a2bf2a6a6ab415de3f02d25d866'
+            'f620edbdba2965dbb3a2b4ae1d4c07a84ca6b4214ca84a649c4f535e495dcd18'
             '82d660caa11db0cd34fd550a049d7296b4a9dcd28f2a50c81418066d6e598864'
             '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99'
-            'd90f4d13bcbca5903b9a70ab653ac4446938961cc7b83b053824ed6afb557898'
-            'SKIP')
+            '322f524f6bb828903f352efc3f2602eb8caf2278aabbb4bb754bbc030d3f66c2'
+            'SKIP'
+            '83b450df0f2350f0539f515203b3be7ecf59b93c94016930c601745f86a871be'
+            'ae0d16e81a915fae130125ba9d0b6fd2427e06f50b8b9514abc4029efe61ee98')
