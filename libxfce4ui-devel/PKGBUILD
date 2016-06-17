@@ -2,7 +2,7 @@
 
 _pkgname=libxfce4ui
 pkgname=${_pkgname}-devel
-pkgver=4.11.2
+pkgver=4.13.0
 pkgrel=1
 pkgdesc="Commonly used Xfce widgets among Xfce applications"
 arch=('i686' 'x86_64')
@@ -15,7 +15,6 @@ provides=("${_pkgname}=${pkgver}")
 conflicts=("${_pkgname}")
 #replaces=('libxfcegui4') - later when all is ported
 options=('!libtool')
-install=libxfce4ui.install
 source=(http://archive.xfce.org/src/xfce/$_pkgname/${pkgver%.*}/$_pkgname-$pkgver.tar.bz2)
 
 build() {
@@ -38,4 +37,4 @@ package() {
   make DESTDIR="$pkgdir" install
 }
 
-sha256sums=('6fefbc8f4f9710f061c3607db352880628aa858d7d816762286f011a5e4fa4da')
+sha256sums=('22f0b66a33945f347952249589f71618418f1e47ca847850eb0ee1bdb0c353d4')

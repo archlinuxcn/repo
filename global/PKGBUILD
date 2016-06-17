@@ -11,10 +11,9 @@ url="http://www.gnu.org/software/global/"
 license=('GPL')
 depends=('libltdl' 'bash' 'perl')
 makedepends=("python2" "python2-pygments")
-optdepends=('idutils' 'ctags' 'python-pygments')
+optdepends=('idutils' 'ctags' 'python-pygments' 'emacs' 'vim')
 makedepends=('python')
 options=(!emptydirs !libtool)
-install=global.install
 source=(http://tamacom.com/global/${pkgname}-${pkgver}.tar.gz)
 md5sums=('a6693598b4cd0890c648aa2cbfa92fe7')
 sha256sums=('af16e0a686a46f759156cb685e25f345680703f43f93af1ce8d834caaf541da6')
@@ -46,5 +45,8 @@ package() {
   make DESTDIR="${pkgdir}" install
 
   install -d "${pkgdir}/usr/share/emacs/site-lisp"
-  ln -s ../../gtags/gtags.el "${pkgdir}/usr/share/emacs/site-lisp/gtags.el"
+  mv "${pkgdir}/usr/share/gtags/gtags.el" "${pkgdir}/usr/share/emacs/site-lisp/gtags.el"
+  install -d "${pkgdir}/usr/share/vim/vimfiles/plugin"
+  mv "${pkgdir}/usr/share/gtags/gtags.vim" "${pkgdir}/usr/share/vim/vimfiles/plugin/gtags.vim"
+  mv "${pkgdir}/usr/share/gtags/gtags-cscope.vim" "${pkgdir}/usr/share/vim/vimfiles/plugin/gtags-cscope.vim"
 }

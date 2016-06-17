@@ -1,7 +1,7 @@
 pkgbase=python-pyusb
 pkgname=(python-pyusb python2-pyusb)
 pkgver=1.0.0b2
-pkgrel=1
+pkgrel=2
 pkgdesc="A pure Python module which provides USB access."
 arch=('any')
 url="https://github.com/walac/pyusb"
@@ -15,16 +15,16 @@ md5sums=('bc12e83ff3ef1045d4306d13a9955fc1')
 build() {
   cp -a pyusb-$pkgver py2usb-$pkgver
 
-  cd "$srcdir/pyusb-$pkgver"
-  python setup.py build
+  (cd pyusb-$pkgver
+   python setup.py build)
 
-  cd "$srcdir/py2usb-$pkgver"
-  python2 setup.py build
+  (cd py2usb-$pkgver
+   python2 setup.py build)
 }
 
 package_python-pyusb() {
   depends=('python>=3.5' 'python<3.6')
-  cd "$srcdir/pyusb-$pkgver"
+  cd pyusb-$pkgver
 
   python setup.py install --root="$pkgdir"
   install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
@@ -32,7 +32,7 @@ package_python-pyusb() {
 
 package_python2-pyusb() {
   depends=('python2')
-  cd "$srcdir/py2usb-$pkgver"
+  cd py2usb-$pkgver
 
   python2 setup.py install --root="$pkgdir"
   install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE

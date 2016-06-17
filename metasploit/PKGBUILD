@@ -3,31 +3,34 @@
 # Contributor: Tobias Veit - nIcE <m.on.key.tobi[at]gmail[dot]com>
 
 pkgname=metasploit
-pkgver=4.11.22
+pkgver=4.12.7
 pkgrel=1
-pkgdesc="An advanced open-source platform for developing, testing, and using exploit code"
-url="https://www.metasploit.com/"
+pkgdesc='An advanced open-source platform for developing, testing, and using exploit code'
+url='https://www.metasploit.com/'
 arch=('i686' 'x86_64')
 license=('BSD')
-depends=('ruby' 'libpcap' 'postgresql-libs' 'ruby-bundler' 'sqlite' 'git')
-optdepends=(
-  'java-runtime: msfgui support'
-  'ruby-pg: database support'
-)
+depends=('ruby' 'libpcap' 'postgresql-libs' 'ruby-bundler' 'sqlite' 'libxslt' 'git')
+optdepends=('java-runtime: msfgui support'
+            'ruby-pg: database support')
 options=('!strip')
 source=(${pkgname}-${pkgver}.tar.gz::https://github.com/rapid7/metasploit-framework/archive/${pkgver}.tar.gz)
-sha512sums=('9a9d99bc4c13cfb016e2401ecce8a78225b2cbc8aa77950fcaca7e3a332382a2b34dc7e4196e9e9226654770741a209c0bc9de04f0ead3ddca7cd6d932faacc8')
+sha512sums=('6927876b577e1d2421eeabdd1abab90ac99aef02703c0b431eb664c855008639081af64dd82426b87114c8460ecd31ecb46cc89af1edf4f65a2e79b30d99675a')
+
+prepare() {
+  cd ${pkgname}-framework-${pkgver}
+  bundle config build.nokogiri --use-system-libraries
+}
 
 build() {
   cd ${pkgname}-framework-${pkgver}
   bundle install -j"$(nproc)" --no-cache --deployment
-  find vendor/bundle/ruby/*/gems/robots-* -exec chmod o+r '{}' \;
+  find vendor/bundle/ruby -exec chmod o+r '{}' \;
 }
 
 package() {
   cd ${pkgname}-framework-${pkgver}
 
-  mkdir -p "${pkgdir}/opt/${pkgname}" "${pkgdir}/usr/bin"
+  install -d "${pkgdir}/opt/${pkgname}" "${pkgdir}/usr/bin"
   cp -r . "${pkgdir}/opt/${pkgname}"
 
   for f in "${pkgdir}"/opt/${pkgname}/msf*; do

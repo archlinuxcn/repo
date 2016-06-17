@@ -1,14 +1,14 @@
 _pkgname=svgwrite
 pkgname=python-svgwrite
-pkgver=1.1.6
-pkgrel=2
+pkgver=1.1.8
+pkgrel=1
 pkgdesc="A Python library to create SVG drawings."
 arch=('any')
 url="http://bitbucket.org/mozman/svgwrite"
 license=('MIT')
 depends=('python' 'python-pyparsing' 'python-setuptools')
-source=('https://pypi.python.org/packages/source/s/svgwrite/svgwrite-1.1.6.zip')
-md5sums=('d57797786f9816617636f06b5566c5f7')
+source=('https://pypi.python.org/packages/fe/a9/91eaf130f02eea843f65b6484ce64e008000e5307dbe465dc107760a8083/svgwrite-1.1.8.tar.gz')
+md5sums=('7a8902566557b23114c8cb57eca38bfe')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"

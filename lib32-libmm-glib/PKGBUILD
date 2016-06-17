@@ -3,8 +3,8 @@
 # Contributor: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 
 pkgname=lib32-libmm-glib
-pkgver=1.4.8
-pkgrel=1
+pkgver=1.4.14
+pkgrel=2
 pkgdesc='ModemManager library'
 arch=('x86_64')
 url='http://www.freedesktop.org/wiki/Software/ModemManager/'
@@ -13,7 +13,7 @@ depends=('lib32-glib2' 'libmm-glib')
 makedepends=('gcc-multilib' 'gobject-introspection' 'intltool' 'lib32-libmbim'
              'lib32-libqmi' 'lib32-polkit' 'lib32-systemd' 'python2' 'vala')
 source=("http://www.freedesktop.org/software/ModemManager/ModemManager-${pkgver}.tar.xz")
-sha256sums=('d951eaffbe513bcde54f90602c6c423a49593f656d6485ba95f6fcb4bc1e8003')
+sha256sums=('abe6cdd515a774bcba3afdcdb1e504569801e79282ccdf26099f33cbb8731ba2')
 
 build() {
   cd ModemManager-${pkgver}
@@ -34,13 +34,15 @@ build() {
     --with-udev-base-dir='/usr/lib32/udev'
   sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
   make -C libmm-glib
+  make -C data
 }
 
 package() {
   cd ModemManager-${pkgver}
 
   make DESTDIR="${pkgdir}" -C libmm-glib install
-  rm -rf "${pkgdir}"/usr/{include,share}
+  make DESTDIR="${pkgdir}" -C data install
+  rm -rf "${pkgdir}"/{etc,usr/{include,lib,share}}
 }
 
 # vim: ts=2 sw=2 et:

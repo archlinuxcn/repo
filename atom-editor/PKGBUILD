@@ -6,25 +6,25 @@
 # https://github.com/sjug/atom-editor
 
 pkgname=atom-editor
-pkgver=1.7.3
+pkgver=1.8.0
 pkgrel=1
 pkgdesc='Chrome-based text editor from Github'
 arch=('x86_64' 'i686')
 url='https://github.com/atom/atom'
 license=('MIT')
 depends=('alsa-lib' 'desktop-file-utils' 'gconf' 'gtk2' 'libgnome-keyring' 'libnotify' 'libxtst' 'nodejs' 'nss' 'python2')
-optdepends=('gvfs: file deletion support')
+optdepends=('gvfs: file deletion support'
+            'ctags: symbol indexing support')
 makedepends=('git' 'npm')
 conflicts=('atom-editor-bin' 'atom-editor-git')
-install=atom.install
 source=("https://github.com/atom/atom/archive/v${pkgver}.tar.gz"
         'package.patch')
-sha256sums=('5074b59ddaca5525eb48098dee6fe63013799cbc77749add314b9e1bc894b8f4'
-            'ab27ab817f67043e98298d525efb6a417dea07f4012b6dfb7cf6a538f9b50bab')
+sha256sums=('2950820b2c7ab658135e9cb7c003ff2074ec0a38ac3b324d85cc20bcb237e61f'
+            'fbd8e29cdde10d430d809ffb2bdd52c5a0af3af96ad882c4754c553fefa7b2db')
 
 prepare() {
   cd "atom-$pkgver"
-  
+
   patch -Np0 -i "$srcdir/package.patch"
 
   sed -i -e "/exception-reporting/d" \

@@ -2,7 +2,7 @@
 # Contributor: TZ86
 
 pkgname=vivaldi
-pkgver=1.1.453.47
+pkgver=1.2.490.39
 pkgrel=2
 pkgdesc='An advanced browser made with the power user in mind.'
 url="https://vivaldi.com"
@@ -14,11 +14,12 @@ makedepends=('w3m')
 optdepends=(
     'vivaldi-ffmpeg-codecs: playback of proprietary video/audio'
     'google-chrome: Widevine DRM Plugin'
+    'vivaldi-widevine: Widevine DRM Plugin'
 )
 source_i686=("https://downloads.vivaldi.com/stable/vivaldi-stable-${pkgver}-1.i386.rpm")
 source_x86_64=("https://downloads.vivaldi.com/stable/vivaldi-stable-${pkgver}-1.x86_64.rpm")
-sha256sums_i686=('bee287c816b07af30fe8f6dc4f8e1025276fe979c7a1f1e370ff4f9a52058274')
-sha256sums_x86_64=('6b24ba9a9190f4376ac93ef2062872863e69bd3d3db808c00d29f714e34321a3')
+sha256sums_i686=('8343547956abc82a66d73aeacc56e73697fb1cb0251f85dd8e723a0562b93ec6')
+sha256sums_x86_64=('63f80195783d8b339e63222320743fb92612f1380e7292c014ea3e507ad95f29')
 
 package() {
     cp -a {opt,usr} "$pkgdir"

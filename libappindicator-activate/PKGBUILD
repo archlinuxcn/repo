@@ -1,4 +1,5 @@
 # Maintainer: Sebastian Krzyszkowiak <dos@dosowisko.net>
+# Contributor: Llewelyn Trahaearn <WoefulDerelict at GMail dot com>
 # Contributor: FadeMind <fademind@gmail.com>
 # Contributor: Maxime Gauduin <alucryd@archlinux.org>
 # Contributor: bitwave <aur@oomlu.de>
@@ -8,7 +9,7 @@
 pkgbase=libappindicator-activate
 pkgname=('libappindicator-activate-gtk2' 'libappindicator-activate-gtk3' 'libappindicator-activate-sharp')
 pkgver=12.10.0
-pkgrel=5
+pkgrel=7
 pkgdesc='libappindicator patched to improve user experience under Plasma 5 (single click activation via Activate dbus method)'
 arch=('i686' 'x86_64')
 url='https://launchpad.net/libappindicator'
@@ -21,6 +22,9 @@ source=("http://launchpad.net/libappindicator/${pkgver%.*}/${pkgver}/+download/l
 sha256sums=('d5907c1f98084acf28fd19593cb70672caa0ca1cf82d747ba6f4830d4cc3b49f' 'b5ee550484aebc13eccbee181f355416efa1de917317c00b044266104418526a')
 
 prepare() {
+    # Check for debris from previous builds and sweep it up if found.
+    [[ -d libappindicator-gtk2-${pkgver} ]] && rm -rf libappindicator-gtk2-${pkgver}
+
     cd libappindicator-${pkgver}
 
     sed 's|/cli/|/mono/|' -i bindings/mono/{appindicator-sharp-0.1.pc.in,Makefile.in}
@@ -74,7 +78,7 @@ package_libappindicator-activate-gtk3() {
 }
 
 package_libappindicator-activate-sharp() {
-    arch=('any')
+    depends=('gtk-sharp-2' 'libappindicator-activate-gtk2')
     provides=('libappindicator-sharp')
     conflicts=('libappindicator-sharp')
 

@@ -1,6 +1,7 @@
 # Maintainer: Piotr Gorski <lucjan.lucjanov@gmail.com> PGP-Key: BDB26C5A
 # Contributor: shivik <> PGP-Key: 761E423C
 # Contributor: Michael Duell <mail@akurei.me> PGP-Key: 6EE23EBE
+# A special thanks to Steven Barrett for very important sugestions 
 
 ###########################################################################################################
 #                                          Patch and Build Options
@@ -31,10 +32,10 @@ _use_32bit_pae="no"	# "yes": Use the PAE config for 32-bit
 
 pkgdesc='A desktop oriented kernel and modules with Liquorix patches'
 __basekernel=4.5
-_minor=2
+_minor=3
 pkgver=${__basekernel}.${_minor}
-pkgrel=2
-lqxrel=4
+pkgrel=1.1
+lqxrel=1
 _kernelname=-lqx
 pkgbase=linux-lqx
 pkgname=('linux-lqx' 'linux-lqx-headers' 'linux-lqx-docs')
@@ -42,11 +43,13 @@ _lqxpatchname="${pkgver}-${lqxrel}.patch"
 arch=('i686' 'x86_64')
 license=('GPL2')
 url="http://liquorix.net/"
+
 if [ "$_custom" = "x" ]; then
    makedepends=('qt5-base' 'kmod' 'inetutils' 'bc')
 else
    makedepends=('kmod' 'inetutils' 'bc')
 fi
+
 options=(!strip)
 install='linux-lqx.install'
 source=("http://www.kernel.org/pub/linux/kernel/v4.x/linux-${__basekernel}.tar.xz"
@@ -59,10 +62,10 @@ source=("http://www.kernel.org/pub/linux/kernel/v4.x/linux-${__basekernel}.tar.x
 
 sha512sums=('cb0d5f30baff37dfea40fbc1119a1482182f95858c883e019ee3f81055c8efbdb9dba7dfc02ebcc4216db38f03ece58688e69efc0fce1dade359af30bd5426de'
             'SKIP'
-            '645759435e89344d698c184cf179711e65504b804aacfb3b80e031610d78fcb363f6ca6643275b834e6170cf0f0d029b54a42aaa426e3fa278f7769781bfbeff'
-            '72e503fb2ef8526e0f01c72c410438a75f0af1e5b15e136ad4ec88e57ac191df3bfcad6c424af390fb92a4ed9d1dfd59f076283929e88f343684f9efdc24e070'
-            'f8183466ace0b0a82419139b53703e0a85fa6469fbd8df4ac397db046cb9f643f7104e1089166378d260e0baa3a5f33db858abe5262c9fa277899a1a2715dfd6'
-            'f9c3a09519d3873535ffa1afc84c63c39dccfc4d9dfebc18746a82264a5fcfcc509c63257231ac145fbccfff422bc62a7ce2d2da36c763f4e5262990c08cbcf7'
+            '7303efb9c80fe1d40a34f4e8ff7325c0b2c3acedb307d7f969ab45b8a935fc1792737150f53d6b27142685914689632b1be8dc9571ad3cece2102229f40e801e'
+            'f88f1385a4f9534d4bd9df4bbb2a937f20f2926b998a19b7eb5c25139fb65ad1045f19654f85e860c054261eac7ab1ad7d1d2cacca998f3977b8dd82b26a2748'
+            'dded1012a8a3d2b118786c8fa3a6989d6ed4bd0c45533e784db3e890bd04e44ad933f15677683ac52c7515572b7d3fa32f681be4ff683e478ace39ffae320d73'
+            '2d54d0c270fe0df5ce1abc87825e8b20a24ab111d50132107a0868873b2ec3142e90dfa6af90c1049538efcb390673f48f403792befb1ce256bfaf395cd4f732'
             'fe4dcd7b5ec06ec3ec4aa631531469f58f6a7111e2d33affa98a1b8a8d230c5fa7e25ffdf770fe5ce61f249b0ec0ecd69df2858c4029acee0efaadff957858fe')
             
 validpgpkeys=(

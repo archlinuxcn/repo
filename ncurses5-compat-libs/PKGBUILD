@@ -4,18 +4,18 @@
 
 # Before you complain about unverifiable signature, please read Allan's post:
 # http://allanmcrae.com/2015/01/two-pgp-keyrings-for-package-management-in-arch-linux/
-# TLDR: gpg --keyserver pgp.mit.edu --recv-keys C52048C0C0748FEE227D47A2702353E0F7E48EDB 
+# TLDR: gpg --keyserver pgp.mit.edu --recv-keys C52048C0C0748FEE227D47A2702353E0F7E48EDB
 
 pkgname=ncurses5-compat-libs
 _pkgname=ncurses
 pkgver=6.0
-pkgrel=3
+pkgrel=4
 pkgdesc='System V Release 4.0 curses emulation library, ABI 5'
 arch=('i686' 'x86_64')
 url='http://invisible-island.net/ncurses/ncurses.html'
 license=('MIT')
 depends=('glibc' 'gcc-libs' 'sh')
-source=(http://invisible-mirror.net/archives/ncurses/ncurses-${pkgver/_/-}.tar.gz{,.asc})
+source=(http://ftp.gnu.org/gnu/ncurses/ncurses-${pkgver/_/-}.tar.gz{,.sig})
 md5sums=('ee13d052e1ead260d7c28071f46eefb1'
          'SKIP')
 validpgpkeys=('C52048C0C0748FEE227D47A2702353E0F7E48EDB')  # Thomas Dickey

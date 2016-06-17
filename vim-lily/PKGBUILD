@@ -2,7 +2,7 @@
 
 pkgbase=vim-lily
 pkgname=(gvim-lily vim-runtime-lily vim-lily)
-pkgver=7.4.1799
+pkgver=7.4.1941
 pkgrel=1
 _versiondir="vim$(echo $pkgver | awk -F. '{print $1$2}')"
 arch=('i686' 'x86_64')
@@ -119,7 +119,6 @@ package_gvim-lily() {
   optdepends=('luajit' 'ruby' 'python' 'python2' 'perl')
   conflicts=('vim' 'gvim' 'vim-python3' 'gvim-python3' 'vim-minimal')
   provides=("vim=${pkgver}-${pkgrel}" "gvim=${pkgver}-${pkgrel}" "gvim-python3=${pkgver}-${pkgrel}")
-  install=${pkgname%%-*}.install
 
   cd "${srcdir}"/gvim-build
   make -j1 VIMRCLOC=/etc DESTDIR="${pkgdir}" install
@@ -167,7 +166,6 @@ package_vim-runtime-lily() {
   # reset
   depends=()
   optdepends=()
-  install=
 
   # Install the runtime split from gvim
   install -dm755 "${pkgdir}"/usr/share

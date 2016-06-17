@@ -1,8 +1,8 @@
 # Maintainer: Alex Taber <aft dot pokemon at gmail dot com>
 
 pkgname=teamviewer
-pkgver=11.0.53191
-pkgrel=2.3
+pkgver=11.0.57095
+pkgrel=4
 pkgdesc='All-In-One Software for Remote Support and Online Meetings'
 arch=('i686' 'x86_64')
 url='http://www.teamviewer.com'
@@ -15,18 +15,20 @@ depends_x86_64=(
 	'lib32-libpng12'
 	'lib32-libsm'
 	'lib32-libxinerama'
-	'lib32-libxrender')
+	'lib32-libxrender'
+	'lib32-libjpeg6-turbo')
 depends_i686=(
 	'fontconfig'
 	'libpng12'
 	'libsm'
 	'libxinerama'
-	'libxrender')
+	'libxrender'
+	'libjpeg6-turbo')
 install=teamviewer.install
 source_x86_64=("https://download.teamviewer.com/download/version_${pkgver%%.*}x/teamviewer_${pkgver}_amd64.deb")
 source_i686=("https://download.teamviewer.com/download/version_${pkgver%%.*}x/teamviewer_${pkgver}_i386.deb")
-sha256sums_x86_64=('D624C93679A25B00013A13B74B51746EEEDE674A2C68746C574A086D79A08A48')
-sha256sums_i686=('E37F4FA053648366A73AC7AF684CEE8567F3D5EF580AC5F63CBC7A68DA6124FB')
+md5sums_i686=('e46cef43ea873dc00a74bc44f9990964')
+md5sums_x86_64=('b8e2023b0dbfe7bfbbc1d391e1687929')
 
 prepare() {
 	echo "If the install fails, you need to uninstall Teamviewer 10"

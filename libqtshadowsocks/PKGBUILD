@@ -2,7 +2,7 @@
 
 _pkgname=libQtShadowsocks
 pkgname=libqtshadowsocks
-pkgver=1.8.4
+pkgver=1.9.0
 pkgrel=1
 pkgdesc="A lightweight library for shadowsocks."
 arch=("i686" "x86_64")
@@ -13,7 +13,7 @@ makedepends=("git" "make" "qtchooser")
 provides=("$pkgname")
 conflicts=("$pkgname" "$pkgname-git")
 source=("https://github.com/librehat/$_pkgname/archive/v$pkgver.tar.gz")
-sha1sums=("8c71b05c9a9ebc81f6645a76be6c2e58fc444e9f")
+sha256sums=("5e013730054543dab77b3b1d94bdf2bbde4a7de91a3e4f6baf09ad8f884c40ef")
 
 build() {
 	cd "$srcdir/$_pkgname-$pkgver"

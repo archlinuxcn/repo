@@ -8,8 +8,8 @@
 # Contributor: gborzi
 
 pkgname=freecad-oce
-pkgver=0.15.4671
-pkgrel=2
+pkgver=0.16
+pkgrel=1
 pkgdesc='A general purpose 3D CAD modeler'
 arch=('i686' 'x86_64')
 url='http://www.freecadweb.org/'
@@ -22,41 +22,42 @@ makedepends=(boost eigen gcc-fortran swig xerces-c desktop-file-utils
 # TODO add reasons
 optdepends=('pycollada-git' 'python2-pyqt4')
 options=(!libtool !staticlibs debug strip)
-install=freecad.install
-source=("http://downloads.sourceforge.net/sourceforge/free-cad/freecad_${pkgver}.tar.gz"
+source=("https://github.com/FreeCAD/FreeCAD/archive/$pkgver.tar.gz"
         "freecad.desktop"
         "freecad.xml")
-md5sums=('7afa95d3e8cd845bef83202e76db7f24'
+md5sums=('6e992c98ae2b8448bcf428e3e9efb02f'
          '4b9656e677b277a3c7babf70b21670e8'
          'c2f4154c8e4678825411de8e7fa54c6b')
 
 prepare() {
-  sed -i \
-      -e 's|\bpyside-uic\b|python2-pyside-uic|' \
-      $srcdir/freecad-$pkgver/cMake/FindPySideTools.cmake
+  cd FreeCAD-${pkgver}
+  # http://www.freecadweb.org/tracker/view.php?id=2347
+  sed -i 's/boost::re_detail/boost::BOOST_REGEX_DETAIL_NS/' \
+      src/Mod/Drawing/App/FeaturePage.cpp
 }
 
 build() {
-  cd freecad-${pkgver}
+  cd FreeCAD-${pkgver}
   mkdir -p build
   cd build
   export CXXFLAGS+=" -DBOOST_SIGNALS_NO_DEPRECATION_WARNING"
 
   cmake .. \
-        -Wno-dev -DCMAKE_INSTALL_PREFIX=/usr/lib/freecad \
+        -Wno-dev -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-        -DCMAKE_INSTALL_DATADIR=/usr/share/freecad \
         -DCMAKE_INSTALL_DOCDIR=/usr/share/freecad/doc \
+        -DCMAKE_INSTALL_DATADIR=/usr/share/freecad \
+        -DCMAKE_INSTALL_LIBDIR=/usr/lib/freecad \
         -DCMAKE_INSTALL_INCLUDEDIR=/usr/include \
         -DOCC_INCLUDE_DIR=/usr/include/oce/ \
         -DPYTHON_EXECUTABLE=/usr/bin/python2 \
         -DFREECAD_USE_EXTERNAL_PIVY=ON \
-        -DOCE_DIR=/usr/lib/oce-0.17-dev/
+        -DOCE_DIR=/usr/lib/oce-0.18-dev/
   make
 }
 
 package_freecad-oce() {
-  cd freecad-${pkgver}/build
+  cd FreeCAD-${pkgver}/build
   provides=('freecad')
   conflicts=('freecad')
 
@@ -64,9 +65,11 @@ package_freecad-oce() {
   make DESTDIR="${pkgdir}" install
 
   # Symlink to /usr/bin
-  mkdir -p "${pkgdir}/usr/bin/"
-  ln -sf "../lib/freecad/bin/FreeCAD" "${pkgdir}/usr/bin/freecad"
-  ln -sf "../lib/freecad/bin/FreeCADCmd" "${pkgdir}/usr/bin/freecadcmd"
+  ln -sf "FreeCAD" "${pkgdir}/usr/bin/freecad"
+  ln -sf "FreeCADCmd" "${pkgdir}/usr/bin/freecadcmd"
+
+  cp -ra "${pkgdir}/usr/Mod" "${pkgdir}/usr/share/freecad/"
+  rm -r "${pkgdir}/usr/Mod"
 
   # Install pixmaps and desktop shortcut
   desktop-file-install \

@@ -9,4 +9,4 @@ def post_build():
   git_commit()
 
 if __name__ == '__main__':
-  single_main()
+  single_main(build_prefix)
