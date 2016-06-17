@@ -1,8 +1,8 @@
 post_install() {
   echo -n "Updating font cache... "
   fc-cache >/dev/null -f
-  mkfontscale /usr/share/fonts/TTF
-  mkfontdir   /usr/share/fonts/TTF
+  mkfontscale /usr/share/fonts/wps-fonts
+  mkfontdir   /usr/share/fonts/wps-fonts
   echo done
 }
 
