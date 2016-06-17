@@ -3,7 +3,7 @@
 
 pkgname=vivaldi
 pkgver=1.2.490.39
-pkgrel=1
+pkgrel=2
 pkgdesc='An advanced browser made with the power user in mind.'
 url="https://vivaldi.com"
 options=(!strip !zipman)
@@ -14,6 +14,7 @@ makedepends=('w3m')
 optdepends=(
     'vivaldi-ffmpeg-codecs: playback of proprietary video/audio'
     'google-chrome: Widevine DRM Plugin'
+    'vivaldi-widevine: Widevine DRM Plugin'
 )
 source_i686=("https://downloads.vivaldi.com/stable/vivaldi-stable-${pkgver}-1.i386.rpm")
 source_x86_64=("https://downloads.vivaldi.com/stable/vivaldi-stable-${pkgver}-1.x86_64.rpm")

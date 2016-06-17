@@ -1,5 +1,5 @@
 pkgname=telegram-desktop
-pkgver=0.9.49
+pkgver=0.9.51
 pkgrel=1
 _qtver=5.6.0
 pkgdesc='Official desktop version of Telegram messaging app.'
@@ -97,7 +97,7 @@ prepare() {
     sed -i 's/CUSTOM_API_ID//g' "$srcdir/tdesktop/Telegram/Telegram.pro"
     sed -i 's,LIBS += /usr/local/lib/libxkbcommon.a,,g' "$srcdir/tdesktop/Telegram/Telegram.pro"
     sed -i 's,LIBS += /usr/local/lib/libz.a,LIBS += -lz,g' "$srcdir/tdesktop/Telegram/Telegram.pro"
-    sed -i "s,/usr/local/tdesktop/Qt-5.6.0,$srcdir/qt,g" "$srcdir/tdesktop/Telegram/Telegram.pro"
+    sed -i 's/c++11/c++14/g' "$srcdir/tdesktop/Telegram/Telegram.pro"
     
     (
         echo "DEFINES += TDESKTOP_DISABLE_AUTOUPDATE"
@@ -168,11 +168,21 @@ build() {
     mkdir -p "$srcdir/tdesktop/Linux/ReleaseIntermediate"
     cd "$srcdir/tdesktop/Linux/ReleaseIntermediate"
     
-    ./../codegen/Debug/codegen_style "-I./../../Telegram/Resources" "-I./../../Telegram/SourceFiles" "-o./../../Telegram/GeneratedFiles/styles" all_files.style --rebuild
-    ./../codegen/Debug/codegen_numbers "-o./../../Telegram/GeneratedFiles" "./../../Telegram/Resources/numbers.txt"
-    ./../DebugLang/MetaLang -lang_in ./../../Telegram/Resources/langs/lang.strings -lang_out ./../../Telegram/GeneratedFiles/lang_auto
+    ./../codegen/Debug/codegen_style \
+        "-I./../../Telegram/Resources" \
+        "-I./../../Telegram/SourceFiles" \
+        "-o./../../Telegram/GeneratedFiles/styles" \
+        all_files.style --rebuild
     
-    qmake CONFIG+=release "../../Telegram/Telegram.pro"
+    ./../codegen/Debug/codegen_numbers \
+        "-o./../../Telegram/GeneratedFiles" \
+        "./../../Telegram/Resources/numbers.txt"
+    
+    ./../DebugLang/MetaLang \
+        -lang_in ./../../Telegram/Resources/langs/lang.strings \
+        -lang_out ./../../Telegram/GeneratedFiles/lang_auto
+    
+    qmake CONFIG+=release QT_TDESKTOP_PATH="$srcdir/qt" "../../Telegram/Telegram.pro"
     make
 }
 

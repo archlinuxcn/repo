@@ -2,7 +2,8 @@
 # Contributor: Lucas Hermann Negri <lucashnegri at gmail dot com>
 
 pkgname=armadillo
-pkgver=7.200.1
+pkgver=7.200.2
+_pkgver=7.200.2
 pkgrel=1
 pkgdesc="C++ linear algebra library"
 arch=('i686' 'x86_64')
@@ -13,22 +14,22 @@ optdepends=('hdf5: HDF5 output'
             'cuda: NVBLAS support'
 	    'acml-cblas: ACML support')
 makedepends=('cmake')
-source=("http://downloads.sourceforge.net/sourceforge/arma/$pkgname-$pkgver.tar.xz")
+source=("http://downloads.sourceforge.net/sourceforge/arma/$pkgname-$_pkgver.tar.xz")
 install=armadillo.install
-sha512sums=('c7b45a94d6c1c2754f8b421f4227c7e91a9ed413bc86b2d536b368dde8d86a17cf76ba9f77240ad1d96751d238c0f77921522d4d38dd4138b84466f2c8bfd38c')
+sha512sums=('c92747f256aec96da27f9dce2f33224883fccfc33b3be904d5de8ba52b540e3327f39b865f9547e06b437c9121a65ef42fe744f4319d518b44bc7795e489fc82')
 
 build() {
   if [ "$CARCH" == "x86_64" ]; then
     ARMA64LIBDIR="-DINSTALL_LIB_DIR:PATH=/usr/lib"
   fi
 
-  cd "${srcdir}/$pkgname-$pkgver"
+  cd "${srcdir}/$pkgname-$_pkgver"
   cmake  $ARMA64LIBDIR -DCMAKE_INSTALL_PREFIX:PATH=/usr .
   make
 }
 
 package() {
-  cd "${srcdir}/$pkgname-$pkgver"
+  cd "${srcdir}/$pkgname-$_pkgver"
   make DESTDIR="${pkgdir}" install
   install -D -m644 LICENSE.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
