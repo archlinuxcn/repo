@@ -2,7 +2,7 @@
 # Previous maintainer: Joel Teichroeb <joel@teichroeb.net>
 
 pkgname=rr-git
-pkgver=4.2.0.r363.g3710623
+pkgver=4.2.0.r390.g1313e22
 pkgrel=1
 pkgdesc='a nondeterministic debugger'
 arch=(i686 x86_64)
@@ -13,14 +13,22 @@ makedepends=('git' 'cmake')
 if [[ $CARCH = x86_64 ]]; then
     makedepends+=('gcc-multilib')
 fi
-source=('git://github.com/mozilla/rr')
-sha1sums=('SKIP')
+source=('git://github.com/mozilla/rr'
+        '0001-Add-an-option-to-skip-recording-when-running-under-r.patch')
+sha1sums=('SKIP'
+          'c2f81fd83f9a4931e3ae62ff09e5fd1c0474c169')
 provides=('rr')
 conflicts=('rr')
+options=('debug' '!strip')
 
 pkgver() {
   cd rr
   git describe --long --tags | sed -r 's/([^-]*-g)/r\1/;s/-/./g'
+}
+
+prepare() {
+  cd rr
+  patch -Np1 < ../0001-Add-an-option-to-skip-recording-when-running-under-r.patch
 }
 
 build() {
