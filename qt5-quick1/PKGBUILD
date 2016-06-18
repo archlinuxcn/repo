@@ -2,9 +2,9 @@
 # Contributor: almack
 
 pkgname=qt5-quick1
-pkgver=5.6.0
-_pkgver=5.6.0
-pkgrel=2
+pkgver=5.6.1
+_pkgver=5.6.1
+pkgrel=1
 arch=('i686' 'x86_64')
 url='http://qt-project.org/'
 pkgdesc='Qt Declarative is provided for Qt 4 compatibility'
@@ -12,7 +12,7 @@ license=('LGPL2.1' 'GPL3')
 #options=("debug")
 depends=('qt5-webkit' 'qt5-script')
 makedepends=('git')
-source=("git+https://code.qt.io/qt/qtquick1.git#commit=dcc5e5c01c28b227f0e5e5e4976a9d26e8a45295")
+source=("git+https://code.qt.io/qt/qtquick1.git")
 sha1sums=('SKIP')
 
 _prlfix() {
@@ -25,7 +25,7 @@ prepare() {
   cd qtquick1
 
   if [ ! -d include ]; then
-    syncqt.pl-qt5 -version 5.6.0 sync.profile
+    syncqt.pl-qt5 -version 5.6.1 sync.profile
   fi
 }
 
