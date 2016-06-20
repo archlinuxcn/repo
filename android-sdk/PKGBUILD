@@ -4,7 +4,7 @@
 
 pkgname=android-sdk
 pkgver=25.1.7
-pkgrel=1
+pkgrel=2
 pkgdesc='Google Android SDK'
 arch=('x86_64' 'i686')
 url='http://developer.android.com/sdk/'
@@ -18,14 +18,14 @@ install="$pkgname.install"
 optdepends=('android-udev: udev rules for Android devices'
             'android-sdk-platform-tools: adb, aapt, aidl, dexdump and dx')
 source=("https://dl.google.com/android/repository/tools_r${pkgver}-linux.zip"
-        'https://developer.android.com/assets/images/android_logo.png'
+        'https://source.android.com/source/images/Android_Robot_100.png'
         "$pkgname.desktop"
         "$pkgname.sh"
         "$pkgname.csh"
         "$pkgname.conf"
         'license.html')
 sha1sums=('36869e6c81cda18f862959a92301761f81bc06b8'
-          'b8726c63294a23e5fea066a36061164e583b5732'
+          'f359ac923ed008dae3a007a513d26cfbaf025626'
           '8f886de363ad91a7f93a0c6ded993e99bef3e1a7'
           '78f8574e651c9bf8b7515ecb30c7ef93edbc4a96'
           '08c85aab7523e22b298891c7047bc0e7adbf3437'
@@ -36,7 +36,7 @@ package() {
   install -Dm755 "$pkgname.sh" "$pkgdir/etc/profile.d/$pkgname.sh"
   install -Dm755 "$pkgname.csh" "$pkgdir/etc/profile.d/$pkgname.csh"
   install -Dm644 "$pkgname.conf" "$pkgdir/etc/ld.so.conf.d/$pkgname.conf"
-  install -Dm644 android_logo.png "$pkgdir/usr/share/pixmaps/$pkgname.png"
+  install -Dm644 Android_Robot_100.png "$pkgdir/usr/share/pixmaps/$pkgname.png"
   install -Dm644 "$pkgname.desktop" \
     "$pkgdir/usr/share/applications/$pkgname.desktop"
   install -Dm644 license.html \
