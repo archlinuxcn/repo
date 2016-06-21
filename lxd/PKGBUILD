@@ -1,7 +1,7 @@
 # Maintainer: Maikel Wever <maikelwever@gmail.com>
 
 pkgname=lxd
-pkgver=2.0.1
+pkgver=2.0.2
 pkgrel=1
 pkgdesc="REST API, command line tool and OpenStack integration plugin for LXC."
 arch=('x86_64')
@@ -15,6 +15,7 @@ optdepends=(
     'thin-provisioning-tools: for thin provisioning support'
     'btrfs-progs: for btrfs support'
     'linux-user-ns-enabled: kernel with CONFIG_USER_NS enabled'
+    'linux-lts-userns: LTS kernel with CONFIG_USER_NS enabled'
 )
 source=(
     "https://github.com/lxc/$pkgname/archive/$pkgname-$pkgver.tar.gz"
@@ -27,7 +28,7 @@ source=(
     "networkmanager-dnsmasq-lxd.conf"
 )
 
-md5sums=('415d11233d4bf6e0b73751d50ce45196'
+md5sums=('a8b9c58a04505dbc3453c1874c5f08ec'
          'b1780c0e01e404895e35ac277aa597c4'
          'b1fd16933c1b24aaa9ccc8f5a0e6478c'
          'e164eaad33795310c024b21764679afb'
