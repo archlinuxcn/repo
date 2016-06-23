@@ -4,7 +4,7 @@
 # Contributor: Florian Pritz <bluewind at jabber dot ccc dot de>
 pkgname=wireshark-gtk2
 pkgbase=wireshark
-pkgver=2.0.3
+pkgver=2.0.4
 pkgrel=1
 arch=('i686' 'x86_64')
 license=('GPL2')
@@ -14,7 +14,7 @@ options=(!emptydirs)
 url='http://www.wireshark.org/'
 source=(http://www.wireshark.org/download/src/${pkgbase}-${pkgver}.tar.bz2
         do_not_use_svn_version.patch)
-sha1sums=('9805d62b4fb108cc1e755d8c47f8c1e21eee8b73'
+sha1sums=('9d76a28ba4f7566bef1aefbb2868e1ddcb93e999'
           '489a176a7b90f7ae6f0985510c0c9038de54d9d6')
 
 prepare() {
@@ -47,7 +47,6 @@ build() {
 package() {
   pkgdesc='a free network protocol analyzer for Unix/Linux and Windows - GTK 2 frontend'
   depends=('desktop-file-utils' 'gtk2' 'portaudio' 'wireshark-cli' 'wireshark-common')
-  install=wireshark-gui.install
 
   cd ${pkgbase}-${pkgver}
 
