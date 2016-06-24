@@ -2,7 +2,7 @@
 # Contributor: drakkan <nicola.murino@gmail.com>
 
 pkgname=botan-1.10
-pkgver=1.10.12
+pkgver=1.10.13
 pkgrel=1
 pkgdesc='Crypto library written in C++'
 license=('BSD')
@@ -11,7 +11,7 @@ url='http://botan.randombit.net/'
 depends=('gcc-libs' 'sh')
 makedepends=('python2')
 source=("http://botan.randombit.net/releases/Botan-${pkgver}.tgz")
-sha256sums=('affc3a79919577943f896e64d3e4a4dcc4970c5bf80cc98c7f3a3144745eac27')
+sha256sums=('23ec973d4b4a4fe04f490d409e08ac5638afe3aa09acd7f520daaff38ba19b90')
 
 build() {
   cd "Botan-$pkgver"
