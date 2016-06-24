@@ -3,7 +3,7 @@
 _pkgname=libQtShadowsocks
 pkgname=libqtshadowsocks
 pkgver=1.9.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A lightweight library for shadowsocks."
 arch=("i686" "x86_64")
 url="https://github.com/librehat/$_pkgname"
