@@ -2,7 +2,7 @@
 
 pkgname=shadowsocks-qt5
 pkgver=2.7.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A fast, reliable and cross-platform GUI fronted for Shadowsocks."
 arch=("i686" "x86_64")
 url="http://github.com/librehat/$pkgname"
