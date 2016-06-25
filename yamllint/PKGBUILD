@@ -1,7 +1,7 @@
 _pkgname=yamllint
-pkgname=python-yamllint
+pkgname=yamllint
 pkgver=1.2.2
-pkgrel=1
+pkgrel=2
 pkgdesc="A linter for YAML files."
 arch=('any')
 url="https://github.com/adrienverge/yamllint"
