@@ -3,7 +3,7 @@
 
 pkgname=newrelic-php53
 _pkgname=newrelic-php5
-pkgver=6.2.0.158
+pkgver=6.4.0.163
 _libver=20090626
 pkgrel=1
 pkgdesc="NewRelic PHP 5.3"
@@ -16,7 +16,7 @@ install=$pkgname.install
 source=("https://download.newrelic.com/php_agent/release/$_pkgname-$pkgver-linux.tar.gz"
         "newrelic-daemon.service"
         "$pkgname.install")
-md5sums=('01fbc0175e4ae522522273ef7f4c6ec0'
+md5sums=('838e9ac9af92a1edc68098abe5582d8e'
          '4fc78347663adcb32ed28eddb546619c'
          '32167cda26104c489f5a672a87543821')
 
