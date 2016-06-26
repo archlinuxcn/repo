@@ -2,6 +2,7 @@
 
 from lilaclib import *
 
+depends = ["ncurses5-compat-libs"]
 build_prefix = 'extra-x86_64'
 post_build = aur_post_build
 
