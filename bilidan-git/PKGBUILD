@@ -1,7 +1,7 @@
 # Maintainer: Tom Bu <tom.bu[at]openmailbox.org>
 # Maintainer: Justin Wong <justin.w.xd[at]gmail.com>
 pkgname=bilidan-git
-pkgver=20160103
+pkgver=20160512
 pkgrel=1
 pkgdesc="Play videos on Bilibili.com with MPV and Danmaku2ASS"
 url="https://github.com/m13253/BiliDan"
