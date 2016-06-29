@@ -1,43 +1,56 @@
---- a/pkgs/conda-4.0.5-py35_0/lib/python3.5/site-packages/conda/install.py	2016-03-16 20:47:12.000000000 +0100
-+++ b/pkgs/conda-4.0.5-py35_0/lib/python3.5/site-packages/conda/install.py	2016-04-05 11:34:17.102042633 +0200
-@@ -267,21 +267,23 @@
-     return res
+--- a/pkgs/conda-4.1.4-py35_0/lib/python3.5/site-packages/conda/install.py	2016-06-29 10:46:47.704920551 +0200
++++ b/pkgs/conda-4.1.4-py35_0/lib/python3.5/site-packages/conda/install.py	2016-06-29 10:53:40.637452974 +0200
+@@ -390,14 +390,14 @@
+     return data
  
- def update_prefix(path, new_prefix, placeholder=prefix_placeholder,
--                  mode='text'):
-+                  mode='text', instdir=None):
+ 
+-def replace_prefix(mode, data, placeholder, new_prefix):
++def replace_prefix(mode, data, placeholder, instdir):
+     if mode == 'text':
+-        data = data.replace(placeholder.encode('utf-8'), new_prefix.encode('utf-8'))
++        data = data.replace(placeholder.encode('utf-8'), instdir.encode('utf-8'))
+     # Skip binary replacement in Windows.  Some files do have prefix information embedded, but
+     #    this should not matter, as it is not used for things like RPATH.
+     elif mode == 'binary':
+         if not on_win:
+-            data = binary_replace(data, placeholder.encode('utf-8'), new_prefix.encode('utf-8'))
++            data = binary_replace(data, placeholder.encode('utf-8'), instdir.encode('utf-8'))
+         else:
+             logging.debug("Skipping prefix replacement in binary on Windows")
+     else:
+@@ -405,17 +405,19 @@
+     return data
+ 
+ 
+-def update_prefix(path, new_prefix, placeholder=prefix_placeholder, mode='text'):
++def update_prefix(path, new_prefix, placeholder=prefix_placeholder, mode='text', instdir=None):
 +    if instdir is None:
 +        instdir = new_prefix
-     if on_win and (placeholder != prefix_placeholder) and ('/' in placeholder):
-         # original prefix uses unix-style path separators
+     if on_win:
+         # force all prefix replacements to forward slashes to simplify need to escape backslashes
          # replace with unix-style path separators
 -        new_prefix = new_prefix.replace('\\', '/')
 +        instdir = instdir.replace('\\', '/')
  
      path = os.path.realpath(path)
      with open(path, 'rb') as fi:
-         data = fi.read()
-     if mode == 'text':
-         new_data = data.replace(placeholder.encode('utf-8'),
--                                new_prefix.encode('utf-8'))
-+                                instdir.encode('utf-8'))
-     elif mode == 'binary':
-         new_data = binary_replace(data, placeholder.encode('utf-8'),
--                                  new_prefix.encode('utf-8'))
-+                                  instdir.encode('utf-8'))
-     else:
-         sys.exit("Invalid mode:" % mode)
+         original_data = data = fi.read()
  
-@@ -604,7 +606,7 @@
- def load_meta(prefix, dist):
-     return is_linked(prefix, dist)
+-    data = replace_prefix(mode, data, placeholder, new_prefix)
++    data = replace_prefix(mode, data, placeholder, instdir)
+     if not on_win:
+         data = replace_long_shebang(mode, data)
  
--def link(pkgs_dir, prefix, dist, linktype=LINK_HARD, index=None):
-+def link(pkgs_dir, prefix, dist, linktype=LINK_HARD, index=None, instdir=None):
-     '''
+@@ -1019,7 +1021,7 @@
+     log.debug("Could not move %s to trash" % path)
+ 
+ 
+-def link(prefix, dist, linktype=LINK_HARD, index=None, shortcuts=False):
++def link(prefix, dist, linktype=LINK_HARD, index=None, shortcuts=False, instdir=None):
+     """
      Set up a package in a specified (environment) prefix.  We assume that
      the package has been extracted (using extract() above).
-@@ -657,7 +659,7 @@
+@@ -1071,7 +1073,7 @@
          for f in sorted(has_prefix_files):
              placeholder, mode = has_prefix_files[f]
              try:
@@ -46,7 +59,7 @@
              except PaddingError:
                  sys.exit("ERROR: placeholder '%s' too short in: %s\n" %
                           (placeholder, dist))
-@@ -802,6 +804,10 @@
+@@ -1214,6 +1216,10 @@
                   default=sys.prefix,
                   help="prefix (defaults to %default)")
  
@@ -57,7 +70,7 @@
      p.add_option('-v', '--verbose',
                   action="store_true")
  
-@@ -812,9 +818,14 @@
+@@ -1224,10 +1230,15 @@
      logging.basicConfig()
  
      prefix = opts.prefix
@@ -66,18 +79,19 @@
 +    else:
 +        instdir = opts.instdir
      pkgs_dir = join(prefix, 'pkgs')
+     pkgs_dirs = [pkgs_dir]
      if opts.verbose:
          print("prefix: %r" % prefix)
 +        print("instdir : %r" % instdir)
  
      if opts.file:
          idists = list(yield_lines(join(prefix, opts.file)))
-@@ -830,7 +841,7 @@
+@@ -1244,7 +1255,7 @@
      for dist in idists:
          if opts.verbose:
              print("linking: %s" % dist)
--        link(pkgs_dir, prefix, dist, linktype)
-+        link(pkgs_dir, prefix, dist, linktype, instdir=instdir)
+-        link(prefix, dist, linktype)
++        link(prefix, dist, linktype, instdir=instdir)
  
      messages(prefix)
  
