@@ -3,8 +3,8 @@
 # Contributor: Christoph Bayer <chrbayer@criby.de>
 
 pkgname=android-sdk-platform-tools
-pkgver=r23.1.0
-pkgrel=4
+pkgver=r24
+pkgrel=1
 pkgdesc='Platform-Tools for Google Android SDK (adb and fastboot)'
 arch=('x86_64')
 url="http://developer.android.com/sdk/index.html"
@@ -20,7 +20,7 @@ _ptools="opt/${_sdk}/platform-tools"
 source=("https://dl-ssl.google.com/android/repository/platform-tools_${pkgver}-linux.zip"
         "adb.service"
         "license.html")
-sha256sums=('8a4524cced3ebead1ca1d0fa9d82592e42edb538df943af753a66a6609a55a07'
+sha256sums=('076368b337d042d163364594dda63b7e778835f636fafb2c8af4d4a604175c32'
             '1c219abea7584ae13f3f76b04e269ef21c1699d6bd29b7615523f927a9d10deb'
             'a7f3a259290ae6a5dc61bd34ecae36e2b7e2f644865ddc3c7fde5d248b8a7cef')
 
