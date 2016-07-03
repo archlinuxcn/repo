@@ -14,11 +14,14 @@ depends=('hdf5')
 makedepends=('cmake' 'python2')
 optdepends=('python2: python bindings'
             'cuda: cuda support')
-source=("http://people.cs.ubc.ca/~mariusm/uploads/FLANN/flann-${pkgver}-src.zip")
-md5sums=('a0ecd46be2ee11a68d2a7d9c6b4ce701')
+source=("http://people.cs.ubc.ca/~mariusm/uploads/FLANN/flann-${pkgver}-src.zip"
+        "http://pkgs.fedoraproject.org/cgit/rpms/flann.git/plain/flann-1.8.4-gcc6.patch")
+md5sums=('a0ecd46be2ee11a68d2a7d9c6b4ce701'
+         '21ec2d7009fb09307ab74909f3b1d04e')
 
 build() {
-  cd $srcdir/flann-${pkgver}-src
+  cd "$srcdir/flann-${pkgver}-src"
+  patch -p0 < ../flann-1.8.4-gcc6.patch
 
   sed -i 's/lib64/lib/g' cmake/flann_utils.cmake
 
@@ -54,10 +57,10 @@ build() {
 }
 
 package() {
-  cd $srcdir/flann-${pkgver}-src
-  
+  cd "$srcdir/flann-${pkgver}-src"
+
   cd build
-  make DESTDIR=$pkgdir install
+  make DESTDIR="$pkgdir" install
 
   #install license file
   install -D -m644 ../COPYING "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
