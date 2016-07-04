@@ -1,31 +1,32 @@
-# Maintainer: Maxime Gauduin <alucryd@archlinux.org>
+# Maintainer: zach <zach {at} zach-adams {dot} com>
+# Contributor: Gordian Edenhofer <gordian.edenhofer[at]yahoo[dot]de
 
-pkgname=numix-circle-icon-theme-git
-pkgver=0.r3534.f59d18a
+pkgname=gtk-theme-arc-git
+_pkgname=arc-theme
+_pkgauthor=horst3180
+pkgver=561.4d58f02
 pkgrel=1
-pkgdesc='Circle icon theme from the Numix project'
+pkgdesc="A flat theme with transparent elements for GTK 3, GTK 2 and Gnome-Shell. Latest commit from the master branch on Github."
 arch=('any')
-url='http://numixproject.org/'
+url="https://github.com/horst3180/${_pkgname}"
 license=('GPL3')
-depends=('numix-icon-theme-git')
+depends=('gtk3' 'gtk-engine-murrine')
 makedepends=('git')
-provides=('numix-circle-icon-theme' 'numix-circle-light-icon-theme')
-conflicts=('numix-circle-icon-theme' 'numix-circle-light-icon-theme')
-options=('!strip')
-source=('numix-circle-icon-theme::git+https://github.com/numixproject/numix-icon-theme-circle.git')
+source=(${_pkgname}::"git+https://github.com/horst3180/${_pkgname}.git")
 sha256sums=('SKIP')
+conflicts=('gtk-theme-arc')
+provides=('gtk-theme-arc')
 
 pkgver() {
-  cd numix-circle-icon-theme
+	cd "${srcdir}/${_pkgname}"
+	echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+}
 
-  echo "0.r$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+build() {
+	cd "${srcdir}/${_pkgname}"
+	./autogen.sh --prefix=/usr
 }
 
 package() {
-  cd numix-circle-icon-theme
-
-  install -dm 755 "${pkgdir}"/usr/share/icons
-  cp -dr --no-preserve='ownership' Numix-Circle{,-Light} "${pkgdir}"/usr/share/icons/
+	make -C "${srcdir}/${_pkgname}" DESTDIR="${pkgdir}" install
 }
-
-# vim: ts=2 sw=2 et:
