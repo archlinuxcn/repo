@@ -34,7 +34,7 @@ prepare() {
 
 build() {
   cd "${srcdir}/${pkgname}/build"
-  qmake-qt5 -r .. PREFIX=/usr INSTALL_LIBS_PREFIX=/usr/lib INSTALL_HEADERS_PREFIX=/usr/include BUILD_MODE+=lib
+  qmake-qt5 -r .. QMAKE_CFLAGS_ISYSTEM= PREFIX=/usr INSTALL_LIBS_PREFIX=/usr/lib INSTALL_HEADERS_PREFIX=/usr/include BUILD_MODE+=lib
   make
 }
 
