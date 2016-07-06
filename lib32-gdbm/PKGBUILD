@@ -1,47 +1,44 @@
-# Maintainer: Maxime Gauduin <alucryd@gmail.com>
+# Maintainer: Maxime Gauduin <alucryd@archlinux.org>
 # Contributor: josephgbr <rafael.f.f1@gmail.com>
 # Contributor: Maribu <leonidas200@web.de>
 
 pkgname=lib32-gdbm
-pkgver=1.11
+pkgver=1.12
 pkgrel=1
 pkgdesc='GNU database library'
 arch=('x86_64')
 url='http://www.gnu.org/software/gdbm/gdbm.html'
 license=('GPL')
-depends=('lib32-glibc' "${pkgname#*-}=${pkgver}")
+depends=('gdbm' 'lib32-glibc')
 makedepends=('gcc-multilib')
-source=("ftp://ftp.gnu.org/gnu/gdbm/${pkgname#*-}-${pkgver}.tar.gz"
+source=("ftp://ftp.gnu.org/gnu/gdbm/gdbm-${pkgver}.tar.gz"
         'gdbm-1.10-zeroheaders.patch')
 options=('!makeflags')
-sha256sums=('8d912f44f05d0b15a4a5d96a76f852e905d051bb88022fcdfd98b43be093e3c3'
+sha256sums=('d97b2166ee867fd6ca5c022efee80702d6f30dd66af0e03ed092285c3af9bcea'
             'fb4b3b3c05e85584c2d8f1af38c63219a3fb2aa152743ae6a6396e6952becc5c')
 
 prepare() {
-  cd ${pkgname#*-}-${pkgver}
+  cd gdbm-${pkgver}
 
   patch -Np1 -i ../gdbm-1.10-zeroheaders.patch
 }
 
 build() {
-  cd ${pkgname#*-}-${pkgver}
+  cd gdbm-${pkgver}
 
   export CC='gcc -m32'
   export CXX='g++ -m32'
   export PKG_CONFIG_PATH='/usr/lib32/pkgconfig'
 
-  ./configure --prefix='/usr' --libdir='/usr/lib32' --enable-libgdbm-compat
+  ./configure \
+    --prefix='/usr' \
+    --libdir='/usr/lib32' \
+    --enable-libgdbm-compat
   make
 }
 
-check() {
-  cd ${pkgname#*-}-${pkgver}
-
-  make check
-}
-
 package() {
-  cd ${pkgname#*-}-${pkgver}
+  cd gdbm-${pkgver}
 
   make DESTDIR="${pkgdir}" install
   rm -rf "${pkgdir}"/usr/{bin,share,include}
