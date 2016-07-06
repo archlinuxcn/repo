@@ -6,21 +6,18 @@
 # Contributor in Chakra: totoloco <totoloco@gmx.com>
 
 pkgname=cutegram-git
-pkgver=2.7.1.stable.r8.g5645a99
+pkgver=2.9.5.dev.r10.g2827175
 pkgrel=1
 pkgdesc="Telegram client by Aseman Land"
 arch=('i686' 'x86_64')
 url="http://aseman.co/cutegram"
 license=('GPL')
-depends=('qt5-base' 'qt5-declarative' 'qt5-multimedia' 'qt5-quick1'
-         'qt5-webkit' 'qt5-imageformats' 'qt5-graphicaleffects'
-         'qt5-quickcontrols' 'telegramqml>=0.9')
+depends=('libqtelegram-ae' 'telegramqml' 'aseman-qt-tools')
 optdepends=('gst-plugins-good: for audio and notification support'
             'gst-plugins-bad: for audio support')
 makedepends=('git')
-source=("${pkgname}"::"git+https://github.com/Aseman-Land/Cutegram.git"
-        "asemantools"::"git+https://github.com/Aseman-Land/aseman-qt-tools.git")
-md5sums=('SKIP' 'SKIP')
+source=("${pkgname}"::"git+https://github.com/Aseman-Land/Cutegram.git")
+md5sums=('SKIP')
 
 pkgver() {
   cd "${srcdir}/${pkgname}"
@@ -32,15 +29,12 @@ pkgver() {
 
 prepare() {
   cd "${srcdir}/${pkgname}"
-  git submodule init
-  git config submodule.asemantools.url $srcdir/asemantools
-  git submodule update
-  mkdir -p build 
+  mkdir -p build
 }
 
 build() {
   cd "${srcdir}/${pkgname}/build"
-  qmake-qt5 -r .. PREFIX=/usr
+  qmake-qt5 .. QMAKE_CFLAGS_ISYSTEM= PREFIX=/usr
   make
 }
 

@@ -6,7 +6,7 @@
 
 from lilaclib import *
 
-depends = ['libqtelegram-ae-git', 'telegramqml-git']
+depends = ['libqtelegram-ae-git', 'telegramqml-git', 'aseman-qt-tools-git']
 
 build_prefix = 'extra-x86_64'
 pre_build = aur_pre_build

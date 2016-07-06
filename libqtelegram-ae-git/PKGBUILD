@@ -7,12 +7,12 @@
 
 pkgname=libqtelegram-ae-git
 epoch=3
-pkgver=6.1.stable.r55.ge4c4966
+pkgver=10.0.0.stable.r0.ge4c4966
 pkgrel=1
 pkgdesc="Telegram library written in Qt based on telegram-cli code"
 arch=('x86_64' 'i686')
 license=('GPL3')
-url="https://launchpad.net/libqtelegram"
+url="https://github.com/Aseman-Land/libqtelegram-aseman-edition"
 provides=("libqtelegram-ae=$epoch:$pkgver")
 conflicts=('libqtelegram-ae')
 depends=('qt5-base' 'qt5-multimedia')
@@ -27,18 +27,18 @@ pkgver() {
     printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
   )
 }
- 
+
 prepare() {
   cd $pkgname
   mkdir -p build
 }
- 
+
 build() {
   cd $pkgname/build
-  qmake-qt5 -r .. QMAKE_CFLAGS_ISYSTEM= PREFIX=/usr INSTALL_LIBS_PREFIX=/usr/lib INSTALL_HEADERS_PREFIX=/usr/include
+  qmake-qt5 -r QMAKE_CFLAGS_ISYSTEM= CONFIG+=typeobjects ..
   make
-} 
- 
+}
+
 package() {
   cd $pkgname/build
   make INSTALL_ROOT="$pkgdir" install

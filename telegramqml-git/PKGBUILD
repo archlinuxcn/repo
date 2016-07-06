@@ -2,15 +2,15 @@
 # Contributor: nylocx <aur@nyloc.de>
 
 pkgname=telegramqml-git
-pkgver=0.9.2.r21.g7d5110a
+pkgver=2.0.0.r0.g351f3e4
 pkgrel=1
 pkgdesc="Telegram API tools for QtQml and Qml"
 arch=('i686' 'x86_64')
 url="https://github.com/Aseman-Land/TelegramQML"
 license=('GPL')
 depends=('qt5-base' 'qt5-declarative' 'qt5-multimedia'
-         'qt5-webkit>=5.5' 'qt5-imageformats' 'qt5-graphicaleffects'
-         'qt5-quickcontrols' 'libqtelegram-ae>=2:6.0')
+         'qt5-webkit' 'qt5-imageformats' 'qt5-graphicaleffects'
+         'qt5-quickcontrols' 'libqtelegram-ae')
 makedepends=('git')
 source=("${pkgname}"::"git+https://github.com/Aseman-Land/TelegramQML.git")
 md5sums=('SKIP')
@@ -27,14 +27,12 @@ pkgver() {
 
 prepare() {
   cd "${srcdir}/${pkgname}"
-  # fixing C++11 error
-  echo "CONFIG += c++11" >> telegramqml.pro
-  mkdir -p build 
+  mkdir -p build
 }
 
 build() {
   cd "${srcdir}/${pkgname}/build"
-  qmake-qt5 -r .. QMAKE_CFLAGS_ISYSTEM= PREFIX=/usr INSTALL_LIBS_PREFIX=/usr/lib INSTALL_HEADERS_PREFIX=/usr/include BUILD_MODE+=lib
+  qmake-qt5 -r .. QMAKE_CFLAGS_ISYSTEM=
   make
 }
 
