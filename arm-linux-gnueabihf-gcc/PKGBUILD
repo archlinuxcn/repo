@@ -3,14 +3,12 @@
 
 _target="arm-linux-gnueabihf"
 pkgbase=${_target}-gcc
-_pkgname=(gcc gcc-libs gcc-fortran
-          gcc-objc
-          # gcc-go
-         )
-pkgver=5.3.0
-_pkgver=5
-_islver=0.14.1
+_pkgname=(gcc gcc-libs gcc-fortran gcc-objc)
+pkgver=6.1.1
+_pkgver=1
+_islver=0.16.1
 pkgrel=1
+_commit=36375203
 #_snapshot=5-20150623
 pkgdesc="The GNU Compiler Collection (${_target})"
 arch=(i686 x86_64)
@@ -19,21 +17,14 @@ url="http://gcc.gnu.org"
 depends=("${_target}-binutils>=2.25" "${_target}-glibc" 'libmpc' 'elfutils')
 options=('!buildflags' '!libtool' '!emptydirs' 'zipman' 'docs'
          '!strip' 'staticlibs')
-source=(
-  ftp://gcc.gnu.org/pub/gcc/releases/gcc-${pkgver}/gcc-${pkgver}.tar.bz2
-  # ftp://gcc.gnu.org/pub/gcc/snapshots/${_snapshot}/gcc-${_snapshot}.tar.bz2
-  http://isl.gforge.inria.fr/isl-${_islver}.tar.bz2
-  0001-ARMv5-disable-LDRD-STRD.patch)
-md5sums=('c9616fd448f980259c31de613e575719'
-         '118d1a379abf7606a3334c98a8411c79'
+source=(git://gcc.gnu.org/git/gcc.git#commit=${_commit}
+        http://isl.gforge.inria.fr/isl-${_islver}.tar.bz2
+        0001-ARMv5-disable-LDRD-STRD.patch)
+md5sums=('SKIP'
+         'ac1f25a0677912952718a51f5bc20f32'
          '924a9bcdd7852410667f04ce18c305d7')
 
-if [ -n "${_snapshot}" ]; then
-    _basedir=gcc-${_snapshot}
-else
-  _basedir=gcc-${pkgver}
-fi
-
+_basedir=gcc
 _libdir="usr/lib/gcc/${_target}/$pkgver"
 
 prepare() {
@@ -119,8 +110,7 @@ build() {
      --disable-nls \
      --with-float=hard \
      --enable-interwork \
-     --enable-addons \
-     --with-default-libstdcxx-abi=gcc4-compatible
+     --enable-addons
 
   make
 }
@@ -136,12 +126,12 @@ package_gcc-libs() {
   rm "${pkgdir}/${_libdir}/libgcc_eh.a"
 
   for lib in libatomic \
-             libgfortran \
-             libgomp \
-             libitm \
-             libquadmath \
-             libsanitizer/{a,l,ub}san \
-             libstdc++-v3/src; do
+                 libgfortran \
+                 libgomp \
+                 libitm \
+                 libquadmath \
+                 libsanitizer/{a,l,ub}san \
+                 libstdc++-v3/src; do
     make -C $_target/$lib DESTDIR="${pkgdir}" install-toolexeclibLTLIBRARIES
   done
 
@@ -210,7 +200,7 @@ package_gcc-fortran() {
 
   cd gcc-build
   make -C $_target/libgfortran DESTDIR="$pkgdir" \
-       install-{caf,my}execlibLTLIBRARIES \
+       install-cafexeclibLTLIBRARIES \
        install-{toolexeclibDATA,nodist_fincludeHEADERS}
   make -C $_target/libgomp DESTDIR="$pkgdir" install-nodist_fincludeHEADERS
   make -C gcc DESTDIR="$pkgdir" fortran.install-common
