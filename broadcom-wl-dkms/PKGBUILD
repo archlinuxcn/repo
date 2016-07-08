@@ -4,7 +4,7 @@
 
 pkgname=broadcom-wl-dkms
 pkgver=6.30.223.271
-pkgrel=7
+pkgrel=8
 pkgdesc="Broadcom 802.11 Linux STA wireless driver"
 arch=('i686' 'x86_64')
 url="https://www.broadcom.com/support/802.11"
@@ -48,10 +48,12 @@ package() {
   cp -a src lib Makefile dkms.conf "${dest}"
   chmod a-x "${dest}/lib/LICENSE.txt" # Ships with executable bits set
 
-  mkdir -p "${pkgdir}/usr/share/licenses/${pkgname}"
-  ln -rs "${dest}/lib/LICENSE.txt" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
-
   install -D -m 0644 broadcom-wl-dkms.conf "${pkgdir}/usr/lib/modprobe.d/broadcom-wl-dkms.conf"
+
+  local lic="${pkgdir}/usr/share/licenses/${pkgname}"
+  mkdir -p "${lic}"
+  ln -rs "${dest}/lib/LICENSE.txt" "${lic}/LICENSE.shipped"
+  sed -n -e '/Copyright/,/SOFTWARE\./{s/^ \* //;p}' src/wl/sys/wl_linux.c > "${lic}/LICENSE.module"
 }
 
 # vim:set ts=2 sw=2 et:
