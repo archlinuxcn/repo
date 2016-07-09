@@ -23,9 +23,9 @@ stds = [
 ]
 
 if debug:
-  dist_url = 'https://mirrors.ustc.edu.cn/rust-static/dist/'
+  dist_url = 'https://mirrors.ustc.edu.cn/rust-static/dist/index.html'
 else:
-  dist_url = 'https://static.rust-lang.org/dist/'
+  dist_url = 'https://static.rust-lang.org/dist/index.html'
 
 build_prefix = 'extra-x86_64'
 
