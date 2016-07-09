@@ -22,7 +22,6 @@ optdepends=('abs: Provides PKGBUILD prototypes for newpkg'
             'namcap: Package analyzer')
 provides=('newpkg' 'pip2arch')
 backup=('etc/pkgtools/newpkg.conf'
-        'etc/pkgtools/pkgfile.conf'
         'etc/pkgtools/spec2arch.conf')
 install=pkgtools.install
 source=("${pkgname}-v${pkgver}.tar.gz::https://github.com/Daenyth/pkgtools/tarball/v$pkgver"
