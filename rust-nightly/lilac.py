@@ -4,6 +4,7 @@ import os
 import glob
 import tornado.template
 import urllib.request
+from urllib.parse import urljoin
 
 from pkg_resources import parse_version
 
@@ -50,7 +51,7 @@ def get_latest_version():
 class Std:
   def __init__(self, platform):
     self.name = 'rust-std-nightly-' + platform
-    self.url = dist_url + self.name + '.tar.gz'
+    self.url = urljoin(dist_url, self.name + '.tar.gz')
     self.platform = platform
     self.optdepends = toolchain.get(platform)
 
