@@ -12,5 +12,5 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.customize ["modifyvm", :id, "--memory", "1024"]
   end
 
-  config.vm.provision "shell", inline: "pacman -Sy --noconfirm pkgbuild-introspection go"
+  config.vm.provision "shell", inline: "pacman -Sy --noconfirm pkgbuild-introspection"
 end
