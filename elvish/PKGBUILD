@@ -1,8 +1,8 @@
 # Maintainer: Haochen Tong <i at hexchain dot org>
 
 pkgname=elvish
-pkgver=0.1
-pkgrel=2
+pkgver=0.2
+pkgrel=1
 pkgdesc="A novel Unix shell."
 arch=('i686' 'x86_64')
 url="https://github.com/elves/elvish"
@@ -10,7 +10,7 @@ license=('custom:2-clause BSD')
 provides=('elvish')
 makedepends=('git' 'go')
 depends=('glibc')
-source=("git+https://github.com/elves/elvish.git#tag=0.1")
+source=("git+https://github.com/elves/elvish.git#tag=$pkgver")
 md5sums=('SKIP')
 install=elvish.install
 
