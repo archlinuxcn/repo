@@ -3,7 +3,7 @@
 # Contributor: Tobias Veit - nIcE <m.on.key.tobi[at]gmail[dot]com>
 
 pkgname=metasploit
-pkgver=4.12.9
+pkgver=4.12.13
 pkgrel=1
 pkgdesc='An advanced open-source platform for developing, testing, and using exploit code'
 url='https://www.metasploit.com/'
@@ -12,13 +12,14 @@ license=('BSD')
 depends=('ruby' 'libpcap' 'postgresql-libs' 'ruby-bundler' 'sqlite' 'libxslt' 'git')
 optdepends=('java-runtime: msfgui support'
             'ruby-pg: database support')
-options=('!strip')
+options=('!strip' '!emptydirs')
 source=(${pkgname}-${pkgver}.tar.gz::https://github.com/rapid7/metasploit-framework/archive/${pkgver}.tar.gz)
-sha512sums=('40a281390c12da564331b56cf911fbdeb3ac0edd791a251f0568b1ca6448cd3ee32da8a3df541770147d5e997817287187db1e0be20bad72f0d853c0e5b77199')
+sha512sums=('fa4b00166cc4f987b1a202109e52c4565689d0449ed7d4bfb886c8b394b69bf7fde1da266633280e22d4852ee51bc879667c0d42e01173a5cb09aa599759dd46')
 
 prepare() {
   cd ${pkgname}-framework-${pkgver}
   bundle config build.nokogiri --use-system-libraries
+  sed 's|git ls-files|find -type f|' -i metasploit-framework.gemspec
 }
 
 build() {
@@ -41,6 +42,9 @@ package() {
 
   install -Dm 644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
   install -Dm 644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
+  install -d "${pkgdir}/usr/share/doc"
+  mv "${pkgdir}/opt/${pkgname}/documentation" "${pkgdir}/usr/share/doc/${pkgname}"
+  rm "${pkgdir}/usr/bin/msfupdate"
 }
 
 # vim: ts=2 sw=2 et:
