@@ -27,7 +27,8 @@ makedepends=('gcc-fortran' 'arpack' 'fftw' 'git' 'gmp' 'libgit2' 'libunwind-git'
              'llvm-julia' 'mpfr' 'pcre2' 'suitesparse' 'python2-sphinx'
              'python2-sphinx_rtd_theme' 'python2-pip' 'texlive-langcjk'
              'texlive-latexextra' 'openspecfun' 'openblas'
-             'libutf8proc-git' 'patchelf' 'openblas-lapack' openlibm)
+             'libutf8proc-git' 'patchelf' 'openblas-lapack' openlibm
+             mbedtls libssh)
 options=('debug' '!strip')
 source=('git://github.com/JuliaLang/julia')
 md5sums=('SKIP')
@@ -60,6 +61,8 @@ julia_opts=(prefix=/usr sysconfdir=/etc
             USE_SYSTEM_SUITESPARSE=1
             USE_SYSTEM_UTF8PROC=1
             USE_SYSTEM_LIBGIT2=1
+            USE_SYSTEM_LIBSSH2=1
+            USE_SYSTEM_MBEDTLS=1
             USE_SYSTEM_PATCHELF=1
             USE_LLVM_SHLIB=1
             LIBBLASNAME=libopenblas
