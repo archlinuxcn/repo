@@ -3,12 +3,20 @@
 # Contributor: Michael Jakl <jakl.michael@gmail.com>
 # With contributions from many kind people at https://aur.archlinux.org/packages/julia-git/
 
+BUILD_DOC=1
+
 pkgbase=julia-git
 if [[ "$CARCH" = x86_64 ]]; then
-    pkgname=('julia-git' 'julia-git-avx2' 'julia-git-docs')
+    pkgname=('julia-git' 'julia-git-avx2')
+    BUILD_DOC=0
 else
-    pkgname=('julia-git' 'julia-git-docs')
+    pkgname=('julia-git')
 fi
+
+if ((BUILD_DOC)); then
+    pkgname+=('julia-git-docs')
+fi
+
 pkgver=0.5.0.dev.5184.g8019433
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
@@ -137,7 +145,7 @@ build() {
   if [[ "$CARCH" = x86_64 ]]; then
       (build_in julia-avx2 0 "${julia_avx2_opts[@]}")
   fi
-  (build_in julia 1 "${julia_opts[@]}")
+  (build_in julia $BUILD_DOC "${julia_opts[@]}")
 }
 
 package-julia-in() {
