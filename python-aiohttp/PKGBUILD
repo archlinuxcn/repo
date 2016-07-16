@@ -1,15 +1,15 @@
 _pkgname=aiohttp
 pkgname=python-aiohttp
-pkgver=0.22.0
-pkgrel=2
+pkgver=0.22.1
+pkgrel=1
 pkgdesc="http client/server for asyncio"
 arch=('i686' 'x86_64')
 url="https://github.com/KeepSafe/aiohttp/"
 license=('Apache')
-depends=('python' 'python-chardet')
+depends=('python' 'python-chardet' 'python-multidict')
 makedepends=('cython' 'python-setuptools')
-source=('https://pypi.python.org/packages/4e/72/d3cf089212019330003607d875e9adca2c71dbf56a8a14bb414c305534eb/aiohttp-0.22.0.tar.gz')
-md5sums=('d260682e79e8a9792012d9195fe41927')
+source=('https://pypi.python.org/packages/c4/e6/02dde6fce60b1b5b79e6411d972a720be4440dba7bb94285afd9ed2ec6e1/aiohttp-0.22.1.tar.gz')
+md5sums=('2ec9d5ad9612fa617beb92f2ef43d97f')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
