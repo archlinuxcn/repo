@@ -1,0 +1,26 @@
+From 214a4e430dd0062ec62731113fd2564e0b0d4a89 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sun, 17 Jul 2016 18:03:31 -0400
+Subject: [PATCH] Fix coverage for the first statement in the function
+
+Fixes #17442
+---
+ src/codegen.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/codegen.cpp b/src/codegen.cpp
+index af6c6ea..1510449 100644
+--- a/src/codegen.cpp
++++ b/src/codegen.cpp
+@@ -4640,6 +4640,8 @@ static std::unique_ptr<Module> emit_function(jl_lambda_info_t *lam, jl_llvm_func
+     if (ctx.debug_enabled)
+         // set initial line number
+         builder.SetCurrentDebugLocation(topdebugloc);
++    if (do_coverage)
++        coverageVisitLine(ctx.file, toplineno);
+     bool prevlabel = false;
+     int lno = -1;
+     int prevlno = -1;
+-- 
+2.9.0
+
