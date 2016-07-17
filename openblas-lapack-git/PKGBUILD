@@ -72,7 +72,10 @@ build() {
 package_openblas-git() {
   cd "${_pkgname}"
 
-  make "${_config[@]}" PREFIX="${pkgdir}/usr" install
+  make "${_config[@]}" PREFIX="${pkgdir}/usr" install 2> error.log || {
+    cat error.log
+    return 1
+  }
 
   # Install license
   install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
