@@ -1,10 +1,10 @@
 # Maintainer: Alexander F Rødseth <xyproto@archlinux.org>
 # Contributor: Daniel Micay <danielmicay@gmail.com>
-# Contributor: Gordin <9ordin @t gmail dot com>
+# Contributor: Gordin <9ordin@gmail.com>
 
 pkgname=android-sdk
 pkgver=25.1.7
-pkgrel=2
+pkgrel=3
 pkgdesc='Google Android SDK'
 arch=('x86_64' 'i686')
 url='http://developer.android.com/sdk/'
@@ -27,8 +27,8 @@ source=("https://dl.google.com/android/repository/tools_r${pkgver}-linux.zip"
 sha1sums=('36869e6c81cda18f862959a92301761f81bc06b8'
           'f359ac923ed008dae3a007a513d26cfbaf025626'
           '8f886de363ad91a7f93a0c6ded993e99bef3e1a7'
-          '78f8574e651c9bf8b7515ecb30c7ef93edbc4a96'
-          '08c85aab7523e22b298891c7047bc0e7adbf3437'
+          'ab7251df3a382a920e81663f25d4a7813918ae1c'
+          '5430d75f38ff74667919efc13f380bef0d67e8ff'
           '145bdf3eb41a56574b289c1577a24bc47097ec83'
           'bfb91be7e0b602d765b7a1fcaf0ce1b7e1a93faa')
 
@@ -47,9 +47,10 @@ package() {
   cp -a tools "$pkgdir/opt/$pkgname"
 
   if [[ $CARCH = i686 ]]; then
-    rm -rf ${pkgdir}/opt/android-sdk/tools/lib/{monitor-,}x86_64 \
-      ${pkgdir}/opt/android-sdk/tools/lib/lib64* \
-      ${pkgdir}/opt/android-sdk/tools/emulator64-*
+    rm -rf \
+      "${pkgdir}"/opt/android-sdk/tools/lib/{monitor-,}x86_64 \
+      "${pkgdir}"/opt/android-sdk/tools/lib/lib64* \
+      "${pkgdir}"/opt/android-sdk/tools/emulator64-*
   fi
 
   # Fix broken permissions
