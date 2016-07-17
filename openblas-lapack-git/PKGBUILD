@@ -66,14 +66,17 @@ build() {
 
   # The OpenBLAS build system doesn't handle update very well.
   git clean -fdx
-  make "${_config[@]}" libs netlib shared
+  make "${_config[@]}" libs netlib shared 2> error.log || {
+    cat error.log
+    return 1
+  }
 }
 
 package_openblas-git() {
   cd "${_pkgname}"
 
-  make "${_config[@]}" PREFIX="${pkgdir}/usr" install 2> error.log || {
-    cat error.log
+  make "${_config[@]}" PREFIX="${pkgdir}/usr" install &> install.log || {
+    cat install.log
     return 1
   }
 
