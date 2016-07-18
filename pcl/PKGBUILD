@@ -6,7 +6,7 @@
 # Contributor: lubosz
 
 pkgname=pcl
-pkgver=1.8.0rc2
+pkgver=1.8.0
 pkgrel=1
 pkgdesc="A comprehensive open source library for n-D Point Clouds and 3D geometry processing"
 arch=('x86_64' 'i686')
@@ -17,7 +17,7 @@ depends=('boost' 'eigen' 'flann' 'vtk' 'qhull' 'qt5-base' 'glu' 'qt5-webkit'
 makedepends=('cmake' 'gl2ps' 'python2' 'libxt')
 optdepends=('cuda' 'openni2' 'python2-sphinx')
 source=("pcl-${pkgver}.tar.gz"::"https://github.com/PointCloudLibrary/pcl/archive/pcl-${pkgver}.tar.gz")
-sha256sums=('d5d5e32c73d89b18bc305b4e1a2499638a63da14f26b89f003c84c433132ab42')
+sha256sums=('9e54b0c1b59a67a386b9b0f4acb2d764272ff9a0377b825c4ed5eedf46ebfcf4')
 
 prepare() {
   cd "${srcdir}/pcl-pcl-${pkgver}"
