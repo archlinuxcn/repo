@@ -17,8 +17,8 @@ if ((BUILD_DOC)); then
     pkgname+=('julia-git-docs')
 fi
 
-pkgver=0.5.0.dev.5475.g39b9d7d
-pkgrel=3
+pkgver=0.5.0.dev.5482.g8d56885
+pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
@@ -30,10 +30,8 @@ makedepends=('gcc-fortran' 'arpack' 'fftw' 'git' 'gmp' 'libgit2' 'libunwind-git'
              'libutf8proc-git' 'patchelf' 'openblas-lapack' openlibm
              mbedtls libssh2)
 options=('debug' '!strip')
-source=('git://github.com/JuliaLang/julia'
-        '0001-Fix-coverage-for-the-first-statement-in-the-function.patch')
-md5sums=('SKIP'
-         'e1b22f59c2b9f0a391d33c81789e4dd7')
+source=('git://github.com/JuliaLang/julia')
+md5sums=('SKIP')
 
 pkgver() {
   cd julia
@@ -109,7 +107,7 @@ EOF
   git reset --hard HEAD
   git clean -fdx
 
-  patch -Np1 < ../0001-Fix-coverage-for-the-first-statement-in-the-function.patch
+  # patch -Np1 < ../
 
   cd doc
 
