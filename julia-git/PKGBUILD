@@ -18,7 +18,7 @@ if ((BUILD_DOC)); then
 fi
 
 pkgver=0.5.0.dev.5475.g39b9d7d
-pkgrel=2
+pkgrel=3
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
@@ -28,7 +28,7 @@ makedepends=('gcc-fortran' 'arpack' 'fftw' 'git' 'gmp' 'libgit2' 'libunwind-git'
              'python2-sphinx_rtd_theme' 'python2-pip' 'texlive-langcjk'
              'texlive-latexextra' 'openspecfun' 'openblas'
              'libutf8proc-git' 'patchelf' 'openblas-lapack' openlibm
-             mbedtls libssh)
+             mbedtls libssh2)
 options=('debug' '!strip')
 source=('git://github.com/JuliaLang/julia'
         '0001-Fix-coverage-for-the-first-statement-in-the-function.patch')
@@ -157,7 +157,8 @@ package-julia-in() {
   arch=('i686' 'x86_64' 'armv7h' 'aarch64')
   depends=(arpack fftw gmp libgit2 libunwind-git llvm-libs-julia
            mpfr pcre2 hicolor-icon-theme xdg-utils suitesparse
-           openspecfun openblas libutf8proc-git openblas-lapack openlibm)
+           openspecfun openblas libutf8proc-git openblas-lapack openlibm
+           mbedtls libssh2)
   conflicts=('julia')
   opts=("${@:2}")
 
