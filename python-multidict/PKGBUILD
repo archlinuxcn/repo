@@ -1,6 +1,6 @@
 _pkgname=multidict
 pkgname=python-multidict
-pkgver=1.2.0
+pkgver=1.2.1
 pkgrel=1
 pkgdesc="multidict implementation"
 arch=('i686' 'x86_64')
@@ -8,8 +8,8 @@ url="https://github.com/aio-libs/multidict/"
 license=('Apache')
 depends=('python' 'python-setuptools')
 makedepends=('cython')
-source=('https://pypi.python.org/packages/1b/8b/2d20d7e568b7f3adb686fad7717f04d198f7914a456ee07758872047706b/multidict-1.2.0.tar.gz')
-md5sums=('999fdd9275a9b85581915160d59b4f44')
+source=('https://pypi.python.org/packages/17/46/d0a6bbdee0f32d0b50a632e2bb5ec6fec949cba62d4f645005e506876cf9/multidict-1.2.1.tar.gz')
+md5sums=('6d13d655c8de0a4436356adb860b6316')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
