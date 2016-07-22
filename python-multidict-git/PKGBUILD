@@ -1,15 +1,22 @@
 _pkgname=multidict
-pkgname=python-multidict
+pkgname=python-multidict-git
 pkgver=1.2.1
 pkgrel=1
 pkgdesc="multidict implementation"
 arch=('i686' 'x86_64')
 url="https://github.com/aio-libs/multidict/"
 license=('Apache')
-depends=('python' 'python-setuptools')
-makedepends=('cython')
-source=('https://pypi.python.org/packages/17/46/d0a6bbdee0f32d0b50a632e2bb5ec6fec949cba62d4f645005e506876cf9/multidict-1.2.1.tar.gz')
-md5sums=('6d13d655c8de0a4436356adb860b6316')
+depends=('python')
+makedepends=('git' 'python-setuptools' 'cython')
+provides=(python-multidict)
+conflicts=(python-multidict)
+replaces=(python-multidict)
+source=('git+https://github.com/aio-libs/multidict/')
+md5sums=('SKIP')
+
+pkgver() {
+  git describe | sed -E 's/^release-//;s/([^-]*-g)/r\1/;s/-/./g'
+}
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"

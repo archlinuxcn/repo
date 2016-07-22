@@ -1,0 +1,24 @@
+_pkgname=Momoko
+pkgname=python-momoko
+pkgver=2.2.3
+pkgrel=1
+pkgdesc="Momoko wraps Psycopg2's functionality for use in Tornado."
+arch=('any')
+url="http://momoko.61924.nl/"
+license=('MIT')
+depends=('python')
+source=('https://pypi.python.org/packages/43/98/80eeb27511184d99fb2357868d8f04004e078a7bbe9e2909a0e20e30874f/Momoko-2.2.3.tar.gz')
+md5sums=('51f5b36504d2e7991bda7012edf07b8f')
+
+build() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  python3 setup.py build
+}
+
+package() {
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+}
+
+# vim:set sw=2 et:
