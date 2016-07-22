@@ -15,6 +15,7 @@ source=('git+https://github.com/aio-libs/multidict/')
 md5sums=('SKIP')
 
 pkgver() {
+  cd "$srcdir/$_pkgname-$pkgver"
   git describe | sed -E 's/^release-//;s/([^-]*-g)/r\1/;s/-/./g'
 }
 
