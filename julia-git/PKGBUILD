@@ -17,8 +17,8 @@ if ((BUILD_DOC)); then
     pkgname+=('julia-git-docs')
 fi
 
-pkgver=0.5.0.dev.5482.g8d56885
-pkgrel=1
+pkgver=0.5.0.pre.5628.g1ef4eb1
+pkgrel=2
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
@@ -168,7 +168,8 @@ package-julia-in() {
   rm -r "$pkgdir/usr/share/doc/julia"
 
   ver=$("$pkgdir/usr/bin/julia" \
-            -f -e 'print(VERSION.major, ".", VERSION.minor, ".", VERSION.patch)')
+            --startup-file=no \
+            -e 'print(VERSION.major, ".", VERSION.minor, ".", VERSION.patch)')
 
   provides=("julia=2:$ver")
 }
