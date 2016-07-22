@@ -15,19 +15,19 @@ source=('git+https://github.com/lorentey/stagger.git')
 md5sums=('SKIP')
 
 pkgver() {
-  cd "$srcdir/$_pkgname-$pkgver"
+  cd "$srcdir/$_pkgname"
   git describe | sed -E 's/^v//;s/([^-]*-g)/r\1/;s/-/./g'
 }
 
 build() {
-  cd "$srcdir/$_pkgname-$pkgver"
+  cd "$srcdir/$_pkgname"
   # Use python-setuptools installed as makedepend.
   sed -i "/distribute_setup/ s/^/#/" setup.py
   python3 setup.py build
 }
 
 package() {
-  cd "$srcdir/$_pkgname-$pkgver"
+  cd "$srcdir/$_pkgname"
 
   python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 }
