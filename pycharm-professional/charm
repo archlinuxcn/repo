@@ -1,17 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import os
 import socket
 import struct
 import sys
+import os
 import time
 
 # see com.intellij.idea.SocketLock for the server side of this interface
 
 RUN_PATH = u'/opt/pycharm-professional/bin/pycharm.sh'
-CONFIG_PATH = u'~/.PyCharm2016.1/config'
-SYSTEM_PATH = u'~/.PyCharm2016.1/system'
+CONFIG_PATH = u'~/.PyCharm2016.2/config'
+SYSTEM_PATH = u'~/.PyCharm2016.2/system'
 
 args = []
 skip_next = False
@@ -92,7 +92,7 @@ if os.path.exists(port_path) and os.path.exists(token_path):
         launch_with_port(port, token)
     except:
         type, value, traceback = sys.exc_info()
-        print('No IDE instance has been found. New one will be started.') # todo error
+        print('Cannot activate a running instance: ' + str(value))
 else:
     print('No IDE instance has been found. New one will be started.')
     if sys.platform == "darwin":

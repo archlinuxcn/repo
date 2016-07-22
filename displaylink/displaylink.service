@@ -1,0 +1,14 @@
+[Unit]
+Description=DisplayLink Manager Service
+After=display-manager.service
+Conflicts=getty@tty7.service
+
+[Service]
+ExecStartPre=/sbin/modprobe evdi
+ExecStart=/usr/lib/displaylink/DisplayLinkManager
+Restart=always
+WorkingDirectory=/usr/lib/displaylink
+RestartSec=5
+
+[Install]
+WantedBy=graphical.target

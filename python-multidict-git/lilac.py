@@ -7,12 +7,11 @@ from lilaclib import *
 build_prefix = 'extra-x86_64'
 
 def pre_build():
-  pypi_pre_build(
-    makedepends = ['cython'],
-    arch = ['i686', 'x86_64'],
-  )
+  vcs_update()
 
-post_build = pypi_post_build
+def post_build():
+  git_add_files('PKGBUILD')
+  git_commit()
 
 if __name__ == '__main__':
   single_main()
