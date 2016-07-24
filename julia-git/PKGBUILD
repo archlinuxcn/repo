@@ -86,7 +86,7 @@ case "$CARCH" in
     _FLTO=''
     ;;
   armv7h)
-    julia_opts=("${julia_opts[@]}" MARCH=armv7-a JULIA_CPU_TARGET=cortex-a7)
+    julia_opts=("${julia_opts[@]}" MARCH=armv7-a JULIA_CPU_TARGET=cortex-a9)
     ;;
 esac
 
