@@ -1,14 +1,15 @@
 # Maintainer: Alfonso Saavedra "Son Link" <sonlink.dourden@gmail.com>
+# Maintainer: Hexchain Tong <i at hexchain dot org>
 pkgname=megasync
-pkgver=2.9.1.0
+pkgver=2.9.5.0
 _pkgver=${pkgver//./_}
 pkgrel=1
 pkgdesc="Sync your files to your Mega account. Official app"
 arch=('i686' 'x86_64')
-url="https://mega.nz/#sync"
+url="https://github.com/meganz/megasync"
 license=('custom:MEGA LIMITED CODE REVIEW LICENCE')
 conflicts=('megatools')
-depends=('openssl' 'c-ares' 'libgcrypt' 'crypto++' 'qt4' 'libpng' 'qtchooser' 'sqlite' 'libuv')
+depends=('curl' 'c-ares' 'crypto++' 'qt4' 'libuv')
 makedepends=('git')
 optdepends=('sni-qt: fix systray issue on KDE and LXQt')
 source=("git+https://github.com/meganz/MEGAsync.git#tag=v${_pkgver}_Linux"
@@ -27,7 +28,6 @@ build(){
   	./autogen.sh
   	./configure \
 		--disable-silent-rules \
- 		--disable-curl-checks \
 		--disable-megaapi \
 		--with-cryptopp \
 		--without-sodium \
@@ -38,7 +38,6 @@ build(){
 		--without-freeimage \
 		--without-readline \
 		--without-termcap \
-		--disable-posix-threads \
 		--disable-examples \
 		--prefix=/usr
  
