@@ -15,13 +15,13 @@ pkgdesc='Very powerful graph editor written in java'
 arch=('any')
 url='http://www.yworks.com/en/products_yed_about.html'
 license=('custom')
-depends=('java-runtime' 'java-environment' 'bash')
+depends=('java-runtime>=8' 'java-environment' 'bash')
 source=("http://www.yworks.com/products/yed/demo/yEd-${pkgver}.zip"
         'yed.desktop'
         'yed')
 sha256sums=('1dc24758535ca033eb5f078524193c9ffcc98635d2832fd403ca9aec01e24bea'
             '342dba6defac88d035253b22e6377d9570858f59367cd486dba4a4dba1621f91'
-            'fee9aff48421fb51f623a371a9aa12c70f388a05f3015b6a3b7c9798312e8e8a')
+            '659784d530d9a3f6a9489d6493b29e947bf534a8da9750b19a907ead1fe2e8ac')
 
 install=${pkgname}.install
 
