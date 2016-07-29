@@ -2,7 +2,7 @@
 # Maintainer: Eric Bélanger <eric@archlinux.org>
 
 pkgname=imagemagick-fftw
-pkgver=6.9.5.2
+pkgver=6.9.5.3
 pkgrel=1
 arch=('i686' 'x86_64')
 url="http://www.imagemagick.org/"
@@ -11,10 +11,11 @@ makedepends=('libltdl' 'lcms2' 'libxt' 'fontconfig' 'libxext' 'ghostscript'
              'openexr' 'libwmf' 'librsvg' 'libxml2' 'liblqr' 'openjpeg2'
              'opencl-headers' 'libcl' 'libwebp' 'subversion' 'glu' 'fftw')
 source=(http://www.imagemagick.org/download/ImageMagick-${pkgver%.*}-${pkgver##*.}.tar.xz{,.asc}
-        perlmagick.rpath.patch)
-sha1sums=('6926ab0b42a7c3e0359c7809cfaab475cde46319'
+        perlmagick.rpath.patch CVE-2016-6491.patch::"http://git.imagemagick.org/repos/ImageMagick/commit/5cb6c1ac.diff")
+sha1sums=('38e70c0e0e3d8d419a0f05dd10d75fc5cf0c00b2'
           'SKIP'
-          'e143cf9d530fabf3b58023899b5cc544ba93daec')
+          'e143cf9d530fabf3b58023899b5cc544ba93daec'
+          '4d7800b26bea97cf1c018405f20c5ea11ef678d4')
 validpgpkeys=('D8272EF51DA223E4D05B466989AB63D48277377A')
 
 prepare() {
@@ -22,6 +23,9 @@ prepare() {
   sed '/AC_PATH_XTRA/d' -i configure.ac
   autoreconf --force --install
   patch -p0 -i "${srcdir}/perlmagick.rpath.patch"
+
+# Fix CVE-2016-6491
+  patch -p1 -i "$srcdir"/CVE-2016-6491.patch
 }
 
 build() {
