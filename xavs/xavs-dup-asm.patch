@@ -1,0 +1,38 @@
+From 8300fbf4918bca2af1af2aee6a337815e90b51e1 Mon Sep 17 00:00:00 2001
+From: Greg Nietsky <gregory@distrotech.co.za>
+Date: Thu, 21 Nov 2013 12:11:32 +0200
+Subject: [PATCH] Remove duplicate deffinitions
+
+---
+ common/i386/cpu-a.asm         | 1 -
+ common/i386/deblock_inter.asm | 2 --
+ 2 files changed, 3 deletions(-)
+
+diff --git a/common/i386/cpu-a.asm b/common/i386/cpu-a.asm
+index ad883cf..cf6a4eb 100644
+--- a/common/i386/cpu-a.asm
++++ b/common/i386/cpu-a.asm
+@@ -37,7 +37,6 @@ SECTION .text
+ 
+ cglobal xavs_cpu_cpuid_test
+ cglobal xavs_cpu_cpuid
+-cglobal xavs_emms
+ 
+ ALIGN 16
+ ;-----------------------------------------------------------------------------
+diff --git a/common/i386/deblock_inter.asm b/common/i386/deblock_inter.asm
+index d6d7208..84e96f6 100644
+--- a/common/i386/deblock_inter.asm
++++ b/common/i386/deblock_inter.asm
+@@ -9,8 +9,6 @@ dw_4:  times 8 dw 4
+ 
+ 
+ SECTION .text
+-cglobal xavs_deblock_v_chroma_mmxext
+-cglobal xavs_deblock_h_chroma_mmxext
+ 
+ 
+ ; out: %4 = |%1-%2|>%3
+-- 
+2.6.2
+
