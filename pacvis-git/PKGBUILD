@@ -2,7 +2,7 @@
 
 pkgname=pacvis-git
 _pkgname=pacvis
-pkgver=0.2.0.r1.g622d5f8
+pkgver=0.2.0.r5.g150a08c
 pkgrel=1
 pkgdesc="Visualize pacman local database using Vis.js, inspired by pacgraph"
 arch=('any')
