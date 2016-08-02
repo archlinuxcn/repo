@@ -12,7 +12,7 @@
 #######################
 
 pkgname=rstudio-desktop-bin
-pkgver=0.99.902
+pkgver=0.99.903
 pkgrel=1
 pkgdesc="A new integrated development environment (IDE) for R (binary version from RStudio official website)"
 arch=('i686' 'x86_64')
@@ -25,8 +25,8 @@ provides=("rstudio-desktop=${pkgver}")
 options=(!strip)
 
 
-_x86md5=363952616a10553aa51f3a9129b9adeb
-_x64md5=d035622f39928246048972ed2064c89a
+_x86md5=761eae80b0ba4d4cd9051a802a2c44e2
+_x64md5=98ea59d3db00e0083d3e4053514f764d
 
 case "$CARCH" in
 	'i686')
