@@ -1,14 +1,14 @@
 _pkgname=plotly
 pkgname=python-plotly
-pkgver=1.12.4
+pkgver=1.12.5
 pkgrel=1
 pkgdesc="Python plotting library for collaborative, interactive, publication-quality graphs."
 arch=('any')
 url="https://plot.ly/python/"
 license=('MIT')
 depends=('python' 'python-requests' 'python-pytz' 'python-setuptools')
-source=('https://pypi.python.org/packages/02/e0/5b739403c3180298ebe277cbc9f5ee99e546ab24768b1732a2d6b381091b/plotly-1.12.4.tar.gz')
-md5sums=('f1ff6b1b18554258aab50449ab571ee2')
+source=('https://pypi.python.org/packages/a3/81/00db7eb0078041fe48964ed7f8298a7163dacc969357c421fc2614cf1b91/plotly-1.12.5.tar.gz')
+md5sums=('6ee8480c40064a3650940001bd7bbc09')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
