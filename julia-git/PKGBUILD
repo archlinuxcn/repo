@@ -33,12 +33,10 @@ makedepends=('gcc-fortran' 'arpack' 'fftw' 'git' 'gmp' 'libgit2' 'libunwind-git'
 options=('debug' '!strip')
 source=('git://github.com/JuliaLang/julia'
         0001-Add-more-try-catch-and-sigatomic-for-top-level-code-.patch
-        0002-Implement-jl_call_in_ctx-on-unix.patch
-        fix-methodcache.patch)
+        0002-Implement-jl_call_in_ctx-on-unix.patch)
 md5sums=('SKIP'
          '1b29434135c622ad7660d5fae3d37467'
-         'bcc9005dc25ee1d5acbdc8002d6329bd'
-         '9be4da93b96c9e1c97bb7f47c7bc2d8e')
+         'bcc9005dc25ee1d5acbdc8002d6329bd')
 
 pkgver() {
   cd julia
@@ -117,7 +115,6 @@ EOF
 
   patch -Np1 < ../0001-Add-more-try-catch-and-sigatomic-for-top-level-code-.patch
   patch -Np1 < ../0002-Implement-jl_call_in_ctx-on-unix.patch
-  patch -Np1 < ../fix-methodcache.patch
 
   cd doc
 
