@@ -1,7 +1,6 @@
 pkgname=telegram-desktop
-pkgver=0.9.56
+pkgver=0.10
 pkgrel=1
-_qtver=5.6.0
 pkgdesc='Official desktop version of Telegram messaging app.'
 arch=('i686' 'x86_64')
 url="https://desktop.telegram.org/"
@@ -52,10 +51,11 @@ makedepends=(
     'libmng'
     'libwebp'
 )
+qt_version=5.6.0
 source=(
     "tdesktop::git+https://github.com/telegramdesktop/tdesktop.git#tag=v$pkgver"
-    "http://download.qt.io/official_releases/qt/${_qtver%.*}/$_qtver/submodules/qtbase-opensource-src-$_qtver.tar.xz"
-    "http://download.qt.io/official_releases/qt/${_qtver%.*}/$_qtver/submodules/qtimageformats-opensource-src-$_qtver.tar.xz"
+    "http://download.qt.io/official_releases/qt/${qt_version%.*}/$qt_version/submodules/qtbase-opensource-src-$qt_version.tar.xz"
+    "http://download.qt.io/official_releases/qt/${qt_version%.*}/$qt_version/submodules/qtimageformats-opensource-src-$qt_version.tar.xz"
     "breakpad::git+https://chromium.googlesource.com/breakpad/breakpad"
     "breakpad-lss::git+https://chromium.googlesource.com/linux-syscall-support"
     "telegramdesktop.desktop"
@@ -76,14 +76,14 @@ prepare() {
     
     mkdir -p "$srcdir/Libraries"
     
-    local qt_patch_file="$srcdir/tdesktop/Telegram/Patches/qtbase_${_qtver//./_}.diff"
-    local qt_src_dir="$srcdir/Libraries/qt${_qtver//./_}"
+    local qt_patch_file="$srcdir/tdesktop/Telegram/Patches/qtbase_${qt_version//./_}.diff"
+    local qt_src_dir="$srcdir/Libraries/qt${qt_version//./_}"
     if [ "$qt_patch_file" -nt "$qt_src_dir" ]; then
         rm -rf "$qt_src_dir"
         mkdir "$qt_src_dir"
         
-        mv "$srcdir/qtbase-opensource-src-$_qtver" "$qt_src_dir/qtbase"
-        mv "$srcdir/qtimageformats-opensource-src-$_qtver" "$qt_src_dir/qtimageformats"
+        mv "$srcdir/qtbase-opensource-src-$qt_version" "$qt_src_dir/qtbase"
+        mv "$srcdir/qtimageformats-opensource-src-$qt_version" "$qt_src_dir/qtimageformats"
         
         cd "$qt_src_dir/qtbase"
         patch -p1 -i "$qt_patch_file"
@@ -94,23 +94,20 @@ prepare() {
         ln -s "$srcdir/breakpad-lss" "$srcdir/Libraries/breakpad/src/third_party/lss"
     fi
     
-    sed -i 's/CUSTOM_API_ID//g' "$srcdir/tdesktop/Telegram/Telegram.pro"
     sed -i 's,LIBS += /usr/local/lib/libxkbcommon.a,,g' "$srcdir/tdesktop/Telegram/Telegram.pro"
-    sed -i 's,LIBS += /usr/local/lib/libz.a,LIBS += -lz,g' "$srcdir/tdesktop/Telegram/Telegram.pro"
+    sed -i 's,#xkbcommon\\,xkbcommon\\,g' "$srcdir/tdesktop/Telegram/Telegram.pro"
+    
+    sed -i 's/CUSTOM_API_ID//g' "$srcdir/tdesktop/Telegram/Telegram.pro"
     
     (
         echo "DEFINES += TDESKTOP_DISABLE_AUTOUPDATE"
         echo "DEFINES += TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME"
-        echo 'INCLUDEPATH += "/usr/lib/glib-2.0/include"'
-        echo 'INCLUDEPATH += "/usr/lib/gtk-2.0/include"'
-        echo 'INCLUDEPATH += "/usr/include/opus"'
-        echo 'LIBS += -lcrypto -lssl'
     ) >> "$srcdir/tdesktop/Telegram/Telegram.pro"
 }
 
 build() {
     # Build patched Qt
-    local qt_src_dir="$srcdir/Libraries/qt${_qtver//./_}"
+    local qt_src_dir="$srcdir/Libraries/qt${qt_version//./_}"
     
     cd "$qt_src_dir/qtbase"
     ./configure \
@@ -128,6 +125,7 @@ build() {
         -system-xcb \
         -system-xkbcommon-x11 \
         -no-opengl \
+        -no-gtkstyle \
         -static \
         -nomake examples \
         -nomake tests
@@ -167,21 +165,29 @@ build() {
     mkdir -p "$srcdir/tdesktop/Linux/ReleaseIntermediate"
     cd "$srcdir/tdesktop/Linux/ReleaseIntermediate"
     
-    ./../codegen/Release/codegen_style \
-        "-I./../../Telegram/Resources" \
-        "-I./../../Telegram/SourceFiles" \
-        "-o./../../Telegram/GeneratedFiles/styles" \
-        all_files.style --rebuild
+    #./../codegen/Release/codegen_style \
+    #    "-I./../../Telegram/Resources" \
+    #    "-I./../../Telegram/SourceFiles" \
+    #    "-o./../../Telegram/GeneratedFiles/styles" \
+    #    all_files.style --rebuild
+    #
+    #./../codegen/Release/codegen_numbers \
+    #    "-o./../../Telegram/GeneratedFiles" \
+    #    "./../../Telegram/Resources/numbers.txt"
+    #
+    #./../ReleaseLang/MetaLang \
+    #    -lang_in ./../../Telegram/Resources/langs/lang.strings \
+    #    -lang_out ./../../Telegram/GeneratedFiles/lang_auto
     
-    ./../codegen/Release/codegen_numbers \
-        "-o./../../Telegram/GeneratedFiles" \
-        "./../../Telegram/Resources/numbers.txt"
+    qmake \
+        CONFIG+=release \
+        QT_TDESKTOP_PATH="$srcdir/qt" \
+        QT_TDESKTOP_VERSION=$qt_version \
+        "../../Telegram/Telegram.pro"
     
-    ./../ReleaseLang/MetaLang \
-        -lang_in ./../../Telegram/Resources/langs/lang.strings \
-        -lang_out ./../../Telegram/GeneratedFiles/lang_auto
-    
-    qmake CONFIG+=release QT_TDESKTOP_PATH="$srcdir/qt" "../../Telegram/Telegram.pro"
+    make style_target
+    make numbers_target
+    make lang_target
     make
 }
 
