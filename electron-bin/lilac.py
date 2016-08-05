@@ -26,13 +26,6 @@ def pre_build():
   # obtain base PKGBUILD, e.g.
   aur_pre_build()
 
-  for line in edit_file('PKGBUILD'):
-    # edit PKGBUILD
-    if 'electron.zip' in line:
-        print(line.replace('electron.zip', 'electron-v${pkgver}-linux-${_arch}.zip'))
-    else:
-        print(line)
-
 def post_build():
   # do something after the package has successfully been built
   aur_post_build()
