@@ -6,7 +6,7 @@
 # https://github.com/sjug/atom-editor
 
 pkgname=atom-editor
-pkgver=1.8.0
+pkgver=1.9.5
 pkgrel=1
 pkgdesc='Chrome-based text editor from Github'
 arch=('x86_64' 'i686')
@@ -17,15 +17,11 @@ optdepends=('gvfs: file deletion support'
             'ctags: symbol indexing support')
 makedepends=('git' 'npm')
 conflicts=('atom-editor-bin' 'atom-editor-git')
-source=("https://github.com/atom/atom/archive/v${pkgver}.tar.gz"
-        'package.patch')
-sha256sums=('2950820b2c7ab658135e9cb7c003ff2074ec0a38ac3b324d85cc20bcb237e61f'
-            'fbd8e29cdde10d430d809ffb2bdd52c5a0af3af96ad882c4754c553fefa7b2db')
+source=("https://github.com/atom/atom/archive/v${pkgver}.tar.gz")
+sha256sums=('9ef0a2b692dbe85ac9d8b7b9cdbf28325df40b83f2892c03344d778f0a6c8e37')
 
 prepare() {
   cd "atom-$pkgver"
-
-  patch -Np0 -i "$srcdir/package.patch"
 
   sed -i -e "/exception-reporting/d" \
       -e "/metrics/d" package.json
