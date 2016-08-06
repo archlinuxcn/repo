@@ -1,0 +1,24 @@
+_pkgname=libclang-py3
+pkgname=python-libclang
+pkgver=3.8.2
+pkgrel=1
+pkgdesc="This is a port of the clang Python bindings to Python 3."
+arch=('any')
+url="https://bitbucket.org/Anteru/python3-libclang"
+license=('custom:University of Illinois/NCSA Open Source License')
+depends=('python' 'python-setuptools' 'clang')
+source=("https://pypi.python.org/packages/e7/29/fc0d6a3fc85ad676207007b42009d1a2d4d6b46f5de7bca4fdef3390d8f5/$_pkgname-$pkgver.tar.gz")
+md5sums=('b59a04e764adbf22669b0580d914c728')
+
+build() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  python3 setup.py build
+}
+
+package() {
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+}
+
+# vim:set sw=2 et:
