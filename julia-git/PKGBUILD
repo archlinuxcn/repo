@@ -18,7 +18,7 @@ if ((BUILD_DOC)); then
 fi
 
 epoch=1
-pkgver=0.6.0.dev.16.g3e00217
+pkgver=0.6.0.dev.72.g174dc5f
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
@@ -69,6 +69,7 @@ julia_opts=(prefix=/usr sysconfdir=/etc
             USE_SYSTEM_LIBGIT2=1
             USE_SYSTEM_LIBSSH2=1
             USE_SYSTEM_MBEDTLS=1
+            USE_SYSTEM_CURL=1
             USE_SYSTEM_PATCHELF=1
             USE_LLVM_SHLIB=1
             LIBBLASNAME=libopenblas
