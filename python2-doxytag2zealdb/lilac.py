@@ -1,17 +1,19 @@
 #!/usr/bin/env python3
-
-import fileinput
+#
+# This file is the most simple lilac.py file,
+# and it suits for most packages in AUR.
+#
 
 from lilaclib import *
 
+
 build_prefix = 'extra-x86_64'
 
-def pre_build():
-  pypi_pre_build(python2=True)
+pre_build = vcs_update
 
 def post_build():
-  pypi_post_build()
-  update_aur_repo()
+  git_add_files('PKGBUILD')
+  git_commit()
 
 if __name__ == '__main__':
-  single_main()
+  single_main(build_prefix)
