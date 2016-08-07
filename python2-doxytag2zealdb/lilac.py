@@ -6,14 +6,16 @@
 
 from lilaclib import *
 
-
 build_prefix = 'extra-x86_64'
 
-pre_build = vcs_update
+def pre_build():
+  pkgver = run_cmd(['sh', '-c', "git ls-remote --tags https://gitlab.com/vedvyas/doxytag2zealdb.git | sed -n '${s#^.*tags\/##p}'"]).rstrip()
+  run_cmd(['sh', '-c', 'sed -i "/^pkgver/s/^.*$/pkgver=' + pkgver + '/" PKGBUILD'])
+
 
 def post_build():
   git_add_files('PKGBUILD')
   git_commit()
 
 if __name__ == '__main__':
-  single_main(build_prefix)
+  single_main()
