@@ -1,0 +1,23 @@
+diff --git a/gfx/graphite2/src/Collider.cpp b/gfx/graphite2/src/Collider.cpp
+--- a/gfx/graphite2/src/Collider.cpp
++++ b/gfx/graphite2/src/Collider.cpp
+@@ -21,17 +21,17 @@
+ 
+ Alternatively, the contents of this file may be used under the terms of the
+ Mozilla Public License (http://mozilla.org/MPL) or the GNU General Public
+ License, as published by the Free Software Foundation, either version 2
+ of the License or (at your option) any later version.
+ */
+ #include <algorithm>
+ #include <limits>
+-#include <math.h>
++#include <cmath>
+ #include <string>
+ #include <functional>
+ #include "inc/Collider.h"
+ #include "inc/Segment.h"
+ #include "inc/Slot.h"
+ #include "inc/GlyphCache.h"
+ #include "inc/Sparse.h"
+ 
+

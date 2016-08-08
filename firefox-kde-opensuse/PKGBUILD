@@ -9,18 +9,19 @@
 _gtk3=true
 
 # try to build with PGO
-_pgo=true
+# currently broken
+#_pgo=false
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=45.0.2
+pkgver=48.0
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
 url="https://build.opensuse.org/package/show/mozilla:Factory/MozillaFirefox"
 depends=('gtk2' 'mozilla-common' 'libxt' 'startup-notification' 'mime-types'
-         'dbus-glib' 'alsa-lib' 'desktop-file-utils' 'hicolor-icon-theme'
+         'dbus-glib' 'alsa-lib' 'hicolor-icon-theme'
 	 'libvpx' 'icu'  'libevent' 'nss>=3.18.1' 'nspr>=4.10.6' 'hunspell'
 	 'sqlite' 'libnotify' 'kmozillahelper' 'ffmpeg' )
 if [ $_gtk3 ] ; then
@@ -28,13 +29,12 @@ if [ $_gtk3 ] ; then
 fi
 
 makedepends=('unzip' 'zip' 'diffutils' 'python2' 'yasm' 'mesa' 'imake'
-             'xorg-server-xvfb' 'libpulse' 'inetutils')
+             'xorg-server-xvfb' 'libpulse' 'inetutils' 'autoconf2.13' 'rust')
 optdepends=('networkmanager: Location detection via available WiFi networks'
 	    'upower: Battery API' )
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
-install=firefox.install
-_patchrev=3ccb278a9ceb
+_patchrev=199d5cf40e86
 options=('!emptydirs'  'strip' )
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz
@@ -50,11 +50,16 @@ source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/
 	unity-menubar.patch
 	add_missing_pgo_rule.patch
         pgo_fix_missing_kdejs.patch
+        rb39193.patch
+        fix_mozalloc.patch
+        https://cgit.gentoo.org/proj/mozilla.git/plain/www-client/firefox/files/xpcom-components-binutils-26.patch
 )
 
 if [ $_gtk3 ] ; then
-    source+=($_patchurl/mozilla-gtk3_20.patch)
+    source+=(mozilla-gtk3_20.patch)
 fi
+
+
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
 # Note: These are for Arch Linux use ONLY. For your own distribution, please
 # get your own set of keys. Feel free to contact foutrelis@archlinux.org for
@@ -62,6 +67,7 @@ fi
 _google_api_key=AIzaSyDwr302FpOSkGRpLlUpPThNTDPbXcIn_FM
 _google_default_client_id=413772536636.apps.googleusercontent.com
 _google_default_client_secret=0ZChLK6AxeA3Isu96MkwqDR4
+
 
 # Mozilla API keys (see https://location.services.mozilla.com/api)
 # Note: These are for Arch Linux use ONLY. For your own distribution, please
@@ -87,7 +93,6 @@ prepare() {
   echo -n "$_mozilla_api_key" >mozilla-api-key
   echo "ac_add_options --with-mozilla-api-keyfile=\"$PWD/mozilla-api-key\"" >>.mozconfig
   
-  
   msg "Patching for KDE"
   patch -Np1 -i "$srcdir/mozilla-nongnome-proxies.patch"
   patch -Np1 -i "$srcdir/mozilla-kde.patch"
@@ -97,7 +102,7 @@ prepare() {
   patch -Np1 -i "$srcdir/firefox-no-default-ualocale.patch"
   patch -Np1 -i "$srcdir/firefox-branded-icons.patch"
   # add globalmenu support
-  patch -Np1 -i "$srcdir/unity-menubar.patch"
+  #patch -Np1 -i "$srcdir/unity-menubar.patch"
 
   # add missing rule for pgo builds
   patch -Np1 -i "$srcdir"/add_missing_pgo_rule.patch
@@ -112,10 +117,15 @@ prepare() {
       echo 'ac_add_options --enable-default-toolkit=cairo-gtk3' >>.mozconfig
           patch -Np1 -i "$srcdir"/mozilla-gtk3_20.patch
   fi
+
+  # 
   # configure script misdetects the preprocessor without an optimization level
   # https://bugs.archlinux.org/task/34644
-  sed -i '/ac_cpp=/s/$CPPFLAGS/& -O2/' configure
+  # sed -i '/ac_cpp=/s/$CPPFLAGS/& -O2/' configure
 
+  # Workaround for binutils/GNU ld 2.26 from NetBSD/amd64 7.99.26
+  patch -Np1 -i "$srcdir"/xpcom-components-binutils-26.patch
+  
   # WebRTC build tries to execute "python" and expects Python 2
   mkdir -p "$srcdir/path"
   ln -sf /usr/bin/python2 "$srcdir/path/python"
@@ -133,12 +143,20 @@ build() {
   cd $_pkgname-$pkgver
 
   export PATH="$srcdir/path:$PATH"
-  export LDFLAGS="$LDFLAGS -Wl,-rpath,/usr/lib/firefox"
   export PYTHON="/usr/bin/python2"
-  export CPPFLAGS="$CPPFLAGS -mno-avx"
+  
+  # _FORTIFY_SOURCE causes configure failures
+  CPPFLAGS+=" -O2"
+
+  # GCC 6
+  CFLAGS+=" -fPIC -fno-delete-null-pointer-checks -fno-lifetime-dse -fno-schedule-insns2"
+  CXXFLAGS+=" -fPIC -fno-delete-null-pointer-checks -fno-lifetime-dse -fno-schedule-insns2"
+
+  # Hardening
+  LDFLAGS+=" -Wl,-z,now"
 
   if [[ -n $_lowmem || $CARCH == i686 ]]; then
-    LDFLAGS+=" -Wl,--no-keep-memory"
+    LDFLAGS+=" -Xlinker --no-keep-memory"
   fi
 
   if [[ -n $_pgo ]]; then
@@ -154,7 +172,7 @@ package() {
   cd $_pkgname-$pkgver
 
   [[ "$CARCH" == "i686" ]] && cp "$srcdir/kde.js" obj-i686-pc-linux-gnu/dist/bin/defaults/pref
-  [[ "$CARCH" == "x86_64" ]] && cp "$srcdir/kde.js" obj-x86_64-unknown-linux-gnu/dist/bin/defaults/pref
+  [[ "$CARCH" == "x86_64" ]] && cp "$srcdir/kde.js" obj-x86_64-pc-linux-gnu/dist/bin/defaults/pref
 
   make -f client.mk DESTDIR="$pkgdir" INSTALL_SDK= install
 
@@ -186,20 +204,23 @@ package() {
   #https://bugzilla.mozilla.org/show_bug.cgi?id=658850
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
-md5sums=('deda5fcd4a41fc63cb8c14102cb8c561'
-         '3bf79ce63bd0b0c11a9403ecc251c583'
+md5sums=('df52f6cfdf98e10b3f036479f38406c4'
+         '3b48232100d936b2822220d971f1e92c'
          '9b02198df96be08f2a0a323ac2e6c2a2'
          'dbf14588e85812ee769bd735823a0146'
          '0d053487907de4376d67d8f499c5502b'
          '05bb69d25fb3572c618e3adf1ee7b670'
          '6e335a517c68488941340ee1c23f97b0'
-         '98a1b2c0b2450d5c0737dbe8f1e571e0'
-         '3a56df3cc8441da9e3ebd4dbfd184be3'
-         '648958ae7db60bc16dca3f847ee9791b'
-         'e98c962df7a52395459ec8b1a81ce33d'
+         '3b3eb8c2747429887e4a03537932eac5'
+         '84c6a2bf45cfc2393821ec2f5ccd64c5'
+         '1fad9a988826d69fe712ea973e43f6da'
+         '91ee1935c2674f89d4f8f358de2f0dbc'
          '903307f923a459189a5a6062ff9df38c'
          '0c684360f1df4536512d51873c1d243d'
-         '06192dd34d7f6078353d4da5725d1d57'
+         'eb6771472c8c5f67331256c7f5a692da'
          'fe24f5ea463013bb7f1c12d12dce41b2'
          '3fa8bd22d97248de529780f5797178af'
-         'aace13105ee6e53f49c5c43d4eb582bf')
+         '43550e772f110a338d5a42914ee2c3a6'
+         '0c1ed789c06297659137a2ed2ef769f7'
+         'a7819fec41ab24da3fc42541981605db'
+         'dd5ebfe5142855540bbd2b9164767a9b')
