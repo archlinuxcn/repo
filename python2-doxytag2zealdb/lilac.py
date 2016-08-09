@@ -9,7 +9,7 @@ from lilaclib import *
 build_prefix = 'extra-x86_64'
 
 def pre_build():
-  pkgver = run_cmd(['sh', '-c', "git ls-remote --tags https://gitlab.com/vedvyas/doxytag2zealdb.git | sed -n '${s#^.*tags\/v##p}'"]).rstrip()
+  pkgver = run_cmd(['sh', '-c', "git ls-remote --tags https://gitlab.com/vedvyas/doxytag2zealdb.git | sed -n '${s#^.*tags\/v##p}' | sed -n 's/\^{}//p'"]).rstrip()
   run_cmd(['sh', '-c', 'sed -i "/^pkgver/s/^.*$/pkgver=' + pkgver + '/" PKGBUILD'])
 
 
