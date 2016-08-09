@@ -7,7 +7,7 @@
 
 pkgname=libqtelegram-ae-git
 epoch=3
-pkgver=10.0.0.stable.r4.g9fb14a4
+pkgver=10.0.0.stable.r14.gaf6e07d
 pkgrel=1
 pkgdesc="Telegram library written in Qt based on telegram-cli code"
 arch=('x86_64' 'i686')
@@ -30,6 +30,7 @@ pkgver() {
 
 prepare() {
   cd $pkgname
+  ./init
   mkdir -p build
 }
 
