@@ -6,7 +6,7 @@
 # https://github.com/sjug/atom-editor
 
 pkgname=atom-editor
-pkgver=1.9.7
+pkgver=1.9.8
 pkgrel=1
 pkgdesc='Chrome-based text editor from Github'
 arch=('x86_64' 'i686')
@@ -18,7 +18,7 @@ optdepends=('gvfs: file deletion support'
 makedepends=('git' 'npm')
 conflicts=('atom-editor-bin' 'atom-editor-git')
 source=("https://github.com/atom/atom/archive/v${pkgver}.tar.gz")
-sha256sums=('59474a3176d378335ac3fd4ae41758666bac5e08fbf400ceb05fe989eea45933')
+sha256sums=('148c6dc162f51f438fc8385f0b6b6b4f19dc554c13a8edf2ec3826b5c164b466')
 
 prepare() {
   cd "atom-$pkgver"
