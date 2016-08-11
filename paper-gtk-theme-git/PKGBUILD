@@ -3,7 +3,7 @@
 
 pkgname=paper-gtk-theme-git
 _pkgname=paper-gtk-theme
-pkgver=266.5113d58
+pkgver=299.cecb923
 pkgrel=1
 pkgdesc="A modern desktop theme suite. Its design is mostly flat with a minimal use of shadows for depth."
 arch=('any')
@@ -15,7 +15,7 @@ optdepends=("gtk-engine-murrine: gtk2 bindings"
 #optdepends=("python: scripts to simplify the rendering process"
 #	"inkscape: recommended editing software for theme assets")
 makedepends=('git')
-provides=("${_pkgname}")
+provides=("${_pkgname}=${pkgver}")
 conflicts=("${_pkgname}")
 source=("${_pkgname}"::"git+https://github.com/snwh/${_pkgname}.git")
 md5sums=('SKIP')
@@ -34,7 +34,5 @@ build() {
 }
 
 package() {
-	cd "${srcdir}/${_pkgname}"
-
-	make DESTDIR="${pkgdir}" install
+	make -C "${srcdir}/${_pkgname}" DESTDIR="${pkgdir}" install
 }

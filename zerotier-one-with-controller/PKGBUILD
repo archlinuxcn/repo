@@ -2,8 +2,8 @@
 # Contributor: Harry Jeffery <harry|@|exec64|.|co|.|uk>
 # Contributor: Alex Jordan <alexander3223098@gmail.com>
 pkgname=zerotier-one-with-controller
-pkgver=1.1.12
-pkgrel=2
+pkgver=1.1.14
+pkgrel=1
 pkgdesc="Creates virtual Ethernet networks of almost unlimited size. controller node version"
 arch=('i686' 'x86_64')
 url="https://www.zerotier.com/index.html"
@@ -13,11 +13,11 @@ depends=("gcc-libs" "sqlite")
 makedepends=("ruby-ronn")
 conflicts=("zerotier-one" "zerotier-one-lastest")
 source=("https://github.com/zerotier/ZeroTierOne/archive/$pkgver.tar.gz")
-sha1sums=('854d32b1af1f1e29f62d78021f51b6de5bc3a51d')
+sha1sums=('b01a5167f8c9a28c80ed5fbae36c3b3cbbe55108')
 
 build() {
   cd "$srcdir/ZeroTierOne-$pkgver"
-  make ZT_ENABLE_NETWORK_CONTROLLER=1
+  make ZT_ENABLE_NETWORK_CONTROLLER=1 ZT_DEBUG=1
 }
 
 #check() {
@@ -34,4 +34,5 @@ package() {
   cd $pkgdir/usr/bin
   ln -s ../../var/lib/zerotier-one/zerotier-one zerotier-cli
   ln -s ../../var/lib/zerotier-one/zerotier-one zerotier-idtool
+  ln -s ../../var/lib/zerotier-one/zerotier-one zerotier-one
 }
