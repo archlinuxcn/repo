@@ -2,7 +2,7 @@
 
 pkgname=xfdashboard
 pkgver=0.6.0
-pkgrel=2
+pkgrel=3
 pkgdesc="Maybe a Gnome shell like dashboard for Xfce"
 arch=('i686' 'x86_64')
 url="http://goodies.xfce.org/projects/applications/xfdashboard/start"
@@ -16,6 +16,8 @@ build() {
   cd "${pkgname}-${pkgver}"
 
   ./configure --prefix=/usr --sysconfdir=/etc --disable-dependency-tracking
+  # -Wl,--as-needed should come before all libraries
+  sed -i -e '/\$CC/s/-shared/\0 -Wl,--as-needed/' libtool
   make
 }
 
