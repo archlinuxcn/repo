@@ -2,7 +2,7 @@
 
 pkgname=openspecfun-git
 pkgver=0.5.3
-pkgrel=1
+pkgrel=2
 pkgdesc="A collection of special mathematical functions"
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="https://github.com/JuliaLang/openspecfun"
@@ -11,7 +11,7 @@ depends=('gcc-libs' 'openlibm')
 provides=(openspecfun)
 conflicts=(openspecfun)
 makedepends=('gcc-fortran' 'git')
-options=('!emptydirs')
+options=('!emptydirs' '!strip')
 source=('git://github.com/JuliaLang/openspecfun')
 md5sums=('SKIP')
 
@@ -25,13 +25,15 @@ build() {
   cd openspecfun
 
   make prefix=/usr bindir=/usr/bin libdir=/usr/lib includedir=/usr/include \
-       USE_OPENLIBM=1
+       USE_OPENLIBM=1 CFLAGS="-std=c99 -Wall -O3 -g -flto" \
+       LDFLAGS="$LDFLAGS -g -O3 -flto" FFLAGS="-O3 -g -flto"
 }
 
 package() {
   cd openspecfun
 
   make DESTDIR="$pkgdir" prefix=/usr bindir=/usr/bin libdir=/usr/lib \
-       includedir=/usr/include install
+       includedir=/usr/include install CFLAGS="-std=c99 -Wall -O3 -g -flto" \
+       LDFLAGS="$LDFLAGS -g -O3 -flto" FFLAGS="-O3 -g -flto"
   install -Dm644 LICENSE.md "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
