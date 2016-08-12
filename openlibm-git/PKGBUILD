@@ -2,7 +2,7 @@
 
 pkgname=openlibm-git
 pkgver=0.5.3
-pkgrel=2
+pkgrel=3
 pkgdesc="standalone implementation of C mathematical functions"
 arch=(i686 x86_64 armv7h aarch64)
 url="https://github.com/JuliaLang/openlibm"
@@ -37,8 +37,8 @@ build() {
 
 package() {
   cd openlibm
-  provides=('openlibm-git-debug')
-  replaces=('openlibm-git-debug')
+  provides+=('openlibm-git-debug')
+  replaces+=('openlibm-git-debug')
   CFLAGS+=' -g -flto -O3'
   LDFLAGS+=' -g -flto -O3'
   make DESTDIR="$pkgdir" install
