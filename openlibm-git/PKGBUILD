@@ -2,16 +2,16 @@
 
 pkgname=openlibm-git
 pkgver=0.5.3
-pkgrel=1
+pkgrel=2
 pkgdesc="standalone implementation of C mathematical functions"
 arch=(i686 x86_64 armv7h aarch64)
 url="https://github.com/JuliaLang/openlibm"
 license=('BSD')
 source=("git://github.com/JuliaLang/openlibm")
 sha256sums=('SKIP')
-provides=('openlibm=0.4.1')
+provides=('openlibm=0.5.3')
 conflicts=('openlibm')
-options=('debug' 'strip')
+options=('debug' '!strip')
 makedepends=('git')
 
 pkgver() {
@@ -30,10 +30,16 @@ prepare() {
 
 build() {
   cd openlibm
+  CFLAGS+=' -g -flto -O3'
+  LDFLAGS+=' -g -flto -O3'
   make
 }
 
 package() {
   cd openlibm
+  provides=('openlibm-git-debug')
+  replaces=('openlibm-git-debug')
+  CFLAGS+=' -g -flto -O3'
+  LDFLAGS+=' -g -flto -O3'
   make DESTDIR="$pkgdir" install
 }
