@@ -10,8 +10,8 @@
 
 pkgname=('llvm-julia' 'llvm-libs-julia' 'llvm-ocaml-julia' 'lldb-julia'
          'clang-julia' 'clang-tools-extra-julia')
-pkgver=3.8.0
-pkgrel=3
+pkgver=3.8.1
+pkgrel=1
 _ocaml_ver=4.02.3
 arch=('i686' 'x86_64')
 url="http://llvm.org/"
@@ -31,21 +31,21 @@ source=(http://llvm.org/releases/$pkgver/llvm-$pkgver.src.tar.xz
         llvm-3.7.1_3.patch
         llvm-D14260.patch
         llvm-D17165-D18583.patch
-        0001-Fix-load-alignement-when-unpacking-aggregates-struct.patch
         0001-Fix-InstCombine-to-not-widen-metadata-on-store-to-lo.patch
+        0001-Revert-Add-a-flag-vectorizer-maximize-bandwidth-in-l.patch
         llvm-Config-llvm-config.h)
-sha256sums=('555b028e9ee0f6445ff8f949ea10e9cd8be0d084840e21fbbe1d31d51fc06e46'
-            '04149236de03cf05232d68eb7cb9c50f03062e339b68f4f8a03b650a11536cf9'
-            'afbda810106a6e64444bc164b921be928af46829117c95b996f2678ce4cb1ec4'
-            'c8d3387e55f229543dac1941769120f24dc50183150bf19d1b070d53d29d56b0'
-            'e3f68f44147df0433e7989bf6ed1c58ff28d7c68b9c47553cb9915f744785a35'
+sha256sums=('6e82ce4adb54ff3afc18053d6981b6aed1406751b8742582ed50f04b5ab475f9'
+            '4cd3836dfb4b88b597e075341cae86d61c63ce3963e45c7fe6a8bf59bb382cdf'
+            '664a5c60220de9c290bf2a5b03d902ab731a4f95fe73a00856175ead494ec396'
+            '0df011dae14d8700499dfc961602ee0a9572fef926202ade5dcdfe7858411e5c'
+            '349148116a47e39dcb5d5042f10d8a6357d2c865034563283ca512f81cdce8a3'
             '406754764e83d58bc3b859ab4b7893abd48c760278c4619cf4341ef9b9b75c85'
             'd71f8677882c86accddb8a5b720f298a4d7a2ad3bce6091951a46396b8f14da1'
             'c276f41690de0f38dc1cd2e0d1f8cb318f7f8f2f1155659027ef140c4a22f1f7'
             'f1518946ba1697a9d8144cb05103de1abf6a673bb8507728811d555fe148b755'
             'f3e8ff172f5da025a3eaa949602149ebbedd8ad8e3604f581cbf5effc20469c5'
-            '122c19c4dc0237d9e58010568e075269d1b2c3d5516da1db035a0f873284d7b1'
             'ce4a7abcdb61d5ae65a8e611e02875bd15d4c5fc65222891bffb3cb2e9262655'
+            'b47853c43911ad0f9bb7cb6145bb3b7fd65c13a6020ffa4eebfd288f1d253825'
             '597dc5968c695bbdbb0eac9e8eb5117fcd2773bc91edf5ec103ecffffab8bc48')
 
 prepare() {
@@ -64,7 +64,7 @@ prepare() {
   patch -p1 < ../llvm-3.7.1_3.patch
   patch -p1 < ../llvm-D14260.patch
   patch -p1 < ../llvm-D17165-D18583.patch
-  patch -p1 < ../0001-Fix-load-alignement-when-unpacking-aggregates-struct.patch
+  patch -p1 < ../0001-Revert-Add-a-flag-vectorizer-maximize-bandwidth-in-l.patch
   patch -p1 < ../0001-Fix-InstCombine-to-not-widen-metadata-on-store-to-lo.patch
 
   # https://llvm.org/bugs/show_bug.cgi?id=23529
@@ -245,7 +245,7 @@ package_clang-julia() {
 }
 
 package_clang-tools-extra-julia() {
-  pkgdesc="Extra tools built using Clang's tooling APIs (with patch for julia)"
+  pkgdesc="Extra tools built using clang's tooling APIs (with patch for julia)"
   url="http://clang.llvm.org/"
   depends=("clang-julia=$pkgver-$pkgrel")
   provides=("clang-tools-extra=$pkgver-$pkgrel")
