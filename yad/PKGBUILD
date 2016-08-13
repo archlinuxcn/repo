@@ -3,7 +3,7 @@
 # Contributor: Ernia <monghitri@aruba.it>
 
 pkgname=yad
-pkgver=0.36.3
+pkgver=0.37.0
 pkgrel=1
 pkgdesc="A fork of zenity - display graphical dialogs from shell scripts or command line"
 url="http://sourceforge.net/projects/yad-dialog"
@@ -12,7 +12,7 @@ license=('GPL3')
 depends=('gtk3' 'webkitgtk')
 makedepends=('intltool')
 source=("${url}/files/${pkgname}-${pkgver}.tar.xz")
-sha256sums=('ca7c8c377858f4d439b6b1d7d8c96e2a0320d16bc2332216da6218953d09a2ac')
+sha256sums=('91efaf24b56dfbed8e86e4af800f13ec9cca4b550b82b65552aaab40ebd3183a')
 
 
 prepare() {
