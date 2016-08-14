@@ -18,17 +18,17 @@ if ((BUILD_DOC)); then
 fi
 
 epoch=1
-pkgver=0.6.0.dev.154.geb515f3
-pkgrel=1
+pkgver=0.6.0.dev.202.g75e88af
+pkgrel=2
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
 license=('GPL')
-makedepends=('gcc-fortran' 'arpack' 'fftw' 'git' 'gmp' 'libgit2' 'libunwind-git'
-             'llvm-julia' 'mpfr' 'pcre2' 'suitesparse' 'python2-sphinx'
-             'python2-sphinx_rtd_theme' 'python2-pip' 'texlive-langcjk'
-             'texlive-latexextra' 'openspecfun' 'openblas'
-             'libutf8proc-git' 'patchelf' 'openblas-lapack' openlibm
+makedepends=(gcc-fortran arpack fftw git gmp libgit2-julia libunwind-git
+             llvm-julia mpfr pcre2 suitesparse python2-sphinx
+             python2-sphinx_rtd_theme python2-pip texlive-langcjk
+             texlive-latexextra openspecfun openblas
+             libutf8proc-git patchelf openblas-lapack openlibm
              mbedtls libssh2)
 options=('debug' '!strip')
 source=('git://github.com/JuliaLang/julia')
@@ -156,7 +156,7 @@ build() {
 
 package-julia-in() {
   arch=('i686' 'x86_64' 'armv7h' 'aarch64')
-  depends=(arpack fftw gmp libgit2 libunwind-git llvm-libs-julia
+  depends=(arpack fftw gmp libgit2-julia libunwind-git llvm-libs-julia
            mpfr pcre2 hicolor-icon-theme xdg-utils suitesparse
            openspecfun openblas libutf8proc-git openblas-lapack openlibm
            mbedtls libssh2)
