@@ -6,7 +6,7 @@
 BUILD_DOC=1
 
 pkgbase=julia-git
-if [[ "$CARCH" = x86_64 ]]; then
+if [[ "$CARCH" = i686 ]]; then
     pkgname=('julia-git' 'julia-git-avx2')
     BUILD_DOC=0
 else
