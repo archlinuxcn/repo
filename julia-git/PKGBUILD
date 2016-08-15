@@ -6,11 +6,14 @@
 BUILD_DOC=1
 
 pkgbase=julia-git
-if [[ "$CARCH" = i686 ]]; then
+if [[ $CARCH = x86_64 ]]; then
     pkgname=('julia-git' 'julia-git-avx2')
-    BUILD_DOC=0
 else
     pkgname=('julia-git')
+fi
+
+if [[ $CARCH = i686 ]]; then
+    BUILD_DOC=0
 fi
 
 if ((BUILD_DOC)); then
@@ -18,8 +21,8 @@ if ((BUILD_DOC)); then
 fi
 
 epoch=1
-pkgver=0.6.0.dev.202.g75e88af
-pkgrel=2
+pkgver=0.6.0.dev.229.g5e58247
+pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
