@@ -10,9 +10,6 @@ arch=('i686' 'x86_64')
 url='http://www.google.com/chrome'
 license=('custom:chrome')
 options=('!strip')
-depends=(
-  'gcc-libs'
-)
 _chrome_ver=52.0.2743.116
 conflicts=("google-chrome")
 source=('chrome-eula_text.html::https://www.google.com/intl/en/chrome/browser/privacy/eula_text.html')
