@@ -1,6 +1,6 @@
 # Maintainer: Tomas Ostasevicius (aquarix) <t dot ostasevicius at gmail dot com>
 pkgname=gitter
-pkgver=3.0.3
+pkgver=3.1.0
 pkgrel=1
 pkgdesc='Where developers come to talk'
 url='https://gitter.im'
@@ -12,7 +12,7 @@ source=("https://update.gitter.im/linux64/${pkgname}_${pkgver}_amd64.deb"
         gitter.sh)
 noextract=("${pkgname}_${pkgver}_amd64.deb")
 install='gitter.install'
-md5sums=('fc8a0389e255c02556e19d8ef7238276'
+md5sums=('dcd92ad435c126c89b28089aec25fe94'
          '4ee1a1a85d4fd6fbaf0a16ffefd7d84d')
 options=(!strip)
 
