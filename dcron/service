@@ -1,0 +1,11 @@
+[Unit]
+Description=Periodic Command Scheduler
+
+[Service]
+Type=forking
+EnvironmentFile=/etc/conf.d/crond
+ExecStart=/usr/bin/crond $CROND_ARGS
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
