@@ -12,7 +12,11 @@ build_prefix = 'extra-x86_64'
 pre_build = aur_pre_build
 
 def post_build():
-    os.unlink('.pkgupdate')
+    try:
+        os.unlink('.pkgupdate')
+        _g.aur_building_files.remove('.pkgupdate')
+    except Exception:
+        pass
     aur_post_build()
 
 if __name__ == '__main__':
