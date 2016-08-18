@@ -2,18 +2,20 @@
 
 pkgname=nvidia-pf
 pkgver=367.35
-_extramodules=extramodules-4.6-pf
-pkgrel=1
+_extramodules=extramodules-4.7-pf
+pkgrel=2
 pkgdesc="NVIDIA drivers for linux-pf"
 arch=('i686' 'x86_64')
 url="http://www.nvidia.com/"
-depends=('linux-pf>=4.6' 'linux-pf<4.7' "nvidia-libgl" "nvidia-utils=${pkgver}")
-makedepends=('linux-pf-headers>=4.6' 'linux-pf-headers<4.7')
+depends=('linux-pf>=4.7' 'linux-pf<4.8' "nvidia-libgl" "nvidia-utils=${pkgver}")
+makedepends=('linux-pf-headers>=4.7' 'linux-pf-headers<4.8')
 license=('custom')
 install=nvidia.install
 options=(!strip)
+source=(linux-4.7.patch)
 source_i686=("http://us.download.nvidia.com/XFree86/Linux-x86/${pkgver}/NVIDIA-Linux-x86-${pkgver}.run")
 source_x86_64=("http://us.download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run")
+md5sums=('64e94b9e934b66624e1687b0a546b379')
 md5sums_i686=('42db6f6485c3c337c7c756380ec64b7a')
 md5sums_x86_64=('24f1fc19fe10bcc6ff264fb5034c4ccc')
 
@@ -24,6 +26,7 @@ prepare() {
     sh "${_pkg}.run" --extract-only
     cd "${_pkg}"
     # patches here
+    patch -p1 -i ../linux-4.7.patch
 }
 
 build() {
