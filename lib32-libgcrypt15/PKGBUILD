@@ -5,7 +5,7 @@
 
 pkgname=lib32-libgcrypt15
 pkgver=1.5.6
-pkgrel=2
+pkgrel=3
 pkgdesc='General purpose cryptographic library based on the code from GnuPG (32-bit)'
 arch=('x86_64')
 url='http://www.gnupg.org'
@@ -17,20 +17,16 @@ sha512sums=('8fced63f1bb2f3b60d456df168479ebe77acf2a8963f5dc831a25e839e0930148e2
             'SKIP')
 validpgpkeys=('D8692123C4065DEA5E0F3AB5249B39D24F25E3B6') # Werner Koch <https://www.gnupg.org/signature_key.html>
 
-prepare() {
-  cd libgcrypt-${pkgver}
-  sed 's:path="amd64":path="i586 i386":' -i mpi/config.links
-}
-
 build() {
   # Modify environment to generate 32-bit ELF. Respects flags defined in makepkg.conf
-  export CC='gcc -m32'
-  export CXX='g++ -m32'
-  export LDFLAGS+=' -m32'
+  export CFLAGS="-m32 ${CFLAGS}"
+  export CXXFLAGS="-m32 ${CXXFLAGS}"
+  export LDFLAGS="-m32 ${LDFLAGS}"
   export PKG_CONFIG_LIBDIR='/usr/lib32/pkgconfig'
 
   cd libgcrypt-${pkgver}
   ./configure \
+    --build=i686-pc-linux-gnu \
     --prefix='/usr' \
     --libdir='/usr/lib32' \
     --enable-shared \
