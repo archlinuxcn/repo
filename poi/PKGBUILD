@@ -2,9 +2,9 @@
 
 pkgname=poi
 _pkgname=poi
-pkgver=7.0.0.beta.5.0.g08bb147
-_pkgver='7.0.0-beta.5'
-pkgrel=4
+pkgver=7.0.0.beta.6.0.gb2e3fc0
+_pkgver='7.0.0-beta.6'
+pkgrel=1
 pkgdesc="Scalable KanColle browser and tool"
 arch=('any')
 url="https://github.com/poooi/poi/"
@@ -30,7 +30,7 @@ build() {
     sed -i 's/^.*"electron-prebuilt".*$//;s/^.*"electron-builder".*$//' package.json
     npm install
     # prevent infinite loop...
-    timeout 30s npm run deploy
+    timeout 1m npm run deploy
 }
 
 package() {
