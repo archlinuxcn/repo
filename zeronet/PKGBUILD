@@ -1,7 +1,7 @@
 # Maintainer: redfish <redfish at galactica dot pw>
 
 pkgname='zeronet'
-pkgver=0.3.6
+pkgver=0.3.7
 pkgrel=1
 arch=('any')
 url="https://zeronet.io/"
@@ -11,10 +11,10 @@ depends=('python2>=2.7.10'
 		)
 license=('GPL2')
 pkgdesc="Decentralized websites using Bitcoin crypto and the BitTorrent network."
-source=("https://github.com/HelloZeroNet/ZeroNet/archive/v$pkgver.tar.gz"
+source=("https://github.com/HelloZeroNet/ZeroNet/archive/v.$pkgver.tar.gz"
         "zeronet.conf"
         "zeronet.service")
-md5sums=('a81944dc3c25918f438b993fb67e7f0b'
+md5sums=('eea94768f499bcf302eca3a5ebe3ccf0'
          'c5216860cfc435a4861c55fd3933391c'
          '5404c37540131f41f10e9be873d11fcc')
 install="zeronet.install"
@@ -22,11 +22,9 @@ backup=("etc/zeronet.conf")
 options=(!strip) # ignore test binaries in the depsendency libs that fail strip
 
 # Upstream uses camel case
-_pkgarchive="ZeroNet-$pkgver"
+_pkgarchive="ZeroNet-v.$pkgver"
 
 package() {
-   cd "$srcdir/$_gitname"
-
    mkdir -p "$pkgdir/opt/zeronet"
    mkdir -p "$pkgdir/var/lib/zeronet"
    mkdir -p "$pkgdir/var/log/zeronet"
