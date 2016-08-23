@@ -1,0 +1,49 @@
+From a0388c3ced59db0a9362e1a20a66c9c0fe5269d6 Mon Sep 17 00:00:00 2001
+From: m!nus <minus+github@mnus.de>
+Date: Sun, 19 Jun 2016 00:14:13 +0200
+Subject: [PATCH] updated build files for bam 0.5
+
+changes makes them incompatible with bam 0.4
+---
+ bam.lua       | 2 +-
+ configure.lua | 5 ++---
+ 2 files changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/bam.lua b/bam.lua
+index 9daebfb..581987e 100644
+--- a/bam.lua
++++ b/bam.lua
+@@ -1,4 +1,4 @@
+-CheckVersion("0.4")
++CheckVersion("0.5")
+ 
+ target_family = os.getenv("TARGET_FAMILY")
+ if target_family then
+diff --git a/configure.lua b/configure.lua
+index f06b77d..a4b832f 100644
+--- a/configure.lua
++++ b/configure.lua
+@@ -72,13 +72,13 @@ function NewConfig(on_configured_callback)
+ 	end
+ 
+ 	config.Load = function(self, filename)
+-		local options_func = loadfile(filename)
+ 		local options_table = {}
++		local options_func = loadfile(filename, nil, options_table)
+ 
+ 		if not options_func then
+ 			print("auto configuration")
+ 			self:Config(filename)
+-			options_func = loadfile(filename)
++			options_func = loadfile(filename, nil, options_table)
+ 		end
+ 
+ 		if options_func then
+@@ -86,7 +86,6 @@ function NewConfig(on_configured_callback)
+ 			for k,v in pairs(self.options) do
+ 				options_table[v.name] = {}
+ 			end
+-			setfenv(options_func, options_table)
+ 
+ 			-- this is to make sure that we get nice error messages when
+ 			-- someone sets an option that isn't valid.
