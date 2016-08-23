@@ -14,7 +14,7 @@ _gtk3=true
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=48.0
+pkgver=48.0.1
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
@@ -34,7 +34,7 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
 	    'upower: Battery API' )
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
-_patchrev=199d5cf40e86
+_patchrev=6ab8b16f232c
 options=('!emptydirs'  'strip' )
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz
@@ -47,6 +47,7 @@ source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/
 	$_patchurl/mozilla-kde.patch
 	$_patchurl/mozilla-language.patch
 	$_patchurl/mozilla-nongnome-proxies.patch
+        $_patchurl/mozilla-flex_buffer_overrun.patch
 	unity-menubar.patch
 	add_missing_pgo_rule.patch
         pgo_fix_missing_kdejs.patch
@@ -56,7 +57,7 @@ source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/
 )
 
 if [ $_gtk3 ] ; then
-    source+=(mozilla-gtk3_20.patch)
+    source+=($_patchurl/mozilla-gtk3_20.patch)
 fi
 
 
@@ -125,6 +126,9 @@ prepare() {
 
   # Workaround for binutils/GNU ld 2.26 from NetBSD/amd64 7.99.26
   patch -Np1 -i "$srcdir"/xpcom-components-binutils-26.patch
+
+  # CVE-2016-6354 (bmo#1292534)
+  patch -Np1 -i "$srcdir"/mozilla-flex_buffer_overrun.patch
   
   # WebRTC build tries to execute "python" and expects Python 2
   mkdir -p "$srcdir/path"
@@ -204,7 +208,7 @@ package() {
   #https://bugzilla.mozilla.org/show_bug.cgi?id=658850
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
-md5sums=('df52f6cfdf98e10b3f036479f38406c4'
+md5sums=('8c09b6cbf13ce13aa57d87175da997f4'
          '3b48232100d936b2822220d971f1e92c'
          '9b02198df96be08f2a0a323ac2e6c2a2'
          'dbf14588e85812ee769bd735823a0146'
@@ -217,10 +221,11 @@ md5sums=('df52f6cfdf98e10b3f036479f38406c4'
          '91ee1935c2674f89d4f8f358de2f0dbc'
          '903307f923a459189a5a6062ff9df38c'
          '0c684360f1df4536512d51873c1d243d'
+         '01af53dc830d00fe522c545bcc0ec4b9'
          'eb6771472c8c5f67331256c7f5a692da'
          'fe24f5ea463013bb7f1c12d12dce41b2'
          '3fa8bd22d97248de529780f5797178af'
          '43550e772f110a338d5a42914ee2c3a6'
          '0c1ed789c06297659137a2ed2ef769f7'
          'a7819fec41ab24da3fc42541981605db'
-         'dd5ebfe5142855540bbd2b9164767a9b')
+         'e4c3fa5aed9663316ea6cdb9c533242f')
