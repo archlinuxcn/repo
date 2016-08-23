@@ -9,7 +9,7 @@ Documentation=man:dnsmasq(8)
 Type=dbus
 BusName=uk.org.thekelleys.dnsmasq-lxd
 ExecStartPre=/usr/bin/dnsmasq --test -C /etc/dnsmasq-lxd.conf
-ExecStart=/usr/bin/dnsmasq -k -C /etc/dnsmasq-lxd.conf --user=dnsmasq --pid-file --enable-dbus=uk.org.thekelleys.dnsmasq-lxd
+ExecStart=/usr/bin/dnsmasq -k -C /etc/dnsmasq-lxd.conf --user=dnsmasq --pid-file
 ExecReload=/bin/kill -HUP $MAINPID
 
 [Install]

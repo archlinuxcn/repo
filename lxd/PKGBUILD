@@ -1,13 +1,14 @@
 # Maintainer: Maikel Wever <maikelwever@gmail.com>
 
 pkgname=lxd
-pkgver=2.0.3
+pkgver=2.1
 pkgrel=1
 pkgdesc="REST API, command line tool and OpenStack integration plugin for LXC."
 arch=('x86_64')
 url="https://github.com/lxc/lxd"
 license=('APACHE')
-depends=('lxc' 'squashfs-tools')
+conflicts=('lxd-lts')
+depends=('lxc')
 makedepends=('go' 'git')
 options=('!strip' '!emptydirs')
 optdepends=(
@@ -28,10 +29,10 @@ source=(
     "networkmanager-dnsmasq-lxd.conf"
 )
 
-md5sums=('69a125da7d2107b3ef944347dad6c02a'
+md5sums=('b088e520e9fddd5fda1a1ab8f498c348'
          'b1780c0e01e404895e35ac277aa597c4'
          'b1fd16933c1b24aaa9ccc8f5a0e6478c'
-         'e164eaad33795310c024b21764679afb'
+         'f2bc527eabb1fdba810b0393ee41edd4'
          '52c641ea0ba5477f5c1a1b857c03dda9'
          'c9b5c98497e4ddc47d0c078b5b500f93'
          '427926fddb1537f7a65d0a7274106df5')
