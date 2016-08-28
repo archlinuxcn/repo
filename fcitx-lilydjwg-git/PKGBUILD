@@ -4,9 +4,9 @@
 
 _pkgname=fcitx
 pkgname=$_pkgname-lilydjwg-git
-pkgver=4.2.8.20160814
-_realver=4.2.8
-pkgrel=1
+pkgver=4.2.9.1.20160814
+_realver=4.2.9.1
+pkgrel=2
 epoch=2
 pkgdesc="A Flexible Input Method Framework. With Lua support"
 arch=("i686" "x86_64")
@@ -14,7 +14,7 @@ license=('GPL')
 url="http://fcitx-im.org/wiki/Fcitx"
 depends=('pango' 'libxinerama' 'shared-mime-info' 'hicolor-icon-theme'
   'desktop-file-utils' 'icu' 'libxkbfile' 'iso-codes' 'libxml2'
-  "gtk2>=2.24.20" 'gtk3' 'dbus-core')
+  "gtk2>=2.24.20" 'gtk3' 'dbus')
 makedepends=('git' 'gettext' 'cmake' 'gobject-introspection' 'coreutils'
   'sh' 'qt4' 'lua' 'python2' 'extra-cmake-modules') # python2 is for gobject-introspection
 conflicts=('fcitx' 'fcitx-qt' 'fcitx-qt4' 'fcitx-gtk2' 'fcitx-gtk3'
