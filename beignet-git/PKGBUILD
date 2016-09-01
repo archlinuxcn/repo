@@ -42,7 +42,7 @@ package() {
   cd beignet/build
 
   make DESTDIR="$pkgdir/" install
-  for f in include/CL/*; do
+  for f in "$pkgdir/usr/include/CL/"*; do
     [[ $f =~ intel ]] && continue
     rm -v "$f"
   done
