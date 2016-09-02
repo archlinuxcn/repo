@@ -1,6 +1,6 @@
-# Maintainer: danyf90 <daniele.formichelli@gmail.com>
-# Co-Maintainer: syncrtl64 <syncrtl64@gmail.com>
-# Contributor: Andrea Cattaneo <andrea.cattaneo.dev@gmail.com>
+#Maintainer: danyf90 <daniele.formichelli@gmail.com>
+#Co-Maintainer: syncrtl64 <syncrtl64@gmail.com>
+#Contributor: Andrea Cattaneo <andrea.cattaneo.dev@gmail.com>
 
 pkgname=genymotion
 pkgver=2.7.2
