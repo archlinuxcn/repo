@@ -6,7 +6,7 @@
 
 from lilaclib import *
 
-depends = ["fmodex"]
+depends = ["fmodex", "qt5-quick1"]
 
 build_prefix = 'extra-x86_64'
 pre_build = aur_pre_build
