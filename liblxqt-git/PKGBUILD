@@ -2,13 +2,13 @@
 
 _pkgname=liblxqt
 pkgname=$_pkgname-git
-pkgver=0.10.0.19.g7df67a2
+pkgver=0.10.0.53.g16ae10a
 pkgrel=1
 pkgdesc="Common base library for LXQt components."
 arch=("i686" "x86_64")
 url="http://lxqt.org"
 license=("GPL2")
-depends=("qt5-base" "qt5-x11extras" "kwindowsystem" "libqtxdg")
+depends=("qt5-base" "qt5-x11extras" "kwindowsystem" "libqtxdg" "libxss")
 makedepends=("git" "cmake" "qt5-tools")
 provides=("$_pkgname")
 conflicts=("$_pkgname")

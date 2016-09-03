@@ -1,0 +1,33 @@
+update-icon(){
+    xdg-icon-resource forceupdate --theme hicolor &>/dev/null
+    update-desktop-database -q
+}
+
+adv(){
+    echo -e "make sure to have this modules loaded: \n\tvboxdrv\n\tvboxnetflt\n\tvboxnetadp\n\tvboxpci"
+    echo "you can simply add them to /etc/modules-load.d/virtualbox.conf with this command:"
+    echo "# echo -e \"vboxdrv\\nvboxnetflt\\nvboxnetadp\\nvboxpci\" > /etc/modules-load.d/virtualbox.conf"
+}
+
+remove_slink(){
+    # in previous version install script created symbolic links
+    [[ -s /usr/local/bin/genymotion ]] && rm /usr/local/bin/genymotion
+    [[ -s /usr/local/bin/genymotion-shell ]] && rm /usr/local/bin/genymotion-shell
+}
+
+post_install() {
+    update-icon
+    adv
+}
+
+post_upgrade() {
+    remove_slink
+    update-icon
+    adv
+}
+
+post_remove() {
+    remove_slink
+    update-icon
+}
+

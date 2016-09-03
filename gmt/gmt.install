@@ -1,0 +1,23 @@
+# arg 1:  the new package version
+pre_install() {
+  /bin/true
+}
+  
+# arg 1:  the new package version
+post_install() {
+   echo "==> GMT HIGH RESOLUTION AND DCW DATASETS"
+   echo "" 
+   echo "==> The default installation of GMT contains a low resolution coastline dataset."
+   echo "==> For maps at higer resolutions please install the gmt-coast package."
+   echo "==> For the digital chart of the world dataset install the gmt-dcw package."
+}
+
+# arg 1:  the new package version
+# arg 2:  the old package version
+post_upgrade() {
+    post_install $1
+}
+      
+op=$1
+shift
+$op $*

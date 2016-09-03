@@ -21,16 +21,14 @@ if ((BUILD_DOC)); then
 fi
 
 epoch=1
-pkgver=0.6.0.dev.403.gf58aaef
+pkgver=0.6.0.dev.455.g40c0fc6
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
 license=('GPL')
 makedepends=(gcc-fortran arpack fftw git gmp libgit2-julia libunwind-git
-             llvm-julia mpfr pcre2 suitesparse python2-sphinx
-             python2-sphinx_rtd_theme python2-pip texlive-langcjk
-             texlive-latexextra openspecfun openblas
+             llvm-julia mpfr pcre2 suitesparse python2 openspecfun openblas
              libutf8proc-git patchelf openblas-lapack openlibm
              mbedtls libssh2)
 options=('debug' '!strip')

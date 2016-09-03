@@ -1,7 +1,7 @@
 # Maintainer: Boqun Feng <boqun.feng@gmail.com>
 
 pkgname=beignet-git
-pkgver=1.0.0.0.712.gd7e654b
+pkgver=1.0.0.0.885.gb00aa44
 pkgrel=1
 epoch=1
 pkgdesc="OpenCL Implemenation for Intel IvyBridge and Haswell"
@@ -16,25 +16,18 @@ source=(git://anongit.freedesktop.org/beignet)
 md5sums=('SKIP')
 
 pkgver() {
-  cd "$srcdir/beignet"
+  cd beignet
 
   git describe --tags | sed -e 's/^[^0-9]*//g' -e 's/-/.0./' -e 's/-/./g'
 }
 
 build() {
-  cd "${srcdir}/beignet"
+  cd beignet
 
   # For clang
   # CFLAGS=${CFLAGS//-fvar-tracking-assignments}
   # CXXFLAGS=${CXXFLAGS//-fvar-tracking-assignments}
 
-  mkdir -p include.bak
-
-  for f in include/CL/*; do
-    [[ $f =~ intel ]] && continue
-    [[ $f =~ ext ]] && continue
-    mv -i "$f" include.bak/
-  done
   mkdir -p build
   cd build
   cmake .. \
@@ -46,8 +39,11 @@ build() {
 }
 
 package() {
-  cd "${srcdir}/beignet/build"
+  cd beignet/build
 
   make DESTDIR="$pkgdir/" install
-  rm -rf "$pkgdir/usr/include/CL/"*ext*
+  for f in "$pkgdir/usr/include/CL/"*; do
+    [[ $f =~ intel ]] && continue
+    rm -v "$f"
+  done
 }
