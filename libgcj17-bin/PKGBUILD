@@ -4,7 +4,7 @@
 # Contributor: Roberto Calabrese <robertocalabrese75 [at] gmail.com>
 
 pkgname=libgcj17-bin
-pkgver=6.2.0_1
+pkgver=6.2.0_2
 pkgrel=1
 pkgdesc="Dynamically load and interpret java class files. Built from binary \
 executables available in Debian repositories."
@@ -16,8 +16,8 @@ depends=(zlib 'gcc-libs')
 
 source_i686=(http://httpredir.debian.org/debian/pool/main/g/gcc-6/${pkgname%-*}_${pkgver%_*}-${pkgver##*_}_i386.deb)
 source_x86_64=(http://httpredir.debian.org/debian/pool/main/g/gcc-6/${pkgname%-*}_${pkgver%_*}-${pkgver##*_}_amd64.deb)
-sha1sums_i686=('af5f1b0baed4cb0b97184289df00f0a9792ddd62')
-sha1sums_x86_64=('2fc4653c9f78c22f78152c92ca9ec24ff5564ce1')
+sha1sums_i686=('1b3b25fc2874a2010b55fee241ef6a096b88ea6f')
+sha1sums_x86_64=('29c04d728e2578464f792f4a4c5e020b0176d8f3')
 
 prepare() {
   tar xf data.tar.*
