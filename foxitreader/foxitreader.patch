@@ -1,6 +1,6 @@
 diff -Naur foxitreader.orig/usr/lib/foxitreader/FoxitReader.desktop foxitreader/usr/lib/foxitreader/FoxitReader.desktop
 --- foxitreader.orig/usr/lib/foxitreader/FoxitReader.desktop	2016-02-16 15:23:41.000000000 +0100
-+++ foxitreader/usr/lib/foxitreader/FoxitReader.desktop	2016-03-06 02:41:40.882259342 +0100
++++ foxitreader/usr/lib/foxitreader/FoxitReader.desktop	2016-04-25 21:26:52.134050652 +0200
 @@ -1,10 +1,11 @@
  [Desktop Entry]
  Name=Foxit Reader
@@ -15,3 +15,14 @@ diff -Naur foxitreader.orig/usr/lib/foxitreader/FoxitReader.desktop foxitreader/
 -Icon=FoxitReader
 +Icon=foxitreader
 +Exec=foxitreader %F
+diff -Naur foxitreader.orig/usr/lib/foxitreader/FoxitReader.sh foxitreader/usr/lib/foxitreader/FoxitReader.sh
+--- foxitreader.orig/usr/lib/foxitreader/FoxitReader.sh	2016-02-16 15:23:41.000000000 +0100
++++ foxitreader/usr/lib/foxitreader/FoxitReader.sh	2016-04-25 21:32:42.102968443 +0200
+@@ -1,3 +1,5 @@
+ #!/bin/sh
+- appname="FoxitReader"
+-
++appname="FoxitReader"
++selfpath="$(dirname $(readlink "$0"))"
++export LD_LIBRARY_PATH="${selfpath}/lib:${selfpath}/platforms:${selfpath}/printsupport:${selfpath}/rmssdk:${selfpath}/sensors:${selfpath}/imageformats:${selfpath}/platforminputcontexts"
++exec "${selfpath}/${appname}" "$@"
