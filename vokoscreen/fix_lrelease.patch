@@ -1,0 +1,12 @@
+diff -uprNEBZ --suppress-blank-empty a/vokoscreen.pro b/vokoscreen.pro
+--- a/vokoscreen.pro	2016-04-19 04:48:55.000000000 -0500
++++ b/vokoscreen.pro	2016-04-21 15:56:08.404677703 -0500
+@@ -27,7 +27,7 @@ TRANSLATIONS = $$files(language/vokoscre
+ !isEmpty(TRANSLATIONS) {
+   isEmpty(QMAKE_LRELEASE) {
+     win32: QMAKE_LRELEASE = $$[QT_INSTALL_BINS]\lrelease.exe
+-      else: QMAKE_LRELEASE = $$[QT_INSTALL_BINS]/lrelease-qt5
++      else: QMAKE_LRELEASE = $$[QT_INSTALL_PREFIX]/bin/lrelease-qt5
+   }
+   isEmpty(TS_DIR):TS_DIR = language
+   TSQM.name = lrelease-qt5 ${QMAKE_FILE_IN}
