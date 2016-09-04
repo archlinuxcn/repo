@@ -29,10 +29,12 @@ pkgver() {
 }
 
 prepare() {
-  
   cd $pkgname
   mkdir -p build
+}
 
+build() {
+  cd $pkgname
   export ASEMAN_SRC_PATH=$(pwd)
 echo "ASEMAN_SRC_PATH=" $ASEMAN_SRC_PATH
 cd $ASEMAN_SRC_PATH
@@ -53,10 +55,6 @@ cd $ASEMAN_SRC_PATH
 
   ./libqtelegram-generator 54 $ASEMAN_SRC_PATH/scheme/scheme-54.tl $ASEMAN_SRC_PATH
 
-
-}
-
-build() {
   cd $pkgname/build
   qmake-qt5 -r QMAKE_CFLAGS_ISYSTEM= CONFIG+=typeobjects PREFIX=/usr ..
   make
