@@ -5,9 +5,9 @@
 # Contributor: Lubomir 'Kuci' Kucera <kuci24-at-gmail-dot-com>
 
 pkgname=android-studio
-pkgver=2.1.2.0
+pkgver=2.1.3.0
 pkgrel=1
-_build=143.2915827
+_build=143.3101438
 pkgdesc="A new Android development environment based on IntelliJ IDEA."
 arch=('i686' 'x86_64')
 url="http://developer.android.com/sdk/installing/studio.html"
@@ -16,12 +16,10 @@ depends=('java-environment' 'python' 'ttf-font')
 makedepends=('unzip')
 optdepends=('android-google-repository' 'android-platform' 'android-sdk' 'android-sdk-platform-tools' 'android-sdk-build-tools' 'android-sources' 'android-support' 
 'android-support-repository')
-conflicts=('android-studio-beta' 'android-studio-dev' 'android-studio-canary')
 options=('!strip')
-install=$pkgname.install
 source=("https://dl.google.com/dl/android/studio/ide-zips/$pkgver/android-studio-ide-$_build-linux.zip"
         "$pkgname.desktop")
-sha512sums=('42f0e6ebd51fc92f64f3bcfa980df3853922e6bff043ae23fbd7564b79cb905b30927bbee534613a52a92d24e60bad89ee577a06e382b301d5f7f773c166ce07'
+sha512sums=('3890dcec1c773732a4b54e6e6dd90f9f9b63c396fb0d2712fa4a5b2b8487a055e910f983a8c4da8e3e5b103021267415eb6065f291bd35a633c4723e5cb648cb'
             '7c1ab152b3f26a0a4796c085bb7bf66aa4711a010910636c0c82a37609155c819b21a732fc3874b55e7d443c989c46f29d51ed54538795829c8eb835308b5aaa')
 
 if [[ $CARCH == "x86_64" ]]; then
