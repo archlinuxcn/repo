@@ -3,7 +3,7 @@
 # Contributor: Gordin <9ordin@gmail.com>
 
 pkgname=android-sdk
-pkgver=25.2.1
+pkgver=25.2.2
 pkgrel=1
 pkgdesc='Google Android SDK'
 arch=('x86_64' 'i686')
@@ -11,9 +11,9 @@ url='http://developer.android.com/sdk/'
 license=('custom')
 depends_x86_64=('java-environment' 'lib32-alsa-lib' 'lib32-openal'
   'lib32-libstdc++5' 'lib32-libxv' 'lib32-mesa' 'lib32-ncurses' 'lib32-sdl'
-  'lib32-zlib' 'lib32-fontconfig' 'lib32-libpulse' 'swt' 'ncurses5-compat-libs')
+  'lib32-zlib' 'lib32-fontconfig' 'lib32-libpulse' 'swt')
 depends_i686=('java-environment' 'alsa-lib' 'openal' 'libstdc++5' 'libxv' 'sdl'
-              'ncurses' 'swt' 'zlib' 'ncurses5-compat-libs')
+              'ncurses' 'swt' 'zlib')
 install="$pkgname.install"
 optdepends=('android-udev: udev rules for Android devices'
             'android-sdk-platform-tools: adb, aapt, aidl, dexdump and dx')
@@ -24,7 +24,7 @@ source=("https://dl.google.com/android/repository/tools_r${pkgver}-linux.zip"
         "$pkgname.csh"
         "$pkgname.conf"
         'license.html')
-sha1sums=('216c45d4133e1dbfef33dc5fd17185bfd86720a9'
+sha1sums=('99257925a3d8b46fee948a7520d7b7e3e3e1890e'
           'f359ac923ed008dae3a007a513d26cfbaf025626'
           '8f886de363ad91a7f93a0c6ded993e99bef3e1a7'
           'ab7251df3a382a920e81663f25d4a7813918ae1c'
