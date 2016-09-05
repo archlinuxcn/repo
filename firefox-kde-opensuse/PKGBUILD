@@ -14,7 +14,7 @@ _gtk3=true
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=48.0.1
+pkgver=48.0.2
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
@@ -208,9 +208,9 @@ package() {
   #https://bugzilla.mozilla.org/show_bug.cgi?id=658850
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
-md5sums=('8c09b6cbf13ce13aa57d87175da997f4'
+md5sums=('bd6410592a8c608c0f771c056351493c'
          '3b48232100d936b2822220d971f1e92c'
-         '9b02198df96be08f2a0a323ac2e6c2a2'
+         '14e0f6237a79b85e60256f4808163160'
          'dbf14588e85812ee769bd735823a0146'
          '0d053487907de4376d67d8f499c5502b'
          '05bb69d25fb3572c618e3adf1ee7b670'
