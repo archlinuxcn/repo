@@ -8,11 +8,10 @@ pkgdesc="Sync your files to your Mega account. Official app"
 arch=('i686' 'x86_64')
 url="https://github.com/meganz/megasync"
 license=('custom:MEGA LIMITED CODE REVIEW LICENCE')
-conflicts=('megatools')
 depends=('curl' 'c-ares' 'crypto++' 'libsodium' 'hicolor-icon-theme' 'qt5-base' 'libuv')
 makedepends=('git' 'qt5-tools')
 optdepends=('sni-qt: fix systray issue on KDE and LXQt')
-source=("git+https://github.com/meganz/MEGAsync.git#commit=aee1443420234446534ddbd3513ee1d480f5533c")
+source=("git+https://github.com/meganz/MEGAsync.git#tag=v${_pkgver}_Linux")
 md5sums=('SKIP')
 
 prepare(){
