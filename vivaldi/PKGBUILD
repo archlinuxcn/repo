@@ -2,7 +2,7 @@
 # Contributor: TZ86
 
 pkgname=vivaldi
-pkgver=1.3.551.38
+pkgver=1.4.589.11
 pkgrel=1
 pkgdesc='An advanced browser made with the power user in mind.'
 url="https://vivaldi.com"
@@ -18,20 +18,27 @@ optdepends=(
 )
 source_i686=("https://downloads.vivaldi.com/stable/vivaldi-stable-${pkgver}-1.i386.rpm")
 source_x86_64=("https://downloads.vivaldi.com/stable/vivaldi-stable-${pkgver}-1.x86_64.rpm")
-sha256sums_i686=('17316c9edbdfd20f73bcf1db1626709b9a7451346f19af035ad2d500cb73c665')
-sha256sums_x86_64=('756dac21d7b10f9566e9be93d66c993a0a160c773e287f5f6c21d50ef22f6cf0')
+sha256sums_i686=('8902eedc9a01344c8729d34c34ddb884e8920054be2ceb6b5c6f45a26c577c7d')
+sha256sums_x86_64=('ebdcf87180070935016597ba6a42c9c07191dedaa1bfbf10619592aaf90bc7d8')
 
 package() {
     cp -a {opt,usr} "$pkgdir"
 
-	# suid sanbox
-	chmod 4755 "$pkgdir/opt/vivaldi/vivaldi-sandbox"
+    # suid sandbox
+    chmod 4755 "$pkgdir/opt/vivaldi/vivaldi-sandbox"
 
-	# install icons
-	for res in 16 22 24 32 48 64 128 256; do
-		install -Dm644 "$pkgdir/opt/vivaldi/product_logo_${res}.png" \
-		"$pkgdir/usr/share/icons/hicolor/${res}x${res}/apps/vivaldi.png"
-	done
+    # make /usr/bin/vivaldi available if its not there
+    if [[ ! -e "$pkgdir/usr/bin/vivaldi" ]]; then
+        install -dm 755 "$pkgdir/usr/bin"
+        ln -sf /opt/vivaldi/vivaldi \
+            "$pkgdir/usr/bin/vivaldi"
+    fi
+
+    # install icons
+    for res in 16 22 24 32 48 64 128 256; do
+        install -Dm644 "$pkgdir/opt/vivaldi/product_logo_${res}.png" \
+            "$pkgdir/usr/share/icons/hicolor/${res}x${res}/apps/vivaldi.png"
+    done
 
     # license
     install -dm755 "$pkgdir/usr/share/licenses/$pkgname"
