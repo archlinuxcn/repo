@@ -1,9 +1,0 @@
-[Unit]
-Description=Socket for uWSGI Emperor (x32 ABI)
-
-[Socket]
-# Change this to your uwsgi application port or unix socket location
-ListenStream=/run/uwsgi/emperor-x32.sock
-
-[Install]
-WantedBy=sockets.target
