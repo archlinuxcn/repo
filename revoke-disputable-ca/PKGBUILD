@@ -1,0 +1,42 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+
+pkgname=revoke-disputable-ca
+pkgver=1
+pkgrel=1
+pkgdesc='Revoke disputable CAs, mainly for Chinese users'
+arch=('any')
+url=''
+license=('GPL')
+depends=('ca-certificates-utils')
+install="${pkgname}.install"
+source=(
+        CA_WoSign_ECC_Root.pem
+        Certification_Authority_of_WoSign_G2.pem
+        CNNIC_ROOT.pem
+        StartCom_Certification_Authority.1.pem
+        StartCom_Certification_Authority_G2.pem
+        StartCom_Certification_Authority.pem
+        WoSign_China.pem
+        WoSign.pem
+        )
+md5sums=('a5f3323bd9bf2699c8c572a7fea0034d'
+         '958cf2ceee0bf55ac077064fb7f0b5f8'
+         'a411201603d26d58720ea081b43638fc'
+         '024c047c146cad9c7b189e78a0599dcc'
+         'e1fb41d30fb450ce6c86ea15627cb6f2'
+         'd067bb319513fa1f4aa3003e54440063'
+         'cbb231202d6a3d12c89a9b468b418c69'
+         '581a282d755e10ed9b45462aa81bb231')
+
+build() {
+  true
+}
+
+package() {
+  cd ${srcdir}
+  _destdir="${pkgdir}/usr/share/ca-certificates/trust-source/blacklist"
+  install -d -m755 "$_destdir"
+  for cert in *.pem; do
+    cp "${cert}" "$_destdir"
+  done
+}
