@@ -2,7 +2,7 @@
 # Maintainer: Stefan Husmann <stefan-husmann@t-online.de>
 
 pkgname=inkscape-bzr
-pkgver=r15104
+pkgver=r15109
 pkgrel=1
 pkgdesc="An Open Source vector graphics editor, using SVG file format, from bzr trunk"
 url="https://launchpad.net/inkscape"
@@ -10,7 +10,7 @@ arch=('i686' 'x86_64')
 license=('GPL' 'LGPL')
 depends=('aspell' 'gc' 'poppler-glib' 'libxslt' 'gsl' 'imagemagick'
 	 'gdl>=3.8.0.25' 'gtkmm3' 'potrace' 'libcdr' 'libvisio'
-	 'gnome-vfs' )
+	 'gnome-vfs')
 optdepends=('python2-numpy: some extensions'
             'python2-lxml: some extensions and filters'
             'uniconvertor: reading/writing to some proprietary formats'
