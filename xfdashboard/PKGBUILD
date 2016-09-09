@@ -1,21 +1,21 @@
 # Maintainer: Andrey Vihrov <andrey.vihrov at gmail.com>
 
 pkgname=xfdashboard
-pkgver=0.6.0
-pkgrel=3
+pkgver=0.7.0
+pkgrel=1
 pkgdesc="Maybe a Gnome shell like dashboard for Xfce"
 arch=('i686' 'x86_64')
 url="http://goodies.xfce.org/projects/applications/xfdashboard/start"
 license=('GPL')
 depends=('libwnck3' 'clutter' 'garcon')
-makedepends=('intltool')
-source=("http://archive.xfce.org/src/apps/${pkgname}/${pkgver%.*}/${pkgname}-${pkgver}.tar.bz2")
-sha256sums=('86feda138001a3bbb686a36c14ad6923e3c7ab2c1b921217f9c075cd43c2b1bc')
+makedepends=('xfce4-dev-tools')
+source=("https://github.com/gmc-holle/xfdashboard/archive/${pkgver}.tar.gz")
+sha256sums=('4de8671e76700b7d792b2fe85a019619d6158b9a83473e908997e7e0c2e0499b')
 
 build() {
   cd "${pkgname}-${pkgver}"
 
-  ./configure --prefix=/usr --sysconfdir=/etc --disable-dependency-tracking
+  ./autogen.sh --prefix=/usr --sysconfdir=/etc --disable-dependency-tracking
   # -Wl,--as-needed should come before all libraries
   sed -i -e '/\$CC/s/-shared/\0 -Wl,--as-needed/' libtool
   make
