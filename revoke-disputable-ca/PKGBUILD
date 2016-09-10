@@ -2,13 +2,12 @@
 
 pkgname=revoke-disputable-ca
 pkgver=1
-pkgrel=1
+pkgrel=2
 pkgdesc='Revoke disputable CAs, mainly for Chinese users'
 arch=('any')
 url=''
 license=('GPL')
 depends=('ca-certificates-utils')
-install="${pkgname}.install"
 source=(
         CA_WoSign_ECC_Root.pem
         Certification_Authority_of_WoSign_G2.pem
