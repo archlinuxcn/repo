@@ -1,0 +1,20 @@
+diff -Nru --exclude changelog hpoj-0.91/mlcd/transport/ExMlcTransport.h hpoj-0.91/mlcd/transport/ExMlcTransport.h
+--- hpoj-0.91/mlcd/transport/ExMlcTransport.h	2003-11-04 06:33:19.000000000 +0530
++++ hpoj-0.91/mlcd/transport/ExMlcTransport.h	2008-03-20 10:14:02.000000000 +0530
+@@ -888,14 +888,14 @@
+ 	void remsockReset(void);
+     public:
+ 	STATUS remsockLookup(int socketID,int *pState,
+-	    int *pMaxForwardPacketSize,int *pMaxForwardPacketSize);
++	    int *pMaxForwardPacketSize,int *pMaxForwardPacketSize2);
+ 	STATUS remsockAdd(int socketID);
+ 	void handleConfigSocketReply(int result,int socketID,
+ 	    int maxPriToSecPacketSize,int maxSecToPriPacketSize,
+ 	    int statusLevel);
+     protected:
+ 	STATUS remsockUpdate(int socketID,
+-	    int maxForwardPacketSize,int maxForwardPacketSize);
++	    int maxForwardPacketSize,int maxForwardPacketSize2);
+ 	STATUS remsockDelete(int socketID);
+ 
+ 	// Peripheral-initiated opens (not supported):

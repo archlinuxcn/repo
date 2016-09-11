@@ -1,0 +1,194 @@
+--- hpoj-0.91/lib/hpojip/xjpg_fix.c.gcc4	2002-07-25 11:01:24.000000000 +0200
++++ hpoj-0.91/lib/hpojip/xjpg_fix.c	2005-03-01 23:05:52.905482223 +0100
+@@ -389,7 +389,7 @@
+ \*****************************************************************************/
+ 
+ 
+-#define MYLOCATE(p) (void *)(p)=(g->headerBuffer+lenAddedHeader)
++#define MYLOCATE(p) (p)=(typeof(p))(g->headerBuffer+lenAddedHeader)
+ #define MYWRITE(p) lenAddedHeader+=sizeof(*(p))
+ #define MYWRITEBUF(data,datalen) \
+     do { \
+--- hpoj-0.91/mlcd/ExMgr.h.gcc4	2003-11-04 02:03:18.000000000 +0100
++++ hpoj-0.91/mlcd/ExMgr.h	2005-03-01 23:38:34.297977986 +0100
+@@ -127,8 +127,8 @@
+ 	QueueEntry(): prev(0),next(0) { } 
+ #ifdef JD_DEBUGLITE
+ 	void dump(void) {
+-		printf("QueueEntry(0x%8.8X): prev=0x%8.8X, next=0x%8.8X\n",
+-			(int)this,(int)prev,(int)next);
++		printf("QueueEntry(%p): prev=%p, next=%p\n",
++			this,prev,next);
+ 	}
+ #endif
+ 	int isEnqueued(void) { return (prev || next); }
+--- hpoj-0.91/mlcd/ExMgr.cpp.gcc4	2003-11-04 02:03:18.000000000 +0100
++++ hpoj-0.91/mlcd/ExMgr.cpp	2005-03-01 23:41:49.408864110 +0100
+@@ -248,8 +248,8 @@
+ 
+ #ifdef JD_DEBUGLITE
+ void ExWatchdogTimer::dump(void) {
+-	printf("pMsgHandler=0x%8.8X\n",(int)pMsgHandler);
+-	printf("pMsg=0x%8.8X\n",(int)pMsg);
++	printf("pMsgHandler=%p\n",pMsgHandler);
++	printf("pMsg=%p\n",pMsg);
+ 	printf("delay=%d seconds, %d usec\n",
+ 		(int)delay.tv_sec,(int)delay.tv_usec);
+ 	printf("cancelled=%d\n",cancelled);
+@@ -1307,13 +1307,13 @@
+ 	printf("\tstate=%d\n",session[scd].state);
+ 	printf("\tfd=%d\n",session[scd].fd);
+ 	printf("\tscdlink=%d\n",session[scd].scdlink);
+-	printf("\tpLookup=0x%8.8X\n",(int)session[scd].pLookup);
++	printf("\tpLookup=%p\n",session[scd].pLookup);
+ 	printf("\toutstandingForwardBdrCount=%d\n",
+ 		session[scd].outstandingForwardBdrCount);
+ 	printf("\tpReverseBdrQueue: depth=%d\n",
+ 		session[scd].pReverseBdrQueue->depth());
+-	printf("\ttcd=0x%8.8X\n",(int)session[scd].tcd);
+-	printf("\tpCommandBdr=0x%8.8X\n",(int)session[scd].pCommandBdr);
++	printf("\ttcd=%p\n",session[scd].tcd);
++	printf("\tpCommandBdr=%p\n",session[scd].pCommandBdr);
+ 	printf("\tpmlTrapsRegistered=%d\n",session[scd].pmlTrapsRegistered);
+ 	printf("\tbitbucketSocket=%d\n",session[scd].bitbucketSocket);
+ 
+@@ -2407,8 +2407,8 @@
+ 	}
+ 	printf("llioPossibleNameCount=%d\n",llioPossibleNameCount);
+ 	printf("llioName=<%s>\n",SAFE_STRING(llioName));
+-	printf("llioGlobBuffer.gl_pathc=%d\n",llioGlobBuffer.gl_pathc);
+-	printf("llioGlobBuffer.gl_offs=%d\n",llioGlobBuffer.gl_offs);
++	printf("llioGlobBuffer.gl_pathc=%lu\n",(unsigned long)llioGlobBuffer.gl_pathc);
++	printf("llioGlobBuffer.gl_offs=%lu\n",(unsigned long)llioGlobBuffer.gl_offs);
+ 	printf("llioGlobFlags=%d\n",llioGlobFlags);
+ 	for (i=0;i<llioMatchDeviceIDCount;i++) {
+ 		printf("llioMatchDeviceID[%d]=<%s>\n",i,
+--- hpoj-0.91/mlcd/transport/ExTransport.cpp.gcc4	2005-03-04 14:00:57.000000000 +0000
++++ hpoj-0.91/mlcd/transport/ExTransport.cpp	2005-03-04 14:03:37.000000000 +0000
+@@ -70,6 +70,7 @@
+ 
+ #ifdef JD_DEBUGLITE
+ void ExLookup::dump(void) {
++#if 0
+ 	printf("sizeof(ExLookup)=%d, this=0x%8.8X\n",
+ 		sizeof(ExLookup),(int)this);
+ 	printf("pService=0x%8.8X\n",
+@@ -82,6 +83,7 @@
+ 		lastSet);
+ 	printf("status=%d\n",
+ 		status);
++#endif
+ }
+ void ExLookup__dump(ExLookup *_this) {
+ 	return _this->dump();
+@@ -316,6 +318,7 @@
+ 
+ #ifdef JD_DEBUGLITE
+ void ExTransportChannel::dump(void) {
++#if 0
+ 	printf("this=0x%8.8X\n",
+ 		(int)this);
+ 	printf("port=%d\n",
+@@ -378,6 +381,7 @@
+ 		currentGrabbedCredit);
+ 	printf("currentGrabbedTransaction=%d\n",
+ 		currentGrabbedTransaction);
++#endif
+ }
+ #endif
+ 
+@@ -922,6 +926,7 @@
+ #ifdef JD_DEBUGLITE
+ 
+ void ExTransport::dump(void) {
++#if 0
+ 	int channel;
+ 
+ 	printf("this=0x%8.8X\n",
+@@ -971,6 +976,7 @@
+     if (pLookupRequest) {
+ 	pLookupRequest->dump();
+     }
++#endif
+ }
+ 
+ void ExTransport::dumpall(void) {
+@@ -1101,7 +1107,7 @@
+ 	ExMsg *pMsg=pMgr->getFreeMsg();
+ 
+ 	pMsg->setType(eEXMSG_ACTIVATE_WAIT);
+-	pMsg->setParams(eEXCLASS_TRANSPORT,(int)this);
++	pMsg->setParams(eEXCLASS_TRANSPORT,(int)(long)this); // HACK
+ 	pMsg->send(pMgr);
+ }
+ 
+@@ -1248,7 +1254,7 @@
+ 	ExMsg *pMsg=pMgr->getFreeMsg();
+ 
+ 	pMsg->setType(eEXMSG_ACTIVATE_RESPONSE);
+-	pMsg->setParams(eEXCLASS_TRANSPORT,(int)this,status);
++	pMsg->setParams(eEXCLASS_TRANSPORT,(int)(long)this,status); // HACK
+ 	pMsg->send(pMgr);
+ }
+ 
+@@ -1282,7 +1288,7 @@
+ 	ExMsg *pMsg=pMgr->getFreeMsg();
+ 
+ 	pMsg->setType(eEXMSG_DEACTIVATE_RESPONSE);
+-	pMsg->setParams(eEXCLASS_TRANSPORT,(int)this,status);
++	pMsg->setParams(eEXCLASS_TRANSPORT,(int)(long)this,status); // HACK
+ 	pMsg->send(pMgr);
+ }
+ 
+--- hpoj-0.91/mlcd/transport/ExMlcTransport.cpp.gcc4	2005-03-04 14:28:28.000000000 +0000
++++ hpoj-0.91/mlcd/transport/ExMlcTransport.cpp	2005-03-04 14:29:40.000000000 +0000
+@@ -409,6 +409,7 @@
+ 
+ #ifdef JD_DEBUGLITE
+ void ExMlcTransportChannel::dump(void) {
++#if 0
+ 	ExTransportChannel::dump();
+ 	printf("----------------\n");
+ 	printf("pMlcTransport=0x%8.8X\n",
+@@ -487,6 +488,7 @@
+ 		countHandleEmptyCreditRequestReply.get());
+ 	printf("isGusher=%d\n",
+ 		isGusher());
++#endif
+ }
+ #endif
+ 
+@@ -1597,6 +1599,7 @@
+ 
+ #ifdef JD_DEBUGLITE
+ void ExMlcTransport::dump(void) {
++#if 0
+ 	int i;
+ 
+ 	ExTransport::dump();
+@@ -1631,6 +1634,7 @@
+ 		remoteSocketArray[i].maxForwardPacketSize,
+ 		remoteSocketArray[i].maxReversePacketSize);
+     }
++#endif
+ }
+ #endif
+ 
+--- hpoj-0.91/mlcd/transport/ExMlcCommandChannel.cpp.gcc4	2005-03-04 14:37:19.000000000 +0000
++++ hpoj-0.91/mlcd/transport/ExMlcCommandChannel.cpp	2005-03-04 14:37:46.000000000 +0000
+@@ -214,6 +214,7 @@
+ 
+ #ifdef JD_DEBUGLITE
+ void ExMlcCommandChannel::dump(void) {
++#if 0
+ 	ExMlcTransportChannel::dump();
+ 	printf("----------------\n");
+ 	printf("pForwardCommandPool=0x%8.8X\n",
+@@ -238,6 +239,7 @@
+ 		lastPsid);
+ 	printf("lastSsid=%d\n",
+ 		lastSsid);
++#endif
+ }
+ #endif
+ 
