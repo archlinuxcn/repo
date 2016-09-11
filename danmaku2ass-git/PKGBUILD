@@ -2,8 +2,8 @@
 # Contributor: Star Brilliant <echo bTEzMjUzQGhvdG1haWwuY29tCg== | base64 -d>
 
 pkgname=danmaku2ass-git
-pkgver=20150829
-pkgrel=2
+pkgver=20160824
+pkgrel=1
 pkgdesc="Convert comments from Niconico/AcFun/bilibili to ASS format"
 arch=('any')
 url="https://github.com/m13253/danmaku2ass"
@@ -18,6 +18,11 @@ md5sums=('SKIP')
 pkgver() {
   cd "$srcdir/danmaku2ass"
   git log -1 --format="%cd" --date=short | tr -d -
+}
+
+build() {
+  cd "$srcdir/danmaku2ass"
+  make
 }
 
 package() {
