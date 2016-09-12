@@ -3,14 +3,14 @@
 
 pkgname=dockbarx
 pkgver=0.92
-pkgrel=1
+pkgrel=2
 pkgdesc="TaskBar with groupping and group manipulation"
 arch=('i686' 'x86_64')
 url="https://github.com/M7S/dockbarx"
 license=('GPL3')
 depends=('python2-wnck' 'pygtk' 'python2-xdg' 'python2-dbus' 'python2-numpy' 
          'python2-pillow' 'python2-keybinder2' 'hicolor-icon-theme' 'python2-xlib'
-         'python2-gconf')
+         'python2-gconf' 'python2-six')
 optdepends=('avant-window-navigator: AWN DockBarX Plugin'
             'xfce4-dockbarx-plugin: Xfce4 Panel Plugin'
             'zeitgeist: recently used file list'
