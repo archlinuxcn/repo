@@ -17,8 +17,8 @@ sha256sums=('1bf0336ce684aa0f48d6eae2469628c1a9b43695a77443bc31a5790aa673bf8a'
             '3bf75bd632d6be88632c0f6113aac5ac5d65e1a01b408c27ea1fd7bb718d6ebd')
 
 prepare() {
-    cd $srcdir
-    patch -p1 -i $srcdir/fix-misleading-indentation.patch
+  cd $srcdir
+  patch -p1 -i $srcdir/fix-misleading-indentation.patch
 }
 
 build() {
