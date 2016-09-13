@@ -18,7 +18,7 @@ options=('debug')
 
 pkgver() {
   cd vim-repo
-  echo 7.4.$(sed -n '/ included_patches\[\]/,+3p' src/version.c | sed '/[^,]$/d;s/\s*\|,//g')
+  echo 8.0.$(sed -n '/ included_patches\[\]/,+3p' src/version.c | sed '/[^,]$/d;s/\s*\|,//g')
 }
 
 build() {
