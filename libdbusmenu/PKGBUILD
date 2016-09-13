@@ -18,7 +18,6 @@ source=("https://launchpad.net/${pkgbase}/${pkgver%.?}/${pkgver}/+download/${pkg
 sha512sums=('ee9654ac4ed94bdebc94a6db83b126784273a417a645b2881b2ba676a5f67d7fc95dd2bb37bfb0890aa47299ed73cb21ed7de8b75f3fed6b69bfd39065062241')
 
 prepare() {
-  cd "${srcdir}"
   [ -d "${pkgbase}-gtk2-${pkgver}" ] && rm -rf "${pkgbase}-gtk2-${pkgver}"
   cp -a "${pkgbase}-${pkgver}" "${pkgbase}-gtk2-${pkgver}"
 }
@@ -40,15 +39,15 @@ build() {
 package_libdbusmenu-glib() {
 depends=('glib2')
 
-  cd "${srcdir}/${pkgbase}-${pkgver}"
+  cd "${pkgbase}-${pkgver}"
 
   make -j1 -C libdbusmenu-glib DESTDIR="${pkgdir}" install
 }
 
 package_libdbusmenu-gtk2() {
-depends=('gtk2' 'libdbusmenu-glib')
+depends=("${pkgbase}-glib" 'gtk2')
 
-  cd "${srcdir}/${pkgbase}-gtk2-${pkgver}"
+  cd "${pkgbase}-gtk2-${pkgver}"
 
   make -j1 -C libdbusmenu-glib DESTDIR="${pkgdir}" install
   make -j1 -C libdbusmenu-gtk DESTDIR="${pkgdir}" install
@@ -56,9 +55,9 @@ depends=('gtk2' 'libdbusmenu-glib')
 }
 
 package_libdbusmenu-gtk3() {
-depends=('gtk3' 'libdbusmenu-glib')
+depends=("${pkgbase}-glib" 'gtk3')
 
-  cd "${srcdir}/${pkgbase}-${pkgver}"
+  cd "${pkgbase}-${pkgver}"
 
   make -j1 -C libdbusmenu-glib DESTDIR="${pkgdir}" install
   make -j1 -C libdbusmenu-gtk DESTDIR="${pkgdir}" install
