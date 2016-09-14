@@ -1,0 +1,13 @@
+post_install() {
+  cat << EOF
+
+===> virtio-win post install message:
+===>
+===> Redistribution of images copied in:
+===>
+===>   /usr/share/virtio/virtio-win.iso
+===>   /usr/share/virtio/virtio-win_x86_32.vfd
+===>   /usr/share/virtio/virtio-win_x86_64.vfd
+
+EOF
+}
