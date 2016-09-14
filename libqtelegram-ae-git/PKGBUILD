@@ -7,7 +7,7 @@
 
 pkgname=libqtelegram-ae-git
 epoch=3
-pkgver=10.0.0.stable.r16.ga60e0d6
+pkgver=10.0.0.stable.r17.g10a4fd2
 pkgrel=1
 pkgdesc="Telegram library written in Qt based on telegram-cli code"
 arch=('x86_64' 'i686')
@@ -34,8 +34,8 @@ prepare() {
 }
 
 build() {
-  cd $ASEMAN_SRC_PATH
 
+  cd $pkgname
   ## copied from ./init with modification
 
   rm -rf libqtelegram-code-generator
@@ -50,11 +50,11 @@ build() {
   qmake-qt5 -r ../libqtelegram-code-generator
   make
 
-  ./libqtelegram-generator 54 $ASEMAN_SRC_PATH/scheme/scheme-54.tl $ASEMAN_SRC_PATH
+  ./libqtelegram-generator 54 ../scheme/scheme-54.tl ..
   cd ..
   ## end of ./init
 
-  cd $pkgname/build
+  cd build
   qmake-qt5 -r QMAKE_CFLAGS_ISYSTEM= CONFIG+=typeobjects PREFIX=/usr ..
   make
 }
