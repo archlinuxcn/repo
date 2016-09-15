@@ -4,7 +4,7 @@
 
 pkgname=steam-libs
 pkgver=1.0.0.52
-pkgrel=4
+pkgrel=5
 pkgdesc='Collection of libraries to launch Steam without its runtime environment'
 arch=('x86_64')
 url='https://wiki.archlinux.org/index.php/Steam#Using_native_runtime'
@@ -26,7 +26,7 @@ depends=('lib32-alsa-lib' 'lib32-alsa-plugins' 'lib32-atk' 'lib32-cairo'
          'lib32-sdl_ttf')
 source=('steam-native'
         'steam-native.desktop')
-sha256sums=('3e377d93d667d81efbbfb456760d4ce0f1b207085788693099839e6fcf26bca0'
+sha256sums=('e7f3318713dd210717cad6dc2aa5e18a6e06be1a18e4d8acbd267685e8ee507b'
             '88ee3daafe792a9eb9d6c2b8cb4429dd5da3b18737a0eae54d64296a6a878332')
 
 package() {
