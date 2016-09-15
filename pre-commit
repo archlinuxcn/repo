@@ -51,6 +51,8 @@ for section in config.sections():
         continue
     with ErrorMessage('nvchecker.ini contains "\033[1;31m{0}\033[m" section but there is no "\033[1;31m{0}\033[m" directory'.format(section)):
         files = os.listdir(section)
+    with ErrorMessage('nvchecker.ini section "\033[1;31m{0}\033[m" is empty'.format(section)):
+        assert len(config[section].items()) > 0
     for key, value in config[section].items():
         with ErrorMessage('nvchecker.ini section "\033[1;31m{0}\033[m" contains ill-formed key "\033[1;31m{1}\033[m"'.format(section, key)):
             assert item_key_regex.match(key).groups()[0] == key
