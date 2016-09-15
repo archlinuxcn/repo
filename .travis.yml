@@ -16,6 +16,7 @@ addons:
             - shellcheck
 
 script:
+    - python3 --version
     - ./pre-commit  # checking nvchecker.ini
     - shellcheck --exclude=SC2034,SC2148,SC2154,SC2164 */PKGBUILD || true  # checking all PKGBUILDS
     # SC2034: $VAR appears unused. Verify it or export it.
