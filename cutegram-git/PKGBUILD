@@ -40,5 +40,6 @@ build() {
 
 package() {
   cd "${srcdir}/${pkgname}/build"
-  make INSTALL_ROOT="${pkgdir}" install
+  # make INSTALL_ROOT="${pkgdir}" install
+  install -Dm755 cutegram "${pkgdir}/usr/bin/cutegram"
 }
