@@ -16,6 +16,7 @@ def error_exit():
     print('\033[1;31mThere are {0} error(s) inside repo, blocking git commit. Please fix the errors and commit again\033[m'.format(total_errors))
     sys.exit(1)
 
+
 class ErrorMessage:
     def __init__(self, msg, fatal=False):
         self.msg = msg
@@ -36,41 +37,48 @@ class ErrorMessage:
             error_exit()
         return True
 
-config = ConfigParser(dict_type=dict, allow_no_value=True)
 
-with ErrorMessage('nvchecker.ini contains syntax error', fatal=True):
-    config.read_file(open('nvchecker.ini'))
+def main():
+    config = ConfigParser(dict_type=dict, allow_no_value=True)
 
-with ErrorMessage('nvchecker.ini has no "__config__" section'):
-    configsection = config["__config__"]
-with ErrorMessage('"__config__" section has no "oldver" or "newver" settings'):
-    oldver, newver = configsection["oldver"], configsection["newver"]
+    with ErrorMessage('nvchecker.ini contains syntax error', fatal=True):
+        config.read_file(open('nvchecker.ini'))
 
-for section in config.sections():
-    if section == "__config__":
-        continue
-    with ErrorMessage('nvchecker.ini contains "\033[1;31m{0}\033[m" section but there is no "\033[1;31m{0}\033[m" directory'.format(section)):
-        files = os.listdir(section)
-    with ErrorMessage('nvchecker.ini section "\033[1;31m{0}\033[m" is empty'.format(section)):
-        assert len(config[section].items()) > 0
-    for key, value in config[section].items():
-        with ErrorMessage('nvchecker.ini section "\033[1;31m{0}\033[m" contains ill-formed key "\033[1;31m{1}\033[m"'.format(section, key)):
-            assert item_key_regex.match(key).groups()[0] == key
-    ## too many packages violating this, disabled
-    # if "manual" not in config[section]:
-    #     with ErrorMessage('package "\033[1;33m{0}\033[1;31m" do not have lilac.py'.format(section)):
-    #         lilacpy = open(os.path.join(section, "lilac.py"), "r")
+    with ErrorMessage('nvchecker.ini has no "__config__" section'):
+        configsection = config["__config__"]
+    with ErrorMessage('"__config__" section has no "oldver" or "newver" settings'):
+        oldver, newver = configsection["oldver"], configsection["newver"]
 
-for package in os.listdir('.'):
-    if not os.path.isdir(package):
-        continue
-    if package == ".git":
-        continue
-    ## too many packages violating this, disabled
-    # with ErrorMessage('package "\033[1;31m{0}\033[m" do not has a section in "nvchecker.ini"'.format(package)):
-    #    section = config[package]
-    with ErrorMessage('package "\033[1;31m{0}\033[m" do not has a "\033[1;31mPKGBUILD\033[m"'.format(package)):
-        pkgbuild = open(os.path.join(package, "PKGBUILD"), "r")
+    for section in config.sections():
+        if section == "__config__":
+            continue
+        with ErrorMessage('nvchecker.ini contains "\033[1;31m{0}\033[m" section but there is no "\033[1;31m{0}\033[m" directory'.format(section)):
+            files = os.listdir(section)
+        with ErrorMessage('nvchecker.ini section "\033[1;31m{0}\033[m" is empty'.format(section)):
+            assert len(config[section].items()) > 0
+        for key, value in config[section].items():
+            with ErrorMessage('nvchecker.ini section "\033[1;31m{0}\033[m" contains ill-formed key "\033[1;31m{1}\033[m"'.format(section, key)):
+                assert item_key_regex.match(key).groups()[0] == key
+        ## too many packages violating this, disabled
+        # if "manual" not in config[section]:
+        #     with ErrorMessage('package "\033[1;33m{0}\033[1;31m" do not have lilac.py'.format(section)):
+        #         lilacpy = open(os.path.join(section, "lilac.py"), "r")
 
-if total_errors > 0:
-    error_exit()
+    for package in os.listdir('.'):
+        if not os.path.isdir(package):
+            continue
+        if package == ".git":
+            continue
+        ## too many packages violating this, disabled
+        # with ErrorMessage('package "\033[1;31m{0}\033[m" do not has a section in "nvchecker.ini"'.format(package)):
+        #    section = config[package]
+        with ErrorMessage('package "\033[1;31m{0}\033[m" do not has a "\033[1;31mPKGBUILD\033[m"'.format(package)):
+            pkgbuild = open(os.path.join(package, "PKGBUILD"), "r")
+
+    if total_errors > 0:
+        error_exit()
+
+
+
+if __name__ == '__main__':
+    main()
