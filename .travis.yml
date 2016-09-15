@@ -1,0 +1,28 @@
+language: python
+
+python:
+    - "3.5"
+
+## modified from https://github.com/koalaman/shellcheck/wiki/TravisCI
+
+# Use container-based infrastructure for quicker build start-up
+sudo: false
+
+addons:
+    apt:
+        sources:
+            - debian-sid    # Grab shellcheck from the Debian repo
+        packages:
+            - shellcheck
+
+script:
+    - ./pre-commit  # checking nvchecker.ini
+    - shellcheck --exclude=SC2034,SC2148,SC2154,SC2164 */PKGBUILD || true  # checking all PKGBUILDS
+    # SC2034: $VAR appears unused. Verify it or export it.
+    # SC2148: Add a shebang.
+    # SC2154: $VAR is referenced but not assigned.
+    # SC2164: Use cd $SOMEPATH || exit in case cd fails.
+
+
+matrix:
+    fast_finish: true
