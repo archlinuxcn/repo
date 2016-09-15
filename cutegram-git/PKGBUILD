@@ -34,7 +34,7 @@ prepare() {
 
 build() {
   cd "${srcdir}/${pkgname}/build"
-  qmake-qt5 .. QMAKE_CFLAGS_ISYSTEM= PREFIX=/usr
+  qmake-qt5 .. QMAKE_CFLAGS_ISYSTEM= CONFIG+=binaryMode
   make
 }
 
