@@ -13,7 +13,7 @@ total_errors = 0
 item_key_regex = re.compile('([_0-9a-zA-Z]+)')
 
 def error_exit():
-    print('\033[1;31mThere are {0} error(s) inside repo, blocking git commit. Please fix the errors and commit again\033[m'.format(total_errors), file=sys.stdout)
+    print('\033[1;31mThere are {0} error(s) inside repo, blocking git commit. Please fix the errors and commit again\033[m'.format(total_errors))
     sys.exit(1)
 
 class ErrorMessage:
@@ -29,9 +29,9 @@ class ErrorMessage:
         if exc_type is None:
             return True
         if self.fatal:
-            traceback.print_exception(exc_type, exc_value, tb, file=sys.stdout)
+            traceback.print_exception(exc_type, exc_value, tb)
         total_errors += 1
-        print(self.msg, file=sys.stdout)
+        print(self.msg)
         if self.fatal:
             error_exit()
         return True
