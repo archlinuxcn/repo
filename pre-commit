@@ -12,11 +12,6 @@ from configparser import ConfigParser
 
 
 class NvcheckerSyntaxTest(TestCase):
-  def run(self, result):
-    TestCase.run(self, result)
-    if not result.wasSuccessful:
-      result.stop()
-
   def test_nvchecker_ini(self):
     self.config = ConfigParser(dict_type=dict, allow_no_value=True)
     with open('nvchecker.ini') as configfile:
