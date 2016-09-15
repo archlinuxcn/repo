@@ -6,79 +6,110 @@
 import os
 import sys
 import re
-import traceback
+from unittest import TestCase, TestSuite, TestLoader, TextTestRunner, skip
+from io import StringIO
 from configparser import ConfigParser
 
-total_errors = 0
-item_key_regex = re.compile('([_0-9a-zA-Z]+)')
 
-def error_exit():
-    print('\033[1;31mThere are {0} error(s) inside repo, blocking git commit. Please fix the errors and commit again\033[m'.format(total_errors))
+class NvcheckerSyntaxTest(TestCase):
+  def run(self, result):
+    TestCase.run(self, result)
+    if not result.wasSuccessful:
+      result.stop()
+
+  def test_nvchecker_ini(self):
+    self.config = ConfigParser(dict_type=dict, allow_no_value=True)
+    with open('nvchecker.ini') as configfile:
+      self.config.read_file(configfile)
+
+
+class ConfigSectionTest(TestCase):
+  def setUp(self):
+    self.item_key_regex = re.compile('([_0-9a-zA-Z]+)')
+    self.config = ConfigParser(dict_type=dict, allow_no_value=True)
+    with open('nvchecker.ini') as configfile:
+      self.config.read_file(configfile)
+
+  def test_config_section(self):
+    self.assertIn("__config__", self.config,
+                  msg='nvchecker.ini has no ' +
+                      '""\033[1;31m__config__\033[m" section')
+    self.assertIn("oldver", self.config["__config__"],
+                  msg='"__config__" section has no ' +
+                      '"\033[1;31moldver\033[m" setting')
+    self.assertIn("newver", self.config["__config__"],
+                  msg='"__config__" section has no ' +
+                      '"\033[1;31mnewver\033[m" setting')
+
+  def test_sections(self):
+    for section in self.config.sections():
+      if section == "__config__":
+        continue
+      with self.subTest(section=section):
+        self.assertTrue(os.path.isdir(section),
+                        msg=('nvchecker.ini contains ' +
+                             '"\033[1;31m{0}\033[m" section but there is no ' +
+                             '"\033[1;31m{0}\033[m" package').format(section))
+      with self.subTest(section=section):
+        self.assertGreater(len(self.config[section].items()), 0,
+                           msg=('section "\033[1;31m{0}\033[m" ' +
+                                'is empty').format(section))
+      for key, value in self.config[section].items():
+        with self.subTest(section=section, key=key, value=value):
+          self.assertTrue(self.item_key_regex.match(key),
+                          msg=('nvchecker.ini section "\033[1;31m{0}\033[m" ' +
+                               'contains ill-formed key ' +
+                               '"\033[1;31m{1}\033[m"').format(section, key))
+
+  @skip("226 packages violating this")
+  def test_have_lilac_py(self):
+    for section in self.config.sections():
+      if "manual" not in self.config[section]:
+        with self.subTest(section=section):
+          self.assertTrue(os.path.isfile(os.path.join(section, "lilac.py")),
+                          msg=('package "\033[1;31m{0}\033[m" do not ' +
+                               'have lilac.py').format(section))
+
+  def test_folders(self):
+    for package in os.listdir('.'):
+      if not os.path.isdir(package):
+        continue
+      if package == ".git":
+        continue
+      with self.subTest(package=package):
+        self.assertTrue(os.path.isfile(os.path.join(package, "PKGBUILD")),
+                        msg=('package "\033[1;31m{0}\033[m" do not ' +
+                             'have PKGBUILD').format(package))
+
+  @skip("37 packages violating this")
+  def test_folders_in_nvchecker(self):
+    for package in os.listdir('.'):
+      if not os.path.isdir(package):
+        continue
+      if package == ".git":
+        continue
+      with self.subTest(package=package):
+        self.assertIn(package, self.config,
+                      msg=('package "\033[1;31m{0}\033[m" is not in ' +
+                           '"nvchecker.ini"').format(package))
+
+
+def run_test(testcase, msg):
+  output = StringIO()
+  suite = TestLoader().loadTestsFromTestCase(testcase)
+  runner = TextTestRunner(output, verbosity=0)
+  results = runner.run(suite)
+  if not results.wasSuccessful():
+    print(output.getvalue())
+    print(msg.format(len(results.failures)))
     sys.exit(1)
 
-
-class ErrorMessage:
-    def __init__(self, msg, fatal=False):
-        self.msg = msg
-        self.fatal = fatal
-
-    def __enter__(self):
-        pass
-
-    def __exit__(self, exc_type, exc_value, tb):
-        global total_errors
-        if exc_type is None:
-            return True
-        if self.fatal:
-            traceback.print_exception(exc_type, exc_value, tb)
-        total_errors += 1
-        print(self.msg)
-        if self.fatal:
-            error_exit()
-        return True
-
-
-def main():
-    config = ConfigParser(dict_type=dict, allow_no_value=True)
-
-    with ErrorMessage('nvchecker.ini contains syntax error', fatal=True):
-        config.read_file(open('nvchecker.ini'))
-
-    with ErrorMessage('nvchecker.ini has no "__config__" section'):
-        configsection = config["__config__"]
-    with ErrorMessage('"__config__" section has no "oldver" or "newver" settings'):
-        oldver, newver = configsection["oldver"], configsection["newver"]
-
-    for section in config.sections():
-        if section == "__config__":
-            continue
-        with ErrorMessage('nvchecker.ini contains "\033[1;31m{0}\033[m" section but there is no "\033[1;31m{0}\033[m" directory'.format(section)):
-            files = os.listdir(section)
-        with ErrorMessage('nvchecker.ini section "\033[1;31m{0}\033[m" is empty'.format(section)):
-            assert len(config[section].items()) > 0
-        for key, value in config[section].items():
-            with ErrorMessage('nvchecker.ini section "\033[1;31m{0}\033[m" contains ill-formed key "\033[1;31m{1}\033[m"'.format(section, key)):
-                assert item_key_regex.match(key).groups()[0] == key
-        ## too many packages violating this, disabled
-        # if "manual" not in config[section]:
-        #     with ErrorMessage('package "\033[1;33m{0}\033[1;31m" do not have lilac.py'.format(section)):
-        #         lilacpy = open(os.path.join(section, "lilac.py"), "r")
-
-    for package in os.listdir('.'):
-        if not os.path.isdir(package):
-            continue
-        if package == ".git":
-            continue
-        ## too many packages violating this, disabled
-        # with ErrorMessage('package "\033[1;31m{0}\033[m" do not has a section in "nvchecker.ini"'.format(package)):
-        #    section = config[package]
-        with ErrorMessage('package "\033[1;31m{0}\033[m" do not has a "\033[1;31mPKGBUILD\033[m"'.format(package)):
-            pkgbuild = open(os.path.join(package, "PKGBUILD"), "r")
-
-    if total_errors > 0:
-        error_exit()
-
-
-
 if __name__ == '__main__':
-    main()
+  run_test(NvcheckerSyntaxTest,
+           msg='\033[1;31mThere are fatal error inside repo, ' +
+               'blocking git commit. Please fix the errors and commit ' +
+               'again\033[m')
+  run_test(ConfigSectionTest,
+           msg=('\033[1;31mThere are {0} error(s) inside repo, ' +
+                'blocking git commit. Please fix the errors and commit ' +
+                'again\033[m'))
