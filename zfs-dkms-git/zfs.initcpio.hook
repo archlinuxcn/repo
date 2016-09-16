@@ -1,0 +1,100 @@
+ZPOOL_FORCE=""
+ZPOOL_IMPORT_FLAGS=""
+
+zfs_get_bootfs () {
+    for zfs_dataset in $(/usr/bin/zpool list -H -o bootfs); do
+        case ${zfs_dataset} in
+            "" | "-")
+                # skip this line/dataset
+                ;;
+            "no pools available")
+                return 1
+                ;;
+            *)
+                ZFS_DATASET=${zfs_dataset}
+                return 0
+                ;;
+        esac
+    done
+    return 1
+}
+
+zfs_mount_handler () {
+    local node=$1
+    if [ "$ZFS_DATASET" = "bootfs" ] ; then
+        if ! zfs_get_bootfs ; then
+            # Lets import everything and try again
+            /usr/bin/zpool import $ZPOOL_IMPORT_FLAGS -N -a $ZPOOL_FORCE
+            if ! zfs_get_bootfs ; then
+                echo "ZFS: Cannot find bootfs."
+                return 1
+            fi
+        fi
+    fi
+
+    local pool="${ZFS_DATASET%%/*}"
+    local rwopt_exp=${rwopt:-ro}
+
+    if ! "/usr/bin/zpool" list -H $pool 2>&1 > /dev/null ; then
+        if [ "$rwopt_exp" != "rw" ]; then
+            msg "ZFS: Importing pool $pool readonly."
+            ZPOOL_IMPORT_FLAGS="$ZPOOL_IMPORT_FLAGS -o readonly=on"
+        else
+            msg "ZFS: Importing pool $pool."
+        fi
+
+        if ! "/usr/bin/zpool" import $ZPOOL_IMPORT_FLAGS -N $pool $ZPOOL_FORCE ; then
+            echo "ZFS: Unable to import pool $pool."
+            return 1
+        fi
+    fi
+
+    local mountpoint=$("/usr/bin/zfs" get -H -o value mountpoint $ZFS_DATASET)
+    if [ "$mountpoint" = "legacy" ] ; then
+        mount -t zfs -o ${rwopt_exp} "$ZFS_DATASET" "$node"
+    else
+        mount -o zfsutil,${rwopt_exp} -t zfs "$ZFS_DATASET" "$node"
+    fi
+}
+
+run_hook() {
+    # Force import the pools, useful if the pool has not properly been exported
+    # using 'zpool export <pool>'
+    [[ $zfs_force == 1 ]] && ZPOOL_FORCE='-f'
+    [[ "$zfs_import_dir" != "" ]] && ZPOOL_IMPORT_FLAGS="$ZPOOL_IMPORT_FLAGS -d $zfs_import_dir"
+
+    if [ "$root" = 'zfs' ]; then
+        mount_handler='zfs_mount_handler'
+    fi
+
+    case $zfs in
+        "")
+            # skip this line/dataset
+            ;;
+        auto|bootfs)
+            ZFS_DATASET='bootfs'
+            mount_handler="zfs_mount_handler"
+            ;;
+        *)
+            ZFS_DATASET=$zfs
+            mount_handler="zfs_mount_handler"
+            ;;
+    esac
+
+    if [ ! -f "/etc/hostid" ] ; then
+        echo "ZFS: No hostid found on kernel command line or /etc/hostid. ZFS pools may not import correctly."
+    fi
+
+    # Allow up to 10 seconds for zfs device to show up
+    for i in 1 2 3 4 5 6 7 8 9 10; do
+        [ -c "/dev/zfs" ] && break
+        sleep 1
+    done
+}
+
+
+run_latehook () {
+    /usr/bin/zpool import -N -a $ZPOOL_FORCE
+}
+
+# vim:set ts=4 sw=4 ft=sh et:
