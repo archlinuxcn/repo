@@ -1,7 +1,7 @@
 # Maintainer: Haochen Tong <i at hexchain dot org>
 
 pkgname=elvish
-pkgver=0.2
+pkgver=0.4
 pkgrel=1
 pkgdesc="A novel Unix shell."
 arch=('i686' 'x86_64')
