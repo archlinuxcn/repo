@@ -1,10 +1,10 @@
 # Maintainer: Christian Hesse <mail@eworm.de>
 
 pkgbase=vmware-horizon-client
-pkgname=('vmware-horizon-client' 'vmware-horizon-pcoip' 'vmware-horizon-rtav' 'vmware-horizon-smartcard' 'vmware-horizon-usb' 'vmware-horizon-virtual-printing')
-pkgver=4.1.0
-_build=3976982
-_cart='CART16Q2'
+pkgname=('vmware-horizon-client' 'vmware-horizon-rtav' 'vmware-horizon-smartcard' 'vmware-horizon-usb' 'vmware-horizon-virtual-printing')
+pkgver=4.2.0
+_build=4329640
+_cart='CART16Q3'
 pkgrel=1
 pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop'
 arch=('i686' 'x86_64')
@@ -23,8 +23,8 @@ sha256sums=('d8794c22229afdeb698dae5908b7b2b3880e075b19be38e0b296bb28f4555163'
             '5e737d69e49ea7e039bc94f358b45c8e6d9071b7c041a53800555d3dc21c8dac'
             'ec763930dd50d6e77a31c40c939909752cfb124cafb0a4ca4f76860375a14d75'
             'e47e770a1e19ed321de7c2765b2d682f59ac466aef92b2e4ea5e65cacf56de36')
-sha256sums_x86_64=('1cca5e81c777619462bdaeec5acbb5a59ee945cc155458e0c06bd7efd129ecb6')
-sha256sums_i686=('c9fde9b36db2864da742e67206073ca1fbc4b7d95c49c68c7aae7e83213f2b63')
+sha256sums_x86_64=('32712e3f44fc41d95c41fabd3e94de285d91a6ddf0950a2c4850109e09e199cb')
+sha256sums_i686=('3e479e9b82e096590ada658cdd6f8f787827a0eb20860fc533a21118aa7a975b')
 
 # VMware bundles old versions of openssl. Usually we can use system openssl.
 # If things break because VMware relies on legacy or buggy code you can use
@@ -45,7 +45,7 @@ prepare() {
 
 	source "${srcdir}/vmware-bundle.eclass"
 
-	for bundle in "${pkgname[@]}"; do
+	for bundle in "${pkgname[@]}" vmware-horizon-pcoip; do
 	        vmware-bundle_extract-bundle-component "${srcdir}/${pkgbase}-${pkgver}-${_build}-${CARCH}.bundle" "${bundle}" "${srcdir}/extract/${bundle}"
 	done
 }
@@ -66,7 +66,7 @@ build() {
 	#	libssl.so.1.0.[12] -> libssl-vmw.so.0
 	#	libcrypto.so.1.0.[12] -> libcrypto-vmw.so.0
 
-	for bundle in "${pkgname[@]}"; do
+	for bundle in "${pkgname[@]}" vmware-horizon-pcoip; do
 		for FILE in $(find "${bundle}" -type f); do
 			# executables and libraries only
 			file --mime "${FILE}" | egrep -q "(application/x-(executable|sharedlib)|text/x-shellscript)" || continue
@@ -81,7 +81,7 @@ build() {
 			sed -i -e 's/libudev.so.0/libudev.so.1/' "${FILE}"
 
 			# even openssl 1.0.[12].x has library file names ending in .so.1.0.0
-			if [ ${_USE_BUNDLED_OPENSSL:=0} -eq 0 -o "${bundle}" = 'vmware-horizon-client' ]; then
+			if [ ${_USE_BUNDLED_OPENSSL:=0} -eq 0 ]; then
 				sed -i -e 's/libssl.so.1.0.[12]/libssl.so.1.0.0/' \
 					-e 's/libcrypto.so.1.0.[12]/libcrypto.so.1.0.0/' \
 					"${FILE}"
@@ -106,14 +106,20 @@ build() {
 		rename -- '.so.1.0.2' '-vmw.so.0' \
 			"${srcdir}"/extract/vmware-horizon-pcoip/pcoip/lib/vmware/lib{crypto,ssl}.so.1.0.2
 	fi
+
+	sed -i '/Name=/a Comment=Connect to VMware Horizon View virtual machines' \
+		"${srcdir}"/extract/vmware-horizon-client/share/applications/vmware-view.desktop
 }
 
 package_vmware-horizon-client() {
-	conflicts=('vmware-view-open-client' 'vmware-view-open-client-beta' 'vmware-view-client')
-	depends=('gnome-icon-theme' 'openssl' 'libpng12' 'gtk2' 'libxml2' 'libxss')
-	optdepends=('freerdp: RDP remote desktop connections'
+	conflicts=('vmware-view-open-client' 'vmware-view-open-client-beta' 'vmware-view-client'
+		'vmware-horizon-pcoip')
+	replaces=('vmware-horizon-pcoip')
+	depends=('gnome-icon-theme' 'openssl' 'libpng12' 'gtk2' 'libxml2' 'libxss' 'libxtst')
+	optdepends=('alsa-lib: audio support via alsa'
+		'freerdp: RDP remote desktop connections'
+		'libpulse: audio support via pulse sound server'
 		'rdesktop: RDP remote desktop connections'
-		'vmware-horizon-pcoip: PCoIP and BLAST remote desktop connections'
 		'vmware-horizon-rtav: Real-Time Audio-Video (webcam and audio-in)'
 		'vmware-horizon-smartcard: smartcard authentication'
 		'vmware-horizon-usb: USB device redirection'
@@ -130,43 +136,36 @@ package_vmware-horizon-client() {
 	mkdir -p "${pkgdir}/usr/share/doc/"
 	cp -a doc/ "${pkgdir}/usr/share/doc/vmware-horizon-client"
 	cp -a debug/ "${pkgdir}/usr/share/doc/vmware-horizon-client/"
-}
-
-package_vmware-horizon-pcoip() {
-	pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop - PCoIP and BLAST remote desktop connections'
-	depends=('vmware-horizon-client' 'libxtst')
-	optdepends=('alsa-lib: audio support via alsa'
-		'libpulse: audio support via pulse sound server')
 
 	cd "${srcdir}/extract/vmware-horizon-pcoip/"
 
 	mkdir -p "${pkgdir}/usr/"
-	cp -a pcoip/lib/ "${pkgdir}/usr/lib"
-	cp -a pcoip/bin/ "${pkgdir}/usr/bin"
+	cp -a pcoip/lib/ "${pkgdir}/usr/"
+	cp -a pcoip/bin/ "${pkgdir}/usr/"
 }
 
 package_vmware-horizon-rtav() {
 	pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop - Real-Time Audio-Video (webcam and audio-in)'
-	depends=('vmware-horizon-pcoip')
+	depends=('vmware-horizon-client')
 	cd "${srcdir}/extract/vmware-horizon-rtav/"
 
 	mkdir -p "${pkgdir}/usr/"
-	cp -a lib/ "${pkgdir}/usr/lib"
+	cp -a lib/ "${pkgdir}/usr/"
 }
 
 package_vmware-horizon-smartcard() {
 	pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop - smartcard authentication'
-	depends=('vmware-horizon-pcoip' 'pcsclite')
+	depends=('vmware-horizon-client' 'pcsclite')
 
 	cd "${srcdir}/extract/vmware-horizon-smartcard/"
 
 	mkdir -p "${pkgdir}/usr/"
-	cp -a lib/ "${pkgdir}/usr/lib"
+	cp -a lib/ "${pkgdir}/usr/"
 }
 
 package_vmware-horizon-usb() {
 	pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop - USB device redirection'
-	depends=('vmware-horizon-pcoip')
+	depends=('vmware-horizon-client')
 	install=vmware-horizon-usb.install
 
 	cd "${srcdir}/extract/vmware-horizon-usb/"
@@ -181,7 +180,7 @@ package_vmware-horizon-usb() {
 
 package_vmware-horizon-virtual-printing() {
 	pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop - virtual printing'
-	depends=('vmware-horizon-pcoip' 'openssl098' 'libcups')
+	depends=('vmware-horizon-client' 'openssl098' 'libcups')
 	install=vmware-horizon-virtual-printing.install
 
 	cd "${srcdir}/extract/vmware-horizon-virtual-printing/"
