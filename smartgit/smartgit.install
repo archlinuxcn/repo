@@ -1,0 +1,16 @@
+post_install() {
+    echo "update desktop mime database..."
+    update-desktop-database
+    gtk-update-icon-cache -f /usr/share/icons/hicolor/
+}
+
+post_upgrade() {
+    gtk-update-icon-cache -f /usr/share/icons/hicolor/
+}
+
+post_remove() {
+    echo "update desktop mime database..."
+    update-desktop-database
+    gtk-update-icon-cache -f /usr/share/icons/hicolor/
+}
+
