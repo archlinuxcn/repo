@@ -10,7 +10,7 @@ _gmockver=1.7.0
 
 _pkgbase="protobuf"
 pkgname=('protobuf3' 'python2-protobuf3' 'python-protobuf3')
-pkgver=3.0.0
+pkgver=3.0.2
 _pkgver=$(echo $pkgver | tr _ -)
 pkgrel=1
 pkgdesc="Protocol Buffers - Google's data interchange format"
@@ -24,7 +24,7 @@ source=(
   "gtest-${_gtestver}.tar.gz::https://github.com/google/googletest/archive/release-${_gtestver}.tar.gz"
   "gmock-${_gmockver}.tar.gz::https://github.com/google/googlemock/archive/release-1.7.0.tar.gz"
 )
-md5sums=('d4f6ca65aadc6310b3872ee421e79fa6'
+md5sums=('845b39e4b7681a2ddfd8c7f528299fbb'
          '4ff6353b2560df0afecfbda3b2763847'
          '13c3b4a57ad575763deb73fc0ad96e07')
 
