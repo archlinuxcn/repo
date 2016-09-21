@@ -2,7 +2,7 @@
 # Contributor: TZ86
 
 pkgname=vivaldi
-pkgver=1.4.589.15
+pkgver=1.4.589.29
 pkgrel=1
 pkgdesc='An advanced browser made with the power user in mind.'
 url="https://vivaldi.com"
@@ -18,8 +18,8 @@ optdepends=(
 )
 source_i686=("https://downloads.vivaldi.com/stable/vivaldi-stable-${pkgver}-1.i386.rpm")
 source_x86_64=("https://downloads.vivaldi.com/stable/vivaldi-stable-${pkgver}-1.x86_64.rpm")
-sha256sums_i686=('ed0d1c360d7858e8aa1cfc469d170b263705d08d51ad862c46c6dda7dc98dd1c')
-sha256sums_x86_64=('cf1f42bf571965c6b73685ef8bf9dcc9f7bdd8beb986eb8fd3b0c4d8c4174914')
+sha256sums_i686=('b9fc0df8f01c1ffcbfa32cc7691524d9be915ed4bd47ab7a4a905ae74be442d7')
+sha256sums_x86_64=('97fc6890483a2cbcfb10b28f0c35ecb023623475c2ab5d822ee681bd9db8d056')
 
 package() {
     cp -a {opt,usr} "$pkgdir"
@@ -27,11 +27,10 @@ package() {
     # suid sandbox
     chmod 4755 "$pkgdir/opt/vivaldi/vivaldi-sandbox"
 
-    # make /usr/bin/vivaldi available if its not there
-    if [[ ! -e "$pkgdir/usr/bin/vivaldi-stable" ]]; then
-        install -dm 755 "$pkgdir/usr/bin"
-        ln -sf /opt/vivaldi/vivaldi \
-            "$pkgdir/usr/bin/vivaldi-stable"
+    binf="$pkgdir/usr/bin/vivaldi-stable"
+    if [[ ! -e "$binf" ]] && [[ ! -f "$binf" ]] && [[ ! -L "$binf" ]]; then
+        install -dm755 "$pkgdir/usr/bin"
+        ln -s /opt/vivaldi/vivaldi "$binf"
     fi
 
     # install icons
