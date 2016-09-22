@@ -7,6 +7,7 @@
 from lilaclib import *
 
 depends = ['dee',
+           'google-breakpad-git',
            ("libdbusmenu", "libdbusmenu-glib"),
            ('libdbusmenu', 'libdbusmenu-gtk2'),
            'libunity',
