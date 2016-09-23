@@ -3,7 +3,7 @@
 
 pkgname=zeal
 epoch=1
-pkgver=0.2.1
+pkgver=0.3.0
 pkgrel=1
 pkgdesc='An offline API documentation browser'
 arch=('i686' 'x86_64')
@@ -14,7 +14,7 @@ depends=('qt5-webkit' 'hicolor-icon-theme' 'desktop-file-utils' 'libarchive'
 makedepends=()
 conflicts=(zeal-git)
 source=("zeal-${pkgver}.tar.gz::https://github.com/zealdocs/zeal/archive/v${pkgver}.tar.gz")
-sha256sums=('994c5fad079cb34952fc05b0663920118489ed7f00f8e5a5887ff2e2bd05861d')
+sha256sums=('d723c6bc3cb08398d10e7c204929853c9d40d57431a5a16752630b258ae96dc1')
 
 build() {
 	cd "$srcdir/$pkgname-$pkgver"
