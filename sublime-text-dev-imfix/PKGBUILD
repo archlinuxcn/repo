@@ -5,8 +5,8 @@
 # Contributor : ska <skatiger (at} gmail {dot) com> (From sublime-text-imfix)
 
 pkgname=('sublime-text-dev-imfix' 'sublime-text-dev-zh-cn' 'sublime-text-dev-zh-tw')
-pkgver=3.3114
-pkgrel=3
+pkgver=3.3124
+pkgrel=1
 arch=('i686' 'x86_64')
 url="http://www.sublimetext.com/3"
 license=('custom')
@@ -34,8 +34,8 @@ sha512sums=('dcdbe5c4aeea56c66f284ca0bd7bc9ff1b31e3e5f63cdc5ae694b90252a6606564e
             '54b356867e6699fe88130c183ec76ea631f4afeab1a15f37e9ecd460f726bc7c80f056fd57637c24a67b865522e9d3bb5156414fe3cc5d091be9e1f21ef0f31f'
             '32023ae446a981cbf22c1e7c056d1bec76b1a8c4cba1a625d8314331c947ff3d12adaa24f267794f270de76a1170d19405a57100db1054760bfeeb29950bb5a0'
             '3ed8d47663d6e825ff3321155a65e1afa691fea541b96500d11ac763c55741db5712a307f6695fdf5f6d09a71d195efea494736026612bac5d0e410bc1e43c1f')
-sha512sums_i686=('7e27029490906c62791e76f0108d70139fa95522b977ee9db70366067ef90217bfe3bafac384c4d5314c18ffeba74b2590dfc05fa97fc22141daf95c30d1d7af')
-sha512sums_x86_64=('b099b1dba84be8185997bd3fd9616beb7cc598965e0435d1e938aa932b6d6df7b18ee32ccdf5f98bf4d994a1c474951f3797448c7114cb9b80840fb28a086da2')
+sha512sums_i686=('93776202439edd5d8b3c6c70f9eb37ac3f52480559da11df443969aaecbfb88b353ec41ff184a2975dfc25d538dc5c51cd078434e004e5d2b40adb2fb7991e52')
+sha512sums_x86_64=('0c5ee02086af776c2c5c8ec7dd824412f34f3c8e3ba73127d95c9e784ecaaa2fc631a0bdfaf4b308975cdba514f56eb9d49631a8243c9a1d35d3d2d2a77661df')
 
 build() {
   cp "${srcdir}/${_branchname}/dist/any/desktop/"* .
