@@ -12,7 +12,7 @@ build_prefix = 'extra-x86_64'
 post_build = aur_post_build
 
 def pre_build():
-    aur_pre_build("google-breakpad-git")
+    aur_pre_build("google-breakpad-git", do_vcs_update=False)
 
     for line in edit_file("PKGBUILD"):
         if not line.strip().startswith("mkdir"):
@@ -20,6 +20,7 @@ def pre_build():
         else:
             print(line.replace("mkdir ", "mkdir -p "))
 
+    vcs_update()
 
 if __name__ == '__main__':
     single_main(build_prefix)
