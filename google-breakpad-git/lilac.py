@@ -20,7 +20,5 @@ def pre_build():
         else:
             print(line.replace("mkdir ", "mkdir -p "))
 
-    vcs_update()
-
 if __name__ == '__main__':
     single_main(build_prefix)
