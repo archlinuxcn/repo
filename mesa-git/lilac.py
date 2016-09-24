@@ -6,7 +6,7 @@
 
 from lilaclib import *
 
-depends = [('llvm-svn', 'llvm-svn'), ('llvm-svn', 'clang-svn')]
+depends = [('llvm-svn', 'llvm-libs-svn'), ('llvm-svn', 'llvm-svn'), ('llvm-svn', 'clang-svn')]
 
 build_prefix = 'extra-x86_64'
 
