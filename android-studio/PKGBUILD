@@ -5,9 +5,9 @@
 # Contributor: Lubomir 'Kuci' Kucera <kuci24-at-gmail-dot-com>
 
 pkgname=android-studio
-pkgver=2.1.3.0
+pkgver=2.2.0.12
 pkgrel=1
-_build=143.3101438
+_build=145.3276617
 pkgdesc="A new Android development environment based on IntelliJ IDEA."
 arch=('i686' 'x86_64')
 url="http://developer.android.com/sdk/installing/studio.html"
@@ -15,11 +15,11 @@ license=('APACHE')
 depends=('java-environment' 'python' 'ttf-font')
 makedepends=('unzip')
 optdepends=('android-google-repository' 'android-platform' 'android-sdk' 'android-sdk-platform-tools' 'android-sdk-build-tools' 'android-sources' 'android-support' 
-'android-support-repository')
+'android-support-repository' 'gtk2' 'libgl')
 options=('!strip')
 source=("https://dl.google.com/dl/android/studio/ide-zips/$pkgver/android-studio-ide-$_build-linux.zip"
         "$pkgname.desktop")
-sha512sums=('3890dcec1c773732a4b54e6e6dd90f9f9b63c396fb0d2712fa4a5b2b8487a055e910f983a8c4da8e3e5b103021267415eb6065f291bd35a633c4723e5cb648cb'
+sha512sums=('71310d6b9fb071fc6b9810765389a2311a62cc706cbe71b2fe466167fb2ded7ebcc2441fe49d34a2942bb79d516f6acfcba5e214e1af42c9e2bc988a28c6fb79'
             '7c1ab152b3f26a0a4796c085bb7bf66aa4711a010910636c0c82a37609155c819b21a732fc3874b55e7d443c989c46f29d51ed54538795829c8eb835308b5aaa')
 
 if [[ $CARCH == "x86_64" ]]; then
@@ -28,27 +28,16 @@ else
   depends+=('fontconfig' 'libxrender' 'mesa')
 fi
 
-prepare() {
-  cd $srcdir/$pkgname
-
-  # extract the application icon
-  unzip -qo lib/resources.jar artwork/icon_AS_128.png
-
-  # enable anti aliasing
-  echo "-Dswing.aatext=true" >> studio.vmoptions
-  echo "-Dswing.aatext=true" >> studio64.vmoptions
-}
-
 package() {
   cd $srcdir/$pkgname
 
-  # application stuff
+  # Install the application
   install -d $pkgdir/{opt/$pkgname,usr/bin}
-  cp -a bin lib plugins $pkgdir/opt/$pkgname
+  cp -a bin gradle lib jre plugins $pkgdir/opt/$pkgname
   ln -s /opt/android-studio/bin/studio.sh $pkgdir/usr/bin/android-studio
 
-  # starter stuff
-  install -Dm644 artwork/icon_AS_128.png $pkgdir/usr/share/pixmaps/$pkgname.png
+  # Add the icon and desktop file
+  install -Dm644 bin/studio.png $pkgdir/usr/share/pixmaps/$pkgname.png
   install -Dm644 $srcdir/$pkgname.desktop $pkgdir/usr/share/applications/$pkgname.desktop
 
   chmod -R ugo+rX $pkgdir/opt
