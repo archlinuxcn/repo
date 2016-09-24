@@ -126,7 +126,6 @@ package_opencl-mesa-git () {
   depends=('libxfixes' 'libxext' 'libcl' 'libclc' 'nettle' "mesa-git=${pkgver}")
   optdepends=('opencl-headers: headers necessary for OpenCL development')
   provides=("opencl-mesa=$(_mesaver)")
-  replaces=('opencl-mesa')
   conflicts=('opencl-mesa')
 
   install -v -m755 -d "${pkgdir}"/etc
@@ -145,7 +144,6 @@ package_mesa-vulkan-intel-git() {
   pkgdesc="Vulkan driver for selected intel graphic chipsets"
   depends=('vulkan-icd-loader' 'libgcrypt' 'wayland' 'libxcb' "mesa-git=${pkgver}")
   provides=('vulkan-intel')
-  replaces=('vulkan-intel')
   conflicts=('vulkan-intel')
   
 #  install -m755 -d ${pkgdir}/etc
@@ -179,7 +177,6 @@ package_mesa-vdpau-git() {
   pkgdesc="Mesa VDPAU drivers"
   depends=('nettle' "mesa-git=${pkgver}")
   provides=("mesa-vdpau=$(_mesaver)")
-  replaces=('mesa-vdpau')
   conflicts=('mesa-vdpau')
 
   install -v -m755 -d "${pkgdir}"/usr/lib
@@ -197,7 +194,6 @@ package_mesa-git () {
               'mesa-vdpau-git: for accelerated video playback'
               'libva-mesa-driver-git: for accelerated video playback')
   provides=("mesa=$(_mesaver)" 'mesa-r300-r600-radeonsi-git' 'mesa-dri')
-  replaces=('mesa' 'mesa-r300-r600-radeonsi-git' 'mesa-dri')
   conflicts=('mesa' 'mesa-r300-r600-radeonsi-git' 'mesa-dri')
 
   install -m755 -d "${pkgdir}"/etc
@@ -231,7 +227,6 @@ package_mesa-libgl-git () {
   pkgdesc="Mesa 3-D graphics library"
   depends=("mesa-git=${pkgver}")
   provides=("mesa-libgl=$(_mesaver)" "libgl=$(_mesaver)")
-  replaces=('mesa-libgl')
   conflicts=('mesa-libgl')
 
   # See FS#26284

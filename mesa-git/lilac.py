@@ -10,7 +10,13 @@ depends = [('llvm-svn', 'llvm-libs-svn'), ('llvm-svn', 'llvm-svn'), ('llvm-svn',
 
 build_prefix = 'extra-x86_64'
 
-pre_build = aur_pre_build
+def pre_build():
+    aur_pre_build()
+    for line in edit_file('PKGBUILD'):
+        # edit PKGBUILD
+        if line.strip().startswith("replaces="):
+            continue
+        print(line)
 
 post_build = aur_post_build
 
