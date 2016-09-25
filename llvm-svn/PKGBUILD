@@ -21,7 +21,7 @@ pkgname=(
 )
 _pkgname='llvm'
 
-pkgver=4.0.0svn_r282132
+pkgver=4.0.0svn_r282344
 pkgrel=1
 
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -154,8 +154,9 @@ build() {
     arm*)
       # compiler_rt is not supported on ARM
       CONFIG=("-DLLVM_EXTERNAL_COMPILER_RT_BUILD=OFF")
-      CFLAGS+=' -g'
-      CXXFLAGS+=' -g'
+      CFLAGS+=' -ggdb1 -O2 -flto'
+      CXXFLAGS+=' -ggdb1 -O2 -flto'
+      LDFLAGS+=' -O2 -flto'
       if [[ $CARCH = armv7h ]]; then
           # Work around GCC bug
           CFLAGS=${CFLAGS//-mfpu=vfpv3-d16/-mfpu=neon}
