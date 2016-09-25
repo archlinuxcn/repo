@@ -164,8 +164,9 @@ build() {
       fi
       ;;
     *)
-      CFLAGS+=' -ggdb1'
-      CXXFLAGS+=' -ggdb1'
+      CFLAGS+=' -ggdb1 -O3 -flto -fasynchronous-unwind-tables'
+      CXXFLAGS+=' -ggdb1 -O3 -flto -fasynchronous-unwind-tables'
+      LDFLAGS+=' -O3 -flto -fasynchronous-unwind-tables'
       ;;
   esac
   export PKG_CONFIG_PATH='/usr/lib/pkgconfig'
