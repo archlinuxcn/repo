@@ -1,0 +1,244 @@
+diff --git a/Telegram/SourceFiles/platform/linux/linux_libs.cpp b/Telegram/SourceFiles/platform/linux/linux_libs.cpp
+index 484b6c5..ab77e35 100644
+--- a/Telegram/SourceFiles/platform/linux/linux_libs.cpp
++++ b/Telegram/SourceFiles/platform/linux/linux_libs.cpp
+@@ -201,6 +201,10 @@ f_unity_launcher_entry_get_for_desktop_id unity_launcher_entry_get_for_desktop_i
+ void start() {
+ 	DEBUG_LOG(("Loading libraries"));
+ 
++	// Workaround for wayland support
++	if (QString(getenv("QT_QPA_PLATFORM")).startsWith(qstr("wayland"), Qt::CaseInsensitive))
++		return;
++
+ 	bool gtkLoaded = false;
+ 	bool indicatorLoaded = false;
+ 	QLibrary lib_gtk, lib_indicator;
+diff --git a/Telegram/SourceFiles/stdafx.cpp b/Telegram/SourceFiles/stdafx.cpp
+index 06bd4af..755d97f 100644
+--- a/Telegram/SourceFiles/stdafx.cpp
++++ b/Telegram/SourceFiles/stdafx.cpp
+@@ -34,6 +34,7 @@ Q_IMPORT_PLUGIN(QGenericEnginePlugin)
+ #elif defined Q_OS_LINUX // Q_OS_LINUX
+ Q_IMPORT_PLUGIN(QWebpPlugin)
+ Q_IMPORT_PLUGIN(QXcbIntegrationPlugin)
++Q_IMPORT_PLUGIN(QWaylandIntegrationPlugin)
+ Q_IMPORT_PLUGIN(QConnmanEnginePlugin)
+ Q_IMPORT_PLUGIN(QGenericEnginePlugin)
+ Q_IMPORT_PLUGIN(QNetworkManagerEnginePlugin)
+diff --git a/Telegram/gyp/Telegram.gyp b/Telegram/gyp/Telegram.gyp
+index 0e8db70..7f5a7d8 100644
+--- a/Telegram/gyp/Telegram.gyp
++++ b/Telegram/gyp/Telegram.gyp
+@@ -69,19 +69,16 @@
+     ],
+ 
+     'defines': [
+-      'AL_LIBTYPE_STATIC',
++      '__STDC_FORMAT_MACROS',
++      'TDESKTOP_DISABLE_AUTOUPDATE',
++      'TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME',
+     ],
+ 
+     'include_dirs': [
+       '<(src_loc)',
+       '<(SHARED_INTERMEDIATE_DIR)',
+-      '<(libs_loc)/breakpad/src',
+-      '<(libs_loc)/lzma/C',
+-      '<(libs_loc)/libexif-0.6.20',
+-      '<(libs_loc)/zlib-1.2.8',
+-      '<(libs_loc)/ffmpeg',
+-      '<(libs_loc)/openal-soft/include',
+       '<(minizip_loc)',
++      '/usr/include/breakpad',
+     ],
+     'sources': [
+       '<@(qrc_files)',
+diff --git a/Telegram/gyp/qt.gypi b/Telegram/gyp/qt.gypi
+index 2a8f010..7fc819e 100644
+--- a/Telegram/gyp/qt.gypi
++++ b/Telegram/gyp/qt.gypi
+@@ -29,7 +29,6 @@
+             'Qt5Network',
+             'Qt5Widgets',
+             'Qt5Gui',
+-            'qtharfbuzzng',
+           ],
+           'conditions': [
+             [ 'build_macold', {
+@@ -78,7 +77,7 @@
+             ],
+           }],
+           [ 'build_linux', {
+-            'qt_loc_unix': '/usr/local/tdesktop/Qt-<(qt_version)',
++            'qt_loc_unix': '../../../qt',
+             'qt_lib_prefix': 'lib',
+             'qt_lib_debug_postfix': '.a',
+             'qt_lib_release_postfix': '.a',
+@@ -91,18 +90,6 @@
+               '<@(qt_libs)',
+               'Qt5DBus',
+               'Qt5Core',
+-              'qtpcre',
+-              'Xi',
+-              'Xext',
+-              'SM',
+-              'ICE',
+-              'fontconfig',
+-              'expat',
+-              'freetype',
+-              'xcb-shm',
+-              'xcb-xfixes',
+-              'xcb-render',
+-              'xcb-static',
+             ],
+           }],
+         ],
+@@ -202,18 +189,36 @@
+         '<(qt_loc)/plugins/platforminputcontexts',
+       ],
+       'libraries': [
+-        '/usr/local/lib/libxkbcommon.a',
+         '<@(qt_libs_release)',
+-        '/usr/local/ssl/lib/libssl.a',
+-        '/usr/local/ssl/lib/libcrypto.a',
++        'z',
++        'pcre16',
++        'harfbuzz',
++        'icuuc',
++        'icutu',
++        'icui18n',
++        'png16',
++        'jpeg',
++        'ssl',
++        'crypto',
+         'xcb',
++        'xcb-shm',
++        'xcb-xfixes',
++        'xcb-render',
+         'X11',
+         'X11-xcb',
++        'GL',
+         'dbus-1',
+         'dl',
+         'gthread-2.0',
+         'glib-2.0',
+         'pthread',
++        'Xi',
++        'Xext',
++        'SM',
++        'ICE',
++        'fontconfig',
++        'expat',
++        'freetype',
+       ],
+       'include_dirs': [
+         '<(qt_loc)/mkspecs/linux-g++',
+diff --git a/Telegram/gyp/telegram_linux.gypi b/Telegram/gyp/telegram_linux.gypi
+index 15bfbb6..5ed7872 100644
+--- a/Telegram/gyp/telegram_linux.gypi
++++ b/Telegram/gyp/telegram_linux.gypi
+@@ -29,31 +29,46 @@
+       ],
+     },
+     'include_dirs': [
+-      '/usr/local/include',
+-      '<(libs_loc)/openssl-xcode/include'
++      '/usr/include',
+     ],
+     'library_dirs': [
+-      '/usr/local/lib',
+-      '<(libs_loc)/libexif-0.6.20/libexif/.libs',
+-      '<(libs_loc)/breakpad/src/client/linux',
++      '/usr/lib',
+     ],
+     'libraries': [
+       'breakpad_client',
+       'composeplatforminputcontextplugin',
+       'ibusplatforminputcontextplugin',
+       'fcitxplatforminputcontextplugin',
+-      'liblzma.a',
+-      'libopenal.a',
+-      'libavformat.a',
+-      'libavcodec.a',
+-      'libswresample.a',
+-      'libswscale.a',
+-      'libavutil.a',
+-      'libopus.a',
+-      'libva-x11.a',
+-      'libva-drm.a',
+-      'libva.a',
+-      'libz.a',
++      'Qt5WaylandClient',
++      'qwayland-generic',
++      'qwayland-egl',
++      'xkbcommon',
++      'xkbcommon-x11',
++      'xcb-randr',
++      'xcb-xinerama',
++      'xcb-xkb',
++      'xcb-shape',
++      'xcb-icccm',
++      'xcb-sync',
++      'xcb-keysyms',
++      'xcb-image',
++      'xcb-render-util',
++      'wayland-client',
++      'wayland-cursor',
++      'proxy',
++      'lzma',
++      'openal',
++      'avformat',
++      'avcodec',
++      'swresample',
++      'swscale',
++      'avutil',
++      'opus',
++      'va-x11',
++      'va-drm',
++      'va',
++      'z',
++      'webp',
+ #      '<!(pkg-config 2> /dev/null --libs <@(pkgconfig_libs))',
+     ],
+     'cflags_cc': [
+diff --git a/Telegram/gyp/utils.gyp b/Telegram/gyp/utils.gyp
+index 209c737..41425f1 100644
+--- a/Telegram/gyp/utils.gyp
++++ b/Telegram/gyp/utils.gyp
+@@ -109,8 +109,6 @@
+     ],
+     'include_dirs': [
+       '<(src_loc)',
+-      '<(libs_loc)/lzma/C',
+-      '<(libs_loc)/zlib-1.2.8',
+     ],
+     'sources': [
+       '<(src_loc)/_other/packer.cpp',
+@@ -130,11 +128,10 @@
+             ],
+           }, {
+             'include_dirs': [
+-              '/usr/local/include',
+-              '<(libs_loc)/openssl-xcode/include'
++              '/usr/include',
+             ],
+             'library_dirs': [
+-              '/usr/local/lib',
++              '/usr/lib',
+             ],
+           }]
+         ],
+@@ -152,11 +149,10 @@
+             ],
+           }, {
+             'include_dirs': [
+-              '/usr/local/include',
+-              '<(libs_loc)/openssl-xcode/include'
++              '/usr/include',
+             ],
+             'library_dirs': [
+-              '/usr/local/lib',
++              '/usr/lib',
+             ],
+           }]
+         ],
