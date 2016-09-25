@@ -1,14 +1,15 @@
-# Maintainer: Jerome Leclanche <jerome@leclan.ch>
+# Maintainer: Peter Mattern <pmattern at arcor dot de>
+# Contributor: Jerome Leclanche <jerome at leclan dot ch>
 
 _pkgname=libsysstat
 pkgname=$_pkgname-git
-pkgver=0.2.0.3.g70f70eb
+pkgver=0.3.2
 pkgrel=1
 pkgdesc="Library to query system statistics (net, resource usage, ...)"
 arch=("i686" "x86_64" "armv6h")
 url="http://lxqt.org"
-license=("GPL2")
-depends=("qt5-base" "qt5-tools")
+license=("LGPL2.1")
+depends=("qt5-base")
 makedepends=("git" "cmake")
 provides=("$_pkgname" "$_pkgname-qt5" "$_pkgname-qt5-git")
 conflicts=("$_pkgname" "$_pkgname-qt5" "$_pkgname-qt5-git")
@@ -21,15 +22,15 @@ pkgver() {
 }
 
 build() {
-	cd "$srcdir/$_pkgname"
 	mkdir -p build
 	cd build
-	cmake -DCMAKE_INSTALL_PREFIX=/usr ..
+	cmake "$srcdir/$_pkgname" \
+              -DCMAKE_INSTALL_PREFIX=/usr \
+              -DCMAKE_INSTALL_LIBDIR=lib
 	make
 }
 
 package() {
-	cd "$srcdir/$_pkgname"
 	cd build
 	make DESTDIR="$pkgdir" install
 }
