@@ -1,0 +1,9 @@
+[Unit]
+Description=Execute arch-audit
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/sh -c 'arch-audit -uq > /tmp/arch-audit.log'
+User=nobody
+Group=nobody

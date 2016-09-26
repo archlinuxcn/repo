@@ -1,0 +1,9 @@
+[Unit]
+Description=Run arch-audit once a day
+
+[Timer]
+OnCalendar=daily
+Persistent=true
+
+[Install]
+WantedBy=timers.target
