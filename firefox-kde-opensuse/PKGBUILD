@@ -14,7 +14,7 @@ _gtk3=true
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=48.0.2
+pkgver=49.0.1
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
@@ -34,7 +34,7 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
 	    'upower: Battery API' )
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
-_patchrev=6ab8b16f232c
+_patchrev=9fc2ebe6d7f1
 options=('!emptydirs'  'strip' )
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz
@@ -53,12 +53,8 @@ source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/
         pgo_fix_missing_kdejs.patch
         rb39193.patch
         fix_mozalloc.patch
-        https://cgit.gentoo.org/proj/mozilla.git/plain/www-client/firefox/files/xpcom-components-binutils-26.patch
 )
 
-if [ $_gtk3 ] ; then
-    source+=($_patchurl/mozilla-gtk3_20.patch)
-fi
 
 
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
@@ -110,22 +106,10 @@ prepare() {
 
   # add missing file Makefile for pgo builds
   patch -Np1 -i "$srcdir"/pgo_fix_missing_kdejs.patch
-  # enable gtk3
-  if [ $_gtk3 ] ; then
-     # fix gtk3 build
-   #  sed -i 's|parent->group|gtk_window_get_group(const_cast<GtkWindow*>(parent))|g' \
-#	 toolkit/xre/nsKDEUtils.cpp
-      echo 'ac_add_options --enable-default-toolkit=cairo-gtk3' >>.mozconfig
-          patch -Np1 -i "$srcdir"/mozilla-gtk3_20.patch
-  fi
 
-  # 
   # configure script misdetects the preprocessor without an optimization level
   # https://bugs.archlinux.org/task/34644
   # sed -i '/ac_cpp=/s/$CPPFLAGS/& -O2/' configure
-
-  # Workaround for binutils/GNU ld 2.26 from NetBSD/amd64 7.99.26
-  patch -Np1 -i "$srcdir"/xpcom-components-binutils-26.patch
 
   # CVE-2016-6354 (bmo#1292534)
   patch -Np1 -i "$srcdir"/mozilla-flex_buffer_overrun.patch
@@ -208,17 +192,17 @@ package() {
   #https://bugzilla.mozilla.org/show_bug.cgi?id=658850
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
-md5sums=('bd6410592a8c608c0f771c056351493c'
-         '3b48232100d936b2822220d971f1e92c'
+md5sums=('3ce01741b9eab6a2988b970127330dcd'
+         '169f583544e9efaf1f80f8548b57a8cc'
          '14e0f6237a79b85e60256f4808163160'
          'dbf14588e85812ee769bd735823a0146'
          '0d053487907de4376d67d8f499c5502b'
          '05bb69d25fb3572c618e3adf1ee7b670'
          '6e335a517c68488941340ee1c23f97b0'
          '3b3eb8c2747429887e4a03537932eac5'
-         '84c6a2bf45cfc2393821ec2f5ccd64c5'
+         'edb29c1ac737a2a2ecdfd499bd30237a'
          '1fad9a988826d69fe712ea973e43f6da'
-         '91ee1935c2674f89d4f8f358de2f0dbc'
+         '7b8cf4883062938956f202d04af47411'
          '903307f923a459189a5a6062ff9df38c'
          '0c684360f1df4536512d51873c1d243d'
          '01af53dc830d00fe522c545bcc0ec4b9'
@@ -226,6 +210,4 @@ md5sums=('bd6410592a8c608c0f771c056351493c'
          'fe24f5ea463013bb7f1c12d12dce41b2'
          '3fa8bd22d97248de529780f5797178af'
          '43550e772f110a338d5a42914ee2c3a6'
-         '0c1ed789c06297659137a2ed2ef769f7'
-         'a7819fec41ab24da3fc42541981605db'
-         'e4c3fa5aed9663316ea6cdb9c533242f')
+         '0c1ed789c06297659137a2ed2ef769f7')
