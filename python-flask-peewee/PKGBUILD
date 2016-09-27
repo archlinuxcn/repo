@@ -1,26 +1,24 @@
-# Maintainer: inknml <i [at] inkn [dot] ml>
-# Submitter: inknml <i [at] inkn [dot] ml>
-
+_pkgname=flask-peewee
 pkgname=python-flask-peewee
-pkgver=0.6.6
+pkgver=0.6.7
 pkgrel=1
 pkgdesc="Peewee integration for flask"
-arch=(any)
-url="http://pypi.python.org/pypi/flask-peewee"
-license=("BSD")
-depends=('python' 'python-flask' 'python-peewee' 'python-wtf-peewee')
-source=("http://pypi.python.org/packages/source/f/flask-peewee/flask-peewee-$pkgver.tar.gz")
-makedepends=('python-setuptools')
-md5sums=('823c81242bc1826a947f774a84788b1b')
+arch=('any')
+url="http://github.com/coleifer/flask-peewee/"
+license=('BSD')
+depends=('python' 'python-flask' 'python-wtforms' 'python-peewee' 'python-wtf-peewee' 'python-setuptools')
+source=('https://pypi.python.org/packages/ab/3d/cc8c9c0b981eeb8f7356847512757d430e5c95a690673f0eb2b9fa2405e4/flask-peewee-0.6.7.tar.gz')
+md5sums=('2d94387bdd1a7596c4667fb5588190fe')
 
 build() {
-  cd $srcdir/flask-peewee-$pkgver
-  python setup.py build
+  cd "$srcdir/$_pkgname-$pkgver"
+  python3 setup.py build
 }
 
 package() {
-  cd $srcdir/flask-peewee-$pkgver
-  python setup.py install --root="$pkgdir" --optimize=1
+  cd "$srcdir/$_pkgname-$pkgver"
 
-  install -D -m644 $srcdir/flask-peewee-$pkgver/LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 }
+
+# vim:set sw=2 et:
