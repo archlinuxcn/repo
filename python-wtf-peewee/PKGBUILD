@@ -1,24 +1,24 @@
-# Maintainer: inknml <i [at] inkn [dot] ml>
-# Submitter: inknml <i [at] inkn [dot] ml>
-
+_pkgname=wtf-peewee
 pkgname=python-wtf-peewee
-pkgver=0.2.3
-pkgrel=1.0
+pkgver=0.2.6
+pkgrel=1
 pkgdesc="WTForms integration for peewee models"
-arch=(any)
-url="http://pypi.python.org/pypi/wtf-peewee"
-license=("MIT")
-depends=("python" "python-peewee" "python-wtforms")
-makedepends=("python-distribute")
-source=("http://pypi.python.org/packages/source/w/wtf-peewee/wtf-peewee-$pkgver.tar.gz")
-md5sums=('80fefb50c9e8c1c5ce5cfadf8eecb4cc')
+arch=('any')
+url="https://github.com/coleifer/wtf-peewee/"
+license=('MIT')
+depends=('python' 'python-wtforms' 'python-peewee' 'python-setuptools')
+source=('https://pypi.python.org/packages/b9/10/5d5e02dcd6beb029b2751b02971038d0811beec4b18613854dca5c1bb514/wtf-peewee-0.2.6.tar.gz')
+md5sums=('6eb121c544d5ee57178e9613ae96270d')
 
 build() {
-  cd "$srcdir/wtf-peewee-$pkgver"
-  python setup.py build
+  cd "$srcdir/$_pkgname-$pkgver"
+  python3 setup.py build
 }
 
 package() {
-  cd "$srcdir/wtf-peewee-$pkgver"
-  python setup.py install --root="$pkgdir" --optimize=1
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 }
+
+# vim:set sw=2 et:
