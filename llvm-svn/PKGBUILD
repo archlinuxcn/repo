@@ -21,7 +21,7 @@ pkgname=(
 )
 _pkgname='llvm'
 
-pkgver=4.0.0svn_r282597
+pkgver=4.0.0svn_r282598
 pkgrel=1
 
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -208,7 +208,7 @@ package_llvm-svn() {
   rm -rf "${srcdir}"/{clang,ocaml.{doc,lib}}
   mv "${pkgdir}/usr/lib/clang" "${srcdir}/clang"
   mv "${pkgdir}/usr/lib/ocaml" "${srcdir}/ocaml.lib"
-  mv "${pkgdir}/usr/share/doc/ocaml" "${srcdir}/ocaml.doc"
+  mv "${pkgdir}/usr/share/doc/llvm/ocaml-html" "${srcdir}/ocaml.doc"
 
   # Get rid of example Hello transformation
   rm -f "${pkgdir}"/usr/lib/*LLVMHello.*
@@ -276,9 +276,9 @@ package_llvm-ocaml-svn() {
   cd "${srcdir}/build"
 
   install -m755 -d "${pkgdir}/usr/lib"
-  install -m755 -d "${pkgdir}/usr/share/doc"
+  install -m755 -d "${pkgdir}/usr/share/doc/llvm"
   cp -a "${srcdir}/ocaml.lib" "${pkgdir}/usr/lib/ocaml"
-  cp -a "${srcdir}/ocaml.doc" "${pkgdir}/usr/share/doc/ocaml"
+  cp -a "${srcdir}/ocaml.doc" "${pkgdir}/usr/share/doc/llvm/ocaml-html"
 
   _install_license
 }
