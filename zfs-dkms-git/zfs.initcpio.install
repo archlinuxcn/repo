@@ -17,6 +17,7 @@ build() {
         dbufstat.py \
         fsck.zfs \
         mount.zfs \
+        seq \
         zdb \
         zed \
         zfs \
@@ -27,14 +28,15 @@ build() {
         zstreamdump \
         ztest \
         splat \
-        hostid \
         /lib/udev/vdev_id \
-        /lib/udev/zvol_id
+        /lib/udev/zvol_id \
+        findmnt
 
     map add_file \
         /lib/udev/rules.d/60-zvol.rules \
         /lib/udev/rules.d/69-vdev.rules \
-        /lib/udev/rules.d/90-zfs.rules
+        /lib/udev/rules.d/90-zfs.rules \
+        /lib/libgcc_s.so.1
 
     map add_dir \
         /etc/zfs/zed.d
@@ -42,11 +44,10 @@ build() {
     add_runscript
 
     # allow mount(8) to "autodetect" ZFS
-    echo 'zfs' >>"$BUILDROOT/etc/filesystems"
+    echo 'zfs' >>"${BUILDROOT}/etc/filesystems"
 
     [[ -f /etc/zfs/zpool.cache ]] && add_file "/etc/zfs/zpool.cache"
     [[ -f /etc/modprobe.d/zfs.conf ]] && add_file "/etc/modprobe.d/zfs.conf"
-    [[ -f /etc/hostid ]] && add_file "/etc/hostid"
 }
 
 help() {
@@ -72,6 +73,10 @@ Command Line Setup:
 
         If set to 1, this will use "zpool import -f" when attempting to import
         pools.
+
+    To change the seconds of time to wait for ZFS devices to show up at boot:
+
+        zfs_wait=30
 
     To search for devices in a directory other than "/dev":
 
