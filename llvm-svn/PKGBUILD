@@ -132,6 +132,8 @@ prepare() {
     exit 1
   }
 
+  patch -Np1 < ../0001-Revert-ARM-move-the-builtins-libcall-CC-setup.patch
+
   svn export --force "${srcdir}/clang" tools/clang
   svn export --force "${srcdir}/clang-tools-extra" tools/clang/tools/extra
   svn export --force "${srcdir}/compiler-rt" projects/compiler-rt
