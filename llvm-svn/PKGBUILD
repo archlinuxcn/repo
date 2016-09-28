@@ -21,7 +21,7 @@ pkgname=(
 )
 _pkgname='llvm'
 
-pkgver=4.0.0svn_r282361
+pkgver=4.0.0svn_r282597
 pkgrel=1
 
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -174,8 +174,8 @@ build() {
         -DLLVM_BUILD_LLVM_DYLIB:BOOL=ON \
         -DLLVM_LINK_LLVM_DYLIB:BOOL=ON \
         -DLLVM_BINUTILS_INCDIR:PATH=/usr/include \
-        -DLLVM_HOST_TRIPLE=${_triple} \
-        -DLLVM_DEFAULT_TARGET_TRIPLE=${_triple} \
+        -DLLVM_HOST_TRIPLE=${_target} \
+        -DLLVM_DEFAULT_TARGET_TRIPLE=${_target} \
         "../${_pkgname}"
 
   make
