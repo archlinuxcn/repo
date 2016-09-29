@@ -1,31 +1,30 @@
-# Maintainer: Vanitas <ssbianjp [AT] gmail.com>
+# Maintainer: Bian Jiaping <ssbianjp [AT] gmail.com>
 # Contributor: Jove Yu <yushijun110 [AT] gmail.com>
 # Contributor: csslayer <wengxt [AT] gmail.com>
 # Contributor: Felix Yan <felixonmars [AT] gmail.com>
 
 pkgname=fcitx-sogoupinyin
-pkgver=2.0.0.0078
-pkgrel=3
+pkgver=2.1.0.0082
+pkgrel=1
 pkgdesc="Sogou Pinyin for Linux"
 arch=('x86_64' 'i686')
-url="https://github.com/bianjp/aur-fcitx-sogoupinyin"
+url="http://pinyin.sogou.com/linux/"
 license=('custom')
 depends=('fcitx' 'opencc' 'libidn' 'fcitx-qt4' 'lsb-release' 'xorg-xprop')
 
 if [ "${CARCH}" = "i686" ]; then
     _LIB_DIR=i386-linux-gnu
     _ARCH=i386
-    _time=1465186614
-    md5sums=('4960259f61b85db985d423a3b8712067'
+    _time=1475146281
+    md5sums=('f6035df8567833ea06e6b36ee138d603'
              '60b1dcd637c932cf4f3bfaed797f5401')
 else
     _LIB_DIR=x86_64-linux-gnu
     _ARCH=amd64
-    _time=1465191139
-    md5sums=('0a4e81d7a9cae7e8597371b1fa3674aa'
+    _time=1475147394
+    md5sums=('97cfe946d4068681ed443557d9ef1662'
              '60b1dcd637c932cf4f3bfaed797f5401')
 fi
-
 source=("http://cdn2.ime.sogou.com/dl/index/${_time}/sogoupinyin_${pkgver}_${_ARCH}.deb"
         "sogou-autostart")
 
