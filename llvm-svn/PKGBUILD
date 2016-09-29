@@ -21,7 +21,7 @@ pkgname=(
 )
 _pkgname='llvm'
 
-pkgver=4.0.0svn_r282598
+pkgver=4.0.0svn_r282648
 pkgrel=1
 
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -47,12 +47,14 @@ source=(
   'clang-tools-extra::svn+http://llvm.org/svn/llvm-project/clang-tools-extra/trunk'
   'compiler-rt::svn+http://llvm.org/svn/llvm-project/compiler-rt/trunk'
   'llvm-Config-llvm-config.h'
+  0001-Revert-ARM-move-the-builtins-libcall-CC-setup.patch
 )
 md5sums=('SKIP'
          'SKIP'
          'SKIP'
          'SKIP'
-         '295c343dcd457dc534662f011d7cff1a')
+         '295c343dcd457dc534662f011d7cff1a'
+         '024bebf639905648751b158c603c20ca')
 
 #
 # BEGIN INTERNAL VARIABLES AND FUNCTIONS
