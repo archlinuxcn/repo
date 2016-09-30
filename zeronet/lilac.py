@@ -7,7 +7,19 @@
 from lilaclib import *
 
 build_prefix = 'extra-x86_64'
-pre_build = aur_pre_build
+
+def pre_build():
+    aur_pre_build()
+    for line in edit_file('zeronet.service'):
+        # edit PKGBUILD
+        if line.strip().startswith("ExecStart=/usr/bin/env"):
+            print("StandardOutput=/dev/null")
+            print("StandardError=/dev/null")
+            line = "ExecStart=/opt/zeronet/zeronet.py --config_file /etc/zeronet.conf"
+        print(line)
+    run_cmd("updpkgsums")
+
+
 post_build = aur_post_build
 
 if __name__ == '__main__':
