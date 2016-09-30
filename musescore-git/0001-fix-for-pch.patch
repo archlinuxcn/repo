@@ -1,4 +1,4 @@
-From 9daecaf57d049fe8bb6a509a0bc1d36de3d1ed15 Mon Sep 17 00:00:00 2001
+From 99929f2be3f59e97390e0590f1750d9f02e7ade5 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sat, 20 Sep 2014 12:13:37 -0400
 Subject: [PATCH 1/2] fix for pch
@@ -8,17 +8,17 @@ Subject: [PATCH 1/2] fix for pch
  1 file changed, 1 insertion(+)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 2cb5133..50a67ef 100644
+index e2e91f3..bfaf8e9 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -368,6 +368,7 @@ if (MINGW)
- else (MINGW)
+@@ -522,6 +522,7 @@ add_custom_command(
+ if (NOT MINGW)
    set(BUILD_PCH true)
- endif(MINGW)
+ endif(NOT MINGW)
 +set(BUILD_PCH false)
  
  precompiled_header(QT_INCLUDES all ${BUILD_PCH})
  
 -- 
-2.1.0
+2.10.0
 
