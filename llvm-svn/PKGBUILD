@@ -22,7 +22,7 @@ pkgname=(
 _pkgname='llvm'
 
 pkgver=4.0.0svn_r282648
-pkgrel=1
+pkgrel=2
 
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url='http://llvm.org/'
@@ -48,13 +48,15 @@ source=(
   'compiler-rt::svn+http://llvm.org/svn/llvm-project/compiler-rt/trunk'
   'llvm-Config-llvm-config.h'
   0001-Revert-ARM-move-the-builtins-libcall-CC-setup.patch
+  0001-Fix-PREL31-relocation-on-ARM.patch
 )
 md5sums=('SKIP'
          'SKIP'
          'SKIP'
          'SKIP'
          '295c343dcd457dc534662f011d7cff1a'
-         '024bebf639905648751b158c603c20ca')
+         '024bebf639905648751b158c603c20ca'
+         '36cd694c834dddc0b65af8eca27e5b62')
 
 #
 # BEGIN INTERNAL VARIABLES AND FUNCTIONS
@@ -135,6 +137,7 @@ prepare() {
   }
 
   patch -Np1 < ../0001-Revert-ARM-move-the-builtins-libcall-CC-setup.patch
+  patch -Np1 < ../0001-Fix-PREL31-relocation-on-ARM.patch
 
   svn export --force "${srcdir}/clang" tools/clang
   svn export --force "${srcdir}/clang-tools-extra" tools/clang/tools/extra
