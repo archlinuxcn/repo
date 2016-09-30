@@ -8,15 +8,17 @@
 
 pkgname=libunwind-git
 pkgver=1.2.rc1.1.gbc8698f
-pkgrel=1
+pkgrel=2
 pkgdesc='Portable and efficient C programming interface (API) to determine the call-chain of a program'
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url='http://www.nongnu.org/libunwind/'
 license=('GPL')
 depends=('glibc' 'xz')
 makedepends=('git')
-source=('git+http://git.savannah.gnu.org/r/libunwind.git')
-md5sums=('SKIP')
+source=('git+http://git.savannah.gnu.org/r/libunwind.git'
+        0001-Support-dynamic-unwind-info-on-ARM.patch)
+md5sums=('SKIP'
+         'bf4c31a70eb1e5cd6b5c1c47a4ede4b2')
 options=('debug' '!strip')
 provides=(libunwind)
 conflicts=(libunwind)
@@ -25,6 +27,12 @@ pkgver() {
   cd libunwind
 
   git describe --tags | sed 's/^v//;s/-/./g'
+}
+
+prepare() {
+  cd libunwind
+
+  patch -Np1 < ../0001-Support-dynamic-unwind-info-on-ARM.patch
 }
 
 build() {
