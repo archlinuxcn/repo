@@ -5,7 +5,7 @@ pkgname=('vmware-horizon-client' 'vmware-horizon-rtav' 'vmware-horizon-smartcard
 pkgver=4.2.0
 _build=4329640
 _cart='CART16Q3'
-pkgrel=1
+pkgrel=2
 pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop'
 arch=('i686' 'x86_64')
 url='https://my.vmware.com/web/vmware/info/slug/desktop_end_user_computing/vmware_horizon_clients/4_0'
@@ -56,7 +56,6 @@ build() {
 	# This is a dirty hack, but it works.
 	# Change dynamic section in ELF files to fix dynamic linking.
 	# Make sure the length is not changed!
-	#	libudev.so.0 -> libudev.so.1
 	#
 	# for system openssl:
 	#	libssl.so.1.0.[12] -> libssl.so.1.0.0
@@ -76,9 +75,6 @@ build() {
 
 			# ELF executables and libraries only
 			file --mime "${FILE}" | egrep -q "application/x-(executable|sharedlib)" || continue
-
-			# link against libudev.so.1
-			sed -i -e 's/libudev.so.0/libudev.so.1/' "${FILE}"
 
 			# even openssl 1.0.[12].x has library file names ending in .so.1.0.0
 			if [ ${_USE_BUNDLED_OPENSSL:=0} -eq 0 ]; then
@@ -115,7 +111,8 @@ package_vmware-horizon-client() {
 	conflicts=('vmware-view-open-client' 'vmware-view-open-client-beta' 'vmware-view-client'
 		'vmware-horizon-pcoip')
 	replaces=('vmware-horizon-pcoip')
-	depends=('gnome-icon-theme' 'openssl' 'libpng12' 'gtk2' 'libxml2' 'libxss' 'libxtst')
+	depends=('gnome-icon-theme' 'gtk2' 'libpng12' 'libudev0-shim' 'libxml2' 'libxss'
+		'libxtst' 'openssl')
 	optdepends=('alsa-lib: audio support via alsa'
 		'freerdp: RDP remote desktop connections'
 		'libpulse: audio support via pulse sound server'
