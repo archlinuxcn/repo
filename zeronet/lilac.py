@@ -11,7 +11,6 @@ build_prefix = 'extra-x86_64'
 def pre_build():
     aur_pre_build()
     for line in edit_file('zeronet.service'):
-        # edit PKGBUILD
         if line.strip().startswith("ExecStart=/usr/bin/env"):
             print("StandardOutput=/dev/null")
             print("StandardError=/dev/null")
