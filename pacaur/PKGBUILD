@@ -1,5 +1,5 @@
 pkgname=pacaur
-pkgver=4.6.9
+pkgver=4.6.10
 pkgrel=1
 pkgdesc="An AUR helper that minimizes user interaction"
 arch=('any')
@@ -9,7 +9,7 @@ depends=('cower' 'expac' 'sudo' 'git')
 makedepends=('perl')
 backup=('etc/xdg/pacaur/config')
 source=("https://github.com/rmarquis/$pkgname/archive/$pkgver.tar.gz")
-md5sums=('e0f2996140dd42dfa4c0289e56242aea')
+md5sums=('d708774040efc197534eff3886d70425')
 
 build() {
     cd "$pkgname-$pkgver"
