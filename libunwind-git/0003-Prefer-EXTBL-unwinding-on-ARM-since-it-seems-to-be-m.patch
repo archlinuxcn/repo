@@ -1,0 +1,54 @@
+From 8e8b6000b971621db60c80491d556395ecc6ddd7 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sat, 1 Oct 2016 15:25:01 +0000
+Subject: [PATCH 3/3] Prefer EXTBL unwinding on ARM since it seems to be more
+ reliable
+
+---
+ src/arm/Gstep.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
+
+diff --git a/src/arm/Gstep.c b/src/arm/Gstep.c
+index 5b2b329..df48264 100644
+--- a/src/arm/Gstep.c
++++ b/src/arm/Gstep.c
+@@ -184,8 +184,18 @@ unw_step (unw_cursor_t *cursor)
+   if (unw_is_signal_frame (cursor))
+      return unw_handle_signal_frame (cursor);
+ 
++  /* First, try extbl-based unwinding. */
++  if (UNW_TRY_METHOD (UNW_ARM_METHOD_EXIDX))
++    {
++      ret = arm_exidx_step (c);
++      if (ret > 0)
++        return 1;
++      if (ret == -UNW_ESTOPUNWIND || ret == 0)
++        return ret;
++    }
++
+ #ifdef CONFIG_DEBUG_FRAME
+-  /* First, try DWARF-based unwinding. */
++  /* Second, try DWARF-based unwinding. */
+   if (UNW_TRY_METHOD(UNW_ARM_METHOD_DWARF))
+     {
+       ret = dwarf_step (&c->dwarf);
+@@ -204,16 +214,6 @@ unw_step (unw_cursor_t *cursor)
+     }
+ #endif /* CONFIG_DEBUG_FRAME */
+ 
+-  /* Next, try extbl-based unwinding. */
+-  if (UNW_TRY_METHOD (UNW_ARM_METHOD_EXIDX))
+-    {
+-      ret = arm_exidx_step (c);
+-      if (ret > 0)
+-        return 1;
+-      if (ret == -UNW_ESTOPUNWIND || ret == 0)
+-        return ret;
+-    }
+-
+   /* Fall back on APCS frame parsing.
+      Note: This won't work in case the ARM EABI is used. */
+   if (unlikely (ret < 0))
+-- 
+2.10.0
+
