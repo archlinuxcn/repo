@@ -4,7 +4,7 @@
 pkgname=zeal
 epoch=1
 pkgver=0.3.0
-pkgrel=1
+pkgrel=2
 pkgdesc='An offline API documentation browser'
 arch=('i686' 'x86_64')
 url='https://zealdocs.org/'
@@ -18,7 +18,7 @@ sha256sums=('d723c6bc3cb08398d10e7c204929853c9d40d57431a5a16752630b258ae96dc1')
 
 build() {
 	cd "$srcdir/$pkgname-$pkgver"
-	QT_SELECT=5 qmake
+	QT_SELECT=5 qmake CONFIG+=force_debug_info
 	make
 }
 
