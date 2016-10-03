@@ -12,7 +12,7 @@ _pkgbase="protobuf"
 pkgname=('protobuf3' 'python2-protobuf3' 'python-protobuf3')
 pkgver=3.0.2
 _pkgver=$(echo $pkgver | tr _ -)
-pkgrel=2
+pkgrel=3
 pkgdesc="Protocol Buffers - Google's data interchange format"
 arch=('i686' 'x86_64')
 url='https://developers.google.com/protocol-buffers/'
@@ -28,6 +28,7 @@ source=(
 md5sums=('845b39e4b7681a2ddfd8c7f528299fbb'
          '4ff6353b2560df0afecfbda3b2763847'
          '13c3b4a57ad575763deb73fc0ad96e07')
+options=('!debug')
 
 prepare() {
   cd $_pkgbase-$_pkgver
@@ -39,7 +40,7 @@ prepare() {
 build() {
   # GCC is stuck on src/google/protobuf/util/internal/protostream_objectsource_test.cc
   # and src/google/protobuf/util/internal/protostream_objectwriter_test.cc
-  export CC=clang CXX=clang++
+  export CC=/usr/bin/clang CXX=/usr/bin/clang++
 
   cd "$srcdir/$_pkgbase-$_pkgver"
   ./autogen.sh
