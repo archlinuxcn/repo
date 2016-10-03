@@ -9,7 +9,7 @@ _minor=7
 _basekernel=${_major}.${_minor}
 _srcname=linux-${_major}.${_minor}
 pkgbase=linux-pf
-_pfrel=4
+_pfrel=5
 _kernelname=-pf
 _pfpatchhome="http://pf.natalenko.name/sources/${_basekernel}/"
 _pfpatchname="patch-${_basekernel}${_kernelname}${_pfrel}"
@@ -69,7 +69,7 @@ pkgrel=1
 arch=('i686' 'x86_64')
 url="http://pf.natalenko.name/"
 license=('GPL2')
-options=('!strip')
+options=('!strip' '!ccache')
 makedepends=('git' 'xmlto' 'docbook-xsl' 'xz' 'bc' 'kmod' 'inetutils' 'elfutils')
 source=("ftp://www.kernel.org/pub/linux/kernel/v${_major}.x/linux-${_basekernel}.tar.xz"
         'config.x86_64'         # the main kernel config files
@@ -77,7 +77,6 @@ source=("ftp://www.kernel.org/pub/linux/kernel/v${_major}.x/linux-${_basekernel}
         'change-default-console-loglevel.patch'
         "${_pfpatchhome}${_pfpatchname}.xz"     # the -pf patchset
         "git+$_aufs4"
-        "https://raw.githubusercontent.com/dolohow/uksm/master/uksm-${_basekernel}.patch"
 )
 
 
@@ -85,10 +84,6 @@ prepare() {
   cd "${srcdir}/linux-${_basekernel}"
   msg "Applying pf-kernel patch"
   patch -Np1 < ${srcdir}/${_pfpatchname}
-
-  msg "applying uksm patches"
-  # since linux-pf uksm is seperate
-  patch -Np1 -i "$srcdir"/uksm-${_basekernel}.patch
 
   msg "applying aufs4 patches"
   cd "$srcdir/${_aufs4##*/}"
@@ -311,7 +306,7 @@ build() {
 }
 
 package_linux-pf() {
- _pkgdesc="Linux kernel and modules with the pf-kernel patch [-ck patchset (BFS included), BFQ], uksm and aufs4."
+ _pkgdesc="Linux kernel and modules with the pf-kernel patch [-ck patchset (BFS included), BFQ] and aufs4."
  pkgdesc=${_pkgdesc}
  backup=(etc/mkinitcpio.d/${pkgbase}.preset)
  depends=('coreutils' 'linux-firmware' 'kmod>=9-2' 'mkinitcpio>=0.7')
@@ -672,9 +667,8 @@ pkgdesc="Linux kernel and modules with the pf-kernel patch [-ck patchset (BFS in
 
 # makepkg -g >>PKGBUILD
 sha256sums=('5190c3d1209aeda04168145bf50569dc0984f80467159b1dc50ad731e3285f10'
-            '7b1c04a66b5867a9181d510310a3da0e254deca1597a9af46b7336fac97bcd9d'
+            '70cf20ba002b69fbf9a3ce221ea67b46fbed9681152884d68a74ff8edb13c08b'
             '82d660caa11db0cd34fd550a049d7296b4a9dcd28f2a50c81418066d6e598864'
             '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99'
-            '7814efafa73321b13ce078182007a4fde3bbd9eec84e2a01561c4850ce9b0275'
-            'SKIP'
-            '16f601b5b5d1d74230403eaf331f716c65f0b36b9b5a37cdcdf51c30ea19e341')
+            'd5d95c8a224ef096b217bf94154458668ba283047a7f11e55700df31df45c7f1'
+            'SKIP')
