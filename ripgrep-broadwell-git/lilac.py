@@ -1,6 +1,11 @@
 from lilaclib import *
 
 build_prefix = 'extra-x86_64'
+depends = [
+  ('rust-nightly', 'rust-std-nightly-x86_64-unknown-linux-gnu'),
+  ('rust-nightly', 'rust-nightly'),
+  ('rust-nightly', 'cargo-nightly'),
+]
 
 pre_build = vcs_update
 
