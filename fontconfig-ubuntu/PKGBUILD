@@ -4,7 +4,7 @@
 
 pkgname=fontconfig-ubuntu
 pkgver=2.11.94
-_ubver=0ubuntu1
+_ubver=0ubuntu2
 pkgrel=2
 pkgdesc="Library for configuring and customizing font access, with Ubuntu's LCD rendering patches."
 arch=('i686' 'x86_64')
@@ -20,7 +20,7 @@ source=("https://launchpad.net/ubuntu/+archive/primary/+files/fontconfig_$pkgver
         "https://launchpad.net/ubuntu/+archive/primary/+files/fontconfig_$pkgver-$_ubver.debian.tar.xz"
         '53-monospace-lcd-filter.patch')
 md5sums=('c988ea12f4117330246e041109152b4a'
-         '600869b15c56513542099eb9a05bd7bc'
+         '1527bc9abef9c13eef6178b4369dda2e'
          'a17e48be6a06bc056574be6756cb9738')
 
 prepare() {
