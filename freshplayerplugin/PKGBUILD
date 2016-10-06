@@ -7,13 +7,13 @@
 # Contributor: zman0900 <zman0900@gmail.com>
 
 pkgname=freshplayerplugin
-pkgver=0.3.5
-pkgrel=2
+pkgver=0.3.6
+pkgrel=1
 pkgdesc='PPAPI-host NPAPI-plugin adapter.'
 arch=( 'i686' 'x86_64' )
 url='https://github.com/i-rinat/freshplayerplugin'
 license=( 'MIT' )
-depends=( 'pango' 'alsa-lib' 'freetype2' 'libevent' 'gtk3' 'libgl' 'v4l-utils' 'ffmpeg' )
+depends=( 'pango' 'alsa-lib' 'freetype2' 'libevent' 'gtk3' 'libgl' 'v4l-utils' 'ffmpeg' 'icu' )
 makedepends=( 'cmake' 'ragel' )
 conflicts=( 'freshplayerplugin-git' )
 install="${pkgname}.install"
@@ -24,11 +24,7 @@ source=(
 )
 
 optdepends=(
-  'chromium-pepper-flash: for the necessary Pepper plugin'
-  'chromium-pepper-flash-standalone: for the necessary Pepper plugin'
-  'google-chrome: for the necessary Pepper plugin'
-  'google-chrome-beta: for the necessary Pepper plugin'
-  'google-chrome-dev: for the necessary Pepper plugin'
+  'pepper-flash: for the necessary Pepper plugin'
 )
 
 build() {
@@ -47,5 +43,5 @@ package() {
   install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
 
-sha1sums=('9f76b38802697576856f880a0672257cc0a9544f'
+sha1sums=('255dc4ad0dbad26ed92e1b7dbdd615e75096b05f'
           '331a3b3877249eaf1c3db917bde1dea6c4d374ab')
