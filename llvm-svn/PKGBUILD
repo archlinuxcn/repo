@@ -21,7 +21,7 @@ pkgname=(
 )
 _pkgname='llvm'
 
-pkgver=4.0.0svn_r283425
+pkgver=4.0.0svn_r283470
 pkgrel=1
 
 arch=('i686' 'x86_64')
@@ -199,7 +199,7 @@ package_llvm-svn() {
     make DESTDIR="${pkgdir}" install
 
     # The runtime libraries get installed in llvm-libs-svn
-    rm -f "${pkgdir}"/usr/lib/lib{LLVM,LTO}{,-*}.so
+    rm -f "${pkgdir}"/usr/lib/lib{LLVM,LTO}{,-*}.so{,.*}
     mv -f "${pkgdir}"/usr/lib/{BugpointPasses,LLVMgold}.so "${srcdir}/"
 
     # Clang libraries and OCaml bindings go to separate packages
