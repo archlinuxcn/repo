@@ -14,6 +14,7 @@ options=(!strip debug)
 source=("https://github.com/BurntSushi/$pkgname/archive/$pkgver.tar.gz")
 source=("git+$url")
 sha256sums=('SKIP')
+conflicts=(ripgrep)
 
 pkgver () {
   cd ripgrep
