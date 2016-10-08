@@ -1,6 +1,6 @@
 #Maintainer: Xyne <ac xunilhcra enyx, backwards>
 pkgname=python3-xcgf
-pkgver=2016.4.5
+pkgver=2016.4.26
 pkgrel=1
 pkgdesc='Xyne'"'"'s common generic functions, for internal use.'
 arch=(any)
@@ -8,16 +8,16 @@ license=(GPL)
 url="http://xyne.archlinux.ca/projects/python3-xcgf"
 depends=(python3)
 source=(
-  http://xyne.archlinux.ca/projects/python3-xcgf/src/python3-xcgf-2016.4.5.tar.xz
-  http://xyne.archlinux.ca/projects/python3-xcgf/src/python3-xcgf-2016.4.5.tar.xz.sig
+  http://xyne.archlinux.ca/projects/python3-xcgf/src/python3-xcgf-2016.4.26.tar.xz
+  http://xyne.archlinux.ca/projects/python3-xcgf/src/python3-xcgf-2016.4.26.tar.xz.sig
 )
 sha512sums=(
-  bee42dc93632258fc5793544e927677dd8cc0cc58fd610aad73206f8f2cd62fb9879d8e1dc518994c114e9c8409b3444d5a77a0bb0885cbbe615fd33e8f61c72
-  b5914b81b706a3a2b8516dc56da0d74e78f24d3a4c66059975c4e2d6a3c6b8e4e6a7c766102f472c296fec3880a77bab9ed8c437318b5354c2c09df0523da9b4
+  272c78ad24f00b6f3b42059b06488e34f78d438c307a17b6ff0293e5257f3c1f35eb08f414aa4ac5facd958ee090535d817beea0e3c46258c0a194c4ea51e6e3
+  acb915ec5d3ec7a12f4ad7ad8d8858d1cde3de8e22ce616b8953fe33ba3390b59eebae04f401f2d06078c0531ba3df349acd0ca03dcbc8a2837f08772d020763
 )
 md5sums=(
-  95e66ccdd3216adc51f84e7f1c43fcd1
-  0ba3825192898462bf9136db4b37372a
+  a7867d3651ba09812286915a1a5425d1
+  44939d706905a54d2fff35d8efcc9efc
 )
 validpgpkeys=('EC3CBE7F607D11E663149E811D1F0DC78F173680')
 
