@@ -3,12 +3,13 @@
 
 DisplayLink Ubuntu Software Release Note
 
-Version: 1.1.62
-Date: 12th May 2016
+Version: 1.2.58
+Date: 16th September 2016
 
-DisplayLink DL-5xxx, DL-3x00 Firmware Version: 8.13.20.75809
-DisplayLink DL-41xx Firmware Version: 8.13.20.75810
-Extensible Virtual Display Interface version included: 1.1.61
+DisplayLink DL-5xxx, DL-3x00 Firmware Version: 9.0.37.80577
+DisplayLink DL-41xx Firmware Version: 9.0.37.80577
+DisplayLink DL-6xxx Firmware Version: 9.0.36.80470
+Extensible Virtual Display Interface version included: 1.2.55
 
 =============================================================================
 =============================================================================
@@ -17,23 +18,23 @@ Extensible Virtual Display Interface version included: 1.1.61
 A. Introduction
 ===============
 
-This is DisplayLink Driver Software v1.1 for Ubuntu. It provides initial, production quality support for DisplayLink USB 3.0 devices on specific variants of desktop Ubuntu Linux.
+This is DisplayLink Driver Software v1.2 for Ubuntu. It provides initial, production quality support for DisplayLink USB 3.0 devices on specific variants of desktop Ubuntu Linux.
 
 The driver enables video support for products using DisplayLink USB 3.0 technology. Standard native Ubuntu drivers provide support for DisplayLink audio and Ethernet interfaces.
 
 
-A1. Important notes about DL5xxx, DL-3x00 and DL-41xx Firmware
-==============================================================
+A1. Important notes about DL-6xxx, DL5xxx, DL-3x00 and DL-41xx Firmware
+=======================================================================
 
-This software release contains an embedded firmware image. DL-5xxx, DL-3xxx and DL-41xx devices will be automatically upgraded with this firmware upon connection if required.
+This software release contains an embedded firmware image. DL-6xxx, DL-5xxx, DL-3xxx and DL-41xx devices will be automatically upgraded with this firmware upon connection if required.
 
-The upgrade is silent, therefore screens connected to DL-5xxx, DL-3xxx or DL-41xx devices may require a few seconds to appear when devices are connected for the first time, or after devices have been used on other platforms and OSes.
+The upgrade is silent, therefore screens connected to DL-6xxx, DL-5xxx, DL-3xxx or DL-41xx devices may require a few seconds to appear when devices are connected for the first time, or after devices have been used on other platforms and OSes.
 
 B. Contents
 ===========
 
 A.  Introduction
-A1. Important notes about DL-5xxx, DL-3xxx and DL-41xx Firmware
+A1. Important notes about DL-6xxx, DL-5xxx, DL-3xxx and DL-41xx Firmware
 B.  Contents
 C.  Issues fixed
 D.  Supported O/S variants
@@ -44,25 +45,24 @@ H.  Limitations & Known issues
 I.  Future Development
 
 C. Issues fixed
-==========================================================================
+===============
 
-Issues fixed since DisplayLink Driver Software v1.0 Beta 3 for Ubuntu (1.0.335)
--------------------------------------------------------------------------------
+Issues fixed since DisplayLink Driver Software v1.1 for Ubuntu (1.1.62)
+-----------------------------------------------------------------------
 
-Sometimes screen corruption can be visible on DisplayLink monitor after screen layout change. (20462)
+High CPU usage with no activity on DisplayLink monitor. (22444)
 
-DisplayLink monitor can be blank after PC reboot. (21166)
+Kernel warning in dmesg after connecting DisplayLink monitor. (22530)
 
-The installer does not create systemd service on Ubuntu 16.04. (22031)
+Segmentation fault could occur while stopping DisplayLink daemon. (22536)
 
-DisplayLink monitor content may freeze after a resolution change. (22060)
+DisplayLink systemd/upstart service is only loaded when a DisplayLink device is connected. (23187)
 
-DisplayLink service component may crash after resolution change. (22061)
 
 D. Supported O/S variants
 =========================
 
-This release has been prepared to be compatible with Ubuntu 16.04. Other variants and editions may be compatible if they meet minimum O/S requirements, but are not supported by DisplayLink.
+This release has been prepared to be compatible with Ubuntu 16.04 and Ubuntu 14.04. Other variants and editions may be compatible if they meet minimum O/S requirements, but are not supported by DisplayLink.
 
 The Software contains binaries which work on Intel x86 platform (32 bit and 64 bit).
 Minimum supported Linux Kernel version is 3.16.
