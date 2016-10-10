@@ -1,7 +1,7 @@
 # Maintainer: Maikel Wever <maikelwever@gmail.com>
 
 pkgname=lxd
-pkgver=2.1
+pkgver=2.4.1
 pkgrel=1
 pkgdesc="REST API, command line tool and OpenStack integration plugin for LXC."
 arch=('x86_64')
@@ -29,7 +29,7 @@ source=(
     "networkmanager-dnsmasq-lxd.conf"
 )
 
-md5sums=('b088e520e9fddd5fda1a1ab8f498c348'
+md5sums=('c82a491d500a1f027e9e62a77ef1f9dd'
          'b1780c0e01e404895e35ac277aa597c4'
          'b1fd16933c1b24aaa9ccc8f5a0e6478c'
          'f2bc527eabb1fdba810b0393ee41edd4'
@@ -56,9 +56,6 @@ package() {
   mkdir -p "$pkgdir/usr/lib/lxd/"
 
   install -p -m755 "$srcdir/bin/"* "$pkgdir/usr/bin"
-  mv "$pkgdir/usr/bin/lxd-bridge-proxy" "$pkgdir/usr/lib/lxd/"
-
-  install -p -m755 "$srcdir/src/$_gourl/lxd-bridge/lxd-bridge" "$pkgdir/usr/lib/lxd/"
 
   # Package license (if available)
   for f in LICENSE COPYING LICENSE.* COPYING.*; do

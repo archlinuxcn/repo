@@ -5,14 +5,13 @@
 # Contributor: Geoffroy Carrier <geoffroy@archlinux.org>
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
-_gtestver=1.7.0
-_gmockver=1.7.0
+_gtestver=1.8.0
 
 _pkgbase="protobuf"
 pkgname=('protobuf3' 'python2-protobuf3' 'python-protobuf3')
 pkgver=3.0.2
 _pkgver=$(echo $pkgver | tr _ -)
-pkgrel=3
+pkgrel=4
 pkgdesc="Protocol Buffers - Google's data interchange format"
 arch=('i686' 'x86_64')
 url='https://developers.google.com/protocol-buffers/'
@@ -23,21 +22,21 @@ makedepends=('unzip' 'python-setuptools' 'python2-setuptools' 'clang')
 source=(
   "https://github.com/google/${_pkgbase}/archive/v${_pkgver}.tar.gz"
   "gtest-${_gtestver}.tar.gz::https://github.com/google/googletest/archive/release-${_gtestver}.tar.gz"
-  "gmock-${_gmockver}.tar.gz::https://github.com/google/googlemock/archive/release-1.7.0.tar.gz"
 )
 md5sums=('845b39e4b7681a2ddfd8c7f528299fbb'
-         '4ff6353b2560df0afecfbda3b2763847'
-         '13c3b4a57ad575763deb73fc0ad96e07')
+         '16877098823401d1bf2ed7891d7dce36')
 options=('!debug')
 
 prepare() {
   cd $_pkgbase-$_pkgver
-  rm -rf gmock && cp -r "$srcdir/googlemock-release-${_gtestver}" "gmock"
-  rm -rf gmock/gtest && cp -r "$srcdir/googletest-release-${_gtestver}" "gmock/gtest"
-  sed -r 's|/usr/bin/env python|/usr/bin/env python2|' -i gmock/gtest/scripts/*.py
+  rm -rf gmock && cp -r "$srcdir/googletest-release-${_gtestver}/googlemock" gmock
+  rm -rf googletest && cp -r "$srcdir/googletest-release-${_gtestver}/googletest" googletest
+  ln -sf ../googletest gmock/gtest
+  sed -r 's|/usr/bin/env python|/usr/bin/env python2|' -i googletest/scripts/*.py
 }
 
 build() {
+  echo "Start of build function" >&2
   # GCC is stuck on src/google/protobuf/util/internal/protostream_objectsource_test.cc
   # and src/google/protobuf/util/internal/protostream_objectwriter_test.cc
   export CC=/usr/bin/clang CXX=/usr/bin/clang++
@@ -45,17 +44,17 @@ build() {
   cd "$srcdir/$_pkgbase-$_pkgver"
   ./autogen.sh
 
-  echo "Building gtest"
-  cd "$srcdir/$_pkgbase-$_pkgver/gmock/gtest"
+  echo "Building gtest" >&2
+  cd "$srcdir/$_pkgbase-$_pkgver/googletest"
   ./configure
   make $MAKEFLAGS
 
-  echo "Building gmock"
+  echo "Building gmock" >&2
   cd "$srcdir/$_pkgbase-$_pkgver/gmock"
   ./configure
   make $MAKEFLAGS
 
-  echo "Building protobuf"
+  echo "Building protobuf" >&2
   cd "$srcdir/$_pkgbase-$_pkgver"
   ./configure --prefix=/usr
   make $MAKEFLAGS

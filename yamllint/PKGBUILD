@@ -1,14 +1,14 @@
 _pkgname=yamllint
 pkgname=yamllint
-pkgver=1.4.1
+pkgver=1.5.0
 pkgrel=1
 pkgdesc="A linter for YAML files."
 arch=('any')
 url="https://github.com/adrienverge/yamllint"
 license=('GPLv3')
 depends=('python' 'python-yaml' 'python-setuptools')
-source=('https://pypi.python.org/packages/ef/c7/4f82f35ac5faa761851929ed33efe218ca3a3170328730446ced6df5b6a2/yamllint-1.4.1.tar.gz')
-md5sums=('8627296504845d776d3615087a051312')
+source=('https://pypi.python.org/packages/42/ff/1570c386f2940ac34d54ec74820da60f43cae55461919910fab2d539e8a7/yamllint-1.5.0.tar.gz')
+md5sums=('e289023a5b95556e06faadcc066ebd89')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"

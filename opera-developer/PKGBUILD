@@ -1,7 +1,7 @@
 # Maintainer: Christian Hesse <mail@eworm.de>
 
 pkgname=opera-developer
-pkgver=41.0.2349.0
+pkgver=42.0.2372.0
 pkgrel=1
 pkgdesc='A fast and secure web browser and Internet suite - developer stream'
 arch=('x86_64' 'i686')
@@ -25,8 +25,8 @@ source_x86_64=("${_source}/${pkgname}/${pkgver}/linux/${pkgname}_${pkgver}_amd64
 source_i686=("${_source}/${pkgname}/${pkgver}/linux/${pkgname}_${pkgver}_i386.deb")
 sha256sums=('508512464e24126fddfb2c41a1e2e86624bdb0c0748084b6a922573b6cf6b9c5'
 	'99fc0d2822edd14e234d451995db47148125e4580221a292598959421d131231')
-sha256sums_x86_64=('c38dee22b96289524897bad230afce7d8222e270547ba23bf0d52bb5bd205d44')
-sha256sums_i686=('23ffee5d33f3afdcbdf99d0c773295298dcd5bf99fa81793ebefe08b43834aae')
+sha256sums_x86_64=('f1f15d176eaa09919b3f98efeb99ca12aa42ced6d0e09273d66c21d0df1a0938')
+sha256sums_i686=('4afb6aec7382ea46a9b2cd0943d85234e56e4b7a5dc0949a36bc89763841063f')
 
 prepare() {
 	cd ${srcdir}/

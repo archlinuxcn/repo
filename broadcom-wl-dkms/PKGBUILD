@@ -4,7 +4,7 @@
 
 pkgname=broadcom-wl-dkms
 pkgver=6.30.223.271
-pkgrel=9
+pkgrel=10
 pkgdesc="Broadcom 802.11 Linux STA wireless driver"
 arch=('i686' 'x86_64')
 url="https://www.broadcom.com/support/802.11"
@@ -20,14 +20,16 @@ source=('broadcom-wl-dkms.conf'
         'dkms.conf.in'
         '001-null-pointer-fix.patch'
         '002-rdtscl.patch'
-        '003-linux47.patch')
+        '003-linux47.patch'
+        '004-linux48.patch')
 source_i686=("http://www.broadcom.com/docs/linux_sta/hybrid-v35-nodebug-pcoem-${pkgver//./_}.tar.gz")
 source_x86_64=("http://www.broadcom.com/docs/linux_sta/hybrid-v35_64-nodebug-pcoem-${pkgver//./_}.tar.gz")
 sha256sums=('b97bc588420d1542f73279e71975ccb5d81d75e534e7b5717e01d6e6adf6a283'
-            '73438b29a1f422ed231b3857d491813c396a8be4fe34f006ce40679bba03d127'
+            'a453cfd7c8ad5b04afa6a55189b445356090b52fd480c2b5ec843bfeec72b9bf'
             '32e505a651fdb9fd5e4870a9d6de21dd703dead768c2b3340a2ca46671a5852f'
             '4ea03f102248beb8963ad00bd3e36e67519a90fa39244db065e74038c98360dd'
-            '30ce1d5e8bf78aee487d0f3ac76756e1060777f70ed1a9cf95215c3a52cfbe2e')
+            '30ce1d5e8bf78aee487d0f3ac76756e1060777f70ed1a9cf95215c3a52cfbe2e'
+            '833af3b209d6a101d9094db16480bda2ad9a85797059b0ae0b13235ad3818e9c')
 sha256sums_i686=('4f8b70b293ac8cc5c70e571ad5d1878d0f29d133a46fe7869868d9c19b5058cd')
 sha256sums_x86_64=('5f79774d5beec8f7636b59c0fb07a03108eef1e3fd3245638b20858c714144be')
 
