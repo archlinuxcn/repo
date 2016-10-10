@@ -10,9 +10,9 @@
 # Contributor: Diego Jose <diegoxter1006@gmail.com>
 
 pkgbase=mesa-git
-pkgname=('opencl-mesa-git' 'mesa-vulkan-intel-git' 'libva-mesa-driver-git' 'mesa-vdpau-git' 'mesa-libgl-git' 'mesa-git')
+pkgname=('opencl-mesa-git' 'mesa-vulkan-intel-git' 'mesa-vulkan-radeon-git' 'libva-mesa-driver-git' 'mesa-vdpau-git' 'mesa-libgl-git' 'mesa-git')
 pkgdesc="an open-source implementation of the OpenGL specification, git version"
-pkgver=12.1.0_devel.85403.965ebc8
+pkgver=12.1.0_devel.85423.db5d278
 pkgrel=1
 arch=('i686' 'x86_64')
 makedepends=('python2-mako' 'libxml2' 'libx11' 'glproto' 'libdrm>=2.4.66' 'dri2proto' 'dri3proto' 'presentproto' 
@@ -55,6 +55,8 @@ build () {
                --with-gallium-drivers=i915,ilo,r300,r600,radeonsi,nouveau,svga,swrast,virgl \
                --with-dri-drivers=i915,i965,r200,radeon,nouveau,swrast \
                --with-egl-platforms=x11,drm,wayland \
+               --with-vulkan-drivers=intel,radeon \
+               --disable-vulkan-icd-full-driver-path \
                --with-clang-libdir=/usr/lib \
                --with-sha1=libnettle \
                --enable-texture-float \
@@ -69,10 +71,7 @@ build () {
                --enable-va \
                --enable-opencl \
                --enable-opencl-icd \
-               --enable-glx-tls \
-               --with-vulkan-drivers=intel
-
-
+               --enable-glx-tls
 
 
 #
@@ -149,14 +148,31 @@ package_mesa-vulkan-intel-git() {
 #  install -m755 -d ${pkgdir}/etc
 #  mv -v ${srcdir}/fakeinstall/etc/vulkan ${pkgdir}/etc/
 
-  install -m755 -d "${pkgdir}"/usr/{include/vulkan,lib,share/{vulkan,licenses}}
+  install -m755 -d "${pkgdir}"/usr/{include/vulkan,lib,share/{vulkan/icd.d,licenses}}
   
   mv -v "${srcdir}"/fakeinstall/usr/lib/libvulkan_intel.so "${pkgdir}"/usr/lib
   mv -v "${srcdir}"/fakeinstall/usr/include/vulkan/vulkan_intel.h "${pkgdir}"/usr/include/vulkan
-  mv -v "${srcdir}"/fakeinstall/usr/share/vulkan/ "${pkgdir}"/usr/share/
+  
+  mv -v ${srcdir}/fakeinstall/usr/share/vulkan/icd.d/intel_icd.json ${pkgdir}/usr/share/vulkan/icd.d
 
   install -m755 -d "${pkgdir}"/usr/share/licenses/mesa-vulkan-intel-git
   install -m644 "${srcdir}"/LICENSE "${pkgdir}"/usr/share/licenses/mesa-vulkan-intel-git/
+}
+
+package_mesa-vulkan-radeon-git() {
+  pkgdesc="Vulkan mesa driver for selected amd gpus (git version)"
+  depends=('vulkan-icd-loader' 'libgcrypt' 'wayland' 'libxcb')
+  provides=('vulkan-radeon')
+  conflicts=('vulkan-radeon')
+  
+  install -m755 -d ${pkgdir}/usr/share/vulkan/icd.d
+  mv -v ${srcdir}/fakeinstall/usr/share/vulkan/icd.d/radeon_icd.json ${pkgdir}/usr/share/vulkan/icd.d/
+
+  install -m755 -d ${pkgdir}/usr/lib
+  mv -v ${srcdir}/fakeinstall/usr/lib/libvulkan_radeon.so ${pkgdir}/usr/lib/
+
+  install -m755 -d "${pkgdir}/usr/share/licenses/mesa-vulkan-radeon-git"
+  install -m644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/mesa-vulkan-radeon-git/"
 }
 
 package_libva-mesa-driver-git() {
@@ -188,7 +204,7 @@ package_mesa-vdpau-git() {
 
 package_mesa-git () {
   pkgdesc="an open-source implementation of the OpenGL specification, git version"
-  depends=('libdrm>=2.4.66' 'wayland' 'libxxf86vm' 'libxdamage' 'libxshmfence' 'elfutils'
+  depends=('libdrm' 'wayland' 'libxxf86vm' 'libxdamage' 'libxshmfence' 'elfutils'
            'libomxil-bellagio' 'libtxc_dxtn' 'nettle' 'llvm-libs-svn' 'libxvmc')
   optdepends=('opengl-man-pages: for the OpenGL API man pages'
               'mesa-vdpau-git: for accelerated video playback'
