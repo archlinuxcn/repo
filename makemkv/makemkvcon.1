@@ -1,0 +1,266 @@
+.TH MAKEMKVCON "1" "May 2014" "MakeMKV 1.8"
+
+\" Completely disable hyphenation. It is a very annoying feature while reading man pages, in my opinion.
+.nh
+
+.SH NAME
+makemkvcon \- Decrypt DVD and Blu-ray discs to your hard disk using a simple command line interface.
+
+.SH SYNOPSIS
+.B makemkvcon
+[\fIOPTIONS\fR]
+\fICOMMAND\fR
+[\fIPARAMETERS\fR]
+
+.SH DESCRIPTION
+MakeMKV is a simple solution to convert video that you own into a free and patents-unencumbered format which can be played everywhere. MakeMKV is a format converter, otherwise called a "transcoder". It converts the video clips from proprietary (and usually encrypted) disc into a set of MKV files, preserving most information but not changing it in any way. Additionally MakeMKV can instantly stream decrypted video without intermediate conversion to wide range of media players.
+
+.SH GENERAL\ OPTIONS
+The options described below apply to all makemkvcon \fICOMMANDS\fR. 
+
+.IP \fB--messages\fR=\fIFILE\fR
+Output all messages to \fIFILE\fR instead of stdandard output.
+
+The following special \fIFILE\fR names are recognized:
+.TS
+left allbox tab(%);
+c c
+l l
+l l
+l l.
+ \fBFILE\fR % \fBSpecial Meaning\fR
+-stdout % standard output
+-stderr % standard error
+-null % disable output
+.TE
+
+.IP \fB--progress\fR=\fIFILE\fR
+Output all progress messages to \fIFILE\fR. By default no progress is output.
+
+The same special \fIFILE\fR names as supported by \fI--messages\fR are recognized, with one addition:
+.TS
+left allbox tab(%);
+c c
+l l.
+ \fBFILE\fR % \fBSpecial Meaning\fR
+-same % output to the same \fIFILE\fR as \fI--messages\fR
+.TE
+
+.IP \fB--debug\fR[=\fIFILE\fR]
+Enable debug messages, and, optionally, output those messages to \fIFILE\fR instead of the debug location specified in program preferences.
+
+.IP \fB--directio\fR=\fIBOOL\fR
+Disable direct disc access if \fIBOOL\fR is \fIfalse\fR. Enable direct disc access if \fIBOOL\fR is \fItrue\fR.
+
+.IP \fB--noscan\fR
+Do not access any media while scanning a disc, and do not check for media insertion and removal. This option may be helpful when other applications are actively accessing discs in other drives. It does not, however, alleviate the need to MakeMKV to have exclusive access to the disc drive you specify to this program.
+
+.IP \fB--cache\fR=\fISIZE\fR
+Specify the maximum \fISIZE\fR of the read cache used by MakeMKV (in megabytes). By default this program may consume a very large amount of memory. Although this high memory consumption allows MakeMKV to quickly and efficiently buffer chunks of data from the DVD or Blu-ray disc, it may noticeably slow down memory-constrained systems or those with very little free RAM. If you choose to limit the cache \fISIZE\fR with this option, please keep in mind that 128 MB is the recommended minimum for streaming and backup, at least 512 MB is necessary for smooth DVD conversion, and at least 1024 MB is necessary for smooth Blu-ray conversion.
+
+.SH CONVERSION\ OPTIONS
+The options described below are for source conversion and apply only to the \fImkv\fR \fICOMMAND\fR.
+
+.IP \fB--minlength\fR=\fILENGTH\fR
+Only capture titles that are at least \fILENGTH\fR seconds long.
+
+.SH STREAMING\ OPTIONS
+The options described below are for network related and apply only to the \fIstream\fR \fICOMMAND\fR.
+
+.IP \fB--upnp\fR=\fIBOOL\fR
+Disable Universal Plug-and-Play (UPNP) streaming if \fIBOOL\fR is \fIfalse\fR. Enable UPNP streaming if \fIBOOL\fR is \fItrue\fR.
+
+.IP \fB--bindip\fR=\fIADDRESS\fR
+Exclusively bind the UPNP server to \fIADDRESS\fR. By default server binds to the first available address, and its local web server listens on all available addresses.
+
+.IP \fB--bindport\fR=\fIPORT\fR
+Bind the web server to \fIPORT\fR instead of 51000.
+
+.SH BACKUP\ OPTIONS
+The options described below related to backup purposes and apply only to the \fIbackup\fR \fICOMMAND\fR.
+
+.IP \fB--decrypt\fR
+Decrypt stream files during backup. By default a strict backup will be made, which means nothing is decrypted sans this option.
+
+.SH AUTOMATION\ OPTIONS
+The options described below are designed to be used by those wishing to automate aspects of this program. They are particularly useful in shell scripts.
+
+.IP \fB-r\fR,\ \fB--robot\fR
+Enable automation mode. In this mode MakeMKV will output more information in a format that is easier to parse by scripts (particularly with regular expressions), but may slightly hinder direct human consumption. All output is line-based and flushed on line end. All strings are quoted, and all control characters and quotes are escaped by backlashes. If you intend to automate this program, it is highly recommended that you use this option. Some options make reference to \fIapdefs.h\fR, which is among the open-source components of MakeMKV and can be found in the makemkv-oss source package in Debian. These values will not change in future versions.
+
+.SH COMMANDS
+Each instantiation of this program requires a \fICOMMAND\fR. This \fICOMMAND\fR determines, on a holistic level, which action MakeMKV should attempt to perform. All supported commands are described below.
+
+.IP \fBinfo\fR\ \fISOURCE\fR
+Print detailed descriptory information about the \fISOURCE\fR disc.
+
+.IP \fBmkv\fR\ \fISOURCE\fR\ \fITITLE_ID\fR\ \fIDESTINATION_DIRECTORY\fR
+Save the title on the \fISOURCE\fR disc with the ID \fITITLE_ID\fR to an MKV file in the directory \fIDESTINATION_DIRECTORY\fR.
+
+.IP \fBstream\fR\ \fISOURCE\fR
+Start a local streaming server backed by the titles on \fISOURCE\fR.
+
+.IP \fBbackup\fR\ \fISOURCE\fR\ \fIDESTINATION_DIRECTORY\fR
+Faithfully backup the contents of \fISOURCE\fR to the \fIDESTINATION_DIRECTORY\fR on your hard disk.
+
+.SH SOURCES
+Since MakeMKV is primarily designed to operate on optical media, each \fICOMMAND\fR must be immediately postfixed by a \fISOURCE\fR. However, because this program supports a wide range of input sources - including ISO images, directories, optical discs, and raw devices - each \fISOURCE\fR must be specified according to the source specification detailed below. The prefixes mandated by this specification hint to MakeMKV the type of media it should attempt to access. If in doubt, try the \fIdisc\fR \fISOURCE\fR; it is the most commonly used.
+
+.TS
+left allbox tab(%);
+c c
+l l
+l l
+l l
+l l.
+ \fBSOURCE\fR % \fBDescription\fR
+iso:\fIFILE\fR % Open the ISO image specified by \fIFILE\fR.
+file:\fIDIRECTORY\fR % Open the files contained in \fIDIRECTORY\fR.
+disc:\fIDISC_ID\fR % Open the optical disc with the ID \fIDISC_ID\fR. Use the \fIinfo\fR command to get a list available \fIDISC_ID\fR's.
+dev:\fIDEVICE\fR % Open the raw device with the name \fIDEVICE\fR. On Linux the first optical disc drive (and hence the first available \fIDEVICE\fR) is typically /dev/sr0.
+.TE
+
+.SH MESSAGE\ FORMATS
+There are several different types of messages that MakeMKV might generate. Each type is documented below. The short codes documented first are used to prefix messages in \fI--robot\fR mode.
+
+\fBMessage Output Format:\fR\ \fIMSG\fR:code,flags,count,message,format,param0,param1,...
+.TS
+left allbox tab(%);
+c c
+l l
+l l
+l l
+l l
+l l
+l l.
+ \fBMSG\fR % \fBDescription\fR
+code % unique message code which should be used to identify a particular string in a language-neutral way
+flags % message flags (see \fIAP_UIMSG_xxx\fR flags in \fIapdefs.h\fR)
+count % number of parameters
+message % raw message string suitable for output
+format % localized format string used for the message
+param[0-9]+ % parameter for the message
+.TE
+
+
+.br
+\fBCurrent Progress Title Format:\fR\ \fIPRGC\fR:code,id,name
+.br
+\fBTotal Progress Title Format:\fR\ \fIPRGT\fR:code,id,name
+.TS
+left allbox tab(%);
+c c
+l l
+l l
+l l.
+ \fBPRGC|PRGT\fR % \fBDescription\fR
+code % unique message code
+id % operation sub-id
+name % name string
+.TE
+
+
+.br
+\fBProgress Bar Format (for current and total progress)\fR:\ \fIPRGV\fR:current,total,max
+.TS
+left allbox tab(%);
+c c
+l l
+l l
+l l.
+ \fBPRGV\fR % \fBDescription\fR
+current % current progress value
+total % total progress value
+max % maximum possible value for a progress bar (constant)
+.TE
+
+
+.br
+\fBDrive Scan Message Format\fR:\ \fIDRV\fR:index,visible,enabled,flags,drive_name,disc_name
+.TS
+left allbox tab(%);
+c c
+l l
+l l
+l l
+l l
+l l
+l l.
+ \fBDRV\fR % \fBDescription\fR
+index % drive index
+visible % set to 1 if drive is present
+enabled % set to 1 if drive is accessible
+flags % media flags (see \fIAP_DskFsFlagXXX\fR in \fIapdefs.h\fR)
+drive name % drive name string
+disc name % disc name string
+.TE
+
+
+.br
+\fBDisc Information Output Format\fR:\ \fITCOUT\fR:count
+.TS
+left allbox tab(%);
+c c
+l l.
+ \fBTCOUT\fR % \fBDescription\fR
+count % number of titles on the disc
+.TE
+
+
+.br
+\fBDisc Information Format\fR:\ \fICINFO\fR:id,code,value
+.br
+\fBTitle Information Format\fR:\ \fITINFO\fR:id,code,value
+.br
+\fBStream Information Format\fR:\ \fISINFO\fR:id,code,value
+.TS
+left allbox tab(%);
+c c
+l l
+l l
+l l.
+ \fBCINFO|TINFO|SINFO\fR % \fBDescription\fR
+id % attribute id (see \fIAP_ItemAttributeId\fR in \fIapdefs.h\fR)
+code % message code (if the attribute value is a constant string)
+value % attribute value
+.TE
+
+.SH EXAMPLES
+The following examples demonstrate the proper syntax for performing various common operations. If you need more help interpreting them, read the documentation above, and use common sense.
+
+\fB1.\fR\ Copy all titles from the first disc, and save them as decrypted MKV files in the \fIVideos\fR directory in your home folder.
+
+.br
+    \fBmakemkvcon mkv disc:0 all ~/Videos\fR
+
+\fB2.\fR\ List all available disc drives.
+
+.br
+    \fBmakemkvcon -r --cache=1 info disc:9999\fR
+
+\fB3.\fR\ Decrypt and backup the first disc to \fI/tmp\fR in automation mode with progress output.
+
+.br
+    \fBmakemkvcon backup --decrypt --cache=16 --noscan -r --progress=-same disc:0 /tmp\fR
+
+\fB4.\fR\ Start a UPNP streaming server with all output suppressed on port 51000 with the address 192.168.1.102.
+
+.br
+    \fBmakemvcon stream --upnp=1 --cache=128 --bindip=192.168.1.102 --bindport=51000 --messages=-none\fR
+
+.SH AUTHOR
+This manual page was written by Karl Lenz <xorangekiller@gmail.com> for the Debian project (but may be used by others).
+
+.SH COPYRIGHT
+2007-2014 GuinpinSoft Inc.
+
+Copying and distribution of this file, with or without modification, are permitted in any medium without royalty provided the copyright notice and this notice are preserved.
+
+The MakeMKV console interface is provided "as is" with no warranty. This program is proprietary software: you can redistribute it under the terms of the MakeMKV End-User License Agreement (EULA) as provided by GuinpinSoft Incorporated. On Debian systems, the complete text of this license can be found in "/usr/share/doc/makemkv-cli/copyright".
+
+.SH SEE\ ALSO
+.BR makemkv (1),
+.BR mmdtsdec (1),
+.BR ffmpeg (1),
+.BR vlc (1),
+.BR mpv (1)
