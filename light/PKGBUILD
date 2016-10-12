@@ -3,9 +3,9 @@
 
 pkgname=light
 pkgver=1.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Program to easily change brightness on backlight-controllers.'
-arch=('i386' 'x86_64')
+arch=('i686' 'x86_64')
 url="https://github.com/haikarainen/light"
 license=('GPL3')
 makedepends=('help2man')
