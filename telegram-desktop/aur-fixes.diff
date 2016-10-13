@@ -1,5 +1,5 @@
 diff --git a/Telegram/SourceFiles/platform/linux/linux_libs.cpp b/Telegram/SourceFiles/platform/linux/linux_libs.cpp
-index 484b6c5..ab77e35 100644
+index 484b6c5..e3f9d61 100644
 --- a/Telegram/SourceFiles/platform/linux/linux_libs.cpp
 +++ b/Telegram/SourceFiles/platform/linux/linux_libs.cpp
 @@ -201,6 +201,10 @@ f_unity_launcher_entry_get_for_desktop_id unity_launcher_entry_get_for_desktop_i
@@ -7,7 +7,7 @@ index 484b6c5..ab77e35 100644
  	DEBUG_LOG(("Loading libraries"));
  
 +	// Workaround for wayland support
-+	if (QString(getenv("QT_QPA_PLATFORM")).startsWith(qstr("wayland"), Qt::CaseInsensitive))
++	if (getenv("WAYLAND_DISPLAY") != nullptr || QString(getenv("QT_QPA_PLATFORM")).startsWith(qstr("wayland"), Qt::CaseInsensitive))
 +		return;
 +
  	bool gtkLoaded = false;
