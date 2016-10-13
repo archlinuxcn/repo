@@ -21,6 +21,8 @@ stds = [
   'i686-unknown-linux-gnu',
   'i686-pc-windows-gnu', # need libgcc_s_dw2-1.dll
   'x86_64-pc-windows-gnu',
+  'asmjs-unknown-emscripten',
+  'wasm32-unknown-emscripten',
 ]
 
 if debug:
@@ -34,6 +36,8 @@ toolchain = {
   'x86_64-pc-windows-gnu': ['mingw-w64-gcc'],
   'i686-pc-windows-gnu': ['mingw-w64-gcc'],
   'i686-unknown-linux-gnu': ['gcc-multilib'],
+  'asmjs-unknown-emscripten': ['emsdk', 'emscripten'],
+  'wasm32-unknown-emscripten': ['emsdk', 'emscripten'],
 }
 
 def get_latest_version():
