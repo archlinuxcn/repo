@@ -2,11 +2,11 @@
 
 pkgname=mendeleydesktop
 pkgver=1.17
-pkgrel=1
+pkgrel=2
 pkgdesc="Academic software for managing and sharing research papers (desktop client)"
 url=http://www.mendeley.com/release-notes/
 arch=(i686 x86_64)
-depends=(qt5-webengine qt5-tools qt5-3d qt5-svg qt5-multimedia qt5-webkit qt5-script dbus-glib)
+depends=(python dbus-glib)
 # optdepends=(gconf)
 license=(custom:mendeley_eula)
 md5sums_i686=('6f6bfbe8ea33f9dcff392e156e978a98')
@@ -43,13 +43,13 @@ package() {
     ln -s /opt/"$pkgname"/share/applications/mendeleydesktop.desktop "$pkgdir"/usr/share/applications/
 
     #Romove bundled Qt from package
-    cat << __EOF__
-Removing bundled Qt library.
-If you used "--force-bundled-qt" to start mendeley,
-make sure you remove any old versions of ".desktop" file of mendeley in ~/.local/share/applications/,
-because mendeley will automatically create one there.
-__EOF__
-    rm -rf "$pkgdir"/opt/"$pkgname"/lib/qt
+#     cat << __EOF__
+# Removing bundled Qt library.
+# If you used "--force-bundled-qt" to start mendeley,
+# make sure you remove any old versions of ".desktop" file of mendeley in ~/.local/share/applications/,
+# because mendeley will automatically create one there.
+# __EOF__
+#     rm -rf "$pkgdir"/opt/"$pkgname"/lib/qt
 
     #Remove unneeded lines if gconf is not installed.
     if ! which gconftool-2 &>/dev/null;then
