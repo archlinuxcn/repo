@@ -4,11 +4,11 @@ _gtk3_min='3.18'
 _gtk3_max='3.22'
 _theme_name=Adapta
 _gtk2_min='2.24.30'
-pkgver="${_gtk3_max}.1.52"
+pkgver="${_gtk3_max}.1.89"
 pkgrel=1
 pkgdesc="An adaptive Gtk+ theme based on Material Design Guidelines."
 arch=(any)
-url="https://github.com/tista500/${_theme_name}"
+url="https://github.com/adapta-project/${pkgname}"
 license=('GPL2' 'CCPL')
 depends=("gtk2>=${_gtk2_min}"
          "gtk3>=${_gtk3_min}.9"
@@ -33,13 +33,13 @@ makedepends=('glib2>=2.48.0'
 _tri_fadeno="tri-fadeno.jpg"
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz"
         "${pkgver}-${_tri_fadeno}::${url}/raw/master/.github/img/${_tri_fadeno}")
-sha256sums=('c741bd46586c5897151390ef5575af3c1420697a7879b569fc5cd0fddebcb34c'
+sha256sums=('c96b2995167f5a29b2b78849ecb45090955329ae9138c8cac657bb5e48c1117e'
             '807bd3d99fb492569caf050cfa9b5c75d4e6a072007637fe8e583a3f5c0bea24')
 
 _bundle="ruby-bundle"
 
 prepare() {
-    cd "${_theme_name}-${pkgver}"
+    cd "${pkgname}-${pkgver}"
     export BUNDLE_PATH="${srcdir}/${_bundle}"
     bundle install
 }
@@ -47,7 +47,7 @@ prepare() {
 build() {
     export BUNDLE_PATH="${srcdir}/${_bundle}"
     export PATH="${BUNDLE_PATH}/bin:${PATH}"
-    cd "${_theme_name}-${pkgver}"
+    cd "${pkgname}-${pkgver}"
     echo "PATH: ${PATH}"
     ./autogen.sh --prefix "${pkgdir}/usr" \
                  --enable-gtk_next \
@@ -58,7 +58,7 @@ build() {
 }
 
 package() {
-    cd "${_theme_name}-${pkgver}"
+    cd "${pkgname}-${pkgver}"
     make install -j 8
 
     # The backgrounds
