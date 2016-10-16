@@ -1,4 +1,4 @@
-From f37ec82721e2cbcc720f42d8fbb5d6c7357543bb Mon Sep 17 00:00:00 2001
+From 2c5bb40dbb09e883b93fbc3431d58f52dcdb747d Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sat, 20 Sep 2014 12:29:23 -0400
 Subject: [PATCH 2/2] add back native style
@@ -10,19 +10,19 @@ Subject: [PATCH 2/2] add back native style
  3 files changed, 11 insertions(+), 1 deletion(-)
 
 diff --git a/mscore/preferences.cpp b/mscore/preferences.cpp
-index a2a22a4..064d24f 100644
+index 40a7f4b..28e12db 100644
 --- a/mscore/preferences.cpp
 +++ b/mscore/preferences.cpp
 @@ -322,6 +322,8 @@ void Preferences::write()
+             styleName = "light_oxygen";
+       else if (globalStyle == MuseScoreStyleType::DARK_FUSION)
              styleName = "dark_fusion";
-       else if (globalStyle == MuseScoreStyleType::LIGHT_FUSION)
-             styleName = "light_fusion";
 +      else if (globalStyle == MuseScoreStyleType::NATIVE)
 +            styleName = "native";
        s.setValue("style", styleName);
        s.setValue("animations", animations);
        s.setValue("singlePalette", singlePalette);
-@@ -469,6 +471,8 @@ void Preferences::read()
+@@ -484,6 +486,8 @@ void Preferences::read()
              globalStyle  = MuseScoreStyleType::DARK_FUSION;
        else if (sName == "light_fusion")
              globalStyle  = MuseScoreStyleType::LIGHT_FUSION;
@@ -32,7 +32,7 @@ index a2a22a4..064d24f 100644
        animations       = s.value("animations",       animations).toBool();
        singlePalette    = s.value("singlePalette",    singlePalette).toBool();
 diff --git a/mscore/preferences.h b/mscore/preferences.h
-index a0d068d..87fde05 100644
+index 1970302..8a130fc 100644
 --- a/mscore/preferences.h
 +++ b/mscore/preferences.h
 @@ -60,7 +60,8 @@ enum class MuseScoreStyleType : char {
@@ -46,7 +46,7 @@ index a0d068d..87fde05 100644
  
  // MusicXML export break values
 diff --git a/mscore/prefsdialog.ui b/mscore/prefsdialog.ui
-index eb36f45..02daff4 100644
+index 6ace1d7..7978ace 100644
 --- a/mscore/prefsdialog.ui
 +++ b/mscore/prefsdialog.ui
 @@ -686,6 +686,11 @@
@@ -60,7 +60,7 @@ index eb36f45..02daff4 100644
 +            </item>
             </widget>
            </item>
-           <item row="2" column="2">
+           <item row="0" column="2" colspan="2">
 -- 
 2.10.0
 
