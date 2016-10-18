@@ -9,8 +9,7 @@ pkgbase=linux-mainline               # Build stock -ARCH kernel
 #pkgbase=linux-custom       # Build kernel with a different name
 _srcname=linux-4.8
 _patchname=patch-4.9-rc1
-#pkgver=4.9rc1
-pkgver=4.8
+pkgver=4.9rc1
 pkgrel=1
 arch=('i686' 'x86_64')
 url="http://www.kernel.org/"
@@ -18,7 +17,7 @@ license=('GPL2')
 makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc' 'libelf')
 options=('!strip')
 source=("https://cdn.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.xz"
-        #"https://cdn.kernel.org/pub/linux/kernel/v4.x/testing/${_patchname}.xz"
+        "https://cdn.kernel.org/pub/linux/kernel/v4.x/testing/${_patchname}.xz"
         #"https://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.sign"
         #"https://www.kernel.org/pub/linux/kernel/v4.x/testing/${_patchname}.sign"
         # the main kernel config files
@@ -27,8 +26,9 @@ source=("https://cdn.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.xz"
         'linux.preset'
         'change-default-console-loglevel.patch')
 sha256sums=('3e9150065f193d3d94bcf46a1fe9f033c7ef7122ab71d75a7fb5a2f0c9a7e11a'
-            '8ac2fb81f4c932c6b1877ca2bda9a98c3ffbb42359dce7dea588c97df4db8c8a'
-            '931724fe1a57134442fecc739ccb32984c1c6a0f0ae7e7311fd9536bb0e47ead'
+            '427d6035e65ec53889b1d0c30facfe1c2e80f1617b2842011311f82a4338b295'
+            '2ac8818414beb7dbacbd3ad450c516e6ada804827132a7132f63b8189e5f5151'
+            '93a4ad4f6c7bb9296fddec436ed7477a5a5c11cf4d6e68482fa6610442cbcb1f'
             'f0d90e756f14533ee67afda280500511a62465b4f76adcc5effa95a40045179c'
             '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99')
 validpgpkeys=(
@@ -46,7 +46,7 @@ prepare() {
   # patch -p1 -i "${srcdir}/patch-${pkgver}"
 
   # mainline: add patch
-  #patch -p1 -i "${srcdir}/${_patchname}" || true
+  patch -p1 -i "${srcdir}/${_patchname}" || true
 
   # add latest fixes from stable queue, if needed
   # http://git.kernel.org/?p=linux/kernel/git/stable/stable-queue.git
