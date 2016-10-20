@@ -1,7 +1,7 @@
 # Maintainer: Stefan Husmann <stefan-husmann@t-online.de>
 
 pkgname=vicare-scheme-git
-pkgver=20160909.6551f93
+pkgver=20161019.37598aa
 pkgrel=1
 pkgdesc="R6RS scheme implementation, from github's master branch"
 arch=('i686' 'x86_64')
