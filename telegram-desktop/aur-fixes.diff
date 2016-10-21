@@ -1,39 +1,70 @@
 diff --git a/Telegram/SourceFiles/platform/linux/linux_libs.cpp b/Telegram/SourceFiles/platform/linux/linux_libs.cpp
-index 484b6c5..e3f9d61 100644
+index a9731ce..2bb4468 100644
 --- a/Telegram/SourceFiles/platform/linux/linux_libs.cpp
 +++ b/Telegram/SourceFiles/platform/linux/linux_libs.cpp
-@@ -201,6 +201,10 @@ f_unity_launcher_entry_get_for_desktop_id unity_launcher_entry_get_for_desktop_i
- void start() {
- 	DEBUG_LOG(("Loading libraries"));
+@@ -45,6 +45,7 @@ bool loadLibrary(QLibrary &lib, const char *name, int version) {
+ }
  
-+	// Workaround for wayland support
-+	if (getenv("WAYLAND_DISPLAY") != nullptr || QString(getenv("QT_QPA_PLATFORM")).startsWith(qstr("wayland"), Qt::CaseInsensitive))
-+		return;
+ bool setupGtkBase(QLibrary &lib_gtk) {
++	load(lib_gtk, "gdk_set_allowed_backends", gdk_set_allowed_backends);
+ 	if (!load(lib_gtk, "gtk_init_check", gtk_init_check)) return false;
+ 	if (!load(lib_gtk, "gtk_menu_new", gtk_menu_new)) return false;
+ 	if (!load(lib_gtk, "gtk_menu_get_type", gtk_menu_get_type)) return false;
+@@ -106,6 +107,10 @@ bool setupGtkBase(QLibrary &lib_gtk) {
+ 	if (!load(lib_gtk, "g_slist_free", g_slist_free)) return false;
+ 
+ 	DEBUG_LOG(("Library gtk functions loaded!"));
++	if (gdk_set_allowed_backends != nullptr) {
++		gdk_set_allowed_backends("x11");
++	}
 +
- 	bool gtkLoaded = false;
- 	bool indicatorLoaded = false;
- 	QLibrary lib_gtk, lib_indicator;
+ 	if (!gtk_init_check(0, 0)) {
+ 		gtk_init_check = nullptr;
+ 		DEBUG_LOG(("Failed to gtk_init_check(0, 0)!"));
+@@ -128,6 +133,7 @@ bool setupAppIndicator(QLibrary &lib_indicator) {
+ 
+ } // namespace
+ 
++f_gdk_set_allowed_backends gdk_set_allowed_backends = nullptr;
+ f_gtk_init_check gtk_init_check = nullptr;
+ f_gtk_menu_new gtk_menu_new = nullptr;
+ f_gtk_menu_get_type gtk_menu_get_type = nullptr;
+diff --git a/Telegram/SourceFiles/platform/linux/linux_libs.h b/Telegram/SourceFiles/platform/linux/linux_libs.h
+index bc3dce6..07c5042 100644
+--- a/Telegram/SourceFiles/platform/linux/linux_libs.h
++++ b/Telegram/SourceFiles/platform/linux/linux_libs.h
+@@ -52,6 +52,9 @@ bool load(QLibrary &lib, const char *name, Function &func) {
+     return false;
+ }
+ 
++typedef void (*f_gdk_set_allowed_backends)(const gchar *backends);
++extern f_gdk_set_allowed_backends gdk_set_allowed_backends;
++
+ typedef gboolean (*f_gtk_init_check)(int *argc, char ***argv);
+ extern f_gtk_init_check gtk_init_check;
+ 
 diff --git a/Telegram/SourceFiles/stdafx.cpp b/Telegram/SourceFiles/stdafx.cpp
-index 06bd4af..755d97f 100644
+index 06bd4af..173721b 100644
 --- a/Telegram/SourceFiles/stdafx.cpp
 +++ b/Telegram/SourceFiles/stdafx.cpp
 @@ -34,6 +34,7 @@ Q_IMPORT_PLUGIN(QGenericEnginePlugin)
  #elif defined Q_OS_LINUX // Q_OS_LINUX
  Q_IMPORT_PLUGIN(QWebpPlugin)
  Q_IMPORT_PLUGIN(QXcbIntegrationPlugin)
-+Q_IMPORT_PLUGIN(QWaylandIntegrationPlugin)
++//Q_IMPORT_PLUGIN(QWaylandIntegrationPlugin)
  Q_IMPORT_PLUGIN(QConnmanEnginePlugin)
  Q_IMPORT_PLUGIN(QGenericEnginePlugin)
  Q_IMPORT_PLUGIN(QNetworkManagerEnginePlugin)
 diff --git a/Telegram/gyp/Telegram.gyp b/Telegram/gyp/Telegram.gyp
-index 69abfe2..bf47628 100644
+index 5a49cd2..7cb3e88 100644
 --- a/Telegram/gyp/Telegram.gyp
 +++ b/Telegram/gyp/Telegram.gyp
-@@ -70,19 +70,16 @@
+@@ -78,21 +78,18 @@
      ],
  
      'defines': [
 -      'AL_LIBTYPE_STATIC',
+       '<!@(python -c "for s in \'<(travis_defines)\'.split(\',\'): print(s)")',
 +      '__STDC_FORMAT_MACROS',
 +      'TDESKTOP_DISABLE_AUTOUPDATE',
 +      'TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME',
@@ -49,38 +80,31 @@ index 69abfe2..bf47628 100644
 -      '<(libs_loc)/ffmpeg',
 -      '<(libs_loc)/openal-soft/include',
        '<(minizip_loc)',
+       '<(sp_media_key_tap_loc)',
 +      '/usr/include/breakpad',
      ],
      'sources': [
        '<@(qrc_files)',
 diff --git a/Telegram/gyp/qt.gypi b/Telegram/gyp/qt.gypi
-index 2a8f010..7fc819e 100644
+index 24ededb..f7862a1 100644
 --- a/Telegram/gyp/qt.gypi
 +++ b/Telegram/gyp/qt.gypi
-@@ -29,7 +29,6 @@
+@@ -38,7 +38,6 @@
              'Qt5Network',
              'Qt5Widgets',
              'Qt5Gui',
 -            'qtharfbuzzng',
            ],
-           'conditions': [
-             [ 'build_macold', {
-@@ -78,7 +77,7 @@
-             ],
-           }],
-           [ 'build_linux', {
--            'qt_loc_unix': '/usr/local/tdesktop/Qt-<(qt_version)',
-+            'qt_loc_unix': '../../../qt',
-             'qt_lib_prefix': 'lib',
-             'qt_lib_debug_postfix': '.a',
-             'qt_lib_release_postfix': '.a',
-@@ -91,18 +90,6 @@
+           'qt_version%': '<(qt_version)',
+           'linux_path_qt%': '/usr/local/tdesktop/Qt-<(qt_version)',
+@@ -91,19 +90,9 @@
                '<@(qt_libs)',
                'Qt5DBus',
                'Qt5Core',
 -              'qtpcre',
 -              'Xi',
 -              'Xext',
+-              'Xfixes',
 -              'SM',
 -              'ICE',
 -              'fontconfig',
@@ -90,33 +114,34 @@ index 2a8f010..7fc819e 100644
 -              'xcb-xfixes',
 -              'xcb-render',
 -              'xcb-static',
++              #'Qt5WaylandClient',
++              #'qwayland-generic',
++              #'qwayland-egl',
              ],
            }],
          ],
-@@ -202,18 +189,36 @@
+@@ -208,19 +197,36 @@
          '<(qt_loc)/plugins/platforminputcontexts',
        ],
        'libraries': [
--        '/usr/local/lib/libxkbcommon.a',
+-        '<(linux_path_xkbcommon)/lib/libxkbcommon.a',
          '<@(qt_libs_release)',
--        '/usr/local/ssl/lib/libssl.a',
--        '/usr/local/ssl/lib/libcrypto.a',
+         '<(linux_lib_ssl)',
+         '<(linux_lib_crypto)',
+         '<!@(python -c "for s in \'<(linux_lib_icu)\'.split(\' \'): print(s)")',
 +        'z',
 +        'pcre16',
 +        'harfbuzz',
-+        'icuuc',
-+        'icutu',
-+        'icui18n',
 +        'png16',
 +        'jpeg',
-+        'ssl',
-+        'crypto',
          'xcb',
 +        'xcb-shm',
 +        'xcb-xfixes',
 +        'xcb-render',
          'X11',
          'X11-xcb',
++        #'wayland-client',
++        #'wayland-cursor',
 +        'GL',
          'dbus-1',
          'dl',
@@ -134,21 +159,26 @@ index 2a8f010..7fc819e 100644
        'include_dirs': [
          '<(qt_loc)/mkspecs/linux-g++',
 diff --git a/Telegram/gyp/telegram_linux.gypi b/Telegram/gyp/telegram_linux.gypi
-index 15bfbb6..5ed7872 100644
+index d07b592..ba441f1 100644
 --- a/Telegram/gyp/telegram_linux.gypi
 +++ b/Telegram/gyp/telegram_linux.gypi
-@@ -29,31 +29,46 @@
-       ],
+@@ -34,37 +34,44 @@
+       'linux_path_breakpad%': '<(libs_loc)/breakpad',
      },
      'include_dirs': [
 -      '/usr/local/include',
--      '<(libs_loc)/openssl-xcode/include'
+-      '<(linux_path_ffmpeg)/include',
+-      '<(linux_path_openal)/include',
+-      '<(linux_path_breakpad)/include/breakpad',
 +      '/usr/include',
      ],
      'library_dirs': [
 -      '/usr/local/lib',
--      '<(libs_loc)/libexif-0.6.20/libexif/.libs',
--      '<(libs_loc)/breakpad/src/client/linux',
+-      '<(linux_path_ffmpeg)/lib',
+-      '<(linux_path_openal)/lib',
+-      '<(linux_path_libexif_lib)',
+-      '<(linux_path_va)/lib',
+-      '<(linux_path_breakpad)/lib',
 +      '/usr/lib',
      ],
      'libraries': [
@@ -167,10 +197,8 @@ index 15bfbb6..5ed7872 100644
 -      'libva-x11.a',
 -      'libva-drm.a',
 -      'libva.a',
+-      'libdrm.a',
 -      'libz.a',
-+      'Qt5WaylandClient',
-+      'qwayland-generic',
-+      'qwayland-egl',
 +      'xkbcommon',
 +      'xkbcommon-x11',
 +      'xcb-randr',
@@ -182,8 +210,8 @@ index 15bfbb6..5ed7872 100644
 +      'xcb-keysyms',
 +      'xcb-image',
 +      'xcb-render-util',
-+      'wayland-client',
-+      'wayland-cursor',
++      #'wayland-client',
++      #'wayland-cursor',
 +      'proxy',
 +      'lzma',
 +      'openal',
@@ -196,49 +224,9 @@ index 15bfbb6..5ed7872 100644
 +      'va-x11',
 +      'va-drm',
 +      'va',
++      'drm',
 +      'z',
 +      'webp',
  #      '<!(pkg-config 2> /dev/null --libs <@(pkgconfig_libs))',
      ],
      'cflags_cc': [
-diff --git a/Telegram/gyp/utils.gyp b/Telegram/gyp/utils.gyp
-index 209c737..41425f1 100644
---- a/Telegram/gyp/utils.gyp
-+++ b/Telegram/gyp/utils.gyp
-@@ -109,8 +109,6 @@
-     ],
-     'include_dirs': [
-       '<(src_loc)',
--      '<(libs_loc)/lzma/C',
--      '<(libs_loc)/zlib-1.2.8',
-     ],
-     'sources': [
-       '<(src_loc)/_other/packer.cpp',
-@@ -130,11 +128,10 @@
-             ],
-           }, {
-             'include_dirs': [
--              '/usr/local/include',
--              '<(libs_loc)/openssl-xcode/include'
-+              '/usr/include',
-             ],
-             'library_dirs': [
--              '/usr/local/lib',
-+              '/usr/lib',
-             ],
-           }]
-         ],
-@@ -152,11 +149,10 @@
-             ],
-           }, {
-             'include_dirs': [
--              '/usr/local/include',
--              '<(libs_loc)/openssl-xcode/include'
-+              '/usr/include',
-             ],
-             'library_dirs': [
--              '/usr/local/lib',
-+              '/usr/lib',
-             ],
-           }]
-         ],

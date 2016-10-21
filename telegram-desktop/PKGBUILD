@@ -1,6 +1,6 @@
 pkgname=telegram-desktop
-pkgver=0.10.11
-pkgrel=2
+pkgver=0.10.16
+pkgrel=1
 pkgdesc='Official desktop version of Telegram messaging app.'
 arch=('i686' 'x86_64')
 url="https://desktop.telegram.org/"
@@ -56,12 +56,12 @@ makedepends=(
     'libmng'
     'libwebp'
 )
-qt_version=5.6.0
+qt_version=5.6.2
 source=(
     "tdesktop::git+https://github.com/telegramdesktop/tdesktop.git#tag=v$pkgver"
     "https://download.qt.io/official_releases/qt/${qt_version%.*}/$qt_version/submodules/qtbase-opensource-src-$qt_version.tar.xz"
     "https://download.qt.io/official_releases/qt/${qt_version%.*}/$qt_version/submodules/qtimageformats-opensource-src-$qt_version.tar.xz"
-    "https://download.qt.io/official_releases/qt/${qt_version%.*}/$qt_version/submodules/qtwayland-opensource-src-$qt_version.tar.xz"
+    #"https://download.qt.io/official_releases/qt/${qt_version%.*}/$qt_version/submodules/qtwayland-opensource-src-$qt_version.tar.xz"
     "git+https://chromium.googlesource.com/external/gyp"
     "telegramdesktop.desktop"
     "tg.protocol"
@@ -69,13 +69,13 @@ source=(
 )
 sha256sums=(
     'SKIP'
-    '6efa8a5c559e92b2e526d48034e858023d5fd3c39115ac1bfd3bb65834dbd67a'
-    '2c854275a689a513ba24f4266cc6017d76875336671c2c8801b4b7289081bada'
-    'b55d0142f245c927970031ef908e98cb20f1d7a2a5441647ed937252fed3bfcc'
+    '2f6eae93c5d982fe0a387a01aeb3435571433e23e9d9d9246741faf51f1ee787'
+    '4fb153be62dac393cbcebab65040b3b9d6edecd1ebbe5e543401b0e45bd147e4'
+    #'035c3199f4719627b64b7020f0f4574da2b4cb78c6981aba75f27b872d8e6c86'
     'SKIP'
     '41c22fae6ae757936741e63aec3d0f17cafe86b2d6153cdd1d01a5581e871f17'
     'd4cdad0d091c7e47811d8a26d55bbee492e7845e968c522e86f120815477e9eb'
-    '8b6eb93ee20bfec3b504c055f43b0b61c4a42db53520ef28551e40cac324a130'
+    'SKIP'
 )
 
 prepare() {
@@ -91,7 +91,7 @@ prepare() {
         
         mv "$srcdir/qtbase-opensource-src-$qt_version" "$qt_src_dir/qtbase"
         mv "$srcdir/qtimageformats-opensource-src-$qt_version" "$qt_src_dir/qtimageformats"
-        mv "$srcdir/qtwayland-opensource-src-$qt_version" "$qt_src_dir/qtwayland"
+        #mv "$srcdir/qtwayland-opensource-src-$qt_version" "$qt_src_dir/qtwayland"
         
         cd "$qt_src_dir/qtbase"
         patch -p1 -i "$qt_patch_file"
@@ -103,11 +103,6 @@ prepare() {
     
     if [ ! -h "$srcdir/Libraries/gyp" ]; then
         ln -s "$srcdir/gyp" "$srcdir/Libraries/gyp"
-    fi
-    
-    if [ ! -d "$srcdir/Libraries/cmake-3.6.2"  ]; then
-        mkdir -p "$srcdir/Libraries/cmake-3.6.2/bin"
-        ln -s "/usr/bin/cmake" "$srcdir/Libraries/cmake-3.6.2/bin/cmake"
     fi
     
     cd "$srcdir/tdesktop"
@@ -147,19 +142,25 @@ build() {
     make
     make install
     
-    cd "$qt_src_dir/qtwayland"
-    qmake .
-    make
-    make install
+    #cd "$qt_src_dir/qtwayland"
+    #qmake .
+    #make
+    #make install
     
     # Build Telegram Desktop
     rm -rf "$srcdir/tdesktop/out"
-    cd "$srcdir/tdesktop/Telegram"
-    gyp/refresh.sh
+    cd "$srcdir/tdesktop/Telegram/gyp"
     
+    "$srcdir/Libraries/gyp/gyp" \
+        -Dlinux_path_qt="$srcdir/qt" \
+        -Dlinux_lib_ssl=-lssl \
+        -Dlinux_lib_crypto=-lcrypto \
+        -Dlinux_lib_icu="-licuuc -licutu -licui18n" \
+        --depth=. --generator-output=../.. -Goutput_dir=out Telegram.gyp --format=cmake
     cd "$srcdir/tdesktop/out/Release"
+    cmake .
     make
-    chrpath --delete "$srcdir/tdesktop/out/Release/Telegram"
+    chrpath --delete Telegram
 }
 
 package() {
