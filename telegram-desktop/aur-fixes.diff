@@ -44,14 +44,14 @@ index bc3dce6..07c5042 100644
  extern f_gtk_init_check gtk_init_check;
  
 diff --git a/Telegram/SourceFiles/stdafx.cpp b/Telegram/SourceFiles/stdafx.cpp
-index 06bd4af..173721b 100644
+index 06bd4af..755d97f 100644
 --- a/Telegram/SourceFiles/stdafx.cpp
 +++ b/Telegram/SourceFiles/stdafx.cpp
 @@ -34,6 +34,7 @@ Q_IMPORT_PLUGIN(QGenericEnginePlugin)
  #elif defined Q_OS_LINUX // Q_OS_LINUX
  Q_IMPORT_PLUGIN(QWebpPlugin)
  Q_IMPORT_PLUGIN(QXcbIntegrationPlugin)
-+//Q_IMPORT_PLUGIN(QWaylandIntegrationPlugin)
++Q_IMPORT_PLUGIN(QWaylandIntegrationPlugin)
  Q_IMPORT_PLUGIN(QConnmanEnginePlugin)
  Q_IMPORT_PLUGIN(QGenericEnginePlugin)
  Q_IMPORT_PLUGIN(QNetworkManagerEnginePlugin)
@@ -86,7 +86,7 @@ index 5a49cd2..7cb3e88 100644
      'sources': [
        '<@(qrc_files)',
 diff --git a/Telegram/gyp/qt.gypi b/Telegram/gyp/qt.gypi
-index 24ededb..f7862a1 100644
+index 24ededb..cdb18f5 100644
 --- a/Telegram/gyp/qt.gypi
 +++ b/Telegram/gyp/qt.gypi
 @@ -38,7 +38,6 @@
@@ -114,13 +114,13 @@ index 24ededb..f7862a1 100644
 -              'xcb-xfixes',
 -              'xcb-render',
 -              'xcb-static',
-+              #'Qt5WaylandClient',
-+              #'qwayland-generic',
-+              #'qwayland-egl',
++              'Qt5WaylandClient',
++              'qwayland-generic',
++              'qwayland-egl',
              ],
            }],
          ],
-@@ -208,19 +197,36 @@
+@@ -208,7 +197,6 @@
          '<(qt_loc)/plugins/platforminputcontexts',
        ],
        'libraries': [
@@ -128,41 +128,70 @@ index 24ededb..f7862a1 100644
          '<@(qt_libs_release)',
          '<(linux_lib_ssl)',
          '<(linux_lib_crypto)',
-         '<!@(python -c "for s in \'<(linux_lib_icu)\'.split(\' \'): print(s)")',
-+        'z',
-+        'pcre16',
-+        'harfbuzz',
-+        'png16',
-+        'jpeg',
-         'xcb',
-+        'xcb-shm',
-+        'xcb-xfixes',
-+        'xcb-render',
-         'X11',
-         'X11-xcb',
-+        #'wayland-client',
-+        #'wayland-cursor',
-+        'GL',
-         'dbus-1',
-         'dl',
+@@ -221,12 +209,32 @@
          'gthread-2.0',
          'glib-2.0',
          'pthread',
++        
 +        'Xi',
 +        'Xext',
++        'Xfixes',
 +        'SM',
 +        'ICE',
 +        'fontconfig',
 +        'expat',
 +        'freetype',
++        
++        '<!(pkg-config 2> /dev/null --libs xkbcommon xkbcommon-x11)',
++        '<!(pkg-config 2> /dev/null --libs harfbuzz)',
++        '<!(pkg-config 2> /dev/null --libs libpcre16)',
++        '<!(pkg-config 2> /dev/null --libs zlib)',
++        '<!(pkg-config 2> /dev/null --libs libpng16)',
++        '<!(pkg-config 2> /dev/null --libs libjpeg)',
++        '<!(pkg-config 2> /dev/null --libs libwebp)',
++        '<!(pkg-config 2> /dev/null --libs xcb-shm xcb-xfixes xcb-render xcb-renderutil xcb-sync xcb-randr xcb-xinerama xcb-xkb xcb-icccm xcb-image xcb-shape xcb-keysyms xcb-util)',
++        '<!(pkg-config 2> /dev/null --libs wayland-client wayland-cursor)',
++        'proxy',
++        'GL',
        ],
        'include_dirs': [
          '<(qt_loc)/mkspecs/linux-g++',
+       ],
+       'ldflags': [
+-        '-static-libstdc++',
+         '-pthread',
+         '-g',
+         '-rdynamic',
 diff --git a/Telegram/gyp/telegram_linux.gypi b/Telegram/gyp/telegram_linux.gypi
-index d07b592..ba441f1 100644
+index d07b592..6e6bd91 100644
 --- a/Telegram/gyp/telegram_linux.gypi
 +++ b/Telegram/gyp/telegram_linux.gypi
-@@ -34,37 +34,44 @@
+@@ -21,11 +21,19 @@
+   'conditions': [[ 'build_linux', {
+     'variables': {
+       'pkgconfig_libs': [
+-# In order to work libxkbcommon must be linked statically,
+-# PKGCONFIG links it like "-L/usr/local/lib -lxkbcommon"
+-# which makes a dynamic link which leads to segfault in
+-# QApplication() -> createPlatformIntegration -> QXcbIntegrationPlugin::create
+-        #'xkbcommon',
++        'liblzma',
++        'openal',
++        'libavformat',
++        'libavcodec',
++        'libswresample',
++        'libswscale',
++        'libavutil',
++        'opus',
++        'libva-x11',
++        'libva-drm',
++        'libva',
++        'libdrm',
++        'zlib',
+       ],
+       'linux_path_ffmpeg%': '/usr/local',
+       'linux_path_openal%': '/usr/local',
+@@ -34,44 +42,24 @@
        'linux_path_breakpad%': '<(libs_loc)/breakpad',
      },
      'include_dirs': [
@@ -199,34 +228,15 @@ index d07b592..ba441f1 100644
 -      'libva.a',
 -      'libdrm.a',
 -      'libz.a',
-+      'xkbcommon',
-+      'xkbcommon-x11',
-+      'xcb-randr',
-+      'xcb-xinerama',
-+      'xcb-xkb',
-+      'xcb-shape',
-+      'xcb-icccm',
-+      'xcb-sync',
-+      'xcb-keysyms',
-+      'xcb-image',
-+      'xcb-render-util',
-+      #'wayland-client',
-+      #'wayland-cursor',
-+      'proxy',
-+      'lzma',
-+      'openal',
-+      'avformat',
-+      'avcodec',
-+      'swresample',
-+      'swscale',
-+      'avutil',
-+      'opus',
-+      'va-x11',
-+      'va-drm',
-+      'va',
-+      'drm',
-+      'z',
-+      'webp',
- #      '<!(pkg-config 2> /dev/null --libs <@(pkgconfig_libs))',
+-#      '<!(pkg-config 2> /dev/null --libs <@(pkgconfig_libs))',
++      '<!(pkg-config 2> /dev/null --libs <@(pkgconfig_libs))',
      ],
      'cflags_cc': [
+       '<!(pkg-config 2> /dev/null --cflags appindicator-0.1)',
+       '<!(pkg-config 2> /dev/null --cflags gtk+-2.0)',
+       '<!(pkg-config 2> /dev/null --cflags glib-2.0)',
+       '<!(pkg-config 2> /dev/null --cflags dee-1.0)',
++      '<!(pkg-config 2> /dev/null --cflags <@(pkgconfig_libs))',
+     ],
+     'configurations': {
+       'Release': {

@@ -1,6 +1,6 @@
 pkgname=telegram-desktop
 pkgver=0.10.16
-pkgrel=1
+pkgrel=2
 pkgdesc='Official desktop version of Telegram messaging app.'
 arch=('i686' 'x86_64')
 url="https://desktop.telegram.org/"
@@ -55,13 +55,15 @@ makedepends=(
     'libtiff'
     'libmng'
     'libwebp'
+    # For qtwayland
+    'wayland'
 )
 qt_version=5.6.2
 source=(
     "tdesktop::git+https://github.com/telegramdesktop/tdesktop.git#tag=v$pkgver"
     "https://download.qt.io/official_releases/qt/${qt_version%.*}/$qt_version/submodules/qtbase-opensource-src-$qt_version.tar.xz"
     "https://download.qt.io/official_releases/qt/${qt_version%.*}/$qt_version/submodules/qtimageformats-opensource-src-$qt_version.tar.xz"
-    #"https://download.qt.io/official_releases/qt/${qt_version%.*}/$qt_version/submodules/qtwayland-opensource-src-$qt_version.tar.xz"
+    "https://download.qt.io/official_releases/qt/${qt_version%.*}/$qt_version/submodules/qtwayland-opensource-src-$qt_version.tar.xz"
     "git+https://chromium.googlesource.com/external/gyp"
     "telegramdesktop.desktop"
     "tg.protocol"
@@ -71,11 +73,11 @@ sha256sums=(
     'SKIP'
     '2f6eae93c5d982fe0a387a01aeb3435571433e23e9d9d9246741faf51f1ee787'
     '4fb153be62dac393cbcebab65040b3b9d6edecd1ebbe5e543401b0e45bd147e4'
-    #'035c3199f4719627b64b7020f0f4574da2b4cb78c6981aba75f27b872d8e6c86'
+    '035c3199f4719627b64b7020f0f4574da2b4cb78c6981aba75f27b872d8e6c86'
     'SKIP'
     '41c22fae6ae757936741e63aec3d0f17cafe86b2d6153cdd1d01a5581e871f17'
     'd4cdad0d091c7e47811d8a26d55bbee492e7845e968c522e86f120815477e9eb'
-    'SKIP'
+    '2380e467c4424d896179ea12e21a5c2d820050b18f00b0bcdc77c2a538479ec3'
 )
 
 prepare() {
@@ -91,7 +93,7 @@ prepare() {
         
         mv "$srcdir/qtbase-opensource-src-$qt_version" "$qt_src_dir/qtbase"
         mv "$srcdir/qtimageformats-opensource-src-$qt_version" "$qt_src_dir/qtimageformats"
-        #mv "$srcdir/qtwayland-opensource-src-$qt_version" "$qt_src_dir/qtwayland"
+        mv "$srcdir/qtwayland-opensource-src-$qt_version" "$qt_src_dir/qtwayland"
         
         cd "$qt_src_dir/qtbase"
         patch -p1 -i "$qt_patch_file"
@@ -142,10 +144,10 @@ build() {
     make
     make install
     
-    #cd "$qt_src_dir/qtwayland"
-    #qmake .
-    #make
-    #make install
+    cd "$qt_src_dir/qtwayland"
+    qmake .
+    make
+    make install
     
     # Build Telegram Desktop
     rm -rf "$srcdir/tdesktop/out"
