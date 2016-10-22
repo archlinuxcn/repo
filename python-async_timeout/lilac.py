@@ -10,6 +10,10 @@ def pre_build():
   pypi_pre_build(
     depends_setuptools = False,
   )
+  for line in edit_file('PKGBUILD'):
+    if line.startswith('_pkgname'):
+      line = '_pkgname=async-timeout'
+    print(line)
 
 post_build = pypi_post_build
 
