@@ -5,8 +5,8 @@
 # or use: $ curl -s https://dl.google.com/linux/chrome/rpm/stable/x86_64/repodata/other.xml.gz | gzip -df | awk -F\" '/pkgid/{ sub(".*-","",$4); print $4": "$10 }'
 
 pkgname=google-chrome-dev
-pkgver=55.0.2883.18
-pkgrel=1
+pkgver=56.0.2897.0
+pkgrel=2
 pkgdesc="An attempt at creating a safer, faster, and more stable browser (Dev Channel)"
 arch=('x86_64')
 url="https://www.google.com/chrome"
@@ -22,16 +22,14 @@ install=$pkgname.install
 _channel=unstable
 source=("google-chrome-${_channel}_${pkgver}_amd64.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_amd64.deb"
         "$url/browser/privacy/eula_text.html"
-        'google-chrome-unstable.sh'
-        'StartupWMClass-and-GNOME3-context-menu.patch')
-md5sums=('44d7c6557c5a1dfe7249672e8cafd559'
+        'google-chrome-unstable.sh')
+md5sums=('b8df8444d99820e91298b6c052cddd61'
          'SKIP'
-         '11b55a3fec7279db32b63e3a0b97dc01'
-         '12ad81f7e06457c9fa7e2536d32f2bd0')
+         '11b55a3fec7279db32b63e3a0b97dc01')
 
 ## Previous build (also see: /var/cache/pacman/pkg/google-chrome-dev-*):
-#source[0]='http://mirror.glendaleacademy.org/chrome/pool/main/g/google-chrome-unstable/google-chrome-unstable_55.0.2883.11-1_amd64.deb'
-#md5sums[0]='f2a24dac514e7dfac8949936ca44bbb8'
+#source[0]='http://mirror.glendaleacademy.org/chrome/pool/main/g/google-chrome-unstable/google-chrome-unstable_55.0.2883.18-1_amd64.deb'
+#md5sums[0]='44d7c6557c5a1dfe7249672e8cafd559'
 
 package() {
   msg2 "Extracting the data.tar.xz..."
@@ -53,12 +51,8 @@ package() {
   # License
   install -Dm644 eula_text.html "$pkgdir"/usr/share/licenses/google-chrome-$_channel/eula_text.html
 
-  #msg2 "Fixing Chrome icon resolution..."
-  #sed -i "/Exec=/i\StartupWMClass=Google-chrome-$_channel" "$pkgdir"/usr/share/applications/google-chrome-$_channel.desktop
-
-  msg2 "Fixing Chrome icon resolution and GNOME 3 context menu..."
-  cd "$pkgdir"
-  patch -p0 -i "$srcdir"/StartupWMClass-and-GNOME3-context-menu.patch
+  msg2 "Fixing Chrome icon resolution..."
+  sed -i "/Exec=/i\StartupWMClass=Google-chrome-$_channel" "$pkgdir"/usr/share/applications/google-chrome-$_channel.desktop
 
   msg2 "Removing Debian Cron job and duplicate product logos..."
   rm -r "$pkgdir"/etc/cron.daily/ "$pkgdir"/opt/google/chrome-$_channel/cron/
