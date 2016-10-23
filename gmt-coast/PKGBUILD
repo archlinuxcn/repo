@@ -17,7 +17,7 @@ build() {
 
 package() {
   mkdir -p ${pkgdir}/usr/share/gmt/coast
-  install -m 644 $startdir/src/gshhg-gmt-${pkgver}/binned* \
+  install -m 644 $srcdir/gshhg-gmt-${pkgver}/binned* \
     ${pkgdir}/usr/share/gmt/coast
 }
 
