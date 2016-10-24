@@ -12,7 +12,7 @@ else
     pkgname=('julia-git')
 fi
 
-if [[ $CARCH = i686 ]]; then
+if [[ $CARCH != x86_64 ]]; then
     BUILD_DOC=0
 fi
 
