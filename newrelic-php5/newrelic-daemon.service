@@ -1,0 +1,11 @@
+[Unit]
+Description=NewRelic Proxy Daemon PHP5
+After=network.target
+
+[Service]
+Type=forking
+PIDFile=/run/newrelic-php5.pid
+ExecStart=/usr/bin/newrelic-daemon -c /etc/newrelic/newrelic.cfg -p /run/newrelic-php5.pid
+
+[Install]
+WantedBy=multi-user.target
