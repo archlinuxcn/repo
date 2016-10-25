@@ -1,6 +1,6 @@
 pkgname=telegram-desktop
-pkgver=0.10.16
-pkgrel=2
+pkgver=0.10.18
+pkgrel=1
 pkgdesc='Official desktop version of Telegram messaging app.'
 arch=('i686' 'x86_64')
 url="https://desktop.telegram.org/"
@@ -77,7 +77,7 @@ sha256sums=(
     'SKIP'
     '41c22fae6ae757936741e63aec3d0f17cafe86b2d6153cdd1d01a5581e871f17'
     'd4cdad0d091c7e47811d8a26d55bbee492e7845e968c522e86f120815477e9eb'
-    '2380e467c4424d896179ea12e21a5c2d820050b18f00b0bcdc77c2a538479ec3'
+    '0afc0013ff5f8aaec1edfa85d51be5d79e23d46cb63b28fcebf1656bb5eec1cf'
 )
 
 prepare() {
