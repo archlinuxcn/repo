@@ -6,10 +6,10 @@
 # Contributor: Tad Fisher <tadfisher at gmail dot com>
 
 pkgname=android-studio
-pkgver=2.2.1
-_pkgver=2.2.1.0
+pkgver=2.2.2
+_pkgver=2.2.2.0
 pkgrel=1
-_build=145.3330264
+_build=145.3360264
 pkgdesc="The official Android IDE (Stable branch)"
 arch=('i686' 'x86_64')
 url="http://tools.android.com/"
@@ -21,7 +21,7 @@ optdepends=('gtk2: GTK+ look and feel'
 options=('!strip')
 source=("https://dl.google.com/dl/android/studio/ide-zips/$_pkgver/android-studio-ide-$_build-linux.zip"
         "$pkgname.desktop")
-sha1sums=('1afb54c3ba7716246ef2cd248bdddd248d1442d4'
+sha1sums=('fc63ca247762697c33102a78063a95f8b5ab5dea'
           '357845775f3e2eb53c03ba96757c6b1e2c8baeb6')
 
 if [ "$CARCH" = "i686" ]; then
