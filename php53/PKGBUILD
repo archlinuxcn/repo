@@ -25,7 +25,7 @@ pkgname=('php53'
          'php53-xsl')
 pkgver=5.3.29
 _suhosinver=5.3.9-0.9.10
-pkgrel=4
+pkgrel=5
 arch=('i686' 'x86_64')
 license=('PHP')
 url='http://www.php.net'
@@ -47,6 +47,7 @@ source=("http://www.php.net/distributions/${pkgbase%53}-${pkgver}.tar.bz2"
 build() {
     phpconfig="--srcdir=../${pkgbase%53}-${pkgver} \
         --prefix=/usr \
+        --sbindir=/usr/bin \
         --sysconfdir=/etc/php \
         --localstatedir=/var \
         --with-layout=GNU \
@@ -292,6 +293,7 @@ package_php53-fpm() {
     install -D -m755 ${srcdir}/build-fpm/sapi/fpm/php-fpm ${pkgdir}/usr/bin/php-fpm
     install -D -m644 ${srcdir}/build-fpm/sapi/fpm/php-fpm.8 ${pkgdir}/usr/share/man/man8/php-fpm.8
     install -D -m644 ${srcdir}/build-fpm/sapi/fpm/php-fpm.conf ${pkgdir}/etc/php/php-fpm.conf
+    install -D -m644 ${srcdir}/build-fpm/sapi/fpm/php-fpm.service ${pkgdir}/usr/lib/systemd/system/php-fpm.service
     install -D -m644 ${srcdir}/logrotate.d.php-fpm ${pkgdir}/etc/logrotate.d/php-fpm
     install -d -m755 ${pkgdir}/etc/php/fpm.d
 }
