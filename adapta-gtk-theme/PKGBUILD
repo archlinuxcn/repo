@@ -4,7 +4,7 @@ _gtk3_min='3.18'
 _gtk3_max='3.22'
 _theme_name=Adapta
 _gtk2_min='2.24.30'
-pkgver="${_gtk3_max}.2.9"
+pkgver="${_gtk3_max}.2.16"
 pkgrel=1
 pkgdesc="An adaptive Gtk+ theme based on Material Design Guidelines."
 arch=(any)
@@ -21,7 +21,7 @@ optdepends=("gnome-shell>=${_gtk3_min}.3: The GNOME Shell"
             'cinnamon>=2.8.6: The Cinnamon desktop'
             'xfdesktop>=4.12.2: The Xfce desktop'
             'marco-gtk3>=1.14.0: The mate desktop in its GTK3 version'
-            'openbox>=3.6.1: The Openbox window manager'
+            'ldm: The LXDE display manager in its GTK2 version'
             'paper-icon-theme: A fitting icon theme'
             'gnome-tweak-tool: A graphical tool to tweak gnome settings'
             'adapta-backgrounds: The corresponding backgrounds project'
@@ -32,7 +32,7 @@ makedepends=('glib2>=2.48.0'
              'inkscape'
              'parallel')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
-sha256sums=('d130a377bff53bb3e7adeb602e425e558106c0a50e5cf81ba9c824d827b82a6f')
+sha256sums=('87a098515207b13bb2ea78054925d47accb8d0c8a1fc5e83b3c509b3c349dbe1')
 
 _bundle="ruby-bundle"
 
