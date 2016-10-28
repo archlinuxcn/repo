@@ -1,0 +1,66 @@
+#!/bin/bash
+# /etc/initcpio/install/sd-plymouth — mkinitcpio/systemd hook for plymouth
+
+build() {
+	add_dir /dev/pts
+	add_dir /usr/share/plymouth/themes
+	add_dir /run/plymouth
+
+	DATADIR="/usr/share"
+	PLYMOUTH_LOGO_FILE="${DATADIR}/plymouth/arch-logo.png"
+	PLYMOUTH_THEME_NAME="$(/usr/bin/plymouth-set-default-theme)"
+	PLYMOUTH_MODULE_NAME="$(grep "ModuleName *= *" ${DATADIR}/plymouth/themes/${PLYMOUTH_THEME_NAME}/${PLYMOUTH_THEME_NAME}.plymouth | sed 's/ModuleName *= *//')"
+	PLYMOUTH_PLUGIN_PATH="$(plymouth --get-splash-plugin-path)"
+
+	add_binary /usr/bin/plymouthd
+	add_binary /usr/bin/plymouth
+
+	add_file ${DATADIR}/plymouth/themes/text/text.plymouth
+	add_binary ${PLYMOUTH_PLUGIN_PATH}/text.so
+	add_file ${DATADIR}/plymouth/themes/details/details.plymouth
+	add_binary ${PLYMOUTH_PLUGIN_PATH}/details.so
+
+	add_file "${PLYMOUTH_LOGO_FILE}"
+	add_file /etc/os-release
+	add_file /etc/plymouth/plymouthd.conf
+	add_file ${DATADIR}/plymouth/plymouthd.defaults
+
+	if [ ! -f ${PLYMOUTH_PLUGIN_PATH}/${PLYMOUTH_MODULE_NAME}.so ]; then
+		echo "The default plymouth plugin (${PLYMOUTH_MODULE_NAME}) doesn't exist" > /dev/stderr
+		exit 1
+	fi
+
+	add_binary ${PLYMOUTH_PLUGIN_PATH}/${PLYMOUTH_MODULE_NAME}.so
+
+	add_binary ${PLYMOUTH_PLUGIN_PATH}/renderers/drm.so
+	add_binary ${PLYMOUTH_PLUGIN_PATH}/renderers/frame-buffer.so
+
+	if [ -d ${DATADIR}/plymouth/themes/${PLYMOUTH_THEME_NAME} ]; then
+		for x in ${DATADIR}/plymouth/themes/${PLYMOUTH_THEME_NAME}/* ; do
+			[ ! -f "$x" ] && break
+			add_file $x
+		done
+	fi
+	
+	add_udev_rule 70-uaccess.rules
+	add_udev_rule 71-seat.rules
+
+	map add_systemd_unit \
+		systemd-ask-password-plymouth.path \
+		systemd-ask-password-plymouth.service \
+		plymouth-halt.service \
+		plymouth-kexec.service \
+		plymouth-poweroff.service \
+		plymouth-quit-wait.service \
+		plymouth-quit.service \
+		plymouth-read-write.service \
+		plymouth-reboot.service \
+		plymouth-start.service \
+		plymouth-switch-root.service
+}
+
+help() {
+	cat <<HELPEOF
+This hook includes plymouth in a systemd-based initramfs image.
+HELPEOF
+}

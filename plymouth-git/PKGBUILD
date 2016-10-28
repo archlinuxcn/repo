@@ -1,0 +1,113 @@
+# Maintainer: Patrick Burroughs (Celti) <celti@celti.name>
+# Contributors: Abbradar, Zephyr, Christian Autermann, Biginoz, Martin Lee, Ricardo Funke,
+#               PirateJonno, lh, Cilyan Olowen, Shaffer, Brcha, Lyle Putnam, Det, Boohbah,
+#               Lara Maia, Padfoot, Jorge Barroso, carstene1ns
+
+pkgname=plymouth-git
+pkgver=0.9.3.r0.g2c437c3
+pkgrel=1
+pkgdesc="A graphical boot splash screen with kernel mode-setting support (development version)"
+url="http://www.freedesktop.org/wiki/Software/Plymouth/"
+
+arch=('i686' 'x86_64')
+license=('GPL')
+
+depends=('libdrm' 'pango' 'systemd')
+makedepends=('git' 'docbook-xsl')
+optdepends=('ttf-dejavu')
+
+options=('!libtool' '!emptydirs')
+
+provides=('plymouth')
+conflicts=('plymouth')
+backup=('etc/plymouth/plymouthd.conf')
+
+source=('git+http://anongit.freedesktop.org/git/plymouth'
+        'arch-logo.png'
+        'plymouth.encrypt_hook'
+        'plymouth.encrypt_install'
+        'gdm-plymouth.service'
+        'kdm-plymouth.service'
+        'lxdm-plymouth.service'
+        'lightdm-plymouth.service'
+        'slim-plymouth.service'
+        'plymouth.initcpio_hook'
+        'plymouth.initcpio_install'
+        'sd-plymouth.initcpio_install'
+        'plymouth-quit.service.in.patch'
+        'plymouth-update-initrd.patch')
+
+sha256sums=('SKIP'
+            '9bac679d2494d9b60b288be87021f1d7b85a9503ebbdce93d6e37c0fc07568ae'
+            'cbfb5bcb6897703e088eefdee9d578f75d987116becafecbb2018b283ba3865e'
+            '544399d4f3454644f24ad11e504eaa7d622c73942728f52fb55bea054c756fa1'
+            '53818ac8299edbb104e2fa09d376079c10a287da9f8a9b26bfb5fc8789b6bc3c'
+            'f9528f0df99f0182c062cd505a49a1e475128e78a7fe535db2a64ee5103abfc8'
+            '6ffe016e8b03354b0a02e2e5d550a0f5f278fceccecfd8747619bdcf6ba9f800'
+            '86d0230d9393c9d83eb7bb430e6b0fb5e3f32e78fcd30f3ecd4e6f3c30b18f71'
+            '0cacaa68e164893ca97d06c7f06d56738a0902991585e456ce687bc2bc1705a0'
+            'd349b30832ff84ea7e4b86265efd5d08f8ff00e9153f05f41c8e8b49addf321c'
+            'b0467b7c490539470f726358e5d0c72951efd58d268a2d16411dafacba68041a'
+            'f434dd9cc96c3cec470aedb7734663cd3e04ffa34eff2bea92708f966132a2da'
+            'fc900a0c330b9bcbf84afaa6575d9df392c4e8c2ea699b72dc9a137f4972de49'
+            'bb597e2ced7c3beca8c9e9f212bc001750746d9b41e00071697a0352ec2a2e27')
+
+pkgver() {
+  cd plymouth
+  git describe --long | sed 's/-/.r/;s/-/./'
+}
+
+prepare() {
+	cd plymouth
+
+	patch -p1 -i "$srcdir"/plymouth-update-initrd.patch
+	patch -p1 -i "$srcdir"/plymouth-quit.service.in.patch
+}
+
+build() {
+	cd ${pkgname%-*}
+
+	LDFLAGS="$LDFLAGS -ludev" ./autogen.sh \
+		--prefix=/usr \
+		--exec-prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--libdir=/usr/lib \
+		--libexecdir=/usr/lib \
+		--sbindir=/usr/bin \
+		--enable-systemd-integration \
+		--enable-drm \
+		--enable-tracing \
+		--enable-pango \
+		--enable-gtk=no \
+		--with-release-file=/etc/os-release \
+		--with-logo=/usr/share/plymouth/arch-logo.png \
+		--with-background-color=0x000000 \
+		--with-background-start-color-stop=0x000000 \
+		--with-background-end-color-stop=0x4D4D4D \
+		--without-rhgb-compat-link \
+		--without-system-root-install
+
+	make
+}
+
+package() {
+	cd plymouth
+
+	make DESTDIR="$pkgdir" install
+
+	install -Dm644 "$srcdir"/arch-logo.png "$pkgdir"/usr/share/plymouth/arch-logo.png
+
+	install -Dm644 "$srcdir"/plymouth.encrypt_hook "$pkgdir"/usr/lib/initcpio/hooks/plymouth-encrypt
+	install -Dm644 "$srcdir"/plymouth.initcpio_hook "$pkgdir"/usr/lib/initcpio/hooks/plymouth
+	install -Dm644 "$srcdir"/plymouth.encrypt_install "$pkgdir"/usr/lib/initcpio/install/plymouth-encrypt
+	install -Dm644 "$srcdir"/plymouth.initcpio_install "$pkgdir"/usr/lib/initcpio/install/plymouth
+	install -Dm644 "$srcdir"/sd-plymouth.initcpio_install "$pkgdir"/usr/lib/initcpio/install/sd-plymouth
+
+	install -dm755 "$pkgdir"/usr/lib/systemd/system
+	install -m644 "$srcdir"/{gdm,kdm,lxdm,slim,lightdm}-plymouth.service "$pkgdir"/usr/lib/systemd/system
+
+	ln -s '../systemd-ask-password-plymouth.path' "$pkgdir"/usr/lib/systemd/system/sysinit.target.wants/systemd-ask-password-plymouth.path
+
+	install -Dm644 "$pkgdir"/usr/share/plymouth/plymouthd.defaults "$pkgdir"/etc/plymouth/plymouthd.conf
+}
