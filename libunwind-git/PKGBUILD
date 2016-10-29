@@ -1,73 +1,41 @@
-# Maintainer: Sébastien Luttringer
-# Contributor: Lawrence Lee <valheru@facticius.net>
-# Contributor: Phillip Marvin <phillip.marvin@gmail.com>
-# Contributor: keystone <phillip.marvin@gmail.com>
-
-# ALARM: Kevin Mihelich <kevin@archlinuxarm.org>
-#  - build v5 with system libatomic_ops
-
+# Maintainer: Moritz Lipp <mlq@pwmt.org>
 pkgname=libunwind-git
-pkgver=1.2.rc1.1.gbc8698f
-pkgrel=5
-pkgdesc='Portable and efficient C programming interface (API) to determine the call-chain of a program'
-arch=('i686' 'x86_64' 'armv7h' 'aarch64')
-url='http://www.nongnu.org/libunwind/'
+pkgver=2c3444d
+pkgrel=1
+pkgdesc="Portable and efficient C programming interface (API) to determine the call-chain of a program"
+arch=('i686' 'x86_64')
+url="http://www.nongnu.org/libunwind/"
 license=('GPL')
-depends=('glibc' 'xz')
-makedepends=('git')
-source=('git+http://git.savannah.gnu.org/r/libunwind.git'
-        0001-Support-dynamic-unwind-info-on-ARM.patch
-        0002-Allow-DWARF-version-4.patch
-        0003-Prefer-EXTBL-unwinding-on-ARM-since-it-seems-to-be-m.patch
-        0001-Handle-non-signal-frame-unwind-info-lookup-in-ARM-ex.patch)
-md5sums=('SKIP'
-         '196e9eb1a6ef4a7568ff539e50c33265'
-         'dd18077715edde55e6aa16752d2d68b0'
-         'ed460db47cf192378cc44de499b6fcfa'
-         'a99cd1bd01c429a4ced8636ca5eacdbf')
-options=('debug' '!strip')
-provides=(libunwind)
-conflicts=(libunwind)
+makedepends=('git' 'texlive-core')
+depends=('glibc')
+provides=('libunwind')
+conflicts=('libunwind')
 
-pkgver() {
-  cd libunwind
-
-  git describe --tags | sed 's/^v//;s/-/./g'
-}
-
-prepare() {
-  cd libunwind
-
-  patch -Np1 < ../0001-Support-dynamic-unwind-info-on-ARM.patch
-  patch -Np1 < ../0002-Allow-DWARF-version-4.patch
-  patch -Np1 < ../0003-Prefer-EXTBL-unwinding-on-ARM-since-it-seems-to-be-m.patch
-  patch -Np1 < ../0001-Handle-non-signal-frame-unwind-info-lookup-in-ARM-ex.patch
-}
+source=("${pkgname}::git+git://git.sv.gnu.org/libunwind.git")
+sha1sums=('SKIP')
 
 build() {
-  cd libunwind
+  cd "$srcdir/$pkgname"
 
-  autoreconf -fi
-  [[ $CARCH == "arm" ]] && LDFLAGS+=" -latomic_ops" && CFLAGS+=" -DAO_USE_PTHREAD_DEFS=1"
-
+  autoreconf -i
   ./configure CFLAGS="$CFLAGS -U_FORTIFY_SOURCE" --prefix=/usr
   make
 }
 
-# check() {
-#   cd libunwind
-
-#   # This function is ``supposed'' to fail. Upstream know, but haven't fixed it.
-#   make check || return 0
-# }
+check() {
+  cd "$srcdir/$pkgname"
+  PATH=/usr/bin:$PATH make check || return 0
+}
 
 package() {
-  cd libunwind
-
+  cd "$srcdir/$pkgname"
   make DESTDIR="$pkgdir/" install
-  cat >> "$pkgdir/usr/include/libunwind.h" <<EOF
-#ifndef JL_UNW_HAS_FORMAT_IP
-#define JL_UNW_HAS_FORMAT_IP 1
-#endif
-EOF
 }
+
+pkgver() {
+  cd "$srcdir/$pkgname"
+  local ver="$(git describe --long --always)"
+  printf "%s" "${ver//-/.}"
+}
+
+# vim:set ts=2 sw=2 et:
