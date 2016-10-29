@@ -3,13 +3,12 @@
 
 DisplayLink Ubuntu Software Release Note
 
-Version: 1.2.58
-Date: 16th September 2016
+Version: 1.2.65
+Date: 5th October 2016
 
 DisplayLink DL-5xxx, DL-3x00 Firmware Version: 9.0.37.80577
 DisplayLink DL-41xx Firmware Version: 9.0.37.80577
-DisplayLink DL-6xxx Firmware Version: 9.0.36.80470
-Extensible Virtual Display Interface version included: 1.2.55
+Extensible Virtual Display Interface version included: 1.2.64
 
 =============================================================================
 =============================================================================
@@ -18,23 +17,23 @@ Extensible Virtual Display Interface version included: 1.2.55
 A. Introduction
 ===============
 
-This is DisplayLink Driver Software v1.2 for Ubuntu. It provides initial, production quality support for DisplayLink USB 3.0 devices on specific variants of desktop Ubuntu Linux.
+This is DisplayLink Driver Software v1.2.1 for Ubuntu. It provides initial, production quality support for DisplayLink USB 3.0 devices on specific variants of desktop Ubuntu Linux.
 
 The driver enables video support for products using DisplayLink USB 3.0 technology. Standard native Ubuntu drivers provide support for DisplayLink audio and Ethernet interfaces.
 
 
-A1. Important notes about DL-6xxx, DL5xxx, DL-3x00 and DL-41xx Firmware
+A1. Important notes about DL5xxx, DL-3x00 and DL-41xx Firmware
 =======================================================================
 
-This software release contains an embedded firmware image. DL-6xxx, DL-5xxx, DL-3xxx and DL-41xx devices will be automatically upgraded with this firmware upon connection if required.
+This software release contains an embedded firmware image. DL-5xxx, DL-3xxx and DL-41xx devices will be automatically upgraded with this firmware upon connection if required.
 
-The upgrade is silent, therefore screens connected to DL-6xxx, DL-5xxx, DL-3xxx or DL-41xx devices may require a few seconds to appear when devices are connected for the first time, or after devices have been used on other platforms and OSes.
+The upgrade is silent, therefore screens connected to DL-5xxx, DL-3xxx or DL-41xx devices may require a few seconds to appear when devices are connected for the first time, or after devices have been used on other platforms and OSes.
 
 B. Contents
 ===========
 
 A.  Introduction
-A1. Important notes about DL-6xxx, DL-5xxx, DL-3xxx and DL-41xx Firmware
+A1. Important notes about DL-5xxx, DL-3xxx and DL-41xx Firmware
 B.  Contents
 C.  Issues fixed
 D.  Supported O/S variants
@@ -46,6 +45,12 @@ I.  Future Development
 
 C. Issues fixed
 ===============
+
+Issues fixed since DisplayLink Driver Software v1.2 for Ubuntu (1.2.58)
+-----------------------------------------------------------------------
+
+Extensible Virtual Display Interface module is not compatible with Linux kernel 4.8. (23848)
+
 
 Issues fixed since DisplayLink Driver Software v1.1 for Ubuntu (1.1.62)
 -----------------------------------------------------------------------
@@ -116,3 +121,4 @@ DisplayLink are open to suggestions and feedback on improving the proposed archi
 - The communication between the EVDI kernel module and the wrapper libevdi library is not access-controlled or authenticated. This could be improved in future releases, making it harder to compromise the data EVDI is sending and receiving.
 
 - EVDI kernel module driver is currently a platform_driver, for multiple reasons; most importantly because virtual displays are not discoverable, i.e. cannot be enumerated at the hardware level. EVDI is also a generic device, not tied to any particular kind of device, transport layer or a bus.
+

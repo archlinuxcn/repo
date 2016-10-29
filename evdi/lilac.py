@@ -7,12 +7,15 @@ build_prefix = 'extra-x86_64'
 def add_into_array(line, values):
     l = line.find('(')
     r = line.rfind(')')
-    arr_str = line[l+1:r]
-    arr = [x.strip().strip('"').strip("'") for x in arr_str.split(',')]
+    arr_str = line[l+1:r].strip()
+    if arr_str == '':
+        arr = []
+    else:
+        arr = [x.strip().strip('"').strip("'") for x in arr_str.split(',')]
     for dep in values:
         if line.find(dep) == -1:
             arr.append(dep)
-    line = line[:l] + tuple(arr).__str__()
+    line = line[:l] + arr.__str__().replace('[','(',1).replace(']',')',1)
     return line
 
 def pre_build():
@@ -26,5 +29,5 @@ def pre_build():
 post_build = aur_post_build
 
 if __name__ == '__main__':
-        single_main()
+    single_main()
 
