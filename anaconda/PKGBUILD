@@ -1,25 +1,22 @@
 # Maintainer : Immae <ismael.bouya@normalesup.org>
 # Contributor : Martin Wimpress <code@flexion.org>
+# Contributor : Jingbei Li <i@jingbei.li>
 
 pkgname=anaconda
-pkgver=4.1.0
-pkgrel=1
+pkgver=4.2.0
+pkgrel=2
 pkgdesc="Completely free enterprise-ready Python distribution for large-scale data processing, predictive analytics, and scientific computing."
 arch=('x86' 'x86_64')
 url="https://store.continuum.io/cshop/anaconda/"
 license=("custom")
 makedepends=('patch')
 source=("http://repo.continuum.io/archive/Anaconda3-${pkgver}-Linux-x86_64.sh"
-        "installer_sh_x86.patch"
-        "installer_sh_x86_64.patch"
-        "conda_install.patch")
+        "install.py.patch")
 options=(!strip libtool)
-sha256sums=('11d32cf4026603d3b327dc4299863be6b815905ff51a80329085e1bb9f96c8bd'
-            '426112c7adc263420b5a4419a11c455e93df23033d6a700f56142eae9108eb2d'
-            '153769574abc0bad758a1eeb8efb215fec0afa40bd0fe303af52f894984b2c77'
-            '7f6f9736f74b42dc0086b05f55898b56746bbd122a113496d2475c646a8ace9c')
-_pythonver='3.5.1-5'
-_condaver='4.1.4'
+sha256sums=('73b51715a12b6382dd4df3dd1905b531bd6792d4aa7273b2377a0436d45f0e78'
+            '9fbb8d46f0864e034cb56bbe33281f475091b021a64df500b89bcb06f2081e71')
+_pythonver='3.5.2-0'
+_condaver='4.2.9'
 
 _pkgarch=`uname -m`
 if [ "$CARCH" == "x86" ]; then
@@ -30,16 +27,36 @@ fi
 
 prepare() {
     cd ${srcdir}
-    patch --follow-symlinks -p1 < installer_sh_${_pkgarch}.patch
+    msg2 "Patching Anaconda3-${pkgver}-Linux-x86_64.sh"
+    sed \
+        -e '/^wc -c "\$THIS_PATH" | grep/s/^/#/' \
+        -e '/^mkdir \$HOME\/\.continuum/s/^/#/' \
+        -e '/^echo "creating default environment..."$/s/^/exit 0 || /' \
+        -i Anaconda3-${pkgver}-Linux-x86_64.sh
 }
 
 package() {
     prefix=${pkgdir}/opt/${pkgname}
+    LD_PRELOAD="/usr/lib/libfakeroot/libfakeroot.so"
+
+    msg2 "Extracting default libraries"
     bash ${srcdir}/Anaconda3-${pkgver}-Linux-${_pkgarch}.sh -b -p $prefix
     [ "$BREAK_EARLY" = 1 ] && exit 1
+
+    msg2 "Patching .install.py"
     cd $prefix
-    patch -p1 < $srcdir/conda_install.patch
-    CONDA_INSTALL="$prefix/pkgs/conda-${_condaver}-py35_0/lib/python3.5/site-packages/conda/install.py"
-    $prefix/pkgs/python-${_pythonver}/bin/python -E -s $CONDA_INSTALL --prefix=$prefix --instdir=/opt/${pkgname} --file=conda-meta/.ilan || exit 1
-    install -D -m644 LICENSE.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+    CONDA_INSTALL="$prefix/pkgs/.install.py"
+    patch -p1 < $srcdir/install.py.patch
+
+    msg2 "Installing to /opt/${pkgname}"
+    $prefix/pkgs/python-${_pythonver}/bin/python -E -s $CONDA_INSTALL --root-prefix=$prefix --instdir=/opt/${pkgname} || exit 1
+
+    msg2 "Stripping the default package cache"
+    rm -r $prefix/pkgs
+
+    msg2 "Stripping \$pkgdir and urls from default meta"
+    find conda-meta -name '*.json' -exec sed -e "s/${pkgdir//\//\\\/}//g" -e "/\"url\":/d" -i {} \;
+
+    msg2 "Installing license"
+    install -D -m644 $prefix/LICENSE.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
