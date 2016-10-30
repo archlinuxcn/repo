@@ -20,6 +20,20 @@ if ((BUILD_DOC)); then
     pkgname+=('julia-git-docs')
 fi
 
+case $CARCH in
+  x86_64|i686)
+    makedepends_llvm=("llvm=3.9.0")
+    depends_llvm=("llvm-libs=3.9.0")
+    ;;
+  armv7h|aarch64)
+    makedepends_llvm=("llvm-svn")
+    depends_llvm=("llvm-libs-svn")
+    ;;
+  *)
+    echo "Unsupported Arch" >&2
+    ;;
+esac
+
 epoch=1
 pkgver=0.6.0.dev.1156.g9747250
 pkgrel=1
@@ -28,9 +42,9 @@ arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
 license=('GPL')
 makedepends=(gcc-fortran arpack fftw git gmp libgit2-julia libunwind-git
-             llvm-julia mpfr pcre2 suitesparse python2 openspecfun openblas
-             libutf8proc-git patchelf openblas-lapack openlibm
-             mbedtls libssh2)
+             "${makedepends_llvm[@]}" mpfr pcre2 suitesparse python2
+             openspecfun openblas libutf8proc-git patchelf openblas-lapack
+             openlibm mbedtls libssh2)
 options=('debug' '!strip')
 source=('git://github.com/JuliaLang/julia')
 md5sums=('SKIP')
@@ -157,7 +171,7 @@ build() {
 
 package-julia-in() {
   arch=('i686' 'x86_64' 'armv7h' 'aarch64')
-  depends=(arpack fftw gmp libgit2-julia libunwind-git llvm-libs-julia
+  depends=(arpack fftw gmp libgit2-julia libunwind-git "${depends_llvm[@]}"
            mpfr pcre2 hicolor-icon-theme xdg-utils suitesparse
            openspecfun openblas libutf8proc-git openblas-lapack openlibm
            mbedtls libssh2)
