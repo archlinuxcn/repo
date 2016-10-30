@@ -22,7 +22,7 @@ def pre_build():
     aur_pre_build()
     for line in edit_file('PKGBUILD'):
         if line.strip().startswith('makedepends'):
-            makedeps = ['linux-headers']
+            makedeps = ['linux', 'linux-headers']
             line = add_into_array(line, makedeps)
         print(line)
 
