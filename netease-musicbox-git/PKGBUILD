@@ -1,7 +1,7 @@
 # Maintainer: Jiachen Yang <farseerfc@gmail.com>
 pkgname=netease-musicbox-git
 _gitname=musicbox
-pkgver=r464.67f8493
+pkgver=r466.fb349fa
 pkgrel=1
 pkgdesc="A sexy command line interface musicbox for NetEase based on Python"
 arch=(any)
