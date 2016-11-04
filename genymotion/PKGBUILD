@@ -4,7 +4,7 @@
 
 pkgname=genymotion
 pkgver=2.8.0
-pkgrel=2
+pkgrel=3
 pkgdesc="Complete set of tools that provides a virtual environment for Android."
 arch=('x86_64')
 url="http://www.genymotion.com/"
@@ -33,5 +33,7 @@ package(){
   install -Dm644 $srcdir/genymotion.desktop $pkgdir/usr/share/applications/genymotion.desktop
   install -Dm644 $srcdir/genymotion-player.desktop $pkgdir/usr/share/applications/genymotion-player.desktop
   chown -R root:root $pkgdir/opt/genymotion
+  rm $pkgdir/opt/genymotion/libdrm.so.2
+  rm $pkgdir/opt/genymotion/libxcb.so.1
 
 }
