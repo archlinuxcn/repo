@@ -1,6 +1,6 @@
 # Maintainer: Moritz Lipp <mlq@pwmt.org>
 pkgname=libunwind-git
-pkgver=v1.2.rc1.1.gbc8698f
+pkgver=1.2.rc1.1.gbc8698f
 pkgrel=6
 pkgdesc="Portable and efficient C programming interface (API) to determine the call-chain of a program"
 arch=('i686' 'x86_64')
@@ -15,7 +15,7 @@ source=("${pkgname}::git+git://git.sv.gnu.org/libunwind.git")
 sha1sums=('SKIP')
 
 build() {
-  cd "$srcdir/$pkgname"
+  cd $pkgname
 
   autoreconf -i
   ./configure CFLAGS="$CFLAGS -U_FORTIFY_SOURCE" --prefix=/usr
@@ -23,19 +23,18 @@ build() {
 }
 
 check() {
-  cd "$srcdir/$pkgname"
+  cd $pkgname
   PATH=/usr/bin:$PATH make check || return 0
 }
 
 package() {
-  cd "$srcdir/$pkgname"
+  cd $pkgname
+
   make DESTDIR="$pkgdir/" install
 }
 
 pkgver() {
-  cd "$srcdir/$pkgname"
-  local ver="$(git describe --long --tags)"
-  printf "%s" "${ver//-/.}"
-}
+  cd $pkgname
 
-# vim:set ts=2 sw=2 et:
+  git describe --long --tags | sed -e 's/-/./g' -e 's/^[^0-9]//'
+}
