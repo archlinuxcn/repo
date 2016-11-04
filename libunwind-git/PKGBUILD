@@ -1,7 +1,7 @@
 # Maintainer: Moritz Lipp <mlq@pwmt.org>
 pkgname=libunwind-git
-pkgver=bc8698f
-pkgrel=2
+pkgver=v1.2.rc1.1.gbc8698f
+pkgrel=6
 pkgdesc="Portable and efficient C programming interface (API) to determine the call-chain of a program"
 arch=('i686' 'x86_64')
 url="http://www.nongnu.org/libunwind/"
@@ -34,7 +34,7 @@ package() {
 
 pkgver() {
   cd "$srcdir/$pkgname"
-  local ver="$(git describe --long --always)"
+  local ver="$(git describe --long --tags)"
   printf "%s" "${ver//-/.}"
 }
 
