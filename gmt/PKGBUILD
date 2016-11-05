@@ -2,8 +2,8 @@
 # Contributor: Rich Li <rich@dranek.com>
 
 pkgname=gmt
-pkgver=5.2.1
-pkgrel=3
+pkgver=5.3.1
+pkgrel=1
 pkgdesc="Generic Mapping Tools: Collection of tools for manipulating geographic and Cartesian data sets, and generating EPS maps."
 arch=(i686 x86_64)
 url="http://gmt.soest.hawaii.edu/"
@@ -18,16 +18,12 @@ optdepends=(
     'gmt-dcw: digital chart of the world polygon map')
 conflicts=('gmt4')
 install='gmt.install'
-source=(
-    "ftp://ftp.soest.hawaii.edu/gmt/${pkgname}-${pkgver}-src.tar.xz"
-    "float_cast.patch")
-md5sums=('4823ab45965a55d5d8869181ae3b0cca'
-         'e8f073eba78712e5a773f1abeb9dfb4f')
+source=("ftp://ftp.soest.hawaii.edu/gmt/${pkgname}-${pkgver}-src.tar.xz")
+md5sums=('6b2c393c99c47c54c71fac254af39852')
 
 prepare() {
   cd "${srcdir}/${pkgname}-${pkgver}"
   rm -fr build && mkdir build
-  patch -d "src/" < "${srcdir}/float_cast.patch"
 }
 
 build() {
