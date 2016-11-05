@@ -12,7 +12,7 @@ pkgname=(rust-nightly
          rust-std-nightly-asmjs-unknown-emscripten
          rust-std-nightly-wasm32-unknown-emscripten
         )
-pkgver=1.14.1_20161102
+pkgver=1.14.1_20161103
 pkgrel=1
 pkgdesc="A safe, concurrent, practical language from Mozilla (nightly version)"
 arch=('i686' 'x86_64')
@@ -67,7 +67,7 @@ build() {
 }
 
 package_rust-nightly() {
-  depends=("rust-std-nightly-$CARCH-unknown-linux-gnu")
+  depends=("rust-std-nightly-$CARCH-unknown-linux-gnu=$pkgver")
   optdepends=('rust-docs-nightly: language and API documentation'
               'vim-rust-git: support for Vim'
 
