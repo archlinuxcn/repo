@@ -4,8 +4,8 @@ _gtk3_min='3.18'
 _gtk3_max='4.0'
 _theme_name=Adapta
 _gtk2_min='2.24.30'
-pkgver="3.22.2.44"
-pkgrel=1
+pkgver="3.22.2.73"
+pkgrel=2
 pkgdesc="An adaptive Gtk+ theme based on Material Design Guidelines."
 arch=(any)
 url="https://github.com/adapta-project/${pkgname}"
@@ -14,8 +14,11 @@ depends=("gtk2>=${_gtk2_min}"
          "gtk3>=${_gtk3_min}.9"
          "gtk3<=${_gtk3_max}.99"
          'gtk-engines>=2.21.0'
-         'gtk-engine-murrine>=0.98.1')
-optdepends=("gnome-shell>=${_gtk3_min}.3: The GNOME Shell"
+         'gtk-engine-murrine>=0.98.1'
+         'cantarell-fonts')
+optdepends=('ttf-roboto: The recommended font'
+            'noto-fonts: The recommended font for improved language support'
+            "gnome-shell>=${_gtk3_min}.3: The GNOME Shell"
             "gnome-flashback>=${_gtk3_min}.2: The GNOME flashback shell"
             'budgie-desktop>=10.2.5: The Budgie desktop'
             'cinnamon>=2.8.6: The Cinnamon desktop'
@@ -32,7 +35,7 @@ makedepends=('glib2>=2.48.0'
              'inkscape'
              'parallel')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
-sha256sums=('436768c5136a4ae68119bd4355e3ef71388f558b0d3c49e4f07cbad8c1b07ec3')
+sha256sums=('fd5f73a9301d2a40c9f71dfb4095dee171b622f3dbb9495680d530be7f3a4413')
 
 _bundle="ruby-bundle"
 
