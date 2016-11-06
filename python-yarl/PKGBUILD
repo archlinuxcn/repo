@@ -1,0 +1,24 @@
+_pkgname=yarl
+pkgname=python-yarl
+pkgver=0.5.3
+pkgrel=0
+pkgdesc="Yet another URL library"
+arch=('any')
+url="https://github.com/aio-libs/yarl/"
+license=('Apache')
+depends=('python')
+source=('https://pypi.python.org/packages/21/09/5f2fd78c8cc363ccba00bc99183a523151d1ad76a6de86be53836d843996/yarl-0.5.3.tar.gz')
+md5sums=('90c14c67c1854c3d9581de4d50c6edce')
+
+build() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  python3 setup.py build
+}
+
+package() {
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+}
+
+# vim:set sw=2 et:
