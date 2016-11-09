@@ -1,7 +1,7 @@
 # Maintainer: Andrea Scarpino <andrea@archlinux.org>
 
 pkgname=arch-audit
-pkgver=0.1.4
+pkgver=0.1.5
 pkgrel=1
 pkgdesc='An utility like pkg-audit based on Arch CVE Monitoring Team data'
 url='https://github.com/ilpianista/arch-audit'
@@ -11,7 +11,7 @@ arch=('i686' 'x86_64')
 license=('MIT')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/ilpianista/arch-audit/archive/$pkgver.tar.gz"
         'arch-audit.service' 'arch-audit.timer')
-md5sums=('c01ec99bfced593ba083962e73824186'
+md5sums=('6d131cf142f685c081326924c3380b64'
          'a076cd0ee1a6a898720fa929875e6484'
          '4ea3d2ef7d9543d69469cdaa537a94b2')
 
