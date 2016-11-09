@@ -12,7 +12,7 @@ pkgname=(rust-nightly
          rust-std-nightly-asmjs-unknown-emscripten
          rust-std-nightly-wasm32-unknown-emscripten
         )
-pkgver=1.14.1_20161106
+pkgver=1.15.0_20161109
 pkgrel=1
 pkgdesc="A safe, concurrent, practical language from Mozilla (nightly version)"
 arch=('i686' 'x86_64')
@@ -80,7 +80,7 @@ package_rust-nightly() {
               'rust-std-nightly-asmjs-unknown-emscripten: cross compile for asmjs-unknown-emscripten'
               'rust-std-nightly-wasm32-unknown-emscripten: cross compile for wasm32-unknown-emscripten'
               'cargo-git: Rust package manager')
-  provides=(rust=1.14.1)
+  provides=(rust=1.15.0)
   conflicts=(rust)
   options=(staticlibs)
 
@@ -107,7 +107,7 @@ package_rust-docs-nightly() {
   pkgdesc="A safe, concurrent, practical language from Mozilla. (Language and API documentation, for nightly version)"
   arch=('any')
   optdepends=('rust-nightly: to compile and run the programs you can write using this documentation')
-  provides=('rust-doc=1.14.1')
+  provides=('rust-doc=1.15.0')
   conflicts=('rust-doc')
 
   cd rust-nightly-$CARCH-unknown-linux-gnu/rust-docs
@@ -117,7 +117,7 @@ package_rust-docs-nightly() {
 
 package_cargo-nightly() {
   pkgdesc="Rust package manager"
-  provides=(cargo=1.14.1)
+  provides=(cargo=1.15.0)
   conflicts=('cargo' 'cargo-git')
   replaces=('cargo-git')
 
