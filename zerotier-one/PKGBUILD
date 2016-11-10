@@ -2,7 +2,7 @@
 # Contributor: Alex Jordan <alexander3223098@gmail.com>
 pkgname=zerotier-one
 pkgver=1.1.14
-pkgrel=1
+pkgrel=2
 pkgdesc="Creates virtual Ethernet networks of almost unlimited size."
 arch=('i686' 'x86_64' 'armv7h')
 url="https://www.zerotier.com/index.html"
@@ -15,7 +15,8 @@ sha1sums=('b01a5167f8c9a28c80ed5fbae36c3b3cbbe55108')
 
 build() {
   cd "$srcdir/ZeroTierOne-$pkgver"
-  make
+  #Doesn't compile with clang currently
+  make CC=gcc CXX=g++
 }
 
 #check() {
