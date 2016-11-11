@@ -32,6 +32,9 @@ def pre_build():
         if line.strip().startswith('makedepends'):
             makedeps = ['linux', 'linux-headers']
             line = add_into_array(line, makedeps)
+        if line.strip().startswith('depends'):
+            makedeps = ['libdrm']
+            line = add_into_array(line, makedeps)
         print(line)
 
 post_build = aur_post_build
