@@ -2,7 +2,7 @@
 
 pkgname=qpdfview
 pkgver=0.4.16
-pkgrel=3
+pkgrel=4
 pkgdesc='A tabbed PDF viewer using the poppler library.'
 arch=('i686' 'x86_64' 'armv7h')
 url='https://launchpad.net/qpdfview'
@@ -12,7 +12,6 @@ optdepends=('texlive-bin: for shared SyncTeX parser library (required at build t
             'libspectre: for PostScript support (required at build time)'
             'djvulibre: for DjVu support (required at build time)')
 makedepends=('qt5-tools')
-install='qpdfview.install'
 source=("https://launchpad.net/$pkgname/trunk/$pkgver/+download/$pkgname-$pkgver.tar.gz")
 sha256sums=('fad416e8fefc3057fa1b8d12d964c7eccd16dffe0307a0d6e9d55a543294da7f')
 
