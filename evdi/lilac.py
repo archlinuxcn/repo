@@ -4,18 +4,26 @@ from lilaclib import *
 
 build_prefix = 'extra-x86_64'
 
+import re
+
+def get_item(s):
+    m = re.search(r'''[ \t'"]*([^ '"]+)[ \t'"]*''', s)
+    if m != None:
+        return m.group(1)
+    else:
+        return None
+
 def add_into_array(line, values):
     l = line.find('(')
     r = line.rfind(')')
     arr_str = line[l+1:r].strip()
-    if arr_str == '':
-        arr = []
-    else:
-        arr = [x.strip().strip('"').strip("'") for x in arr_str.split(',')]
-    for dep in values:
-        if line.find(dep) == -1:
-            arr.append(dep)
-    line = line[:l] + arr.__str__().replace('[','(',1).replace(']',')',1)
+    arr = {get_item(x) for x in arr_str.split(' ')}.union(values)
+    arr_str = '('
+    for item in arr:
+        if item == None: continue
+        arr_str += "'{}' ".format(item)
+    arr_str += ')'
+    line = line[:l] + arr_str
     return line
 
 def pre_build():
