@@ -1,0 +1,24 @@
+--- a/usr/share/applications/atom.desktop
++++ b/usr/share/applications/atom.desktop
+@@ -2,7 +2,7 @@
+ Name=Atom
+ Comment=A hackable text editor for the 21st Century.
+ GenericName=Text Editor
+-Exec=/usr/share/atom/atom %F
++Exec=env PYTHON=python2 /usr/share/atom/atom %U
+ Icon=atom
+ Type=Application
+ StartupNotify=true
+
+
+--- a/usr/share/atom/resources/app/apm/bin/apm
++++ b/usr/share/atom/resources/app/apm/bin/apm
+@@ -2,6 +2,8 @@
+
+ set -e
+
++export PYTHON=python2
++
+ initialCwd=`pwd -P`
+
+ apmPath=$0

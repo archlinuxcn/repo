@@ -1,0 +1,8 @@
+# Colored makepkg-like functions
+note() {
+    printf "${blue}==>${yellow} NOTE:${bold} $1${all_off}\n"
+}
+
+post_install() {
+  note "Custom launch flags can be put in: ~/.config/atom-editor-flags.conf"
+}
