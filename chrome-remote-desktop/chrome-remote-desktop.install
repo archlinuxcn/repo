@@ -1,6 +1,6 @@
 post_install() {
   # Create chrome-remote-desktop group
-  [[ $(cat /etc/group) == *chrome-remote-desktop* ]] || groupadd chrome-remote-desktop
+  [[ $(cat /etc/group) == *chrome-remote-desktop* ]] || groupadd -r chrome-remote-desktop
   
   echo "Set up CRD by issuing the command:"
   echo "crd --setup"
