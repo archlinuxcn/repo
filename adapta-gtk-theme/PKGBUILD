@@ -4,7 +4,7 @@ _gtk3_min='3.18'
 _gtk3_max='4.0'
 _theme_name=Adapta
 _gtk2_min='2.24.30'
-pkgver="3.22.3.40"
+pkgver="3.22.3.67"
 pkgrel=1
 pkgdesc="An adaptive Gtk+ theme based on Material Design Guidelines."
 arch=(any)
@@ -35,7 +35,7 @@ makedepends=('glib2>=2.48.0'
              'inkscape'
              'parallel')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
-sha256sums=('6810855125e1585d3669e9fe4e88ddc4e88d93292ea9271ef6afc6f4c8b6466e')
+sha256sums=('b9860f73dfc9ba52b55eacaae8580891e065e46f00853fe507c8b3095690b186')
 
 _bundle="ruby-bundle"
 
