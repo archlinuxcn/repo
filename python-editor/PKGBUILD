@@ -1,14 +1,16 @@
 _pkgname=python-editor
 pkgname=python-editor
-pkgver=1.0.1
+pkgver=1.0.2
 pkgrel=1
 pkgdesc="Programmatically open an editor, capture the result."
 arch=('any')
 url="https://github.com/fmoo/python-editor"
 license=('Apache')
 depends=('python' 'python-setuptools')
-source=('https://pypi.python.org/packages/2b/c0/df7b87d5cf016f82eab3b05cd35f53287c1178ad8c42bfb6fa61b89b22f6/python-editor-1.0.1.tar.gz')
-md5sums=('e1fa63535b40e022fa4fd646fd8b511a')
+source=('https://pypi.python.org/packages/1a/0b/af25b4b13644e1b8ce5b32eaca40be2beab542b9c3451198a63f0decfa6a/python-editor-1.0.2b.tar.gz')
+md5sums=('238dbe80a6e3eb0cb016cacd3b967905')
+
+export LANG=en_US.UTF-8
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
