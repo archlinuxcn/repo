@@ -6,18 +6,18 @@
 
 pkgname=cgns
 _PKGNAME=CGNS
-pkgver=3.2.1
-pkgrel=1
+pkgver=3.3.0
+pkgrel=2
 pkgdesc='Standard for recording and recovering computer data associated with the numerical solution of fluid dynamics equations'
 arch=('i686' 'x86_64')
 url='http://www.cgns.org'
 license=('custom')
 provides=('libcgns' 'libcgns-paraview')
 conflicts=('ligcgns2')
-depends=('tk' 'hdf5' 'libxmu' 'glu')
+depends=('tk' 'hdf5-cpp-fortran' 'libxmu' 'glu')
 makedepends=('gcc-fortran' 'cmake')
-source=("${pkgname}-${pkgver}.tar.gz"::"https://github.com/${_PKGNAME}/${_PKGNAME}/archive/v${pkgver}.tar.gz")
-sha256sums=('677d0da94f0892b72b96da7cf4de51f661acfff1141c585af50a531fa161773f')
+source=(${pkgname}-${pkgver}.tar.gz::https://github.com/${_PKGNAME}/${_PKGNAME}/archive/v${pkgver}.tar.gz)
+sha256sums=('8422c67994f8dc6a2f201523a14f6c7d7e16313bdd404c460c16079dbeafc662')
 
 # need to tell cmake when to build 64bit version
 if [[ $CARCH == "x86_64" ]]
@@ -31,8 +31,8 @@ prepare(){
   cd "${srcdir}"
 
   # Out of source build
-  rm -rf build
-  mkdir -p build
+  rm -rf -- build
+  mkdir -p -- build
 }
 
 build() {
@@ -52,7 +52,7 @@ build() {
     -DCMAKE_SKIP_RPATH:BOOL=ON \
     "../${_PKGNAME}-${pkgver}"
 
-  make
+  make -j1
 }
 
 
