@@ -1,0 +1,39 @@
+diff -Naur ParaView-v5.1.2_org/VTK/ThirdParty/hdf5/vtkhdf5/CMakeInstallation.cmake ParaView-v5.1.2/VTK/ThirdParty/hdf5/vtkhdf5/CMakeInstallation.cmake
+--- ParaView-v5.1.2_org/VTK/ThirdParty/hdf5/vtkhdf5/CMakeInstallation.cmake	2016-07-26 21:52:16.000000000 +0200
++++ ParaView-v5.1.2/VTK/ThirdParty/hdf5/vtkhdf5/CMakeInstallation.cmake	2016-10-13 17:01:06.326836570 +0200
+@@ -58,7 +58,7 @@
+   )
+   install (
+       FILES ${HDF5_BINARY_DIR}/CMakeFiles/FindHDF5${HDF_PACKAGE_EXT}.cmake
+-      DESTINATION ${HDF5_INSTALL_CMAKE_DIR}/${HDF5_PACKAGE}
++      DESTINATION ${HDF5_INSTALL_CMAKE_DIR}/${HDF5_PACKAGE}_paraview
+       COMPONENT configinstall
+   )
+ endif (NOT HDF5_EXTERNALLY_CONFIGURED)
+@@ -73,7 +73,7 @@
+   )
+   install (
+       FILES ${HDF5_BINARY_DIR}/CMakeFiles/${HDF5_PACKAGE}${HDF_PACKAGE_EXT}-config.cmake
+-      DESTINATION ${HDF5_INSTALL_CMAKE_DIR}/${HDF5_PACKAGE}
++      DESTINATION ${HDF5_INSTALL_CMAKE_DIR}/${HDF5_PACKAGE}_paraview
+       COMPONENT configinstall
+   )
+ endif (NOT HDF5_EXTERNALLY_CONFIGURED)
+@@ -88,7 +88,7 @@
+   )
+   install (
+       FILES ${HDF5_BINARY_DIR}/CMakeFiles/${HDF5_PACKAGE}${HDF_PACKAGE_EXT}-config-version.cmake
+-      DESTINATION ${HDF5_INSTALL_CMAKE_DIR}/${HDF5_PACKAGE}
++      DESTINATION ${HDF5_INSTALL_CMAKE_DIR}/${HDF5_PACKAGE}_paraview
+       COMPONENT configinstall
+   )
+ endif (NOT HDF5_EXTERNALLY_CONFIGURED)
+@@ -107,7 +107,7 @@
+ )
+ install (
+     FILES ${HDF5_BINARY_DIR}/libhdf5.settings
+-    DESTINATION ${HDF5_INSTALL_CMAKE_DIR}/${HDF5_PACKAGE}
++    DESTINATION ${HDF5_INSTALL_CMAKE_DIR}/${HDF5_PACKAGE}_paraview
+     COMPONENT libraries
+ )
+ 
