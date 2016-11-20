@@ -22,13 +22,14 @@ strip_file() {
   objcopy --only-keep-debug "$binary" "$dbgdir/$binary.debug"
   objcopy --add-gnu-debuglink="$dbgdir/${binary#/}.debug" "$binary"
 
+  # I know for sure that there aren't any hardlinks.
   # create any needed hardlinks
-  while read -d '' file ; do
-    if [[ "${binary}" -ef "${file}" && ! -f "$dbgdir/${file}.debug" ]]; then
-      mkdir -p "$dbgdir/${file%/*}"
-      ln "$dbgdir/${binary}.debug" "$dbgdir/${file}.debug"
-    fi
-  done < <(find . -type f -perm -u+w -print0 2>/dev/null)
+  # while read -d '' file ; do
+  #   if [[ "${binary}" -ef "${file}" && ! -f "$dbgdir/${file}.debug" ]]; then
+  #     mkdir -p "$dbgdir/${file%/*}"
+  #     ln "$dbgdir/${binary}.debug" "$dbgdir/${file}.debug"
+  #   fi
+  # done < <(find . -type f -perm -u+w -print0 2>/dev/null)
 
   if [[ -n "$bid" ]]; then
     local target
