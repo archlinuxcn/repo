@@ -1,6 +1,48 @@
+
+## copy from pacman-key
+_msg() {
+        (( QUIET )) && return
+        local mesg=$1; shift
+        printf "${GREEN}==>${ALL_OFF}${BOLD} ${mesg}${ALL_OFF}\n" "$@" >&1
+}
+
+
+_error() {
+        local mesg=$1; shift
+        printf "${RED}==> $(gettext "ERROR:")${ALL_OFF}${BOLD} ${mesg}${ALL_OFF}\n" "$@" >&2
+}
+
+_get_from() {
+        while IFS='=' read -r key value; do
+                [[ -z $key || ${key:0:1} = '#' ]] && continue
+
+                if [[ ${key%% *} = "$2" && -n ${value##* } ]]; then
+                        echo "${value##* }"
+                        return 0
+                fi
+        done < "$1"
+        if [[ -n "$3" ]]; then
+                printf '%s\n' "$3"
+                return 0
+        fi
+        return 1
+}
+
+CONFIG=${CONFIG:-/etc/pacman.conf}
+PACMAN_KEYRING_DIR=${PACMAN_KEYRING_DIR:-$(_get_from "$CONFIG" "GPGDir" "/etc/pacman.d/gnupg")}
+GPG_PACMAN=(gpg --homedir "${PACMAN_KEYRING_DIR}" --no-permission-warning)
+
+
 post_upgrade() {
         if usr/bin/pacman-key -l >/dev/null 2>&1; then
                 usr/bin/pacman-key --populate archlinuxcn
+
+                ## needed for https://github.com/archlinuxcn/repo/issues/300
+                _msg "$(gettext "Updating trust database...")"
+                if ! "${GPG_PACMAN[@]}" --batch --check-trustdb --yes ; then
+                        _error "$(gettext "Trust database could not be updated.")"
+                        exit 1
+                fi
         fi
 }
 
