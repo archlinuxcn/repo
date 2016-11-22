@@ -4,7 +4,7 @@
 # Contributor: phoenixlzx < phoenixlzx AT phoenixsec DOT org >
 
 pkgname=vuze
-pkgver=5.7.3.0
+pkgver=5.7.4.0
 pkgrel=1
 _ver=${pkgver//./} 
 pkgdesc="A feature-rich Java-based BitTorrent client (previously called 'Azureus')"
@@ -18,7 +18,7 @@ optdepends=('vuze-plugin-countrylocator: Country flags for the "Peers" tab'
 options=('!strip')
 install=$pkgname.install
 source=("http://downloads.sourceforge.net/azureus/vuze/Vuze_${_ver}/Vuze_${_ver}_linux.tar.bz2")
-md5sums=('5382857d2f2d9ace13124912be6bbbab')
+md5sums=('be264f74dc37f728a5025f502f69c093')
 
 package() {
   cd vuze
