@@ -8,14 +8,14 @@
 
 pkgname=atom-editor-bin
 pkgver=1.12.5
-pkgrel=1
+pkgrel=2
 pkgdesc="Chrome-based text editor from Github - Precompiled binary from official repository"
 arch=('x86_64')
 url="https://github.com/atom/atom"
 license=('MIT')
 provides=('atom' 'apm')
 options=(!strip)
-depends=('git' 'gconf' 'gtk2' 'libnotify' 'libxtst' 'nss' 'python2' 'xdg-utils' 'desktop-file-utils' 'alsa-lib' 'libgnome-keyring')
+depends=('git' 'gconf' 'gtk2' 'libnotify' 'libxtst' 'nss' 'python2' 'xdg-utils' 'desktop-file-utils' 'alsa-lib' 'libgnome-keyring' 'libxss')
 optdepends=('gvfs')
 conflicts=('atom' 'atom-editor' 'atom-editor-git' 'atom-editor-git-tagged' 'apm')
 install=$pkgname.install
