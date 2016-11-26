@@ -1,7 +1,7 @@
 # Maintainer: graysky <graysky AT archlinux DOT us>
 
 pkgname='profile-sync-daemon'
-pkgver=6.29
+pkgver=6.30
 pkgrel=1
 pkgdesc='Syncs browser profiles to tmpfs reducing SSD/HDD calls and speeding-up browsers.'
 arch=('any')
@@ -12,7 +12,7 @@ conflicts=('firefox-sync' 'goanysync' 'go-anysync-git' 'iceweasel-sync'
 'tmpfs-store' 'tmpfs-sync' 'user-profile-sync-daemon')
 source=("http://repo-ck.com/source/$pkgname/$pkgname-$pkgver.tar.xz")
 install=psd.install
-sha256sums=('8adc2f5470dfe4f705c592f4b8b8376a5d84e5ba0d32d06aeb9e68f7957f9f51')
+sha256sums=('9bfbf1bfc2710d1fd9594c644b79bd9872ea0df97d6b67b3e86ef99550beaaee')
 
 build() {
   cd "$pkgname-$pkgver"
