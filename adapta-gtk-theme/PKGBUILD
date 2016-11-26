@@ -4,7 +4,7 @@ _gtk3_min='3.18'
 _gtk3_max='4.0'
 _theme_name=Adapta
 _gtk2_min='2.24.30'
-pkgver="3.22.4.5"
+pkgver="3.89.1.47"
 pkgrel=1
 pkgdesc="An adaptive Gtk+ theme based on Material Design Guidelines."
 arch=(any)
@@ -31,23 +31,14 @@ optdepends=('ttf-roboto: The recommended font'
             "unity>=7.4.0: Ubuntu's Unity desktop")
 makedepends=('glib2>=2.48.0'
              'libxml2'
-             'ruby-bundler>=1.11.0'
+             'librsvg'
+             'sassc>=3.3.2'
              'inkscape'
              'parallel')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
-sha256sums=('63f948c494bf36993f5dca8050f49e4442a9d563bafca1206f31b0082150cad2')
-
-_bundle="ruby-bundle"
-
-prepare() {
-    cd "${pkgname}-${pkgver}"
-    export BUNDLE_PATH="${srcdir}/${_bundle}"
-    bundle install
-}
+sha256sums=('94b5d7e2959752c85b53e4abb042aa9a01120922230c8f7605662f93687e62d8')
 
 build() {
-    export BUNDLE_PATH="${srcdir}/${_bundle}"
-    export PATH="${BUNDLE_PATH}/bin:${PATH}"
     cd "${pkgname}-${pkgver}"
     ./autogen.sh --enable-gtk_next \
                  --enable-chrome \
