@@ -83,6 +83,7 @@ julia_opts=(prefix=/usr sysconfdir=/etc
             USE_SYSTEM_CURL=1
             USE_SYSTEM_PATCHELF=1
             USE_LLVM_SHLIB=1
+            LLVM_USE_CMAKE=0 # Workaround LLVM linking with system LLVM
             LIBBLASNAME=libopenblas
             LIBBLAS=-lopenblas
             LIBLAPACKNAME=libopenblas
