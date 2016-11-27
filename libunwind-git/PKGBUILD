@@ -29,6 +29,18 @@ options=('debug' '!strip')
 provides=(libunwind)
 conflicts=(libunwind)
 
+# HACK!!! remove after the damange on the build server is repaired.
+if [[ -f ${SRCDEST:-${PWD}}/libunwind/config ]] && \
+       grep 'url = http://git\.savannah\.gnu\.org/' \
+            ${SRCDEST:-${PWD}}/libunwind/config &> /dev/null; then
+    rm -rf ${SRCDEST:-${PWD}}/libunwind &> /dev/null || true
+fi
+if [[ -f ${SRCDEST:-${PWD}}/libunwind-git/config ]] && \
+       grep 'url = git://git\.sv\.gnu\.org/libunwind\.git' \
+            ${SRCDEST:-${PWD}}/libunwind-git/config &> /dev/null; then
+    rm -rf ${SRCDEST:-${PWD}}/libunwind-git &> /dev/null || true
+fi
+
 pkgver() {
   cd libunwind
 
