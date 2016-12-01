@@ -28,7 +28,7 @@ package() {
   mkdir -p "${pkgdir}/usr/share/oh-my-zsh"
 
   # Fix the path to oh-my-zsh, and disable auto-updating.
-  sed -e '2c\ZSH=/usr/share/oh-my-zsh/'\
+  sed -e 's/ZSH=.*/ZSH=\/usr\/share\/oh-my-zsh/1'\
       -e 's/# \(DISABLE_AUTO_UPDATE="true"\)/\1/'\
       templates/zshrc.zsh-template > zshrc
 
