@@ -1,0 +1,12 @@
+[Unit]
+Description=Minecraft Server World Backup
+After=local-fs.target
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/minecraftd backup
+User=minecraft
+Group=minecraft
+
+[Install]
+WantedBy=multi-user.target

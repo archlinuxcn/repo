@@ -1,6 +1,7 @@
 # Contributor: Weng Xuetian <wengxt@gmail.com>
 # Maintainer: Thaodan <theodorstormgrade@gmail.com>
 
+
 # enable this if you run out of memory during linking
 #_lowmem=true
 
@@ -8,18 +9,19 @@
 _gtk3=true
 
 # try to build with PGO
-_pgo=true
+# currently broken
+#_pgo=false
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=45.0.1
+pkgver=50.0
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
 url="https://build.opensuse.org/package/show/mozilla:Factory/MozillaFirefox"
 depends=('gtk2' 'mozilla-common' 'libxt' 'startup-notification' 'mime-types'
-         'dbus-glib' 'alsa-lib' 'desktop-file-utils' 'hicolor-icon-theme'
+         'dbus-glib' 'alsa-lib' 'hicolor-icon-theme'
 	 'libvpx' 'icu'  'libevent' 'nss>=3.18.1' 'nspr>=4.10.6' 'hunspell'
 	 'sqlite' 'libnotify' 'kmozillahelper' 'ffmpeg' )
 if [ $_gtk3 ] ; then
@@ -27,13 +29,12 @@ if [ $_gtk3 ] ; then
 fi
 
 makedepends=('unzip' 'zip' 'diffutils' 'python2' 'yasm' 'mesa' 'imake'
-             'xorg-server-xvfb' 'libpulse' 'inetutils')
+             'xorg-server-xvfb' 'libpulse' 'inetutils' 'autoconf2.13' 'rust')
 optdepends=('networkmanager: Location detection via available WiFi networks'
 	    'upower: Battery API' )
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
-install=firefox.install
-_patchrev=6a889427cd4f
+_patchrev=a58cc7936ce7
 options=('!emptydirs'  'strip' )
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz
@@ -46,10 +47,15 @@ source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/
 	$_patchurl/mozilla-kde.patch
 	$_patchurl/mozilla-language.patch
 	$_patchurl/mozilla-nongnome-proxies.patch
+        $_patchurl/mozilla-flex_buffer_overrun.patch
 	unity-menubar.patch
 	add_missing_pgo_rule.patch
         pgo_fix_missing_kdejs.patch
+        rb39193.patch
+        fix_mozalloc.patch
 )
+
+
 
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
 # Note: These are for Arch Linux use ONLY. For your own distribution, please
@@ -58,6 +64,7 @@ source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/
 _google_api_key=AIzaSyDwr302FpOSkGRpLlUpPThNTDPbXcIn_FM
 _google_default_client_id=413772536636.apps.googleusercontent.com
 _google_default_client_secret=0ZChLK6AxeA3Isu96MkwqDR4
+
 
 # Mozilla API keys (see https://location.services.mozilla.com/api)
 # Note: These are for Arch Linux use ONLY. For your own distribution, please
@@ -83,7 +90,6 @@ prepare() {
   echo -n "$_mozilla_api_key" >mozilla-api-key
   echo "ac_add_options --with-mozilla-api-keyfile=\"$PWD/mozilla-api-key\"" >>.mozconfig
   
-  
   msg "Patching for KDE"
   patch -Np1 -i "$srcdir/mozilla-nongnome-proxies.patch"
   patch -Np1 -i "$srcdir/mozilla-kde.patch"
@@ -93,24 +99,21 @@ prepare() {
   patch -Np1 -i "$srcdir/firefox-no-default-ualocale.patch"
   patch -Np1 -i "$srcdir/firefox-branded-icons.patch"
   # add globalmenu support
-  patch -Np1 -i "$srcdir/unity-menubar.patch"
+  #patch -Np1 -i "$srcdir/unity-menubar.patch"
 
   # add missing rule for pgo builds
   patch -Np1 -i "$srcdir"/add_missing_pgo_rule.patch
 
   # add missing file Makefile for pgo builds
   patch -Np1 -i "$srcdir"/pgo_fix_missing_kdejs.patch
-  # enable gtk3
-  if [ $_gtk3 ] ; then
-     # fix gtk3 build
-     sed -i 's|parent->group|gtk_window_get_group(const_cast<GtkWindow*>(parent))|g' \
-	 toolkit/xre/nsKDEUtils.cpp
-     echo 'ac_add_options --enable-default-toolkit=cairo-gtk3' >>.mozconfig
-  fi
+
   # configure script misdetects the preprocessor without an optimization level
   # https://bugs.archlinux.org/task/34644
-  sed -i '/ac_cpp=/s/$CPPFLAGS/& -O2/' configure
+  # sed -i '/ac_cpp=/s/$CPPFLAGS/& -O2/' configure
 
+  # CVE-2016-6354 (bmo#1292534)
+  patch -Np1 -i "$srcdir"/mozilla-flex_buffer_overrun.patch
+  
   # WebRTC build tries to execute "python" and expects Python 2
   mkdir -p "$srcdir/path"
   ln -sf /usr/bin/python2 "$srcdir/path/python"
@@ -128,12 +131,20 @@ build() {
   cd $_pkgname-$pkgver
 
   export PATH="$srcdir/path:$PATH"
-  export LDFLAGS="$LDFLAGS -Wl,-rpath,/usr/lib/firefox"
   export PYTHON="/usr/bin/python2"
-  export CPPFLAGS="$CPPFLAGS -mno-avx"
+  
+  # _FORTIFY_SOURCE causes configure failures
+  CPPFLAGS+=" -O2"
+
+  # GCC 6
+  CFLAGS+=" -fPIC -fno-delete-null-pointer-checks -fno-lifetime-dse -fno-schedule-insns2"
+  CXXFLAGS+=" -fPIC -fno-delete-null-pointer-checks -fno-lifetime-dse -fno-schedule-insns2"
+
+  # Hardening
+  LDFLAGS+=" -Wl,-z,now"
 
   if [[ -n $_lowmem || $CARCH == i686 ]]; then
-    LDFLAGS+=" -Wl,--no-keep-memory"
+    LDFLAGS+=" -Xlinker --no-keep-memory"
   fi
 
   if [[ -n $_pgo ]]; then
@@ -149,7 +160,7 @@ package() {
   cd $_pkgname-$pkgver
 
   [[ "$CARCH" == "i686" ]] && cp "$srcdir/kde.js" obj-i686-pc-linux-gnu/dist/bin/defaults/pref
-  [[ "$CARCH" == "x86_64" ]] && cp "$srcdir/kde.js" obj-x86_64-unknown-linux-gnu/dist/bin/defaults/pref
+  [[ "$CARCH" == "x86_64" ]] && cp "$srcdir/kde.js" obj-x86_64-pc-linux-gnu/dist/bin/defaults/pref
 
   make -f client.mk DESTDIR="$pkgdir" INSTALL_SDK= install
 
@@ -181,20 +192,22 @@ package() {
   #https://bugzilla.mozilla.org/show_bug.cgi?id=658850
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
-
-sha256sums=('d1814ac6d8cd687696bd0d98da3bb525f6df11fe655e0d668742b21fca57d9c8'
-            '633084aa03336088e087f39eb55b212cc97b11d27a4b288a87f75148350be4dd'
-            'c202e5e18da1eeddd2e1d81cb3436813f11e44585ca7357c4c5f1bddd4bec826'
-            'd86e41d87363656ee62e12543e2f5181aadcff448e406ef3218e91865ae775cd'
-            '4b50e9aec03432e21b44d18c4c97b2630bace606b033f7d556c9d3e3eb0f4fa4'
-            'b8cc5f35ec35fc96ac5c5a2477b36722e373dbb57eba87eb5ad1276e4df7236d'
-            '68e3a5b47c6d175cc95b98b069a15205f027cab83af9e075818d38610feb6213'
-            '0778583e04d021d317aede459e47e9393bb164913eaa40aef56453377e2685ea'
-            '661ed67b994605862999a8f650e3b660fae32d39c77f0663ea2d6578578b4a21'
-            '02e92f84dd31ed079be3e67509cf23d0d351e06bb690fcc091c904d906d2d690'
-            '3e7d8d65b481c03eb1da37b2e211f018e6fc9de381433205398e5ddaaff1c44a'
-            'feede2fb86527c4a5d90bd5458fe582da920ab02dd25ec656236d87caf8888ba'
-            'e8289ea4c1f8191e1e23661312ceee2128b8e790501b9a589d0d7bfc4384553f'
-            '6b0e2900be693805388a96e4b2f4ea9a838c1e95322a546388d384a21458cd3f'
-            'f9067f62a25a7a77276e15f91cc9e7ba6576315345cfc6347b1b2e884becdb0c'
-            '2797d1e61031d24ee24bf682c9447b3b9c1bca10f8e6cbd597b854af2de1ec54')
+md5sums=('743aeb5d71eb6a8f227aad954f8a663a'
+         '169f583544e9efaf1f80f8548b57a8cc'
+         '14e0f6237a79b85e60256f4808163160'
+         'dbf14588e85812ee769bd735823a0146'
+         '0d053487907de4376d67d8f499c5502b'
+         '05bb69d25fb3572c618e3adf1ee7b670'
+         '6e335a517c68488941340ee1c23f97b0'
+         '3b3eb8c2747429887e4a03537932eac5'
+         '4597391f698d5f3a7138e5a2757ac094'
+         '1fad9a988826d69fe712ea973e43f6da'
+         '1a8a9fbe8ac6a37f2af5032e81e63fff'
+         'ce59663430373d7facd5915056745897'
+         '0c684360f1df4536512d51873c1d243d'
+         '01af53dc830d00fe522c545bcc0ec4b9'
+         'eb6771472c8c5f67331256c7f5a692da'
+         'fe24f5ea463013bb7f1c12d12dce41b2'
+         '3fa8bd22d97248de529780f5797178af'
+         '43550e772f110a338d5a42914ee2c3a6'
+         '0c1ed789c06297659137a2ed2ef769f7')

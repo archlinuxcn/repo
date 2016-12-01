@@ -7,11 +7,8 @@
 from lilaclib import *
 
 depends = ['dee',
-           ("libdbusmenu", "libdbusmenu-glib"),
-           ('libdbusmenu', 'libdbusmenu-gtk2'),
-           'libunity',
-           ('libindicator', 'libindicator-gtk2'),
-           ('libappindicator-activate', 'libappindicator-activate-gtk2')]
+           'google-breakpad-git',
+           'libunity']
 
 build_prefix = 'extra-x86_64'
 pre_build = aur_pre_build

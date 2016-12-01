@@ -1,0 +1,242 @@
+diff --git a/Telegram/SourceFiles/platform/linux/linux_libs.cpp b/Telegram/SourceFiles/platform/linux/linux_libs.cpp
+index a9731ce..2bb4468 100644
+--- a/Telegram/SourceFiles/platform/linux/linux_libs.cpp
++++ b/Telegram/SourceFiles/platform/linux/linux_libs.cpp
+@@ -45,6 +45,7 @@ bool loadLibrary(QLibrary &lib, const char *name, int version) {
+ }
+ 
+ bool setupGtkBase(QLibrary &lib_gtk) {
++	load(lib_gtk, "gdk_set_allowed_backends", gdk_set_allowed_backends);
+ 	if (!load(lib_gtk, "gtk_init_check", gtk_init_check)) return false;
+ 	if (!load(lib_gtk, "gtk_menu_new", gtk_menu_new)) return false;
+ 	if (!load(lib_gtk, "gtk_menu_get_type", gtk_menu_get_type)) return false;
+@@ -106,6 +107,10 @@ bool setupGtkBase(QLibrary &lib_gtk) {
+ 	if (!load(lib_gtk, "g_slist_free", g_slist_free)) return false;
+ 
+ 	DEBUG_LOG(("Library gtk functions loaded!"));
++	if (gdk_set_allowed_backends != nullptr) {
++		gdk_set_allowed_backends("x11");
++	}
++
+ 	if (!gtk_init_check(0, 0)) {
+ 		gtk_init_check = nullptr;
+ 		DEBUG_LOG(("Failed to gtk_init_check(0, 0)!"));
+@@ -128,6 +133,7 @@ bool setupAppIndicator(QLibrary &lib_indicator) {
+ 
+ } // namespace
+ 
++f_gdk_set_allowed_backends gdk_set_allowed_backends = nullptr;
+ f_gtk_init_check gtk_init_check = nullptr;
+ f_gtk_menu_new gtk_menu_new = nullptr;
+ f_gtk_menu_get_type gtk_menu_get_type = nullptr;
+diff --git a/Telegram/SourceFiles/platform/linux/linux_libs.h b/Telegram/SourceFiles/platform/linux/linux_libs.h
+index bc3dce6..07c5042 100644
+--- a/Telegram/SourceFiles/platform/linux/linux_libs.h
++++ b/Telegram/SourceFiles/platform/linux/linux_libs.h
+@@ -52,6 +52,9 @@ bool load(QLibrary &lib, const char *name, Function &func) {
+     return false;
+ }
+ 
++typedef void (*f_gdk_set_allowed_backends)(const gchar *backends);
++extern f_gdk_set_allowed_backends gdk_set_allowed_backends;
++
+ typedef gboolean (*f_gtk_init_check)(int *argc, char ***argv);
+ extern f_gtk_init_check gtk_init_check;
+ 
+diff --git a/Telegram/SourceFiles/stdafx.cpp b/Telegram/SourceFiles/stdafx.cpp
+index 06bd4af..755d97f 100644
+--- a/Telegram/SourceFiles/stdafx.cpp
++++ b/Telegram/SourceFiles/stdafx.cpp
+@@ -34,6 +34,7 @@ Q_IMPORT_PLUGIN(QGenericEnginePlugin)
+ #elif defined Q_OS_LINUX // Q_OS_LINUX
+ Q_IMPORT_PLUGIN(QWebpPlugin)
+ Q_IMPORT_PLUGIN(QXcbIntegrationPlugin)
++Q_IMPORT_PLUGIN(QWaylandIntegrationPlugin)
+ Q_IMPORT_PLUGIN(QConnmanEnginePlugin)
+ Q_IMPORT_PLUGIN(QGenericEnginePlugin)
+ Q_IMPORT_PLUGIN(QNetworkManagerEnginePlugin)
+diff --git a/Telegram/gyp/Telegram.gyp b/Telegram/gyp/Telegram.gyp
+index f6609c1..ef6fc5e 100644
+--- a/Telegram/gyp/Telegram.gyp
++++ b/Telegram/gyp/Telegram.gyp
+@@ -78,21 +78,18 @@
+     ],
+ 
+     'defines': [
+-      'AL_LIBTYPE_STATIC',
+       '<!@(python -c "for s in \'<(travis_defines)\'.split(\',\'): print(s)")',
++      '__STDC_FORMAT_MACROS',
++      'TDESKTOP_DISABLE_AUTOUPDATE',
++      'TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME',
+     ],
+ 
+     'include_dirs': [
+       '<(src_loc)',
+       '<(SHARED_INTERMEDIATE_DIR)',
+-      '<(libs_loc)/breakpad/src',
+-      '<(libs_loc)/lzma/C',
+-      '<(libs_loc)/libexif-0.6.20',
+-      '<(libs_loc)/zlib-1.2.8',
+-      '<(libs_loc)/ffmpeg',
+-      '<(libs_loc)/openal-soft/include',
+       '<(minizip_loc)',
+       '<(sp_media_key_tap_loc)',
++      '/usr/include/breakpad',
+     ],
+     'sources': [
+       '<@(qrc_files)',
+diff --git a/Telegram/gyp/qt.gypi b/Telegram/gyp/qt.gypi
+index 24ededb..cdb18f5 100644
+--- a/Telegram/gyp/qt.gypi
++++ b/Telegram/gyp/qt.gypi
+@@ -38,7 +38,6 @@
+             'Qt5Network',
+             'Qt5Widgets',
+             'Qt5Gui',
+-            'qtharfbuzzng',
+           ],
+           'qt_version%': '<(qt_version)',
+           'linux_path_qt%': '/usr/local/tdesktop/Qt-<(qt_version)',
+@@ -91,19 +90,9 @@
+               '<@(qt_libs)',
+               'Qt5DBus',
+               'Qt5Core',
+-              'qtpcre',
+-              'Xi',
+-              'Xext',
+-              'Xfixes',
+-              'SM',
+-              'ICE',
+-              'fontconfig',
+-              'expat',
+-              'freetype',
+-              'xcb-shm',
+-              'xcb-xfixes',
+-              'xcb-render',
+-              'xcb-static',
++              'Qt5WaylandClient',
++              'qwayland-generic',
++              'qwayland-egl',
+             ],
+           }],
+         ],
+@@ -208,7 +197,6 @@
+         '<(qt_loc)/plugins/platforminputcontexts',
+       ],
+       'libraries': [
+-        '<(linux_path_xkbcommon)/lib/libxkbcommon.a',
+         '<@(qt_libs_release)',
+         '<(linux_lib_ssl)',
+         '<(linux_lib_crypto)',
+@@ -221,12 +209,32 @@
+         'gthread-2.0',
+         'glib-2.0',
+         'pthread',
++        
++        'Xi',
++        'Xext',
++        'Xfixes',
++        'SM',
++        'ICE',
++        'fontconfig',
++        'expat',
++        'freetype',
++        
++        '<!(pkg-config 2> /dev/null --libs xkbcommon xkbcommon-x11)',
++        '<!(pkg-config 2> /dev/null --libs harfbuzz)',
++        '<!(pkg-config 2> /dev/null --libs libpcre16)',
++        '<!(pkg-config 2> /dev/null --libs zlib)',
++        '<!(pkg-config 2> /dev/null --libs libpng16)',
++        '<!(pkg-config 2> /dev/null --libs libjpeg)',
++        '<!(pkg-config 2> /dev/null --libs libwebp)',
++        '<!(pkg-config 2> /dev/null --libs xcb-shm xcb-xfixes xcb-render xcb-renderutil xcb-sync xcb-randr xcb-xinerama xcb-xkb xcb-icccm xcb-image xcb-shape xcb-keysyms xcb-util)',
++        '<!(pkg-config 2> /dev/null --libs wayland-client wayland-cursor)',
++        'proxy',
++        'GL',
+       ],
+       'include_dirs': [
+         '<(qt_loc)/mkspecs/linux-g++',
+       ],
+       'ldflags': [
+-        '-static-libstdc++',
+         '-pthread',
+         '-g',
+         '-rdynamic',
+diff --git a/Telegram/gyp/telegram_linux.gypi b/Telegram/gyp/telegram_linux.gypi
+index d07b592..6e6bd91 100644
+--- a/Telegram/gyp/telegram_linux.gypi
++++ b/Telegram/gyp/telegram_linux.gypi
+@@ -21,11 +21,19 @@
+   'conditions': [[ 'build_linux', {
+     'variables': {
+       'pkgconfig_libs': [
+-# In order to work libxkbcommon must be linked statically,
+-# PKGCONFIG links it like "-L/usr/local/lib -lxkbcommon"
+-# which makes a dynamic link which leads to segfault in
+-# QApplication() -> createPlatformIntegration -> QXcbIntegrationPlugin::create
+-        #'xkbcommon',
++        'liblzma',
++        'openal',
++        'libavformat',
++        'libavcodec',
++        'libswresample',
++        'libswscale',
++        'libavutil',
++        'opus',
++        'libva-x11',
++        'libva-drm',
++        'libva',
++        'libdrm',
++        'zlib',
+       ],
+       'linux_path_ffmpeg%': '/usr/local',
+       'linux_path_openal%': '/usr/local',
+@@ -34,44 +42,24 @@
+       'linux_path_breakpad%': '<(libs_loc)/breakpad',
+     },
+     'include_dirs': [
+-      '/usr/local/include',
+-      '<(linux_path_ffmpeg)/include',
+-      '<(linux_path_openal)/include',
+-      '<(linux_path_breakpad)/include/breakpad',
++      '/usr/include',
+     ],
+     'library_dirs': [
+-      '/usr/local/lib',
+-      '<(linux_path_ffmpeg)/lib',
+-      '<(linux_path_openal)/lib',
+-      '<(linux_path_libexif_lib)',
+-      '<(linux_path_va)/lib',
+-      '<(linux_path_breakpad)/lib',
++      '/usr/lib',
+     ],
+     'libraries': [
+       'breakpad_client',
+       'composeplatforminputcontextplugin',
+       'ibusplatforminputcontextplugin',
+       'fcitxplatforminputcontextplugin',
+-      'liblzma.a',
+-      'libopenal.a',
+-      'libavformat.a',
+-      'libavcodec.a',
+-      'libswresample.a',
+-      'libswscale.a',
+-      'libavutil.a',
+-      'libopus.a',
+-      'libva-x11.a',
+-      'libva-drm.a',
+-      'libva.a',
+-      'libdrm.a',
+-      'libz.a',
+-#      '<!(pkg-config 2> /dev/null --libs <@(pkgconfig_libs))',
++      '<!(pkg-config 2> /dev/null --libs <@(pkgconfig_libs))',
+     ],
+     'cflags_cc': [
+       '<!(pkg-config 2> /dev/null --cflags appindicator-0.1)',
+       '<!(pkg-config 2> /dev/null --cflags gtk+-2.0)',
+       '<!(pkg-config 2> /dev/null --cflags glib-2.0)',
+       '<!(pkg-config 2> /dev/null --cflags dee-1.0)',
++      '<!(pkg-config 2> /dev/null --cflags <@(pkgconfig_libs))',
+     ],
+     'configurations': {
+       'Release': {

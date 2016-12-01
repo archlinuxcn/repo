@@ -1,0 +1,13 @@
+post_install() {
+if [ ! -f /usr/bin/darkmod ]; then
+  ln -s /opt/darkmod/thedarkmod.x86 /usr/bin/darkmod
+else
+  rm -f /usr/bin/darkmod
+  ln -s /opt/darkmod/thedarkmod.x86 /usr/bin/darkmod
+fi
+echo "User must be add to the 'games' group to be able to play"
+}
+
+post_upgrade() {
+  post_install
+}

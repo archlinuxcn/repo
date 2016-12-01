@@ -1,26 +1,8 @@
 # Colored makepkg-like functions
-msg_blue() {
-  printf "${blue}==>${bold} $1${all_off}\n"
-}
-
 note() {
     printf "${blue}==>${yellow} NOTE:${bold} $1${all_off}\n"
 }
 
-_update() {
-  msg_blue "Updating desktop MIME database..."
-  update-desktop-database -q
-}
-
 post_install() {
-  _update
   note "Custom launch flags can be put in: ~/.config/atom-editor-flags.conf"
-}
-
-post_upgrade() {
-  _update
-}
-
-post_remove() {
-  _update
 }

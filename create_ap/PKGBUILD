@@ -1,7 +1,8 @@
-# Maintainer:  Xiaoxiao Pu <i@xiaoxiao.im>
+# Maintainer: NicoHood <aur {at} nicohood {dot} de>
+# Contributor: Xiaoxiao Pu <i@xiaoxiao.im>
 
 pkgname=create_ap
-pkgver=r191.69541cb
+pkgver=0.4.2
 pkgrel=1
 pkgdesc="A shell script to create a NATed/Bridged Software Access Point"
 arch=('any')
@@ -10,21 +11,12 @@ license=('BSD')
 depends=('bash' 'hostapd' 'iproute2' 'iw' 'dnsmasq'
          'iptables' 'util-linux' 'procps-ng')
 optdepends=('haveged: boost low entropy')
-makedepends=('git')
-backup=('usr/lib/systemd/system/create_ap.service')
-install=create_ap.install
-source=("git+https://github.com/oblique/create_ap")
-sha256sums=('SKIP')
-
-pkgver() {
-    cd "${srcdir}/create_ap"
-    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
-}
+makedepends=('')
+backup=('etc/create_ap.conf')
+source=("https://github.com/oblique/${pkgname}/archive/v${pkgver}.tar.gz")
+sha512sums=('4c252ad17f07a36cee82bb1b6b49d4f7024b32d52e80b4e95d77b70803575005e37ee086c161d12070722de1a250fcb76cca6165792302869fd27b69ceca93b3')
 
 package() {
-    cd "${srcdir}/create_ap/"
-    install -Dm755 "create_ap" "${pkgdir}/usr/bin/create_ap"
-    install -Dm644 "bash_completion" "${pkgdir}/usr/share/bash-completion/completions/create_ap"
-    install -Dm644 "LICENSE" "${pkgdir}/usr/share/licenses/create_ap/LICENSE"
-    install -Dm644 "create_ap.service" "${pkgdir}/usr/lib/systemd/system/create_ap.service"
+    make -C "${pkgname}-${pkgver}" DESTDIR="${pkgdir}" install
+    install -Dm 644 "${pkgname}-${pkgver}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }

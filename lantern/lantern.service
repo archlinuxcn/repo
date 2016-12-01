@@ -5,6 +5,8 @@ After=network.target
 [Service]
 ExecStart=/usr/bin/lantern -headless=true
 User=lantern
+StandardError=/dev/null
+StandardOutput=/dev/null
 
 [Install]
 WantedBy=multi-user.target

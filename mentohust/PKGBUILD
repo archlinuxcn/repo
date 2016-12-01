@@ -1,23 +1,26 @@
+# Maintainer: SY Zhang <lastavengers@archlinuxcn.org>
 # Contributor: Shen Miren <dickeny@gmail.com>
 # Contributor: renyuneyun <renyuneyun@gmail.com>
+
 pkgname=mentohust
 pkgver=0.3.1
-pkgrel=4
+pkgrel=5
 pkgdesc="A Ruijie and Cernet supplicant"
 arch=('i686' 'x86_64')
-url="http://mentohust.googlecode.com"
+url="https://code.google.com/archive/p/mentohust/"
 license=('GPL')
 depends=('libpcap')
 optdepends=('libnotify')
-conflicts=()
+conflicts=('mentohust-git')
 provides=()
 backup=('etc/mentohust.conf')
 install=$pkgname.install
-source=(http://mentohust.googlecode.com/files/${pkgname}-${pkgver}.tar.gz
-		${pkgname}.service)
+source=("https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/mentohust/${pkgname}-${pkgver}.tar.gz"
+		"${pkgname}.service")
 	
-md5sums=('c7033ba8d8e75294924ed03f4b7b0c45'
-		 'bd7b05c0ff9442aa9ee96d29599985fc')
+sha256sums=('e7d15008487d1130c90037581f8243ac145d0114006a08e3f0ac00751b2e1c6a'
+            '1a6bacff66f9469f3b3d81772c5b989cbb75f323c64c7aa7478c58199e322db4')
+
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
@@ -26,8 +29,8 @@ build() {
 
 package() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
-	make || return 1
-	make install DESTDIR="${pkgdir}" || return 1
+	make
+	make install DESTDIR="${pkgdir}"
 	cd -
 
 	# install systemd service

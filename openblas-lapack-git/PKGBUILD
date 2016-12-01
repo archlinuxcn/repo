@@ -6,7 +6,7 @@
 pkgbase=openblas-git
 pkgname=(openblas-git openblas-lapack-git)
 _pkgname=OpenBLAS
-pkgver=v0.2.17.r74.g9253dad
+pkgver=v0.2.17.r238.gf8a6e6c
 pkgrel=1
 pkgdesc="Optimized BLAS library based on GotoBLAS2 1.13 BSD"
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -24,6 +24,7 @@ _config=(
   'SMP=1'
   'USE_OPENMP=1'
   'USE_THREAD=1'
+  'NUM_THREADS=8'
   'MAJOR_VERSION=3'
   'NO_LAPACK=0'
   'GEMM_MULTITHREADING_THRESHOLD=50'
@@ -66,13 +67,19 @@ build() {
 
   # The OpenBLAS build system doesn't handle update very well.
   git clean -fdx
-  make "${_config[@]}" libs netlib shared
+  make "${_config[@]}" libs netlib shared 2> error.log || {
+    cat error.log
+    return 1
+  }
 }
 
 package_openblas-git() {
   cd "${_pkgname}"
 
-  make "${_config[@]}" PREFIX="${pkgdir}/usr" install
+  make "${_config[@]}" PREFIX="${pkgdir}/usr" install &> install.log || {
+    cat install.log
+    return 1
+  }
 
   # Install license
   install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
@@ -86,7 +93,7 @@ package_openblas-git() {
 
 package_openblas-lapack-git() {
   depends=('openblas-git')
-  provides=('blas=3.6.0' 'lapack=3.6.0' 'cblas')
+  provides=('openblas-lapack' 'blas=3.6.0' 'lapack=3.6.0' 'cblas')
   conflicts=('blas' 'lapack' 'cblas')
   rm -rf pkg
   mkdir -p "${pkgdir}/usr/"{include,lib}/

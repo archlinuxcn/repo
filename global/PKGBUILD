@@ -3,21 +3,20 @@
 # Contributor: Matthias Meulien orontee@gmail.com
 
 pkgname=global
-pkgver=6.5.4
-pkgrel=2
+pkgver=6.5.5
+pkgrel=1
 pkgdesc="A source code tag system"
 arch=('i686' 'x86_64')
 url="http://www.gnu.org/software/global/"
 license=('GPL')
 depends=('libltdl' 'bash' 'perl')
 makedepends=("python2" "python2-pygments")
-optdepends=('idutils' 'ctags' 'python-pygments')
+optdepends=('idutils' 'ctags' 'python-pygments' 'emacs' 'vim')
 makedepends=('python')
 options=(!emptydirs !libtool)
-install=global.install
 source=(http://tamacom.com/global/${pkgname}-${pkgver}.tar.gz)
-md5sums=('a6693598b4cd0890c648aa2cbfa92fe7')
-sha256sums=('af16e0a686a46f759156cb685e25f345680703f43f93af1ce8d834caaf541da6')
+md5sums=('ee1c0ac678385fed77c90369a1ccfe65')
+sha256sums=('bc5b42a2c58d1570ff6b6acf7479c3e1609fe0ec8b44e5baa5290dc47148cf7b')
 
 prepare() {
   cd "${srcdir}/${pkgname}-${pkgver}"
@@ -46,5 +45,8 @@ package() {
   make DESTDIR="${pkgdir}" install
 
   install -d "${pkgdir}/usr/share/emacs/site-lisp"
-  ln -s ../../gtags/gtags.el "${pkgdir}/usr/share/emacs/site-lisp/gtags.el"
+  mv "${pkgdir}/usr/share/gtags/gtags.el" "${pkgdir}/usr/share/emacs/site-lisp/gtags.el"
+  install -d "${pkgdir}/usr/share/vim/vimfiles/plugin"
+  mv "${pkgdir}/usr/share/gtags/gtags.vim" "${pkgdir}/usr/share/vim/vimfiles/plugin/gtags.vim"
+  mv "${pkgdir}/usr/share/gtags/gtags-cscope.vim" "${pkgdir}/usr/share/vim/vimfiles/plugin/gtags-cscope.vim"
 }

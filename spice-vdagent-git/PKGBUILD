@@ -1,0 +1,64 @@
+# Maintainer:  Peter Mattern <pmattern at arcor dot de>
+
+_pkgname=spice-vdagent
+pkgname=$_pkgname-git
+pkgver=0.16.0.32.gb7e6c56
+pkgrel=1
+pkgdesc='SPICE VDAgent for Linux'
+arch=('i686' 'x86_64')
+url='http://www.spice-space.org'
+license=('GPL')
+depends=('glib2' 'dbus' 'alsa-lib' 'libpciaccess' 'libxfixes' 'libxrandr' 'libxinerama')
+makedepends=('git' 'spice-protocol')
+provides=("$_pkgname")
+conflicts=("$_pkgname")
+source=("$_pkgname::git://anongit.freedesktop.org/spice/linux/vd_agent"
+         spice-vdagentd.conf.sample)
+sha256sums=("SKIP"
+            ab5231eb6375fee5baaf10a59559e7dea58def158fa0ab8e125e9b7340c5e4e8)
+
+pkgver() {
+    cd $_pkgname
+    git describe --always | sed 's:^spice-vdagent.::;s:-:.:g'
+}
+
+prepare() {
+
+    # adjustment of several paths to the habits of Arch Linux
+
+    cd $_pkgname
+
+    # don't expect file providing command line options for spice-vdagentd in /etc/sysconfig
+    sed -i 's:etc/sysconfig.*$:etc/spice/spice-vdagentd.conf:' data/spice-vdagentd.service
+
+    # /bin and /usr/sbin should be avoided
+    sed -i 's:bin.rm:usr/bin/rm:;s:sbin:bin:' data/spice-vdagentd.service
+
+    # place runtime data directory in /run instead of /var/run
+    sed -i 's:$(mkdir_p) $(DESTDIR)$(localstatedir)/run/spice-vdagentd:true:' Makefile.am
+    sed -i 's:/var::' data/tmpfiles.d/spice-vdagentd.conf
+
+    # place udev rules file in /usr/lib instead of /lib
+    sed -i 's:udevrulesdir = /lib:udevrulesdir = /usr/lib:' Makefile.am
+
+}
+
+build() {
+    cd $_pkgname
+    autoreconf -fi
+    ./configure \
+        --prefix=/usr \
+        --sysconfdir=/etc \
+        --sbindir=/usr/bin \
+        --localstatedir=/var \
+        --with-init-script=systemd
+    make
+}
+
+package() {
+    cd $_pkgname
+    make DESTDIR=$pkgdir install
+
+    # sample configuration file to pass command line options to spice-vdagentd
+    install -Dm644 -t $pkgdir/usr/share/doc/spice-vdagent/ $srcdir/spice-vdagentd.conf.sample
+}

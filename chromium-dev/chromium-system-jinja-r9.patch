@@ -1,0 +1,72 @@
+--- third_party/WebKit/Source/bindings/scripts/scripts.gyp.orig	2014-08-19 09:55:10.330972228 +0000
++++ third_party/WebKit/Source/bindings/scripts/scripts.gyp	2014-08-19 09:55:26.387286232 +0000
+@@ -54,7 +54,6 @@
+     'actions': [{
+       'action_name': 'cache_jinja_templates',
+       'inputs': [
+-        '<@(jinja_module_files)',
+         'code_generator_v8.py',
+         '<@(code_generator_template_files)',
+       ],
+--- third_party/WebKit/Source/build/scripts/scripts.gypi.orig	2014-08-19 10:00:00.216521733 +0000
++++ third_party/WebKit/Source/build/scripts/scripts.gypi	2014-08-19 10:00:11.464735099 +0000
+@@ -2,10 +2,6 @@
+ {
+     'variables': {
+         'scripts_for_in_files': [
+-            # jinja2/__init__.py contains version string, so sufficient as
+-            # dependency for whole jinja2 package
+-            '<(DEPTH)/third_party/jinja2/__init__.py',
+-            '<(DEPTH)/third_party/markupsafe/__init__.py',  # jinja2 dep
+             'hasher.py',
+             'in_file.py',
+             'in_generator.py',
+--- third_party/WebKit/Source/platform/inspector_protocol/protocol.gyp.orig	2016-03-04 20:32:22.679406333 +0100
++++ third_party/WebKit/Source/platform/inspector_protocol/protocol.gyp	2016-03-04 20:32:48.091957337 +0100
+@@ -5,11 +5,6 @@
+ {
+   'variables': {
+     'blink_platform_output_dir': '<(SHARED_INTERMEDIATE_DIR)/blink/platform',
+-    'jinja_module_files': [
+-      # jinja2/__init__.py contains version string, so sufficient for package
+-      '<(DEPTH)/third_party/jinja2/__init__.py',
+-      '<(DEPTH)/third_party/markupsafe/__init__.py',  # jinja2 dep
+-    ],
+   },
+ 
+   'targets': [
+@@ -24,7 +19,6 @@
+         {
+           'action_name': 'generateInspectorProtocolBackendSources',
+           'inputs': [
+-            '<@(jinja_module_files)',
+             # The python script in action below.
+             'CodeGenerator.py',
+             # Input files for the script.
+
+@@ -24,7 +20,6 @@
+         {
+           'action_name': 'generateInspectorProtocolBackendSources',
+           'inputs': [
+-            '<@(jinja_module_files)',
+             # The python script in action below.
+             'CodeGenerator.py',
+             # Input files for the script.
+--- third_party/WebKit/Source/bindings/scripts/scripts.gypi.orig	2016-03-04 20:40:25.624543121 +0100
++++ third_party/WebKit/Source/bindings/scripts/scripts.gypi	2016-03-04 20:40:43.163993076 +0100
+@@ -6,15 +6,7 @@
+   'variables': {
+     'bindings_scripts_dir': '.',
+     'bindings_scripts_output_dir': '<(SHARED_INTERMEDIATE_DIR)/blink/bindings/scripts',
+-    'jinja_module_files': [
+-      # jinja2/__init__.py contains version string, so sufficient for package
+-      '<(DEPTH)/third_party/jinja2/__init__.py',
+-      '<(DEPTH)/third_party/markupsafe/__init__.py',  # jinja2 dep
+-    ],
+     'idl_lexer_parser_files': [
+-      # PLY (Python Lex-Yacc)
+-      '<(DEPTH)/third_party/ply/lex.py',
+-      '<(DEPTH)/third_party/ply/yacc.py',
+       # Web IDL lexer/parser (base parser)
+       '<(DEPTH)/tools/idl_parser/idl_lexer.py',
+       '<(DEPTH)/tools/idl_parser/idl_node.py',

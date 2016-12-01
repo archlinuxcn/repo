@@ -17,34 +17,19 @@ if [[ $(uname -m) = x86_64 ]]; then
     _64=true
 fi
 
-_update() {
-    msg_blue "Updating desktop MIME database..."
-    update-desktop-database -q
-    msg_blue "Updating MIME database..."
-    update-mime-database usr/share/mime >/dev/null
-    msg_blue "Updating icon cache..."
-    xdg-icon-resource forceupdate &>/dev/null
-}
-
-post_install() {
-    _update
+post_install() {    
     if [[ $_64 ]]; then
-        note "The binary is called 'google-earth'." "1"
+        note "The launcher is called 'google-earth'." "1"
         note "If experiencing graphical corruption:
           $ rm -r ~/.googleearth/Cache/" "2"
     else
-        note "The binary is called 'google-earth'."
+        note "The launcher is called 'google-earth'."
     fi
 }
 
-post_upgrade() {
-    _update
+post_upgrade() {    
     if [[ $_64 ]]; then
         note "If experiencing graphical corruption:
           $ rm -r ~/.googleearth/Cache/"
     fi
-}
-
-post_remove() {
-    _update
 }

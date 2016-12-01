@@ -4,17 +4,17 @@
 # Contributor: Florian Pritz <bluewind at jabber dot ccc dot de>
 pkgname=wireshark-gtk2
 pkgbase=wireshark
-pkgver=2.0.2
-pkgrel=3
+pkgver=2.2.2
+pkgrel=1
 arch=('i686' 'x86_64')
 license=('GPL2')
-makedepends=('c-ares' 'geoip' 'gtk2' 'krb5' 'libpcap' 'bash'
+makedepends=('c-ares' 'geoip' 'qt5-tools' 'qt5-multimedia' 'gtk3' 'krb5' 'libpcap' 'bash' 'libssh'
              'gnutls' 'portaudio' 'lua52' 'python' 'desktop-file-utils' 'hicolor-icon-theme')
 options=(!emptydirs)
-url='http://www.wireshark.org/'
-source=(http://www.wireshark.org/download/src/${pkgbase}-${pkgver}.tar.bz2
+url='https://www.wireshark.org/'
+source=(https://www.wireshark.org/download/src/${pkgbase}-${pkgver}.tar.bz2
         do_not_use_svn_version.patch)
-sha1sums=('6a5c18710d6da04ddc84975cdc840812e672c0f4'
+sha1sums=('b92a292b95e2ea010014364ff513d86afdc8e5a6'
           '489a176a7b90f7ae6f0985510c0c9038de54d9d6')
 
 prepare() {
@@ -47,7 +47,6 @@ build() {
 package() {
   pkgdesc='a free network protocol analyzer for Unix/Linux and Windows - GTK 2 frontend'
   depends=('desktop-file-utils' 'gtk2' 'portaudio' 'wireshark-cli' 'wireshark-common')
-  install=wireshark-gui.install
 
   cd ${pkgbase}-${pkgver}
 

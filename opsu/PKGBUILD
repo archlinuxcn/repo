@@ -1,16 +1,18 @@
 # Maintainer: Lucki <Lucki at holarse-linuxgaming dot de>
+# Contributor in comments: Misc <https://aur.archlinux.org/account/misc/>
+# Contributor in comments: SajeOne <https://aur.archlinux.org/account/SajeOne/>
 
 pkgname=opsu
 pkgver=0.12.1
-pkgrel=1
+pkgrel=3
 pkgdesc="An open source osu!-client written in Java."
 arch=('any')
 url="https://itdelatrisu.github.io/opsu/"
 license=('GPL3')
 #changelog=.CHANGELOG
-depends=('java-environment' 'bash')
+depends=('java-environment' 'bash' 'xorg-xrandr')
 makedepends=('java-environment' 'java-web-start' 'gradle' 'gendesk' 'git')
-provides=('opsu')
+provides=('opsu-git')
 conflicts=('opsu-git')
 source=( ${pkgname}::git://github.com/itdelatrisu/opsu.git#tag=${pkgver}
          opsu.sh )

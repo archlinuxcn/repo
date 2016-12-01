@@ -1,7 +1,7 @@
 # Maintainer: Danny Dutton <duttondj@vt.edu>
 
 pkgname="qt-installer-framework"
-pkgver=2.0.1
+pkgver=2.0.3
 pkgrel=2
 _qtver=5.4.2
 pkgdesc="The Qt Installer Framework used for the Qt SDK installer."
@@ -11,8 +11,8 @@ license=('FDL' 'LGPL')
 makedepends=("qt5-base>=${_qtver}" "qt5-tools>=${_qtver}" "qt5-declarative>=${_qtver}")
 groups=('qt' 'qt5')
 _pkgfqn="${pkgname}-opensource-${pkgver}-src"
-source=("http://download.qt.io/official_releases/${pkgname}/${pkgver}/${_pkgfqn}.tar.gz")
-md5sums=('0069845a6a37bccfc814a8d5ca7f3b3b')
+source=("https://download.qt.io/official_releases/${pkgname}/${pkgver}/${_pkgfqn}.tar.gz")
+md5sums=('643014f53c31e8d1064812706a1f976d')
 
 build() {
 	cd "${srcdir}/${_pkgfqn}"

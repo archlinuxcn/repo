@@ -9,6 +9,7 @@ def pre_build():
 
 def post_build():
   pypi_post_build()
+  update_aur_repo()
 
 if __name__ == '__main__':
   single_main()

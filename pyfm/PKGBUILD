@@ -2,7 +2,7 @@
 
 pkgname=('pyfm' 'python2-pyfm')
 pkgver=0.2.4
-pkgrel=1
+pkgrel=2
 pkgdesc="A Tiny and Smart Terminal Player of douban.fm."
 url="https://github.com/skyline75489/pyfm"
 depends=('mpg123')

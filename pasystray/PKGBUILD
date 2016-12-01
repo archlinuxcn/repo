@@ -1,39 +1,57 @@
 # Maintainer: Christoph Gysin <christoph.gysin@gmail.com>
-pkgname=pasystray
-pkgver=0.5.2
-pkgrel=2
+pkgname=(pasystray pasystray-gtk2)
+_pkgname=pasystray
+pkgver=0.6.0
+pkgrel=1
 pkgdesc="PulseAudio system tray (a replacement for padevchooser)"
 arch=('i686' 'x86_64')
 url="https://github.com/christophgysin/pasystray"
 license=('LGPL')
 groups=('multimedia')
-depends=('libpulse' 'gtk3' 'libnotify' 'avahi' 'libx11' 'gnome-icon-theme'
+depends=('libpulse' 'libnotify' 'avahi' 'libx11' 'gnome-icon-theme'
     'gtk-update-icon-cache')
-makedepends=('pkg-config' )
+makedepends=('pkg-config' 'gtk2' 'gtk3')
 optdepends=(
+    'pulseaudio: To control a local pulseaudio instance'
     'paman: Launch PulseAudio manager from tray icon'
     'pavucontrol: Launch PulseAudio mixer from tray icon'
     'pavumeter: Launch PulseAudio volume meter from tray icon'
     'paprefs: Launch PulseAudio preferences from tray icon'
 )
-install='pasystray.install'
-source=("https://github.com/christophgysin/${pkgname}/archive/${pkgname}-${pkgver}.tar.gz")
-md5sums=('0ea894a47a8ab10b830051e3bd89294d')
+source=($_pkgname-$pkgver.tar.gz::https://github.com/christophgysin/$_pkgname/archive/$pkgver.tar.gz)
+md5sums=('c7467ac2b75290bd086fc60f8243ad77')
+
 
 build() {
-    cd $srcdir/$pkgname-$pkgname-$pkgver
+    cp -r $srcdir/$_pkgname{,-gtk2}-$pkgver
 
-    aclocal
-    autoconf
-    autoheader
-    automake --add-missing
-    ./configure \
-        --prefix=/usr \
-        --sysconfdir=/etc
-    make
+    for gtk in "" 2; do
+        cd $srcdir/$_pkgname${gtk:+-gtk$gtk}-$pkgver
+
+        autoreconf -is
+        ./configure \
+            --prefix=/usr \
+            --sysconfdir=/etc \
+            ${gtk:+--with-gtk=$gtk}
+        make
+    done
 }
 
-package() {
-    cd $srcdir/$pkgname-$pkgname-$pkgver
+package_pasystray-gtk2() {
+    depends+=(gtk2)
+    cd $srcdir/$pkgname-$pkgver
+
+    # hack: do not require gtk-3
+    sed -i \
+        -e '/<requires /d' \
+        -e '/license_type/d' \
+        src/pasystray.glade
+
+    make DESTDIR="$pkgdir/" install
+}
+
+package_pasystray() {
+    depends+=(gtk3)
+    cd $srcdir/$_pkgname-$pkgver
     make DESTDIR="$pkgdir/" install
 }

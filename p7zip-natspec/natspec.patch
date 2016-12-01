@@ -1,5 +1,5 @@
 diff --git a/CPP/7zip/Archive/Zip/ZipIn.cpp b/CPP/7zip/Archive/Zip/ZipIn.cpp
-index 345fbf5..2ef43a8 100644
+index 2ba7e3f..7e795b1 100644
 --- a/CPP/7zip/Archive/Zip/ZipIn.cpp
 +++ b/CPP/7zip/Archive/Zip/ZipIn.cpp
 @@ -2,6 +2,9 @@
@@ -33,7 +33,7 @@ index 345fbf5..2ef43a8 100644
  }
  
 @@ -445,6 +454,19 @@ void CInArchive::ReadFileName(unsigned size, AString &s)
-   s.ReleaseBuffer();
+   s.ReleaseBuf_CalcLen(size);
  }
  
 +void CInArchive::RecodeFileName(CItem &item) {
@@ -52,15 +52,15 @@ index 345fbf5..2ef43a8 100644
  bool CInArchive::ReadExtra(unsigned extraSize, CExtraBlock &extraBlock,
      UInt64 &unpackSize, UInt64 &packSize, UInt64 &localHeaderOffset, UInt32 &diskStartNumber)
  {
-@@ -565,6 +587,7 @@ bool CInArchive::ReadLocalItem(CItemEx &item)
+@@ -578,6 +600,7 @@ bool CInArchive::ReadLocalItem(CItemEx &item)
+     HeadersWarning = true;
    }
-   if (item.Name.Len() != nameSize)
-     return false;
+   
 +  RecodeFileName(item);
    return item.LocalFullHeaderSize <= ((UInt32)1 << 16);
  }
  
-@@ -738,6 +761,7 @@ HRESULT CInArchive::ReadCdItem(CItemEx &item)
+@@ -799,6 +822,7 @@ HRESULT CInArchive::ReadCdItem(CItemEx &item)
    item.ExternalAttrib = Get32(p + 34);
    item.LocalHeaderPos = Get32(p + 38);
    ReadFileName(nameSize, item.Name);
@@ -69,7 +69,7 @@ index 345fbf5..2ef43a8 100644
    if (extraSize > 0)
    {
 diff --git a/CPP/7zip/Archive/Zip/ZipIn.h b/CPP/7zip/Archive/Zip/ZipIn.h
-index f6b349b..834d3f5 100644
+index 734d3bc..a508fef 100644
 --- a/CPP/7zip/Archive/Zip/ZipIn.h
 +++ b/CPP/7zip/Archive/Zip/ZipIn.h
 @@ -184,6 +184,9 @@ public:
@@ -83,10 +83,10 @@ index f6b349b..834d3f5 100644
    
  }}
 diff --git a/CPP/7zip/Archive/Zip/ZipItem.cpp b/CPP/7zip/Archive/Zip/ZipItem.cpp
-index 3aba259..f6ceef8 100644
+index 12bc8ad..cf72102 100644
 --- a/CPP/7zip/Archive/Zip/ZipItem.cpp
 +++ b/CPP/7zip/Archive/Zip/ZipItem.cpp
-@@ -10,6 +10,8 @@
+@@ -15,6 +15,8 @@
  namespace NArchive {
  namespace NZip {
  
@@ -96,10 +96,10 @@ index 3aba259..f6ceef8 100644
  
  bool CExtraSubBlock::ExtractNtfsTime(unsigned index, FILETIME &ft) const
 diff --git a/CPP/7zip/Archive/Zip/ZipItem.h b/CPP/7zip/Archive/Zip/ZipItem.h
-index d50c3ae..d770907 100644
+index 5f078b6..1e01583 100644
 --- a/CPP/7zip/Archive/Zip/ZipItem.h
 +++ b/CPP/7zip/Archive/Zip/ZipItem.h
-@@ -15,6 +15,8 @@
+@@ -14,6 +14,8 @@
  namespace NArchive {
  namespace NZip {
  
@@ -154,7 +154,7 @@ index 2a1ba2c..c720bd3 100644
  {
    m_CurPos += distanceToMove; // test overflow
 diff --git a/CPP/7zip/Archive/Zip/ZipOut.h b/CPP/7zip/Archive/Zip/ZipOut.h
-index eaaa032..d3a7f33 100644
+index 056d0d0..a2bb3af 100644
 --- a/CPP/7zip/Archive/Zip/ZipOut.h
 +++ b/CPP/7zip/Archive/Zip/ZipOut.h
 @@ -81,6 +81,9 @@ public:
@@ -168,19 +168,19 @@ index eaaa032..d3a7f33 100644
  
  }}
 diff --git a/CPP/7zip/Archive/Zip/ZipUpdate.cpp b/CPP/7zip/Archive/Zip/ZipUpdate.cpp
-index 38f41b9..522e542 100644
+index 75c4ec5..58fb31d 100644
 --- a/CPP/7zip/Archive/Zip/ZipUpdate.cpp
 +++ b/CPP/7zip/Archive/Zip/ZipUpdate.cpp
-@@ -86,6 +86,8 @@ static void SetFileHeader(
-   }
+@@ -89,6 +89,8 @@ static void SetFileHeader(
    else
      isDir = item.IsDir();
-+  
-+  archive.RecodeFileName(item);
  
++  archive.RecodeFileName(item);
++
    item.LocalHeaderPos = archive.GetCurPos();
    item.MadeByVersion.HostOS = kMadeByHostOS;
-@@ -353,6 +355,7 @@ static HRESULT UpdateItemOldData(
+   item.MadeByVersion.Version = NFileHeader::NCompressionMethod::kMadeByProgramVersion;
+@@ -371,6 +373,7 @@ static HRESULT UpdateItemOldData(
      item.Ntfs_ATime = ui.Ntfs_ATime;
      item.Ntfs_CTime = ui.Ntfs_CTime;
      item.NtfsTimeIsDefined = ui.NtfsTimeIsDefined;
@@ -188,17 +188,17 @@ index 38f41b9..522e542 100644
  
      item.CentralExtra.RemoveUnknownSubBlocks();
      item.LocalExtra.RemoveUnknownSubBlocks();
-@@ -367,6 +370,8 @@ static HRESULT UpdateItemOldData(
+@@ -385,6 +388,8 @@ static HRESULT UpdateItemOldData(
    {
      CUpdateRange range(inArchive->GetOffsetInStream(itemEx.LocalHeaderPos), itemEx.GetLocalFullSize());
      
 +    archive.RecodeFileName(item);
-+    
++
      // set new header position
      item.LocalHeaderPos = archive.GetCurPos();
      
 diff --git a/makefile.linux_amd64_asm b/makefile.linux_amd64_asm
-index 95ac8ab..7f0c360 100644
+index 075c6a8..3de8ccf 100644
 --- a/makefile.linux_amd64_asm
 +++ b/makefile.linux_amd64_asm
 @@ -19,7 +19,7 @@ ASM=yasm -f elf -m amd64 -Dx64
@@ -211,7 +211,7 @@ index 95ac8ab..7f0c360 100644
  
  CPU=x64
 diff --git a/makefile.linux_any_cpu_gcc_4.X b/makefile.linux_any_cpu_gcc_4.X
-index 148cda1..56039bf 100644
+index be093b5..e384b74 100644
 --- a/makefile.linux_any_cpu_gcc_4.X
 +++ b/makefile.linux_any_cpu_gcc_4.X
 @@ -19,7 +19,7 @@ LINK_SHARED=-fPIC -shared
@@ -224,7 +224,7 @@ index 148cda1..56039bf 100644
  
  OBJ_CRC32=$(OBJ_CRC32_C)
 diff --git a/makefile.linux_x86_asm_gcc_4.X b/makefile.linux_x86_asm_gcc_4.X
-index e783739..591025d 100644
+index 1ac339b..4b37a3f 100644
 --- a/makefile.linux_x86_asm_gcc_4.X
 +++ b/makefile.linux_x86_asm_gcc_4.X
 @@ -22,7 +22,7 @@ ASM=nasm -f elf

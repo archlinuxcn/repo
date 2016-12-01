@@ -1,0 +1,7 @@
+post_install() {
+cat << EOF
+==> To get the HP-Officejet working run as root: ptal-init setup
+==> Add ptal-init to /etc/rc.conf daemon list and place it before cups is started!
+==> To access scanner enable in /etc/sane.d/dll.conf hpoj line.
+EOF
+}

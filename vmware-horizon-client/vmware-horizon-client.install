@@ -1,15 +1,7 @@
-uela() {
+post_install() {
 	echo " > By installing this package you acknowledge that you agree to the End-User"
 	echo " > License Agreement (EULA) found in /usr/share/doc/vmware-horizon-client/."
 	echo " > If you do not agree to VMware EULA remove this package immediately:"
 	echo " >  $ pacman -Rc vmware-horizon-client"
 }
 
-post_install() {
-	update-desktop-database -q
-	uela
-}
-
-post_upgrade(){
-	update-desktop-database -q
-}

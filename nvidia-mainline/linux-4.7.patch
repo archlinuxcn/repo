@@ -1,0 +1,48 @@
+diff -Npur a/kernel/nvidia-drm/nvidia-drm-fb.c b/kernel/nvidia-drm/nvidia-drm-fb.c
+--- a/kernel/nvidia-drm/nvidia-drm-fb.c	2016-06-04 14:35:34.039874000 +0200
++++ b/kernel/nvidia-drm/nvidia-drm-fb.c	2016-06-04 14:40:03.137790083 +0200
+@@ -114,7 +114,7 @@ static struct drm_framebuffer *internal_
+      * We don't support any planar format, pick up first buffer only.
+      */
+ 
+-    gem = drm_gem_object_lookup(dev, file, cmd->handles[0]);
++    gem = drm_gem_object_lookup(file, cmd->handles[0]);
+ 
+     if (gem == NULL)
+     {
+diff -Npur a/kernel/nvidia-drm/nvidia-drm-gem.c b/kernel/nvidia-drm/nvidia-drm-gem.c
+--- a/kernel/nvidia-drm/nvidia-drm-gem.c	2016-04-19 22:31:08.000000000 +0200
++++ b/kernel/nvidia-drm/nvidia-drm-gem.c	2016-06-04 14:37:28.833902856 +0200
+@@ -405,7 +405,7 @@ int nvidia_drm_dumb_map_offset
+ 
+     mutex_lock(&dev->struct_mutex);
+ 
+-    gem = drm_gem_object_lookup(dev, file, handle);
++    gem = drm_gem_object_lookup(file, handle);
+ 
+     if (gem == NULL)
+     {
+diff -Npur a/kernel/nvidia-uvm/uvm8_gpu.c b/kernel/nvidia-uvm/uvm8_gpu.c
+--- a/kernel/nvidia-uvm/uvm8_gpu.c	2016-04-19 22:33:14.000000000 +0200
++++ b/kernel/nvidia-uvm/uvm8_gpu.c	2016-06-04 14:30:07.363305134 +0200
+@@ -525,7 +525,7 @@ static void remove_gpu(uvm_gpu_t *gpu)
+                    gpu->id, uvm_gpu_retained_count(gpu));
+ 
+     // All channels should have been removed before the retained count went to 0
+-    UVM_ASSERT(radix_tree_empty(&gpu->instance_ptr_table));
++    UVM_ASSERT(radix_tree_is_empty(&gpu->instance_ptr_table));
+ 
+     // Remove the GPU from the table.
+     uvm_spin_lock_irqsave(&g_uvm_global.gpu_table_lock);
+diff -Npur a/kernel/nvidia-uvm/uvm_linux.h b/kernel/nvidia-uvm/uvm_linux.h
+--- a/kernel/nvidia-uvm/uvm_linux.h	2016-04-19 22:33:14.000000000 +0200
++++ b/kernel/nvidia-uvm/uvm_linux.h	2016-06-04 14:30:07.553400122 +0200
+@@ -547,7 +547,7 @@ static void uvm_init_radix_tree_preloada
+     INIT_RADIX_TREE(tree, GFP_NOWAIT);
+ }
+ 
+-static bool radix_tree_empty(struct radix_tree_root *tree)
++static bool radix_tree_is_empty(struct radix_tree_root *tree)
+ {
+     void *dummy;
+     return radix_tree_gang_lookup(tree, &dummy, 0, 1) == 0;

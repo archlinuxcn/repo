@@ -1,0 +1,12 @@
+--- xavs-0.1.55/configure~	2011-11-24 10:42:06.000000000 +0100
++++ xavs-0.1.55/configure	2011-11-24 11:49:04.908528371 +0100
+@@ -404,8 +404,7 @@ if [ "$pic" = "yes" ] ; then
+ fi
+ 
+ if [ "$debug" != "yes" -a "$gprof" != "yes" ]; then
+-    CFLAGS="$CFLAGS -s -fomit-frame-pointer"
+-    LDFLAGS="$LDFLAGS -s"
++    CFLAGS="$CFLAGS -fomit-frame-pointer"
+ fi
+ 
+ if [ "$debug" = "yes" ]; then

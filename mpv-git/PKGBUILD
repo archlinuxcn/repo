@@ -11,13 +11,13 @@
 
 pkgname=mpv-git
 _gitname=mpv
-pkgver=42762.g5d94977
+pkgver=43403.g5700da4
 pkgrel=1
 pkgdesc='Video player based on MPlayer/mplayer2 (git version)'
 arch=('i686' 'x86_64' 'armv6h' 'armv7h')
-license=('GPL3')
-url='http://mpv.io'
-_undetected_depends=('desktop-file-utils' 'hicolor-icon-theme' 'xdg-utils')
+license=('GPL')
+url='https://mpv.io'
+_undetected_depends=('hicolor-icon-theme')
 depends=('ffmpeg' "${_undetected_depends[@]}")
 optdepends=('youtube-dl: for --ytdl')
 makedepends=('git' 'python-docutils')
@@ -55,8 +55,7 @@ build() {
   ./waf configure --prefix=/usr \
         --confdir=/etc/mpv \
         --enable-zsh-comp \
-        --enable-libmpv-shared \
-        --enable-gpl3
+        --enable-libmpv-shared
 
   ./waf build
 }

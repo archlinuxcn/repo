@@ -1,0 +1,11 @@
+post_install() {
+  echo "The makemkv package is licensed software."
+  echo "You MUST read and agree to the license stored in"
+  echo "/usr/share/licenses/makemkv/eula_en_linux.txt before using it."
+}
+
+post_upgrade() {
+  post_install $1
+}
+
+

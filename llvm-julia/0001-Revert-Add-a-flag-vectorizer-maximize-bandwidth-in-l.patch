@@ -1,0 +1,244 @@
+From 24f3c40a14c2746fb9ae8d06eabc127ca7ea1b5d Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Tue, 9 Aug 2016 01:36:32 -0400
+Subject: [PATCH] Revert "Add a flag vectorizer-maximize-bandwidth in loop
+ vectorizer to enable using larger vectorization factor."
+
+This reverts commit c895fd0d677be116efaac45af934b4270e4a35a1.
+---
+ lib/Transforms/Vectorize/LoopVectorize.cpp         | 104 +++++----------------
+ .../LoopVectorize/X86/vector_max_bandwidth.ll      |  46 ---------
+ 2 files changed, 21 insertions(+), 129 deletions(-)
+ delete mode 100644 test/Transforms/LoopVectorize/X86/vector_max_bandwidth.ll
+
+diff --git a/lib/Transforms/Vectorize/LoopVectorize.cpp b/lib/Transforms/Vectorize/LoopVectorize.cpp
+index 17c25dff..f9166f6 100644
+--- a/lib/Transforms/Vectorize/LoopVectorize.cpp
++++ b/lib/Transforms/Vectorize/LoopVectorize.cpp
+@@ -1460,10 +1460,8 @@ public:
+     unsigned NumInstructions;
+   };
+ 
+-  /// \return Returns information about the register usages of the loop for the
+-  /// given vectorization factors.
+-  SmallVector<RegisterUsage, 8>
+-  calculateRegisterUsage(const SmallVector<unsigned, 8> &VFs);
++  /// \return  information about the register usage of the loop.
++  RegisterUsage calculateRegisterUsage();
+ 
+ private:
+   /// Returns the expected execution cost. The unit of the cost does
+@@ -4775,26 +4773,6 @@ LoopVectorizationCostModel::selectVectorizationFactor(bool OptForSize) {
+          " into one vector!");
+ 
+   unsigned VF = MaxVectorSize;
+-  if (MaximizeBandwidth && !OptForSize) {
+-    // Collect all viable vectorization factors.
+-    SmallVector<unsigned, 8> VFs;
+-    unsigned NewMaxVectorSize = WidestRegister / SmallestType;
+-    for (unsigned VS = MaxVectorSize; VS <= NewMaxVectorSize; VS *= 2)
+-      VFs.push_back(VS);
+-
+-    // For each VF calculate its register usage.
+-    auto RUs = calculateRegisterUsage(VFs);
+-
+-    // Select the largest VF which doesn't require more registers than existing
+-    // ones.
+-    unsigned TargetNumRegisters = TTI.getNumberOfRegisters(true);
+-    for (int i = RUs.size() - 1; i >= 0; --i) {
+-      if (RUs[i].MaxLocalUsers <= TargetNumRegisters) {
+-        VF = VFs[i];
+-        break;
+-      }
+-    }
+-  }
+ 
+   // If we optimize the program for size, avoid creating the tail loop.
+   if (OptForSize) {
+@@ -4965,7 +4943,7 @@ unsigned LoopVectorizationCostModel::selectInterleaveCount(bool OptForSize,
+       TargetNumRegisters = ForceTargetNumVectorRegs;
+   }
+ 
+-  RegisterUsage R = calculateRegisterUsage({VF})[0];
++  LoopVectorizationCostModel::RegisterUsage R = calculateRegisterUsage();
+   // We divide by these constants so assume that we have at least one
+   // instruction that uses at least one register.
+   R.MaxLocalUsers = std::max(R.MaxLocalUsers, 1U);
+@@ -5074,9 +5052,8 @@ unsigned LoopVectorizationCostModel::selectInterleaveCount(bool OptForSize,
+   return 1;
+ }
+ 
+-SmallVector<LoopVectorizationCostModel::RegisterUsage, 8>
+-LoopVectorizationCostModel::calculateRegisterUsage(
+-    const SmallVector<unsigned, 8> &VFs) {
++LoopVectorizationCostModel::RegisterUsage
++LoopVectorizationCostModel::calculateRegisterUsage() {
+   // This function calculates the register usage by measuring the highest number
+   // of values that are alive at a single location. Obviously, this is a very
+   // rough estimation. We scan the loop in a topological order in order and
+@@ -5097,8 +5074,8 @@ LoopVectorizationCostModel::calculateRegisterUsage(
+   LoopBlocksDFS DFS(TheLoop);
+   DFS.perform(LI);
+ 
+-  RegisterUsage RU;
+-  RU.NumInstructions = 0;
++  RegisterUsage R;
++  R.NumInstructions = 0;
+ 
+   // Each 'key' in the map opens a new interval. The values
+   // of the map are the index of the 'last seen' usage of the
+@@ -5117,7 +5094,7 @@ LoopVectorizationCostModel::calculateRegisterUsage(
+   unsigned Index = 0;
+   for (LoopBlocksDFS::RPOIterator bb = DFS.beginRPO(),
+        be = DFS.endRPO(); bb != be; ++bb) {
+-    RU.NumInstructions += (*bb)->size();
++    R.NumInstructions += (*bb)->size();
+     for (Instruction &I : **bb) {
+       IdxToInstr[Index++] = &I;
+ 
+@@ -5152,26 +5129,10 @@ LoopVectorizationCostModel::calculateRegisterUsage(
+     TransposeEnds[it->second].push_back(it->first);
+ 
+   SmallSet<Instruction*, 8> OpenIntervals;
++  unsigned MaxUsage = 0;
+ 
+-  // Get the size of the widest register.
+-  unsigned MaxSafeDepDist = -1U;
+-  if (Legal->getMaxSafeDepDistBytes() != -1U)
+-    MaxSafeDepDist = Legal->getMaxSafeDepDistBytes() * 8;
+-  unsigned WidestRegister =
+-      std::min(TTI.getRegisterBitWidth(true), MaxSafeDepDist);
+-  const DataLayout &DL = TheFunction->getParent()->getDataLayout();
+-
+-  SmallVector<RegisterUsage, 8> RUs(VFs.size());
+-  SmallVector<unsigned, 8> MaxUsages(VFs.size(), 0);
+ 
+   DEBUG(dbgs() << "LV(REG): Calculating max register usage:\n");
+-
+-  // A lambda that gets the register usage for the given type and VF.
+-  auto GetRegUsage = [&DL, WidestRegister](Type *Ty, unsigned VF) {
+-    unsigned TypeSize = DL.getTypeSizeInBits(Ty->getScalarType());
+-    return std::max<unsigned>(1, VF * TypeSize / WidestRegister);
+-  };
+-
+   for (unsigned int i = 0; i < Index; ++i) {
+     Instruction *I = IdxToInstr[i];
+     // Ignore instructions that are never used within the loop.
+@@ -5183,50 +5144,27 @@ LoopVectorizationCostModel::calculateRegisterUsage(
+ 
+     // Remove all of the instructions that end at this location.
+     InstrList &List = TransposeEnds[i];
+-    for (unsigned int j = 0, e = List.size(); j < e; ++j)
++    for (unsigned int j=0, e = List.size(); j < e; ++j)
+       OpenIntervals.erase(List[j]);
+ 
+-    // For each VF find the maximum usage of registers.
+-    for (unsigned j = 0, e = VFs.size(); j < e; ++j) {
+-      if (VFs[j] == 1) {
+-        MaxUsages[j] = std::max(MaxUsages[j], OpenIntervals.size());
+-        continue;
+-      }
+-
+-      // Count the number of live intervals.
+-      unsigned RegUsage = 0;
+-      for (auto Inst : OpenIntervals)
+-        RegUsage += GetRegUsage(Inst->getType(), VFs[j]);
+-      MaxUsages[j] = std::max(MaxUsages[j], RegUsage);
+-    }
++    // Count the number of live intervals.
++    MaxUsage = std::max(MaxUsage, OpenIntervals.size());
+ 
+-    DEBUG(dbgs() << "LV(REG): At #" << i << " Interval # "
+-                 << OpenIntervals.size() << '\n');
++    DEBUG(dbgs() << "LV(REG): At #" << i << " Interval # " <<
++          OpenIntervals.size() << '\n');
+ 
+     // Add the current instruction to the list of open intervals.
+     OpenIntervals.insert(I);
+   }
+ 
+-  for (unsigned i = 0, e = VFs.size(); i < e; ++i) {
+-    unsigned Invariant = 0;
+-    if (VFs[i] == 1)
+-      Invariant = LoopInvariants.size();
+-    else {
+-      for (auto Inst : LoopInvariants)
+-        Invariant += GetRegUsage(Inst->getType(), VFs[i]);
+-    }
+-
+-    DEBUG(dbgs() << "LV(REG): VF = " << VFs[i] <<  '\n');
+-    DEBUG(dbgs() << "LV(REG): Found max usage: " << MaxUsages[i] << '\n');
+-    DEBUG(dbgs() << "LV(REG): Found invariant usage: " << Invariant << '\n');
+-    DEBUG(dbgs() << "LV(REG): LoopSize: " << RU.NumInstructions << '\n');
+-
+-    RU.LoopInvariantRegs = Invariant;
+-    RU.MaxLocalUsers = MaxUsages[i];
+-    RUs[i] = RU;
+-  }
++  unsigned Invariant = LoopInvariants.size();
++  DEBUG(dbgs() << "LV(REG): Found max usage: " << MaxUsage << '\n');
++  DEBUG(dbgs() << "LV(REG): Found invariant usage: " << Invariant << '\n');
++  DEBUG(dbgs() << "LV(REG): LoopSize: " << R.NumInstructions << '\n');
+ 
+-  return RUs;
++  R.LoopInvariantRegs = Invariant;
++  R.MaxLocalUsers = MaxUsage;
++  return R;
+ }
+ 
+ unsigned LoopVectorizationCostModel::expectedCost(unsigned VF) {
+diff --git a/test/Transforms/LoopVectorize/X86/vector_max_bandwidth.ll b/test/Transforms/LoopVectorize/X86/vector_max_bandwidth.ll
+deleted file mode 100644
+index e6dc39c..0000000
+--- a/test/Transforms/LoopVectorize/X86/vector_max_bandwidth.ll
++++ /dev/null
+@@ -1,46 +0,0 @@
+-; RUN: opt -loop-vectorize -vectorizer-maximize-bandwidth -mcpu=corei7-avx -debug-only=loop-vectorize -S < %s 2>&1 | FileCheck %s
+-; REQUIRES: asserts
+-
+-target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
+-target triple = "x86_64-unknown-linux-gnu"
+-
+-@a = global [1000 x i8] zeroinitializer, align 16
+-@b = global [1000 x i8] zeroinitializer, align 16
+-@c = global [1000 x i8] zeroinitializer, align 16
+-@u = global [1000 x i32] zeroinitializer, align 16
+-@v = global [1000 x i32] zeroinitializer, align 16
+-@w = global [1000 x i32] zeroinitializer, align 16
+-
+-; Tests that the vectorization factor is determined by the smallest instead of
+-; widest type in the loop for maximum bandwidth when
+-; -vectorizer-maximize-bandwidth is indicated.
+-;
+-; CHECK-label: foo
+-; CHECK: LV: Selecting VF: 16.
+-define void @foo() {
+-entry:
+-  br label %for.body
+-
+-for.cond.cleanup:
+-  ret void
+-
+-for.body:
+-  %indvars.iv = phi i64 [ 0, %entry ], [ %indvars.iv.next, %for.body ]
+-  %arrayidx = getelementptr inbounds [1000 x i8], [1000 x i8]* @b, i64 0, i64 %indvars.iv
+-  %0 = load i8, i8* %arrayidx, align 1
+-  %arrayidx2 = getelementptr inbounds [1000 x i8], [1000 x i8]* @c, i64 0, i64 %indvars.iv
+-  %1 = load i8, i8* %arrayidx2, align 1
+-  %add = add i8 %1, %0
+-  %arrayidx6 = getelementptr inbounds [1000 x i8], [1000 x i8]* @a, i64 0, i64 %indvars.iv
+-  store i8 %add, i8* %arrayidx6, align 1
+-  %arrayidx8 = getelementptr inbounds [1000 x i32], [1000 x i32]* @v, i64 0, i64 %indvars.iv
+-  %2 = load i32, i32* %arrayidx8, align 4
+-  %arrayidx10 = getelementptr inbounds [1000 x i32], [1000 x i32]* @w, i64 0, i64 %indvars.iv
+-  %3 = load i32, i32* %arrayidx10, align 4
+-  %add11 = add nsw i32 %3, %2
+-  %arrayidx13 = getelementptr inbounds [1000 x i32], [1000 x i32]* @u, i64 0, i64 %indvars.iv
+-  store i32 %add11, i32* %arrayidx13, align 4
+-  %indvars.iv.next = add nuw nsw i64 %indvars.iv, 1
+-  %exitcond = icmp eq i64 %indvars.iv.next, 1000
+-  br i1 %exitcond, label %for.cond.cleanup, label %for.body
+-}
+-- 
+2.9.2
+

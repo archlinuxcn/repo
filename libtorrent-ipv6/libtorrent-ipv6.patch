@@ -1,0 +1,1650 @@
+diff --git a/AUTHORS b/AUTHORS
+index 195fc22..f9bdb53 100644
+--- a/AUTHORS
++++ b/AUTHORS
+@@ -1 +1 @@
+-Jari Sundell <jaris@ifi.uio.no>
++Jari Sundell <sundell.software@gmail.com>
+diff --git a/README b/README
+index 6ebca06..76aa08a 100644
+--- a/README
++++ b/README
+@@ -1,5 +1,7 @@
+ LibTorrent
+ 
++Copyright (C) 2005-2014, Jari Sundell
++
+ LICENSE
+ 
+  GNU GPL, see COPYING. "libtorrent/src/utils/sha_fast.{cc,h}" is
+@@ -15,22 +17,11 @@ compiled if the user wishes to avoid using OpenSSL.
+ 
+ CONTACT
+ 
+- Send bug reports, suggestions and patches to <jaris@ifi.uio.no> or
+-to the mailinglist.
+-
+-LIBRARY DEPENDENCIES
+-
+-  g++ >= 4.2.1
+-
+-SIGC++
++ Jari Sundell
+ 
+- The API will use sigc++ signals to give the client a simple, yet
+-powerful way of reacting to events from the library. The client can
+-hook multiple slots on each signal and modify the parameters to suit
+-the functions. This avoids lots of unnecessary code in the client.
++ Skomakerveien 33
++ 3185 Skoppum, NORWAY
+ 
+-POLLING
++ Send bug reports, suggestions and patches to
++<sundell.software@gmail.com> or to the mailinglist.
+ 
+- "libtorrent/src/torrent/poll.h" provides an abstract class for
+-implementing any kind of polling the client wishes to use. Currently
+-epoll and select based polling is included.
+diff --git a/configure.ac b/configure.ac
+index a15b91a..2b3eb7a 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -105,7 +105,6 @@ TORRENT_CHECK_EXECINFO()
+ TORRENT_CHECK_PTHREAD_SETNAME_NP()
+ TORRENT_MINCORE()
+ 
+-TORRENT_DISABLE_IPV6
+ TORRENT_DISABLE_INSTRUMENTATION
+ 
+ LIBTORRENT_LIBS="-ltorrent"
+@@ -126,9 +125,10 @@ AC_OUTPUT([
+ 	Makefile
+ 	src/Makefile
+ 	src/torrent/Makefile
+-	src/torrent/peer/Makefile
+ 	src/torrent/data/Makefile
+ 	src/torrent/download/Makefile
++	src/torrent/net/Makefile
++	src/torrent/peer/Makefile
+ 	src/torrent/utils/Makefile
+ 	src/data/Makefile
+ 	src/dht/Makefile
+diff --git a/rak/socket_address.h b/rak/socket_address.h
+index 25fdb37..d1d5b72 100644
+--- a/rak/socket_address.h
++++ b/rak/socket_address.h
+@@ -109,13 +109,11 @@ public:
+   const sockaddr*     c_sockaddr() const                      { return &m_sockaddr; }
+   const sockaddr_in*  c_sockaddr_inet() const                 { return &m_sockaddrInet; }
+ 
+-#ifdef RAK_USE_INET6
+   socket_address_inet6*       sa_inet6()                      { return reinterpret_cast<socket_address_inet6*>(this); }
+   const socket_address_inet6* sa_inet6() const                { return reinterpret_cast<const socket_address_inet6*>(this); }
+ 
+   sockaddr_in6*       c_sockaddr_inet6()                      { return &m_sockaddrInet6; }
+   const sockaddr_in6* c_sockaddr_inet6() const                { return &m_sockaddrInet6; }
+-#endif
+ 
+   // Copy a socket address which has the length 'length. Zero out any
+   // extranous bytes and ensure it does not go beyond the size of this
+@@ -139,13 +137,11 @@ private:
+   union {
+     sockaddr            m_sockaddr;
+     sockaddr_in         m_sockaddrInet;
+-#ifdef RAK_USE_INET6
+     sockaddr_in6        m_sockaddrInet6;
+-#endif
+   };
+ };
+ 
+-// Remeber to set the AF_INET.
++// Remember to set the AF_INET.
+ 
+ class socket_address_inet {
+ public:
+@@ -184,6 +180,8 @@ public:
+ 
+   const sockaddr*     c_sockaddr() const                      { return reinterpret_cast<const sockaddr*>(&m_sockaddr); }
+   const sockaddr_in*  c_sockaddr_inet() const                 { return &m_sockaddr; }
++  
++  socket_address_inet6 to_mapped_address() const;
+ 
+   bool                operator == (const socket_address_inet& rhs) const;
+   bool                operator < (const socket_address_inet& rhs) const;
+@@ -192,48 +190,47 @@ private:
+   struct sockaddr_in  m_sockaddr;
+ };
+ 
+-// Unique key for the address, excluding port numbers etc.
+-class socket_address_key {
++class socket_address_inet6 {
+ public:
+-//   socket_address_host_key() {}
++  bool                is_any() const                          { return is_port_any() && is_address_any(); }
++  bool                is_valid() const                        { return !is_port_any() && !is_address_any(); }
++  bool                is_port_any() const                     { return port() == 0; }
++  bool                is_address_any() const                  { return std::memcmp(&m_sockaddr.sin6_addr, &in6addr_any, sizeof(in6_addr)) == 0; }
+ 
+-  socket_address_key(const socket_address& sa) {
+-    *this = sa;
+-  }
++  void                clear()                                 { std::memset(this, 0, sizeof(socket_address_inet6)); set_family(); }
+ 
+-  socket_address_key& operator = (const socket_address& sa) {
+-    if (sa.family() == 0) {
+-      std::memset(this, 0, sizeof(socket_address_key));
++  uint16_t            port() const                            { return ntohs(m_sockaddr.sin6_port); }
++  uint16_t            port_n() const                          { return m_sockaddr.sin6_port; }
++  void                set_port(uint16_t p)                    { m_sockaddr.sin6_port = htons(p); }
++  void                set_port_n(uint16_t p)                  { m_sockaddr.sin6_port = p; }
+ 
+-    } else if (sa.family() == socket_address::af_inet) {
+-      // Using hardware order as we use operator < to compare when
+-      // using inet only.
+-      m_addr.s_addr = sa.sa_inet()->address_h();
++  in6_addr            address() const                         { return m_sockaddr.sin6_addr; }
++  const in6_addr*     address_ptr() const                     { return &m_sockaddr.sin6_addr; }
++  std::string         address_str() const;
++  bool                address_c_str(char* buf, socklen_t size) const;
+ 
+-    } else {
+-      // When we implement INET6 handling, embed the ipv4 address in
+-      // the ipv6 address.
+-      throw std::logic_error("socket_address_key(...) received an unsupported protocol family.");
+-    }
++  void                set_address(in6_addr a)                 { m_sockaddr.sin6_addr = a; }
++  bool                set_address_str(const std::string& a)   { return set_address_c_str(a.c_str()); }
++  bool                set_address_c_str(const char* a);
+ 
+-    return *this;
+-  }
++  void                set_address_any()                       { set_port(0); set_address(in6addr_any); }
+ 
+-//   socket_address_key& operator = (const socket_address_key& sa) {
+-//   }
++  sa_family_t         family() const                          { return m_sockaddr.sin6_family; }
++  void                set_family()                            { m_sockaddr.sin6_family = AF_INET6; }
+ 
+-  bool operator < (const socket_address_key& sa) const {
+-    // Compare the memory area instead.
+-    return m_addr.s_addr < sa.m_addr.s_addr;
+-  }    
++  sockaddr*           c_sockaddr()                            { return reinterpret_cast<sockaddr*>(&m_sockaddr); }
++  sockaddr_in6*       c_sockaddr_inet6()                      { return &m_sockaddr; }
++
++  const sockaddr*     c_sockaddr() const                      { return reinterpret_cast<const sockaddr*>(&m_sockaddr); }
++  const sockaddr_in6* c_sockaddr_inet6() const                { return &m_sockaddr; }
++
++  socket_address      normalize_address() const;
++
++  bool                operator == (const socket_address_inet6& rhs) const;
++  bool                operator < (const socket_address_inet6& rhs) const;
+ 
+ private:
+-  union {
+-    in_addr m_addr;
+-// #ifdef RAK_USE_INET6
+-//     in_addr6 m_addr6;
+-// #endif
+-  };
++  struct sockaddr_in6 m_sockaddr;
+ };
+ 
+ inline bool
+@@ -241,8 +238,8 @@ socket_address::is_valid() const {
+   switch (family()) {
+   case af_inet:
+     return sa_inet()->is_valid();
+-//   case af_inet6:
+-//     return sa_inet6().is_valid();
++  case af_inet6:
++    return sa_inet6()->is_valid();
+   default:
+     return false;
+   }
+@@ -253,6 +250,8 @@ socket_address::is_bindable() const {
+   switch (family()) {
+   case af_inet:
+     return !sa_inet()->is_address_any();
++  case af_inet6:
++    return !sa_inet6()->is_address_any();
+   default:
+     return false;
+   }
+@@ -263,6 +262,8 @@ socket_address::is_address_any() const {
+   switch (family()) {
+   case af_inet:
+     return sa_inet()->is_address_any();
++  case af_inet6:
++    return sa_inet6()->is_address_any();
+   default:
+     return true;
+   }
+@@ -273,6 +274,8 @@ socket_address::port() const {
+   switch (family()) {
+   case af_inet:
+     return sa_inet()->port();
++  case af_inet6:
++    return sa_inet6()->port();
+   default:
+     return 0;
+   }
+@@ -283,6 +286,8 @@ socket_address::set_port(uint16_t p) {
+   switch (family()) {
+   case af_inet:
+     return sa_inet()->set_port(p);
++  case af_inet6:
++    return sa_inet6()->set_port(p);
+   default:
+     break;
+   }
+@@ -293,6 +298,8 @@ socket_address::address_str() const {
+   switch (family()) {
+   case af_inet:
+     return sa_inet()->address_str();
++  case af_inet6:
++    return sa_inet6()->address_str();
+   default:
+     return std::string();
+   }
+@@ -303,6 +310,8 @@ socket_address::address_c_str(char* buf, socklen_t size) const {
+   switch (family()) {
+   case af_inet:
+     return sa_inet()->address_c_str(buf, size);
++  case af_inet6:
++    return sa_inet6()->address_c_str(buf, size);
+   default:
+     return false;
+   }
+@@ -314,6 +323,10 @@ socket_address::set_address_c_str(const char* a) {
+     sa_inet()->set_family();
+     return true;
+ 
++  } else if (sa_inet6()->set_address_c_str(a)) {
++    sa_inet6()->set_family();
++    return true;
++
+   } else {
+     return false;
+   }
+@@ -325,6 +338,8 @@ socket_address::length() const {
+   switch(family()) {
+   case af_inet:
+     return sizeof(sockaddr_in);
++  case af_inet6:
++    return sizeof(sockaddr_in6);
+   default:
+     return 0;
+   }      
+@@ -349,8 +364,8 @@ socket_address::operator == (const socket_address& rhs) const {
+   switch (family()) {
+   case af_inet:
+     return *sa_inet() == *rhs.sa_inet();
+-//   case af_inet6:
+-//     return *sa_inet6() == *rhs.sa_inet6();
++  case af_inet6:
++    return *sa_inet6() == *rhs.sa_inet6();
+   default:
+     throw std::logic_error("socket_address::operator == (rhs) invalid type comparison.");
+   }
+@@ -364,8 +379,8 @@ socket_address::operator < (const socket_address& rhs) const {
+   switch (family()) {
+   case af_inet:
+     return *sa_inet() < *rhs.sa_inet();
+-//   case af_inet6:
+-//     return *sa_inet6() < *rhs.sa_inet6();
++  case af_inet6:
++    return *sa_inet6() < *rhs.sa_inet6();
+   default:
+     throw std::logic_error("socket_address::operator < (rhs) invalid type comparison.");
+   }
+@@ -391,6 +406,21 @@ socket_address_inet::set_address_c_str(const char* a) {
+   return inet_pton(AF_INET, a, &m_sockaddr.sin_addr);
+ }
+ 
++inline socket_address_inet6
++socket_address_inet::to_mapped_address() const {
++  uint32_t addr32[4];
++  addr32[0] = 0;
++  addr32[1] = 0;
++  addr32[2] = htonl(0xffff);
++  addr32[3] = m_sockaddr.sin_addr.s_addr;
++  
++  socket_address_inet6 sa;
++  sa.clear();
++  sa.set_address(*reinterpret_cast<in6_addr *>(addr32));
++  sa.set_port_n(m_sockaddr.sin_port);
++  return sa;
++}
++
+ inline bool
+ socket_address_inet::operator == (const socket_address_inet& rhs) const {
+   return
+@@ -406,6 +436,55 @@ socket_address_inet::operator < (const socket_address_inet& rhs) const {
+      m_sockaddr.sin_port < rhs.m_sockaddr.sin_port);
+ }
+ 
++inline std::string
++socket_address_inet6::address_str() const {
++  char buf[INET6_ADDRSTRLEN];
++
++  if (!address_c_str(buf, INET6_ADDRSTRLEN))
++    return std::string();
++
++  return std::string(buf);
++}
++
++inline bool
++socket_address_inet6::address_c_str(char* buf, socklen_t size) const {
++  return inet_ntop(family(), &m_sockaddr.sin6_addr, buf, size);
++}
++
++inline bool
++socket_address_inet6::set_address_c_str(const char* a) {
++  return inet_pton(AF_INET6, a, &m_sockaddr.sin6_addr);
++}
++
++inline socket_address
++socket_address_inet6::normalize_address() const {
++  const uint32_t *addr32 = reinterpret_cast<const uint32_t *>(m_sockaddr.sin6_addr.s6_addr);
++  if (addr32[0] == 0 && addr32[1] == 0 && addr32[2] == htonl(0xffff)) {
++    socket_address addr4;
++    addr4.sa_inet()->set_family();
++    addr4.sa_inet()->set_address_n(addr32[3]);
++    addr4.sa_inet()->set_port_n(m_sockaddr.sin6_port);
++    return addr4;
++  }
++  return *reinterpret_cast<const socket_address*>(this);
++}
++
++inline bool
++socket_address_inet6::operator == (const socket_address_inet6& rhs) const {
++  return
++    memcmp(&m_sockaddr.sin6_addr, &rhs.m_sockaddr.sin6_addr, sizeof(in6_addr)) == 0 &&
++    m_sockaddr.sin6_port == rhs.m_sockaddr.sin6_port;
++}
++
++inline bool
++socket_address_inet6::operator < (const socket_address_inet6& rhs) const {
++  int addr_comp = memcmp(&m_sockaddr.sin6_addr, &rhs.m_sockaddr.sin6_addr, sizeof(in6_addr));
++  return
++    addr_comp < 0 ||
++    (addr_comp == 0 ||
++     m_sockaddr.sin6_port < rhs.m_sockaddr.sin6_port);
++}
++
+ }
+ 
+ #endif
+diff --git a/src/Makefile.am b/src/Makefile.am
+index 110da5a..99aaace 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -15,6 +15,7 @@ libtorrent_la_LIBADD = \
+ 	torrent/libsub_torrent.la \
+ 	torrent/data/libsub_torrentdata.la \
+ 	torrent/download/libsub_torrentdownload.la \
++	torrent/net/libsub_torrentnet.la \
+ 	torrent/peer/libsub_torrentpeer.la \
+ 	torrent/utils/libsub_torrentutils.la \
+ 	data/libsub_data.la \
+diff --git a/src/dht/dht_node.cc b/src/dht/dht_node.cc
+index 69b16db..830b0c9 100644
+--- a/src/dht/dht_node.cc
++++ b/src/dht/dht_node.cc
+@@ -54,8 +54,9 @@ DhtNode::DhtNode(const HashString& id, const rak::socket_address* sa) :
+   m_recentlyInactive(0),
+   m_bucket(NULL) {
+ 
+-  if (sa->family() != rak::socket_address::af_inet)
+-    throw resource_error("Address not af_inet");
++  if (sa->family() != rak::socket_address::af_inet &&
++      (sa->family() != rak::socket_address::af_inet6 || !sa->sa_inet6()->is_any()))
++    throw resource_error("Addres not af_inet or in6addr_any");
+ }
+ 
+ DhtNode::DhtNode(const std::string& id, const Object& cache) :
+@@ -84,8 +85,19 @@ DhtNode::store_compact(char* buffer) const {
+ 
+ Object*
+ DhtNode::store_cache(Object* container) const {
+-  container->insert_key("i", m_socketAddress.sa_inet()->address_h());
+-  container->insert_key("p", m_socketAddress.sa_inet()->port());
++  if (m_socketAddress.family() == rak::socket_address::af_inet6) {
++    // Currently, all we support is in6addr_any (checked in the constructor),
++    // which is effectively equivalent to this. Note that we need to specify
++    // int64_t explicitly here because a zero constant is special in C++ and
++    // thus we need an explicit match.
++    container->insert_key("i", int64_t(0));
++    container->insert_key("p", m_socketAddress.sa_inet6()->port());
++
++  } else {
++    container->insert_key("i", m_socketAddress.sa_inet()->address_h());
++    container->insert_key("p", m_socketAddress.sa_inet()->port());
++  }
++
+   container->insert_key("t", m_lastSeen);
+   return container;
+ }
+diff --git a/src/dht/dht_server.cc b/src/dht/dht_server.cc
+index 844d5f7..1a00908 100644
+--- a/src/dht/dht_server.cc
++++ b/src/dht/dht_server.cc
+@@ -701,6 +701,14 @@ DhtServer::event_read() {
+       if (read < 0)
+         break;
+ 
++      // We can currently only process mapped-IPv4 addresses, not real IPv6.
++      // Translate them to an af_inet socket_address.
++      if (sa.family() == rak::socket_address::af_inet6)
++        sa = sa.sa_inet6()->normalize_address();
++
++      if (sa.family() != rak::socket_address::af_inet)
++        continue;
++
+       total += read;
+ 
+       // If it's not a valid bencode dictionary at all, it's probably not a DHT
+diff --git a/src/net/Makefile.am b/src/net/Makefile.am
+index 4e6446c..fb4da4f 100644
+--- a/src/net/Makefile.am
++++ b/src/net/Makefile.am
+@@ -4,6 +4,8 @@ libsub_net_la_SOURCES = \
+ 	address_list.cc \
+ 	address_list.h \
+ 	data_buffer.h \
++	local_addr.cc \
++	local_addr.h \
+ 	listen.cc \
+ 	listen.h \
+ 	protocol_buffer.h \
+diff --git a/src/net/address_list.cc b/src/net/address_list.cc
+index 2952149..66b97c1 100644
+--- a/src/net/address_list.cc
++++ b/src/net/address_list.cc
+@@ -78,6 +78,16 @@ AddressList::parse_address_compact(raw_string s) {
+ }
+ 
+ void
++AddressList::parse_address_compact_ipv6(const std::string& s) {
++  if (sizeof(const SocketAddressCompact6) != 18)
++    throw internal_error("ConnectionList::AddressList::parse_address_compact_ipv6(...) bad struct size.");
++
++  std::copy(reinterpret_cast<const SocketAddressCompact6*>(s.c_str()),
++            reinterpret_cast<const SocketAddressCompact6*>(s.c_str() + s.size() - s.size() % sizeof(SocketAddressCompact6)),
++            std::back_inserter(*this));
++}
++
++void
+ AddressList::parse_address_bencode(raw_list s) {
+   if (sizeof(const SocketAddressCompact) != 6)
+     throw internal_error("AddressList::parse_address_bencode(...) bad struct size.");
+diff --git a/src/net/address_list.h b/src/net/address_list.h
+index c884da3..d40efd9 100644
+--- a/src/net/address_list.h
++++ b/src/net/address_list.h
+@@ -54,6 +54,7 @@ public:
+ 
+   void                        parse_address_compact(raw_string s);
+   void                        parse_address_compact(const std::string& s);
++  void                        parse_address_compact_ipv6(const std::string& s);
+ 
+ private:
+   static rak::socket_address  parse_address(const Object& b);
+@@ -99,6 +100,26 @@ struct SocketAddressCompact {
+   const char*         c_str() const { return reinterpret_cast<const char*>(this); }
+ } __attribute__ ((packed));
+ 
++struct SocketAddressCompact6 {
++  SocketAddressCompact6() {}
++  SocketAddressCompact6(in6_addr a, uint16_t p) : addr(a), port(p) {}
++  SocketAddressCompact6(const rak::socket_address_inet6* sa) : addr(sa->address()), port(sa->port_n()) {}
++
++  operator rak::socket_address () const {
++    rak::socket_address sa;
++    sa.sa_inet6()->clear();
++    sa.sa_inet6()->set_port_n(port);
++    sa.sa_inet6()->set_address(addr);
++
++    return sa;
++  }
++
++  in6_addr addr;
++  uint16_t port;
++
++  const char*         c_str() const { return reinterpret_cast<const char*>(this); }
++} __attribute__ ((packed));
++
+ }
+ 
+ #endif
+diff --git a/src/net/listen.cc b/src/net/listen.cc
+index 79c52f4..da1c2e8 100644
+--- a/src/net/listen.cc
++++ b/src/net/listen.cc
+@@ -61,7 +61,8 @@ Listen::open(uint16_t first, uint16_t last, int backlog, const rak::socket_addre
+   if (first == 0 || first > last)
+     throw input_error("Tried to open listening port with an invalid range.");
+ 
+-  if (bindAddress->family() != rak::socket_address::af_inet &&
++  if (bindAddress->family() != 0 &&
++      bindAddress->family() != rak::socket_address::af_inet &&
+       bindAddress->family() != rak::socket_address::af_inet6)
+     throw input_error("Listening socket must be bound to an inet or inet6 address.");
+ 
+@@ -71,7 +72,13 @@ Listen::open(uint16_t first, uint16_t last, int backlog, const rak::socket_addre
+     throw resource_error("Could not allocate socket for listening.");
+ 
+   rak::socket_address sa;
+-  sa.copy(*bindAddress, bindAddress->length());
++
++  // TODO: Temporary until we refactor:
++  if (bindAddress->family() == 0) {
++    sa.sa_inet6()->clear();
++  } else {
++    sa.copy(*bindAddress, bindAddress->length());
++  }
+ 
+   do {
+     sa.set_port(first);
+diff --git a/src/net/local_addr.cc b/src/net/local_addr.cc
+new file mode 100644
+index 0000000..1682e5f
+--- /dev/null
++++ b/src/net/local_addr.cc
+@@ -0,0 +1,333 @@
++// libTorrent - BitTorrent library
++// Copyright (C) 2005-2007, Jari Sundell
++//
++// This program is free software; you can redistribute it and/or modify
++// it under the terms of the GNU General Public License as published by
++// the Free Software Foundation; either version 2 of the License, or
++// (at your option) any later version.
++// 
++// This program is distributed in the hope that it will be useful,
++// but WITHOUT ANY WARRANTY; without even the implied warranty of
++// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++// GNU General Public License for more details.
++// 
++// You should have received a copy of the GNU General Public License
++// along with this program; if not, write to the Free Software
++// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
++//
++// In addition, as a special exception, the copyright holders give
++// permission to link the code of portions of this program with the
++// OpenSSL library under certain conditions as described in each
++// individual source file, and distribute linked combinations
++// including the two.
++//
++// You must obey the GNU General Public License in all respects for
++// all of the code used other than OpenSSL.  If you modify file(s)
++// with this exception, you may extend this exception to your version
++// of the file(s), but you are not obligated to do so.  If you do not
++// wish to do so, delete this exception statement from your version.
++// If you delete this exception statement from all source files in the
++// program, then also delete it here.
++//
++// Contact:  Jari Sundell <jaris@ifi.uio.no>
++//
++//           Skomakerveien 33
++//           3185 Skoppum, NORWAY
++
++#include "config.h"
++
++#include <stdio.h>
++#include <ifaddrs.h>
++#include <rak/socket_address.h>
++#include <sys/types.h>
++#include <errno.h>
++
++#ifdef __linux__
++#include <linux/netlink.h>
++#include <linux/rtnetlink.h>
++#endif
++
++#include "torrent/exceptions.h"
++#include "socket_fd.h"
++#include "local_addr.h"
++
++namespace torrent {
++
++#ifdef __linux__
++
++namespace {
++
++// IPv4 priority, from highest to lowest:
++//
++//   1. Everything else (global address)
++//   2. Private address space (10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16)
++//   3. Empty/INADDR_ANY (0.0.0.0)
++//   4. Link-local address (169.254.0.0/16)
++//   5. Localhost (127.0.0.0/8)
++int
++get_priority_ipv4(const in_addr& addr) {
++  if ((addr.s_addr & htonl(0xff000000U)) == htonl(0x7f000000U)) {
++    return 5;
++  }
++  if ((addr.s_addr & htonl(0xffff0000U)) == htonl(0xa9fe0000U)) {
++    return 4;
++  }
++  if (addr.s_addr == htonl(0)) {
++    return 3;
++  }
++  if ((addr.s_addr & htonl(0xff000000U)) == htonl(0x0a000000U) ||
++      (addr.s_addr & htonl(0xfff00000U)) == htonl(0xac100000U) ||
++      (addr.s_addr & htonl(0xffff0000U)) == htonl(0xc0a80000U)) {
++    return 2;
++  }
++  return 1;
++}
++
++// IPv6 priority, from highest to lowest:
++//
++//  1. Global address (2000::/16 not in 6to4 or Teredo)
++//  2. 6to4 (2002::/16)
++//  3. Teredo (2001::/32)
++//  4. Empty/INADDR_ANY (::)
++//  5. Everything else (link-local, ULA, etc.)
++int
++get_priority_ipv6(const in6_addr& addr) {
++  const uint32_t *addr32 = reinterpret_cast<const uint32_t *>(addr.s6_addr);
++  if (addr32[0] == htonl(0) &&
++      addr32[1] == htonl(0) &&
++      addr32[2] == htonl(0) &&
++      addr32[3] == htonl(0)) {
++    return 4;
++  }
++  if (addr32[0] == htonl(0x20010000)) {
++    return 3;
++  }
++  if ((addr32[0] & htonl(0xffff0000)) == htonl(0x20020000)) {
++    return 2;
++  }
++  if ((addr32[0] & htonl(0xe0000000)) == htonl(0x20000000)) {
++    return 1;
++  }
++  return 5;
++}
++
++int
++get_priority(const rak::socket_address& addr) {
++  switch (addr.family()) {
++  case AF_INET:
++    return get_priority_ipv4(addr.c_sockaddr_inet()->sin_addr);
++  case AF_INET6:
++    return get_priority_ipv6(addr.c_sockaddr_inet6()->sin6_addr);
++  default:
++    throw torrent::internal_error("Unknown address family given to compare");
++  }
++}
++
++}
++
++// Linux-specific implementation that understands how to filter away
++// understands how to filter away secondary addresses.
++bool get_local_address(sa_family_t family, rak::socket_address *address) {
++  ifaddrs *ifaddrs;
++  if (getifaddrs(&ifaddrs)) {
++    return false;
++  }
++
++  rak::socket_address best_addr;
++  switch (family) {
++  case AF_INET:
++    best_addr.sa_inet()->clear();
++    break;
++  case AF_INET6:
++    best_addr.sa_inet6()->clear();
++    break;
++  default:
++    throw torrent::internal_error("Unknown address family given to get_local_address");
++  }
++
++  // The bottom bit of the priority is used to hold if the address is 
++  // a secondary address (e.g. with IPv6 privacy extensions) or not;
++  // secondary addresses have lower priority (higher number).
++  int best_addr_pri = get_priority(best_addr) * 2;
++
++  // Get all the addresses via Linux' netlink interface.
++  int fd = ::socket(PF_NETLINK, SOCK_RAW, NETLINK_ROUTE);
++  if (fd == -1) {
++    return false;
++  }
++
++  struct sockaddr_nl nladdr;
++  memset(&nladdr, 0, sizeof(nladdr));
++  nladdr.nl_family = AF_NETLINK;
++  if (::bind(fd, (sockaddr *)&nladdr, sizeof(nladdr))) {
++    ::close(fd);
++    return false;
++  }
++
++  const int seq_no = 1;
++  struct {
++    nlmsghdr nh;
++    rtgenmsg g;
++  } req;
++  memset(&req, 0, sizeof(req));
++
++  req.nh.nlmsg_len = sizeof(req);
++  req.nh.nlmsg_type = RTM_GETADDR;
++  req.nh.nlmsg_flags = NLM_F_ROOT | NLM_F_MATCH | NLM_F_REQUEST;
++  req.nh.nlmsg_pid = getpid();
++  req.nh.nlmsg_seq = seq_no;
++  req.g.rtgen_family = AF_UNSPEC;
++
++  int ret;
++  do {
++    ret = ::sendto(fd, &req, sizeof(req), 0, (sockaddr *)&nladdr, sizeof(nladdr));
++  } while (ret == -1 && errno == EINTR);
++
++  if (ret == -1) {
++    ::close(fd);
++    return false;
++  }
++
++  bool done = false;
++  do {
++    char buf[4096];
++    socklen_t len = sizeof(nladdr);
++    do {
++      ret = ::recvfrom(fd, buf, sizeof(buf), 0, (sockaddr *)&nladdr, &len);
++    } while (ret == -1 && errno == EINTR);
++
++    if (ret < 0) {
++      ::close(fd);
++      return false;
++    }
++
++    for (const nlmsghdr *nlmsg = (const nlmsghdr *)buf;
++         NLMSG_OK(nlmsg, ret);
++         nlmsg = NLMSG_NEXT(nlmsg, ret)) {
++      if (nlmsg->nlmsg_seq != seq_no)
++        continue;
++      if (nlmsg->nlmsg_type == NLMSG_DONE) {
++        done = true;
++        break;
++      }
++      if (nlmsg->nlmsg_type == NLMSG_ERROR) {
++        ::close(fd);
++        return false;
++      }
++      if (nlmsg->nlmsg_type != RTM_NEWADDR)
++        continue;
++
++      const ifaddrmsg *ifa = (const ifaddrmsg *)NLMSG_DATA(nlmsg);
++
++      if (ifa->ifa_family != family)
++        continue; 
++
++#ifdef IFA_F_OPTIMISTIC
++      if ((ifa->ifa_flags & IFA_F_OPTIMISTIC) != 0)
++        continue;
++#endif
++#ifdef IFA_F_DADFAILED
++      if ((ifa->ifa_flags & IFA_F_DADFAILED) != 0)
++        continue;
++#endif
++#ifdef IFA_F_DEPRECATED
++      if ((ifa->ifa_flags & IFA_F_DEPRECATED) != 0)
++        continue;
++#endif
++#ifdef IFA_F_TENTATIVE
++      if ((ifa->ifa_flags & IFA_F_TENTATIVE) != 0)
++        continue;
++#endif
++  
++      // Since there can be point-to-point links on the machine, we need to keep
++      // track of the addresses we've seen for this interface; if we see both
++      // IFA_LOCAL and IFA_ADDRESS for an interface, keep only the IFA_LOCAL.
++      rak::socket_address this_addr;
++      bool seen_addr = false;
++      int plen = IFA_PAYLOAD(nlmsg);
++      for (const rtattr *rta = IFA_RTA(ifa);
++           RTA_OK(rta, plen);
++	   rta = RTA_NEXT(rta, plen)) {
++        if (rta->rta_type != IFA_LOCAL &&
++            rta->rta_type != IFA_ADDRESS) {
++          continue;
++        }
++        if (rta->rta_type == IFA_ADDRESS && seen_addr) {
++          continue;
++        }
++        seen_addr = true;
++        switch (ifa->ifa_family) {
++        case AF_INET:
++          this_addr.sa_inet()->clear();
++          this_addr.sa_inet()->set_address(*(const in_addr *)RTA_DATA(rta));
++          break;
++        case AF_INET6:
++          this_addr.sa_inet6()->clear();
++          this_addr.sa_inet6()->set_address(*(const in6_addr *)RTA_DATA(rta));
++          break;
++        }
++      }
++      if (!seen_addr)
++        continue;
++       
++      int this_addr_pri = get_priority(this_addr) * 2;
++      if ((ifa->ifa_flags & IFA_F_SECONDARY) == IFA_F_SECONDARY) {
++        ++this_addr_pri;
++      }
++
++      if (this_addr_pri < best_addr_pri) {
++        best_addr = this_addr;
++        best_addr_pri = this_addr_pri;
++      }
++    }
++  } while (!done);
++
++  ::close(fd);
++  if (!best_addr.is_address_any()) {
++    *address = best_addr;
++    return true;
++  } else {
++    return false;
++  } 
++}
++
++#else
++
++// Generic POSIX variant.
++bool
++get_local_address(sa_family_t family, rak::socket_address *address) {
++  SocketFd sock;
++  if (!sock.open_datagram()) {
++    return false;
++  }
++
++  rak::socket_address dummy_dest;
++  dummy_dest.clear();
++
++  switch (family) {
++  case rak::socket_address::af_inet:
++    dummy_dest.set_address_c_str("4.0.0.0"); 
++    break;
++  case rak::socket_address::af_inet6:
++    dummy_dest.set_address_c_str("2001:700::"); 
++    break;
++  default:
++    throw internal_error("Unknown address family");
++  }
++
++  dummy_dest.set_port(80);
++
++  if (!sock.connect(dummy_dest)) {
++    sock.close();
++    return false;
++  }
++
++  bool ret = sock.getsockname(address);
++  sock.close();
++
++  return ret;
++}
++
++#endif
++
++}
+diff --git a/src/net/local_addr.h b/src/net/local_addr.h
+new file mode 100644
+index 0000000..43bc820
+--- /dev/null
++++ b/src/net/local_addr.h
+@@ -0,0 +1,64 @@
++// libTorrent - BitTorrent library
++// Copyright (C) 2005-2007, Jari Sundell
++//
++// This program is free software; you can redistribute it and/or modify
++// it under the terms of the GNU General Public License as published by
++// the Free Software Foundation; either version 2 of the License, or
++// (at your option) any later version.
++// 
++// This program is distributed in the hope that it will be useful,
++// but WITHOUT ANY WARRANTY; without even the implied warranty of
++// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++// GNU General Public License for more details.
++// 
++// You should have received a copy of the GNU General Public License
++// along with this program; if not, write to the Free Software
++// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
++//
++// In addition, as a special exception, the copyright holders give
++// permission to link the code of portions of this program with the
++// OpenSSL library under certain conditions as described in each
++// individual source file, and distribute linked combinations
++// including the two.
++//
++// You must obey the GNU General Public License in all respects for
++// all of the code used other than OpenSSL.  If you modify file(s)
++// with this exception, you may extend this exception to your version
++// of the file(s), but you are not obligated to do so.  If you do not
++// wish to do so, delete this exception statement from your version.
++// If you delete this exception statement from all source files in the
++// program, then also delete it here.
++//
++// Contact:  Jari Sundell <jaris@ifi.uio.no>
++//
++//           Skomakerveien 33
++//           3185 Skoppum, NORWAY
++
++// A routine to get a local IP address that can be presented to a tracker.
++// (Does not use UPnP etc., so will not understand NAT.)
++// On a machine with multiple network cards, address selection can be a
++// complex process, and in general what's selected is a source/destination
++// address pair. However, this routine will give an approximation that will
++// be good enough for most purposes and users.
++
++#ifndef LIBTORRENT_NET_LOCAL_ADDR_H
++#define LIBTORRENT_NET_LOCAL_ADDR_H
++
++#include <unistd.h>
++
++namespace rak {
++  class socket_address;
++}
++
++namespace torrent {
++
++// Note: family must currently be rak::af_inet or rak::af_inet6
++// (rak::af_unspec won't do); anything else will throw an exception.
++// Returns false if no address of the given family could be found,
++// either because there are none, or because something went wrong in
++// the process (e.g., no free file descriptors).
++bool get_local_address(sa_family_t family, rak::socket_address *address);
++
++}
++
++#endif /* LIBTORRENT_NET_LOCAL_ADDR_H */
+diff --git a/src/net/socket_datagram.cc b/src/net/socket_datagram.cc
+index 57fbb1f..e7c5e1a 100644
+--- a/src/net/socket_datagram.cc
++++ b/src/net/socket_datagram.cc
+@@ -73,7 +73,12 @@ SocketDatagram::write_datagram(const void* buffer, unsigned int length, rak::soc
+   int r;
+ 
+   if (sa != NULL) {
+-    r = ::sendto(m_fileDesc, buffer, length, 0, sa->sa_inet()->c_sockaddr(), sizeof(rak::socket_address_inet));
++    if (m_ipv6_socket && sa->family() == rak::socket_address::pf_inet) {
++      rak::socket_address_inet6 sa_mapped = sa->sa_inet()->to_mapped_address();
++      r = ::sendto(m_fileDesc, buffer, length, 0, sa_mapped.c_sockaddr(), sizeof(rak::socket_address_inet6));
++    } else {
++      r = ::sendto(m_fileDesc, buffer, length, 0, sa->c_sockaddr(), sa->length());
++    }
+   } else {
+     r = ::send(m_fileDesc, buffer, length, 0);
+   }
+diff --git a/src/net/socket_fd.cc b/src/net/socket_fd.cc
+index 8c6a477..6238fcf 100644
+--- a/src/net/socket_fd.cc
++++ b/src/net/socket_fd.cc
+@@ -70,7 +70,10 @@ SocketFd::set_priority(priority_type p) {
+   check_valid();
+   int opt = p;
+ 
+-  return setsockopt(m_fd, IPPROTO_IP, IP_TOS, &opt, sizeof(opt)) == 0;
++  if (m_ipv6_socket)
++    return setsockopt(m_fd, IPPROTO_IPV6, IPV6_TCLASS, &opt, sizeof(opt)) == 0;
++  else
++    return setsockopt(m_fd, IPPROTO_IP, IP_TOS, &opt, sizeof(opt)) == 0;
+ }
+ 
+ bool
+@@ -112,12 +115,32 @@ SocketFd::get_error() const {
+ 
+ bool
+ SocketFd::open_stream() {
+-  return (m_fd = socket(rak::socket_address::pf_inet, SOCK_STREAM, IPPROTO_TCP)) != -1;
++  m_fd = socket(rak::socket_address::pf_inet6, SOCK_STREAM, IPPROTO_TCP);
++
++  if (m_fd == -1) {
++    m_ipv6_socket = false;
++    return (m_fd = socket(rak::socket_address::pf_inet, SOCK_STREAM, IPPROTO_TCP)) != -1;
++  }
++
++  m_ipv6_socket = true;
++
++  int zero = 0;
++  return setsockopt(m_fd, IPPROTO_IPV6, IPV6_V6ONLY, &zero, sizeof(zero)) != -1;
+ }
+ 
+ bool
+ SocketFd::open_datagram() {
+-  return (m_fd = socket(rak::socket_address::pf_inet, SOCK_DGRAM, 0)) != -1;
++  m_fd = socket(rak::socket_address::pf_inet6, SOCK_DGRAM, 0);
++
++  if (m_fd == -1) {
++    m_ipv6_socket = false;
++    return (m_fd = socket(rak::socket_address::pf_inet, SOCK_DGRAM, 0)) != -1;
++  }
++
++  m_ipv6_socket = true;
++
++  int zero = 0;
++  return setsockopt(m_fd, IPPROTO_IPV6, IPV6_V6ONLY, &zero, sizeof(zero)) != -1;
+ }
+ 
+ bool
+@@ -148,6 +171,11 @@ bool
+ SocketFd::bind(const rak::socket_address& sa) {
+   check_valid();
+ 
++  if (m_ipv6_socket && sa.family() == rak::socket_address::pf_inet) {
++    rak::socket_address_inet6 sa_mapped = sa.sa_inet()->to_mapped_address();
++    return !::bind(m_fd, sa_mapped.c_sockaddr(), sizeof(sa_mapped));
++  }
++
+   return !::bind(m_fd, sa.c_sockaddr(), sa.length());
+ }
+ 
+@@ -155,6 +183,11 @@ bool
+ SocketFd::bind(const rak::socket_address& sa, unsigned int length) {
+   check_valid();
+ 
++  if (m_ipv6_socket && sa.family() == rak::socket_address::pf_inet) {
++    rak::socket_address_inet6 sa_mapped = sa.sa_inet()->to_mapped_address();
++    return !::bind(m_fd, sa_mapped.c_sockaddr(), sizeof(sa_mapped));
++  }
++
+   return !::bind(m_fd, sa.c_sockaddr(), length);
+ }
+ 
+@@ -162,10 +195,31 @@ bool
+ SocketFd::connect(const rak::socket_address& sa) {
+   check_valid();
+ 
++  if (m_ipv6_socket && sa.family() == rak::socket_address::pf_inet) {
++    rak::socket_address_inet6 sa_mapped = sa.sa_inet()->to_mapped_address();
++    return !::connect(m_fd, sa_mapped.c_sockaddr(), sizeof(sa_mapped)) || errno == EINPROGRESS;
++  }
++
+   return !::connect(m_fd, sa.c_sockaddr(), sa.length()) || errno == EINPROGRESS;
+ }
+ 
+ bool
++SocketFd::getsockname(rak::socket_address *sa) {
++  check_valid();
++
++  socklen_t len = sizeof(rak::socket_address);
++  if (::getsockname(m_fd, sa->c_sockaddr(), &len)) {
++    return false;
++  }
++
++  if (m_ipv6_socket && sa->family() == rak::socket_address::af_inet6) {
++    *sa = sa->sa_inet6()->normalize_address();
++  }
++
++  return true;
++}
++
++bool
+ SocketFd::listen(int size) {
+   check_valid();
+ 
+@@ -177,7 +231,17 @@ SocketFd::accept(rak::socket_address* sa) {
+   check_valid();
+   socklen_t len = sizeof(rak::socket_address);
+ 
+-  return SocketFd(::accept(m_fd, sa != NULL ? sa->c_sockaddr() : NULL, &len));
++  if (sa == NULL) {
++    return SocketFd(::accept(m_fd, NULL, &len));
++  }
++
++  int fd = ::accept(m_fd, sa->c_sockaddr(), &len);
++
++  if (fd != -1 && m_ipv6_socket && sa->family() == rak::socket_address::af_inet6) {
++    *sa = sa->sa_inet6()->normalize_address();
++  }
++
++  return SocketFd(fd);
+ }
+ 
+ // unsigned int
+diff --git a/src/net/socket_fd.h b/src/net/socket_fd.h
+index 3435ead..bcb302d 100644
+--- a/src/net/socket_fd.h
++++ b/src/net/socket_fd.h
+@@ -79,6 +79,7 @@ public:
+   bool                bind(const rak::socket_address& sa);
+   bool                bind(const rak::socket_address& sa, unsigned int length);
+   bool                connect(const rak::socket_address& sa);
++  bool                getsockname(rak::socket_address* sa);
+ 
+   bool                listen(int size);
+   SocketFd            accept(rak::socket_address* sa);
+@@ -90,6 +91,7 @@ private:
+   inline void         check_valid() const;
+ 
+   int                 m_fd;
++  bool                m_ipv6_socket;
+ };
+ 
+ }
+diff --git a/src/torrent/Makefile.am b/src/torrent/Makefile.am
+index cea5b72..1bdfde3 100644
+--- a/src/torrent/Makefile.am
++++ b/src/torrent/Makefile.am
+@@ -1,6 +1,7 @@
+ SUBDIRS = \
+ 	data \
+ 	download \
++	net \
+ 	peer \
+ 	utils
+ 
+diff --git a/src/torrent/connection_manager.cc b/src/torrent/connection_manager.cc
+index 33ae1d9..972dcbf 100644
+--- a/src/torrent/connection_manager.cc
++++ b/src/torrent/connection_manager.cc
+@@ -92,13 +92,12 @@ ConnectionManager::ConnectionManager() :
+   m_listen_backlog(SOMAXCONN) {
+ 
+   m_bindAddress = (new rak::socket_address())->c_sockaddr();
+-  rak::socket_address::cast_from(m_bindAddress)->sa_inet()->clear();
+-
+   m_localAddress = (new rak::socket_address())->c_sockaddr();
+-  rak::socket_address::cast_from(m_localAddress)->sa_inet()->clear();
+-
+   m_proxyAddress = (new rak::socket_address())->c_sockaddr();
+-  rak::socket_address::cast_from(m_proxyAddress)->sa_inet()->clear();
++
++  rak::socket_address::cast_from(m_bindAddress)->clear();
++  rak::socket_address::cast_from(m_localAddress)->clear();
++  rak::socket_address::cast_from(m_proxyAddress)->clear();
+ 
+   m_slot_resolver = std::bind(&resolve_host,
+                               std::placeholders::_1,
+diff --git a/src/torrent/event.h b/src/torrent/event.h
+index c336947..f354976 100644
+--- a/src/torrent/event.h
++++ b/src/torrent/event.h
+@@ -60,6 +60,7 @@ public:
+ 
+ protected:
+   int                 m_fileDesc;
++  bool                m_ipv6_socket;
+ };
+ 
+ }
+diff --git a/src/torrent/net/Makefile.am b/src/torrent/net/Makefile.am
+new file mode 100644
+index 0000000..51999d1
+--- /dev/null
++++ b/src/torrent/net/Makefile.am
+@@ -0,0 +1,11 @@
++noinst_LTLIBRARIES = libsub_torrentnet.la
++
++libsub_torrentnet_la_SOURCES = \
++	socket_address_key.cc \
++	socket_address_key.h
++
++AM_CPPFLAGS = -I$(srcdir) -I$(srcdir)/.. -I$(srcdir)/../.. -I$(top_srcdir)
++
++libtorrentincludedir = $(includedir)/torrent/net
++libtorrentinclude_HEADERS = \
++	socket_address_key.h
+diff --git a/src/torrent/net/socket_address_compact.h b/src/torrent/net/socket_address_compact.h
+new file mode 100644
+index 0000000..44474ef
+--- /dev/null
++++ b/src/torrent/net/socket_address_compact.h
+@@ -0,0 +1,58 @@
++// Copyright (C) 2005-2014, Jari Sundell
++// All rights reserved.
++
++#ifndef LIBTORRENT_UTILS_SOCKET_ADDRESS_COMPACT_H
++#define LIBTORRENT_UTILS_SOCKET_ADDRESS_COMPACT_H
++
++// Unique key for the socket address, excluding port numbers, etc.
++
++// TODO: Add include files...
++
++#include <rak/socket_address.h>
++
++namespace torrent {
++
++struct socket_address_compact {
++  socket_address_compact() {}
++  socket_address_compact(uint32_t a, uint16_t p) : addr(a), port(p) {}
++  socket_address_compact(const rak::socket_address_inet* sa) : addr(sa->address_n()), port(sa->port_n()) {}
++
++  operator rak::socket_address () const {
++    rak::socket_address sa;
++    sa.sa_inet()->clear();
++    sa.sa_inet()->set_port_n(port);
++    sa.sa_inet()->set_address_n(addr);
++
++    return sa;
++  }
++
++  uint32_t addr;
++  uint16_t port;
++
++  // TODO: c_str? should be c_ptr or something.
++  const char*         c_str() const { return reinterpret_cast<const char*>(this); }
++} __attribute__ ((packed));
++
++struct socket_address_compact6 {
++  socket_address_compact6() {}
++  socket_address_compact6(in6_addr a, uint16_t p) : addr(a), port(p) {}
++  socket_address_compact6(const rak::socket_address_inet6* sa) : addr(sa->address()), port(sa->port_n()) {}
++
++  operator rak::socket_address () const {
++    rak::socket_address sa;
++    sa.sa_inet6()->clear();
++    sa.sa_inet6()->set_port_n(port);
++    sa.sa_inet6()->set_address(addr);
++
++    return sa;
++  }
++
++  in6_addr addr;
++  uint16_t port;
++
++  const char*         c_str() const { return reinterpret_cast<const char*>(this); }
++} __attribute__ ((packed));
++
++}
++
++#endif
+diff --git a/src/torrent/net/socket_address_key.cc b/src/torrent/net/socket_address_key.cc
+new file mode 100644
+index 0000000..f5e0d3b
+--- /dev/null
++++ b/src/torrent/net/socket_address_key.cc
+@@ -0,0 +1,5 @@
++// Copyright (C) 2005-2014, Jari Sundell
++// All rights reserved.
++
++#include "config.h"
++
+diff --git a/src/torrent/net/socket_address_key.h b/src/torrent/net/socket_address_key.h
+new file mode 100644
+index 0000000..9d6e0c4
+--- /dev/null
++++ b/src/torrent/net/socket_address_key.h
+@@ -0,0 +1,126 @@
++// Copyright (C) 2005-2014, Jari Sundell
++// All rights reserved.
++
++#ifndef LIBTORRENT_UTILS_SOCKET_ADDRESS_KEY_H
++#define LIBTORRENT_UTILS_SOCKET_ADDRESS_KEY_H
++
++#include <cstring>
++#include <inttypes.h>
++#include <netinet/in.h>
++
++// Unique key for the socket address, excluding port numbers, etc.
++
++// TODO: Add include files...
++
++namespace torrent {
++
++class socket_address_key {
++public:
++  // TODO: Disable default ctor?
++
++  // socket_address_key(const sockaddr* sa) : m_sockaddr(sa) {}
++
++  bool is_valid() const { return m_family != AF_UNSPEC; }
++
++  // // Rename, add same family, valid inet4/6.
++
++  // TODO: Make from_sockaddr an rvalue reference.
++  static bool is_comparable_sockaddr(const sockaddr* sa);
++
++  static socket_address_key from_sockaddr(const sockaddr* sa);
++  static socket_address_key from_sin_addr(const sockaddr_in& sa);
++  static socket_address_key from_sin6_addr(const sockaddr_in6& sa);
++
++  bool operator < (const socket_address_key& sa) const;
++  bool operator > (const socket_address_key& sa) const;
++  bool operator == (const socket_address_key& sa) const;
++
++private:
++  sa_family_t m_family;
++
++  union {
++    in_addr m_addr;
++    in6_addr m_addr6;
++  };
++} __attribute__ ((packed));
++
++inline bool
++socket_address_key::is_comparable_sockaddr(const sockaddr* sa) {
++  return sa != NULL && (sa->sa_family == AF_INET || sa->sa_family == AF_INET6);
++}
++
++// TODO: Require socket length?
++
++inline socket_address_key
++socket_address_key::from_sockaddr(const sockaddr* sa) {
++  socket_address_key result;
++
++  std::memset(&result, 0, sizeof(socket_address_key));
++
++  result.m_family = AF_UNSPEC;
++
++  if (sa == NULL)
++    return result;
++
++  switch (sa->sa_family) {
++  case AF_INET:
++    // Using hardware order to allo for the use of operator < to
++    // sort in lexical order.
++    result.m_family = AF_INET;
++    result.m_addr.s_addr = ntohl(reinterpret_cast<const struct sockaddr_in*>(sa)->sin_addr.s_addr);
++    break;
++
++  case AF_INET6:
++    result.m_family = AF_INET6;
++    result.m_addr6 = reinterpret_cast<const struct sockaddr_in6*>(sa)->sin6_addr;
++    break;
++   
++  default:
++    break;
++  }
++
++  return result;
++}
++
++inline socket_address_key
++socket_address_key::from_sin_addr(const sockaddr_in& sa) {
++  socket_address_key result;
++
++  std::memset(&result, 0, sizeof(socket_address_key));
++
++  result.m_family = AF_INET;
++  result.m_addr.s_addr = ntohl(sa.sin_addr.s_addr);
++
++  return result;
++}
++
++inline socket_address_key
++socket_address_key::from_sin6_addr(const sockaddr_in6& sa) {
++  socket_address_key result;
++
++  std::memset(&result, 0, sizeof(socket_address_key));
++
++  result.m_family = AF_INET6;
++  result.m_addr6 = sa.sin6_addr;
++
++  return result;
++}
++
++inline bool
++socket_address_key::operator < (const socket_address_key& sa) const {
++  return std::memcmp(this, &sa, sizeof(socket_address_key)) < 0;
++}
++
++inline bool
++socket_address_key::operator > (const socket_address_key& sa) const {
++  return std::memcmp(this, &sa, sizeof(socket_address_key)) > 0;
++}
++
++inline bool
++socket_address_key::operator == (const socket_address_key& sa) const {
++  return std::memcmp(this, &sa, sizeof(socket_address_key)) == 0;
++}
++
++}
++
++#endif
+diff --git a/src/torrent/peer/peer_list.cc b/src/torrent/peer/peer_list.cc
+index be55400..23ca651 100644
+--- a/src/torrent/peer/peer_list.cc
++++ b/src/torrent/peer/peer_list.cc
+@@ -62,28 +62,29 @@ namespace torrent {
+ 
+ ipv4_table PeerList::m_ipv4_table;
+ 
++// TODO: Clean up...
+ bool
+ socket_address_less(const sockaddr* s1, const sockaddr* s2) {
+   const rak::socket_address* sa1 = rak::socket_address::cast_from(s1);
+   const rak::socket_address* sa2 = rak::socket_address::cast_from(s2);
+ 
+-  if (sa1->family() != sa2->family())
++  if (sa1->family() != sa2->family()) {
+     return sa1->family() < sa2->family();
+ 
+-  else if (sa1->family() == rak::socket_address::af_inet)
++  } else if (sa1->family() == rak::socket_address::af_inet) {
+     // Sort by hardware byte order to ensure proper ordering for
+     // humans.
+     return sa1->sa_inet()->address_h() < sa2->sa_inet()->address_h();
+ 
+-  else
+-    // When we implement INET6 handling, embed the ipv4 address in
+-    // the ipv6 address.
+-    throw internal_error("socket_address_key(...) tried to compare an invalid family type.");
+-}
++  } else if (sa1->family() == rak::socket_address::af_inet6) {
++    const in6_addr addr1 = sa1->sa_inet6()->address();
++    const in6_addr addr2 = sa2->sa_inet6()->address();
+ 
+-inline bool
+-socket_address_key::is_comparable(const sockaddr* sa) {
+-  return rak::socket_address::cast_from(sa)->family() == rak::socket_address::af_inet;
++    return memcmp(&addr1, &addr2, sizeof(in6_addr)) < 0;
++
++  } else {
++    throw internal_error("socket_address_key(...) tried to compare an invalid family type.");
++  }
+ }
+ 
+ struct peer_list_equal_port : public std::binary_function<PeerList::reference, uint16_t, bool> {
+@@ -120,14 +121,17 @@ PeerList::set_info(DownloadInfo* info) {
+ 
+ PeerInfo*
+ PeerList::insert_address(const sockaddr* sa, int flags) {
+-  if (!socket_address_key::is_comparable(sa)) {
++  socket_address_key sock_key = socket_address_key::from_sockaddr(sa);
++
++  if (sock_key.is_valid() &&
++      !socket_address_key::is_comparable_sockaddr(sa)) {
+     LT_LOG_EVENTS("address not comparable", 0);
+     return NULL;
+   }
+ 
+   const rak::socket_address* address = rak::socket_address::cast_from(sa);
+ 
+-  range_type range = base_type::equal_range(sa);
++  range_type range = base_type::equal_range(sock_key);
+ 
+   // Do some special handling if we got a new port number but the
+   // address was present.
+@@ -146,7 +150,7 @@ PeerList::insert_address(const sockaddr* sa, int flags) {
+   
+   manager->client_list()->retrieve_unknown(&peerInfo->mutable_client_info());
+ 
+-  base_type::insert(range.second, value_type(socket_address_key(peerInfo->socket_address()), peerInfo));
++  base_type::insert(range.second, value_type(sock_key, peerInfo));
+ 
+   if ((flags & address_available) && peerInfo->listen_port() != 0) {
+     m_available_list->push_back(address);
+@@ -186,7 +190,7 @@ PeerList::insert_available(const void* al) {
+   AvailableList::const_iterator availLast = m_available_list->end();
+ 
+   for (; itr != last; itr++) {
+-    if (!socket_address_key::is_comparable(itr->c_sockaddr()) || itr->port() == 0) {
++    if (!socket_address_key::is_comparable_sockaddr(itr->c_sockaddr()) || itr->port() == 0) {
+       invalid++;
+       continue;
+     }
+@@ -200,11 +204,13 @@ PeerList::insert_available(const void* al) {
+       continue;
+     }
+ 
++    socket_address_key sock_key = socket_address_key::from_sockaddr(itr->c_sockaddr());
++
+     // Check if the peerinfo exists, if it does, check if we would
+     // ever want to connect. Just update the timer for the last
+     // availability notice if the peer isn't really ideal, but might
+     // be used in an emergency.
+-    range_type range = base_type::equal_range(itr->c_sockaddr());
++    range_type range = base_type::equal_range(sock_key);
+ 
+     if (range.first != range.second) {
+       // Add some logic here to select the best PeerInfo, but for now
+@@ -252,8 +258,10 @@ PeerList::available_list_size() const {
+ PeerInfo*
+ PeerList::connected(const sockaddr* sa, int flags) {
+   const rak::socket_address* address = rak::socket_address::cast_from(sa);
++  socket_address_key sock_key = socket_address_key::from_sockaddr(sa);
+ 
+-  if (!socket_address_key::is_comparable(sa))
++  if (!sock_key.is_valid() ||
++      !socket_address_key::is_comparable_sockaddr(sa))
+     return NULL;
+ 
+   int filter_value = m_ipv4_table.at(address->sa_inet()->address_h());
+@@ -264,14 +272,14 @@ PeerList::connected(const sockaddr* sa, int flags) {
+     return NULL;
+ 
+   PeerInfo* peerInfo;
+-  range_type range = base_type::equal_range(sa);
++  range_type range = base_type::equal_range(sock_key);
+ 
+   if (range.first == range.second) {
+     // Create a new entry.
+     peerInfo = new PeerInfo(sa);
+     peerInfo->set_flags(filter_value & PeerInfo::mask_ip_table);
+ 
+-    base_type::insert(range.second, value_type(socket_address_key(peerInfo->socket_address()), peerInfo));
++    base_type::insert(range.second, value_type(sock_key, peerInfo));
+ 
+   } else if (!range.first->second->is_connected()) {
+     // Use an old entry.
+@@ -315,7 +323,9 @@ PeerList::connected(const sockaddr* sa, int flags) {
+ 
+ void
+ PeerList::disconnected(PeerInfo* p, int flags) {
+-  range_type range = base_type::equal_range(p->socket_address());
++  socket_address_key sock_key = socket_address_key::from_sockaddr(p->socket_address());
++
++  range_type range = base_type::equal_range(sock_key);
+   
+   iterator itr = std::find_if(range.first, range.second, rak::equal(p, rak::mem_ref(&value_type::second)));
+ 
+diff --git a/src/torrent/peer/peer_list.h b/src/torrent/peer/peer_list.h
+index 1d63bc3..a3b409c 100644
+--- a/src/torrent/peer/peer_list.h
++++ b/src/torrent/peer/peer_list.h
+@@ -39,6 +39,7 @@
+ 
+ #include <map>
+ #include <torrent/common.h>
++#include <torrent/net/socket_address_key.h>
+ #include <torrent/utils/extents.h>
+ 
+ namespace torrent {
+@@ -47,21 +48,6 @@ class DownloadInfo;
+ 
+ typedef extents<uint32_t, int, 32, 256, 8> ipv4_table;
+ 
+-bool socket_address_less(const sockaddr* s1, const sockaddr* s2);
+-
+-// Unique key for the address, excluding port numbers etc.
+-class LIBTORRENT_EXPORT socket_address_key {
+-public:
+-  socket_address_key(const sockaddr* sa) : m_sockaddr(sa) {}
+-
+-  inline static bool is_comparable(const sockaddr* sa);
+-
+-  bool operator < (const socket_address_key& sa) const { return socket_address_less(m_sockaddr, sa.m_sockaddr); }
+-
+-private:
+-  const sockaddr*     m_sockaddr;
+-};
+-
+ class LIBTORRENT_EXPORT PeerList : private std::multimap<socket_address_key, PeerInfo*> {
+ public:
+   friend class DownloadWrapper;
+diff --git a/src/tracker/tracker_http.cc b/src/tracker/tracker_http.cc
+index 6dbd0f5..0bf0f36 100644
+--- a/src/tracker/tracker_http.cc
++++ b/src/tracker/tracker_http.cc
+@@ -44,6 +44,7 @@
+ #include <rak/string_manip.h>
+ 
+ #include "net/address_list.h"
++#include "net/local_addr.h"
+ #include "torrent/connection_manager.h"
+ #include "torrent/download_info.h"
+ #include "torrent/exceptions.h"
+@@ -141,9 +142,14 @@ TrackerHttp::send_state(int state) {
+ 
+   const rak::socket_address* localAddress = rak::socket_address::cast_from(manager->connection_manager()->local_address());
+ 
+-  if (localAddress->family() == rak::socket_address::af_inet &&
+-      !localAddress->sa_inet()->is_address_any())
++  if (!localAddress->is_address_any())
+     s << "&ip=" << localAddress->address_str();
++  
++  if (localAddress->is_address_any() || localAddress->family() != rak::socket_address::pf_inet6) {
++    rak::socket_address local_v6;
++    if (get_local_address(rak::socket_address::af_inet6, &local_v6))
++      s << "&ipv6=" << rak::copy_escape_html(local_v6.address_str());
++  }
+ 
+   if (info->is_compact())
+     s << "&compact=1";
+@@ -332,19 +338,27 @@ TrackerHttp::process_success(const Object& object) {
+ 
+   AddressList l;
+ 
+-  try {
+-    // Due to some trackers sending the wrong type when no peers are
+-    // available, don't bork on it.
+-    if (object.get_key("peers").is_string())
+-      l.parse_address_compact(object.get_key_string("peers"));
++  if (!object.has_key("peers") && !object.has_key("peers6"))
++    return receive_failed("No peers returned");
+ 
+-    else if (object.get_key("peers").is_list())
+-      l.parse_address_normal(object.get_key_list("peers"));
++  if (object.has_key("peers")) {
++    try {
++      // Due to some trackers sending the wrong type when no peers are
++      // available, don't bork on it.
++      if (object.get_key("peers").is_string())
++        l.parse_address_compact(object.get_key_string("peers"));
+ 
+-  } catch (bencode_error& e) {
+-    return receive_failed(e.what());
++      else if (object.get_key("peers").is_list())
++        l.parse_address_normal(object.get_key_list("peers"));
++
++    } catch (bencode_error& e) {
++      return receive_failed(e.what());
++    }
+   }
+ 
++  if (object.has_key("peers6"))
++    l.parse_address_compact_ipv6(object.get_key_string("peers6"));
++
+   close_directly();
+   m_parent->receive_success(this, &l);
+ }
+diff --git a/src/tracker/tracker_udp.cc b/src/tracker/tracker_udp.cc
+index fc76c14..aafca67 100644
+--- a/src/tracker/tracker_udp.cc
++++ b/src/tracker/tracker_udp.cc
+@@ -337,11 +337,12 @@ TrackerUdp::prepare_announce_input() {
+ 
+   const rak::socket_address* localAddress = rak::socket_address::cast_from(manager->connection_manager()->local_address());
+ 
+-  // This code assumes we're have a inet address.
+-  if (localAddress->family() != rak::socket_address::af_inet)
+-    throw internal_error("TrackerUdp::prepare_announce_input() info->local_address() not of family AF_INET.");
++  uint32_t local_addr = 0;
+ 
+-  m_writeBuffer->write_32_n(localAddress->sa_inet()->address_n());
++  if (localAddress->family() == rak::socket_address::af_inet)
++    local_addr = localAddress->sa_inet()->address_n();
++
++  m_writeBuffer->write_32_n(local_addr);
+   m_writeBuffer->write_32(m_parent->key());
+   m_writeBuffer->write_32(m_parent->numwant());
+   m_writeBuffer->write_16(manager->connection_manager()->listen_port());

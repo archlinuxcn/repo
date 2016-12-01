@@ -1,0 +1,10 @@
+[Unit]
+Description=REST API, command line tool and OpenStack integration plugin for LXC.
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/lxd --group lxd
+
+[Install]
+WantedBy=multi-user.target

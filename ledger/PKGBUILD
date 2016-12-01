@@ -5,18 +5,22 @@
 
 pkgname=ledger
 pkgver=3.1.1
-pkgrel=2
+pkgrel=3
 pkgdesc='A double-entry accounting system with a command-line reporting interface.'
 arch=('i686' 'x86_64')
 url='https://github.com/ledger/ledger'
 license=('BSD')
 depends=('python2' 'boost' 'libedit')
 makedepends=('cmake')
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/ledger/${pkgname}/archive/v${pkgver}.tar.gz")
-md5sums=('eae070cbbc1a40a277f1394d72ef0fe6')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/ledger/${pkgname}/archive/v${pkgver}.tar.gz"
+"${pkgname}-boost-1.61.patch::https://github.com/ledger/${pkgname}/commit/1856b8c4902498843f4da37a7aaeb2ce85acc1d3.patch"
+)
+md5sums=('eae070cbbc1a40a277f1394d72ef0fe6'
+         '004062eca8add315a125ecf1db39f2fb')
 
 prepare() {
   cd ${srcdir}/${pkgname}-${pkgver}
+  patch -p1 < ${srcdir}/${pkgname}-boost-1.61.patch
   sed -i '/enable_testing()\|add_subdirectory(test)/d' ./CMakeLists.txt
   cmake ./ \
   -DCMAKE_INSTALL_PREFIX:PATH=/usr \

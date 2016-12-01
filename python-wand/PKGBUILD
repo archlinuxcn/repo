@@ -1,14 +1,14 @@
 _pkgname=Wand
 pkgname=python-wand
-pkgver=0.4.2
+pkgver=0.4.4
 pkgrel=1
 pkgdesc="Ctypes-based simple MagickWand API binding for Python"
 arch=('any')
 url="http://wand-py.org/"
 license=('MIT')
 depends=('python' 'python-setuptools')
-source=('https://pypi.python.org/packages/source/W/Wand/Wand-0.4.2.tar.gz')
-md5sums=('6936a7e5f0a0fe43efce2a249dcd59dc')
+source=('https://pypi.python.org/packages/c5/0e/4c7846ffac7a478578ff77c93d6aff3da2c181972d9447c74bfe1e87ac06/Wand-0.4.4.tar.gz')
+md5sums=('855c14d36fec3216fa9b6511ce1c9171')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"

@@ -1,14 +1,15 @@
 _pkgname=curio
 pkgname=python-curio
-pkgver=0.1
-pkgrel=2
+pkgver=0.4
+pkgrel=1
 pkgdesc="Curio - Concurrent I/O"
 arch=('any')
 url="https://github.com/dabeaz/curio"
 license=('BSD')
-depends=('python' 'python-setuptools')
-source=('https://pypi.python.org/packages/source/c/curio/curio-0.1.tar.gz')
-md5sums=('cc667ad56947843f6326b61b099e8609')
+depends=('python')
+makedepends=('python-setuptools')
+source=('https://pypi.python.org/packages/07/f8/6eb3a8f99e52cc8d95e196383755e76e2636870a57546c841658855940ca/curio-0.4.tar.gz')
+md5sums=('f769a76dc394480fa7731c50f5169f39')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"

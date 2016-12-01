@@ -1,0 +1,40 @@
+
+### former 'plymouth-git'
+
+#run_hook() {
+#        msg -n ":: Loading plymouth..."
+#
+#        /bin/mknod /dev/fb c 29 0 &>/dev/null
+#        #/bin/mount devpts /dev/pts -t devpts
+#
+#        # plymouth deamon
+#        #/bin/mkdir -p /run/plymouth
+#        /usr/sbin/plymouthd --mode=boot --pid-file=/var/run/plymouth/pid --attach-to-session
+#
+#        # plymouth frontend
+#        /usr/bin/plymouth --show-splash
+#        msg "done."
+#}
+
+### from stable 'plymouth'
+
+run_earlyhook(){
+        udevadm trigger --action=add --attr-match=class=0x030000 >/dev/null 2>&1
+        udevadm trigger --action=add --subsystem-match=graphics --subsystem-match=drm --subsystem-match=tty >/dev/null 2>&1
+        udevadm settle --timeout=30 2>&1
+
+        /usr/bin/mknod /dev/fb c 29 &>/dev/null
+        /usr/bin/mkdir -p /dev/pts
+        /usr/bin/mount -t devpts -o noexec,nosuid,gid=5,mode=0620 devpts /dev/pts || true
+        /usr/bin/plymouthd --mode=boot --pid-file=/run/plymouth/pid --attach-to-session
+}
+ 
+run_hook() {
+        /usr/bin/plymouth --show-splash
+}
+ 
+run_latehook(){
+        /usr/bin/plymouth update-root-fs --new-root-dir=/new_root      
+}
+
+# vim: set ft=sh:

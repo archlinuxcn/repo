@@ -1,0 +1,41 @@
+post_install(){
+    if [ -d /usr/share/ppd ] ; then
+      cd /usr/share/cups/model
+      for fn in CN*ZK.ppd ; do \
+        ln -sf "/usr/share/cups/model/"$fn /usr/share/ppd/$fn ;
+      done
+    fi
+    chmod 4755 /usr/bin/cnpkmoduleufr2
+    cat << EOF
+    >>> Installation:
+    >>> 1) Make sure CUPS is running and your printer is turned on and connected to your computer.
+    >>> eg.
+    >>> systemctl start cups
+    >>>
+    >>> 2) Check the name of the device, udev created for you.
+    >>> eg. /dev/usb/lp0
+    >>>
+    >>> 3) /usr/sbin/lpadmin -p [Printer Name] -m [PPD file] -v usb:[device file location] -E
+    >>> eg.
+    >>> /usr/sbin/lpadmin -p LBP2900 -m CNCUPSLBP2900CAPTK.ppd -v usb:/dev/usblp0 -E 
+    >>> you can find ppds in the /usr/share/cups/model/ directory)
+    >>>
+    >>> 4) Now you can print. Consider using "systemctl enable cups" to have it start automatically on boot
+    
+EOF
+}
+
+post_upgrade(){
+	post_remove
+	post_install
+}
+
+post_remove(){
+  if [ -d /usr/share/ppd ] ; then
+    rm -rf /usr/share/ppd/CN*ZK.ppd
+  fi
+}
+
+op=$1
+shift
+$op $*

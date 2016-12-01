@@ -4,14 +4,15 @@ import os
 import glob
 import tornado.template
 import urllib.request
+from urllib.parse import urljoin
 
 from pkg_resources import parse_version
 
 from lilaclib import *
 
 debug = False
-_version = '1.8.0'
-_version_date = '2016-02-17'
+_version = '1.10.0'
+_version_date = '2016-05-13'
 
 stds = [
   'arm-unknown-linux-gnueabihf',
@@ -20,12 +21,14 @@ stds = [
   'i686-unknown-linux-gnu',
   'i686-pc-windows-gnu', # need libgcc_s_dw2-1.dll
   'x86_64-pc-windows-gnu',
+  'asmjs-unknown-emscripten',
+  'wasm32-unknown-emscripten',
 ]
 
 if debug:
-  dist_url = 'https://mirrors.ustc.edu.cn/rust-static/dist/'
+  dist_url = 'https://mirrors.ustc.edu.cn/rust-static/dist/index.html'
 else:
-  dist_url = 'https://static.rust-lang.org/dist/'
+  dist_url = 'https://static.rust-lang.org/dist/index.html'
 
 build_prefix = 'extra-x86_64'
 
@@ -33,6 +36,8 @@ toolchain = {
   'x86_64-pc-windows-gnu': ['mingw-w64-gcc'],
   'i686-pc-windows-gnu': ['mingw-w64-gcc'],
   'i686-unknown-linux-gnu': ['gcc-multilib'],
+  'asmjs-unknown-emscripten': ['emsdk', 'emscripten'],
+  'wasm32-unknown-emscripten': ['emsdk', 'emscripten'],
 }
 
 def get_latest_version():
@@ -50,7 +55,7 @@ def get_latest_version():
 class Std:
   def __init__(self, platform):
     self.name = 'rust-std-nightly-' + platform
-    self.url = dist_url + self.name + '.tar.gz'
+    self.url = urljoin(dist_url, self.name + '.tar.gz')
     self.platform = platform
     self.optdepends = toolchain.get(platform)
 

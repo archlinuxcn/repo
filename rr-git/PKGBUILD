@@ -2,21 +2,22 @@
 # Previous maintainer: Joel Teichroeb <joel@teichroeb.net>
 
 pkgname=rr-git
-pkgver=4.2.0.r203.gdcf9f91
+pkgver=4.4.0.r101.g5e0bdeb
 pkgrel=1
 pkgdesc='a nondeterministic debugger'
 arch=(i686 x86_64)
 url='http://rr-project.org/'
 license=('custom')
-depends=('libpfm4' 'libdisasm' 'python2-pexpect' 'gdb')
+depends=('python2-pexpect' 'gdb')
 makedepends=('git' 'cmake')
 if [[ $CARCH = x86_64 ]]; then
     makedepends+=('gcc-multilib')
 fi
-source=(git://github.com/mozilla/rr)
+source=('git://github.com/mozilla/rr')
 sha1sums=('SKIP')
 provides=('rr')
 conflicts=('rr')
+options=('debug' '!strip')
 
 pkgver() {
   cd rr
@@ -25,26 +26,21 @@ pkgver() {
 
 prepare() {
   cd rr
-  mkdir -p build
-  sed -i -e 's/ python / python2 /g' -e 's/-Werror/-Wextra/g' CMakeLists.txt
-  sed -i -e 's/^\(#define \)_BSD_SOURCE$/\1_DEFAULT_SOURCE/' src/Command.cc
+  # patch -Np1 < ../
 }
 
 build() {
-  cd rr/build
+  cd rr
+  mkdir -p build
 
-  # some files in rr don't compile with optimization on (due to inline asm)
-  export CFLAGS=''
-  export CXXFLAGS=''
-
-  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Debug ..
-
+  cd build
+  # Debug build has `Werror` on
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release ..
   make
 }
 
 package() {
   cd rr/build
   make DESTDIR="${pkgdir}" install
-  cd ..
-  install -D LICENSE "${pkgdir}/usr/share/licenses/rr/LICENSE"
+  install -D ../LICENSE "${pkgdir}/usr/share/licenses/rr/LICENSE"
 }

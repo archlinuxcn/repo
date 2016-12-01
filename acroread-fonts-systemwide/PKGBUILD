@@ -7,7 +7,7 @@
 pkgname=acroread-fonts-systemwide
 epoch=1
 _cloudver=DC
-_ver=2015.010.20060
+_ver=2015.020.20039
 _fontpackver=2015.007.20033
 _shortver=${_ver:2}
 _nodotver=${_shortver//.}
@@ -25,11 +25,10 @@ conflicts=('ttf-adobe-fonts'
            'ttf-adobe-fonts-cjkext'
            'acroread-fonts'
            'acroread-font-chinese-simplified')
-install=$pkgname.install
 source=("http://ardownload.adobe.com/pub/adobe/reader/win/Acrobat${_cloudver}/${_nodotver}/AcroRdr${_cloudver}${_nodotver}_en_US.exe"
         "http://ardownload.adobe.com/pub/adobe/reader/win/Acrobat${_cloudver}/misc/FontPack${_fpnodotver}_XtdAlf_Lang_${_cloudver}.msi")
 noextract=("AcroRdr${_cloudver}${_nodotver}_en_US.exe")
-sha256sums=('9d534e8736426b811ec35cef7d25b8f26099f355003362d969c74beaf8025f7e'
+sha256sums=('a7c4f313ca013c8228ea534f9237fd4e559127adf6685eabd9dadeb64a738408'
             '38ca687a30e3b40a9e8ba24275e4619db9914a572b7b6a5d6de1df452e0a7a47')
 
 prepare() {

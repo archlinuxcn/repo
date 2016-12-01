@@ -1,7 +1,11 @@
 _pack=control
 
+_octave_run() {
+	octave --no-history --no-init-file --no-window-system -q -f --eval "$*"
+}
+
 post_install() {
-	octave -q -f --eval "pkg rebuild -global $_pack"
+	_octave_run "pkg rebuild -global $_pack"
 }
 
 post_upgrade() {
@@ -9,5 +13,5 @@ post_upgrade() {
 }
 
 post_remove() {
-	octave -q -f --eval "pkg rebuild -global"
+	_octave_run "pkg rebuild -global"
 }

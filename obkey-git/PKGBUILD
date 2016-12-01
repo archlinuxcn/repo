@@ -1,22 +1,30 @@
 # Maintainer: Steven Honeyman <stevenhoneyman at gmail com>
-
+ 
 pkgname=obkey-git
-pkgver=20140525
+pkgver=1.0.35.gba638e8
 pkgrel=1
 pkgdesc="Openbox Key Editor - converted to PyGObject."
-arch=('i686' 'x86_64')
+arch=('i686' 'x86_64' 'armv7h')
 url="https://github.com/stevenhoneyman/obkey"
 license=('GPL2')
-depends=('python2' 'python2-gobject')
+depends=('python2' 'python2-gobject' 'gtk3')
 makedepends=('git')
 conflicts=('obkey')
 provides=('obkey')
-source=('git://github.com/stevenhoneyman/obkey.git')
+source=("git+https://github.com/stevenhoneyman/obkey.git")
 md5sums=('SKIP')
+ 
+pkgver() {
+	cd "$srcdir/obkey"
+	git describe --tags | sed "s/^v//;s/-/./g"
+}
+ 
 package() {
-  cd $srcdir/obkey
-  install -Dm755 obkey "$pkgdir"/usr/bin/obkey
-  install -Dm755 obkey_classes.py "$pkgdir"/usr/lib/python2.7/site-packages/obkey_classes.py
-  mkdir -p "$pkgdir"/usr/share/obkey/icons/
-  install -Dm644 icons/add_{child,sibling}.png "$pkgdir"/usr/share/obkey/icons/
+	cd $srcdir/obkey
+	install -Dm755 obkey "$pkgdir"/usr/bin/obkey
+	install -Dm755 obkey_classes.py "$pkgdir"/usr/lib/python2.7/site-packages/obkey_classes.py
+	mkdir -p "$pkgdir"/usr/share/obkey/icons/
+	install -Dm644 icons/add_{child,sibling}.png "$pkgdir"/usr/share/obkey/icons/
+	mkdir -p "$pkgdir"/usr/share/applications/
+	install -Dm644 misc/obkey.desktop "$pkgdir"/usr/share/applications/
 }

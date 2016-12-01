@@ -1,0 +1,5 @@
+pre_remove() {
+  if test -e /etc/bash_completion.d/mpv; then
+    rm -f /etc/bash_completion.d/mpv
+  fi
+}

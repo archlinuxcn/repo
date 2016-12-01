@@ -15,77 +15,60 @@
 # Contributor: Andy Weidenbaum <archbaum@gmail.com>
 
 pkgname=vim-youcompleteme-git
-pkgver=1391.ba6e140
-pkgver() {
-  cd "YouCompleteMe"
-  echo $(git rev-list --count master).$(git rev-parse --short master)
-}
+pkgver=1952.39be8b1
+_CLANG_VERSION=3.9.0
 pkgrel=1
 pkgdesc="A code-completion engine for Vim"
-
 arch=('i686' 'x86_64')
 url='http://valloric.github.com/YouCompleteMe/'
 license=('GPL3')
 groups=('vim-plugins')
-depends=('python2' 'vim')
+depends=('python2' 'vim' 'clang='$_CLANG_VERSION
+         'python2-bottle' 'python2-future' 'python2-requests'
+         'python2-waitress' 'python2-jedi' 'python2-futures')
 optdepends=('mono: for C# completer'
             'nodejs: for nodejs completer'
-            'rust: for rust completer'
-            'clang: for C/C++/Obj-C completer')
-makedepends=('cargo' 'cmake' 'git' 'go' 'make' 'mono' 'npm' 'nodejs' 'rust' 'clang')
+            'rust: for rust completer')
+makedepends=('cargo' 'cmake' 'git' 'go' 'make' 'mono' 'npm' 'nodejs' 'rust')
 source=('git+https://github.com/Valloric/YouCompleteMe.git'
-        'git+https://github.com/kennethreitz/requests.git'
         'git+https://github.com/ross/requests-futures.git'
         'git+https://github.com/Valloric/ycmd.git'
         'git+https://github.com/bewest/argparse.git'
-        'git+https://github.com/bottlepy/bottle.git'
-        'git+https://github.com/slezica/python-frozendict.git'
-        'git+https://github.com/davidhalter/jedi.git'
+        'frozendict::git+https://github.com/slezica/python-frozendict.git'
         'git+https://github.com/vheon/JediHTTP.git'
-        'git+https://github.com/Pylons/waitress.git'
         'git+https://github.com/nsf/gocode.git'
         'git+https://github.com/Manishearth/godef.git'
         'git+https://github.com/nosami/OmniSharpServer.git'
         'git+https://github.com/icsharpcode/NRefactory.git'
         'git+https://github.com/jbevain/cecil.git'
-        'git+https://github.com/jwilm/racerd.git'
-        'git+https://github.com/PythonCharmers/python-future.git')
-sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP'
-            'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
+        'git+https://github.com/jwilm/racerd.git')
+sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP'
+            'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
 install=install
 _COMPLETER="USE_CLANG_COMPLETER"
 _SYSTEM_LIBCLANG="USE_SYSTEM_LIBCLANG"
+
+pkgver() {
+  cd "$srcdir/YouCompleteMe"
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
 
 prepare() {
   msg2 'Setting up Git submodules...'
 
   cd "$srcdir/YouCompleteMe"
   git submodule init
-  git config submodule.third_party/requests-futures.url "$srcdir/requests-futures"
-  git config submodule.third_party/ycmd.url "$srcdir/ycmd"
-  git submodule update
+  for _m in requests-futures ycmd; do
+    git config submodule.third_party/$_m.url "$srcdir/$_m"
+    git submodule update third_party/$_m
+  done
 
   cd "$srcdir/YouCompleteMe/third_party/ycmd"
   git submodule init
-  git config submodule.third_party/argparse.url "$srcdir/argparse"
-  git config submodule.third_party/bottle.url "$srcdir/bottle"
-  git config submodule.third_party/frozendict.url "$srcdir/python-frozendict"
-  git config submodule.third_party/JediHTTP.url "$srcdir/JediHTTP"
-  git config submodule.third_party/waitress.url "$srcdir/waitress"
-  git config submodule.third_party/gocode.url "$srcdir/gocode"
-  git config submodule.third_party/godef.url "$srcdir/godef"
-  git config submodule.third_party/OmniSharpServer.url "$srcdir/OmniSharpServer"
-  git config submodule.third_party/requests.url "$srcdir/requests"
-  git config submodule.third_party/racerd.url "$srcdir/racerd"
-  git config submodule.third_party/python-future.url "$srcdir/python-future"
-  git submodule update
-
-  cd "$srcdir/YouCompleteMe/third_party/ycmd/third_party/JediHTTP"
-  git submodule init
-  git config submodule.vendor/waitress.url "$srcdir/waitress"
-  git config submodule.vendor/jedi.url "$srcdir/jedi"
-  git config submodule.vendor/bottle.url "$srcdir/bottle"
-  git submodule update
+  for _m in argparse JediHTTP gocode godef OmniSharpServer racerd frozendict; do
+    git config submodule.third_party/$_m.url "$srcdir/$_m"
+    git submodule update third_party/$_m
+  done
 
   cd "$srcdir/YouCompleteMe/third_party/ycmd/third_party/OmniSharpServer"
   git submodule init
@@ -105,25 +88,20 @@ build() {
 
   msg2 'Building OmniSharp completer...' # BuildOmniSharp()
   cd "$srcdir/YouCompleteMe/third_party/ycmd/third_party/OmniSharpServer"
-  pwd
   xbuild /property:Configuration=Release
 
   msg2 'Building Gocode completer...' # BuildGoCode()
   cd "$srcdir/YouCompleteMe/third_party/ycmd/third_party/gocode"
-  pwd
   go build
   cd "$srcdir/YouCompleteMe/third_party/ycmd/third_party/godef"
-  pwd
   go build
 
   msg2 'Building Rust completer...' # BuildRacerd()
   cd "$srcdir/YouCompleteMe/third_party/ycmd/third_party/racerd"
-  pwd
   cargo build --release
 
   msg2 'Building Tern completer...' # SetUpTern()
   cd "$srcdir/YouCompleteMe/third_party/ycmd/third_party/tern_runtime"
-  pwd
   npm install --production --python=python2
   # }}}
 }
@@ -136,12 +114,15 @@ package() {
 
   cp -r "$srcdir/YouCompleteMe/"{autoload,doc,plugin,python} \
     "$pkgdir/usr/share/vim/vimfiles"
-  cp -r "$srcdir/YouCompleteMe/third_party/"{pythonfutures,requests-futures,retries} \
+  cp -r "$srcdir/YouCompleteMe/third_party/"{requests-futures,retries} \
     "$pkgdir/usr/share/vim/vimfiles/third_party"
-  cp -r "$srcdir/YouCompleteMe/third_party/ycmd/"{ycmd,ycm_core.so,check_core_version.py,CORE_VERSION} \
+  cp -r "$srcdir/YouCompleteMe/third_party/ycmd/"{ycmd,ycm_core.so,CORE_VERSION} \
     "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd"
 
-  cp -r "$srcdir/YouCompleteMe/third_party/ycmd/third_party/"{argparse,bottle,frozendict,JediHTTP,requests,tern_runtime,waitress,python-future} \
+  ln -s "/usr/lib/clang/${_CLANG_VERSION}" \
+    "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/clang_includes"
+
+  cp -r "$srcdir/YouCompleteMe/third_party/ycmd/third_party/"{argparse,frozendict,JediHTTP,tern_runtime} \
     "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party"
 
   cp    "$srcdir/YouCompleteMe/third_party/ycmd/third_party/gocode/gocode" \
@@ -155,5 +136,4 @@ package() {
 
   find "$pkgdir" -name .git -exec rm -fr {} +
 }
-
 # vim:set ts=2 sw=2 et:

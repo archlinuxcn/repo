@@ -1,0 +1,51 @@
+.TH MMDTSDEC "1" "May 2014" "MakeMKV 1.8"
+
+\" Completely disable hyphenation. It is a very annoying feature while reading man pages, in my opinion.
+.nh
+
+.SH NAME
+mmdtsdec \- Decode a Multimedia Display MPEG Transport Stream encoded file into Waveform Audio File format.
+
+.SH SYNOPSIS
+.B mmdtsdec
+[\fIOPTIONS\fR]
+\fIINPUT_FILE\fR
+\fIOUTPUT_FILE\fR
+
+.SH DESCRIPTION
+Mmdtsdec is a command line program to decode Multimedia Display MPEG Transport Stream (TS) encoded files into into Waveform Audio File (WAV) format. Transport Stream is specified in the MPEG-2 Part 1 standard, and is commonly used to store audio, video, and data on DVD and Blu-ray discs. WAV files, on the other hand, are only lightly compressed, but are supported by a large number audio/video programs thanks to the format's relative simplicity. This program is part of the MakeMKV suite, and is designed first-and-foremost to complement MakeMKV.
+
+.SH OPTIONS
+
+.IP \fB-d\fR,\ \fB--dll\fR\ \fIFILE\fR
+Use the shared library \fIFILE\fR to decode the \fIINPUT_FILE\fR.
+
+.SH INPUT_FILE
+Each instance of this program must have an \fIINPUT_FILE\fR. This parameter should be the file name and path to an MPEG Transport Stream encoded file. (Which typically terminates with a \fI.ts\fR or \fI.dts\fR file extension.)
+
+.SH OUTPUT_FILE
+Each instance of this program must have an \fIOUTPUT_FILE\fR. The file specified by this parameter should not exist prior to this program being executed. If \fIOUTPUT_FILE\fR already exists, it will be unconditionally overwritten. Since a Waveform Audio File will be produced, this file name should end with the \fI.wav\fR file extension.
+
+.SH EXAMPLES
+The following examples demonstrate the proper syntax for performing various common operations.
+
+\fB1.\fR\ Decode \fIInputFile.dts\fR to \fIOutputFile.wav\fR using the default decoder library.
+
+.br
+    \fBmmdtsdec InputFile.dts OutputFile.wav\fR
+
+.SH AUTHOR
+This manual page was written by Karl Lenz <xorangekiller@gmail.com> for the Debian project (but may be used by others).
+
+.SH COPYRIGHT
+2007-2014 GuinpinSoft Inc.
+
+Copying and distribution of this file, with or without modification, are permitted in any medium without royalty provided the copyright notice and this notice are preserved.
+
+The MakeMKV Multimedia Display MPEG Transport Stream Decoder is provided "as is" with no warranty. This program is proprietary software: you can redistribute it under the terms of the MakeMKV End-User License Agreement (EULA) as provided by GuinpinSoft Incorporated. On Debian systems, the complete text of this license can be found in "/usr/share/doc/makemkv-dec/copyright".
+
+.SH SEE\ ALSO
+.BR makemkv (1),
+.BR makemkvcon (1),
+.BR ffmpeg (1),
+.BR mencoder (1)

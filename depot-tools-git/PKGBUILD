@@ -1,0 +1,123 @@
+# Maintainer: Adrian Perez <aperez@igalia.com>
+# Contributor: rway <rway07@gmail.com>
+# Contributor: wabi <aschrafl@jetnet.ch>
+# Contributor: Alexander RÃ¸dseth <rodseth@gmail.com>
+# Contributor: Andreas Schrafl <aschrafl@gmail.com>
+# Contributor: piojo <aur@zwell.net>
+# Contributor: hack.augusto <hack.augusto@gmail.com>
+# Contributor: Yen Chi Hsuan <yan12125@gmail.com>
+
+pkgname=depot-tools-git
+pkgver=r3771.1bf69a1
+pkgrel=1
+pkgdesc='Build tools for working with Chromium development, include gclient'
+arch=('any')
+url='http://dev.chromium.org/developers/how-tos/install-depot-tools'
+source=("${pkgname}::git+https://chromium.googlesource.com/chromium/tools/depot_tools.git"
+	'depot_tools.sh' 'repo_fix.sh' 'fixshebangs.py')
+license=('Custom')
+depends=('git' 'ninja' 'python2')
+optdepends=(
+	'google-cloud-sdk: for gsutil and download_from_google_storage'
+	'subversion: for repositories using svn'
+)
+provides=('depot_tools' 'gclient')
+conflicts=('gclient-svn' 'depot_tools-svn')
+options=('!strip')
+install="depot_tools.install"
+sha512sums=('SKIP'
+            'dbd6e66dce2b142830c7f22df79f6956f7f2aa762e80c1121f1a12599a8d98230d67404319c86549f52da7e736c56231d857a0f6a2dd5139b94bf70f5d7526fa'
+            'bde33ffcad42a4d554d5490b6562981ef4b9f3abebadbed909749ee05ba391da4b5acb31b901e785b6f019b4ed3f9c740ab92623dd6a87e67b4b599a0010374b'
+            '33d772f68deddefce985d2820d3ef60fa730a1f3bc404cef3c8b1b517369501b9c3a07bc7b1b3df4d0589b45cbe4850f935699676c3e10c437bceffb37eb8214')
+
+scripts_to_fix_exec=(
+	apply_issue
+	cit
+	clang-format
+	commit_queue
+	depot-tools-auth
+	download_from_google_storage
+	fetch
+	gclient
+	git-runhooks
+	gn
+	roll-dep-svn
+	roll-dep
+)
+
+pkgver () {
+	cd "${pkgname}"
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare () {
+	cd "${pkgname}"
+
+	# This tools work with python2, but ArchLinux default is python3. Fix it.
+	# pylint is in extra, ninja is an executable and it does not need any change.
+	# gclient.py require a fix for work correctly with python2-colorama
+	# Another way is make default python2, but I don't think is a good idea!
+	# Fixing python scripts.
+	msg "Patching scripts for python2 usage..."
+	"${srcdir}/fixshebangs.py"
+
+	# Fix gclient.py
+	sed -i -r -e 's/from third_party import colorama/import colorama/' \
+			  -e 's/from third_party.colorama import Fore/from colorama import Fore/' \
+		gclient.py
+
+	# Fixing scripts which use "exec python"
+	for script in "${scripts_to_fix_exec[@]}"
+	do
+		sed -r -i -e 's/exec python/exec python2/' "${script}"
+	done
+}
+
+package()
+{
+	# Creating directories
+	install -d "${pkgdir}/opt"
+
+	cp -r "${srcdir}/${pkgname}" "${pkgdir}/opt/depot_tools"
+
+	# Export PATH
+	install -Dm755 "${srcdir}/depot_tools.sh" "${pkgdir}/etc/profile.d/depot_tools.sh"
+
+	# Install repo_fix.sh script
+	install -Dm 755 "${srcdir}/repo_fix.sh" "${pkgdir}/opt/depot_tools"
+
+	# Install License
+	install -Dm644 "${pkgdir}/opt/depot_tools/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+
+	# Move manual pages to /usr/share/man
+	install -dm755 "${pkgdir}/usr/share/man"
+	mv "${pkgdir}/opt/depot_tools/man"/man[0-8] "${pkgdir}/usr/share/man/"
+
+	# Ditto for HTML pages and README files, to /usr/share/doc
+	install -dm755 "${pkgdir}/usr/share/doc/${pkgname}"
+	mv "${pkgdir}/opt/depot_tools/man/html" "${pkgdir}/usr/share/doc/${pkgname}"
+	mv "${pkgdir}/opt/depot_tools"/README*  "${pkgdir}/usr/share/doc/${pkgname}"
+
+	# Remove stray files
+	rm -r "${pkgdir}/opt/depot_tools/man"
+
+	# We depend on the "ninja" package, so the wrapper script which chooses a
+	# prebuilt version of it or makes a local build is not needed at all, so
+	# those are removed and a wrapper script which runs the system-installed
+	# /usr/bin/ninja is created instead.
+	rm "${pkgdir}/opt/depot_tools"/ninja*
+	cat > "${pkgdir}/opt/depot_tools/ninja" <<-EOF
+	#! /bin/sh
+	exec /usr/bin/ninja
+	EOF
+	chmod 755 "${pkgdir}/opt/depot_tools/ninja"
+
+	# gsutil v4.19 is included in google-cloud-sdk, and I guess 4.19 is compatible with 4.13 and 4.15
+	# download_from_google_storage.py expects version 4.15 and gsutil.py expects 4.13
+	GSUTIL_PATH="${pkgdir}/opt/depot_tools/external_bin/gsutil"
+	install -d "${GSUTIL_PATH}/gsutil_4.13"
+	ln -s /opt/google-cloud-sdk/platform/gsutil "${GSUTIL_PATH}/gsutil_4.13/gsutil"
+	ln -s "gsutil_4.13" "${GSUTIL_PATH}/gsutil_4.15"
+
+	rm -rf "${pkgdir}/opt/depot_tools/.git"
+}

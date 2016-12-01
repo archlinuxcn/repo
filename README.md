@@ -1,6 +1,8 @@
 Arch Linux Chinese Community Repository
 ====
 
+Packaging consistency check: [![Build Status](https://travis-ci.org/archlinuxcn/repo.svg?branch=master)](https://travis-ci.org/archlinuxcn/repo)
+
 ###Usage
 
 Add repo

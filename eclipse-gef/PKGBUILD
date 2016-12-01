@@ -6,17 +6,18 @@
 # Contributor: Rubin Simons <rubin@xs4all.nl>
 
 pkgname=eclipse-gef
-pkgver=3.10.1
-_reldate=201509140217
+pkgver=4.0.0
+_reldate=201606082015
 pkgrel=1
 pkgdesc="GEF framework for the Eclipse platform"
 arch=(any)
 url=http://www.eclipse.org/gef/
 license=(EPL)
 depends=(eclipse)
-_mirror="http://www.eclipse.org/downloads/download.php?r=1&file="
-source=($_mirror/tools/gef/gef4/downloads/drops/$pkgver/R$_reldate/GEF4-Update-$pkgver.zip)
-sha256sums=('8ec17bf698d71a22453de05d10108b59580c722e394da0d5dc99f809548c94f0')
+_mirror="http://www.eclipse.org/downloads/download.php?r=1&mirror_id=1&file="
+source=("$_mirror/tools/gef/downloads/drops/gef4/${pkgver}/R${_reldate}/GEF4-Update-${pkgver}.zip")
+
+md5sums=('080a895db5956569c6de09bb3bdb1bb9')
 
 package() {
     _dest="$pkgdir"/usr/lib/eclipse/dropins/${pkgname#*-}/eclipse

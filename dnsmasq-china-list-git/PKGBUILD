@@ -2,7 +2,7 @@
 
 _pkgname=dnsmasq-china-list
 pkgname=$_pkgname-git
-pkgver=0.7432.ca4a753
+pkgver=0.34957.5fff6cc
 pkgrel=1
 pkgdesc="Configuration for hot China domains to accelerate via Dnsmasq"
 arch=('any')
@@ -11,7 +11,7 @@ license=('WTFPL')
 depends=('dnsmasq')
 makedepends=('git')
 source=("git://github.com/felixonmars/${_pkgname}.git")
-md5sums=("SKIP")
+md5sums=('SKIP')
 
 pkgver() {
   cd "$srcdir/$_pkgname"

@@ -1,0 +1,42 @@
+# shellcheck disable=SC2034,SC2164,SC2154
+# Maintainer: Sven-Hendrik Haase <sh@lutzhaase.com>
+# Contributor: Andrew Gallant <jamslam@gmail.com>
+pkgname=ripgrep-broadwell-git
+pkgver=0.3.1.r10.g0473df1
+pkgrel=1
+pkgdesc="A search tool that combines the usability of ag with the raw speed of grep. Git version, optimized for broadwell CPUs"
+arch=('x86_64')
+url="https://github.com/BurntSushi/ripgrep"
+license=('MIT' 'UNLICENSE')
+depends=('gcc-libs')
+makedepends=('cargo-nightly' 'git')
+options=('debug')
+source=("https://github.com/BurntSushi/$pkgname/archive/$pkgver.tar.gz")
+source=("git+$url")
+sha256sums=('SKIP')
+conflicts=(ripgrep)
+
+pkgver () {
+  cd ripgrep
+  git describe | sed -E 's/([^-]*-g)/r\1/;s/-/./g'
+}
+
+build () {
+  cd ripgrep
+  echo "lto = true" >> Cargo.toml
+  RUSTFLAGS="-C target-cpu=broadwell" cargo build --release --features simd-accel
+  git checkout Cargo.toml
+}
+
+package () {
+  cd ripgrep
+
+  install -Dm755 "target/release/rg" "$pkgdir/usr/bin/rg"
+
+  install -Dm644 "doc/rg.1" "$pkgdir/usr/share/man/man1/rg.1"
+  install -Dm644 "README.md" "$pkgdir/usr/share/doc/${pkgname}/README.md"
+
+  install -Dm644 "COPYING" "$pkgdir/usr/share/licenses/${pkgname}/COPYING"
+  install -Dm644 "LICENSE-MIT" "$pkgdir/usr/share/licenses/${pkgname}/LICENSE-MIT"
+  install -Dm644 "UNLICENSE" "$pkgdir/usr/share/licenses/${pkgname}/UNLICENSE"
+}

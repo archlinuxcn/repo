@@ -1,0 +1,52 @@
+# Maintainer: Daniel Bermond < yahoo-com: danielbermond >
+
+# NOTE:
+# libmfx defaults to build only the static library.
+
+pkgname=libmfx-git
+pkgver=r40.7adf2e4
+pkgrel=2
+pkgdesc="Intel Media SDK dispatcher library"
+arch=('i686' 'x86_64')
+url="https://github.com/lu-zero/mfx_dispatch"
+license=('custom')
+depends=('libva')
+makedepends=('git' 'autoconf')
+options=('staticlibs')
+provides=('libmfx' 'libmfx.a')
+source=("$pkgname"::'git+https://github.com/lu-zero/mfx_dispatch.git')
+sha256sums=('SKIP')
+
+pkgver() {
+	cd "${srcdir}/${pkgname}"
+	
+	# Git, with or without tags available
+	
+	( set -o pipefail
+          git describe --long 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
+          printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+        )
+}
+
+build() {
+	cd "${srcdir}/${pkgname}"
+	
+	autoreconf -i
+	
+	./configure \
+                --prefix=/usr \
+                --enable-static=yes \
+                --enable-shared=no \
+                --enable-fast-install=yes \
+                --with-libva_drm=yes \
+                --with-libva_x11=yes \
+                --with-pic
+}
+
+package() {
+	cd "${srcdir}/${pkgname}"
+	
+	make DESTDIR="$pkgdir/" install
+	
+	install -D -m644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}

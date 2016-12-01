@@ -29,6 +29,10 @@ provides=("firefox=${pkgver}-${pkgrel}")\n""" + line
   for line in edit_file('mozconfig'):
     if 'gtk3' in line:
       continue
+    elif 'MOZ_REQUIRE_SIGNING' in line:
+      continue
+    elif '--enable-official-branding' in line:
+      print('ac_add_options --enable-default-toolkit=cairo-gtk2')
     print(line)
 
   run_cmd(['updpkgsums'])

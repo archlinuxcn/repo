@@ -1,0 +1,25 @@
+_pkgname=async-timeout
+pkgname=python-async_timeout
+pkgver=1.1.0
+pkgrel=1
+pkgdesc="Timeout context manager for asyncio programs"
+arch=('any')
+url="https://github.com/aio-libs/async_timeout/"
+license=('Apache')
+depends=('python')
+makedepends=('python-setuptools')
+source=('https://pypi.python.org/packages/29/f6/eeac39dfadd3a7610bb33842cf611a1f09fcd2e445ab76e4c951efde0c2b/async-timeout-1.1.0.tar.gz')
+md5sums=('8c3565e165266dd7710a76f50ae44319')
+
+build() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  python3 setup.py build
+}
+
+package() {
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+}
+
+# vim:set sw=2 et:

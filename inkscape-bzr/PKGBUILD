@@ -2,70 +2,54 @@
 # Maintainer: Stefan Husmann <stefan-husmann@t-online.de>
 
 pkgname=inkscape-bzr
-pkgver=r14783
+pkgver=r15286
 pkgrel=1
-pkgdesc="An Open Source vector graphics editor, using Scalable Vector Graphics (SVG) file format"
+pkgdesc="An Open Source vector graphics editor, using SVG file format, from bzr trunk"
 url="https://launchpad.net/inkscape"
 arch=('i686' 'x86_64')
 license=('GPL' 'LGPL')
-depends=('aspell' 'gtkspell' 'gtkmm' 'libexif' 'gc' 'poppler-glib' 'potrace'
-	 'libxslt' 'gsl' 'imagemagick' 'desktop-file-utils' 'python2'
-	 'popt' 'dbus-glib' 'libcdr' 'libvisio' 'python2' 'gdk-pixbuf2'
-	 'hicolor-icon-theme')
+depends=('aspell' 'gc' 'poppler-glib' 'libxslt' 'gsl' 'imagemagick' 'libyaml'
+	 'gdl>=3.8.0.25' 'gtkmm3' 'potrace' 'libcdr' 'libvisio' 'gnome-vfs')
 optdepends=('python2-numpy: some extensions'
             'python2-lxml: some extensions and filters'
             'uniconvertor: reading/writing to some proprietary formats'
  	    'gtkspell3: for spelling'
 	    'ruby: for simplepath extension')
-makedepends=('boost' 'intltool' 'bzr' 'gettext' 'pango' 'fontconfig')
+makedepends=('cmake' 'boost' 'intltool' 'bzr' 'gettext' 'pango'  'fontconfig')
 provides=('inkscape')
 conflicts=('inkscape')
-options=('!libtool')
+options=('!libtool' '!buildflags' '!makeflags')
 source=('inkscape::bzr+http://bazaar.launchpad.net/~inkscape.dev/inkscape/trunk/')
-md5sums=('SKIP')
-install=inkscape-bzr.install
+sha1sums=('SKIP')
 _bzrmod="inkscape"
 
 pkgver() {
-  cd $srcdir/$_bzrmod
+  cd "$srcdir/$_bzrmod"
   printf "r%s" "$(bzr revno)"
 }
 
 prepare() {
   cd "$srcdir/$_bzrmod"
-  #fix for inkscape to use python2 with the python 3 package installed.
-  sed -i '1s|/usr/bin/python\>|/usr/bin/python2|' cxxtest/*.py
-  sed -i '1s|/usr/bin/env python\>|/usr/bin/env python2|g' share/*/{test/,}*.py
-  sed -i 's|"python" },|"python2" },|g' src/extension/implementation/script.cpp
-  sed -i 's|python -c |python2 -c|g' share/extensions/uniconv*.py
   sed -i 's|"python"|"python2"|g' src/main.cpp
-  sed -i '1s|/usr/bin/env python\>|/usr/bin/env python2|g' share/extensions/ink2canvas/svg.py
-  sed -i '1s|/usr/bin/env python\>|/usr/bin/env python2|g' share/extensions/ink2canvas/canvas.py
+  find share -type f -name "*.py" -exec \
+       sed -i '1s|/usr/bin/env python\>|/usr/bin/env python2|g' {} \;
+  sed -i '1s|/usr/bin/env python3\>|/usr/bin/env python2|g' CMakeScripts/cmake_consistency_check.py 
 }
 
 build() {
   cd "$srcdir/$_bzrmod"
-  [[ -d ../build ]] || mkdir ../build
-  export CXXFLAGS+=" `pkg-config --cflags glib` -fPIC -std=c++11"
-  ./autogen.sh
-  sed -i 's|python -c|python2 -c|g' configure
-  cd ../build
-  ../$_bzrmod/configure LIBS='-lpangoft2-1.0 -lfontconfig' \
-    --prefix=/usr \
-    --without-gnome-vfs \
-    --enable-lcms \
-    --enable-poppler-cairo \
-    --disable-gtk3-experimental \
-    --enable-dbusapi \
-    --enable-visio \
-    --enable-wpg \
-    --disable-rpath \
-    --enable-binreloc \
-    --disable-dependency-tracking
-   make 
+  [[ -d build ]] || mkdir build
+  cd build
+  
+  cmake .. \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_BUILD_TYPE=RELEASE \
+	-DWITH_DBUS=OFF
+  make 
 }
 
 package() {
-  cd "$srcdir/build"
+  cd "$srcdir/$_bzrmod/build"
   make DESTDIR=$pkgdir install
 }
+

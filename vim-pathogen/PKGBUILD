@@ -1,19 +1,16 @@
 # Maintainer: drrossum <d.r.vanrossum at gmx.de>
 
 pkgname=vim-pathogen
-pkgver=2.3
-pkgrel=2
+pkgver=2.4
+pkgrel=1
 pkgdesc="A vim plugin for managing your runtimepath"
 arch=('any')
 url="http://github.com/tpope/vim-pathogen"
 license=('GPL')
 groups=('vim-plugins')
 depends=('vim')
-conflicts=('vim-pathogen-git')
-provides=('vim-pathogen')
-install=vimdoc.install
 source=("$pkgname-$pkgver.tar.gz"::"https://github.com/tpope/$pkgname/archive/v$pkgver.tar.gz")
-md5sums=('8cf56e1d8f5c993bee44d89a003aa943')
+md5sums=('b2a7c050216c3822314705f41f673097')
 
 package() {
   cd "$pkgname-$pkgver"

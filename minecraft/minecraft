@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if [ -e "${HOME}/.minecraft/launcher.jar" ]; then
+	exec java -jar "${HOME}/.minecraft/launcher.jar" $@
+else
+	exec java -jar /usr/share/minecraft/Minecraft.jar $@
+fi

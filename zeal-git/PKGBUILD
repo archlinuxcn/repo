@@ -1,0 +1,35 @@
+# Maintainer: Oleg Shparber <trollixx+aur@gmail.com>
+# Contributor: Whyme Lyu <callme5long@gmail.com>
+# URL: https://github.com/trollixx/aur-packages
+
+pkgname=zeal-git
+_appname=zeal
+pkgver=v0.3.1.r22.g7e4e956
+pkgrel=1
+epoch=1
+pkgdesc="An offline API documentation browser"
+arch=('i686' 'x86_64')
+url="https://zealdocs.org/"
+license=('GPL3')
+depends=('libarchive' 'qt5-webkit' 'qt5-imageformats' 'qt5-x11extras'
+         'xcb-util-keysyms' 'xdg-utils')
+makedepends=('git')
+conflicts=('zeal')
+source=("git+https://github.com/zealdocs/$_appname")
+sha1sums=('SKIP')
+
+pkgver() {
+	cd ${srcdir}/${_appname}
+	git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+	cd ${srcdir}/${_appname}
+	QT_SELECT=5 qmake PREFIX=/usr CONFIG+=zeal_qtwebkit
+	make
+}
+
+package() {
+	cd ${srcdir}/${_appname}
+	make INSTALL_ROOT="$pkgdir" install
+}

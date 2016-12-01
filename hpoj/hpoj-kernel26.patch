@@ -1,0 +1,86 @@
+--- hpoj-0.91/scripts/ptal-init.in.kernel26	2004-03-03 17:30:47.000000000 +0000
++++ hpoj-0.91/scripts/ptal-init.in	2004-03-03 17:30:59.000000000 +0000
+@@ -90,6 +90,11 @@
+ my $varLock="/var/lock";
+ my $varLockSubsys="$varLock/subsys";
+ my $osPlatform=`uname -s 2>/dev/null`;
++chomp $osPlatform;
++my $linuxVersion=($osPlatform eq 'Linux' ? `uname -r 2>/dev/null` : '');
++$linuxVersion=~s/^(\s*)(\d+\.\d+)(\..*)$/$2/;
++chomp $linuxVersion;
++my $usbprintermodule = ($linuxVersion eq '2.6' ? "usblp" : "printer");
+ my %devnames;
+ my %obsoleteDevnames;
+ my %configInfo;
+@@ -1222,12 +1227,12 @@
+ # undef -- skip USB probe
+ # 0 -- do nothing, proceed with USB probe
+ # >0 -- load printer.o
+-# <0 -- disable and unload printer.o
++# <0 -- disable and unload printer.o/usblp.o
+ sub linuxWhatShouldWeDoAboutUsbPrinterModule {
+ 	my $isSmp=&linuxIsSmp;
+ 	my $libusbSupported=&ptalMlcdSupportsLibusb;
+ 	my $usblpIsLoaded=&linuxUsblpIsLoaded;
+-	my $printerIsLoaded=&linuxModuleIsLoaded("printer");
++	my $printerIsLoaded=&linuxModuleIsLoaded($usbprintermodule);
+ 
+ 	# non-SMP:
+ 	if (!$isSmp) {
+@@ -1261,9 +1266,10 @@
+ 		}
+ 		goto allowInsmodPrinter;
+ 
+-	# SMP, libusb support, some sort of printer.c functionality loaded:
++	# SMP, libusb support, some sort of printer.c/usblp.c
++	# functionality loaded:
+ 	} elsif ($usblpIsLoaded) {
+-	    # printer.c compiled into the kernel:
++	    # printer.c/usblp.c compiled into the kernel:
+ 	    if (!$printerIsLoaded) {
+ 		if (!&askYN(
+ "\n".
+@@ -1280,7 +1286,7 @@
+ 			return undef;
+ 		}
+ 
+-	    # printer.c compiled and loaded as a module:
++	    # printer.c/usblp.c compiled and loaded as a module:
+ 	    } else {
+ promptDisableRmmodPrinter:
+ 		my $r=&askYN(
+@@ -1301,8 +1307,9 @@
+ 		}
+ 	    }
+ 
+-	# SMP, libusb support, printer.c enabled although not loaded:
+-	} elsif (!&linuxModuleIsDisabled("printer")) {
++	# SMP, libusb support, printer.c/usblp.c enabled although not 
++	# loaded:
++	} elsif (!&linuxModuleIsDisabled($usbprintermodule)) {
+ 		goto promptDisableRmmodPrinter;
+ 	}
+ 
+@@ -1326,11 +1333,11 @@
+ 			return 1;
+ 		}
+ 		if ($r<0) {
+-			$r=&linuxDisableAndUnloadModule("printer",
++			$r=&linuxDisableAndUnloadModule($usbprintermodule,
+ "to prevent possible system instability due to SMP+USB");
+ 		} else {
+ linuxJustLoad:
+-			$r=&linuxInsmod("printer",$quiet);
++			$r=&linuxInsmod($usbprintermodule,$quiet);
+ 		}
+ 		if (!$r && !$quiet &&
+ 		    &askYN("\n*** Continue with the USB probe anyway".$msg,0)) {
+@@ -1601,7 +1608,7 @@
+ 
+     } else {
+ 	my $parModulesLoaded=0;
+-	# Don't "modprobe printer" on SMP Linux with libusb support:
++	# Don't "modprobe printer/usblp" on SMP Linux with libusb support:
+ 	my $usbModulesLoaded=
+ 		(&ptalMlcdSupportsLibusb &&
+ 		 $osPlatform=~/Linux/ && &linuxIsSmp);

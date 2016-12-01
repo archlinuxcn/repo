@@ -3,7 +3,7 @@
 
 pkgname='xfce4-linelight-plugin'
 pkgver='0.1.7'
-pkgrel='8'
+pkgrel='9'
 pkgdesc='A simple frontend for the locate search.'
 arch=('i686' 'x86_64')
 license=('GPL2')

@@ -1,0 +1,31 @@
+# Maintainer: Stephen Zhang <zsrkmyn at gmail dot com>
+_mirrorlist_name=archlinuxcn-mirrorlist
+pkgname=$_mirrorlist_name-git
+pkgver=20161009
+pkgver() {
+  date +'%Y%m%d'
+}
+pkgrel=1
+pkgdesc="Arch Linux CN repo mirror list for use by pacman"
+arch=('any')
+url="https://github.com/archlinuxcn/repo"
+license=('GPL')
+makedepends=('git')
+backup=(etc/pacman.d/$_mirrorlist_name)
+source=(git://github.com/archlinuxcn/mirrorlist-repo.git)
+md5sums=('SKIP')
+
+_gitname=mirrorlist-repo
+
+build() {
+  cd "$srcdir/$_gitname"
+  grep '^Server = ' README.md | sed 's/^/#/' > "$_mirrorlist_name"
+}
+
+package() {
+  cd "$srcdir/$_gitname"
+  mkdir -p "$pkgdir/etc/pacman.d/"
+  mv "$_mirrorlist_name" "$pkgdir/etc/pacman.d/"
+}
+
+# vim:set ts=2 sw=2 et:

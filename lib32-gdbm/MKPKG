@@ -1,0 +1,9 @@
+arch=('x86_64')
+pkgname=('lib32-gdbm')
+
+build () {
+    shift
+    ionice -c 3 chrt -b 0 sudo multilib-build -- $*
+}
+
+# vim: ts=2 sw=2 et:

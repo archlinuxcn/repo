@@ -4,13 +4,14 @@
 
 pkgname=fontconfig-ubuntu
 pkgver=2.11.94
-_ubver=0ubuntu1
-pkgrel=3
+_ubver=0ubuntu2
+pkgrel=2
 pkgdesc="Library for configuring and customizing font access, with Ubuntu's LCD rendering patches."
 arch=('i686' 'x86_64')
 url="https://launchpad.net/ubuntu/+source/fontconfig"
 license=('custom')
 depends=('expat' 'freetype2-ubuntu')
+makedepends=('python2' 'docbook2x')
 conflicts=('fontconfig')
 provides=("fontconfig=$pkgver")
 options=('!libtool')
@@ -18,9 +19,9 @@ install=$pkgname.install
 source=("https://launchpad.net/ubuntu/+archive/primary/+files/fontconfig_$pkgver.orig.tar.bz2"
         "https://launchpad.net/ubuntu/+archive/primary/+files/fontconfig_$pkgver-$_ubver.debian.tar.xz"
         '53-monospace-lcd-filter.patch')
-sha256sums=('d763c024df434146f3352448bc1f4554f390c8a48340cef7aa9cc44716a159df'
-         '5acde991abf1ac334aa906007ea07e42a569174560d78c675f8b1878312f29c1'
-         'c759702ba66fe88768aa93035637401085bb5c02d898c960b68291aea10daa8d')
+md5sums=('c988ea12f4117330246e041109152b4a'
+         '1527bc9abef9c13eef6178b4369dda2e'
+         'a17e48be6a06bc056574be6756cb9738')
 
 prepare() {
   cd fontconfig-$pkgver
@@ -37,12 +38,12 @@ prepare() {
 build() {
   cd fontconfig-$pkgver
 
-  # make sure there's no rpath trouble and sane .so versioning - FC and Gentoo do this as well
-  msg2 "Running libtoolize.."
-  libtoolize -f
+  # # make sure there's no rpath trouble and sane .so versioning - FC and Gentoo do this as well
+  # msg2 "Running libtoolize.."
+  # libtoolize -f
 
-  msg2 "Running autoreconf.."
-  autoreconf -fi
+  # msg2 "Running autoreconf.."
+  # autoreconf -fi
 
   # Enable Position Independent Code for prelinking
   export CFLAGS="$CFLAGS -fPIC"

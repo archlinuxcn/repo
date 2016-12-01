@@ -1,0 +1,11 @@
+diff -Naur hpoj-0.91-orig/lib/ptal/ptal-hpjd.c hpoj-0.91/lib/ptal/ptal-hpjd.c
+--- hpoj-0.91-orig/lib/ptal/ptal-hpjd.c	2010-02-19 22:33:54.000000000 -0500
++++ hpoj-0.91/lib/ptal/ptal-hpjd.c	2010-02-19 22:34:45.000000000 -0500
+@@ -45,6 +45,7 @@
+ #include <stdlib.h>
+ 
+ #ifdef HAVE_SNMP
++#include <net-snmp/net-snmp-config.h>
+ #include <asn1.h>
+ #include <snmp.h>
+ #include <snmp_api.h>

@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 
-import fileinput
-
 from lilaclib import *
 
 build_prefix = 'extra-x86_64'
+depends = ['python-multidict-git', 'python-async_timeout', 'python-yarl']
 
 def pre_build():
   pypi_pre_build(
-    depends = ['python-chardet'],
+    depends = ['python-chardet', 'python-multidict', 'python-async_timeout', 'python-yarl'],
     depends_setuptools = False,
     makedepends = ['cython'],
+    optdepends = ['python-aiodns'],
     arch = ['i686', 'x86_64'],
   )
 

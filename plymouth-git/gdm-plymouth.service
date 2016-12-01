@@ -1,0 +1,15 @@
+[Unit]
+Description=GNOME Display Manager
+Conflicts=getty@tty1.service plymouth-quit.service
+After=systemd-user-sessions.service getty@tty1.service plymouth-quit.service
+
+[Service]
+ExecStart=/usr/bin/gdm
+Restart=always
+IgnoreSIGPIPE=no
+BusName=org.gnome.DisplayManager
+StandardOutput=syslog
+StandardError=inherit
+
+[Install]
+Alias=display-manager.service

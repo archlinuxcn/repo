@@ -19,8 +19,6 @@
 
 from lilaclib import *
 
-depends=['kwayland-git']
-
 build_prefix = 'extra-x86_64'
 
 pre_build = aur_pre_build

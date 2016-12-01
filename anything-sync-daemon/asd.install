@@ -1,0 +1,37 @@
+## arg 1:  the new package version
+## arg 2:  the old package version
+
+_stopit() {
+	systemctl is-active asd.service &>/dev/null
+	if [ $? -eq 0 ]; then
+		echo '--> Pacman must stop asd before it can upgrade.'
+		echo '--> Please start it manually once the upgrade is complete.'
+		systemctl stop asd.service &>/dev/null
+	fi
+}
+
+pre_upgrade() {
+	for version in 5.69 5.76; do
+		if [ $(vercmp $2 $version) -lt 0 ]; then
+			_stopit
+		fi
+	done
+}
+
+post_install() {
+	echo '--------------------------------------------------------------------------'
+	echo '  Define what to sync in /etc/asd.conf'
+	echo '  Read the manpage before use and also see the wiki page'
+	echo '  https://wiki.archlinux.org/index.php/Anything-sync-daemon'
+	echo
+	echo '  ALWAYS backup your important data before using utils like asd!'
+	echo '--------------------------------------------------------------------------'
+}
+
+pre_remove() {
+	systemctl is-active asd.service &>/dev/null
+	if [ $? -eq 0 ]; then
+		echo '--> In order to preserve your data, pacman will now stop asd.'
+		systemctl stop asd.service &>/dev/null
+	fi
+}

@@ -1,0 +1,63 @@
+post_install() {
+	set -e
+
+# Add icons to the system icons
+XDG_ICON_RESOURCE="`which xdg-icon-resource 2> /dev/null || true`"
+if [ ! -x "$XDG_ICON_RESOURCE" ]; then
+  echo "Error: Could not find xdg-icon-resource" >&2
+  exit 1
+fi
+for icon in "/opt/yandex/browser-beta/product_logo_"*.png; do
+  size="${icon##*/product_logo_}"
+  "$XDG_ICON_RESOURCE" install --size "${size%.png}" "$icon" "yandex-browser-beta"
+done
+
+UPDATE_MENUS="`which update-menus 2> /dev/null || true`"
+if [ -x "$UPDATE_MENUS" ]; then
+  update-menus
+fi
+
+# Update cache of .desktop file MIME types. Non-fatal since it's just a cache.
+update-desktop-database > /dev/null 2>&1 || true
+
+chmod 4755 /opt/yandex/browser-beta/yandex_browser-sandbox
+#chown root:root /opt/yandex/browser-beta/yandex_browser-sandbox
+	
+  cat << EOF
+==> NOTE: After install run chmod 4755 /opt/yandex/browser-beta/yandex_browser-sandbox as root.
+
+EOF
+}
+
+post_upgrade() {
+	set -e
+
+# Add icons to the system icons
+XDG_ICON_RESOURCE="`which xdg-icon-resource 2> /dev/null || true`"
+if [ ! -x "$XDG_ICON_RESOURCE" ]; then
+  echo "Error: Could not find xdg-icon-resource" >&2
+  exit 1
+fi
+for icon in "/opt/yandex/browser-beta/product_logo_"*.png; do
+  size="${icon##*/product_logo_}"
+  "$XDG_ICON_RESOURCE" install --size "${size%.png}" "$icon" "yandex-browser-beta"
+done
+
+UPDATE_MENUS="`which update-menus 2> /dev/null || true`"
+if [ -x "$UPDATE_MENUS" ]; then
+  update-menus
+fi
+
+# Update cache of .desktop file MIME types. Non-fatal since it's just a cache.
+update-desktop-database > /dev/null 2>&1 || true
+
+chmod 4755 /opt/yandex/browser-beta/yandex_browser-sandbox
+#chown root:root /opt/yandex/browser-beta/yandex_browser-sandbox
+
+  cat << EOF
+==> NOTE: After install run chmod 4755 /opt/yandex/browser-beta/yandex_browser-sandbox as root.
+
+EOF
+}
+
+

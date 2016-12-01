@@ -1,0 +1,41 @@
+# Maintainer: Lukas Fleischer <lfleischer@archlinux.org>
+# Contributor: Hilton Medeiros <medeiros.hilton@gmail.com>
+# Contributor: Dave Reisner <d@falconindy.com>
+
+pkgname=libgit2-julia
+pkgver=0.24.1
+pkgrel=2
+epoch=1
+pkgdesc='A linkable library for Git'
+arch=(i686 x86_64 armv7h aarch64)
+url='https://libgit2.github.com/'
+depends=(zlib openssl libssh2 curl)
+makedepends=(cmake python)
+provides=("libgit2=$epoch:$pkgver")
+conflicts=(libgit2)
+license=('GPL2')
+source=("libgit2-$pkgver.tar.gz::https://github.com/libgit2/libgit2/archive/v${pkgver}.tar.gz"
+        libgit2-agent-nonfatal.patch
+        libgit2-openssl-hang.patch)
+sha1sums=('198ac53d713c521d940951ab5d6b90b75b941918'
+          '1665c52b5c26bb6b2d76685a2077ab57e65c9206'
+          'd642321a5de0753d4d5e3be66a9cb48648df6390')
+
+prepare() {
+  cd "libgit2-$pkgver"
+
+  patch -p1 < ../libgit2-agent-nonfatal.patch
+  patch -p1 < ../libgit2-openssl-hang.patch
+}
+
+build() {
+  cd "libgit2-$pkgver"
+  export LANG=en_US.UTF-8
+  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DTHREADSAFE=ON
+  make
+}
+
+package() {
+  cd "libgit2-$pkgver"
+  make DESTDIR="$pkgdir" install
+}
