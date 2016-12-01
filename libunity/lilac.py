@@ -6,7 +6,7 @@
 
 from lilaclib import *
 
-depends=["dee", ("libdbusmenu", "libdbusmenu-glib")]
+depends=["dee"]
 
 build_prefix = 'extra-x86_64'
 pre_build = aur_pre_build
