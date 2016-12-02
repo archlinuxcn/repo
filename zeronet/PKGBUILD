@@ -3,7 +3,6 @@
 pkgname='zeronet'
 pkgver=0.5.0
 pkgrel=1.1
-pkgrel=1
 arch=('any')
 url="https://zeronet.io/"
 depends=('python2>=2.7.10'
@@ -33,7 +32,6 @@ package() {
    # There is no setup.py shipped, so brute-force copy
    cp -a "$srcdir/$_pkgarchive/." "$pkgdir/opt/zeronet/"
 python2 -m compileall $pkgdir/opt/zeronet
-   cp -a "$srcdir/$_pkgarchive/." "$pkgdir/opt/zeronet/"
 
    install -D -m644 "$srcdir/zeronet.conf" "$pkgdir/etc/zeronet.conf"
    install -D -m644 "$srcdir/zeronet.service" "$pkgdir/usr/lib/systemd/system/zeronet.service"
