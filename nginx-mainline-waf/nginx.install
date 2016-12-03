@@ -1,0 +1,21 @@
+post_upgrade() {
+    if (( $(vercmp $2 1.2.7-4) <= 0 )); then
+        chmod 750 var/log/nginx
+        chown http:log var/log/nginx
+    fi
+    if (( $(vercmp $2 1.2.1-2) <= 0 )); then
+        echo ' >>> Since 1.2.1-2 several changes has been made in package:'
+        echo '      - *.conf files have been moved to /etc/nginx'
+        echo '      - /etc/conf.d/nginx has been removed'
+        echo '        Main configuration file is set to /etc/nginx/nginx.conf'
+        echo '      - access.log and error.log can be found in /var/log/nginx by default'
+        echo '      - bundled *.html files have been moved to /usr/share/nginx/html'
+        echo '      - /etc/nginx/{html,logs} symbolic links and *.default files have been removed'
+    fi
+    if (( $(vercmp $2 1.4.2-4) < 0 )); then
+        echo 'Nginx now includes only upstream bundled modules.'
+        echo 'Thus, passenger module support was dropped.'
+    fi
+}
+
+# vim:set ts=4 sw=4 et:

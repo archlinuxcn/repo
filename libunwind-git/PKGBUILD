@@ -1,40 +1,85 @@
-# Maintainer: Moritz Lipp <mlq@pwmt.org>
+# Maintainer: Sébastien Luttringer
+# Contributor: Lawrence Lee <valheru@facticius.net>
+# Contributor: Phillip Marvin <phillip.marvin@gmail.com>
+# Contributor: keystone <phillip.marvin@gmail.com>
+
+# ALARM: Kevin Mihelich <kevin@archlinuxarm.org>
+#  - build v5 with system libatomic_ops
+
 pkgname=libunwind-git
 pkgver=1.2.rc1.1.gbc8698f
-pkgrel=7
-pkgdesc="Portable and efficient C programming interface (API) to determine the call-chain of a program"
-arch=('i686' 'x86_64')
-url="http://www.nongnu.org/libunwind/"
+pkgrel=8
+pkgdesc='Portable and efficient C programming interface (API) to determine the call-chain of a program'
+arch=('i686' 'x86_64' 'armv7h' 'aarch64')
+url='http://www.nongnu.org/libunwind/'
 license=('GPL')
-makedepends=('git' 'texlive-core')
-depends=('glibc')
-provides=('libunwind')
-conflicts=('libunwind')
+depends=('glibc' 'xz')
+makedepends=('git')
+source=('git://git.savannah.gnu.org/libunwind.git'
+        0001-Support-dynamic-unwind-info-on-ARM.patch
+        0002-Allow-DWARF-version-4.patch
+        0003-Prefer-EXTBL-unwinding-on-ARM-since-it-seems-to-be-m.patch
+        0001-Handle-non-signal-frame-unwind-info-lookup-in-ARM-ex.patch)
+md5sums=('SKIP'
+         '196e9eb1a6ef4a7568ff539e50c33265'
+         'dd18077715edde55e6aa16752d2d68b0'
+         'ed460db47cf192378cc44de499b6fcfa'
+         'a99cd1bd01c429a4ced8636ca5eacdbf')
+options=('debug' '!strip')
+provides=(libunwind)
+conflicts=(libunwind)
 
-source=("${pkgname}::git+git://git.sv.gnu.org/libunwind.git")
-sha1sums=('SKIP')
+# HACK!!! remove after the damange on the build server is repaired.
+if [[ -f ${SRCDEST:-${PWD}}/libunwind/config ]] && \
+       grep 'url = http://git\.savannah\.gnu\.org/' \
+            ${SRCDEST:-${PWD}}/libunwind/config &> /dev/null; then
+    rm -rf ${SRCDEST:-${PWD}}/libunwind &> /dev/null || true
+fi
+if [[ -f ${SRCDEST:-${PWD}}/libunwind-git/config ]] && \
+       grep 'url = git://git\.sv\.gnu\.org/libunwind\.git' \
+            ${SRCDEST:-${PWD}}/libunwind-git/config &> /dev/null; then
+    rm -rf ${SRCDEST:-${PWD}}/libunwind-git &> /dev/null || true
+fi
+
+pkgver() {
+  cd libunwind
+
+  git describe --tags | sed 's/^v//;s/-/./g'
+}
+
+prepare() {
+  cd libunwind
+
+  patch -Np1 < ../0001-Support-dynamic-unwind-info-on-ARM.patch
+  patch -Np1 < ../0002-Allow-DWARF-version-4.patch
+  patch -Np1 < ../0003-Prefer-EXTBL-unwinding-on-ARM-since-it-seems-to-be-m.patch
+  patch -Np1 < ../0001-Handle-non-signal-frame-unwind-info-lookup-in-ARM-ex.patch
+}
 
 build() {
-  cd $pkgname
+  cd libunwind
 
-  autoreconf -i
+  autoreconf -fi
+  [[ $CARCH == "arm" ]] && LDFLAGS+=" -latomic_ops" && CFLAGS+=" -DAO_USE_PTHREAD_DEFS=1"
+
   ./configure CFLAGS="$CFLAGS -U_FORTIFY_SOURCE" --prefix=/usr
   make
 }
 
-check() {
-  cd $pkgname
-  PATH=/usr/bin:$PATH make check || return 0
-}
+# check() {
+#   cd libunwind
+
+#   # This function is ``supposed'' to fail. Upstream know, but haven't fixed it.
+#   make check || return 0
+# }
 
 package() {
-  cd $pkgname
+  cd libunwind
 
   make DESTDIR="$pkgdir/" install
-}
-
-pkgver() {
-  cd $pkgname
-
-  git describe --long --tags | sed -e 's/-/./g' -e 's/^[^0-9]//'
+  cat >> "$pkgdir/usr/include/libunwind.h" <<EOF
+#ifndef JL_UNW_HAS_FORMAT_IP
+#define JL_UNW_HAS_FORMAT_IP 1
+#endif
+EOF
 }

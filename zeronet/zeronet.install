@@ -30,7 +30,6 @@ post_install() {
 }
 
 post_upgrade() {
-    chown -R zeronet:zeronet /opt/zeronet
     chown zeronet:zeronet /var/lib/zeronet
     chown zeronet:zeronet /var/log/zeronet
 }

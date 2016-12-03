@@ -10,11 +10,11 @@ build_prefix = 'extra-x86_64'
 
 def pre_build():
     aur_pre_build()
+
     for line in edit_file('PKGBUILD'):
-        # edit PKGBUILD
-        if line.strip().startswith("replaces="):
-            continue
         print(line)
+        if line.strip().startswith('install='):
+            print('makedepends+=("git")') # Should depend on git
 
 post_build = aur_post_build
 
