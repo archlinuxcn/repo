@@ -1,12 +1,10 @@
-# Maintainer: lestb <tkhdlstfl dot l plus aur at gmail dot com>
-# Contributor: Philipp Wolfer <ph.wolfer@gmail.com>
-# Contributor: Joel Pedraza <joel@joelpedraza.com>
-# Contributor: Jakub Schmidtke <sjakub-at-gmail-dot-com>
+# Maintainers: goetzc
+# Contributors: lestb, Philipp Wolfer, Joel Pedraza, Jakub Schmidtke
 # Package Repository: https://github.com/mij-aur-packages/android-platform
 
 pkgname=android-platform
 _apilevel=25
-_rev=r01
+_rev=r02
 pkgver=${_apilevel}_${_rev}
 pkgrel=1
 pkgdesc="Android SDK Platform, latest API"
@@ -18,7 +16,7 @@ provides=("${pkgname}-${_apilevel}")
 conflicts=("${pkgname}-${_apilevel}")
 options=('!strip')
 source=("https://dl-ssl.google.com/android/repository/platform-${_apilevel}_${_rev}.zip")
-sha1sums=('5a7ec10d7ddd3b2729384b5d40d7cbcfe968d34f')
+sha1sums=('6057e54a04f1d141f36a2c8d20f2962b41a3183f')
 
 package() {
   mkdir -p "${pkgdir}/opt/android-sdk/platforms/"
