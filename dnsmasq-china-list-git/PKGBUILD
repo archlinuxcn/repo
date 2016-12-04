@@ -2,7 +2,7 @@
 
 _pkgname=dnsmasq-china-list
 pkgname=$_pkgname-git
-pkgver=0.35070.e3694a1
+pkgver=0.35072.a807cb9
 pkgrel=1
 pkgdesc="Configuration for hot China domains to accelerate via Dnsmasq"
 arch=('any')
