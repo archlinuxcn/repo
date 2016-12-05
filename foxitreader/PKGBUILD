@@ -2,7 +2,9 @@
 # Contributor: TDY <tdy@archlinux.info>
 
 pkgname=foxitreader
-pkgver=2.1.0805
+pkgver=2.2.0930
+_frrev_i686=r231869
+_frrev_x86_64=${_frrev_i686}
 pkgrel=1
 pkgdesc="A fast, secure and complete PDF viewer"
 arch=('i686' 'x86_64')
@@ -12,12 +14,12 @@ makedepends=('qt-installer-framework' 'qt5-tools' 'p7zip')
 depends=('desktop-file-utils' 'qt5-declarative')
 source=("https://www.foxitsoftware.com/products/pdf-reader/eula.html"
         "${pkgname}.patch")
-source_i686=("http://cdn01.foxitsoftware.com/pub/foxit/reader/desktop/linux/2.x/${pkgver%.*}/en_us/FoxitReader${pkgver}_Server_x86_enu_Setup.run.tar.gz")
-source_x86_64=("http://cdn01.foxitsoftware.com/pub/foxit/reader/desktop/linux/2.x/${pkgver%.*}/en_us/FoxitReader${pkgver}_Server_x64_enu_Setup.run.tar.gz")
+source_i686=("http://cdn02.foxitsoftware.com/pub/foxit/reader/desktop/linux/2.x/${pkgver%.*}/en_us/FoxitReader${pkgver}_Server_x86_enu_Setup.run.tar.gz")
+source_x86_64=("http://cdn02.foxitsoftware.com/pub/foxit/reader/desktop/linux/2.x/${pkgver%.*}/en_us/FoxitReader${pkgver}_Server_x64_enu_Setup.run.tar.gz")
 sha256sums=('738fc621a727e0429b9c50580b3c166776797f925f2819037d1414dad0b95f6a'
-            '2111205034f47ba57e1fa328e3f190f9f33c8680927cc9a0492ca98cff0107b3')
-sha256sums_i686=('1ffe255d6d030b32331823d660c0e025b01f146dd1fa3601cc55b43e2547c0cf')
-sha256sums_x86_64=('bf696e2337d90dccad6a4f7ae9c391e7d38f282b6f5bfc19017a3fabc52095f4')
+            'e4ad8031e6bd2ae8550905fd3d4d2126b02042414204f955d67b304d692876dc')
+sha256sums_i686=('c30a8c617b8a9dc965c971decd51232f89b3db15e0b3825faf17539e35d03448')
+sha256sums_x86_64=('4f719b47113d65ca8913c71e6675805e5c32d1613721321c2a90df9a2f1c4ce7')
 
 build() {
   # Clean installer dir
@@ -28,9 +30,9 @@ build() {
   # Decompress .run installer
   if [ "${CARCH}" = 'x86_64' ]
   then
-    _file_run="FoxitReader.enu.setup.${pkgver}(r225432).x64.run"
+    _file_run="FoxitReader.enu.setup.${pkgver}(${_frrev_x86_64}).x64.run"
   else
-    _file_run="FoxitReader.enu.setup.${pkgver}(r225434).x86.run"
+    _file_run="FoxitReader.enu.setup.${pkgver}(${_frrev_i686}).x86.run"
   fi
   devtool --dump "${pkgname}-installer" "${_file_run}"
 }
@@ -68,5 +70,7 @@ package() {
   cd "${pkgdir}"
   install -m 755 -d "${pkgdir}/usr/bin"
   ln -s "/usr/lib/${pkgname}/FoxitReader.sh" "${pkgdir}/usr/bin/${pkgname}"
+  # Fix for toolbar, asking to be opened in read write
+  chmod 0666 "${pkgdir}/usr/lib/${pkgname}/configtoolbar.xml"
 }
 
