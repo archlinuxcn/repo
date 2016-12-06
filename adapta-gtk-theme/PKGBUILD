@@ -4,7 +4,7 @@ _gtk3_min='3.18'
 _gtk3_max='4.0'
 _theme_name=Adapta
 _gtk2_min='2.24.30'
-pkgver="3.89.1.66"
+pkgver="3.89.1.80"
 pkgrel=1
 pkgdesc="An adaptive Gtk+ theme based on Material Design Guidelines."
 arch=(any)
@@ -36,7 +36,7 @@ makedepends=('glib2>=2.48.0'
              'inkscape'
              'parallel')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
-sha256sums=('7a6c15cf41dc003d545825c863b1de52380d143361fae60e3159dff1d06f37a7')
+sha256sums=('be87311120a3099bb1b7230854601a12db779c0b89e6b69168281a71568177b6')
 
 build() {
     cd "${pkgname}-${pkgver}"
