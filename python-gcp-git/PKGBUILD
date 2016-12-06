@@ -9,7 +9,7 @@ url="http://github.com/petronny/gcp"
 license=('GPL3')
 depends=('python' 'python-gobject2' 'python-dbus' 'dbus-glib')
 source=("$pkgname::git+$url")
-makedepends=('python-setuptools')
+makedepends=('git' 'python-setuptools')
 optdepends=('python-progressbar')
 md5sums=('SKIP')
 
