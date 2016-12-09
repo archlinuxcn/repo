@@ -48,13 +48,17 @@ source=(
   'compiler-rt::svn+http://llvm.org/svn/llvm-project/compiler-rt/trunk'
   'llvm-Config-llvm-config.h'
   0001-Revert-ARM-move-the-builtins-libcall-CC-setup.patch
+  0001-Fix-R_AARCH64_MOVW_UABS_G3-relocation.patch
+  0002-Fix-unwind-info-relocation-with-large-code-model-on-.patch
 )
 md5sums=('SKIP'
          'SKIP'
          'SKIP'
          'SKIP'
          '295c343dcd457dc534662f011d7cff1a'
-         '024bebf639905648751b158c603c20ca')
+         '024bebf639905648751b158c603c20ca'
+         '79eecbd06131d954f94faf168c9bf7b3'
+         '90b472128ad8f788ceb9d1fc76bda204')
 
 #
 # BEGIN INTERNAL VARIABLES AND FUNCTIONS
@@ -135,6 +139,8 @@ prepare() {
   }
 
   patch -Np1 < ../0001-Revert-ARM-move-the-builtins-libcall-CC-setup.patch
+  patch -Np1 < ../0001-Fix-R_AARCH64_MOVW_UABS_G3-relocation.patch
+  patch -Np1 < ../0002-Fix-unwind-info-relocation-with-large-code-model-on-.patch
 
   svn export --force "${srcdir}/clang" tools/clang
   svn export --force "${srcdir}/clang-tools-extra" tools/clang/tools/extra
@@ -435,5 +441,3 @@ package_clang-tools-extra-svn() {
 
   _install_license
 }
-
-# vim:set ts=4 sts=4 sw=4 et:
