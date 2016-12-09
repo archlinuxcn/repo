@@ -3,7 +3,7 @@
 # Contributor: Andrew Gallant <jamslam@gmail.com>
 pkgname=ripgrep-broadwell-git
 pkgver=0.3.2.r1.g6d346a0
-pkgrel=1
+pkgrel=2
 pkgdesc="A search tool that combines the usability of ag with the raw speed of grep. Git version, optimized for broadwell CPUs"
 arch=('x86_64')
 url="https://github.com/BurntSushi/ripgrep"
@@ -24,7 +24,7 @@ pkgver () {
 build () {
   cd ripgrep
   echo "lto = true" >> Cargo.toml
-  RUSTFLAGS="-C target-cpu=broadwell" cargo build --release --features simd-accel
+  RUSTFLAGS="-C target-cpu=broadwell" cargo build --release --features 'simd-accel avx-accel'
   git checkout Cargo.toml
 }
 
