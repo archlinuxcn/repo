@@ -6,10 +6,9 @@
 # Contributor: Tad Fisher <tadfisher at gmail dot com>
 
 pkgname=android-studio
-pkgver=2.2.2
-_pkgver=2.2.2.0
+pkgver=2.2.3.0
 pkgrel=1
-_build=145.3360264
+_build=145.3537739
 pkgdesc="The official Android IDE (Stable branch)"
 arch=('i686' 'x86_64')
 url="http://tools.android.com/"
@@ -19,9 +18,9 @@ depends=('alsa-lib' 'freetype2' 'libxrender' 'libxtst')
 optdepends=('gtk2: GTK+ look and feel'
             'libgl: emulator support')
 options=('!strip')
-source=("https://dl.google.com/dl/android/studio/ide-zips/$_pkgver/android-studio-ide-$_build-linux.zip"
+source=("https://dl.google.com/dl/android/studio/ide-zips/$pkgver/android-studio-ide-$_build-linux.zip"
         "$pkgname.desktop")
-sha1sums=('fc63ca247762697c33102a78063a95f8b5ab5dea'
+sha1sums=('172c9b01669f2fe46edcc16e466917fac04c9a7f'
           '357845775f3e2eb53c03ba96757c6b1e2c8baeb6')
 
 if [ "$CARCH" = "i686" ]; then
