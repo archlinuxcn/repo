@@ -4,12 +4,12 @@
 pkgname=armadillo
 pkgver=7.500.2
 _pkgver=7.500.2
-pkgrel=1
+pkgrel=2
 pkgdesc="C++ linear algebra library"
 arch=('i686' 'x86_64')
 url="http://arma.sourceforge.net/"
 license=('MPL 2.0')
-depends=('lapack' 'blas' 'arpack' 'superlu=5.2.0')
+depends=('lapack' 'blas' 'arpack' 'superlu>=5.2.0')
 optdepends=('hdf5: HDF5 output'
             'cuda: NVBLAS support'
 	    'acml-cblas: ACML support')
