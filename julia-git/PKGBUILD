@@ -35,14 +35,14 @@ case $CARCH in
 esac
 
 epoch=1
-pkgver=0.6.0.dev.1557.g1f8006d
+pkgver=0.6.0.dev.1560.g57d7622
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
 license=('GPL')
 makedepends=(gcc-fortran arpack fftw git gmp libgit2-julia libunwind-git
-             "${makedepends_llvm[@]}" mpfr pcre2 suitesparse python2
+             "${makedepends_llvm[@]}" mpfr pcre2 suitesparse
              openspecfun openblas libutf8proc-git patchelf openblas-lapack
              openlibm mbedtls libssh2)
 options=('debug' '!strip')
@@ -127,11 +127,6 @@ EOF
   git clean -fdx
 
   # patch -Np1 < ../
-
-  cd doc
-
-  # They use the Python2 version for sphinx which has on Arch a different name
-  sed 's/pip /pip2 /g' -i Makefile
 
   if [[ "$CARCH" = x86_64 ]]; then
       (cd "$srcdir"
