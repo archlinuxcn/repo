@@ -2,7 +2,7 @@
 # Maintainer: Stefan Husmann <stefan-husmann@t-online.de>
 
 pkgname=inkscape-bzr
-pkgver=r15297
+pkgver=r15329
 pkgrel=1
 pkgdesc="An Open Source vector graphics editor, using SVG file format, from bzr trunk"
 url="https://launchpad.net/inkscape"
@@ -15,7 +15,7 @@ optdepends=('python2-numpy: some extensions'
             'uniconvertor: reading/writing to some proprietary formats'
  	    'gtkspell3: for spelling'
 	    'ruby: for simplepath extension')
-makedepends=('cmake' 'boost' 'intltool' 'bzr' 'gettext' 'pango'  'fontconfig')
+makedepends=('cmake' 'boost' 'intltool' 'bzr' 'gettext' 'pango' 'python' 'fontconfig')
 provides=('inkscape')
 conflicts=('inkscape')
 options=('!libtool' '!buildflags' '!makeflags')
@@ -33,7 +33,7 @@ prepare() {
   sed -i 's|"python"|"python2"|g' src/main.cpp
   find share -type f -name "*.py" -exec \
        sed -i '1s|/usr/bin/env python\>|/usr/bin/env python2|g' {} \;
-  sed -i '1s|/usr/bin/env python3\>|/usr/bin/env python2|g' CMakeScripts/cmake_consistency_check.py 
+  sed -i '1s|/usr/bin/env python3\>|/usr/bin/env python2|g' CMakeScripts/cmake_consistency_check.py
 }
 
 build() {
