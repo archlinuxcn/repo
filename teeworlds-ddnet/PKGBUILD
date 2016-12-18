@@ -1,7 +1,7 @@
 # Maintainer: Rafael Fontenelle <rafaelff@gnome.org>
 
 pkgname=teeworlds-ddnet
-pkgver=10.3.4
+pkgver=10.3.5
 pkgrel=1
 pkgdesc="A customized version by DDRaceNetwork of this 2D shooting game"
 arch=('i686' 'x86_64')
@@ -16,7 +16,7 @@ conflicts=('teeworlds')
 source=("ddnet-$pkgver.tar.gz::https://github.com/ddnet/ddnet/archive/$pkgver.tar.gz")
 source_i686=("https://ddnet.tw/downloads/GraphicsTools-linux_x86.tar.gz")
 source_x86_64=("https://ddnet.tw/downloads/GraphicsTools-linux_x86_64.tar.gz")
-md5sums=('bc32a5b0aca0d3367c85be436544131d')
+md5sums=('aaf7c8834de806f3fe24e8ff9ff29bd0')
 md5sums_i686=('566354c3b4510b032af7d891381ee711')
 md5sums_x86_64=('fc32ca52ae9be02f68b6c257153dbd37')
 
