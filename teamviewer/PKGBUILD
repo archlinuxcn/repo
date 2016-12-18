@@ -1,8 +1,8 @@
 # Maintainer: Alex Taber <aft dot pokemon at gmail dot com>
 
 pkgname=teamviewer
-pkgver=11.0.57095
-pkgrel=4
+pkgver=12.0.71510
+pkgrel=6
 pkgdesc='All-In-One Software for Remote Support and Online Meetings'
 arch=('i686' 'x86_64')
 url='http://www.teamviewer.com'
@@ -16,28 +16,31 @@ depends_x86_64=(
 	'lib32-libsm'
 	'lib32-libxinerama'
 	'lib32-libxrender'
-	'lib32-libjpeg6-turbo')
+	'lib32-libjpeg6-turbo'
+	'lib32-libxtst'
+	'libxtst')
 depends_i686=(
 	'fontconfig'
 	'libpng12'
 	'libsm'
 	'libxinerama'
 	'libxrender'
-	'libjpeg6-turbo')
+	'libjpeg6-turbo'
+	'libxtst')
 install=teamviewer.install
 source_x86_64=("https://download.teamviewer.com/download/version_${pkgver%%.*}x/teamviewer_${pkgver}_amd64.deb")
 source_i686=("https://download.teamviewer.com/download/version_${pkgver%%.*}x/teamviewer_${pkgver}_i386.deb")
-md5sums_i686=('e46cef43ea873dc00a74bc44f9990964')
-md5sums_x86_64=('b8e2023b0dbfe7bfbbc1d391e1687929')
+sha512sums_i686=('edc1e5823939f20a9879bd29d952a728275f5f190ad434b95e71e886086b8aca407749d5671284cec9b20007aaa4b5907c84a83cc4921f9f715738cd33c704db')
+sha512sums_x86_64=('543826bce6e973cc7100d6107ff57a289222376f5df32b15d162fae9136cb82e3029bbe7f1da807b2148a834fc8e9a3013d2fb4e81a2c5beda5fc7bdb3c7ac16')
 
 prepare() {
-	echo "If the install fails, you need to uninstall Teamviewer 10"
+	warning "If the install fails, you need to uninstall previous major version of Teamviewer"
 	tar -xf data.tar.bz2
 }
 
 package() {
 	# Install
-	echo "If the install fails here, you need to uninstall Teamviewer 10"
+	warning "If the install fails, you need to uninstall previous major version of Teamviewer"
 	cp -dr --no-preserve=ownership {etc,opt,usr,var} "${pkgdir}"/
 
 	# Additional files
@@ -45,8 +48,6 @@ package() {
 	install -D -m0644 "${pkgdir}"/opt/teamviewer/tv_bin/script/teamviewerd.service \
 		"${pkgdir}"/usr/lib/systemd/system/teamviewerd.service
 	install -d -m0755 "${pkgdir}"/usr/{share/applications,share/licenses/teamviewer}
-	ln -s /opt/teamviewer/tv_bin/desktop/teamviewer-teamviewer${pkgver%%.*}.desktop \
-		"${pkgdir}"/usr/share/applications/teamviewer.desktop
 	ln -s /opt/teamviewer/License.txt \
 		"${pkgdir}"/usr/share/licenses/teamviewer/LICENSE
 }
