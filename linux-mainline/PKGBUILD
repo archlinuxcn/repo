@@ -7,17 +7,17 @@
 
 pkgbase=linux-mainline               # Build stock -ARCH kernel
 #pkgbase=linux-custom       # Build kernel with a different name
-_srcname=linux-4.8
-_patchname=patch-4.9-rc7
-pkgver=4.9rc7
-pkgrel=1
+_srcname=linux-4.9
+_patchname=patch-4.9-rc8
+pkgver=4.9
+pkgrel=2
 arch=('i686' 'x86_64')
 url="http://www.kernel.org/"
 license=('GPL2')
 makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc' 'libelf')
 options=('!strip')
 source=("https://cdn.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.xz"
-        "https://cdn.kernel.org/pub/linux/kernel/v4.x/testing/${_patchname}.xz"
+        #"https://cdn.kernel.org/pub/linux/kernel/v4.x/testing/${_patchname}.xz"
         #"https://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.sign"
         #"https://www.kernel.org/pub/linux/kernel/v4.x/testing/${_patchname}.sign"
         # the main kernel config files
@@ -27,10 +27,9 @@ source=("https://cdn.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.xz"
         # standard config files for mkinitcpio ramdisk
         'linux.preset'
         'change-default-console-loglevel.patch')
-sha256sums=('3e9150065f193d3d94bcf46a1fe9f033c7ef7122ab71d75a7fb5a2f0c9a7e11a'
-            'b12b04c739743d0bebd287cca572caea9bfeea55810d850021533608508c5762'
-            '2fd479c42362075c3bea6c7c1737fd3e0c222245046d071fa10157d05397965f'
-            'ae414d09d296fcf388e930ff919f975c03302ec2f595e2ae0c172422402b3a6e'
+sha256sums=('029098dcffab74875e086ae970e3828456838da6e0ba22ce3f64ef764f3d7f1a'
+            '2ac8818414beb7dbacbd3ad450c516e6ada804827132a7132f63b8189e5f5151'
+            '41b9a64542befd2fea170776e8ec22a7d158dd3273633afc9b91662c448cd90a'
             '834bd254b56ab71d73f59b3221f056c72f559553c04718e350ab2a3e2991afe0'
             'ad6344badc91ad0630caacde83f7f9b97276f80d26a20619a87952be65492c65'
             '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99')
@@ -49,7 +48,7 @@ prepare() {
   # patch -p1 -i "${srcdir}/patch-${pkgver}"
 
   # mainline: add patch
-  patch -p1 -i "${srcdir}/${_patchname}" || true
+  #patch -p1 -i "${srcdir}/${_patchname}" || true
 
   # add latest fixes from stable queue, if needed
   # http://git.kernel.org/?p=linux/kernel/git/stable/stable-queue.git
