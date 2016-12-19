@@ -1,5 +1,5 @@
 diff --git a/Telegram/SourceFiles/platform/linux/linux_libs.cpp b/Telegram/SourceFiles/platform/linux/linux_libs.cpp
-index a9731ce..2bb4468 100644
+index f8abb51d..8f20a6ce 100644
 --- a/Telegram/SourceFiles/platform/linux/linux_libs.cpp
 +++ b/Telegram/SourceFiles/platform/linux/linux_libs.cpp
 @@ -45,6 +45,7 @@ bool loadLibrary(QLibrary &lib, const char *name, int version) {
@@ -30,7 +30,7 @@ index a9731ce..2bb4468 100644
  f_gtk_menu_new gtk_menu_new = nullptr;
  f_gtk_menu_get_type gtk_menu_get_type = nullptr;
 diff --git a/Telegram/SourceFiles/platform/linux/linux_libs.h b/Telegram/SourceFiles/platform/linux/linux_libs.h
-index bc3dce6..07c5042 100644
+index bc3dce6e..07c5042a 100644
 --- a/Telegram/SourceFiles/platform/linux/linux_libs.h
 +++ b/Telegram/SourceFiles/platform/linux/linux_libs.h
 @@ -52,6 +52,9 @@ bool load(QLibrary &lib, const char *name, Function &func) {
@@ -44,7 +44,7 @@ index bc3dce6..07c5042 100644
  extern f_gtk_init_check gtk_init_check;
  
 diff --git a/Telegram/SourceFiles/stdafx.cpp b/Telegram/SourceFiles/stdafx.cpp
-index 06bd4af..755d97f 100644
+index 06bd4afa..755d97fe 100644
 --- a/Telegram/SourceFiles/stdafx.cpp
 +++ b/Telegram/SourceFiles/stdafx.cpp
 @@ -34,6 +34,7 @@ Q_IMPORT_PLUGIN(QGenericEnginePlugin)
@@ -56,7 +56,7 @@ index 06bd4af..755d97f 100644
  Q_IMPORT_PLUGIN(QGenericEnginePlugin)
  Q_IMPORT_PLUGIN(QNetworkManagerEnginePlugin)
 diff --git a/Telegram/gyp/Telegram.gyp b/Telegram/gyp/Telegram.gyp
-index f6609c1..ef6fc5e 100644
+index b01d35aa..dcd46a2b 100644
 --- a/Telegram/gyp/Telegram.gyp
 +++ b/Telegram/gyp/Telegram.gyp
 @@ -78,21 +78,18 @@
@@ -86,7 +86,7 @@ index f6609c1..ef6fc5e 100644
      'sources': [
        '<@(qrc_files)',
 diff --git a/Telegram/gyp/qt.gypi b/Telegram/gyp/qt.gypi
-index 24ededb..cdb18f5 100644
+index 24ededbf..0076f031 100644
 --- a/Telegram/gyp/qt.gypi
 +++ b/Telegram/gyp/qt.gypi
 @@ -38,7 +38,6 @@
@@ -132,7 +132,7 @@ index 24ededb..cdb18f5 100644
          'gthread-2.0',
          'glib-2.0',
          'pthread',
-+        
++
 +        'Xi',
 +        'Xext',
 +        'Xfixes',
@@ -141,7 +141,7 @@ index 24ededb..cdb18f5 100644
 +        'fontconfig',
 +        'expat',
 +        'freetype',
-+        
++
 +        '<!(pkg-config 2> /dev/null --libs xkbcommon xkbcommon-x11)',
 +        '<!(pkg-config 2> /dev/null --libs harfbuzz)',
 +        '<!(pkg-config 2> /dev/null --libs libpcre16)',
@@ -163,7 +163,7 @@ index 24ededb..cdb18f5 100644
          '-g',
          '-rdynamic',
 diff --git a/Telegram/gyp/telegram_linux.gypi b/Telegram/gyp/telegram_linux.gypi
-index d07b592..6e6bd91 100644
+index d07b5928..6e6bd91d 100644
 --- a/Telegram/gyp/telegram_linux.gypi
 +++ b/Telegram/gyp/telegram_linux.gypi
 @@ -21,11 +21,19 @@
