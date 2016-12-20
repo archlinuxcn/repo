@@ -14,7 +14,7 @@ _gtk3=true
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=50.0.2
+pkgver=50.1.0
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
@@ -53,6 +53,8 @@ source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/
         pgo_fix_missing_kdejs.patch
         rb39193.patch
         fix_mozalloc.patch
+        fix-wifi-scanner.diff
+        rust-i686.patch
 )
 
 
@@ -113,6 +115,13 @@ prepare() {
 
   # CVE-2016-6354 (bmo#1292534)
   patch -Np1 -i "$srcdir"/mozilla-flex_buffer_overrun.patch
+
+
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=1314968
+  patch -Np1 -i "$srcdir"/fix-wifi-scanner.diff
+  
+  # Build with the rust targets we actually ship
+  patch -Np1 -i "$srcdir"/rust-i686.patch
   
   # WebRTC build tries to execute "python" and expects Python 2
   mkdir -p "$srcdir/path"
@@ -123,7 +132,8 @@ prepare() {
   # TODO: Remove this; Firefox 34 might use CSS animations for the loading icon
   # https://bugzilla.mozilla.org/show_bug.cgi?id=759252
   cp "$srcdir/firefox-fixed-loading-icon.png" \
-    browser/themes/linux/tabbrowser/loading.png
+     browser/themes/linux/tabbrowser/loading.png
+     
 }
 
 build() {
@@ -192,7 +202,7 @@ package() {
   #https://bugzilla.mozilla.org/show_bug.cgi?id=658850
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
-md5sums=('11b4f60e31007caf2a34aeed11b74b2d'
+md5sums=('0f6a56cd8da8fa9deedfd61bcb43a65d'
          '169f583544e9efaf1f80f8548b57a8cc'
          '14e0f6237a79b85e60256f4808163160'
          'dbf14588e85812ee769bd735823a0146'
@@ -210,4 +220,6 @@ md5sums=('11b4f60e31007caf2a34aeed11b74b2d'
          'fe24f5ea463013bb7f1c12d12dce41b2'
          '3fa8bd22d97248de529780f5797178af'
          '43550e772f110a338d5a42914ee2c3a6'
-         '0c1ed789c06297659137a2ed2ef769f7')
+         '0c1ed789c06297659137a2ed2ef769f7'
+         'e2396b9918aa602427f80d48caf319b4'
+         '40b197fcf8c855b3902414f4d591b18b')
