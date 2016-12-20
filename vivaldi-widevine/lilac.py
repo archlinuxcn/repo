@@ -7,6 +7,7 @@
 from lilaclib import *
 
 build_prefix = 'extra-x86_64'
+depends = ['vivaldi-ffmpeg-codecs']
 
 def pre_build():
     aur_pre_build()
@@ -14,7 +15,7 @@ def pre_build():
     for line in edit_file('PKGBUILD'):
         print(line)
         if line.strip().startswith('options='):
-            print('depends=("gcc-libs")') # Should depend on gcc-libs
+            print('depends+=("gcc-libs")') # Should depend on gcc-libs
 
 post_build = aur_post_build
 
