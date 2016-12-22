@@ -2,7 +2,7 @@
 
 pkgname=youdao-dict
 pkgver=1.1.0
-pkgrel=1
+pkgrel=2
 pkgdesc='YouDao Dictionary'
 arch=('i686' 'x86_64')
 url='http://cidian.youdao.com/index-linux.html'
@@ -22,12 +22,21 @@ depends=(
 	'python-xdg'
 	'python-webob'
 	'qt5-webkit'
+	'qt5-graphicaleffects'
+	'qt5-quickcontrols'
 )
 install=youdao-dict.install
+source=('youdao-arch.patch')
 source_i686=('http://codown.youdao.com/cidian/linux/youdao-dict_1.1.0-0~i386.tar.gz')
 source_x86_64=('http://codown.youdao.com/cidian/linux/youdao-dict_1.1.0-0~amd64.tar.gz')
+sha256sums=('ab1e8cf2b38c459c60af5e47814a022ad485d2e2c0ae257ffae4c03174e703a6')
 sha256sums_i686=('d1ff404f1e465d6a196b566294ddfea1a1bfe4568226201b65d74236407152fc')
 sha256sums_x86_64=('5c3a5ed105238e2fad181704fd99815c4275bf546136f99e817614188794dc07')
+
+prepare() {
+	cd "${srcdir}/src"
+	patch -Np2 -i "${srcdir}/youdao-arch.patch"
+}
 
 package() {
 	cd "${srcdir}"
