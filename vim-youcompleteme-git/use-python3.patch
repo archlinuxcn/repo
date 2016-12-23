@@ -1,0 +1,13 @@
+diff --git i/YouCompleteMe/autoload/youcompleteme.vim w/YouCompleteMe/autoload/youcompleteme.vim
+index 80551c3..1ad6f60 100644
+--- i/YouCompleteMe/autoload/youcompleteme.vim
++++ w/YouCompleteMe/autoload/youcompleteme.vim
+@@ -39,7 +39,7 @@ function! s:UsingPython2()
+ endfunction
+ 
+ 
+-let s:using_python2 = s:UsingPython2()
++let s:using_python2 = 0
+ let s:python_until_eof = s:using_python2 ? "python << EOF" : "python3 << EOF"
+ let s:python_command = s:using_python2 ? "py " : "py3 "
+ 

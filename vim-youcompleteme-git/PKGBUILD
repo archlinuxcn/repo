@@ -23,9 +23,9 @@ arch=('i686' 'x86_64')
 url='http://valloric.github.com/YouCompleteMe/'
 license=('GPL3')
 groups=('vim-plugins')
-depends=('python2' 'vim' 'clang='$_CLANG_VERSION
-         'python2-bottle' 'python2-future' 'python2-requests'
-         'python2-waitress' 'python2-jedi' 'python2-futures')
+depends=('python' 'vim' 'clang='$_CLANG_VERSION
+         'python-bottle' 'python-future' 'python-requests'
+         'python-waitress' 'python-jedi')
 optdepends=('mono: for C# completer'
             'nodejs: for nodejs completer'
             'rust: for rust completer')
@@ -41,9 +41,10 @@ source=('git+https://github.com/Valloric/YouCompleteMe.git'
         'git+https://github.com/nosami/OmniSharpServer.git'
         'git+https://github.com/icsharpcode/NRefactory.git'
         'git+https://github.com/jbevain/cecil.git'
-        'git+https://github.com/jwilm/racerd.git')
+        'git+https://github.com/jwilm/racerd.git'
+        'use-python3.patch')
 sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP'
-            'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
+            'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
 install=install
 _COMPLETER="USE_CLANG_COMPLETER"
 _SYSTEM_LIBCLANG="USE_SYSTEM_LIBCLANG"
@@ -55,6 +56,8 @@ pkgver() {
 
 prepare() {
   msg2 'Setting up Git submodules...'
+
+  patch -Np1 -i $srcdir/use-python3.patch
 
   cd "$srcdir/YouCompleteMe"
   git submodule init
@@ -83,7 +86,7 @@ build() {
   msg2 'Building ycmd...' # BuildYcmdLibs()
   mkdir -p "$srcdir/ycmd_build"
   cd "$srcdir/ycmd_build"
-  cmake -G "Unix Makefiles" -D${_COMPLETER}=1 -D${_SYSTEM_LIBCLANG}=1 . "$srcdir/YouCompleteMe/third_party/ycmd/cpp"
+  cmake -G "Unix Makefiles" -DUSE_PYTHON2=0 -D${_COMPLETER}=1 -D${_SYSTEM_LIBCLANG}=1 . "$srcdir/YouCompleteMe/third_party/ycmd/cpp"
   make ycm_core
 
   msg2 'Building OmniSharp completer...' # BuildOmniSharp()
@@ -102,7 +105,7 @@ build() {
 
   msg2 'Building Tern completer...' # SetUpTern()
   cd "$srcdir/YouCompleteMe/third_party/ycmd/third_party/tern_runtime"
-  npm install --production --python=python2
+  npm install --production
   # }}}
 }
 
