@@ -53,13 +53,11 @@ def get_latest_version():
     return _version, _version_date
 
 class Std:
-  def __init__(self, platform):
+  def __init__(self, platform, date):
     self.name = 'rust-std-nightly-' + platform
-    self.url = urljoin(dist_url, self.name + '.tar.gz')
+    self.url = urljoin(dist_url, date, self.name + '.tar.gz')
     self.platform = platform
     self.optdepends = toolchain.get(platform)
-
-stds = [Std(x) for x in stds]
 
 def pre_build():
   version, version_date = get_latest_version()
@@ -67,6 +65,8 @@ def pre_build():
   for f in oldfiles:
     if not debug:
       os.unlink(f)
+
+  stds = [Std(x, version_date) for x in stds]
 
   loader = tornado.template.Loader('.')
   content = loader.load('PKGBUILD.tmpl').generate(
