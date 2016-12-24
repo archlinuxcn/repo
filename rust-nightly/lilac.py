@@ -14,7 +14,7 @@ debug = False
 _version = '1.10.0'
 _version_date = '2016-05-13'
 
-stds = [
+STDS = [
   'arm-unknown-linux-gnueabihf',
   'armv7-unknown-linux-gnueabihf',
   'x86_64-unknown-linux-gnu',
@@ -66,7 +66,7 @@ def pre_build():
     if not debug:
       os.unlink(f)
 
-  stds = [Std(x, version_date) for x in stds]
+  stds = [Std(x, version_date) for x in STDS]
 
   loader = tornado.template.Loader('.')
   content = loader.load('PKGBUILD.tmpl').generate(
