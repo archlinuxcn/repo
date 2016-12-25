@@ -11,8 +11,8 @@ from pkg_resources import parse_version
 from lilaclib import *
 
 debug = False
-_version = '1.10.0'
-_version_date = '2016-05-13'
+_version = '1.16.0'
+_version_date = '2016-12-23'
 
 STDS = [
   'arm-unknown-linux-gnueabihf',
@@ -25,10 +25,7 @@ STDS = [
   'wasm32-unknown-emscripten',
 ]
 
-if debug:
-  dist_url = 'https://mirrors.ustc.edu.cn/rust-static/dist/index.html'
-else:
-  dist_url = 'https://static.rust-lang.org/dist/index.html'
+dist_url = 'https://static.rust-lang.org/dist/index.html'
 
 build_prefix = 'extra-x86_64'
 
@@ -61,10 +58,11 @@ class Std:
 
 def pre_build():
   version, version_date = get_latest_version()
-  oldfiles = glob.glob('*.gz') + glob.glob('*.gz.asc')
-  for f in oldfiles:
-    if not debug:
-      os.unlink(f)
+  if not debug:
+    oldfiles = glob.glob('*.gz') + glob.glob('*.gz.asc')
+    for f in oldfiles:
+      if not debug:
+        os.unlink(f)
 
   stds = [Std(x, version_date) for x in STDS]
 
@@ -73,6 +71,7 @@ def pre_build():
     stds = stds,
     version = version,
     version_date = version_date.replace('-', ''),
+    version_date_raw = version_date,
   )
   with open('PKGBUILD', 'wb') as output:
     output.write(content)
