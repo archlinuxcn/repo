@@ -30,7 +30,7 @@ case $CARCH in
     depends_llvm=("llvm-libs-svn")
     ;;
   *)
-    echo "Unsupported Arch" >&2
+    echo "Unsupported Arch $CARCH" >&2
     ;;
 esac
 
