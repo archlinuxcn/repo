@@ -44,7 +44,8 @@ source=('git+https://github.com/Valloric/YouCompleteMe.git'
         'git+https://github.com/jwilm/racerd.git'
         'use-python3.patch')
 sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP'
-            'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
+            'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP'
+            '36712bac48fa10777ea213b51fbf77c5bc67732cd4af21b47a73bad030ed1577')
 install=install
 _COMPLETER="USE_CLANG_COMPLETER"
 _SYSTEM_LIBCLANG="USE_SYSTEM_LIBCLANG"
@@ -57,7 +58,7 @@ pkgver() {
 prepare() {
   msg2 'Setting up Git submodules...'
 
-  patch -Np1 -i $srcdir/use-python3.patch
+  patch -Np1 -i "$srcdir/use-python3.patch"
 
   cd "$srcdir/YouCompleteMe"
   git submodule init
