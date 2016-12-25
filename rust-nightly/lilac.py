@@ -55,7 +55,7 @@ def get_latest_version():
 class Std:
   def __init__(self, platform, date):
     self.name = 'rust-std-nightly-' + platform
-    self.url = urljoin(dist_url, date, self.name + '.tar.gz')
+    self.url = urljoin(dist_url, date + '/' + self.name + '.tar.gz')
     self.platform = platform
     self.optdepends = toolchain.get(platform)
 
