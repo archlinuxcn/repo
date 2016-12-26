@@ -1,7 +1,7 @@
 # Maintainer: Christian Hesse <mail@eworm.de>
 
 pkgname=opera-beta
-pkgver=42.0.2393.78
+pkgver=43.0.2442.7
 pkgrel=1
 pkgdesc='A fast and secure web browser and Internet suite - beta stream'
 arch=('x86_64' 'i686')
@@ -25,8 +25,8 @@ source_x86_64=("${_source}/${pkgname}/${pkgver}/linux/${pkgname}_${pkgver}_amd64
 source_i686=("${_source}/${pkgname}/${pkgver}/linux/${pkgname}_${pkgver}_i386.deb")
 sha256sums=('508512464e24126fddfb2c41a1e2e86624bdb0c0748084b6a922573b6cf6b9c5'
 	'99fc0d2822edd14e234d451995db47148125e4580221a292598959421d131231')
-sha256sums_x86_64=('f246482a0cb9f97224041dfdaa376a6b41ab6b909b41570bc5b45d8ceabfb2b0')
-sha256sums_i686=('65a9d4a7a6806c547a550175d917d77be0a64ff6b52477e4641b1a1bce2bdc38')
+sha256sums_x86_64=('c7a2e8055728ce8cfdea41ed5bc4a95dac0c99dcc332cec1d5c35bb532114f55')
+sha256sums_i686=('5a0cf2f729f81bbb593a4d915c9986ecf1fed7db75bffef49fb126154a3bbb8f')
 
 prepare() {
 	cd ${srcdir}/
