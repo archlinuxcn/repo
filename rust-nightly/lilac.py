@@ -61,8 +61,7 @@ def pre_build():
   if not debug:
     oldfiles = glob.glob('*.gz') + glob.glob('*.gz.asc')
     for f in oldfiles:
-      if not debug:
-        os.unlink(f)
+      os.unlink(f)
 
   stds = [Std(x, version_date) for x in STDS]
 

@@ -2,57 +2,42 @@
 
 import os
 import glob
-import tornado.template
 import urllib.request
 from urllib.parse import urljoin
 
-from pkg_resources import parse_version
+import tornado.template
+import pytoml
 
 from lilaclib import *
 
+manifest = 'https://static.rust-lang.org/dist/channel-rust-nightly.toml'
 debug = False
-_version_date = '2016-12-23'
-
-STDS = [
-]
-
-dist_url = 'https://static.rust-lang.org/cargo-dist/index.html'
 
 build_prefix = 'extra-x86_64'
 
-toolchain = {
-}
-
 def get_latest_version():
-  if not debug:
-    res = urllib.request.urlopen(dist_url)
-    page = res.read().decode('utf-8')
-    version_date = re.findall(r'(\d{4}-\d{2}-\d{2})/', page)[-1]
-    return version_date
-  else:
-    return _version_date
-
-class Std:
-  def __init__(self, platform, date):
-    self.name = 'cargo-nightly-' + platform
-    self.url = urljoin(dist_url, date + '/' + self.name + '.tar.gz')
-    self.platform = platform
-    self.optdepends = toolchain.get(platform)
+  res = urllib.request.urlopen(manifest)
+  page = res.read().decode('utf-8')
+  toml = pytoml.loads(page)
+  version_string = toml['pkg']['cargo']['version']
+  version = re.findall(r'([\d.]+)-nightly', version_string)[0]
+  version_date = re.findall(r'\d{4}-\d{2}-\d{2}', version_string)[0]
+  cargo = toml['pkg']['cargo']['target']['x86_64-unknown-linux-gnu']
+  return version, version_date, cargo['url'], cargo['hash']
 
 def pre_build():
-  version_date = get_latest_version()
-  oldfiles = glob.glob('*.gz') + glob.glob('*.gz.asc')
-  for f in oldfiles:
-    if not debug:
+  version, version_date, url, file_hash = get_latest_version()
+  if not debug:
+    oldfiles = glob.glob('*.gz') + glob.glob('*.gz.asc')
+    for f in oldfiles:
       os.unlink(f)
-
-  stds = [Std(x, version_date) for x in STDS]
 
   loader = tornado.template.Loader('.')
   content = loader.load('PKGBUILD.tmpl').generate(
-    stds = stds,
-    version_date = version_date.replace('-', ''),
-    version_date_raw = version_date,
+    version = version,
+    pkgver = version + '_' + version_date.replace('-', ''),
+    url = url,
+    hash = file_hash,
   )
   with open('PKGBUILD', 'wb') as output:
     output.write(content)
