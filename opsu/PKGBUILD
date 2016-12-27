@@ -3,8 +3,8 @@
 # Contributor in comments: SajeOne <https://aur.archlinux.org/account/SajeOne/>
 
 pkgname=opsu
-pkgver=0.12.1
-pkgrel=3
+pkgver=0.13.0
+pkgrel=1
 pkgdesc="An open source osu!-client written in Java."
 arch=('any')
 url="https://itdelatrisu.github.io/opsu/"
