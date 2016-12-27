@@ -122,6 +122,10 @@ build() {
 
   cd "$srcdir/YouCompleteMe/third_party/ycmd/ycmd"
   python3 -m compileall -x 'testdata' .
+
+  cd "$srcdir/YouCompleteMe/python/ycm/"
+  rm -rf tests/
+  python3 -m compileall .
 }
 
 package() {
@@ -155,6 +159,10 @@ package() {
   for _f in .git .gitignore .gitmodules .hgignore .hgtags .travis.yml; do
     find "$pkgdir" -name "$_f" -delete
   done
+  rm -fr "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party/JediHTTP/vendor"
   rm -fr "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party/JediHTTP/travis"
+  rm -fr "$pkgdir/usr/share/vim/vimfiles/third_party/requests-futures/setup.py"
+  rm -fr "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party/argparse/setup."{py,cfg}
+  rm -fr "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party/frozendict/setup.py"
 }
 # vim:set ts=2 sw=2 et:
