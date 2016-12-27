@@ -16,14 +16,14 @@
 
 pkgname=vim-youcompleteme-git
 pkgver=1969.8161d350
-_CLANG_VERSION=3.9.0
-pkgrel=2
+_CLANG_VERSION=3.9.1
+pkgrel=3
 pkgdesc="A code-completion engine for Vim"
 arch=('i686' 'x86_64')
 url='http://valloric.github.com/YouCompleteMe/'
 license=('GPL3')
 groups=('vim-plugins')
-depends=('python' 'vim' 'clang='$_CLANG_VERSION
+depends=('python' 'vim' "clang=$_CLANG_VERSION"
          'python-bottle' 'python-future' 'python-requests'
          'python-waitress' 'python-jedi')
 optdepends=('mono: for C# completer'
@@ -46,7 +46,6 @@ source=('git+https://github.com/Valloric/YouCompleteMe.git'
 sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP'
             'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP'
             '36712bac48fa10777ea213b51fbf77c5bc67732cd4af21b47a73bad030ed1577')
-install=install
 _COMPLETER="USE_CLANG_COMPLETER"
 _SYSTEM_LIBCLANG="USE_SYSTEM_LIBCLANG"
 
@@ -108,6 +107,21 @@ build() {
   cd "$srcdir/YouCompleteMe/third_party/ycmd/third_party/tern_runtime"
   npm install --production
   # }}}
+
+  rm -rf "$srcdir/YouCompleteMe/third_party/ycmd/"{ycmd/tests,third_party/JediHTTP/jedihttp/tests}
+
+  for _m in requests-futures retries; do
+    cd "$srcdir/YouCompleteMe/third_party/$_m"
+    python3 -m compileall -x 'setup.py' .
+  done
+
+  for _m in argparse JediHTTP frozendict; do
+    cd "$srcdir/YouCompleteMe/third_party/ycmd/third_party/$_m"
+    python3 -m compileall -x 'setup.py' .
+  done
+
+  cd "$srcdir/YouCompleteMe/third_party/ycmd/ycmd"
+  python3 -m compileall -x 'testdata' .
 }
 
 package() {
@@ -138,6 +152,9 @@ package() {
   cp    "$srcdir/YouCompleteMe/third_party/ycmd/third_party/racerd/target/release/racerd" \
     "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party/racerd/target/release/racerd"
 
-  find "$pkgdir" -name .git -exec rm -fr {} +
+  for _f in .git .gitignore .gitmodules .hgignore .hgtags .travis.yml; do
+    find "$pkgdir" -name "$_f" -delete
+  done
+  rm -fr "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party/JediHTTP/travis"
 }
 # vim:set ts=2 sw=2 et:
