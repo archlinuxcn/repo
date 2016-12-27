@@ -2,7 +2,7 @@
 
 pkgname=vim-rust-git
 pkgver=20161128
-pkgrel=1
+pkgrel=2
 pkgdesc="Rust language support for Vim"
 arch=('any')
 depends=('vim')
@@ -14,7 +14,6 @@ source=(${pkgname%-git}::git+https://github.com/rust-lang/rust.vim)
 sha256sums=('SKIP')
 provides=('vim-rust')
 conflicts=('vim-rust')
-install=vimdoc.install
 optdepends=('rust: for RustRun and similar commands'
             'vim-syntastic: syntax checking')
 
