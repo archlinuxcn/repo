@@ -9,4 +9,4 @@ package: PKGBUILD .SRCINFO
 all: package
 
 clean:
-	rm -Rfv *.jpg .SRCINFO *.tar.gz *.tar.xz *.part src/ pkg/ 2> /dev/null || true
+	rm -Rfv *.asc *.jpg .SRCINFO *.tar.gz *.tar.xz *.part src/ pkg/ 2> /dev/null || true
