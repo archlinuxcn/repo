@@ -16,14 +16,15 @@
 
 pkgname=vim-youcompleteme-git
 pkgver=1969.8161d350
-_CLANG_VERSION=3.9.1
+_CLANG_VERSION_MAX=4.0
+_CLANG_VERSION_MIN=3.9
 pkgrel=1
 pkgdesc="A code-completion engine for Vim"
 arch=('i686' 'x86_64')
 url='http://valloric.github.com/YouCompleteMe/'
 license=('GPL3')
 groups=('vim-plugins')
-depends=('python' 'vim' "clang=$_CLANG_VERSION"
+depends=('python' 'vim' "clang>=$_CLANG_VERSION_MIN" "clang<$_CLANG_VERSION_MAX"
          'python-bottle' 'python-future' 'python-requests'
          'python-waitress' 'python-jedi')
 optdepends=('mono: for C# completer'
@@ -33,7 +34,6 @@ makedepends=('cargo' 'cmake' 'git' 'go' 'make' 'mono' 'npm' 'nodejs' 'rust')
 source=('git+https://github.com/Valloric/YouCompleteMe.git'
         'git+https://github.com/ross/requests-futures.git'
         'git+https://github.com/Valloric/ycmd.git'
-        'git+https://github.com/bewest/argparse.git'
         'frozendict::git+https://github.com/slezica/python-frozendict.git'
         'git+https://github.com/vheon/JediHTTP.git'
         'git+https://github.com/nsf/gocode.git'
@@ -44,7 +44,7 @@ source=('git+https://github.com/Valloric/YouCompleteMe.git'
         'git+https://github.com/jwilm/racerd.git'
         'use-python3.patch')
 sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP'
-            'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP'
+            'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP'
             '36712bac48fa10777ea213b51fbf77c5bc67732cd4af21b47a73bad030ed1577')
 _COMPLETER="USE_CLANG_COMPLETER"
 _SYSTEM_LIBCLANG="USE_SYSTEM_LIBCLANG"
@@ -68,7 +68,7 @@ prepare() {
 
   cd "$srcdir/YouCompleteMe/third_party/ycmd"
   git submodule init
-  for _m in argparse JediHTTP gocode godef OmniSharpServer racerd frozendict; do
+  for _m in JediHTTP gocode godef OmniSharpServer racerd frozendict; do
     git config submodule.third_party/$_m.url "$srcdir/$_m"
     git submodule update third_party/$_m
   done
@@ -115,13 +115,13 @@ build() {
     python3 -m compileall -x 'setup.py' .
   done
 
-  for _m in argparse JediHTTP frozendict; do
+  for _m in JediHTTP frozendict; do
     cd "$srcdir/YouCompleteMe/third_party/ycmd/third_party/$_m"
     python3 -m compileall -x 'setup.py' .
   done
 
   cd "$srcdir/YouCompleteMe/third_party/ycmd/ycmd"
-  python3 -m compileall -x 'testdata' .
+  python3 -m compileall .
 
   cd "$srcdir/YouCompleteMe/python/ycm/"
   rm -rf tests/
@@ -141,10 +141,10 @@ package() {
   cp -r "$srcdir/YouCompleteMe/third_party/ycmd/"{ycmd,ycm_core.so,CORE_VERSION} \
     "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd"
 
-  ln -s "/usr/lib/clang/${_CLANG_VERSION}" \
+  ln -s "/usr/lib/clang/${_CLANG_VERSION_MIN}" \
     "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/clang_includes"
 
-  cp -r "$srcdir/YouCompleteMe/third_party/ycmd/third_party/"{argparse,frozendict,JediHTTP,tern_runtime} \
+  cp -r "$srcdir/YouCompleteMe/third_party/ycmd/third_party/"{frozendict,JediHTTP,tern_runtime} \
     "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party"
 
   cp    "$srcdir/YouCompleteMe/third_party/ycmd/third_party/gocode/gocode" \
@@ -159,10 +159,9 @@ package() {
   for _f in .git .gitignore .gitmodules .hgignore .hgtags .travis.yml; do
     find "$pkgdir" -name "$_f" -delete
   done
-  rm -fr "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party/JediHTTP/vendor"
+  rm -fr "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party/JediHTTP/vendor/*"
   rm -fr "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party/JediHTTP/travis"
   rm -fr "$pkgdir/usr/share/vim/vimfiles/third_party/requests-futures/setup.py"
-  rm -fr "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party/argparse/setup."{py,cfg}
   rm -fr "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party/frozendict/setup.py"
 }
 # vim:set ts=2 sw=2 et:
