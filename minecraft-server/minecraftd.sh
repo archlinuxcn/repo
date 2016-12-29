@@ -113,7 +113,7 @@ idle_server_daemon() {
 		screen -S "${SESSION_NAME}" -Q select . > /dev/null
 		if [[ $? -eq 0 ]]; then
 			# Game server is up and running
-			if [[ "$(screen -S "${SESSION_NAME}" -ls | sed -n 2p | awk '{ print $2 }')" == "(Attached)" ]]; then
+			if [[ "$(screen -S "${SESSION_NAME}" -ls | sed -n "s/.*${SESSION_NAME}\s\+//gp")" == "(Attached)" ]]; then
 				# An administrator is connected to the console, pause player checking
 				echo "An admin is connected to the console. Pause player checking."
 			# Check for active player
