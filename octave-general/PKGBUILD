@@ -9,7 +9,7 @@
 _pack=general
 pkgname=octave-$_pack
 pkgver=2.0.0
-pkgrel=2
+pkgrel=3
 pkgdesc="General tools for Octave."
 arch=(any)
 url="http://octave.sourceforge.net/$_pack/"

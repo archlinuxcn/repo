@@ -1,0 +1,11 @@
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Operation= Remove
+Type = File
+Target = usr/share/vim/vimfiles/doc/
+
+[Action]
+Description = Updating Vim help tags...
+Exec = /usr/bin/vim -es --cmd ":helptags /usr/share/vim/vimfiles/doc" --cmd ":q"
+When = PostTransaction

@@ -6,19 +6,12 @@
 
 from lilaclib import *
 
-depends = ["python2-lz4"]
+depends = ["python2-lz4", "python-lz4", "rencode", "python2-gtkglext"]
 
 build_prefix = 'extra-x86_64'
 post_build = aur_post_build
+pre_build = aur_pre_build
 
-def pre_build():
-    aur_pre_build()
-
-    for line in edit_file('PKGBUILD'):
-        # edit PKGBUILD
-        if line.strip().startswith("depends"):
-            line = line + " 'libxkbfile'"
-        print(line)
 
 if __name__ == '__main__':
   single_main()

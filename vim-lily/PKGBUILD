@@ -2,18 +2,20 @@
 
 pkgbase=vim-lily
 pkgname=(gvim-lily vim-runtime-lily vim-lily)
-pkgver=8.0.106
-pkgrel=1
+pkgver=8.0.134
+pkgrel=2
 _versiondir="vim$(echo $pkgver | awk -F. '{print $1$2}')"
 arch=('i686' 'x86_64')
 license=('custom:vim')
 url="http://www.vim.org"
-makedepends=('gpm' 'gtk2' 'perl' 'python2' 'python>=3.0.0' 'ruby' 'gettext'
+makedepends=('gpm' 'gtk2' 'perl' 'python2' 'python' 'ruby' 'gettext'
              'pkg-config' 'sed' 'luajit' 'git' 'tar' 'desktop-file-utils' 'libxt')
-source=(tmpfiles.conf
+source=('tmpfiles.conf'
+        'vimdoc.hook'
         "vim-repo::git://localhost/vim")
-md5sums=('f8a425473752076384de2eae382af24a'
-         'SKIP')
+sha1sums=('f4d0ccb87d0add6bd76280ed82f401e9a91aabc5'
+          'adc4c82b6c4097944e5a767270a772721455eb8c'
+          'SKIP')
 options=('debug')
 
 pkgver() {
@@ -193,6 +195,9 @@ package_vim-runtime-lily() {
   install -dm755 "${pkgdir}"/usr/share/licenses/vim-runtime
   ln -s /usr/share/vim/${_versiondir}/doc/uganda.txt \
     "${pkgdir}"/usr/share/licenses/vim-runtime/license.txt
+
+  # The official package puts it in vim-runtime so we have to do the same to avoid conflicts
+  install -Dm644 "${srcdir}"/vimdoc.hook "${pkgdir}"/usr/share/libalpm/hooks/vimdoc.hook
 }
 
 # vim:set sw=2 sts=2 et ft=sh:

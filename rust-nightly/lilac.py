@@ -11,10 +11,10 @@ from pkg_resources import parse_version
 from lilaclib import *
 
 debug = False
-_version = '1.10.0'
-_version_date = '2016-05-13'
+_version = '1.16.0'
+_version_date = '2016-12-23'
 
-stds = [
+STDS = [
   'arm-unknown-linux-gnueabihf',
   'armv7-unknown-linux-gnueabihf',
   'x86_64-unknown-linux-gnu',
@@ -25,10 +25,7 @@ stds = [
   'wasm32-unknown-emscripten',
 ]
 
-if debug:
-  dist_url = 'https://mirrors.ustc.edu.cn/rust-static/dist/index.html'
-else:
-  dist_url = 'https://static.rust-lang.org/dist/index.html'
+dist_url = 'https://static.rust-lang.org/dist/index.html'
 
 build_prefix = 'extra-x86_64'
 
@@ -53,26 +50,27 @@ def get_latest_version():
     return _version, _version_date
 
 class Std:
-  def __init__(self, platform):
+  def __init__(self, platform, date):
     self.name = 'rust-std-nightly-' + platform
-    self.url = urljoin(dist_url, self.name + '.tar.gz')
+    self.url = urljoin(dist_url, date + '/' + self.name + '.tar.gz')
     self.platform = platform
     self.optdepends = toolchain.get(platform)
 
-stds = [Std(x) for x in stds]
-
 def pre_build():
   version, version_date = get_latest_version()
-  oldfiles = glob.glob('*.gz') + glob.glob('*.gz.asc')
-  for f in oldfiles:
-    if not debug:
+  if not debug:
+    oldfiles = glob.glob('*.gz') + glob.glob('*.gz.asc')
+    for f in oldfiles:
       os.unlink(f)
+
+  stds = [Std(x, version_date) for x in STDS]
 
   loader = tornado.template.Loader('.')
   content = loader.load('PKGBUILD.tmpl').generate(
     stds = stds,
     version = version,
     version_date = version_date.replace('-', ''),
+    version_date_raw = version_date,
   )
   with open('PKGBUILD', 'wb') as output:
     output.write(content)

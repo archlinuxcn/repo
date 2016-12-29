@@ -23,6 +23,6 @@ diff -Naur foxitreader.orig/usr/lib/foxitreader/FoxitReader.sh foxitreader/usr/l
 - appname="FoxitReader"
 -
 +appname="FoxitReader"
-+selfpath="$(dirname $(readlink "$0"))"
++selfpath="$(dirname $(readlink -f "$0"))"
 +export LD_LIBRARY_PATH="${selfpath}/lib:${selfpath}/platforms:${selfpath}/printsupport:${selfpath}/rmssdk:${selfpath}/sensors:${selfpath}/imageformats:${selfpath}/platforminputcontexts"
 +exec "${selfpath}/${appname}" "$@"

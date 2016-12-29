@@ -2,10 +2,10 @@
 
 pkgbase=vmware-horizon-client
 pkgname=('vmware-horizon-client' 'vmware-horizon-rtav' 'vmware-horizon-smartcard' 'vmware-horizon-usb' 'vmware-horizon-virtual-printing')
-pkgver=4.2.0
-_build=4329640
-_cart='CART16Q3'
-pkgrel=2
+pkgver=4.3.0
+_build=4710754
+_cart='CART16Q4'
+pkgrel=1
 pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop'
 arch=('i686' 'x86_64')
 url='https://my.vmware.com/web/vmware/info/slug/desktop_end_user_computing/vmware_horizon_clients/4_0'
@@ -23,8 +23,8 @@ sha256sums=('d8794c22229afdeb698dae5908b7b2b3880e075b19be38e0b296bb28f4555163'
             '5e737d69e49ea7e039bc94f358b45c8e6d9071b7c041a53800555d3dc21c8dac'
             'ec763930dd50d6e77a31c40c939909752cfb124cafb0a4ca4f76860375a14d75'
             'e47e770a1e19ed321de7c2765b2d682f59ac466aef92b2e4ea5e65cacf56de36')
-sha256sums_x86_64=('32712e3f44fc41d95c41fabd3e94de285d91a6ddf0950a2c4850109e09e199cb')
-sha256sums_i686=('3e479e9b82e096590ada658cdd6f8f787827a0eb20860fc533a21118aa7a975b')
+sha256sums_x86_64=('b7fbfca5e7daddb59c6659cd21b8789403318423643cc41b055c22c15919f875')
+sha256sums_i686=('a32b14d205d9a467a0c9134dc076147e6e4b87185e3a952c7e858a3e965079d3')
 
 # VMware bundles old versions of openssl. Usually we can use system openssl.
 # If things break because VMware relies on legacy or buggy code you can use

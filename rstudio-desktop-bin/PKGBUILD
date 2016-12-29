@@ -12,21 +12,20 @@
 #######################
 
 pkgname=rstudio-desktop-bin
-pkgver=0.99.903
-pkgrel=1
+pkgver=1.0.136
+pkgrel=2
 pkgdesc="A new integrated development environment (IDE) for R (binary version from RStudio official website)"
 arch=('i686' 'x86_64')
 license=('GPL')
 url="http://www.rstudio.org/"
 depends=('r' 'gstreamer0.10-base' 'hicolor-icon-theme' 'libxcomposite' 'libxslt' 'shared-mime-info' 'libxrandr' 'pandoc' 'pandoc-citeproc')
-makedepends=('patchelf')
+#makedepends=('patchelf')
 conflicts=('rstudio-desktop' 'rstudio-desktop-git' 'rstudio-desktop-preview-bin')
 provides=("rstudio-desktop=${pkgver}")
 options=(!strip)
 
-
-_x86md5=761eae80b0ba4d4cd9051a802a2c44e2
-_x64md5=98ea59d3db00e0083d3e4053514f764d
+_x86md5=0a20fb89d8aaeb39b329a640ddadd2c5
+_x64md5=2a73b88a12a9fbaf96251cecf8b41340
 
 case "$CARCH" in
 	'i686')
@@ -53,19 +52,19 @@ package() {
   tar zxpf data.tar.gz -C "$pkgdir"
   install -dm755 "$pkgdir/usr/bin"
 
-  cd "$pkgdir/usr/lib/rstudio/bin"
-  ln -sf /usr/lib/libncursesw.so.6 libtinfo.so.5
-  ln -sf /usr/lib/libedit.so.0  libedit.so.2
+  #cd "$pkgdir/usr/lib/rstudio/bin"
+  #ln -sf /usr/lib/libncursesw.so.6 libtinfo.so.5
+  #ln -sf /usr/lib/libedit.so.0  libedit.so.2
 
-  cd "$pkgdir/usr/lib/rstudio/bin/rsclang"
-  patchelf --set-rpath '$ORIGIN/..' libclang.so
+#  cd "$pkgdir/usr/lib/rstudio/bin/rsclang"
+#  patchelf --set-rpath '$ORIGIN/..' libclang.so
 
   cd "$pkgdir/usr/lib/rstudio/bin/pandoc"
   ln -sf /usr/bin/pandoc ./
   ln -sf /usr/bin/pandoc-citeproc ./
 
-  cd "$pkgdir/usr/lib/rstudio/bin/plugins"
-  ls */*.so | xargs -n1 patchelf --set-rpath '$ORIGIN/../..'
+#  cd "$pkgdir/usr/lib/rstudio/bin/plugins"
+#  ls */*.so | xargs -n1 patchelf --set-rpath '$ORIGIN/../..'
 
   find "$pkgdir/usr" -type d -print0 | xargs -0 chmod 755
   find "$pkgdir/usr" -type f -name '*.so.*' -print0 | xargs -0 chmod 644
@@ -73,11 +72,15 @@ package() {
   cd "$pkgdir/usr/lib/rstudio/bin"
   ls libQt*.so.*| grep '\.[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}$'|
   while read x;do
-    ln -sf "$x" "${x%.+([0-9]).+([0-9])}"
+    if [[ ! -e "${x%.+([0-9]).+([0-9])}" ]];then
+      ln -s "$x" "${x%.+([0-9]).+([0-9])}"
+    fi
   done
   ls lib*.so.* | grep '\.so\.[0-9]\{1,\}\.[0-9]\{1,\}$'|
   while read x;do
-    ln -sf "$x" "${x%.+([0-9])}"
+    if [[ ! -e "${x%.+([0-9])}" ]];then
+      ln -s "$x" "${x%.+([0-9])}"
+    fi
   done
 
   cd "$pkgdir/usr/bin"

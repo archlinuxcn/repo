@@ -1,0 +1,14 @@
+post_install() {
+    gtk-update-icon-cache -q -t -f /usr/share/icons/hicolor
+    echo ">> Firefox users can also use Flashgot add-on for browser integration. In case"
+    echo "    you wish to use Flashgot, you need to disable browser integration for firefox"
+    echo "    in FlareGet Settings->Browser Integration."
+}
+
+post_upgrade() {
+    post_install
+}
+
+post_remove() {
+    gtk-update-icon-cache -q -t -f /usr/share/icons/hicolor
+}

@@ -1,17 +1,17 @@
 # Maintainer: Yuexuan Gu <lastavengers@outlook.com>
 
 pkgname=srain-git
-pkgver=0.404.b07f14e
+pkgver=0.413.22ccd91
 pkgrel=1
 pkgdesc="It does not look like a irc client"
 arch=('i686' 'x86_64')
 license=('GPL')
-url="https://github.com/lastavenger/srain"
+url="https://github.com/SilverRainZ/srain"
 depends=('gtk3' 'python' 'libircclient' 'curl' 'libnotify')
 makedepends=('git' 'make' 'gcc' 'pkg-config' 'gettext' 'imagemagick')
 conflicts=('srain')
 provides=('srain')
-source=("git+https://github.com/LastAvenger/srain.git")
+source=("git+https://github.com/SilverRainZ/srain.git")
 sha256sums=('SKIP')
 
 pkgver() {

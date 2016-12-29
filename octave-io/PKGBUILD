@@ -9,13 +9,13 @@
 _pack=io
 pkgname=octave-$_pack
 pkgver=2.4.5
-pkgrel=1
+pkgrel=2
 pkgdesc="Input/Output in external formats."
 arch=(any)
 url="http://octave.sourceforge.net/$_pack/"
 license=('custom')
 groups=('octave-forge')
-depends=('octave>=3.8.0' 'octave<4.2.0')
+depends=('octave>=3.8.0' 'octave<4.4.0')
 makedepends=()
 optdepends=()
 backup=()

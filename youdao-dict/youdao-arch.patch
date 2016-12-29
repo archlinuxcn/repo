@@ -1,0 +1,29 @@
+--- a/youdao-dict/app/plugins/youdao/dbus_proxy.py	2016-05-24 11:12:53.000000000 +0800
++++ b/youdao-dict/app/plugins/youdao/dbus_proxy.py	2016-09-22 14:43:11.571453798 +0800
+@@ -52,6 +52,7 @@
+     def __init__(self):
+         QtCore.QObject.__init__(self)
+         self.session_bus = QDBusConnection.sessionBus()
++        self.session_bus.registerObject('/', self)
+         self.session_bus.connect(self.DBUS_NAME, self.DBUS_PATH, self.DBUS_IFACE,
+             'hide', self.hideSlot)
+         self.session_bus.connect(self.DBUS_NAME, self.DBUS_PATH, self.DBUS_IFACE,
+@@ -204,6 +205,7 @@
+     def __init__(self):
+         QtCore.QObject.__init__(self)
+         self.session_bus = QDBusConnection.sessionBus()
++        self.session_bus.registerObject('/indicator', self)
+         self.session_bus.connect(self.DBUS_NAME, self.DBUS_PATH, self.DBUS_IFACE,
+             'MenuItemClicked', self.MenuItemClickedSlot)
+         self.session_bus.connect(self.DBUS_NAME, self.DBUS_PATH, self.DBUS_IFACE,
+--- a/youdao-dict/dae/ewmh.py	2016-05-24 11:12:53.000000000 +0800
++++ b/youdao-dict/dae/ewmh.py	2016-09-22 14:43:20.551538216 +0800
+@@ -116,7 +116,7 @@
+             self.display.get_atom(property_type),
+             Xatom.STRING,
+             8,
+-            property_content,
++            property_content.encode('ascii'),
+             )
+         self.display.sync()
+ 

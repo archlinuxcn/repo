@@ -2,12 +2,12 @@
  
 pkgname=shashlik-bin
 pkgver=0.9.3
-pkgrel=1
+pkgrel=2
 pkgdesc="run Android applications on a standard Linux desktop"
 arch=('x86_64')
 url="http://www.shashlik.io"
 license=('GPL')
-depends=('python' 'lib32-libgl' 'kdebase-kdialog')
+depends=('python' 'lib32-libgl' 'kdialog')
 conflicts=('shashlik')
 provides=('shashlik')
 source=("http://static.davidedmundson.co.uk/shashlik/shashlik_${pkgver}.deb")

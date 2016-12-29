@@ -1,0 +1,265 @@
+From 588541869c1e6d214f33b2ec8ce74a5965d959bc Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Wed, 28 Sep 2016 18:44:23 -0400
+Subject: [PATCH] Revert "ARM: move the builtins libcall CC setup"
+
+This reverts commit a757788abaf4ba30306d52e14e36623e85c9f12b.
+
+Revert "CodeGen: ensure that libcalls are always AAPCS CC"
+
+This reverts commit c4c2318e72dd5d13f529436536a429c8f9fbe7cb.
+---
+ lib/CodeGen/TargetLoweringBase.cpp             |   8 +-
+ lib/Target/ARM/ARMISelLowering.cpp             | 167 -------------------------
+ lib/Target/ARM/ARMISelLowering.h               |   2 -
+ test/CodeGen/Thumb2/float-intrinsics-double.ll |   2 +-
+ test/CodeGen/Thumb2/float-intrinsics-float.ll  |   2 +-
+ 5 files changed, 7 insertions(+), 174 deletions(-)
+
+diff --git a/lib/CodeGen/TargetLoweringBase.cpp b/lib/CodeGen/TargetLoweringBase.cpp
+index be66f7e..9cbd6d9 100644
+--- a/lib/CodeGen/TargetLoweringBase.cpp
++++ b/lib/CodeGen/TargetLoweringBase.cpp
+@@ -492,10 +492,12 @@ static void InitLibcallNames(const char **Names, const Triple &TT) {
+   Names[RTLIB::DEOPTIMIZE] = "__llvm_deoptimize";
+ }
+ 
+-/// Set default libcall CallingConvs.
++/// InitLibcallCallingConvs - Set default libcall CallingConvs.
++///
+ static void InitLibcallCallingConvs(CallingConv::ID *CCs) {
+-  for (int LC = 0; LC < RTLIB::UNKNOWN_LIBCALL; ++LC)
+-    CCs[LC] = CallingConv::C;
++  for (int i = 0; i < RTLIB::UNKNOWN_LIBCALL; ++i) {
++    CCs[i] = CallingConv::C;
++  }
+ }
+ 
+ /// getFPEXT - Return the FPEXT_*_* value for the given types, or
+diff --git a/lib/Target/ARM/ARMISelLowering.cpp b/lib/Target/ARM/ARMISelLowering.cpp
+index 018fb16..2842c0f 100644
+--- a/lib/Target/ARM/ARMISelLowering.cpp
++++ b/lib/Target/ARM/ARMISelLowering.cpp
+@@ -97,171 +97,6 @@ namespace {
+   };
+ }
+ 
+-void ARMTargetLowering::InitLibcallCallingConvs() {
+-  // The builtins on ARM always use AAPCS, irrespective of wheter C is AAPCS or
+-  // AAPCS_VFP.
+-  for (const auto LC : {
+-           RTLIB::SHL_I16,
+-           RTLIB::SHL_I32,
+-           RTLIB::SHL_I64,
+-           RTLIB::SHL_I128,
+-           RTLIB::SRL_I16,
+-           RTLIB::SRL_I32,
+-           RTLIB::SRL_I64,
+-           RTLIB::SRL_I128,
+-           RTLIB::SRA_I16,
+-           RTLIB::SRA_I32,
+-           RTLIB::SRA_I64,
+-           RTLIB::SRA_I128,
+-           RTLIB::MUL_I8,
+-           RTLIB::MUL_I16,
+-           RTLIB::MUL_I32,
+-           RTLIB::MUL_I64,
+-           RTLIB::MUL_I128,
+-           RTLIB::MULO_I32,
+-           RTLIB::MULO_I64,
+-           RTLIB::MULO_I128,
+-           RTLIB::SDIV_I8,
+-           RTLIB::SDIV_I16,
+-           RTLIB::SDIV_I32,
+-           RTLIB::SDIV_I64,
+-           RTLIB::SDIV_I128,
+-           RTLIB::UDIV_I8,
+-           RTLIB::UDIV_I16,
+-           RTLIB::UDIV_I32,
+-           RTLIB::UDIV_I64,
+-           RTLIB::UDIV_I128,
+-           RTLIB::SREM_I8,
+-           RTLIB::SREM_I16,
+-           RTLIB::SREM_I32,
+-           RTLIB::SREM_I64,
+-           RTLIB::SREM_I128,
+-           RTLIB::UREM_I8,
+-           RTLIB::UREM_I16,
+-           RTLIB::UREM_I32,
+-           RTLIB::UREM_I64,
+-           RTLIB::UREM_I128,
+-           RTLIB::SDIVREM_I8,
+-           RTLIB::SDIVREM_I16,
+-           RTLIB::SDIVREM_I32,
+-           RTLIB::SDIVREM_I64,
+-           RTLIB::SDIVREM_I128,
+-           RTLIB::UDIVREM_I8,
+-           RTLIB::UDIVREM_I16,
+-           RTLIB::UDIVREM_I32,
+-           RTLIB::UDIVREM_I64,
+-           RTLIB::UDIVREM_I128,
+-           RTLIB::NEG_I32,
+-           RTLIB::NEG_I64,
+-           RTLIB::ADD_F32,
+-           RTLIB::ADD_F64,
+-           RTLIB::ADD_F80,
+-           RTLIB::ADD_F128,
+-           RTLIB::SUB_F32,
+-           RTLIB::SUB_F64,
+-           RTLIB::SUB_F80,
+-           RTLIB::SUB_F128,
+-           RTLIB::MUL_F32,
+-           RTLIB::MUL_F64,
+-           RTLIB::MUL_F80,
+-           RTLIB::MUL_F128,
+-           RTLIB::DIV_F32,
+-           RTLIB::DIV_F64,
+-           RTLIB::DIV_F80,
+-           RTLIB::DIV_F128,
+-           RTLIB::POWI_F32,
+-           RTLIB::POWI_F64,
+-           RTLIB::POWI_F80,
+-           RTLIB::POWI_F128,
+-           RTLIB::FPEXT_F64_F128,
+-           RTLIB::FPEXT_F32_F128,
+-           RTLIB::FPEXT_F32_F64,
+-           RTLIB::FPEXT_F16_F32,
+-           RTLIB::FPROUND_F32_F16,
+-           RTLIB::FPROUND_F64_F16,
+-           RTLIB::FPROUND_F80_F16,
+-           RTLIB::FPROUND_F128_F16,
+-           RTLIB::FPROUND_F64_F32,
+-           RTLIB::FPROUND_F80_F32,
+-           RTLIB::FPROUND_F128_F32,
+-           RTLIB::FPROUND_F80_F64,
+-           RTLIB::FPROUND_F128_F64,
+-           RTLIB::FPTOSINT_F32_I32,
+-           RTLIB::FPTOSINT_F32_I64,
+-           RTLIB::FPTOSINT_F32_I128,
+-           RTLIB::FPTOSINT_F64_I32,
+-           RTLIB::FPTOSINT_F64_I64,
+-           RTLIB::FPTOSINT_F64_I128,
+-           RTLIB::FPTOSINT_F80_I32,
+-           RTLIB::FPTOSINT_F80_I64,
+-           RTLIB::FPTOSINT_F80_I128,
+-           RTLIB::FPTOSINT_F128_I32,
+-           RTLIB::FPTOSINT_F128_I64,
+-           RTLIB::FPTOSINT_F128_I128,
+-           RTLIB::FPTOUINT_F32_I32,
+-           RTLIB::FPTOUINT_F32_I64,
+-           RTLIB::FPTOUINT_F32_I128,
+-           RTLIB::FPTOUINT_F64_I32,
+-           RTLIB::FPTOUINT_F64_I64,
+-           RTLIB::FPTOUINT_F64_I128,
+-           RTLIB::FPTOUINT_F80_I32,
+-           RTLIB::FPTOUINT_F80_I64,
+-           RTLIB::FPTOUINT_F80_I128,
+-           RTLIB::FPTOUINT_F128_I32,
+-           RTLIB::FPTOUINT_F128_I64,
+-           RTLIB::FPTOUINT_F128_I128,
+-           RTLIB::SINTTOFP_I32_F32,
+-           RTLIB::SINTTOFP_I32_F64,
+-           RTLIB::SINTTOFP_I32_F80,
+-           RTLIB::SINTTOFP_I32_F128,
+-           RTLIB::SINTTOFP_I64_F32,
+-           RTLIB::SINTTOFP_I64_F64,
+-           RTLIB::SINTTOFP_I64_F80,
+-           RTLIB::SINTTOFP_I64_F128,
+-           RTLIB::SINTTOFP_I128_F32,
+-           RTLIB::SINTTOFP_I128_F64,
+-           RTLIB::SINTTOFP_I128_F80,
+-           RTLIB::SINTTOFP_I128_F128,
+-           RTLIB::UINTTOFP_I32_F32,
+-           RTLIB::UINTTOFP_I32_F64,
+-           RTLIB::UINTTOFP_I32_F80,
+-           RTLIB::UINTTOFP_I32_F128,
+-           RTLIB::UINTTOFP_I64_F32,
+-           RTLIB::UINTTOFP_I64_F64,
+-           RTLIB::UINTTOFP_I64_F80,
+-           RTLIB::UINTTOFP_I64_F128,
+-           RTLIB::UINTTOFP_I128_F32,
+-           RTLIB::UINTTOFP_I128_F64,
+-           RTLIB::UINTTOFP_I128_F80,
+-           RTLIB::UINTTOFP_I128_F128,
+-           RTLIB::OEQ_F32,
+-           RTLIB::OEQ_F64,
+-           RTLIB::OEQ_F128,
+-           RTLIB::UNE_F32,
+-           RTLIB::UNE_F64,
+-           RTLIB::UNE_F128,
+-           RTLIB::OGE_F32,
+-           RTLIB::OGE_F64,
+-           RTLIB::OGE_F128,
+-           RTLIB::OLT_F32,
+-           RTLIB::OLT_F64,
+-           RTLIB::OLT_F128,
+-           RTLIB::OLE_F32,
+-           RTLIB::OLE_F64,
+-           RTLIB::OLE_F128,
+-           RTLIB::OGT_F32,
+-           RTLIB::OGT_F64,
+-           RTLIB::OGT_F128,
+-           RTLIB::UO_F32,
+-           RTLIB::UO_F64,
+-           RTLIB::UO_F128,
+-           RTLIB::O_F32,
+-           RTLIB::O_F64,
+-           RTLIB::O_F128,
+-       })
+-  setLibcallCallingConv(LC, CallingConv::ARM_AAPCS);
+-}
+-
+ // The APCS parameter registers.
+ static const MCPhysReg GPRArgRegs[] = {
+   ARM::R0, ARM::R1, ARM::R2, ARM::R3
+@@ -349,8 +184,6 @@ ARMTargetLowering::ARMTargetLowering(const TargetMachine &TM,
+ 
+   setBooleanVectorContents(ZeroOrNegativeOneBooleanContent);
+ 
+-  InitLibcallCallingConvs();
+-
+   if (Subtarget->isTargetMachO()) {
+     // Uses VFP for Thumb libfuncs if available.
+     if (Subtarget->isThumb() && Subtarget->hasVFP2() &&
+diff --git a/lib/Target/ARM/ARMISelLowering.h b/lib/Target/ARM/ARMISelLowering.h
+index 191235d..4906686 100644
+--- a/lib/Target/ARM/ARMISelLowering.h
++++ b/lib/Target/ARM/ARMISelLowering.h
+@@ -506,8 +506,6 @@ namespace llvm {
+ 
+     bool HasStandaloneRem = true;
+ 
+-    void InitLibcallCallingConvs();
+-
+     void addTypeForNEON(MVT VT, MVT PromotedLdStVT, MVT PromotedBitwiseVT);
+     void addDRTypeForNEON(MVT VT);
+     void addQRTypeForNEON(MVT VT);
+diff --git a/test/CodeGen/Thumb2/float-intrinsics-double.ll b/test/CodeGen/Thumb2/float-intrinsics-double.ll
+index 9e94990..657d1b1 100644
+--- a/test/CodeGen/Thumb2/float-intrinsics-double.ll
++++ b/test/CodeGen/Thumb2/float-intrinsics-double.ll
+@@ -18,7 +18,7 @@ declare double     @llvm.powi.f64(double %Val, i32 %power)
+ define double @powi_d(double %a, i32 %b) {
+ ; CHECK-LABEL: powi_d:
+ ; SOFT: {{(bl|b)}} __powidf2
+-; HARD: bl __powidf2
++; HARD: b __powidf2
+   %1 = call double @llvm.powi.f64(double %a, i32 %b)
+   ret double %1
+ }
+diff --git a/test/CodeGen/Thumb2/float-intrinsics-float.ll b/test/CodeGen/Thumb2/float-intrinsics-float.ll
+index fda840d..847aeac 100644
+--- a/test/CodeGen/Thumb2/float-intrinsics-float.ll
++++ b/test/CodeGen/Thumb2/float-intrinsics-float.ll
+@@ -18,7 +18,7 @@ declare float     @llvm.powi.f32(float %Val, i32 %power)
+ define float @powi_f(float %a, i32 %b) {
+ ; CHECK-LABEL: powi_f:
+ ; SOFT: bl __powisf2
+-; HARD: bl __powisf2
++; HARD: b __powisf2
+   %1 = call float @llvm.powi.f32(float %a, i32 %b)
+   ret float %1
+ }
+-- 
+2.10.0
+

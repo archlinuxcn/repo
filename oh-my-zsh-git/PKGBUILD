@@ -2,7 +2,7 @@
 # Contributor: ThinCarrotShrimp <christoph.r.martin+arch at gmail dot com>
 
 pkgname=oh-my-zsh-git
-pkgver=4255.6ee6a73
+pkgver=4267.97c038416
 pkgrel=1
 pkgdesc="A community-driven framework for managing your zsh configuration."
 arch=('any')
@@ -28,7 +28,7 @@ package() {
   mkdir -p "${pkgdir}/usr/share/oh-my-zsh"
 
   # Fix the path to oh-my-zsh, and disable auto-updating.
-  sed -e 's\ZSH=.*\ZSH=/usr/share/oh-my-zsh\1'\
+  sed -e 's/ZSH=.*/ZSH=\/usr\/share\/oh-my-zsh/1'\
       -e 's/# \(DISABLE_AUTO_UPDATE="true"\)/\1/'\
       templates/zshrc.zsh-template > zshrc
 

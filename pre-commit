@@ -62,7 +62,7 @@ class ConfigSectionTest(TestCase):
       if "manual" not in self.config[section]:
         with self.subTest(section=section):
           self.assertTrue(os.path.isfile(os.path.join(section, "lilac.py")),
-                          msg=('package "\033[1;31m{0}\033[m" do not ' +
+                          msg=('package "\033[1;31m{0}\033[m" does not ' +
                                'have lilac.py').format(section))
 
   def test_folders(self):
@@ -73,7 +73,7 @@ class ConfigSectionTest(TestCase):
         continue
       with self.subTest(package=package):
         self.assertTrue(os.path.isfile(os.path.join(package, "PKGBUILD")),
-                        msg=('package "\033[1;31m{0}\033[m" do not ' +
+                        msg=('package "\033[1;31m{0}\033[m" does not ' +
                              'have PKGBUILD').format(package))
 
   @skip("37 packages violating this")

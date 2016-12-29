@@ -22,27 +22,27 @@ fi
 
 case $CARCH in
   x86_64|i686)
-    makedepends_llvm=("llvm=3.9.0")
-    depends_llvm=("llvm-libs=3.9.0")
+    makedepends_llvm=("llvm=3.9.1")
+    depends_llvm=("llvm-libs=3.9.1")
     ;;
   armv7h|aarch64)
     makedepends_llvm=("llvm-svn")
     depends_llvm=("llvm-libs-svn")
     ;;
   *)
-    echo "Unsupported Arch" >&2
+    echo "Unsupported Arch \"$CARCH\"" >&2
     ;;
 esac
 
 epoch=1
-pkgver=0.6.0.dev.1353.g4a805b3
+pkgver=0.6.0.dev.1738.g309657f69c
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
 license=('GPL')
 makedepends=(gcc-fortran arpack fftw git gmp libgit2-julia libunwind-git
-             "${makedepends_llvm[@]}" mpfr pcre2 suitesparse python2
+             "${makedepends_llvm[@]}" mpfr pcre2 suitesparse
              openspecfun openblas libutf8proc-git patchelf openblas-lapack
              openlibm mbedtls libssh2)
 options=('debug' '!strip')
@@ -127,11 +127,6 @@ EOF
   git clean -fdx
 
   # patch -Np1 < ../
-
-  cd doc
-
-  # They use the Python2 version for sphinx which has on Arch a different name
-  sed 's/pip /pip2 /g' -i Makefile
 
   if [[ "$CARCH" = x86_64 ]]; then
       (cd "$srcdir"
