@@ -1,20 +1,22 @@
 # Maintainer: redfish <redfish at galactica dot pw>
 
 pkgname='zeronet'
-pkgver=0.5.0
-pkgrel=1.1
+pkgver=0.5.0.r122.5103879
+pkgrel=1
+_commit='5103879471176fced494dc70d35e8384275f787e'
 arch=('any')
 url="https://zeronet.io/"
 depends=('python2>=2.7.10'
          'python2-gevent'
          'python2-msgpack'
 		)
+makedepends=('git')
 license=('GPL2')
 pkgdesc="Decentralized websites using Bitcoin crypto and the BitTorrent network."
-source=("https://github.com/HelloZeroNet/ZeroNet/archive/v$pkgver.tar.gz"
+source=("git+https://github.com/HelloZeroNet/ZeroNet.git#commit=$_commit"
         "zeronet.conf"
         "zeronet.service")
-md5sums=('3e60b755394dd3da59b7dc6bea4a4ea3'
+md5sums=('SKIP'
          'c5216860cfc435a4861c55fd3933391c'
          '4b1a25fc9f2cc691d40611ec4bfad99f')
 install="zeronet.install"
@@ -22,7 +24,7 @@ backup=("etc/zeronet.conf")
 options=(!strip) # ignore test binaries in the depsendency libs that fail strip
 
 # Upstream uses camel case
-_pkgarchive="ZeroNet-$pkgver"
+_pkgarchive="ZeroNet"
 
 package() {
    mkdir -p "$pkgdir/opt/zeronet"
@@ -31,7 +33,7 @@ package() {
 
    # There is no setup.py shipped, so brute-force copy
    cp -a "$srcdir/$_pkgarchive/." "$pkgdir/opt/zeronet/"
-python2 -m compileall $pkgdir/opt/zeronet
+   python2 -m compileall $pkgdir/opt/zeronet
 
    install -D -m644 "$srcdir/zeronet.conf" "$pkgdir/etc/zeronet.conf"
    install -D -m644 "$srcdir/zeronet.service" "$pkgdir/usr/lib/systemd/system/zeronet.service"
