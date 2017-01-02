@@ -1,0 +1,266 @@
+diff --git a/src/gmpv_application.c b/src/gmpv_application.c
+index 9e9904f..fea2380 100644
+--- a/src/gmpv_application.c
++++ b/src/gmpv_application.c
+@@ -709,11 +709,12 @@ static void mpv_prop_change_handler(mpv_event_property *prop, gpointer data)
+ 
+ 		gmpv_control_box_set_volume(control_box, volume);
+ 	}
+-	else if(g_strcmp0(prop->name, "length") == 0 && prop->data)
++	else if(g_strcmp0(prop->name, "duration") == 0 && prop->data)
+ 	{
+-		gdouble length = *((gdouble *) prop->data);
++		gdouble duration = *((gdouble *) prop->data);
+ 
+-		gmpv_control_box_set_seek_bar_length(control_box, (gint)length);
++		gmpv_control_box_set_seek_bar_duration
++			(control_box, (gint)duration);
+ 	}
+ 	else if(g_strcmp0(prop->name, "media-title") == 0 && prop->data)
+ 	{
+@@ -772,7 +773,7 @@ static void mpv_event_handler(mpv_event *event, gpointer data)
+ 		GmpvPlaylist *playlist;
+ 		gchar *title;
+ 		gint64 pos = -1;
+-		gdouble length = 0;
++		gdouble duration = 0;
+ 
+ 		control_box = gmpv_main_window_get_control_box(app->gui);
+ 		playlist = gmpv_mpv_obj_get_playlist(mpv);
+@@ -790,15 +791,15 @@ static void mpv_event_handler(mpv_event *event, gpointer data)
+ 
+ 		gmpv_mpv_obj_get_property
+ 			(mpv, "playlist-pos", MPV_FORMAT_INT64, &pos);
+ 		gmpv_mpv_obj_get_property
+-			(mpv, "length", MPV_FORMAT_DOUBLE, &length);
++			(mpv, "duration", MPV_FORMAT_DOUBLE, &duration);
+ 
+ 		title = gmpv_mpv_obj_get_property_string(mpv, "media-title");
+ 
+ 		gmpv_control_box_set_enabled(control_box, TRUE);
+ 		gmpv_control_box_set_playing_state(control_box, !state.paused);
+ 		gmpv_playlist_set_indicator_pos(playlist, (gint)pos);
+-		gmpv_control_box_set_seek_bar_length(control_box, (gint)length);
++		gmpv_control_box_set_seek_bar_duration(control_box, (gint)duration);
+ 		gtk_window_set_title(GTK_WINDOW(app->gui), title);
+ 
+ 		gmpv_mpv_obj_free(title);
+diff --git a/src/gmpv_control_box.c b/src/gmpv_control_box.c
+index 618cbf8..ba26218 100644
+--- a/src/gmpv_control_box.c
++++ b/src/gmpv_control_box.c
+@@ -323,9 +323,9 @@ void gmpv_control_box_set_seek_bar_pos(GmpvControlBox *box, gdouble pos)
+ 	gmpv_seek_bar_set_pos(GMPV_SEEK_BAR(box->seek_bar), pos);
+ }
+ 
+-void gmpv_control_box_set_seek_bar_length(GmpvControlBox *box, gint length)
++void gmpv_control_box_set_seek_bar_duration(GmpvControlBox *box, gint duration)
+ {
+-	gmpv_seek_bar_set_length(GMPV_SEEK_BAR(box->seek_bar), length);
++	gmpv_seek_bar_set_duration(GMPV_SEEK_BAR(box->seek_bar), duration);
+ }
+ 
+ void gmpv_control_box_set_volume(GmpvControlBox *box, gdouble volume)
+@@ -390,7 +390,7 @@ void gmpv_control_box_set_fullscreen_btn_visible(	GmpvControlBox *box,
+ void gmpv_control_box_reset(GmpvControlBox *box)
+ {
+ 	gmpv_control_box_set_seek_bar_pos(box, 0);
+-	gmpv_control_box_set_seek_bar_length(box, 0);
++	gmpv_control_box_set_seek_bar_duration(box, 0);
+ 	gmpv_control_box_set_playing_state(box, FALSE);
+ 	gmpv_control_box_set_chapter_enabled(box, FALSE);
+ 	gmpv_control_box_set_fullscreen_state(box, FALSE);
+diff --git a/src/gmpv_control_box.h b/src/gmpv_control_box.h
+index 4208499..6a1c7f1 100644
+--- a/src/gmpv_control_box.h
++++ b/src/gmpv_control_box.h
+@@ -32,7 +32,7 @@ GtkWidget *gmpv_control_box_new(void);
+ void gmpv_control_box_set_enabled(GmpvControlBox *box, gboolean enabled);
+ void gmpv_control_box_set_chapter_enabled(GmpvControlBox *box, gboolean enabled);
+ void gmpv_control_box_set_seek_bar_pos(GmpvControlBox *box, gdouble pos);
+-void gmpv_control_box_set_seek_bar_length(GmpvControlBox *box, gint length);
++void gmpv_control_box_set_seek_bar_duration(GmpvControlBox *box, gint duration);
+ void gmpv_control_box_set_volume(GmpvControlBox *box, gdouble volume);
+ gdouble gmpv_control_box_get_volume(GmpvControlBox *box);
+ gboolean gmpv_control_box_get_volume_popup_visible(GmpvControlBox *box);
+diff --git a/src/gmpv_mpv_obj.c b/src/gmpv_mpv_obj.c
+index 695f51b..e5f4daf 100644
+--- a/src/gmpv_mpv_obj.c
++++ b/src/gmpv_mpv_obj.c
+@@ -141,13 +141,16 @@ static void mpv_prop_change_handler(GmpvMpvObj *mpv, mpv_event_property* prop)
+ 
+ 	if(g_strcmp0(prop->name, "pause") == 0)
+ 	{
+-		gboolean idle;
++		gboolean idle_active;
+ 
+ 		mpv->state.paused = prop->data?*((int *)prop->data):TRUE;
+ 
+-		mpv_get_property(mpv->mpv_ctx, "idle", MPV_FORMAT_FLAG, &idle);
++		mpv_get_property(	mpv->mpv_ctx,
++					"idle-active",
++					MPV_FORMAT_FLAG,
++					&idle_active );
+ 
+-		if(idle && !mpv->state.paused)
++		if(idle_active && !mpv->state.paused)
+ 		{
+ 			gmpv_mpv_obj_load(mpv, NULL, FALSE, TRUE);
+ 		}
+@@ -1035,7 +1038,7 @@ void gmpv_mpv_obj_initialize(GmpvMpvObj *mpv)
+ 	mpv_observe_property(mpv->mpv_ctx, 0, "core-idle", MPV_FORMAT_FLAG);
+ 	mpv_observe_property(mpv->mpv_ctx, 0, "fullscreen", MPV_FORMAT_FLAG);
+ 	mpv_observe_property(mpv->mpv_ctx, 0, "pause", MPV_FORMAT_FLAG);
+-	mpv_observe_property(mpv->mpv_ctx, 0, "length", MPV_FORMAT_DOUBLE);
++	mpv_observe_property(mpv->mpv_ctx, 0, "duration", MPV_FORMAT_DOUBLE);
+ 	mpv_observe_property(mpv->mpv_ctx, 0, "media-title", MPV_FORMAT_STRING);
+ 	mpv_observe_property(mpv->mpv_ctx, 0, "playlist-pos", MPV_FORMAT_INT64);
+ 	mpv_observe_property(mpv->mpv_ctx, 0, "track-list", MPV_FORMAT_NODE);
+diff --git a/src/gmpv_seek_bar.c b/src/gmpv_seek_bar.c
+index 1955048..f4a1c84 100644
+--- a/src/gmpv_seek_bar.c
++++ b/src/gmpv_seek_bar.c
+@@ -27,7 +27,7 @@ struct _GmpvSeekBar
+ 	GtkWidget *seek_bar;
+ 	GtkWidget *label;
+ 	gdouble pos;
+-	gdouble length;
++	gdouble duration;
+ };
+ 
+ struct _GmpvSeekBarClass
+@@ -50,7 +50,7 @@ static void change_value_handler(	GtkWidget *widget,
+ {
+ 	GmpvSeekBar *bar = data;
+ 
+-	if(bar->length > 0)
++	if(bar->duration > 0)
+ 	{
+ 		update_label(data);
+ 		g_signal_emit_by_name(data, "seek", value);
+@@ -60,29 +60,29 @@ static void change_value_handler(	GtkWidget *widget,
+ static void update_label(GmpvSeekBar *bar)
+ {
+ 	gint sec = (gint)bar->pos;
+-	gint length = (gint)bar->length;
++	gint duration = (gint)bar->duration;
+ 	gchar *output;
+ 
+ 	/* Longer than one hour */
+-	if(length > 3600)
++	if(duration > 3600)
+ 	{
+ 		output = g_strdup_printf(	"%02d:%02d:%02d/"
+ 						"%02d:%02d:%02d",
+ 						sec/3600,
+ 						(sec%3600)/60,
+ 						sec%60,
+-						length/3600,
+-						(length%3600)/60,
+-						length%60 );
++						duration/3600,
++						(duration%3600)/60,
++						duration%60 );
+ 	}
+-	else if(length > 0)
++	else if(duration > 0)
+ 	{
+ 		output = g_strdup_printf(	"%02d:%02d/"
+ 						"%02d:%02d",
+ 						(sec%3600)/60,
+ 						sec%60,
+-						(length%3600)/60,
+-						length%60 );
++						(duration%3600)/60,
++						duration%60 );
+ 	}
+ 	else
+ 	{
+@@ -110,7 +110,7 @@ static void gmpv_seek_bar_init(GmpvSeekBar *bar)
+ {
+ 	bar->seek_bar = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, NULL);
+ 	bar->label = gtk_label_new("");
+-	bar->length = 0;
++	bar->duration = 0;
+ 	bar->pos = 0;
+ 
+ 	update_label(bar);
+@@ -132,12 +132,12 @@ GtkWidget *gmpv_seek_bar_new()
+ 	return GTK_WIDGET(g_object_new(gmpv_seek_bar_get_type(), NULL));
+ }
+ 
+-void gmpv_seek_bar_set_length(GmpvSeekBar *bar, gdouble length)
++void gmpv_seek_bar_set_duration(GmpvSeekBar *bar, gdouble duration)
+ {
+-	bar->length = length;
++	bar->duration = duration;
+ 
+ 	update_label(bar);
+-	gtk_range_set_range(GTK_RANGE(bar->seek_bar), 0, length);
++	gtk_range_set_range(GTK_RANGE(bar->seek_bar), 0, duration);
+ }
+ 
+ void gmpv_seek_bar_set_pos(GmpvSeekBar *bar, gdouble pos)
+diff --git a/src/gmpv_seek_bar.h b/src/gmpv_seek_bar.h
+index 603e84a..5353b64 100644
+--- a/src/gmpv_seek_bar.h
++++ b/src/gmpv_seek_bar.h
+@@ -29,7 +29,7 @@ G_BEGIN_DECLS
+ G_DECLARE_FINAL_TYPE(GmpvSeekBar, gmpv_seek_bar, GMPV, SEEK_BAR, GtkBox)
+ 
+ GtkWidget *gmpv_seek_bar_new(void);
+-void gmpv_seek_bar_set_length(GmpvSeekBar *bar, gdouble length);
++void gmpv_seek_bar_set_duration(GmpvSeekBar *bar, gdouble duration);
+ void gmpv_seek_bar_set_pos(GmpvSeekBar *bar, gdouble pos);
+ 
+ G_END_DECLS
+diff --git a/src/mpris/gmpv_mpris_player.c b/src/mpris/gmpv_mpris_player.c
+index d4ba9be..664c02c 100644
+--- a/src/mpris/gmpv_mpris_player.c
++++ b/src/mpris/gmpv_mpris_player.c
+@@ -380,14 +380,14 @@ static void playback_status_update_handler(gmpv_mpris *inst)
+ 	gmpv_mpris_prop *prop_list;
+ 	GVariant *state_value;
+ 	GVariant *can_seek_value;
+-	gint idle;
++	gint idle_active;
+ 	gint core_idle;
+ 	gboolean can_seek;
+ 
+-	gmpv_mpv_obj_get_property(mpv, "idle", MPV_FORMAT_FLAG, &idle);
+-	gmpv_mpv_obj_get_property(mpv, "core-idle", MPV_FORMAT_FLAG, &core_idle);
++	gmpv_mpv_obj_get_property(mpv, "idle-active", MPV_FORMAT_FLAG, &idle_active);
++	gmpv_mpv_obj_get_property(mpv, "core-idle", MPV_FORMAT_FLAG, &core_idle);
+ 
+-	if(!core_idle && !idle)
++	if(!core_idle && !idle_active)
+ 	{
+ 		GmpvMainWindow *wnd =	gmpv_application_get_main_window
+ 					(inst->gmpv_ctx);
+@@ -397,7 +397,7 @@ static void playback_status_update_handler(gmpv_mpris *inst)
+ 
+ 		mpv_playback_restart_handler(wnd, inst);
+ 	}
+-	else if(core_idle && idle)
++	else if(core_idle && idle_active)
+ 	{
+ 		state = "Stopped";
+ 		can_seek = FALSE;
+@@ -604,7 +604,7 @@ static void mpv_init_handler(GmpvMainWindow *wnd, gpointer data)
+ 	GmpvMpvObj *mpv = gmpv_application_get_mpv_obj(inst->gmpv_ctx);
+ 	mpv_handle *mpv_ctx = gmpv_mpv_obj_get_mpv_handle(mpv);
+ 
+-	mpv_observe_property(mpv_ctx, 0, "idle", MPV_FORMAT_FLAG);
++	mpv_observe_property(mpv_ctx, 0, "idle-active", MPV_FORMAT_FLAG);
+ 	mpv_observe_property(mpv_ctx, 0, "core-idle", MPV_FORMAT_FLAG);
+ 	mpv_observe_property(mpv_ctx, 0, "speed", MPV_FORMAT_DOUBLE);
+ 	mpv_observe_property(mpv_ctx, 0, "metadata", MPV_FORMAT_NODE);
+@@ -661,7 +661,7 @@ static void mpv_prop_change_handler(	GmpvMainWindow *wnd,
+ 	gmpv_mpv_obj_get_state(mpv, &state);
+ 
+ 	if(g_strcmp0(name, "core-idle") == 0
+-	|| g_strcmp0(name, "idle") == 0)
++	|| g_strcmp0(name, "idle-active") == 0)
+ 	{
+ 		playback_status_update_handler(inst);
+ 	}
