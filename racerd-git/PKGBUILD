@@ -1,10 +1,12 @@
 # Maintainer: Alexander 'z33ky' Hirsch <1zeeky@gmail.com>
 
 pkgname=racerd-git
-pkgver=99.0e18f33
+pkgver=r126.dc090ea
 pkgrel=1
 pkgdesc='JSON/HTTP Server based on racer for adding Rust support to editors and IDEs'
 arch=(i686 x86_64)
+provides=('racerd')
+conflicts=('racerd')
 url='https://jwilm.github.io/racerd/libracerd/'
 license=('Apache')
 depends=('rust-racer')
