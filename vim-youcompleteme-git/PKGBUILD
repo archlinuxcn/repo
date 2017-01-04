@@ -130,7 +130,7 @@ build() {
 
 package() {
   for _f in .git .gitignore .gitmodules .hgignore .hgtags .travis.yml; do
-    find "$srcdir" -name "$_f" -delete
+    find "$srcdir" -name "$_f" -exec rm -rf {} +
   done
   rm -fr "$srcdir/YouCompleteMe/third_party/ycmd/third_party/JediHTTP/jedihttp/tests"
   rm -fr "$srcdir/YouCompleteMe/third_party/ycmd/third_party/JediHTTP/vendor/*"
