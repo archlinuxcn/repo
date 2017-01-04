@@ -2,7 +2,7 @@
 
 _pkgname=nixnote2
 pkgname=$_pkgname-git
-pkgver=642.v2.0beta459g6aad8c8
+pkgver=latest
 pkgrel=1
 pkgdesc="Nixnote2 is a C++ rewrite of nixnote,which is a clone of Evernote designed to run on Linux.Nixnote is formerly called nevernote."
 arch=('x86_64' 'i686')
@@ -11,14 +11,14 @@ license=('GPL2')
 depends=('tidyhtml' 'opencv' 'hunspell'  'qtwebkit' 'sqlite' 'poppler-qt4' 'qt4')
 makedepends=('git' 'boost')
 provides=($_pkgname)
-conflicts=($_pkgname 'nixnote-beta')
+conflicts=($_pkgname 'nixnote-beta' 'nixnote_beta')
 source=("git://github.com/baumgarr/$_pkgname.git")
 sha256sums=('SKIP')
 _gitname=$_pkgname
 
 pkgver() {
-	cd "$srcdir/$_gitname"
-	echo "$(git rev-list --count HEAD).$(git describe --always)"|sed 's:-::g'
+  cd "$_gitname"
+  git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/\./g'
 }
 prepare() {
         rm -rf ${srcdir}/build
@@ -41,7 +41,6 @@ package() {
 	mkdir -p $pkgdir/usr/share/applications
 	install -m 755 ./nixnote2 $pkgdir/usr/bin/nixnote2
         cd "${srcdir}/${_gitname}"
-	cp -R ./certs $pkgdir/usr/share/nixnote2
 	cp -R ./help $pkgdir/usr/share/nixnote2
 	cp -R ./images $pkgdir/usr/share/nixnote2
 	cp -R ./qss $pkgdir/usr/share/nixnote2
