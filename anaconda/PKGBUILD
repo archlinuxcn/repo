@@ -4,7 +4,7 @@
 
 pkgname=anaconda
 pkgver=4.2.0
-pkgrel=3
+pkgrel=4
 pkgdesc="Completely free enterprise-ready Python distribution for large-scale data processing, predictive analytics, and scientific computing."
 arch=('x86' 'x86_64')
 url="https://store.continuum.io/cshop/anaconda/"
@@ -53,6 +53,9 @@ package() {
 
     msg2 "Installing anaconda to /opt/${pkgname}"
     $prefix/pkgs/python-${_pythonver}/bin/python -E -s $CONDA_INSTALL --root-prefix=$prefix --instdir=/opt/${pkgname} || exit 1
+
+    msg2 "Correcting permissions"
+    chmod a+r -R $prefix/pkgs
 
     msg2 "Stripping \$pkgdir from default meta"
     find conda-meta -name '*.json' -exec sed -e "s/${pkgdir//\//\\\/}//g" -i {} \;
