@@ -5,23 +5,23 @@
 # Contributor: techryda <techryda at silentdome dot com>
 # Contributor: Mathias R. <pu154r@overlinux.org>
 pkgname=xrdp
-pkgver=0.8.0
-pkgrel=4
+pkgver=0.9.1
+pkgrel=3
 pkgdesc="An open source remote desktop protocol (RDP) server"
-url="http://xrdp.sourceforge.net/"
+url="https://github.com/neutrinolabs/xrdp"
 arch=('i686' 'x86_64' 'armv6h')
 license=('Apache')
-depends=('tigervnc' 'libjpeg-turbo' 'libxrandr' 'libpulse' 'fuse')
+depends=('tigervnc' 'libxrandr' 'lame' 'opus' 'fuse')
 backup=('etc/xrdp/sesman.ini' 'etc/xrdp/xrdp.ini')
-install=xrdp.install
-source=(https://github.com/neutrinolabs/${pkgname}/archive/v${pkgver}.tar.gz
-	fixups.patch)
-md5sums=('2b0c3affc65ee77ad251514c62896757'
-         'e6985363c6f13e22272afdc6a7dddc96')
+install="${pkgname}.install"
+source=("https://github.com/neutrinolabs/xrdp/releases/download/v${pkgver}/xrdp-${pkgver}.tar.gz"
+	"arch-config.diff")
+md5sums=('111a3a3b7ea01eb62b08c698ab8f8bff'
+         'cca1a944ca04e33987b60eb7278d4d8f')
 
 prepare() {
   cd "${pkgname}-${pkgver}"
-  patch -p2 -b -z .orig <../fixups.patch
+  patch -Np2 -b -z .orig <../arch-config.diff
   ./bootstrap
 }
 
@@ -33,15 +33,18 @@ build() {
               --sbindir=/usr/bin \
               --with-systemdsystemunitdir=/usr/lib/systemd/system \
               --enable-jpeg \
-              --enable-simplesound \
+              --enable-tjpeg \
               --enable-fuse \
-              --enable-loadpulsemodules
+	      --enable-opus \
+	      --enable-rfxcodec \
+	      --enable-mp3lame \
+	      --enable-pixman
   make V=0
 }
 
 package() {
   cd "${pkgname}-${pkgver}"
   make DESTDIR="$pkgdir" install
-
+  rm -f "$pkgdir"/etc/xrdp/rsakeys.ini
   install -Dm644 COPYING "$pkgdir"/usr/share/licenses/$pkgname/COPYING
 }

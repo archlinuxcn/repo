@@ -1,55 +1,50 @@
-diff -upr xrdp-git/instfiles/Makefile.am xrdp-git-new/instfiles/Makefile.am
---- xrdp-git/instfiles/Makefile.am	2015-04-24 16:38:02.092787754 -0700
-+++ xrdp-git-new/instfiles/Makefile.am	2015-04-24 16:47:21.346145399 -0700
-@@ -4,14 +4,16 @@ xrdp.service
+diff -up src/xrdp-devel-git/instfiles/xrdp.service.orig src/xrdp-devel-git/instfiles/xrdp.service
+--- src/xrdp-devel-git/instfiles/xrdp.service.orig	2017-01-04 17:08:45.000000000 -0700
++++ src/xrdp-devel-git/instfiles/xrdp.service	2017-01-04 17:08:48.000000000 -0700
+@@ -6,10 +6,8 @@ After=syslog.target network.target xrdp-
+ [Service]
+ Type=forking
+ PIDFile=/var/run/xrdp.pid
+-EnvironmentFile=-/etc/sysconfig/xrdp
+-EnvironmentFile=-/etc/default/xrdp
+-ExecStart=/usr/sbin/xrdp $XRDP_OPTIONS
+-ExecStop=/usr/sbin/xrdp $XRDP_OPTIONS --kill
++ExecStart=/usr/bin/xrdp
++ExecStop=/usr/bin/xrdp --kill
  
- SUBDIRS = \
-   pam.d \
--  init.d \
--  default \
-   pulse
+ [Install]
+ WantedBy=multi-user.target
+diff -up src/xrdp-devel-git/instfiles/xrdp-sesman.service.orig src/xrdp-devel-git/instfiles/xrdp-sesman.service
+--- src/xrdp-devel-git/instfiles/xrdp-sesman.service.orig	2017-01-04 17:08:45.000000000 -0700
++++ src/xrdp-devel-git/instfiles/xrdp-sesman.service	2017-01-04 17:08:48.000000000 -0700
+@@ -7,10 +7,8 @@ BindTo=xrdp.service
+ [Service]
+ Type=forking
+ PIDFile=/var/run/xrdp-sesman.pid
+-EnvironmentFile=-/etc/sysconfig/xrdp
+-EnvironmentFile=-/etc/default/xrdp
+-ExecStart=/usr/sbin/xrdp-sesman $SESMAN_OPTIONS
+-ExecStop=/usr/sbin/xrdp-sesman $SESMAN_OPTIONS --kill
++ExecStart=/usr/bin/xrdp-sesman
++ExecStop=/usr/bin/xrdp-sesman --kill
  
- if HAVE_SYSTEMD
- systemdsystemunit_DATA = \
-         xrdp-sesman.service \
-         xrdp.service
-+else
-+SUBDIRS+= \
-+  init.d \
-+  default
- endif
+ [Install]
+ WantedBy=multi-user.target
+diff -up src/xrdp-devel-git/instfiles/xrdp.sh.orig src/xrdp-devel-git/instfiles/xrdp.sh
+--- src/xrdp-devel-git/instfiles/xrdp.sh.orig	2017-01-04 17:08:45.000000000 -0700
++++ src/xrdp-devel-git/instfiles/xrdp.sh	2017-01-04 17:10:02.000000000 -0700
+@@ -17,7 +17,7 @@
+ # Description: starts xrdp
+ ### END INIT INFO
  
- startscriptdir=$(sysconfdir)/xrdp
-@@ -35,5 +37,7 @@ startscript_DATA = \
- # must be tab below
- install-data-hook:
- 	chmod 755 $(DESTDIR)$(sysconfdir)/xrdp/xrdp.sh
--	chmod 755 $(DESTDIR)$(sysconfdir)/init.d/xrdp
--	sed -i 's|__BASE__|$(prefix)|' $(DESTDIR)$(sysconfdir)/init.d/xrdp;
-+	if [ -f $(DESTDIR)$(sysconfdir)/init.d/xrdp ]; then \
-+	  chmod 755 $(DESTDIR)$(sysconfdir)/init.d/xrdp \
-+	  sed -i 's|__BASE__|$(prefix)|' $(DESTDIR)$(sysconfdir)/init.d/xrdp; \
-+	fi
-diff -upr xrdp-git/instfiles/pam.d/xrdp-sesman xrdp-git-new/instfiles/pam.d/xrdp-sesman
---- xrdp-git/instfiles/pam.d/xrdp-sesman	2015-04-24 16:38:02.096121088 -0700
-+++ xrdp-git-new/instfiles/pam.d/xrdp-sesman	2015-04-24 16:44:57.272805802 -0700
-@@ -1,5 +1,9 @@
- #%PAM-1.0
--@include common-auth
--@include common-account
--@include common-session
--@include common-password
-+#@include common-auth
-+#@include common-account
-+#@include common-session
-+#@include common-password
-+auth include system-auth
-+account include system-auth
-+password include system-auth
-+session include system-auth
-diff -upr xrdp-git/sesman/startwm.sh xrdp-git-new/sesman/startwm.sh
---- xrdp-git/sesman/startwm.sh	2015-04-24 16:38:02.116121089 -0700
-+++ xrdp-git-new/sesman/startwm.sh	2015-04-24 16:43:36.872802307 -0700
+-SBINDIR=/usr/local/sbin
++SBINDIR=/usr/bin
+ LOG=/dev/null
+ CFGDIR=/etc/xrdp
+ 
+diff -up src/xrdp-devel-git/sesman/startwm.sh.orig src/xrdp-devel-git/sesman/startwm.sh
+--- src/xrdp-devel-git/sesman/startwm.sh.orig	2017-01-04 17:08:46.000000000 -0700
++++ src/xrdp-devel-git/sesman/startwm.sh	2017-01-04 17:08:48.000000000 -0700
 @@ -8,6 +8,17 @@ wm_start()
      export LANG LANGUAGE
    fi
@@ -68,31 +63,3 @@ diff -upr xrdp-git/sesman/startwm.sh xrdp-git-new/sesman/startwm.sh
    # debian
    if [ -r /etc/X11/Xsession ]; then
      . /etc/X11/Xsession
-diff -upr xrdp-git/xrdp/xrdp.ini xrdp-git-new/xrdp/xrdp.ini
---- xrdp-git/xrdp/xrdp.ini	2015-04-24 16:38:02.152787757 -0700
-+++ xrdp-git-new/xrdp/xrdp.ini	2015-04-24 16:46:19.786142723 -0700
-@@ -51,7 +51,7 @@ grey=dedede
- # require_credentials=yes
-
- # set a default entry for autorun if the client send login and pass directly
--autorun=xrdp1
-+autorun=xrdp2
-
- bulk_compression=yes
-
-@@ -139,6 +139,15 @@ tcutils=true
- # for debugging xrdp, add following line to section xrdp1
- # chansrvport=/tmp/.xrdp/xrdp_chansrv_socket_7210
-
-+[xrdp0]
-+name=sesman-Xvnc-delay
-+lib=libvnc.so
-+username=ask
-+password=ask
-+ip=127.0.0.1
-+port=-1
-+delay_ms=2000
-+
- [xrdp1]
- name=sesman-X11rdp
- lib=libxup.so
