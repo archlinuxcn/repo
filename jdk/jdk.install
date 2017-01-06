@@ -10,12 +10,6 @@ note() {
     printf "${blue}::${yellow} archlinux-java:${bold} $1${all_off}\n"
 }
 
-update_desktop() {
-    update-desktop-database -q
-    update-mime-database /usr/share/mime >/dev/null
-    xdg-icon-resource forceupdate &>/dev/null
-}
-
 post_install() {
     default=$(archlinux-java get)
     case ${default} in
@@ -38,8 +32,6 @@ post_install() {
     if [[ ! -f /etc/ssl/certs/java/cacerts ]]; then
         update-ca-trust
     fi
-
-    update_desktop
 }
 
 post_upgrade() {
@@ -66,6 +58,4 @@ post_remove() {
             note "Java environment unset."
         fi
     fi
-
-    update_desktop
 }
