@@ -10,6 +10,8 @@ depends=('python' 'python-pyparsing' 'python-setuptools')
 source=('https://pypi.python.org/packages/c7/81/34d72c8dbfe72afdd05bb62f53f90b944b6eee36d7505f190e556903bf87/svgwrite-1.1.9.zip')
 md5sums=('50c8d835c23cc4280539ff6717389b05')
 
+export LANG=en_US.UTF-8
+
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
   python3 setup.py build
