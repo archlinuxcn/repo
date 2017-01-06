@@ -7,8 +7,10 @@ arch=('any')
 url="http://pypi.python.org/pypi/memory_profiler"
 license=('BSD')
 depends=('python' 'python-psutil' 'python-setuptools')
-source=('https://pypi.python.org/packages/source/m/memory_profiler/memory_profiler-0.41.tar.gz')
+source=('https://pypi.python.org/packages/df/d7/826bebacb980941fd02726d012c33051ac89c31064b43eb2f6fd4048209c/memory_profiler-0.41.tar.gz')
 md5sums=('8615aecbcc5cf1a761c819b9f4976cad')
+
+export LANG=en_US.UTF-8
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
