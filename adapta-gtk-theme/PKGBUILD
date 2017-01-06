@@ -5,7 +5,7 @@ _gtk3_max='4.0'
 _theme_name=Adapta
 _gtk2_min='2.24.30'
 _github="adapta-project/${pkgname}"
-pkgver="3.89.2.50"
+pkgver="3.89.2.53"
 pkgrel=1
 pkgdesc="An adaptive Gtk+ theme based on Material Design Guidelines."
 arch=(any)
@@ -38,7 +38,7 @@ makedepends=('glib2>=2.48.0'
              'parallel')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
 #        "${pkgname}-${pkgver}.tar.gz.asc::${url}/releases/download/${pkgver}/${pkgname}-${pkgver}.tar.gz.asc")
-sha256sums=('a6b08101084795d0df62920f545aa952dd6e787485d5e1a744098cd7e6667554')
+sha256sums=('042d1c55b69c3a5562b967892085df475c8ff4f297a6411f718797bba2f73ba0')
 
 build() {
     cd "${pkgname}-${pkgver}"
