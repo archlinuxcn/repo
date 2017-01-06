@@ -10,6 +10,8 @@ depends=('python' 'python-setuptools')
 source=('https://pypi.python.org/packages/c5/0e/4c7846ffac7a478578ff77c93d6aff3da2c181972d9447c74bfe1e87ac06/Wand-0.4.4.tar.gz')
 md5sums=('855c14d36fec3216fa9b6511ce1c9171')
 
+export LANG=en_US.UTF-8
+
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
   python3 setup.py build
