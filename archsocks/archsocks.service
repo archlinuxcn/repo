@@ -5,7 +5,27 @@ After=network.target
 [Service]
 Type=simple
 User=archsocks
+PermissionsStartOnly=true
 ExecStart=/usr/bin/archsocks
+
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=full
+ProtectHome=true
+NoNewPrivileges=true
+CapabilityBoundingSet=
+
+ExecStartPre=-/usr/bin/iptables -w -N ARCHSOCKS
+ExecStartPre=/usr/bin/iptables -w -A OUTPUT -m owner --uid-owner archsocks -j ARCHSOCKS
+ExecStartPre=/usr/bin/iptables -w -A ARCHSOCKS -p tcp --dport 80 -m comment --comment "archsocks out 80" -j ACCEPT
+ExecStartPre=/usr/bin/iptables -w -A ARCHSOCKS -p tcp --dport 443 -m comment --comment "archsocks out 443" -j ACCEPT
+ExecStartPre=/usr/bin/iptables -w -A ARCHSOCKS -p tcp -d 127.0.0.1 -m comment --comment "archsocks local" -j ACCEPT
+ExecStartPre=/usr/bin/iptables -w -A ARCHSOCKS -p udp --dport 53 -m comment --comment "archsocks dns" -j ACCEPT
+ExecStartPre=/usr/bin/iptables -w -A ARCHSOCKS -j DROP
+
+ExecStopPost=/usr/bin/iptables -w -D OUTPUT -m owner --uid-owner archsocks -j ARCHSOCKS
+ExecStopPost=/usr/bin/iptables -w -F ARCHSOCKS
+ExecStopPost=/usr/bin/iptables -w -X ARCHSOCKS
 
 [Install]
 WantedBy=multi-user.target
