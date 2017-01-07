@@ -2,7 +2,7 @@
 # Previous Maintainer: Chris Morgan <me@chrismorgan.info>
 
 pkgname=princexml
-pkgver=10r7
+pkgver=11
 pkgrel=1
 pkgdesc="Convert HTML documents to PDF with CSS"
 arch=(i686 x86_64)
@@ -12,8 +12,8 @@ license=(custom)
 
 source_i686=(http://www.princexml.com/download/prince-${pkgver}-linux-generic-i686.tar.gz)
 source_x86_64=(http://www.princexml.com/download/prince-${pkgver}-linux-generic-x86_64.tar.gz)
-sha256sums_i686=('21c298cdc13fc5ff2fb6fe4c56087aabbccd7f55c134c2bfc3fa49c7ada3bac4')
-sha256sums_x86_64=('3eb2f6e71530a99872c538c74b628c60a143447362a8032e55285cf7f5b340d6')
+sha256sums_i686=('fdadf614693fddbbe0768ad52e3c006e9e9ee0335929e3a5b9fcbd54366c0782')
+sha256sums_x86_64=('9b1c787b507d3217ea40781d37254f8fbea994e06b690b7afe8d08e262d44cd1')
 
 package() {
 	mkdir -p "$pkgdir/opt/prince"
