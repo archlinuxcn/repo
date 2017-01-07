@@ -3,7 +3,7 @@
 # Contributor: Matthias Meulien orontee@gmail.com
 
 pkgname=global
-pkgver=6.5.5
+pkgver=6.5.6
 pkgrel=1
 pkgdesc="A source code tag system"
 arch=('i686' 'x86_64')
@@ -15,8 +15,8 @@ optdepends=('idutils' 'ctags' 'python-pygments' 'emacs' 'vim')
 makedepends=('python')
 options=(!emptydirs !libtool)
 source=(http://tamacom.com/global/${pkgname}-${pkgver}.tar.gz)
-md5sums=('ee1c0ac678385fed77c90369a1ccfe65')
-sha256sums=('bc5b42a2c58d1570ff6b6acf7479c3e1609fe0ec8b44e5baa5290dc47148cf7b')
+md5sums=('079b657e5c34ff80fbcde4d1df6d7ded')
+sha256sums=('122f9afa69a8daa0f64c12db7f02981fe573f51a163fa3829ed4f832cd281505')
 
 prepare() {
   cd "${srcdir}/${pkgname}-${pkgver}"
