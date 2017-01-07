@@ -3,7 +3,7 @@
 _pkgname=cld2
 pkgname=${_pkgname}-git
 pkgver=20150820
-pkgrel=1
+pkgrel=2
 pkgdesc='Compact Language Detector 2'
 arch=('x86_64')
 url='https://github.com/CLD2Owners/cld2'
@@ -23,7 +23,9 @@ pkgver() {
 build() {
   cd "$srcdir/$_pkgname"
   cd internal
-  sh ./compile_libs.sh
+  # use C++98, or it won't compile; see
+  # https://github.com/CLD2Owners/cld2/pull/52
+  CXXFALGS=-std=c++98 sh ./compile_libs.sh
 }
 
 package() {
