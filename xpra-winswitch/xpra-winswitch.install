@@ -2,17 +2,12 @@
 post_install() {
     systemd-sysusers xpra.conf
     systemd-tmpfiles --create xpra.conf
-    update-desktop-database -q
 }
 
 ## arg 1:  the new package version
 ## arg 2:  the old package version
 post_upgrade() {
   post_install $1
-}
-
-post_remove() {
-  update-desktop-database -q
 }
 
 # vim:set ts=2 sw=2 et:
