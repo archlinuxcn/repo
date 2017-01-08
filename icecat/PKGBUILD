@@ -9,7 +9,7 @@ pkgname=icecat
 pkgver=45.5.1
 _pkgver=${pkgver}-gnu1
 _pkgverbase=${pkgver%%.*}
-pkgrel=4
+pkgrel=5
 pkgdesc="GNU version of the Firefox browser."
 arch=(i686 x86_64)
 url="http://www.gnu.org/software/gnuzilla/"
@@ -18,7 +18,7 @@ depends=('gtk2' 'mozilla-common' 'libxt' 'startup-notification' 'mime-types'
          'dbus-glib' 'alsa-lib' 'ffmpeg' 'desktop-file-utils'
          'libvpx' 'icu' 'libevent' 'nss' 'hunspell' 'sqlite' 'ttf-font')
 makedepends=('unzip' 'zip' 'diffutils' 'python2' 'yasm' 'mesa' 'imake' 'gconf'
-             'libpulse' 'gst-plugins-base-libs' 'inetutils')
+             'libpulse' 'gst-plugins-base-libs' 'inetutils' 'cargo')
 optdepends=('networkmanager: Location detection via available WiFi networks'
             'upower: Battery API')
 options=('!emptydirs' '!makeflags')
@@ -32,18 +32,16 @@ source=(http://ftpmirror.gnu.org/gnuzilla/${pkgver}/${pkgname}-${_pkgver}.tar.bz
         icecat-safe.desktop
         vendor.js
         gcc6-fix-compilation-for-IceCat.patch
-        firefox-gcc-6.0.patch
-        mozilla-1228540-1.patch)
+        firefox-gcc-6.0.patch)
 
 sha256sums=('8163e5bc53f69d9f9b0fc5e9f95fae33da8139ae0f902756751cadbaa27e6ee9'
             'SKIP'
-            'cafb2793d58f0298cf171b7f8745805cf72a1a6c1252451db5f0f630b95846c0'
+            '0f9c8f4e7795ded4f661af9ff73a5b091fda4eebc969a76e00e48d005feebe7d'
             'c44eab35f71dd3028a74632463710d674b2e8a0682e5e887535e3233a3b7bbb3'
             '190577ad917bccfc89a9bcafbc331521f551b6f54e190bb6216eada48dcb1303'
             '4b50e9aec03432e21b44d18c4c97b2630bace606b033f7d556c9d3e3eb0f4fa4'
             '329cf6753d29ae64a4336a8a76ee71f0d331a39132159401e4d11de65b708a07'
-            '4d1e1ddabc9e975ed39f49e134559a29e01cd49439e358233f1ede43bf5a52bf'
-            'd1ccbaf0973615c57f7893355e5cd3a89efb4e91071d0ec376e429b50cf6ed19')
+            '4d1e1ddabc9e975ed39f49e134559a29e01cd49439e358233f1ede43bf5a52bf')
 
 validpgpkeys=(A57369A8BABC2542B5A0368C3C76EED7D7E04784) # Ruben Rodriguez (GNU IceCat releases key) <ruben@gnu.org>
 
@@ -58,9 +56,6 @@ prepare() {
   # Compilation fix (FS#49243 and FS#49363), internet and Thunderbird package
   patch -Np1 -i $srcdir/gcc6-fix-compilation-for-IceCat.patch
   patch -Np1 -i $srcdir/firefox-gcc-6.0.patch
-
-  # Patch harfbuzz (following Thunderbird in [extra])
-  patch -Np1 -i $srcdir/mozilla-1228540-1.patch
 
   msg2 "Starting build..."
 
