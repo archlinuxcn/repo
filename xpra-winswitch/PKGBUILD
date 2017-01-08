@@ -1,8 +1,8 @@
 # Contributor: Bug <bug2000@gmail.com>
 # Maintainer: Bug <bug2000@gmail.com>
 pkgname=xpra-winswitch
-pkgver=1.0
-pkgrel=2
+pkgver=1.0.1
+pkgrel=1
 pkgdesc="Modified version of xpra by Winswitch"
 arch=('i686' 'x86_64')
 url='http://xpra.org/'
@@ -39,20 +39,19 @@ backup=('etc/xpra/xpra.conf' 'etc/xpra/xorg.conf'
 install=xpra-winswitch.install
 source=("https://xpra.org/src/xpra-$pkgver.tar.xz"
         "xpra-winswitch.install")
-sha256sums=('87b7c4e4bd4afe40363b23add4b3246004c8a027b305faee23b6063761c3826a'
+sha256sums=('415eea94dc7efabb1fd2e4eaa8a7665fefe65ed91be1cf31605394fb6d48ec17'
             'ae7cffba6c132517ef4bd41d107ac665d4319dd7f7f606898884e0885cf4ce8f')
 
 build() {
   cd ${srcdir}/xpra-$pkgver
+  export pkgdir
   #python2 setup.py build || return 1
-  CFLAGS="$CFLAGS -fno-strict-aliasing" python2 setup.py build || return 1
+  CFLAGS="$CFLAGS -fno-strict-aliasing" python2 setup.py build
 }
 
 package() {
   cd ${srcdir}/xpra-$pkgver
-  python2 setup.py install --root=${pkgdir} || return 1
-  sed -i -e '/^xvfb\s*=\s*Xorg/s|Xorg|/usr/lib/xorg-server/Xorg|' ${pkgdir}/etc/xpra/conf.d/55_server_x11.conf
-  sed -i -e "s|$(echo ${pkgdir})||g" ${pkgdir}/etc/xpra/conf.d/55_server_x11.conf
+  python2 setup.py install --root=${pkgdir}
   mkdir -p ${pkgdir}/usr/lib/sysusers.d
   echo g xpra - - > ${pkgdir}/usr/lib/sysusers.d/xpra.conf
 }
