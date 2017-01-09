@@ -1,9 +1,9 @@
 # Maintainer: Alfonso Saavedra "Son Link" <sonlink.dourden@gmail.com>
 # Maintainer: Hexchain Tong <i at hexchain dot org>
 pkgname=megasync
-pkgver=2.9.8.0
+pkgver=2.9.10
 _pkgver=${pkgver//./_}
-pkgrel=2.1
+pkgrel=1
 pkgdesc="Sync your files to your Mega account. Official app"
 arch=('i686' 'x86_64')
 url="https://github.com/meganz/megasync"
@@ -11,7 +11,7 @@ license=('custom:MEGA LIMITED CODE REVIEW LICENCE')
 depends=('curl' 'c-ares' 'crypto++' 'libsodium' 'hicolor-icon-theme' 'qt5-base' 'libuv')
 makedepends=('git' 'qt5-tools')
 optdepends=('sni-qt: fix systray issue on KDE and LXQt')
-source=("git+https://github.com/meganz/MEGAsync.git#tag=v${_pkgver}_Linux")
+source=("git+https://github.com/meganz/MEGAsync.git#commit=2e03defad7e732afe5ffd6977eeb10558f25457b")
 md5sums=('SKIP')
 
 prepare(){
