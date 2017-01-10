@@ -1,8 +1,8 @@
 # Maintainer: Arne Hoch <arne@derhoch.de>
 
 pkgname=dbeaver
-pkgver=3.8.2
-pkgrel=2
+pkgver=3.8.3
+pkgrel=1
 pkgdesc="A free universal database tool for developers and database administrators"
 arch=('i686' 'x86_64')
 url="http://dbeaver.jkiss.org/"
@@ -14,8 +14,8 @@ source_i686=("http://dbeaver.jkiss.org/files/$pkgver/dbeaver-ce-$pkgver-linux.gt
 source_x86_64=("http://dbeaver.jkiss.org/files/$pkgver/dbeaver-ce-$pkgver-linux.gtk.x86_64.tar.gz")
 
 sha256sums=('d6890b86f1ece47d2bc6f039f89a90eba985376ccb117d832fcddd9a103f6689')
-sha256sums_i686=('9075bd33b3763392fdf390a1eb672aab71278aff48dc6b206a73c6c9879c3ad1')
-sha256sums_x86_64=('e71499b016ff667b5ab5514f69560629d027a0a87999aaf6a7592212ad4d7c2a')
+sha256sums_i686=('041b9e16904371a9e1fafce567c2b3f703ac7462db68c6505372e824839faedf')
+sha256sums_x86_64=('fb63c0c602bebb1560848b78a0bddcaf688325b84cc6c49418ccbf94af7fb34f')
 
 package() {
   cd $pkgdir
