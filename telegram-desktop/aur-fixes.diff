@@ -1,5 +1,18 @@
+diff --git a/Telegram/SourceFiles/historywidget.cpp b/Telegram/SourceFiles/historywidget.cpp
+index 580cffe8..e807c43f 100644
+--- a/Telegram/SourceFiles/historywidget.cpp
++++ b/Telegram/SourceFiles/historywidget.cpp
+@@ -189,7 +189,7 @@ namespace {
+ // is applied once for blocks list in a history and once for items list in the found block
+ template <bool TopToBottom, typename T>
+ int binarySearchBlocksOrItems(const T &list, int edge) {
+-	auto start = 0, end = list.size();
++	size_t start = 0, end = list.size();
+ 	while (end - start > 1) {
+ 		auto middle = (start + end) / 2;
+ 		auto top = list[middle]->y;
 diff --git a/Telegram/SourceFiles/platform/linux/linux_libs.cpp b/Telegram/SourceFiles/platform/linux/linux_libs.cpp
-index f8abb51d..8f20a6ce 100644
+index 5b502039..45ad10cf 100644
 --- a/Telegram/SourceFiles/platform/linux/linux_libs.cpp
 +++ b/Telegram/SourceFiles/platform/linux/linux_libs.cpp
 @@ -45,6 +45,7 @@ bool loadLibrary(QLibrary &lib, const char *name, int version) {
@@ -30,7 +43,7 @@ index f8abb51d..8f20a6ce 100644
  f_gtk_menu_new gtk_menu_new = nullptr;
  f_gtk_menu_get_type gtk_menu_get_type = nullptr;
 diff --git a/Telegram/SourceFiles/platform/linux/linux_libs.h b/Telegram/SourceFiles/platform/linux/linux_libs.h
-index bc3dce6e..07c5042a 100644
+index 1ecae702..80b7e4f4 100644
 --- a/Telegram/SourceFiles/platform/linux/linux_libs.h
 +++ b/Telegram/SourceFiles/platform/linux/linux_libs.h
 @@ -52,6 +52,9 @@ bool load(QLibrary &lib, const char *name, Function &func) {
@@ -44,7 +57,7 @@ index bc3dce6e..07c5042a 100644
  extern f_gtk_init_check gtk_init_check;
  
 diff --git a/Telegram/SourceFiles/stdafx.cpp b/Telegram/SourceFiles/stdafx.cpp
-index 06bd4afa..755d97fe 100644
+index 3cc98b84..781ad18f 100644
 --- a/Telegram/SourceFiles/stdafx.cpp
 +++ b/Telegram/SourceFiles/stdafx.cpp
 @@ -34,6 +34,7 @@ Q_IMPORT_PLUGIN(QGenericEnginePlugin)
@@ -56,10 +69,10 @@ index 06bd4afa..755d97fe 100644
  Q_IMPORT_PLUGIN(QGenericEnginePlugin)
  Q_IMPORT_PLUGIN(QNetworkManagerEnginePlugin)
 diff --git a/Telegram/gyp/Telegram.gyp b/Telegram/gyp/Telegram.gyp
-index b01d35aa..dcd46a2b 100644
+index 2503f1e1..b0a61eb9 100644
 --- a/Telegram/gyp/Telegram.gyp
 +++ b/Telegram/gyp/Telegram.gyp
-@@ -78,21 +78,18 @@
+@@ -79,21 +79,18 @@
      ],
  
      'defines': [
@@ -163,10 +176,10 @@ index 24ededbf..0076f031 100644
          '-g',
          '-rdynamic',
 diff --git a/Telegram/gyp/telegram_linux.gypi b/Telegram/gyp/telegram_linux.gypi
-index d07b5928..6e6bd91d 100644
+index b42e7443..a2597725 100644
 --- a/Telegram/gyp/telegram_linux.gypi
 +++ b/Telegram/gyp/telegram_linux.gypi
-@@ -21,11 +21,19 @@
+@@ -21,11 +21,20 @@
    'conditions': [[ 'build_linux', {
      'variables': {
        'pkgconfig_libs': [
@@ -186,12 +199,13 @@ index d07b5928..6e6bd91d 100644
 +        'libva-x11',
 +        'libva-drm',
 +        'libva',
++        'vdpau',
 +        'libdrm',
 +        'zlib',
        ],
        'linux_path_ffmpeg%': '/usr/local',
        'linux_path_openal%': '/usr/local',
-@@ -34,44 +42,24 @@
+@@ -35,46 +44,24 @@
        'linux_path_breakpad%': '<(libs_loc)/breakpad',
      },
      'include_dirs': [
@@ -207,6 +221,7 @@ index d07b5928..6e6bd91d 100644
 -      '<(linux_path_openal)/lib',
 -      '<(linux_path_libexif_lib)',
 -      '<(linux_path_va)/lib',
+-      '<(linux_path_vdpau)/lib',
 -      '<(linux_path_breakpad)/lib',
 +      '/usr/lib',
      ],
@@ -226,6 +241,7 @@ index d07b5928..6e6bd91d 100644
 -      'libva-x11.a',
 -      'libva-drm.a',
 -      'libva.a',
+-      'libvdpau.a',
 -      'libdrm.a',
 -      'libz.a',
 -#      '<!(pkg-config 2> /dev/null --libs <@(pkgconfig_libs))',
