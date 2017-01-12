@@ -1,26 +1,23 @@
 _pkgname=plotly
 pkgname=python-plotly
-pkgver=1.12.12
+pkgver=1.13.0
 pkgrel=1
 pkgdesc="Python plotting library for collaborative, interactive, publication-quality graphs."
 arch=('any')
 url="https://plot.ly/python/"
 license=('MIT')
 depends=('python' 'python-requests' 'python-pytz' 'python-setuptools')
-source=('https://pypi.python.org/packages/ca/bc/229aba67f7a65f3fa7e30b77fc8dd42036e56388a108294ec7bcddfcaedc/plotly-1.12.12.tar.gz')
-md5sums=('c814f40e986563e6c7e10d2215b54901')
-
-export LANG=en_US.UTF-8
+source=('https://pypi.python.org/packages/a6/77/f58428e17a3251a9d245fb5920e7e6af56ae8de8de12fa8431c176fce329/plotly-1.13.0.tar.gz')
+md5sums=('0432531a87c1e2a5b2ab671014d736c3')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
-  python3 setup.py build
+  LANG=en_US.UTF-8 python3 setup.py build
 }
 
 package() {
   cd "$srcdir/$_pkgname-$pkgver"
-
-  python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+  LANG=en_US.UTF-8 python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 }
 
 # vim:set sw=2 et:
