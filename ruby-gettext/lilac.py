@@ -5,7 +5,8 @@ import fileinput
 from lilaclib import *
 
 build_prefix = 'extra-x86_64'
-depends = ['ruby-locale', 'ruby-levenshtein', 'ruby-text']
+depends = ['ruby-locale', 'ruby-text']
+
 def pre_build():
   # AUR is out-of-date
   # aur_pre_build()
