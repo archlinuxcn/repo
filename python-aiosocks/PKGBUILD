@@ -1,7 +1,7 @@
 _pkgname=aiosocks
 pkgname=python-aiosocks
 pkgver=0.1.7
-pkgrel=1
+pkgrel=1.1
 pkgdesc="SOCKS proxy client for asyncio and aiohttp"
 arch=('any')
 url="https://github.com/nibrag/aiosocks"
@@ -12,13 +12,12 @@ md5sums=('46b2c6564e8af97ce6a8ad66fe632de3')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
-  python3 setup.py build
+  LANG=en_US.UTF-8 python3 setup.py build
 }
 
 package() {
   cd "$srcdir/$_pkgname-$pkgver"
-
-  python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+  LANG=en_US.UTF-8 python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 }
 
 # vim:set sw=2 et:

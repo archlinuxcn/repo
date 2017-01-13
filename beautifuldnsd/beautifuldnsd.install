@@ -1,8 +1,6 @@
 post_install() {
   useradd -r -U -d /var/lib/beautifuldnsd -s /bin/false beautifuldnsd &>/dev/null
   chown -R beautifuldnsd:beautifuldnsd /etc/beautifuldnsd.yaml
-
-  usr/bin/systemd-tmpfiles --create beautifuldnsd.conf
 }
 
 post_upgrade() {
