@@ -10,9 +10,9 @@
 
 pkgname=('llvm-julia' 'llvm-libs-julia' 'llvm-ocaml-julia' 'lldb-julia'
          'clang-julia' 'clang-tools-extra-julia')
-pkgver=3.8.1
+pkgver=3.9.1
 pkgrel=1
-_ocaml_ver=4.02.3
+_ocaml_ver=4.04.0
 arch=('i686' 'x86_64')
 url="http://llvm.org/"
 license=('custom:University of Illinois/NCSA Open Source License')
@@ -26,26 +26,38 @@ source=(http://llvm.org/releases/$pkgver/llvm-$pkgver.src.tar.xz
         http://llvm.org/releases/$pkgver/clang-tools-extra-$pkgver.src.tar.xz
         http://llvm.org/releases/$pkgver/compiler-rt-$pkgver.src.tar.xz
         http://llvm.org/releases/$pkgver/lldb-$pkgver.src.tar.xz
-        D17567-PR23529-Sema-part-of-attrbute-abi_tag-support.patch
-        D18035-PR23529-Mangler-part-of-attrbute-abi_tag-support.patch
-        llvm-3.7.1_3.patch
-        llvm-D14260.patch
-        llvm-D17165-D18583.patch
-        0001-Fix-InstCombine-to-not-widen-metadata-on-store-to-lo.patch
-        0001-Revert-Add-a-flag-vectorizer-maximize-bandwidth-in-l.patch
+        AMDGPU-Fix-an-interaction-between-WQM-and-polygon-stippling.patch
+        msan-prevent-initialization-failure-with-newer-glibc.patch
+        llvm-D25865-cmakeshlib.patch
+        llvm-D27389.patch
+        llvm-D27397.patch
+        llvm-D27609-AArch64-UABS_G3.patch
+        llvm-D27629-AArch64-large_model.patch
+        llvm-D28009.patch
+        llvm-D28215_FreeBSD_shlib.patch
+        llvm-D28221-avx512.patch
+        llvm-D9168_argument_alignment.patch
+        llvm-PR22923.patch
+        llvm-arm-fix-prel31.patch
         llvm-Config-llvm-config.h)
-sha256sums=('6e82ce4adb54ff3afc18053d6981b6aed1406751b8742582ed50f04b5ab475f9'
-            '4cd3836dfb4b88b597e075341cae86d61c63ce3963e45c7fe6a8bf59bb382cdf'
-            '664a5c60220de9c290bf2a5b03d902ab731a4f95fe73a00856175ead494ec396'
-            '0df011dae14d8700499dfc961602ee0a9572fef926202ade5dcdfe7858411e5c'
-            '349148116a47e39dcb5d5042f10d8a6357d2c865034563283ca512f81cdce8a3'
-            '406754764e83d58bc3b859ab4b7893abd48c760278c4619cf4341ef9b9b75c85'
-            'd71f8677882c86accddb8a5b720f298a4d7a2ad3bce6091951a46396b8f14da1'
-            'c276f41690de0f38dc1cd2e0d1f8cb318f7f8f2f1155659027ef140c4a22f1f7'
-            'f1518946ba1697a9d8144cb05103de1abf6a673bb8507728811d555fe148b755'
-            'f3e8ff172f5da025a3eaa949602149ebbedd8ad8e3604f581cbf5effc20469c5'
-            'ce4a7abcdb61d5ae65a8e611e02875bd15d4c5fc65222891bffb3cb2e9262655'
-            'b47853c43911ad0f9bb7cb6145bb3b7fd65c13a6020ffa4eebfd288f1d253825'
+sha256sums=('1fd90354b9cf19232e8f168faf2220e79be555df3aa743242700879e8fd329ee'
+            'e6c4cebb96dee827fa0470af313dff265af391cb6da8d429842ef208c8f25e63'
+            '29a5b65bdeff7767782d4427c7c64d54c3a8684bc6b217b74a70e575e4813635'
+            'd30967b1a5fa51a2503474aacc913e69fd05ae862d37bf310088955bdb13ec99'
+            '7e3311b2a1f80f4d3426e09f9459d079cab4d698258667e50a46dccbaaa460fc'
+            'adadc41090ab0eb33fe4449a0ea3f02b15d03f186262dd89576848a2c66d0ce6'
+            '8e4f194c2283b91644a7fff43bc4e58c36b5507f2a4d90b72f275c0bd7511c20'
+            'cf437e1eeded2b2a1af2a6c57ed89d816a6b39754eb1ccd0358efc5d49ce4c1f'
+            '08ace4ebd9ddeffec03483e8473a31f3bc7ecee2e0445a28e942292fa69de04b'
+            'b65e514cb6a936970dd9b83990be80365cc51b2f95e6d3a0251b835093ad2446'
+            '661244cc21bb102c7821456c16e57d2e34b3330125b62c48a04498035f2dee5c'
+            '17ef2a7d1aadd0682c629e9e97aea2def41b9e4e9f6c603f432bd221df525d49'
+            'aa742189de2e6cfe666f531d954377db430b2175c43186ffee5b6aead7022fe7'
+            '5502ad544316a3371215139dc957e5fa7c4d9fd0c966644ea29fc07614211460'
+            '5e7c40fc0f098e2c44be7f9883c1373ec098753af53d40586a0baae3a98e3394'
+            'f55b56468bc6c297ae492879e3ca1f7bf2db054869867841725a915e8b49b25a'
+            '219c7e7dbe967209eea1bc3e887e28e0d0c2f8f1c48cd8b89459e0b0266c3dbc'
+            'c9cab284a04ac4cd0b84f5440b0556bab995d340f9ee50068dc10b0f6a6b0fee'
             '597dc5968c695bbdbb0eac9e8eb5117fcd2773bc91edf5ec103ecffffab8bc48')
 
 prepare() {
@@ -61,15 +73,23 @@ prepare() {
 
   mv "$srcdir/lldb-$pkgver.src" tools/lldb
 
-  patch -p1 < ../llvm-3.7.1_3.patch
-  patch -p1 < ../llvm-D14260.patch
-  patch -p1 < ../llvm-D17165-D18583.patch
-  patch -p1 < ../0001-Revert-Add-a-flag-vectorizer-maximize-bandwidth-in-l.patch
-  patch -p1 < ../0001-Fix-InstCombine-to-not-widen-metadata-on-store-to-lo.patch
+  patch -p1 < ../llvm-D25865-cmakeshlib.patch
+  patch -p1 < ../llvm-D27389.patch
+  patch -p1 < ../llvm-D27397.patch
+  patch -p1 < ../llvm-D27609-AArch64-UABS_G3.patch
+  patch -p1 < ../llvm-D27629-AArch64-large_model.patch
+  patch -p1 < ../llvm-D28009.patch
+  patch -p1 < ../llvm-D28215_FreeBSD_shlib.patch
+  patch -p1 < ../llvm-D28221-avx512.patch
+  patch -p1 < ../llvm-D9168_argument_alignment.patch
+  patch -p1 < ../llvm-PR22923.patch
+  patch -p1 < ../llvm-arm-fix-prel31.patch
 
-  # https://llvm.org/bugs/show_bug.cgi?id=23529
-  patch -d tools/clang -Np2 <../D17567-PR23529-Sema-part-of-attrbute-abi_tag-support.patch
-  patch -d tools/clang -Np0 <../D18035-PR23529-Mangler-part-of-attrbute-abi_tag-support.patch
+  # https://bugs.freedesktop.org/show_bug.cgi?id=99078
+  patch -Rp1 -i ../AMDGPU-Fix-an-interaction-between-WQM-and-polygon-stippling.patch
+
+  # https://reviews.llvm.org/D24736
+  patch -Np0 -d projects/compiler-rt <../msan-prevent-initialization-failure-with-newer-glibc.patch
 
   mkdir build
 }
@@ -83,14 +103,15 @@ build() {
       -DCMAKE_BUILD_TYPE=Release \
       -DCMAKE_INSTALL_PREFIX=/usr \
       -DLLVM_BUILD_LLVM_DYLIB=ON \
-      -DLLVM_DYLIB_EXPORT_ALL=ON \
       -DLLVM_LINK_LLVM_DYLIB=ON \
+      -DLLVM_INSTALL_UTILS=ON \
       -DLLVM_ENABLE_RTTI=ON \
       -DLLVM_ENABLE_FFI=ON \
       -DLLVM_BUILD_TESTS=ON \
       -DLLVM_BUILD_DOCS=ON \
       -DLLVM_ENABLE_SPHINX=ON \
       -DLLVM_ENABLE_DOXYGEN=OFF \
+      -DLLDB_DISABLE_LIBEDIT=1 \
       -DSPHINX_WARNINGS_AS_ERRORS=OFF \
       -DFFI_INCLUDE_DIR=$(pkg-config --variable=includedir libffi) \
       -DLLVM_BINUTILS_INCDIR=/usr/include \
@@ -185,13 +206,17 @@ package_llvm-ocaml-julia() {
 package_lldb-julia() {
   pkgdesc="Next generation, high-performance debugger (with patch for julia)"
   url="http://lldb.llvm.org/"
-  depends=('libedit' 'libxml2' 'python2' 'python2-six')
+  depends=('libxml2' 'python2' 'python2-six')
   conflicts=("lldb")
   provides=("lldb=$pkgver-$pkgrel")
 
   cd "$srcdir/llvm-$pkgver.src"
 
   make -C build/tools/lldb DESTDIR="$pkgdir" install
+
+  # https://bugs.archlinux.org/task/50759
+  sed -i "/import_module('_lldb')/s/_lldb/lldb.&/" \
+      "$pkgdir/usr/lib/python2.7/site-packages/lldb/__init__.py"
 
   # Remove bundled six library
   rm "$pkgdir/usr/lib/python2.7/site-packages/six.py"
@@ -256,10 +281,8 @@ package_clang-tools-extra-julia() {
   make -C build/tools/clang/tools/extra DESTDIR="$pkgdir" install
 
   # Use Python 2
-  sed -i \
-      -e 's|env python$|&2|' \
-      -e 's|/usr/bin/python$|&2|' \
-      "$pkgdir"/usr/share/clang/{clang-tidy-diff,run-clang-tidy}.py
+  sed -i 's|/usr/bin/env python|&2|' \
+      "$pkgdir"/usr/share/clang/{clang-tidy-diff,run-clang-tidy,run-find-all-symbols}.py
 
   install -Dm644 tools/clang/tools/extra/LICENSE.TXT \
           "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
