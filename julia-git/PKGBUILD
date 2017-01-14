@@ -46,8 +46,10 @@ makedepends=(gcc-fortran arpack fftw git gmp libgit2-julia libunwind-git
              openspecfun openblas libutf8proc-git patchelf openblas-lapack
              openlibm mbedtls libssh2)
 options=('debug' '!strip')
-source=('git://github.com/JuliaLang/julia')
-md5sums=('SKIP')
+source=('git://github.com/JuliaLang/julia'
+        0001-Fix-compilation-on-LLVM-svn.patch)
+md5sums=('SKIP'
+         'af36397952eb0b603415e4ba34411dfd')
 
 pkgver() {
   cd julia
@@ -126,7 +128,7 @@ EOF
   git reset --hard HEAD
   git clean -fdx
 
-  # patch -Np1 < ../
+  patch -Np1 < ../0001-Fix-compilation-on-LLVM-svn.patch
 
   if [[ "$CARCH" = x86_64 ]]; then
       (cd "$srcdir"
