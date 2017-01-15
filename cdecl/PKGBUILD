@@ -10,10 +10,10 @@ arch=('i686' 'x86_64')
 url="http://www.ibiblio.org/pub/linux/devel/lang/c/"
 license=('Public Domain')
 depends=('readline')
-source=(http://www.ibiblio.org/pub/linux/devel/lang/c/$pkgname-$pkgver.tar.gz
-		getopt.patch
-		makefile.patch
-		fix-getline.patch)
+source=("http://www.ibiblio.org/pub/linux/devel/lang/c/$pkgname-$pkgver.tar.gz"
+        'getopt.patch'
+        'makefile.patch'
+        'fix-getline.patch')
 md5sums=('29895dab52e85b2474a59449e07b7996'
          'bd0889f5c6142b46f667700ebf0eda02'
          '3a2a766cdc3fdc714ba35655d4d836a9'
@@ -36,7 +36,7 @@ prepare() {
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
-  make
+  make CFLAGS="-std=gnu90"
 }
 
 package() {
