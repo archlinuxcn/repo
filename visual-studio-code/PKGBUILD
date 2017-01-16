@@ -2,7 +2,7 @@
 
 pkgname=visual-studio-code
 pkgver=1.8.1
-pkgrel=1
+pkgrel=3
 pkgdesc="Editor for building and debugging modern web and cloud applications (official binary version)"
 arch=('x86_64' 'i686')
 url="https://code.visualstudio.com/"
@@ -16,9 +16,9 @@ source_i686=(code_ia32_${pkgver}.tar.gz::https://vscode-update.azurewebsites.net
               ${pkgname}.desktop
               )
 md5sums_x86_64=('87ba1a58c33100e0184e1deb7c599c11'
-                '89eb024d17221e5c92c99c390eaf92ce')
+                'b5d0d40f5f22b4efb0b3d05c287f8704')
 md5sums_i686=('5a0145f7df69d92cbc1657672ec5d38e'
-              '89eb024d17221e5c92c99c390eaf92ce')
+              'b5d0d40f5f22b4efb0b3d05c287f8704')
 package() {
   _pkg=VSCode-linux-x64
   if [ "${CARCH}" = "i686" ]; then
