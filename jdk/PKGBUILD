@@ -3,8 +3,8 @@
 
 pkgname=jdk
 _major=8
-_minor=112
-_build=b15
+_minor=121
+_build=b13
 pkgver=${_major}u${_minor}
 pkgrel=1
 pkgdesc="Oracle Java Development Kit"
@@ -49,15 +49,15 @@ source=("http://download.oracle.com/otn-pub/java/jce/$_major/jce_policy-$_major.
         "jmc-$_jname.desktop"
         "jvisualvm-$_jname.desktop"
         "policytool-$_jname.desktop")
-source_i686=("http://download.oracle.com/otn-pub/java/jdk/$pkgver-$_build/$pkgname-$pkgver-linux-i586.tar.gz")
-source_x86_64=("http://download.oracle.com/otn-pub/java/jdk/$pkgver-$_build/$pkgname-$pkgver-linux-x64.tar.gz")
+source_i686=("http://download.oracle.com/otn-pub/java/jdk/$pkgver-$_build/e9e7ea248e2c4826b92b3f075a80e441/$pkgname-$pkgver-linux-i586.tar.gz")
+source_x86_64=("http://download.oracle.com/otn-pub/java/jdk/$pkgver-$_build/e9e7ea248e2c4826b92b3f075a80e441/$pkgname-$pkgver-linux-x64.tar.gz")
 md5sums=('b3c7031bc65c28c2340302065e7d00d3'
          'b4f0da18e03f7a9623cb073b65dde6c1'
          '8f0ebcead2aecad67fbd12ef8ced1503'
          'a4a21b064ff9f3c3f3fdb95edf5ac6f3'
          '98245ddb13914a74f0cc5a028fffddca')
-md5sums_i686=('66ccf8e7c28969d56863034d030134bf')
-md5sums_x86_64=('de9b7a90f0f5a13cfcaa3b01451d0337')
+md5sums_i686=('9e0e84f36427ce258abfca35fbeb0c55')
+md5sums_x86_64=('91972fb4e753f1b6674c2b952d974320')
 ## Alternative mirror, if your local one is throttled:
 #source_x86_64=("http://ftp.wsisiz.edu.pl/pub/pc/pozyteczne%20oprogramowanie/java/$pkgname-$pkgver-linux-x64.gz")
 
