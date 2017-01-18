@@ -1,26 +1,23 @@
 _pkgname=alembic
 pkgname=python-alembic
-pkgver=0.8.9
-pkgrel=2
+pkgver=0.8.10
+pkgrel=1
 pkgdesc="A database migration tool for SQLAlchemy."
 arch=('any')
 url="http://bitbucket.org/zzzeek/alembic"
 license=('MIT')
 depends=('python' 'python-editor' 'python-mako' 'python-sqlalchemy' 'python-setuptools')
-source=('https://pypi.python.org/packages/63/ca/c60ba17274b6737ff9ff1f89f0fbc7da93e05dd12bbdaae5099df8b60d38/alembic-0.8.9.tar.gz')
-md5sums=('f1ed0d26bc66027568bd3385bbb740f7')
-
-export LANG=en_US.UTF-8
+source=('https://pypi.python.org/packages/f0/7d/7fcda63887d9726e0145e98802baf374ec8cf889325e469194cd7926c98e/alembic-0.8.10.tar.gz')
+md5sums=('21b344a70ce637699c18bf074a080649')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
-  python3 setup.py build
+  LANG=en_US.UTF-8 python3 setup.py build
 }
 
 package() {
   cd "$srcdir/$_pkgname-$pkgver"
-
-  python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+  LANG=en_US.UTF-8 python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 }
 
 # vim:set sw=2 et:
