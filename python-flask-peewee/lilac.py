@@ -3,7 +3,7 @@
 from lilaclib import *
 
 build_prefix = 'archlinuxcn-x86_64'
-depends=['python-wtforms', 'python-wtf-peewee']
+depends=['python-wtf-peewee']
 
 def pre_build():
   pypi_pre_build(depends=['python-flask', 'python-wtforms', 'python-peewee', 'python-wtf-peewee'])
