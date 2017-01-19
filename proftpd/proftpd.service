@@ -1,0 +1,12 @@
+[Unit]
+Description=ProFTPD FTP Server
+After=network.target
+
+[Service]
+Type=forking
+PIDFile=/run/proftpd/proftpd.pid
+ExecStart=/usr/bin/proftpd
+ExecReload=/bin/kill -HUP $MAINPID
+
+[Install]
+WantedBy = multi-user.target
