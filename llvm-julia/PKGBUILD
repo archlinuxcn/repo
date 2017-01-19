@@ -44,6 +44,8 @@ source=(http://llvm.org/releases/$pkgver/llvm-$pkgver.src.tar.xz
         0003-ExecutionDepsFix-Fix-bug-in-clearance-calculation.patch
         0004-Avoid-false-dependencies-of-undef-machine-operands.patch
         0005-Fixing-bug-committed-in-rev.-278321.patch
+        llvm-D28759-loopclearance.patch
+        llvm-D28786-callclearance.patch
         llvm-Config-llvm-config.h)
 sha256sums=('1fd90354b9cf19232e8f168faf2220e79be555df3aa743242700879e8fd329ee'
             'e6c4cebb96dee827fa0470af313dff265af391cb6da8d429842ef208c8f25e63'
@@ -68,6 +70,8 @@ sha256sums=('1fd90354b9cf19232e8f168faf2220e79be555df3aa743242700879e8fd329ee'
             'abb096a77a56fbacfe9c7b6b4813c2548ee006fa3b9b7265d08eb650977def45'
             '1846dbeed028bd37e2937a6e1d4b5700075bbb815630738bce4c069ff1e021cd'
             '213604fea25c77fc41fc518385980db7e0537b89b3153ec668c7bf381e47eb84'
+            'd58bd763afcfb3cb2a389525c84dca6dc386026fdf60fc742f03ce1f4e91b719'
+            '5cb55900d458069ef47239a7ab1d9dcbc2132a98f182d4fd8de95cd4d432b1e8'
             '597dc5968c695bbdbb0eac9e8eb5117fcd2773bc91edf5ec103ecffffab8bc48')
 
 prepare() {
@@ -99,6 +103,8 @@ prepare() {
   patch -p1 < ../0003-ExecutionDepsFix-Fix-bug-in-clearance-calculation.patch
   patch -p1 < ../0004-Avoid-false-dependencies-of-undef-machine-operands.patch
   patch -p1 < ../0005-Fixing-bug-committed-in-rev.-278321.patch
+  patch -p1 < ../llvm-D28759-loopclearance.patch
+  patch -p1 < ../llvm-D28786-callclearance.patch
 
   # https://bugs.freedesktop.org/show_bug.cgi?id=99078
   patch -Rp1 -i ../AMDGPU-Fix-an-interaction-between-WQM-and-polygon-stippling.patch
