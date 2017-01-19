@@ -1,8 +1,8 @@
 # Maintainer: Conor Anderson <conor@conr.ca>
 pkgname=wire-desktop
 _pkgname=wire
-pkgver=2.11.2685
-pkgrel=1
+pkgver=2.11.2687
+pkgrel=3
 pkgdesc='Modern, private messenger. Based on Electron.'
 arch=('x86_64' 'i686')
 url='https://wire.com/'
@@ -12,8 +12,7 @@ depends=('alsa-lib' 'gconf' 'gtk2' 'libxss' 'libxtst' 'nss')
 makedepends=('gendesk' 'grunt-cli' 'npm' 'python2' 'yarn')
 provides=('wire-desktop')
 source=("${pkgver}.tar.gz::https://github.com/wireapp/wire-desktop/archive/release/"$pkgver".tar.gz")        
-sha256sums=('e68ccb04d1f0741e0b703c7cff37d0d208ae696bf3cbb7f2f0da9c1283d50b5f')
-install="${pkgname}".install
+sha256sums=('3d5c517933a28a0957961db8f1fb2b2ded795c28e1c045346afd7354b69c0e70')
 
 prepare() {
   gendesk -f -n --name=Wire --pkgname="${_pkgname}" --pkgdesc="${pkgdesc}" --exec="${_pkgname}" --categories="Network"
@@ -21,7 +20,7 @@ prepare() {
 
 build() {
   cd "${srcdir}/${pkgname}-release-${pkgver}"
-  yarn
+  npm install
   grunt 'clean:linux' 'update-keys' 'release-prod'
   if [ $CARCH == 'x86_64' ]; then
     node_modules/.bin/build --linux --x64 --dir
@@ -48,12 +47,16 @@ package() {
   ln -s "/usr/lib/${_pkgname}/${_pkgname}" "${pkgdir}/usr/bin/${_pkgname}"
   
   # Place desktop entry and icon
-  install -Dm644 "${_pkgname}.desktop" "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
-  install -Dm644 "${srcdir}/${pkgname}-release-${pkgver}/electron/img/wire.png" "${pkgdir}/usr/share/pixmaps/${_pkgname}.png"
+  desktop-file-install -m 644 --dir "${pkgdir}/usr/share/applications/" "${srcdir}/${_pkgname}.desktop"
+  for res in 32x32 256x256; do
+    install -dm755 "${pkgdir}/usr/share/icons/hicolor/${res}/apps"
+    install -Dm644 "${srcdir}/${pkgname}-release-${pkgver}/resources/icons/${res}.png" \
+      "${pkgdir}/usr/share/icons/hicolor/${res}/apps/${_pkgname}.png"
+  done
 
   # Place license files
-  install -Dm644 "${pkgdir}/usr/lib/${_pkgname}/LICENSE.electron.txt" "${pkgdir}/usr/share/licenses/${_pkgname}/LICENSE.electron.txt"
-  install -Dm644 "${pkgdir}/usr/lib/${_pkgname}/LICENSES.chromium.html" "${pkgdir}/usr/share/licenses/${_pkgname}/LICENSES.chromium.html"
-  rm "${pkgdir}/usr/lib/${_pkgname}/LICENSE.electron.txt"
-  rm "${pkgdir}/usr/lib/${_pkgname}/LICENSES.chromium.html"
+  for license in "LICENSE.electron.txt" "LICENSES.chromium.html"; do
+    install -Dm644 "${pkgdir}/usr/lib/${_pkgname}/${license}" "${pkgdir}/usr/share/licenses/${_pkgname}/${license}"
+    rm "${pkgdir}/usr/lib/${_pkgname}/${license}"
+  done
 }
