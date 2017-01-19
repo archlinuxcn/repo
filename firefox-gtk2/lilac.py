@@ -17,6 +17,7 @@ def pre_build():
       line = 'pkgname=firefox-gtk2'
     elif line.startswith('depends=('):
       line = line.replace("'gtk3' ", "")
+      line = line.replace("gtk3 ", "")
       line = """conflicts=('firefox')
 provides=("firefox=${pkgver}-${pkgrel}")\n""" + line
     elif '$pkgname' in line:
