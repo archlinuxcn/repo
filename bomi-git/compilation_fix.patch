@@ -1,0 +1,103 @@
+diff --git a/src/bomi/dialog/encoderdialog.cpp b/src/bomi/dialog/encoderdialog.cpp
+index 970bf7a..19b4962 100644
+--- a/src/bomi/dialog/encoderdialog.cpp
++++ b/src/bomi/dialog/encoderdialog.cpp
+@@ -255,7 +255,7 @@ auto EncoderDialog::run() -> QString
+ {
+     if (d->size.isEmpty())
+         return tr("No video stream exists.");
+-    d->g.unix = QDateTime::currentMSecsSinceEpoch();
++    d->g._unix = QDateTime::currentMSecsSinceEpoch();
+     d->g.dateTime = QDateTime::currentDateTime();
+     d->g.start = d->ui.a->time();
+     d->g.end = d->ui.b->time();
+diff --git a/src/bomi/misc/filenamegenerator.cpp b/src/bomi/misc/filenamegenerator.cpp
+index 3ae0d78..8b1e25a 100644
+--- a/src/bomi/misc/filenamegenerator.cpp
++++ b/src/bomi/misc/filenamegenerator.cpp
+@@ -51,8 +51,8 @@ auto get(const FileNameGenerator *g, const QString &ph) -> QString
+         };
+         get[u"%MEDIA_DISPLAY_NAME%"_q] = [] (const FileNameGenerator *g) { return g->mediaName; };
+ 
+-        get[u"%UNIX%"_q]     = [] (const FileNameGenerator *g) { return _N(g->unix / 1000llu); };
+-        get[u"%UNIX_MS%"_q]  = [] (const FileNameGenerator *g) { return _N(g->unix); };
++        get[u"%UNIX%"_q]     = [] (const FileNameGenerator *g) { return _N(g->_unix / 1000llu); };
++        get[u"%UNIX_MS%"_q]  = [] (const FileNameGenerator *g) { return _N(g->_unix); };
+         return get;
+     }();
+     auto ret = func.value(ph);
+diff --git a/src/bomi/misc/filenamegenerator.hpp b/src/bomi/misc/filenamegenerator.hpp
+index dad8601..6567942 100644
+--- a/src/bomi/misc/filenamegenerator.hpp
++++ b/src/bomi/misc/filenamegenerator.hpp
+@@ -11,7 +11,7 @@ struct FileNameGenerator {
+     QTime start, end;
+     QString mediaName;
+     Mrl mrl;
+-    quint64 unix = 0;
++    quint64 _unix = 0;
+ };
+ 
+ #endif // FILENAMEGENERATOR_HPP
+diff --git a/src/bomi/player/mainwindow_p.cpp b/src/bomi/player/mainwindow_p.cpp
+index 7c2aa8a..6c8765f 100644
+--- a/src/bomi/player/mainwindow_p.cpp
++++ b/src/bomi/player/mainwindow_p.cpp
+@@ -910,7 +910,7 @@ auto MainWindow::Data::fileNameGenerator(const QTime &end) const -> FileNameGene
+     g.dateTime = QDateTime::currentDateTime();
+     g.start = QTime::fromMSecsSinceStartOfDay(e.time());
+     g.end = end.isNull() ? g.start : end;
+-    g.unix = QDateTime::currentMSecsSinceEpoch();
++    g._unix = QDateTime::currentMSecsSinceEpoch();
+     g.mrl = e.mrl();
+     g.mediaName = e.media()->name();
+     return g;
+diff --git a/src/bomi/player/mainwindow_p.hpp b/src/bomi/player/mainwindow_p.hpp
+index 7f72589..9153f68 100644
+--- a/src/bomi/player/mainwindow_p.hpp
++++ b/src/bomi/player/mainwindow_p.hpp
+@@ -101,7 +101,7 @@ struct MainWindow::Data {
+ 
+     struct {
+         QDate date; QTime time, position;
+-        quint64 unix = 0;
++        quint64 _unix = 0;
+         QMap<QString, std::function<QString(void)>> get;
+     } ph;
+     QTimer waiter, hider, dialogWorkaround;
+diff --git a/src/mpv/audio/filter/af_lavcac3enc.c b/src/mpv/audio/filter/af_lavcac3enc.c
+index 5695bfd..4d2abca 100644
+--- a/src/mpv/audio/filter/af_lavcac3enc.c
++++ b/src/mpv/audio/filter/af_lavcac3enc.c
+@@ -26,7 +26,6 @@
+ #include <assert.h>
+ 
+ #include <libavcodec/avcodec.h>
+-#include <libavutil/audioconvert.h>
+ #include <libavutil/intreadwrite.h>
+ #include <libavutil/common.h>
+ #include <libavutil/bswap.h>
+diff --git a/src/mpv/audio/filter/af_lavrresample.c b/src/mpv/audio/filter/af_lavrresample.c
+index 265fa4b..83b5505 100644
+--- a/src/mpv/audio/filter/af_lavrresample.c
++++ b/src/mpv/audio/filter/af_lavrresample.c
+@@ -28,7 +28,6 @@
+ #include <assert.h>
+ 
+ #include <libavutil/opt.h>
+-#include <libavutil/audioconvert.h>
+ #include <libavutil/common.h>
+ #include <libavutil/samplefmt.h>
+ #include <libavutil/mathematics.h>
+diff --git a/src/mpv/audio/out/ao_lavc.c b/src/mpv/audio/out/ao_lavc.c
+index b322982..16ff8c1 100644
+--- a/src/mpv/audio/out/ao_lavc.c
++++ b/src/mpv/audio/out/ao_lavc.c
+@@ -25,7 +25,6 @@
+ #include <limits.h>
+ 
+ #include <libavutil/common.h>
+-#include <libavutil/audioconvert.h>
+ 
+ #include "config.h"
+ #include "options/options.h"
