@@ -3,7 +3,7 @@
 _pkgname=desktop-app
 pkgname=leanote
 pkgver=2.2.3
-pkgrel=1
+pkgrel=2
 pkgdesc="Knowledge, Blog, Sharing, Cooperation."
 arch=("i686" "x86_64")
 url="https://leanote.com/"
@@ -22,7 +22,7 @@ sha256sums=('8dab30fe0835432e44b5a3a1d46aebde8716a2a47ba4031cbe2a01560987aa83'
 )
 
 source_x86_64=("https://sourceforge.net/projects/leanote-desktop-app/files/${pkgver}/leanote-desktop-linux-x64-v${pkgver}.zip/download")
-source_i686=("https://sourceforge.net/projects/leanote-desktop-app/files/${pkgver}/leanote-desktop-linux-ia33-v${pkgver}.zip/download")
+source_i686=("https://sourceforge.net/projects/leanote-desktop-app/files/${pkgver}/leanote-desktop-linux-ia32-v${pkgver}.zip/download")
 sha256sums_x86_64=('17c0e0510ae247ec4f05f428209f414bbccf25939c1e378ab09fad6afb5b85bb')
 sha256sums_i686=('2ad20d4004c4a0220d400821273d1f28a121a8d6fa1b9ee3db9141ebf5838578')
 
