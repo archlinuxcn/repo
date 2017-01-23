@@ -5,6 +5,7 @@ After=network.target
 [Service]
 Type=simple
 ExecStart=/usr/bin/lxd --group lxd
+KillMode=process
 
 [Install]
 WantedBy=multi-user.target
