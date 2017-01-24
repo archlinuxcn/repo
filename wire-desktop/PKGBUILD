@@ -1,18 +1,19 @@
 # Maintainer: Conor Anderson <conor@conr.ca>
 pkgname=wire-desktop
 _pkgname=wire
-pkgver=2.11.2687
-pkgrel=3
+pkgver=2.11.2689
+pkgrel=1
 pkgdesc='Modern, private messenger. Based on Electron.'
 arch=('x86_64' 'i686')
 url='https://wire.com/'
 license=('GPL3')
 conflicts=('wire-desktop-bin')
 depends=('alsa-lib' 'gconf' 'gtk2' 'libxss' 'libxtst' 'nss')
-makedepends=('python2' 'git' 'grunt-cli' 'yarn' 'npm' 'gendesk' )
+makedepends=('python2' 'gendesk' 'grunt-cli' 'npm' 'git' )
+optdepends=('hunspell-en: for English spellcheck support')
 provides=('wire-desktop')
 source=("${pkgver}.tar.gz::https://github.com/wireapp/wire-desktop/archive/release/"$pkgver".tar.gz")        
-sha256sums=('3d5c517933a28a0957961db8f1fb2b2ded795c28e1c045346afd7354b69c0e70')
+sha256sums=('37c0f47bdae4f869c6ceb6da6bb3541befe1b32b47fc10656f154c448415dcf0')
 
 prepare() {
   gendesk -f -n --name=Wire --pkgname="${_pkgname}" --pkgdesc="${pkgdesc}" --exec="${_pkgname}" --categories="Network"
@@ -53,6 +54,10 @@ package() {
     install -Dm644 "${srcdir}/${pkgname}-release-${pkgver}/resources/icons/${res}.png" \
       "${pkgdir}/usr/share/icons/hicolor/${res}/apps/${_pkgname}.png"
   done
+
+  # Spellcheck dictionaries
+  rm -rf "${pkgdir}/usr/lib/${_pkgname}/resources/app/node_modules/spellchecker/vendor/hunspell_dictionaries"
+  ln -s "/usr/share/hunspell" "${pkgdir}/usr/lib/${_pkgname}/resources/app/node_modules/spellchecker/vendor/hunspell_dictionaries"
 
   # Place license files
   for license in "LICENSE.electron.txt" "LICENSES.chromium.html"; do
