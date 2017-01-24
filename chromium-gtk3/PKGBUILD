@@ -43,7 +43,6 @@ optdepends=('kdebase-kdialog: needed for file dialogs in KDE'
             'pepper-flash: for pepper-flash plugin'
             'gtk2: for pepper-flash plugin')
 conflicts=('chromium')
-replaces=('chromium')
 install=chromium.install
 source=(https://commondatastorage.googleapis.com/chromium-browser-official/$_pkgname-$pkgver.tar.xz
         chromium-launcher-$_launcher_ver.tar.gz::https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver.tar.gz
