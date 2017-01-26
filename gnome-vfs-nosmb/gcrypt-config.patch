@@ -1,0 +1,31 @@
+# Allow gnome-vfs-2.24 to build with libgcrypt >= 1.5.0
+--- gnome-vfs-2.24.4/configure.in	2010-07-01 12:36:09.000000000 -0300
++++ gnome-vfs-2.24.4-libgcrypt//configure.in	2011-07-22 15:55:02.296325640 -0300
+@@ -689,6 +689,16 @@
+ AM_CONDITIONAL(HAVE_SSL, test x$have_ssl = xtrue)
+
+ dnl ****************************
++dnl LibGCrypt 1.5.0
++dnl ****************************
++
++AM_PATH_LIBGCRYPT(1.5.0)
++
++if test "x${LIBGCRYPT_LIBS}" = "x"; then
++	AC_MSG_ERROR([unable to find libgcrypt])
++fi
++
++dnl ****************************
+ dnl DNS-SD implementations
+ dnl ****************************
+ AM_CONDITIONAL(HAVE_AVAHI, false)
+@@ -1045,8 +1055,8 @@
+ dnl ==============================================================================
+
+ PKG_CHECK_MODULES(LIBGNOMEVFS, glib-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gconf-2.0 >= $GCONF_REQUIRED libxml-2.0 >= $XML_REQUIRED gnome-mime-data-2.0 $dbus_requirement)
+-LIBGNOMEVFS_CFLAGS="$LIBGNOMEVFS_CFLAGS $OPENSSL_CFLAGS $LIBGNUTLS_CFLAGS $HOWL_CFLAGS $AVAHI_CFLAGS"
+-LIBGNOMEVFS_LIBS="$LIBGNOMEVFS_LIBS $OPENSSL_LIBS $LIBGNUTLS_LIBS $HOWL_LIBS $AVAHI_LIBS $RESOLVER_LIBS"
++LIBGNOMEVFS_CFLAGS="$LIBGNOMEVFS_CFLAGS $OPENSSL_CFLAGS $LIBGNUTLS_CFLAGS $HOWL_CFLAGS $AVAHI_CFLAGS $LIBGCRYPT_CFLAGS"
++LIBGNOMEVFS_LIBS="$LIBGNOMEVFS_LIBS $OPENSSL_LIBS $LIBGNUTLS_LIBS $HOWL_LIBS $AVAHI_LIBS $RESOLVER_LIBS  $LIBGCRYPT_LIBS"
+ AC_SUBST(LIBGNOMEVFS_CFLAGS)
+ AC_SUBST(LIBGNOMEVFS_LIBS)
+
