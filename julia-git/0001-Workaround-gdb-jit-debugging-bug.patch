@@ -1,28 +1,40 @@
-From 9ecfc2dce03c2b7af887ecff093bf00e4b89ce6f Mon Sep 17 00:00:00 2001
+From f20aaaca1da94777335305ffde0c42af1fa470b7 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
-Date: Sat, 14 Jan 2017 01:09:49 -0500
-Subject: [PATCH] Workaround gdb jit debugging bug
+Date: Thu, 26 Jan 2017 14:58:24 -0500
+Subject: [PATCH] Workaround GDB JIT debugging bug with shared linked LLVM
 
+Fix #17856
 ---
- src/jitlayers.cpp | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ src/jitlayers.cpp | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
 diff --git a/src/jitlayers.cpp b/src/jitlayers.cpp
-index 0c4ba6a..fb53337 100644
+index 0d478b9..905b4f2 100644
 --- a/src/jitlayers.cpp
 +++ b/src/jitlayers.cpp
-@@ -282,9 +282,9 @@ extern "C" {
-   // We put information about the JITed function in this global, which the
-   // debugger reads.  Make sure to specify the version statically, because the
-   // debugger checks the version before we can set it during runtime.
--  extern struct jit_descriptor __jit_debug_descriptor;
-+  JL_DLLEXPORT struct jit_descriptor __jit_debug_descriptor;
- 
--  LLVM_ATTRIBUTE_NOINLINE extern void __jit_debug_register_code();
-+  JL_DLLEXPORT LLVM_ATTRIBUTE_NOINLINE void __jit_debug_register_code() {}
- }
+@@ -287,6 +287,13 @@ extern "C" {
  
  namespace {
+ 
++// Use a local variable to hold the addresses to avoid generating a PLT
++// on the function call.
++// It messes up the GDB lookup logic with dynamically linked LLVM.
++// (Ref https://sourceware.org/bugzilla/show_bug.cgi?id=20633)
++// Use `volatile` to make sure the call always loads this slot.
++void (*volatile jit_debug_register_code)() = __jit_debug_register_code;
++
+ using namespace llvm;
+ using namespace llvm::object;
+ using namespace llvm::orc;
+@@ -305,7 +312,7 @@ void NotifyDebugger(jit_code_entry *JITCodeEntry)
+     }
+     __jit_debug_descriptor.first_entry = JITCodeEntry;
+     __jit_debug_descriptor.relevant_entry = JITCodeEntry;
+-    __jit_debug_register_code();
++    jit_debug_register_code();
+ }
+ }
+ // ------------------------ END OF TEMPORARY COPY FROM LLVM -----------------
 -- 
 2.10.2
 

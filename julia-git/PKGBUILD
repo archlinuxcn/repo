@@ -36,7 +36,7 @@ esac
 
 epoch=1
 pkgver=0.6.0.dev.2379.g571aad6300
-pkgrel=1
+pkgrel=2
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
@@ -49,7 +49,7 @@ options=('debug' '!strip')
 source=('git://github.com/JuliaLang/julia'
         0001-Workaround-gdb-jit-debugging-bug.patch)
 md5sums=('SKIP'
-         '2397c20a6891daca4110199deaee5732')
+         'c0e3a49307e46d3e9ca76deb918b1d24')
 
 pkgver() {
   cd julia
