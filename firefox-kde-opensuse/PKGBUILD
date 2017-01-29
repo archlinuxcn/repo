@@ -14,8 +14,8 @@ _gtk3=true
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=50.1.0
-pkgrel=2
+pkgver=51.0.1
+pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -29,12 +29,13 @@ if [ $_gtk3 ] ; then
 fi
 
 makedepends=('unzip' 'zip' 'diffutils' 'python2' 'yasm' 'mesa' 'imake'
-             'xorg-server-xvfb' 'libpulse' 'inetutils' 'autoconf2.13' 'rust')
+             'xorg-server-xvfb' 'libpulse' 'inetutils' 'autoconf2.13' 'rust'
+            'cargo')
 optdepends=('networkmanager: Location detection via available WiFi networks'
 	    'upower: Battery API' )
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
-_patchrev=a58cc7936ce7
+_patchrev=3604ed712e16
 options=('!emptydirs'  'strip' )
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz
@@ -47,7 +48,6 @@ source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/
 	$_patchurl/mozilla-kde.patch
 	$_patchurl/mozilla-language.patch
 	$_patchurl/mozilla-nongnome-proxies.patch
-        $_patchurl/mozilla-flex_buffer_overrun.patch
 	unity-menubar.patch
 	add_missing_pgo_rule.patch
         pgo_fix_missing_kdejs.patch
@@ -87,7 +87,7 @@ prepare() {
   echo "ac_add_options --with-google-api-keyfile=\"$PWD/google-api-key\"" >>.mozconfig
 
   echo -n "$_google_default_client_id $_google_default_client_secret" >google-oauth-api-key
-  echo "ac_add_options --with-google-oauth-api-keyfile=\"$PWD/google-oauth-api-key\"" >>.mozconfig
+  echo "ac_add_options --with-google-api-keyfile=\"$PWD/google-oauth-api-key\"" >>.mozconfig
 
   echo -n "$_mozilla_api_key" >mozilla-api-key
   echo "ac_add_options --with-mozilla-api-keyfile=\"$PWD/mozilla-api-key\"" >>.mozconfig
@@ -113,8 +113,6 @@ prepare() {
   # https://bugs.archlinux.org/task/34644
   # sed -i '/ac_cpp=/s/$CPPFLAGS/& -O2/' configure
 
-  # CVE-2016-6354 (bmo#1292534)
-  patch -Np1 -i "$srcdir"/mozilla-flex_buffer_overrun.patch
 
 
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1314968
@@ -122,6 +120,8 @@ prepare() {
   
   # Build with the rust targets we actually ship
   patch -Np1 -i "$srcdir"/rust-i686.patch
+
+
   
   # WebRTC build tries to execute "python" and expects Python 2
   mkdir -p "$srcdir/path"
@@ -147,7 +147,6 @@ build() {
   CPPFLAGS+=" -O2"
 
   # GCC 6
-  CFLAGS+=" -fPIC -fno-delete-null-pointer-checks -fno-lifetime-dse -fno-schedule-insns2"
   CXXFLAGS+=" -fPIC -fno-delete-null-pointer-checks -fno-lifetime-dse -fno-schedule-insns2"
 
   # Hardening
@@ -202,20 +201,19 @@ package() {
   #https://bugzilla.mozilla.org/show_bug.cgi?id=658850
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
-md5sums=('0f6a56cd8da8fa9deedfd61bcb43a65d'
-         '169f583544e9efaf1f80f8548b57a8cc'
+md5sums=('05d8d655983d21d5059d5c886b2e6a9c'
+         'b3b04357505b8f00864ceeb1cc40a66f'
          '14e0f6237a79b85e60256f4808163160'
          'dbf14588e85812ee769bd735823a0146'
          'aa9f776d2187cba09de65cbb02b39ca0'
          '05bb69d25fb3572c618e3adf1ee7b670'
          '6e335a517c68488941340ee1c23f97b0'
          '3b3eb8c2747429887e4a03537932eac5'
-         '4597391f698d5f3a7138e5a2757ac094'
+         'a8bff00299be95e2d5635c8660858237'
          '1fad9a988826d69fe712ea973e43f6da'
-         '1a8a9fbe8ac6a37f2af5032e81e63fff'
-         'ce59663430373d7facd5915056745897'
+         'f41f9222bc2108516719178e77528e9d'
+         'fa6ac817f576b486419b5f308116a7cd'
          '0c684360f1df4536512d51873c1d243d'
-         '01af53dc830d00fe522c545bcc0ec4b9'
          'eb6771472c8c5f67331256c7f5a692da'
          'fe24f5ea463013bb7f1c12d12dce41b2'
          '3fa8bd22d97248de529780f5797178af'

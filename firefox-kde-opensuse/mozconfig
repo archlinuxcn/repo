@@ -38,6 +38,10 @@ ac_add_options --disable-crashreporter
 ac_add_options --disable-tests
 ac_add_options --disable-updater
 ac_add_options --disable-debug-symbols
+ac_add_options --disable-crashreporter
+
+STRIP_FLAGS="--strip-debug"
+ 
 
 # Optimization
 ac_add_options --enable-optimize
