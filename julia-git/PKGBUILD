@@ -46,10 +46,8 @@ makedepends=(gcc-fortran arpack fftw git gmp libgit2-julia libunwind-git
              openspecfun openblas libutf8proc-git patchelf openblas-lapack
              openlibm mbedtls libssh2)
 options=('debug' '!strip')
-source=('git://github.com/JuliaLang/julia'
-        0001-Workaround-gdb-jit-debugging-bug.patch)
-md5sums=('SKIP'
-         'c0e3a49307e46d3e9ca76deb918b1d24')
+source=('git://github.com/JuliaLang/julia')
+md5sums=('SKIP')
 
 pkgver() {
   cd julia
@@ -128,7 +126,7 @@ EOF
   git reset --hard HEAD
   git clean -fdx
 
-  patch -Np1 < ../0001-Workaround-gdb-jit-debugging-bug.patch
+  # patch -Np1 < ../
 
   if [[ "$CARCH" = x86_64 ]]; then
       (cd "$srcdir"
