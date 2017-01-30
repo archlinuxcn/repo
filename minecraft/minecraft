@@ -1,7 +1,26 @@
 #!/bin/sh
 
-if [ -e "${HOME}/.minecraft/launcher.jar" ]; then
+# Since launching the minecraft launch from the home directory bypass the update mechanism, I'm adding this
+# small piece of code that will do a checksum of the versions.json file provided by mojang, if a new version
+# of the game is out, I force a download of the launcher just to keep everyone up to date
+
+# those 2 can be overrided if you want
+MC_VERSION_URL=${MC_VERSION_URL:-"https://launchermeta.mojang.com/mc/game/version_manifest.json"}
+MC_SUM_FILE=${MC_SUM_FILE:-"${HOME}/.minecraft/versions.sum"}
+
+# compute sums
+MC_VERSION_SUM=$( curl -s https://launchermeta.mojang.com/mc/game/version_manifest.json | sha256sum | cut -f 1 -d " " )
+MC_CURRENT_SUM=$( cat "$MC_SUM_FILE" 2>/dev/null )
+
+if [ "$MC_VERSION_SUM" != "$MC_CURRENT_SUM" ]; then
+	export MC_FORCE_UPDATE=1
+	echo "$MC_VERSION_SUM" > "$MC_SUM_FILE"
+fi
+
+if [ -e "${HOME}/.minecraft/launcher.jar" ] && [ -z "$MC_FORCE_UPDATE" ]; then
 	exec java -jar "${HOME}/.minecraft/launcher.jar" $@
 else
 	exec java -jar /usr/share/minecraft/Minecraft.jar $@
 fi
+
+unset MC_FORCE_UPDATE
