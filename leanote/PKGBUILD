@@ -3,7 +3,7 @@
 _pkgname=desktop-app
 pkgname=leanote
 pkgver=2.3
-pkgrel=2
+pkgrel=3
 pkgdesc="Knowledge, Blog, Sharing, Cooperation."
 arch=("i686" "x86_64")
 url="https://leanote.com/"
@@ -21,8 +21,8 @@ sha256sums=('8dab30fe0835432e44b5a3a1d46aebde8716a2a47ba4031cbe2a01560987aa83'
 '57155a0e423bc98f0e83acb35f03ace06b3de54bdc64b2373128671c801727b1'
 )
 
-source_x86_64=("${pkgname}-${pkgver}.zip::https://sourceforge.net/projects/leanote-desktop-app/files/${pkgver}/leanote-desktop-linux-x64-v${pkgver}.zip/download")
-source_i686=("${pkgname}-${pkgver}.zip::https://sourceforge.net/projects/leanote-desktop-app/files/${pkgver}/leanote-desktop-linux-ia32-v${pkgver}.zip/download")
+source_x86_64=("${pkgname}-${pkgver}-x64.zip::https://sourceforge.net/projects/leanote-desktop-app/files/${pkgver}/leanote-desktop-linux-x64-v${pkgver}.zip/download")
+source_i686=("${pkgname}-${pkgver}-x86.zip::https://sourceforge.net/projects/leanote-desktop-app/files/${pkgver}/leanote-desktop-linux-ia32-v${pkgver}.zip/download")
 sha256sums_x86_64=('2d83504ed1537ff5263dda3056c2c57513e941ca0fb7900823c9c4a137f39983')
 sha256sums_i686=('f65a0c58f6ac77f71c522647f9acffee8790c466d3c5bb8246daceee2c657b51')
 noextract=("${pkgname}-${pkgver}.zip")
@@ -34,6 +34,7 @@ prepare() {
 }
 
 build() {
+    echo "    Cleanup directories..."
 	cd "${srcdir}/src"
     rm -rf __MACOSX 
     rm -rf .DS_Store
