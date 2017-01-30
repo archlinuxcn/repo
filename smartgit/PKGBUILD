@@ -1,12 +1,12 @@
 #Maintainer: Alexey Stukalov <astukalov@gmail.com>
 pkgname=smartgit
-pkgver=17
+pkgver=17.0.1
 pkgrel=1
 pkgdesc="Git client with Hg and SVN support."
 arch=("any")
 url="http://www.syntevo.com/smartgit"
 license=('custom')
-depends=("java-runtime" "desktop-file-utils" "sh" "git" "gtk2")
+depends=("java-runtime>=8" "desktop-file-utils" "sh" "git" "gtk2")
 optdepends=("mercurial: hg repositories support")
 replaces=(smartgithg)
 
@@ -17,7 +17,7 @@ _pkgfolder=${pkgname}
 source=(https://www.syntevo.com/static/smart/download/${pkgname}/${pkgname}-linux-${_pkgver}.tar.gz
         smartgit.desktop)
 install="smartgit.install"
-sha1sums=('e8f27981d9dfbda2b491c013dae670431373176f'
+sha1sums=('dc506415edc4944e5d2aa4cd37685b64bdc54702'
           'bafa47c0b43ad89aaa3b34a078771b3cd12bd1f3')
 
 package() {
