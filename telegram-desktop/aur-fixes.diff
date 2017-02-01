@@ -1,8 +1,8 @@
 diff --git a/Telegram/SourceFiles/historywidget.cpp b/Telegram/SourceFiles/historywidget.cpp
-index 52c9addd..78af10ac 100644
+index c28d64b7..f6808ff0 100644
 --- a/Telegram/SourceFiles/historywidget.cpp
 +++ b/Telegram/SourceFiles/historywidget.cpp
-@@ -189,7 +189,7 @@ namespace {
+@@ -190,7 +190,7 @@ namespace {
  // is applied once for blocks list in a history and once for items list in the found block
  template <bool TopToBottom, typename T>
  int binarySearchBlocksOrItems(const T &list, int edge) {
@@ -69,7 +69,7 @@ index 3cc98b84..781ad18f 100644
  Q_IMPORT_PLUGIN(QGenericEnginePlugin)
  Q_IMPORT_PLUGIN(QNetworkManagerEnginePlugin)
 diff --git a/Telegram/gyp/Telegram.gyp b/Telegram/gyp/Telegram.gyp
-index 2503f1e1..b0a61eb9 100644
+index a1e632ae..8d05143e 100644
 --- a/Telegram/gyp/Telegram.gyp
 +++ b/Telegram/gyp/Telegram.gyp
 @@ -79,21 +79,18 @@
