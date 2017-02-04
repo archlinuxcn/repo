@@ -2,7 +2,7 @@
 
 pkgname=drive
 pkgver=0.3.9.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Pull or push Google Drive files"
 arch=('x86_64' 'i686' 'arm' 'armv6h' 'armv7h')
 url="http://github.com/odeke-em/drive"
