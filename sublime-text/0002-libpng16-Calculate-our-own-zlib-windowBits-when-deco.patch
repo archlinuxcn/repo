@@ -1,0 +1,133 @@
+From 127b08a265f99ce517ea31ec7988a91fc17da4d9 Mon Sep 17 00:00:00 2001
+From: Glenn Randers-Pehrson <glennrp at users.sourceforge.net>
+Date: Sun, 5 May 2013 22:13:47 -0500
+Subject: [PATCH 09/10] [libpng16] Calculate our own zlib windowBits when
+ decoding rather than
+
+trusting the CMF bytes in the PNG datastream.
+---
+ ANNOUNCE   |  6 +++--
+ CHANGES    |  5 +++-
+ pngrutil.c | 87 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----
+ 3 files changed, 88 insertions(+), 10 deletions(-)
+
+ (foutrelis: pruned non-code changes to apply cleanly to libpng 1.6.2.)
+
+diff --git a/pngrutil.c b/pngrutil.c
+index 01c3679..9c10e26 100644
+--- a/pngrutil.c
++++ b/pngrutil.c
+@@ -18,8 +18,6 @@
+ 
+ #ifdef PNG_READ_SUPPORTED
+ 
+-#define png_strtod(p,a,b) strtod(a,b)
+-
+ png_uint_32 PNGAPI
+ png_get_uint_31(png_const_structrp png_ptr, png_const_bytep buf)
+ {
+@@ -4165,6 +4163,75 @@ png_read_finish_row(png_structrp png_ptr)
+ }
+ #endif /* PNG_SEQUENTIAL_READ_SUPPORTED */
+ 
++#ifdef PNG_READ_OPTIMIZE_WINDOWBITS_SUPPORTED
++/* This is the code to to select a windowBits value to match the smallest
++ * possible sliding window needed to contain the entire uncompressed image.
++ */
++static unsigned int
++required_window_bits(png_alloc_size_t data_size)
++{
++   unsigned int windowBits = 15;
++   if (data_size <= 16384) /* else windowBits must be 15 */
++   {
++      unsigned int half_z_window_size = 1U << (windowBits-1);  /* 16384 */
++
++      do
++      {
++         half_z_window_size >>= 1;
++         --windowBits;
++      }
++      while (windowBits > 8 && data_size <= half_z_window_size);
++   }
++   return windowBits;
++}
++/* This is used below to find the size of an image to pass to png_deflate_claim,
++ * so it only needs to be accurate if the size is less than 16384 bytes (the
++ * point at which a lower LZ window size can be used.)
++ *
++ * To do: merge this with png_image_size() in pngwutil.c and put the result
++ * in png.c as a PNG_INTERNAL_FUNCTION.
++ */
++static png_alloc_size_t
++png_read_image_size(png_structrp png_ptr)
++{
++   /* Only return sizes up to the maximum of a png_uint_32, do this by limiting
++    * the width and height used to 15 bits.
++    */
++   png_uint_32 h = png_ptr->height;
++
++   if (png_ptr->rowbytes < 32768 && h < 32768)
++   {
++      if (png_ptr->interlaced)
++      {
++         /* Interlacing makes the image larger because of the replication of
++          * both the filter byte and the padding to a byte boundary.
++          */
++         png_uint_32 w = png_ptr->width;
++         unsigned int pd = png_ptr->pixel_depth;
++         png_alloc_size_t cb_base;
++         int pass;
++
++         for (cb_base=0, pass=0; pass<=6; ++pass)
++         {
++            png_uint_32 pw = PNG_PASS_COLS(w, pass);
++
++            if (pw > 0)
++               cb_base += (PNG_ROWBYTES(pd, pw)+1) * PNG_PASS_ROWS(h, pass);
++         }
++
++         return cb_base;
++      }
++
++      else
++         return (png_ptr->rowbytes+1) * h;
++   }
++
++   else
++      return 0xffffffffU;
++}
++
++#endif /* PNG_READ_OPTIMIZE_WINDOWBITS_SUPPORTED */
++
+ void /* PRIVATE */
+ png_read_start_row(png_structrp png_ptr)
+ {
+@@ -4449,14 +4516,20 @@ defined(PNG_USER_TRANSFORM_PTR_SUPPORTED)
+       png_free(png_ptr, buffer);
+    }
+ 
+-   /* Finally claim the zstream for the inflate of the IDAT data, use the bits
+-    * value from the stream (note that this will result in a fatal error if the
+-    * IDAT stream has a bogus deflate header window_bits value, but this should
+-    * not be happening any longer!)
++   /* Finally claim the zstream for the inflate of the IDAT data, using the
++    * windowBts predicted from the uncompressed data size, not the value from
++    * the stream.  If READ_OPTIMIZE_WINDOWBITS_SUPPORTED is not defined, then
++    * simply use a 32kbyte window (windowBits=15).
+     */
+-   if (png_inflate_claim(png_ptr, png_IDAT, 0) != Z_OK)
++#ifdef PNG_READ_OPTIMIZE_WINDOWBITS_SUPPORTED
++   if (png_inflate_claim(png_ptr, png_IDAT,
++      required_window_bits(png_read_image_size(png_ptr))) != Z_OK)
++#else
++   if (png_inflate_claim(png_ptr, png_IDAT, 15) != Z_OK)
++#endif
+       png_error(png_ptr, png_ptr->zstream.msg);
+ 
+    png_ptr->flags |= PNG_FLAG_ROW_INIT;
+ }
++
+ #endif /* PNG_READ_SUPPORTED */
+-- 
+1.8.2.2
+

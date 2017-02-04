@@ -1,0 +1,19 @@
+--- libpng-1.6.2-apng.patch.orig	2013-05-06 12:09:16.000000000 +0300
++++ libpng-1.6.2-apng.patch	2013-05-06 12:12:14.000000000 +0300
+@@ -1034,7 +1034,7 @@ diff -Naru libpng-1.6.2.org/pngrutil.c l
+  
+           if (png_ptr->zstream.avail_in > 0 || png_ptr->idat_size > 0)
+              png_chunk_benign_error(png_ptr, "Extra compressed data");
+-@@ -4459,4 +4671,80 @@
++@@ -4459,5 +4671,81 @@
+  
+     png_ptr->flags |= PNG_FLAG_ROW_INIT;
+  }
+@@ -1114,6 +1114,7 @@ diff -Naru libpng-1.6.2.org/pngrutil.c l
+ +}
+ +#endif /* PNG_PROGRESSIVE_READ_SUPPORTED */
+ +#endif /* PNG_READ_APNG_SUPPORTED */
++ 
+  #endif /* PNG_READ_SUPPORTED */
+ diff -Naru libpng-1.6.2.org/pngset.c libpng-1.6.2/pngset.c
+ --- libpng-1.6.2.org/pngset.c	2013-04-29 17:31:42.000000000 +0900
