@@ -5,7 +5,7 @@ _gtk3_max='4.0'
 _theme_name=Adapta
 _gtk2_min='2.24.30'
 _github="adapta-project/${pkgname}"
-pkgver="3.89.3.74"
+pkgver="3.89.3.99"
 pkgrel=1
 pkgdesc="An adaptive Gtk+ theme based on Material Design Guidelines."
 arch=(any)
@@ -40,13 +40,14 @@ makedepends=('glib2>=2.48.0'
              'parallel')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
 #        "${pkgname}-${pkgver}.tar.gz.asc::${url}/releases/download/${pkgver}/${pkgname}-${pkgver}.tar.gz.asc")
-sha256sums=('0b094c5df88aeeecb901b8238591f156bd20e196822587e218fca51239192fb8')
+sha256sums=('751bc43f6fe8230abe5d07f65da5f7126510e74a90ba17b4fcf0c0b78a121467')
 
 build() {
     cd "${pkgname}-${pkgver}"
     ./autogen.sh --enable-gtk_next \
                  --enable-chrome \
                  --enable-plank \
+                 --enable-telegram \
                  --enable-parallel
     make
 }
