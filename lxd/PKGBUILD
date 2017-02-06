@@ -3,7 +3,7 @@
 
 pkgname=lxd
 pkgver=2.8
-pkgrel=1
+pkgrel=2
 pkgdesc="REST API, command line tool and OpenStack integration plugin for LXC."
 arch=('x86_64')
 url="https://github.com/lxc/lxd"
@@ -45,8 +45,10 @@ build() {
   mkdir -p $srcdir/src/${_gourl}
   cp -r --preserve=timestamps $srcdir/$pkgname-$pkgname-$pkgver/* $srcdir/src/${_gourl}/
   cd $srcdir/src/${_gourl}
-  GOPATH="$srcdir" go get
-  GOPATH="$srcdir" go build
+  # This git config fix is a workaround for:
+  # https://github.com/niemeyer/gopkg/issues/50
+  git config --global http.https://gopkg.in.followRedirects true
+
   GOPATH="$srcdir" make
 }
 
