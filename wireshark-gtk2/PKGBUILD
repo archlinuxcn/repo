@@ -4,7 +4,7 @@
 # Contributor: Florian Pritz <bluewind at jabber dot ccc dot de>
 pkgname=wireshark-gtk2
 pkgbase=wireshark
-pkgver=2.2.3
+pkgver=2.2.4
 pkgrel=1
 arch=('i686' 'x86_64')
 license=('GPL2')
@@ -14,7 +14,7 @@ options=(!emptydirs)
 url='https://www.wireshark.org/'
 source=(https://www.wireshark.org/download/src/${pkgbase}-${pkgver}.tar.bz2
         do_not_use_svn_version.patch)
-sha1sums=('98fa058e0b07ab97b6f0a670e5277203f0b80715'
+sha1sums=('2913835d17a93af2a85ad5d9b580c47b359619a4'
           '489a176a7b90f7ae6f0985510c0c9038de54d9d6')
 
 prepare() {
