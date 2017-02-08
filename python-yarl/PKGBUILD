@@ -1,27 +1,24 @@
 _pkgname=yarl
 pkgname=python-yarl
-pkgver=0.8.1
-pkgrel=2
+pkgver=0.9.1
+pkgrel=1
 pkgdesc="Yet another URL library"
 arch=('any')
 url="https://github.com/aio-libs/yarl/"
 license=('Apache')
 depends=('python' 'python-multidict')
 makedepends=('python-setuptools')
-source=('https://pypi.python.org/packages/10/1b/be30529bde22c85c2975a4e21cf7f13edbcb291350fbbde8bc13938620c8/yarl-0.8.1.tar.gz')
-md5sums=('34f60a148ab55e3bfde2c0efd7026308')
-
-export LANG=en_US.UTF-8
+source=('https://pypi.python.org/packages/0f/60/d918b5593f4457ee3e7ef57eec5c4ddc403fa17a3035775a70a44ec6a490/yarl-0.9.1.tar.gz')
+md5sums=('50e3ce72f00120734a2dd26fccbb35c6')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
-  python3 setup.py build
+  LANG=en_US.UTF-8 python3 setup.py build
 }
 
 package() {
   cd "$srcdir/$_pkgname-$pkgver"
-
-  python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+  LANG=en_US.UTF-8 python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 }
 
 # vim:set sw=2 et:
