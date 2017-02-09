@@ -1,13 +1,13 @@
-# Maintainer Danny Arnold <despair.blue at gmail dot com>
+# Maintainer: George Rawlinson <george@rawlinson.net.nz>
 # Contributor: Andre Miranda <andreldm1989 AT gmail DOT com>
 # Contributor: Tom Bu <tom.bu AT members.fsf.org>
 # Contributor: John Reese <john@noswap.com>
 # Contributor: Jordan J Klassen <forivall@gmail.com>
-# Contributor: George Rawlinson <george@rawlinson.net.nz>
+# Contributor: Danny Arnold <despair.blue at gmail dot com>
 # Upstream URL: https://github.com/atom/atom
 
 pkgname=atom-editor-bin
-pkgver=1.13.1
+pkgver=1.14.0
 pkgrel=1
 pkgdesc="Chrome-based text editor from Github - Precompiled binary from official repository"
 arch=('x86_64')
@@ -20,7 +20,7 @@ optdepends=('gvfs')
 conflicts=('atom' 'atom-editor' 'atom-editor-git' 'atom-editor-git-tagged' 'apm')
 install=$pkgname.install
 
-md5sums=('4714eb7aaa891405e447275670ba0ae1'
+md5sums=('1087c3f7166075109f6df408206ce11b'
          '22b4763c2e8607f0ea46311ec13da9ff'
          'd472858970fc4ba6f63197729b65607c')
 source=("atom-amd64-v${pkgver}.deb::https://atom-installer.github.com/v${pkgver}/atom-amd64.deb"
