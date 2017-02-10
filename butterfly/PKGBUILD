@@ -1,31 +1,24 @@
-# Maintainer: Olivier Biesmans <olivier at biesmans dot fr>
-# Maintainer: Peter Cai <peter at typeblog dot net>
+_pkgname=butterfly
 pkgname=butterfly
-pkgver=2.0.1
-pkgrel=2
+pkgver=2.0.2
+pkgrel=1
 pkgdesc="A sleek web based terminal emulator"
 arch=('any')
-url="https://pypi.python.org/pypi/butterfly"
-license=('GPL')
-groups=()
-depends=('python' 'python-tornado' 'python-pyopenssl' 'tornado_systemd')
-makedepends=('python-setuptools')
-optdepends=('python-libsass: theming support')
-provides=()
-conflicts=()
-replaces=()
-backup=()
-options=(!emptydirs)
-install=
-source=("https://pypi.python.org/packages/source/b/butterfly/butterfly-${pkgver}.tar.gz" "butterfly.service")
-sha256sums=('93ecdef71b62e1809a48a706ac2ae86fdbeea6d722970cda99969bccad8ba7ef'
-            '2e4fe822908270db8648bcdb492025ab4b972007860a92393b4d4313d6598dbe')
+url="http://github.com/paradoxxxzero/butterfly"
+license=('GPLv3')
+depends=('python' 'python-pyopenssl' 'python-tornado' 'tornado_systemd' 'python-setuptools')
+optdepends=('python-libsass')
+source=('https://pypi.python.org/packages/25/ef/01cd00716876d8612206087017e22525dd5cb171fb145ba72535204b169b/butterfly-2.0.2.tar.gz')
+md5sums=('e8c5c3941f58380adeb9f6ea91c63553')
 
-package() {
-  cd "$srcdir/$pkgname-$pkgver"
-  python setup.py install --root="$pkgdir/" --optimize=1
-  install -Dm 0644 "${srcdir}/${pkgname}.service" \
-    "$pkgdir/etc/systemd/system/${pkgname}.service"
+build() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  LANG=en_US.UTF-8 python3 setup.py build
 }
 
-# vim:set ts=2 sw=2 et:
+package() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  LANG=en_US.UTF-8 python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+}
+
+# vim:set sw=2 et:
