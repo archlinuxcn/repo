@@ -7,23 +7,22 @@
 
 pkgbase=nvidia-mainline
 pkgname=(nvidia-mainline nvidia-mainline-dkms)
-pkgver=367.27
-_extramodules=extramodules-4.7-mainline
+pkgver=375.26
+_extramodules=extramodules-4.10-mainline
 pkgrel=1
 pkgdesc="NVIDIA drivers for linux-mainline"
 arch=('i686' 'x86_64')
 url="http://www.nvidia.com/"
-makedepends=('nvidia-libgl' "nvidia-utils=${pkgver}" 'linux-mainline' 'linux-mainline-headers>=4.7rc1' 'linux-mainline-headers<4.8rc1')
+makedepends=('nvidia-libgl' "nvidia-utils=${pkgver}" 'linux-mainline' 'linux-mainline-headers')
 license=('custom')
 options=('!strip')
-source=('linux-4.6.patch' 
-        'linux-4.7.patch')
+source=("linux-4.10-rc1.patch")
 source_i686=("http://us.download.nvidia.com/XFree86/Linux-x86/${pkgver}/NVIDIA-Linux-x86-${pkgver}.run")
-source_x86_64=("http://us.download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run")
-md5sums=('3064bd437b26adac246f301f54f2814c'
-         '0b68fdfd7b43a20e47a3ddb06004e820')
-md5sums_i686=('f32b9ab673acce56990f2b5acdc1e77f')
-md5sums_x86_64=('cdf8a16c533382acc9f088bd8e689860')
+source_x86_64=("http://us.download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run" "linux-4.10-rc1-x86_64.patch")
+sha512sums=('db48665e2e68bdf3e1381ff5b9b8c70056c6a2b9f6ed27d9882be2b62258d68c595f6230552f03b5addcde16cc3216722f3811a6fa4bfd9cb3f1ca9d0aa57ab5')
+sha512sums_i686=('3bc859a95469a45f3c627018248d83e178d160385c3d17d9f890b0d142ecd1220fb21c442e4fe7755b831227a9c820736f447b162acd9699819c6e8145d6d841')
+sha512sums_x86_64=('f52f6597daa1eaf4cbd934d785da6028ef23ecef98e14746143e3738504f8d65b73788abbcf9fd812317fc2c53cdf1c4d4839de57fafdea1930a08c6b21f1992'
+                   'd3adcd8af6f1bd4672c40ae37a979798d6a00e9fcf4aef48a15b525201a22fa43bed91cc0aca57fe75f1673afb1f0018d8f31494c64592897fb51e0d090cca17')
 
 [[ "$CARCH" = "i686" ]] && _pkg="NVIDIA-Linux-x86-${pkgver}"
 [[ "$CARCH" = "x86_64" ]] && _pkg="NVIDIA-Linux-x86_64-${pkgver}-no-compat32"
@@ -32,8 +31,10 @@ prepare() {
     sh "${_pkg}.run" --extract-only
     cd "${_pkg}"
     # patches here
-    # patch -p1 --no-backup-if-mismatch -i ../linux-4.6.patch
-    patch -p1 --no-backup-if-mismatch -i ../linux-4.7.patch
+    patch -p1 -i "$srcdir/linux-4.10-rc1.patch"
+    if [[ "$CARCH" = "x86_64" ]];
+       then patch -p1 -i "$srcdir/linux-4.10-rc1-x86_64.patch"
+    fi
 
     cp -a kernel kernel-dkms
     cd kernel-dkms
@@ -58,7 +59,7 @@ build() {
 
 package_nvidia-mainline() {
     pkgdesc="NVIDIA drivers for linux-mainline"
-    depends=('linux-mainline>=4.7rc1' 'linux-mainline<4.8rc1' "nvidia-utils=${pkgver}" 'libgl')
+    depends=('linux-mainline' 'linux-mainline' "nvidia-utils=${pkgver}" 'libgl')
     install="${pkgbase}.install"
 
     install -D -m644 "${srcdir}/${_pkg}/kernel/nvidia.ko" \
@@ -73,6 +74,8 @@ package_nvidia-mainline() {
             "${pkgdir}/usr/lib/modules/${_extramodules}/nvidia-uvm.ko"
     fi
 
+    sed -i -e "s/EXTRAMODULES='.*'/EXTRAMODULES='${_extramodules}'/" "${startdir}/${pkgbase}.install"
+    
     gzip "${pkgdir}/usr/lib/modules/${_extramodules}/"*.ko
     install -d -m755 "${pkgdir}/usr/lib/modprobe.d"
 
