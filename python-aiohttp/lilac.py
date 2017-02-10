@@ -8,7 +8,7 @@ depends = ['python-async_timeout', 'python-yarl']
 def pre_build():
   for line in edit_file('PKGBUILD'):
     if line.startswith('pkgver='):
-      line = 'pkgver=%s' % g.oldver
+      line = 'pkgver=%s' % _G.oldver
     print(line)
 
   run_cmd(['updpkgsums'])
