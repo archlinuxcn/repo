@@ -1,5 +1,5 @@
-# Contributor: Weng Xuetian <wengxt@gmail.com>
 # Maintainer: Thaodan <theodorstormgrade@gmail.com>
+# Contributor: Weng Xuetian <wengxt@gmail.com>
 
 
 # enable this if you run out of memory during linking
@@ -12,10 +12,16 @@ _gtk3=true
 # currently broken
 #_pgo=false
 
+# globalmenu
+# to support globalmenu a patch from ubuntu is applied
+# source:
+# http://bazaar.launchpad.net/~mozillateam/firefox/firefox-trunk.head
+# /view/head:/debian/patches/unity-menubar.patch
+
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
 pkgver=51.0.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -74,7 +80,6 @@ _google_default_client_secret=0ZChLK6AxeA3Isu96MkwqDR4
 # more information.
 _mozilla_api_key=16674381-f021-49de-8622-3021c5942aff
 
-
 prepare() {
   cd $_pkgname-$pkgver
 
@@ -100,8 +105,9 @@ prepare() {
   patch -Np1 -i "$srcdir/firefox-kde.patch"
   patch -Np1 -i "$srcdir/firefox-no-default-ualocale.patch"
   patch -Np1 -i "$srcdir/firefox-branded-icons.patch"
+  
   # add globalmenu support
-  #patch -Np1 -i "$srcdir/unity-menubar.patch"
+  patch -Np1 -i "$srcdir/unity-menubar.patch"
 
   # add missing rule for pgo builds
   patch -Np1 -i "$srcdir"/add_missing_pgo_rule.patch
@@ -214,7 +220,7 @@ md5sums=('05d8d655983d21d5059d5c886b2e6a9c'
          'f41f9222bc2108516719178e77528e9d'
          'fa6ac817f576b486419b5f308116a7cd'
          '0c684360f1df4536512d51873c1d243d'
-         'eb6771472c8c5f67331256c7f5a692da'
+         'b43efba36e9919522d5832c6ea9fe207'
          'fe24f5ea463013bb7f1c12d12dce41b2'
          '3fa8bd22d97248de529780f5797178af'
          '43550e772f110a338d5a42914ee2c3a6'
