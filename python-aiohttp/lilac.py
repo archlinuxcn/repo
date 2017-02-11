@@ -3,7 +3,7 @@
 from lilaclib import *
 
 build_prefix = 'extra-x86_64'
-depends = ['python-async_timeout', 'python-yarl']
+depends = ['python-multidict-git', 'python-async_timeout', 'python-yarl']
 
 def pre_build():
   for line in edit_file('PKGBUILD'):
