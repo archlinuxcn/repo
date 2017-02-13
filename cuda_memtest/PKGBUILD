@@ -2,12 +2,12 @@
 
 pkgname=cuda_memtest
 pkgver=1.2.3
-pkgrel=2
+pkgrel=3
 pkgdesc="A GPU memory test utility for NVIDIA and AMD GPUs. OpenCL version."
 arch=('i686' 'x86_64')
 url="http://cudagpumemtest.sourceforge.net/"
 license=('Illinois Open Source License')
-depends=('libcl')
+depends=('opencl-icd-loader')
 optdepends=('opencl-nvidia: OpenCL implemention for NVIDIA'
 	    'opencl-catalyst: AMD/ATI drivers. OpenCL implemention for AMD Catalyst'
 	    'opencl-mesa: OpenCL support for AMD/ATI Radeon mesa drivers')
