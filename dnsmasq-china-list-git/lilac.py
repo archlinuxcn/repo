@@ -1,23 +1,20 @@
 #!/usr/bin/env python3
-#
-# This file is the most simple lilac.py file,
-# and it suits for most packages in AUR.
-#
 
 from lilaclib import *
 
 build_prefix = 'extra-x86_64'
 
 def pre_build():
-    run_cmd(["updpkgsums"])
+  aur_pre_build()
 
-def post_build():
-    git_add_files("PKGBUILD")
-    git_commit()
-    update_aur_repo()
+  for line in edit_file('PKGBUILD'):
+    if 'bogus-nxdomain.china.conf' in line:
+        print(line)
+        print(line.replace('bogus-nxdomain.china.conf','google.china.conf'))
+    else:
+        print(line)
 
+post_build = aur_post_build
 
 if __name__ == '__main__':
-    single_main(build_prefix)
-
-
+  single_main(build_prefix)
