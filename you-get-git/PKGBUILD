@@ -2,14 +2,14 @@
 pkgname=you-get-git
 pkgdesc="A YouTube/Youku/Sohu/Tudou/QQ/Sina/PPTV/Xiami/Vimeo/ifeng/AcFun/bilibili/CNTV/... video downloader written in Python 3."
 pkgver=0.4.652.20170212.1509
-pkgrel=1
+pkgrel=2
 arch=('any')
 url="http://www.soimort.org/you-get/"
 license=('MIT')
 depends=('python' 'python-setuptools')
 makedepends=('git')
-conflicts=(python-you-get-git python-you-get)
-replaces=(python-you-get-git)
+conflicts=(you-get)
+provides=(you-get)
 source=("git://github.com/soimort/you-get.git#branch=develop")
 md5sums=(SKIP)
 
