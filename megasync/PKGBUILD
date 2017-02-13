@@ -1,17 +1,16 @@
 # Maintainer: Alfonso Saavedra "Son Link" <sonlink.dourden@gmail.com>
 # Maintainer: Hexchain Tong <i at hexchain dot org>
 pkgname=megasync
-pkgver=2.9.10
-_pkgver=${pkgver//./_}
+pkgver=3.0.1.0
 pkgrel=1
 pkgdesc="Sync your files to your Mega account. Official app"
 arch=('i686' 'x86_64')
 url="https://github.com/meganz/megasync"
 license=('custom:MEGA LIMITED CODE REVIEW LICENCE')
 depends=('curl' 'c-ares' 'crypto++' 'libsodium' 'hicolor-icon-theme' 'qt5-base' 'libuv')
-makedepends=('git' 'qt5-tools')
+makedepends=('git' 'qt5-tools' 'swig' 'doxygen')
 optdepends=('sni-qt: fix systray issue on KDE and LXQt')
-source=("git+https://github.com/meganz/MEGAsync.git#commit=2e03defad7e732afe5ffd6977eeb10558f25457b")
+source=("git+https://github.com/meganz/MEGAsync.git#tag=v${pkgver}_Linux")
 md5sums=('SKIP')
 
 prepare(){
@@ -23,20 +22,21 @@ build(){
     cd "$srcdir/MEGAsync/src/MEGASync/mega"
     ./autogen.sh
     ./configure \
-        --enable-gcc-hardening \
-        --disable-silent-rules \
-        --disable-megaapi \
-        --with-cryptopp \
-        --with-sodium \
-        --with-zlib \
-        --with-sqlite \
-        --with-cares \
-        --with-curl \
-        --without-freeimage \
-        --without-readline \
-        --without-termcap \
+        --prefix=/usr \
         --disable-examples \
-        --prefix=/usr
+        --disable-java \
+        --disable-php \
+        --disable-python \
+        --enable-chat \
+        --enable-gcc-hardening \
+        --with-cares \
+        --with-cryptopp \
+        --with-curl \
+        --with-sodium \
+        --with-sqlite \
+        --with-zlib \
+        --without-freeimage \
+        --without-termcap
 
     cd "$srcdir/MEGAsync/src"
     qmake-qt5 CONFIG+="release" MEGA.pro
