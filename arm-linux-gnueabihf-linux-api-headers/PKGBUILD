@@ -6,18 +6,16 @@
 _target_arch=arm
 _target=${_target_arch}-linux-gnueabihf
 pkgname=${_target}-linux-api-headers
-pkgver=3.19
-_basever=3.19
+pkgver=4.9.9
+_basever=4.9
 pkgrel=1
 pkgdesc="Kernel headers sanitized for use in userspace (${_target})"
 arch=(any)
 url="http://www.gnu.org/software/libc"
 license=('GPL2')
-provides=("${_target}-linux-api-headers=${_basever}"
-  "${_target}-linux-api-headers30")
-conflicts=("${_target}-linux-api-headers26")
-source=("http://www.kernel.org/pub/linux/kernel/v3.x/linux-${pkgver}.tar.xz")
-md5sums=('d3fc8316d4d4d04b65cbc2d70799e763')
+provides=("${_target}-linux-api-headers=${_basever}")
+source=("http://www.kernel.org/pub/linux/kernel/v4.x/linux-${pkgver}.tar.xz")
+md5sums=('de43a1a9e3a1ad97467c9a413bcdf896')
 
 build() {
   cd "${srcdir}/linux-${pkgver}"
