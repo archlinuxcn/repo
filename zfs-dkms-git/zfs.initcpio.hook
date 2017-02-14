@@ -39,7 +39,7 @@ zfs_mount_handler () {
     local pool="${ZFS_DATASET%%/*}"
     local rwopt_exp="${rwopt:-ro}"
 
-    if ! zpool list -H "${pool}" 2>1 > /dev/null ; then
+    if ! zpool list -H "${pool}" 2&>1 > /dev/null ; then
         if [ ! "${rwopt_exp}" = "rw" ]; then
             msg "ZFS: Importing pool ${pool} readonly."
             ZPOOL_IMPORT_FLAGS="${ZPOOL_IMPORT_FLAGS} -o readonly=on"
