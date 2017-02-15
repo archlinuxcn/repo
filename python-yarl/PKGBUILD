@@ -1,6 +1,6 @@
 _pkgname=yarl
 pkgname=python-yarl
-pkgver=0.9.5
+pkgver=0.9.6
 pkgrel=1
 pkgdesc="Yet another URL library"
 arch=('any')
@@ -8,8 +8,8 @@ url="https://github.com/aio-libs/yarl/"
 license=('Apache')
 depends=('python' 'python-multidict')
 makedepends=('python-setuptools')
-source=('https://pypi.python.org/packages/7f/56/729e64437b23c30069b8bf924e06f058e1d1f7ab8629412c1a9202fb6e32/yarl-0.9.5.tar.gz')
-md5sums=('875660b3c2d811c55ae801f1a86c01f9')
+source=('https://pypi.python.org/packages/2f/08/b197bd19930410d647939af91cc3a26125b826a2d7b22bf28c3ccad79819/yarl-0.9.6.tar.gz')
+md5sums=('6a359ac0e24cdf287e3d461966cc481a')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
