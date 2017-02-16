@@ -3,42 +3,39 @@
 
 _target="arm-linux-gnueabihf"
 pkgname=${_target}-glibc
-pkgver=2.21
+pkgver=2.24
 pkgrel=2
 pkgdesc="GNU C Library (${_target})"
 arch=(any)
 url="http://www.gnu.org/software/libc"
 license=('GPL' 'LGPL')
-depends=("${_target}-linux-api-headers")
-makedepends=("${_target}-gcc-stage2" 'gperf')
-provides=("${_target}-eglibc=${pkgver}" "${_target}-glibc-headers=${pkgver}"
-          "${_target}-eglibc-headers=${pkgver}")
-conflicts=("${_target}-eglibc" "${_target}-glibc-headers")
-replaces=("${_target}-eglibc" "${_target}-glibc-headers")
-options=(!strip 'staticlibs')
-source=(http://ftp.gnu.org/gnu/libc/glibc-${pkgver}.tar.xz
-        glibc-2.21-roundup.patch)
-md5sums=('9cb398828e8f84f57d1f7d5588cf40cd'
-         'bf9d96b11c76b113606aae102da63d9d')
+depends=("${_target}-linux-api-headers>=4.7")
+makedepends=("${_target}-gcc-stage2>=6.3.1" 'gperf')
+provides=("${_target}-glibc-headers=${pkgver}" "${_target}-eglibc")
+conflicts=("${_target}-glibc-headers" "${_target}-eglibc")
+replaces=("${_target}-glibc-headers")
+options=('!buildflags' '!strip' 'staticlibs')
+source=(http://ftp.gnu.org/gnu/libc/glibc-${pkgver}.tar.xz)
+md5sums=('97dc5517f92016f3d70d83e3162ad318')
 
 prepare() {
   cd glibc-${pkgver}
 
-  # glibc-2.21..75adf430
-  patch -p1 -i ../glibc-2.21-roundup.patch
+  #patch -p1 -i ${srcdir}/glibc-${_commit}.patch
 
   rm -rf "${srcdir}"/glibc-build
   mkdir -p "${srcdir}"/glibc-build
 }
 
 build() {
-  cd glibc-${pkgver}
+  cd glibc-build
 
-  # Don not build timezones
-  sed -i 's/timezone rt/rt/' Makeconfig
+  echo "slibdir=/lib" >> configparms
+  echo "rtlddir=/lib" >> configparms
+  echo "sbindir=/bin" >> configparms
+  echo "rootsbindir=/bin" >> configparms
 
-  cd "${srcdir}"/glibc-build
-
+  # remove hardening options for building libraries
   export CFLAGS="-U_FORTIFY_SOURCE -mlittle-endian -mhard-float -O2"
   export CPPFLAGS="-U_FORTIFY_SOURCE -O2"
   unset LD_LIBRARY_PATH
@@ -49,26 +46,25 @@ build() {
   export AR=${_target}-ar
   export RANLIB=${_target}-ranlib
 
-  ../glibc-${pkgver}/configure \
-    --prefix=/ \
-    --target=${_target} \
-    --host=${_target} \
-    --build=${CHOST} \
-    --with-headers=/usr/${_target}/include \
-    --enable-add-ons \
-    --enable-obsolete-rpc \
-    --enable-kernel=2.6.32 \
-    --enable-bind-now \
-    --disable-profile \
-    --enable-stackguard-randomization \
-    --enable-lock-elision \
-    --enable-shared \
-    --with-tls \
-    --with-__thread \
-    --without-cvs \
-    --without-gd \
-    --disable-werror
+  ../glibc-${pkgver}/configure --prefix=/ \
+           --target=${_target} --host=${_target} --build=${CHOST} \
+           --libdir=/lib --libexecdir=/lib \
+           --with-headers=/usr/${_target}/include \
+           --enable-add-ons \
+           --enable-obsolete-rpc \
+           --enable-kernel=2.6.32 \
+           --enable-bind-now --disable-profile \
+           --enable-stackguard-randomization \
+           --enable-lock-elision \
+           --disable-multi-arch \
+           --enable-shared \
+           --with-tls \
+           --with-__thread \
+           --without-cvs \
+           --without-gd \
+           --disable-werror
 
+  echo "build-programs=no" >> configparms
   make
 }
 
@@ -79,6 +75,7 @@ package() {
 
   mkdir -p "${pkgdir}/usr/${_target}/usr"
   ln -s ../{include,lib} "${pkgdir}/usr/${_target}/usr"
+
   # Remove unneeded for compilation files
   rm -rf "${pkgdir}"/usr/${_target}/{bin,sbin,etc,share,var}
 
