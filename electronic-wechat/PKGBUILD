@@ -2,7 +2,7 @@
 # Maintainer: hexchain <i at hexchain.org>
 
 pkgname=electronic-wechat
-pkgver=2.0rc1
+pkgver=2.0
 pkgrel=1
 pkgdesc="A better WeChat client"
 arch=('x86_64')
@@ -11,7 +11,7 @@ license=('custom')
 depends=('electron')
 makedepends=('git' 'npm' 'imagemagick')
 source=(
-    "git+https://github.com/geeeeeeeeek/electronic-wechat.git#tag=v2.0-rc1"
+    "git+https://github.com/geeeeeeeeek/electronic-wechat.git#tag=V2.0"
     'electronic-wechat.desktop'
     'remove-bundle-electron.patch'
     'electronic-wechat.sh'
