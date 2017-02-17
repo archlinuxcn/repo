@@ -1,6 +1,6 @@
 #Maintainer: Alexey Stukalov <astukalov@gmail.com>
 pkgname=smartgit
-pkgver=17.0.1
+pkgver=17.0.2
 pkgrel=1
 pkgdesc="Git client with Hg and SVN support."
 arch=("any")
@@ -17,7 +17,7 @@ _pkgfolder=${pkgname}
 source=(https://www.syntevo.com/static/smart/download/${pkgname}/${pkgname}-linux-${_pkgver}.tar.gz
         smartgit.desktop)
 install="smartgit.install"
-sha1sums=('dc506415edc4944e5d2aa4cd37685b64bdc54702'
+sha1sums=('6678adcc8e58a44727291fc52cdbe87829d1b64d'
           'bafa47c0b43ad89aaa3b34a078771b3cd12bd1f3')
 
 package() {
