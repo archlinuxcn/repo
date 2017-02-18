@@ -1,7 +1,7 @@
 # Maintainer: Haochen Tong <i at hexchain dot org>
 
 pkgname=elvish
-pkgver=0.6
+pkgver=0.7
 pkgrel=1
 pkgdesc="A friendly and expressive Unix shell."
 arch=('i686' 'x86_64')
