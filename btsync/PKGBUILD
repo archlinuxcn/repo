@@ -4,33 +4,33 @@
 # Maintainer: ava1ar <mail(at)ava1ar(dot)me>
 
 pkgname=btsync
-pkgver=2.3.8
+pkgver=2.4.4
 pkgrel=1
-pkgdesc="BitTorrent Sync (Resilio) - automatically sync files via secure, distributed technology"
+pkgdesc="Resilio Sync (formerly BitTorrent Sync) - automatically sync files via secure, distributed technology"
 license=("custom:btsync")
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h')
-url="https://www.getsync.com"
+url="https://www.resilio.com/"
 install=btsync.install
 backup=('etc/btsync.conf')
 conflicts=('btsync-1.4')
 source=(btsync.service btsync_user.service btsync.conf)
-source_arm=("BitTorrent-Sync_arm-${pkgver}-${pkgrel}.tar.gz::https://download-cdn.getsync.com/${pkgver}/linux-arm/BitTorrent-Sync_arm.tar.gz")
-source_armv6h=("BitTorrent-Sync_arm-${pkgver}-${pkgrel}.tar.gz::https://download-cdn.getsync.com/${pkgver}/linux-arm/BitTorrent-Sync_arm.tar.gz")
-source_armv7h=("BitTorrent-Sync_armhf-${pkgver}-${pkgrel}.tar.gz::https://download-cdn.getsync.com/${pkgver}/linux-armhf/BitTorrent-Sync_armhf.tar.gz")
-source_i686=("BitTorrent-Sync_i386-${pkgver}-${pkgrel}.tar.gz::https://download-cdn.getsync.com/${pkgver}/linux-i386/BitTorrent-Sync_i386.tar.gz")
-source_x86_64=("BitTorrent-Sync_x64-${pkgver}-${pkgrel}.tar.gz::https://download-cdn.getsync.com/${pkgver}/linux-x64/BitTorrent-Sync_x64.tar.gz")
+source_arm=("Resilio-Sync_arm-${pkgver}-${pkgrel}.tar.gz::https://download-cdn.resilio.com/stable/linux-arm/resilio-sync_arm.tar.gz")
+source_armv6h=("Resilio-Sync_arm-${pkgver}-${pkgrel}.tar.gz::https://download-cdn.resilio.com/stable/linux-arm/resilio-sync_arm.tar.gz")
+source_armv7h=("Resilio-Sync_armhf-${pkgver}-${pkgrel}.tar.gz::https://download-cdn.resilio.com/stable/linux-armhf/resilio-sync_armhf.tar.gz")
+source_i686=("Resilio-Sync_i386-${pkgver}-${pkgrel}.tar.gz::https://download-cdn.resilio.com/stable/linux-i386/resilio-sync_i386.tar.gz")
+source_x86_64=("Resilio-Sync_x64-${pkgver}-${pkgrel}.tar.gz::https://download-cdn.resilio.com/stable/linux-x64/resilio-sync_x64.tar.gz")
 sha1sums=('05038b03a673dd0207b2758a2e01db5d28c409d1'
           'd30deb7e41ba1d163b4a5e442b8d8118758d312a'
           'bf7d6bd7ffe2d23cce51a51e92fac3b82a7c87bb')
-sha1sums_i686=('15dfbe8f2da78c697673b7f2a1ce02df197e4882')
-sha1sums_x86_64=('234102dc920441718d2dd61b6f76e67feb62f101')
-sha1sums_arm=('364271ab0445e9ccf6a896f48491e9e9ec8d6343')
-sha1sums_armv6h=('364271ab0445e9ccf6a896f48491e9e9ec8d6343')
-sha1sums_armv7h=('af5716b295c31738fdb0b5ba0076080e407f1b33')
+sha1sums_i686=('d390f4b9484e3e77ce4e46baf8f51bdb5fa80213')
+sha1sums_x86_64=('17c58e914be49f9a78c4a24a4cd0637307d8456b')
+sha1sums_arm=('adf52e7273dc0adf162445104e279f51cfc76bf8')
+sha1sums_armv6h=('adf52e7273dc0adf162445104e279f51cfc76bf8')
+sha1sums_armv7h=('b212ad482eac1987cb1ff1e4596def01dc16889e')
 
 package() {
 	# install main binary
-	install -Dm755 "${srcdir}"/btsync "${pkgdir}"/usr/bin/btsync
+	install -Dm755 "${srcdir}"/rslsync "${pkgdir}"/usr/bin/btsync
 
 	# generate and install system-wide config
 	mkdir -p "${pkgdir}"/etc
