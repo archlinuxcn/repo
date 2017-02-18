@@ -18,6 +18,11 @@ build() {
 package() {
   cd "$srcdir/$_pkgname-$pkgver"
   LANG=en_US.UTF-8 python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+
+  _pyver=$(python -c 'import sysconfig; print(sysconfig.get_python_version())')
+  # use the snapshot version, because generating a new one requires Internat access and root permission
+  ln -s .tld_set_snapshot "$pkgdir/usr/lib/python$_pyver/site-packages/tldextract/.tld_set"
+
 }
 
 # vim:set sw=2 et:
