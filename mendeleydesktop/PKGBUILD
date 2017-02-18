@@ -1,7 +1,7 @@
 #Maintainer:xgdgsc<xgdgsc@gmail.com>
 
 pkgname=mendeleydesktop
-pkgver=1.17.7
+pkgver=1.17.8
 pkgrel=1
 pkgdesc="Academic software for managing and sharing research papers (desktop client)"
 url=http://www.mendeley.com/release-notes/
@@ -9,8 +9,8 @@ arch=(i686 x86_64)
 depends=(python dbus-glib)
 # optdepends=(gconf)
 license=(custom:mendeley_eula)
-md5sums_i686=('a55e5277e78b45e229cdd41eaf4cf098')
-md5sums_x86_64=('339749ba5132109df416cb0ac930466d')
+md5sums_i686=('36d7958b8b94f3f8bfa6a981430245a4')
+md5sums_x86_64=('336b65f056b3ac33b5302a3877b0f363')
 if [[ $CARCH = i686 ]];then
   _arch=i486
 else
