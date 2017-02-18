@@ -5,7 +5,7 @@
 #pkgbase=opencv
 pkgname=opencv-docs
 _realname=opencv
-pkgver=3.1.0
+pkgver=3.2.0
 pkgrel=1
 pkgdesc="Open Source Computer Vision Library docs"
 arch=('any')
@@ -16,7 +16,7 @@ depends=('')
 makedepends=('cmake' 'python2-numpy' 'doxygen')
 
 source=("http://downloads.sourceforge.net/opencvlibrary/opencv-unix/$pkgver/$_realname-$pkgver.zip")
-md5sums=('6082ee2124d4066581a7386972bfd52a')
+md5sums=('bfc6a261eb069b709bcfe7e363ef5899')
 
 _cmakeopts=(
             '-D BUILD_DOCS=ON'
