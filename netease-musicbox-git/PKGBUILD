@@ -2,12 +2,18 @@
 pkgname=netease-musicbox-git
 _gitname=musicbox
 pkgver=r481.c045426
-pkgrel=1
+pkgrel=2
 pkgdesc="A sexy command line interface musicbox for NetEase based on Python"
 arch=(any)
 url="https://github.com/darknessomi/musicbox"
 license=('MIT')
-depends=('python' 'mpg123' 'python-beautifulsoup4' 'python-requests' 'python-setuptools' 'python-crypto' 'python-future')
+depends=('python2' 'mpg123' 'python2-beautifulsoup4' 'python2-requests' 'python2-setuptools' 'python2-crypto' 'python2-future')
+optdepends=('aria2: music caching'
+            'python2-keybinder2: global keybindings'
+            'libnotify: notifications'
+            'python2-qt4: lyrics support'
+            'python2-dbus: lyrics support'
+           )
 makedepends=('git')
 options=(!emptydirs)
 source=("git+https://github.com/darknessomi/musicbox")
@@ -23,7 +29,7 @@ pkgver() {
 
 package() {
   cd "$srcdir/$_gitname"
-  python setup.py install --root="$pkgdir/" --optimize=1
+  python2 setup.py install --root="$pkgdir/" --optimize=1
   mkdir -p "${pkgdir}/usr/share/licenses/${pkgname}"
   install -m755 LICENSE.txt "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
