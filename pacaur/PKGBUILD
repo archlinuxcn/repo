@@ -1,5 +1,5 @@
 pkgname=pacaur
-pkgver=4.7.3
+pkgver=4.7.4
 pkgrel=1
 pkgdesc="An AUR helper that minimizes user interaction"
 arch=('any')
@@ -9,7 +9,7 @@ depends=('cower' 'expac' 'sudo' 'git')
 makedepends=('perl')
 backup=('etc/xdg/pacaur/config')
 source=("https://github.com/rmarquis/$pkgname/archive/$pkgver.tar.gz")
-md5sums=('de5cf6ec6d6c082421db54334f6fb436')
+md5sums=('17791094075b6137a68b06d27b8b979e')
 
 build() {
     cd "$pkgname-$pkgver"
@@ -34,7 +34,7 @@ package() {
     install -D -m644 ./pacaur.8 "$pkgdir/usr/share/man/man8/pacaur.8"
     mkdir -p "$pkgdir/usr/share/licenses/pacaur"
     install -D -m644 ./LICENSE "$pkgdir/usr/share/licenses/pacaur/LICENSE"
-    for i in {ca,da,de,es,fi,fr,hu,it,ja,nb,nl,pl,pt,ru,sk,sl,sr,sr@latin,tr}; do
+    for i in {ca,da,de,es,fi,fr,hu,it,ja,nb,nl,pl,pt,ru,sk,sl,sr,sr@latin,tr,zh_CN}; do
         mkdir -p "$pkgdir/usr/share/locale/$i/LC_MESSAGES/"
         msgfmt ./po/$i.po -o "$pkgdir/usr/share/locale/$i/LC_MESSAGES/pacaur.mo"
     done
