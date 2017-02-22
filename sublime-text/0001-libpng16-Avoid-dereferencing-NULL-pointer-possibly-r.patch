@@ -1,0 +1,106 @@
+From 56d6bc2e8855d25e03816509a0137c3a70410ae6 Mon Sep 17 00:00:00 2001
+From: Glenn Randers-Pehrson <glennrp at users.sourceforge.net>
+Date: Mon, 29 Apr 2013 08:57:14 -0500
+Subject: [PATCH 06/10] [libpng16] Avoid dereferencing NULL pointer possibly
+ returned from
+
+png_create_write_struct() (Andrew Church).
+---
+ ANNOUNCE   |  6 ++++--
+ CHANGES    |  4 +++-
+ pngwrite.c | 65 +++++++++++++++++++++++++++++++-------------------------------
+ 3 files changed, 39 insertions(+), 36 deletions(-)
+
+ (foutrelis: pruned non-code changes to apply cleanly to libpng 1.6.2.)
+
+diff --git a/pngwrite.c b/pngwrite.c
+index 33924aa..b71a3d3 100644
+--- a/pngwrite.c
++++ b/pngwrite.c
+@@ -494,51 +494,50 @@ png_create_write_struct_2,(png_const_charp user_png_ver, png_voidp error_ptr,
+    png_structrp png_ptr = png_create_png_struct(user_png_ver, error_ptr,
+       error_fn, warn_fn, mem_ptr, malloc_fn, free_fn);
+ #endif /* PNG_USER_MEM_SUPPORTED */
++   if (png_ptr != NULL)
++   {
++      /* Set the zlib control values to defaults; they can be overridden by the
++       * application after the struct has been created.
++       */
++      png_ptr->zbuffer_size = PNG_ZBUF_SIZE;
+ 
+-   /* Set the zlib control values to defaults; they can be overridden by the
+-    * application after the struct has been created.
+-    */
+-   png_ptr->zbuffer_size = PNG_ZBUF_SIZE;
+-
+-   /* The 'zlib_strategy' setting is irrelevant because png_default_claim in
+-    * pngwutil.c defaults it according to whether or not filters will be used,
+-    * and ignores this setting.
+-    */
+-   png_ptr->zlib_strategy = PNG_Z_DEFAULT_STRATEGY;
+-   png_ptr->zlib_level = PNG_Z_DEFAULT_COMPRESSION;
+-   png_ptr->zlib_mem_level = 8;
+-   png_ptr->zlib_window_bits = 15;
+-   png_ptr->zlib_method = 8;
++      /* The 'zlib_strategy' setting is irrelevant because png_default_claim in
++       * pngwutil.c defaults it according to whether or not filters will be
++       * used, and ignores this setting.
++       */
++      png_ptr->zlib_strategy = PNG_Z_DEFAULT_STRATEGY;
++      png_ptr->zlib_level = PNG_Z_DEFAULT_COMPRESSION;
++      png_ptr->zlib_mem_level = 8;
++      png_ptr->zlib_window_bits = 15;
++      png_ptr->zlib_method = 8;
+ 
+ #ifdef PNG_WRITE_COMPRESSED_TEXT_SUPPORTED
+-   png_ptr->zlib_text_strategy = PNG_TEXT_Z_DEFAULT_STRATEGY;
+-   png_ptr->zlib_text_level = PNG_TEXT_Z_DEFAULT_COMPRESSION;
+-   png_ptr->zlib_text_mem_level = 8;
+-   png_ptr->zlib_text_window_bits = 15;
+-   png_ptr->zlib_text_method = 8;
++      png_ptr->zlib_text_strategy = PNG_TEXT_Z_DEFAULT_STRATEGY;
++      png_ptr->zlib_text_level = PNG_TEXT_Z_DEFAULT_COMPRESSION;
++      png_ptr->zlib_text_mem_level = 8;
++      png_ptr->zlib_text_window_bits = 15;
++      png_ptr->zlib_text_method = 8;
+ #endif /* PNG_WRITE_COMPRESSED_TEXT_SUPPORTED */
+ 
+-   /* This is a highly dubious configuration option; by default it is off, but
+-    * it may be appropriate for private builds that are testing extensions not
+-    * conformant to the current specification, or of applications that must not
+-    * fail to write at all costs!
+-    */
+-#  ifdef PNG_BENIGN_WRITE_ERRORS_SUPPORTED
++      /* This is a highly dubious configuration option; by default it is off,
++       * but it may be appropriate for private builds that are testing
++       * extensions not conformant to the current specification, or of
++       * applications that must not fail to write at all costs!
++       */
++#ifdef PNG_BENIGN_WRITE_ERRORS_SUPPORTED
+       png_ptr->flags |= PNG_FLAG_BENIGN_ERRORS_WARN;
+       /* In stable builds only warn if an application error can be completely
+        * handled.
+        */
+-#  endif
++#endif
+ 
+-   /* App warnings are warnings in release (or release candidate) builds but
+-    * are errors during development.
+-    */
+-#  if PNG_LIBPNG_BUILD_BASE_TYPE >= PNG_LIBPNG_BUILD_RC
++      /* App warnings are warnings in release (or release candidate) builds but
++       * are errors during development.
++       */
++#if PNG_LIBPNG_BUILD_BASE_TYPE >= PNG_LIBPNG_BUILD_RC
+       png_ptr->flags |= PNG_FLAG_APP_WARNINGS_WARN;
+-#  endif
++#endif
+ 
+-   if (png_ptr != NULL)
+-   {
+       /* TODO: delay this, it can be done in png_init_io() (if the app doesn't
+        * do it itself) avoiding setting the default function if it is not
+        * required.
+-- 
+1.8.2.2
+

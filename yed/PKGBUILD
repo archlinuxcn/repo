@@ -10,7 +10,7 @@
 
 pkgname=yed
 pkgver=3.16.2.1
-pkgrel=1
+pkgrel=2
 pkgdesc='Very powerful graph editor written in java'
 arch=('any')
 url='http://www.yworks.com/en/products_yed_about.html'
@@ -21,7 +21,7 @@ source=("http://www.yworks.com/resources/yed/demo/yEd-${pkgver}.zip"
         'yed')
 sha256sums=('47ac746ad30eb6375b8f45e9382efd0db0b6e3b1eb8f4760625963175b753805'
             '342dba6defac88d035253b22e6377d9570858f59367cd486dba4a4dba1621f91'
-            '659784d530d9a3f6a9489d6493b29e947bf534a8da9750b19a907ead1fe2e8ac')
+            'cea06705c5b9981874bf5b84924bdf3b1d0cf9445e91c32f8d6bb117011f8e02')
 
 install=${pkgname}.install
 

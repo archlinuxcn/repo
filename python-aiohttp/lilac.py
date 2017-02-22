@@ -6,15 +6,16 @@ build_prefix = 'extra-x86_64'
 depends = ['python-multidict-git', 'python-async_timeout', 'python-yarl']
 
 def pre_build():
-  pypi_pre_build(
-    depends = ['python-chardet', 'python-multidict', 'python-async_timeout', 'python-yarl'],
-    depends_setuptools = False,
-    makedepends = ['cython'],
-    optdepends = ['python-aiodns'],
-    arch = ['i686', 'x86_64'],
-  )
+  for line in edit_file('PKGBUILD'):
+    if line.startswith('pkgver='):
+      line = 'pkgver=%s' % _G.oldver
+    print(line)
 
-post_build = pypi_post_build
+  run_cmd(['updpkgsums'])
+
+def post_build():
+  git_add_files('PKGBUILD')
+  git_commit()
 
 if __name__ == '__main__':
   single_main()

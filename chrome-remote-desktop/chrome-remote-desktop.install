@@ -1,7 +1,7 @@
 post_install() {
   # Create chrome-remote-desktop group
   [[ $(cat /etc/group) == *chrome-remote-desktop* ]] || groupadd -r chrome-remote-desktop
-  
+
   echo "Set up CRD by issuing the command:"
   echo "crd --setup"
   echo "as a normal user."
@@ -12,18 +12,18 @@ post_install() {
   echo "systemctl --user {enable,start} chrome-remote-desktop"
   echo "This only really makes sense for servers."
   echo ""
-  echo "You can also start the chrome remote desktop server by issuing the command:" 
-  echo "crd" 
+  echo "You can also start the chrome remote desktop server by issuing the command:"
+  echo "crd"
   echo "as a normal user. "
   echo "This will prompt you to set up your CRD if it hasn't been set up already."
   echo ""
   echo "Go to https://support.google.com/chrome/answer/1649523 for more information."
 }
- 
+
 post_upgrade() {
   post_install
 }
- 
+
 post_remove() {
   echo ""
   echo "Please remove ~/.config/chrome-remote-desktop folder manually"

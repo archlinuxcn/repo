@@ -1,0 +1,26 @@
+diff --git a/setup.py b/setup.py
+index f92779a..fcc956a 100644
+--- a/setup.py
++++ b/setup.py
+@@ -59,9 +59,9 @@ for directory in (
+     for pth, _, filenames in os.walk(directory):
+         for filename in filenames:
+             filename = os.path.join(pth, filename)
+-            if filename.endswith(('.c', '.cpp')):
+-                sources.append(filename)
+-            elif filename.endswith('.h'):
++            #if filename.endswith(('.c', '.cpp')):
++            #    sources.append(filename)
++            if filename.endswith('.h'):
+                 headers.append(filename)
+ 
+ if sys.platform == 'win32':
+@@ -139,7 +139,7 @@ else:
+     if platform.system() == 'FreeBSD':
+         link_flags = ['-fPIC', '-lc++']
+     else:
+-        link_flags = ['-fPIC', '-lstdc++']
++        link_flags = ['-fPIC', '-lstdc++', '-lsass']
+ 
+ sass_extension = Extension(
+     '_sass',

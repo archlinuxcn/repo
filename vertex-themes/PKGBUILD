@@ -2,37 +2,25 @@
 # Author: horst3180 @ deviantart
 
 pkgname=vertex-themes
-pkgver=20161009
+pkgver=20170128
 pkgrel=1
 pkgdesc='Vertex Gtk2, Gtk3, Metacity, Xfwm, Cinnamon and GNOME Shell themes (GNOME 3.22 version)'
 _gnomever=3.22
+_releasever=20170128
 arch=('any')
 url='http://horst3180.deviantart.com/art/Vertex-Theme-470663601'
 license=('GPL3')
 depends=('gtk-engine-murrine')
-makedepends=('git')
 conflicts=('vertex-themes-git')
-source=($pkgname::git+https://github.com/horst3180/Vertex-theme.git#commit=c861918a7fccf6d0768d45d790a19a13bb23485e)
-sha256sums=('SKIP')
-
-pkgver() {
-	cd $pkgname
-	# get number of last git commit
-	_commitCount=$(git rev-list --count HEAD)
-	# get time of last git commit
-	_commitTime=$(git show -s --format="%ci" | grep -o "....-..-.." | sed "s/-//g")
-	# add "r*.*" from package version
-	#echo "r$_commitCount.$_commitTime"
-	echo "$_commitTime"
-}
+source=("${pkgname}-${_releasever}.tar.gz::https://github.com/horst3180/Vertex-theme/archive/${_releasever}.tar.gz")
+sha256sums=('1540657ff247bcdb9c49a740e4ddf305aecd4f3bebc93ca566fe74d319b7a620')
 
 build() {
-	cd $pkgname
-
+  cd vertex-theme-${_releasever}
   ./autogen.sh --prefix=/usr --with-gnome=${_gnomever}
 }
 package() {
-	cd $pkgname
+  cd vertex-theme-${_releasever}
 
   make DESTDIR="$pkgdir" install
   cd extra

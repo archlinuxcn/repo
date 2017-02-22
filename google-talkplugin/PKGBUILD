@@ -2,8 +2,8 @@
 # Maintainer: ava1ar <mail(at)ava1ar(dot)info>
 
 pkgname=google-talkplugin
-pkgver=5.41.0.0
-pkgrel=3
+pkgver=5.41.3.0
+pkgrel=0
 pkgdesc="Video chat browser plug-in for Google Talk"
 arch=('i686' 'x86_64')
 url="http://www.google.com/chat/video"
@@ -12,8 +12,8 @@ depends=('gtk2>=2.12.0' 'alsa-lib' 'mesa' 'lsb-release')
 optdepends=('libnotify' 'pulseaudio')
 source=(${pkgname}-license.html::https://www.google.com/intl/en/policies/terms/index.html)
 sha1sums=('SKIP')
-sha1sums_i686=('f6f5555cd2e48c41d2a438896ddf0df07a70781a')
-sha1sums_x86_64=('b89fdc66ad728db5d564c4619ed480166e5be82c')
+sha1sums_i686=('babf7baba3203b5a94eff7efd93922a036f73442')
+sha1sums_x86_64=('b4d551b52636bdc4a82c3cc72a6613afb282a921')
 source_i686+=("https://dl.google.com/linux/talkplugin/rpm/stable/i386/${pkgname}-${pkgver}-1.i386.rpm")
 source_x86_64+=("https://dl.google.com/linux/talkplugin/rpm/stable/x86_64/${pkgname}-${pkgver}-1.x86_64.rpm")
 

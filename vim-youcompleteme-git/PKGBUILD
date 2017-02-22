@@ -15,7 +15,7 @@
 # Contributor: Andy Weidenbaum <archbaum@gmail.com>
 
 pkgname=vim-youcompleteme-git
-pkgver=1990.26bbbb2c
+pkgver=2009.83aea2fb
 _CLANG_VERSION_MAX=4.0
 _CLANG_VERSION_MIN=3.9
 pkgrel=1
@@ -103,10 +103,8 @@ build() {
   npm install --production
   # }}}
 
-  for _m in requests-futures retries; do
-    cd "$srcdir/YouCompleteMe/third_party/$_m"
-    python3 -m compileall -x 'setup.py' .
-  done
+  cd "$srcdir/YouCompleteMe/third_party/requests-futures"
+  python3 -m compileall -x 'setup.py' .
 
   for _m in JediHTTP frozendict; do
     cd "$srcdir/YouCompleteMe/third_party/ycmd/third_party/$_m"
@@ -144,7 +142,7 @@ package() {
 
   cp -r "$srcdir/YouCompleteMe/"{autoload,doc,plugin,python} \
     "$pkgdir/usr/share/vim/vimfiles"
-  cp -r "$srcdir/YouCompleteMe/third_party/"{requests-futures,retries} \
+  cp -r "$srcdir/YouCompleteMe/third_party/requests-futures" \
     "$pkgdir/usr/share/vim/vimfiles/third_party"
   cp -r "$srcdir/YouCompleteMe/third_party/ycmd/"{ycmd,ycm_core.so,CORE_VERSION} \
     "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd"

@@ -5,17 +5,17 @@
 # or use: $ curl -s https://dl.google.com/linux/chrome/rpm/stable/x86_64/repodata/other.xml.gz | gzip -df | awk -F\" '/pkgid/{ sub(".*-","",$4); print $4": "$10 }'
 
 pkgname=google-chrome-dev
-pkgver=57.0.2987.8
+pkgver=58.0.3013.3
 pkgrel=1
 pkgdesc="An attempt at creating a safer, faster, and more stable browser (Dev Channel)"
 arch=('x86_64')
 url="https://www.google.com/chrome"
 license=('custom:chrome')
-depends=('alsa-lib' 'desktop-file-utils' 'flac' 'gconf' 'gnome-themes-standard' 'gtk2' 'harfbuzz' 'harfbuzz-icu'
-         'hicolor-icon-theme' 'icu' 'libpng' 'libxss' 'libxtst' 'nss' 'opus' 'snappy' 'speech-dispatcher'
-         'ttf-font' 'xdg-utils')
-optdepends=('kdebase-kdialog: needed for file dialogs in KDE'
-            'ttf-liberation: fix fonts for some PDFs')
+depends=('alsa-lib' 'gconf' 'gtk2' 'libxss' 'libxtst' 'nss')
+optdepends=('kdialog: needed for file dialogs in KDE'
+            'gnome-keyring: for storing passwords in GNOME keyring'
+            'kwallet: for storing passwords in KWallet'
+            'ttf-liberation: fix fonts for some PDFs (CRBug #369991)')
 provides=('google-chrome')
 options=('!emptydirs' '!strip')
 install=$pkgname.install
@@ -23,13 +23,13 @@ _channel=unstable
 source=("google-chrome-${_channel}_${pkgver}_amd64.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_amd64.deb"
         "$url/browser/privacy/eula_text.html"
         'google-chrome-unstable.sh')
-md5sums=('93867140e9059ef13def487ec1046d79'
+md5sums=('fc2f71495eb3c2038b39252becfecfed'
          'SKIP'
          '11b55a3fec7279db32b63e3a0b97dc01')
 
 ## Previous build (also see: /var/cache/pacman/pkg/google-chrome-dev-*):
-#source[0]='http://mirror.glendaleacademy.org/chrome/pool/main/g/google-chrome-unstable/google-chrome-unstable_57.0.2986.0-1_amd64.deb'
-#md5sums[0]='580ef124e72243d778b7de270580ccf3'
+#source[0]='http://mirror.glendaleacademy.org/chrome/pool/main/g/google-chrome-unstable/google-chrome-unstable_58.0.3004.3-1_amd64.deb'
+#md5sums[0]='bdbe0144f8abae032eceb6ce8c40a82d'
 
 package() {
   msg2 "Extracting the data.tar.xz..."
@@ -58,4 +58,3 @@ package() {
   rm -r "$pkgdir"/etc/cron.daily/ "$pkgdir"/opt/google/chrome-$_channel/cron/
   rm "$pkgdir"/opt/google/chrome-$_channel/product_logo_*.png
 }
- 

@@ -35,7 +35,7 @@ case $CARCH in
 esac
 
 epoch=1
-pkgver=0.6.0.dev.2375.g1303dfb96a
+pkgver=0.6.0.dev.2897.g35ce0fdb96
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
@@ -46,10 +46,8 @@ makedepends=(gcc-fortran arpack fftw git gmp libgit2-julia libunwind-git
              openspecfun openblas libutf8proc-git patchelf openblas-lapack
              openlibm mbedtls libssh2)
 options=('debug' '!strip')
-source=('git://github.com/JuliaLang/julia'
-        0001-Workaround-gdb-jit-debugging-bug.patch)
-md5sums=('SKIP'
-         '2397c20a6891daca4110199deaee5732')
+source=('git://github.com/JuliaLang/julia')
+md5sums=('SKIP')
 
 pkgver() {
   cd julia
@@ -128,7 +126,7 @@ EOF
   git reset --hard HEAD
   git clean -fdx
 
-  patch -Np1 < ../0001-Workaround-gdb-jit-debugging-bug.patch
+  # patch -Np1 < ../
 
   if [[ "$CARCH" = x86_64 ]]; then
       (cd "$srcdir"

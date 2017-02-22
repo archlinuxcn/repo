@@ -2,7 +2,7 @@
 
 _pkgname=dnsmasq-china-list
 pkgname=$_pkgname-git
-pkgver=0.35982.1ea9cbaa5
+pkgver=0.36195.58c4a2f5e
 pkgrel=1
 pkgdesc="Configuration for hot China domains to accelerate via Dnsmasq"
 arch=('any')
@@ -21,6 +21,7 @@ pkgver() {
 package() {
   install -Dm644 "$srcdir/$_pkgname/accelerated-domains.china.conf" "$pkgdir/etc/dnsmasq.d/accelerated-domains.china.conf"
   install -Dm644 "$srcdir/$_pkgname/bogus-nxdomain.china.conf" "$pkgdir/etc/dnsmasq.d/bogus-nxdomain.china.conf"
+  install -Dm644 "$srcdir/$_pkgname/google.china.conf" "$pkgdir/etc/dnsmasq.d/google.china.conf"
   install -Dm755 "$srcdir/$_pkgname/dnsmasq-update-china-list" "$pkgdir/usr/bin/dnsmasq-update-china-list"
 }
 

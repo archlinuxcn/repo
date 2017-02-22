@@ -1,7 +1,7 @@
 # Maintainer: Farkasity <farkaity@gmail.com>
 
 pkgname=shyaml
-pkgver=0.4.0
+pkgver=0.4.2
 pkgrel=1
 pkgdesc='Simple scripts that allow read access to YAML files through command line.'
 url='https://github.com/0k/shyaml'
@@ -9,7 +9,7 @@ license=('custom')
 source=("https://github.com/0k/shyaml/archive/${pkgver}.tar.gz")
 arch=('any')
 depends=('python' 'python-yaml')
-sha256sums=('c29f0d3d0058eb6f3511a0d9c456a85855ffdb0b734066fd4ae11a603f088870')
+sha256sums=('a5cb2c00414450d63a677890dfdc1eebede5f643c58ca052a31010127e35fdb4')
 
 package() {
     cd "${srcdir}/${pkgname}-${pkgver}"

@@ -1,7 +1,7 @@
 _pkgname=tldextract
 pkgname=python-tldextract
 pkgver=2.0.2
-pkgrel=3
+pkgrel=4
 pkgdesc="Accurately separate the TLD from the registered domain andsubdomains of a URL, using the Public Suffix List."
 arch=('any')
 url="https://github.com/john-kurkowski/tldextract"
@@ -18,6 +18,11 @@ build() {
 package() {
   cd "$srcdir/$_pkgname-$pkgver"
   LANG=en_US.UTF-8 python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+
+  _pyver=$(python -c 'import sysconfig; print(sysconfig.get_python_version())')
+  # use the snapshot version, because generating a new one requires Internat access and root permission
+  ln -s .tld_set_snapshot "$pkgdir/usr/lib/python$_pyver/site-packages/tldextract/.tld_set"
+
 }
 
 # vim:set sw=2 et:
