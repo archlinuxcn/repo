@@ -1,0 +1,13 @@
+diff --git a/Telegram/gyp/qt_rcc.gypi b/Telegram/gyp/qt_rcc.gypi
+index eebc6967..19a346fe 100644
+--- a/Telegram/gyp/qt_rcc.gypi
++++ b/Telegram/gyp/qt_rcc.gypi
+@@ -28,7 +28,7 @@
+       '<(SHARED_INTERMEDIATE_DIR)/<(_target_name)/qrc/qrc_<(RULE_INPUT_ROOT).cpp',
+     ],
+     'action': [
+-      '<(qt_loc)/bin/rcc<(exe_ext)',
++      '/usr/bin/rcc',
+       '-name', '<(RULE_INPUT_ROOT)',
+       '-no-compress',
+       '<(RULE_INPUT_PATH)',
