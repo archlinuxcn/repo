@@ -4,13 +4,13 @@
 # https://github.com/mymedia2/tdesktop
 
 pkgname=telegram-desktop-systemqt
-pkgver=1.0.13
-pkgrel=2
+pkgver=1.0.14
+pkgrel=1
 pkgdesc='Experimental build of Telegram Desktop (using system Qt)'
 arch=('i686' 'x86_64')
 url="https://desktop.telegram.org/"
 license=('GPL3')
-depends=('ffmpeg' 'hicolor-icon-theme' 'minizip' 'openal' 'qt5-base')
+depends=('ffmpeg' 'hicolor-icon-theme' 'minizip' 'openal' 'qt5-base' 'qt5-imageformats')
 makedepends=('cmake' 'libappindicator-gtk3' 'dee' 'git' 'gyp-git' 'libexif' 'libva' 'libwebp' 'mtdev' 'python' 'python2')
 optdepends=('libappindicator-gtk3: AppIndicator tray icon')
 conflicts=('telegram-desktop')
