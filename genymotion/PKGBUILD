@@ -4,11 +4,11 @@
 
 pkgname=genymotion
 pkgver=2.8.1
-pkgrel=4
+pkgrel=5
 pkgdesc="Complete set of tools that provides a virtual environment for Android."
 arch=('x86_64')
 url="http://www.genymotion.com/"
-depends=('libpng' 'net-tools' 'protobuf' 'qca' 'qt5-script' 'qt5-webkit' 'virtualbox')
+depends=('libpng' 'net-tools' 'protobuf' 'qca-qt5' 'qt5-script' 'qt5-webkit' 'virtualbox')
 install=$pkgname.install
 license=('custom')
 _ARCH="x64"

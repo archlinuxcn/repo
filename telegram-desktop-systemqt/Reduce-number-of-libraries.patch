@@ -1,0 +1,104 @@
+Description: Remove linking of unused libraries
+Author: Nicholas Guriev <guriev-ns@ya.ru>
+Last-Update: 2017-02-18
+
+diff --git a/Telegram/gyp/Telegram.gyp b/Telegram/gyp/Telegram.gyp
+index 603264b..830df69 100644
+--- a/Telegram/gyp/Telegram.gyp
++++ b/Telegram/gyp/Telegram.gyp
+@@ -76,7 +76,6 @@
+       'codegen.gyp:codegen_style',
+       'codegen.gyp:codegen_numbers',
+       'codegen.gyp:MetaLang',
+-      'utils.gyp:Updater',
+     ],
+ 
+     'defines': [
+diff --git a/Telegram/gyp/qt.gypi b/Telegram/gyp/qt.gypi
+index 1db05de..d322153 100644
+--- a/Telegram/gyp/qt.gypi
++++ b/Telegram/gyp/qt.gypi
+@@ -32,6 +32,5 @@
+             ],
+           },
+           'qt_libs': [
+-            'Qt5PrintSupport',
+             'Qt5Network',
+             'Qt5Widgets',
+@@ -81,21 +80,8 @@
+             'qt_lib_debug_postfix': '',
+             'qt_lib_release_postfix': '',
+             'qt_libs': [
+-              'Qt5XcbQpa',
+               '<@(qt_libs)',
+-              'Qt5DBus',
+               'Qt5Core',
+-              'Xi',
+-              'Xext',
+-              'Xfixes',
+-              'SM',
+-              'ICE',
+-              'fontconfig',
+-              'expat',
+-              'freetype',
+-              'xcb-shm',
+-              'xcb-xfixes',
+-              'xcb-render',
+             ],
+           }],
+         ],
+@@ -120,11 +106,6 @@
+         'qt_loc': '<(qt_loc_unix)',
+       }],
+     ],
+-
+-    'linux_path_xkbcommon%': '/usr/local',
+-    'linux_lib_ssl%': 'ssl',
+-    'linux_lib_crypto%': 'crypto',
+-    'linux_lib_icu%': 'icutu icui18n icuuc icudata',
+   },
+ 
+   'configurations': {
+@@ -200,17 +181,9 @@
+         '<(qt_loc)/plugins/platforminputcontexts',
+       ],
+       'libraries': [
+-        'xkbcommon',
+         '<@(qt_libs_release)',
+-        '<(linux_lib_ssl)',
+-        '<(linux_lib_crypto)',
+-        '<!@(python -c "for s in \'<(linux_lib_icu)\'.split(\' \'): print(s)")',
+-        'xcb',
++        'crypto',
+         'X11',
+-        'X11-xcb',
+-        'dbus-1',
+-        'dl',
+-        'gthread-2.0',
+         'glib-2.0',
+         'pthread',
+       ],
+diff --git a/Telegram/gyp/telegram_linux.gypi b/Telegram/gyp/telegram_linux.gypi
+index 29386a9..63d26e4 100644
+--- a/Telegram/gyp/telegram_linux.gypi
++++ b/Telegram/gyp/telegram_linux.gypi
+@@ -50,19 +50,12 @@
+       '<(linux_path_breakpad)/lib',
+     ],
+     'libraries': [
+-      'lzma',
+       'openal',
+       'avformat',
+       'avcodec',
+       'swresample',
+       'swscale',
+       'avutil',
+-      'opus',
+-      'va-x11',
+-      'va-drm',
+-      'va',
+-      'vdpau',
+-      'drm',
+       'z',
+       'minizip',
+ #      '<!(pkg-config 2> /dev/null --libs <@(pkgconfig_libs))',
