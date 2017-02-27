@@ -1,15 +1,15 @@
 # Maintainer: Gordian Edenhofer <gordian.edenhofer[at]yahoo[dot]de>
 pkgname=spigot
 pkgver=1.11.2
-pkgrel=1
+pkgrel=2
 pkgdesc="High performance Minecraft server implementation"
 arch=(any)
 url="https://www.spigotmc.org/"
 license=("LGPL")
-depends=(java-runtime-headless screen sudo fontconfig bash awk sed)
+depends=("java-runtime-headless>=8" screen sudo fontconfig bash awk sed)
 optdepends=("tar: needed in order to create world backups"
 "netcat: required in order to suspend an idle server")
-makedepends=(java-environment git)
+makedepends=("java-environment>=8" git)
 provides=("minecraft-server=${pkgver%_*}" "bukkit=${pkgver%_*}" "craftbukkit=${pkgver%_*}")
 conflicts=(bukkit craftbukkit spigot-patcher)
 backup=("etc/conf.d/${pkgname}")
