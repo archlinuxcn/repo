@@ -5,7 +5,7 @@
 
 pkgname=quantlib
 _pkgname=QuantLib
-pkgver=1.9.1
+pkgver=1.9.2
 pkgrel=1
 pkgdesc="A free/open-source library for quantitative finance."
 arch=('i686' 'x86_64')
@@ -15,7 +15,7 @@ options=(!libtool)
 depends=('boost-libs' 'sh')
 makedepends=('make' 'boost' 'gcc')
 source=(http://downloads.sourceforge.net/project/$pkgname/$_pkgname/$pkgver/$_pkgname-$pkgver.tar.gz)
-md5sums=('c9ed1b0e0cbf0b39fb152293a850935d')
+md5sums=('fd5f7b521e73e35786927a17f90c70e7')
 
 build() {
   cd "$srcdir"/"$_pkgname-$pkgver"/
