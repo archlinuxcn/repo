@@ -1,18 +1,23 @@
 # Maintainer: Arthur Zamarin <arthurzam@gmail.com>
 
-pkgname=openlibm-git
+pkgbase=openlibm-git
+if [[ $CARCH = x86_64 ]]; then
+    pkgname=(openlibm-git openlibm-git-avx2)
+else
+    pkgname=(openlibm-git)
+fi
 pkgver=0.5.4.4.gba43b36
-pkgrel=1
+pkgrel=2
 pkgdesc="standalone implementation of C mathematical functions"
 arch=(i686 x86_64 armv7h aarch64)
 url="https://github.com/JuliaLang/openlibm"
 license=('BSD')
-source=("git://github.com/JuliaLang/openlibm")
-sha256sums=('SKIP')
-provides=('openlibm=0.5.3')
+provides=('openlibm=0.5.4')
 conflicts=('openlibm')
 options=('debug' '!strip')
 makedepends=('git')
+source=("git://github.com/JuliaLang/openlibm")
+sha256sums=('SKIP')
 
 pkgver() {
   cd openlibm
@@ -21,25 +26,45 @@ pkgver() {
 }
 
 prepare() {
-  cd openlibm
-  git reset --hard HEAD
-  git clean -fdx
+  (cd openlibm
+   git reset --hard HEAD
+   git clean -fdx
 
-  sed -i "s@/usr/local@/usr@" Make.inc
+   sed -i "s@/usr/local@/usr@" Make.inc)
+
+  if [[ $CARCH = x86_64 ]]; then
+      rm -rf openlibm-avx2
+      cp -a openlibm openlibm-avx2
+  fi
 }
 
 build() {
-  cd openlibm
-  CFLAGS+=' -g -flto -O3'
-  LDFLAGS+=' -g -flto -O3'
-  make
+  (cd openlibm
+   CFLAGS+=' -g -flto -O3'
+   LDFLAGS+=' -g -flto -O3'
+   make)
+
+  if [[ $CARCH = x86_64 ]]; then
+      (cd openlibm-avx2
+       CFLAGS+=' -g -flto -O3 -mavx2 -march=haswell'
+       LDFLAGS+=' -g -flto -O3 -mavx2 -march=haswell'
+       make)
+  fi
 }
 
-package() {
+package_openlibm-git() {
   cd openlibm
   provides+=('openlibm-git-debug')
   replaces+=('openlibm-git-debug')
-  CFLAGS+=' -g -flto -O3'
-  LDFLAGS+=' -g -flto -O3'
-  make DESTDIR="$pkgdir" install
+  (CFLAGS+=' -g -flto -O3'
+   LDFLAGS+=' -g -flto -O3'
+   make DESTDIR="$pkgdir" install)
+}
+
+package_openlibm-git-avx2() {
+  cd openlibm-avx2
+  provides+=('openlibm-git')
+  (CFLAGS+=' -g -flto -O3 -mavx2 -march=haswell'
+   LDFLAGS+=' -g -flto -O3 -mavx2 -march=haswell'
+   make DESTDIR="$pkgdir" install)
 }
