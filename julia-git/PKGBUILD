@@ -36,7 +36,7 @@ esac
 
 epoch=1
 pkgver=0.6.0.pre.alpha.5.gb1242dff00
-pkgrel=1
+pkgrel=2
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
@@ -169,7 +169,7 @@ package-julia-in() {
   arch=('i686' 'x86_64' 'armv7h' 'aarch64')
   depends=(arpack fftw gmp libgit2-julia libunwind-git "${depends_llvm[@]}"
            mpfr pcre2 hicolor-icon-theme xdg-utils suitesparse
-           openspecfun openblas libutf8proc-git openblas-lapack openlibm
+           openspecfun openblas libutf8proc-git openblas-lapack
            mbedtls libssh2)
   conflicts=('julia')
   opts=("${@:2}")
@@ -190,10 +190,12 @@ package-julia-in() {
 
 package_julia-git() {
   package-julia-in julia "${julia_opts[@]}"
+  depends+=(openlibm)
 }
 
 package_julia-git-avx2() {
   package-julia-in julia-avx2 "${julia_avx2_opts[@]}"
+  depends+=(openlibm-avx2)
 }
 
 package_julia-git-docs() {
