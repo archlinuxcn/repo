@@ -63,7 +63,7 @@ package_openlibm-git() {
 
 package_openlibm-git-avx2() {
   cd openlibm-avx2
-  provides+=('openlibm-git')
+  provides+=(openlibm-git openlibm-avx2)
   (CFLAGS+=' -g -flto -O3 -mavx2 -march=haswell'
    LDFLAGS+=' -g -flto -O3 -mavx2 -march=haswell'
    make DESTDIR="$pkgdir" install)
