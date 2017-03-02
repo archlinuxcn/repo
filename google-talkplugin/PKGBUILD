@@ -3,8 +3,8 @@
 
 pkgname=google-talkplugin
 pkgver=5.41.3.0
-pkgrel=0
-pkgdesc="Video chat browser plug-in for Google Talk"
+pkgrel=1
+pkgdesc="Video chat browser plug-in for Google Hangouts"
 arch=('i686' 'x86_64')
 url="http://www.google.com/chat/video"
 license=('custom:google')
