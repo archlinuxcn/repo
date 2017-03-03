@@ -1,0 +1,167 @@
+#!/bin/bash
+
+#
+# Copyright © 2017 Sébastien Luttringer
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+# display what to run and run it quietly
+run() {
+	echo "==> $*"
+	"$@" > /dev/null
+}
+
+# check kernel is valid for action
+# it means kernel and its headers are installed
+# $1: kernel version
+check_kernel() {
+	local kver="$1"; shift
+	if [[ ! -d "$install_tree/$kver/kernel" ]]; then
+		echo "==> No kernel $kver modules. You must install them to use DKMS!"
+		return 1
+	elif [[ ! -d "$install_tree/$kver/build/Makefile" ]]; then
+		echo "==> No kernel $kver headers. You must install them to use DKMS!"
+		return 1
+	fi
+	return 0
+}
+
+# handle actions on module addition/upgrade/removal
+# $1: module name
+# $2: module version
+# $3: dkms action
+parse_module() {
+	pushd "$install_tree" >/dev/null
+	local path
+	for path in */build/; do
+		local kver="${path%%/*}"
+		dkms_register "$1" "$2" "$kver" "$3"
+	done
+	popd >/dev/null
+}
+
+# handle actions on kernel addition/upgrade/removal
+# $1: kernel version
+# $2: dkms action
+parse_kernel() {
+	local path
+	for path in "$source_tree"/*-*/dkms.conf; do
+		if [[ -f "$path" && "$path" =~ ^$source_tree/([^/]+)-([^/]+)/dkms\.conf$ ]]; then
+			dkms_register "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}" "$1" "$2"
+		fi
+	done
+}
+
+# register a dkms call
+# this function suppress echo call for a module
+# $1: module name, $2: module version, $3: kernel version, $4: action
+dkms_register() {
+	DKMS_ACTION["$1/$2/$3"]="$4"
+}
+
+# check whether the dependencies of a module are installed
+# $1: module name/module version
+# $2: kernel version
+check_dependency() {
+	local BUILD_DEPENDS
+	mod_name=${1%/*}
+	mod_ver=${1#*/}
+	readarray -t BUILD_DEPENDS <<<$(source "$source_tree/$mod_name-$mod_ver/dkms.conf"; printf '%s\n' "${BUILD_DEPENDS[@]}")
+	[ "$BUILD_DEPENDS" = "" ] && unset BUILD_DEPENDS
+	for dep in "${BUILD_DEPENDS[@]}"; do
+		if [ ! "$(dkms status -m "$dep" -k "$2" | grep -o installed)" = "installed" ]; then
+			return 1
+		fi
+	done
+	return 0
+}
+
+# run registered dkms commands
+dkms_run() {
+	local nvk mod kver cont
+	cont=y
+	while [ "$cont" = "y" ]; do
+		cont=n
+		for nvk in "${!DKMS_ACTION[@]}"; do
+			mod=${nvk%/*}
+			kver=${nvk##*/}
+			check_kernel "$kver" || continue
+			if [ "${DKMS_ACTION[$nvk]}" = "install" ]; then
+				check_dependency "$mod" "$kver" || continue
+			fi
+			run dkms "${DKMS_ACTION[$nvk]}" "$mod" -k "$kver"
+			cont=y
+			unset DKMS_ACTION[$nvk]
+		done
+	done
+	# show warning for modules not installed
+	for nvk in "${!DKMS_ACTION[@]}"; do
+		[ "${DKMS_ACTION[$nvk]}" = "install" ] || continue
+		mod=${nvk%/*}
+		kver=${nvk##*/}
+		check_kernel "$kver" || continue
+		echo "==> WARNING: Cannot resolve dependencies for module $mod, kernel version $kver"
+	done
+}
+
+# emulated program entry point
+main() {
+	[[ -n "$DKMS_ALPM_HOOK_DEBUG" ]] && set -x
+
+	# prevent to have all each dkms call to fail
+	if (( EUID )); then
+		echo 'You must be root to use this hook' >&2
+		exit 1
+	fi
+
+	# check args count
+	if (( $# < 1 )); then
+		echo "usage: ${0##*/} dkms-arguments" >&2
+		exit 1
+	fi
+
+	# dkms path from framework config
+	# note: the alpm hooks which trigger this script use static path
+	source_tree='/usr/src'
+	install_tree='/usr/lib/modules'
+	source /etc/dkms/framework.conf
+
+	# check source_tree and install_tree exists
+	local path
+	for path in "$source_tree" "$install_tree"; do
+		if [[ ! -d "$path" ]]; then
+			echo "==> Missing mandatory directory: $path. Exiting!"
+			return 1
+		fi
+	done
+
+	# Storage for DKMS action to run
+	declare -A DKMS_ACTION
+
+	# parse stdin paths to guess what do do
+	while read -r path; do
+		if [[ "/$path" =~ ^$source_tree/([^/]+)-([^/]+)/dkms\.conf$ ]]; then
+			parse_module "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}" "$@"
+		elif [[ "/$path" =~ ^$install_tree/([^/]+)/ ]]; then
+			parse_kernel "${BASH_REMATCH[1]}" "$@"
+		fi
+	done
+
+	dkms_run
+
+	return 0
+}
+
+main "$@"

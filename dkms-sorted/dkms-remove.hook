@@ -1,0 +1,16 @@
+[Trigger]
+Operation = Upgrade
+Operation = Remove
+Type = File
+Target = usr/src/*/dkms.conf
+Target = usr/lib/modules/*/build/Makefile
+Target = usr/lib/modules/*/kernel/
+
+[Action]
+Description = Remove DKMS modules
+Depends = dkms
+When = PreTransaction
+# SIGPIPE workaround. See FS#49816
+#Exec = /usr/lib/dkms/alpm-hook remove
+Exec = /usr/bin/perl -e "$SIG{PIPE}='DEFAULT'; exec('/usr/lib/dkms/alpm-hook', 'remove');"
+NeedsTargets
