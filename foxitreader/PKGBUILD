@@ -2,8 +2,8 @@
 # Contributor: TDY <tdy@archlinux.info>
 
 pkgname=foxitreader
-pkgver=2.2.1025
-_frrev_i686=r231871
+pkgver=2.3.0.2174
+_frrev_i686=r242174
 _frrev_x86_64=${_frrev_i686}
 pkgrel=1
 pkgdesc="A fast, secure and complete PDF viewer"
@@ -11,15 +11,15 @@ arch=('i686' 'x86_64')
 url="https://www.foxitsoftware.com/products/pdf-reader/"
 license=('custom:EULA')
 makedepends=('qt-installer-framework' 'qt5-tools' 'p7zip')
-depends=('desktop-file-utils' 'qt5-declarative')
+depends=('desktop-file-utils' 'qt5-declarative' 'libsecret')
 source=("https://www.foxitsoftware.com/products/pdf-reader/eula.html"
         "${pkgname}.patch")
-source_i686=("http://cdn02.foxitsoftware.com/pub/foxit/reader/desktop/linux/2.x/${pkgver%.*}/en_us/FoxitReader${pkgver}_Server_x86_enu_Setup.run.tar.gz")
-source_x86_64=("http://cdn02.foxitsoftware.com/pub/foxit/reader/desktop/linux/2.x/${pkgver%.*}/en_us/FoxitReader${pkgver}_Server_x64_enu_Setup.run.tar.gz")
+source_i686=("http://cdn02.foxitsoftware.com/pub/foxit/reader/desktop/linux/2.x/${pkgver%.*.*}/en_us/FoxitReader${pkgver}_Server_x86_enu_Setup.run.tar.gz")
+source_x86_64=("http://cdn02.foxitsoftware.com/pub/foxit/reader/desktop/linux/2.x/${pkgver%.*.*}/en_us/FoxitReader${pkgver}_Server_x64_enu_Setup.run.tar.gz")
 sha256sums=('738fc621a727e0429b9c50580b3c166776797f925f2819037d1414dad0b95f6a'
             'e4ad8031e6bd2ae8550905fd3d4d2126b02042414204f955d67b304d692876dc')
-sha256sums_i686=('701af98b62f441ce17e065eee53a536acf000869998e11f16435317b1484067d')
-sha256sums_x86_64=('723794b2779e460874443fc5c0b321c397938cc0201674538d3f9f69eccab15f')
+sha256sums_i686=('faa6ae03441a8ecf2c614fd20cd059a0027df6ea3e315101c71127014d9ada33')
+sha256sums_x86_64=('c6294d0e9e413deb4f1bc92367f16344570148fb82ba8b7a0a49acec7b9161f6')
 
 build() {
   # Clean installer dir
@@ -70,7 +70,5 @@ package() {
   cd "${pkgdir}"
   install -m 755 -d "${pkgdir}/usr/bin"
   ln -s "/usr/lib/${pkgname}/FoxitReader.sh" "${pkgdir}/usr/bin/${pkgname}"
-  # Fix for toolbar, asking to be opened in read write
-  chmod 0666 "${pkgdir}/usr/lib/${pkgname}/configtoolbar.xml"
 }
 
