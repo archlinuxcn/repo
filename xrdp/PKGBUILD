@@ -6,7 +6,7 @@
 # Contributor: Mathias R. <pu154r@overlinux.org>
 pkgname=xrdp
 pkgver=0.9.1
-pkgrel=5
+pkgrel=6
 pkgdesc="An open source remote desktop protocol (RDP) server"
 url="https://github.com/neutrinolabs/xrdp"
 arch=('i686' 'x86_64' 'armv6h')
@@ -39,7 +39,8 @@ build() {
 	      --enable-opus \
 	      --enable-rfxcodec \
 	      --enable-mp3lame \
-	      --enable-pixman
+	      --enable-pixman \
+	      --enable-painter
   make V=0
 }
 

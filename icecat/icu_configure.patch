@@ -1,0 +1,22 @@
+--- configure_old	2017-01-15 12:13:23.456943319 +0100
++++ configure	2017-01-15 12:13:35.291907492 +0100
+@@ -30305,7 +30305,7 @@
+         fi
+     fi
+ 
+-    version=`sed -n 's/^[:space:]*#[[:space:]]*define[[:space:]][[:space:]]*U_ICU_VERSION_MAJOR_NUM[[:space:]][[:space:]]*\([0-9][0-9]*\)[[:space:]]*$/\1/p' "$icudir/common/unicode/uvernum.h"`
++    version=`sed -n 's/^[[:space:]]*#[[:space:]]*define[[:space:]][[:space:]]*U_ICU_VERSION_MAJOR_NUM[[:space:]][[:space:]]*\([0-9][0-9]*\)[[:space:]]*$/\1/p' "$icudir/common/unicode/uvernum.h"`
+     if test x"$version" = x; then
+        { echo "configure: error: cannot determine icu version number from uvernum.h header file $lineno" 1>&2; echo "configure: error: cannot determine icu version number from uvernum.h header file $lineno" 1>&5; exit 1; }
+     fi
+--- js/src/configure_old	2017-01-15 12:14:55.625663124 +0100
++++ js/src/configure	2017-01-15 12:15:09.949619360 +0100
+@@ -15906,7 +15906,7 @@
+         fi
+     fi
+ 
+-    version=`sed -n 's/^[:space:]*#[[:space:]]*define[[:space:]][[:space:]]*U_ICU_VERSION_MAJOR_NUM[[:space:]][[:space:]]*\([0-9][0-9]*\)[[:space:]]*$/\1/p' "$icudir/common/unicode/uvernum.h"`
++    version=`sed -n 's/^[[:space:]]*#[[:space:]]*define[[:space:]][[:space:]]*U_ICU_VERSION_MAJOR_NUM[[:space:]][[:space:]]*\([0-9][0-9]*\)[[:space:]]*$/\1/p' "$icudir/common/unicode/uvernum.h"`
+     if test x"$version" = x; then
+        { echo "configure: error: cannot determine icu version number from uvernum.h header file $lineno" 1>&2; echo "configure: error: cannot determine icu version number from uvernum.h header file $lineno" 1>&5; exit 1; }
+     fi
