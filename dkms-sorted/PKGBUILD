@@ -4,8 +4,8 @@
 
 pkgname=dkms-sorted
 pkgver=2.3
-pkgrel=1
-pkgdesc='Dynamic Kernel Modules System (modified alpm hook to handle dependencies)'
+pkgrel=2
+pkgdesc='Dynamic Kernel Modules System (modified alpm hook to handle dependencies) - experimental'
 arch=('any')
 url='https://github.com/dell/dkms'
 license=('GPL2')
@@ -25,7 +25,7 @@ conflicts=('dkms')
 sha256sums=('SKIP'
             '6f2fe43f98cd3e043330e599689d3471108e5022ca7edf69ad645f609ccc33ac'
             'a145a3a8880449a8bc824374b8409750f3cb7c003395fff5a8b9e5ff803c1328'
-            'a897269345bdcbea4a3feca371cf24767762ae75b7cd2d7f3a4abb50797c3dbd')
+            '6ca388b4f3a65cc18a737946090ef96d56a832cc0f531bf2adbbc15545ca8cdc')
 
 
 prepare() {

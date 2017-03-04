@@ -31,7 +31,7 @@ check_kernel() {
 	if [[ ! -d "$install_tree/$kver/kernel" ]]; then
 		echo "==> No kernel $kver modules. You must install them to use DKMS!"
 		return 1
-	elif [[ ! -d "$install_tree/$kver/build/Makefile" ]]; then
+	elif [[ ! -e "$install_tree/$kver/build/Makefile" ]]; then
 		echo "==> No kernel $kver headers. You must install them to use DKMS!"
 		return 1
 	fi
