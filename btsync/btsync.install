@@ -21,49 +21,10 @@ post_upgrade() {
     chmod 600 /etc/btsync.conf
 
 cat << EOF
-
-	WebGUI can be accessed via following URL: http://localhost:8888
-	
-	* Running btsync system instance (using dedicated btsync:btsync account)
-
-  	  System instance of btsync is preconfigured (configuration file located
-	  at /etc/btsync.conf) and can be used directly after installation.
-
-	  Execute:
-
-	    to reload system systemd modules:     systemctl daemon-reload
-	    to start btsync manually:             systemctl start btsync
-	    to autostart btsync on system start:  systemctl enable btsync
-
-	* Running btsync user instance (using current user account)
-
-	  User instance MUST be configured before use. To perform configuration, 
-	  install btsync-autoconfig package or follow manual configuration steps:
-
-  	    1. Copy /etc/btsync/btsync.conf to ~/.config/btsync/btsync.conf for
- 	    the user you wish to configure btsync:
- 	
-	      mkdir -p ~/.config/btsync	
-	      cp /etc/btsync.conf ~/.config/btsync/btsync.conf
- 
-	    2. Replace user-specific references with the appropriate information,
-	    including the following settings:
- 
-	      - storage_path
-	      - pid_file
-	      - webui.listen
-	      - webui.login
-	      - webui.password
-
-	    3. Make sure folder you specified as storage_path and folder where pid_file will
-	    be located both exist in the filesystem, since btsync will not create it for you.
-
-	  Execute:
-
-	    to reload user systemd modules:       systemctl --user daemon-reload
-	    to start btsync manually:             systemctl --user start btsync
-	    to autostart btsync on user login:    systemctl --user enable btsync
-
+      ====== ATTENTION PLEASE ======
+    This software has been renamed to rslsync(Resilio Sync).
+    Please install rslsync from archlinuxcn and manually migrate the config.
+    This is the last update of btsync package.
 EOF
 
 }
