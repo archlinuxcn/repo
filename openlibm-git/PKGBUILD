@@ -7,7 +7,7 @@ else
     pkgname=(openlibm-git)
 fi
 pkgver=0.5.4.4.gba43b36
-pkgrel=2
+pkgrel=3
 pkgdesc="standalone implementation of C mathematical functions"
 arch=(i686 x86_64 armv7h aarch64)
 url="https://github.com/JuliaLang/openlibm"
@@ -18,6 +18,9 @@ options=('debug' '!strip')
 makedepends=('git')
 source=("git://github.com/JuliaLang/openlibm")
 sha256sums=('SKIP')
+
+_CFLAGS_common=' -g -flto -O3'
+_LDFLAGS_common=' -g -flto -O3 -fno-plt -Wl,-Bsymbolic-functions'
 
 pkgver() {
   cd openlibm
@@ -39,15 +42,15 @@ prepare() {
 }
 
 build() {
+  CFLAGS+="$_CFLAGS_common"
+  LDFLAGS+="$_LDFLAGS_common"
   (cd openlibm
-   CFLAGS+=' -g -flto -O3'
-   LDFLAGS+=' -g -flto -O3'
    make)
 
   if [[ $CARCH = x86_64 ]]; then
       (cd openlibm-avx2
-       CFLAGS+=' -g -flto -O3 -mavx2 -march=haswell'
-       LDFLAGS+=' -g -flto -O3 -mavx2 -march=haswell'
+       CFLAGS+=' -mavx2 -march=haswell'
+       LDFLAGS+=' -mavx2 -march=haswell'
        make)
   fi
 }
@@ -56,15 +59,15 @@ package_openlibm-git() {
   cd openlibm
   provides+=('openlibm-git-debug')
   replaces+=('openlibm-git-debug')
-  (CFLAGS+=' -g -flto -O3'
-   LDFLAGS+=' -g -flto -O3'
+  (CFLAGS+="$_CFLAGS_common"
+   LDFLAGS+="$_LDFLAGS_common"
    make DESTDIR="$pkgdir" install)
 }
 
 package_openlibm-git-avx2() {
   cd openlibm-avx2
   provides+=(openlibm-git openlibm-avx2)
-  (CFLAGS+=' -g -flto -O3 -mavx2 -march=haswell'
-   LDFLAGS+=' -g -flto -O3 -mavx2 -march=haswell'
+  (CFLAGS+="$_CFLAGS_common -mavx2 -march=haswell"
+   LDFLAGS+="$_LDFLAGS_common -mavx2 -march=haswell"
    make DESTDIR="$pkgdir" install)
 }
