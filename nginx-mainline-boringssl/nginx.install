@@ -1,0 +1,12 @@
+post_upgrade() {
+  if (( $(vercmp $2 1.11.8-2) < 0)); then
+    chown root:root var/log/nginx
+  fi
+
+  if (( $(vercmp $2 1.11.9-2) < 0 )); then
+    chmod 755 var/log/nginx
+    echo ':: Security notice:'
+    echo '     - When additional log directories are used in /var/log/nginx make sure they'
+    echo '       are owned by root:root and have 755 set as permission to mitigate CVE-2016-1247'
+  fi
+}
