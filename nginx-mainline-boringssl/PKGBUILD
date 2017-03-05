@@ -6,13 +6,13 @@
 
 pkgname=nginx-mainline-boringssl
 pkgver=1.11.10
-pkgrel=1
+pkgrel=2
 pkgdesc='Lightweight HTTP server and IMAP/POP3 proxy server, mainline release'
 arch=('i686' 'x86_64')
 url='https://nginx.org'
 license=('custom')
-depends=('pcre' 'zlib' 'openssl' 'geoip')
-makedepends=('hardening-wrapper')
+depends=('pcre' 'zlib' 'geoip')
+makedepends=('cmake' 'git' 'go' 'hardening-wrapper')
 backup=('etc/nginx/fastcgi.conf'
         'etc/nginx/fastcgi_params'
         'etc/nginx/koi-win'
