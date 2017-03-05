@@ -1,0 +1,43 @@
+# Maintainer: Stephen Zhang <zsrkmyn at gmail dot com>
+pkgname='torch7-lmdb-git'
+pkgdesc='LMDB for Torch'
+pkgver=r33.814a4f7
+pkgrel=1
+makedepends=('cmake' 'git')
+depends=('torch7-git>=r819')
+conflicts=('torch7-lmdb')
+provides=('torch7-lmdb')
+arch=('any')
+url='https://github.com/eladhoffer/lmdb.torch'
+license=('MIT')
+source=("${pkgname}::git+${url}")
+sha512sums=('SKIP')
+
+pkgver () {
+	cd "${pkgname}"
+	(
+		set -o pipefail
+		git describe --long 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
+		printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+	)
+}
+
+build () {
+	cd "${pkgname}"
+	[ ! -d build ] && mkdir build
+	cd build
+	cmake .. \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_BUILD_TYPE=Release
+	make
+}
+
+package () {
+	cd "${pkgname}/build"
+	make DESTDIR="${pkgdir}" install
+
+	# Move pure Lua modules
+	mkdir -p "${pkgdir}/usr/share/lua/5.1"
+	mv "${pkgdir}/usr/lua/lmdb" "${pkgdir}/usr/share/lua/5.1/"
+	rm -rf "${pkgdir}/usr/lua"
+}
