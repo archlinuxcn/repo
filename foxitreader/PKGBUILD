@@ -1,11 +1,12 @@
 # Maintainer: Muflone http://www.muflone.com/contacts/english/
+# Contributor: Stephen Zhang <zsrkmyn at gmail dot com>
 # Contributor: TDY <tdy@archlinux.info>
 
 pkgname=foxitreader
 pkgver=2.3.0.2174
 _frrev_i686=r242174
 _frrev_x86_64=${_frrev_i686}
-pkgrel=1
+pkgrel=2
 pkgdesc="A fast, secure and complete PDF viewer"
 arch=('i686' 'x86_64')
 url="https://www.foxitsoftware.com/products/pdf-reader/"
@@ -50,12 +51,13 @@ package() {
   patch -p1 -i "${srcdir}/${pkgname}.patch"
   # Remove useless files
   cd "${pkgdir}/usr/lib/${pkgname}"
-  rm "lib/.directory" "Activation" "Activation.desktop" "Activation.sh" \
+  rm "Activation" "Activation.desktop" "Activation.sh" \
      "countinstalltion" "countinstalltion.sh" \
      "installUpdate" "ldlibrarypath.sh" \
      "maintenancetool.sh" "Uninstall.desktop" \
      "Update.desktop" "updater" "updater.sh"
-  rm -rf "welcome/images/.svn" "manual/en_us/.svn"
+  find -type d -name .svn -exec rm -rf {} +
+  find -type f -name .directory -exec rm -rf {} +
   # Install icon and desktop files
   install -m 755 -d "${pkgdir}/usr/share/pixmaps"
   install -m 644 "images/FoxitReader.png" \
@@ -63,6 +65,7 @@ package() {
   install -m 755 -d "${pkgdir}/usr/share/applications"
   install -m 755 "FoxitReader.desktop" \
     "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+  rm FoxitReader.desktop
   # Install license file
   install -m 755 -d "${pkgdir}/usr/share/licenses/${pkgname}"
   install -m 644 -t "${pkgdir}/usr/share/licenses/${pkgname}" "${srcdir}/eula.html"
