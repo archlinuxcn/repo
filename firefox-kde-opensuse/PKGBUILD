@@ -20,15 +20,15 @@ _gtk3=true
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=51.0.1
-pkgrel=2
+pkgver=52.0
+pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
 url="https://build.opensuse.org/package/show/mozilla:Factory/MozillaFirefox"
 depends=('gtk2' 'mozilla-common' 'libxt' 'startup-notification' 'mime-types'
          'dbus-glib' 'alsa-lib' 'hicolor-icon-theme'
-	 'libvpx' 'icu'  'libevent' 'nss>=3.18.1' 'nspr>=4.10.6' 'hunspell'
+	 'libvpx' 'icu'  'libevent' 'nss>=3.28.3' 'nspr>=4.10.6' 'hunspell'
 	 'sqlite' 'libnotify' 'kmozillahelper' 'ffmpeg' )
 if [ $_gtk3 ] ; then
     depends+=('gtk3')
@@ -38,10 +38,10 @@ makedepends=('unzip' 'zip' 'diffutils' 'python2' 'yasm' 'mesa' 'imake'
              'xorg-server-xvfb' 'libpulse' 'inetutils' 'autoconf2.13' 'rust'
             'cargo')
 optdepends=('networkmanager: Location detection via available WiFi networks'
-	    'upower: Battery API' )
+            'speech-dispatcher: Text-to-Speech')
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
-_patchrev=3604ed712e16
+_patchrev=ce8a98f8d8d7
 options=('!emptydirs'  'strip' )
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz
@@ -153,7 +153,7 @@ build() {
   CPPFLAGS+=" -O2"
 
   # GCC 6
-  CXXFLAGS+=" -fPIC -fno-delete-null-pointer-checks -fno-lifetime-dse -fno-schedule-insns2"
+  CXXFLAGS+=" -fPIC -fno-delete-null-pointer-checks -fno-schedule-insns2"
 
   # Hardening
   LDFLAGS+=" -Wl,-z,now"
@@ -207,20 +207,20 @@ package() {
   #https://bugzilla.mozilla.org/show_bug.cgi?id=658850
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
-md5sums=('05d8d655983d21d5059d5c886b2e6a9c'
-         'b3b04357505b8f00864ceeb1cc40a66f'
+md5sums=('76cf84d46590f60f13b0b3dda65d19ae'
+         '36b41345f62ec209e8ef7179649325c4'
          '14e0f6237a79b85e60256f4808163160'
          'dbf14588e85812ee769bd735823a0146'
          'aa9f776d2187cba09de65cbb02b39ca0'
          '05bb69d25fb3572c618e3adf1ee7b670'
          '6e335a517c68488941340ee1c23f97b0'
          '3b3eb8c2747429887e4a03537932eac5'
-         'a8bff00299be95e2d5635c8660858237'
+         '688b522c10f805261f07c085848487eb'
          '1fad9a988826d69fe712ea973e43f6da'
-         'f41f9222bc2108516719178e77528e9d'
+         '4ac0c221feeee260172acf50581b2246'
          'fa6ac817f576b486419b5f308116a7cd'
          '0c684360f1df4536512d51873c1d243d'
-         'b43efba36e9919522d5832c6ea9fe207'
+         '87eac57858072cfb3d8c3a128bb92da4'
          'fe24f5ea463013bb7f1c12d12dce41b2'
          '3fa8bd22d97248de529780f5797178af'
          '43550e772f110a338d5a42914ee2c3a6'
