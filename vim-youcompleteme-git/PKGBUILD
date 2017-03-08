@@ -18,7 +18,7 @@ pkgname=vim-youcompleteme-git
 pkgver=2015.0cc761fe
 _CLANG_VERSION_MAX=4.0
 _CLANG_VERSION_MIN=3.9
-pkgrel=1
+pkgrel=2
 pkgdesc="A code-completion engine for Vim"
 arch=('i686' 'x86_64')
 url='http://valloric.github.com/YouCompleteMe/'
@@ -45,11 +45,16 @@ source=('git+https://github.com/Valloric/YouCompleteMe.git'
         'git+https://github.com/nosami/OmniSharpServer.git'
         'git+https://github.com/icsharpcode/NRefactory.git'
         'git+https://github.com/jbevain/cecil.git'
-        'use-system-completer.patch'
-        'use-python3.patch')
-sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP'
-            'c99613a2b43e2f0eefc1a0c7d8ef42760428ae65b05c8a9920648938130aac21'
-            '36712bac48fa10777ea213b51fbf77c5bc67732cd4af21b47a73bad030ed1577')
+        'use-system-completer.patch')
+sha256sums=('SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'c99613a2b43e2f0eefc1a0c7d8ef42760428ae65b05c8a9920648938130aac21')
 _COMPLETER="USE_CLANG_COMPLETER"
 _SYSTEM_LIBCLANG="USE_SYSTEM_LIBCLANG"
 
