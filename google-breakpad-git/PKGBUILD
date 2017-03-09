@@ -3,7 +3,7 @@
 # Contributor: John Schoenick <john@pointysoftware.net>
 # Contributor: Geoffrey Teale <tealeg@googlemail.com>
 pkgname=google-breakpad-git
-pkgver=r1603.32a9e038
+pkgver=r1604.5dbd93a0
 pkgrel=1
 pkgdesc="An open-source multi-platform crash reporting system"
 arch=('i686' 'x86_64' 'armv7h')
@@ -15,9 +15,14 @@ options=('staticlibs' '!strip')
 conflicts=('google-breakpad-svn')
 
 prepare() {
-  mkdir -p "$srcdir/${pkgname}"
+  #remove any old source lying around, since I don't want to learn depot tools
+  if [ -d "$srcdir/${pkgname}" ]; then
+    rm -rf "$srcdir/${pkgname}"
+  fi
+
+  mkdir -p -p "$srcdir/${pkgname}"
   cd "$srcdir/${pkgname}"
-  /opt/depot_tools/fetch breakpad > /dev/null
+  /opt/depot_tools/fetch breakpad
 }
 
 pkgver() {
