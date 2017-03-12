@@ -19,9 +19,8 @@ def get_latest_version():
   res = urllib.request.urlopen(manifest)
   page = res.read().decode('utf-8')
   toml = pytoml.loads(page)
-  version_string = toml['pkg']['cargo']['version']
-  version = re.findall(r'([\d.]+)-nightly', version_string)[0]
-  version_date = re.findall(r'\d{4}-\d{2}-\d{2}', version_string)[0]
+  version = toml['pkg']['cargo']['version']
+  version_date = toml['date']
   cargo = toml['pkg']['cargo']['target']['x86_64-unknown-linux-gnu']
   return version, version_date, cargo['url'], cargo['hash']
 
