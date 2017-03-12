@@ -1,7 +1,7 @@
 # Maintainer: Andrey Vihrov <andrey.vihrov at gmail.com>
 
 pkgname=xfdashboard
-pkgver=0.7.0
+pkgver=0.7.1
 pkgrel=1
 pkgdesc="Maybe a Gnome shell like dashboard for Xfce"
 arch=('i686' 'x86_64')
@@ -10,7 +10,7 @@ license=('GPL')
 depends=('libwnck3' 'clutter' 'garcon')
 makedepends=('xfce4-dev-tools')
 source=("https://github.com/gmc-holle/xfdashboard/archive/${pkgver}.tar.gz")
-sha256sums=('4de8671e76700b7d792b2fe85a019619d6158b9a83473e908997e7e0c2e0499b')
+sha256sums=('2c37f1ed52e8568de8463aada542c2cccc17c99c600381d093fdab83324bd6b8')
 
 build() {
   cd "${pkgname}-${pkgver}"
