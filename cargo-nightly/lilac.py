@@ -20,6 +20,8 @@ def get_latest_version():
   page = res.read().decode('utf-8')
   toml = pytoml.loads(page)
   version = toml['pkg']['cargo']['version']
+  if version.endswith('-nightly'):
+    version = version[:-len('-nightly')]
   version_date = toml['date']
   cargo = toml['pkg']['cargo']['target']['x86_64-unknown-linux-gnu']
   return version, version_date, cargo['url'], cargo['hash']
