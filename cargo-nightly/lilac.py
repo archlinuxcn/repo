@@ -19,10 +19,15 @@ def get_latest_version():
   res = urllib.request.urlopen(manifest)
   page = res.read().decode('utf-8')
   toml = pytoml.loads(page)
-  version = toml['pkg']['cargo']['version']
-  if version.endswith('-nightly'):
-    version = version[:-len('-nightly')]
-  version_date = toml['date']
+  version_string = toml['pkg']['cargo']['version']
+  # sometimes it's like this
+  # version = "0.18.0-nightly (4a3c0a63b 2017-03-12)"
+  # sometimes it's without the bracketed text
+  version = re.findall(r'([\d.]+)-nightly', version_string)[0]
+  try:
+    version_date = re.findall(r'\d{4}-\d{2}-\d{2}', version_string)[0]
+  except IndexError:
+    version_date = toml['date']
   cargo = toml['pkg']['cargo']['target']['x86_64-unknown-linux-gnu']
   return version, version_date, cargo['url'], cargo['hash']
 
