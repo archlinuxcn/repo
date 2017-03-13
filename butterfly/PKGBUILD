@@ -1,6 +1,6 @@
 _pkgname=butterfly
 pkgname=butterfly
-pkgver=2.0.2
+pkgver=3.0.0
 pkgrel=1
 pkgdesc="A sleek web based terminal emulator"
 arch=('any')
@@ -8,8 +8,8 @@ url="http://github.com/paradoxxxzero/butterfly"
 license=('GPLv3')
 depends=('python' 'python-pyopenssl' 'python-tornado' 'tornado_systemd' 'python-setuptools')
 optdepends=('python-libsass')
-source=('https://pypi.python.org/packages/25/ef/01cd00716876d8612206087017e22525dd5cb171fb145ba72535204b169b/butterfly-2.0.2.tar.gz')
-md5sums=('e8c5c3941f58380adeb9f6ea91c63553')
+source=('https://pypi.python.org/packages/e6/f3/0de160fd27d6eedfdebae8e73cd35d702fa6324bb9a4d320c308c13f81df/butterfly-3.0.0.tar.gz')
+md5sums=('0ad4979adad02e05ae5535e091c22998')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
