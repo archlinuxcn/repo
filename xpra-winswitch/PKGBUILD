@@ -1,7 +1,7 @@
 # Contributor: Bug <bug2000@gmail.com>
 # Maintainer: Bug <bug2000@gmail.com>
 pkgname=xpra-winswitch
-pkgver=1.0.3
+pkgver=1.0.4
 pkgrel=1
 pkgdesc="Modified version of xpra by Winswitch"
 arch=('i686' 'x86_64')
@@ -37,12 +37,12 @@ backup=('etc/xpra/xpra.conf' 'etc/xpra/xorg.conf'
         'etc/xpra/conf.d/60_server.conf'
         'etc/xpra/conf.d/65_proxy.conf')
 source=("https://xpra.org/src/xpra-$pkgver.tar.xz")
-sha256sums=('f83c5946f67fe26eee8b44fba0fa30bca9fbc7aa58ee66b903b7385c2d332166')
+sha256sums=('c841940957761e60454eac44c955d174b3d864c853f28b387e784a6d85fc9924')
 
 build() {
   cd ${srcdir}/xpra-$pkgver
   export pkgdir
-  #python2 setup.py build || return 1
+  #python2 setup.py build
   CFLAGS="$CFLAGS -fno-strict-aliasing" python2 setup.py build --without-enc_x265
 }
 
