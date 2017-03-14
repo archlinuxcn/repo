@@ -10,7 +10,7 @@ build_prefix = 'archlinuxcn-x86_64'
 pre_build = aur_pre_build
 post_build = aur_post_build
 
-depends = ['seafile', 'ccnet-server', 'libevhtp-seafile']
+depends = ['seafile', 'ccnet', 'ccnet-server', 'libevhtp-seafile', 'libsearpc']
 
 if __name__ == '__main__':
   single_main()
