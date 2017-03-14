@@ -1,0 +1,17 @@
+--- a/tools/seafile-admin
++++ b/tools/seafile-admin
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/lib/seafile/seafileenv/bin/python2
+ # coding: UTF-8
+ '''This is the helper script to setup/manage your seafile server
+ '''
+@@ -683,7 +683,7 @@
+ 
+ def start_seahub_gunicorn():
+     argv = [
+-        'gunicorn',
++        '/usr/lib/seafile/seafileenv/bin/gunicorn',
+         'seahub.wsgi:application',
+         '-c',
+         conf[CONF_SEAHUB_CONF],

@@ -1,0 +1,27 @@
+From a241e334aa22e66b0469a3899d73db7df4b6e274 Mon Sep 17 00:00:00 2001
+From: Moritz Maxeiner <moritz@ucworks.org>
+Date: Mon, 28 Apr 2014 04:42:11 +0200
+Subject: [PATCH] Revert "[server] put pids/ folder out of seafile-data/"
+
+This reverts commit 54926205490f9efcd16d22c4bc178576d50449ef.
+---
+ controller/seafile-controller.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/controller/seafile-controller.c b/controller/seafile-controller.c
+index c5bc425..a1a9358 100644
+--- a/controller/seafile-controller.c
++++ b/controller/seafile-controller.c
+@@ -611,7 +611,7 @@ stop_ccnet_server ()
+ static void
+ init_pidfile_path (SeafileController *ctl)
+ {
+-    char *pid_dir = g_build_filename (topdir, "pids", NULL);
++    char *pid_dir = g_build_filename (ctl->seafile_dir, "pids", NULL);
+     if (!g_file_test(pid_dir, G_FILE_TEST_EXISTS)) {
+         if (g_mkdir(pid_dir, 0777) < 0) {
+             seaf_warning("failed to create pid dir %s: %s", pid_dir, strerror(errno));
+-- 
+1.9.2
+
+
