@@ -4,7 +4,7 @@
 # Contributor: Adrian Hühn <adrian.huehn@web.de>
 
 pkgname=ccnet
-pkgver=6.0.3
+pkgver=6.0.4
 pkgrel=1
 pkgdesc="A framework for writing networked applications in C."
 arch=('i686' 'x86_64' 'armv7h' 'armv6h')
@@ -14,7 +14,7 @@ depends=('ccnet-server')
 makedepends=('vala' 'libmariadbclient' )
 source=("${pkgname}-v${pkgver}-server.tar.gz::${url}/archive/v${pkgver}.tar.gz"
         "libccnet.pc.patch")
-sha256sums=('b766d049e0464f192f509c997e1a76d544c9e8db88957035bcf62f234bfc86a5'
+sha256sums=('2156787fc9ae1e4293493f0ce398aa8b97d84b9f0201d2fd6986b736bd249b04'
             '66c3b02c3981db6a80819e0ae103bedadf8dfdf81405a7f75a9cba714acf973f')
 
 prepare () {
@@ -36,4 +36,5 @@ package () {
     # Already provided by ccnet-server
     rm -rf "${pkgdir}/usr/include"
     rm -rf "${pkgdir}/usr/lib"
+    rm -rf "${pkgdir}/usr/bin/ccnet-init"
 }
