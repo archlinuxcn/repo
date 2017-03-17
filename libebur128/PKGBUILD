@@ -1,8 +1,8 @@
 # $Id$
-# Maintainer: BlackIkeEagle <ike DOT devolder AT gmail DOT com>
+# Maintainer: BoosterDEV <booster DOT devel AT gmail DOT com>
 
 pkgname=libebur128
-pkgver=1.1.0
+pkgver=1.2.2
 pkgrel=1
 pkgdesc="A library that implements the EBU R 128 standard for loudness normalisation."
 arch=('i686' 'x86_64')
@@ -13,7 +13,7 @@ makedepends=('cmake')
 source=(
 	"$pkgname-$pkgver.tar.gz::https://github.com/jiixyj/$pkgname/archive/v$pkgver.tar.gz"
 )
-sha256sums=('c60e78f4bfda387a0895c64a4fc9850445e3a4425cc98f9140885966ce17c1d1')
+sha256sums=('1d0d7e855da04010a2432e11fbc596502caf11b61c3b571ccbcb10095fe44b43')
 
 prepare() {
 	cd "$pkgname-$pkgver"
@@ -35,8 +35,7 @@ build() {
 
 package() {
 	cd "$pkgname-$pkgver"
-	
+
 	cd build
 	make DESTDIR="$pkgdir" install
 }
-
