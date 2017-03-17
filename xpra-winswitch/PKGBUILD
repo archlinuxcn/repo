@@ -1,27 +1,25 @@
 # Contributor: Bug <bug2000@gmail.com>
 # Maintainer: Bug <bug2000@gmail.com>
 pkgname=xpra-winswitch
-pkgver=1.0.4
+pkgver=2.0
 pkgrel=1
 pkgdesc="Modified version of xpra by Winswitch"
 arch=('i686' 'x86_64')
 url='http://xpra.org/'
 license=('GPL2')
 depends=('python2' 'pygtk' 'libxtst' 'python2-pillow' 'python2-lz4'
-         'ffmpeg' 'libvpx' 'xf86-video-dummy' 'libwebp' 'libxkbfile'
+         'ffmpeg' 'libvpx' 'xf86-video-dummy' 'libxkbfile'
          'python2-numpy' 'rencode' 'python2-opengl'
-         'python2-gtkglext' 'python-lz4' 'python-opengl' 'python2-opengl')
+         'python2-gtkglext' 'python-lz4' 'python-opengl')
 optdepends=('x264: Codec' 'python2-dbus: dbus features'
             'python2-pycups: Printing support' 'python2-netifaces: mdns'
             'python2-cryptography: Cryptography'
-            'python-cryptography: Cryptography'
-            'python2-crypto: Cryptography'
-            'python-crypto: Cryptography')
+            'python-cryptography: Cryptography')
 conflicts=('parti-all')
 provides=('parti-all')
 makedepends=('python2-setuptools' 'cython2')
 backup=('etc/xpra/xpra.conf' 'etc/xpra/xorg.conf'
-        'etc/xpra/cuda.conf' 'etc/xpra/nvenc.keys'
+#        'etc/xpra/cuda.conf' 'etc/xpra/nvenc.keys'
         'etc/xpra/conf.d/05_features.conf'
         'etc/xpra/conf.d/10_network.conf'
         'etc/xpra/conf.d/12_ssl.conf'
@@ -37,7 +35,7 @@ backup=('etc/xpra/xpra.conf' 'etc/xpra/xorg.conf'
         'etc/xpra/conf.d/60_server.conf'
         'etc/xpra/conf.d/65_proxy.conf')
 source=("https://xpra.org/src/xpra-$pkgver.tar.xz")
-sha256sums=('c841940957761e60454eac44c955d174b3d864c853f28b387e784a6d85fc9924')
+sha256sums=('ca9e9622a9d435f9591bf60baec50ea02ebad4e0c0017e1df43dfddd6616e807')
 
 build() {
   cd ${srcdir}/xpra-$pkgver
