@@ -1,5 +1,11 @@
+commit fc1417f1ee8d411a768486c301eaea2a69fae6b5 (HEAD -> master)
+Author: Taiki Sugawara <buzz.taiki@gmail.com>
+Date:   Wed Mar 22 03:05:51 2017 +0900
+
+    natspec patch
+
 diff --git a/CPP/7zip/Archive/Zip/ZipIn.cpp b/CPP/7zip/Archive/Zip/ZipIn.cpp
-index 2ba7e3f..7e795b1 100644
+index c71c40f..3aaf4e8 100644
 --- a/CPP/7zip/Archive/Zip/ZipIn.cpp
 +++ b/CPP/7zip/Archive/Zip/ZipIn.cpp
 @@ -2,6 +2,9 @@
@@ -12,7 +18,7 @@ index 2ba7e3f..7e795b1 100644
  // #include <stdio.h>
  
  #include "../../../Common/DynamicBuffer.h"
-@@ -13,6 +16,8 @@
+@@ -16,6 +19,8 @@
  
  #include "ZipIn.h"
  
@@ -21,20 +27,9 @@ index 2ba7e3f..7e795b1 100644
  #define Get16(p) GetUi16(p)
  #define Get32(p) GetUi32(p)
  #define Get64(p) GetUi64(p)
-@@ -91,6 +96,10 @@ HRESULT CInArchive::Open(IInStream *stream, const UInt64 *searchHeaderSizeLimit)
-   RINOK(FindAndReadMarker(stream, searchHeaderSizeLimit));
-   RINOK(stream->Seek(m_Position, STREAM_SEEK_SET, NULL));
-   Stream = stream;
-+
-+
-+  /* Guess archive filename charset */
-+  archive_oem_charset = natspec_get_charset_by_locale(NATSPEC_DOSCS, "");
-   return S_OK;
+@@ -604,6 +609,19 @@ void CInArchive::ReadFileName(unsigned size, AString &s)
  }
  
-@@ -445,6 +454,19 @@ void CInArchive::ReadFileName(unsigned size, AString &s)
-   s.ReleaseBuf_CalcLen(size);
- }
  
 +void CInArchive::RecodeFileName(CItem &item) {
 +  if (item.IsUtf8()) return;
@@ -52,7 +47,7 @@ index 2ba7e3f..7e795b1 100644
  bool CInArchive::ReadExtra(unsigned extraSize, CExtraBlock &extraBlock,
      UInt64 &unpackSize, UInt64 &packSize, UInt64 &localHeaderOffset, UInt32 &diskStartNumber)
  {
-@@ -578,6 +600,7 @@ bool CInArchive::ReadLocalItem(CItemEx &item)
+@@ -745,6 +763,7 @@ bool CInArchive::ReadLocalItem(CItemEx &item)
      HeadersWarning = true;
    }
    
@@ -60,20 +55,32 @@ index 2ba7e3f..7e795b1 100644
    return item.LocalFullHeaderSize <= ((UInt32)1 << 16);
  }
  
-@@ -799,6 +822,7 @@ HRESULT CInArchive::ReadCdItem(CItemEx &item)
-   item.ExternalAttrib = Get32(p + 34);
-   item.LocalHeaderPos = Get32(p + 38);
+@@ -1017,6 +1036,7 @@ HRESULT CInArchive::ReadCdItem(CItemEx &item)
+   G32(34, item.ExternalAttrib);
+   G32(38, item.LocalHeaderPos);
    ReadFileName(nameSize, item.Name);
 +  RecodeFileName(item);
    
    if (extraSize > 0)
-   {
+     ReadExtra(extraSize, item.CentralExtra, item.Size, item.PackSize, item.LocalHeaderPos, item.Disk);
+@@ -2112,7 +2132,10 @@ HRESULT CInArchive::ReadHeaders2(CObjectVector<CItemEx> &items)
+ HRESULT CInArchive::Open(IInStream *stream, const UInt64 *searchLimit,
+     IArchiveOpenCallback *callback, CObjectVector<CItemEx> &items)
+ {
+-  _inBufMode = false;
++  /* Guess archive filename charset */
++  archive_oem_charset = natspec_get_charset_by_locale(NATSPEC_DOSCS, "");
++
++ _inBufMode = false;
+   items.Clear();
+   
+   Close();
 diff --git a/CPP/7zip/Archive/Zip/ZipIn.h b/CPP/7zip/Archive/Zip/ZipIn.h
-index 734d3bc..a508fef 100644
+index 9b10905..8265c58 100644
 --- a/CPP/7zip/Archive/Zip/ZipIn.h
 +++ b/CPP/7zip/Archive/Zip/ZipIn.h
-@@ -184,6 +184,9 @@ public:
-       return false;
+@@ -349,6 +349,9 @@ public:
+ 
      return true;
    }
 +
@@ -96,7 +103,7 @@ index 12bc8ad..cf72102 100644
  
  bool CExtraSubBlock::ExtractNtfsTime(unsigned index, FILETIME &ft) const
 diff --git a/CPP/7zip/Archive/Zip/ZipItem.h b/CPP/7zip/Archive/Zip/ZipItem.h
-index 5f078b6..1e01583 100644
+index c134ec7..14d4dbe 100644
 --- a/CPP/7zip/Archive/Zip/ZipItem.h
 +++ b/CPP/7zip/Archive/Zip/ZipItem.h
 @@ -14,6 +14,8 @@
@@ -168,10 +175,10 @@ index 056d0d0..a2bb3af 100644
  
  }}
 diff --git a/CPP/7zip/Archive/Zip/ZipUpdate.cpp b/CPP/7zip/Archive/Zip/ZipUpdate.cpp
-index 75c4ec5..58fb31d 100644
+index 77df016..f86d235 100644
 --- a/CPP/7zip/Archive/Zip/ZipUpdate.cpp
 +++ b/CPP/7zip/Archive/Zip/ZipUpdate.cpp
-@@ -89,6 +89,8 @@ static void SetFileHeader(
+@@ -79,6 +79,8 @@ static void SetFileHeader(
    else
      isDir = item.IsDir();
  
@@ -180,7 +187,7 @@ index 75c4ec5..58fb31d 100644
    item.LocalHeaderPos = archive.GetCurPos();
    item.MadeByVersion.HostOS = kMadeByHostOS;
    item.MadeByVersion.Version = NFileHeader::NCompressionMethod::kMadeByProgramVersion;
-@@ -371,6 +373,7 @@ static HRESULT UpdateItemOldData(
+@@ -364,6 +366,7 @@ static HRESULT UpdateItemOldData(
      item.Ntfs_ATime = ui.Ntfs_ATime;
      item.Ntfs_CTime = ui.Ntfs_CTime;
      item.NtfsTimeIsDefined = ui.NtfsTimeIsDefined;
@@ -188,9 +195,9 @@ index 75c4ec5..58fb31d 100644
  
      item.CentralExtra.RemoveUnknownSubBlocks();
      item.LocalExtra.RemoveUnknownSubBlocks();
-@@ -385,6 +388,8 @@ static HRESULT UpdateItemOldData(
-   {
-     CUpdateRange range(inArchive->GetOffsetInStream(itemEx.LocalHeaderPos), itemEx.GetLocalFullSize());
+@@ -383,6 +386,8 @@ static HRESULT UpdateItemOldData(
+     if (!packStream)
+       return E_NOTIMPL;
      
 +    archive.RecodeFileName(item);
 +
