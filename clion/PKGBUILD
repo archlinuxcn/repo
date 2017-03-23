@@ -10,7 +10,7 @@ pkgname=(clion clion-jre clion-cmake clion-gdb clion-lldb)
 _pkgname=clion
 _dlname=CLion
 # Make sure to use vercmp to check version is seen as newer. Bump epoch if not.
-pkgver=2016.3.4
+pkgver=2016.3.5
 pkgrel=1
 # Bump when JetBrains uses silly letters in stable releases
 epoch=1
@@ -22,7 +22,7 @@ license=('custom')
 makedepends=('rsync')
 source=("https://download.jetbrains.com/cpp/${_dlname}-${pkgver}.tar.gz"
         "jetbrains-${pkgbase}.desktop")
-sha256sums=('76b20f853c000aab2042e3903a4ff660732aa441772ddc52fe2d7ce0d51f7b7d'
+sha256sums=('143026bb0e79d01c8c09ff738c0f131de33d92970fb0d0e0694717ee286fc358'
             '9f0f4335f410e0587018c85ebfcf4b65a7a47ad682a58972624378953ef288d6')
 noextract=("${_dlname}-${pkgver}.tar.gz")
 
