@@ -1,7 +1,7 @@
 # Maintainer: Jingbei Li <i@jingbei.li>
 pkgdesc='An Image toolbox for Torch.'
 pkgname='torch7-image-git'
-pkgver=1.0.1.0.r285.gc4f41c3
+pkgver=1.0.1.0.r287.g705393f
 pkgrel=1
 makedepends=('cmake' 'git')
 depends=('torch7-git>=r819' 'libjpeg-turbo' 'libpng' 'torch7-sys-git')
@@ -34,10 +34,7 @@ package () {
 
 	# Move Lua C module
 	mkdir -p "${pkgdir}/usr/lib/lua/5.1"
-	mv "${pkgdir}/usr/lib/libimage.so" "${pkgdir}/usr/lib/lua/5.1/"
-	mv "${pkgdir}/usr/lib/libjpeg.so" "${pkgdir}/usr/lib/lua/5.1/"
-	mv "${pkgdir}/usr/lib/libpng.so" "${pkgdir}/usr/lib/lua/5.1/"
-	mv "${pkgdir}/usr/lib/libppm.so" "${pkgdir}/usr/lib/lua/5.1/"
+	find "${pkgdir}/usr/lib" -name "*.so" -exec mv {} "${pkgdir}/usr/lib/lua/5.1/" \;
 
 	# Move pure Lua modules
 	mkdir -p "${pkgdir}/usr/share/lua/5.1"
