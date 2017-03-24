@@ -3,9 +3,9 @@
 pkgname=virtio-win
 _ver=0.1.134
 # package version
-pkgver=${_ver}.1
+pkgver=${_ver}.2
 # upstream version
-_pkgver=${_ver}-1
+_pkgver=${_ver}-2
 pkgrel=1
 pkgdesc="virtio drivers for Windows (2000, XP, Vista, 7, 8, 10) guests and floppy images for Windows XP"
 arch=('any')
@@ -22,9 +22,9 @@ source=("${pkgname}-${_pkgver}.iso::${_url}/${pkgname}-${_pkgver}/${pkgname}.iso
 noextract=("${pkgname}-${_pkgver}.iso"
            "${pkgname}-${_pkgver}_amd64.vfd"
            "${pkgname}-${_pkgver}_x86.vfd")
-sha256sums=('cb89ff41c4a723af150240f8df041d2b86023fafec3ea1b8b5079ea7142c4ac0'
-            'd5917b247bd4eb41669c7c2f3e4c9c1227fb51a767356ba646bd47c17ce5431c'
-            '647f6b6c958bb0635e4d6409673164e98827de45dc01830a2811841061556a59')
+sha256sums=('6b57022529bf8a843404af3c6ee10ec6c58c5ed27f6ad6f050a039aec8ac5b0f'
+            'ddb5527ef330b32a35af7397f22dcbd8c945da835a37259b7a15fb4c5286e771'
+            '1d208fea11cc5a22257cc5c02fcaea0895cdc6b994f1974a9349aa77fef0ab93')
 
 package() {
   install -Dm 644 ${pkgname}-${_pkgver}.iso \
