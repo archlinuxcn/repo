@@ -3,7 +3,7 @@ Arch Linux Chinese Community Repository
 
 Packaging consistency check: [![Build Status](https://travis-ci.org/archlinuxcn/repo.svg?branch=master)](https://travis-ci.org/archlinuxcn/repo)
 
-###Usage
+### Usage
 
 Add repo
 
@@ -22,7 +22,7 @@ Add PGP Keys
 sudo pacman -Syy && sudo pacman -S archlinuxcn-keyring
 ```
 
-###PKGLIST
+### PKGLIST
 
 * Flag package OUT-OF-DATE by submit new issue, and shall be closed after package updated.
 
