@@ -1,6 +1,6 @@
 _pkgname=aiohttp
 pkgname=python-${_pkgname}
-pkgver=2.0.1
+pkgver=2.0.2
 
 pkgrel=3
 pkgdesc="http client/server for asyncio"
@@ -11,7 +11,7 @@ depends=('python' 'python-chardet' 'python-multidict' 'python-async_timeout' 'py
 makedepends=('cython' 'python-setuptools')
 optdepends=('python-aiodns')
 source=("https://github.com/KeepSafe/aiohttp/archive/${pkgver}.tar.gz")
-sha1sums=('92f4a34f1c411b167db5a3758d31341478b7c632')
+sha1sums=('3b3b6fb251a86c914088b869eaa5f2597d1cf488')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
