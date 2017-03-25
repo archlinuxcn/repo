@@ -68,7 +68,7 @@
                   help="perform post extract (on a single package), "
 @@ -1439,6 +1446,10 @@ p.error('no arguments expected')
  
-     ROOT_PREFIX = opts.root_prefix
+     ROOT_PREFIX = opts.root_prefix.replace('//', '/')
 +    if not opts.instdir:
 +        instdir = ROOT_PREFIX
 +    else:
