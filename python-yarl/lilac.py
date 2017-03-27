@@ -13,8 +13,7 @@ def pre_build():
 
 def post_build():
   pypi_post_build()
-  # moving to [community]
-  # update_aur_repo()
+  update_aur_repo()
 
 if __name__ == '__main__':
   single_main()
