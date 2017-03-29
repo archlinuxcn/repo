@@ -1,0 +1,14 @@
+--- a/Makefile.orig
++++ b/Makefile
+@@ -3 +3 @@
+-PROGNAME = tetris$(EXE)
++PROGNAME = vitetris$(EXE)
+@@ -6 +6 @@
+-#HISCORE_FILENAME = /var/games/vitetris-hiscores
++HISCORE_FILENAME = /var/games/vitetris/hiscores
+@@ -59 +59 @@
+-	$(INSTALL) -m644 README licence.txt $(DESTDIR)$(docdir)
++	$(INSTALL) -m644 README $(DESTDIR)$(docdir)
+@@ -75 +75 @@
+-	if [ -z "$$HS_FN" ]; then HS_FN=/var/games/vitetris-hiscores; fi; \
++	if [ -z "$$HS_FN" ]; then HS_FN=/var/games/vitetris/hiscores; fi; \

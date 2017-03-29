@@ -1,7 +1,7 @@
 # Maintainer: David Scholl <djscholl at gmail dot com>
 pkgname=leo
-pkgver=5.2
-pkgrel=1.1
+pkgver=5.5
+pkgrel=1
 pkgdesc="Literate programmer's editor, outliner, and project manager"
 arch=('any')
 url="http://leoeditor.com/"
@@ -13,15 +13,15 @@ optdepends=('python-pyenchant: spellchecking support'
             'python-sphinx: documentation support')
 
 install="leo.install"
-source=(http://downloads.sourceforge.net/sourceforge/$pkgname/Leo-$pkgver-final.zip
+source=(http://downloads.sourceforge.net/sourceforge/$pkgname/Leo-$pkgver.zip
         leo.desktop
         leo.xml)
-sha256sums=('2df0ac372be832a837157ce289ada1c34cf883aace5cf760df62ae8ceeb6858f'
+sha256sums=('f366a2d5cac40117a2b2446e43a4ec09a40a274a20c480a338e8bdef8a1f52b0'
             '7b326791378eefedecee2474c4e1a497838d2a06ff4259a195d817c38588395b'
             '630852279324b0d9acf656c4684f16777d64f49b4062bd101c5cddbfc33c82cb')
 
 package() {
-  cd $srcdir/Leo-$pkgver-final
+  cd $srcdir/Leo-$pkgver
   cp leo/dist/setup.py leo/dist/setup.cfg leo/dist/leo-install.py ./
   python setup.py install --root=$pkgdir
   install -D -m644 LICENSE.TXT $pkgdir/usr/share/licenses/$pkgname/LICENSE.TXT

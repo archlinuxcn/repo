@@ -7,14 +7,14 @@
 
 pkgname=acpi_call-pf
 pkgver=1.1.0
-pkgrel=54
-_extramodules=extramodules-4.9-pf
+pkgrel=55
+_extramodules=extramodules-4.10-pf
 pkgdesc='A linux-pf kernel module that enables calls to ACPI methods through /proc/acpi/call'
 arch=('i686' 'x86_64')
 url="http://github.com/mkottman/${pkgname%-*}"
 license=('GPL')
-depends=('linux-pf>=4.9' 'linux-pf<4.10')
-makedepends=('linux-pf-headers>=4.9' 'linux-pf-headers<4.10')
+depends=('linux-pf>=4.10' 'linux-pf<4.11')
+makedepends=('linux-pf-headers>=4.10' 'linux-pf-headers<4.11')
 provides=("${pkgname%-*}")
 install="${pkgname}.install"
 source=("acpi_call-$pkgver.tar.gz::${url}/archive/v${pkgver}.tar.gz")

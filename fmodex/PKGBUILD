@@ -1,19 +1,19 @@
 # $Id$
-# Maintainer: Sven-Hendrik Haase <sh@lutzhaase.com>
+# Maintainer: Eric Bailey <nerflad@gmail.com>
+# Prior Maintainer: Sven-Hendrik Haase <sh@lutzhaase.com>
 # Contributor: Christoph Zeiler <archNOSPAM_at_moonblade.dot.org>
 
-# Note: This packae is proprietary and distribution is limited. However, we
+# Note: This package is proprietary and distribution is limited. However, we
 # have written permission to by the FMOD CEO to distribute this in binary form.
 pkgname=fmodex
-pkgver=4.44.58
+pkgver=4.44.62
 pkgrel=1
 pkgdesc="An advanced audio engine"
 arch=('i686' 'x86_64')
 url="http://www.fmod.org/"
 license=('custom')
-source=("fmodapi44458linux.tar.gz::https://www.dropbox.com/s/0z62kk2p79gs6bh/fmodapi44458linux.tar.gz?dl=1")
-## source=fmodapi44433linux.tar.gz?dl=1
-md5sums=('SKIP')
+source=("fmodapi44462linux.tar.gz::https://zdoom.org/files/fmod/fmodapi44462linux.tar.gz")
+sha256sums=('4f962bc498dc9d3be8267f75fd0207a84ab4b24cec6638f8ff5d59df640ee4f3')
 
 package() {
   cd fmodapi${pkgver//./}linux

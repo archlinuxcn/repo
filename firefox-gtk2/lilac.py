@@ -22,21 +22,14 @@ def pre_build():
 provides=("firefox=${pkgver}-${pkgrel}")\n""" + line
     elif '$pkgname' in line:
       line = line.replace('$pkgname', 'firefox')
-    elif '../firefox-gtk3-20.patch' in line:
-      line = '  # ' + line.lstrip()
 
-    print(line)
-
-  for line in edit_file('mozconfig'):
-    if 'gtk3' in line:
-      continue
+    # .mozconfig
     elif 'MOZ_REQUIRE_SIGNING' in line:
       continue
     elif '--enable-official-branding' in line:
       print('ac_add_options --enable-default-toolkit=cairo-gtk2')
-    print(line)
 
-  run_cmd(['updpkgsums'])
+    print(line)
 
 def post_build():
   git_rm_files(g.oldfiles)

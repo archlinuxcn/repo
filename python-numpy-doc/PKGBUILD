@@ -3,7 +3,7 @@
 # Contributor: Patrice Peterson <runiq at archlinux dot us>
 
 pkgname=python-numpy-doc
-pkgver=1.11.0
+pkgver=1.12.0
 pkgrel=1
 pkgdesc="Documentation for NumPy"
 makedepends=('unzip')
@@ -12,7 +12,7 @@ url='http://docs.scipy.org'
 license=('BSD')
 source=("$pkgname-$pkgver.zip::http://docs.scipy.org/doc/numpy/numpy-html-${pkgver}.zip")
 noextract=("$pkgname-$pkgver.zip")
-md5sums=('d4dd593c32a4c37864e6345045c6ca9f')
+md5sums=('e52c299963f2e4ef536ea6bd87fed78e')
 
 package()
 {

@@ -1,19 +1,17 @@
 # Maintainer: Phillip Schichtel <phillip.public@schich.tel>
 pkgname=adapta-gtk-theme
-_gtk3_min='3.18'
-_gtk3_max='4.0'
-_theme_name=Adapta
 _gtk2_min='2.24.30'
-_github="adapta-project/${pkgname}"
-pkgver="3.89.4.148"
+_gtk3_min='3.18'
+_gtk_max='4.0'
+pkgver="3.89.5.51"
 pkgrel=1
 pkgdesc="An adaptive Gtk+ theme based on Material Design Guidelines."
 arch=(any)
-url="https://github.com/${_github}"
+url="https://github.com/adapta-project/${pkgname}"
 license=('GPL2' 'CCPL')
 depends=("gtk2>=${_gtk2_min}"
          "gtk3>=${_gtk3_min}.9"
-         "gtk3<=${_gtk3_max}.99"
+         "gtk3<=${_gtk_max}.99"
          'gdk-pixbuf2>=2.21.0'
          'gtk-engines>=2.21.0'
          'gtk-engine-murrine>=0.98.1'
@@ -40,7 +38,7 @@ makedepends=('glib2>=2.48.0'
              'parallel')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
 #        "${pkgname}-${pkgver}.tar.gz.asc::${url}/releases/download/${pkgver}/${pkgname}-${pkgver}.tar.gz.asc")
-sha256sums=('bd6b39afc8c2c8eae20747bce96b9e63517aea6dce9fe35ca7b1c872f6c8ee21')
+sha256sums=('ed984652e2f79c754031fae97600a702ebce5df4d35e87012015aac5a18a87ed')
 
 build() {
     cd "${pkgname}-${pkgver}"

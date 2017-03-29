@@ -2,14 +2,14 @@
 # Contributor: Kilian Lackhove kilian@lackhove.de
 # Contributor: Justin Patera serialhex@gmail.com
 # Contributor: ava1ar <mail(at)ava1ar(dot)me>
-# Maintainer: Flow
+# Maintainer: widowild
 
 pkgname=rslsync
 pkgver=2.4.4
-pkgrel=1
+pkgrel=3
 pkgdesc="Resilio Sync (ex:BitTorrent Sync) - automatically sync files via secure, distributed technology"
 license=("custom:resilio")
-arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h')
+arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://www.getsync.com"
 install=rslsync.install
 backup=('etc/rslsync.conf')
@@ -18,6 +18,7 @@ source=(rslsync.service rslsync_user.service rslsync.conf)
 source_arm=("rslsync_arm-${pkgver}.tar.gz::https://download-cdn.resilio.com/stable/linux-arm/resilio-sync_arm.tar.gz")
 source_armv6h=("rslsync_arm-${pkgver}.tar.gz::https://download-cdn.resilio.com/stable/linux-arm/resilio-sync_arm.tar.gz")
 source_armv7h=("rslsync_armhf-${pkgver}.tar.gz::https://download-cdn.resilio.com/stable/linux-armhf/resilio-sync_armhf.tar.gz")
+source_aarch64=("rslsync_armhf-${pkgver}.tar.gz::https://download-cdn.resilio.com/stable/linux-armhf/resilio-sync_armhf.tar.gz")
 source_i686=("rslsync_i386-${pkgver}.tar.gz::https://download-cdn.resilio.com/stable/linux-i386/resilio-sync_i386.tar.gz")
 source_x86_64=("rslsync_x64-${pkgver}.tar.gz::https://download-cdn.resilio.com/stable/linux-x64/resilio-sync_x64.tar.gz")
 sha256sums=('4483cbe3fff81281666d8fbe8c9b8d7d27c38ba7a3d3752a865f1ab8c1f212db'
@@ -28,6 +29,8 @@ sha256sums_x86_64=('00fb4354b713cda91a55a9e84fe4a9be5241f42b5b7b6a6df52f72ea89f1
 sha256sums_arm=('3a36576962f93bcefc05842f2cc7303af8a826ecb596abed4a953a7be5595532')
 sha256sums_armv6h=('3a36576962f93bcefc05842f2cc7303af8a826ecb596abed4a953a7be5595532')
 sha256sums_armv7h=('b71fbf1f5873ddc0cc1e926356eee27b8a83d3c045a3161eaf034728076a2287')
+sha256sums_aarch64=('b71fbf1f5873ddc0cc1e926356eee27b8a83d3c045a3161eaf034728076a2287')
+
 
 package() {
   # install main binary
