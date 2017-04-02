@@ -1,0 +1,17 @@
+Description: Remove -Werror flag
+ This flag is removed because of fatal warnings in Qt
+Author: Nicholas Guriev <guriev-ns@ya.ru>
+Last-Update: 2017-03-31
+
+diff --git a/Telegram/gyp/settings_linux.gypi b/Telegram/gyp/settings_linux.gypi
+index 9050ab2..82bd931 100644
+--- a/Telegram/gyp/settings_linux.gypi
++++ b/Telegram/gyp/settings_linux.gypi
+@@ -25,7 +25,6 @@
+           '-pipe',
+           '-g',
+           '-Wall',
+-          '-Werror',
+           '-W',
+           '-fPIC',
+           '-Wno-unused-variable',

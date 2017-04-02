@@ -7,8 +7,8 @@
 
 _emoji_res_commit="62fcc728a12a4d5b41049e6aadb5e6f039c28f8d"
 pkgname=telegram-desktop-systemqt-notoemoji
-pkgver=1.0.14
-pkgrel=1
+pkgver=1.0.27
+pkgrel=2
 pkgdesc='Experimental build of Telegram Desktop (using system Qt, emojis replaced with those from Noto Color Emoji)'
 arch=('i686' 'x86_64')
 url="https://desktop.telegram.org/"
@@ -19,17 +19,24 @@ optdepends=('libappindicator-gtk3: AppIndicator tray icon')
 conflicts=('telegram-desktop')
 provides=('telegram-desktop')
 install="telegram-desktop.install"
+_variant_ver="1.1.3"
+_GSL_commit="16a6a41690325433976d843e13ec676d6f9ab091"
 source=(
     "tdesktop::git+https://github.com/telegramdesktop/tdesktop.git#tag=v$pkgver"
+    "GSL::git+https://github.com/Microsoft/GSL.git#commit=${_GSL_commit}"
+    "variant::git+https://github.com/mapbox/variant#tag=v${_variant_ver}"
     "telegramdesktop.desktop"
     "tg.protocol"
     "Avoid-depending-on-static-libraries.patch"
-    "Fix-desktop-integration-issues.patch"
+    "Remove-Werror-flag.patch"
+    "Downgrade-Qt-version.patch"
     "Flags-for-precompiled-header-and-MOC.patch"
     "Fix-rcc-path.patch"
     "Use-gtk3-headers.patch"
     "Reduce-number-of-libraries.patch"
+    "Correct-MOC-path.patch"
     "CMakeLists.inj"
+    "qt_functions.cpp"
     "https://github.com/PeterCxy/tdesktop/raw/${_emoji_res_commit}/Telegram/Resources/art/emoji.webp"
     "https://github.com/PeterCxy/tdesktop/raw/${_emoji_res_commit}/Telegram/Resources/art/emoji_125x.webp"
     "https://github.com/PeterCxy/tdesktop/raw/${_emoji_res_commit}/Telegram/Resources/art/emoji_150x.webp"
@@ -37,15 +44,20 @@ source=(
     "https://github.com/PeterCxy/tdesktop/raw/${_emoji_res_commit}/Telegram/Resources/art/emoji_250x.webp"
 )
 sha256sums=('SKIP'
+            'SKIP'
+            'SKIP'
             '41c22fae6ae757936741e63aec3d0f17cafe86b2d6153cdd1d01a5581e871f17'
             'd4cdad0d091c7e47811d8a26d55bbee492e7845e968c522e86f120815477e9eb'
-            '197159eca70fc4a3d55548842d3218bcd67394cb869f08825d8fc12cf7b050f8'
-            '4e1938a5ddfcf8ac57bafa5f9ce80413665ac3b0ccd3c1853fe8f0835b91f468'
-            '952c7590cb05354c70037745d980fa97c36e36f96a1fa7d0db29a5c6a1d8dbd1'
+            '8da40e3d8bbec2c8dc653cc8c5071b5a7a6e899befac75d6b996536703da4ce6'
+            'c47633e0c1e86cd4488c1533d5742245c5f9e910300f93083101d54597c00c3a'
+            'c05175c418354f3202f4a031ca4133769a37640c920e9e4ff91025f9fc58a015'
+            '5b5a41a852d4d5b84466a19a04684dc7e43dfc6d6494dbcbe41341807bae52b3'
             'cf4dbb293afdbfd226861a00a42790a15b23bea296eccf35853d104e07ea345a'
             '5f3ac7c08df0293bed626293dbfb6040764abf28899db7681572cfb1d8bcaa6e'
-            '0442af5365a31de5a8e15de8a94f5c1192775fc4460b74c4045da99e548f045a'
+            'ca37a7a7bec56133530c4e03c718ad5d5d43f29ec79009d87cb7d891ef78b7a7'
+            '75dcda4aa2d6032f4931cf99e1d915defb4d960ee42725f3b54bbb7dd4ab8531'
             '7a06af83609168a8eaec59a65252caa41dcd0ecc805225886435eb65073e9c82'
+            '8fa4115ae60a87ee6c846f82d5cc4b90d0ba2b2016e1bd36634772230903af31'
             'c6fea6d718b054aa3deb0b8b5a7f1ff330db2ab1f66962de033ad84c33622727'
             '701d15ffe711113022981b2f7da3ae2a4aa9febe260dac020a30274f8c8b538b'
             'c268159a23152b765c7af72997cd290bfbb8c1ed5219991cca28596f85596bd1'
@@ -54,20 +66,32 @@ sha256sums=('SKIP'
 
 prepare() {
     cd "$srcdir/tdesktop"
+    git submodule init
+    git config submodule.third_party/GSL.url "$srcdir/GSL"
+    git config submodule.third_party/variant.url "$srcdir/variant"
+    git submodule update
     git apply "$srcdir/Avoid-depending-on-static-libraries.patch"
-    git apply "$srcdir/Fix-desktop-integration-issues.patch"
+    git apply "$srcdir/Remove-Werror-flag.patch"
+    git apply "$srcdir/Downgrade-Qt-version.patch"
     git apply "$srcdir/Flags-for-precompiled-header-and-MOC.patch"
     git apply "$srcdir/Fix-rcc-path.patch"
     git apply "$srcdir/Use-gtk3-headers.patch"
     git apply "$srcdir/Reduce-number-of-libraries.patch"
+    git apply "$srcdir/Correct-MOC-path.patch"
     cp "$srcdir/emoji.webp" "$srcdir/emoji_"{125,150,200,250}"x.webp" "$srcdir/tdesktop/Telegram/Resources/art/"
+    mkdir -p debian
+    cp "$srcdir/qt_functions.cpp" debian/
 }
 
 build() {
+    export LANG=en_US.UTF-8
+    export GYP_DEFINES="TDESKTOP_DISABLE_CRASH_REPORTS,TDESKTOP_DISABLE_AUTOUPDATE,TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME"
     cd "$srcdir/tdesktop"
     export EXTRA_CPPFLAGS="-DTDESKTOP_DISABLE_AUTOUPDATE -DTDESKTOP_DISABLE_CRASH_REPORTS -DTDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME"
     export CPPFLAGS="$CPPFLAGS $EXTRA_CPPFLAGS"
+    export CXXFLAGS="$CXXFLAGS $EXTRA_CPPFLAGS"
     gyp \
+        -Dbuild_defines=${GYP_DEFINES:1} \
         -Gconfig=Release \
         --depth=Telegram/gyp --generator-output=../.. -Goutput_dir=out Telegram/gyp/Telegram.gyp --format=cmake
     NUM=$((`wc -l < out/Release/CMakeLists.txt` - 2))
