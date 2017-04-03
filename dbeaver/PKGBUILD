@@ -1,7 +1,7 @@
 # Maintainer: Arne Hoch <arne@derhoch.de>
 
 pkgname=dbeaver
-pkgver=4.0.3
+pkgver=4.0.4
 pkgrel=1
 pkgdesc="A free universal database tool for developers and database administrators"
 arch=('i686' 'x86_64')
@@ -11,7 +11,7 @@ depends=('java-runtime>=8' 'gtk2' 'gtk-update-icon-cache')
 makedepends=('maven' 'java-environment>=8')
 source=("https://github.com/serge-rider/dbeaver/archive/${pkgver}.tar.gz"
         'dbeaver.desktop')
-sha256sums=('22424516be8cecd60ab3e470255558f8beeece1db5f0a9716fbffb26b31a0851'
+sha256sums=('91dbe987eae6796d702c977309ba2bae6718cdd97aec2c54b67d4d42bdbc41ef'
             'd6890b86f1ece47d2bc6f039f89a90eba985376ccb117d832fcddd9a103f6689')
 
 build() {
