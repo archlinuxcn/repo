@@ -1,0 +1,53 @@
+Description: Downgrade Qt version
+Author: Nicholas Guriev <guriev-ns@ya.ru>
+Last-Update: 2017-03-31
+
+diff --git a/Telegram/SourceFiles/main.cpp b/Telegram/SourceFiles/main.cpp
+--- a/Telegram/SourceFiles/main.cpp
++++ b/Telegram/SourceFiles/main.cpp
+@@ -23,9 +23,10 @@ Copyright (c) 2014-2017 John Preston, https://desktop.telegram.org
+ #include "storage/localstorage.h"
+ 
+ int main(int argc, char *argv[]) {
+-#ifndef Q_OS_MAC // Retina display support is working fine, others are not.
++#if !defined(Q_OS_MAC) && QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
++	// Retina display support is working fine, others are not.
+ 	QCoreApplication::setAttribute(Qt::AA_DisableHighDpiScaling, true);
+-#endif // Q_OS_MAC
++#endif // not defined Q_OS_MAC and QT_VERSION >= 5.6.0
+ 	QCoreApplication::setApplicationName(qsl("TelegramDesktop"));
+ 
+ 	settingsParseArgs(argc, argv);
+diff --git a/Telegram/SourceFiles/ui/text/text.cpp b/Telegram/SourceFiles/ui/text/text.cpp
+--- a/Telegram/SourceFiles/ui/text/text.cpp
++++ b/Telegram/SourceFiles/ui/text/text.cpp
+@@ -1692,11 +1692,11 @@ private:
+ 		if (item == -1)
+ 			return;
+ 
+-#ifdef OS_MAC_OLD
++#if defined(OS_MAC_OLD) || QT_VERSION < QT_VERSION_CHECK(5, 6, 0)
+ 		auto end = _e->findItem(line.from + line.length - 1);
+-#else // OS_MAC_OLD
++#else
+ 		auto end = _e->findItem(line.from + line.length - 1, item);
+-#endif // OS_MAC_OLD
++#endif
+ 
+ 		int blockIndex = _lineStartBlock;
+ 		ITextBlock *currentBlock = _t->_blocks[blockIndex];
+diff --git a/Telegram/SourceFiles/ui/twidget.cpp b/Telegram/SourceFiles/ui/twidget.cpp
+--- a/Telegram/SourceFiles/ui/twidget.cpp
++++ b/Telegram/SourceFiles/ui/twidget.cpp
+@@ -107,9 +107,9 @@ void sendSynteticMouseEvent(QWidget *widget, QEvent::Type type, Qt::MouseButton
+ 			, button
+ 			, QGuiApplication::mouseButtons() | button
+ 			, QGuiApplication::keyboardModifiers()
+-#ifndef OS_MAC_OLD
++#if !defined(OS_MAC_OLD) && QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
+ 			, Qt::MouseEventSynthesizedByApplication
+-#endif // OS_MAC_OLD
++#endif
+ 		);
+ 		ev.setTimestamp(getms());
+ 		QGuiApplication::sendEvent(windowHandle, &ev);

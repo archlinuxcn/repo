@@ -1,54 +1,9 @@
-diff --git a/Telegram/SourceFiles/platform/linux/linux_libs.cpp b/Telegram/SourceFiles/platform/linux/linux_libs.cpp
-index 372a012f..a356ad4a 100644
---- a/Telegram/SourceFiles/platform/linux/linux_libs.cpp
-+++ b/Telegram/SourceFiles/platform/linux/linux_libs.cpp
-@@ -45,6 +45,7 @@ bool loadLibrary(QLibrary &lib, const char *name, int version) {
- }
- 
- bool setupGtkBase(QLibrary &lib_gtk) {
-+	load(lib_gtk, "gdk_set_allowed_backends", gdk_set_allowed_backends);
- 	if (!load(lib_gtk, "gtk_init_check", gtk_init_check)) return false;
- 	if (!load(lib_gtk, "gtk_menu_new", gtk_menu_new)) return false;
- 	if (!load(lib_gtk, "gtk_menu_get_type", gtk_menu_get_type)) return false;
-@@ -106,6 +107,10 @@ bool setupGtkBase(QLibrary &lib_gtk) {
- 	if (!load(lib_gtk, "g_slist_free", g_slist_free)) return false;
- 
- 	DEBUG_LOG(("Library gtk functions loaded!"));
-+	if (gdk_set_allowed_backends != nullptr) {
-+		gdk_set_allowed_backends("x11");
-+	}
-+
- 	if (!gtk_init_check(0, 0)) {
- 		gtk_init_check = nullptr;
- 		DEBUG_LOG(("Failed to gtk_init_check(0, 0)!"));
-@@ -128,6 +133,7 @@ bool setupAppIndicator(QLibrary &lib_indicator) {
- 
- } // namespace
- 
-+f_gdk_set_allowed_backends gdk_set_allowed_backends = nullptr;
- f_gtk_init_check gtk_init_check = nullptr;
- f_gtk_menu_new gtk_menu_new = nullptr;
- f_gtk_menu_get_type gtk_menu_get_type = nullptr;
-diff --git a/Telegram/SourceFiles/platform/linux/linux_libs.h b/Telegram/SourceFiles/platform/linux/linux_libs.h
-index 1ecae702..80b7e4f4 100644
---- a/Telegram/SourceFiles/platform/linux/linux_libs.h
-+++ b/Telegram/SourceFiles/platform/linux/linux_libs.h
-@@ -52,6 +52,9 @@ bool load(QLibrary &lib, const char *name, Function &func) {
-     return false;
- }
- 
-+typedef void (*f_gdk_set_allowed_backends)(const gchar *backends);
-+extern f_gdk_set_allowed_backends gdk_set_allowed_backends;
-+
- typedef gboolean (*f_gtk_init_check)(int *argc, char ***argv);
- extern f_gtk_init_check gtk_init_check;
- 
-diff --git a/Telegram/SourceFiles/stdafx.cpp b/Telegram/SourceFiles/stdafx.cpp
-index 3cc98b84..781ad18f 100644
---- a/Telegram/SourceFiles/stdafx.cpp
-+++ b/Telegram/SourceFiles/stdafx.cpp
-@@ -34,6 +34,7 @@ Q_IMPORT_PLUGIN(QGenericEnginePlugin)
- #elif defined Q_OS_LINUX // Q_OS_LINUX
+diff --git a/Telegram/SourceFiles/qt_static_plugins.cpp b/Telegram/SourceFiles/qt_static_plugins.cpp
+index 1d4896a6..3efd7caa 100644
+--- a/Telegram/SourceFiles/qt_static_plugins.cpp
++++ b/Telegram/SourceFiles/qt_static_plugins.cpp
+@@ -30,6 +30,7 @@ Q_IMPORT_PLUGIN(QGenericEnginePlugin)
+ #elif defined Q_OS_LINUX // Q_OS_WIN | Q_OS_MAC
  Q_IMPORT_PLUGIN(QWebpPlugin)
  Q_IMPORT_PLUGIN(QXcbIntegrationPlugin)
 +Q_IMPORT_PLUGIN(QWaylandIntegrationPlugin)
@@ -56,10 +11,10 @@ index 3cc98b84..781ad18f 100644
  Q_IMPORT_PLUGIN(QGenericEnginePlugin)
  Q_IMPORT_PLUGIN(QNetworkManagerEnginePlugin)
 diff --git a/Telegram/gyp/Telegram.gyp b/Telegram/gyp/Telegram.gyp
-index 76a6f3e6..0e54d450 100644
+index fb22932c..01b54dfe 100644
 --- a/Telegram/gyp/Telegram.gyp
 +++ b/Telegram/gyp/Telegram.gyp
-@@ -79,21 +79,18 @@
+@@ -81,21 +81,18 @@
      ],
  
      'defines': [
@@ -82,11 +37,11 @@ index 76a6f3e6..0e54d450 100644
        '<(minizip_loc)',
        '<(sp_media_key_tap_loc)',
 +      '/usr/include/breakpad',
+       '<(submodules_loc)/GSL/include',
+       '<(submodules_loc)/variant/include',
      ],
-     'sources': [
-       '<@(qrc_files)',
 diff --git a/Telegram/gyp/qt.gypi b/Telegram/gyp/qt.gypi
-index a8adbaa2..536e22f3 100644
+index a3212210..12868c6b 100644
 --- a/Telegram/gyp/qt.gypi
 +++ b/Telegram/gyp/qt.gypi
 @@ -38,7 +38,6 @@
@@ -96,8 +51,8 @@ index a8adbaa2..536e22f3 100644
 -            'qtharfbuzzng',
            ],
            'qt_version%': '<(qt_version)',
-           'linux_path_qt%': '/usr/local/tdesktop/Qt-<(qt_version)',
-@@ -91,19 +90,9 @@
+           'conditions': [
+@@ -97,19 +96,9 @@
                '<@(qt_libs)',
                'Qt5DBus',
                'Qt5Core',
@@ -120,7 +75,7 @@ index a8adbaa2..536e22f3 100644
              ],
            }],
          ],
-@@ -208,7 +197,6 @@
+@@ -219,7 +208,6 @@
          '<(qt_loc)/plugins/platforminputcontexts',
        ],
        'libraries': [
@@ -128,7 +83,7 @@ index a8adbaa2..536e22f3 100644
          '<@(qt_libs_release)',
          '<(linux_lib_ssl)',
          '<(linux_lib_crypto)',
-@@ -221,12 +209,32 @@
+@@ -232,12 +220,32 @@
          'gthread-2.0',
          'glib-2.0',
          'pthread',
@@ -162,6 +117,18 @@ index a8adbaa2..536e22f3 100644
          '-pthread',
          '-g',
          '-rdynamic',
+diff --git a/Telegram/gyp/settings_linux.gypi b/Telegram/gyp/settings_linux.gypi
+index fde88dcd..1fd1b9cb 100644
+--- a/Telegram/gyp/settings_linux.gypi
++++ b/Telegram/gyp/settings_linux.gypi
+@@ -25,7 +25,6 @@
+           '-pipe',
+           '-g',
+           '-Wall',
+-          '-Werror',
+           '-W',
+           '-fPIC',
+           '-Wno-unused-variable',
 diff --git a/Telegram/gyp/telegram_linux.gypi b/Telegram/gyp/telegram_linux.gypi
 index b42e7443..a2597725 100644
 --- a/Telegram/gyp/telegram_linux.gypi

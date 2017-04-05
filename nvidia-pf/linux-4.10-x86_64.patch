@@ -1,276 +1,382 @@
-diff -ur NVIDIA-Linux-x86_64-378.13/kernel/common/inc/nv-linux.h NVIDIA-Linux-x86_64-378.13.patched/kernel/common/inc/nv-linux.h
---- NVIDIA-Linux-x86_64-378.13/kernel/common/inc/nv-linux.h	2017-02-08 04:58:34.000000000 +0100
-+++ NVIDIA-Linux-x86_64-378.13.patched/kernel/common/inc/nv-linux.h	2017-02-15 04:14:46.304110124 +0100
-@@ -294,7 +294,8 @@
+From ca8b106738521823707f3567cedb41ca158792a3 Mon Sep 17 00:00:00 2001
+From: Alberto Milone <alberto.milone@canonical.com>
+Date: Wed, 15 Feb 2017 10:53:42 +0100
+Subject: [PATCH 1/1] Add support for Linux 4.10
+
+---
+ common/inc/nv-mm.h            |  9 ++++--
+ nvidia-drm/nvidia-drm-fence.c | 72 +++++++++++++++++++++++++++++++++++++++++++
+ nvidia-drm/nvidia-drm-gem.h   |  6 ++++
+ nvidia-drm/nvidia-drm-priv.h  |  7 +++++
+ nvidia/nv-pat.c               | 40 ++++++++++++++++++++++++
+ 5 files changed, 132 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/common/inc/nv-mm.h b/kernel/common/inc/nv-mm.h
+index 06d7da4..e5cc56a 100644
+--- a/kernel/common/inc/nv-mm.h
++++ b/kernel/common/inc/nv-mm.h
+@@ -46,6 +46,8 @@
+  *   2016 Dec 14:5b56d49fc31dbb0487e14ead790fc81ca9fb2c99
+  */
  
- extern int nv_pat_mode;
++#include <linux/version.h>
++
+ #if defined(NV_GET_USER_PAGES_REMOTE_PRESENT)
+     #if defined(NV_GET_USER_PAGES_HAS_WRITE_AND_FORCE_ARGS)
+         #define NV_GET_USER_PAGES           get_user_pages
+@@ -92,10 +94,13 @@
+                                             pages, vmas, NULL);
  
--#if defined(CONFIG_HOTPLUG_CPU)
-+//#if defined(CONFIG_HOTPLUG_CPU)
-+#if 0
- #define NV_ENABLE_HOTPLUG_CPU
- #include <linux/cpu.h>              /* CPU hotplug support              */
- #include <linux/notifier.h>         /* struct notifier_block, etc       */
-diff -ur NVIDIA-Linux-x86_64-378.13/kernel/nvidia/nv-p2p.c NVIDIA-Linux-x86_64-378.13.patched/kernel/nvidia/nv-p2p.c
---- NVIDIA-Linux-x86_64-378.13/kernel/nvidia/nv-p2p.c	2017-02-08 04:58:34.000000000 +0100
-+++ NVIDIA-Linux-x86_64-378.13.patched/kernel/nvidia/nv-p2p.c	2017-02-15 04:14:46.304110124 +0100
-@@ -146,7 +146,7 @@
- int nvidia_p2p_get_pages(
-     uint64_t p2p_token,
-     uint32_t va_space,
--    uint64_t virtual_address,
-+    uint64_t address,
-     uint64_t length,
-     struct nvidia_p2p_page_table **page_table,
-     void (*free_callback)(void * data),
-@@ -211,7 +211,7 @@
-     }
+         #else
+-
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 10, 0)
+                return get_user_pages_remote(tsk, mm, start, nr_pages, flags,
+                                             pages, vmas);
+-
++#else
++               return get_user_pages_remote(tsk, mm, start, nr_pages, flags,
++                                            pages, vmas, NULL);
++#endif
+         #endif
  
-     status = rm_p2p_get_pages(sp, p2p_token, va_space,
--            virtual_address, length, physical_addresses, wreqmb_h,
-+            address, length, physical_addresses, wreqmb_h,
-             rreqmb_h, &entries, &gpu_uuid, *page_table,
-             free_callback, data);
-     if (status != NV_OK)
-@@ -286,7 +286,7 @@
- 
-     if (bGetPages)
-     {
--        rm_p2p_put_pages(sp, p2p_token, va_space, virtual_address,
-+        rm_p2p_put_pages(sp, p2p_token, va_space, address,
-                 gpu_uuid, *page_table);
-     }
- 
-@@ -329,7 +329,7 @@
- int nvidia_p2p_put_pages(
-     uint64_t p2p_token,
-     uint32_t va_space,
--    uint64_t virtual_address,
-+    uint64_t address,
-     struct nvidia_p2p_page_table *page_table
- )
- {
-@@ -343,7 +343,7 @@
-         return rc;
-     }
- 
--    status = rm_p2p_put_pages(sp, p2p_token, va_space, virtual_address,
-+    status = rm_p2p_put_pages(sp, p2p_token, va_space, address,
-             page_table->gpu_uuid, page_table);
-     if (status == NV_OK)
-         nvidia_p2p_free_page_table(page_table);
-diff -ur NVIDIA-Linux-x86_64-378.13/kernel/nvidia-drm/nvidia-drm-fence.c NVIDIA-Linux-x86_64-378.13.patched/kernel/nvidia-drm/nvidia-drm-fence.c
---- NVIDIA-Linux-x86_64-378.13/kernel/nvidia-drm/nvidia-drm-fence.c	2017-02-08 04:58:37.000000000 +0100
-+++ NVIDIA-Linux-x86_64-378.13.patched/kernel/nvidia-drm/nvidia-drm-fence.c	2017-02-15 04:14:46.304110124 +0100
-@@ -31,7 +31,7 @@
+         }
+diff --git a/kernel/nvidia-drm/nvidia-drm-fence.c b/kernel/nvidia-drm/nvidia-drm-fence.c
+index 5e98c5f..fa2c508 100644
+--- a/kernel/nvidia-drm/nvidia-drm-fence.c
++++ b/kernel/nvidia-drm/nvidia-drm-fence.c
+@@ -31,7 +31,11 @@
  
  #if defined(NV_DRM_DRIVER_HAS_GEM_PRIME_RES_OBJ)
  struct nv_fence {
--    struct fence base;
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 10, 0)
+     struct fence base;
++#else
 +    struct dma_fence base;
++#endif
      spinlock_t lock;
  
      struct nvidia_drm_device *nv_dev;
-@@ -51,7 +51,7 @@
+@@ -51,7 +55,11 @@ nv_fence_ready_to_signal(struct nv_fence *nv_fence)
  
  static const char *nvidia_drm_gem_prime_fence_op_get_driver_name
  (
--    struct fence *fence
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 10, 0)
+     struct fence *fence
++#else
 +    struct dma_fence *fence
++#endif
  )
  {
      return "NVIDIA";
-@@ -59,7 +59,7 @@
+@@ -59,7 +67,11 @@ static const char *nvidia_drm_gem_prime_fence_op_get_driver_name
  
  static const char *nvidia_drm_gem_prime_fence_op_get_timeline_name
  (
--    struct fence *fence
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 10, 0)
+     struct fence *fence
++#else
 +    struct dma_fence *fence
++#endif
  )
  {
      return "nvidia.prime";
-@@ -67,7 +67,7 @@
+@@ -67,7 +79,11 @@ static const char *nvidia_drm_gem_prime_fence_op_get_timeline_name
  
  static bool nvidia_drm_gem_prime_fence_op_signaled
  (
--    struct fence *fence
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 10, 0)
+     struct fence *fence
++#else
 +    struct dma_fence *fence
++#endif
  )
  {
      struct nv_fence *nv_fence = container_of(fence, struct nv_fence, base);
-@@ -99,7 +99,7 @@
+@@ -99,7 +115,11 @@ unlock_struct_mutex:
  
  static bool nvidia_drm_gem_prime_fence_op_enable_signaling
  (
--    struct fence *fence
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 10, 0)
+     struct fence *fence
++#else
 +    struct dma_fence *fence
++#endif
  )
  {
      bool ret = true;
-@@ -107,7 +107,7 @@
+@@ -107,7 +127,11 @@ static bool nvidia_drm_gem_prime_fence_op_enable_signaling
      struct nvidia_drm_gem_object *nv_gem = nv_fence->nv_gem;
      struct nvidia_drm_device *nv_dev = nv_fence->nv_dev;
  
--    if (fence_is_signaled(fence))
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 10, 0)
+     if (fence_is_signaled(fence))
++#else
 +    if (dma_fence_is_signaled(fence))
++#endif
      {
          return false;
      }
-@@ -136,7 +136,7 @@
+@@ -136,7 +160,11 @@ static bool nvidia_drm_gem_prime_fence_op_enable_signaling
      }
  
      nv_gem->fenceContext.softFence = fence;
--    fence_get(fence);
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 10, 0)
+     fence_get(fence);
++#else
 +    dma_fence_get(fence);
++#endif
  
  unlock_struct_mutex:
      mutex_unlock(&nv_dev->dev->struct_mutex);
-@@ -146,7 +146,7 @@
+@@ -146,7 +174,11 @@ unlock_struct_mutex:
  
  static void nvidia_drm_gem_prime_fence_op_release
  (
--    struct fence *fence
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 10, 0)
+     struct fence *fence
++#else
 +    struct dma_fence *fence
++#endif
  )
  {
      struct nv_fence *nv_fence = container_of(fence, struct nv_fence, base);
-@@ -155,7 +155,7 @@
+@@ -155,7 +187,11 @@ static void nvidia_drm_gem_prime_fence_op_release
  
  static signed long nvidia_drm_gem_prime_fence_op_wait
  (
--    struct fence *fence,
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 10, 0)
+     struct fence *fence,
++#else
 +    struct dma_fence *fence,
++#endif
      bool intr,
      signed long timeout
  )
-@@ -170,12 +170,12 @@
+@@ -170,12 +206,20 @@ static signed long nvidia_drm_gem_prime_fence_op_wait
       * that it should never get hit during normal operation, but not so long
       * that the system becomes unresponsive.
       */
--    return fence_default_wait(fence, intr,
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 10, 0)
+     return fence_default_wait(fence, intr,
++#else
 +    return dma_fence_default_wait(fence, intr,
++#endif
                                (timeout == MAX_SCHEDULE_TIMEOUT) ?
                                    msecs_to_jiffies(96) : timeout);
  }
  
--static const struct fence_ops nvidia_drm_gem_prime_fence_ops = {
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 10, 0)
+ static const struct fence_ops nvidia_drm_gem_prime_fence_ops = {
++#else
 +static const struct dma_fence_ops nvidia_drm_gem_prime_fence_ops = {
++#endif
      .get_driver_name = nvidia_drm_gem_prime_fence_op_get_driver_name,
      .get_timeline_name = nvidia_drm_gem_prime_fence_op_get_timeline_name,
      .signaled = nvidia_drm_gem_prime_fence_op_signaled,
-@@ -285,7 +285,7 @@
+@@ -285,7 +329,11 @@ static void nvidia_drm_gem_prime_fence_signal
      bool force
  )
  {
--    struct fence *fence = nv_gem->fenceContext.softFence;
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 10, 0)
+     struct fence *fence = nv_gem->fenceContext.softFence;
++#else
 +    struct dma_fence *fence = nv_gem->fenceContext.softFence;
++#endif
  
      WARN_ON(!mutex_is_locked(&nv_dev->dev->struct_mutex));
  
-@@ -301,10 +301,10 @@
+@@ -301,10 +349,18 @@ static void nvidia_drm_gem_prime_fence_signal
  
          if (force || nv_fence_ready_to_signal(nv_fence))
          {
--            fence_signal(&nv_fence->base);
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 10, 0)
+             fence_signal(&nv_fence->base);
++#else
 +            dma_fence_signal(&nv_fence->base);
++#endif
  
              nv_gem->fenceContext.softFence = NULL;
--            fence_put(&nv_fence->base);
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 10, 0)
+             fence_put(&nv_fence->base);
++#else
 +            dma_fence_put(&nv_fence->base);
++#endif
  
              nvKms->disableChannelEvent(nv_dev->pDevice,
                                         nv_gem->fenceContext.cb);
-@@ -320,7 +320,7 @@
+@@ -320,7 +376,11 @@ static void nvidia_drm_gem_prime_fence_signal
  
          nv_fence = container_of(fence, struct nv_fence, base);
  
--        fence_signal(&nv_fence->base);
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 10, 0)
+         fence_signal(&nv_fence->base);
++#else
 +        dma_fence_signal(&nv_fence->base);
++#endif
      }
  }
  
-@@ -513,7 +513,7 @@
+@@ -513,7 +573,11 @@ int nvidia_drm_gem_prime_fence_init
       * fence_context_alloc() cannot fail, so we do not need to check a return
       * value.
       */
--    nv_gem->fenceContext.context = fence_context_alloc(1);
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 10, 0)
+     nv_gem->fenceContext.context = fence_context_alloc(1);
++#else
 +    nv_gem->fenceContext.context = dma_fence_context_alloc(1);
++#endif
  
      ret = nvidia_drm_gem_prime_fence_import_semaphore(
                nv_dev, nv_gem, p->index,
-@@ -670,7 +670,7 @@
+@@ -670,7 +734,11 @@ int nvidia_drm_gem_prime_fence_attach
      nv_fence->nv_gem = nv_gem;
  
      spin_lock_init(&nv_fence->lock);
--    fence_init(&nv_fence->base, &nvidia_drm_gem_prime_fence_ops,
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 10, 0)
+     fence_init(&nv_fence->base, &nvidia_drm_gem_prime_fence_ops,
++#else
 +    dma_fence_init(&nv_fence->base, &nvidia_drm_gem_prime_fence_ops,
++#endif
                 &nv_fence->lock, nv_gem->fenceContext.context,
                 p->sem_thresh);
  
-@@ -680,7 +680,7 @@
+@@ -680,7 +748,11 @@ int nvidia_drm_gem_prime_fence_attach
  
      reservation_object_add_excl_fence(&nv_gem->fenceContext.resv,
                                        &nv_fence->base);
--    fence_put(&nv_fence->base); /* Reservation object has reference */
-+    dma_fence_put(&nv_fence->base); /* Reservation object has reference */
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 10, 0)
+     fence_put(&nv_fence->base); /* Reservation object has reference */
++#else
++    dma_fence_put(&nv_fence->base);
++#endif
  
      ret = 0;
  
-diff -ur NVIDIA-Linux-x86_64-378.13/kernel/nvidia-drm/nvidia-drm-gem.h NVIDIA-Linux-x86_64-378.13.patched/kernel/nvidia-drm/nvidia-drm-gem.h
---- NVIDIA-Linux-x86_64-378.13/kernel/nvidia-drm/nvidia-drm-gem.h	2017-02-08 04:58:37.000000000 +0100
-+++ NVIDIA-Linux-x86_64-378.13.patched/kernel/nvidia-drm/nvidia-drm-gem.h	2017-02-15 04:14:46.304110124 +0100
-@@ -101,7 +101,7 @@
+diff --git a/kernel/nvidia-drm/nvidia-drm-gem.h b/kernel/nvidia-drm/nvidia-drm-gem.h
+index 4ff45e8..394576b 100644
+--- a/kernel/nvidia-drm/nvidia-drm-gem.h
++++ b/kernel/nvidia-drm/nvidia-drm-gem.h
+@@ -29,6 +29,8 @@
+ 
+ #include "nvidia-drm-priv.h"
+ 
++#include <linux/version.h>
++
+ #include <drm/drmP.h>
+ #include "nvkms-kapi.h"
+ 
+@@ -98,7 +100,11 @@ struct nvidia_drm_gem_object
          /* Software signaling structures */
          struct NvKmsKapiChannelEvent *cb;
          struct nvidia_drm_gem_prime_soft_fence_event_args *cbArgs;
--        struct fence *softFence; /* Fence for software signaling */
-+        struct dma_fence *softFence; /* Fence for software signaling */
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 10, 0)
+         struct fence *softFence; /* Fence for software signaling */
++#else
++        struct dma_fence *softFence;
++#endif
      } fenceContext;
  #endif
  };
-diff -ur NVIDIA-Linux-x86_64-378.13/kernel/nvidia-drm/nvidia-drm-modeset.c NVIDIA-Linux-x86_64-378.13.patched/kernel/nvidia-drm/nvidia-drm-modeset.c
---- NVIDIA-Linux-x86_64-378.13/kernel/nvidia-drm/nvidia-drm-modeset.c	2017-02-08 04:58:37.000000000 +0100
-+++ NVIDIA-Linux-x86_64-378.13.patched/kernel/nvidia-drm/nvidia-drm-modeset.c	2017-02-15 04:14:46.305110124 +0100
-@@ -78,8 +78,7 @@
+diff --git a/kernel/nvidia-drm/nvidia-drm-priv.h b/kernel/nvidia-drm/nvidia-drm-priv.h
+index 1e9b9f9..ae171e7 100644
+--- a/kernel/nvidia-drm/nvidia-drm-priv.h
++++ b/kernel/nvidia-drm/nvidia-drm-priv.h
+@@ -25,6 +25,8 @@
  
- void nvidia_drm_atomic_state_free(struct drm_atomic_state *state)
- {
--    struct nvidia_drm_atomic_state *nv_state =
--                    to_nv_atomic_state(state);
-+    struct nvidia_drm_atomic_state *nv_state = to_nv_atomic_state(state);
-     drm_atomic_state_default_release(state);
-     nvidia_drm_free(nv_state);
- }
-diff -ur NVIDIA-Linux-x86_64-378.13/kernel/nvidia-drm/nvidia-drm-priv.h NVIDIA-Linux-x86_64-378.13.patched/kernel/nvidia-drm/nvidia-drm-priv.h
---- NVIDIA-Linux-x86_64-378.13/kernel/nvidia-drm/nvidia-drm-priv.h	2017-02-08 04:58:37.000000000 +0100
-+++ NVIDIA-Linux-x86_64-378.13.patched/kernel/nvidia-drm/nvidia-drm-priv.h	2017-02-15 04:14:46.305110124 +0100
-@@ -34,7 +34,7 @@
+ #include "conftest.h" /* NV_DRM_AVAILABLE */
+ 
++#include <linux/version.h>
++
+ #if defined(NV_DRM_AVAILABLE)
+ 
+ #include <drm/drmP.h>
+@@ -34,7 +36,12 @@
  #endif
  
  #if defined(NV_DRM_DRIVER_HAS_GEM_PRIME_RES_OBJ)
--#include <linux/fence.h>
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 10, 0)
+ #include <linux/fence.h>
++#else
 +#include <linux/dma-fence.h>
++#endif
++
  #include <linux/reservation.h>
  #endif
  
-diff -ur NVIDIA-Linux-x86_64-378.13/kernel/nvidia-uvm/uvm8_test.c NVIDIA-Linux-x86_64-378.13.patched/kernel/nvidia-uvm/uvm8_test.c
---- NVIDIA-Linux-x86_64-378.13/kernel/nvidia-uvm/uvm8_test.c	2017-02-08 04:58:36.000000000 +0100
-+++ NVIDIA-Linux-x86_64-378.13.patched/kernel/nvidia-uvm/uvm8_test.c	2017-02-15 04:14:46.305110124 +0100
-@@ -103,7 +103,7 @@
-     return NV_ERR_INVALID_STATE;
+diff --git a/kernel/nvidia/nv-pat.c b/kernel/nvidia/nv-pat.c
+index df78020..0af7d47 100644
+--- a/kernel/nvidia/nv-pat.c
++++ b/kernel/nvidia/nv-pat.c
+@@ -203,6 +203,7 @@ void nv_disable_pat_support(void)
  }
  
--static NV_STATUS uvm8_test_get_kernel_virtual_address(
-+static NV_STATUS uvm8_test_get_kernel_address(
-         UVM_TEST_GET_KERNEL_VIRTUAL_ADDRESS_PARAMS *params,
-         struct file *filp)
+ #if defined(NV_ENABLE_PAT_SUPPORT) && defined(NV_ENABLE_HOTPLUG_CPU)
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 10, 0)
+ static int
+ nvidia_cpu_callback(struct notifier_block *nfb, unsigned long action, void *hcpu)
  {
-@@ -173,7 +173,7 @@
-         UVM_ROUTE_CMD_STACK(UVM_TEST_RANGE_GROUP_RANGE_COUNT,       uvm8_test_range_group_range_count);
-         UVM_ROUTE_CMD_STACK(UVM_TEST_GET_PREFETCH_FAULTS_REENABLE_LAPSE, uvm8_test_get_prefetch_faults_reenable_lapse);
-         UVM_ROUTE_CMD_STACK(UVM_TEST_SET_PREFETCH_FAULTS_REENABLE_LAPSE, uvm8_test_set_prefetch_faults_reenable_lapse);
--        UVM_ROUTE_CMD_STACK(UVM_TEST_GET_KERNEL_VIRTUAL_ADDRESS,    uvm8_test_get_kernel_virtual_address);
-+        UVM_ROUTE_CMD_STACK(UVM_TEST_GET_KERNEL_VIRTUAL_ADDRESS,    uvm8_test_get_kernel_address);
-         UVM_ROUTE_CMD_STACK(UVM_TEST_PMA_ALLOC_FREE,                uvm8_test_pma_alloc_free);
-         UVM_ROUTE_CMD_STACK(UVM_TEST_PMM_ALLOC_FREE_ROOT,           uvm8_test_pmm_alloc_free_root);
-         UVM_ROUTE_CMD_STACK(UVM_TEST_PMM_INJECT_PMA_EVICT_ERROR,    uvm8_test_pmm_inject_pma_evict_error);
+@@ -234,6 +235,34 @@ static struct notifier_block nv_hotcpu_nfb = {
+     .notifier_call = nvidia_cpu_callback,
+     .priority = 0
+ };
++#else
++static int nvidia_cpu_online(unsigned int hcpu)
++{
++    unsigned int cpu = get_cpu();
++    if (cpu == hcpu)
++        nv_setup_pat_entries(NULL);
++    else
++        NV_SMP_CALL_FUNCTION(nv_setup_pat_entries, (void *)(long int)hcpu, 1);
++
++    put_cpu();
++
++    return 0;
++}
++
++static int nvidia_cpu_down_prep(unsigned int hcpu)
++{
++    unsigned int cpu = get_cpu();
++    if (cpu == hcpu)
++        nv_restore_pat_entries(NULL);
++    else
++        NV_SMP_CALL_FUNCTION(nv_restore_pat_entries, (void *)(long int)hcpu, 1);
++
++    put_cpu();
++
++    return 0;
++}
++#endif
++
+ #endif
+ 
+ int nv_init_pat_support(nvidia_stack_t *sp)
+@@ -255,7 +284,14 @@ int nv_init_pat_support(nvidia_stack_t *sp)
+ #if defined(NV_ENABLE_PAT_SUPPORT) && defined(NV_ENABLE_HOTPLUG_CPU)
+         if (nv_pat_mode == NV_PAT_MODE_BUILTIN)
+         {
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 10, 0)
+             if (register_hotcpu_notifier(&nv_hotcpu_nfb) != 0)
++#else
++            if (cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
++                                  "gpu/nvidia:online",
++                                  nvidia_cpu_online,
++                                  nvidia_cpu_down_prep) != 0)
++#endif
+             {
+                 nv_disable_pat_support();
+                 nv_printf(NV_DBG_ERRORS,
+@@ -280,7 +316,11 @@ void nv_teardown_pat_support(void)
+     {
+         nv_disable_pat_support();
+ #if defined(NV_ENABLE_PAT_SUPPORT) && defined(NV_ENABLE_HOTPLUG_CPU)
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 10, 0)
+         unregister_hotcpu_notifier(&nv_hotcpu_nfb);
++#else
++        cpuhp_remove_state_nocalls(CPUHP_AP_ONLINE_DYN);
++#endif
+ #endif
+     }
+ }
+-- 
+2.7.4
+

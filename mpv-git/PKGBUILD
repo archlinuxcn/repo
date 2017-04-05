@@ -11,7 +11,7 @@
 
 pkgname=mpv-git
 _gitname=mpv
-pkgver=43403.g5700da4
+pkgver=0.24.0.r203.ga1ad64a1c8
 pkgrel=1
 pkgdesc='Video player based on MPlayer/mplayer2 (git version)'
 arch=('i686' 'x86_64' 'armv6h' 'armv7h')
@@ -34,12 +34,11 @@ sha256sums=('SKIP'
 
 pkgver() {
   cd "$srcdir/$_gitname"
-  #_curtag="$(git rev-list --tags --max-count=1)"
-  #_tagver="$(git describe --tags $_curtag | sed -e 's:^v::' -e 's:-:_:g')"
-  #_commits="$(git rev-list --count HEAD --since=$_tagver)"
-  #_sha="$(git rev-parse --short HEAD)"
-  #printf "%s_%s_g%s" $_tagver $_commits $_sha
-  echo "$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)"
+  _curtag="$(git rev-list --tags --max-count=1)"
+  _tagver="$(git describe --tags "$_curtag" | sed -e 's:^v::' -e 's:-:_:g')"
+  _commits_since="$(git rev-list --count "$_curtag"..HEAD)"
+  _sha="$(git rev-parse --short HEAD)"
+  printf '%s.r%s.g%s' "$_tagver" "$_commits_since" "$_sha"
 }
 
 prepare() {

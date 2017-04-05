@@ -1,12 +1,11 @@
 Description: Remove linking of unused libraries
 Author: Nicholas Guriev <guriev-ns@ya.ru>
-Last-Update: 2017-02-18
+Last-Update: 2017-03-31
 
 diff --git a/Telegram/gyp/Telegram.gyp b/Telegram/gyp/Telegram.gyp
-index 603264b..830df69 100644
 --- a/Telegram/gyp/Telegram.gyp
 +++ b/Telegram/gyp/Telegram.gyp
-@@ -76,7 +76,6 @@
+@@ -78,7 +78,6 @@
        'codegen.gyp:codegen_style',
        'codegen.gyp:codegen_numbers',
        'codegen.gyp:MetaLang',
@@ -15,24 +14,35 @@ index 603264b..830df69 100644
  
      'defines': [
 diff --git a/Telegram/gyp/qt.gypi b/Telegram/gyp/qt.gypi
-index 1db05de..d322153 100644
 --- a/Telegram/gyp/qt.gypi
 +++ b/Telegram/gyp/qt.gypi
-@@ -32,6 +32,5 @@
+@@ -32,13 +32,9 @@
              ],
            },
            'qt_libs': [
+-            'qwebp',
 -            'Qt5PrintSupport',
+-            'Qt5PlatformSupport',
              'Qt5Network',
              'Qt5Widgets',
-@@ -81,21 +80,8 @@
+             'Qt5Gui',
+-            'qtharfbuzzng',
+           ],
+           'qt_version%': '<(qt_version)',
+           'conditions': [
+@@ -89,27 +86,8 @@
              'qt_lib_debug_postfix': '',
              'qt_lib_release_postfix': '',
              'qt_libs': [
+-              'qxcb',
 -              'Qt5XcbQpa',
+-              'qconnmanbearer',
+-              'qgenericbearer',
+-              'qnmbearer',
                '<@(qt_libs)',
 -              'Qt5DBus',
                'Qt5Core',
+-              'qtpcre',
 -              'Xi',
 -              'Xext',
 -              'Xfixes',
@@ -44,13 +54,14 @@ index 1db05de..d322153 100644
 -              'xcb-shm',
 -              'xcb-xfixes',
 -              'xcb-render',
+-              'xcb-static',
              ],
            }],
          ],
-@@ -120,11 +106,6 @@
-         'qt_loc': '<(qt_loc_unix)',
-       }],
-     ],
+@@ -139,11 +117,6 @@
+     # '<!@(python <(DEPTH)/list_sources.py [sources] <(qt_moc_list_sources_arg))'
+     # where [sources] contains all your source files
+     'qt_moc_list_sources_arg': '--moc-prefix SHARED_INTERMEDIATE_DIR/<(_target_name)/moc/moc_',
 -
 -    'linux_path_xkbcommon%': '/usr/local',
 -    'linux_lib_ssl%': 'ssl',
@@ -59,17 +70,11 @@ index 1db05de..d322153 100644
    },
  
    'configurations': {
-@@ -200,17 +181,9 @@
-         '<(qt_loc)/plugins/platforminputcontexts',
-       ],
+@@ -221,12 +194,7 @@ icudata.a',
        'libraries': [
--        'xkbcommon',
          '<@(qt_libs_release)',
--        '<(linux_lib_ssl)',
--        '<(linux_lib_crypto)',
--        '<!@(python -c "for s in \'<(linux_lib_icu)\'.split(\' \'): print(s)")',
+         'crypto',
 -        'xcb',
-+        'crypto',
          'X11',
 -        'X11-xcb',
 -        'dbus-1',
@@ -79,7 +84,6 @@ index 1db05de..d322153 100644
          'pthread',
        ],
 diff --git a/Telegram/gyp/telegram_linux.gypi b/Telegram/gyp/telegram_linux.gypi
-index 29386a9..63d26e4 100644
 --- a/Telegram/gyp/telegram_linux.gypi
 +++ b/Telegram/gyp/telegram_linux.gypi
 @@ -50,19 +50,12 @@
