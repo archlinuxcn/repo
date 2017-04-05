@@ -3,33 +3,25 @@
 # Contributor: Christian Neukirchen <chneukirchen@gmail.com>
 # Contributor: bl4ckb1t <bl4ckb1t@gmail.com>
 pkgname=toilet
-pkgver=0.3.3eb9d58
-pkgrel=2
+pkgver=0.3.r155.3eb9d58
+pkgrel=1
 pkgdesc="free replacement for the FIGlet utility."
 arch=('i686' 'x86_64')
 url="https://github.com/cacalabs/toilet"
 license=('custom:WTFPL')
-makedepends=('git')
 depends=('libcaca')
-source=('git://github.com/cacalabs/toilet.git')
-sha256sums=('SKIP')
-_upstreamver=0.3
-_gitname=toilet
-
-pkgver() {
-    cd "$_gitname"
-    git log --oneline | awk '{print $1}' | head -n 1 | sed '1s/^/'$_upstreamver'./'
-}
+source=('https://github.com/cacalabs/toilet/archive/master.tar.gz')
+sha256sums=('294e6992accafd407fa43892f445137e81a7a0b1c8610b76928d1bab6b5c1fec')
 
 build() {
-  cd "$_gitname"
-  ./bootstrap
-  ./configure --prefix=/usr
-  make
+    cd $pkgname-master
+    ./bootstrap
+    ./configure --prefix=/usr
+    make
 }
 
 package() {
-  cd "$_gitname"
-  make DESTDIR="$pkgdir" install
-  install -Dm644 COPYING "$pkgdir"/usr/share/licenses/${pkgname}/COPYING
+    cd $pkgname-master
+    make DESTDIR="$pkgdir" install
+    install -Dm644 COPYING "$pkgdir"/usr/share/licenses/${pkgname}/COPYING
 }
