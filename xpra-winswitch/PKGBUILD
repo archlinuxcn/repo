@@ -1,7 +1,7 @@
 # Contributor: Bug <bug2000@gmail.com>
 # Maintainer: Bug <bug2000@gmail.com>
 pkgname=xpra-winswitch
-pkgver=2.0
+pkgver=2.0.1
 pkgrel=2
 pkgdesc="Modified version of xpra by Winswitch"
 arch=('i686' 'x86_64')
@@ -35,7 +35,7 @@ backup=('etc/xpra/xpra.conf' 'etc/xpra/xorg.conf'
         'etc/xpra/conf.d/60_server.conf'
         'etc/xpra/conf.d/65_proxy.conf')
 source=("https://xpra.org/src/xpra-$pkgver.tar.xz")
-sha256sums=('ca9e9622a9d435f9591bf60baec50ea02ebad4e0c0017e1df43dfddd6616e807')
+sha256sums=('685553c0f7cdeadde3d5a7ba48f3cd9d0feaa755e0debbdf198355223c8bc287')
 
 build() {
   cd ${srcdir}/xpra-$pkgver
