@@ -4,7 +4,7 @@
 # Contributor: Ferik <djferik at gmail dot com>
 
 pkgname=masterpdfeditor
-pkgver=4.1.01
+pkgver=4.1.22
 pkgrel=1
 pkgdesc='A complete solution for creation and editing PDF files'
 url='http://code-industry.net/free-pdf-editor.php'
@@ -14,7 +14,7 @@ makedepends=('patchelf')
 source=('masterpdfeditor.desktop')
 source_x86_64=("http://get.code-industry.net/public/master-pdf-editor-${pkgver}_qt5.amd64.tar.gz")
 sha1sums=('5b3a0392390e49d4f7f4e478dd336476436f5cfa')
-sha1sums_x86_64=('7529b7efc14bdf3df8803295baff492d8c8f4c5d')
+sha1sums_x86_64=('c600110782cf053ad08b6716f270c89fcc37f49f')
 
 package() {
   depends=('gcc-libs' 'glibc' 'libgl' 'qt5-base' 'qt5-svg' 'sane')
