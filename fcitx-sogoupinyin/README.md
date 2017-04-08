@@ -8,14 +8,27 @@
 yaourt -S fcitx-sogoupinyin
 ```
 
+Don't forget to add this input method in Fcitx configurations.
+
 ## Configuration
 
-Gnome:
+It should work out of the box.
+
+In case it doesn't work in Gnome 3, add the following to `~/.xprofile`:
 
 ```
-# ~/.xprofile
+export GTK_IM_MODULE=fcitx
+export QT_IM_MODULE=fcitx
+export XMODIFIERS="@im=fcitx"
+
 gsettings set org.gnome.settings-daemon.plugins.xsettings overrides "{'Gtk/IMModule':<'fcitx'>}"
 ```
+
+## Troubleshooting
+
+### Not work
+
+Try executing `rm -rf ~/.config/SogouPY*` and restart.
 
 ## Known issues
 
