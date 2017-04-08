@@ -1,7 +1,7 @@
 # Maintainer: Arnau Sanchez <pyarnau@gmail.com>
 _npmname=js-beautify
 _npmver=1.6.8
-pkgname=js-beautify # All lowercase
+pkgname=js-beautify-archlinuxcn # All lowercase
 pkgver=$_npmver
 pkgrel=1
 pkgdesc="Beautify JavaScript/JSON (jsbeautifier.org)"
@@ -10,7 +10,8 @@ license=('MIT')
 url="http://jsbeautifier.org/"
 depends=('nodejs' 'npm' )
 optdepends=()
-conflicts=('python-jsbeautifier')
+provides=("js-beautify")
+conflicts=("js-beautify")
 source=(http://registry.npmjs.org/$_npmname/-/$_npmname-$_npmver.tgz)
 noextract=($_npmname-$_npmver.tgz)
 md5sums=(84cb3c09bcc29c6bc0b83bcf3d24a6ea)
@@ -21,6 +22,7 @@ package() {
   mkdir -p $_npmdir
   cd $_npmdir
   npm install -g --prefix "$pkgdir/usr" $_npmname@$_npmver
+  cd $pkgdir/usr/bin;for i in *;do mv $i node-$i;done
 }
 
 # vim:set ts=2 sw=2 et:
