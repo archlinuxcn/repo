@@ -1,6 +1,6 @@
 Description: Remove linking of unused libraries
 Author: Nicholas Guriev <guriev-ns@ya.ru>
-Last-Update: 2017-03-31
+Last-Update: 2017-04-05
 
 diff --git a/Telegram/gyp/Telegram.gyp b/Telegram/gyp/Telegram.gyp
 --- a/Telegram/gyp/Telegram.gyp
@@ -30,7 +30,7 @@ diff --git a/Telegram/gyp/qt.gypi b/Telegram/gyp/qt.gypi
            ],
            'qt_version%': '<(qt_version)',
            'conditions': [
-@@ -89,27 +86,8 @@
+@@ -89,28 +86,8 @@
              'qt_lib_debug_postfix': '',
              'qt_lib_release_postfix': '',
              'qt_libs': [
@@ -51,6 +51,7 @@ diff --git a/Telegram/gyp/qt.gypi b/Telegram/gyp/qt.gypi
 -              'fontconfig',
 -              'expat',
 -              'freetype',
+-              'z',
 -              'xcb-shm',
 -              'xcb-xfixes',
 -              'xcb-render',

@@ -7,8 +7,8 @@
 
 _emoji_res_commit="62fcc728a12a4d5b41049e6aadb5e6f039c28f8d"
 pkgname=telegram-desktop-systemqt-notoemoji
-pkgver=1.0.27
-pkgrel=2
+pkgver=1.0.29
+pkgrel=1
 pkgdesc='Experimental build of Telegram Desktop (using system Qt, emojis replaced with those from Noto Color Emoji)'
 arch=('i686' 'x86_64')
 url="https://desktop.telegram.org/"
@@ -54,7 +54,7 @@ sha256sums=('SKIP'
             '5b5a41a852d4d5b84466a19a04684dc7e43dfc6d6494dbcbe41341807bae52b3'
             'cf4dbb293afdbfd226861a00a42790a15b23bea296eccf35853d104e07ea345a'
             '5f3ac7c08df0293bed626293dbfb6040764abf28899db7681572cfb1d8bcaa6e'
-            'ca37a7a7bec56133530c4e03c718ad5d5d43f29ec79009d87cb7d891ef78b7a7'
+            '2990be2c71bdc6b8add19fb4d7638d03610989fe2c299c0ef776d526487deef1'
             '75dcda4aa2d6032f4931cf99e1d915defb4d960ee42725f3b54bbb7dd4ab8531'
             '7a06af83609168a8eaec59a65252caa41dcd0ecc805225886435eb65073e9c82'
             '8fa4115ae60a87ee6c846f82d5cc4b90d0ba2b2016e1bd36634772230903af31'
