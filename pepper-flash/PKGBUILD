@@ -2,7 +2,7 @@
 
 pkgname=pepper-flash
 pkgdesc="Adobe's Pepper Flash plugin"
-pkgver=25.0.0.127
+pkgver=25.0.0.148
 pkgrel=1
 arch=('i686' 'x86_64')
 url='http://www.adobe.com/software/flash/about/'
@@ -13,8 +13,8 @@ optdepends=('freshplayerplugin: Firefox support'
 conflicts=('chromium-pepper-flash')
 source_x86_64=("flash_player_ppapi_linux_$pkgver.x86_64.tar.gz::https://fpdownload.adobe.com/pub/flashplayer/pdc/$pkgver/flash_player_ppapi_linux.x86_64.tar.gz")
 source_i686=("flash_player_ppapi_linux_$pkgver.i386.tar.gz::https://fpdownload.adobe.com/pub/flashplayer/pdc/$pkgver/flash_player_ppapi_linux.i386.tar.gz")
-sha256sums_i686=('dfa0731c4c8f878b0777665ad1d5d45ae306b8ec3afc8a0d84c1321c4ab7e75b')
-sha256sums_x86_64=('0d31c78f5e96488e548ce742d3acddf1fe05580a2a2bbc41032196a9f2c4c792')
+sha256sums_i686=('4226ba0c0aee1ad7ecd7cc4c7f4519245d76361627df4b52e0f1a9a6ed0db764')
+sha256sums_x86_64=('5cf13ce4eb10534903213ad7ce8a40b0f84c744e705f7d676ca7b75787235de2')
 
 package() {
   install -Dm644 manifest.json libpepflashplayer.so -t "$pkgdir/usr/lib/PepperFlash/"
