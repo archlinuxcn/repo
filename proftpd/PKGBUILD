@@ -2,25 +2,23 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=proftpd
-pkgver=1.3.5d
-pkgrel=2
+pkgver=1.3.6
+pkgrel=1
 epoch=1
 pkgdesc='High-performance, scalable FTP server'
 arch=('x86_64' 'i686')
 url='http://www.proftpd.org/'
 license=('GPL')
-depends=('libmariadbclient' 'postgresql-libs' 'libcap' 'pam')
+depends=('libmariadbclient' 'postgresql-libs' 'libcap' 'pam' 'hiredis')
 backup=('etc/proftpd.conf')
 options=('!emptydirs')
 source=("ftp://ftp.proftpd.org/distrib/source/${pkgname}-${pkgver}.tar.gz"
         'proftpd.logrotate' 'proftpd.service'
         'proftpd.tmpfiles')
-md5sums=('bcd2846edf0dad4c4d49a7c8c176d83a'
+md5sums=('13270911c42aac842435f18205546a1b'
          '4d7a3eedc1852d4fa9faafc072fb8320'
          'f7e0c3a402a845ba8d546b2801f77ed2'
          '907b149a120b046f05647c73502e23c9')
-
-
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
@@ -37,6 +35,7 @@ build() {
     --with-includes=/usr/include/mysql:/usr/include/postgresql \
     --with-libraries=/usr/lib/mysql:/usr/lib/postgresql \
     --enable-nls \
+    --enable-redis \
     --with-systemd
 
   make
