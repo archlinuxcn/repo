@@ -3,8 +3,8 @@
 # Contributor: Mateus Rodrigues Costa <charles [dot] costar [at] gmail [dot] com>
 
 pkgname=chrome-remote-desktop
-pkgver=56.0.2924.51
-pkgrel=2
+pkgver=57.0.2987.37
+pkgrel=1
 pkgdesc="Allows you to securely access your computer over the Internet through Chrome."
 url="https://chrome.google.com/webstore/detail/gbchcmhmhahfdphkhkmpfmihenigjmpp"
 arch=('x86_64')
@@ -19,7 +19,7 @@ source_x86_64=("http://dl.google.com/linux/chrome-remote-desktop/deb/pool/main/$
 source=("$pkgname.service"
         "crd")
 #md5sums_i686=('bf9135f439fa4bfa1daf16e96c62d87a')
-md5sums_x86_64=('ae209d8ea495c9098375fee23610c12f')
+md5sums_x86_64=('b0c2c9e8a59fc6f0cd8fbfe175e2f116')
 md5sums=('6f6083ff37f036f590702c7b1319445b'
          '5e9fa07e85d0d490de675bf258a0c511')
 
