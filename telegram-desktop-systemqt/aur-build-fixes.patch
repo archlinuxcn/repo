@@ -228,10 +228,10 @@ index 5d6830e9..c3f08d3f 100644
          IMPLICIT_DEPENDS CXX "${_pch_header}"
          COMMENT "Precompiling ${_name} for ${_target} (C++)")
 diff --git a/Telegram/gyp/Telegram.gyp b/Telegram/gyp/Telegram.gyp
-index fb22932c..f4743e15 100644
+index a1805ebd..2ebb6d35 100644
 --- a/Telegram/gyp/Telegram.gyp
 +++ b/Telegram/gyp/Telegram.gyp
-@@ -77,24 +77,16 @@
+@@ -78,24 +78,16 @@
        'codegen.gyp:codegen_style',
        'codegen.gyp:codegen_numbers',
        'codegen.gyp:MetaLang',
@@ -258,7 +258,7 @@ index fb22932c..f4743e15 100644
        '<(submodules_loc)/GSL/include',
        '<(submodules_loc)/variant/include',
 diff --git a/Telegram/gyp/qt.gypi b/Telegram/gyp/qt.gypi
-index a3212210..213723c5 100644
+index c12e450b..7356778e 100644
 --- a/Telegram/gyp/qt.gypi
 +++ b/Telegram/gyp/qt.gypi
 @@ -27,25 +27,21 @@
@@ -289,7 +289,7 @@ index a3212210..213723c5 100644
              }]
            ]
          },
-@@ -85,31 +81,12 @@
+@@ -85,32 +81,12 @@
              ],
            }],
            [ 'build_linux', {
@@ -317,6 +317,7 @@ index a3212210..213723c5 100644
 -              'fontconfig',
 -              'expat',
 -              'freetype',
+-              'z',
 -              'xcb-shm',
 -              'xcb-xfixes',
 -              'xcb-render',
@@ -324,7 +325,7 @@ index a3212210..213723c5 100644
              ],
            }],
          ],
-@@ -139,11 +116,6 @@
+@@ -140,11 +116,6 @@
      # '<!@(python <(DEPTH)/list_sources.py [sources] <(qt_moc_list_sources_arg))'
      # where [sources] contains all your source files
      'qt_moc_list_sources_arg': '--moc-prefix SHARED_INTERMEDIATE_DIR/<(_target_name)/moc/moc_',
@@ -336,7 +337,7 @@ index a3212210..213723c5 100644
    },
  
    'configurations': {
-@@ -192,13 +164,13 @@
+@@ -193,13 +164,13 @@
    },
  
    'include_dirs': [
@@ -350,14 +351,14 @@ index a3212210..213723c5 100644
 +    '/usr/include/qt',
 +    '/usr/include/qt/QtCore',
 +    '/usr/include/qt/QtGui',
-+    '/usr/include/qt/QtCore/<(qt_version)/',
-+    '/usr/include/qt/QtGui/<(qt_version)/',
++    '/usr/include/qt/QtCore/<(qt_version)',
++    '/usr/include/qt/QtGui/<(qt_version)',
 +    '/usr/include/qt/QtCore/<(qt_version)/QtCore',
 +    '/usr/include/qt/QtGui/<(qt_version)/QtGui',
    ],
    'library_dirs': [
      '<(qt_loc)/lib',
-@@ -219,17 +191,9 @@
+@@ -220,11 +191,8 @@
          '<(qt_loc)/plugins/platforminputcontexts',
        ],
        'libraries': [
@@ -366,17 +367,11 @@ index a3212210..213723c5 100644
 -        '<(linux_lib_ssl)',
 -        '<(linux_lib_crypto)',
 -        '<!@(python -c "for s in \'<(linux_lib_icu)\'.split(\' \'): print(s)")',
--        'xcb',
 +        'crypto',
+         'xcb',
          'X11',
--        'X11-xcb',
--        'dbus-1',
--        'dl',
--        'gthread-2.0',
-         'glib-2.0',
-         'pthread',
-       ],
-@@ -237,7 +201,6 @@
+         'X11-xcb',
+@@ -238,7 +206,6 @@
          '<(qt_loc)/mkspecs/linux-g++',
        ],
        'ldflags': [
@@ -384,7 +379,7 @@ index a3212210..213723c5 100644
          '-pthread',
          '-g',
          '-rdynamic',
-@@ -259,11 +222,12 @@
+@@ -260,7 +227,7 @@
        '<(SHARED_INTERMEDIATE_DIR)/<(_target_name)/moc/moc_<(RULE_INPUT_ROOT).cpp',
      ],
      'action': [
@@ -393,11 +388,6 @@ index a3212210..213723c5 100644
  
        # Silence "Note: No relevant classes found. No output generated."
        '--no-notes',
- 
-+      '<!@(echo $CPPFLAGS | grep -Po "[-]([IDU]\s*\S*|E)")',
-       '<!@(python -c "for s in \'<@(_defines)\'.split(\' \'): print(\'-D\' + s)")',
-       # '<!@(python -c "for s in \'<@(_include_dirs)\'.split(\' \'): print(\'-I\' + s)")',
-       '<(RULE_INPUT_PATH)',
 diff --git a/Telegram/gyp/qt_rcc.gypi b/Telegram/gyp/qt_rcc.gypi
 index eebc6967..19a346fe 100644
 --- a/Telegram/gyp/qt_rcc.gypi
@@ -432,7 +422,7 @@ index fde88dcd..ca149b85 100644
        ],
        'cflags_c': [
 diff --git a/Telegram/gyp/telegram_linux.gypi b/Telegram/gyp/telegram_linux.gypi
-index b42e7443..71e39897 100644
+index b42e7443..43163a4c 100644
 --- a/Telegram/gyp/telegram_linux.gypi
 +++ b/Telegram/gyp/telegram_linux.gypi
 @@ -35,12 +35,14 @@
@@ -478,8 +468,8 @@ index b42e7443..71e39897 100644
 +      'swresample',
 +      'swscale',
 +      'avutil',
-+      'z',
 +      'minizip',
++      'z',
  #      '<!(pkg-config 2> /dev/null --libs <@(pkgconfig_libs))',
      ],
      'cflags_cc': [
@@ -491,10 +481,10 @@ index b42e7443..71e39897 100644
      ],
      'configurations': {
 diff --git a/Telegram/gyp/telegram_sources.txt b/Telegram/gyp/telegram_sources.txt
-index 01f08e35..51c72634 100644
+index 6fa7b704..431fadd6 100644
 --- a/Telegram/gyp/telegram_sources.txt
 +++ b/Telegram/gyp/telegram_sources.txt
-@@ -511,14 +511,7 @@
+@@ -522,14 +522,7 @@
  <(src_loc)/structs.cpp
  <(src_loc)/structs.h
  
