@@ -5,10 +5,10 @@
 # Thanks Nicholas Guriev <guriev-ns@ya.ru> for the patches!
 # https://github.com/mymedia2/tdesktop
 
-_emoji_res_commit="62fcc728a12a4d5b41049e6aadb5e6f039c28f8d"
+_emoji_res_commit="db4c66e311a160b3f849d6c76890932c50701bf8"
 pkgname=telegram-desktop-systemqt-notoemoji
 pkgver=1.0.29
-pkgrel=1
+pkgrel=2
 pkgdesc='Experimental build of Telegram Desktop (using system Qt, emojis replaced with those from Noto Color Emoji)'
 arch=('i686' 'x86_64')
 url="https://desktop.telegram.org/"
@@ -37,11 +37,11 @@ source=(
     "Correct-MOC-path.patch"
     "CMakeLists.inj"
     "qt_functions.cpp"
-    "https://github.com/PeterCxy/tdesktop/raw/${_emoji_res_commit}/Telegram/Resources/art/emoji.webp"
-    "https://github.com/PeterCxy/tdesktop/raw/${_emoji_res_commit}/Telegram/Resources/art/emoji_125x.webp"
-    "https://github.com/PeterCxy/tdesktop/raw/${_emoji_res_commit}/Telegram/Resources/art/emoji_150x.webp"
-    "https://github.com/PeterCxy/tdesktop/raw/${_emoji_res_commit}/Telegram/Resources/art/emoji_200x.webp"
-    "https://github.com/PeterCxy/tdesktop/raw/${_emoji_res_commit}/Telegram/Resources/art/emoji_250x.webp"
+    "emoji.webp_${_emoji_res_commit}::https://github.com/PeterCxy/tdesktop/raw/${_emoji_res_commit}/Telegram/Resources/art/emoji.webp"
+    "emoji_125x.webp_${_emoji_res_commit}::https://github.com/PeterCxy/tdesktop/raw/${_emoji_res_commit}/Telegram/Resources/art/emoji_125x.webp"
+    "emoji_150x.webp_${_emoji_res_commit}::https://github.com/PeterCxy/tdesktop/raw/${_emoji_res_commit}/Telegram/Resources/art/emoji_150x.webp"
+    "emoji_200x.webp_${_emoji_res_commit}::https://github.com/PeterCxy/tdesktop/raw/${_emoji_res_commit}/Telegram/Resources/art/emoji_200x.webp"
+    "emoji_250x.webp_${_emoji_res_commit}::https://github.com/PeterCxy/tdesktop/raw/${_emoji_res_commit}/Telegram/Resources/art/emoji_250x.webp"
 )
 sha256sums=('SKIP'
             'SKIP'
@@ -58,11 +58,11 @@ sha256sums=('SKIP'
             '75dcda4aa2d6032f4931cf99e1d915defb4d960ee42725f3b54bbb7dd4ab8531'
             '7a06af83609168a8eaec59a65252caa41dcd0ecc805225886435eb65073e9c82'
             '8fa4115ae60a87ee6c846f82d5cc4b90d0ba2b2016e1bd36634772230903af31'
-            'c6fea6d718b054aa3deb0b8b5a7f1ff330db2ab1f66962de033ad84c33622727'
-            '701d15ffe711113022981b2f7da3ae2a4aa9febe260dac020a30274f8c8b538b'
-            'c268159a23152b765c7af72997cd290bfbb8c1ed5219991cca28596f85596bd1'
-            '410f4cf5b66bdd4f380694c983da26eefdc3e5411957db74a609072ac690d738'
-            '342880dedeaaed24008430f698e252450b87527b799ebc9399f98f208c9b0953')
+            'fccd084805b4621e3614d2a0584bb78a0ad44f502a79b4a4534e901881677555'
+            '668a2371c3dae8e95187f0c9f8fec9b0e535157482747d2f9c6034c6b9eefa16'
+            'd84537063ccf42904ab35ea2624263419f7d17671d24b17d02d02020d9af8be2'
+            '876e085cee23f988b86398fb8bd104e3d7ad1aa45accd75e1d1d1653f2b32663'
+            '37add3f2536dc027705c202446deb0c5351c3c7ade27336b2c054917acf4d15f')
 
 prepare() {
     cd "$srcdir/tdesktop"
@@ -78,7 +78,9 @@ prepare() {
     git apply "$srcdir/Use-gtk3-headers.patch"
     git apply "$srcdir/Reduce-number-of-libraries.patch"
     git apply "$srcdir/Correct-MOC-path.patch"
-    cp "$srcdir/emoji.webp" "$srcdir/emoji_"{125,150,200,250}"x.webp" "$srcdir/tdesktop/Telegram/Resources/art/"
+    for x in "" "_125x" "_150x" "_200x" "_250x"; do
+        cp "$srcdir/emoji$x.webp_${_emoji_res_commit}" "$srcdir/tdesktop/Telegram/Resources/art/emoji$x.webp"
+    done
     mkdir -p debian
     cp "$srcdir/qt_functions.cpp" debian/
 }
