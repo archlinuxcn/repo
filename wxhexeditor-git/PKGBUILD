@@ -3,13 +3,13 @@
 pkgname=wxhexeditor-git
 _pkgbasename=wxhexeditor
 pkgver=r595.afdb5b1
-pkgrel=1
+pkgrel=2
 pkgdesc="a free hex editor / disk editor for Linux, Windows and MacOSX"
 arch=('i686' 'x86_64')
 url="http://wxhexeditor.sourceforge.net/"
 license=('GPL')
 depends=('wxgtk')
-makedepends=('git')
+makedepends=('git' 'python')
 provides=('wxhexeditor')
 conflicts=('wxhexeditor')
 source=('wxhexeditor::git+https://github.com/EUA/wxHexEditor.git')
