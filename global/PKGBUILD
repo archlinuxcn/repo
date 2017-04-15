@@ -1,21 +1,18 @@
-# Maintainer: Peter Vasil <mail@petervasil.net>
-# Contributor: Lucas De Marchi <lucas.de.marchi@gmail.com>
-# Contributor: Matthias Meulien orontee@gmail.com
+# Maintainer: Randy Ramos <rramos1295@gmail.com>
 
 pkgname=global
 pkgver=6.5.6
-pkgrel=1
+pkgrel=2
 pkgdesc="A source code tag system"
 arch=('i686' 'x86_64')
 url="http://www.gnu.org/software/global/"
 license=('GPL')
-depends=('libltdl' 'bash' 'perl')
+depends=('libltdl' 'bash' 'perl' 'sqlite')
 makedepends=("python2" "python2-pygments")
 optdepends=('idutils' 'ctags' 'python-pygments' 'emacs' 'vim')
 makedepends=('python')
 options=(!emptydirs !libtool)
-source=(http://tamacom.com/global/${pkgname}-${pkgver}.tar.gz)
-md5sums=('079b657e5c34ff80fbcde4d1df6d7ded')
+source=("ftp://ftp.gnu.org/pub/gnu/${pkgname}/${pkgname}-${pkgver}.tar.gz")
 sha256sums=('122f9afa69a8daa0f64c12db7f02981fe573f51a163fa3829ed4f832cd281505')
 
 prepare() {
@@ -31,7 +28,7 @@ prepare() {
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
   autoreconf -fi
-  ./configure --prefix=/usr --with-exuberant-ctags=/usr/bin/ctags
+  ./configure --prefix=/usr --with-exuberant-ctags=/usr/bin/ctags --with-sqlite3
   make
 }
 
