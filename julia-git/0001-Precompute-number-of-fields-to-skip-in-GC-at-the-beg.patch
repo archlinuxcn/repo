@@ -1,0 +1,145 @@
+From bffb43dea4e353591d3d8b0533c016d514d6586b Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sun, 5 Mar 2017 00:47:01 -0500
+Subject: [PATCH 1/3] Precompute number of fields to skip in GC at the begin
+ and end of a type
+
+---
+ src/datatype.c | 29 ++++++++++++++++++++++++-----
+ src/dump.c     | 10 +++++++++-
+ src/gc.c       | 11 ++++++-----
+ 3 files changed, 39 insertions(+), 11 deletions(-)
+
+diff --git a/src/datatype.c b/src/datatype.c
+index 5052433517..017685b6f4 100644
+--- a/src/datatype.c
++++ b/src/datatype.c
+@@ -97,12 +97,23 @@ static jl_datatype_layout_t *jl_get_layout(uint32_t nfields,
+ {
+     // compute the smallest fielddesc type that can hold the layout description
+     int fielddesc_type = 0;
++    uint32_t npointers = 0;
++    // First pointer field
++    uint32_t first_ptr = (uint32_t)-1;
++    // Last pointer field
++    uint32_t last_ptr = 0;
+     if (nfields > 0) {
+         uint32_t max_size = 0;
+         uint32_t max_offset = desc[nfields - 1].offset;
+         for (size_t i = 0; i < nfields; i++) {
+             if (desc[i].size > max_size)
+                 max_size = desc[i].size;
++            if (desc[i].isptr) {
++                npointers++;
++                if (first_ptr == (uint32_t)-1)
++                    first_ptr = i;
++                last_ptr = i;
++            }
+         }
+         jl_fielddesc8_t maxdesc8 = { 0, max_size, max_offset };
+         jl_fielddesc16_t maxdesc16 = { 0, max_size, max_offset };
+@@ -120,8 +131,20 @@ static jl_datatype_layout_t *jl_get_layout(uint32_t nfields,
+ 
+     // allocate a new descriptor
+     uint32_t fielddesc_size = jl_fielddesc_size(fielddesc_type);
++    int has_padding = nfields && npointers;
+     jl_datatype_layout_t *flddesc =
+-        (jl_datatype_layout_t*)jl_gc_perm_alloc(sizeof(jl_datatype_layout_t) + nfields * fielddesc_size);
++        (jl_datatype_layout_t*)jl_gc_perm_alloc(sizeof(jl_datatype_layout_t) +
++                                                nfields * fielddesc_size +
++                                                (has_padding ? sizeof(uint32_t) : 0));
++    if (has_padding) {
++        if (first_ptr > UINT16_MAX)
++            first_ptr = UINT16_MAX;
++        last_ptr = nfields - last_ptr - 1;
++        if (last_ptr > UINT16_MAX)
++            last_ptr = UINT16_MAX;
++        *(uint32_t*)flddesc = (first_ptr << 16) | last_ptr;
++        flddesc = (jl_datatype_layout_t*)(((char*)flddesc) + sizeof(uint32_t));
++    }
+     flddesc->nfields = nfields;
+     flddesc->alignment = alignment;
+     flddesc->haspadding = haspadding;
+@@ -131,7 +154,6 @@ static jl_datatype_layout_t *jl_get_layout(uint32_t nfields,
+     jl_fielddesc8_t* desc8 = (jl_fielddesc8_t*)jl_dt_layout_fields(flddesc);
+     jl_fielddesc16_t* desc16 = (jl_fielddesc16_t*)jl_dt_layout_fields(flddesc);
+     jl_fielddesc32_t* desc32 = (jl_fielddesc32_t*)jl_dt_layout_fields(flddesc);
+-    uint32_t npointers = 0;
+     for (size_t i = 0; i < nfields; i++) {
+         if (fielddesc_type == 0) {
+             desc8[i].offset = desc[i].offset;
+@@ -148,9 +170,6 @@ static jl_datatype_layout_t *jl_get_layout(uint32_t nfields,
+             desc32[i].size = desc[i].size;
+             desc32[i].isptr = desc[i].isptr;
+         }
+-        if (desc[i].isptr) {
+-            npointers++;
+-        }
+     }
+     uint32_t nexp = 0;
+     while (npointers >= 0x10000) {
+diff --git a/src/dump.c b/src/dump.c
+index b21951b989..37bbb71853 100644
+--- a/src/dump.c
++++ b/src/dump.c
+@@ -646,6 +646,8 @@ static void jl_serialize_datatype(jl_serializer_state *s, jl_datatype_t *dt)
+             write_int32(s->s, nf);
+             uint32_t alignment = ((uint32_t*)dt->layout)[1];
+             write_int32(s->s, alignment);
++            if (dt->layout->npointers && nf)
++                write_int32(s->s, ((uint32_t*)dt->layout)[-1]);
+             size_t fieldsize = jl_fielddesc_size(dt->layout->fielddesc_type);
+             ios_write(s->s, (char*)(&dt->layout[1]), nf * fieldsize);
+         }
+@@ -1503,10 +1505,16 @@ static jl_value_t *jl_deserialize_datatype(jl_serializer_state *s, int pos, jl_v
+             } header;
+             header.buffer.nf = nf;
+             header.buffer.alignment = alignment;
++            int has_padding = header.layout.npointers && nf;
+             uint8_t fielddesc_type = header.layout.fielddesc_type;
+             size_t fielddesc_size = nf > 0 ? jl_fielddesc_size(fielddesc_type) : 0;
+             jl_datatype_layout_t *layout = (jl_datatype_layout_t*)jl_gc_perm_alloc(
+-                    sizeof(jl_datatype_layout_t) + nf * fielddesc_size);
++                    sizeof(jl_datatype_layout_t) + nf * fielddesc_size +
++                    (has_padding ? sizeof(uint32_t) : 0));
++            if (has_padding) {
++                *(uint32_t*)layout = read_int32(s->s);
++                layout = (jl_datatype_layout_t*)(((char*)layout) + sizeof(uint32_t));
++            }
+             *layout = header.layout;
+             ios_read(s->s, (char*)&layout[1], nf * fielddesc_size);
+             dt->layout = layout;
+diff --git a/src/gc.c b/src/gc.c
+index 411510710d..0515a58423 100644
+--- a/src/gc.c
++++ b/src/gc.c
+@@ -1469,7 +1469,8 @@ static void gc_scan_obj_(jl_ptls_t ptls, jl_value_t *v, int d,
+     if (vt == jl_weakref_type)
+         return;
+     // fast path
+-    if (vt->layout->npointers == 0)
++    uint32_t npointers = vt->layout->npointers;
++    if (npointers == 0)
+         return;
+     d++;
+     if (d >= MAX_MARK_DEPTH)
+@@ -1538,12 +1539,12 @@ static void gc_scan_obj_(jl_ptls_t ptls, jl_value_t *v, int d,
+     }
+     else {
+         int nf = (int)jl_datatype_nfields(vt);
+-        uint32_t npointers = vt->layout->npointers;
+         nptr += (npointers & 0xff) << (npointers & 0x300);
+-        for(int i=0; i < nf; i++) {
++        uint32_t offsets = ((uint32_t*)vt->layout)[-1];
++        nf -= offsets & 0xffff;
++        for (int i = (offsets >> 16); i < nf; i++) {
+             if (jl_field_isptr(vt, i)) {
+-                jl_value_t **slot = (jl_value_t**)((char*)v +
+-                                                   jl_field_offset(vt, i));
++                jl_value_t **slot = (jl_value_t**)((char*)v + jl_field_offset(vt, i));
+                 jl_value_t *fld = *slot;
+                 if (fld) {
+                     verify_parent2("object", v, slot, "field(%d)", i);
+-- 
+2.12.2
+
