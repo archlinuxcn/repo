@@ -1,7 +1,6 @@
 # Maintainer: Conor Anderson <conor@conr.ca>
 pkgname=wire-desktop
-_pkgname=wire
-pkgver=2.13.2730
+pkgver=2.13.2740
 pkgrel=1
 pkgdesc='Modern, private messenger. Based on Electron.'
 arch=('x86_64' 'i686')
@@ -9,14 +8,14 @@ url='https://wire.com/'
 license=('GPL3')
 conflicts=('wire-desktop-bin')
 depends=('alsa-lib' 'gconf' 'gtk2' 'libxss' 'libxtst' 'nss')
-makedepends=('grunt-cli' 'python2' 'git' 'gendesk' 'npm' )
+makedepends=('grunt-cli' 'gendesk' 'git' 'python2' 'npm' )
 optdepends=('hunspell-en: for English spellcheck support')
 provides=('wire-desktop')
 source=("${pkgver}.tar.gz::https://github.com/wireapp/wire-desktop/archive/release/"$pkgver".tar.gz")        
-sha256sums=('749f4c09c71fcf38145bb2a7f17af58802190f50234e91caf0ea830ab7e0a566')
+sha256sums=('73d86094211d55e67479ff0a891754713eff22ba813cd906e3d2e6c3f28a626c')
 
 prepare() {
-  gendesk -f -n --name=Wire --pkgname="${_pkgname}" --pkgdesc="${pkgdesc}" --exec="${_pkgname}" --categories="Network"
+  gendesk -f -n --name=Wire --pkgname="${pkgname}" --pkgdesc="${pkgdesc}" --exec="${pkgname}" --categories="Network"
 }
 
 build() {
@@ -24,44 +23,45 @@ build() {
   npm install
   grunt 'clean:linux' 'update-keys' 'release-prod'
   if [ $CARCH == 'x86_64' ]; then
-    node_modules/.bin/build --linux --x64 --dir
+    build_arch="x64"
   elif [ $CARCH == 'i686' ]; then
-    node_modules/.bin/build --linux --ia32 --dir
+    build_arch="ia32"
   else
-    echo "Unknown architecture"; exit 1;
+    echo "Unsupported architecture"; exit 1;
   fi
+  grunt --arch=${build_arch} --target="dir" "electronbuilder:linux_other"
 }
 
 package() {
   # Place files
-  install -d "${pkgdir}/usr/lib/${_pkgname}"
+  install -d "${pkgdir}/usr/lib/${pkgname}"
   if [ $CARCH == 'x86_64' ]; then
-    cp -a "${srcdir}/${pkgname}-release-${pkgver}/wrap/dist/linux-unpacked/"* "${pkgdir}/usr/lib/${_pkgname}"
+    cp -a "${srcdir}/${pkgname}-release-${pkgver}/wrap/dist/linux-unpacked/"* "${pkgdir}/usr/lib/${pkgname}"
   elif [ $CARCH == 'i686' ]; then
-    cp -a "${srcdir}/${pkgname}-release-${pkgver}/wrap/dist/linux-ia32-unpacked/"* "${pkgdir}/usr/lib/${_pkgname}"
+    cp -a "${srcdir}/${pkgname}-release-${pkgver}/wrap/dist/linux-ia32-unpacked/"* "${pkgdir}/usr/lib/${pkgname}"
   else
     echo "Unknown architecture"; exit 1;
   fi
   
   # Symlink main binary
   install -d "${pkgdir}/usr/bin"
-  ln -s "/usr/lib/${_pkgname}/${_pkgname}" "${pkgdir}/usr/bin/${_pkgname}"
+  ln -s "/usr/lib/${pkgname}/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
   
   # Place desktop entry and icon
-  desktop-file-install -m 644 --dir "${pkgdir}/usr/share/applications/" "${srcdir}/${_pkgname}.desktop"
+  desktop-file-install -m 644 --dir "${pkgdir}/usr/share/applications/" "${srcdir}/${pkgname}.desktop"
   for res in 32x32 256x256; do
     install -dm755 "${pkgdir}/usr/share/icons/hicolor/${res}/apps"
     install -Dm644 "${srcdir}/${pkgname}-release-${pkgver}/resources/icons/${res}.png" \
-      "${pkgdir}/usr/share/icons/hicolor/${res}/apps/${_pkgname}.png"
+      "${pkgdir}/usr/share/icons/hicolor/${res}/apps/${pkgname}.png"
   done
 
   # Spellcheck dictionaries
-  rm -rf "${pkgdir}/usr/lib/${_pkgname}/resources/app/node_modules/spellchecker/vendor/hunspell_dictionaries"
-  ln -s "/usr/share/hunspell" "${pkgdir}/usr/lib/${_pkgname}/resources/app/node_modules/spellchecker/vendor/hunspell_dictionaries"
+  rm -rf "${pkgdir}/usr/lib/${pkgname}/resources/app/node_modules/spellchecker/vendor/hunspell_dictionaries"
+  ln -s "/usr/share/hunspell" "${pkgdir}/usr/lib/${pkgname}/resources/app/node_modules/spellchecker/vendor/hunspell_dictionaries"
 
   # Place license files
   for license in "LICENSE.electron.txt" "LICENSES.chromium.html"; do
-    install -Dm644 "${pkgdir}/usr/lib/${_pkgname}/${license}" "${pkgdir}/usr/share/licenses/${_pkgname}/${license}"
-    rm "${pkgdir}/usr/lib/${_pkgname}/${license}"
+    install -Dm644 "${pkgdir}/usr/lib/${pkgname}/${license}" "${pkgdir}/usr/share/licenses/${pkgname}/${license}"
+    rm "${pkgdir}/usr/lib/${pkgname}/${license}"
   done
 }
