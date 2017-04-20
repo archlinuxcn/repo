@@ -3,12 +3,13 @@
 
 pkgname=electronic-wechat
 pkgver=2.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A better WeChat client"
 arch=('x86_64')
 url="https://github.com/geeeeeeeeek/electronic-wechat"
 license=('custom')
 depends=('electron')
+optdepends=('libappindicator-gtk3: fix broken tray icon in KDE')
 makedepends=('git' 'npm' 'imagemagick')
 source=(
     "git+https://github.com/geeeeeeeeek/electronic-wechat.git#tag=V2.0"
