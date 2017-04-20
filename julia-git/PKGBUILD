@@ -9,7 +9,7 @@ pkgbase=julia-git
 if [[ $CARCH = x86_64 ]]; then
     pkgname=('julia-git' 'julia-git-avx2')
 else
-    pkgname=('julia-git')
+  pkgname=('julia-git')
 fi
 
 if [[ $CARCH != x86_64 ]]; then
@@ -35,7 +35,7 @@ case $CARCH in
 esac
 
 epoch=1
-pkgver=0.6.0.pre.beta.215.g762c6db940
+pkgver=0.6.0.pre.beta.224.g7d0c945362
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
@@ -47,11 +47,17 @@ makedepends=(gcc-fortran arpack fftw git gmp libgit2-julia libunwind-git
              openlibm mbedtls libssh2)
 options=('debug' '!strip')
 source=('git://github.com/JuliaLang/julia'
-        0001-Precompute-number-of-fields-to-skip-in-GC-at-the-beg.patch
-        0003-Optimize-Threads.threadid.patch)
+        0001-Optimize-Threads.threadid.patch
+        0002-Allow-armv8-and-armv8-a-as-CPU-targets-on-aarch64.patch
+        0003-Band-aid-to-make-threaded-loop-a-little-easier-to-wo.patch
+        0004-Make-sure-the-codegen-lock-is-acquired-when-calling-.patch
+        0005-Evaluate-thread-range-only-once.patch)
 md5sums=('SKIP'
-         '89506eae6a4bed8c47532a1b0e502476'
-         '8f39a97ff9d6dfb08fba336456013528')
+         'bbbca8a169d20ac9cd502aee0caf8c66'
+         '443e7b80eb24fdcccca881b48d1bf7de'
+         'fd30db80bc989ae4a394469523dcd19f'
+         '77e26fc04c19634e305dba85d5ad86c0'
+         'c1b5ec956f697dccb4f59eb0191eb8b8')
 
 pkgver() {
   cd julia
@@ -130,8 +136,11 @@ EOF
   git reset --hard HEAD
   git clean -fdx
 
-  patch -Np1 < ../0001-Precompute-number-of-fields-to-skip-in-GC-at-the-beg.patch
-  patch -Np1 < ../0003-Optimize-Threads.threadid.patch
+  patch -Np1 < ../0001-Optimize-Threads.threadid.patch
+  patch -Np1 < ../0002-Allow-armv8-and-armv8-a-as-CPU-targets-on-aarch64.patch
+  patch -Np1 < ../0003-Band-aid-to-make-threaded-loop-a-little-easier-to-wo.patch
+  patch -Np1 < ../0004-Make-sure-the-codegen-lock-is-acquired-when-calling-.patch
+  patch -Np1 < ../0005-Evaluate-thread-range-only-once.patch
 
   if [[ "$CARCH" = x86_64 ]]; then
       (cd "$srcdir"
@@ -155,7 +164,7 @@ build_in() {
   if (($2)); then
       make "${opts[@]}" release debug docs
   else
-      make "${opts[@]}" release debug
+    make "${opts[@]}" release debug
   fi
 
   # Check to detect issues like JuliaLang/julia#13820

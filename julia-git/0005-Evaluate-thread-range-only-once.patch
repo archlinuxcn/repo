@@ -1,0 +1,53 @@
+From 2ebe76cd9a72cc6a2f9e804826cb3286c26075e6 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Thu, 20 Apr 2017 17:33:07 -0400
+Subject: [PATCH 5/5] Evaluate thread range only once
+
+---
+ base/threadingconstructs.jl |  3 ++-
+ test/threads.jl             | 14 ++++++++++++++
+ 2 files changed, 16 insertions(+), 1 deletion(-)
+
+diff --git a/base/threadingconstructs.jl b/base/threadingconstructs.jl
+index da47caead6..1237c1dba3 100644
+--- a/base/threadingconstructs.jl
++++ b/base/threadingconstructs.jl
+@@ -25,8 +25,9 @@ function _threadsfor(iter,lbody)
+     lidx = iter.args[1]         # index
+     range = iter.args[2]
+     quote
++        range = $(esc(range))
+         function threadsfor_fun(onethread=false)
+-            r = $(esc(range))
++            r = range # Load into local variable
+             lenr = length(r)
+             # divide loop iterations among threads
+             if onethread
+diff --git a/test/threads.jl b/test/threads.jl
+index 141041a14e..e2ec1e1448 100644
+--- a/test/threads.jl
++++ b/test/threads.jl
+@@ -404,6 +404,20 @@ else
+     @test_throws ErrorException cglobal(:jl_tls_states)
+ end
+ 
++function test_thread_range()
++    a = zeros(Int, nthreads())
++    @threads for i in 1:threadid()
++        a[i] = 1
++    end
++    for i in 1:threadid()
++        @test a[i] == 1
++    end
++    for i in (threadid() + 1):nthreads()
++        @test a[i] == 0
++    end
++end
++test_thread_range()
++
+ # Thread safety of `jl_load_and_lookup`.
+ function test_load_and_lookup_18020(n)
+     @threads for i in 1:n
+-- 
+2.12.2
+
