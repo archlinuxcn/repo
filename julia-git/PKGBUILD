@@ -174,7 +174,9 @@ build_in() {
 
 build() {
   if [[ "$CARCH" = x86_64 ]]; then
+      msg "Building AVX2 version"
       (build_in julia-avx2 0 "${julia_avx2_opts[@]}")
+      msg "Building Generic version"
   fi
   (build_in julia $BUILD_DOC "${julia_opts[@]}")
 }
