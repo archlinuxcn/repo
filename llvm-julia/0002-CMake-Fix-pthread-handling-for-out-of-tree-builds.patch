@@ -1,0 +1,36 @@
+From f5f712dfcac6ee99381c5aca212950276f1743e8 Mon Sep 17 00:00:00 2001
+From: Eric Fiselier <eric@efcs.ca>
+Date: Fri, 10 Feb 2017 01:59:20 +0000
+Subject: [PATCH] [CMake] Fix pthread handling for out-of-tree builds
+
+LLVM defines `PTHREAD_LIB` which is used by AddLLVM.cmake and various projects
+to correctly link the threading library when needed. Unfortunately
+`PTHREAD_LIB` is defined by LLVM's `config-ix.cmake` file which isn't installed
+and therefore can't be used when configuring out-of-tree builds. This causes
+such builds to fail since `pthread` isn't being correctly linked.
+
+This patch attempts to fix that problem by renaming and exporting
+`LLVM_PTHREAD_LIB` as part of`LLVMConfig.cmake`. I renamed `PTHREAD_LIB`
+because It seemed likely to cause collisions with downstream users of
+`LLVMConfig.cmake`.
+
+
+git-svn-id: https://llvm.org/svn/llvm-project/clang-tools-extra/trunk@294690 91177308-0d34-0410-b5e6-96231b3b80d8
+---
+ include-fixer/plugin/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include-fixer/plugin/CMakeLists.txt b/include-fixer/plugin/CMakeLists.txt
+index 2799fd4a..df792ea1 100644
+--- a/include-fixer/plugin/CMakeLists.txt
++++ b/include-fixer/plugin/CMakeLists.txt
+@@ -9,5 +9,5 @@ add_clang_library(clangIncludeFixerPlugin
+   clangParse
+   clangSema
+   clangTooling
+-  ${PTHREAD_LIB}
++  ${LLVM_PTHREAD_LIB}
+   )
+-- 
+2.12.2
+

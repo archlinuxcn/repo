@@ -1,0 +1,193 @@
+From a61fc423f3c043314efd4c0cdb1367de2077ac36 Mon Sep 17 00:00:00 2001
+From: Eric Fiselier <eric@efcs.ca>
+Date: Fri, 10 Feb 2017 01:59:20 +0000
+Subject: [PATCH] [CMake] Fix pthread handling for out-of-tree builds
+
+LLVM defines `PTHREAD_LIB` which is used by AddLLVM.cmake and various projects
+to correctly link the threading library when needed. Unfortunately
+`PTHREAD_LIB` is defined by LLVM's `config-ix.cmake` file which isn't installed
+and therefore can't be used when configuring out-of-tree builds. This causes
+such builds to fail since `pthread` isn't being correctly linked.
+
+This patch attempts to fix that problem by renaming and exporting
+`LLVM_PTHREAD_LIB` as part of`LLVMConfig.cmake`. I renamed `PTHREAD_LIB`
+because It seemed likely to cause collisions with downstream users of
+`LLVMConfig.cmake`.
+
+
+git-svn-id: https://llvm.org/svn/llvm-project/llvm/trunk@294690 91177308-0d34-0410-b5e6-96231b3b80d8
+---
+ cmake/config-ix.cmake                             | 2 +-
+ cmake/modules/AddLLVM.cmake                       | 6 +++---
+ cmake/modules/LLVMConfig.cmake.in                 | 4 ++++
+ examples/ParallelJIT/CMakeLists.txt               | 2 +-
+ lib/CodeGen/CMakeLists.txt                        | 2 +-
+ lib/ExecutionEngine/IntelJITEvents/CMakeLists.txt | 2 +-
+ lib/Fuzzer/CMakeLists.txt                         | 4 ++--
+ lib/Support/CMakeLists.txt                        | 2 +-
+ unittests/ExecutionEngine/Orc/CMakeLists.txt      | 2 +-
+ unittests/Support/CMakeLists.txt                  | 2 +-
+ utils/unittest/CMakeLists.txt                     | 4 ++--
+ 11 files changed, 18 insertions(+), 14 deletions(-)
+
+diff --git a/cmake/config-ix.cmake b/cmake/config-ix.cmake
+index 50bcc508a80..6bd2b535500 100755
+--- a/cmake/config-ix.cmake
++++ b/cmake/config-ix.cmake
+@@ -115,7 +115,7 @@ if(HAVE_LIBPTHREAD)
+   set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+   set(THREADS_HAVE_PTHREAD_ARG Off)
+   find_package(Threads REQUIRED)
+-  set(PTHREAD_LIB ${CMAKE_THREAD_LIBS_INIT})
++  set(LLVM_PTHREAD_LIB ${CMAKE_THREAD_LIBS_INIT})
+ endif()
+ 
+ # Don't look for these libraries on Windows. Also don't look for them if we're
+diff --git a/cmake/modules/AddLLVM.cmake b/cmake/modules/AddLLVM.cmake
+index b3c7746c480..cb4171c9bc8 100644
+--- a/cmake/modules/AddLLVM.cmake
++++ b/cmake/modules/AddLLVM.cmake
+@@ -718,11 +718,11 @@ macro(add_llvm_executable name)
+   if(NOT ARG_IGNORE_EXTERNALIZE_DEBUGINFO)
+     llvm_externalize_debuginfo(${name})
+   endif()
+-  if (PTHREAD_LIB)
++  if (LLVM_PTHREAD_LIB)
+     # libpthreads overrides some standard library symbols, so main
+     # executable must be linked with it in order to provide consistent
+     # API for all shared libaries loaded by this executable.
+-    target_link_libraries(${name} ${PTHREAD_LIB})
++    target_link_libraries(${name} ${LLVM_PTHREAD_LIB})
+   endif()
+ endmacro(add_llvm_executable name)
+ 
+@@ -1027,7 +1027,7 @@ function(add_unittest test_suite test_name)
+   # libpthreads overrides some standard library symbols, so main
+   # executable must be linked with it in order to provide consistent
+   # API for all shared libaries loaded by this executable.
+-  target_link_libraries(${test_name} gtest_main gtest ${PTHREAD_LIB})
++  target_link_libraries(${test_name} gtest_main gtest ${LLVM_PTHREAD_LIB})
+ 
+   add_dependencies(${test_suite} ${test_name})
+   get_target_property(test_suite_folder ${test_suite} FOLDER)
+diff --git a/cmake/modules/LLVMConfig.cmake.in b/cmake/modules/LLVMConfig.cmake.in
+index 2aea2dcaa54..7a8eb367472 100644
+--- a/cmake/modules/LLVMConfig.cmake.in
++++ b/cmake/modules/LLVMConfig.cmake.in
+@@ -45,6 +45,10 @@ set(LLVM_ENABLE_PIC @LLVM_ENABLE_PIC@)
+ 
+ set(LLVM_BUILD_32_BITS @LLVM_BUILD_32_BITS@)
+ 
++if (NOT "@LLVM_PTHREAD_LIB@" STREQUAL "")
++  set(LLVM_PTHREAD_LIB "@LLVM_PTHREAD_LIB@")
++endif()
++
+ set(LLVM_ENABLE_PLUGINS @LLVM_ENABLE_PLUGINS@)
+ set(LLVM_EXPORT_SYMBOLS_FOR_PLUGINS @LLVM_EXPORT_SYMBOLS_FOR_PLUGINS@)
+ set(LLVM_PLUGIN_EXT @LLVM_PLUGIN_EXT@)
+diff --git a/examples/ParallelJIT/CMakeLists.txt b/examples/ParallelJIT/CMakeLists.txt
+index e85b470f503..deeee072b33 100644
+--- a/examples/ParallelJIT/CMakeLists.txt
++++ b/examples/ParallelJIT/CMakeLists.txt
+@@ -11,4 +11,4 @@ add_llvm_example(ParallelJIT
+   ParallelJIT.cpp
+   )
+ 
+-target_link_libraries(ParallelJIT ${PTHREAD_LIB})
++target_link_libraries(ParallelJIT ${LLVM_PTHREAD_LIB})
+diff --git a/lib/CodeGen/CMakeLists.txt b/lib/CodeGen/CMakeLists.txt
+index a1e5fd46610..a9a3d85f3c2 100644
+--- a/lib/CodeGen/CMakeLists.txt
++++ b/lib/CodeGen/CMakeLists.txt
+@@ -150,7 +150,7 @@ add_llvm_library(LLVMCodeGen
+   ${LLVM_MAIN_INCLUDE_DIR}/llvm/CodeGen
+   ${LLVM_MAIN_INCLUDE_DIR}/llvm/CodeGen/PBQP
+ 
+-  LINK_LIBS ${PTHREAD_LIB}
++  LINK_LIBS ${LLVM_PTHREAD_LIB}
+ 
+   DEPENDS
+   intrinsics_gen
+diff --git a/lib/ExecutionEngine/IntelJITEvents/CMakeLists.txt b/lib/ExecutionEngine/IntelJITEvents/CMakeLists.txt
+index 3b8c4b973e6..e6c33b2ecc2 100644
+--- a/lib/ExecutionEngine/IntelJITEvents/CMakeLists.txt
++++ b/lib/ExecutionEngine/IntelJITEvents/CMakeLists.txt
+@@ -4,7 +4,7 @@ if( HAVE_LIBDL )
+     set(LLVM_INTEL_JIT_LIBS ${CMAKE_DL_LIBS})
+ endif()
+ 
+-set(LLVM_INTEL_JIT_LIBS ${PTHREAD_LIB} ${LLVM_INTEL_JIT_LIBS})
++set(LLVM_INTEL_JIT_LIBS ${LLVM_PTHREAD_LIB} ${LLVM_INTEL_JIT_LIBS})
+ 
+ 
+ add_llvm_library(LLVMIntelJITEvents
+diff --git a/lib/Fuzzer/CMakeLists.txt b/lib/Fuzzer/CMakeLists.txt
+index 5ba126e69cc..f490b3681b9 100644
+--- a/lib/Fuzzer/CMakeLists.txt
++++ b/lib/Fuzzer/CMakeLists.txt
+@@ -34,12 +34,12 @@ if( LLVM_USE_SANITIZE_COVERAGE )
+   add_library(LLVMFuzzerNoMain STATIC
+     $<TARGET_OBJECTS:LLVMFuzzerNoMainObjects>
+     )
+-  target_link_libraries(LLVMFuzzerNoMain ${PTHREAD_LIB})
++  target_link_libraries(LLVMFuzzerNoMain ${LLVM_PTHREAD_LIB})
+   add_library(LLVMFuzzer STATIC
+     FuzzerMain.cpp
+     $<TARGET_OBJECTS:LLVMFuzzerNoMainObjects>
+     )
+-  target_link_libraries(LLVMFuzzer ${PTHREAD_LIB})
++  target_link_libraries(LLVMFuzzer ${LLVM_PTHREAD_LIB})
+ 
+   if( LLVM_INCLUDE_TESTS )
+     add_subdirectory(test)
+diff --git a/lib/Support/CMakeLists.txt b/lib/Support/CMakeLists.txt
+index 3301364cf2c..f7cfa760ba0 100644
+--- a/lib/Support/CMakeLists.txt
++++ b/lib/Support/CMakeLists.txt
+@@ -17,7 +17,7 @@ elseif( CMAKE_HOST_UNIX )
+   if( LLVM_ENABLE_THREADS AND HAVE_LIBATOMIC )
+     set(system_libs ${system_libs} atomic)
+   endif()
+-  set(system_libs ${system_libs} ${PTHREAD_LIB})
++  set(system_libs ${system_libs} ${LLVM_PTHREAD_LIB})
+   if ( LLVM_ENABLE_ZLIB AND HAVE_LIBZ )
+     set(system_libs ${system_libs} z)
+   endif()
+diff --git a/unittests/ExecutionEngine/Orc/CMakeLists.txt b/unittests/ExecutionEngine/Orc/CMakeLists.txt
+index 68f6d0c28d7..80c344e040a 100644
+--- a/unittests/ExecutionEngine/Orc/CMakeLists.txt
++++ b/unittests/ExecutionEngine/Orc/CMakeLists.txt
+@@ -21,4 +21,4 @@ add_llvm_unittest(OrcJITTests
+   RPCUtilsTest.cpp
+   )
+ 
+-target_link_libraries(OrcJITTests ${PTHREAD_LIB})
++target_link_libraries(OrcJITTests ${LLVM_PTHREAD_LIB})
+diff --git a/unittests/Support/CMakeLists.txt b/unittests/Support/CMakeLists.txt
+index 4c9bb5eea38..ea260792282 100644
+--- a/unittests/Support/CMakeLists.txt
++++ b/unittests/Support/CMakeLists.txt
+@@ -64,4 +64,4 @@ add_llvm_unittest(SupportTests
+   )
+ 
+ # ManagedStatic.cpp uses <pthread>.
+-target_link_libraries(SupportTests ${PTHREAD_LIB})
++target_link_libraries(SupportTests ${LLVM_PTHREAD_LIB})
+diff --git a/utils/unittest/CMakeLists.txt b/utils/unittest/CMakeLists.txt
+index a50733af9aa..b42ac834e3a 100644
+--- a/utils/unittest/CMakeLists.txt
++++ b/utils/unittest/CMakeLists.txt
+@@ -40,8 +40,8 @@ if (NOT LLVM_ENABLE_THREADS)
+   add_definitions( -DGTEST_HAS_PTHREAD=0 )
+ endif()
+ 
+-find_library(PTHREAD_LIBRARY_PATH pthread)
+-if (PTHREAD_LIBRARY_PATH)
++find_library(LLVM_PTHREAD_LIBRARY_PATH pthread)
++if (LLVM_PTHREAD_LIBRARY_PATH)
+   list(APPEND LIBS pthread)
+ endif()
+ 
+-- 
+2.12.2
+

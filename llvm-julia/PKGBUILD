@@ -8,10 +8,10 @@
 # Contributor: Roberto Alsina <ralsina@kde.org>
 # Contributor: Gerardo Exequiel Pozzi <vmlinuz386@yahoo.com.ar>
 
-pkgname=('llvm-julia' 'llvm-libs-julia' 'llvm-ocaml-julia' 'lldb-julia'
+pkgname=('llvm-julia' 'llvm-libs-julia' 'llvm-ocaml-julia' 'lld-julia' 'lldb-julia'
          'clang-julia' 'clang-tools-extra-julia')
-pkgver=3.9.1
-pkgrel=2
+pkgver=4.0.0
+pkgrel=1
 _ocaml_ver=4.04.0
 arch=('i686' 'x86_64')
 url="http://llvm.org/"
@@ -21,96 +21,56 @@ makedepends=('cmake' 'libffi' 'python2' "ocaml=$_ocaml_ver" 'python-sphinx'
 # Use gcc-multilib to build 32-bit compiler-rt libraries on x86_64 (FS#41911)
 makedepends_x86_64=('gcc-multilib')
 options=('staticlibs' '!strip')
-source=(http://llvm.org/releases/$pkgver/llvm-$pkgver.src.tar.xz
-        http://llvm.org/releases/$pkgver/cfe-$pkgver.src.tar.xz
-        http://llvm.org/releases/$pkgver/clang-tools-extra-$pkgver.src.tar.xz
-        http://llvm.org/releases/$pkgver/compiler-rt-$pkgver.src.tar.xz
-        http://llvm.org/releases/$pkgver/lldb-$pkgver.src.tar.xz
-        AMDGPU-Fix-an-interaction-between-WQM-and-polygon-stippling.patch
-        msan-prevent-initialization-failure-with-newer-glibc.patch
-        llvm-D25865-cmakeshlib.patch
-        llvm-D27389.patch
-        llvm-D27397.patch
-        llvm-D27609-AArch64-UABS_G3.patch
+source=(http://releases.llvm.org/$pkgver/llvm-$pkgver.src.tar.xz
+        http://releases.llvm.org/$pkgver/cfe-$pkgver.src.tar.xz
+        http://releases.llvm.org/$pkgver/clang-tools-extra-$pkgver.src.tar.xz
+        http://releases.llvm.org/$pkgver/compiler-rt-$pkgver.src.tar.xz
+        http://releases.llvm.org/$pkgver/lld-$pkgver.src.tar.xz
+        http://releases.llvm.org/$pkgver/lldb-$pkgver.src.tar.xz
         llvm-D27629-AArch64-large_model.patch
-        llvm-D28009.patch
         llvm-D28215_FreeBSD_shlib.patch
-        llvm-D28221-avx512.patch
-        llvm-D9168_argument_alignment.patch
-        llvm-PR22923.patch
-        llvm-arm-fix-prel31.patch
-        0001-X86-AVX2-Improve-sign-zero-extension-on-AVX2-targets.patch
-        0002-X86-Remove-unnecessary-bitcast-from-the-front-of-AVX.patch
-        0003-ExecutionDepsFix-Fix-bug-in-clearance-calculation.patch
-        0004-Avoid-false-dependencies-of-undef-machine-operands.patch
-        0005-Fixing-bug-committed-in-rev.-278321.patch
-        llvm-D28759-loopclearance.patch
         llvm-D28786-callclearance.patch
-        llvm-Config-llvm-config.h)
-sha256sums=('1fd90354b9cf19232e8f168faf2220e79be555df3aa743242700879e8fd329ee'
-            'e6c4cebb96dee827fa0470af313dff265af391cb6da8d429842ef208c8f25e63'
-            '29a5b65bdeff7767782d4427c7c64d54c3a8684bc6b217b74a70e575e4813635'
-            'd30967b1a5fa51a2503474aacc913e69fd05ae862d37bf310088955bdb13ec99'
-            '7e3311b2a1f80f4d3426e09f9459d079cab4d698258667e50a46dccbaaa460fc'
-            'adadc41090ab0eb33fe4449a0ea3f02b15d03f186262dd89576848a2c66d0ce6'
-            '8e4f194c2283b91644a7fff43bc4e58c36b5507f2a4d90b72f275c0bd7511c20'
-            'cf437e1eeded2b2a1af2a6c57ed89d816a6b39754eb1ccd0358efc5d49ce4c1f'
-            '08ace4ebd9ddeffec03483e8473a31f3bc7ecee2e0445a28e942292fa69de04b'
-            'b65e514cb6a936970dd9b83990be80365cc51b2f95e6d3a0251b835093ad2446'
-            '661244cc21bb102c7821456c16e57d2e34b3330125b62c48a04498035f2dee5c'
-            '17ef2a7d1aadd0682c629e9e97aea2def41b9e4e9f6c603f432bd221df525d49'
-            'aa742189de2e6cfe666f531d954377db430b2175c43186ffee5b6aead7022fe7'
+        0001-CMake-Fix-pthread-handling-for-out-of-tree-builds.patch
+        0002-CMake-Fix-pthread-handling-for-out-of-tree-builds.patch
+        0003-CMake-Fix-pthread-handling-for-out-of-tree-builds.patch
+        0001-AMDGPU-Fix-bug-31610.patch
+        llvm-config.h)
+sha256sums=('8d10511df96e73b8ff9e7abbfb4d4d432edbdbe965f1f4f07afaf370b8a533be'
+            'cea5f88ebddb30e296ca89130c83b9d46c2d833685e2912303c828054c4dc98a'
+            '41b7d37eb128fd362ab3431be5244cf50325bb3bb153895735c5bacede647c99'
+            'd3f25b23bef24c305137e6b44f7e81c51bbec764c119e01512a9bd2330be3115'
+            '33e06457b9ce0563c89b11ccc7ccabf9cff71b83571985a5bf8684c9150e7502'
+            '2dbd8f05c662c1c9f11270fc9d0c63b419ddc988095e0ad107ed911cf882033d'
+            'd1257409dcb2cd797f6b09f66890cf042a29e7c2ca266ea68d64484cdc06f36f'
             '5502ad544316a3371215139dc957e5fa7c4d9fd0c966644ea29fc07614211460'
-            '5e7c40fc0f098e2c44be7f9883c1373ec098753af53d40586a0baae3a98e3394'
-            'f55b56468bc6c297ae492879e3ca1f7bf2db054869867841725a915e8b49b25a'
-            '219c7e7dbe967209eea1bc3e887e28e0d0c2f8f1c48cd8b89459e0b0266c3dbc'
-            'c9cab284a04ac4cd0b84f5440b0556bab995d340f9ee50068dc10b0f6a6b0fee'
-            '56de7642900b59190925c949476412420715c61e5d88a434bd20da997382e359'
-            '6bb19fd0d0216025feaa334a98c631e559eef11786138008293eb084ff1a7b19'
-            'abb096a77a56fbacfe9c7b6b4813c2548ee006fa3b9b7265d08eb650977def45'
-            '1846dbeed028bd37e2937a6e1d4b5700075bbb815630738bce4c069ff1e021cd'
-            '213604fea25c77fc41fc518385980db7e0537b89b3153ec668c7bf381e47eb84'
-            'd58bd763afcfb3cb2a389525c84dca6dc386026fdf60fc742f03ce1f4e91b719'
             '5cb55900d458069ef47239a7ab1d9dcbc2132a98f182d4fd8de95cd4d432b1e8'
+            'ead18f586f1ee902b01bebd1f7f9feec07be271fe3229d67808b8016fe99d512'
+            '6d4e7541a70981d8c5162d92bf5604eec3f61536cc1a3ebc9f118dc892ae879b'
+            'a33a0106909b04c2a551a817d7184462e62995abaa01e5940cd3e67d28f141d5'
+            'cddd04be4fd822e03ff16b7640618e424d475d3bf04494c0d38aa225b920f00e'
             '597dc5968c695bbdbb0eac9e8eb5117fcd2773bc91edf5ec103ecffffab8bc48')
 
 prepare() {
   cd "$srcdir/llvm-$pkgver.src"
 
-  # At the present, clang must reside inside the LLVM source code tree to build
-  # See http://llvm.org/bugs/show_bug.cgi?id=4840
   mv "$srcdir/cfe-$pkgver.src" tools/clang
-
   mv "$srcdir/clang-tools-extra-$pkgver.src" tools/clang/tools/extra
-
   mv "$srcdir/compiler-rt-$pkgver.src" projects/compiler-rt
-
+  mv "$srcdir/lld-$pkgver.src" tools/lld
   mv "$srcdir/lldb-$pkgver.src" tools/lldb
 
-  patch -p1 < ../llvm-PR22923.patch
-  patch -p1 < ../llvm-arm-fix-prel31.patch
-  patch -p1 < ../llvm-D25865-cmakeshlib.patch
-  patch -p1 < ../llvm-D27609-AArch64-UABS_G3.patch
+  msg "Applying D27629-AArch64-large_model"
   patch -p1 < ../llvm-D27629-AArch64-large_model.patch
-  patch -p1 < ../llvm-D9168_argument_alignment.patch
-  patch -p1 < ../llvm-D27389.patch
-  patch -p1 < ../llvm-D27397.patch
-  patch -p1 < ../llvm-D28009.patch
+  msg "Applying D28215_FreeBSD_shlib"
   patch -p1 < ../llvm-D28215_FreeBSD_shlib.patch
-  patch -p1 < ../llvm-D28221-avx512.patch
-  patch -p1 < ../0001-X86-AVX2-Improve-sign-zero-extension-on-AVX2-targets.patch
-  patch -p1 < ../0002-X86-Remove-unnecessary-bitcast-from-the-front-of-AVX.patch
-  patch -p1 < ../0003-ExecutionDepsFix-Fix-bug-in-clearance-calculation.patch
-  patch -p1 < ../0004-Avoid-false-dependencies-of-undef-machine-operands.patch
-  patch -p1 < ../0005-Fixing-bug-committed-in-rev.-278321.patch
-  patch -p1 < ../llvm-D28759-loopclearance.patch
+  msg "Applying D28786-callclearance"
   patch -p1 < ../llvm-D28786-callclearance.patch
 
-  # https://bugs.freedesktop.org/show_bug.cgi?id=99078
-  patch -Rp1 -i ../AMDGPU-Fix-an-interaction-between-WQM-and-polygon-stippling.patch
-
-  # https://reviews.llvm.org/D24736
-  patch -Np0 -d projects/compiler-rt <../msan-prevent-initialization-failure-with-newer-glibc.patch
+  # Arch patches
+  patch -Np1 -i ../0001-CMake-Fix-pthread-handling-for-out-of-tree-builds.patch
+  patch -Np1 -i ../0001-AMDGPU-Fix-bug-31610.patch
+  patch -Np1 -d tools/clang/tools/extra <../0002-CMake-Fix-pthread-handling-for-out-of-tree-builds.patch
+  patch -Np1 -d tools/lld <../0003-CMake-Fix-pthread-handling-for-out-of-tree-builds.patch
 
   mkdir build
 }
@@ -142,16 +102,14 @@ build() {
   make ocaml_doc
 
   # Disable automatic installation of components that go into subpackages
-  sed -i '/\(clang\|lldb\)\/cmake_install.cmake/d' tools/cmake_install.cmake
+  sed -i '/\(clang\|lld\|lldb\)\/cmake_install.cmake/d' tools/cmake_install.cmake
   sed -i '/extra\/cmake_install.cmake/d' tools/clang/tools/cmake_install.cmake
   sed -i '/compiler-rt\/cmake_install.cmake/d' projects/cmake_install.cmake
 }
 
 check() {
-  true
-  # cd "$srcdir/llvm-$pkgver.src/build"
-  # make check
-  # make check-clang
+  cd "$srcdir/llvm-$pkgver.src/build"
+  # make check-{llvm,clang,clang-tools,lld}
 }
 
 package_llvm-julia() {
@@ -168,21 +126,19 @@ package_llvm-julia() {
   rm -r "$pkgdir"/usr/share/doc/llvm/html/{_sources,.buildinfo}
 
   # The runtime libraries go into llvm-libs
-  mv -f "$pkgdir"/usr/lib/lib{LLVM,LTO}*.so "$srcdir"
+  mv -f "$pkgdir"/usr/lib/lib{LLVM,LTO}*.so* "$srcdir"
   mv -f "$pkgdir"/usr/lib/LLVMgold.so "$srcdir"
 
   # OCaml bindings go to a separate package
   rm -rf "$srcdir"/ocaml.{lib,doc}
   mv "$pkgdir/usr/lib/ocaml" "$srcdir/ocaml.lib"
-  mv "$pkgdir/usr/docs/ocaml/html" "$srcdir/ocaml.doc"
-  rm -r "$pkgdir/usr/docs"
+  mv "$pkgdir/usr/share/doc/llvm/ocaml-html" "$srcdir/ocaml.doc"
 
   if [[ $CARCH == x86_64 ]]; then
       # Needed for multilib (https://bugs.archlinux.org/task/29951)
       # Header stub is taken from Fedora
       mv "$pkgdir/usr/include/llvm/Config/llvm-config"{,-64}.h
-      cp "$srcdir/llvm-Config-llvm-config.h" \
-         "$pkgdir/usr/include/llvm/Config/llvm-config.h"
+      cp "$srcdir/llvm-config.h" "$pkgdir/usr/include/llvm/Config/llvm-config.h"
   fi
 
   install -Dm644 LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
@@ -196,7 +152,7 @@ package_llvm-libs-julia() {
 
   install -d "$pkgdir/usr/lib"
   cp -P \
-     "$srcdir"/lib{LLVM,LTO}*.so \
+     "$srcdir"/lib{LLVM,LTO}*.so* \
      "$srcdir"/LLVMgold.so \
      "$pkgdir/usr/lib/"
 
@@ -217,17 +173,34 @@ package_llvm-ocaml-julia() {
 
   cd "$srcdir/llvm-$pkgver.src"
 
-  install -d "$pkgdir"/{usr/lib,usr/share/doc}
+  install -d "$pkgdir"/{usr/lib,usr/share/doc/llvm-ocaml}
   cp -a "$srcdir/ocaml.lib" "$pkgdir/usr/lib/ocaml"
-  cp -a "$srcdir/ocaml.doc" "$pkgdir/usr/share/doc/llvm-ocaml"
+  cp -a "$srcdir/ocaml.doc" "$pkgdir/usr/share/doc/llvm-ocaml/html"
 
   install -Dm644 LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
+package_lld-julia() {
+  pkgdesc="Linker from the LLVM project (with patch for julia)"
+  url="http://lld.llvm.org/"
+  depends=("llvm-libs=$pkgver-$pkgrel")
+  conflicts=("lld")
+  provides=("lld=$pkgver-$pkgrel")
+
+  cd "$srcdir/llvm-$pkgver.src"
+
+  make -C build/tools/lld DESTDIR="$pkgdir" install
+
+  # Remove documentation sources
+  rm -r "$pkgdir"/usr/share/doc/lld/html/{_sources,.buildinfo}
+
+  install -Dm644 tools/lld/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
 package_lldb-julia() {
   pkgdesc="Next generation, high-performance debugger (with patch for julia)"
   url="http://lldb.llvm.org/"
-  depends=('libxml2' 'python2' 'python2-six')
+  depends=("llvm-libs-julia=$pkgver-$pkgrel" 'libxml2' 'python2' 'python2-six')
   conflicts=("lldb")
   provides=("lldb=$pkgver-$pkgrel")
 
@@ -300,6 +273,9 @@ package_clang-tools-extra-julia() {
   cd "$srcdir/llvm-$pkgver.src"
 
   make -C build/tools/clang/tools/extra DESTDIR="$pkgdir" install
+
+  # Remove documentation sources
+  rm -r "$pkgdir"/usr/share/doc/clang-tools/html/{_sources,.buildinfo}
 
   # Use Python 2
   sed -i 's|/usr/bin/env python|&2|' \
