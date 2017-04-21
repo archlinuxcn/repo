@@ -35,7 +35,7 @@ case $CARCH in
 esac
 
 epoch=1
-pkgver=0.6.0.pre.beta.236.g5444473732
+pkgver=0.6.0.pre.beta.238.g3ccbcf76b9
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
@@ -101,7 +101,7 @@ _FLTO='-flto'
 
 case "$CARCH" in
   x86_64)
-    julia_avx2_opts=("${julia_opts[@]}" MARCH=x86-64 JULIA_CPU_TARGET=core-avx2)
+    julia_avx2_opts=("${julia_opts[@]}" MARCH=haswell JULIA_CPU_TARGET=core-avx2)
     julia_opts=("${julia_opts[@]}" MARCH=x86-64 JULIA_CPU_TARGET=x86-64)
     ;;
   i686)
