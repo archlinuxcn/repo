@@ -6,10 +6,18 @@ pkgdesc="Packaging script for julia"
 arch=('any')
 license=('custom:MIT')
 depends=('julia')
-source=("julia-install-pkg.sh")
-md5sums=('3c5a0eb6fa7417920e7543b52bbca0e7')
+source=(git://github.com/yuyichao/julia-pkg-scripts)
+md5sums=('SKIP')
+
+pkgver() {
+  cd julia-pkg-scripts
+
+  git describe --tags | sed -e 's/^[^0-9]*//' -e 's/-/.0./' -e 's/-/./g'
+}
 
 package() {
+  cd julia-pkg-scripts
+
   mkdir -p "${pkgdir}/usr/bin"
   install -Dm644 julia-install-pkg.sh "${pkgdir}/usr/bin"
 }
