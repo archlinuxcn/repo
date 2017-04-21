@@ -35,7 +35,7 @@ case $CARCH in
 esac
 
 epoch=1
-pkgver=0.6.0.pre.beta.224.g7d0c945362
+pkgver=0.6.0.pre.beta.235.g5482f911c3
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
@@ -49,11 +49,13 @@ options=('debug' '!strip')
 source=('git://github.com/JuliaLang/julia'
         0001-Band-aid-to-make-threaded-loop-a-little-easier-to-wo.patch
         0002-Make-sure-the-codegen-lock-is-acquired-when-calling-.patch
-        0003-Evaluate-thread-range-only-once.patch)
+        0003-Optimize-pause-and-wake-functions-in-julia-code.patch
+        0004-Put-worker-threads-to-sleep-immediately-on-startup.patch)
 md5sums=('SKIP'
-         'ee12551d71d5f1e5395e5560f2624b90'
-         '58960ab99b21cf9f7645ff17f8efa15a'
-         '5d074212184d07124a3a56e610d91f32')
+         '7d357093d4d380550ba3c3cd509d1e48'
+         'e3e15f5230a9aec7deddd0717e13ec69'
+         '6ad3308c6eefbba6f6b0b073c336655f'
+         '05f337f5d8692350fab21c6eb5b32908')
 
 pkgver() {
   cd julia
@@ -134,7 +136,8 @@ EOF
 
   patch -Np1 < ../0001-Band-aid-to-make-threaded-loop-a-little-easier-to-wo.patch
   patch -Np1 < ../0002-Make-sure-the-codegen-lock-is-acquired-when-calling-.patch
-  patch -Np1 < ../0003-Evaluate-thread-range-only-once.patch
+  patch -Np1 < ../0003-Optimize-pause-and-wake-functions-in-julia-code.patch
+  patch -Np1 < ../0004-Put-worker-threads-to-sleep-immediately-on-startup.patch
 
   if [[ "$CARCH" = x86_64 ]]; then
       (cd "$srcdir"

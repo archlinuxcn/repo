@@ -1,13 +1,13 @@
-From 9f5a54ea786267a61d107b267bb57a056b9055b5 Mon Sep 17 00:00:00 2001
+From bf21d31b289045d58dd8a3b7115249ac7379d21b Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Thu, 20 Apr 2017 17:53:22 -0400
-Subject: [PATCH 2/3] Make sure the codegen lock is acquired when calling LLVM
+Subject: [PATCH 2/4] Make sure the codegen lock is acquired when calling LLVM
  in cfunction.
 
 ---
  src/codegen.cpp | 11 ++++++++---
- test/threads.jl | 14 ++++++++++++++
- 2 files changed, 22 insertions(+), 3 deletions(-)
+ test/threads.jl | 17 +++++++++++++++++
+ 2 files changed, 25 insertions(+), 3 deletions(-)
 
 diff --git a/src/codegen.cpp b/src/codegen.cpp
 index a42f4923ff..5de00ef196 100644
@@ -69,14 +69,14 @@ index a42f4923ff..5de00ef196 100644
      if (f == NULL)
          jl_rethrow();
 diff --git a/test/threads.jl b/test/threads.jl
-index 9be402deb6..141041a14e 100644
+index ff38963c09..995fb2942d 100644
 --- a/test/threads.jl
 +++ b/test/threads.jl
-@@ -381,6 +381,20 @@ for period in (0.06, Dates.Millisecond(60))
+@@ -381,6 +381,23 @@ for period in (0.06, Dates.Millisecond(60))
      end
  end
  
-+function complex_cfunction(a)
++complex_cfunction = function(a)
 +    s = zero(eltype(a))
 +    @inbounds @simd for i in a
 +        s += muladd(a[i], a[i], -2)
@@ -85,7 +85,10 @@ index 9be402deb6..141041a14e 100644
 +end
 +function test_thread_cfunction()
 +    @threads for i in 1:1000
-+        cfunction(complex_cfunction, Float64, Tuple{Ref{Vector{Float64}}})
++        # Make sure this is not inferrable
++        # and a runtime call to `jl_function_ptr` will be created
++        ccall(:jl_function_ptr, Ptr{Void}, (Any, Any, Any),
++              complex_cfunction, Float64, Tuple{Ref{Vector{Float64}}})
 +    end
 +end
 +test_thread_cfunction()
