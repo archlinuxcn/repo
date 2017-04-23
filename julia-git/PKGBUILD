@@ -46,16 +46,8 @@ makedepends=(gcc-fortran arpack fftw git gmp libgit2-julia libunwind-git
              openspecfun openblas libutf8proc-git patchelf openblas-lapack
              openlibm mbedtls libssh2)
 options=('debug' '!strip')
-source=('git://github.com/JuliaLang/julia'
-        0001-Band-aid-to-make-threaded-loop-a-little-easier-to-wo.patch
-        0002-Make-sure-the-codegen-lock-is-acquired-when-calling-.patch
-        0003-Optimize-pause-and-wake-functions-in-julia-code.patch
-        0004-Put-worker-threads-to-sleep-immediately-on-startup.patch)
-md5sums=('SKIP'
-         '7d357093d4d380550ba3c3cd509d1e48'
-         'e3e15f5230a9aec7deddd0717e13ec69'
-         '6ad3308c6eefbba6f6b0b073c336655f'
-         '05f337f5d8692350fab21c6eb5b32908')
+source=('git://github.com/JuliaLang/julia')
+md5sums=('SKIP')
 
 pkgver() {
   cd julia
@@ -134,10 +126,7 @@ EOF
   git reset --hard HEAD
   git clean -fdx
 
-  patch -Np1 < ../0001-Band-aid-to-make-threaded-loop-a-little-easier-to-wo.patch
-  patch -Np1 < ../0002-Make-sure-the-codegen-lock-is-acquired-when-calling-.patch
-  patch -Np1 < ../0003-Optimize-pause-and-wake-functions-in-julia-code.patch
-  patch -Np1 < ../0004-Put-worker-threads-to-sleep-immediately-on-startup.patch
+  # patch -Np1 < ../
 
   if [[ "$CARCH" = x86_64 ]]; then
       (cd "$srcdir"
