@@ -20,7 +20,7 @@ _gtk3=true
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=52.0.2
+pkgver=53.0
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
@@ -41,7 +41,7 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
             'speech-dispatcher: Text-to-Speech')
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
-_patchrev=d91c918a6511
+_patchrev=4665fe34fbce
 options=('!emptydirs'  'strip' )
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz
@@ -60,7 +60,6 @@ source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/
         rb39193.patch
         fix_mozalloc.patch
         fix-wifi-scanner.diff
-        rust-i686.patch
 )
 
 
@@ -124,10 +123,6 @@ prepare() {
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1314968
   patch -Np1 -i "$srcdir"/fix-wifi-scanner.diff
   
-  # Build with the rust targets we actually ship
-  patch -Np1 -i "$srcdir"/rust-i686.patch
-
-
   
   # WebRTC build tries to execute "python" and expects Python 2
   mkdir -p "$srcdir/path"
@@ -151,9 +146,6 @@ build() {
   
   # _FORTIFY_SOURCE causes configure failures
   CPPFLAGS+=" -O2"
-
-  # GCC 6
-  CXXFLAGS+=" -fPIC -fno-delete-null-pointer-checks -fno-schedule-insns2"
 
   # Hardening
   LDFLAGS+=" -Wl,-z,now"
@@ -182,6 +174,19 @@ package() {
   install -Dm644 "$srcdir/vendor.js" "$pkgdir/usr/lib/firefox/browser/defaults/preferences/vendor.js"
   install -Dm644 "$srcdir/kde.js" "$pkgdir/usr/lib/firefox/browser/defaults/preferences/kde.js"
 
+  _distini="$pkgdir/usr/lib/firefox/distribution/distribution.ini"
+  install -Dm644 /dev/stdin "$_distini" <<END
+[Global]
+id=archlinux
+version=1.0
+about=Mozilla Firefox for Arch Linux
+
+[Preferences]
+app.distributor=archlinux
+app.distributor.channel=$pkgname
+app.partner.archlinux=archlinux
+END
+
   for i in 16 22 24 32 48 256; do
       install -Dm644 browser/branding/official/default$i.png \
         "$pkgdir/usr/share/icons/hicolor/${i}x${i}/apps/firefox.png"
@@ -207,23 +212,22 @@ package() {
   #https://bugzilla.mozilla.org/show_bug.cgi?id=658850
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
-md5sums=('e24c6c4f0e2c8ce8694c6d6a4f712f93'
+md5sums=('73175f850d4ff6068c6af674df20477c'
          '36b41345f62ec209e8ef7179649325c4'
          '14e0f6237a79b85e60256f4808163160'
          'dbf14588e85812ee769bd735823a0146'
          'aa9f776d2187cba09de65cbb02b39ca0'
          '05bb69d25fb3572c618e3adf1ee7b670'
          '6e335a517c68488941340ee1c23f97b0'
-         '3b3eb8c2747429887e4a03537932eac5'
-         '688b522c10f805261f07c085848487eb'
+         '46a4971f26c990a66b913ba700c7f3fa'
+         '906efefafcbe3efd44c8827f699c05e2'
          '1fad9a988826d69fe712ea973e43f6da'
-         '4ac0c221feeee260172acf50581b2246'
+         '2ab6215a97ff35fbb46eea83df68f0c7'
          'fa6ac817f576b486419b5f308116a7cd'
          '0c684360f1df4536512d51873c1d243d'
-         '87eac57858072cfb3d8c3a128bb92da4'
+         '64b6e0aebd5b716847198fec849e4a6e'
          'fe24f5ea463013bb7f1c12d12dce41b2'
          '3fa8bd22d97248de529780f5797178af'
          '43550e772f110a338d5a42914ee2c3a6'
          '0c1ed789c06297659137a2ed2ef769f7'
-         'e2396b9918aa602427f80d48caf319b4'
-         '40b197fcf8c855b3902414f4d591b18b')
+         'e2396b9918aa602427f80d48caf319b4')
