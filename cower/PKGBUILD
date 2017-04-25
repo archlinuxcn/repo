@@ -1,24 +1,24 @@
 # Maintainer: Dave Reisner <d@falconindy.com>
 
 pkgname=cower
-pkgver=16
-pkgrel=1
+pkgver=17
+pkgrel=2
 pkgdesc="A simple AUR agent with a pretentious name"
 arch=('i686' 'x86_64')
 url="http://github.com/falconindy/cower"
 license=('MIT')
-depends=('curl' 'openssl' 'pacman' 'yajl')
+depends=('curl' 'pacman' 'yajl')
 makedepends=('perl')
-source=("http://code.falconindy.com/archive/$pkgname/$pkgname-$pkgver.tar.gz"{,.sig})
+source=("https://pkgbuild.com/~dreisner/sources/$pkgname/$pkgname-$pkgver.tar.gz"{,.sig})
 validpgpkeys=('487EACC08557AD082088DABA1EB2638FF56C0C53')  # Dave Reisner
-md5sums=('f141e441b7775df3d3a1ba3a80bc3d1d'
+md5sums=('263c216e6643751b6c96eebfdd70c359'
          'SKIP')
 
 build() {
   cd "$pkgname-$pkgver"
 
   make
-  sed '/^$/q' cower.c >LICENSE
+  sed '/^$/q' src/cower.c >LICENSE
 }
 
 package() {
