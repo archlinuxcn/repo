@@ -1,25 +1,31 @@
-# Maintainer: Alfonso Saavedra "Son Link" <sonlink.dourden@gmail.com>
-# Maintainer: Hexchain Tong <i at hexchain dot org>
+# Maintainer: Miguel Revilla <yo at  miguelrevilla dot com>
+# Contributor: Alfonso Saavedra "Son Link" <sonlink.dourden@gmail.com>
+# Contributor: Hexchain Tong <i at hexchain dot org>
 pkgname=megasync
 pkgver=3.0.1.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Sync your files to your Mega account. Official app"
 arch=('i686' 'x86_64')
 url="https://github.com/meganz/megasync"
 license=('custom:MEGA LIMITED CODE REVIEW LICENCE')
-depends=('curl' 'c-ares' 'crypto++' 'libsodium' 'hicolor-icon-theme' 'qt5-base' 'libuv')
+depends=('curl' 'c-ares' 'crypto++' 'libsodium' 'hicolor-icon-theme' 'qt5-base' 'libuv' 'openssl')
 makedepends=('git' 'qt5-tools' 'swig' 'doxygen')
 optdepends=('sni-qt: fix systray issue on KDE and LXQt')
-source=("git+https://github.com/meganz/MEGAsync.git#tag=v${pkgver}_Linux")
-md5sums=('SKIP')
+source=("git+https://github.com/meganz/MEGAsync.git#tag=v${pkgver}_Linux"
+		'netcpp-openssl110.patch')
+md5sums=('SKIP'
+         'a0b970b4c763216cba959237f430ad76')
 
 prepare(){
-    cd "$srcdir/MEGAsync"
+    cd "${srcdir}/MEGAsync"
     git submodule update --init --recursive
+
+	cd "${srcdir}/MEGAsync/src/MEGASync/mega/src/posix"
+	patch < "${srcdir}/netcpp-openssl110.patch"
 }
 
 build(){
-    cd "$srcdir/MEGAsync/src/MEGASync/mega"
+    cd "${srcdir}/MEGAsync/src/MEGASync/mega"
     ./autogen.sh
     ./configure \
         --prefix=/usr \
@@ -38,26 +44,26 @@ build(){
         --without-freeimage \
         --without-termcap
 
-    cd "$srcdir/MEGAsync/src"
+    cd "${srcdir}/MEGAsync/src"
     qmake-qt5 CONFIG+="release" MEGA.pro
     lrelease-qt5 MEGASync/MEGASync.pro
     make
 }
 
 package (){
-    cd "$srcdir/MEGAsync"
-    install -Dm 644 LICENCE.md "$pkgdir/usr/share/licenses/megasync/LICENCE.md"
-    install -Dm 644 installer/terms.txt "$pkgdir/usr/share/licenses/megasync/terms.txt"
+    cd "${srcdir}/MEGAsync"
+    install -Dm 644 LICENCE.md "${pkgdir}/usr/share/licenses/megasync/LICENCE.md"
+    install -Dm 644 installer/terms.txt "${pkgdir}/usr/share/licenses/megasync/terms.txt"
 
     cd src/MEGASync
-    install -Dm 755 megasync "$pkgdir/usr/bin/megasync"
+    install -Dm 755 megasync "${pkgdir}/usr/bin/megasync"
 
     cd platform/linux/data
-    install -Dm 644 megasync.desktop "$pkgdir/usr/share/applications/megasync.desktop"
+    install -Dm 644 megasync.desktop "${pkgdir}/usr/share/applications/megasync.desktop"
 
     cd icons/hicolor
     for size in 16x16 32x32 48x48 128x128 256x256
     do
-        install -Dm 644 "$size/apps/mega.png" "$pkgdir/usr/share/icons/hicolor/$size/apps/mega.png"
+        install -Dm 644 "${size}/apps/mega.png" "${pkgdir}/usr/share/icons/hicolor/${size}/apps/mega.png"
     done
 }
