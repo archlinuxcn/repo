@@ -3,7 +3,7 @@
 # Contributor: Andrew Gallant <jamslam@gmail.com>
 pkgname=ripgrep-broadwell-git
 pkgver=0.5.1.20170421
-pkgrel=1
+pkgrel=2
 pkgdesc="A search tool that combines the usability of ag with the raw speed of grep. Git version, optimized for broadwell CPUs"
 arch=('x86_64')
 url="https://github.com/BurntSushi/ripgrep"
@@ -33,6 +33,10 @@ package () {
   cd ripgrep
 
   install -Dm755 "target/release/rg" "$pkgdir/usr/bin/rg"
+
+  install -Dm644 "target/release/build/ripgrep-"*/out/rg.bash-completion "$pkgdir/usr/share/bash-completion/completions/rg"
+  install -Dm644 "target/release/build/ripgrep-"*/out/_rg "$pkgdir/usr/share/zsh/site-functions/_rg"
+  install -Dm644 "target/release/build/ripgrep-"*/out/rg.fish "$pkgdir/usr/share/fish/completions/rg.fish"
 
   install -Dm644 "doc/rg.1" "$pkgdir/usr/share/man/man1/rg.1"
   install -Dm644 "README.md" "$pkgdir/usr/share/doc/${pkgname}/README.md"
