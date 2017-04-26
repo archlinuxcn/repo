@@ -1,0 +1,47 @@
+--- lib/Makefile.am.orig	2017-02-17 03:39:51.000000000 +0100
++++ lib/Makefile.am	2017-04-04 23:49:52.849386841 +0200
+@@ -7,6 +7,7 @@
+ 	-I$(top_srcdir)/common \
+ 	@CCNET_CFLAGS@ \
+ 	@SEARPC_CFLAGS@ \
++	@SSL_CFLAGS@ \
+ 	@MSVC_CFLAGS@ \
+ 	-Wall
+ 
+--- server/Makefile.am.orig	2017-02-17 03:39:51.000000000 +0100
++++ server/Makefile.am	2017-04-04 23:53:57.200087930 +0200
+@@ -11,6 +11,7 @@
+ 	@CCNET_CFLAGS@ \
+ 	@SEARPC_CFLAGS@ \
+ 	@GLIB2_CFLAGS@ \
++	@SSL_CFLAGS@ \
+ 	@MSVC_CFLAGS@ \
+ 	@LIBARCHIVE_CFLAGS@ \
+ 	-Wall
+--- server/gc/Makefile.am.orig	2017-02-17 03:39:51.000000000 +0100
++++ server/gc/Makefile.am	2017-04-04 23:57:06.103954436 +0200
+@@ -9,6 +9,7 @@
+ 	@CCNET_CFLAGS@ \
+ 	@SEARPC_CFLAGS@ \
+ 	@GLIB2_CFLAGS@ \
++	@SSL_CFLAGS@ \
+ 	@MSVC_CFLAGS@ \
+ 	-Wall
+ 
+@@ -86,5 +87,6 @@
+ 	@CCNET_CFLAGS@ \
+ 	@SEARPC_CFLAGS@ \
+ 	@GLIB2_CFLAGS@ \
++	@SSL_CFLAGS@ \
+ 	@MSVC_CFLAGS@ \
+ 	-Wall
+--- fuse/Makefile.am.orig	2017-02-17 03:39:51.000000000 +0100
++++ fuse/Makefile.am	2017-04-04 23:59:32.874362992 +0200
+@@ -8,6 +8,7 @@
+ 	@CCNET_CFLAGS@ \
+ 	@SEARPC_CFLAGS@ \
+ 	@GLIB2_CFLAGS@ \
++	@SSL_CFLAGS@ \
+ 	@FUSE_CFLAGS@ \
+ 	-Wall
+ 
