@@ -4,8 +4,8 @@
 # Contributor: Florian Pritz <bluewind at jabber dot ccc dot de>
 pkgname=wireshark-gtk2
 pkgbase=wireshark
-pkgver=2.2.5
-pkgrel=2
+pkgver=2.2.6
+pkgrel=1
 arch=('i686' 'x86_64')
 license=('GPL2')
 makedepends=('c-ares' 'geoip' 'qt5-tools' 'qt5-multimedia' 'gtk3' 'krb5' 'libpcap' 'bash' 'libssh'
@@ -14,7 +14,7 @@ options=(!emptydirs)
 url='https://www.wireshark.org/'
 source=(https://www.wireshark.org/download/src/${pkgbase}-${pkgver}.tar.bz2
         do_not_use_svn_version.patch)
-sha256sums=('75dd88d3d6336559e5b0b72077d8a772a988197d571f00029986225fef609ac8'
+sha256sums=('f627d51eda85f5ae5f5c8c9fc1f6539ffc2a270dd7500dc7f67490a8534ca849'
             '3981bb46f592e319f9c679c5e215ae0af828044a3b64d49d2cf0305ecacf4691')
 
 prepare() {
