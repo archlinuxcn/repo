@@ -1,0 +1,36 @@
+pkgbase=firefox-esr-i18n
+pkgver=52.1.0
+pkgrel=1
+pkgdesc="Language pack for Firefox"
+arch=('any')
+url="https://www.mozilla.com/"
+license=('MPL' 'GPL')
+
+_languages=(
+  'zh-CN  "Chinese (Simplified)"'
+)
+
+pkgname=()
+source=()
+_url=https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/${pkgver}esr/linux-i686/xpi
+
+for _lang in "${_languages[@]}"; do
+  _locale=${_lang%% *}
+  _pkgname=firefox-esr-i18n-${_locale,,}
+
+  pkgname+=($_pkgname)
+  source+=("firefox-esr-i18n-$pkgver-$_locale.xpi::$_url/$_locale.xpi")
+  eval "package_$_pkgname() {
+    _package $_lang
+  }"
+done
+
+# Don't extract anything
+noextract=(${source[@]%%::*})
+
+_package() {
+  pkgdesc="$2 language pack for Firefox"
+  depends=("firefox>=$pkgver")
+  install -Dm644 firefox-i18n-$pkgver-$1.xpi \
+    "$pkgdir/usr/lib/firefox/browser/extensions/langpack-$1@firefox.mozilla.org.xpi"
+}
