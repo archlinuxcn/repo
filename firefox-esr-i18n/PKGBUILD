@@ -31,6 +31,6 @@ noextract=(${source[@]%%::*})
 _package() {
   pkgdesc="$2 language pack for Firefox"
   depends=("firefox>=$pkgver")
-  install -Dm644 firefox-i18n-$pkgver-$1.xpi \
+  install -Dm644 firefox-esr-i18n-$pkgver-$1.xpi \
     "$pkgdir/usr/lib/firefox/browser/extensions/langpack-$1@firefox.mozilla.org.xpi"
 }
