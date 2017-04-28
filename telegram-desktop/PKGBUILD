@@ -1,6 +1,6 @@
 pkgname=telegram-desktop
 pkgver=1.0.29
-pkgrel=1
+pkgrel=2
 pkgdesc='Official desktop version of Telegram messaging app.'
 arch=('i686' 'x86_64')
 url="https://desktop.telegram.org/"
@@ -20,6 +20,7 @@ depends=(
     'xcb-util-image'
     'xcb-util-renderutil'
     'hicolor-icon-theme'
+    'openssl-1.0'
 )
 makedepends=(
     'git'
@@ -77,7 +78,7 @@ sha256sums=(
     'SKIP'
     '41c22fae6ae757936741e63aec3d0f17cafe86b2d6153cdd1d01a5581e871f17'
     'd4cdad0d091c7e47811d8a26d55bbee492e7845e968c522e86f120815477e9eb'
-    '125105bcc7caeb796fb75c2f0025a5240e5ed9c33f12732792fa37e1bf893427'
+    '7c5fdfa86648b36929a0fd73f35be52611be857e88c12b873125dfc1f67a3ad5'
 )
 
 prepare() {
@@ -97,6 +98,8 @@ prepare() {
         
         cd "$qt_src_dir/qtbase"
         patch -p1 -i "$qt_patch_file"
+        
+        echo "INCLUDEPATH += /usr/include/openssl-1.0" >> "$qt_src_dir/qtbase/src/network/network.pro"
     fi
     
     cd "$srcdir/gyp"
@@ -117,6 +120,7 @@ build() {
     # Build patched Qt
     local qt_src_dir="$srcdir/Libraries/qt${qt_version//./_}"
     
+    export OPENSSL_LIBS='-L/usr/lib/openssl-1.0 -lssl -lcrypto'
     cd "$qt_src_dir/qtbase"
     ./configure \
         -prefix "$srcdir/qt" \
@@ -158,8 +162,8 @@ build() {
 export LANG=en_US.UTF-8
     "$srcdir/Libraries/gyp/gyp" \
         -Dlinux_path_qt="$srcdir/qt" \
-        -Dlinux_lib_ssl=-lssl \
-        -Dlinux_lib_crypto=-lcrypto \
+        -Dlinux_lib_ssl='-L/usr/lib/openssl-1.0 -lssl' \
+        -Dlinux_lib_crypto='-L/usr/lib/openssl-1.0 -lcrypto' \
         -Dlinux_lib_icu="-licuuc -licutu -licui18n" \
         --depth=. --generator-output=../.. -Goutput_dir=out Telegram.gyp --format=cmake
     cd "$srcdir/tdesktop/out/Release"
