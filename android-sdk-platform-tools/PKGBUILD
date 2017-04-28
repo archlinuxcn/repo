@@ -3,7 +3,7 @@
 # Contributor: Christoph Bayer <chrbayer@criby.de>
 
 pkgname=android-sdk-platform-tools
-pkgver=r25.0.4
+pkgver=r25.0.5
 pkgrel=1
 pkgdesc='Platform-Tools for Google Android SDK (adb and fastboot)'
 arch=('x86_64')
@@ -21,10 +21,10 @@ source=("https://dl-ssl.google.com/android/repository/platform-tools_${pkgver}-l
         "adb.service"
         "license.html"
         "source.properties")
-sha256sums=('79048c41f69e730800d4fb710f6128691b7b8dfcb3a280e6b4e112a6f9285cbf'
+sha256sums=('dd0157060da138be5e95b70cb7b3c06eb9524e474386db4983e594564b414cee'
             '1c219abea7584ae13f3f76b04e269ef21c1699d6bd29b7615523f927a9d10deb'
             'a7f3a259290ae6a5dc61bd34ecae36e2b7e2f644865ddc3c7fde5d248b8a7cef'
-            'd50cd65551230298a7c1d4c29552aecd35d2c99270d22ba4ce6b4ff3d6f9ecf1')
+            '3f9d5ad95cbb72729a0e8af9b8fde85f2566a1bef769e45cb678dd0a1d797854')
 
 package() {
   install -Dm644 "${srcdir}/adb.service" "${pkgdir}/usr/lib/systemd/system/adb.service"
