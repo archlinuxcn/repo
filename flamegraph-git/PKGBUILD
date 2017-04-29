@@ -2,7 +2,7 @@
 
 pkgname=flamegraph-git
 pkgver=r239.2287fa5
-pkgrel=1.1
+pkgrel=1.2
 pkgdesc="stack trace visualizer"
 arch=('any')
 url="http://www.brendangregg.com/FlameGraphs/cpuflamegraphs.html"
@@ -28,7 +28,9 @@ package() {
 
   for script in $(find -maxdepth 1 -name "*.pl" -o -name "*.awk");do
     install -Dm755 $script ${pkgdir}/usr/bin/$script
+    ln -s ${script} ${pkgdir}/usr/bin/${script%.*}
   done;
+  rm ${pkgdir}/usr/bin/files
 
   install -Dm644 docs/cddl1.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }

@@ -1,0 +1,3 @@
+# Creates an nvm-exec script in NVM_DIR which passes through to the installed nvm-exec
+
+[ -e "$NVM_DIR/nvm-exec" ] || (mkdir -p "$NVM_DIR" && (echo '/usr/share/nvm/nvm-exec "$@"' > "$NVM_DIR/nvm-exec") && chmod +x "$NVM_DIR/nvm-exec")
