@@ -1,6 +1,6 @@
 pkgbase=firefox-esr-i18n
 pkgver=52.1.0
-pkgrel=4
+pkgrel=5
 pkgdesc="Language pack for Firefox"
 arch=('any')
 url="https://www.mozilla.com/"
@@ -35,4 +35,5 @@ _package() {
   install -Dm644 firefox-esr-i18n-$pkgver-$1.xpi \
     "$pkgdir/usr/lib/firefox/browser/extensions/langpack-$1@firefox.mozilla.org.xpi"
 }
-md5sums=('67be16baa3a5689784e93d33365dabe6')
+md5sums=('67be16baa3a5689784e93d33365dabe6'
+         'f95c31d344eb5ea21eeae99f2bc20ddd')
