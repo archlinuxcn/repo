@@ -19,6 +19,7 @@ def pre_build():
         print(line)
       else:
         print('pkgrel=1')
+      continue
 
     print(line)
 
