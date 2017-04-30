@@ -6,7 +6,7 @@ pkgbase=cndrvcups-common-lb
 pkgname=cndrvcups-common-lb
 # used this name to avoid conflict with the existing cndrvcups-common (no longer in aur) which was wrong version for cndrvcups-lb
 _pkgname=cndrvcups-common
-pkgver=3.60
+pkgver=3.71
 pkgrel=1
 pkgdesc="Common printer driver modules for cndrvcups-lb package, built from source"
 arch=('i686' 'x86_64')
@@ -14,17 +14,18 @@ url="http://support-au.canon.com.au/contents/AU/EN/0100270808.html"
 license=('GPL' 'MIT' 'custom')
 depends_i686=('libglade' 'gcc-libs')
 depends_x86_64=('libglade' 'lib32-gcc-libs')
-makedepends=('automake' 'autoconf')
+makedepends=('automake' 'autoconf' 'glib2' 'gtk2')
 conflicts=('cndrvcups-lb-bin')
 # http://pdisp01.c-wss.com/gdl/WWUFORedirectTarget.do?id=MDEwMDAwMjcwODE0&cmp=ABS&lang=EN
-source=(Linux_UFRII_PrinterDriver_V320_uk_EN.tar.gz::'http://pdisp01.c-wss.com/gdl/WWUFORedirectTarget.do?id=MDEwMDAwMjcwODE0&cmp=ABS&lang=EN')
+#source=(Linux_UFRII_PrinterDriver_V320_uk_EN.tar.gz::'http://pdisp01.c-wss.com/gdl/WWUFORedirectTarget.do?id=MDEwMDAwMjcwODE0&cmp=ABS&lang=EN')
+source=(http://gdlp01.c-wss.com/gds/8/0100007658/03/linux-UFRII-drv-v331-uken.tar.gz)
 options=('!emptydirs' '!strip' 'staticlibs')
-sha512sums=('fc35670a07f067b6ccdebf5b96590eafac2ed984faaa8a90ce44dd44396d6de0964f6352cae0fdf8ce1f6127ebf3ea9f6610b56ba7dd9a7f382bd1c6d588a801')
+sha512sums=('db110d29011b356ab0df1534b0cab6be6dd224a076aef87bfb2f4add4d580c11e2a7aac2b622638b0e70abd0f36a7bf9f0832cf6c4fdacdeba3de99a375bb103')
 
 # build instructions are adapted from upstream cndrvcups-common.spec file
 
 prepare() {
-    cd "${srcdir}"/Linux_UFRII_PrinterDriver_V320_uk_EN/Sources
+    cd "${srcdir}"/linux-UFRII-drv-v331-uken/Sources
     bsdtar xf "${_pkgname}"-"${pkgver}"-1.tar.gz -C "${srcdir}"
 }
 
@@ -35,11 +36,8 @@ build() {
     ./autogen.sh --prefix=/usr/ --enable-progpath=/usr/bin --libdir=/usr/lib
 
     cd "${srcdir}"/"${_pkgname}"-"${pkgver}"/cngplp
-    _cflags="${CFLAGS}"
-    CFLAGS="${CFLAGS} $(pkg-config --cflags --libs gmodule-2.0)"
     autoreconf -i
-    ./autogen.sh --prefix=/usr --libdir=/usr/lib 
-    CFLAGS="${_cflags}"
+    LIBS="-lgtk-x11-2.0 -lgobject-2.0 -lglib-2.0 -lgmodule-2.0" ./autogen.sh --prefix=/usr --libdir=/usr/lib
 
     cd "${srcdir}"/"${_pkgname}"-"${pkgver}"/backend
     autoreconf -i
@@ -79,7 +77,7 @@ package()
     install -m 755 libs/libcaepcm.so.1.0     "${pkgdir}"/usr/"${_lib32dir}"
 
     install -m 755 libs/libColorGear.so.0.0.0    "${pkgdir}"/usr/"${_lib32dir}"
-    install -m 755 libs/libColorGearC.so.0.0.0    "${pkgdir}"/usr/"${_lib32dir}"
+    install -m 755 libs/libColorGearC.so.1.0.0    "${pkgdir}"/usr/"${_lib32dir}"
 
 
     install -m 644 data/*.ICC  "${pkgdir}"/usr/share/caepcm
@@ -111,7 +109,10 @@ package()
     ln -sf libcanonc3pl.so.1.0.0    libcanonc3pl.so.1
     
     # according to gentoo ebuild (for 2.90 )c3pldrv dlopens the absolute path /usr/lib/libc3pl.so
-    ln -s /usr/lib32/libc3pl.so libc3pl.so
+    # this is only needed for x86_64 build
+    if [[ ${CARCH} == "x86_64" ]]; then
+        ln -s /usr/lib32/libc3pl.so libc3pl.so
+    fi
     
     cd "${srcdir}"/"${_pkgname}"-"${pkgver}"
     install -m755 -d "${pkgdir}"/usr/share/licenses/"${pkgname}"
