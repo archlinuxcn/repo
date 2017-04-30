@@ -53,6 +53,7 @@ prepare() {
   ln -s /usr/bin/python2 path/python
 
   cd firefox-${pkgver}esr
+sed -i '3abuild = false' media/libstagefright/binding/mp4parse_capi/Cargo.toml
 
   patch -Np1 -i ../firefox-install-dir.patch
 
