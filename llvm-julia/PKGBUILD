@@ -29,6 +29,7 @@ source=(http://releases.llvm.org/$pkgver/llvm-$pkgver.src.tar.xz
         http://releases.llvm.org/$pkgver/lldb-$pkgver.src.tar.xz
         llvm-D27629-AArch64-large_model.patch
         llvm-D28215_FreeBSD_shlib.patch
+        llvm-D28759-loopclearance.patch
         llvm-D28786-callclearance.patch
         0001-CMake-Fix-pthread-handling-for-out-of-tree-builds.patch
         0002-CMake-Fix-pthread-handling-for-out-of-tree-builds.patch
@@ -43,7 +44,8 @@ sha256sums=('8d10511df96e73b8ff9e7abbfb4d4d432edbdbe965f1f4f07afaf370b8a533be'
             '2dbd8f05c662c1c9f11270fc9d0c63b419ddc988095e0ad107ed911cf882033d'
             'd1257409dcb2cd797f6b09f66890cf042a29e7c2ca266ea68d64484cdc06f36f'
             '5502ad544316a3371215139dc957e5fa7c4d9fd0c966644ea29fc07614211460'
-            '5cb55900d458069ef47239a7ab1d9dcbc2132a98f182d4fd8de95cd4d432b1e8'
+            '92f8c6f7ff947520b44fc9f92e6983fe8a05c2ec2cebe5784947688274a8888d'
+            '0ce2226fce1402b87679155311780695820f58928512ada6584651c985ddc8c0'
             'ead18f586f1ee902b01bebd1f7f9feec07be271fe3229d67808b8016fe99d512'
             '6d4e7541a70981d8c5162d92bf5604eec3f61536cc1a3ebc9f118dc892ae879b'
             'a33a0106909b04c2a551a817d7184462e62995abaa01e5940cd3e67d28f141d5'
@@ -63,6 +65,8 @@ prepare() {
   patch -p1 < ../llvm-D27629-AArch64-large_model.patch
   msg "Applying D28215_FreeBSD_shlib"
   patch -p1 < ../llvm-D28215_FreeBSD_shlib.patch
+  msg "Applying D28759-loopclearance"
+  patch -p1 < ../llvm-D28759-loopclearance.patch
   msg "Applying D28786-callclearance"
   patch -p1 < ../llvm-D28786-callclearance.patch
 

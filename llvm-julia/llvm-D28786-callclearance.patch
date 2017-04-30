@@ -1,8 +1,8 @@
 diff --git a/include/llvm/Target/TargetInstrInfo.h b/include/llvm/Target/TargetInstrInfo.h
-index 83515bc..65b435a 100644
+index 247d694f2e4..e455549cdc6 100644
 --- a/include/llvm/Target/TargetInstrInfo.h
 +++ b/include/llvm/Target/TargetInstrInfo.h
-@@ -1440,6 +1440,17 @@ public:
+@@ -1421,6 +1421,17 @@ public:
    virtual void breakPartialRegDependency(MachineInstr &MI, unsigned OpNum,
                                           const TargetRegisterInfo *TRI) const {}
  
@@ -21,7 +21,7 @@ index 83515bc..65b435a 100644
    virtual DFAPacketizer *
    CreateTargetScheduleState(const TargetSubtargetInfo &) const {
 diff --git a/lib/CodeGen/ExecutionDepsFix.cpp b/lib/CodeGen/ExecutionDepsFix.cpp
-index 6ac1db4..63065ea 100644
+index 64aed533a9d..9f3bd634622 100644
 --- a/lib/CodeGen/ExecutionDepsFix.cpp
 +++ b/lib/CodeGen/ExecutionDepsFix.cpp
 @@ -214,13 +214,18 @@ private:
@@ -94,16 +94,16 @@ index 6ac1db4..63065ea 100644
 +        visitHardInstr(MI, DomP.first);
 +    }
 +    Kill = !DomP.first;
-   }
- 
--  return !DomP.first;
++  }
++
 +  // If this is a call, pretend all registers we are considering are def'd here.
 +  // We have no idea which registers the callee may use.
 +  if (MI->isCall()) {
 +    for (unsigned i = 0, e = NumRegs; i != e; ++i)
 +      LiveRegs[i].Def = CurInstr;
-+  }
-+
+   }
+ 
+-  return !DomP.first;
 +  return Kill;
  }
  
@@ -219,7 +219,7 @@ index 6ac1db4..63065ea 100644
 +  // reset the undef read register for all following instructions.
 +
    // Collect this block's live out register units.
-   LiveRegSet.init(TRI);
+   LiveRegSet.init(*TRI);
    // We do not need to care about pristine registers as they are just preserved
    // but not actually used in the function.
    LiveRegSet.addLiveOutsNoPristines(*MBB);
@@ -291,7 +291,7 @@ index 6ac1db4..63065ea 100644
  }
  
  // A hard instruction only works in one domain. All input registers will be
-@@ -793,9 +923,7 @@ void ExeDepsFix::processBasicBlock(MachineBasicBlock *MBB, bool PrimaryPass,
+@@ -787,9 +917,7 @@ void ExeDepsFix::processBasicBlock(MachineBasicBlock *MBB, bool PrimaryPass,
    enterBasicBlock(MBB);
    for (MachineInstr &MI : *MBB) {
      if (!MI.isDebugValue()) {
@@ -303,10 +303,10 @@ index 6ac1db4..63065ea 100644
      }
    }
 diff --git a/lib/Target/X86/X86InstrInfo.cpp b/lib/Target/X86/X86InstrInfo.cpp
-index 5793597..f31c97e 100644
+index 627b6120b04..26665b2a15d 100644
 --- a/lib/Target/X86/X86InstrInfo.cpp
 +++ b/lib/Target/X86/X86InstrInfo.cpp
-@@ -7496,6 +7496,23 @@ void X86InstrInfo::breakPartialRegDependency(
+@@ -7432,6 +7432,23 @@ void X86InstrInfo::breakPartialRegDependency(
    }
  }
  
@@ -331,10 +331,10 @@ index 5793597..f31c97e 100644
  X86InstrInfo::foldMemoryOperandImpl(MachineFunction &MF, MachineInstr &MI,
                                      ArrayRef<unsigned> Ops,
 diff --git a/lib/Target/X86/X86InstrInfo.h b/lib/Target/X86/X86InstrInfo.h
-index 8d74617..fa86882 100644
+index acfdef4da7a..4ea9ddfc863 100644
 --- a/lib/Target/X86/X86InstrInfo.h
 +++ b/lib/Target/X86/X86InstrInfo.h
-@@ -484,6 +484,7 @@ public:
+@@ -477,6 +477,7 @@ public:
                                  const TargetRegisterInfo *TRI) const override;
    void breakPartialRegDependency(MachineInstr &MI, unsigned OpNum,
                                   const TargetRegisterInfo *TRI) const override;

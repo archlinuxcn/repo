@@ -1,7 +1,7 @@
-From e3621af0115a851d0ed02f0b436deec62ec3e99c Mon Sep 17 00:00:00 2001
+From b3ff8a3a791cbedffb42d29731e5869dfa094b3b Mon Sep 17 00:00:00 2001
 From: Keno Fischer <keno@juliacomputing.com>
 Date: Sun, 15 Jan 2017 23:59:07 -0500
-Subject: [PATCH] [ExecutionDepsFix] Improve clearance calculation for loops
+Subject: [PATCH 1/2] Improve clearance calculation for loops
 
 In revision rL278321, ExecutionDepsFix learned how to pick a better
 register for undef register reads, e.g. for instructions such as
@@ -59,7 +59,7 @@ prior to us in reverse postorder.
  2 files changed, 197 insertions(+), 83 deletions(-)
 
 diff --git a/lib/CodeGen/ExecutionDepsFix.cpp b/lib/CodeGen/ExecutionDepsFix.cpp
-index e7c6b03..6ac1db4 100644
+index 32c57e3e370..64aed533a9d 100644
 --- a/lib/CodeGen/ExecutionDepsFix.cpp
 +++ b/lib/CodeGen/ExecutionDepsFix.cpp
 @@ -142,8 +142,26 @@ class ExeDepsFix : public MachineFunctionPass {
@@ -285,7 +285,7 @@ index e7c6b03..6ac1db4 100644
  
        // How many instructions since rx was last written?
        LiveRegs[rx].Def = CurInstr;
-@@ -780,6 +788,45 @@ void ExeDepsFix::visitSoftInstr(MachineInstr *mi, unsigned mask) {
+@@ -774,6 +782,45 @@ void ExeDepsFix::visitSoftInstr(MachineInstr *mi, unsigned mask) {
    }
  }
  
@@ -331,7 +331,7 @@ index e7c6b03..6ac1db4 100644
  bool ExeDepsFix::runOnMachineFunction(MachineFunction &mf) {
    if (skipFunction(*mf.getFunction()))
      return false;
-@@ -816,44 +863,54 @@ bool ExeDepsFix::runOnMachineFunction(MachineFunction &mf) {
+@@ -810,44 +857,54 @@ bool ExeDepsFix::runOnMachineFunction(MachineFunction &mf) {
          AliasMap[*AI].push_back(i);
    }
  
@@ -412,7 +412,7 @@ index e7c6b03..6ac1db4 100644
    Avail.clear();
    Allocator.DestroyAll();
 diff --git a/test/CodeGen/X86/break-false-dep.ll b/test/CodeGen/X86/break-false-dep.ll
-index 4c5e747..0ba1825 100644
+index 4c5e747f9ca..0ba18254d76 100644
 --- a/test/CodeGen/X86/break-false-dep.ll
 +++ b/test/CodeGen/X86/break-false-dep.ll
 @@ -277,3 +277,60 @@ ret:
@@ -477,4 +477,5 @@ index 4c5e747..0ba1825 100644
 +  ret void
 +}
 -- 
-2.9.3
+2.12.2
+
