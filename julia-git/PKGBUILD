@@ -22,8 +22,8 @@ fi
 
 case $CARCH in
   x86_64|i686)
-    makedepends_llvm=("llvm-julia=3.9.1")
-    depends_llvm=("llvm-libs-julia=3.9.1")
+    makedepends_llvm=("llvm-julia=4.0.0")
+    depends_llvm=("llvm-libs-julia=4.0.0")
     ;;
   armv7h|aarch64)
     makedepends_llvm=("llvm-svn")
@@ -36,7 +36,7 @@ esac
 
 epoch=1
 pkgver=0.6.0.pre.beta.434.g6d240982bf
-pkgrel=1
+pkgrel=2
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
