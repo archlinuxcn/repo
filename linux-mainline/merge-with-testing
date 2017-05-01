@@ -20,6 +20,6 @@ grep ^pkgrel PKGBUILD
 git checkout master
 
 echo "Automerging configs"
-git checkout merge -- config config.x86_64
+git checkout merge -- config.i686 config.x86_64
 
 echo "All done, you can now do git checkout --patch merge PKGBUILD"
