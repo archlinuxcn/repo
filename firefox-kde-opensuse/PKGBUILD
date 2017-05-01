@@ -21,7 +21,7 @@ _gtk3=true
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
 pkgver=53.0
-pkgrel=1
+pkgrel=3
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -60,6 +60,7 @@ source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/
         rb39193.patch
         fix_mozalloc.patch
         fix-wifi-scanner.diff
+        rb111682.patch
 )
 
 
@@ -122,6 +123,9 @@ prepare() {
 
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1314968
   patch -Np1 -i "$srcdir"/fix-wifi-scanner.diff
+
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=1338655
+  patch -Np1 -i "$srcdir"/rb111682.patch
   
   
   # WebRTC build tries to execute "python" and expects Python 2
@@ -230,4 +234,5 @@ md5sums=('73175f850d4ff6068c6af674df20477c'
          '3fa8bd22d97248de529780f5797178af'
          '43550e772f110a338d5a42914ee2c3a6'
          '0c1ed789c06297659137a2ed2ef769f7'
-         'e2396b9918aa602427f80d48caf319b4')
+         'e2396b9918aa602427f80d48caf319b4'
+         '4320613e0596691561a403f16b79d6a4')
