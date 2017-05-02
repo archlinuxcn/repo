@@ -1,6 +1,6 @@
 _pkgname=async-timeout
 pkgname=python-async_timeout
-pkgver=1.2.0
+pkgver=1.2.1
 pkgrel=1
 pkgdesc="Timeout context manager for asyncio programs"
 arch=('any')
@@ -8,8 +8,8 @@ url="https://github.com/aio-libs/async_timeout/"
 license=('Apache')
 depends=('python')
 makedepends=('python-setuptools')
-source=('https://pypi.python.org/packages/55/67/3870ef0811ee3e40b67d776b3144743f34a2a2d094690af83a1c5390806e/async-timeout-1.2.0.tar.gz')
-md5sums=('b9fc198be2e415e6786da596091abe40')
+source=('https://pypi.python.org/packages/eb/a3/9fbe8bf7de4128d8f5562ca0b7b2f81d21b006085149528b937e1624e71f/async-timeout-1.2.1.tar.gz')
+md5sums=('e71f9b197498f917864e29af7a5defa0')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
