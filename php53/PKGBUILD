@@ -25,7 +25,7 @@ pkgname=('php53'
          'php53-xsl')
 pkgver=5.3.29
 _suhosinver=5.3.9-0.9.10
-pkgrel=4
+pkgrel=5
 arch=('i686' 'x86_64')
 license=('PHP')
 url='http://www.php.net'
@@ -36,7 +36,7 @@ makedepends=('apache' 'c-client' 'postgresql-libs' 'libldap' 'postfix'
 source=("http://www.php.net/distributions/${pkgbase%53}-${pkgver}.tar.bz2"
         "http://download.suhosin.org/suhosin-patch-${_suhosinver}.patch.gz"
         php.ini.patch apache.conf php-fpm.conf.in.patch
-        logrotate.d.php-fpm suhosin.patch freetype-path.patch
+        logrotate.d.php-fpm suhosin.patch
         CVE-2014-3587.patch CVE-2014-3597.patch CVE-2014-3668.patch
         CVE-2014-3669.patch CVE-2014-3670.patch curl_embedded_null.patch
         CVE-2014-8142.patch CVE-2015-0231.patch CVE-2014-9705.patch
@@ -47,6 +47,7 @@ source=("http://www.php.net/distributions/${pkgbase%53}-${pkgver}.tar.bz2"
 build() {
     phpconfig="--srcdir=../${pkgbase%53}-${pkgver} \
         --prefix=/usr \
+        --sbindir=/usr/bin \
         --sysconfdir=/etc/php \
         --localstatedir=/var \
         --with-layout=GNU \
@@ -168,7 +169,6 @@ build() {
     msg "Adjust paths"
     patch -p0 -i ${srcdir}/php.ini.patch
     patch -p0 -i ${srcdir}/php-fpm.conf.in.patch
-    patch -p1 -i ${srcdir}/freetype-path.patch
 
     # To workaround c-client linking problem
     export IMAP_SHARED_LIBADD="-lssl"
@@ -292,6 +292,7 @@ package_php53-fpm() {
     install -D -m755 ${srcdir}/build-fpm/sapi/fpm/php-fpm ${pkgdir}/usr/bin/php-fpm
     install -D -m644 ${srcdir}/build-fpm/sapi/fpm/php-fpm.8 ${pkgdir}/usr/share/man/man8/php-fpm.8
     install -D -m644 ${srcdir}/build-fpm/sapi/fpm/php-fpm.conf ${pkgdir}/etc/php/php-fpm.conf
+    install -D -m644 ${srcdir}/build-fpm/sapi/fpm/php-fpm.service ${pkgdir}/usr/lib/systemd/system/php-fpm.service
     install -D -m644 ${srcdir}/logrotate.d.php-fpm ${pkgdir}/etc/logrotate.d/php-fpm
     install -d -m755 ${pkgdir}/etc/php/fpm.d
 }
@@ -443,7 +444,6 @@ sha1sums=('6e9e492c6d5853d063ddb9a4dbef60b8e5d87444'
           'ea9a9101b9678a8461d9dddfc0df2a4412a4cb5d'
           'b6a661523535a8e7e60d4a0c054d8f6066edf63e'
           '4d9fea0b7ab856c59ddbf722fe6c95b8e479af9b'
-          '8f19ee0e351aa2cdc9b110db4e33b4c8f6131b12'
           'b5caa85fd1b76a3ece056ab5441852330989640b'
           '9f2aa7c2514cb66204f9f5c3dc5f8ebdda238c78'
           '4672c18ece397b2f99ad0c992f61220e210b2dc1'
