@@ -1,4 +1,87 @@
+1.0.0beta
+----------
+This is a major minor update to 0.9.9.3. It fixed several critical bugs when facing some extreme conditions.
+
+The update blog is below:
+
+    Use the new singleton application class instead of using shared memory.
+    Update the bass to the latest version.
+    Reduce the file find signal number. Using the patch list to compress the signal.
+    Fixed the error which might delete all the files under the running directory bug.
+    Fixed the genre images folder get from root bug.
+
+The graduation thesis took far more time than I expected. The update progress could be slow, but I will do my best to upgrade the application. Currently I am working on the following parts.
+
+    Configuration Panels: In 1.0 final release, we will provide custom settings.
+    Format Converting: In 1.0 final release, we will bundle FFMPEG as one part of Mu and providing file format converting function.
+    Spliting: In 1.0 final release, we will provide the CUE file spliting function.
+    Perhaps new backends: It is time to change the backend from two to one. Previously I was trying to use GStreamer to unified the backend. One of our user suggesting me to use the libmpv. To tell the truth, I was trying to add one MPV backend before, however due to my personal skill, I didn't realize it. Some new information gives me hope. This feature may not appear in 1.0 release, but must be appeared in the future release.
+
+Hope you can enjoy the new version μ!
+
+〜μ'sic Forever♪♪♪♪♪♪♪♪♪〜
+
+
+0.9.9.3
+----------
+
+This a major minor update of 0.9.9.2. It updates several important module for new APIs and provides some important features to imporve user experience.
+
+The update log is below:
+
+    Support Netease online lyrics module.
+    Support Key controls on album view tab including arrows and PGUP/DOWN.
+    Support menu key under all platform for opening menu.
+    Support Mac OS X dock menu.
+    Support Mac OS X file association type.
+    Update the scroll bar base color policy.
+    Improve the debian changelog file format to the correct one.
+    Fixed the album detail widget won't expand bug.
+    Fixed the online lyrics might download several times bug.
+    Fixed the download lyrics will resume playing bug.
+    Fixed the application cannot be launched after a crash.
+    Fixed the scroll bar initial wrong position bug.
+
+I have just finished my examination and now I could spend my time on this project again! (BANZAI!). If anyone has great ideas about online music playing, and how to play a URL using Qt, please contact us via kreogistdevteam@126.com. Hope you can enjoy the new version μ!
+
+〜μ'sic Forever♪♪♪♪♪♪♪♪♪〜
+
+
+
+
+0.9.9.2
+----------
+
+This is a minor update version from 0.9.9.1. Due to the exams and useless papers from someone's university, like COMP2410 and COMP3120 :(, this update should come much earlier.
+
+In this version, we add a few new features for user friendly, and update the cloud API. There's also a few bugs affect under Windows and OS X. The update log is below.
+
+    New scroll bar for album view, all tree view and list view.
+    Mini Player is now support for multiple display maganet border.
+    Mini Player is now support for multiple display position recovery.
+    Message box is now support for multiple display.
+    Labels in detail info dialog is now support selection.
+    Add download lyrics option for current playing song.
+    Add remove button for playlists.
+    Main Player and Mini Player now support drag and drop.
+    Support close button for Mini player under OS X.
+    Forget password is now working.
+    Update the Kreogist Account API to the latest version.
+    Tweak the menu style for OS X 10.10 and later.
+    Fixed the mini player movable problem on OS X 10.10 and later.
+    Fixed the memory leaking under Windows and OS X.
+    Fixed the potential password attack for simply input the Hash result.
+
+A news about 1.0, we are now facing some problem with online music playing. We have to do some research in this area. If any of you are expert of this area, knows how to build a online music player cross-platform using C++, please contact us via kreogistdevteam@126.com.
+
+Hope you can enjoy the new version μ!
+
+〜μ'sic Forever♪♪♪♪♪♪♪♪♪〜
+
+
+
 0.9.9.1
+----------
 
 This is a bug fixed version of 0.9.9, it fixed several critical bugs.
 
@@ -10,7 +93,9 @@ P.S.: Hope the final live will be super success. I could do nothing but bless th
 〜μ'sic Forever♪♪♪♪♪♪♪♪♪〜
 
 
+
 0.9.9
+----------
 
 This is the last major release of 0.9. So we skip several version, and the next version will be 1.0.
 In this version, Kreogist μ add our Kreogist Account system, it supports for our third-party music resources. Now it support for customize your nickname, avatar.
@@ -30,7 +115,9 @@ Yayuan Yan
 〜μ'sic Forever♪♪♪♪♪♪♪♪♪〜
 
 
-0.9.4:
+
+0.9.4
+----------
 
 This is a major updated version. It contains the following updates and features.
 
@@ -50,14 +137,19 @@ And then our product will become the third-party client for several online music
 
 〜μ'sic Forever♪♪♪♪♪♪♪♪♪〜
 
-0.9.3:
+
+
+0.9.3
+----------
 
 This is a major updated version. It contains several major updates and features.
 Now it could edit ID3v1, ID3v2 and APEv2 tag. The UI is also optimized for speed. And several bug fixed.
 Happy new year and μ'sic start!
 
 
-0.9.2:
+
+0.9.2
+----------
 
 This is a Linux enhanced version, and it's a major update.
 Widget player is added in this version. And also support a new lyrics server. Now it can match many lyrics perfectly.
@@ -65,7 +157,9 @@ For this version, the default backend under Linux will switch from Phonon to GSt
 Happy Linux!
 
 
-0.9.1:
+
+0.9.1
+----------
 
 - Retina Display support for Mac OS X and even all other platforms.
 - Add one more language for International support.
@@ -75,7 +169,9 @@ Happy Linux!
 - Fixed the album search will change the now playing model bug.
 
 
-0.9:
+
+0.9
+----------
 
 This is the ninth major release of Kreogist μ. Brand new architecture and new user interface will provide you the best experience ever. With the brand new architecture, we can now load thousands of songs less than 1 second. It's seven times faster than iTunes on Windows. The new multiple condition search will make your life much easier. And new vertical mode of the main player can fit your screen right in size.
 This is the last beta version of Kreogist μ. We provides special version for 64bit Windows users: if you know your processor well, you can choose the special compiled version right for your processor to break the performance seal.
@@ -104,6 +200,8 @@ Here're some of updates and bug fix:
 - Fixed the library tree view bug.
 
 
-0.8:
+
+0.8
+----------
 
 migrate to AUR4
