@@ -1,5 +1,5 @@
-# Maintainer: Erik Beran <eberan AT_gmail_DOT com>
-# Contributor: Stephen Zhang <zsrkmyn at gmail dot com>
+# Maintainer: Stephen Zhang <zsrkmyn at gmail dot com>
+# Contributor: Erik Beran <eberan AT_gmail_DOT com>
 # Contributor: Thor K. H. <thor at roht dot no>
 # Contributor: Babken Vardanyan <483ken 4tgma1l
 # Contributor: mikezackles
@@ -18,7 +18,7 @@ pkgname=vim-youcompleteme-git
 pkgver=2068.ba779aff
 _CLANG_VERSION_MAX=4.1
 _CLANG_VERSION_MIN=4.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A code-completion engine for Vim"
 arch=('i686' 'x86_64')
 url='http://valloric.github.com/YouCompleteMe/'
@@ -150,7 +150,7 @@ package() {
   cp -r "$srcdir/YouCompleteMe/third_party/ycmd/"{ycmd,ycm_core.so,CORE_VERSION} \
     "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd"
 
-  ln -s "/usr/lib/clang/${_CLANG_VERSION_MIN}" \
+  ln -s "/usr/lib/clang/${_CLANG_VERSION_MIN}"* \
     "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/clang_includes"
 
   cp -r "$srcdir/YouCompleteMe/third_party/ycmd/third_party/"{frozendict,JediHTTP,tern_runtime} \
