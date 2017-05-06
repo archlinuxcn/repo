@@ -21,11 +21,11 @@ if ((BUILD_DOC)); then
 fi
 
 case $CARCH in
-  x86_64|i686)
+  x86_64|i686|aarch64)
     makedepends_llvm=("llvm-julia=4.0.0")
     depends_llvm=("llvm-libs-julia=4.0.0")
     ;;
-  armv7h|aarch64)
+  armv7h)
     makedepends_llvm=("llvm-svn")
     depends_llvm=("llvm-libs-svn")
     ;;
@@ -35,7 +35,7 @@ case $CARCH in
 esac
 
 epoch=1
-pkgver=0.7.0.DEV.33.g22901aafb3
+pkgver=0.7.0.DEV.46.g2001c26a43
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
