@@ -13,7 +13,7 @@ pkgname=('llvm-julia' 'llvm-libs-julia' 'llvm-ocaml-julia' 'lld-julia' 'lldb-jul
 pkgver=4.0.0
 pkgrel=1
 _ocaml_ver=4.04.1
-arch=('i686' 'x86_64')
+arch=(i686 x86_64 armv7h aarch64)
 url="http://llvm.org/"
 license=('custom:University of Illinois/NCSA Open Source License')
 makedepends=('cmake' 'libffi' 'python2' "ocaml=$_ocaml_ver" 'python-sphinx'
