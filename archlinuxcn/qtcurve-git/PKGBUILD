@@ -2,8 +2,8 @@
 
 pkgname=qtcurve-git
 _realver=1.8.18
-pkgver=1.8.18.262.gae2aa69
-pkgrel=4
+pkgver=1.8.18.291.g88296597
+pkgrel=1
 pkgdesc='A configurable set of widget styles for KDE and Gtk.'
 arch=('i686' 'x86_64')
 url="https://github.com/QtCurve/qtcurve"
@@ -12,7 +12,8 @@ groups=('qtcurve')
 depends=('qt5-base' 'qt5-svg' 'libxcb' 'qt5-x11extras'
          'kdelibs' 'gtk2' 'libx11' 'gcc-libs' 'extra-cmake-modules'
          'kdelibs4support' 'karchive' 'kconfig' 'kconfigwidgets' 'ki18n' 'kio'
-         'kguiaddons' 'kiconthemes' 'kxmlgui' 'kdoctools' 'kdesignerplugin')
+         'kguiaddons' 'kiconthemes' 'kxmlgui' 'kdoctools' 'kdesignerplugin'
+         frameworkintegration)
 makedepends=('cmake' 'automoc4' 'git' 'python' 'mesa')
 provides=(
   "qtcurve-utils=${_realver}"
@@ -31,7 +32,7 @@ options=('debug' 'strip')
 
 _gitname="qtcurve"
 
-_gitroot="git://anongit.kde.org/qtcurve.git"
+_gitroot="https://anongit.kde.org/qtcurve.git"
 _gitref=master
 
 _fetch_git() {
