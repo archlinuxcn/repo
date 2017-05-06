@@ -5,7 +5,7 @@ _pkgname=nginx
 provides=('nginx')
 conflicts=('nginx')
 pkgver=1.13.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Lightweight HTTP1/2 server, mainline, with Naxsi, Certificate
 Transparency and GeoIP (GeoIP Legacy) Support.'
 arch=('i686' 'x86_64')
@@ -70,6 +70,7 @@ build() {
     --with-stream \
     --with-stream_ssl_module \
     --with-threads \
+    --with-compat \
     --add-module=../naxsi/naxsi_src \
     --add-module=../headers-more-nginx-module \
     --add-module=../nginx-ct
