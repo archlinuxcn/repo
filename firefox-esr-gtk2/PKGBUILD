@@ -7,8 +7,8 @@
 
 pkgname=firefox-esr-gtk2
 _pkgname=firefox-esr
-pkgver=52.1.0
-pkgrel=3
+pkgver=52.1.1
+pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org, Extended Support Release"
 arch=(i686 x86_64)
 license=(MPL GPL LGPL)
@@ -26,12 +26,11 @@ replaces=(firefox-gtk2)
 options=(!emptydirs !makeflags !strip)
 source=(https://ftp.mozilla.org/pub/firefox/releases/${pkgver}esr/source/firefox-${pkgver}esr.source.tar.xz
         firefox.desktop firefox-symbolic.svg
-        firefox-install-dir.patch rust-i686.patch fix-wifi-scanner.diff)
-sha256sums=('da2ba9630b8b56c6f5d36d9f3da2d984ef7986dc8b4d804f6947fcea6c24637d'
+        firefox-install-dir.patch fix-wifi-scanner.diff)
+sha256sums=('a7298f6a04a1330e39e560337c4560ec9b71567a0f758982dfa18d5a2a798a7c'
             'ada313750e6fb14558b37c764409a17c1672a351a46c73b350aa1fe4ea9220ef'
             'a2474b32b9b2d7e0fb53a4c89715507ad1c194bef77713d798fa39d507def9e9'
             'd86e41d87363656ee62e12543e2f5181aadcff448e406ef3218e91865ae775cd'
-            'f61ea706ce6905f568b9bdafd1b044b58f20737426f0aa5019ddb9b64031a269'
             '9765bca5d63fb5525bbd0520b7ab1d27cabaed697e2fc7791400abc3fa4f13b8')
 validpgpkeys=('2B90598A745E992F315E22C58AB132963A06537A')
 
@@ -60,9 +59,6 @@ sed -i '3abuild = false' media/libstagefright/binding/mp4parse_capi/Cargo.toml
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1314968
   patch -Np1 -i ../fix-wifi-scanner.diff
 
-  # Build with the rust targets we actually ship
-  patch -Np1 -i ../rust-i686.patch
-
   echo -n "$_google_api_key" >google-api-key
   echo -n "$_mozilla_api_key" >mozilla-api-key
 
@@ -73,7 +69,6 @@ ac_add_options --prefix=/usr
 ac_add_options --enable-release
 ac_add_options --enable-gold
 ac_add_options --enable-pie
-ac_add_options --enable-rust
 
 ac_add_options --enable-default-toolkit=cairo-gtk2
 
