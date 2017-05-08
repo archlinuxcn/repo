@@ -1,8 +1,8 @@
 # Maintainer: Joey Dumont <joey.dumont@gmail.com>
 # Contributor: Lucas Hermann Negri <lucashnegri at gmail dot com>
 pkgname=armadillo
-pkgver=7.800.2
-_pkgver=7.800.2
+pkgver=7.900.0
+_pkgver=7.900.0
 pkgrel=1
 pkgdesc="C++ linear algebra library"
 arch=('i686' 'x86_64')
@@ -15,7 +15,7 @@ optdepends=('hdf5: HDF5 output'
 makedepends=('cmake')
 source=("http://downloads.sourceforge.net/sourceforge/arma/$pkgname-$_pkgver.tar.xz")
 install=armadillo.install
-sha512sums=('bd6a718d9aff5d87ae3bb792405e634e58249e74c8b49e31e6c3a1d77f7537b3e2f04f9fb10fc34279673126a1069cd43e991fb03fdf82ce77a00541ab6bd2fc')
+sha512sums=('a71a8d8546b2348eebc5fb8db6808ccce19b506e55d8306a440e06393627044ee999f2987dbd844d0d27106e935a54da1474e9613eecf2c250e12f001b698e70')
 
 build() {
   if [ "$CARCH" == "x86_64" ]; then
