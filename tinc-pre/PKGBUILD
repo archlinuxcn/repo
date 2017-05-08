@@ -2,12 +2,12 @@
 
 pkgname=tinc-pre
 pkgver=1.1pre14
-pkgrel=2
+pkgrel=3
 pkgdesc="VPN (Virtual Private Network) daemon (Pre-release)"
 arch=(i686 x86_64 armv7h)
 url="http://www.tinc-vpn.org/"
 license=('GPL')
-depends=('lzo' 'zlib' 'openssl' 'miniupnpc')
+depends=('lzo' 'zlib' 'openssl-1.0' 'miniupnpc')
 makedepends=('git' 'autoconf')
 optdepends=('python2' 'wxpython: gui support')
 provides=('tinc-pre' 'tinc-pre-systemd')
@@ -26,6 +26,9 @@ build() {
         --sysconfdir=/etc \
         --localstatedir=/var \
         --with-systemd=/usr/lib/systemd/system \
+        --with-openssl=/usr/lib/openssl-1.0 \
+        --with-openssl-include=/usr/include/openssl-1.0 \
+        --with-openssl-lib=/usr/lib/openssl-1.0 \
         --enable-miniupnpc
     make
 }
