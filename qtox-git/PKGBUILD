@@ -1,4 +1,6 @@
-# Maintainer: Håvard Pettersson <mail@haavard.me>
+# Maintainer: Maxim Kurnosenko <asusx2@mail.ru>
+# Contributor: Jiachen Yang <farseerfc@gmail.com>
+# Contributor: Håvard Pettersson <mail@haavard.me>
 # Contributor: Kevin MacMartin <prurigro at gmail dot com>
 
 _pkgname=qtox
@@ -7,7 +9,7 @@ pkgver=1.10.0.r0.g496f8548
 pkgrel=1
 pkgdesc='Powerful Tox client written in C++/Qt that follows the Tox design guidelines.'
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h')
-url='https://github.com/tux3/qTox'
+url='https://github.com/qTox/qTox'
 license=('GPL3')
 depends=('desktop-file-utils'
          'libxss'
@@ -17,11 +19,11 @@ depends=('desktop-file-utils'
          'ffmpeg'
          'qt5-svg'
          'sqlcipher'
-         'toxcore')
-makedepends=('git' 'qt5-tools')
+         'toxcore>=1:0.1.0')
+makedepends=('git' 'check' 'cmake' 'qt5-tools')
 provides=("$_pkgname")
 conflicts=("$_pkgname")
-source=("$_pkgname::git+https://github.com/tux3/qTox.git")
+source=("$_pkgname::git+$url.git")
 sha512sums=('SKIP')
 
 pkgver() {
@@ -29,15 +31,25 @@ pkgver() {
   git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
-build() {
+prepare() {
   cd $_pkgname
   install -d build
   cd build
-  qmake-qt5 ENABLE_SYSTRAY_UNITY_BACKEND=NO CONFIG+=silent ..
-  make
+  cmake .. -DCMAKE_INSTALL_PREFIX="/usr"
+}
+
+check() {
+  cd $_pkgname
+  cd build
+  make test
+}
+
+build() {
+  cd $_pkgname/build
+  make $MAKEFLAGS
 }
 
 package() {
   cd $_pkgname/build
-  make INSTALL_ROOT="$pkgdir" install
+  make DESTDIR="$pkgdir" install
 }
