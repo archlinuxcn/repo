@@ -6,10 +6,10 @@
 # Contributor: Muhammad 'MJ' Jassim <UnbreakableMJ@gmail.com> 
 
 pkgname=icecat
-pkgver=52.0.2
+pkgver=52.1.0
 _pkgver=${pkgver}-gnu1
 _pkgverbase=${pkgver%%.*}
-pkgrel=2
+pkgrel=1
 pkgdesc="GNU version of the Firefox browser."
 arch=(i686 x86_64)
 url="http://www.gnu.org/software/gnuzilla/"
@@ -28,7 +28,7 @@ source=(http://ftpmirror.gnu.org/gnuzilla/${pkgver}/${pkgname}-${_pkgver}.tar.bz
         mozconfig icecat.desktop icecat-safe.desktop vendor.js
         fix-wifi-scanner.diff)
 
-sha256sums=('8901a4ab7f2b87d5516c77cbdec6d276cdde64421725d4ed613c1b4f805a4a2b'
+sha256sums=('0beff2a04fdc1b56d274133cd22ff546fd609c929954132ff6bf1b800a5b24f3'
             'SKIP'
             '1fe0c64404ec088ad3900bf482ab9cdd317b2f57c8fcc3b38e9f3321fb237b60'
             'c44eab35f71dd3028a74632463710d674b2e8a0682e5e887535e3233a3b7bbb3'
