@@ -5,7 +5,7 @@
 # or use: $ curl -s https://dl.google.com/linux/chrome/rpm/stable/x86_64/repodata/other.xml.gz | gzip -df | awk -F\" '/pkgid/{ sub(".*-","",$4); print $4": "$10 }'
 
 pkgname=google-chrome
-pkgver=58.0.3029.96
+pkgver=58.0.3029.110
 pkgrel=1
 pkgdesc="An attempt at creating a safer, faster, and more stable browser (Stable Channel)"
 arch=('x86_64')
@@ -15,6 +15,7 @@ depends=('alsa-lib' 'gconf' 'gtk2' 'libxss' 'libxtst' 'nss')
 optdepends=('kdialog: needed for file dialogs in KDE'
             'gnome-keyring: for storing passwords in GNOME keyring'
             'kwallet: for storing passwords in KWallet'
+            'libunity: download progress on KDE'
             'ttf-liberation: fix fonts for some PDFs (CRBug #369991)'
             'xdg-utils')
 options=('!emptydirs' '!strip')
@@ -23,7 +24,7 @@ _channel=stable
 source=("google-chrome-${_channel}_${pkgver}_amd64.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_amd64.deb"
         "$url/browser/privacy/eula_text.html"
         'google-chrome-stable.sh')
-md5sums=('13a77d042f8b8967744d22f5ff6d26d3'
+md5sums=('97b313ad0abeba57d916bdb88c3ded90'
          'SKIP'
          '99fa93d5e7fb5d622cef0f9621f3ffa3')
 
