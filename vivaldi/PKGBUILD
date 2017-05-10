@@ -2,7 +2,7 @@
 # Contributor: TZ86
 
 pkgname=vivaldi
-pkgver=1.9.818.44
+pkgver=1.9.818.49
 pkgrel=1
 pkgdesc='An advanced browser made with the power user in mind.'
 url="https://vivaldi.com"
@@ -18,8 +18,8 @@ optdepends=(
 )
 source_i686=("https://downloads.vivaldi.com/stable/vivaldi-stable-${pkgver}-1.i386.rpm")
 source_x86_64=("https://downloads.vivaldi.com/stable/vivaldi-stable-${pkgver}-1.x86_64.rpm")
-sha512sums_i686=('ecb1bca83f320d0f9f6f44f861776e66ebe549987db6b30d23020fde814a22241b67d87f4cf8dfc76dc1eea29960f8bd8de4434d872b514245af76b9d659eea0')
-sha512sums_x86_64=('64e70642347260b254d24fec1c0b1475e32f27e8f47a22ec0d4fffe01b27249d481fea3ff989b9d79b105717f1e67f622dcf6b7048e2b20b562af0b3d9b6ad08')
+sha512sums_i686=('9db6335c866eebbc09fcef7eb9d625595a42f9c7d2800dae546d5a9c9114228c7f8bc06da25d31e1fe66309f3fc5f13965ed0894f81e1eaffc54a0634099c63a')
+sha512sums_x86_64=('90e950b9a9be82a521d893cc440cc31cd073f0f2fe8dff623220df81d99a64817edf5abe62c772163ec36253a2b4de92f11d8ce4ab14b44e899556fca3997b6c')
 
 package() {
     cp -a {opt,usr} "$pkgdir"
