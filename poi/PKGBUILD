@@ -2,7 +2,7 @@
 
 pkgname=poi
 _pkgname=poi
-pkgver=7.7.0.beta.0.0.gc8456bdb
+pkgver=7.7.0.0.g4e0e98d6
 pkgrel=1
 pkgdesc="Scalable KanColle browser and tool"
 arch=('any')
@@ -18,6 +18,7 @@ source=("git+https://github.com/poooi/poi.git"
 sha256sums=('SKIP'
           '24f89c538a189a5db96be3e3228aba6e4e7d332c5a368b15dacb6e97ee6f7586'
           '1d49f43801fcc28d1a2a75407422a6445314fbf815e004382fc2cb5b956ac530')
+options=('!strip') # nothing to strip
 
 
 prepare() {
@@ -33,10 +34,12 @@ pkgver() {
 build() {
     cd "${srcdir}/${_pkgname}"
     git clean -xdf
-    sed -i 's/^.*"electron-prebuilt".*$//;s/^.*"electron-builder".*$//;s/^.*"electron".*$//' package.json
+    #sed -i 's/^.*"electron-prebuilt".*$//;s/^.*"electron-builder".*$//;s/^.*"electron-builder-squirrel-windows".*$//;s/^.*"electron".*$//' package.json
     npm install
+    npm install --save eachr # workaround
     # prevent infinite loop...
     timeout 5m npm run deploy
+    npm prune --production
 }
 
 package() {
