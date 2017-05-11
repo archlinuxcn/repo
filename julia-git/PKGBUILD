@@ -21,21 +21,21 @@ if ((BUILD_DOC)); then
 fi
 
 case $CARCH in
-  x86_64|i686|aarch64)
+  x86_64|i686|aarch64|armv7h)
     makedepends_llvm=("llvm-julia=4.0.0")
     depends_llvm=("llvm-libs-julia=4.0.0")
     ;;
-  armv7h)
-    makedepends_llvm=("llvm-svn")
-    depends_llvm=("llvm-libs-svn")
-    ;;
+  # armv7h)
+  #   makedepends_llvm=("llvm-svn")
+  #   depends_llvm=("llvm-libs-svn")
+  #   ;;
   *)
     echo "Unsupported Arch \"$CARCH\"" >&2
     ;;
 esac
 
 epoch=1
-pkgver=0.7.0.DEV.94.g4dbfe4b31d
+pkgver=0.7.0.DEV.100.g7ea162040e
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
