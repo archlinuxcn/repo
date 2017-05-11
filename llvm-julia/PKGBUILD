@@ -11,7 +11,7 @@
 pkgname=('llvm-julia' 'llvm-libs-julia' 'llvm-ocaml-julia' 'lld-julia' 'lldb-julia'
          'clang-julia' 'clang-tools-extra-julia')
 pkgver=4.0.0
-pkgrel=1
+pkgrel=2
 _ocaml_ver=4.04.1
 arch=(i686 x86_64 armv7h aarch64)
 url="http://llvm.org/"
@@ -82,7 +82,16 @@ prepare() {
 build() {
   cd "$srcdir/llvm-$pkgver.src/build"
 
-  CXXFLAGS+=' -ggdb1'
+  if [[ "${CARCH}" == "aarch64" ]]; then
+      # GCC miscompiles LLVM on AArch64 with LTO
+      CFLAGS+=' -ggdb1 -O3 -fasynchronous-unwind-tables'
+      CXXFLAGS+=' -ggdb1 -O3 -fasynchronous-unwind-tables'
+      LDFLAGS+=' -O3 -fasynchronous-unwind-tables'
+  else
+      CFLAGS+=' -ggdb1 -O3 -flto -fasynchronous-unwind-tables'
+      CXXFLAGS+=' -ggdb1 -O3 -flto -fasynchronous-unwind-tables'
+      LDFLAGS+=' -O3 -flto -fasynchronous-unwind-tables'
+  fi
 
   cmake \
       -DCMAKE_BUILD_TYPE=Release \
