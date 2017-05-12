@@ -5,7 +5,7 @@
 # or use: $ curl -s https://dl.google.com/linux/chrome/rpm/stable/x86_64/repodata/other.xml.gz | gzip -df | awk -F\" '/pkgid/{ sub(".*-","",$4); print $4": "$10 }'
 
 pkgname=google-chrome-dev
-pkgver=60.0.3088.3
+pkgver=60.0.3095.5
 pkgrel=1
 pkgdesc="An attempt at creating a safer, faster, and more stable browser (Dev Channel)"
 arch=('x86_64')
@@ -15,6 +15,7 @@ depends=('alsa-lib' 'gconf' 'gtk3' 'libxss' 'libxtst' 'nss')
 optdepends=('kdialog: needed for file dialogs in KDE'
             'gnome-keyring: for storing passwords in GNOME keyring'
             'kwallet: for storing passwords in KWallet'
+            'libunity: download progress on KDE'
             'ttf-liberation: fix fonts for some PDFs (CRBug #369991)'
             'xdg-utils')
 provides=('google-chrome')
@@ -24,13 +25,13 @@ _channel=unstable
 source=("google-chrome-${_channel}_${pkgver}_amd64.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_amd64.deb"
         "$url/browser/privacy/eula_text.html"
         'google-chrome-unstable.sh')
-md5sums=('82c82ed5ff484bbc91f752b6682ecf06'
+md5sums=('0a29c99307cd6990a782dd7ef8fdbc92'
          'SKIP'
          '11b55a3fec7279db32b63e3a0b97dc01')
 
 ## Previous build (also see: /var/cache/pacman/pkg/google-chrome-dev-*):
-#source[0]='http://mirror.glendaleacademy.org/chrome/pool/main/g/google-chrome-unstable/google-chrome-unstable_60.0.3080.5-1_amd64.deb'
-#md5sums[0]='6fd80532f26408a1be9f170e5ecc760f'
+#source[0]='http://mirror.glendaleacademy.org/chrome/pool/main/g/google-chrome-unstable/google-chrome-unstable_60.0.3088.3-1_amd64.deb'
+#md5sums[0]='82c82ed5ff484bbc91f752b6682ecf06'
 
 package() {
   msg2 "Extracting the data.tar.xz..."
