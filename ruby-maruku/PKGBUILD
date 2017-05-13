@@ -4,8 +4,8 @@
 
 _gemname=maruku
 pkgname=ruby-$_gemname
-pkgver=0.7.2
-pkgrel=4
+pkgver=0.7.3
+pkgrel=1
 pkgdesc='Maruku is a Markdown-superset interpreter written in Ruby.'
 arch=(any)
 url='http://github.com/bhollis/maruku'
@@ -14,7 +14,7 @@ depends=(ruby)
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
-sha256sums=('e8a755d8e9c24f1601157c8b376f0378f88d487fa777aa655f332504557a0798')
+sha256sums=('dd14156f57b5433993710adca63b766d18b36f6e35cb25c21b178a6edfedebe4')
 
 package() {
   local _gemdir="$(ruby -e'puts Gem.default_dir')"
