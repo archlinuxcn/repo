@@ -4,30 +4,29 @@
 # Contributor: Adrian Hühn <adrian.huehn@web.de>
 
 pkgname=ccnet-server
-pkgver=6.0.10
-pkgrel=2
+pkgver=6.1.0
+pkgrel=1
 pkgdesc="A framework for writing networked applications in C."
 arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
 url="https://github.com/haiwen/${pkgname}"
 license=('GPL2')
-depends=('libevent' 'libzdb' 'libsearpc' 'libldap' 'python2' 'openssl-1.0')
+depends=('libevent' 'libzdb' 'libsearpc' 'libldap' 'python2')
 makedepends=('vala' 'libmariadbclient')
 source=("${pkgname}-v${pkgver}-server.tar.gz::${url}/archive/v${pkgver}-server.tar.gz"
         "libccnet.pc.patch"
-        "openssl-1.0.patch")
-sha256sums=('1a31a917c143c74bbb6fd67c54ee61841c343650b70f3d07dc130c990d8ffc1f'
+        "openssl-1.1.diff")
+sha256sums=('a4999ff8638e5f6cf6487a7e8d649e0f1992221c44632682a5fe61cb6c6cff79'
             '66c3b02c3981db6a80819e0ae103bedadf8dfdf81405a7f75a9cba714acf973f'
-            'df166018e220074216b108f8b6969e623bdf51c1fa79f354a3127bae629059e2')
+            'f98a17d467214984d11ddf819e02d54b2b88e89ebafec1955922e43c123800d4')
 
 prepare () {
   cd "${srcdir}/${pkgname}-${pkgver}-server"
   patch -p1 -i "${srcdir}"/libccnet.pc.patch
-  patch -p1 -i "${srcdir}"/openssl-1.0.patch
+  patch -p1 -i "${srcdir}"/openssl-1.1.diff
 }
 
 build () {
   cd "${srcdir}/${pkgname}-${pkgver}-server"
-  export PKG_CONFIG_PATH=/usr/lib/openssl-1.0/pkgconfig
   ./autogen.sh
   ./configure --enable-ldap --enable-python --enable-console --prefix=/usr PYTHON=/usr/bin/python2
   make
