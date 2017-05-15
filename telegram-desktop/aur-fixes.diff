@@ -11,14 +11,16 @@ index 1d4896a6..3efd7caa 100644
  Q_IMPORT_PLUGIN(QGenericEnginePlugin)
  Q_IMPORT_PLUGIN(QNetworkManagerEnginePlugin)
 diff --git a/Telegram/gyp/Telegram.gyp b/Telegram/gyp/Telegram.gyp
-index a1805ebd..5e36ce31 100644
+index 80160d16..68a0622c 100644
 --- a/Telegram/gyp/Telegram.gyp
 +++ b/Telegram/gyp/Telegram.gyp
-@@ -82,21 +82,18 @@
+@@ -83,24 +83,20 @@
      ],
  
      'defines': [
 -      'AL_LIBTYPE_STATIC',
+       'AL_ALEXT_PROTOTYPES',
+       'TGVOIP_USE_CXX11_LIB',
        '<!@(python -c "for s in \'<(build_defines)\'.split(\',\'): print(s)")',
 +      '__STDC_FORMAT_MACROS',
 +      'TDESKTOP_DISABLE_AUTOUPDATE',
@@ -34,6 +36,7 @@ index a1805ebd..5e36ce31 100644
 -      '<(libs_loc)/zlib-1.2.8',
 -      '<(libs_loc)/ffmpeg',
 -      '<(libs_loc)/openal-soft/include',
+-      '<(libs_loc)/opus/include',
        '<(minizip_loc)',
        '<(sp_media_key_tap_loc)',
 +      '/usr/include/breakpad',
@@ -41,7 +44,7 @@ index a1805ebd..5e36ce31 100644
        '<(submodules_loc)/variant/include',
      ],
 diff --git a/Telegram/gyp/qt.gypi b/Telegram/gyp/qt.gypi
-index c12e450b..5a0f77a0 100644
+index 81c13a18..caa93b5b 100644
 --- a/Telegram/gyp/qt.gypi
 +++ b/Telegram/gyp/qt.gypi
 @@ -38,7 +38,6 @@
@@ -139,7 +142,7 @@ index fde88dcd..1fd1b9cb 100644
            '-fPIC',
            '-Wno-unused-variable',
 diff --git a/Telegram/gyp/telegram_linux.gypi b/Telegram/gyp/telegram_linux.gypi
-index b42e7443..a2597725 100644
+index b8866ec2..2a6eb308 100644
 --- a/Telegram/gyp/telegram_linux.gypi
 +++ b/Telegram/gyp/telegram_linux.gypi
 @@ -21,11 +21,20 @@
@@ -168,14 +171,15 @@ index b42e7443..a2597725 100644
        ],
        'linux_path_ffmpeg%': '/usr/local',
        'linux_path_openal%': '/usr/local',
-@@ -35,46 +44,24 @@
-       'linux_path_breakpad%': '<(libs_loc)/breakpad',
+@@ -36,47 +45,25 @@
+       'linux_path_opus_include%': '<(libs_loc)/opus/include',
      },
      'include_dirs': [
 -      '/usr/local/include',
 -      '<(linux_path_ffmpeg)/include',
 -      '<(linux_path_openal)/include',
 -      '<(linux_path_breakpad)/include/breakpad',
+       '<(linux_path_opus_include)',
 +      '/usr/include',
      ],
      'library_dirs': [

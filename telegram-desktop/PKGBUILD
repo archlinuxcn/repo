@@ -1,6 +1,6 @@
 pkgname=telegram-desktop
-pkgver=1.0.29
-pkgrel=3
+pkgver=1.1.0
+pkgrel=1
 pkgdesc='Official desktop version of Telegram messaging app.'
 arch=('i686' 'x86_64')
 url="https://desktop.telegram.org/"
@@ -62,6 +62,9 @@ makedepends=(
 qt_version=5.6.2
 source=(
     "tdesktop::git+https://github.com/telegramdesktop/tdesktop.git#tag=v$pkgver"
+    "GSL::git+https://github.com/Microsoft/GSL.git"
+    "variant::git+https://github.com/mapbox/variant.git"
+    "libtgvoip::git+https://github.com/telegramdesktop/libtgvoip.git"
     "https://download.qt.io/official_releases/qt/${qt_version%.*}/$qt_version/submodules/qtbase-opensource-src-$qt_version.tar.xz"
     "https://download.qt.io/official_releases/qt/${qt_version%.*}/$qt_version/submodules/qtimageformats-opensource-src-$qt_version.tar.xz"
     "https://download.qt.io/official_releases/qt/${qt_version%.*}/$qt_version/submodules/qtwayland-opensource-src-$qt_version.tar.xz"
@@ -72,13 +75,16 @@ source=(
 )
 sha256sums=(
     'SKIP'
+    'SKIP'
+    'SKIP'
+    'SKIP'
     '2f6eae93c5d982fe0a387a01aeb3435571433e23e9d9d9246741faf51f1ee787'
     '4fb153be62dac393cbcebab65040b3b9d6edecd1ebbe5e543401b0e45bd147e4'
     '035c3199f4719627b64b7020f0f4574da2b4cb78c6981aba75f27b872d8e6c86'
     'SKIP'
     '41c22fae6ae757936741e63aec3d0f17cafe86b2d6153cdd1d01a5581e871f17'
     'd4cdad0d091c7e47811d8a26d55bbee492e7845e968c522e86f120815477e9eb'
-    '7c5fdfa86648b36929a0fd73f35be52611be857e88c12b873125dfc1f67a3ad5'
+    'b8ced823bf98391e06a8ed5f3e1b4a16aa0e3f15a83c592b97babe6335df0558'
 )
 
 prepare() {
@@ -111,8 +117,13 @@ prepare() {
     fi
     
     cd "$srcdir/tdesktop"
+    
     git submodule init
+    git config submodule.Telegram/ThirdParty/GSL.url "$srcdir/GSL"
+    git config submodule.Telegram/ThirdParty/variant.url "$srcdir/variant"
+    git config submodule.Telegram/ThirdParty/libtgvoip.url "$srcdir/libtgvoip"
     git submodule update
+    
     git apply "$srcdir/aur-fixes.diff"
 }
 
@@ -165,6 +176,7 @@ export LANG=en_US.UTF-8
         -Dlinux_lib_ssl='-L/usr/lib/openssl-1.0 -lssl' \
         -Dlinux_lib_crypto='-L/usr/lib/openssl-1.0 -lcrypto' \
         -Dlinux_lib_icu="-licuuc -licutu -licui18n" \
+        -Dlinux_path_opus_include="/usr/include/opus" \
         --depth=. --generator-output=../.. -Goutput_dir=out Telegram.gyp --format=cmake
     cd "$srcdir/tdesktop/out/Release"
     cmake .
