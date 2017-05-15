@@ -3,8 +3,8 @@
 # Contributor: Aaron Lindsay <aaron@aclindsay.com>
 
 pkgname=seafile-server
-pkgver=6.0.10
-pkgrel=4
+pkgver=6.1.0
+pkgrel=1
 pkgdesc="Seafile is an online file storage and collaboration tool"
 arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
 url="https://github.com/haiwen/${pkgname}"
@@ -21,15 +21,15 @@ source=("${pkgname}-${pkgver}-server.tar.gz::${url}/archive/v${pkgver}-server.ta
         "create-default-conf-dir.patch"
         "0001-Revert-server-put-pids-folder-out-of-seafile-data.patch"
         "libseafile.in.patch"
-        "openssl-1.0.patch")
-sha256sums=('7e6a8ebaa4b2b40c2854fbe9fd6608d24a219318be1271dd00603ebbb4fe90c1'
+        "openssl-1.1.diff")
+sha256sums=('84b3078a67914cbccb6664c0ad964327f51d62eb71e7222a04f170799e180449'
             '52fb29858f6424052cf01630ad72b5687a4fb259f23f9efc97f08be04a883218'
             'ae1ed38f94304d27e4ef1ca66e15d544f99681c1e743c510c54d4a112f050421'
             '333b78e2ac2ce03b243a70223975bfb0f8e1998edc074b4307c9a96df1b5883f'
             '6bd632f8741b039bad961af3d6850b651e25b7e7a3018d6e2789f350ff93bb78'
             'b1748e826d8e7cccdd825b99864b74dfb5795312f8878d63e9a87105f4382e29'
             'a2d7f7cf0c59aba97650af62b3cefd0ceb71a1007c34d9369a88e5769c7f6076'
-            '9bf78853447f70ba620873bd7a6709fb2e149aaa216f4e12380886f9474d3454')
+            'ffa351b22e89a66f80139888e4e7a2c2bde41fd648d57c71dcf10884dc03bbc3')
 optdepends=('libmariadbclient: mysql server support')
 install=seafile-server.install
 
@@ -40,7 +40,7 @@ prepare () {
   patch -p1 -i "${srcdir}/0001-Revert-server-put-pids-folder-out-of-seafile-data.patch"
   patch -p1 -i "${srcdir}/create-default-conf-dir.patch"
   patch -p1 -i "${srcdir}/libseafile.in.patch"
-  patch -p0 -i "${srcdir}/openssl-1.0.patch"
+  patch -p1 -i "${srcdir}/openssl-1.1.diff"
 
   # Fix all script's python 2 requirement
   grep -s -l -r '#!/usr/bin/env python' "${srcdir}/${pkgname}-${pkgver}-server" \
@@ -49,8 +49,6 @@ prepare () {
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}-server"
-
-  export PKG_CONFIG_PATH=/usr/lib/openssl-1.0/pkgconfig
 
   ./autogen.sh
 
