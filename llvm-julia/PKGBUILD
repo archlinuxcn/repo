@@ -11,7 +11,7 @@
 pkgname=('llvm-julia' 'llvm-libs-julia' 'llvm-ocaml-julia' 'lld-julia' 'lldb-julia'
          'clang-julia' 'clang-tools-extra-julia')
 pkgver=4.0.0
-pkgrel=2
+pkgrel=3
 _ocaml_ver=4.04.1
 arch=(i686 x86_64 armv7h aarch64)
 url="http://llvm.org/"
@@ -52,7 +52,25 @@ sha256sums=('8d10511df96e73b8ff9e7abbfb4d4d432edbdbe965f1f4f07afaf370b8a533be'
             'cddd04be4fd822e03ff16b7640618e424d475d3bf04494c0d38aa225b920f00e'
             '597dc5968c695bbdbb0eac9e8eb5117fcd2773bc91edf5ec103ecffffab8bc48')
 
+_FLTO='-flto'
+
+if [[ "${CARCH}" == "aarch64" ]]; then
+    # GCC miscompiles LLVM on AArch64 with LTO
+    _FLTO=''
+fi
+
 prepare() {
+  rm -rf bin/
+  mkdir -p bin/
+
+  for p in cc c++ gcc g++; do
+    cat > bin/$p <<EOF
+#!/bin/bash
+exec /usr/bin/$p $_FLTO "\${@}"
+EOF
+    chmod +x bin/$p
+  done
+
   cd "$srcdir/llvm-$pkgver.src"
 
   mv "$srcdir/cfe-$pkgver.src" tools/clang
@@ -82,16 +100,10 @@ prepare() {
 build() {
   cd "$srcdir/llvm-$pkgver.src/build"
 
-  if [[ "${CARCH}" == "aarch64" ]]; then
-      # GCC miscompiles LLVM on AArch64 with LTO
-      CFLAGS+=' -ggdb1 -O3 -fasynchronous-unwind-tables'
-      CXXFLAGS+=' -ggdb1 -O3 -fasynchronous-unwind-tables'
-      LDFLAGS+=' -O3 -fasynchronous-unwind-tables'
-  else
-      CFLAGS+=' -ggdb1 -O3 -flto -fasynchronous-unwind-tables'
-      CXXFLAGS+=' -ggdb1 -O3 -flto -fasynchronous-unwind-tables'
-      LDFLAGS+=' -O3 -flto -fasynchronous-unwind-tables'
-  fi
+  export PATH="${srcdir}/bin:${PATH}"
+  CFLAGS+=' -ggdb1 -O3 -fasynchronous-unwind-tables'
+  CXXFLAGS+=' -ggdb1 -O3 -fasynchronous-unwind-tables'
+  LDFLAGS+=' -O3 -fasynchronous-unwind-tables'
 
   cmake \
       -DCMAKE_BUILD_TYPE=Release \
