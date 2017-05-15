@@ -158,7 +158,7 @@ index 1d4896a6..f2f876b3 100644
 -Q_IMPORT_PLUGIN(QFcitxPlatformInputContextPlugin)
  #endif // Q_OS_WIN | Q_OS_MAC | Q_OS_LINUX
 diff --git a/Telegram/SourceFiles/ui/text/text.cpp b/Telegram/SourceFiles/ui/text/text.cpp
-index 0188d70c..960fc062 100644
+index dbc2b0db..61fa93c9 100644
 --- a/Telegram/SourceFiles/ui/text/text.cpp
 +++ b/Telegram/SourceFiles/ui/text/text.cpp
 @@ -1692,11 +1692,11 @@ private:
@@ -190,10 +190,10 @@ index f89644e1..35230cfc 100644
  		layout.createLine();
  
 diff --git a/Telegram/SourceFiles/ui/twidget.cpp b/Telegram/SourceFiles/ui/twidget.cpp
-index abfcd27e..1e1049b2 100644
+index 04fad32b..688cd8e0 100644
 --- a/Telegram/SourceFiles/ui/twidget.cpp
 +++ b/Telegram/SourceFiles/ui/twidget.cpp
-@@ -107,9 +107,9 @@ void sendSynteticMouseEvent(QWidget *widget, QEvent::Type type, Qt::MouseButton
+@@ -187,9 +187,9 @@ void sendSynteticMouseEvent(QWidget *widget, QEvent::Type type, Qt::MouseButton
  			, button
  			, QGuiApplication::mouseButtons() | button
  			, QGuiApplication::keyboardModifiers()
@@ -228,21 +228,23 @@ index 5d6830e9..c3f08d3f 100644
          IMPLICIT_DEPENDS CXX "${_pch_header}"
          COMMENT "Precompiling ${_name} for ${_target} (C++)")
 diff --git a/Telegram/gyp/Telegram.gyp b/Telegram/gyp/Telegram.gyp
-index a1805ebd..2ebb6d35 100644
+index 80160d16..8789e874 100644
 --- a/Telegram/gyp/Telegram.gyp
 +++ b/Telegram/gyp/Telegram.gyp
-@@ -78,24 +78,16 @@
-       'codegen.gyp:codegen_style',
+@@ -78,12 +78,10 @@
+       'codegen.gyp:codegen_lang',
        'codegen.gyp:codegen_numbers',
-       'codegen.gyp:MetaLang',
+       'codegen.gyp:codegen_style',
 -      'utils.gyp:Updater',
+       '../ThirdParty/libtgvoip/libtgvoip.gyp:libtgvoip',
      ],
  
      'defines': [
 -      'AL_LIBTYPE_STATIC',
+       'AL_ALEXT_PROTOTYPES',
+       'TGVOIP_USE_CXX11_LIB',
        '<!@(python -c "for s in \'<(build_defines)\'.split(\',\'): print(s)")',
-     ],
- 
+@@ -92,14 +90,7 @@
      'include_dirs': [
        '<(src_loc)',
        '<(SHARED_INTERMEDIATE_DIR)',
@@ -252,13 +254,14 @@ index a1805ebd..2ebb6d35 100644
 -      '<(libs_loc)/zlib-1.2.8',
 -      '<(libs_loc)/ffmpeg',
 -      '<(libs_loc)/openal-soft/include',
+-      '<(libs_loc)/opus/include',
 -      '<(minizip_loc)',
 +      '/usr/include/minizip',
        '<(sp_media_key_tap_loc)',
        '<(submodules_loc)/GSL/include',
        '<(submodules_loc)/variant/include',
 diff --git a/Telegram/gyp/qt.gypi b/Telegram/gyp/qt.gypi
-index c12e450b..7356778e 100644
+index 81c13a18..1af2e86e 100644
 --- a/Telegram/gyp/qt.gypi
 +++ b/Telegram/gyp/qt.gypi
 @@ -27,25 +27,21 @@
@@ -422,25 +425,30 @@ index fde88dcd..ca149b85 100644
        ],
        'cflags_c': [
 diff --git a/Telegram/gyp/telegram_linux.gypi b/Telegram/gyp/telegram_linux.gypi
-index b42e7443..43163a4c 100644
+index b8866ec2..b505a67d 100644
 --- a/Telegram/gyp/telegram_linux.gypi
 +++ b/Telegram/gyp/telegram_linux.gypi
-@@ -35,12 +35,14 @@
+@@ -33,9 +33,10 @@
+       'linux_path_va%': '/usr/local',
+       'linux_path_vdpau%': '/usr/local',
        'linux_path_breakpad%': '<(libs_loc)/breakpad',
+-      'linux_path_opus_include%': '<(libs_loc)/opus/include',
++      'linux_path_opus_include%': '/usr/include/opus',
      },
      'include_dirs': [
 +      '/usr/include/openssl-1.0',
        '/usr/local/include',
        '<(linux_path_ffmpeg)/include',
        '<(linux_path_openal)/include',
-       '<(linux_path_breakpad)/include/breakpad',
+@@ -43,6 +44,7 @@
+       '<(linux_path_opus_include)',
      ],
      'library_dirs': [
 +      '/usr/lib/openssl-1.0',
        '/usr/local/lib',
        '<(linux_path_ffmpeg)/lib',
        '<(linux_path_openal)/lib',
-@@ -50,30 +52,19 @@
+@@ -52,30 +54,20 @@
        '<(linux_path_breakpad)/lib',
      ],
      'libraries': [
@@ -469,6 +477,7 @@ index b42e7443..43163a4c 100644
 +      'swscale',
 +      'avutil',
 +      'minizip',
++      'opus',
 +      'z',
  #      '<!(pkg-config 2> /dev/null --libs <@(pkgconfig_libs))',
      ],
@@ -481,10 +490,10 @@ index b42e7443..43163a4c 100644
      ],
      'configurations': {
 diff --git a/Telegram/gyp/telegram_sources.txt b/Telegram/gyp/telegram_sources.txt
-index 6fa7b704..431fadd6 100644
+index c970f984..cb5f225c 100644
 --- a/Telegram/gyp/telegram_sources.txt
 +++ b/Telegram/gyp/telegram_sources.txt
-@@ -522,14 +522,7 @@
+@@ -552,14 +552,7 @@
  <(src_loc)/structs.cpp
  <(src_loc)/structs.h
  
