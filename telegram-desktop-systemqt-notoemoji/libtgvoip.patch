@@ -1,0 +1,13 @@
+diff --git a/libtgvoip.gyp b/libtgvoip.gyp
+index 58dc6bf..98a09d7 100644
+--- a/libtgvoip.gyp
++++ b/libtgvoip.gyp
+@@ -13,7 +13,7 @@
+         'variables': {
+           'tgvoip_src_loc': '.',
+           'official_build_target%': '',
+-          'linux_path_opus_include%': '<(DEPTH)/../../../Libraries/opus/include',
++          'linux_path_opus_include%': '/usr/include/opus',
+         },
+         'include_dirs': [
+           '<(tgvoip_src_loc)/webrtc_dsp',
