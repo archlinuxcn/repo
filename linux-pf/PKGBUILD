@@ -9,7 +9,7 @@ _minor=11
 _basekernel=${_major}.${_minor}
 _srcname=linux-${_major}.${_minor}
 pkgbase=linux-pf
-_pfrel=1
+_pfrel=2
 _kernelname=-pf
 _pfpatchhome="http://pf.natalenko.name/sources/${_basekernel}/"
 _pfpatchname="patch-${_basekernel}${_kernelname}${_pfrel}"
@@ -77,7 +77,6 @@ source=("ftp://www.kernel.org/pub/linux/kernel/v${_major}.x/linux-${_basekernel}
         '90-linux-pf.hook'
         "${_pfpatchhome}${_pfpatchname}.xz"     # the -pf patchset
         "git+$_aufs4"
-	"https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/plain/queue-4.11/refcount-change-export_symbol-markings.patch"
 )
 
 
@@ -124,9 +123,6 @@ prepare() {
 
   # add latest fixes from stable queue, if needed
   # http://git.kernel.org/?p=linux/kernel/git/stable/stable-queue.git
-
-  # For Nvidia 381.22
-  patch -p1 -i ../refcount-change-export_symbol-markings.patch
 
   # end linux-ARCH patches
 
@@ -667,9 +663,8 @@ pkgdesc="Linux kernel and modules with the pf-kernel patch [-ck patchset (BFS in
 
 # makepkg -g >>PKGBUILD
 sha256sums=('b67ecafd0a42b3383bf4d82f0850cbff92a7e72a215a6d02f42ddbafcf42a7d6'
-            'c5e1390f762f638529cc04d4f0b195a837bb982c4003940e3a28c5c780951727'
+            'c31e8276bc70e61a08eed1cc737372efbea9d3ebbe8fd36a123dcbbaa17ffb6e'
             '82d660caa11db0cd34fd550a049d7296b4a9dcd28f2a50c81418066d6e598864'
             'e442a951ad7ded6c178aebab8b4fdfa135dd194b672d1762ece36a044c9ce378'
-            'c34e93ccfb88577ef2902b21d9f425771ed31d117844cdc3abddfd84815881dd'
-            'SKIP'
-            '336663345c78475802260033c91312100bbb3a5ddf7a7d6b9952c1b4fcec546f')
+            '81a0e854bbc96d0ddc9eb3249a84b10e1be63f9be3f99da9c46f55112bbbb0cf'
+            'SKIP')
