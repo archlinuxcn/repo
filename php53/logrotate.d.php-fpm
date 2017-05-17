@@ -1,6 +1,8 @@
-/var/log/php-fpm.log {
+/var/log/php53-fpm.log {
 	missingok
+	notifempty
+	delaycompress
 	postrotate
-	/etc/rc.d/php-fpm logrotate >/dev/null || true
+		/bin/kill -SIGUSR1 `cat /run/php53-fpm/php-fpm.pid 2>/dev/null` 2>/dev/null || true
 	endscript
 }

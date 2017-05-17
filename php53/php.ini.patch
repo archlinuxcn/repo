@@ -5,7 +5,7 @@
  ; *NOT* affected by whether Safe Mode is turned On or Off.
  ; http://php.net/open-basedir
 -;open_basedir =
-+open_basedir = /srv/http/:/home/:/tmp/:/usr/share/pear/
++open_basedir = /srv/http/:/home/:/tmp/:/usr/share/php53/pear/:/usr/share/webapps/
  
  ; This directive allows you to disable certain functions for security reasons.
  ; It receives a comma-delimited list of function names. This directive is
@@ -14,7 +14,7 @@
  
  ; UNIX: "/path1:/path2"
 -;include_path = ".:/php/includes"
-+include_path = ".:/usr/share/pear"
++include_path = ".:/usr/share/php53/pear"
  ;
  ; Windows: "\path1;\path2"
  ;include_path = ".;c:\php\includes"
@@ -23,7 +23,7 @@
  ; Directory in which the loadable extensions (modules) reside.
  ; http://php.net/extension-dir
 -; extension_dir = "./"
-+extension_dir = "/usr/lib/php/modules/"
++extension_dir = "/usr/lib/php53/modules/"
  ; On windows:
  ; extension_dir = "ext"
  

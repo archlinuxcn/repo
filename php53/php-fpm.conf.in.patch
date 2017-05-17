@@ -2,10 +2,10 @@
 +++ sapi/fpm/php-fpm.conf.in	2012-03-01 19:50:48.549947258 +0100
 @@ -12,7 +12,7 @@
  ; Relative path can also be used. They will be prefixed by:
- ;  - the global prefix if it's been set (-p arguement)
+ ;  - the global prefix if it's been set (-p argument)
  ;  - @prefix@ otherwise
 -;include=etc/fpm.d/*.conf
-+;include=/etc/php/fpm.d/*.conf
++;include=/etc/php53/fpm.d/*.conf
  
  ;;;;;;;;;;;;;;;;;;
  ; Global Options ;
@@ -14,7 +14,7 @@
  ; Note: the default prefix is @EXPANDED_LOCALSTATEDIR@
  ; Default Value: none
 -;pid = run/php-fpm.pid
-+pid = run/php-fpm/php-fpm.pid
++pid = run/php53-fpm/php-fpm.pid
  
  ; Error log file
  ; If it's set to "syslog", log is sent to syslogd instead of being written
@@ -23,8 +23,8 @@
  ;   '/path/to/unix/socket' - to listen on a unix socket.
  ; Note: This value is mandatory.
 -listen = 127.0.0.1:9000
-+;listen = 127.0.0.1:9000
-+listen = /var/run/php-fpm/php-fpm.sock
++;listen = 127.0.0.1:9001
++listen = /run/php53-fpm/php-fpm.sock
  
  ; Set listen(2) backlog.
  ; Default Value: 128 (-1 on FreeBSD and OpenBSD)
