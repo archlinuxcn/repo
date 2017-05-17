@@ -10,7 +10,7 @@ pkgname=(clion clion-jre clion-cmake clion-gdb clion-lldb)
 _pkgname=clion
 _dlname=CLion
 # Make sure to use vercmp to check version is seen as newer. Bump epoch if not.
-pkgver=2017.1.1
+pkgver=2017.1.2
 pkgrel=1
 # Bump when JetBrains uses silly letters in stable releases
 epoch=1
@@ -22,7 +22,7 @@ license=('custom')
 makedepends=('rsync')
 source=("https://download.jetbrains.com/cpp/${_dlname}-${pkgver}.tar.gz"
         "jetbrains-${pkgbase}.desktop")
-sha256sums=('9abd6bd38801ae6cf29db2cd133c700e8da11841093de872312fe33ed51309ae'
+sha256sums=('90a8f53fce2230a91b8f6b2ac19f1cd8a857c29f2afb7b4b105bcfbc8fc24816'
             '9f0f4335f410e0587018c85ebfcf4b65a7a47ad682a58972624378953ef288d6')
 noextract=("${_dlname}-${pkgver}.tar.gz")
 
@@ -56,7 +56,7 @@ package_clion() {
     )
 
     rsync -rtl "${srcdir}/opt" "${pkgdir}" \
-          --exclude=/opt/${pkgbase}/jre \
+          --exclude=/opt/${pkgbase}/jre64 \
           --exclude=/opt/${pkgbase}/bin/cmake \
           --exclude=/opt/${pkgbase}/bin/gdb \
           --exclude=/opt/${pkgbase}/bin/lldb
@@ -79,7 +79,7 @@ package_clion() {
 
 package_clion-jre() {
     install -d -m755 "${pkgdir}/opt/${pkgbase}"
-    rsync -rtl "${srcdir}/opt/${pkgbase}/jre" "${pkgdir}/opt/${pkgbase}"
+    rsync -rtl "${srcdir}/opt/${pkgbase}/jre64" "${pkgdir}/opt/${pkgbase}"
 }
 
 package_clion-cmake() {
