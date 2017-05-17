@@ -1,0 +1,15 @@
+post_install() {
+    getent group pcp >/dev/null || groupadd --system pcp
+    getent passwd pcp >/dev/null || useradd -d /var/lib/pcp --system -g pcp -s /bin/false pcp
+    chown -R pcp:pcp /var/log/pcp
+    chown -R pcp:pcp /var/lib/pcp/config/pmda
+}
+
+post_upgrade() {
+    post_install
+}
+
+post_remove() {
+    getent passwd pcp >/dev/null && userdel pcp
+    getent group pcp >/dev/null && groupdel pcp
+}
