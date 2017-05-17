@@ -1,0 +1,20 @@
+post_install() {
+
+# set the PETSC_DIR
+source /etc/profile.d/petsc.sh
+export PETSC_DIR=${PETSC_DIR}
+
+noVersion=${1%%-[1-9]}
+rootDir=${noVersion/_/-}
+
+cat << EOF
+
+If you just ran makepkg in this directory then
+to test the PETSc installation you can run:
+
+$ cd src/petsc-${rootDir}/; make PETSC_DIR=$PETSC_DIR test
+
+EOF
+}
+
+# vim:set ts=2 sw=2 et:
