@@ -36,7 +36,7 @@ esac
 
 epoch=1
 pkgver=0.7.0.DEV.220.ga0ada1dc46
-pkgrel=1
+pkgrel=2
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
@@ -46,8 +46,10 @@ makedepends=(gcc-fortran arpack fftw git gmp libgit2-julia libunwind-git
              openspecfun openblas libutf8proc-git patchelf openblas-lapack
              openlibm mbedtls libssh2)
 options=('debug' '!strip' '!buildflags')
-source=('git://github.com/JuliaLang/julia')
-md5sums=('SKIP')
+source=('git://github.com/JuliaLang/julia'
+        0001-Revert-turn-on-deprecation-warnings-for-type-and-imm.patch)
+md5sums=('SKIP'
+         'b77e738b7d1aae3a93efff8108fe3273')
 
 pkgver() {
   cd julia
@@ -126,7 +128,7 @@ EOF
   git reset --hard HEAD
   git clean -fdx
 
-  # patch -Np1 < ../
+  patch -Np1 < ../0001-Revert-turn-on-deprecation-warnings-for-type-and-imm.patch
 
   if [[ "$CARCH" = x86_64 ]]; then
       (cd "$srcdir"
