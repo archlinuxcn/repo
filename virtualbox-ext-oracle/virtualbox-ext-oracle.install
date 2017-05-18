@@ -1,5 +1,5 @@
 post_install () {
-  VBoxManage extpack install "/usr/share/virtualbox/extensions/Oracle_VM_VirtualBox_Extension_Pack-${1%%-*}.vbox-extpack" >/dev/null
+  VBoxManage extpack install --accept-license="$(sha256sum /usr/share/licenses/virtualbox-ext-oracle/PUEL | head --bytes=64)" "/usr/share/virtualbox/extensions/Oracle_VM_VirtualBox_Extension_Pack-${1%%-*}.vbox-extpack" >/dev/null
 }
 
 pre_upgrade() {
