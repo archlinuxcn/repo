@@ -1,14 +1,14 @@
 _pkgname=alembic
 pkgname=python-alembic
-pkgver=0.9.1
+pkgver=0.9.2
 pkgrel=1
 pkgdesc="A database migration tool for SQLAlchemy."
 arch=('any')
 url="http://bitbucket.org/zzzeek/alembic"
 license=('MIT')
 depends=('python' 'python-editor' 'python-mako' 'python-sqlalchemy' 'python-setuptools')
-source=('https://pypi.python.org/packages/97/00/3e6797a2e4209db69d23b223ae3148d5f3605dafba6a332670de7a12c147/alembic-0.9.1.tar.gz')
-md5sums=('798f933eae7c51125f0e71735cfa0666')
+source=('https://pypi.python.org/packages/78/48/b5b26e7218b415f40b60b92c53853d242e5456c0f19f6c66101d98ff5f2a/alembic-0.9.2.tar.gz')
+md5sums=('40daf8bae50969beea40efaaf0839ff4')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
