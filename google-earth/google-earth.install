@@ -4,7 +4,7 @@ msg_blue() {
 }
 
 note() {
-    printf "${blue}==>${yellow} NOTE:$2${bold} $1${all_off}\n"
+    printf "${blue}==>${yellow} NOTE$2:${bold} $1${all_off}\n"
 }
 
 all_off="$(tput sgr0)"
@@ -21,7 +21,7 @@ post_install() {
     if [[ $_64 ]]; then
         note "The launcher is called 'google-earth'." "1"
         note "If experiencing graphical corruption:
-          $ rm -r ~/.googleearth/Cache/" "2"
+           $ rm -r ~/.googleearth/Cache/" "2"
     else
         note "The launcher is called 'google-earth'."
     fi
