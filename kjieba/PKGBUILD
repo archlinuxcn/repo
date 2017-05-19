@@ -1,10 +1,10 @@
 #Package from: isoft-linux <github.com/isoft-linux/kjieba>
 #Maintainer : Sasasu <lizhaolong0123@gmail.com>
 pkgname=kjieba
-pkgver=20161217
-pkgrel=2
+pkgver=20170519
+pkgrel=1
 pkgdesc="DBus interface of libcppjieba && Chinese2Pinyin for KDE5"
-arch=('any')
+arch=('i686' 'x86_64')
 url="https://github.com/isoft-linux/kjieba"
 license=('GPL2')
 depends=('gcc' 'qt5-base' 'krunner')
