@@ -5,7 +5,7 @@
 # Maintainer: widowild
 
 pkgname=rslsync
-pkgver=2.5.1
+pkgver=2.5.2
 pkgrel=1
 pkgdesc="Resilio Sync (ex:BitTorrent Sync) - automatically sync files via secure, distributed technology"
 license=("custom:resilio")
@@ -24,12 +24,12 @@ source_x86_64=("rslsync_x64-${pkgver}.tar.gz::https://download-cdn.resilio.com/s
 sha256sums=('4483cbe3fff81281666d8fbe8c9b8d7d27c38ba7a3d3752a865f1ab8c1f212db'
             'ba4b0ee3303027122e67345d4bf852f911a56f213f98c9eaa198c69d903fd8a1'
             'acc08bf5a321a0ae1ee58aee64af524508359db6305d2164d43bb84a2a3fc7c4')
-sha256sums_i686=('534a72e9914f043eecbe3aa1e6a35b24bf6dab6153aff85775539d4fc6d2cffb')
-sha256sums_x86_64=('bafc3de3fea5a42c27e25c445f81e335dc749a85295a6f83f09167dc66167ed2')
-sha256sums_arm=('8ae12633c162e49c6018dd2da9141a60b8793732bc76510f31e86430ec6771a4')
-sha256sums_armv6h=('8ae12633c162e49c6018dd2da9141a60b8793732bc76510f31e86430ec6771a4')
-sha256sums_armv7h=('c6b0d3b407fdc18a0d47399584c28e7a7e7771b69eab39e9537f86f2b99e8db0')
-sha256sums_aarch64=('c6b0d3b407fdc18a0d47399584c28e7a7e7771b69eab39e9537f86f2b99e8db0')
+sha256sums_i686=('482ecef93cde102e32007ec76a6f029e6dcac47dd91c23de51bba4354c5bc7f8')
+sha256sums_x86_64=('2285a13d5e27600eaf54045a9d97f51ed0ab4306786f7e9748fe068d7f89f295')
+sha256sums_arm=('e4a106bde67e7f78a6ca6bafbdba46fe2efa59f954ffcbf7d67c8de832888fcd')
+sha256sums_armv6h=('e4a106bde67e7f78a6ca6bafbdba46fe2efa59f954ffcbf7d67c8de832888fcd')
+sha256sums_armv7h=('58943621cebbc45ba761232d546d749ae6a4d549e9c0d4764e0d5d0eb4802e89')
+sha256sums_aarch64=('58943621cebbc45ba761232d546d749ae6a4d549e9c0d4764e0d5d0eb4802e89')
 
 package() {
   # install main binary
