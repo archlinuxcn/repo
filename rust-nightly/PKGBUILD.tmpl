@@ -79,6 +79,7 @@ package_{{x.name}}(){
   optdepends=({{' '.join("'%s'" % y for y in x.optdepends)}}){% end %}
 
   cd {{x.name}}
+  chmod +x install.sh{# Windows one isn't executable #}
   ./install.sh --destdir="$pkgdir" --prefix=/usr --disable-ldconfig
   rm "$pkgdir"/usr/lib/rustlib/{components,manifest-*,rust-installer-version,install.log,uninstall.sh}
   find "$pkgdir"/usr/lib -name '*.so' -exec chmod +x {} +
