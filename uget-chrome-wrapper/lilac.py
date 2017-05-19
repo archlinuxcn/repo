@@ -10,12 +10,11 @@ def _get_new_version():
 def pre_build():
   aur_pre_build()
   ver = _get_new_version()
-  with fileinput.input(files=('PKGBUILD'), inplace=1) as f:
-    for l in f:
-      l = l.rstrip('\n')
-      if l.startswith('pkgver='):
-        l = 'pkgver=' + ver
-      print(l)
+  for l in edit_file('PKGBUILD'):
+    if l.startswith('pkgver='):
+      l = 'pkgver=' + ver
+    print(l)
+  run_cmd(["updpkgsums"])
 
 def post_build():
   git_add_files("PKGBUILD")
