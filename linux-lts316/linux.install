@@ -1,0 +1,34 @@
+# arg 1:  the new package version
+# arg 2:  the old package version
+
+KERNEL_NAME=
+KERNEL_VERSION=
+
+note() {
+    printf "${blue}==>${yellow} NOTE:${bold} $1${all_off}\n"
+}
+
+post_install () {
+  # updating module dependencies
+  echo ">>> Updating module dependencies. Please wait ..."
+  depmod ${KERNEL_VERSION}
+
+  note "If you see an error building your initramfs you can try adding this to your mkinitcpio.conf"
+  note "    _addedmodules["dm_cache_smq"]=1"
+}
+
+post_upgrade() {
+  if findmnt --fstab -uno SOURCE /boot &>/dev/null && ! mountpoint -q /boot; then
+    echo "WARNING: /boot appears to be a separate partition but is not mounted."
+  fi
+
+  # updating module dependencies
+  echo ">>> Updating module dependencies. Please wait ..."
+  depmod ${KERNEL_VERSION}
+}
+
+post_remove() {
+  # also remove the compat symlinks
+  rm -f boot/initramfs-linux${KERNEL_NAME}.img
+  rm -f boot/initramfs-linux${KERNEL_NAME}-fallback.img
+}
