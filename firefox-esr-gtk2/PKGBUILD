@@ -7,7 +7,7 @@
 
 pkgname=firefox-esr-gtk2
 _pkgname=firefox-esr
-pkgver=52.1.1
+pkgver=52.1.2
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org, Extended Support Release"
 arch=(i686 x86_64)
@@ -27,7 +27,7 @@ options=(!emptydirs !makeflags !strip)
 source=(https://ftp.mozilla.org/pub/firefox/releases/${pkgver}esr/source/firefox-${pkgver}esr.source.tar.xz
         firefox.desktop firefox-symbolic.svg
         firefox-install-dir.patch fix-wifi-scanner.diff)
-sha256sums=('a7298f6a04a1330e39e560337c4560ec9b71567a0f758982dfa18d5a2a798a7c'
+sha256sums=('388e0454d69801f0f2010f8f93b796420ec0493fbf138fc659dbd5b497b8373b'
             'ada313750e6fb14558b37c764409a17c1672a351a46c73b350aa1fe4ea9220ef'
             'a2474b32b9b2d7e0fb53a4c89715507ad1c194bef77713d798fa39d507def9e9'
             'd86e41d87363656ee62e12543e2f5181aadcff448e406ef3218e91865ae775cd'
