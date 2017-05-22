@@ -66,14 +66,14 @@ build() {
   mkdir -p tmp
   msg2 "Building pip package ..."
   ./bazel-bin/install $srcdir/sonnet
-
+  
   # CUDA 
   # no such target '@org_tensorflow//tensorflow/tools/git:gen/spec.json'
   # no such target '@org_tensorflow//tensorflow/tools/git:gen/head'
   # no such target '@org_tensorflow//tensorflow/tools/git:gen/branch_ref'
   # target '//:install' failed
   # Looks like a upstream problem 
-
+  
   # cd $srcdir/sonnet-cuda/tensorflow
   # msg2 "Configure tensorflow-cuda ..."
   # configure_tensorflow_cuda
