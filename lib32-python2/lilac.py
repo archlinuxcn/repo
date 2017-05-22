@@ -6,7 +6,7 @@
 
 from lilaclib import *
 
-build_prefix = 'multilib'
+build_prefix = 'multilib-archlinuxcn'
 pre_build = aur_pre_build
 post_build = aur_post_build
 
