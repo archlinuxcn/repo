@@ -1,14 +1,14 @@
-# Maintainer: Randy Ramos <rramos1295@gmail.com>
+# Maintainer: Randy Ramos <rramos1295 \at\ gmail \dot\ com>
 # Contributor: Peter Vasil <mail@petervasil.net>
 # Contributor: Lucas De Marchi <lucas.de.marchi@gmail.com>
 # Contributor: Matthias Meulien <orontee@gmail.com>
 
 pkgname=global
-pkgver=6.5.6
-pkgrel=3
+pkgver=6.5.7
+pkgrel=1
 pkgdesc="A source code tag system"
 arch=('i686' 'x86_64')
-url="http://www.gnu.org/software/global/"
+url="https://www.gnu.org/software/global/"
 license=('GPL')
 depends=('libltdl' 'bash' 'perl' 'sqlite')
 makedepends=("python2" "python2-pygments")
@@ -16,7 +16,7 @@ optdepends=('idutils' 'ctags' 'python-pygments' 'emacs' 'vim')
 makedepends=('python')
 options=(!emptydirs !libtool)
 source=("https://ftp.gnu.org/pub/gnu/${pkgname}/${pkgname}-${pkgver}.tar.gz")
-sha256sums=('122f9afa69a8daa0f64c12db7f02981fe573f51a163fa3829ed4f832cd281505')
+sha256sums=('d9c08fa524f9499b54241cb2d72f8a7df01453b6d5e012a63784ded08e3acd32')
 
 prepare() {
   cd "${srcdir}/${pkgname}-${pkgver}"
