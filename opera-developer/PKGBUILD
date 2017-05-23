@@ -1,10 +1,10 @@
 # Maintainer: Christian Hesse <mail@eworm.de>
 
 pkgname=opera-developer
-pkgver=46.0.2573.0
+pkgver=46.0.2602.0
 pkgrel=1
 pkgdesc='A fast and secure web browser and Internet suite - developer stream'
-arch=('x86_64' 'i686')
+arch=('x86_64')
 url='http://www.opera.com/browser/'
 license=('custom:opera')
 depends=('alsa-lib' 'nss' 'gtk2' 'gconf' 'libxss' 'libxtst' 'desktop-file-utils')
@@ -13,20 +13,18 @@ optdepends=('curl: opera crash reporter and autoupdate checker'
 	"${pkgname}-ffmpeg-codecs: support h.264 and mp3 codecs")
 options=(!strip)
 backup=("etc/${pkgname}/default")
-source=('opera'
-	'default')
 _source='https://get.geo.opera.com/pub/'
 # alternative downloads:
 # http://get.geo.opera.com/pub/
 # https://ftp.opera.com/pub/
 # http://ftp.opera.com/pub/
 # ftp://ftp.opera.com/pub/
-source_x86_64=("${_source}/${pkgname}/${pkgver}/linux/${pkgname}_${pkgver}_amd64.deb")
-source_i686=("${_source}/${pkgname}/${pkgver}/linux/${pkgname}_${pkgver}_i386.deb")
-sha256sums=('508512464e24126fddfb2c41a1e2e86624bdb0c0748084b6a922573b6cf6b9c5'
+source=("${_source}/${pkgname}/${pkgver}/linux/${pkgname}_${pkgver}_amd64.deb"
+	'opera'
+	'default')
+sha256sums=('1a949e4f136dd0896d0caab51a092b51c32420c61cf6f651f2a41bfe4a564b45'
+	'508512464e24126fddfb2c41a1e2e86624bdb0c0748084b6a922573b6cf6b9c5'
 	'99fc0d2822edd14e234d451995db47148125e4580221a292598959421d131231')
-sha256sums_x86_64=('5d3442850e2720588bf1403d668e3346daa093f33c2ee004fd97bb1457c48e81')
-sha256sums_i686=('d0b2d4d7ddcadbcf1e426ccf0e56d7f28d2455a63067354e0eadf02015f97941')
 
 prepare() {
 	cd ${srcdir}/
