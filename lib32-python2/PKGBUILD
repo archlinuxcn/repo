@@ -4,22 +4,25 @@
 
 _pkgbasename=python2
 pkgname=lib32-$_pkgbasename
-pkgver=2.7.11
-pkgrel=4
+pkgver=2.7.13
+pkgrel=1
 _pybasever=2.7
 pkgdesc="A high-level scripting language (32 bit)"
 arch=('x86_64')
 license=('PSF')
 url="http://www.python.org/"
-depends=(lib32-{bzip2,db,expat,gdbm,libffi,openssl,sqlite,zlib} "${_pkgbasename}>=${pkgver}")
+depends=(lib32-{bzip2,db,expat,gdbm,libffi,openssl,sqlite,zlib})
 makedepends=('lib32-tk' 'gcc-multilib')
-optdepends=('lib32-tk: for IDLE')
+optdepends=(
+  'lib32-tk: for IDLE'
+  "python2>=${pkgver}: building packages which require python sources"
+)
 conflicts=('lib32-python<3')
 options=('!makeflags')
 source=("Python-${pkgver}.tar.xz::http://www.python.org/ftp/python/${pkgver%rc?}/Python-${pkgver}.tar.xz"
         'python-config-32.patch'
         'lib32-distutils-sysconfig.patch')
-sha256sums=('962b4c45af50124ea61f11a30deb4342fc0bc21126790fa1d7f6c79809413f46'
+sha256sums=('35d543986882f78261f97787fd3e06274bfa6df29fac9b4a94f73930ff98f731'
             '227230f73a2144f997c8246576e514783749b4432b45256765eee0193864f1eb'
             '54b58eb8d0083c9ff751763180e9951b776dfa0c65e6391b000c56a538e20ad9')
 
