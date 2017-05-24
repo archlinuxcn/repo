@@ -30,8 +30,9 @@ package() {
     cd $srcdir
     cp -ra usr $pkgdir/usr
     cp -ra etc $pkgdir/etc
-
+    
     # License
     install -Dm644 $pkgdir/usr/share/doc/$pkgname/COPYING $pkgdir/usr/share/licenses/$pkgname/LICENSE
     rm $pkgdir/usr/share/doc/$pkgname/COPYING
 }
+
