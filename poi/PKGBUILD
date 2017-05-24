@@ -3,13 +3,13 @@
 pkgname=poi
 _pkgname=poi
 pkgver=7.8.0.beta.1.0.ga34648c7
-pkgrel=1
+pkgrel=2
 pkgdesc="Scalable KanColle browser and tool"
 arch=('any')
 url="https://github.com/poooi/poi/"
 license=('MIT')
 depends=('electron' 'sh')
-makedepends=('git' 'npm' 'coreutils' 'findutils' 'sed' 'imagemagick' 'tar' 'zlib' 'unzip' 'gulp')
+makedepends=('git' 'nodejs' 'npm' 'coreutils' 'findutils' 'sed' 'imagemagick' 'tar' 'zlib' 'unzip' 'gulp')
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
 source=("git+https://github.com/poooi/poi.git"
@@ -31,6 +31,14 @@ pkgver() {
     git describe --tags --long | sed 's/^v//;s/-/./g'
 }
 
+compile() {
+    local filename
+    filename="$1"
+    echo "[Compile] ${filename}"
+    node -e "console.log(require('babel-core').transformFileSync(process.argv[1], require('./babel.config.js')).code)" "$filename" > "${filename%.es}.js"
+    rm "$filename"
+}
+
 build() {
     cd "${srcdir}/${_pkgname}"
     git clean -xdf
@@ -38,14 +46,18 @@ build() {
     npm install
     npm install --save eachr # workaround
     # prevent infinite loop...
-    timeout 5m npm run deploy
+    timeout 5m gulp deploy
+    export -f compile
+    find . -type f -name '*.es' -exec bash -c 'compile "$0"' {} \;
     npm prune --production
 }
 
 package() {
     cd "${srcdir}"
 
-    find "${_pkgname}" -not -path '*/\.*' -type f -exec install -Dm644 {} "${pkgdir}/usr/share/{}" \;
+    for path in app.js assets babel.config.js i18n index.html index.js lib LICENSE node_modules package.json PepperFlash views; do
+        find "${_pkgname}/${path}" -type f -exec install -Dm644 {} "${pkgdir}/usr/share/{}" \;
+    done
 
     install -Dm644 "${_pkgname}.desktop" "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
 
