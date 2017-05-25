@@ -20,6 +20,8 @@ def pre_build():
   # use the snapshot version, because generating a new one requires Internat access and root permission
   ln -s .tld_set_snapshot "$pkgdir/usr/lib/python$_pyver/site-packages/tldextract/.tld_set"
 '''
+    elif l.startswith('pkgdesc=') and '.' in l:
+      l = l.split('.')[0] + '"'
     print(l)
 
 def post_build():
