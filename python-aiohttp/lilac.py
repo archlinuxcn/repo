@@ -6,12 +6,14 @@ build_prefix = 'extra-x86_64'
 depends = ['python-multidict-git', 'python-async_timeout', 'python-yarl']
 
 def pre_build():
-  for line in edit_file('PKGBUILD'):
-    if line.startswith('pkgver='):
-      line = 'pkgver=%s' % _G.newver.lstrip('v')
-    print(line)
+  old_pkgver, pkgrel = get_pkgver_and_pkgrel()
+  pkgver = _G.newver.lstrip('v')
 
-  run_cmd(['updpkgsums'])
+  if old_pkgver == pkgver:
+    update_pkgrel(pkgrel)
+  else:
+    update_pkgver(pkgver)
+    update_pkgrel(1)
 
 def post_build():
   git_add_files('PKGBUILD')

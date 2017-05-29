@@ -1,7 +1,6 @@
 _pkgname=aiohttp
 pkgname=python-${_pkgname}
 pkgver=2.1.0
-
 pkgrel=6
 pkgdesc="http client/server for asyncio"
 arch=('i686' 'x86_64')
@@ -9,7 +8,8 @@ url="https://github.com/KeepSafe/aiohttp"
 license=('Apache')
 depends=('python' 'python-chardet' 'python-multidict' 'python-async_timeout' 'python-yarl')
 makedepends=('cython' 'python-setuptools')
-optdepends=('python-aiodns')
+optdepends=('python-aiodns: for fast DNS resolving, highly recommended'
+            'python-cchardet: faster replacement for python-chardet')
 source=("https://github.com/KeepSafe/aiohttp/archive/v${pkgver}.tar.gz")
 sha1sums=('249b077714ca2c74e5944525e5312905dbf3ff45')
 
