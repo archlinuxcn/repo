@@ -35,7 +35,7 @@ case $CARCH in
 esac
 
 epoch=1
-pkgver=0.7.0.DEV.377.g06521f1781
+pkgver=0.7.0.DEV.380.g67b9b3eab0
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
@@ -137,8 +137,10 @@ build_in() {
 
   opts=("${@:3}")
   export PATH="${srcdir}/bin:${PATH}"
-  CFLAGS=${CFLAGS//-march=i686/-march=pentium4}
-  CXXFLAGS=${CXXFLAGS//-march=i686/-march=pentium4}
+  if [[ $CARCH = i686 ]]; then
+      CFLAGS="${CFLAGS//-march=i686/-march=pentium4} -march=pentium4"
+      CXXFLAGS="${CXXFLAGS//-march=i686/-march=pentium4} -march=pentium4"
+  fi
   export CFLAGS+=' -Wno-pedantic -Wno-clobbered'
   export CXXFLAGS+=' -Wno-pedantic -Wno-clobbered'
 
