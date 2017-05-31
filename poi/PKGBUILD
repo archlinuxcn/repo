@@ -2,7 +2,7 @@
 
 pkgname=poi
 _pkgname=poi
-pkgver=7.8.0.beta.2.0.g8aec6dc4
+pkgver=7.8.0.beta.3.0.gab9a4642
 pkgrel=1
 pkgdesc="Scalable KanColle browser and tool"
 arch=('any')
