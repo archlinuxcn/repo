@@ -21,7 +21,7 @@ case $1 in
   crd_size=$(cat $HOME/.config/chrome-remote-desktop/Size)
   /opt/google/chrome-remote-desktop/chrome-remote-desktop --size="$crd_size" --start
   ;;
-  
+
 --reload)
   /opt/google/chrome-remote-desktop/chrome-remote-desktop --reload
   exit
@@ -32,14 +32,14 @@ case $1 in
   rm -rf $HOME/.config/chrome-remote-desktop/pulseaudio*
   exit
   ;;
-  
+
 --start)
   if [ ! -f $HOME/.chrome-remote-desktop-session ] | [ ! -f $HOME/.config/chrome-remote-desktop/Size ]
   then
     echo "Seems like you haven't set this up yet. Try running crd --setup."
     exit
   fi
-  
+
   if [ ! -f $HOME/.config/chrome-remote-desktop/host#*.json ]
   then
     echo "Seems like you haven't activated CRD in your browser. Please do"
@@ -47,13 +47,13 @@ case $1 in
     exit
   fi
 
-  
+
   rm -rf $HOME/.config/chrome-remote-desktop/pulseaudio*
   crd_size=$(cat $HOME/.config/chrome-remote-desktop/Size)
   /opt/google/chrome-remote-desktop/chrome-remote-desktop --size="$crd_size" --start
   exit
   ;;
-  
+
 --setup)
   sudo gpasswd -a $USER chrome-remote-desktop
   echo "Checking working directory and session file are present"
@@ -68,6 +68,7 @@ case $1 in
     echo "# You will have to uncomment one of the following lines for CRD to work" > $HOME/.chrome-remote-desktop-session
     echo "# Remove the # and select ctrl-X to finish." >> $HOME/.chrome-remote-desktop-session
     echo "# " >> $HOME/.chrome-remote-desktop-session
+    echo "export $(dbus-launch)" >> $HOME/.chrome-remote-desktop-session
     grep -R '^Exec=' /usr/share/xsessions/ | sed 's|/usr/.*=|# exec |' >> $HOME/.chrome-remote-desktop-session
     echo "Now entering the editor to make the appropriate changes to"
     echo "your session file."
@@ -87,7 +88,7 @@ case $1 in
     read -rsp $'Press any key to continue...\n' -n1 key
     nano $HOME/.config/chrome-remote-desktop/Size
   fi
-  
+
   echo "This completes the setup."
   echo ""
   echo "Please remember that you will need to allow Chrome or Chromium"
@@ -155,21 +156,21 @@ case $1 in
   echo ""
   exit
   ;;
-  
+
 *)
   if [ ! -f $HOME/.chrome-remote-desktop-session ] | [ ! -f $HOME/.config/chrome-remote-desktop/Size ]
   then
     echo "Seems like you haven't set this up yet. Try running crd --setup."
     exit
   fi
-  
+
   if [ ! -f $HOME/.config/chrome-remote-desktop/host#*.json ]
   then
     echo "Seems like you haven't activated CRD in your browser. Please do"
     echo "that before trying to run the server."
     exit
   fi
-  
+
   if [[ $crd_status = "STARTED" ]]
   then
     echo "CRD is already running; stopping."
@@ -186,5 +187,5 @@ case $1 in
     exit
   fi
   ;;
-  
+
 esac
