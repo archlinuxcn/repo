@@ -65,13 +65,13 @@ case $1 in
 
   if [[ -z $(cat $HOME/.chrome-remote-desktop-session) ]]
   then
-    echo "# You will have to uncomment one of the following lines for CRD to work" > $HOME/.chrome-remote-desktop-session
-    echo "# Remove the # and select ctrl-X to finish." >> $HOME/.chrome-remote-desktop-session
-    echo "# " >> $HOME/.chrome-remote-desktop-session
-    echo "export $(dbus-launch)" >> $HOME/.chrome-remote-desktop-session
+    echo '# You will have to uncomment one of the following lines for CRD to work' > $HOME/.chrome-remote-desktop-session
+    echo '# Remove the # and select ctrl-X to finish.' >> $HOME/.chrome-remote-desktop-session
+    echo '# ' >> $HOME/.chrome-remote-desktop-session
+    echo 'export $(dbus-launch)' >> $HOME/.chrome-remote-desktop-session
     grep -R '^Exec=' /usr/share/xsessions/ | sed 's|/usr/.*=|# exec |' >> $HOME/.chrome-remote-desktop-session
-    echo "Now entering the editor to make the appropriate changes to"
-    echo "your session file."
+    echo 'Now entering the editor to make the appropriate changes to'
+    echo 'your session file.'
     read -rsp $'Press any key to continue...\n' -n1 key
     nano $HOME/.chrome-remote-desktop-session
   fi

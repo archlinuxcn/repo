@@ -4,7 +4,7 @@
 
 pkgname=chrome-remote-desktop
 pkgver=59.0.3071.47
-pkgrel=2
+pkgrel=3
 pkgdesc="Allows you to securely access your computer over the Internet through Chrome."
 url="https://chrome.google.com/webstore/detail/gbchcmhmhahfdphkhkmpfmihenigjmpp"
 arch=('x86_64')
@@ -21,7 +21,7 @@ source=("$pkgname.service"
 #md5sums_i686=('bf9135f439fa4bfa1daf16e96c62d87a')
 md5sums_x86_64=('2edc99e417685fed9185eb294630fbbc')
 md5sums=('6f6083ff37f036f590702c7b1319445b'
-         '31ef1a39628bc627ac91ec231357b44e')
+         'ad1e228db2a456bb9e5b11258bc58bf7')
 
 pkgver() {
   bsdtar -xf control.tar.gz -O control | grep '^Version: ' | cut -f2 -d' '
