@@ -9,7 +9,9 @@ pkgdesc="Kingsoft Office (WPS Office) is an office productivity suite"
 arch=('i686' 'x86_64')
 license=("custom")
 url="http://wps-community.org/"
-depends=('fontconfig' 'libpng12' 'glib2' 'libsm' 'libxext' 'libxrender' 'libxml2' 'desktop-file-utils' 'shared-mime-info' 'xdg-utils' 'glu')
+depends=('fontconfig' 'libpng12' 'glib2' 'libsm' 'libxext' 'libxrender'
+         'libxml2' 'desktop-file-utils' 'shared-mime-info' 'xdg-utils' 'glu'
+         'xorg-mkfontdir')
 optdepends=('cups: for printing support'
             'pango: for complex (right-to-left) text support')
 conflicts=('kingsoft-office')
