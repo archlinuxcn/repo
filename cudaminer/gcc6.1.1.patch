@@ -1,0 +1,55 @@
+--- CudaMiner/Makefile.am	2016-05-12 18:30:34.000000000 +0800
++++ Makefile.am	2016-05-12 19:34:50.497216667 +0800
+@@ -13,6 +13,8 @@
+ 
+ bin_PROGRAMS	= cudaminer
+ 
++AM_CFLAGS = -O2
++NVCCFLAGS = -Xcompiler -std=c++98
+ cudaminer_SOURCES	= elist.h miner.h compat.h \
+ 			  compat/inttypes.h compat/stdbool.h compat/unistd.h \
+ 			  compat/sys/time.h compat/getopt/getopt.h \
+@@ -40,33 +42,33 @@
+ cudaminer_CPPFLAGS	= -msse2 @LIBCURL_CPPFLAGS@ @OPENMP_CFLAGS@ $(PTHREAD_FLAGS) -fno-strict-aliasing $(JANSSON_INCLUDES) -DSCRYPT_KECCAK512 -DSCRYPT_CHACHA -DSCRYPT_CHOOSE_COMPILETIME
+ 
+ .cu.o:
+-	$(NVCC) @CFLAGS@ -Xptxas "-abi=no -v" -arch=compute_10 --maxrregcount=64 --ptxas-options=-v $(JANSSON_INCLUDES) -o $@ -c $<
++	$(NVCC) @CFLAGS@ $(NVCCFLAGS) -Xptxas "-abi=no -v" --maxrregcount=64 --ptxas-options=-v $(JANSSON_INCLUDES) -o $@ -c $<
+ 
+ sha256.o: sha256.cu
+-	$(NVCC) @CFLAGS@ -Xptxas "-abi=no -v" -arch=compute_10 --maxrregcount=64 --ptxas-options=-v $(JANSSON_INCLUDES) -o $@ -c $<
++	$(NVCC) @CFLAGS@ $(NVCCFLAGS) -Xptxas "-abi=no -v" --maxrregcount=64 --ptxas-options=-v $(JANSSON_INCLUDES) -o $@ -c $<
+ 
+ keccak.o: keccak.cu
+-	$(NVCC) @CFLAGS@ -Xptxas "-abi=no -v" -arch=compute_10 --maxrregcount=64 --ptxas-options=-v $(JANSSON_INCLUDES) -o $@ -c $<
++	$(NVCC) @CFLAGS@ $(NVCCFLAGS) -Xptxas "-abi=no -v" --maxrregcount=64 --ptxas-options=-v $(JANSSON_INCLUDES) -o $@ -c $<
+ 
+ blake.o: blake.cu
+-	$(NVCC) @CFLAGS@ -Xptxas "-abi=no -v" -arch=compute_10 --maxrregcount=64 --ptxas-options=-v $(JANSSON_INCLUDES) -o $@ -c $<
++	$(NVCC) @CFLAGS@ $(NVCCFLAGS) -Xptxas "-abi=no -v" --maxrregcount=64 --ptxas-options=-v $(JANSSON_INCLUDES) -o $@ -c $<
+ 
+ # NOTE: now compiling for compute 1.0 again, as it's using less power and runs way faster on Linux
+ fermi_kernel.o: fermi_kernel.cu
+-	$(NVCC) @CFLAGS@ -Xptxas "-abi=no -v" -arch=compute_10 --maxrregcount=64 $(JANSSON_INCLUDES) -o $@ -c $<
++	$(NVCC) @CFLAGS@ $(NVCCFLAGS) -Xptxas "-abi=no -v" --maxrregcount=64 $(JANSSON_INCLUDES) -o $@ -c $<
+ 
+ kepler_kernel.o: kepler_kernel.cu
+-	$(NVCC) @CFLAGS@ -Xptxas "-abi=no -v" -arch=sm_30 --maxrregcount=32 $(JANSSON_INCLUDES) -o $@ -c $<
++	$(NVCC) @CFLAGS@ $(NVCCFLAGS) -Xptxas "-abi=no -v" -arch=sm_30 --maxrregcount=32 $(JANSSON_INCLUDES) -o $@ -c $<
+ 
+ titan_kernel.o: titan_kernel.cu
+-	$(NVCC) @CFLAGS@ -Xptxas "-abi=no -v" -arch=sm_35 --maxrregcount=32 $(JANSSON_INCLUDES) -o $@ -c $<
++	$(NVCC) @CFLAGS@ $(NVCCFLAGS) -Xptxas "-abi=no -v" -arch=sm_35 --maxrregcount=32 $(JANSSON_INCLUDES) -o $@ -c $<
+ 
+ # NOTE: now compiling for compute 1.0 again, as it's using less power and runs way faster on Linux
+ test_kernel.o: test_kernel.cu
+-	$(NVCC) @CFLAGS@ -Xptxas "-abi=no -v" -arch=compute_10 --maxrregcount=32 $(JANSSON_INCLUDES) -o $@ -c $<
++	$(NVCC) @CFLAGS@ $(NVCCFLAGS) -Xptxas "-abi=no -v" --maxrregcount=32 $(JANSSON_INCLUDES) -o $@ -c $<
+ 
+ nv_kernel.o: nv_kernel.cu
+-	$(NVCC) @CFLAGS@ -Xptxas "-abi=no -v" -arch=sm_30 --maxrregcount=63 $(JANSSON_INCLUDES) -o $@ -c $<
++	$(NVCC) @CFLAGS@ $(NVCCFLAGS) -Xptxas "-abi=no -v" -arch=sm_30 --maxrregcount=63 $(JANSSON_INCLUDES) -o $@ -c $<
+ 
+ nv_kernel2.o: nv_kernel2.cu
+-	$(NVCC) @CFLAGS@ -Xptxas "-abi=no -v" -arch=sm_35 --maxrregcount=80 $(JANSSON_INCLUDES) -o $@ -c $<
++	$(NVCC) @CFLAGS@ $(NVCCFLAGS) -Xptxas "-abi=no -v" -arch=sm_35 --maxrregcount=80 $(JANSSON_INCLUDES) -o $@ -c $<
