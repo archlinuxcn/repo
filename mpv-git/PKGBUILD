@@ -33,7 +33,6 @@ _opt_features=(
   # Features disabled by default, but don't require any extra dependencies on an
   # Arch system: (should these just be default?)
 
-  #cplugins
   #vf-dlopen-filters
   #dvbin
 
@@ -47,7 +46,7 @@ _opt_features=(
 
 pkgname=mpv-git
 _gitname=mpv
-pkgver=0.25.0.r105.g9f79809930
+pkgver=0.25.0.r108.gbd603c2997
 pkgrel=1
 pkgdesc='Video player based on MPlayer/mplayer2 (git version)'
 arch=('i686' 'x86_64' 'armv6h' 'armv7h')
@@ -105,7 +104,7 @@ for feature in "${_opt_features[@]}"; do
     uchardet|rubberband)
       depends+=("$feature")
       ;;
-    cplugins|vf-dlopen-filters|dvbin)
+    vf-dlopen-filters|dvbin)
       _opt_extra_flags+=("--enable-$feature")
       ;;
     *)
