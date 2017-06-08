@@ -1,7 +1,6 @@
 post_install() {
-	echo " > To enable USB redirection you have to launch"
-	echo " > /usr/lib/systemd/scripts/vmware-horizon-usb or start/enable"
+	echo " > To enable USB redirection you have to start/enable"
 	echo " > systemd service vmware-horizon-usb:"
-	echo " >  $ systemctl start vmware-horizon-usb"
+	echo " >  $ systemctl enable --now vmware-horizon-usb.service"
 }
 
