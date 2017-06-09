@@ -1,8 +1,8 @@
 # Maintainer: Christian Hesse <mail@eworm.de>
 
 pkgname=opera-developer
-pkgver=46.0.2602.0
-pkgrel=2
+pkgver=47.0.2615.0
+pkgrel=1
 pkgdesc='A fast and secure web browser and Internet suite - developer stream'
 arch=('x86_64')
 url='http://www.opera.com/browser/'
@@ -22,7 +22,7 @@ _source='https://get.geo.opera.com/pub/'
 source=("${_source}/${pkgname}/${pkgver}/linux/${pkgname}_${pkgver}_amd64.deb"
 	'opera'
 	'default')
-sha256sums=('1a949e4f136dd0896d0caab51a092b51c32420c61cf6f651f2a41bfe4a564b45'
+sha256sums=('c33967558ef500314c66e1f46c0e62f906e9efb110d005c64c09d3c5efe99a2c'
 	'508512464e24126fddfb2c41a1e2e86624bdb0c0748084b6a922573b6cf6b9c5'
 	'99fc0d2822edd14e234d451995db47148125e4580221a292598959421d131231')
 
