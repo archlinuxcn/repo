@@ -1,11 +1,11 @@
 # Maintainer: Christian Hesse <mail@eworm.de>
 
 pkgbase=vmware-horizon-client
-pkgname=('vmware-horizon-client' 'vmware-horizon-rtav' 'vmware-horizon-smartcard' 'vmware-horizon-usb' 'vmware-horizon-virtual-printing')
+pkgname=('vmware-horizon-client' 'vmware-horizon-rtav' 'vmware-horizon-smartcard' 'vmware-horizon-usb' 'vmware-horizon-virtual-printing' 'vmware-horizon-tsdr' 'vmware-horizon-mmr')
 pkgver=4.5.0
 _build=5650368
 _cart='CART17Q2'
-pkgrel=2
+pkgrel=3
 pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop'
 arch=('i686' 'x86_64')
 url='https://my.vmware.com/web/vmware/info/slug/desktop_end_user_computing/vmware_horizon_clients/4_0'
@@ -118,7 +118,9 @@ package_vmware-horizon-client() {
 		'vmware-horizon-rtav: Real-Time Audio-Video (webcam and audio-in)'
 		'vmware-horizon-smartcard: smartcard authentication'
 		'vmware-horizon-usb: USB device redirection'
-		'vmware-horizon-virtual-printing: virtual printing')
+		'vmware-horizon-virtual-printing: virtual printing'
+		'vmware-horizon-tsdr: folder sharing'
+		'vmware-horizon-mmr: multimedia redirection')
 	install=vmware-horizon-client.install
 
 	cd "${srcdir}/extract/vmware-horizon-client/"
@@ -199,5 +201,25 @@ package_vmware-horizon-virtual-printing() {
 	install -D -m0644 bin/conf/thnuclnt.types "${pkgdir}/usr/share/cups/mime/thnuclnt.types"
 
 	install -D -m0644 "${srcdir}/vmware-horizon-virtual-printing.service" "${pkgdir}/usr/lib/systemd/system/vmware-horizon-virtual-printing.service"
+}
+
+package_vmware-horizon-tsdr() {
+	pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop - folder sharing'
+	depends=('vmware-horizon-client' 'glibmm')
+
+	cd "${srcdir}/extract/vmware-horizon-tsdr/"
+
+	mkdir -p "${pkgdir}/usr/"
+	cp -a lib/ "${pkgdir}/usr/"
+}
+
+package_vmware-horizon-mmr() {
+	pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop - multimedia redirection'
+	depends=('vmware-horizon-client' 'gstreamer0.10-base' 'libpulse')
+
+	cd "${srcdir}/extract/vmware-horizon-mmr/"
+
+	mkdir -p "${pkgdir}/usr/"
+	cp -a lib/ "${pkgdir}/usr/"
 }
 
