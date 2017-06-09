@@ -22,20 +22,28 @@ declare -r game="spigot"
 
 # System parameters for the control script
 [[ ! -z "${IDLE_SERVER}" ]]       && tmp_IDLE_SERVER=${IDLE_SERVER}   || IDLE_SERVER="false"
-[[ ! -z "${IDLE_SESSION_NAME}" ]] && declare -r IDLE_SESSION_NAME=${IDLE_SESSION_NAME} || IDLE_SESSION_NAME="idle_server"
+[[ ! -z "${IDLE_SESSION_NAME}" ]] && declare -r IDLE_SESSION_NAME=${IDLE_SESSION_NAME} || IDLE_SESSION_NAME="idle_server_${SESSION_NAME}"
 [[ ! -z "${GAME_PORT}" ]]         && declare -r GAME_PORT=${GAME_PORT}       || GAME_PORT="25565"
 [[ ! -z "${CHECK_PLAYER_TIME}" ]] && declare -r CHECK_PLAYER_TIME=${CHECK_PLAYER_TIME} || CHECK_PLAYER_TIME="30"
 [[ ! -z "${IDLE_IF_TIME}" ]]      && declare -r IDLE_IF_TIME=${IDLE_IF_TIME} || IDLE_IF_TIME="1200"
 
+# Additional configuration options which only few may need to alter
+[[ ! -z "${GAME_COMMAND_DUMP}" ]] && declare -r GAME_COMMAND_DUMP=${GAME_COMMAND_DUMP} || GAME_COMMAND_DUMP="/tmp/${myname}_${SESSION_NAME}_command_dump.txt"
+
 # Variables passed over the command line will always override the one from a config file
-source /etc/conf.d/${game} || echo "Could not source /etc/conf.d/${game}"
+source /etc/conf.d/"${game}" 2>/dev/null || >&2 echo "Could not source /etc/conf.d/${game}"
 
 # Preserve the content of IDLE_SERVER without making it readonly
 [[ ! -z ${tmp_IDLE_SERVER} ]] && IDLE_SERVER=${tmp_IDLE_SERVER}
 
 
+# Strictly disallow uninitialized Variables
+set -u
+# Exit if a single command breaks and its failure is not handled accordingly
+set -e
+
 # Check whether sudo is needed at all
-if [[ $(whoami) == ${GAME_USER} ]]; then
+if [[ "$(whoami)" == "${GAME_USER}" ]]; then
 	SUDO_CMD=""
 else
 	SUDO_CMD="sudo -u ${GAME_USER}"
@@ -51,7 +59,7 @@ else
 fi
 
 # Check for sudo rigths
-if [[ $(${SUDO_CMD} whoami) != ${GAME_USER} ]]; then
+if [[ "$(${SUDO_CMD} whoami)" != "${GAME_USER}" ]]; then
 	>&2 echo -e "You have \e[39;1mno permission\e[0m to run commands as $GAME_USER user."
 	exit 21
 fi
@@ -59,15 +67,15 @@ fi
 # Pipe any given argument to the game server console,
 # sleep for $sleep_time and return its output if $return_stdout is set
 game_command() {
-	if [[ -z "${return_stdout}" ]]; then
-		${SUDO_CMD} screen -S "${SESSION_NAME}" -X stuff "`printf \"$*\r\"`"
+	if [[ -z "${return_stdout:-}" ]]; then
+		${SUDO_CMD} screen -S "${SESSION_NAME}" -X stuff "$(printf "%s\r" "$*")"
 	else
 		${SUDO_CMD} screen -S "${SESSION_NAME}" -X log on
-		${SUDO_CMD} screen -S "${SESSION_NAME}" -X stuff "`printf \"$*\r\"`"
-		sleep ${sleep_time:-0.3}
+		${SUDO_CMD} screen -S "${SESSION_NAME}" -X stuff "$(printf "%s\r" "$*")"
+		sleep "${sleep_time:-0.3}"
 		${SUDO_CMD} screen -S "${SESSION_NAME}" -X log off
-		${SUDO_CMD} cat "/tmp/${myname}_screen_command_dump.txt"
-		${SUDO_CMD} rm "/tmp/${myname}_screen_command_dump.txt"
+		${SUDO_CMD} cat "${GAME_COMMAND_DUMP}"
+		${SUDO_CMD} rm "${GAME_COMMAND_DUMP}"
 	fi
 }
 
@@ -93,7 +101,7 @@ is_player_online() {
 # Check whether the server is visited by a player otherwise shut it down
 idle_server_daemon() {
 	# This function is run within a screen session of the GAME_USER therefore SUDO_CMD can be omitted
-	if [[ $(whoami) != ${GAME_USER} ]]; then
+	if [[ "$(whoami)" != "${GAME_USER}" ]]; then
 		>&2 echo "Somehow this hidden function was not executed by the ${GAME_USER} user."
 		>&2 echo "This should not have happend. Are you messing around with this script? :P"
 		exit 22
@@ -107,10 +115,9 @@ idle_server_daemon() {
 		# Retry in ${CHECK_PLAYER_TIME} seconds
 		sleep ${CHECK_PLAYER_TIME}
 
-		screen -S "${SESSION_NAME}" -Q select . > /dev/null
-		if [[ $? -eq 0 ]]; then
+		if screen -S "${SESSION_NAME}" -Q select . > /dev/null; then
 			# Game server is up and running
-			if [[ "$(screen -S "${SESSION_NAME}" -ls | sed -n 2p | awk '{ print $2 }')" == "(Attached)" ]]; then
+			if [[ "$(screen -S "${SESSION_NAME}" -ls | sed -n "s/.*${SESSION_NAME}\s\+//gp")" == "(Attached)" ]]; then
 				# An administrator is connected to the console, pause player checking
 				echo "An admin is connected to the console. Pause player checking."
 			# Check for active player
@@ -122,8 +129,7 @@ idle_server_daemon() {
 					IDLE_SERVER="false" ${myname} stop
 					# Wait for game server to go down
 					for i in {1..100}; do
-						screen -S "${SESSION_NAME}" -Q select . > /dev/null
-						[[ $? -eq 1 ]] && break
+						screen -S "${SESSION_NAME}" -Q select . > /dev/null || break
 						[[ $i -eq 100 ]] && echo -e "An \e[39;1merror\e[0m occurred while trying to reset the idle_server!"
 						sleep 0.1
 					done
@@ -131,8 +137,7 @@ idle_server_daemon() {
 					no_player=$(( IDLE_IF_TIME - 300 ))
 					# Game server is down, listen on port ${GAME_PORT} for incoming connections
 					echo -n "Netcat: "
-					${NETCAT_CMD} -v -l -p ${GAME_PORT}
-					[[ $? -eq 0 ]] && echo "Netcat caught an connection. The server is coming up again..."
+					${NETCAT_CMD} -v -l -p ${GAME_PORT} && echo "Netcat caught an connection. The server is coming up again..."
 					IDLE_SERVER="false" ${myname} start
 				fi
 			else
@@ -144,8 +149,7 @@ idle_server_daemon() {
 			no_player=$(( IDLE_IF_TIME - 300 ))
 			# Game server is down, listen on port ${GAME_PORT} for incoming connections
 			echo -n "Netcat: "
-			${NETCAT_CMD} -v -l -p ${GAME_PORT}
-			[[ $? -eq 0 ]] && echo "Netcat caught an connection. The server is coming up again..."
+			${NETCAT_CMD} -v -l -p ${GAME_PORT} && echo "Netcat caught an connection. The server is coming up again..."
 			IDLE_SERVER="false" ${myname} start
 		fi
 	done
@@ -154,17 +158,16 @@ idle_server_daemon() {
 # Start the server if it is not already running
 server_start() {
 	# Start the game server
-	${SUDO_CMD} screen -S "${SESSION_NAME}" -Q select . > /dev/null
-	if [[ $? -eq 0 ]]; then
+	if ${SUDO_CMD} screen -S "${SESSION_NAME}" -Q select . > /dev/null; then
 		echo "A screen ${SESSION_NAME} session is already running. Please close it first."
 	else
 		echo -en "Starting server..."
 		${SUDO_CMD} screen -dmS "${SESSION_NAME}" /bin/bash -c "cd '${SERVER_ROOT}'; ${SERVER_START_CMD}"
-		${SUDO_CMD} screen -S "${SESSION_NAME}" -X logfile "/tmp/${myname}_screen_command_dump.txt"
+		${SUDO_CMD} screen -S "${SESSION_NAME}" -X logfile "${GAME_COMMAND_DUMP}"
 		echo -e "\e[39;1m done\e[0m"
 	fi
 
-	if [[ "${IDLE_SERVER}" == "true" ]]; then
+	if [[ "${IDLE_SERVER,,}" == "true" ]]; then
 		# Check for the availability of the netcat (nc) binaries
 		if [[ -z "${NETCAT_CMD}" ]]; then
 			>&2 echo "The netcat binaries are needed for suspending an idle server."
@@ -172,13 +175,14 @@ server_start() {
 		fi
 
 		# Start the idle server daemon
-		${SUDO_CMD} screen -S "${IDLE_SESSION_NAME}" -Q select . > /dev/null
-		if [[ $? -eq 0 ]]; then
+		if ${SUDO_CMD} screen -S "${IDLE_SESSION_NAME}" -Q select . > /dev/null; then
 			${SUDO_CMD} screen -S "${IDLE_SESSION_NAME}" -X quit
 			# Restart as soon as the idle_server_daemon has shut down completely
 			for i in {1..100}; do
-				${SUDO_CMD} screen -S "${IDLE_SESSION_NAME}" -Q select . > /dev/null
-				[[ $? -eq 1 ]] && ${SUDO_CMD} screen -dmS "${IDLE_SESSION_NAME}" /bin/bash -c "${myname} idle_server_daemon" && break
+				if ! ${SUDO_CMD} screen -S "${IDLE_SESSION_NAME}" -Q select . > /dev/null; then
+					${SUDO_CMD} screen -dmS "${IDLE_SESSION_NAME}" /bin/bash -c "${myname} idle_server_daemon"
+					break
+				fi
 				[[ $i -eq 100 ]] && echo -e "An \e[39;1merror\e[0m occurred while trying to reset the idle_server!"
 				sleep 0.1
 			done
@@ -193,15 +197,14 @@ server_start() {
 # Stop the server gracefully by saving everything prior and warning the users
 server_stop() {
 	# Quit the idle daemon
-	if [[ "${IDLE_SERVER}" == "true" ]]; then
+	if [[ "${IDLE_SERVER,,}" == "true" ]]; then
 		# Check for the availability of the netcat (nc) binaries
 		if [[ -z "${NETCAT_CMD}" ]]; then
 			>&2 echo "The netcat binaries are needed for suspending an idle server."
 			exit 12
 		fi
 
-		${SUDO_CMD} screen -S "${IDLE_SESSION_NAME}" -Q select . > /dev/null
-		if [[ $? -eq 0 ]]; then
+		if ${SUDO_CMD} screen -S "${IDLE_SESSION_NAME}" -Q select . > /dev/null; then
 			echo -en "Stopping idle server daemon..."
 			${SUDO_CMD} screen -S "${IDLE_SESSION_NAME}" -X quit
 			echo -e "\e[39;1m done\e[0m"
@@ -211,8 +214,7 @@ server_stop() {
 	fi
 
 	# Gracefully exit the game server
-	${SUDO_CMD} screen -S "${SESSION_NAME}" -Q select . > /dev/null
-	if [[ $? -eq 0 ]]; then
+	if ${SUDO_CMD} screen -S "${SESSION_NAME}" -Q select . > /dev/null; then
 		# Game server is up and running, gracefully stop the server when there are still active players
 
 		# Check for active player
@@ -227,8 +229,8 @@ server_stop() {
 			game_command save-all
 			echo -en "Server is going down in..."
 			for i in {1..10}; do
-				game_command say "down in... $(expr 10 - $i)"
-				echo -n " $(expr 10 - $i)"
+				game_command say "down in... $(( 10 - i ))"
+				echo -n " $(( 10 - i ))"
 				sleep 1
 			done
 			game_command stop
@@ -236,8 +238,10 @@ server_stop() {
 
 		# Finish as soon as the server has shut down completely
 		for i in {1..100}; do
-			${SUDO_CMD} screen -S "${SESSION_NAME}" -Q select . > /dev/null
-			[[ $? -eq 1 ]] && echo -e "\e[39;1m done\e[0m" && break
+			if ! ${SUDO_CMD} screen -S "${SESSION_NAME}" -Q select . > /dev/null; then
+				echo -e "\e[39;1m done\e[0m"
+				break
+			fi
 			[[ $i -eq 100 ]] && echo -e "\e[39;1m timed out\e[0m"
 			sleep 0.1
 		done
@@ -249,15 +253,14 @@ server_stop() {
 # Print whether the server is running and if so give some information about memory usage and threads
 server_status() {
 	# Print status information about the idle daemon
-	if [[ "${IDLE_SERVER}" == "true" ]]; then
+	if [[ "${IDLE_SERVER,,}" == "true" ]]; then
 		# Check for the availability of the netcat (nc) binaries
 		if [[ -z "${NETCAT_CMD}" ]]; then
 			>&2 echo "The netcat binaries are needed for suspending an idle server."
 			exit 12
 		fi
 
-		${SUDO_CMD} screen -S "${IDLE_SESSION_NAME}" -Q select . > /dev/null
-		if [[ $? -eq 0 ]]; then
+		if ${SUDO_CMD} screen -S "${IDLE_SESSION_NAME}" -Q select . > /dev/null; then
 			echo -e "Idle server daemon status:\e[39;1m running\e[0m"
 		else
 			echo -e "Idle server daemon status:\e[39;1m stopped\e[0m"
@@ -265,13 +268,12 @@ server_status() {
 	fi
 
 	# Print status information for the game server
-	${SUDO_CMD} screen -S "${SESSION_NAME}" -Q select . > /dev/null
-	if [[ $? -eq 0 ]]; then
+	if ${SUDO_CMD} screen -S "${SESSION_NAME}" -Q select . > /dev/null; then
 		echo -e "Status:\e[39;1m running\e[0m"
 
 		# Calculating memory usage
 		for p in $(${SUDO_CMD} pgrep -f "${MAIN_EXECUTABLE}"); do
-			ps -p${p} -O rss | tail -n 1;
+			ps -p"${p}" -O rss | tail -n 1;
 		done | gawk '{ count ++; sum += $2 }; END {count --; print "Number of processes =", count, "(screen, bash,", count-2, "x server)"; print "Total memory usage =", sum/1024, "MB" ;};'
 	else
 		echo -e "Status:\e[39;1m stopped\e[0m"
@@ -280,8 +282,7 @@ server_status() {
 
 # Restart the complete server by shutting it down and starting it again
 server_restart() {
-	${SUDO_CMD} screen -S "${SESSION_NAME}" -Q select . > /dev/null
-	if [[ $? -eq 0 ]]; then
+	if ${SUDO_CMD} screen -S "${SESSION_NAME}" -Q select . > /dev/null; then
 		server_stop
 		server_start
 	else
@@ -292,8 +293,7 @@ server_restart() {
 # Backup the directories specified in BACKUP_PATHS
 backup_files() {
 	# Check for the availability of the tar binaries
-	which tar &> /dev/null
-	if [[ $? -ne 0 ]]; then
+	if ! which tar &> /dev/null; then
 		>&2 echo "The tar binaries are needed for a backup."
 		exit 11
 	fi
@@ -301,8 +301,7 @@ backup_files() {
 	echo "Starting backup..."
 	FILE="$(date +%Y_%m_%d_%H.%M.%S).tar.gz"
 	${SUDO_CMD} mkdir -p "${BACKUP_DEST}"
-	${SUDO_CMD} screen -S "${SESSION_NAME}" -Q select . > /dev/null
-	if [[ $? -eq 0 ]]; then
+	if ${SUDO_CMD} screen -S "${SESSION_NAME}" -Q select . > /dev/null; then
 		game_command save-off
 		game_command save-all
 		sync && wait
@@ -314,10 +313,10 @@ backup_files() {
 	echo -e "\e[39;1mbackup completed\e[0m\n"
 
 	echo -n "Only keeping the last ${KEEP_BACKUPS} backups and removing the other ones..."
-	BACKUP_COUNT=$(for f in "${BACKUP_DEST}"/[0-9_.]*; do echo ${f}; done | wc -l)
-	if [[ $(expr ${BACKUP_COUNT} - ${KEEP_BACKUPS}) -gt 0 ]]; then
-		${SUDO_CMD} rm $(for f in "${BACKUP_DEST}"/[0-9_.]*; do echo ${f}; done | head -n$(expr ${BACKUP_COUNT} - ${KEEP_BACKUPS}))
-		echo -e "\e[39;1m done\e[0m ($(expr ${BACKUP_COUNT} - ${KEEP_BACKUPS}) backup(s) pruned)"
+	BACKUP_COUNT=$(for f in "${BACKUP_DEST}"/[0-9_.]*; do echo "${f}"; done | wc -l)
+	if [[ $(( BACKUP_COUNT - KEEP_BACKUPS )) -gt 0 ]]; then
+		${SUDO_CMD} rm "$(for f in "${BACKUP_DEST}"/[0-9_.]*; do echo "${f}"; done | head -n"$(( BACKUP_COUNT - KEEP_BACKUPS ))")"
+		echo -e "\e[39;1m done\e[0m ($(( BACKUP_COUNT - KEEP_BACKUPS)) backup(s) pruned)"
 	else
 		echo -e "\e[39;1m done\e[0m (no backups pruned)"
 	fi
@@ -326,15 +325,13 @@ backup_files() {
 # Restore backup
 backup_restore() {
 	# Check for the availability of the tar binaries
-	which tar &> /dev/null
-	if [[ $? -ne 0 ]]; then
+	if ! which tar &> /dev/null; then
 		>&2 echo "The tar binaries are needed for a backup."
 		exit 11
 	fi
 
 	# Only allow the user to restore a backup if the server is down
-	${SUDO_CMD} screen -S "${SESSION_NAME}" -Q select . > /dev/null
-	if [[ $? -eq 0 ]]; then
+	if ${SUDO_CMD} screen -S "${SESSION_NAME}" -Q select . > /dev/null; then
 		>&2 echo -e "The \e[39;1mserver should be down\e[0m in order to restore the world data."
 		exit 3
 	fi
@@ -350,7 +347,7 @@ backup_restore() {
 		echo -en "Restore backup number: "
 
 		# Read in user input
-		read user_choice
+		read -r user_choice
 
 		# Interpeting the input
 		if [[ $user_choice =~ ^-?[0-9]+$ ]]; then
@@ -386,8 +383,7 @@ backup_restore() {
 	fi
 
 	echo "Restoring backup..."
-	${SUDO_CMD} tar -xf "${FILE}" -C "${SERVER_ROOT}" 2>&1
-	if [[ $? -eq 0 ]]; then
+	if ${SUDO_CMD} tar -xf "${FILE}" -C "${SERVER_ROOT}" 2>&1; then
 		echo -e "\e[39;1mRestoration completed\e[0m"
 	else
 		echo -e "\e[39;1mFailed to restore backup.\e[0m"
@@ -401,8 +397,7 @@ server_command() {
 		exit 1
 	fi
 
-	${SUDO_CMD} screen -S "${SESSION_NAME}" -Q select . > /dev/null
-	if [[ $? -eq 0 ]]; then
+	if ${SUDO_CMD} screen -S "${SESSION_NAME}" -Q select . > /dev/null; then
 		return_stdout=true game_command "$@"
 	else
 		echo "There is no ${SESSION_NAME} session to connect to."
@@ -411,8 +406,7 @@ server_command() {
 
 # Enter the screen game session
 server_console() {
-	${SUDO_CMD} screen -S "${SESSION_NAME}" -Q select . > /dev/null
-	if [[ $? -eq 0 ]]; then
+	if ${SUDO_CMD} screen -S "${SESSION_NAME}" -Q select . > /dev/null; then
 		${SUDO_CMD} screen -S "${SESSION_NAME}" -rx
 	else
 		echo "There is no ${SESSION_NAME} session to connect to."
@@ -439,7 +433,7 @@ help() {
 	EOF
 }
 
-case "$1" in
+case "${1:-}" in
 	start)
 	server_start
 	;;
@@ -477,9 +471,15 @@ case "$1" in
 	idle_server_daemon
 	;;
 
-	*|-h|--help)
+	-h|--help)
 	help
 	exit 0
+	;;
+
+	*)
+	help
+	exit 1
+	;;
 esac
 
 exit 0
