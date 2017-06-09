@@ -1,17 +1,15 @@
 # Maintainer: Sasasu <lizhaolong0123@gmail.com>
 pkgbase=python-sonnet-git
-# pkgname=(python-sonnet-git python-sonnet-cuda-git)
-pkgname=(python-sonnet-git)
+pkgname=(python-sonnet-git python-sonnet-cuda-git)
 pkgver=20170515.170829
 tf_pkgver=1.1.0
-pkgrel=1
+pkgrel=2
 pkgdesc="TensorFlow-based neural network library."
 url="https://github.com/deepmind/sonnet"
 license=('Apache2')
 arch=('x86_64')
 depends=('python-tensorflow' 'python')
-# makedepends=('git' 'bazel' 'python-numpy' 'gcc5' 'cuda' 'cudnn' 'python-pip' 'python-wheel' 'python-setuptools')
-makedepends=('git' 'bazel' 'python-numpy' 'python-pip' 'python-wheel' 'python-setuptools')
+makedepends=('git' 'bazel' 'python-numpy' 'gcc5' 'cuda' 'cudnn' 'python-pip' 'python-wheel' 'python-setuptools')
 source=("git+https://github.com/deepmind/sonnet"
         "https://github.com/tensorflow/tensorflow/archive/v${tf_pkgver}.tar.gz")
 md5sums=('SKIP'
@@ -40,7 +38,7 @@ configure_tensorflow() {
 }
 
 configure_tensorflow_cuda() {
-  cd $srcdir/sonnet/tensorflow
+  cd $srcdir/sonnet-cuda/tensorflow
   export TF_NEED_CUDA=1
   export GCC_HOST_COMPILER_PATH=/usr/bin/gcc-5
   # For next version instead of the gcc-5 stuff:
@@ -68,32 +66,26 @@ build() {
   ./bazel-bin/install $srcdir/sonnet
   
   # CUDA 
-  # no such target '@org_tensorflow//tensorflow/tools/git:gen/spec.json'
-  # no such target '@org_tensorflow//tensorflow/tools/git:gen/head'
-  # no such target '@org_tensorflow//tensorflow/tools/git:gen/branch_ref'
-  # target '//:install' failed
-  # Looks like a upstream problem 
-  
-  # cd $srcdir/sonnet-cuda/tensorflow
-  # msg2 "Configure tensorflow-cuda ..."
-  # configure_tensorflow_cuda
-  # cd $srcdir/sonnet-cuda
-  # msg2 "Building sonnet-cuda ..."
-  # bazel build  --ignore_unsupported_sandboxing --config=opt :install 
-  # mkdir -p tmp
-  # msg2 "Building pip package ..."
-  # ./bazel-bin/install $srcdir/sonnet-cuda
+  cd $srcdir/sonnet-cuda/tensorflow
+  msg2 "Configure tensorflow-cuda ..."
+  configure_tensorflow_cuda
+  cd $srcdir/sonnet-cuda
+  msg2 "Building sonnet-cuda ..."
+  bazel build  --ignore_unsupported_sandboxing --config=opt :install 
+  mkdir -p tmp
+  msg2 "Building pip package ..."
+  ./bazel-bin/install $srcdir/sonnet-cuda
 }
 
 package_python-sonnet-git() {
   cd "${srcdir}/sonnet"
-  PKG=$(find "$srcdir" -name "sonnet-*.whl")
+  PKG=$(find . -name "sonnet-*.whl")
   pip install --ignore-installed --upgrade --root "$pkgdir/" "$PKG" --no-dependencies
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 package_python-sonnet-cuda-git(){
   cd "${srcdir}/sonnet-cuda"
-  PKG=$(find "$srcdir" -name "sonnet-*.whl")
+  PKG=$(find . -name "sonnet-*.whl")
   pip install --ignore-installed --upgrade --root "$pkgdir/" "$PKG" --no-dependencies
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
