@@ -5,7 +5,7 @@ pkgname=('vmware-horizon-client' 'vmware-horizon-rtav' 'vmware-horizon-smartcard
 pkgver=4.5.0
 _build=5650368
 _cart='CART17Q2'
-pkgrel=3
+pkgrel=4
 pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop'
 arch=('i686' 'x86_64')
 url='https://my.vmware.com/web/vmware/info/slug/desktop_end_user_computing/vmware_horizon_clients/4_0'
@@ -15,14 +15,18 @@ source=('http://sources.gentoo.org/cgi-bin/viewvc.cgi/gentoo-x86/eclass/vmware-b
 	'vmware-horizon-usb'
 	'vmware-horizon-usb.service'
 	'vmware-horizon-virtual-printing.service')
-source_x86_64=("${pkgbase}-${pkgver}-${_build}-x86_64.bundle::https://download3.vmware.com/software/view/viewclients/${_cart}/VMware-Horizon-Client-${pkgver}-${_build}.x64.bundle")
-source_i686=("${pkgbase}-${pkgver}-${_build}-i686.bundle::https://download3.vmware.com/software/view/viewclients/${_cart}/VMware-Horizon-Client-${pkgver}-${_build}.x86.bundle")
+source_x86_64=("${pkgbase}-${pkgver}-${_build}-x86_64.bundle::https://download3.vmware.com/software/view/viewclients/${_cart}/VMware-Horizon-Client-${pkgver}-${_build}.x64.bundle"
+	'http://de.archive.ubuntu.com/ubuntu/pool/main/g/glibmm2.4/libglibmm-2.4-1c2a_2.39.93-0ubuntu1_amd64.deb')
+source_i686=("${pkgbase}-${pkgver}-${_build}-i686.bundle::https://download3.vmware.com/software/view/viewclients/${_cart}/VMware-Horizon-Client-${pkgver}-${_build}.x86.bundle"
+	'http://de.archive.ubuntu.com/ubuntu/pool/main/g/glibmm2.4/libglibmm-2.4-1c2a_2.39.93-0ubuntu1_i386.deb')
 sha256sums=('d8794c22229afdeb698dae5908b7b2b3880e075b19be38e0b296bb28f4555163'
             '008b60ebf45f7d1e033c8ad8ce1688d5e1c59fc0668493067fb89b563b1dc00f'
             '5e737d69e49ea7e039bc94f358b45c8e6d9071b7c041a53800555d3dc21c8dac'
             'e47e770a1e19ed321de7c2765b2d682f59ac466aef92b2e4ea5e65cacf56de36')
-sha256sums_x86_64=('70281bcac267e72b816e62cb0742c8707a5f29dccae977613d6b837e3248d429')
-sha256sums_i686=('2fa5bac1445c3619a295b1f64ddc0432da3d6d9a4f1930885fcdc6fd111bd5df')
+sha256sums_x86_64=('70281bcac267e72b816e62cb0742c8707a5f29dccae977613d6b837e3248d429'
+                   'fe0c8d8a71ab4261f73469871c06665941a04c2e26c71cd6cbb3c2dd42faa2b9')
+sha256sums_i686=('2fa5bac1445c3619a295b1f64ddc0432da3d6d9a4f1930885fcdc6fd111bd5df'
+                 'fa5d97b7514574b87b2e0e3b2f8638a56d68a6f57fdc5128e33b7b018b4a12dd')
 
 # VMware bundles old versions of openssl. Usually we can use system openssl.
 # If things break because VMware relies on legacy or buggy code you can use
@@ -206,6 +210,11 @@ package_vmware-horizon-virtual-printing() {
 package_vmware-horizon-tsdr() {
 	pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop - folder sharing'
 	depends=('vmware-horizon-client' 'glibmm')
+
+	# this is from libglibmm package from Ubuntu
+	bsdtar xf data.tar.xz
+	mkdir -p "${pkgdir}/usr/lib/vmware/"
+	cp -a $(find usr/lib/ -type f -o -type l) "${pkgdir}/usr/lib/vmware/"
 
 	cd "${srcdir}/extract/vmware-horizon-tsdr/"
 
