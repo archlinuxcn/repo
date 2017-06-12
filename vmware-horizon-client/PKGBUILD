@@ -1,17 +1,26 @@
 # Maintainer: Christian Hesse <mail@eworm.de>
 
 pkgbase=vmware-horizon-client
-pkgname=('vmware-horizon-client' 'vmware-horizon-rtav' 'vmware-horizon-smartcard' 'vmware-horizon-usb' 'vmware-horizon-virtual-printing' 'vmware-horizon-tsdr' 'vmware-horizon-mmr')
+pkgname=('vmware-horizon-client'
+	'vmware-horizon-rtav'
+	'vmware-horizon-smartcard'
+	'vmware-horizon-usb'
+	'vmware-horizon-virtual-printing'
+	'vmware-horizon-tsdr'
+	'vmware-horizon-mmr'
+	'vmware-horizon-docs')
 pkgver=4.5.0
 _build=5650368
 _cart='CART17Q2'
-pkgrel=4
+_docver=45
+pkgrel=5
 pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop'
 arch=('i686' 'x86_64')
 url='https://my.vmware.com/web/vmware/info/slug/desktop_end_user_computing/vmware_horizon_clients/4_0'
 license=('custom')
 makedepends=('libxslt')
 source=('http://sources.gentoo.org/cgi-bin/viewvc.cgi/gentoo-x86/eclass/vmware-bundle.eclass'
+	"https://www.vmware.com/pdf/horizon-view/horizon-client-linux-${_docver}-document.pdf"
 	'vmware-horizon-usb'
 	'vmware-horizon-usb.service'
 	'vmware-horizon-virtual-printing.service')
@@ -20,6 +29,7 @@ source_x86_64=("${pkgbase}-${pkgver}-${_build}-x86_64.bundle::https://download3.
 source_i686=("${pkgbase}-${pkgver}-${_build}-i686.bundle::https://download3.vmware.com/software/view/viewclients/${_cart}/VMware-Horizon-Client-${pkgver}-${_build}.x86.bundle"
 	'http://de.archive.ubuntu.com/ubuntu/pool/main/g/glibmm2.4/libglibmm-2.4-1c2a_2.39.93-0ubuntu1_i386.deb')
 sha256sums=('d8794c22229afdeb698dae5908b7b2b3880e075b19be38e0b296bb28f4555163'
+            '9f34fd9b3d1ef5822f3927829d6f28db6197d72896bb4a1108233db3731f064c'
             '008b60ebf45f7d1e033c8ad8ce1688d5e1c59fc0668493067fb89b563b1dc00f'
             '5e737d69e49ea7e039bc94f358b45c8e6d9071b7c041a53800555d3dc21c8dac'
             'e47e770a1e19ed321de7c2765b2d682f59ac466aef92b2e4ea5e65cacf56de36')
@@ -68,6 +78,9 @@ build() {
 	#	libcrypto.so.1.0.[12] -> libcrypto-vmw.so.0
 
 	for bundle in "${pkgname[@]}" vmware-horizon-pcoip; do
+		# not in bundle
+		[ "${bundle}" == 'vmware-horizon-docs' ] && continue
+		
 		for FILE in $(find "${bundle}" -type f); do
 			# executables and libraries only
 			file --mime "${FILE}" | egrep -q "(application/x-(executable|sharedlib)|text/x-shellscript)" || continue
@@ -204,7 +217,8 @@ package_vmware-horizon-virtual-printing() {
 	install -D -m0644 bin/conf/thnuclnt.convs "${pkgdir}/usr/share/cups/mime/thnuclnt.convs"
 	install -D -m0644 bin/conf/thnuclnt.types "${pkgdir}/usr/share/cups/mime/thnuclnt.types"
 
-	install -D -m0644 "${srcdir}/vmware-horizon-virtual-printing.service" "${pkgdir}/usr/lib/systemd/system/vmware-horizon-virtual-printing.service"
+	install -D -m0644 "${srcdir}/vmware-horizon-virtual-printing.service" \
+		"${pkgdir}/usr/lib/systemd/system/vmware-horizon-virtual-printing.service"
 }
 
 package_vmware-horizon-tsdr() {
@@ -214,7 +228,7 @@ package_vmware-horizon-tsdr() {
 	# this is from libglibmm package from Ubuntu
 	bsdtar xf data.tar.xz
 	mkdir -p "${pkgdir}/usr/lib/vmware/"
-	cp -a $(find usr/lib/ -type f -o -type l) "${pkgdir}/usr/lib/vmware/"
+	cp -a $(find usr/lib/ -name "libglibmm-2.4.so.1*") "${pkgdir}/usr/lib/vmware/"
 
 	cd "${srcdir}/extract/vmware-horizon-tsdr/"
 
@@ -230,5 +244,13 @@ package_vmware-horizon-mmr() {
 
 	mkdir -p "${pkgdir}/usr/"
 	cp -a lib/ "${pkgdir}/usr/"
+}
+
+package_vmware-horizon-docs() {
+	pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop - documentation'
+	depends=('vmware-horizon-client')
+
+	install -D -m0644 horizon-client-linux-${_docver}-document.pdf \
+		"${pkgdir}/usr/share/doc/vmware-horizon/horizon-client-linux-${_docver}-document.pdf"
 }
 
