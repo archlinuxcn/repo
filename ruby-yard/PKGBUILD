@@ -2,8 +2,8 @@
 
 _gemname=yard
 pkgname=ruby-$_gemname
-pkgver=0.8.7.6
-pkgrel=2
+pkgver=0.9.9
+pkgrel=1
 pkgdesc="Documentation tool for consistent and usable documentation in Ruby."
 arch=("any")
 url="http://yardoc.org"
@@ -12,7 +12,7 @@ depends=("ruby")
 makedepends=("rubygems")
 source=("http://gems.rubyforge.org/gems/$_gemname-$pkgver.gem")
 noextract=("$_gemname-$pkgver.gem")
-sha256sums=("3da10884b94fa25b7476f619b1d2cfb61290e10673965c545975630cd88a46b6")
+sha256sums=("aae74f34bb1de444d5429a213ef995738d9d3a0fe5cc7ae061756277bc02a6a7")
 
 
 package() {
