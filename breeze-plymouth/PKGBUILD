@@ -1,7 +1,7 @@
 # Maintainer: Jameson Pugh <imntreal@gmail.com>
 
 pkgname=breeze-plymouth
-pkgver=5.10.1
+pkgver=5.10.2
 pkgrel=1
 pkgdesc="Breeze theme for plymouth"
 arch=(any)
@@ -10,7 +10,7 @@ license=(LGPL)
 depends=(plymouth)
 makedepends=(extra-cmake-modules)
 source=("http://download.kde.org/stable/plasma/${pkgver}/${pkgname}-${pkgver}.tar.xz")
-sha256sums=('31a56d551c21c0be5c84a595189ed779928a150d40a4d563a890f56f2b78ca3e')
+sha256sums=('ed22b2dd666d1f46ec743c4836bf64bc70fdd5443dda7edc1d57ef03c7046035')
 
 prepare() {
   mkdir -p "${srcdir}/${pkgname}-${pkgver}/build"
