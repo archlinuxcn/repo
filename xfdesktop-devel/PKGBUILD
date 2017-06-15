@@ -2,21 +2,26 @@
 
 _pkgname=xfdesktop
 pkgname=${_pkgname}-devel
-pkgver=4.11.8
-pkgrel=2
+pkgver=4.13.1
+pkgrel=1
 pkgdesc="A desktop manager for Xfce"
 arch=('i686' 'x86_64')
 url="http://www.xfce.org/"
 license=('GPL2')
-#groups=('xfce4')
-depends=('libxfce4ui>=4.11.0' 'thunar' 'garcon' 'hicolor-icon-theme' 'libwnck')
+groups=('xfce4')
+depends=('libxfce4ui>=4.13' 'exo>=0.11.0' 'thunar' 'garcon>=0.6.0' 'hicolor-icon-theme' 'libwnck3>=3.14')
 makedepends=('intltool')
-conflicts=('xfce4-menueditor' "${_pkgname}")
+conflicts=('xfce4-menueditor' "${_pkgname}" "${_pkgname}-git")
 provides=("${_pkgname}=${pkgver}")
 replaces=('xfce4-menueditor')
 options=('!libtool')
-install=xfdesktop.install
 source=(http://archive.xfce.org/src/xfce/$_pkgname/${pkgver%.*}/$_pkgname-$pkgver.tar.bz2)
+
+prepare() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  # garcon-2 was dropped back to garcon-1
+  find . -maxdepth 1 -type f -exec sed -i 's:garcon-2:garcon-1:g' '{}' \;
+}
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
@@ -27,7 +32,6 @@ build() {
     --libexecdir=/usr/lib \
     --localstatedir=/var \
     --disable-static \
-    --enable-gio-unix \
     --enable-thunarx \
     --enable-notifications \
     --disable-debug
@@ -39,4 +43,4 @@ package() {
   make DESTDIR="$pkgdir" install
 }
 
-md5sums=('dd716b6e594aa876ec2674c994c74a57')
+md5sums=('9e7d04e79053cf9ec077f55425f234c6')
