@@ -4,7 +4,7 @@
 
 pkgname=vidalia
 pkgver=0.2.21
-pkgrel=5
+pkgrel=6
 pkgdesc="Controller GUI for Tor"
 url="https://www.torproject.org/vidalia"
 arch=('i686' 'x86_64')
@@ -12,7 +12,7 @@ license=('GPL')
 depends=('geoip' 'qt4' 'tor')
 makedepends=('cmake')
 install=vidalia.install
-source=(https://dist.torproject.org/vidalia/$pkgname-$pkgver.tar.gz{,.asc} vidalia.install TorSettings.h.patch)
+source=(https://archive.torproject.org/tor-package-archive/vidalia/$pkgname-$pkgver.tar.gz{,.asc} vidalia.install TorSettings.h.patch)
 sha256sums=('c4008e7e7781dddf4a8670a435da6496dc9309dbdbc6125ac6d2cc871bdc1be7'
             'SKIP'
             'c20e899df28939abd84fd3ec0e2e62058e85da0a42e123af732cdaabb7da177e'
