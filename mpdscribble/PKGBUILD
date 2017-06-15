@@ -6,10 +6,10 @@
 
 pkgname=mpdscribble
 pkgver=0.22
-pkgrel=12
+pkgrel=13
 pkgdesc='MPD client which submits track info to {Libre,Last}.fm'
 url='http://mpd.wikia.com/wiki/Client:Mpdscribble'
-arch=('i686' 'x86_64' 'armv6h')
+arch=('i686' 'x86_64' 'armv6h' 'armv7h')
 license=('GPL')
 depends=('libsoup' 'glib2' 'libmpdclient')
 install=$pkgname.install
@@ -19,7 +19,7 @@ md5sums=('652ee927b797e9a4cef45494e77047db'
          'a57d7d3d41b37fb23b45835aa0cfc325')
 
 prepare() {
-  sed 's:multi-user.target:default.target:;:User=%i:d' service > user.service
+  sed 's/multi-user.target/default.target/;/User=%i/d' service > user.service
 }
 
 build() {
