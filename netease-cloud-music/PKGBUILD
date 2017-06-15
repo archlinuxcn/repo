@@ -3,8 +3,8 @@
 _distro="ubuntu16.04"
 
 pkgname=netease-cloud-music
-pkgver=1.0.0
-pkgrel=3
+pkgver=1.0.0_2
+pkgrel=1
 pkgdesc="Netease Cloud Music, converted from .deb package"
 arch=("x86_64")
 url="http://music.163.com/"
@@ -21,8 +21,8 @@ source=(
 	"http://music.163.com/html/web2/service.html"
 	"netease-cloud-music"
 )
-md5sums=('c1430b695eff22294ab3b84205105cdf'
-         '2f06d90c7b3362a01c287ec7b6a40f27'
+md5sums=('d9a6fa79ffcb654254a1d8b7ba5901a3'
+         '9b85978382d2e115166c7e41e3466e6b'
          '31a25ac517facc48762a6a9378a66f58')
 
 package() {
