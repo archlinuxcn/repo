@@ -20,7 +20,7 @@ _gtk3=true
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=53.0.3
+pkgver=54.0
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
@@ -36,15 +36,16 @@ fi
 
 makedepends=('unzip' 'zip' 'diffutils' 'python2' 'yasm' 'mesa' 'imake'
              'xorg-server-xvfb' 'libpulse' 'inetutils' 'autoconf2.13' 'rust'
-            'cargo')
+            'cargo' 'mercurial')
 optdepends=('networkmanager: Location detection via available WiFi networks'
             'speech-dispatcher: Text-to-Speech')
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
-_patchrev=4665fe34fbce
+_patchrev=f82a374a310d
 options=('!emptydirs'  'strip' )
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
-source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz
+_repo=https://hg.mozilla.org/mozilla-unified
+source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
         mozconfig firefox.desktop firefox-install-dir.patch vendor.js kde.js firefox-fixed-loading-icon.png
 	# Firefox patchset
 	$_patchurl/firefox-branded-icons.patch
@@ -57,10 +58,8 @@ source=(https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$pkgver/source/
 	unity-menubar.patch
 	add_missing_pgo_rule.patch
         pgo_fix_missing_kdejs.patch
-        rb39193.patch
-        fix_mozalloc.patch
         fix-wifi-scanner.diff
-        rb111682.patch
+        no-crmf.diff
 )
 
 
@@ -81,7 +80,7 @@ _google_default_client_secret=0ZChLK6AxeA3Isu96MkwqDR4
 _mozilla_api_key=16674381-f021-49de-8622-3021c5942aff
 
 prepare() {
-  cd $_pkgname-$pkgver
+  cd mozilla-unified
 
   cp "$srcdir/mozconfig" .mozconfig
 
@@ -123,10 +122,9 @@ prepare() {
 
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1314968
   patch -Np1 -i "$srcdir"/fix-wifi-scanner.diff
-
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1338655
-  patch -Np1 -i "$srcdir"/rb111682.patch
   
+   # https://bugzilla.mozilla.org/show_bug.cgi?id=1371991
+  patch -Np1 -i "$srcdir"/no-crmf.diff
   
   # WebRTC build tries to execute "python" and expects Python 2
   mkdir -p "$srcdir/path"
@@ -143,7 +141,7 @@ prepare() {
 
 build() {
 
-  cd $_pkgname-$pkgver
+  cd mozilla-unified
 
   export PATH="$srcdir/path:$PATH"
   export PYTHON="/usr/bin/python2"
@@ -168,7 +166,7 @@ build() {
 }
 
 package() {
-  cd $_pkgname-$pkgver
+  cd mozilla-unified
 
   [[ "$CARCH" == "i686" ]] && cp "$srcdir/kde.js" obj-i686-pc-linux-gnu/dist/bin/defaults/pref
   [[ "$CARCH" == "x86_64" ]] && cp "$srcdir/kde.js" obj-x86_64-pc-linux-gnu/dist/bin/defaults/pref
@@ -216,23 +214,21 @@ END
   #https://bugzilla.mozilla.org/show_bug.cgi?id=658850
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
-md5sums=('16be3d9774f1e3bf74e2c4e198652d19'
-         '36b41345f62ec209e8ef7179649325c4'
+md5sums=('SKIP'
+         'a438d28b6644036d79a20c16efad80b2'
          '14e0f6237a79b85e60256f4808163160'
          'dbf14588e85812ee769bd735823a0146'
          'aa9f776d2187cba09de65cbb02b39ca0'
          '05bb69d25fb3572c618e3adf1ee7b670'
          '6e335a517c68488941340ee1c23f97b0'
          '46a4971f26c990a66b913ba700c7f3fa'
-         '906efefafcbe3efd44c8827f699c05e2'
+         'b6471edbd17c079b6bd9ca81b3930bec'
          '1fad9a988826d69fe712ea973e43f6da'
-         '2ab6215a97ff35fbb46eea83df68f0c7'
+         '6cced7f7f4a03e429e53620237162b5b'
          'fa6ac817f576b486419b5f308116a7cd'
          '0c684360f1df4536512d51873c1d243d'
-         '64b6e0aebd5b716847198fec849e4a6e'
+         'ca0532e1b9e55186496868b0b18b4a98'
          'fe24f5ea463013bb7f1c12d12dce41b2'
          '3fa8bd22d97248de529780f5797178af'
-         '43550e772f110a338d5a42914ee2c3a6'
-         '0c1ed789c06297659137a2ed2ef769f7'
          'e2396b9918aa602427f80d48caf319b4'
-         '4320613e0596691561a403f16b79d6a4')
+         '196edf030efc516e3de5ae3aa01e9851')
