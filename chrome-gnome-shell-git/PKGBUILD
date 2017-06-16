@@ -1,0 +1,42 @@
+# Contributor: Andrew Querol <andrew@querol.me>
+# Maintainer: Rafael Fontenelle <rafaelff@gnome.org>
+
+_name=chrome-gnome-shell
+pkgname=$_name-git
+pkgver=9.r12.g792c135
+pkgrel=1
+pkgdesc="Native connector for integration with extensions.gnome.org"
+arch=('any')
+url="https://wiki.gnome.org/Projects/GnomeShellIntegrationForChrome"
+license=('GPL')
+depends=('gnome-shell' 'python-requests' 'python-gobject')
+makedepends=('git' 'cmake' 'jq')
+provides=("$_name")
+replaces=('gs-chrome-connector') # Old name
+conflicts=('gs-chrome-connector' "$_name")
+source=("git+https://git.gnome.org/browse/chrome-gnome-shell")
+md5sums=('SKIP')
+
+pkgver() {
+    cd "$srcdir/$_name"
+    git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/^v//'
+}
+
+prepare() {
+    cd "$srcdir/$_name"
+    mkdir -p 'build'
+}
+
+build() {
+    cd "$srcdir/$_name/build"
+    cmake                                \
+        -DCMAKE_INSTALL_PREFIX=/usr      \
+        -DCMAKE_INSTALL_LIBDIR=lib       \
+        -DBUILD_EXTENSION=OFF ../
+}
+
+package() {
+    cd "$srcdir/$_name/build"
+    make DESTDIR="$pkgdir" install
+}
+
