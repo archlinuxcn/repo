@@ -1,0 +1,11 @@
+post_install() {
+  cat <<EOF
+
+  Use this code snippet to force 2.8 usage:
+    import wxversion
+    wxversion.select("2.8")
+
+  http://wiki.wxpython.org/MultiVersionInstalls
+
+EOF
+}

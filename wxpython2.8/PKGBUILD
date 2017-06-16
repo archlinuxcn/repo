@@ -1,0 +1,53 @@
+# Maintainer: archlinux.info:tdy
+# Contributor: Laurent Carlier <lordheavym@gmail.com>
+
+pkgname=wxpython2.8
+pkgver=2.8.12.1
+pkgrel=3
+pkgdesc="A wxWidgets GUI toolkit for Python"
+arch=(i686 x86_64)
+license=(custom:wxWindows)
+url=http://www.wxpython.org
+depends=(wxgtk2.8 wxpython python2)
+makedepends=(mesa glu)
+install=$pkgname.install
+source=(http://downloads.sourceforge.net/wxpython/wxPython-src-$pkgver.tar.bz2
+        wxGTK-collision.patch
+        wxpython-cairo.patch
+        wxpython-fpb_default_style.patch)
+sha256sums=(1f3f153d9f1504c6ce2d2c4b23e940b8f58b81f4cba35cda1a5bb31142243cd0
+            e5e2af0d0649ddfcb401b4dd32362b41dc1b49fdb4d3974b39700f7d811f09f3
+            b2c8870336c4215646c760f9ae9c2a5ede9c9e4d6cb29f1a5763a4240db87f74
+            57729f843d589c4890fd5f2fddb48e1d2f4a09d609188b4a744554daf0b2b246)
+
+prepare() {
+  cd wxPython-src-$pkgver
+  patch -Np1 -i ../wxGTK-collision.patch
+  patch -Np0 -i ../../wxpython-cairo.patch
+  patch -Np0 -i ../../wxpython-fpb_default_style.patch
+  find . -type f -exec sed -i 's/env python/&2/' '{}' \;
+
+  export WXPORT=gtk2
+  export UNICODE=1
+  export WX_CONFIG=/usr/bin/wx-config-2.8 
+}
+
+build() {
+  cd wxPython-src-$pkgver
+  ./configure --prefix=/usr --libdir=/usr/lib --with-gtk=2 --with-opengl \
+    --enable-unicode --enable-graphics_ctx --disable-optimize --enable-mediactrl \
+    --with-regex=sys --with-libpng=sys --with-libxpm=sys --with-libjpeg=sys \
+    --with-libtiff=sys --disable-precomp-headers
+
+  cd wxPython
+  python2 setup.py build
+}
+
+package() {
+  cd wxPython-src-$pkgver/wxPython
+  python2 setup.py install --root="$pkgdir"
+  install ../docs/licence.txt -m 644 -Dt "$pkgdir"/usr/share/licenses/$pkgname/
+
+  rm -rf "$pkgdir"/usr/bin
+  rm "$pkgdir"/usr/lib/python2.7/site-packages/{wx.pth,wxversion.py*}
+}
