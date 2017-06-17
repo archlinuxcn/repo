@@ -7,7 +7,7 @@
 # Upstream URL: https://github.com/atom/atom
 
 pkgname=atom-editor-bin
-pkgver=1.17.2
+pkgver=1.18.0
 pkgrel=1
 pkgdesc="Atom is a hackable text editor for the 21st century built on Electron - Precompiled binary from official repository"
 arch=('x86_64')
@@ -20,7 +20,7 @@ optdepends=('gvfs')
 conflicts=('atom' 'atom-editor' 'atom-editor-git' 'atom-editor-git-tagged' 'apm' 'atom-notracking')
 install=$pkgname.install
 
-md5sums=('b65beaae1b08bf60d80297a793662756'
+md5sums=('74098a72b38a82757ffdfe7b6a60eb28'
          '22b4763c2e8607f0ea46311ec13da9ff'
          'd472858970fc4ba6f63197729b65607c')
 source=("atom-amd64-v${pkgver}.deb::https://atom-installer.github.com/v${pkgver}/atom-amd64.deb"
@@ -28,7 +28,7 @@ source=("atom-amd64-v${pkgver}.deb::https://atom-installer.github.com/v${pkgver}
          startupwmclass.patch)
 
 package() {
-  bsdtar xf data.tar.gz
+  bsdtar xf data.tar.xz
   printf "Applying atom-python.patch\n"
   patch -p1 < "${srcdir}"/atom-python.patch
   printf "Applying startupwmclass.patch\n"
