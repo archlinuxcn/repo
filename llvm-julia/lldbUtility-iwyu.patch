@@ -1,0 +1,50 @@
+From 1725eaa2ec15c8393510975bbccf0b753825327e Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sat, 17 Jun 2017 08:24:10 -0400
+Subject: [PATCH] Fix compilation on GCC 7
+
+---
+ include/lldb/Utility/TaskPool.h | 9 ++++-----
+ source/Utility/TaskPool.cpp     | 4 ++++
+ 2 files changed, 8 insertions(+), 5 deletions(-)
+
+diff --git a/include/lldb/Utility/TaskPool.h b/include/lldb/Utility/TaskPool.h
+index db15b2081..bf1391d6a 100644
+--- a/include/lldb/Utility/TaskPool.h
++++ b/include/lldb/Utility/TaskPool.h
+@@ -26,13 +26,12 @@
+ #pragma warning(disable : 4062)
+ #endif
+ 
+-#include <cassert>
+-#include <cstdint>
++#include <functional> // for bind, function
+ #include <future>
+ #include <list>
+-#include <queue>
+-#include <thread>
+-#include <vector>
++#include <memory>      // for make_shared
++#include <mutex>       // for mutex, unique_lock, condition_variable
++#include <type_traits> // for forward, result_of, move
+ 
+ // Global TaskPool class for running tasks in parallel on a set of worker thread
+ // created the first
+diff --git a/source/Utility/TaskPool.cpp b/source/Utility/TaskPool.cpp
+index f66f7bf91..244e64fdb 100644
+--- a/source/Utility/TaskPool.cpp
++++ b/source/Utility/TaskPool.cpp
+@@ -9,6 +9,10 @@
+ 
+ #include "lldb/Utility/TaskPool.h"
+ 
++#include <cstdint> // for uint32_t
++#include <queue>   // for queue
++#include <thread>  // for thread
++
+ namespace {
+ class TaskPoolImpl {
+ public:
+-- 
+2.13.1
+

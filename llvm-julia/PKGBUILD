@@ -37,6 +37,7 @@ source=(http://releases.llvm.org/$pkgver/llvm-$pkgver.src.tar.xz
         0001-AMDGPU-Fix-bug-31610.patch
         llvm-D32593.patch
         llvm-D33179.patch
+        lldbUtility-iwyu.patch
         llvm-config.h)
 sha256sums=('8d10511df96e73b8ff9e7abbfb4d4d432edbdbe965f1f4f07afaf370b8a533be'
             'cea5f88ebddb30e296ca89130c83b9d46c2d833685e2912303c828054c4dc98a'
@@ -54,6 +55,7 @@ sha256sums=('8d10511df96e73b8ff9e7abbfb4d4d432edbdbe965f1f4f07afaf370b8a533be'
             'cddd04be4fd822e03ff16b7640618e424d475d3bf04494c0d38aa225b920f00e'
             '3931ac87a7c8790f12bafa26018cd7fccc926cc5f563e120fbec815066b2ddf7'
             '29da9487dc577dc4565e767e6dd49f5934bcf0bc2fdedd5b25afce24486a5b7d'
+            '2ca78b133d6017b6729e0e3a6d765450f05f541c1018f2584db1254949902af4'
             '597dc5968c695bbdbb0eac9e8eb5117fcd2773bc91edf5ec103ecffffab8bc48')
 
 _FLTO='-flto'
@@ -95,8 +97,11 @@ EOF
   patch -p1 < ../llvm-D32593.patch
   msg "Applying llvm-D33179"
   patch -p1 < ../llvm-D33179.patch
+  msg "Applying lldbUtility-iwyu.patch"
+  patch -p1 -d tools/lldb < ../lldbUtility-iwyu.patch
 
   # Arch patches
+  msg "Applying Arch patches"
   patch -Np1 -i ../0001-CMake-Fix-pthread-handling-for-out-of-tree-builds.patch
   patch -Np1 -i ../0001-AMDGPU-Fix-bug-31610.patch
   patch -Np1 -d tools/clang/tools/extra <../0002-CMake-Fix-pthread-handling-for-out-of-tree-builds.patch
