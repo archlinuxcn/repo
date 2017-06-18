@@ -11,7 +11,7 @@
 pkgname=('llvm-julia' 'llvm-libs-julia' 'llvm-ocaml-julia' 'lld-julia' 'lldb-julia'
          'clang-julia' 'clang-tools-extra-julia')
 pkgver=4.0.0
-pkgrel=6
+pkgrel=7
 _ocaml_ver=4.04.1
 arch=(i686 x86_64 armv7h aarch64)
 url="http://llvm.org/"
@@ -48,6 +48,7 @@ source=(http://releases.llvm.org/$pkgver/llvm-$pkgver.src.tar.xz
         llvm-VNCoercion-signatures.patch
         llvm-VNCoercion-template.patch
         llvm-Yet-another-fix.patch
+        llvm-loadcse-addrspace.patch
         llvm-config.h)
 sha256sums=('8d10511df96e73b8ff9e7abbfb4d4d432edbdbe965f1f4f07afaf370b8a533be'
             'cea5f88ebddb30e296ca89130c83b9d46c2d833685e2912303c828054c4dc98a'
@@ -76,6 +77,7 @@ sha256sums=('8d10511df96e73b8ff9e7abbfb4d4d432edbdbe965f1f4f07afaf370b8a533be'
             'ba97d2009dbf588d9e648744c442f190ef238db77b1a80ac629d36c45f027b66'
             '0eceb7403ea11ff6b7812f6580ce43884020c9338bb5ed6eea335d1dedb1256a'
             'ed8b43c93033ff028f63cf66db6122a267806180d060a19a9e1b560422ef185c'
+            'a69856668b11b757a531c779fbf63c01a0b86a6389d1c1b31f4e98bc07eca0d3'
             '597dc5968c695bbdbb0eac9e8eb5117fcd2773bc91edf5ec103ecffffab8bc48')
 
 _FLTO='-flto'
@@ -84,6 +86,12 @@ if [[ "${CARCH}" == "aarch64" ]]; then
     # GCC miscompiles LLVM on AArch64 with LTO
     _FLTO=''
 fi
+
+apply_julia_patch() {
+  local name=$1
+  msg "Applying Julia patch $name"
+  patch -p1 < ../llvm-$name.patch
+}
 
 prepare() {
   rm -rf bin/
@@ -105,40 +113,27 @@ EOF
   mv "$srcdir/lld-$pkgver.src" tools/lld
   mv "$srcdir/lldb-$pkgver.src" tools/lldb
 
-  msg "Applying D27629-AArch64-large_model"
-  patch -p1 < ../llvm-D27629-AArch64-large_model.patch
-  msg "Applying D28215_FreeBSD_shlib"
-  patch -p1 < ../llvm-D28215_FreeBSD_shlib.patch
-  msg "Applying D28759-loopclearance"
-  patch -p1 < ../llvm-D28759-loopclearance.patch
-  msg "Applying D28786-callclearance"
-  patch -p1 < ../llvm-D28786-callclearance.patch
-  msg "Applying llvm-D32593"
-  patch -p1 < ../llvm-D32593.patch
-  msg "Applying llvm-D33179"
-  patch -p1 < ../llvm-D33179.patch
-  msg "Applying llvm-D32203-SORA-non-integral.patch"
-  patch -p1 < ../llvm-D32203-SORA-non-integral.patch
-  msg "Applying llvm-D33110-codegen-prepare-inttoptr.patch"
-  patch -p1 < ../llvm-D33110-codegen-prepare-inttoptr.patch
-  msg "Applying llvm-D30478-VNCoercion.patch"
-  patch -p1 < ../llvm-D30478-VNCoercion.patch
-  msg "Applying llvm-VNCoercion-signatures.patch"
-  patch -p1 < ../llvm-VNCoercion-signatures.patch
-  msg "Applying llvm-VNCoercion-template.patch"
-  patch -p1 < ../llvm-VNCoercion-template.patch
-  msg "Applying llvm-D32196-LIR-non-integral.patch"
-  patch -p1 < ../llvm-D32196-LIR-non-integral.patch
-  msg "Applying llvm-D32208-coerce-non-integral.patch"
-  patch -p1 < ../llvm-D32208-coerce-non-integral.patch
-  msg "Applying llvm-D32623-GVN-non-integral.patch"
-  patch -p1 < ../llvm-D32623-GVN-non-integral.patch
-  msg "Applying llvm-D33129-scevexpander-non-integral.patch"
-  patch -p1 < ../llvm-D33129-scevexpander-non-integral.patch
-  msg "Applying llvm-Yet-another-fix.patch"
-  patch -p1 < ../llvm-Yet-another-fix.patch
+  apply_julia_patch D27629-AArch64-large_model
+  apply_julia_patch D28215_FreeBSD_shlib
+  apply_julia_patch D28759-loopclearance
+  apply_julia_patch D28786-callclearance
+  apply_julia_patch D32593
+  apply_julia_patch D33179
+  apply_julia_patch D32203-SORA-non-integral
+  apply_julia_patch D33110-codegen-prepare-inttoptr
+  apply_julia_patch D30478-VNCoercion
+  apply_julia_patch VNCoercion-signatures
+  apply_julia_patch VNCoercion-template
+  apply_julia_patch D32196-LIR-non-integral
+  apply_julia_patch D32208-coerce-non-integral
+  apply_julia_patch D32623-GVN-non-integral
+  apply_julia_patch D33129-scevexpander-non-integral
+  apply_julia_patch Yet-another-fix
+  apply_julia_patch loadcse-addrspace
+
   msg "Applying lldbUtility-iwyu.patch"
   patch -p1 -d tools/lldb < ../lldbUtility-iwyu.patch
+
   # Arch patches
   msg "Applying Arch patches"
   patch -Np1 -i ../0001-CMake-Fix-pthread-handling-for-out-of-tree-builds.patch
