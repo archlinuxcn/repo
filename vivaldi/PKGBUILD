@@ -9,12 +9,13 @@ url="https://vivaldi.com"
 options=(!strip !zipman)
 license=('custom')
 arch=('x86_64')
-depends=('gtk2' 'nss' 'libxtst' 'gconf' 'libxss' 'freetype2' 'ttf-font' 'desktop-file-utils' 'shared-mime-info' 'alsa-lib' 'hicolor-icon-theme')
+depends=('gtk3' 'libcups' 'nss' 'gconf' 'alsa-lib' 'libxss' 'ttf-font' 'desktop-file-utils' 'shared-mime-info' 'hicolor-icon-theme')
 makedepends=('w3m')
 optdepends=(
     'vivaldi-ffmpeg-codecs: playback of proprietary video/audio'
     'google-chrome: Widevine DRM Plugin'
     'vivaldi-widevine: Widevine DRM Plugin'
+    'libnotify: native notifications'
 )
 source=("https://downloads.vivaldi.com/stable/vivaldi-stable-${pkgver}-1.x86_64.rpm")
 sha512sums=('7f524ddc5fc99bb8b1ee020fc8106a4a624a6e05c70c10ca6af48cfcab97fb2880db13c371cb8ff6c981028fc2c670374cfde5b5fad347d5952e9bd3613647eb')
@@ -25,6 +26,7 @@ package() {
     # suid sandbox
     chmod 4755 "$pkgdir/opt/vivaldi/vivaldi-sandbox"
 
+    # make /usr/bin/vivaldi-stable available
     binf="$pkgdir/usr/bin/vivaldi-stable"
     if [[ ! -e "$binf" ]] && [[ ! -f "$binf" ]] && [[ ! -L "$binf" ]]; then
         install -dm755 "$pkgdir/usr/bin"
