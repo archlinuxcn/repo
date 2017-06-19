@@ -1,0 +1,11 @@
+--- bin/cassandra.in.sh.orig	2013-08-01 22:09:39.303556219 +0200
++++ bin/cassandra.in.sh	2013-08-01 22:10:17.007406989 +0200
+@@ -15,7 +15,7 @@
+ # limitations under the License.
+ 
+ if [ "x$CASSANDRA_HOME" = "x" ]; then
+-    CASSANDRA_HOME="`dirname "$0"`/.."
++    CASSANDRA_HOME="/usr/share/cassandra"
+ fi
+ 
+ # The directory where Cassandra's configs live (required)

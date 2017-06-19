@@ -1,0 +1,24 @@
+post_install() {
+  systemd-sysusers cassandra.conf
+  systemd-tmpfiles --create cassandra.conf
+
+  ln -snf /var/lib/cassandra /usr/share/cassandra/data
+  ln -snf /var/log/cassandra /usr/share/cassandra/logs
+}
+
+post_upgrade() {
+  post_install
+}
+
+pre_remove() {
+  systemctl stop cassandra
+}
+
+post_remove() {
+  if getent passwd cassandra >/dev/null 2>&1; then
+    userdel cassandra
+  fi
+  if getent group cassandra >/dev/null 2>&1; then
+    groupdel cassandra
+  fi
+}

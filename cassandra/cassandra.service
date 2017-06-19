@@ -1,0 +1,20 @@
+[Unit]
+Description=Cassandra NoSQL database
+Documentation=https://cassandra.apache.org/
+After=network.target
+
+[Service]
+Type=forking
+User=cassandra
+Group=cassandra
+ExecStart=/usr/bin/cassandra -p /run/cassandra/cassandra.pid
+Environment=JAVA_HOME=/usr/lib/jvm/default-runtime
+PIDFile=/run/cassandra/cassandra.pid
+WorkingDirectory=/var/lib/cassandra
+LimitMEMLOCK=infinity
+LimitNOFILE=100000
+LimitNPROC=32768
+LimitAS=infinity
+
+[Install]
+WantedBy=multi-user.target
