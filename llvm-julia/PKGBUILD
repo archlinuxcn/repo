@@ -11,7 +11,7 @@
 pkgname=('llvm-julia' 'llvm-libs-julia' 'llvm-ocaml-julia' 'lld-julia' 'lldb-julia'
          'clang-julia' 'clang-tools-extra-julia')
 pkgver=4.0.0
-pkgrel=7
+pkgrel=8
 _ocaml_ver=4.04.1
 arch=(i686 x86_64 armv7h aarch64)
 url="http://llvm.org/"
@@ -49,6 +49,7 @@ source=(http://releases.llvm.org/$pkgver/llvm-$pkgver.src.tar.xz
         llvm-VNCoercion-template.patch
         llvm-Yet-another-fix.patch
         llvm-loadcse-addrspace.patch
+        llvm-jump-table-large-model.patch
         llvm-config.h)
 sha256sums=('8d10511df96e73b8ff9e7abbfb4d4d432edbdbe965f1f4f07afaf370b8a533be'
             'cea5f88ebddb30e296ca89130c83b9d46c2d833685e2912303c828054c4dc98a'
@@ -78,6 +79,7 @@ sha256sums=('8d10511df96e73b8ff9e7abbfb4d4d432edbdbe965f1f4f07afaf370b8a533be'
             '0eceb7403ea11ff6b7812f6580ce43884020c9338bb5ed6eea335d1dedb1256a'
             'ed8b43c93033ff028f63cf66db6122a267806180d060a19a9e1b560422ef185c'
             'a69856668b11b757a531c779fbf63c01a0b86a6389d1c1b31f4e98bc07eca0d3'
+            'f65ec7a7b5e147a89c7b93d2c3bafc725f17ed2714e31c73cd1d071652af2e4c'
             '597dc5968c695bbdbb0eac9e8eb5117fcd2773bc91edf5ec103ecffffab8bc48')
 
 _FLTO='-flto'
@@ -130,6 +132,7 @@ EOF
   apply_julia_patch D33129-scevexpander-non-integral
   apply_julia_patch Yet-another-fix
   apply_julia_patch loadcse-addrspace
+  apply_julia_patch jump-table-large-model
 
   msg "Applying lldbUtility-iwyu.patch"
   patch -p1 -d tools/lldb < ../lldbUtility-iwyu.patch
