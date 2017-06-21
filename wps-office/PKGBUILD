@@ -1,16 +1,17 @@
-# Maintainer: Ouyang Jun<ouyangjun1999@gmail.com> 
+# Maintainer: Ouyang Jun<ouyangjun1999@gmail.com>
+# Maintainer: Astro Benzene<universebenzene at sina dot com>
 # Maintainer: Felix Yan <felixonmars@archlinux.org>
 # Contributor: Jove Yu <yushijun110 [at] gmail.com>
 
 pkgname=wps-office
 pkgver=10.1.0.5707_a21
 _pkgver=10.1.0.5707~a21
-pkgrel=1
+pkgrel=2
 pkgdesc="Kingsoft Office (WPS Office) is an office productivity suite"
 arch=('i686' 'x86_64')
 license=("custom")
 url="http://wps-community.org/"
-depends=('fontconfig' 'libpng12' 'glib2' 'libsm' 'libxext' 'libxrender' 'libxml2' 'desktop-file-utils' 'shared-mime-info' 'xdg-utils' 'glu')
+depends=('fontconfig' 'libpng12' 'glib2' 'libsm' 'libxext' 'libxrender' 'libxml2' 'desktop-file-utils' 'shared-mime-info' 'xdg-utils' 'glu' 'xorg-mkfontdir')
 optdepends=('cups: for printing support'
             'pango: for complex (right-to-left) text support')
 conflicts=('kingsoft-office')
@@ -26,6 +27,8 @@ prepare() {
   cd wps-office_${_pkgver}_$_archext
 
   sed -i 's|/opt/kingsoft/wps-office|/usr/lib|' wps wpp et
+  sed -i 's|/office6/${gApp}  ${gOptExt}|/office6/${gApp} -style gtk+ ${gOptExt}|' wps
+  sed -i 's|/office6/${gApp} ${gOptExt}|/office6/${gApp} -style gtk+ ${gOptExt}|' wpp et
 }
 
 package() {
