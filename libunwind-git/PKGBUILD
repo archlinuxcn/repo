@@ -17,9 +17,9 @@ depends=('glibc' 'xz')
 makedepends=('git')
 source=('git://git.savannah.gnu.org/libunwind.git'
         0001-Support-dynamic-unwind-info-on-ARM.patch
-        0002-Allow-DWARF-version-4.patch
-        0003-Prefer-EXTBL-unwinding-on-ARM-since-it-seems-to-be-m.patch
-        0001-Handle-non-signal-frame-unwind-info-lookup-in-ARM-ex.patch)
+        0002-Handle-non-signal-frame-unwind-info-lookup-in-ARM-ex.patch
+        0003-Allow-DWARF-version-4.patch
+        0004-Prefer-EXTBL-unwinding-on-ARM.patch)
 md5sums=('SKIP'
          '196e9eb1a6ef4a7568ff539e50c33265'
          'dd18077715edde55e6aa16752d2d68b0'
@@ -51,9 +51,9 @@ prepare() {
   cd libunwind
 
   patch -Np1 < ../0001-Support-dynamic-unwind-info-on-ARM.patch
-  patch -Np1 < ../0002-Allow-DWARF-version-4.patch
-  patch -Np1 < ../0003-Prefer-EXTBL-unwinding-on-ARM-since-it-seems-to-be-m.patch
-  patch -Np1 < ../0001-Handle-non-signal-frame-unwind-info-lookup-in-ARM-ex.patch
+  patch -Np1 < ../0002-Handle-non-signal-frame-unwind-info-lookup-in-ARM-ex.patch
+  patch -Np1 < ../0003-Allow-DWARF-version-4.patch
+  patch -Np1 < ../0004-Prefer-EXTBL-unwinding-on-ARM.patch
 }
 
 build() {
