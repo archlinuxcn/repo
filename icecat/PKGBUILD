@@ -9,7 +9,7 @@ pkgname=icecat
 pkgver=52.1.0
 _pkgver=${pkgver}-gnu1
 _pkgverbase=${pkgver%%.*}
-pkgrel=1
+pkgrel=2
 pkgdesc="GNU version of the Firefox browser."
 arch=(i686 x86_64)
 url="http://www.gnu.org/software/gnuzilla/"
@@ -26,7 +26,7 @@ source=(http://ftpmirror.gnu.org/gnuzilla/${pkgver}/${pkgname}-${_pkgver}.tar.bz
 #source=(https://mirrors.kernel.org/gnu/gnuzilla/${pkgver}/${pkgname}-${_pkgver}.tar.bz2      ## Good mirror
 #source=(http://jenkins.trisquel.info/icecat/${pkgname}-${_pkgver}.tar.bz2      ## Official developer (Ruben Rodriguez) site. Probably only has developer releases.
         mozconfig icecat.desktop icecat-safe.desktop vendor.js
-        fix-wifi-scanner.diff)
+        fix-wifi-scanner.diff no-crmf.diff)
 
 sha256sums=('0beff2a04fdc1b56d274133cd22ff546fd609c929954132ff6bf1b800a5b24f3'
             'SKIP'
@@ -34,7 +34,8 @@ sha256sums=('0beff2a04fdc1b56d274133cd22ff546fd609c929954132ff6bf1b800a5b24f3'
             'c44eab35f71dd3028a74632463710d674b2e8a0682e5e887535e3233a3b7bbb3'
             '190577ad917bccfc89a9bcafbc331521f551b6f54e190bb6216eada48dcb1303'
             '4b50e9aec03432e21b44d18c4c97b2630bace606b033f7d556c9d3e3eb0f4fa4'
-            '9765bca5d63fb5525bbd0520b7ab1d27cabaed697e2fc7791400abc3fa4f13b8')
+            '9765bca5d63fb5525bbd0520b7ab1d27cabaed697e2fc7791400abc3fa4f13b8'
+            'ada119174a2a1779c4195a1b4506e8ae67c49c5306103158805a390237acc1c6')
 
 validpgpkeys=(A57369A8BABC2542B5A0368C3C76EED7D7E04784) # Ruben Rodriguez (GNU IceCat releases key) <ruben@gnu.org>
 
@@ -48,6 +49,9 @@ prepare() {
 
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1314968
   patch -Np1 -i ../fix-wifi-scanner.diff
+
+  # https://bugs.archlinux.org/task/54395
+  patch -Np1 -i ../no-crmf.diff
 
   msg2 "Starting build..."
 
