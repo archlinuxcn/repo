@@ -3,8 +3,8 @@
 # Contributor: Balwinder S "bsd" Dheeman (bdheeman AT gmail.com)
 
 pkgname=dkms-sorted
-pkgver=2.3
-pkgrel=2
+pkgver=2.4.0
+pkgrel=1
 pkgdesc='Dynamic Kernel Modules System (modified alpm hook to handle dependencies) - experimental'
 arch=('any')
 url='https://github.com/dell/dkms'
@@ -16,7 +16,7 @@ optdepends=('linux-headers: build modules against the Arch kernel'
             'linux-zen-headers: build modules against the ZEN kernel'
             'linux-grsec-headers: build modules against the GRSEC kernel')
 backup=('etc/dkms/framework.conf')
-source=("git+https://github.com/dell/dkms.git#tag=${pkgver}"
+source=("git+https://github.com/dell/dkms.git#tag=v${pkgver}"
         'dkms-install.hook'
         'dkms-remove.hook'
         'alpm-hook')
