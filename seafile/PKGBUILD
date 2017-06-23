@@ -3,7 +3,7 @@
 # Contributor: Aaron Lindsay <aaron@aclindsay.com>
 
 pkgname=seafile
-pkgver=6.0.6
+pkgver=6.0.7
 pkgrel=1
 pkgdesc="Seafile is an online file storage and collaboration tool"
 arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
@@ -13,7 +13,7 @@ depends=("ccnet" "fuse" "python2" "sqlite")
 makedepends=("vala" "intltool")
 source=("seafile-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
         "libseafile.in.patch")
-sha256sums=('3f4e25211c301d18fa0ff0be0f9ba0fcbc2649a5092b10cdb960a78be2062aed'
+sha256sums=('e563eade01330bf679f3e6b9f0202b198170cdd8ec80642d9fb670b3a5cda793'
             'a2d7f7cf0c59aba97650af62b3cefd0ceb71a1007c34d9369a88e5769c7f6076')
 provides=('seafile-client-cli')
 
