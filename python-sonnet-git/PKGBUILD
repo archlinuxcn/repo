@@ -19,7 +19,8 @@ md5sums=('SKIP'
 
 prepare() {
   patch -Np1 -d tensorflow-${tf_pkgver} < ${srcdir}/10868.patch
-
+  cp -r tensorflow-${tf_pkgver} tensorflow-${tf_pkgver}-cuda
+  
   mkdir -p $srcdir/sonnet/tensorflow
   cp -r tensorflow-$tf_pkgver/* $srcdir/sonnet/tensorflow/
   cp -r $srcdir/sonnet $srcdir/sonnet-cuda
