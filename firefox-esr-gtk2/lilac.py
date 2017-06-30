@@ -3,6 +3,7 @@
 from lilaclib import *
 
 build_prefix = 'extra-x86_64'
+depends = ['gcc63']
 
 def pre_build():
   aur_pre_build()
