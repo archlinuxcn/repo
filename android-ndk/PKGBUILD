@@ -1,9 +1,10 @@
-# Maintainer: Alexander F Rødseth <xyproto@archlinux.org>
+# Maintainer: Yen Chi Hsuan <yan12125 at gmail dot com>
+# Contributor: Alexander F Rødseth <xyproto@archlinux.org>
 # Contributor: Daniel Micay <danielmicay@gmail.com>
 # Contributor: frownlee <florez.brownlee@gmail.com>
 
 pkgname=android-ndk
-pkgver=r15
+pkgver=r15.b
 pkgrel=1
 pkgdesc='Android C/C++ developer kit'
 arch=('x86_64')
@@ -18,7 +19,7 @@ replaces=('android-ndk64')
 depends=('ncurses5-compat-libs')
 source=('android-ndk.sh' "https://dl.google.com/android/repository/${pkgname}-${pkgver/./}-linux-x86_64.zip")
 sha1sums=('2c03a98f773704d3357ed06d6cc2412b184a3c0c'
-          '32b3115357ed798a8a48d7d589ffcb901693c745')
+          '2690d416e54f88f7fa52d0dcb5f539056a357b3b')
 
 package() {
   install -d "$pkgdir/opt"
