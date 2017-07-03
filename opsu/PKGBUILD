@@ -4,7 +4,7 @@
 # Contributor in email: tpenguinltg <https://aur.archlinux.org/account/tpenguinltg/>
 
 pkgname=opsu
-pkgver=0.15.0
+pkgver=0.16.0
 pkgrel=1
 pkgdesc="An open source osu!-client written in Java."
 arch=('any')
