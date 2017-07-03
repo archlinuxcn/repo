@@ -23,6 +23,7 @@ STDS = [
   'x86_64-pc-windows-gnu',
   'asmjs-unknown-emscripten',
   'wasm32-unknown-emscripten',
+  'aarch64-linux-android',
 ]
 
 dist_url = 'https://static.rust-lang.org/dist/index.html'
