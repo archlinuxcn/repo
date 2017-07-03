@@ -36,6 +36,7 @@ toolchain = {
   'i686-unknown-linux-gnu': ['gcc-multilib'],
   'asmjs-unknown-emscripten': ['emsdk', 'emscripten'],
   'wasm32-unknown-emscripten': ['emsdk', 'emscripten'],
+  'aarch64-linux-android': ['android-ndk'],
 }
 
 def get_latest_version():
