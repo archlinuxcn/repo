@@ -11,7 +11,7 @@
 #
 
 pkgname='tor-browser'
-pkgver='7.0.1'
+pkgver='7.0.2'
 pkgrel=1
 pkgdesc='Tor Browser Bundle: Anonymous browsing using firefox and tor (language-agnostic PKGBUILD)'
 url='https://www.torproject.org/projects/torbrowser.html'
@@ -29,8 +29,6 @@ optdepends=('zenity: simple dialog boxes'
 	'libpulse: PulseAudio audio driver'
 	'libnotify: Gnome dialog boxes')
 install="${pkgname}.install"
-
-validpgpkeys=('EF6E286DDA85EA2A4BA7DE684E2C6E8793298290')
 
 _archstr=$([ $CARCH = 'x86_64' ] && echo "${_idstr64}" || echo "${_idstr32}")
 
@@ -67,15 +65,16 @@ _localetor() {
 
 _language="$(_localetor)"
 
+validpgpkeys=('EF6E286DDA85EA2A4BA7DE684E2C6E8793298290')
+
 source_i686=("https://dist.torproject.org/torbrowser/${pkgver}/${pkgname}-${_idstr32}-${pkgver}_${_language}.tar.xz"{,.asc})
 source_x86_64=("https://dist.torproject.org/torbrowser/${pkgver}/${pkgname}-${_idstr64}-${pkgver}_${_language}.tar.xz"{,.asc})
-
 source=("${pkgname}.desktop"
 	"${pkgname}.install"
 	"${pkgname}.png"
 	"${pkgname}.sh")
 
-md5sums=('f0cfc7681d58a77251abc49b250802d3'
+md5sums=('f294787c2d7993b2f6022e6014e582e7'
 	'ef1de5f4e269f1084f20122d2703e954'
 	'494afbfa60fb4ce21840244cc3f7208c'
 	'3ef08aff0e2afebb1a2a7ffbf8f65897')
@@ -91,13 +90,11 @@ package() {
 
 	cd "${srcdir}"
 
+	sed -i "s/REPL_LANGUAGE/${_language}/g" "${pkgname}.desktop"
+
 	sed -i "s/REPL_NAME/${pkgname}/g"	"${pkgname}.sh"
 	sed -i "s/REPL_VERSION/${pkgver}/g"	"${pkgname}.sh"
 	sed -i "s/REPL_LANGUAGE/${_language}/g" "${pkgname}.sh"
-
-	sed -i "s/REPL_NAME/${pkgname}/g"	"${pkgname}.desktop"
-	sed -i "s/REPL_LANGUAGE/${_language}/g" "${pkgname}.desktop"
-	sed -i "s/REPL_COMMENT/${pkgdesc}/g"	"${pkgname}.desktop"
 
 	install -Dm 644 "${pkgname}.desktop"	"${pkgdir}/usr/share/applications/${pkgname}.desktop"
 	install -Dm 644 "${pkgname}.png"	"${pkgdir}/usr/share/pixmaps/${pkgname}.png"
