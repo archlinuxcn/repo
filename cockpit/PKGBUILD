@@ -3,7 +3,7 @@
 # Contributor: Anatol Pomozov <anatol.pomozov@gmail.com>
 
 pkgname=cockpit
-pkgver=142
+pkgver=144
 pkgrel=1
 pkgdesc='A systemd web based user interface for Linux servers'
 arch=(i686 x86_64 armv6h armv7h)
@@ -12,12 +12,17 @@ license=(LGPL2.1)
 conflicts=(cockpit-git)
 depends=(libssh krb5 sshpass accountsservice perl-json perl-locale-po json-glib pcp glib-networking)
 makedepends=(git intltool python2-pyscss gtk-doc perl-javascript-minifier-xs gobject-introspection networkmanager libgsystem xmlto npm tar)
-optdepends=(udisks2 networkmanager)
+optdepends=("udisks2: manage hard disks"
+	    "networkmanager: manage network connections"
+	    "packagekit: manage packages"
+	    "docker: manage containers"
+	    "libvirt: manage virtual machines"
+	    "kubernetes: manage cluster")
 source=(https://github.com/cockpit-project/cockpit/releases/download/${pkgver}/cockpit-${pkgver}.tar.xz
 	https://github.com/cockpit-project/cockpit/releases/download/${pkgver}/cockpit-cache-${pkgver}.tar.xz)
 noextract=(cockpit-${pkgver}.tar.xz)
-sha1sums=('2be1d5a44180ca76d8ca62a9ca4d71c954203291'
-          '38a7a2c52b568d273462a89b8c41b0824b29c7a7')
+sha1sums=('0ed6a60899ba464ae869926289bd78bcce57290a'
+          '5869edd093fff2d88d3455f18224e6f3ec07ecdc')
 
 prepare() {
   cd $srcdir

@@ -6,7 +6,7 @@
 # https://www.gnu.org/licenses/gpl-2.0.html
 
 pkgname=('pacman-pstatus')
-pkgver=0.2.0
+pkgver=0.2.1
 pkgrel=1
 arch=('any')
 url='https://gitlab.com/renyuneyun/pacman-ps'
@@ -20,7 +20,7 @@ pkgdesc="Provides a command to identify which running processes have files that 
 install='pacman-ps.install'
 
 options=('!strip')
-source=('git+https://gitlab.com/renyuneyun/pacman-ps#tag=v0.2.0'
+source=("git+https://gitlab.com/renyuneyun/pacman-ps#tag=v$pkgver"
         'pacman-ps.install')
 sha1sums=('SKIP'
           '53dcfea595c1c59cd47ae45c7f083e3e03a5e219')

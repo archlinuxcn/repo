@@ -2,10 +2,10 @@
 
 pkgname=gottet
 pkgver=1.1.3
-pkgrel=2
+pkgrel=3
 pkgdesc='A tetris clone using the Qt GUI toolkit'
 arch=('i686' 'x86_64')
-url="http://gottcode.org/$pkgname/"
+url="https://gottcode.org/$pkgname/"
 license=('GPL3')
 depends=('qt5-base')
 makedepends=('qt5-tools')
@@ -22,5 +22,6 @@ build() {
 package() {
   cd "$pkgname-$pkgver"
 
+  qmake-qt5 PREFIX=/usr
   make INSTALL_ROOT="$pkgdir/" install
 }

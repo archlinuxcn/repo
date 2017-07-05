@@ -1,5 +1,5 @@
 diff --git a/Telegram/SourceFiles/qt_static_plugins.cpp b/Telegram/SourceFiles/qt_static_plugins.cpp
-index 1d4896a6..3efd7caa 100644
+index b975c7a8..5ad461a4 100644
 --- a/Telegram/SourceFiles/qt_static_plugins.cpp
 +++ b/Telegram/SourceFiles/qt_static_plugins.cpp
 @@ -30,6 +30,7 @@ Q_IMPORT_PLUGIN(QGenericEnginePlugin)
@@ -142,7 +142,7 @@ index fde88dcd..1fd1b9cb 100644
            '-fPIC',
            '-Wno-unused-variable',
 diff --git a/Telegram/gyp/telegram_linux.gypi b/Telegram/gyp/telegram_linux.gypi
-index b8866ec2..2a6eb308 100644
+index 2c464928..2112496b 100644
 --- a/Telegram/gyp/telegram_linux.gypi
 +++ b/Telegram/gyp/telegram_linux.gypi
 @@ -21,11 +21,20 @@
@@ -171,7 +171,7 @@ index b8866ec2..2a6eb308 100644
        ],
        'linux_path_ffmpeg%': '/usr/local',
        'linux_path_openal%': '/usr/local',
-@@ -36,47 +45,25 @@
+@@ -36,20 +45,11 @@
        'linux_path_opus_include%': '<(libs_loc)/opus/include',
      },
      'include_dirs': [
@@ -194,9 +194,10 @@ index b8866ec2..2a6eb308 100644
      ],
      'libraries': [
        'breakpad_client',
-       'composeplatforminputcontextplugin',
+@@ -57,27 +57,14 @@
        'ibusplatforminputcontextplugin',
        'fcitxplatforminputcontextplugin',
+       'himeplatforminputcontextplugin',
 -      'liblzma.a',
 -      'libopenal.a',
 -      'libavformat.a',

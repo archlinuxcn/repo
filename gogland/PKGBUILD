@@ -3,7 +3,7 @@
 pkgbase=gogland
 pkgname=(gogland gogland-jre)
 pkgver=171.4694.35
-pkgrel=1
+pkgrel=2
 pkgdesc='Capable and Ergonomic Go IDE'
 arch=('x86_64' 'i686')
 url='https://www.jetbrains.com/go/'
@@ -26,6 +26,7 @@ package_gogland() {
 
   rsync -rtl "${srcdir}/Gogland-${pkgver}/" "${pkgdir}/opt/${pkgbase}" --exclude=/jre64
 
+  chmod +x "${pkgdir}/opt/${pkgbase}/plugins/intellij-go-plugin/lib/dlv/linux/dlv"
   ln -s "/opt/${pkgbase}/bin/${pkgbase}.sh" "${pkgdir}/usr/bin/${pkgbase}"
   install -D -m 644 "${srcdir}/jetbrains-${pkgbase}.desktop" "${pkgdir}/usr/share/applications/"
   install -D -m 644 "${pkgdir}/opt/${pkgbase}/bin/${pkgbase}.png" "${pkgdir}/usr/share/pixmaps/${pkgbase}.png"

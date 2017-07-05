@@ -4,7 +4,7 @@
 # Contributor: Andrew Reed <reed.996@osu.edu>
 
 pkgname=python-lz4
-pkgver=0.9.2
+pkgver=0.10.0
 pkgrel=1
 pkgdesc="LZ4 Bindings for Python"
 arch=('any')
@@ -12,8 +12,8 @@ url="https://pypi.python.org/pypi/lz4"
 license=('BSD')
 makedepends=('python-distribute' 'python-setuptools')
 depends=('python3')
-source=("https://pypi.python.org/packages/47/19/eff906f3f37680a73ad9524eeee1a4f59f728b3a13a4bcd92251961d006b/lz4-$pkgver.tar.gz")
-md5sums=('b11f78c4bfd2afb15b1094438735c689')
+source=("https://pypi.python.org/packages/1b/69/6c106a77a804f08938487a9bf45a9771209f487c9dadea8ea819c1555e35/lz4-$pkgver.tar.gz")
+md5sums=('46f2b225747703aa8b12e003604bdcef')
 
 package() {
   cd $srcdir/lz4-$pkgver

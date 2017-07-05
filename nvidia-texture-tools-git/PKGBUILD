@@ -2,16 +2,17 @@
 
 _pkgname=nvidia-texture-tools
 pkgname="${_pkgname}-git"
-pkgver=2.1.0.923b57d
+pkgver=2.1.0.8d333f2
 pkgrel=1
 pkgdesc="Texture processing tools with support for Direct3D 10 and 11 formats"
 arch=('i686' 'x86_64')
 url="https://github.com/castano/nvidia-texture-tools"
 license=('MIT')
 depends=('libpng' 'libjpeg' 'libtiff' 'openexr')
+makedepends=('git')
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")
-makedepends=('git' 'cmake')
+makedepends=('cmake')
 source=(git+https://github.com/castano/nvidia-texture-tools.git)
 md5sums=('SKIP')
 

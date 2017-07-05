@@ -407,7 +407,9 @@ server_command() {
 # Enter the screen game session
 server_console() {
 	if ${SUDO_CMD} screen -S "${SESSION_NAME}" -Q select . > /dev/null; then
-		${SUDO_CMD} screen -S "${SESSION_NAME}" -rx
+		# Circumvent a permission bug related to running GNU screen as a different user,
+		# see e.g. https://serverfault.com/questions/116775/sudo-as-different-user-and-running-screen
+		${SUDO_CMD} script -q -c "screen -S \"${SESSION_NAME}\" -rx" /dev/null
 	else
 		echo "There is no ${SESSION_NAME} session to connect to."
 	fi
