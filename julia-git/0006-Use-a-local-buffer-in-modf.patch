@@ -1,0 +1,40 @@
+From 0982b8601ab85162f7567c58a69c6fbe621abd09 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Wed, 5 Jul 2017 05:30:13 -0400
+Subject: [PATCH 6/6] Use a local buffer in `modf`
+
+Fix #21591
+---
+ base/math.jl | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/base/math.jl b/base/math.jl
+index 454b6e4cdc..80a9967122 100644
+--- a/base/math.jl
++++ b/base/math.jl
+@@ -693,16 +693,16 @@ julia> modf(3.5)
+ """
+ modf(x) = rem(x,one(x)), trunc(x)
+ 
+-const _modff_temp = Ref{Float32}()
+ function modf(x::Float32)
+-    f = ccall((:modff,libm), Float32, (Float32,Ptr{Float32}), x, _modff_temp)
+-    f, _modff_temp[]
++    temp = Ref{Float32}()
++    f = ccall((:modff, libm), Float32, (Float32, Ptr{Float32}), x, temp)
++    f, temp[]
+ end
+ 
+-const _modf_temp = Ref{Float64}()
+ function modf(x::Float64)
+-    f = ccall((:modf,libm), Float64, (Float64,Ptr{Float64}), x, _modf_temp)
+-    f, _modf_temp[]
++    temp = Ref{Float64}()
++    f = ccall((:modf, libm), Float64, (Float64, Ptr{Float64}), x, temp)
++    f, temp[]
+ end
+ 
+ @inline ^(x::Float64, y::Float64) = nan_dom_err(ccall("llvm.pow.f64", llvmcall, Float64, (Float64, Float64), x, y), x + y)
+-- 
+2.13.2
+

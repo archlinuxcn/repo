@@ -1,0 +1,600 @@
+From 9de1344fc07e592dacb1e71d5d1c27c107081c41 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Tue, 4 Jul 2017 22:14:59 -0400
+Subject: [PATCH 5/6] Add LLVM level allocation optimization pass
+
+This can obtain escape information with much higher precision than what we can currently do
+in typeinf. However, it does not replace the alloc_elim_pass! in type inference either since
+this cannot handle objects with reference fields.
+
+Fix #20452
+---
+ src/Makefile           |   2 +-
+ src/ccall.cpp          |   2 +-
+ src/cgutils.cpp        |  21 +--
+ src/codegen.cpp        |  29 ++--
+ src/intrinsics.cpp     |   6 +-
+ src/jitlayers.cpp      |   8 +
+ src/jitlayers.h        |   1 +
+ src/llvm-alloc-opt.cpp | 385 +++++++++++++++++++++++++++++++++++++++++++++++++
+ test/codegen.jl        |   7 +
+ 9 files changed, 416 insertions(+), 45 deletions(-)
+ create mode 100644 src/llvm-alloc-opt.cpp
+
+diff --git a/src/Makefile b/src/Makefile
+index 9e2bf245d8..fd4539c418 100644
+--- a/src/Makefile
++++ b/src/Makefile
+@@ -50,7 +50,7 @@ endif
+ LLVMLINK :=
+ 
+ ifeq ($(JULIACODEGEN),LLVM)
+-SRCS += codegen jitlayers disasm debuginfo llvm-simdloop llvm-ptls llvm-muladd llvm-late-gc-lowering llvm-lower-handlers llvm-gc-invariant-verifier llvm-propagate-addrspaces cgmemmgr
++SRCS += codegen jitlayers disasm debuginfo llvm-simdloop llvm-ptls llvm-muladd llvm-late-gc-lowering llvm-lower-handlers llvm-gc-invariant-verifier llvm-propagate-addrspaces llvm-alloc-opt cgmemmgr
+ FLAGS += -I$(shell $(LLVM_CONFIG_HOST) --includedir)
+ LLVM_LIBS := all
+ ifeq ($(USE_POLLY),1)
+diff --git a/src/ccall.cpp b/src/ccall.cpp
+index 849fcd6df7..4492dd134a 100644
+--- a/src/ccall.cpp
++++ b/src/ccall.cpp
+@@ -2143,7 +2143,7 @@ jl_cgval_t function_sig_t::emit_a_ccall(
+                 size_t rtsz = jl_datatype_size(rt);
+                 assert(rtsz > 0);
+                 Value *strct = emit_allocobj(ctx, rtsz, runtime_bt);
+-                int boxalign = jl_gc_alignment(rtsz);
++                int boxalign = jl_datatype_align(rt);
+ #ifndef JL_NDEBUG
+ #if JL_LLVM_VERSION >= 40000
+                 const DataLayout &DL = jl_data_layout;
+diff --git a/src/cgutils.cpp b/src/cgutils.cpp
+index 35cfc4bfd6..d134e75274 100644
+--- a/src/cgutils.cpp
++++ b/src/cgutils.cpp
+@@ -2156,25 +2156,10 @@ static Value *emit_allocobj(jl_codectx_t &ctx, size_t static_size, Value *jt)
+ {
+     JL_FEAT_REQUIRE(ctx, dynamic_alloc);
+     JL_FEAT_REQUIRE(ctx, runtime);
+-
+-    int osize;
+-    int offset = jl_gc_classify_pools(static_size, &osize);
+     Value *ptls_ptr = emit_bitcast(ctx, ctx.ptlsStates, T_pint8);
+-    Value *v;
+-    if (offset < 0) {
+-        Value *args[] = {ptls_ptr,
+-                         ConstantInt::get(T_size, static_size + sizeof(void*))};
+-        v = ctx.builder.CreateCall(prepare_call(jlalloc_big_func),
+-                               ArrayRef<Value*>(args, 2));
+-    }
+-    else {
+-        Value *pool_offs = ConstantInt::get(T_int32, offset);
+-        Value *args[] = {ptls_ptr, pool_offs, ConstantInt::get(T_int32, osize)};
+-        v = ctx.builder.CreateCall(prepare_call(jlalloc_pool_func),
+-                               ArrayRef<Value*>(args, 3));
+-    }
+-    tbaa_decorate(tbaa_tag, ctx.builder.CreateStore(maybe_decay_untracked(jt), emit_typeptr_addr(ctx, v)));
+-    return v;
++    return ctx.builder.CreateCall(prepare_call(jl_alloc_obj_func),
++                                  {ptls_ptr, ConstantInt::get(T_size, static_size),
++                                          maybe_decay_untracked(jt)});
+ }
+ 
+ // if ptr is NULL this emits a write barrier _back_
+diff --git a/src/codegen.cpp b/src/codegen.cpp
+index 98987c21e5..5227ef5b28 100644
+--- a/src/codegen.cpp
++++ b/src/codegen.cpp
+@@ -315,8 +315,7 @@ static Function *jlgenericfunction_func;
+ static Function *jlenter_func;
+ static Function *jlleave_func;
+ static Function *jlegal_func;
+-static Function *jlalloc_pool_func;
+-static Function *jlalloc_big_func;
++static Function *jl_alloc_obj_func;
+ static Function *jlisa_func;
+ static Function *jlsubtype_func;
+ static Function *jlapplytype_func;
+@@ -6631,24 +6630,14 @@ static void init_julia_llvm_env(Module *m)
+                          "jl_instantiate_type_in_env", m);
+     add_named_global(jlapplytype_func, &jl_instantiate_type_in_env);
+ 
+-    std::vector<Type*> alloc_pool_args(0);
+-    alloc_pool_args.push_back(T_pint8);
+-    alloc_pool_args.push_back(T_int32);
+-    alloc_pool_args.push_back(T_int32);
+-    jlalloc_pool_func =
+-        Function::Create(FunctionType::get(T_prjlvalue, alloc_pool_args, false),
+-                         Function::ExternalLinkage,
+-                         "jl_gc_pool_alloc", m);
+-    add_named_global(jlalloc_pool_func, &jl_gc_pool_alloc);
+-
+-    std::vector<Type*> alloc_big_args(0);
+-    alloc_big_args.push_back(T_pint8);
+-    alloc_big_args.push_back(T_size);
+-    jlalloc_big_func =
+-        Function::Create(FunctionType::get(T_prjlvalue, alloc_big_args, false),
+-                         Function::ExternalLinkage,
+-                         "jl_gc_big_alloc", m);
+-    add_named_global(jlalloc_big_func, &jl_gc_big_alloc);
++    std::vector<Type*> gc_alloc_args(0);
++    gc_alloc_args.push_back(T_pint8);
++    gc_alloc_args.push_back(T_size);
++    gc_alloc_args.push_back(T_prjlvalue);
++    jl_alloc_obj_func = Function::Create(FunctionType::get(T_prjlvalue, gc_alloc_args, false),
++                                         Function::ExternalLinkage,
++                                         "julia.gc_alloc_obj");
++    add_named_global(jl_alloc_obj_func, (void*)NULL, /*dllimport*/false);
+ 
+     std::vector<Type *> dlsym_args(0);
+     dlsym_args.push_back(T_pint8);
+diff --git a/src/intrinsics.cpp b/src/intrinsics.cpp
+index 1f197b6154..45e8871f87 100644
+--- a/src/intrinsics.cpp
++++ b/src/intrinsics.cpp
+@@ -326,11 +326,7 @@ static Value *emit_unbox(jl_codectx_t &ctx, Type *to, const jl_cgval_t &x, jl_va
+     }
+ 
+     int alignment;
+-    if (x.isboxed) {
+-        // julia's gc gives 16-byte aligned addresses
+-        alignment = 16;
+-    }
+-    else if (jt) {
++    if (jt) {
+         alignment = julia_alignment(p, jt, 0);
+     }
+     else {
+diff --git a/src/jitlayers.cpp b/src/jitlayers.cpp
+index 10f8a4c290..2f00f80dce 100644
+--- a/src/jitlayers.cpp
++++ b/src/jitlayers.cpp
+@@ -108,6 +108,7 @@ void addOptimizationPasses(legacy::PassManagerBase *PM, int opt_level)
+ #endif
+     if (opt_level == 0) {
+         PM->add(createCFGSimplificationPass()); // Clean up disgusting code
++        PM->add(createAllocOptPass(false));
+ #if JL_LLVM_VERSION < 50000
+         PM->add(createBarrierNoopPass());
+         PM->add(createLowerExcHandlersPass());
+@@ -147,6 +148,7 @@ void addOptimizationPasses(legacy::PassManagerBase *PM, int opt_level)
+     // effectiveness of the optimization, but should retain correctness.
+ #if JL_LLVM_VERSION < 50000
+     PM->add(createLowerExcHandlersPass());
++    PM->add(createAllocOptPass(true));
+     PM->add(createLateLowerGCFramePass());
+     // Remove dead use of ptls
+     PM->add(createDeadCodeEliminationPass());
+@@ -161,6 +163,12 @@ void addOptimizationPasses(legacy::PassManagerBase *PM, int opt_level)
+     PM->add(createAlwaysInlinerPass()); // Respect always_inline
+ #endif
+ 
++#if JL_LLVM_VERSION >= 50000
++    // Running `memcpyopt` between this and `sroa` seems to give `sroa` a hard time
++    // merging the `alloca` for the unboxed data and the `alloca` created by the `alloc_opt`
++    // pass.
++    PM->add(createAllocOptPass(true));
++#endif
+     PM->add(createInstructionCombiningPass()); // Cleanup for scalarrepl.
+     PM->add(createSROAPass());                 // Break up aggregate allocas
+     PM->add(createInstructionCombiningPass()); // Cleanup for scalarrepl.
+diff --git a/src/jitlayers.h b/src/jitlayers.h
+index aaa11ec384..138c8f9d81 100644
+--- a/src/jitlayers.h
++++ b/src/jitlayers.h
+@@ -207,6 +207,7 @@ Pass *createLateLowerGCFramePass();
+ Pass *createLowerExcHandlersPass();
+ Pass *createGCInvariantVerifierPass(bool Strong);
+ Pass *createPropagateJuliaAddrspaces();
++Pass *createAllocOptPass(bool);
+ // Whether the Function is an llvm or julia intrinsic.
+ static inline bool isIntrinsicFunction(Function *F)
+ {
+diff --git a/src/llvm-alloc-opt.cpp b/src/llvm-alloc-opt.cpp
+new file mode 100644
+index 0000000000..4ab3c5af33
+--- /dev/null
++++ b/src/llvm-alloc-opt.cpp
+@@ -0,0 +1,385 @@
++// This file is a part of Julia. License is MIT: https://julialang.org/license
++
++#define DEBUG_TYPE "alloc_opt"
++#undef DEBUG
++#include "llvm-version.h"
++
++#include <llvm/IR/Value.h>
++#include <llvm/IR/Function.h>
++#include <llvm/IR/Instructions.h>
++#include <llvm/IR/IntrinsicInst.h>
++#include <llvm/IR/Module.h>
++#include <llvm/IR/Operator.h>
++#include <llvm/IR/IRBuilder.h>
++#include <llvm/Pass.h>
++#include <llvm/Support/Debug.h>
++#include "fix_llvm_assert.h"
++
++#include "codegen_shared.h"
++#include "julia.h"
++#include "julia_internal.h"
++
++#include <map>
++
++using namespace llvm;
++
++extern std::pair<MDNode*,MDNode*> tbaa_make_child(const char *name, MDNode *parent=nullptr, bool isConstant=false);
++
++namespace {
++
++static void copyMetadata(Instruction *dest, const Instruction *src)
++{
++#if JL_LLVM_VERSION < 40000
++    if (!src->hasMetadata())
++        return;
++    SmallVector<std::pair<unsigned,MDNode*>,4> TheMDs;
++    src->getAllMetadataOtherThanDebugLoc(TheMDs);
++    for (const auto &MD : TheMDs)
++        dest->setMetadata(MD.first, MD.second);
++    dest->setDebugLoc(src->getDebugLoc());
++#else
++    dest->copyMetadata(*src);
++#endif
++}
++
++/**
++ * Promote `julia.gc_alloc_obj` which do not have escaping root to a alloca and
++ * lower other ones to real GC allocation.
++ */
++
++constexpr ssize_t invalid_offset = -15;
++
++struct AllocOpt : public FunctionPass {
++    static char ID;
++    AllocOpt(bool opt=true)
++        : FunctionPass(ID),
++          optimize(opt)
++    {}
++
++private:
++    bool optimize;
++    LLVMContext *ctx;
++
++    const DataLayout *DL;
++
++    Function *alloc_obj;
++    Function *pool_alloc;
++    Function *big_alloc;
++    Function *ptr_from_objref;
++
++    Type *T_int8;
++    Type *T_int32;
++    Type *T_size;
++    Type *T_pint8;
++    Type *T_pjlvalue;
++    Type *T_pjlvalue0;
++    Type *T_pjlvalue_der;
++    Type *T_ppjlvalue0;
++    Type *T_ppjlvalue_der;
++
++    MDNode *tbaa_tag;
++
++    bool doInitialization(Module &m) override;
++    bool runOnFunction(Function &F) override;
++    bool checkUses(Instruction *I, size_t offset, bool &ignore_tag);
++    bool checkInst(Instruction *I, Instruction *parent, size_t offset, bool &ignore_tag);
++    void replaceUsesWith(Instruction *orig_i, Instruction *new_i, bool ignore_tag);
++    void lowerAlloc(CallInst *I, size_t sz);
++};
++
++bool AllocOpt::doInitialization(Module &M)
++{
++    ctx = &M.getContext();
++    DL = &M.getDataLayout();
++
++    alloc_obj = M.getFunction("julia.gc_alloc_obj");
++    if (!alloc_obj)
++        return false;
++
++    ptr_from_objref = M.getFunction("julia.pointer_from_objref");
++
++    T_pjlvalue = alloc_obj->getReturnType();
++    T_pjlvalue0 = PointerType::get(cast<PointerType>(T_pjlvalue)->getElementType(), 0);
++    T_pjlvalue_der = PointerType::get(cast<PointerType>(T_pjlvalue)->getElementType(),
++                                      AddressSpace::Derived);
++    T_ppjlvalue0 = PointerType::get(T_pjlvalue, 0);
++    T_ppjlvalue_der = PointerType::get(T_pjlvalue, AddressSpace::Derived);
++
++    T_int8 = Type::getInt8Ty(*ctx);
++    T_int32 = Type::getInt32Ty(*ctx);
++    T_size = sizeof(void*) == 8 ? Type::getInt64Ty(*ctx) : T_int32;
++    T_pint8 = PointerType::get(T_int8, 0);
++
++    if (!(pool_alloc = M.getFunction("jl_gc_pool_alloc"))) {
++        std::vector<Type*> alloc_pool_args(0);
++        alloc_pool_args.push_back(T_pint8);
++        alloc_pool_args.push_back(T_int32);
++        alloc_pool_args.push_back(T_int32);
++        pool_alloc = Function::Create(FunctionType::get(T_pjlvalue, alloc_pool_args, false),
++                                      Function::ExternalLinkage, "jl_gc_pool_alloc", &M);
++    }
++    if (!(big_alloc = M.getFunction("jl_gc_big_alloc"))) {
++        std::vector<Type*> alloc_big_args(0);
++        alloc_big_args.push_back(T_pint8);
++        alloc_big_args.push_back(T_size);
++        big_alloc = Function::Create(FunctionType::get(T_pjlvalue, alloc_big_args, false),
++                                     Function::ExternalLinkage, "jl_gc_big_alloc", &M);
++    }
++    MDNode *tbaa_data;
++    MDNode *tbaa_data_scalar;
++    std::tie(tbaa_data, tbaa_data_scalar) = tbaa_make_child("jtbaa_data");
++    tbaa_tag = tbaa_make_child("jtbaa_tag", tbaa_data_scalar).first;
++
++    return true;
++}
++
++bool AllocOpt::checkUses(Instruction *I, size_t offset, bool &ignore_tag)
++{
++    for (auto user: I->users()) {
++        auto inst = dyn_cast<Instruction>(user);
++        if (!inst || !checkInst(inst, I, offset, ignore_tag)) {
++            return false;
++        }
++    }
++    return true;
++}
++
++bool AllocOpt::checkInst(Instruction *I, Instruction *parent, size_t offset, bool &ignore_tag)
++{
++    if (isa<LoadInst>(I))
++        return true;
++    if (auto call = dyn_cast<CallInst>(I)) {
++        if (ptr_from_objref && ptr_from_objref == call->getCalledFunction())
++            return true;
++        // Only use in argument counts, uses in operand bundle doesn't since it cannot escape.
++        for (auto &arg: call->arg_operands()) {
++            if (dyn_cast<Instruction>(&arg) == parent) {
++                return false;
++            }
++        }
++        if (call->getNumOperandBundles() != 1)
++            return false;
++        auto obuse = call->getOperandBundleAt(0);
++        if (obuse.getTagName() != "jl_roots")
++            return false;
++        return true;
++    }
++    if (isa<AddrSpaceCastInst>(I) || isa<BitCastInst>(I))
++        return checkUses(I, offset, ignore_tag);
++    if (auto gep = dyn_cast<GetElementPtrInst>(I)) {
++        APInt apoffset(sizeof(void*) * 8, offset, true);
++        if (ignore_tag && (!gep->accumulateConstantOffset(*DL, apoffset) ||
++                           apoffset.isNegative()))
++            ignore_tag = false;
++        return checkUses(I, offset, ignore_tag);
++    }
++    if (auto store = dyn_cast<StoreInst>(I)) {
++        auto storev = store->getValueOperand();
++        // Only store value count
++        if (storev == parent)
++            return false;
++        // There's GC root in this object.
++        if (auto ptrtype = dyn_cast<PointerType>(storev->getType())) {
++            if (ptrtype->getAddressSpace() == AddressSpace::Tracked) {
++                return false;
++            }
++        }
++        return true;
++    }
++    return false;
++}
++
++// Both arguments should be pointer of the same type but possibly different address spaces
++// `orig_i` is always in addrspace 0.
++// This function needs to handle all cases `AllocOpt::checkInst` can handle.
++void AllocOpt::replaceUsesWith(Instruction *orig_i, Instruction *new_i, bool ignore_tag)
++{
++    Type *orig_t = orig_i->getType();
++    Type *new_t = new_i->getType();
++    if (orig_t == new_t) {
++        orig_i->replaceAllUsesWith(new_i);
++        orig_i->eraseFromParent();
++        return;
++    }
++    SmallVector<User*, 4> users(orig_i->user_begin(), orig_i->user_end());
++    for (auto user: users) {
++        if (isa<LoadInst>(user) || isa<StoreInst>(user)) {
++            user->replaceUsesOfWith(orig_i, new_i);
++        }
++        else if (auto call = dyn_cast<CallInst>(user)) {
++            if (ptr_from_objref && ptr_from_objref == call->getCalledFunction()) {
++                call->replaceAllUsesWith(new_i);
++                call->eraseFromParent();
++                continue;
++            }
++            // remove from operand bundle
++            user->replaceUsesOfWith(orig_i, ConstantPointerNull::get(cast<PointerType>(new_t)));
++        }
++        else if (isa<AddrSpaceCastInst>(user) || isa<BitCastInst>(user)) {
++            auto I = cast<Instruction>(user);
++            auto cast_t = PointerType::get(cast<PointerType>(I->getType())->getElementType(), 0);
++            auto replace_i = new_i;
++            if (cast_t != orig_t)
++                replace_i = new BitCastInst(replace_i, cast_t, "", I);
++            replaceUsesWith(I, replace_i, ptr_from_objref);
++        }
++        else if (auto gep = dyn_cast<GetElementPtrInst>(user)) {
++            Instruction *new_gep;
++            SmallVector<Value *, 4> IdxOperands(gep->idx_begin(), gep->idx_end());
++            if (gep->isInBounds()) {
++                new_gep = GetElementPtrInst::CreateInBounds(gep->getSourceElementType(),
++                                                            new_i, IdxOperands,
++                                                            gep->getName(), gep);
++            }
++            else {
++                new_gep = GetElementPtrInst::Create(gep->getSourceElementType(),
++                                                    new_i, IdxOperands,
++                                                    gep->getName(), gep);
++            }
++            copyMetadata(new_gep, gep);
++            replaceUsesWith(gep, new_gep, ptr_from_objref);
++        }
++        else {
++            abort();
++        }
++    }
++    assert(orig_i->user_empty());
++    orig_i->eraseFromParent();
++}
++
++void AllocOpt::lowerAlloc(CallInst *I, size_t sz)
++{
++    int osize;
++    int offset = jl_gc_classify_pools(sz, &osize);
++    auto ptls = I->getArgOperand(0);
++    CallInst *newI;
++    if (offset < 0) {
++        newI = CallInst::Create(big_alloc, {ptls, ConstantInt::get(T_size, sz + sizeof(void*))},
++                                None, "", I);
++    }
++    else {
++        auto pool_offs = ConstantInt::get(T_int32, offset);
++        auto pool_osize = ConstantInt::get(T_int32, osize);
++        newI = CallInst::Create(pool_alloc, {ptls, pool_offs, pool_osize}, None, "", I);
++    }
++    auto tag = I->getArgOperand(2);
++    copyMetadata(newI, I);
++    const auto &dbg = I->getDebugLoc();
++    auto derived = new AddrSpaceCastInst(newI, T_pjlvalue_der, "", I);
++    derived->setDebugLoc(dbg);
++    auto cast = new BitCastInst(derived, T_ppjlvalue_der, "", I);
++    cast->setDebugLoc(dbg);
++    auto tagaddr = GetElementPtrInst::Create(T_pjlvalue, cast, {ConstantInt::get(T_size, -1)},
++                                             "", I);
++    tagaddr->setDebugLoc(dbg);
++    auto store = new StoreInst(tag, tagaddr, I);
++    store->setMetadata(LLVMContext::MD_tbaa, tbaa_tag);
++    store->setDebugLoc(dbg);
++    I->replaceAllUsesWith(newI);
++    I->eraseFromParent();
++}
++
++bool AllocOpt::runOnFunction(Function &F)
++{
++    if (!alloc_obj)
++        return false;
++    std::map<CallInst*,size_t> allocs;
++    for (auto &bb: F) {
++        for (auto &I: bb) {
++            auto call = dyn_cast<CallInst>(&I);
++            if (!call)
++                continue;
++            auto callee = call->getCalledFunction();
++            if (!callee)
++                continue;
++            size_t sz;
++            if (callee == alloc_obj) {
++                assert(call->getNumArgOperands() == 3);
++                sz = (size_t)cast<ConstantInt>(call->getArgOperand(1))->getZExtValue();
++            }
++            else {
++                continue;
++            }
++            allocs[call] = sz;
++        }
++    }
++
++    auto &entry = F.getEntryBlock();
++    auto first = &entry.front();
++    for (auto it: allocs) {
++        bool ignore_tag = true;
++        auto orig = it.first;
++        if (optimize && checkUses(orig, 0, ignore_tag)) {
++            // The allocation does not escape or be used in a phi node so none of the derived
++            // SSA from it are live when we run the allocation again.
++            // It is now safe to promote the allocation to an entry block alloca.
++            size_t sz = it.second;
++            size_t align = 1;
++            // TODO make codegen handling of alignment consistent and pass that as a parameter
++            // to the allocation function directly.
++            if (!ignore_tag) {
++                align = sz <= 8 ? 8 : 16;
++                sz += align;
++            }
++            else if (sz >= 16) {
++                align = 16;
++            }
++            else if (sz >= 8) {
++                align = 8;
++            }
++            else if (sz >= 4) {
++                align = 4;
++            }
++            else if (sz >= 2) {
++                align = 2;
++            }
++            const auto &dbg = orig->getDebugLoc();
++#if JL_LLVM_VERSION >= 50000
++            Instruction *ptr = new AllocaInst(T_int8, 0, ConstantInt::get(T_int32, sz),
++                                              align, "", first);
++#else
++            Instruction *ptr = new AllocaInst(T_int8, ConstantInt::get(T_int32, sz),
++                                              align, "", first);
++#endif
++            ptr->setDebugLoc(dbg);
++            if (!ignore_tag) {
++                ptr = GetElementPtrInst::CreateInBounds(T_size, ptr,
++                                                        {ConstantInt::get(T_int32, align)}, "",
++                                                        first);
++                ptr->setDebugLoc(dbg);
++            }
++            auto cast = new BitCastInst(ptr, T_pjlvalue0, "", first);
++            cast->setDebugLoc(dbg);
++            // Someone might be reading the tag, initialize it.
++            if (!ignore_tag) {
++                auto tag = orig->getArgOperand(2);
++                auto cast2 = new BitCastInst(ptr, T_ppjlvalue0, "", orig);
++                cast2->setDebugLoc(dbg);
++                auto tagaddr = GetElementPtrInst::Create(T_pjlvalue, cast,
++                                                         {ConstantInt::get(T_size, -1)},
++                                                         "", orig);
++                tagaddr->setDebugLoc(dbg);
++                auto store = new StoreInst(tag, tagaddr, orig);
++                store->setMetadata(LLVMContext::MD_tbaa, tbaa_tag);
++                store->setDebugLoc(dbg);
++            }
++            replaceUsesWith(orig, cast, ignore_tag);
++        }
++        else {
++            lowerAlloc(orig, it.second);
++        }
++    }
++    return true;
++}
++
++char AllocOpt::ID = 0;
++static RegisterPass<AllocOpt> X("AllocOpt", "Promote heap allocation to stack",
++                                false /* Only looks at CFG */,
++                                false /* Analysis Pass */);
++
++}
++
++Pass *createAllocOptPass(bool opt)
++{
++    return new AllocOpt(opt);
++}
+diff --git a/test/codegen.jl b/test/codegen.jl
+index 0c7bd5e354..ff59fa86d1 100644
+--- a/test/codegen.jl
++++ b/test/codegen.jl
+@@ -62,3 +62,10 @@ if opt_level > 0
+ end
+ 
+ @test !contains(get_llvm(isequal, Tuple{Nullable{BigFloat}, Nullable{BigFloat}}), "%gcframe")
++
++if opt_level > 0
++    @test !contains(get_llvm((a)->ccall(:jl_breakpoint, Void, (Ref{Float64},), a),
++                             Tuple{Float64}), "jl_gc_pool_alloc")
++    @test contains(get_llvm((a)->ccall(:jl_breakpoint, Void, (Ref{Any},), a),
++                            Tuple{Float64}), "jl_gc_pool_alloc")
++end
+-- 
+2.13.2
+
