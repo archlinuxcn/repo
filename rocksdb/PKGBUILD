@@ -1,5 +1,5 @@
 pkgname=rocksdb
-pkgver=5.4.6
+pkgver=5.5.1
 pkgrel=1
 pkgdesc='Embedded key-value store for fast storage'
 arch=(i686 x86_64)
@@ -14,11 +14,11 @@ depends=(
 	)
 makedepends=('gcc' 'make')
 checkdepends=(python2)
-source=(https://github.com/facebook/rocksdb/archive/rocksdb-$pkgver.zip)
-sha256sums=('b130935c3c59a3cdc0193a87f985d559b7f6bd26548fe039293172227ec8ae5a')
+source=(https://github.com/facebook/rocksdb/archive/v$pkgver.zip)
+sha256sums=('43e626cf50934b446ac7cb7bd4659a7afb469f306fefba47ea3dd0ff1974ccdc')
 
 prepare() {
-  cd rocksdb-rocksdb-$pkgver
+  cd rocksdb-$pkgver
   sed -e 's/\bpython\b/python2/' -i Makefile
   if [ "$CARCH"  == "armv6h" ]; then
     sed -e 's/-momit-leaf-frame-pointer//' -i Makefile
@@ -26,7 +26,7 @@ prepare() {
 }
 
 build() {
-  cd rocksdb-rocksdb-$pkgver
+  cd rocksdb-$pkgver
   make shared_lib -j4
 }
 
@@ -36,7 +36,7 @@ build() {
 #}
 
 package() {
-  cd rocksdb-rocksdb-$pkgver
+  cd rocksdb-$pkgver
   install -d "$pkgdir"/usr/include
   cp -r include/rocksdb "$pkgdir"/usr/include
   install -m755 -D librocksdb.so "$pkgdir"/usr/lib/librocksdb.so
