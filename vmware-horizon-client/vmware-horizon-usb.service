@@ -1,5 +1,6 @@
 [Unit]
 Description=VMware Horizon USB daemon
+ConditionPathExists=/sys/bus/usb
 
 [Service]
 Type=forking
