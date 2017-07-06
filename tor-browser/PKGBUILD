@@ -12,7 +12,7 @@
 
 pkgname='tor-browser'
 pkgver='7.0.2'
-pkgrel=1
+pkgrel=3
 pkgdesc='Tor Browser Bundle: Anonymous browsing using firefox and tor (language-agnostic PKGBUILD)'
 url='https://www.torproject.org/projects/torbrowser.html'
 arch=('i686' 'x86_64')
@@ -63,9 +63,9 @@ _localetor() {
 
 }
 
-_language="$(_localetor)"
-
 validpgpkeys=('EF6E286DDA85EA2A4BA7DE684E2C6E8793298290')
+
+_language="$(_localetor)"
 
 source_i686=("https://dist.torproject.org/torbrowser/${pkgver}/${pkgname}-${_idstr32}-${pkgver}_${_language}.tar.xz"{,.asc})
 source_x86_64=("https://dist.torproject.org/torbrowser/${pkgver}/${pkgname}-${_idstr64}-${pkgver}_${_language}.tar.xz"{,.asc})
@@ -74,10 +74,10 @@ source=("${pkgname}.desktop"
 	"${pkgname}.png"
 	"${pkgname}.sh")
 
-md5sums=('f294787c2d7993b2f6022e6014e582e7'
-	'ef1de5f4e269f1084f20122d2703e954'
-	'494afbfa60fb4ce21840244cc3f7208c'
-	'3ef08aff0e2afebb1a2a7ffbf8f65897')
+md5sums=('914bc94601657ac143f21acd8ed75747'
+         'd7aa692701859b7ab6cd55f48e44e5e7'
+         '494afbfa60fb4ce21840244cc3f7208c'
+         '45aad9b5bb9697724f824e0eec52e406')
 md5sums_i686=('SKIP'
 	'SKIP')
 md5sums_x86_64=('SKIP'
@@ -90,11 +90,26 @@ package() {
 
 	cd "${srcdir}"
 
-	sed -i "s/REPL_LANGUAGE/${_language}/g" "${pkgname}.desktop"
+	msg "Packaging ${pkgname} (language: ${_language})..."
 
-	sed -i "s/REPL_NAME/${pkgname}/g"	"${pkgname}.sh"
-	sed -i "s/REPL_VERSION/${pkgver}/g"	"${pkgname}.sh"
-	sed -i "s/REPL_LANGUAGE/${_language}/g" "${pkgname}.sh"
+	if [ -z "${TORBROWSER_PKGLANG}" ]; then
+		msg ''
+		msg "Note: if you want to package ${pkgname} in a different language, please"
+		msg 'set a `TORBROWSER_PKGLANG` environment variable before running `makepkg`.'
+		msg ''
+		msg 'For instance:'
+		msg ''
+		msg "   TORBROWSER_PKGLANG='en-US' makepkg"
+		msg ''
+	fi
+
+	sed -i "s/__REPL_LANGUAGE__/${_language}/g"	"${pkgname}.desktop"
+
+	sed -i "s/__REPL_NAME__/${pkgname}/g"		"${pkgname}.sh"
+	sed -i "s/__REPL_VERSION__/${pkgver}/g"		"${pkgname}.sh"
+	sed -i "s/__REPL_RELEASE__/${pkgrel}/g"		"${pkgname}.sh"
+	sed -i "s/__REPL_LANGUAGE__/${_language}/g"	"${pkgname}.sh"
+	sed -i "s/__REPL_ARCH__/${_archstr}/g"		"${pkgname}.sh"
 
 	install -Dm 644 "${pkgname}.desktop"	"${pkgdir}/usr/share/applications/${pkgname}.desktop"
 	install -Dm 644 "${pkgname}.png"	"${pkgdir}/usr/share/pixmaps/${pkgname}.png"

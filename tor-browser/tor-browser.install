@@ -14,30 +14,30 @@ pre_install() {
 
 post_install() {
 	echo
-	echo "==> ${pkgname} will be extracted to ~/.$pkgname"
-	echo "==> the first time you run $pkgname as your normal user!"
+	echo "==> ${pkgname} will be extracted to ~/.${pkgname}"
+	echo "==> the first time you run ${pkgname} as your normal user!"
 	echo "==> Just start it and have fun."
 	echo
 }
 
 pre_upgrade() {
 	# remove old files
-	rm -rf /opt/$pkgname
+	rm -rf "/opt/${pkgname}"
 }
 
 post_upgrade() {
-	echo 
-	echo "==> The $pkgname copy in your home directory will be upgraded at the"
+	echo
+	echo "==> The ${pkgname} copy in your home directory will be upgraded at the"
 	echo "==> first time you run it as your normal user!"
 	echo "==> Just start and have fun."
-	echo 
+	echo
 }
 
 post_remove() {
-	echo 
+	echo
 	echo "==> You have to remove the tor-brower directory in your home"
 	echo "==> directory by hand: As your normal user, do:"
 	echo "==> "
 	echo "==> rm -rf ~/.${pkgname}"
-	echo 
+	echo
 }

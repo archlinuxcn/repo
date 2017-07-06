@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-#
+
 # Copyright (C) 2009 Benjamin Drung <bdrung at ubuntu dot com>
 # Copyright (C) 2012 Alessio Sergi <al3hex at gmail dot com>
 # modified 2012 for tor-browser (Max Roder <maxroder at web dot de>)
 # modified 2014 by Yardena Cohen <yardenack at gmail dot com>
+# modified 2017 by grufo <madmurphy333 at gmail dot com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,89 +21,159 @@
 
 set -e
 
-# filled by the PKGBUILD
-NAME='REPL_NAME'
-VERSION='REPL_VERSION'
-LANGUAGE="REPL_LANGUAGE"
 
-ARCH=$(getconf LONG_BIT)
+# filled by PKGBUILD
+_TB_PKGNAME_='__REPL_NAME__'
+_TB_VERSION_='__REPL_VERSION__'
+_TB_RELEASE_='__REPL_RELEASE__'
+_TB_LANGUAGE_="__REPL_LANGUAGE__"
+_TB_ARCH_='__REPL_ARCH__'
 
-notify() {
-  local title="$1"
-  local message="$2"
+# other constants and variables
+_TB_HOME_DIR_=~/".${_TB_PKGNAME_}"
+_TB_APP_DIR_="${_TB_HOME_DIR_}/app"
+_TB_VER_FILE_="${_TB_HOME_DIR_}/VERSION"
+_TB_LOG_FILE_="${_TB_HOME_DIR_}/LOG"
+_TB_UPDATE_=0
 
-  if [ $(which zenity 2>/dev/null) ]; then
-    zenity --info --title "$title" --text "$message"
-  elif [ $(which notify-send 2>/dev/null) ]; then
-    notify-send "$title" "$message"
-  elif [ $(which kdialog 2>/dev/null) ]; then
-    kdialog --title "$title" --passivepopup "$message"
-  else
-    echo -e "$0: [$title] $message" >&2
-  fi
+
+# syntax: _notify_ "${TITLE}" "${MESSAGE}"
+_notify_() {
+
+	if [ $(which zenity 2>/dev/null) ]; then
+		zenity --info --title "${1}" --text "${2}"
+	elif [ $(which notify-send 2>/dev/null) ]; then
+		notify-send "${1}" "${2}"
+	elif [ $(which kdialog 2>/dev/null) ]; then
+		kdialog --title "${1}" --passivepopup "${2}"
+	else
+		echo -e "${0}: [${1}] ${2}" >&2
+	fi
+
 }
 
-update() {
-	echo "$0: Extracting files to $INSTALL_DIRECTORY." >> $LOG_FILE
-	rm -rf $INSTALL_DIRECTORY/*
-	tar --strip-components=1 -xJf /opt/$NAME/tor-browser-linux${ARCH}-${VERSION}_${LANGUAGE}.tar.xz \
-		-C $INSTALL_DIRECTORY >> $LOG_FILE 2>&1 || notify "Error" \
+
+# syntax: _compare_ver_ "${INSTALLED_VERSION}" "${LATEST_VERSION}"
+_compare_ver_() {
+
+	[[ "${1}" == "${2}" ]] && return 1 || [[ "${1}" == "`echo -e "${1}\n${2}" | sort -V | head -n1`" ]]
+
+}
+
+
+_refresh_local_() {
+
+	echo "${0}: Extracting files to ${_TB_APP_DIR_}." >> "${_TB_LOG_FILE_}"
+	rm -rf "${_TB_APP_DIR_}"/*
+	tar --strip-components=1 -xJf "/opt/${_TB_PKGNAME_}/tor-browser-${_TB_ARCH_}-${_TB_VERSION_}_${_TB_LANGUAGE_}.tar.xz" \
+		-C "${_TB_APP_DIR_}" >> "${_TB_LOG_FILE_}" 2>&1 || _notify_ 'Error' \
 		"The tor-browser archive could not be extracted to your home directory. \
-		\nCheck permissions of $INSTALL_DIRECTORY. \
-		\nThe error log can be found in $LOG_FILE."
+		\nCheck permissions of ${_TB_APP_DIR_}. \
+		\nThe error log can be found in ${_TB_LOG_FILE_}."
 
-	[[ -f $INSTALL_DIRECTORY/Browser/start-tor-browser ]] && echo $VERSION > $VERSION_FILE
+	[[ -f "${_TB_APP_DIR_}/Browser/start-tor-browser" ]] && echo "${_TB_VERSION_}" > "${_TB_VER_FILE_}"
+
 }
 
-usage() {
-  cat <<EOF
+
+_aur_update_() {
+
+	local DO_UPDATE=0
+	local AUR_URL="https://aur.archlinux.org/cgit/aur.git/snapshot/${_TB_PKGNAME_}.tar.gz"
+
+	if [[ "$(id -u)" == '0' ]]; then
+		echo 'It is not a good idea to do this as root. Abort.' 1>&2
+		exit 1
+	fi
+
+	if ! curl --output /dev/null --silent --head --fail "${AUR_URL}"; then
+		echo 'Unable to retrieve the PKGBUILD. Abort.'
+		exit 1
+	fi
+
+	local TMP_PKGBUILD="$(mktemp -d)"
+
+	cd "${TMP_PKGBUILD}"
+
+	curl --silent "${AUR_URL}" | tar xz
+
+	cd "${TMP_PKGBUILD}/${_TB_PKGNAME_}"
+
+	local AUR_VERSION="$(grep 'pkgver' '.SRCINFO' | cut -d = -f2 | sed -e 's/^[[:space:]]*//')"
+	local AUR_RELEASE="$(grep 'pkgrel' '.SRCINFO' | cut -d = -f2 | sed -e 's/^[[:space:]]*//')"
+
+	if _compare_ver_ "${_TB_VERSION_}" "${AUR_VERSION}"; then
+		echo 'Found new version.'
+		local DO_UPDATE=1
+	elif [[ "${_TB_VERSION_}" == "${AUR_VERSION}" ]] && [[ "${_TB_RELEASE_}" != "${AUR_RELEASE}" ]] && [[ "${_TB_RELEASE_}" == "`echo -e "${_TB_RELEASE_}\n${AUR_RELEASE}" | sort | head -n1`" ]]; then
+		echo 'Found new PKGBUILD.'
+		local DO_UPDATE=1
+	else
+		echo "Everything is up to date (version: ${_TB_VERSION_})"
+	fi
+
+	[[ ${DO_UPDATE} -eq 1 ]] && makepkg -si
+
+	rm -rf "${TMP_PKGBUILD}"
+
+}
+
+
+_usage_() {
+
+	cat <<EOF
 Usage: ${0##*/} [option]
 
 Options:
   -h|--help         Show this help message and exit
-  -u|--update       Force update of the copy in your home directory
+  -u|--update       Search in AUR for a new release and install it
+  -f|--refresh      Force refresh of the copy in your home directory
   --dir=<directory> The Tor-Browser directory to use
 
   All unrecognized arguments will be passed to the browser.
 EOF
+
 }
 
-DIRECTORY=~/.$NAME
+
+# remove old INSTALL and APP directories (temporary command, to be removed in the next versions)
+if [[ -d "${_TB_HOME_DIR_}/INSTALL" ]] || [[ -d "${_TB_HOME_DIR_}/APP" ]]; then
+	rm -rf "${_TB_HOME_DIR_}"
+fi
+
 args=()
 for arg; do
-	case "$arg" in
-		-h|--help)   usage; exit 0 ;;
-		-u|--update) update=1 ;;
-		--dir=*)     DIRECTORY="${arg#*=}" ;;
+	case "${arg}" in
+		-h|--help) _usage_; exit 0 ;;
+		-u|--update) _aur_update_; exit 0 ;;
+		-f|--refresh) _TB_UPDATE_=1 ;;
+		--dir=*) _TB_HOME_DIR_="${arg#*=}" ;;
 		*) args+=("$arg") ;;
 	esac
 done
 
-INSTALL_DIRECTORY=$DIRECTORY/INSTALL
-VERSION_FILE=$DIRECTORY/VERSION
-LOG_FILE=$DIRECTORY/LOG
-
 # create directory, if it is missing (e.g. first run)
-[[ ! -d "$INSTALL_DIRECTORY" ]] && mkdir -p "$INSTALL_DIRECTORY"
-cd "$DIRECTORY"
+[[ ! -d "${_TB_APP_DIR_}" ]] && mkdir -p "${_TB_APP_DIR_}"
+cd "${_TB_HOME_DIR_}"
 
 # create version file if missing
-[[ ! -f $VERSION_FILE ]] && echo 0 > $VERSION_FILE
+[[ ! -f "${_TB_VER_FILE_}" ]] && echo 0 > "${_TB_VER_FILE_}"
 
-#get installed version
+# get the installed version
 while read line
 do
-	INSTALLED_VERSION=$line
-done < $VERSION_FILE
+	TB_INSTALLED_VERSION="${line}"
+done < "${_TB_VER_FILE_}"
 
 # start update if old or no tor-browser is installed
-if [[ "$INSTALLED_VERSION" == "$VERSION" ]] && [[ $update != 1 ]]; then
+if [[ "${TB_INSTALLED_VERSION}" == "${_TB_VERSION_}" ]] && [[ ${_TB_UPDATE_} -eq 0 ]]; then
 	# clear log
-	> $LOG_FILE
+	> "${_TB_LOG_FILE_}"
 else
-	echo "$0: Your version in $DIRECTORY is outdated or you do not have installed $NAME yet." > $LOG_FILE
-	update
+	echo "${0}: Your version in ${_TB_HOME_DIR_} is outdated or you do not have installed ${_TB_PKGNAME_} yet." > "${_TB_LOG_FILE_}"
+	_refresh_local_
 fi
 
 # start tor-browser
-cd $INSTALL_DIRECTORY/Browser && ./start-tor-browser "${args[@]}"
+cd "${_TB_APP_DIR_}/Browser" && ./start-tor-browser "${args[@]}"
+
