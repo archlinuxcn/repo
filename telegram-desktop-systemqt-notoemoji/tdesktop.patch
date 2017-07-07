@@ -141,10 +141,10 @@ index 00000000..4a722b8d
 +        flags |= QTextItem::StrikeOut;
 +}
 diff --git a/Telegram/SourceFiles/qt_static_plugins.cpp b/Telegram/SourceFiles/qt_static_plugins.cpp
-index 1d4896a6..f2f876b3 100644
+index b975c7a8..f2f876b3 100644
 --- a/Telegram/SourceFiles/qt_static_plugins.cpp
 +++ b/Telegram/SourceFiles/qt_static_plugins.cpp
-@@ -28,12 +28,4 @@ Q_IMPORT_PLUGIN(QWebpPlugin)
+@@ -28,13 +28,4 @@ Q_IMPORT_PLUGIN(QWebpPlugin)
  Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin)
  Q_IMPORT_PLUGIN(QGenericEnginePlugin)
  #elif defined Q_OS_LINUX // Q_OS_WIN | Q_OS_MAC
@@ -156,9 +156,10 @@ index 1d4896a6..f2f876b3 100644
 -Q_IMPORT_PLUGIN(QComposePlatformInputContextPlugin)
 -Q_IMPORT_PLUGIN(QIbusPlatformInputContextPlugin)
 -Q_IMPORT_PLUGIN(QFcitxPlatformInputContextPlugin)
+-Q_IMPORT_PLUGIN(QHimePlatformInputContextPlugin)
  #endif // Q_OS_WIN | Q_OS_MAC | Q_OS_LINUX
 diff --git a/Telegram/SourceFiles/ui/text/text.cpp b/Telegram/SourceFiles/ui/text/text.cpp
-index dbc2b0db..61fa93c9 100644
+index 044f8716..0865a5bb 100644
 --- a/Telegram/SourceFiles/ui/text/text.cpp
 +++ b/Telegram/SourceFiles/ui/text/text.cpp
 @@ -1692,11 +1692,11 @@ private:
@@ -190,10 +191,10 @@ index f89644e1..35230cfc 100644
  		layout.createLine();
  
 diff --git a/Telegram/SourceFiles/ui/twidget.cpp b/Telegram/SourceFiles/ui/twidget.cpp
-index 04fad32b..688cd8e0 100644
+index e9848ef2..dcee47ee 100644
 --- a/Telegram/SourceFiles/ui/twidget.cpp
 +++ b/Telegram/SourceFiles/ui/twidget.cpp
-@@ -187,9 +187,9 @@ void sendSynteticMouseEvent(QWidget *widget, QEvent::Type type, Qt::MouseButton
+@@ -191,9 +191,9 @@ void sendSynteticMouseEvent(QWidget *widget, QEvent::Type type, Qt::MouseButton
  			, button
  			, QGuiApplication::mouseButtons() | button
  			, QGuiApplication::keyboardModifiers()
@@ -261,7 +262,7 @@ index 80160d16..8789e874 100644
        '<(submodules_loc)/GSL/include',
        '<(submodules_loc)/variant/include',
 diff --git a/Telegram/gyp/qt.gypi b/Telegram/gyp/qt.gypi
-index 81c13a18..1af2e86e 100644
+index 81c13a18..56066400 100644
 --- a/Telegram/gyp/qt.gypi
 +++ b/Telegram/gyp/qt.gypi
 @@ -27,25 +27,21 @@
@@ -269,7 +270,7 @@ index 81c13a18..1af2e86e 100644
                  'qt_version%': '5.3.2',
                }, {
 -                'qt_version%': '5.6.2',
-+                'qt_version%': '5.8.0',
++                'qt_version%': '5.9.1',
                }]
              ],
            },
@@ -425,7 +426,7 @@ index fde88dcd..ca149b85 100644
        ],
        'cflags_c': [
 diff --git a/Telegram/gyp/telegram_linux.gypi b/Telegram/gyp/telegram_linux.gypi
-index b8866ec2..b505a67d 100644
+index 2c464928..b505a67d 100644
 --- a/Telegram/gyp/telegram_linux.gypi
 +++ b/Telegram/gyp/telegram_linux.gypi
 @@ -33,9 +33,10 @@
@@ -448,7 +449,7 @@ index b8866ec2..b505a67d 100644
        '/usr/local/lib',
        '<(linux_path_ffmpeg)/lib',
        '<(linux_path_openal)/lib',
-@@ -52,30 +54,20 @@
+@@ -52,31 +54,20 @@
        '<(linux_path_breakpad)/lib',
      ],
      'libraries': [
@@ -456,6 +457,7 @@ index b8866ec2..b505a67d 100644
 -      'composeplatforminputcontextplugin',
 -      'ibusplatforminputcontextplugin',
 -      'fcitxplatforminputcontextplugin',
+-      'himeplatforminputcontextplugin',
 -      'liblzma.a',
 -      'libopenal.a',
 -      'libavformat.a',
@@ -490,10 +492,10 @@ index b8866ec2..b505a67d 100644
      ],
      'configurations': {
 diff --git a/Telegram/gyp/telegram_sources.txt b/Telegram/gyp/telegram_sources.txt
-index c970f984..cb5f225c 100644
+index bfc18fdc..5d210e9f 100644
 --- a/Telegram/gyp/telegram_sources.txt
 +++ b/Telegram/gyp/telegram_sources.txt
-@@ -552,14 +552,7 @@
+@@ -578,14 +578,7 @@
  <(src_loc)/structs.cpp
  <(src_loc)/structs.h
  
