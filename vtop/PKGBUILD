@@ -1,17 +1,17 @@
 _npmname=vtop
-_npmver=0.5.5
-pkgname=vtop # All lowercase
-pkgver=0.5.5
+_npmver=0.5.7
+pkgname=$_npmname # All lowercase
+pkgver=$_npmver
 pkgrel=1
 pkgdesc="Wow such top. So stats"
 arch=(any)
 url="http://parall.ax/vtop"
 license=()
-depends=('nodejs' )
-optdepends=()
+depends=('nodejs')
+makedepends=('npm')
 source=(http://registry.npmjs.org/$_npmname/-/$_npmname-$_npmver.tgz)
 noextract=($_npmname-$_npmver.tgz)
-sha1sums=(286bd962e0ffa454a852989d751fd70d73e26e73)
+sha1sums=('fff91000fac3a97a165f6f52dc253bce3d4d091e')
 
 package() {
   cd $srcdir
