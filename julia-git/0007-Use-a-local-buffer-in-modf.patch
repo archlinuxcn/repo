@@ -1,18 +1,17 @@
-From 0982b8601ab85162f7567c58a69c6fbe621abd09 Mon Sep 17 00:00:00 2001
+From c0c98e14a564843b24c51f66de88117208cda9a9 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Wed, 5 Jul 2017 05:30:13 -0400
-Subject: [PATCH 6/6] Use a local buffer in `modf`
+Subject: [PATCH 7/8] Use a local buffer in `modf`
 
-Fix #21591
 ---
  base/math.jl | 12 ++++++------
  1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/base/math.jl b/base/math.jl
-index 454b6e4cdc..80a9967122 100644
+index 485d24884f..d86a4a0e58 100644
 --- a/base/math.jl
 +++ b/base/math.jl
-@@ -693,16 +693,16 @@ julia> modf(3.5)
+@@ -695,16 +695,16 @@ julia> modf(3.5)
  """
  modf(x) = rem(x,one(x)), trunc(x)
  

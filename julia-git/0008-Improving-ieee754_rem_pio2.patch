@@ -1,0 +1,38 @@
+From be8e4ce0293b83c7eb5e186f20d82ecd7662b5c1 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sat, 8 Jul 2017 06:51:32 -0400
+Subject: [PATCH 8/8] Improving ieee754_rem_pio2
+
+---
+ base/math.jl | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/base/math.jl b/base/math.jl
+index d86a4a0e58..edd4ad00ad 100644
+--- a/base/math.jl
++++ b/base/math.jl
+@@ -740,7 +740,7 @@ function add22condh(xh::Float64, xl::Float64, yh::Float64, yl::Float64)
+     return zh
+ end
+ 
+-function ieee754_rem_pio2(x::Float64)
++@inline function ieee754_rem_pio2(x::Float64)
+     # rem_pio2 essentially computes x mod pi/2 (ie within a quarter circle)
+     # and returns the result as
+     # y between + and - pi/4 (for maximal accuracy (as the sign bit is exploited)), and
+@@ -754,9 +754,9 @@ function ieee754_rem_pio2(x::Float64)
+     # this is just wrapping up
+     # https://github.com/JuliaLang/openspecfun/blob/master/rem_pio2/e_rem_pio2.c
+ 
+-    y = [0.0,0.0]
+-    n = ccall((:__ieee754_rem_pio2, openspecfun), Cint, (Float64,Ptr{Float64}), x, y)
+-    return (n,y)
++    y = Ref{NTuple{2,Float64}}()
++    n = ccall((:__ieee754_rem_pio2, openspecfun), Cint, (Float64, Ptr{Void}), x, y)
++    return (n, y[])
+ end
+ 
+ # multiples of pi/2, as double-double (ie with "tail")
+-- 
+2.13.2
+

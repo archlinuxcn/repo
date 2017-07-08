@@ -1,24 +1,22 @@
-From 9de1344fc07e592dacb1e71d5d1c27c107081c41 Mon Sep 17 00:00:00 2001
+From 4e8d327ec9242d4e58cd685b404f2bffcbf3b005 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Tue, 4 Jul 2017 22:14:59 -0400
-Subject: [PATCH 5/6] Add LLVM level allocation optimization pass
+Subject: [PATCH 6/8] Add LLVM level allocation optimization pass
 
 This can obtain escape information with much higher precision than what we can currently do
 in typeinf. However, it does not replace the alloc_elim_pass! in type inference either since
 this cannot handle objects with reference fields.
-
-Fix #20452
 ---
  src/Makefile           |   2 +-
  src/ccall.cpp          |   2 +-
- src/cgutils.cpp        |  21 +--
- src/codegen.cpp        |  29 ++--
+ src/cgutils.cpp        |  21 +-
+ src/codegen.cpp        |  34 +--
  src/intrinsics.cpp     |   6 +-
  src/jitlayers.cpp      |   8 +
  src/jitlayers.h        |   1 +
- src/llvm-alloc-opt.cpp | 385 +++++++++++++++++++++++++++++++++++++++++++++++++
- test/codegen.jl        |   7 +
- 9 files changed, 416 insertions(+), 45 deletions(-)
+ src/llvm-alloc-opt.cpp | 688 +++++++++++++++++++++++++++++++++++++++++++++++++
+ test/codegen.jl        |  15 ++
+ 9 files changed, 732 insertions(+), 45 deletions(-)
  create mode 100644 src/llvm-alloc-opt.cpp
 
 diff --git a/src/Makefile b/src/Makefile
@@ -48,10 +46,10 @@ index 849fcd6df7..4492dd134a 100644
  #if JL_LLVM_VERSION >= 40000
                  const DataLayout &DL = jl_data_layout;
 diff --git a/src/cgutils.cpp b/src/cgutils.cpp
-index 35cfc4bfd6..d134e75274 100644
+index bfe1b64684..adf2b56ca7 100644
 --- a/src/cgutils.cpp
 +++ b/src/cgutils.cpp
-@@ -2156,25 +2156,10 @@ static Value *emit_allocobj(jl_codectx_t &ctx, size_t static_size, Value *jt)
+@@ -2149,25 +2149,10 @@ static Value *emit_allocobj(jl_codectx_t &ctx, size_t static_size, Value *jt)
  {
      JL_FEAT_REQUIRE(ctx, dynamic_alloc);
      JL_FEAT_REQUIRE(ctx, runtime);
@@ -81,7 +79,7 @@ index 35cfc4bfd6..d134e75274 100644
  
  // if ptr is NULL this emits a write barrier _back_
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index 98987c21e5..5227ef5b28 100644
+index 7538267f3d..01b3c2c951 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
 @@ -315,8 +315,7 @@ static Function *jlgenericfunction_func;
@@ -94,7 +92,7 @@ index 98987c21e5..5227ef5b28 100644
  static Function *jlisa_func;
  static Function *jlsubtype_func;
  static Function *jlapplytype_func;
-@@ -6631,24 +6630,14 @@ static void init_julia_llvm_env(Module *m)
+@@ -6635,24 +6634,19 @@ static void init_julia_llvm_env(Module *m)
                           "jl_instantiate_type_in_env", m);
      add_named_global(jlapplytype_func, &jl_instantiate_type_in_env);
  
@@ -123,15 +121,20 @@ index 98987c21e5..5227ef5b28 100644
 +    jl_alloc_obj_func = Function::Create(FunctionType::get(T_prjlvalue, gc_alloc_args, false),
 +                                         Function::ExternalLinkage,
 +                                         "julia.gc_alloc_obj");
++#if JL_LLVM_VERSION >= 50000
++    jl_alloc_obj_func->addAttribute(AttributeList::ReturnIndex, Attribute::NoAlias);
++#else
++    jl_alloc_obj_func->addAttribute(AttributeSet::ReturnIndex, Attribute::NoAlias);
++#endif
 +    add_named_global(jl_alloc_obj_func, (void*)NULL, /*dllimport*/false);
  
      std::vector<Type *> dlsym_args(0);
      dlsym_args.push_back(T_pint8);
 diff --git a/src/intrinsics.cpp b/src/intrinsics.cpp
-index 1f197b6154..45e8871f87 100644
+index 7c9ef29df2..5b7397ddc8 100644
 --- a/src/intrinsics.cpp
 +++ b/src/intrinsics.cpp
-@@ -326,11 +326,7 @@ static Value *emit_unbox(jl_codectx_t &ctx, Type *to, const jl_cgval_t &x, jl_va
+@@ -325,11 +325,7 @@ static Value *emit_unbox(jl_codectx_t &ctx, Type *to, const jl_cgval_t &x, jl_va
      }
  
      int alignment;
@@ -191,10 +194,10 @@ index aaa11ec384..138c8f9d81 100644
  {
 diff --git a/src/llvm-alloc-opt.cpp b/src/llvm-alloc-opt.cpp
 new file mode 100644
-index 0000000000..4ab3c5af33
+index 0000000000..4da3c22cd4
 --- /dev/null
 +++ b/src/llvm-alloc-opt.cpp
-@@ -0,0 +1,385 @@
+@@ -0,0 +1,688 @@
 +// This file is a part of Julia. License is MIT: https://julialang.org/license
 +
 +#define DEBUG_TYPE "alloc_opt"
@@ -202,6 +205,7 @@ index 0000000000..4ab3c5af33
 +#include "llvm-version.h"
 +
 +#include <llvm/IR/Value.h>
++#include <llvm/IR/CFG.h>
 +#include <llvm/IR/Function.h>
 +#include <llvm/IR/Instructions.h>
 +#include <llvm/IR/IntrinsicInst.h>
@@ -210,6 +214,9 @@ index 0000000000..4ab3c5af33
 +#include <llvm/IR/IRBuilder.h>
 +#include <llvm/Pass.h>
 +#include <llvm/Support/Debug.h>
++
++#include <llvm/IR/Dominators.h>
++
 +#include "fix_llvm_assert.h"
 +
 +#include "codegen_shared.h"
@@ -217,6 +224,7 @@ index 0000000000..4ab3c5af33
 +#include "julia_internal.h"
 +
 +#include <map>
++#include <set>
 +
 +using namespace llvm;
 +
@@ -244,8 +252,6 @@ index 0000000000..4ab3c5af33
 + * lower other ones to real GC allocation.
 + */
 +
-+constexpr ssize_t invalid_offset = -15;
-+
 +struct AllocOpt : public FunctionPass {
 +    static char ID;
 +    AllocOpt(bool opt=true)
@@ -263,9 +269,12 @@ index 0000000000..4ab3c5af33
 +    Function *pool_alloc;
 +    Function *big_alloc;
 +    Function *ptr_from_objref;
++    Function *lifetime_start;
++    Function *lifetime_end;
 +
 +    Type *T_int8;
 +    Type *T_int32;
++    Type *T_int64;
 +    Type *T_size;
 +    Type *T_pint8;
 +    Type *T_pjlvalue;
@@ -276,13 +285,53 @@ index 0000000000..4ab3c5af33
 +
 +    MDNode *tbaa_tag;
 +
++    struct CheckInstFrame {
++        Instruction *parent;
++        size_t offset;
++        Instruction::user_iterator user_it;
++        Instruction::user_iterator user_end;
++    };
++    typedef SmallVector<CheckInstFrame, 4> CheckInstStack;
++    struct ReplaceUsesFrame {
++        Instruction *orig_i;
++        Instruction *new_i;
++        SmallVector<User*,4> users;
++        size_t idx;
++        ReplaceUsesFrame(Instruction *orig_i, Instruction *new_i)
++            : orig_i(orig_i),
++              new_i(new_i),
++              users(orig_i->user_begin(), orig_i->user_end()),
++              idx(0)
++        {}
++    };
++    typedef SmallVector<ReplaceUsesFrame,4> ReplaceUsesStack;
++
 +    bool doInitialization(Module &m) override;
 +    bool runOnFunction(Function &F) override;
-+    bool checkUses(Instruction *I, size_t offset, bool &ignore_tag);
-+    bool checkInst(Instruction *I, Instruction *parent, size_t offset, bool &ignore_tag);
-+    void replaceUsesWith(Instruction *orig_i, Instruction *new_i, bool ignore_tag);
++    bool checkInst(Instruction *I, CheckInstStack &stack, std::set<Instruction*> &uses,
++                   bool &ignore_tag);
++    void replaceUsesWith(Instruction *orig_i, Instruction *new_i, ReplaceUsesStack &stack);
 +    void lowerAlloc(CallInst *I, size_t sz);
++    bool isSafepoint(Instruction *inst);
++    void getAnalysisUsage(AnalysisUsage &AU) const override
++    {
++        if (optimize) {
++            FunctionPass::getAnalysisUsage(AU);
++            AU.addRequired<DominatorTreeWrapperPass>();
++            AU.addPreserved<DominatorTreeWrapperPass>();
++            AU.setPreservesCFG();
++        }
++    }
 +};
++
++static void addRetNoAlias(Function *F)
++{
++#if JL_LLVM_VERSION >= 50000
++    F->addAttribute(AttributeList::ReturnIndex, Attribute::NoAlias);
++#else
++    F->addAttribute(AttributeSet::ReturnIndex, Attribute::NoAlias);
++#endif
++}
 +
 +bool AllocOpt::doInitialization(Module &M)
 +{
@@ -304,7 +353,8 @@ index 0000000000..4ab3c5af33
 +
 +    T_int8 = Type::getInt8Ty(*ctx);
 +    T_int32 = Type::getInt32Ty(*ctx);
-+    T_size = sizeof(void*) == 8 ? Type::getInt64Ty(*ctx) : T_int32;
++    T_int64 = Type::getInt64Ty(*ctx);
++    T_size = sizeof(void*) == 8 ? T_int64 : T_int32;
 +    T_pint8 = PointerType::get(T_int8, 0);
 +
 +    if (!(pool_alloc = M.getFunction("jl_gc_pool_alloc"))) {
@@ -314,6 +364,7 @@ index 0000000000..4ab3c5af33
 +        alloc_pool_args.push_back(T_int32);
 +        pool_alloc = Function::Create(FunctionType::get(T_pjlvalue, alloc_pool_args, false),
 +                                      Function::ExternalLinkage, "jl_gc_pool_alloc", &M);
++        addRetNoAlias(pool_alloc);
 +    }
 +    if (!(big_alloc = M.getFunction("jl_gc_big_alloc"))) {
 +        std::vector<Type*> alloc_big_args(0);
@@ -321,7 +372,17 @@ index 0000000000..4ab3c5af33
 +        alloc_big_args.push_back(T_size);
 +        big_alloc = Function::Create(FunctionType::get(T_pjlvalue, alloc_big_args, false),
 +                                     Function::ExternalLinkage, "jl_gc_big_alloc", &M);
++        addRetNoAlias(big_alloc);
 +    }
++
++#if JL_LLVM_VERSION >= 50000
++    lifetime_start = Intrinsic::getDeclaration(&M, Intrinsic::lifetime_start, { T_pint8 });
++    lifetime_end = Intrinsic::getDeclaration(&M, Intrinsic::lifetime_end, { T_pint8 });
++#else
++    lifetime_start = Intrinsic::getDeclaration(&M, Intrinsic::lifetime_start);
++    lifetime_end = Intrinsic::getDeclaration(&M, Intrinsic::lifetime_end);
++#endif
++
 +    MDNode *tbaa_data;
 +    MDNode *tbaa_data_scalar;
 +    std::tie(tbaa_data, tbaa_data_scalar) = tbaa_make_child("jtbaa_data");
@@ -330,76 +391,137 @@ index 0000000000..4ab3c5af33
 +    return true;
 +}
 +
-+bool AllocOpt::checkUses(Instruction *I, size_t offset, bool &ignore_tag)
++bool AllocOpt::checkInst(Instruction *I, CheckInstStack &stack, std::set<Instruction*> &uses,
++                         bool &ignore_tag)
 +{
-+    for (auto user: I->users()) {
-+        auto inst = dyn_cast<Instruction>(user);
-+        if (!inst || !checkInst(inst, I, offset, ignore_tag)) {
-+            return false;
-+        }
-+    }
-+    return true;
-+}
++    if (I->user_empty())
++        return true;
++    CheckInstFrame cur{I, 0, I->user_begin(), I->user_end()};
++    stack.clear();
++    uses.clear();
 +
-+bool AllocOpt::checkInst(Instruction *I, Instruction *parent, size_t offset, bool &ignore_tag)
-+{
-+    if (isa<LoadInst>(I))
-+        return true;
-+    if (auto call = dyn_cast<CallInst>(I)) {
-+        if (ptr_from_objref && ptr_from_objref == call->getCalledFunction())
++    // Recursion
++    auto push_inst = [&] (Instruction *inst) {
++        if (cur.user_it != cur.user_end)
++            stack.push_back(cur);
++        cur.parent = inst;
++        cur.user_it = inst->user_begin();
++        cur.user_end = inst->user_end();
++    };
++
++    auto check_inst = [&] (Instruction *inst) {
++        if (isa<LoadInst>(inst))
 +            return true;
-+        // Only use in argument counts, uses in operand bundle doesn't since it cannot escape.
-+        for (auto &arg: call->arg_operands()) {
-+            if (dyn_cast<Instruction>(&arg) == parent) {
-+                return false;
++        if (auto call = dyn_cast<CallInst>(inst)) {
++            // TODO: on LLVM 5.0 we may need to handle certain llvm intrinsics
++            // including `memcpy`, `memset` etc. We might also need to handle
++            // `memcmp` by coverting to our own intrinsic and lower it after the gc root pass.
++            if (ptr_from_objref && ptr_from_objref == call->getCalledFunction())
++                return true;
++            // Only use in argument counts, use in operand bundle doesn't since it cannot escape.
++            for (auto &arg: call->arg_operands()) {
++                if (dyn_cast<Instruction>(&arg) == cur.parent) {
++                    return false;
++                }
 +            }
-+        }
-+        if (call->getNumOperandBundles() != 1)
-+            return false;
-+        auto obuse = call->getOperandBundleAt(0);
-+        if (obuse.getTagName() != "jl_roots")
-+            return false;
-+        return true;
-+    }
-+    if (isa<AddrSpaceCastInst>(I) || isa<BitCastInst>(I))
-+        return checkUses(I, offset, ignore_tag);
-+    if (auto gep = dyn_cast<GetElementPtrInst>(I)) {
-+        APInt apoffset(sizeof(void*) * 8, offset, true);
-+        if (ignore_tag && (!gep->accumulateConstantOffset(*DL, apoffset) ||
-+                           apoffset.isNegative()))
-+            ignore_tag = false;
-+        return checkUses(I, offset, ignore_tag);
-+    }
-+    if (auto store = dyn_cast<StoreInst>(I)) {
-+        auto storev = store->getValueOperand();
-+        // Only store value count
-+        if (storev == parent)
-+            return false;
-+        // There's GC root in this object.
-+        if (auto ptrtype = dyn_cast<PointerType>(storev->getType())) {
-+            if (ptrtype->getAddressSpace() == AddressSpace::Tracked) {
++            if (call->getNumOperandBundles() != 1)
 +                return false;
-+            }
++            auto obuse = call->getOperandBundleAt(0);
++            if (obuse.getTagName() != "jl_roots")
++                return false;
++            return true;
 +        }
-+        return true;
++        if (auto store = dyn_cast<StoreInst>(inst)) {
++            auto storev = store->getValueOperand();
++            // Only store value count
++            if (storev == cur.parent)
++                return false;
++            // There's GC root in this object.
++            if (auto ptrtype = dyn_cast<PointerType>(storev->getType())) {
++                if (ptrtype->getAddressSpace() == AddressSpace::Tracked) {
++                    return false;
++                }
++            }
++            return true;
++        }
++        if (isa<AddrSpaceCastInst>(inst) || isa<BitCastInst>(inst)) {
++            push_inst(inst);
++            return true;
++        }
++        if (auto gep = dyn_cast<GetElementPtrInst>(inst)) {
++            APInt apoffset(sizeof(void*) * 8, cur.offset, true);
++            if (ignore_tag && (!gep->accumulateConstantOffset(*DL, apoffset) ||
++                               apoffset.isNegative()))
++                ignore_tag = false;
++            push_inst(inst);
++            cur.offset = apoffset.getLimitedValue();
++            return true;
++        }
++        return false;
++    };
++
++    while (true) {
++        assert(cur.user_it != cur.user_end);
++        auto user = *cur.user_it;
++        auto inst = dyn_cast<Instruction>(user);
++        ++cur.user_it;
++        if (!inst)
++            return false;
++        if (!check_inst(inst))
++            return false;
++        uses.insert(inst);
++        if (cur.user_it == cur.user_end) {
++            if (stack.empty())
++                return true;
++            cur = stack.back();
++            stack.pop_back();
++        }
 +    }
-+    return false;
 +}
 +
 +// Both arguments should be pointer of the same type but possibly different address spaces
 +// `orig_i` is always in addrspace 0.
 +// This function needs to handle all cases `AllocOpt::checkInst` can handle.
-+void AllocOpt::replaceUsesWith(Instruction *orig_i, Instruction *new_i, bool ignore_tag)
++// This function should not erase any safepoint
++void AllocOpt::replaceUsesWith(Instruction *orig_inst, Instruction *new_inst,
++                               ReplaceUsesStack &stack)
 +{
-+    Type *orig_t = orig_i->getType();
-+    Type *new_t = new_i->getType();
-+    if (orig_t == new_t) {
-+        orig_i->replaceAllUsesWith(new_i);
-+        orig_i->eraseFromParent();
++    auto simple_replace = [&] (Instruction *orig_i, Instruction *new_i) {
++        if (orig_i->user_empty()) {
++            if (orig_i != orig_inst)
++                orig_i->eraseFromParent();
++            return true;
++        }
++        Type *orig_t = orig_i->getType();
++        Type *new_t = new_i->getType();
++        if (orig_t == new_t) {
++            orig_i->replaceAllUsesWith(new_i);
++            if (orig_i != orig_inst)
++                orig_i->eraseFromParent();
++            return true;
++        }
++        return false;
++    };
++    if (simple_replace(orig_inst, new_inst))
 +        return;
-+    }
-+    SmallVector<User*, 4> users(orig_i->user_begin(), orig_i->user_end());
-+    for (auto user: users) {
++    stack.clear();
++    stack.emplace_back(orig_inst, new_inst);
++    ReplaceUsesFrame *cur = &stack[0];
++    auto finish_cur = [&] () {
++        assert(cur->orig_i->user_empty());
++        if (cur->orig_i != orig_inst) {
++            cur->orig_i->eraseFromParent();
++        }
++    };
++    auto push_frame = [&] (Instruction *orig_i, Instruction *new_i) {
++        if (simple_replace(orig_i, new_i))
++            return;
++        stack.emplace_back(orig_i, new_i);
++        cur = &stack.back();
++    };
++    auto replace_inst = [&] (Instruction *user) {
++        Instruction *orig_i = cur->orig_i;
++        Instruction *new_i = cur->new_i;
 +        if (isa<LoadInst>(user) || isa<StoreInst>(user)) {
 +            user->replaceUsesOfWith(orig_i, new_i);
 +        }
@@ -407,18 +529,20 @@ index 0000000000..4ab3c5af33
 +            if (ptr_from_objref && ptr_from_objref == call->getCalledFunction()) {
 +                call->replaceAllUsesWith(new_i);
 +                call->eraseFromParent();
-+                continue;
++                return;
 +            }
 +            // remove from operand bundle
++            Type *new_t = new_i->getType();
 +            user->replaceUsesOfWith(orig_i, ConstantPointerNull::get(cast<PointerType>(new_t)));
 +        }
 +        else if (isa<AddrSpaceCastInst>(user) || isa<BitCastInst>(user)) {
-+            auto I = cast<Instruction>(user);
-+            auto cast_t = PointerType::get(cast<PointerType>(I->getType())->getElementType(), 0);
++            auto cast_t = PointerType::get(cast<PointerType>(user->getType())->getElementType(),
++                                           0);
 +            auto replace_i = new_i;
++            Type *orig_t = orig_i->getType();
 +            if (cast_t != orig_t)
-+                replace_i = new BitCastInst(replace_i, cast_t, "", I);
-+            replaceUsesWith(I, replace_i, ptr_from_objref);
++                replace_i = new BitCastInst(replace_i, cast_t, "", user);
++            push_frame(user, replace_i);
 +        }
 +        else if (auto gep = dyn_cast<GetElementPtrInst>(user)) {
 +            Instruction *new_gep;
@@ -434,14 +558,26 @@ index 0000000000..4ab3c5af33
 +                                                    gep->getName(), gep);
 +            }
 +            copyMetadata(new_gep, gep);
-+            replaceUsesWith(gep, new_gep, ptr_from_objref);
++            push_frame(gep, new_gep);
 +        }
 +        else {
 +            abort();
 +        }
++    };
++
++    while (true) {
++        assert(cur->idx < cur->users.size());
++        auto user = cast<Instruction>(cur->users[cur->idx]);
++        cur->idx++;
++        replace_inst(user);
++        while (cur->idx >= cur->users.size()) {
++            finish_cur();
++            stack.pop_back();
++            if (stack.empty())
++                return;
++            cur = &stack.back();
++        }
 +    }
-+    assert(orig_i->user_empty());
-+    orig_i->eraseFromParent();
 +}
 +
 +void AllocOpt::lowerAlloc(CallInst *I, size_t sz)
@@ -473,7 +609,22 @@ index 0000000000..4ab3c5af33
 +    store->setMetadata(LLVMContext::MD_tbaa, tbaa_tag);
 +    store->setDebugLoc(dbg);
 +    I->replaceAllUsesWith(newI);
-+    I->eraseFromParent();
++}
++
++bool AllocOpt::isSafepoint(Instruction *inst)
++{
++    auto call = dyn_cast<CallInst>(inst);
++    if (!call)
++        return false;
++    if (isa<IntrinsicInst>(call))
++        return false;
++    if (auto callee = call->getCalledFunction()) {
++        // Known functions emitted in codegen that are not safepoints
++        if (callee == ptr_from_objref || callee->getName() == "memcmp") {
++            return false;
++        }
++    }
++    return true;
 +}
 +
 +bool AllocOpt::runOnFunction(Function &F)
@@ -503,11 +654,163 @@ index 0000000000..4ab3c5af33
 +
 +    auto &entry = F.getEntryBlock();
 +    auto first = &entry.front();
++    CheckInstStack check_stack;
++    ReplaceUsesStack replace_stack;
++    std::set<Instruction*> alloc_uses;
++    std::map<BasicBlock*,Instruction*> first_safepoint;
++    auto get_first_safepoint = [&] (BasicBlock *bb) {
++        auto it = first_safepoint.find(bb);
++        if (it != first_safepoint.end())
++            return it->second;
++        Instruction *first = nullptr;
++        for (auto &I: *bb) {
++            if (isSafepoint(&I)) {
++                first = &I;
++                break;
++            }
++        }
++        first_safepoint[bb] = first;
++        return first;
++    };
++    auto insert_lifetime_end = [&] (Instruction *ptr, Constant *sz, Instruction *insert) {
++        BasicBlock::iterator it(insert);
++        BasicBlock::iterator begin(insert->getParent()->begin());
++        while (it != begin) {
++            --it;
++            if (auto II = dyn_cast<IntrinsicInst>(&*it)) {
++                if (II->getIntrinsicID() == Intrinsic::lifetime_start ||
++                    II->getIntrinsicID() == Intrinsic::lifetime_end) {
++                    insert = II;
++                    continue;
++                }
++            }
++            break;
++        }
++        CallInst::Create(lifetime_end, {sz, ptr}, "", insert);
++    };
++    struct BBPredFrame {
++        BasicBlock *bb;
++        pred_iterator p_cur;
++        pred_iterator p_end;
++        BBPredFrame(BasicBlock *bb)
++            : bb(bb),
++              p_cur(pred_begin(bb)),
++              p_end(pred_end(bb))
++        {}
++    };
++    SmallVector<BBPredFrame,4> bb_stack;
++    auto insert_lifetime = [&] (Instruction *ptr, Constant *sz, Instruction *orig) {
++        CallInst::Create(lifetime_start, {sz, ptr}, "", orig);
++        BasicBlock *def = orig->getParent();
++        std::set<BasicBlock*> bbs{def};
++        auto &DT = getAnalysis<DominatorTreeWrapperPass>().getDomTree();
++        // Collect all BB where the allocation is live
++        for (auto use: alloc_uses) {
++            auto bb = use->getParent();
++            if (!bbs.insert(bb).second)
++                continue;
++            bb_stack.clear();
++            BBPredFrame cur{bb};
++            while (true) {
++                assert(cur.p_cur != cur.p_end);
++                auto pred = *cur.p_cur;
++                ++cur.p_cur;
++                if (bbs.insert(pred).second) {
++                    if (cur.p_cur != cur.p_end)
++                        bb_stack.push_back(cur);
++                    cur = BBPredFrame(pred);
++                }
++                if (cur.p_cur == cur.p_end) {
++                    if (bb_stack.empty())
++                        break;
++                    cur = bb_stack.back();
++                    bb_stack.pop_back();
++                }
++            }
++        }
++        // For each BB, find the first instruction(s) where the allocation is possibly dead.
++        // If all successors are live, then there isn't one.
++        // If all successors are dead, then it's the first instruction after the last use
++        // within the BB.
++        // If some successors are live and others are dead, it's the first instruction in
++        // the successors that are dead.
++        std::vector<Instruction*> first_dead;
++        for (auto bb: bbs) {
++            bool has_use = false;
++            for (auto succ: successors(bb)) {
++                // def is the only bb in bbs that's not dominated by orig
++                if (succ != def && bbs.find(succ) != bbs.end()) {
++                    has_use = true;
++                    break;
++                }
++            }
++            if (has_use) {
++                for (auto succ: successors(bb)) {
++                    if (bbs.find(succ) == bbs.end()) {
++                        first_dead.push_back(&*succ->begin());
++                    }
++                }
++            }
++            else {
++                for (auto it = bb->rbegin(), end = bb->rend(); it != end; ++it) {
++                    if (alloc_uses.find(&*it) != alloc_uses.end()) {
++                        --it;
++                        first_dead.push_back(&*it);
++                        break;
++                    }
++                }
++            }
++        }
++        bbs.clear();
++        // There can/need only be one lifetime.end for each allocation in each bb, use bbs
++        // to record that.
++        // Iterate through the first dead and find the first safepoint following each of them.
++        while (!first_dead.empty()) {
++            auto I = first_dead.back();
++            first_dead.pop_back();
++            auto bb = I->getParent();
++            if (!bbs.insert(bb).second)
++                continue;
++            if (I == &*bb->begin()) {
++                // The there's no use in or after this bb. If this bb is not dominated by
++                // the def then it has to be dead on entering this bb.
++                // Otherwise, there could be use that we don't track
++                // before hitting the next safepoint.
++                if (!DT.dominates(orig, bb)) {
++                    insert_lifetime_end(ptr, sz, &*bb->getFirstInsertionPt());
++                    continue;
++                }
++                else if (auto insert = get_first_safepoint(bb)) {
++                    insert_lifetime_end(ptr, sz, insert);
++                }
++            }
++            else {
++                assert(DT.dominates(orig, I));
++                BasicBlock::iterator it(I);
++                BasicBlock::iterator end = bb->end();
++                bool safepoint_found = false;
++                for (; it != end; ++it) {
++                    auto insert = &*it;
++                    if (isSafepoint(insert)) {
++                        insert_lifetime_end(ptr, sz, insert);
++                        safepoint_found = true;
++                        break;
++                    }
++                }
++                if (safepoint_found) {
++                    continue;
++                }
++            }
++            for (auto succ: successors(bb)) {
++                first_dead.push_back(&*succ->begin());
++            }
++        }
++    };
 +    for (auto it: allocs) {
 +        bool ignore_tag = true;
 +        auto orig = it.first;
-+        if (optimize && checkUses(orig, 0, ignore_tag)) {
-+            // The allocation does not escape or be used in a phi node so none of the derived
++        if (optimize && checkInst(orig, check_stack, alloc_uses, ignore_tag)) {
++            // The allocation does not escape or get used in a phi node so none of the derived
 +            // SSA from it are live when we run the allocation again.
 +            // It is now safe to promote the allocation to an entry block alloca.
 +            size_t sz = it.second;
@@ -538,6 +841,7 @@ index 0000000000..4ab3c5af33
 +            Instruction *ptr = new AllocaInst(T_int8, ConstantInt::get(T_int32, sz),
 +                                              align, "", first);
 +#endif
++            insert_lifetime(ptr, ConstantInt::get(T_int64, sz), orig);
 +            ptr->setDebugLoc(dbg);
 +            if (!ignore_tag) {
 +                ptr = GetElementPtrInst::CreateInBounds(T_size, ptr,
@@ -560,12 +864,14 @@ index 0000000000..4ab3c5af33
 +                store->setMetadata(LLVMContext::MD_tbaa, tbaa_tag);
 +                store->setDebugLoc(dbg);
 +            }
-+            replaceUsesWith(orig, cast, ignore_tag);
++            replaceUsesWith(orig, cast, replace_stack);
 +        }
 +        else {
 +            lowerAlloc(orig, it.second);
 +        }
 +    }
++    for (auto it: allocs)
++        it.first->eraseFromParent();
 +    return true;
 +}
 +
@@ -581,19 +887,27 @@ index 0000000000..4ab3c5af33
 +    return new AllocOpt(opt);
 +}
 diff --git a/test/codegen.jl b/test/codegen.jl
-index 0c7bd5e354..ff59fa86d1 100644
+index da80ff1661..35220c772b 100644
 --- a/test/codegen.jl
 +++ b/test/codegen.jl
-@@ -62,3 +62,10 @@ if opt_level > 0
+@@ -135,3 +135,18 @@ if opt_level > 0
+     @test contains(compare_large_struct_ir, "call i32 @memcmp")
+     @test !contains(compare_large_struct_ir, "%gcframe")
  end
- 
- @test !contains(get_llvm(isequal, Tuple{Nullable{BigFloat}, Nullable{BigFloat}}), "%gcframe")
++
++function two_breakpoint(a::Float64)
++    ccall(:jl_breakpoint, Void, (Ref{Float64},), a)
++    ccall(:jl_breakpoint, Void, (Ref{Float64},), a)
++end
 +
 +if opt_level > 0
 +    @test !contains(get_llvm((a)->ccall(:jl_breakpoint, Void, (Ref{Float64},), a),
 +                             Tuple{Float64}), "jl_gc_pool_alloc")
 +    @test contains(get_llvm((a)->ccall(:jl_breakpoint, Void, (Ref{Any},), a),
 +                            Tuple{Float64}), "jl_gc_pool_alloc")
++    two_breakpoint_ir = get_llvm(two_breakpoint, Tuple{Float64})
++    @test !contains(two_breakpoint_ir, "jl_gc_pool_alloc")
++    @test contains(two_breakpoint_ir, "llvm.lifetime.end")
 +end
 -- 
 2.13.2

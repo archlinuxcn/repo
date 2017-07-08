@@ -1,21 +1,39 @@
-From dbceaee1f1fd43e416db59f2e7dedf2246bfb2ae Mon Sep 17 00:00:00 2001
+From 22b296d62ad7314126ba657ffc83bcec251c21f3 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Wed, 7 Jun 2017 01:01:41 -0400
-Subject: [PATCH 4/6] Add a custom LLVM pass to allow contraction of fast
+Subject: [PATCH 4/8] Add a custom LLVM pass to allow contraction of fast
  fadd/fsub with a normal fmul.
 
-Fix #18654, Fix #22217
 ---
+ base/math.jl              |   7 ++-
  src/Makefile              |   2 +-
  src/intrinsics.cpp        |  20 ++++++--
  src/jitlayers.cpp         |   1 +
  src/jitlayers.h           |   1 +
  src/llvm-muladd.cpp       | 123 ++++++++++++++++++++++++++++++++++++++++++++++
  test/llvmpasses/muladd.ll |  28 +++++++++++
- 6 files changed, 171 insertions(+), 4 deletions(-)
+ 7 files changed, 176 insertions(+), 6 deletions(-)
  create mode 100644 src/llvm-muladd.cpp
  create mode 100644 test/llvmpasses/muladd.ll
 
+diff --git a/base/math.jl b/base/math.jl
+index d12bf8860c..485d24884f 100644
+--- a/base/math.jl
++++ b/base/math.jl
+@@ -941,8 +941,11 @@ mod2pi(x) = rem2pi(x,RoundDown)
+ """
+     muladd(x, y, z)
+ 
+-Combined multiply-add, computes `x*y+z` in an efficient manner. This may on some systems be
+-equivalent to `x*y+z`, or to `fma(x,y,z)`. `muladd` is used to improve performance.
++Combined multiply-add, computes `x*y+z` allowing the add and multiply to be contracted with
++each other or ones from other `muladd` and `@fastmath` to form `fma`
++if the transformation can improve performance.
++The result can be different on different machines and can also be different on the same machine
++due to constant propagation or other optimizations.
+ See [`fma`](@ref).
+ 
+ # Example
 diff --git a/src/Makefile b/src/Makefile
 index cfaf825c25..9e2bf245d8 100644
 --- a/src/Makefile
@@ -30,10 +48,10 @@ index cfaf825c25..9e2bf245d8 100644
  LLVM_LIBS := all
  ifeq ($(USE_POLLY),1)
 diff --git a/src/intrinsics.cpp b/src/intrinsics.cpp
-index d044decf25..1f197b6154 100644
+index 0c1e83e2df..7c9ef29df2 100644
 --- a/src/intrinsics.cpp
 +++ b/src/intrinsics.cpp
-@@ -723,17 +723,23 @@ static Value *emit_checked_srem_int(jl_codectx_t &ctx, Value *x, Value *den)
+@@ -704,17 +704,23 @@ static Value *emit_checked_srem_int(jl_codectx_t &ctx, Value *x, Value *den)
  struct math_builder {
      IRBuilder<> &ctxbuilder;
      FastMathFlags old_fmf;
@@ -60,7 +78,7 @@ index d044decf25..1f197b6154 100644
      }
      IRBuilder<>& operator()() const { return ctxbuilder; }
      ~math_builder() {
-@@ -936,10 +942,18 @@ static Value *emit_untyped_intrinsic(jl_codectx_t &ctx, intrinsic f, Value **arg
+@@ -913,10 +919,18 @@ static Value *emit_untyped_intrinsic(jl_codectx_t &ctx, intrinsic f, Value **arg
          return ctx.builder.CreateCall(fmaintr, {x, y, z});
      }
      case muladd_float: {
