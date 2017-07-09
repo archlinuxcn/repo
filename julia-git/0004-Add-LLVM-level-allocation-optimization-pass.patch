@@ -1,4 +1,4 @@
-From 313dcd73a2ebcc214c5a37174ee81d5bd34d5a5c Mon Sep 17 00:00:00 2001
+From 78b858776cc7b6a6fa0a8e1cc7d8e394ecabe203 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Tue, 4 Jul 2017 22:14:59 -0400
 Subject: [PATCH 4/6] Add LLVM level allocation optimization pass
@@ -7,28 +7,30 @@ This can obtain escape information with much higher precision than what we can c
 in typeinf. However, it does not replace the alloc_elim_pass! in type inference either since
 this cannot handle objects with reference fields.
 ---
- src/Makefile           |   2 +-
+ src/Makefile           |   4 +-
  src/ccall.cpp          |   2 +-
  src/cgutils.cpp        |  21 +-
  src/codegen.cpp        |  34 +--
  src/intrinsics.cpp     |   6 +-
  src/jitlayers.cpp      |   8 +
  src/jitlayers.h        |   1 +
- src/llvm-alloc-opt.cpp | 688 +++++++++++++++++++++++++++++++++++++++++++++++++
+ src/llvm-alloc-opt.cpp | 707 +++++++++++++++++++++++++++++++++++++++++++++++++
  test/codegen.jl        |  15 ++
- 9 files changed, 732 insertions(+), 45 deletions(-)
+ 9 files changed, 753 insertions(+), 45 deletions(-)
  create mode 100644 src/llvm-alloc-opt.cpp
 
 diff --git a/src/Makefile b/src/Makefile
-index 9e2bf245d8..fd4539c418 100644
+index 9e2bf245d8..70c0444f1f 100644
 --- a/src/Makefile
 +++ b/src/Makefile
-@@ -50,7 +50,7 @@ endif
+@@ -50,7 +50,9 @@ endif
  LLVMLINK :=
  
  ifeq ($(JULIACODEGEN),LLVM)
 -SRCS += codegen jitlayers disasm debuginfo llvm-simdloop llvm-ptls llvm-muladd llvm-late-gc-lowering llvm-lower-handlers llvm-gc-invariant-verifier llvm-propagate-addrspaces cgmemmgr
-+SRCS += codegen jitlayers disasm debuginfo llvm-simdloop llvm-ptls llvm-muladd llvm-late-gc-lowering llvm-lower-handlers llvm-gc-invariant-verifier llvm-propagate-addrspaces llvm-alloc-opt cgmemmgr
++SRCS += codegen jitlayers disasm debuginfo llvm-simdloop llvm-ptls llvm-muladd \
++	llvm-late-gc-lowering llvm-lower-handlers llvm-gc-invariant-verifier \
++	llvm-propagate-addrspaces llvm-alloc-opt cgmemmgr
  FLAGS += -I$(shell $(LLVM_CONFIG_HOST) --includedir)
  LLVM_LIBS := all
  ifeq ($(USE_POLLY),1)
@@ -194,10 +196,10 @@ index aaa11ec384..138c8f9d81 100644
  {
 diff --git a/src/llvm-alloc-opt.cpp b/src/llvm-alloc-opt.cpp
 new file mode 100644
-index 0000000000..4da3c22cd4
+index 0000000000..9da4e1e92b
 --- /dev/null
 +++ b/src/llvm-alloc-opt.cpp
-@@ -0,0 +1,688 @@
+@@ -0,0 +1,707 @@
 +// This file is a part of Julia. License is MIT: https://julialang.org/license
 +
 +#define DEBUG_TYPE "alloc_opt"
@@ -206,6 +208,7 @@ index 0000000000..4da3c22cd4
 +
 +#include <llvm/IR/Value.h>
 +#include <llvm/IR/CFG.h>
++#include <llvm/IR/Dominators.h>
 +#include <llvm/IR/Function.h>
 +#include <llvm/IR/Instructions.h>
 +#include <llvm/IR/IntrinsicInst.h>
@@ -214,8 +217,6 @@ index 0000000000..4da3c22cd4
 +#include <llvm/IR/IRBuilder.h>
 +#include <llvm/Pass.h>
 +#include <llvm/Support/Debug.h>
-+
-+#include <llvm/IR/Dominators.h>
 +
 +#include "fix_llvm_assert.h"
 +
@@ -394,11 +395,11 @@ index 0000000000..4da3c22cd4
 +bool AllocOpt::checkInst(Instruction *I, CheckInstStack &stack, std::set<Instruction*> &uses,
 +                         bool &ignore_tag)
 +{
++    uses.clear();
 +    if (I->user_empty())
 +        return true;
 +    CheckInstFrame cur{I, 0, I->user_begin(), I->user_end()};
 +    stack.clear();
-+    uses.clear();
 +
 +    // Recursion
 +    auto push_inst = [&] (Instruction *inst) {
@@ -701,8 +702,8 @@ index 0000000000..4da3c22cd4
 +    SmallVector<BBPredFrame,4> bb_stack;
 +    auto insert_lifetime = [&] (Instruction *ptr, Constant *sz, Instruction *orig) {
 +        CallInst::Create(lifetime_start, {sz, ptr}, "", orig);
-+        BasicBlock *def = orig->getParent();
-+        std::set<BasicBlock*> bbs{def};
++        BasicBlock *def_bb = orig->getParent();
++        std::set<BasicBlock*> bbs{def_bb};
 +        auto &DT = getAnalysis<DominatorTreeWrapperPass>().getDomTree();
 +        // Collect all BB where the allocation is live
 +        for (auto use: alloc_uses) {
@@ -728,6 +729,26 @@ index 0000000000..4da3c22cd4
 +                }
 +            }
 +        }
++#ifndef JL_NDEBUG
++        for (auto bb: bbs) {
++            if (bb == def_bb)
++                continue;
++            if (DT.dominates(orig, bb))
++                continue;
++#if JL_LLVM_VERSION >= 50000
++            F.print(llvm::dbgs(), nullptr, false, true);
++            orig->print(llvm::dbgs(), true);
++            jl_safe_printf("Does not dominate BB:\n");
++            bb->print(llvm::dbgs(), true);
++#else
++            F.dump();
++            orig->dump();
++            jl_safe_printf("Does not dominate BB:\n");
++            bb->dump();
++#endif
++            abort();
++        }
++#endif
 +        // For each BB, find the first instruction(s) where the allocation is possibly dead.
 +        // If all successors are live, then there isn't one.
 +        // If all successors are dead, then it's the first instruction after the last use
@@ -738,8 +759,8 @@ index 0000000000..4da3c22cd4
 +        for (auto bb: bbs) {
 +            bool has_use = false;
 +            for (auto succ: successors(bb)) {
-+                // def is the only bb in bbs that's not dominated by orig
-+                if (succ != def && bbs.find(succ) != bbs.end()) {
++                // def_bb is the only bb in bbs that's not dominated by orig
++                if (succ != def_bb && bbs.find(succ) != bbs.end()) {
 +                    has_use = true;
 +                    break;
 +                }
@@ -785,7 +806,7 @@ index 0000000000..4da3c22cd4
 +                }
 +            }
 +            else {
-+                assert(DT.dominates(orig, I));
++                assert(bb == def_bb || DT.dominates(orig, I));
 +                BasicBlock::iterator it(I);
 +                BasicBlock::iterator end = bb->end();
 +                bool safepoint_found = false;

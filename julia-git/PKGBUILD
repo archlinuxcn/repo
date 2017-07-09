@@ -36,7 +36,7 @@ esac
 
 epoch=1
 pkgver=0.7.0.DEV.872.g5e21673e50
-pkgrel=2
+pkgrel=3
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
@@ -52,10 +52,10 @@ source=('git://github.com/JuliaLang/julia'
         0005-Use-a-local-buffer-in-modf.patch
         0006-Improving-ieee754_rem_pio2.patch)
 md5sums=('SKIP'
-         '6916fe83cd3a6f0b116f80a845cd9853'
-         'cb60fa365760c32d51c4516516edcbe4'
-         '5c628ff84502979d86e840eb7b1c26bd'
-         '72df5314b5ff4788f48532beb3904ee9')
+         '8c44fe6b86cbccd8a44d61fc34ccc3cb'
+         '7c64dac4a1d6a0fa332277a9e3fabd75'
+         '49832ba74eb4a159b6eb0c86bc56e0a1'
+         '573021ab55ddabda23a0030d0ec05e68')
 
 pkgver() {
   cd julia
