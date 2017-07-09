@@ -1,8 +1,8 @@
 # Maintainer: Frantic1048 <archer@frantic1048.com>
 
 pkgname=kreogist-mu
-pkgver='1.0.0beta'
-_git_tag='1.0-beta'
+pkgver='1.0.0beta2'
+_git_tag='1.0-beta2'
 pkgrel=1
 epoch=1
 pkgdesc="Fantastic cross-platform music manager.based on Qt5"
@@ -38,7 +38,7 @@ source=(
   "kreogist-mu.desktop"
 )
 
-sha224sums=('9e13147a2cd7cf8a65f19153e13d1b3d6fe7add31df6c7b70d0f3227'
+sha224sums=('050fa0e08539f6adf7fe050831965e59ab0a7b908cf3c03df315c2bd'
             '2f35e3f154fed55638827811b7ea3d0a34e3f7c39107bb7257a8a5f8')
 
 build() {
