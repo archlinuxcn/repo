@@ -1,7 +1,7 @@
-From 4e8d327ec9242d4e58cd685b404f2bffcbf3b005 Mon Sep 17 00:00:00 2001
+From 313dcd73a2ebcc214c5a37174ee81d5bd34d5a5c Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Tue, 4 Jul 2017 22:14:59 -0400
-Subject: [PATCH 6/8] Add LLVM level allocation optimization pass
+Subject: [PATCH 4/6] Add LLVM level allocation optimization pass
 
 This can obtain escape information with much higher precision than what we can currently do
 in typeinf. However, it does not replace the alloc_elim_pass! in type inference either since
