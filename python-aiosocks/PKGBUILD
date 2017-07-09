@@ -1,14 +1,14 @@
 _pkgname=aiosocks
 pkgname=python-aiosocks
-pkgver=0.2.3
+pkgver=0.2.4
 pkgrel=1
 pkgdesc="SOCKS proxy client for asyncio and aiohttp"
 arch=('any')
 url="https://github.com/nibrag/aiosocks"
 license=('Apache')
 depends=('python' 'python-setuptools')
-source=('https://pypi.python.org/packages/cf/21/7193dc5fb364c635f032c84b8af61b09fd2862d85c032ba815d353b7c05d/aiosocks-0.2.3.tar.gz')
-md5sums=('4ce5bcf143971cce387f1705d15d7418')
+source=('https://pypi.python.org/packages/2e/2d/c59f47a339c86f6e42b9ce9d0a718488003ec3662f48b9e505128385137a/aiosocks-0.2.4.tar.gz')
+md5sums=('f12e7a8abd5a5452ed510df108f4d1c8')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
