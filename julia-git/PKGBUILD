@@ -36,7 +36,7 @@ esac
 
 epoch=1
 pkgver=0.7.0.DEV.855.gdf63db6832
-pkgrel=2
+pkgrel=3
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
@@ -48,14 +48,12 @@ makedepends=(gcc-fortran arpack fftw git gmp libgit2-julia libunwind-git
 options=('debug' '!strip' '!buildflags')
 source=('git://github.com/JuliaLang/julia'
         0001-Revert-turn-on-deprecation-warnings-for-type-and-imm.patch
-        0004-Add-a-custom-LLVM-pass-to-allow-contraction-of-fast-.patch
         0005-Add-a-white-list-of-known-non-safepoint-functions.patch
         0006-Add-LLVM-level-allocation-optimization-pass.patch
         0007-Use-a-local-buffer-in-modf.patch
         0008-Improving-ieee754_rem_pio2.patch)
 md5sums=('SKIP'
          'b7dcbf764b02c684d36e2892e952b418'
-         'e1522fd4b6e91f6c8c53bfbf85f7a3ff'
          'c936c14d9c8e7efd54357d07248ed5ee'
          '5acde66509b94e7c15a467af78749a61'
          '46ff70e614daf1cc63ae99b40070e481'
@@ -135,7 +133,6 @@ EOF
   git clean -fdx
 
   patch -Np1 < ../0001-Revert-turn-on-deprecation-warnings-for-type-and-imm.patch
-  patch -Np1 < ../0004-Add-a-custom-LLVM-pass-to-allow-contraction-of-fast-.patch
   patch -Np1 < ../0005-Add-a-white-list-of-known-non-safepoint-functions.patch
   patch -Np1 < ../0006-Add-LLVM-level-allocation-optimization-pass.patch
   patch -Np1 < ../0007-Use-a-local-buffer-in-modf.patch
