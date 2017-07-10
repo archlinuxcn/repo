@@ -1,0 +1,471 @@
+From 99fba51c26bb8403f845fe437dd250dde46ec493 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sun, 9 Jul 2017 23:07:41 -0400
+Subject: [PATCH 7/9] Change foreigncall argument order
+
+Explicitly specify the number of ccall arguments and put the gc root arguments at the end.
+This way we can specify variable number of roots, making it easier for typeinf to split the root.
+into smaller allocations.
+---
+ base/inference.jl       | 27 ++++++++++++----
+ doc/src/devdocs/llvm.md |  2 +-
+ src/ccall.cpp           | 83 +++++++++++++++++++++++++------------------------
+ src/codegen.cpp         |  8 ++---
+ src/julia-syntax.scm    | 46 +++++++++++++++------------
+ src/method.c            |  5 ++-
+ 6 files changed, 99 insertions(+), 72 deletions(-)
+
+diff --git a/base/inference.jl b/base/inference.jl
+index 9238277e28..feda4a0a7a 100644
+--- a/base/inference.jl
++++ b/base/inference.jl
+@@ -3678,6 +3678,10 @@ function substitute!(e::ANY, na::Int, argexprs::Vector{Any}, spsig::ANY, spvals:
+                         for argt
+                         in e.args[3] ]
+                     e.args[3] = svec(argtuple...)
++                elseif i == 4
++                    @assert isa((e.args[4]::QuoteNode).value, Symbol)
++                elseif i == 5
++                    @assert isa(e.args[5], Int)
+                 else
+                     e.args[i] = substitute!(e.args[i], na, argexprs, spsig, spvals, offset)
+                 end
+@@ -4757,8 +4761,8 @@ function inlining_pass(e::Expr, sv::InferenceState, stmts, ins)
+     # by the interpreter and inlining might put in something it can't handle,
+     # like another ccall (or try to move the variables out into the function)
+     if e.head === :foreigncall
+-        # 3 is rewritten to 1 below to handle the callee.
+-        i0 = 3
++        # 5 is rewritten to 1 below to handle the callee.
++        i0 = 5
+         isccall = true
+     elseif is_known_call(e, Core.Intrinsics.llvmcall, sv.src, sv.mod)
+         i0 = 5
+@@ -4766,7 +4770,7 @@ function inlining_pass(e::Expr, sv::InferenceState, stmts, ins)
+     has_stmts = false # needed to preserve order-of-execution
+     prev_stmts_length = length(stmts)
+     for _i = length(eargs):-1:i0
+-        if isccall && _i == 3
++        if isccall && _i == 5
+             i = 1
+             isccallee = true
+         else
+@@ -4821,10 +4825,21 @@ function inlining_pass(e::Expr, sv::InferenceState, stmts, ins)
+     end
+     if isccall
+         le = length(eargs)
+-        for i = 4:2:(le - 1)
+-            if eargs[i] === eargs[i + 1]
+-                eargs[i + 1] = 0
++        nccallargs = eargs[5]::Int
++        ccallargs = ObjectIdDict()
++        for i in 6:(5 + nccallargs)
++            ccallargs[eargs[i]] = nothing
++        end
++        i = 6 + nccallargs
++        while i <= le
++            rootarg = eargs[i]
++            if haskey(ccallargs, rootarg)
++                deleteat!(eargs, i)
++                le -= 1
++            elseif i < le
++                ccallargs[rootarg] = nothing
+             end
++            i += 1
+         end
+     end
+     if e.head !== :call
+diff --git a/doc/src/devdocs/llvm.md b/doc/src/devdocs/llvm.md
+index ed6b559382..9b7a5c6f5b 100644
+--- a/doc/src/devdocs/llvm.md
++++ b/doc/src/devdocs/llvm.md
+@@ -260,7 +260,7 @@ pointer which drops the reference to the array value. However, we of course
+ need to make sure that the array does stay alive while we're doing the `ccall`.
+ To understand how this is done, first recall the lowering of the above code:
+ ```julia
+-return $(Expr(:foreigncall, :(:foo), Void, svec(Ptr{Float64}), :($(Expr(:foreigncall, :(:jl_array_ptr), Ptr{Float64}, svec(Any), :(A), 0))), :(A)))
++return $(Expr(:foreigncall, :(:foo), Void, svec(Ptr{Float64}), :(:ccall), 1, :($(Expr(:foreigncall, :(:jl_array_ptr), Ptr{Float64}, svec(Any), :(:ccall), 1, :(A)))), :(A)))
+ ```
+ The last `:(A)`, is an extra argument list inserted during lowering that informs
+ the code generator which Julia level values need to be kept alive for the
+diff --git a/src/ccall.cpp b/src/ccall.cpp
+index 4641762d41..c6aaa9ee7d 100644
+--- a/src/ccall.cpp
++++ b/src/ccall.cpp
+@@ -1380,7 +1380,7 @@ static std::pair<CallingConv::ID, bool> convert_cconv(jl_sym_t *lhd)
+     if (lhd == jl_symbol("stdcall")) {
+         return std::make_pair(CallingConv::X86_StdCall, false);
+     }
+-    else if (lhd == jl_symbol("cdecl")) {
++    else if (lhd == jl_symbol("cdecl") || lhd == jl_symbol("ccall")) {
+         return std::make_pair(CallingConv::C, false);
+     }
+     else if (lhd == jl_symbol("fastcall")) {
+@@ -1395,7 +1395,7 @@ static std::pair<CallingConv::ID, bool> convert_cconv(jl_sym_t *lhd)
+     jl_errorf("ccall: invalid calling convention %s", jl_symbol_name(lhd));
+ }
+ 
+-static const std::string verify_ccall_sig(size_t nargs, jl_value_t *&rt, jl_value_t *at,
++static const std::string verify_ccall_sig(size_t nccallargs, jl_value_t *&rt, jl_value_t *at,
+                                           jl_unionall_t *unionall_env, jl_svec_t *sparam_vals, const char *funcName,
+                                           size_t &nargt, bool &isVa, Type *&lrt, bool &retboxed, bool &static_rt)
+ {
+@@ -1438,8 +1438,8 @@ static const std::string verify_ccall_sig(size_t nargs, jl_value_t *&rt, jl_valu
+ 
+     nargt = jl_svec_len(at);
+     isVa = (nargt > 0 && jl_is_vararg_type(jl_svecref(at, nargt - 1)));
+-    if ((!isVa && nargt    != (nargs - 2) / 2) ||
+-        ( isVa && nargt - 1 > (nargs - 2) / 2))
++    if ((!isVa && nargt    != nccallargs) ||
++        ( isVa && nargt - 1 > nccallargs))
+         return "ccall: wrong number of arguments to C function";
+ 
+     return "";
+@@ -1448,21 +1448,20 @@ static const std::string verify_ccall_sig(size_t nargs, jl_value_t *&rt, jl_valu
+ // Expr(:foreigncall, pointer, rettype, (argtypes...), args...)
+ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
+ {
+-    JL_NARGSV(ccall, 3);
++    JL_NARGSV(ccall, 5);
+     args -= 1;
+     jl_value_t *rt = args[2];
+     jl_value_t *at = args[3];
++    assert(jl_is_quotenode(args[4]));
++    jl_sym_t *cc_sym = *(jl_sym_t**)args[4];
++    size_t nccallargs = jl_unbox_long(args[5]);
++    assert(jl_is_symbol(cc_sym));
+     native_sym_arg_t symarg = {};
+     JL_GC_PUSH3(&rt, &at, &symarg.gcroot);
+ 
+     CallingConv::ID cc = CallingConv::C;
+     bool llvmcall = false;
+-    if (nargs % 2 == 0) {
+-        jl_value_t *last = args[nargs];
+-        JL_TYPECHK(ccall, expr, last);
+-        std::tie(cc, llvmcall) = convert_cconv(((jl_expr_t*)last)->head);
+-        nargs -= 1;
+-    }
++    std::tie(cc, llvmcall) = convert_cconv(cc_sym);
+ 
+     interpret_symbol_arg(ctx, symarg, args[1], "ccall", llvmcall);
+     Value *&jl_ptr = symarg.jl_ptr;
+@@ -1476,6 +1475,11 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
+         return jl_cgval_t();
+     }
+ 
++    auto ccallarg = [=] (size_t i) {
++        assert(i < nccallargs);
++        return args[6 + i];
++    };
++
+     jl_unionall_t *unionall = (jl_is_method(ctx.linfo->def.method) && jl_is_unionall(ctx.linfo->def.method->sig))
+         ? (jl_unionall_t*)ctx.linfo->def.method->sig
+         : NULL;
+@@ -1533,7 +1537,7 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
+     bool static_rt;
+     std::string err = verify_ccall_sig(
+             /* inputs:  */
+-            nargs, rt, at, unionall,
++            nccallargs, rt, at, unionall,
+             ctx.spvals_ptr == NULL ? ctx.linfo->sparam_vals : NULL,
+             ctx.funcName.c_str(),
+             /* outputs: */
+@@ -1566,8 +1570,8 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
+     if (is_libjulia_func(jl_array_ptr)) {
+         assert(lrt->isPointerTy());
+         assert(!isVa && !llvmcall);
+-        assert(nargt==1);
+-        jl_value_t *argi = args[4];
++        assert(nargt == 1);
++        jl_value_t *argi = ccallarg(0);
+         assert(!(jl_is_expr(argi) && ((jl_expr_t*)argi)->head == amp_sym));
+         jl_cgval_t ary = emit_expr(ctx, argi);
+         JL_GC_POP();
+@@ -1578,7 +1582,7 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
+         assert(lrt->isPointerTy());
+         assert(!isVa && !llvmcall);
+         assert(nargt==1);
+-        jl_value_t *argi = args[4];
++        jl_value_t *argi = ccallarg(0);
+         bool addressOf = false;
+         jl_value_t *tti = jl_svecref(at, 0);
+         if (jl_is_expr(argi) && ((jl_expr_t*)argi)->head == amp_sym) {
+@@ -1739,7 +1743,7 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
+     else if (is_libjulia_func(jl_is_leaf_type)) {
+         assert(nargt == 1);
+         assert(!isVa && !llvmcall);
+-        jl_value_t *arg = args[4];
++        jl_value_t *arg = ccallarg(0);
+         jl_value_t *ty = expr_type(ctx, arg);
+         if (jl_is_type_type(ty) && !jl_is_typevar(jl_tparam0(ty))) {
+             int isleaf = jl_is_leaf_type(jl_tparam0(ty));
+@@ -1752,14 +1756,14 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
+     else if (is_libjulia_func(jl_function_ptr)) {
+         assert(nargt == 3);
+         assert(!isVa && !llvmcall);
+-        jl_value_t *f = static_eval(ctx, args[4], false, false);
++        jl_value_t *f = static_eval(ctx, ccallarg(0), false, false);
+         jl_value_t *fargt = nullptr;
+         JL_GC_PUSH2(&f, &fargt);
+-        jl_value_t *frt = expr_type(ctx, args[6]);
++        jl_value_t *frt = expr_type(ctx, ccallarg(1));
+         if (f && (jl_is_type_type((jl_value_t*)frt) && !jl_has_free_typevars(jl_tparam0(frt)))) {
+-            fargt = static_eval(ctx, args[8], true, true);
++            fargt = static_eval(ctx, ccallarg(2), true, true);
+             if (!fargt) {
+-                fargt = expr_type(ctx, args[8]);
++                fargt = expr_type(ctx, ccallarg(2));
+                 if (jl_is_type_type((jl_value_t*)fargt)) {
+                     fargt = jl_tparam0(fargt);
+                     if (jl_has_free_typevars(fargt) || !jl_is_tuple_type(fargt)) {
+@@ -1789,9 +1793,9 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
+                 if (llvmf) {
+                     llvmf = prepare_call(llvmf);
+                     // make sure to emit any side-effects that may have been part of the original expression
+-                    emit_expr(ctx, args[4]);
+-                    emit_expr(ctx, args[6]);
+-                    emit_expr(ctx, args[8]);
++                    emit_expr(ctx, ccallarg(0));
++                    emit_expr(ctx, ccallarg(1));
++                    emit_expr(ctx, ccallarg(2));
+                     JL_GC_POP();
+                     JL_GC_POP();
+                     return mark_or_box_ccall_result(ctx, emit_bitcast(ctx, llvmf, lrt),
+@@ -1802,10 +1806,10 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
+         JL_GC_POP();
+     }
+     else if (is_libjulia_func(jl_array_isassigned) &&
+-             expr_type(ctx, args[6]) == (jl_value_t*)jl_ulong_type) {
++             expr_type(ctx, ccallarg(1)) == (jl_value_t*)jl_ulong_type) {
+         assert(nargt == 2);
+-        jl_value_t *aryex = args[4];
+-        jl_value_t *idxex = args[6];
++        jl_value_t *aryex = ccallarg(0);
++        jl_value_t *idxex = ccallarg(1);
+         jl_value_t *aryty = expr_type(ctx, aryex);
+         if (jl_is_array_type(aryty)) {
+             jl_value_t *ety = jl_tparam0(aryty);
+@@ -1832,24 +1836,19 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
+         assert(lrt == T_pint8);
+         assert(!isVa && !llvmcall);
+         assert(nargt == 1);
+-        auto obj = emit_pointer_from_objref(ctx, boxed(ctx, emit_expr(ctx, args[4])));
++        auto obj = emit_pointer_from_objref(ctx, boxed(ctx, emit_expr(ctx, ccallarg(0))));
+         auto strp = ctx.builder.CreateConstGEP1_32(emit_bitcast(ctx, obj, T_pint8), sizeof(void*));
+         JL_GC_POP();
+         return mark_or_box_ccall_result(ctx, strp, retboxed, rt, unionall, static_rt);
+     }
+ 
+     // emit arguments
+-    jl_cgval_t *argv = (jl_cgval_t*)alloca(sizeof(jl_cgval_t) * (nargs - 3) / 2);
+-    SmallVector<Value*, 16> gc_uses;
++    jl_cgval_t *argv = (jl_cgval_t*)alloca(sizeof(jl_cgval_t) * nccallargs);
+     std::vector<bool> addressOf(0);
+ 
+-    size_t i;
+-    for (i = 4; i < nargs + 1; i += 2) {
+-        // Current C function parameter
+-        size_t ai = (i - 4) / 2;
+-
++    for (size_t i = 0; i < nccallargs; i++) {
+         // Julia (expression) value of current parameter
+-        jl_value_t *argi = args[i];
++        jl_value_t *argi = ccallarg(i);
+ 
+         // pass the address of the argument rather than the argument itself
+         if (jl_is_expr(argi) && ((jl_expr_t*)argi)->head == amp_sym) {
+@@ -1860,20 +1859,24 @@ static jl_cgval_t emit_ccall(jl_codectx_t &ctx, jl_value_t **args, size_t nargs)
+             addressOf.push_back(false);
+         }
+ 
+-        jl_cgval_t &arg = argv[ai];
++        jl_cgval_t &arg = argv[i];
+         arg = emit_expr(ctx, (jl_value_t*)argi);
+-
++    }
++    SmallVector<Value*, 16> gc_uses;
++    for (size_t i = nccallargs + 6; i <= nargs; i++) {
+         // Julia (expression) value of current parameter gcroot
+-        jl_value_t *argi_root = args[i + 1];
++        jl_value_t *argi_root = args[i];
+         if (jl_is_long(argi_root))
+             continue;
+         jl_cgval_t arg_root = emit_expr(ctx, argi_root);
+         Value *gcuse = arg_root.gcroot ? ctx.builder.CreateLoad(arg_root.gcroot) : arg_root.V;
+-        if (gcuse)
++        if (gcuse) {
+             gc_uses.push_back(gcuse);
++        }
+     }
+ 
+-    function_sig_t sig(lrt, rt, retboxed, (jl_svec_t*)at, unionall, (nargs - 3) / 2, isVa, cc, llvmcall);
++    function_sig_t sig(lrt, rt, retboxed, (jl_svec_t*)at, unionall, nccallargs,
++                       isVa, cc, llvmcall);
+     jl_cgval_t retval = sig.emit_a_ccall(
+             ctx,
+             symarg,
+diff --git a/src/codegen.cpp b/src/codegen.cpp
+index 01b3c2c951..74f985e768 100644
+--- a/src/codegen.cpp
++++ b/src/codegen.cpp
+@@ -2115,10 +2115,10 @@ static void simple_escape_analysis(jl_codectx_t &ctx, jl_value_t *expr, bool esc
+         }
+         else if (e->head == foreigncall_sym) {
+             simple_escape_analysis(ctx, jl_exprarg(e, 0), esc);
+-            // 2nd and 3d arguments are static
+-            size_t alen = jl_array_dim0(e->args);
+-            for (i = 3; i < alen; i += 2) {
+-                simple_escape_analysis(ctx, jl_exprarg(e, i), esc);
++            // 2nd to 5th arguments are static
++            size_t nccallargs = jl_unbox_long(jl_exprarg(e, 4));
++            for (i = 0; i < nccallargs; i++) {
++                simple_escape_analysis(ctx, jl_exprarg(e, i + 5), esc);
+             }
+         }
+         else if (e->head == method_sym) {
+diff --git a/src/julia-syntax.scm b/src/julia-syntax.scm
+index 52cf9fd004..267695d0db 100644
+--- a/src/julia-syntax.scm
++++ b/src/julia-syntax.scm
+@@ -536,9 +536,10 @@
+                                            (list `(... ,(arg-name (car vararg))))))
+                               ;; otherwise add to rest keywords
+                               `(foreigncall 'jl_array_ptr_1d_push (core Void) (call (core svec) Any Any)
+-                                            ,rkw 0 (tuple ,elt
+-                                                          (call (core arrayref) ,kw
+-                                                                (call (top +) ,ii 1))) 0))
++                                            'ccall 2
++                                            ,rkw (tuple ,elt
++                                                        (call (core arrayref) ,kw
++                                                              (call (top +) ,ii 1)))))
+                           (map list vars vals flags))))
+             ;; set keywords that weren't present to their default values
+             ,@(apply append
+@@ -955,29 +956,31 @@
+   (let loop ((F atypes)  ;; formals
+              (A args)    ;; actuals
+              (stmts '()) ;; initializers
+-             (C '()))    ;; converted
++             (C '())     ;; converted
++             (GC '()))   ;; GC roots
+     (if (and (null? F) (not (null? A))) (error "more arguments than types for ccall"))
+     (if (and (null? A) (not (or (null? F) (and (pair? F) (vararg? (car F)) (null? (cdr F)))))) (error "more types than arguments for ccall"))
+     (if (null? A)
+         `(block
+           ,.(reverse! stmts)
+           (foreigncall ,name ,RT (call (core svec) ,@(dots->vararg atypes))
+-                ,.(reverse! C)
+-                ,@A
+-                ,@cconv))
++                       ',cconv
++                       ,(length C)
++                       ,.(reverse! C)
++                       ,@GC)) ; GC root ordering is arbitrary
+         (let* ((a     (car A))
+                (isseq (and (vararg? (car F))))
+                (ty    (if isseq (cadar F) (car F))))
+           (if (and isseq (not (null? (cdr F)))) (error "only the trailing ccall argument type should have '...'"))
+           (if (eq? ty 'Any)
+-              (loop (if isseq F (cdr F)) (cdr A) stmts (list* 0 a C))
++              (loop (if isseq F (cdr F)) (cdr A) stmts (list* a C) GC)
+               (let* ((g (make-ssavalue))
+                      (isamp (and (pair? a) (eq? (car a) '&)))
+                      (a (if isamp (cadr a) a))
+                      (stmts (cons `(= ,g (call (top ,(if isamp 'ptr_arg_cconvert 'cconvert)) ,ty ,a)) stmts))
+                      (ca `(call (top ,(if isamp 'ptr_arg_unsafe_convert 'unsafe_convert)) ,ty ,g)))
+                 (loop (if isseq F (cdr F)) (cdr A) stmts
+-                      (list* g (if isamp `(& ,ca) ca) C))))))))
++                      (list* (if isamp `(& ,ca) ca) C) (list* g GC))))))))
+ 
+ (define (expand-function-def e)   ;; handle function or stagedfunction
+   (define (just-arglist? ex)
+@@ -1280,7 +1283,8 @@
+                         (= ,err true)))
+                   (= ,finally-exception (the_exception))
+                   ,finalb
+-                  (if ,err (foreigncall 'jl_rethrow_other (core Void) (call (core svec) Any) ,finally-exception 0))
++                  (if ,err (foreigncall 'jl_rethrow_other (core Void) (call (core svec) Any)
++                                        'ccall 1 ,finally-exception))
+                   ,(if hasret
+                        (if ret
+                            `(if ,ret (return ,retval) ,val)
+@@ -1510,9 +1514,10 @@
+                              (loop (cdr kw) (list* (caddr arg) `(quote ,(cadr arg)) initial-kw) stmts #t)
+                              (loop (cdr kw) initial-kw
+                                    (cons `(foreigncall 'jl_array_ptr_1d_push2 (core Void) (call (core svec) Any Any Any)
+-                                                       ,container 0
+-                                                       (|::| (quote ,(cadr arg)) (core Symbol)) 0
+-                                                       ,(caddr arg) 0)
++                                                       'ccall 3
++                                                       ,container
++                                                       (|::| (quote ,(cadr arg)) (core Symbol))
++                                                       ,(caddr arg))
+                                          stmts)
+                                    #t)))
+                         (else
+@@ -1520,9 +1525,10 @@
+                                (cons (let* ((k (make-ssavalue))
+                                             (v (make-ssavalue))
+                                             (push-expr `(foreigncall 'jl_array_ptr_1d_push2 (core Void) (call (core svec) Any Any Any)
+-                                                                     ,container 0
+-                                                                     (|::| ,k (core Symbol)) 0
+-                                                                     ,v 0)))
++                                                                     'ccall 3
++                                                                     ,container
++                                                                     (|::| ,k (core Symbol))
++                                                                     ,v)))
+                                        (if (vararg? arg)
+                                            `(for (= (tuple ,k ,v) ,(cadr arg))
+                                                  ,push-expr)
+@@ -2102,7 +2108,7 @@
+                                   (error "ccall argument types must be a tuple; try \"(T,)\"")))
+                           (expand-forms
+                            (lower-ccall name RT (cdr argtypes) args
+-                            (if have-cconv (list (list cconv)) '()))))))
++                                        (if have-cconv cconv 'ccall))))))
+                  ((and (pair? (caddr e))
+                        (eq? (car (caddr e)) 'parameters))
+                   ;; (call f (parameters . kwargs) ...)
+@@ -3397,13 +3403,13 @@ f(x) = yt(x)
+           (case (car e)
+             ((call new foreigncall)
+              (let* ((args (if (eq? (car e) 'foreigncall)
+-                              ;; NOTE: 2nd and 3rd arguments of ccall must be left in place
++                              ;; NOTE: 2nd to 5th arguments of ccall must be left in place
+                               ;;       the 1st should be compiled if an atom.
+                               (append (list)
+                                       (cond (atom? (cadr e) (compile-args (list (cadr e)) break-labels linearize-args))
+                                             (else (cadr e)))
+-                                      (list-head (cddr e) 2)
+-                                      (compile-args (list-tail e 4) break-labels linearize-args))
++                                      (list-head (cddr e) 4)
++                                      (compile-args (list-tail e 6) break-labels linearize-args))
+                               (compile-args (cdr e) break-labels linearize-args)))
+                     (callex (cons (car e) args)))
+                (cond (tail (emit-return callex))
+diff --git a/src/method.c b/src/method.c
+index 630d3d60d2..53b55fc71c 100644
+--- a/src/method.c
++++ b/src/method.c
+@@ -69,7 +69,7 @@ jl_value_t *jl_resolve_globals(jl_value_t *expr, jl_module_t *module, jl_svec_t
+             }
+             size_t i = 0, nargs = jl_array_len(e->args);
+             if (e->head == foreigncall_sym) {
+-                JL_NARGSV(ccall method definition, 3); // (fptr, rt, at)
++                JL_NARGSV(ccall method definition, 5); // (fptr, rt, at, cc, narg)
+                 jl_value_t *rt = jl_exprarg(e, 1);
+                 jl_value_t *at = jl_exprarg(e, 2);
+                 if (!jl_is_type(rt)) {
+@@ -100,6 +100,9 @@ jl_value_t *jl_resolve_globals(jl_value_t *expr, jl_module_t *module, jl_svec_t
+                     jl_error("ccall: missing return type");
+                 JL_TYPECHK(ccall method definition, type, rt);
+                 JL_TYPECHK(ccall method definition, simplevector, at);
++                JL_TYPECHK(ccall method definition, quotenode, jl_exprarg(e, 3));
++                JL_TYPECHK(ccall method definition, symbol, *(jl_value_t**)jl_exprarg(e, 3));
++                JL_TYPECHK(ccall method definition, long, jl_exprarg(e, 4));
+             }
+             if (e->head == method_sym || e->head == abstracttype_sym || e->head == compositetype_sym ||
+                 e->head == bitstype_sym || e->head == module_sym) {
+-- 
+2.13.2
+

@@ -1,0 +1,53 @@
+From 8b4f91a5a54f6d2cac91c9723ed7e9680ff1fe53 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Mon, 10 Jul 2017 10:00:31 -0400
+Subject: [PATCH 9/9] Complex ccall test case
+
+---
+ test/codegen.jl | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+
+diff --git a/test/codegen.jl b/test/codegen.jl
+index 83ceb9b937..fb73e8ae83 100644
+--- a/test/codegen.jl
++++ b/test/codegen.jl
+@@ -146,6 +146,25 @@ Base.unsafe_convert(::Type{Ptr{BadRef}}, ar::BadRef) = Ptr{BadRef}(pointer_from_
+ 
+ breakpoint_badref(a::MutableStruct) = ccall(:jl_breakpoint, Void, (Ptr{BadRef},), a)
+ 
++struct PtrStruct
++    a::Ptr{Void}
++    b::Int
++end
++
++mutable struct RealStruct
++    a::Float64
++    b::Int
++end
++
++function Base.cconvert(::Type{Ref{PtrStruct}}, a::RealStruct)
++    (a, Ref(PtrStruct(pointer_from_objref(a), a.b)))
++end
++Base.unsafe_convert(::Type{Ref{PtrStruct}}, at::Tuple) =
++    Base.unsafe_convert(Ref{PtrStruct}, at[2])
++
++breakpoint_ptrstruct(a::RealStruct) =
++    ccall(:jl_breakpoint, Void, (Ref{PtrStruct},), a)
++
+ if opt_level > 0
+     @test !contains(get_llvm(isequal, Tuple{Nullable{BigFloat}, Nullable{BigFloat}}), "%gcframe")
+     @test !contains(get_llvm(pointer_not_safepoint, Tuple{}), "%gcframe")
+@@ -161,6 +180,10 @@ if opt_level > 0
+     breakpoint_badref_ir = get_llvm(breakpoint_badref, Tuple{MutableStruct})
+     @test !contains(breakpoint_badref_ir, "%gcframe")
+     @test !contains(breakpoint_badref_ir, "jl_gc_pool_alloc")
++
++    breakpoint_ptrstruct_ir = get_llvm(breakpoint_ptrstruct, Tuple{RealStruct})
++    @test !contains(breakpoint_ptrstruct_ir, "%gcframe")
++    @test !contains(breakpoint_ptrstruct_ir, "jl_gc_pool_alloc")
+ end
+ 
+ function two_breakpoint(a::Float64)
+-- 
+2.13.2
+

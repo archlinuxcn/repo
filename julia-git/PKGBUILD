@@ -36,7 +36,7 @@ esac
 
 epoch=1
 pkgver=0.7.0.DEV.884.gff781e597c
-pkgrel=1
+pkgrel=2
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
@@ -50,12 +50,18 @@ source=('git://github.com/JuliaLang/julia'
         0001-Revert-turn-on-deprecation-warnings-for-type-and-imm.patch
         0004-Add-LLVM-level-allocation-optimization-pass.patch
         0005-Use-a-local-buffer-in-modf.patch
-        0006-Improving-ieee754_rem_pio2.patch)
+        0006-Improving-ieee754_rem_pio2.patch
+        0007-Change-foreigncall-argument-order.patch
+        0008-Eliminating-allocation-of-ccall-root-in-simple-cases.patch
+        0009-Complex-ccall-test-case.patch)
 md5sums=('SKIP'
-         '8c44fe6b86cbccd8a44d61fc34ccc3cb'
-         '7c64dac4a1d6a0fa332277a9e3fabd75'
-         '49832ba74eb4a159b6eb0c86bc56e0a1'
-         '573021ab55ddabda23a0030d0ec05e68')
+         'ab06bafa0a8c6454637738d17606f3c7'
+         '8e103d033236181a5ae0bee9fabfd7f3'
+         'dbe0fcb5cf6afdd1dc180a39be611002'
+         '7980d02c37dcfe768d3429205f3946b8'
+         '8df46c1be50689c8c62e6dacd61b9944'
+         'd2b44b0abdc7437a9e799b379d101f44'
+         '92f5f4d0a361e7e5f0c4ba48d3c0c27e')
 
 pkgver() {
   cd julia
@@ -134,6 +140,9 @@ EOF
   patch -Np1 < ../0004-Add-LLVM-level-allocation-optimization-pass.patch
   patch -Np1 < ../0005-Use-a-local-buffer-in-modf.patch
   patch -Np1 < ../0006-Improving-ieee754_rem_pio2.patch
+  patch -Np1 < ../0007-Change-foreigncall-argument-order.patch
+  patch -Np1 < ../0008-Eliminating-allocation-of-ccall-root-in-simple-cases.patch
+  patch -Np1 < ../0009-Complex-ccall-test-case.patch
 
   if [[ "$CARCH" = x86_64 ]]; then
       (cd "$srcdir"

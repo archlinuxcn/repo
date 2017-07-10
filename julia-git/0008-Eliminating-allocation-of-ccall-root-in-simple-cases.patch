@@ -1,0 +1,122 @@
+From 1b16cd540827e3aacd01e324d7999a9f8e5580a2 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sun, 9 Jul 2017 23:42:45 -0400
+Subject: [PATCH 8/9] Eliminating allocation of ccall root in simple cases
+
+---
+ base/inference.jl | 40 ++++++++++++++++++++++++++++++++++++----
+ test/codegen.jl   | 27 +++++++++++++++++++++++++++
+ 2 files changed, 63 insertions(+), 4 deletions(-)
+
+diff --git a/base/inference.jl b/base/inference.jl
+index feda4a0a7a..e596956ca3 100644
+--- a/base/inference.jl
++++ b/base/inference.jl
+@@ -5222,6 +5222,21 @@ function occurs_outside_getfield(e::ANY, sym::ANY,
+         if head === :(=)
+             return occurs_outside_getfield(e.args[2], sym, sv,
+                                            field_count, field_names)
++        elseif head === :foreigncall
++            args = e.args
++            nccallargs = args[5]::Int
++            # Only arguments escape, GC root arguments do not escape.
++            for i in 1:length(args)
++                a = args[i]
++                if i > 5 + nccallargs && symequal(a, sym)
++                    # No need to verify indices, uninitialized members can be
++                    # ignored in root slot.
++                    continue
++                end
++                if occurs_outside_getfield(a, sym, sv, field_count, field_names)
++                    return true
++                end
++            end
+         else
+             if (head === :block && isa(sym, Slot) &&
+                 sv.src.slotflags[slot_id(sym)] & Slot_UsedUndef == 0)
+@@ -5805,8 +5820,11 @@ end
+ function replace_getfield!(e::Expr, tupname, vals, field_names, sv::InferenceState)
+     for i = 1:length(e.args)
+         a = e.args[i]
+-        if isa(a,Expr) && is_known_call(a, getfield, sv.src, sv.mod) &&
+-            symequal(a.args[2],tupname)
++        if !isa(a, Expr)
++            continue
++        end
++        a = a::Expr
++        if is_known_call(a, getfield, sv.src, sv.mod) && symequal(a.args[2], tupname)
+             idx = if isa(a.args[3], Int)
+                 a.args[3]
+             else
+@@ -5835,8 +5853,22 @@ function replace_getfield!(e::Expr, tupname, vals, field_names, sv::InferenceSta
+                 end
+             end
+             e.args[i] = val
+-        elseif isa(a, Expr)
+-            replace_getfield!(a::Expr, tupname, vals, field_names, sv)
++        else
++            if a.head === :foreigncall
++                args = a.args
++                nccallargs = args[5]::Int
++                le = length(args)
++                next_i = 6 + nccallargs
++                while next_i <= le
++                    i = next_i
++                    next_i += 1
++
++                    symequal(args[i], tupname) || continue
++                    splice!(args, i, vals)
++                    next_i += length(vals) - 1
++                end
++            end
++            replace_getfield!(a, tupname, vals, field_names, sv)
+         end
+     end
+ end
+diff --git a/test/codegen.jl b/test/codegen.jl
+index 35220c772b..83ceb9b937 100644
+--- a/test/codegen.jl
++++ b/test/codegen.jl
+@@ -128,12 +128,39 @@ function compare_large_struct(a)
+     end
+ end
+ 
++mutable struct MutableStruct
++    a::Int
++    MutableStruct() = new()
++end
++
++breakpoint_mutable(a::MutableStruct) = ccall(:jl_breakpoint, Void, (Ref{MutableStruct},), a)
++
++# Allocation with uninitialized field as gcroot
++mutable struct BadRef
++    x::MutableStruct
++    y::MutableStruct
++    BadRef(x) = new(x)
++end
++Base.cconvert(::Type{Ptr{BadRef}}, a::MutableStruct) = BadRef(a)
++Base.unsafe_convert(::Type{Ptr{BadRef}}, ar::BadRef) = Ptr{BadRef}(pointer_from_objref(ar.x))
++
++breakpoint_badref(a::MutableStruct) = ccall(:jl_breakpoint, Void, (Ptr{BadRef},), a)
++
+ if opt_level > 0
+     @test !contains(get_llvm(isequal, Tuple{Nullable{BigFloat}, Nullable{BigFloat}}), "%gcframe")
+     @test !contains(get_llvm(pointer_not_safepoint, Tuple{}), "%gcframe")
+     compare_large_struct_ir = get_llvm(compare_large_struct, Tuple{typeof(create_ref_struct())})
+     @test contains(compare_large_struct_ir, "call i32 @memcmp")
+     @test !contains(compare_large_struct_ir, "%gcframe")
++
++    @test contains(get_llvm(MutableStruct, Tuple{}), "jl_gc_pool_alloc")
++    breakpoint_mutable_ir = get_llvm(breakpoint_mutable, Tuple{MutableStruct})
++    @test !contains(breakpoint_mutable_ir, "%gcframe")
++    @test !contains(breakpoint_mutable_ir, "jl_gc_pool_alloc")
++
++    breakpoint_badref_ir = get_llvm(breakpoint_badref, Tuple{MutableStruct})
++    @test !contains(breakpoint_badref_ir, "%gcframe")
++    @test !contains(breakpoint_badref_ir, "jl_gc_pool_alloc")
+ end
+ 
+ function two_breakpoint(a::Float64)
+-- 
+2.13.2
+

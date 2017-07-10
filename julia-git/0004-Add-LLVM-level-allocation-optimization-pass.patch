@@ -1,7 +1,7 @@
-From 78b858776cc7b6a6fa0a8e1cc7d8e394ecabe203 Mon Sep 17 00:00:00 2001
+From 914c73821fe4d2acda06f58befaee68fb8cf9c1f Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Tue, 4 Jul 2017 22:14:59 -0400
-Subject: [PATCH 4/6] Add LLVM level allocation optimization pass
+Subject: [PATCH 4/9] Add LLVM level allocation optimization pass
 
 This can obtain escape information with much higher precision than what we can currently do
 in typeinf. However, it does not replace the alloc_elim_pass! in type inference either since
@@ -35,10 +35,10 @@ index 9e2bf245d8..70c0444f1f 100644
  LLVM_LIBS := all
  ifeq ($(USE_POLLY),1)
 diff --git a/src/ccall.cpp b/src/ccall.cpp
-index 849fcd6df7..4492dd134a 100644
+index 62de8e5890..4641762d41 100644
 --- a/src/ccall.cpp
 +++ b/src/ccall.cpp
-@@ -2143,7 +2143,7 @@ jl_cgval_t function_sig_t::emit_a_ccall(
+@@ -2140,7 +2140,7 @@ jl_cgval_t function_sig_t::emit_a_ccall(
                  size_t rtsz = jl_datatype_size(rt);
                  assert(rtsz > 0);
                  Value *strct = emit_allocobj(ctx, rtsz, runtime_bt);
