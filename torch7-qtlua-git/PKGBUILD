@@ -2,10 +2,10 @@
 
 pkgdesc='Lua interface to QT library'
 pkgname='torch7-qtlua-git'
-pkgver=r81.a29e8a7
+pkgver=r83.8b80419
 pkgrel=1
 makedepends=('cmake' 'git')
-depends=('torch7-git>=r819' 'qt5-base')
+depends=('torch7-git>=r819' 'qt4')
 conflicts=('torch7-qtlua')
 provides=('torch7-qtlua')
 arch=('x86_64' 'i686')
@@ -23,6 +23,16 @@ pkgver () {
 	)
 }
 
+prepare() {
+	cd "${pkgname}"
+	sed -i -e '24s#cmake#cmake/${PROJECT_NAME}#' cmake/QtLuaPaths.cmake
+	sed -i \
+		-e '7iSET(QTLUA_LIB_DIR "@CMAKE_INSTALL_PREFIX@/@QtLua_INSTALL_LIB_SUBDIR@")' \
+		-e '9iINCLUDE_DIRECTORIES(${QTLUA_INCLUDE_DIR})\nLINK_DIRECTORIES(${QTLUA_LIB_DIR})' \
+		-e '2d' qtlua/QtLuaConfig.cmake.in
+	sed -i -e '57s#)# @ONLY)#' qtlua/CMakeLists.txt
+}
+
 build () {
 	cd "${pkgname}"
 	[ ! -d build ] && mkdir build
@@ -30,13 +40,14 @@ build () {
 	cmake .. \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_BUILD_TYPE=Release \
-		-DLUA_INCDIR=/usr/include/lua5.1 \
+		-DLUA_INCDIR=/usr/include/luajit-2.0 \
 		-DLUA_LIBDIR=/usr/lib/lua/5.1 \
 		-DLUA=luajit \
 		-DLUA_BINDIR=/usr/bin \
-		-DLUADIR=/usr/share/lua/5.1/ \
+		-DLUALIB=/usr/lib/libluajit-5.1.so \
+		-DLUADIR=/usr/share/lua/5.1 \
 		-DLIBDIR=/usr/lib/lua/5.1 \
-		-DCONFDIR=/usr/share/
+		-DCONFDIR=/usr/share
 	make
 }
 
