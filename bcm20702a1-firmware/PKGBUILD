@@ -5,7 +5,7 @@
 pkgbase=bcm20702a1-firmware
 pkgname=('bcm4335c0-firmware' 'bcm4350c5-firmware' 'bcm4356a2-firmware' 'bcm20702a1-firmware' 'bcm20702b0-firmware' 'bcm20703a1-firmware' 'bcm43142a0-firmware')
 pkgver=1201710
-pkgrel=7
+pkgrel=8
 arch=('any')
 pkgdesc="Broadcom bluetooth firmware."
 url="http://asus.com"
@@ -103,7 +103,11 @@ package_bcm20703a1-firmware() {
   mkdir -p ${pkgdir}/usr/lib/firmware/brcm
   
   for i in BCM20703A1-*.hcd; do
-    install -m644 "${srcdir}/$i" "${pkgdir}/usr/lib/firmware/brcm/$i"
+    if [ "$i" == "BCM20703A1-0a5c-6410.hcd" ]; then
+      install -m644 "${srcdir}/$i" "${pkgdir}/usr/lib/firmware/brcm/BCM-0a5c-6410.hcd"
+    else
+      install -m644 "${srcdir}/$i" "${pkgdir}/usr/lib/firmware/brcm/$i"
+    fi
   done
 }
 
