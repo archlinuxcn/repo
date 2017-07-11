@@ -39,6 +39,9 @@ package() {
             "$pkgdir/usr/share/icons/hicolor/${res}x${res}/apps/vivaldi.png"
     done
 
+    # exo provides the vivaldi helper now
+    rm -r "$pkgdir/usr/share/xfce4"
+
     # license
     install -dm755 "$pkgdir/usr/share/licenses/$pkgname"
     strings "$pkgdir/opt/vivaldi/locales/en-US.pak" \
