@@ -1,0 +1,36 @@
+From 0c0005e3eb83b0e0c4903d2ec4223a58ef115e54 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Micha=C3=ABl=20Defferrard?= <michael.defferrard@epfl.ch>
+Date: Fri, 30 Jun 2017 13:47:39 +0000
+Subject: [PATCH] Only use weakref.finalize from backports in Python < 3.4
+
+---
+ tensorflow/python/util/tf_should_use.py | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/tensorflow/python/util/tf_should_use.py b/tensorflow/python/util/tf_should_use.py
+index 05c99856d27..491b78f1dd3 100644
+--- a/tensorflow/python/util/tf_should_use.py
++++ b/tensorflow/python/util/tf_should_use.py
+@@ -25,7 +25,12 @@
+ 
+ import six  # pylint: disable=unused-import
+ 
+-from backports import weakref  # pylint: disable=g-bad-import-order
++# pylint: disable=g-bad-import-order
++try:
++  from weakref import finalize
++except ImportError:
++  from backports.weakref import finalize
++# pylint: enable=g-bad-import-order
+ 
+ from tensorflow.python.platform import tf_logging
+ from tensorflow.python.util import tf_decorator
+@@ -107,7 +112,7 @@ def __init__(self, true_self):
+       # garbage collected.  Can't add self as the args because the
+       # loop will break garbage collection.  We keep track of
+       # ourselves via python ids.
+-      weakref.finalize(self, _deleted, self._tf_ref_id, fatal_error)
++      finalize(self, _deleted, self._tf_ref_id, fatal_error)
+ 
+     # Not sure why this pylint warning is being used; this is not an
+     # old class form.
