@@ -1,0 +1,60 @@
+build() {
+	add_dir /dev/pts
+	add_dir /usr/share/plymouth/themes
+	add_dir /var/run/plymouth
+
+	DATADIR="/usr/share"
+	PLYMOUTH_LOGO_FILE="${DATADIR}/plymouth/arch-logo.png"
+	PLYMOUTH_THEME_NAME="$(/usr/bin/plymouth-set-default-theme)"
+	PLYMOUTH_MODULE_NAME="$(grep "ModuleName *= *" ${DATADIR}/plymouth/themes/${PLYMOUTH_THEME_NAME}/${PLYMOUTH_THEME_NAME}.plymouth | sed 's/ModuleName *= *//')"
+	PLYMOUTH_PLUGIN_PATH="$(plymouth --get-splash-plugin-path)"
+
+	add_binary /usr/bin/plymouthd
+	add_binary /usr/bin/plymouth
+
+	add_file ${DATADIR}/plymouth/themes/text/text.plymouth
+	add_binary ${PLYMOUTH_PLUGIN_PATH}/text.so
+	add_file ${DATADIR}/plymouth/themes/details/details.plymouth
+	add_binary ${PLYMOUTH_PLUGIN_PATH}/details.so
+
+	add_file "${PLYMOUTH_LOGO_FILE}"
+	add_file /etc/os-release
+	add_file /etc/plymouth/plymouthd.conf
+    add_file ${DATADIR}/plymouth/plymouthd.defaults
+
+	if [ ! -f ${PLYMOUTH_PLUGIN_PATH}/${PLYMOUTH_MODULE_NAME}.so ]; then
+	    echo "The default plymouth plugin (${PLYMOUTH_MODULE_NAME}) doesn't exist" > /dev/stderr
+	    exit 1
+	fi
+
+	add_binary ${PLYMOUTH_PLUGIN_PATH}/${PLYMOUTH_MODULE_NAME}.so
+
+	add_binary ${PLYMOUTH_PLUGIN_PATH}/renderers/drm.so
+	add_binary ${PLYMOUTH_PLUGIN_PATH}/renderers/frame-buffer.so
+
+	if [ -d ${DATADIR}/plymouth/themes/${PLYMOUTH_THEME_NAME} ]; then
+	    for x in ${DATADIR}/plymouth/themes/${PLYMOUTH_THEME_NAME}/* ; do
+		[ ! -f "$x" ] && break
+		add_file $x
+	    done
+	fi
+	
+	add_file /usr/lib/udev/rules.d/70-uaccess.rules
+	add_file /usr/lib/udev/rules.d/71-seat.rules
+
+	# suppress a warning in glib (which the label control uses)
+	# about uid 0 by building a dummy NSS stack (LP #649917)
+	add_file /etc/passwd
+	add_file /etc/nsswitch.conf
+	add_binary "$(readlink -e /lib/libnss_files.so.2)"
+	add_file /lib/libnss_files.so.2
+
+	add_runscript
+}
+
+help() {
+	echo "This hook includes plymouth in the initramfs image."
+}
+
+# vim: set ft=sh:
+#EOF

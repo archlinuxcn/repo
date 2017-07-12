@@ -1,0 +1,15 @@
+diff -aur plymouth-0.8.8.src/scripts/plymouth-set-default-theme.in plymouth-0.8.8.patch/scripts/plymouth-set-default-theme.in
+--- plymouth-0.8.8.src/scripts/plymouth-set-default-theme.in	2012-10-27 02:01:45.000000000 +1100
++++ plymouth-0.8.8.patch/scripts/plymouth-set-default-theme.in	2014-01-26 09:55:34.337189615 +1100
+@@ -173,7 +173,10 @@
+         exit $?
+ fi
+ 
+-if [ ! -e ${PLYMOUTH_DATADIR}/plymouth/themes/${THEME_NAME}/${THEME_NAME}.plymouth ]; then
++if [ -z ${THEME_NAME} ]; then
++        echo "Please specify a theme name"
++        exit 1
++elif [ ! -e ${PLYMOUTH_DATADIR}/plymouth/themes/${THEME_NAME}/${THEME_NAME}.plymouth ]; then
+         echo "${PLYMOUTH_DATADIR}/plymouth/themes/${THEME_NAME}/${THEME_NAME}.plymouth does not exist" > /dev/stderr
+         exit 1
+ fi

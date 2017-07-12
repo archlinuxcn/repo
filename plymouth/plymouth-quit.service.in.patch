@@ -1,0 +1,14 @@
+diff -aur plymouth-0.8.8.src/systemd-units/plymouth-quit.service.in plymouth-0.8.8.patch/systemd-units/plymouth-quit.service.in
+--- plymouth-0.8.8.src/systemd-units/plymouth-quit.service.in	2012-09-27 02:50:53.000000000 +1000
++++ plymouth-0.8.8.patch/systemd-units/plymouth-quit.service.in	2014-02-11 16:36:58.813194805 +1100
+@@ -1,8 +1,9 @@
+ [Unit]
+ Description=Terminate Plymouth Boot Screen
+ After=rc-local.service plymouth-start.service systemd-user-sessions.service
++Before=getty@tty1.service
+ 
+ [Service]
+-ExecStart=-@PLYMOUTH_CLIENT_DIR@/plymouth quit
++ExecStart=-@PLYMOUTH_CLIENT_DIR@/plymouth quit --retain-splash
+ Type=oneshot
+ TimeoutSec=20
