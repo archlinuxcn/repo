@@ -1,0 +1,30 @@
+From 8bf4d553ba9e7a5978ed8920ca0b06e624de2eda Mon Sep 17 00:00:00 2001
+From: "Jan Alexander Steffens (heftig)" <jan.steffens@gmail.com>
+Date: Sat, 20 Jun 2015 17:22:38 +0200
+Subject: [PATCH 2/2] Xsession: Don't start ssh-agent by default
+
+---
+ data/Xsession.in | 8 --------
+ 1 file changed, 8 deletions(-)
+
+diff --git a/data/Xsession.in b/data/Xsession.in
+index f253375..c143b30 100755
+--- a/data/Xsession.in
++++ b/data/Xsession.in
+@@ -184,14 +184,6 @@ if [ "x$command" = "xdefault" ] ; then
+   fi
+ fi
+ 
+-# add ssh-agent if found
+-sshagent="`gdmwhich ssh-agent`"
+-if [ -n "$sshagent" ] && [ -x "$sshagent" ] && [ -z "$SSH_AUTH_SOCK" ]; then
+-    command="$sshagent -- $command"
+-elif [ -z "$sshagent" ] ; then
+-    echo "$0: ssh-agent not found!"
+-fi
+-
+ echo "$0: Setup done, will execute: $command"
+ 
+ eval exec $command
+-- 
+2.4.5
