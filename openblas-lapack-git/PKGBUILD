@@ -7,7 +7,7 @@ pkgbase=openblas-git
 pkgname=(openblas-git openblas-lapack-git)
 _pkgname=OpenBLAS
 pkgver=v0.2.17.r552.gc4ec8820
-pkgrel=1
+pkgrel=2
 pkgdesc="Optimized BLAS library based on GotoBLAS2 1.13 BSD"
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://xianyi.github.com/OpenBLAS/"
@@ -19,6 +19,7 @@ conflicts=('openblas')
 options=(!emptydirs debug strip)
 source=("git://github.com/xianyi/OpenBLAS")
 md5sums=('SKIP')
+_lapack_ver=3.7.1
 
 _config=(
   'SMP=1'
@@ -93,7 +94,8 @@ package_openblas-git() {
 
 package_openblas-lapack-git() {
   depends=('openblas-git')
-  provides=('openblas-lapack' 'blas=3.6.0' 'lapack=3.6.0' 'cblas')
+  provides=('openblas-lapack' "blas=${_lapackver}" "lapack=${_lapackver}"
+            "cblas=${_lapackver}" "lapacke=${_lapackver}")
   conflicts=('blas' 'lapack' 'cblas')
   rm -rf pkg
   mkdir -p "${pkgdir}/usr/"{include,lib}/
@@ -105,14 +107,9 @@ package_openblas-lapack-git() {
 
   # Symlink to provide blas, cblas and lapack
   cd "${pkgdir}/usr/lib/"
-  # BLAS
-  ln -sf libopenblas.so libblas.so
-  ln -sf libopenblas.so libblas.so.3
-  ln -sf libopenblas.so libblas.so.3.6.0
-  # CBLAS
-  ln -sf libopenblas.so libcblas.so
-  # LAPACK
-  ln -sf libopenblas.so liblapack.so
-  ln -sf libopenblas.so liblapack.so.3
-  ln -sf libopenblas.so liblapack.so.3.6.0
+  for lib in blas cblas lapack lapacke; do
+    ln -sf linopenblas.so lib$lib.so
+    ln -sf linopenblas.so lib$lib.so.${_lapackver:0:1}
+    ln -sf linopenblas.so lib$lib.so.${_lapackver}
+  done
 }
