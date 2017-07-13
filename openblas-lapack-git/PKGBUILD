@@ -7,7 +7,7 @@ pkgbase=openblas-git
 pkgname=(openblas-git openblas-lapack-git)
 _pkgname=OpenBLAS
 pkgver=v0.2.17.r552.gc4ec8820
-pkgrel=2
+pkgrel=3
 pkgdesc="Optimized BLAS library based on GotoBLAS2 1.13 BSD"
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://xianyi.github.com/OpenBLAS/"
@@ -108,8 +108,8 @@ package_openblas-lapack-git() {
   # Symlink to provide blas, cblas and lapack
   cd "${pkgdir}/usr/lib/"
   for lib in blas cblas lapack lapacke; do
-    ln -sf linopenblas.so lib$lib.so
-    ln -sf linopenblas.so lib$lib.so.${_lapackver:0:1}
-    ln -sf linopenblas.so lib$lib.so.${_lapackver}
+    ln -sf libopenblas.so lib$lib.so
+    ln -sf libopenblas.so lib$lib.so.${_lapack_ver:0:1}
+    ln -sf libopenblas.so lib$lib.so.${_lapack_ver}
   done
 }
