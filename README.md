@@ -25,5 +25,6 @@ sudo pacman -Syy && sudo pacman -S archlinuxcn-keyring
 ### PKGLIST
 
 * Flag package OUT-OF-DATE by submit new issue, and shall be closed after package updated.
+  * If the new release is within less than a day, and you can see a file named `lilac.py` alongside the PKGBUILD for the package here, please be patient and wait for up to one day.
 
 * Please contact us via Email or submitting new issues.
