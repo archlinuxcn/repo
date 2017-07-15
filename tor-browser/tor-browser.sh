@@ -78,19 +78,18 @@ _refresh_local_() {
 
 _aur_update_() {
 
-	local DO_UPDATE=0
-
 	if [[ "$(id -u)" == '0' ]]; then
 		echo 'It is not a good idea to do this as root. Abort.' 1>&2
 		exit 1
 	fi
 
+	local DO_UPDATE=0
 	local TMP_PKGBUILD="$(mktemp -d)"
 
 	cd "${TMP_PKGBUILD}"
 
 	if ! { curl --silent --fail "https://aur.archlinux.org/cgit/aur.git/snapshot/${_TB_PKGNAME_}.tar.gz" | tar xz ;} 2>/dev/null; then
-		echo 'Unable to retrieve the PKGBUILD. Abort.'
+		echo 'Unable to retrieve the PKGBUILD. Abort.' 1>&2
 		rm -rf "${TMP_PKGBUILD}"
 		exit 1
 	fi
@@ -101,11 +100,11 @@ _aur_update_() {
 	local AUR_RELEASE="$(grep 'pkgrel' '.SRCINFO' | cut -d = -f2 | sed -e 's/^[[:space:]]*//')"
 
 	if _compare_ver_ "${_TB_VERSION_}" "${AUR_VERSION}"; then
-		echo "Found new version (${AUR_VERSION})..."
-		local DO_UPDATE=1
+		echo "Found new version (${_TB_VERSION_} -> ${AUR_VERSION})..."
+		DO_UPDATE=1
 	elif [[ "${_TB_VERSION_}" == "${AUR_VERSION}" ]] && [[ "${_TB_RELEASE_}" != "${AUR_RELEASE}" ]] && [[ "${_TB_RELEASE_}" == "`echo -e "${_TB_RELEASE_}\n${AUR_RELEASE}" | sort | head -n1`" ]]; then
 		echo 'Found new PKGBUILD...'
-		local DO_UPDATE=1
+		DO_UPDATE=1
 	else
 		echo "Everything is up to date (current version: ${_TB_VERSION_})."
 	fi
@@ -125,7 +124,8 @@ Usage: ${0##*/} [option]
 Options:
   -h|--help         Show this help message and exit
   -u|--update       Search in AUR for a new release and install it
-  -f|--refresh      Force refresh of the copy in your home directory
+  -r|--refresh      Refresh the copy in your home directory and launch tor-browser
+  -e|--erase        Erase the copy in your home directory
   --dir=<directory> The Tor-Browser directory to use
 
   All unrecognized arguments will be passed to the browser.
@@ -145,6 +145,7 @@ for arg; do
 		-h|--help) _usage_; exit 0 ;;
 		-u|--update) _aur_update_; exit 0 ;;
 		-f|--refresh) _TB_REFRESH_=1 ;;
+		-e|--erase) rm -rf "${_TB_HOME_DIR_}"; exit 0 ;;
 		--dir=*) _TB_HOME_DIR_="${arg#*=}" ;;
 		*) args+=("$arg") ;;
 	esac
