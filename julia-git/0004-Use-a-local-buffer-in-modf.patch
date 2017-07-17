@@ -1,17 +1,18 @@
-From 9da98e3a2734cfe9aa01893545624ae35b6de4d7 Mon Sep 17 00:00:00 2001
+From e95bc3bc93d9e996b3005a21d591c9d0fd5f2457 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Wed, 5 Jul 2017 05:30:13 -0400
-Subject: [PATCH 5/9] Use a local buffer in `modf`
+Subject: [PATCH 4/5] Use a local buffer in `modf`
 
+Fix #21591
 ---
  base/math.jl | 12 ++++++------
  1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/base/math.jl b/base/math.jl
-index 485d24884f..d86a4a0e58 100644
+index 20d39089b4..288cf0dcd6 100644
 --- a/base/math.jl
 +++ b/base/math.jl
-@@ -695,16 +695,16 @@ julia> modf(3.5)
+@@ -722,16 +722,16 @@ julia> modf(3.5)
  """
  modf(x) = rem(x,one(x)), trunc(x)
  
@@ -33,7 +34,7 @@ index 485d24884f..d86a4a0e58 100644
 +    f, temp[]
  end
  
- @inline ^(x::Float64, y::Float64) = nan_dom_err(ccall("llvm.pow.f64", llvmcall, Float64, (Float64, Float64), x, y), x + y)
+ @inline function ^(x::Float64, y::Float64)
 -- 
 2.13.2
 
