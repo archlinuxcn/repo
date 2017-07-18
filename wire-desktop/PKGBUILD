@@ -1,18 +1,18 @@
 # Maintainer: Conor Anderson <conor@conr.ca>
 pkgname=wire-desktop
-pkgver=2.14.2744
-pkgrel=3
+pkgver=2.15.2750
+pkgrel=1
 pkgdesc='Modern, private messenger. Based on Electron.'
 arch=('x86_64' 'i686')
 url='https://wire.com/'
 license=('GPL3')
 conflicts=('wire-desktop-bin')
 depends=('alsa-lib' 'gconf' 'gtk2' 'libxss' 'libxtst' 'nss')
-makedepends=('git' 'cargo' 'gendesk' 'grunt-cli' 'npm' 'python2' )
+makedepends=('git' 'npm' 'python2' 'gendesk' 'cargo' )
 optdepends=('hunspell-en: for English spellcheck support')
 provides=('wire-desktop')
 source=("${pkgver}.tar.gz::https://github.com/wireapp/wire-desktop/archive/release/"$pkgver".tar.gz")        
-sha256sums=('511db93af1abad458f713c313039183c520ad571bb09947b757368ce5f58f8a5')
+sha256sums=('c1f7a667b29400006fc5b39d6ac82ac621677e28c708b5c033238ae4e9271244')
 
 prepare() {
   gendesk -f -n --name=Wire --pkgname="${pkgname}" --pkgdesc="${pkgdesc}" --exec="${pkgname}" --categories="Network"
@@ -21,7 +21,7 @@ prepare() {
 build() {
   cd "${srcdir}/${pkgname}-release-${pkgver}"
   npm install
-  grunt 'clean:linux' 'update-keys' 'release-prod'
+  $(npm bin)/grunt 'clean:linux' 'update-keys' 'release-prod' 'bundle'
   if [ $CARCH == 'x86_64' ]; then
     build_arch="x64"
   elif [ $CARCH == 'i686' ]; then
@@ -29,7 +29,7 @@ build() {
   else
     echo "Unsupported architecture"; exit 1;
   fi
-  grunt --arch=${build_arch} --target="dir" "electronbuilder:linux_other"
+  $(npm bin)/grunt --arch=${build_arch} --target="dir" "electronbuilder:linux_other"
 }
 
 package() {
