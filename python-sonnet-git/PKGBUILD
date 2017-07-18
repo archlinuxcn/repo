@@ -1,7 +1,7 @@
 # Maintainer: Sasasu <lizhaolong0123@gmail.com>
 pkgbase=python-sonnet-git
 pkgname=(python-sonnet-git python-sonnet-cuda-git)
-pkgver=20170515.170829
+pkgver=20170718.170829
 tf_pkgver=1.2.1
 pkgrel=4
 pkgdesc="TensorFlow-based neural network library."
@@ -88,13 +88,13 @@ build() {
 
 package_python-sonnet-git() {
   cd "${srcdir}/sonnet"
-  PKG=$(find . -name "sonnet-*.whl")
+  PKG=$(find . -name "*sonnet-*.whl")
   pip install --ignore-installed --upgrade --root "$pkgdir/" "$PKG" --no-dependencies
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 package_python-sonnet-cuda-git(){
   cd "${srcdir}/sonnet-cuda"
-  PKG=$(find . -name "sonnet-*.whl")
+  PKG=$(find . -name "*sonnet-*.whl")
   pip install --ignore-installed --upgrade --root "$pkgdir/" "$PKG" --no-dependencies
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
