@@ -3,13 +3,13 @@
 pkgname=poi
 _pkgname=poi
 pkgver=7.9.0.beta.1.0.gd0db1978
-pkgrel=1
+pkgrel=2
 pkgdesc="Scalable KanColle browser and tool"
 arch=('any')
 url="https://github.com/poooi/poi/"
 license=('MIT')
 depends=('electron' 'sh')
-makedepends=('git' 'nodejs' 'npm' 'coreutils' 'findutils' 'sed' 'imagemagick' 'tar' 'zlib' 'unzip' 'gulp')
+makedepends=('git' 'nodejs' 'yarn' 'coreutils' 'findutils' 'sed' 'imagemagick' 'tar' 'zlib' 'unzip' 'gulp')
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
 source=("git+https://github.com/poooi/poi.git"
@@ -35,21 +35,21 @@ compile() {
     local filename
     filename="$1"
     echo "[Compile] ${filename}"
-    node -e "console.log(require('babel-core').transformFileSync(process.argv[1], require('./babel.config.js')).code)" "$filename" > "${filename%.es}.js"
-    rm "$filename"
+    node -e "console.log(require('babel-core').transformFileSync(process.argv[1], require('./babel.config.js')).code)" "$filename" > "${filename%.es}.js" \
+    && rm "$filename"
 }
 
 build() {
     cd "${srcdir}/${_pkgname}"
     git clean -xdf
     #sed -i 's/^.*"electron-prebuilt".*$//;s/^.*"electron-builder".*$//;s/^.*"electron-builder-squirrel-windows".*$//;s/^.*"electron".*$//' package.json
-    npm install
-    npm install --save eachr # workaround
+    yarn install
+    yarn add eachr # workaround
     # prevent infinite loop...
     timeout 5m gulp deploy
     export -f compile
     find . -type f -name '*.es' -exec bash -c 'compile "$0"' {} \;
-    npm prune --production
+    yarn install --production
 }
 
 package() {
