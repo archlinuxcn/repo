@@ -22,8 +22,8 @@ fi
 
 case $CARCH in
   x86_64|i686|aarch64|armv7h)
-    makedepends_llvm=("llvm-julia=4.0.0")
-    depends_llvm=("llvm-libs-julia=4.0.0")
+    makedepends_llvm=("llvm-julia>=4.0" "llvm-julia<5.0")
+    depends_llvm=("llvm-libs-julia>=4.0.0" "llvm-libs-julia<5.0")
     ;;
   # armv7h)
   #   makedepends_llvm=("llvm-svn")
