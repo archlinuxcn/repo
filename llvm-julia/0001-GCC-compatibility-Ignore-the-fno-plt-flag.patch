@@ -1,0 +1,37 @@
+From ea7d4d81905ff99c5c04388909f501b1da451b79 Mon Sep 17 00:00:00 2001
+From: Evangelos Foutras <evangelos@foutrelis.com>
+Date: Thu, 6 Jul 2017 18:53:05 +0300
+Subject: [PATCH 1/2] GCC compatibility: Ignore the -fno-plt flag
+
+---
+ include/clang/Driver/Options.td | 1 +
+ test/Driver/clang_f_opts.c      | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/include/clang/Driver/Options.td b/include/clang/Driver/Options.td
+index 6be159fad6..364296e861 100644
+--- a/include/clang/Driver/Options.td
++++ b/include/clang/Driver/Options.td
+@@ -2277,6 +2277,7 @@ defm ivopts : BooleanFFlag<"ivopts">, Group<clang_ignored_gcc_optimization_f_Gro
+ defm non_call_exceptions : BooleanFFlag<"non-call-exceptions">, Group<clang_ignored_f_Group>;
+ defm peel_loops : BooleanFFlag<"peel-loops">, Group<clang_ignored_gcc_optimization_f_Group>;
+ defm permissive : BooleanFFlag<"permissive">, Group<clang_ignored_f_Group>;
++defm plt : BooleanFFlag<"plt">, Group<clang_ignored_f_Group>;
+ defm prefetch_loop_arrays : BooleanFFlag<"prefetch-loop-arrays">, Group<clang_ignored_gcc_optimization_f_Group>;
+ defm printf : BooleanFFlag<"printf">, Group<clang_ignored_f_Group>;
+ defm profile : BooleanFFlag<"profile">, Group<clang_ignored_f_Group>;
+diff --git a/test/Driver/clang_f_opts.c b/test/Driver/clang_f_opts.c
+index 210e16935d..3999590c47 100644
+--- a/test/Driver/clang_f_opts.c
++++ b/test/Driver/clang_f_opts.c
+@@ -277,6 +277,7 @@
+ // RUN:     -fno-caller-saves -fcaller-saves                                  \
+ // RUN:     -fno-reorder-blocks -freorder-blocks                              \
+ // RUN:     -fno-schedule-insns2 -fschedule-insns2                            \
++// RUN:     -fno-plt -fplt                                                    \
+ // RUN:     -fno-stack-check                                                  \
+ // RUN:     -fno-check-new -fcheck-new                                        \
+ // RUN:     -ffriend-injection                                                \
+-- 
+2.13.2
+
