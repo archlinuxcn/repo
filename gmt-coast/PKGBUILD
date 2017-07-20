@@ -1,7 +1,7 @@
 # Contributor: Benjamin Sick
 pkgname=gmt-coast
-pkgver=2.3.6
-pkgrel=2
+pkgver=2.3.7
+pkgrel=1
 pkgdesc="The full resolution coastline dataset for the Generic Mapping Tools."
 arch=('any')
 url="http://gmt.soest.hawaii.edu/"
@@ -10,6 +10,7 @@ depends=()
 makedepends=()
 provides=()
 source=(ftp://ftp.soest.hawaii.edu/gshhg/gshhg-gmt-${pkgver}.tar.gz)
+md5sums=('8ee2653f9daf84d49fefbf990bbfa1e7')
 
 build() {
   echo "Nothing to build."
@@ -22,4 +23,3 @@ package() {
 }
 
 # vim:set ts=2 sw=2 et:
-md5sums=('108fd757939d3e5f8eaf385e185d6d14')
