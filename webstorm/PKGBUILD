@@ -4,8 +4,8 @@
 
 pkgbase=webstorm
 pkgname=(webstorm webstorm-jre)
-pkgver=2017.1.4
-_pkgver=171.4694.29
+pkgver=2017.2
+_pkgver=172.3317.70
 pkgrel=1
 pkgdesc='JavaScript IDE and HTML editor.'
 arch=('x86_64' 'i686')
@@ -15,12 +15,13 @@ makedepends=('rsync')
 options=('!strip')
 source=(https://download.jetbrains.com/webstorm/WebStorm-${pkgver}.tar.gz
         jetbrains-webstorm.desktop)
-sha512sums=('768b77b054af93613cc892577d63a546066cdd9039aa1f6ae0d11b675ae561b147785580cc335c68c82c421caacc4ae10e267a7d3f6084c03d9a9bf76d6fc93b'
+sha512sums=('f144bed6cabec3093e8f49681e79c52af1854895420aff1d91d6106f07da392cd02a50109e122794b24d1258fb34c7c8b09b8fdf0301dca5335d5d8c379bb272'
             'e261eb9b7fe61518d3399874492c94b642cb8268861c246692887ef3027380af06b7e692d6733340deebb629a3c8d095364cb6def4071cd5af31cfbfe9ec6b68')
 
 package_webstorm() {
   optdepends=('webstorm-jre: JetBrains custom Java Runtime (Recommended)'
-              'java-runtime>=8: JRE - Required if webstorm-jre is not installed')
+              'java-runtime>=8: JRE - Required if webstorm-jre is not installed'
+              'gnome-keyring: save login/deployment credentials safely')
 
   install -d -m 755 "${pkgdir}/opt/"
   install -d -m 755 "${pkgdir}/usr/bin/"
