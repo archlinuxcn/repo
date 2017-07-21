@@ -34,7 +34,7 @@ def get_latest_version():
 def pre_build():
   version, version_date, url, file_hash = get_latest_version()
   if not debug:
-    oldfiles = glob.glob('*.gz') + glob.glob('*.gz.asc')
+    oldfiles = glob.glob('*.xz') + glob.glob('*.xz.asc')
     for f in oldfiles:
       os.unlink(f)
 

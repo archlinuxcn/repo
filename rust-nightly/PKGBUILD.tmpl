@@ -14,8 +14,8 @@ validpgpkeys=('108F66205EAEB0AAA8DD5E1C85AB96E6FA1BE5FE')
 makedepends=('git')
 source=(
         {% for c in ['rustc', 'rust-docs'] %}
-        'https://static.rust-lang.org/dist/{{version_date_raw}}/{{c}}-nightly-x86_64-unknown-linux-gnu.tar.gz'
-        'https://static.rust-lang.org/dist/{{version_date_raw}}/{{c}}-nightly-x86_64-unknown-linux-gnu.tar.gz.asc'
+        'https://static.rust-lang.org/dist/{{version_date_raw}}/{{c}}-nightly-x86_64-unknown-linux-gnu.tar.xz'
+        'https://static.rust-lang.org/dist/{{version_date_raw}}/{{c}}-nightly-x86_64-unknown-linux-gnu.tar.xz.asc'
         {% end %}
 {% for x in stds %}
         {{ "'%s'" % x.url }}

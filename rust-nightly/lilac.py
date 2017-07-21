@@ -54,14 +54,14 @@ def get_latest_version():
 class Std:
   def __init__(self, platform, date):
     self.name = 'rust-std-nightly-' + platform
-    self.url = urljoin(dist_url, date + '/' + self.name + '.tar.gz')
+    self.url = urljoin(dist_url, date + '/' + self.name + '.tar.xz')
     self.platform = platform
     self.optdepends = toolchain.get(platform)
 
 def pre_build():
   version, version_date = get_latest_version()
   if not debug:
-    oldfiles = glob.glob('*.gz') + glob.glob('*.gz.asc')
+    oldfiles = glob.glob('*.xz') + glob.glob('*.xz.asc')
     for f in oldfiles:
       os.unlink(f)
 
