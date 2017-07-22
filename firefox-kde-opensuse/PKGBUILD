@@ -20,8 +20,8 @@ _gtk3=true
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=54.0
-pkgrel=1
+pkgver=54.0.1
+pkgrel=2
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -41,8 +41,8 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
             'speech-dispatcher: Text-to-Speech')
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
-_patchrev=f82a374a310d
-options=('!emptydirs'  'strip' )
+_patchrev=53443ffb496a
+options=('!emptydirs'  'strip')
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 _repo=https://hg.mozilla.org/mozilla-unified
 source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
@@ -140,7 +140,7 @@ prepare() {
 }
 
 build() {
-
+  #export CXXFLAGS="${CFLAGS}"
   cd mozilla-unified
 
   export PATH="$srcdir/path:$PATH"
@@ -222,9 +222,9 @@ md5sums=('SKIP'
          '05bb69d25fb3572c618e3adf1ee7b670'
          '6e335a517c68488941340ee1c23f97b0'
          '46a4971f26c990a66b913ba700c7f3fa'
-         'b6471edbd17c079b6bd9ca81b3930bec'
+         '8f49836b3ad6d40dc490c3bf703f71d6'
          '1fad9a988826d69fe712ea973e43f6da'
-         '6cced7f7f4a03e429e53620237162b5b'
+         'c09024c0bea0f3224d3e45f74ddc4d6b'
          'fa6ac817f576b486419b5f308116a7cd'
          '0c684360f1df4536512d51873c1d243d'
          'ca0532e1b9e55186496868b0b18b4a98'
