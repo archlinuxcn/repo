@@ -29,7 +29,7 @@ def get_latest_version():
   except IndexError:
     version_date = toml['date']
   cargo = toml['pkg']['cargo']['target']['x86_64-unknown-linux-gnu']
-  return version, version_date, cargo['url'], cargo['hash']
+  return version, version_date, cargo['xz_url'], cargo['xz_hash']
 
 def pre_build():
   version, version_date, url, file_hash = get_latest_version()
