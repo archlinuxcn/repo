@@ -7,7 +7,7 @@
 
 _emoji_res_commit="db4c66e311a160b3f849d6c76890932c50701bf8"
 pkgname=telegram-desktop-systemqt-notoemoji
-pkgver=1.1.10
+pkgver=1.1.11
 pkgrel=1
 pkgdesc='Experimental build of Telegram Desktop (using system Qt, emojis replaced with those from Noto Color Emoji)'
 arch=('i686' 'x86_64')
@@ -24,7 +24,7 @@ provides=('telegram-desktop')
 install="telegram-desktop.install"
 _variant_ver="1.1.3"
 _GSL_commit="16a6a41690325433976d843e13ec676d6f9ab091"
-_libtgvoip_commit="ccf715b626246990bf57068102bc04014f4ac385"
+_libtgvoip_commit="757a5d8ec31aadcf387ac3cb135256152c18de1c"
 source=(
     "tdesktop::git+https://github.com/telegramdesktop/tdesktop.git#tag=v$pkgver"
     "GSL::git+https://github.com/Microsoft/GSL.git#commit=${_GSL_commit}"
@@ -48,8 +48,8 @@ sha256sums=('SKIP'
             '41c22fae6ae757936741e63aec3d0f17cafe86b2d6153cdd1d01a5581e871f17'
             'd4cdad0d091c7e47811d8a26d55bbee492e7845e968c522e86f120815477e9eb'
             '7a06af83609168a8eaec59a65252caa41dcd0ecc805225886435eb65073e9c82'
-            '0aa02c2dc2cb4a32519de43a9f188d924b9a3458fdd941e733a17d54ec3db8ed'
-            '3d72e09b9054ff75785a85c9f24ee82d48a2b9bf0ce8515156717b20157a45b3'
+            '6d54c8b51b2224c75c15d1e147855a6f22b96848ca3413330882ca6243dd05cb'
+            '640ef297f5977de78dab17789390e628b8f7a8a495529c24da8a43693f3fae23'
             'fccd084805b4621e3614d2a0584bb78a0ad44f502a79b4a4534e901881677555'
             '668a2371c3dae8e95187f0c9f8fec9b0e535157482747d2f9c6034c6b9eefa16'
             'd84537063ccf42904ab35ea2624263419f7d17671d24b17d02d02020d9af8be2'
