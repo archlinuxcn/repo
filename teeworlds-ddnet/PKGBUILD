@@ -1,7 +1,7 @@
 # Maintainer: Rafael Fontenelle <rafaelff@gnome.org>
 
 pkgname=teeworlds-ddnet
-pkgver=10.6.7
+pkgver=10.7
 pkgrel=1
 pkgdesc="A customized version by DDRaceNetwork of this 2D shooting game"
 arch=('i686' 'x86_64')
@@ -13,21 +13,21 @@ optdepends=('teeworlds-ddnet-skins: more skins for your tee'
             'teeworlds-ddnet-maps-git: mainly important for DDNet Server')
 provides=('teeworlds')
 conflicts=('teeworlds')
-source=("ddnet-$pkgver.tar.gz::https://github.com/ddnet/ddnet/archive/$pkgver.tar.gz")
-source_i686=("https://ddnet.tw/downloads/GraphicsTools-linux_x86.tar.gz")
-source_x86_64=("https://ddnet.tw/downloads/GraphicsTools-linux_x86_64.tar.gz")
-md5sums=('e047fe1af084c1a2f627c8a162cbb867')
+source=("$url/downloads/DDNet-$pkgver.tar.xz")
+source_i686=("$url/downloads/GraphicsTools-linux_x86.tar.gz")
+source_x86_64=("$url/downloads/GraphicsTools-linux_x86_64.tar.gz")
+md5sums=('19bc5479ec5d304034c49e1b11deba5f')
 md5sums_i686=('566354c3b4510b032af7d891381ee711')
 md5sums_x86_64=('fc32ca52ae9be02f68b6c257153dbd37')
 
 prepare() {
       # Client
-    convert "ddnet-$pkgver/other/icons/DDNet.ico" "$srcdir/$pkgname.png"
+    convert "DDNet-$pkgver/other/icons/DDNet.ico" "$srcdir/$pkgname.png"
     gendesk -f -n --pkgname "$pkgname" --pkgdesc "$pkgdesc" \
         --name 'Teeworlds' --categories 'Game;ArcadeGame'
       
       # Server
-    convert "ddnet-$pkgver/other/icons/DDNet-Server.ico" "$srcdir/${pkgname}_srv.png"
+    convert "DDNet-$pkgver/other/icons/DDNet-Server.ico" "$srcdir/${pkgname}_srv.png"
       # This desktop file, combined with 'teeworlds-ddnet-maps-git' pkg will
       # run DDNet Server with all votes, maps etc. -- no score/ranking, though
     gendesk -f -n --pkgname "${pkgname}_srv" --pkgdesc "DDNet Server"        \
@@ -36,12 +36,12 @@ prepare() {
 }
 
 build() {
-  cd ddnet-$pkgver
+  cd DDNet-$pkgver
   bam release
 }
 
 package() {
-  cd ddnet-$pkgver
+  cd DDNet-$pkgver
   
     # Install DDNet client/server binaries
   install -Dm755 DDNet           "$pkgdir/usr/bin/teeworlds-ddnet"
