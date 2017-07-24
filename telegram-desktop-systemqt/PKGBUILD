@@ -4,7 +4,7 @@
 # https://github.com/mymedia2/tdesktop
 
 pkgname=telegram-desktop-systemqt
-pkgver=1.1.11
+pkgver=1.1.15
 pkgrel=1
 pkgdesc='Experimental build of Telegram Desktop (using system Qt)'
 arch=('i686' 'x86_64')
