@@ -3,7 +3,7 @@
 # Contributor: Skunnyk <skunnyk@archlinux.fr>
 
 pkgname=yaourt
-pkgver=1.8.1
+pkgver=1.9
 pkgrel=1
 pkgdesc="A pacman wrapper with extended features and AUR support"
 arch=('any')
@@ -14,8 +14,8 @@ optdepends=('aurvote: vote for favorite packages from AUR'
             'customizepkg: automatically modify PKGBUILD during install/upgrade'
             'rsync: retrieve PKGBUILD from official repositories')
 backup=('etc/yaourtrc')
-source=("$url/releases/download/$pkgver/$pkgname-$pkgver.tar.xz")
-sha256sums=('f5da1144f2d4e9754bc5728116a79a9c78469f6587321c4c766812f06393ca92')
+source=("$url/releases/download/$pkgver/$pkgname-$pkgver.tar.gz")
+sha256sums=('9a485cef9d50e80b8abae5dbb147e09bdeb8818d29316b65e892fb560c48517d')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver/"
