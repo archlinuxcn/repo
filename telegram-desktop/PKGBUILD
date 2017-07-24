@@ -1,5 +1,5 @@
 pkgname=telegram-desktop
-pkgver=1.1.10
+pkgver=1.1.15
 pkgrel=1
 pkgdesc='Official desktop version of Telegram messaging app.'
 arch=('i686' 'x86_64')
@@ -72,6 +72,7 @@ source=(
     "telegramdesktop.desktop"
     "tg.protocol"
     "aur-fixes.diff"
+    "libtgvoip-fixes.diff"
 )
 sha256sums=(
     'SKIP'
@@ -85,6 +86,7 @@ sha256sums=(
     'f47f4b10c8b498ab456ad1dd54754cbd6725b936bb94ffe4fea12d2c2f2b408d'
     'd4cdad0d091c7e47811d8a26d55bbee492e7845e968c522e86f120815477e9eb'
     '4aa5ffc3f96337517c6e983067f4b796adcde66e0639bc9c9e4966c3fdaa40c7'
+    'df86ab21e5eddc3dac46781a2165452ce076e928c2b9d59f340883c13f5d5a02'
 )
 
 prepare() {
@@ -125,6 +127,10 @@ prepare() {
     git submodule update
     
     git apply "$srcdir/aur-fixes.diff"
+    
+    cd Telegram/ThirdParty/libtgvoip
+    git checkout .
+    git apply "$srcdir/libtgvoip-fixes.diff"
 }
 
 build() {
