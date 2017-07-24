@@ -3,7 +3,7 @@
 
 pkgname=imagemagick-fftw
 pkgver=6.9.9.2
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 url="http://www.imagemagick.org/"
 license=('custom')
@@ -11,17 +11,19 @@ makedepends=('libltdl' 'lcms2' 'libxt' 'fontconfig' 'libxext' 'ghostscript'
              'openexr' 'libwmf' 'librsvg' 'libxml2' 'liblqr' 'openjpeg2' 'libraw'
              'opencl-headers' 'opencl-icd-loader' 'libwebp' 'subversion' 'glu' 'git' 'fftw')
 source=(http://www.imagemagick.org/download/ImageMagick-${pkgver%.*}-${pkgver##*.}.tar.xz{,.asc}
-        perlmagick.rpath.patch)
+        perlmagick.rpath.patch imagemagick-underlink.patch)
 sha1sums=('e23ee6a54063c0ac36882fc71f54b660316f542d'
           'SKIP'
-          'e143cf9d530fabf3b58023899b5cc544ba93daec')
+          'e143cf9d530fabf3b58023899b5cc544ba93daec'
+          'e0cb8d32952d9e1636d03b1b4c03d8c9206192c4')
 validpgpkeys=('D8272EF51DA223E4D05B466989AB63D48277377A')
 
 prepare() {
   cd ImageMagick-${pkgver%.*}-${pkgver##*.}
   sed '/AC_PATH_XTRA/d' -i configure.ac
-  autoreconf --force --install
   patch -p0 -i "${srcdir}/perlmagick.rpath.patch"
+  patch -p1 -i ../imagemagick-underlink.patch # Fix underlinking
+  autoreconf --force --install
 }
 
 build() {
