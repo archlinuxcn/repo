@@ -315,7 +315,9 @@ backup_files() {
 	echo -n "Only keeping the last ${KEEP_BACKUPS} backups and removing the other ones..."
 	BACKUP_COUNT=$(for f in "${BACKUP_DEST}"/[0-9_.]*; do echo "${f}"; done | wc -l)
 	if [[ $(( BACKUP_COUNT - KEEP_BACKUPS )) -gt 0 ]]; then
-		${SUDO_CMD} rm "$(for f in "${BACKUP_DEST}"/[0-9_.]*; do echo "${f}"; done | head -n"$(( BACKUP_COUNT - KEEP_BACKUPS ))")"
+		for old_backup in $(for f in "${BACKUP_DEST}"/[0-9_.]*; do echo "${f}"; done | head -n"$(( BACKUP_COUNT - KEEP_BACKUPS ))"); do
+			${SUDO_CMD} rm "${old_backup}";
+		done
 		echo -e "\e[39;1m done\e[0m ($(( BACKUP_COUNT - KEEP_BACKUPS)) backup(s) pruned)"
 	else
 		echo -e "\e[39;1m done\e[0m (no backups pruned)"
