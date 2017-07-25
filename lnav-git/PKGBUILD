@@ -2,8 +2,8 @@
 # Contributor: Andy Weidenbaum <archbaum@gmail.com>
 
 pkgname="lnav-git"
-pkgver="0.7.3.r60.g92dd592"
-pkgrel="1"
+pkgver=0.8.3.alpha.r7.g2e095fb
+pkgrel=1
 pkgdesc="A featureful ncurses based log file viewer"
 arch=("i686" "x86_64")
 url="http://lnav.org/"
@@ -13,7 +13,7 @@ makedepends=("git" "re2c")
 conflicts=("lnav")
 provides=("lnav")
 source=("$pkgname"::"git+https://github.com/tstack/lnav.git")
-md5sums=("SKIP")
+md5sums=('SKIP')
 
 pkgver() {
     cd "$pkgname"
