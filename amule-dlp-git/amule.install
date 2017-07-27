@@ -1,0 +1,32 @@
+post_install() {
+  post_upgrade
+  passwd -l amule &>/dev/null
+}
+
+_config_instructions() {
+  echo "If you plan to use external client (e.g. amuleGUI or amuleweb) then you need to"
+  echo "provide [ExternalConnect] configuration."
+  echo "You also need to specify amuleweb password."
+  echo "Please follow https://wiki.archlinux.org/index.php/AMule for more information."
+  echo "amuleweb can be started as 'systemctl start amuleweb'."
+  echo
+  echo "This package only provides amule-dlp."
+  echo "If you want the antileech function, you have to install amule-dlp-libantileech-git."
+}
+
+post_upgrade() {
+  # create user/group that the daemon will run as by default, do not delete this on uninstall, as it will own files
+  getent group amule >/dev/null || groupadd amule
+  getent passwd amule >/dev/null || useradd -c 'aMule Client' -g amule -d '/var/lib/amule' -m -s /bin/false amule
+
+  if [ ! -e /var/lib/amule/.aMule/amule.conf ]; then
+    _config_instructions
+  fi
+}
+
+post_remove() {
+  # TOTHINK: delete homedir and user account/group?
+  #getent passwd amule >/dev/null && userdel amule
+  #getent group amule >/dev/null && groupdel amule
+  true
+}

@@ -1,0 +1,13 @@
+[Unit]
+Description=aMule Webserver
+Requires=amuled.service
+
+[Service]
+User=amule
+ExecStart=/usr/bin/amuleweb --quiet
+# If amuled still starting then amuleweb exits, restart until amuleweb is up 
+Restart=on-success
+RestartSec=3s
+
+[Install]
+WantedBy=multi-user.target
