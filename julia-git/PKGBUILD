@@ -125,9 +125,6 @@ EOF
   git clean -fdx
 
   patch -Np1 < ../0001-Revert-turn-on-deprecation-warnings-for-type-and-imm.patch
-  patch -Np1 < ../0003-Add-LLVM-level-allocation-optimization-pass.patch
-  patch -Np1 < ../0004-Use-a-local-buffer-in-modf.patch
-  patch -Np1 < ../0005-Improving-ieee754_rem_pio2.patch
 
   if [[ "$CARCH" = x86_64 ]]; then
       (cd "$srcdir"
