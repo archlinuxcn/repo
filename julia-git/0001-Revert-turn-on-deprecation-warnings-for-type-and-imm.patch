@@ -1,7 +1,7 @@
-From 19f74f5c276710b84ddcedf5b728425e89471fc8 Mon Sep 17 00:00:00 2001
+From dd866032a3825d5b7f3d8d5b4eb8ba41c0489a40 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Wed, 17 May 2017 17:55:32 -0400
-Subject: [PATCH 1/5] Revert "turn on deprecation warnings for `type` and
+Subject: [PATCH 1/3] Revert "turn on deprecation warnings for `type` and
  `immutable`"
 
 This partially reverts commit 9a8adb550b134d81b60418df9d8d6659093d52a2.
@@ -10,10 +10,10 @@ This partially reverts commit 9a8adb550b134d81b60418df9d8d6659093d52a2.
  1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/src/julia-parser.scm b/src/julia-parser.scm
-index 28496f5d23..34279efb0b 100644
+index b192147dae..11dc004499 100644
 --- a/src/julia-parser.scm
 +++ b/src/julia-parser.scm
-@@ -1354,10 +1354,11 @@
+@@ -1407,10 +1407,11 @@
                               (expect-end (take-lineendings s) "primitive type"))))))
         ;; deprecated type keywords
         ((type)
@@ -28,5 +28,5 @@ index 28496f5d23..34279efb0b 100644
         ((bitstype)
          (let* ((nb   (with-space-sensitive (parse-cond s)))
 -- 
-2.13.2
+2.13.3
 

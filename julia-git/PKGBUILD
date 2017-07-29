@@ -47,9 +47,11 @@ makedepends=(gcc-fortran arpack fftw git gmp libgit2-julia libunwind-git
              openlibm mbedtls libssh2)
 options=('debug' '!strip' '!buildflags')
 source=('git://github.com/JuliaLang/julia'
-        0001-Revert-turn-on-deprecation-warnings-for-type-and-imm.patch)
+        0001-Revert-turn-on-deprecation-warnings-for-type-and-imm.patch
+        0002-Revert-deprecation-warning-for-old-parametric-method.patch)
 md5sums=('SKIP'
-         '3551461bc89062b0947a407c341e2806')
+         'ce4f6bbf6ccf9eae710b3021ffa2ec64'
+         'a5a3592637c1729374ca3bc57a7d4708')
 
 pkgver() {
   cd julia
@@ -125,6 +127,7 @@ EOF
   git clean -fdx
 
   patch -Np1 < ../0001-Revert-turn-on-deprecation-warnings-for-type-and-imm.patch
+  patch -Np1 < ../0002-Revert-deprecation-warning-for-old-parametric-method.patch
 
   if [[ "$CARCH" = x86_64 ]]; then
       (cd "$srcdir"
