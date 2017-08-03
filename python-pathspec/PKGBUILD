@@ -1,0 +1,23 @@
+_pkgname=pathspec
+pkgname=python-pathspec
+pkgver=0.5.3
+pkgrel=1
+pkgdesc="Utility library for gitignore style pattern matching of file paths."
+arch=('any')
+url="https://github.com/cpburnz/python-path-specification"
+license=('MPL')
+depends=('python')
+source=('https://pypi.python.org/packages/a5/92/078512f5fe85300b97281210a9d38c970dde2dd7109a2b6dddd8252d9a3f/pathspec-0.5.3.tar.gz')
+md5sums=('5c3f701f069afc1f885e52daec31524c')
+
+build() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  LANG=en_US.UTF-8 python3 setup.py build
+}
+
+package() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  LANG=en_US.UTF-8 python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+}
+
+# vim:set sw=2 et:
