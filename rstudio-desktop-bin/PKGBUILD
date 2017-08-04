@@ -12,20 +12,22 @@
 #######################
 
 pkgname=rstudio-desktop-bin
-pkgver=1.0.143
-pkgrel=2
-pkgdesc="A new integrated development environment (IDE) for R (binary version from RStudio official website)"
+pkgver=1.0.153
+pkgrel=1
+pkgdesc="An integrated development environment (IDE) for R (binary version from RStudio official repository)"
 arch=('i686' 'x86_64')
 license=('GPL')
 url="http://www.rstudio.org/"
-depends=('r' 'gstreamer0.10-base' 'hicolor-icon-theme' 'libxcomposite' 'libxslt' 'shared-mime-info' 'libxrandr' 'pandoc' 'pandoc-citeproc')
+depends=('r' 'gstreamer0.10-base' 'hicolor-icon-theme' 'libxcomposite' 'libxslt' 'shared-mime-info' 'libxrandr')
 #makedepends=('patchelf')
+optdepends=('pandoc: markdown support'
+            'pandoc-citeproc: markdown support')
 conflicts=('rstudio-desktop' 'rstudio-desktop-git' 'rstudio-desktop-preview-bin')
 provides=("rstudio-desktop=${pkgver}")
 options=(!strip)
 
-_x86md5=21ca14bffcdc1a2361ead2d763d0313d
-_x64md5=75761eae209158d8415d562b3771fbec
+_x86md5=981be44f91fc07e5f69f52330da32659
+_x64md5=2d0769bea2bf6041511d6901a1cf69c3
 
 case "$CARCH" in
 	'i686')
