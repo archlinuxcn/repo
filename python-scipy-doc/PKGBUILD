@@ -1,7 +1,8 @@
 # Maintainer: Patrice Peterson <runiq at archlinux dot us>
+# Contributor: David McInnis < dave@dave3.xyz>
 
 pkgname=python-scipy-doc
-pkgver=0.18.1
+pkgver=0.19.1
 pkgrel=1
 pkgdesc="Documentation for SciPy"
 makedepends=('unzip')
@@ -10,7 +11,7 @@ url='http://docs.scipy.org'
 license=('BSD')
 source=("$pkgname-$pkgver.zip::https://docs.scipy.org/doc/scipy/scipy-html-$pkgver.zip")
 noextract=("$pkgname-$pkgver.zip")
-sha256sums=('b6118abf9af19318b566521c1944d93f0dec57a7e533641348e5338f790e1279')
+sha256sums=('e123b40d3d550ed55df0f8fbe808ff28f6e4343c3773c553afff508819e800ba')
 
 package()
 {
