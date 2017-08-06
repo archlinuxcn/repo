@@ -3,8 +3,8 @@
 # Contributor: Dave Reisner <d@falconindy.com>
 
 pkgname=libgit2-julia
-pkgver=0.25.1
-pkgrel=5
+pkgver=0.26.0
+pkgrel=1
 epoch=1
 pkgdesc='A linkable library for Git'
 arch=(i686 x86_64 armv7h aarch64)
@@ -14,22 +14,16 @@ makedepends=(cmake python)
 provides=("libgit2=$epoch:$pkgver")
 conflicts=(libgit2)
 license=('GPL2')
-source=("libgit2-$pkgver.tar.gz::https://github.com/libgit2/libgit2/archive/v${pkgver}.tar.gz"
-        libgit2-agent-nonfatal.patch
-        0001-filebuf-fix-resolving-absolute-symlinks.patch
-        0001-Do-not-free-config-when-creating-remote.patch)
-sha1sums=('c65238d0e0a698b202a3a886d003228cac6dacc3'
-          '5b333adbd3bfa5e546053d2439d15f684cb0c44f'
-          '6411486c592b97d2c94147258c32dae4d0fddb19'
-          '28e2cd4b5a3a264cb5a0fc771d483343884c0ad5')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/libgit2/libgit2/archive/v${pkgver}.tar.gz"
+        libgit2-agent-nonfatal.patch)
+sha1sums=('7e9792e3d2ee88719f0d7cb59737256bfc1cddbb'
+          '5b333adbd3bfa5e546053d2439d15f684cb0c44f')
 options=(!strip)
 
 prepare() {
   cd "libgit2-$pkgver"
 
   patch -p1 < ../libgit2-agent-nonfatal.patch
-  patch -p1 < ../0001-filebuf-fix-resolving-absolute-symlinks.patch
-  patch -p1 < ../0001-Do-not-free-config-when-creating-remote.patch
 }
 
 build() {
