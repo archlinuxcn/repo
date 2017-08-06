@@ -159,10 +159,10 @@ index b975c7a8..f2f876b3 100644
 -Q_IMPORT_PLUGIN(QHimePlatformInputContextPlugin)
  #endif // Q_OS_WIN | Q_OS_MAC | Q_OS_LINUX
 diff --git a/Telegram/SourceFiles/ui/text/text.cpp b/Telegram/SourceFiles/ui/text/text.cpp
-index 044f8716..0865a5bb 100644
+index d18a8ea5..2c58287e 100644
 --- a/Telegram/SourceFiles/ui/text/text.cpp
 +++ b/Telegram/SourceFiles/ui/text/text.cpp
-@@ -1692,11 +1692,11 @@ private:
+@@ -1689,11 +1689,11 @@ private:
  		if (item == -1)
  			return;
  
@@ -175,8 +175,8 @@ index 044f8716..0865a5bb 100644
 -#endif // OS_MAC_OLD
 +#endif
  
- 		int blockIndex = _lineStartBlock;
- 		ITextBlock *currentBlock = _t->_blocks[blockIndex];
+ 		auto blockIndex = _lineStartBlock;
+ 		auto currentBlock = _t->_blocks[blockIndex].get();
 diff --git a/Telegram/SourceFiles/ui/text/text_block.cpp b/Telegram/SourceFiles/ui/text/text_block.cpp
 index f89644e1..35230cfc 100644
 --- a/Telegram/SourceFiles/ui/text/text_block.cpp
@@ -229,10 +229,10 @@ index 5d6830e9..c3f08d3f 100644
          IMPLICIT_DEPENDS CXX "${_pch_header}"
          COMMENT "Precompiling ${_name} for ${_target} (C++)")
 diff --git a/Telegram/gyp/Telegram.gyp b/Telegram/gyp/Telegram.gyp
-index 80160d16..8789e874 100644
+index 9d92b817..e5c81e12 100644
 --- a/Telegram/gyp/Telegram.gyp
 +++ b/Telegram/gyp/Telegram.gyp
-@@ -78,12 +78,10 @@
+@@ -79,12 +79,10 @@
        'codegen.gyp:codegen_lang',
        'codegen.gyp:codegen_numbers',
        'codegen.gyp:codegen_style',
@@ -245,7 +245,7 @@ index 80160d16..8789e874 100644
        'AL_ALEXT_PROTOTYPES',
        'TGVOIP_USE_CXX11_LIB',
        '<!@(python -c "for s in \'<(build_defines)\'.split(\',\'): print(s)")',
-@@ -92,14 +90,7 @@
+@@ -93,14 +91,7 @@
      'include_dirs': [
        '<(src_loc)',
        '<(SHARED_INTERMEDIATE_DIR)',
@@ -259,8 +259,8 @@ index 80160d16..8789e874 100644
 -      '<(minizip_loc)',
 +      '/usr/include/minizip',
        '<(sp_media_key_tap_loc)',
+       '<(emoji_suggestions_loc)',
        '<(submodules_loc)/GSL/include',
-       '<(submodules_loc)/variant/include',
 diff --git a/Telegram/gyp/qt.gypi b/Telegram/gyp/qt.gypi
 index 81c13a18..99af0edb 100644
 --- a/Telegram/gyp/qt.gypi
@@ -492,12 +492,12 @@ index 2c464928..b505a67d 100644
      ],
      'configurations': {
 diff --git a/Telegram/gyp/telegram_sources.txt b/Telegram/gyp/telegram_sources.txt
-index fbe63ec5..475210b3 100644
+index 40556793..b42767e3 100644
 --- a/Telegram/gyp/telegram_sources.txt
 +++ b/Telegram/gyp/telegram_sources.txt
-@@ -580,14 +580,7 @@
- <(src_loc)/structs.cpp
- <(src_loc)/structs.h
+@@ -587,14 +587,7 @@
+ <(emoji_suggestions_loc)/emoji_suggestions.cpp
+ <(emoji_suggestions_loc)/emoji_suggestions.h
  
 -platforms: !win
 -<(minizip_loc)/crypt.h

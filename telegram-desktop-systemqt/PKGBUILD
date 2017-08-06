@@ -4,7 +4,7 @@
 # https://github.com/mymedia2/tdesktop
 
 pkgname=telegram-desktop-systemqt
-pkgver=1.1.18
+pkgver=1.1.19
 pkgrel=1
 pkgdesc='Experimental build of Telegram Desktop (using system Qt)'
 arch=('i686' 'x86_64')
@@ -37,8 +37,8 @@ sha256sums=('SKIP'
             '41c22fae6ae757936741e63aec3d0f17cafe86b2d6153cdd1d01a5581e871f17'
             'd4cdad0d091c7e47811d8a26d55bbee492e7845e968c522e86f120815477e9eb'
             '7a06af83609168a8eaec59a65252caa41dcd0ecc805225886435eb65073e9c82'
-            '6d54c8b51b2224c75c15d1e147855a6f22b96848ca3413330882ca6243dd05cb'
-            '640ef297f5977de78dab17789390e628b8f7a8a495529c24da8a43693f3fae23')
+            '8532262ca8876bed0b347115fb87453885e6150ebc3995e2daa5d38a4f318ae5'
+            '0e55b150b91aeeddcb813fb242a62fe4d1977bcac457eb9d65997faef643f075')
 
 prepare() {
     cd "$srcdir/tdesktop"
