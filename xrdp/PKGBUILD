@@ -6,7 +6,7 @@
 # Contributor: Mathias R. <pu154r@overlinux.org>
 
 pkgname=xrdp
-pkgver=0.9.2
+pkgver=0.9.3
 pkgrel=1
 pkgdesc="An open source remote desktop protocol (RDP) server"
 url="https://github.com/neutrinolabs/xrdp"
@@ -18,8 +18,8 @@ backup=('etc/xrdp/sesman.ini' 'etc/xrdp/xrdp.ini')
 install="${pkgname}.install"
 source=("https://github.com/neutrinolabs/xrdp/releases/download/v${pkgver}/xrdp-${pkgver}.tar.gz"
 	"arch-config.diff")
-md5sums=('afe2f922d2912a19dab1f78c927c204b'
-         '4ffed594dcc6ca76553893a807c1645d')
+md5sums=('51167f1ca1f15a25b7ae82310dc6783c'
+         '50424a25558d08abff0575cb64ee3418')
 
 prepare() {
   cd "${pkgname}-${pkgver}"

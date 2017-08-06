@@ -1,10 +1,10 @@
 pkgname=rocksdb
-pkgver=5.5.1
-pkgrel=1
+pkgver=5.6.1
+pkgrel=2
 pkgdesc='Embedded key-value store for fast storage'
 arch=(i686 x86_64)
 url='http://rocksdb.org'
-license=(BSD)
+license=(Apace)
 depends=(
 	'bzip2'
 	'gcc-libs'
@@ -15,7 +15,7 @@ depends=(
 makedepends=('gcc' 'make')
 checkdepends=(python2)
 source=(https://github.com/facebook/rocksdb/archive/v$pkgver.zip)
-sha256sums=('43e626cf50934b446ac7cb7bd4659a7afb469f306fefba47ea3dd0ff1974ccdc')
+sha256sums=('13f47a7a0b7acd4ca42fed63f13477af47e0a0a1410825cf5668e7f03e6db821')
 
 prepare() {
   cd rocksdb-$pkgver
@@ -40,5 +40,6 @@ package() {
   install -d "$pkgdir"/usr/include
   cp -r include/rocksdb "$pkgdir"/usr/include
   install -m755 -D librocksdb.so "$pkgdir"/usr/lib/librocksdb.so
-  install -D -m644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -D -m644 LICENSE.Apache "$pkgdir/usr/share/licenses/$pkgname/LICENSE.Apache"
+  install -D -m644 LICENSE.leveldb "$pkgdir/usr/share/licenses/$pkgname/LICENSE.leveldb"
 }

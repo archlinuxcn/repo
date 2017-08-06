@@ -1,6 +1,6 @@
 # Maintainer: Gordian Edenhofer <gordian.edenhofer[at]yahoo[dot]de>
 pkgname=spigot
-pkgver=1.12
+pkgver=1.12.1
 pkgrel=1
 pkgdesc="High performance Minecraft server implementation"
 arch=(any)
@@ -26,7 +26,7 @@ md5sums=('SKIP'
          '872d2e03799f1f8f0c75acdebce91894'
          '1eb2d5f485cf9eff7a99c826ad56fcf4'
          'b377759fa023d1119893dacff3b01cec'
-         '90c7f40aacc911fc544e57f1501b47a9')
+         'bb5389bb949e6913ab62141f3cce24cb')
 
 _game="spigot"
 _server_root="/srv/craftbukkit"

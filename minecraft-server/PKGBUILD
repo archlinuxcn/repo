@@ -3,8 +3,8 @@
 # Contributer: sowieso <sowieso@dukun.de>
 
 pkgname=minecraft-server
-pkgver=1.12
-pkgrel=4
+pkgver=1.12.1
+pkgrel=1
 pkgdesc="Minecraft server unit files, script, and jar"
 arch=('any')
 url="https://minecraft.net/"
@@ -22,7 +22,7 @@ source=("https://s3.amazonaws.com/Minecraft.Download/versions/${pkgver}/minecraf
 	"minecraftd.conf"
 	"minecraftd.sh")
 noextract=("minecraft_server.${pkgver}.jar")
-sha512sums=('b96aff9b718373c587ada412513aa3c8111c88ff1424a9ec9f80a934e781a4371bfa74290eea3218ce2c3b1f45196d25493f01d11bd4be905d5827a4fe18574a'
+sha512sums=('ae715dcf729b28682ea77109d0fd01473812147de55b749508b8bddaa6d7c6153cb85f30c5d32955145fa3dea99c35a1158c137dab8793bd785a19fe5f948b9b'
             'c8f96bafb0ba3fd8946ac791b09e75cae54dc1a8e02822f91ca70a77a8ba45b253a83c4db30f9cfbf0658a2608b38e6de3d00f1d832ef676f329a78e69eab3e7'
             '19ee3646bfbace353b65c0373594edb654de11c9671f29cebad3b31109f29f94ade1d529d9f409b0989c376bef9b451585b22a1e0ac4295fcc92d9565f808418'
             'b0124c8cd90a4f9901a9105c0ee51eb3e7db944d106cf30fd91b29794178e650d3a21c3be3c8e0cb454b2cef6f27541c44e7a5e77a1d50f89b9152363de51d28'
