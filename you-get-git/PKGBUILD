@@ -1,7 +1,7 @@
 # Maintainer: lilydjwg <lilydjwg@gmail.com>
 pkgname=you-get-git
 pkgdesc="A YouTube/Youku/Sohu/Tudou/QQ/Sina/PPTV/Xiami/Vimeo/ifeng/AcFun/bilibili/CNTV/... video downloader written in Python 3."
-pkgver=0.4.803.20170808.1682
+pkgver=0.4.803.20170808.1683
 pkgrel=1
 arch=('any')
 url="http://www.soimort.org/you-get/"
