@@ -7,14 +7,14 @@
 
 pkgname=acpi_call-pf
 pkgver=1.1.0
-pkgrel=60
-_extramodules=extramodules-4.11-pf
+pkgrel=61
+_extramodules=extramodules-4.12-pf
 pkgdesc='A linux-pf kernel module that enables calls to ACPI methods through /proc/acpi/call'
 arch=('i686' 'x86_64')
 url="http://github.com/mkottman/${pkgname%-*}"
 license=('GPL')
-depends=('linux-pf>=4.11' 'linux-pf<4.12')
-makedepends=('linux-pf-headers>=4.11' 'linux-pf-headers<4.12')
+depends=('linux-pf>=4.12' 'linux-pf<4.13')
+makedepends=('linux-pf-headers>=4.12' 'linux-pf-headers<4.13')
 provides=("${pkgname%-*}")
 install="${pkgname}.install"
 source=("acpi_call-$pkgver.tar.gz::${url}/archive/v${pkgver}.tar.gz")
@@ -23,7 +23,11 @@ sha256sums=('d0d14b42944282724fca76f57d598eed794ef97448f387d1c489d85ad813f2f0')
 build() {
   cd ${pkgname%-*}-${pkgver}
 
-  sed -i '9s/acpi/linux/' acpi_call.c
+  # Fix build with Linux >= 3.17
+   sed -i 's|acpi/acpi.h|linux/acpi.h|' acpi_call.c
+
+  # Fix build with Linux >= 4.12
+  sed -i 's|asm/uaccess.h|linux/uaccess.h|' acpi_call.c
 
   _kernver="$(cat /usr/lib/modules/${_extramodules}/version)"
 
