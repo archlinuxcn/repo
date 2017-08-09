@@ -1,0 +1,5 @@
+#compdef bcc
+
+local tools=(/usr/share/bcc/tools/**/*(*))
+_arguments ':tool:(${tools#/*/*/*/*/})' '*:arguments: '
+return 0

@@ -1,0 +1,5 @@
+#!/bin/sh -e
+
+cmd=$1
+shift
+exec "/usr/share/bcc/tools/$cmd" "$@"
