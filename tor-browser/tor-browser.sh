@@ -134,11 +134,6 @@ EOF
 }
 
 
-# remove old INSTALL and APP directories (temporary command, to be removed in the next versions)
-if [[ -d "${_TB_HOME_DIR_}/INSTALL" ]] || [[ -d "${_TB_HOME_DIR_}/APP" ]]; then
-	rm -rf "${_TB_HOME_DIR_}"
-fi
-
 args=()
 for arg; do
 	case "${arg}" in
