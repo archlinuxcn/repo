@@ -1,0 +1,34 @@
+# Colored makepkg-like functions
+msg_blue() {
+    printf "${blue}==>${bold} $1${all_off}\n"
+}
+
+note() {
+    printf "${blue}==>${yellow} NOTE$1:${bold} $2${all_off}\n"
+}
+
+all_off="$(tput sgr0)"
+bold="${all_off}$(tput bold)"
+blue="${bold}$(tput setaf 4)"
+yellow="${bold}$(tput setaf 3)"
+
+_update() {
+    msg_blue "Updating desktop database..."
+    update-desktop-database -q
+    msg_blue "Updating icon cache.."
+    gtk-update-icon-cache -q -t -f /usr/share/icons/hicolor
+}
+
+post_install() {
+    _update
+    note 1 "This package installs side-by-side with [extra]'s firefox."
+    note 2 "The binary is called 'firefox-nightly'."
+}
+
+post_upgrade() {
+    post_install
+}
+
+post_remove() {
+    post_upgrade
+}
