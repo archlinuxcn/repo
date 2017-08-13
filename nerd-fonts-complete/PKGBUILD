@@ -2,7 +2,7 @@
 # Maintainer: glider <samtron1412 {at} gmail {dot} com>
 pkgname=nerd-fonts-complete
 pkgver=1.1.0
-pkgrel=1
+pkgrel=2
 pkgdesc="collection of over 20 patched fonts (complete variant) for \
          powerline, devicons, and vim-devicons: includes Droid Sans, \
          Meslo, AnonymousPro, ProFont, Inconsolta, and many more"
@@ -23,6 +23,7 @@ prepare() {
   #
   # Start constructing `find` expression
   #
+  # Join all the array elements of $3 by a separate $2 and return to $1
   implode() {
     # $1 is return variable name
     # $2 is sep
@@ -31,18 +32,18 @@ prepare() {
     shift 3 || shift $(($#))
     printf -v "$retname" "%s" "$ret${@/#/$sep}"
   }
-  find_include="-and -name '*Complete*'"
+  find_include=
   find_exclude=
 
+  # Include things
+  include=("Complete")
+  if [ ! -z "${include[*]}" ]; then
+    implode find_include "*' -and -name '*" "${include[@]}"
+    find_include="-and -name '*${find_include}*'"
+  fi
+
   # Exclude everything we didn’t include
-  exclude=("Font Awesome" "Font Linux" "Octicons" "Pomicons" "Nerd Font*Mono" "Windows Compatible")
-  for delete in "${include[@]}"; do
-    exclude=( "${exclude[@]/$delete}" )
-  done
-  # Delete empty elements
-  for i in "${!exclude[@]}"; do
-    [ "${exclude[$i]}" = '' ] && unset exclude[$i]
-  done
+  exclude=("Font Awesome" "Font Linux" "Octicons" "Pomicons" "Windows Compatible")
   if [ ! -z "${exclude[*]}" ]; then
     implode find_exclude "*' -and \! -name '*" "${exclude[@]}"
     find_exclude="-and \! -name '*${find_exclude}*'"
@@ -56,6 +57,7 @@ prepare() {
   while IFS=  read -r -d $'\0'; do
     files+=("$REPLY")
   done < <(eval "$find_command")
+
   #
   # Remove duplicates (i.e. when both otf and ttf version present)
   #
