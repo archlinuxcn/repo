@@ -1,0 +1,342 @@
+=== modified file 'bin/shutter'
+--- bin/shutter	2014-12-23 23:02:02 +0000
++++ bin/shutter	2017-01-28 09:57:21 +0000
+@@ -8353,7 +8353,10 @@
+                         #~ print $name, $folder, $type, "\n";
+ 
+                         if (   !exists $accounts{$name}
+-                            || !exists $accounts{$name}->{module} )
++                            || !exists $accounts{$name}->{module}
++                            || $accounts{$name}->{supports_anonymous_upload} ne &fct_upload_plugin_get_info( $ukey, 'supports_anonymous_upload' ) ||
++                               $accounts{$name}->{supports_authorized_upload} ne &fct_upload_plugin_get_info( $ukey, 'supports_authorized_upload' ) ||
++                               $accounts{$name}->{supports_oauth_upload} ne &fct_upload_plugin_get_info( $ukey, 'supports_oauth_upload' ) )
+                         {
+ 
+                             #show dialog and progress bar
+@@ -10632,7 +10635,7 @@
+                     my $uploader = $hosting_module->new( $hosting_host, $sc->get_debug, $shutter_root, $d, $window, SHUTTER_VERSION );
+ 
+                     #init module
+-                    if ( $uploader->init ) {
++                    if ( $uploader->init($hosting_username) ) {
+ 
+                         my $counter = 1;
+                         $hosting_progress->set_fraction(0);
+
+=== modified file 'share/shutter/resources/modules/Shutter/App/Common.pm'
+--- share/shutter/resources/modules/Shutter/App/Common.pm	2013-08-25 18:40:51 +0000
++++ share/shutter/resources/modules/Shutter/App/Common.pm	2017-01-28 09:57:21 +0000
+@@ -48,7 +48,7 @@
+ 	my $self = { _shutter_root => shift, _mainwindow => shift, _appname => shift, _version => shift, _rev => shift, _pid => shift };
+ 
+ 	#vars
+-	$self->{_debug_cparam}              = FALSE;
++	$self->{_debug_cparam}              = TRUE;
+ 	$self->{_clear_cache}               = FALSE;
+ 	$self->{_min_cparam}                = FALSE;
+ 	$self->{_disable_systray_cparam}    = FALSE;
+
+=== modified file 'share/shutter/resources/modules/Shutter/App/SimpleDialogs.pm'
+--- share/shutter/resources/modules/Shutter/App/SimpleDialogs.pm	2013-08-25 18:40:51 +0000
++++ share/shutter/resources/modules/Shutter/App/SimpleDialogs.pm	2017-01-28 09:57:21 +0000
+@@ -59,6 +59,7 @@
+ 	my $detail_message = shift;
+ 	my $detail_checkbox = shift;
+ 	my $content_widget = shift;
++	my $content_widget2 = shift;
+ 
+ 	my $info_dialog = Gtk2::MessageDialog->new( $self->{_window}, [qw/modal destroy-with-parent/], 'info', 'none', undef );
+ 
+@@ -71,6 +72,9 @@
+ 	if($content_widget){
+ 		$info_dialog->get_content_area()->add($content_widget);
+ 	}
++	if($content_widget2){
++		$info_dialog->get_content_area()->add($content_widget2);
++	}
+ 
+ 	$info_dialog->add_button( $button_text_extra1, 10 ) if $button_text_extra1;
+ 	$info_dialog->add_button( $button_text_extra2, 20 ) if $button_text_extra2;
+
+=== modified file 'share/shutter/resources/system/upload_plugins/upload/Imgur.pm'
+--- share/shutter/resources/system/upload_plugins/upload/Imgur.pm	2013-08-25 18:40:51 +0000
++++ share/shutter/resources/system/upload_plugins/upload/Imgur.pm	2017-01-28 09:57:21 +0000
+@@ -29,7 +29,8 @@
+ use strict;
+ use POSIX qw/setlocale/;
+ use Locale::gettext;
+-use Glib qw/TRUE FALSE/; 
++use Glib qw/TRUE FALSE/;
++use MIME::Base64;
+ 
+ use Shutter::Upload::Shared;
+ our @ISA = qw(Shutter::Upload::Shared);
+@@ -38,12 +39,13 @@
+ $d->dir( $ENV{'SHUTTER_INTL'} );
+ 
+ my %upload_plugin_info = (
+-    'module'        => "Imgur",
++	'module'        => "Imgur",
+ 	'url'           => "http://imgur.com/",
+ 	'registration'  => "https://imgur.com/register",
+ 	'description'   => $d->get( "Imgur is used to share photos with social networks and online communities, and has the funniest pictures from all over the Internet" ),
+-	'supports_anonymous_upload'  => TRUE,
++	'supports_anonymous_upload'	 => TRUE,
+ 	'supports_authorized_upload' => FALSE,
++	'supports_oauth_upload' => TRUE,
+ );
+ 
+ binmode( STDOUT, ":utf8" );
+@@ -66,13 +68,128 @@
+ 
+ sub init {
+ 	my $self = shift;
++	my $username = shift;
+ 
+-	#do custom stuff here	
++	#do custom stuff here
+ 	use JSON;
+ 	use LWP::UserAgent;
+ 	use HTTP::Request::Common;
+-	
+-	return TRUE;
++	use Path::Class;
++
++	$self->{_config} = { };
++	$self->{_config_file} = file( $ENV{'HOME'}, '.imgur-api-config' );
++
++	$self->load_config;
++	if ($username eq $d->get("OAuth"))
++	{
++		return $self->connect;
++	}
++
++	return TRUE;
++}
++
++sub load_config {
++	my $self = shift;
++	
++	if (-f $self->{_config_file}) {
++		eval {
++			$self->{_config} = decode_json($self->{_config_file}->slurp);
++		};
++		if ($@) {
++			$self->{_config}->{client_id} = '9490811e0906b6e';
++			$self->{_config}->{client_secret} = '158b57f13e9a51f064276bd9e31529fb065f741e';
++		}
++	}
++	else {
++		$self->{_config}->{client_id} = '9490811e0906b6e';
++		$self->{_config}->{client_secret} = '158b57f13e9a51f064276bd9e31529fb065f741e';
++	}
++
++	return TRUE;
++}
++
++sub connect {
++	my $self = shift;
++	return $self->setup;
++}
++
++sub setup {
++	my $self = shift;
++	
++	if ($self->{_debug_cparam}) {
++		print "Setting up Imgur...\n";
++	}
++	
++	#some helpers
++	my $sd = Shutter::App::SimpleDialogs->new;
++
++	#Authentication
++	my $login_link = 'https://api.imgur.com/oauth2/authorize?response_type=pin&client_id=' . $self->{_config}->{client_id};
++
++	my $pin_entry = Gtk2::Entry->new();
++	my $pin = '';
++	$pin_entry->signal_connect(changed => sub {
++		$pin = $pin_entry->get_text;
++	});
++
++	my $response = $sd->dlg_info_message(
++		$d->get("Please click on the button below to authorize with Imgur. Input the PIN you receive and press 'Apply' when you are done."), 
++		$d->get("Authorize with Imgur"),
++		'gtk-cancel','gtk-apply', undef,
++		undef, undef, undef, undef, undef,
++		Gtk2::LinkButton->new ($login_link, $d->get("Authorize")),
++		$pin_entry,
++	);
++	if ($response == 20) {
++		
++		if ($self->{_debug_cparam}) {
++			print "Imgur: Authorizing...\n";
++		}
++
++		my %params = (
++			'client_id' => $self->{_config}->{client_id},
++			'client_secret' => $self->{_config}->{client_secret},
++			'grant_type' => 'pin',
++			'pin' => $pin,
++		);
++
++		my @params = (
++			"https://api.imgur.com/oauth2/token",
++			'Content' => [%params]
++		);
++
++		my $req = HTTP::Request::Common::POST(@params, 'Authorization' => 'Client-ID ' . $self->{_config}->{client_id});
++
++		my $client = LWP::UserAgent->new(
++			'timeout'    => 20,
++			'keep_alive' => 10,
++			'env_proxy'  => 1,
++		);
++		my $rsp = $client->request($req);
++
++		my $json = JSON->new(); 
++		my $json_rsp = $json->decode($rsp->content);
++		
++		if ($self->{_debug_cparam}) {
++			print $pin . ' ' . $rsp->content;
++		}
++		if (exists $json_rsp->{status} && $json_rsp->{status} ne 200) {
++			return $self->setup;
++		}
++
++		$self->{_config}->{access_token} = $json_rsp->{access_token};
++		$self->{_config}->{refresh_token} = $json_rsp->{refresh_token};
++		$self->{_config}->{account_id} = $json_rsp->{account_id};
++		$self->{_config}->{account_username} = $json_rsp->{account_username};
++
++		$self->{_config_file}->openw->print(encode_json($self->{_config}));
++		chmod 0600, $self->{_config_file};
++
++		return TRUE;
++	}
++	else {
++		return FALSE;
++	}
+ }
+ 
+ sub upload {
+@@ -87,62 +204,66 @@
+ 	utf8::encode $password;
+ 	utf8::encode $username;
+ 
+-	#~ if ( $username ne "" && $password ne "" ) {
+-
+-		my $client = LWP::UserAgent->new(
+-			'timeout'    => 20,
+-			'keep_alive' => 10,
+-			'env_proxy'  => 1,
+-		);
+-
+-		eval{
+-
+-			my $json = JSON->new(); 
+-
+-			my %params = (
+-				'image' => [$upload_filename],
+-				'key'   => '12ea5e932124142c5ef3c8d5a02557de',
+-			);
+-
+-			my @params = (
+-				"http://api.imgur.com/1/upload.json",
+-				'Content_Type' => 'multipart/form-data',
+-				'Content' => [%params]
+-			);
+-
+-			my $req = HTTP::Request::Common::POST(@params);
+-			my $rsp = $client->request($req);
+-
+-			#~ print Dumper $json->decode( $rsp->content ); 
+-
+-			$self->{_links} = $json->decode( $rsp->content ); 
+-			$self->{_links} = $self->{_links}->{'rsp'};
+-			if(defined $self->{_links}->{'stat'} && $self->{_links}->{'stat'} eq 'ok'){
+-				$self->{_links} = $self->{_links}->{'image'};
+-				#clean hash
+-				foreach (keys %{$self->{_links}}){
+-					if($_ eq 'delete_hash' || $_ eq 'image_hash'){
+-						delete $self->{_links}->{$_};
+-						next;
+-					}
+-					if( $self->{_debug_cparam}) {
+-						print $_.": ".$self->{_links}->{$_}, "\n";
+-					}
+-				}
+-				#set status (success)
+-				$self->{_links}{'status'} = 200;
+-			}else{
+-				$self->{_links}{'status'} = $self->{_links}->{'image'}->{'error_msg'};
++	my $client = LWP::UserAgent->new(
++		'timeout'    => 20,
++		'keep_alive' => 10,
++		'env_proxy'  => 1,
++	);
++
++	eval {
++
++		my $json = JSON->new();
++
++		open( IMAGE, $upload_filename ) or die "$!";
++		my $binary_data = do { local $/ = undef; <IMAGE>; };
++		close IMAGE;
++		my $encoded_image = encode_base64($binary_data);
++
++		my %params = (
++			'image' => $encoded_image,
++		);
++
++		my @params = (
++			"https://api.imgur.com/3/image",
++			'Content' => [%params]
++		);
++
++		my $req;
++		if ($username eq $d->get("OAuth") && $self->{_config}->{access_token}) {
++			$req = HTTP::Request::Common::POST(@params, 'Authorization' => 'Bearer ' . $self->{_config}->{access_token});
++		}
++		else {
++			$req = HTTP::Request::Common::POST(@params, 'Authorization' => 'Client-ID ' . $self->{_config}->{client_id});
++		}
++		my $rsp = $client->request($req);
++
++		#~ print Dumper $json->decode( $rsp->content ); 
++
++		my $json_rsp = $json->decode( $rsp->content );
++
++		if ($json_rsp->{'status'} ne 200) {
++			unlink $self->{_config_file};
++			$self->{_links}{'status'} = '';
++			if (exists $json_rsp->{'data'}->{'error'}) {
++				$self->{_links}{'status'} .= $json_rsp->{'data'}->{'error'} . ': ';
+ 			}
+-			
+-		};
+-		if($@){
+-			$self->{_links}{'status'} = $@;
+-			#~ print "$@\n";
++			$self->{_links}{'status'} .= $d->get("Maybe you or Imgur revoked or expired an access token. Please close this dialog and try again. Your account will be re-authenticated the next time you upload a file.");
++			return %{ $self->{_links} };
+ 		}
+ 
+-	#~ }
+-	
++		$self->{_links}{'status'} = $json_rsp->{'status'};
++		$self->{_links}->{'direct_link'} = $json_rsp->{'data'}->{'link'};
++		$self->{_links}->{'deletion_link'} = 'https://imgur.com/delete/' . $json_rsp->{'data'}->{'deletehash'};
++		$self->{_links}->{'post_link'} = $json_rsp->{'data'}->{'link'};
++		$self->{_links}->{'post_link'} =~ s/i\.imgur/imgur/;
++		$self->{_links}->{'post_link'} =~ s/\.[^.]+$//;
++
++	};
++	if ($@) {
++		$self->{_links}{'status'} = $@;
++		#~ print "$@\n";
++	}
++
+ 	#and return links
+ 	return %{ $self->{_links} };
+ }
+

@@ -1,0 +1,60 @@
+From 380c313840dd223e5b6c35720a79c338780f42d6 Mon Sep 17 00:00:00 2001
+From: Lionel Miller <delonorm@gmail.com>
+Date: Wed, 14 Dec 2016 02:31:52 +0300
+Subject: [PATCH] Fixed segfaults on Manjaro
+
+On Manjaro Linux, shutter would segfault whenever it would receive
+a message from another running instance of itself. This was caused
+by the fact that dbus did not handle correctly messages with empty
+text. This patch adds an extra check to prevent that.
+---
+ bin/shutter | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/bin/shutter b/bin/shutter
+index a0495d4..f70980c 100755
+--- a/bin/shutter
++++ b/bin/shutter
+@@ -442,12 +442,14 @@ else {
+                     #set export filename
+                 }
+                 elsif ( $cmd eq 'exfilename' ) {
+-                    $sc->set_export_filename( $message->get_text );
++                    my $arg = defined $message->get ? $message->get_text : "";
++                    $sc->set_export_filename( $arg );
+ 
+                     #set delay
+                 }
+                 elsif ( $cmd eq 'delay' ) {
+-                    $sc->set_delay( $message->get_text );
++                    my $arg = defined $message->get ? $message->get_text : "";
++                    $sc->set_delay( $arg );
+ 
+                     #set include_cursor flag
+                 }
+@@ -464,12 +466,13 @@ else {
+                     #set nosession flag
+                 }
+                 elsif ( $cmd eq 'nosession' ) {
+-                    $sc->set_no_session( $message->get_text );
++                    my $arg = defined $message->get ? $message->get_text : "";
++                    $sc->set_no_session( $arg );
+ 
+                     #open new files
+                 }
+                 elsif ( $cmd eq 'fopen' ) {
+-                    my @init_files = $message->get_uris;
++                    my @init_files = defined $message->get ? $message->get_uris : ();
+                     if ( scalar @init_files > 0 ) {
+                         &fct_open_files(@init_files);
+                     }
+@@ -483,7 +486,8 @@ else {
+                     #take screenshot
+                 }
+                 else {
+-                    &evt_take_screenshot( 'global_keybinding', $cmd, undef, $message->get_text );
++                    my $arg = defined $message->get ? $message->get_text : "";
++                    &evt_take_screenshot( 'global_keybinding', $cmd, undef, $arg );
+                 }
+             }
+ 

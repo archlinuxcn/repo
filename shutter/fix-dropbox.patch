@@ -1,0 +1,11 @@
+--- share/shutter/resources/system/upload_plugins/upload/Dropbox.pm	2015-07-09 17:58:48.000000000 +0200
++++ share/shutter/resources/system/upload_plugins/upload/Dropbox.pm	2016-09-11 08:21:17.113474014 +0200
+@@ -195,7 +195,7 @@
+ 		$upload_file->close();
+ 
+ 		if(! $self->{_box}->error) {
+-			$res = $self->{_box}->media($self->{_config}->{upload_folder} . "/" . basename($upload_filename));
++			$res = $self->{_box}->shares($self->{_config}->{upload_folder} . "/" . basename($upload_filename), {short_url => 0});
+ 		}
+ 
+ 		if(! $self->{_box}->error){
