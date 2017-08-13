@@ -1,0 +1,40 @@
+From: Boyuan Yang <073plan@gmail.com>
+Date: Mon, 5 Dec 2016 16:21:51 +0800
+Subject: Force utf8 for retrieved window name from Gtk2.
+
+Transform the window name retrieved from Gtk2 to utf8
+to prevent messy encoding problem. Otherwise latin-1
+would be used and cause mess.
+
+This should work on most contemporary systems.
+
+Signed-off-by: Boyuan Yang <073plan@gmail.com>
+---
+ bin/shutter | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/bin/shutter b/bin/shutter
+index a0495d4..38eeedd 100755
+--- a/bin/shutter
++++ b/bin/shutter
+@@ -30,6 +30,9 @@ use utf8;
+ use strict;
+ use warnings;
+ 
++#Deal with encoding problem
++use Encode;
++
+ #Gnome2 libraries
+ use Gnome2;
+ use Gnome2::Wnck;
+@@ -8624,7 +8627,9 @@ else {
+         #add all windows to menu to capture it directly
+         foreach my $win ( $wnck_screen->get_windows_stacked ) {
+             if ( $active_workspace && $win->is_on_workspace($active_workspace) ) {
+-                my $window_item = Gtk2::ImageMenuItem->new_with_label( $win->get_name );
++                my $win_name = $win->get_name;
++                Encode::_utf8_on( $win_name );
++                my $window_item = Gtk2::ImageMenuItem->new_with_label( $win_name );
+                 foreach my $child ( $window_item->get_children ) {
+                     if ( $child =~ /Gtk2::AccelLabel/ ) {
+                         $child->set_width_chars(50);

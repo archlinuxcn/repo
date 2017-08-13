@@ -1,0 +1,13 @@
+diff --git a/shutter-0.93.1/bin/shutter b/shutter-0.93.1/bin/shutter
+index a0495d4..656cbe7 100755
+--- a/shutter-0.93.1/bin/shutter
++++ b/shutter-0.93.1/bin/shutter
+@@ -6964,7 +6964,7 @@ else {
+             );
+         }
+         else {
+-            push( @files_to_email, $session_screens{$key}->{'uri'}->to_string );
++            push( @files_to_email, $session_screens{$key}->{'long'} );
+         }
+ 
+         my $mail_string = undef;
