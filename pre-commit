@@ -69,19 +69,34 @@ class ConfigSectionTest(TestCase):
     for package in os.listdir('.'):
       if not os.path.isdir(package):
         continue
-      if package == ".git":
+      if package[0] == '.':
         continue
       with self.subTest(package=package):
         self.assertTrue(os.path.isfile(os.path.join(package, "PKGBUILD")),
                         msg=('package "\033[1;31m{0}\033[m" does not ' +
                              'have PKGBUILD').format(package))
 
+  def test_lilac_py_has_nvchecker_config(self):
+    for package in os.listdir('.'):
+      if not os.path.isdir(package):
+        continue
+      if package[0] == '.':
+        continue
+      if not os.path.exists(os.path.join(package, 'lilac.py')):
+        continue
+
+      with self.subTest(package=package):
+        self.assertIn(package, self.config,
+                      msg=('package "\033[1;31m{0}\033[m" is not in ' +
+                           '"nvchecker.ini"').format(package))
+
+
   @skip("37 packages violating this")
   def test_folders_in_nvchecker(self):
     for package in os.listdir('.'):
       if not os.path.isdir(package):
         continue
-      if package == ".git":
+      if package[0] == '.':
         continue
       with self.subTest(package=package):
         self.assertIn(package, self.config,
