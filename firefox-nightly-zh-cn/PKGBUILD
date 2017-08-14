@@ -44,7 +44,7 @@ package() {
   ln -s "/${OPT_PATH}/${_name}" "${pkgdir}"/usr/bin/${pkgname}
 
   # Install .desktop files
-  install -Dm644 "${srcdir}"/${pkgname}.desktop -t "${pkgdir}"/usr/share/applications
+  install -Dm644 "${srcdir}"/${pkgname}-zh-cn.desktop -t "${pkgdir}"/usr/share/applications
 
   # Install icons
   SRC_LOC="${srcdir}"/${_name}/browser
