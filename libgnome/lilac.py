@@ -10,7 +10,7 @@ build_prefix = 'archilnuxcn-x86_64'
 pre_build = aur_pre_build
 post_build = aur_post_build
 
-depends = ["libbonobo", "gnome-vfs-nosmb"] # in AUR it said depends on gnome-vfs, but actaully it's gnome-vfs-nosmb
+depends = ["libbonobo"]
 
 if __name__ == '__main__':
       single_main(build_prefix)
