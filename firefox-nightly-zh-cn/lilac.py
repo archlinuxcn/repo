@@ -27,7 +27,7 @@ def pre_build():
             if l.startswith('pkgver='):
                 l = 'pkgver=' + today_ver
             if l.startswith("_filename"):
-                l = "_filename=" + "firefox-" + ver + ".zh-CN.linux-${CARCH}"
+                l = "_filename=" + "firefox-" + ver +"-"+ date + ".zh-CN.linux"
             print(l)
 
 
