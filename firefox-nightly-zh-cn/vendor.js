@@ -1,4 +1,4 @@
-//pref("app.update.enabled", false);
+pref("app.update.enabled", false);
 pref("browser.download.useDownloadDir",false);
 pref("browser.feeds.showFirstRunUI", false);
 pref("browser.startup.homepage_override.mstone", "ignore");

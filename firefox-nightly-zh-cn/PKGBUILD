@@ -4,11 +4,11 @@
 _name=firefox
 _channel=nightly
 _lang=zh-CN
-pkgname=${_name}-${_channel}
+pkgname=${_name}-${_channel}-zh-cn
 pkgdesc="Standalone Web Browser from Mozilla — Nightly build (${_lang})"
 url="https://www.mozilla.org/${_lang}/${_name}/${_channel}"
 _version=57.0a1
-pkgver=57.0a1_20170814
+pkgver=57.0a1
 pkgrel=1
 arch=('x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -25,13 +25,12 @@ optdepends=('pulseaudio: audio support'
 _url="https://ftp.mozilla.org/pub/${_name}/nightly/latest-mozilla-central-l10n"
 _src="${_name}-${_version}.${_lang}.linux"
 _filename=firefox-57.0a1.zh-CN.linux-${CARCH}
-source=("${pkgname}-zh-cn.desktop" 'vendor.js')
+source=("${pkgname}.desktop" 'vendor.js')
 source_x86_64=("${_filename}-x86_64.tar.bz2"::"${_url}/${_src}-x86_64.tar.bz2"
                "${_filename}-x86_64.tar.bz2.asc"::"${_url}/${_src}-x86_64.tar.bz2.asc")
 sha512sums=(
     'dd0c9936ce7c32059099336506d66370a1e397e3f36593524e6e9840fd1c8ac59b692e2aea1a97b97e492fbed16eefe5836af14543d29dc8dfcabbcd565196ca'
-    'e436d087c9f82359b87725aa03ebd3e9d627e0abfd17386fdaea43883cf8c867cc737200f007b58d14307458d49293ce86cdf06a71fef3bab1129eb9b184f34f'
-)
+    '64f9f5549328a699aeba3edc78cbcb2fa465b0319945b0e3b7c8d8cd0459c3bf3d583d168c1e99085a0b06a8ab92faa8398010ca020aaa4b98faa7e4051bc852')
 sha512sums_x86_64=('SKIP' 'SKIP')
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla’s GnuPG release key
 
