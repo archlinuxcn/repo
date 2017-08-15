@@ -1,8 +1,8 @@
 # Maintainer: Christian Hesse <mail@eworm.de>
 
 pkgname=opera-beta
-pkgver=46.0.2597.6
-pkgrel=2
+pkgver=47.0.2631.34
+pkgrel=1
 pkgdesc='A fast and secure web browser and Internet suite - beta stream'
 arch=('x86_64')
 url='http://www.opera.com/browser/'
@@ -22,7 +22,7 @@ _source='https://get.geo.opera.com/pub/'
 source=("${_source}/${pkgname}/${pkgver}/linux/${pkgname}_${pkgver}_amd64.deb"
 	'opera'
 	'default')
-sha256sums=('359a7596bb436ada87b7aec54c6c25e1cb08081d426c2d0ea50c75adbf0580e6'
+sha256sums=('fc4e70cf8cb669cb08dc4e2086a788f5f1ec88d963a94faf0daa73b713ae8d6f'
 	'508512464e24126fddfb2c41a1e2e86624bdb0c0748084b6a922573b6cf6b9c5'
 	'99fc0d2822edd14e234d451995db47148125e4580221a292598959421d131231')
 
