@@ -32,9 +32,9 @@ noextract=(${source[@]%%::*})
 
 _package() {
   pkgdesc="$2 language pack for Firefox"
-  depends=("firefox>=$pkgver")
+  depends=("firefox-nightly")
   install -Dm644 $pkgver-firefox-nightly-i18n-$_pkgver-$_locale.xpi \
-    "$pkgdir/usr/lib/firefox/browser/extensions/langpack-$1@firefox.mozilla.org.xpi"
+    "$pkgdir/opt/firefox-nightly/browser/extensions/langpack-$1@firefox.mozilla.org.xpi"
 }
 md5sums=('22d27afc3525fe6d02f9fd1faacf4294'
          '23760f9ddcefe6a68e69de0f87f84494')
