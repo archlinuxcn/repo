@@ -27,10 +27,9 @@ _src="${_name}-${_version}.${_lang}.linux"
 _filename=firefox-57.0a1-20170815.zh-CN.linux
 source=("${pkgname}.desktop" 'vendor.js')
 source_x86_64=("${_filename}-x86_64.tar.bz2"::"${_url}/${_src}-x86_64.tar.bz2"
-               "${_filename}-x86_64.tar.bz2.asc"::"${_url}/${_src}-x86_64.tar.bz2.asc")
-sha512sums=(
-    'dd0c9936ce7c32059099336506d66370a1e397e3f36593524e6e9840fd1c8ac59b692e2aea1a97b97e492fbed16eefe5836af14543d29dc8dfcabbcd565196ca'
-    '64f9f5549328a699aeba3edc78cbcb2fa465b0319945b0e3b7c8d8cd0459c3bf3d583d168c1e99085a0b06a8ab92faa8398010ca020aaa4b98faa7e4051bc852')
+               "${_filename}-x86_64.tar.bz2.asc"::"${_url}/${_src}-x86_64.tar.bz2.asc") 
+sha512sums=('b8bed7cd04a512f729c44206146af167658055f716d4fd787b00fceb1d89349cd2ce1abdff4d367d54ac69c8a6dc58bea665372007d3d92b83acabe79c8fca1a'
+'64f9f5549328a699aeba3edc78cbcb2fa465b0319945b0e3b7c8d8cd0459c3bf3d583d168c1e99085a0b06a8ab92faa8398010ca020aaa4b98faa7e4051bc852')
 sha512sums_x86_64=('SKIP' 'SKIP')
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla’s GnuPG release key
 
