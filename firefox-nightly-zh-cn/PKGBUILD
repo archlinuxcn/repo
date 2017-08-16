@@ -8,7 +8,7 @@ pkgname=${_name}-${_channel}-zh-cn
 pkgdesc="Standalone Web Browser from Mozilla — Nightly build (${_lang})"
 url="https://www.mozilla.org/${_lang}/${_name}/${_channel}"
 _version=57.0a1
-pkgver=57.0a1_20170815
+pkgver=57.0a1_20170816
 pkgrel=1
 arch=('x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -24,7 +24,7 @@ optdepends=('pulseaudio: audio support'
             'startup-notification: support for FreeDesktop Startup Notification')
 _url="https://ftp.mozilla.org/pub/${_name}/nightly/latest-mozilla-central-l10n"
 _src="${_name}-${_version}.${_lang}.linux"
-_filename=firefox-57.0a1-20170815.zh-CN.linux
+_filename=firefox-57.0a1-20170816.zh-CN.linux
 source=("${pkgname}.desktop" 'vendor.js')
 source_x86_64=("${_filename}-x86_64.tar.bz2"::"${_url}/${_src}-x86_64.tar.bz2"
                "${_filename}-x86_64.tar.bz2.asc"::"${_url}/${_src}-x86_64.tar.bz2.asc") 
