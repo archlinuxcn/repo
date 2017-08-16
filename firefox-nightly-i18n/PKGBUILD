@@ -1,0 +1,40 @@
+pkgbase=firefox-nightly-i18n
+pkgver=57.0a1_20170816
+_pkgver=57.0a1
+pkgrel=1
+pkgdesc="Language pack for Firefox Nightly"
+arch=('any')
+url="https://www.mozilla.com/"
+license=('MPL' 'GPL')
+
+_languages=(
+  'zh-CN  "Chinese (Simplified)"'
+  'zh-TW  "Chinese (Traditional)"'
+)
+
+pkgname=()
+source=()
+_url=https://ftp.mozilla.org/pub/firefox/nightly/latest-mozilla-central-l10n/linux-x86_64/xpi
+
+for _lang in "${_languages[@]}"; do
+  _locale=${_lang%% *}
+  _pkgname=firefox-nightly-i18n-${_locale,,}
+
+  pkgname+=($_pkgname)
+  source+=("$pkgver-firefox-nightly-i18n-$_pkgver-$_locale.xpi::$_url/firefox-$_pkgver.$_locale.langpack.xpi")
+  eval "package_$_pkgname() {
+    _package $_lang
+  }"
+done
+
+# Don't extract anything
+noextract=(${source[@]%%::*})
+
+_package() {
+  pkgdesc="$2 language pack for Firefox"
+  depends=("firefox>=$pkgver")
+  install -Dm644 $pkgver-firefox-nightly-i18n-$_pkgver-$_locale.xpi \
+    "$pkgdir/usr/lib/firefox/browser/extensions/langpack-$1@firefox.mozilla.org.xpi"
+}
+md5sums=('22d27afc3525fe6d02f9fd1faacf4294'
+         '23760f9ddcefe6a68e69de0f87f84494')
