@@ -33,10 +33,7 @@ build() {
 	add_binary ${PLYMOUTH_PLUGIN_PATH}/renderers/frame-buffer.so
 
 	if [ -d ${DATADIR}/plymouth/themes/${PLYMOUTH_THEME_NAME} ]; then
-	    for x in ${DATADIR}/plymouth/themes/${PLYMOUTH_THEME_NAME}/* ${DATADIR}/plymouth/themes/${PLYMOUTH_THEME_NAME}/**/* ; do
-		[ ! -f "$x" ] && break
-		add_file $x
-	    done
+            add_full_dir ${DATADIR}/plymouth/themes/${PLYMOUTH_THEME_NAME}
 	fi
 	
 	add_file /usr/lib/udev/rules.d/70-uaccess.rules
