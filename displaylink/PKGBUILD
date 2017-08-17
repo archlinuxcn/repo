@@ -2,28 +2,30 @@
 # Contributor: rhabbachi
 
 pkgname=displaylink
-pkgver=1.3.52
+pkgver=1.3.54
 pkgrel=1
 pkgdesc="Linux driver for DL-5xxx, DL-41xx and DL-3x00"
 arch=('i686' 'x86_64')
 url="http://www.displaylink.com/downloads/ubuntu.php"
 license=('custom' 'GPL2' 'LGPL2.1')
 depends=('evdi>=1.3.43' 'libusb>=1.0.0')
-makedepends=('grep' 'gawk')
+makedepends=('grep' 'gawk' 'wget')
 install=
 changelog="release-note.txt"
-source=(displaylink-driver-$pkgver.zip::http://www.displaylink.com/downloads/file\?id\=744
+source=(displaylink-driver-$pkgver.zip::http://www.displaylink.com/downloads/file?id=993
 	udev.sh
         99-displaylink.rules 
 	displaylink.service 
         displaylink-sleep.sh)
-
-# Update with > updpkgsums
-md5sums=('2df66116bdf2f6f0fd14fb492d63abc5'
+md5sums=('ece7c98b5e90991838c4aeeb708eb8db'
          'd5de775e41af06edbd8073adc490139d'
          '20495d81c7d2540910ef86dc437b7fac'
          'c141a15e973481c7d961f8e135627ca4'
          '7cbd9ab2ac79ba66e8297689c6e5483e')
+
+DLAGENTS=('http::/usr/bin/wget -O %o --post-data=fileId=993&accept_submit=Accept %u')
+
+# Update with > updpkgsums
 
 package() {
   echo "Adding udev rule for DisplayLink DL-3xxx/5xxx devices"
