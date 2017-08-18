@@ -2,13 +2,13 @@
 
 pkgname=pacvis-git
 _pkgname=pacvis
-pkgver=0.2.4.r12.gd1696d8
+pkgver=0.2.5.r0.g7324390
 pkgrel=1
 pkgdesc="Visualize pacman local database using Vis.js, inspired by pacgraph"
 arch=('any')
 url="https://github.com/farseerfc/pacvis"
 license=('MIT')
-depends=('python-tornado' 'pyalpm' 'python-setuptools')
+depends=('python-tornado' 'pyalpm' 'python-setuptools' 'systemd')
 makedepends=('git')
 source=("git+https://github.com/farseerfc/pacvis.git")
 conflicts=("pacvis")
@@ -30,6 +30,7 @@ build () {
 package () {
     cd "$srcdir/$_pkgname"
     python3 setup.py install --root="$pkgdir" -O1
+    install -D -m644 "pacvis@.service" "${pkgdir}/usr/lib/systemd/system/pacvis@.service"
 }
 
 # vim:set ts=2 sw=2 et:
