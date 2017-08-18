@@ -1,13 +1,13 @@
 # Maintainer: Shengyu Zhang <arch at srain.im>
 
 pkgname=srain
-pkgver=0.06
-pkgrel=2
+pkgver=0.06.1
+pkgrel=1
 pkgdesc="Modern, beautiful IRC client written in GTK+ 3"
 arch=('i686' 'x86_64')
 license=('GPL')
 url="https://srain.im"
-depends=('gtk3' 'python' 'curl' 'libnotify' 'libconfig')
+depends=('gtk3' 'python' 'curl' 'libnotify' 'libconfig' 'libsoup')
 makedepends=('git' 'make' 'gcc' 'pkg-config' 'gettext' 'imagemagick')
 optdepends=(
     'glib-networking: TLS connection support'
@@ -18,7 +18,7 @@ optdepends=(
 conflicts=('srain-git')
 provides=('srain')
 source=("https://github.com/SilverRainZ/${pkgname}/archive/${pkgver}.tar.gz")
-sha256sums=('2bbe3b9e76965ca3d7b9742c823be2468b611383404ada52cf3962c462e49057')
+sha256sums=('085106f649cb6847328c41e0c83a96f4e954336bc32a20caaed172511e614381')
 
 build() {
     cd ${pkgname}-${pkgver}
