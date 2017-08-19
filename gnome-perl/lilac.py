@@ -10,7 +10,7 @@ build_prefix = 'extra-x86_64'
 pre_build = aur_pre_build
 post_build = aur_post_build
 
-depends = ["gnomecanvas-perl", "gnome-vfs-perl", "libgnomeui"]
+depends = ["gnomecanvas-perl", "gnome-vfs-perl", "libgnomeui", "perl"]
 
 if __name__ == '__main__':
       single_main(build_prefix)
