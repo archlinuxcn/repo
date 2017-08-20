@@ -2,8 +2,8 @@
 
 pkgname=qtcurve-git
 _realver=1.8.18
-pkgver=1.8.18.291.g88296597
-pkgrel=1
+pkgver=1.9.0.rc1.12.gb4d175d5
+pkgrel=3
 pkgdesc='A configurable set of widget styles for KDE and Gtk.'
 arch=('i686' 'x86_64')
 url="https://github.com/QtCurve/qtcurve"
@@ -29,49 +29,17 @@ provides=(
 conflicts=("qtcurve-kde4" "qtcurve-qt4"
   "qtcurve-qt5" "qtcurve-gtk2" "qtcurve-utils")
 options=('debug' 'strip')
-
-_gitname="qtcurve"
-
-_gitroot="https://anongit.kde.org/qtcurve.git"
-_gitref=master
-
-_fetch_git() {
-  cd "$srcdir"
-
-  if [ -d "$srcdir/$_gitname/.git" ]; then
-    cd "$_gitname"
-    msg "Reset current branch"
-    git reset --hard HEAD
-    git clean -fdx
-    msg "Fetching branch $_gitref from $_gitroot..."
-    git fetch --force --update-head-ok \
-      "$_gitroot" "$_gitref:$_gitref" --
-    msg "Checking out branch $_gitref..."
-    git checkout "$_gitref" --
-    git reset --hard "$_gitref"
-    git clean -fdx
-    msg "The local files are updated."
-  else
-    msg "Cloning branch $_gitref from $_gitroot to $_gitname..."
-    git clone --single-branch --branch "$_gitref" \
-      "$_gitroot" "$_gitname"
-    cd "$_gitname"
-  fi
-  msg "GIT checkout done or server timeout"
-}
+source=("git+https://anongit.kde.org/qtcurve.git")
+md5sums=('SKIP')
 
 pkgver() {
-  local outfile=/dev/null
-  [[ -e /dev/tty ]] && outfile=/dev/tty
-  (_fetch_git &> ${outfile})
-  cd "$srcdir/$_gitname"
+  cd qtcurve
 
-  git describe | sed -e 's/-/./g'
+  git describe --tags | sed -e 's/-/./g'
 }
 
 build() {
-  (_fetch_git)
-  cd "$srcdir/$_gitname"
+  cd qtcurve
 
   mkdir -p build
   cd build
@@ -85,7 +53,7 @@ build() {
 }
 
 package() {
-  cd "$srcdir/$_gitname/build"
+  cd qtcurve/build
 
   make DESTDIR="$pkgdir/" install
 }
