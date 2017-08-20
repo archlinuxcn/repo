@@ -1,0 +1,27 @@
+From fde133bf9f03edadac948d3985155f19358970d1 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sun, 20 Aug 2017 10:38:43 -0400
+Subject: [PATCH] Use `ucontext_t` instead of `struct ucontext`
+
+Ref https://sourceware.org/git/?p=glibc.git;a=commit;h=251287734e89a52da3db682a8241eb6bccc050c9
+And this is what other part of the code uses.
+---
+ src/x86_64/Gos-linux.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/x86_64/Gos-linux.c b/src/x86_64/Gos-linux.c
+index a4f80ca..0a3c212 100644
+--- a/src/x86_64/Gos-linux.c
++++ b/src/x86_64/Gos-linux.c
+@@ -138,7 +138,7 @@ x86_64_sigreturn (unw_cursor_t *cursor)
+ {
+   struct cursor *c = (struct cursor *) cursor;
+   struct sigcontext *sc = (struct sigcontext *) c->sigcontext_addr;
+-  mcontext_t *sc_mcontext = &((struct ucontext*)sc)->uc_mcontext;
++  mcontext_t *sc_mcontext = &((ucontext_t*)sc)->uc_mcontext;
+   /* Copy in saved uc - all preserved regs are at the start of sigcontext */
+   memcpy(sc_mcontext, &c->uc->uc_mcontext,
+          DWARF_NUM_PRESERVED_REGS * sizeof(unw_word_t));
+-- 
+2.14.1
+

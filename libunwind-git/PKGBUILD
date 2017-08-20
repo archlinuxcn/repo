@@ -19,12 +19,12 @@ source=('git://git.savannah.gnu.org/libunwind.git'
         0001-Handle-non-signal-frame-unwind-info-lookup-in-ARM-ex.patch
         0002-Allow-DWARF-version-4.patch
         0003-Prefer-EXTBL-unwinding-on-ARM.patch
-        0001-Include-asm-ucontext.h-for-the-definition-of-struct-.patch)
+        0001-Use-ucontext_t-instead-of-struct-ucontext.patch)
 md5sums=('SKIP'
          'd00e44a1a90459c0125cc4525871c232'
          'ac40837ccb190c9dd08357cfc747655f'
          'f2390a8ead7fc3d8b3d0c038b2e35ded'
-         'ed34e52c5c2d9bca87102651f4d20f65')
+         '28a9327aa1cb71c40ad59a7df20a9ae3')
 options=('debug' '!strip')
 provides=(libunwind)
 conflicts=(libunwind)
@@ -53,7 +53,7 @@ prepare() {
   patch -Np1 < ../0001-Handle-non-signal-frame-unwind-info-lookup-in-ARM-ex.patch
   patch -Np1 < ../0002-Allow-DWARF-version-4.patch
   patch -Np1 < ../0003-Prefer-EXTBL-unwinding-on-ARM.patch
-  patch -Np1 < ../0001-Include-asm-ucontext.h-for-the-definition-of-struct-.patch
+  patch -Np1 < ../0001-Use-ucontext_t-instead-of-struct-ucontext.patch
 }
 
 build() {
