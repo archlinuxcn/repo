@@ -1,7 +1,7 @@
-From 509c6186bf6998a32e8d6abcd1e9bb3cf3a0ce7e Mon Sep 17 00:00:00 2001
+From 2d0d680f8ee176a60a309d6b5fc36da916dea2bc Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sat, 1 Oct 2016 16:55:40 +0000
-Subject: [PATCH 4/4] Prefer EXTBL unwinding on ARM
+Subject: [PATCH 3/3] Prefer EXTBL unwinding on ARM
 
 It is part of the C++ ABI so a EXTBL unwind info that's not `CANT_UNWIND`
 should always be reliable/correct.
@@ -80,7 +80,7 @@ index 3f6b5cf..c87d394 100644
  arm_put_unwind_info (unw_addr_space_t as, unw_proc_info_t *proc_info, void *arg)
  {
 diff --git a/src/arm/Gstep.c b/src/arm/Gstep.c
-index 70d7aef..2a5e2a0 100644
+index 7f659e9..5e6c6f8 100644
 --- a/src/arm/Gstep.c
 +++ b/src/arm/Gstep.c
 @@ -53,8 +53,15 @@ arm_exidx_step (struct cursor *c)
@@ -137,5 +137,5 @@ index 70d7aef..2a5e2a0 100644
       Note: This won't work in case the ARM EABI is used. */
    if (unlikely (ret < 0))
 -- 
-2.13.1
+2.14.1
 

@@ -7,7 +7,7 @@
 #  - build v5 with system libatomic_ops
 
 pkgname=libunwind-git
-pkgver=1.2.rc1.98.g152a96e
+pkgver=1.2.rc1.114.g5a491cb
 pkgrel=1
 pkgdesc='Portable and efficient C programming interface (API) to determine the call-chain of a program'
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -16,15 +16,15 @@ license=('GPL')
 depends=('glibc' 'xz')
 makedepends=('git')
 source=('git://git.savannah.gnu.org/libunwind.git'
-        0001-Support-dynamic-unwind-info-on-ARM.patch
-        0002-Handle-non-signal-frame-unwind-info-lookup-in-ARM-ex.patch
-        0003-Allow-DWARF-version-4.patch
-        0004-Prefer-EXTBL-unwinding-on-ARM.patch)
+        0001-Handle-non-signal-frame-unwind-info-lookup-in-ARM-ex.patch
+        0002-Allow-DWARF-version-4.patch
+        0003-Prefer-EXTBL-unwinding-on-ARM.patch
+        0001-Include-asm-ucontext.h-for-the-definition-of-struct-.patch)
 md5sums=('SKIP'
-         '92933c002bbb516cf55b98d5643a2eb6'
-         '99b17c615e8412677c229fdef7b02141'
-         'ddfcb6da4750296122c611fc935a88f8'
-         '91caf07fb0c2d574cd7755956b1272d0')
+         'd00e44a1a90459c0125cc4525871c232'
+         'ac40837ccb190c9dd08357cfc747655f'
+         'f2390a8ead7fc3d8b3d0c038b2e35ded'
+         'ed34e52c5c2d9bca87102651f4d20f65')
 options=('debug' '!strip')
 provides=(libunwind)
 conflicts=(libunwind)
@@ -50,10 +50,10 @@ pkgver() {
 prepare() {
   cd libunwind
 
-  patch -Np1 < ../0001-Support-dynamic-unwind-info-on-ARM.patch
-  patch -Np1 < ../0002-Handle-non-signal-frame-unwind-info-lookup-in-ARM-ex.patch
-  patch -Np1 < ../0003-Allow-DWARF-version-4.patch
-  patch -Np1 < ../0004-Prefer-EXTBL-unwinding-on-ARM.patch
+  patch -Np1 < ../0001-Handle-non-signal-frame-unwind-info-lookup-in-ARM-ex.patch
+  patch -Np1 < ../0002-Allow-DWARF-version-4.patch
+  patch -Np1 < ../0003-Prefer-EXTBL-unwinding-on-ARM.patch
+  patch -Np1 < ../0001-Include-asm-ucontext.h-for-the-definition-of-struct-.patch
 }
 
 build() {
