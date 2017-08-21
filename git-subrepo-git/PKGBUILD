@@ -33,4 +33,5 @@ package() {
   cd "$_pkgname"
 
   make DESTDIR="$pkgdir" PREFIX=/usr install
+  install -Dm644 share/zsh-completion/_git-subrepo "$pkgdir/usr/share/zsh/site-functions/_git-subrepo"
 }
