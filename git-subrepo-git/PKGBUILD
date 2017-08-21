@@ -8,6 +8,7 @@ pkgdesc="Git command is an improvement from git-submodule and git-subtree."
 arch=('any')
 url="https://github.com/ingydotnet/$_pkgname"
 license=('GPL')
+depends=('git')
 provides=("$_pkgname=$pkgver")
 conflicts=("$_pkgname")
 source=("$_pkgname"::"git+$url.git")
