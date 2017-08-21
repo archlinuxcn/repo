@@ -11,7 +11,7 @@ pkgname=('vmware-horizon-client'
 pkgver=4.5.0
 _build=5650368
 _cart='CART17Q2'
-pkgrel=8
+pkgrel=10
 pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop'
 arch=('i686' 'x86_64')
 url='https://my.vmware.com/web/vmware/info/slug/desktop_end_user_computing/vmware_horizon_clients/4_0'
@@ -120,7 +120,7 @@ package_vmware-horizon-client() {
 		'vmware-horizon-pcoip')
 	replaces=('vmware-horizon-pcoip')
 	depends=('gnome-icon-theme' 'gtk2' 'libpng12' 'libudev0-shim' 'libxml2' 'libxss'
-		'libxtst' 'openssl')
+		'libxtst' 'openssl' 'binutils' 'glib2' 'expat')
 	optdepends=('alsa-lib: audio support via alsa'
 		'freerdp: RDP remote desktop connections'
 		'libpulse: audio support via pulse sound server'
@@ -153,7 +153,7 @@ package_vmware-horizon-client() {
 
 package_vmware-horizon-rtav() {
 	pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop - Real-Time Audio-Video (webcam and audio-in)'
-	depends=('vmware-horizon-client')
+	depends=('vmware-horizon-client' 'gcc-libs' 'libutil-linux' 'zlib' 'glib2')
 	cd "${srcdir}/extract/vmware-horizon-rtav/"
 
 	mkdir -p "${pkgdir}/usr/"
@@ -162,7 +162,7 @@ package_vmware-horizon-rtav() {
 
 package_vmware-horizon-smartcard() {
 	pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop - smartcard authentication'
-	depends=('vmware-horizon-client' 'pcsclite')
+	depends=('vmware-horizon-client' 'pcsclite' 'glib2')
 
 	cd "${srcdir}/extract/vmware-horizon-smartcard/"
 
@@ -172,7 +172,7 @@ package_vmware-horizon-smartcard() {
 
 package_vmware-horizon-usb() {
 	pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop - USB device redirection'
-	depends=('vmware-horizon-client')
+	depends=('vmware-horizon-client' 'glib2')
 	install=vmware-horizon-usb.install
 
 	cd "${srcdir}/extract/vmware-horizon-usb/"
@@ -187,7 +187,7 @@ package_vmware-horizon-usb() {
 
 package_vmware-horizon-virtual-printing() {
 	pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop - virtual printing'
-	depends=('vmware-horizon-client' 'openssl098' 'libcups')
+	depends=('vmware-horizon-client' 'openssl098' 'libcups' 'zlib')
 	install=vmware-horizon-virtual-printing.install
 
 	cd "${srcdir}/extract/vmware-horizon-virtual-printing/"
@@ -216,7 +216,7 @@ package_vmware-horizon-virtual-printing() {
 
 package_vmware-horizon-tsdr() {
 	pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop - folder sharing'
-	depends=('vmware-horizon-client' 'glibmm')
+	depends=('vmware-horizon-client' 'glibmm' 'glib2')
 
 	# this is from libglibmm package from Ubuntu
 	bsdtar xf data.tar.xz
@@ -231,7 +231,7 @@ package_vmware-horizon-tsdr() {
 
 package_vmware-horizon-mmr() {
 	pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop - multimedia redirection'
-	depends=('vmware-horizon-client' 'gstreamer0.10-base' 'libpulse')
+	depends=('vmware-horizon-client' 'gstreamer0.10-base' 'libpulse' 'libxml2' 'glib2')
 
 	cd "${srcdir}/extract/vmware-horizon-mmr/"
 
