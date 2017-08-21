@@ -4,7 +4,7 @@
 
 pkgbase="zfs-dkms-git"
 pkgname=("zfs-dkms-git" "zfs-utils-dkms-git")
-pkgver=0.7.0_r33_g08de8c16f
+pkgver=0.7.0_r38_g551905dd4
 pkgrel=1
 license=('CDDL')
 makedepends=("git" "spl-dkms-git")
@@ -17,7 +17,7 @@ source=("git+https://github.com/zfsonlinux/zfs.git"
 sha256sums=('SKIP'
             'b60214f70ffffb62ffe489cbfabd2e069d14ed2a391fac0e36f914238394b540'
             'aa5706bf08b36209a318762680f3c9fb45b3fc4b8e4ef184c8a5370b2c3000ca'
-            '138964b43d7a282e1ed5f7fcf1f8dc9baa4f664655b628eeac1912a3017a787b')
+            'f95ad1a5421ccbb8b01f448373f46cfd1f718361a82c2687a597325cf9827e3e')
 
 pkgver() {
     cd "${srcdir}/zfs"
