@@ -23,12 +23,6 @@ pkgver() {
   )
 }
 
-check() {
-  cd "$_pkgname"
-
-  make test
-}
-
 package() {
   cd "$_pkgname"
 
