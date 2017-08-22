@@ -1,0 +1,13 @@
+post_install() {
+    echo "==>> If you want to emulate real MSX systems and not only the free C-BIOS machines,"
+    echo "==>> put the system ROMs in one of the following directories: /usr/share/openmsx/systemroms"
+    echo "==>> or ~/.openMSX/share/systemroms"
+    echo "==>>"
+    echo "==>> If you want openMSX to find MSX software referred to from replays or savestates you get"
+    echo "==>> from your friends, copy that MSX software to /usr/share/openmsx/software or"
+    echo "==>> ~/.openMSX/share/software"
+}
+
+op=$1
+shift
+$op $*
