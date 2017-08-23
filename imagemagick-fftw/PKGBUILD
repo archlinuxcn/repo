@@ -3,13 +3,13 @@
 
 pkgname=imagemagick-fftw
 pkgver=6.9.9.9
-pkgrel=1
+pkgrel=3
 arch=('i686' 'x86_64')
 url="http://www.imagemagick.org/"
 license=('custom')
 makedepends=('libltdl' 'lcms2' 'libxt' 'fontconfig' 'libxext' 'ghostscript'
-             'openexr' 'libwmf' 'librsvg' 'libxml2' 'liblqr' 'openjpeg2' 'libraw'
-             'opencl-headers' 'opencl-icd-loader' 'libwebp' 'subversion' 'glu' 'git' 'fftw')
+             'openexr' 'libwmf' 'librsvg' 'libxml2' 'liblqr' 'openjpeg2' 'libraw' 'libraqm'
+             'opencl-headers' 'opencl-icd-loader' 'libwebp' 'subversion' 'glu' 'fftw')
 source=(http://www.imagemagick.org/download/ImageMagick-${pkgver%.*}-${pkgver##*.}.tar.xz{,.asc}
         perlmagick.rpath.patch)
 sha1sums=('abfc4abaf2f7ce1a454f4779df5593357adaab86'
@@ -45,7 +45,7 @@ check() {
 
 package() {
   pkgdesc="An image viewing/manipulation program"
-  depends=('libltdl' 'lcms2' 'libxt' 'fontconfig' 'libxext' 'liblqr' 'opencl-icd-loader')
+  depends=('libltdl' 'lcms2' 'libxt' 'fontconfig' 'libxext' 'liblqr' 'libraqm' 'opencl-icd-loader')
   optdepends=('imagemagick-doc: for additional information'
               'ghostscript: for Ghostscript support' 
               'openexr: for OpenEXR support' 
@@ -54,7 +54,8 @@ package() {
               'librsvg: for SVG support' 
               'libxml2: for XML support' 
               'libpng: for PNG support' 
-	      'libwebp: for WEBP support')
+	      'libwebp: for WEBP support'
+              'libraw: for DNG support')
   backup=("etc/ImageMagick-${pkgver%%.*}/coder.xml"
           "etc/ImageMagick-${pkgver%%.*}/colors.xml"
           "etc/ImageMagick-${pkgver%%.*}/delegates.xml"
