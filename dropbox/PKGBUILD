@@ -4,7 +4,7 @@
 
 pkgname=dropbox
 pkgver=32.4.23
-pkgrel=1
+pkgrel=2
 pkgdesc="A free service that lets you bring your photos, docs, and videos anywhere and share them easily."
 arch=("i686" "x86_64")
 url="https://www.dropbox.com"
@@ -13,6 +13,7 @@ depends=("libsm" "libxslt" "libxmu")
 optdepends=(
     'ufw-extras: ufw rules for dropbox'
     'perl-file-mimeinfo: opening dropbox folder on some desktop environments'
+    'xdg-utils: for "Launch Dropbox Website" and file manager integration'
 )
 conflicts=("dropbox-experimental")
 options=('!strip' '!upx')
