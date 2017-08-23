@@ -15,7 +15,6 @@ conflicts=('scummvm')
 provides=('scummvm')
 source=("$_pkgname"::'git+https://github.com/scummvm/scummvm.git')
 md5sums=('SKIP')
-install=${_pkgname}.install
  
 pkgver() {
   cd "$srcdir/$_pkgname"
