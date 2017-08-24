@@ -2,7 +2,7 @@
 # Contributor: TZ86
 
 pkgname=vivaldi
-pkgver=1.11.917.39
+pkgver=1.11.917.43
 pkgrel=1
 pkgdesc='An advanced browser made with the power user in mind.'
 url="https://vivaldi.com"
@@ -13,12 +13,13 @@ depends=('gtk3' 'libcups' 'nss' 'gconf' 'alsa-lib' 'libxss' 'ttf-font' 'desktop-
 makedepends=('w3m')
 optdepends=(
     'vivaldi-ffmpeg-codecs: playback of proprietary video/audio'
+    'pepper-flash: flash support'
     'google-chrome: Widevine DRM Plugin'
     'vivaldi-widevine: Widevine DRM Plugin'
     'libnotify: native notifications'
 )
 source=("https://downloads.vivaldi.com/stable/vivaldi-stable-${pkgver}-1.x86_64.rpm")
-sha512sums=('de2395c920c72c4934bbeb8a497c7cbe47386d6a48e7304877ce41fa5694cb9f16bff46c909f11dec298585c085427a5a221e874e43223cdbc3fa17169793a24')
+sha512sums=('9b4959887499f06417418952ca81e85a5574ee202f091bb38ebe75d049ca2961159fd2da03fd83f4bf05a42ca708ea5f9187ca591c439dc2d729a38834600dab')
 
 package() {
     cp -a {opt,usr} "$pkgdir"
