@@ -1,0 +1,32 @@
+--- configure.in.orig	2011-09-07 08:45:49.687783970 +0000
++++ configure.in	2011-09-07 09:12:55.709382840 +0000
+@@ -418,7 +418,7 @@
+ fi
+ 
+ dnl **************************************************
+-AC_SUBST(GETTEXT_PACKAGE, goffice-${VERSION})
++AC_SUBST(GETTEXT_PACKAGE, goffice-${GOFFICE_API_VER})
+ AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE",
+ 	[The package name, for gettext])
+ AM_GLIB_GNU_GETTEXT
+@@ -638,9 +638,9 @@
+ dnl ******************
+ dnl
+ dnl These are changed in goffice.c for WIN32 packages
+-AC_SUBST(goffice_datadir, '${datadir}/goffice/${VERSION}')
+-AC_SUBST(goffice_libdir, '${libdir}/goffice/${VERSION}')
+-AC_SUBST(goffice_icondir, '${datadir}/pixmaps/goffice/${VERSION}')
++AC_SUBST(goffice_datadir, '${datadir}/goffice/${GOFFICE_API_VER}')
++AC_SUBST(goffice_libdir, '${libdir}/goffice/${GOFFICE_API_VER}')
++AC_SUBST(goffice_icondir, '${datadir}/pixmaps/goffice/${GOFFICE_API_VER}')
+ AC_SUBST(goffice_localedir, '${prefix}/${DATADIRNAME}/locale')
+ dnl
+ AC_SUBST(goffice_plugindir, '${goffice_libdir}/plugins')
+--- libgoffice.pc.in.orig	2010-02-18 22:49:39.000000000 +0000
++++ libgoffice.pc.in	2011-09-07 09:18:53.655992532 +0000
+@@ -11,4 +11,4 @@
+ Libs.private: @EXTRA_LIBS@
+ Cflags: -I${includedir}/libgoffice-@GOFFICE_API_VER@ @EXTRA_INCLUDES@
+ 
+-PluginDir=${libdir}/goffice/@VERSION@/plugins
++PluginDir=${libdir}/goffice/@GOFFICE_API_VER@/plugins
