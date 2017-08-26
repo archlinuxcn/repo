@@ -1,8 +1,8 @@
 # Author: Patrick Brisbin <pbrisbin@gmail.com>
 pkgname=downgrade
-pkgver=5.4.1
+pkgver=6.0.0
 pkgrel=1
-pkgdesc="Bash script for downgrading one or more packages to a version in your cache or the A.R.M."
+pkgdesc="Bash script for downgrading one or more packages to a version in your cache or the A.L.A."
 arch=('any')
 url="https://github.com/pbrisbin/$pkgname"
 license=('GPL')
@@ -23,4 +23,4 @@ package() {
 
   make PREFIX=/usr DESTDIR="$pkgdir" install
 }
-md5sums=('0c1bde61c6586d2305a279f4ced0e2e7')
+md5sums=('66b11e0ec92711df4d64f62876f322bf')
