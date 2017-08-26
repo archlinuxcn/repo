@@ -48,10 +48,12 @@ makedepends=(gcc-fortran arpack fftw git gmp libgit2-julia libunwind-git
 options=('debug' '!strip' '!buildflags')
 source=('git://github.com/JuliaLang/julia'
         0001-Revert-turn-on-deprecation-warnings-for-type-and-imm.patch
-        0002-Revert-deprecation-warning-for-old-parametric-method.patch)
+        0002-Revert-deprecation-warning-for-old-parametric-method.patch
+        0001-Revert-Replace-quiet-with-banner-23343.patch)
 md5sums=('SKIP'
          'ce4f6bbf6ccf9eae710b3021ffa2ec64'
-         'a5a3592637c1729374ca3bc57a7d4708')
+         'a5a3592637c1729374ca3bc57a7d4708'
+         'b3c5a4ba02fbbfa53b7043beb0242156')
 
 pkgver() {
   cd julia
