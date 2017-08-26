@@ -1,0 +1,17 @@
+[Trigger]
+Type = File
+Operation = Install
+Operation = Upgrade
+Operation = Remove
+Target = usr/lib/vlc/plugins/*
+
+[Trigger]
+Type = Package
+Operation = Install
+Operation = Remove
+Target = qt4
+
+[Action]
+Description = Updating the vlc plugin cache...
+When = PostTransaction
+Exec = /usr/lib/vlc/vlc-cache-gen -f /usr/lib/vlc/plugins
