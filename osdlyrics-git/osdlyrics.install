@@ -1,0 +1,15 @@
+post_upgrade()
+{
+    usr/bin/update-desktop-database -q
+    usr/bin/gtk-update-icon-cache -q -t -f usr/share/icons/hicolor
+}
+
+post_install()
+{
+    post_upgrade
+}
+
+post_remove()
+{
+    post_upgrade
+}
