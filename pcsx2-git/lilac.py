@@ -1,6 +1,6 @@
 from lilaclib import *
 
-build_prefix = 'extra-x86_64'
+build_prefix = 'multilib'
 
 pre_build = vcs_update
 

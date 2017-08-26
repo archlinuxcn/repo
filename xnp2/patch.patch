@@ -1,0 +1,17 @@
+--- xnp2-0.86/x11/compiler.h.old        2016-03-08 18:25:50.000000000 +0100
++++ xnp2-0.86/x11/compiler.h    2016-07-05 23:48:04.507937827 +0200
+@@ -117,12 +117,14 @@
+ #define	MAX_PATH	MAXPATHLEN
+ #endif
+
++#ifndef __cplusplus
+ #ifndef	max
+ #define	max(a,b)	(((a) > (b)) ? (a) : (b))
+ #endif
+ #ifndef	min
+ #define	min(a,b)	(((a) < (b)) ? (a) : (b))
+ #endif
++#endif /* __cplusplus */
+
+ #ifndef        ZeroMemory
+ #define        ZeroMemory(d,n)         memset((d), 0, (n))
