@@ -4,18 +4,18 @@
 
 pkgname=ncurses5-compat-libs
 _pkgname=ncurses
-_pkgver=6.0-20170527
+_pkgver=6.0-20170827
 pkgver=${_pkgver/-/+}
 pkgrel=1
 pkgdesc='System V Release 4.0 curses emulation library, ABI 5'
-arch=('i686' 'x86_64')
+arch=(i686 x86_64)
 url='http://invisible-island.net/ncurses/ncurses.html'
-license=('MIT')
-depends=('glibc' 'gcc-libs' 'sh')
-provides=('libtinfo5')
-conflicts=('libtinfo5')
+license=(MIT)
+depends=(glibc gcc-libs sh)
+provides=(libtinfo5)
+conflicts=(libtinfo5)
 source=(http://invisible-mirror.net/archives/ncurses/current/ncurses-${_pkgver}.tgz{,.asc})
-md5sums=('c0e32e50ed6fd81af7ecc4910de9fa3f'
+md5sums=('08fdc01a498f19ee75d8638c5504cdb1'
          'SKIP')
 validpgpkeys=('C52048C0C0748FEE227D47A2702353E0F7E48EDB')  # Thomas Dickey
 
@@ -31,7 +31,7 @@ build() {
 package() {
   cd ${_pkgname}-${_pkgver}
   make DESTDIR="$pkgdir" install.libs
-  rm -rf "$pkgdir"/usr/include/ "$pkgdir"/usr/lib/pkgconfig \
+  rm -rf "$pkgdir/usr/include/" "$pkgdir/usr/lib/pkgconfig" \
     "$pkgdir"/usr/lib/*.so
 
   # fool packages looking to link to non-wide-character ncurses libraries
