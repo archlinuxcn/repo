@@ -11,7 +11,7 @@ license=('custom:OFL')
 depends=('fontconfig' 'xorg-font-utils')
 source=("http://7xpdnl.dl1.z0.glb.clouddn.com/inziu-iosevka-${pkgver}.7z"
         "https://raw.githubusercontent.com/be5invis/Iosevka/master/LICENSE.md")
-sha256sums=('bb530d3cb51b851dc4f31f7167c39121cf596ed1f8f94328f6eeaf34d189cd5f'
+sha256sums=('de3b49f941552cd12c4fc5552e49325b040a2818fcbb850d227e49eb720253ed'
             'a7a0e1da98ab1bae99a1f246f45e51720e0cc13a53b4a5b0692f64991d2191af')
 
 package() {
