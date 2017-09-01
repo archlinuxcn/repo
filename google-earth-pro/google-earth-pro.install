@@ -1,0 +1,35 @@
+# Colored makepkg-like functions
+msg_blue() {
+    printf "${blue}==>${bold} $1${all_off}\n"
+}
+
+note() {
+    printf "${blue}==>${yellow} NOTE$2:${bold} $1${all_off}\n"
+}
+
+all_off="$(tput sgr0)"
+bold="${all_off}$(tput bold)"
+blue="${bold}$(tput setaf 4)"
+yellow="${bold}$(tput setaf 3)"
+
+# 64-bit?
+if [[ $(uname -m) = x86_64 ]]; then
+    _64=true
+fi
+
+post_install() {    
+    if [[ $_64 ]]; then
+        note "The launcher is called 'google-earth-pro'." "1"
+        note "If experiencing graphical corruption:
+           $ rm -r ~/.googleearth/Cache/" "2"
+    else
+        note "The launcher is called 'google-earth-pro'."
+    fi
+}
+
+post_upgrade() {    
+    if [[ $_64 ]]; then
+        note "If experiencing graphical corruption:
+          $ rm -r ~/.googleearth/Cache/"
+    fi
+}
