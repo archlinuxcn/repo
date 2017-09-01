@@ -1,7 +1,5 @@
 from lilaclib import *
 
-depends = ["openmsx-git"]
-
 build_prefix = 'extra-x86_64'
 
 pre_build = vcs_update
