@@ -1,0 +1,12 @@
+--- a/usr/share/applications/slack.desktop	2016-12-10 11:42:15.377200285 +0100
++++ b/usr/share/applications/slack.desktop	2016-12-10 11:42:59.740826015 +0100
+@@ -3,7 +3,7 @@
+ Comment=Slack Desktop
+ GenericName=Slack Client for Linux
+-Exec=/usr/bin/slack --disable-gpu %U
++Exec=env LD_PRELOAD=/usr/lib/libcurl.so.3 /usr/bin/slack --disable-gpu %U
+-Icon=/usr/share/pixmaps/slack.png
++Icon=slack
+ Type=Application
+ StartupNotify=true
+ Categories=GNOME;GTK;Network;InstantMessaging;
