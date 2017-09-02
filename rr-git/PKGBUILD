@@ -9,7 +9,7 @@ arch=(i686 x86_64)
 url='http://rr-project.org/'
 license=('custom')
 depends=('python2-pexpect' 'gdb')
-makedepends=('git' 'cmake')
+makedepends=('git' 'cmake' 'capnproto')
 if [[ $CARCH = x86_64 ]]; then
     makedepends+=('gcc-multilib')
 fi
