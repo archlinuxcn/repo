@@ -10,7 +10,7 @@ build_prefix = 'extra-x86_64'
 pre_build = aur_pre_build
 post_build = aur_post_build
 
-depends = [("libgnome", "libgnome-data"), "gnomecanvas-perl", "gnome-vfs-nosmb", "gnome-vfs-perl", "libbonoboui", "libgnomeui", "libgnome"]
+depends = ["orbit2", "libbonobo", ("libgnome", "libgnome-data"), "gnomecanvas-perl", "gnome-vfs-nosmb", "gnome-vfs-perl", "libbonoboui", "libgnomeui", "libgnome"]
 
 if __name__ == '__main__':
       single_main(build_prefix)
