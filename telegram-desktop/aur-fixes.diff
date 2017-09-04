@@ -11,10 +11,10 @@ index b975c7a8..5ad461a4 100644
  Q_IMPORT_PLUGIN(QGenericEnginePlugin)
  Q_IMPORT_PLUGIN(QNetworkManagerEnginePlugin)
 diff --git a/Telegram/gyp/Telegram.gyp b/Telegram/gyp/Telegram.gyp
-index 9d92b817..c3017101 100644
+index 0d1f38aa..0665cce1 100644
 --- a/Telegram/gyp/Telegram.gyp
 +++ b/Telegram/gyp/Telegram.gyp
-@@ -84,25 +84,21 @@
+@@ -85,25 +85,21 @@
      ],
  
      'defines': [
@@ -45,7 +45,7 @@ index 9d92b817..c3017101 100644
        '<(submodules_loc)/variant/include',
      ],
 diff --git a/Telegram/gyp/qt.gypi b/Telegram/gyp/qt.gypi
-index 81c13a18..caa93b5b 100644
+index 6032d066..567cdb95 100644
 --- a/Telegram/gyp/qt.gypi
 +++ b/Telegram/gyp/qt.gypi
 @@ -38,7 +38,6 @@
@@ -97,18 +97,18 @@ index 81c13a18..caa93b5b 100644
          '<(linux_lib_ssl)',
          '<(linux_lib_crypto)',
 @@ -233,12 +221,32 @@
-         'gthread-2.0',
-         'glib-2.0',
-         'pthread',
+         '-lgthread-2.0',
+         '-lglib-2.0',
+         '-lpthread',
 +
-+        'Xi',
-+        'Xext',
-+        'Xfixes',
-+        'SM',
-+        'ICE',
-+        'fontconfig',
-+        'expat',
-+        'freetype',
++        '-lXi',
++        '-lXext',
++        '-lXfixes',
++        '-lSM',
++        '-lICE',
++        '-lfontconfig',
++        '-lexpat',
++        '-lfreetype',
 +
 +        '<!(pkg-config 2> /dev/null --libs xkbcommon xkbcommon-x11)',
 +        '<!(pkg-config 2> /dev/null --libs harfbuzz)',
@@ -119,8 +119,8 @@ index 81c13a18..caa93b5b 100644
 +        '<!(pkg-config 2> /dev/null --libs libwebp)',
 +        '<!(pkg-config 2> /dev/null --libs xcb-shm xcb-xfixes xcb-render xcb-renderutil xcb-sync xcb-randr xcb-xinerama xcb-xkb xcb-icccm xcb-image xcb-shape xcb-keysyms xcb-util)',
 +        '<!(pkg-config 2> /dev/null --libs wayland-client wayland-cursor)',
-+        'proxy',
-+        'GL',
++        '-lproxy',
++        '-lGL',
        ],
        'include_dirs': [
          '<(qt_loc)/mkspecs/linux-g++',
