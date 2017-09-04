@@ -4,7 +4,7 @@
 
 pkgname=ncurses5-compat-libs
 _pkgname=ncurses
-_pkgver=6.0-20170827
+_pkgver=6.0-20170902
 pkgver=${_pkgver/-/+}
 pkgrel=1
 pkgdesc='System V Release 4.0 curses emulation library, ABI 5'
@@ -15,7 +15,7 @@ depends=(glibc gcc-libs sh)
 provides=(libtinfo5)
 conflicts=(libtinfo5)
 source=(http://invisible-mirror.net/archives/ncurses/current/ncurses-${_pkgver}.tgz{,.asc})
-md5sums=('08fdc01a498f19ee75d8638c5504cdb1'
+md5sums=('b7b1cedc484172434855b00831183458'
          'SKIP')
 validpgpkeys=('C52048C0C0748FEE227D47A2702353E0F7E48EDB')  # Thomas Dickey
 
