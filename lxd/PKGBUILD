@@ -2,7 +2,7 @@
 # Contributor: Benjamin Asbach <archlinux-aur.lxd@impl.it>
 
 pkgname=lxd
-pkgver=2.16
+pkgver=2.17
 pkgrel=1
 pkgdesc="REST API, command line tool and OpenStack integration plugin for LXC."
 arch=('x86_64')
@@ -30,12 +30,12 @@ source=(
     "networkmanager-dnsmasq-lxd.conf"
 )
 
-md5sums=('1e28fae2c3eb199aa14db2b202e89175'
+md5sums=('179ccae9b1870538dff8629c079974f8'
          '5dde136f2fbcdf5773a011a39c82cfc6'
          'b1fd16933c1b24aaa9ccc8f5a0e6478c'
-         'f2bc527eabb1fdba810b0393ee41edd4'
+         '15ae1bc51684d611bded2839ca55a37b'
          '52c641ea0ba5477f5c1a1b857c03dda9'
-         'c9b5c98497e4ddc47d0c078b5b500f93'
+         'c86b8c441ab014340186acc7799096f2'
          '427926fddb1537f7a65d0a7274106df5')
 
 _gourl=github.com/lxc/lxd
