@@ -1,0 +1,52 @@
+# Maintainer: Iru Cai <mytbk920423@gmail.com>
+# Contributor: Alexander Hunziker <alex.hunziker@gmail.com>
+# Contributor: Alessio Biancalana <dottorblaster@gmail.com>
+# Contributor: Massimiliano Torromeo <massimiliano.torromeo@gmail.com>
+
+pkgname=gegl-git
+pkgver=0.3.20.14
+pkgrel=2
+pkgdesc="Graph based image processing framework"
+arch=('i686' 'x86_64')
+url="http://www.gegl.org"
+license=('GPL3' 'LGPL3')
+depends=('babl-git' 'libspiro' 'json-glib' 'glu' 'openexr' 'libgexiv2')
+makedepends=('git' 'intltool' 'python2' 'ruby' 'lua'
+             'libraw' 'ffmpeg' 'librsvg' 'jasper'
+             'graphviz' 'libtiff' 'suitesparse' 'gobject-introspection')
+optdepends=('ffmpeg: for using the ffmpeg plugin'
+            'librsvg: for using the svg plugin'
+            'libtiff: tiff plugin'
+            'jasper: for using the jasper plugin'
+            'libraw: raw plugin'
+            'suitesparse: matting-levin plugin'
+            'lua: lua plugin')
+provides=("gegl=${pkgver}")
+conflicts=('gegl>=0.3.0')
+options=(!libtool)
+source=(git://git.gnome.org/gegl)
+md5sums=('SKIP')
+
+_gitroot=GITURL
+_gitname=gegl
+
+build() {
+  cd "$srcdir/$_gitname"
+
+  ./autogen.sh
+  ./configure --prefix=/usr --with-sdl --with-openexr --with-librsvg \
+    --with-libavformat --with-jasper --disable-docs \
+    --enable-workshop \
+	--enable-introspection=yes
+  make
+}
+
+package() {
+  cd "$srcdir/$_gitname"
+  make DESTDIR="$pkgdir/" install
+}
+
+pkgver() {
+  cd $_gitname
+  git describe --always | sed -e 's/GEGL_//' -e 's/-g.*$//' -e 's/[_-]/./g'
+}

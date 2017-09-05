@@ -1,0 +1,611 @@
+Combines the following two patches adjusted to work with libmypaint 1.3
+https://github.com/mypaint/libmypaint/commit/0b31421ffbfb5f4a1c68ceeafa292c6ff08e949c
+https://github.com/mypaint/libmypaint/commit/08c4236d4c0e871bf6c29f2e42cafd55d1f361ce
+This will allow side-by-side installations of different libmypaint builds
+at the level of the minor version number.
+diff -Naur ./libmypaint-1.3.0.orig/configure.ac ./libmypaint-1.3.0/configure.ac
+--- ./libmypaint-1.3.0.orig/configure.ac	2016-12-01 17:47:14.000000000 -0500
++++ ./libmypaint-1.3.0/configure.ac	2017-07-24 10:54:57.297918118 -0400
+@@ -1,27 +1,50 @@
+ # AC_OPENMP requires autoconf >= 2.62.
+ AC_PREREQ(2.62)
+ 
++
++## Canonical version number components ##
++
+ # API version: see https://github.com/mypaint/libmypaint/wiki/Versioning
++# See http://semver.org/ for what this means.
++
+ m4_define([libmypaint_api_major], [1])
+ m4_define([libmypaint_api_minor], [3])
+ m4_define([libmypaint_api_micro], [0])
+ m4_define([libmypaint_api_prerelease], [])  # may be blank
+-# The platform version is "major.minor" only.
+-# The full version is "major.minor.micro[-prerelease]".
+ 
+-# ABI version see: https://autotools.io/libtool/version.html
++# ABI version. Changes independently of API version.
++# See: https://autotools.io/libtool/version.html
+ # https://www.gnu.org/software/libtool/manual/html_node/Updating-version-info.html
++# The rules are fiddly, and are summarized here.
++
+ m4_define([libmypaint_abi_revision], [0])  # increment on every release
+ m4_define([libmypaint_abi_current], [0])  # inc when add/remove/change interfaces
+ m4_define([libmypaint_abi_age], [0])  # inc only if changes backward compat
+ 
+-# Derivative version macros
++
++## Derivative version macros ##
++
++# The full version is "major.minor.micro[-prerelease]".
++
+ m4_define([libmypaint_version],
+           [libmypaint_api_major.libmypaint_api_minor.libmypaint_api_micro])
+ m4_define([libmypaint_version_full],
+           [libmypaint_api_major().libmypaint_api_minor().libmypaint_api_micro()m4_bpatsubst(libmypaint_api_prerelease(), [^\(.\)], [-\1])])
+ 
+-# Dependencies.
++# The API "platform" or "intercompatibility" version.
++#
++# This one is used for library name prefixes, for introspection
++# namespace versions, for gettext domains, and basically anything that
++# needs to change when backwards or forwards API compatibility changes.
++# Another way of thinking about it: it allows meaningful side by side
++# installations of libmypaint.
++
++m4_define([libmypaint_api_platform_version],
++          [libmypaint_api_major.libmypaint_api_minor])
++
++
++## Dependencies ##
++
+ m4_define([gegl_required_version], [0.3])
+ m4_define([introspection_required_version], [1.32.0])
+ 
+@@ -44,7 +67,8 @@
+ LIBMYPAINT_MICRO_VERSION=libmypaint_api_micro
+ LIBMYPAINT_VERSION=libmypaint_version
+ LIBMYPAINT_VERSION_FULL=libmypaint_version_full
+-LIBMYPAINT_API_PLATFORM_VERSION=libmypaint_api_major.libmypaint_api_minor
++LIBMYPAINT_API_PLATFORM_VERSION=libmypaint_api_platform_version
++LIBMYPAINT_API_PLATFORM_VERSION_UL=m4_bpatsubst(libmypaint_api_platform_version(), [[^A-Za-z0-9]], [_])
+ LIBMYPAINT_ABI_VERSION_INFO=libmypaint_abi_current:libmypaint_abi_revision:libmypaint_abi_age
+ 
+ AC_SUBST(LIBMYPAINT_MAJOR_VERSION)
+@@ -54,6 +78,7 @@
+ AC_SUBST(LIBMYPAINT_VERSION)
+ AC_SUBST(LIBMYPAINT_VERSION_FULL)
+ AC_SUBST(LIBMYPAINT_API_PLATFORM_VERSION)
++AC_SUBST(LIBMYPAINT_API_PLATFORM_VERSION_UL)
+ AC_SUBST(LIBMYPAINT_ABI_VERSION_INFO)
+ 
+ AC_PROG_CC
+@@ -72,9 +97,8 @@
+ # Check for pkg-config
+ PKG_PROG_PKG_CONFIG(0.16)
+ 
+-###########################
+-# Check host architecture
+-###########################
++
++## Check host and platform ##
+ 
+ AC_CANONICAL_HOST
+ 
+@@ -273,7 +297,7 @@
+ 
+ if test "x$enable_i18n" != "xno"; then
+   enable_i18n="yes"
+-  GETTEXT_PACKAGE=libmypaint
++  GETTEXT_PACKAGE=libmypaint-libmypaint_api_platform_version
+   AC_SUBST(GETTEXT_PACKAGE)
+   AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE",
+                      [The prefix for our gettext translation domains.])
+@@ -321,9 +345,9 @@
+ 
+ AC_CONFIG_FILES([
+   doc/Makefile
+-  gegl/libmypaint-gegl.pc:gegl/libmypaint-gegl.pc.in
++  gegl/libmypaint-gegl-]libmypaint_api_platform_version()[.pc:gegl/libmypaint-gegl.pc.in
+   gegl/Makefile
+-  libmypaint.pc:libmypaint.pc.in
++  libmypaint-]libmypaint_api_platform_version()[.pc:libmypaint.pc.in
+   m4macros/Makefile
+   Makefile
+   po/Makefile.in
+diff -Naur ./libmypaint-1.3.0.orig/configure.ac.orig ./libmypaint-1.3.0/configure.ac.orig
+--- ./libmypaint-1.3.0.orig/configure.ac.orig	1969-12-31 19:00:00.000000000 -0500
++++ ./libmypaint-1.3.0/configure.ac.orig	2016-12-01 17:47:14.000000000 -0500
+@@ -0,0 +1,339 @@
++# AC_OPENMP requires autoconf >= 2.62.
++AC_PREREQ(2.62)
++
++# API version: see https://github.com/mypaint/libmypaint/wiki/Versioning
++m4_define([libmypaint_api_major], [1])
++m4_define([libmypaint_api_minor], [3])
++m4_define([libmypaint_api_micro], [0])
++m4_define([libmypaint_api_prerelease], [])  # may be blank
++# The platform version is "major.minor" only.
++# The full version is "major.minor.micro[-prerelease]".
++
++# ABI version see: https://autotools.io/libtool/version.html
++# https://www.gnu.org/software/libtool/manual/html_node/Updating-version-info.html
++m4_define([libmypaint_abi_revision], [0])  # increment on every release
++m4_define([libmypaint_abi_current], [0])  # inc when add/remove/change interfaces
++m4_define([libmypaint_abi_age], [0])  # inc only if changes backward compat
++
++# Derivative version macros
++m4_define([libmypaint_version],
++          [libmypaint_api_major.libmypaint_api_minor.libmypaint_api_micro])
++m4_define([libmypaint_version_full],
++          [libmypaint_api_major().libmypaint_api_minor().libmypaint_api_micro()m4_bpatsubst(libmypaint_api_prerelease(), [^\(.\)], [-\1])])
++
++# Dependencies.
++m4_define([gegl_required_version], [0.3])
++m4_define([introspection_required_version], [1.32.0])
++
++AC_INIT([libmypaint],
++        [libmypaint_version_full],
++        [https://github.com/mypaint/libmypaint/issues],
++        [libmypaint],
++        [https://github.com/mypaint/libmypaint])
++
++AC_CONFIG_HEADERS([config.h])
++AC_CONFIG_MACRO_DIR([m4macros])
++
++AM_INIT_AUTOMAKE([no-define dist-xz no-dist-gzip
++                  -Wall -Werror
++                  subdir-objects
++                  foreign])
++
++LIBMYPAINT_MAJOR_VERSION=libmypaint_api_major
++LIBMYPAINT_MINOR_VERSION=libmypaint_api_minor
++LIBMYPAINT_MICRO_VERSION=libmypaint_api_micro
++LIBMYPAINT_VERSION=libmypaint_version
++LIBMYPAINT_VERSION_FULL=libmypaint_version_full
++LIBMYPAINT_API_PLATFORM_VERSION=libmypaint_api_major.libmypaint_api_minor
++LIBMYPAINT_ABI_VERSION_INFO=libmypaint_abi_current:libmypaint_abi_revision:libmypaint_abi_age
++
++AC_SUBST(LIBMYPAINT_MAJOR_VERSION)
++AC_SUBST(LIBMYPAINT_MINOR_VERSION)
++AC_SUBST(LIBMYPAINT_MICRO_VERSION)
++AC_SUBST(LIBMYPAINT_PRERELEASE_VERSION)
++AC_SUBST(LIBMYPAINT_VERSION)
++AC_SUBST(LIBMYPAINT_VERSION_FULL)
++AC_SUBST(LIBMYPAINT_API_PLATFORM_VERSION)
++AC_SUBST(LIBMYPAINT_ABI_VERSION_INFO)
++
++AC_PROG_CC
++AC_PROG_CC_C99
++AM_PROG_AR
++
++AC_PROG_INSTALL
++
++# Initialize libtool (default: shared library only).
++LT_PREREQ([2.2])
++LT_INIT([disable-static win32-dll])
++
++# Initialize maintainer mode
++AM_MAINTAINER_MODE([enable])
++
++# Check for pkg-config
++PKG_PROG_PKG_CONFIG(0.16)
++
++###########################
++# Check host architecture
++###########################
++
++AC_CANONICAL_HOST
++
++case "$host_cpu" in
++  i*86)
++    have_x86=yes
++    AC_DEFINE(ARCH_X86, 1, [Define to 1 if you are compiling for ix86.])
++    ;;
++  x86_64)
++    have_x86=yes
++    AC_DEFINE(ARCH_X86, 1, [Define to 1 if you are compiling for ix86.])
++    AC_DEFINE(ARCH_X86_64, 1, [Define to 1 if you are compiling for amd64.])
++    ;;
++  ppc | powerpc)
++    have_ppc=yes
++    AC_DEFINE(ARCH_PPC, 1, [Define to 1 if you are compiling for PowerPC.])
++    ;;
++  ppc64 | powerpc64)
++    have_ppc=yes
++    AC_DEFINE(ARCH_PPC, 1, [Define to 1 if you are compiling for PowerPC.])
++    AC_DEFINE(ARCH_PPC64, 1, [Define to 1 if you are compiling for PowerPC64.])
++    ;;
++  *)
++    ;;
++esac
++
++#################
++# Check for Win32
++#################
++
++AC_MSG_CHECKING([for some Win32 platform])
++case "$host_os" in
++  mingw* | cygwin*)
++    platform_win32=yes
++    ;;
++  *)
++    platform_win32=no
++    ;;
++esac
++AC_MSG_RESULT([$platform_win32])
++AM_CONDITIONAL(PLATFORM_WIN32, test "$platform_win32" = "yes")
++
++AC_MSG_CHECKING([for native Win32])
++case "$host_os" in
++  mingw*)
++    os_win32=yes
++    case "$host_cpu" in
++      x86_64)
++	;;
++      *)
++	WIN32_LARGE_ADDRESS_AWARE='-Wl,--large-address-aware'
++	;;
++    esac
++    PATHSEP=';'
++    ;;
++  *)
++    os_win32=no
++    PATHSEP=':'
++    ;;
++esac
++AC_MSG_RESULT([$os_win32])
++AC_SUBST(WIN32_LARGE_ADDRESS_AWARE)
++AC_SUBST(PATHSEP)
++AM_CONDITIONAL(OS_WIN32, test "$os_win32" = "yes")
++AM_CONDITIONAL(OS_UNIX, test "$os_win32" != "yes")
++
++####################
++# Check for Mac OS X
++####################
++
++platform_osx=no
++AC_MSG_CHECKING([if compiling for Mac OS X])
++case "$host_os" in
++  darwin*)
++     AC_MSG_RESULT(yes)
++     AC_DEFINE(PLATFORM_OSX, 1, [define to 1 if compiling for Mac OS X])
++     platform_osx=yes
++     ;;
++  *)
++     AC_MSG_RESULT(no)
++     ;;
++esac
++
++AM_CONDITIONAL(PLATFORM_OSX, test "x$platform_osx" = xyes)
++
++# Define strdup() in string.h under glibc >= 2.10 (POSIX.1-2008)
++CFLAGS="-D_POSIX_C_SOURCE=200809L $CFLAGS"
++
++## Debug ##
++AC_MSG_CHECKING([whether to turn on debugging])
++AC_ARG_ENABLE(debug,
++              AS_HELP_STRING([--enable-debug],
++                             [turn on debugging (default=no)])
++)
++
++if eval "test x$enable_debug = xyes"; then
++  AC_MSG_RESULT([yes])
++  CPPDEFINES='HEAVY_DEBUG $CPPDEFINES'
++  CCFLAGS='-O0 $CCFLAGS'
++  LINKFLAGS='-O0 $LINKFLAGS'
++else
++  AC_MSG_RESULT([no])
++  CCFLAGS='-O3 $CCFLAGS'
++  LINKFLAGS='-O3 $LINKFLAGS'
++fi
++
++## Profiling ##
++AC_MSG_CHECKING([whether to turn on profiling])
++AC_ARG_ENABLE(profiling,
++  AS_HELP_STRING([--enable-profiling],
++    [turn on profiling (default=no)])
++)
++
++if eval "test x$enable_profiling = xyes"; then
++  AC_MSG_RESULT([yes])
++  CCFLAGS='-pg $CCFLAGS'
++else
++  AC_MSG_RESULT([no])
++fi
++
++## Variables for pkg-config file ##
++PKG_CONFIG_REQUIRES=""
++
++## OpenMP ##
++AC_ARG_ENABLE(openmp,
++  AS_HELP_STRING([--enable-openmp],
++    [compile with OpenMP (default=no)]),
++  [AC_OPENMP([CFLAGS="$CFLAGS $OPENMP_CFLAGS"])]
++)
++
++AC_SUBST(OPENMP_CFLAGS)
++
++## gperftools ##
++AC_ARG_ENABLE(gperftools,
++  AS_HELP_STRING([--enable-gperftools],
++    [enable gperftools in build, for profiling (default=no)])
++)
++
++have_libprofiler="no"
++if test "x$enable_gperftools" = xyes; then
++  PKG_CHECK_MODULES(LIBPROFILER, libprofiler,
++                    have_libprofiler="yes")
++fi
++AM_CONDITIONAL(HAVE_GPERFTOOLS, test "x$have_libprofiler" = "xyes")
++
++## Docs ##
++AC_ARG_ENABLE(docs,
++  AS_HELP_STRING([--enable-docs],
++    [enable documentation build (default=no)])
++)
++
++if test "x$enable_docs" = xyes; then
++  AC_CHECK_PROGS(DOXYGEN, doxygen)
++  AC_CHECK_PROGS(SPHINX_BUILD, sphinx-build2 sphinx-build-2 sphinx-build3 sphinx-build-3 sphinx-build)
++  # TODO: the python "breathe" extension is also a dependency to doc building.
++  # The configure script should check for its existence.
++fi
++AM_CONDITIONAL(ENABLE_DOCS,
++               test "x$DOXYGEN" != "x" && test "x$SPHINX_BUILD" != "x")
++
++## json-c ##
++PKG_CHECK_MODULES(JSON, json-c,
++                  have_json_c="yes", have_json_c="no")
++
++if test "x$have_json_c" = xno; then
++  AC_MSG_WARN([Could not find 'json-c', trying legacy 'json' instead])
++  PKG_CHECK_MODULES(JSON, json)
++  PKG_CONFIG_REQUIRES="json"
++else
++  PKG_CONFIG_REQUIRES="json-c"
++fi
++
++AC_DEFINE(HAVE_JSON_C, 1, [Define to 1 if json is available])
++AC_SUBST(JSON_LIBS)
++AC_SUBST(JSON_CFLAGS)
++
++## Standard maths functions ##
++AC_SEARCH_LIBS([floorf], [m], [], AC_MSG_ERROR([no floorf]))
++AC_SEARCH_LIBS([powf], [m], [], AC_MSG_ERROR([no powf]))
++AC_SEARCH_LIBS([expf], [m], [], AC_MSG_ERROR([no expf]))
++
++## Additional compile flags ##
++
++AX_CHECK_COMPILE_FLAG([-fsanitize=undefined],
++  [test x$enable_debug = xyes && CFLAGS="-fsanitize=undefined $CFLAGS"],
++  [], [-Werror], [])
++AX_CHECK_LINK_FLAG([-fsanitize=undefined],
++  [test x$enable_debug = xyes && LDFLAGS="-fsanitize=undefined $LDFLAGS"],
++  [], [-Werror], [])
++
++## Internationalization ##
++AC_ARG_ENABLE(i18n,
++  AS_HELP_STRING([--disable-i18n],
++    [disable internationalization (default=no)])
++)
++
++if test "x$enable_i18n" != "xno"; then
++  enable_i18n="yes"
++  GETTEXT_PACKAGE=libmypaint
++  AC_SUBST(GETTEXT_PACKAGE)
++  AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE",
++                     [The prefix for our gettext translation domains.])
++  AC_SUBST(GETTEXT_PACKAGE)
++  IT_PROG_INTLTOOL
++  AM_GLIB_GNU_GETTEXT
++
++  dnl Debian: stdlib
++  dnl Windows, and OSX: -lintl
++  AC_SEARCH_LIBS([dgettext], [intl], [], AC_MSG_ERROR([no dgettext]))
++fi
++AM_CONDITIONAL(HAVE_I18N, test "x$enable_i18n" = "xyes")
++
++GOBJECT_INTROSPECTION_CHECK(introspection_required_version)
++
++## glib ##
++AC_ARG_WITH(glib,
++  AS_HELP_STRING([--with-glib],
++    [use glib (forced on by introspection)])
++)
++
++if test "x$with_glib" = xyes ||
++   test "x$found_introspection" = xyes; then
++  PKG_CHECK_MODULES(GLIB, gobject-2.0)
++  AC_DEFINE(MYPAINT_CONFIG_USE_GLIB, 1, [Define to 1 if glib is used])
++  PKG_CONFIG_REQUIRES="$PKG_CONFIG_REQUIRES gobject-2.0"
++else
++  AC_DEFINE(MYPAINT_CONFIG_USE_GLIB, 0, [Define to 1 if glib is used])
++fi
++AM_CONDITIONAL(WITH_GLIB, test "x$with_glib" = "xyes")
++
++## GEGL ##
++AC_ARG_ENABLE(gegl,
++  AS_HELP_STRING([--enable-gegl],
++    [enable GEGL based code in build (yes|no, default=no)])
++)
++
++if eval "test x$enable_gegl = xyes"; then
++  PKG_CHECK_MODULES(GEGL, gegl-0.3 >= gegl_required_version)
++fi
++AM_CONDITIONAL(ENABLE_GEGL, test "x$enable_gegl" = "xyes")
++
++# Set pkg-config variables before generation.
++AC_SUBST(PKG_CONFIG_REQUIRES)
++
++AC_CONFIG_FILES([
++  doc/Makefile
++  gegl/libmypaint-gegl.pc:gegl/libmypaint-gegl.pc.in
++  gegl/Makefile
++  libmypaint.pc:libmypaint.pc.in
++  m4macros/Makefile
++  Makefile
++  po/Makefile.in
++  tests/Makefile
++  tests/gegl/Makefile
++])
++
++AC_OUTPUT
++
++echo ""
++echo "  Configured libmypaint $LIBMYPAINT_VERSION_FULL"
++echo ""
++
+diff -Naur ./libmypaint-1.3.0.orig/gegl/Makefile.am ./libmypaint-1.3.0/gegl/Makefile.am
+--- ./libmypaint-1.3.0.orig/gegl/Makefile.am	2016-12-01 17:47:14.000000000 -0500
++++ ./libmypaint-1.3.0/gegl/Makefile.am	2017-07-24 10:54:57.297918118 -0400
+@@ -37,10 +37,10 @@
+ 	../glib/mypaint-gegl-glib.c	\
+ 	mypaint-gegl-surface.c
+ 
+-MyPaintGegl-@LIBMYPAINT_MAJOR_VERSION@.@LIBMYPAINT_MINOR_VERSION@.gir: libmypaint-gegl.la Makefile
++MyPaintGegl-@LIBMYPAINT_MAJOR_VERSION@.@LIBMYPAINT_MINOR_VERSION@.gir: libmypaint-gegl-@LIBMYPAINT_API_PLATFORM_VERSION@.la Makefile
+ MyPaintGegl_@LIBMYPAINT_MAJOR_VERSION@_@LIBMYPAINT_MINOR_VERSION@_gir_INCLUDES = GObject-2.0 MyPaint-$(LIBMYPAINT_MAJOR_VERSION).$(LIBMYPAINT_MINOR_VERSION) Gegl-0.3
+ MyPaintGegl_@LIBMYPAINT_MAJOR_VERSION@_@LIBMYPAINT_MINOR_VERSION@_gir_CFLAGS = $(AM_CFLAGS) $(AM_CPPFLAGS) -I. -I..
+-MyPaintGegl_@LIBMYPAINT_MAJOR_VERSION@_@LIBMYPAINT_MINOR_VERSION@_gir_LIBS = libmypaint-gegl.la ../libmypaint.la
++MyPaintGegl_@LIBMYPAINT_MAJOR_VERSION@_@LIBMYPAINT_MINOR_VERSION@_gir_LIBS = libmypaint-gegl-@LIBMYPAINT_API_PLATFORM_VERSION@.la ../libmypaint-@LIBMYPAINT_API_PLATFORM_VERSION@.la
+ MyPaintGegl_@LIBMYPAINT_MAJOR_VERSION@_@LIBMYPAINT_MINOR_VERSION@_gir_FILES = $(introspection_sources)
+ INTROSPECTION_GIRS += MyPaintGegl-@LIBMYPAINT_MAJOR_VERSION@.@LIBMYPAINT_MINOR_VERSION@.gir
+ 
+@@ -56,10 +56,10 @@
+ 
+ ## pkg-config file ##
+ pkgconfigdir = $(libdir)/pkgconfig
+-pkgconfig_DATA = libmypaint-gegl.pc
++pkgconfig_DATA = libmypaint-gegl-@LIBMYPAINT_API_PLATFORM_VERSION@.pc
+ 
+ ## libmypaint-gegl ##
+-lib_LTLIBRARIES = libmypaint-gegl.la
++lib_LTLIBRARIES = libmypaint-gegl-@LIBMYPAINT_API_PLATFORM_VERSION@.la
+ 
+ libmypaint_gegl_publicdir = $(includedir)/libmypaint-gegl
+ 
+@@ -70,9 +70,9 @@
+ 	../glib/mypaint-gegl-glib.c	\
+ 	mypaint-gegl-surface.c
+ 
+-libmypaint_gegl_la_SOURCES = $(libmypaint_gegl_public_HEADERS) $(LIBMYPAINT_GEGL_SOURCES)
++libmypaint_gegl_@LIBMYPAINT_API_PLATFORM_VERSION@_la_SOURCES = $(libmypaint_gegl_public_HEADERS) $(LIBMYPAINT_GEGL_SOURCES)
+ 
+-libmypaint_gegl_la_CFLAGS = $(JSON_CFLAGS) $(GLIB_CFLAGS) $(GEGL_CFLAGS)
+-libmypaint_gegl_la_LIBADD = $(top_builddir)/libmypaint.la $(GEGL_LIBS)
++libmypaint_gegl_@LIBMYPAINT_API_PLATFORM_VERSION@_la_CFLAGS = $(JSON_CFLAGS) $(GLIB_CFLAGS) $(GEGL_CFLAGS)
++libmypaint_gegl_@LIBMYPAINT_API_PLATFORM_VERSION@_la_LIBADD = $(top_builddir)/libmypaint-@LIBMYPAINT_API_PLATFORM_VERSION@.la $(GEGL_LIBS)
+ 
+ endif # enable_gegl
+diff -Naur ./libmypaint-1.3.0.orig/.gitignore ./libmypaint-1.3.0/.gitignore
+--- ./libmypaint-1.3.0.orig/.gitignore	2016-12-01 17:47:14.000000000 -0500
++++ ./libmypaint-1.3.0/.gitignore	2017-07-24 10:54:57.297918118 -0400
+@@ -39,8 +39,8 @@
+ .libs/
+ *.lo
+ 
+-libmypaint.la
+-gegl/libmypaint-gegl.la
++libmypaint-*.la
++gegl/libmypaint-gegl-*.la
+ 
+ po/*.gmo
+ po/Makefile*
+diff -Naur ./libmypaint-1.3.0.orig/libmypaint.pc.in ./libmypaint-1.3.0/libmypaint.pc.in
+--- ./libmypaint-1.3.0.orig/libmypaint.pc.in	2016-12-01 17:47:14.000000000 -0500
++++ ./libmypaint-1.3.0/libmypaint.pc.in	2017-07-24 10:54:57.297918118 -0400
+@@ -8,5 +8,5 @@
+ URL: @PACKAGE_URL@
+ Version: @LIBMYPAINT_VERSION@
+ Requires: @PKG_CONFIG_REQUIRES@
+-Cflags: -I${includedir}/libmypaint
+-Libs: -L${libdir} -lmypaint @OPENMP_CFLAGS@
++Cflags: -I${includedir}/libmypaint-@LIBMYPAINT_API_PLATFORM_VERSION@
++Libs: -L${libdir} -lmypaint-@LIBMYPAINT_API_PLATFORM_VERSION@ @OPENMP_CFLAGS@
+diff -Naur ./libmypaint-1.3.0.orig/Makefile.am ./libmypaint-1.3.0/Makefile.am
+--- ./libmypaint-1.3.0.orig/Makefile.am	2016-12-01 17:47:14.000000000 -0500
++++ ./libmypaint-1.3.0/Makefile.am	2017-07-24 10:54:57.297918118 -0400
+@@ -13,7 +13,7 @@
+     --warn-all \
+     --pkg="glib-2.0" \
+     --namespace="MyPaint" \
+-    --nsversion="$(LIBMYPAINT_MAJOR_VERSION).$(LIBMYPAINT_MINOR_VERSION)" \
++    --nsversion="$(LIBMYPAINT_API_PLATFORM_VERSION)" \
+     --identifier-prefix="MyPaint" \
+     --symbol-prefix="mypaint_" \
+     --add-include-path="$(srcdir)" \
+@@ -54,12 +54,13 @@
+ 	mypaint-tiled-surface.c			\
+ 	tilemap.c
+ 
+-MyPaint-@LIBMYPAINT_MAJOR_VERSION@.@LIBMYPAINT_MINOR_VERSION@.gir: libmypaint.la Makefile
+-MyPaint_@LIBMYPAINT_MAJOR_VERSION@_@LIBMYPAINT_MINOR_VERSION@_gir_INCLUDES = GObject-2.0 GLib-2.0
+-MyPaint_@LIBMYPAINT_MAJOR_VERSION@_@LIBMYPAINT_MINOR_VERSION@_gir_CFLAGS = $(AM_CFLAGS) $(AM_CPPFLAGS)
+-MyPaint_@LIBMYPAINT_MAJOR_VERSION@_@LIBMYPAINT_MINOR_VERSION@_gir_LIBS = libmypaint.la
+-MyPaint_@LIBMYPAINT_MAJOR_VERSION@_@LIBMYPAINT_MINOR_VERSION@_gir_FILES = $(introspection_sources)
+-INTROSPECTION_GIRS += MyPaint-@LIBMYPAINT_MAJOR_VERSION@.@LIBMYPAINT_MINOR_VERSION@.gir
++# CAUTION: some of these need to use the underscored API version string.
++MyPaint-@LIBMYPAINT_API_PLATFORM_VERSION@.gir: libmypaint-@LIBMYPAINT_API_PLATFORM_VERSION@.la Makefile
++MyPaint_@LIBMYPAINT_API_PLATFORM_VERSION_UL@_gir_INCLUDES = GObject-2.0 GLib-2.0
++MyPaint_@LIBMYPAINT_API_PLATFORM_VERSION_UL@_gir_CFLAGS = $(AM_CFLAGS) $(AM_CPPFLAGS)
++MyPaint_@LIBMYPAINT_API_PLATFORM_VERSION_UL@_gir_LIBS = libmypaint-@LIBMYPAINT_API_PLATFORM_VERSION@.la
++MyPaint_@LIBMYPAINT_API_PLATFORM_VERSION_UL@_gir_FILES = $(introspection_sources)
++INTROSPECTION_GIRS += MyPaint-@LIBMYPAINT_API_PLATFORM_VERSION@.gir
+ 
+ girdir = $(datadir)/gir-1.0
+ gir_DATA = $(INTROSPECTION_GIRS)
+@@ -75,22 +76,23 @@
+ 
+ pkgconfigdir = $(libdir)/pkgconfig
+ 
+-pkgconfig_DATA = libmypaint.pc
++pkgconfig_DATA = libmypaint-@LIBMYPAINT_API_PLATFORM_VERSION@.pc
+ 
+-## libmypaint ##
++## libmypaint-@LIBMYPAINT_API_PLATFORM_VERSION@ ##
+ 
+ AM_CFLAGS = $(JSON_CFLAGS) $(GLIB_CFLAGS)
+ 
+ LIBS = $(JSON_LIBS) $(GLIB_LIBS) @LIBS@
+ 
+-lib_LTLIBRARIES = libmypaint.la
++lib_LTLIBRARIES = libmypaint-@LIBMYPAINT_API_PLATFORM_VERSION@.la
+ 
+-libmypaint_la_LDFLAGS = \
+-    -release @LIBMYPAINT_API_PLATFORM_VERSION@ \
++libmypaint_@LIBMYPAINT_API_PLATFORM_VERSION@_la_LDFLAGS = \
+     -version-info @LIBMYPAINT_ABI_VERSION_INFO@ \
+     -no-undefined
+ 
+-libmypaint_publicdir = $(includedir)/libmypaint
++#    -release @LIBMYPAINT_API_PLATFORM_VERSION@
++
++libmypaint_publicdir = $(includedir)/libmypaint-$(LIBMYPAINT_API_PLATFORM_VERSION)
+ 
+ nobase_libmypaint_public_HEADERS = \
+ 	mypaint-config.h				\
+@@ -117,9 +119,9 @@
+ 	tilemap.c						\
+ 	utils.c
+ 
+-libmypaint_la_SOURCES = $(libmypaint_public_HEADERS) $(LIBMYPAINT_SOURCES)
++libmypaint_@LIBMYPAINT_API_PLATFORM_VERSION@_la_SOURCES = $(libmypaint_public_HEADERS) $(LIBMYPAINT_SOURCES)
+ 
+-DISTCLEANFILES = MyPaint-@LIBMYPAINT_MAJOR_VERSION@.@LIBMYPAINT_MINOR_VERSION@.gir.files
++DISTCLEANFILES = MyPaint-@LIBMYPAINT_API_PLATFORM_VERSION@.gir.files
+ 
+ EXTRA_DIST = \
+ 	brushsettings.json				\
+diff -Naur ./libmypaint-1.3.0.orig/tests/Makefile.am ./libmypaint-1.3.0/tests/Makefile.am
+--- ./libmypaint-1.3.0.orig/tests/Makefile.am	2016-12-01 17:47:14.000000000 -0500
++++ ./libmypaint-1.3.0/tests/Makefile.am	2017-07-24 10:54:57.297918118 -0400
+@@ -41,7 +41,7 @@
+ LDADD = \
+ 	$(DEPS)							\
+ 	libmypaint-tests.a				\
+-	$(top_builddir)/libmypaint.la
++	$(top_builddir)/libmypaint-@LIBMYPAINT_API_PLATFORM_VERSION@.la
+ 
+ EXTRA_DIST = \
+ 	brushes/bulk.myb			\
