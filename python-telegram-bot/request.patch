@@ -1,6 +1,6 @@
---- request.py	2017-07-29 02:17:14.000000000 +0800
-+++ request.py	2017-08-09 15:44:07.172596915 +0800
-@@ -27,12 +27,12 @@
+--- request.py	2017-09-05 13:52:59.072801147 +0800
++++ request.py	2017-09-05 13:54:00.026307817 +0800
+@@ -28,12 +28,12 @@
  except ImportError:
      import json
  
@@ -15,15 +15,15 @@
 +    import urllib3.contrib.appengine as appengine
 +    from urllib3.connection import HTTPConnection
 +    from urllib3.util.timeout import Timeout
- except ImportError:
+ except ImportError:  # pragma: no cover
      warnings.warn("python-telegram-bot wasn't properly installed. Please refer to README.rst on "
                    "how to properly install.")
-@@ -79,7 +79,7 @@
+@@ -91,7 +91,7 @@
          kwargs = dict(
              maxsize=con_pool_size,
              cert_reqs='CERT_REQUIRED',
 -            ca_certs=certifi.where(),
 +            ca_certs="/etc/ssl/certs/ca-certificates.crt",
-             socket_options=HTTPConnection.default_socket_options + [
-                 (socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1),
-             ],
+             socket_options=sockopts,
+             timeout=urllib3.Timeout(
+                 connect=self._connect_timeout, read=read_timeout, total=None))

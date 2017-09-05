@@ -1,7 +1,7 @@
 # Maintainer: Sean Enck <enckse@gmail.com>
 # Maintainer: Sherlock Holo <sherlockya(at)gmail.com>
 pkgname=python-telegram-bot
-pkgver=7.0.1
+pkgver=8.0
 pkgrel=1
 pkgdesc="A Python wrapper around the Telegram Bot API"
 url="https://github.com/python-telegram-bot/python-telegram-bot"
@@ -11,10 +11,10 @@ optdepends=('python-ujson: Ultra fast JSON parsing'
             'python-pysocks: SOCKS or HTTP proxy')
 license=('LGPLv3')
 arch=('any')
-source=("https://pypi.python.org/packages/c4/76/df538d842f16793244842eb71e19697d240affb65a32a65fa1067760b211/python-telegram-bot-7.0.1.tar.gz"
+source=("https://pypi.python.org/packages/74/12/bbc0158dd7aa20ff7e55dc936954e4d06f0844c11ad0cb52b29bf547b532/python-telegram-bot-8.0.tar.gz"
         "request.patch")
-sha256sums=('494ffdd76ffcca62ce6276906b0afe6e8e8c4245b78501404f723aec79949bff'
-            '2919bd5588988d10ba3ebd416bbcb7fe77a4a151aec43f21d753163512d87dc5')
+sha256sums=('b648845f9d5c3ed569066be25e5efdfa36148a24d87e7b5219b4eb8e64853b4d'
+            'cb93235b5e479603d6195e158df7b6028fc3bf87e7bd9bc7a602a029f9bdc644')
 
 prepare(){
     cd $srcdir
