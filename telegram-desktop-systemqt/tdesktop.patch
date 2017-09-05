@@ -229,13 +229,13 @@ index 5d6830e9..c3f08d3f 100644
          IMPLICIT_DEPENDS CXX "${_pch_header}"
          COMMENT "Precompiling ${_name} for ${_target} (C++)")
 diff --git a/Telegram/gyp/Telegram.gyp b/Telegram/gyp/Telegram.gyp
-index 9d92b817..e5c81e12 100644
+index 0d1f38aa..06af0021 100644
 --- a/Telegram/gyp/Telegram.gyp
 +++ b/Telegram/gyp/Telegram.gyp
-@@ -79,12 +79,10 @@
-       'codegen.gyp:codegen_lang',
+@@ -80,12 +80,10 @@
        'codegen.gyp:codegen_numbers',
        'codegen.gyp:codegen_style',
+       'tests/tests.gyp:tests',
 -      'utils.gyp:Updater',
        '../ThirdParty/libtgvoip/libtgvoip.gyp:libtgvoip',
      ],
@@ -245,7 +245,7 @@ index 9d92b817..e5c81e12 100644
        'AL_ALEXT_PROTOTYPES',
        'TGVOIP_USE_CXX11_LIB',
        '<!@(python -c "for s in \'<(build_defines)\'.split(\',\'): print(s)")',
-@@ -93,14 +91,7 @@
+@@ -94,14 +92,7 @@
      'include_dirs': [
        '<(src_loc)',
        '<(SHARED_INTERMEDIATE_DIR)',
@@ -262,7 +262,7 @@ index 9d92b817..e5c81e12 100644
        '<(emoji_suggestions_loc)',
        '<(submodules_loc)/GSL/include',
 diff --git a/Telegram/gyp/qt.gypi b/Telegram/gyp/qt.gypi
-index 81c13a18..99af0edb 100644
+index 6032d066..fe92d853 100644
 --- a/Telegram/gyp/qt.gypi
 +++ b/Telegram/gyp/qt.gypi
 @@ -27,25 +27,21 @@
@@ -371,10 +371,10 @@ index 81c13a18..99af0edb 100644
 -        '<(linux_lib_ssl)',
 -        '<(linux_lib_crypto)',
 -        '<!@(python -c "for s in \'<(linux_lib_icu)\'.split(\' \'): print(s)")',
-+        'crypto',
-         'xcb',
-         'X11',
-         'X11-xcb',
++        '-lcrypto',
+         '-lxcb',
+         '-lX11',
+         '-lX11-xcb',
 @@ -238,7 +206,6 @@
          '<(qt_loc)/mkspecs/linux-g++',
        ],
@@ -492,10 +492,10 @@ index 2c464928..b505a67d 100644
      ],
      'configurations': {
 diff --git a/Telegram/gyp/telegram_sources.txt b/Telegram/gyp/telegram_sources.txt
-index 40556793..b42767e3 100644
+index ef66965f..81852d10 100644
 --- a/Telegram/gyp/telegram_sources.txt
 +++ b/Telegram/gyp/telegram_sources.txt
-@@ -587,14 +587,7 @@
+@@ -598,14 +598,7 @@
  <(emoji_suggestions_loc)/emoji_suggestions.cpp
  <(emoji_suggestions_loc)/emoji_suggestions.h
  
