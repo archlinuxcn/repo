@@ -5,8 +5,8 @@
 # Maintainer: widowild
 
 pkgname=rslsync
-pkgver=2.5.7
-pkgrel=1
+pkgver=2.5.8
+pkgrel=3
 pkgdesc="Resilio Sync (ex:BitTorrent Sync) - automatically sync files via secure, distributed technology"
 license=("custom:resilio")
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
@@ -23,13 +23,13 @@ source_i686=("rslsync_i386-${pkgver}.tar.gz::https://download-cdn.resilio.com/st
 source_x86_64=("rslsync_x64-${pkgver}.tar.gz::https://download-cdn.resilio.com/stable/linux-x64/resilio-sync_x64.tar.gz")
 sha256sums=('4483cbe3fff81281666d8fbe8c9b8d7d27c38ba7a3d3752a865f1ab8c1f212db'
             'ba4b0ee3303027122e67345d4bf852f911a56f213f98c9eaa198c69d903fd8a1'
-            'acc08bf5a321a0ae1ee58aee64af524508359db6305d2164d43bb84a2a3fc7c4')
-sha256sums_i686=('43e2b92b0382874e7facf6f4e89ff75581f0bc7ecc5bcfd080395621a3c81f0c')
-sha256sums_x86_64=('ce60c480047ef5c1347aa87bb5a6f73e38bcad1dafd10389f4c7529afeacd3e4')
-sha256sums_arm=('d214e9873cb41dbe04644a28aac47db8234661a2339df447d3ddcd09a375a48e')
-sha256sums_armv6h=('d214e9873cb41dbe04644a28aac47db8234661a2339df447d3ddcd09a375a48e')
-sha256sums_armv7h=('7372aaa56529fac07920d308f90c736e89b17d6e7bde200831b888723a7f8cdd')
-sha256sums_aarch64=('7372aaa56529fac07920d308f90c736e89b17d6e7bde200831b888723a7f8cdd')
+            '56a0523cdde9b6c1c469bbb29805d260972e8e1fc831e82863fd35d9e2f6c734')
+sha256sums_i686=('9dde6fd55a06d6c681daf65d1e3e176e75396894ed172fe9152094c60ec2174f')
+sha256sums_x86_64=('bf6f0077adbb5380e86a3e613453a85f7c2380883f0656e5fdc3cfed3e2b0098')
+sha256sums_arm=('1dbd1f8dbbab85c0fc0505b2effb948d3b249abeee741f47901e73b37a8c9109')
+sha256sums_armv6h=('1dbd1f8dbbab85c0fc0505b2effb948d3b249abeee741f47901e73b37a8c9109')
+sha256sums_armv7h=('a6d2f9b336e3b1fc3e4bde34bfb38877494154bcaca5a9f011dd5f12fb36f0fb')
+sha256sums_aarch64=('a6d2f9b336e3b1fc3e4bde34bfb38877494154bcaca5a9f011dd5f12fb36f0fb')
 
 
 package() {
@@ -42,7 +42,7 @@ package() {
   | sed 's:/home/user/\.sync:/var/lib/rslsync:' \
   | sed 's:\/\/ "pid_file":  "pid_file":' \
   | sed 's:\/\/ "storage_path":  "storage_path":' \
-  | sed 's/\/var\/run\/btsync\/btsync.pid/\/var\/run\/btsync\/btsync.pid/g' \
+  | sed 's/\/var\/run\/resilio\/resilio.pid/\/var\/run\/resilio\/resilio.pid/g' \
   > "${pkgdir}"/etc/rslsync.conf
 
   # install systemd config files
