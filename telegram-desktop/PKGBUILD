@@ -1,5 +1,5 @@
 pkgname=telegram-desktop
-pkgver=1.1.22
+pkgver=1.1.23
 pkgrel=1
 pkgdesc='Official desktop version of Telegram messaging app.'
 arch=('i686' 'x86_64')
