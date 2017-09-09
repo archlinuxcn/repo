@@ -1,7 +1,7 @@
 # Contributor: David Keogh <davekeogh@archlinux.us>
 
 pkgname=pycharm-community
-pkgver=2017.2.2
+pkgver=2017.2.3
 pkgrel=1
 pkgdesc="Powerful Python and Django IDE. Community edition."
 arch=('i686' 'x86_64')
@@ -44,3 +44,5 @@ package() {
 }
 
 # vim:set ts=2 sw=2 et:
+sha256sums=('e8562938c2ede32a1c1036391942190144cd9f0927bd49b6b3ddf5f7a01c33aa'
+            '5ce44b5bee632258749ee7d0df0fd08af446d43715f9ef50cb6889b88232de41')

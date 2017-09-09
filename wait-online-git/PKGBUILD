@@ -1,0 +1,35 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+pkgname=wait-online-git
+pkgver=0.r11.b77de3b
+pkgrel=1
+pkgdesc="tools to wait for Internet (204 response)"
+arch=('any')
+license=("GPLv3")
+makedepends=('git')
+depends=('python-systemd')
+source=(
+  git+https://github.com/lilydjwg/wait-online.git
+)
+_gitname=wait-online
+
+sha1sums=(SKIP)
+
+pkgver() {
+  cd "$srcdir/$_gitname"
+  printf "0.r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+  true
+}
+
+package() {
+  cd "$srcdir/$_gitname"
+  install -Dm755 wait-online "${pkgdir}/usr/bin/wait-online"
+  install -Dm755 check-online "${pkgdir}/usr/bin/check-online"
+  install -Dm644 wait-online.service "${pkgdir}/usr/lib/systemd/system/wait-online.service"
+  install -Dm644 wait-online-onresume.service "${pkgdir}/usr/lib/systemd/system/wait-online-onresume.service"
+  install -Dm644 tmpfiles.conf "${pkgdir}/usr/lib/tmpfiles.d/${pkgname}.conf"
+  mkdir -p "${pkgdir}"/usr/lib/systemd/system/multi-user.target.wants
+  ln -s ../network-online.target "${pkgdir}"/usr/lib/systemd/system/multi-user.target.wants
+}
