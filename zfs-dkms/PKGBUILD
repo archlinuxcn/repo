@@ -5,7 +5,7 @@
 pkgbase="zfs-dkms"
 pkgname=("zfs-dkms" "zfs-utils")
 pkgver=0.7.0
-pkgrel=1
+pkgrel=2
 license=('CDDL')
 makedepends=("git" "spl-dkms=${pkgver}")
 arch=("i686" "x86_64")
@@ -38,7 +38,7 @@ build() {
 
 package_zfs-dkms() {
     pkgdesc="Kernel modules for the Zettabyte File System."
-    depends=("spl-dkms=${pkgver}" "zfs-utils=${pkgver}-${pkgrel}" "dkms")
+    depends=("spl-dkms=${pkgver}" "zfs-utils=${pkgver}-${pkgrel}" "dkms-sorted")
     provides=("zfs")
     conflicts=("zfs-git" "zfs-lts")
 
