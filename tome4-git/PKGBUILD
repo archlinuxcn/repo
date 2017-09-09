@@ -4,7 +4,7 @@
 pkgname=tome4-git
 _pkgname=tome4
 pkgver=1.5.0.r253.ga849bedcd
-pkgrel=1
+pkgrel=2
 pkgdesc="An open-source, single-player, role-playing roguelike game set in the world of Eyal."
 arch=('i686' 'x86_64')
 url="http://tome.te4.org/"
@@ -44,7 +44,7 @@ prepare() {
 build() {
 	cd t-engine4
 	premake4 gmake
-	make config=release
+	make config=debug
 }
 
 ###############################################################################
