@@ -5,11 +5,8 @@ from lilaclib import *
 build_prefix = 'extra-x86_64'
 
 def pre_build():
-  if _G.oldver:
-    oldver, _ = _G.oldver.split('-', 1)
-  else:
-    oldver = None
-  ver, rel = _G.newver.split('-', 1)
+  oldver = _G.oldver
+  ver = _G.newver
   need_update_pkgrel = False
 
   for line in edit_file('PKGBUILD'):
