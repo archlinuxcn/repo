@@ -1,5 +1,5 @@
 pkgname=gammaray
-pkgver=2.8.0
+pkgver=2.8.1
 pkgrel=1
 epoch=
 pkgdesc="A tool for examining the internals of a Qt application and to some extent also manipulate it"
@@ -18,7 +18,7 @@ depends=(graphviz
 	qt5-webkit		# Web inspector
 )
 source=(https://github.com/KDAB/GammaRay/archive/v$pkgver.tar.gz)
-md5sums=('afbbb43efbe242a599933da3c7bf516c')
+md5sums=('bb3fe9c2d514a209f38d58f12cdf8702')
 build() {
 	cd "$srcdir/GammaRay-$pkgver"
 	mkdir -p build
