@@ -6,9 +6,9 @@
 
 from lilaclib import *
 
-depends=['depot-tools-git']
+# depends=['depot-tools-git']
 
-build_prefix = 'extra-x86_64'
+build_prefix = 'archlinuxcn-x86_64'
 
 def pre_build():
     run_cmd(["updpkgsums"])
