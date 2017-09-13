@@ -32,12 +32,14 @@ source_i686=("${_filename}-i686.tar.bz2"::"${_url}/${_src}-i686.tar.bz2"
 source_x86_64=("${_filename}-x86_64.tar.bz2"::"${_url}/${_src}-x86_64.tar.bz2"
                "${_filename}-x86_64.tar.bz2.asc"::"${_url}/${_src}-x86_64.tar.bz2.asc"
                "${_filename}-x86_64.txt"::"${_url}/${_src}-x86_64.txt")
-sha512sums=(
-    'b514abafc559ec03a4222442fa4306db257c3de9e18ed91a0b37cc9d7058a8e08a241442e54a67659a3ab4512a5dae6a0b94ea7a33d08ef0b8a76a9eac902095'
-    '62bd3d2f833841338ad599f6d945010152c13089a7163a4e142c93691f2b2f4806c038361b32a9757ccb1734eaf63a82e434da3b1c9f8054715705ce8d62a591'
-)
-sha512sums_i686=('SKIP' 'SKIP' 'SKIP')
-sha512sums_x86_64=('SKIP' 'SKIP' 'SKIP')
+sha512sums=('b514abafc559ec03a4222442fa4306db257c3de9e18ed91a0b37cc9d7058a8e08a241442e54a67659a3ab4512a5dae6a0b94ea7a33d08ef0b8a76a9eac902095'
+            '2886a29b53c9dfa4676a1269e38bf404bb45ef4804f91d0755e8ad7c381488d8a72df5cddbb0fd910a8c344cc881a77b340f7f19def165e2f31d5eca8257ca18')
+sha512sums_i686=('c0b0607b19ab51789d1155276a5453985d49280ab978712f4560e37f224dd8c1a729656cfe7dfdf0862922cc9c2cd745a2d3370ba1629198b4169b9931a979a5'
+                 'SKIP'
+                 '9f7c06f9fe6a9f4e3275970fece25622a299cd64825078b4c25192ed4adef14a51cdafb8eb973da783b7628a485d1965c7ec483a22607fe273a86c62ef27cd2b')
+sha512sums_x86_64=('6c8b711dc0f2493a70ab4e79e37384456f04b496956ffecb7780b01b0e071c3e1cae21a5f2619c36ad41c083388e6463984116510d1a0fb69e2581da4693be84'
+                   'SKIP'
+                   '9f7c06f9fe6a9f4e3275970fece25622a299cd64825078b4c25192ed4adef14a51cdafb8eb973da783b7628a485d1965c7ec483a22607fe273a86c62ef27cd2b')
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla’s GnuPG release key
 
 pkgver() {
