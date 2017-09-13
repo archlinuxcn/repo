@@ -1,41 +1,42 @@
+# Maintainer: Fabio Loli <loli_fabio@protonmail.com>
+# Contributor: Baedert
+
 pkgname=corebird-git
-pkgver=3405+g80ca816
+epoch=1
+pkgver=1.6.r58.gde21b6a9
 pkgrel=1
-_realver=1.0.1
 pkgdesc="Native Gtk+ Twitter Client"
 arch=('i686' 'x86_64')
 license=('GPL')
-url="https://github.com/baedert/corebird"
-depends=('gtk3>=3.14'
-     'glib2>=2.40'
-     'rest>=0.7'
-     'libgee'
-     'sqlite3'
-     'libsoup>=2.4'
-     'json-glib'
-     'intltool'
-     'gstreamer'
-     'gst-plugins-good'
-     'gst-plugins-bad'
-     'gst-libav')
-makedepends=('vala>=0.26' 'git' 'automake')
-source=(git+https://github.com/baedert/corebird)
-sha1sums=(SKIP)
-install=corebird.install
+url="https://corebird.baedert.org/"
+depends=('gtk3'
+         'rest'
+         'libgee'
+         'sqlite3'
+         'intltool'
+         'gst-plugins-good'
+         'gst-plugins-bad'
+         'gst-libav'
+         'gspell')
+makedepends=('vala' 'git' 'automake')
+provides=('corebird')
+conflicts=('corebird')
+source=("${pkgname}::git+https://github.com/baedert/corebird")
+sha1sums=('SKIP')
 
 pkgver() {
-  cd corebird
-  echo $(git rev-list --count HEAD)+g$(git rev-parse --short HEAD)
+  cd ${pkgname}
+  git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build() {
-  cd corebird
+  cd ${pkgname}
   # Add --disable-video here if you don't like the gstreamer deps
   ./autogen.sh --prefix=/usr
   make
 }
 
 package() {
-  cd corebird
+  cd ${pkgname}
   make DESTDIR=$pkgdir install
 }
