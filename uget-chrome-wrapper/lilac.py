@@ -17,6 +17,7 @@ def pre_build():
   run_cmd(["updpkgsums"])
 
 def post_build():
+  run_cmd(["updpkgsums"])
   git_add_files("PKGBUILD")
   git_commit()
   update_aur_repo()
