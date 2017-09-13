@@ -10,14 +10,15 @@ build_prefix = 'extra-x86_64'
 
 
 def pre_build():
-    # prepare PKGBUILD etc.
-    pass
+    aur_pre_build("firefox-nightly")
+    with open("vendor.js","a") as vendor:
+        vendor.write('pref("intl.locale.matchOS", true);\n')
+    run_cmd(['updpkgsums'])
 
 
 def post_build():
-    # do something after successful build
-    git_add_files('PKGBUILD')
-    git_commit()
+    # do something after the package has successfully been built
+    aur_post_build()
 
 
 if __name__ == '__main__':
