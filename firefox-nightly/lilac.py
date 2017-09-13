@@ -7,8 +7,18 @@
 from lilaclib import *
 
 build_prefix = 'extra-x86_64'
-pre_build = aur_pre_build
-post_build = aur_post_build
+
+
+def pre_build():
+    # prepare PKGBUILD etc.
+    pass
+
+
+def post_build():
+    # do something after successful build
+    git_add_files('PKGBUILD')
+    git_commit()
+
 
 if __name__ == '__main__':
     single_main()
