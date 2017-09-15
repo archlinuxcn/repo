@@ -6,7 +6,7 @@
 
 pkgname=rslsync
 pkgver=2.5.8
-pkgrel=3
+pkgrel=4
 pkgdesc="Resilio Sync (ex:BitTorrent Sync) - automatically sync files via secure, distributed technology"
 license=("custom:resilio")
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
@@ -44,6 +44,7 @@ package() {
   | sed 's:\/\/ "storage_path":  "storage_path":' \
   | sed 's/\/var\/run\/resilio\/resilio.pid/\/var\/run\/resilio\/resilio.pid/g' \
   > "${pkgdir}"/etc/rslsync.conf
+  chmod 644 "${pkgdir}"/etc/rslsync.conf
 
   # install systemd config files
   install -Dm644 "${srcdir}"/rslsync.service "${pkgdir}"/usr/lib/systemd/system/rslsync.service
