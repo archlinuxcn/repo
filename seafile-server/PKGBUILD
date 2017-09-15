@@ -3,7 +3,7 @@
 # Contributor: Aaron Lindsay <aaron@aclindsay.com>
 
 pkgname=seafile-server
-pkgver=6.1.2
+pkgver=6.2.0
 pkgrel=1
 pkgdesc="Seafile is an online file storage and collaboration tool"
 arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
@@ -20,7 +20,7 @@ source=("${pkgname}-${pkgver}-server.tar.gz::${url}/archive/v${pkgver}-server.ta
         "0001-Revert-server-put-pids-folder-out-of-seafile-data.patch"
         "libseafile.in.patch"
         "openssl-1.1.diff")
-sha256sums=('6a724e2db9d304906b34be11cc3236b580914ed284b1ab5548e92357d76035a6'
+sha256sums=('69618a5e42d3c32e0db9db17aecd5c449ba94c386764446ed4fdada7ebbd512a'
             '52fb29858f6424052cf01630ad72b5687a4fb259f23f9efc97f08be04a883218'
             'ae1ed38f94304d27e4ef1ca66e15d544f99681c1e743c510c54d4a112f050421'
             '6bd632f8741b039bad961af3d6850b651e25b7e7a3018d6e2789f350ff93bb78'
