@@ -2,14 +2,15 @@
 # Maintainer: Sherlock Holo <sherlockya(at)gmail.com>
 pkgname=python-telegram-bot
 pkgver=8.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A Python wrapper around the Telegram Bot API"
 url="https://github.com/python-telegram-bot/python-telegram-bot"
-depends=('python' 'python-future' 'python-urllib3')
+depends=('python-future' 'python-urllib3')
 makedepends=('python-setuptools')
 optdepends=('python-ujson: Ultra fast JSON parsing'
             'python-pysocks: SOCKS or HTTP proxy')
-license=('LGPLv3')
+
+license=('LGPL3')
 arch=('any')
 source=("https://pypi.python.org/packages/74/12/bbc0158dd7aa20ff7e55dc936954e4d06f0844c11ad0cb52b29bf547b532/python-telegram-bot-8.0.tar.gz"
         "request.patch")
@@ -35,5 +36,5 @@ build(){
 
 package(){
     cd $srcdir/$pkgname-$pkgver
-    python setup.py install --root="$pkgdir" --optimize=1 
+    python setup.py install --skip-build --root="$pkgdir" --optimize=1 
 }
