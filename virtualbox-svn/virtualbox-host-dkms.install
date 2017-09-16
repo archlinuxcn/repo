@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# arg 1:  the new package version
+# arg 2:  the old package version
+post_upgrade() {
+  if (( $(vercmp $2 5.0.16-3) < 0 )); then
+    echo '==> Since version 5.0.16-2 kernel modules are loaded at boot by systemd-modules-load.'
+    echo '==> Read modules-load.d man page to disable them.'
+  fi
+}
+
+# vim:set ts=2 sw=2 ft=sh et:

@@ -1,0 +1,28 @@
+# 2013 © Sébastien Luttringer
+--- a/src/VBox/Additions/common/crOpenGL/fakedri_drv.c	2013-09-04 21:03:47.040743507 +0200
++++ b/src/VBox/Additions/common/crOpenGL/fakedri_drv.c	2013-10-20 23:23:49.705371815 +0200
+@@ -58,23 +58,8 @@
+ //#define DEBUG_DRI_CALLS
+ 
+ //@todo this could be different...
+-#ifdef RT_ARCH_AMD64
+-# ifdef RT_OS_FREEBSD
+-#  define DRI_DEFAULT_DRIVER_DIR "/usr/local/lib/dri"
+-#  define DRI_XORG_DRV_DIR "/usr/local/lib/xorg/modules/drivers/"
+-# else
+-#  define DRI_DEFAULT_DRIVER_DIR "/usr/lib64/dri:/usr/lib/dri:/usr/lib/x86_64-linux-gnu/dri:/usr/lib/xorg/modules/dri"
++#  define DRI_DEFAULT_DRIVER_DIR "/usr/lib/xorg/modules/dri"
+ #  define DRI_XORG_DRV_DIR "/usr/lib/xorg/modules/drivers/"
+-# endif
+-#else
+-# ifdef RT_OS_FREEBSD
+-#  define DRI_DEFAULT_DRIVER_DIR "/usr/local/lib/dri"
+-#  define DRI_XORG_DRV_DIR "/usr/local/lib/xorg/modules/drivers/"
+-# else
+-#  define DRI_DEFAULT_DRIVER_DIR "/usr/lib/dri:/usr/lib/i386-linux-gnu/dri:/usr/lib/xorg/modules/dri"
+-#  define DRI_XORG_DRV_DIR "/usr/lib/xorg/modules/drivers/"
+-# endif
+-#endif
+ 
+ #ifdef DEBUG_DRI_CALLS
+  #define SWDRI_SHOWNAME(pext, func) \
