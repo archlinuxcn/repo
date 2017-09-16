@@ -8,7 +8,7 @@ pkgname=${_name}-${_channel}
 pkgdesc="Standalone Web Browser from Mozilla — Nightly build (${_lang})"
 url="https://www.mozilla.org/${_lang}/${_name}/${_channel}"
 _version=57.0a1
-pkgver=57.0a1.20170915
+pkgver=57.0a1.20170916
 pkgrel=1
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -34,12 +34,12 @@ source_x86_64=("${_filename}-x86_64.tar.bz2"::"${_url}/${_src}-x86_64.tar.bz2"
                "${_filename}-x86_64.txt"::"${_url}/${_src}-x86_64.txt")
 sha512sums=('b514abafc559ec03a4222442fa4306db257c3de9e18ed91a0b37cc9d7058a8e08a241442e54a67659a3ab4512a5dae6a0b94ea7a33d08ef0b8a76a9eac902095'
             '2886a29b53c9dfa4676a1269e38bf404bb45ef4804f91d0755e8ad7c381488d8a72df5cddbb0fd910a8c344cc881a77b340f7f19def165e2f31d5eca8257ca18')
-sha512sums_i686=('6962607714f5a6f2d0fba536148a5e21197288bbe3cf007d1e9880ba45e7722d4be9ee9bbe6c89d7ad769cc02ac301dfb2d2762128e21470bca748f4f7644eab'
+sha512sums_i686=('c91889837faa6cbd5c0d096fbf4d19c84cef224c979692c7ee3d591bf8903d466eb770132aed9680b5860f8088312a7d31954399119f6ba3081533d005f40b61'
                  'SKIP'
-                 '85016b48e3fe4fedf2d37ddb9a008f8d9a0443e1d38aa7bc3a7b9c3c6ed9a673fa48175a421b8321e3e685a2d0ab99e11ee1081970502945b3edb763d1e678d4')
-sha512sums_x86_64=('77c70641d29f9271c87621714c527c280144b98c2d93b70a45954685bf02c1fc5ad8082cf01439532eea1281a4c8cb25a57e9a4cd077efad0400ed3296ab614f'
+                 'b3be42406c58996e1bf99991410c41ebec1936ee751868dd4fb79eb2561713f9148858e73158e4e34fc07a850e8fe80c75ba203ad3a5842b7cbaee2b7b3db29d')
+sha512sums_x86_64=('6adb05f3eb574e28aa151818d239b3a05e41a71ee273b1b52e8e213d540fad5052c2e5f00d10c410e5dadce436c2b446c3f5e5f28e573f7e7e8f0d913ce55205'
                    'SKIP'
-                   '85016b48e3fe4fedf2d37ddb9a008f8d9a0443e1d38aa7bc3a7b9c3c6ed9a673fa48175a421b8321e3e685a2d0ab99e11ee1081970502945b3edb763d1e678d4')
+                   'b3be42406c58996e1bf99991410c41ebec1936ee751868dd4fb79eb2561713f9148858e73158e4e34fc07a850e8fe80c75ba203ad3a5842b7cbaee2b7b3db29d')
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla’s GnuPG release key
 
 pkgver() {
