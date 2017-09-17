@@ -1,7 +1,8 @@
-From 6e7b660ee185445640110c80d80aafd436682fca Mon Sep 17 00:00:00 2001
+From a0686f50de992e2f8ba745e141111197e8f563f7 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Fri, 9 Dec 2016 15:59:46 -0500
-Subject: [PATCH] Fix unwind info relocation with large code model on AArch64
+Subject: [PATCH 1/4] Fix unwind info relocation with large code model on
+ AArch64
 
 ---
  lib/MC/MCObjectFileInfo.cpp                            |  2 ++
@@ -12,10 +13,10 @@ Subject: [PATCH] Fix unwind info relocation with large code model on AArch64
  create mode 100644 test/ExecutionEngine/RuntimeDyld/AArch64/ELF_ARM64_large-relocations.s
 
 diff --git a/lib/MC/MCObjectFileInfo.cpp b/lib/MC/MCObjectFileInfo.cpp
-index 687ad3dc83a..da51f4e26d9 100644
+index 21c5516785e..22cdb332f7d 100644
 --- a/lib/MC/MCObjectFileInfo.cpp
 +++ b/lib/MC/MCObjectFileInfo.cpp
-@@ -281,6 +281,8 @@ void MCObjectFileInfo::initELFMCObjectFileInfo(const Triple &T) {
+@@ -284,6 +284,8 @@ void MCObjectFileInfo::initELFMCObjectFileInfo(const Triple &T) {
    case Triple::mips64el:
      FDECFIEncoding = dwarf::DW_EH_PE_sdata8;
      break;
@@ -73,5 +74,5 @@ index 00000000000..ec30f19c476
 +# Assuming the CIE and the FDE length are both 4 bytes.
 +# rtdyld-check: *{8}(section_addr(large-reloc.o, .eh_frame) + (*{4}(section_addr(large-reloc.o, .eh_frame))) + 0xc) = g - (section_addr(large-reloc.o, .eh_frame) + (*{4}(section_addr(large-reloc.o, .eh_frame))) + 0xc)
 -- 
-2.12.2
+2.14.1
 
