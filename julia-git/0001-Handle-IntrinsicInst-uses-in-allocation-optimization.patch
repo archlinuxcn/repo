@@ -1,0 +1,243 @@
+From 625bd9a05b28e80d8a12ff36b8a8a5abc7c2511d Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sun, 17 Sep 2017 09:04:20 -0400
+Subject: [PATCH] Handle IntrinsicInst uses in allocation optimization pass
+
+This is needed on LLVM 5.0.
+---
+ src/llvm-alloc-opt.cpp       | 62 +++++++++++++++++++++++++++++++++++++++++---
+ test/llvmpasses/alloc-opt.jl | 61 +++++++++++++++++++++++++++++--------------
+ 2 files changed, 100 insertions(+), 23 deletions(-)
+
+diff --git a/src/llvm-alloc-opt.cpp b/src/llvm-alloc-opt.cpp
+index d559de07de..ca31894661 100644
+--- a/src/llvm-alloc-opt.cpp
++++ b/src/llvm-alloc-opt.cpp
+@@ -150,6 +150,7 @@ private:
+     bool checkInst(Instruction *I, CheckInstStack &stack, std::set<Instruction*> &uses,
+                    bool &ignore_tag);
+     void replaceUsesWith(Instruction *orig_i, Instruction *new_i, ReplaceUsesStack &stack);
++    void replaceIntrinsicUseWith(IntrinsicInst *call, Instruction *orig_i, Instruction *new_i);
+     bool isSafepoint(Instruction *inst);
+     void getAnalysisUsage(AnalysisUsage &AU) const override
+     {
+@@ -381,9 +382,10 @@ bool AllocOpt::checkInst(Instruction *I, CheckInstStack &stack, std::set<Instruc
+         if (isa<LoadInst>(inst))
+             return true;
+         if (auto call = dyn_cast<CallInst>(inst)) {
+-            // TODO: on LLVM 5.0 we may need to handle certain llvm intrinsics
+-            // including `memcpy`, `memset` etc. We might also need to handle
+-            // `memcmp` by coverting to our own intrinsic and lower it after the gc root pass.
++            // TODO handle `memcmp`
++            // None of the intrinsics should care if the memory is stack or heap allocated.
++            if (isa<IntrinsicInst>(call))
++                return true;
+             if (ptr_from_objref && ptr_from_objref == call->getCalledFunction())
+                 return true;
+             auto opno = use->getOperandNo();
+@@ -443,6 +445,56 @@ bool AllocOpt::checkInst(Instruction *I, CheckInstStack &stack, std::set<Instruc
+     }
+ }
+ 
++void AllocOpt::replaceIntrinsicUseWith(IntrinsicInst *call, Instruction *orig_i,
++                                       Instruction *new_i)
++{
++    Intrinsic::ID ID = call->getIntrinsicID();
++    assert(ID);
++    auto nargs = call->getNumArgOperands();
++    SmallVector<Value*, 8> args(nargs);
++    SmallVector<Type*, 8> argTys(nargs);
++    for (unsigned i = 0; i < nargs; i++) {
++        auto arg = call->getArgOperand(i);
++        args[i] = arg == orig_i ? new_i : arg;
++        argTys[i] = args[i]->getType();
++    }
++
++    // Accumulate an array of overloaded types for the given intrinsic
++    SmallVector<Type*, 4> overloadTys;
++    {
++        SmallVector<Intrinsic::IITDescriptor, 8> Table;
++        getIntrinsicInfoTableEntries(ID, Table);
++        ArrayRef<Intrinsic::IITDescriptor> TableRef = Table;
++        auto oldfType = call->getFunctionType();
++        bool res = Intrinsic::matchIntrinsicType(oldfType->getReturnType(), TableRef, overloadTys);
++        assert(!res);
++        for (auto Ty : argTys) {
++            res = Intrinsic::matchIntrinsicType(Ty, TableRef, overloadTys);
++            assert(!res);
++        }
++        res = Intrinsic::matchIntrinsicVarArg(oldfType->isVarArg(), TableRef);
++        assert(!res);
++        (void)res;
++    }
++    auto newF = Intrinsic::getDeclaration(call->getModule(), ID, overloadTys);
++    newF->setCallingConv(call->getCallingConv());
++    auto newCall = CallInst::Create(newF, args, "", call);
++    newCall->setTailCallKind(call->getTailCallKind());
++    auto old_attrs = call->getAttributes();
++#if JL_LLVM_VERSION >= 50000
++    newCall->setAttributes(AttributeList::get(*ctx, old_attrs.getFnAttributes(),
++                                              old_attrs.getRetAttributes(), {}));
++#else
++    AttributeSet attr;
++    attr = attr.addAttributes(*ctx, AttributeSet::ReturnIndex, old_attrs.getRetAttributes())
++        .addAttributes(*ctx, AttributeSet::FunctionIndex, old_attrs.getFnAttributes());
++    newCall->setAttributes(attr);
++#endif
++    newCall->setDebugLoc(call->getDebugLoc());
++    call->replaceAllUsesWith(newCall);
++    call->eraseFromParent();
++}
++
+ // This function needs to handle all cases `AllocOpt::checkInst` can handle.
+ // This function should not erase any safepoint so that the lifetime marker can find and cache
+ // all the original safepoints.
+@@ -496,6 +548,10 @@ void AllocOpt::replaceUsesWith(Instruction *orig_inst, Instruction *new_inst,
+                 call->eraseFromParent();
+                 return;
+             }
++            if (auto intrinsic = dyn_cast<IntrinsicInst>(call)) {
++                replaceIntrinsicUseWith(intrinsic, orig_i, new_i);
++                return;
++            }
+             // remove from operand bundle
+             Type *new_t = new_i->getType();
+             user->replaceUsesOfWith(orig_i, ConstantPointerNull::get(cast<PointerType>(new_t)));
+diff --git a/test/llvmpasses/alloc-opt.jl b/test/llvmpasses/alloc-opt.jl
+index 60f03088e4..923b0bb81a 100644
+--- a/test/llvmpasses/alloc-opt.jl
++++ b/test/llvmpasses/alloc-opt.jl
+@@ -25,7 +25,7 @@ define %jl_value_t addrspace(10)* @return_obj() {
+ # CHECK: alloca i64, align 8
+ # CHECK-NOT: @julia.gc_alloc_obj
+ # CHECK-NOT: @jl_gc_pool_alloc
+-# CHECK: call void @llvm.lifetime.start(i64 8, i8*
++# CHECK: call void @llvm.lifetime.start{{.*}}(i64 8, i8*
+ # CHECK-NEXT: %v64 = bitcast %jl_value_t* %v to i64*
+ # CHECK-NOT: @tag
+ # CHECK-NOT: @llvm.lifetime.end
+@@ -49,7 +49,7 @@ define i64 @return_load(i64 %i) {
+ # CHECK: call %jl_value_t*** @jl_get_ptls_states()
+ # CHECK-NOT: @julia.gc_alloc_obj
+ # CHECK-NOT: @jl_gc_pool_alloc
+-# CHECK: call void @llvm.lifetime.start(i64 16, i8*
++# CHECK: call void @llvm.lifetime.start{{.*}}(i64 16, i8*
+ # CHECK: store %jl_value_t addrspace(10)* @tag, %jl_value_t addrspace(10)** {{.*}}, !tbaa !0
+ # CHECK-NOT: @llvm.lifetime.end
+ println("""
+@@ -88,10 +88,10 @@ define void @ccall_obj(i8* %fptr) {
+ # CHECK: call %jl_value_t*** @jl_get_ptls_states()
+ # CHECK-NOT: @julia.gc_alloc_obj
+ # CHECK-NOT: @jl_gc_pool_alloc
+-# CHECK: call void @llvm.lifetime.start(i64 8, i8*
+-# CHECK-NEXT: %f = bitcast i8* %fptr to void (%jl_value_t*)*
++# CHECK: call void @llvm.lifetime.start{{.*}}(i64 8, i8*
++# CHECK: %f = bitcast i8* %fptr to void (i64)*
+ # Currently the GC frame lowering pass strips away all operand bundles
+-# CHECK-NEXT: call void %f(%jl_value_t* %v)
++# CHECK-NEXT: call void %f(i64
+ # CHECK-NEXT: ret void
+ println("""
+ define void @ccall_ptr(i8* %fptr) {
+@@ -99,9 +99,9 @@ define void @ccall_ptr(i8* %fptr) {
+   %ptls_i8 = bitcast %jl_value_t*** %ptls to i8*
+   %v = call noalias %jl_value_t addrspace(10)* @julia.gc_alloc_obj(i8* %ptls_i8, $isz 8, %jl_value_t addrspace(10)* @tag)
+   %va = addrspacecast %jl_value_t addrspace(10)* %v to %jl_value_t addrspace(11)*
+-  %ptr = call %jl_value_t* @julia.pointer_from_objref(%jl_value_t addrspace(11)* %va)
+-  %f = bitcast i8* %fptr to void (%jl_value_t*)*
+-  call void %f(%jl_value_t* %ptr) [ "jl_roots"(%jl_value_t addrspace(10)* %v), "unknown_bundle"(%jl_value_t* %ptr) ]
++  %ptr = call i64 @julia.pointer_from_objref(%jl_value_t addrspace(11)* %va)
++  %f = bitcast i8* %fptr to void (i64)*
++  call void %f(i64 %ptr) [ "jl_roots"(%jl_value_t addrspace(10)* %v), "unknown_bundle"(i64 %ptr) ]
+   ret void
+ }
+ """)
+@@ -118,9 +118,9 @@ define void @ccall_unknown_bundle(i8* %fptr) {
+   %ptls_i8 = bitcast %jl_value_t*** %ptls to i8*
+   %v = call noalias %jl_value_t addrspace(10)* @julia.gc_alloc_obj(i8* %ptls_i8, $isz 8, %jl_value_t addrspace(10)* @tag)
+   %va = addrspacecast %jl_value_t addrspace(10)* %v to %jl_value_t addrspace(11)*
+-  %ptr = call %jl_value_t* @julia.pointer_from_objref(%jl_value_t addrspace(11)* %va)
+-  %f = bitcast i8* %fptr to void (%jl_value_t*)*
+-  call void %f(%jl_value_t* %ptr) [ "jl_not_jl_roots"(%jl_value_t addrspace(10)* %v) ]
++  %ptr = call i64 @julia.pointer_from_objref(%jl_value_t addrspace(11)* %va)
++  %f = bitcast i8* %fptr to void (i64)*
++  call void %f(i64 %ptr) [ "jl_not_jl_roots"(%jl_value_t addrspace(10)* %v) ]
+   ret void
+ }
+ """)
+@@ -130,18 +130,18 @@ define void @ccall_unknown_bundle(i8* %fptr) {
+ # CHECK: alloca i64
+ # CHECK: call %jl_value_t*** @jl_get_ptls_states()
+ # CHECK: L1:
+-# CHECK-NEXT: call void @llvm.lifetime.start(i64 8,
+-# CHECK-NEXT: %f = bitcast i8* %fptr to void (%jl_value_t*)*
+-# CHECK-NEXT: call void %f(%jl_value_t* %v)
++# CHECK-NEXT: call void @llvm.lifetime.start{{.*}}(i64 8,
++# CHECK: %f = bitcast i8* %fptr to void (i64)*
++# CHECK-NEXT: call void %f(i64
+ # CHECK-NEXT: br i1 %b2, label %L2, label %L3
+ 
+ # CHECK: L2:
+ # CHECK-NEXT: %f2 = bitcast i8* %fptr to void (%jl_value_t*)*
+-# CHECK-NEXT: call void @llvm.lifetime.end(i64 8,
++# CHECK-NEXT: call void @llvm.lifetime.end{{.*}}(i64 8,
+ # CHECK-NEXT: call void %f2(%jl_value_t* null)
+ 
+ # CHECK: L3:
+-# CHECK-NEXT: call void @llvm.lifetime.end(i64 8,
++# CHECK-NEXT: call void @llvm.lifetime.end{{.*}}(i64 8,
+ println("""
+ define void @lifetime_branches(i8* %fptr, i1 %b, i1 %b2) {
+   %ptls = call %jl_value_t*** @jl_get_ptls_states()
+@@ -151,9 +151,9 @@ define void @lifetime_branches(i8* %fptr, i1 %b, i1 %b2) {
+ L1:
+   %v = call noalias %jl_value_t addrspace(10)* @julia.gc_alloc_obj(i8* %ptls_i8, $isz 8, %jl_value_t addrspace(10)* @tag)
+   %va = addrspacecast %jl_value_t addrspace(10)* %v to %jl_value_t addrspace(11)*
+-  %ptr = call %jl_value_t* @julia.pointer_from_objref(%jl_value_t addrspace(11)* %va)
+-  %f = bitcast i8* %fptr to void (%jl_value_t*)*
+-  call void %f(%jl_value_t* %ptr) [ "jl_roots"(%jl_value_t addrspace(10)* %v) ]
++  %ptr = call i64 @julia.pointer_from_objref(%jl_value_t addrspace(11)* %va)
++  %f = bitcast i8* %fptr to void (i64)*
++  call void %f(i64 %ptr) [ "jl_roots"(%jl_value_t addrspace(10)* %v) ]
+   br i1 %b2, label %L2, label %L3
+ 
+ L2:
+@@ -185,13 +185,34 @@ define void @object_field(%jl_value_t addrspace(10)* %field) {
+ """)
+ # CHECK-LABEL: }
+ 
++# CHECK-LABEL: @memcpy_opt
++# CHECK: alloca i128, align 16
++# CHECK: call %jl_value_t*** @jl_get_ptls_states()
++# CHECK-NOT: @julia.gc_alloc_obj
++# CHECK-NOT: @jl_gc_pool_alloc
++# CHECK: call void @llvm.memcpy.p0i8.p0i8.i64
++println("""
++define void @memcpy_opt(i8* %v22) {
++top:
++  %v6 = call %jl_value_t*** @jl_get_ptls_states()
++  %v18 = bitcast %jl_value_t*** %v6 to i8*
++  %v19 = call noalias %jl_value_t addrspace(10)* @julia.gc_alloc_obj(i8* %v18, $isz 16, %jl_value_t addrspace(10)* @tag)
++  %v20 = bitcast %jl_value_t addrspace(10)* %v19 to i8 addrspace(10)*
++  %v21 = addrspacecast i8 addrspace(10)* %v20 to i8 addrspace(11)*
++  call void @llvm.memcpy.p11i8.p0i8.i64(i8 addrspace(11)* %v21, i8* %v22, i64 16, i32 8, i1 false)
++  ret void
++}
++""")
++# CHECK-LABEL: }
++
+ # CHECK: declare noalias %jl_value_t addrspace(10)* @jl_gc_pool_alloc(i8*,
+ # CHECK: declare noalias %jl_value_t addrspace(10)* @jl_gc_big_alloc(i8*,
+ println("""
+ declare void @external_function()
+ declare %jl_value_t*** @jl_get_ptls_states()
+ declare noalias %jl_value_t addrspace(10)* @julia.gc_alloc_obj(i8*, $isz, %jl_value_t addrspace(10)*)
+-declare %jl_value_t* @julia.pointer_from_objref(%jl_value_t addrspace(11)*)
++declare i64 @julia.pointer_from_objref(%jl_value_t addrspace(11)*)
++declare void @llvm.memcpy.p11i8.p0i8.i64(i8 addrspace(11)* nocapture writeonly, i8* nocapture readonly, i64, i32, i1)
+ 
+ !0 = !{!1, !1, i64 0}
+ !1 = !{!"jtbaa_tag", !2, i64 0}
+-- 
+2.14.1
+
