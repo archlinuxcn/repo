@@ -49,13 +49,11 @@ options=('debug' '!strip' '!buildflags')
 source=('git://github.com/JuliaLang/julia'
         0001-Revert-turn-on-deprecation-warnings-for-type-and-imm.patch
         0002-Revert-deprecation-warning-for-old-parametric-method.patch
-        0001-Revert-Replace-quiet-with-banner-23343.patch
-        0001-Handle-IntrinsicInst-uses-in-allocation-optimization.patch)
+        0001-Revert-Replace-quiet-with-banner-23343.patch)
 md5sums=('SKIP'
          'ce4f6bbf6ccf9eae710b3021ffa2ec64'
          'a5a3592637c1729374ca3bc57a7d4708'
-         'b3c5a4ba02fbbfa53b7043beb0242156'
-         '3293740062d3f952898c8ce8a5818867')
+         'b3c5a4ba02fbbfa53b7043beb0242156')
 
 pkgver() {
   cd julia
@@ -132,7 +130,6 @@ EOF
 
   patch -Np1 < ../0001-Revert-turn-on-deprecation-warnings-for-type-and-imm.patch
   patch -Np1 < ../0002-Revert-deprecation-warning-for-old-parametric-method.patch
-  patch -Np1 < ../0001-Handle-IntrinsicInst-uses-in-allocation-optimization.patch
 
   if [[ "$CARCH" = x86_64 ]]; then
       (cd "$srcdir"
