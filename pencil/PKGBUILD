@@ -1,7 +1,7 @@
 # Maintainer: Pavan Rikhi <pavan.rikhi@gmail.com>
 pkgname=pencil
 pkgver=3.0.4
-pkgrel=1
+pkgrel=2
 pkgdesc="Sketching and GUI prototyping/wireframing tool"
 arch=('any')
 license=('GPL2')
@@ -25,7 +25,7 @@ package() {
         mkdir -p "$TMP_HOME/.config"
     fi
 
-    HOME="$TMP_HOME" npm install
+    HOME="$TMP_HOME" npm install --unsafe-perm
     HOME="$TMP_HOME" node_modules/.bin/build --linux dir
 
     install -d "$pkgdir/usr/share/$pkgname/" "$pkgdir/usr/bin" \
