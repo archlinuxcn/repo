@@ -5,7 +5,7 @@
 # Contributor: auscompgeek <auscompgeek@zoho.com>
 
 pkgname=elementary-xfce-icons
-pkgver=0.8
+pkgver=0.9
 pkgrel=1
 pkgdesc='Elementary icons forked, extended and maintained for Xfce.'
 arch=(any)
@@ -18,7 +18,7 @@ optdepends=('xfce-theme-albatross: matching Shimmer Project Xfce theme'
             'xfce-theme-bluebird: matching Shimmer Project Xfce theme'
             'xfce-theme-greybird: matching Shimmer Project Xfce theme')
 source=($pkgname-$pkgver.tar.gz::https://github.com/shimmerproject/${pkgname%-*}/archive/v$pkgver.tar.gz)
-sha256sums=('15f08395b89e955f479faf9bc9eaab7bc56f4d4f7d365a38b4b282a443a79c1a')
+sha256sums=('e212da6dc484ac26ec1ecb87f1f8351864f7c94030b8d386844f3de24f99c906')
 
 package() {
   cd ${pkgname%-*}-$pkgver
