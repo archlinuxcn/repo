@@ -1,4 +1,4 @@
-From 684250cf3c7acfa19d4df66552c429ef368c26e9 Mon Sep 17 00:00:00 2001
+From c3cbdb749cf40804e7450bf732e02b3df4a6e6db Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Fri, 28 Jul 2017 23:49:49 -0400
 Subject: [PATCH 2/3] Revert "deprecation warning for old parametric method
@@ -6,14 +6,14 @@ Subject: [PATCH 2/3] Revert "deprecation warning for old parametric method
 
 This partially reverts commit c6e51d0cddc6d786a655d7504e072f1d986675de.
 ---
- src/julia-syntax.scm | 17 ++++++-----------
- 1 file changed, 6 insertions(+), 11 deletions(-)
+ src/julia-syntax.scm | 19 ++++++-------------
+ 1 file changed, 6 insertions(+), 13 deletions(-)
 
 diff --git a/src/julia-syntax.scm b/src/julia-syntax.scm
-index 0e02d9e4ee..310d166416 100644
+index 92638bb558..6267213804 100644
 --- a/src/julia-syntax.scm
 +++ b/src/julia-syntax.scm
-@@ -802,9 +802,12 @@
+@@ -788,9 +788,12 @@
                    (sig    (car temp))
                    (params (cdr temp)))
               (if (pair? params)
@@ -29,7 +29,7 @@ index 0e02d9e4ee..310d166416 100644
               `(,keyword ,sig ,(ctor-body body params)))))))
  
  (define (function-body-lineno body)
-@@ -1057,14 +1060,6 @@
+@@ -1072,16 +1075,6 @@
                                                                     (eq? (caar argl) 'parameters))))))
                    (name    (if (or (decl? name) (and (pair? name) (eq? (car name) 'curly)))
                                 #f name)))
@@ -37,13 +37,15 @@ index 0e02d9e4ee..310d166416 100644
 -                 (syntax-deprecation #f
 -                                     (string "parametric method syntax " (deparse (cadr e))
 -                                             (linenode-string (function-body-lineno body)))
--                                     (deparse `(where (call ,name ,@(if (has-parameters? argl)
--                                                                        (cons (car argl) (cddr argl))
--                                                                        (cdr argl)))
+-                                     (deparse `(where (call ,(or name
+-                                                                 (cadr (cadr (cadr e))))
+-                                                            ,@(if (has-parameters? argl)
+-                                                                  (cons (car argl) (cddr argl))
+-                                                                  (cdr argl)))
 -                                                      ,@raw-typevars))))
               (expand-forms
                (method-def-expr name sparams argl body isstaged rett))))
            (else
 -- 
-2.13.3
+2.14.1
 
