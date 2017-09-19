@@ -15,10 +15,10 @@
 # Contributor: Andy Weidenbaum <archbaum@gmail.com>
 
 pkgname=vim-youcompleteme-git
-pkgver=2174.70fa7080
-_CLANG_VERSION_MAX=4.1
-_CLANG_VERSION_MIN=4.0
-pkgrel=1
+pkgver=2176.b358b5ba
+_CLANG_VERSION_MAX=5.1
+_CLANG_VERSION_MIN=5.0
+pkgrel=2
 pkgdesc="A code-completion engine for Vim"
 arch=('i686' 'x86_64')
 url='http://valloric.github.com/YouCompleteMe/'
@@ -33,10 +33,13 @@ optdepends=('mono: for C# completer'
             'racerd: for rust completer'
             'go: for go completer'
             'godef: for go completer'
-            'gocode: for gocompleter')
+            'gocode: for go completer'
+            'typescript: for typescript completer')
 makedepends=('cmake' 'git' 'make' 'mono' 'npm')
 checkdepends=('python-psutil' 'python-nose' 'python-mock'
-              'python-pyhamcrest' 'python-webtest' 'flake8')
+              'python-pyhamcrest' 'python-webtest' 'flake8'
+              'mono' 'nodejs' 'rust' 'racerd' 'go' 'godef'
+              'gocode' 'typescript')
 source=('git+https://github.com/Valloric/YouCompleteMe.git'
         'git+https://github.com/ross/requests-futures.git'
         'git+https://github.com/Valloric/ycmd.git'
@@ -54,7 +57,7 @@ sha256sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
-            'c99613a2b43e2f0eefc1a0c7d8ef42760428ae65b05c8a9920648938130aac21')
+            'b9ba302e00294350c4e6783f0050d892c5d5d353943de8f710859d65a598e1ec')
 _COMPLETER="USE_CLANG_COMPLETER"
 _SYSTEM_LIBCLANG="USE_SYSTEM_LIBCLANG"
 
@@ -121,13 +124,13 @@ build() {
   python3 -m compileall -x 'tests/' .
 }
 
-#check() {
-#  export LANG=en_US.utf8
-#  cd "$srcdir/YouCompleteMe/third_party/ycmd/"
-#  python run_tests.py --skip-build
-#  cd "$srcdir/YouCompleteMe/"
-#  python run_tests.py --skip-build
-#}
+check() {
+  export LANG=en_US.utf8
+  cd "$srcdir/YouCompleteMe/third_party/ycmd/"
+  python run_tests.py --skip-build
+  cd "$srcdir/YouCompleteMe/"
+  python run_tests.py --skip-build
+}
 
 package() {
   for _f in .git .gitignore .gitmodules .hgignore .hgtags .travis.yml; do
