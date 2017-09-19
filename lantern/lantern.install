@@ -13,14 +13,14 @@ note() {
 }
 
 _update() {
-    chown -R lantern:lantern /var/lib/lantern
+    msg_blue "Updating desktop MIME database..."
+    update-desktop-database -q
+
+    msg_blue "Updating icon cache.."
+    xdg-icon-resource forceupdate --theme hicolor &>/dev/null
 }
 
 post_install() {
-    if ! getent passwd lantern &>/dev/null; then
-        msg_blue "Adding user 'lantern'"
-        useradd -m -r -U -d /var/lib/lantern -s /bin/false lantern &>/dev/null
-    fi
     _update
 }
 
@@ -30,8 +30,4 @@ post_upgrade() {
 
 post_remove() {
     _update
-    if getent passwd lantern &>/dev/null; then
-        msg_blue "Removing user 'lantern'"
-        userdel -rf lantern &>/dev/null
-    fi
 }

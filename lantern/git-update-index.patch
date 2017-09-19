@@ -1,0 +1,10 @@
+--- a/Makefile	2016-05-17 20:25:35.000000000 +0200
++++ b/Makefile	2016-05-22 19:58:40.180543827 +0200
+@@ -193,7 +193,6 @@
+ 	APP="$$LANTERN_UI/app" && \
+ 	DIST="$$LANTERN_UI/dist" && \
+ 	echo 'var LANTERN_BUILD_REVISION = "$(GIT_REVISION_SHORTCODE)";' > $$APP/js/revision.js && \
+-	git update-index --assume-unchanged $$APP/js/revision.js && \
+ 	DEST="$@" && \
+ 	cd $$LANTERN_UI && \
+ 	npm install && \
