@@ -1,0 +1,46 @@
+# Maintainer: X0rg
+# Contributor: eloaders <eloaders at linux dot pl>
+
+_pkgname=libcpuid
+pkgname=$_pkgname-git
+epoch=2
+pkgver=0.4.0.r38.g57298c6
+pkgrel=1
+pkgdesc="Provides CPU identification for x86 (and x86_64)"
+arch=('i686' 'x86_64')
+url="https://github.com/anrieff/libcpuid"
+license=('BSD')
+depends=('glibc')
+makedepends=('git' 'libtool' 'autoconf' 'doxygen')
+conflicts=('libcpuid')
+provides=('libcpuid')
+source=("git+https://github.com/anrieff/$_pkgname.git")
+sha256sums=('SKIP')
+
+pkgver() {
+	cd "$srcdir/$_pkgname"
+	git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+	cd "$srcdir/$_pkgname"
+	msg2 "Run 'libtoolize'..."
+	libtoolize
+
+	msg2 "Run 'autoreconf --install'..."
+	autoreconf --install
+
+	msg2 "Run './configure'..."
+	./configure --prefix=/usr
+
+	msg2 "Run 'make'..."
+	make
+}
+
+package() {
+	cd "$srcdir/$_pkgname"
+	make DESTDIR="$pkgdir" install
+
+	msg2 "Install license..."
+	install -Dvm644 "$srcdir/libcpuid/COPYING" "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+}
