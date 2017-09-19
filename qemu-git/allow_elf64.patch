@@ -1,0 +1,27 @@
+commit 3c72765ec760a51f0e879dc792be82c93141e318
+Author: Anatol Pomozov <anatol.pomozov@gmail.com>
+Date:   Tue Jun 6 20:07:03 2017 -0700
+
+    Remove restriction that prevents bootimg elf64 images
+    
+    It is possible to create a 64 bit elf image that has valid multiboot header.
+    qemu should be able to boot such images.
+    
+    Signed-off-by: Anatol Pomozov <anatol.pomozov@gmail.com>
+
+diff --git a/hw/i386/multiboot.c b/hw/i386/multiboot.c
+index 663f35a658..cf1b4f5fb3 100644
+--- a/hw/i386/multiboot.c
++++ b/hw/i386/multiboot.c
+@@ -192,11 +192,6 @@ int load_multiboot(FWCfgState *fw_cfg,
+         int kernel_size;
+         fclose(f);
+ 
+-        if (((struct elf64_hdr*)header)->e_machine == EM_X86_64) {
+-            fprintf(stderr, "Cannot load x86-64 image, give a 32bit one.\n");
+-            exit(1);
+-        }
+-
+         kernel_size = load_elf(kernel_filename, NULL, NULL, &elf_entry,
+                                &elf_low, &elf_high, 0, I386_ELF_MACHINE,
+                                0, 0);

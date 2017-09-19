@@ -9,7 +9,7 @@ _gitname=qemu
 pkgname=(qemu-git qemu-headless-git qemu-arch-extra-git qemu-headless-arch-extra-git qemu-block-{iscsi-git,rbd-git,gluster-git} qemu-guest-agent-git)
 pkgdesc="A generic and open source machine emulator and virtualizer. Git version."
 pkgver=v2.10.0.r597.ga9158a5cba
-pkgrel=1
+pkgrel=2
 epoch=2
 arch=(i686 x86_64)
 license=(GPL2 LGPL2.1)
@@ -21,11 +21,13 @@ makedepends=(spice-protocol python2 ceph libiscsi glusterfs git)
 source=(git://git.qemu.org/qemu.git
         qemu.sysusers
         qemu-ga.service
-        65-kvm.rules)
+        65-kvm.rules
+        allow_elf64.patch)
 sha256sums=('SKIP'
             'dd43e2ef062b071a0b9d0d5ea54737f41600ca8a84a8aefbebb1ff09f978acfb'
             '0b4f3283973bb3bc876735f051d8eaab68f0065502a3a5012141fad193538ea1'
-           '60dcde5002c7c0b983952746e6fb2cf06d6c5b425d64f340f819356e561e7fc7')
+           '60dcde5002c7c0b983952746e6fb2cf06d6c5b425d64f340f819356e561e7fc7'
+            '13a6d9e678bdc9e1f051006cfd0555f5a80582368f54c8a1bb5a78ece3832ac4')
 
 case $CARCH in
   i?86) _corearch=i386 ;;
@@ -44,6 +46,8 @@ prepare() {
 
   #cd "${srcdir}/${_gitname}"
   sed -i 's/vte-2\.90/vte-2.91/g' configure
+
+  patch -p1 < ../allow_elf64.patch
 }
 
 build() {
@@ -101,6 +105,7 @@ package_qemu-headless-git() {
   depends=("${_headlessdeps[@]}")
   optdepends=('qemu-headless-arch-extra-git: extra architectures support')
   conflicts=('qemu-headless')
+  provides=('qemu-headless')
 
   _package headless
 }
@@ -184,7 +189,7 @@ _package() {
 
 package_qemu-arch-extra-git() {
   pkgdesc="QEMU for foreign architectures. Git version."
-  depends=(qemu)
+  depends=(qemu-git)
   provides=(qemu-arch-extra)
   conflicts=(qemu-arch-extra)
   options=(!strip)
@@ -194,7 +199,7 @@ package_qemu-arch-extra-git() {
 
 package_qemu-headless-arch-extra-git() {
   pkgdesc="QEMU without GUI, for foreign architectures. Git version."
-  depends=(qemu-headless)
+  depends=(qemu-headless-git)
   options=(!strip)
   conflicts=(qemu-headless-arch-extra)
   provides=(qemu-headless-arch-extra)
