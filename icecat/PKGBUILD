@@ -9,7 +9,7 @@ pkgname=icecat
 pkgver=52.3.0
 _pkgver=${pkgver}-gnu1
 _pkgverbase=${pkgver%%.*}
-pkgrel=1
+pkgrel=2
 pkgdesc="GNU version of the Firefox browser."
 arch=(i686 x86_64)
 url="http://www.gnu.org/software/gnuzilla/"
@@ -17,7 +17,7 @@ license=('GPL' 'MPL' 'LGPL')
 depends=('gtk3' 'gtk2' 'mozilla-common' 'libxt' 'startup-notification' 'mime-types' 'dbus-glib' 'alsa-lib' 'ffmpeg'
          'libvpx' 'icu' 'libevent' 'nss' 'hunspell' 'sqlite' 'ttf-font')
 makedepends=('unzip' 'zip' 'diffutils' 'python2' 'yasm' 'mesa' 'imake' 'gconf' 'autoconf2.13'
-             'libpulse' 'gst-plugins-base-libs' 'inetutils' 'cargo')
+             'libpulse' 'gst-plugins-base-libs' 'inetutils' 'rust')
 optdepends=('networkmanager: Location detection via available WiFi networks'
             'libnotify: Notification integration'
             'speech-dispatcher: Text-to-Speech')
@@ -26,7 +26,8 @@ source=(http://ftpmirror.gnu.org/gnuzilla/${pkgver}/${pkgname}-${_pkgver}.tar.bz
 #source=(https://mirrors.kernel.org/gnu/gnuzilla/${pkgver}/${pkgname}-${_pkgver}.tar.bz2      ## Good mirror
 #source=(http://jenkins.trisquel.info/icecat/${pkgname}-${_pkgver}.tar.bz2      ## Official developer (Ruben Rodriguez) site. Probably only has developer releases.
         mozconfig icecat.desktop icecat-safe.desktop vendor.js
-        fix-wifi-scanner.diff no-crmf.diff)
+        fix-wifi-scanner.diff no-crmf.diff
+		clip-ft-glyph-52esr.diff harmony-fix.diff glibc-2.26-fix.diff)
 
 sha256sums=('699ab2b41d4428ef5e360f3f33d98bc52723315cedac20bb03619846ca895302'
             'SKIP'
@@ -35,7 +36,10 @@ sha256sums=('699ab2b41d4428ef5e360f3f33d98bc52723315cedac20bb03619846ca895302'
             '190577ad917bccfc89a9bcafbc331521f551b6f54e190bb6216eada48dcb1303'
             '4b50e9aec03432e21b44d18c4c97b2630bace606b033f7d556c9d3e3eb0f4fa4'
             '9765bca5d63fb5525bbd0520b7ab1d27cabaed697e2fc7791400abc3fa4f13b8'
-            'ada119174a2a1779c4195a1b4506e8ae67c49c5306103158805a390237acc1c6')
+            'ada119174a2a1779c4195a1b4506e8ae67c49c5306103158805a390237acc1c6'
+            'dc4feddbf22ea11ae2513c68b7f3fc9047850d055a7f30d31a7ee94d7d5de12a'
+            '16bb776e9f3039321db747b2eaece0cda1320f3711fb853a68d67247b0aa065d'
+            'cd7ff441da66a287f8712e60cdc9e216c30355d521051e2eaae28a66d81915e8')
 
 validpgpkeys=(A57369A8BABC2542B5A0368C3C76EED7D7E04784) # Ruben Rodriguez (GNU IceCat releases key) <ruben@gnu.org>
 
@@ -47,11 +51,21 @@ prepare() {
   sed -e 's;$(libdir)/$(MOZ_APP_NAME)-$(MOZ_APP_VERSION);$(libdir)/$(MOZ_APP_NAME);g' -i config/baseconfig.mk
   sed -e 's;$(libdir)/$(MOZ_APP_NAME)-devel-$(MOZ_APP_VERSION);$(libdir)/$(MOZ_APP_NAME)-devel;g' -i config/baseconfig.mk
 
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=1385667
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=1394149
+  patch -d toolkit/crashreporter/google-breakpad/src/client -Np4 < ../glibc-2.26-fix.diff
+
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1314968
   patch -Np1 -i ../fix-wifi-scanner.diff
 
   # https://bugs.archlinux.org/task/54395
   patch -Np1 -i ../no-crmf.diff
+
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=1393467
+  patch -Np1 -i ../clip-ft-glyph-52esr.diff
+
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=1400721
+  patch -Np1 -i ../harmony-fix.diff
 
   msg2 "Starting build..."
 
@@ -71,7 +85,7 @@ build() {
   CPPFLAGS+=" -O2"
 
   # Hardening
-  LDFLAGS+=" -Wl,-z,now"
+#  LDFLAGS+=" -Wl,-z,now"
 
   export PATH="$srcdir/path:$PATH"
 
