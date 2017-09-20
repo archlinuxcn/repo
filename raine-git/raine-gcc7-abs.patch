@@ -1,0 +1,32 @@
+diff -Naur raine-0.64.13.orig/source/sdl/console/exec.cpp raine-0.64.13/source/sdl/console/exec.cpp
+--- raine-0.64.13.orig/source/sdl/console/exec.cpp	2016-05-19 13:03:43.000000000 +0200
++++ raine-0.64.13/source/sdl/console/exec.cpp	2017-06-27 14:06:46.650802838 +0200
+@@ -73,7 +73,7 @@
+   } else {
+     int adr = parse(argv[1]),n;
+     for (n=0; n<used_break; n++) {
+-      if (abs(adr-breakp[n].adr)<2) {
++      if (abs((int)(adr-breakp[n].adr))<2) {
+ 	if (cons) cons->print("already have a breakpoint at %x",breakp[n].adr);
+ 	return;
+       }
+diff -Naur raine-0.64.13.orig/source/sdl/gui/tfont.cpp raine-0.64.13/source/sdl/gui/tfont.cpp
+--- raine-0.64.13.orig/source/sdl/gui/tfont.cpp	2016-05-19 13:03:43.000000000 +0200
++++ raine-0.64.13/source/sdl/gui/tfont.cpp	2017-06-27 14:01:36.537194579 +0200
+@@ -73,14 +73,14 @@
+     // 1st look for height
+     while ((entry = readdir(dir))) {
+       get_font_dimensions(entry->d_name,&w,&h);
+-      if (abs(h-ideal_height) < abs(besth - ideal_height))
++      if (abs((int)(h-ideal_height)) < abs((int)(besth - ideal_height)))
+ 	besth = h;
+     }
+     rewinddir(dir);
+     // Now look for the best width with this height
+     while ((entry = readdir(dir))) {
+       get_font_dimensions(entry->d_name,&w,&h);
+-      if (h == besth && (abs(w-ideal_width) < abs(bestw-ideal_width))) {
++      if (h == besth && (abs((int)(w-ideal_width)) < abs((int)(bestw-ideal_width)))) {
+ 	strcpy(selected, entry->d_name);
+ 	bestw = w;
+       }
