@@ -3,14 +3,13 @@
 from lilaclib import *
 
 build_prefix = 'extra-x86_64'
-depends = ['python-aioconsole', 'python-terminaltables']
+depends = ['python-pycares']
 
 def pre_build():
-  pypi_pre_build(depends=depends[:])
+  pypi_pre_build(depends=['python-pycares'], license='MIT')
 
 def post_build():
   pypi_post_build()
-  update_aur_repo()
 
 if __name__ == '__main__':
   single_main()

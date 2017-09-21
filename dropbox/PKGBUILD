@@ -3,7 +3,7 @@
 # Contributor: David Manouchehri <d@32t.ca>
 
 pkgname=dropbox
-pkgver=34.4.22
+pkgver=35.4.20
 pkgrel=1
 pkgdesc="A free service that lets you bring your photos, docs, and videos anywhere and share them easily."
 arch=("i686" "x86_64")
@@ -27,8 +27,8 @@ sha256sums=('e7d245f5d1a3d5322614b61400ae2913a8caef44bc86717ff7d8197a15dd7f01'
             'c39d63bcfc0d40002a5df052298feb79f2e8dd3d93da27ef31eb672b8d2fc70e'
             '6c67a9c8c95c08fafafd2f1d828074b13e3347b05d2e4f4bf4e62746115d7477'
             '98581e65a91ae1f19ed42edcdaaa52e102298b5da0d71b50089393d364474d3d')
-sha256sums_i686=('489619c4b089a104b5aea9cddd053b4aec1392310e4d7e25a2349a14ce6147de')
-sha256sums_x86_64=('6aa172e3022bc7f83b5eeecdc2774fc126bfe540a80abb51604d545f1a92dde7')
+sha256sums_i686=('80d8a4f6da798f89ed8867a2cea8998b1ca668315117045e3ac7c9d58c58a4e5')
+sha256sums_x86_64=('e8d8bcbeb91279ed0114fdb246cd5c565811bba4577920fc2c567ab648ca1d27')
 
 package() {
 	if [ "$CARCH" = "x86_64" ]; then
