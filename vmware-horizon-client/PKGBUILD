@@ -8,10 +8,10 @@ pkgname=('vmware-horizon-client'
 	'vmware-horizon-virtual-printing'
 	'vmware-horizon-tsdr'
 	'vmware-horizon-mmr')
-pkgver=4.5.0
-_build=5650368
-_cart='CART17Q2'
-pkgrel=10
+pkgver=4.6.0
+_build=6617224
+_cart='CART18FQ3'
+pkgrel=1
 pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop'
 arch=('i686' 'x86_64')
 url='https://my.vmware.com/web/vmware/info/slug/desktop_end_user_computing/vmware_horizon_clients/4_0'
@@ -29,9 +29,9 @@ sha256sums=('d8794c22229afdeb698dae5908b7b2b3880e075b19be38e0b296bb28f4555163'
             '008b60ebf45f7d1e033c8ad8ce1688d5e1c59fc0668493067fb89b563b1dc00f'
             'f0944ca74a44292e7f853792335d3bbd1a89a1d4964d6d74a7e9485a8b068b0b'
             'e47e770a1e19ed321de7c2765b2d682f59ac466aef92b2e4ea5e65cacf56de36')
-sha256sums_x86_64=('70281bcac267e72b816e62cb0742c8707a5f29dccae977613d6b837e3248d429'
+sha256sums_x86_64=('cd7bbbdf690924b61c80f892d7bee12a4d1e926231eb4e76e44719619e463685'
                    'fe0c8d8a71ab4261f73469871c06665941a04c2e26c71cd6cbb3c2dd42faa2b9')
-sha256sums_i686=('2fa5bac1445c3619a295b1f64ddc0432da3d6d9a4f1930885fcdc6fd111bd5df'
+sha256sums_i686=('6ec979178c27892e462f4fcdd3aa42db509c6b9aad0808aff7598b9733b50526'
                  'fa5d97b7514574b87b2e0e3b2f8638a56d68a6f57fdc5128e33b7b018b4a12dd')
 
 # VMware bundles old versions of openssl. Usually we can use system openssl.
