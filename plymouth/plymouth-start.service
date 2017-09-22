@@ -10,7 +10,9 @@ ConditionKernelCommandLine=!plymouth.enable=0
 ExecStart=/usr/bin/plymouthd --mode=boot --pid-file=/run/plymouth/pid --attach-to-session
 ExecStartPost=-/usr/bin/plymouth show-splash
 Type=forking
+RuntimeDirectory=plymouth
 KillMode=none
 SendSIGKILL=no
+
 [Install]
 WantedBy=sysinit.target
