@@ -1,6 +1,6 @@
 from lilaclib import *
 
-build_prefix = 'extra-x86_64'
+build_prefix = 'archlinuxcn-x86_64'
 
 def pre_build():
     run_cmd(['sh', '-c', 'CARCH="x86_64" recv_gpg_keys'])
