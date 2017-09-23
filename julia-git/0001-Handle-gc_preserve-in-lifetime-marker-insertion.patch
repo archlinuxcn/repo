@@ -1,0 +1,230 @@
+From a4cfc6a024454b0ce0368a8785a2a05ee52a5792 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Fri, 22 Sep 2017 21:43:29 -0400
+Subject: [PATCH] Handle gc_preserve in lifetime marker insertion.
+
+In this case, the lifetime is not just determined by the instructions we see anymore.
+We need to extend the use list based on domination information before deciding which block
+has no use of the allocation.
+---
+ src/llvm-alloc-opt.cpp       | 57 +++++++++++++++++++++++++++++++++++++-------
+ test/llvmpasses/alloc-opt.jl | 46 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 95 insertions(+), 8 deletions(-)
+
+diff --git a/src/llvm-alloc-opt.cpp b/src/llvm-alloc-opt.cpp
+index 582dccab62..1ba45129cb 100644
+--- a/src/llvm-alloc-opt.cpp
++++ b/src/llvm-alloc-opt.cpp
+@@ -4,6 +4,8 @@
+ #undef DEBUG
+ #include "llvm-version.h"
+ 
++#include <llvm/ADT/SmallSet.h>
++#include <llvm/ADT/SmallVector.h>
+ #include <llvm/IR/Value.h>
+ #include <llvm/IR/CFG.h>
+ #include <llvm/IR/Dominators.h>
+@@ -128,8 +130,9 @@ private:
+         {}
+         // insert llvm.lifetime.* calls for `ptr` with size `sz`
+         // based on the use of `orig` given in `alloc_uses`.
+-        void insert(Instruction *ptr, Constant *sz, Instruction *orig,
+-                    const std::set<Instruction*> &alloc_uses);
++        void insert(Function &F, Instruction *ptr, Constant *sz, Instruction *orig,
++                    const std::set<Instruction*> &alloc_uses,
++                    const std::set<CallInst*> &preserves);
+     private:
+         Instruction *getFirstSafepoint(BasicBlock *bb);
+         void insertEnd(Instruction *ptr, Constant *sz, Instruction *insert);
+@@ -151,7 +154,7 @@ private:
+     bool doInitialization(Module &m) override;
+     bool runOnFunction(Function &F) override;
+     bool checkInst(Instruction *I, CheckInstStack &stack, std::set<Instruction*> &uses,
+-                   bool &ignore_tag);
++                   std::set<CallInst*> &preserves, bool &ignore_tag);
+     void replaceUsesWith(Instruction *orig_i, Instruction *new_i, ReplaceUsesStack &stack);
+     void replaceIntrinsicUseWith(IntrinsicInst *call, Intrinsic::ID ID, Instruction *orig_i,
+                                  Instruction *new_i);
+@@ -203,8 +206,9 @@ void AllocOpt::LifetimeMarker::insertEnd(Instruction *ptr, Constant *sz, Instruc
+     CallInst::Create(pass.lifetime_end, {sz, ptr}, "", insert);
+ }
+ 
+-void AllocOpt::LifetimeMarker::insert(Instruction *ptr, Constant *sz, Instruction *orig,
+-                                      const std::set<Instruction*> &alloc_uses)
++void AllocOpt::LifetimeMarker::insert(Function &F, Instruction *ptr, Constant *sz,
++                                      Instruction *orig, const std::set<Instruction*> &alloc_uses,
++                                      const std::set<CallInst*> &preserves)
+ {
+     CallInst::Create(pass.lifetime_start, {sz, ptr}, "", orig);
+     BasicBlock *def_bb = orig->getParent();
+@@ -248,6 +252,34 @@ void AllocOpt::LifetimeMarker::insert(Instruction *ptr, Constant *sz, Instructio
+         abort();
+     }
+ #endif
++    // Record extra BBs that contain invisible uses.
++    SmallSet<BasicBlock*, 8> extra_use;
++    SmallVector<DomTreeNodeBase<BasicBlock>*, 8> dominated;
++    for (auto preserve: preserves) {
++        for (auto RN = DT.getNode(preserve->getParent()); RN;
++             RN = dominated.empty() ? nullptr : dominated.pop_back_val()) {
++            for (auto N: *RN) {
++                auto bb = N->getBlock();
++                if (extra_use.count(bb))
++                    continue;
++                bool ended = false;
++                for (auto end: preserve->users()) {
++                    auto end_bb = cast<Instruction>(end)->getParent();
++                    auto end_node = DT.getNode(end_bb);
++                    if (end_bb == bb || (end_node && DT.dominates(end_node, N))) {
++                        ended = true;
++                        break;
++                    }
++                }
++                if (ended)
++                    continue;
++                bbs.insert(bb);
++                extra_use.insert(bb);
++                dominated.push_back(N);
++            }
++        }
++        assert(dominated.empty());
++    }
+     // For each BB, find the first instruction(s) where the allocation is possibly dead.
+     // If all successors are live, then there isn't one.
+     // If all successors are dead, then it's the first instruction after the last use
+@@ -271,6 +303,9 @@ void AllocOpt::LifetimeMarker::insert(Instruction *ptr, Constant *sz, Instructio
+                 }
+             }
+         }
++        else if (extra_use.count(bb)) {
++            first_dead.push_back(bb->getTerminator());
++        }
+         else {
+             for (auto it = bb->rbegin(), end = bb->rend(); it != end; ++it) {
+                 if (alloc_uses.count(&*it)) {
+@@ -302,6 +337,7 @@ void AllocOpt::LifetimeMarker::insert(Instruction *ptr, Constant *sz, Instructio
+             }
+             else if (auto insert = getFirstSafepoint(bb)) {
+                 insertEnd(ptr, sz, insert);
++                continue;
+             }
+         }
+         else {
+@@ -366,7 +402,7 @@ bool AllocOpt::doInitialization(Module &M)
+ }
+ 
+ bool AllocOpt::checkInst(Instruction *I, CheckInstStack &stack, std::set<Instruction*> &uses,
+-                         bool &ignore_tag)
++                         std::set<CallInst*> &preserves, bool &ignore_tag)
+ {
+     uses.clear();
+     if (I->use_empty())
+@@ -395,6 +431,9 @@ bool AllocOpt::checkInst(Instruction *I, CheckInstStack &stack, std::set<Instruc
+                     return true;
+                 }
+                 if (gc_preserve_begin && gc_preserve_begin == callee) {
++                    for (auto user: call->users())
++                        uses.insert(cast<Instruction>(user));
++                    preserves.insert(call);
+                     return true;
+                 }
+             }
+@@ -654,12 +693,14 @@ bool AllocOpt::runOnFunction(Function &F)
+     CheckInstStack check_stack;
+     ReplaceUsesStack replace_stack;
+     std::set<Instruction*> alloc_uses;
++    std::set<CallInst*> preserves;
+     LifetimeMarker lifetime(*this);
+     for (auto &it: allocs) {
+         bool ignore_tag = true;
+         auto orig = it.first;
+         size_t &sz = it.second;
+-        if (!checkInst(orig, check_stack, alloc_uses, ignore_tag)) {
++        preserves.clear();
++        if (!checkInst(orig, check_stack, alloc_uses, preserves, ignore_tag)) {
+             sz = UINT32_MAX;
+             continue;
+         }
+@@ -692,7 +733,7 @@ bool AllocOpt::runOnFunction(Function &F)
+             buff->setAlignment(align);
+             ptr = cast<Instruction>(prolog_builder.CreateBitCast(buff, T_pint8));
+         }
+-        lifetime.insert(ptr, ConstantInt::get(T_int64, sz), orig, alloc_uses);
++        lifetime.insert(F, ptr, ConstantInt::get(T_int64, sz), orig, alloc_uses, preserves);
+         // Someone might be reading the tag, initialize it.
+         if (!ignore_tag) {
+             ptr = cast<Instruction>(prolog_builder.CreateConstGEP1_32(T_int8, ptr, align));
+diff --git a/test/llvmpasses/alloc-opt.jl b/test/llvmpasses/alloc-opt.jl
+index e603e542c8..5d8f8bb12b 100644
+--- a/test/llvmpasses/alloc-opt.jl
++++ b/test/llvmpasses/alloc-opt.jl
+@@ -210,6 +210,11 @@ top:
+ # CHECK: call %jl_value_t*** @jl_get_ptls_states()
+ # CHECK-NOT: @julia.gc_alloc_obj
+ # CHECK-NOT: @jl_gc_pool_alloc
++# CHECK: @llvm.lifetime.start
++# CHECK-NOT: @llvm.lifetime.end
++# CHECK: @external_function
++# CHECK-NEXT: @llvm.lifetime.end
++# CHECK-NEXT: @external_function
+ println("""
+ define void @preserve_opt(i8* %v22) {
+ top:
+@@ -219,6 +224,46 @@ top:
+   %v20 = bitcast %jl_value_t addrspace(10)* %v19 to i8 addrspace(10)*
+   %v21 = addrspacecast i8 addrspace(10)* %v20 to i8 addrspace(11)*
+   %tok = call token (...) @llvm.julia.gc_preserve_begin(%jl_value_t addrspace(10)* %v19)
++  call void @external_function()
++  call void @llvm.julia.gc_preserve_end(token %tok)
++  call void @external_function()
++  ret void
++}
++""")
++# CHECK-LABEL: }
++
++# CHECK-LABEL: @preserve_branches
++# CHECK: alloca i64
++# CHECK: call %jl_value_t*** @jl_get_ptls_states()
++# CHECK: L1:
++# CHECK-NEXT: call void @llvm.lifetime.start{{.*}}(i64 8,
++# CHECK-NEXT: @external_function()
++# CHECK-NEXT: br i1 %b2, label %L2, label %L3
++
++# CHECK: L2:
++# CHECK-NOT: call void @llvm.lifetime.end{{.*}}(i64 8,
++# CHECK: @external_function()
++# CHECK-NEXT: br label %L3
++
++# CHECK: L3:
++# CHECK-NEXT: call void @llvm.lifetime.end{{.*}}(i64 8,
++println("""
++define void @preserve_branches(i8* %fptr, i1 %b, i1 %b2) {
++  %ptls = call %jl_value_t*** @jl_get_ptls_states()
++  %ptls_i8 = bitcast %jl_value_t*** %ptls to i8*
++  br i1 %b, label %L1, label %L3
++
++L1:
++  %v = call noalias %jl_value_t addrspace(10)* @julia.gc_alloc_obj(i8* %ptls_i8, $isz 8, %jl_value_t addrspace(10)* @tag)
++  %tok = call token (...) @llvm.julia.gc_preserve_begin(%jl_value_t addrspace(10)* %v)
++  call void @external_function()
++  br i1 %b2, label %L2, label %L3
++
++L2:
++  call void @external_function()
++  br label %L3
++
++L3:
+   ret void
+ }
+ """)
+@@ -233,6 +278,7 @@ declare noalias %jl_value_t addrspace(10)* @julia.gc_alloc_obj(i8*, $isz, %jl_va
+ declare i64 @julia.pointer_from_objref(%jl_value_t addrspace(11)*)
+ declare void @llvm.memcpy.p11i8.p0i8.i64(i8 addrspace(11)* nocapture writeonly, i8* nocapture readonly, i64, i32, i1)
+ declare token @llvm.julia.gc_preserve_begin(...)
++declare void @llvm.julia.gc_preserve_end(token)
+ 
+ !0 = !{!1, !1, i64 0}
+ !1 = !{!"jtbaa_tag", !2, i64 0}
+-- 
+2.14.1
+
