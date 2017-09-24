@@ -4,7 +4,7 @@
 
 pkgname=seafile-server
 pkgver=6.2.1
-pkgrel=2
+pkgrel=3
 pkgdesc="Seafile is an online file storage and collaboration tool"
 arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
 url="https://github.com/haiwen/${pkgname}"
@@ -12,7 +12,8 @@ license=('AGPL3')
 makedepends=("vala" "intltool")
 depends=("seafile" "wget" "sqlite" "fuse" "ccnet-server" "libarchive"
          "libevhtp-seafile" "git" "ffmpeg"
-         "python2-requests" "python2-flup")
+         "python2-requests" "python2-flup"
+         "python2-setuptools" "python2-pillow" "mysql-python")
 source=("${pkgname}-${pkgver}-server.tar.gz::${url}/archive/v${pkgver}-server.tar.gz"
         "seafile-admin_virtualenv.patch"
         "seafile-server@.service"
@@ -22,12 +23,11 @@ source=("${pkgname}-${pkgver}-server.tar.gz::${url}/archive/v${pkgver}-server.ta
         "openssl-1.1.diff")
 sha256sums=('d29ca6dfd5a7e43fec4d6e926555ea7061cf33a158fc367728b5665f35b444b3'
             '52fb29858f6424052cf01630ad72b5687a4fb259f23f9efc97f08be04a883218'
-            '95c9eae185d68321015ef8374cb7bf44c82b2bc9e41bd79e573385c1ae86e406'
+            'b33b9299370954145d70991abe0084c8b19c5c07233b35e62ae16c9c1ce7c0e9'
             '6bd632f8741b039bad961af3d6850b651e25b7e7a3018d6e2789f350ff93bb78'
             'b1748e826d8e7cccdd825b99864b74dfb5795312f8878d63e9a87105f4382e29'
             'a2d7f7cf0c59aba97650af62b3cefd0ceb71a1007c34d9369a88e5769c7f6076'
             'ffa351b22e89a66f80139888e4e7a2c2bde41fd648d57c71dcf10884dc03bbc3')
-optdepends=('libmariadbclient: mysql server support')
 
 prepare () {
   cd "${srcdir}/${pkgname}-${pkgver}-server"
