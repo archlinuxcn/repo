@@ -1,0 +1,28 @@
+_pkgname=xsv
+pkgname=${_pkgname}-git
+pkgver=1002
+pkgrel=1
+pkgdesc='A fast CSV toolkit written in Rust.'
+arch=('i686' 'x86_64')
+url="https://github.com/BurntSushi/xsv"
+license=('MIT' 'UNLICENSE')
+depends=()
+makedepends=('rust' 'git')
+source=("git+https://github.com/BurntSushi/xsv.git")
+md5sums=('SKIP')
+
+pkgver() {
+    cd "$srcdir/$_pkgname"
+    git describe | sed -E 's/([^-]*-g)/r\1/;s/-/./g'
+}
+
+build() {
+    cd "$srcdir/$_pkgname"
+    sed -i '/profile\.release/alto = true' Cargo.toml
+    cargo build --release
+}
+
+package() {
+    cd "$srcdir/$_pkgname"
+    install -Dm755 "target/release/xsv" "$pkgdir/usr/bin/xsv"
+}
