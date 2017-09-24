@@ -1,4 +1,5 @@
-# Maintainer: Bruno Pagani (a.k.a. ArchangeGabriel) <bruno.n.pagani@gmail.com>
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+# Contributor: Bruno Pagani (a.k.a. ArchangeGabriel) <bruno.n.pagani@gmail.com>
 # Contributor: Cedric MATHIEU <me.xenom @ gmail.com>
 
 _name=firefox
@@ -42,10 +43,6 @@ sha512sums_x86_64=('f24780bbcb67006507805b7bfce6b8f10a1c9ac0d7200fe52afae36bc470
                    '7d8830f4255c78a8df079aeae98c2e82d1f14ebc877067c2269f17c7b7a3bb98932cc6b36157f35686b7f4ed98ace86e5b11e5d45b7bc1fe4f6f103933dccb3f')
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla’s GnuPG release key
 
-pkgver() {
-  echo "${_version}.$(head -n1 ${_filename}-${CARCH}.txt | cut -c-8)"
-}
-
 package() {
   OPT_PATH="opt/${pkgname}"
 
@@ -60,8 +57,7 @@ package() {
   # Install icons
   SRC_LOC="${srcdir}"/${_name}/browser
   DEST_LOC="${pkgdir}"/usr/share/icons/hicolor
-  for i in 16 32 48
-  do
+  for i in 16 32 48; do
       install -Dm644 "${SRC_LOC}"/chrome/icons/default/default${i}.png "${DEST_LOC}"/${i}x${i}/apps/${pkgname}.png
   done
   install -Dm644 "${SRC_LOC}"/icons/mozicon128.png "${DEST_LOC}"/128x128/apps/${pkgname}.png

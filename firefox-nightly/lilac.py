@@ -1,25 +1,30 @@
 #!/usr/bin/env python3
-#
-# This file is the most simple lilac.py file,
-# and it suits for most packages in AUR.
-#
+
+from datetime import datetime
 
 from lilaclib import *
 
 build_prefix = 'extra-x86_64'
 
-
 def pre_build():
-    aur_pre_build("firefox-nightly")
-    with open("vendor.js","a") as vendor:
-        vendor.write('pref("intl.locale.matchOS", true);\n')
-    run_cmd(['updpkgsums'])
+  version, dt = _G.newver.split(None, 1)
+  dt = datetime.strptime(dt, '%d-%b-%Y %H:%M').strftime('%Y%m%d.%H')
 
+  for line in edit_file('PKGBUILD'):
+    if line.startswith('_version='):
+      line = f'_version={version}'
+    elif line.startswith('pkgver='):
+      line = f'pkgver={version}.{dt}'
+    elif line.startswith('_filename='):
+      line = f'_filename="{dt.split(".", 1)[0]}-${{_src}}"'
+
+    print(line)
+
+  run_cmd(['updpkgsums'])
 
 def post_build():
-    # do something after the package has successfully been built
-    aur_post_build()
-
+  git_add_files('PKGBUILD')
+  git_commit()
 
 if __name__ == '__main__':
-    single_main()
+  single_main()
