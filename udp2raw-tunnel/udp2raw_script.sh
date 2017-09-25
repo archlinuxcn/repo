@@ -11,7 +11,7 @@ else
 fi
 
 if [[ "$TARGET" == 'insert' ]]; then
-  /usr/bin/iptables -I INPUT $RULE -j DROP || exit 1
+  /usr/bin/iptables -I $RULE -j DROP || exit 1
 elif [[ "$TARGET" == 'delete' ]]; then
-  /usr/bin/iptables -D INPUT $RULE -j DROP || exit 1
+  /usr/bin/iptables -D $RULE -j DROP || exit 1
 fi

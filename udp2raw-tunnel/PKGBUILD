@@ -1,6 +1,6 @@
 # Maintainer: Peter Cai <peter at typeblog dot net>
 pkgname=udp2raw-tunnel
-pkgver=20170826.0
+pkgver=20170918.0
 pkgrel=1
 pkgdesc='An Encrpyted,Anti-Replay,Multiplexed Udp Tunnel,tunnels udp traffic through fake-tcp or icmp by using raw socket'
 arch=('x86_64' 'i686')
@@ -25,12 +25,12 @@ package() {
   mkdir -p "$pkgdir/usr/bin/"
   install -m755 udp2raw "$pkgdir/usr/bin/"
   mkdir -p "$pkgdir/etc/udp2raw"
-  install -m644 config.example "$pkgdir/etc/udp2raw/example.conf"
+  install -m644 example.conf "$pkgdir/etc/udp2raw/example.conf"
   mkdir -p "$pkgdir/usr/lib/udp2raw"
   install -m755 "$srcdir/udp2raw_script.sh" "$pkgdir/usr/lib/udp2raw/"
   mkdir -p "$pkgdir/usr/lib/systemd/system"
   install -m644 "$srcdir/udp2raw@.service" "$pkgdir/usr/lib/systemd/system/"
 }
-md5sums=('5391108eb40cdef8e2f98b4f4faebc19'
-         'ef27e09d068abf7222158f66168ff353'
+md5sums=('125b292458e06850325730aacbd94445'
+         'f3c5d10f24eb2a41e9007a47d42f4199'
          '1c73eb54f737b77dae29e8f6c7f137f9')
