@@ -8,7 +8,7 @@ build_prefix = 'extra-x86_64'
 
 def pre_build():
   version, dt = _G.newver.split(None, 1)
-  dt = datetime.datetime.strptime(dt, '%d-%b-%Y %H:%M').strftime('%Y%m%d.%H')
+  dt = datetime.datetime.strptime(dt.strip(), '%d-%b-%Y %H:%M').strftime('%Y%m%d.%H')
 
   for l in edit_file('PKGBUILD'):
     if l.startswith('pkgver='):
