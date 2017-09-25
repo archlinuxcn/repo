@@ -9,7 +9,7 @@ def pre_build():
 
   for line in edit_file('PKGBUILD'):
     if line.startswith('pkgver='):
-      line = f'pkgver={version}
+      line = f'pkgver={version}'
 
     print(line)
 
