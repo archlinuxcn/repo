@@ -9,7 +9,7 @@ pkgname=${_name}-${_channel}
 pkgdesc="Standalone Web Browser from Mozilla — Nightly build (${_lang})"
 url="https://www.mozilla.org/${_lang}/${_name}/${_channel}"
 _version=58.0a1
-pkgver=58.0a1.20170924.13
+pkgver=58.0a1.20170925.01
 pkgrel=1
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -25,7 +25,7 @@ optdepends=('pulseaudio: audio support'
             'startup-notification: support for FreeDesktop Startup Notification')
 _url="https://ftp.mozilla.org/pub/${_name}/nightly/latest-mozilla-central"
 _src="${_name}-${_version}.${_lang}.linux"
-_filename="20170924-${_src}"
+_filename="20170925-${_src}"
 source=("${pkgname}.desktop" 'vendor.js')
 source_i686=("${_filename}-i686.tar.bz2"::"${_url}/${_src}-i686.tar.bz2"
              "${_filename}-i686.tar.bz2.asc"::"${_url}/${_src}-i686.tar.bz2.asc"
@@ -35,12 +35,12 @@ source_x86_64=("${_filename}-x86_64.tar.bz2"::"${_url}/${_src}-x86_64.tar.bz2"
                "${_filename}-x86_64.txt"::"${_url}/${_src}-x86_64.txt")
 sha512sums=('b514abafc559ec03a4222442fa4306db257c3de9e18ed91a0b37cc9d7058a8e08a241442e54a67659a3ab4512a5dae6a0b94ea7a33d08ef0b8a76a9eac902095'
             '2886a29b53c9dfa4676a1269e38bf404bb45ef4804f91d0755e8ad7c381488d8a72df5cddbb0fd910a8c344cc881a77b340f7f19def165e2f31d5eca8257ca18')
-sha512sums_i686=('2e64b1d5d373ac215b132b64894c0606d4613e4d612ced2b76814b792c9e44ce5763709063cc5c13a9a497d8f001a26e5aab099e0886233e159cb2bfccca9adb'
+sha512sums_i686=('ae0c3e3c823c433f5263a51b7af1f83e41f2f34ea4a22f425d5164ac246f492969ad2dc5e5827f8430ca3055ae3a5228610765ef2cdc025abb8cdf3eb9b74681'
                  'SKIP'
-                 '91cc09f0f73fe7b671c3adb1e4839e1b324692fd06113c477d131832a6e4813e49d518d9837baaf06d2b1f53f513e4de5168f4030d12fe7b0a25b56de8e740f3')
-sha512sums_x86_64=('6330bbf0003e4a7e3611549bc20d267ba4b72d1f287c343469166db168007f7b877b4b51fee6123b2c53d7fd4917c8641868e767b463d1fbbda0b4aa40f0a764'
+                 '5ec0092fa1220d913502b5bbea467e973860c5380fa4fcc3c0c7524a526aaf20e1872fc453487e4bc4521d6eea7f32d989e6b2b4a852c6da8ccddd57a563b076')
+sha512sums_x86_64=('fff025c4a073991b80180970c8c04bfd90a313afc150f865bbd7f5d37e1dbecece3d278ec6d95fe8ef952cfac187c9fab18e2646dd6889a475621a7d7d7a5267'
                    'SKIP'
-                   '91cc09f0f73fe7b671c3adb1e4839e1b324692fd06113c477d131832a6e4813e49d518d9837baaf06d2b1f53f513e4de5168f4030d12fe7b0a25b56de8e740f3')
+                   '5ec0092fa1220d913502b5bbea467e973860c5380fa4fcc3c0c7524a526aaf20e1872fc453487e4bc4521d6eea7f32d989e6b2b4a852c6da8ccddd57a563b076')
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla’s GnuPG release key
 
 package() {
