@@ -31,9 +31,9 @@ _TB_ARCH_='__REPL_ARCH__'
 
 # other constants and variables
 _TB_HOME_DIR_=~/".${_TB_PKGNAME_}"
-_TB_APP_DIR_="${_TB_HOME_DIR_}/app"
 _TB_VER_FILE_="${_TB_HOME_DIR_}/VERSION"
 _TB_LOG_FILE_="${_TB_HOME_DIR_}/LOG"
+_TB_APP_DIR_="${_TB_HOME_DIR_}/app"
 _TB_REFRESH_=0
 
 
@@ -63,6 +63,17 @@ _compare_ver_() {
 
 _refresh_local_() {
 
+	local KEEP_DIR="${_TB_APP_DIR_}/Browser/TorBrowser/Data/Browser"
+	local KEPT_DIR=~/".${_TB_PKGNAME_}-tmpdata"
+	local DIR_IS_KEPT=0
+
+	if [[ -d "${KEEP_DIR}" ]]; then
+		[[ -d "${KEPT_DIR}" ]] && rm -R "${KEPT_DIR}"
+		mv "${KEEP_DIR}" "${KEPT_DIR}"
+		echo "${0}: Preserving files in ${KEPT_DIR}/." >> "${_TB_LOG_FILE_}"
+		DIR_IS_KEPT=1
+	fi
+
 	echo "${0}: Extracting files to ${_TB_APP_DIR_}." >> "${_TB_LOG_FILE_}"
 	rm -rf "${_TB_APP_DIR_}"/*
 	tar --strip-components=1 -xJf "/opt/${_TB_PKGNAME_}/tor-browser-${_TB_ARCH_}-${_TB_VERSION_}_${_TB_LANGUAGE_}.tar.xz" \
@@ -70,6 +81,11 @@ _refresh_local_() {
 		"The tor-browser archive could not be extracted to your home directory. \
 		\nCheck permissions of ${_TB_APP_DIR_}. \
 		\nThe error log can be found in ${_TB_LOG_FILE_}."
+
+	if [[ ! ${DIR_IS_KEPT} -eq 0 ]]; then
+		rm -R "${KEEP_DIR}"
+		mv "${KEPT_DIR}" "${KEEP_DIR}"
+	fi
 
 	[[ -f "${_TB_APP_DIR_}/Browser/start-tor-browser" ]] && echo "${_TB_VERSION_}" > "${_TB_VER_FILE_}"
 
@@ -109,7 +125,7 @@ _aur_update_() {
 		echo "Everything is up to date (current version: ${_TB_VERSION_})."
 	fi
 
-	[[ ${DO_UPDATE} -eq 1 ]] && makepkg -si
+	[[ ! ${DO_UPDATE} -eq 0 ]] && makepkg -si
 
 	rm -rf "${TMP_PKGBUILD}"
 
