@@ -4,13 +4,13 @@
 # Contributor: Mark Schneider <queueRAM@gmail.com>
 
 pkgname=gnucash
-pkgver=2.6.17
-pkgrel=5
+pkgver=2.6.18
+pkgrel=1
 pkgdesc="A personal and small-business financial-accounting application"
 arch=('i686' 'x86_64')
 url="http://www.gnucash.org"
 license=("GPL")
-depends=('guile' 'slib' 'goffice0.8' 'libdbi-drivers' 'libmariadbclient' 'postgresql-libs' 'aqbanking' 'desktop-file-utils' 'webkitgtk2' 'libgnome-keyring' 'libgnomecanvas' 'dconf')
+depends=('guile2.0' 'slib' 'goffice0.8' 'libdbi-drivers' 'libmariadbclient' 'postgresql-libs' 'aqbanking' 'desktop-file-utils' 'webkitgtk2' 'libgnome-keyring' 'libgnomecanvas' 'dconf')
 makedepends=('intltool')
 optdepends=('evince: for print preview'
 	    'yelp: help browser'
@@ -18,7 +18,7 @@ optdepends=('evince: for print preview'
             'perl-date-manip: for stock information lookups')
 options=('!makeflags' '!emptydirs')
 source=(http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-${pkgver}.tar.gz)
-sha1sums=('d970d876f1fc7cd3fad9155463cdda348bcf0c7e')
+sha1sums=('57321f8740c88b46295b69b523dac71fc3b2ecf6')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
