@@ -1,7 +1,7 @@
 # Maintainer: Andreas Bilke <abilke at cosy dot sbg dot ac dot at>
 # Contributor: Myles English <myles at rockhead dot biz>
 pkgname=petsc
-pkgver=3.7.6
+pkgver=3.7.7
 pkgrel=1
 _config=linux-c-opt
 # if --with-debugging=yes is set then PETSC_ARCH is automatically set to
@@ -9,7 +9,7 @@ _config=linux-c-opt
 #_config=linux-c-debug
 pkgdesc="Portable, extensible toolkit for scientific computation"
 arch=('i686' 'x86_64')
-url="http://www.mcs.anl.gov/petsc/petsc-as"
+url="https://www.mcs.anl.gov/petsc/"
 license=('MIT compatible')
 options=(staticlibs)
 depends=('python2' 'openmpi' 'boost' 'lapack')
@@ -26,9 +26,9 @@ optdepends=('trilinos: support for trilinos'
     )
 install=petsc.install
 source=(http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/${pkgname}-${pkgver/_/-}.tar.gz test_optdepends.sh)
-md5sums=('977aa84b85aa3146c695592cd0a11057'
+md5sums=('c2cfb76677d32839810c4cf51a2f9cf5'
          'e60925d1f552303198106bf98eb2bfa5')
-sha256sums=('3c8ee051349587d45baa7910c54ce8e0a571592e3b40f3054a7b7f986919d449'
+sha256sums=('40fd3bc76998e056c4097704c08f28eb89bf3b93164dc9e69abab393f43bf6f0'
             'adff0a432735f6cf4ec2edcb7345ba0d90963bef962b8d9742fa5e9735c0e455')
 
 
