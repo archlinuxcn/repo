@@ -49,13 +49,11 @@ options=('debug' '!strip' '!buildflags')
 source=('git://github.com/JuliaLang/julia'
         0001-Revert-turn-on-deprecation-warnings-for-type-and-imm.patch
         0002-Revert-deprecation-warning-for-old-parametric-method.patch
-        0001-Revert-Replace-quiet-with-banner-23343.patch
-        0001-Handle-gc_preserve-in-lifetime-marker-insertion.patch)
+        0001-Revert-Replace-quiet-with-banner-23343.patch)
 md5sums=('SKIP'
          '91a0c77dc0700ff283d3aaaac67a9147'
          '84d6c1e407839b1459278b35c245e3ad'
-         'b3c5a4ba02fbbfa53b7043beb0242156'
-         '250cb1d8ea04a3e87efac94fcfb50d96')
+         'b3c5a4ba02fbbfa53b7043beb0242156')
 
 pkgver() {
   cd julia
@@ -132,7 +130,6 @@ EOF
 
   patch -Np1 < ../0001-Revert-turn-on-deprecation-warnings-for-type-and-imm.patch
   patch -Np1 < ../0002-Revert-deprecation-warning-for-old-parametric-method.patch
-  patch -Np1 < ../0001-Handle-gc_preserve-in-lifetime-marker-insertion.patch
 
   if [[ "$CARCH" = x86_64 ]]; then
       (cd "$srcdir"
