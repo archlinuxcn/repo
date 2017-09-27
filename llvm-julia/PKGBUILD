@@ -11,7 +11,7 @@
 pkgname=('llvm-julia' 'llvm-libs-julia' 'llvm-ocaml-julia' 'lld-julia' 'lldb-julia'
          'clang-julia' 'clang-tools-extra-julia')
 pkgver=5.0.0
-pkgrel=1
+pkgrel=2
 _ocaml_ver=4.05.0
 arch=(i686 x86_64 armv7h aarch64)
 url="http://llvm.org/"
@@ -29,7 +29,6 @@ source=(https://releases.llvm.org/$pkgver/llvm-$pkgver.src.tar.xz
         https://releases.llvm.org/$pkgver/lldb-$pkgver.src.tar.xz
         llvm-D27629-AArch64-large_model.patch
         llvm-loadcse-addrspace.patch
-        llvm-Yet-another-fix.patch
         llvm-D34078-vectorize-fdiv.patch
         # Arch patches
         0001-GCC-compatibility-Ignore-the-fno-plt-flag.patch
@@ -87,7 +86,6 @@ EOF
 
   apply_julia_patch D27629-AArch64-large_model
   apply_julia_patch loadcse-addrspace
-  apply_julia_patch Yet-another-fix
   apply_julia_patch D34078-vectorize-fdiv
 
   # Arch patches
