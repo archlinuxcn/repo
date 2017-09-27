@@ -1,5 +1,5 @@
 pkgname=babel-eslint
-pkgver=8.0.0
+pkgver=8.0.1
 
 pkgrel=1
 pkgdesc='allows you to lint ALL valid Babel code with the fantastic ESLint'
@@ -10,7 +10,7 @@ depends=('eslint')
 makedepends=('npm')
 source=("https://registry.npmjs.org/$pkgname/-/$pkgname-$pkgver.tgz")
 noextract=("$pkgname-$pkgver.tgz")
-sha512sums=('b4dd41dda759dedc3ca6bf681ac675f222826dd2814afb27f5a6fa70675b103fbad4ba462e121571fefa7a1e7d5de8db7512d305ef8e61ecf199821a4e03e260')
+sha512sums=('8779a817a3c24d0134e948cc306fb2759481bd9e10eeba8f13fe560143af5321d8513ab19bc255863651886d5abc8fed19538ae019d92c341aa722f387c0de2a')
 
 package() {
   npm install -g --user root --prefix "$pkgdir"/usr "$srcdir"/$pkgname-$pkgver.tgz
