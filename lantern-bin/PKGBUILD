@@ -29,5 +29,5 @@ package() {
     install -Dm644 "${srcdir}/lantern.service" "${pkgdir}/usr/lib/systemd/system/lantern.service"
 
     mkdir -p "$pkgdir/var/lib/lantern"
-    chmod 640 "$pkgdir/var/lib/lantern"
+    chmod 750 "$pkgdir/var/lib/lantern"
 }
