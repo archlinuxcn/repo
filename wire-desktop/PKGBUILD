@@ -1,26 +1,25 @@
 # Maintainer: Conor Anderson <conor@conr.ca>
 pkgname=wire-desktop
-pkgver=2.15.2751
-pkgrel=2
+pkgver=2.17.2813
+pkgrel=1
 pkgdesc='Modern, private messenger. Based on Electron.'
 arch=('x86_64' 'i686')
 url='https://wire.com/'
 license=('GPL3')
 conflicts=('wire-desktop-bin')
 depends=('alsa-lib' 'gconf' 'gtk2' 'libxss' 'libxtst' 'nss')
-makedepends=('git' 'python2' 'npm' 'cargo' )
+makedepends=('python2' 'git' 'cargo' 'npm' )
 optdepends=('hunspell-en: for English spellcheck support')
 provides=('wire-desktop')
 source=("${pkgver}.tar.gz::https://github.com/wireapp/wire-desktop/archive/release/"$pkgver".tar.gz"
         "${pkgname}.desktop")
-sha256sums=('a58894b3fa8421fbce96e0a608e71b978e1d58c14c3c95fab1a29675a8c6560a'
+sha256sums=('66e532a8b64231f0b7f11cce0dad389e56eff25cc4481976bcc466525d0aa8f6'
             '84d869ca111010a5f45f3d5cb8ef4320fa46ac01104773559fb3a7c501f8313b')
 
 build() {
   cd "${srcdir}/${pkgname}-release-${pkgver}"
   npm install
-  $(npm bin)/grunt 'clean:linux' 'update-keys' 'release-prod' 'bundle'
-  $(npm bin)/grunt "electronbuilder:linux_other"
+  $(npm bin)/grunt 'linux-other'
 }
 
 package() {
