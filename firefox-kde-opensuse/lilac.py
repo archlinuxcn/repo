@@ -10,8 +10,8 @@ build_prefix = 'archlinuxcn-x86_64'
 
 def get_source_list():
     buf = ''
-    for line in open("PKGBUILD"):
-        if not line.strip().startswith("#"):
+    for line in open('PKGBUILD'):
+        if not line.strip().startswith('#'):
             buf += line
 
     match = re.search('source=\(([^)]+)\)', buf)
@@ -27,9 +27,11 @@ def pre_build():
             os.remove(f)
 
     aur_pre_build()
+    for line in edit_file('PKGBUILD'):
+        print(line.replace("'cargo' ",""))
 
 def post_build():
     aur_post_build()
 
 if __name__ == '__main__':
-  single_main()
+  single_main(build_prefix)
