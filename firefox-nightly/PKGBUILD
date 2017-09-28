@@ -11,7 +11,7 @@ url="https://www.mozilla.org/${_lang}/${_name}/${_channel}"
 _version=58.0a1
 pkgver=58.0a1.20170926.12
 pkgrel=1
-arch=('i686' 'x86_64')
+arch=('x86_64')
 license=('MPL' 'GPL' 'LGPL')
 depends=('dbus-glib' 'gtk3' 'libxt' 'nss' 'mime-types')
 optdepends=('pulseaudio: audio support'
@@ -26,21 +26,13 @@ optdepends=('pulseaudio: audio support'
 _url="https://ftp.mozilla.org/pub/${_name}/nightly/latest-mozilla-central"
 _src="${_name}-${_version}.${_lang}.linux"
 _filename="20170926-${_src}"
-source=("${pkgname}.desktop" 'vendor.js')
-source_i686=("${_filename}-i686.tar.bz2"::"${_url}/${_src}-i686.tar.bz2"
-             "${_filename}-i686.tar.bz2.asc"::"${_url}/${_src}-i686.tar.bz2.asc"
-             "${_filename}-i686.txt"::"${_url}/${_src}-i686.txt")
-source_x86_64=("${_filename}-x86_64.tar.bz2"::"${_url}/${_src}-x86_64.tar.bz2"
-               "${_filename}-x86_64.tar.bz2.asc"::"${_url}/${_src}-x86_64.tar.bz2.asc"
-               "${_filename}-x86_64.txt"::"${_url}/${_src}-x86_64.txt")
+source=("${pkgname}.desktop" 'vendor.js'
+        "${_filename}-x86_64.tar.bz2"::"${_url}/${_src}-x86_64.tar.bz2"
+        "${_filename}-x86_64.tar.bz2.asc"::"${_url}/${_src}-x86_64.tar.bz2.asc")
 sha512sums=('b514abafc559ec03a4222442fa4306db257c3de9e18ed91a0b37cc9d7058a8e08a241442e54a67659a3ab4512a5dae6a0b94ea7a33d08ef0b8a76a9eac902095'
-            '2886a29b53c9dfa4676a1269e38bf404bb45ef4804f91d0755e8ad7c381488d8a72df5cddbb0fd910a8c344cc881a77b340f7f19def165e2f31d5eca8257ca18')
-sha512sums_i686=('c45d9f5bfa9d6d865a6b1b8c8f47745acc49f6e2f5a0de4750861333a51d8f98cf6786416e47480cd043ed9d340e3e1d9ca98ebefd2193f176691d7b17f88507'
-                 'SKIP'
-                 'f503da900b77cc66b1c603c5c46552b64b9b583e085847e0d6181895a039a521a059fcd9f81d848a45ebb42c4684755e6675fb6e45ab13328640ba53df296dc5')
-sha512sums_x86_64=('086f390c6a1306a3272ea9cb06db4b6fd7032e526194e836d02feca940da77e766b08182b14637e6f30341d49a9ce082c8077601e5897aeb0670122952864940'
-                   'SKIP'
-                   'f503da900b77cc66b1c603c5c46552b64b9b583e085847e0d6181895a039a521a059fcd9f81d848a45ebb42c4684755e6675fb6e45ab13328640ba53df296dc5')
+            '2886a29b53c9dfa4676a1269e38bf404bb45ef4804f91d0755e8ad7c381488d8a72df5cddbb0fd910a8c344cc881a77b340f7f19def165e2f31d5eca8257ca18'
+            '086f390c6a1306a3272ea9cb06db4b6fd7032e526194e836d02feca940da77e766b08182b14637e6f30341d49a9ce082c8077601e5897aeb0670122952864940'
+            'SKIP')
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla’s GnuPG release key
 
 package() {
