@@ -6,11 +6,7 @@
 BUILD_DOC=1
 
 pkgbase=julia-git
-if [[ $CARCH = x86_64 ]]; then
-    pkgname=('julia-git' 'julia-git-avx2')
-else
-  pkgname=('julia-git')
-fi
+pkgname=julia-git
 
 if [[ $CARCH != x86_64 ]]; then
     BUILD_DOC=0
@@ -35,8 +31,8 @@ case $CARCH in
 esac
 
 epoch=1
-pkgver=0.7.0.DEV.1973.ged51793c7e
-pkgrel=1
+pkgver=0.7.0.DEV.2011.g2be031fbc0
+pkgrel=2
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
@@ -50,11 +46,29 @@ source=('git://github.com/JuliaLang/julia'
         0001-Revert-turn-on-deprecation-warnings-for-type-and-imm.patch
         0002-Revert-deprecation-warning-for-old-parametric-method.patch
         0001-Revert-Replace-quiet-with-banner-23343.patch
+        0001-Remove-code-that-are-not-needed-will-not-make-sense-.patch
+        0002-Move-CPU-feature-detection-functions-to-processor.cp.patch
+        0003-Add-X86-CPU-name-and-feature-detection.patch
+        0004-Add-AArch32-and-AArch64-CPU-name-and-feature-detecti.patch
+        0005-Implement-fallback-CPU-detection-and-dispatch-API.patch
+        0006-Use-processor.cpp-API-in-disasm.cpp.patch
+        0007-Use-processor.cpp-API-to-initialize-LLVM-JIT.patch
+        0008-Implement-function-multi-versioning-in-sysimg.patch
+        0009-Finish-up-function-multiversioning-support.patch
         0001-Try-re-enable-frame-pointer-omission.patch)
 md5sums=('SKIP'
          '91a0c77dc0700ff283d3aaaac67a9147'
          '84d6c1e407839b1459278b35c245e3ad'
          'b3c5a4ba02fbbfa53b7043beb0242156'
+         '585bf414f889b7eb41d4f3602ffca9e3'
+         '8214838d79ed08f8e9c57cb50728a5b1'
+         '84ba13eccb70173f208c5a3521649ed7'
+         '6024dc9adb361708a85952e47f40c821'
+         '25a92a86d549d81248ed4d94b9bc184d'
+         'f5067bc584aa319ad2379208e82a6a34'
+         '7d626ef30f7ccccef9b94b7bc8b06b93'
+         'f6a713513a1a720e83fdb2bf0a056fde'
+         '73216180a27604bc96dcfe45d463da3d'
          '91bc8836614d83cf1aebe79e455b181f')
 
 pkgver() {
@@ -97,19 +111,22 @@ julia_opts=(prefix=/usr sysconfdir=/etc
             LIBLAPACKNAME=libopenblas
             LIBLAPACK=-lopenblas)
 
+_x86_target='generic;haswell,clone_all,-rdrnd;skylake,base(1),-rdrnd;cannonlake,base(1),-rdrnd'
+_arm_target='armv7-a;armv7-a,neon;armv7-a,neon,vfp4'
+_aa64_target='generic;cortex-a57;thunderx2t99'
+
 case "$CARCH" in
   x86_64)
-    julia_avx2_opts=("${julia_opts[@]}" MARCH=haswell JULIA_CPU_TARGET=core-avx2)
-    julia_opts=("${julia_opts[@]}" MARCH=x86-64 JULIA_CPU_TARGET=x86-64)
+    julia_opts=("${julia_opts[@]}" MARCH=x86-64 JULIA_CPU_TARGET="${_x86_target}")
     ;;
   i686)
-    julia_opts=("${julia_opts[@]}" MARCH=pentium4 JULIA_CPU_TARGET=pentium4)
+    julia_opts=("${julia_opts[@]}" MARCH=pentium4 JULIA_CPU_TARGET="${_x86_target}")
     ;;
   aarch64)
-    julia_opts=("${julia_opts[@]}" MARCH=armv8-a JULIA_CPU_TARGET=cortex-a57)
+    julia_opts=("${julia_opts[@]}" MARCH=armv8-a JULIA_CPU_TARGET="${_aa64_target}")
     ;;
   armv7h)
-    julia_opts=("${julia_opts[@]}" MARCH=armv7-a JULIA_CPU_TARGET=cortex-a9)
+    julia_opts=("${julia_opts[@]}" MARCH=armv7-a JULIA_CPU_TARGET="${_arm_target}")
     ;;
 esac
 
@@ -124,7 +141,6 @@ EOF
     chmod +x bin/$p
   done
 
-  rm -rf julia-avx2
   cd julia
 
   git reset --hard HEAD
@@ -132,12 +148,16 @@ EOF
 
   patch -Np1 < ../0001-Revert-turn-on-deprecation-warnings-for-type-and-imm.patch
   patch -Np1 < ../0002-Revert-deprecation-warning-for-old-parametric-method.patch
+  patch -Np1 < ../0001-Remove-code-that-are-not-needed-will-not-make-sense-.patch
+  patch -Np1 < ../0002-Move-CPU-feature-detection-functions-to-processor.cp.patch
+  patch -Np1 < ../0003-Add-X86-CPU-name-and-feature-detection.patch
+  patch -Np1 < ../0004-Add-AArch32-and-AArch64-CPU-name-and-feature-detecti.patch
+  patch -Np1 < ../0005-Implement-fallback-CPU-detection-and-dispatch-API.patch
+  patch -Np1 < ../0006-Use-processor.cpp-API-in-disasm.cpp.patch
+  patch -Np1 < ../0007-Use-processor.cpp-API-to-initialize-LLVM-JIT.patch
+  patch -Np1 < ../0008-Implement-function-multi-versioning-in-sysimg.patch
+  patch -Np1 < ../0009-Finish-up-function-multiversioning-support.patch
   patch -Np1 < ../0001-Try-re-enable-frame-pointer-omission.patch
-
-  if [[ "$CARCH" = x86_64 ]]; then
-      (cd "$srcdir"
-       cp -a julia julia-avx2)
-  fi
 }
 
 build_in() {
@@ -167,12 +187,7 @@ build_in() {
 }
 
 build() {
-  if [[ "$CARCH" = x86_64 ]]; then
-      msg "Building AVX2 version"
-      (build_in julia-avx2 0 "${julia_avx2_opts[@]}")
-      msg "Building Generic version"
-  fi
-  (build_in julia $BUILD_DOC "${julia_opts[@]}")
+  build_in julia $BUILD_DOC "${julia_opts[@]}"
 }
 
 package-julia-in() {
@@ -201,11 +216,9 @@ package-julia-in() {
 package_julia-git() {
   package-julia-in julia "${julia_opts[@]}"
   depends+=(openlibm)
-}
-
-package_julia-git-avx2() {
-  package-julia-in julia-avx2 "${julia_avx2_opts[@]}"
-  depends+=(openlibm-avx2)
+  if [[ "$CARCH" = x86_64 ]]; then
+      replaces=(julia-git-avx2)
+  fi
 }
 
 package_julia-git-docs() {

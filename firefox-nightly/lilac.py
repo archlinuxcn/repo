@@ -16,7 +16,7 @@ def pre_build():
     elif line.startswith('pkgver='):
       line = f'pkgver={version}.{dt}'
     elif line.startswith('_filename='):
-      line = f'_filename="{dt.split(".", 1)[0]}-${{_src}}"'
+      line = f'_filename="{dt}-${{_src}}"'
 
     print(line)
 
