@@ -68,7 +68,7 @@ _refresh_local_() {
 	local DIR_IS_KEPT=0
 
 	if [[ -d "${KEEP_DIR}" ]]; then
-		[[ -d "${KEPT_DIR}" ]] && rm -R "${KEPT_DIR}"
+		[[ -d "${KEPT_DIR}" ]] && rm -rf "${KEPT_DIR}"
 		mv "${KEEP_DIR}" "${KEPT_DIR}"
 		echo "${0}: Preserving files in ${KEPT_DIR}/." >> "${_TB_LOG_FILE_}"
 		DIR_IS_KEPT=1
@@ -83,7 +83,7 @@ _refresh_local_() {
 		\nThe error log can be found in ${_TB_LOG_FILE_}."
 
 	if [[ ! ${DIR_IS_KEPT} -eq 0 ]]; then
-		rm -R "${KEEP_DIR}"
+		rm -rf "${KEEP_DIR}"
 		mv "${KEPT_DIR}" "${KEEP_DIR}"
 	fi
 
