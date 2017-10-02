@@ -2,7 +2,7 @@
 # Maintainer: Eric Bélanger <eric@archlinux.org>
 
 pkgname=imagemagick-fftw
-pkgver=6.9.9.15
+pkgver=6.9.9.17
 pkgrel=1
 arch=('i686' 'x86_64')
 url="http://www.imagemagick.org/"
@@ -12,7 +12,7 @@ makedepends=('libltdl' 'lcms2' 'libxt' 'fontconfig' 'libxext' 'ghostscript'
              'opencl-headers' 'opencl-icd-loader' 'libwebp' 'subversion' 'glu' 'fftw')
 source=(http://www.imagemagick.org/download/ImageMagick-${pkgver%.*}-${pkgver##*.}.tar.xz{,.asc}
         perlmagick.rpath.patch)
-sha256sums=('cc5411bcd766efbc5c281ae2147f0d154c452e5f0cc72894796afb88036baf2f'
+sha256sums=('ff25e28aa846cf5adea1e33d28d3019ba689f520bc40160abc0d95611a936978'
             'SKIP'
             '17218bbecc17f3c7a86935a09d5a47e46113a1fc28f7d91c2fe495019cc36088')
 validpgpkeys=('D8272EF51DA223E4D05B466989AB63D48277377A')
