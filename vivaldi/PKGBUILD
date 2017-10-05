@@ -8,7 +8,7 @@ pkgdesc='An advanced browser made with the power user in mind.'
 url="https://vivaldi.com"
 options=(!strip !zipman)
 license=('custom')
-arch=('x86_64')
+arch=('i686' 'x86_64')
 depends=('gtk3' 'libcups' 'nss' 'gconf' 'alsa-lib' 'libxss' 'ttf-font' 'desktop-file-utils' 'shared-mime-info' 'hicolor-icon-theme')
 makedepends=('w3m')
 optdepends=(
@@ -18,8 +18,10 @@ optdepends=(
     'vivaldi-widevine: Widevine DRM Plugin'
     'libnotify: native notifications'
 )
-source=("https://downloads.vivaldi.com/stable/vivaldi-stable-${pkgver}-1.x86_64.rpm")
-sha512sums=('8eccabe2a204173ca9c0750124ece29154bff971bf6c5ec489d9f147d6da95db667023494fc965e032a88e177254cf176eb9f65c3701164ea46c18cd2b769ef2')
+source_i686=("https://downloads.vivaldi.com/stable/vivaldi-stable-${pkgver}-1.i386.rpm")
+source_x86_64=("https://downloads.vivaldi.com/stable/vivaldi-stable-${pkgver}-1.x86_64.rpm")
+sha512sums_i686=('3df3027ed195fe118f1839d97f6f3265f686861208dc8b4b6a17c503ee4931e6319a26de2c42d19c4a11f0452d17f9025cf3c22ebf5fda32b84ef427ebff93ac')
+sha512sums_x86_64=('8eccabe2a204173ca9c0750124ece29154bff971bf6c5ec489d9f147d6da95db667023494fc965e032a88e177254cf176eb9f65c3701164ea46c18cd2b769ef2')
 
 package() {
     cp -a {opt,usr} "$pkgdir"
