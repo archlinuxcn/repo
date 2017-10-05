@@ -1,0 +1,46 @@
+From 9542280384b776ac24836a21ad85bb37fefc2659 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Thu, 5 Oct 2017 09:36:00 -0400
+Subject: [PATCH] Clear LastMappingSymbols and LastEMS(Info) when resetting the
+ ARM(AArch64)ELFStreamer
+
+---
+ lib/Target/AArch64/MCTargetDesc/AArch64ELFStreamer.cpp | 8 ++++++++
+ lib/Target/ARM/MCTargetDesc/ARMELFStreamer.cpp         | 2 ++
+ 2 files changed, 10 insertions(+)
+
+diff --git a/lib/Target/AArch64/MCTargetDesc/AArch64ELFStreamer.cpp b/lib/Target/AArch64/MCTargetDesc/AArch64ELFStreamer.cpp
+index a0de3c39562..85a3aeb6aaa 100644
+--- a/lib/Target/AArch64/MCTargetDesc/AArch64ELFStreamer.cpp
++++ b/lib/Target/AArch64/MCTargetDesc/AArch64ELFStreamer.cpp
+@@ -101,6 +101,14 @@ public:
+     MCELFStreamer::ChangeSection(Section, Subsection);
+   }
+ 
++  // Reset state between object emissions
++  void reset() override {
++    MappingSymbolCounter = 0;
++    MCELFStreamer::reset();
++    LastMappingSymbols.clear();
++    LastEMS = EMS_None;
++  }
++
+   /// This function is the one used to emit instruction data into the ELF
+   /// streamer. We override it to add the appropriate mapping symbol if
+   /// necessary.
+diff --git a/lib/Target/ARM/MCTargetDesc/ARMELFStreamer.cpp b/lib/Target/ARM/MCTargetDesc/ARMELFStreamer.cpp
+index af11fa74bba..7c17f9e82f6 100644
+--- a/lib/Target/ARM/MCTargetDesc/ARMELFStreamer.cpp
++++ b/lib/Target/ARM/MCTargetDesc/ARMELFStreamer.cpp
+@@ -1169,6 +1169,8 @@ void ARMELFStreamer::reset() {
+   ATS.reset();
+   MappingSymbolCounter = 0;
+   MCELFStreamer::reset();
++  LastMappingSymbols.clear();
++  LastEMSInfo.reset();
+   // MCELFStreamer clear's the assembler's e_flags. However, for
+   // arm we manually set the ABI version on streamer creation, so
+   // do the same here
+-- 
+2.14.2
+
