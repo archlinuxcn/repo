@@ -17,8 +17,8 @@
 # Note that dependency on libxtst is from swt.
 
 pkgname=android-sdk
-pkgver=26.0.2
-pkgrel=2
+pkgver=26.1.1
+pkgrel=1
 pkgdesc='Google Android SDK'
 arch=('x86_64' 'i686')
 url='https://developer.android.com/studio/releases/sdk-tools.html'
@@ -32,12 +32,12 @@ optdepends=('android-emulator: emulator has become standalone since 25.3.0'
             'android-sdk-platform-tools: adb, aapt, aidl, dexdump and dx'
             'android-udev: udev rules for Android devices')
 install="${pkgname}.install"
-source=('https://dl.google.com/android/repository/sdk-tools-linux-3952940.zip'
+source=('https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip'
         "${pkgname}.sh"
         "${pkgname}.csh"
         "${pkgname}.conf"
         'license.html')
-sha1sums=('a438247f7d752b8e90f9e432b16b187fcff40c85'
+sha1sums=('8c7c28554a32318461802c1291d76fccfafde054'
           '30a6ed281d54f8b7be08663a18c367f79c0d8d47'
           '1bd09bf137fd09171cb426daa5748f117cfb3c25'
           '145bdf3eb41a56574b289c1577a24bc47097ec83'

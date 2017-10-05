@@ -8,7 +8,7 @@
 # Contributor: Yen Chi Hsuan <yan12125@gmail.com>
 
 pkgname=depot-tools-git
-pkgver=r4658.35c5b9ad
+pkgver=r4674.a58f1dac
 pkgrel=1
 pkgdesc='Build tools for working with Chromium development, include gclient'
 arch=('any')
@@ -33,15 +33,16 @@ scripts_to_fix_exec=(
 	apply_issue
 	cit
 	clang-format
-	commit_queue
+	clang_format_merge_driver
+	compile_single_file
 	depot-tools-auth
 	download_from_google_storage
 	fetch
 	gclient
 	git-runhooks
 	gn
-	roll-dep-svn
 	roll-dep
+	roll-dep-svn
 )
 
 pkgver () {

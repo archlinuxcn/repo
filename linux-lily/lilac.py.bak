@@ -9,17 +9,9 @@ g = SimpleNamespace()
 
 build_prefix = 'makepkg'
 
-config_version = '3.18.7'
-cjktty_version = '3.19'
-bfq_version = '4.4.0-v7r11'
-bfq_patches = [
-   '0001-block-cgroups-kconfig-build-bits-for-BFQ-v7r11-4.4.0.patch',
-   '0002-block-introduce-the-BFQ-v7r11-I-O-sched-for-4.4.0.patch',
-   '0003-block-bfq-add-Early-Queue-Merge-EQM-to-BFQ-v7r11-for.patch',
-]
-uksm_file = 'uksm-0.1.2.3-for-v3.18.patch'
-
-bfq_baseurl = 'http://algo.ing.unimo.it/people/paolo/disk_sched/patches/'
+config_version = '4.13.4'
+cjktty_version = '4.13'
+uksm_file = 'https://github.com/dolohow/uksm/raw/master/uksm-4.13.patch'
 
 def prepare_source(version):
   config = os.path.join(os.getcwd(), 'config.x86_64')
@@ -31,16 +23,9 @@ def prepare_source(version):
     run_cmd(["git", "checkout", "-b", 'v%s-lily' % version, "v" + version])
     run_cmd(["git", "merge", "--no-edit", 'cjktty/%s-utf8' % cjktty_version])
 
-    run_cmd(["sh", "-c", 'patch -p1 < ~/%s' % uksm_file])
+    run_cmd(["sh", "-c", 'curl -sS %s | patch -p1' % uksm_file])
     run_cmd(["git", "add", "."])
     run_cmd(["git", "commit", "-m", 'apply uksm patch'])
-
-    cmd = ['curl'] + [bfq_baseurl + bfq_version + '/' + x
-                      for x in bfq_patches]
-    curl = subprocess.Popen(cmd, stdout=subprocess.PIPE)
-    gitam = subprocess.Popen(['git', 'am'], stdin=curl.stdout)
-    curl.wait()
-    gitam.wait()
 
     run_cmd(["cp", config, ".config"])
     run_cmd(["patch", ".config", mypatch])

@@ -53,8 +53,8 @@ sha256sums=('e35dcbae6084adcf4abb32514127c5eabd7d63b733852ccdb31e06f1373136da'
 
 _FLTO='-flto'
 
-if [[ "${CARCH}" == "aarch64" ]]; then
-    # GCC miscompiles LLVM on AArch64 with LTO
+if [[ "${CARCH}" == "aarch64" ]] || [[ "${CARCH}" == "armv7h" ]]; then
+    # GCC miscompiles LLVM on AArch64 with LTO and segfault on arm during linking...
     _FLTO=''
 fi
 
@@ -77,7 +77,7 @@ EOF
   done
 
   cd "$srcdir/llvm-$pkgver.src"
-  mkdir build
+  mkdir -p build
 
   mv "$srcdir/cfe-$pkgver.src" tools/clang
   mv "$srcdir/clang-tools-extra-$pkgver.src" tools/clang/tools/extra

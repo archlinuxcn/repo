@@ -4,10 +4,9 @@
 # Contributor: John Reese <john@noswap.com>
 # Contributor: Jordan J Klassen <forivall@gmail.com>
 # Contributor: Danny Arnold <despair.blue at gmail dot com>
-# Upstream URL: https://github.com/atom/atom
 
 pkgname=atom-editor-bin
-pkgver=1.20.1
+pkgver=1.21.0
 pkgrel=1
 pkgdesc="Atom is a hackable text editor for the 21st century built on Electron - Precompiled binary from official repository"
 arch=('x86_64')
@@ -19,22 +18,28 @@ depends=('git' 'gconf' 'gtk2' 'libnotify' 'libxtst' 'nss' 'python2' 'xdg-utils' 
 optdepends=('gvfs')
 conflicts=('atom' 'atom-editor' 'atom-editor-git' 'atom-editor-git-tagged' 'apm' 'atom-notracking')
 install=$pkgname.install
-
-md5sums=('52a90061d4bb28b7b2268578cf73fe5c'
-         '22b4763c2e8607f0ea46311ec13da9ff'
-         'd472858970fc4ba6f63197729b65607c')
+sha512sums=('f8bc6d79cf48db695f35a2004c56d33632cd16709aaf7546c9d98cab72227dd8125908d6bb39e9f6d84fd71c55f8818965c6c714d1db81497ff2492efa229fa1'
+            '66aa0c1d574def8691c0059f3b26d4b820c430a146db73c23e31a85f7d4894a3b710cef14726c3bebcc88c8c91149012d6caa4e27e62608fe7022516c10e45fe'
+            '374b9f8fa1e0d2cab77d4cea9c718fb889bb6db3dbf9762ad5cbb88f3a0936023f36641012fc90e029832a772b8d4fdfe6b72f304e3950c02a7c9bf4d6d3d4ec')
 source=("atom-amd64-v${pkgver}.deb::https://atom-installer.github.com/v${pkgver}/atom-amd64.deb"
          atom-python.patch
          startupwmclass.patch)
 
-package() {
+prepare() {
+  # Extract data
   bsdtar xf data.tar.xz
-  printf "Applying atom-python.patch\n"
-  patch -p1 < "${srcdir}"/atom-python.patch
-  printf "Applying startupwmclass.patch\n"
-  patch -p1 < "${srcdir}"/startupwmclass.patch
+
+  # Apply patches
+  patch -sp1 < "${srcdir}"/atom-python.patch
+  patch -sp1 < "${srcdir}"/startupwmclass.patch
+
+  # Modify package to use python2 instead of python3
   sed -i 's|env PYTHON=python2 GTK_IM_MODULE= QT_IM_MODULE= XMODIFIERS= /usr/share/atom/atom|/usr/bin/atom|' usr/share/applications/atom.desktop
   sed -i 's|python|python2|' usr/share/atom/resources/app/apm/bin/python-interceptor.sh
+}
+
+package() {
+  # Recursively remove group's write permission before moving to package directory
   chmod -R g-w usr
   mv usr "${pkgdir}"
 }
