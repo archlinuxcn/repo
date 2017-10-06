@@ -20,8 +20,8 @@ _gtk3=true
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=55.0.3
-pkgrel=3
+pkgver=56.0
+pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -36,12 +36,12 @@ fi
 
 makedepends=('unzip' 'zip' 'diffutils' 'python2' 'yasm' 'mesa' 'imake'
              'xorg-server-xvfb' 'libpulse' 'inetutils' 'autoconf2.13' 'rust'
-            'mercurial')
+            'mercurial' 'llvm')
 optdepends=('networkmanager: Location detection via available WiFi networks'
             'speech-dispatcher: Text-to-Speech')
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
-_patchrev=74bc4d049531
+_patchrev=37c56dbf929f
 options=('!emptydirs'  'strip')
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 _repo=https://hg.mozilla.org/mozilla-unified
@@ -60,7 +60,6 @@ source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
         pgo_fix_missing_kdejs.patch
         fix_pgo_bug1389436_explicitly_instantiate_gfxFont.patch
         wifi-disentangle.patch wifi-fix-interface.patch
-        clip-ft-glyph.diff harmony-fix.diff
         firefox-install-dir.patch no-crmf.diff glibc-2.26-fix.diff
 )
 
@@ -133,14 +132,6 @@ prepare() {
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1314968
   patch -Np1 -i ../wifi-disentangle.patch
   patch -Np1 -i ../wifi-fix-interface.patch
-
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1393467
-  patch -Np1 -i ../clip-ft-glyph.diff
-
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1400721
-  patch -Np1 -i ../harmony-fix.diff
-
-
   
   # WebRTC build tries to execute "python" and expects Python 2
   mkdir -p "$srcdir/path"
@@ -231,26 +222,24 @@ END
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
 md5sums=('SKIP'
-         'a438d28b6644036d79a20c16efad80b2'
+         'd9e24ab7ac01e2ab2511b2019d169bb8'
          '14e0f6237a79b85e60256f4808163160'
          'dbf14588e85812ee769bd735823a0146'
          'aa9f776d2187cba09de65cbb02b39ca0'
          '05bb69d25fb3572c618e3adf1ee7b670'
          '6e335a517c68488941340ee1c23f97b0'
          '46a4971f26c990a66b913ba700c7f3fa'
-         'ec5bf2759be835054e9d1d803e9b5897'
+         'bb59c4103d189d564d4ac323ebacf212'
          '1fad9a988826d69fe712ea973e43f6da'
-         '1d3a8171492b6e1c672f639fd44d4cf4'
-         'fa6ac817f576b486419b5f308116a7cd'
-         '0c684360f1df4536512d51873c1d243d'
-         '730e43106f0a4b19066c9c1e15ff7888'
+         'a106718d4e44b908bf28ed64e8372730'
+         'be479d0972ee83ea967bbc96d55c939a'
+         '0661e259fe57df87fca791f4aeb78da0'
+         'c7e2592c49f5846857e7a84e0788099d'
          'fe24f5ea463013bb7f1c12d12dce41b2'
          '3fa8bd22d97248de529780f5797178af'
          'b358b5ed3726ecd4ed054bdc09901982'
          'c6ebac35e9e9c3b031f2cf9ee3e6ed96'
          'a819433292665a6f06a223a0a718e67a'
-         '7601506112cd12f21dea65d840968d1f'
-         '2f51339d122d19f57ec49fc2da07654a'
          'dbf14588e85812ee769bd735823a0146'
          '196edf030efc516e3de5ae3aa01e9851'
          '11427899801d5e8f66df835f5806f851')
