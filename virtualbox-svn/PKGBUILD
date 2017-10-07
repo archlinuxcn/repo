@@ -10,7 +10,7 @@ pkgname=('virtualbox-svn'
          'virtualbox-guest-utils-svn'
          'virtualbox-guest-utils-nox-svn'
          'virtualbox-ext-vnc-svn')
-pkgver=68966
+pkgver=69007
 pkgrel=1
 arch=('i686' 'x86_64')
 url='http://virtualbox.org'
@@ -70,7 +70,6 @@ source=("VirtualBox::svn+http://www.virtualbox.org/svn/vbox/trunk"
         '006-rdesktop-vrdp-keymap-path.patch'
         '007-python2-path.patch'
         '008-no-vboxvideo.patch'
-        '009-glibc-2.26.patch'
         )
 sha256sums=('SKIP'
             '292fa3a414c125cf9119c8f2d866f3bd3a36c37842c9f68e6bbf74801860cd8a'
@@ -89,9 +88,7 @@ sha256sums=('SKIP'
             '7d2da8fe10a90f76bbfc80ad1f55df4414f118cd10e10abfb76070326abebd46'
             '5d5af2de5b1f1c61ec793503350f2440661cf8fd640f11b8a86f10bce499c0dc'
             '6bdb017459532537199c399eefd3d84d8dc7f1786e79997caebd3b6eb5c75d9f'
-            '8b7f241107863f82a5b0ae336aead0b3366a40103ff72dbebf33f54b512a0cbc'
-            '3b6ad08a80f9f8c02c0c3625b7c96150056b466b8f32740b242a55736c282ec7')
-
+            '8b7f241107863f82a5b0ae336aead0b3366a40103ff72dbebf33f54b512a0cbc')
 pkgver() {
   cd "VirtualBox"
   local ver="$(svnversion)"
