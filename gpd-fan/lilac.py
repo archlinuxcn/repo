@@ -9,7 +9,6 @@ from lilaclib import *
 build_prefix = 'extra-x86_64'
 
 def pre_build():
-    run_cmd('rm -rf master.zip'.split(' '))
     vcs_update()
 
 post_build = aur_post_build
