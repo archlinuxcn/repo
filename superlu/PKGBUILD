@@ -2,10 +2,10 @@
 # Contributor: Giuseppe Borzi <gborzi@ieee.org>
 pkgname=superlu
 pkgver=5.2.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Set of subroutines to solve a sparse linear system"
 arch=('i686' 'x86_64')
-url="http://crd.lbl.gov/~xiaoye/SuperLU/"
+url="http://crd-legacy.lbl.gov/~xiaoye/SuperLU/"
 license=('custom')
 depends=('gcc-libs' 'blas')
 makedepends=('gcc-fortran' 'tcsh')
