@@ -12,7 +12,9 @@ def pre_build():
     run_cmd('rm -rf master.zip'.split(' '))
     vcs_update()
 
-post_build = aur_post_build
+def post_build():
+    git_add_files("PKGBUILD")
+    git_commit()
 
 if __name__ == '__main__':
     single_main(build_prefix)
