@@ -1,6 +1,6 @@
 # Maintainer: Meow < leon.tty1 at gmail dot com >
 
-# Get download links and md5 sums for latest version of RStudio desktop
+# Get download links and md5sums for latest version of RStudio desktop
 ## R code #############
 #
 #  require(XML)
@@ -12,7 +12,7 @@
 #######################
 
 pkgname=rstudio-desktop-bin
-pkgver=1.0.153
+pkgver=1.1.383
 pkgrel=1
 pkgdesc="An integrated development environment (IDE) for R (binary version from RStudio official repository)"
 arch=('i686' 'x86_64')
@@ -26,22 +26,12 @@ conflicts=('rstudio-desktop' 'rstudio-desktop-git' 'rstudio-desktop-preview-bin'
 provides=("rstudio-desktop=${pkgver}")
 options=(!strip)
 
-_x86md5=981be44f91fc07e5f69f52330da32659
-_x64md5=2d0769bea2bf6041511d6901a1cf69c3
+md5sums_i686=(9588bce746f2a5e8da299c4a8b35d4fa)
+md5sums_x86_64=(3eede231b7206a7eebbf090f4991358f)
 
-case "$CARCH" in
-	'i686')
-		_arch=i386
-    _archx=
-		md5sums=($_x86md5)
-		;;
-	'x86_64')
-		_arch=amd64
-    _archx=64
-		md5sums=($_x64md5)
-		;;
-esac    
-source=("https://download1.rstudio.org/rstudio-${pkgver}-${_arch}.deb")
+source_i686=("https://download1.rstudio.org/rstudio-${pkgver}-i386.deb")
+source_x86_64=("https://download1.rstudio.org/rstudio-${pkgver}-amd64.deb")
+
 install="$pkgname".install
 
 package() {
