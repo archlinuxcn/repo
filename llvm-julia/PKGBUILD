@@ -11,7 +11,7 @@
 pkgname=('llvm-julia' 'llvm-libs-julia' 'llvm-ocaml-julia' 'lld-julia' 'lldb-julia'
          'clang-julia' 'clang-tools-extra-julia')
 pkgver=5.0.0
-pkgrel=4
+pkgrel=5
 _ocaml_ver=4.05.0
 arch=(i686 x86_64 armv7h aarch64)
 url="http://llvm.org/"
@@ -28,7 +28,7 @@ source=(https://releases.llvm.org/$pkgver/llvm-$pkgver.src.tar.xz
         https://releases.llvm.org/$pkgver/lld-$pkgver.src.tar.xz
         https://releases.llvm.org/$pkgver/lldb-$pkgver.src.tar.xz
         llvm-D27629-AArch64-large_model.patch
-        llvm-loadcse-addrspace.patch
+        llvm-instcombine-ptrtoint.patch
         llvm-D34078-vectorize-fdiv.patch
         llvm-arm-reset.patch
         # Arch patches
@@ -43,7 +43,7 @@ sha256sums=('e35dcbae6084adcf4abb32514127c5eabd7d63b733852ccdb31e06f1373136da'
             '399a7920a5278d42c46a7bf7e4191820ec2301457a7d0d4fcc9a4ac05dd53897'
             'c0a0ca32105e9881d86b7ca886220147e686edc97fdb9f3657c6659dc6568b7d'
             'b80285028d65417116c53915505ab418b0f9e0a697c67803abf459108f7fd501'
-            '16dc4d6d4166bf019e2104bb138e3cbd0c1551d959692efb699b3d2de51cab79'
+            '43f021afc8037e537ba4c5f82fe1d8a9dcbcf15e8b9fffc527260f0385451350'
             '5ea9c995aba1627440d3985c425472301c711b134ce3fd9e655d0245d0832699'
             '55bec3bbcde3bc149df2049bc53101d79c2e012f4b791132725a445d724fddea'
             'a1ba7fb859ac157c4b4342435cd656e29b1e1d9bddcb8ae0158a91c0a8ba6203'
@@ -86,7 +86,7 @@ EOF
   mv "$srcdir/lldb-$pkgver.src" tools/lldb
 
   apply_julia_patch D27629-AArch64-large_model
-  apply_julia_patch loadcse-addrspace
+  apply_julia_patch instcombine-ptrtoint
   apply_julia_patch D34078-vectorize-fdiv
   apply_julia_patch arm-reset
 
