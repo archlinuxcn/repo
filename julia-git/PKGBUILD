@@ -205,13 +205,16 @@ package-julia-in() {
   cd "$1"
 
   if ((BUILD_DOC)); then
-      make install DESTDIR="$pkgdir" "${opts[@]}"
+    make install DESTDIR="$pkgdir" "${opts[@]}"
   else
-      make install-nodoc DESTDIR="$pkgdir" "${opts[@]}"
+    make install-nodoc DESTDIR="$pkgdir" "${opts[@]}"
+    # Manually install man pages
+    mkdir -p "$pkgdir"/usr/share/man/man1/
+    install -m644 -t "$pkgdir"/usr/share/man/man1/ usr/share/man/man1/julia.1
   fi
 
-  # Remove doc files
-  rm -r "$pkgdir/usr/share/doc/julia"
+  # Remove doc files (should be non for nodoc install)
+  rm -rf "$pkgdir/usr/share/doc/julia"
 
   ver=$("$pkgdir/usr/bin/julia" \
             --startup-file=no \
