@@ -5,19 +5,23 @@
 pkgbase=libgnome
 pkgname=('libgnome' 'libgnome-data')
 pkgver=2.32.1
-pkgrel=6
+pkgrel=7
 arch=('i686' 'x86_64')
 license=('LGPL')
 makedepends=('intltool' 'gnome-vfs' 'libbonobo' 'gconf' 'gvfs' 'libcanberra')
 options=('!emptydirs')
 url="http://www.gnome.org"
 source=(https://download.gnome.org/sources/${pkgbase}/2.32/${pkgbase}-${pkgver}.tar.bz2
-        0001-Don-t-use-G_DISABLE_DEPRECATED.patch)
+        0001-Don-t-use-G_DISABLE_DEPRECATED.patch
+	  05_glib-2.54-ftbfs.patch)
 sha256sums=('b2c63916866485793b87398266dd7778548c1734923c272a94d84ee011b6f7a4'
-            'c2521ed5985159b33a0a5bf53b89012abd9521391fc8ce4c9c73289ca18eb147')
+            'c2521ed5985159b33a0a5bf53b89012abd9521391fc8ce4c9c73289ca18eb147'
+		'b86a3a1ef9df2314029a418ea26cadeadb1cf2da30536b850f7c98a6d8ce2220')
 
 prepare() {
   cd $pkgbase-$pkgver
+  #patch "$pkgbase/gnome-config.h" < "$srcdir/05_glib-2.54-ftbfs.patch"
+  patch -Np1 -i ../05_glib-2.54-ftbfs.patch
   patch -Np1 -i ../0001-Don-t-use-G_DISABLE_DEPRECATED.patch
 }
 

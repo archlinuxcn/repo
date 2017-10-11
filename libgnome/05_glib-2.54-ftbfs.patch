@@ -1,0 +1,16 @@
+Description: Fix FTBFS with glib 2.54
+ glib-mkenums now expects input files to be UTF-8,
+ fix the encoding of libgnome/gnome-config.h
+Author: Adrian Bunk <bunk@debian.org>
+
+--- libgnome-2.32.1.orig/libgnome/gnome-config.h
++++ libgnome-2.32.1/libgnome/gnome-config.h
+@@ -270,7 +270,7 @@ void gnome_config_clean_key_ (const char
+ #define gnome_config_private_clean_key(path) \
+ 	(gnome_config_clean_key_((path),TRUE))
+ 
+-/* returns the true filename of the config file */
++/* returns the true filename of the config file */
+ #define gnome_config_get_real_path(path) \
+ 	(g_build_filename (gnome_user_dir_get(),(path),NULL))
+ #define gnome_config_private_get_real_path(path) \
