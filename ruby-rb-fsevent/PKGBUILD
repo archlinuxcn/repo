@@ -4,8 +4,8 @@
 
 _gemname=rb-fsevent
 pkgname=ruby-$_gemname
-pkgver=0.9.7
-pkgrel=2
+pkgver=0.10.2
+pkgrel=1
 pkgdesc='Very simple & usable FSEvents API'
 arch=('any')
 url='http://rubygems.org/gems/rb-fsevent'
@@ -13,7 +13,7 @@ license=('MIT')
 depends=('ruby')
 source=("https://rubygems.org/downloads/$_gemname-$pkgver.gem")
 noextract=("$_gemname-$pkgver.gem")
-sha256sums=('9b744c190144ce481500d7f23936512b5f25437b8c2def2d69933fdb1f7593f6')
+sha256sums=('ee479a1a259e26db06936379c0fd228aab67aeafb0cee04f466b767ebdac77b9')
 options=(!emptydirs)
 
 package() {
