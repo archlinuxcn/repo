@@ -1,4 +1,4 @@
-From 2c5bb40dbb09e883b93fbc3431d58f52dcdb747d Mon Sep 17 00:00:00 2001
+From d0d50d8ac47d1c26aa85b4ae2f0c84e8b71feb81 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sat, 20 Sep 2014 12:29:23 -0400
 Subject: [PATCH 2/2] add back native style
@@ -10,19 +10,19 @@ Subject: [PATCH 2/2] add back native style
  3 files changed, 11 insertions(+), 1 deletion(-)
 
 diff --git a/mscore/preferences.cpp b/mscore/preferences.cpp
-index 40a7f4b..28e12db 100644
+index 8e4cc0ce5..f5e1eaf1a 100644
 --- a/mscore/preferences.cpp
 +++ b/mscore/preferences.cpp
-@@ -322,6 +322,8 @@ void Preferences::write()
-             styleName = "light_oxygen";
-       else if (globalStyle == MuseScoreStyleType::DARK_FUSION)
+@@ -323,6 +323,8 @@ void Preferences::write()
+       QString styleName = "light_fusion";
+       if (globalStyle == MuseScoreStyleType::DARK_FUSION)
              styleName = "dark_fusion";
 +      else if (globalStyle == MuseScoreStyleType::NATIVE)
 +            styleName = "native";
        s.setValue("style", styleName);
        s.setValue("animations", animations);
        s.setValue("singlePalette", singlePalette);
-@@ -484,6 +486,8 @@ void Preferences::read()
+@@ -485,6 +487,8 @@ void Preferences::read()
              globalStyle  = MuseScoreStyleType::DARK_FUSION;
        else if (sName == "light_fusion")
              globalStyle  = MuseScoreStyleType::LIGHT_FUSION;
@@ -32,13 +32,13 @@ index 40a7f4b..28e12db 100644
        animations       = s.value("animations",       animations).toBool();
        singlePalette    = s.value("singlePalette",    singlePalette).toBool();
 diff --git a/mscore/preferences.h b/mscore/preferences.h
-index 1970302..8a130fc 100644
+index 8592cae40..a50469746 100644
 --- a/mscore/preferences.h
 +++ b/mscore/preferences.h
-@@ -60,7 +60,8 @@ enum class MuseScoreStyleType : char {
-       DARK_OXYGEN = 0,
-       LIGHT_OXYGEN,
-       DARK_FUSION,
+@@ -58,7 +58,8 @@ enum {
+ 
+ enum class MuseScoreStyleType : char {
+       DARK_FUSION = 0,
 -      LIGHT_FUSION
 +      LIGHT_FUSION,
 +      NATIVE
@@ -46,11 +46,11 @@ index 1970302..8a130fc 100644
  
  // MusicXML export break values
 diff --git a/mscore/prefsdialog.ui b/mscore/prefsdialog.ui
-index 6ace1d7..7978ace 100644
+index 2ed08a9da..0d87de05d 100644
 --- a/mscore/prefsdialog.ui
 +++ b/mscore/prefsdialog.ui
-@@ -686,6 +686,11 @@
-               <string>Light Fusion</string>
+@@ -672,6 +672,11 @@
+               <string>Light</string>
               </property>
              </item>
 +            <item>
@@ -62,5 +62,5 @@ index 6ace1d7..7978ace 100644
            </item>
            <item row="0" column="2" colspan="2">
 -- 
-2.10.0
+2.14.2
 

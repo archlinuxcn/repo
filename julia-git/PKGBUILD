@@ -31,7 +31,7 @@ case $CARCH in
 esac
 
 epoch=1
-pkgver=0.7.0.DEV.2057.g956677193c
+pkgver=0.7.0.DEV.2127.g9c5ee20a81
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
@@ -55,7 +55,8 @@ source=('git://github.com/JuliaLang/julia'
         0007-Use-processor.cpp-API-to-initialize-LLVM-JIT.patch
         0008-Implement-function-multi-versioning-in-sysimg.patch
         0009-Finish-up-function-multiversioning-support.patch
-        0001-Try-re-enable-frame-pointer-omission.patch)
+        0001-Try-re-enable-frame-pointer-omission.patch
+        0001-Add-install-nodoc-make-target-to-skip-building-and-i.patch)
 md5sums=('SKIP'
          '91a0c77dc0700ff283d3aaaac67a9147'
          '84d6c1e407839b1459278b35c245e3ad'
@@ -69,7 +70,8 @@ md5sums=('SKIP'
          '7d626ef30f7ccccef9b94b7bc8b06b93'
          'f6a713513a1a720e83fdb2bf0a056fde'
          '73216180a27604bc96dcfe45d463da3d'
-         '91bc8836614d83cf1aebe79e455b181f')
+         '91bc8836614d83cf1aebe79e455b181f'
+         '2222d3eabfe6040a8cca466303c86d2b')
 
 pkgver() {
   cd julia
@@ -158,6 +160,7 @@ EOF
   patch -Np1 < ../0008-Implement-function-multi-versioning-in-sysimg.patch
   patch -Np1 < ../0009-Finish-up-function-multiversioning-support.patch
   patch -Np1 < ../0001-Try-re-enable-frame-pointer-omission.patch
+  patch -Np1 < ../0001-Add-install-nodoc-make-target-to-skip-building-and-i.patch
 }
 
 build_in() {
@@ -201,10 +204,17 @@ package-julia-in() {
 
   cd "$1"
 
-  make install DESTDIR="$pkgdir" "${opts[@]}"
+  if ((BUILD_DOC)); then
+    make install DESTDIR="$pkgdir" "${opts[@]}"
+  else
+    make install-nodoc DESTDIR="$pkgdir" "${opts[@]}"
+    # Manually install man pages
+    mkdir -p "$pkgdir"/usr/share/man/man1/
+    install -m644 -t "$pkgdir"/usr/share/man/man1/ usr/share/man/man1/julia.1
+  fi
 
-  # Remove doc files
-  rm -r "$pkgdir/usr/share/doc/julia"
+  # Remove doc files (should be non for nodoc install)
+  rm -rf "$pkgdir/usr/share/doc/julia"
 
   ver=$("$pkgdir/usr/bin/julia" \
             --startup-file=no \

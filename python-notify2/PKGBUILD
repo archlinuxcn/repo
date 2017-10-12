@@ -2,15 +2,16 @@
 
 pkgname=python-notify2
 _pypiname=${pkgname/python-/}
-pkgver=0.3
-pkgrel=2.1
+pkgver=0.3.1
+pkgrel=2
 pkgdesc='Python interface to DBus notifications'
 arch=('any')
 url='https://pypi.python.org/pypi/notify2/'
 license=('BSD')
 depends=('python' 'python-setuptools' 'python-dbus')
-source=("http://pypi.python.org/packages/source/${_pypiname:0:1}/${_pypiname}/${_pypiname}-${pkgver}.tar.gz")
-sha256sums=('684281f91c51fc60bc7909a35bd21d043a2a421f4e269de1ed1f13845d1d6321')
+
+source=("https://pypi.python.org/packages/aa/e8/d4b335aa739dc299a77766ecc5f1972d1de1993524aa94acef3219bba315/notify2-0.3.1.tar.gz")
+sha256sums=('33fa108d50c42f3cd3407cc437518ad3f6225d1bb237011f16393c9dd3ce197d')
 
 package() {
     cd $srcdir/${_pypiname}-${pkgver}
