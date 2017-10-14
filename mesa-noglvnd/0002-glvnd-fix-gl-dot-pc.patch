@@ -1,0 +1,12 @@
+diff -up mesa-12.0.3/src/mesa/gl.pc.in.jx mesa-12.0.3/src/mesa/gl.pc.in
+--- mesa-12.0.3/src/mesa/gl.pc.in.jx	2016-01-18 02:39:26.000000000 -0500
++++ mesa-12.0.3/src/mesa/gl.pc.in	2016-10-25 13:06:44.013159358 -0400
+@@ -7,7 +7,7 @@ Name: gl
+ Description: Mesa OpenGL library
+ Requires.private: @GL_PC_REQ_PRIV@
+ Version: @PACKAGE_VERSION@
+-Libs: -L${libdir} -l@GL_LIB@
++Libs: -L${libdir} -lGL
+ Libs.private: @GL_PC_LIB_PRIV@
+ Cflags: -I${includedir} @GL_PC_CFLAGS@
+ glx_tls: @GLX_TLS@
