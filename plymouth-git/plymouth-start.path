@@ -1,0 +1,10 @@
+[Unit]
+Description=Automatically Start Plymouth Boot Screen
+
+[Path]
+PathExistsGlob=/sys/class/graphics/fb*/device/drm/
+Unit=plymouth-start.service
+
+[Install]
+WantedBy=sysinit.target
+
