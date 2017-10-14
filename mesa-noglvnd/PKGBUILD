@@ -6,7 +6,7 @@
 pkgbase=mesa-noglvnd
 pkgname=('opencl-mesa-noglvnd' 'vulkan-intel-noglvnd' 'vulkan-radeon-noglvnd' 'libva-mesa-driver-noglvnd' 'mesa-vdpau-noglvnd' 'mesa-noglvnd' 'mesa-libgl-noglvnd')
 pkgver=17.2.2
-pkgrel=1
+pkgrel=3
 arch=('i686' 'x86_64')
 makedepends=('python2-mako' 'libxml2' 'libx11' 'glproto' 'libdrm' 'dri2proto' 'dri3proto' 'presentproto' 
              'libxshmfence' 'libxxf86vm' 'libxdamage' 'libvdpau' 'libva' 'wayland' 'elfutils' 'llvm'
@@ -83,7 +83,6 @@ package_opencl-mesa-noglvnd() {
   optdepends=('opencl-headers: headers necessary for OpenCL development')
   provides=('opencl-driver' 'opencl-mesa')
   conflicts=('opencl-mesa' 'opencl-mesa-git')
-  replaces=('opencl-mesa' 'opencl-mesa-git')
 
   install -m755 -d ${pkgdir}/etc
   cp -rv ${srcdir}/fakeinstall/etc/OpenCL ${pkgdir}/etc/
@@ -101,7 +100,6 @@ package_vulkan-intel-noglvnd() {
   depends=('wayland' 'libx11' 'libxshmfence')
   provides=('vulkan-driver' 'vulkan-intel')
   conflicts=('vulkan-intel' 'vulkan-intel-git')
-  replaces=('vulkan-intel' 'vulkan-intel-git')
 
   install -m755 -d ${pkgdir}/usr/share/vulkan/icd.d
   mv -v ${srcdir}/fakeinstall/usr/share/vulkan/icd.d/intel_icd*.json ${pkgdir}/usr/share/vulkan/icd.d/
@@ -119,7 +117,6 @@ package_vulkan-radeon-noglvnd() {
   depends=('wayland' 'libx11' 'libxshmfence' 'libelf' 'libdrm' 'llvm-libs')
   provides=('vulkan-driver' 'vulkan-radeon')
   conflicts=('vulkan-radeon' 'vulkan-radeon-git')
-  replaces=('vulkan-radeon' 'vulkan-radeon-git')
 
   install -m755 -d ${pkgdir}/usr/share/vulkan/icd.d
   mv -v ${srcdir}/fakeinstall/usr/share/vulkan/icd.d/radeon_icd*.json ${pkgdir}/usr/share/vulkan/icd.d/
@@ -136,7 +133,6 @@ package_libva-mesa-driver-noglvnd() {
   depends=('libdrm' 'libx11' 'llvm-libs' 'expat' 'libelf' 'libxshmfence' 'lm_sensors' 'libunwind')
   provides=('libva-mesa-driver')
   conflicts=('libva-mesa-driver')
-  replaces=('libva-mesa-driver')
 
   install -m755 -d ${pkgdir}/usr/lib
   cp -rv ${srcdir}/fakeinstall/usr/lib/dri ${pkgdir}/usr/lib
@@ -150,7 +146,6 @@ package_mesa-vdpau-noglvnd() {
   depends=('libdrm' 'libx11' 'llvm-libs' 'expat' 'libelf' 'libgcrypt' 'libxshmfence' 'lm_sensors' 'libunwind')
   provides=('mesa-vdpau')
   conflicts=('mesa-vdpau')
-  replaces=('mesa-vdpau')
 
   install -m755 -d ${pkgdir}/usr/lib
   cp -rv ${srcdir}/fakeinstall/usr/lib/vdpau ${pkgdir}/usr/lib
@@ -168,7 +163,6 @@ package_mesa-noglvnd() {
               'libva-mesa-driver-noglvnd: for accelerated video playback')
   provides=('ati-dri' 'intel-dri' 'nouveau-dri' 'svga-dri' 'mesa-dri' 'mesa' 'opengl-driver') #'mesa-libgl')
   conflicts=('ati-dri' 'intel-dri' 'nouveau-dri' 'svga-dri' 'mesa-dri' 'mesa' 'mesa-git') #'mesa-libgl')
-  replaces=('ati-dri' 'intel-dri' 'nouveau-dri' 'svga-dri' 'mesa-dri' 'mesa' 'mesa-git') #'mesa-libgl')
   backup=('etc/drirc')
 
   install -m755 -d ${pkgdir}/etc
@@ -211,7 +205,6 @@ package_mesa-libgl-noglvnd() {
   depends=('mesa')
   provides=('libgl' 'libgles' 'libegl' 'mesa-libgl')
   conflicts=('mesa-libgl' 'mesa-libgl-git' 'libglvnd')
-  replaces=('mesa-libgl' 'mesa-libgl-git')
 
   install -m755 -d "${pkgdir}/usr/lib/"
  

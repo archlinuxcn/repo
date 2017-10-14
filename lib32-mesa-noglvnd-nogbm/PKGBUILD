@@ -6,7 +6,7 @@
 pkgbase=lib32-mesa-noglvnd-nogbm
 pkgname=('lib32-vulkan-intel-noglvnd-nogbm' 'lib32-vulkan-radeon-noglvnd-nogbm' 'lib32-mesa-vdpau-noglvnd-nogbm' 'lib32-mesa-noglvnd-nogbm' 'lib32-mesa-libgl-noglvnd-nogbm')
 pkgver=17.2.2
-pkgrel=1
+pkgrel=3
 arch=('x86_64')
 makedepends=('python2-mako' 'lib32-libxml2' 'lib32-expat' 'lib32-libx11' 'glproto' 'lib32-libdrm' 'dri2proto' 'dri3proto' 'presentproto'
              'lib32-libxshmfence' 'lib32-libxxf86vm' 'lib32-libxdamage' 'gcc-multilib' 'lib32-libelf' 'lib32-llvm' 'lib32-libvdpau'
@@ -85,7 +85,6 @@ package_lib32-vulkan-intel-noglvnd-nogbm() {
   depends=('lib32-wayland' 'lib32-libx11' 'lib32-gcc-libs' 'lib32-libxshmfence')
   provides=('lib32-vulkan-driver' 'lib32-vulkan-intel')
   conflicts=('lib32-vulkan-intel' 'lib32-vulkan-intel-git')
-  replaces=('lib32-vulkan-intel' 'lib32-vulkan-intel-git')
 
   install -m755 -d ${pkgdir}/usr/share/vulkan/icd.d
   cp -rv ${srcdir}/fakeinstall/usr/share/vulkan/icd.d/intel_icd*.json ${pkgdir}/usr/share/vulkan/icd.d/
@@ -102,7 +101,6 @@ package_lib32-vulkan-radeon-noglvnd-nogbm() {
   depends=('lib32-wayland' 'lib32-libx11' 'lib32-llvm-libs' 'lib32-libdrm' 'lib32-libelf' 'lib32-lm_sensors' 'lib32-libxshmfence')
   provides=('lib32-vulkan-driver' 'lib32-vulkan-radeon')
   conflicts=('lib32-vulkan-radeon' 'lib32-vulkan-radeon-git')
-  replaces=('lib32-vulkan-radeon' 'lib32-vulkan-radeon-git')
 
   install -m755 -d ${pkgdir}/usr/share/vulkan/icd.d
   cp -rv ${srcdir}/fakeinstall/usr/share/vulkan/icd.d/radeon_icd*.json ${pkgdir}/usr/share/vulkan/icd.d/
@@ -119,7 +117,6 @@ package_lib32-mesa-vdpau-noglvnd-nogbm() {
   depends=('lib32-libdrm' 'lib32-libx11' 'lib32-expat' 'lib32-llvm-libs' 'lib32-libelf' 'lib32-libxshmfence')
   provides=('lib32-mesa-vdpau')
   conflicts=('lib32-mesa-vdpau')
-  replaces=('lib32-mesa-vdpau')
 
   install -m755 -d ${pkgdir}/usr/lib32
   cp -rv ${srcdir}/fakeinstall/usr/lib32/vdpau ${pkgdir}/usr/lib32
@@ -136,7 +133,6 @@ package_lib32-mesa-noglvnd-nogbm() {
               'lib32-mesa-vdpau-noglvnd-nogbm: for accelerated video playback')
   provides=('lib32-ati-dri' 'lib32-intel-dri' 'lib32-nouveau-dri' 'lib32-mesa-dri' 'lib32-opengl-driver' 'lib32-mesa')
   conflicts=('lib32-ati-dri' 'lib32-intel-dri' 'lib32-nouveau-dri' 'lib32-mesa-dri' 'lib32-mesa' 'lib32-mesa-git')
-  replaces=('lib32-ati-dri' 'lib32-intel-dri' 'lib32-nouveau-dri' 'lib32-mesa-dri' 'lib32-mesa' 'lib32-mesa-git')
   install -m755 -d ${pkgdir}/usr/lib32/xorg/modules/dri
   # ati-dri, nouveay-dri, intel-dri, swrast
   cp -rv ${srcdir}/fakeinstall/usr/lib32/xorg/modules/dri/* ${pkgdir}/usr/lib32/xorg/modules/dri
@@ -165,7 +161,6 @@ package_lib32-mesa-libgl-noglvnd-nogbm() {
   depends=('lib32-mesa')
   provides=('lib32-libgl' 'lib32-libegl' 'lib32-libgles' 'lib32-mesa-libgl')
   conflicts=('lib32-mesa-libgl' 'lib32-mesa-libgl-git' 'lib32-libglvnd')
-  replaces=('lib32-mesa-libgl' 'lib32-mesa-libgl-git')
 
   install -m755 -d ${pkgdir}/usr/lib32
 
