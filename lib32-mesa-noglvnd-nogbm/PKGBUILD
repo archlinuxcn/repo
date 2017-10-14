@@ -3,8 +3,8 @@
 # Contributor: Jan de Groot <jgc@archlinux.org>
 # Contributor: Andreas Radke <andyrtr@archlinux.org>
 
-pkgbase=lib32-mesa-noglvnd
-pkgname=('lib32-vulkan-intel-noglvnd' 'lib32-vulkan-radeon-noglvnd' 'lib32-mesa-vdpau-noglvnd' 'lib32-mesa-noglvnd' 'lib32-mesa-libgl-noglvnd')
+pkgbase=lib32-mesa-noglvnd-nogbm
+pkgname=('lib32-vulkan-intel-noglvnd-nogbm' 'lib32-vulkan-radeon-noglvnd-nogbm' 'lib32-mesa-vdpau-noglvnd-nogbm' 'lib32-mesa-noglvnd-nogbm' 'lib32-mesa-libgl-noglvnd-nogbm')
 pkgver=17.2.2
 pkgrel=1
 arch=('x86_64')
@@ -80,7 +80,7 @@ build() {
   make DESTDIR=${srcdir}/fakeinstall install
 }
 
-package_lib32-vulkan-intel-noglvnd() {
+package_lib32-vulkan-intel-noglvnd-nogbm() {
   pkgdesc="Intel's Vulkan mesa driver (32-bit) - non-libglvnd version"
   depends=('lib32-wayland' 'lib32-libx11' 'lib32-gcc-libs' 'lib32-libxshmfence')
   provides=('lib32-vulkan-driver' 'lib32-vulkan-intel')
@@ -97,7 +97,7 @@ package_lib32-vulkan-intel-noglvnd() {
   install -m644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/lib32-vulkan-intel/"
 }
 
-package_lib32-vulkan-radeon-noglvnd() {
+package_lib32-vulkan-radeon-noglvnd-nogbm() {
   pkgdesc="Radeon's Vulkan mesa driver (32-bit) - non-libglvnd version"
   depends=('lib32-wayland' 'lib32-libx11' 'lib32-llvm-libs' 'lib32-libdrm' 'lib32-libelf' 'lib32-lm_sensors' 'lib32-libxshmfence')
   provides=('lib32-vulkan-driver' 'lib32-vulkan-radeon')
@@ -114,7 +114,7 @@ package_lib32-vulkan-radeon-noglvnd() {
   install -m644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/lib32-vulkan-radeon/"
 }
 
-package_lib32-mesa-vdpau-noglvnd() {
+package_lib32-mesa-vdpau-noglvnd-nogbm() {
   pkgdesc="Mesa VDPAU drivers (32-bit) - non-libglvnd version"
   depends=('lib32-libdrm' 'lib32-libx11' 'lib32-expat' 'lib32-llvm-libs' 'lib32-libelf' 'lib32-libxshmfence')
   provides=('lib32-mesa-vdpau')
@@ -128,12 +128,12 @@ package_lib32-mesa-vdpau-noglvnd() {
   install -m644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/lib32-mesa-vdpau/"
 }
 
-package_lib32-mesa-noglvnd() {
+package_lib32-mesa-noglvnd-nogbm() {
   pkgdesc="an open-source implementation of the OpenGL specification (32-bit) - non-libglvnd version"
   depends=('lib32-libdrm' 'lib32-libxxf86vm' 'lib32-libxdamage' 'lib32-libxshmfence' 'lib32-lm_sensors'
            'lib32-libelf' 'lib32-llvm-libs' 'lib32-wayland' 'lib32-libtxc_dxtn' 'mesa')
   optdepends=('opengl-man-pages: for the OpenGL API man pages'
-              'lib32-mesa-vdpau-noglvnd: for accelerated video playback')
+              'lib32-mesa-vdpau-noglvnd-nogbm: for accelerated video playback')
   provides=('lib32-ati-dri' 'lib32-intel-dri' 'lib32-nouveau-dri' 'lib32-mesa-dri' 'lib32-opengl-driver' 'lib32-mesa')
   conflicts=('lib32-ati-dri' 'lib32-intel-dri' 'lib32-nouveau-dri' 'lib32-mesa-dri' 'lib32-mesa' 'lib32-mesa-git')
   replaces=('lib32-ati-dri' 'lib32-intel-dri' 'lib32-nouveau-dri' 'lib32-mesa-dri' 'lib32-mesa' 'lib32-mesa-git')
@@ -160,7 +160,7 @@ package_lib32-mesa-noglvnd() {
   install -m644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/lib32-mesa/"
 }
 
-package_lib32-mesa-libgl-noglvnd() {
+package_lib32-mesa-libgl-noglvnd-nogbm() {
   pkgdesc="Mesa 3-D graphics library (32-bit) - non-libglvnd version"
   depends=('lib32-mesa')
   provides=('lib32-libgl' 'lib32-libegl' 'lib32-libgles' 'lib32-mesa-libgl')
