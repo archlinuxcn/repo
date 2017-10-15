@@ -1,9 +1,10 @@
-# Maintainer: Charles Bos <charlesbos1 AT gmail>
+# Maintainer: Jeremy MJ <jskier@gmail.com>
+# Contributor: Charles Bos <charlesbos1 AT gmail>
 # Contributor: Alessio Sergi <asergi at archlinux dot us>
 
 pkgname=xfce4-places-plugin
 pkgver=1.7.0
-pkgrel=4
+pkgrel=5
 pkgdesc="Places menu plugin for the Xfce panel"
 arch=('i686' 'x86_64')
 url="http://goodies.xfce.org/projects/panel-plugins/xfce4-places-plugin"
