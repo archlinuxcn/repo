@@ -1,0 +1,142 @@
+From 2cc72825a832e3254a6b275e69dd20ee5d612e88 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sat, 14 Oct 2017 19:19:47 -0400
+Subject: [PATCH] Fix implicit null check with negative offset
+
+It seems that negative offset was accidentally allowed in D17967.
+AFAICT small negative offset should be valid (always raise segfault) on all archs
+that I'm aware of (especially x86, which is the only one with this optimization enabled)
+and such case can be useful when loading hiden metadata from an object.
+
+However, like the positive side, it should only be done within a certain limit.
+For now, use the same limit on the positive side for the negative side.
+A separate option can be added if needs appear.
+---
+ lib/CodeGen/ImplicitNullChecks.cpp               |  2 +-
+ test/CodeGen/X86/implicit-null-check-negative.ll | 16 +++++++++
+ test/CodeGen/X86/implicit-null-check.ll          | 41 ++++++++++++++++++++++--
+ 3 files changed, 56 insertions(+), 3 deletions(-)
+
+diff --git a/lib/CodeGen/ImplicitNullChecks.cpp b/lib/CodeGen/ImplicitNullChecks.cpp
+index 19c52d01374..bf0f88d49a8 100644
+--- a/lib/CodeGen/ImplicitNullChecks.cpp
++++ b/lib/CodeGen/ImplicitNullChecks.cpp
+@@ -369,7 +369,7 @@ ImplicitNullChecks::isSuitableMemoryOp(MachineInstr &MI, unsigned PointerReg,
+   // We want the mem access to be issued at a sane offset from PointerReg,
+   // so that if PointerReg is null then the access reliably page faults.
+   if (!((MI.mayLoad() || MI.mayStore()) && !MI.isPredicable() &&
+-        Offset < PageSize))
++        -PageSize < Offset && Offset < PageSize))
+     return SR_Unsuitable;
+ 
+   // Finally, check whether the current memory access aliases with previous one.
+diff --git a/test/CodeGen/X86/implicit-null-check-negative.ll b/test/CodeGen/X86/implicit-null-check-negative.ll
+index c8d425c3889..c05b4a072ad 100644
+--- a/test/CodeGen/X86/implicit-null-check-negative.ll
++++ b/test/CodeGen/X86/implicit-null-check-negative.ll
+@@ -37,6 +37,22 @@ define i32 @imp_null_check_gep_load(i32* %x) {
+   ret i32 %t
+ }
+ 
++define i32 @imp_null_check_neg_gep_load(i32* %x) {
++ entry:
++  %c = icmp eq i32* %x, null
++  br i1 %c, label %is_null, label %not_null, !make.implicit !0
++
++ is_null:
++  ret i32 42
++
++ not_null:
++; null - 5000 * sizeof(i32) lies outside the null page and hence the
++; load to %t cannot be assumed to be reliably faulting.
++  %x.gep = getelementptr i32, i32* %x, i32 -5000
++  %t = load i32, i32* %x.gep
++  ret i32 %t
++}
++
+ define i32 @imp_null_check_load_no_md(i32* %x) {
+ ; This is fine, except it is missing the !make.implicit metadata.
+  entry:
+diff --git a/test/CodeGen/X86/implicit-null-check.ll b/test/CodeGen/X86/implicit-null-check.ll
+index ee795667cdb..8cfc9c669ad 100644
+--- a/test/CodeGen/X86/implicit-null-check.ll
++++ b/test/CodeGen/X86/implicit-null-check.ll
+@@ -182,6 +182,28 @@ define void @imp_null_check_store(i32* %x) {
+   ret void
+ }
+ 
++define i32 @imp_null_check_neg_gep_load(i32* %x) {
++; CHECK-LABEL: _imp_null_check_neg_gep_load:
++; CHECK: [[BB0_imp_null_check_neg_gep_load:L[^:]+]]:
++; CHECK: movl -128(%rdi), %eax
++; CHECK: retq
++; CHECK: [[BB1_imp_null_check_neg_gep_load:LBB7_[0-9]+]]:
++; CHECK: movl $42, %eax
++; CHECK: retq
++
++ entry:
++  %c = icmp eq i32* %x, null
++  br i1 %c, label %is_null, label %not_null, !make.implicit !0
++
++ is_null:
++  ret i32 42
++
++ not_null:
++  %x.gep = getelementptr i32, i32* %x, i32 -32
++  %t = load i32, i32* %x.gep
++  ret i32 %t
++}
++
+ !0 = !{}
+ 
+ ; CHECK-LABEL: __LLVM_FaultMaps:
+@@ -194,7 +216,7 @@ define void @imp_null_check_store(i32* %x) {
+ ; CHECK-NEXT: .short 0
+ 
+ ; # functions:
+-; CHECK-NEXT: .long 7
++; CHECK-NEXT: .long 8
+ 
+ ; FunctionAddr:
+ ; CHECK-NEXT: .quad _imp_null_check_add_result
+@@ -261,6 +283,19 @@ define void @imp_null_check_store(i32* %x) {
+ ; Fault[0].HandlerOffset:
+ ; CHECK-NEXT: .long [[BB1_imp_null_check_load]]-_imp_null_check_load
+ 
++; FunctionAddr:
++; CHECK-NEXT: .quad _imp_null_check_neg_gep_load
++; NumFaultingPCs
++; CHECK-NEXT: .long 1
++; Reserved:
++; CHECK-NEXT: .long 0
++; Fault[0].Type:
++; CHECK-NEXT: .long 1
++; Fault[0].FaultOffset:
++; CHECK-NEXT: .long [[BB0_imp_null_check_neg_gep_load]]-_imp_null_check_neg_gep_load
++; Fault[0].HandlerOffset:
++; CHECK-NEXT: .long [[BB1_imp_null_check_neg_gep_load]]-_imp_null_check_neg_gep_load
++
+ ; FunctionAddr:
+ ; CHECK-NEXT: .quad _imp_null_check_store
+ ; NumFaultingPCs
+@@ -289,7 +324,7 @@ define void @imp_null_check_store(i32* %x) {
+ 
+ ; OBJDUMP: FaultMap table:
+ ; OBJDUMP-NEXT: Version: 0x1
+-; OBJDUMP-NEXT: NumFunctions: 7
++; OBJDUMP-NEXT: NumFunctions: 8
+ ; OBJDUMP-NEXT: FunctionAddress: 0x000000, NumFaultingPCs: 1
+ ; OBJDUMP-NEXT: Fault kind: FaultingLoad, faulting PC offset: 0, handling PC offset: 5
+ ; OBJDUMP-NEXT: FunctionAddress: 0x000000, NumFaultingPCs: 1
+@@ -301,6 +336,8 @@ define void @imp_null_check_store(i32* %x) {
+ ; OBJDUMP-NEXT: FunctionAddress: 0x000000, NumFaultingPCs: 1
+ ; OBJDUMP-NEXT: Fault kind: FaultingLoad, faulting PC offset: 0, handling PC offset: 3
+ ; OBJDUMP-NEXT: FunctionAddress: 0x000000, NumFaultingPCs: 1
++; OBJDUMP-NEXT: Fault kind: FaultingLoad, faulting PC offset: 0, handling PC offset: 4
++; OBJDUMP-NEXT: FunctionAddress: 0x000000, NumFaultingPCs: 1
+ ; OBJDUMP-NEXT: Fault kind: FaultingStore, faulting PC offset: 0, handling PC offset: 7
+ ; OBJDUMP-NEXT: FunctionAddress: 0x000000, NumFaultingPCs: 1
+ ; OBJDUMP-NEXT: Fault kind: FaultingLoad, faulting PC offset: 0, handling PC offset: 11
+-- 
+2.14.2
+
