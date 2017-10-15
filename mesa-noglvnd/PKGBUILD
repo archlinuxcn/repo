@@ -4,9 +4,9 @@
 # Contributor: Andreas Radke <andyrtr@archlinux.org>
 
 pkgbase=mesa-noglvnd
-pkgname=('opencl-mesa-noglvnd' 'vulkan-intel-noglvnd' 'vulkan-radeon-noglvnd' 'libva-mesa-driver-noglvnd' 'mesa-vdpau-noglvnd' 'mesa-noglvnd' 'mesa-libgl-noglvnd')
+pkgname=('opencl-mesa-noglvnd' 'vulkan-intel-noglvnd' 'vulkan-radeon-noglvnd' 'libva-mesa-driver-noglvnd' 'mesa-vdpau-noglvnd' 'mesa-noglvnd')
 pkgver=17.2.2
-pkgrel=3
+pkgrel=4
 arch=('i686' 'x86_64')
 makedepends=('python2-mako' 'libxml2' 'libx11' 'glproto' 'libdrm' 'dri2proto' 'dri3proto' 'presentproto' 
              'libxshmfence' 'libxxf86vm' 'libxdamage' 'libvdpau' 'libva' 'wayland' 'elfutils' 'llvm'
@@ -198,32 +198,4 @@ package_mesa-noglvnd() {
 
   install -m755 -d "${pkgdir}/usr/share/licenses/mesa"
   install -m644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/mesa/"
-}
-
-package_mesa-libgl-noglvnd() {
-  pkgdesc="Mesa 3-D graphics library - non-libglvnd version"
-  depends=('mesa')
-  provides=('libgl' 'libgles' 'libegl' 'mesa-libgl')
-  conflicts=('mesa-libgl' 'mesa-libgl-git' 'libglvnd')
-
-  install -m755 -d "${pkgdir}/usr/lib/"
- 
-  ln -s /usr/lib/mesa/libGL.so.1.2.0 ${pkgdir}/usr/lib/libGL.so.1.2.0
-  ln -s libGL.so.1.2.0	             ${pkgdir}/usr/lib/libGL.so.1
-  ln -s libGL.so.1.2.0               ${pkgdir}/usr/lib/libGL.so
-
-  ln -s /usr/lib/mesa/libEGL.so.1.0.0 ${pkgdir}/usr/lib/libEGL.so.1.0.0
-  ln -s libEGL.so.1.0.0	              ${pkgdir}/usr/lib/libEGL.so.1
-  ln -s libEGL.so.1.0.0               ${pkgdir}/usr/lib/libEGL.so
-
-  ln -s /usr/lib/mesa/libGLESv1_CM.so.1.1.0 ${pkgdir}/usr/lib/libGLESv1_CM.so.1.1.0
-  ln -s libGLESv1_CM.so.1.1.0	            ${pkgdir}/usr/lib/libGLESv1_CM.so.1
-  ln -s libGLESv1_CM.so.1.1.0               ${pkgdir}/usr/lib/libGLESv1_CM.so
-
-  ln -s /usr/lib/mesa/libGLESv2.so.2.0.0 ${pkgdir}/usr/lib/libGLESv2.so.2.0.0
-  ln -s libGLESv2.so.2.0.0               ${pkgdir}/usr/lib/libGLESv2.so.2
-  ln -s libGLESv2.so.2.0.0               ${pkgdir}/usr/lib/libGLESv2.so
-
-  install -m755 -d "${pkgdir}/usr/share/licenses/mesa-libgl"
-  install -m644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/mesa-libgl/"
 }
