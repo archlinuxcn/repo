@@ -7,7 +7,7 @@
 
 pkgbase=linux-jwrdegoede
 _srcname=linux-sunxi-master
-pkgver=4.14.0rc4
+pkgver=4.14.0rc4.16c985c
 pkgrel=1
 arch=('x86_64')
 url="https://www.kernel.org/"
@@ -256,7 +256,8 @@ build() {
 pkgver() {
   url="https://raw.githubusercontent.com/jwrdegoede/linux-sunxi/master/Makefile"
   local ver=($(curl -fssL $url | head -n4 | awk -F'=' '{print $2}' | sed 's/ //g'))
-  printf "%s" "${ver[0]}.${ver[1]}.${ver[2]}${ver[3]/-/}"
+  local hash=$(curl -fssL https://api.github.com/repos/jwrdegoede/linux-sunxi/git/refs/heads/master | python -c "import sys,json;print(json.load(sys.stdin)['object']['sha'][:7])")
+  printf "%s" "${ver[0]}.${ver[1]}.${ver[2]}${ver[3]/-/}.${hash}"
 }
 
 _package() {
