@@ -1,7 +1,7 @@
 # Contributor: Zeph <zeph33@gmail.com>
 # Maintainer: Zeph <zeph33@gmail.com>
 pkgname=pamac-aur
-_pkgver=6.1.0
+_pkgver=6.1.1
 pkgver=$_pkgver
 pkgrel=2
 pkgdesc="A Gtk3 frontend for libalpm"
@@ -23,7 +23,7 @@ options=(!emptydirs)
 install=pamac.install
 
 source=("pamac-$pkgver-$pkgrel.tar.gz::$url/archive/v$_pkgver.tar.gz")
-sha256sums=('2d63d33517c288f899eedab08c46dbae859d72b7c3f3a455a3e6622ce9b7851d')
+sha256sums=('fb4d8f9754ca11d32132cbf5d8c8cb49963e53e39069d3801ced45d3902544a5')
 
 prepare() {
   cd "$srcdir/pamac-$_pkgver"
@@ -35,15 +35,25 @@ prepare() {
 
 build() {
   cd "$srcdir/pamac-$_pkgver"
+  mkdir -p builddir  
+  cd builddir
+#  meson --prefix="$pkgdir"/usr --sysconfdir="$pkgdir"/etc ./ ./builddir/
+  meson --prefix=/usr --sysconfdir=/etc
 
   # build
-  mkdir builddir  
-  meson --prefix="$pkgdir"/usr --sysconfdir="$pkgdir"/etc ./ ./builddir/
+  ninja
 }
 
 package() {
   cd "$srcdir/pamac-$_pkgver/builddir"
-  ninja
-  ninja install
+  
+  DESTDIR="$pkgdir" ninja install
+  # enable systemd timer
+  mkdir -p "$pkgdir/etc/systemd/system/multi-user.target.wants"
+  ln -sf "/usr/lib/systemd/system/pamac-cleancache.timer" "$pkgdir/etc/systemd/system/multi-user.target.wants"
+  
+  # remove pamac-tray-appindicator
+#  rm "$pkgdir/usr/bin/pamac-tray-appindicator"
+#  rm "$pkgdir/etc/xdg/autostart/pamac-tray-appindicator.desktop"
 }
 # vim:set ts=2 sw=2 et:
