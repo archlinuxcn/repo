@@ -4,13 +4,13 @@
 
 pkgname=chrome-remote-desktop
 pkgver=61.0.3163.20
-pkgrel=1
+pkgrel=2
 pkgdesc="Allows you to securely access your computer over the Internet through Chrome."
 url="https://chrome.google.com/webstore/detail/gbchcmhmhahfdphkhkmpfmihenigjmpp"
 arch=('x86_64')
 license=('BSD')
 install=$pkgname.install
-depends=('python2' 'python2-psutil' 'gconf' 'gtk2' 'nss'
+depends=('python2' 'python2-psutil' 'gconf' 'gtk3' 'nss'
          'xorg-xdpyinfo' 'xorg-setxkbmap' 'xorg-server-xvfb' 'xorg-xauth')
 makedepends=('nano')
 
