@@ -4,7 +4,7 @@
 
 pkgname=anaconda
 pkgver=5.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Completely free enterprise-ready Python distribution for large-scale data processing, predictive analytics, and scientific computing."
 arch=('x86' 'x86_64')
 url="https://store.continuum.io/cshop/anaconda/"
@@ -28,16 +28,16 @@ package() {
     LD_PRELOAD="/usr/lib/libfakeroot/libfakeroot.so"
 
     msg2 "Installing anaconda to /opt/${pkgname}"
-    bash ${srcdir}/Anaconda3-${pkgver}-Linux-${_pkgarch}.sh -b -p $prefix
+    bash ${srcdir}/Anaconda3-${pkgver}-Linux-${_pkgarch}.sh -b -p $prefix -f
 
     cd $prefix
 
     msg2 "Correcting permissions"
     chmod a+r -R $prefix/pkgs
 
-    msg2 "Stripping \$pkgdir from default meta"
-    find conda-meta -name '*.json' -exec sed -e "s/${pkgdir//\//\\\/}//g" -i {} \;
+    msg2 "Stripping \$pkgdir"
+    sed "s|${pkgdir}||g" -i $(grep "$pkgdir" . -rIl)
 
     msg2 "Installing license"
-    install -D -m644 $prefix/LICENSE.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+    install -D -m644 LICENSE.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
