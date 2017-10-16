@@ -15,8 +15,6 @@ options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
 sha1sums=('64d337568404bf8f761974ebf2b538418bff3d85')
-replaces=('ruby-rouge')
-conflicts=('ruby-rouge')
 
 package() {
   local _gemdir="$(ruby -e'puts Gem.default_dir')"
