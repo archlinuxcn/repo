@@ -1,39 +1,71 @@
-# Maintainer: Danny Dutton <duttondj@vt.edu>
+# Maintainer: Muflone http://www.muflone.com/contacts/english/
+# Contributor: Danny Dutton <duttondj@vt.edu>
 
-pkgname="qt-installer-framework"
-pkgver=2.0.3
-pkgrel=2
-_qtver=5.4.2
-pkgdesc="The Qt Installer Framework used for the Qt SDK installer."
+pkgbase=qt-installer-framework
+pkgname=(qt-installer-framework qt-installer-framework-docs)
+pkgver=3.0.1
+pkgrel=1
+pkgdesc='The Qt Installer Framework used for the Qt SDK installer'
 arch=('i686' 'x86_64')
 url='http://qt-project.org/wiki/Qt-Installer-Framework'
 license=('FDL' 'LGPL')
-makedepends=("qt5-base>=${_qtver}" "qt5-tools>=${_qtver}" "qt5-declarative>=${_qtver}")
-groups=('qt' 'qt5')
-_pkgfqn="${pkgname}-opensource-${pkgver}-src"
-source=("https://download.qt.io/official_releases/${pkgname}/${pkgver}/${_pkgfqn}.tar.gz")
-md5sums=('643014f53c31e8d1064812706a1f976d')
+makedepends=('qt5-tools' 'qt5-declarative')
+source=("https://download.qt.io/official_releases/${pkgbase}/${pkgver}/${pkgbase}-opensource-src-${pkgver}.tar.gz")
+sha256sums=('e1aca203f6f34e5f79b2e16d0ab50016875be877920cc4a66fef7c84b60acb7a')
 
 build() {
-	cd "${srcdir}/${_pkgfqn}"
-	qmake-qt5 ./installerfw.pro
-	make
-	make docs
-	cd "${srcdir}/${_pkgfqn}/tests"
-	qmake-qt5 ./tests.pro
-	make
+  # Build tools and libraries
+  qmake-qt5 ./installerfw.pro
+  make
+  make docs
 }
 
-package() {
-        install -d ${pkgdir}/usr/{bin,lib,share/{${pkgname},doc/{qt,${pkgname}},licenses/${pkgname}}}
-	cd "${srcdir}/${_pkgfqn}"
-	install -m644 LGPL_EXCEPTION.txt "${pkgdir}/usr/share/licenses/${pkgname}/"
-	install -m644 LICENSE.FDL "${pkgdir}/usr/share/licenses/${pkgname}/"
-	install -m644 LICENSE.LGPL* "${pkgdir}/usr/share/licenses/${pkgname}/"
-	cp -a ./bin/*    "${pkgdir}/usr/bin/"
-	cp -a ./lib/*    "${pkgdir}/usr/lib/"
-	cp -a "./doc/html"    "${pkgdir}/usr/share/doc/${pkgname}/"
-	cp    "./doc/ifw.qch" "${pkgdir}/usr/share/doc/qt/"
-	cp -a "./tests"        "${pkgdir}/usr/share/${pkgname}/"
-	cp -a "./examples"    "${pkgdir}/usr/share/${pkgname}/"
-} 
+package_qt-installer-framework() {
+  pkgdesc='The Qt Installer Framework used for the Qt SDK installer'
+  depends=('qt5-declarative')
+  optdepends=('python: needed to run some sample tests'
+              'qt-installer-framework-docs: examples and documentation files')
+
+  cd "${srcdir}"
+  # Install executables
+  install -m 755 -d "${pkgdir}/usr/bin"
+  install -m 755 -t "${pkgdir}/usr/bin" "bin/archivegen" \
+                                        "bin/binarycreator" \
+                                        "bin/devtool" \
+                                        "bin/installerbase" \
+                                        "bin/repogen"
+  # Install libraries
+  install -m 755 -d "${pkgdir}/usr/lib"
+  install -m 755 -t "${pkgdir}/usr/lib" "lib/libinstaller.so.1.0.0"
+  ln -s "libinstaller.so.1.0.0" "${pkgdir}/usr/lib/libinstaller.so"
+  ln -s "libinstaller.so.1.0.0" "${pkgdir}/usr/lib/libinstaller.so.1"
+  ln -s "libinstaller.so.1.0.0" "${pkgdir}/usr/lib/libinstaller.so.1.0"
+  # Install tests
+  install -m 755 -d "${pkgdir}/usr/lib/${pkgbase}"
+  cp -a -t "${pkgdir}/usr/lib/${pkgbase}/" "tests"
+  # Install licenses
+  install -m 755 -d "${pkgdir}/usr/share/licenses/${pkgname}"
+  install -m 644 -t "${pkgdir}/usr/share/licenses/${pkgname}" "3RDPARTY" \
+                                                              "LICENSE.GPL3-EXCEPT" \
+                                                              "LICENSE.FDL"
+}
+
+package_qt-installer-framework-docs() {
+  pkgdesc='The Qt Installer Framework used for the Qt SDK installer (examples and documentation)'
+  arch=('any')
+
+  cd "${srcdir}"
+  # Install examples
+  install -m 755 -d "${pkgdir}/usr/share/${pkgbase}"
+  cp -a -t "${pkgdir}/usr/share/${pkgbase}/" "examples"
+  # Install licenses
+  install -m 755 -d "${pkgdir}/usr/share/licenses/${pkgname}"
+  install -m 644 -t "${pkgdir}/usr/share/licenses/${pkgname}" "3RDPARTY" \
+                                                              "LICENSE.GPL3-EXCEPT" \
+                                                              "LICENSE.FDL"
+  # Install documentation
+  install -m 755 -d "${pkgdir}/usr/share/doc/${pkgbase}"
+  cp -a "doc/html" "${pkgdir}/usr/share/doc/${pkgbase}"
+  install -m 755 -d "${pkgdir}/usr/share/doc/qt"
+  install -m 644 -t "${pkgdir}/usr/share/doc/qt" "doc/ifw.qch"
+}
