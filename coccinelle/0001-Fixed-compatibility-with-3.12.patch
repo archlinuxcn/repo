@@ -1,0 +1,278 @@
+From cc454c831e5b61e8cdd961b4c5a47ae18a570387 Mon Sep 17 00:00:00 2001
+From: Thierry Martinez <martinez@nsup.org>
+Date: Wed, 12 Oct 2016 17:09:52 +0200
+Subject: [PATCH 1/2] Fixed: compatibility with 3.12
+
+- Update py.ml
+- Remove the use of |>
+---
+ bundles/pyml/pyml-current/generate.ml       | 17 +++++++++--------
+ bundles/pyml/pyml-current/py.ml             | 17 ++++++++++-------
+ bundles/pyml/pyml-current/py.mli            | 14 +++++++++-----
+ bundles/pyml/pyml-current/pycaml.ml         |  4 ++--
+ bundles/pyml/pyml-current/pyml_compat.mli   |  2 ++
+ bundles/pyml/pyml-current/pyml_compat312.ml |  2 ++
+ bundles/pyml/pyml-current/pyml_compat400.ml |  2 ++
+ bundles/pyml/pyml-current/pyml_compat403.ml |  2 ++
+ bundles/pyml/pyml-current/pyml_stubs.c      |  6 ++++--
+ tools/spgen/source/context_rule.ml          |  2 +-
+ 10 files changed, 43 insertions(+), 25 deletions(-)
+
+diff --git a/bundles/pyml/pyml-current/generate.ml b/bundles/pyml/pyml-current/generate.ml
+index 82af8c9..e8d9cff 100644
+--- a/bundles/pyml/pyml-current/generate.ml
++++ b/bundles/pyml/pyml-current/generate.ml
+@@ -2,7 +2,7 @@ type ty =
+     PyObject of bool
+   | PyCompilerFlags | String | WideString | Int | Int64 | Long | Size | IntPtr
+   | Compare | Input | Unit | File | Double | StringOption | NeverReturn
+-  | UCS2 | UCS4 | UCS2Option | UCS4Option
++  | UCS2 | UCS4 | UCS2Option | UCS4Option of bool
+ 
+ type arguments =
+     Value
+@@ -825,7 +825,7 @@ let wrappers_ucs4 =
+      result = PyObject false; };
+    { symbol = "PyUnicodeUCS4_AsUnicode";
+      arguments = Fun [PyObject false];
+-     result = UCS4Option; };]
++     result = UCS4Option false; };]
+ 
+ let wrappers_python3 =
+   [{ symbol = "Py_GetProgramName";
+@@ -919,7 +919,7 @@ let wrappers_python3 =
+      result = PyObject false; };
+    { symbol = "PyUnicode_AsUCS4Copy";
+      arguments = Fun [PyObject false];
+-     result = UCS4Option; };]
++     result = UCS4Option true; };]
+ 
+ let string_of_type_ml ty =
+   match ty with
+@@ -936,7 +936,7 @@ let string_of_type_ml ty =
+   | StringOption -> "string option"
+   | NeverReturn -> "'a"
+   | UCS2 | UCS4 -> "int array"
+-  | UCS2Option | UCS4Option -> "int array option"
++  | UCS2Option | UCS4Option _ -> "int array option"
+ 
+ let decapitalize prefix symbol =
+   prefix ^ symbol
+@@ -1102,7 +1102,7 @@ let string_of_type_c ty =
+   | File -> "FILE *"
+   | Double -> "double"
+   | UCS2 | UCS2Option -> "int16_t *"
+-  | UCS4 | UCS4Option -> "int32_t *"
++  | UCS4 | UCS4Option _ -> "int32_t *"
+ 
+ let print_declaration prefix channel wrapper =
+   let symbol = wrapper.symbol in
+@@ -1149,7 +1149,7 @@ let coercion_of_caml ty v =
+   | IntPtr -> Printf.sprintf "pyunwrap_intref(%s)" v
+   | PyCompilerFlags -> Printf.sprintf "pyunwrap_compilerflags(%s)" v
+   | Compare -> Printf.sprintf "Int_val(%s)" v
+-  | Unit | NeverReturn | UCS2Option | UCS4Option -> assert false
++  | Unit | NeverReturn | UCS2Option | UCS4Option _ -> assert false
+   | Input -> Printf.sprintf "256 + Int_val(%s)" v
+   | File -> Printf.sprintf "fdopen(dup(Int_val(%s)), \"r\")" v
+   | Double -> Printf.sprintf "Double_val(%s)" v
+@@ -1180,8 +1180,9 @@ let coercion_of_c ty =
+   | Input | File | UCS2 | UCS4 -> assert false
+   | Double -> Printf.sprintf "    CAMLreturn(caml_copy_double(result));"
+   | UCS2Option -> Printf.sprintf "    CAMLreturn(pywrap_ucs2_option(result));"
+-  | UCS4Option ->
+-      Printf.sprintf "    CAMLreturn(pywrap_ucs4_option_and_free(result));"
++  | UCS4Option free ->
++      Printf.sprintf "    CAMLreturn(pywrap_ucs4_option_and_free(result, %s));"
++        (string_of_bool free)
+ 
+ let space_if_not_starred s =
+   if s.[String.length s - 1] = '*' then
+diff --git a/bundles/pyml/pyml-current/py.ml b/bundles/pyml/pyml-current/py.ml
+index fca9527..b0f64ce 100644
+--- a/bundles/pyml/pyml-current/py.ml
++++ b/bundles/pyml/pyml-current/py.ml
+@@ -177,8 +177,8 @@ let find_library_path version_major version_minor =
+         | Some library_filename -> library_filename in
+       (library_paths, [library_filename])
+ 
+-let initialize_version_value () =
+-  let version_line = run_command "python --version" true in
++let initialize_version_value python =
++  let version_line = run_command (Printf.sprintf "%s --version" python) true in
+   let version = extract_version version_line in
+   let (version_major, version_minor) = extract_version_major_minor version in
+   version_value := version;
+@@ -220,10 +220,10 @@ let initialize_library () =
+     | Some s -> set_python_home s
+   end
+ 
+-let initialize () =
++let initialize ?(interpreter = "python") () =
+   if !initialized then
+     failwith "Py.initialize: already initialized";
+-  initialize_version_value ();
++  initialize_version_value interpreter;
+   initialize_library ();
+   initialized := true
+ 
+@@ -449,6 +449,8 @@ let as_UTF8_string s =
+   check_not_null (f s)
+ 
+ module Type = struct
++  let none = None
++
+   type t =
+       Unknown
+     | Bool
+@@ -497,12 +499,12 @@ module Type = struct
+     match get s with
+       Bytes -> Some (pystring_asstringandsize s)
+     | Unicode -> Some (pystring_asstringandsize (as_UTF8_string s))
+-    | _ -> None
++    | _ -> none
+ 
+   let string_of_repr item =
+     match to_string (object_repr item) with
+-      None -> failwith "Py.Object.string_of_repr"
+-    | Some repr -> check_some repr
++      Some repr -> check_some repr
++    | _ (* None *) -> failwith "Py.Object.string_of_repr"
+ 
+   let mismatch t o =
+     failwith
+@@ -1371,6 +1373,7 @@ module Utils = struct
+     with e ->
+       close_in_noerr channel;
+       raise e
++
+   let write_and_close channel f arg =
+     try
+       let result = f arg in
+diff --git a/bundles/pyml/pyml-current/py.mli b/bundles/pyml/pyml-current/py.mli
+index c81c913..8553cf4 100644
+--- a/bundles/pyml/pyml-current/py.mli
++++ b/bundles/pyml/pyml-current/py.mli
+@@ -2,11 +2,15 @@
+ 
+ (** Call [initialize ()] first. *)
+ 
+-val initialize: unit -> unit
+-(** [initialize ()] finds and loads the Python library. This function
+-    should be called before any other functions, except if explicitely
+-    mentioned.  The version of Python is determined by the output of
+-    the shell command [python --version]. The library is searched by
++val initialize: ?interpreter:string -> unit -> unit
++(** [initialize ~interpreter ()] finds and loads the Python library.
++    This function should be called before any other functions, except
++    if explicitely mentioned.
++    The version of Python is determined by the output of the shell command
++    [python --version].
++    If an [interpreter] executable name is given, this executable is
++    used in place of [python] in the previous command line.
++    The library is searched by
+     using [pkg-config] if available, by considering system paths, and
+     in the directory [../lib] relatively to the directory where the
+     [python] executable is. If the library has been statically linked
+diff --git a/bundles/pyml/pyml-current/pycaml.ml b/bundles/pyml/pyml-current/pycaml.ml
+index bb3421d..cfd0a1a 100644
+--- a/bundles/pyml/pyml-current/pycaml.ml
++++ b/bundles/pyml/pyml-current/pycaml.ml
+@@ -123,7 +123,7 @@ let py_false () = Py.Bool.f
+ 
+ let py_finalize = Py.finalize
+ 
+-let py_initialize = Py.initialize
++let py_initialize () = Py.initialize ()
+ 
+ let py_is_true = Py.Object.is_true
+ 
+@@ -490,7 +490,7 @@ let unpythonizing_function ?name ?(catch_weird_exceptions = true) ?extra_guards
+ 
+ let py_profiling_active = ref false
+ 
+-let py_profile_hash = Lazy.from_fun (fun () -> Hashtbl.create 100)
++let py_profile_hash = Pyml_compat.lazy_from_fun (fun () -> Hashtbl.create 100)
+ 
+ let py_activate_profiling () =
+   let old_value = !py_profiling_active in
+diff --git a/bundles/pyml/pyml-current/pyml_compat.mli b/bundles/pyml/pyml-current/pyml_compat.mli
+index 19c5b8a..c717f93 100644
+--- a/bundles/pyml/pyml-current/pyml_compat.mli
++++ b/bundles/pyml/pyml-current/pyml_compat.mli
+@@ -1,3 +1,5 @@
+ val lowercase: string -> string
+ 
+ val mapi: (int -> 'a -> 'b) -> 'a list -> 'b list
++
++val lazy_from_fun: (unit -> 'a) -> 'a Lazy.t
+diff --git a/bundles/pyml/pyml-current/pyml_compat312.ml b/bundles/pyml/pyml-current/pyml_compat312.ml
+index 3185799..ddfd5f1 100644
+--- a/bundles/pyml/pyml-current/pyml_compat312.ml
++++ b/bundles/pyml/pyml-current/pyml_compat312.ml
+@@ -7,3 +7,5 @@ let rec mapi_from f i l =
+ 
+ let mapi f l =
+   mapi_from f 0 l
++
++let lazy_from_fun = Lazy.lazy_from_fun
+diff --git a/bundles/pyml/pyml-current/pyml_compat400.ml b/bundles/pyml/pyml-current/pyml_compat400.ml
+index 26512eb..564da81 100644
+--- a/bundles/pyml/pyml-current/pyml_compat400.ml
++++ b/bundles/pyml/pyml-current/pyml_compat400.ml
+@@ -1,3 +1,5 @@
+ let lowercase = String.lowercase
+ 
+ let mapi = List.mapi
++
++let lazy_from_fun = Lazy.from_fun
+diff --git a/bundles/pyml/pyml-current/pyml_compat403.ml b/bundles/pyml/pyml-current/pyml_compat403.ml
+index d960204..192a787 100644
+--- a/bundles/pyml/pyml-current/pyml_compat403.ml
++++ b/bundles/pyml/pyml-current/pyml_compat403.ml
+@@ -1,3 +1,5 @@
+ let lowercase = String.lowercase_ascii
+ 
+ let mapi = List.mapi
++
++let lazy_from_fun = Lazy.from_fun
+diff --git a/bundles/pyml/pyml-current/pyml_stubs.c b/bundles/pyml/pyml-current/pyml_stubs.c
+index 69ab87a..c8d33af 100644
+--- a/bundles/pyml/pyml-current/pyml_stubs.c
++++ b/bundles/pyml/pyml-current/pyml_stubs.c
+@@ -872,7 +872,7 @@ pywrap_ucs2_option(int16_t *buffer)
+ }
+ 
+ static value
+-pywrap_ucs4_option_and_free(int32_t *buffer)
++pywrap_ucs4_option_and_free(int32_t *buffer, bool free)
+ {
+     CAMLparam0();
+     CAMLlocal2(result, array);
+@@ -891,7 +891,9 @@ pywrap_ucs4_option_and_free(int32_t *buffer)
+     }
+     result = caml_alloc(1, 0);
+     Store_field(result, 0, array);
+-    Python_PyMem_Free(buffer);
++    if (free) {
++        Python_PyMem_Free(buffer);
++    }
+     CAMLreturn(result);
+ }
+ 
+diff --git a/tools/spgen/source/context_rule.ml b/tools/spgen/source/context_rule.ml
+index e925a36..80db2a9 100644
+--- a/tools/spgen/source/context_rule.ml
++++ b/tools/spgen/source/context_rule.ml
+@@ -52,7 +52,7 @@ let generate ~context_mode ~disj_map ~new_name ~rule_names ~rule =
+           then MV.inherit_rule ~force:true ~new_rule:(Globals.get_context_name ~context_mode r) mv
+           else mv
+         in
+-        MV.extract ~minus_rule ~rule_name:old_nm |> List.map inherit_name
++        List.map inherit_name (MV.extract ~minus_rule ~rule_name:old_nm)
+       in
+ 
+       let deps = Globals.add_context_dependency ~context_mode deps in
+-- 
+2.10.1
+
