@@ -40,7 +40,7 @@ license=('GPL')
 makedepends=(gcc-fortran arpack fftw git gmp libgit2-julia libunwind-git
              "${makedepends_llvm[@]}" mpfr pcre2 suitesparse
              openspecfun openblas libutf8proc-git patchelf openblas-lapack
-             openlibm mbedtls libssh2)
+             openlibm mbedtls libssh2 libtinfo)
 options=('debug' '!strip' '!buildflags')
 source=('git://github.com/JuliaLang/julia'
         0001-Revert-turn-on-deprecation-warnings-for-type-and-imm.patch
