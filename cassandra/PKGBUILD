@@ -10,7 +10,7 @@
 # If you have problems with gpg, you can remove check() function, and all will be ok.
 
 pkgname=cassandra
-pkgver=3.11.0
+pkgver=3.11.1
 pkgrel=1
 pkgdesc='Apache Cassandra NoSQL database'
 arch=('any')
@@ -35,7 +35,7 @@ source=("${_url_tgz}"
         'cassandra.service'
         'cassandra-tmpfile.conf'
         'cassandra-user.conf')
-sha256sums=('d597b99b402bd2cf925033519db9e58340acb893fd83d600d904ba4041d44fa7'
+sha256sums=('6feed696759e2f3219e0ebde13f4c9080cac0744a77eb3cb43af136ab527f0ed'
             'bbb5dcc19cac4e19c506210da901280c3063a6a241480bf12bc874e6a5c02657'
             '971d6d0f21963b2d9443039431e5225191771454728c6eda4aab9175ee478ce4'
             'abc9d54399c84eacf5922811b5480846ea1c88a73c5d214ea1db3d20c7c0422a'

@@ -1,0 +1,351 @@
+From c8025ac6bd9874663f4445288056702c424db8cb Mon Sep 17 00:00:00 2001
+From: Thierry Martinez <martinez@nsup.org>
+Date: Tue, 18 Oct 2016 18:38:05 +0200
+Subject: [PATCH 2/2] Added: Support for --with-python and --python
+
+The option --with-python is restored in configure to give a default
+path/command for the Python interpreter.
+
+The value can be overwritten with the --python option in the command
+line.
+
+Py.ml library has been updated to support custom Python interpreters. As
+a side effect, the environment variable PYTHONHOME is now dynamically
+set if it is not already defined. It should make the Python library work
+even on systems where the environment variable has not been properly
+set.
+---
+ bundles/pyml/pyml-current/py.ml        | 94 ++++++++++++++++++++++++++--------
+ bundles/pyml/pyml-current/py.mli       | 10 ++--
+ bundles/pyml/pyml-current/pyml_stubs.c | 24 +++++++--
+ changes.txt                            |  2 +
+ configure.ac                           | 10 ++++
+ globals/config.ml.in                   |  2 +
+ main.ml                                |  2 +
+ python/yes_pycocci.ml                  |  2 +-
+ 8 files changed, 116 insertions(+), 30 deletions(-)
+
+diff --git a/bundles/pyml/pyml-current/py.ml b/bundles/pyml/pyml-current/py.ml
+index b0f64ce..50caab2 100644
+--- a/bundles/pyml/pyml-current/py.ml
++++ b/bundles/pyml/pyml-current/py.ml
+@@ -6,7 +6,8 @@ type compare = Pytypes.compare = LT | LE | EQ | NE | GT | GE
+ 
+ type ucs = UCSNone | UCS2 | UCS4
+ 
+-external load_library: int -> string option -> unit = "py_load_library"
++external load_library: string option -> unit = "py_load_library"
++external unsetenv: string -> unit = "py_unsetenv"
+ external finalize_library: unit -> unit = "py_finalize_library"
+ external pywrap_closure: string -> (pyobject -> pyobject) -> pyobject
+     = "pywrap_closure"
+@@ -84,13 +85,13 @@ let extract_version version_line =
+ 
+ let extract_version_major_minor version =
+   try
+-    let first_dot = String.index version '.' in
+-    let second_dot = String.index_from version (succ first_dot) '.' in
+-    let major = int_of_string (String.sub version 0 first_dot) in
+-    let minor =
+-      int_of_string (substring_between version first_dot second_dot) in
+-    (major, minor)
+-  with Not_found | Failure _ ->
++    if String.length version >= 3 && (String.sub version 1 1 = ".") then
++      let major = int_of_string (String.sub version 0 1) in
++      let minor = int_of_string (String.sub version 2 1) in
++      (major, minor)
++    else
++      raise Exit
++  with Exit | Failure _ ->
+     let msg =
+       Printf.sprintf
+         "Py.extract_version_major: unable to parse the version number '%s'"
+@@ -134,6 +135,19 @@ let rec split string ?(from=0) separator =
+       let word = String.sub string from (position - from) in
+       word :: split string ~from:(succ position) separator
+ 
++let parent_dir filename =
++  let dirname = Filename.dirname filename in
++  Filename.concat dirname Filename.parent_dir_name
++
++let has_putenv = ref false
++
++let init_pythonhome pythonhome =
++  try
++    ignore (Sys.getenv "PYTHONHOME")
++  with Not_found ->
++    Unix.putenv "PYTHONHOME" pythonhome;
++    has_putenv := true
++
+ let find_library_path version_major version_minor =
+   let command =
+     Printf.sprintf "pkg-config --libs python-%d.%d" version_major
+@@ -144,10 +158,16 @@ let find_library_path version_major version_minor =
+   with
+     None ->
+       let library_paths =
+-        try
+-          [Filename.concat (Filename.dirname (run_command "which python" false))
+-             "../lib"]
+-        with Failure _ -> [] in
++        match
++          try Some (Sys.getenv "PYTHONHOME")
++          with Not_found -> None
++        with
++          None -> []
++        | Some pythonhome ->
++            let prefix =
++              try String.sub pythonhome 0 (String.index pythonhome ':')
++              with Not_found -> pythonhome in
++            [Filename.concat prefix "lib"] in
+       let library_filenames =
+         [Printf.sprintf "python%d.%dm" version_major version_minor;
+          Printf.sprintf "python%d.%d" version_major version_minor] in
+@@ -177,8 +197,20 @@ let find_library_path version_major version_minor =
+         | Some library_filename -> library_filename in
+       (library_paths, [library_filename])
+ 
+-let initialize_version_value python =
+-  let version_line = run_command (Printf.sprintf "%s --version" python) true in
++let initialize_version_value interpreter =
++  begin
++    let python_full_path =
++      if String.contains interpreter '/' then interpreter
++      else
++        let which_python = Printf.sprintf "which \"%s\"" interpreter in
++        run_command which_python false in
++    let pythonhome = parent_dir python_full_path in
++    init_pythonhome pythonhome
++  end;
++  let version_line =
++    let python_version_cmd = Printf.sprintf "\"%s\" --version" interpreter in
++    try run_command python_version_cmd false
++    with Failure _ -> run_command python_version_cmd true in
+   let version = extract_version version_line in
+   let (version_major, version_minor) = extract_version_major_minor version in
+   version_value := version;
+@@ -187,7 +219,7 @@ let initialize_version_value python =
+ 
+ let find_library () =
+   try
+-    load_library !version_major_value None
++    load_library None
+   with Failure _ ->
+     let (library_paths, library_filenames) =
+       find_library_path !version_major_value !version_minor_value in
+@@ -206,7 +238,9 @@ let find_library () =
+         [] -> failwith "Py.find_library: unable to find the Python library"
+       | filename :: others ->
+           begin
+-            try load_library !version_major_value (Some filename)
++            try
++              init_pythonhome (parent_dir filename);
++              load_library (Some filename)
+             with Failure _ -> try_load_library others
+           end in
+     try_load_library library_filenames
+@@ -220,16 +254,38 @@ let initialize_library () =
+     | Some s -> set_python_home s
+   end
+ 
+-let initialize ?(interpreter = "python") () =
++let get_version = Pywrappers.py_getversion
++
++let initialize ?(interpreter = "python") ?version () =
+   if !initialized then
+     failwith "Py.initialize: already initialized";
+-  initialize_version_value interpreter;
++  begin
++    match version with
++      Some (version_major, version_minor) ->
++        version_major_value := version_major;
++        version_minor_value := version_minor
++    | _ ->
++        initialize_version_value interpreter;
++  end;
+   initialize_library ();
++  let version = get_version () in
++  let (version_major, version_minor) = extract_version_major_minor version in
++  if version_major != !version_major_value ||
++    version_minor != !version_minor_value then
++    begin
++      finalize_library ();
++      failwith "Version mismatch"
++    end;
+   initialized := true
+ 
+ let finalize () =
+   assert_initialized ();
+   finalize_library ();
++  if !has_putenv then
++    begin
++      unsetenv "PYTHONHOME";
++      has_putenv := false
++    end;
+   initialized := false
+ 
+ let version () =
+@@ -335,8 +391,6 @@ let get_path () =
+   else
+     Pywrappers.Python3.py_getpath ()
+ 
+-let get_version = Pywrappers.py_getversion
+-
+ let get_platform = Pywrappers.py_getplatform
+ 
+ let get_copyright = Pywrappers.py_getcopyright
+diff --git a/bundles/pyml/pyml-current/py.mli b/bundles/pyml/pyml-current/py.mli
+index 8553cf4..f8db91e 100644
+--- a/bundles/pyml/pyml-current/py.mli
++++ b/bundles/pyml/pyml-current/py.mli
+@@ -2,12 +2,14 @@
+ 
+ (** Call [initialize ()] first. *)
+ 
+-val initialize: ?interpreter:string -> unit -> unit
+-(** [initialize ~interpreter ()] finds and loads the Python library.
++val initialize: ?interpreter:string -> ?version:(int * int) -> unit -> unit
++(** [initialize ~interpreter ~version ()] finds and loads the Python library.
+     This function should be called before any other functions, except
+     if explicitely mentioned.
+-    The version of Python is determined by the output of the shell command
+-    [python --version].
++    [version] should be a pair specifying the major and the minor version
++    number.
++    If no version number is given, the version of Python is determined by the
++    output of the shell command [python --version].
+     If an [interpreter] executable name is given, this executable is
+     used in place of [python] in the previous command line.
+     The library is searched by
+diff --git a/bundles/pyml/pyml-current/pyml_stubs.c b/bundles/pyml/pyml-current/pyml_stubs.c
+index c8d33af..5732026 100644
+--- a/bundles/pyml/pyml-current/pyml_stubs.c
++++ b/bundles/pyml/pyml-current/pyml_stubs.c
+@@ -12,6 +12,7 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <unistd.h>
++#include <errno.h>
+ 
+ /* The following definitions are extracted and simplified from
+ #include <Python.h>
+@@ -458,10 +459,9 @@ pywrap_closure(value docstring, value closure)
+ }
+ 
+ CAMLprim value
+-py_load_library(value version_major_ocaml, value filename_ocaml)
++py_load_library(value filename_ocaml)
+ {
+-    CAMLparam2(version_major_ocaml, filename_ocaml);
+-    version_major = Int_val(version_major_ocaml);
++    CAMLparam1(filename_ocaml);
+     if (Is_block(filename_ocaml)) {
+         char *filename = String_val(Field(filename_ocaml, 0));
+         library = dlopen(filename, RTLD_LAZY);
+@@ -472,10 +472,13 @@ py_load_library(value version_major_ocaml, value filename_ocaml)
+     else {
+         library = RTLD_DEFAULT;
+     }
+-    Python_PyCFunction_NewEx = dlsym(library, "PyCFunction_NewEx");
+-    if (!Python_PyCFunction_NewEx) {
++    Python_Py_GetVersion = dlsym(library, "Py_GetVersion");
++    if (!Python_Py_GetVersion) {
+         failwith("No Python symbol");
+     }
++    const char *version = Python_Py_GetVersion();
++    version_major = version[0] - '0';
++    Python_PyCFunction_NewEx = resolve("PyCFunction_NewEx");
+     Python_PyCapsule_New = resolve("PyCapsule_New");
+     Python_PyCapsule_GetPointer = resolve("PyCapsule_GetPointer");
+     Python_PyObject_CallFunctionObjArgs =
+@@ -524,6 +527,17 @@ py_finalize_library(value unit)
+ }
+ 
+ CAMLprim value
++py_unsetenv(value name_ocaml)
++{
++    CAMLparam1(name_ocaml);
++    char *name = String_val(name_ocaml);
++    if (unsetenv(name) == -1) {
++        failwith(strerror(errno));
++    }
++    CAMLreturn(Val_unit);
++}
++
++CAMLprim value
+ py_get_UCS(value unit)
+ {
+     CAMLparam1(unit);
+diff --git a/changes.txt b/changes.txt
+index 4a48965..552bb3f 100644
+--- a/changes.txt
++++ b/changes.txt
+@@ -16,6 +16,8 @@
+ - New scripting languages
+ - more than one SP on the command line
+ - interpret #if, as is done for #ifdef
++- restored support for with-python in configure and support for --python option
++  in the command line to use a specific python interpreter
+ 
+ ** Bugfix:
+ - Add more information in documentation, man pages and wiki
+diff --git a/configure.ac b/configure.ac
+index 8402b59..fa51ca5 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -276,6 +276,16 @@ dnl  variables:
+ dnl    with_python: whether to enable the python feature (and what version)
+ AC_ARG_ENABLE([python], [AS_HELP_STRING([--enable-python], [enable python scripting (yes/no) (default: auto)])])
+ 
++AC_ARG_WITH([python], [AS_HELP_STRING([--with-python], [which python interpreter to use (default: python)])])
++
++AS_IF([test -n "$with_python"],
++[dnl
++  AC_SUBST([PYTHON], ["$with_python"])
++],
++[dnl
++  AC_SUBST([PYTHON], ["python"])
++])
++
+ AS_IF([test "x$enable_python" != xno],
+ [dnl
+   AC_CHECK_COCCI_EXTPKG([pyml])  dnl  will set $enable_pyml to 'yes', 'no', or 'local'
+diff --git a/globals/config.ml.in b/globals/config.ml.in
+index 978fa77..02b7ef1 100644
+--- a/globals/config.ml.in
++++ b/globals/config.ml.in
+@@ -12,3 +12,5 @@ let get_temp_dir_name = @GET_TEMP_DIR_NAME_EXPR@
+ 
+ let configure_flags = "@CONFIGURE_FLAGS@"
+ let ocaml_version = "@OCAMLVERSION@"
++
++let python_interpreter = ref "@PYTHON@"
+diff --git a/main.ml b/main.ml
+index 66aaff4..2444d39 100644
+--- a/main.ml
++++ b/main.ml
+@@ -353,6 +353,8 @@ let short_options = [
+    "    \"\" for a file in the current directory");
+   "--kbuild-info", Arg.Set_string kbuild_info,
+   "    <file> improve -dir by grouping related c files";
++  "--python", Arg.Set_string Config.python_interpreter,
++  "    Sets the path to the python interpreter";
+   "--pyoutput", Arg.Set_string Flag.pyoutput,
+   "    Sets output routine: Standard values: <coccilib.output.Gtk|coccilib.output.Console>";
+   "--parse-handler",
+diff --git a/python/yes_pycocci.ml b/python/yes_pycocci.ml
+index 920d22f..55ac501 100644
+--- a/python/yes_pycocci.ml
++++ b/python/yes_pycocci.ml
+@@ -172,7 +172,7 @@ let pycocci_init () =
+   initialised := true;
+   let _ = if not (Py.is_initialized ()) then
+   	(if !Flag.show_misc then Common.pr2 "Initializing python\n%!";
+-	Py.initialize ()) in
++	Py.initialize ~interpreter:!Config.python_interpreter ()) in
+ 
+   (* set argv *)
+   let argv0 = Sys.executable_name in
+-- 
+2.10.1
+
