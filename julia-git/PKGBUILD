@@ -46,30 +46,12 @@ source=('git://github.com/JuliaLang/julia'
         0001-Revert-turn-on-deprecation-warnings-for-type-and-imm.patch
         0002-Revert-deprecation-warning-for-old-parametric-method.patch
         0001-Revert-Replace-quiet-with-banner-23343.patch
-        0001-Remove-code-that-are-not-needed-will-not-make-sense-.patch
-        0002-Move-CPU-feature-detection-functions-to-processor.cp.patch
-        0003-Add-X86-CPU-name-and-feature-detection.patch
-        0004-Add-AArch32-and-AArch64-CPU-name-and-feature-detecti.patch
-        0005-Implement-fallback-CPU-detection-and-dispatch-API.patch
-        0006-Use-processor.cpp-API-in-disasm.cpp.patch
-        0007-Use-processor.cpp-API-to-initialize-LLVM-JIT.patch
-        0008-Implement-function-multi-versioning-in-sysimg.patch
-        0009-Finish-up-function-multiversioning-support.patch
         0001-Try-re-enable-frame-pointer-omission.patch
         0001-Add-install-nodoc-make-target-to-skip-building-and-i.patch)
 md5sums=('SKIP'
          '91a0c77dc0700ff283d3aaaac67a9147'
          '84d6c1e407839b1459278b35c245e3ad'
          'b3c5a4ba02fbbfa53b7043beb0242156'
-         '585bf414f889b7eb41d4f3602ffca9e3'
-         '8214838d79ed08f8e9c57cb50728a5b1'
-         '84ba13eccb70173f208c5a3521649ed7'
-         '6024dc9adb361708a85952e47f40c821'
-         '25a92a86d549d81248ed4d94b9bc184d'
-         'f5067bc584aa319ad2379208e82a6a34'
-         '7d626ef30f7ccccef9b94b7bc8b06b93'
-         'f6a713513a1a720e83fdb2bf0a056fde'
-         '73216180a27604bc96dcfe45d463da3d'
          '91bc8836614d83cf1aebe79e455b181f'
          '2222d3eabfe6040a8cca466303c86d2b')
 
@@ -150,15 +132,6 @@ EOF
 
   patch -Np1 < ../0001-Revert-turn-on-deprecation-warnings-for-type-and-imm.patch
   patch -Np1 < ../0002-Revert-deprecation-warning-for-old-parametric-method.patch
-  patch -Np1 < ../0001-Remove-code-that-are-not-needed-will-not-make-sense-.patch
-  patch -Np1 < ../0002-Move-CPU-feature-detection-functions-to-processor.cp.patch
-  patch -Np1 < ../0003-Add-X86-CPU-name-and-feature-detection.patch
-  patch -Np1 < ../0004-Add-AArch32-and-AArch64-CPU-name-and-feature-detecti.patch
-  patch -Np1 < ../0005-Implement-fallback-CPU-detection-and-dispatch-API.patch
-  patch -Np1 < ../0006-Use-processor.cpp-API-in-disasm.cpp.patch
-  patch -Np1 < ../0007-Use-processor.cpp-API-to-initialize-LLVM-JIT.patch
-  patch -Np1 < ../0008-Implement-function-multi-versioning-in-sysimg.patch
-  patch -Np1 < ../0009-Finish-up-function-multiversioning-support.patch
   patch -Np1 < ../0001-Try-re-enable-frame-pointer-omission.patch
   patch -Np1 < ../0001-Add-install-nodoc-make-target-to-skip-building-and-i.patch
 }
