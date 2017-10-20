@@ -3,14 +3,14 @@
 
 _pkgname=libsysstat
 pkgname=$_pkgname-git
-pkgver=0.3.0.12.g5ef5c4a
+pkgver=0.3.2.5.gf384265
 pkgrel=1
-pkgdesc="Library to query system statistics (net, resource usage, ...)"
-arch=("i686" "x86_64" "armv6h")
-url="http://lxqt.org"
-license=("LGPL2.1")
-depends=("qt5-base")
-makedepends=("git" "cmake")
+pkgdesc='Library to query system statistics (net, resource usage, ...)'
+arch=('i686' 'x86_64' 'armv6h')
+url='https://github.com/lxde/libsysstat'
+license=('LGPL2.1')
+depends=('qt5-base')
+makedepends=('git' 'cmake' 'lxqt-build-tools-git')
 provides=("$_pkgname" "$_pkgname-qt5" "$_pkgname-qt5-git")
 conflicts=("$_pkgname" "$_pkgname-qt5" "$_pkgname-qt5-git")
 source=("git+https://github.com/lxde/$_pkgname.git")
