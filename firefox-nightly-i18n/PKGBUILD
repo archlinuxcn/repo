@@ -1,5 +1,5 @@
 pkgbase=firefox-nightly-i18n
-pkgver=58.0a1_20171021.01
+pkgver=58.0a1_20171021.12
 _pkgver=58.0a1
 pkgrel=1
 pkgdesc="Language pack for Firefox Nightly"
@@ -37,6 +37,6 @@ _package() {
   install -Dm644 $pkgver-firefox-nightly-i18n-$_pkgver-$1.xpi \
     "$pkgdir/opt/firefox-nightly/browser/extensions/langpack-$1@firefox.mozilla.org.xpi"
 }
-md5sums=('14f8fbf5aa2318c3d9bf6c602a83ebc2'
-         'c8ab62ad357962e73c9669bc3d6aad82'
-         '79d48c01b829a7c273e3d3105f88b280')
+md5sums=('be3ece3d2631aa74230fe13dab9c3b0b'
+         'd4ec86beabfe76e42743f8d24feb326f'
+         '09756be33128bab6431e0b33c3d290ed')
