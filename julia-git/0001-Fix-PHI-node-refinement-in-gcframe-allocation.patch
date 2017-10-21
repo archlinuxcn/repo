@@ -1,4 +1,4 @@
-From 13199dda5006de8ec700718b47b75ea340848dce Mon Sep 17 00:00:00 2001
+From ff6d107b2914fde47bc8d036145d695a75c70443 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Thu, 12 Oct 2017 11:51:46 -0400
 Subject: [PATCH 1/2] Fix PHI node refinement in gcframe allocation
@@ -16,7 +16,7 @@ Subject: [PATCH 1/2] Fix PHI node refinement in gcframe allocation
  4 files changed, 351 insertions(+), 80 deletions(-)
 
 diff --git a/src/llvm-late-gc-lowering.cpp b/src/llvm-late-gc-lowering.cpp
-index de5452a003..9977721057 100644
+index 389f04b6d1..a7a82f873e 100644
 --- a/src/llvm-late-gc-lowering.cpp
 +++ b/src/llvm-late-gc-lowering.cpp
 @@ -237,6 +237,9 @@ struct BBState {
@@ -497,7 +497,7 @@ index d59ce83e01..a49a890c4c 100644
 +    @test !contains(get_llvm(g24108, Tuple{B24108}), "%gcframe")
  end
 diff --git a/test/llvmpasses/gcroots.ll b/test/llvmpasses/gcroots.ll
-index 9e13a67bf3..26665c7010 100644
+index 5d32800740..a8cdca128c 100644
 --- a/test/llvmpasses/gcroots.ll
 +++ b/test/llvmpasses/gcroots.ll
 @@ -289,27 +289,6 @@ top:
@@ -508,7 +508,7 @@ index 9e13a67bf3..26665c7010 100644
 -; CHECK-LABEL: @refine_select_phi
 -; CHECK-NOT: %gcframe
 -top:
--  %ptls = call %jl_value_t*** @jl_get_ptls_states()
+-  %ptls = call %jl_value_t*** @julia.ptls_states()
 -  %s = select i1 %b, %jl_value_t addrspace(10)* %x, %jl_value_t addrspace(10)* %y
 -  br i1 %b, label %L1, label %L2
 -
@@ -529,7 +529,7 @@ index 9e13a67bf3..26665c7010 100644
  !1 = !{!"jtbaa_const", !0, i64 0}
  !2 = !{!1, !1, i64 0, i64 1}
 diff --git a/test/llvmpasses/refinements.ll b/test/llvmpasses/refinements.ll
-index 656d4e7947..be4d12438b 100644
+index fe60cdc2dc..64b3011d85 100644
 --- a/test/llvmpasses/refinements.ll
 +++ b/test/llvmpasses/refinements.ll
 @@ -76,6 +76,116 @@ define void @issue22770() {
@@ -540,7 +540,7 @@ index 656d4e7947..be4d12438b 100644
 +; CHECK-LABEL: @refine_select_phi
 +; CHECK-NOT: %gcframe
 +top:
-+  %ptls = call %jl_value_t*** @jl_get_ptls_states()
++  %ptls = call %jl_value_t*** @julia.ptls_states()
 +  %s = select i1 %b, %jl_value_t addrspace(10)* %x, %jl_value_t addrspace(10)* %y
 +  br i1 %b, label %L1, label %L2
 +
@@ -561,7 +561,7 @@ index 656d4e7947..be4d12438b 100644
 +; CHECK-LABEL: @dont_refine_loop
 +; CHECK: %gcframe = alloca %jl_value_t addrspace(10)*, i32 4
 +top:
-+  %ptls = call %jl_value_t*** @jl_get_ptls_states()
++  %ptls = call %jl_value_t*** @julia.ptls_states()
 +  br label %L1
 +
 +L1:
@@ -582,7 +582,7 @@ index 656d4e7947..be4d12438b 100644
 +; CHECK-LABEL: @refine_loop_const
 +; CHECK-NOT: %gcframe
 +top:
-+  %ptls = call %jl_value_t*** @jl_get_ptls_states()
++  %ptls = call %jl_value_t*** @julia.ptls_states()
 +  br label %L1
 +
 +L1:
@@ -602,7 +602,7 @@ index 656d4e7947..be4d12438b 100644
 +; CHECK-LABEL: @refine_loop_indirect
 +; CHECK: %gcframe = alloca %jl_value_t addrspace(10)*, i32 3
 +top:
-+  %ptls = call %jl_value_t*** @jl_get_ptls_states()
++  %ptls = call %jl_value_t*** @julia.ptls_states()
 +  %a = call %jl_value_t addrspace(10)* @allocate_some_value()
 +  br label %L1
 +
@@ -626,7 +626,7 @@ index 656d4e7947..be4d12438b 100644
 +; CHECK-LABEL: @refine_loop_indirect2
 +; CHECK: %gcframe = alloca %jl_value_t addrspace(10)*, i32 3
 +top:
-+  %ptls = call %jl_value_t*** @jl_get_ptls_states()
++  %ptls = call %jl_value_t*** @julia.ptls_states()
 +  %a = call %jl_value_t addrspace(10)* @allocate_some_value()
 +  br label %L1
 +

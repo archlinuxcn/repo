@@ -1,4 +1,4 @@
-From 8b4824422f90fd3edb925b8479fc380d58317929 Mon Sep 17 00:00:00 2001
+From b6673df4d8827c7f8dce150f55d78ec9cbe925ba Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Fri, 20 Oct 2017 23:24:41 -0400
 Subject: [PATCH 2/2] Improve handling of vector of GC pointers
@@ -12,7 +12,7 @@ Fix #23949
  2 files changed, 91 insertions(+), 32 deletions(-)
 
 diff --git a/src/llvm-late-gc-lowering.cpp b/src/llvm-late-gc-lowering.cpp
-index 9977721057..fe6b9a741f 100644
+index a7a82f873e..5249ea8133 100644
 --- a/src/llvm-late-gc-lowering.cpp
 +++ b/src/llvm-late-gc-lowering.cpp
 @@ -345,9 +345,13 @@ private:
@@ -205,7 +205,7 @@ index 9977721057..fe6b9a741f 100644
      // free to rewrite them if convenient. We need to change
      // it back here for the store.
 diff --git a/test/llvmpasses/gcroots.ll b/test/llvmpasses/gcroots.ll
-index 26665c7010..3f2f8f27de 100644
+index a8cdca128c..47d689b2c6 100644
 --- a/test/llvmpasses/gcroots.ll
 +++ b/test/llvmpasses/gcroots.ll
 @@ -289,6 +289,31 @@ top:
@@ -215,7 +215,7 @@ index 26665c7010..3f2f8f27de 100644
 +define %jl_value_t addrspace(10)* @vec_jlcallarg(%jl_value_t addrspace(10)*, %jl_value_t addrspace(10)**, i32) {
 +; CHECK-LABEL: @vec_jlcallarg
 +; CHECK-NOT: %gcframe
-+  %v4 = call %jl_value_t*** @jl_get_ptls_states()
++  %v4 = call %jl_value_t*** @julia.ptls_states()
 +  %v5 = bitcast %jl_value_t addrspace(10)** %1 to <2 x %jl_value_t addrspace(10)*>*
 +  %v6 = load <2 x %jl_value_t addrspace(10)*>, <2 x %jl_value_t addrspace(10)*>* %v5, align 8
 +  %v7 = extractelement <2 x %jl_value_t addrspace(10)*> %v6, i32 0
@@ -227,7 +227,7 @@ index 26665c7010..3f2f8f27de 100644
 +define %jl_value_t addrspace(10)* @vec_loadobj() {
 +; CHECK-LABEL: @vec_loadobj
 +; CHECK: %gcframe = alloca %jl_value_t addrspace(10)*, i32 3
-+  %v4 = call %jl_value_t*** @jl_get_ptls_states()
++  %v4 = call %jl_value_t*** @julia.ptls_states()
 +  %obj = call %jl_value_t addrspace(10) *@alloc()
 +  %v1 = bitcast %jl_value_t addrspace(10) * %obj to %jl_value_t addrspace(10)* addrspace(10)*
 +  %v5 = bitcast %jl_value_t addrspace(10)* addrspace(10)* %v1 to <2 x %jl_value_t addrspace(10)*> addrspace(10)*
