@@ -32,7 +32,7 @@ esac
 
 epoch=1
 pkgver=0.7.0.DEV.2244.g4253e5622e
-pkgrel=1
+pkgrel=2
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
@@ -47,13 +47,17 @@ source=('git://github.com/JuliaLang/julia'
         0002-Revert-deprecation-warning-for-old-parametric-method.patch
         0001-Revert-Replace-quiet-with-banner-23343.patch
         0001-Try-re-enable-frame-pointer-omission.patch
-        0001-Add-install-nodoc-make-target-to-skip-building-and-i.patch)
+        0001-Add-install-nodoc-make-target-to-skip-building-and-i.patch
+        0001-Fix-PHI-node-refinement-in-gcframe-allocation.patch
+        0002-Improve-handling-of-vector-of-GC-pointers.patch)
 md5sums=('SKIP'
          '91a0c77dc0700ff283d3aaaac67a9147'
          '84d6c1e407839b1459278b35c245e3ad'
          'b3c5a4ba02fbbfa53b7043beb0242156'
          '91bc8836614d83cf1aebe79e455b181f'
-         '2222d3eabfe6040a8cca466303c86d2b')
+         '2222d3eabfe6040a8cca466303c86d2b'
+         'a31aa7f4ded789facd247361da7ed908'
+         '0281bf3738c82e94116a34a03502eac3')
 
 pkgver() {
   cd julia
@@ -134,6 +138,8 @@ EOF
   patch -Np1 < ../0002-Revert-deprecation-warning-for-old-parametric-method.patch
   patch -Np1 < ../0001-Try-re-enable-frame-pointer-omission.patch
   patch -Np1 < ../0001-Add-install-nodoc-make-target-to-skip-building-and-i.patch
+  patch -Np1 < ../0001-Fix-PHI-node-refinement-in-gcframe-allocation.patch
+  patch -Np1 < ../0002-Improve-handling-of-vector-of-GC-pointers.patch
 }
 
 build_in() {
