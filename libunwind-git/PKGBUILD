@@ -29,18 +29,6 @@ options=('debug' '!strip')
 provides=(libunwind)
 conflicts=(libunwind)
 
-# HACK!!! remove after the damange on the build server is repaired.
-if [[ -f ${SRCDEST:-${PWD}}/libunwind/config ]] && \
-       grep 'url = http://git\.savannah\.gnu\.org/' \
-            ${SRCDEST:-${PWD}}/libunwind/config &> /dev/null; then
-    rm -rf ${SRCDEST:-${PWD}}/libunwind &> /dev/null || true
-fi
-if [[ -f ${SRCDEST:-${PWD}}/libunwind-git/config ]] && \
-       grep 'url = git://git\.sv\.gnu\.org/libunwind\.git' \
-            ${SRCDEST:-${PWD}}/libunwind-git/config &> /dev/null; then
-    rm -rf ${SRCDEST:-${PWD}}/libunwind-git &> /dev/null || true
-fi
-
 pkgver() {
   cd libunwind
 
@@ -53,6 +41,7 @@ prepare() {
   patch -Np1 < ../0001-Handle-non-signal-frame-unwind-info-lookup-in-ARM-ex.patch
   patch -Np1 < ../0002-Allow-DWARF-version-4.patch
   patch -Np1 < ../0003-Prefer-EXTBL-unwinding-on-ARM.patch
+  patch -Np1 < ../0001-Fix-local-unwind-compilation-on-ARM.patch
 }
 
 build() {
