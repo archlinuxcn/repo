@@ -8,7 +8,7 @@
 
 pkgname=libunwind-git
 pkgver=1.2.rc1.124.g36b46f1
-pkgrel=1
+pkgrel=2
 pkgdesc='Portable and efficient C programming interface (API) to determine the call-chain of a program'
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url='http://www.nongnu.org/libunwind/'
@@ -18,11 +18,13 @@ makedepends=('git')
 source=('git://git.savannah.gnu.org/libunwind.git'
         0001-Handle-non-signal-frame-unwind-info-lookup-in-ARM-ex.patch
         0002-Allow-DWARF-version-4.patch
-        0003-Prefer-EXTBL-unwinding-on-ARM.patch)
+        0003-Prefer-EXTBL-unwinding-on-ARM.patch
+        0001-Fix-local-unwind-compilation-on-ARM.patch)
 md5sums=('SKIP'
          'd00e44a1a90459c0125cc4525871c232'
          'ac40837ccb190c9dd08357cfc747655f'
-         'f2390a8ead7fc3d8b3d0c038b2e35ded')
+         'f2390a8ead7fc3d8b3d0c038b2e35ded'
+         '971c8150499c756d5098002a3018bc41')
 options=('debug' '!strip')
 provides=(libunwind)
 conflicts=(libunwind)

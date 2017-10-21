@@ -1,0 +1,25 @@
+From d1923256b0973b86ddfb43ec9d3b5d30b9b7a691 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sat, 21 Oct 2017 13:16:30 -0400
+Subject: [PATCH] Fix local unwind compilation on ARM
+
+This was broken by fd02fd59e7462f49311d4e0d6547aacf48fe072b.
+---
+ src/Makefile.am | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/Makefile.am b/src/Makefile.am
+index 7514ab5..a557d8d 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -492,6 +492,7 @@ if OS_LINUX
+  libunwind_la_SOURCES_x86_64_os       = x86_64/Gos-linux.c
+  libunwind_la_SOURCES_x86_64_os_local = x86_64/Los-linux.c
+  libunwind_la_SOURCES_arm_os          = arm/Gos-linux.c
++ libunwind_la_SOURCES_arm_os_local    = arm/Los-linux.c
+  libunwind_coredump_la_SOURCES += coredump/_UCD_access_reg_linux.c
+ endif
+ 
+-- 
+2.14.2
+
