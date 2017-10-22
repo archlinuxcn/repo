@@ -7,7 +7,7 @@
 _target="arm-linux-gnueabihf"
 pkgbase=${_target}-binutils
 pkgname=(${_target}-binutils-ldscripts ${_target}-binutils)
-pkgver=2.27
+pkgver=2.29.1
 pkgrel=1
 _commit=2870b1ba
 pkgdesc="A set of programs to assemble and manipulate binary and object files (${_target})"
@@ -19,7 +19,7 @@ makedepends=('git')
 options=('staticlibs' '!distcc' '!ccache')
 source=(# git://sourceware.org/git/binutils-gdb.git#commit=${_commit}
         http://ftp.gnu.org/gnu/binutils/binutils-${pkgver}.tar.bz2)
-md5sums=('2869c9bf3e60ee97c74ac2a6bf4e9d68')
+md5sums=('9af59a2ca3488823e453bb356fe0f113')
 
 prepare() {
   cd binutils-${pkgver}
