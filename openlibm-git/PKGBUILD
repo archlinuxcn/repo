@@ -16,10 +16,8 @@ provides=('openlibm=0.5.4')
 conflicts=('openlibm')
 options=('debug' '!strip')
 makedepends=('git')
-source=("git://github.com/JuliaLang/openlibm"
-        0001-Fix-compilation-on-AArch64.patch)
-md5sums=('SKIP'
-         '075e8933e266329e339ffd97aab68b8a')
+source=("git://github.com/JuliaLang/openlibm")
+md5sums=('SKIP')
 
 _CFLAGS_common=' -g -flto -O3'
 _LDFLAGS_common=' -g -flto -O3 -fno-plt -Wl,-Bsymbolic-functions'
@@ -34,8 +32,6 @@ prepare() {
   (cd openlibm
    git reset --hard HEAD
    git clean -fdx
-
-   patch -Np1 < ../0001-Fix-compilation-on-AArch64.patch
 
    sed -i "s@/usr/local@/usr@" Make.inc)
 
