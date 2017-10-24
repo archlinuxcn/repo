@@ -1,7 +1,7 @@
 # Maintainer: Chris Down <chris@chrisdown.name>
 
 pkgname=pyenv
-pkgver=1.1.3
+pkgver=1.1.5
 pkgrel=1
 pkgdesc='Simple Python version management'
 arch=('any')
@@ -10,7 +10,7 @@ license=('MIT')
 optdepends=('mercurial: to install dev builds')
 depends=()
 source=("https://github.com/yyuu/pyenv/archive/v${pkgver}.zip")
-md5sums=('4ec1ccfebb28a5431ac13088abb6b8da')
+md5sums=('15f7782ba2aa96dec3763a74aa70e7d2')
 
 package() {
     mkdir -p "${pkgdir?}"/{opt/pyenv,usr/bin}
