@@ -4,8 +4,8 @@
 
 pkgbase=amdgpu-pro-installer
 pkgname=(amdgpu-pro amdgpu-pro-dkms amdgpu-pro-libdrm amdgpu-pro-libgl amdgpu-pro-opencl amdgpu-pro-vdpau amdgpu-pro-vulkan amdgpu-pro-mesa-omx amdgpu-pro-gst-omx lib32-amdgpu-pro lib32-amdgpu-pro-libdrm lib32-amdgpu-pro-libgl lib32-amdgpu-pro-opencl lib32-amdgpu-pro-vdpau lib32-amdgpu-pro-vulkan lib32-amdgpu-pro-mesa-omx lib32-amdgpu-pro-gst-omx xf86-video-amdgpu-pro)
-pkgver=17.30.465504
-pkgrel=4
+pkgver=17.40.483984
+pkgrel=1
 arch=('x86_64')
 url='http://www.amd.com'
 license=('custom:AMD')
@@ -13,14 +13,12 @@ makedepends=('bcunit' 'dkms' 'glib2' 'gst-plugins-base' 'gstreamer' 'lib32-gcc-l
 
 DLAGENTS='https::/usr/bin/wget --referer https://support.amd.com/en-us/kb-articles/Pages/AMDGPU-PRO-Install.aspx -N %u'
 
-source=(https://www2.ati.com/drivers/linux/ubuntu/amdgpu-pro-17.30-465504.tar.xz
+source=(https://www2.ati.com/drivers/linux/beta/ubuntu/amdgpu-pro-17.40-483984.tar.xz
 	0001-disable-firmware-copy.patch
-	0002-fix-warnings-for-Werror.patch
 	0003-add-archlinux-as-build-option.patch
 	20-amdgpu.conf)
-sha256sums=(b74494d142542164b5582e8bed845315f788aa3d9eb0c1ed5f2a6c5f982beaf5
-	c9b95504f5f7575c7ca7e138beb4bf474efd2abe82e72e9cad3d4fd1a8fc5c7c
-	4d63683a846b16ca914557e371df90460e45639a2a7ca0df0cf575b945a4661a
+sha256sums=(SKIP
+	SKIP
 	2bf8eac2afac3bce0d17f840c15009838b578a72412ff66df6e8caa6c00fade7
 	550ee0e7b65deaabca724202b1c732264bd438e74bc2bcf73bbf1ba30d5d8683)
 
@@ -63,12 +61,12 @@ package_amdgpu-pro () {
 	arch=('x86_64')
 	depends=('gcc-libs' 'glib2' 'libx11' 'libxcb' 'libxdamage' 'libxext' 'libxfixes' 'libxshmfence' 'libxxf86vm' 'ncurses5-compat-libs' 'openssl' 'zlib' 'mesa-noglvnd-nogbm')
 
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./amdgpu-pro_17.30-465504_amd64.deb
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./libgbm1-amdgpu-pro_17.30-465504_amd64.deb
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./libgbm1-amdgpu-pro-base_17.30-465504_all.deb
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./libgbm1-amdgpu-pro-dev_17.30-465504_amd64.deb
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./libgl1-amdgpu-pro-dri_17.30-465504_amd64.deb
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./ids-amdgpu-pro_1.0.0-465504_all.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./amdgpu-pro_17.40-483984_amd64.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./libgbm1-amdgpu-pro_17.40-483984_amd64.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./libgbm1-amdgpu-pro-base_17.40-483984_all.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./libgbm1-amdgpu-pro-dev_17.40-483984_amd64.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./libgl1-amdgpu-pro-dri_17.40-483984_amd64.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./ids-amdgpu-pro_1.0.0-483984_all.deb
 	#move_libdir "${pkgdir}/opt/amdgpu-pro" "usr"
 	#move_libdir "${pkgdir}/opt/amdgpu-pro/lib/x86_64-linux-gnu"
 	move_libdir "${pkgdir}/lib"
@@ -87,19 +85,17 @@ package_amdgpu-pro-dkms () {
 	arch=('any')
 	depends=('dkms>=1.95')
 
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./amdgpu-pro-dkms_17.30-465504_all.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./amdgpu-pro-dkms_17.40-483984_all.deb
 	#move_libdir "${pkgdir}/opt/amdgpu-pro" "usr"
 	#move_libdir "${pkgdir}/opt/amdgpu-pro/lib/x86_64-linux-gnu"
 	move_libdir "${pkgdir}/lib"
 
 	# extra_commands:
 	msg 'Applying patches...'
-	(cd ${pkgdir}/usr/src/amdgpu-pro-17.30-465504;
+	(cd ${pkgdir}/usr/src/amdgpu-17.40-483984;
 		sed -i 's/\/extra/\/extramodules/' dkms.conf
 			msg2 '0001-disable-firmware-copy.patch'
 		patch -p1 -i "${srcdir}/0001-disable-firmware-copy.patch";
-		msg2 '0002-fix-warnings-for-Werror.patch'
-		patch -p1 -i "${srcdir}/0002-fix-warnings-for-Werror.patch";
 		msg2 '0003-add-archlinux-as-build-option.patch'
 		patch -p1 -i "${srcdir}/0003-add-archlinux-as-build-option.patch"
 	)
@@ -111,13 +107,13 @@ package_amdgpu-pro-libdrm () {
 	arch=('x86_64')
 	provides=('libdrm')
 	conflicts=('libdrm')
-	depends=('bcunit' 'amdgpu-pro=17.30.465504-4' 'glibc')
+	depends=('bcunit' 'amdgpu-pro=17.40.483984-1' 'glibc')
 
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./libdrm-amdgpu-pro-amdgpu1_2.4.70-465504_amd64.deb
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./libdrm-amdgpu-pro-dev_2.4.70-465504_amd64.deb
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./libdrm-amdgpu-pro-radeon1_2.4.70-465504_amd64.deb
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./libdrm-amdgpu-pro-utils_2.4.70-465504_amd64.deb
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./libdrm2-amdgpu-pro_2.4.70-465504_amd64.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./libdrm-amdgpu-pro-amdgpu1_2.4.82-483984_amd64.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./libdrm-amdgpu-pro-dev_2.4.82-483984_amd64.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./libdrm-amdgpu-pro-radeon1_2.4.82-483984_amd64.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./libdrm-amdgpu-pro-utils_2.4.82-483984_amd64.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./libdrm2-amdgpu-pro_2.4.82-483984_amd64.deb
 	#move_libdir "${pkgdir}/opt/amdgpu-pro" "usr"
 	#move_libdir "${pkgdir}/opt/amdgpu-pro/lib/x86_64-linux-gnu"
 	move_libdir "${pkgdir}/lib"
@@ -130,13 +126,13 @@ package_amdgpu-pro-libgl () {
 	arch=('x86_64')
 	provides=('libgl' 'libegl' 'libgles')
 	conflicts=('libgl' 'libegl' 'libgles')
-	depends=('amdgpu-pro=17.30.465504-4' 'gcc-libs')
+	depends=('amdgpu-pro=17.40.483984-1' 'gcc-libs')
 	
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./libgl1-amdgpu-pro-appprofiles_17.30-465504_all.deb
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./libgl1-amdgpu-pro-ext_17.30-465504_amd64.deb
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./libgl1-amdgpu-pro-glx_17.30-465504_amd64.deb
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./libgles2-amdgpu-pro_17.30-465504_amd64.deb
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./libegl1-amdgpu-pro_17.30-465504_amd64.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./libgl1-amdgpu-pro-appprofiles_17.40-483984_all.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./libgl1-amdgpu-pro-ext_17.40-483984_amd64.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./libgl1-amdgpu-pro-glx_17.40-483984_amd64.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./libgles2-amdgpu-pro_17.40-483984_amd64.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./libegl1-amdgpu-pro_17.40-483984_amd64.deb
 
 	#move_libdir "${pkgdir}/opt/amdgpu-pro" "usr"
 	#move_libdir "${pkgdir}/opt/amdgpu-pro/lib/x86_64-linux-gnu"
@@ -149,11 +145,11 @@ package_amdgpu-pro-opencl () {
 	pkgdesc="The AMDGPU Pro OpenCL implementation"
 	arch=('x86_64')
 	provides=('opencl-driver')
-	depends=('amdgpu-pro=17.30.465504-4' 'gcc-libs')
+	depends=('amdgpu-pro=17.40.483984-1' 'gcc-libs')
 
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./clinfo-amdgpu-pro_17.30-465504_amd64.deb
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./libopencl1-amdgpu-pro_17.30-465504_amd64.deb
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./opencl-amdgpu-pro-icd_17.30-465504_amd64.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./clinfo-amdgpu-pro_17.40-483984_amd64.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./libopencl1-amdgpu-pro_17.40-483984_amd64.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./opencl-amdgpu-pro-icd_17.40-483984_amd64.deb
 	#move_libdir "${pkgdir}/opt/amdgpu-pro" "usr"
 	#move_libdir "${pkgdir}/opt/amdgpu-pro/lib/x86_64-linux-gnu"
 	move_libdir "${pkgdir}/lib"
@@ -164,9 +160,9 @@ package_amdgpu-pro-opencl () {
 package_amdgpu-pro-vdpau () {
 	pkgdesc="The AMDGPU Pro VDPAU driver"
 	arch=('x86_64')
-	depends=('amdgpu-pro-libdrm=17.30.465504-4' 'libvdpau' 'libxcb' 'libxcb' 'ncurses5-compat-libs' 'zlib' 'gcc-libs' 'libelf')
+	depends=('amdgpu-pro-libdrm=17.40.483984-1' 'libvdpau' 'libxcb' 'libxcb' 'ncurses5-compat-libs' 'zlib' 'gcc-libs' 'libelf')
 
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./libvdpau-amdgpu-pro_17.0.1-465504_amd64.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./libvdpau-amdgpu-pro_17.0.1-483984_amd64.deb
 	#move_libdir "${pkgdir}/opt/amdgpu-pro" "usr"
 	#move_libdir "${pkgdir}/opt/amdgpu-pro/lib/x86_64-linux-gnu"
 	move_libdir "${pkgdir}/lib"
@@ -183,9 +179,9 @@ package_amdgpu-pro-vulkan () {
 	pkgdesc="The AMDGPU Pro Vulkan driver"
 	arch=('x86_64')
 	provides=('vulkan-driver')
-	depends=('amdgpu-pro-libdrm=17.30.465504-4' 'gcc-libs')
+	depends=('amdgpu-pro-libdrm=17.40.483984-1' 'gcc-libs')
 
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./vulkan-amdgpu-pro_17.30-465504_amd64.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./vulkan-amdgpu-pro_17.40-483984_amd64.deb
 	#move_libdir "${pkgdir}/opt/amdgpu-pro" "usr"
 	#move_libdir "${pkgdir}/opt/amdgpu-pro/lib/x86_64-linux-gnu"
 	move_libdir "${pkgdir}/lib"
@@ -199,9 +195,9 @@ package_amdgpu-pro-vulkan () {
 package_amdgpu-pro-mesa-omx () {
 	pkgdesc="Mesa OpenMAX video drivers for AMDGPU Pro"
 	arch=('x86_64')
-	depends=('amdgpu-pro-libdrm=17.30.465504-4' 'libelf' 'gcc-libs' 'libomxil-bellagio')
+	depends=('amdgpu-pro-libdrm=17.40.483984-1' 'libelf' 'gcc-libs' 'libomxil-bellagio')
 
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./mesa-amdgpu-pro-omx-drivers_17.0.1-465504_amd64.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./mesa-amdgpu-pro-omx-drivers_17.0.1-483984_amd64.deb
 	#move_libdir "${pkgdir}/opt/amdgpu-pro" "usr"
 	#move_libdir "${pkgdir}/opt/amdgpu-pro/lib/x86_64-linux-gnu"
 	move_libdir "${pkgdir}/lib"
@@ -214,7 +210,7 @@ package_amdgpu-pro-gst-omx () {
 	conflicts=('gst-omx')
 	depends=('glib2' 'gst-plugins-base' 'gstreamer' 'libomxil-bellagio' 'glibc')
 
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./gst-omx-amdgpu-pro_1.0.0.1-465504_amd64.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./gst-omx-amdgpu-pro_1.0.0.1-483984_amd64.deb
 	#move_libdir "${pkgdir}/opt/amdgpu-pro" "usr"
 	#move_libdir "${pkgdir}/opt/amdgpu-pro/lib/x86_64-linux-gnu"
 	move_libdir "${pkgdir}/lib"
@@ -225,10 +221,10 @@ package_lib32-amdgpu-pro () {
 	arch=('x86_64')
 	depends=('lib32-glib2' 'lib32-gcc-libs' 'lib32-libx11' 'lib32-libxcb' 'lib32-libxdamage' 'lib32-libxext' 'lib32-libxfixes' 'lib32-libxshmfence' 'lib32-libxxf86vm' 'lib32-ncurses5-compat-libs' 'lib32-openssl' 'lib32-zlib' 'lib32-mesa-noglvnd-nogbm')
 
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./amdgpu-pro_17.30-465504_i386.deb
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./libgbm1-amdgpu-pro_17.30-465504_i386.deb
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./libgbm1-amdgpu-pro-dev_17.30-465504_i386.deb
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./libgl1-amdgpu-pro-dri_17.30-465504_i386.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./amdgpu-pro_17.40-483984_i386.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./libgbm1-amdgpu-pro_17.40-483984_i386.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./libgbm1-amdgpu-pro-dev_17.40-483984_i386.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./libgl1-amdgpu-pro-dri_17.40-483984_i386.deb
 	#move_libdir "${pkgdir}/opt/amdgpu-pro" "usr"
 	#move_libdir "${pkgdir}/opt/amdgpu-pro/lib/i386-linux-gnu" "usr/lib32"
 	move_libdir "${pkgdir}/lib" "usr/lib32"
@@ -253,12 +249,12 @@ package_lib32-amdgpu-pro-libdrm () {
 	arch=('x86_64')
 	provides=('lib32-libdrm')
 	conflicts=('lib32-libdrm')
-	depends=('amdgpu-pro-libdrm=17.30.465504-4' 'lib32-glibc')
+	depends=('amdgpu-pro-libdrm=17.40.483984-1' 'lib32-glibc')
 
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./libdrm-amdgpu-pro-amdgpu1_2.4.70-465504_i386.deb
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./libdrm-amdgpu-pro-dev_2.4.70-465504_i386.deb
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./libdrm-amdgpu-pro-radeon1_2.4.70-465504_i386.deb
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./libdrm2-amdgpu-pro_2.4.70-465504_i386.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./libdrm-amdgpu-pro-amdgpu1_2.4.82-483984_i386.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./libdrm-amdgpu-pro-dev_2.4.82-483984_i386.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./libdrm-amdgpu-pro-radeon1_2.4.82-483984_i386.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./libdrm2-amdgpu-pro_2.4.82-483984_i386.deb
 	#move_libdir "${pkgdir}/opt/amdgpu-pro" "usr"
 	#move_libdir "${pkgdir}/opt/amdgpu-pro/lib/i386-linux-gnu" "usr/lib32"
 	move_libdir "${pkgdir}/lib" "usr/lib32"
@@ -276,12 +272,12 @@ package_lib32-amdgpu-pro-libgl () {
 	arch=('x86_64')
 	provides=('lib32-libgl' 'lib32-libegl' 'lib32-libgles')
 	conflicts=('lib32-libgl' 'lib32-libegl' 'lib32-libgles')
-	depends=('amdgpu-pro-libgl' 'lib32-amdgpu-pro=17.30.465504-4' 'lib32-gcc-libs')
+	depends=('amdgpu-pro-libgl' 'lib32-amdgpu-pro=17.40.483984-1' 'lib32-gcc-libs')
 	
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./libegl1-amdgpu-pro_17.30-465504_i386.deb
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./libgl1-amdgpu-pro-ext_17.30-465504_i386.deb
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./libgl1-amdgpu-pro-glx_17.30-465504_i386.deb
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./libgles2-amdgpu-pro_17.30-465504_i386.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./libegl1-amdgpu-pro_17.40-483984_i386.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./libgl1-amdgpu-pro-ext_17.40-483984_i386.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./libgl1-amdgpu-pro-glx_17.40-483984_i386.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./libgles2-amdgpu-pro_17.40-483984_i386.deb
 
 	#move_libdir "${pkgdir}/opt/amdgpu-pro" "usr"
 	#move_libdir "${pkgdir}/opt/amdgpu-pro/lib/i386-linux-gnu" "usr/lib32"
@@ -300,10 +296,10 @@ package_lib32-amdgpu-pro-opencl () {
 	pkgdesc="The AMDGPU Pro OpenCL implementation"
 	arch=('x86_64')
 	provides=('lib32-opencl-driver')
-	depends=('lib32-amdgpu-pro=17.30.465504-4' 'lib32-gcc-libs')
+	depends=('lib32-amdgpu-pro=17.40.483984-1' 'lib32-gcc-libs')
 
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./libopencl1-amdgpu-pro_17.30-465504_i386.deb
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./opencl-amdgpu-pro-icd_17.30-465504_i386.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./libopencl1-amdgpu-pro_17.40-483984_i386.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./opencl-amdgpu-pro-icd_17.40-483984_i386.deb
 	#move_libdir "${pkgdir}/opt/amdgpu-pro" "usr"
 	#move_libdir "${pkgdir}/opt/amdgpu-pro/lib/i386-linux-gnu" "usr/lib32"
 	move_libdir "${pkgdir}/lib" "usr/lib32"
@@ -319,9 +315,9 @@ package_lib32-amdgpu-pro-opencl () {
 package_lib32-amdgpu-pro-vdpau () {
 	pkgdesc="The AMDGPU Pro VDPAU driver (32bit libraries)"
 	arch=('x86_64')
-	depends=('lib32-amdgpu-pro-libdrm=17.30.465504-4' 'lib32-libvdpau>=1.1' 'lib32-libxcb' 'lib32-libxcb>=1.8' 'lib32-ncurses5-compat-libs>=6' 'lib32-gcc-libs' 'lib32-zlib>=1.2.0' 'lib32-amdgpu-pro=17.30.465504-4')
+	depends=('lib32-amdgpu-pro-libdrm=17.40.483984-1' 'lib32-libvdpau>=1.1' 'lib32-libxcb' 'lib32-libxcb>=1.8' 'lib32-ncurses5-compat-libs>=6' 'lib32-gcc-libs' 'lib32-zlib>=1.2.0' 'lib32-amdgpu-pro=17.40.483984-1')
 
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./libvdpau-amdgpu-pro_17.0.1-465504_i386.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./libvdpau-amdgpu-pro_17.0.1-483984_i386.deb
 	#move_libdir "${pkgdir}/opt/amdgpu-pro" "usr"
 	#move_libdir "${pkgdir}/opt/amdgpu-pro/lib/i386-linux-gnu" "usr/lib32"
 	move_libdir "${pkgdir}/lib" "usr/lib32"
@@ -343,9 +339,9 @@ package_lib32-amdgpu-pro-vulkan () {
 	pkgdesc="The AMDGPU Pro Vulkan driver (32bit libraries)"
 	arch=('x86_64')
 	provides=('lib32-vulkan-driver')
-	depends=('lib32-amdgpu-pro-libdrm=17.30.465504-4' 'lib32-amdgpu-pro=17.30.465504-4' 'lib32-gcc-libs')
+	depends=('lib32-amdgpu-pro-libdrm=17.40.483984-1' 'lib32-amdgpu-pro=17.40.483984-1' 'lib32-gcc-libs')
 
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./vulkan-amdgpu-pro_17.30-465504_i386.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./vulkan-amdgpu-pro_17.40-483984_i386.deb
 	#move_libdir "${pkgdir}/opt/amdgpu-pro" "usr"
 	#move_libdir "${pkgdir}/opt/amdgpu-pro/lib/i386-linux-gnu" "usr/lib32"
 	move_libdir "${pkgdir}/lib" "usr/lib32"
@@ -364,9 +360,9 @@ package_lib32-amdgpu-pro-vulkan () {
 package_lib32-amdgpu-pro-mesa-omx () {
 	pkgdesc="Mesa OpenMAX video drivers for AMDGPU Pro (32bit libraries)"
 	arch=('x86_64')
-	depends=('lib32-amdgpu-pro-libdrm=17.30.465504-4' 'lib32-gcc-libs' 'lib32-libomxil-bellagio')
+	depends=('lib32-amdgpu-pro-libdrm=17.40.483984-1' 'lib32-gcc-libs' 'lib32-libomxil-bellagio')
 
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./mesa-amdgpu-pro-omx-drivers_17.0.1-465504_i386.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./mesa-amdgpu-pro-omx-drivers_17.0.1-483984_i386.deb
 	#move_libdir "${pkgdir}/opt/amdgpu-pro" "usr"
 	#move_libdir "${pkgdir}/opt/amdgpu-pro/lib/x86_64-linux-gnu"
 	move_libdir "${pkgdir}/lib32"
@@ -379,7 +375,7 @@ package_lib32-amdgpu-pro-gst-omx () {
 	conflicts=('lib32-gst-omx')
 	depends=('lib32-glib2' 'lib32-gst-plugins-base' 'lib32-gstreamer' 'lib32-libomxil-bellagio' 'lib32-glibc')
 
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./gst-omx-amdgpu-pro_1.0.0.1-465504_i386.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./gst-omx-amdgpu-pro_1.0.0.1-483984_i386.deb
 	#move_libdir "${pkgdir}/opt/amdgpu-pro" "usr"
 	#move_libdir "${pkgdir}/opt/amdgpu-pro/lib/x86_64-linux-gnu"
 	move_libdir "${pkgdir}/lib32"
@@ -391,10 +387,11 @@ package_xf86-video-amdgpu-pro () {
 	provides=('xf86-video-amdgpu')
 	conflicts=('xf86-video-amdgpu' 'xorg-server<1.19.0' 'xorg-server>1.20.0')
 	groups=('xorg-driversxorg')
-	depends=('amdgpu-pro-libdrm=17.30.465504-4' 'amdgpu-pro=17.30.465504-4' 'libepoxy>=1.0' 'libsystemd>=183')
+	depends=('amdgpu-pro-libdrm=17.40.483984-1' 'amdgpu-pro=17.40.483984-1' 'libepoxy>=1.0' 'libsystemd>=183')
+	backup=('etc/X11/xorg.conf.d/20-amdgpu.conf')
 
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./xserver-xorg-video-amdgpu-pro_1.3.99-465504_amd64.deb
-	extract_deb "${srcdir}"/amdgpu-pro-17.30-465504/./xserver-xorg-video-modesetting-amdgpu-pro_1.19.0-465504_amd64.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./xserver-xorg-video-amdgpu-pro_1.3.99-483984_amd64.deb
+	extract_deb "${srcdir}"/amdgpu-pro-17.40-483984/./xserver-xorg-video-modesetting-amdgpu-pro_1.19.0-483984_amd64.deb
 	#move_libdir "${pkgdir}/opt/amdgpu-pro" "usr"
 	#move_libdir "${pkgdir}/opt/amdgpu-pro/lib/x86_64-linux-gnu"
 	move_libdir "${pkgdir}/lib"

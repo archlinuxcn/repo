@@ -11,15 +11,15 @@ diff --git a/pre-build.sh b/pre-build.sh
 index 35d53e5..3c9d7d1 100755
 --- a/pre-build.sh
 +++ b/pre-build.sh
-@@ -38,8 +38,3 @@ find ttm -name '*.c' -exec grep EXPORT_SYMBOL {} + \
+@@ -38,8 +38,3 @@ find ttm -name '*.c' -exec grep EXPORT_S
      | sort -u \
      | awk -F'[()]' '{print "#define "$2" amd"$2" //"$0}'\
      >> include/rename_symbol.h
 -
 -FW_DIR="/lib/firmware/$KERNELVER"
 -mkdir -p $FW_DIR
--cp -ar /usr/src/amdgpu-pro-17.30-465504/firmware/radeon $FW_DIR
--cp -ar /usr/src/amdgpu-pro-17.30-465504/firmware/amdgpu $FW_DIR
+-cp -ar /usr/src/amdgpu-17.40-483984/firmware/radeon $FW_DIR
+-cp -ar /usr/src/amdgpu-17.40-483984/firmware/amdgpu $FW_DIR
 -- 
 2.14.1
 
