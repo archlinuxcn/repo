@@ -31,7 +31,7 @@ case $CARCH in
 esac
 
 epoch=1
-pkgver=0.7.0.DEV.2288.gc5faf80469
+pkgver=0.7.0.DEV.2294.g906db16e52
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
@@ -48,7 +48,6 @@ source=('git://github.com/JuliaLang/julia'
         0001-Revert-Replace-quiet-with-banner-23343.patch
         0001-Try-re-enable-frame-pointer-omission.patch
         0001-Add-install-nodoc-make-target-to-skip-building-and-i.patch
-        0001-Fix-PHI-node-refinement-in-gcframe-allocation.patch
         0002-Improve-handling-of-vector-of-GC-pointers.patch)
 md5sums=('SKIP'
          '91a0c77dc0700ff283d3aaaac67a9147'
@@ -56,7 +55,6 @@ md5sums=('SKIP'
          'b3c5a4ba02fbbfa53b7043beb0242156'
          '91bc8836614d83cf1aebe79e455b181f'
          '2222d3eabfe6040a8cca466303c86d2b'
-         '124a65045ce4352b855afd3be140ef38'
          '5c2386908ecae5c6dfde9fb5c05f9f2a')
 
 pkgver() {
@@ -99,7 +97,7 @@ julia_opts=(prefix=/usr sysconfdir=/etc
             LIBLAPACKNAME=libopenblas
             LIBLAPACK=-lopenblas)
 
-_x86_target='generic;haswell,clone_all,-rdrnd;skylake,base(1),-rdrnd;cannonlake,base(1),-rdrnd'
+_x86_target='generic,opt_size;haswell,clone_all,-rdrnd;skylake,base(1),-rdrnd;cannonlake,base(1),-rdrnd'
 _arm_target='armv7-a;armv7-a,neon;armv7-a,neon,vfp4'
 _aa64_target='generic;cortex-a57;thunderx2t99'
 
@@ -138,7 +136,6 @@ EOF
   patch -Np1 < ../0002-Revert-deprecation-warning-for-old-parametric-method.patch
   patch -Np1 < ../0001-Try-re-enable-frame-pointer-omission.patch
   patch -Np1 < ../0001-Add-install-nodoc-make-target-to-skip-building-and-i.patch
-  patch -Np1 < ../0001-Fix-PHI-node-refinement-in-gcframe-allocation.patch
   patch -Np1 < ../0002-Improve-handling-of-vector-of-GC-pointers.patch
 }
 
