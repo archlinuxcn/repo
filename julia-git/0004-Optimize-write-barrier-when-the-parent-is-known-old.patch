@@ -1,0 +1,76 @@
+From b64c39468f24ad737fbe8ff7096a228d936412da Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Tue, 24 Oct 2017 20:51:40 -0400
+Subject: [PATCH 4/4] Optimize write barrier when the parent is known old
+
+We can't omit the write barrier but we can skip a check.
+---
+ src/gc.c                      | 11 ++++-------
+ src/llvm-late-gc-lowering.cpp | 17 +++++++++++------
+ 2 files changed, 15 insertions(+), 13 deletions(-)
+
+diff --git a/src/gc.c b/src/gc.c
+index 0c706061f6..c5f1331ee3 100644
+--- a/src/gc.c
++++ b/src/gc.c
+@@ -1302,14 +1302,11 @@ static void gc_sweep_perm_alloc(void)
+ 
+ JL_DLLEXPORT void jl_gc_queue_root(jl_value_t *ptr)
+ {
+-    jl_ptls_t ptls = jl_get_ptls_states();
+     jl_taggedvalue_t *o = jl_astaggedvalue(ptr);
+-#ifndef JULIA_ENABLE_THREADING
+-    // Disable this assert since it can happen with multithreading (same
+-    // with the ones in gc_queue_binding) when two threads are writing
+-    // to the same object.
+-    assert(o->bits.gc == GC_OLD_MARKED);
+-#endif
++    // This can happen in multithreading or when we omit the parent check in codegen
++    if (o->bits.gc != GC_OLD_MARKED)
++        return;
++    jl_ptls_t ptls = jl_get_ptls_states();
+     // The modification of the `gc_bits` is not atomic but it
+     // should be safe here since GC is not allowed to run here and we only
+     // write GC_OLD to the GC bits outside GC. This could cause
+diff --git a/src/llvm-late-gc-lowering.cpp b/src/llvm-late-gc-lowering.cpp
+index 01a75cb62b..0bbe1241aa 100644
+--- a/src/llvm-late-gc-lowering.cpp
++++ b/src/llvm-late-gc-lowering.cpp
+@@ -816,7 +816,9 @@ static bool isLoadFromImmut(LoadInst *LI)
+         return false;
+     while (TBAA->getNumOperands() > 1) {
+         TBAA = cast<MDNode>(TBAA->getOperand(1).get());
+-        if (cast<MDString>(TBAA->getOperand(0))->getString() == "jtbaa_immut") {
++        auto Str = cast<MDString>(TBAA->getOperand(0))->getString();
++        // We load array owner with `tbaa_const`.
++        if (Str == "jtbaa_immut" || Str == "jtbaa_const") {
+             return true;
+         }
+     }
+@@ -1779,15 +1781,18 @@ bool LateLowerGCFrame::CleanupIR(Function &F, State *S) {
+         }
+         IRBuilder<> builder(CI);
+         builder.SetCurrentDebugLocation(CI->getDebugLoc());
+-        auto parBits = builder.CreateAnd(EmitLoadTag(builder, T_size, parent), 3);
+-        auto parOldMarked = builder.CreateICmpEQ(parBits, ConstantInt::get(T_size, 3));
+-        auto mayTrigTerm = SplitBlockAndInsertIfThen(parOldMarked, CI, false);
+-        builder.SetInsertPoint(mayTrigTerm);
++        Instruction *splitPoint = CI;
++        if (!IsPermRooted(parent, S)) {
++            auto parBits = builder.CreateAnd(EmitLoadTag(builder, T_size, parent), 3);
++            auto parOldMarked = builder.CreateICmpEQ(parBits, ConstantInt::get(T_size, 3));
++            splitPoint = SplitBlockAndInsertIfThen(parOldMarked, splitPoint, false);
++            builder.SetInsertPoint(splitPoint);
++        }
+         auto chldBit = builder.CreateAnd(EmitLoadTag(builder, T_size, child), 1);
+         auto chldNotMarked = builder.CreateICmpEQ(chldBit, ConstantInt::get(T_size, 0));
+         MDBuilder MDB(parent->getContext());
+         SmallVector<uint32_t, 2> Weights{1, 9};
+-        auto trigTerm = SplitBlockAndInsertIfThen(chldNotMarked, mayTrigTerm, false,
++        auto trigTerm = SplitBlockAndInsertIfThen(chldNotMarked, splitPoint, false,
+                                                   MDB.createBranchWeights(Weights));
+         builder.SetInsertPoint(trigTerm);
+         builder.CreateCall(queueroot_func, parent);
+-- 
+2.14.3
+

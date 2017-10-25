@@ -48,14 +48,20 @@ source=('git://github.com/JuliaLang/julia'
         0001-Revert-Replace-quiet-with-banner-23343.patch
         0001-Try-re-enable-frame-pointer-omission.patch
         0001-Add-install-nodoc-make-target-to-skip-building-and-i.patch
-        0002-Improve-handling-of-vector-of-GC-pointers.patch)
+        0001-Improve-handling-of-vector-of-GC-pointers.patch
+        0002-A-few-cleanup-optimizations-related-to-tag-handling-.patch
+        0003-Do-not-trigger-write-barrier-when-the-child-is-a-per.patch
+        0004-Optimize-write-barrier-when-the-parent-is-known-old.patch)
 md5sums=('SKIP'
          '91a0c77dc0700ff283d3aaaac67a9147'
          '84d6c1e407839b1459278b35c245e3ad'
          'b3c5a4ba02fbbfa53b7043beb0242156'
          '91bc8836614d83cf1aebe79e455b181f'
          '2222d3eabfe6040a8cca466303c86d2b'
-         '5c2386908ecae5c6dfde9fb5c05f9f2a')
+         'e5a3962bace855883da98d205ba267e8'
+         'a33f3d56c8e234e758e87325ccf3ccba'
+         '21dccaa272150fa71259800fefc4e6b2'
+         'b8032cd28a7c97713e3c7412811d34dd')
 
 pkgver() {
   cd julia
@@ -136,7 +142,10 @@ EOF
   patch -Np1 < ../0002-Revert-deprecation-warning-for-old-parametric-method.patch
   patch -Np1 < ../0001-Try-re-enable-frame-pointer-omission.patch
   patch -Np1 < ../0001-Add-install-nodoc-make-target-to-skip-building-and-i.patch
-  patch -Np1 < ../0002-Improve-handling-of-vector-of-GC-pointers.patch
+  patch -Np1 < ../0001-Improve-handling-of-vector-of-GC-pointers.patch
+  patch -Np1 < ../0002-A-few-cleanup-optimizations-related-to-tag-handling-.patch
+  patch -Np1 < ../0003-Do-not-trigger-write-barrier-when-the-child-is-a-per.patch
+  patch -Np1 < ../0004-Optimize-write-barrier-when-the-parent-is-known-old.patch
 }
 
 build_in() {
