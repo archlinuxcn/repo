@@ -1,4 +1,4 @@
-From acf2f273d17d9e37e1b6ed58964f9c636d31ba85 Mon Sep 17 00:00:00 2001
+From f868a88003047d4091185410d5940ed0d61fd7c0 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Tue, 24 Oct 2017 22:12:11 -0400
 Subject: [PATCH] Fix gc allocation lowering
@@ -12,10 +12,10 @@ Also add `nonnull` attribute to the return value.
  1 file changed, 16 insertions(+), 28 deletions(-)
 
 diff --git a/src/llvm-late-gc-lowering.cpp b/src/llvm-late-gc-lowering.cpp
-index 27e4d2faf9..fa7fb55dcc 100644
+index 0bbe1241aa..5b8196b953 100644
 --- a/src/llvm-late-gc-lowering.cpp
 +++ b/src/llvm-late-gc-lowering.cpp
-@@ -297,6 +297,16 @@ namespace llvm {
+@@ -347,6 +347,16 @@ namespace llvm {
      void initializeLateLowerGCFramePass(PassRegistry &Registry);
  }
  
@@ -32,7 +32,7 @@ index 27e4d2faf9..fa7fb55dcc 100644
  extern std::pair<MDNode*,MDNode*> tbaa_make_child(const char *name, MDNode *parent=nullptr, bool isConstant=false);
  struct LateLowerGCFrame: public FunctionPass {
      static char ID;
-@@ -1392,21 +1402,6 @@ void LateLowerGCFrame::PopGCFrame(AllocaInst *gcframe, Instruction *InsertBefore
+@@ -1545,21 +1555,6 @@ void LateLowerGCFrame::PopGCFrame(AllocaInst *gcframe, Instruction *InsertBefore
      inst->setMetadata(llvm::LLVMContext::MD_tbaa, tbaa_gcframe);
  }
  
@@ -51,10 +51,10 @@ index 27e4d2faf9..fa7fb55dcc 100644
 -#endif
 -}
 -
- bool LateLowerGCFrame::CleanupIR(Function &F) {
-     bool ChangesMade = false;
-     // We create one alloca for all the jlcall frames that haven't been processed
-@@ -1461,9 +1456,9 @@ bool LateLowerGCFrame::CleanupIR(Function &F) {
+ // Size of T is assumed to be `sizeof(void*)`
+ Value *LateLowerGCFrame::EmitTagPtr(IRBuilder<> &builder, Type *T, Value *V)
+ {
+@@ -1680,9 +1675,9 @@ bool LateLowerGCFrame::CleanupIR(Function &F, State *S) {
                      auto pool_osize = ConstantInt::get(T_int32, osize);
                      newI = builder.CreateCall(pool_alloc_func, {ptls, pool_offs, pool_osize});
                  }
@@ -66,7 +66,7 @@ index 27e4d2faf9..fa7fb55dcc 100644
                  auto derived = builder.CreateAddrSpaceCast(newI, T_pjlvalue_der);
                  auto cast = builder.CreateBitCast(derived, T_ppjlvalue_der);
                  auto tagaddr = builder.CreateGEP(T_prjlvalue, cast,
-@@ -1694,15 +1689,6 @@ void LateLowerGCFrame::PlaceRootsAndUpdateCalls(std::vector<int> &Colors, State
+@@ -1962,15 +1957,6 @@ void LateLowerGCFrame::PlaceRootsAndUpdateCalls(std::vector<int> &Colors, State
      }
  }
  
@@ -79,10 +79,10 @@ index 27e4d2faf9..fa7fb55dcc 100644
 -#endif
 -}
 -
- bool LateLowerGCFrame::DefineFunctions(Module &M) {
+ bool LateLowerGCFrame::doInitialization(Module &M) {
      ptls_getter = M.getFunction("julia.ptls_states");
      gc_flush_func = M.getFunction("julia.gcroot_flush");
-@@ -1723,7 +1709,8 @@ bool LateLowerGCFrame::DefineFunctions(Module &M) {
+@@ -2006,7 +1992,8 @@ bool LateLowerGCFrame::doInitialization(Module &M) {
              args.push_back(T_int32);
              pool_alloc_func = Function::Create(FunctionType::get(T_prjlvalue, args, false),
                                                 Function::ExternalLinkage, "jl_gc_pool_alloc", &M);
@@ -92,7 +92,7 @@ index 27e4d2faf9..fa7fb55dcc 100644
          }
          if (!(big_alloc_func = M.getFunction("jl_gc_big_alloc"))) {
              std::vector<Type*> args(0);
-@@ -1731,7 +1718,8 @@ bool LateLowerGCFrame::DefineFunctions(Module &M) {
+@@ -2014,7 +2001,8 @@ bool LateLowerGCFrame::doInitialization(Module &M) {
              args.push_back(T_size);
              big_alloc_func = Function::Create(FunctionType::get(T_prjlvalue, args, false),
                                           Function::ExternalLinkage, "jl_gc_big_alloc", &M);
