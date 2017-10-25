@@ -51,7 +51,8 @@ source=('git://github.com/JuliaLang/julia'
         0001-Improve-handling-of-vector-of-GC-pointers.patch
         0002-A-few-cleanup-optimizations-related-to-tag-handling-.patch
         0003-Do-not-trigger-write-barrier-when-the-child-is-a-per.patch
-        0004-Optimize-write-barrier-when-the-parent-is-known-old.patch)
+        0004-Optimize-write-barrier-when-the-parent-is-known-old.patch
+        0001-Fix-gc-allocation-lowering.patch)
 md5sums=('SKIP'
          '91a0c77dc0700ff283d3aaaac67a9147'
          '84d6c1e407839b1459278b35c245e3ad'
@@ -61,7 +62,8 @@ md5sums=('SKIP'
          'e5a3962bace855883da98d205ba267e8'
          'a33f3d56c8e234e758e87325ccf3ccba'
          '21dccaa272150fa71259800fefc4e6b2'
-         'b8032cd28a7c97713e3c7412811d34dd')
+         'b8032cd28a7c97713e3c7412811d34dd'
+         '03f8b5039976c4105a537ff2ba52a14e')
 
 pkgver() {
   cd julia
@@ -146,6 +148,7 @@ EOF
   patch -Np1 < ../0002-A-few-cleanup-optimizations-related-to-tag-handling-.patch
   patch -Np1 < ../0003-Do-not-trigger-write-barrier-when-the-child-is-a-per.patch
   patch -Np1 < ../0004-Optimize-write-barrier-when-the-parent-is-known-old.patch
+  patch -Np1 < ../0001-Fix-gc-allocation-lowering.patch
 }
 
 build_in() {
