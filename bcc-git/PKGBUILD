@@ -31,6 +31,7 @@ build() {
   mkdir "${srcdir}/${pkgbase}/build"
   cd "${srcdir}/${pkgbase}/build"
 
+  export LDFLAGS=-ltinfo
   # we don't care which python here for the core C library
   cmake .. \
     -DCMAKE_INSTALL_PREFIX=/usr \
