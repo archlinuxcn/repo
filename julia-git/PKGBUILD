@@ -50,7 +50,8 @@ source=('git://github.com/JuliaLang/julia'
         0001-Add-install-nodoc-make-target-to-skip-building-and-i.patch
         0002-A-few-cleanup-optimizations-related-to-tag-handling-.patch
         0003-Do-not-trigger-write-barrier-when-the-child-is-a-per.patch
-        0004-Optimize-write-barrier-when-the-parent-is-known-old.patch)
+        0004-Optimize-write-barrier-when-the-parent-is-known-old.patch
+        0001-Improve-debug-info-correctness-and-printing-in-disas.patch)
 md5sums=('SKIP'
          '91a0c77dc0700ff283d3aaaac67a9147'
          '84d6c1e407839b1459278b35c245e3ad'
@@ -59,7 +60,8 @@ md5sums=('SKIP'
          '2222d3eabfe6040a8cca466303c86d2b'
          '765cc74a9ad15e47c24ba32e2b845255'
          '726c901fd7d135940c14e831c9259b76'
-         '0efe9ea2a4ab8363b92054b2fbe27eb7')
+         '0efe9ea2a4ab8363b92054b2fbe27eb7'
+         'd2db2aeb01e09d8381822a4f7e9726eb')
 
 pkgver() {
   cd julia
@@ -143,6 +145,7 @@ EOF
   patch -Np1 < ../0002-A-few-cleanup-optimizations-related-to-tag-handling-.patch
   patch -Np1 < ../0003-Do-not-trigger-write-barrier-when-the-child-is-a-per.patch
   patch -Np1 < ../0004-Optimize-write-barrier-when-the-parent-is-known-old.patch
+  patch -Np1 < ../0001-Improve-debug-info-correctness-and-printing-in-disas.patch
 }
 
 build_in() {

@@ -1,0 +1,112 @@
+From 9bb3bf40b3811579af8e4e75dddf64bd1116fb1f Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Wed, 25 Oct 2017 22:47:47 -0400
+Subject: [PATCH] Improve debug info correctness and printing in disassembler
+
+* Mark functions with correct line numbers
+
+  This is consistent with what Clang does.
+
+* Mark functions with correct argument types for non-zero debug level
+
+* Do not print extra debug info before disassembling starts
+---
+ src/codegen.cpp | 10 +++++-----
+ src/disasm.cpp  | 26 +++++++++++++++++++++-----
+ 2 files changed, 26 insertions(+), 10 deletions(-)
+
+diff --git a/src/codegen.cpp b/src/codegen.cpp
+index 0e05395817..04c75ea1a9 100644
+--- a/src/codegen.cpp
++++ b/src/codegen.cpp
+@@ -5061,7 +5061,7 @@ static std::unique_ptr<Module> emit_function(
+ #endif
+ 
+         DISubroutineType *subrty;
+-        if (jl_options.debug_level <= 1) {
++        if (jl_options.debug_level < 1) {
+             subrty = jl_di_func_null_sig;
+         }
+         else if (!specsig) {
+@@ -5074,11 +5074,11 @@ static std::unique_ptr<Module> emit_function(
+                                      dbgFuncName,      // Name
+                                      f->getName(),     // LinkageName
+                                      topfile,          // File
+-                                     0,                // LineNo
++                                     toplineno,        // LineNo
+                                      subrty,           // Ty
+                                      false,            // isLocalToUnit
+                                      true,             // isDefinition
+-                                     0,                // ScopeLine
++                                     toplineno,        // ScopeLine
+                                      DIFlagZero,       // Flags
+                                      true,             // isOptimized
+                                      nullptr);         // Template Parameters
+@@ -5512,11 +5512,11 @@ static std::unique_ptr<Module> emit_function(
+                                                  std::string(inl_name) + ";",
+                                                  inl_name,
+                                                  new_file,
+-                                                 0,
++                                                 inlined_func_lineno,
+                                                  jl_di_func_null_sig,
+                                                  false,
+                                                  true,
+-                                                 0,
++                                                 inlined_func_lineno,
+                                                  DIFlagZero,
+                                                  true,
+                                                  nullptr);
+diff --git a/src/disasm.cpp b/src/disasm.cpp
+index aa9140d578..04698c16d1 100644
+--- a/src/disasm.cpp
++++ b/src/disasm.cpp
+@@ -712,7 +712,25 @@ static void jl_dump_asm_internal(
+ 
+     DILineInfoTable di_lineinfo;
+     if (di_ctx)
+-         di_lineinfo = di_ctx->getLineInfoForAddressRange(Fptr+slide, Fsize);
++        di_lineinfo = di_ctx->getLineInfoForAddressRange(Fptr+slide, Fsize);
++    if (!di_lineinfo.empty()) {
++        auto cur_addr = di_lineinfo[0].first;
++        auto nlineinfo = di_lineinfo.size();
++        // filter out line infos that doesn't contain any instructions
++        unsigned j = 0;
++        for (unsigned i = 1; i < nlineinfo; i++) {
++            auto &info = di_lineinfo[i];
++            if (info.first != cur_addr)
++                j++;
++            cur_addr = info.first;
++            if (i != j) {
++                di_lineinfo[j] = std::move(info);
++            }
++        }
++        if (j + 1 < nlineinfo) {
++            di_lineinfo.resize(j + 1);
++        }
++    }
+ 
+     // Take two passes: In the first pass we record all branch labels,
+     // in the second we actually perform the output
+@@ -742,9 +760,6 @@ static void jl_dump_asm_internal(
+             if (di_ctx) {
+                 // Set up the line info
+                 if (di_lineIter != di_lineEnd) {
+-                    std::string buf;
+-                    dbgctx.emit_lineinfo(buf, di_lineIter->second);
+-                    Streamer->EmitRawText(buf);
+                     if (di_lineIter->second.Line <= 0)
+                         ++di_lineIter;
+                     nextLineAddr = di_lineIter->first;
+@@ -770,7 +785,8 @@ static void jl_dump_asm_internal(
+                     else {
+                         dbgctx.emit_lineinfo(buf, di_lineIter->second);
+                     }
+-                    Streamer->EmitRawText(buf);
++                    if (!buf.empty())
++                        Streamer->EmitRawText(buf);
+                     nextLineAddr = (++di_lineIter)->first;
+                 }
+             }
+-- 
+2.14.3
+
