@@ -18,11 +18,13 @@ makedepends=('git')
 source=('git://git.savannah.gnu.org/libunwind.git'
         0001-Handle-non-signal-frame-unwind-info-lookup-in-ARM-ex.patch
         0002-Allow-DWARF-version-4.patch
-        0003-Prefer-EXTBL-unwinding-on-ARM.patch)
+        0003-Prefer-EXTBL-unwinding-on-ARM.patch
+        0001-Use-ucontext_t-instead-of-struct-ucontext.patch)
 md5sums=('SKIP'
          'd00e44a1a90459c0125cc4525871c232'
          'ac40837ccb190c9dd08357cfc747655f'
-         'f2390a8ead7fc3d8b3d0c038b2e35ded')
+         'f2390a8ead7fc3d8b3d0c038b2e35ded'
+         '58a9f04221053ad4e68300b2f62d6f37')
 options=('debug' '!strip')
 provides=(libunwind)
 conflicts=(libunwind)
@@ -39,6 +41,7 @@ prepare() {
   patch -Np1 < ../0001-Handle-non-signal-frame-unwind-info-lookup-in-ARM-ex.patch
   patch -Np1 < ../0002-Allow-DWARF-version-4.patch
   patch -Np1 < ../0003-Prefer-EXTBL-unwinding-on-ARM.patch
+  patch -Np1 < ../0001-Use-ucontext_t-instead-of-struct-ucontext.patch
 }
 
 build() {
