@@ -43,25 +43,25 @@ makedepends=(gcc-fortran arpack fftw git gmp libgit2-julia libunwind-git
              openlibm mbedtls libssh2)
 options=('debug' '!strip' '!buildflags')
 source=('git://github.com/JuliaLang/julia'
+        0001-Revert-Replace-quiet-with-banner-23343.patch
+        0001-Add-install-nodoc-make-target-to-skip-building-and-i.patch
         0001-Revert-turn-on-deprecation-warnings-for-type-and-imm.patch
         0002-Revert-deprecation-warning-for-old-parametric-method.patch
-        0001-Revert-Replace-quiet-with-banner-23343.patch
-        0001-Try-re-enable-frame-pointer-omission.patch
-        0001-Add-install-nodoc-make-target-to-skip-building-and-i.patch
-        0002-A-few-cleanup-optimizations-related-to-tag-handling-.patch
-        0003-Do-not-trigger-write-barrier-when-the-child-is-a-per.patch
-        0004-Optimize-write-barrier-when-the-parent-is-known-old.patch
-        0001-Improve-debug-info-correctness-and-printing-in-disas.patch)
+        0003-Try-re-enable-frame-pointer-omission.patch
+        0004-A-few-cleanup-optimizations-related-to-tag-handling-.patch
+        0005-Do-not-trigger-write-barrier-when-the-child-is-a-per.patch
+        0006-Optimize-write-barrier-when-the-parent-is-known-old.patch
+        0007-Improve-debug-info-correctness-and-printing-in-disas.patch)
 md5sums=('SKIP'
-         '91a0c77dc0700ff283d3aaaac67a9147'
-         '84d6c1e407839b1459278b35c245e3ad'
          'b3c5a4ba02fbbfa53b7043beb0242156'
-         'bc7c5d00a8f1d15685d915b3264b3f59'
          '2222d3eabfe6040a8cca466303c86d2b'
-         '765cc74a9ad15e47c24ba32e2b845255'
-         '726c901fd7d135940c14e831c9259b76'
-         '0efe9ea2a4ab8363b92054b2fbe27eb7'
-         'd2db2aeb01e09d8381822a4f7e9726eb')
+         'fccd6f87178fecd9249d48a2149e41f0'
+         '56cfe7e765f3fbf0ce0d540100f50424'
+         '0b74f12a528d08f8e2c5c756a73d1851'
+         '81ef05c7dcb45bb614d2bf1a97595e27'
+         '9906d8387038538c1ef0c849fd411a2c'
+         'f2fca449f8710f5e0d491a44da19e068'
+         'e8af6209008b03b8b59570b775a98ffe')
 
 pkgver() {
   cd julia
@@ -138,14 +138,14 @@ EOF
   git reset --hard HEAD
   git clean -fdx
 
+  patch -Np1 < ../0001-Add-install-nodoc-make-target-to-skip-building-and-i.patch
   patch -Np1 < ../0001-Revert-turn-on-deprecation-warnings-for-type-and-imm.patch
   patch -Np1 < ../0002-Revert-deprecation-warning-for-old-parametric-method.patch
-  patch -Np1 < ../0001-Try-re-enable-frame-pointer-omission.patch
-  patch -Np1 < ../0001-Add-install-nodoc-make-target-to-skip-building-and-i.patch
-  patch -Np1 < ../0002-A-few-cleanup-optimizations-related-to-tag-handling-.patch
-  patch -Np1 < ../0003-Do-not-trigger-write-barrier-when-the-child-is-a-per.patch
-  patch -Np1 < ../0004-Optimize-write-barrier-when-the-parent-is-known-old.patch
-  patch -Np1 < ../0001-Improve-debug-info-correctness-and-printing-in-disas.patch
+  patch -Np1 < ../0003-Try-re-enable-frame-pointer-omission.patch
+  patch -Np1 < ../0004-A-few-cleanup-optimizations-related-to-tag-handling-.patch
+  patch -Np1 < ../0005-Do-not-trigger-write-barrier-when-the-child-is-a-per.patch
+  patch -Np1 < ../0006-Optimize-write-barrier-when-the-parent-is-known-old.patch
+  patch -Np1 < ../0007-Improve-debug-info-correctness-and-printing-in-disas.patch
 }
 
 build_in() {

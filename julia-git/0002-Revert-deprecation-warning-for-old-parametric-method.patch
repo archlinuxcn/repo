@@ -1,7 +1,7 @@
-From c3cbdb749cf40804e7450bf732e02b3df4a6e6db Mon Sep 17 00:00:00 2001
+From 45e9b7168fd39755848628a721c42bce7056c122 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Fri, 28 Jul 2017 23:49:49 -0400
-Subject: [PATCH 2/3] Revert "deprecation warning for old parametric method
+Subject: [PATCH 2/7] Revert "deprecation warning for old parametric method
  syntax. fixes #11310 (#22834)"
 
 This partially reverts commit c6e51d0cddc6d786a655d7504e072f1d986675de.
@@ -10,10 +10,10 @@ This partially reverts commit c6e51d0cddc6d786a655d7504e072f1d986675de.
  1 file changed, 6 insertions(+), 13 deletions(-)
 
 diff --git a/src/julia-syntax.scm b/src/julia-syntax.scm
-index 92638bb558..6267213804 100644
+index 7aa9565ec0..32e85c7361 100644
 --- a/src/julia-syntax.scm
 +++ b/src/julia-syntax.scm
-@@ -788,9 +788,12 @@
+@@ -838,9 +838,12 @@
                    (sig    (car temp))
                    (params (cdr temp)))
               (if (pair? params)
@@ -26,10 +26,10 @@ index 92638bb558..6267213804 100644
 +                   (syntax-deprecation #f
 +                                       (string "inner constructor " name "(...)" (linenode-string lno))
 +                                       (deparse `(where (call (curly ,name ,@params) ...) ,@params)))))
-              `(,keyword ,sig ,(ctor-body body params)))))))
+              `(function ,sig ,(ctor-body body params)))))))
  
  (define (function-body-lineno body)
-@@ -1072,16 +1075,6 @@
+@@ -1117,16 +1120,6 @@
                                                                     (eq? (caar argl) 'parameters))))))
                    (name    (if (or (decl? name) (and (pair? name) (eq? (car name) 'curly)))
                                 #f name)))
@@ -44,8 +44,8 @@ index 92638bb558..6267213804 100644
 -                                                                  (cdr argl)))
 -                                                      ,@raw-typevars))))
               (expand-forms
-               (method-def-expr name sparams argl body isstaged rett))))
+               (method-def-expr name sparams argl body rett))))
            (else
 -- 
-2.14.1
+2.14.3
 
