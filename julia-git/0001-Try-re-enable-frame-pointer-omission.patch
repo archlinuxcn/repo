@@ -1,17 +1,17 @@
-From 5501a9c7dab3d2291641e34253aa9a570d8196e4 Mon Sep 17 00:00:00 2001
+From d8f5ffa5cdf703b47c9a9c89cfe2fb41026b5aa0 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Wed, 27 Sep 2017 09:04:55 -0400
-Subject: [PATCH] Try re-enable frame-pointer-omission
+Subject: [PATCH 1/4] Try re-enable frame-pointer-omission
 
 ---
  src/codegen.cpp | 8 ++++----
  1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index a6fb5c717e..52eae43d9d 100644
+index 981baaa048..ab7239eee3 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
-@@ -4137,7 +4137,7 @@ static Function *gen_cfun_wrapper(jl_function_t *ff, jl_value_t *jlrettype, jl_t
+@@ -4147,7 +4147,7 @@ static Function *gen_cfun_wrapper(jl_function_t *ff, jl_value_t *jlrettype, jl_t
              funcName.str(), M);
      jl_init_function(cw);
      cw->setAttributes(sig.attributes);
@@ -20,7 +20,7 @@ index a6fb5c717e..52eae43d9d 100644
      Function *cw_proto = function_proto(cw);
  
      jl_codectx_t ctx(jl_LLVMContext);
-@@ -4315,7 +4315,7 @@ static Function *gen_cfun_wrapper(jl_function_t *ff, jl_value_t *jlrettype, jl_t
+@@ -4326,7 +4326,7 @@ static Function *gen_cfun_wrapper(jl_function_t *ff, jl_value_t *jlrettype, jl_t
                      GlobalVariable::InternalLinkage, funcName.str(), M);
              jl_init_function(gf_thunk);
              gf_thunk->setAttributes(returninfo.decl->getAttributes());
@@ -29,7 +29,7 @@ index a6fb5c717e..52eae43d9d 100644
              // build a  specsig -> jl_apply_generic converter thunk
              // this builds a method that calls jl_apply_generic (as a closure over a singleton function pointer),
              // but which has the signature of a specsig
-@@ -4540,7 +4540,7 @@ static Function *gen_jlcall_wrapper(jl_method_instance_t *lam, const jl_returnin
+@@ -4551,7 +4551,7 @@ static Function *gen_jlcall_wrapper(jl_method_instance_t *lam, const jl_returnin
                                     funcName, M);
      w->addFnAttr("thunk");
      jl_init_function(w);
@@ -38,7 +38,7 @@ index a6fb5c717e..52eae43d9d 100644
      Function::arg_iterator AI = w->arg_begin();
      Value *fArg = &*AI++;
      Value *argArray = &*AI++;
-@@ -4978,7 +4978,7 @@ static std::unique_ptr<Module> emit_function(
+@@ -4989,7 +4989,7 @@ static std::unique_ptr<Module> emit_function(
          declarations->specFunctionObject = NULL;
      }
  
@@ -48,5 +48,5 @@ index a6fb5c717e..52eae43d9d 100644
          f->setDoesNotReturn();
  #if defined(_OS_WINDOWS_) && !defined(_CPU_X86_64_)
 -- 
-2.14.1
+2.14.3
 

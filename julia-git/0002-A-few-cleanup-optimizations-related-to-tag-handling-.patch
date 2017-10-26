@@ -1,4 +1,4 @@
-From 3a4404a0d5a7b2d11072879f8db73a8c2f5f9ee3 Mon Sep 17 00:00:00 2001
+From b15672275c76edac41f9d939d9b9c8e45d4479e9 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sun, 22 Oct 2017 18:37:46 -0400
 Subject: [PATCH 2/4] A few cleanup/optimizations related to tag handling in
@@ -43,9 +43,9 @@ with object reference as fields.
  src/codegen.cpp                | 111 +++++++++++--------
  src/jitlayers.cpp              |   2 +
  src/llvm-alloc-opt.cpp         |  20 +++-
- src/llvm-late-gc-lowering.cpp  | 217 ++++++++++++++++++++++++++++++++++--
+ src/llvm-late-gc-lowering.cpp  | 224 ++++++++++++++++++++++++++++++++++---
  test/llvmpasses/refinements.ll |  29 +++++
- 6 files changed, 431 insertions(+), 191 deletions(-)
+ 6 files changed, 433 insertions(+), 196 deletions(-)
 
 diff --git a/src/cgutils.cpp b/src/cgutils.cpp
 index 0a314baec3..ce173e4edc 100644
@@ -376,7 +376,7 @@ index 0a314baec3..ce173e4edc 100644
          else if (jl_is_uniontype(jfty)) {
              int fsz = jl_field_size(sty, idx0);
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index 20303df22c..2337b84f1d 100644
+index ab7239eee3..0e05395817 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
 @@ -222,7 +222,6 @@ static MDNode *tbaa_gcframe;    // GC frame
@@ -424,7 +424,7 @@ index 20303df22c..2337b84f1d 100644
  static bool isbits_spec(jl_value_t *jt, bool allow_singleton = true)
  {
      return jl_isbits(jt) && jl_is_leaf_type(jt) &&
-@@ -1574,6 +1583,7 @@ void *jl_get_llvmf_decl(jl_method_instance_t *linfo, size_t world, bool getwrapp
+@@ -1572,6 +1581,7 @@ void *jl_get_llvmf_decl(jl_method_instance_t *linfo, size_t world, bool getwrapp
  
      if (getwrapper || !decls.specFunctionObject) {
          auto f = Function::Create(jl_func_sig, GlobalVariable::ExternalLinkage, decls.functionObject);
@@ -432,7 +432,7 @@ index 20303df22c..2337b84f1d 100644
          f->addFnAttr("thunk");
          return f;
      }
-@@ -2516,7 +2526,7 @@ static bool emit_builtin_call(jl_codectx_t &ctx, jl_cgval_t *ret, jl_value_t *f,
+@@ -2514,7 +2524,7 @@ static bool emit_builtin_call(jl_codectx_t &ctx, jl_cgval_t *ret, jl_value_t *f,
                              ctx.builder.CreateCondBr(is_owned, ownedBB, mergeBB);
                              ctx.builder.SetInsertPoint(ownedBB);
                              // load owner pointer
@@ -441,7 +441,7 @@ index 20303df22c..2337b84f1d 100644
                              if (jl_is_long(ndp)) {
                                  own_ptr = tbaa_decorate(tbaa_const, ctx.builder.CreateLoad(
                                      emit_bitcast(ctx,
-@@ -2524,6 +2534,8 @@ static bool emit_builtin_call(jl_codectx_t &ctx, jl_cgval_t *ret, jl_value_t *f,
+@@ -2522,6 +2532,8 @@ static bool emit_builtin_call(jl_codectx_t &ctx, jl_cgval_t *ret, jl_value_t *f,
                                              emit_bitcast(ctx, decay_derived(aryv), T_pint8),
                                              jl_array_data_owner_offset(nd)),
                                          T_pprjlvalue)));
@@ -450,7 +450,7 @@ index 20303df22c..2337b84f1d 100644
                              }
                              else {
                                  own_ptr = ctx.builder.CreateCall(
-@@ -2595,7 +2607,8 @@ static bool emit_builtin_call(jl_codectx_t &ctx, jl_cgval_t *ret, jl_value_t *f,
+@@ -2593,7 +2605,8 @@ static bool emit_builtin_call(jl_codectx_t &ctx, jl_cgval_t *ret, jl_value_t *f,
                          jl_value_t *boundscheck = (nargs == 3 ? argv[3].constant : jl_true);
                          idx = emit_bounds_check(ctx, va_ary, NULL, idx, valen, boundscheck);
                          idx = ctx.builder.CreateAdd(idx, ConstantInt::get(T_size, ctx.nReqArgs));
@@ -460,7 +460,7 @@ index 20303df22c..2337b84f1d 100644
                          *ret = mark_julia_type(ctx, v, /*boxed*/ true, jl_any_type);
                          return true;
                      }
-@@ -2875,6 +2888,7 @@ static Value *emit_jlcall(jl_codectx_t &ctx, Value *theFptr, Value *theF,
+@@ -2873,6 +2886,7 @@ static Value *emit_jlcall(jl_codectx_t &ctx, Value *theFptr, Value *theF,
      CallInst *result = ctx.builder.CreateCall(FTy,
          ctx.builder.CreateBitCast(prepare_call(theFptr), FTy->getPointerTo()),
          theArgs);
@@ -468,7 +468,7 @@ index 20303df22c..2337b84f1d 100644
      if (theF)
          result->setCallingConv(JLCALL_F_CC);
      else
-@@ -2983,8 +2997,10 @@ static jl_cgval_t emit_call_function_object(jl_method_instance_t *li, jl_llvm_fu
+@@ -2981,8 +2995,10 @@ static jl_cgval_t emit_call_function_object(jl_method_instance_t *li, jl_llvm_fu
          return retval;
      }
      auto theFptr = jl_Module->getOrInsertFunction(decls.functionObject, jl_func_sig);
@@ -480,7 +480,7 @@ index 20303df22c..2337b84f1d 100644
      Value *ret = emit_jlcall(ctx, theFptr, boxed(ctx, argv[0]), &argv[1], nargs - 1);
      return mark_julia_type(ctx, ret, true, inferred_retty);
  }
-@@ -3322,10 +3338,11 @@ static jl_cgval_t emit_local(jl_codectx_t &ctx, jl_value_t *slotload)
+@@ -3320,10 +3336,11 @@ static jl_cgval_t emit_local(jl_codectx_t &ctx, jl_value_t *slotload)
          }
      }
      if (vi.boxroot != NULL) {
@@ -493,7 +493,7 @@ index 20303df22c..2337b84f1d 100644
          if (vi.pTIndex) {
              // value is either boxed in the stack slot, or unboxed in value
              // as indicated by testing (pTIndex & 0x80)
-@@ -4375,6 +4392,7 @@ static Function *gen_cfun_wrapper(jl_function_t *ff, jl_value_t *jlrettype, jl_t
+@@ -4372,6 +4389,7 @@ static Function *gen_cfun_wrapper(jl_function_t *ff, jl_value_t *jlrettype, jl_t
                  else {
                      assert(theFptr->getFunctionType() == jl_func_sig);
                  }
@@ -501,7 +501,7 @@ index 20303df22c..2337b84f1d 100644
                  theFptr->addFnAttr("thunk");
              }
          }
-@@ -4552,6 +4570,7 @@ static Function *gen_jlcall_wrapper(jl_method_instance_t *lam, const jl_returnin
+@@ -4549,6 +4567,7 @@ static Function *gen_jlcall_wrapper(jl_method_instance_t *lam, const jl_returnin
  {
      Function *w = Function::Create(jl_func_sig, GlobalVariable::ExternalLinkage,
                                     funcName, M);
@@ -509,7 +509,7 @@ index 20303df22c..2337b84f1d 100644
      w->addFnAttr("thunk");
      jl_init_function(w);
      // w->addFnAttr("no-frame-pointer-elim", "true");
-@@ -4607,7 +4626,7 @@ static Function *gen_jlcall_wrapper(jl_method_instance_t *lam, const jl_returnin
+@@ -4604,7 +4623,7 @@ static Function *gen_jlcall_wrapper(jl_method_instance_t *lam, const jl_returnin
          }
          else {
              Value *argPtr = ctx.builder.CreateGEP(argArray, ConstantInt::get(T_size, i-1));
@@ -518,7 +518,7 @@ index 20303df22c..2337b84f1d 100644
          }
          if (lty != NULL && !isboxed) {
              theArg = decay_derived(emit_bitcast(ctx, theArg, PointerType::get(lty, 0)));
-@@ -4774,6 +4793,8 @@ static jl_returninfo_t get_specsig_function(Module *M, const std::string &name,
+@@ -4771,6 +4790,8 @@ static jl_returninfo_t get_specsig_function(Module *M, const std::string &name,
      else {
          assert(f->getFunctionType() == ftype);
      }
@@ -527,7 +527,7 @@ index 20303df22c..2337b84f1d 100644
      props.decl = f;
      return props;
  }
-@@ -4985,6 +5006,7 @@ static std::unique_ptr<Module> emit_function(
+@@ -4982,6 +5003,7 @@ static std::unique_ptr<Module> emit_function(
          f = Function::Create(needsparams ? jl_func_sig_sparams : jl_func_sig,
                               GlobalVariable::ExternalLinkage,
                               funcName.str(), M);
@@ -535,7 +535,7 @@ index 20303df22c..2337b84f1d 100644
          f->addFnAttr("thunk");
          returninfo.decl = f;
          jl_init_function(f);
-@@ -5313,7 +5335,9 @@ static std::unique_ptr<Module> emit_function(
+@@ -5310,7 +5332,9 @@ static std::unique_ptr<Module> emit_function(
                  }
                  else {
                      Value *argPtr = ctx.builder.CreateGEP(argArray, ConstantInt::get(T_size, i-1));
@@ -546,7 +546,7 @@ index 20303df22c..2337b84f1d 100644
                      if (ctx.debug_enabled && vi.dinfo && !vi.boxroot && !vi.value.V) {
                          SmallVector<uint64_t, 8> addr;
                          addr.push_back(llvm::dwarf::DW_OP_deref);
-@@ -5905,6 +5929,7 @@ static GlobalVariable *julia_const_gv(jl_value_t *val)
+@@ -5902,6 +5926,7 @@ static GlobalVariable *julia_const_gv(jl_value_t *val)
  static Function *jlcall_func_to_llvm(const std::string &cname, jl_fptr_t addr, Module *m)
  {
      Function *f = Function::Create(jl_func_sig, Function::ExternalLinkage, cname, m);
@@ -554,7 +554,7 @@ index 20303df22c..2337b84f1d 100644
      f->addFnAttr("thunk");
      add_named_global(f, addr);
      return f;
-@@ -5953,7 +5978,6 @@ static void init_julia_llvm_meta(void)
+@@ -5950,7 +5975,6 @@ static void init_julia_llvm_meta(void)
      tbaa_stack = tbaa_make_child("jtbaa_stack").first;
      MDNode *tbaa_data_scalar;
      std::tie(tbaa_data, tbaa_data_scalar) = tbaa_make_child("jtbaa_data");
@@ -562,7 +562,7 @@ index 20303df22c..2337b84f1d 100644
      tbaa_binding = tbaa_make_child("jtbaa_binding", tbaa_data_scalar).first;
      MDNode *tbaa_value_scalar;
      std::tie(tbaa_value, tbaa_value_scalar) =
-@@ -6197,6 +6221,7 @@ static void init_julia_llvm_env(Module *m)
+@@ -6194,6 +6218,7 @@ static void init_julia_llvm_env(Module *m)
      jlnew_func =
          Function::Create(jl_func_sig, Function::ExternalLinkage,
                           "jl_new_structv", m);
@@ -570,7 +570,7 @@ index 20303df22c..2337b84f1d 100644
      jlnew_func->addFnAttr("thunk");
      add_named_global(jlnew_func, &jl_new_structv);
  
-@@ -6302,19 +6327,13 @@ static void init_julia_llvm_env(Module *m)
+@@ -6299,19 +6324,13 @@ static void init_julia_llvm_env(Module *m)
      add_named_global(jldepwarnpi_func, &jl_depwarn_partial_indexing);
  
  
@@ -591,7 +591,7 @@ index 20303df22c..2337b84f1d 100644
      jlapplygeneric_func->addFnAttr("thunk");
      add_named_global(jlapplygeneric_func, &jl_apply_generic);
  
-@@ -6325,6 +6344,7 @@ static void init_julia_llvm_env(Module *m)
+@@ -6322,6 +6341,7 @@ static void init_julia_llvm_env(Module *m)
      jlinvoke_func = Function::Create(FunctionType::get(T_prjlvalue, invokeargs, false),
                                       Function::ExternalLinkage,
                                       "jl_invoke", m);
@@ -599,7 +599,7 @@ index 20303df22c..2337b84f1d 100644
      add_named_global(jlinvoke_func, &jl_invoke);
  
      std::vector<Type *> exp_args(0);
-@@ -6338,6 +6358,7 @@ static void init_julia_llvm_env(Module *m)
+@@ -6335,6 +6355,7 @@ static void init_julia_llvm_env(Module *m)
          Function::Create(FunctionType::get(T_pjlvalue, args_topeval, false),
                           Function::ExternalLinkage,
                           "jl_toplevel_eval", m);
@@ -607,7 +607,7 @@ index 20303df22c..2337b84f1d 100644
      add_named_global(jltopeval_func, &jl_toplevel_eval);
  
      std::vector<Type*> args_copyast(0);
-@@ -6346,6 +6367,7 @@ static void init_julia_llvm_env(Module *m)
+@@ -6343,6 +6364,7 @@ static void init_julia_llvm_env(Module *m)
          Function::Create(FunctionType::get(T_prjlvalue, args_copyast, false),
                           Function::ExternalLinkage,
                           "jl_copy_ast", m);
@@ -615,7 +615,7 @@ index 20303df22c..2337b84f1d 100644
      add_named_global(jlcopyast_func, &jl_copy_ast);
  
      std::vector<Type*> args5(0);
-@@ -6354,6 +6376,7 @@ static void init_julia_llvm_env(Module *m)
+@@ -6351,6 +6373,7 @@ static void init_julia_llvm_env(Module *m)
          Function::Create(FunctionType::get(T_pjlvalue, args5, true),
                           Function::ExternalLinkage,
                           "jl_svec", m);
@@ -623,7 +623,7 @@ index 20303df22c..2337b84f1d 100644
      add_named_global(jlnsvec_func, &jl_svec);
  
      std::vector<Type*> mdargs(0);
-@@ -6466,6 +6489,7 @@ static void init_julia_llvm_env(Module *m)
+@@ -6462,6 +6485,7 @@ static void init_julia_llvm_env(Module *m)
          Function::Create(FunctionType::get(T_prjlvalue, applytype_args, false),
                           Function::ExternalLinkage,
                           "jl_instantiate_type_in_env", m);
@@ -631,7 +631,7 @@ index 20303df22c..2337b84f1d 100644
      add_named_global(jlapplytype_func, &jl_instantiate_type_in_env);
  
      std::vector<Type*> gc_alloc_args(0);
-@@ -6475,13 +6499,29 @@ static void init_julia_llvm_env(Module *m)
+@@ -6471,13 +6495,29 @@ static void init_julia_llvm_env(Module *m)
      jl_alloc_obj_func = Function::Create(FunctionType::get(T_prjlvalue, gc_alloc_args, false),
                                           Function::ExternalLinkage,
                                           "julia.gc_alloc_obj");
@@ -666,7 +666,7 @@ index 20303df22c..2337b84f1d 100644
      std::vector<Type *> dlsym_args(0);
      dlsym_args.push_back(T_pint8);
      dlsym_args.push_back(T_pint8);
-@@ -6492,15 +6532,6 @@ static void init_julia_llvm_env(Module *m)
+@@ -6488,15 +6528,6 @@ static void init_julia_llvm_env(Module *m)
                           "jl_load_and_lookup", m);
      add_named_global(jldlsym_func, &jl_load_and_lookup);
  
@@ -682,7 +682,7 @@ index 20303df22c..2337b84f1d 100644
      std::vector<Type *> getnthfld_args(0);
      getnthfld_args.push_back(T_prjlvalue);
      getnthfld_args.push_back(T_size);
-@@ -6508,6 +6539,7 @@ static void init_julia_llvm_env(Module *m)
+@@ -6504,6 +6535,7 @@ static void init_julia_llvm_env(Module *m)
          Function::Create(FunctionType::get(T_prjlvalue, getnthfld_args, false),
                           Function::ExternalLinkage,
                           "jl_get_nth_field_checked", m);
@@ -690,7 +690,7 @@ index 20303df22c..2337b84f1d 100644
      add_named_global(jlgetnthfieldchecked_func, *jl_get_nth_field_checked);
  
      diff_gc_total_bytes_func =
-@@ -6522,19 +6554,9 @@ static void init_julia_llvm_env(Module *m)
+@@ -6518,19 +6550,9 @@ static void init_julia_llvm_env(Module *m)
          Function::Create(FunctionType::get(T_prjlvalue, array_owner_args, false),
                           Function::ExternalLinkage,
                           "jl_array_data_owner", m);
@@ -713,7 +713,7 @@ index 20303df22c..2337b84f1d 100644
      add_named_global(jlarray_data_owner_func, jl_array_data_owner);
  
      gcroot_flush_func = Function::Create(FunctionType::get(T_void, false),
-@@ -6559,6 +6581,7 @@ static void init_julia_llvm_env(Module *m)
+@@ -6555,6 +6577,7 @@ static void init_julia_llvm_env(Module *m)
                                           Function::ExternalLinkage,
                                           "julia.pointer_from_objref");
      pointer_from_objref_func->addFnAttr(Attribute::ReadNone);
@@ -827,7 +827,7 @@ index 216a37eb64..4c754a5bbc 100644
      for (auto it: allocs) {
          if (it.second == UINT32_MAX)
 diff --git a/src/llvm-late-gc-lowering.cpp b/src/llvm-late-gc-lowering.cpp
-index d8d0e8be04..7a1822d90c 100644
+index 86732c1d5a..301d2d6235 100644
 --- a/src/llvm-late-gc-lowering.cpp
 +++ b/src/llvm-late-gc-lowering.cpp
 @@ -3,6 +3,7 @@
@@ -903,7 +903,7 @@ index d8d0e8be04..7a1822d90c 100644
  /* Julia GC Root Placement pass. For a general overview of the design of GC
     root lowering, see the devdocs. This file is the actual implementation.
  
-@@ -336,6 +383,9 @@ private:
+@@ -346,6 +393,9 @@ private:
      Function *gc_preserve_end_func;
      Function *pointer_from_objref_func;
      Function *alloc_obj_func;
@@ -913,7 +913,7 @@ index d8d0e8be04..7a1822d90c 100644
      Function *pool_alloc_func;
      Function *big_alloc_func;
      CallInst *ptlsStates;
-@@ -365,7 +415,8 @@ private:
+@@ -375,7 +425,8 @@ private:
      void PlaceGCFrameStore(State &S, unsigned R, unsigned MinColorRoot, const std::vector<int> &Colors, Value *GCFrame, Instruction *InsertionPoint);
      void PlaceGCFrameStores(State &S, unsigned MinColorRoot, const std::vector<int> &Colors, Value *GCFrame);
      void PlaceRootsAndUpdateCalls(std::vector<int> &Colors, State &S, std::map<Value *, std::pair<int, int>>);
@@ -923,7 +923,7 @@ index d8d0e8be04..7a1822d90c 100644
      bool runOnFunction(Function &F) override;
      Instruction *get_pgcstack(Instruction *ptlsStates);
      bool CleanupIR(Function &F);
-@@ -373,6 +424,8 @@ private:
+@@ -383,6 +434,8 @@ private:
      SmallVector<int, 1> GetPHIRefinements(PHINode *phi, State &S);
      void FixUpRefinements(ArrayRef<int> PHINumbers, State &S);
      void RefineLiveSet(BitVector &LS, State &S);
@@ -932,7 +932,7 @@ index d8d0e8be04..7a1822d90c 100644
  };
  
  static unsigned getValueAddrSpace(Value *V) {
-@@ -945,7 +998,13 @@ State LateLowerGCFrame::LocalScan(Function &F) {
+@@ -955,7 +1008,13 @@ State LateLowerGCFrame::LocalScan(Function &F) {
                          continue;
                      }
                  }
@@ -947,7 +947,7 @@ index d8d0e8be04..7a1822d90c 100644
                  NoteOperandUses(S, BBS, I, BBS.UpExposedUses);
                  for (Use &U : CI->operands()) {
                      Value *V = U;
-@@ -957,7 +1016,7 @@ State LateLowerGCFrame::LocalScan(Function &F) {
+@@ -967,7 +1026,7 @@ State LateLowerGCFrame::LocalScan(Function &F) {
                  if (CI->canReturnTwice()) {
                      S.ReturnsTwice.push_back(CI);
                  }
@@ -956,7 +956,7 @@ index d8d0e8be04..7a1822d90c 100644
                      if (callee == gc_preserve_begin_func) {
                          std::vector<int> args;
                          for (Use &U : CI->arg_operands()) {
-@@ -973,12 +1032,18 @@ State LateLowerGCFrame::LocalScan(Function &F) {
+@@ -983,12 +1042,18 @@ State LateLowerGCFrame::LocalScan(Function &F) {
                      }
                      // Known functions emitted in codegen that are not safepoints
                      if (callee == pointer_from_objref_func || callee == gc_preserve_begin_func ||
@@ -978,8 +978,8 @@ index d8d0e8be04..7a1822d90c 100644
                      // Intrinsics are never safepoints.
                      continue;
                  }
-@@ -1441,6 +1506,36 @@ static void copyMetadata(Instruction *dest, const Instruction *src)
- #endif
+@@ -1436,6 +1501,36 @@ void LateLowerGCFrame::PopGCFrame(AllocaInst *gcframe, Instruction *InsertBefore
+     inst->setMetadata(llvm::LLVMContext::MD_tbaa, tbaa_gcframe);
  }
  
 +// Size of T is assumed to be `sizeof(void*)`
@@ -1015,7 +1015,7 @@ index d8d0e8be04..7a1822d90c 100644
  bool LateLowerGCFrame::CleanupIR(Function &F) {
      bool ChangesMade = false;
      // We create one alloca for all the jlcall frames that haven't been processed
-@@ -1458,6 +1553,7 @@ bool LateLowerGCFrame::CleanupIR(Function &F) {
+@@ -1453,6 +1548,7 @@ bool LateLowerGCFrame::CleanupIR(Function &F) {
  #endif
          ConstantInt::get(T_int32, maxframeargs), "", StartOff);
      }
@@ -1023,8 +1023,17 @@ index d8d0e8be04..7a1822d90c 100644
      for (BasicBlock &BB : F) {
          for (auto it = BB.begin(); it != BB.end();) {
              auto *CI = dyn_cast<CallInst>(&*it);
-@@ -1505,6 +1601,24 @@ bool LateLowerGCFrame::CleanupIR(Function &F) {
-                 auto store = builder.CreateStore(CI->getArgOperand(2), tagaddr);
+@@ -1493,13 +1589,28 @@ bool LateLowerGCFrame::CleanupIR(Function &F) {
+                 addReturnAttr(newI, Attribute::NoAlias);
+                 addReturnAttr(newI, Attribute::NonNull);
+                 newI->takeName(CI);
+-                auto derived = builder.CreateAddrSpaceCast(newI, T_pjlvalue_der);
+-                auto cast = builder.CreateBitCast(derived, T_ppjlvalue_der);
+-                auto tagaddr = builder.CreateGEP(T_prjlvalue, cast,
+-                                                 ConstantInt::get(T_size, -1));
+-                auto store = builder.CreateStore(CI->getArgOperand(2), tagaddr);
++                auto store = builder.CreateStore(CI->getArgOperand(2),
++                                                 EmitTagPtr(builder, T_prjlvalue, newI));
                  store->setMetadata(LLVMContext::MD_tbaa, tbaa_tag);
                  CI->replaceAllUsesWith(newI);
 +            } else if (typeof_func && callee == typeof_func) {
@@ -1048,7 +1057,7 @@ index d8d0e8be04..7a1822d90c 100644
              } else if (CC == JLCALL_CC ||
                         CC == JLCALL_F_CC) {
                  assert(T_prjlvalue);
-@@ -1564,6 +1678,25 @@ bool LateLowerGCFrame::CleanupIR(Function &F) {
+@@ -1559,6 +1670,25 @@ bool LateLowerGCFrame::CleanupIR(Function &F) {
              ChangesMade = true;
          }
      }
@@ -1074,8 +1083,8 @@ index d8d0e8be04..7a1822d90c 100644
      if (maxframeargs == 0 && Frame) {
          Frame->eraseFromParent();
      }
-@@ -1737,7 +1870,7 @@ static void addRetNoAlias(Function *F)
- #endif
+@@ -1723,7 +1853,7 @@ void LateLowerGCFrame::PlaceRootsAndUpdateCalls(std::vector<int> &Colors, State
+     }
  }
  
 -bool LateLowerGCFrame::DefineFunctions(Module &M) {
@@ -1083,7 +1092,7 @@ index d8d0e8be04..7a1822d90c 100644
      ptls_getter = M.getFunction("julia.ptls_states");
      gc_flush_func = M.getFunction("julia.gcroot_flush");
      gc_preserve_begin_func = M.getFunction("llvm.julia.gc_preserve_begin");
-@@ -1748,6 +1881,21 @@ bool LateLowerGCFrame::DefineFunctions(Module &M) {
+@@ -1734,6 +1864,21 @@ bool LateLowerGCFrame::DefineFunctions(Module &M) {
      T_int8 = Type::getInt8Ty(ctx);
      T_pint8 = PointerType::get(T_int8, 0);
      T_int32 = Type::getInt32Ty(ctx);
@@ -1105,7 +1114,7 @@ index d8d0e8be04..7a1822d90c 100644
      if ((alloc_obj_func = M.getFunction("julia.gc_alloc_obj"))) {
          T_prjlvalue = alloc_obj_func->getReturnType();
          if (!(pool_alloc_func = M.getFunction("jl_gc_pool_alloc"))) {
-@@ -1772,7 +1920,6 @@ bool LateLowerGCFrame::DefineFunctions(Module &M) {
+@@ -1760,7 +1905,6 @@ bool LateLowerGCFrame::DefineFunctions(Module &M) {
          T_ppjlvalue = PointerType::get(T_pjlvalue, 0);
          T_pjlvalue_der = PointerType::get(T_jlvalue, AddressSpace::Derived);
          T_ppjlvalue_der = PointerType::get(T_prjlvalue, AddressSpace::Derived);
@@ -1113,7 +1122,7 @@ index d8d0e8be04..7a1822d90c 100644
      }
      else if (ptls_getter) {
          auto functype = ptls_getter->getFunctionType();
-@@ -1790,12 +1937,62 @@ bool LateLowerGCFrame::DefineFunctions(Module &M) {
+@@ -1778,12 +1922,62 @@ bool LateLowerGCFrame::DefineFunctions(Module &M) {
          T_pjlvalue_der = nullptr;
          T_ppjlvalue_der = nullptr;
      }
