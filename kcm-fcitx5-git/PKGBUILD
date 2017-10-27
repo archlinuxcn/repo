@@ -16,6 +16,13 @@ makedepends=('extra-cmake-modules' 'python' 'git')
 source=("git+https://github.com/fcitx/kcm-fcitx5.git")
 sha512sums=('SKIP')
 
+pkgver() {
+  cd $_pkgname
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+
+
 prepare() {
   mkdir build
 }
