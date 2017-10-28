@@ -1,7 +1,7 @@
 # Maintainer: Colin Keenan <colinnkeenan at gmail dot com>
 
 pkgname=silentcast
-pkgver=3.06
+pkgver=3.07
 pkgrel=1
 pkgdesc="Silent Screencast: video record your screen and make it into an animated gif"
 arch=('x86_64')
@@ -10,7 +10,7 @@ license=('GPL3')
 depends=('ffmpeg' 'imagemagick' 'gtk3')
 
 source=($url"/archive/v"$pkgver".tar.gz")
-md5sums=('edbc2679ae6eb3a02ec0be537f783694')
+md5sums=('983b867f901132e2b83e4f7d28b64403')
 
 package() {
   cd "$pkgname-$pkgver"

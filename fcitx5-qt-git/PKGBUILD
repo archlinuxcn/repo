@@ -1,0 +1,33 @@
+# $Id: PKGBUILD 226039 2017-04-27 13:52:30Z felixonmars $
+# Maintainer: Felix Yan <felixonmars@archlinux.org>
+# Contributor: csslayer <wengxt AT gmail com>
+
+pkgname=fcitx5-qt-git
+pkgver=r97.050fe6e
+pkgrel=1
+pkgdesc="Fcitx Qt Library"
+arch=('i686' 'x86_64')
+url="https://github.com/fcitx/fcitx5"
+license=('GPL')
+depends=('fcitx5-git' 'qt4' 'qt5-x11extras')
+makedepends=('extra-cmake-modules' 'git')
+conflicts=('fcitx-qt5')
+source=("git+https://github.com/fcitx/fcitx5-qt.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd fcitx5-qt
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build(){
+  cd fcitx5-qt
+
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_LIBDIR=/usr/lib .
+  make
+}
+
+package() {
+  cd fcitx5-qt
+  make DESTDIR="$pkgdir" install
+}

@@ -2,7 +2,7 @@
 
 pkgbase=gogland
 pkgname=(gogland gogland-jre)
-pkgver=173.3188.63
+pkgver=173.3415.23
 pkgrel=1
 pkgdesc='Capable and Ergonomic Go IDE'
 arch=('x86_64' 'i686')
@@ -12,7 +12,7 @@ makedepends=('rsync')
 options=('!strip')
 source=(https://download.jetbrains.com/go/${pkgbase}-${pkgver}.tar.gz
         jetbrains-gogland.desktop)
-sha512sums=('d8d571cc5363f2e7e593d6d855717d5e23ab7be89c9b5e8d5a1f1779b177f25ba3589d90364a95cf0375001f6bc6717b28fd8fc425ab517c2fc5680bdf205917'
+sha512sums=('7cfcf07bef5115cecff9913551ec4af8cd493a341e30cb818223b5c36345c5816bba118f53f5ad652dc78533b336530ca98dba9f34e81a322c94a332d49f4524'
             '49d0ecaa2082c4325107b0ce6b1eeda2c6983a779c45d3a44be0888f4321797db8613dd8b724b43695bf6884c3150e505d44d1aa74cd6efed49ed0879181ef36')
 
 package_gogland() {

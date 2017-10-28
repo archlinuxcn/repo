@@ -1,0 +1,25 @@
+From 6655e804c49f66b6c978fcdd01ef6b03b55208fa Mon Sep 17 00:00:00 2001
+From: Victor Zverovich <victor.zverovich@gmail.com>
+Date: Sun, 6 Aug 2017 20:18:04 -0700
+Subject: [PATCH] Fix a segfault in test on glibc 2.26 #551
+
+---
+ test/util-test.cc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/test/util-test.cc b/test/util-test.cc
+index a388255..6cef7e8 100644
+--- a/test/util-test.cc
++++ b/test/util-test.cc
+@@ -838,7 +838,7 @@ TEST(UtilTest, FormatSystemError) {
+   EXPECT_EQ(fmt::format("test: {}", get_system_error(EDOM)), message.str());
+   message.clear();
+   fmt::format_system_error(
+-        message, EDOM, fmt::StringRef(0, std::numeric_limits<size_t>::max()));
++        message, EDOM, fmt::StringRef(0, std::numeric_limits<ssize_t>::max()));
+   EXPECT_EQ(fmt::format("error {}", EDOM), message.str());
+ }
+ 
+-- 
+2.14.1
+
