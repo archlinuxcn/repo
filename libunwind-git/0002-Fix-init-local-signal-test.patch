@@ -1,0 +1,51 @@
+From 2922b6de651b877ba1d817ad02d20c97d203b581 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sat, 28 Oct 2017 00:16:49 +0000
+Subject: [PATCH 2/5] Fix init-local-signal test
+
+* Add `SA_SIGINFO` flag
+
+  This is needed to guarantee the availability of the `ucontext` argument
+
+* Mark the `NULL` pointer load as `volatile`
+
+  Further prevent any compiler optimization on the load.
+---
+ tests/Ltest-init-local-signal-lib.c | 2 +-
+ tests/Ltest-init-local-signal.c     | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/tests/Ltest-init-local-signal-lib.c b/tests/Ltest-init-local-signal-lib.c
+index 45c0e7c..7474f71 100644
+--- a/tests/Ltest-init-local-signal-lib.c
++++ b/tests/Ltest-init-local-signal-lib.c
+@@ -1,6 +1,6 @@
+ #include <stdio.h>
+ 
+ /* To prevent inlining and optimizing away */
+-int foo(int* f) {
++int foo(volatile int* f) {
+   return *f;
+ }
+diff --git a/tests/Ltest-init-local-signal.c b/tests/Ltest-init-local-signal.c
+index d23d66f..4bde218 100644
+--- a/tests/Ltest-init-local-signal.c
++++ b/tests/Ltest-init-local-signal.c
+@@ -46,12 +46,13 @@ void handler(int num, siginfo_t* info, void* ucontext) {
+   exit(-1);
+ }
+ 
+-int foo(int* f);
++int foo(volatile int* f);
+ 
+ int main(){
+   struct sigaction a;
+   memset(&a, 0, sizeof(struct sigaction));
+   a.sa_sigaction = &handler;
++  a.sa_flags = SA_SIGINFO;
+   sigaction(SIGSEGV, &a, NULL);
+ 
+   foo(NULL);
+-- 
+2.14.3
+

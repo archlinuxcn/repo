@@ -1,4 +1,4 @@
-From 2d0d680f8ee176a60a309d6b5fc36da916dea2bc Mon Sep 17 00:00:00 2001
+From bdb92508cb945f74399c1912d4e872191c9a9181 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sat, 1 Oct 2016 16:55:40 +0000
 Subject: [PATCH 3/3] Prefer EXTBL unwinding on ARM
@@ -14,10 +14,10 @@ using the debug info instead.
  3 files changed, 36 insertions(+), 15 deletions(-)
 
 diff --git a/include/tdep-arm/libunwind_i.h b/include/tdep-arm/libunwind_i.h
-index 9996b2f..bfefc7b 100644
+index 2602f41..074fc8c 100644
 --- a/include/tdep-arm/libunwind_i.h
 +++ b/include/tdep-arm/libunwind_i.h
-@@ -250,6 +250,7 @@ dwarf_put (struct dwarf_cursor *c, dwarf_loc_t loc, unw_word_t val)
+@@ -253,6 +253,7 @@ dwarf_put (struct dwarf_cursor *c, dwarf_loc_t loc, unw_word_t val)
  #define tdep_init_done                  UNW_OBJ(init_done)
  #define tdep_init                       UNW_OBJ(init)
  #define arm_find_proc_info              UNW_OBJ(find_proc_info)
@@ -25,7 +25,7 @@ index 9996b2f..bfefc7b 100644
  #define arm_put_unwind_info             UNW_OBJ(put_unwind_info)
  /* Platforms that support UNW_INFO_FORMAT_TABLE need to define
     tdep_search_unwind_table.  */
-@@ -291,6 +292,9 @@ extern void tdep_init (void);
+@@ -294,6 +295,9 @@ extern void tdep_init (void);
  extern int arm_find_proc_info (unw_addr_space_t as, unw_word_t ip,
                                 unw_proc_info_t *pi, int need_unwind_info,
                                 void *arg);
@@ -80,7 +80,7 @@ index 3f6b5cf..c87d394 100644
  arm_put_unwind_info (unw_addr_space_t as, unw_proc_info_t *proc_info, void *arg)
  {
 diff --git a/src/arm/Gstep.c b/src/arm/Gstep.c
-index 7f659e9..5e6c6f8 100644
+index ae2f10f..b3f0d75 100644
 --- a/src/arm/Gstep.c
 +++ b/src/arm/Gstep.c
 @@ -53,8 +53,15 @@ arm_exidx_step (struct cursor *c)
@@ -99,7 +99,7 @@ index 7f659e9..5e6c6f8 100644
      }
  
    if (c->dwarf.pi.format != UNW_INFO_FORMAT_ARM_EXIDX)
-@@ -187,8 +194,18 @@ unw_step (unw_cursor_t *cursor)
+@@ -94,8 +101,18 @@ unw_step (unw_cursor_t *cursor)
    if (unw_is_signal_frame (cursor) > 0)
       return unw_handle_signal_frame (cursor);
  
@@ -119,7 +119,7 @@ index 7f659e9..5e6c6f8 100644
    if (UNW_TRY_METHOD(UNW_ARM_METHOD_DWARF))
      {
        ret = dwarf_step (&c->dwarf);
-@@ -207,16 +224,6 @@ unw_step (unw_cursor_t *cursor)
+@@ -114,16 +131,6 @@ unw_step (unw_cursor_t *cursor)
      }
  #endif /* CONFIG_DEBUG_FRAME */
  
@@ -135,7 +135,7 @@ index 7f659e9..5e6c6f8 100644
 -
    /* Fall back on APCS frame parsing.
       Note: This won't work in case the ARM EABI is used. */
-   if (unlikely (ret < 0))
+ #ifdef __FreeBSD__
 -- 
-2.14.1
+2.14.3
 

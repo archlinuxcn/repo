@@ -1,0 +1,27 @@
+From bfffa0e6065d38da6275bd9e4d7504034709f1d6 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Thu, 26 Oct 2017 13:05:03 +0000
+Subject: [PATCH 1/5] Use `ucontext_t` instead of `struct ucontext`
+
+Ref https://github.com/libunwind/libunwind/pull/40.
+I didn't caught it last time since I don't have a 32bits buildbot.
+---
+ src/x86/Gos-linux.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/x86/Gos-linux.c b/src/x86/Gos-linux.c
+index 7cc98d6..9d3fdc6 100644
+--- a/src/x86/Gos-linux.c
++++ b/src/x86/Gos-linux.c
+@@ -314,7 +314,7 @@ x86_sigreturn (unw_cursor_t *cursor)
+ {
+   struct cursor *c = (struct cursor *) cursor;
+   struct sigcontext *sc = (struct sigcontext *) c->sigcontext_addr;
+-  mcontext_t *sc_mcontext = &((struct ucontext*)sc)->uc_mcontext;
++  mcontext_t *sc_mcontext = &((ucontext_t*)sc)->uc_mcontext;
+   /* Copy in saved uc - all preserved regs are at the start of sigcontext */
+   memcpy(sc_mcontext, &c->uc->uc_mcontext,
+          DWARF_NUM_PRESERVED_REGS * sizeof(unw_word_t));
+-- 
+2.14.3
+

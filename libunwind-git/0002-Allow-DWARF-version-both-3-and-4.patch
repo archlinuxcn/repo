@@ -1,0 +1,46 @@
+From e5d48a4ee344f896cf636149836c97ae7a77c3fc Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sat, 1 Oct 2016 15:24:09 +0000
+Subject: [PATCH 2/3] Allow DWARF version both 3 and 4
+
+---
+ include/dwarf.h  | 3 ++-
+ src/dwarf/Gfde.c | 7 ++++---
+ 2 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/include/dwarf.h b/include/dwarf.h
+index db2a769..f45d0e4 100644
+--- a/include/dwarf.h
++++ b/include/dwarf.h
+@@ -135,7 +135,8 @@ typedef enum
+   }
+ dwarf_expr_op_t;
+ 
+-#define DWARF_CIE_VERSION       3       /* GCC emits version 1??? */
++#define DWARF_CIE_VERSION       3
++#define DWARF_CIE_VERSION_MAX   4
+ 
+ #define DWARF_CFA_OPCODE_MASK   0xc0
+ #define DWARF_CFA_OPERAND_MASK  0x3f
+diff --git a/src/dwarf/Gfde.c b/src/dwarf/Gfde.c
+index 49484ee..9250b89 100644
+--- a/src/dwarf/Gfde.c
++++ b/src/dwarf/Gfde.c
+@@ -116,10 +116,11 @@ parse_cie (unw_addr_space_t as, unw_accessors_t *a, unw_word_t addr,
+   if ((ret = dwarf_readu8 (as, a, &addr, &version, arg)) < 0)
+     return ret;
+ 
+-  if (version != 1 && version != DWARF_CIE_VERSION)
++  /* GCC emits version 1??? */
++  if (version != 1 && (version < DWARF_CIE_VERSION || version > DWARF_CIE_VERSION_MAX))
+     {
+-      Debug (1, "Got CIE version %u, expected version 1 or "
+-             STR (DWARF_CIE_VERSION) "\n", version);
++      Debug (1, "Got CIE version %u, expected version 1 or between "
++             STR (DWARF_CIE_VERSION) " and " STR (DWARF_CIE_VERSION_MAX) "\n", version);
+       return -UNW_EBADVERSION;
+     }
+ 
+-- 
+2.14.3
+

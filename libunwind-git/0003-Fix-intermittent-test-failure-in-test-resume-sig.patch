@@ -1,0 +1,46 @@
+From ba4708aa3c58065772adf06bfd3879855e3c9263 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sat, 28 Oct 2017 01:42:16 +0000
+Subject: [PATCH 3/5] Fix intermittent test failure in test-resume-sig
+
+(At least on x86(_32),) `unw_resume` will call `setcontext` which will modify the signal masks
+based on the value in the context. Since the signal mask is not being initialized by
+`unw_getcontext`, this cause the signal mask to be set to a random (uninitialized) value after
+`unw_resume` which cause the test to fail since it relies on the signal mask for SIGUSR2 being
+cleared.
+
+The proper fix is likely to either make `unw_resume` not touch the signal mask if the context
+wasn't initialized with a signal ucontext, or to make `unw_getcontext` record the signal mask too.
+It's unclear to me which approach should be taken...
+
+In the mean time, the intermittent failure can be fixed simply by zero initialing the context first
+which would clear all the signal masks.
+When siginfo is available, a more reliable way is to use the `ucontext` passed in
+to the signal handler directly and rely on `sigreturn` to reset it.
+Unfortunately, this is currently not implemented on all archs either.
+---
+ tests/Gtest-resume-sig.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/tests/Gtest-resume-sig.c b/tests/Gtest-resume-sig.c
+index 846bba9..18ec65d 100644
+--- a/tests/Gtest-resume-sig.c
++++ b/tests/Gtest-resume-sig.c
+@@ -79,6 +79,14 @@ handler (int sig)
+   unw_cursor_t c;
+   char foo;
+   int ret;
++  // The test rely on SIGUSR2 mask to be cleared when the handler returns.
++  // For local context from the signal handler, there doesn't seem to be a way
++  // currently to set it so just clear the whole struct to make sure the signal mask is cleared.
++  // This should probably be fixed to avoid signal mask being set to random values
++  // by `unw_resume` if the context was not pre-zeroed.,
++  // Using the signal ucontext direction should also work automatically but currently doesn't
++  // on ARM/AArch64 (or any other archs that doesn't have a proper sigreturn implementation)
++  memset(&uc, 0x0, sizeof(uc));
+ 
+ #if UNW_TARGET_IA64
+   if (verbose)
+-- 
+2.14.3
+
