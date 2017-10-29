@@ -61,7 +61,7 @@ class Std:
 def pre_build():
   version, version_date = get_latest_version()
   if not debug:
-    oldfiles = glob.glob('*.xz') + glob.glob('*.xz.asc')
+    oldfiles = glob.glob('*.xz') + glob.glob('*.xz.asc') + glob.glob('*.part')
     for f in oldfiles:
       os.unlink(f)
 
