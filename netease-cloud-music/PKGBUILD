@@ -22,7 +22,7 @@ source=(
 	"netease-cloud-music"
 )
 md5sums=('d9a6fa79ffcb654254a1d8b7ba5901a3'
-         '9b85978382d2e115166c7e41e3466e6b'
+         'SKIP'
          '31a25ac517facc48762a6a9378a66f58')
 
 package() {
