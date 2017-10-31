@@ -2,18 +2,17 @@
 # Contributor : Martin Wimpress <code@flexion.org>
 # Contributor : Jingbei Li <i@jingbei.li>
 pkgname=anaconda
-pkgver=5.0.0
-pkgrel=3
+pkgver=5.0.1
+pkgrel=1
 pkgdesc="Completely free enterprise-ready Python distribution for large-scale data processing, predictive analytics, and scientific computing."
 arch=('x86_64')
 url="https://store.continuum.io/cshop/anaconda/"
 license=("custom")
-makedepends=('patch')
 source=("http://repo.continuum.io/archive/Anaconda3-${pkgver}-Linux-x86_64.sh"
 "$pkgname.install")
 options=(!strip libtool staticlibs)
-sha256sums=('67f5c20232a3e493ea3f19a8e273e0618ab678fa14b03b59b1783613062143e9'
-'72e3066ba033c8e59684331f2d9ea8ea2dc1855d51a7a4ea2fa5565b7dd6cc60')
+sha256sums=('55e4db1919f49c92d5abbf27a4be5986ae157f074bf9f8238963cd4582a4068a'
+            '72e3066ba033c8e59684331f2d9ea8ea2dc1855d51a7a4ea2fa5565b7dd6cc60')
 install="$pkgname.install"
 
 prepare() {
@@ -29,7 +28,7 @@ package() {
 	prefix=${pkgdir}/opt/${pkgname}
 	LD_PRELOAD="/usr/lib/libfakeroot/libfakeroot.so"
 
-	msg2 "Installing anaconda to /opt/${pkgname}"
+	msg2 "Installing ${pkgname} to /opt/${pkgname}"
 	bash ${srcdir}/Anaconda3-${pkgver}-Linux-${CARCH}.sh -b -p $prefix -f
 	[ "$BREAK_EARLY" = 1 ] && exit 1
 	cd $prefix

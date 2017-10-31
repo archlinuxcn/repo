@@ -3,7 +3,7 @@
 
 pkgname=corebird-git
 epoch=1
-pkgver=1.6.r58.gde21b6a9
+pkgver=1.7.1.r2.g8e64ad47
 pkgrel=1
 pkgdesc="Native Gtk+ Twitter Client"
 arch=('i686' 'x86_64')
@@ -17,8 +17,9 @@ depends=('gtk3'
          'gst-plugins-good'
          'gst-plugins-bad'
          'gst-libav'
-         'gspell')
-makedepends=('vala' 'git' 'automake')
+         'gspell'
+         'noto-fonts-emoji')
+makedepends=('vala' 'git' 'meson')
 provides=('corebird')
 conflicts=('corebird')
 source=("${pkgname}::git+https://github.com/baedert/corebird")
@@ -31,12 +32,13 @@ pkgver() {
 
 build() {
   cd ${pkgname}
-  # Add --disable-video here if you don't like the gstreamer deps
-  ./autogen.sh --prefix=/usr
-  make
+
+  meson builddir --prefix=/usr -D VIDEO=yes -D SPELLCHECK=yes
+  ninja -C builddir
 }
 
 package() {
   cd ${pkgname}
-  make DESTDIR=$pkgdir install
+
+  DESTDIR="${pkgdir}" ninja -C builddir install
 }
