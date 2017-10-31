@@ -48,9 +48,7 @@ source=('git://github.com/JuliaLang/julia'
         0001-Revert-turn-on-deprecation-warnings-for-type-and-imm.patch
         0002-Revert-deprecation-warning-for-old-parametric-method.patch
         0003-Try-re-enable-frame-pointer-omission.patch
-        0004-A-few-cleanup-optimizations-related-to-tag-handling-.patch
         0005-Do-not-trigger-write-barrier-when-the-child-is-a-per.patch
-        0006-Optimize-write-barrier-when-the-parent-is-known-old.patch
         0007-Improve-debug-info-correctness-and-printing-in-disas.patch)
 md5sums=('SKIP'
          'b3c5a4ba02fbbfa53b7043beb0242156'
@@ -58,9 +56,7 @@ md5sums=('SKIP'
          'fccd6f87178fecd9249d48a2149e41f0'
          '56cfe7e765f3fbf0ce0d540100f50424'
          '0b74f12a528d08f8e2c5c756a73d1851'
-         '81ef05c7dcb45bb614d2bf1a97595e27'
          '9906d8387038538c1ef0c849fd411a2c'
-         'f2fca449f8710f5e0d491a44da19e068'
          'e8af6209008b03b8b59570b775a98ffe')
 
 pkgver() {
@@ -142,9 +138,7 @@ EOF
   patch -Np1 < ../0001-Revert-turn-on-deprecation-warnings-for-type-and-imm.patch
   patch -Np1 < ../0002-Revert-deprecation-warning-for-old-parametric-method.patch
   patch -Np1 < ../0003-Try-re-enable-frame-pointer-omission.patch
-  patch -Np1 < ../0004-A-few-cleanup-optimizations-related-to-tag-handling-.patch
   patch -Np1 < ../0005-Do-not-trigger-write-barrier-when-the-child-is-a-per.patch
-  patch -Np1 < ../0006-Optimize-write-barrier-when-the-parent-is-known-old.patch
   patch -Np1 < ../0007-Improve-debug-info-correctness-and-printing-in-disas.patch
 }
 
