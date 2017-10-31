@@ -12,16 +12,21 @@ from io import StringIO
 from configparser import ConfigParser
 from functools import lru_cache
 
-GIT_BRANCH = 'master'
-
+GIT_BRANCH = 'HEAD'
 
 def readutf8(st):
     return st.read().decode('utf-8').strip()
 
-
 def reads(st):
     return readutf8(st).strip()
 
+def git_write_tree_index():
+    global GIT_BRANCH
+    cmd = ['git', 'write-tree']
+    with Popen(cmd, stdout=PIPE) as p:
+        GIT_BRANCH = reads(p.stdout)
+
+git_write_tree_index()
 
 def git_open(filename):
     cmd = ['git', 'cat-file', 'blob', f'{GIT_BRANCH}:{filename}']
