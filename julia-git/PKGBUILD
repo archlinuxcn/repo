@@ -47,15 +47,13 @@ source=('git://github.com/JuliaLang/julia'
         0001-Add-install-nodoc-make-target-to-skip-building-and-i.patch
         0001-Revert-turn-on-deprecation-warnings-for-type-and-imm.patch
         0002-Revert-deprecation-warning-for-old-parametric-method.patch
-        0003-Try-re-enable-frame-pointer-omission.patch
-        0007-Improve-debug-info-correctness-and-printing-in-disas.patch)
+        0003-Try-re-enable-frame-pointer-omission.patch)
 md5sums=('SKIP'
          'b3c5a4ba02fbbfa53b7043beb0242156'
          '2222d3eabfe6040a8cca466303c86d2b'
          'fccd6f87178fecd9249d48a2149e41f0'
          '56cfe7e765f3fbf0ce0d540100f50424'
-         '0b74f12a528d08f8e2c5c756a73d1851'
-         'e8af6209008b03b8b59570b775a98ffe')
+         '0b74f12a528d08f8e2c5c756a73d1851')
 
 pkgver() {
   cd julia
@@ -136,7 +134,6 @@ EOF
   patch -Np1 < ../0001-Revert-turn-on-deprecation-warnings-for-type-and-imm.patch
   patch -Np1 < ../0002-Revert-deprecation-warning-for-old-parametric-method.patch
   patch -Np1 < ../0003-Try-re-enable-frame-pointer-omission.patch
-  patch -Np1 < ../0007-Improve-debug-info-correctness-and-printing-in-disas.patch
 }
 
 build_in() {
