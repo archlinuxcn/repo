@@ -7,8 +7,8 @@
 #  - build v5 with system libatomic_ops
 
 pkgname=libunwind-git
-pkgver=1.2.rc1.125.gab39ae9
-pkgrel=3
+pkgver=1.2.rc1.132.gf248ac0
+pkgrel=1
 pkgdesc='Portable and efficient C programming interface (API) to determine the call-chain of a program'
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url='http://www.nongnu.org/libunwind/'
@@ -16,11 +16,9 @@ license=('GPL')
 depends=('glibc' 'xz')
 makedepends=('git')
 source=('git://git.savannah.gnu.org/libunwind.git'
-        0003-Prefer-EXTBL-unwinding-on-ARM.patch
-        0005-dwarf-Fix-incorrect-cfi-execution.patch)
+        0003-Prefer-EXTBL-unwinding-on-ARM.patch)
 md5sums=('SKIP'
-         '148852d93dc2e2a85ac167de707353f3'
-         '96418814c394e837daadd9dd211f575d')
+         '148852d93dc2e2a85ac167de707353f3')
 options=('debug' '!strip')
 provides=(libunwind)
 conflicts=(libunwind)
@@ -35,7 +33,6 @@ prepare() {
   cd libunwind
 
   patch -Np1 < ../0003-Prefer-EXTBL-unwinding-on-ARM.patch
-  patch -Np1 < ../0005-dwarf-Fix-incorrect-cfi-execution.patch
 }
 
 build() {
@@ -48,20 +45,8 @@ build() {
   make
 }
 
-# check() {
-#   cd libunwind
-
-#   # This function is ``supposed'' to fail. Upstream know, but haven't fixed it.
-#   make check || return 0
-# }
-
 package() {
   cd libunwind
 
   make DESTDIR="$pkgdir/" install
-  cat >> "$pkgdir/usr/include/libunwind.h" <<EOF
-#ifndef JL_UNW_HAS_FORMAT_IP
-#define JL_UNW_HAS_FORMAT_IP 1
-#endif
-EOF
 }
