@@ -3,7 +3,7 @@
 
 pkgname=corebird-git
 epoch=1
-pkgver=1.7.1.r2.g8e64ad47
+pkgver=1.7.1.r5.gf6cd3917
 pkgrel=1
 pkgdesc="Native Gtk+ Twitter Client"
 arch=('i686' 'x86_64')
@@ -17,8 +17,9 @@ depends=('gtk3'
          'gst-plugins-good'
          'gst-plugins-bad'
          'gst-libav'
-         'gspell'
-         'noto-fonts-emoji')
+         'gspell')
+optdepends=('noto-fonts-emoji: Emoji support'
+            'emojione-fonts: Emoji support')
 makedepends=('vala' 'git' 'meson')
 provides=('corebird')
 conflicts=('corebird')
