@@ -4,7 +4,7 @@
 
 pkgname=dee
 pkgver=1.2.7
-pkgrel=9.2
+pkgrel=10
 pkgdesc="Model to synchronize multiple instances over DBus."
 arch=("i686" "x86_64")
 url="https://launchpad.net/dee"
@@ -12,18 +12,23 @@ license=("LGPL")
 depends=("glib2" "icu")
 makedepends=("gobject-introspection" "python2" "vala")
 source=("https://launchpad.net/${pkgname}/1.0/${pkgver}/+download/${pkgname}-${pkgver}.tar.gz"
-        "https://launchpadlibrarian.net/258481465/fix-misleading-indentation.patch")
+        "https://launchpadlibrarian.net/258481465/fix-misleading-indentation.patch"
+        "gtk-doc.patch")
 sha256sums=('1bf0336ce684aa0f48d6eae2469628c1a9b43695a77443bc31a5790aa673bf8a'
-            '3bf75bd632d6be88632c0f6113aac5ac5d65e1a01b408c27ea1fd7bb718d6ebd')
+            '3bf75bd632d6be88632c0f6113aac5ac5d65e1a01b408c27ea1fd7bb718d6ebd'
+            '38f9fbccce0b618595a992785a4a6a8650031bd0974b15f7c88e91046cb014a0')
 
 prepare() {
-  cd $srcdir
-  patch -p1 -i $srcdir/fix-misleading-indentation.patch
+	cd $pkgname-$pkgver
+	patch -Np2 < "$srcdir"/fix-misleading-indentation.patch
+	patch -Np1 < "$srcdir"/gtk-doc.patch
 }
 
 build() {
-	cd ${pkgname}-${pkgver}
+	cd $pkgname-$pkgver
 	export PYTHON="/usr/bin/python2"
+	aclocal
+	automake
 	./configure --prefix="/usr" --sysconfdir="/etc" --localstatedir="/var" --disable-{static,tests}
 	make
 }

@@ -1,0 +1,11 @@
+--- a/gtk-doc.make	2017-11-03 09:39:07.403680715 +0100
++++ b/gtk-doc.make	2017-11-03 09:39:40.387188057 +0100
+@@ -266,7 +266,7 @@
+ 	    mv -f $${installdir}/$(DOC_MODULE).devhelp2 \
+ 	      $${installdir}/$(DOC_MODULE)-$(DOC_MODULE_VERSION).devhelp2; \
+ 	  fi; \
+-	  $(GTKDOC_REBASE) --relative --dest-dir=$(DESTDIR) --html-dir=$${installdir}; \
++	  env LANG=en_US.UTF-8 $(GTKDOC_REBASE) --verbose --relative --dest-dir=$(DESTDIR) --html-dir=$${installdir}; \
+ 	fi
+ 
+ uninstall-local:
