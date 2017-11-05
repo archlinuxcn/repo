@@ -1,9 +1,9 @@
-# Maintainer: Fabio Loli <loli_fabio@protonmail.com>
+# Maintainer: Fabio Loli <loli_fabio@protonmail.com> -> https://github.com/FabioLolix
 # Contributor: Baedert
 
 pkgname=corebird-git
 epoch=1
-pkgver=1.7.1.r5.gf6cd3917
+pkgver=1.7.2.r0.g6d2f3f26
 pkgrel=1
 pkgdesc="Native Gtk+ Twitter Client"
 arch=('i686' 'x86_64')
