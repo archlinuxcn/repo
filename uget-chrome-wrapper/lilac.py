@@ -8,7 +8,6 @@ def _get_new_version():
   return new_verion['name'][1:]
 
 def pre_build():
-  aur_pre_build()
   ver = _get_new_version()
   for l in edit_file('PKGBUILD'):
     if l.startswith('pkgver='):
@@ -17,7 +16,6 @@ def pre_build():
   run_cmd(["updpkgsums"])
 
 def post_build():
-  run_cmd(["updpkgsums"])
   git_add_files("PKGBUILD")
   git_commit()
   update_aur_repo()
