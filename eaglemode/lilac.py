@@ -29,8 +29,8 @@ def pre_build():
         # edit PKGBUILD
         if line.strip().startswith("sha256sum="):
             continue
-        if line.strip() == "pkgver=0.85.0":
-            line = "pkgver=0.86.0"
+        if line.strip() == "pkgver=0.93.0":
+            line = "pkgver=0.93.1"
         print(line)
 
     run_cmd(['sh', '-c', 'makepkg -g >> PKGBUILD'])
