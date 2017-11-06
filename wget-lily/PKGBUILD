@@ -2,11 +2,11 @@
 # Maintainer: Eric Bélanger <eric@archlinux.org>
 
 pkgname=wget-lily
-pkgver=1.19.1
-pkgrel=2
-pkgdesc="A network utility to retrieve files from the Web"
+pkgver=1.19.2
+pkgrel=1
+pkgdesc="Network utility to retrieve files from the Web"
 arch=('i686' 'x86_64')
-url="http://www.gnu.org/software/wget/wget.html"
+url="https://www.gnu.org/software/wget/wget.html"
 license=('GPL3')
 depends=('gnutls' 'libidn' 'libutil-linux' 'libpsl' 'pcre')
 checkdepends=('perl-http-daemon' 'perl-io-socket-ssl' 'python')
@@ -14,9 +14,9 @@ optdepends=('ca-certificates: HTTPS downloads')
 conflicts=('wget')
 provides=("wget=$pkgver")
 backup=('etc/wgetrc')
-source=(ftp://ftp.gnu.org/gnu/wget/wget-${pkgver}.tar.xz{,.sig} wget.patch)
-sha1sums=('cde25e99c144191644406793cbd1c69c102c6970'
-          'SKIP' 50d39b440b755ab411cf30128cd001bf4233c329)
+source=(https://ftp.gnu.org/gnu/wget/wget-${pkgver}.tar.gz{,.sig} wget.patch)
+sha256sums=('4f4a673b6d466efa50fbfba796bd84a46ae24e370fa562ede5b21ab53c11a920'
+            'SKIP' aa28cf8532f6b7cc1fe689eb253b0453102990eb725a6583704ca4f3e665c9b0)
 validpgpkeys=('AC404C1C0BF735C63FF4D562263D6DF2E163E1EA'
               '1CB27DBC98614B2D5841646D08302DB6A2670428') # Tim Rühsen <tim.ruehsen@gmx.de>
 
@@ -32,16 +32,23 @@ EOF
 
 build() {
   cd wget-${pkgver}
-  ./configure --prefix=/usr --sysconfdir=/etc --enable-nls --with-ssl=gnutls
+  ./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --disable-rpath \
+    --enable-nls \
+    --with-ssl=gnutls
   make
 }
 
 check() {
   cd wget-${pkgver}
-  make check
+  make check < /dev/null
 }
 
 package() {
   cd wget-${pkgver}
   make DESTDIR="${pkgdir}" install
 }
+
+# vim: ts=2 sw=2 et:
