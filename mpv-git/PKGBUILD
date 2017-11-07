@@ -3,6 +3,13 @@
 # Contributor: Bartłomiej Piotrowski <nospam@bpiotrowski.pl>
 # Contributor: Eivind Uggedal <eivind@uggedal.com>
 
+# Upstream recommends their forked ffmpeg, which can be installed alongside a
+# different system ffmpeg. You can build mpv against the system ffmpeg instead
+# by uncommenting the second line below, but this may sometimes fail to build
+# when mpv depends on a feature that hasn't been merged into upstream ffmpeg.
+_ffmpeg_depend=ffmpeg-mpv-git
+#_ffmpeg_depend=ffmpeg
+
 _opt_features=(
 
   # Disabled by default, need to be enabled every build:
@@ -48,14 +55,14 @@ _opt_features=(
 
 pkgname=mpv-git
 _gitname=mpv
-pkgver=0.27.0_296_gf08ec22567
+pkgver=0.27.0_370_ge7bf5576e5
 pkgrel=1
 pkgdesc='Video player based on MPlayer/mplayer2 (git version)'
 arch=('i686' 'x86_64' 'armv6h' 'armv7h')
 license=('GPL')
 url='https://mpv.io'
 _undetected_depends=('hicolor-icon-theme')
-depends=('ffmpeg' "${_undetected_depends[@]}")
+depends=("$_ffmpeg_depend" "${_undetected_depends[@]}")
 optdepends=('youtube-dl: for --ytdl')
 makedepends=('git' 'python-docutils')
 provides=('mpv')
@@ -136,7 +143,13 @@ prepare() {
 build() {
   cd "$srcdir/$_gitname"
 
-  CFLAGS="$CFLAGS -I/usr/include/samba-4.0"
+  if [[ "$_ffmpeg_depend" = *-mpv* ]]; then
+    export CFLAGS="$CFLAGS -I/usr/include/ffmpeg-mpv-git" \
+           LDFLAGS="$LDFLAGS -L/usr/lib/ffmpeg-mpv-git" \
+           PKG_CONFIG_PATH="${PKG_CONFIG_PATH:+$PKG_CONFIG_PATH:}/usr/lib/ffmpeg-mpv-git/pkgconfig"
+  else
+    _opt_extra_flags+=("--enable-ffmpeg-upstream")
+  fi
 
   ./waf configure --prefix=/usr \
         --confdir=/etc/mpv \
