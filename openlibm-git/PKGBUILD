@@ -6,7 +6,7 @@ if [[ $CARCH = x86_64 ]]; then
 else
     pkgname=(openlibm-git)
 fi
-pkgver=0.5.4.9.gddf649b
+pkgver=0.5.5.2.gb252047
 pkgrel=1
 pkgdesc="standalone implementation of C mathematical functions"
 arch=(i686 x86_64 armv7h aarch64)
@@ -17,7 +17,7 @@ conflicts=('openlibm')
 options=('debug' '!strip')
 makedepends=('git')
 source=("git://github.com/JuliaLang/openlibm")
-sha256sums=('SKIP')
+md5sums=('SKIP')
 
 _CFLAGS_common=' -g -flto -O3'
 _LDFLAGS_common=' -g -flto -O3 -fno-plt -Wl,-Bsymbolic-functions'

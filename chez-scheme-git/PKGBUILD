@@ -1,69 +1,49 @@
-# This is an example PKGBUILD file. Use this as a start to creating your own,
-# and remove these comments. For more information, see 'man PKGBUILD'.
-# NOTE: Please fill out the license field for your package! If it is unknown,
-# then please put 'unknown'.
+# Maintainer: Peter Feigl <>
+# Contributor: Jonathon Fernyhough <>
 
-# See http://wiki.archlinux.org/index.php/VCS_PKGBUILD_Guidelines
-# for more information on packaging from GIT sources.
-
-# Maintainer: Peter Feigl <craven@gmx.net>
 pkgname=chez-scheme-git
-pkgver=r258.b790996
+_pkgname=ChezScheme
+pkgver=r277.1558dca
 pkgrel=1
 pkgdesc="Chez Scheme is an implementation of the Revised6 Report on Scheme [27] (R6RS) with numerous language and programming environment extensions. (threaded build)"
 arch=(i686 x86_64)
 url="https://github.com/cisco/ChezScheme"
 license=('APL')
-groups=()
-depends=()
 makedepends=('git' 'ncurses' 'libx11' 'xproto')
 provides=(chez-scheme)
 conflicts=(petite-chez-scheme)
 replaces=(petite-chez-scheme)
-backup=()
-options=()
-install=
-source=("$pkgname::git+https://github.com/cisco/ChezScheme.git")
-md5sums=("SKIP")
-noextract=()
-#generate with 'makepkg -g'
-
-_gitroot=https://github.com/cisco/ChezScheme.git
-_gitname=chez
+source=('git+https://github.com/cisco/ChezScheme.git'
+        'git+https://github.com/nanopass/nanopass-framework-scheme.git'
+        'git+https://github.com/dybvig/stex.git'
+        'git+https://github.com/madler/zlib.git')
+md5sums=('SKIP'
+         'SKIP'
+         'SKIP'
+         'SKIP')
 
 pkgver() {
-	cd "$srcdir/${pkgname}"
+  cd "$_pkgname"
   printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
+prepare() {
+  cd "$_pkgname"
+  rmdir nanopass stex zlib
+  ln -s ../nanopass-framework-scheme nanopass
+  ln -s ../stex
+  ln -s ../zlib
+
+  # glibc=2.26 dropped xlocale.h, this is a hacky workaround
+  cp /usr/include/locale.h zlib/xlocale.h
+}
+
 build() {
-  cd "$srcdir"
-  msg "Connecting to GIT server...."
-
-  if [[ -d "$_gitname" ]]; then
-    cd "$_gitname" && git pull origin
-    msg "The local files are updated."
-  else
-    git clone "$_gitroot" "$_gitname"
-  fi
-
-  msg "GIT checkout done or server timeout"
-  msg "Starting build..."
-
-  rm -rf "$srcdir/$_gitname-build"
-  git clone "$srcdir/$_gitname" "$srcdir/$_gitname-build"
-  cd "$srcdir/$_gitname-build"
-
-  #
-  # BUILD HERE
-  #
-  ./configure --installprefix=/usr --temproot=$pkgdir --threads
+  cd "$_pkgname"
+  ./configure --installprefix=/usr --temproot="$pkgdir" --threads
   make
 }
 
 package() {
-  cd "$srcdir/$_gitname-build"
-  make DESTDIR="$pkgdir/" install InstallSchemeName=chez-scheme
+  make -C "$_pkgname" DESTDIR="$pkgdir"/ install InstallSchemeName=chez-scheme
 }
-
-# vim:set ts=2 sw=2 et:

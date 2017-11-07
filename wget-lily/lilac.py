@@ -27,7 +27,7 @@ provides=("wget=$pkgver")'''
     elif line.startswith('source=('):
       line = line.replace(')', ' wget.patch)')
     elif "'SKIP')" in line:
-      line = line.replace(')', ' 50d39b440b755ab411cf30128cd001bf4233c329)')
+      line = line.replace(')', ' aa28cf8532f6b7cc1fe689eb253b0453102990eb725a6583704ca4f3e665c9b0)')
     if '${pkgname}' in line:
       line = line.replace('${pkgname}', 'wget')
     print(line)

@@ -1,0 +1,13 @@
+post_install() {
+	echo "==> ****************************************************"
+  	echo "==> Don't forget to Restart GNOME Shell ([Alt]+[F2], r)."
+  	echo "==> ****************************************************"
+}
+
+post_upgrade() {
+	post_install
+}
+
+post_remove() {
+	post_install
+}

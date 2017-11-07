@@ -12,7 +12,7 @@
 #
 
 # To port this PKGBUILD to another language of tor-browser you have to
-# change ONLY the variable ${_language} in PKGBUILD and tor-browser.install
+# change ONLY the variable ${_language} below
 
 _language='zh-CN'
 
@@ -20,8 +20,8 @@ _language='zh-CN'
 
 _pkgname='tor-browser'
 pkgname="${_pkgname}-${_language,,}"
-pkgver='7.0.5'
-pkgrel=1
+pkgver='7.0.9'
+pkgrel='1'
 pkgdesc="Tor Browser Bundle: Anonymous browsing using firefox and tor (${_language})"
 url='https://www.torproject.org/projects/torbrowser.html'
 arch=('i686' 'x86_64')
@@ -39,7 +39,7 @@ optdepends=('zenity: simple dialog boxes'
 	'libnotify: Gnome dialog boxes')
 install="${_pkgname}.install"
 
-_archstr=$([ $CARCH = 'x86_64' ] && echo "${_idstr64}" || echo "${_idstr32}")
+_archstr=$([[ "${CARCH}" == 'x86_64' ]] && echo -n "${_idstr64}" || echo -n "${_idstr32}")
 
 validpgpkeys=('EF6E286DDA85EA2A4BA7DE684E2C6E8793298290')
 
@@ -51,7 +51,7 @@ source=("${_pkgname}.desktop"
 
 md5sums=('9178c9325979377f7ec57569b15fcb61'
 	'494afbfa60fb4ce21840244cc3f7208c'
-	'9ba504d97e5841d80e0d1388d3e18951')
+	'120910366e4094c652fe7c4ee55abbca')
 md5sums_i686=('SKIP'
 	'SKIP')
 md5sums_x86_64=('SKIP'

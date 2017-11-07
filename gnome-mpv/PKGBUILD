@@ -1,8 +1,8 @@
 # Maintainer: Ainola
 
 pkgname=gnome-mpv
-pkgver=0.12
-pkgrel=4
+pkgver=0.13
+pkgrel=1
 pkgdesc="A simple GTK+ frontend for mpv."
 arch=('i686' 'x86_64')
 url="https://github.com/gnome-mpv/gnome-mpv"
@@ -11,14 +11,13 @@ depends=('gtk3' 'mpv')
 makedepends=('meson')
 optdepends=('youtube-dl: Video integration to YouTube and other video sites.')
 source=("https://github.com/gnome-mpv/gnome-mpv/releases/download/v${pkgver}/gnome-mpv-${pkgver}.tar.xz"
-        "meson-version-0.12.patch")
-sha256sums=('6c121261a1ea7e8065379c5355c2b2061eb4abbff0c8121ada211d4777fa9635'
-            'bc0983bfc1af703a0bc330b06dd7c0c9d3318d9e6a9fe25d913a8b98e185c2aa')
+        "update-appdata-and-add-missing-meson-build-file.patch")
+sha256sums=('c5a288c7095ccbe520b3ba419856e29981f4a2d204e7cfa264ee69edab2724f1'
+            'fdd2f358ceb72430fca464665ede6eb18f26be6b1830c4919ce065225f3518eb')
 
 prepare() {
-    cp "$srcdir/meson-version-0.12.patch" "$srcdir/$pkgname-$pkgver"
-    cd "${pkgname}-${pkgver}"
-    patch -p1 < meson-version-0.12.patch
+    cd "$srcdir"
+    patch -d "$pkgname-$pkgver" -p1 < update-appdata-and-add-missing-meson-build-file.patch
 }
 
 build() {

@@ -1,4 +1,5 @@
-# Maintainer: Bruno Pagani (a.k.a. ArchangeGabriel) <bruno.n.pagani@gmail.com>
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+# Contributor: Bruno Pagani (a.k.a. ArchangeGabriel) <bruno.n.pagani@gmail.com>
 # Contributor: Cedric MATHIEU <me.xenom @ gmail.com>
 
 _name=firefox
@@ -7,10 +8,10 @@ _lang=en-US
 pkgname=${_name}-${_channel}
 pkgdesc="Standalone Web Browser from Mozilla — Nightly build (${_lang})"
 url="https://www.mozilla.org/${_lang}/${_name}/${_channel}"
-_version=57.0a1
-pkgver=57.0a1.20170921
+_version=58.0a1
+pkgver=58.0a1.20171106.12
 pkgrel=1
-arch=('i686' 'x86_64')
+arch=('x86_64')
 license=('MPL' 'GPL' 'LGPL')
 depends=('dbus-glib' 'gtk3' 'libxt' 'nss' 'mime-types')
 optdepends=('pulseaudio: audio support'
@@ -24,27 +25,15 @@ optdepends=('pulseaudio: audio support'
             'startup-notification: support for FreeDesktop Startup Notification')
 _url="https://ftp.mozilla.org/pub/${_name}/nightly/latest-mozilla-central"
 _src="${_name}-${_version}.${_lang}.linux"
-_filename="$(date +%Y%m%d)-${_src}"
-source=("${pkgname}.desktop" 'vendor.js')
-source_i686=("${_filename}-i686.tar.bz2"::"${_url}/${_src}-i686.tar.bz2"
-             "${_filename}-i686.tar.bz2.asc"::"${_url}/${_src}-i686.tar.bz2.asc"
-             "${_filename}-i686.txt"::"${_url}/${_src}-i686.txt")
-source_x86_64=("${_filename}-x86_64.tar.bz2"::"${_url}/${_src}-x86_64.tar.bz2"
-               "${_filename}-x86_64.tar.bz2.asc"::"${_url}/${_src}-x86_64.tar.bz2.asc"
-               "${_filename}-x86_64.txt"::"${_url}/${_src}-x86_64.txt")
+_filename="20171106.12-${_src}"
+source=("${pkgname}.desktop" 'vendor.js'
+        "${_filename}-x86_64.tar.bz2"::"${_url}/${_src}-x86_64.tar.bz2"
+        "${_filename}-x86_64.tar.bz2.asc"::"${_url}/${_src}-x86_64.tar.bz2.asc")
 sha512sums=('b514abafc559ec03a4222442fa4306db257c3de9e18ed91a0b37cc9d7058a8e08a241442e54a67659a3ab4512a5dae6a0b94ea7a33d08ef0b8a76a9eac902095'
-            '2886a29b53c9dfa4676a1269e38bf404bb45ef4804f91d0755e8ad7c381488d8a72df5cddbb0fd910a8c344cc881a77b340f7f19def165e2f31d5eca8257ca18')
-sha512sums_i686=('436d7deeb3487b7672f6697a24c431284b2414e8dc8c80d42133a231b8dd164eae9c72a75c22ea1fc646e9f91177d5380bfa004009eb8c7398e242c281e00aaf'
-                 'SKIP'
-                 '7d8830f4255c78a8df079aeae98c2e82d1f14ebc877067c2269f17c7b7a3bb98932cc6b36157f35686b7f4ed98ace86e5b11e5d45b7bc1fe4f6f103933dccb3f')
-sha512sums_x86_64=('f24780bbcb67006507805b7bfce6b8f10a1c9ac0d7200fe52afae36bc4708371a12a36bc5d995201ac109b2884d761950cf9da5b9caaf953b8a212d5321924ab'
-                   'SKIP'
-                   '7d8830f4255c78a8df079aeae98c2e82d1f14ebc877067c2269f17c7b7a3bb98932cc6b36157f35686b7f4ed98ace86e5b11e5d45b7bc1fe4f6f103933dccb3f')
+            '2886a29b53c9dfa4676a1269e38bf404bb45ef4804f91d0755e8ad7c381488d8a72df5cddbb0fd910a8c344cc881a77b340f7f19def165e2f31d5eca8257ca18'
+            '831e600210137150b0671573d6f1a54566cb4854f9d4256bc212f3847bdb2ee18bfc7917acab584038515f20613778702df257b4b10ecf399f8b987de62662e3'
+            'SKIP')
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla’s GnuPG release key
-
-pkgver() {
-  echo "${_version}.$(head -n1 ${_filename}-${CARCH}.txt | cut -c-8)"
-}
 
 package() {
   OPT_PATH="opt/${pkgname}"
@@ -60,8 +49,7 @@ package() {
   # Install icons
   SRC_LOC="${srcdir}"/${_name}/browser
   DEST_LOC="${pkgdir}"/usr/share/icons/hicolor
-  for i in 16 32 48
-  do
+  for i in 16 32 48; do
       install -Dm644 "${SRC_LOC}"/chrome/icons/default/default${i}.png "${DEST_LOC}"/${i}x${i}/apps/${pkgname}.png
   done
   install -Dm644 "${SRC_LOC}"/icons/mozicon128.png "${DEST_LOC}"/128x128/apps/${pkgname}.png

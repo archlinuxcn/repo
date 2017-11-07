@@ -1,7 +1,8 @@
 # Maintainer:  lilydjwg@gmail.com
 
 pkgname=lantern-bin
-pkgver=3.7.4
+pkgver=4.4.0
+
 pkgrel=1
 pkgdesc='Free desktop application that delivers fast, reliable and secure access to the open Internet. (Stable Channel, binary)'
 arch=('i686' 'x86_64')
@@ -15,9 +16,9 @@ source=('lantern.service')
 source_i686=("${pkgname}-${pkgver}-i686.deb::https://raw.githubusercontent.com/getlantern/lantern-binaries/master/lantern-installer-32-bit.deb")
 source_x86_64=("${pkgname}-${pkgver}-x86_64.deb::https://raw.githubusercontent.com/getlantern/lantern-binaries/master/lantern-installer-64-bit.deb")
 install=lantern.install
-sha256sums=('15406105d166e65ccc231b3e945bc5529f75694e661e5cc61dfa9c081634a2c8')
-sha256sums_i686=('603cfb87ebed6ff9c0c68c3c27eac5c4a836206bb1b57459fd3b7cb21c43e3c0')
-sha256sums_x86_64=('1d0e3fb1553653c895bc2c2587fa8ba7dab30db4d7d548a221f03dc8e63e91f1')
+sha256sums=('4dc6f71c0e95ff04daa05c6de06847d87c10fbecd82869e93591886f9cab46a7')
+sha256sums_i686=('696776832b0af318adc7fc1caff68793f28e505d78ee0ef9ec0b3deff79dee10')
+sha256sums_x86_64=('10142f693e12fa56a75d4d95c46642599cc7182428c36a6670984da49e0612db')
 options=(emptydirs)
 
 package() {
@@ -28,4 +29,5 @@ package() {
     install -Dm644 "${srcdir}/lantern.service" "${pkgdir}/usr/lib/systemd/system/lantern.service"
 
     mkdir -p "$pkgdir/var/lib/lantern"
+    chmod 750 "$pkgdir/var/lib/lantern"
 }

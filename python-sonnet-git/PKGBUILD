@@ -2,8 +2,8 @@
 pkgbase=python-sonnet-git
 pkgname=(python-sonnet-git python-sonnet-cuda-git)
 pkgver=20170808.170829
-tf_pkgver=1.3.0
-pkgrel=5
+tf_pkgver=1.4.0-rc0
+pkgrel=1
 pkgdesc="TensorFlow-based neural network library."
 url="https://github.com/deepmind/sonnet"
 license=('Apache2')
@@ -13,7 +13,7 @@ makedepends=('git' 'bazel' 'python-numpy' 'gcc5' 'cuda' 'cudnn' 'python-pip' 'py
 source=("git+https://github.com/deepmind/sonnet"
         "https://github.com/tensorflow/tensorflow/archive/v${tf_pkgver}.tar.gz")
 md5sums=('SKIP'
-         '01c008c58d206324ef68cd5116a83965')
+         '71dafc5677905dce9ecee07adc373b00')
 
 prepare() {
   cp -r tensorflow-${tf_pkgver} tensorflow-${tf_pkgver}-cuda
@@ -29,6 +29,7 @@ prepare() {
   export TF_NEED_GCP=0
   export TF_NEED_HDFS=0
   export TF_ENABLE_XLA=1
+  export TF_NEED_GDR=0
   export TF_NEED_VERBS=0
   export TF_NEED_OPENCL=0
   export TF_NEED_MPI=0
@@ -44,15 +45,15 @@ configure_tensorflow() {
 configure_tensorflow_cuda() {
   cd $srcdir/sonnet-cuda/tensorflow
   export TF_NEED_CUDA=1
-  export GCC_HOST_COMPILER_PATH=/usr/bin/gcc-5
-  # For next version instead of the gcc-5 stuff:
+  # For next version instead of the gcc-6 stuff:
+  export GCC_HOST_COMPILER_PATH=/usr/bin/gcc-6
   export TF_CUDA_CLANG=0
   # export CLANG_CUDA_COMPILER_PATH=/usr/bin/clang
   export CUDA_TOOLKIT_PATH=/opt/cuda
   export TF_CUDA_VERSION=$($CUDA_TOOLKIT_PATH/bin/nvcc --version | sed -n 's/^.*release \(.*\),.*/\1/p')
   export CUDNN_INSTALL_PATH=/opt/cuda
   export TF_CUDNN_VERSION=$(sed -n 's/^#define CUDNN_MAJOR\s*\(.*\).*/\1/p' $CUDNN_INSTALL_PATH/include/cudnn.h)
-  export TF_CUDA_COMPUTE_CAPABILITIES=3.0,3.5,5.2,6.1
+  export TF_CUDA_COMPUTE_CAPABILITIES=3.0,3.5,5.2,6.1,6.2
 
   ./configure
 }
@@ -92,4 +93,3 @@ package_python-sonnet-cuda-git(){
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 # vim:set ts=2 sw=2 et:
-

@@ -9,9 +9,9 @@
 # Contributor: chuckdaniels
 
 pkgname=paraview
-_pkgver=5.4.0
+_pkgver=5.4.1
 pkgver=${_pkgver//-/.}
-pkgrel=3
+pkgrel=2
 pkgdesc='Parallel Visualization Application using VTK'
 arch=('i686' 'x86_64')
 url='http://www.paraview.org'
@@ -24,7 +24,7 @@ depends=('qt5-tools' 'qt5-x11extras'  'qt5-xmlpatterns'
 makedepends=('cmake' 'mesa' 'gcc-fortran' 'ninja')
 source=("http://paraview.org/files/v${pkgver:0:3}/ParaView-v${_pkgver}.tar.gz"
         "visit_fix_gcc7.patch")
-sha1sums=('d1bc9112d76f603d3232069b4ea9c507c4e1b1a7'
+sha1sums=('3b7df6f6bbf978bb9a8583c97208a58af9afcdde'
           'f86feb14e7e17ce3ad5341ee4f52b40111cecbec')
 
 prepare() {

@@ -20,8 +20,8 @@ _gtk3=true
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=54.0.1
-pkgrel=2
+pkgver=56.0.2
+pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -36,30 +36,31 @@ fi
 
 makedepends=('unzip' 'zip' 'diffutils' 'python2' 'yasm' 'mesa' 'imake'
              'xorg-server-xvfb' 'libpulse' 'inetutils' 'autoconf2.13' 'rust'
-            'cargo' 'mercurial')
+            'mercurial' 'llvm')
 optdepends=('networkmanager: Location detection via available WiFi networks'
             'speech-dispatcher: Text-to-Speech')
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
-_patchrev=53443ffb496a
+_patchrev=37c56dbf929f
 options=('!emptydirs'  'strip')
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 _repo=https://hg.mozilla.org/mozilla-unified
 source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
         mozconfig firefox.desktop firefox-install-dir.patch vendor.js kde.js firefox-fixed-loading-icon.png
 	# Firefox patchset
-	$_patchurl/firefox-branded-icons.patch
-	$_patchurl/firefox-kde.patch
-	$_patchurl/firefox-no-default-ualocale.patch
+	firefox-branded-icons-$_patchrev.patch::$_patchurl/firefox-branded-icons.patch
+	firefox-kde-$_patchrev.patch::$_patchurl/firefox-kde.patch
+	firefox-no-default-ualocale-$_patchrev.patch::$_patchurl/firefox-no-default-ualocale.patch
 	# Gecko/toolkit patchset
-	$_patchurl/mozilla-kde.patch
-	$_patchurl/mozilla-language.patch
-	$_patchurl/mozilla-nongnome-proxies.patch
+	mozilla-kde-$_patchrev.patch::$_patchurl/mozilla-kde.patch
+	mozilla-language-$_patchrev.patch::$_patchurl/mozilla-language.patch
+	mozilla-nongnome-proxies-$_patchrev.patch::$_patchurl/mozilla-nongnome-proxies.patch
 	unity-menubar.patch
 	add_missing_pgo_rule.patch
         pgo_fix_missing_kdejs.patch
-        fix-wifi-scanner.diff
-        no-crmf.diff
+        fix_pgo_bug1389436_explicitly_instantiate_gfxFont.patch
+        wifi-disentangle.patch wifi-fix-interface.patch
+        firefox-install-dir.patch no-crmf.diff glibc-2.26-fix.diff
 )
 
 
@@ -97,13 +98,13 @@ prepare() {
   echo "ac_add_options --with-mozilla-api-keyfile=\"$PWD/mozilla-api-key\"" >>.mozconfig
   
   msg "Patching for KDE"
-  patch -Np1 -i "$srcdir/mozilla-nongnome-proxies.patch"
-  patch -Np1 -i "$srcdir/mozilla-kde.patch"
-  patch -Np1 -i "$srcdir/mozilla-language.patch"
+  patch -Np1 -i "$srcdir/mozilla-nongnome-proxies-$_patchrev.patch"
+  patch -Np1 -i "$srcdir/mozilla-kde-$_patchrev.patch"
+  patch -Np1 -i "$srcdir/mozilla-language-$_patchrev.patch"
 
-  patch -Np1 -i "$srcdir/firefox-kde.patch"
-  patch -Np1 -i "$srcdir/firefox-no-default-ualocale.patch"
-  patch -Np1 -i "$srcdir/firefox-branded-icons.patch"
+  patch -Np1 -i "$srcdir/firefox-kde-$_patchrev.patch"
+  patch -Np1 -i "$srcdir/firefox-no-default-ualocale-$_patchrev.patch"
+  patch -Np1 -i "$srcdir/firefox-branded-icons-$_patchrev.patch"
   
   # add globalmenu support
   patch -Np1 -i "$srcdir/unity-menubar.patch"
@@ -114,17 +115,23 @@ prepare() {
   # add missing file Makefile for pgo builds
   patch -Np1 -i "$srcdir"/pgo_fix_missing_kdejs.patch
 
+  # fix bug 1389436 - Explicitly instantiate gfxFont::GetShapedWord<uint8_t> for its use in gfxTextRun.cpp. r=jfkthame
+  patch -Np1 -i "$srcdir"/fix_pgo_bug1389436_explicitly_instantiate_gfxFont.patch
+
   # configure script misdetects the preprocessor without an optimization level
   # https://bugs.archlinux.org/task/34644
   # sed -i '/ac_cpp=/s/$CPPFLAGS/& -O2/' configure
 
-
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=1371991
+  patch -Np1 -i ../no-crmf.diff
+  
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=1385667
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=1394149
+  patch -Np1 -i ../glibc-2.26-fix.diff
 
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1314968
-  patch -Np1 -i "$srcdir"/fix-wifi-scanner.diff
-  
-   # https://bugzilla.mozilla.org/show_bug.cgi?id=1371991
-  patch -Np1 -i "$srcdir"/no-crmf.diff
+  patch -Np1 -i ../wifi-disentangle.patch
+  patch -Np1 -i ../wifi-fix-interface.patch
   
   # WebRTC build tries to execute "python" and expects Python 2
   mkdir -p "$srcdir/path"
@@ -215,20 +222,24 @@ END
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
 md5sums=('SKIP'
-         'a438d28b6644036d79a20c16efad80b2'
+         'd9e24ab7ac01e2ab2511b2019d169bb8'
          '14e0f6237a79b85e60256f4808163160'
          'dbf14588e85812ee769bd735823a0146'
          'aa9f776d2187cba09de65cbb02b39ca0'
          '05bb69d25fb3572c618e3adf1ee7b670'
          '6e335a517c68488941340ee1c23f97b0'
          '46a4971f26c990a66b913ba700c7f3fa'
-         '8f49836b3ad6d40dc490c3bf703f71d6'
+         'bb59c4103d189d564d4ac323ebacf212'
          '1fad9a988826d69fe712ea973e43f6da'
-         'c09024c0bea0f3224d3e45f74ddc4d6b'
-         'fa6ac817f576b486419b5f308116a7cd'
-         '0c684360f1df4536512d51873c1d243d'
-         'ca0532e1b9e55186496868b0b18b4a98'
+         'a106718d4e44b908bf28ed64e8372730'
+         'be479d0972ee83ea967bbc96d55c939a'
+         '0661e259fe57df87fca791f4aeb78da0'
+         'c7e2592c49f5846857e7a84e0788099d'
          'fe24f5ea463013bb7f1c12d12dce41b2'
          '3fa8bd22d97248de529780f5797178af'
-         'e2396b9918aa602427f80d48caf319b4'
-         '196edf030efc516e3de5ae3aa01e9851')
+         'b358b5ed3726ecd4ed054bdc09901982'
+         'c6ebac35e9e9c3b031f2cf9ee3e6ed96'
+         'a819433292665a6f06a223a0a718e67a'
+         'dbf14588e85812ee769bd735823a0146'
+         '196edf030efc516e3de5ae3aa01e9851'
+         '11427899801d5e8f66df835f5806f851')

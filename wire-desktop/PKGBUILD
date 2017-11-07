@@ -1,26 +1,25 @@
 # Maintainer: Conor Anderson <conor@conr.ca>
 pkgname=wire-desktop
-pkgver=2.15.2751
-pkgrel=2
+pkgver=3.0.2816
+pkgrel=1
 pkgdesc='Modern, private messenger. Based on Electron.'
 arch=('x86_64' 'i686')
 url='https://wire.com/'
 license=('GPL3')
 conflicts=('wire-desktop-bin')
-depends=('alsa-lib' 'gconf' 'gtk2' 'libxss' 'libxtst' 'nss')
-makedepends=('git' 'python2' 'npm' 'cargo' )
+depends=('alsa-lib' 'gconf' 'gtk2' 'libxss' 'libxtst' 'nss' 'xdg-utils')
+makedepends=('python2' 'cargo' 'npm' 'git' )
 optdepends=('hunspell-en: for English spellcheck support')
 provides=('wire-desktop')
 source=("${pkgver}.tar.gz::https://github.com/wireapp/wire-desktop/archive/release/"$pkgver".tar.gz"
         "${pkgname}.desktop")
-sha256sums=('a58894b3fa8421fbce96e0a608e71b978e1d58c14c3c95fab1a29675a8c6560a'
-            '84d869ca111010a5f45f3d5cb8ef4320fa46ac01104773559fb3a7c501f8313b')
+sha256sums=('7c9ec60dfbb1aedd60eeb23d248e3d539301c94ff1f44b58a66737324a0780c3'
+            'd2afa9a754c852bf6b915cfc1ad2d6482d576c1f7fa396de0faf07fe2ca951e7')
 
 build() {
   cd "${srcdir}/${pkgname}-release-${pkgver}"
   npm install
-  $(npm bin)/grunt 'clean:linux' 'update-keys' 'release-prod' 'bundle'
-  $(npm bin)/grunt "electronbuilder:linux_other"
+  $(npm bin)/grunt 'linux-other'
 }
 
 package() {

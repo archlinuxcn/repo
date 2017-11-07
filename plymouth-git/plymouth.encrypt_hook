@@ -76,7 +76,7 @@ EOF
             if [ ${dopassphrase} -gt 0 ]; then
                 echo
                 echo "A password is required to access the ${cryptname} volume:"
-                plymouth ask-for-password --prompt="Password for ${cryptname} volume" --dont-pause-progress --number-of-tries=5 --command="/sbin/cryptsetup luksOpen --key-file=- ${cryptdev} ${cryptname} ${cryptargs} ${CSQUIET}"
+                plymouth ask-for-password --prompt="Password for ${cryptname} volume" --dont-pause-progress --number-of-tries=5 --command="/sbin/cryptsetup luksOpen --key-file=- ${resolved} ${cryptname} ${cryptargs} ${CSQUIET}"
                 sleep 2
             fi
             if [ -e "/dev/mapper/${cryptname}" ]; then

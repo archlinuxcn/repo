@@ -6,7 +6,7 @@
 
 pkgname=pkgtools
 pkgver=25
-pkgrel=7
+pkgrel=8
 pkgdesc="A collection of scripts for Arch Linux packages"
 arch=('any')
 url="https://bbs.archlinux.org/viewtopic.php?pid=384196"
@@ -16,7 +16,7 @@ depends=('coreutils'    # for comm in whoneeds
          'pcre'
          'libarchive'
          'python')
-optdepends=('abs: Provides PKGBUILD prototypes for newpkg'
+optdepends=(
             'gem2arch: Create PKGBUILD from Ruby Gem Package'
             'pkgfile: Required to use pkgconflict'
             'namcap: Package analyzer')

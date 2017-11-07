@@ -44,6 +44,10 @@ post_upgrade() {
                         exit 1
                 fi
         fi
+	if (usr/bin/grep -A3 "[^#]*\[archlinuxcn\]" /etc/pacman.conf | grep "TrustAll" >/dev/null 2>&1); then
+		_error 'Please remove the SigLevel= line of [archlinuxcn] from "/etc/pacman.conf" to use the default setting'
+		_error '请删除 /etc/pacman.conf 中 [archlinuxcn] 下的 SigLevel= 行，以使用默认设置'
+	fi	
 }
 
 post_install() {

@@ -11,7 +11,7 @@
 pkgname=('llvm-julia' 'llvm-libs-julia' 'llvm-ocaml-julia' 'lld-julia' 'lldb-julia'
          'clang-julia' 'clang-tools-extra-julia')
 pkgver=5.0.0
-pkgrel=1
+pkgrel=6
 _ocaml_ver=4.05.0
 arch=(i686 x86_64 armv7h aarch64)
 url="http://llvm.org/"
@@ -28,9 +28,11 @@ source=(https://releases.llvm.org/$pkgver/llvm-$pkgver.src.tar.xz
         https://releases.llvm.org/$pkgver/lld-$pkgver.src.tar.xz
         https://releases.llvm.org/$pkgver/lldb-$pkgver.src.tar.xz
         llvm-D27629-AArch64-large_model.patch
-        llvm-loadcse-addrspace.patch
-        llvm-Yet-another-fix.patch
+        llvm-instcombine-ptrtoint.patch
         llvm-D34078-vectorize-fdiv.patch
+        llvm-arm-reset.patch
+        llvm-D38924-faultmap-reset.patch
+        llvm-D38925-neg-implicit-null.patch
         # Arch patches
         0001-GCC-compatibility-Ignore-the-fno-plt-flag.patch
         0002-Enable-SSP-and-PIE-by-default.patch
@@ -43,9 +45,11 @@ sha256sums=('e35dcbae6084adcf4abb32514127c5eabd7d63b733852ccdb31e06f1373136da'
             '399a7920a5278d42c46a7bf7e4191820ec2301457a7d0d4fcc9a4ac05dd53897'
             'c0a0ca32105e9881d86b7ca886220147e686edc97fdb9f3657c6659dc6568b7d'
             'b80285028d65417116c53915505ab418b0f9e0a697c67803abf459108f7fd501'
-            '16dc4d6d4166bf019e2104bb138e3cbd0c1551d959692efb699b3d2de51cab79'
-            'e4da55acdf151fd4558bf71eb384e606a8a019e9e39488c41810dd219f6974cf'
+            '43f021afc8037e537ba4c5f82fe1d8a9dcbcf15e8b9fffc527260f0385451350'
             '5ea9c995aba1627440d3985c425472301c711b134ce3fd9e655d0245d0832699'
+            '55bec3bbcde3bc149df2049bc53101d79c2e012f4b791132725a445d724fddea'
+            'a60cc1a6ec0869c9dcddfd11ef710e3e484883080b78b234ce4bb6d72621768b'
+            'db1e2652b2c3aa19957927b78eaae596bff7629646145235c99394f0d4cb7ba6'
             'a1ba7fb859ac157c4b4342435cd656e29b1e1d9bddcb8ae0158a91c0a8ba6203'
             '186f2d10b013395f2dd6e1fd3baf4961a2e40c403f115517c9b253682934f50f'
             '6fff47ab5ede79d45fe64bb4903b7dfc27212a38e6cd5d01e60ebd24b7557359'
@@ -53,8 +57,8 @@ sha256sums=('e35dcbae6084adcf4abb32514127c5eabd7d63b733852ccdb31e06f1373136da'
 
 _FLTO='-flto'
 
-if [[ "${CARCH}" == "aarch64" ]]; then
-    # GCC miscompiles LLVM on AArch64 with LTO
+if [[ "${CARCH}" == "aarch64" ]] || [[ "${CARCH}" == "armv7h" ]]; then
+    # GCC miscompiles LLVM on AArch64 with LTO and segfault on arm during linking...
     _FLTO=''
 fi
 
@@ -77,7 +81,7 @@ EOF
   done
 
   cd "$srcdir/llvm-$pkgver.src"
-  mkdir build
+  mkdir -p build
 
   mv "$srcdir/cfe-$pkgver.src" tools/clang
   mv "$srcdir/clang-tools-extra-$pkgver.src" tools/clang/tools/extra
@@ -86,9 +90,11 @@ EOF
   mv "$srcdir/lldb-$pkgver.src" tools/lldb
 
   apply_julia_patch D27629-AArch64-large_model
-  apply_julia_patch loadcse-addrspace
-  apply_julia_patch Yet-another-fix
+  apply_julia_patch instcombine-ptrtoint
   apply_julia_patch D34078-vectorize-fdiv
+  apply_julia_patch arm-reset
+  apply_julia_patch D38924-faultmap-reset
+  apply_julia_patch D38925-neg-implicit-null
 
   # Arch patches
   msg "Applying Arch patches"

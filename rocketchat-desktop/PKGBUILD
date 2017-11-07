@@ -1,0 +1,42 @@
+# Maintainer: sum01 <sum01@protonmail.com>
+pkgname=rocketchat-desktop
+pkgver=2.9.0
+_srcname="Rocket.Chat.Electron-$pkgver"
+pkgrel=1
+pkgdesc='Rocket.Chat Native Cross-Platform Desktop Application via Electron.'
+arch=('i686' 'x86_64')
+url="https://github.com/RocketChat/Rocket.Chat.Electron"
+license=('MIT')
+depends=('libxss' 'gconf' 'nss' 'alsa-lib' 'gtk2' 'libxtst')
+makedepends=('sed' 'yarn' 'gulp')
+conflicts=('rocketchat-client-bin')
+source=("https://github.com/RocketChat/Rocket.Chat.Electron/archive/$pkgver.tar.gz")
+sha512sums=('b36d20319fc1cad96318e90b7a3696bfafb36e84a76556c568bf42f22a7389c083a352b63a5c5963f6799005a2f99f73f5bb0252bb4bdb52141e2560203f5b17')
+prepare(){
+  sed -i 's/"deb",/"dir"/' "$srcdir/$_srcname/package.json"
+  sed -i '/"rpm"/d' "$srcdir/$_srcname/package.json"
+  sed -i 's|${SNAP}/meta/gui/icon.png|rocketchat-desktop|' "$srcdir/$_srcname/snap/gui/$pkgname.desktop"
+}
+build(){
+    cd "$srcdir/$_srcname"
+    yarn install --non-interactive --cache-folder "$srcdir/yarn-cache"
+    yarn release
+}
+check() {
+  cd "$srcdir/$_srcname"
+  yarn check --integrity
+  yarn test
+}
+package() {
+  install -Dm644 "$srcdir/$_srcname/snap/gui/icon.png" "$pkgdir/usr/share/icons/hicolor/512x512/apps/$pkgname.png"
+  install -Dm644 "$srcdir/$_srcname/snap/gui/$pkgname.desktop" "$pkgdir/usr/share/applications/$pkgname/$pkgname.desktop"
+  install -Dm644 "$srcdir/$_srcname/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  if [[ $CARCH = "i686" ]]; then
+    _distname="linux-ia32-unpacked"
+  else
+    _distname="linux-unpacked"
+  fi
+  mkdir -p "$pkgdir"/usr/{lib,bin}
+  mv "$srcdir/$_srcname/dist/$_distname" "$pkgdir/usr/lib/$pkgname"
+  ln -s /usr/lib/$pkgname/rocketchat "$pkgdir/usr/bin/$pkgname"
+}

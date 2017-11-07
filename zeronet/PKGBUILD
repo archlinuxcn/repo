@@ -1,9 +1,9 @@
 # Maintainer: redfish <redfish at galactica dot pw>
 
 pkgname='zeronet'
-pkgver=0.5.6
+pkgver=0.6.0
 pkgrel=1
-_commit='9a772eaeccd721a495c1415e6337283c50ae7333'
+_commit='4efcfa8bf49a1d9ce9b6b8095b4cd92d30c70d74'
 arch=('any')
 url="https://zeronet.io/"
 depends=('python2>=2.7.10'
@@ -16,9 +16,9 @@ pkgdesc="Decentralized websites using Bitcoin crypto and the BitTorrent network.
 source=("git+https://github.com/HelloZeroNet/ZeroNet.git#commit=$_commit"
         "zeronet.conf"
         "zeronet.service")
-md5sums=('SKIP'
-         'c5216860cfc435a4861c55fd3933391c'
-         '4b1a25fc9f2cc691d40611ec4bfad99f')
+sha512sums=('SKIP'
+            '000884cd9f1e5c0b34e45f590fc5f6d0c4ed8bc95dfec84fc66d93a4504a6a1acbab6c8c0f71a43fc5834ab4fec30cb9aa29ab7b55a36f9a7743a37020f26618'
+            'e3e9f6947480e7f6d496caaaa81ab00ea99dbafac46fa8607235965d89f7bdc20c73b137830a938b469158b1ee803c2a771d3a10bda14a8e5e217931013f5a0c')
 install="zeronet.install"
 backup=("etc/zeronet.conf")
 options=(!strip) # ignore test binaries in the depsendency libs that fail strip

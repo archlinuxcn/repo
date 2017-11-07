@@ -4,7 +4,7 @@
 _gemname=rouge
 pkgname=ruby-$_gemname-1
 pkgver=1.11.1
-pkgrel=2
+pkgrel=3
 pkgdesc='A pure-ruby colorizer based on pygments'
 arch=(any)
 url='http://rouge.jneen.net/'
@@ -15,8 +15,6 @@ options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
 sha1sums=('64d337568404bf8f761974ebf2b538418bff3d85')
-replaces=('ruby-rouge')
-conflicts=('ruby-rouge')
 
 package() {
   local _gemdir="$(ruby -e'puts Gem.default_dir')"

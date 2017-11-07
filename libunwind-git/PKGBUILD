@@ -7,7 +7,7 @@
 #  - build v5 with system libatomic_ops
 
 pkgname=libunwind-git
-pkgver=1.2.rc1.122.g60ddc67
+pkgver=1.2.rc1.132.gf248ac0
 pkgrel=1
 pkgdesc='Portable and efficient C programming interface (API) to determine the call-chain of a program'
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -16,28 +16,12 @@ license=('GPL')
 depends=('glibc' 'xz')
 makedepends=('git')
 source=('git://git.savannah.gnu.org/libunwind.git'
-        0001-Handle-non-signal-frame-unwind-info-lookup-in-ARM-ex.patch
-        0002-Allow-DWARF-version-4.patch
         0003-Prefer-EXTBL-unwinding-on-ARM.patch)
 md5sums=('SKIP'
-         'd00e44a1a90459c0125cc4525871c232'
-         'ac40837ccb190c9dd08357cfc747655f'
-         'f2390a8ead7fc3d8b3d0c038b2e35ded')
+         '148852d93dc2e2a85ac167de707353f3')
 options=('debug' '!strip')
 provides=(libunwind)
 conflicts=(libunwind)
-
-# HACK!!! remove after the damange on the build server is repaired.
-if [[ -f ${SRCDEST:-${PWD}}/libunwind/config ]] && \
-       grep 'url = http://git\.savannah\.gnu\.org/' \
-            ${SRCDEST:-${PWD}}/libunwind/config &> /dev/null; then
-    rm -rf ${SRCDEST:-${PWD}}/libunwind &> /dev/null || true
-fi
-if [[ -f ${SRCDEST:-${PWD}}/libunwind-git/config ]] && \
-       grep 'url = git://git\.sv\.gnu\.org/libunwind\.git' \
-            ${SRCDEST:-${PWD}}/libunwind-git/config &> /dev/null; then
-    rm -rf ${SRCDEST:-${PWD}}/libunwind-git &> /dev/null || true
-fi
 
 pkgver() {
   cd libunwind
@@ -48,8 +32,6 @@ pkgver() {
 prepare() {
   cd libunwind
 
-  patch -Np1 < ../0001-Handle-non-signal-frame-unwind-info-lookup-in-ARM-ex.patch
-  patch -Np1 < ../0002-Allow-DWARF-version-4.patch
   patch -Np1 < ../0003-Prefer-EXTBL-unwinding-on-ARM.patch
 }
 
@@ -63,20 +45,8 @@ build() {
   make
 }
 
-# check() {
-#   cd libunwind
-
-#   # This function is ``supposed'' to fail. Upstream know, but haven't fixed it.
-#   make check || return 0
-# }
-
 package() {
   cd libunwind
 
   make DESTDIR="$pkgdir/" install
-  cat >> "$pkgdir/usr/include/libunwind.h" <<EOF
-#ifndef JL_UNW_HAS_FORMAT_IP
-#define JL_UNW_HAS_FORMAT_IP 1
-#endif
-EOF
 }

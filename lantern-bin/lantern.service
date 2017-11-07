@@ -17,17 +17,6 @@ ProtectHome=true
 NoNewPrivileges=true
 CapabilityBoundingSet=
 
-ExecStartPre=-/usr/bin/iptables -w -N LANTERN
-ExecStartPre=/usr/bin/iptables -w -A OUTPUT -m owner --uid-owner lantern -j LANTERN
-ExecStartPre=/usr/bin/iptables -w -A LANTERN -p tcp --dport 443 -m comment --comment "lantern out 443" -j ACCEPT
-ExecStartPre=/usr/bin/iptables -w -A LANTERN -p tcp -d 127.0.0.1 -m comment --comment "lantern local" -j ACCEPT
-ExecStartPre=/usr/bin/iptables -w -A LANTERN -p udp --dport 53 -m comment --comment "lantern dns" -j ACCEPT
-ExecStartPre=/usr/bin/iptables -w -A LANTERN -j DROP
-
-ExecStopPost=/usr/bin/iptables -w -D OUTPUT -m owner --uid-owner lantern -j LANTERN
-ExecStopPost=/usr/bin/iptables -w -F LANTERN
-ExecStopPost=/usr/bin/iptables -w -X LANTERN
-
 [Install]
 WantedBy=multi-user.target
 

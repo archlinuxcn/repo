@@ -6,11 +6,7 @@
 BUILD_DOC=1
 
 pkgbase=julia-git
-if [[ $CARCH = x86_64 ]]; then
-    pkgname=('julia-git' 'julia-git-avx2')
-else
-  pkgname=('julia-git')
-fi
+pkgname=julia-git
 
 if [[ $CARCH != x86_64 ]]; then
     BUILD_DOC=0
@@ -35,7 +31,7 @@ case $CARCH in
 esac
 
 epoch=1
-pkgver=0.7.0.DEV.1937.g2e864155d0
+pkgver=0.7.0.DEV.2443.g1c122fc3ee
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
@@ -47,15 +43,17 @@ makedepends=(gcc-fortran arpack fftw git gmp libgit2-julia libunwind-git
              openlibm mbedtls libssh2)
 options=('debug' '!strip' '!buildflags')
 source=('git://github.com/JuliaLang/julia'
+        0001-Revert-Replace-quiet-with-banner-23343.patch
+        0001-Add-install-nodoc-make-target-to-skip-building-and-i.patch
         0001-Revert-turn-on-deprecation-warnings-for-type-and-imm.patch
         0002-Revert-deprecation-warning-for-old-parametric-method.patch
-        0001-Revert-Replace-quiet-with-banner-23343.patch
-        0001-Handle-gc_preserve-in-lifetime-marker-insertion.patch)
+        0001-Optimize-GC-frame-push-pop-insertion.patch)
 md5sums=('SKIP'
-         '91a0c77dc0700ff283d3aaaac67a9147'
-         '84d6c1e407839b1459278b35c245e3ad'
          'b3c5a4ba02fbbfa53b7043beb0242156'
-         '250cb1d8ea04a3e87efac94fcfb50d96')
+         '2222d3eabfe6040a8cca466303c86d2b'
+         'fccd6f87178fecd9249d48a2149e41f0'
+         '56cfe7e765f3fbf0ce0d540100f50424'
+         '3dbb81b1dae3a9d977bd69f8354b3007')
 
 pkgver() {
   cd julia
@@ -97,19 +95,22 @@ julia_opts=(prefix=/usr sysconfdir=/etc
             LIBLAPACKNAME=libopenblas
             LIBLAPACK=-lopenblas)
 
+_x86_target='generic,opt_size;haswell,clone_all,-rdrnd;skylake,base(1),-rdrnd;cannonlake,base(1),-rdrnd'
+_arm_target='armv7-a;armv7-a,neon;armv7-a,neon,vfp4'
+_aa64_target='generic;cortex-a57;thunderx2t99'
+
 case "$CARCH" in
   x86_64)
-    julia_avx2_opts=("${julia_opts[@]}" MARCH=haswell JULIA_CPU_TARGET=core-avx2)
-    julia_opts=("${julia_opts[@]}" MARCH=x86-64 JULIA_CPU_TARGET=x86-64)
+    julia_opts=("${julia_opts[@]}" MARCH=x86-64 JULIA_CPU_TARGET="${_x86_target}")
     ;;
   i686)
-    julia_opts=("${julia_opts[@]}" MARCH=pentium4 JULIA_CPU_TARGET=pentium4)
+    julia_opts=("${julia_opts[@]}" MARCH=pentium4 JULIA_CPU_TARGET="${_x86_target}")
     ;;
   aarch64)
-    julia_opts=("${julia_opts[@]}" MARCH=armv8-a JULIA_CPU_TARGET=cortex-a57)
+    julia_opts=("${julia_opts[@]}" MARCH=armv8-a JULIA_CPU_TARGET="${_aa64_target}")
     ;;
   armv7h)
-    julia_opts=("${julia_opts[@]}" MARCH=armv7-a JULIA_CPU_TARGET=cortex-a9)
+    julia_opts=("${julia_opts[@]}" MARCH=armv7-a JULIA_CPU_TARGET="${_arm_target}")
     ;;
 esac
 
@@ -124,20 +125,15 @@ EOF
     chmod +x bin/$p
   done
 
-  rm -rf julia-avx2
   cd julia
 
   git reset --hard HEAD
   git clean -fdx
 
+  patch -Np1 < ../0001-Add-install-nodoc-make-target-to-skip-building-and-i.patch
   patch -Np1 < ../0001-Revert-turn-on-deprecation-warnings-for-type-and-imm.patch
   patch -Np1 < ../0002-Revert-deprecation-warning-for-old-parametric-method.patch
-  patch -Np1 < ../0001-Handle-gc_preserve-in-lifetime-marker-insertion.patch
-
-  if [[ "$CARCH" = x86_64 ]]; then
-      (cd "$srcdir"
-       cp -a julia julia-avx2)
-  fi
+  patch -Np1 < ../0001-Optimize-GC-frame-push-pop-insertion.patch
 }
 
 build_in() {
@@ -167,12 +163,7 @@ build_in() {
 }
 
 build() {
-  if [[ "$CARCH" = x86_64 ]]; then
-      msg "Building AVX2 version"
-      (build_in julia-avx2 0 "${julia_avx2_opts[@]}")
-      msg "Building Generic version"
-  fi
-  (build_in julia $BUILD_DOC "${julia_opts[@]}")
+  build_in julia $BUILD_DOC "${julia_opts[@]}"
 }
 
 package-julia-in() {
@@ -186,10 +177,17 @@ package-julia-in() {
 
   cd "$1"
 
-  make install DESTDIR="$pkgdir" "${opts[@]}"
+  if ((BUILD_DOC)); then
+    make install DESTDIR="$pkgdir" "${opts[@]}"
+  else
+    make install-nodoc DESTDIR="$pkgdir" "${opts[@]}"
+    # Manually install man pages
+    mkdir -p "$pkgdir"/usr/share/man/man1/
+    install -m644 -t "$pkgdir"/usr/share/man/man1/ usr/share/man/man1/julia.1
+  fi
 
-  # Remove doc files
-  rm -r "$pkgdir/usr/share/doc/julia"
+  # Remove doc files (should be non for nodoc install)
+  rm -rf "$pkgdir/usr/share/doc/julia"
 
   ver=$("$pkgdir/usr/bin/julia" \
             --startup-file=no \
@@ -201,11 +199,9 @@ package-julia-in() {
 package_julia-git() {
   package-julia-in julia "${julia_opts[@]}"
   depends+=(openlibm)
-}
-
-package_julia-git-avx2() {
-  package-julia-in julia-avx2 "${julia_avx2_opts[@]}"
-  depends+=(openlibm-avx2)
+  if [[ "$CARCH" = x86_64 ]]; then
+      replaces=(julia-git-avx2)
+  fi
 }
 
 package_julia-git-docs() {

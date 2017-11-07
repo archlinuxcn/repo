@@ -1,0 +1,41 @@
+From 1f7287847a1720cd946b967014a754d1e0975f9a Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sat, 14 Oct 2017 16:29:23 -0400
+Subject: [PATCH] Fix `FaultMaps` crash when the out streamer is reused
+
+Make sure the map is cleared before processing a new module.
+Similar to `StackMaps`
+---
+ include/llvm/CodeGen/FaultMaps.h | 3 +++
+ lib/Target/X86/X86AsmPrinter.h   | 1 +
+ 2 files changed, 4 insertions(+)
+
+diff --git a/include/llvm/CodeGen/FaultMaps.h b/include/llvm/CodeGen/FaultMaps.h
+index 98ff526dfe9..55e25c9823b 100644
+--- a/include/llvm/CodeGen/FaultMaps.h
++++ b/include/llvm/CodeGen/FaultMaps.h
+@@ -39,6 +39,9 @@ public:
+ 
+   void recordFaultingOp(FaultKind FaultTy, const MCSymbol *HandlerLabel);
+   void serializeToFaultMapSection();
++  void reset() {
++    FunctionInfos.clear();
++  }
+ 
+ private:
+   static const char *WFMP;
+diff --git a/lib/Target/X86/X86AsmPrinter.h b/lib/Target/X86/X86AsmPrinter.h
+index 7a40552ee38..c5c29b611cc 100644
+--- a/lib/Target/X86/X86AsmPrinter.h
++++ b/lib/Target/X86/X86AsmPrinter.h
+@@ -135,6 +135,7 @@ public:
+   bool doInitialization(Module &M) override {
+     SMShadowTracker.reset(0);
+     SM.reset();
++    FM.reset();
+     return AsmPrinter::doInitialization(M);
+   }
+ 
+-- 
+2.14.2
+

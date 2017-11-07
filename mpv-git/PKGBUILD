@@ -27,6 +27,9 @@ _opt_features=(
   #x11
   #wayland
 
+  #vulkan
+  #shaderc # preferred SPIR-V compiler; only available as -git from AUR
+
   #uchardet
   #rubberband
 
@@ -45,7 +48,7 @@ _opt_features=(
 
 pkgname=mpv-git
 _gitname=mpv
-pkgver=0.27.0_50_g89cdccfa6c
+pkgver=0.27.0_296_gf08ec22567
 pkgrel=1
 pkgdesc='Video player based on MPlayer/mplayer2 (git version)'
 arch=('i686' 'x86_64' 'armv6h' 'armv7h')
@@ -99,6 +102,14 @@ for feature in "${_opt_features[@]}"; do
       ;;
     wayland)
       depends+=('wayland' 'libxkbcommon')
+      ;;
+    vulkan)
+      makedepends+=('vulkan-headers')
+      depends+=('vulkan-icd-loader')
+      ;;
+    shaderc)
+      #depends+=('shaderc')
+      depends+=('shaderc-git')
       ;;
     uchardet|rubberband)
       depends+=("$feature")
