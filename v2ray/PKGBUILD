@@ -1,6 +1,6 @@
 # Maintainer: pandada8 <pandada8@gmail.com>
 pkgname=v2ray
-pkgver=2.43
+pkgver=2.46.1
 pkgrel=1
 pkgdesc="A platform for building proxies to bypass network restrictions."
 arch=('i686' 'x86_64')
@@ -14,8 +14,8 @@ source_x86_64=(v2ray-linux-64-$pkgver.zip::https://github.com/v2ray/v2ray-core/r
 
 md5sums=('453d35e39d62436aadcc3e64e91ece94'
          '22ecbf92e9821283dc3f8937890c0c5e')
-md5sums_i686=('e68af7d8f249fa080bd4064b4e7b71d4')
-md5sums_x86_64=('10a125538178b8cfe5b8675d810bc099')
+md5sums_i686=('2c0daa5f1a8ab7ce7a64cd520bb89c12')
+md5sums_x86_64=('a4c1e600a069aa8a022034bc6da87403')
 
 arch_map=( ["i686"]="32"  ["x86_64"]="64")
 
