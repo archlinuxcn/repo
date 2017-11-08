@@ -1,8 +1,8 @@
 # Maintainer: Frantic1048 <archer@frantic1048.com>
 
 pkgname=kreogist-mu
-pkgver='1.0.0beta2'
-_git_tag='1.0-beta2'
+pkgver='1.0.0beta4'
+_git_tag='1.0-beta4'
 pkgrel=1
 epoch=1
 pkgdesc="Fantastic cross-platform music manager.based on Qt5"
@@ -11,19 +11,7 @@ url="https://kreogist.github.io/Mu/"
 license=('GPL')
 changelog="$pkgname.changelog"
 depends=(
-  'pulseaudio'
-  'ffmpeg'
-  'phonon-qt5'
-  'gst-libav'
-  'ffmpeg'
-  'desktop-file-utils'
-  'hicolor-icon-theme'
-)
-
-optdepends=(
-  'gst-plugins-good: good plugin libraries'
-  'gst-plugins-bad: bad plugin libraries'
-  'gst-plugins-ugly: ugly plugin libraries'
+  'mpv'
 )
 
 makedepends=(
@@ -38,8 +26,8 @@ source=(
   "kreogist-mu.desktop"
 )
 
-sha224sums=('050fa0e08539f6adf7fe050831965e59ab0a7b908cf3c03df315c2bd'
-            '2f35e3f154fed55638827811b7ea3d0a34e3f7c39107bb7257a8a5f8')
+sha224sums=('5472e022e7bff614bd0dea9b3a7b5bfa4588c04417a16e63fc2ce198'
+            '4faf812fee8623c1f4bbd817397fc5a931f6744cc17ac77ba006980b')
 
 build() {
   mkdir -p $srcdir/Mu-build
