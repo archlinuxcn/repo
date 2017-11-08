@@ -1,0 +1,26 @@
+# Maintainer: Ben Yip <yebenmy@protonmail.com>
+pkgname=ghq
+pkgver=0.8.0
+pkgrel=1
+pkgdesc="Remote repository management made easy"
+arch=('i686' 'x86_64')
+url="https://github.com/motemen/ghq"
+license=('MIT')
+provides=('ghq')
+optdepends=('zsh: ghq function for zsh')
+
+source=("https://raw.githubusercontent.com/motemen/ghq/master/LICENSE")
+
+source_i686=("https://github.com/motemen/ghq/releases/download/v$pkgver/ghq_linux_386.zip")
+source_x86_64=("https://github.com/motemen/ghq/releases/download/v$pkgver/ghq_linux_amd64.zip")
+
+package() {
+	install -Dm 644 LICENSE ${pkgdir}/usr/share/licenses/ghq/LICENSE
+	install -Dm 644 ${srcdir}/zsh/_ghq ${pkgdir}/usr/share/zsh/site-functions/_ghq
+	install -Dm 755 ${srcdir}/ghq ${pkgdir}/usr/bin/ghq
+}
+
+md5sums=('4a2daf6d07c0f705e71f52a5805c3d3d')
+md5sums_i686=('ef2e725bf93f17472ff07213bad0b9a1')
+md5sums_x86_64=('fba7206be2afbabcf4e2bcc7e87df507')
+
