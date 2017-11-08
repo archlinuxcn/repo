@@ -1,8 +1,8 @@
 # Maintainer: Sean Enck <enckse@gmail.com>
 # Maintainer: Sherlock Holo <sherlockya(at)gmail.com>
 pkgname=python-telegram-bot
-pkgver=8.0
-pkgrel=2
+pkgver=8.1.1
+pkgrel=1
 pkgdesc="A Python wrapper around the Telegram Bot API"
 url="https://github.com/python-telegram-bot/python-telegram-bot"
 depends=('python-future' 'python-urllib3')
@@ -12,15 +12,13 @@ optdepends=('python-ujson: Ultra fast JSON parsing'
 
 license=('LGPL3')
 arch=('any')
-source=("https://pypi.python.org/packages/74/12/bbc0158dd7aa20ff7e55dc936954e4d06f0844c11ad0cb52b29bf547b532/python-telegram-bot-8.0.tar.gz"
-        "request.patch")
-sha256sums=('b648845f9d5c3ed569066be25e5efdfa36148a24d87e7b5219b4eb8e64853b4d'
-            'cb93235b5e479603d6195e158df7b6028fc3bf87e7bd9bc7a602a029f9bdc644')
+source=("https://pypi.python.org/packages/b4/d4/66e153eb470179dd6346ae1f5a50c75b871c2263ab7b976427b2d9722689/python-telegram-bot-8.1.1.tar.gz")
+sha256sums=('238c4a88b09d93c52d413bcf7e7fe14dfeb02f5f9222ffe4cafd4bd3d55489a3')
 
 prepare(){
     cd $srcdir
     bsdtar -xf $pkgname-$pkgver.tar.gz
-    cp $srcdir/request.patch $srcdir/$pkgname-$pkgver/telegram/utils/
+    #cp $srcdir/request.patch $srcdir/$pkgname-$pkgver/telegram/utils/
 }
 
 build(){
@@ -29,7 +27,11 @@ build(){
     sed '/certifi/d' requirements.txt -i
     #patch -p0 -i setup.patch
     cd telegram/utils
-    patch -p0 -i request.patch
+    #patch -p0 -i request.patch
+    sed -i 's/import telegram.vendor.ptb_urllib3.urllib3 as urllib3/import urllib3 as urllib3/g' request.py
+    sed -i 's/import telegram.vendor.ptb_urllib3.urllib3.contrib.appengine as appengine/import urllib3.contrib.appengine as appengine/g' request.py
+    sed -i 's/from telegram.vendor.ptb_urllib3.urllib3.connection import HTTPConnection/from urllib3.connection import HTTPConnection/g' request.py
+    sed -i 's/from telegram.vendor.ptb_urllib3.urllib3.util.timeout import Timeout/from urllib3.util.timeout import Timeout/g' request.py
     cd $srcdir/$pkgname-$pkgver
     python setup.py build
 }
