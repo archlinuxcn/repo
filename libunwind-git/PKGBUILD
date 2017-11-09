@@ -39,8 +39,6 @@ build() {
   cd libunwind
 
   autoreconf -fi
-  [[ $CARCH == "arm" ]] && LDFLAGS+=" -latomic_ops" && CFLAGS+=" -DAO_USE_PTHREAD_DEFS=1"
-
   ./configure CFLAGS="$CFLAGS -U_FORTIFY_SOURCE" --prefix=/usr
   make
 }
