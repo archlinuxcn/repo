@@ -1,0 +1,21 @@
+post_install() {
+    getent passwd i2p &>/dev/null || {
+        echo -n ">>> Creating i2p user... "
+        useradd --system --user-group --home /opt/i2p i2p
+        echo "done"
+    }
+    post_upgrade
+}
+
+post_upgrade() {
+    systemd-tmpfiles --create i2prouter.conf
+    chown -R i2p:i2p /opt/i2p
+}
+
+pre_remove() {
+    getent passwd i2p &>/dev/null && {
+        echo -n ">>> Removing i2p user... "
+        userdel i2p
+        echo "done"
+    }
+}

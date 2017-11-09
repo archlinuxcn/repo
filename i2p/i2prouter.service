@@ -1,0 +1,19 @@
+[Unit]
+Description=Invisible Internet Project
+After=network.target
+
+[Service]
+Type=forking
+User=i2p
+PIDFile=/run/i2p/i2p.pid
+Environment=WRAPPER_CONF=/opt/i2p/wrapper.config
+ExecStart=/usr/bin/java-service-wrapper ${WRAPPER_CONF} \
+    wrapper.name=i2prouter wrapper.syslog.ident=i2prouter \
+    wrapper.daemonize=TRUE
+SendSIGKILL=no
+ExecReload=/bin/kill -USR1 $MAINPID
+ExecStop=/bin/kill -TERM $MAINPID
+SuccessExitStatus=0 2 3
+
+[Install]
+WantedBy=multi-user.target
