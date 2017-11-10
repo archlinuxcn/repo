@@ -25,17 +25,17 @@ package() {
 	
 	#for Google Chrome if you not use Google Chrome please delete them
 	mkdir -p "$pkgdir/etc/opt/chrome/native-messaging-hosts"
-	install -Dm644 "ugetchromewrapper-$pkgver" "$pkgdir"/etc/opt/chrome/native-messaging-hosts
+	install -m644 "ugetchromewrapper-$pkgver" "$pkgdir"/etc/opt/chrome/native-messaging-hosts/com.javahelps.ugetchromewrapper.json
 	
 	#for Chromium and Vivaldi if you not use Chromium or Vivaldi please delete them
 	mkdir -p "$pkgdir/etc/chromium/native-messaging-hosts"
-	install -Dm644 "ugetchromewrapper-$pkgver" "$pkgdir"/etc/chromium/native-messaging-hosts
+	install -m644 "ugetchromewrapper-$pkgver" "$pkgdir"/etc/chromium/native-messaging-hosts/com.javahelps.ugetchromewrapper.json
 	
 	#for Opera if you not use Opera please delete them
 	mkdir -p "$pkgdir/etc/opera/native-messaging-hosts"
-	install -Dm644 "ugetchromewrapper-$pkgver" "$pkgdir"/etc/opera/native-messaging-hosts
+	install -m644 "ugetchromewrapper-$pkgver" "$pkgdir"/etc/opera/native-messaging-hosts/com.javahelps.ugetchromewrapper.json
 
 	#for Firefox if you not use Firefox please delete them
 	mkdir -p "$pkgdir/usr/lib/mozilla/native-messaging-hosts"
-	install -Dm644 "ugetfirefoxwrapper-$pkgver" "$pkgdir"/usr/lib/mozilla/native-messaging-hosts
+	install -m644 "ugetfirefoxwrapper-$pkgver" "$pkgdir"/usr/lib/mozilla/native-messaging-hosts/com.javahelps.ugetfirefoxwrapper.json
 }
