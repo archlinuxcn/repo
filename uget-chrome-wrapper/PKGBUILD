@@ -1,7 +1,7 @@
 #Maintainer : Sasasu <lizhaolong0123@gmail.com>
 pkgname=uget-chrome-wrapper
 pkgver=2.0.6
-pkgrel=5
+pkgrel=6
 pkgdesc="Integrate uGet Download Manager with Google Chrome, Chromium, Vivaldi, Opera and Firefox"
 arch=('any')
 url="https://github.com/slgobinath/uget-chrome-wrapper"
@@ -21,7 +21,7 @@ build() {
 package() {
 	cd "$srcdir"/"$_pkgname"
 	mkdir -p "$pkgdir/usr/bin"
-	install -Dm755 "uget-chrome-wrapper-$pkgver" "$pkgdir"/usr/bin
+	install -m755 "uget-chrome-wrapper-$pkgver" "$pkgdir"/usr/bin/uget-chrome-wrapper
 	
 	#for Google Chrome if you not use Google Chrome please delete them
 	mkdir -p "$pkgdir/etc/opt/chrome/native-messaging-hosts"
