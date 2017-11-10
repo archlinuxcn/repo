@@ -6,7 +6,7 @@ Wants=network.target
 [Service]
 Type=simple
 PIDFile=/var/run/v2ray-%i.pid
-ExecStart=/usr/bin/v2ray -config /etc/v2ray/%i.json
+ExecStart=/usr/bin/env v2ray.location.asset=/etc/v2ray /usr/bin/v2ray -config /etc/v2ray/%i.json
 Restart=on-failure
 
 [Install]
