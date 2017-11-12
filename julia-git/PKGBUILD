@@ -134,6 +134,8 @@ EOF
   patch -Np1 < ../0001-Revert-turn-on-deprecation-warnings-for-type-and-imm.patch
   patch -Np1 < ../0002-Revert-deprecation-warning-for-old-parametric-method.patch
   patch -Np1 < ../0001-Optimize-GC-frame-push-pop-insertion.patch
+
+  sed -i -e 's/-fno-omit-frame-pointer/-fomit-frame-pointer/g' src/Makefile ui/Makefile
 }
 
 build_in() {
