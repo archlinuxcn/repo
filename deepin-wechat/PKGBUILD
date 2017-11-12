@@ -1,7 +1,7 @@
 # Maintainer: Jingbei Li <i@jingbei.li>
 pkgname=deepin-wechat
-pkgver=2.4.5.48deepin2
-pkgrel=2
+pkgver=2.6.0.40deepin1
+pkgrel=1
 pkgdesc="Tencent WeChat Client on Deepin Wine"
 arch=("x86_64")
 url="http://www.deepin.com/"
@@ -9,7 +9,7 @@ license=('custom')
 depends=('p7zip' 'wine' 'xdotool' 'xorg-xwininfo')
 _mirror="https://mirrors.tuna.tsinghua.edu.cn/deepin"
 source=("$_mirror/pool/non-free/d/deepin.com.wechat/deepin.com.wechat_${pkgver}_i386.deb")
-md5sums=('65a297ea7ec081cb43b68e1b32ab63b3')
+md5sums=('75f258819b3000ba05522b32f23529a2')
 
 package() {
   cd ${srcdir}
