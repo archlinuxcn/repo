@@ -2,7 +2,7 @@
 # Maintainer: Sherlock Holo <sherlockya(at)gmail.com>
 pkgname=python-telegram-bot
 pkgver=8.1.1
-pkgrel=1
+pkgrel=3
 pkgdesc="A Python wrapper around the Telegram Bot API"
 url="https://github.com/python-telegram-bot/python-telegram-bot"
 depends=('python-future' 'python-urllib3')
@@ -32,6 +32,8 @@ build(){
     sed -i 's/import telegram.vendor.ptb_urllib3.urllib3.contrib.appengine as appengine/import urllib3.contrib.appengine as appengine/g' request.py
     sed -i 's/from telegram.vendor.ptb_urllib3.urllib3.connection import HTTPConnection/from urllib3.connection import HTTPConnection/g' request.py
     sed -i 's/from telegram.vendor.ptb_urllib3.urllib3.util.timeout import Timeout/from urllib3.util.timeout import Timeout/g' request.py
+    sed -i "s/certifi.where()/\"\/etc\/ssl\/certs\/ca-certificates.crt\"/g" request.py
+    sed -i 's/import certifi//g' request.py
     cd $srcdir/$pkgname-$pkgver
     python setup.py build
 }

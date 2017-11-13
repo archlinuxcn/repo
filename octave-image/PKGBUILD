@@ -10,7 +10,7 @@
 
 _pack=image
 pkgname=octave-$_pack
-pkgver=2.6.1
+pkgver=2.6.2
 pkgrel=2
 pkgdesc="The Octave-forge Image package provides functions for processing images. The package also provides functions for feature extraction, image statistics, spatial and geometric transformations, morphological operations, linear filtering, and much more."
 arch=(any)
@@ -26,7 +26,7 @@ install=$pkgname.install
 _archive=$_pack-$pkgver.tar.gz
 source=("http://downloads.sourceforge.net/octave/$_archive")
 noextract=("$_archive")
-md5sums=('0efd8fcbd5f243903faf34a7ea932402')
+md5sums=('84697fc180ab52e34076dbaa79215e1e')
 
 _octave_run() {
 	octave --no-history --no-init-file --no-window-system -q -f --eval "$*"

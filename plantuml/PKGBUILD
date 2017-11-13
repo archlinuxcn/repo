@@ -1,7 +1,7 @@
 # Main://aur.archlinux.org/plantuml.gittainer: juantascon <juantascon.aur@horlux.org>
 
 pkgname=plantuml
-pkgver=1.2017.18
+pkgver=1.2017.19
 pkgrel=1
 pkgdesc="Component that allows to quickly write uml diagrams"
 arch=(any)
@@ -11,7 +11,7 @@ depends=("java-runtime" "graphviz")
 makedepends=("apache-ant" "java-environment")
 source=("http://downloads.sourceforge.net/project/$pkgname/$pkgver/$pkgname-$pkgver.tar.gz"
         "$pkgname.run")
-sha256sums=('94f545a2d5760fd5fdb9e7778d1ad8b499fcc779a1d82b579ebefc435ee3e914'
+sha256sums=('0818fe7161f9454572c603accfa83c83384871fee4a25758a0c9176c07445fcd'
             'dff39e4d8dd8eedb58c1b0a0cf64ab2c404b713e3a42fa5fdf0b6792ca382ed5')
 
 package() {

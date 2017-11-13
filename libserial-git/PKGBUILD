@@ -1,0 +1,41 @@
+# Maintainer: Shelvacu <aur@shelvacu.com>
+
+pkgname="libserial-git"
+pkgver=r168.1201211
+pkgrel=1
+pkgdesc="A library for accessing serial ports on POSIX systems (git version)"
+arch=('x86_64')
+url="https://github.com/crayzeewulf/libserial/"
+license=('GPL2')
+makedepends=(git python2-sip boost)
+conflicts=(libserial)
+provides=(libserial)
+source=("git://github.com/crayzeewulf/libserial")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd libserial
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+  cd libserial
+
+  sed -i -e 's/ test / /g' -e 's/ examples / /g' Makefile.am
+
+  make -f Makefile.dist
+
+  ./configure --prefix=/usr
+
+  cd sip
+  python2 configure.py # Workaround from https://github.com/crayzeewulf/libserial/issues/62
+  cd ..
+
+  make
+}
+
+package() {
+  cd libserial
+
+  make DESTDIR="${pkgdir}" PREFIX=/usr install
+}
