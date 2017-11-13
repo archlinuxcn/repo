@@ -1,0 +1,14 @@
+post_install() {
+  sbin/ldconfig -r .
+}
+
+post_upgrade() {
+  if [ "$(vercmp $2 1.14.4-2)" -lt 0 ]; then
+    sed -i -e '/\/usr\/lib\/libfakeroot/d' etc/ld.so.conf
+  fi
+  sbin/ldconfig -r .
+}
+
+pre_remove() {
+  sbin/ldconfig -r .
+}

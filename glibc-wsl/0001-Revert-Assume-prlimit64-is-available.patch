@@ -1,0 +1,171 @@
+From e2cfb44540873fc0a566a8a119c550a64a38c319 Mon Sep 17 00:00:00 2001
+From: Patrick Stewart <patrick@rfcreations.com>
+Date: Thu, 14 Sep 2017 18:26:22 +0100
+Subject: [PATCH] Revert "Assume prlimit64 is available."
+
+This reverts commit 695d7d138eda449678a1650a8b8b58181033353f.
+---
+ sysdeps/unix/sysv/linux/getrlimit64.c     | 35 ++++++++++++++++++++++++++++++-
+ sysdeps/unix/sysv/linux/kernel-features.h |  5 +++++
+ sysdeps/unix/sysv/linux/prlimit.c         | 10 +++++++++
+ sysdeps/unix/sysv/linux/setrlimit.c       |  7 ++++++-
+ sysdeps/unix/sysv/linux/setrlimit64.c     | 31 ++++++++++++++++++++++++++-
+ 5 files changed, 85 insertions(+), 3 deletions(-)
+
+diff --git a/sysdeps/unix/sysv/linux/getrlimit64.c b/sysdeps/unix/sysv/linux/getrlimit64.c
+index 56af3c0646..37c173286f 100644
+--- a/sysdeps/unix/sysv/linux/getrlimit64.c
++++ b/sysdeps/unix/sysv/linux/getrlimit64.c
+@@ -35,7 +35,40 @@
+ int
+ __getrlimit64 (enum __rlimit_resource resource, struct rlimit64 *rlimits)
+ {
+-  return INLINE_SYSCALL_CALL (prlimit64, 0, resource, NULL, rlimits);
++#ifdef __NR_prlimit64
++  int res = INLINE_SYSCALL_CALL (prlimit64, 0, resource, NULL, rlimits);
++  if (res == 0 || errno != ENOSYS)
++    return res;
++#endif
++
++/* The fallback code only makes sense if the platform supports either
++   __NR_ugetrlimit and/or __NR_getrlimit.  */
++#if defined (__NR_ugetrlimit) || defined (__NR_getrlimit)
++# ifndef __NR_ugetrlimit
++#  define __NR_ugetrlimit __NR_getrlimit
++# endif
++# if __RLIM_T_MATCHES_RLIM64_T
++#  define rlimits32 (*rlimits)
++# else
++  struct rlimit rlimits32;
++# endif
++
++  if (INLINE_SYSCALL_CALL (ugetrlimit, resource, &rlimits32) < 0)
++    return -1;
++
++# if !__RLIM_T_MATCHES_RLIM64_T
++  if (rlimits32.rlim_cur == RLIM_INFINITY)
++    rlimits->rlim_cur = RLIM64_INFINITY;
++  else
++    rlimits->rlim_cur = rlimits32.rlim_cur;
++  if (rlimits32.rlim_max == RLIM_INFINITY)
++    rlimits->rlim_max = RLIM64_INFINITY;
++  else
++    rlimits->rlim_max = rlimits32.rlim_max;
++# endif /* !__RLIM_T_MATCHES_RLIM64_T */
++#endif /* defined (__NR_ugetrlimit) || defined (__NR_getrlimit)  */
++
++  return 0;
+ }
+ libc_hidden_def (__getrlimit64)
+ 
+diff --git a/sysdeps/unix/sysv/linux/kernel-features.h b/sysdeps/unix/sysv/linux/kernel-features.h
+index 9495db4fef..38788a75fb 100644
+--- a/sysdeps/unix/sysv/linux/kernel-features.h
++++ b/sysdeps/unix/sysv/linux/kernel-features.h
+@@ -81,6 +81,11 @@
+ /* Support for sendmmsg functionality was added in 3.0.  */
+ #define __ASSUME_SENDMMSG	1
+ 
++/* prlimit64 is available in 2.6.36.  */
++#if __LINUX_KERNEL_VERSION >= 0x020624
++# define __ASSUME_PRLIMIT64	1
++#endif
++
+ /* On most architectures, most socket syscalls are supported for all
+    supported kernel versions, but on some socketcall architectures
+    separate syscalls were only added later.  */
+diff --git a/sysdeps/unix/sysv/linux/prlimit.c b/sysdeps/unix/sysv/linux/prlimit.c
+index d31980f10c..2996e73b81 100644
+--- a/sysdeps/unix/sysv/linux/prlimit.c
++++ b/sysdeps/unix/sysv/linux/prlimit.c
+@@ -20,6 +20,7 @@
+ #include <sys/syscall.h>
+ 
+ 
++#ifdef __NR_prlimit64
+ int
+ prlimit (__pid_t pid, enum __rlimit_resource resource,
+ 	 const struct rlimit *new_rlimit, struct rlimit *old_rlimit)
+@@ -72,3 +73,12 @@ prlimit (__pid_t pid, enum __rlimit_resource resource,
+ 
+   return res;
+ }
++#else
++int
++prlimit (__pid_t pid, enum __rlimit_resource resource,
++	 const struct rlimit *new_rlimit, struct rlimit *old_rlimit)
++{
++  return INLINE_SYSCALL_ERROR_RETURN_VALUE (ENOSYS);
++}
++stub_warning (prlimit)
++#endif
+diff --git a/sysdeps/unix/sysv/linux/setrlimit.c b/sysdeps/unix/sysv/linux/setrlimit.c
+index 8773c78236..01812ac355 100644
+--- a/sysdeps/unix/sysv/linux/setrlimit.c
++++ b/sysdeps/unix/sysv/linux/setrlimit.c
+@@ -34,6 +34,7 @@
+ int
+ __setrlimit (enum __rlimit_resource resource, const struct rlimit *rlim)
+ {
++# ifdef __NR_prlimit64
+   struct rlimit64 rlim64;
+ 
+   if (rlim->rlim_cur == RLIM_INFINITY)
+@@ -45,7 +46,11 @@ __setrlimit (enum __rlimit_resource resource, const struct rlimit *rlim)
+   else
+     rlim64.rlim_max = rlim->rlim_max;
+ 
+-  return INLINE_SYSCALL_CALL (prlimit64, 0, resource, &rlim64, NULL);
++  int res = INLINE_SYSCALL_CALL (prlimit64, 0, resource, &rlim64, NULL);
++  if (res == 0 || errno != ENOSYS)
++    return res;
++# endif
++  return INLINE_SYSCALL_CALL (setrlimit, resource, rlim);
+ }
+ 
+ # if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
+diff --git a/sysdeps/unix/sysv/linux/setrlimit64.c b/sysdeps/unix/sysv/linux/setrlimit64.c
+index db1960fc18..2dd129d99e 100644
+--- a/sysdeps/unix/sysv/linux/setrlimit64.c
++++ b/sysdeps/unix/sysv/linux/setrlimit64.c
+@@ -36,7 +36,36 @@
+ int
+ __setrlimit64 (enum __rlimit_resource resource, const struct rlimit64 *rlimits)
+ {
+-  return INLINE_SYSCALL_CALL (prlimit64, 0, resource, rlimits, NULL);
++  int res;
++
++#ifdef __NR_prlimit64
++  res = INLINE_SYSCALL_CALL (prlimit64, 0, resource, rlimits, NULL);
++  if (res == 0 || errno != ENOSYS)
++    return res;
++#endif
++
++/* The fallback code only makes sense if the platform supports
++   __NR_setrlimit.  */
++#ifdef __NR_setrlimit
++# if !__RLIM_T_MATCHES_RLIM64_T
++  struct rlimit rlimits32;
++
++  if (rlimits->rlim_cur >= RLIM_INFINITY)
++    rlimits32.rlim_cur = RLIM_INFINITY;
++  else
++    rlimits32.rlim_cur = rlimits->rlim_cur;
++  if (rlimits->rlim_max >= RLIM_INFINITY)
++    rlimits32.rlim_max = RLIM_INFINITY;
++  else
++    rlimits32.rlim_max = rlimits->rlim_max;
++# else
++#  define rlimits32 (*rlimits)
++# endif
++
++  res = INLINE_SYSCALL_CALL (setrlimit, resource, &rlimits32);
++#endif
++
++  return res;
+ }
+ weak_alias (__setrlimit64, setrlimit64)
+ 
+-- 
+2.14.1
+
