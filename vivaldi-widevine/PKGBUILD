@@ -2,24 +2,33 @@
 # Contributor/Base PKGBUILD: Doug Newgard <scimmia at archlinux dot info>
 
 pkgname=vivaldi-widevine
-pkgver=1.4.8.1008
-pkgrel=2
 pkgdesc="A browser plugin designed for the viewing of premium video content, standalone for vivaldi"
-arch=('i686' 'x86_64')
+pkgver=1.4.8.1029
+pkgrel=2
+_chrome_ver=62.0.3202.94
+epoch=1
+arch=('x86_64')
 url='https://www.widevine.com/'
-source_i686=("https://dl.google.com/widevine-cdm/1.4.8.1008-linux-ia32.zip")
-source_x86_64=("https://dl.google.com/widevine-cdm/1.4.8.1008-linux-x64.zip")
+source=('chrome-eula_text.html::https://www.google.com/intl/en/chrome/browser/privacy/eula_text.html'
+        "https://dl.google.com/linux/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${_chrome_ver}-1_amd64.deb")
 options=("!strip")
 depends+=("gcc-libs")
 license=('custom')
-epoch=1
 depends=('vivaldi-ffmpeg-codecs' 'glib2')
 conflicts=('chromium-widevine' 'google-chrome')
-sha512sums_i686=('5af0f41dddf3077c2977a775a3009c435569892f7efa2110932424fda3556d6ecee76fbb1e9633e72b72e09a92b0b7fa2ac159e1741b0d4cd94e095b6e121bce')
-sha512sums_x86_64=('37e037a5e0c320a6a577492050d86b2bbd00239610785b0f07326e6c47b6d1899ac4f6874ad1436982a95a13c11fd73e10e9287d88da0c1036dd6eb36fe91e65')
+sha512sums=('a225555c06b7c32f9f2657004558e3f996c981481dbb0d3cd79b1d59fa3f05d591af88399422d3ab29d9446c103e98d567aeafe061d9550817ab6e7eb0498396'
+            '9333c7740250d5f1b4eb1cacaca699ab0bfdb15345317f5cfc883c6996236931789c1ed77770c518f8450ffa48792386ba577b8eed593d38bc4e3e22a14cd387')
+
+prepare() {
+  bsdtar -xf data.tar.xz opt/google/chrome/{chrome,libwidevinecdm.so}
+}
+
+pkgver() {
+  awk 'match($0,/\(version: \0?([0-9.]+)/,a) {print a[1];}' opt/google/chrome/chrome
+}
 
 package() {
-  install -Dm644 libwidevinecdm.so -t "$pkgdir/opt/google/chrome/"
-  install -Dm644 LICENSE.txt -t "$pkgdir/usr/share/licenses/vivaldi-widevine/"
+  install -Dm644 opt/google/chrome/libwidevinecdm.so -t "$pkgdir/opt/google/chrome/"
+  install -Dm644 chrome-eula_text.html -t "$pkgdir/usr/share/licenses/vivaldi-widevine/"
 }
 
