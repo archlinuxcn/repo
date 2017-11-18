@@ -3,8 +3,8 @@
 # Package Repository: https://github.com/mij-aur-packages/android-platform
 
 pkgname=android-platform
-_apilevel=26
-_rev=r02
+_apilevel=27
+_rev=r01
 pkgver=${_apilevel}_${_rev}
 pkgrel=1
 pkgdesc="Android SDK Platform, latest API"
@@ -16,7 +16,7 @@ provides=("${pkgname}-${_apilevel}")
 conflicts=("${pkgname}-${_apilevel}")
 options=('!strip')
 source=("https://dl-ssl.google.com/android/repository/platform-${_apilevel}_${_rev}.zip")
-sha512sums=('7f125570e0e2e347865503148af23f9f6402456e5afe724ac19f788c4fbc3ae7c1305707502f87206e8a9bb7b720ac383a881f411586f3d0fff913273e7cb961')
+sha384sums=('269d9373d55f0f93994401b9d733e98b599d42c680d6d4436a91232024c298bc1e3d717288f94f85c303b2c2c93e8dc5')
 
 package() {
   mkdir -p "${pkgdir}/opt/android-sdk/platforms/"
