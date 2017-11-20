@@ -4,7 +4,7 @@
 # https://github.com/michaellass/AUR
 
 pkgname=archlinux-java-run
-pkgver=1
+pkgver=2
 pkgrel=1
 pkgdesc="Java Application Launcher for Arch Linux"
 arch=(any)
