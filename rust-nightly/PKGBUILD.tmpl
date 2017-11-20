@@ -81,9 +81,9 @@ package_rust-src-nightly() {
   provides=('rust-src={{version}}')
   conflicts=('rust-src')
 
-  cd rust-src-nightly/rust-src
-  mkdir -p "$pkgdir/lib"
-  cp -r rustlib "$pkgdir/lib"
+  cd rust-src-nightly/rust-src/lib/rustlib/src/
+  mkdir -p "$pkgdir/usr/src"
+  cp -r rust "$pkgdir/usr/src"
 }
 
 {% for x in stds %}
