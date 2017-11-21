@@ -7,9 +7,17 @@
 from lilaclib import *
 
 build_prefix = 'extra-x86_64'
-pre_build = aur_pre_build
+
+
+def pre_build():
+    aur_pre_build()
+    with open('PKGBUILD', mode="a") as f:
+        f.writelines(
+            ['provides=("${_pkgname}=${pkgver}-${pkgrel}")\n',
+             'conflicts=("${_pkgname}")'])
+
+
 post_build = aur_post_build
 
 if __name__ == '__main__':
-  single_main()
-
+    single_main()
