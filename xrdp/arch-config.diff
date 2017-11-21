@@ -1,38 +1,42 @@
-diff -up src/xrdp-0.9.3/instfiles/xrdp.service.orig src/xrdp-0.9.3/instfiles/xrdp.service
---- src/xrdp-0.9.3/instfiles/xrdp.service.orig	2017-07-29 19:09:02.000000000 -0600
-+++ src/xrdp-0.9.3/instfiles/xrdp.service	2017-07-29 19:13:34.000000000 -0600
-@@ -7,10 +7,8 @@ After=network.target xrdp-sesman.service
+diff -up src/xrdp-0.9.4/instfiles/xrdp.service.in.orig src/xrdp-0.9.4/instfiles/xrdp.service.in
+--- src/xrdp-0.9.4/instfiles/xrdp.service.in.orig	2017-07-18 22:23:49.000000000 -0600
++++ src/xrdp-0.9.4/instfiles/xrdp.service.in	2017-11-18 23:48:10.000000000 -0700
+@@ -6,11 +6,9 @@ After=network.target xrdp-sesman.service
+ 
  [Service]
  Type=forking
- PIDFile=/var/run/xrdp.pid
--EnvironmentFile=-/etc/sysconfig/xrdp
--EnvironmentFile=-/etc/default/xrdp
--ExecStart=/usr/local/sbin/xrdp $XRDP_OPTIONS
--ExecStop=/usr/local/sbin/xrdp $XRDP_OPTIONS --kill
-+ExecStart=/usr/bin/xrdp
-+ExecStop=/usr/bin/xrdp --kill
+-PIDFile=@localstatedir@/run/xrdp.pid
+-EnvironmentFile=-@sysconfdir@/sysconfig/xrdp
+-EnvironmentFile=-@sysconfdir@/default/xrdp
+-ExecStart=@sbindir@/xrdp $XRDP_OPTIONS
+-ExecStop=@sbindir@/xrdp $XRDP_OPTIONS --kill
++PIDFile=/run/xrdp.pid
++ExecStart=@sbindir@/xrdp
++ExecStop=@sbindir@/xrdp --kill
  
  [Install]
  WantedBy=multi-user.target
-diff -up src/xrdp-0.9.3/instfiles/xrdp-sesman.service.orig src/xrdp-0.9.3/instfiles/xrdp-sesman.service
---- src/xrdp-0.9.3/instfiles/xrdp-sesman.service.orig	2017-07-29 19:09:02.000000000 -0600
-+++ src/xrdp-0.9.3/instfiles/xrdp-sesman.service	2017-07-29 19:14:49.000000000 -0600
-@@ -8,10 +8,8 @@ BindsTo=xrdp.service
+diff -up src/xrdp-0.9.4/instfiles/xrdp-sesman.service.in.orig src/xrdp-0.9.4/instfiles/xrdp-sesman.service.in
+--- src/xrdp-0.9.4/instfiles/xrdp-sesman.service.in.orig	2017-07-18 22:23:49.000000000 -0600
++++ src/xrdp-0.9.4/instfiles/xrdp-sesman.service.in	2017-11-18 23:47:37.000000000 -0700
+@@ -7,11 +7,9 @@ BindsTo=xrdp.service
+ 
  [Service]
  Type=forking
- PIDFile=/var/run/xrdp-sesman.pid
--EnvironmentFile=-/etc/sysconfig/xrdp
--EnvironmentFile=-/etc/default/xrdp
--ExecStart=/usr/local/sbin/xrdp-sesman $SESMAN_OPTIONS
--ExecStop=/usr/local/sbin/xrdp-sesman $SESMAN_OPTIONS --kill
-+ExecStart=/usr/bin/xrdp-sesman
-+ExecStop=/usr/bin/xrdp-sesman --kill
+-PIDFile=@localstatedir@/run/xrdp-sesman.pid
+-EnvironmentFile=-@sysconfdir@/sysconfig/xrdp
+-EnvironmentFile=-@sysconfdir@/default/xrdp
+-ExecStart=@sbindir@/xrdp-sesman $SESMAN_OPTIONS
+-ExecStop=@sbindir@/xrdp-sesman $SESMAN_OPTIONS --kill
++PIDFile=/run/xrdp-sesman.pid
++ExecStart=@sbindir@/xrdp-sesman
++ExecStop=@sbindir@/xrdp-sesman --kill
  
  [Install]
  WantedBy=multi-user.target
-diff -up src/xrdp-0.9.3/instfiles/xrdp.sh.orig src/xrdp-0.9.3/instfiles/xrdp.sh
---- src/xrdp-0.9.3/instfiles/xrdp.sh.orig	2017-06-26 07:09:39.000000000 -0600
-+++ src/xrdp-0.9.3/instfiles/xrdp.sh	2017-07-29 19:09:03.000000000 -0600
+diff -up src/xrdp-0.9.4/instfiles/xrdp.sh.orig src/xrdp-0.9.4/instfiles/xrdp.sh
+--- src/xrdp-0.9.4/instfiles/xrdp.sh.orig	2017-06-26 07:09:39.000000000 -0600
++++ src/xrdp-0.9.4/instfiles/xrdp.sh	2017-11-18 23:44:01.000000000 -0700
 @@ -17,7 +17,7 @@
  # Description: starts xrdp
  ### END INIT INFO
@@ -42,9 +46,9 @@ diff -up src/xrdp-0.9.3/instfiles/xrdp.sh.orig src/xrdp-0.9.3/instfiles/xrdp.sh
  LOG=/dev/null
  CFGDIR=/etc/xrdp
  
-diff -up src/xrdp-0.9.3/sesman/startwm.sh.orig src/xrdp-0.9.3/sesman/startwm.sh
---- src/xrdp-0.9.3/sesman/startwm.sh.orig	2017-07-13 01:46:42.000000000 -0600
-+++ src/xrdp-0.9.3/sesman/startwm.sh	2017-07-29 19:09:03.000000000 -0600
+diff -up src/xrdp-0.9.4/sesman/startwm.sh.orig src/xrdp-0.9.4/sesman/startwm.sh
+--- src/xrdp-0.9.4/sesman/startwm.sh.orig	2017-07-18 22:23:49.000000000 -0600
++++ src/xrdp-0.9.4/sesman/startwm.sh	2017-11-18 23:42:35.000000000 -0700
 @@ -56,6 +56,17 @@ wm_start()
      export LANG LANGUAGE
    fi

@@ -1,13 +1,13 @@
-# Maintainer: drakkan <nicola.murino@gmail.com>
-# Contributor: Pierre Carrier <pierre@gcarrier.fr>
+# Maintainer: drakkan <nicola.murino at gmail dot com>
+# Contributor: Pierre Carrier <pierre at gcarrier dot fr>
 pkgname=wrk
 pkgver=4.0.2
-pkgrel=1
+pkgrel=2
 pkgdesc="Modern HTTP benchmarking tool"
 arch=(i686 x86_64)
 url=https://github.com/wg/wrk
 license=(Apache)
-depends=('openssl')
+depends=('openssl' 'luajit')
 makedepends=()
 source=(https://github.com/wg/$pkgname/archive/$pkgver.tar.gz)
 sha256sums=('a4a6ad6727733023771163e7250189a9a23e6253b5e5025191baa6092d5a26fb')
@@ -16,7 +16,7 @@ options=('!makeflags'
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
-  make WITH_OPENSSL=/usr
+  make WITH_OPENSSL=/usr WITH_LUAJIT=/usr
 }
 
 package() {

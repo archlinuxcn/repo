@@ -1,6 +1,7 @@
 # Maintainer: lilydjwg <lilydjwg@gmail.com>
 {% autoescape None %}
 pkgname=(rust-nightly
+         rust-src-nightly
          rust-docs-nightly{% for x in stds %}
          {{ x.name }}{% end %}
         )
@@ -17,11 +18,13 @@ source=(
         'https://static.rust-lang.org/dist/{{version_date_raw}}/{{c}}-nightly-x86_64-unknown-linux-gnu.tar.xz'
         'https://static.rust-lang.org/dist/{{version_date_raw}}/{{c}}-nightly-x86_64-unknown-linux-gnu.tar.xz.asc'
         {% end %}
+        'https://static.rust-lang.org/dist/{{version_date_raw}}/rust-src-nightly.tar.xz'
+        'https://static.rust-lang.org/dist/{{version_date_raw}}/rust-src-nightly.tar.xz.asc'
 {% for x in stds %}
         {{ "'%s'" % x.url }}
         {{ "'%s.asc'" % x.url }}{% end %}
         'git://github.com/rust-lang/zsh-config')
-sha512sums=({% for _ in range(5 + len(stds) * 2) %}
+sha512sums=({% for _ in range(7 + len(stds) * 2) %}
             'SKIP'{% end %})
 
 build() {
@@ -31,6 +34,7 @@ build() {
 package_rust-nightly() {
   depends=("rust-std-nightly-$CARCH-unknown-linux-gnu=$pkgver")
   optdepends=('rust-docs-nightly: language and API documentation'
+              'rust-src-nightly: source code'
               'vim-rust-git: support for Vim'
 {% for x in stds %}
               {{ "'%s: cross compile for %s'" % (x.name, x.platform) }}{% end %}
@@ -68,6 +72,18 @@ package_rust-docs-nightly() {
   cd rust-docs-nightly-$CARCH-unknown-linux-gnu/rust-docs
   mkdir -p "$pkgdir/usr"
   cp -r share "$pkgdir/usr"
+}
+
+package_rust-src-nightly() {
+  pkgdesc="A safe, concurrent, practical language from Mozilla. (Source code, for nightly version)"
+  arch=('any')
+  optdepends=('rust-nightly')
+  provides=('rust-src={{version}}')
+  conflicts=('rust-src')
+
+  cd rust-src-nightly/rust-src
+  mkdir -p "$pkgdir/usr"
+  cp -r lib "$pkgdir/usr"
 }
 
 {% for x in stds %}

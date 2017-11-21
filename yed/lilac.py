@@ -22,6 +22,8 @@ import re
 
 build_prefix = 'extra-x86_64'
 
+depends = ['archlinux-java-run']
+
 
 def pre_build():
     aur_pre_build()

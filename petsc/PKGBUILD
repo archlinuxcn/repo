@@ -1,7 +1,7 @@
 # Maintainer: Andreas Bilke <abilke at cosy dot sbg dot ac dot at>
 # Contributor: Myles English <myles at rockhead dot biz>
 pkgname=petsc
-pkgver=3.8.1
+pkgver=3.8.2
 pkgrel=1
 _config=linux-c-opt
 # if --with-debugging=yes is set then PETSC_ARCH is automatically set to
@@ -26,14 +26,14 @@ optdepends=('trilinos: support for trilinos'
     )
 install=petsc.install
 source=(http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/${pkgname}-${pkgver/_/-}.tar.gz test_optdepends.sh)
-md5sums=('3ed75c1147800fc156fe1f1e515a68a7'
+md5sums=('00666e1c4cbfa8dd6eebf91ff8180f79'
          'e60925d1f552303198106bf98eb2bfa5')
-sha256sums=('9b48a9e72d304046923667d2ab1f201778cc56242928a374ff9e074843a334ff'
+sha256sums=('42690508d408e31fb98be738ac097bc869be14c5bfe08dda2184243283ceb16a'
             'adff0a432735f6cf4ec2edcb7345ba0d90963bef962b8d9742fa5e9735c0e455')
 
 
 _install_dir=/opt/petsc/${_config}
-petsc_arch="arch-${_config}"
+_petsc_arch="arch-${_config}"
 
 # to avoid: "make[2]: *** No rule to make target `libptesmumps.a', needed by `main_esmumps'.  Stop."
 export MAKEFLAGS="-j1"
@@ -68,10 +68,10 @@ build() {
     echo ${CONFOPTS}
 	python2 ./configure \
 		--prefix=${_install_dir} \
-		--PETSC_ARCH=${petsc_arch} \
+		--PETSC_ARCH=${_petsc_arch} \
 		${CONFOPTS}
 
-	make ${MAKEFLAGS} PETSC_DIR=${_build_dir} PETSC_ARCH=${petsc_arch} all
+	make ${MAKEFLAGS} PETSC_DIR=${_build_dir} PETSC_ARCH=${_petsc_arch} all
 }
 
 check() {
