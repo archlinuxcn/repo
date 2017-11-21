@@ -8,7 +8,7 @@ Please mark with `x` inside `[ ]`.
 * [ ] 弃置软件包 / orphaning packages
 * [ ] 其它 / other
 
-### Affect packages / 受影响的软件包
+### 受影响的软件包 / Affect packages
 
 请每行一个包名，开头加上 `* `。
 Please write one package name per line, prefixing with `* `.
