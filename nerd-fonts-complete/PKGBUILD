@@ -1,8 +1,8 @@
 # Maintainer: Super Bo <supernbo at gmail dot com>
 # Maintainer: glider <samtron1412 {at} gmail {dot} com>
 pkgname=nerd-fonts-complete
-pkgver=1.1.0
-pkgrel=3
+pkgver=1.2.0
+pkgrel=1
 pkgdesc="collection of over 20 patched fonts (complete variant) for \
          powerline, devicons, and vim-devicons: includes Droid Sans, \
          Meslo, AnonymousPro, ProFont, Inconsolta, and many more"
@@ -13,7 +13,7 @@ depends=('fontconfig' 'xorg-font-utils')
 conflicts=('nerd-fonts-git' 'nerd-fonts-complete-mono-glyphs')
 install=$pkgname.install
 source=("$pkgname-$pkgver.tar.gz::https://github.com/ryanoasis/nerd-fonts/archive/v$pkgver.tar.gz")
-sha256sums=('ee7ae13f09ec576e2fb3da71b8aa217eae152a64e375697f16529b7182cedb27')
+sha256sums=('c440409b76c86dc4a88be3d9ab5fb04092a176e6ff15ff2a61edc00861df0c2d')
 
 prepare() {
   local extension="otf"
