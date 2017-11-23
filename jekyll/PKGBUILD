@@ -4,11 +4,11 @@
 _gemname=jekyll
 pkgname=$_gemname
 pkgver=3.6.2
-pkgrel=1
+pkgrel=2
 pkgdesc='A simple, blog aware, static site generator.'
-arch=(any)
+arch=('any')
 url='https://github.com/jekyll/jekyll'
-license=(MIT)
+license=('MIT')
 depends=('ruby>=2.1.0'
     'ruby-addressable>=2.4' 'ruby-addressable<3.0'
     'ruby-colorator>=1.0' 'ruby-colorator<=2.0'
@@ -18,10 +18,15 @@ depends=('ruby>=2.1.0'
     'ruby-liquid>=4.0' 'ruby-liquid<5.0'
     'ruby-mercenary>=0.3.3' 'ruby-mercenary<0.4'
     'ruby-pathutil>=0.9' 'ruby-pathutil<1.0'
-    'ruby-rouge>1.7' 'ruby-rouge<3'
+    'ruby-rouge-1'
     'ruby-safe_yaml>=1.0' 'ruby-safe_yaml<2.0'
     )
-provides=("$pkgname=$pkgver")
+    # 'ruby-rouge>1.7' 'ruby-rouge<3.0'
+optdepends=('ruby-jekyll-paginate'
+    'ruby-jekyll-gist'
+    'ruby-jekyll-feed'
+    )
+provides=("$pkgname=$pkgver", "ruby-jekyll")
 conflicts=('ruby-jekyll')
 replace=('ruby-jekyll')
 options=(!emptydirs)
