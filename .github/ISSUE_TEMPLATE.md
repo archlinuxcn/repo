@@ -1,12 +1,12 @@
 ### 问题类型 / Type of issues
 
-请在相应的 `[ ]` 中标记 `x`。
-Please mark with `x` inside `[ ]`.
+请只保留符合的行，删掉其它行。
+Please keep only the line that suits and delete others.
 
-* [ ] 软件打包请求 / package request
-* [ ] 过期软件包 / out-of-date packages
-* [ ] 弃置软件包 / orphaning packages
-* [ ] 其它 / other
+* 软件打包请求 / package request
+* 过期软件包 / out-of-date packages
+* 弃置软件包 / orphaning packages
+* 其它 / other
 
 ### 受影响的软件包 / Affect packages
 
