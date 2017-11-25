@@ -1,21 +1,21 @@
 # Maintainer : Zuyi Hu <hzy068808@gmail.com>
 
 pkgname=nvidia-pf
-pkgver=387.22
-_extramodules=extramodules-4.13-pf
-pkgrel=3
+pkgver=387.34
+_extramodules=extramodules-4.14-pf
+pkgrel=1
 pkgdesc="NVIDIA drivers for linux-pf"
 arch=('i686' 'x86_64')
 url="http://www.nvidia.com/"
-depends=('linux-pf>=4.13' 'linux-pf<4.14' "nvidia-libgl" "nvidia-utils=${pkgver}")
-makedepends=('linux-pf-headers>=4.13' 'linux-pf-headers<4.14')
+depends=('linux-pf>=4.14' 'linux-pf<4.15' "nvidia-libgl" "nvidia-utils=${pkgver}")
+makedepends=('linux-pf-headers>=4.14' 'linux-pf-headers<4.15')
 license=('custom')
 install=nvidia.install
 options=(!strip)
 source_i686=("http://us.download.nvidia.com/XFree86/Linux-x86/${pkgver}/NVIDIA-Linux-x86-${pkgver}.run")
 source_x86_64=("http://us.download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run")
-md5sums_i686=('abdbb3c813e52148f7435308121e6a37')
-md5sums_x86_64=('b21f9bafb20409b337505c9b1d362c34')
+md5sums_i686=('4e356a75541633ac3f9ac0f53bb65823')
+md5sums_x86_64=('a009bbc502c30e4b483d71be9fa51790')
 
 [[ "$CARCH" = "i686" ]] && _pkg="NVIDIA-Linux-x86-${pkgver}"
 [[ "$CARCH" = "x86_64" ]] && _pkg="NVIDIA-Linux-x86_64-${pkgver}-no-compat32"
