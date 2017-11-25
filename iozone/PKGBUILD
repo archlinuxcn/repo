@@ -5,8 +5,9 @@ validpgpkeys=('748231EBCBD808A14F5E85D28C004C2F93481F6B')
 # Past maintainer: Joris Steyn <jorissteyn@gmail.com>
 # Contributor: TDY <tdy@gmx.com>
 pkgname=iozone
-pkgver=3_471
-pkgrel=1
+pkgver=3.471
+_pkgver=${pkgver/./_}
+pkgrel=2
 pkgdesc="A filesystem benchmark tool"
 arch=('i686' 'x86_64')
 url="http://www.iozone.org/"
@@ -14,20 +15,20 @@ license=('custom')
 depends=('sh')
 optdepends=('gnuplot: for generating graph reports')
 install=$pkgname.install
-source=("http://www.${pkgname}.org/src/current/${pkgname}${pkgver}.tar"
-	"${pkgname}${pkgver}.tar.sig")
+source=("http://www.${pkgname}.org/src/current/${pkgname}${_pkgver}.tar"
+	"${pkgname}${_pkgver}.tar.sig")
 sha512sums=('c61b2b8b5af3dccdb99b26aef8a0a4f2f5f467fc3985ac72ed4bb4fb36e4b7684ca6dbaa5bbc05ae0a4e73852e048e9fd2495eda9313f5abc4e631499d683aec'
 	    'SKIP')
 
 build() {
-	cd "${srcdir}/${pkgname}${pkgver}/src/current"
+	cd "${srcdir}/${pkgname}${_pkgver}/src/current"
 
 	[[ "${CARCH}" == 'x86_64' ]] && TARGET='-AMD64'
 	make linux${TARGET} CFLAGS="${CFLAGS}"
 }
 
 package() {
-	cd "${srcdir}/${pkgname}${pkgver}/src/current"
+	cd "${srcdir}/${pkgname}${_pkgver}/src/current"
 
 	_examples=/usr/share/doc/iozone3/examples
 
