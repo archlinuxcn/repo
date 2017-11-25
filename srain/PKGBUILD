@@ -2,7 +2,7 @@
 
 pkgname=srain
 pkgver=0.06.2
-pkgrel=1
+pkgrel=2
 pkgdesc="Modern, beautiful IRC client written in GTK+ 3"
 arch=('i686' 'x86_64')
 license=('GPL')
