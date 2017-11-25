@@ -2,22 +2,20 @@
 # Maintainer: Juanma Hernandez <juanmah@gmail.com>
 
 pkgname=zotero
-pkgver=5.0.26
+pkgver=5.0.28
 pkgrel=1
 pkgdesc="Zotero Standalone. Is a free, easy-to-use tool to help you collect, organize, cite, and share your research sources."
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://www.zotero.org/download"
 license=('GPL3')
 depends=('dbus-glib' 'gtk2' 'gtk3' 'nss' 'libxt')
 
 sha256sums=('2e700ebe97d332a894be80d232b037b0117d84b38c5fa99dffc727cb10918228')
-sha256sums_i686=('f72ae1c887086ec1566f7a051fb359e64fa522784487f629963f55fd27e0b7b6')
-sha256sums_x86_64=('6ee4812cd9f23ad3ba7b85fc8450c0afb440c05276de74c9082a8104fd015cd7')
+sha256sums_x86_64=('38b436ae44ebb918a07ab8a2a5a2db6e14c98d0b8ca3e9d371a7cb56f97c09c2')
 
 install='zotero.install'
 
 source=("zotero.desktop")
-source_i686=("Zotero-${pkgver}_linux_$CARCH.tar.bz2::https://www.zotero.org/download/client/dl?channel=release&platform=linux-$CARCH&version=${pkgver}")
 source_x86_64=("Zotero-${pkgver}_linux_$CARCH.tar.bz2::https://www.zotero.org/download/client/dl?channel=release&platform=linux-$CARCH&version=${pkgver}")
         
 package() {
