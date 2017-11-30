@@ -2,7 +2,7 @@
 pkgname=rocketchat-desktop
 pkgver=2.9.0
 _srcname="Rocket.Chat.Electron-$pkgver"
-pkgrel=1
+pkgrel=2
 pkgdesc='Rocket.Chat Native Cross-Platform Desktop Application via Electron.'
 arch=('i686' 'x86_64')
 url="https://github.com/RocketChat/Rocket.Chat.Electron"
@@ -21,11 +21,6 @@ build(){
     cd "$srcdir/$_srcname"
     yarn install --non-interactive --cache-folder "$srcdir/yarn-cache"
     yarn release
-}
-check() {
-  cd "$srcdir/$_srcname"
-  yarn check --integrity
-  yarn test
 }
 package() {
   install -Dm644 "$srcdir/$_srcname/snap/gui/icon.png" "$pkgdir/usr/share/icons/hicolor/512x512/apps/$pkgname.png"
