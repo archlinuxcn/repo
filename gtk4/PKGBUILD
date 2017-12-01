@@ -4,7 +4,7 @@
 pkgbase=gtk4
 pkgname=(gtk4-update-icon-cache gtk4 gtk4-print-backends)
 pkgver=3.91.1
-pkgrel=1
+pkgrel=2
 pkgdesc="GObject-based multi-platform GUI toolkit"
 arch=('i686' 'x86_64')
 url="http://www.gtk.org/"
@@ -126,7 +126,6 @@ package_gtk4-update-icon-cache() {
 package_gtk4-print-backends() {
   pkgdesc="Print backends for GTK4"
   depends=(gtk4 rest colord libcups)
-  groups=(gnome)
 
   mv print-backends/* "$pkgdir"
 }
