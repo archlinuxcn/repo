@@ -2,7 +2,7 @@
 
 pkgname=microsoft-r-open
 pkgver=3.4.2
-pkgrel=1
+pkgrel=2
 _majorver=3.4
 _mrandate=2017-10-15
 pkgdesc="Language and environment for statistical computing and graphics, enhanced by Microsoft"
@@ -42,7 +42,7 @@ backup=('etc/R/Makeconf'
         'etc/R/javaconf')
 options=('!makeflags' '!emptydirs')
 install=microsoft-r-open.install
-source=("https://mran.revolutionanalytics.com/install/mro/${pkgver}/microsoft-r-open-${pkgver}.tar.gz"
+source=("https://mran.blob.core.windows.net/install/mro/${pkgver}/microsoft-r-open-${pkgver}.tar.gz"
         'mro.desktop'
         'mro.png'
         'R.conf')
