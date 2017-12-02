@@ -6,6 +6,7 @@ Please keep only the line that suits and delete others.
 * 软件打包请求 / package request
 * 过期软件包 / out-of-date packages
 * 弃置软件包 / orphaning packages
+* 软件包被官方仓库收录 / available in official repos
 * 其它 / other
 
 ### 受影响的软件包 / Affect packages
@@ -14,7 +15,7 @@ Please keep only the line that suits and delete others.
 Please write one package name per line, prefixing with `* `.
 
 ----
-
+<!--
 补充信息请写在此处。
 Write other details here.
 
@@ -24,3 +25,4 @@ For package requests, please add the following info:
 * 主要语言和工具链 / Main Languages and Toolchains
 * 上游链接 / Upstream Link
 * 为何需要这个软件包 / Why Need This Package
+-->
