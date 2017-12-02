@@ -3,13 +3,13 @@
 pkgname=poi
 _pkgname=poi
 pkgver=7.10.0.0.ga131b3cb
-pkgrel=1
+pkgrel=2
 pkgdesc="Scalable KanColle browser and tool"
 arch=('any')
 url="https://github.com/poooi/poi/"
 license=('MIT')
 depends=('electron' 'sh')
-makedepends=('git' 'nodejs' 'yarn' 'coreutils' 'findutils' 'sed' 'imagemagick' 'tar' 'zlib' 'unzip' 'gulp')
+makedepends=('git' 'nodejs' 'yarn' 'coreutils' 'findutils' 'sed' 'imagemagick' 'tar' 'zlib' 'unzip' 'gulp' 'npm')
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
 source=("git+https://github.com/poooi/poi.git"
