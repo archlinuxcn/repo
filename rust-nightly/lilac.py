@@ -23,6 +23,7 @@ STDS = [
   'x86_64-pc-windows-gnu',
   'asmjs-unknown-emscripten',
   'wasm32-unknown-emscripten',
+  'wasm32-unknown-unknown',
   'aarch64-linux-android',
 ]
 
@@ -36,6 +37,7 @@ toolchain = {
   'i686-unknown-linux-gnu': ['gcc-multilib'],
   'asmjs-unknown-emscripten': ['emsdk', 'emscripten'],
   'wasm32-unknown-emscripten': ['emsdk', 'emscripten'],
+  'wasm32-unknown-unknown': [],
   'aarch64-linux-android': ['android-ndk'],
 }
 
