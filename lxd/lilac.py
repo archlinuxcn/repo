@@ -11,7 +11,7 @@ build_prefix = 'extra-x86_64'
 def pre_build():
     aur_pre_build()
     for line in edit_file('PKGBUILD'):
-        if 'makedepends' in line and not 'sqlite' in line:
+        if 'depends' in line and not 'sqlite' in line:
             print(line.replace(')',' \'sqlite\')'))
         else:
             print(line)
