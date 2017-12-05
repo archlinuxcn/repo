@@ -11,9 +11,7 @@ build_prefix = 'extra-x86_64'
 def pre_build():
     aur_pre_build()
     for line in edit_file('PKGBUILD'):
-        if 'git describe' in line:
-            print(line.replace('|',' 2>/dev/null |'))
-        elif 'makedepends' in line:
+        if 'makedepends' in line and not 'sqlite' in line:
             print(line.replace(')',' \'sqlite\')'))
         else:
             print(line)
