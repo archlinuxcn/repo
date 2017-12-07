@@ -14,8 +14,12 @@ Please keep only the line that suits and delete others.
 ### 受影响的软件包 / Affect packages
 
 <!--
-请每行一个包名，开头加上 `* `。
-Please write one package name per line, prefixing with `* `.
+请每行一个包名，开头加上 `* `（注意星号后有一个空格）。
+Please write one package name per line, prefixing with `* `
+(Note there is a space after the star).
+
+对于软件打包请求，此项可不填。
+Not necessary for package requests.
 -->
 
 ----
