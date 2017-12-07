@@ -3,7 +3,7 @@
 
 pkgname=paper-gtk-theme-git
 _pkgname=paper-gtk-theme
-pkgver=301.f75724f
+pkgver=302.770aba4
 pkgrel=1
 pkgdesc="A modern desktop theme suite. Its design is mostly flat with a minimal use of shadows for depth."
 arch=('any')
