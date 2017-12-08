@@ -1,7 +1,7 @@
 # Maintainer: BlackEagle < ike DOT devolder AT gmail DOT com >
 
 pkgname=vivaldi-ffmpeg-codecs
-pkgver=62.0.3202.89
+pkgver=62.0.3202.97
 pkgrel=1
 pkgdesc="additional support for proprietary codecs for vivaldi"
 arch=('x86_64')
@@ -20,7 +20,7 @@ source=(
   'https://raw.githubusercontent.com/gentoo/gentoo/master/www-client/chromium/files/chromium-gn-bootstrap-r17.patch'
   'chromium-gcc5-r2.patch'
 )
-sha512sums=('11ed71d2c9ebf82c9b704111d85d01c5600fc1caeb66e0dfaca172b20bb357817d717b3bcc13f704072b77550fa7fa74f990725b1d7d85d4d2b82cc1baec9578'
+sha512sums=('2f8c7e9a17f25670bd3ceb557149185329d372873b75584f57486f26326d8c0fb7849807b46ace0be563a4aebf4a2be4ceeae4fe30cf5da7dcb1068ab1b7ebd1'
             '8f63366ca998e3ee06a79c6df5b4454707bd9865913ecde2f79fcb49fdd86d291f678b9f21807e4eb61d15497cdbe4a4bdc06637882e708f34f6804453bdfd41'
             '2d78092a700788c74b86db636af303fdb63a28ce5b7b0431dd81f6b7ce501e5d0234a6327a1b49bc23e1c1d00ba98fd5334dd07d9a20bb0d81d1a4ca4487a26c'
             '28812a8bd6d591831a3bbd749f1d7c6dd434eb0237970d4e8ea8cfd48fa8efb4d98906eca3d175218fe62c50bcb0b6472b2d7dfdde73d5641cd3fde1d9dc5f3b'
