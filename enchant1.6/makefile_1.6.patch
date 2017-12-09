@@ -1,0 +1,21 @@
+diff --git a/src/Makefile.am b/src/Makefile.am
+index 17cf8c2..9db81f8 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -1,6 +1,6 @@
+ SUBDIRS=. aspell ispell uspell myspell hspell applespell voikko zemberek
+ 
+-AM_CPPFLAGS=-I$(top_srcdir) $(ENCHANT_CFLAGS) $(CC_WARN_CFLAGS) -DENCHANT_GLOBAL_MODULE_DIR=\"$(libdir)/enchant\" -DENCHANT_GLOBAL_ORDERING=\"$(datadir)/enchant\" -D_ENCHANT_BUILD=1 -DENCHANT_VERSION_STRING=\"@ENCHANT_MAJOR_VERSION@.@ENCHANT_MINOR_VERSION@.@ENCHANT_MICRO_VERSION@\"
++AM_CPPFLAGS=-I$(top_srcdir) $(ENCHANT_CFLAGS) $(CC_WARN_CFLAGS) -DENCHANT_GLOBAL_MODULE_DIR=\"$(libdir)/enchant1.6\" -DENCHANT_GLOBAL_ORDERING=\"$(datadir)/enchant\" -D_ENCHANT_BUILD=1 -DENCHANT_VERSION_STRING=\"@ENCHANT_MAJOR_VERSION@.@ENCHANT_MINOR_VERSION@.@ENCHANT_MICRO_VERSION@\"
+ 
+ lib_LTLIBRARIES = libenchant.la
+ 
+@@ -16,7 +16,7 @@ endif
+ libenchant_la_DEPENDENCIES = @ENCHANT_WIN32_RESOURCE@
+ libenchant_la_SOURCES = enchant.c pwl.c enchant.h pwl.h
+ 
+-libenchant_includedir = $(includedir)/enchant
++libenchant_includedir = $(includedir)/enchant1.6
+ libenchant_include_HEADERS = enchant.h enchant-provider.h enchant++.h
+ 
+ if WITH_APPLESPELL
