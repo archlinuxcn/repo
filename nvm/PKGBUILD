@@ -1,7 +1,7 @@
 # Maintainer: Tom Wadley <tom@tomwadley.net>
 
 pkgname=nvm
-pkgver=0.33.6
+pkgver=0.33.7
 pkgrel=1
 pkgdesc="Node Version Manager - Simple bash script to manage multiple active node.js versions"
 url="https://github.com/creationix/nvm"
@@ -12,7 +12,7 @@ install="${pkgname}.install"
 source=("https://github.com/creationix/nvm/archive/v${pkgver}.zip"
         "init-nvm.sh"
         "install-nvm-exec")
-md5sums=('e78d7db1e65ae8f822ed9241a1a6c86d'
+md5sums=('ac8eb6a106472161cda2ecc9d29e5fb2'
          'b75a15a2cbe04e6203ebaf6103e90926'
          '8f3c5b82f09636e9cf82d45d68c39cc6')
 
