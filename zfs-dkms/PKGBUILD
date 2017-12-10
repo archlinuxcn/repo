@@ -66,6 +66,9 @@ package_zfs-utils() {
     rm -r "${pkgdir}"/usr/lib/dracut
     rm -r "${pkgdir}"/usr/share/initramfs-tools
 
+    rm -r "${pkgdir}"/usr/share/zfs/zfs-tests.sh
+    rm -r "${pkgdir}"/usr/share/zfs/zfs-tests/
+
     install -D -m644 "${srcdir}"/zfs.initcpio.hook "${pkgdir}"/usr/lib/initcpio/hooks/zfs
     install -D -m644 "${srcdir}"/zfs.initcpio.install "${pkgdir}"/usr/lib/initcpio/install/zfs
     install -D -m644 "${srcdir}"/zfs.bash-completion-r1 "${pkgdir}"/usr/share/bash-completion/completions/zfs
