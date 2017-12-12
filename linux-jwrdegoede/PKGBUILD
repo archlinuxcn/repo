@@ -257,7 +257,7 @@ pkgver() {
   url="https://raw.githubusercontent.com/jwrdegoede/linux-sunxi/master/Makefile"
   local ver=($(curl -fssL $url | head -n4 | awk -F'=' '{print $2}' | sed 's/ //g'))
   local hash=$(curl -fssL https://api.github.com/repos/jwrdegoede/linux-sunxi/git/refs/heads/master | python -c "import sys,json;print(json.load(sys.stdin)['object']['sha'][:7])")
-  local d=$(date -Iseconds | sed "s/[^0-9]//g")
+  local d=$(date -Iseconds | sed "s/[^0-9]//g" | cut -c1-12)
   printf "%s" "${ver[0]}.${ver[1]}.${ver[2]}${ver[3]/-/}.${d}.${hash}"
 }
 
