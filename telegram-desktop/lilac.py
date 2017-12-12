@@ -8,7 +8,8 @@ from lilaclib import *
 
 depends = ['dee',
            'google-breakpad-git',
-           'libunity']
+           'libunity',
+           'range-v3']
 
 build_prefix = 'extra-x86_64'
 post_build = aur_post_build
