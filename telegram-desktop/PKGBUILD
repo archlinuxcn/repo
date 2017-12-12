@@ -1,6 +1,6 @@
 pkgname=telegram-desktop
-pkgver=1.1.23
-pkgrel=2
+pkgver=1.2.0
+pkgrel=1
 pkgdesc='Official desktop version of Telegram messaging app.'
 arch=('i686' 'x86_64')
 url="https://desktop.telegram.org/"
@@ -31,6 +31,7 @@ makedepends=(
     'libexif'
     'libwebp'
     'google-breakpad-git'
+    'range-v3'
     'chrpath'
     'cmake'
     'python'
@@ -65,6 +66,9 @@ source=(
     "GSL::git+https://github.com/Microsoft/GSL.git"
     "variant::git+https://github.com/mapbox/variant.git"
     "libtgvoip::git+https://github.com/telegramdesktop/libtgvoip.git"
+    "git+https://github.com/telegramdesktop/fcitx.git#commit=1abe0b8bdf8124a49f63ddf90de78ed10748c2f6"
+    "git+https://github.com/telegramdesktop/hime.git#commit=28f674788a6ba940296ec77c14a2a9f7f0e4618a"
+    "qt${qt_version//./_}::git+https://code.qt.io/qt/qt5.git#tag=v$qt_version"
     "https://download.qt.io/official_releases/qt/${qt_version%.*}/$qt_version/submodules/qtbase-opensource-src-$qt_version.tar.xz"
     "https://download.qt.io/official_releases/qt/${qt_version%.*}/$qt_version/submodules/qtimageformats-opensource-src-$qt_version.tar.xz"
     "https://download.qt.io/official_releases/qt/${qt_version%.*}/$qt_version/submodules/qtwayland-opensource-src-$qt_version.tar.xz"
@@ -79,13 +83,16 @@ sha256sums=(
     'SKIP'
     'SKIP'
     'SKIP'
+    'SKIP'
+    'SKIP'
+    'SKIP'
     '2f6eae93c5d982fe0a387a01aeb3435571433e23e9d9d9246741faf51f1ee787'
     '4fb153be62dac393cbcebab65040b3b9d6edecd1ebbe5e543401b0e45bd147e4'
     '035c3199f4719627b64b7020f0f4574da2b4cb78c6981aba75f27b872d8e6c86'
     'SKIP'
     'f47f4b10c8b498ab456ad1dd54754cbd6725b936bb94ffe4fea12d2c2f2b408d'
     'd4cdad0d091c7e47811d8a26d55bbee492e7845e968c522e86f120815477e9eb'
-    '5bd1272ba8221eeb1d26b1673093f726e8bf028b1c867b814cd3c552a8a59a36'
+    '5ff20e8b76661c9c1f4abe06eaf8fc40b93a9af273880f62e2ae0c5bd172957f'
     'df86ab21e5eddc3dac46781a2165452ce076e928c2b9d59f340883c13f5d5a02'
 )
 
@@ -98,16 +105,23 @@ prepare() {
     local qt_src_dir="$srcdir/Libraries/qt${qt_version//./_}"
     if [ "$qt_patch_file" -nt "$qt_src_dir" ]; then
         rm -rf "$qt_src_dir"
-        mkdir "$qt_src_dir"
+        mv "$srcdir/qt${qt_version//./_}" "$qt_src_dir"
+        cd "$qt_src_dir"
         
+        rmdir "$qt_src_dir/qtbase"
         mv "$srcdir/qtbase-opensource-src-$qt_version" "$qt_src_dir/qtbase"
+        rmdir "$qt_src_dir/qtimageformats"
         mv "$srcdir/qtimageformats-opensource-src-$qt_version" "$qt_src_dir/qtimageformats"
+        rmdir "$qt_src_dir/qtwayland"
         mv "$srcdir/qtwayland-opensource-src-$qt_version" "$qt_src_dir/qtwayland"
         
         cd "$qt_src_dir/qtbase"
         patch -p1 -i "$qt_patch_file"
         
         echo "INCLUDEPATH += /usr/include/openssl-1.0" >> "$qt_src_dir/qtbase/src/network/network.pro"
+        
+        mv "$srcdir/fcitx" "$qt_src_dir/qtbase/src/plugins/platforminputcontexts/fcitx"
+        mv "$srcdir/hime" "$qt_src_dir/qtbase/src/plugins/platforminputcontexts/hime"
     fi
     
     cd "$srcdir/gyp"
@@ -138,7 +152,7 @@ build() {
     local qt_src_dir="$srcdir/Libraries/qt${qt_version//./_}"
     
     export OPENSSL_LIBS='-L/usr/lib/openssl-1.0 -lssl -lcrypto'
-    cd "$qt_src_dir/qtbase"
+    cd "$qt_src_dir"
     ./configure \
         -prefix "$srcdir/qt" \
         -release \
@@ -158,17 +172,6 @@ build() {
         -nomake examples \
         -nomake tests
         #-no-opengl
-    make
-    make install
-    export PATH="$srcdir/qt/bin:$PATH"
-    
-    cd "$qt_src_dir/qtimageformats"
-    qmake .
-    make
-    make install
-    
-    cd "$qt_src_dir/qtwayland"
-    qmake .
     make
     make install
     

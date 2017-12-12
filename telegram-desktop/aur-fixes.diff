@@ -11,10 +11,10 @@ index b975c7a8..5ad461a4 100644
  Q_IMPORT_PLUGIN(QGenericEnginePlugin)
  Q_IMPORT_PLUGIN(QNetworkManagerEnginePlugin)
 diff --git a/Telegram/gyp/Telegram.gyp b/Telegram/gyp/Telegram.gyp
-index 0d1f38aa..0665cce1 100644
+index 31480945..193690e8 100644
 --- a/Telegram/gyp/Telegram.gyp
 +++ b/Telegram/gyp/Telegram.gyp
-@@ -85,25 +85,21 @@
+@@ -87,25 +87,21 @@
      ],
  
      'defines': [
@@ -32,11 +32,11 @@ index 0d1f38aa..0665cce1 100644
        '<(SHARED_INTERMEDIATE_DIR)',
 -      '<(libs_loc)/breakpad/src',
 -      '<(libs_loc)/lzma/C',
--      '<(libs_loc)/libexif-0.6.20',
--      '<(libs_loc)/zlib-1.2.8',
+-      '<(libs_loc)/zlib',
 -      '<(libs_loc)/ffmpeg',
 -      '<(libs_loc)/openal-soft/include',
 -      '<(libs_loc)/opus/include',
+-      '<(libs_loc)/range-v3/include',
        '<(minizip_loc)',
        '<(sp_media_key_tap_loc)',
        '<(emoji_suggestions_loc)',
@@ -44,8 +44,21 @@ index 0d1f38aa..0665cce1 100644
        '<(submodules_loc)/GSL/include',
        '<(submodules_loc)/variant/include',
      ],
+diff --git a/Telegram/gyp/linux_glibc_wraps.gyp b/Telegram/gyp/linux_glibc_wraps.gyp
+index 07a8276f..99ac4cac 100644
+--- a/Telegram/gyp/linux_glibc_wraps.gyp
++++ b/Telegram/gyp/linux_glibc_wraps.gyp
+@@ -27,7 +27,7 @@
+     'sources': [
+       '../SourceFiles/platform/linux/linux_glibc_wraps.c',
+     ],
+-    'conditions': [[ '"<!(uname -p)" == "x86_64"', {
++    'conditions': [[ '"<!(uname -m)" == "x86_64"', {
+       'sources': [
+         '../SourceFiles/platform/linux/linux_glibc_wraps_64.c',
+       ],
 diff --git a/Telegram/gyp/qt.gypi b/Telegram/gyp/qt.gypi
-index 6032d066..567cdb95 100644
+index dea127a3..57106533 100644
 --- a/Telegram/gyp/qt.gypi
 +++ b/Telegram/gyp/qt.gypi
 @@ -38,7 +38,6 @@
@@ -74,13 +87,13 @@ index 6032d066..567cdb95 100644
 -              'xcb-xfixes',
 -              'xcb-render',
 -              'xcb-static',
-+              'Qt5WaylandClient',
 +              'qwayland-generic',
 +              'qwayland-egl',
++              'Qt5WaylandClient',
              ],
            }],
          ],
-@@ -200,6 +188,7 @@
+@@ -201,6 +189,7 @@
      '<(qt_loc)/include/QtGui/<(qt_version)',
      '<(qt_loc)/include/QtCore/<(qt_version)/QtCore',
      '<(qt_loc)/include/QtGui/<(qt_version)/QtGui',
@@ -88,15 +101,15 @@ index 6032d066..567cdb95 100644
    ],
    'library_dirs': [
      '<(qt_loc)/lib',
-@@ -220,7 +209,6 @@
-         '<(qt_loc)/plugins/platforminputcontexts',
+@@ -225,7 +214,6 @@
        ],
        'libraries': [
+         '<(PRODUCT_DIR)/obj.target/liblinux_glibc_wraps.a',
 -        '<(linux_path_xkbcommon)/lib/libxkbcommon.a',
          '<@(qt_libs_release)',
          '<(linux_lib_ssl)',
          '<(linux_lib_crypto)',
-@@ -233,12 +221,32 @@
+@@ -238,12 +226,32 @@
          '-lgthread-2.0',
          '-lglib-2.0',
          '-lpthread',
@@ -128,27 +141,27 @@ index 6032d066..567cdb95 100644
        'ldflags': [
 -        '-static-libstdc++',
          '-pthread',
-         '-g',
          '-rdynamic',
+       ],
 diff --git a/Telegram/gyp/settings_linux.gypi b/Telegram/gyp/settings_linux.gypi
-index fde88dcd..1fd1b9cb 100644
+index b93bace4..0f14aa1f 100644
 --- a/Telegram/gyp/settings_linux.gypi
 +++ b/Telegram/gyp/settings_linux.gypi
-@@ -25,7 +25,6 @@
+@@ -24,7 +24,6 @@
+         'linux_common_flags': [
            '-pipe',
-           '-g',
            '-Wall',
 -          '-Werror',
            '-W',
            '-fPIC',
            '-Wno-unused-variable',
 diff --git a/Telegram/gyp/telegram_linux.gypi b/Telegram/gyp/telegram_linux.gypi
-index 2c464928..2112496b 100644
+index f6918c22..36ef6ad3 100644
 --- a/Telegram/gyp/telegram_linux.gypi
 +++ b/Telegram/gyp/telegram_linux.gypi
-@@ -21,11 +21,20 @@
-   'conditions': [[ 'build_linux', {
+@@ -22,11 +22,20 @@
      'variables': {
+       'not_need_gtk%': '<!(python -c "print(\'TDESKTOP_DISABLE_GTK_INTEGRATION\' in \'<(build_defines)\')")',
        'pkgconfig_libs': [
 -# In order to work libxkbcommon must be linked statically,
 -# PKGCONFIG links it like "-L/usr/local/lib -lxkbcommon"
@@ -172,8 +185,8 @@ index 2c464928..2112496b 100644
        ],
        'linux_path_ffmpeg%': '/usr/local',
        'linux_path_openal%': '/usr/local',
-@@ -36,20 +45,11 @@
-       'linux_path_opus_include%': '<(libs_loc)/opus/include',
+@@ -37,20 +46,11 @@
+       'linux_path_range%': '/usr/local',
      },
      'include_dirs': [
 -      '/usr/local/include',
@@ -181,13 +194,13 @@ index 2c464928..2112496b 100644
 -      '<(linux_path_openal)/include',
 -      '<(linux_path_breakpad)/include/breakpad',
        '<(linux_path_opus_include)',
+-      '<(linux_path_range)/include',
 +      '/usr/include',
      ],
      'library_dirs': [
 -      '/usr/local/lib',
 -      '<(linux_path_ffmpeg)/lib',
 -      '<(linux_path_openal)/lib',
--      '<(linux_path_libexif_lib)',
 -      '<(linux_path_va)/lib',
 -      '<(linux_path_vdpau)/lib',
 -      '<(linux_path_breakpad)/lib',
@@ -195,7 +208,7 @@ index 2c464928..2112496b 100644
      ],
      'libraries': [
        'breakpad_client',
-@@ -57,27 +57,14 @@
+@@ -58,23 +58,14 @@
        'ibusplatforminputcontextplugin',
        'fcitxplatforminputcontextplugin',
        'himeplatforminputcontextplugin',
@@ -217,11 +230,11 @@ index 2c464928..2112496b 100644
 +      '<!(pkg-config 2> /dev/null --libs <@(pkgconfig_libs))',
      ],
      'cflags_cc': [
-       '<!(pkg-config 2> /dev/null --cflags appindicator-0.1)',
-       '<!(pkg-config 2> /dev/null --cflags gtk+-2.0)',
-       '<!(pkg-config 2> /dev/null --cflags glib-2.0)',
-       '<!(pkg-config 2> /dev/null --cflags dee-1.0)',
++      '<!(pkg-config 2> /dev/null --cflags appindicator-0.1)',
++      '<!(pkg-config 2> /dev/null --cflags gtk+-2.0)',
++      '<!(pkg-config 2> /dev/null --cflags glib-2.0)',
++      '<!(pkg-config 2> /dev/null --cflags dee-1.0)',
 +      '<!(pkg-config 2> /dev/null --cflags <@(pkgconfig_libs))',
+       '-Wno-strict-overflow',
      ],
-     'configurations': {
-       'Release': {
+     'ldflags': [
