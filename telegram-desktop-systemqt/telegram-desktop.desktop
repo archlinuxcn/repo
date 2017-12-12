@@ -1,12 +1,20 @@
 [Desktop Entry]
-Encoding=UTF-8
 Version=1.0
-Name=Telegram Desktop
+Type=Application
+Name=Telegram
 Comment=Official desktop version of Telegram messaging app
+Categories=Network;
+Keywords=messaging
+TryExec=/usr/bin/telegram-desktop
 Exec=/usr/bin/telegram-desktop -- %u
 Icon=telegram-desktop
-Terminal=false
-StartupWMClass=telegram-desktop
-Type=Application
-Categories=Network;
 MimeType=x-scheme-handler/tg;
+Actions=Homepage;Twitter;
+
+[Desktop Action Homepage]
+Exec=xdg-open https://telegram.org
+Name=Telegram Homepage
+
+[Desktop Action Twitter]
+Exec=xdg-open https://twitter.com/telegram
+Name=Telegram on Twitter

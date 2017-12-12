@@ -1,9 +1,7 @@
 post_install () {
     cat <<EOF
 Telegram will crash if you only have libappindicator-gtk2 installed.
-
-Either removing libappindicator-gtk2 or installing libappindicator-gtk3
-should be enough to avoid the crash.
+Either remove libappindicator-gtk2, or install libappindicator-gtk3 to avoid the crash.
 EOF
 }
 
