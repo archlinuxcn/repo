@@ -1,9 +1,12 @@
 # Maintainer : Daniel Bermond < yahoo-com: danielbermond >
+# Contributor: Kamran Mackey <kamranm1200@gmail.com>
+# Contributor: richteer <richteer at lastprime.net>
+# Contributor: DrZaius <lou at fakeoutdoorsman.com>
 
-pkgname=ffmpeg-mpv-git
-pkgver=3.5.r89366.g65b5fcfbe2
+pkgname=ffmpeg-git
+pkgver=3.4.r86991.g16efcfe413
 pkgrel=1
-pkgdesc='Complete solution to record, convert and stream audio and video (modified for mpv, git version)'
+pkgdesc='Complete solution to record, convert and stream audio and video (git version)'
 arch=('i686' 'x86_64')
 url='http://www.ffmpeg.org/'
 license=('GPL3')
@@ -17,10 +20,13 @@ depends=('alsa-lib' 'bzip2' 'fontconfig' 'fribidi' 'glibc' 'gmp' 'gnutls' 'gsm'
          'libx264.so' 'libx265.so' 'libxvidcore.so')
 makedepends=('git' 'ladspa' 'nasm')
 optdepends=('ladspa: LADSPA filters')
-provides=('libavcodec.so' 'libavdevice.so' 'libavfilter.so' 'libavformat.so'
-          'libavresample.so' 'libavutil.so' 'libpostproc.so' 'libswresample.so'
-          'libswscale.so')
-source=("$pkgname"::'git+https://github.com/mpv-player/ffmpeg-mpv.git')
+provides=('ffmpeg' 'qt-faststart' 'libavcodec.so' 'libavdevice.so' 'libavfilter.so'
+          'libavformat.so' 'libavresample.so' 'libavutil.so' 'libpostproc.so'
+          'libswresample.so' 'libswscale.so')
+conflicts=('ffmpeg' 'ffmpeg-decklink' 'ffmpeg-libfdk_aac' 'ffmpeg-nvenc'
+           'ffmpeg-qsv-git' 'ffmpeg-full' 'ffmpeg-full-git' 'ffmpeg-full-nvenc'
+           'ffmpeg-semifull-git')
+source=("$pkgname"::'git://source.ffmpeg.org/ffmpeg.git')
 sha256sums=('SKIP')
 
 pkgver() {
@@ -38,10 +44,6 @@ build() {
     
     ./configure \
         --prefix='/usr' \
-        --incdir='/usr/include/ffmpeg-mpv-git' \
-        --libdir='/usr/lib/ffmpeg-mpv-git' \
-        --shlibdir='/usr/lib/ffmpeg-mpv-git' \
-        --enable-rpath \
         --disable-debug \
         --disable-static \
         --disable-stripping \
@@ -87,10 +89,5 @@ build() {
 package() {
     cd "$pkgname"
     make DESTDIR="$pkgdir" install
-    rm -rf "${pkgdir}/usr/share"
-    
-    find "${pkgdir}/usr/bin" -type f -exec mv {} {}-mpv-git \;
-    
-    install -d -m755 "${pkgdir}/etc/ld.so.conf.d"
-    printf '%s\n%s\n' '/usr/lib/' '/usr/lib/ffmpeg-mpv-git/' > "${pkgdir}/etc/ld.so.conf.d/51-ffmpeg-mpv-git.conf"
+    install -D -m755 tools/qt-faststart "${pkgdir}/usr/bin/qt-faststart"
 } 
