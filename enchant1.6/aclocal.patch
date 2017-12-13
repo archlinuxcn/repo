@@ -1,0 +1,11 @@
+--- a/autogen.sh	2017-12-12 14:23:45.020578807 +0100
++++ b/autogen.sh	2017-12-12 14:40:43.331852995 +0100
+@@ -9,7 +9,7 @@
+         exit 1
+ }
+ 
+-aclocal --install -I m4 || exit 1
++aclocal -I m4 || exit 1
+ autoreconf --install -Wno-portability || exit 1
+ 
+ if [ "$NOCONFIGURE" = "" ]; then
