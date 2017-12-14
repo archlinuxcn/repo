@@ -1,5 +1,5 @@
 pkgname=telegram-desktop
-pkgver=1.2.0
+pkgver=1.2.1
 pkgrel=1
 pkgdesc='Official desktop version of Telegram messaging app.'
 arch=('i686' 'x86_64')
@@ -65,6 +65,7 @@ source=(
     "tdesktop::git+https://github.com/telegramdesktop/tdesktop.git#tag=v$pkgver"
     "GSL::git+https://github.com/Microsoft/GSL.git"
     "variant::git+https://github.com/mapbox/variant.git"
+    "Catch::git+https://github.com/philsquared/Catch"
     "libtgvoip::git+https://github.com/telegramdesktop/libtgvoip.git"
     "git+https://github.com/telegramdesktop/fcitx.git#commit=1abe0b8bdf8124a49f63ddf90de78ed10748c2f6"
     "git+https://github.com/telegramdesktop/hime.git#commit=28f674788a6ba940296ec77c14a2a9f7f0e4618a"
@@ -75,10 +76,11 @@ source=(
     "git+https://chromium.googlesource.com/external/gyp#commit=702ac58e4772"
     "telegram-desktop.desktop"
     "tg.protocol"
-    "aur-fixes.diff"
-    "libtgvoip-fixes.diff"
+    "tdesktop-aur-fixes.diff"
+    "libtgvoip-aur-fixes.diff"
 )
 sha256sums=(
+    'SKIP'
     'SKIP'
     'SKIP'
     'SKIP'
@@ -93,7 +95,7 @@ sha256sums=(
     'f47f4b10c8b498ab456ad1dd54754cbd6725b936bb94ffe4fea12d2c2f2b408d'
     'd4cdad0d091c7e47811d8a26d55bbee492e7845e968c522e86f120815477e9eb'
     '5ff20e8b76661c9c1f4abe06eaf8fc40b93a9af273880f62e2ae0c5bd172957f'
-    'df86ab21e5eddc3dac46781a2165452ce076e928c2b9d59f340883c13f5d5a02'
+    '00877dd2c6e808313f1dd38c48f0dc656e342adb01e4d8ec58b14e63408b16c6'
 )
 
 prepare() {
@@ -138,13 +140,14 @@ prepare() {
     git config submodule.Telegram/ThirdParty/GSL.url "$srcdir/GSL"
     git config submodule.Telegram/ThirdParty/variant.url "$srcdir/variant"
     git config submodule.Telegram/ThirdParty/libtgvoip.url "$srcdir/libtgvoip"
+    git config submodule.Telegram/ThirdParty/Catch.url "$srcdir/Catch"
     git submodule update
     
-    git apply "$srcdir/aur-fixes.diff"
+    git apply "$srcdir/tdesktop-aur-fixes.diff"
     
     cd Telegram/ThirdParty/libtgvoip
     git checkout .
-    git apply "$srcdir/libtgvoip-fixes.diff"
+    git apply "$srcdir/libtgvoip-aur-fixes.diff"
 }
 
 build() {
