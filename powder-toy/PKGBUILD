@@ -11,22 +11,23 @@ NATIVE_OPTIMIZATIONS=n
 
 
 pkgname=powder-toy
-_sver=92
-_mver=5
+#pkgver=${_sver}.${_mver}
+pkgver=92.5
+_sver=${pkgver/.*/}
+_mver=${pkgver/*./}
 _build=336
-pkgver=${_sver}.${_mver}
-pkgrel=1
+pkgrel=2
 pkgdesc="Desktop version of the classic falling sand physics sandbox, simulates air pressure, velocity & heat!"
 arch=(i686 x86_64)
 depends=('sdl' 'lua52' 'fftw' 'bzip2' 'zlib')
 makedepends=('python2' 'scons')
 url="http://powdertoy.co.uk/"
 license=('GPL3')
-source=(http://github.com/ThePowderToy/The-Powder-Toy/archive/v${_sver}.${_mver}.tar.gz
+source=(http://github.com/ThePowderToy/The-Powder-Toy/archive/v${pkgver}.tar.gz
 	${pkgname}.desktop ${pkgname}.png)
 
 prepare() {
-  cd "${srcdir}/The-Powder-Toy-${_sver}.${_mver}"
+  cd "${srcdir}/The-Powder-Toy-${pkgver}"
 
   #Disable the updates. I cant get the buildsystem to not compile a beta version.
   #Also I do not know the logic behind the generated snapshotids.
@@ -36,7 +37,7 @@ prepare() {
 
 build() {
   unset _xarch _ssever _native
-  cd "${srcdir}/The-Powder-Toy-${_sver}.${_mver}"
+  cd "${srcdir}/The-Powder-Toy-${pkgver}"
 
   if $(grep -q 'pni' -i /proc/cpuinfo); then
     _ssever="sse3"
@@ -65,7 +66,7 @@ build() {
 }
 
 package() {
-  install -Dm 755 "${srcdir}/The-Powder-Toy-${_sver}.${_mver}/build/binary" "${pkgdir}/usr/bin/powder-toy"
+  install -Dm 755 "${srcdir}/The-Powder-Toy-${pkgver}/build/binary" "${pkgdir}/usr/bin/powder-toy"
   install -Dm 644 "${srcdir}/${pkgname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
   install -Dm 644 "${srcdir}/${pkgname}.png" "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
 }
