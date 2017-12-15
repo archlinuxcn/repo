@@ -2,7 +2,7 @@
 
 pkgname=visual-studio-code
 pkgver=1.19.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Visual Studio Code: Editor for building and debugging modern web and cloud applications (official binary version)"
 arch=('x86_64' 'i686')
 url="https://code.visualstudio.com/"
@@ -37,5 +37,5 @@ package() {
   install -m644 "${srcdir}/${pkgname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
 
   cp -r "${srcdir}/${_pkg}/"* "${pkgdir}/opt/${pkgname}" -R
-  ln -s /opt/${pkgname}/bin/code "${pkgdir}"/usr/bin/code
+  ln -s /opt/${pkgname}/code "${pkgdir}"/usr/bin/code
 }
