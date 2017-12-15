@@ -2,7 +2,7 @@
 
 pkgname=visual-studio-code
 pkgver=1.19.0
-pkgrel=2
+pkgrel=3
 pkgdesc="Visual Studio Code: Editor for building and debugging modern web and cloud applications (official binary version)"
 arch=('x86_64' 'i686')
 url="https://code.visualstudio.com/"
@@ -17,9 +17,9 @@ source_i686=(code_ia32_${pkgver}.tar.gz::https://vscode-update.azurewebsites.net
               ${pkgname}.desktop
               )
 sha256sums_x86_64=('96a40ee148bc5d6bf3498b28067c2f8b32d8522538c0674abfa29984e94d3221'
-                   'de88d95db3f55ce58ffd3c229cbde566099384d4f005cf887b00ccaeed605984')
+                   '2eec4248cf68a60ab9c5a3930c8ec0c89baa29dacdb767d8981ec8b1d66fa6f2')
 sha256sums_i686=('a78bcae11d021054c1226b7859e139a9f38daceed7bc806de4f1aca16a6dd50c'
-                 'de88d95db3f55ce58ffd3c229cbde566099384d4f005cf887b00ccaeed605984')
+                 '2eec4248cf68a60ab9c5a3930c8ec0c89baa29dacdb767d8981ec8b1d66fa6f2')
 package() {
   _pkg=VSCode-linux-x64
   if [ "${CARCH}" = "i686" ]; then
@@ -37,5 +37,5 @@ package() {
   install -m644 "${srcdir}/${pkgname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
 
   cp -r "${srcdir}/${_pkg}/"* "${pkgdir}/opt/${pkgname}" -R
-  ln -s /opt/${pkgname}/code "${pkgdir}"/usr/bin/code
+  ln -s /opt/${pkgname}/bin/code "${pkgdir}"/usr/bin/code
 }
