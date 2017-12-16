@@ -2,7 +2,7 @@
 
 _pkgname=desktop-app
 pkgname=leanote
-pkgver=2.5
+pkgver=2.6
 pkgrel=1
 pkgdesc="Knowledge, Blog, Sharing, Cooperation."
 arch=("i686" "x86_64")
@@ -23,8 +23,8 @@ sha256sums=('8dab30fe0835432e44b5a3a1d46aebde8716a2a47ba4031cbe2a01560987aa83'
 
 source_x86_64=("${pkgname}-${pkgver}.zip::https://sourceforge.net/projects/leanote-desktop-app/files/${pkgver}/leanote-desktop-linux-x64-v${pkgver}.zip/download")
 source_i686=("${pkgname}-${pkgver}.zip::https://sourceforge.net/projects/leanote-desktop-app/files/${pkgver}/leanote-desktop-linux-ia32-v${pkgver}.zip/download")
-sha256sums_x86_64=('c27c7075c270f1833b02e33a2680f2ee7027be9169297055d1953771384a7b2b')
-sha256sums_i686=('ed68dc2d91b77c1d43ccc452b43a90dbb803b38ad8ddd8bebbccc22e8e0061b2')
+sha256sums_x86_64=('125c167daa6d98f080ca4e436ad3debf3f90951b3839f1a0f934b188b755e105')
+sha256sums_i686=('decef71d12f841e88c8910af95ba7d65652fc4a960a9d4d61dae7cabf13df786')
 noextract=("${pkgname}-${pkgver}.zip")
 
 prepare() {
