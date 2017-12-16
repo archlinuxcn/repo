@@ -1,0 +1,22 @@
+pkgname=neovim-fake
+pkgver=1
+pkgrel=1
+pkgdesc='Fake package to provide neovim, for working with neovim-compatible Vim.'
+arch=(any)
+license=(BSD)
+depends=('vim>=8')
+optdepends=('python2-neovim: for Python 2 plugin support (see :help python)'
+            'python-neovim: for Python 3 plugin support (see :help python)')
+source=()
+sha512sums=()
+provides=(neovim=0.2.2)
+
+build() {
+  true
+}
+
+package() {
+  true
+}
+
+# vim:set sw=2 sts=2 et:
