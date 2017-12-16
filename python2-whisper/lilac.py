@@ -4,8 +4,6 @@ from lilaclib import *
 
 build_prefix = 'extra-x86_64'
 
-depends = ['python2-whisper']
-
 def pre_build():
   aur_pre_build()
 
