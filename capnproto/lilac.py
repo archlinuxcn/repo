@@ -5,8 +5,7 @@ from lilaclib import *
 build_prefix = 'extra-x86_64'
 
 def pre_build():
-  # newver defaults to detected one
-  update_pkgver()
+  update_pkgver_and_pkgrel(_G.newver)
 
 def post_build():
   git_add_files('PKGBUILD')
