@@ -8,25 +8,25 @@ index 0554fa179..3ea027406 100644
 -    <file alias="etc/qt.conf">../etc/qt_linux.conf</file>
    </qresource>
  </RCC>
-diff --git a/Telegram/SourceFiles/main.cpp b/Telegram/SourceFiles/main.cpp
-index 6e85f27dc..3c7912020 100644
---- a/Telegram/SourceFiles/main.cpp
-+++ b/Telegram/SourceFiles/main.cpp
-@@ -23,9 +23,10 @@ Copyright (c) 2014-2017 John Preston, https://desktop.telegram.org
- #include "storage/localstorage.h"
+diff --git a/Telegram/SourceFiles/core/launcher.cpp b/Telegram/SourceFiles/core/launcher.cpp
+index c05915976..9b19941df 100644
+--- a/Telegram/SourceFiles/core/launcher.cpp
++++ b/Telegram/SourceFiles/core/launcher.cpp
+@@ -43,9 +43,10 @@ void Launcher::init() {
  
- int main(int argc, char *argv[]) {
--#ifndef Q_OS_MAC // Retina display support is working fine, others are not.
+ 	QCoreApplication::setApplicationName(qsl("TelegramDesktop"));
+ 
+-#ifndef OS_MAC_OLD
 +#if !defined(Q_OS_MAC) && QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
 +	// Retina display support is working fine, others are not.
  	QCoreApplication::setAttribute(Qt::AA_DisableHighDpiScaling, true);
--#endif // Q_OS_MAC
+-#endif // OS_MAC_OLD
 +#endif // not defined Q_OS_MAC and QT_VERSION >= 5.6.0
- 	QCoreApplication::setApplicationName(qsl("TelegramDesktop"));
  
- 	InitFromCommandLine(argc, argv);
-@@ -39,6 +40,13 @@ int main(int argc, char *argv[]) {
- 	Logs::start(); // must be started before Platform is started
+ 	initHook();
+ }
+@@ -63,6 +64,13 @@ int Launcher::exec() {
+ 	Logs::start(this); // must be started before Platform is started
  	Platform::start(); // must be started before QApplication is created
  
 +	// I don't know why path is not in QT_PLUGIN_PATH by default
@@ -36,9 +36,9 @@ index 6e85f27dc..3c7912020 100644
 +	// Telegram doesn't start when extraordinary theme is set, see launchpad.net/bugs/1680943
 +	unsetenv("QT_QPA_PLATFORMTHEME");
 +
- 	int result = 0;
+ 	auto result = 0;
  	{
- 		Application app(argc, argv);
+ 		Application app(this, _argc, _argv);
 diff --git a/Telegram/SourceFiles/platform/linux/linux_libs.h b/Telegram/SourceFiles/platform/linux/linux_libs.h
 index e9e349be9..d82963fa2 100644
 --- a/Telegram/SourceFiles/platform/linux/linux_libs.h
@@ -190,11 +190,11 @@ index 710277fe2..5eb4465d6 100644
  		auto blockIndex = _lineStartBlock;
  		auto currentBlock = _t->_blocks[blockIndex].get();
 diff --git a/Telegram/SourceFiles/ui/text/text_block.cpp b/Telegram/SourceFiles/ui/text/text_block.cpp
-index f89644e1d..35230cfc6 100644
+index e435b50dc..893496b4f 100644
 --- a/Telegram/SourceFiles/ui/text/text_block.cpp
 +++ b/Telegram/SourceFiles/ui/text/text_block.cpp
-@@ -330,7 +330,7 @@ TextBlock::TextBlock(const style::font &font, const QString &str, QFixed minResi
- 		SignalHandlers::setCrashAnnotationRef("CrashString", &part);
+@@ -332,7 +332,7 @@ TextBlock::TextBlock(const style::font &font, const QString &str, QFixed minResi
+ 		CrashReports::SetAnnotationRef("CrashString", &part);
  
  		QStackTextEngine engine(part, blockFont->f);
 -		QTextLayout layout(&engine);
@@ -288,7 +288,7 @@ index 07a8276f0..99ac4cacb 100644
          '../SourceFiles/platform/linux/linux_glibc_wraps_64.c',
        ],
 diff --git a/Telegram/gyp/qt.gypi b/Telegram/gyp/qt.gypi
-index dea127a33..2b225b127 100644
+index dea127a33..62c95e682 100644
 --- a/Telegram/gyp/qt.gypi
 +++ b/Telegram/gyp/qt.gypi
 @@ -27,25 +27,21 @@
@@ -473,7 +473,7 @@ index b93bace41..0fcdfd566 100644
        ],
        'cflags_c': [
 diff --git a/Telegram/gyp/telegram_linux.gypi b/Telegram/gyp/telegram_linux.gypi
-index f6918c224..583602662 100644
+index f6918c224..50f0d8c7c 100644
 --- a/Telegram/gyp/telegram_linux.gypi
 +++ b/Telegram/gyp/telegram_linux.gypi
 @@ -33,10 +33,11 @@
@@ -541,7 +541,8 @@ index f6918c224..583602662 100644
          # 32 bit version can't be linked with debug info or LTO,
          # virtual memory exhausted :(
          'cflags_c': [ '-g' ],
-@@ -119,8 +111,7 @@
+@@ -118,9 +110,8 @@
+         ],
        }], ['not_need_gtk!="True"', {
          'cflags_cc': [
 -          '<!(pkg-config 2> /dev/null --cflags appindicator-0.1)',
@@ -553,10 +554,10 @@ index f6918c224..583602662 100644
          ],
        }]
 diff --git a/Telegram/gyp/telegram_sources.txt b/Telegram/gyp/telegram_sources.txt
-index e90614dae..0e4d82d69 100644
+index bbf2b2ade..2d380810f 100644
 --- a/Telegram/gyp/telegram_sources.txt
 +++ b/Telegram/gyp/telegram_sources.txt
-@@ -680,14 +680,7 @@
+@@ -693,14 +693,7 @@
  <(emoji_suggestions_loc)/emoji_suggestions.cpp
  <(emoji_suggestions_loc)/emoji_suggestions.h
  
