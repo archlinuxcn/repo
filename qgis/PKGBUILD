@@ -13,9 +13,9 @@
 
 pkgname=qgis
 pkgver=2.18.15
-pkgrel=1
+pkgrel=2
 pkgdesc='Geographic Information System (GIS) that supports vector, raster & database formats'
-url='http://qgis.org/'
+url='https://qgis.org/'
 license=('GPL')
 arch=('i686' 'x86_64')
 depends=('expat' 'gcc-libs' 'gdal' 'geos' 'glibc' 'libspatialite' 'postgresql-libs' 'proj'
@@ -72,6 +72,9 @@ build() {
 #    -DWITH_GLOBE=TRUE
 
   make
+
+  LD_LIBRARY_PATH="$PWD/output/lib/" make synccrsdb
+  mv /tmp/srs.db ../resources/
 }
 
 package() {
