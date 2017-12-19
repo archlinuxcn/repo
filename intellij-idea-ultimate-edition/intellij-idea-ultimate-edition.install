@@ -1,0 +1,5 @@
+post_upgrade() {
+    echo -e "\033[0;33m\033[1m\tWarning:\033[0m Install location has moved to /opt!"
+    echo -e "\tIf you have modified *.vmoptions or idea.properties, you will need to move them to the new directory by running:\n"
+    echo -e "\tsudo cp -a /usr/share/intellij-idea-ultimate-edition/bin/{*.vmoptions, idea.properties} /opt/intellij-idea-ultimate-edition/bin/"
+}
