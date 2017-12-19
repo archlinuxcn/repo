@@ -3,7 +3,7 @@
 pkgname=kreogist-mu
 pkgver='1.0.0beta4'
 _git_tag='1.0-beta4'
-pkgrel=2
+pkgrel=3
 epoch=1
 pkgdesc="Fantastic cross-platform music manager.based on Qt5"
 arch=('x86_64')
@@ -12,6 +12,7 @@ license=('GPL')
 changelog="$pkgname.changelog"
 depends=(
   'mpv'
+  'qt5-base'
 )
 
 makedepends=(
