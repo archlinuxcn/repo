@@ -2,8 +2,8 @@
 # Maintainer='Gilles Hamel <hamelg@laposte.net>'
 # Initial Maintainer: Augusto F. Hack <hack.augusto@gmail.com>
 pkgname=python2-carbon
-pkgver=1.0.2
-pkgrel=5
+pkgver=1.1.1
+pkgrel=1
 pkgdesc='Backend data caching and persistence daemon for Graphite'
 arch=('any')
 url='https://github.com/graphite-project/carbon'
@@ -15,7 +15,7 @@ options=(!emptydirs)
 source=("$pkgname-$pkgver.tar.gz::https://github.com/graphite-project/carbon/archive/$pkgver.tar.gz"
         carbon.service
         carbon.conf)
-sha1sums=('df483025f6b03dc895db17c879e19a90f27614b5'
+sha1sums=('c566bab4dc9a7c35b90f3e6203bc174c1e175c39'
           'd10b97e9790ae5d0b4ad71243fc5f44b970d36af'
           '977e9df9e02eba93951ee7180e440b9d6aa75950')
 backup=(etc/carbon/aggregation-rules.conf
