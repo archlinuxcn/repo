@@ -2,30 +2,32 @@
 
 pkgname=gnome-shell-extension-kimpanel-git
 pkgver=20171209
-pkgrel=1
+pkgrel=2
 pkgdesc="KDE's kimpanel implementation for GNOME Shell, now support fcitx"
 arch=("i686" "x86_64")
 license=('GPL')
-url="http://code.google.com/p/fcitx"
+url="https://github.com/wengxt/kimpanel-for-gnome-shell"
 depends=('fcitx' 'gnome-shell' 'zip' 'unzip')
 makedepends=('cmake' 'git')
+source=("git+https://github.com/wengxt/kimpanel-for-gnome-shell.git")
+sha256sums=('SKIP')
 
 _extensionname="kimpanel@kde.org"
 _gitname="kimpanel-for-gnome-shell"
 _gitroot="https://github.com/wengxt/kimpanel-for-gnome-shell.git"
 
 build() {
-  cd "$srcdir"
-  msg "Connecting to the GIT server...."
+  cd "$srcdir/$_gitname"
+  #msg "Connecting to the GIT server...."
 
-  if [[ -d $srcdir/$_gitname ]] ; then
-    cd $_gitname
-    git pull origin
-    msg "The local files are updated."
-  else
-    git clone $_gitroot $_gitname
-    cd $_gitname
-  fi
+  #if [[ -d $srcdir/$_gitname ]] ; then
+  #  cd $_gitname
+  #  git pull origin
+  #  msg "The local files are updated."
+  #else
+  #  git clone $_gitroot $_gitname
+  #  cd $_gitname
+  #fi
 
   rm -rf build
   mkdir build
@@ -40,4 +42,3 @@ package(){
   cd ${srcdir}/$_gitname/build
   make DESTDIR=${pkgdir} install
 }
-
