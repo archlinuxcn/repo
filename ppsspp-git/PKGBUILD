@@ -6,31 +6,41 @@
 # Contributor: uberushaximus <uberushaximus@gmail.com>
 
 pkgbase=ppsspp-git
-pkgname=('ppsspp-git' 'ppsspp-qt-git')
-pkgver=1.3.r718.79bd01efb
+pkgname=('ppsspp-git' 'ppsspp-headless-git' 'ppsspp-qt-git')
+pkgver=1.5.4.r115.525cce095
 pkgrel=1
 pkgdesc='A PSP emulator written in C++'
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url='http://www.ppsspp.org/'
 license=('GPL2')
-depends=('gcc-libs' 'glew' 'glibc' 'libgl' 'libzip' 'sdl2' 'zlib'
-         'libavcodec.so' 'libavformat.so' 'libavutil.so' 'libswresample.so'
-         'libswscale.so' 'ffmpeg' 'snappy')
-makedepends=('cmake' 'git' 'glu' 'qt5-multimedia' 'qt5-tools')
+depends=('gcc-libs' 'glew' 'glibc' 'libgl' 'sdl2' 'zlib')
+makedepends=('cmake' 'git' 'glu' 'libzip' 'qt5-tools')
 source=('git+https://github.com/hrydgard/ppsspp.git'
-        'git+https://github.com/hrydgard/ppsspp-lang.git'
+        'ppsspp-ffmpeg::git+https://github.com/hrydgard/ppsspp-ffmpeg.git'
         'ppsspp-glslang::git+https://github.com/hrydgard/glslang.git'
-        'ppsspp-armips::git+https://github.com/Kingcom/armips.git'
+        'git+https://github.com/hrydgard/ppsspp-lang.git'
+        'git+https://github.com/Kingcom/armips.git'
         'armips-tinyformat::git+https://github.com/Kingcom/tinyformat.git'
-        'SPIRV-Cross::git+https://github.com/KhronosGroup/SPIRV-Cross.git'
-        'ppsspp.desktop')
+        'git+https://github.com/KhronosGroup/SPIRV-Cross.git'
+        'ppsspp.sh'
+        'ppsspp-headless.sh'
+        'ppsspp-qt.sh'
+        'ppsspp.desktop'
+        'ppsspp-qt.desktop'
+        'ppsspp-flags.patch')
 sha256sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
-            '1c332702d0aeced07df7e12ba8530bc3f19a52bc76c355f6c84c141becfd46d8')
+            'SKIP'
+            '2c2d1ee6d1ce5c2acec372d58b8079885f6d5d674633cfea489cd550252a5426'
+            '1236ce000bb670ee2c0e0645c3d55f4d8c8e74dbc35a1af0962a3bdd7608f1c5'
+            '828b06aacc56672a4d953d77342717c5be414a68261025f74e466abd084b8e6b'
+            '1c332702d0aeced07df7e12ba8530bc3f19a52bc76c355f6c84c141becfd46d8'
+            'b3b1fb9e0ecd3c4472b51f27d028a69514b1a3823c26e33da6ffaebfb1522b7f'
+            '6694643d96dae673f01555637139468eb277f3379afbcceccad3f7e0ae670278')
 
 pkgver() {
   cd ppsspp
@@ -41,21 +51,28 @@ pkgver() {
 prepare() {
   cd ppsspp
 
-  for submodule in assets/lang ext/{armips,glslang}; do
+  patch -Np1 -i ../ppsspp-flags.patch
+
+  for submodule in ffmpeg assets/lang ext/glslang; do
     git submodule init ${submodule}
     git config submodule.${submodule}.url ../ppsspp-${submodule#*/}
     git submodule update ${submodule}
   done
+  for submodule in ext/{SPIRV-Cross,armips}; do
+    git submodule init ${submodule}
+    git config submodule.${submodule}.url ../${submodule#*/}
+    git submodule update ${submodule}
+  done
 
   pushd ext/armips
-  git submodule init ext/tinyformat
-  git config submodule.ext/tinyformat.url ../../../armips-tinyformat
-  git submodule update ext/tinyformat
-  popd
 
-  git submodule init ext/SPIRV-Cross
-  git config submodule.ext/SPIRV-Cross.url ../SPIRV-Cross
-  git submodule update ext/SPIRV-Cross
+  for submodule in ext/tinyformat; do
+    git submodule init ${submodule}
+    git config submodule.${submodule}.url ../../../armips-${submodule#*/}
+    git submodule update ${submodule}
+  done
+
+  popd
 
   for ui in sdl qt; do
     if [[ -d build-$ui ]]; then
@@ -71,7 +88,7 @@ build() {
   cmake .. \
     -DCMAKE_BUILD_TYPE='Release' \
     -DCMAKE_SKIP_RPATH='ON' \
-    -DUSE_SYSTEM_FFMPEG='ON'
+    -DHEADLESS='ON'
   make
 
   cd ../build-qt
@@ -79,38 +96,51 @@ build() {
   cmake .. \
     -DCMAKE_BUILD_TYPE='Release' \
     -DCMAKE_SKIP_RPATH='ON' \
-    -DUSE_SYSTEM_FFMPEG='ON' \
     -DUSING_QT_UI='ON'
   make
 }
 
 package_ppsspp-git() {
+  depends+=('hicolor-icon-theme' 'libzip')
   provides=('ppsspp')
   conflicts=('ppsspp' 'ppsspp-qt' 'ppsspp-qt-git')
 
   cd ppsspp/build-sdl
 
-  install -dm 755 "${pkgdir}"/usr/{bin,share/{applications,icons,man/man1,pixmaps,ppsspp}}
-  install -m 755 PPSSPPSDL "${pkgdir}"/usr/bin/ppsspp
-  cp -dr --no-preserve='ownership' assets "${pkgdir}"/usr/share/ppsspp/
+  install -dm 755 "${pkgdir}"/{opt/ppsspp,usr/{bin,share/{applications,icons,pixmaps}}}
+  install -m 755 PPSSPPSDL "${pkgdir}"/opt/ppsspp/
+  cp -dr --no-preserve='ownership' assets "${pkgdir}"/opt/ppsspp/
   cp -dr --no-preserve='ownership' ../icons/hicolor "${pkgdir}"/usr/share/icons/
   install -m 644 ../icons/icon-512.svg "${pkgdir}"/usr/share/pixmaps/ppsspp.svg
+  install -m 755 ../../ppsspp.sh "${pkgdir}"/usr/bin/ppsspp
   install -m 644 ../../ppsspp.desktop "${pkgdir}"/usr/share/applications/
 }
 
+package_ppsspp-headless-git() {
+  provides=('ppsspp-headless')
+  conflicts=('ppsspp-headless')
+
+  cd ppsspp/build-sdl
+
+  install -dm 755 "${pkgdir}"/{opt/ppsspp,usr/bin}
+  install -m 755 PPSSPPHeadless "${pkgdir}"/opt/ppsspp/
+  install -m 755 ../../ppsspp-headless.sh "${pkgdir}"/usr/bin/ppsspp-headless
+}
+
 package_ppsspp-qt-git() {
-  depends+=('qt5-base' 'qt5-multimedia')
-  provides=('ppsspp')
+  depends+=('hicolor-icon-theme' 'libzip' 'qt5-base')
+  provides=('ppsspp-qt')
   conflicts=('ppsspp' 'ppsspp-git' 'ppsspp-qt')
 
   cd ppsspp/build-qt
 
-  install -dm 755 "${pkgdir}"/usr/{bin,share/{applications,man/man1,pixmaps}}
-  install -m 755 PPSSPPQt "${pkgdir}"/usr/bin/ppsspp
-  cp -dr --no-preserve='ownership' assets "${pkgdir}"/usr/share/ppsspp/
+  install -dm 755 "${pkgdir}"/{opt/ppsspp,usr/{bin,share/{applications,icons,pixmaps}}}
+  install -m 755 PPSSPPQt "${pkgdir}"/opt/ppsspp/
+  cp -dr --no-preserve='ownership' assets "${pkgdir}"/opt/ppsspp/
   cp -dr --no-preserve='ownership' ../icons/hicolor "${pkgdir}"/usr/share/icons/
   install -m 644 ../icons/icon-512.svg "${pkgdir}"/usr/share/pixmaps/ppsspp.svg
-  install -m 644 ../../ppsspp.desktop "${pkgdir}"/usr/share/applications/
+  install -m 755 ../../ppsspp-qt.sh "${pkgdir}"/usr/bin/ppsspp-qt
+  install -m 644 ../../ppsspp-qt.desktop "${pkgdir}"/usr/share/applications/
 }
 
 # vim ts=2 sw=2 et:
