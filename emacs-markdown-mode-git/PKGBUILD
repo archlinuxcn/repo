@@ -6,7 +6,7 @@ pkgname=emacs-markdown-mode-git
 pkgver=2.3.r141.ge8b336c
 pkgrel=1
 pkgdesc='Emacs markdown-mode'
-arch=('i686' 'x86_64')
+arch=('any')
 url='http://jblevins.org/projects/markdown-mode/'
 license=('GPL')
 makedepends=('git')
@@ -25,6 +25,6 @@ pkgver() {
 
 package() {
   cd markdown-mode
-  mkdir -p $pkgdir/usr/share/emacs/site-lisp/markdown-mode
-  install -Dm644 *.el $pkgdir/usr/share/emacs/site-lisp/markdown-mode
+  mkdir -p "$pkgdir"/usr/share/emacs/site-lisp/markdown-mode
+  install -Dm644 *.el "$pkgdir"/usr/share/emacs/site-lisp/markdown-mode
 }
