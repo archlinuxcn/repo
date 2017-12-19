@@ -4,24 +4,23 @@
 # Contributor: Mark Schneider <queueRAM@gmail.com>
 
 pkgname=gnucash
-pkgver=2.6.18
-pkgrel=5
-_sourcerel=1
+pkgver=2.6.19
+pkgrel=1
 pkgdesc="A personal and small-business financial-accounting application"
 arch=('i686' 'x86_64')
 url="http://www.gnucash.org"
 license=("GPL")
-depends=('guile2.0' 'slib' 'goffice0.8' 'libdbi-drivers' 'libmariadbclient' 'postgresql-libs' 'aqbanking' 'desktop-file-utils' 'webkitgtk2' 'libgnome-keyring' 'libgnomecanvas' 'dconf' 'enchant1.6')
+depends=('guile2.0' 'slib' 'goffice0.8' 'libdbi-drivers' 'libmariadbclient' 'postgresql-libs' 'aqbanking' 'desktop-file-utils' 'webkitgtk2' 'libgnome-keyring' 'libgnomecanvas' 'dconf')
 makedepends=('intltool')
 optdepends=('evince: for print preview'
 	    'yelp: help browser'
             'perl-finance-quote: for stock information lookups'
             'perl-date-manip: for stock information lookups')
 options=('!makeflags' '!emptydirs')
-source=(https://github.com/Gnucash/${pkgname}/releases/download/${pkgver}/${pkgname}-${pkgver}-${_sourcerel}.tar.bz2)
-sha1sums=('41b2580ba1fe586fbdb4629f2b36b12e9161b546')
-sha256sums=('68730bcfcead7485011eb43d3b2c5df032c714571c81f9a15d33d8494fc4249d')
-sha512sums=('81cc0e2e567ddb95e31f303e0146354cdefd53771e831f2d4ae8921610097d46cccaab4599effddbed76bb57263e8f1566229463fb2afc441b6ec5c05a36a36b')
+source=(https://github.com/Gnucash/${pkgname}/releases/download/${pkgver}/${pkgname}-${pkgver}.tar.bz2)
+sha1sums=('d2ae5c7855fac30d88fe889d47a441e8a887b19c')
+sha256sums=('50b89367246ec2d51e9765bd6bd8c669e35ceb4ac5ab92636f76758a9f3f7fd1')
+sha512sums=('0a979caf48ba96d6f37a929036e7172855cfb03af8832f479966bce72fad3400903925134d33aaa31eb6b36a2041f5e0d3f74b88e95b83c7d76e96b1503bec13')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
