@@ -3,7 +3,7 @@
 pkgname=dns-over-https
 #_pkgname=dns-over-https
 pkgver=1.0.0
-pkgrel=3
+pkgrel=4
 pkgdesc="Client and server software to query DNS over HTTPS, using Google DNS-over-HTTPS protocol"
 url="https://github.com/m13253/dns-over-https"
 arch=('x86_64' 'i686')
@@ -16,8 +16,8 @@ backup=('etc/dns-over-https/doh-client.conf'
 sha256sums=('a6965f058539da2f622b431567890152cadc6c19e26046457dca703f29cd5d2a')
 
 prepare(){
-        mkdir -p $srcdir/gopath
-        export GOPATH=$srcdir/gopath
+        #mkdir -p $srcdir/gopath
+        #export GOPATH=$srcdir/gopath
         cd $srcdir/$pkgname-$pkgver
         sed -i 's/\/usr\/local/${pkgdir}\/usr/g' Makefile
         sed -i 's/\/local//g' systemd/doh-client.service
@@ -26,7 +26,7 @@ prepare(){
 
 build(){
         cd $srcdir/$pkgname-$pkgver
-        make
+        make -j1
 }
 
 package(){
