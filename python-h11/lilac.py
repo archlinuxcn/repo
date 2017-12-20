@@ -4,13 +4,8 @@ from lilaclib import *
 
 build_prefix = 'extra-x86_64'
 
-depends = ['python-async_generator', 'python-trio', 'python-multio',
-           'python-h11']
-
 def pre_build():
-  pypi_pre_build(
-    depends=['python-multio', 'python-h11'],
-    depends_setuptools=False)
+  pypi_pre_build(depends_setuptools=False)
 
 def post_build():
   git_add_files('PKGBUILD')
