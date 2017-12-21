@@ -4,9 +4,11 @@ from lilaclib import *
 
 build_prefix = 'extra-x86_64'
 
+depends = ['python-curio']
+
 def pre_build():
   pypi_pre_build(
-    provides=['python-multio-provider'],
+    depends=['python-multio-provider'],
     depends_setuptools=False)
 
 def post_build():

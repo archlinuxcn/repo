@@ -1,0 +1,24 @@
+_pkgname=async_generator
+pkgname=python-async_generator
+pkgver=1.8
+pkgrel=1
+pkgdesc="Async generators for Python 3.5"
+arch=('any')
+url="https://github.com/njsmith/async_generator"
+license=('MIT')
+depends=('python')
+makedepends=('python-setuptools')
+source=('https://pypi.python.org/packages/cf/2f/0577dc1ebcee37f5b4ace6f32da5bd2b2dc9073d82186143b75259b52123/async_generator-1.8.zip')
+md5sums=('a97473393c097193e5316a957e96020c')
+
+build() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  LANG=en_US.UTF-8 python3 setup.py build
+}
+
+package() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  LANG=en_US.UTF-8 python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+}
+
+# vim:set sw=2 et:
