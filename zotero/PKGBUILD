@@ -2,7 +2,7 @@
 # Maintainer: Juanma Hernandez <juanmah@gmail.com>
 
 pkgname=zotero
-pkgver=5.0.32
+pkgver=5.0.33
 pkgrel=1
 pkgdesc="Zotero Standalone. Is a free, easy-to-use tool to help you collect, organize, cite, and share your research sources."
 arch=('x86_64')
@@ -11,7 +11,7 @@ license=('GPL3')
 depends=('dbus-glib' 'gtk2' 'gtk3' 'nss' 'libxt')
 
 sha256sums=('2e700ebe97d332a894be80d232b037b0117d84b38c5fa99dffc727cb10918228')
-sha256sums_x86_64=('ae323add8ecc9b3005f7ebd4f117ed99f11b4dc32708ca990b09083db4dfb46e')
+sha256sums_x86_64=('85cef27f039259548597ece3ba31d38f33a6975971e036f1a105dac598dcb0d4')
 
 install='zotero.install'
 
