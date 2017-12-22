@@ -1,0 +1,73 @@
+From c3c1af44db713ac6624e729ea4832d0ce70685e0 Mon Sep 17 00:00:00 2001
+Message-Id: <c3c1af44db713ac6624e729ea4832d0ce70685e0.1513282811.git.jan.steffens@gmail.com>
+From: Benjamin Poirier <bpoirier@suse.com>
+Date: Mon, 11 Dec 2017 16:26:40 +0900
+Subject: [PATCH 1/2] e1000e: Fix e1000_check_for_copper_link_ich8lan return
+ value.
+
+e1000e_check_for_copper_link() and e1000_check_for_copper_link_ich8lan()
+are the two functions that may be assigned to mac.ops.check_for_link when
+phy.media_type == e1000_media_type_copper. Commit 19110cfbb34d ("e1000e:
+Separate signaling for link check/link up") changed the meaning of the
+return value of check_for_link for copper media but only adjusted the first
+function. This patch adjusts the second function likewise.
+
+Reported-by: Christian Hesse <list@eworm.de>
+Reported-by: Gabriel C <nix.or.die@gmail.com>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=198047
+Fixes: 19110cfbb34d ("e1000e: Separate signaling for link check/link up")
+Tested-by: Christian Hesse <list@eworm.de>
+Signed-off-by: Benjamin Poirier <bpoirier@suse.com>
+---
+ drivers/net/ethernet/intel/e1000e/ich8lan.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.c b/drivers/net/ethernet/intel/e1000e/ich8lan.c
+index d6d4ed7acf031172..31277d3bb7dc1241 100644
+--- a/drivers/net/ethernet/intel/e1000e/ich8lan.c
++++ b/drivers/net/ethernet/intel/e1000e/ich8lan.c
+@@ -1367,22 +1367,25 @@ static s32 e1000_disable_ulp_lpt_lp(struct e1000_hw *hw, bool force)
+  *  Checks to see of the link status of the hardware has changed.  If a
+  *  change in link status has been detected, then we read the PHY registers
+  *  to get the current speed/duplex if link exists.
++ *
++ *  Returns a negative error code (-E1000_ERR_*) or 0 (link down) or 1 (link
++ *  up).
+  **/
+ static s32 e1000_check_for_copper_link_ich8lan(struct e1000_hw *hw)
+ {
+ 	struct e1000_mac_info *mac = &hw->mac;
+ 	s32 ret_val, tipg_reg = 0;
+ 	u16 emi_addr, emi_val = 0;
+ 	bool link;
+ 	u16 phy_reg;
+ 
+ 	/* We only want to go out to the PHY registers to see if Auto-Neg
+ 	 * has completed and/or if our link status has changed.  The
+ 	 * get_link_status flag is set upon receiving a Link Status
+ 	 * Change or Rx Sequence Error interrupt.
+ 	 */
+ 	if (!mac->get_link_status)
+-		return 0;
++		return 1;
+ 
+ 	/* First we want to see if the MII Status Register reports
+ 	 * link.  If so, then we want to get the current speed/duplex
+@@ -1613,10 +1616,12 @@ static s32 e1000_check_for_copper_link_ich8lan(struct e1000_hw *hw)
+ 	 * different link partner.
+ 	 */
+ 	ret_val = e1000e_config_fc_after_link_up(hw);
+-	if (ret_val)
++	if (ret_val) {
+ 		e_dbg("Error configuring flow control\n");
++		return ret_val;
++	}
+ 
+-	return ret_val;
++	return 1;
+ }
+ 
+ static s32 e1000_get_variants_ich8lan(struct e1000_adapter *adapter)
+-- 
+2.15.1
+
