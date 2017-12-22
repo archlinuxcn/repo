@@ -18,10 +18,10 @@ _use_wayland=0   # Build Wayland NOTE: extremely experimental and don't work at 
 ## -- Package and components information -- ##
 ##############################################
 pkgname=chromium-dev
-pkgver=64.0.3253.3
-pkgrel=0.1
+pkgver=65.0.3294.5
+pkgrel=1
 pkgdesc="The open-source project behind Google Chrome (Dev Channel)"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url='http://www.chromium.org'
 license=('BSD')
 depends=(
@@ -78,16 +78,13 @@ source=( #"https://gsdview.appspot.com/chromium-browser-official/chromium-${pkgv
         # Patch form Gentoo
         'https://raw.githubusercontent.com/gentoo/gentoo/master/www-client/chromium/files/chromium-FORTIFY_SOURCE-r2.patch'
         'chromium-gcc5-r5.patch'
-        'https://raw.githubusercontent.com/gentoo/gentoo/master/www-client/chromium/files/chromium-clang-r1.patch'
         # Misc Patches
 #         'chromium-intel-vaapi_r15.diff.base64::https://chromium-review.googlesource.com/changes/532294/revisions/15/patch?download'
         'chromium-intel-vaapi_r16.diff.patch'
-        'https://raw.githubusercontent.com/sjnewbury/gentoo-playground/master/www-client/chromium/files/chromium-intel-vaapi-fix.patch'
         # Patch from crbug (chromium bugtracker) or Arch chromium package
         'chromium-widevine-r1.patch'
 #         'chromium-exclude_unwind_tables.patch.base64::https://chromium-review.googlesource.com/changes/712575/revisions/1/patch?download' # https://bugs.archlinux.org/task/55914
         'chromium-exclude_unwind_tables_r2.patch.patch'
-        'chromium-Fix_GenericLogisticRegressionInference_includes.patch.base64::https://chromium-review.googlesource.com/changes/743690/revisions/3/patch?download'
         )
 sha256sums=( #"$(curl -sL https://gsdview.appspot.com/chromium-browser-official/chromium-${pkgver}.tar.xz.hashes | grep sha256 | cut -d ' ' -f3)"
             "$(curl -sL https://commondatastorage.googleapis.com/chromium-browser-official/chromium-${pkgver}.tar.xz.hashes | grep sha256 | cut -d ' ' -f3)"
@@ -96,16 +93,13 @@ sha256sums=( #"$(curl -sL https://gsdview.appspot.com/chromium-browser-official/
             # Patch form Gentoo
             'fa3f703d599051135c5be24b81dfcb23190bb282db73121337ac76bc9638e8a5'
             '3d0d306e24b5b0c91358127a578c8a7ade8cef3eb15a769739b07a282f068de4'
-            'ab5368a3e3a67fa63b33fefc6788ad5b4a79089ef4db1011a14c3bee9fdf70c6'
             # Misc Patches
 #             'cb4933db92b669696201b2866ec9b4942466a849b94b13463d8331284d09a2d1'
             'c32d71237cf9dca71c35ec54431749c837eb3a7b7dae2fb3fc88beafefa1ca97'
-            'a688de2b3a7183ebf9eb25108b0d28a8c6228cc71c8e3519062a51224f5b3488'
             # Patch from crbug (chromium bugtracker) or Arch chromium package
             '0d537830944814fe0854f834b5dc41dc5fc2428f77b2ad61d4a5e76b0fe99880'
 #             'd4a99239701256edb37ef3a5504fa87ca2219349834cbf59b9fe42bf7ac496d8'
             '9478f1ec1a3c53425306cf41c2d0555c215a4f106955d9d6adfff38044530ce8'
-            '6a7c1e909f569897fed1837f7d96ccb577756883a5d40da5c968f82a9ab43211'
             )
 options=('!strip')
 install=chromium-dev.install
@@ -122,17 +116,12 @@ _google_api_key="AIzaSyDwr302FpOSkGRpLlUpPThNTDPbXcIn_FM"
 _google_default_client_id="413772536636.apps.googleusercontent.com"
 _google_default_client_secret="0ZChLK6AxeA3Isu96MkwqDR4"
 
-# Build NaCL?. disabled if detect 32bit system
-# VULKAN!! (seems only build with 64 bits) # https://crbug.com/582558 NOTE: disabled by default
-if [ "${CARCH}" = "i686" ]; then
-  _build_nacl=0
-  _nacl=false
-elif [ "${CARCH}" = "x86_64" ]; then
-  _build_nacl=1
-  _nacl=true
-  _vulkan=0
-  makedepends+=('ncurses5-compat-libs')
-fi
+# Build NaCL
+# VULKAN!! # https://crbug.com/582558 NOTE: disabled by default
+_build_nacl=1
+_nacl=true
+_vulkan=0
+makedepends+=('ncurses5-compat-libs')
 
 # Need you use ccache?.
 if [ "${_use_ccache}" = "1" ]; then
@@ -173,14 +162,15 @@ _keeplibs=(
            'third_party/angle/src/third_party/trace_event'
            'third_party/blink'
            'third_party/boringssl'
+           'third_party/boringssl/src/third_party/fiat'
            'third_party/breakpad'
            'third_party/breakpad/breakpad/src/third_party/curl'
            'third_party/brotli'
            'third_party/cacheinvalidation'
            'third_party/catapult'
-           'third_party/catapult/third_party/polymer'
            'third_party/catapult/common/py_vulcanize/third_party/rcssmin'
            'third_party/catapult/common/py_vulcanize/third_party/rjsmin'
+           'third_party/catapult/third_party/polymer'
            'third_party/catapult/tracing/third_party/d3'
            'third_party/catapult/tracing/third_party/gl-matrix'
            'third_party/catapult/tracing/third_party/jszip'
@@ -188,7 +178,6 @@ _keeplibs=(
            'third_party/catapult/tracing/third_party/oboe'
            'third_party/catapult/tracing/third_party/pako'
            'third_party/ced'
-           'third_party/cld_2'
            'third_party/cld_3'
            'third_party/crc32c'
            'third_party/cros_system_api'
@@ -214,6 +203,8 @@ _keeplibs=(
            'third_party/leveldatabase'
            'third_party/libXNVCtrl'
            'third_party/libaddressinput'
+           'third_party/libaom'
+           'third_party/libaom/source/libaom/third_party/x86inc'
            'third_party/libjingle'
            'third_party/libphonenumber'
            'third_party/libsecret'
@@ -250,6 +241,7 @@ _keeplibs=(
            'third_party/protobuf'
            'third_party/protobuf/third_party/six'
            'third_party/qcms'
+           'third_party/s2cellid'
            'third_party/sfntly'
            'third_party/shaderc'
            'third_party/skia'
@@ -275,6 +267,7 @@ _keeplibs=(
            'third_party/zlib/google'
            'url/third_party/mozilla'
            'v8/src/third_party/valgrind'
+           'v8/src/third_party/utf8-decoder'
            'v8/third_party/inspector_protocol'
 
            # gyp -> gn leftovers
@@ -356,6 +349,9 @@ _use_system=(
              'zlib'
              )
 
+# Use system harfbuzz
+_flags+=('use_system_harfbuzz=true')
+
 # Conditionals.
 # Build Debug mode?.
 if [ "${_debug_mode}" = "1" ]; then
@@ -434,8 +430,8 @@ prepare() {
   fi
 
   # Apply VAAPI patch
-  #base64 -d "${srcdir}/chromium-intel-vaapi_r15.diff.base64" | patch -p1 -i -
-  patch -p1 -i "${srcdir}/chromium-intel-vaapi_r16.diff.patch"
+  # base64 -d "${srcdir}/chromium-intel-vaapi_r15.diff.base64" | patch -p1 -i -
+  #patch -p1 -i "${srcdir}/chromium-intel-vaapi_r16.diff.patch"
   # needs generate gpu_lists_version.h by hand (?) # taked from DEPS files
   python2 build/util/lastchange.py -m GPU_LISTS_VERSION --revision-id-only --header gpu/config/gpu_lists_version.h
 
@@ -448,9 +444,6 @@ prepare() {
   # https://bugs.archlinux.org/task/55914
   #base64 -d "${srcdir}/chromium-exclude_unwind_tables.patch.base64" | patch -p1 -i -
   patch -p1 -i "${srcdir}/chromium-exclude_unwind_tables_r2.patch.patch"
-
-  #Attemp to fix build https://chromium-review.googlesource.com/c/chromium/src/+/724122
-  base64 -d "${srcdir}/chromium-Fix_GenericLogisticRegressionInference_includes.patch.base64" | patch -p1 -i -
 
   # Setup nodejs dependency
   mkdir -p third_party/node/linux/node-linux-x64/bin/
@@ -511,23 +504,18 @@ prepare() {
   if [ "${_use_clang}" = "0" ]; then
     _set_gcc
   elif [ "${_use_clang}" = "1" ]; then
-    if [ "${CARCH}" = 'i686' ]; then
-      _set_gcc
-      _compiler_msg=": Build with (bundled) clang is not possible in 32bit systems."
-    elif [ "${CARCH}" = 'x86_64' ]; then
-      _compiler=Clang
-      _flags+=(
-               'is_clang=true'
-               'clang_use_chrome_plugins=true'
-              )
-      _clang_path="${srcdir}/chromium-${pkgver}/third_party/llvm-build/Release+Asserts/bin"
-      _c_compiler="${_clang_path}/clang"
-      _cpp_compiler="${_clang_path}/clang++"
-      export CXXFLAGS="${CXXFLAGS//-fno-plt/}"
-      export CFLAGS="${CFLAGS//-fno-plt/}"
-      CFLAGS+=' -Wno-unknown-warning-option'
-      CXXFLAGS+=' -Wno-unknown-warning-option'
-    fi
+    _compiler=Clang
+    _flags+=(
+             'is_clang=true'
+             'clang_use_chrome_plugins=true'
+            )
+    _clang_path="${srcdir}/chromium-${pkgver}/third_party/llvm-build/Release+Asserts/bin"
+    _c_compiler="${_clang_path}/clang"
+    _cpp_compiler="${_clang_path}/clang++"
+    export CXXFLAGS="${CXXFLAGS//-fno-plt/}"
+    export CFLAGS="${CFLAGS//-fno-plt/}"
+    CFLAGS+=' -Wno-unknown-warning-option'
+    CXXFLAGS+=' -Wno-unknown-warning-option'
   fi
 
   # Export compilers
@@ -601,6 +589,7 @@ package() {
          #
          'natives_blob.bin'
          'snapshot_blob.bin'
+         'v8_context_snapshot.bin'
          )
   for i in "${_libs[@]}"; do
     install -Dm755 "${i}" "${pkgdir}/usr/lib/chromium-dev/${i}"
