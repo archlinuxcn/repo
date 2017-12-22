@@ -1,8 +1,8 @@
 # Contributor: Bug <bug2000@gmail.com>
 # Maintainer: Bug <bug2000@gmail.com>
 pkgname=xpra
-pkgver=2.1.3
-pkgrel=3
+pkgver=2.2.1
+pkgrel=1
 pkgdesc="multi-platform screen and application forwarding system screen for X11"
 arch=('i686' 'x86_64')
 url='http://xpra.org/'
@@ -38,7 +38,7 @@ backup=('etc/xpra/xpra.conf' 'etc/xpra/xorg.conf'
         'etc/xpra/conf.d/65_proxy.conf'
         'etc/pam.d/xpra')
 source=("https://xpra.org/src/xpra-$pkgver.tar.xz")
-sha256sums=('359fded90cb63f2c725ae64d0cfd0e156de16ddd68cb71e7aeae009cca1d1464')
+sha256sums=('81e103712d1543fb85880a28e25702efe3be9175d18274cb8d8ffb20b8485c14')
 
 build() {
   cd ${srcdir}/xpra-$pkgver
@@ -50,5 +50,6 @@ build() {
 package() {
   cd ${srcdir}/xpra-$pkgver
   python2 setup.py install --root=${pkgdir} --without-enc_x265
-  mkdir -p ${pkgdir}/usr/lib/sysusers.d
+  mv ${pkgdir}/lib/* ${pkgdir}/usr/lib/
+  rmdir ${pkgdir}/lib
 }
