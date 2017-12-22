@@ -123,9 +123,9 @@ _package() {
   export dbgdir="$pkgdir-debug/usr/lib/debug"
   mkdir -p "$dbgdir"
   pushd "$pkgdir"
-  find . -name '*.ko' -print0 | parallel -j20 -0 /home/lilydjwg/archgitrepo/linux-lily/kostrip
+  find . -name '*.ko' -print0 | parallel -j$(nproc) -0 $startdir/kostrip
   popd
-  find "${pkgdir}" -name '*.ko' -print0 | parallel -j8 -0 xz
+  find "${pkgdir}" -name '*.ko' -print0 | parallel -j$(nproc) -0 xz
 
   # now we call depmod...
   depmod -b "${pkgdir}/usr" -F System.map "${_kernver}"
