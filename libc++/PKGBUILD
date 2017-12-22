@@ -4,22 +4,22 @@
 
 pkgbase=libc++
 pkgname=(${pkgbase}{,abi,experimental})
-pkgver=5.0.0
+pkgver=5.0.1
 pkgrel=1
 url="http://libcxx.llvm.org/"
 license=('MIT' 'custom:University of Illinois/NCSA Open Source License')
 arch=('i686' 'x86_64')
 depends=('gcc-libs')
 makedepends=('clang' 'cmake' 'python' 'libunwind')
-source=("http://llvm.org/releases/$pkgver/llvm-$pkgver.src.tar.xz"{,.sig}
-        "http://llvm.org/releases/$pkgver/libcxx-$pkgver.src.tar.xz"{,.sig}
-        "http://llvm.org/releases/$pkgver/libcxxabi-$pkgver.src.tar.xz"{,.sig})
+source=("https://releases.llvm.org/$pkgver/llvm-$pkgver.src.tar.xz"{,.sig}
+        "https://releases.llvm.org/$pkgver/libcxx-$pkgver.src.tar.xz"{,.sig}
+        "https://releases.llvm.org/$pkgver/libcxxabi-$pkgver.src.tar.xz"{,.sig})
 noextract=("${source[@]##*/}")
-sha512sums=('e6d8fdcb5bf27bded814d02f39f69c6171bc3a512d5957c03e5ac2e231f903b7de87634b059bd5c5da670f7c3a8f7a538f6299225799f15f921857f1452f6b3a'
+sha512sums=('bee1d45fca15ce725b1f2b1339b13eb6f750a3a321cfd099075477ec25835a8ca55b5366172c4aad46592dfd8afe372349ecf264f581463d017f9cee2d63c1cb'
             'SKIP'
-            '210749f6585d8fd39fc63a32dd85d68de4aa480c91915cbf419b9e8a3b300fa4624f03200ed963cecc8ab233777c36e8c522fa0762a2aa068bc65e6f48118328'
+            '994681d3c79047fc2d618c5584b08e9b5c925dab48f8812fc0adc81a575b49a637e9481bb9a0f7ae6f7f352b2b33f40056c347c27123cd6c96c6c226febd002c'
             'SKIP'
-            '88f48a3232c220a7d22ee31121e5c2bd09b506177079a1ff567eeae213e24a9bb8bd13e59f0c6ca5ec995c60bf516e3c2507d342a149a2c4cef8aad7b4b330f8'
+            'a8d448653772690a19f68c1270f9cf18f27d7225847825f29c6ea21846c1074aa61c31b81bc2ae4007067985d389071c32e69b2560282ddb85864a99e9bdd884'
             'SKIP')
 validpgpkeys=(# Tom Stellard <tom@stellard.net> (.1 releases)
               # https://pgp.mit.edu/pks/lookup?op=get&search=0x8F0871F202119294
