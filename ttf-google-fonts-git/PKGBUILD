@@ -1,93 +1,132 @@
-# Maintainer:  Sebastian Stammler <stammler.s@gmail.com>
-#
-# Now pacman 4.1 ready!
-# For improvements/fixes to this package, please send me a
-# pull request on github: https://github.com/sebastianst/aur-packages
-#
+# Maintainer: Andrew Crerar <andrew (at) crerar (dot) io>
+# Contributor: Mohammadreza Abdollahzadeh <morealaz at gmail dot com>
+# Contributor: FadeMind <fademind@gmail.com>
+# Contributor: Vlad M. <vlad@archlinux.net>
+# Contributor: Sebastian Stammler <stammler.s@gmail.com>
 # Contributor: Sarkasper <echo a2FzcGVyLm1lbnRlbkBnbXguY29tCg== | base64 -d>
 # Contributor: Daniel Micay <danielmicay@gmail.com>
 # Contributor: Michalis Georgiou <mechmg93@gmail.comr>
 # Contributor: Alexander De Sousa <archaur.xandy21@spamgourmet.com>
 
 pkgname=ttf-google-fonts-git
-pkgver=20160311
-pkgrel=1
-pkgdesc="TrueType fonts from the Google Fonts project"
+pkgver=r1212.a16b8302
+pkgrel=4
+epoch=1
+pkgdesc="TrueType fonts from the Google Fonts project (git version)"
 arch=('any')
 url="https://github.com/google/fonts"
-license=('various')
-# see comment in package() function about why "cantarell-fonts" is a dependency
-depends=('cantarell-fonts'
-         'fontconfig'
-         'xorg-fonts-encodings'
+license=('custom:SIL Open Font License' 'custom:Ubuntu Font License v1.0')
+
+depends=('fontconfig'
          'xorg-mkfontdir'
-         'xorg-mkfontscale')
+         'xorg-mkfontscale'
+         'xorg-fonts-encodings'
+         'noto-fonts'
+         'noto-fonts-extra'
+         'ttf-fira-sans'
+         'ttf-fira-mono'
+         'ttf-ubuntu-font-family'
+         'ttf-croscore'
+         'ttf-roboto'
+         'ttf-inconsolata'
+         'cantarell-fonts'
+         'ttf-merriweather'
+         'ttf-merriweather-sans'
+         'ttf-opensans'
+         'ttf-oswald'
+         'ttf-quintessential'
+         'ttf-signika')
 makedepends=('git')
-conflicts=('googlefontdirectory'
-           'adobe-source-code-pro-fonts'
+conflicts=('adobe-source-code-pro-fonts'
            'adobe-source-sans-pro-fonts'
            'jsmath-fonts'
            'lohit-fonts'
-           'oldstand-font'
-           'otf-goudy'
-           'ttf-google-webfonts'
-           'ttf-google-webfonts-hg'
-           'ttf-google-webfonts-git'
-           'ttf-google-fonts-hg'
            'ttf-andika'
            'ttf-anonymous-pro'
-           'ttf-cantarell'
            'ttf-cardo'
-           'ttf-chromeos-fonts'
            'ttf-comfortaa'
-           'ttf-droid'
-           'ttf-inconsolata'
-           'ttf-kimberly_geswein_print'
+           'ttf-lato'
+           'ttf-lora-cyrillic'
+           'ttf-lekton'
            'ttf-medievalsharp'
            'ttf-nova'
-           'ttf-oldstandard'
-           'ttf-opensans'
            'ttf-oxygen'
-           'ttf-pt-mono'
-           'ttf-ptsans'
-           'ttf-pt-sans'
-           'ttf-roboto'
+           'ttf-oxygen-git'
+           'ttf-pt-fonts'
+           'ttf-roboto-mono'
            'ttf-sil-fonts'
-           'ttf-sortsmillgoudy'
-           'ttf-source-code-pro'
-           'ttf-source-sans-pro'
-           'ttf-ubuntu-font-family'
-           'ttf-vollkorn'
-	   'ttf-lato'
-	   'openarch_fonts'
-	   'ttf-oxygen-git'
-	   'otf-bitter'
-	   'ttf-lekton'
-	   'ttf-lato')
-provides=("${conflicts[@]}" 'ttf-font')
-source=("git://github.com/google/fonts")
-md5sums=('SKIP')
-install=font.install
-
-# git variables
-_gitname="fonts"
+           'ttf-source-code-pro-ibx'
+           'ttf-source-sans-pro-ibx'
+           'ttf-vollkorn-ibx'
+           'ttf-arabeyes-fonts')
+provides=('adobe-source-code-pro-fonts'
+          'adobe-source-sans-pro-fonts'
+          'jsmath-fonts'
+          'lohit-fonts'
+          'ttf-andika'
+          'ttf-anonymous-pro'
+          'ttf-cardo'
+          'ttf-comfortaa'
+          'ttf-lato'
+          'ttf-lora-cyrillic'
+          'ttf-lekton'
+          'ttf-medievalsharp'
+          'ttf-nova'
+          'ttf-oxygen'
+          'ttf-oxygen-git'
+          'ttf-pt-fonts'
+          'ttf-roboto-mono'
+          'ttf-sil-fonts'
+          'ttf-source-code-pro-ibx'
+          'ttf-source-sans-pro-ibx'
+          'ttf-vollkorn-ibx')
+source=(git+"${url}".git)
+sha512sums=('SKIP')
 
 pkgver() {
-  cd "$srcdir/$_gitname"
-  git log -1 --format="%cd" --date=short | sed 's|-||g'
+  cd fonts
+
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 package() {
-  cd "$srcdir"
-  install -dm755 "$pkgdir/usr/share/fonts/TTF"
-  find . -type f -name \*.ttf -exec install -Dm644 '{}' \
-    "$pkgdir/usr/share/fonts/TTF" \;
+  # NOTE: These are the font families that already exist in the [extra] and [community] repos.
+  declare -A omitted_font_families=([cantarell]=1 [noto-sans-tamil]=1 [noto-serif]=1
+                                    [noto-sans]=1 [fira-sans]=1 [fira-mono]=1
+                                    [ubuntu]=1 [ubuntu-mono]=1 [tinos]=1 [arimo]=1
+                                    [cousine]=1 [roboto]=1 [roboto-condensed]=1
+                                    [inconsolata]=1 [merriweather]=1 [merriweather-sans]=1
+                                    [open-sans]=1 [oswald]=1 [quintessential]=1)
 
-  # remove Cantarell fonts because Google ships the original Cantarell
-  # instead of the improved version of Cantarell shipped by the GNOME Project
-  #
-  # it is safe to remove "Cantarell-*.ttf" from this dir because the
-  # cantarell-fonts package installs its fonts into /usr/share/fonts/cantarell/
-  # and because cantarell-fonts installs .otf files instead of .ttf files
-  find "${pkgdir}/usr/share/fonts/TTF" -type f -name "Cantarell-*.ttf" -delete
+  while IFS= read -rd '' file; do
+    font_family=$(fc-query -f '%{family[0]|downcase|translate( ,-)}\n' "$file" | sed -n '1p')
+
+    # NOTE: Skip the rest of the loop if we're not supposed to be touching this family
+    ((omitted_font_families["$font_family"])) && continue
+
+    pkg_font_path="$pkgdir"/usr/share/fonts/"$font_family"
+    install -Dm644 "$file" -t "$pkg_font_path"  # TODO: Check and make sure $font_family is being created
+
+    # NOTE: If the font's license already exists, we don't need to copy the license again.
+    src_license_path="${file%/*}"/OFL.txt
+    pkg_font_license="$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE."$font_family"
+    if [[ -f "$src_license_path" && ! -f "$pkg_font_license" ]]; then
+      install -Dm644 "$src_license_path" "$pkg_font_license"
+    fi
+
+  done < <(find "$srcdir" -type f -iname \*.ttf -print0)
+
+  # NOTE: Since the cwtex* Chinese font family has special characters we need to change
+  # those folder names to prevent errors during package compression.
+  mv "$pkgdir"/usr/share/fonts/cwtex-仿宋體 "$pkgdir"/usr/share/fonts/cwtex-fangsong
+  mv "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE.cwtex-仿宋體 "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE.cwtex-fangsong
+
+  mv "$pkgdir"/usr/share/fonts/cwtex-楷書 "$pkgdir"/usr/share/fonts/cwtex-kai
+  mv "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE.cwtex-楷書 "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE.cwtex-kai
+
+  mv "$pkgdir"/usr/share/fonts/cwtex-明體 "$pkgdir"/usr/share/fonts/cwtex-ming
+  mv "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE.cwtex-明體 "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE.cwtex-ming
+
+  mv "$pkgdir"/usr/share/fonts/cwtex-圓體 "$pkgdir"/usr/share/fonts/cwtex-yen
+  mv "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE.cwtex-圓體 "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE.cwtex-yen
 }
