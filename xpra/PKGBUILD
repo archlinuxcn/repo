@@ -2,7 +2,7 @@
 # Maintainer: Bug <bug2000@gmail.com>
 pkgname=xpra
 pkgver=2.2.1
-pkgrel=1
+pkgrel=2
 pkgdesc="multi-platform screen and application forwarding system screen for X11"
 arch=('i686' 'x86_64')
 url='http://xpra.org/'
@@ -41,15 +41,15 @@ source=("https://xpra.org/src/xpra-$pkgver.tar.xz")
 sha256sums=('81e103712d1543fb85880a28e25702efe3be9175d18274cb8d8ffb20b8485c14')
 
 build() {
-  cd ${srcdir}/xpra-$pkgver
+  cd "${srcdir}/xpra-$pkgver"
   export pkgdir
   #python2 setup.py build
   CFLAGS="$CFLAGS -fno-strict-aliasing" python2 setup.py build --without-enc_x265
 }
 
 package() {
-  cd ${srcdir}/xpra-$pkgver
-  python2 setup.py install --root=${pkgdir} --without-enc_x265
-  mv ${pkgdir}/lib/* ${pkgdir}/usr/lib/
-  rmdir ${pkgdir}/lib
+  cd "${srcdir}/xpra-$pkgver"
+  python2 setup.py install --root="${pkgdir}" --without-enc_x265
+  mv "${pkgdir}"/lib/* "${pkgdir}"/usr/lib/
+  rmdir "${pkgdir}/lib"
 }
