@@ -3,7 +3,7 @@
 # Contributer: auk
 
 pkgname=hyper
-pkgver=2.1.1
+pkgver=2.0.0.canary.8
 pkgrel=1
 epoch=
 pkgdesc="A terminal built on web technologies"
@@ -23,26 +23,29 @@ backup=()
 options=()
 install=
 changelog=
+
+_pkgver_project=${pkgver/\.canary/-canary}
+
 source=(
-    "https://github.com/zeit/$pkgname/archive/${pkgver}.tar.gz"
+    "https://github.com/zeit/$pkgname/archive/${_pkgver_project}.tar.gz"
     "https://raw.githubusercontent.com/zeit/art/master/hyper/mark/Hyper-Mark-120@3x.png"
     "Hyper.desktop"
 )
 noextract=()
-md5sums=('6c0a6182c18c475dcb8bfe9cb3dfebc6'
+md5sums=('4b1acce7bdf2b3527068b286dcd8ef28'
          'f3481e14cba331160339b3b5ab78872b'
          '74cb7ba38e37332aa8300e4b6ba9c61c')
 validpgpkeys=()
 
 prepare() {
-    cd "$pkgname-$pkgver"
+    cd "$pkgname-$_pkgver_project"
 
     # yarn is a build-dep according to the README
     yarn install
 }
 
 build() {
-    cd "$pkgname-$pkgver"
+    cd "$pkgname-$_pkgver_project"
 
     # This build command is the same as the one defined in package.json via
     # npm run dist except that it doesn't build for debian, rpm, etc. and
@@ -64,7 +67,7 @@ build() {
 }
 
 package() {
-    cd "$pkgname-$pkgver"
+    cd "$pkgname-$_pkgver_project"
 
     _appdir="/usr/lib/$pkgname"
     _libinstall="${pkgdir}${_appdir}"
