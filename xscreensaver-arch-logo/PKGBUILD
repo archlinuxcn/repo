@@ -3,10 +3,10 @@
 # Contributer: Eric Belanger <eric@archlinux.org>
 
 pkgname=xscreensaver-arch-logo
-pkgver=5.37
+pkgver=5.38
 pkgrel=1
 pkgdesc="Screen saver and locker for the X Window System with Arch Linux branding"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://www.jwz.org/xscreensaver/"
 license=('BSD')
 depends=('libglade' 'libxmu' 'glu' 'xorg-appres' 'perl-libwww')
@@ -18,13 +18,13 @@ backup=('etc/pam.d/xscreensaver')
 source=(http://www.jwz.org/xscreensaver/${pkgname%%-*}-${pkgver}.tar.gz
 xscreensaver-add-electricsheep.diff LICENSE
 logo-50.xpm logo-180.xpm logo-50.png logo-180.png)
-sha256sums=('7ac7aea494df9293e68a4211b64861b577bbfb8769ee4b0a0f504cb27e6be5d9'
-            'c78db4518d1e439811e177638015c7152c5714f13d1cdb32e5d1f53695c52fec'
-            '164903ea70ff499c32a54a940d08cd0510893decbabed7707f6c29a5887ec730'
-            '82366926a2a81bd08459327936ba144e8b3ea5ee4a386c268bd898e1791ab1a0'
-            '253f0d5bbdd841f21a7bbdbb0fd7ded21f711751d5cb1b7914952bdd6541b36d'
-            '8027bdb2b4328d154a8e517bdb94f5ef4a9eb031e79a285dabedd62acfa77317'
-            '8357f9e631b80ae373cb0fc8e27fa96fd032c3d5e3869bd04dde843b79260b19')
+sha1sums=('b4e6b6799e8e244c894db277d6ff2bf5ee48290c'
+          'e8dc57b6471fb3867ee099304ac6bf628351cb98'
+          '3eedb8b91b13c29df9b1fe5cbb027e1470b802d2'
+          '5ff6dfd0a14ca484d4287647c3e00af8e417163c'
+          '63ed187b08864993684f826dc87b1c5f42ea5bf4'
+          '203ca4f21e0d42263fc0ebb796eaf968c457d93a'
+          '619cff60b77812545493dbedb0ba247a37f381e5')
 
 prepare() {
   cd "${pkgname%%-*}-${pkgver}"
