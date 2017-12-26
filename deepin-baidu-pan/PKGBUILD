@@ -1,6 +1,6 @@
 # Maintainer: Jingbei Li <i@jingbei.li>
 pkgname=deepin-baidu-pan
-pkgver=5.5.4deepin6
+pkgver=5.5.4deepin8
 pkgrel=1
 pkgdesc="Baidu net disk client on Deepin Wine"
 arch=("x86_64")
@@ -9,7 +9,7 @@ license=('custom')
 depends=('p7zip' 'wine' 'xorg-xwininfo' 'xdotool')
 _mirror="https://mirrors.tuna.tsinghua.edu.cn/deepin"
 source=("$_mirror/pool/non-free/d/deepin.com.baidu.pan/deepin.com.baidu.pan_${pkgver}_i386.deb")
-md5sums=('164e7088f219c091d13909c9c78df8d2')
+md5sums=('20383bc9574c979199cd86e85b6f5871')
 
 package() {
   cd ${srcdir}
