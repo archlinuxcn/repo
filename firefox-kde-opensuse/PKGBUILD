@@ -10,7 +10,7 @@ _gtk3=true
 
 # try to build with PGO
 # currently broken
-#_pgo=false
+_pgo=true
 
 # globalmenu
 # to support globalmenu a patch from ubuntu is applied
@@ -20,8 +20,8 @@ _gtk3=true
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=56.0.2
-pkgrel=0
+pkgver=57.0.2
+pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -41,7 +41,7 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
             'speech-dispatcher: Text-to-Speech')
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
-_patchrev=37c56dbf929f
+_patchrev=77c890186192
 options=('!emptydirs'  'strip')
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 _repo=https://hg.mozilla.org/mozilla-unified
@@ -53,14 +53,17 @@ source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
 	firefox-no-default-ualocale-$_patchrev.patch::$_patchurl/firefox-no-default-ualocale.patch
 	# Gecko/toolkit patchset
 	mozilla-kde-$_patchrev.patch::$_patchurl/mozilla-kde.patch
-	mozilla-language-$_patchrev.patch::$_patchurl/mozilla-language.patch
 	mozilla-nongnome-proxies-$_patchrev.patch::$_patchurl/mozilla-nongnome-proxies.patch
+        mozilla-bindgen-systemlibs-$_patchrev.patch::$_patchurl/mozilla-bindgen-systemlibs.patch
 	unity-menubar.patch
 	add_missing_pgo_rule.patch
         pgo_fix_missing_kdejs.patch
         fix_pgo_bug1389436_explicitly_instantiate_gfxFont.patch
         wifi-disentangle.patch wifi-fix-interface.patch
-        firefox-install-dir.patch no-crmf.diff glibc-2.26-fix.diff
+        firefox-install-dir.patch no-crmf.diff
+        0001-Bug-1360278-Add-preference-to-trigger-context-menu-o.patch
+        0002-Bug-1419426-Implement-browserSettings.contextMenuSho.patch 
+        no-plt.diff
 )
 
 
@@ -100,7 +103,7 @@ prepare() {
   msg "Patching for KDE"
   patch -Np1 -i "$srcdir/mozilla-nongnome-proxies-$_patchrev.patch"
   patch -Np1 -i "$srcdir/mozilla-kde-$_patchrev.patch"
-  patch -Np1 -i "$srcdir/mozilla-language-$_patchrev.patch"
+  patch -Np1 -i "$srcdir/mozilla-bindgen-systemlibs-$_patchrev.patch"
 
   patch -Np1 -i "$srcdir/firefox-kde-$_patchrev.patch"
   patch -Np1 -i "$srcdir/firefox-no-default-ualocale-$_patchrev.patch"
@@ -114,21 +117,23 @@ prepare() {
 
   # add missing file Makefile for pgo builds
   patch -Np1 -i "$srcdir"/pgo_fix_missing_kdejs.patch
-
-  # fix bug 1389436 - Explicitly instantiate gfxFont::GetShapedWord<uint8_t> for its use in gfxTextRun.cpp. r=jfkthame
-  patch -Np1 -i "$srcdir"/fix_pgo_bug1389436_explicitly_instantiate_gfxFont.patch
-
+   
   # configure script misdetects the preprocessor without an optimization level
   # https://bugs.archlinux.org/task/34644
   # sed -i '/ac_cpp=/s/$CPPFLAGS/& -O2/' configure
 
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=1382942
+  patch -Np1 -i ../no-plt.diff
+
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1371991
   patch -Np1 -i ../no-crmf.diff
-  
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1385667
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1394149
-  patch -Np1 -i ../glibc-2.26-fix.diff
 
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=1360278
+  patch -Np1 -i ../0001-Bug-1360278-Add-preference-to-trigger-context-menu-o.patch
+
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=1419426
+  patch -Np1 -i ../0002-Bug-1419426-Implement-browserSettings.contextMenuSho.patch
+  
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1314968
   patch -Np1 -i ../wifi-disentangle.patch
   patch -Np1 -i ../wifi-fix-interface.patch
@@ -152,6 +157,7 @@ build() {
 
   export PATH="$srcdir/path:$PATH"
   export PYTHON="/usr/bin/python2"
+  export MOZ_SOURCE_REPO="$_repo"
   
   # _FORTIFY_SOURCE causes configure failures
   CPPFLAGS+=" -O2"
@@ -217,23 +223,27 @@ END
   ln -s /usr/share/hunspell "$pkgdir/usr/lib/firefox/dictionaries"
   ln -s /usr/share/hyphen "$pkgdir/usr/lib/firefox/hyphenation"
 
+  # Use system certificates
+  ln -srf "$pkgdir/usr/lib/libnssckbi.so" \
+     "$pkgdir/usr/lib/$_pkgname/libnssckbi.so"
+
   #workaround for now
   #https://bugzilla.mozilla.org/show_bug.cgi?id=658850
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
 md5sums=('SKIP'
-         'd9e24ab7ac01e2ab2511b2019d169bb8'
+         '6e7ef23754f23c32adaf686a760d369a'
          '14e0f6237a79b85e60256f4808163160'
          'dbf14588e85812ee769bd735823a0146'
          'aa9f776d2187cba09de65cbb02b39ca0'
          '05bb69d25fb3572c618e3adf1ee7b670'
          '6e335a517c68488941340ee1c23f97b0'
-         '46a4971f26c990a66b913ba700c7f3fa'
-         'bb59c4103d189d564d4ac323ebacf212'
-         '1fad9a988826d69fe712ea973e43f6da'
-         'a106718d4e44b908bf28ed64e8372730'
-         'be479d0972ee83ea967bbc96d55c939a'
+         'af659b0f4f5b904480bf97843fa3502b'
+         'fb5bb43056a4f509a8aa844c2a9d4e95'
+         '82f7f100d4b01677ed748679565d8b1a'
+         'f69c35d2f38d436e31d173a946299444'
          '0661e259fe57df87fca791f4aeb78da0'
+         '51c36935c00f62efd493a9d37742a5a2'
          'c7e2592c49f5846857e7a84e0788099d'
          'fe24f5ea463013bb7f1c12d12dce41b2'
          '3fa8bd22d97248de529780f5797178af'
@@ -242,4 +252,6 @@ md5sums=('SKIP'
          'a819433292665a6f06a223a0a718e67a'
          'dbf14588e85812ee769bd735823a0146'
          '196edf030efc516e3de5ae3aa01e9851'
-         '11427899801d5e8f66df835f5806f851')
+         '408d5191d5083ca852d90a1bb858b158'
+         '099fe738095e4da2df8fb662f17d4aa3'
+         'cf3409120d3f05190e5197f48c2b2343')
