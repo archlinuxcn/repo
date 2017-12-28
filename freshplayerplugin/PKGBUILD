@@ -7,7 +7,7 @@
 # Contributor: zman0900 <zman0900@gmail.com>
 
 pkgname=freshplayerplugin
-pkgver=0.3.8
+pkgver=0.3.9
 pkgrel=1
 pkgdesc='PPAPI-host NPAPI-plugin adapter.'
 arch=('i686' 'x86_64')
@@ -19,7 +19,7 @@ depends=('alsa-lib' 'cairo' 'ffmpeg' 'freetype2' 'glib2' 'icu' 'jack'
          'v4l-utils' 'pepper-flash')
 makedepends=('libdrm' 'cmake' 'ragel')
 source=($pkgname-$pkgver.tar.gz::"${url}/archive/v${pkgver}.tar.gz")
-sha1sums=('b2fd7b47f5896eb25acc1cd0aa9ea428c6743828')
+sha1sums=('fc7ba6b860a126de15a6f26c2835a437774161e0')
 
 build() {
   cd "${pkgname}-${pkgver}"
