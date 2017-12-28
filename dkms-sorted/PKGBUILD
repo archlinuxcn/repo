@@ -3,8 +3,8 @@
 # Contributor: Balwinder S "bsd" Dheeman (bdheeman AT gmail.com)
 
 pkgname=dkms-sorted
-pkgver=2.4.0
-pkgrel=2
+pkgver=2.5
+pkgrel=1
 pkgdesc='Dynamic Kernel Modules System (modified alpm hook to handle dependencies) - experimental'
 arch=('any')
 url='https://github.com/dell/dkms'
