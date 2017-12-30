@@ -5,7 +5,7 @@
 
 pkgname=flann
 pkgver=1.8.4
-pkgrel=2
+pkgrel=3
 pkgdesc="FLANN is a library for performing fast approximate nearest neighbor searches in high dimensional spaces"
 arch=('i686' 'x86_64')
 url='http://www.cs.ubc.ca/~mariusm/index.php/FLANN/FLANN'

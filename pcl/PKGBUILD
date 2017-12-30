@@ -1,4 +1,5 @@
 # Maintainer: Benjamin Chrétien <chretien dot b plus aur at gmail dot com>
+# Contributor: Fabio Loli <loli_fabio@protonmail.com>
 # Contributor: Yuxin Wu <ppwwyyxxc@gmail.com>
 # Contributor: Sven-Hendrik Haase <sh@lutzhaase.com>
 # Contributor: hauptmech
@@ -6,18 +7,18 @@
 # Contributor: lubosz
 
 pkgname=pcl
-pkgver=1.8.0
+pkgver=1.8.1
 pkgrel=1
 pkgdesc="A comprehensive open source library for n-D Point Clouds and 3D geometry processing"
 arch=('x86_64' 'i686')
 url='http://www.pointclouds.org'
 license=('BSD')
 depends=('boost' 'eigen' 'flann' 'vtk' 'qhull' 'qt5-base' 'glu' 'qt5-webkit'
-  'openmpi' 'python2' 'libxt')
+  'openmpi' 'python2' 'libxt' 'libharu' 'proj' 'glew')
 makedepends=('cmake' 'gl2ps' 'python2' 'libxt')
 optdepends=('cuda' 'openni2' 'python2-sphinx')
 source=("pcl-${pkgver}.tar.gz"::"https://github.com/PointCloudLibrary/pcl/archive/pcl-${pkgver}.tar.gz")
-sha256sums=('9e54b0c1b59a67a386b9b0f4acb2d764272ff9a0377b825c4ed5eedf46ebfcf4')
+sha256sums=('5a102a2fbe2ba77c775bf92c4a5d2e3d8170be53a68c3a76cfc72434ff7b9783')
 
 prepare() {
   cd "${srcdir}/pcl-pcl-${pkgver}"

@@ -1,14 +1,14 @@
 _pkgname=objgraph
 pkgname=python-objgraph
-pkgver=3.2.0
+pkgver=3.3.0
 pkgrel=1
 pkgdesc="Draws Python object reference graphs with graphviz"
 arch=('any')
 url="https://mg.pov.lt/objgraph/"
 license=('MIT')
 depends=('python' 'graphviz' 'python-setuptools')
-source=('https://pypi.python.org/packages/89/dd/33ef81f7d6eb91c7805f1af169e9be145c4e65541e579d4938bb4bd74d9a/objgraph-3.2.0.tar.gz')
-md5sums=('a4ced85049ea1b4f2f00d92b58d3535f')
+source=('https://pypi.python.org/packages/dc/d2/2632aff7039a45bf1b276cdfc6b89dc54e20e8d364d1b27188310213557b/objgraph-3.3.0.tar.gz')
+md5sums=('e5f47bb5952955b3698cfb41073484fe')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
