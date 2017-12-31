@@ -14,9 +14,11 @@ Please keep only the line that suits and delete others.
 ### 受影响的软件包 / Affect packages
 
 <!--
-请每行一个包名，开头加上 `* `（注意星号后有一个空格）。
-Please write one package name per line, prefixing with `* `
-(Note there is a space after the star).
+请每行一个包基础名（对应仓库中的目录名），
+开头加上 `* `（注意星号后有一个空格）。
+
+Please write one package base name (i.e. the directory name in this repo) per
+line, prefixing with `* ` (Note there is a space after the star).
 
 对于软件打包请求，此项可不填。
 Not necessary for package requests.
