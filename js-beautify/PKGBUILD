@@ -1,6 +1,6 @@
 # Maintainer: Arnau Sanchez <pyarnau@gmail.com>
 _npmname=js-beautify
-_npmver=1.6.14
+_npmver=1.7.5
 pkgname=js-beautify # All lowercase
 pkgver=$_npmver
 pkgrel=1
@@ -13,7 +13,7 @@ optdepends=()
 conflicts=('python-jsbeautifier')
 source=(http://registry.npmjs.org/$_npmname/-/$_npmname-$_npmver.tgz)
 noextract=($_npmname-$_npmver.tgz)
-md5sums=(622879bacc1b52cd59e4616d98f1a16b)
+md5sums=(9ee13ddfc42482f91a661c5dde4348cc)
 
 package() {
   cd $srcdir
