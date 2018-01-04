@@ -5,6 +5,7 @@ After=network.target
 [Service]
 Type=forking
 ExecStart=/usr/bin/carbon-cache.py --config=/etc/carbon/carbon.conf start
+User=carbon
 
 PrivateTmp=true
 PrivateDevices=true

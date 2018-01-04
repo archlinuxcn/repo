@@ -1,0 +1,7 @@
+#!/bin/bash
+
+post_upgrade() {
+  if [[ -d var/lib/carbon/whisper ]] && [[ $(usr/bin/stat -c %U var/lib/carbon/whisper) == root ]]; then
+    chown -R carbon: var/lib/carbon/whisper var/log/carbon
+  fi
+}

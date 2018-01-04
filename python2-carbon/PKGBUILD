@@ -3,7 +3,7 @@
 # Initial Maintainer: Augusto F. Hack <hack.augusto@gmail.com>
 pkgname=python2-carbon
 pkgver=1.1.1
-pkgrel=1
+pkgrel=5
 pkgdesc='Backend data caching and persistence daemon for Graphite'
 arch=('any')
 url='https://github.com/graphite-project/carbon'
@@ -11,13 +11,18 @@ license=('Apache')
 depends=('python2' 'python2-whisper' 'python2-twisted>=13.2.0')
 optdepends=('python2-txamqp: AMQP support')
 makedepends=('python2-setuptools')
+install=carbon.install
 options=(!emptydirs)
 source=("$pkgname-$pkgver.tar.gz::https://github.com/graphite-project/carbon/archive/$pkgver.tar.gz"
         carbon.service
+        carbon.tmpfiles
+        carbon.sysusers
         carbon.conf)
 sha1sums=('c566bab4dc9a7c35b90f3e6203bc174c1e175c39'
-          'd10b97e9790ae5d0b4ad71243fc5f44b970d36af'
-          '977e9df9e02eba93951ee7180e440b9d6aa75950')
+          'a2d216abc6f5a27a0725eb4f87cc533074ed63b2'
+          '1cbaf55a0d5c532901b6c6fe039bc15c8a54c7dd'
+          'c2bdf80507458a2a9fb999f4c99db45eb5ac6f64'
+          '0051b8752666cfc869f7fe6894743cc1984fc9fe')
 backup=(etc/carbon/aggregation-rules.conf
         etc/carbon/blacklist.conf
         etc/carbon/carbon.amqp.conf
@@ -31,14 +36,15 @@ backup=(etc/carbon/aggregation-rules.conf
 package() {
   cd "$srcdir/carbon-$pkgver"
   python2 setup.py install --root="$pkgdir/" --install-lib=/usr/lib/python2.7/site-packages --install-data=/var/lib/graphite --install-scripts=/usr/bin --optimize=1
-  install -D -m644 $srcdir/carbon.service $pkgdir/usr/lib/systemd/system/carbon.service
+  install -Dm644 "$srcdir"/carbon.service "$pkgdir"/usr/lib/systemd/system/carbon.service
+  install -Dm644 "$srcdir"/carbon.sysusers "$pkgdir"/usr/lib/sysusers.d/carbon.conf
+  install -Dm644 "$srcdir"/carbon.tmpfiles "$pkgdir"/usr/lib/tmpfiles.d/carbon.conf
 
   # change the directory of the config files
   ls conf | while read conf; do
     install -D -m644 conf/$conf $pkgdir/etc/carbon/${conf/.example}
   done;
   rm -r $pkgdir/var
-  mkdir -p $pkgdir/var/{lib,log}/carbon
 
   # use our config with FHS
   install -D -m644 $srcdir/carbon.conf $pkgdir/etc/carbon/carbon.conf
