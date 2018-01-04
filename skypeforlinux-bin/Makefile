@@ -5,7 +5,7 @@ inf = .SRCINFO
 all: sum $(inf) check
 
 $(inf): $(src)
-	mksrcinfo
+	makepkg --printsrcinfo >$@
 
 check: $(src)
 	namcap $^
