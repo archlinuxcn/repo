@@ -10,8 +10,8 @@
 
 pkgname=('llvm-julia' 'llvm-libs-julia' 'llvm-ocaml-julia' 'lld-julia' 'lldb-julia'
          'clang-julia' 'clang-tools-extra-julia')
-pkgver=5.0.0
-pkgrel=6
+pkgver=5.0.1
+pkgrel=1
 _ocaml_ver=4.05.0
 arch=(i686 x86_64 armv7h aarch64)
 url="http://llvm.org/"
@@ -38,12 +38,12 @@ source=(https://releases.llvm.org/$pkgver/llvm-$pkgver.src.tar.xz
         0002-Enable-SSP-and-PIE-by-default.patch
         disable-llvm-symbolizer-test.patch
         llvm-config.h)
-sha256sums=('e35dcbae6084adcf4abb32514127c5eabd7d63b733852ccdb31e06f1373136da'
-            '019f23c2192df793ac746595e94a403908749f8e0c484b403476d2611dd20970'
-            '87d078b959c4a6e5ff9fd137c2f477cadb1245f93812512996f73986a6d973c6'
-            'd5ad5266462134a482b381f1f8115b6cad3473741b3bb7d1acc7f69fd0f0c0b3'
-            '399a7920a5278d42c46a7bf7e4191820ec2301457a7d0d4fcc9a4ac05dd53897'
-            'c0a0ca32105e9881d86b7ca886220147e686edc97fdb9f3657c6659dc6568b7d'
+sha256sums=('5fa7489fc0225b11821cab0362f5813a05f2bcf2533e8a4ea9c9c860168807b0'
+            '135f6c9b0cd2da1aff2250e065946258eb699777888df39ca5a5b4fe5e23d0ff'
+            '9aada1f9d673226846c3399d13fab6bba4bfd38bcfe8def5ee7b0ec24f8cd225'
+            '4edd1417f457a9b3f0eb88082530490edf3cf6a7335cdce8ecbc5d3e16a895da'
+            'd5b36c0005824f07ab093616bdff247f3da817cae2c51371e1d1473af717d895'
+            'b7c1c9e67975ca219089a3a6a9c77c2d102cead2dc38264f2524aa3326da376a'
             'b80285028d65417116c53915505ab418b0f9e0a697c67803abf459108f7fd501'
             '43f021afc8037e537ba4c5f82fe1d8a9dcbcf15e8b9fffc527260f0385451350'
             '5ea9c995aba1627440d3985c425472301c711b134ce3fd9e655d0245d0832699'
@@ -105,9 +105,6 @@ EOF
   # Enable SSP and PIE by default
   patch -Np1 -d tools/clang <../0001-GCC-compatibility-Ignore-the-fno-plt-flag.patch
   patch -Np1 -d tools/clang <../0002-Enable-SSP-and-PIE-by-default.patch
-
-  # https://bugs.llvm.org/show_bug.cgi?id=34123
-  sed -i '/LLVMSupport/d' tools/clang/tools/extra/clangd/tool/CMakeLists.txt
 }
 
 build() {
