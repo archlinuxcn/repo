@@ -1,14 +1,14 @@
 # Maintainer: Maxime de Roucy <maxime.deroucy@gmail.com>
 
 pkgname=libu2f-server
-pkgver=1.0.1
+pkgver=1.1.0
 pkgrel=1
 pkgdesc="Yubico Universal 2nd Factor (U2F) Server C Library"
 arch=('i686' 'x86_64')
 url='https://developers.yubico.com/libu2f-server/'
 license=('BSD')
 depends=('openssl' 'json-c')
-makedepends=('check')
+makedepends=('check' 'gengetopt' 'help2man')
 source=("https://developers.yubico.com/libu2f-server/Releases/${pkgname}-${pkgver}.tar.xz")
 
 build() {
@@ -29,8 +29,7 @@ package() {
 
 	make DESTDIR="${pkgdir}/" install
 
-	mkdir -p "${pkgdir}/usr/share/licenses/${pkgname}"
-	cp COPYING "${pkgdir}/usr/share/licenses/${pkgname}/"
+	install -D -m0644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
 }
 
-sha256sums=('a618f59051209d6d70c24cf42d64c9b67bd7dd5946b6dbd2c649181d7e8f1f6e')
+sha512sums=('ebdb7c8c20727f37f4e31d8f16df7966603374f78478ada723a7b9bec1b0b0622caf6d12a65067ac8651f6088aaad61b2ad6ed51b9d6ef0dc45f031c974d8ff9')
