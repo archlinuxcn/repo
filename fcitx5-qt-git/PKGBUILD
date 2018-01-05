@@ -2,31 +2,61 @@
 # Maintainer: Felix Yan <felixonmars@archlinux.org>
 # Contributor: csslayer <wengxt AT gmail com>
 
-pkgname=fcitx5-qt-git
+_pkgname=fcitx5-qt
+pkgbase=$_pkgname-git
+pkgname=(fcitx5-qt5-git fcitx5-qt4-git)
 pkgver=r123.5fd61db
-pkgrel=1.2
+pkgrel=3
 pkgdesc="Fcitx Qt Library"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="https://github.com/fcitx/fcitx5"
 license=('GPL')
-depends=('fcitx5-git' 'qt4' 'qt5-x11extras' 'qt5-quickcontrols')
-makedepends=('extra-cmake-modules' 'git')
+depends=('fcitx5-git')
+makedepends=('extra-cmake-modules' 'git' 'qt4' 'qt5-x11extras' 'qt5-quickcontrols')
 source=("git+https://github.com/fcitx/fcitx5-qt.git")
 sha512sums=('SKIP')
 
 pkgver() {
-  cd fcitx5-qt
+  cd $_pkgname
   printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 build(){
-  cd fcitx5-qt
+  cd $_pkgname
 
   cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_LIBDIR=/usr/lib .
   make
+
+  # install into /tmp and split the package
+  make DESTDIR="/tmp/$_pkgname/" install
 }
 
-package() {
-  cd fcitx5-qt
-  make DESTDIR="$pkgdir" install
+_mv_pkg(){
+  mkdir -p "$pkgdir/$(dirname $1)"
+  mv "$@" "$pkgdir/$(dirname $1)"
+}
+
+package_fcitx5-qt5-git(){
+  depends=('fcitx5-git' 'qt5-x11extras' 'qt5-quickcontrols')
+  pkgdesc="Fcitx Qt Library, for Qt5"
+
+  cd /tmp/$_pkgname
+  _mv_pkg usr/share
+  _mv_pkg usr/lib/qt
+  _mv_pkg usr/lib/libFcitx5Qt5*
+  _mv_pkg usr/lib/fcitx5
+  _mv_pkg usr/lib/cmake/Fcitx5Qt5DBusAddons
+  _mv_pkg usr/lib/cmake/Fcitx5Qt5WidgetsAddons
+  _mv_pkg usr/include/Fcitx5Qt5
+}
+
+package_fcitx5-qt4-git(){
+  depends=('fcitx5-git' 'qt4')
+  pkgdesc="Fcitx Qt Library, for Qt4"
+
+  cd /tmp/$_pkgname
+  _mv_pkg usr/lib/qt4
+  _mv_pkg usr/lib/libFcitx5Qt4*
+  _mv_pkg usr/lib/cmake/Fcitx5Qt4DBusAddons
+  _mv_pkg usr/include/Fcitx5Qt4
 }

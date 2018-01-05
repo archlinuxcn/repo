@@ -6,7 +6,7 @@
 
 from lilaclib import *
 
-depends=['fmt', 'xcb-imdkit-git', 'fcitx5-git', 'fcitx5-qt-git']
+depends=['fmt', 'xcb-imdkit-git', 'fcitx5-git', ('fcitx5-qt-git', 'fcitx5-qt5-git')]
 
 build_prefix = 'extra-x86_64'
 
