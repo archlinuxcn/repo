@@ -1,11 +1,12 @@
-# Maintainer: Sven-Hendrik Haase <sh@lutzhaase.com>
-# Maintainer: Javier Fuentes <0xffaa.rm@gmail.com>
+# Maintainer: Tim Rakowski <tim.rakowski@gmail.com>
+# Contributor: Sven-Hendrik Haase <sh@lutzhaase.com>
+# Contributor: Javier Fuentes <0xffaa.rm@gmail.com>
 # Contributor: Figo.zhang <figo1802@gmail.com>
 # Contributor: hauptmech
 
 pkgname=flann
-pkgver=1.8.4
-pkgrel=3
+pkgver=1.9.1
+pkgrel=1
 pkgdesc="FLANN is a library for performing fast approximate nearest neighbor searches in high dimensional spaces"
 arch=('i686' 'x86_64')
 url='http://www.cs.ubc.ca/~mariusm/index.php/FLANN/FLANN'
@@ -14,19 +15,11 @@ depends=('hdf5')
 makedepends=('cmake' 'python2')
 optdepends=('python2: python bindings'
             'cuda: cuda support')
-source=("http://people.cs.ubc.ca/~mariusm/uploads/FLANN/flann-${pkgver}-src.zip"
-        "http://pkgs.fedoraproject.org/cgit/rpms/flann.git/plain/flann-1.8.4-gcc6.patch")
-md5sums=('a0ecd46be2ee11a68d2a7d9c6b4ce701'
-         '21ec2d7009fb09307ab74909f3b1d04e')
+source=("https://github.com/mariusmuja/flann/archive/${pkgver}.tar.gz")
+md5sums=('73adef1c7bf8e8b978987e7860926ea6')
 
 build() {
-  cd "$srcdir/flann-${pkgver}-src"
-  patch -p0 < ../flann-1.8.4-gcc6.patch
-
-  sed -i 's/lib64/lib/g' cmake/flann_utils.cmake
-
-  sed -i '1 i #undef _GLIBCXX_ATOMIC_BUILTINS' src/cpp/flann/algorithms/kdtree_cuda_3d_index.cu
-  sed -i '1 i #undef _GLIBCXX_USE_INT128' src/cpp/flann/algorithms/kdtree_cuda_3d_index.cu
+  cd "$srcdir/flann-${pkgver}"
 
   sed -i 's|#!/usr/bin/env python|#!/usr/bin/python2|' \
       bin/download_checkmd5.py \
@@ -52,12 +45,13 @@ build() {
       -DBUILD_MATLAB_BINDINGS=OFF \
       -DBUILD_PYTHON_BINDINGS=ON \
       -DPYTHON_EXECUTABLE=/usr/bin/python2 \
-      -DNVCC_COMPILER_BINDIR=/usr/bin
+      -DBUILD_TESTS=OFF \
+      -DBUILD_EXAMPLES=OFF
   make
 }
 
 package() {
-  cd "$srcdir/flann-${pkgver}-src"
+  cd "$srcdir/flann-${pkgver}"
 
   cd build
   make DESTDIR="$pkgdir" install
