@@ -55,7 +55,8 @@ sha256sums=('5fa7489fc0225b11821cab0362f5813a05f2bcf2533e8a4ea9c9c860168807b0'
             '6fff47ab5ede79d45fe64bb4903b7dfc27212a38e6cd5d01e60ebd24b7557359'
             '597dc5968c695bbdbb0eac9e8eb5117fcd2773bc91edf5ec103ecffffab8bc48')
 
-_FLTO='-flto'
+# _FLTO='-flto'
+_FLTO=''
 
 if [[ "${CARCH}" == "aarch64" ]] || [[ "${CARCH}" == "armv7h" ]]; then
     # GCC miscompiles LLVM on AArch64 with LTO and segfault on arm during linking...
