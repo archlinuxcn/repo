@@ -1,0 +1,13 @@
+#!/bin/bash
+post_upgrade() {
+		cur_ver=$1
+    pre_ver=$2
+		if [ $(vercmp $pre_ver "1.1.2") -le 0 ] && [ $(vercmp $cur_ver "1.1.2") -eq 0 ]; then
+        echo "!!Important"
+				echo "after upgrade to 1.1.2 you need to delete cookie before use."
+				echo "rm -rf ~/.config/iease-music/"
+				echo "more info https://github.com/trazyn/ieaseMusic/issues/115"
+				echo ""
+				echo "personal hint: if you experience freeze after startup, try leave it for 5min."
+		fi
+}
