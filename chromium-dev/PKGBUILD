@@ -18,7 +18,7 @@ _use_wayland=0   # Build Wayland NOTE: extremely experimental and don't work at 
 ## -- Package and components information -- ##
 ##############################################
 pkgname=chromium-dev
-pkgver=65.0.3294.5
+pkgver=65.0.3311.3
 pkgrel=1
 pkgdesc="The open-source project behind Google Chrome (Dev Channel)"
 arch=('x86_64')
@@ -59,6 +59,8 @@ makedepends=(
              'hwids'
              'nodejs'
              'wget'
+             'atk'
+             'at-spi2-atk'
              )
 optdepends=(
             'pepper-flash: PPAPI Flash Player'
@@ -77,8 +79,8 @@ source=( #"https://gsdview.appspot.com/chromium-browser-official/chromium-${pkgv
         'chromium-dev.svg'
         # Patch form Gentoo
         'https://raw.githubusercontent.com/gentoo/gentoo/master/www-client/chromium/files/chromium-FORTIFY_SOURCE-r2.patch'
-        'chromium-gcc5-r5.patch'
-        # Misc Patches
+        'https://raw.githubusercontent.com/gentoo/gentoo/master/www-client/chromium/files/chromium-clang-r2.patch'
+         # Misc Patches
 #         'chromium-intel-vaapi_r15.diff.base64::https://chromium-review.googlesource.com/changes/532294/revisions/15/patch?download'
         'chromium-intel-vaapi_r16.diff.patch'
         # Patch from crbug (chromium bugtracker) or Arch chromium package
@@ -92,7 +94,7 @@ sha256sums=( #"$(curl -sL https://gsdview.appspot.com/chromium-browser-official/
             'dd2b5c4191e468972b5ea8ddb4fa2e2fa3c2c94c79fc06645d0efc0e63ce7ee1'
             # Patch form Gentoo
             'fa3f703d599051135c5be24b81dfcb23190bb282db73121337ac76bc9638e8a5'
-            '3d0d306e24b5b0c91358127a578c8a7ade8cef3eb15a769739b07a282f068de4'
+            '4495e8b29dae242c79ffe4beefc5171eb3c7aacb7e9aebfd2d4d69b9d8c958d3'
             # Misc Patches
 #             'cb4933db92b669696201b2866ec9b4942466a849b94b13463d8331284d09a2d1'
             'c32d71237cf9dca71c35ec54431749c837eb3a7b7dae2fb3fc88beafefa1ca97'
@@ -291,7 +293,6 @@ _flags=(
         "google_default_client_secret=\"${_google_default_client_secret}\""
         'fieldtrial_testing_like_official_build=false'
         'use_gtk3=true'
-        'use_gconf=false'
         "use_gio=false"
         "use_gnome_keyring=${_gnome_keyring}"
         'link_pulseaudio=true'
@@ -303,6 +304,7 @@ _flags=(
         "enable_nacl=${_nacl}"
         "enable_nacl_nonsfi=${_nacl}"
         'use_custom_libcxx=false'
+        'use_lld=false' # https://bugs.gentoo.org/641556
         )
 
 if [ "$_wayland" = "1" ]; then
@@ -330,7 +332,8 @@ optdepends+=(
 _use_system=(
              'ffmpeg'
              'flac'
-#              'freetype'    # https://bugs.chromium.org/p/pdfium/issues/detail?id=733
+             'fontconfig'
+             'freetype'
 #              'harfbuzz-ng' # freetype and harfbuzz needs update at same time, or both or none. disable due freetype bug. link avobe
 #              'icu'         # https://crbug.com/678661
              'libdrm'
@@ -406,9 +409,7 @@ prepare() {
   msg2 "Patching the sources"
   # Patch sources from Gentoo.
   patch -p1 -i "${srcdir}/chromium-FORTIFY_SOURCE-r2.patch"
-
-  # Fix build with gcc 7(?)
-  patch -p1 -i "${srcdir}/chromium-gcc5-r5.patch"
+  patch -p1 -i "${srcdir}/chromium-clang-r2.patch"
 
   # Pats to chromium dev's about why always they forget add/remove missing build rules
   # Done this time :D
@@ -428,6 +429,9 @@ prepare() {
     sed 's|base/||' -i cc/output/vulkan_renderer.h
     sed 's|/x86_64-linux-gnu||' -i gpu/vulkan/BUILD.gn
   fi
+
+  # fix vulkan build https://crbug.com/799620
+  sed 's|is_win \|\| (is_linux && use_x11 && !is_chromeos)|false|g' -i third_party/angle/gni/angle.gni
 
   # Apply VAAPI patch
   # base64 -d "${srcdir}/chromium-intel-vaapi_r15.diff.base64" | patch -p1 -i -
@@ -540,7 +544,7 @@ build() {
   out/Release/gn gen out/Release -v --args="${_flags[*]}" --script-executable=/usr/bin/python2
 
   # Build all with ninja.
-  LC_ALL=C ninja -C out/Release -v pdf chrome chrome_sandbox chromedriver widevinecdmadapter clearkeycdm
+  LC_ALL=C ninja -C out/Release -v pdf chrome chrome_sandbox chromedriver widevinecdmadapter clear_key_cdm
 }
 
 package() {
@@ -577,12 +581,12 @@ package() {
          'libclearkeycdm.so'
          'libEGL.so'
          'libGLESv2.so'
-         'libVkLayer_core_validation.so'
-         'libVkLayer_object_tracker.so'
-         'libVkLayer_parameter_validation.so'
-         'libVkLayer_swapchain.so'
-         'libVkLayer_threading.so'
-         'libVkLayer_unique_objects.so'
+#          'libVkLayer_core_validation.so'
+#          'libVkLayer_object_tracker.so'
+#          'libVkLayer_parameter_validation.so'
+#          'libVkLayer_swapchain.so'
+#          'libVkLayer_threading.so'
+#          'libVkLayer_unique_objects.so'
          'libwidevinecdmadapter.so'
          'swiftshader/libEGL.so'
          'swiftshader/libGLESv2.so'
