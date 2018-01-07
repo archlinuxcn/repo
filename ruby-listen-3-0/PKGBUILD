@@ -4,7 +4,7 @@
 pkgname=ruby-listen-3-0
 _pkgname=ruby-listen
 pkgver=3.0.8
-pkgrel=2
+pkgrel=3
 pkgdesc='The Listen gem listens to file modifications and notifies you about the changes. Works everywhere! version < 3.1'
 arch=('any')
 url='https://rubygems.org/gems/listen'
