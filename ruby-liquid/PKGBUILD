@@ -3,7 +3,7 @@
 _gemname=liquid
 pkgname=ruby-$_gemname
 pkgver=4.0.0
-pkgrel=2
+pkgrel=3
 pkgdesc='Liquid markup language. Safe, customer facing template language for flexible web apps'
 url='https://shopify.github.io/liquid/'
 arch=('any')
