@@ -13,7 +13,7 @@ def pre_build():
     aur_pre_build()
     for l in edit_file('PKGBUILD'):
         if l.strip() == "..":
-            line = "  -DCMAKE_INSTALL_LIBDIR=/usr/lib .."
+            l = "  -DCMAKE_INSTALL_LIBDIR=/usr/lib .."
         print(l)
 
 
