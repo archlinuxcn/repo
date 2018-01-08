@@ -10,6 +10,7 @@ def pre_build():
   for line in edit_file('PKGBUILD'):
     if 'bogus-nxdomain.china.conf' in line:
         print(line)
+        print(line.replace('bogus-nxdomain.china.conf','apple.china.conf'))
         print(line.replace('bogus-nxdomain.china.conf','google.china.conf'))
     else:
         print(line)
