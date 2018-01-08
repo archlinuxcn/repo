@@ -18,7 +18,7 @@ build() {
     cmake -DCMAKE_BUILD_TYPE=Release  \
           -DCMAKE_INSTALL_PREFIX=/usr \
           -DFMT_DOC=OFF               \
-          ..
+  -DCMAKE_INSTALL_LIBDIR=/usr/lib ..
     make
 }
 
