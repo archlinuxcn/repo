@@ -7,8 +7,15 @@
 from lilaclib import *
 
 build_prefix = 'extra-x86_64'
-pre_build = aur_pre_build
 post_build = aur_post_build
+
+def pre_build():
+    aur_pre_build()
+    for l in edit_file('PKGBUILD'):
+        if l.strip() == "..":
+            line = "  -DCMAKE_INSTALL_LIBDIR=/usr/lib .."
+        print(l)
+
 
 if __name__ == '__main__':
   single_main()
