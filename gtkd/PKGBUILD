@@ -5,7 +5,7 @@
 
 pkgname='gtkd'
 pkgver='3.7.3'
-pkgrel=1
+pkgrel=2
 pkgdesc='D bindings for GTK+ and related libraries.'
 arch=('x86_64' 'i686')
 url='http://gtkd.org/'
@@ -19,7 +19,7 @@ sha512sums=('6a6b31859d914f060c08661408b3569082e1269bb7efb9fe80c53cf2c73b394bc70
 build() {
   cd ${srcdir}/GtkD-${pkgver}
 
-  LDFLAGS='' DC='ldc' make libdir='lib/' shared-{gtkd,gtkdgl,sv,gstreamer,vte,peas}
+  LDFLAGS='-defaultlib=druntime-ldc-shared,phobos2-ldc-shared' DC='ldc' make libdir='lib/' shared-{gtkd,gtkdgl,sv,gstreamer,vte,peas}
 }
 
 package() {
