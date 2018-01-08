@@ -9,7 +9,7 @@ pkgname=icecat
 pkgver=52.3.0
 _pkgver=${pkgver}-gnu1
 _pkgverbase=${pkgver%%.*}
-pkgrel=2.1
+pkgrel=3
 pkgdesc="GNU version of the Firefox browser."
 arch=(i686 x86_64)
 url="http://www.gnu.org/software/gnuzilla/"
@@ -27,7 +27,8 @@ source=(http://ftpmirror.gnu.org/gnuzilla/${pkgver}/${pkgname}-${_pkgver}.tar.bz
 #source=(http://jenkins.trisquel.info/icecat/${pkgname}-${_pkgver}.tar.bz2      ## Official developer (Ruben Rodriguez) site. Probably only has developer releases.
         mozconfig icecat.desktop icecat-safe.desktop vendor.js
         fix-wifi-scanner.diff no-crmf.diff
-		clip-ft-glyph-52esr.diff harmony-fix.diff glibc-2.26-fix.diff)
+		clip-ft-glyph-52esr.diff harmony-fix.diff glibc-2.26-fix.diff
+        icecat-bug-1427870-spectre-mitigation.patch)
 
 sha256sums=('699ab2b41d4428ef5e360f3f33d98bc52723315cedac20bb03619846ca895302'
             'SKIP'
@@ -39,7 +40,8 @@ sha256sums=('699ab2b41d4428ef5e360f3f33d98bc52723315cedac20bb03619846ca895302'
             'ada119174a2a1779c4195a1b4506e8ae67c49c5306103158805a390237acc1c6'
             'dc4feddbf22ea11ae2513c68b7f3fc9047850d055a7f30d31a7ee94d7d5de12a'
             '16bb776e9f3039321db747b2eaece0cda1320f3711fb853a68d67247b0aa065d'
-            'cd7ff441da66a287f8712e60cdc9e216c30355d521051e2eaae28a66d81915e8')
+            'cd7ff441da66a287f8712e60cdc9e216c30355d521051e2eaae28a66d81915e8'
+            '8088e9d3116f12e32e17a019918ab45f93e2a2f819ff9372949e33ca428d3129')
 
 validpgpkeys=(A57369A8BABC2542B5A0368C3C76EED7D7E04784) # Ruben Rodriguez (GNU IceCat releases key) <ruben@gnu.org>
 
@@ -66,6 +68,9 @@ prepare() {
 
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1400721
   patch -Np1 -i ../harmony-fix.diff
+
+  # mitigation to Spectre for GNU IceCat. It's best this than nothing until official patches will be posted
+  patch -Np1 -i ../icecat-bug-1427870-spectre-mitigation.patch
 
   msg2 "Starting build..."
 

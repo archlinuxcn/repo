@@ -1,0 +1,49 @@
+Mitigate Spectre by reducing the resolution of performance.now() to 20
+microseconds.  Based on:
+
+  https://hg.mozilla.org/releases/mozilla-release/rev/afa87f9be3a8
+
+For more details, see:
+
+  https://blog.mozilla.org/security/2018/01/03/mitigations-landing-new-class-timing-attack/
+
+This patch was modified to apply cleanly to GNU IceCat.
+
+
+# HG changeset patch
+# User Tom Ritter <tom@mozilla.com>
+# Date 1514660820 21600
+# Node ID afa87f9be3a8852da3a30f286b15ae599c7874f6
+# Parent  6caa457ebedc915b43dc1d054b8fe22e82ca7447
+Bug 1427870 - Change resolution of .now() to 20us. r=bkelly, a=lizzard
+
+The comment about workers was introduced in Bug 1186489 but became obsolete some time after that
+(definitely by Bug 1278838)
+
+diff --git a/dom/performance/Performance.cpp b/dom/performance/Performance.cpp
+--- a/dom/performance/Performance.cpp
++++ b/dom/performance/Performance.cpp
+@@ -234,20 +234,19 @@ Performance::ClearResourceTimings()
+ {
+   MOZ_ASSERT(NS_IsMainThread());
+   mResourceEntries.Clear();
+ }
+ 
+ DOMHighResTimeStamp
+ Performance::RoundTime(double aTime) const
+ {
+-  // Round down to the nearest 5us, because if the timer is too accurate people
+-  // can do nasty timing attacks with it.  See similar code in the worker
+-  // Performance implementation.
+-  const double maxResolutionMs = 0.005;
++  // Round down to the nearest 20us, because if the timer is too accurate people
++  // can do nasty timing attacks with it.
++  const double maxResolutionMs = 0.020;
+   return floor(aTime / maxResolutionMs) * maxResolutionMs;
+ }
+ 
+ 
+ void
+ Performance::Mark(const nsAString& aName, ErrorResult& aRv)
+ {
+   // Don't add the entry if the buffer is full. XXX should be removed by bug 1159003.
