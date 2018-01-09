@@ -5,7 +5,7 @@
 _branch='discord'
 
 pkgname=discord
-pkgver=0.0.3
+pkgver=0.0.4
 pkgrel=1
 pkgdesc="All-in-one voice and text chat for gamers that's free and secure."
 arch=('x86_64')
@@ -23,7 +23,7 @@ source=(Discord.desktop LICENSE)
 source_x86_64=("https://dl.discordapp.net/apps/linux/${pkgver}/${_branch}-${pkgver}.tar.gz")
 md5sums=('a9046504943624ac4861983d67a1404b'
          '9a481caa5a223defd608f5505202f595')
-md5sums_x86_64=('b470f4930f0d592145a877a1d3355f9b')
+md5sums_x86_64=('573637dc71ac61f1b4f47e1637aa946b')
 
 
 
