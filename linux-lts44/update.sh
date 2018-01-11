@@ -9,4 +9,4 @@ HASH="$(curl -sSf https://www.kernel.org/pub/linux/kernel/v4.x/sha256sums.asc | 
 
 sed -i "s/pkgver=.*/pkgver=${VERSION}/" PKGBUILD
 sed -i "s/.* # patch$/            '$HASH' # patch/" PKGBUILD
-mksrcinfo
+makepkg --printsrcinfo > .SRCINFO
