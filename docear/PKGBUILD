@@ -1,8 +1,9 @@
+# Maintainer: Roman Vasilev <2rvasilev@live.ru>
 # Maintainer: Cloud Han <heliumhgy@gmail.com>
 
 pkgname=docear
 pkgver=1.2.0_stable
-pkgrel=2
+pkgrel=3
 pkgdesc="Docear is an academic literature suite for searching, organizing and creating academic literature, built upon the mind mapping software Freeplane and the reference manager JabRef."
 arch=('any')
 url="http://www.docear.org/"
@@ -54,9 +55,9 @@ package()
   chmod 755 "${pkgdir}/usr/bin/docear"
 
   install -d "${pkgdir}/usr/share/applications"
-  install -Dm 644 "$startdir/docear.desktop" "${pkgdir}/usr/share/applications/docear.desktop"
+  install -Dm 644 "$srcdir/docear.desktop" "${pkgdir}/usr/share/applications/docear.desktop"
 
-  install -Dm 644 "$startdir/docear-metadata-lib-0.0.1.jar?raw=1" "${pkgdir}/usr/share/docear/plugins/org.docear.plugin.bibtex/lib/docear-metadata-lib-0.0.1.jar"
+  install -Dm 644 "$srcdir/docear-metadata-lib-0.0.1.jar?raw=1" "${pkgdir}/usr/share/docear/plugins/org.docear.plugin.bibtex/lib/docear-metadata-lib-0.0.1.jar"
 
   # enable antialiasing when start up docear
   echo "-Dawt.useSystemAAFontSettings=on" >> "${pkgdir}/usr/share/docear/init.xargs"
