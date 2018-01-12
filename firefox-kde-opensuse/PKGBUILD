@@ -20,7 +20,7 @@ _pgo=true
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=57.0.3
+pkgver=57.0.4
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
@@ -41,7 +41,7 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
             'speech-dispatcher: Text-to-Speech')
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
-_patchrev=77c890186192
+_patchrev=963651ec972e
 options=('!emptydirs'  'strip')
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 _repo=https://hg.mozilla.org/mozilla-unified
@@ -241,7 +241,7 @@ md5sums=('SKIP'
          'af659b0f4f5b904480bf97843fa3502b'
          'fb5bb43056a4f509a8aa844c2a9d4e95'
          '82f7f100d4b01677ed748679565d8b1a'
-         'f69c35d2f38d436e31d173a946299444'
+         '8eae53a34fdd6e1664ff08173fec465e'
          '0661e259fe57df87fca791f4aeb78da0'
          '51c36935c00f62efd493a9d37742a5a2'
          'c7e2592c49f5846857e7a84e0788099d'
