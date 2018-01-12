@@ -1,6 +1,6 @@
 _pkgname=libsass
 pkgname=python-libsass
-pkgver=0.13.4
+pkgver=0.13.5
 pkgrel=1
 pkgdesc="SASS for Python: A straightforward binding of libsass for Python."
 arch=('x86_64')
@@ -8,8 +8,8 @@ url="http://hongminhee.org/libsass-python/"
 license=('MIT')
 depends=('python' 'python-six' 'libsass' 'python-setuptools')
 makedepends=('gcc')
-source=('https://pypi.python.org/packages/d9/ea/d2d67633f2d808bfa2461f54f7068fd21f47eb0980132e560cdcc99a7882/libsass-0.13.4.tar.gz')
-md5sums=('a6bc47e45ef3f532867edc8d2cf166b2')
+source=('https://pypi.python.org/packages/02/68/a34fe46508b243a59e33020ea5b18b7b4bedb438095176f9a5060913d1cb/libsass-0.13.5.tar.gz')
+md5sums=('a400dc2db9c252483b22a6c13dbb7955')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
