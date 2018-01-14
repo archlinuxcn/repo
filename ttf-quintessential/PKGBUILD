@@ -3,7 +3,7 @@
 pkgname=ttf-quintessential
 _commit='883939708704a19a295e0652036369d22469e8dc'
 pkgver=1.001
-pkgrel=3
+pkgrel=4
 pkgdesc='Calligraphic typeface from Google by Brian J. Bonislawsky'
 arch=('any')
 url='https://fonts.google.com/specimen/Quintessential'
