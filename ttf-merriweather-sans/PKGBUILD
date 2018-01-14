@@ -3,7 +3,7 @@
 pkgname=ttf-merriweather-sans
 _commit='982e9355296882ebb55e6f39117bb106a6a82b17'
 pkgver=1.006
-pkgrel=3
+pkgrel=4
 pkgdesc='A sans-serif typeface that is pleasant to read on screens by Sorkin Type Co'
 arch=('any')
 url='https://fonts.google.com/specimen/Merriweather+Sans'
