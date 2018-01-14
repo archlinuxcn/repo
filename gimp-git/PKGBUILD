@@ -4,7 +4,7 @@
 
 pkgname=gimp-git
 epoch=1
-pkgver=2.9.8.141.gaa2ce4b60d
+pkgver=2.9.8.323.gc77ec09fb2
 pkgrel=1
 pkgdesc="GNU Image Manipulation Program"
 arch=('i686' 'x86_64')
@@ -13,12 +13,14 @@ license=('GPL' 'LGPL')
 depends=('pygtk' 'lcms2>=2.2' 'libwmf>=0.2.8' \
 	'libgexiv2' 'librsvg>=2.16.1' 'desktop-file-utils' \
 	'libexif>=0.6.15' 'libart-lgpl>=2.3.19' 'dbus-glib' 'gtk-doc' \
-	'babl-git' 'gegl-git' 'openexr>=1.6.1' 'libmypaint>=1.3.0' \
-  'ghostscript' 'libmng' 'libwebp' 'poppler-glib' 'libxpm' 'glu' 'libgudev')
+	'babl-git' 'gegl-git' 'openexr>=1.6.1' 'mypaint-brushes>=1.3.0'
+  'aalib' 'poppler-glib' 'poppler-data' 'libmng' 'libwebp' 'libxpm' 'libgudev' 'ghostscript' 'webkitgtk2' 'xdg-utils')
 makedepends=('git' 'gutenprint>=5.0.0' 'intltool>=0.40.1' \
-                   'gnome-python>=2.16.2' 'poppler>=0.12.4' \
+                   'gnome-python>=2.16.2' \
                    'alsa-lib>=1.0.0' 'libxslt' 'glib-networking')
-optdepends=('alsa-lib: for MIDI event controller module'
+optdepends=('gutenprint: for sophisticated printing only as gimp has built-in cups print support'
+            'poppler-glib: for pdf support'
+            'alsa-lib: for MIDI event controller module'
             'curl: for URI support')
 options=('!libtool' '!makeflags')
 provides=('gimp')
@@ -42,10 +44,14 @@ build() {
 	  sed -i 's/libmypaint /libmypaint-1.3 /g' configure.ac
   fi
 
+  # glib-2.0.pc says the glib2 version is 2.54.0, so replace it
+  sed -i 's/glib_required_version\], \[2\.54\.[0-9]*/glib_required_version], [2.54.0/' configure.ac
+  sed -i 's/GLIB_REQUIRED_MICRO 2/GLIB_REQUIRED_MICRO 0/' app/sanity.c
+
   PYTHON=/usr/bin/python2 ./autogen.sh --prefix=/usr --sysconfdir=/etc \
     --enable-mp --enable-gimp-console --enable-gimp-remote \
     --enable-python --with-gif-compression=lzw --with-libcurl \
-    --without-aa --without-hal --without-gvfs --without-gnomevfs
+    --with-aa --without-hal --without-gvfs --without-gnomevfs
   make
 }
 
