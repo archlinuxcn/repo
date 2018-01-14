@@ -3,7 +3,7 @@
 pkgname=ttf-signika
 _commit='d774fc0799fdeddbd8720616a6d2d791be29fafa'
 pkgver=1.002
-pkgrel=1
+pkgrel=2
 pkgdesc='Sans-serif typeface from Google by Anna Giedryś'
 arch=('any')
 url='https://fonts.google.com/specimen/Signika'
