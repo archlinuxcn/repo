@@ -4,11 +4,14 @@
 
 pkgname=gtk4
 pkgver=3.93.0
-pkgrel=1
+pkgrel=2
 pkgdesc="GObject-based multi-platform GUI toolkit"
 arch=('i686' 'x86_64')
 url="https://www.gtk.org/"
 license=('LGPL')
+provides=('gtk4' 'gtk4-print-backends' 'gtk4-update-icon-cache')
+replaces=('gtk4-print-backends' 'gtk4-update-icon-cache')
+conflicts=('gtk4-git' 'gtk4-print-backends' 'gtk4-update-icon-cache')
 depends=('hicolor-icon-theme'
          'at-spi2-atk'
          'atk>=2.15.1'
