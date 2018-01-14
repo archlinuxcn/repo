@@ -1,0 +1,14 @@
+[Unit]
+Description=Configure LID-only device events for linux-macbook
+ConditionPathExists=/proc/acpi/wakeup
+After=suspend.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c "awk '$1 !~ /^LID/ && $3 ~ /enabled/ {print $1}' /proc/acpi/wakeup | xargs -I{} echo '{}' > /proc/acpi/wakeup"
+ExecStart=/bin/sh -c "awk '$1 ~ /^LID/ && $3 ~ /disabled/ {print $1}' /proc/acpi/wakeup | xargs -I{} echo '{}' > /proc/acpi/wakeup"
+RemainAfterExit=yes
+TimeoutSec=0
+
+[Install]
+WantedBy=multi-user.target sleep.target

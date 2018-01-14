@@ -1,0 +1,31 @@
+--- a/drivers/platform/x86/apple-gmux.c
++++ a/drivers/platform/x86/apple-gmux.c
+@@ -419,6 +419,7 @@ static int gmux_resume(struct device *dev)
+
+ static struct pci_dev *gmux_get_io_pdev(void)
+ {
++	struct pci_dev *igp = NULL, *dgp = NULL;
+ 	struct pci_dev *pdev = NULL;
+
+ 	while ((pdev = pci_get_class(PCI_CLASS_DISPLAY_VGA << 8, pdev))) {
+@@ -428,10 +429,18 @@ static struct pci_dev *gmux_get_io_pdev(void)
+ 		if (!(cmd & PCI_COMMAND_IO))
+ 			continue;
+
+-		return pdev;
++		if (pdev->bus && pdev->bus->number > 0 && !dgp)
++			dgp = pci_dev_get(pdev);
++		else if (pdev->bus && pdev->bus->number == 0 && !igp)
++			igp = pci_dev_get(pdev);
+ 	}
+
+-	return NULL;
++	if (dgp && !igp)
++		pr_warn("Found only discrete GPU %s, integrated GPU is hidden,"
++				" unable to protect backlight behind VGA IO",
++				pci_name(dgp));
++	pci_dev_put(dgp);
++	return igp;
+ }
+
+ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)

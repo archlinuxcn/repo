@@ -1,0 +1,72 @@
+From b0bfa7c33cead5dd87267cfd4c29fda47dc1adc4 Mon Sep 17 00:00:00 2001
+Message-Id: <b0bfa7c33cead5dd87267cfd4c29fda47dc1adc4.1514245012.git.jan.steffens@gmail.com>
+From: Steffen Klassert <steffen.klassert@secunet.com>
+Date: Wed, 15 Nov 2017 06:40:57 +0100
+Subject: [PATCH 1/3] Revert "xfrm: Fix stack-out-of-bounds read in
+ xfrm_state_find."
+
+This reverts commit c9f3f813d462c72dbe412cee6a5cbacf13c4ad5e.
+
+This commit breaks transport mode when the policy template
+has widlcard addresses configured, so revert it.
+
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+---
+ net/xfrm/xfrm_policy.c | 29 ++++++++++++++++++-----------
+ 1 file changed, 18 insertions(+), 11 deletions(-)
+
+diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
+index 6eb228a70131069b..a2e531bf4f976308 100644
+--- a/net/xfrm/xfrm_policy.c
++++ b/net/xfrm/xfrm_policy.c
+@@ -1361,29 +1361,36 @@ xfrm_tmpl_resolve_one(struct xfrm_policy *policy, const struct flowi *fl,
+ 	struct net *net = xp_net(policy);
+ 	int nx;
+ 	int i, error;
++	xfrm_address_t *daddr = xfrm_flowi_daddr(fl, family);
++	xfrm_address_t *saddr = xfrm_flowi_saddr(fl, family);
+ 	xfrm_address_t tmp;
+ 
+ 	for (nx = 0, i = 0; i < policy->xfrm_nr; i++) {
+ 		struct xfrm_state *x;
+-		xfrm_address_t *local;
+-		xfrm_address_t *remote;
++		xfrm_address_t *remote = daddr;
++		xfrm_address_t *local  = saddr;
+ 		struct xfrm_tmpl *tmpl = &policy->xfrm_vec[i];
+ 
+-		remote = &tmpl->id.daddr;
+-		local = &tmpl->saddr;
+-		if (xfrm_addr_any(local, tmpl->encap_family)) {
+-			error = xfrm_get_saddr(net, fl->flowi_oif,
+-					       &tmp, remote,
+-					       tmpl->encap_family, 0);
+-			if (error)
+-				goto fail;
+-			local = &tmp;
++		if (tmpl->mode == XFRM_MODE_TUNNEL ||
++		    tmpl->mode == XFRM_MODE_BEET) {
++			remote = &tmpl->id.daddr;
++			local = &tmpl->saddr;
++			if (xfrm_addr_any(local, tmpl->encap_family)) {
++				error = xfrm_get_saddr(net, fl->flowi_oif,
++						       &tmp, remote,
++						       tmpl->encap_family, 0);
++				if (error)
++					goto fail;
++				local = &tmp;
++			}
+ 		}
+ 
+ 		x = xfrm_state_find(remote, local, fl, tmpl, policy, &error, family);
+ 
+ 		if (x && x->km.state == XFRM_STATE_VALID) {
+ 			xfrm[nx++] = x;
++			daddr = remote;
++			saddr = local;
+ 			continue;
+ 		}
+ 		if (x) {
+-- 
+2.15.1
+

@@ -1,0 +1,114 @@
+From a3c64fe9d978f3ee8f21fac5b410c63fe7cce725 Mon Sep 17 00:00:00 2001
+Message-Id: <a3c64fe9d978f3ee8f21fac5b410c63fe7cce725.1514245012.git.jan.steffens@gmail.com>
+In-Reply-To: <b0bfa7c33cead5dd87267cfd4c29fda47dc1adc4.1514245012.git.jan.steffens@gmail.com>
+References: <b0bfa7c33cead5dd87267cfd4c29fda47dc1adc4.1514245012.git.jan.steffens@gmail.com>
+From: Tejun Heo <tj@kernel.org>
+Date: Wed, 20 Dec 2017 07:09:19 -0800
+Subject: [PATCH 3/3] cgroup: fix css_task_iter crash on CSS_TASK_ITER_PROC
+
+While teaching css_task_iter to handle skipping over tasks which
+aren't group leaders, bc2fb7ed089f ("cgroup: add @flags to
+css_task_iter_start() and implement CSS_TASK_ITER_PROCS") introduced a
+silly bug.
+
+CSS_TASK_ITER_PROCS is implemented by repeating
+css_task_iter_advance() while the advanced cursor is pointing to a
+non-leader thread.  However, the cursor variable, @l, wasn't updated
+when the iteration has to advance to the next css_set and the
+following repetition would operate on the terminal @l from the
+previous iteration which isn't pointing to a valid task leading to
+oopses like the following or infinite looping.
+
+  BUG: unable to handle kernel NULL pointer dereference at 0000000000000254
+  IP: __task_pid_nr_ns+0xc7/0xf0
+  PGD 0 P4D 0
+  Oops: 0000 [#1] SMP
+  ...
+  CPU: 2 PID: 1 Comm: systemd Not tainted 4.14.4-200.fc26.x86_64 #1
+  Hardware name: System manufacturer System Product Name/PRIME B350M-A, BIOS 3203 11/09/2017
+  task: ffff88c4baee8000 task.stack: ffff96d5c3158000
+  RIP: 0010:__task_pid_nr_ns+0xc7/0xf0
+  RSP: 0018:ffff96d5c315bd50 EFLAGS: 00010206
+  RAX: 0000000000000000 RBX: ffff88c4b68c6000 RCX: 0000000000000250
+  RDX: ffffffffa5e47960 RSI: 0000000000000000 RDI: ffff88c490f6ab00
+  RBP: ffff96d5c315bd50 R08: 0000000000001000 R09: 0000000000000005
+  R10: ffff88c4be006b80 R11: ffff88c42f1b8004 R12: ffff96d5c315bf18
+  R13: ffff88c42d7dd200 R14: ffff88c490f6a510 R15: ffff88c4b68c6000
+  FS:  00007f9446f8ea00(0000) GS:ffff88c4be680000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 0000000000000254 CR3: 00000007f956f000 CR4: 00000000003406e0
+  Call Trace:
+   cgroup_procs_show+0x19/0x30
+   cgroup_seqfile_show+0x4c/0xb0
+   kernfs_seq_show+0x21/0x30
+   seq_read+0x2ec/0x3f0
+   kernfs_fop_read+0x134/0x180
+   __vfs_read+0x37/0x160
+   ? security_file_permission+0x9b/0xc0
+   vfs_read+0x8e/0x130
+   SyS_read+0x55/0xc0
+   entry_SYSCALL_64_fastpath+0x1a/0xa5
+  RIP: 0033:0x7f94455f942d
+  RSP: 002b:00007ffe81ba2d00 EFLAGS: 00000293 ORIG_RAX: 0000000000000000
+  RAX: ffffffffffffffda RBX: 00005574e2233f00 RCX: 00007f94455f942d
+  RDX: 0000000000001000 RSI: 00005574e2321a90 RDI: 000000000000002b
+  RBP: 0000000000000000 R08: 00005574e2321a90 R09: 00005574e231de60
+  R10: 00007f94458c8b38 R11: 0000000000000293 R12: 00007f94458c8ae0
+  R13: 00007ffe81ba3800 R14: 0000000000000000 R15: 00005574e2116560
+  Code: 04 74 0e 89 f6 48 8d 04 76 48 8d 04 c5 f0 05 00 00 48 8b bf b8 05 00 00 48 01 c7 31 c0 48 8b 0f 48 85 c9 74 18 8b b2 30 08 00 00 <3b> 71 04 77 0d 48 c1 e6 05 48 01 f1 48 3b 51 38 74 09 5d c3 8b
+  RIP: __task_pid_nr_ns+0xc7/0xf0 RSP: ffff96d5c315bd50
+
+Fix it by moving the initialization of the cursor below the repeat
+label.  While at it, rename it to @next for readability.
+
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Fixes: bc2fb7ed089f ("cgroup: add @flags to css_task_iter_start() and implement CSS_TASK_ITER_PROCS")
+Cc: stable@vger.kernel.org # v4.14+
+Reported-by: Laura Abbott <labbott@redhat.com>
+Reported-by: Bronek Kozicki <brok@incorrekt.com>
+Reported-by: George Amanakis <gamanakis@gmail.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+---
+ kernel/cgroup/cgroup.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
+
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index 44857278eb8aa6a2..030e4286f14c715e 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -4059,26 +4059,24 @@ static void css_task_iter_advance_css_set(struct css_task_iter *it)
+ 
+ static void css_task_iter_advance(struct css_task_iter *it)
+ {
+-	struct list_head *l = it->task_pos;
++	struct list_head *next;
+ 
+ 	lockdep_assert_held(&css_set_lock);
+-	WARN_ON_ONCE(!l);
+-
+ repeat:
+ 	/*
+ 	 * Advance iterator to find next entry.  cset->tasks is consumed
+ 	 * first and then ->mg_tasks.  After ->mg_tasks, we move onto the
+ 	 * next cset.
+ 	 */
+-	l = l->next;
++	next = it->task_pos->next;
+ 
+-	if (l == it->tasks_head)
+-		l = it->mg_tasks_head->next;
++	if (next == it->tasks_head)
++		next = it->mg_tasks_head->next;
+ 
+-	if (l == it->mg_tasks_head)
++	if (next == it->mg_tasks_head)
+ 		css_task_iter_advance_css_set(it);
+ 	else
+-		it->task_pos = l;
++		it->task_pos = next;
+ 
+ 	/* if PROCS, skip over tasks which aren't group leaders */
+ 	if ((it->flags & CSS_TASK_ITER_PROCS) && it->task_pos &&
+-- 
+2.15.1
+
