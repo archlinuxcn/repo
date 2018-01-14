@@ -4,30 +4,30 @@
 
 pkgname=foxitreader
 pkgver=2.4.1.0609
-_frrev_i686=r08f07f8
-_frrev_x86_64=${_frrev_i686}
-pkgrel=4
+_foxitrevision=r08f07f8
+pkgrel=5
 pkgdesc="A fast, secure and complete PDF viewer"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="https://www.foxitsoftware.com/products/pdf-reader/"
 license=('custom:EULA')
-makedepends=('qt-installer-framework>=3.0.1' 'qt5-tools' 'p7zip')
 depends=('libsecret' 'qt5-webkit')
-source=("https://www.foxitsoftware.com/products/pdf-reader/eula.html"
-        "${pkgname}.patch")
-source_i686=("http://cdn09.foxitsoftware.com/pub/foxit/reader/desktop/linux/2.x/${pkgver%.*.*}/en_us/FoxitReader${pkgver}_Server_x86_enu_Setup.run.tar.gz"
-             "${pkgname}-excluded_files-i686")
-source_x86_64=("http://cdn09.foxitsoftware.com/pub/foxit/reader/desktop/linux/2.x/${pkgver%.*.*}/en_us/FoxitReader${pkgver}_Server_x64_enu_Setup.run.tar.gz"
-               "${pkgname}-excluded_files-x86_64")
-sha256sums=('c1485614de2b8087d14ab2d7b10e51faaaaf83a96f8bce6a0e1791effadf6079'
-            'd85bfa4b293927975182aa6b1582ac064c5732711e5678d5f1ec35e65c78e6d1')
-sha256sums_i686=('03dd1c4d248bd1782a9a9dd46836ffec9f38128b5f34ad3370a71d33fd87c9bc'
-                 '58addc465b629286552a9166ab70509c2f87bee9f7519dcd567a183f5dcaba9b')
-sha256sums_x86_64=('d8093dd3b3aeb4e788cbdff5f9d05d7557eb440810f6da6bdc4e23447d3a27ba'
-                   '02d9bb529bf59e02c75c61e5be74711fc1d4918224a8953cff766f80a66c0f8e')
+source=("http://cdn09.foxitsoftware.com/pub/foxit/reader/desktop/linux/2.x/${pkgver%.*.*}/en_us/FoxitReader${pkgver}_Server_x64_enu_Setup.run.tar.gz"
+        "https://www.foxitsoftware.com/products/pdf-reader/eula.html"
+        "${pkgname}.patch"
+        "${pkgname}-excluded_files-x86_64"
+        "installer.qs")
+sha256sums=('d8093dd3b3aeb4e788cbdff5f9d05d7557eb440810f6da6bdc4e23447d3a27ba'
+            'c1485614de2b8087d14ab2d7b10e51faaaaf83a96f8bce6a0e1791effadf6079'
+            'd85bfa4b293927975182aa6b1582ac064c5732711e5678d5f1ec35e65c78e6d1'
+            'aac1c0aac453470bbfd1f65033a1fdaeb6eb660ba15e94cc10262c054bb9aa23'
+            'afe2ca6ed0cec06256d329a1529e5d299eb289cb25132ef253d6d2e9b7489aa8')
+
+prepare() {
+  # Fix output path in the installer script
+  sed "s#OUTPUT_DIRECTORY#${srcdir}/${pkgname}-installer#" "${srcdir}/installer.qs" > "${pkgname}.qs"
+}
 
 build() {
-  local _file
   local _line
   # Clean installer dir
   if [ -d "${pkgname}-installer" ]
@@ -35,33 +35,17 @@ build() {
     rm -rf "${pkgname}-installer"
   fi
   # Decompress .run installer
-  if [ "${CARCH}" = 'x86_64' ]
-  then
-    _file="FoxitReader.enu.setup.${pkgver}(${_frrev_x86_64}).x64.run"
-  else
-    _file="FoxitReader.enu.setup.${pkgver}(${_frrev_i686}).x86.run"
-  fi
-  devtool dump "${_file}" "${pkgname}-installer"
-  # Clean build dir
-  if [ -d "${pkgname}-build" ]
-  then
-    rm -rf "${pkgname}-build"
-  fi
-  # Decompress files
-  cd "${pkgname}-installer/metadata/Install Foxit Reader"
-  install -m 755 -d "${srcdir}/${pkgname}-build"
-  for _file in *.7z
-  do
-    7z x -o"${srcdir}/${pkgname}-build" ${_file} > /dev/null
-  done
+  QT_QPA_PLATFORM=minimal "./FoxitReader.enu.setup.${pkgver}(${_foxitrevision}).x64.run" \
+                          --script "${pkgname}.qs" "${srcdir}/${pkgname}-installer"
   # Apply final patches
-  cd "${srcdir}/${pkgname}-build"
-  patch -p4 -i "${srcdir}/${pkgname}.patch"
+  cd "${srcdir}/${pkgname}-installer"
+  patch -p4 --no-backup-if-mismatch -i "${srcdir}/${pkgname}.patch"
   # Remove unneeded files
   rm "Activation" "Activation.desktop" "Activation.sh" \
      "countinstalltion" "countinstalltion.sh" \
-     "installUpdate" "ldlibrarypath.sh" \
-     "maintenancetool.sh" "Uninstall.desktop" \
+     "installUpdate" \
+     "maintenancetool" "maintenancetool.dat" "maintenancetool.ini" "maintenancetool.sh" \
+     "Uninstall.desktop" \
      "Update.desktop" "updater" "updater.sh"
   find -type d -name ".svn" -exec rm -rf {} +
   find -type f -name ".directory" -exec rm -rf {} +
@@ -69,12 +53,12 @@ build() {
   # Remove excluded files
   while IFS='' read -r _line
   do
-    if [ "${_line::1}" == '#' ]
+    if [ "${_line::2}" = "# " ]
     then
       echo "  -> Removing excluded files from ${_line:2}..."
-    elif [ -n "${_line}" ]
+    elif [ -n "${_line}" -a "${_line::1}" != "#" ]
     then
-      rm "${srcdir}/${pkgname}-build/${_line}"
+      rm "${srcdir}/${pkgname}-installer/${_line}"
     fi
   done < "${srcdir}/${pkgname}-excluded_files-$CARCH"
 }
@@ -83,7 +67,7 @@ check() {
   # Check for unwanted libraries
   local _file
   local _unwanted=0
-  cd "${srcdir}/${pkgname}-build/lib"
+  cd "${srcdir}/${pkgname}-installer/lib"
 
   # Check if lib folders is not empty  
   if [ "$(ls -A .)" ]
@@ -111,7 +95,7 @@ check() {
 
 package() {
   install -m 755 -d "${pkgdir}/usr/lib/${pkgname}"
-  cd "${srcdir}/${pkgname}-build"
+  cd "${srcdir}/${pkgname}-installer"
   cp -r * "${pkgdir}/usr/lib/${pkgname}"
   # Install icon and desktop files
   install -m 755 -d "${pkgdir}/usr/share/pixmaps"
