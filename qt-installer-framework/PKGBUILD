@@ -3,15 +3,15 @@
 
 pkgbase=qt-installer-framework
 pkgname=(qt-installer-framework qt-installer-framework-docs)
-pkgver=3.0.1
+pkgver=3.0.2
 pkgrel=1
 pkgdesc='The Qt Installer Framework used for the Qt SDK installer'
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url='http://qt-project.org/wiki/Qt-Installer-Framework'
 license=('FDL' 'LGPL')
 makedepends=('qt5-tools' 'qt5-declarative')
 source=("https://download.qt.io/official_releases/${pkgbase}/${pkgver}/${pkgbase}-opensource-src-${pkgver}.tar.gz")
-sha256sums=('e1aca203f6f34e5f79b2e16d0ab50016875be877920cc4a66fef7c84b60acb7a')
+sha256sums=('f65059141278e0a1224a5b821ae8affe59ee4bb4b50abdc4e04f93fd69a02617')
 
 build() {
   # Build tools and libraries
@@ -34,12 +34,6 @@ package_qt-installer-framework() {
                                         "bin/devtool" \
                                         "bin/installerbase" \
                                         "bin/repogen"
-  # Install libraries
-  install -m 755 -d "${pkgdir}/usr/lib"
-  install -m 755 -t "${pkgdir}/usr/lib" "lib/libinstaller.so.1.0.0"
-  ln -s "libinstaller.so.1.0.0" "${pkgdir}/usr/lib/libinstaller.so"
-  ln -s "libinstaller.so.1.0.0" "${pkgdir}/usr/lib/libinstaller.so.1"
-  ln -s "libinstaller.so.1.0.0" "${pkgdir}/usr/lib/libinstaller.so.1.0"
   # Install tests
   install -m 755 -d "${pkgdir}/usr/lib/${pkgbase}"
   cp -a -t "${pkgdir}/usr/lib/${pkgbase}/" "tests"
