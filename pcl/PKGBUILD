@@ -8,7 +8,7 @@
 
 pkgname=pcl
 pkgver=1.8.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A comprehensive open source library for n-D Point Clouds and 3D geometry processing"
 arch=('x86_64' 'i686')
 url='http://www.pointclouds.org'
@@ -32,22 +32,27 @@ prepare() {
     | xargs sed -i "s/#include <boost.*posix_time.hpp>/#ifndef Q_MOC_RUN\n\r#include <boost\\/date_time\\/posix_time\\/posix_time.hpp>\n\r#endif/g"
 
   # [[ -d build ]] && rm -r build
-  mkdir -p build && cd build
-
-  cmake .. \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCUDA_HOST_COMPILER=/usr/bin/gcc
 }
 
 build() {
-  cd "${srcdir}/pcl-pcl-${pkgver}/build"
+# [[ -d build ]] && rm -r build
+#  mkdir -p build && cd build
+ # Create build directory
+  [ -d ${srcdir}/build ] || mkdir ${srcdir}/build
+  cd ${srcdir}/build
+
+  cmake ${srcdir}/pcl-pcl-${pkgver} \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCUDA_HOST_COMPILER=/usr/bin/gcc
+
+#  cd "${srcdir}/pcl-pcl-${pkgver}/build"
   make
 }
 
 package() {
-  cd "${srcdir}/pcl-pcl-${pkgver}/build"
+  cd "${srcdir}/build"
   make DESTDIR=${pkgdir} install
 
-  install -Dm644 ../LICENSE.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  install -Dm644 ${srcdir}/pcl-pcl-${pkgver}/LICENSE.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
