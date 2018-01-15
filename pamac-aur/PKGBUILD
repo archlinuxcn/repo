@@ -42,7 +42,7 @@ build() {
   meson --prefix=/usr --sysconfdir=/etc
 
   # build
-  ninja -l2
+  ninja -l$(nproc)
 }
 
 package() {
