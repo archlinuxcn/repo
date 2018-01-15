@@ -1,6 +1,6 @@
 #Maintainer : Sasasu <lizhaolong0123@gmail.com>
 pkgname=uget-chrome-wrapper
-pkgver=2.0.6
+pkgver=2.0.7
 pkgrel=6
 pkgdesc="Integrate uGet Download Manager with Google Chrome, Chromium, Vivaldi, Opera and Firefox"
 arch=('any')
@@ -11,7 +11,7 @@ makedepends=()
 source=("uget-chrome-wrapper-$pkgver::https://raw.githubusercontent.com/slgobinath/uget-chrome-wrapper/v$pkgver/uget-chrome-wrapper/bin/uget-chrome-wrapper"
         "ugetchromewrapper-$pkgver::https://raw.githubusercontent.com/slgobinath/uget-chrome-wrapper/v$pkgver/uget-chrome-wrapper/conf/com.javahelps.ugetchromewrapper.json"
         "ugetfirefoxwrapper-$pkgver::https://raw.githubusercontent.com/slgobinath/uget-chrome-wrapper/v$pkgver/uget-chrome-wrapper/conf/com.javahelps.ugetfirefoxwrapper.json")
-md5sums=('08c546f9f2216885f6aa5083b4b30ecc'
+md5sums=('3db3e88a3b9f9585ac66c6d13c5fc7b7'
          '7c185094db349599f8375866796db33a'
          '4806bc4553389cc0610e642b12510246')
 install=uget-chrome-wrapper.install
