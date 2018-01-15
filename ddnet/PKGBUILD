@@ -1,12 +1,12 @@
 # Maintainer: Rafael Fontenelle <rafaelff@gnome.org>
 
 pkgname=ddnet
-pkgver=10.8.6
+pkgver=11.0
 pkgrel=1
 pkgdesc="DDraceNetwork, a mod of Teeworlds"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="https://ddnet.tw"
-license=('custom')
+license=('custom:BSD' 'cc-by-nc-sa-3.0')
 depends=('alsa-lib' 'glu' 'sdl2' 'freetype2' 'opusfile' 'curl') #mariadb
 makedepends=('cmake' 'imagemagick' 'gendesk' 'python' 'gtest')
 optdepends=('ddnet-skins: more skins for your tee'
@@ -15,7 +15,7 @@ provides=('teeworlds-ddnet')
 conflicts=('teeworlds-ddnet')
 replaces=('teeworlds-ddnet')
 source=("https://ddnet.tw/downloads/DDNet-$pkgver.tar.xz")
-sha256sums=('1b43a9a7a4dae19a1ad280d25095d7fe6b72dcedd910ce95f204548356e64402')
+sha256sums=('29c81ef7c01a0a0decf715aa850faa692eb115b577e403f59b02daf2d1e1d2fb')
 
 prepare() {
     mkdir build || true
