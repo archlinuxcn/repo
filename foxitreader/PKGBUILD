@@ -5,7 +5,7 @@
 pkgname=foxitreader
 pkgver=2.4.1.0609
 _foxitrevision=r08f07f8
-pkgrel=5
+pkgrel=6
 pkgdesc="A fast, secure and complete PDF viewer"
 arch=('x86_64')
 url="https://www.foxitsoftware.com/products/pdf-reader/"
@@ -37,8 +37,10 @@ build() {
   # Decompress .run installer
   QT_QPA_PLATFORM=minimal "./FoxitReader.enu.setup.${pkgver}(${_foxitrevision}).x64.run" \
                           --script "${pkgname}.qs" "${srcdir}/${pkgname}-installer"
-  # Apply final patches
+  # Fix desktop file path
   cd "${srcdir}/${pkgname}-installer"
+  sed -i '/Exec=/d' FoxitReader.desktop
+  # Apply final patches
   patch -p4 --no-backup-if-mismatch -i "${srcdir}/${pkgname}.patch"
   # Remove unneeded files
   rm "Activation" "Activation.desktop" "Activation.sh" \
