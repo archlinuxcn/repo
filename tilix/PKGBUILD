@@ -1,8 +1,8 @@
 # Maintainer: Carl George < arch at cgtx dot us >
 
 pkgname="tilix"
-pkgver=1.7.3
-pkgrel=2
+pkgver=1.7.5
+pkgrel=1
 pkgdesc="A tiling terminal emulator for Linux using GTK+ 3"
 arch=('x86_64' 'i686')
 url="https://github.com/gnunn1/tilix"
@@ -16,15 +16,15 @@ optdepends=('python2-nautilus: for "Open Tilix Here" support in nautilus'\
 provides=('terminix')
 conflicts=('terminix')
 replaces=('terminix')
-source=("$url/archive/$pkgver/$pkgname-$pkgver.tar.gz"
-        "$url/commit/1de71cc0f77d1da9ee03425d3444c424150bc101.patch")
-sha256sums=('c05cac4073267e576671f69613f644c4b52769253edd473a48f406b7f10d954c'
-            'bb38279ff6ddaa16aa0cb794a9a531293659a6e84f8c13cc3954fad1733022bb')
+source=("$url/archive/$pkgver/$pkgname-$pkgver.tar.gz")
+#        "$url/commit/1de71cc0f77d1da9ee03425d3444c424150bc101.patch")
+sha256sums=('324c565e71ae5f975d5488241915c1e12eb27695a1d4b896443fb7ef02dd39c0')
+#            'bb38279ff6ddaa16aa0cb794a9a531293659a6e84f8c13cc3954fad1733022bb')
 
 prepare() {
     cd "$pkgname-$pkgver"
-	# Cherry-pick fix for gtkd 3.7.1
-	patch -p1 -i "../1de71cc0f77d1da9ee03425d3444c424150bc101.patch"
+	# Cherry-pick
+	#patch -p1 -i "../1de71cc0f77d1da9ee03425d3444c424150bc101.patch"
     ./autogen.sh
 }
 
