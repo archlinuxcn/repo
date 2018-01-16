@@ -1,0 +1,24 @@
+# Generated with gembuild (https://github.com/mfinelli/gembuild)
+# Maintainer: Mario Finelli <mario dot finelli at yahoo dot com>
+
+_gemname=benchmark-ips
+pkgname=ruby-$_gemname
+pkgver=2.3.0
+pkgrel=1
+pkgdesc='A iterations per second enhancement to Benchmark.'
+arch=('any')
+url='https://github.com/evanphx/benchmark-ips'
+license=('MIT')
+options=(!emptydirs)
+noextract=($_gemname-$pkgver.gem)
+depends=('ruby')
+makedepends=('rubygems')
+source=("https://rubygems.org/downloads/$_gemname-$pkgver.gem")
+sha256sums=('12443aa327d3129aa965244f79d7d5cb0f692f0f92ba7db76fba61526a40062e')
+
+package() {
+  cd "$srcdir"
+  local _gemdir="$(ruby -e'puts Gem.default_dir')"
+
+  gem install --ignore-dependencies --no-user-install -i "$pkgdir/$_gemdir" -n "$pkgdir/usr/bin" $_gemname-$pkgver.gem
+}
