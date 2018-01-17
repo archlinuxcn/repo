@@ -1,14 +1,14 @@
 _pkgname=Telethon
 pkgname=python-telethon
-pkgver=0.16.1.3
+pkgver=0.16.1.4
 pkgrel=1
 pkgdesc="Full-featured Telegram client library for Python 3"
 arch=('any')
 url="https://github.com/LonamiWebs/Telethon"
 license=('MIT')
 depends=('python' 'python-pyaes' 'python-rsa' 'python-setuptools')
-source=('https://pypi.python.org/packages/31/78/073a7f978b170ace3d0d53d80e237655c5f7c7eeeefb19c579a4b99cbf03/Telethon-0.16.1.3.tar.gz')
-md5sums=('730a2947e684563e6fc4769fc70b202b')
+source=('https://pypi.python.org/packages/1a/e5/3c13251e01a7bccdbf7fad1eeab2c2a016d642bfaaa1d733fe840ac1ac1e/Telethon-0.16.1.4.tar.gz')
+md5sums=('85290f83ab866e62b088549071cf76df')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
