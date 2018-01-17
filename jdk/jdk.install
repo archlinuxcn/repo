@@ -10,6 +10,10 @@ note() {
     printf "${blue}::${yellow} archlinux-java:${bold} $1${all_off}\n"
 }
 
+note2() {
+    printf "${blue}==>${yellow} NOTE:${bold} $1${all_off}\n"
+}
+
 post_install() {
     default=$(archlinux-java get)
     case ${default} in
@@ -32,6 +36,14 @@ post_install() {
     if [[ ! -f /etc/ssl/certs/java/cacerts ]]; then
         update-ca-trust
     fi
+
+    note2 "Since Oracle Java 9, some Qt 5 applications (such as the reader apps Zeal and
+          GoldenDict) will crash due to the existance of the Java NPAPI plugin symlink
+          (/usr/lib/mozilla/plugins/libnpjp2-jdk9.so).
+          
+          See: 
+          - https://github.com/zealdocs/zeal/issues/802
+          - https://bbs.archlinux.org/viewtopic.php?id=231222"
 }
 
 post_upgrade() {
