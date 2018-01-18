@@ -1,18 +1,19 @@
+# Co-Maintainer: Shengyu Zhang <la@archlinuxcn.org>
 # Maintainer: Carsten Feuls <archlinux@carstenfeuls.de>
 
 _gemname=jekyll-watch
 pkgname=ruby-$_gemname
-pkgver=1.5.0
-pkgrel=2
+pkgver=2.0.0
+pkgrel=1
 pkgdesc='Rebuild your Jekyll site when a file changes with the `--watch` switch.'
 arch=('any')
 url='https://github.com/jekyll/jekyll-watch'
 license=('MIT')
-depends=('ruby-listen>3.0')
+depends=('ruby-listen>=3.0' 'ruby-listen<4.0')
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
-sha512sums=('8eda8def17883354aa5ecf89f68e8553e664f228dc4b82b0e888c66c6c247592817b8462907d9e69200532a2211d032e3669e5760a3e816f1dd118eea70ca834')
+sha512sums=('b4057980e41253bf6a91633da5cd23afb34c83d9d01c95cd495ea8a1d389c8e09a464388198c1ba72bd35ed3470a37587787d7bbb3f48f9e60ca9718a9b2b938')
 
 package() {
   local _gemdir="$(ruby -e'puts Gem.default_dir')"
