@@ -1,15 +1,15 @@
 _pkgname=async_generator
 pkgname=python-async_generator
-pkgver=1.8
+pkgver=1.9
 pkgrel=1
-pkgdesc="Async generators for Python 3.5"
+pkgdesc="Async generators and context managers for Python 3.5+"
 arch=('any')
-url="https://github.com/njsmith/async_generator"
+url="https://github.com/python-trio/async_generator"
 license=('MIT')
 depends=('python')
 makedepends=('python-setuptools')
-source=('https://pypi.python.org/packages/cf/2f/0577dc1ebcee37f5b4ace6f32da5bd2b2dc9073d82186143b75259b52123/async_generator-1.8.zip')
-md5sums=('a97473393c097193e5316a957e96020c')
+source=('https://pypi.python.org/packages/d6/fd/d9c76bac900882ceb0b2579d071588f60556557cc5d1a92ddcade14cc210/async_generator-1.9.tar.gz')
+md5sums=('a0a4922839f6309135e4122975ed4a96')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
