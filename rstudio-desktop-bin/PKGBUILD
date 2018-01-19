@@ -12,8 +12,8 @@
 #######################
 
 pkgname=rstudio-desktop-bin
-pkgver=1.1.383
-pkgrel=4
+pkgver=1.1.414
+pkgrel=1
 pkgdesc="An integrated development environment (IDE) for R (binary version from RStudio official repository)"
 arch=('i686' 'x86_64')
 license=('GPL')
@@ -27,11 +27,11 @@ provides=("rstudio-desktop=${pkgver}")
 options=(!strip)
 
 md5sums_i686=(
-9588bce746f2a5e8da299c4a8b35d4fa
+44d16f29fcdbef82b2652adbef7cf53d
 795a3ca3f2048c4dc32d25560e191c35
 eca697b2b8efbed3d2241f6b0c8c15e4)
 md5sums_x86_64=(
-3eede231b7206a7eebbf090f4991358f
+759fd531bfbfc47a6f211953750de9e4
 84e61f5eda991b978fa168d6762f7990
 391ba54997d6faddbfe41a185a823ee4)
 
