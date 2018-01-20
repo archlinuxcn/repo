@@ -1,0 +1,19 @@
+# Maintainer: BenYip <yebenmy@protonmail.com>
+
+pkgname=elixir-docs
+pkgver=1.6.0
+pkgrel=1
+pkgdesc="Documentation for elixir"
+makedepends=('unzip')
+arch=('any')
+url='http://elixir-lang.org'
+license=('BSD')
+source=("$pkgname-$pkgver.zip::https://github.com/elixir-lang/elixir/releases/download/v${pkgver}/Docs.zip")
+md5sums=('eafe28e8190d159c44265da3d11f4da4')
+
+package() {
+  mkdir -p "$pkgdir/usr/share"
+  mkdir -p "$pkgdir/usr/share/licenses/elixir-docs"
+  cp -r "$srcdir/doc" "$pkgdir/usr/"
+  cp -r "$srcdir/LICENSE" "$pkgdir/usr/share/licenses/elixir-docs/"
+}
