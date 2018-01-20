@@ -5,7 +5,7 @@ build_prefix = 'extra-x86_64'
 
 def _get_new_version():
   new_verion = s.get("https://api.github.com/repos/elixir-lang/elixir/releases").json()[0]
-  return new_verion['name'][1:]
+  return new_verion['tag_name'][1:]
 
 def pre_build():
   ver = _get_new_version()
