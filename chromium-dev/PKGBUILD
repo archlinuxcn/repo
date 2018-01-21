@@ -18,7 +18,7 @@ _use_wayland=0   # Build Wayland NOTE: extremely experimental and don't work at 
 ## -- Package and components information -- ##
 ##############################################
 pkgname=chromium-dev
-pkgver=65.0.3311.3
+pkgver=65.0.3322.3
 pkgrel=1
 pkgdesc="The open-source project behind Google Chrome (Dev Channel)"
 arch=('x86_64')
@@ -105,6 +105,9 @@ sha256sums=( #"$(curl -sL https://gsdview.appspot.com/chromium-browser-official/
             )
 options=('!strip')
 install=chromium-dev.install
+
+# only for test purpose
+#BUILDDIR=$(pwd)
 
 ################################################
 ## -- Don't touch anything below this line -- ##
@@ -305,6 +308,7 @@ _flags=(
         "enable_nacl_nonsfi=${_nacl}"
         'use_custom_libcxx=false'
         'use_lld=false' # https://bugs.gentoo.org/641556
+        'use_jumbo_build=false' # https://chromium.googlesource.com/chromium/src/+/lkcr/docs/jumbo.md
         )
 
 if [ "$_wayland" = "1" ]; then
@@ -430,14 +434,9 @@ prepare() {
     sed 's|/x86_64-linux-gnu||' -i gpu/vulkan/BUILD.gn
   fi
 
-  # fix vulkan build https://crbug.com/799620
-  sed 's|is_win \|\| (is_linux && use_x11 && !is_chromeos)|false|g' -i third_party/angle/gni/angle.gni
-
   # Apply VAAPI patch
   # base64 -d "${srcdir}/chromium-intel-vaapi_r15.diff.base64" | patch -p1 -i -
   #patch -p1 -i "${srcdir}/chromium-intel-vaapi_r16.diff.patch"
-  # needs generate gpu_lists_version.h by hand (?) # taked from DEPS files
-  python2 build/util/lastchange.py -m GPU_LISTS_VERSION --revision-id-only --header gpu/config/gpu_lists_version.h
 
   # Patch from crbug (chromium bugtracker) or Arch chromium package
 
@@ -544,7 +543,7 @@ build() {
   out/Release/gn gen out/Release -v --args="${_flags[*]}" --script-executable=/usr/bin/python2
 
   # Build all with ninja.
-  LC_ALL=C ninja -C out/Release -v pdf chrome chrome_sandbox chromedriver widevinecdmadapter clear_key_cdm
+  LC_ALL=C ninja -l$(nproc) -C out/Release -v pdf chrome chrome_sandbox chromedriver widevinecdmadapter clear_key_cdm
 }
 
 package() {
@@ -581,12 +580,11 @@ package() {
          'libclearkeycdm.so'
          'libEGL.so'
          'libGLESv2.so'
-#          'libVkLayer_core_validation.so'
-#          'libVkLayer_object_tracker.so'
-#          'libVkLayer_parameter_validation.so'
-#          'libVkLayer_swapchain.so'
-#          'libVkLayer_threading.so'
-#          'libVkLayer_unique_objects.so'
+         'libVkLayer_core_validation.so'
+         'libVkLayer_object_tracker.so'
+         'libVkLayer_parameter_validation.so'
+         'libVkLayer_threading.so'
+         'libVkLayer_unique_objects.so'
          'libwidevinecdmadapter.so'
          'swiftshader/libEGL.so'
          'swiftshader/libGLESv2.so'
