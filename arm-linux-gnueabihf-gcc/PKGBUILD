@@ -19,9 +19,6 @@ url='http://gcc.gnu.org'
 depends=("${_target}-binutils>=2.29.0-1" "${_target}-glibc>=2.26-4" libmpc elfutils zlib)
 checkdepends=(dejagnu inetutils)
 options=(!emptydirs !distcc !strip)
-conflicts=("${_target}-gcc-stage1" "${_target}-gcc-stage2")
-replaces=("${_target}-gcc-stage1" "${_target}-gcc-stage2")
-provides=("${_target}-gcc-stage1=${pkgver}" "${_target}-gcc-stage2=${pkgver}")
 source=(https://github.com/gcc-mirror/gcc/archive/${_commit}.tar.gz
         http://isl.gforge.inria.fr/isl-${_islver}.tar.bz2
         Revert-eeb6872bf.patch
