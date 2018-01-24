@@ -7,24 +7,29 @@
 _target="arm-linux-gnueabihf"
 pkgbase=${_target}-gcc
 _pkgname=(gcc gcc-libs gcc-fortran gcc-objc)
-pkgver=6.3.1
-_pkgver=6
-_islver=0.16.1
-pkgrel=1
-_commit=4ca53f06ff7d346ef8021a23108f23a5406a0417
+pkgver=7.2.0
+_pkgver=${pkgver:0:1}
+_islver=0.18
+pkgrel=3
+_commit=1bd23ca8c30f4827c4bea23deedf7ca33a86ffb5
 pkgdesc="The GNU Compiler Collection (${_target})"
 arch=(i686 x86_64)
-license=('GPL' 'LGPL' 'FDL' 'custom')
-url="http://gcc.gnu.org"
-depends=("${_target}-binutils>=2.25" "${_target}-glibc>=2.24" 'libmpc' 'elfutils' 'zlib')
-options=('!buildflags' '!libtool' '!emptydirs' 'zipman' 'docs'
-         '!distcc' '!strip' 'staticlibs')
+license=(GPL LGPL FDL custom)
+url='http://gcc.gnu.org'
+depends=("${_target}-binutils>=2.29.0-1" "${_target}-glibc>=2.26-4" libmpc elfutils zlib)
+checkdepends=(dejagnu inetutils)
+options=(!emptydirs !distcc !strip)
+conflicts=("${_target}-gcc-stage1" "${_target}-gcc-stage2")
+replaces=("${_target}-gcc-stage1" "${_target}-gcc-stage2")
+provides=("${_target}-gcc-stage1=${pkgver}" "${_target}-gcc-stage2=${pkgver}")
 source=(https://github.com/gcc-mirror/gcc/archive/${_commit}.tar.gz
         http://isl.gforge.inria.fr/isl-${_islver}.tar.bz2
-        0001-ARMv5-disable-LDRD-STRD.patch)
-md5sums=('e65d06ed7c00e68bc84f6989752a09eb'
-         'ac1f25a0677912952718a51f5bc20f32'
-         '924a9bcdd7852410667f04ce18c305d7')
+        Revert-eeb6872bf.patch
+        PR82155.patch)
+md5sums=('1b6966a45fe43445ae7ae4ffd5d43df9'
+         '11436d6b205e516635b666090b94ab32'
+         'e4c9c8b498b04c0f51d219d025ca8407'
+         'e77419f7d25aad0980c765012dc8c417')
 
 _basedir=gcc-${_commit}
 _libdir="usr/lib/gcc/${_target}/$pkgver"
@@ -32,7 +37,7 @@ _libdir="usr/lib/gcc/${_target}/$pkgver"
 prepare() {
   cd ${_basedir}
 
-  # link isl for in-tree builds
+  # link isl for in-tree build
   ln -sf ../isl-${_islver} isl
 
   # Do not run fixincludes
@@ -43,10 +48,13 @@ prepare() {
   # hack! - some configure tests for header files using "$CPP $CPPFLAGS"
   sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" {libiberty,gcc}/configure
 
-  mkdir -p "${srcdir}"/gcc-build
+  # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=80717
+  patch -p1 -i ${srcdir}/Revert-eeb6872bf.patch
 
-  # Disable LDRD/STRD on ARMv5 (64-bit alignment issues)
-  patch -p1 -i ../0001-ARMv5-disable-LDRD-STRD.patch
+  mkdir -p "$srcdir/gcc-build"
+
+  # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=82155
+  patch -p1 -i ../PR82155.patch
 
   rm -rf "${srcdir}/bin"
   mkdir -p "${srcdir}/bin"
@@ -80,20 +88,23 @@ build() {
 
   # using -pipe causes spurious test-suite failures
   # http://gcc.gnu.org/bugzilla/show_bug.cgi?id=48565
+  CFLAGS=${CFLAGS/-pipe/}
+  CXXFLAGS=${CXXFLAGS/-pipe/}
 
   ../${_basedir}/configure \
      --prefix=/usr \
      --program-prefix=${_target}- \
-     --target=${_target} \
-     --host=$CHOST \
-     --build=$CHOST \
+     --with-local-prefix=/usr/${_target} \
      --with-sysroot=/usr/${_target} \
      --with-build-sysroot=/usr/${_target} \
      --with-as=/usr/bin/${_target}-as \
      --with-ld=/usr/bin/${_target}-ld \
+     --libdir=/usr/lib --libexecdir=/usr/lib \
      --enable-languages=c,c++,fortran,lto,objc,obj-c++ \
      --enable-shared \
      --enable-threads=posix \
+     --with-system-zlib \
+     --with-isl \
      --enable-__cxa_atexit \
      --disable-libunwind-exceptions \
      --enable-clocale=gnu \
@@ -109,10 +120,16 @@ build() {
      --disable-multilib \
      --disable-werror \
      --enable-checking=release \
-     --disable-nls \
-     --with-float=hard \
+     --enable-default-pie \
+     --enable-default-ssp \
+     --target=${_target} \
+     --host=${CHOST} \
+     --build=${CHOST} \
      --enable-interwork \
-     --enable-addons
+     --enable-addons \
+     --with-arch=armv6 \
+     --with-float=hard \
+     --with-fpu=vfp
 
   make
 }
@@ -172,7 +189,7 @@ package_gcc() {
   make -C lto-plugin DESTDIR="${pkgdir}" install
   # install -dm755 "${pkgdir}"/usr/lib/bfd-plugins/
   # ln -s /usr/lib/gcc/$_target/${pkgver}/liblto_plugin.so \
-  #    "${pkgdir}"/usr/lib/bfd-plugins/
+      #    "${pkgdir}"/usr/lib/bfd-plugins/
 
   make -C $_target/libgomp DESTDIR="${pkgdir}" \
        install-nodist_toolexeclibHEADERS install-nodist_libsubincludeHEADERS
