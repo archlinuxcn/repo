@@ -32,5 +32,4 @@ package() {
   cd "$srcdir/build"
 
   make DESTDIR="$pkgdir/" install
-  sed -i 's/class io_service;//g' $pkgdir/usr/include/core/dbus/asio/executor.h
 }
