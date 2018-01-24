@@ -89,4 +89,7 @@ package() {
 
   # Remove unneeded for compilation files
   rm -rf "$pkgdir/usr/$_target/"{bin,sbin,etc,share,var}
+  for f in "${pkgdir}"/usr/${_target}/lib/lib{c,pthread}.so; do
+    sed -i "$f" -e "s://*lib/l:l:g"
+  done
 }
