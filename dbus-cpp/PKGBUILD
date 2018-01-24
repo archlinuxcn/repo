@@ -4,7 +4,7 @@ pkgname=dbus-cpp
 pkgdesc="A header-only dbus-binding leveraging C++-11"
 pkgver=5.0.0
 _pkgver=5.0.0+16.10.20160809
-pkgrel=2
+pkgrel=3
 arch=('x86_64')
 url="https://code.launchpad.net/dbus-cpp"
 license=('LGPL3')
@@ -32,4 +32,5 @@ package() {
   cd "$srcdir/build"
 
   make DESTDIR="$pkgdir/" install
+  sed -i 's/class io_service;//g' $pkgdir/usr/include/core/dbus/asio/executor.h
 }
