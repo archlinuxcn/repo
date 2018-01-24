@@ -2,16 +2,16 @@
 # Contributor: Artyom Olshevskiy <siasia@siasia>
 
 pkgname='java-service-wrapper'
-pkgver=3.5.32
+pkgver=3.5.34
 pkgrel=1
 pkgdesc="Enables a Java Application to be run as a Windows Service or Unix Daemon"
 url="https://wrapper.tanukisoftware.com/doc/english/introduction.html"
-arch=('i686' 'x86_64' 'armv6h' 'armv7h')
+arch=('i686' 'x86_64' 'aarch64' 'armv6h' 'armv7h')
 license=('GPL2')
 conflicts=('java-service-wrapper-bin')
 makedepends=('apache-ant' 'java-environment>=7')
 source=("https://wrapper.tanukisoftware.com/download/${pkgver}/wrapper_${pkgver}_src.tar.gz")
-sha256sums=('c11d6300c7a65acd301591a97b79e3ee046f3f7d65cb0ff8f2fc2e29cb4568ec')
+sha256sums=('d5c8f2530bba5ac5d938b25ccd2aee30f577e518098ae964d25be41fe06d3db6')
 
 prepare() {
     sed -i "${srcdir}/wrapper_${pkgver}_src/build.xml" \
@@ -29,10 +29,8 @@ build() {
     source /etc/profile.d/jre.sh
     export JAVA_HOME="${JAVA_HOME:-/usr/lib/jvm/default}"
 
-    [[ "$CARCH" = "x86_64" ]] && _bits=64    || _bits=32
-    [[ "$CARCH" = arm*     ]] && _arch=armhf || _arch=x86
-
-    ant -Dbits=${_bits} -Ddist.arch=${_arch} jar compile-c-unix
+    [[ "$CARCH" = @(x86_64|aarch64) ]] && _bits=64 || _bits=32
+    ant -Dbits=${_bits} -Dos.arch="$(uname -m)" jar compile-c-unix
 }
 
 package() {
