@@ -1,7 +1,6 @@
 from lilaclib import *
 
 build_prefix = 'multilib'
-depends = ['capnproto']
 
 pre_build = vcs_update
 
