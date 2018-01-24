@@ -1,30 +1,42 @@
 # Contributor: Alexander 'hatred' Drozdov <adrozdoff@gmail.com>
-# Maintainer: Erico Nunes <nunes dot erico at gmail>
+# Contributor: toha257 <toha257@gmail.com>
+# Contributor: Allan McRae <allan@archlinux.org>
+# Contributor: Bartłomiej Piotrowski <bpiotrowski@archlinux.org>
+# Contributor: Kevin Mihelich <kevin@archlinuxarm.org>
+# Maintainer: Tavian Barnes <tavianator@tavianator.com>
 
 _target="arm-linux-gnueabihf"
 pkgname=${_target}-glibc
 pkgver=2.26
-pkgrel=1
+pkgrel=4
 pkgdesc="GNU C Library (${_target})"
-arch=(any)
-url="http://www.gnu.org/software/libc"
-license=('GPL' 'LGPL')
-depends=("${_target}-linux-api-headers>=4.7")
-makedepends=("${_target}-gcc-stage2>=6.3.1" 'gperf')
+arch=('any')
+url="http://www.gnu.org/software/libc/"
+license=(GPL LGPL)
+depends=("${_target}-linux-api-headers>=4.12.7-1")
+makedepends=("${_target}-gcc-stage2>=7.2.0-3" gperf)
 provides=("${_target}-glibc-headers=${pkgver}" "${_target}-eglibc")
 conflicts=("${_target}-glibc-headers" "${_target}-eglibc")
 replaces=("${_target}-glibc-headers")
-options=('!buildflags' '!strip' 'staticlibs')
-source=(http://ftp.gnu.org/gnu/libc/glibc-${pkgver}.tar.xz)
-md5sums=('102f637c3812f81111f48f2427611be1')
+options=(!buildflags !strip staticlibs)
+_commit=58270c0049404ef2f878fdd45df55f17f0b8c1f7
+source=(http://ftp.gnu.org/gnu/libc/glibc-${pkgver}.tar.xz
+        glibc-${_commit}.patch
+        0001-Don-t-use-IFUNC-resolver-for-longjmp-or-system-in-li.patch
+        0002-x86-Add-x86_64-to-x86-64-HWCAP-BZ-22093.patch)
+md5sums=('102f637c3812f81111f48f2427611be1'
+         '7ce099a4060f59b7b7dd5ca66605f4e8'
+         'cbc073315c00b03898b7fc614274d6b3'
+         'bd9b13f3294b6357baa809e4416b9f44')
 
 prepare() {
-  cd glibc-${pkgver}
+  mkdir glibc-build
+  cd glibc-$pkgver
 
-  #patch -p1 -i ${srcdir}/glibc-${_commit}.patch
+  patch -p1 -i "$srcdir/glibc-$_commit.patch"
 
-  rm -rf "${srcdir}"/glibc-build
-  mkdir -p "${srcdir}"/glibc-build
+  patch -p1 -i "$srcdir/0001-Don-t-use-IFUNC-resolver-for-longjmp-or-system-in-li.patch"
+  patch -p1 -i "$srcdir/0002-x86-Add-x86_64-to-x86-64-HWCAP-BZ-22093.patch"
 }
 
 build() {
@@ -35,10 +47,8 @@ build() {
   echo "sbindir=/bin" >> configparms
   echo "rootsbindir=/bin" >> configparms
 
-  # remove hardening options for building libraries
-  export CFLAGS="-U_FORTIFY_SOURCE -mlittle-endian -mhard-float -O2"
-  export CPPFLAGS="-U_FORTIFY_SOURCE -O2"
-  unset LD_LIBRARY_PATH
+  # remove fortify for building libraries
+  CPPFLAGS=${CPPFLAGS/-D_FORTIFY_SOURCE=2/}
 
   export BUILD_CC=gcc
   export CC=${_target}-gcc
@@ -46,23 +56,24 @@ build() {
   export AR=${_target}-ar
   export RANLIB=${_target}-ranlib
 
-  ../glibc-${pkgver}/configure --prefix=/ \
-           --target=${_target} --host=${_target} --build=${CHOST} \
-           --libdir=/lib --libexecdir=/lib \
-           --with-headers=/usr/${_target}/include \
-           --enable-add-ons \
-           --enable-obsolete-rpc \
-           --enable-kernel=2.6.32 \
-           --enable-bind-now --disable-profile \
-           --enable-stackguard-randomization \
-           --enable-lock-elision \
-           --disable-multi-arch \
-           --enable-shared \
-           --with-tls \
-           --with-__thread \
-           --without-cvs \
-           --without-gd \
-           --disable-werror
+  "$srcdir/glibc-$pkgver/configure" \
+      --prefix=/ \
+      --libdir=/lib \
+      --libexecdir=/lib \
+      --with-headers=/usr/${_target}/include \
+      --enable-add-ons \
+      --enable-bind-now \
+      --enable-lock-elision \
+      --disable-multi-arch \
+      --enable-obsolete-nsl \
+      --enable-obsolete-rpc \
+      --enable-stack-protector=strong \
+      --enable-stackguard-randomization \
+      --disable-profile \
+      --disable-werror \
+      --target=${_target} \
+      --host=${_target} \
+      --build=${CHOST}
 
   echo "build-programs=no" >> configparms
   make
@@ -71,15 +82,11 @@ build() {
 package() {
   cd glibc-build
 
-  make "install_root=${pkgdir}/usr/${_target}" install
+  make install_root="$pkgdir/usr/$_target" install
 
-  mkdir -p "${pkgdir}/usr/${_target}/usr"
-  ln -s ../{include,lib} "${pkgdir}/usr/${_target}/usr"
+  mkdir -p "$pkgdir/usr/$_target/usr"
+  ln -s ../{include,lib} "$pkgdir/usr/$_target/usr"
 
   # Remove unneeded for compilation files
-  rm -rf "${pkgdir}"/usr/${_target}/{bin,sbin,etc,share,var}
-
-  for f in "${pkgdir}"/usr/${_target}/lib/lib{c,pthread}.so; do
-    sed -i "$f" -e "s://*lib/l:l:g"
-  done
+  rm -rf "$pkgdir/usr/$_target/"{bin,sbin,etc,share,var}
 }
