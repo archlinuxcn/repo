@@ -2,7 +2,7 @@
 # Maintainer: glider <samtron1412 {at} gmail {dot} com>
 pkgname=nerd-fonts-complete
 pkgver=1.2.0
-pkgrel=2
+pkgrel=3
 pkgdesc="collection of over 20 patched fonts (complete variant) for \
          powerline, devicons, and vim-devicons: includes Droid Sans, \
          Meslo, AnonymousPro, ProFont, Inconsolta, and many more"
@@ -88,9 +88,9 @@ prepare() {
 }
 
 package() {
-  install -Dm644 -t "$pkgdir"/usr/share/fonts/OTF "$srcdir"/NerdFonts/*.otf
-  install -Dm644 -t "$pkgdir"/usr/share/fonts/TTF "$srcdir"/NerdFonts/*.ttf
+  install -Dm644 -t "$pkgdir"/usr/share/fonts/$pkgname/otf "$srcdir"/NerdFonts/*.otf
+  install -Dm644 -t "$pkgdir"/usr/share/fonts/$pkgname/ttf "$srcdir"/NerdFonts/*.ttf
   install -Dm644 -t "$pkgdir"/etc/fonts/conf.avail "$srcdir"/nerd-fonts-$pkgver/10-nerd-font-symbols.conf
-  install -Dm644 -t "$pkgdir"/"$HOME"/.local/share/fonts "$srcdir"/nerd-fonts-$pkgver/bin/scripts/lib/*
+  install -Dm644 -t "$pkgdir"/usr/lib/$pkgname/scripts/lib "$srcdir"/nerd-fonts-$pkgver/bin/scripts/lib/*
   install -Dm644 -t "$pkgdir"/usr/share/licenses/$pkgname "$srcdir"/nerd-fonts-$pkgver/LICENSE
 }
