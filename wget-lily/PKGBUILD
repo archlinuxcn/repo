@@ -1,12 +1,12 @@
-# $Id$
+# Maintainer: Levente Polyak <anthraxx[at]archlinux[dot]org>
 # Maintainer: Eric Bélanger <eric@archlinux.org>
 
 pkgname=wget-lily
-pkgver=1.19.2
+pkgver=1.19.4
 pkgrel=1
-pkgdesc="Network utility to retrieve files from the Web"
-arch=('i686' 'x86_64')
-url="https://www.gnu.org/software/wget/wget.html"
+pkgdesc='Network utility to retrieve files from the Web'
+url='https://www.gnu.org/software/wget/wget.html'
+arch=('x86_64')
 license=('GPL3')
 depends=('gnutls' 'libidn' 'libutil-linux' 'libpsl' 'pcre')
 checkdepends=('perl-http-daemon' 'perl-io-socket-ssl' 'python')
@@ -14,10 +14,11 @@ optdepends=('ca-certificates: HTTPS downloads')
 conflicts=('wget')
 provides=("wget=$pkgver")
 backup=('etc/wgetrc')
-source=(https://ftp.gnu.org/gnu/wget/wget-${pkgver}.tar.gz{,.sig} wget.patch)
-sha256sums=('4f4a673b6d466efa50fbfba796bd84a46ae24e370fa562ede5b21ab53c11a920'
+source=(https://ftp.gnu.org/gnu/wget/wget-${pkgver}.tar.lz{,.sig} wget.patch)
+sha256sums=('2fc0ffb965a8dc8f1e4a89cbe834c0ae7b9c22f559ebafc84c7874ad1866559a'
             'SKIP' aa28cf8532f6b7cc1fe689eb253b0453102990eb725a6583704ca4f3e665c9b0)
 validpgpkeys=('AC404C1C0BF735C63FF4D562263D6DF2E163E1EA'
+              '7845120B07CBD8D6ECE5FF2B2A1743EDA91A35B6'
               '1CB27DBC98614B2D5841646D08302DB6A2670428') # Tim Rühsen <tim.ruehsen@gmx.de>
 
 prepare() {
