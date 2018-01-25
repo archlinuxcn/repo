@@ -5,7 +5,7 @@
 # or use: $ curl -s https://dl.google.com/linux/chrome/rpm/stable/x86_64/repodata/other.xml.gz | gzip -df | awk -F\" '/pkgid/{ sub(".*-","",$4); print $4": "$10 }'
 
 pkgname=google-chrome
-pkgver=63.0.3239.132
+pkgver=64.0.3282.119
 pkgrel=1
 pkgdesc="The popular and trusted web browser by Google (Stable Channel)"
 arch=('x86_64')
@@ -25,7 +25,7 @@ _channel=stable
 source=("google-chrome-${_channel}_${pkgver}_amd64.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_amd64.deb"
         'eula_text.html'
         "google-chrome-$_channel.sh")
-md5sums=('686da57aa7aebeb304e85a7c3699c13d'
+md5sums=('9c7227daaa03e9b3dacbff1bc8e5ec90'
          'd50d8f0a6940791eabc41c4f64e6a3cf'
          '99fa93d5e7fb5d622cef0f9621f3ffa3')
 
@@ -46,11 +46,6 @@ package() {
     install -Dm644 "$pkgdir"/opt/google/chrome/product_logo_${i/x*}.png \
                    "$pkgdir"/usr/share/icons/hicolor/$i/apps/google-chrome.png
   done
-
-  # Man page
-  if [[ -f "$pkgdir"/usr/share/man/man1/google-chrome.1 ]]; then
-    gzip "$pkgdir"/usr/share/man/man1/google-chrome.1
-  fi
 
   # License
   install -Dm644 eula_text.html "$pkgdir"/usr/share/licenses/google-chrome/eula_text.html
