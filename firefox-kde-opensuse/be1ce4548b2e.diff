@@ -1,0 +1,49 @@
+# HG changeset patch
+# User Chris Manchester <cmanchester@mozilla.com>
+# Date 1516312802 28800
+#      Thu Jan 18 14:00:02 2018 -0800
+# Node ID be1ce4548b2e1fcb34e91fc7b514394de5eb9ddf
+# Parent  2c2e56a87ad10a77faf799adf4c2ec55882128dd
+Bug 1431342 - Move channel-prefs.js processing back to Makefile.in to avoid changing its content. r=rstrong
+
+MozReview-Commit-ID: A7kR8WPB4TQ
+
+diff -r 2c2e56a87ad1 -r be1ce4548b2e browser/app/Makefile.in
+--- a/browser/app/Makefile.in	Fri Jan 12 18:02:14 2018 +0100
++++ b/browser/app/Makefile.in	Thu Jan 18 14:00:02 2018 -0800
+@@ -53,6 +53,13 @@
+ 
+ endif
+ 
++# channel-prefs.js is handled separate from other prefs due to bug 756325
++# DO NOT change the content of channel-prefs.js without taking the appropriate
++# steps. See bug 1431342.
++libs:: $(srcdir)/profile/channel-prefs.js
++	$(NSINSTALL) -D $(DIST)/bin/defaults/pref
++	$(call py_action,preprocessor,-Fsubstitution $(PREF_PPFLAGS) $(ACDEFINES) $^ -o $(DIST)/bin/defaults/pref/channel-prefs.js)
++
+ ifeq (cocoa,$(MOZ_WIDGET_TOOLKIT))
+ 
+ MAC_APP_NAME = $(MOZ_APP_DISPLAYNAME)
+diff -r 2c2e56a87ad1 -r be1ce4548b2e browser/app/moz.build
+--- a/browser/app/moz.build	Fri Jan 12 18:02:14 2018 +0100
++++ b/browser/app/moz.build	Thu Jan 18 14:00:02 2018 -0800
+@@ -43,9 +43,6 @@
+ # Neither channel-prefs.js nor firefox.exe want to end up in dist/bin/browser.
+ DIST_SUBDIR = ""
+ 
+-# channel-prefs.js is handled separate from other prefs due to bug 756325
+-JS_PREFERENCE_PP_FILES += ['profile/channel-prefs.js']
+-
+ LOCAL_INCLUDES += [
+     '!/build',
+     '/toolkit/xre',
+diff -r 2c2e56a87ad1 -r be1ce4548b2e browser/app/profile/channel-prefs.js
+--- a/browser/app/profile/channel-prefs.js	Fri Jan 12 18:02:14 2018 +0100
++++ b/browser/app/profile/channel-prefs.js	Thu Jan 18 14:00:02 2018 -0800
+@@ -2,5 +2,4 @@
+  * License, v. 2.0. If a copy of the MPL was not distributed with this
+  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+ 
+-#filter substitution
+ pref("app.update.channel", "@MOZ_UPDATE_CHANNEL@");

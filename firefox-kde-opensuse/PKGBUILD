@@ -20,7 +20,7 @@ _pgo=true
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=57.0.4
+pkgver=58.0
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
@@ -41,7 +41,7 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
             'speech-dispatcher: Text-to-Speech')
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
-_patchrev=963651ec972e
+_patchrev=d14085eee2b2
 options=('!emptydirs'  'strip')
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 _repo=https://hg.mozilla.org/mozilla-unified
@@ -54,16 +54,12 @@ source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
 	# Gecko/toolkit patchset
 	mozilla-kde-$_patchrev.patch::$_patchurl/mozilla-kde.patch
 	mozilla-nongnome-proxies-$_patchrev.patch::$_patchurl/mozilla-nongnome-proxies.patch
-        mozilla-bindgen-systemlibs-$_patchrev.patch::$_patchurl/mozilla-bindgen-systemlibs.patch
 	unity-menubar.patch
 	add_missing_pgo_rule.patch
         pgo_fix_missing_kdejs.patch
         fix_pgo_bug1389436_explicitly_instantiate_gfxFont.patch
-        wifi-disentangle.patch wifi-fix-interface.patch
         firefox-install-dir.patch no-crmf.diff
-        0001-Bug-1360278-Add-preference-to-trigger-context-menu-o.patch
-        0002-Bug-1419426-Implement-browserSettings.contextMenuSho.patch 
-        no-plt.diff
+        be1ce4548b2e.diff
 )
 
 
@@ -103,7 +99,6 @@ prepare() {
   msg "Patching for KDE"
   patch -Np1 -i "$srcdir/mozilla-nongnome-proxies-$_patchrev.patch"
   patch -Np1 -i "$srcdir/mozilla-kde-$_patchrev.patch"
-  patch -Np1 -i "$srcdir/mozilla-bindgen-systemlibs-$_patchrev.patch"
 
   patch -Np1 -i "$srcdir/firefox-kde-$_patchrev.patch"
   patch -Np1 -i "$srcdir/firefox-no-default-ualocale-$_patchrev.patch"
@@ -115,6 +110,9 @@ prepare() {
   # add missing rule for pgo builds
   patch -Np1 -i "$srcdir"/add_missing_pgo_rule.patch
 
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=1431342
+  patch -Np1 -i "$srcdir"/be1ce4548b2e.diff
+  
   # add missing file Makefile for pgo builds
   patch -Np1 -i "$srcdir"/pgo_fix_missing_kdejs.patch
    
@@ -122,22 +120,10 @@ prepare() {
   # https://bugs.archlinux.org/task/34644
   # sed -i '/ac_cpp=/s/$CPPFLAGS/& -O2/' configure
 
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1382942
-  patch -Np1 -i ../no-plt.diff
 
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1371991
   patch -Np1 -i ../no-crmf.diff
 
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1360278
-  patch -Np1 -i ../0001-Bug-1360278-Add-preference-to-trigger-context-menu-o.patch
-
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1419426
-  patch -Np1 -i ../0002-Bug-1419426-Implement-browserSettings.contextMenuSho.patch
-  
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1314968
-  patch -Np1 -i ../wifi-disentangle.patch
-  patch -Np1 -i ../wifi-fix-interface.patch
-  
   # WebRTC build tries to execute "python" and expects Python 2
   mkdir -p "$srcdir/path"
   ln -sf /usr/bin/python2 "$srcdir/path/python"
@@ -171,11 +157,12 @@ build() {
 
   if [[ -n $_pgo ]]; then
     # Do PGO
-    xvfb-run -a -s "-extension GLX -screen 0 1280x1024x24" \
-      make -f client.mk build MOZ_PGO=1
+    DISPLAY=:99 MOZ_PGO=1 xvfb-run -a -s "-extension GLX -screen 0 1280x1024x24" \
+           ./mach build
   else
-    make -f client.mk build
+    ./mach build
   fi
+  ./mach buildsymbols
 }
 
 package() {
@@ -184,7 +171,7 @@ package() {
   [[ "$CARCH" == "i686" ]] && cp "$srcdir/kde.js" obj-i686-pc-linux-gnu/dist/bin/defaults/pref
   [[ "$CARCH" == "x86_64" ]] && cp "$srcdir/kde.js" obj-x86_64-pc-linux-gnu/dist/bin/defaults/pref
 
-  make -f client.mk DESTDIR="$pkgdir" INSTALL_SDK= install
+  DESTDIR="$pkgdir" ./mach install
 
   install -Dm644 "$srcdir/vendor.js" "$pkgdir/usr/lib/firefox/browser/defaults/preferences/vendor.js"
   install -Dm644 "$srcdir/kde.js" "$pkgdir/usr/lib/firefox/browser/defaults/preferences/kde.js"
@@ -239,19 +226,14 @@ md5sums=('SKIP'
          '05bb69d25fb3572c618e3adf1ee7b670'
          '6e335a517c68488941340ee1c23f97b0'
          'af659b0f4f5b904480bf97843fa3502b'
-         'fb5bb43056a4f509a8aa844c2a9d4e95'
+         'fa564c666987df18683c1cb53a3834a9'
          '82f7f100d4b01677ed748679565d8b1a'
-         '8eae53a34fdd6e1664ff08173fec465e'
+         '1975dde6770233eb17a16beea317d947'
          '0661e259fe57df87fca791f4aeb78da0'
-         '51c36935c00f62efd493a9d37742a5a2'
-         'c7e2592c49f5846857e7a84e0788099d'
+         '38b6df4dbce5df03e46eefe41202d74b'
          'fe24f5ea463013bb7f1c12d12dce41b2'
          '3fa8bd22d97248de529780f5797178af'
          'b358b5ed3726ecd4ed054bdc09901982'
-         'c6ebac35e9e9c3b031f2cf9ee3e6ed96'
-         'a819433292665a6f06a223a0a718e67a'
          'dbf14588e85812ee769bd735823a0146'
          '196edf030efc516e3de5ae3aa01e9851'
-         '408d5191d5083ca852d90a1bb858b158'
-         '099fe738095e4da2df8fb662f17d4aa3'
-         'cf3409120d3f05190e5197f48c2b2343')
+         '480a3e3899c9ba9ec4b699d45cfe36fa')
