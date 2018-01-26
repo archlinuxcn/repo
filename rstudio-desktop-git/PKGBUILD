@@ -6,7 +6,7 @@ pkgver=v1.1.371.r839.g4ede38f978
 _gwtver=2.8.1
 _ginver=2.1.2
 _clangver=5.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A powerful and productive integrated development environment (IDE) for R programming language"
 arch=('i686' 'x86_64')
 url="https://www.rstudio.com/products/rstudio/"
@@ -34,7 +34,7 @@ pkgver() {
     git describe --long --tags | sed -r 's/([^-]*-g)/r\1/;s/-/./g'
 }
 
-prepare() {
+build() {
     msg "Extracting dependencies..."
     cd "${srcdir}/${_gitname}/src/gwt"
     install -d dictionaries
@@ -57,9 +57,7 @@ prepare() {
  
     msg "Downloading and installing R packages..."
     bash install-packages
-}
 
-build() {
     rm -rf "${srcdir}/${_gitname}/build"
     mkdir "${srcdir}/${_gitname}/build"
     cd "${srcdir}/${_gitname}/build"
