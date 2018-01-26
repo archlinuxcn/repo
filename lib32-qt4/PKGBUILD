@@ -7,7 +7,7 @@
 
 pkgname=lib32-qt4
 pkgver=4.8.7
-pkgrel=13
+pkgrel=14
 pkgdesc='A cross-platform application and UI framework (32-bit)'
 arch=('x86_64')
 url='http://www.qt.io'
@@ -15,8 +15,9 @@ license=('GPL3' 'LGPL' 'FDL' 'custom')
 depends=("${pkgname#lib32-}" 'lib32-alsa-lib' 'lib32-dbus' 'lib32-fontconfig' 'lib32-glib2'
          'lib32-libgl' 'lib32-libmng' 'lib32-libpng' 'lib32-libsm' 'lib32-libtiff'
          'lib32-libxi' 'lib32-libxrandr' 'lib32-libxv' 'lib32-openssl' 'lib32-sqlite')
-makedepends=('cups' 'gcc-multilib'  'lib32-gtk2' 'lib32-libcups' 'lib32-libxfixes' 'lib32-mesa')
-optdepends=('lib32-libxcursor: Xcursor support'
+makedepends=('cups' 'gcc-multilib'  'lib32-gtk2' 'lib32-icu' 'lib32-libcups' 'lib32-libxfixes' 'lib32-mesa')
+optdepends=('lib32-icu: Unicode support'
+            'lib32-libxcursor: Xcursor support'
             'lib32-libxfixes: Xfixes support'
             'lib32-libxinerama: Xinerama support'
             'lib32-sni-qt: StatusNotifierItem (AppIndicators) support')
@@ -104,12 +105,14 @@ prepare() {
 
   # Fix build with OpenSSL 1.1 (Debian + OpenMandriva)
   patch -p1 -i "$srcdir"/qt4-openssl-1.1.patch
+
+  echo "QMAKE_CXXFLAGS += -std=gnu++98" >> src/3rdparty/javascriptcore/JavaScriptCore/JavaScriptCore.pri
+  echo "QMAKE_CXXFLAGS += -std=gnu++98" >> src/plugins/accessible/qaccessiblebase.pri
 }
 
 build() {
   export QT4DIR="${srcdir}"/${_pkgfqn}
   export LD_LIBRARY_PATH=${QT4DIR}/lib:${LD_LIBRARY_PATH}
-  export CXXFLAGS+=" -std=gnu++98" # Fix build with GCC 6
   export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
 #  export PKG_CONFIG_LIBDIR='/usr/lib32/pkgconfig'
 
