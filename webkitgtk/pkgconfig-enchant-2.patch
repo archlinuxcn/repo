@@ -1,0 +1,11 @@
+--- webkitgtk-2.4.11/Source/autotools/FindDependencies.m4.orig	2018-01-19 23:47:23.866875328 +0800
++++ webkitgtk-2.4.11/Source/autotools/FindDependencies.m4	2018-01-19 23:47:34.543576202 +0800
+@@ -154,7 +154,7 @@
+ AC_SUBST(PANGO_LIBS)
+ 
+ if test "$enable_spellcheck" = "yes"; then
+-    PKG_CHECK_MODULES(ENCHANT, enchant >= enchant_required_version, [], [enable_spellcheck="no"])
++    PKG_CHECK_MODULES(ENCHANT, enchant-2 >= enchant_required_version, [], [enable_spellcheck="no"])
+     AC_SUBST(ENCHANT_CFLAGS)
+     AC_SUBST(ENCHANT_LIBS)
+ fi
