@@ -10,9 +10,9 @@ pkgname=('virtualbox-svn'
          'virtualbox-guest-utils-svn'
          'virtualbox-guest-utils-nox-svn'
          'virtualbox-ext-vnc-svn')
-pkgver=69165
+pkgver=70753
 pkgrel=1
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url='http://virtualbox.org'
 license=('GPL' 'custom')
 makedepends=('alsa-lib'
@@ -65,15 +65,15 @@ source=("VirtualBox::svn+http://www.virtualbox.org/svn/vbox/trunk"
         'vboxweb.service'
         'vboxreload'
         '002-dri-driver-path.patch'
-        '003-ogl-include-path.patch'
         '005-gsoap-build.patch'
         '006-rdesktop-vrdp-keymap-path.patch'
         '007-python2-path.patch'
         '008-no-vboxvideo.patch'
+        '009-include-path.patch'
         )
 sha256sums=('SKIP'
-            '292fa3a414c125cf9119c8f2d866f3bd3a36c37842c9f68e6bbf74801860cd8a'
-            'f4c4ec1b2d25c64d3b334d487d4fbf6e06e072d252a0979f73a47a41e4afdcf7'
+            'deb03efa7ad0376aa55a087f2e882afe00935f10b0e7aa853ba9147090d341ec'
+            '113f9b92141b85df01f1e74d22f01d1f1aa81650eb79b89ceefc3cae20afe2e2'
             '2101ebb58233bbfadf3aa74381f22f7e7e508559d2b46387114bc2d8e308554c'
             'da4c49f6ca94e047e196cdbcba2c321199f4760056ea66e0fbc659353e128c9e'
             '9c5238183019f9ebc7d92a8582cad232f471eab9d3278786225abc1a1c7bf66e'
@@ -83,12 +83,14 @@ sha256sums=('SKIP'
             '01dbb921bd57a852919cc78be5b73580a564f28ebab2fe8d6c9b8301265cbfce'
             'e6e875ef186578b53106d7f6af48e426cdaf1b4e86834f01696b8ef1c685787f'
             '2a9d7748dc58f9d091f791da06b733a696943114f7c0d580fa00a0752eb1d2ac'
-            'ee54fe188e27b6e80e2044ea9ba1874db2ca2c026ad04f393be1be69c18d440d'
-            'a094a37ce710452e45f14eaec3e10bd71054aa910cf463b36a8b3ec42be466a1'
+            'f67674931c30187f867233e3a4ae662f93c9110fbd0bfce50dd9f391f4533bc0'
             '7d2da8fe10a90f76bbfc80ad1f55df4414f118cd10e10abfb76070326abebd46'
             '5d5af2de5b1f1c61ec793503350f2440661cf8fd640f11b8a86f10bce499c0dc'
             '6bdb017459532537199c399eefd3d84d8dc7f1786e79997caebd3b6eb5c75d9f'
-            '8b7f241107863f82a5b0ae336aead0b3366a40103ff72dbebf33f54b512a0cbc')
+            '8b7f241107863f82a5b0ae336aead0b3366a40103ff72dbebf33f54b512a0cbc'
+            '1acc7014bcb3d9ca6da29eed813c3d6e91a688c43f9d93802fd4e3814f67ace4'
+            )
+
 pkgver() {
   cd "VirtualBox"
   local ver="$(svnversion)"
@@ -112,6 +114,9 @@ prepare() {
 
     msg2 'Use our CFLAGS'
     echo "VBOX_GCC_OPT=$CXXFLAGS" >> LocalConfig.kmk
+
+    msg2 'Use system GL headers'
+    echo 'VBOX_USE_SYSTEM_GL_HEADERS=true' >> LocalConfig.kmk
 
     msg2 'Remove gcc version censorship'
     sed -i 's/^check_gcc$/#check_gcc/' configure
@@ -141,7 +146,6 @@ build() {
 }
 
 package_virtualbox-svn() {
-    _pkgname=virtualbox
     pkgdesc='Powerful x86 virtualization for enterprise as well as home use'
     depends=('glibc' 'openssl' 'curl' 'gcc-libs' 'libpng' 'python2' 'sdl'
              'libvpx' 'libxml2' 'procps-ng' 'shared-mime-info' 'zlib'
@@ -152,9 +156,9 @@ package_virtualbox-svn() {
                 'virtualbox-ext-vnc: VNC server support'
                 'virtualbox-sdk: Developer kit')
     backup=('etc/vbox/vbox.cfg')
+    provides=('virtualbox')
     replaces=('virtualbox-ose')
     conflicts=('virtualbox-ose' 'virtualbox')
-    provides=('virtualbox')
     install=virtualbox.install
 
     source "VirtualBox/env.sh"
@@ -225,7 +229,7 @@ package_virtualbox-svn() {
     cd "$srcdir"
 
     #licence
-    install -Dm644 VirtualBox/COPYING "$pkgdir/usr/share/licenses/$_pkgname/LICENSE"
+    install -Dm644 VirtualBox/COPYING "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 
     # install systemd stuff
     install -Dm644 60-vboxdrv.rules "$pkgdir/usr/lib/udev/rules.d/60-vboxdrv.rules"
@@ -238,7 +242,6 @@ package_virtualbox-svn() {
 }
 
 package_virtualbox-sdk-svn() {
-    _pkgname=virtualbox-sdk
     pkgdesc='VirtualBox Software Developer Kit (SDK)'
     depends=('python2')
     provides=('virtualbox-sdk')
@@ -258,7 +261,7 @@ package_virtualbox-sdk-svn() {
     cp -r sdk "$pkgdir/usr/lib/virtualbox"
     # licence
     install -Dm644 "$srcdir/VirtualBox/COPYING" \
-        "$pkgdir/usr/share/licenses/$_pkgname/LICENSE"
+        "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
 package_virtualbox-host-dkms-svn() {
@@ -269,7 +272,7 @@ package_virtualbox-host-dkms-svn() {
               'virtualbox-host-source'
               'virtualbox-host-modules-lts')
     conflicts=('virtualbox-source' 'virtualbox-host-source' 'virtualbox-host-dkms')
-    provides=('VIRTUALBOX-HOST-MODULES-SVN' 'virtualbox-host-dkms')
+    provides=('VIRTUALBOX-HOST-MODULES-SVN')
     optdepends=('linux-headers: build modules against Arch kernel'
                 'linux-lts-headers: build modules against LTS kernel'
                 'linux-zen-headers: build modules against ZEN kernel')
@@ -299,7 +302,7 @@ package_virtualbox-guest-dkms-svn() {
     replaces=('virtualbox-archlinux-source'
               'virtualbox-guest-source'
               'virtualbox-guest-modules-lts')
-    provides=('VIRTUALBOX-GUEST-MODULES-SVN' 'virtualbox-guest-dkms')
+    provides=('VIRTUALBOX-GUEST-MODULES-SVN')
     conflicts=('virtualbox-archlinux-source' 'virtualbox-guest-source' 'virtualbox-guest-dkms')
     optdepends=('linux-headers: build modules against Arch kernel'
                 'linux-lts-headers: build modules against LTS kernel'
@@ -324,14 +327,12 @@ package_virtualbox-guest-dkms-svn() {
 }
 
 package_virtualbox-guest-utils-svn() {
-    _pkgname=virtualbox-guest-utils
     pkgdesc='VirtualBox Guest userspace utilities'
     depends=('glibc' 'pam' 'libx11' 'libxcomposite'
              'libxdamage' 'libxext' 'libxfixes' 'libxmu' 'libxt' 'xorg-xrandr'
              'VIRTUALBOX-GUEST-MODULES-SVN')
     replaces=('virtualbox-archlinux-additions' 'virtualbox-guest-additions')
     conflicts=('virtualbox-archlinux-additions' 'virtualbox-guest-additions' 'virtualbox-guest-utils-nox' 'virtualbox-guest-utils')
-    provides=('virtualbox-guest-utils')
 
     source "VirtualBox/env.sh"
     pushd "VirtualBox/out/linux.$BUILD_PLATFORM_ARCH/release/bin/additions"
@@ -351,14 +352,12 @@ package_virtualbox-guest-utils-svn() {
     install -Dm644 vboxservice.service "$pkgdir/usr/lib/systemd/system/vboxservice.service"
     install -Dm644 virtualbox-guest-utils.sysusers "$pkgdir/usr/lib/sysusers.d/virtualbox-guest-utils.conf"
     # licence
-    install -Dm644 VirtualBox/COPYING "$pkgdir/usr/share/licenses/$_pkgname/LICENSE"
+    install -Dm644 VirtualBox/COPYING "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
 package_virtualbox-guest-utils-nox-svn() {
-    _pkgname=virtualbox-guest-utils-nox
     pkgdesc='VirtualBox Guest userspace utilities without X support'
     depends=('glibc' 'pam' 'VIRTUALBOX-GUEST-MODULES-SVN')
-    provides=('virtualbox-guest-utils-nox')
     conflicts=('virtualbox-guest-utils' 'virtualbox-guest-utils-nox')
 
     source "VirtualBox/env.sh"
@@ -373,11 +372,10 @@ package_virtualbox-guest-utils-nox-svn() {
     install -Dm644 virtualbox-guest-utils.sysusers "$pkgdir/usr/lib/sysusers.d/virtualbox-guest-utils.conf"
     # licence
     install -Dm644 "$srcdir/VirtualBox/COPYING" \
-        "$pkgdir/usr/share/licenses/$_pkgname/LICENSE"
+        "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
 package_virtualbox-ext-vnc-svn() {
-    _pkgname=virtualbox-ext-vnc
     pkgdesc='VirtualBox VNC extension pack'
     depends=('virtualbox' 'libvncserver')
     optdepends=('tigervnc: vnc client')
@@ -390,7 +388,7 @@ package_virtualbox-ext-vnc-svn() {
     install -Dm644 VNC-*.vbox-extpack "$pkgdir/usr/share/virtualbox/extensions/VNC-svn.vbox-extpack"
     # licence
     install -Dm644 "$srcdir/VirtualBox/COPYING" \
-        "$pkgdir/usr/share/licenses/$_pkgname/LICENSE"
+        "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
 # vim:set ts=4 sw=4 et:
