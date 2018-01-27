@@ -48,7 +48,7 @@ _opt_features=(
 
 pkgname=mpv-git
 _gitname=mpv
-pkgver=0.28.0_169_g7eb3427573
+pkgver=0.28.0_173_g20cc22437e
 pkgrel=1
 pkgdesc='Video player based on MPlayer/mplayer2 (git version)'
 arch=('i686' 'x86_64' 'armv6h' 'armv7h')
@@ -68,6 +68,17 @@ md5sums=('SKIP'
          'ffb774b13decbefc62908dda0332046b')
 sha256sums=('SKIP'
             'ce974e160347202e0dc63f6a7a5a89e52d2cc1db2d000c661fddb9dc1d007c02')
+
+# vulkan-icd-loader contains vulkan.pc, which makes mpv think it can build
+# against Vulkan. However, the headers required to actually do so are in another
+# package, vulkan-headers, for whatever reason. Building with only the former
+# installed will fail. So if we see the .pc installed, make sure the headers are
+# too.
+#
+# See also: https://bugs.archlinux.org/task/56238
+if pkg-config --exists vulkan; then
+  makedepends+=('vulkan-headers')
+fi
 
 _opt_extra_flags=()
 
