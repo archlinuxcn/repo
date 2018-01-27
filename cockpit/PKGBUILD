@@ -3,7 +3,7 @@
 # Contributor: Anatol Pomozov <anatol.pomozov@gmail.com>
 
 pkgname=cockpit
-pkgver=157
+pkgver=160
 pkgrel=1
 pkgdesc='A systemd web based user interface for Linux servers'
 arch=(i686 x86_64 armv6h armv7h)
@@ -21,8 +21,8 @@ optdepends=("udisks2: manage hard disks"
 source=(https://github.com/cockpit-project/cockpit/releases/download/${pkgver}/cockpit-${pkgver}.tar.xz
 	https://github.com/cockpit-project/cockpit/releases/download/${pkgver}/cockpit-cache-${pkgver}.tar.xz)
 noextract=(cockpit-${pkgver}.tar.xz)
-sha1sums=('350687e6d1a3d408042a5f831c43756970774f3c'
-          '6832172826d1efbd0accef20f7a6bb3bf8873546')
+sha1sums=('236c4ed6fc4cfc4d78edf1d6fc9c54de08d82432'
+          'afaf9886d706738d3fffc375eba2b14e4b6a6dac')
 
 prepare() {
   cd $srcdir
