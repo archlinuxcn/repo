@@ -6,7 +6,7 @@ pkg = $(shell ls -v $(nam)*.pkg.tar* 2>/dev/null | tail -1)
 all: sum $(inf) check
 
 $(inf): $(src)
-	mksrcinfo
+	makepkg --printsrcinfo >$@
 
 check: $(src)
 	namcap $^
