@@ -1,0 +1,55 @@
+# Maintainer: Shengyu Zhagn <la@archlinuxcn.org>
+
+pkgname=cquery
+_pkgver=v2018-01-23@1825
+pkgver=${_pkgver//-/}
+__pkgver=${_pkgver/@/-}
+__pkgver=${__pkgver:1}
+pkgrel=1
+pkgdesc='Low-latency vscode language server for large C++ code-bases, powered by libclang.'
+arch=('x86_64')
+url='https://github.com/cquery-project/cquery/'
+license=('MIT')
+depends=('clang')
+makedepends=('git' 'python' 'llvm')
+conflicts=('cquery-git')
+source=("https://github.com/cquery-project/$pkgname/archive/$_pkgver.tar.gz"
+        'git+https://github.com/miloyip/rapidjson'
+        'git+https://github.com/onqtam/doctest'
+        'git+https://github.com/greg7mdp/sparsepp'
+        'git+https://github.com/emilk/loguru'
+        'git+https://github.com/msgpack/msgpack-c'
+        )
+sha256sums=('ff0a156638e582e7dd6af6ac5c4c364a07b216790308e1f80a982802854c85e7'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            )
+
+prepare() {
+    cd $pkgname-$__pkgver
+    cp -r $srcdir/rapidjson third_party
+    cp -r $srcdir/doctest third_party
+    cp -r $srcdir/sparsepp third_party
+    cp -r $srcdir/loguru third_party
+    cp -r $srcdir/msgpack-c third_party
+    sed -e "s/, '-Werror'//g" -i ./wscript
+}
+
+build() {
+    cd $pkgname-$__pkgver
+    python waf configure --prefix="$pkgdir/usr" --use-system-clang
+    python waf build
+}
+
+check() {
+    cd $pkgname-$__pkgver
+    yes | build/release/bin/cquery --test-unit --test-index --clang-sanity-check
+}
+
+package() {
+    cd $pkgname-$__pkgver
+    python waf install
+}
