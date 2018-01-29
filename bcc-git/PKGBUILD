@@ -42,8 +42,8 @@ build() {
 package_bcc-git() {
   pkgdesc="BPF Compiler Collection  - C library and examples"
   makedepends=('cmake' 'clang>=3.7.0' 'llvm>=3.7.0' 'flex' 'bison')
-  provides=('bcc-git' 'libbcc-git')
-  conflicts=('bcc')
+  provides=('bcc' 'libbcc')
+  conflicts=('bcc' 'libbcc')
   depends=('linux-headers' 'libelf' 'zlib' 'ncurses' 'gcc-libs')
   optdepends=('bcc-tools-git: Python utilites using the BCC library'
               'python-bcc-git: Python 3 bindings for BCC'
