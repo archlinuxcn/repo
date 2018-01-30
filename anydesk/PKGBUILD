@@ -2,12 +2,12 @@
 
 pkgname=anydesk
 pkgver=2.9.5
-pkgrel=1
+pkgrel=2
 pkgdesc="'AnyDesk Free' is an All-In-One Software for Remote Support"
 arch=('i686' 'x86_64')
 url="http://anydesk.de/"
 license=('custom:Freeware')
-depends=('binutils' 'make' 'fakeroot' 'gtkglext')
+depends=('fakeroot' 'gtkglext' 'libglvnd' 'gtk2' 'libx11' 'glibc' 'glib2' 'gdk-pixbuf2' 'libxcb' 'cairo' 'pango' 'libxi' 'libxrandr' 'libxtst' 'libxext' 'libxfixes' 'libxdamage' 'gcc-libs')
 optdepends=('libpulse')
 
 source_i686=(http://download.anydesk.com/linux/${pkgname}_${pkgver}-1_i386.deb)
@@ -20,6 +20,6 @@ package() {
     cd "${pkgdir}"
     tar xf "${srcdir}/data.tar.gz"
     #
-    # If you want to keep the autostart mode, comment next line
+    msg2 "\e[1;32mIf you want to enable the autostart mode, edit PKGBUILD and comment line #24 \e[0m"
     rm -rf etc/
 }
