@@ -1,17 +1,17 @@
 # Maintainer: Merrick Luo <merrick@luois.me>
 pkgname=iease-music
-pkgver=1.1.2
+pkgver=1.1.3
 pkgrel=0
 pkgdesc='Elegant neteaseMusic desktop app, Rock with NeteaseMusic.'
 arch=('x86_64')
 url='https://github.com/trazyn/ieaseMusic'
 license=('MIT')
 _rpmname="ieaseMusic-${pkgver}-linux-x86_64.rpm"
-depends=('libxtst' 'gtk2' 'gconf' 'libxss' 'nss' 'python' 'alsa-lib' 'java-environment')
+depends=()
 makedepends=()
 options=()
 source=("https://github.com/trazyn/ieaseMusic/releases/download/v${pkgver}/${_rpmname}")
-sha1sums=('b80d9296e5f728be87aac5c66b08a8e92af44064')
+sha1sums=('2f574150e194a7c1c679c15a3863982da05a85d5')
 install='iease-music.install'
 
 package() {
