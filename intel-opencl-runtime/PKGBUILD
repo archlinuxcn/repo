@@ -5,18 +5,18 @@
 
 pkgname=intel-opencl-runtime
 epoch=1
-pkgver=16.1.1
-_package=opencl_runtime_${pkgver}_x64_rh_6.4.0.25
-pkgrel=2
+pkgver=16.1.2
+_package=opencl_runtime_${pkgver}_x64_rh_6.4.0.37
+pkgrel=1
 pkgdesc="OpenCL runtime for Intel Core and Xeon processors"
 arch=('x86_64')
-url="https://software.intel.com/en-us/articles/opencl-drivers"
+url="https://software.intel.com/en-us/articles/opencl-drivers#latest_CPU_runtime"
 license=('custom:intel')
 depends=('numactl' 'intel-tbb' 'zlib' 'ncurses5-compat-libs')
 optdepends=('intel-opencl-sdk: Intel SDK for OpenCL Applications')
 provides=('opencl')
-source=(http://registrationcenter-download.intel.com/akdlm/irc_nas/9019/${_package}.tgz)
-sha256sums=('3e67ff99879609cbb3cde8811b6db56c831d38b2a3bbf6dbb98fb177fd1c3b19')
+source=(http://registrationcenter-download.intel.com/akdlm/irc_nas/12556/${_package}.tgz)
+sha256sums=('7dabca91d9ef76a68858d8c3f2a70fb75e7c80861f2824642d7119aa0dbf8a9a')
 
 package() {
 	cd "${srcdir}"/${_package}/
