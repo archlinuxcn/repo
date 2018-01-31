@@ -1,7 +1,7 @@
 # Maintainer: BlackEagle < ike DOT devolder AT gmail DOT com >
 
 pkgname=vivaldi-ffmpeg-codecs
-pkgver=62.0.3202.97
+pkgver=64.0.3282.119
 pkgrel=1
 pkgdesc="additional support for proprietary codecs for vivaldi"
 arch=('x86_64')
@@ -16,15 +16,15 @@ options=('!strip')
 source=(
   "https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$pkgver.tar.xz"
   'chromium-last-commit-position-r1.patch'
-  'https://raw.githubusercontent.com/gentoo/gentoo/master/www-client/chromium/files/chromium-FORTIFY_SOURCE-r2.patch'
-  'https://raw.githubusercontent.com/gentoo/gentoo/master/www-client/chromium/files/chromium-gn-bootstrap-r17.patch'
-  'chromium-gcc5-r2.patch'
+  'chromium-FORTIFY_SOURCE-r2.patch'
+  'chromium-memcpy-r0.patch'
+  'chromium-angle-r0.patch'
 )
-sha512sums=('2f8c7e9a17f25670bd3ceb557149185329d372873b75584f57486f26326d8c0fb7849807b46ace0be563a4aebf4a2be4ceeae4fe30cf5da7dcb1068ab1b7ebd1'
+sha512sums=('5ad3e110dcecd8f37a98c32ff8837e6b1f81c3375afdcb03c0375aebe148a2f2f49b6dc91bd3565d25e29bc587fbc9721062d2f04cee647b3cfdadd03437865a'
             '8f63366ca998e3ee06a79c6df5b4454707bd9865913ecde2f79fcb49fdd86d291f678b9f21807e4eb61d15497cdbe4a4bdc06637882e708f34f6804453bdfd41'
             '2d78092a700788c74b86db636af303fdb63a28ce5b7b0431dd81f6b7ce501e5d0234a6327a1b49bc23e1c1d00ba98fd5334dd07d9a20bb0d81d1a4ca4487a26c'
-            '28812a8bd6d591831a3bbd749f1d7c6dd434eb0237970d4e8ea8cfd48fa8efb4d98906eca3d175218fe62c50bcb0b6472b2d7dfdde73d5641cd3fde1d9dc5f3b'
-            '55723ffe9c34b5336450e75db8354c1ce5d6429b7296cbf575941eef5f3de3cdc40836e8f9b6905b4153913b10136a12d4c6d37f6a9f447677aa40588bfac182')
+            '1aeeb70929acee529dea66860b42f106afe18c0f6219eb03c9c710faf8d20a997135550e289839599ec325d8f032243fd70c07d397bd89302a192c41e8c4660a'
+            'c5fa18dbaa82a0fc089c6c88857089f19c83f6d3ff7c7034e6ca3cde20f1615cd84ac13fde14b55dcfa7d3c85eb0f023fbe337bb96d7d8199b5729b269a5ccc7')
 
 prepare() {
   cd "$srcdir/chromium-$pkgver"
@@ -43,8 +43,8 @@ prepare() {
 
   patch -p1 -i "$srcdir/chromium-last-commit-position-r1.patch"
   patch -p1 -i "$srcdir/chromium-FORTIFY_SOURCE-r2.patch"
-  patch -p1 -i "$srcdir/chromium-gn-bootstrap-r17.patch"
-  patch -p1 -i "$srcdir/chromium-gcc5-r2.patch"
+  patch -p1 -i "$srcdir/chromium-memcpy-r0.patch"
+  patch -p1 -i "$srcdir/chromium-angle-r0.patch"
 }
 
 build() {
