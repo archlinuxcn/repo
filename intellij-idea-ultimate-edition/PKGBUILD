@@ -2,18 +2,17 @@
 
 pkgbase=intellij-idea-ultimate-edition
 pkgname=(intellij-idea-ultimate-edition intellij-idea-ultimate-edition-jre)
-pkgver=2017.3.3
-_buildver=173.4301.25
-pkgrel=2
+pkgver=2017.3.4
+_buildver=173.4548.28
+pkgrel=1
 arch=('any')
 pkgdesc="An intelligent IDE for Java, Groovy and other programming languages with advanced refactoring features intensely focused on developer productivity."
 url="https://www.jetbrains.com/idea/"
 license=('Commercial')
 options=(!strip)
-install=$pkgbase.install
 source=("https://download.jetbrains.com/idea/ideaIU-$pkgver.tar.gz"
         "jetbrains-idea.desktop")
-sha256sums=('05a7382ad5f04a64f0caa10c14af61c0270cf8a2ac25bb2c14a52536c3587e55'
+sha256sums=('d1f33796fa317c04e0618a9bd329f944355c3374011815c398384ca5cc57bfbc'
             '83af2ba8f9f14275a6684e79d6d4bd9b48cd852c047dacfc81324588fa2ff92b')
 
 prepare() {
@@ -31,7 +30,7 @@ package_intellij-idea-ultimate-edition() {
   install -d "$pkgdir"/{opt/$pkgname,usr/bin}
   mv idea-IU-${_buildver}/* "$pkgdir"/opt/$pkgbase
 
-  # workaround for missing executable bit
+  # https://youtrack.jetbrains.com/issue/IDEA-185828
   chmod +x "$pkgdir"/opt/$pkgbase/plugins/maven/lib/maven3/bin/mvn
 
   ln -s /opt/$pkgname/bin/idea.sh "$pkgdir"/usr/bin/$pkgname
