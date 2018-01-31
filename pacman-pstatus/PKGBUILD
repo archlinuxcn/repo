@@ -7,10 +7,10 @@
 
 pkgname=('pacman-pstatus')
 pkgver=0.2.1
-pkgrel=1
+pkgrel=2
 arch=('any')
 url='https://gitlab.com/renyuneyun/pacman-ps'
-license=('GPLv2')
+license=('GPL')
 depends=('python')
 makedepends=('git')
 conflicts=('pacman-ps')
