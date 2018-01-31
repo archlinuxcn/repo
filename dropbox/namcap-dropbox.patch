@@ -1,0 +1,12 @@
+diff --git a/Namcap/rules/rpath.py b/Namcap/rules/rpath.py
+index 4da040c..504d77c 100644
+--- a/Namcap/rules/rpath.py
++++ b/Namcap/rules/rpath.py
+@@ -39,6 +39,7 @@ def get_rpaths(fileobj):
+ 			rpaths = rpaths.split(':')
+ 			for path in rpaths:
+ 				yield path
++	yield '/opt/dropbox'
+ 
+ class package(TarballRule):
+ 	name = "rpath"
