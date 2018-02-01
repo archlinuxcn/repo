@@ -14,6 +14,6 @@ md5sums=('5dc256354e5b31633cd2606135a37ebd')
 package() {
   mkdir -p "$pkgdir/usr/share"
   mkdir -p "$pkgdir/usr/share/licenses/elixir-docs"
-  cp -r "$srcdir/doc" "$pkgdir/usr/"
+  cp -r "$srcdir/doc" "$pkgdir/usr/share/"
   cp -r "$srcdir/LICENSE" "$pkgdir/usr/share/licenses/elixir-docs/"
 }
