@@ -1,0 +1,51 @@
+diff --git a/tools/seafile-admin b/tools/seafile-admin
+index 5e3658b..63af448 100755
+--- a/tools/seafile-admin
++++ b/tools/seafile-admin
+@@ -861,6 +861,13 @@ def check_necessary_files():
+         os.path.join(cwd, 'conf', 'seahub_settings.py'),
+     ]
+ 
++    # seahub.db isn't create with a MySQL installation and crash the startup
++    with open(files[3], 'r') as f:
++        for line in f:
++            if 'DATABASES' in line:
++                del(files[2])
++                break
++
+     for fpath in files:
+         if not os.path.exists(fpath):
+             error('%s not found' % fpath)
+diff --git a/scripts/setup-seafile-mysql.sh b/scripts/setup-seafile-mysql.sh
+index cb8b8c5..a8f18df 100755
+--- a/scripts/setup-seafile-mysql.sh
++++ b/scripts/setup-seafile-mysql.sh
+@@ -8,6 +8,7 @@ set -e
+ 
+ SCRIPT=$(readlink -f "$0")
+ INSTALLPATH=$(dirname "${SCRIPT}")
++PYTHON='/usr/lib/seahub/bin/python2'
+ 
+ cd "$INSTALLPATH"
+ 
+diff --git a/scripts/setup-seafile-mysql.py b/scripts/setup-seafile-mysql.py
+index 596687c..39ed520 100644
+--- a/scripts/setup-seafile-mysql.py
++++ b/scripts/setup-seafile-mysql.py
+@@ -301,7 +301,7 @@ class EnvManager(object):
+     def __init__(self):
+         self.install_path = os.path.dirname(os.path.abspath(__file__))
+         self.top_dir = os.path.dirname(self.install_path)
+-        self.bin_dir = os.path.join(self.install_path, 'seafile', 'bin')
++        self.bin_dir = '/usr/bin'
+         self.central_config_dir = os.path.join(self.top_dir, 'conf')
+         Utils.must_mkdir(self.central_config_dir)
+ 
+@@ -311,7 +311,6 @@ class EnvManager(object):
+                 Utils.error('"%s" not found' % path)
+ 
+         paths = [
+-            os.path.join(self.install_path, 'seafile'),
+             os.path.join(self.install_path, 'seahub'),
+             os.path.join(self.install_path, 'runtime'),
+         ]

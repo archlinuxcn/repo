@@ -1,0 +1,18 @@
+2018-02-02 Joffrey <j-off@live.fr>
+	
+	* Version: v6.2.5-1 -> 6.2.5-2
+	
+	* ChangeLog: Add Changelog
+	
+	* PKGBUILD: Add seafile pkg to conflicts, since v6.2.5 no longer use the
+	same libraries (fix rpcclient problems)
+	Python modules utils have been moved in seahub virtualenv
+	
+	* create-default-conf-dir.patch: Removed, it was used for update to v5.0
+	
+	* fix_seafile-admin.diff: Replace seafile-admin_virtualenv.patch
+	
+	* fix_mysql_support.diff: Replace mysql-setup.patch, use python
+	interpreter for mysql deployment scripts
+	
+	* 0001-Revert-server-put-pids-folder-out-of-seafile-data.patch: Fix Hunk
