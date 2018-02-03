@@ -9,18 +9,7 @@ from lilaclib import *
 build_prefix = 'archlinuxcn-x86_64'
 depends = ['python3-xcgf', 'python3-xcpf']
 
-def pre_build():
-  # obtain base PKGBUILD, e.g.
-  aur_pre_build()
-
-  count=0
-  for line in edit_file('PKGBUILD'):
-    # edit PKGBUILD
-    count=count+1
-    if count in {14,18,22,24}:
-        print('#'+line)
-    else:
-        print(line)
+pre_build = aur_pre_build
 
 post_build = aur_post_build
 
