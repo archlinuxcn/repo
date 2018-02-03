@@ -1,10 +1,8 @@
-# Maintainer: Shengyu Zhagn <la@archlinuxcn.org>
+# Maintainer: Shengyu Zhang <la@archlinuxcn.org>
 
 pkgname=cquery
-_pkgver=v2018-01-23@1825
-pkgver=${_pkgver//-/}
-__pkgver=${_pkgver/@/-}
-__pkgver=${__pkgver:1}
+pkgver=v20180203
+__pkgver=${pkgver:1}
 pkgrel=1
 pkgdesc='Low-latency vscode language server for large C++ code-bases, powered by libclang.'
 arch=('x86_64')
@@ -13,14 +11,14 @@ license=('MIT')
 depends=('clang')
 makedepends=('git' 'python' 'llvm')
 conflicts=('cquery-git')
-source=("https://github.com/cquery-project/$pkgname/archive/$_pkgver.tar.gz"
+source=("https://github.com/cquery-project/$pkgname/archive/$pkgver.tar.gz"
         'git+https://github.com/miloyip/rapidjson'
         'git+https://github.com/onqtam/doctest'
         'git+https://github.com/greg7mdp/sparsepp'
         'git+https://github.com/emilk/loguru'
         'git+https://github.com/msgpack/msgpack-c'
         )
-sha256sums=('ff0a156638e582e7dd6af6ac5c4c364a07b216790308e1f80a982802854c85e7'
+sha256sums=('78ab675b329042ed787bffed68a12172e5a0f5a42c3e4acffa9477fb1f9bd850'
             'SKIP'
             'SKIP'
             'SKIP'
@@ -40,16 +38,17 @@ prepare() {
 
 build() {
     cd $pkgname-$__pkgver
-    python waf configure --prefix="$pkgdir/usr" --use-system-clang
-    python waf build
+    # --variant=custom will not add extra CXXFLAGS
+    python waf configure --variant=custom --prefix="$pkgdir/usr" --llvm-config=/usr/bin/llvm-config
+    python waf build --variant=custom
 }
 
 check() {
     cd $pkgname-$__pkgver
-    yes | build/release/bin/cquery --test-unit --test-index --clang-sanity-check
+    yes | build/custom/bin/cquery --test-unit --test-index --clang-sanity-check
 }
 
 package() {
     cd $pkgname-$__pkgver
-    python waf install
+    python waf install --variant=custom
 }
