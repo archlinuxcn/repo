@@ -3,8 +3,8 @@
 
 pkgname=corebird-git
 epoch=1
-pkgver=1.7.2.r0.g6d2f3f26
-pkgrel=1.1
+pkgver=1.7.3.r11.g87bc8519
+pkgrel=1
 pkgdesc="Native Gtk+ Twitter Client"
 arch=('i686' 'x86_64')
 license=('GPL')
@@ -35,7 +35,7 @@ build() {
   cd ${pkgname}
 
   meson builddir --prefix=/usr -D VIDEO=yes -D SPELLCHECK=yes
-  ninja -C builddir
+  ninja -C builddir -l$(nproc)
 }
 
 package() {
