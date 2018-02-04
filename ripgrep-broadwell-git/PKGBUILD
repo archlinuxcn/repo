@@ -19,7 +19,7 @@ conflicts=(ripgrep)
 pkgver () {
   cd ripgrep
   # git describe | sed -E 's/([^-]*-g)/r\1/;s/-/./g'
-  echo $(grep -oP '(?<=^version = ")[^"]+' Cargo.toml).$(git log -1 --pretty='%cd' --date=short | tr -d '-')
+  echo $(grep -oPm1 '(?<=^version = ")[^"]+' Cargo.toml).$(git log -1 --pretty='%cd' --date=short | tr -d '-')
 }
 
 build () {
