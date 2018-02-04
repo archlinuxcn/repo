@@ -5,21 +5,21 @@
 pkgname=foxitreader
 pkgver=2.4.1.0609
 _foxitrevision=r08f07f8
-pkgrel=8
+pkgrel=9
 pkgdesc="A fast, secure and complete PDF viewer"
 arch=('x86_64')
 url="https://www.foxitsoftware.com/products/pdf-reader/"
 license=('custom:EULA')
-depends=('libsecret')
+depends=('libsecret' 'libxslt' 'libxcomposite' 'libgl' 'libxrender' 'gstreamer0.10-base')
 makedepends=('p7zip')
 source=("http://cdn09.foxitsoftware.com/pub/foxit/reader/desktop/linux/2.x/${pkgver%.*.*}/en_us/FoxitReader${pkgver}_Server_x64_enu_Setup.run.tar.gz"
         "https://www.foxitsoftware.com/products/pdf-reader/eula.html"
         "${pkgname}.patch"
-        "${pkgname}-excluded_files-x86_64")
+        "${pkgname}-excluded_files")
 sha256sums=('d8093dd3b3aeb4e788cbdff5f9d05d7557eb440810f6da6bdc4e23447d3a27ba'
             'c1485614de2b8087d14ab2d7b10e51faaaaf83a96f8bce6a0e1791effadf6079'
             'd85bfa4b293927975182aa6b1582ac064c5732711e5678d5f1ec35e65c78e6d1'
-            '87932852ae1ce12bc8e9e7a7d3cdf2f8fdcdf8cf5f27871f1297b920223c4aa7')
+            'e558529c6dbea047eee744b011ffcc214547c503896b14211ebf5f6309ef4e9f')
 
 build() {
   local _file
@@ -75,7 +75,7 @@ build() {
     then
       rm "${srcdir}/${pkgname}-build/${_line}"
     fi
-  done < "${srcdir}/${pkgname}-excluded_files-$CARCH"
+  done < "${srcdir}/${pkgname}-excluded_files"
 }
 
 package() {
