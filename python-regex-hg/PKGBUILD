@@ -21,9 +21,6 @@ pkgver() {
 
 build() {
   cd "$srcdir/${_hgname}"
-  mv regex_3/{regex,Python}/* regex_3
-  rmdir regex_3/{regex,Python}
-  rm regex_3/test_*
   python setup.py build
 }
 
