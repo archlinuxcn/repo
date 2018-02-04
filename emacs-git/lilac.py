@@ -7,7 +7,11 @@
 from lilaclib import *
 
 build_prefix = 'archlinuxcn-x86_64'
-pre_build = aur_pre_build
+
+def pre_build():
+    run_cmd(["rm", "-rf", "emacs"])
+    aur_pre_build()
+
 post_build = aur_post_build
 
 if __name__ == '__main__':
