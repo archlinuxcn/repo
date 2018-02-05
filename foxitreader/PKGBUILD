@@ -5,13 +5,15 @@
 pkgname=foxitreader
 pkgver=2.4.1.0609
 _foxitrevision=r08f07f8
-pkgrel=9
+pkgrel=10
 pkgdesc="A fast, secure and complete PDF viewer"
 arch=('x86_64')
 url="https://www.foxitsoftware.com/products/pdf-reader/"
 license=('custom:EULA')
-depends=('libsecret' 'libxslt' 'libxcomposite' 'libgl' 'libxrender' 'gstreamer0.10-base')
+depends=('libsecret' 'libxslt' 'libxcomposite' 'libgl' 'libxrender' 'gstreamer0.10-base'
+         'libxi' 'libsm' 'fontconfig' 'dbus' 'openssl-1.0')
 makedepends=('p7zip')
+optdepends=('gtk2: use GTK+ dialogs under GTK+ based desktop environments')
 source=("http://cdn09.foxitsoftware.com/pub/foxit/reader/desktop/linux/2.x/${pkgver%.*.*}/en_us/FoxitReader${pkgver}_Server_x64_enu_Setup.run.tar.gz"
         "https://www.foxitsoftware.com/products/pdf-reader/eula.html"
         "${pkgname}.patch"
