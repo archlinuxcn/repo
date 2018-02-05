@@ -9,7 +9,7 @@ from lilaclib import *
 build_prefix = 'archlinuxcn-x86_64'
 
 def pre_build():
-    run_cmd(["rm", "-rf", "emacs"])
+    run_cmd(["rm", "-rf", "emacs-git"])
     aur_pre_build()
 
 post_build = aur_post_build
