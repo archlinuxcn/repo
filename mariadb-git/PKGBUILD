@@ -6,7 +6,7 @@ pkgbase=mariadb-git
 _pkgbase=mariadb
 pkgname=('libmariadbclient-git' 'mariadb-clients-git' 'mytop-git' 'mariadb-git')
 pkgver=10.3.4.r165.g883496782f3
-pkgrel=2
+pkgrel=4
 arch=('x86_64')
 license=('GPL')
 url='http://mariadb.org/'
@@ -166,6 +166,7 @@ package_mariadb-git() {
   #rm -r etc/
   #install -Dm0644 usr/share/mysql/my-medium.cnf etc/mysql/my.cnf
   install -Dm0644 usr/share/mysql/wsrep.cnf etc/mysql/wsrep.cnf
+  mkdir etc/my.cnf.d
 
   mv usr/lib/sysusers.d/{sysusers,mariadb}.conf
   mv usr/lib/tmpfiles.d/{tmpfiles,mariadb}.conf
@@ -185,6 +186,7 @@ package_mariadb-git() {
 
   # provided by libmariadbclient
   rm usr/bin/mariadb_config
+  rm usr/bin/mysql_config
   rm usr/lib/libmysql*
   rm usr/lib/libmariadb*
   rm usr/share/man/man1/mysql_config.1
