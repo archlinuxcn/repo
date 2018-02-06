@@ -3,7 +3,7 @@
 
 pkgname=spigot
 _pkgver=1.12.2
-_build=70
+_build=71
 pkgver="${_pkgver}+b${_build}"
 pkgrel=1
 pkgdesc="High performance Minecraft server implementation"
@@ -24,7 +24,7 @@ source=("BuildTools-${_pkgver}+b${_build}.jar::https://hub.spigotmc.org/jenkins/
 	"${pkgname}.service"
 	"${pkgname}.conf"
 	"${pkgname}.sh")
-sha512sums=('ba3e671fd0bd4bca861d66db9fce159f66f55f588c42618d0efc2d65ce962dc35d0b69c6d4ea7b328f7b438be5b826a6b9419cf8625ac32e71458a1522e7d862'
+sha512sums=('d5a328a031aee8b449dbcf1b56c75ad3426d0a82a5e5e1210d56283c4a1504aa95e6194ed160b1f77fc3828a65ecf7ed49176a1a797f1a17f544783c0d45acb3'
             '914d079718bcf4adbe60ec1414ae95220be9e0ba6da8135d13fc9f1f82c7a5f1fb1844764a9d827bb9583bee2f6c10111880d0bcba135ec61d63b53a3f2aab27'
             '76c77e47c442b477216e968db2213612579b24add54cf0e0512f808498673500b4d24e59bce70b1e7479d724a9a897ceb154e937b88a476beb11c8776258b36c'
             'bfebbb163fe81dbf086f1511c60953c5ef4149e69c80e6a01af35ea67279e2c652072c9342a71e5d1c178a5504fc9d0275c19f51aacb65b722654c5c42a9b1cb'
