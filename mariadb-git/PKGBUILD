@@ -6,7 +6,7 @@ pkgbase=mariadb-git
 _pkgbase=mariadb
 pkgname=('libmariadbclient-git' 'mariadb-clients-git' 'mytop-git' 'mariadb-git')
 pkgver=10.3.4.r165.g883496782f3
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 license=('GPL')
 url='http://mariadb.org/'
@@ -184,12 +184,16 @@ package_mariadb-git() {
   rm usr/bin/rcmysql
 
   # provided by libmariadbclient
-  rm usr/bin/mysql_config
+  rm usr/bin/mariadb_config
   rm usr/lib/libmysql*
+  rm usr/lib/libmariadb*
   rm usr/share/man/man1/mysql_config.1
   rm -r usr/include/
   rm -r usr/share/mysql/{aclocal,pkgconfig}
-
+  rm -r usr/lib/mysql/plugin/auth_gssapi_client.so
+  rm -r usr/lib/mysql/plugin/dialog.so
+  rm -r usr/lib/mysql/plugin/mysql_clear_password.so
+  rm -r usr/lib/mysql/plugin/sha256_password.so 
   # provided by mariadb-clients
   rm usr/bin/{mysql,mysql_plugin,mysql_upgrade,mysqladmin,mysqlbinlog,mysqlcheck,mysqldump,mysqlimport,mysqlshow,mysqlslap,mysqltest}
   rm usr/share/man/man1/{mysql,mysql_plugin,mysql_upgrade,mysqladmin,mysqlbinlog,mysqlcheck,mysqldump,mysqlimport,mysqlshow,mysqlslap,mysqltest}.1
