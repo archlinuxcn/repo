@@ -1,0 +1,26 @@
+post_install(){
+  groupadd -g 89 mysql &>/dev/null
+  useradd -u 89 -g mysql -d "/var/lib/mysql" -s /bin/false mysql &>/dev/null
+
+  if [[ ! -e "/var/lib/mysql" ]]; then
+    install -dm700 "/var/lib/mysql"
+    chown -R mysql:mysql "/var/lib/mysql" &>/dev/null
+  fi
+
+  /usr/bin/systemd-tmpfiles --create mysqld.conf
+
+  echo ":: You need to initialize the MySQL data directory prior to starting"
+  echo "   the service. This can be done with mysqld --initialize command, e.g.:"
+  echo "   mysqld --initialize --user=mysql --basedir=/usr --datadir=/var/lib/mysql"
+  echo ":: Additionally you should secure your MySQL installation using"
+  echo "   mysql_secure_installation command after starting the mysqld service"
+}
+
+post_remove(){
+  if getent passwd mysql >/dev/null 2>&1; then
+    userdel mysql
+  fi
+  if getent group mysql >/dev/null 2>&1; then
+    groupdel mysql
+  fi
+}
