@@ -1,51 +1,34 @@
-From 45e9b7168fd39755848628a721c42bce7056c122 Mon Sep 17 00:00:00 2001
+From bb6d007fefdd149c78ca69e15698902db2892a0e Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Fri, 28 Jul 2017 23:49:49 -0400
-Subject: [PATCH 2/7] Revert "deprecation warning for old parametric method
+Subject: [PATCH 2/2] Revert "deprecation warning for old parametric method
  syntax. fixes #11310 (#22834)"
 
 This partially reverts commit c6e51d0cddc6d786a655d7504e072f1d986675de.
 ---
- src/julia-syntax.scm | 19 ++++++-------------
- 1 file changed, 6 insertions(+), 13 deletions(-)
+ src/julia-syntax.scm | 9 ---------
+ 1 file changed, 9 deletions(-)
 
 diff --git a/src/julia-syntax.scm b/src/julia-syntax.scm
-index 7aa9565ec0..32e85c7361 100644
+index 754b0f470b..29bc49bbcb 100644
 --- a/src/julia-syntax.scm
 +++ b/src/julia-syntax.scm
-@@ -838,9 +838,12 @@
-                   (sig    (car temp))
-                   (params (cdr temp)))
-              (if (pair? params)
--                 (syntax-deprecation #f
--                                     (string "inner constructor " name "(...)" (linenode-string (function-body-lineno body)))
--                                     (deparse `(where (call (curly ,name ,@params) ...) ,@params))))
-+                 (let* ((lnos (filter (lambda (e) (and (pair? e) (eq? (car e) 'line)))
-+                                      body))
-+                        (lno (if (null? lnos) '() (car lnos))))
-+                   (syntax-deprecation #f
-+                                       (string "inner constructor " name "(...)" (linenode-string lno))
-+                                       (deparse `(where (call (curly ,name ,@params) ...) ,@params)))))
-              `(function ,sig ,(ctor-body body params)))))))
- 
- (define (function-body-lineno body)
-@@ -1117,16 +1120,6 @@
+@@ -1078,15 +1078,6 @@
                                                                     (eq? (caar argl) 'parameters))))))
                    (name    (if (or (decl? name) (and (pair? name) (eq? (car name) 'curly)))
                                 #f name)))
 -             (if has-sp
--                 (syntax-deprecation #f
--                                     (string "parametric method syntax " (deparse (cadr e))
--                                             (linenode-string (function-body-lineno body)))
+-                 (syntax-deprecation (string "parametric method syntax " (deparse (cadr e)))
 -                                     (deparse `(where (call ,(or name
 -                                                                 (cadr (cadr (cadr e))))
 -                                                            ,@(if (has-parameters? argl)
 -                                                                  (cons (car argl) (cddr argl))
 -                                                                  (cdr argl)))
--                                                      ,@raw-typevars))))
+-                                                      ,@raw-typevars))
+-                                     (function-body-lineno body)))
               (expand-forms
                (method-def-expr name sparams argl body rett))))
            (else
 -- 
-2.14.3
+2.16.1
 
