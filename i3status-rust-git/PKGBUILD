@@ -1,8 +1,8 @@
 # Maintainer: Josip Ponjavic <josipponjavic at gmail dot com>
 
 pkgname=i3status-rust-git
-pkgver=0.9.0.r407.g04f7124
-pkgrel=2
+pkgver=0.9.0.r440.g881979b
+pkgrel=1
 pkgdesc='Very resourcefriendly and feature-rich replacement for i3status to use with bar programs (like i3bar and swaybar), written in pure Rust'
 arch=('x86_64')
 url='https://github.com/greshake/i3status-rust'
