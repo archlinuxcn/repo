@@ -1,0 +1,42 @@
+From 3383f4060f7fe25afd5f863fe169fd2f286ab237 Mon Sep 17 00:00:00 2001
+Message-Id: <3383f4060f7fe25afd5f863fe169fd2f286ab237.1517188106.git.jan.steffens@gmail.com>
+In-Reply-To: <4aefcc4253233dce6ac5938e01371074958b8f1c.1517188106.git.jan.steffens@gmail.com>
+References: <4aefcc4253233dce6ac5938e01371074958b8f1c.1517188106.git.jan.steffens@gmail.com>
+From: Jim Bride <jim.bride@linux.intel.com>
+Date: Mon, 6 Nov 2017 13:38:57 -0800
+Subject: [PATCH 2/2] drm/i915/edp: Only use the alternate fixed mode if it's
+ asked for
+
+In commit dc911f5bd8aa ("drm/i915/edp: Allow alternate fixed mode for
+eDP if available."), the patch allows for the use of an alternate fixed
+mode if it is available, but the patch was not ensuring that the only
+time the alternate mode is used is when it is specifically requested.
+This patch adds an additional comparison to intel_edp_compare_alt_mode
+to ensure that we only use the alternate mode if it is directly
+requested.
+
+Fixes: dc911f5bd8aac ("Allow alternate fixed mode for eDP if available.")
+Cc: David Weinehall <david.weinehall@linux.intel.com>
+Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Signed-off-by: Jim Bride <jim.bride@linux.intel.com>
+---
+ drivers/gpu/drm/i915/intel_dp.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/i915/intel_dp.c b/drivers/gpu/drm/i915/intel_dp.c
+index 158438bb0389..69b16df868ea 100644
+--- a/drivers/gpu/drm/i915/intel_dp.c
++++ b/drivers/gpu/drm/i915/intel_dp.c
+@@ -1616,7 +1616,8 @@ static bool intel_edp_compare_alt_mode(struct drm_display_mode *m1,
+ 			m1->vdisplay == m2->vdisplay &&
+ 			m1->vsync_start == m2->vsync_start &&
+ 			m1->vsync_end == m2->vsync_end &&
+-			m1->vtotal == m2->vtotal);
++			m1->vtotal == m2->vtotal &&
++			m1->vrefresh == m2->vrefresh);
+ 	return bres;
+ }
+ 
+-- 
+2.16.1
+

@@ -1,8 +1,9 @@
-From 5ec2dd3a095442ec1a21d86042a4994f2ba24e63 Mon Sep 17 00:00:00 2001
-Message-Id: <5ec2dd3a095442ec1a21d86042a4994f2ba24e63.1512651251.git.jan.steffens@gmail.com>
+From 4aefcc4253233dce6ac5938e01371074958b8f1c Mon Sep 17 00:00:00 2001
+Message-Id: <4aefcc4253233dce6ac5938e01371074958b8f1c.1517188106.git.jan.steffens@gmail.com>
 From: Serge Hallyn <serge.hallyn@canonical.com>
 Date: Fri, 31 May 2013 19:12:12 +0100
-Subject: [PATCH] add sysctl to disallow unprivileged CLONE_NEWUSER by default
+Subject: [PATCH 1/2] add sysctl to disallow unprivileged CLONE_NEWUSER by
+ default
 
 Signed-off-by: Serge Hallyn <serge.hallyn@ubuntu.com>
 [bwh: Remove unneeded binary sysctl bits]
@@ -14,7 +15,7 @@ Signed-off-by: Daniel Micay <danielmicay@gmail.com>
  3 files changed, 30 insertions(+)
 
 diff --git a/kernel/fork.c b/kernel/fork.c
-index 07cc743698d3668e..4011d68a8ff9305c 100644
+index 2295fc69717f..6f320a216e7d 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
 @@ -102,6 +102,11 @@
@@ -29,7 +30,7 @@ index 07cc743698d3668e..4011d68a8ff9305c 100644
  
  /*
   * Minimum number of threads to boot the kernel
-@@ -1555,6 +1560,10 @@ static __latent_entropy struct task_struct *copy_process(
+@@ -1550,6 +1555,10 @@ static __latent_entropy struct task_struct *copy_process(
  	if ((clone_flags & (CLONE_NEWUSER|CLONE_FS)) == (CLONE_NEWUSER|CLONE_FS))
  		return ERR_PTR(-EINVAL);
  
@@ -40,7 +41,7 @@ index 07cc743698d3668e..4011d68a8ff9305c 100644
  	/*
  	 * Thread groups must share signals as well, and detached threads
  	 * can only be started up within the thread group.
-@@ -2348,6 +2357,12 @@ SYSCALL_DEFINE1(unshare, unsigned long, unshare_flags)
+@@ -2343,6 +2352,12 @@ SYSCALL_DEFINE1(unshare, unsigned long, unshare_flags)
  	if (unshare_flags & CLONE_NEWNS)
  		unshare_flags |= CLONE_FS;
  
@@ -54,7 +55,7 @@ index 07cc743698d3668e..4011d68a8ff9305c 100644
  	if (err)
  		goto bad_unshare_out;
 diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index b86520ed3fb60fbf..f7dab3760839f1a1 100644
+index 557d46728577..c19d7a828913 100644
 --- a/kernel/sysctl.c
 +++ b/kernel/sysctl.c
 @@ -105,6 +105,9 @@ extern int core_uses_pid;
@@ -84,12 +85,12 @@ index b86520ed3fb60fbf..f7dab3760839f1a1 100644
  	{
  		.procname	= "tainted",
 diff --git a/kernel/user_namespace.c b/kernel/user_namespace.c
-index c490f1e4313b998a..dd03bd39d7bf194d 100644
+index 246d4d4ce5c7..f64432b45cec 100644
 --- a/kernel/user_namespace.c
 +++ b/kernel/user_namespace.c
-@@ -24,6 +24,9 @@
- #include <linux/projid.h>
- #include <linux/fs_struct.h>
+@@ -26,6 +26,9 @@
+ #include <linux/bsearch.h>
+ #include <linux/sort.h>
  
 +/* sysctl */
 +int unprivileged_userns_clone;
@@ -98,5 +99,5 @@ index c490f1e4313b998a..dd03bd39d7bf194d 100644
  static DEFINE_MUTEX(userns_state_mutex);
  
 -- 
-2.15.1
+2.16.1
 
