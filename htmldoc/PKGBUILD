@@ -1,4 +1,5 @@
-# Maintainer: James An <james@jamesan.ca>
+# Maintainer : Daniel Bermond < yahoo-com: danielbermond >
+# Contributor: James An <james@jamesan.ca>
 # Contributor: Mariusz Libera <mariusz.libera@gmail.com>
 # Contributor: mortdeus <mortdeus@gocos2d.org>
 # Contributor: Sergej Pupykin <pupykin.s+arch@gmail.com>
@@ -6,76 +7,37 @@
 # Contributor: Simon Rutishauser <simon.rutishauser@gmx.ch>
 
 pkgname=htmldoc
-pkgver=1.8.29
+pkgver=1.9.2
 pkgrel=1
-pkgdesc="Produce PDF or Postscript from HTML documents including TOCs and Indices"
+pkgdesc='HTML Conversion Software'
 arch=('i686' 'x86_64')
-url="http://www.htmldoc.org"
+url='http://www.msweet.org/htmldoc/index.html'
 license=('GPL2')
-depends=('libxpm' 'fltk' 'libjpeg' 'openssl' 'shared-mime-info')
-conflicts=('htmldoc-svn')
+depends=('libxpm' 'gnutls' 'fltk')
+conflicts=('htmldoc-git')
 changelog=ChangeLog
-install=$pkgname.install
-source=(
-    "http://www.msweet.org/files/project1/htmldoc-${pkgver}-source.tar.gz"
-    'errno.patch'
-    "$pkgname.install"
-)
-md5sums=(
-    '14d32bd772e2bc6af7b9b2233724c3ec'
-   '2f48488fd485f2583e02b519d6cef553'
-   '808c3a6920824fdab7b2519d567c92f9'
-)
-
-prepare() {
-    cd "$pkgname-$pkgver"
-
-    # replace obsolete libgnutls-config with pkg-config
-    grep -rIl 'libgnutls-config --libs' | while read file ; do sed -i 's/libgnutls-config --libs/pkg-config --libs gnutls/' $file ; done
-
-    # apply patches
-    for patch in ../*.patch ; do
-        patch -Np1 -i $patch
-    done
-
-    # fix desktop file
-    echo "MimeType=application/vnd.htmldoc-book;" >> desktop/htmldoc.desktop
-    sed -i 's/X-Red-Hat.*$//' desktop/htmldoc.desktop
-    sed -i 's/htmldoc.png/htmldoc/' desktop/htmldoc.desktop
-}
+source=("${pkgname}-${pkgver}.tar.gz"::"https://github.com/michaelrsweet/${pkgname}/archive/v${pkgver}.tar.gz")
+sha256sums=('f967654f1cd607f80297f46d774b5607cda80ab8199f358d868a7efa77de35d3')
 
 build() {
-    cd "$pkgname-$pkgver"
-
+    cd "${pkgname}-${pkgver}"
+    
     ./configure \
-        prefix="$pkgdir/usr" \
-
+        --prefix='/usr' \
+        --enable-largefile \
+        --enable-ssl \
+        --enable-gnutls \
+        --enable-cdsassl \
+        --enable-localjpeg \
+        --enable-localzlib \
+        --enable-localpng \
+        --with-gui
+    
     make
 }
 
 package() {
-    cd "$pkgname-$pkgver"
-
-    make install
-
-    # documentation
-    install -d "$pkgdir/usr/share/doc/htmldoc"
-    for f in CHANGES.txt README.txt; do
-        install -Dm644 $f \
-            "$pkgdir/usr/share/doc/htmldoc/$f"
-    done
-
-    # desktop file
-    install -Dm644 desktop/htmldoc.desktop \
-        "$pkgdir/usr/share/applications/htmldoc.desktop"
-
-    # icons
-    for s in 16 24 32 48 64 96 128; do
-        install -Dm644 desktop/htmldoc-${s}.png \
-            "$pkgdir/usr/share/icons/hicolor/${s}x${s}/apps/htmldoc.png"
-    done
-
-    # mime
-    install -Dm644 desktop/htmldoc.xml \
-        "$pkgdir/usr/share/mime/packages/htmldoc.xml"
+    cd "${pkgname}-${pkgver}"
+    
+    make DESTDIR="$pkgdir" install
 }
