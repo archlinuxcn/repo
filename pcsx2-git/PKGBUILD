@@ -2,10 +2,10 @@
 # Contributor: josephgbr <rafael.f.f1@gmail.com>
 # Contributor: Themaister <maister@archlinux.us>
 
-pkgname=pcsx2-avx-git
+pkgname=pcsx2-git
 pkgver=1.5.0.r2284.785fe6b2e
-pkgrel=2
-pkgdesc='A Sony PlayStation 2 emulator (AVX instruction set, Sandy Bridge and up CPU required)'
+pkgrel=3
+pkgdesc='A Sony PlayStation 2 emulator (Generic)'
 arch=('x86_64')
 url='http://www.pcsx2.net'
 license=('GPL2' 'GPL3' 'LGPL2.1' 'LGPL3')
@@ -13,8 +13,8 @@ depends=('lib32-glew' 'lib32-libaio' 'lib32-libcanberra' 'lib32-libjpeg-turbo'
          'lib32-libpulse' 'lib32-nvidia-cg-toolkit' 'lib32-portaudio'
          'lib32-sdl2' 'lib32-soundtouch' 'lib32-wxgtk2')
 makedepends=('cmake' 'git' 'png++')
-provides=('pcsx2' 'pcsx2-git')
-conflicts=('pcsx2' 'pcsx2-git')
+provides=('pcsx2')
+conflicts=('pcsx2')
 source=('git+https://github.com/PCSX2/pcsx2.git')
 sha256sums=('SKIP')
 
@@ -27,7 +27,6 @@ pkgver() {
 prepare() {
   # Disable ZZOgl-PG
   rm -rf pcsx2/plugins/zzogl-pg
-  sed -i 's/-march=native/-march=sandybridge/g' pcsx2/cmake/BuildParameters.cmake
 }
 
 build() {
@@ -39,6 +38,7 @@ build() {
   mkdir build && cd build
 
   cmake .. \
+    -DDISABLE_ADVANCE_SIMD='TRUE' \
     -DCMAKE_BUILD_TYPE='Release' \
     -DCMAKE_TOOLCHAIN_FILE='cmake/linux-compiler-i386-multilib.cmake' \
     -DCMAKE_INSTALL_PREFIX='/usr' \
