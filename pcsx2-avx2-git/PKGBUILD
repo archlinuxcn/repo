@@ -2,10 +2,10 @@
 # Contributor: josephgbr <rafael.f.f1@gmail.com>
 # Contributor: Themaister <maister@archlinux.us>
 
-pkgname=pcsx2-git
+pkgname=pcsx2-avx2-git
 pkgver=1.5.0.r2284.785fe6b2e
 pkgrel=1
-pkgdesc='A Sony PlayStation 2 emulator'
+pkgdesc='A Sony PlayStation 2 emulator (AVX2 instruction set, Haswell and up CPU required)'
 arch=('x86_64')
 url='http://www.pcsx2.net'
 license=('GPL2' 'GPL3' 'LGPL2.1' 'LGPL3')
@@ -13,8 +13,8 @@ depends=('lib32-glew' 'lib32-libaio' 'lib32-libcanberra' 'lib32-libjpeg-turbo'
          'lib32-libpulse' 'lib32-nvidia-cg-toolkit' 'lib32-portaudio'
          'lib32-sdl2' 'lib32-soundtouch' 'lib32-wxgtk2')
 makedepends=('cmake' 'git' 'png++')
-provides=('pcsx2')
-conflicts=('pcsx2')
+provides=('pcsx2' 'pcsx2-git')
+conflicts=('pcsx2' 'pcsx2-git')
 source=('git+https://github.com/PCSX2/pcsx2.git')
 sha256sums=('SKIP')
 
