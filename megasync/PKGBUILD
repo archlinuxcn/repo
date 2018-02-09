@@ -1,15 +1,17 @@
-# Maintainer: Daniel Henry <d at hackr dot pl>
+# Maintainer: kikadf <kikadf.01@gmail.com>
+# Contributor: Daniel Henry <d at hackr dot pl>
 # Contributor: Miguel Revilla <yo at  miguelrevilla dot com>
 # Contributor: Alfonso Saavedra "Son Link" <sonlink.dourden@gmail.com>
 # Contributor: Hexchain Tong <i at hexchain dot org>
+
 pkgname=megasync
-pkgver=3.5.3.0
-pkgrel=2
+pkgver=3.6.0.0
+pkgrel=1
 pkgdesc="Sync your files to your Mega account. Official app"
 arch=('i686' 'x86_64')
 url="https://github.com/meganz/megasync"
 license=('custom:MEGA LIMITED CODE REVIEW LICENCE')
-depends=('curl' 'c-ares' 'crypto++' 'libsodium' 'hicolor-icon-theme' 'qt5-base' 'libuv' 'openssl' 'qt5-svg')
+depends=('curl' 'c-ares' 'crypto++' 'libsodium' 'hicolor-icon-theme' 'libuv' 'qt5-svg' 'libmediainfo')
 makedepends=('git' 'qt5-tools' 'swig' 'doxygen')
 optdepends=('sni-qt: fix systray issue on KDE and LXQt')
 source=("git+https://github.com/meganz/MEGAsync.git#tag=v${pkgver}_Linux")
@@ -18,6 +20,9 @@ md5sums=('SKIP')
 prepare(){
     cd "${srcdir}/MEGAsync"
     git submodule update --init --recursive
+    # Fix crypto++-6 issue
+    cd "${srcdir}/MEGAsync/src/MEGASync/mega"
+    git checkout 222594ea17e6fe4fca9b42b28e3cce335c2ca60e
 }
 
 build(){
