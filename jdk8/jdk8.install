@@ -1,0 +1,61 @@
+THIS_JAVA='java-8-jdk'
+NAME='JDK 8'
+
+all_off="$(tput sgr0)"
+bold="${all_off}$(tput bold)"
+blue="${bold}$(tput setaf 4)"
+yellow="${bold}$(tput setaf 3)"
+
+note() {
+    printf "${blue}::${yellow} archlinux-java:${bold} $1${all_off}\n"
+}
+
+post_install() {
+    default=$(archlinux-java get)
+    case ${default} in
+        "")
+            archlinux-java set ${THIS_JAVA}
+            note "${NAME} ('${THIS_JAVA}') set as default Java environment."
+            ;;
+        ${THIS_JAVA})
+            note "${NAME} ('${THIS_JAVA}') set as default Java environment."
+            ;;
+        *)
+            note "Default Java environment already set to '${default}'.
+                   To use ${NAME} ('${THIS_JAVA}'), run:
+                     # archlinux-java set ${THIS_JAVA}
+                   For status, use:
+                     $ archlinux-java status"
+            ;;
+    esac
+
+    if [[ ! -f /etc/ssl/certs/java/cacerts ]]; then
+        update-ca-trust
+    fi
+}
+
+post_upgrade() {
+    post_install
+}
+
+pre_remove() {
+    default=$(archlinux-java get)
+    if [[ ${default} = ${THIS_JAVA} ]]; then
+        archlinux-java unset
+    fi
+}
+
+post_remove() {
+    default=$(archlinux-java get) # reassign
+    if [[ ${default} ]]; then
+        note "Default Java environment is '${default}'."
+    else
+        archlinux-java fix
+        default=$(archlinux-java get) # re-reassign
+        if [[ ${default} ]]; then
+            note "Default Java environment left as '${default}'."
+        else
+            note "Java environment unset."
+        fi
+    fi
+}
