@@ -2,7 +2,7 @@
 
 pkgname=rpcs3-git
 pkgver=0.0.4.r337.cce0ad0c3
-pkgrel=2
+pkgrel=3
 pkgdesc='A Sony PlayStation 3 emulator (Sandy Bridge CPU and up)'
 arch=('x86_64')
 url='https://github.com/RPCS3/rpcs3'
@@ -53,7 +53,7 @@ prepare() {
 
   popd
 
- sed -i 's/-march=native/-march=sandybridge/g' rpcs3/CMakeLists.txt
+  sed -i 's/native/sandybridge/g' rpcs3/CMakeLists.txt
 
   if [[ -d build ]]; then
     rm -rf build
