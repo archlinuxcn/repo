@@ -1,0 +1,11 @@
+# Message displayed after a fresh install.
+post_install() {
+    echo "Add these lines to ~/.emacs:"
+    echo "  (require 'undo-tree)"
+}
+
+# Message displayed afteer package removal.
+post_remove() {
+    echo "Remove these lines from ~/.emacs:"
+    echo "  (require 'undo-tree)"
+}
