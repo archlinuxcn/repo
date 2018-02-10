@@ -9,7 +9,7 @@ pkgdesc='Rebuild your Jekyll site when a file changes with the `--watch` switch.
 arch=('any')
 url='https://github.com/jekyll/jekyll-watch'
 license=('MIT')
-depends=('ruby-listen>=3.0' 'ruby-listen<4.0')
+depends=('ruby-listen>=3.0' 'ruby-listen<4.0' 'ruby-rdoc')
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
