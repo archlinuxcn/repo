@@ -2,7 +2,7 @@
 # Based on vivaldi-codecs-ffmpeg-extra-bin package <Maintainer: Fahad Hossain>
 
 pkgname=yandex-browser-codecs-ffmpeg-extra-bin
-pkgver=64.0.3282.119
+pkgver=64.0.3282.140
 pkgrel=1
 pkgdesc="Prebuilt ffmpeg-codecs package for yandex.browser"
 arch=(
@@ -21,7 +21,7 @@ source=(
 "http://security.ubuntu.com/ubuntu/pool/universe/c/chromium-browser/chromium-codecs-ffmpeg-extra_${pkgver}-0ubuntu0.16.04.${pkgrel}_amd64.deb"
 )
 md5sums=(
-  "8a3117c581d4a6806aef44502173efad"
+  "b5589dc0cfe14603423b1c69a1f63366"
 )
 
 prepare() {
