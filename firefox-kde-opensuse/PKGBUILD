@@ -20,7 +20,7 @@ _pgo=true
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=58.0.1
+pkgver=58.0.2
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
@@ -59,7 +59,7 @@ source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
         pgo_fix_missing_kdejs.patch
         fix_pgo_bug1389436_explicitly_instantiate_gfxFont.patch
         firefox-install-dir.patch no-crmf.diff
-        be1ce4548b2e.diff
+        0001-Bug-1430274-Define-MOZ_ALSA-for-more-source-files.-r.patch
 )
 
 
@@ -110,17 +110,16 @@ prepare() {
   # add missing rule for pgo builds
   patch -Np1 -i "$srcdir"/add_missing_pgo_rule.patch
 
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1431342
-  patch -Np1 -i "$srcdir"/be1ce4548b2e.diff
-  
   # add missing file Makefile for pgo builds
   patch -Np1 -i "$srcdir"/pgo_fix_missing_kdejs.patch
-   
+
   # configure script misdetects the preprocessor without an optimization level
   # https://bugs.archlinux.org/task/34644
   # sed -i '/ac_cpp=/s/$CPPFLAGS/& -O2/' configure
 
-
+  # https://bugs.archlinux.org/task/57285
+  patch -Np1 -i "$srcdir"/0001-Bug-1430274-Define-MOZ_ALSA-for-more-source-files.-r.patch
+  
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1371991
   patch -Np1 -i ../no-crmf.diff
 
@@ -236,4 +235,4 @@ md5sums=('SKIP'
          'b358b5ed3726ecd4ed054bdc09901982'
          'dbf14588e85812ee769bd735823a0146'
          '196edf030efc516e3de5ae3aa01e9851'
-         '480a3e3899c9ba9ec4b699d45cfe36fa')
+         'cf8b9644eb0ae7820ccc2e775fb68d6e')
