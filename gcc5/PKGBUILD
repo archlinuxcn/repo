@@ -7,12 +7,12 @@ pkgname=('gcc5')
 pkgver=5.5.0
 _pkgver=5
 _islver=0.18
-pkgrel=2.1
+pkgrel=4
 pkgdesc="The GNU Compiler Collection (5.x.x)"
 arch=('i686' 'x86_64')
 license=('GPL' 'LGPL' 'FDL' 'custom')
 url="http://gcc.gnu.org"
-makedepends=('binutils>=2.26' 'libmpc')
+depends=('glibc>=2.23' 'binutils>=2.26' 'libmpc')
 options=('!emptydirs')
 source=(ftp://gcc.gnu.org/pub/gcc/releases/gcc-${pkgver}/gcc-${pkgver}.tar.xz
         http://isl.gforge.inria.fr/isl-${_islver}.tar.bz2)
@@ -72,7 +72,6 @@ build() {
       --enable-version-specific-runtime-libs
       #--enable-install-libiberty
 
-  export LD_PRELOAD=/usr/lib/libstdc++.so
   make
 }
 
