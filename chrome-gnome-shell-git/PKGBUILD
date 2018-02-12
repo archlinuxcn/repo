@@ -3,7 +3,7 @@
 
 _name=chrome-gnome-shell
 pkgname=$_name-git
-pkgver=9.r34.g5463caa
+pkgver=10.r2.gabfb53a
 pkgrel=1
 pkgdesc="Native connector for integration with extensions.gnome.org"
 arch=('any')
@@ -32,11 +32,11 @@ build() {
     cmake                                \
         -DCMAKE_INSTALL_PREFIX=/usr      \
         -DCMAKE_INSTALL_LIBDIR=lib       \
-        -DBUILD_EXTENSION=OFF ../
+        -DBUILD_EXTENSION=OFF ../        \
+        -DPYTHON_EXECUTABLE=/usr/bin/python
 }
 
 package() {
     cd "$srcdir/$_name/build"
     make DESTDIR="$pkgdir" install
 }
-
