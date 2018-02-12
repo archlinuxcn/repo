@@ -55,6 +55,34 @@ md5sums=('SKIP'
          'f90e6a0139600b182d6c36e6c7cf3492'
          '3dbb81b1dae3a9d977bd69f8354b3007')
 
+_builtin_pkgs=(julia-base64
+               julia-crc32c
+               julia-dates
+               julia-delimitedfiles
+               julia-distributed
+               julia-filewatching
+               julia-future
+               julia-interactiveutils
+               julia-iterativeeigensolvers
+               julia-libgit2
+               julia-libdl
+               julia-linearalgebra
+               julia-loggin
+               julia-markdown
+               julia-mmap
+               julia-pkg
+               julia-printf
+               julia-profile
+               julia-repl
+               julia-random
+               julia-sha
+               julia-serialization
+               julia-sparsearrays
+               julia-suitesparse
+               julia-test
+               julia-uuids
+               julia-unicode)
+
 pkgver() {
   cd julia
 
@@ -174,7 +202,8 @@ package-julia-in() {
            mpfr pcre2 hicolor-icon-theme xdg-utils suitesparse
            openspecfun openblas libutf8proc-git openblas-lapack
            mbedtls libssh2)
-  conflicts=('julia')
+  conflicts=('julia' "${_builtin_pkgs[@]}")
+  replaces=("${_builtin_pkgs[@]}")
   opts=("${@:2}")
 
   cd "$1"
@@ -195,7 +224,7 @@ package-julia-in() {
             --startup-file=no \
             -e 'print(VERSION.major, ".", VERSION.minor, ".", VERSION.patch)')
 
-  provides=("julia=2:$ver")
+  provides=("julia=2:$ver" "${_builtin_pkgs[@]}")
 }
 
 package_julia-git() {
