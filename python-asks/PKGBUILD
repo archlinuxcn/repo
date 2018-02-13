@@ -1,6 +1,6 @@
 _pkgname=asks
 pkgname=python-asks
-pkgver=1.3.9
+pkgver=1.3.10
 pkgrel=1
 pkgdesc="asks - async http"
 arch=('any')
@@ -8,8 +8,8 @@ url="https://github.com/theelous3/asks"
 license=('MIT')
 depends=('python' 'python-multio' 'python-h11')
 makedepends=('python-setuptools')
-source=('https://pypi.python.org/packages/bd/db/12bff14c41c6e4131005acf41e924ee110c4524a4f7751aeb551b57da8fd/asks-1.3.9.tar.gz')
-md5sums=('937361180a3c485c6ab6ca45da3e5cb8')
+source=('https://pypi.python.org/packages/80/22/ef3bafc4d5b7b54cab7da1afd3e2cd73531dc546add635ff72e607058f0d/asks-1.3.10.tar.gz')
+md5sums=('1ad73b73ee24ede7f818c9747dcbbb1d')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
