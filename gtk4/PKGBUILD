@@ -4,7 +4,8 @@
 
 pkgname=gtk4
 pkgver=3.93.0
-pkgrel=2
+_tag_commit_id=3f012f6d018708f895663468e2c788b448cddc3d
+pkgrel=3
 pkgdesc="GObject-based multi-platform GUI toolkit"
 arch=('i686' 'x86_64')
 url="https://www.gtk.org/"
@@ -42,13 +43,13 @@ makedepends=('gobject-introspection'
 optdepends=('gnome-icon-theme: Default icon theme'
             'gnome-themes-standard: Default widget theme'
             'gdk-pixbuf2: An image loading library')
-source=("https://git.gnome.org/browse/gtk+/snapshot/gtk+-${pkgver}.tar.xz"
+source=("https://gitlab.gnome.org/GNOME/gtk/repository/${pkgver}/archive.tar.gz"
         'gtk4.install'
         'gtk4-query-immodules.hook'
         'gtk4-update-icon-cache.hook'
         'gtk4-update-icon-cache.script'
         'settings.ini')
-sha512sums=('759cd1daaeb4269e1873ec4c65849731cf867fcbd38ed2f79fa1fb55b6d5f26f5461adbace5af7e25f5174ae56e1c10a207270415b0a9e187783658ad5423cbd'
+sha512sums=('b3c2c8937da4063e2602a568d05e772147d6f5504a31fc9104ba76579903a0cc562d3bf0e1b3521eade864ee981caa4bc08032a3152c3a08b5057bceec137126'
             '5dcb698a15e7d5f4611c9357782d475052944cc71e73351238ffb5dfbe18d1bd1b62289da7f8066cde256c4339de5efa982088f47781876f5d8317f92b87f79f'
             '1dbcce0a3e17ee05b579613adba25feff692f6626155e91fa6859e5f176753201b5ceffa8c9c7c897cf945aeeb32fbd28affa24050dfc0d65237733964bf28de'
             '9d3bb80afb3a00dc50402d32476719daaeab017e1a066425bb602316b534d0a9899d48734a84f70af1066ed104df0491264383a34969dfad2ea9828fb41b9b6b'
@@ -57,7 +58,7 @@ sha512sums=('759cd1daaeb4269e1873ec4c65849731cf867fcbd38ed2f79fa1fb55b6d5f26f546
 install="gtk4.install"
 
 build() {
-  cd gtk+-${pkgver}
+  cd gtk-${pkgver}-${_tag_commit_id}
 
   meson --prefix=/usr \
     --sysconfdir=/etc \
@@ -73,7 +74,7 @@ build() {
 }
 
 package() {
-  cd gtk+-${pkgver}/_build
+  cd gtk-${pkgver}-${_tag_commit_id}/_build
 
   DESTDIR="$pkgdir" ninja install
 
