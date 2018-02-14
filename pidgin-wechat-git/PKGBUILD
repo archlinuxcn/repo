@@ -1,0 +1,32 @@
+# Maintainer: GI_Jack <iamjacksemail@hackermail.com>
+pkgname=pidgin-wechat-git
+_pkgname=pidgin-wechat
+pkgver=0.1.1.r35.gdc3adda
+pkgrel=1
+pkgdesc="Wechat plugin for pidgin libpurple"
+arch=('x86_64')
+url="https://github.com/sbwtw/pidgin-wechat"
+license=('WTFPL')
+depends=('libpurple')
+makedepends=('rust' 'clang' 'libpurple' 'git')
+optdepends=('pidgin')
+provides=('pidgin-wechat')
+conflicts=('pidgin-wechat')
+source=("git://github.com/sbwtw/pidgin-wechat.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "${_pkgname}"
+  git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+  cd "${_pkgname}"
+  cargo build --release
+}
+
+package() {
+  cd "${_pkgname}"
+  install -Dm755 target/release/deps/libwechat.so ${pkgdir}/usr/lib/pidgin/libwechat.so
+}
+
