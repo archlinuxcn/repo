@@ -5,13 +5,14 @@
 
 pkgname=ccnet-server
 pkgver=6.2.5
-pkgrel=1
-pkgdesc="A framework for writing networked applications in C."
+pkgrel=2
+pkgdesc="Internal communication framework and user/group management for Seafile-server"
 arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
 url="https://github.com/haiwen/${pkgname}"
 license=('GPL2')
 depends=('libevent' 'libzdb' 'libsearpc' 'libldap' 'python2')
 makedepends=('vala' 'libmariadbclient')
+conflicts=('ccnet')
 source=("${pkgname}-v${pkgver}-server.tar.gz::${url}/archive/v${pkgver}-server.tar.gz"
         "libccnet.pc.patch"
         "openssl-1.1.diff")
