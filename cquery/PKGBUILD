@@ -1,7 +1,7 @@
 # Maintainer: Shengyu Zhang <la@archlinuxcn.org>
 
 pkgname=cquery
-pkgver=v20180203
+pkgver=v20180215
 __pkgver=${pkgver:1}
 pkgrel=1
 pkgdesc='Low-latency vscode language server for large C++ code-bases, powered by libclang.'
@@ -18,7 +18,7 @@ source=("https://github.com/cquery-project/$pkgname/archive/$pkgver.tar.gz"
         'git+https://github.com/emilk/loguru'
         'git+https://github.com/msgpack/msgpack-c'
         )
-sha256sums=('78ab675b329042ed787bffed68a12172e5a0f5a42c3e4acffa9477fb1f9bd850'
+sha256sums=('1651672e2e5f9707778ab2b9a0b719596c7cb8bf77f374994abc23baa532148d'
             'SKIP'
             'SKIP'
             'SKIP'
