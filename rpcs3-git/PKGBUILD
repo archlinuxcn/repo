@@ -2,7 +2,7 @@
 
 pkgname=rpcs3-git
 pkgver=0.0.4.r347.95c6ac699
-pkgrel=1
+pkgrel=2
 pkgdesc='A Sony PlayStation 3 emulator (Sandy Bridge CPU and up)'
 arch=('x86_64')
 url='https://github.com/RPCS3/rpcs3'
@@ -14,6 +14,7 @@ makedepends=('boost' 'cereal' 'cmake' 'git' 'llvm40')
 provides=('rpcs3')
 conflicts=('rpcs3')
 source=('git+https://github.com/RPCS3/rpcs3.git'
+        'avx.patch'
         'rpcs3-common::git+https://github.com/RPCS3/common.git'
         'rpcs3-hidapi::git+https://github.com/RPCS3/hidapi.git#commit=ca39ce8'
         'rpcs3-pugixml::git+https://github.com/RPCS3/pugixml.git#commit=f205aaf'
@@ -30,6 +31,7 @@ sha256sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
+            'SKIP'
             'SKIP')
 
 pkgver() {
@@ -39,6 +41,7 @@ pkgver() {
 }
 
 prepare() {
+  sed -i 's/native/sandybridge/g' ${srcdir}/rpcs3/CMakeLists.txt
   pushd rpcs3
 
   git submodule init 3rdparty/{GSL,hidapi,Optional,pugixml} asmjit Vulkan/{glslang,Vulkan-LoaderAndValidationLayers}
@@ -53,8 +56,8 @@ prepare() {
 
   popd
 
-  sed -i 's/native/sandybridge/g' rpcs3/CMakeLists.txt
-
+  cd $srcdir
+  patch -p0 < avx.patch
   if [[ -d build ]]; then
     rm -rf build
   fi
