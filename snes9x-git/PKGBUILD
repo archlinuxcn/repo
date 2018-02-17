@@ -1,0 +1,72 @@
+# Maintainer: Michael DeGuzis <mdeguzis@gmail.com>
+
+pkgbase=snes9x-git
+pkgname=('snes9x-git' 'snes9x-gtk-git')
+pkgver=1.55.r52.ga13ac31
+pkgrel=1
+pkgdesc="Port of the Snes9x emulator (git version). Includes Gtk version."
+arch=('i686' 'x86_64')
+url="http://www.snes9x.com/"
+license=('LGPL')
+depends=('minizip')
+makedepends=('git' 'intltool' 'nasm' 'mesa' 'libpulse'  'libpng' 'sdl' 'gtk2' 'libxv'
+             'adwaita-icon-theme' 'autogen' 'minizip')
+source=("$pkgname"::'git://github.com/snes9xgit/snes9x.git')
+sha1sums=('SKIP')
+
+pkgver() {
+
+  cd "$srcdir/$pkgname"
+  git describe --long --tags | sed -E 's/([^-]*-g)/r\1/;s/-/./g'
+
+}
+
+build() {
+
+  cd ${pkgbase}/unix
+  # work around problems with automake & cvs
+  touch configure
+  ./configure --prefix=/usr --enable-netplay
+  make
+
+  cd ../gtk
+  ./autogen.sh
+  ./configure --prefix=/usr --with-netplay --with-opengl
+  make
+
+}
+
+package_snes9x-git() {
+
+  pkgdesc="A portable Emulator for the Super Nintendo Entertainment System"
+  depends=('libpng' 'libxext' 'libsm' 'libxv' 'minizip')
+  conflicts=('snes9x')
+  provides=('snesx')
+
+  cd ${pkgbase}/unix
+  install -D -m755 snes9x "${pkgdir}/usr/bin/snes9x"
+  install -d "${pkgdir}/usr/share/doc/${pkgname}"
+  install -D -m644 ../docs/{snes9x.conf.default,{control-inputs,controls,snapshots}.txt} \
+    "${pkgdir}/usr/share/doc/${pkgname}/"
+  install -D -m644 ../docs/snes9x-license.txt \
+    "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+
+}
+
+package_snes9x-gtk-git() {
+
+  pkgdesc="A portable Emulator for the Super Nintendo Entertainment System - GTK version"
+  license=('custom' 'LGPL')
+  depends=('sdl' 'libpulse' 'gtk2' 'libxv' 'adwaita-icon-theme' 'minizip' 'libgl')
+  conflicts=('snes9x-gtk')
+  provides=('snes9x-gtk')
+
+  cd ${pkgbase}/gtk
+  make DESTDIR="${pkgdir}" install
+  install -d "${pkgdir}/usr/share/doc/${pkgname}"
+  install -D -m644 ../docs/{snes9x.conf.default,{control-inputs,controls,snapshots}.txt} \
+    "${pkgdir}/usr/share/doc/${pkgname}/"
+  install -D -m644 ../docs/snes9x-license.txt \
+    "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+
+}
