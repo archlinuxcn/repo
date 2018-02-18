@@ -1,9 +1,9 @@
 # Maintainer: Jguer <joaogg3@gmail.com>
 pkgname=yay
-pkgver=2.303
+pkgver=2.350
 pkgrel=1
 pkgdesc="Yet another yogurt. Pacman wrapper and AUR helper written in go."
-arch=('i686' 'x86_64' 'armv7h' 'aarch64')
+arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
 url="https://github.com/Jguer/yay"
 license=('GPL')
 options=('!strip' '!emptydirs')
@@ -16,7 +16,7 @@ makedepends=(
 )
 conflicts=('yay-bin' 'yay-git')
 source=("https://github.com/Jguer/yay/archive/v${pkgver}.tar.gz")
-sha1sums=('e1175e534b9876ce9c422dfad6b19d0c7fa31acb')
+sha1sums=('06d110e83e183e8b4cc2aacef6a848ec1a8440d4')
 
 prepare() {
   export GOPATH="${srcdir}/.go"
@@ -36,9 +36,6 @@ build() {
 package() {
   _output="${srcdir}/$pkgname-$pkgver"
   install -Dm755 "${_output}/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
-
-  # Install GLP v3
-  # install -Dm644 "${_output}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname/-bin/}/LICENSE"
 
   # Install manpage
   install -Dm644 "${_output}/yay.8" "${pkgdir}/usr/share/man/man8/yay.8"
