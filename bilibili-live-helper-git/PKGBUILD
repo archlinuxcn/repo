@@ -2,7 +2,7 @@
 _pkgname=bilibili-live-helper
 pkgname=bilibili-live-helper-git
 entryname="Bilibili Live Helper"
-pkgver=r28.b500462
+pkgver=r9.8b03f00
 pkgrel=1
 pkgdesc="A Helper for Bilibili Live."
 arch=('x86_64')
@@ -16,15 +16,17 @@ conflicts=('bilibili-live-helper')
 source=('git+https://github.com/pandaGao/bilibili-live-helper' "${entryname}.desktop" "${_pkgname}.ico")
 md5sums=('SKIP' 'SKIP' 'SKIP')
 
-pkgver() {
+prepare() {
 	cd "$srcdir/$_pkgname"
 	git checkout develop
+}
+
+pkgver() {
 	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 build() {
 	cd "$srcdir/$_pkgname"
-	git checkout develop
 	npm run-script build
 	cd builds
 	mv Bilibili直播弹幕库-linux-x64 ${_pkgname}
