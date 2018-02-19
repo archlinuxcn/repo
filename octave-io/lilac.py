@@ -12,7 +12,7 @@ _pkg = 'io'
 
 def _get_new_version():
   web = s.get('http://octave.sourceforge.net/%s/index.html' % _pkg)
-  return re.search(r'\d\.\d\.\d', web.text).group()
+  return re.search(r'\d+\.\d+\.\d+', web.text).group()
 
 def pre_build():
   aur_pre_build()
