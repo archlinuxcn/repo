@@ -1,0 +1,13 @@
+echo_url()
+{
+    echo "https://addons.mozilla.org/en-US/firefox/addon/ugetintegration/"
+}
+post_install()
+{
+    echo "you should install uGet Integration extension to your browser"
+    echo_url
+}
+post_upgrade() {
+    echo "you should upgrade uGet Integration extension"
+    echo_url
+}
