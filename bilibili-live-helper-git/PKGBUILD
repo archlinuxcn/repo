@@ -2,7 +2,7 @@
 _pkgname=bilibili-live-helper
 pkgname=bilibili-live-helper-git
 entryname="Bilibili Live Helper"
-pkgver=r9.8b03f00
+pkgver=r28.b500462
 pkgrel=1
 pkgdesc="A Helper for Bilibili Live."
 arch=('x86_64')
@@ -22,6 +22,7 @@ prepare() {
 }
 
 pkgver() {
+	cd "$srcdir/$_pkgname"
 	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
