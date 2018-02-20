@@ -1,4 +1,4 @@
-# Maintainer: Jack Wu <origincoder@yahoo.com>
+# Maintainer: OriginCode <origincoder@yahoo.com>
 _pkgname=bilibili-live-helper
 pkgname=bilibili-live-helper-git
 entryname="Bilibili Live Helper"
