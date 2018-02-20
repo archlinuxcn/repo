@@ -1,11 +1,13 @@
 #Maintainer : Sasasu <lizhaolong0123@gmail.com>
 pkgname=uget-chrome-wrapper
 pkgver=2.0.7
-pkgrel=6
+pkgrel=7
 pkgdesc="Integrate uGet Download Manager with Google Chrome, Chromium, Vivaldi, Opera and Firefox"
 arch=('any')
 url="https://github.com/slgobinath/uget-chrome-wrapper"
 license=('GPL3')
+replaces=('uget-integrator')
+conflicts=('uget-integrator')
 depends=('python3' 'uget')
 makedepends=()
 source=("uget-chrome-wrapper-$pkgver::https://raw.githubusercontent.com/slgobinath/uget-chrome-wrapper/v$pkgver/uget-chrome-wrapper/bin/uget-chrome-wrapper"
