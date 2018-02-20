@@ -9,7 +9,7 @@ pkgname=${_name}-${_channel}
 pkgdesc="Standalone Web Browser from Mozilla — Nightly build (${_lang})"
 url="https://www.mozilla.org/${_lang}/${_name}/${_channel}"
 _version=60.0a1
-pkgver=60.0a1.20180218.23
+pkgver=60.0a1.20180220.00
 pkgrel=2
 arch=('x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -25,13 +25,13 @@ optdepends=('pulseaudio: audio support'
             'startup-notification: support for FreeDesktop Startup Notification')
 _url="https://ftp.mozilla.org/pub/${_name}/nightly/latest-mozilla-central"
 _src="${_name}-${_version}.${_lang}.linux"
-_filename="20180218.23-${_src}"
+_filename="20180220.00-${_src}"
 source=("${pkgname}.desktop" 'vendor.js'
         "${_filename}-x86_64.tar.bz2"::"${_url}/${_src}-x86_64.tar.bz2"
         "${_filename}-x86_64.tar.bz2.asc"::"${_url}/${_src}-x86_64.tar.bz2.asc")
 sha512sums=('b514abafc559ec03a4222442fa4306db257c3de9e18ed91a0b37cc9d7058a8e08a241442e54a67659a3ab4512a5dae6a0b94ea7a33d08ef0b8a76a9eac902095'
             'c9443c2fb0897193af036bfd156d732b5ffabc20ec008f351918661c4ff30a67eb62a971cc628e3f58d2017c0844e601609164171e926ebc36faf3a04ff085b5'
-            'e5ad2fa395b44c47dd73a7da6adcbbf4b2e75ad33418334f1b2260399ab25b8d3394aeb8de9ec1740e27baca7a1a8d9e705bfb211ff3f724e4ed1c8dbffae877'
+            '931b724a29bf2adbfc52e16a002e714a5d1561b74b16285e0578916bc45756f05d64525f00bdecc5ff83e9902283e716dc15062d451a40cb6420a5cb0c66bca6'
             'SKIP')
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla’s GnuPG release key
 
