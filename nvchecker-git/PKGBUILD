@@ -23,7 +23,7 @@ _gitroot=nvchecker
 
 pkgver() {
   cd "$srcdir/$_gitroot"
-  echo $(awk '$1 == "__version__" { gsub(/\x27/, "", $3); print $3 }' nvchecker/__init__.py).$(git describe --long | cut -d- -f2)
+  echo $(awk '$1 == "__version__" { gsub(/\x27/, "", $3); print $3 }' nvchecker/__init__.py).r$(git describe --long | cut -d- -f2)
 }
 
 build() {
