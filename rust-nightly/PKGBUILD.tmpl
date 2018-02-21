@@ -72,6 +72,8 @@ package_rust-docs-nightly() {
 
 package_rustfmt-nightly() {
   pkgdesc="A safe, concurrent, practical language from Mozilla. (rustfmt formatter, for nightly version)"
+  pkgver={{rustfmt_version + ' ' + version_date}}
+  epoch=3
   provides=('rustfmt={{rustfmt_version}}')
   conflicts=('rustfmt' 'rustup')
 
@@ -82,6 +84,8 @@ package_rustfmt-nightly() {
 
 package_cargo-nightly() {
   pkgdesc="Rust package manager (nightly version)"
+  pkgver={{cargo_version + ' ' + version_date}}
+  epoch=3
   provides=('cargo={{cargo_version}}')
   conflicts=('cargo' 'rustup')
 
