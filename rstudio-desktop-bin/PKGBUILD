@@ -12,7 +12,7 @@
 #######################
 
 pkgname=rstudio-desktop-bin
-pkgver=1.1.414
+pkgver=1.1.423
 pkgrel=1
 pkgdesc="An integrated development environment (IDE) for R (binary version from RStudio official repository)"
 arch=('i686' 'x86_64')
@@ -27,11 +27,11 @@ provides=("rstudio-desktop=${pkgver}")
 options=(!strip)
 
 md5sums_i686=(
-44d16f29fcdbef82b2652adbef7cf53d
+8515d8f5c78ac15b331bd9be0c1ea412
 795a3ca3f2048c4dc32d25560e191c35
 eca697b2b8efbed3d2241f6b0c8c15e4)
 md5sums_x86_64=(
-759fd531bfbfc47a6f211953750de9e4
+f6e385c13ff7a1218891937f016e9383
 84e61f5eda991b978fa168d6762f7990
 391ba54997d6faddbfe41a185a823ee4)
 
@@ -105,6 +105,14 @@ package() {
       ln -s "$x" "${x%.+([0-9])}"
     fi
   done
+
+  ln -sf /usr/lib/qt/plugins/platforminputcontexts/libfcitxplatforminputcontextplugin.so plugins/platforminputcontexts/
+  ls /usr/lib/libFcitxQt5WidgetsAddons.so{,.*} \
+      /usr/lib/libFcitxQt5DBusAddons.so{,.*} |
+      while read x;do
+          ln -sf "$x" ./
+      done
+
 
   cd "$pkgdir/usr/bin"
   #ln -s -f ../lib/rstudio/bin/rstudio rstudio-bin
