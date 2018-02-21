@@ -3,16 +3,12 @@
 import os
 import glob
 import tornado.template
-import urllib.request
-from urllib.parse import urljoin
 
-from pkg_resources import parse_version
+import pytoml
 
-from lilaclib import *
+from lilaclib import s, git_add_files, git_commit, single_main
 
-debug = False
-_version = '1.16.0'
-_version_date = '2016-12-23'
+debug = True
 
 STDS = [
   'arm-unknown-linux-gnueabihf',
@@ -27,47 +23,45 @@ STDS = [
   'aarch64-linux-android',
 ]
 
-dist_url = 'https://static.rust-lang.org/dist/index.html'
+config_url = 'https://static.rust-lang.org/dist/channel-rust-nightly.toml'
 
 build_prefix = 'extra-x86_64'
 
 toolchain = {
   'x86_64-pc-windows-gnu': ['mingw-w64-gcc'],
   'i686-pc-windows-gnu': ['mingw-w64-gcc'],
-  'i686-unknown-linux-gnu': ['gcc-multilib'],
+  'i686-unknown-linux-gnu': [],
   'asmjs-unknown-emscripten': ['emsdk', 'emscripten'],
   'wasm32-unknown-emscripten': ['emsdk', 'emscripten'],
   'wasm32-unknown-unknown': [],
   'aarch64-linux-android': ['android-ndk'],
 }
 
-def get_latest_version():
-  if not debug:
-    res = urllib.request.urlopen(dist_url)
-    page = res.read().decode('utf-8')
-    version_date = re.findall(r'(\d{4}-\d{2}-\d{2})/', page)[-1]
-    stable = sorted(set(re.findall(r'\d+\.\d+\.\d+', page)), key=parse_version)[-1]
-    major, minor, patchlevel = stable.split('.')
-    version = '%s.%s.%s' % (major, int(minor) + 2, patchlevel)
-    return version, version_date
-  else:
-    return _version, _version_date
-
 class Std:
-  def __init__(self, platform, date):
-    self.name = 'rust-std-nightly-' + platform
-    self.url = urljoin(dist_url, date + '/' + self.name + '.tar.xz')
-    self.platform = platform
-    self.optdepends = toolchain.get(platform)
+  def __init__(self, target, data):
+    if not data['available']:
+      raise Exception('target not available', target)
+    self.name = f'rust-std-nightly-{target}'
+    self.url = data['xz_url']
+    self.hash = data['xz_hash']
+    self.target = target
+    self.optdepends = toolchain.get(target)
 
 def pre_build():
-  version, version_date = get_latest_version()
+  toml = s.get(config_url).text
+  toml = pytoml.loads(toml)
+
+  version_date = toml['date']
+  version = toml['pkg']['rust']['version'].split('-', 1)[0]
+  cargo_version = toml['pkg']['cargo']['version'].split('-', 1)[0]
+  rustfmt_version = toml['pkg']['rustfmt-preview']['version'].split('-', 1)[0]
+
   if not debug:
     oldfiles = glob.glob('*.xz') + glob.glob('*.xz.asc') + glob.glob('*.part')
     for f in oldfiles:
       os.unlink(f)
 
-  stds = [Std(x, version_date) for x in STDS]
+  stds = [Std(target, toml['pkg']['rust-std']['target'][target]) for target in STDS]
 
   loader = tornado.template.Loader('.')
   content = loader.load('PKGBUILD.tmpl').generate(
@@ -75,6 +69,8 @@ def pre_build():
     version = version,
     version_date = version_date.replace('-', ''),
     version_date_raw = version_date,
+    cargo_version = cargo_version,
+    rustfmt_version = rustfmt_version,
   )
   with open('PKGBUILD', 'wb') as output:
     output.write(content)
