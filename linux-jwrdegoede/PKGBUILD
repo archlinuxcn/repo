@@ -6,16 +6,17 @@
 # Maintainer: Thomas Baechler <thomas@archlinux.org>
 
 pkgbase=linux-jwrdegoede
-_srcname=linux-sunxi-master
+_srcname=linux-sunxi
 pkgver=4.15.0.201802120946.8d7dfa5
 pkgrel=1
 arch=('x86_64')
 url="https://www.kernel.org/"
 license=('GPL2')
-makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc' 'libelf' 'python')
+makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc' 'libelf' 'python' 'git')
 options=('!strip')
-# 'git+https://github.com/jwrdegoede/linux-sunxi'
-source=('https://github.com/jwrdegoede/linux-sunxi/archive/master.zip'
+source=(
+        'git+https://github.com/jwrdegoede/linux-sunxi'
+        #'https://github.com/jwrdegoede/linux-sunxi/archive/master.zip'
         '90-linux.hook'
         'linux.preset'
         )
