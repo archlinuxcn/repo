@@ -3,7 +3,7 @@
 pkgname=poi
 _pkgname=poi
 pkgver=8.2.0.beta.3.0.g530c79c7
-pkgrel=1
+pkgrel=2
 pkgdesc="Scalable KanColle browser and tool"
 arch=('any')
 url="https://github.com/poooi/poi/"
@@ -48,7 +48,8 @@ build() {
     # prevent infinite loop...
     timeout 5m gulp deploy
     export -f compile
-    find . -type f -name '*.es' -exec bash -c 'compile "$0"' {} \;
+    # do not compile now
+    #find . -type f -name '*.es' -exec bash -c 'compile "$0"' {} \;
     yarn install --production
 }
 
