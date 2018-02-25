@@ -3,7 +3,7 @@
 pkgname=cquery
 pkgver=v20180215
 __pkgver=${pkgver:1}
-pkgrel=1
+pkgrel=2
 pkgdesc='Low-latency vscode language server for large C++ code-bases, powered by libclang.'
 arch=('x86_64')
 url='https://github.com/cquery-project/cquery/'
@@ -23,8 +23,7 @@ sha256sums=('1651672e2e5f9707778ab2b9a0b719596c7cb8bf77f374994abc23baa532148d'
             'SKIP'
             'SKIP'
             'SKIP'
-            'SKIP'
-            )
+            'SKIP')
 
 prepare() {
     cd $pkgname-$__pkgver
