@@ -4,8 +4,8 @@ index ad40fd9..50e19a4 100644
 +++ b/build/config/compiler/compiler.gni
 @@ -68,19 +68,19 @@
  
-   # Whether or not we should use position independent code.
-   use_pic = true
+   # x86{,_64}.
+   using_mismatched_sample_profile = current_cpu != "x64" && current_cpu != "x86"
 +
 +  # Exclude unwind tables for official builds as unwinding can be done from
 +  # stack dumps produced by Crashpad at a later time "offline" in the crash
