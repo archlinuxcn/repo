@@ -9,7 +9,7 @@ pkgver=3.0.8
 _commit=12a01268825e9c7e17794c58c367e3b4db912ad9
 pkgrel=2
 pkgdesc="A simple and easy-to-use C language RPC framework (including both server side & client side) based on GObject System."
-arch=('i686' 'x86_64' 'armv6h' 'armv7h')
+arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
 url="https://github.com/haiwen/libsearpc"
 license=('Apache')
 depends=("glib2>=2.26.0" "jansson>=2.2.1" "python2-gobject2>=2.26.0" 'python2-simplejson')
