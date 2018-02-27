@@ -1,7 +1,7 @@
 # Maintainer: Claudio d'Angelis <claudiodangelis at gmail dot com>
 pkgname=postman-bin
-pkgver=5.5.3
-pkgrel=2
+pkgver=6.0.7
+pkgrel=1
 pkgdesc="Build, test, and document your APIs faster"
 arch=('x86_64')
 url="https://www.getpostman.com"
@@ -11,10 +11,10 @@ source=(
     "postman.desktop"
 )
 md5sums=(
-    "5940ecbe81c8a3acde8508f86410489e"
+    "1ab60b57f37b44ad7a4b6c6216d0f9d3"
     "ebf1903fa3299a8cf3eb578674ee090f"
 )
-depends=(gconf libxss libxtst nss alsa-lib)
+depends=(gconf libxss gtk2 libxtst nss alsa-lib)
 package() {
 	install -dm755 "${pkgdir}/opt/"
 	chmod -R 755 "Postman"
