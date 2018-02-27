@@ -7,8 +7,8 @@
 
 pkgbase=linux-mainline               # Build stock -ARCH kernel
 #pkgbase=linux-custom       # Build kernel with a different name
-_tag=v4.16-rc2
-pkgver=4.16rc2
+_tag=v4.16-rc3
+pkgver=4.16rc3
 pkgrel=1
 arch=('x86_64')
 url="https://www.kernel.org/"
