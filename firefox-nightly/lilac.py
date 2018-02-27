@@ -13,13 +13,12 @@ def pre_build():
   for line in edit_file('PKGBUILD'):
     if line.startswith('_version='):
       line = f'_version={version}'
-    elif line.startswith('pkgver='):
-      line = f'pkgver={version}.{dt}'
     elif line.startswith('_filename='):
       line = f'_filename="{dt}-${{_src}}"'
 
     print(line)
 
+  update_pkgver_and_pkgrel(f'{version}.{dt}')
   run_cmd(['updpkgsums'])
 
 def post_build():

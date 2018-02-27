@@ -1,4 +1,4 @@
-# Maintainer: Jack Wu <origincoder@yahoo.com>
+# Maintainer: OriginCode <origincoder@yahoo.com>
 _pkgname=bilibili-live-helper
 pkgname=bilibili-live-helper-git
 entryname="Bilibili Live Helper"
@@ -10,7 +10,7 @@ url="https://github.com/pandaGao/bilibili-live-helper"
 install=${pkgname}.install
 license=('MIT')
 depends=('cairo' 'libxtst' 'libxi' 'gtk2' 'libxrandr' 'pango' 'fontconfig' 'libxss' 'gdk-pixbuf2' 'nss' 'freetype2' 'nspr' 'gconf' 'libxext' 'libxdamage' 'atk' 'libxrender' 'libxcomposite' 'libxcursor' 'libxfixes' 'libx11' 'alsa-lib' 'libcups')
-makedepends=('npm')
+makedepends=('npm' 'git')
 provides=('bilibili-live-helper')
 conflicts=('bilibili-live-helper')
 source=('git+https://github.com/pandaGao/bilibili-live-helper' "${entryname}.desktop" "${_pkgname}.ico")

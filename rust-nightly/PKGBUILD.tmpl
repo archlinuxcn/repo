@@ -1,12 +1,15 @@
 # Maintainer: lilydjwg <lilydjwg@gmail.com>
 {% autoescape None %}
 pkgname=(rust-nightly
+         rustfmt-nightly
+         cargo-nightly
          rust-src-nightly
          rust-docs-nightly{% for x in stds %}
          {{ x.name }}{% end %}
         )
 pkgver={{version + '_' + version_date}}
 pkgrel=1
+epoch=4
 pkgdesc="A safe, concurrent, practical language from Mozilla (nightly version)"
 arch=('i686' 'x86_64')
 url="https://www.rust-lang.org/"
@@ -14,17 +17,15 @@ license=('MIT' 'Apache')
 validpgpkeys=('108F66205EAEB0AAA8DD5E1C85AB96E6FA1BE5FE')
 makedepends=('git')
 source=(
-        {% for c in ['rustc', 'rust-docs'] %}
-        'https://static.rust-lang.org/dist/{{version_date_raw}}/{{c}}-nightly-x86_64-unknown-linux-gnu.tar.xz'
-        'https://static.rust-lang.org/dist/{{version_date_raw}}/{{c}}-nightly-x86_64-unknown-linux-gnu.tar.xz.asc'
-        {% end %}
+        'https://static.rust-lang.org/dist/{{version_date_raw}}/rust-nightly-x86_64-unknown-linux-gnu.tar.xz'
+        'https://static.rust-lang.org/dist/{{version_date_raw}}/rust-nightly-x86_64-unknown-linux-gnu.tar.xz.asc'
         'https://static.rust-lang.org/dist/{{version_date_raw}}/rust-src-nightly.tar.xz'
         'https://static.rust-lang.org/dist/{{version_date_raw}}/rust-src-nightly.tar.xz.asc'
 {% for x in stds %}
         {{ "'%s'" % x.url }}
         {{ "'%s.asc'" % x.url }}{% end %}
         'git://github.com/rust-lang/zsh-config')
-sha512sums=({% for _ in range(7 + len(stds) * 2) %}
+sha512sums=({% for _ in range(5 + len(stds) * 2) %}
             'SKIP'{% end %})
 
 build() {
@@ -32,12 +33,12 @@ build() {
 }
 
 package_rust-nightly() {
-  depends=("rust-std-nightly-$CARCH-unknown-linux-gnu=$pkgver")
+  depends=("rust-std-nightly-$CARCH-unknown-linux-gnu=$epoch:$pkgver")
   optdepends=('rust-docs-nightly: language and API documentation'
               'rust-src-nightly: source code'
               'vim-rust-git: support for Vim'
 {% for x in stds %}
-              {{ "'%s: cross compile for %s'" % (x.name, x.platform) }}{% end %}
+              {{ "'%s: cross compile for %s'" % (x.name, x.target) }}{% end %}
               'cargo-nightly: Rust package manager')
   provides=(rust={{version}})
   conflicts=(rust)
@@ -45,14 +46,9 @@ package_rust-nightly() {
 
   install -Dm644 "$srcdir"/zsh-config/_rust "$pkgdir/usr/share/zsh/site-functions/_rust"
 
-  cd rustc-nightly-$CARCH-unknown-linux-gnu/rustc
-
-  for f in *; do
-    if [[ $f == manifest.in ]]; then
-      continue
-    fi
-    cp -r $f "$pkgdir/usr"
-  done
+  cd rust-nightly-$CARCH-unknown-linux-gnu
+  ./install.sh --destdir="$pkgdir" --prefix=/usr --disable-ldconfig --components=rustc
+  rm "$pkgdir"/usr/lib/rustlib/{components,manifest-*,rust-installer-version,install.log,uninstall.sh}
 
   rm -r "$pkgdir/usr/share/doc"
   cd "$pkgdir"/usr/lib
@@ -69,9 +65,29 @@ package_rust-docs-nightly() {
   provides=('rust-doc={{version}}')
   conflicts=('rust-doc')
 
-  cd rust-docs-nightly-$CARCH-unknown-linux-gnu/rust-docs
+  cd rust-nightly-$CARCH-unknown-linux-gnu/rust-docs
   mkdir -p "$pkgdir/usr"
   cp -r share "$pkgdir/usr"
+}
+
+package_rustfmt-nightly() {
+  pkgdesc="A safe, concurrent, practical language from Mozilla. (rustfmt formatter, for nightly version)"
+  provides=('rustfmt={{rustfmt_version}}')
+  conflicts=('rustfmt' 'rustup')
+
+  cd rust-nightly-$CARCH-unknown-linux-gnu/rustfmt-preview
+  mkdir -p "$pkgdir/usr"
+  cp -r bin "$pkgdir/usr"
+}
+
+package_cargo-nightly() {
+  pkgdesc="Rust package manager (nightly version)"
+  provides=('cargo={{cargo_version}}')
+  conflicts=('cargo' 'rustup')
+
+  cd rust-nightly-$CARCH-unknown-linux-gnu/cargo
+  mkdir -p "$pkgdir/usr"
+  cp -r bin etc share "$pkgdir/usr"
 }
 
 package_rust-src-nightly() {
@@ -88,7 +104,7 @@ package_rust-src-nightly() {
 
 {% for x in stds %}
 package_{{x.name}}(){
-  pkgdesc="A safe, concurrent, practical language from Mozilla. (standard library, for nightly version, for (cross-)compiling to and running on {{x.platform}})"
+  pkgdesc="A safe, concurrent, practical language from Mozilla. (standard library, for nightly version, for (cross-)compiling to and running on {{x.target}})"
   arch=('any')
   options+=('!strip')
 {% if x.optdepends %}

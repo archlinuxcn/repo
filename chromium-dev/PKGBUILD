@@ -18,7 +18,7 @@ _use_wayland=0   # Build Wayland NOTE: extremely experimental and don't work at 
 ## -- Package and components information -- ##
 ##############################################
 pkgname=chromium-dev
-pkgver=65.0.3322.3
+pkgver=66.0.3350.0
 pkgrel=1
 pkgdesc="The open-source project behind Google Chrome (Dev Channel)"
 arch=('x86_64')
@@ -43,6 +43,7 @@ depends=(
 #          'icu'    # https://crbug.com/678661
          'gtk3'
          'openh264'
+         'vulkan-icd-loader'
          )
 makedepends=(
              'libexif'
@@ -81,12 +82,11 @@ source=( #"https://gsdview.appspot.com/chromium-browser-official/chromium-${pkgv
         'https://raw.githubusercontent.com/gentoo/gentoo/master/www-client/chromium/files/chromium-FORTIFY_SOURCE-r2.patch'
         'https://raw.githubusercontent.com/gentoo/gentoo/master/www-client/chromium/files/chromium-clang-r2.patch'
          # Misc Patches
-#         'chromium-intel-vaapi_r15.diff.base64::https://chromium-review.googlesource.com/changes/532294/revisions/15/patch?download'
-        'chromium-intel-vaapi_r16.diff.patch'
+        'chromium-intel-vaapi_r16.diff.base64::https://chromium-review.googlesource.com/changes/532294/revisions/16/patch?download'
         # Patch from crbug (chromium bugtracker) or Arch chromium package
         'chromium-widevine-r1.patch'
 #         'chromium-exclude_unwind_tables.patch.base64::https://chromium-review.googlesource.com/changes/712575/revisions/1/patch?download' # https://bugs.archlinux.org/task/55914
-        'chromium-exclude_unwind_tables_r2.patch.patch'
+        'chromium-exclude_unwind_tables_r3.patch'
         )
 sha256sums=( #"$(curl -sL https://gsdview.appspot.com/chromium-browser-official/chromium-${pkgver}.tar.xz.hashes | grep sha256 | cut -d ' ' -f3)"
             "$(curl -sL https://commondatastorage.googleapis.com/chromium-browser-official/chromium-${pkgver}.tar.xz.hashes | grep sha256 | cut -d ' ' -f3)"
@@ -96,18 +96,14 @@ sha256sums=( #"$(curl -sL https://gsdview.appspot.com/chromium-browser-official/
             'fa3f703d599051135c5be24b81dfcb23190bb282db73121337ac76bc9638e8a5'
             '4495e8b29dae242c79ffe4beefc5171eb3c7aacb7e9aebfd2d4d69b9d8c958d3'
             # Misc Patches
-#             'cb4933db92b669696201b2866ec9b4942466a849b94b13463d8331284d09a2d1'
-            'c32d71237cf9dca71c35ec54431749c837eb3a7b7dae2fb3fc88beafefa1ca97'
+            '83d1ba905ff8ad41ada7d87963cf7b5e1c3a7ece5690e595dfb762ac30695637'
             # Patch from crbug (chromium bugtracker) or Arch chromium package
             '0d537830944814fe0854f834b5dc41dc5fc2428f77b2ad61d4a5e76b0fe99880'
 #             'd4a99239701256edb37ef3a5504fa87ca2219349834cbf59b9fe42bf7ac496d8'
-            '9478f1ec1a3c53425306cf41c2d0555c215a4f106955d9d6adfff38044530ce8'
+            '603d05a0099302ea0797888ac499053a44c11f136ef9e2c471be52c62f6e499c'
             )
 options=('!strip')
 install=chromium-dev.install
-
-# only for test purpose
-#BUILDDIR=$(pwd)
 
 ################################################
 ## -- Don't touch anything below this line -- ##
@@ -122,10 +118,8 @@ _google_default_client_id="413772536636.apps.googleusercontent.com"
 _google_default_client_secret="0ZChLK6AxeA3Isu96MkwqDR4"
 
 # Build NaCL
-# VULKAN!! # https://crbug.com/582558 NOTE: disabled by default
 _build_nacl=1
 _nacl=true
-_vulkan=0
 makedepends+=('ncurses5-compat-libs')
 
 # Need you use ccache?.
@@ -151,6 +145,9 @@ _keeplibs=(
            'base/third_party/valgrind'
            'base/third_party/xdg_mime'
            'base/third_party/xdg_user_dirs'
+           'buildtools/third_party/libc++'
+           'buildtools/third_party/libc++abi'
+           'buildtools/third_party/libunwind'
            'chrome/third_party/mozilla_security_manager'
            'courgette/third_party'
            'native_client/src/third_party/dlmalloc'
@@ -165,6 +162,10 @@ _keeplibs=(
            'third_party/angle/src/third_party/compiler'
            'third_party/angle/src/third_party/libXNVCtrl'
            'third_party/angle/src/third_party/trace_event'
+           'third_party/angle/third_party/glslang'
+           'third_party/angle/third_party/spirv-headers'
+           'third_party/angle/third_party/spirv-tools'
+           'third_party/angle/third_party/vulkan-validation-layers'
            'third_party/blink'
            'third_party/boringssl'
            'third_party/boringssl/src/third_party/fiat'
@@ -220,6 +221,7 @@ _keeplibs=(
            'third_party/libwebm'
            'third_party/libxml/chromium'
            'third_party/libyuv'
+           'third_party/llvm'
            'third_party/lss'
            'third_party/lzma_sdk'
            'third_party/markupsafe'
@@ -234,13 +236,14 @@ _keeplibs=(
            'third_party/pdfium'
            'third_party/pdfium/third_party/agg23'
            'third_party/pdfium/third_party/base'
-           'third_party/pdfium/third_party/build'
            'third_party/pdfium/third_party/bigint'
+           'third_party/pdfium/third_party/eu-strip'
            'third_party/pdfium/third_party/freetype'
            'third_party/pdfium/third_party/lcms'
            'third_party/pdfium/third_party/libopenjpeg20'
            'third_party/pdfium/third_party/libpng16'
            'third_party/pdfium/third_party/libtiff'
+           'third_party/pdfium/third_party/skia_shared'
            'third_party/ply'
            'third_party/polymer'
            'third_party/protobuf'
@@ -261,6 +264,7 @@ _keeplibs=(
            'third_party/swiftshader/third_party/llvm-subzero'
            'third_party/swiftshader/third_party/subzero'
            'third_party/tcmalloc'
+           'third_party/unrar'
            'third_party/usrsctp'
            'third_party/vulkan-validation-layers'
            'third_party/vulkan'
@@ -270,6 +274,7 @@ _keeplibs=(
            'third_party/widevine'
            'third_party/woff2'
            'third_party/zlib/google'
+
            'url/third_party/mozilla'
            'v8/src/third_party/valgrind'
            'v8/src/third_party/utf8-decoder'
@@ -309,6 +314,7 @@ _flags=(
         'use_custom_libcxx=false'
         'use_lld=false' # https://bugs.gentoo.org/641556
         'use_jumbo_build=false' # https://chromium.googlesource.com/chromium/src/+/lkcr/docs/jumbo.md
+        'enable_vulkan=true'
         )
 
 if [ "$_wayland" = "1" ]; then
@@ -319,9 +325,7 @@ if [ "$_wayland" = "1" ]; then
            'enable_vulkan_wayland_client=true'
            )
 fi
-if [ "$_vulkan" = "1" ]; then
-  _flags+=('enable_vulkan=true')
-fi
+
 
 # Enable VAAPI, see https://chromium-review.googlesource.com/532294
 _flags+=('use_vaapi=true')
@@ -419,6 +423,7 @@ prepare() {
   # Done this time :D
 
   # Misc Patches:
+  sed '11i#include <cstring>' -i third_party/webrtc/api/audio/audio_frame.cc
 
   # https://crbug.com/710701
   _chrome_build_hash=$(curl -s "https://chromium.googlesource.com/chromium/src.git/+/${pkgver}?format=TEXT" | base64 -d | grep -Po '^parent \K[0-9a-f]{40}$')
@@ -428,15 +433,12 @@ prepare() {
   fi
   echo "LASTCHANGE=$_chrome_build_hash-" > build/util/LASTCHANGE
 
-  if [ "${_vulkan}" = "1" ]; then
-    export VULKAN_SDK="/usr"
-    sed 's|base/||' -i cc/output/vulkan_renderer.h
-    sed 's|/x86_64-linux-gnu||' -i gpu/vulkan/BUILD.gn
-  fi
+  # Setup vulkan
+  export VULKAN_SDK="/usr"
+  sed 's|/x86_64-linux-gnu||' -i gpu/vulkan/BUILD.gn
 
   # Apply VAAPI patch
-  # base64 -d "${srcdir}/chromium-intel-vaapi_r15.diff.base64" | patch -p1 -i -
-  #patch -p1 -i "${srcdir}/chromium-intel-vaapi_r16.diff.patch"
+  #base64 -d "${srcdir}/chromium-intel-vaapi_r16.diff.base64" | patch -p1 -i -
 
   # Patch from crbug (chromium bugtracker) or Arch chromium package
 
@@ -446,7 +448,7 @@ prepare() {
 
   # https://bugs.archlinux.org/task/55914
   #base64 -d "${srcdir}/chromium-exclude_unwind_tables.patch.base64" | patch -p1 -i -
-  patch -p1 -i "${srcdir}/chromium-exclude_unwind_tables_r2.patch.patch"
+  patch -p1 -i "${srcdir}/chromium-exclude_unwind_tables_r3.patch"
 
   # Setup nodejs dependency
   mkdir -p third_party/node/linux/node-linux-x64/bin/
@@ -480,9 +482,19 @@ prepare() {
   if [ "${_build_nacl}" = "1" ]; then
     msg2 "Setup NaCl/PNaCl SDK: Download and install NaCl/PNaCl toolchains"
     python2 build/download_nacl_toolchains.py --packages nacl_x86_newlib,pnacl_newlib,pnacl_translator sync --extract
-    # Download clang from google. need for build NaCl. also is used by build the project in x86_64 systems when use clang
-    python2 tools/clang/scripts/update.py
   fi
+}
+
+build() {
+
+  msg2 "Build the Launcher"
+  make -C chromium-launcher \
+          CHROMIUM_SUFFIX="-dev"
+
+  cd "chromium-${pkgver}"
+
+  # Download clang from google. need for build NaCl. also is used by build the project in x86_64 systems when use clang
+  python2 tools/clang/scripts/update.py --without-android #--force-local-build --use-system-cmake --if-needed --gcc-toolchain=/usr --skip-checkout
 
   # Setup compilers.
   if [ "${_use_ccache}" = "1" ]; then
@@ -527,15 +539,6 @@ prepare() {
   export NM=nm
   export CC="${_ccache} ${_c_compiler} ${_ccache_flags}"
   export CXX="${_ccache} ${_cpp_compiler} ${_ccache_flags}"
-}
-
-build() {
-
-  msg2 "Build the Launcher"
-  make -C "chromium-launcher" \
-     CHROMIUM_SUFFIX="-dev" \
-
-  cd "chromium-${pkgver}"
 
   msg2 "Starting building Chromium..."
   # Configure the builder.
@@ -548,7 +551,7 @@ build() {
 
 package() {
   # Install launcher.
-  make -C "chromium-launcher" \
+  make -C chromium-launcher \
     PREFIX=/usr \
     CHROMIUM_SUFFIX="-dev" \
     DESTDIR="${pkgdir}" \
@@ -603,16 +606,17 @@ package() {
               'chrome_200_percent.pak'
               'headless_lib.pak'
               'keyboard_resources.pak'
-              'mus_app_resources_100.pak'
-              'mus_app_resources_200.pak'
-              'mus_app_resources_strings.pak'
               'resources.pak'
               'views_mus_resources.pak'
               )
   for i in "${_resources[@]}"; do
     install -Dm644 "${i}" "${pkgdir}/usr/lib/chromium-dev/${i}"
   done
+
   find resources -type f -name "*" -exec install -Dm644 '{}' "${pkgdir}/usr/lib/chromium-dev/{}" \;
+
+  install -Dm644 MEIPreload/manifest.json "${pkgdir}/usr/lib/chromium-dev/MEIPreload/manifest.json"
+  install -Dm644 MEIPreload/preloaded_data.pb "${pkgdir}/usr/lib/chromium-dev/MEIPreload/preloaded_data.pb"
 
   # Install .desktop and manpages
   process_template "${srcdir}/chromium-${pkgver}/chrome/app/resources/manpage.1.in" chromium-dev.1

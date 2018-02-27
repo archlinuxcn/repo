@@ -4,8 +4,7 @@
 
 pkgname=ncurses5-compat-libs
 _pkgname=ncurses
-_pkgver=6.0-20170902
-pkgver=${_pkgver/-/+}
+pkgver=6.1
 pkgrel=1
 pkgdesc='System V Release 4.0 curses emulation library, ABI 5'
 arch=(i686 x86_64)
@@ -14,13 +13,13 @@ license=(MIT)
 depends=(glibc gcc-libs sh)
 provides=(libtinfo5)
 conflicts=(libtinfo5)
-source=(http://invisible-mirror.net/archives/ncurses/current/ncurses-${_pkgver}.tgz{,.asc})
-md5sums=('b7b1cedc484172434855b00831183458'
+source=(https://ftp.gnu.org/pub/gnu/ncurses/ncurses-$pkgver.tar.gz{,.sig})
+md5sums=('98c889aaf8d23910d2b92d65be2e737a'
          'SKIP')
 validpgpkeys=('C52048C0C0748FEE227D47A2702353E0F7E48EDB')  # Thomas Dickey
 
 build() {
-  cd ${_pkgname}-${_pkgver}
+  cd ${_pkgname}-${pkgver}
 
   ./configure --prefix=/usr --mandir=/usr/share/man \
     --with-shared --with-normal --without-debug --without-ada --enable-widec \
@@ -29,19 +28,15 @@ build() {
 }
 
 package() {
-  cd ${_pkgname}-${_pkgver}
+  cd ${_pkgname}-${pkgver}
   make DESTDIR="$pkgdir" install.libs
+  install -Dm644 COPYING "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
   rm -rf "$pkgdir/usr/include/" "$pkgdir/usr/lib/pkgconfig" \
     "$pkgdir"/usr/lib/*.so
 
-  # fool packages looking to link to non-wide-character ncurses libraries
   for lib in ncurses ncurses++ form panel menu; do
     ln -s /usr/lib/lib${lib}w.so.5 "$pkgdir/usr/lib/lib${lib}.so.5"
   done
   ln -s /usr/lib/libncurses.so.5 "$pkgdir/usr/lib/libtinfo.so.5"
-
-  # install license, rip it from the readme
-  install -d "$pkgdir/usr/share/licenses/$pkgname"
-  grep -B 100 '$Id' README > "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-
+  ln -s /usr/lib/libncurses.so.5 "$pkgdir/usr/lib/libtic.so.5"
 }

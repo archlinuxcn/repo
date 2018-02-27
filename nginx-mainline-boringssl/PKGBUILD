@@ -5,13 +5,13 @@
 # Contributor: Kasei Wang <cnsdwpc at gmail.com>
 
 pkgname=nginx-mainline-boringssl
-pkgver=1.13.8
+pkgver=1.13.9
 pkgrel=1
 pkgdesc='Lightweight HTTP server and IMAP/POP3 proxy server, mainline release'
 arch=('i686' 'x86_64')
 url='https://nginx.org'
 license=('custom')
-depends=('pcre' 'zlib' 'geoip')
+depends=('pcre' 'zlib' 'geoip' 'mailcap')
 makedepends=('cmake' 'git' 'go')
 backup=('etc/nginx/fastcgi.conf'
         'etc/nginx/fastcgi_params'
@@ -31,7 +31,7 @@ source=($url/download/nginx-$pkgver.tar.gz{,.asc}
         "service"
         "logrotate")
 validpgpkeys=('B0F4253373F8F6F510D42178520A9993A1C052F8') # Maxim Dounin <mdounin@mdounin.ru>
-sha256sums=('8410b6c31ff59a763abf7e5a5316e7629f5a5033c95a3a0ebde727f9ec8464c5'
+sha256sums=('5faea18857516fe68d30be39c3032bd22ed9cf85e1a6fdf32e3721d96ff7fa42'
             'SKIP'
             'SKIP'
             '05fdc0c0483410944b988d7f4beabb00bec4a44a41bd13ebc9b78585da7d3f9b'
@@ -111,6 +111,7 @@ package() {
     -i "$pkgdir"/etc/nginx/nginx.conf
 
   rm "$pkgdir"/etc/nginx/*.default
+  rm "$pkgdir"/etc/nginx/mime.types  # in mailcap
 
   install -d "$pkgdir"/var/lib/nginx
   install -dm700 "$pkgdir"/var/lib/nginx/proxy

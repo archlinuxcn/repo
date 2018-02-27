@@ -6,12 +6,12 @@
 
 pkgname=megasync
 pkgver=3.6.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Sync your files to your Mega account. Official app"
 arch=('i686' 'x86_64')
 url="https://github.com/meganz/megasync"
 license=('custom:MEGA LIMITED CODE REVIEW LICENCE')
-depends=('curl' 'c-ares' 'crypto++' 'libsodium' 'hicolor-icon-theme' 'libuv' 'qt5-svg' 'libmediainfo')
+depends=('c-ares' 'crypto++' 'libsodium' 'hicolor-icon-theme' 'libuv' 'qt5-svg' 'libmediainfo')
 makedepends=('git' 'qt5-tools' 'swig' 'doxygen')
 optdepends=('sni-qt: fix systray issue on KDE and LXQt')
 source=("git+https://github.com/meganz/MEGAsync.git#tag=v${pkgver}_Linux")
