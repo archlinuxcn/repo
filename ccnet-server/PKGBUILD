@@ -5,12 +5,12 @@
 
 pkgname=ccnet-server
 pkgver=6.2.5
-pkgrel=3
+pkgrel=4
 pkgdesc="Internal communication framework and user/group management for seafile server"
 arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
 url="https://github.com/haiwen/${pkgname}"
 license=('GPL2')
-depends=('libevent' 'libsearpc' 'libldap' 'libmariadbclient' 'libpqxx')
+depends=('libevent' 'libsearpc' 'libldap' 'libmariadbclient' 'postgresql-libs')
 makedepends=('vala')
 conflicts=('ccnet')
 source=("${pkgname}-v${pkgver}-server.tar.gz::${url}/archive/v${pkgver}-server.tar.gz"
