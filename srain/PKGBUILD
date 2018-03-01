@@ -1,7 +1,7 @@
 # Maintainer: Shengyu Zhang <arch at srain.im>
 
 pkgname=srain
-pkgver=0.06.3
+pkgver=0.06.4
 pkgrel=1
 pkgdesc="Modern, beautiful IRC client written in GTK+ 3"
 arch=('i686' 'x86_64')
@@ -18,7 +18,7 @@ optdepends=(
 conflicts=('srain-git')
 provides=('srain')
 source=("https://github.com/SilverRainZ/${pkgname}/archive/${pkgver}.tar.gz")
-sha256sums=('e7925492ebe25c9ada9f3687c82bdbabbd01abc2ae8619deb29896e8ddf56996')
+sha256sums=('f8449f1144fadfeb62095afffa62b4129717296b07baf2d8da5a290e9d29eca2')
 
 build() {
     cd ${pkgname}-${pkgver}
