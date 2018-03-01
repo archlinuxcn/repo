@@ -3,10 +3,9 @@ Description=/etc/rc.local Compatibility
 ConditionFileIsExecutable=/etc/rc.local
 
 [Service]
-Type=oneshot
+Type=idle
 ExecStart=/etc/rc.local
 TimeoutSec=0
-RemainAfterExit=yes
 
 [Install]
 WantedBy=multi-user.target

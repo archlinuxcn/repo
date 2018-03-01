@@ -1,6 +1,6 @@
 # Maintainer: lilydjwg <lilydjwg@gmail.com>
 pkgname=systemd-rc-local
-pkgver=1.1
+pkgver=1.2
 pkgrel=1
 pkgdesc="/etc/rc.local and /etc/rc.local.shutdown Compatibility"
 arch=('any')
@@ -15,5 +15,5 @@ package() {
   install -D -m644 rc-local-shutdown.service "${pkgdir}/usr/lib/systemd/system/rc-local-shutdown.service"
 }
 
-md5sums=('90e88c6fcdf1a9ced2fdf51fb1b222f7'
+md5sums=('8b65a742676896cb98722c0c429ce398'
          'fa5d995a79941c6ae354a18da61c2faf')
