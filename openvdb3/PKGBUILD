@@ -1,0 +1,59 @@
+# Maintainer : Sven-Hendrik Haase <sh@lutzhaase.com>
+
+# I would just like to take a minute here to state that this is probably one
+# of the worst packaged software packages that I have ever looked at.
+# The Makefile has defaults set to the upstream developers' specific systems
+# as well as other oddities.
+
+pkgname=openvdb3
+_pkgname=openvdb
+pkgver=3.2.0
+pkgrel=4
+pkgdesc='A large suite of tools for the efficient storage and manipulation of sparse volumetric data discretized on three-dimensional grids'
+url='https://github.com/dreamworksanimation/openvdb'
+arch=('i686' 'x86_64')
+license=('MPL')
+depends=('openexr' 'boost-libs' 'intel-tbb' 'zlib' 'jemalloc' 'blosc')
+makedepends=('doxygen' 'boost' 'python2' 'log4cplus' 'python2-numpy' 'texlive-core' 'ghostscript')
+optdepends=('python2-numpy: Python module'
+            'log4cplus: for vdb_print')
+source=("https://github.com/dreamworksanimation/openvdb/archive/v${pkgver}.tar.gz"
+        22d09714f9a6a29c62668b533495ed2afd4251ef.patch)
+sha512sums=('df9a4895b219aae3b5a9616c34eb846d565877ff76648405691f0c903507f6faba94e8eba9173423b50cb5cef80f3ec500a9f70977cb7161701d39fd105abc91'
+'SKIP')
+prepare() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+
+  patch -Np1 < "${srcdir}/22d09714f9a6a29c62668b533495ed2afd4251ef.patch"
+}
+
+build() {
+  cd "${srcdir}/${_pkgname}-${pkgver}/${_pkgname}"
+
+  make all \
+    OPENVDB_ENABLE_3_ABI_COMPATIBLE=ON \
+    PYTHON_VERSION='2.7' \
+    CPPUNIT_INCL_DIR='' \
+    HDSO='/usr' \
+    PYTHON_INCL_DIR=/usr/include/python2.7 \
+    PYTHON_LIB_DIR=/usr/lib \
+    EXR_LIB_DIR=/usr/lib \
+    ILMBASE_LIB_DIR=/usr/lib \
+    NUMPY_INCL_DIR=/usr/lib/python2.7/site-packages/numpy/core/include/numpy \
+    GLFW_INCL_DIR='' \
+    BOOST_PYTHON_LIB_DIR=/usr/lib \
+    BOOST_PYTHON_LIB=-lboost_python
+
+}
+
+package() {
+  cd "${srcdir}/${_pkgname}-${pkgver}/${_pkgname}"
+
+  mkdir -p ${pkgdir}/opt/openvdb3
+  make install \
+    GLFW_INCL_DIR='' \
+    EPYDOC='' \
+    DESTDIR=${pkgdir}/opt/openvdb3
+}
+
+# vim:set sw=2 sts=2 et:

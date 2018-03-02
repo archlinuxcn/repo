@@ -1,0 +1,107 @@
+# $Id$
+# Maintainer: Sven-Hendrik Haase <sh@lutzhaase.com>
+# Contributor: John Sowiak <john@archlinux.org>
+# Contributor: tobias <tobias@archlinux.org>
+
+# Sometimes blender.org takes some time to release patch releases and because Arch users
+# are impatient, we sometimes need to build from git directly.
+# Update because I get so many queries on this:
+# Due to our other rolling deps, it's sometimes not possible to build Blender stable releases.
+# More often than not, a new openshadinglanguage breaks it and I could either backport fixes
+# or simply roll with a new version. I usually choose the latter when the former seems
+# unreasonable.
+
+pkgname=blender-git
+_pkgname=blender
+pkgver=69819.f76d49ed950
+pkgrel=1
+pkgdesc="A fully integrated 3D graphics creation suite, GIT version"
+arch=('x86_64')
+license=('GPL')
+url="http://www.blender.org"
+depends=('libpng' 'libtiff' 'openexr' 'python' 'desktop-file-utils' 'python-requests'
+         'shared-mime-info' 'hicolor-icon-theme' 'xdg-utils' 'glew' 'openjpeg' 'python-numpy'
+         'freetype2' 'openal' 'ffmpeg' 'fftw' 'boost-libs' 'opencollada' 'alembic'
+         'openimageio' 'libsndfile' 'jack' 'opencolorio' 'openshadinglanguage'
+         'jemalloc' 'libspnav' 'ptex' 'opensubdiv' 'openvdb3' 'log4cplus' 'sdl2')
+makedepends=('cmake' 'boost' 'mesa' 'git' 'llvm35' 'gcc6' 'cuda')
+optdepends=('cuda: cycles renderer cuda support')
+options=(!strip)
+provides=("blender")
+conflicts=("blender")
+source=("git://git.blender.org/blender.git"
+        "git://git.blender.org/blender-addons.git"
+        "git://git.blender.org/blender-addons-contrib.git"
+        "git://git.blender.org/blender-translations.git"
+        "git://git.blender.org/blender-dev-tools.git"
+        "git://git.blender.org/scons.git")
+md5sums=('SKIP'
+         'SKIP'
+         'SKIP'
+         'SKIP'
+         'SKIP'
+         'SKIP')
+
+pkgver() {
+  cd "$srcdir/blender"
+  printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd "$srcdir/$_pkgname"
+
+  git submodule init
+  git config submodule."release/scripts/addons".url ${srcdir}/blender-addons
+  git config submodule."release/scripts/addons_contrib".url ${srcdir}/blender-addons-contrib
+  git config submodule."release/datafiles/locale".url ${srcdir}/blender-translations
+  git config submodule."source/tools".url ${srcdir}/blender-dev-tools
+  git config submodule."scons".url ${srcdir}/scons
+  git submodule update
+#  patch -Np1 < "${srcdir}"/cuda9.patch
+
+  # cuda 9.1 fixes
+  sed -i -e "s/sm_20;//" -e "s/sm_21;//" build_files/cmake/config/blender_release.cmake
+}
+
+build() {
+  cd "$srcdir/$_pkgname"
+
+  [[ -d build ]] && rm -rf build
+  mkdir build && cd build
+
+#  export CFLAGS="${CFLAGS} -DOPENVDB_ABI_VERSION_NUMBER=3"
+#  export CXXFLAGS="${CXXFLAGS} -DOPENVDB_ABI_VERSION_NUMBER=3"
+  cmake -C../build_files/cmake/config/blender_release.cmake .. \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DWITH_INSTALL_PORTABLE=OFF \
+    -DWITH_PYTHON_INSTALL=ON \
+    -DOPENIMAGEIO_ROOT_DIR=/usr \
+    -DWITH_LLVM=ON \
+    -DWITH_SYSTEM_OPENJPEG=ON \
+    -DWITH_SYSTEM_GLEW=ON \
+    -DWITH_GL_PROFILE_CORE=OFF \
+    -DWITH_GL_PROFILE_ES20=OFF \
+    -DLLVM_VERSION=3.6 \
+    -DLLVM_STATIC=ON \
+    -DWITH_CYCLES_CUDA_BINARIES=ON \
+    -DWITH_CYCLES_PTEX=OFF \
+    -DPYTHON_VERSION=3.6 \
+    -DPYTHON_LIBPATH=/usr/lib \
+    -DPYTHON_LIBRARY=python3.6m \
+    -DPYTHON_INCLUDE_DIRS=/usr/include/python3.6m \
+    -DOPENVDB_ROOT_DIR=/opt/openvdb3
+
+  make
+
+  # PTEX is currently broken and experimental in blender anyway
+}
+
+package() {
+  cd "$srcdir/$_pkgname/build"
+
+  make DESTDIR="${pkgdir}" install
+  install -Dm755 ../release/bin/blender-softwaregl "${pkgdir}/usr/bin/blender-softwaregl"
+  #python -m compileall "${pkgdir}/usr/share/blender"
+  #python -O -m compileall "${pkgdir}/usr/share/blender"
+}
