@@ -1,0 +1,13 @@
+diff --git a/src/ClientCreditsList.cpp b/src/ClientCreditsList.cpp
+index 3bea9fe2d..a7ae1e34c 100644
+--- a/src/ClientCreditsList.cpp
++++ b/src/ClientCreditsList.cpp
+@@ -312,7 +312,7 @@ void CClientCreditsList::InitalizeCrypting()
+ 		// calculate and store public key
+ 		CryptoPP::RSASSA_PKCS1v15_SHA_Verifier pubkey(*static_cast<CryptoPP::RSASSA_PKCS1v15_SHA_Signer *>(m_pSignkey));
+ 		CryptoPP::ArraySink asink(m_abyMyPublicKey, 80);
+-		pubkey.DEREncode(asink);
++		pubkey.AccessMaterial().Save(asink);
+ 		m_nMyPublicKeyLen = asink.TotalPutLength();
+ 		asink.MessageEnd();
+ 	} catch (const CryptoPP::Exception& e) {
