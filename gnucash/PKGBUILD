@@ -5,7 +5,7 @@
 
 pkgname=gnucash
 pkgver=2.6.19
-pkgrel=1
+pkgrel=2
 pkgdesc="A personal and small-business financial-accounting application"
 arch=('i686' 'x86_64')
 url="http://www.gnucash.org"
@@ -17,6 +17,10 @@ optdepends=('evince: for print preview'
             'perl-finance-quote: for stock information lookups'
             'perl-date-manip: for stock information lookups')
 options=('!makeflags' '!emptydirs')
+backup=(
+	'etc/gnucash/config'
+	'etc/gnucash/environment'
+) 
 source=(https://github.com/Gnucash/${pkgname}/releases/download/${pkgver}/${pkgname}-${pkgver}.tar.bz2)
 sha1sums=('d2ae5c7855fac30d88fe889d47a441e8a887b19c')
 sha256sums=('50b89367246ec2d51e9765bd6bd8c669e35ceb4ac5ab92636f76758a9f3f7fd1')

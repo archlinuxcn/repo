@@ -1,0 +1,13 @@
+diff --git a/remarkable/RemarkableWindow.py b/remarkable/RemarkableWindow.py
+index 50fc3c8..ee110aa 100644
+--- a/remarkable/RemarkableWindow.py
++++ b/remarkable/RemarkableWindow.py
+@@ -37,7 +37,7 @@ import pdfkit
+ import re, subprocess, datetime, os, webbrowser, _thread, sys, locale
+ import tempfile
+ import traceback
+-import styles
++from remarkable import styles
+ import unicodedata
+ import warnings
+ import datetime
