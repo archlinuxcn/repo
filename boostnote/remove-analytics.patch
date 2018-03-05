@@ -1,0 +1,287 @@
+diff -ura a/browser/main/Detail/MarkdownNoteDetail.js b/browser/main/Detail/MarkdownNoteDetail.js
+--- a/browser/main/Detail/MarkdownNoteDetail.js	2018-02-25 06:30:57.000000000 +0100
++++ b/browser/main/Detail/MarkdownNoteDetail.js	2018-02-25 15:44:55.466920787 +0100
+@@ -15,7 +15,6 @@
+ import StatusBar from '../StatusBar'
+ import _ from 'lodash'
+ import { findNoteTitle } from 'browser/lib/findNoteTitle'
+-import AwsMobileAnalyticsConfig from 'browser/main/lib/AwsMobileAnalyticsConfig'
+ import ConfigManager from 'browser/main/lib/ConfigManager'
+ import TrashButton from './TrashButton'
+ import FullscreenButton from './FullscreenButton'
+@@ -112,7 +111,6 @@
+           type: 'UPDATE_NOTE',
+           note: note
+         })
+-        AwsMobileAnalyticsConfig.recordDynamicCustomEvent('EDIT_NOTE')
+       })
+   }
+ 
+@@ -151,7 +149,6 @@
+ 
+   handleStarButtonClick (e) {
+     const { note } = this.state
+-    if (!note.isStarred) AwsMobileAnalyticsConfig.recordDynamicCustomEvent('ADD_STAR')
+ 
+     note.isStarred = !note.isStarred
+ 
+diff -ura a/browser/main/Detail/SnippetNoteDetail.js b/browser/main/Detail/SnippetNoteDetail.js
+--- a/browser/main/Detail/SnippetNoteDetail.js	2018-02-25 06:30:57.000000000 +0100
++++ b/browser/main/Detail/SnippetNoteDetail.js	2018-02-25 15:45:32.799171520 +0100
+@@ -18,7 +18,6 @@
+ import ConfigManager from 'browser/main/lib/ConfigManager'
+ import _ from 'lodash'
+ import { findNoteTitle } from 'browser/lib/findNoteTitle'
+-import AwsMobileAnalyticsConfig from 'browser/main/lib/AwsMobileAnalyticsConfig'
+ import TrashButton from './TrashButton'
+ import RestoreButton from './RestoreButton'
+ import PermanentDeleteButton from './PermanentDeleteButton'
+@@ -120,7 +119,6 @@
+           type: 'UPDATE_NOTE',
+           note: note
+         })
+-        AwsMobileAnalyticsConfig.recordDynamicCustomEvent('EDIT_NOTE')
+       })
+   }
+ 
+@@ -159,7 +157,6 @@
+ 
+   handleStarButtonClick (e) {
+     const { note } = this.state
+-    if (!note.isStarred) AwsMobileAnalyticsConfig.recordDynamicCustomEvent('ADD_STAR')
+ 
+     note.isStarred = !note.isStarred
+ 
+@@ -297,9 +294,6 @@
+     const mode = syntax != null ? syntax.name : null
+     if (mode != null) {
+       snippets[index].mode = mode
+-      AwsMobileAnalyticsConfig.recordDynamicCustomEvent('SNIPPET_LANG', {
+-        name: mode
+-      })
+     }
+     this.setState({note: Object.assign(this.state.note, {snippets: snippets})})
+ 
+@@ -321,10 +315,6 @@
+       }, () => {
+         this.save()
+       })
+-
+-      AwsMobileAnalyticsConfig.recordDynamicCustomEvent('SELECT_LANG', {
+-        name
+-      })
+     }
+   }
+ 
+diff -ura a/browser/main/Detail/TagSelect.js b/browser/main/Detail/TagSelect.js
+--- a/browser/main/Detail/TagSelect.js	2018-02-25 06:30:57.000000000 +0100
++++ b/browser/main/Detail/TagSelect.js	2018-02-25 15:45:46.609264098 +0100
+@@ -3,7 +3,6 @@
+ import CSSModules from 'browser/lib/CSSModules'
+ import styles from './TagSelect.styl'
+ import _ from 'lodash'
+-import AwsMobileAnalyticsConfig from 'browser/main/lib/AwsMobileAnalyticsConfig'
+ 
+ class TagSelect extends React.Component {
+   constructor (props) {
+@@ -62,7 +61,6 @@
+   }
+ 
+   submitTag () {
+-    AwsMobileAnalyticsConfig.recordDynamicCustomEvent('ADD_TAG')
+     let { value } = this.props
+     let newTag = this.refs.newTag.value.trim().replace(/ +/g, '_')
+     newTag = newTag.charAt(0) === '#' ? newTag.substring(1) : newTag
+diff -ura a/browser/main/Main.js b/browser/main/Main.js
+--- a/browser/main/Main.js	2018-02-25 06:30:57.000000000 +0100
++++ b/browser/main/Main.js	2018-02-25 15:45:57.461336784 +0100
+@@ -10,7 +10,6 @@
+ import dataApi from 'browser/main/lib/dataApi'
+ import _ from 'lodash'
+ import ConfigManager from 'browser/main/lib/ConfigManager'
+-import mobileAnalytics from 'browser/main/lib/AwsMobileAnalyticsConfig'
+ import eventEmitter from 'browser/main/lib/eventEmitter'
+ import { hashHistory } from 'react-router'
+ import store from 'browser/main/store'
+@@ -23,10 +22,6 @@
+   constructor (props) {
+     super(props)
+ 
+-    if (process.env.NODE_ENV === 'production') {
+-      mobileAnalytics.initAwsMobileAnalytics()
+-    }
+-
+     const { config } = props
+ 
+     this.state = {
+diff -ura a/browser/main/modals/CreateFolderModal.js b/browser/main/modals/CreateFolderModal.js
+--- a/browser/main/modals/CreateFolderModal.js	2018-02-25 06:30:57.000000000 +0100
++++ b/browser/main/modals/CreateFolderModal.js	2018-02-25 15:46:09.092414626 +0100
+@@ -6,7 +6,6 @@
+ import store from 'browser/main/store'
+ import consts from 'browser/lib/consts'
+ import ModalEscButton from 'browser/components/ModalEscButton'
+-import AwsMobileAnalyticsConfig from 'browser/main/lib/AwsMobileAnalyticsConfig'
+ 
+ class CreateFolderModal extends React.Component {
+   constructor (props) {
+@@ -50,7 +49,6 @@
+   }
+ 
+   confirm () {
+-    AwsMobileAnalyticsConfig.recordDynamicCustomEvent('ADD_FOLDER')
+     if (this.state.name.trim().length > 0) {
+       const { storage } = this.props
+       const input = {
+diff -ura a/browser/main/modals/NewNoteModal.js b/browser/main/modals/NewNoteModal.js
+--- a/browser/main/modals/NewNoteModal.js	2018-02-25 06:30:57.000000000 +0100
++++ b/browser/main/modals/NewNoteModal.js	2018-02-25 15:46:25.416523776 +0100
+@@ -5,7 +5,6 @@
+ import { hashHistory } from 'react-router'
+ import ee from 'browser/main/lib/eventEmitter'
+ import ModalEscButton from 'browser/components/ModalEscButton'
+-import AwsMobileAnalyticsConfig from 'browser/main/lib/AwsMobileAnalyticsConfig'
+ 
+ class NewNoteModal extends React.Component {
+   constructor (props) {
+@@ -24,8 +23,6 @@
+   }
+ 
+   handleMarkdownNoteButtonClick (e) {
+-    AwsMobileAnalyticsConfig.recordDynamicCustomEvent('ADD_MARKDOWN')
+-    AwsMobileAnalyticsConfig.recordDynamicCustomEvent('ADD_ALLNOTE')
+     const { storage, folder, dispatch, location } = this.props
+     dataApi
+       .createNote(storage, {
+@@ -58,8 +55,6 @@
+   }
+ 
+   handleSnippetNoteButtonClick (e) {
+-    AwsMobileAnalyticsConfig.recordDynamicCustomEvent('ADD_SNIPPET')
+-    AwsMobileAnalyticsConfig.recordDynamicCustomEvent('ADD_ALLNOTE')
+     const { storage, folder, dispatch, location } = this.props
+ 
+     dataApi
+diff -ura a/browser/main/modals/PreferencesModal/InfoTab.js b/browser/main/modals/PreferencesModal/InfoTab.js
+--- a/browser/main/modals/PreferencesModal/InfoTab.js	2018-02-25 06:30:57.000000000 +0100
++++ b/browser/main/modals/PreferencesModal/InfoTab.js	2018-02-25 15:46:59.805753337 +0100
+@@ -3,7 +3,6 @@
+ import styles from './InfoTab.styl'
+ import ConfigManager from 'browser/main/lib/ConfigManager'
+ import store from 'browser/main/store'
+-import AwsMobileAnalyticsConfig from 'browser/main/lib/AwsMobileAnalyticsConfig'
+ import _ from 'lodash'
+ 
+ const electron = require('electron')
+@@ -24,47 +23,6 @@
+     e.preventDefault()
+   }
+ 
+-  handleConfigChange (e) {
+-    const newConfig = { amaEnabled: this.refs.amaEnabled.checked }
+-
+-    this.setState({ config: newConfig })
+-  }
+-
+-  handleSaveButtonClick (e) {
+-    const newConfig = {
+-      amaEnabled: this.state.config.amaEnabled
+-    }
+-
+-    if (!newConfig.amaEnabled) {
+-      AwsMobileAnalyticsConfig.recordDynamicCustomEvent('DISABLE_AMA')
+-      this.setState({
+-        amaMessage: 'We hope we will gain your trust'
+-      })
+-    } else {
+-      this.setState({
+-        amaMessage: 'Thank\'s for trust us'
+-      })
+-    }
+-
+-    _.debounce(() => {
+-      this.setState({
+-        amaMessage: ''
+-      })
+-    }, 3000)()
+-
+-    ConfigManager.set(newConfig)
+-
+-    store.dispatch({
+-      type: 'SET_CONFIG',
+-      config: newConfig
+-    })
+-  }
+-
+-  infoMessage () {
+-    const { amaMessage } = this.state
+-    return amaMessage ? <p styleName='policy-confirm'>{amaMessage}</p> : null
+-  }
+-
+   render () {
+     return (
+       <div styleName='root'>
+@@ -134,23 +92,6 @@
+             License: GPL v3
+           </li>
+         </ul>
+-
+-        <hr styleName='separate-line' />
+-
+-        <div styleName='policy'>Analytics</div>
+-        <div>Boostnote collects anonymous data for the sole purpose of improving the application, and strictly does not collect any personal information such the contents of your notes.</div>
+-        <div>You can see how it works on <a href='https://github.com/BoostIO/Boostnote' onClick={(e) => this.handleLinkClick(e)}>GitHub</a>.</div>
+-        <br />
+-        <div>You can choose to enable or disable this option.</div>
+-        <input onChange={(e) => this.handleConfigChange(e)}
+-          checked={this.state.config.amaEnabled}
+-          ref='amaEnabled'
+-          type='checkbox'
+-        />
+-        Enable analytics to help improve Boostnote<br />
+-        <button styleName='policy-submit' onClick={(e) => this.handleSaveButtonClick(e)}>Save</button>
+-        <br />
+-        {this.infoMessage()}
+       </div>
+     )
+   }
+diff -ura a/browser/main/NoteList/index.js b/browser/main/NoteList/index.js
+--- a/browser/main/NoteList/index.js	2018-02-25 06:30:57.000000000 +0100
++++ b/browser/main/NoteList/index.js	2018-02-25 15:47:29.154948871 +0100
+@@ -13,7 +13,6 @@
+ import fs from 'fs'
+ import path from 'path'
+ import { hashHistory } from 'react-router'
+-import AwsMobileAnalyticsConfig from 'browser/main/lib/AwsMobileAnalyticsConfig'
+ 
+ const { remote } = require('electron')
+ const { Menu, MenuItem, dialog } = remote
+@@ -584,7 +583,6 @@
+             note: newNote
+           })
+         })
+-        AwsMobileAnalyticsConfig.recordDynamicCustomEvent('EDIT_NOTE')
+         console.log('Notes went to trash')
+       })
+       .catch((err) => {
+@@ -603,8 +601,6 @@
+     const firstNote = selectedNotes[0]
+     const eventName = firstNote.type === 'MARKDOWN_NOTE' ? 'ADD_MARKDOWN' : 'ADD_SNIPPET'
+ 
+-    AwsMobileAnalyticsConfig.recordDynamicCustomEvent(eventName)
+-    AwsMobileAnalyticsConfig.recordDynamicCustomEvent('ADD_ALLNOTE')
+     dataApi
+       .createNote(storage.key, {
+         type: firstNote.type,
+diff -ura a/package.json b/package.json
+--- a/package.json	2018-02-25 06:30:57.000000000 +0100
++++ b/package.json	2018-02-25 15:47:46.823066420 +0100
+@@ -50,8 +50,6 @@
+   "dependencies": {
+     "@rokt33r/markdown-it-math": "^4.0.1",
+     "@rokt33r/season": "^5.3.0",
+-    "aws-sdk": "^2.48.0",
+-    "aws-sdk-mobile-analytics": "^0.9.2",
+     "codemirror": "^5.19.0",
+     "codemirror-mode-elixir": "^1.1.1",
+     "electron-config": "^0.2.1",
