@@ -1,4 +1,5 @@
 # Maintainer: grufo <madmurphy333 AT gmail DOT com>
+# Contributor: midgard <arch.midgard AT janmaes DOT com> 
 # Contributor: TrialnError <autumn-wind AT web DOT de>
 # Contributor: Yardena Cohen <yardenack AT gmail DOT com>
 # Contributor: Max Roder <maxroder AT web DOT de>
@@ -12,8 +13,8 @@
 
 pkgname='tor-browser'
 pkgver='7.5'
-pkgrel='1'
-pkgdesc='Tor Browser Bundle: Anonymous browsing using firefox and tor (international PKGBUILD)'
+pkgrel=2
+pkgdesc='Tor Browser Bundle: anonymous browsing using Firefox and Tor (international PKGBUILD)'
 url='https://www.torproject.org/projects/torbrowser.html'
 arch=('i686' 'x86_64')
 _idstr32='linux32'
@@ -24,8 +25,8 @@ depends=('gtk2' 'mozilla-common' 'libxt' 'startup-notification' 'mime-types'
 	'libvpx' 'icu' 'libevent' 'nss' 'hunspell' 'sqlite')
 optdepends=('zenity: simple dialog boxes'
 	'kdialog: KDE dialog boxes'
-	'gst-plugins-good: h.264 video'
-	'gst-libav: h.264 video'
+	'gst-plugins-good: H.264 video'
+	'gst-libav: H.264 video'
 	'libpulse: PulseAudio audio driver'
 	'libnotify: Gnome dialog boxes')
 install="${pkgname}.install"
@@ -41,26 +42,22 @@ _localetor() {
 	#	TORBROWSER_PKGLANG='en-US' makepkg
 	#
 
-	if [[ -z "${TORBROWSER_PKGLANG}" ]]; then
-
-		local _urlbase="https://dist.torproject.org/torbrowser/${pkgver}/${pkgname}-${_archstr}-${pkgver}"
-		local _fulllocale="$(locale | grep LANG | cut -d= -f2 | cut -d. -f1 | sed s/_/\-/)"
-		local _shortlocale="$(locale | grep LANG | cut -d= -f2 | cut -d_ -f1)"
-
-		if curl --output /dev/null --silent --head --fail "${_urlbase}_${_fulllocale}.tar.xz"; then
-			echo -n "${_fulllocale}"
-		elif curl --output /dev/null --silent --head --fail "${_urlbase}_${_shortlocale}.tar.xz"; then
-			echo -n "${_shortlocale}"
-		else
-			echo -n 'en-US'
-		fi
-
-	else
-
+	if [[ -n "${TORBROWSER_PKGLANG}" ]]; then
 		echo -n "${TORBROWSER_PKGLANG}"
-
+		return 0
 	fi
 
+	local _urlbase="https://dist.torproject.org/torbrowser/${pkgver}/${pkgname}-${_archstr}-${pkgver}"
+	local _fulllocale="$(locale | grep LANG | cut -d= -f2 | cut -d. -f1 | sed s/_/\-/)"
+	local _shortlocale="$(locale | grep LANG | cut -d= -f2 | cut -d_ -f1)"
+
+	if curl --output /dev/null --silent --head --fail "${_urlbase}_${_fulllocale}.tar.xz"; then
+		echo -n "${_fulllocale}"
+	elif curl --output /dev/null --silent --head --fail "${_urlbase}_${_shortlocale}.tar.xz"; then
+		echo -n "${_shortlocale}"
+	else
+		echo -n 'en-US'
+	fi
 }
 
 validpgpkeys=('EF6E286DDA85EA2A4BA7DE684E2C6E8793298290')
@@ -73,18 +70,18 @@ source=("${pkgname}.desktop"
 	"${pkgname}.png"
 	"${pkgname}.sh")
 
-md5sums=('914bc94601657ac143f21acd8ed75747'
-	'494afbfa60fb4ce21840244cc3f7208c'
-	'120910366e4094c652fe7c4ee55abbca')
-md5sums_i686=('SKIP'
-	'SKIP')
-md5sums_x86_64=('SKIP'
-	'SKIP')
+sha256sums=('505070369493a9e864e98e89fb1415a5b7f7f4b4244e36cf1bd049532435ec57'
+            'bb6b0f27c33d21e0ef6df961e25418327c5e8b01c003bbe18c0a8dae3e16d77d'
+            '3a491ad1a476f2fb343f274eab4e8df925637438e6dac3591f092b3ef3294da3')
+sha256sums_i686=('SKIP'
+                 'SKIP')
+sha256sums_x86_64=('SKIP'
+                   'SKIP')
 
 noextract=("${pkgname}-${_idstr64}-${pkgver}_${_language}.tar.xz"
 	"${pkgname}-${_idstr32}-${pkgver}_${_language}.tar.xz")
 
-package() {
+prepare() {
 
 	# use colors only if we have them
 	if [[ $(which tput > /dev/null 2>&1 && tput -T "${TERM}" colors || echo -n '0') -ge 8 ]] ; then
@@ -96,8 +93,6 @@ package() {
 		local _COL_DEFAULT_='\e[0m'
 	fi
 
-	cd "${srcdir}"
-
 	msg "Packaging ${pkgname} (language: ${_language})..."
 
 	if [[ -z "${TORBROWSER_PKGLANG}" ]]; then
@@ -107,18 +102,33 @@ package() {
 		echo -e "\n        ${_COL_LIGHTGREY_}TORBROWSER_PKGLANG='en-US' makepkg${_COL_DEFAULT_}\n"
 	fi
 
-	sed -i "s/__REPL_LANGUAGE__/${_language}/g"	"${pkgname}.desktop"
+	# we search and replace using sed with / as delimiter below so don't allow slashes in these vars.
+	# makepkg already enforces that there're no slashes in $pkgname, so we don't check that again here.
+	if [[ ${pkgver} = */* || ${_language} = */* || ${pkgdesc} = */* ]]; then
+		error '${pkgver}, ${_language} and ${pkgdesc} for this package are not allowed to contain /' >&2
+		return 1
+	fi
 
-	sed -i "s/__REPL_NAME__/${pkgname}/g"		"${pkgname}.sh"
-	sed -i "s/__REPL_VERSION__/${pkgver}/g"		"${pkgname}.sh"
-	sed -i "s/__REPL_RELEASE__/${pkgrel}/g"		"${pkgname}.sh"
-	sed -i "s/__REPL_LANGUAGE__/${_language}/g"	"${pkgname}.sh"
-	sed -i "s/__REPL_ARCH__/${_archstr}/g"		"${pkgname}.sh"
+}
 
-	install -Dm 644 "${pkgname}.desktop"	"${pkgdir}/usr/share/applications/${pkgname}.desktop"
-	install -Dm 644 "${pkgname}.png"	"${pkgdir}/usr/share/pixmaps/${pkgname}.png"
-	install -Dm 755 "${pkgname}.sh"		"${pkgdir}/usr/bin/${pkgname}"
+package() {
+
+	cd "${srcdir}"
+
+	sed -i "s/__REPL_LANGUAGE__/${_language}/g" "${pkgname}.desktop"
+
+	sed -i "s/__REPL_NAME__/${pkgname}/g"       "${pkgname}.sh"
+	sed -i "s/__REPL_VERSION__/${pkgver}/g"     "${pkgname}.sh"
+	sed -i "s/__REPL_RELEASE__/${pkgrel}/g"     "${pkgname}.sh"
+	sed -i "s/__REPL_LANGUAGE__/${_language}/g" "${pkgname}.sh"
+	sed -i "s/__REPL_ARCH__/${_archstr}/g"      "${pkgname}.sh"
+
+	install -Dm 644 "${pkgname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+	install -Dm 644 "${pkgname}.png"     "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
+	install -Dm 755 "${pkgname}.sh"      "${pkgdir}/usr/bin/${pkgname}"
 
 	install -Dm 644 "${pkgname}-${_archstr}-${pkgver}_${_language}.tar.xz" "${pkgdir}/opt/${pkgname}/${pkgname}-${_archstr}-${pkgver}_${_language}.tar.xz"
 
 }
+
+# vim: set noet :
