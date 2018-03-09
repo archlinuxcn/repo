@@ -1,0 +1,19 @@
+--- include/core/dbus/asio/executor.h.orig 2018-03-05 20:58:01.985697687 +0300 
++++ include/core/dbus/asio/executor.h 2018-03-05 21:05:58.537930745 +0300
+@@ -21,14 +21,7 @@
+ #include <core/dbus/bus.h>
+ #include <core/dbus/executor.h>
+ #include <core/dbus/visibility.h>
+-
+-namespace boost
+-{
+-namespace asio
+-{
+-class io_service;
+-}
+-}
++#include <boost/asio/io_service.hpp>
+
+ namespace core
+ {
+

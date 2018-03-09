@@ -2,7 +2,7 @@
 
 pkgname=('anbox-git' 'anbox-modules-dkms-git')
 _pkgname=anbox
-pkgver=r717.b21e5d9
+pkgver=r733.03f69c8
 pkgrel=1
 epoch=1
 arch=('x86_64')
@@ -16,8 +16,7 @@ source=("git+https://github.com/anbox/anbox.git"
 	'anbox.conf'
 	'anbox.desktop'
 	'anbox-bridge.network'
-	'anbox-bridge.netdev'
-  'boost.patch')
+  'anbox-bridge.netdev')
 sha256sums=('SKIP'
             '5be94b63dc30d141f15ca7d1be6e3e81f26ef33f844614975537562f5d08236c'
             '1f22dbb5a3ca6925bbf62899cd0f0bbaa0b77c879adcdd12ff9d43adfa61b1d8'
@@ -25,8 +24,7 @@ sha256sums=('SKIP'
             '3e07dc524a827c1651857cce28a06c1565bc5188101c140ed213bbafedc5abff'
             '7332d09865be553a259a53819cebddd21f661c7a251d78c2f46acd75c66676b6'
             '44899328725667041e6e84912da81c1d0147b708006eb2c2bb6503f271629ff0'
-            '559190df4d6d595480b30d8b13b862081fc4aac52790e33eb24cf7fbcb8003b8'
-            'SKIP')
+            '559190df4d6d595480b30d8b13b862081fc4aac52790e33eb24cf7fbcb8003b8')
 
 pkgver() {
   cd "$srcdir/$_pkgname"
@@ -48,8 +46,6 @@ prepare() {
 
   # Fix usage of Python 2
   sed -i 's:#!.*python$:&2:' scripts/*.py
-
-  patch -p1 < $srcdir/boost.patch
 }
 
 build() {
