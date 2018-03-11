@@ -3,8 +3,8 @@
 @@ -3,7 +3,7 @@
  Comment=Slack Desktop
  GenericName=Slack Client for Linux
--Exec=/usr/bin/slack --disable-gpu %U
-+Exec=env LD_PRELOAD=/usr/lib/libcurl.so.3 /usr/bin/slack --disable-gpu %U
+-Exec=/usr/bin/slack %U
++Exec=env LD_PRELOAD=/usr/lib/libcurl.so.3 /usr/bin/slack %U
 -Icon=/usr/share/pixmaps/slack.png
 +Icon=slack
  Type=Application
