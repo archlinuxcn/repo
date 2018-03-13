@@ -1,0 +1,6 @@
+post_install() {
+  systemd-sysusers plex.conf
+  [[ -d /var/lib/plex ]] || install -dm 750 -o plex -g plex /var/lib/plex
+}
+
+# vim: ts=2 sw=2 et:
