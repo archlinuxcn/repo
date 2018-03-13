@@ -1,6 +1,6 @@
 diff -ura a/browser/main/Detail/MarkdownNoteDetail.js b/browser/main/Detail/MarkdownNoteDetail.js
---- a/browser/main/Detail/MarkdownNoteDetail.js	2018-02-25 06:30:57.000000000 +0100
-+++ b/browser/main/Detail/MarkdownNoteDetail.js	2018-02-25 15:44:55.466920787 +0100
+--- a/browser/main/Detail/MarkdownNoteDetail.js	2018-03-13 15:12:32.000000000 +0100
++++ b/browser/main/Detail/MarkdownNoteDetail.js	2018-03-13 16:36:14.542041324 +0100
 @@ -15,7 +15,6 @@
  import StatusBar from '../StatusBar'
  import _ from 'lodash'
@@ -26,8 +26,8 @@ diff -ura a/browser/main/Detail/MarkdownNoteDetail.js b/browser/main/Detail/Mark
      note.isStarred = !note.isStarred
  
 diff -ura a/browser/main/Detail/SnippetNoteDetail.js b/browser/main/Detail/SnippetNoteDetail.js
---- a/browser/main/Detail/SnippetNoteDetail.js	2018-02-25 06:30:57.000000000 +0100
-+++ b/browser/main/Detail/SnippetNoteDetail.js	2018-02-25 15:45:32.799171520 +0100
+--- a/browser/main/Detail/SnippetNoteDetail.js	2018-03-13 15:12:32.000000000 +0100
++++ b/browser/main/Detail/SnippetNoteDetail.js	2018-03-13 16:36:53.467255847 +0100
 @@ -18,7 +18,6 @@
  import ConfigManager from 'browser/main/lib/ConfigManager'
  import _ from 'lodash'
@@ -74,8 +74,8 @@ diff -ura a/browser/main/Detail/SnippetNoteDetail.js b/browser/main/Detail/Snipp
    }
  
 diff -ura a/browser/main/Detail/TagSelect.js b/browser/main/Detail/TagSelect.js
---- a/browser/main/Detail/TagSelect.js	2018-02-25 06:30:57.000000000 +0100
-+++ b/browser/main/Detail/TagSelect.js	2018-02-25 15:45:46.609264098 +0100
+--- a/browser/main/Detail/TagSelect.js	2018-03-13 15:12:32.000000000 +0100
++++ b/browser/main/Detail/TagSelect.js	2018-03-13 16:37:07.906963169 +0100
 @@ -3,7 +3,6 @@
  import CSSModules from 'browser/lib/CSSModules'
  import styles from './TagSelect.styl'
@@ -93,8 +93,8 @@ diff -ura a/browser/main/Detail/TagSelect.js b/browser/main/Detail/TagSelect.js
      let newTag = this.refs.newTag.value.trim().replace(/ +/g, '_')
      newTag = newTag.charAt(0) === '#' ? newTag.substring(1) : newTag
 diff -ura a/browser/main/Main.js b/browser/main/Main.js
---- a/browser/main/Main.js	2018-02-25 06:30:57.000000000 +0100
-+++ b/browser/main/Main.js	2018-02-25 15:45:57.461336784 +0100
+--- a/browser/main/Main.js	2018-03-13 15:12:32.000000000 +0100
++++ b/browser/main/Main.js	2018-03-13 16:37:20.632704674 +0100
 @@ -10,7 +10,6 @@
  import dataApi from 'browser/main/lib/dataApi'
  import _ from 'lodash'
@@ -115,8 +115,8 @@ diff -ura a/browser/main/Main.js b/browser/main/Main.js
  
      this.state = {
 diff -ura a/browser/main/modals/CreateFolderModal.js b/browser/main/modals/CreateFolderModal.js
---- a/browser/main/modals/CreateFolderModal.js	2018-02-25 06:30:57.000000000 +0100
-+++ b/browser/main/modals/CreateFolderModal.js	2018-02-25 15:46:09.092414626 +0100
+--- a/browser/main/modals/CreateFolderModal.js	2018-03-13 15:12:32.000000000 +0100
++++ b/browser/main/modals/CreateFolderModal.js	2018-03-13 16:37:36.570380220 +0100
 @@ -6,7 +6,6 @@
  import store from 'browser/main/store'
  import consts from 'browser/lib/consts'
@@ -134,8 +134,8 @@ diff -ura a/browser/main/modals/CreateFolderModal.js b/browser/main/modals/Creat
        const { storage } = this.props
        const input = {
 diff -ura a/browser/main/modals/NewNoteModal.js b/browser/main/modals/NewNoteModal.js
---- a/browser/main/modals/NewNoteModal.js	2018-02-25 06:30:57.000000000 +0100
-+++ b/browser/main/modals/NewNoteModal.js	2018-02-25 15:46:25.416523776 +0100
+--- a/browser/main/modals/NewNoteModal.js	2018-03-13 15:12:32.000000000 +0100
++++ b/browser/main/modals/NewNoteModal.js	2018-03-13 16:37:55.830987090 +0100
 @@ -5,7 +5,6 @@
  import { hashHistory } from 'react-router'
  import ee from 'browser/main/lib/eventEmitter'
@@ -163,8 +163,8 @@ diff -ura a/browser/main/modals/NewNoteModal.js b/browser/main/modals/NewNoteMod
  
      dataApi
 diff -ura a/browser/main/modals/PreferencesModal/InfoTab.js b/browser/main/modals/PreferencesModal/InfoTab.js
---- a/browser/main/modals/PreferencesModal/InfoTab.js	2018-02-25 06:30:57.000000000 +0100
-+++ b/browser/main/modals/PreferencesModal/InfoTab.js	2018-02-25 15:46:59.805753337 +0100
+--- a/browser/main/modals/PreferencesModal/InfoTab.js	2018-03-13 15:12:32.000000000 +0100
++++ b/browser/main/modals/PreferencesModal/InfoTab.js	2018-03-13 16:38:42.188036508 +0100
 @@ -3,7 +3,6 @@
  import styles from './InfoTab.styl'
  import ConfigManager from 'browser/main/lib/ConfigManager'
@@ -195,7 +195,7 @@ diff -ura a/browser/main/modals/PreferencesModal/InfoTab.js b/browser/main/modal
 -      })
 -    } else {
 -      this.setState({
--        amaMessage: 'Thank\'s for trust us'
+-        amaMessage: 'Thanks for trusting us'
 -      })
 -    }
 -
@@ -246,17 +246,17 @@ diff -ura a/browser/main/modals/PreferencesModal/InfoTab.js b/browser/main/modal
      )
    }
 diff -ura a/browser/main/NoteList/index.js b/browser/main/NoteList/index.js
---- a/browser/main/NoteList/index.js	2018-02-25 06:30:57.000000000 +0100
-+++ b/browser/main/NoteList/index.js	2018-02-25 15:47:29.154948871 +0100
-@@ -13,7 +13,6 @@
- import fs from 'fs'
+--- a/browser/main/NoteList/index.js	2018-03-13 15:12:32.000000000 +0100
++++ b/browser/main/NoteList/index.js	2018-03-13 16:39:11.268437224 +0100
+@@ -14,7 +14,6 @@
  import path from 'path'
  import { hashHistory } from 'react-router'
+ import copy from 'copy-to-clipboard'
 -import AwsMobileAnalyticsConfig from 'browser/main/lib/AwsMobileAnalyticsConfig'
+ import markdown from '../../lib/markdown'
  
  const { remote } = require('electron')
- const { Menu, MenuItem, dialog } = remote
-@@ -584,7 +583,6 @@
+@@ -623,7 +622,6 @@
              note: newNote
            })
          })
@@ -264,7 +264,7 @@ diff -ura a/browser/main/NoteList/index.js b/browser/main/NoteList/index.js
          console.log('Notes went to trash')
        })
        .catch((err) => {
-@@ -603,8 +601,6 @@
+@@ -642,8 +640,6 @@
      const firstNote = selectedNotes[0]
      const eventName = firstNote.type === 'MARKDOWN_NOTE' ? 'ADD_MARKDOWN' : 'ADD_SNIPPET'
  
@@ -274,8 +274,8 @@ diff -ura a/browser/main/NoteList/index.js b/browser/main/NoteList/index.js
        .createNote(storage.key, {
          type: firstNote.type,
 diff -ura a/package.json b/package.json
---- a/package.json	2018-02-25 06:30:57.000000000 +0100
-+++ b/package.json	2018-02-25 15:47:46.823066420 +0100
+--- a/package.json	2018-03-13 15:12:32.000000000 +0100
++++ b/package.json	2018-03-13 16:39:21.284230318 +0100
 @@ -50,8 +50,6 @@
    "dependencies": {
      "@rokt33r/markdown-it-math": "^4.0.1",

@@ -5,7 +5,7 @@
 # Contributor: Romain Bazile <gromain {dot} baz {at} gmail {dot} com>
 pkgname=boostnote
 _pkgname=Boostnote
-pkgver=0.10.0
+pkgver=0.11.2
 pkgrel=1
 pkgdesc="Open source note-taking app for programmers"
 arch=('any')
@@ -22,11 +22,11 @@ source=(
   "remove-analytics.patch"
   )
 
-sha512sums=('9f8739f73e41064678f5a14cf78e9a761e460e9a137c91fee2e81bade897ac9d921a6d51d39bd29e15fbbada0bb82cc546ee47a66b9e04c46403070accdc2a9b'
+sha512sums=('7f7564ddb60ede5c075a81e0e2a16b13aa5e7aedc821c2aad9258912e3418d95f43465d788037093c6a557e2cb533789221c984110757c7335749ea102329363'
             '1f0ccd2a3632a12c4714d97b9f909ddc94b53d6f86a9e4bdcab31abd55a93071a2c35c6e1e9527b747de6dd74b8a5276414980c11e174085f28b8f2d2721230a'
             '18bcda13580da8ceeaa86793a77ec00a053b8fd51451dad7e2b1a19553fe1a467ac647b44b789212e783f3f6a80968cc9404e884ef7ff6b1f6588473b3229d40'
             '415eb95c889eee8076cc92ea30058505f9f3c1b73b0bc9712b92ffc65ddb5be250e962b20449946be2fffccaf31153b9923fa63e11412525db33dbf1c3215974'
-            '8f19cef9c945246b27b667cfddefec5d855db8d02fdefbaea06af1eb1be11ac2b4fe864e22f2945f37b92e1bddd2c20db50e563c1c2c0efd3a93c1bbdb2ff64e')
+            'cfa67c7a6b861390fc684290bfdd40acf1cc28ec9b24437a5c1b80a13c364483fb27a1d84f96af8a0f50dde0e16394f1c5f12a164ad137f932c1dcab70fe731c')
 
 prepare() {
   cd "${_pkgname}-${pkgver}"
@@ -38,9 +38,6 @@ prepare() {
 build() {
   cd "${_pkgname}-${pkgver}"
 
-  # Needed to fix an upstream bug
-  mv node_modules/boost/boostNewLineIndentContinueMarkdownList.js boostNewLineIndentContinueMarkdownList.js
-  
   npm install --no-optional
   grunt compile
   rm -r node_modules/
@@ -49,10 +46,6 @@ build() {
 
 package() {
   cd "${_pkgname}-${pkgver}"
-
-  # Fix for upstream bug
-  mkdir node_modules/boost
-  mv boostNewLineIndentContinueMarkdownList.js node_modules/boost
 
   appdir="/usr/lib/${pkgname}"
 
