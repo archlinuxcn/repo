@@ -3,12 +3,12 @@
 
 pkgname=wget-lily
 pkgver=1.19.4
-pkgrel=1
+pkgrel=2
 pkgdesc='Network utility to retrieve files from the Web'
 url='https://www.gnu.org/software/wget/wget.html'
 arch=('x86_64')
 license=('GPL3')
-depends=('gnutls' 'libidn' 'libutil-linux' 'libpsl' 'pcre')
+depends=('glibc' 'gnutls' 'libidn' 'libutil-linux' 'libpsl' 'pcre')
 checkdepends=('perl-http-daemon' 'perl-io-socket-ssl' 'python')
 optdepends=('ca-certificates: HTTPS downloads')
 conflicts=('wget')
