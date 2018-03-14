@@ -1,7 +1,7 @@
 # Maintainer: Josip Ponjavic <josipponjavic at gmail dot com>
 
 pkgname=i3status-rust-git
-pkgver=0.9.0.r440.g881979b
+pkgver=0.9.0.r451.g8787509
 pkgrel=1
 pkgdesc='Very resourcefriendly and feature-rich replacement for i3status to use with bar programs (like i3bar and swaybar), written in pure Rust'
 arch=('x86_64')
@@ -10,6 +10,7 @@ license=('GPL3')
 depends=('dbus')
 makedepends=('git' 'rust')
 optdepends=('alsa-utils: For volume block'
+            'curl: For the weather block'
             'lm_sensors: For temperature block'
             'powerline-fonts: For all themes using the powerline arrow char'
             'speedtest-cli: For the speedtest block'
