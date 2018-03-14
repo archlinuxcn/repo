@@ -1,4 +1,5 @@
 # Maintainer: grufo <madmurphy333 AT gmail DOT com>
+# Contributor: midgard <arch.midgard AT janmaes DOT com>
 # Contributor: TrialnError <autumn-wind AT web DOT de>
 # Contributor: Yardena Cohen <yardenack AT gmail DOT com>
 # Contributor: Max Roder <maxroder AT web DOT de>
@@ -20,9 +21,9 @@ _language='zh-CN'
 
 _pkgname='tor-browser'
 pkgname="${_pkgname}-${_language,,}"
-pkgver='7.5'
-pkgrel='1'
-pkgdesc="Tor Browser Bundle: Anonymous browsing using firefox and tor (${_language})"
+pkgver='7.5.1'
+pkgrel='2'
+pkgdesc="Tor Browser Bundle: anonymous browsing using Firefox and Tor (${_language})"
 url='https://www.torproject.org/projects/torbrowser.html'
 arch=('i686' 'x86_64')
 _idstr32='linux32'
@@ -33,8 +34,8 @@ depends=('gtk2' 'mozilla-common' 'libxt' 'startup-notification' 'mime-types'
 	'libvpx' 'icu' 'libevent' 'nss' 'hunspell' 'sqlite')
 optdepends=('zenity: simple dialog boxes'
 	'kdialog: KDE dialog boxes'
-	'gst-plugins-good: h.264 video'
-	'gst-libav: h.264 video'
+	'gst-plugins-good: H.264 video'
+	'gst-libav: H.264 video'
 	'libpulse: PulseAudio audio driver'
 	'libnotify: Gnome dialog boxes')
 install="${_pkgname}.install"
@@ -49,18 +50,20 @@ source=("${_pkgname}.desktop"
 	"${_pkgname}.png"
 	"${_pkgname}.sh")
 
-md5sums=('9178c9325979377f7ec57569b15fcb61'
-	'494afbfa60fb4ce21840244cc3f7208c'
-	'120910366e4094c652fe7c4ee55abbca')
-md5sums_i686=('SKIP'
-	'SKIP')
-md5sums_x86_64=('SKIP'
-	'SKIP')
+sha256sums=('5926477b1c56b0a21549ced1faeb3f232d0e4641a184acd65774f890af7b58e8'
+            '17fc2f5784d080233aca16e788d62ab6fe3e57cf781b123cfe32767de97d6d3b'
+            '3a491ad1a476f2fb343f274eab4e8df925637438e6dac3591f092b3ef3294da3')
+sha256sums_i686=('SKIP'
+                 'SKIP')
+sha256sums_x86_64=('SKIP'
+                   'SKIP')
 
 noextract=("${_pkgname}-${_idstr64}-${pkgver}_${_language}.tar.xz"
 	"${_pkgname}-${_idstr32}-${pkgver}_${_language}.tar.xz")
 
 package() {
+
+	cd "${srcdir}"
 
 	sed -i "s/__REPL_LANGUAGE__/${_language}/g"	"${_pkgname}.desktop"
 	sed -i "s/__REPL_NAME__/${pkgname}/g"		"${_pkgname}.desktop"
