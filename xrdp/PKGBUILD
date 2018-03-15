@@ -7,7 +7,7 @@
 
 pkgname=xrdp
 pkgver=0.9.5
-pkgrel=1
+pkgrel=2
 pkgdesc="An open source remote desktop protocol (RDP) server"
 url="https://github.com/neutrinolabs/xrdp"
 arch=('i686' 'x86_64' 'armv6h')
@@ -41,7 +41,8 @@ build() {
 	      --enable-rfxcodec \
 	      --enable-mp3lame \
 	      --enable-pixman \
-	      --enable-painter
+	      --enable-painter \
+	      --enable-vsock
   make V=0
 }
 
