@@ -1,0 +1,16 @@
+diff --git a/include/core/dbus/asio/executor.h b/include/core/dbus/asio/executor.h
+index d1f043e..7cbece2 100644
+--- a/include/core/dbus/asio/executor.h
++++ b/include/core/dbus/asio/executor.h
+@@ -26,7 +26,11 @@ namespace boost
+ {
+ namespace asio
+ {
++#if BOOST_VERSION >= 106600
++class io_context;
++#else
+ class io_service;
++#endif
+ }
+ }
+ 

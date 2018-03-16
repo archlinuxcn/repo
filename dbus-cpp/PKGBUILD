@@ -10,14 +10,20 @@ url="https://code.launchpad.net/dbus-cpp"
 license=('LGPL3')
 depends=('process-cpp' 'dbus' 'libxml2')
 makedepends=('cmake' 'gmock' 'properties-cpp' 'boost')
-source=("https://launchpad.net/ubuntu/+archive/primary/+files/dbus-cpp_${_pkgver}.orig.tar.gz")
-md5sums=('61e9568f3c799214c5bc8b5e3a498496')
+source=("https://launchpad.net/ubuntu/+archive/primary/+files/dbus-cpp_${_pkgver}.orig.tar.gz"
+	"boost-asio-1-66.patch")
+md5sums=('61e9568f3c799214c5bc8b5e3a498496'
+         '127dde628ffb8296516090228975cfc2')
 
 prepare() {
   cd "$srcdir"
 
   # Don't build tests
   truncate -s 0 tests/CMakeLists.txt
+
+  # Fix boost asio 1.66 API changes
+  # https://github.com/anbox/anbox/issues/637#issuecomment-373361974
+  patch -Np1 -i boost-asio-1-66.patch
 }
 
 build() {
