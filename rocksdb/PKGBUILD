@@ -1,8 +1,8 @@
 pkgname=rocksdb
 pkgver=5.11.3
-pkgrel=0
+pkgrel=1
 pkgdesc='Embedded key-value store for fast storage'
-arch=(i686 x86_64)
+arch=(i686 x86_64 armv7h)
 url='http://rocksdb.org'
 license=(Apache leveldb)
 depends=(
