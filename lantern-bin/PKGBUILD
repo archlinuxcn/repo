@@ -1,7 +1,7 @@
 # Maintainer:  lilydjwg@gmail.com
 
 pkgname=lantern-bin
-pkgver=4.5.5
+pkgver=4.5.7
 
 pkgrel=1
 pkgdesc='Free desktop application that delivers fast, reliable and secure access to the open Internet. (Stable Channel, binary)'
@@ -17,8 +17,8 @@ source_i686=("${pkgname}-${pkgver}-i686.deb::https://raw.githubusercontent.com/g
 source_x86_64=("${pkgname}-${pkgver}-x86_64.deb::https://raw.githubusercontent.com/getlantern/lantern-binaries/master/lantern-installer-64-bit.deb")
 install=lantern.install
 sha256sums=('4dc6f71c0e95ff04daa05c6de06847d87c10fbecd82869e93591886f9cab46a7')
-sha256sums_i686=('26f679a05b400c18fd0a8df742e96ad6beccafcb0e3763e90291b67feadbfe84')
-sha256sums_x86_64=('a4db8558cbb5d7b134589330f4ebdfa587c11380d0a21c01d5bf713f5bc45d93')
+sha256sums_i686=('4af07214c0ceaf146a4d98d47ce5b49a1b4122539b11a1e360db970d744af92a')
+sha256sums_x86_64=('81189987fbaf74d4bd7a979325303cb6e9bd625e1d449c5f3da7fdf59913b225')
 options=(emptydirs)
 
 package() {
