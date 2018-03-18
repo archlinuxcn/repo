@@ -1,15 +1,15 @@
 #Maintainer: Xyne <ac xunilhcra enyx, backwards>
 pkgname=pystopwatch
 pkgver=2012.12.24.1
-pkgrel=3
+pkgrel=4
 pkgdesc='A stopwatch written in Python with a clock and two countdown functions that can minimize to the tray.'
 arch=(any)
 license=(GPL)
-url="http://xyne.archlinux.ca/projects/pystopwatch"
-depends=(python2 pygtk gtk2 librsvg)
+url="https://xyne.archlinux.ca/projects/pystopwatch"
+depends=(gtk2 librsvg pygtk python2)
 source=(
-  http://xyne.archlinux.ca/projects/pystopwatch/src/pystopwatch-2012.12.24.1.tar.xz
-  http://xyne.archlinux.ca/projects/pystopwatch/src/pystopwatch-2012.12.24.1.tar.xz.sig
+  https://xyne.archlinux.ca/projects/pystopwatch/src/pystopwatch-2012.12.24.1.tar.xz
+  https://xyne.archlinux.ca/projects/pystopwatch/src/pystopwatch-2012.12.24.1.tar.xz.sig
 )
 sha512sums=(
   4b3af373356eaafd14caeecb34150fef8e7099120855230dce7c0eabba68f75d497c3cc2eb733a086a02a96ae5feeca1898ba201a5f6f5597dcd32de9c80b3df
@@ -19,7 +19,6 @@ md5sums=(
   2bc39a6ac418bdf34cb96a22dc298e65
   48c6e896d5c0868744534e1b8445192c
 )
-install=pystopwatch.install
 validpgpkeys=('EC3CBE7F607D11E663149E811D1F0DC78F173680')
 
 package ()
