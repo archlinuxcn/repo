@@ -4,12 +4,12 @@ post_install() {
   # If the database exists, just update it and keep existing entries
   if [ -f "${DB_DIR}/files.db" ]; then
     pacman -Ql | sort -u -k 2,2 - "${DB_DIR}/files.db" > "${DB_DIR}/files-temp.db"
+    rm "${DB_DIR}/files.db"
   # Otherwise create it
   else
     mkdir -p "${DB_DIR}"
     pacman -Ql | sort -u -k 2,2 -  > ${DB_DIR}/files-temp.db
   fi
-  rm "${DB_DIR}/files.db"
   mv "${DB_DIR}/files-temp.db" "${DB_DIR}/files.db"
   printf "Created initial database at %s/files.db\n" "${DB_DIR}"
 }

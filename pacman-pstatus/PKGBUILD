@@ -1,13 +1,13 @@
 # Author and Maintainer: renyuneyun <renyuneyun@gmail.com>
 # Original author: Samantha McVey <samantham@posteo.net>
-# Copyright (C) 2017
+# Copyright (C) 2017 - 2018
 # This file and project are licensed under the GPLv2 or greater at your choice.
 # For more information view the license included or visit:
 # https://www.gnu.org/licenses/gpl-2.0.html
 
 pkgname=('pacman-pstatus')
 pkgver=0.2.1
-pkgrel=2
+pkgrel=4
 arch=('any')
 url='https://gitlab.com/renyuneyun/pacman-ps'
 license=('GPL')
@@ -20,10 +20,8 @@ pkgdesc="Provides a command to identify which running processes have files that 
 install='pacman-ps.install'
 
 options=('!strip')
-source=("git+https://gitlab.com/renyuneyun/pacman-ps#tag=v$pkgver"
-        'pacman-ps.install')
-sha1sums=('SKIP'
-          '53dcfea595c1c59cd47ae45c7f083e3e03a5e219')
+source=("git+https://gitlab.com/renyuneyun/pacman-ps#tag=v$pkgver")
+md5sums=('SKIP')
 
 package() {
   LICENSE_DIR="/usr/share/licenses"
