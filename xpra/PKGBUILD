@@ -1,8 +1,8 @@
 # Contributor: Bug <bug2000@gmail.com>
 # Maintainer: Bug <bug2000@gmail.com>
 pkgname=xpra
-pkgver=2.2.1
-pkgrel=2
+pkgver=2.2.5
+pkgrel=1
 pkgdesc="multi-platform screen and application forwarding system screen for X11"
 arch=('i686' 'x86_64')
 url='http://xpra.org/'
@@ -15,6 +15,7 @@ optdepends=('x264: Codec' 'python2-dbus: dbus features'
             'python2-pycups: Printing support' 'python2-netifaces: mdns'
             'python2-cryptography: Cryptography'
             'python-cryptography: Cryptography'
+            'gst-python2'
             'pam-selinux: Proxy Server Support')
 conflicts=('xpra-winswitch')
 provides=('xpra-winswitch')
@@ -38,7 +39,7 @@ backup=('etc/xpra/xpra.conf' 'etc/xpra/xorg.conf'
         'etc/xpra/conf.d/65_proxy.conf'
         'etc/pam.d/xpra')
 source=("https://xpra.org/src/xpra-$pkgver.tar.xz")
-sha256sums=('81e103712d1543fb85880a28e25702efe3be9175d18274cb8d8ffb20b8485c14')
+sha256sums=('5a0685127c1996ae590cc3fa944ee0e9232a3a5264aef925a4fcadc12c0054e0')
 
 build() {
   cd "${srcdir}/xpra-$pkgver"
