@@ -5,7 +5,7 @@
 pkgname=remarkable
 replaces=('remarkable-webkit2gtk')
 pkgver=1.87
-pkgrel=2
+pkgrel=3
 pkgdesc="A free fully featured markdown editor for Linux."
 arch=('any')
 url="http://remarkableapp.github.io"
@@ -15,14 +15,14 @@ depends=('python'
          'python-gobject'
          'python-markdown'
          'python-beautifulsoup4'
-         'python-gtkspellcheck'
          'python-lxml'
          'webkit2gtk'
          'wkhtmltopdf'
          'gtksourceview3'
          )
 makedepends=('python')
-optdepends=('python-lxml: export to HTML format support')
+optdepends=('python-lxml: export to HTML format support'
+            'python-gtkspellcheck: Spellcheck (might cause problems)')
 
 install="remarkable.install"
 source=("https://github.com/jamiemcg/Remarkable/archive/v${pkgver}.tar.gz"
