@@ -1,0 +1,11 @@
+[Unit]
+Description=Frp Client Service
+After=network.target
+
+[Service]
+Type=simple
+User=nobody
+ExecStart=/usr/bin/frpc -c /etc/frp/%i.ini
+
+[Install]
+WantedBy=multi-user.target
