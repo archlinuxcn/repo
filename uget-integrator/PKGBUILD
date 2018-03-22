@@ -6,12 +6,12 @@ url="https://github.com/ugetdm/uget-integrator"
 license=('GPL3')
 depends=('python3' 'uget')
 makedepends=()
-pkgver=0.0.1
+pkgver=1.0.0
 pkgrel=1
 source=("uget-integrator-$pkgver::https://raw.githubusercontent.com/ugetdm/uget-integrator/v$pkgver/bin/uget-integrator")
 conflicts=('uget-chrome-wrapper')
 pkgdesc="Integrate uGet Download Manager with Google Chrome, Chromium, Vivaldi, Opera and Firefox"
-md5sums=('83b3c8c2cacdd352d3625f6e3a8e8dd3')
+md5sums=('3f30519362f94598ccf8085be9f9da3d')
 optdepends=(
     'uget-integrator-chrome: native messaging hosts for Google Chrome'
     'uget-integrator-chromium: native messaging hosts for Chromium and Vivaldi'
