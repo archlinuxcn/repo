@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from lilaclib import *
 
-build_prefix = 'archlinuxcn-x86_64-build'
+build_prefix = 'archlinuxcn-x86_64'
 
 def _get_new_version():
   new_verion = s.get("https://api.github.com/repos/ugetdm/uget-integrator/tags").json()[0]
