@@ -12,7 +12,7 @@
 # You will also need to install osgearth or fcgi, respectively, before building.
 
 pkgname=qgis
-pkgver=3.0.0
+pkgver=3.0.1
 pkgrel=1
 pkgdesc='Geographic Information System (GIS) that supports vector, raster & database formats'
 url='https://qgis.org/'
@@ -22,7 +22,7 @@ depends=('expat' 'gcc-libs' 'gdal' 'geos' 'glibc' 'libspatialite' 'libzip' 'post
          'qca-qt5' 'qextserialport' 'qscintilla-qt5' 'qt5-3d' 'qt5-base' 'qt5-location' 'qt5-svg'
          'qt5-webkit' 'qtkeychain' 'qwt' 'qwtpolar' 'spatialindex' 'sqlite'
          'python' 'python-qscintilla-qt5' 'python-pyqt5' 'python-sip')
-makedepends=('cmake' 'gsl' 'perl' 'txt2tags' 'qt5-tools' 'python-six' 'python-future')
+makedepends=('cmake' 'gsl' 'perl' 'txt2tags' 'qt5-tools' 'python-six')
 optdepends=('gpsbabel: GPS Tool plugin'
             'gsl: Georeferencer plugin'
             'python-gdal: DB Manager plugin; Processing plugin'
@@ -31,9 +31,10 @@ optdepends=('gpsbabel: GPS Tool plugin'
             'python-psycopg2: DB Manager plugin; Processing plugin'
             'python-pygments: MetaSearch plugin; DB Manager plugin'
             'python-numpy: Processing plugin'
-            'python-yaml: Processing plugin')
+            'python-yaml: Processing plugin'
+            'saga-gis-ltr: Saga processing tools')
 source=("https://qgis.org/downloads/$pkgname-$pkgver.tar.bz2")
-md5sums=('ff6e7ad62e98ef32af41db42640f345d')
+md5sums=('a9fac346ab7a4dfdf8755c7d3aecc3a0')
 
 prepare() {
   cd $pkgname-$pkgver
@@ -86,16 +87,12 @@ package() {
 
   cd "$srcdir/$pkgname-$pkgver"
 
-  # install desktop file and icons
+  # install desktop file and icon
   install -Dm644 debian/qgis.desktop -t "$pkgdir/usr/share/applications/"
   install -Dm644 images/icons/qgis_icon.svg "$pkgdir/usr/share/icons/hicolor/scalable/apps/qgis.svg"
-  for _res in 16x16 60x60 512x512; do
-    install -Dm644 images/icons/qgis-icon-$_res.png "$pkgdir/usr/share/icons/hicolor/$_res/apps/qgis.png"
-  done
 
   # install mime information and icons
   install -Dm644 debian/qgis.xml -t "$pkgdir/usr/share/mime/packages/"
-  install -Dm644 images/icons/qgis-mime-icon.png "$pkgdir/usr/share/icons/hicolor/64x64/mimetypes/qgis-mime.png"
   for _type in asc ddf dem dt0 dxf gml img mime mldata qgs qlr qml qpt shp sqlite; do
     install -Dm644 images/icons/qgis_${_type}_icon.svg "$pkgdir/usr/share/icons/hicolor/scalable/mimetypes/qgis-$_type.svg"
   done
