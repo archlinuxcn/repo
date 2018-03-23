@@ -1,33 +1,26 @@
-# Maintainer: Karol "Kenji Takahashi" Woźniak <kenji.sx>
+# Maintainer: Kewl <xrjy@nygb.rh.bet(rot13)>
+# Contributor: Karol "Kenji Takahashi" Woźniak <kenji.sx>
 
 pkgname=copyq
-_realname=CopyQ
-pkgver=3.1.2
-pkgrel=1
-pkgdesc="Clipboard manager with searchable and editable history."
-url="https://github.com/hluk/CopyQ"
+pkgver=3.3.0
+pkgrel=2
+pkgdesc="Clipboard manager with searchable and editable history"
+url="https://github.com/hluk/${pkgname}"
 depends=('libxtst' 'qt5-script' 'hicolor-icon-theme')
 optdepends=('copyq-plugin-itemweb')
 makedepends=('cmake' 'qt5-tools' 'qt5-svg')
 license=('GPL3')
-arch=('i686' 'x86_64')
-source=("https://github.com/hluk/${_realname}/archive/v${pkgver}.tar.gz")
-md5sums=('fef762f28d1572b0ca7544936e7a6a90')
+arch=('x86_64')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
+sha256sums=('910a3b0e6410b461795af2dbde970960ae77cfdacebbc5e3ef6b5707baa74fba')
 
 build() {
-    mkdir "${srcdir}/build"
-    cd "${srcdir}/build"
-    cmake \
-        -DWITH_WEBKIT=0 \
-        -DCMAKE_INSTALL_PREFIX=/usr \
-        -DWITH_QT5=TRUE \
-        "${srcdir}/${_realname}-${pkgver}"
+    cd "CopyQ-${pkgver}"
+    cmake -DCMAKE_BUILD_TYPE=Release -DWITH_WEBKIT=0 -DCMAKE_INSTALL_PREFIX=/usr -DWITH_QT5=TRUE .
     make
 }
 
 package() {
-    cd "${srcdir}/build"
+    cd "CopyQ-${pkgver}"
     make DESTDIR="${pkgdir}" install
 }
-
-# vim:set ts=4 sw=4 et:
