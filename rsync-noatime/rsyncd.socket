@@ -1,0 +1,10 @@
+[Unit]
+Description=Rsync Socket
+Conflicts=rsyncd.service
+
+[Socket]
+ListenStream=873
+Accept=true
+
+[Install]
+WantedBy=sockets.target

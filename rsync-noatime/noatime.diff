@@ -1,0 +1,94 @@
+Optionally preserve atimes.
+    
+Based on https://bugzilla.samba.org/show_bug.cgi?id=7249#c1 by Nicolas George.
+
+Index: rsync-3.1.0/options.c
+===================================================================
+--- rsync-3.1.0.orig/options.c
++++ rsync-3.1.0/options.c
+@@ -125,6 +125,7 @@ int delay_updates = 0;
+ long block_size = 0; /* "long" because popt can't set an int32. */
+ char *skip_compress = NULL;
+ item_list dparam_list = EMPTY_ITEM_LIST;
++int noatime = 0;
+ 
+ /** Network address family. **/
+ int default_af_hint
+@@ -802,6 +803,7 @@ void usage(enum logcode F)
+   rprintf(F,"     --iconv=CONVERT_SPEC    request charset conversion of filenames\n");
+ #endif
+   rprintf(F,"     --checksum-seed=NUM     set block/file checksum seed (advanced)\n");
++  rprintf(F,"     --noatime               do not alter atime when opening source files\n");
+   rprintf(F," -4, --ipv4                  prefer IPv4\n");
+   rprintf(F," -6, --ipv6                  prefer IPv6\n");
+   rprintf(F,"     --version               print version number\n");
+@@ -1019,6 +1021,7 @@ static struct poptOption long_options[]
+   {"iconv",            0,  POPT_ARG_STRING, &iconv_opt, 0, 0, 0 },
+   {"no-iconv",         0,  POPT_ARG_NONE,   0, OPT_NO_ICONV, 0, 0 },
+ #endif
++  {"noatime",          0,  POPT_ARG_VAL,    &noatime, 1, 0, 0 },
+   {"ipv4",            '4', POPT_ARG_VAL,    &default_af_hint, AF_INET, 0, 0 },
+   {"ipv6",            '6', POPT_ARG_VAL,    &default_af_hint, AF_INET6, 0, 0 },
+   {"8-bit-output",    '8', POPT_ARG_VAL,    &allow_8bit_chars, 1, 0, 0 },
+@@ -2739,6 +2742,12 @@ void server_options(char **args, int *ar
+ 	if (preallocate_files && am_sender)
+ 		args[ac++] = "--preallocate";
+ 
++	/*
++	 * Do we want remote atime preservation when we preserve local ones?
++	if (noatime)
++		args[ac++] = "--noatime";
++	*/
++
+ 	if (ac > MAX_SERVER_ARGS) { /* Not possible... */
+ 		rprintf(FERROR, "argc overflow in server_options().\n");
+ 		exit_cleanup(RERR_MALLOC);
+Index: rsync-3.1.0/rsync.yo
+===================================================================
+--- rsync-3.1.0.orig/rsync.yo
++++ rsync-3.1.0/rsync.yo
+@@ -454,6 +454,7 @@ to the detailed description below for a
+      --protocol=NUM          force an older protocol version to be used
+      --iconv=CONVERT_SPEC    request charset conversion of filenames
+      --checksum-seed=NUM     set block/file checksum seed (advanced)
++     --noatime               do not alter atime when opening source files
+  -4, --ipv4                  prefer IPv4
+  -6, --ipv6                  prefer IPv6
+      --version               print version number
+@@ -2543,6 +2544,13 @@ daemon uses the charset specified in its
+ regardless of the remote charset you actually pass.  Thus, you may feel free to
+ specify just the local charset for a daemon transfer (e.g. bf(--iconv=utf8)).
+ 
++dit(bf(--noatime)) Use the O_NOATIME open flag on systems that support it.
++The effect of this flag is to avoid altering the access time (atime) of the
++opened files.
++If the system does not support the O_NOATIME flag, this option does nothing.
++Currently, systems known to support O_NOATIME are Linux >= 2.6.8 with glibc
++>= 2.3.4.
++
+ dit(bf(-4, --ipv4) or bf(-6, --ipv6)) Tells rsync to prefer IPv4/IPv6
+ when creating sockets.  This only affects sockets that rsync has direct
+ control over, such as the outgoing socket when directly contacting an
+Index: rsync-3.1.0/syscall.c
+===================================================================
+--- rsync-3.1.0.orig/syscall.c
++++ rsync-3.1.0/syscall.c
+@@ -40,6 +40,7 @@ extern int read_only;
+ extern int list_only;
+ extern int preserve_perms;
+ extern int preserve_executability;
++extern int noatime;
+ 
+ #define RETURN_ERROR_IF(x,e) \
+ 	do { \
+@@ -189,6 +190,10 @@ int do_open(const char *pathname, int fl
+ 		RETURN_ERROR_IF(dry_run, 0);
+ 		RETURN_ERROR_IF_RO_OR_LO;
+ 	}
++#ifdef O_NOATIME
++	if (noatime)
++		flags |= O_NOATIME;
++#endif
+ 
+ 	return open(pathname, flags | O_BINARY, mode);
+ }
