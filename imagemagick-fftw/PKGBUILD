@@ -4,12 +4,12 @@
 pkgbase=imagemagick-fftw
 pkgname=(libmagick-fftw imagemagick-fftw)
 pkgver=7.0.7.27
-pkgrel=1
+pkgrel=2
 pkgdesc="An image viewing/manipulation program"
 url="https://www.imagemagick.org/"
 arch=(x86_64)
 license=(custom)
-depends=(libltdl lcms2 fontconfig libxext liblqr libraqm libpng)
+depends=(libltdl lcms2 fontconfig libxext liblqr libraqm libpng libxml2)
 makedepends=(ghostscript openexr libwmf librsvg libxml2 openjpeg2 libraw opencl-headers libwebp
              chrpath ocl-icd glu ghostpcl ghostxps 'fftw')
 checkdepends=(gsfonts ttf-dejavu)
