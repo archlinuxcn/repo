@@ -47,21 +47,5 @@ package() {
         | sed -rne 's/.*(<html lang.*>.*html>).*/\1/p' \
         | w3m -I 'utf-8' -T 'text/html' \
         > "$pkgdir/usr/share/licenses/$pkgname/eula.txt"
-
-    # quick fix for the actions
-    if ! grep 'Desktop Action' "$pkgdir/usr/share/applications/vivaldi-stable.desktop" > /dev/null 2>&1; then
-        cat <<'EOF' >> "$pkgdir/usr/share/applications/vivaldi-stable.desktop"
-
-[Desktop Action new-window]
-Name=New Window
-Exec=/usr/bin/vivaldi-stable --new-window
-TargetEnvironment=Unity
-
-[Desktop Action new-private-window]
-Name=New Private Window
-Exec=/usr/bin/vivaldi-stable --incognito
-TargetEnvironment=Unity
-EOF
-    fi
 }
 
