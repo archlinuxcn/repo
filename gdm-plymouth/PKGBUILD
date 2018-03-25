@@ -6,8 +6,8 @@
 _pkgbase=gdm
 pkgbase=gdm-plymouth
 pkgname=(gdm-plymouth libgdm-plymouth)
-pkgver=3.26.2.1
-pkgrel=2
+pkgver=3.28.0
+pkgrel=1
 pkgdesc="Gnome Display Manager with Plymouth support."
 arch=(i686 x86_64)
 license=(GPL)
@@ -18,7 +18,7 @@ checkdepends=('check')
 source=("https://git.gnome.org/browse/gdm/snapshot/${_pkgbase}-${pkgver}.tar.xz"
 	"0002-Xsession-Don-t-start-ssh-agent-by-default.patch"
 	"gdm.sysusers")
-sha256sums=('d57edf199c8cb3f2f34861a634ede82e28c8b99921ddeee93a0b4a0b05f68d7a'
+sha256sums=('2908bc2e84bd5c14d0736e58afc31ccdbb05b5314df66093d6d81d631a9811e9'
             '63f99db7623f078e390bf755350e5793db8b2c4e06622caf42eddc63cd39ecca'
             '6d9c8e38c7de85b6ec75e488585b8c451f5d9b4fabd2a42921dc3bfcc4aa3e13')
 
