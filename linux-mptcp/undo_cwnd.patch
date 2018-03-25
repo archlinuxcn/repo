@@ -1,0 +1,77 @@
+From c2119e001dd45a4fa3cf2c33d513e84662dd030e Mon Sep 17 00:00:00 2001
+From: Ycarus <ycarus@zugaina.org>
+Date: Fri, 16 Mar 2018 17:26:19 +0100
+Subject: [PATCH] mptcp: add undo_cwnd to all MPTCP congestion modules.
+
+This patch add tcp_reno_undo_cwnd to all MPTCP congestion modules.
+This was the fallback used before
+https://github.com/multipath-tcp/mptcp/commit/e97991832a4ea4a5f47d65f068a4c966a2eb5730
+
+The patch remove this error:
+```
+Thu Mar 15 15:24:09 2018 kern.err kernel: [    0.180797] TCP: lia does not implement required ops
+Thu Mar 15 15:24:09 2018 kern.err kernel: [    0.181160] TCP: olia does not implement required ops
+Thu Mar 15 15:24:09 2018 kern.err kernel: [    0.181527] TCP: wvegas does not implement required ops
+Thu Mar 15 15:24:09 2018 kern.err kernel: [    0.181901] TCP: balia does not implement required ops
+```
+
+Fixes: 0bc2117826d3 ("Merge tag 'v4.10' into mptcp_trunk")
+Signed-off-by: Ycarus (Yannick Chabanois) <ycarus@zugaina.org>
+Signed-off-by: Christoph Paasch <cpaasch@apple.com>
+(cherry picked from commit a16eccb970a3715d902d2bd8da1e2092998ee22f)
+Signed-off-by: Christoph Paasch <cpaasch@apple.com>
+---
+ net/mptcp/mptcp_balia.c   | 1 +
+ net/mptcp/mptcp_coupled.c | 1 +
+ net/mptcp/mptcp_olia.c    | 1 +
+ net/mptcp/mptcp_wvegas.c  | 1 +
+ 4 files changed, 4 insertions(+)
+
+diff --git a/net/mptcp/mptcp_balia.c b/net/mptcp/mptcp_balia.c
+index 73f365b436bd..8b1fe11b08d5 100644
+--- a/net/mptcp/mptcp_balia.c
++++ b/net/mptcp/mptcp_balia.c
+@@ -241,6 +241,7 @@ static struct tcp_congestion_ops mptcp_balia = {
+ 	.init		= mptcp_balia_init,
+ 	.ssthresh	= mptcp_balia_ssthresh,
+ 	.cong_avoid	= mptcp_balia_cong_avoid,
++	.undo_cwnd	= tcp_reno_undo_cwnd,
+ 	.cwnd_event	= mptcp_balia_cwnd_event,
+ 	.set_state	= mptcp_balia_set_state,
+ 	.owner		= THIS_MODULE,
+diff --git a/net/mptcp/mptcp_coupled.c b/net/mptcp/mptcp_coupled.c
+index 9d97947aed03..f9d856334ca9 100644
+--- a/net/mptcp/mptcp_coupled.c
++++ b/net/mptcp/mptcp_coupled.c
+@@ -244,6 +244,7 @@ static struct tcp_congestion_ops mptcp_ccc = {
+ 	.init		= mptcp_ccc_init,
+ 	.ssthresh	= tcp_reno_ssthresh,
+ 	.cong_avoid	= mptcp_ccc_cong_avoid,
++	.undo_cwnd	= tcp_reno_undo_cwnd,
+ 	.cwnd_event	= mptcp_ccc_cwnd_event,
+ 	.set_state	= mptcp_ccc_set_state,
+ 	.owner		= THIS_MODULE,
+diff --git a/net/mptcp/mptcp_olia.c b/net/mptcp/mptcp_olia.c
+index 201b595e0a31..c17c306849a3 100644
+--- a/net/mptcp/mptcp_olia.c
++++ b/net/mptcp/mptcp_olia.c
+@@ -284,6 +284,7 @@ static struct tcp_congestion_ops mptcp_olia = {
+ 	.init		= mptcp_olia_init,
+ 	.ssthresh	= tcp_reno_ssthresh,
+ 	.cong_avoid	= mptcp_olia_cong_avoid,
++	.undo_cwnd	= tcp_reno_undo_cwnd,
+ 	.set_state	= mptcp_olia_set_state,
+ 	.owner		= THIS_MODULE,
+ 	.name		= "olia",
+diff --git a/net/mptcp/mptcp_wvegas.c b/net/mptcp/mptcp_wvegas.c
+index 87a496811c0d..4373b8d1ee8d 100644
+--- a/net/mptcp/mptcp_wvegas.c
++++ b/net/mptcp/mptcp_wvegas.c
+@@ -240,6 +240,7 @@ static struct tcp_congestion_ops mptcp_wvegas __read_mostly = {
+ 	.init		= mptcp_wvegas_init,
+ 	.ssthresh	= tcp_reno_ssthresh,
+ 	.cong_avoid	= mptcp_wvegas_cong_avoid,
++	.undo_cwnd	= tcp_reno_undo_cwnd,
+ 	.pkts_acked	= mptcp_wvegas_pkts_acked,
+ 	.set_state	= mptcp_wvegas_state,
+ 	.cwnd_event	= mptcp_wvegas_cwnd_event,
