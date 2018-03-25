@@ -1,22 +1,16 @@
 pkgname=kdocker
-pkgver=5.0
-pkgrel=2
+pkgver=5.1
+pkgrel=1
 pkgdesc="An application to help you dock any application into the system tray"
 arch=('i686' 'x86_64')
 url="https://github.com/user-none/KDocker"
 license=('GPL2')
 depends=('qt5-base' 'qt5-x11extras' 'libxpm' 'libxmu')
 source=(https://github.com/user-none/KDocker/archive/${pkgver}.tar.gz)
-sha256sums=('711c3a07d36d278eca47fa56db34fcb0f20f30210d9a1e86a9d0243b834e357a')
+sha256sums=('4d0e6e9d35d0afe3358f38cfab7e25fe12c0c60b97d14aaaa2f8572674879034')
 
 build() {
     cd "$srcdir/KDocker-$pkgver"
-
-    # Fix building with Qt 5.5
-    sed -i '/<QCoreApplication>/ a\#include <QDataStream>' 3rdparty/qtsingleapplication/src/qtlocalpeer.cpp
-
-    # Make sure to restore docked applications on exit
-    sed -i '/delete m_trayItemManager;/ i\m_trayItemManager->undockAll();' src/kdocker.cpp
 
     qmake-qt5
     make
