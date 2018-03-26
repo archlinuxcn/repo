@@ -8,7 +8,7 @@ _anotherpkgver=.g0d3547d9
 _i386_anotherpkgver=.g6bd7cc73
 _amd64_pkgrel=38
 _i386_pkgrel=35
-pkgrel=1
+pkgrel=2
 pkgdesc="A proprietary music streaming service"
 arch=('x86_64' 'i686')
 license=('custom:"Copyright (c) 2006-2010 Spotify Ltd"')
@@ -28,7 +28,9 @@ source_x86_64=("http://repository.spotify.com/pool/non-free/s/spotify-client/spo
 
 source_i686=("http://repository.spotify.com/pool/non-free/s/spotify-client/spotify-client_${_i386_pkgver}${_i386_anotherpkgver}-${_i386_pkgrel}_i386.deb")
 
-depends=("alsa-lib>=1.0.14" "gconf" "gtk2" "glib2" "nss" "libsystemd" "libxtst" "libx11" "libxss" "openssl-1.0" "libcurl-compat" "desktop-file-utils" "rtmpdump")
+depends=("alsa-lib>=1.0.14" "gconf" "gtk2" "glib2" "nss" "libsystemd" "libxtst" "libx11" "libxss" "openssl-1.0" "desktop-file-utils" "rtmpdump")
+depends_x86_64=('libcurl-gnutls')
+depends_i686=('libcurl-compat')
 optdepends=('ffmpeg-compat-54: Adds support for playback of local files'
 'zenity: Adds support for importing local files'
 'libnotify: Desktop notifications'
