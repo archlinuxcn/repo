@@ -29,7 +29,7 @@ prepare() {
     elif line.startswith('source=('):
       line = f'{line}\n\t"noatime.diff"'
     elif "'SKIP'" in line:
-      line = f'{line}\n\t"db2625abaa1c5882144a802b536aec8cd7a503aa08d7756d179eb6879c7811d2"'
+      line = f'{line}\n\t"bff6a2e4682f31b7c0f556c39b8cd227983f9a3e8741d751be8d57455c58ab63"'
     if '$pkgname' in line:
       line = line.replace('$pkgname', 'rsync')
     print(line)
