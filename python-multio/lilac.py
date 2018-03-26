@@ -4,7 +4,7 @@ from lilaclib import *
 
 build_prefix = 'extra-x86_64'
 
-depends = ['python-curio']
+depends = ['python-trio']
 
 def pre_build():
   pypi_pre_build(
