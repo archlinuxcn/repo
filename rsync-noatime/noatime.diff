@@ -1,18 +1,6 @@
-diff -Naur rsync-3.1.3/Makefile.in rsync-3.1.3.new/Makefile.in
---- rsync-3.1.3/Makefile.in	2016-07-20 23:34:26.000000000 +0800
-+++ rsync-3.1.3.new/Makefile.in	2018-03-24 11:35:32.851655087 +0800
-@@ -128,7 +128,7 @@
- getfsdev$(EXEEXT): getfsdev.o
- 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ getfsdev.o $(LIBS)
- 
--TRIMSLASH_OBJ = trimslash.o syscall.o lib/compat.o lib/snprintf.o
-+TRIMSLASH_OBJ = trimslash.o syscall.o options.o lib/compat.o lib/snprintf.o
- trimslash$(EXEEXT): $(TRIMSLASH_OBJ)
- 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(TRIMSLASH_OBJ) $(LIBS)
- 
 diff -Naur rsync-3.1.3/options.c rsync-3.1.3.new/options.c
 --- rsync-3.1.3/options.c	2018-01-15 11:55:07.000000000 +0800
-+++ rsync-3.1.3.new/options.c	2018-03-24 11:35:16.711439684 +0800
++++ rsync-3.1.3.new/options.c	2018-03-24 11:45:36.047079032 +0800
 @@ -127,6 +127,7 @@
  long block_size = 0; /* "long" because popt can't set an int32. */
  char *skip_compress = NULL;
@@ -52,7 +40,7 @@ diff -Naur rsync-3.1.3/options.c rsync-3.1.3.new/options.c
  		exit_cleanup(RERR_MALLOC);
 diff -Naur rsync-3.1.3/rsync.yo rsync-3.1.3.new/rsync.yo
 --- rsync-3.1.3/rsync.yo	2018-01-29 07:24:27.000000000 +0800
-+++ rsync-3.1.3.new/rsync.yo	2018-03-24 11:35:16.711439684 +0800
++++ rsync-3.1.3.new/rsync.yo	2018-03-24 11:45:36.047079032 +0800
 @@ -458,6 +458,7 @@
       --protocol=NUM          force an older protocol version to be used
       --iconv=CONVERT_SPEC    request charset conversion of filenames
@@ -77,7 +65,7 @@ diff -Naur rsync-3.1.3/rsync.yo rsync-3.1.3.new/rsync.yo
  control over, such as the outgoing socket when directly contacting an
 diff -Naur rsync-3.1.3/syscall.c rsync-3.1.3.new/syscall.c
 --- rsync-3.1.3/syscall.c	2018-01-15 11:55:07.000000000 +0800
-+++ rsync-3.1.3.new/syscall.c	2018-03-24 11:35:16.712439697 +0800
++++ rsync-3.1.3.new/syscall.c	2018-03-24 11:45:36.048079042 +0800
 @@ -42,6 +42,7 @@
  extern int preallocate_files;
  extern int preserve_perms;
@@ -97,3 +85,14 @@ diff -Naur rsync-3.1.3/syscall.c rsync-3.1.3.new/syscall.c
  
  	return open(pathname, flags | O_BINARY, mode);
  }
+diff -Naur rsync-3.1.3/trimslash.c rsync-3.1.3.new/trimslash.c
+--- rsync-3.1.3/trimslash.c	2018-01-15 11:55:07.000000000 +0800
++++ rsync-3.1.3.new/trimslash.c	2018-03-26 10:47:06.539752561 +0800
+@@ -30,6 +30,7 @@
+ int preserve_executability = 0;
+ int preallocate_files = 0;
+ int inplace = 0;
++int noatime = 0;
+ 
+ int
+ main(int argc, char **argv)
