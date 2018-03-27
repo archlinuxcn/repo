@@ -6,7 +6,7 @@
 # Contributor: Dario 'Dax' Vilardi <dax [at] deelab [dot] org>
 # Contributor: Anatol Pomozov <anatol.pomozov@gmail.com>
 pkgname=amule-dlp-git
-pkgver=2.3.2.r10453.4f2254308
+pkgver=2.3.2.r10460.0097ba5b1
 pkgrel=1
 pkgdesc="An eMule-like client for ed2k p2p network with DLP patch"
 arch=('i686' 'x86_64')
@@ -18,14 +18,12 @@ makedepends=('git' 'boost')
 optdepends=('antileech')
 install=amule.install
 provides=('amule' 'amule-dlp')
-source=("git+https://github.com/persmule/amule-dlp.git#commit=4f22543087008d29a58a579aff2aab1262b5a5fa"
+source=("git+https://github.com/persmule/amule-dlp.git#commit=0097ba5b1daac27e46c664b067366df402901280"
         'amuled.systemd'
-        'amuleweb.systemd'
-		'crypto++.patch')
+		'amuleweb.systemd')
 sha256sums=('SKIP'
             '6dbdd1ad1c3c3d8637b8f4cbd5416f39c8e4277a2f8498577b08bf6cda8dbca9'
-            'f4f43b1154ddccc9036a4291a58c6715f097b171fec62ea7aead0c9d9fa654f2'
-			'de425a5763a90d2b4302a22299a8d57e2a32bd83c6c427a012a42deaac9378a2')
+			'f4f43b1154ddccc9036a4291a58c6715f097b171fec62ea7aead0c9d9fa654f2')
 
 pkgver() {
   cd "${srcdir}/amule-dlp"
@@ -34,7 +32,6 @@ pkgver() {
 
 prepare(){
   cd "${srcdir}/amule-dlp"
-  patch -p1 -i ../crypto++.patch 
   cp src/aMule.xpm amule.xpm
 }
 
