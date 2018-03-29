@@ -50,10 +50,6 @@ package() {
   cd "$srcdir/pamac-$pkgver/builddir"
   
   DESTDIR="$pkgdir" ninja install
-  # enable systemd timer
-  mkdir -p "$pkgdir/etc/systemd/system/multi-user.target.wants"
-  ln -sf "/usr/lib/systemd/system/pamac-cleancache.timer" "$pkgdir/etc/systemd/system/multi-user.target.wants"
-#  ln -sf "/usr/lib/systemd/system/pamac-mirrorlist.timer" "$pkgdir/etc/systemd/system/multi-user.target.wants"
   # remove pamac-tray-appindicator
 #  rm "$pkgdir/usr/bin/pamac-tray-appindicator"
 #  rm "$pkgdir/etc/xdg/autostart/pamac-tray-appindicator.desktop"

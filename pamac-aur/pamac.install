@@ -1,7 +1,17 @@
 post_install() {
+  # enable systemd timers
+  ln -sf /usr/lib/systemd/system/pamac-cleancache.timer /etc/systemd/system/multi-user.target.wants
+  #ln -sf /usr/lib/systemd/system/pamac-mirrorlist.timer /etc/systemd/system/multi-user.target.wants
+  # polkit agent
   printf '==> An authentication agent is required\n'
   printf '    Cinnamon, Deepin, GNOME, GNOME Flashback, KDE, LXDE, LXQt, MATE and Xfce\n'
   printf '    have an authentication agent already.\n'
   printf '    See https://wiki.archlinux.org/index.php/Polkit#Authentication_agents\n'
   printf '    for other desktop environments.\n'
+}
+
+post_remove() {
+  # disable systemd timers
+  rm -f /etc/systemd/system/multi-user.target.wants/pamac-cleancache.timer
+  #rm -f /etc/systemd/system/multi-user.target.wants/pamac-mirrorlist.timer
 }
