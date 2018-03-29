@@ -4,7 +4,7 @@
 
 _pkgname=vokoscreen
 pkgname=${_pkgname}-git
-pkgver=2.5.8.beta.25.gf68b1f1
+pkgver=2.5.8.beta.31.g6793999
 pkgrel=1
 pkgdesc='An easy to use screencast creator. Development version.'
 arch=('i686' 'x86_64')
@@ -21,12 +21,10 @@ conflicts=("${_pkgname}")
 
 source=(
 	"git+https://github.com/vkohaupt/${_pkgname}.git"
-	'fix_lrelease.patch'
 	'desktop_file.patch'
 )
 sha512sums=(
 	'SKIP'
-	'9e4b70ccca8fd3b2abb5e21a379334fcb79c41383e6362e6f6c984a7c0f52aacbf419524b062c8905bf46846d1ba8a38056e37bb7dc1b139e6a5b6982be9e296'
 	'3ddc567f831b9f6e2672997a77a099cf8fdd5a6a1d79157738c1670c9106fd6c4e09d74287a770c19bac23dcb73a19ce69cc1ac893d4988f75c7ac35668f7a90'
 )
 
@@ -38,9 +36,6 @@ pkgver() {
 
 prepare() {
 	cd "${srcdir}"/${_pkgname}
-
-	# Fix lrelease path
-	patch -Np1 < ../fix_lrelease.patch
 
 	# Desktop entry
 	patch -Np1 < ../desktop_file.patch
