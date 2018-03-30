@@ -2,7 +2,7 @@
 
 pkgbase=goland
 pkgname=(goland goland-jre)
-pkgver=2017.3.3
+pkgver=2018.1
 pkgrel=1
 pkgdesc='Capable and Ergonomic Go IDE'
 arch=('x86_64' 'i686')
@@ -12,7 +12,7 @@ makedepends=('rsync')
 options=('!strip')
 source=(https://download.jetbrains.com/go/${pkgbase}-${pkgver}.tar.gz
         jetbrains-goland.desktop)
-sha512sums=('18bc2be621408107f7bcc8b359f07ee8b933a9357f21d272196b5d04d411a720bb8643ac2788ecdc4ee6313b23a39f60e3a28776622b3355d80a73e3197abee4'
+sha512sums=('f731a1dd9e1c26d318bcf700ca8b7e7ce6c2868e9e65e6ccbf9e9b980bdd484d1faf3a2a0cba16d1c27a42a9cec79c95dc7faf6135d2085bbab248ebe9870149'
             '391167246a98cc82305ffa7d475960b3f58f78d36dee5cda3f318351e5ddf07d3457688713c1fcc2c20f548aeed387e5a9f16c97423bd37bb43bc502082f61eb')
 
 package_goland() {
