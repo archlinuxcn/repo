@@ -13,7 +13,7 @@
 
 pkgname=blender-git
 _pkgname=blender
-pkgver=69868.8a76f8dac34
+pkgver=70009.891c1cfc9a3
 pkgrel=1
 pkgdesc="A fully integrated 3D graphics creation suite, GIT version"
 arch=('x86_64')
@@ -23,8 +23,8 @@ depends=('libpng' 'libtiff' 'openexr' 'python' 'desktop-file-utils' 'python-requ
          'shared-mime-info' 'hicolor-icon-theme' 'xdg-utils' 'glew' 'openjpeg' 'python-numpy'
          'freetype2' 'openal' 'ffmpeg' 'fftw' 'boost-libs' 'opencollada' 'alembic'
          'openimageio' 'libsndfile' 'jack' 'opencolorio' 'openshadinglanguage'
-         'jemalloc' 'libspnav' 'ptex' 'opensubdiv' 'openvdb3' 'log4cplus' 'sdl2')
-makedepends=('cmake' 'boost' 'mesa' 'git' 'llvm35' 'gcc6' 'cuda')
+         'jemalloc' 'libspnav' 'ptex' 'opensubdiv' 'openvdb' 'log4cplus' 'sdl2')
+makedepends=('cmake' 'boost' 'mesa' 'git' 'llvm' 'gcc6' 'cuda')
 optdepends=('cuda: cycles renderer cuda support')
 options=(!strip)
 provides=("blender")
@@ -61,6 +61,7 @@ prepare() {
 
   # cuda 9.1 fixes
   sed -i -e "s/sm_20;//" -e "s/sm_21;//" build_files/cmake/config/blender_release.cmake
+  sed -i "s/OPENVDB_LIBRARY_MAJOR_VERSION_NUMBER == 3/OPENVDB_LIBRARY_MAJOR_VERSION_NUMBER >= 3/g" intern/openvdb/intern/openvdb_writer.cc
 }
 
 build() {
@@ -69,8 +70,8 @@ build() {
   [[ -d build ]] && rm -rf build
   mkdir build && cd build
 
-#  export CFLAGS="${CFLAGS} -DOPENVDB_ABI_VERSION_NUMBER=3"
-#  export CXXFLAGS="${CXXFLAGS} -DOPENVDB_ABI_VERSION_NUMBER=3"
+  export CFLAGS="${CFLAGS} -DOPENVDB_3_ABI_COMPATIBLE"
+  export CXXFLAGS="${CXXFLAGS} -DOPENVDB_3_ABI_COMPATIBLE"
   cmake -C../build_files/cmake/config/blender_release.cmake .. \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
@@ -89,8 +90,7 @@ build() {
     -DPYTHON_VERSION=3.6 \
     -DPYTHON_LIBPATH=/usr/lib \
     -DPYTHON_LIBRARY=python3.6m \
-    -DPYTHON_INCLUDE_DIRS=/usr/include/python3.6m \
-    -DOPENVDB_ROOT_DIR=/opt/openvdb3
+    -DPYTHON_INCLUDE_DIRS=/usr/include/python3.6m
 
   make
 
