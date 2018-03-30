@@ -4,14 +4,13 @@
 pkgbase=webkitgtk
 pkgname=(webkitgtk webkitgtk2)
 pkgver=2.4.11
-pkgrel=11
-epoch=3
+pkgrel=12
 pkgdesc="Legacy Web content engine"
 arch=(i686 x86_64)
 url="https://webkitgtk.org/"
 license=(custom)
 depends=(libxt libxslt sqlite libsoup 'enchant>=2.2' libgl geoclue2 gst-plugins-base-libs
-         libsecret libwebp harfbuzz-icu)
+         libsecret libwebp harfbuzz-icu 'icu>=61')
 makedepends=(gtk3 gtk2 gperf gobject-introspection python2 mesa ruby)
 optdepends=('gst-plugins-base: free media decoding'
             'gst-plugins-good: media decoding'
@@ -25,8 +24,8 @@ source=(https://webkitgtk.org/releases/$pkgbase-${pkgver}.tar.xz
         pkgconfig-enchant-2.patch)
 sha256sums=('588aea051bfbacced27fdfe0335a957dca839ebe36aa548df39c7bbafdb65bf7'
             'ec294bbb5588a1802a68e3615c6718486b22f922645c5fef686d3d103014bf70'
-            'eb791b9c8dcb84996904846dedf8c3ddf1a5fde32330177f3f0071510bd8ca6d'
-            '81a4ad1c921bece16edb9a3cb187096fd8f336db8b89114356119a86f26e3d6d'
+            'a1118b3c9317806438c1e2f46f17e15556aae34665f739ca72b94b10b16ae422'
+            '8db282f3b7f0e21ff51121c2579466c3194475a20d35c4fbd0e53f35b5639919'
             'df8284004f25d189184aab1009df696c915212e0e439a555dbd0dbec06111e2e')
 
 prepare() {

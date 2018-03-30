@@ -8,10 +8,7 @@
  
  #ifdef __cplusplus
  extern "C" {
-@@ -46,7 +47,7 @@
-  character. As with all scalar types, endianness depends on the underlying
-  architecture.
- */
+@@ -46,4 +47,4 @@
 -    typedef unsigned short JSChar;
 +    typedef char16_t JSChar;
  #else
@@ -21,7 +18,7 @@
 +++ webkitgtk-2.16.1/Source/WebKit2/Shared/API/c/WKString.h	2017-04-22 14:35:56.853196170 +0200
 @@ -28,6 +28,7 @@
  
- #include <WebKit/WKBase.h>
+ #include <WebKit2/WKBase.h>
  #include <stddef.h>
 +#include <uchar.h>
  
