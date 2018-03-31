@@ -3,7 +3,7 @@
 # Contributer: auk
 
 pkgname=hyper
-pkgver=2.0.0.canary.11
+pkgver=2.0.0.canary.15
 pkgrel=1
 epoch=
 pkgdesc="A terminal built on web technologies"
@@ -32,7 +32,7 @@ source=(
     "Hyper.desktop"
 )
 noextract=()
-md5sums=('c02e9037fc8e829aa8a7a8135f9771b7'
+md5sums=('eeaa8b0c9abc53d40f4b647f3e9e6ac1'
          'f3481e14cba331160339b3b5ab78872b'
          '74cb7ba38e37332aa8300e4b6ba9c61c')
 validpgpkeys=()
