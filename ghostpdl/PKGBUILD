@@ -16,7 +16,7 @@
 
 set -u
 pkgname='ghostpdl'
-pkgver='9.22'
+pkgver='9.23'
 pkgrel='1'
 pkgdesc='Ghostscript RIP for PS, PDF, PCL-5, PCL-XL, SVG and XPS.'
 arch=('i686' 'x86_64')
@@ -28,13 +28,13 @@ depends=('ghostscript' 'glu' 'freeglut' 'libjpeg' 'libxt')
 _giturl="https://github.com/ArtifexSoftware/${pkgname}-downloads"
 _verwatch=("${_giturl}/releases.atom" '\s\+<title>Ghostscript/GhostPDL \([0-9\.]\+\)</title>.*' 'f')
 source=("${_giturl}/releases/download/gs${pkgver//./}/${pkgname}-${pkgver}.tar.xz")
-sha256sums=('f4e46bc1f8285a61ab036007705fc2b532cc40f4448fe6bc156bd130733f306b')
+sha256sums=('0d714d08fe419373eecd2448036dba640353ee521d2e8e41ab5cbfc7f3298313')
 
 prepare() {
   set -u
   cd "${pkgname}-${pkgver}"
   # get rid of a harmless shell warning
-  sed -i -e 's:^\(if test \)\($ac_cv_c_compiler_gnu\)\( = yes; then\)$:\1"\2"\3:g' 'configure'
+  sed -e 's:^\(if test \)\($ac_cv_c_compiler_gnu\)\( = yes; then\)$:\1"\2"\3:g' -i 'configure'
   ./configure --prefix='/usr'
   set +u
 }
@@ -42,7 +42,8 @@ prepare() {
 build() {
   set -u
   cd "${pkgname}-${pkgver}"
-  make -s -j "$(nproc)"
+  local _nproc="$(nproc)"; _nproc=$((_nproc>8?8:_nproc))
+  make -s -j "${_nproc}"
   set +u
 }
 
