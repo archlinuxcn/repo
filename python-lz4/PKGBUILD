@@ -1,21 +1,24 @@
 # Maintainer: Nissar Chababy <funilrys at outlook dot com>
+# Co-Maintainer: Thrasibule <guillaume dot horel at gmail dot com>
 # Ex-Maintainer: David Manouchehri <manouchehri@riseup.net>
 # Contributor: Vladimir Tsanev <tsachev@gmail.com>
 # Contributor: Andrew Reed <reed.996@osu.edu>
 
 pkgname=python-lz4
-pkgver=0.21.6
-pkgrel=2
+_pkgname=lz4
+pkgver=1.0.0
+pkgrel=3
 pkgdesc="LZ4 Bindings for Python"
-arch=('any')
+arch=('x86_64')
 url="https://pypi.python.org/pypi/lz4"
 license=('BSD')
-makedepends=('python-distribute' 'python-setuptools' 'python-setuptools-scm')
-depends=('python3')
-source=("https://pypi.python.org/packages/b8/22/4e5cff49209da0b95407569a0a447dc7fb75226acf38e98ecf23cbba2f42/lz4-$pkgver.tar.gz")
-md5sums=('775f2040423816264bbb9531a00b1a9d')
+makedepends=('python-distribute' 'python-setuptools')
+depends=('python' 'python-deprecation')
+checkdepends=('python-pytest')
+source=("https://pypi.org/packages/source/${_pkgname:0:1}/$_pkgname/${_pkgname}-${pkgver}.tar.gz")
+md5sums=('420e428921f02ebcb4dc8c40a9d0f484')
 
 package() {
-  cd $srcdir/lz4-$pkgver
-  python3 setup.py install --root=$pkgdir || return 1
+  cd ${srcdir}/${_pkgname}-${pkgver}
+  python setup.py install --root=${pkgdir} || return 1
 }
