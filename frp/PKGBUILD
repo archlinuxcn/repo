@@ -2,16 +2,16 @@
 
 pkgname=frp
 pkgver=0.16.1
-pkgrel=2
+pkgrel=3
 pkgdesc="A fast reverse proxy to help you expose a local server behind a NAT or firewall to the internet."
 license=('Apache')
 url="https://github.com/fatedier/frp"
 source=(frps.service frpc.service frps@.service frpc@.service "https://github.com/fatedier/frp/releases/download/v${pkgver}/frp_${pkgver}_linux_amd64.tar.gz")
 arch=('x86_64')
 md5sums=('6f9c6681357f3f984983457151d7f0c5'
-         'd704eacd9f769de32c8ab2c875d9f34a'
+         'e3bfa7c428433fa6cbb5aa64515d8899'
          '50364b050ca08f47b7afe305f528eaa2'
-         'aa40573c08f791bfd73900f95bc136ce'
+         '7aaf36865c656232b441e7bbaf2993dd'
          '2715de9dac4a2da4817de9dd285ca600')
 install=$pkgname.install
 
