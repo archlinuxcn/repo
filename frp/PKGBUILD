@@ -2,21 +2,35 @@
 
 pkgname=frp
 pkgver=0.16.1
-pkgrel=3
+pkgrel=4
 pkgdesc="A fast reverse proxy to help you expose a local server behind a NAT or firewall to the internet."
 license=('Apache')
 url="https://github.com/fatedier/frp"
-source=(frps.service frpc.service frps@.service frpc@.service "https://github.com/fatedier/frp/releases/download/v${pkgver}/frp_${pkgver}_linux_amd64.tar.gz")
-arch=('x86_64')
+arch=('x86_64' 'i686' 'arm')
+source=(frps.service frpc.service frps@.service frpc@.service)
+source_x86_64=("https://github.com/fatedier/frp/releases/download/v${pkgver}/frp_${pkgver}_linux_amd64.tar.gz")
+source_i686=("https://github.com/fatedier/frp/releases/download/v${pkgver}/frp_${pkgver}_linux_386.tar.gz")
+source_arm=("https://github.com/fatedier/frp/releases/download/v${pkgver}/frp_${pkgver}_linux_arm.tar.gz")
 md5sums=('6f9c6681357f3f984983457151d7f0c5'
-         'e3bfa7c428433fa6cbb5aa64515d8899'
-         '50364b050ca08f47b7afe305f528eaa2'
-         '7aaf36865c656232b441e7bbaf2993dd'
-         '2715de9dac4a2da4817de9dd285ca600')
+'e3bfa7c428433fa6cbb5aa64515d8899'
+'50364b050ca08f47b7afe305f528eaa2'
+'7aaf36865c656232b441e7bbaf2993dd')
+md5sums_x86_64=('2715de9dac4a2da4817de9dd285ca600')
+md5sums_i686=('1297a23e3344b64820dd3699a2d0f187')
+md5sums_arm=('e3dc3a7b23ec514e9dd4e424aff5264f')
 install=$pkgname.install
 
 package() {
-    frpdir=$srcdir/frp_${pkgver}_linux_amd64
+    case $CARCH in
+        x86_64)ARCH=amd64
+            ;;
+        i686)ARCH=386
+            ;;
+        arm)ARCH=arm
+            ;;
+    esac
+    frpdir=$srcdir/frp_${pkgver}_linux_${ARCH}
+
     mkdir -p $pkgdir/usr/bin
     install -m755  $frpdir/frpc $pkgdir/usr/bin/frpc
     install -m755  $frpdir/frps $pkgdir/usr/bin/frps
