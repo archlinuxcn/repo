@@ -4,45 +4,57 @@
 # Contributor: Mark Schneider <queueRAM@gmail.com>
 
 pkgname=gnucash
-pkgver=2.6.19
-pkgrel=2
+pkgver=3.0
+pkgrel=3
 pkgdesc="A personal and small-business financial-accounting application"
 arch=('i686' 'x86_64')
 url="http://www.gnucash.org"
 license=("GPL")
-depends=('guile2.0' 'slib' 'goffice0.8' 'libdbi-drivers' 'libmariadbclient' 'postgresql-libs' 'aqbanking' 'desktop-file-utils' 'webkitgtk2' 'libgnome-keyring' 'libgnomecanvas' 'dconf')
-makedepends=('intltool')
-optdepends=('evince: for print preview'
-	    'yelp: help browser'
-            'perl-finance-quote: for stock information lookups'
-            'perl-date-manip: for stock information lookups')
+depends=('libmariadbclient' 'postgresql-libs' 'aqbanking' 'webkit2gtk' 'boost-libs' 'libsecret' 'libdbi-drivers')
+makedepends=('boost' 'gmock' 'gwenhywfar' 'cmake')
+optdepends=(
+	'gnucash-docs: for documentation'
+	'iso-codes: for translation of currency names'
+	'perl-finance-quote: for stock information lookups'
+	'perl-date-manip: for stock information lookups'
+)
 options=('!makeflags' '!emptydirs')
+source=(
+	http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-${pkgver}.tar.bz2
+)
+sha1sums=('a575e853668b93b34dcd94f0ef0d1fee25b0165f')
+sha256sums=('4c754476a5b80a97abacaeadac64fefc5a68fcfec15967908dbe3c9f7370dbb9')
+sha512sums=('5ec13b8abe1520a7e614ceeca4c41d5dba3ebae4ec965918584963022ceb5cb3b85862289a85a72767db74a0c735214a78342a53c37e6da939ff850538174a87')
 backup=(
 	'etc/gnucash/config'
 	'etc/gnucash/environment'
-) 
-source=(https://github.com/Gnucash/${pkgname}/releases/download/${pkgver}/${pkgname}-${pkgver}.tar.bz2)
-sha1sums=('d2ae5c7855fac30d88fe889d47a441e8a887b19c')
-sha256sums=('50b89367246ec2d51e9765bd6bd8c669e35ceb4ac5ab92636f76758a9f3f7fd1')
-sha512sums=('0a979caf48ba96d6f37a929036e7172855cfb03af8832f479966bce72fad3400903925134d33aaa31eb6b36a2041f5e0d3f74b88e95b83c7d76e96b1503bec13')
+)
+
+prepare() {
+  cd "${srcdir}"
+
+  mkdir build
+  cd build
+  cmake	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=/usr/lib \
+	-DCMAKE_INSTALL_LIBEXECDIR=/usr/lib \
+	-DCOMPILE_GSCHEMAS=NO \
+	-DWITH_OFX=ON \
+	-DWITH_AQBANKING=ON \
+	"${srcdir}/${pkgname}-${pkgver}"
+
+}
 
 build() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  ./configure --prefix=/usr --mandir=/usr/share/man --sysconfdir=/etc \
-    --libexecdir=/usr/lib --disable-schemas-compile --enable-ofx --enable-aqbanking
-  make GUILD=/usr/bin/guild2.0
+  cd "${srcdir}/build"
+
+  make -j$(nproc)
 }
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  make GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1 DESTDIR="${pkgdir}" install
-  cd src/doc/design
-  make DESTDIR="${pkgdir}" install-info
-
-  install -dm755 "${pkgdir}/usr/share/gconf/schemas"
-  gconf-merge-schema "${pkgdir}/usr/share/gconf/schemas/${pkgname}.schemas" --domain gnucash "${pkgdir}"/etc/gconf/schemas/*.schemas
-  rm -f "${pkgdir}"/etc/gconf/schemas/*.schemas
-
+  cd "${srcdir}/build"
+  make DESTDIR="${pkgdir}" install
+  
   # Delete the gnucash-valgrind executable because the source files
   # are not included with the package and the executable is hardlinked
   # to the location that it was built at.
