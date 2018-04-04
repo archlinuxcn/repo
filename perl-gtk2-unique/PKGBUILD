@@ -2,11 +2,12 @@
 # Contributor: Crotok <crotok [at] mailbox [dot] org>
 # Contributor: Felix Yan <felixonmars@archlinux.org>
 # Contributor: Brian Bidulock <bidulock@openss7.org>
+# Contributor: Michael Kogan <michael dot kogan at gmx dot net>
 
 pkgname=perl-gtk2-unique
 _cpanname=Gtk2-Unique
 pkgver=0.05
-pkgrel=21
+pkgrel=22
 pkgdesc="Perl bindings for the C library libunique"
 arch=('i686' 'x86_64')
 url="https://metacpan.org/release/${_cpanname}"
@@ -16,13 +17,16 @@ depends=('perl' 'gtk2-perl' 'libunique')
 checkdepends=('xorg-server-xvfb')
 options=('!emptydirs')
 source=("http://search.cpan.org/CPAN/authors/id/P/PO/POTYL/${_cpanname}-${pkgver}.tar.gz"
-        "$pkgname.patch")
+        "$pkgname.patch"
+		"fix_segfault_2nd_instance.patch")
 md5sums=('0beb552933b765a017588563a71af123'
-         'f8e15e1b93e2629e1745f8e4de8524ff')
+         'f8e15e1b93e2629e1745f8e4de8524ff'
+         'b509a893e15c614dc668348c89e83c2d')
 
 build() {
   cd  $_cpanname-$pkgver
   patch -Np1 -i ../$pkgname.patch
+  patch -Np1 -i ../fix_segfault_2nd_instance.patch
   PERL_MM_USE_DEFAULT=1 perl Makefile.PL INSTALLDIRS=vendor
   sed -e 's,q(build/doc.pl),q(./build/doc.pl),g' -i Makefile
   make
