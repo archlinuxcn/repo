@@ -2,22 +2,18 @@ post_install() {
   # Create chrome-remote-desktop group
   [[ $(cat /etc/group) == *chrome-remote-desktop* ]] || groupadd -r chrome-remote-desktop
 
-  echo "Set up CRD by issuing the command:"
-  echo "crd --setup"
-  echo "as a normal user."
-  echo ""
-  echo "After that, enable access to CRD in your chrome or chromium browser."
-  echo ""
-  echo "To {enable,start} the service, issue the command:"
-  echo "systemctl --user {enable,start} chrome-remote-desktop"
-  echo "This only really makes sense for servers."
-  echo ""
-  echo "You can also start the chrome remote desktop server by issuing the command:"
-  echo "crd"
-  echo "as a normal user. "
-  echo "This will prompt you to set up your CRD if it hasn't been set up already."
-  echo ""
-  echo "Go to https://support.google.com/chrome/answer/1649523 for more information."
+  printf "$(tput setaf 4)Set up CRD by issuing the command:$(tput sgr0)\n"
+  printf "$(tput setaf 2)crd --setup$(tput sgr0)\n"
+  printf "$(tput setaf 4)as a normal user.$(tput sgr0)\n\n"
+  printf "$(tput setaf 4)After that, enable access to CRD in your chrome or chromium browser.$(tput sgr0)\n\n"
+  printf "$(tput setaf 4)To {enable,start} the service, issue the command:$(tput sgr0)\n"
+  printf "$(tput setaf 2)systemctl --user {enable,start} chrome-remote-desktop$(tput sgr0)\n"
+  printf "$(tput setaf 4)This only really makes sense for servers.$(tput sgr0)\n\n"
+  printf "$(tput setaf 4)You can also start the chrome remote desktop server by issuing the command:$(tput sgr0)\n"
+  printf "$(tput setaf 2)crd --start$(tput sgr0)\n"
+  printf "$(tput setaf 4)as a normal user. $(tput sgr0)\n"
+  printf "$(tput setaf 4)This will prompt you to set up your CRD if it hasn't been set up already.$(tput sgr0)\n\n"
+  printf "$(tput setaf 4)Go to https://support.google.com/chrome/answer/1649523 for more information.$(tput sgr0)\n"
 }
 
 post_upgrade() {
@@ -25,7 +21,5 @@ post_upgrade() {
 }
 
 post_remove() {
-  echo ""
-  echo "Please remove ~/.config/chrome-remote-desktop folder manually"
-  echo ""
+  printf "\n$(tput setaf 4)Please remove ~/.config/chrome-remote-desktop folder manually$(tput sgr0)\n\n"
 }
