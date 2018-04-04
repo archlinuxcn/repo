@@ -3,9 +3,8 @@
 # Contributor: Michael Goehler <somebody dot here at gmx dot de>
 
 pkgname=remarkable
-replaces=('remarkable-webkit2gtk')
 pkgver=1.87
-pkgrel=3
+pkgrel=4
 pkgdesc="A free fully featured markdown editor for Linux."
 arch=('any')
 url="http://remarkableapp.github.io"
@@ -26,18 +25,12 @@ optdepends=('python-lxml: export to HTML format support'
 
 install="remarkable.install"
 source=("https://github.com/jamiemcg/Remarkable/archive/v${pkgver}.tar.gz"
-        "0003-fixes-184-port-to-WebKit2Gtk.patch"
-        "0004-fixes-175-Live-Preview-Mode-Executes-JavaScript.patch"
-        "remarkable.patch"
-        "remarkable.install"
-        "LICENSE")
+        "stable.patch::https://github.com/jamiemcg/Remarkable/compare/v1.87...mbloms:stable.patch"
+        "remarkable.install")
 
 sha1sums=('a492dc5d0a276f36846a99287ae93c02e22a5cd8'
-          '097f12a6f499bd39b99c32301a9027a9457eaeac'
-          'd90a26e2830f0306a07b76dc69aa211840f0223e'
-          'd9fc74c5a0136649f670a345e16c1c88d21a97d2'
-          'bdbfb750df9e5fb3022f47a46a80555259628cd1'
-          '6e5ea06076c85fdd25b79bfc41588f7f7ee9ba29')
+          'c91182e1521927e02328eb407a4e4f1ad910d16d'
+          'bdbfb750df9e5fb3022f47a46a80555259628cd1')
 
 prepare() {
     msg2 "Applying patches for webkit2gtk..."
@@ -48,10 +41,11 @@ package() {
     _python_site=$(python -c 'import site; print(site.getsitepackages()[0]);')
     [ -z ${_python_site} ] && echo "error: could not identify python site_packages directory" && return 1
 
-    install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
     
     cd "Remarkable-${pkgver}"
 
+    install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+    
     install -Dm 755 "bin/remarkable" "${pkgdir}/usr/bin/remarkable"
     install -D "debian/remarkable.mime" "${pkgdir}/usr/lib/mime/packages/remarkable"
     install -D "data/media/remarkable.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/remarkable.svg"
