@@ -3,7 +3,7 @@
 # Contributor: robb_force <robb_force@holybuffalo.net>
 
 pkgname=raine-git
-pkgver=1273.249da32
+pkgver=1311.e4fb6dd
 _pkgver=0.64.13
 pkgrel=1
 pkgdesc="A multiple arcade emulator focused on 680x0 machines like NeoCD and Neo Geo"
@@ -21,11 +21,9 @@ optdepends=('raine-artwork: additional background graphics for some games'
             'arcade-history-dat: database with various information about the loaded rom'
             'arcade-command-dat: database with button combinations for special moves in (mostly fighting) games')
 source=(git://github.com/zelurker/raine
-        "$url/archive/debian/dists/unstable/main/binary-i386/raine_${_pkgver}_i386.deb"
-        "raine-gcc7-abs.patch")
+"$url/archive/debian/dists/unstable/main/binary-i386/raine_${_pkgver}_i386.deb")
 sha256sums=('SKIP'
-            '71414fc61c1d26eeccfab4f7319ba9efce19b8276151d3a119fd86c3db0a172b'
-            '396eecb13c8546b55f98094a69dbe8ccab79855e2a3eca58397aedc72308bd59')
+'71414fc61c1d26eeccfab4f7319ba9efce19b8276151d3a119fd86c3db0a172b')
 options=('emptydirs')
 provides=('raine')
 conflicts=('raine')
@@ -58,9 +56,6 @@ prepare() {
   # 'detect-cpu' script does not recognize most recent cpus, use generic optimizing
   echo "_MARCH=-march=${CARCH/x86_64/x86-64} -mtune=generic" > cpuinfo
   echo "CPU=generic" >> cpuinfo
-
-  # gcc7 compatibility
-  patch -p1 < "$srcdir"/raine-gcc7-abs.patch
 }
 
 build() {
