@@ -8,7 +8,7 @@
 WINEPREFIX="$HOME/.deepinwine/Deepin-QQ"
 APPDIR="/opt/deepinwine/apps/Deepin-QQ"
 APPVER="8.9.19983deepin18"
-QQVER="8.9.3"
+QQVER="8.9"
 APPTAR="files.7z"
 PACKAGENAME="deepin.com.qq.im"
 
