@@ -7,7 +7,7 @@
 
 pkgname=rubymine
 _pkgname=RubyMine
-pkgver=2017.3.3
+pkgver=2018.1
 pkgrel=1
 pkgdesc="Ruby and Rails IDE with the full stack of essential developer tools."
 arch=('i686' 'x86_64')
@@ -20,7 +20,7 @@ install=rubymine.install
 source=(https://download.jetbrains.com/ruby/${_pkgname}-${pkgver}.tar.gz
         rubymine.desktop
         rubymine.install)
-sha256sums=('93f1d3f9a7f93ae9bc86eac495ca60a2572b95a28466ae43cd9773f4d8451eac'
+sha256sums=('b0fcc72ba3d47691aa659f91b0408e49dd7e0afd564a546fa06f761b335a7561'
             '72df0e7c605caf7b6c98e9335f4eee9c8bfe8fcc24523634fd8c1ebe019534d6'
             '7ecadddf2b315b22df3a5c7b90e18be7ea69e2a0d869ee18bf0e031b2c508f76')
 
@@ -67,9 +67,9 @@ package() {
     ln -s "/usr/share/${pkgname}/bin/${pkgname}.sh" "${pkgdir}/usr/bin/jetbrains-${pkgname}"
 
     #License
-    #install -Dm644 "${srcdir}/${_pkgname}-${pkgver}/license/${_pkgname}_license.txt" "${pkgdir}/usr/share/licenses/${pkgname}/license.txt"
-    install -Dm644 "${srcdir}/${_pkgname}-${pkgver}/license/debug-commons_license.txt" "${pkgdir}/usr/share/licenses/${pkgname}/debug-commons_license.txt"
-    install -Dm644 "${srcdir}/${_pkgname}-${pkgver}/license/LLDB-license.txt" "${pkgdir}/usr/share/licenses/${pkgname}/LLDB-license.txt"
+    install -dm755 "$pkgdir/usr/share/licenses/$pkgname"
+    find "$srcdir/$_pkgname-$pkgver/license/" -type f -exec \
+        install -Dm644 '{}' "$pkgdir/usr/share/licenses/$pkgname/" \;
 
     #Java config
     sed -i 's/lcd/on/' "${pkgdir}/usr/share/rubymine/bin/rubymine${SUFFIX}.vmoptions"
