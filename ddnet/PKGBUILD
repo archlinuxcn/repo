@@ -2,13 +2,14 @@
 
 pkgname=ddnet
 pkgver=11.1.2
-pkgrel=1
+pkgrel=2
 pkgdesc="DDraceNetwork, a mod of Teeworlds"
 arch=('x86_64')
 url="https://ddnet.tw"
 license=('custom:BSD' 'CCPL:by-nc-sa')
 depends=('alsa-lib' 'sdl2' 'freetype2' 'opusfile' 'curl' 'glew' 'wavpack')
-makedepends=('cmake' 'imagemagick' 'gendesk' 'python' 'gtest')
+makedepends=('cmake' 'imagemagick' 'gendesk' 'python')
+checkdepends=('gtest')
 optdepends=('ddnet-skins: more skins for your tee'
             'ddnet-maps-git: have all DDNet maps available offline')
 provides=('teeworlds-ddnet')
@@ -40,6 +41,11 @@ build() {
     cd build
     cmake ../DDNet-$pkgver -DCMAKE_BUILD_TYPE=Release
     make all tools
+}
+
+check() {
+    cd build
+    make -k run_tests
 }
 
 package() {
