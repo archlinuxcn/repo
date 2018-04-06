@@ -1,14 +1,14 @@
 _pkgname=pathspec
 pkgname=python-pathspec
-pkgver=0.5.5
+pkgver=0.5.6
 pkgrel=1
 pkgdesc="Utility library for gitignore style pattern matching of file paths."
 arch=('any')
 url="https://github.com/cpburnz/python-path-specification"
 license=('MPL')
 depends=('python' 'python-setuptools')
-source=('https://pypi.python.org/packages/9f/fb/5a901a3b1eeebf83af6da74ecca69d7daf5189e450f0f4cccf9c19132651/pathspec-0.5.5.tar.gz')
-md5sums=('3c45b031b63d2bdd65b8d5e85bd269d9')
+source=('https://pypi.python.org/packages/5e/59/d40bf36fda6cc9ec0e2d2d843986fa7d91f7144ad83e909bcb126b45ea88/pathspec-0.5.6.tar.gz')
+md5sums=('63551c99b88e02c83290becfc5e1fc31')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
