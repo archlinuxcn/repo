@@ -4,7 +4,7 @@
 
 pkgname=dkms-sorted
 pkgver=2.5
-pkgrel=1
+pkgrel=2
 pkgdesc='Dynamic Kernel Modules System (modified alpm hook to handle dependencies) - experimental'
 arch=('any')
 url='https://github.com/dell/dkms'
@@ -21,7 +21,7 @@ source=("git+https://github.com/dell/dkms.git#tag=v${pkgver}"
         'dkms-remove.hook'
         'alpm-hook'
         '0001-Revert-Make-newly-installed-modules-available-immedi.patch')
-provides=('dkms')
+provides=("dkms=${pkgver}")
 conflicts=('dkms')
 sha256sums=('SKIP'
             '6f2fe43f98cd3e043330e599689d3471108e5022ca7edf69ad645f609ccc33ac'
