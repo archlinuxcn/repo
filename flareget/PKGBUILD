@@ -2,8 +2,8 @@
 # Maintainer: Marc Rozanc <marc AT rozanc D0T fr>
 
 pkgname=flareget
-_rel=4.6
-_subrel=104
+_rel=4.7
+_subrel=106
 pkgver=${_rel}.${_subrel}
 pkgrel=3
 pkgdesc="A full featured, advanced, multi-threaded, multisegment download manager and accelerator."
@@ -16,8 +16,8 @@ backup=('etc/opt/chrome/native-messaging-hosts/com.flareget.flareget.json'
         'etc/chromium/native-messaging-hosts/com.flareget.flareget.json')
 source_i686=("https://flareget.com/downloads/files/flareget/rpm/i386/${pkgname}-${_rel}-${_subrel}.i386.rpm")
 source_x86_64=("https://flareget.com/downloads/files/flareget/rpm/amd64/${pkgname}-${_rel}-${_subrel}.x86_64.rpm")
-sha256sums_i686=("6b1cba7c86099663c7e74592242ad27b1852427e7b3aa795bef8680926617cae")
-sha256sums_x86_64=("ba2ad01d8ed625e5779b9a2e974f5b8fb91c040b8bc976294798240d534d4e2c")
+sha256sums_i686=("7368ef73d71cc76b554a03e4562b9c2ae6fe341966012eb5a79357b5bdce5480")
+sha256sums_x86_64=("82eea01ac4754bf14d6ffec7ed8216c5df605fa3b1861a8c69dde95ddf9990c1")
 
 package() {
     cd $srcdir
