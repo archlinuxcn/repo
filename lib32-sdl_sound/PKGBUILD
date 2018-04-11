@@ -5,7 +5,7 @@
 
 pkgname=lib32-sdl_sound
 pkgver=1.0.3
-pkgrel=6
+pkgrel=7
 pkgdesc="A library to decode several popular sound file formats, such as .WAV and .MP3 (32 bit)"
 arch=('x86_64')
 url="http://icculus.org/SDL_sound/"
@@ -14,6 +14,11 @@ depends=('lib32-sdl' 'lib32-libmikmod' 'libvorbis' 'lib32-flac' 'lib32-speex' 'l
          'lib32-libmodplug' 'sdl_sound')
 source=("http://icculus.org/SDL_sound/downloads/SDL_sound-$pkgver.tar.gz")
 sha256sums=('3999fd0bbb485289a52be14b2f68b571cb84e380cc43387eadf778f64c79e6df')
+
+prepare() {
+  # renamed since physfs 2.1.1
+  sed 's/__EXPORT__/PHYSFS_DECL/g' -i SDL_sound-$pkgver/playsound/physfsrwops.h
+}
 
 build() {
   cd SDL_sound-$pkgver
