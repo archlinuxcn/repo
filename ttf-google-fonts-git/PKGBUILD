@@ -1,4 +1,4 @@
-# Maintainer: Andrew Crerar <andrew (at) crerar (dot) io>
+# Maintainer: Andrew Crerar <crerar@archlinux.org>
 # Contributor: Mohammadreza Abdollahzadeh <morealaz at gmail dot com>
 # Contributor: FadeMind <fademind@gmail.com>
 # Contributor: Vlad M. <vlad@archlinux.net>
@@ -9,7 +9,7 @@
 # Contributor: Alexander De Sousa <archaur.xandy21@spamgourmet.com>
 
 pkgname=ttf-google-fonts-git
-pkgver=r1221.5f860df5
+pkgver=r1249.98670058
 pkgrel=1
 epoch=1
 pkgdesc="TrueType fonts from the Google Fonts project (git version)"
@@ -116,17 +116,14 @@ package() {
 
   done < <(find "$srcdir" -type f -iname \*.ttf -print0)
 
-  # NOTE: Since the cwtex* Chinese font family has special characters we need to change
+  # NOTE: Since the nanum* and hanna Korean font families have special characters we need to change
   # those folder names to prevent errors during package compression.
-  mv "$pkgdir"/usr/share/fonts/cwtex-仿宋體 "$pkgdir"/usr/share/fonts/cwtex-fangsong
-  mv "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE.cwtex-仿宋體 "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE.cwtex-fangsong
+  mv "$pkgdir"/usr/share/fonts/배달의민족-한나 "$pkgdir"/usr/share/fonts/bm-hanna_ttf
+  mv "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE.배달의민족-한나 "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE.bm-hanna_ttf
 
-  mv "$pkgdir"/usr/share/fonts/cwtex-楷書 "$pkgdir"/usr/share/fonts/cwtex-kai
-  mv "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE.cwtex-楷書 "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE.cwtex-kai
+  mv "$pkgdir"/usr/share/fonts/나눔명조 "$pkgdir"/usr/share/fonts/nanum-myeongjo
+  mv "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE.나눔명조 "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE.nanum-myeongjo
 
-  mv "$pkgdir"/usr/share/fonts/cwtex-明體 "$pkgdir"/usr/share/fonts/cwtex-ming
-  mv "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE.cwtex-明體 "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE.cwtex-ming
-
-  mv "$pkgdir"/usr/share/fonts/cwtex-圓體 "$pkgdir"/usr/share/fonts/cwtex-yen
-  mv "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE.cwtex-圓體 "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE.cwtex-yen
+  mv "$pkgdir"/usr/share/fonts/나눔고딕 "$pkgdir"/usr/share/fonts/nanum-gothic
+  mv "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE.나눔고딕 "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE.nanum-gothic
 }
