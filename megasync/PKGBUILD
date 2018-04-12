@@ -6,7 +6,7 @@
 
 pkgname=megasync
 pkgver=3.6.0.0
-pkgrel=2
+pkgrel=3
 pkgdesc="Sync your files to your Mega account. Official app"
 arch=('i686' 'x86_64')
 url="https://github.com/meganz/megasync"
