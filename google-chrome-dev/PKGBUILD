@@ -36,7 +36,7 @@ md5sums=('SKIP'
 #md5sums[0]='80146dce3fc2c1f9e0678c754649f4e9'
 
 pkgver () {
-    curl -s https://dl.google.com/linux/chrome/rpm/stable/x86_64/repodata/other.xml.gz | gzip -df | awk -F\" '/pkgid/{ sub(".*-","",$4); print $4": "$10 }' | sed -n '/unstable/, +1p' | sed 's/unstable: //g'
+    curl -s https://dl.google.com/linux/chrome/rpm/stable/x86_64/repodata/other.xml.gz | gzip -df | awk -F\" '/pkgid/{ sub(".*-","",$4); print $4": "$10 }' | sed -n '/unstable/, +0p' | sed 's/unstable: //g'
 }
 
 package() {
