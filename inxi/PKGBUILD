@@ -3,7 +3,7 @@
 # Contributor: Florian Pritz <f-p@gmx.at>
 
 pkgname=inxi
-pkgver=2.9.12
+pkgver=3.0.03
 pkgrel=1
 pkgdesc="script to get system information"
 arch=('any')
@@ -27,31 +27,11 @@ optdepends=(
   "xorg-xrandr: inxi -G single screen resolution"
 )
 options=('zipman')
-_commit=e43933452fb8f99fee31a26d7adf03b670c5ffab
-source=("$pkgname-$pkgver.tar.gz::$url/archive/$_commit.tar.gz")
-sha256sums=('b6c041bff3189bfc662eb72eb7ba3ca9bb19c408e4ababaeea723a91e5198224')
-
-pkgver() {
-    cd "${pkgname}-${_commit}"
-
-    # change version
-    awk '/self_version=/ {print $2}' inxi | cut -c 16-21
-}
-
-prepare() {
-    cd "${pkgname}-${_commit}"
-    
-    # temp move inxi to pinxi
-    mv inxi pinxi
-
-    # patches here
-
-    # temp move pinxi back to inxi
-    mv pinxi inxi
-}
+source=("${pkgname}-${pkgver}::https://github.com/smxi/inxi/archive/${pkgver}-1.tar.gz")
+sha256sums=('80f2fef56567311dcae9a70c7d592cbc516c4000a643a5a9b938a28c12c5a90d')
 
 package() {
-    cd "${pkgname}-${_commit}"
+  cd "${pkgname}-${pkgver}-1"
   install -D -m755 $pkgname "${pkgdir}/usr/bin/$pkgname"
   install -D -m755 $pkgname.1 "${pkgdir}/usr/share/man/man1/$pkgname.1"
 }
