@@ -13,7 +13,7 @@ set -x
 
 sed -i "s/^pkgver=.*\$/pkgver=${VERSION}/" PKGBUILD
 updpkgsums
-mksrcinfo
+makepkg --printsrcinfo > .SRCINFO
 git add .
 git commit -m "Upgrade to v${VERSION}"
 makepkg
