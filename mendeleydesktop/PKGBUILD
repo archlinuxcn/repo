@@ -2,7 +2,7 @@
 
 pkgname=mendeleydesktop
 pkgver=1.18
-pkgrel=1
+pkgrel=2
 pkgdesc="Academic software for managing and sharing research papers (desktop client)"
 url=http://www.mendeley.com/release-notes/
 arch=(i686 x86_64)
@@ -53,9 +53,10 @@ package() {
 
     #Remove unneeded lines if gconf is not installed.
     if ! which gconftool-2 &>/dev/null;then
-    sed -i '6d;74d;75d' \
+    sed -i  '/GCONF/d' \
         "$pkgdir"/opt/"$pkgname"/bin/install-mendeley-link-handler.sh
     fi
+    sed -i 's/Exec=/&LD_LIBRARY_PATH=\/opt\/mendeleydesktop\/lib\/mendeleydesktop\/plugins\/platforms /' "$pkgdir"/opt/"$pkgname"/bin/install-mendeley-link-handler.sh
     #force mendeley to use bundled qt because which under qt 4.8 crashes at start point
     #make sure you remove any old versions of ".desktop" file of mendeley in ~/.local/share/applications/
 #    sed -i 's/^Exec.*$/& --force-bundled-qt/' "$pkgdir"/opt/"$pkgname"/share/applications/mendeleydesktop.desktop
