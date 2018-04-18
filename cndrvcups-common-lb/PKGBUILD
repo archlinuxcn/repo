@@ -1,119 +1,164 @@
-# Maintainer : Lone_Wolf lonewolf@xs4all.nl
+# Maintainer:  Chris Severance aur.severach aATt spamgourmet dott com
+# Maintainer:  Lone_Wolf <lonewolf@xs4all.nl>
 # Contributor: Steven She <mintcoffee@gmail.com>
-# Contributor: vbPadre <vbpadre@gmail.com>
+# Contributor: vbPadre <vbPadre@gmail.com>
 
-pkgbase=cndrvcups-common-lb
-pkgname=cndrvcups-common-lb
+# TODO: cndrvcups-common-lb and cndrvcups-lb should be a single split package
+
+set -u
+pkgbase='cndrvcups-common-lb'
+pkgname="${pkgbase}"
 # used this name to avoid conflict with the existing cndrvcups-common (no longer in aur) which was wrong version for cndrvcups-lb
-_pkgname=cndrvcups-common
-pkgver=3.80
-pkgrel=1
-pkgdesc="Common printer driver modules for cndrvcups-lb package, built from source"
+#_pkgname='cndrvcups-common'
+#_pkgver='3.40'; _commonver='3.80'; _dl='8/0100002708/17'
+_pkgver='3.50'; _commonver='3.90'; _dl='8/0100007658/05'
+pkgver="${_commonver}"
+pkgrel='1'
+pkgdesc='common printer driver modules for cndrvcups-lb package, built from source'
 arch=('i686' 'x86_64')
-url="http://support-au.canon.com.au/contents/AU/EN/0100270808.html"
+# Direct links to the download reference go bad on the next version. We want something that will persist for a while.
+url='https://www.canon.co.uk/for_work/products/office_print_copy_solutions/office_black_white/imagerunner_1730i/'
+#url='https://www.usa.canon.com/internet/portal/us/home/support/details/printers/black-and-white-laser/mf212w/imageclass-mf212w'
 license=('GPL' 'MIT' 'custom')
-depends_i686=('libglade' 'gcc-libs')
-depends_x86_64=('libglade' 'lib32-gcc-libs')
-makedepends=('automake' 'autoconf' 'glib2' 'gtk2')
-conflicts=('cndrvcups-lb-bin')
-# http://gdlp01.c-wss.com/gds/8/0100002708/17/linux-UFRII-drv-v340-uken.tar.gz
-source=(http://gdlp01.c-wss.com/gds/8/0100002708/17/linux-UFRII-drv-v340-uken.tar.gz)
-options=('!emptydirs' '!strip' 'staticlibs')
-sha512sums=('05f12d2cac5ae9987fe389be1a15b11d280734f6d47b86f04fa2fcb61bf94175b7afdba4cc1cf5ecf2c1ef5a8e2c14eda5d72f7671618d7c94581c620fea4494')
+depends=('libglade')
+depends_i686=('gcc-libs')
+depends_x86_64=("${depends_i686[@]/#/lib32-}")
+makedepends=('autoconf' 'automake')
+makedepends+=('glib2' 'gtk2')
+options=('!emptydirs' '!strip')
+options+=('staticlibs')
+_srcdir="${pkgname%-lb}-${pkgver}"
+source=(
+  "http://gdlp01.c-wss.com/gds/${_dl}/linux-UFRII-drv-v${_pkgver//\./}-uken.tar.gz"
+)
+sha256sums=('c00324177a6f77f0a6deb4ecc6bee8150607dd4029bad3dfc1a521f84f811e7f')
+sha512sums=('2eeb1448cb76ac156e1e5f6df46141ee5605b0bed1c25f31b0f039fb9f579fe3d5732b132cae391e78276c550febc19366f958d1fb53c93f955303f1f5c37ab3')
 
-# build instructions are adapted from upstream cndrvcups-common.spec file
+# build instructions are adapted from upstream file
+# cndrvcups-common.spec
 
 prepare() {
-    cd "${srcdir}"/linux-UFRII-drv-v340-uken/Sources
-    bsdtar xf ${_pkgname}-${pkgver}-1.tar.gz -C "${srcdir}"
+  set -u
+  bsdtar -xf "linux-UFRII-drv-v${_pkgver//\./}-uken/Sources/${_srcdir}-1.tar.gz"
+  set +u
 }
 
 build() {
+  set -u
 
-    cd "${srcdir}"/${_pkgname}-${pkgver}/buftool
-    autoreconf -i
-    ./autogen.sh --prefix=/usr/ --enable-progpath=/usr/bin --libdir=/usr/lib
+  set +u; msg2 'Building buftool'; set -u
+  cd "${_srcdir}/buftool"
+  autoreconf -i
+  ./autogen.sh --prefix='/usr/' --enable-progpath='/usr/bin' --libdir='/usr/lib'
 
-    cd "${srcdir}"/${_pkgname}-${pkgver}/cngplp
-    autoreconf -i
-    LIBS="-lgtk-x11-2.0 -lgobject-2.0 -lglib-2.0 -lgmodule-2.0" ./autogen.sh --prefix=/usr --libdir=/usr/lib
+  set +u; msg2 'Building cngplp'; set -u
+  cd '../cngplp'
+  autoreconf -i
+  LIBS='-lgtk-x11-2.0 -lgobject-2.0 -lglib-2.0 -lgmodule-2.0' \
+  ./autogen.sh --prefix='/usr' --libdir='/usr/lib'
 
-    cd "${srcdir}"/${_pkgname}-${pkgver}/backend
-    autoreconf -i
-    ./autogen.sh --prefix=/usr --libdir=/usr/lib
+  set +u; msg2 'Building backend'; set -u
+  cd '../backend'
+  autoreconf -i
+  ./autogen.sh --prefix='/usr' --libdir='/usr/lib'
 
-    cd "${srcdir}"/${_pkgname}-${pkgver}
-    make
+  set +u; msg2 'Building all'; set -u
+  cd "${srcdir}/${_srcdir}"
+  make
 
-    cd "${srcdir}"/${_pkgname}-${pkgver}/c3plmod_ipc
-    make 
+  set +u; msg2 'Building c3plmod_ipc'; set -u
+  cd 'c3plmod_ipc'
+  make
+
+  set +u
 }
-package()
-{
 
-    cd "${srcdir}"/"${_pkgname}"-"${pkgver}"
-    mkdir -p "${pkgdir}"/usr/{bin,lib/cups/backend,include}
-    
-    if [[ ${CARCH} == "i686" ]]; then
-      _lib32dir="lib"
-    else
-      _lib32dir="lib32"
-      mkdir -p "${pkgdir}"/usr/${_lib32dir}
+package() {
+  set -u
+
+  cd "${_srcdir}"
+
+  declare -A _lib32dirs=([i686]='lib' [x86_64]='lib32')
+  local _lib32dir="${_lib32dirs[${CARCH}]}"
+
+  make install DESTDIR="${pkgdir}"
+
+  install -Dpm644 'Rule/canon-laser-printer.usb-quirks' -t "${pkgdir}/usr/share/cups/usb/"
+
+  cd 'c3plmod_ipc'
+  make install DESTDIR="${pkgdir}" LIBDIR='/usr/lib'
+  cd ..
+
+  cd 'libs'
+  install -s -Dpm755 'c3pldrv' -t "${pkgdir}/usr/bin/"
+  local _libs=(
+    'libcaiowrap.so.1.0.0'
+    'libcaiousb.so.1.0.0'
+    'libc3pl.so.0.0.1'
+    'libcaepcm.so.1.0'
+    'libColorGear.so.0.0.0'
+    'libColorGearC.so.1.0.0'
+    'libcanon_slim.so.1.0.0'
+  )
+  install -s -Dpm755 "${_libs[@]}" -t "${pkgdir}/usr/${_lib32dir}/"
+
+  cd '../data'
+  install -Dpm644 *.[Ii][Cc][Cc] *.PRF -t "${pkgdir}/usr/share/caepcm/"
+
+  local _lib _libt
+  cd "${pkgdir}/usr/${_lib32dir}"
+  for _lib in "${_libs[@]}"; do
+    echo "soname ${_lib}"
+    test -f "${_lib}" || echo "${}"
+    if [[ "${_lib}" =~ ^(lib[^.]+\.so\.[0-9]+)\. ]]; then
+      _libt="${BASH_REMATCH[1]}"
+      ln -s "${_lib}" "${_libt}"
+      _libt="${_libt%.*}"
+      ln -s "${_lib}" "${_libt}"
     fi
+  done
 
-    mkdir -p "${pkgdir}"/usr/share/{caepcm,cngplp,locale/ja/LC_MESSAGES}
-
-    make install DESTDIR="${pkgdir}"
-
-    cd c3plmod_ipc
-    make install DESTDIR="${pkgdir}" LIBDIR=/usr/lib
-    cd ..
-
-    install -m 755 libs/libcaiowrap.so.1.0.0   "${pkgdir}"/usr/${_lib32dir}
-    install -m 755 libs/libcaiousb.so.1.0.0    "${pkgdir}"/usr/${_lib32dir}
-
-    install -m 755 libs/libc3pl.so.0.0.1     "${pkgdir}"/usr/${_lib32dir}
-    install -m 755 libs/libcaepcm.so.1.0     "${pkgdir}"/usr/${_lib32dir}
-
-    install -m 755 libs/libColorGear.so.0.0.0    "${pkgdir}"/usr/${_lib32dir}
-    install -m 755 libs/libColorGearC.so.1.0.0    "${pkgdir}"/usr/${_lib32dir}
-
-
-    install -m 644 data/*.ICC  "${pkgdir}"/usr/share/caepcm
-    install -m 644 data/*.PRF  "${pkgdir}"/usr/share/caepcm
-
-    install -s -m 755 libs/c3pldrv     "${pkgdir}"/usr/bin
-
-    install -m 755 libs/libcanon_slim.so.1.0.0   "${pkgdir}"/usr/${_lib32dir}
-
-    cd "${pkgdir}"/usr/${_lib32dir}
-    ln -sf libc3pl.so.0.0.1     libc3pl.so.0
-    ln -sf libc3pl.so.0.0.1     libc3pl.so
-    ln -sf libcaepcm.so.1.0     libcaepcm.so.1
-    ln -sf libcaepcm.so.1.0     libcaepcm.so
-    ln -sf libcaiowrap.so.1.0.0   libcaiowrap.so.1
-    ln -sf libcaiowrap.so.1.0.0   libcaiowrap.so
-    ln -sf libcaiousb.so.1.0.0    libcaiousb.so.1
-    ln -sf libcaiousb.so.1.0.0    libcaiousb.so
-    ln -sf libcanon_slim.so.1.0.0   libcanon_slim.so.1
-    ln -sf libcanon_slim.so.1.0.0   libcanon_slim.so
-
-    ln -sf libColorGear.so.0.0.0    libColorGear.so.0
-    ln -sf libColorGear.so.0.0.0    libColorGear.so
-    ln -sf libColorGearC.so.0.0.0   libColorGearC.so.0
-    ln -sf libColorGearC.so.0.0.0   libColorGearC.so
-
-    cd "${pkgdir}"/usr/lib
-    ln -sf libcanonc3pl.so.1.0.0    libcanonc3pl.so
-    ln -sf libcanonc3pl.so.1.0.0    libcanonc3pl.so.1
-    
-    # according to gentoo ebuild (for 2.90 )c3pldrv dlopens the absolute path /usr/lib/libc3pl.so
-    # this is only needed for x86_64 build
-    if [[ ${CARCH} == "x86_64" ]]; then
-        ln -s /usr/lib32/libc3pl.so libc3pl.so
+  cd "${pkgdir}/usr/lib"
+  _libs=('libcanonc3pl.so.1.0.0')
+  for _lib in "${_libs[@]}"; do
+    echo "soname ${_lib}"
+    test -f "${_lib}" || echo "${}"
+    if [[ "${_lib}" =~ ^(lib[^.]+\.so\.[0-9]+)\. ]]; then
+      _libt="${BASH_REMATCH[1]}"
+      ln -s "${_lib}" "${_libt}"
+      _libt="${_libt%.*}"
+      ln -s "${_lib}" "${_libt}"
     fi
-    
-    cd "${srcdir}"/"${_pkgname}"-"${pkgver}"
-    install -m755 -d "${pkgdir}"/usr/share/licenses/"${pkgname}"
-    install -m755 LICENSE-* "${pkgdir}"/usr/share/licenses/"${pkgname}"
+  done
+
+  # according to Gentoo ebuild v2.90 c3pldrv dlopens the absolute path
+  # /usr/lib/libc3pl.so
+  if [ "${CARCH}" = 'x86_64' ]; then
+    ln -s '../lib32/libc3pl.so' -t "${pkgdir}/usr/lib/"
+  fi
+
+  cd "${srcdir}/${_srcdir}"
+  if [ "$(vercmp "${pkgver}" '3.50')" -lt 0 ]; then
+    install -Dpm644 LICENSE-* -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+  else
+    local _lics=(
+      $(find -type 'f' -name 'LICENSE.txt')
+    )
+    local _lic _licd _lico
+    for _lic in "${_lics[@]}"; do
+      _licd="$(dirname "${_lic}")"
+      _licd="$(basename "${_licd}")"
+      _lico="LICENSE.${_licd}.txt"
+      echo "license ${_lico}"
+      install -Dpm644 "${_lic}" "${pkgdir}/usr/share/licenses/${pkgname}/${_lico}"
+    done
+  fi
+  install -Dpm644 README* -t "${pkgdir}/usr/share/doc/${pkgname}/"
+
+  # The filter works in /usr/bin but it's expected in .../cups/filter/
+  install -d "${pkgdir}/usr/lib/cups/filter/"
+  ln -s '/usr/bin/c3pldrv' -t "${pkgdir}/usr/lib/cups/filter/"
+
+  set +u
 }
+set +u
