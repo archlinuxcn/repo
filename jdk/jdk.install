@@ -1,4 +1,5 @@
-THIS_JAVA='java-10-jdk'
+VERSION='10'
+THIS_JAVA='java-${VERSION}-jdk'
 NAME='JDK'
 
 all_off="$(tput sgr0)"
@@ -39,7 +40,7 @@ post_install() {
 
     note2 "Since Oracle Java 9, some Qt 5 applications (such as the reader apps Zeal and
           GoldenDict) will crash due to the existance of the Java NPAPI plugin symlink
-          (/usr/lib/mozilla/plugins/libnpjp2-jdk9.so).
+          (/usr/lib/mozilla/plugins/libnpjp2-jdk${VERSION}.so).
           
           See: 
           - https://github.com/zealdocs/zeal/issues/802
