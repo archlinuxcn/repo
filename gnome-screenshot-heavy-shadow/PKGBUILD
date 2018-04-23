@@ -2,7 +2,7 @@
 
 pkgname=gnome-screenshot-heavy-shadow
 pkgver=3.26.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Take pictures of your screen, with modified shadow effect"
 arch=('i686' 'x86_64')
 url="https://github.com/Cabbagec/gnome-screenshot-heavy-shadow"
@@ -17,11 +17,12 @@ sha256sums=('SKIP')
 
 build() {
 	cd "$pkgname"
-	./configure --prefix=/usr
-	make
+	meson _build --prefix=/usr
+    cd _build
+    ninja
 }
 
 package() {
-	cd "$pkgname"
-	make DESTDIR="$pkgdir/" install
+	cd "$pkgname/_build"
+	DESTDIR="$pkgdir/" ninja install
 }
