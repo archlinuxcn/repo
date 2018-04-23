@@ -1,19 +1,27 @@
-# Maintainer: wenLiangcan <boxeed at gmail dot com>
+# Maintainer: Metal A-wing <1 at 233 dot email>
+# Contributor: wenLiangcan <boxeed at gmail dot com>
 
 pkgname=websocketd
-pkgver=0.2.12
+pkgver=0.3.0
 pkgrel=1
 pkgdesc="Like inetd, but for WebSockets. Turn any application that uses STDIO/STDOUT into a WebSocket server."
-arch=('x86_64' 'i686' 'arm')
+arch=('x86_64' 'i686' 'arm64' 'arm')
 url="https://github.com/joewalnes/websocketd"
 license=('BSD-2-Clause ')
 depends=('glibc')
 
 source_x86_64=("https://github.com/joewalnes/websocketd/releases/download/v${pkgver}/websocketd-${pkgver}-linux_amd64.zip")
-md5sums_x86_64=('e0ac3172dddd2709c5a5d8fa509e7464')
-md5sums_i686=('580cff1818353e74093b3624e8a7e736')
-
 source_i686=("https://github.com/joewalnes/websocketd/releases/download/v${pkgver}/websocketd-${pkgver}-linux_386.zip")
+
+source_arm64=("https://github.com/joewalnes/websocketd/releases/download/v${pkgver}/websocketd-${pkgver}-linux_arm64.zip")
+source_arm=("https://github.com/joewalnes/websocketd/releases/download/v${pkgver}/websocketd-${pkgver}-linux_arm.zip")
+
+
+md5sums_x86_64=('398eaaa82858a802c863aba3a177fdbc')
+md5sums_i686=('2f3cb03240474b1ba3e2073e4a6fa225')
+
+md5sums_arm64=('968c1ce4ed4fe5f86817f2533f5d3004')
+md5sums_arm=('eb1350748075034b7699925cf3ca2d7d')
 
 package() {
     cd "${srcdir}"
