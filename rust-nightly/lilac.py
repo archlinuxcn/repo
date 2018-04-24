@@ -8,7 +8,7 @@ import pytoml
 
 from lilaclib import s, git_add_files, git_commit, single_main
 
-debug = True
+debug = False
 
 STDS = [
   'arm-unknown-linux-gnueabihf',
