@@ -6,9 +6,9 @@
 # Contributor: Tad Fisher <tadfisher at gmail dot com>
 
 pkgname=android-studio
-pkgver=3.1.1.0
+pkgver=3.1.2.0
 pkgrel=1
-_build=173.4697961
+_build=173.4720617
 pkgdesc="The official Android IDE (Stable branch)"
 arch=('i686' 'x86_64')
 url="http://tools.android.com/"
@@ -20,7 +20,7 @@ optdepends=('gtk2: GTK+ look and feel'
 options=('!strip')
 source=("https://dl.google.com/dl/android/studio/ide-zips/$pkgver/android-studio-ide-$_build-linux.zip"
         "$pkgname.desktop")
-sha256sums=('08539019cda4f9228f6e08d9fda8933a71ecae29eac75f8d31e743816315c076'
+sha256sums=('13f290279790df570bb6592f72a979a495f7591960a378abea7876ece7252ec1'
             '73cd2dde1d0f99aaba5baad1e2b91c834edd5db3c817f6fb78868d102360d3c4')
 
 if [ "$CARCH" = "i686" ]; then
