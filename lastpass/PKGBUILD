@@ -1,11 +1,11 @@
 # Maintainer: Eli Schwartz <eschwartz@archlinux.org>
 
 pkgname=lastpass
-pkgver=4.2.3.20
+pkgver=4.9.2.0
 pkgrel=1
-_universalver=4.1.44
+_universalver=4.1.51
 _chromever=4.1.52
-_amo_file=800645
+_amo_file=931368
 _crx_id=hdokiejnpimakedhajhdlcegeplioahd
 pkgdesc="The Universal LastPass installer for Firefox, Chrome, and Opera"
 arch=('i686' 'x86_64')
@@ -20,7 +20,7 @@ options=('!strip')
 # Apparently, API endpoints are all the rage -- so this isn't actually a file...
 source=("${pkgname}-${pkgver}.xpi::https://addons.mozilla.org/firefox/downloads/file/${_amo_file}/"
         "lpchrome-${_chromever}.crx::${url}/lpchrome_linux.crx"
-        "lplinux-${_universalver}v2.tar.bz2::${url}/lplinux.tar.bz2"
+        "lplinux-${_universalver}.tar.bz2::${url}/lplinux.tar.bz2"
         "com.lastpass.nplastpass.json"
         "firefox-com.lastpass.nplastpass.json"
         "lastpass_policy_sources.json"
@@ -28,7 +28,7 @@ source=("${pkgname}-${pkgver}.xpi::https://addons.mozilla.org/firefox/downloads/
         "License.txt")
 noextract=("${pkgname}-${pkgver}.xpi"
            "lpchrome-${_chromever}.crx")
-sha256sums=('cb837b4d738d51fac1d4361b7ac50cac1fc2828c2848057f10f88220aff77380'
+sha256sums=('b3f0a2532e24d7b47d5ace588f49dbca823b75f1694253e727216606a4301385'
             '47937f48972b73f024a1e616547405d41e368cb3756f97958423d20d2196762d'
             '22690e30f5670205df2e5508ae799757b81060aa25b33bb115eeea6ba90e4425'
             'e8eb3b585809d6644807727c5bd0a74ead96dd2c5a7e6d2ce29e0b6ea28b9e59'
