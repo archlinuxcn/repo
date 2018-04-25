@@ -3,7 +3,7 @@
 
 _npmname=tiddlywiki
 pkgname=nodejs-$_npmname
-pkgver=5.1.14
+pkgver=5.1.15
 pkgrel=1
 pkgdesc="A non-linear personal web notebook"
 url="http://tiddlywiki.com/"
@@ -12,7 +12,7 @@ license=('BSD')
 depends=('nodejs' 'npm')
 source=(https://registry.npmjs.org/$_npmname/-/$_npmname-$pkgver.tgz)
 noextract=($_npmname-$pkgver.tgz)
-sha256sums=('6761e950c7c9140eda37208d11f0a9603edd12df566f214c9dbd41c3ba47c8d0')
+sha256sums=('cd91bc8a1e57f5245f0c1ba3d55e90a34aa114d2c1bee7913648c641af654b56')
 
 package() {
   cd "$srcdir"
