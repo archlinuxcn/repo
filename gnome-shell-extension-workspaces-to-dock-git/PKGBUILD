@@ -1,7 +1,7 @@
 # Maintainer: Mohammadreza Abdollahzadeh <morealaz at gmail dot com>
 
 pkgname=gnome-shell-extension-workspaces-to-dock-git
-pkgver=44_3.26.r0.g5235dd2
+pkgver=45_3.28.r1.g225899e
 pkgrel=1
 pkgdesc="Gnome shell extension, Workspaces to Dock, Transform Gnome Shell's overview workspaces into an intelligent dock."
 arch=('any')
@@ -12,7 +12,6 @@ depends=('gnome-shell')
 makedepends=('git' 'gnome-common')
 provides=("${pkgname%-git}")
 conflicts=("${pkgname%-git}")
-replaces=("${pkgname%-git}")
 source=("git+https://github.com/passingthru67/workspaces-to-dock.git")
 install='gnome-shell-extension.install'
 md5sums=('SKIP')
@@ -32,3 +31,4 @@ package() {
   install -d "$pkgdir/usr/share/gnome-shell/extensions"
   cp -a "workspaces-to-dock@passingthru67.gmail.com" "$pkgdir/usr/share/gnome-shell/extensions/"
 }
+# vim:set ts=2 sw=2 et:
