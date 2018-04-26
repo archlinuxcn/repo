@@ -4,7 +4,7 @@
  
 pkgname=shashlik-bin
 pkgver=0.9.3
-pkgrel=3
+pkgrel=4
 pkgdesc="A way to run Android applications on a standard Linux desktop as easily and simply as possible"
 arch=("x86_64")
 url="http://www.shashlik.io"
@@ -30,12 +30,11 @@ package() {
   cd "${srcdir}"
   
   install -dm755 "${pkgdir}/usr/bin"
-  install -dm755 "${pkgdir}/opt/${pkgname}"
   
   msg2 "Installing application into /opt/${pkgname}"
-  cp -r "${srcdir}/opt/${pkgname%-bin}/"* "${pkgdir}/opt/${pkgname}/"
+  cp -r "${srcdir}/opt" "${pkgdir}/"
 
   msg2 "Creating links into /usr/bin"
-  ln -s /opt/${pkgname}/bin/${pkgname%-bin}-run "${pkgdir}/usr/bin/"
-  ln -s /opt/${pkgname}/bin/${pkgname%-bin}-install "${pkgdir}/usr/bin/"
+  ln -s /opt/${pkgname%-bin}/bin/${pkgname%-bin}-run "${pkgdir}/usr/bin/"
+  ln -s /opt/${pkgname%-bin}/bin/${pkgname%-bin}-install "${pkgdir}/usr/bin/"
 }
