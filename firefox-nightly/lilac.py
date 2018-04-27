@@ -13,8 +13,8 @@ def pre_build():
   for line in edit_file('PKGBUILD'):
     if line.startswith('_version='):
       line = f'_version={version}'
-    elif line.startswith('_filename='):
-      line = f'_filename="{dt}-${{_src}}"'
+    elif line.startswith('_filename_prefix='):
+      line = f'_filename="{dt}-"'
 
     print(line)
 

@@ -4,10 +4,8 @@
 
 _name=firefox
 _channel=nightly
-_lang=en-US
-pkgname=${_name}-${_channel}
-pkgdesc="Standalone Web Browser from Mozilla — Nightly build (${_lang})"
-url="https://www.mozilla.org/${_lang}/${_name}/${_channel}"
+pkgbase=firefox-nightly
+pkgname=()
 _version=61.0a1
 pkgver=61.0a1.20180426.23
 pkgrel=1
@@ -23,20 +21,47 @@ optdepends=('pulseaudio: audio support'
             'networkmanager: location detection via available WiFi networks'
             'speech-dispatcher: text-to-speech'
             'startup-notification: support for FreeDesktop Startup Notification')
-_url="https://ftp.mozilla.org/pub/${_name}/nightly/latest-mozilla-central"
-_src="${_name}-${_version}.${_lang}.linux"
-_filename="20180426.23-${_src}"
-source=("${pkgname}.desktop" 'vendor.js'
-        "${_filename}-x86_64.tar.bz2"::"${_url}/${_src}-x86_64.tar.bz2"
-        "${_filename}-x86_64.tar.bz2.asc"::"${_url}/${_src}-x86_64.tar.bz2.asc")
+_url="https://ftp.mozilla.org/pub/${_name}/nightly/latest-mozilla-central-l10n"
+_filename_prefix="20180426.23-"
+source=("${pkgbase}.desktop" 'vendor.js')
 sha512sums=('b514abafc559ec03a4222442fa4306db257c3de9e18ed91a0b37cc9d7058a8e08a241442e54a67659a3ab4512a5dae6a0b94ea7a33d08ef0b8a76a9eac902095'
             'c9443c2fb0897193af036bfd156d732b5ffabc20ec008f351918661c4ff30a67eb62a971cc628e3f58d2017c0844e601609164171e926ebc36faf3a04ff085b5'
             'd7579589da4465bc0c5de3a9335db9f26d5432dd6cdc9c68211bd5ea62614669143d73ee3ecaaade20d12856296487105d5c426ac96dec24c679535759ba5ce2'
+            'SKIP'
+            '4c4deac1c021ef6d8b4ce7d9282fd6c2a332fbcedd2065414e1c2a09675f2009279e2f592c0da7bf4c8377922e30ef33301d0129581a919707c9cc11c9903055'
             'SKIP')
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla’s GnuPG release key
 
-package() {
+_languages=(en-US zh-CN)
+
+for _lang in "${_languages[@]}"; do
+  _locale=${_lang}
+  _pkgname=firefox-nightly-${_locale,,}
+  _src="${_name}-${_version}.${_lang}.linux"
+  _filename="${_filename_prefix}${_src}-x86_64.tar.bz2"
+
+  pkgname+=($_pkgname)
+  source+=("${_filename}"::"${_url}/${_src}-x86_64.tar.bz2"
+           "${_filename}.asc"::"${_url}/${_src}-x86_64.tar.bz2.asc")
+  eval "package_$_pkgname() {
+    msg2 'Removing old firefox directory...'
+    rm -rf firefox
+    msg2 'Extract ${_filename}...'
+    bsdtar -xf ${_filename}
+    _package $_lang
+  }"
+done
+
+# Don't extract anything because they'll override each other
+noextract=(${source[@]%%::*})
+
+_package() {
   OPT_PATH="opt/${pkgname}"
+  pkgdesc="Standalone Web Browser from Mozilla — Nightly build ($1)"
+  url="https://www.mozilla.org/$1/${_name}/${_channel}"
+  provides=(firefox-${_channel}=$pkgver)
+  conflicts=(firefox-${_channel} firefox-${_channel}-i18n-${1,,})
+  replaces=(firefox-${_channel}-i18n-${1,,})
 
   # Install the package files
   install -d "${pkgdir}"/{usr/bin,opt}
@@ -44,13 +69,13 @@ package() {
   ln -s "/${OPT_PATH}/${_name}" "${pkgdir}"/usr/bin/${pkgname}
 
   # Install .desktop files
-  install -Dm644 "${srcdir}"/${pkgname}.desktop -t "${pkgdir}"/usr/share/applications
+  install -Dm644 "${srcdir}"/${pkgbase}.desktop -t "${pkgdir}"/usr/share/applications
 
   # Install icons
   SRC_LOC="${srcdir}"/${_name}/browser
   DEST_LOC="${pkgdir}"/usr/share/icons/hicolor
   for i in 16 32 48 64 128; do
-      install -Dm644 "${SRC_LOC}"/chrome/icons/default/default${i}.png "${DEST_LOC}"/${i}x${i}/apps/${pkgname}.png
+      install -Dm644 "${SRC_LOC}"/chrome/icons/default/default${i}.png "${DEST_LOC}"/${i}x${i}/apps/${pkgbase}.png
   done
 
   # Disable auto-updates
