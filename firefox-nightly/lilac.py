@@ -14,7 +14,7 @@ def pre_build():
     if line.startswith('_version='):
       line = f'_version={version}'
     elif line.startswith('_filename_prefix='):
-      line = f'_filename="{dt}-"'
+      line = f'_filename_prefix="{dt}-"'
 
     print(line)
 
