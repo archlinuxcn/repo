@@ -1,0 +1,9 @@
+[Trigger]
+Operation = Upgrade
+Type = Package
+Target = glibc
+
+[Action]
+Description = Restart dcron...
+Exec = /usr/bin/systemctl try-restart dcron
+When = PostTransaction
