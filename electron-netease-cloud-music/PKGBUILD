@@ -1,7 +1,7 @@
 # Maintainer: Metal A-wing <1 at 233 dot email>
 
 pkgname=electron-netease-cloud-music
-pkgver=0.4.0.228963a
+pkgver=0.4.1
 pkgrel=1
 pkgdesc=" UNOFFICAL clinet for music.163.com. Powered by Electron and Vue"
 arch=('x86_64')
@@ -9,13 +9,13 @@ url="https://github.com/Rocket1184/electron-netease-cloud-music"
 license=('GPL-3.0')
 depends=('electron')
 
-source_x86_64=("https://github.com/Rocket1184/electron-netease-cloud-music/releases/download/${pkgver}-228963a/app.asar"
+source_x86_64=("https://github.com/Rocket1184/electron-netease-cloud-music/releases/download/v${pkgver}/app.asar"
   'electron-netease-cloud-music.desktop'
   'electron-netease-cloud-music.sh'
   'netease-cloud-music.svg'
 )
 
-md5sums_x86_64=('8219dff67e51f50e7c0f9b2ff1074d69'
+md5sums_x86_64=('1d97eb7cd9fb08ec4d0a9af9b12bac5d'
                 '9198bd214026256cab4f0ad60ed5a538'
                 '77f597cf81b39d6d6bfee05d4009d026'
                 '24cb8955dac6c6c5f0ae2bc1451c56b8')
