@@ -2,10 +2,15 @@ post_install() {
   echo "The makemkv package is licensed software."
   echo "You MUST read and agree to the license stored in"
   echo "/usr/share/licenses/makemkv/eula_en_linux.txt before using it."
+  echo ""
+  echo "Starting from 1.10.8 the /dev/sgX device that corresponds to the drive is required."
+  echo "You may have to load the sg kernel module in order to create the device."
+  echo "To enable module autoloading run the following command as root and reboot:"
+  echo ""
+  echo "  echo sg > /etc/modules-load.d/sg.conf"
+  echo ""
 }
 
 post_upgrade() {
   post_install $1
 }
-
-

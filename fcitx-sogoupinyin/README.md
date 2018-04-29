@@ -1,34 +1,39 @@
-# Fcitx sogoupinyin
+# fcitx-sogoupinyin
 
-[Sogoupinyin](http://pinyin.sogou.com/linux/) for Arch Linux.
+AUR package of [sogoupinyin for Linux](http://pinyin.sogou.com/linux/).
 
 ## Installation
 
-```
-yaourt -S fcitx-sogoupinyin
+This package is available on both [AUR](https://aur.archlinux.org/packages/fcitx-sogoupinyin/) and [archlinuxcn repository](https://www.archlinuxcn.org/archlinux-cn-repo-and-mirror/).
+
+```bash
+# Use pacaur or any other AUR helpers to install from AUR
+pacaur -S fcitx-sogoupinyin
 ```
 
-Don't forget to add this input method in Fcitx configurations.
+Don't forget to add this input method in Fcitx configuration.
 
 ## Configuration
 
-It should work out of the box.
+No configuration is needed.
 
-In case it doesn't work in Gnome 3, add the following to `~/.xprofile`:
-
-```
-export GTK_IM_MODULE=fcitx
-export QT_IM_MODULE=fcitx
-export XMODIFIERS="@im=fcitx"
-
-gsettings set org.gnome.settings-daemon.plugins.xsettings overrides "{'Gtk/IMModule':<'fcitx'>}"
-```
+For fcitx's configuation, refer to [Fcitx#Configuration](https://wiki.archlinux.org/index.php/Fcitx#Configuration) on ArchWiki.
 
 ## Troubleshooting
 
-### Not work
+### Unable to start
 
-Try executing `rm -rf ~/.config/SogouPY*` and restart.
+__Make sure fcitx is running before start `sogou-qimpanel`.__
+
+Try one of the following methods:
+
+* Delete sogou lock files: `rm -rf ~/.sogouinput/`
+* Relogin the desktop environment
+* Delete all sogou related files: `rm -rf ~/.sogouinput/ ~/.config/SogouPY*`
+
+### Not working
+
+It's probably caused by fcitx not working. See [Fcitx#Troubleshooting](https://wiki.archlinux.org/index.php/Fcitx#Troubleshooting) on ArchWiki.
 
 ## Known issues
 

@@ -1,0 +1,11 @@
+post_install() {
+  grep -qe '^/usr/bin/pwsh$' etc/shells || echo '/usr/bin/pwsh' >> etc/shells
+}
+
+post_upgrade() {
+  post_install
+}
+
+pre_remove() {
+  sed -ri '\|^/usr/bin/pwsh$|d' etc/shells
+}
