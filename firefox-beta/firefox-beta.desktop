@@ -1,0 +1,25 @@
+[Desktop Entry]
+Name=Firefox Beta
+GenericName=Web Browser
+Comment=Browse the World Wide Web
+Exec=firefox-beta %u
+Terminal=false
+Type=Application
+Icon=firefox-beta
+Categories=Network;WebBrowser;
+MimeType=text/html;text/xml;application/xhtml+xml;application/vnd.mozilla.xul+xml;text/mml;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;
+StartupNotify=true
+StartupWMClass=Firefox
+Actions=NewTab;NewWindow;NewPrivateWindow;
+
+[Desktop Action NewTab]
+Name=Open new tab
+Exec=firefox-beta -new-tab about:newtab
+
+[Desktop Action NewWindow]
+Name=Open new window
+Exec=firefox-beta -new-window
+
+[Desktop Action NewPrivateWindow]
+Name=New private window
+Exec=firefox-beta -private-window
