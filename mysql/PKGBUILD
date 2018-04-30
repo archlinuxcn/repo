@@ -5,11 +5,12 @@
 
 pkgname=('mysql' 'libmysqlclient' 'mysql-clients')
 pkgbase=mysql
-pkgver=5.7.21
+pkgver=5.7.22
 pkgrel=1
 pkgdesc="Fast SQL database server, community edition"
 arch=('x86_64')
-makedepends=('openssl' 'zlib' 'cmake' 'systemd-tools' 'libaio' 'jemalloc')
+makedepends=('openssl' 'zlib' 'cmake' 'systemd-tools' 'libaio' 'jemalloc'
+             'rpcsvc-proto' 'libtirpc')
 _boost_ver=1.59.0
 license=('GPL')
 url="https://www.mysql.com/products/community/"
@@ -24,7 +25,7 @@ source=("https://dev.mysql.com/get/Downloads/MySQL-5.7/${pkgbase}-${pkgver}.tar.
         "mysqld-tmpfile.conf"
         "mysqld.service"
         "my-default.cnf")
-sha256sums=('fa205079c27a39c24f3485e7498dd0906a6e0b379b4f99ebc0ec38a9ec5b09b7'
+sha256sums=('4eb8405b0a9acb0381eae94c1741b2850dfc6467742b24b676e62b566409cff2'
             '47f11c8844e579d02691a607fbd32540104a9ac7a2534a8ddaef50daf502baac'
             '1353162f5ae6e3dd4b0b8660738adbbc36c6d514d65331c013d9c45359665c52'
             'ca49f11ed70d4673d14df700caff4380ae27b81d4d10c7a49297d5b56f0eb288'
@@ -107,7 +108,7 @@ package_libmysqlclient(){
   install -m 755 -d "${pkgdir}/usr/bin"
   install -m 755 scripts/mysql_config "${pkgdir}/usr/bin/"
   install -m 755 -d "${pkgdir}/usr/share/man/man1"
-  for man in mysql_config mysql_client_test_embedded mysqltest_embedded
+  for man in mysql_config
   do
     install -m 644 "${srcdir}/${pkgbase}-${pkgver}/man/${man}.1" "${pkgdir}/usr/share/man/man1/${man}.1"
   done
@@ -160,14 +161,11 @@ package_mysql(){
 
   # provided by libmysqlclient
   rm "${pkgdir}/usr/bin/mysql_config"
-  rm "${pkgdir}/usr/bin/mysql_client_test_embedded"
   rm "${pkgdir}/usr/bin/mysqltest_embedded"
   rm "${pkgdir}"/usr/lib/libmysql*
   rm "${pkgdir}/usr/lib/mysql/plugin/authentication_ldap_sasl_client.so"
   rm -r "${pkgdir}/usr/include/"
   rm "${pkgdir}/usr/share/man/man1/mysql_config.1"
-  rm "${pkgdir}/usr/share/man/man1/mysql_client_test_embedded.1"
-  rm "${pkgdir}/usr/share/man/man1/mysqltest_embedded.1"
 
   # provided by mysql-clients
   rm "${pkgdir}/usr/bin/mysql"
@@ -188,6 +186,5 @@ package_mysql(){
 
   # not needed
   rm -r "${pkgdir}/usr/mysql-test"
-  rm "${pkgdir}/usr/share/man/man1/mysql-test-run.pl.1"
 }
 
