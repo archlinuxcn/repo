@@ -1,0 +1,19 @@
+diff --git a/u2f-server/openssl.c b/u2f-server/openssl.c
+index 6ff97f8..f0d1bd8 100644
+--- a/u2f-server/openssl.c
++++ b/u2f-server/openssl.c
+@@ -51,13 +51,11 @@ void dumpCert(const u2fs_X509_t * certificate)
+ 
+ void crypto_init(void)
+ {
+-  SSL_load_error_strings();
++
+ }
+ 
+ void crypto_release(void)
+ {
+-  RAND_cleanup();
+-  ERR_free_strings();
+ }
+ 
+ u2fs_rc set_random_bytes(char *data, size_t len)
