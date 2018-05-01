@@ -2,7 +2,7 @@
 # Maintainer: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 
 pkgname=dbus-broker
-pkgver=12
+pkgver=13
 pkgrel=1
 
 pkgdesc='Linux D-Bus Message Broker'
@@ -13,7 +13,7 @@ depends=('libsystemd' 'expat' 'glib2')
 makedepends=('git' 'meson' 'systemd' 'python-docutils')
 
 source=("https://github.com/bus1/dbus-broker/releases/download/v$pkgver/$pkgname-$pkgver.tar.xz")
-sha256sums=('207cea88f7777f84c26f12f7c15fb40d266695bc4956303f7b422ef6d431998c')
+sha256sums=('6ac2851d0c7fc985add872439ea5a501d9d7996b7c22315cf5d237f99489335d')
 
 prepare() {
   rm -Rf build
