@@ -1,7 +1,8 @@
 # Maintainer: lilydjwg@gmail.com
 
 pkgname="dcron-git"
-pkgver=v4.5.r12.g5da6519
+epoch=1
+pkgver=4.5.r9.g6186237
 pkgrel=1
 pkgdesc="dillon's lightweight cron daemon, git version"
 arch=("i686" "x86_64" "armv6h" "armv7h")
@@ -13,7 +14,7 @@ makedepends=('git')
 optdepends=("msmtp-mta: sending cron job output via email")
 provides=("cron")
 conflicts=("cron")
-source=("git+https://github.com/dubiousjim/dcron.git"
+source=("git+https://github.com/dubiousjim/dcron.git#commit=6186237"
         "dcron.hook"
         "service")
 md5sums=('SKIP'
@@ -22,7 +23,7 @@ md5sums=('SKIP'
 
 pkgver() {
   cd "$srcdir/dcron"
-  git describe | sed -E 's/([^-]*-g)/r\1/;s/-/./g'
+  git describe | sed -E 's/([^-]*-g)/r\1/;s/-/./g;s/^v//'
 }
 
 build() {
