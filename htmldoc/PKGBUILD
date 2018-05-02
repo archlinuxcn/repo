@@ -7,7 +7,7 @@
 # Contributor: Simon Rutishauser <simon.rutishauser@gmx.ch>
 
 pkgname=htmldoc
-pkgver=1.9.2
+pkgver=1.9.3
 pkgrel=1
 pkgdesc='HTML Conversion Software'
 arch=('i686' 'x86_64')
@@ -17,7 +17,7 @@ depends=('libxpm' 'gnutls' 'fltk')
 conflicts=('htmldoc-git')
 changelog=ChangeLog
 source=("${pkgname}-${pkgver}.tar.gz"::"https://github.com/michaelrsweet/${pkgname}/archive/v${pkgver}.tar.gz")
-sha256sums=('f967654f1cd607f80297f46d774b5607cda80ab8199f358d868a7efa77de35d3')
+sha256sums=('601ad21f6aa7adf57a6fcfeab180dc39d6b99ec2f52f0e559df5bb57f087eb2e')
 
 build() {
     cd "${pkgname}-${pkgver}"
