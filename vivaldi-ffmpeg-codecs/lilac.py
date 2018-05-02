@@ -8,6 +8,7 @@ from lilaclib import *
 import glob
 
 build_prefix = 'extra-x86_64'
+depends = ['ncurses5-compat-libs']
 
 _g = SimpleNamespace()
 
