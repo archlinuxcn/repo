@@ -4,7 +4,7 @@
 # Contributor: DrZaius <lou at fakeoutdoorsman.com>
 
 pkgname=ffmpeg-git
-pkgver=4.1.r90921.ga150b2e3a0
+pkgver=4.1.r90923.gab1114a0f5
 pkgrel=1
 pkgdesc='Complete solution to record, convert and stream audio and video (git version)'
 arch=('i686' 'x86_64')
@@ -15,6 +15,7 @@ depends=('alsa-lib' 'bzip2' 'fontconfig' 'fribidi' 'glibc' 'gmp' 'gnutls' 'gsm'
          'libraw1394' 'libsoxr' 'libssh' 'libtheora' 'libvdpau' 'libwebp'
          'libx11' 'libxcb' 'libxml2' 'opencore-amr' 'openjpeg2' 'opus' 'sdl2'
          'speex' 'v4l-utils' 'xz' 'zlib'
+         'libomxil-bellagio'
          'libass.so' 'libbluray.so' 'libfreetype.so' 'libva-drm.so' 'libva.so'
          'libva-x11.so' 'libvidstab.so' 'libvorbisenc.so' 'libvorbis.so'
          'libvpx.so' 'libx264.so' 'libx265.so' 'libxvidcore.so')
@@ -31,9 +32,11 @@ sha256sums=('SKIP')
 
 pkgver() {
     cd "$pkgname"
-    local _version="$(  git describe  --tags --long      | cut -d'-' -f1 | sed 's/^n//')"
-    local _revision="$( git describe  --tags --match 'N' | cut -d'-' -f2)"
+    
+    local _version="$(  git describe  --tags --long      | awk -F'-' '{ printf $1 }' | sed 's/^n//')"
+    local _revision="$( git describe  --tags --match 'N' | awk -F'-' '{ printf $2 }')"
     local _shorthash="$(git rev-parse --short HEAD)"
+    
     printf '%s.r%s.g%s' "$_version" "$_revision" "$_shorthash"
 }
 
@@ -82,13 +85,17 @@ build() {
         --enable-libxml2 \
         --enable-libxvid \
         --enable-shared \
-        --enable-version3
+        --enable-version3 \
+        --enable-omx
+        
     make
     make tools/qt-faststart
 }
 
 package() {
     cd "$pkgname"
+    
     make DESTDIR="$pkgdir" install
+    
     install -D -m755 tools/qt-faststart "${pkgdir}/usr/bin/qt-faststart"
 } 
