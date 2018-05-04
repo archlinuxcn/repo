@@ -2,7 +2,7 @@
 
 pkgname=visual-studio-code-bin
 _pkgname=visual-studio-code
-pkgver=1.22.2
+pkgver=1.23.0
 pkgrel=1
 pkgdesc="Visual Studio Code: Editor for building and debugging modern web and cloud applications (official binary version)"
 arch=('x86_64' 'i686')
@@ -19,9 +19,9 @@ source_x86_64=(code_x64_${pkgver}.tar.gz::https://vscode-update.azurewebsites.ne
 source_i686=(code_ia32_${pkgver}.tar.gz::https://vscode-update.azurewebsites.net/${pkgver}/linux-ia32/stable
               ${_pkgname}.desktop
               )
-sha256sums_x86_64=('557513c7cb8ffb7482921172849e02509e80e05735e6da843a4ec3a72094e2d9'
+sha256sums_x86_64=('fe6bbd599f8f236862e2113f05076d7301b96883c24a37a816a26cf5b7f27dd6'
                    '488592034dd5f979083bbd80788d33e253bb3ac3e52d50faee80e715a924a212')
-sha256sums_i686=('b6f05d4fa8d8c97bc4248aed868d4cc19cf7e61c7a8a4966a08bb1b6cdc3389e'
+sha256sums_i686=('b4b8c063cecc13f5cdeb331c33bfd39c4cb1ee3358f5138715e5a0e0ec63d9db'
                  '488592034dd5f979083bbd80788d33e253bb3ac3e52d50faee80e715a924a212')
 package() {
   _pkg=VSCode-linux-x64
