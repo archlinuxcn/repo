@@ -8,7 +8,7 @@ from lilaclib import *
 
 depends=['fmt', 'xcb-imdkit-git', 'fcitx5-git']
 
-build_prefix = 'extra-x86_64'
+build_prefix = 'archlinuxcn-x86_64'
 pre_build = vcs_update
 
 def post_build():
