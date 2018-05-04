@@ -7,8 +7,8 @@
 
 pkgname=telegram-desktop-systemqt-notoemoji
 pkgver=1.2.17
-pkgrel=1
-pkgdesc='Official Telegram Desktop client'
+pkgrel=2
+pkgdesc='Official Telegram Desktop client (with noto emoji)'
 arch=('x86_64')
 url="https://desktop.telegram.org/"
 license=('GPL3')
