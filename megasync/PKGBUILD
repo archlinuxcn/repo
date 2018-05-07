@@ -5,8 +5,8 @@
 # Contributor: Hexchain Tong <i at hexchain dot org>
 
 pkgname=megasync
-pkgver=3.6.0.0
-pkgrel=3
+pkgver=3.6.5.0
+pkgrel=1
 pkgdesc="Sync your files to your Mega account. Official app"
 arch=('i686' 'x86_64')
 url="https://github.com/meganz/megasync"
@@ -20,9 +20,6 @@ md5sums=('SKIP')
 prepare(){
     cd "${srcdir}/MEGAsync"
     git submodule update --init --recursive
-    # Fix crypto++-6 issue
-    cd "${srcdir}/MEGAsync/src/MEGASync/mega"
-    git checkout 222594ea17e6fe4fca9b42b28e3cce335c2ca60e
 }
 
 build(){
@@ -43,7 +40,8 @@ build(){
         --with-sqlite \
         --with-zlib \
         --without-freeimage \
-        --without-termcap
+        --without-termcap \
+	--without-ffmpeg
 
     cd "${srcdir}/MEGAsync/src"
     qmake-qt5 CONFIG+="release" MEGA.pro
