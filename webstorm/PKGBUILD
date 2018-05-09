@@ -4,8 +4,8 @@
 
 pkgbase=webstorm
 pkgname=(webstorm webstorm-jre)
-pkgver=2018.1.2
-_pkgver=181.4668.60
+pkgver=2018.1.3
+_pkgver=181.4892.44
 pkgrel=1
 pkgdesc='JavaScript IDE and HTML editor.'
 arch=('x86_64' 'i686')
@@ -15,7 +15,7 @@ makedepends=('rsync')
 options=('!strip')
 source=(https://download.jetbrains.com/webstorm/WebStorm-${pkgver}.tar.gz
         jetbrains-webstorm.desktop)
-sha512sums=('5989a9a34eee3cc5cb4a11f86fc11c4a7de0bbfe68d4a203ccff21f0a613d900791ee4b470a32c5cebb138b5ef0a4451ed3b0c9e5319c930a634ebb939fd24d1'
+sha512sums=('d03bd861c13f1698b9332817c105710bf9f20d6ee206956ffb46954c907eedda5d64576d2fb37f13ab0796be00f436a9e3d5de41aa3a2fb67cca8f8398503c82'
             'e261eb9b7fe61518d3399874492c94b642cb8268861c246692887ef3027380af06b7e692d6733340deebb629a3c8d095364cb6def4071cd5af31cfbfe9ec6b68')
 
 package_webstorm() {
