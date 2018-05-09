@@ -16,9 +16,9 @@ _zipcode_rel=201703
 _pkgbase=mozc
 pkgname=fcitx5-mozc-git
 pkgdesc="Fcitx5 Module of A Japanese Input Method for Chromium OS, Windows, Mac and Linux (the Open Source Edition of Google Japanese Input)"
-pkgver=2.18.2612.102.1.r1171.5dd2b693
+pkgver=2.18.2612.102.1.r1315.cff92c9f
 _fcitx_patchver=2.18.2612.102.1
-pkgrel=1.2
+pkgrel=1
 arch=('x86_64')
 url="https://github.com/google/mozc"
 license=('custom')
@@ -27,18 +27,33 @@ makedepends=('pkg-config' 'python2' 'curl' 'gtk2' 'mesa' 'subversion' 'ninja' 'g
 replaces=('mozc-fcitx')
 conflicts=('mozc' 'mozc-server' 'mozc-utils-gui' 'mozc-fcitx' 'fcitx-mozc')
 source=(git+https://github.com/fcitx/mozc.git#branch=fcitx
-        japanese_usage_dictionary::git+https://github.com/hiroyuki-komatsu/japanese-usage-dictionary.git#commit=${_japanese_usage_dictionary_rev}
-        mozc-gyp::git+https://chromium.googlesource.com/external/gyp#commit=${_gyp_rev}
-        git+https://github.com/google/protobuf.git#commit=${_protobuf_rev}
+        zero_query_dict-iterator-decrement.patch
+        #japanese_usage_dictionary::git+https://github.com/hiroyuki-komatsu/japanese-usage-dictionary.git#commit=${_japanese_usage_dictionary_rev}
+        #mozc-gyp::git+https://chromium.googlesource.com/external/gyp#commit=${_gyp_rev}
+        #git+https://github.com/google/protobuf.git#commit=${_protobuf_rev}
         http://downloads.sourceforge.net/pnsft-aur/x-ken-all-${_zipcode_rel}.zip
         http://downloads.sourceforge.net/pnsft-aur/jigyosyo-${_zipcode_rel}.zip
+        https://download.fcitx-im.org/fcitx-mozc/fcitx-mozc-icon.tar.gz
+        git+https://chromium.googlesource.com/breakpad/breakpad
+        git+https://github.com/google/googletest.git
+        git+https://chromium.googlesource.com/external/gyp
+        git+https://github.com/hiroyuki-komatsu/japanese-usage-dictionary.git
+        git+https://github.com/open-source-parsers/jsoncpp.git
+        git+https://github.com/google/protobuf.git
+        git+https://github.com/taku910/zinnia.git
 	)
 sha512sums=('SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
+            '9284b6865ee063a294369f40947a2ff7fc3ce49a2bbe9ebbf282a0e0bf199cedc18e1bc51ba8c3e4ed00404f8ef36e6a9db0602b51083f358a1ff555fd031858'
             'aecd93a99c460fbbb9790bdf9e024a313b62cf51a1fec23bc19da0f375ddaeec37fe3bdf5d44930d16da9d1ba0b3205a2da008c4be611165ae474c469d173176'
-            'e426652cfa1ab6360c00770a76d12089165ba66364aaf8b6dcd3b6bf9fc7b154ec490eea77476eefd7e1551cf84165a45f165bb6cfab4964a1bb682220e11e28')
+            'e426652cfa1ab6360c00770a76d12089165ba66364aaf8b6dcd3b6bf9fc7b154ec490eea77476eefd7e1551cf84165a45f165bb6cfab4964a1bb682220e11e28'
+            '5507c637e5a65c44ccf6e32118b6d16647ece865171b9a77dd3c78e6790fbd97e6b219e68d2e27750e22074eb536bccf8d553c295d939066b72994b86b2f251a'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP')
 validpgpkeys=('2CC8A0609AD2A479C65B6D5C8E8B898CBF2412F9')  # Weng Xuetian
 
 pkgver() {
@@ -47,13 +62,22 @@ pkgver() {
 }
 
 prepare() {
-  mv mozc-gyp gyp
+  cd "$srcdir/mozc"
+  git submodule init
+  git config submodule.src/third_party/breakpad.url "$srcdir/breakpad"
+  git config submodule.src/third_party/gtest.url "$srcdir/googletest"
+  git config submodule.src/third_party/gyp.url "$srcdir/gyp"
+  git config submodule.src/third_party/japanese_usage_dictionary.url "$srcdir/japanese-usage-dictionary"
+  git config submodule.src/third_party/jsoncpp.url "$srcdir/jsoncpp"
+  git config submodule.src/third_party/protobuf.url "$srcdir/protobuf"
+  git config submodule.src/third_party/zinnia.url "$srcdir/zinnia"
+  git submodule update
 
-  cd mozc
 
   ## Apply fcitx patch
   #rm unix/fcitx -rf
   #patch -Np2 -i "$srcdir/fcitx-mozc-${_fcitx_patchver}.patch"
+  patch -Np1 -i "$srcdir/zero_query_dict-iterator-decrement.patch"
 
   # Adjust to use python2
   find . -name  \*.py        -type f -exec sed -i -e "1s|python.*$|python2|"  {} +
@@ -69,12 +93,12 @@ prepare() {
   # disable fcitx4 target 
   rm unix/fcitx/fcitx.gyp
 
-  # Copy third party deps
-  cd "$srcdir"
-  for dep in gyp protobuf japanese_usage_dictionary
-  do
-    cp -a $dep mozc/src/third_party/
-  done
+  ## Copy third party deps
+  #cd "$srcdir"
+  #for dep in gyp protobuf japanese_usage_dictionary
+  #do
+  #  cp -a $dep mozc/src/third_party/
+  #done
 }
 
 build() {
@@ -135,5 +159,17 @@ package() {
   install -d "${PREFIX}/share/fcitx5/inputmethod"
   install -d "${PREFIX}/lib/fcitx5"
   ../scripts/install_fcitx5
+
+  install -d "${pkgdir}/usr/share/fcitx5/mozc/icon"
+  install -m 644 "$srcdir/fcitx-mozc-icons/mozc.png" "${pkgdir}/usr/share/fcitx5/mozc/icon/mozc.png"
+  install -m 644 "$srcdir/fcitx-mozc-icons/mozc-alpha_full.png" "${pkgdir}/usr/share/fcitx5/mozc/icon/mozc-alpha_full.png"
+  install -m 644 "$srcdir/fcitx-mozc-icons/mozc-alpha_half.png" "${pkgdir}/usr/share/fcitx5/mozc/icon/mozc-alpha_half.png"
+  install -m 644 "$srcdir/fcitx-mozc-icons/mozc-direct.png" "${pkgdir}/usr/share/fcitx5/mozc/icon/mozc-direct.png"
+  install -m 644 "$srcdir/fcitx-mozc-icons/mozc-hiragana.png" "${pkgdir}/usr/share/fcitx5/mozc/icon/mozc-hiragana.png"
+  install -m 644 "$srcdir/fcitx-mozc-icons/mozc-katakana_full.png" "${pkgdir}/usr/share/fcitx5/mozc/icon/mozc-katakana_full.png"
+  install -m 644 "$srcdir/fcitx-mozc-icons/mozc-katakana_half.png" "${pkgdir}/usr/share/fcitx5/mozc/icon/mozc-katakana_half.png"
+  install -m 644 "$srcdir/fcitx-mozc-icons/mozc-dictionary.png" "${pkgdir}/usr/share/fcitx5/mozc/icon/mozc-dictionary.png"
+  install -m 644 "$srcdir/fcitx-mozc-icons/mozc-properties.png" "${pkgdir}/usr/share/fcitx5/mozc/icon/mozc-properties.png"
+  install -m 644 "$srcdir/fcitx-mozc-icons/mozc-tool.png" "${pkgdir}/usr/share/fcitx5/mozc/icon/mozc-tool.png"
 
 }
