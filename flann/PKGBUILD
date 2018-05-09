@@ -6,7 +6,7 @@
 
 pkgname=flann
 pkgver=1.9.1
-pkgrel=2
+pkgrel=3
 pkgdesc="FLANN is a library for performing fast approximate nearest neighbor searches in high dimensional spaces"
 arch=('i686' 'x86_64')
 url='http://www.cs.ubc.ca/~mariusm/index.php/FLANN/FLANN'
@@ -15,16 +15,17 @@ depends=('lz4' 'hdf5')
 makedepends=('cmake' 'python2' 'texlive-core')
 optdepends=('python2: python bindings'
             'cuda: cuda support')
-source=("https://github.com/mariusmuja/flann/archive/${pkgver}.tar.gz" "system_lz4.patch")
-md5sums=('73adef1c7bf8e8b978987e7860926ea6'
-         'af01e25f6b090c1c1f266797a03f4766')
+source=("https://github.com/mariusmuja/flann/archive/${pkgver}.tar.gz")
+md5sums=('73adef1c7bf8e8b978987e7860926ea6')
 
 prepare() {
   cd "$srcdir/flann-${pkgver}"
 
-  patch -Np2 -i "${srcdir}/system_lz4.patch"
-
   sed -i "s|setup\.py install|setup.py install --root=$pkgdir --optimize=1|" src/python/CMakeLists.txt
+
+  touch src/cpp/empty.cpp
+  sed -i -e 's/flann_cpp SHARED \"\"/flann_cpp SHARED \"empty\.cpp\"/g' src/cpp/CMakeLists.txt
+  sed -i -e 's/flann SHARED \"\"/flann SHARED \"empty\.cpp\"/g' src/cpp/CMakeLists.txt
 }
 
 build() {
@@ -52,8 +53,5 @@ package() {
 
   #install license file
   install -D -m644 ../COPYING "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
-
-  # remove lz4 because we use the one supplied by the system
-  rm -r "${pkgdir}/usr/include/flann/ext"
 }
 
