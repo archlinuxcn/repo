@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
 
-pkgver=$(bash ./check_ver.sh)
+pkgver=$(python ./check_ver.py)
 sed "s/^pkgver=.*/pkgver=$pkgver/" -i PKGBUILD
 updpkgsums
