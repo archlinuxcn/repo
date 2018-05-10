@@ -24,7 +24,9 @@ build_prefix = 'extra-x86_64'
 depends=[("spl-dkms-git", "spl-utils-dkms-git"), ("spl-dkms-git", "spl-dkms-git")]
 
 
-pre_build = aur_pre_build
+def pre_build():
+    aur_pre_build()
+    add_makedepends("python2")
 
 post_build = aur_post_build
 
