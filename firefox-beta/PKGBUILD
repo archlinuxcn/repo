@@ -5,17 +5,18 @@
 
 pkgname=firefox-beta
 name=firefox-beta
-pkgver=60.15
-pkgrel=1.1
-meme=FIREFOX_60_0b15_RELEASE
+pkgver=61.3
+pkgrel=1
+meme=FIREFOX_61_0b3_RELEASE
 meme2=DEVEDITION_61_0b1_RELEASE
+meme3=FIREFOX_BETA_61_BASE
 pkgdesc="Standalone web browser from mozilla.org, with telemetry and signing disabled"
 arch=(i686 x86_64)
 license=(MPL GPL LGPL)
 url="https://www.mozilla.org/firefox/"
 depends=(gtk3 gtk2 mozilla-common libxt startup-notification mime-types dbus-glib ffmpeg
          nss hunspell sqlite ttf-font libpulse)
-makedepends=(unzip zip diffutils python2 yasm mesa imake gconf inetutils xorg-server-xvfb
+makedepends=(unzip zip diffutils python yasm mesa imake gconf inetutils xorg-server-xvfb
              autoconf2.13 rust mercurial clang llvm jack)
 optdepends=('networkmanager: Location detection via available WiFi networks'
             'libnotify: Notification integration'
@@ -23,7 +24,7 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
             'speech-dispatcher: Text-to-Speech')
 options=(!emptydirs !makeflags !strip)
 source=("https://hg.mozilla.org/mozilla-unified/archive/$meme.tar.gz"
-        https://raw.githubusercontent.com/bn0785ac/firefox-beta/master/$name.desktop 
+        https://raw.githubusercontent.com/bn0785ac/firefox-beta/master/$name.desktop
 https://raw.githubusercontent.com/bn0785ac/firefox-beta/master/firefox-symbolic.svg 
 https://raw.githubusercontent.com/bn0785ac/firefox-beta/master/firefox-52-disable-data-sharing-infobar.patch
 https://raw.githubusercontent.com/bn0785ac/firefox-beta/master/firefox-52-disable-location.services.mozilla.com.patch
@@ -33,7 +34,7 @@ https://raw.githubusercontent.com/bn0785ac/firefox-beta/master/fix.patch
 https://raw.githubusercontent.com/bn0785ac/firefox-beta/master/fix2.patch
 )
 
-sha256sums=('8a9965b323f1944f9fd2ecdbc0a5ce09390bfc843efe8fdcb3f7dd024b8dbd05'
+sha256sums=('ca9a1ec0da442ccb96e2926153795235565fb1481dcb4819618657d419fcb1bc'
             'd6b4c91a7fe77f9a335b44b943e120ce44511e46bbb16ae305cc82b4c3db66cd'
             'a2474b32b9b2d7e0fb53a4c89715507ad1c194bef77713d798fa39d507def9e9'
             'bdad68eafe110b9f94a0e025635e32a6ab53e2f9adcd594c8dd2e3225f6453ab'
@@ -57,9 +58,6 @@ sha256sums=('8a9965b323f1944f9fd2ecdbc0a5ce09390bfc843efe8fdcb3f7dd024b8dbd05'
 
 
 prepare() {
-  mkdir path
-  ln -s /usr/bin/python2 path/python
-
   cd mozilla-unified-$meme
   patch -Np1 -i ../id.patch
 
@@ -121,10 +119,6 @@ ac_add_options --disable-accessibility
 ac_add_options --disable-tests
 
 ac_add_options --enable-rust-simd
-# please put 1.25 times your number of threads
-
-mk_add_options MOZ_MAKE_FLAGS="-j10"
-
 END
 }
 
@@ -134,7 +128,6 @@ build() {
   # _FORTIFY_SOURCE causes configure failures
   CPPFLAGS+=" -O2"
 
-  export PATH="$srcdir/path:$PATH"
   export MOZ_SOURCE_REPO="$_repo"
 
   # Do PGO
