@@ -4,7 +4,7 @@
 
 pkgbase="zfs-dkms"
 pkgname=("zfs-dkms" "zfs-utils")
-pkgver=0.7.8
+pkgver=0.7.9
 pkgrel=1
 license=('CDDL')
 makedepends=("git" "spl-dkms=${pkgver}")
