@@ -4,7 +4,7 @@
 # Contributor: Adrian Hühn <adrian.huehn@web.de>
 
 pkgname=ccnet
-pkgver=6.1.6
+pkgver=6.1.8
 pkgrel=1
 pkgdesc="A framework for writing networked applications in C."
 arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
@@ -15,7 +15,7 @@ makedepends=('vala')
 conflicts=('ccnet-server')
 source=("${pkgname}-v${pkgver}-server.tar.gz::${url}/archive/v${pkgver}.tar.gz"
         "libccnet.pc.patch")
-sha256sums=('c6ecec39b21dc92489f77b1975d808f6e7898fcbe623e3fb22dd5a39e1a8faf4'
+sha256sums=('b55636bf95232dc1db70d3604d0bebb7c3d730292d15b9b6c5b951307eb69762'
             '66c3b02c3981db6a80819e0ae103bedadf8dfdf81405a7f75a9cba714acf973f')
 
 prepare () {
