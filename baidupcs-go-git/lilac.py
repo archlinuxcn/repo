@@ -7,11 +7,11 @@
 from lilaclib import *
 
 def post_build():
-  git_add_files('PKGBUILD')
-  git_commit()
+    git_add_files('PKGBUILD')
+    git_commit()
 
 build_prefix = 'extra-x86_64'
 pre_build = vcs_update
 
 if __name__ == '__main__':
-single_main(build_prefix)
+    single_main(build_prefix)
