@@ -5,12 +5,13 @@ pkgname=shattered-pixel-dungeon
 _pkgname=$pkgname-gdx
 pkgver=0.6.3a
 _srcdir=$_pkgname-$pkgver
-pkgrel=1
+pkgrel=2
 pkgdesc='Shattered fork of the popular rogue-like game'
 url='http://shatteredpixel.tumblr.com'
 license=('GPL3')
 depends=('java-runtime' 'bash' 'xorg-xrandr')
-makedepends=('git' 'java-environment')
+makedepends=('git' 'java-environment' 'jdk8-openjdk')
+conflicts=('shattered-pixel-dungeon-git')
 arch=('any')
 source=(
   "https://github.com/00-Evan/shattered-pixel-dungeon-gdx/archive/v$pkgver.tar.gz"
@@ -24,6 +25,8 @@ sha512sums=('fb4be8c9a5bfa96eea580c78a198140385caf9f6ad0f2914470c5a24dee29f4c3b5
 build() {
   cd $_srcdir
   unset _JAVA_OPTIONS
+  # Force the system to build the package using JDK8
+  export PATH=/usr/lib/jvm/java-8-openjdk/jre/bin/:$PATH
   GRADLE_USER_HOME="$srcdir" ./gradlew desktop:dist
 }
 
