@@ -3,9 +3,9 @@
 
 pkgname=shattered-pixel-dungeon
 _pkgname=$pkgname-gdx
-pkgver=0.6.3a
+pkgver=0.6.3b
 _srcdir=$_pkgname-$pkgver
-pkgrel=2
+pkgrel=1
 pkgdesc='Shattered fork of the popular rogue-like game'
 url='http://shatteredpixel.tumblr.com'
 license=('GPL3')
@@ -18,7 +18,7 @@ source=(
   "$pkgname.sh"
   "$pkgname.desktop"
 )
-sha512sums=('fb4be8c9a5bfa96eea580c78a198140385caf9f6ad0f2914470c5a24dee29f4c3b5b90e00605f90414d35edfbfc08600247af063cdc5e1c8f03a053c5671a0f4'
+sha512sums=('3df77c6f6ae58cf4571cd8e4ba89df2673fcf6f0d593f822105ba1fe98ff006f55430b2f00c928d5e93ad1b443bdfa386a2b76167444502255e09a77b59e1ebc'
             '88814d1f33eea6bd5656d3ca731ed5a6cfce10ecdae24012252c5b32c4b194ec75fb0e22cac70897802679086c6a32e210d52933ec45ca94ff350ac4ad7c266e'
             '204a7bcedbbc14bdad6586e4b759b326191a7fd2c344dadc7032495d4caa5fe32edac4118d7294229a6fe24f6684416fff37e260bbc9dde9e50846a03ba77db8')
 
