@@ -1,7 +1,7 @@
 # Maintainer: Wesley Moore <wes@wezm.net>
 
 pkgname=bat
-pkgver=0.2.2
+pkgver=0.3.0
 pkgrel=1
 pkgdesc='A cat(1) clone with syntax highlighting and Git integration'
 arch=('x86_64')
@@ -11,7 +11,7 @@ makedepends=('rust' 'cmake')
 depends=('curl' 'libssh2' 'oniguruma')
 conflicts=('bacula-bat')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-sha512sums=('3a3e586f311fabfbc160999fc2bb2ab9e1ea0e5622b284325c4bc16e4c34cf7d0e51ae5cd3f5e6314dcaa2b983f541dfce7f0646d58a201a4bcf23a91af183c3')
+sha256sums=('ffb3f2b20fb831e503c3db224a563dc30e766c627a08c069cf60e5182845207c')
 
 build() {
   cd $pkgname-$pkgver
