@@ -4,22 +4,22 @@
 # Contributor: DrZaius <lou at fakeoutdoorsman.com>
 
 pkgname=ffmpeg-git
-pkgver=4.1.r91072.gcae004cabb
+pkgver=4.1.r91073.g32234e03a7
 pkgrel=1
 pkgdesc='Complete solution to record, convert and stream audio and video (git version)'
 arch=('i686' 'x86_64')
 url='http://www.ffmpeg.org/'
 license=('GPL3')
 depends=('alsa-lib' 'bzip2' 'fontconfig' 'fribidi' 'glibc' 'gmp' 'gnutls' 'gsm'
-         'jack' 'lame' 'libavc1394' 'libiec61883' 'libmodplug' 'libpulse'
-         'libraw1394' 'libsoxr' 'libssh' 'libtheora' 'libvdpau' 'libwebp'
-         'libx11' 'libxcb' 'libxml2' 'opencore-amr' 'openjpeg2' 'opus' 'sdl2'
-         'speex' 'v4l-utils' 'xz' 'zlib'
-         'libomxil-bellagio'
+         'lame' 'libavc1394' 'libdrm' 'libiec61883' 'libmodplug'
+         'libomxil-bellagio' 'libpulse' 'libraw1394' 'libsoxr' 'libssh'
+         'libtheora' 'libvdpau' 'libwebp' 'libx11' 'libxcb' 'libxext' 'libxml2'
+         'libxv' 'opencore-amr' 'openjpeg2' 'opus' 'sdl2' 'speex' 'v4l-utils'
+         'xz' 'zlib'
          'libass.so' 'libbluray.so' 'libfreetype.so' 'libva-drm.so' 'libva.so'
          'libva-x11.so' 'libvidstab.so' 'libvorbisenc.so' 'libvorbis.so'
          'libvpx.so' 'libx264.so' 'libx265.so' 'libxvidcore.so')
-makedepends=('git' 'ladspa' 'nasm')
+makedepends=('git' 'ffnvcodec-headers' 'ladspa' 'nasm')
 optdepends=('ladspa: LADSPA filters')
 provides=('ffmpeg' 'qt-faststart' 'libavcodec.so' 'libavdevice.so' 'libavfilter.so'
           'libavformat.so' 'libavresample.so' 'libavutil.so' 'libpostproc.so'
@@ -50,7 +50,6 @@ build() {
         --disable-debug \
         --disable-static \
         --disable-stripping \
-        --enable-avisynth \
         --enable-avresample \
         --enable-fontconfig \
         --enable-gmp \
@@ -59,6 +58,7 @@ build() {
         --enable-ladspa \
         --enable-libass \
         --enable-libbluray \
+        --enable-libdrm \
         --enable-libfreetype \
         --enable-libfribidi \
         --enable-libgsm \
@@ -84,9 +84,11 @@ build() {
         --enable-libxcb \
         --enable-libxml2 \
         --enable-libxvid \
+        --enable-nvdec \
+        --enable-nvenc \
+        --enable-omx \
         --enable-shared \
-        --enable-version3 \
-        --enable-omx
+        --enable-version3
         
     make
     make tools/qt-faststart
@@ -98,4 +100,4 @@ package() {
     make DESTDIR="$pkgdir" install
     
     install -D -m755 tools/qt-faststart "${pkgdir}/usr/bin/qt-faststart"
-} 
+}
