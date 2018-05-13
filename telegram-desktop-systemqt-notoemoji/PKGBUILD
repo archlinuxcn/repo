@@ -6,7 +6,7 @@
 # https://github.com/mymedia2/tdesktop
 
 pkgname=telegram-desktop-systemqt-notoemoji
-pkgver=1.2.17
+pkgver=1.2.19
 pkgrel=2
 pkgdesc='Official Telegram Desktop client (with noto emoji)'
 arch=('x86_64')
@@ -33,18 +33,18 @@ source=(
     "libtgvoip.patch"
     "libtgvoip-2.patch"
 )
-sha256sums=('SKIP'
+sha512sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
-            '0b520c1227010f2357c52208c3937a394534bd3aa30c78810cd4d309afa94bd7'
-            'd4cdad0d091c7e47811d8a26d55bbee492e7845e968c522e86f120815477e9eb'
-            '7a06af83609168a8eaec59a65252caa41dcd0ecc805225886435eb65073e9c82'
-            'aea18527d47228dcdb42b8c1d74398fcf0fdcd7b3c2246e87198f8d9b2dfe0bc'
-            '8d707debe027c7cb658825501dc30fb3beb57ab21b1b6df2f01c5f76ca39a0e6'
-            '4dd2b1674b1a5bcfc5b640612278fe3a53b454192fbcc06b7476ff54ed6d2f6d'
-            '07ca232b91e9ad0fb9c1501b8b83275cc62b00477c7e5edde5e4cfd2852f1f26')
+            '376a4860e37b0f60892f362e954f976a563c632579167003b4aacbb24b6fea6aabb4e6952baf6d1a546b961936935cc49cf0e0ce9570320245b6bb326cb149e5'
+            'b87414ceaae19185a8a5749cea1f6d9f3fc3c69b8dd729e3db8790cde00b987c3c827cd30baf0eac579d1884e34aa2f37bb90778c3c0bc9ca211d75a82891b9d'
+            'aa97c02ff4f1caa152671496aff6bb7162271fbfb86ade7c5b72f1cca3ab1ef92b69a9e9390614d2b84ae43606545b8c8bc2bfd98132d0cf57a8b253bcf2e643'
+            '72c9cf1f5639c2c090e853d7141cc9f8c295b869f3ce1b998559db136903d37f3a8c6676520cd5d5d228f6e1e6db0ec0b0c7c399a3653f214bf56d9d1c1a25d0'
+            '7a37e0ca582145a56a411585aec0bc94889dc18a80cc038d2efa237e19eebf8b67d56825e068be88f7566b08316ce068d7f20c25729caa33d0e9d6c370325025'
+            'd60694dc701aa985b0e82a12c9732b945082470441c687b33167a94f94efcf253baf43bb7280ec160ba338485ee5c62de138e4804cae05f27cc5cf4298166d39'
+            '251f43bcdfd688a4c7dda082e981569c6cd6332289652576cfdc9f6376eee6e28195ec4a60bcfa002c6358d0f3cbdf215b7d390bbcce2ed560abfc9c606566b5')
 
 prepare() {
     cd "$srcdir/tdesktop"
@@ -59,7 +59,7 @@ prepare() {
 
     cd "Telegram/ThirdParty/libtgvoip"
     patch -Np1 -i "$srcdir/libtgvoip.patch"
-    patch -Np1 -i "$srcdir/libtgvoip-2.patch"
+    # patch -Np1 -i "$srcdir/libtgvoip-2.patch"
 
     for x in "" "_125x" "_150x" "_200x" "_250x"; do
         cp -vf "$srcdir/noto-emoji-${_emojiver}/emoji$x.webp" "$srcdir/tdesktop/Telegram/Resources/art/emoji$x.webp"
