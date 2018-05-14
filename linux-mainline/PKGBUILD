@@ -7,8 +7,8 @@
 
 pkgbase=linux-mainline               # Build stock -ARCH kernel
 #pkgbase=linux-custom       # Build kernel with a different name
-_tag=v4.17-rc4
-pkgver=4.17rc4
+_tag=v4.17-rc5
+pkgver=4.17rc5
 pkgrel=1
 arch=('x86_64')
 url="https://www.kernel.org/"
@@ -38,20 +38,26 @@ _kernelname=${pkgbase#linux}
 prepare() {
   cd "${srcdir}/linux"
 
-  cp -Tf ../config .config
-
   cat ../config - >.config <<END
 CONFIG_LOCALVERSION="${_kernelname}"
 CONFIG_LOCALVERSION_AUTO=n
 END
 
+  # mainline: Fix LOCALVERSION
+  touch .scmversion
+
+  # mainline: we have -rcX in EXTRAVERSION, don't touch it
   # set extraversion to pkgrel and empty localversion
-  sed -e "/^EXTRAVERSION =/s/=.*/= -${pkgrel}/" \
-      -e "/^EXTRAVERSION =/aLOCALVERSION =" \
-      -i Makefile
+  #sed -e "/^EXTRAVERSION =/s/=.*/= -${pkgrel}/" \
+  #    -e "/^EXTRAVERSION =/aLOCALVERSION =" \
+  #    -i Makefile
 
   # don't run depmod on 'make install'. We'll do this ourselves in packaging
   sed -i '2iexit 0' scripts/depmod.sh
+
+  # mainline: Disabled here, causes make config to run before olddefconfig
+  # get kernel version
+  #make prepare
 
   # load configuration
   # Configure the kernel. Replace the line below with one of your choice.
@@ -62,6 +68,7 @@ END
   make olddefconfig
   # ... or manually edit .config
 
+  # mainline: moved here from before make config
   # get kernel version
   make prepare
 
