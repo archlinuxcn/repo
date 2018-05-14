@@ -5,9 +5,9 @@
 
 pkgname=firefox-beta
 name=firefox-beta
-pkgver=61.3
+pkgver=61.4
 pkgrel=1
-meme=FIREFOX_61_0b3_RELEASE
+meme=FIREFOX_61_0b4_RELEASE
 meme2=DEVEDITION_61_0b1_RELEASE
 meme3=FIREFOX_BETA_61_BASE
 pkgdesc="Standalone web browser from mozilla.org, with telemetry and signing disabled"
@@ -34,7 +34,7 @@ https://raw.githubusercontent.com/bn0785ac/firefox-beta/master/fix.patch
 https://raw.githubusercontent.com/bn0785ac/firefox-beta/master/fix2.patch
 )
 
-sha256sums=('ca9a1ec0da442ccb96e2926153795235565fb1481dcb4819618657d419fcb1bc'
+sha256sums=('11913902b51f234710be62f89bd2a90df48c982fa1ee9a1ec8687c997de82489'
             'd6b4c91a7fe77f9a335b44b943e120ce44511e46bbb16ae305cc82b4c3db66cd'
             'a2474b32b9b2d7e0fb53a4c89715507ad1c194bef77713d798fa39d507def9e9'
             'bdad68eafe110b9f94a0e025635e32a6ab53e2f9adcd594c8dd2e3225f6453ab'
@@ -133,7 +133,7 @@ build() {
   # Do PGO
   #xvfb-run -a -n 95 -s "-extension GLX -screen 0 1280x1024x24" \
   #  MOZ_PGO=1 ./mach build
-  ./mach build
+  ./mach build -j1
   ./mach buildsymbols
 }
 
