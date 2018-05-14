@@ -1,7 +1,7 @@
 # Maintainer: Philipp Wolfer <ph.wolfer@gmail.com>
 pkgname=peek
 pkgver=1.3.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Simple screen recorder with an easy to use interface"
 arch=('i686' 'x86_64')
 url="https://github.com/phw/peek"
@@ -24,17 +24,17 @@ build() {
   cd "build"
   cmake "${srcdir}/${pkgname}-${pkgver}" \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DBUILD_TESTS=ON \
+    -DBUILD_TESTS=OFF \
     -DCMAKE_BUILD_TYPE=Release \
     -DGSETTINGS_COMPILE=OFF \
     -DENABLE_FILECHOOSERNATIVE=ON
   make
 }
 
-check() {
-  cd "build"
-  make test
-}
+# check() {
+#   cd "build"
+#   make test
+# }
 
 package() {
   cd "build"
