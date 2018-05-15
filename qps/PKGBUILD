@@ -4,11 +4,11 @@
 
 pkgname=qps
 pkgver=1.10.17
-pkgrel=2
+pkgrel=3
 pkgdesc="a visual process manager, an X11 version of 'top' or 'ps'."
-url="https://github.com/QtDesktop/qps"
-depends=('qt5-x11extras')
-makedepends=('cmake' 'qt5-tools')
+url="https://github.com/lxqt/qps"
+depends=('qt5-x11extras' 'qt5-tools')
+makedepends=('cmake')
 arch=('x86_64')
 license=("GPL")
 source=("$pkgname-$pkgver.tar.xz::https://github.com/QtDesktop/qps/releases/download/1.10.17/$pkgname-$pkgver.tar.xz"
