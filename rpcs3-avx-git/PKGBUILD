@@ -1,27 +1,28 @@
-# Maintainer: Maxime Gauduin <alucryd@archlinux.org>
-
 pkgname=rpcs3-avx-git
-pkgver=0.0.5.r237.753d8170d
-pkgrel=1
-pkgdesc='A Sony PlayStation 3 emulator (Sandy Bridge CPU and up)'
+pkgver=0.0.5.r258.737db9005
+pkgrel=2
+pkgdesc='A Sony PlayStation 3 emulator'
 arch=('x86_64')
 url='https://github.com/RPCS3/rpcs3'
 license=('GPL2')
-depends=('alsa-lib' 'gcc-libs' 'glew' 'glibc' 'glu' 'libevdev' 'libgl' 'libpng'
-         'libpulse' 'libx11' 'llvm40-libs' 'openal' 'qt5-base'
-         'vulkan-icd-loader' 'yaml-cpp' 'zlib' 'ffmpeg' 'qt5-3d')
-makedepends=('boost' 'cereal' 'cmake' 'git' 'llvm40')
-provides=('rpcs3')
-conflicts=('rpcs3')
+depends=('alsa-lib' 'gcc-libs' 'glew' 'glibc' 'glu' 'libevdev' 'libgl' 'libice'
+         'libpng' 'libpulse' 'libsm' 'libx11' 'libxext' 'openal' 'qt5-base'
+         'qt5-declarative' 'vulkan-icd-loader' 'yaml-cpp' 'zlib' 'llvm'
+         'libavcodec.so' 'libavformat.so' 'libavutil.so' 'libncursesw.so'
+         'libswscale.so' 'libudev.so')
+makedepends=('boost' 'cereal' 'cmake' 'ffmpeg' 'git')
+provides=('rpcs3' 'rpcs3-git')
+conflicts=('rpcs3' 'rpcs3-git')
 source=('git+https://github.com/RPCS3/rpcs3.git'
         'rpcs3-common::git+https://github.com/RPCS3/common.git'
-        'rpcs3-hidapi::git+https://github.com/RPCS3/hidapi.git#commit=ca39ce8'
-        'rpcs3-pugixml::git+https://github.com/RPCS3/pugixml.git#commit=f205aaf'
-        'git+https://github.com/kobalicek/asmjit.git#commit=1370fe6'
-        'git+https://github.com/Microsoft/GSL.git#commit=fc5fce4'
-        'git+https://github.com/KhronosGroup/glslang.git#commit=cf571f7'
-        'git+https://github.com/KhronosGroup/Vulkan-LoaderAndValidationLayers.git#commit=85926a3'
-        'git+https://github.com/akrzemi1/Optional.git#commit=f27e790')
+        'rpcs3-hidapi::git+https://github.com/RPCS3/hidapi.git'
+#        'rpcs3-llvm::git+https://github.com/RPCS3/llvm.git'
+        'git+https://github.com/kobalicek/asmjit.git'
+        'git+https://github.com/Microsoft/GSL.git'
+        'git+https://github.com/KhronosGroup/glslang.git'
+        'git+https://github.com/akrzemi1/Optional.git'
+        'git+https://github.com/zeux/pugixml.git'
+        'git+https://github.com/KhronosGroup/Vulkan-LoaderAndValidationLayers.git')
 sha256sums=('SKIP'
             'SKIP'
             'SKIP'
@@ -46,13 +47,15 @@ prepare() {
   git config submodule.glslang.url ../glslang
   git config submodule.GSL.url ../GSL
   git config submodule.hidapi.url ../rpcs3-hidapi
+  #git config submodule.llvm.url ../rpcs3-llvm
   git config submodule.Optional.url ../Optional
-  git config submodule.pugixml.url ../rpcs3-pugixml
+  git config submodule.pugixml.url ../pugixml
   git config submodule.Vulkan-LoaderAndValidationLayers ../Vulkan-LoaderAndValidationLayers
   git submodule update 3rdparty/{GSL,hidapi,Optional,pugixml} asmjit Vulkan/{glslang,Vulkan-LoaderAndValidationLayers}
 
-  popd
-  
+  sed 's/999.666/6.0.0/' -i rpcs3/CMakeLists.txt
+
+  popd  
   sed -i 's/march=native/march=sandybridge -mtune=sandybridge/g' ${srcdir}/rpcs3/rpcs3/CMakeLists.txt
   if [[ -d build ]]; then
     rm -rf build
@@ -69,8 +72,7 @@ build() {
     -DCMAKE_EXE_LINKER_FLAGS='-ldl -lyaml-cpp' \
     -DCMAKE_SKIP_RPATH='ON' \
     -DUSE_SYSTEM_FFMPEG='ON' \
-    -DUSE_SYSTEM_LIBPNG='ON' \
-    -DLLVM_DIR='/usr/lib/llvm-4.0/lib/cmake/llvm'
+    -DUSE_SYSTEM_LIBPNG='ON'
   make
 }
 
