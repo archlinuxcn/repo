@@ -6,6 +6,6 @@ Target = boot/vmlinuz-%PKGBASE%
 Target = usr/lib/initcpio/*
 
 [Action]
-Description = Updating %PKGBASE% initcpios
+Description = Updating %PKGBASE% initcpios...
 When = PostTransaction
 Exec = /usr/bin/mkinitcpio -p %PKGBASE%
