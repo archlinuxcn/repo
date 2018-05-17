@@ -1,14 +1,14 @@
 _pkgname=aioconsole
 pkgname=python-aioconsole
-pkgver=0.1.7
+pkgver=0.1.8
 pkgrel=1
 pkgdesc="Asynchronous console and interfaces for asyncio"
 arch=('any')
 url="https://github.com/vxgmichel/aioconsole"
 license=('GPLv3')
 depends=('python' 'python-setuptools')
-source=('https://pypi.python.org/packages/f3/53/ac3e648b2a1a75447b120079096f9950d11fc9dc1017bd57d2a476965470/aioconsole-0.1.7.tar.gz')
-md5sums=('30f9b9e3ade490cbd88811d38d0c17f4')
+source=('https://files.pythonhosted.org/packages/34/bb/0479e51f7df8c92df9409ec2464184aac64c2ad793780c312fc316e6c381/aioconsole-0.1.8.tar.gz')
+md5sums=('5dbf64e6ced6c56c8a62de26692bd0f3')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
