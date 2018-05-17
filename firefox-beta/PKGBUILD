@@ -5,11 +5,9 @@
 
 pkgname=firefox-beta
 name=firefox-beta
-pkgver=61.4
+pkgver=61.0b5
 pkgrel=1
-meme=FIREFOX_61_0b4_RELEASE
-meme2=DEVEDITION_61_0b1_RELEASE
-meme3=FIREFOX_BETA_61_BASE
+epoch=1
 pkgdesc="Standalone web browser from mozilla.org, with telemetry and signing disabled"
 arch=(i686 x86_64)
 license=(MPL GPL LGPL)
@@ -23,18 +21,19 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
             'pulseaudio: Audio support'
             'speech-dispatcher: Text-to-Speech')
 options=(!emptydirs !makeflags !strip)
-source=("https://hg.mozilla.org/mozilla-unified/archive/$meme.tar.gz"
+source=(https://ftp.mozilla.org/pub/firefox/releases/$pkgver/source/firefox-$pkgver.source.tar.xz{,.asc}
         https://raw.githubusercontent.com/bn0785ac/firefox-beta/master/$name.desktop
-https://raw.githubusercontent.com/bn0785ac/firefox-beta/master/firefox-symbolic.svg 
-https://raw.githubusercontent.com/bn0785ac/firefox-beta/master/firefox-52-disable-data-sharing-infobar.patch
-https://raw.githubusercontent.com/bn0785ac/firefox-beta/master/firefox-52-disable-location.services.mozilla.com.patch
-https://raw.githubusercontent.com/bn0785ac/firefox-beta/master/firefox-52-disable-telemetry.patch
-https://raw.githubusercontent.com/bn0785ac/firefox-beta/master/id.patch
-https://raw.githubusercontent.com/bn0785ac/firefox-beta/master/fix.patch
-https://raw.githubusercontent.com/bn0785ac/firefox-beta/master/fix2.patch
+        https://raw.githubusercontent.com/bn0785ac/firefox-beta/master/firefox-symbolic.svg 
+        https://raw.githubusercontent.com/bn0785ac/firefox-beta/master/firefox-52-disable-data-sharing-infobar.patch
+        https://raw.githubusercontent.com/bn0785ac/firefox-beta/master/firefox-52-disable-location.services.mozilla.com.patch
+        https://raw.githubusercontent.com/bn0785ac/firefox-beta/master/firefox-52-disable-telemetry.patch
+        https://raw.githubusercontent.com/bn0785ac/firefox-beta/master/id.patch
+        https://raw.githubusercontent.com/bn0785ac/firefox-beta/master/fix.patch
+        https://raw.githubusercontent.com/bn0785ac/firefox-beta/master/fix2.patch
 )
 
-sha256sums=('11913902b51f234710be62f89bd2a90df48c982fa1ee9a1ec8687c997de82489'
+sha256sums=('f4032355ff8bf02ba1cb8b89451c0c88f6dec5f9b9c591c8293f730467d59c32'
+            'SKIP'
             'd6b4c91a7fe77f9a335b44b943e120ce44511e46bbb16ae305cc82b4c3db66cd'
             'a2474b32b9b2d7e0fb53a4c89715507ad1c194bef77713d798fa39d507def9e9'
             'bdad68eafe110b9f94a0e025635e32a6ab53e2f9adcd594c8dd2e3225f6453ab'
@@ -43,6 +42,7 @@ sha256sums=('11913902b51f234710be62f89bd2a90df48c982fa1ee9a1ec8687c997de82489'
             '7e44bd2eb4ce243ef47451e64e793203c8d637f900c86889106eb7f8adf79296'
             '7e44dc0dc836a31c6f8e3e3461aeb636de210fb5a238e58a0eb10787ca4ad958'
             '32d04bf9c5c76ec3803aa7e1f82ca11dc5ea3d32b86d054168f4cc1e1ef9960c')
+validpgpkeys=(14F26682D0916CDD81E37B6D61B7B526D98F0353)
 
 
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
@@ -58,7 +58,7 @@ sha256sums=('11913902b51f234710be62f89bd2a90df48c982fa1ee9a1ec8687c997de82489'
 
 
 prepare() {
-  cd mozilla-unified-$meme
+  cd firefox-${pkgver//b*/}
   patch -Np1 -i ../id.patch
 
 
@@ -123,7 +123,7 @@ END
 }
 
 build() {
-  cd mozilla-unified-$meme
+  cd firefox-${pkgver//b*/}
 
   # _FORTIFY_SOURCE causes configure failures
   CPPFLAGS+=" -O2"
@@ -138,7 +138,7 @@ build() {
 }
 
 package() {
-  cd mozilla-unified-$meme
+  cd firefox-${pkgver//b*/}
   DESTDIR="$pkgdir" ./mach install
   find . -name '*crashreporter-symbols-full.zip' -exec cp -fvt "$startdir" {} +
 
