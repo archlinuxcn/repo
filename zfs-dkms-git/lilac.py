@@ -26,7 +26,7 @@ depends=[("spl-dkms-git", "spl-utils-dkms-git"), ("spl-dkms-git", "spl-dkms-git"
 
 def pre_build():
     aur_pre_build()
-    add_makedepends("python2")
+    add_makedepends(["python2"])
 
 post_build = aur_post_build
 
