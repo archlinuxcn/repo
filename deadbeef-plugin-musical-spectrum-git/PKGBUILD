@@ -1,0 +1,41 @@
+# Maintainer: Raphaël Doursenaud <rdoursenaud@free.fr>
+pkgbase=deadbeef-plugin-musical-spectrum-git
+pkgname=(deadbeef-plugin-musical-spectrum-gtk2-git deadbeef-plugin-musical-spectrum-gtk3-git)
+pkgver=r144.797e929
+pkgrel=1
+_pkgdesc="Musical spectrum for the DeaDBeeF audio player"
+url="https://github.com/cboxdoerfer/ddb_musical_spectrum"
+arch=('i686' 'x86_64')
+license=('GPL2')
+makedepends=('git' 'pkg-config' 'deadbeef' 'fftw' 'gtk2' 'gtk3')
+
+_gitname=ddb_musical_spectrum
+_gitroot=https://github.com/cboxdoerfer/${_gitname}
+
+source=("git+${_gitroot}")
+md5sums=('SKIP')
+
+pkgver() {
+  cd "${srcdir}/${_gitname}"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+  cd "${_gitname}"
+  make
+}
+
+package_deadbeef-plugin-musical-spectrum-gtk2-git() {
+  pkgdesc="${_pkgdesc} GTK2"
+  depends=('deadbeef' 'fftw' 'gtk2')
+  provides=('deadbeef-plugin-musical-spectrum-gtk2')
+  conflicts=('deadbeef-plugin-musical-spectrum-gtk2')
+  install -D -v -c "${srcdir}/${_gitname}/gtk2/ddb_vis_musical_spectrum_GTK2.so" "${pkgdir}/usr/lib/deadbeef/ddb_vis_musical_spectrum_GTK2.so"
+}
+package_deadbeef-plugin-musical-spectrum-gtk3-git() {
+  pkgdesc="${_pkgdesc} GTK3"
+  depends=('deadbeef' 'fftw' 'gtk3')
+  provides=('deadbeef-plugin-musical-spectrum-gtk3')
+  conflicts=('deadbeef-plugin-musical-spectrum-gtk3')
+  install -D -v -c "${srcdir}/${_gitname}/gtk3/ddb_vis_musical_spectrum_GTK3.so" "${pkgdir}/usr/lib/deadbeef/ddb_vis_musical_spectrum_GTK3.so"
+}
