@@ -2,7 +2,7 @@
 
 pkgbase=vim-lily
 pkgname=(gvim-lily vim-runtime-lily vim-lily)
-pkgver=8.0.1848
+pkgver=8.1.1
 pkgrel=1
 _versiondir="vim$(echo $pkgver | awk -F. '{print $1$2}')"
 arch=('i686' 'x86_64')
@@ -20,7 +20,7 @@ options=('debug')
 
 pkgver() {
   cd vim-repo
-  echo 8.0.$(sed -n '/ included_patches\[\]/,+3p' src/version.c | sed '/[^,]$/d;s/\s*\|,//g')
+  echo 8.1.$(sed -n '/ included_patches\[\]/,+3p' src/version.c | sed '/[^,]$/d;s/\s*\|,//g')
 }
 
 build() {
