@@ -2,7 +2,7 @@
 _pkgname=bilibili-live-helper
 pkgname=bilibili-live-helper-git
 entryname="Bilibili Live Helper"
-pkgver=r37.7f8bcb0
+pkgver=r36.122df52
 pkgrel=1
 pkgdesc="A Helper for Bilibili Live."
 arch=('x86_64')
