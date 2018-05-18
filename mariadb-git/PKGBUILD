@@ -5,17 +5,15 @@
 pkgbase=mariadb-git
 _pkgbase=mariadb
 pkgname=('libmariadbclient-git' 'mariadb-clients-git' 'mytop-git' 'mariadb-git')
-pkgver=10.3.6.r251.g33721d91389
+pkgver=10.3.6.r505.g9df656db65e
 pkgrel=1
 arch=('x86_64')
 license=('GPL')
 url='http://mariadb.org/'
 makedepends=('boost' 'bzip2' 'cmake' 'jemalloc' 'libaio' 'libxml2' 'lz4' 'lzo'
              'openssl' 'systemd' 'zlib' 'git')
-source=("$_pkgbase::git://github.com/MariaDB/server.git"
-        '0002-mroonga-after-merge-CMakeLists.txt-fixes.patch')
-sha256sums=('SKIP'
-            '98736aefef21e575e450f8066685ba82771264409412e33491ab0a54e4407ba7')
+source=("$_pkgbase::git://github.com/MariaDB/server.git")
+sha256sums=('SKIP')
 
 pkgver() {
   cd "$_pkgbase"
@@ -31,10 +29,6 @@ prepare() {
   sed -i -e '/^Alias/d' \
     -e '/^PrivateTmp/c PrivateTmp=true' \
     support-files/mariadb{,@}.service.in
-
-  # revert to fix the build
-  # mroonga after-merge CMakeLists.txt fixes
-  patch -Np1 -R < "${srcdir}"/0002-mroonga-after-merge-CMakeLists.txt-fixes.patch
 
   # let's create the datadir from tmpfiles
   echo 'd @MYSQL_DATADIR@ 0700 @MYSQLD_USER@ @MYSQLD_USER@ -' >> support-files/tmpfiles.conf.in
@@ -95,7 +89,7 @@ build() {
 
 package_libmariadbclient-git() {
   pkgdesc='MariaDB client libraries'
-  depends=('bzip2' 'libaio' 'lz4' 'lzo' 'openssl' 'xz' 'zlib')
+  depends=('bzip2' 'libaio' 'lz4' 'lzo' 'openssl' 'xz' 'zlib' 'jemalloc' 'krb5')
   conflicts=('libmysqlclient' 'libmariadbclient')
   provides=('libmariadbclient')
 
@@ -147,7 +141,7 @@ package_mariadb-git() {
   backup=('etc/mysql/my.cnf'
           'etc/mysql/wsrep.cnf')
   install=mariadb.install
-  depends=("mariadb-clients-git" 'inetutils' 'libsystemd' 'libxml2')
+  depends=("mariadb-clients-git" 'inetutils' 'libsystemd' 'libxml2' 'python' 'curl')
   optdepends=('galera: for MariaDB cluster with Galera WSREP'
               'perl-dbd-mysql: for mysqlhotcopy, mysql_convert_table_format and mysql_setpermission')
   conflicts=('mysql' 'mariadb')
