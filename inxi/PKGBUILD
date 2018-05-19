@@ -3,7 +3,7 @@
 # Contributor: Florian Pritz <f-p@gmx.at>
 
 pkgname=inxi
-pkgver=3.0.07
+pkgver=3.0.09
 pkgrel=1
 pkgdesc="script to get system information"
 arch=('any')
@@ -27,8 +27,8 @@ optdepends=(
   "xorg-xrandr: inxi -G single screen resolution"
 )
 options=('zipman')
-source=("${pkgname}-${pkgver}::https://github.com/smxi/inxi/archive/${pkgver}-1.tar.gz")
-sha256sums=('72ed009c882d25f7324e3d51ad61407d639b6fbfe9c50be97122b7dda0eb7b9e')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/smxi/inxi/archive/${pkgver}-1.tar.gz")
+sha256sums=('982200d41c4c5c85ea1917d226c4da0076d88afc0ab5a6b79f790a0e9b9790c7')
 
 package() {
   cd "${pkgname}-${pkgver}-1"
