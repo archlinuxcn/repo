@@ -5,7 +5,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=aria2-fast
-pkgver=1.33.1
+pkgver=1.34.0
 pkgrel=1
 pkgdesc='Aria2 Download utility with little patch to maximize aria2 download speed'
 arch=('i686' 'x86_64' 'armv6h' 'armv7h')
@@ -45,5 +45,5 @@ package() {
     ${pkgdir}/usr/share/bash-completion/completions
   rm -rf ${pkgdir}/usr/share/doc/aria2/bash_completion
 }
-md5sums=('586ac195cc15b8bec51688338fac0fc5'
+md5sums=('923b2f6cab7414a8ef0c05a264e070bb'
          '28bcf743c3c08432f61f74913c0d413f')
