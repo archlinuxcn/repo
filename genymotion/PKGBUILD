@@ -1,9 +1,10 @@
-#Maintainer: danyf90 <daniele.formichelli@gmail.com>
-#Co-Maintainer: syncrtl64 <syncrtl64@gmail.com>
+#Maintainer: Ekin Dursun <ekindursun@gmail.com>
+#Contributor: danyf90 <daniele.formichelli@gmail.com>
+#Contributor: syncrtl64 <syncrtl64@gmail.com>
 #Contributor: Andrea Cattaneo <andrea.cattaneo.dev@gmail.com>
 
 pkgname=genymotion
-pkgver=2.11.0
+pkgver=2.12.1
 pkgrel=1
 pkgdesc="Complete set of tools that provides a virtual environment for Android."
 arch=('x86_64')
@@ -17,7 +18,7 @@ source=("genymotion.desktop"
         "https://dl.genymotion.com/releases/genymotion-$pkgver/$pkgname-${pkgver}-linux_$_ARCH.bin")
 sha512sums=('48e9bafe1d64b688c51eceb8d129f44d690060ff9a6d82eefcf3295f7834516ce62439faf4f4454287f594fc410aafbafd30a43537ea3d295c42bee8e4e03ac7'
             'fabbccd65c22c2dc26b32a847c9fa81d4b7d3e2a13e976cd01c1517654e4bd7e4eac485152dbe8e97b1953ffda62f40e99223a76d24f0c8dfc6530fe3908b665'
-            'b128fbe1e27120cdd88a6ac4661031231cc17fc0adf007fa986f7892571db7d8ce259bf6f106eb9e620149572d5ca242ae6032b7360ba7502b208ac18ef98e2e')
+            'f932018b5ac110f70f383bd0bd78146fa0fec573423906f4fa31dab3479fd04f8bd4348c68ac19de400eee77ba649bb8a267d7c8dc679a269b70b2f5f2b7e5e3')
 
 package(){
   cd $srcdir
