@@ -6,7 +6,7 @@
 
 pkgname=plymouth
 pkgver=0.9.3
-pkgrel=3
+pkgrel=4
 pkgdesc="A graphical boot splash screen with kernel mode-setting support"
 url="http://www.freedesktop.org/wiki/Software/Plymouth/"
 arch=('i686' 'x86_64')
@@ -43,7 +43,7 @@ source=("http://www.freedesktop.org/software/${pkgname}/releases/${pkgname}-${pk
 md5sums=('b261c720888a5431cdfce8494805eab3'
          '65fa2763d5c9bb9f80973ea5e6e3db3e'
          'd67132b297ccfb1a877a2efd78076963'
-         '65eb269910f1b81e3f0970af456394ca'
+         '02861a13840dee3a5f2224b598274220'
          'ae6e97bb1104bb12cbca6738e3fb872d'
          '1430ae2ec501d600f8f6771454dc9bbe'
          '870ea3e63c6989e2badf79d1fbafa914'
