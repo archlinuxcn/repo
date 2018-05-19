@@ -24,6 +24,9 @@ build() {
     add_file "/etc/fonts/fonts.conf"
     add_file "/etc/fonts/conf.d/60-latin.conf"
 
+    # cryptsetup calls pthread_create(), which dlopen()s libgcc_s.so.1
+    add_binary "/usr/lib/libgcc_s.so.1"
+
     add_runscript
 }
 
