@@ -1,0 +1,23 @@
+_pkgname=PyMySQL
+pkgname=python-pymysql
+pkgver=0.8.1
+pkgrel=1
+pkgdesc="Pure Python MySQL Driver"
+arch=('any')
+url="https://github.com/PyMySQL/PyMySQL/"
+license=('MIT')
+depends=('python')
+source=('https://files.pythonhosted.org/packages/44/39/6bcb83cae0095a31b6be4511707fdf2009d3e29903a55a0494d3a9a2fac0/PyMySQL-0.8.1.tar.gz')
+md5sums=('516b0c19765a308ee484fcc35a6d3860')
+
+build() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  LANG=en_US.UTF-8 python3 setup.py build
+}
+
+package() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  LANG=en_US.UTF-8 python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+}
+
+# vim:set sw=2 et:
