@@ -1,0 +1,23 @@
+_pkgname=tabulate
+pkgname=python-tabulate
+pkgver=0.8.2
+pkgrel=1
+pkgdesc="Pretty-print tabular data"
+arch=('any')
+url="https://bitbucket.org/astanin/python-tabulate"
+license=('MIT')
+depends=('python')
+source=('https://files.pythonhosted.org/packages/12/c2/11d6845db5edf1295bc08b2f488cf5937806586afe42936c3f34c097ebdc/tabulate-0.8.2.tar.gz')
+md5sums=('9bbaa53754356d837343740fdc70c074')
+
+build() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  LANG=en_US.UTF-8 python3 setup.py build
+}
+
+package() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  LANG=en_US.UTF-8 python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+}
+
+# vim:set sw=2 et:
