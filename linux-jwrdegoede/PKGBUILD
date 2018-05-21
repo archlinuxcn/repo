@@ -35,11 +35,11 @@ _kernelname=${pkgbase#linux}
 
 pkgver() {
   cd ${_srcname}
-  
   # produce version string
   local ver=($(head -n4 Makefile | awk '/=/ {print $3}'))
   local commit=$(git rev-parse --short HEAD)
-  printf "%s" "${ver[0]}.${ver[1]}.${ver[2]}.${commit}"
+  local d=$(date -Iseconds | sed "s/[^0-9]//g" | cut -c1-12)
+  printf "%s" "${ver[0]}.${ver[1]}.${ver[2]}${ver[3]/-/}.${d}.${hash}"
 }
 
 prepare() {
