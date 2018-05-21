@@ -85,7 +85,7 @@ build() {
 
 package_vim-lily() {
   pkgdesc='Vi Improved, a highly configurable, improved version of the vi text editor with additional scripting support'
-  depends=('gpm' 'vim-runtime' 'acl')
+  depends=('gpm' 'vim-runtime-lily' 'acl')
   optdepends=('luajit' 'ruby' 'python' 'python2' 'perl')
   conflicts=('vim' 'gvim' 'vim-python3' 'gvim-python3' 'vim-minimal')
   provides=("vim=${pkgver}-${pkgrel}" "vim-python3=${pkgver}-${pkgrel}")
@@ -119,7 +119,7 @@ package_vim-lily() {
 
 package_gvim-lily() {
   pkgdesc='Vi Improved, a highly configurable, improved version of the vi text editor (with advanced features, such as a GUI) with additional scripting support'
-  depends=('gpm' 'gtk2' 'vim-runtime' 'desktop-file-utils' 'libxt')
+  depends=('gpm' 'gtk2' 'vim-runtime-lily' 'desktop-file-utils' 'libxt')
   optdepends=('luajit' 'ruby' 'python' 'python2' 'perl')
   conflicts=('vim' 'gvim' 'vim-python3' 'gvim-python3' 'vim-minimal')
   provides=("vim=${pkgver}-${pkgrel}" "gvim=${pkgver}-${pkgrel}" "gvim-python3=${pkgver}-${pkgrel}")
