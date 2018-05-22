@@ -4,8 +4,6 @@ from lilaclib import *
 
 build_prefix = 'extra-x86_64'
 
-depends = ['python-async_generator']
-
 def pre_build():
   pypi_pre_build(
     depends=['python-attrs', 'python-sortedcontainers', 'python-idna', 'python-async_generator'],

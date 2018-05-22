@@ -4,7 +4,7 @@ from lilaclib import *
 
 build_prefix = 'extra-x86_64'
 
-depends = ['python-async_generator', 'python-trio', 'python-multio']
+depends = ['python-trio', 'python-multio']
 
 def pre_build():
   pypi_pre_build(
