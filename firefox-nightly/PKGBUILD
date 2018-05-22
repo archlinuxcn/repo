@@ -7,7 +7,7 @@ _channel=nightly
 pkgbase=firefox-nightly
 pkgname=()
 _version=62.0a1
-pkgver=62.0a1.20180521.11
+pkgver=62.0a1.20180521.23
 pkgrel=1
 arch=('x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -22,17 +22,17 @@ optdepends=('pulseaudio: audio support'
             'speech-dispatcher: text-to-speech'
             'startup-notification: support for FreeDesktop Startup Notification')
 _url="https://ftp.mozilla.org/pub/${_name}/nightly/latest-mozilla-central-l10n"
-_filename_prefix="20180521.11-"
+_filename_prefix="20180521.23-"
 source=("${pkgbase}.desktop" 'vendor.js')
 sha512sums=('b514abafc559ec03a4222442fa4306db257c3de9e18ed91a0b37cc9d7058a8e08a241442e54a67659a3ab4512a5dae6a0b94ea7a33d08ef0b8a76a9eac902095'
             'c9443c2fb0897193af036bfd156d732b5ffabc20ec008f351918661c4ff30a67eb62a971cc628e3f58d2017c0844e601609164171e926ebc36faf3a04ff085b5'
-            'e57d52cd7f68de32e1d3afdb6fd80145571b879f3f9c8a48954a6bfdccc454f468a66c06a864af21e9ff748452cc8043e5e3ce6bfb4fcf6735bc30a37a78687a'
+            'd9b12e1528e2e31dd128244dc79c7a05983a7239555b30a13cd94c79af206da346e29ed5503b61a3fd5dec631bc7c4729f61c30437a77267f537aca4de3028f2'
             'SKIP'
-            '292d3b3011c0b018d749f50f07a09ee37f7ee918c0583c624b741974af62dd238dc2472d18f375cc02cc168eac27b2120c75e478186a4d4ffd8b0d1bf3d17ce3'
+            '72778cad4fa9291409554ee72dd8e3c0844286c7fdfbd185010115a9bb5a7c1f88267d6dfd3a2bcc624b37784acfbf8e62bebec4cefd6882de60142124523445'
             'SKIP'
-            'c9053ece140696e8ef76923dfa8df7a5886e35b6a2559c1bfc5699ebd3841fce5eed23fe48d47ff8484d8bc611c53e13034ec607dec14fc2cb5d5babc44c7315'
+            '682b4d0ff929851bed48b525a71e7a16f70140adda5fb52b1c03da4e747a9adb62c9482ddf985f2ec7cf286af5c76bf2170705cf46cea47bf19d80693e544c64'
             'SKIP'
-            '0ed0bd4c631b8460516a79297ebc9792ba7ad24c197203876ba0f01b15b83c3173e50c6a1d9a8c5236d47a7c55d278b12290a329309e8fc79a2a3dea6f5b6dc5'
+            '96dc875e57d0c8d5ba446bb0f3d7927f5f22e3767dbabf7ebfd66ad464459a63e27a50a8b7a403db2f4c0e02fdfc8bdd5b17935c756f8fc71628cdc7c330157b'
             'SKIP')
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla’s GnuPG release key
 
