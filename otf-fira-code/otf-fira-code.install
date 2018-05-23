@@ -1,0 +1,12 @@
+post_install() {
+	mkfontscale /usr/share/fonts/OTF
+	mkfontdir /usr/share/fonts/OTF
+}
+
+post_upgrade() {
+	post_install
+}
+
+post_remove() {
+	post_install
+}
