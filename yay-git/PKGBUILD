@@ -9,12 +9,11 @@ arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="https://github.com/Jguer/yay"
 license=('GPL')
 options=('!strip' '!emptydirs')
-depends=('sudo')
-optdepends=('git: devel update support')
-makedepends=('git' 'go')
+depends=('git' 'sudo')
+makedepends=('go')
 conflicts=('yay-bin' 'yay')
 provides=('yay')
-source=("git+https://github.com/Jguer/yay/")
+source=("yay::git+https://github.com/Jguer/yay.git#branch=master")
 md5sums=("SKIP")
 
 pkgver() {
