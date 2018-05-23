@@ -1,19 +1,20 @@
 # Maintainer: Wei Congrui < crvv.mail at gmail dot com >
-# Maintainer: Carl George < arch at cgtx dot us >
+# Contributor: Carl George < arch at cgtx dot us >
 # Contributor: Eric Engeström <eric at engestrom dot ch>
 # Contributor: Andreas Linz <klingt.net at gmail dot com>
 
 _gopkgname='github.com/mholt/caddy'
 
 pkgname=caddy
-pkgver=0.10.11
-pkgrel=3
+pkgver=0.11.0
+pkgrel=1
 pkgdesc='HTTP/2 Web Server with Automatic HTTPS'
-arch=('i686' 'x86_64' 'armv7h' 'aarch64')
+arch=('x86_64' 'i686' 'armv6h' 'armv7h' 'aarch64')
 url='https://caddyserver.com'
 license=('Apache')
 backup=('etc/caddy/caddy.conf')
 install='caddy.install'
+depends=('glibc')
 makedepends=('go>=1.8.1' 'git')
 source=("https://$_gopkgname/archive/v$pkgver/$pkgname-$pkgver.tar.gz"
         'https://caddyserver.com/resources/images/brand/caddy-at-your-service-white.svg'
@@ -22,7 +23,7 @@ source=("https://$_gopkgname/archive/v$pkgver/$pkgname-$pkgver.tar.gz"
         'caddy.tmpfiles'
         'caddy.conf'
         'plugins.go')
-sha256sums=('c473121840532dfbe8e98b2663442c4a6602b684a5dc234081fdc41d98e0ae95'
+sha256sums=('81e593d258460a9f5c6b5a5f46890a08b6b1ce15f5c0fc7bcaf09826368c3a1a'
             'e679dd79fd92dc351fc190c7af529c73e3896986aaa6b7c0ae01e561398d6b85'
             '6db7aec45e95bbbf770ce4d120a60d8e4992d2262a8ebf668521179279aa5ae7'
             '0466a41290db84402ca41cf32c0fc5b66b112a9d85b71d1619ae97b5a3dd2740'
@@ -72,8 +73,9 @@ package() {
     install -d -m 0755 "$pkgdir/etc/caddy/caddy.conf.d"
 }
 
-plugins=(
+_plugins=(
 #    'dns'
+#    'docker'
 #    'dyndns'
 #    'hook.service'
 #    'http.authz'
@@ -87,6 +89,7 @@ plugins=(
 #    'http.filemanager'
 #    'http.filter'
 #    'http.forwardproxy'
+#    'http.geoip'
 #    'http.git'
 #    'http.gopkg'
 #    'http.grpc'
@@ -111,6 +114,7 @@ plugins=(
 #    'tls.dns.auroradns'
 #    'tls.dns.azure'
 #    'tls.dns.cloudflare'
+#    'tls.dns.cloudxns'
 #    'tls.dns.digitalocean'
 #    'tls.dns.dnsimple'
 #    'tls.dns.dnsmadeeasy'
@@ -125,7 +129,9 @@ plugins=(
 #    'tls.dns.linode'
 #    'tls.dns.namecheap'
 #    'tls.dns.ns1'
+#    'tls.dns.otc'
 #    'tls.dns.ovh'
+#    'tls.dns.powerdns'
 #    'tls.dns.rackspace'
 #    'tls.dns.rfc2136'
 #    'tls.dns.route53'
