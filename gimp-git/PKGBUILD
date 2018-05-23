@@ -4,30 +4,31 @@
 
 pkgname=gimp-git
 epoch=1
-pkgver=2.10.0.289.g2e948d43d0
+pkgver=2.10.2.500.g47cdb11c44
 pkgrel=1
 pkgdesc="GNU Image Manipulation Program"
 arch=('i686' 'x86_64')
 url="http://www.gimp.org"
 license=('GPL' 'LGPL')
-depends=('pygtk' 'lcms2>=2.2' 'libwmf>=0.2.8' \
-	'libgexiv2' 'librsvg>=2.16.1' 'desktop-file-utils' \
-	'libexif>=0.6.15' 'libart-lgpl>=2.3.19' 'dbus-glib' 'gtk-doc' \
-	'babl-git' 'gegl-git' 'openexr>=1.6.1' 'mypaint-brushes>=1.3.0'
-  'aalib' 'poppler-glib' 'poppler-data' 'libmng' 'libwebp' 'libxpm' 'libgudev' 'ghostscript' 'webkitgtk2' 'xdg-utils')
-makedepends=('git' 'gutenprint>=5.0.0' 'intltool>=0.40.1' \
-                   'gnome-python>=2.16.2' \
-                   'alsa-lib>=1.0.0' 'libxslt' 'glib-networking')
-optdepends=('gutenprint: for sophisticated printing only as gimp has built-in cups print support'
+depends=('babl-git' 'dbus-glib' 'desktop-file-utils' 'gegl-git' 'glib-networking' 'hicolor-icon-theme'
+         'jasper' 'lcms' 'libexif' 'libgudev' 'libmng' 'libmypaint' 'librsvg' 'libwebp' 'libwmf'
+         'libxmu' 'libxpm' 'mypaint-brushes' 'openexr' 'poppler-data' 'pygtk' 'gtk3' 'webkitgtk' 'xdg-utils')
+makedepends=('git' 'aalib' 'alsa-lib' 'curl' 'ghostscript' 'gtk-doc' 'intltool' 'iso-codes' 'poppler-glib' 'libheif')
+optdepends=('aalib: ASCII art'
+            'libheif: Load HEIF files'
+            'gutenprint: for sophisticated printing only as gimp has built-in cups print support'
             'poppler-glib: for pdf support'
             'alsa-lib: for MIDI event controller module'
-            'curl: for URI support')
+            'curl: for URI support'
+            'ghostscript: for postscript support')
 options=('!libtool' '!makeflags')
 provides=('gimp')
 conflicts=('gimp')
 source=(git://git.gnome.org/gimp
+configure.patch
 	linux.gpl)
 md5sums=('SKIP'
+         'SKIP'
          'bb27bc214261d36484093e857f015f38')
 
 _gitname=gimp
@@ -37,31 +38,42 @@ pkgver() {
     git describe --always | sed -e 's/GIMP_//' -e 's/[_-]/./g'
 }
 
+prepare() {
+  cd $srcdir
+  patch -p0 < configure.patch
+  cd $_gitname
+  git submodule init
+  git submodule update
+  _mypaintver=$(echo /usr/lib/libmypaint-*.so | grep -o -E '\-[0-9]+(\.[0-9]+)*' | head -1)
+  sed -i "s|\\(libmypaint\\)\\( >= libmypaint_required_version\\)|\\1${_mypaintver}\\2|g" configure.ac
+  ln -s /usr/share/gtk-doc/data/gtk-doc.make
+  autoreconf --install --force
+}
+
 build() {
-  cd "$srcdir/$_gitname"
-
-  if [ -f /usr/lib/pkgconfig/libmypaint-1.3.pc ]; then
-	  sed -i 's/libmypaint /libmypaint-1.3 /g' configure.ac
-  fi
-
-  # glib-2.0.pc says the glib2 version is 2.54.0, so replace it
-  sed -i 's/glib_required_version\], \[2\.54\.[0-9]*/glib_required_version], [2.54.0/' configure.ac
-  sed -i 's/GLIB_REQUIRED_MICRO 2/GLIB_REQUIRED_MICRO 0/' app/sanity.c
-
-  PYTHON=/usr/bin/python2 ./autogen.sh --prefix=/usr --sysconfdir=/etc \
-    --enable-mp --enable-gimp-console --enable-gimp-remote \
-    --enable-python --with-gif-compression=lzw --with-libcurl \
-    --with-aa --without-hal --without-gvfs --without-gnomevfs
+  pkg-config --exists --print-errors "OpenEXR >= 1.6.1"
+  cd $_gitname
+  PYTHON=/usr/bin/python2 ./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --libexecdir=/usr/bin \
+    --enable-mp \
+    --enable-gimp-console \
+    --enable-python \
+    --enable-gtk-doc \
+    --with-bug-report-url='https://bugs.archlinux.org/index.php?project=1&do=newtask' \
+    --with-openexr \
+    --with-aa
+  sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
   make
 }
 
 package() {
-  cd "$srcdir/$_gitname"
-  make DESTDIR="$pkgdir/" install
-#  sed -i 's|#!/usr/bin/env python|#!/usr/bin/env python2|' "${pkgdir}"/usr/lib/gimp/2.0/plug-ins/*.py
+  cd $_gitname
+  make DESTDIR="${pkgdir}" install
   install -D -m644 "${srcdir}/linux.gpl" "${pkgdir}/usr/share/gimp/2.0/palettes/Linux.gpl"
 
-  #ln -s gimp-2.9 ${pkgdir}/usr/bin/gimp
-  #ln -s gimp-console-2.9 ${pkgdir}/usr/bin/gimp-console
+  ln -s gimp-console-2.99.1.gz "${pkgdir}/usr/share/man/man1/gimp-console.1.gz"
+  ln -s gimptool-2.99 "${pkgdir}/usr/bin/gimptool"
+  ln -sf gimptool-2.99.1.gz "${pkgdir}/usr/share/man/man1/gimptool.1.gz"
 }
-
