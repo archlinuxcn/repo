@@ -73,7 +73,10 @@ package() {
   make DESTDIR="${pkgdir}" install
   install -D -m644 "${srcdir}/linux.gpl" "${pkgdir}/usr/share/gimp/2.0/palettes/Linux.gpl"
 
+  
   ln -s gimp-console-2.99.1.gz "${pkgdir}/usr/share/man/man1/gimp-console.1.gz"
   ln -s gimptool-2.99 "${pkgdir}/usr/bin/gimptool"
+  ln -s gimp-2.99 "${pkgdir}/usr/bin/gimp"
+  ln -s gimp-console-2.99 "${pkgdir}/usr/bin/gimp-console"
   ln -sf gimptool-2.99.1.gz "${pkgdir}/usr/share/man/man1/gimptool.1.gz"
 }
