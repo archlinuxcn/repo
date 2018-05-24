@@ -6,45 +6,41 @@
 # Contributor: Élie Bouttier <elie@bouttier.eu>
 
 pkgbase=linux-mptcp
-_srcname=mptcp
 pkgver=0.94
-pkgrel=2
+pkgrel=3
 epoch=1
+_commit=d6cd22e29f5c9b7bf374e259bbb2d51be5cfaee5
+_srcname=mptcp-${_commit}
 arch=('x86_64')
 url="http://www.multipath-tcp.org/"
 license=('GPL2')
 makedepends=('xmlto' 'kmod' 'inetutils' 'bc' 'libelf')
 options=('!strip')
-source=("https://github.com/multipath-tcp/mptcp/archive/v${pkgver}/${pkgbase}-${pkgver}.tar.gz"
+source=("https://github.com/multipath-tcp/mptcp/archive/${_commit}/${pkgbase}-${pkgver}-${_commit}.tar.gz"
         'config'         # the main kernel config file
         '60-linux.hook'  # pacman hook for depmod
         '90-linux.hook'  # pacman hook for initramfs regeneration
         'linux-mptcp.preset'   # standard config files for mkinitcpio ramdisk
         '0001-add-sysctl-to-disallow-unprivileged-CLONE_NEWUSER-by.patch'
-        '0002-drm-i915-edp-Only-use-the-alternate-fixed-mode-if-it.patch'
-        'undo_cwnd.patch')
-sha256sums=('4b12cb81fd7d6b65496d7bf52bec96a225e22439d0704f88d33c0c895bcd8436'
+        '0002-drm-i915-edp-Only-use-the-alternate-fixed-mode-if-it.patch')
+sha256sums=('048f017a768b956ef598c09b4fa37ddf9ca4c966fc88dc69f4dd65d34f427459'
             '039c824a72c1c10c3a44fc9d5f50a3ea2d6147ae7db115ba33c1136c13781b97'
             'ae2e95db94ef7176207c690224169594d49445e04249d2499e9d2fbc117a0b21'
             '75f99f5239e03238f88d1a834c50043ec32b1dc568f2cc291b07d04718483919'
             'ad6344badc91ad0630caacde83f7f9b97276f80d26a20619a87952be65492c65'
             '36b1118c8dedadc4851150ddd4eb07b1c58ac5bbf3022cc2501a27c2b476da98'
-            '6364edabad4182dcf148ae7c14d8f45d61037d4539e76486f978f1af3a090794'
-            '27421905cf8e6cae6c1053d13ad2d9f85c282f1faa293e750ce551d3b58fbcdf')
+            '6364edabad4182dcf148ae7c14d8f45d61037d4539e76486f978f1af3a090794')
 
 _kernelname=${pkgbase#linux}
 
 prepare() {
-  cd "${srcdir}/${_srcname}-${pkgver}"
+  cd "${srcdir}/${_srcname}"
 
   # disable USER_NS for non-root users by default
   patch -Np1 -i "${srcdir}/0001-add-sysctl-to-disallow-unprivileged-CLONE_NEWUSER-by.patch"
 
   # https://bugs.archlinux.org/task/56711
   patch -Np1 -i "${srcdir}/0002-drm-i915-edp-Only-use-the-alternate-fixed-mode-if-it.patch"
-
-  # Fix issue that prevents any congestion control to be loaded
-  patch -Np1 -i "${srcdir}/undo_cwnd.patch"
 
   cat "${srcdir}/config" > ./.config
 
@@ -75,7 +71,7 @@ prepare() {
 }
 
 build() {
-  cd "${srcdir}/${_srcname}-${pkgver}"
+  cd "${srcdir}/${_srcname}"
 
   # save configuration for later reuse
   cat .config > "${startdir}/config.last"
@@ -84,7 +80,7 @@ build() {
 }
 
 _package() {
-  pkgdesc="The Linux kernel and modules with Multipath TCP support (based on linux 4.14.24)"
+  pkgdesc="The Linux kernel and modules with Multipath TCP support (based on linux 4.14.41)"
   [ "${pkgbase}" = "linux" ] && groups=('base')
   depends=('coreutils' 'linux-firmware' 'kmod' 'mkinitcpio>=0.7')
   optdepends=('crda: to set the correct wireless channels of your country'
@@ -93,7 +89,7 @@ _package() {
   backup=("etc/mkinitcpio.d/${pkgbase}.preset")
   install=linux-mptcp.install
 
-  cd "${srcdir}/${_srcname}-${pkgver}"
+  cd "${srcdir}/${_srcname}"
 
   # get kernel version
   _kernver="$(make LOCALVERSION= kernelrelease)"
@@ -146,7 +142,7 @@ _package() {
 _package-headers() {
   pkgdesc="Header files and scripts for building modules for ${pkgbase/linux/Linux} kernel"
 
-  cd "${srcdir}/${_srcname}-${pkgver}"
+  cd "${srcdir}/${_srcname}"
   local _builddir="${pkgdir}/usr/lib/modules/${_kernver}/build"
 
   install -Dt "${_builddir}" -m644 Makefile .config Module.symvers
@@ -216,7 +212,7 @@ _package-headers() {
 _package-docs() {
   pkgdesc="Kernel hackers manual - HTML documentation that comes with the ${pkgbase/linux/Linux} kernel"
 
-  cd "${srcdir}/${_srcname}-${pkgver}"
+  cd "${srcdir}/${_srcname}"
   local _builddir="${pkgdir}/usr/lib/modules/${_kernver}/build"
 
   mkdir -p "${_builddir}"
