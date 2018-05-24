@@ -6,7 +6,7 @@ _pkgname=firefox-beta
 pkgver=61.0b7
 _major=${pkgver/rc*}
 _build=${pkgver/*rc}
-pkgrel=1
+pkgrel=2
 pkgdesc="Standalone web browser from mozilla.org - Beta"
 arch=('x86_64')
 url="https://www.mozilla.org/en-US/firefox/channel/#beta"
@@ -27,7 +27,7 @@ source=("https://ftp.mozilla.org/pub/firefox/releases/$pkgver/linux-x86_64/en-US
         "$pkgname.desktop")
 sha256sums=('e19c8d287fdef126354d6654a42dcb076ddbd79ab2fabf6e67aedfc2b868a7ea'
             '367100e5f66523a90c3792e2e0d0e2fe8a3c28748b905ce9f5f6b121343d7842'
-            '92f58532757365f38382e016d250836e4faf8415599cefb6ddace0de77486658')
+            '05dafb94c7dbe7a1fcc1e7555f350aebf7fd7bdc2459819273ac00d3ca5f028e')
 # RC
 if [[ $_build = ? ]]; then
   source[0]="firefox-$pkgver.tar.bz2::https://ftp.mozilla.org/pub/firefox/candidates/$_major-candidates/build$_build/linux-x86_64/en-US/firefox-$_major.tar.bz2"
@@ -53,16 +53,11 @@ package() {
   install -m644 *.desktop "$pkgdir"/usr/share/applications/
 
   # Icons
-  for i in 16x16 22x22 24x24 32x32 48x48 256x256; do
+  for i in 16x16 32x32 48x48 64x64 128x128; do
     install -d "$pkgdir"/usr/share/icons/hicolor/$i/apps/
     ln -s /opt/$_pkgname/browser/chrome/icons/default/default${i/x*}.png \
           "$pkgdir"/usr/share/icons/hicolor/$i/apps/$_pkgname.png
   done
-
-  # 128x128
-  install -d "$pkgdir"/usr/share/icons/hicolor/128x128/apps/
-  ln -s /opt/$_pkgname/browser/icons/mozicon128.png \
-        "$pkgdir"/usr/share/icons/hicolor/128x128/apps/$_pkgname.png
 
   # Use system-provided dictionaries
   rm -r "$pkgdir"/opt/$_pkgname/dictionaries
