@@ -14,6 +14,7 @@ def pre_build():
         if line.startswith('prepare() {'):
             line += "\n    export CGO_ENABLED=0"
         print(line)
+        
     git_add_files('PKGBUILD')
     git_commit()
     
