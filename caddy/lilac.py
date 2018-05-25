@@ -14,6 +14,8 @@ def pre_build():
         if line.startwith('prepare() {'):
             line += "\n    export CGO_ENABLED=0"
         print(line)
+    git_add_files('PKGBUILD')
+    git_commit()
     
 post_build = aur_post_build
 
