@@ -11,7 +11,7 @@ build_prefix = 'extra-x86_64'
 def pre_build():
     aur_pre_build()
     for line in edit_file('PKGBUILD'):
-        if line.startwith('prepare() {'):
+        if line.startswith('prepare() {'):
             line += "\n    export CGO_ENABLED=0"
         print(line)
     git_add_files('PKGBUILD')
