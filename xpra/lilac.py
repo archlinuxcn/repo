@@ -6,7 +6,7 @@
 
 from lilaclib import *
 
-depends = ["python2-lz4", "python-lz4", "rencode", "python2-gtkglext"]
+depends = ["rencode", "python2-gtkglext"]
 
 build_prefix = 'extra-x86_64'
 post_build = aur_post_build
