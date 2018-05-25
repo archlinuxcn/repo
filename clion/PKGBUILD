@@ -9,7 +9,7 @@ pkgbase=clion
 pkgname=(clion clion-jre clion-cmake clion-gdb clion-lldb)
 _pkgname=clion
 _dlname=CLion
-pkgver=2018.1.2
+pkgver=2018.1.3
 pkgrel=1
 epoch=1
 pkgdesc="C/C++ IDE. Free 30-day trial."
@@ -20,7 +20,7 @@ license=('custom')
 makedepends=('rsync')
 source=("https://download.jetbrains.com/cpp/${_dlname}-${pkgver}.tar.gz"
         "jetbrains-${pkgbase}.desktop")
-sha256sums=('8a2f58ca3f7ebcbe0e4c256d7478acf34cbecc65197612b10df5af05f26a1e95'
+sha256sums=('85df4a1c2ed095cbf706fa73d30a87cad400a4ff5ef40acc7a7da676140c5235'
             '9f0f4335f410e0587018c85ebfcf4b65a7a47ad682a58972624378953ef288d6')
 noextract=("${_dlname}-${pkgver}.tar.gz")
 
@@ -91,7 +91,6 @@ package_clion-gdb() {
 }
 
 package_clion-lldb() {
-    depends+=('ncurses5-compat-libs')
     install -d -m755 "${pkgdir}/opt/${pkgbase}/bin"
     rsync -rtl "${srcdir}/opt/${pkgbase}/bin/lldb" "${pkgdir}/opt/${pkgbase}/bin"
 }
