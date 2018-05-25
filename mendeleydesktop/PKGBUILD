@@ -2,21 +2,21 @@
 # Maintainer: Alesandar Trifunović <akstrfn at gmail dot com>
 
 pkgname=mendeleydesktop
-pkgver=1.18
-pkgrel=3
+pkgver=1.19
+pkgrel=1
 pkgdesc="Academic software for managing and sharing research papers (desktop client)"
 url=http://www.mendeley.com/release-notes/
 arch=(i686 x86_64)
 depends=(qt5-webengine)
 license=(custom:mendeley_eula)
-sha512sums=('9e72ca02beae2412fb427cfc22da3495ae0bcdcc23b188e5f09e4e29a942a276635be54bf22bbcf08c63cdee102c257c145cce00a361c4b8b48e0f538a81b108')
+source_i686=("https://desktop-download.mendeley.com/download/linux/$pkgname-$pkgver-linux-i486.tar.bz2")
+source_x86_64=("https://desktop-download.mendeley.com/download/linux/$pkgname-$pkgver-linux-x86_64.tar.bz2")
+sha512sums_i686=('9dd0a62b02a3b9a389cd6deb8c642b30c07043e695f01a7f928bc791f535aae98ebba85e7f8b28aeecb8b95d7d6c6e6eb9bc1744965ed145163af662415d627f')
+sha512sums_x86_64=('cea139a30e220cc28ab82189ae81304a9f1003fc0afbecd7e14dc4956af69e14c8ff6110bbbf9eee1ab205950e6b45b91b04c623f5f2e418329d8d85953a6710')
 
 if [[ $CARCH = i686 ]];then
-    $CARCH=i486
-    sha512sums=('63a82863a824e5ce180a31453e68c900ba4bcebf0c228f515db87fe523a3cef8a284dd8c81729741fe7c9795b918d7a25503024aa63692014ce5e4a87a7cad11')
+$CARCH=i486
 fi
-
-source=("https://desktop-download.mendeley.com/download/linux/$pkgname-$pkgver-linux-$CARCH.tar.bz2")
 
 prepare() {
     cd "$pkgname-$pkgver-linux-$CARCH"
