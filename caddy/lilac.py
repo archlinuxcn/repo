@@ -10,11 +10,11 @@ build_prefix = 'extra-x86_64'
 
 def insert(path, i):
     env_list = list("    export CGO_ENABLED=0\n")
-    with open('PKGBUILD', 'r') as file:
+    with open(path, 'r') as file:
         content = file.readlines()
         content[i:] = env_list + content[i:]
 
-    with open('PKGBUILD', 'w') as file:
+    with open(path, 'w') as file:
         file.writelines(content)
 
 def pre_build():
