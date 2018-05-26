@@ -11,7 +11,7 @@ depends=(
 	'python-qrcode'
 	'python-argparse'
 )
-makedepends=()
+makedepends=('git')
 provides=('ss-qrcode')
 conflicts=()
 source=('git+https://github.com/OriginCode/shadowsocks-libev-qrcode')
