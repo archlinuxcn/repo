@@ -6,20 +6,23 @@
 
 pkgname=mpdscribble
 pkgver=0.22
-pkgrel=13
+pkgrel=14
 pkgdesc='MPD client which submits track info to {Libre,Last}.fm'
-url='http://mpd.wikia.com/wiki/Client:Mpdscribble'
+url='https://github.com/MusicPlayerDaemon/mpdscribble'
 arch=('i686' 'x86_64' 'armv6h' 'armv7h')
 license=('GPL')
 depends=('libsoup' 'glib2' 'libmpdclient')
 install=$pkgname.install
-source=(http://www.musicpd.org/download/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.bz2
+source=(https://github.com/MusicPlayerDaemon/${pkgname}/archive/v${pkgver}.tar.gz
         service)
-md5sums=('652ee927b797e9a4cef45494e77047db'
+md5sums=('15296ef0e7207ca291ad31aa0c3c7f54'
          'a57d7d3d41b37fb23b45835aa0cfc325')
 
 prepare() {
   sed 's/multi-user.target/default.target/;/User=%i/d' service > user.service
+
+  cd ${pkgname}-"${pkgver}"
+  autoreconf -i
 }
 
 build() {
