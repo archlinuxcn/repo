@@ -5,7 +5,7 @@
 
 pkgname=genymotion
 pkgver=2.12.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Complete set of tools that provides a virtual environment for Android."
 arch=('x86_64')
 url="http://www.genymotion.com/"
