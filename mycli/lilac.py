@@ -2,21 +2,23 @@
 
 from lilaclib import *
 
-build_prefix = 'extra-x86_64'
+build_prefix = 'archlinuxcn-x86_64'
 
 
 def pre_build():
-    pypi_pre_build(depends=[
-        'python'
-        'python-click'
-        'python-configobj'
-        'python-cryptography'
-        'python-prompt_toolkit'
-        'python-pygments'
-        'python-pymysql'
-        'python-sqlparse'
-        'python-cli-helpers'
-    ])
+    pypi_pre_build(
+        depends=[
+            'python'
+            'python-click'
+            'python-configobj'
+            'python-cryptography'
+            'python-prompt_toolkit'
+            'python-pygments'
+            'python-pymysql'
+            'python-sqlparse'
+            'python-cli-helpers'
+        ],
+        license='MIT')
 
 
 def post_build():
