@@ -4,15 +4,15 @@
 # Contributor: Ferik <djferik at gmail dot com>
 
 pkgname=masterpdfeditor
-pkgver=5.0.03
+pkgver=5.0.08
 pkgrel=1
 pkgdesc='A complete solution for creation and editing PDF files'
 url='https://code-industry.net/free-pdf-editor/'
 arch=('x86_64')
 license=('custom')
 makedepends=('patchelf')
-source_x86_64=("http://get.code-industry.net/public/master-pdf-editor-${pkgver}_qt5.amd64.tar.gz")
-sha1sums_x86_64=('89d332b27c5f0233030b0cba316f2dbec46f42d3')
+source_x86_64=("https://code-industry.net/public/master-pdf-editor-${pkgver}_qt5.amd64.tar.gz")
+sha1sums_x86_64=('8d37ce43e5526ebc2a63d13dc59757f3a73e6746')
 
 package() {
   depends=('gcc-libs' 'glibc' 'libgl' 'nspr' 'nss' 'qt5-base' 'qt5-svg' 'sane')
