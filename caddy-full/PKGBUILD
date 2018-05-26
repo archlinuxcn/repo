@@ -7,6 +7,7 @@
 _gopkgname='github.com/mholt/caddy'
 
 pkgname=caddy-full
+_originname=caddy
 pkgver=0.11.0
 pkgrel=3
 pkgdesc='HTTP/2 Web Server with Automatic HTTPS (Full Plugins Version)'
@@ -48,7 +49,7 @@ prepare() {
     export GOPATH="$srcdir/build"
     rm -rf "$GOPATH/src/$gopkgname"
     mkdir --parents `dirname "$GOPATH/src/$_gopkgname"`
-    mv -Tv "$srcdir/$pkgname-$pkgver" "$GOPATH/src/$_gopkgname"
+    mv -Tv "$srcdir/$_originname-$pkgver" "$GOPATH/src/$_gopkgname"
 
     if [ ${#plugins[@]} -gt 0 ]; then
         echo enabled plugins: ${plugins[@]}
