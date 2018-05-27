@@ -1,0 +1,11 @@
+post_install() {
+  grep -x /usr/bin/xonsh /etc/shells >/dev/null || echo /usr/bin/xonsh >> /etc/shells
+}
+
+post_remove() {
+  sed -i "/^\/usr\/bin\/xonsh$/d" /etc/shells
+}
+
+post_upgrade() {
+  post_install
+}
