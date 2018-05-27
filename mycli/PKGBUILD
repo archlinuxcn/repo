@@ -1,12 +1,12 @@
 _pkgname=mycli
-pkgname=python-mycli
+pkgname=mycli
 pkgver=1.16.0
 pkgrel=1
 pkgdesc="CLI for MySQL Database. With auto-completion and syntax highlighting."
 arch=('any')
 url="http://mycli.net"
-license=('(FIXME)')
-depends=('python')
+license=('MIT')
+depends=('python' 'python-click' 'python-configobj' 'python-cryptography' 'python-prompt_toolkit' 'python-pygments' 'python-pymysql' 'python-sqlparse' 'python-cli-helpers')
 source=('https://files.pythonhosted.org/packages/de/19/74c21a13074d13d955e2ad16943b0f12b0bf78845dc130f2d46f451b65cc/mycli-1.16.0.tar.gz')
 md5sums=('a9d9e7d8b284d3e94947b82fb38f6d63')
 
