@@ -10,7 +10,6 @@ pkgver=4.17.0.201805260151.
 pkgrel=1
 arch=('x86_64')
 url='https://www.kernel.org/'
-conflicts=('linux-jwrdegoede' 'gpd-pocket-linux-jwrdegoede')
 license=('GPL2')
 makedepends=('git' 'xmlto' 'kmod' 'inetutils' 'bc' 'libelf')
 options=('!strip')
@@ -39,7 +38,7 @@ pkgver() {
   local ver=($(head -n4 Makefile | awk '/=/ {print $3}'))
   local commit=$(git rev-parse --short HEAD)
   local d=$(date -Iseconds | sed "s/[^0-9]//g" | cut -c1-12)
-  printf "%s" "${ver[0]}.${ver[1]}.${ver[2]}${ver[3]/-/}.${d}.${hash}"
+  printf "%s" "${ver[0]}.${ver[1]}.${ver[2]}${ver[3]/-/}.${d}.${commit}"
 }
 
 prepare() {
