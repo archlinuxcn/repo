@@ -8,17 +8,20 @@ import sys
 import re
 from subprocess import Popen, PIPE
 from unittest import TestCase, TestSuite, TestLoader, TextTestRunner, skip
-from io import StringIO
+from io import TextIOWrapper, StringIO
 from configparser import ConfigParser
-from functools import lru_cache
 
+DIRS, FILES = None, None
 GIT_BRANCH = 'HEAD'
+
 
 def readutf8(st):
     return st.read().decode('utf-8').strip()
 
+
 def reads(st):
     return readutf8(st).strip()
+
 
 def git_write_tree_index():
     global GIT_BRANCH
@@ -26,7 +29,28 @@ def git_write_tree_index():
     with Popen(cmd, stdout=PIPE) as p:
         GIT_BRANCH = reads(p.stdout)
 
-git_write_tree_index()
+
+def git_ls_tree():
+    cmd = ['git', 'ls-tree', '-rtz', '--full-name', GIT_BRANCH]
+    ## git ls-tree
+    ## -r Recurse into sub-trees.
+    ## -t Show tree entries even when going to recurse them.
+    ## -z \0 line termination on output and do not quote filenames.
+    dirs = []
+    files = []
+    with Popen(cmd, stdout=PIPE) as p:
+        alllines = readutf8(p.stdout)
+        for line in alllines.split('\0')[:-1]: # ignore last \0
+            ## OUTPUT FORMAT
+            ## <mode> SP <type> SP <object> TAB <file>
+            first, _, path = line.partition('\t')
+            _, t, _ = first.split(' ')
+            if t == 'tree':
+                dirs.append(path)
+            elif t == 'blob':
+                files.append(path)
+        return dirs, files
+
 
 def git_open(filename):
     cmd = ['git', 'cat-file', 'blob', f'{GIT_BRANCH}:{filename}']
@@ -34,27 +58,21 @@ def git_open(filename):
         return StringIO(readutf8(p.stdout))
 
 
-@lru_cache(maxsize=1 << 16, typed=True)
 def git_listdir(path):
     cmd = ['git', 'ls-tree', '--name-only',
-           (f'{GIT_BRANCH}:{path}' if path != '.' else f'{GIT_BRANCH}')]
+           (f'{GIT_BRANCH}:{path}' if path != '.' else GIT_BRANCH)]
     with Popen(cmd, stdout=PIPE) as p:
         return reads(p.stdout).split("\n")
 
 
-@lru_cache(maxsize=1 << 16, typed=True)
 def git_isdir(path):
-    cmd = ['git', 'cat-file', '-t', f'{GIT_BRANCH}:{path}']
-    with Popen(cmd, stdout=PIPE, stderr=PIPE) as p:
-        return reads(p.stderr) == "" and reads(p.stdout) == "tree"
+    global DIRS
+    return path in DIRS
 
 
-@lru_cache(maxsize=1 << 16, typed=True)
 def git_isfile(path, name):
-    cmd = ['git', 'cat-file', '-t', f'{GIT_BRANCH}:{path}/{name}']
-    with Popen(cmd, stdout=PIPE, stderr=PIPE) as p:
-        return reads(p.stderr) == "" and reads(p.stdout) == "blob"
-
+    global FILES
+    return os.path.join(path, name) in FILES
 
 class NvcheckerSyntaxTest(TestCase):
     def test_nvchecker_ini(self):
@@ -160,6 +178,8 @@ def run_test(testcase, msg):
 
 
 if __name__ == '__main__':
+    git_write_tree_index()
+    DIRS, FILES = git_ls_tree()
     run_test(NvcheckerSyntaxTest,
              msg='\033[1;31mThere are fatal error inside repo, ' +
                  'blocking git commit. Please fix the errors and commit ' +
