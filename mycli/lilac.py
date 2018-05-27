@@ -16,7 +16,7 @@ def pre_build():
             'python-pygments'
             'python-pymysql'
             'python-sqlparse'
-            'python-cli-helpers'
+            'python-cli_helpers'
         ],
         license='MIT')
 
