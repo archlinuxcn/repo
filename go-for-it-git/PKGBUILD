@@ -2,7 +2,7 @@
 # Contributor: Manuel Kehl <https://launchpad.net/~mank319, https://github.com/mank319/>
 
 pkgname=go-for-it-git
-pkgver=287.4689a26
+pkgver=601.ed31d42
 pkgrel=1
 _gitname=Go-For-It
 pkgdesc='A stylish to-do list with built-in productivity timer.'
