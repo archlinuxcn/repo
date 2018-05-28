@@ -4,7 +4,7 @@
 
 pkgname=gimp-git
 epoch=1
-pkgver=2.10.2.501.gb33c6bc072
+pkgver=2.10.2.559.g3773ccbe1f
 pkgrel=1
 pkgdesc="GNU Image Manipulation Program"
 arch=('i686' 'x86_64')
@@ -27,7 +27,7 @@ provides=('gimp')
 conflicts=('gimp')
 source=(git://git.gnome.org/gimp
 configure.patch
-	linux.gpl)
+linux.gpl)
 md5sums=('SKIP'
          'SKIP'
          'bb27bc214261d36484093e857f015f38')
@@ -43,11 +43,9 @@ prepare() {
   cd $srcdir
   patch -p0 < configure.patch
   cd $_gitname
-  git submodule init
-  git submodule update
   _mypaintver=$(echo /usr/lib/libmypaint-*.so | grep -o -E '\-[0-9]+(\.[0-9]+)*' | head -1)
   sed -i "s|\\(libmypaint\\)\\( >= libmypaint_required_version\\)|\\1${_mypaintver}\\2|g" configure.ac
-  ln -s /usr/share/gtk-doc/data/gtk-doc.make
+  cp /usr/share/gtk-doc/data/gtk-doc.make .
   autoreconf --install --force
 }
 
@@ -73,8 +71,7 @@ package() {
   cd $_gitname
   make DESTDIR="${pkgdir}" install
   install -D -m644 "${srcdir}/linux.gpl" "${pkgdir}/usr/share/gimp/2.0/palettes/Linux.gpl"
-
-  
+ 
   ln -s gimp-console-2.99.1.gz "${pkgdir}/usr/share/man/man1/gimp-console.1.gz"
   ln -s gimptool-2.99 "${pkgdir}/usr/bin/gimptool"
   ln -s gimp-2.99 "${pkgdir}/usr/bin/gimp"
