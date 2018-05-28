@@ -3,7 +3,7 @@
 
 pkgname=mednaffe-git
 _pkgname=mednaffe
-pkgver=196.0d1b37a
+pkgver=183.b6618da
 pkgrel=1
 pkgdesc="front-end (GUI) for mednafen emulator"
 arch=('i686' 'x86_64')
@@ -14,7 +14,7 @@ optdepends=('mednafen')
 makedepends=('git')
 provides=('mednaffe')
 conflicts=('mednaffe')
-source=(git://github.com/AmatCoder/mednaffe.git)
+source=(git://github.com/AmatCoder/mednaffe.git#branch=0.8.x-UNSTABLE)
 sha1sums=('SKIP')
 
 pkgver() {
