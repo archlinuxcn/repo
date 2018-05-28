@@ -19,15 +19,11 @@ def readutf8(st):
     return st.read().decode('utf-8').strip()
 
 
-def reads(st):
-    return readutf8(st).strip()
-
-
 def git_write_tree_index():
     global GIT_BRANCH
     cmd = ['git', 'write-tree']
     with Popen(cmd, stdout=PIPE) as p:
-        GIT_BRANCH = reads(p.stdout)
+        GIT_BRANCH = readutf8(p.stdout)
 
 
 def git_ls_tree():
@@ -62,7 +58,7 @@ def git_listdir(path):
     cmd = ['git', 'ls-tree', '--name-only',
            (f'{GIT_BRANCH}:{path}' if path != '.' else GIT_BRANCH)]
     with Popen(cmd, stdout=PIPE) as p:
-        return reads(p.stdout).split("\n")
+        return readutf8(p.stdout).split("\n")
 
 
 def git_isdir(path):
