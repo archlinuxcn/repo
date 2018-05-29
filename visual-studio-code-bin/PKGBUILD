@@ -3,12 +3,12 @@
 pkgname=visual-studio-code-bin
 _pkgname=visual-studio-code
 pkgver=1.23.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Visual Studio Code: Editor for building and debugging modern web and cloud applications (official binary version)"
 arch=('x86_64' 'i686')
 url="https://code.visualstudio.com/"
 license=('custom: commercial')
-provides=('vscode','visualstudiocode','visual-studio-code')
+provides=('vscode' 'visualstudiocode' 'visual-studio-code')
 replaces=('visual-studio-code')
 conflicts=('visual-studio-code')
 depends=(fontconfig libxtst gtk2 python cairo alsa-lib nss gcc-libs libnotify libxss gconf)
