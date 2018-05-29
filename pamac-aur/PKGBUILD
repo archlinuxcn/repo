@@ -1,7 +1,7 @@
 # Contributor: Zeph <zeph33@gmail.com>
 # Maintainer: Zeph <zeph33@gmail.com>
 pkgname=pamac-aur
-_pkgver=6.3.2
+_pkgver=6.3.3
 pkgver=$_pkgver
 pkgrel=2
 pkgdesc="A Gtk3 frontend for libalpm"
@@ -25,7 +25,7 @@ install=pamac.install
 source=("pamac-$pkgver-$pkgrel.tar.gz::$url/archive/v$_pkgver.tar.gz"
         #"git-$pkgver-$pkgrel.patch::https://github.com/manjaro/pamac/compare/v$_pkgver...master.patch"
        )
-sha256sums=('e37b61bb5dce96e284562d10bcf84444a5e2698a85d38702888fdbd21685be38')
+sha256sums=('b4e62b9fb602ca4c2ac30b829200484d4177a9cf944ab86c5eaaf583509e4766')
 
 prepare() {
   cd "$srcdir/pamac-$pkgver"
