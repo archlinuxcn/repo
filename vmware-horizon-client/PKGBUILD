@@ -8,10 +8,10 @@ pkgname=('vmware-horizon-client'
 	'vmware-horizon-virtual-printing'
 	'vmware-horizon-tsdr'
 	'vmware-horizon-mmr')
-# https://download3.vmware.com/software/view/viewclients/CART18FQ4/VMware-Horizon-Client-4.7.0-7395152.x64.bundle
-pkgver=4.7.0
-_build=7395152
-_cart='CART18FQ4'
+# https://download3.vmware.com/software/view/viewclients/CART19FQ2/VMware-Horizon-Client-4.8.0-8518891.x64.bundle
+pkgver=4.8.0
+_build=8518891
+_cart='CART19FQ2'
 pkgrel=1
 pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop'
 arch=('x86_64')
@@ -23,7 +23,7 @@ source=("${pkgbase}-${pkgver}-${_build}-x86_64.bundle::https://download3.vmware.
         'vmware-horizon-usb'
         'vmware-horizon-usb.service'
         'vmware-horizon-virtual-printing.service')
-sha256sums=('0e6fc223bad6f9a608270fef094374fc8a2635a80ffc78056e847a01d30ffdfe'
+sha256sums=('40a3a5a194b3185fb129c30d8f2319868af28b4bf91f22da684e02e742aaaea8'
             'd8794c22229afdeb698dae5908b7b2b3880e075b19be38e0b296bb28f4555163'
             '008b60ebf45f7d1e033c8ad8ce1688d5e1c59fc0668493067fb89b563b1dc00f'
             'f0944ca74a44292e7f853792335d3bbd1a89a1d4964d6d74a7e9485a8b068b0b'
@@ -71,13 +71,13 @@ build() {
 	for bundle in "${pkgname[@]}" vmware-horizon-pcoip; do
 		for FILE in $(find "${bundle}" -type f); do
 			# executables and libraries only
-			file --mime "${FILE}" | egrep -q "(application/x-(executable|sharedlib)|text/x-shellscript)" || continue
+			file --mime "${FILE}" | egrep -q "(application/x-(pie-)?(executable|sharedlib)|text/x-shellscript)" || continue
 
 			# make executable
 			chmod +x "${FILE}"
 
 			# ELF executables and libraries only
-			file --mime "${FILE}" | egrep -q "application/x-(executable|sharedlib)" || continue
+			file --mime "${FILE}" | egrep -q "application/x-(pie-)?(executable|sharedlib)" || continue
 
 			# even openssl 1.0.[12].x has library file names ending in .so.1.0.0
 			if [ ${_USE_BUNDLED_OPENSSL:=0} -eq 0 ]; then
