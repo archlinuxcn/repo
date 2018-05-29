@@ -9,7 +9,7 @@ from lilaclib import *
 build_prefix = 'extra-x86_64'
 pre_build = aur_pre_build
 post_build = aur_post_build
-makedepends = ['python2']
 
 if __name__ == '__main__':
+  add_makedepends(["python2"])
   single_main()
