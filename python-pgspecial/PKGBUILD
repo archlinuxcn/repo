@@ -1,20 +1,23 @@
-# Maintainer: fzerorubigd <fzero@rubi.gd>
-_pkgmain=pgspecial
-pkgname=python-$_pkgmain
-pkgver=1.9.0
+_pkgname=pgspecial
+pkgname=python-pgspecial
+pkgver=1.11.0
 pkgrel=1
 pkgdesc="Meta-commands handler for Postgres Database."
 arch=('any')
-url="https://github.com/dbcli/pgspecial"
-license=('BSD')
-groups=()
-depends=('python')
-provides=('python-pgspecial')
-options=(!emptydirs)
-source=($pkgname-$pkgver.zip::https://github.com/dbcli/pgspecial/archive/v${pkgver}.zip)
+url="https://www.dbcli.com"
+license=('LICENSE.txt')
+depends=('python' 'python-setuptools')
+source=('https://files.pythonhosted.org/packages/0f/07/847815d9effa367ac045a8d8b2ef62058a348f3dea41b98f98d1a33c71f9/pgspecial-1.11.0.tar.gz')
+md5sums=('6406b710f9b64d8b63e542108df238b2')
+
+build() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  LANG=en_US.UTF-8 python3 setup.py build
+}
 
 package() {
-  cd "$srcdir/$_pkgmain-$pkgver"
-  python setup.py install --root="$pkgdir/" --optimize=1
+  cd "$srcdir/$_pkgname-$pkgver"
+  LANG=en_US.UTF-8 python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 }
-md5sums=('158b681ec7fea65534501b82732f6db6')
+
+# vim:set sw=2 et:
