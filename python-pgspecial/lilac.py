@@ -7,9 +7,10 @@
 from lilaclib import *
 
 build_prefix = 'extra-x86_64'
-pre_build = aur_pre_build
+def pre_build():
+    aur_pre_build()
+    pypi_pre_build(depends_setuptools=True)
 post_build = aur_post_build
-depends_setuptools = True
 
 if __name__ == '__main__':
   single_main()
