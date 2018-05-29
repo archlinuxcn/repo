@@ -9,10 +9,10 @@ Please keep only the line that suits and delete others.
 * 过期软件包 / out-of-date packages
 * 弃置软件包 / orphaning packages
 * 软件包被官方仓库收录 / available in official repos
-× 打包错误 / package error
+* 打包错误 / packaging error
 * 其它 / other
 
-### 受影响的软件包 / Affect packages
+### 受影响的软件包 / Affected packages
 
 <!--
 请每行一个包基础名（对应仓库中的目录名），
