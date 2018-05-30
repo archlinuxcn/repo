@@ -3,7 +3,7 @@
 
 pkgbase=imagemagick-fftw
 pkgname=(libmagick-fftw imagemagick-fftw)
-pkgver=7.0.7.35
+pkgver=7.0.7.36
 pkgrel=1
 pkgdesc="An image viewing/manipulation program"
 url="https://www.imagemagick.org/"
@@ -17,7 +17,7 @@ _relname=ImageMagick-${pkgver%%.*}
 _tarname=ImageMagick-${pkgver%.*}-${pkgver##*.}
 source=(https://www.imagemagick.org/download/$_tarname.tar.xz{,.asc}
         arch-fonts.diff)
-sha256sums=('5441583b724f84d5ecd87b9056aa751fb520e5ef26da4b45a8975f1938d4c39d'
+sha256sums=('922989149298defdd758225e396b9b09eaf5682320c34120fff3e6d8ccbb91ef'
             'SKIP'
             'a85b744c61b1b563743ecb7c7adad999d7ed9a8af816650e3ab9321b2b102e73')
 validpgpkeys=(D8272EF51DA223E4D05B466989AB63D48277377A)  # Lexie Parsimoniae
@@ -123,11 +123,12 @@ package_imagemagick-fftw() {
   find "$pkgdir/usr/lib/perl5" -name '*.so' -exec chrpath -d {} +
 
 # template start; name=perl-binary-module-dependency; version=1;
-if [[ $(find "$pkgdir/usr/lib/perl5/" -name "*.so") ]]; then
-        _perlver_min=$(perl -e '$v = $^V->{version}; print $v->[0].".".($v->[1]);')
-        _perlver_max=$(perl -e '$v = $^V->{version}; print $v->[0].".".($v->[1]+1);')
-        depends+=("perl>=$_perlver_min" "perl<$_perlver_max")
-fi
+#if [[ $(find "$pkgdir/usr/lib/perl5/" -name "*.so") ]]; then
+#        _perlver_min=$(perl -e '$v = $^V->{version}; print $v->[0].".".($v->[1]);')
+#        _perlver_max=$(perl -e '$v = $^V->{version}; print $v->[0].".".($v->[1]+1);')
+#        echo $_perlver_min $_perlver_max
+#        depends+=("perl>=$_perlver_min" "perl<$_perlver_max")
+#fi
 # template end;
 
   cd $_tarname
