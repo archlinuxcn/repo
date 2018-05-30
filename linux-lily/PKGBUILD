@@ -85,7 +85,7 @@ END
 build() {
   cd ~/linux-git
 
-  make bzImage modules
+  make ${MAKEFLAGS} LOCALVERSION= bzImage modules
 }
 
 _package() {
@@ -100,12 +100,12 @@ _package() {
   cd ~/linux-git
 
   # get kernel version
-  _kernver="$(make kernelrelease)"
+  _kernver="$(make LOCALVERSION= kernelrelease)"
   _basekernel=${_kernver%%-*}
   _basekernel=${_basekernel%.*}
 
   mkdir -p "${pkgdir}"/{boot,usr/lib/modules}
-  make INSTALL_MOD_PATH="${pkgdir}/usr" modules_install
+  make LOCALVERSION= INSTALL_MOD_PATH="${pkgdir}/usr" modules_install
   cp arch/x86/boot/bzImage "${pkgdir}/boot/vmlinuz-${pkgbase}"
 
   # make room for external modules
