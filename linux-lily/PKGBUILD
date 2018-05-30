@@ -4,9 +4,9 @@
 
 pkgbase=linux-lily               # Build stock -ARCH kernel
 #pkgbase=linux-custom       # Build kernel with a different name
-_srcname=linux-4.15
-pkgver=4.15.2
-pkgrel=2
+_srcname=linux-4.16
+pkgver=4.16.12
+pkgrel=1
 arch=('x86_64')
 url="https://www.kernel.org/"
 license=('GPL2')
@@ -18,7 +18,8 @@ source=(
   90-linux.hook  # pacman hook for initramfs regeneration
   linux.preset   # standard config files for mkinitcpio ramdisk
   0001-add-sysctl-to-disallow-unprivileged-CLONE_NEWUSER-by.patch
-  0002-drm-i915-edp-Only-use-the-alternate-fixed-mode-if-it.patch
+  0002-ACPI-watchdog-Prefer-iTCO_wdt-on-Lenovo-Z50-70.patch
+  0003-Revert-drm-i915-edp-Allow-alternate-fixed-mode-for-e.patch
 )
 validpgpkeys=(
   'ABAF11C65A2970B130ABE3C479BE3E4300411886'  # Linus Torvalds
@@ -28,8 +29,9 @@ sha256sums=(
             'ae2e95db94ef7176207c690224169594d49445e04249d2499e9d2fbc117a0b21'
             '75f99f5239e03238f88d1a834c50043ec32b1dc568f2cc291b07d04718483919'
             'ad6344badc91ad0630caacde83f7f9b97276f80d26a20619a87952be65492c65'
-            '7b7363b53c68f52b119df994c9c08d4f29271b408f021366ab23f862518bd9bc'
-            'ac996455cddccc312d93e63845d92b2d8ab8fb53208a221948d28c76c678d215')
+            '8d6a5f34b3d79e75b0cb888c6bcf293f84c5cbb2757f7bdadafee7e0ea77d7dd'
+            '2454c1ee5e0f5aa119fafb4c8d3b402c5e4e10b2e868fe3e4ced3b1e2aa48446'
+            '8114295b8c07795a15b9f8eafb0f515c34661a1e05512da818a34581dd30f87e')
 
 _kernelname=${pkgbase#linux}
 : ${_kernelname:=-ARCH}
@@ -46,16 +48,21 @@ prepare() {
   # disable USER_NS for non-root users by default
   patch -Np1 -i $startdir/0001-add-sysctl-to-disallow-unprivileged-CLONE_NEWUSER-by.patch
 
+  # https://bugs.archlinux.org/task/56780
+  patch -Np1 -i $startdir/0002-ACPI-watchdog-Prefer-iTCO_wdt-on-Lenovo-Z50-70.patch
+
   # https://bugs.archlinux.org/task/56711
-  patch -Np1 -i $startdir/0002-drm-i915-edp-Only-use-the-alternate-fixed-mode-if-it.patch
+  patch -Np1 -i $startdir/0003-Revert-drm-i915-edp-Allow-alternate-fixed-mode-for-e.patch
 
   cat >>.config <<END
 CONFIG_LOCALVERSION="${_kernelname}"
 CONFIG_LOCALVERSION_AUTO=n
 END
 
-  # set extraversion to pkgrel
-  sed -i "/^EXTRAVERSION =/s/=.*/= -${pkgrel}/" Makefile
+  # set extraversion to pkgrel and empty localversion
+  sed -e "/^EXTRAVERSION =/s/=.*/= -${pkgrel}/" \
+      -e "/^EXTRAVERSION =/aLOCALVERSION =" \
+      -i Makefile
 
   # don't run depmod on 'make install'. We'll do this ourselves in packaging
   sed -i '2iexit 0' scripts/depmod.sh
@@ -78,7 +85,7 @@ END
 build() {
   cd ~/linux-git
 
-  make ${MAKEFLAGS} LOCALVERSION= bzImage modules
+  make bzImage modules
 }
 
 _package() {
@@ -93,12 +100,12 @@ _package() {
   cd ~/linux-git
 
   # get kernel version
-  _kernver="$(make LOCALVERSION= kernelrelease)"
+  _kernver="$(make kernelrelease)"
   _basekernel=${_kernver%%-*}
   _basekernel=${_basekernel%.*}
 
   mkdir -p "${pkgdir}"/{boot,usr/lib/modules}
-  make LOCALVERSION= INSTALL_MOD_PATH="${pkgdir}/usr" modules_install
+  make INSTALL_MOD_PATH="${pkgdir}/usr" modules_install
   cp arch/x86/boot/bzImage "${pkgdir}/boot/vmlinuz-${pkgbase}"
 
   # make room for external modules
@@ -171,9 +178,6 @@ _package-headers() {
 
   install -Dt "${_builddir}/drivers/md" -m644 drivers/md/*.h
   install -Dt "${_builddir}/net/mac80211" -m644 net/mac80211/*.h
-
-  # http://bugs.archlinux.org/task/9912
-  install -Dt "${_builddir}/drivers/media/dvb-core" -m644 drivers/media/dvb-core/*.h
 
   # http://bugs.archlinux.org/task/13146
   install -Dt "${_builddir}/drivers/media/i2c" -m644 drivers/media/i2c/msp3400-driver.h
