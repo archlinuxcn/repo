@@ -5,7 +5,7 @@
 # Contributor: Hexchain Tong <i at hexchain dot org>
 
 pkgname=megasync
-pkgver=3.6.5.0
+pkgver=3.6.6.0
 pkgrel=1
 pkgdesc="Sync your files to your Mega account. Official app"
 arch=('i686' 'x86_64')
