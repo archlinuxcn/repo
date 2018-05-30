@@ -1,7 +1,7 @@
 # Maintainer: Philipp Wolfer <ph.wolfer@gmail.com>
 _pkgname=gifski
 pkgname=${_pkgname}-git
-pkgver=0.8.0.r14.g555d3dc
+pkgver=0.8.3.r0.geaf8def
 pkgrel=1
 pkgdesc="GIF encoder based on libimagequant (pngquant, gifquant?). Squeezes maximum possible quality from the awful GIF format"
 arch=('i686' 'x86_64')
