@@ -1,0 +1,22 @@
+diff --git a/server/server.go b/server/server.go
+index df0f24197..5f515a42e 100644
+--- a/server/server.go
++++ b/server/server.go
+@@ -35,6 +35,7 @@ import (
+ 	"io/ioutil"
+ 	"math/rand"
+ 	"net"
++	"os"
+ 	"sync"
+ 	"sync/atomic"
+ 	"time"
+@@ -156,6 +157,9 @@ func NewServer(cfg *config.Config, driver IDriver) (*Server, error) {
+ 		if s.listener, err = net.Listen("unix", cfg.Socket); err == nil {
+ 			log.Infof("Server is running MySQL Protocol through Socket [%s]", cfg.Socket)
+ 		}
++		if err := os.Chmod(cfg.Socket, 0777); err != nil {
++			log.Fatal("Couldn't change socket permission for %s", cfg.Socket)
++		}
+ 	} else {
+ 		addr := fmt.Sprintf("%s:%d", s.cfg.Host, s.cfg.Port)
+ 		if s.listener, err = net.Listen("tcp", addr); err == nil {

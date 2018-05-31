@@ -1,0 +1,20 @@
+[Unit]
+Description=TiDB
+Documentation=https://pingcap.com/docs
+Wants=network.target
+After=network.target
+
+[Service]
+Type=simple
+RuntimeDirectory=tidb
+PIDFile=/run/tidb/tidb.pid
+WorkingDirectory=/var/lib/tidb
+
+User=tidb
+Group=tidb
+
+ExecStart=/usr/bin/tidb-server -config /etc/tidb/config.toml
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
