@@ -21,8 +21,6 @@ from lilaclib import *
 
 build_prefix = 'extra-x86_64'
 
-depends=[("spl-dkms-git", "spl-utils-dkms-git"), ("spl-dkms-git", "spl-dkms-git")]
-
 
 def pre_build():
     aur_pre_build()
