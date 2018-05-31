@@ -10,7 +10,7 @@ def post_build():
     git_add_files('PKGBUILD')
     git_commit()
 
-build_prefix = 'extra-x86_64'
+build_prefix = 'archlinuxcn-x86_64'
 pre_build = vcs_update
 
 if __name__ == '__main__':
