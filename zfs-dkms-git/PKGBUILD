@@ -2,11 +2,11 @@
 # Contributor: Iacopo Isimbaldi <isiachi@rhye.it>
 
 pkgbase="zfs-dkms-git"
-pkgname=("zfs-dkms-git" "zfs-utils-dkms-git")
-pkgver=0.7.0_r495_g3e5300e0e
+pkgname=("zfs-dkms-git" "zfs-utils-git")
+pkgver=0.7.0_r1576_g928046b74
 pkgrel=1
 license=('CDDL')
-makedepends=('python2' 'git' 'spl-dkms-git' )
+makedepends=('git' 'python2' )
 arch=("i686" "x86_64")
 url="http://zfsonlinux.org/"
 source=("git+https://github.com/zfsonlinux/zfs.git"
@@ -15,7 +15,7 @@ source=("git+https://github.com/zfsonlinux/zfs.git"
         "zfs-utils.initcpio.hook")
 sha256sums=('SKIP'
             'b60214f70ffffb62ffe489cbfabd2e069d14ed2a391fac0e36f914238394b540'
-            'e33adabbe3f2f4866802c9d63c7810c7a42b4df2288d0cdd23376519b15b36e4'
+            '335e309ebf5b74fd8956f5e8805939c37d4008b0bcc3b00be6e7ef1d5b7c1669'
             '290b18f538badce2eedd4ac4926a579535ec6c887436569fa6ff3685b55776bf')
 
 pkgver() {
@@ -43,9 +43,10 @@ build() {
 
 package_zfs-dkms-git() {
     pkgdesc="Kernel modules for the Zettabyte File System. (Git version)"
-    depends=("spl-dkms-git" "zfs-utils-dkms-git=${pkgver}-${pkgrel}" "dkms")
-    provides=("zfs")
-    conflicts=("zfs-git" "zfs-lts" "zfs-dkms")
+    depends=("zfs-utils-git=${pkgver}-${pkgrel}" "dkms" "lsb-release")
+    provides=("zfs" "spl")
+    conflicts=("zfs-git" "zfs-lts" "zfs-dkms" "spl-dkms-git")
+    replaces=("spl-dkms-git")
 
     dkmsdir="${pkgdir}/usr/src/zfs-${pkgver%%_*}"
     install -d "${dkmsdir}"
@@ -59,10 +60,11 @@ package_zfs-dkms-git() {
     chmod g-w,o-w -R .
 }
 
-package_zfs-utils-dkms-git() {
+package_zfs-utils-git() {
     pkgdesc="Kernel module support files for the Zettabyte File System. (Git version)"
-    provides=("zfs-utils")
-    conflicts=("zfs-utils-git" "zfs-utils-lts" "zfs-utils" "zfs-utils-common-git" "zfs-utils-common")
+    provides=("zfs-utils" "spl-utils")
+    replaces=("zfs-utils-dkms-git" "spl-utils-dkms-git")
+    conflicts=("zfs-utils-dkms-git" "zfs-utils" "zfs-utils-common-git" "zfs-utils-common" "spl-utils-dkms-git")
     install=zfs-utils.install
     backup=('etc/zfs/zed.d/zed.rc' 'etc/default/zfs')
 
