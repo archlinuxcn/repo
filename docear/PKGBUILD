@@ -3,13 +3,13 @@
 
 pkgname=docear
 pkgver=1.2.0_stable
-pkgrel=3
+pkgrel=4
 pkgdesc="Docear is an academic literature suite for searching, organizing and creating academic literature, built upon the mind mapping software Freeplane and the reference manager JabRef."
 arch=('any')
 url="http://www.docear.org/"
 license=('GPL 2')
 groups=()
-depends=('java-runtime')
+depends=('jre8-openjdk-headless')
 makedepends=()
 optdepends=()
 provides=('docear')
@@ -48,7 +48,9 @@ package()
   find "${pkgdir}/usr/share/docear" -type d -exec chmod 755 {} \;
   find "${pkgdir}/usr/share/docear" -type f -exec chmod 644 {} \;
   chmod 755 "${pkgdir}/usr/share/docear/docear.sh"
-
+  
+  sed -i -e 's/$(which java)/\/usr\/lib\/jvm\/java-8-openjdk\/jre\/bin\/java/g' "${pkgdir}/usr/share/docear/docear.sh"
+  
   install -dm 755 "${pkgdir}/usr/bin"
   echo "#! /bin/sh" > "${pkgdir}/usr/bin/docear"
   echo "/usr/share/docear/docear.sh \$*" >> "${pkgdir}/usr/bin/docear"
