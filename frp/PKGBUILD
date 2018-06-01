@@ -1,7 +1,7 @@
 # Maintainer: Vimsucks <dev@vimsucks.com>
 
 pkgname=frp
-pkgver=0.19.1
+pkgver=0.20.0
 pkgrel=1
 pkgdesc="A fast reverse proxy to help you expose a local server behind a NAT or firewall to the internet."
 license=('Apache')
@@ -15,9 +15,9 @@ md5sums=('6f9c6681357f3f984983457151d7f0c5'
          'e3bfa7c428433fa6cbb5aa64515d8899'
          '50364b050ca08f47b7afe305f528eaa2'
          '7aaf36865c656232b441e7bbaf2993dd')
-md5sums_x86_64=('0a323dc60d2c93fd5956ac0218929f4e')
-md5sums_i686=('a5c1f33b6afd3453369a5677c49ae9df')
-md5sums_arm=('1f50d2cbd5436a05cc9a6c2b66ece05c')
+md5sums_x86_64=('d8d573f44235d84a3b7cb04faf66d744')
+md5sums_i686=('4200e240343acc8458ccbf6e62196bbf')
+md5sums_arm=('06eea7fe56a7c5933d148497ae9fc36f')
 install=$pkgname.install
 
 package() {
