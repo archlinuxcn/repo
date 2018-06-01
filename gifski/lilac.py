@@ -2,16 +2,9 @@
 
 from lilaclib import *
 
-from lilaclib import *
-
 build_prefix = 'extra-x86_64'
-
-def pre_build():
-  update_pkgver_and_pkgrel(_G.newver)
-
-def post_build():
-  git_add_files('PKGBUILD')
-  git_commit()
+pre_build = aur_pre_build
+post_build = aur_post_build
 
 if __name__ == '__main__':
   single_main()
