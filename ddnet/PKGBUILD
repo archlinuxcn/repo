@@ -1,8 +1,8 @@
 # Maintainer: Rafael Fontenelle <rafaelff@gnome.org>
 
 pkgname=ddnet
-pkgver=11.1.8
-pkgrel=2
+pkgver=11.1.9
+pkgrel=1
 pkgdesc="DDraceNetwork, a mod of Teeworlds"
 arch=('x86_64')
 url="https://ddnet.tw"
@@ -18,7 +18,7 @@ replaces=('teeworlds-ddnet')
 source=("https://ddnet.tw/downloads/DDNet-$pkgver.tar.xz"
         'ddnet.desktop' 'ddnet-server.desktop'
         'DDNet.png' 'DDNet-Server.png')
-sha256sums=('f8116f074d19fbd953ebd8fa204c63d5665a20120a6c71f81e793fb78e1243c2'
+sha256sums=('c0caad30326ac5eb4b306ba9d2354b31b253f1c5a41924fac4f8732f06fe64bd'
             '11402ed2cf323e350e381588c7cb4fa1d450c19645a0a079897912134bb436bd'
             'fc8c27e129f92c5dddf96a079306a2439c8cc14d4b8ce719c5fa2f59aceee367'
             '1dc83efd9fdab2597fc4d41358628422a9550d4d23b60d273f2f30cf7b76dfaa'
@@ -59,7 +59,7 @@ package() {
     install -m755 map_extract          "$pkgdir/usr/lib/ddnet/tools/"
     install -m755 map_replace_image    "$pkgdir/usr/lib/ddnet/tools/"
     install -m755 map_resave           "$pkgdir/usr/lib/ddnet/tools/"
-    install -m755 map_version          "$pkgdir/usr/lib/ddnet/tools/"
+    #install -m755 map_version          "$pkgdir/usr/lib/ddnet/tools/"
     install -m755 packetgen            "$pkgdir/usr/lib/ddnet/tools/"
     install -m755 tileset_borderadd    "$pkgdir/usr/lib/ddnet/tools/"
     install -m755 tileset_borderfix    "$pkgdir/usr/lib/ddnet/tools/"
