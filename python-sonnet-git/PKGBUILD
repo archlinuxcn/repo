@@ -18,13 +18,10 @@ sha512sums=('SKIP'
             '7280e65d26fb3f15d95f7217ee3bc08d1424cd144cf25bf638fa114fa835b2505dfaf457c55700067d24f485b77120973d094ec568e6d1b1054857402f9c352d')
 
 prepare() {
-  set -v on
+  cp -r tensorflow-${tf_pkgver} tensorflow-${tf_pkgver}-cuda
   mkdir -p $srcdir/sonnet/tensorflow
   cp -r tensorflow-$tf_pkgver/* $srcdir/sonnet/tensorflow/
-  
-  cp -r $srcdir/sonnet $srcdir/sonnet-$tf_pkgver
-  cp -r $srcdir/sonnet $srcdir/sonnet-cuda-$tf_pkgver
-  
+  cp -r $srcdir/sonnet $srcdir/sonnet-cuda
   # These environment variables influence the behavior of the configure call below.
   export PYTHON_BIN_PATH=/usr/bin/python
   export USE_DEFAULT_PYTHON_LIB_PATH=1
@@ -47,7 +44,7 @@ prepare() {
 }
 
 configure_tensorflow() {
-  cd $srcdir/sonnet-$tf_pkgver/tensorflow
+  cd $srcdir/sonnet/tensorflow
   export CC_OPT_FLAGS="-march=x86-64"
   export TF_NEED_CUDA=0
   
@@ -55,7 +52,7 @@ configure_tensorflow() {
 }
 
 configure_tensorflow_cuda() {
-  cd $srcdir/sonnet-cuda-$tf_pkgver/tensorflow
+  cd $srcdir/sonnet-cuda/tensorflow
   export CC_OPT_FLAGS="-march=x86-64"
   export TF_NEED_CUDA=1
   export TF_CUDA_CLANG=0
@@ -70,33 +67,35 @@ configure_tensorflow_cuda() {
 
 build() {
   # CPU only
+  cd $srcdir/sonnet/tensorflow
   msg2 "Configure tensorflow..."
   configure_tensorflow
-  cd $srcdir/sonnet-$tf_pkgver
+  cd $srcdir/sonnet
   msg2 "Building sonnet ..."
   bazel build  --ignore_unsupported_sandboxing :install 
   mkdir -p tmp
   msg2 "Building pip package ..."
-  ./bazel-bin/install $srcdir/sonnet-$tf_pkgver python3
+  ./bazel-bin/install $srcdir/sonnet python3
   
   # CUDA 
+  cd $srcdir/sonnet-cuda/tensorflow
   msg2 "Configure tensorflow-cuda ..."
   configure_tensorflow_cuda
-  cd $srcdir/sonnet-cuda-$tf_pkgver
+  cd $srcdir/sonnet-cuda
   msg2 "Building sonnet-cuda ..."
   bazel build  --ignore_unsupported_sandboxing :install 
   mkdir -p tmp
   msg2 "Building pip package ..."
-  ./bazel-bin/install $srcdir/sonnet-cuda-$tf_pkgver python3
+  ./bazel-bin/install $srcdir/sonnet-cuda python3
 }
 
 package_python-sonnet-git() {
-  cd $srcdir/sonnet-$tf_pkgver
+  cd "${srcdir}/sonnet"
   pip install --ignore-installed --upgrade --root "$pkgdir/" *.whl --no-dependencies
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 package_python-sonnet-cuda-git(){
-  cd $srcdir/sonnet-cuda-$tf_pkgver
+  cd "${srcdir}/sonnet-cuda"
   pip install --ignore-installed --upgrade --root "$pkgdir/" *.whl --no-dependencies
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
