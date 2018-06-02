@@ -1,7 +1,7 @@
 # Contributor: Zeph <zeph33@gmail.com>
 # Maintainer: Zeph <zeph33@gmail.com>
 pkgname=pamac-aur
-_pkgver=6.3.3
+_pkgver=6.4.0
 pkgver=$_pkgver
 pkgrel=2
 pkgdesc="A Gtk3 frontend for libalpm"
@@ -9,7 +9,7 @@ arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://github.com/manjaro/pamac"
 license=('GPL3')
 depends=('glib2>=2.42' 'json-glib' 'libsoup' 'dbus-glib' 'polkit' 'vte3>=0.38' 'gtk3>=3.22'
-         'libnotify' 'desktop-file-utils' 'pacman>=5.0' 'gnutls>=3.4'
+         'libnotify' 'desktop-file-utils' 'pacman>=5.1' 'gnutls>=3.4'
          'appstream-glib' 'archlinux-appstream-data')
 
   optdepends=('polkit-gnome: needed for authentification in Cinnamon, Gnome'
@@ -25,7 +25,7 @@ install=pamac.install
 source=("pamac-$pkgver-$pkgrel.tar.gz::$url/archive/v$_pkgver.tar.gz"
         #"git-$pkgver-$pkgrel.patch::https://github.com/manjaro/pamac/compare/v$_pkgver...master.patch"
        )
-sha256sums=('b4e62b9fb602ca4c2ac30b829200484d4177a9cf944ab86c5eaaf583509e4766')
+sha256sums=('4bb1223d318037f9b17c3b44197aae40ae19fb8a508e2540d6d09959796a0265')
 
 prepare() {
   cd "$srcdir/pamac-$pkgver"
