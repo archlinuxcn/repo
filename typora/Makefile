@@ -23,3 +23,9 @@ versions:
 # This will remove the files downloaded and created in the build process
 clean:
 	rm -rf pkg src typora_*.deb typora-*.pkg.tar
+
+publish:
+	git add .
+	git commit -m "Update to version $(shell $(MAKE) versions | tail -n 1)"
+	git push
+	git push aur master
