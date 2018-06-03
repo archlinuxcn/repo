@@ -10,6 +10,8 @@ def pre_build():
     for line in edit_file('PKGBUILD'):
         if 'ninja' in line and 'chrome' in line:
             print(line.replace('ninja','ninja -l$(nproc)'))
+        elif 'makedepends=(' in line:
+            print(line.replace('makedepends=(', 'makedepends=("libva" '))
         else:
             print(line)
 
