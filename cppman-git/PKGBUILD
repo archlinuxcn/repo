@@ -15,7 +15,8 @@ sha256sums=("SKIP")
 
 
 pkgver() {
-  date '+%Y%m%d'
+  cd "$srcdir/$_pkgname"
+  echo 0.$(git rev-list --count HEAD).$(git rev-parse --short HEAD)
 }
 
 build() {
