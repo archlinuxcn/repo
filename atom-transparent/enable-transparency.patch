@@ -1,0 +1,29 @@
+diff -ur a/atom.sh b/atom.sh
+--- a/atom.sh	2018-06-03 20:13:22.329490169 +0800
++++ b/atom.sh	2018-06-03 20:22:19.346842103 +0800
+@@ -44,11 +44,11 @@
+ mkdir -p "$ATOM_HOME"
+ 
+ if [ $EXPECT_OUTPUT ]; then
+-  "$ATOM_PATH" --executed-from="$(pwd)" --pid=$$ "$@"
++  "$ATOM_PATH" --executed-from="$(pwd)" --pid=$$ --enable-transparent-visuals --disable-gpu "$@"
+   exit $?
+ else
+   (
+-  nohup "$ATOM_PATH" --executed-from="$(pwd)" --pid=$$ "$@" > "$ATOM_HOME/nohup.out" 2>&1
++  nohup "$ATOM_PATH" --executed-from="$(pwd)" --pid=$$ --enable-transparent-visuals --disable-gpu "$@" > "$ATOM_HOME/nohup.out" 2>&1
+   if [ $? -ne 0 ]; then
+     cat "$ATOM_HOME/nohup.out"
+     exit $?
+diff -ur a/src/main-process/atom-window.js b/src/main-process/atom-window.js
+--- a/src/main-process/atom-window.js	2018-05-19 06:49:28.000000000 +0800
++++ b/src/main-process/atom-window.js	2018-06-03 20:18:09.254908066 +0800
+@@ -31,6 +31,8 @@
+     this.closedPromise = new Promise(resolve => { this.resolveClosedPromise = resolve })
+ 
+     const options = {
++      frame: false,
++      transparent: true,
+       show: false,
+       title: 'Atom',
+       tabbingIdentifier: 'atom',

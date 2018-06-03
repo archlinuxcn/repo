@@ -1,0 +1,212 @@
+--- a/package.json
++++ b/package.json
+@@ -12,7 +12,6 @@
+     "url": "https://github.com/atom/atom/issues"
+   },
+   "license": "MIT",
+-  "electronVersion": "1.7.15",
+   "dependencies": {
+     "@atom/nsfw": "^1.0.18",
+     "@atom/watcher": "1.0.3",
+--- a/script/build
++++ b/script/build
+@@ -2,10 +2,6 @@
+ 
+ 'use strict'
+ 
+-// Run bootstrap first to ensure all the dependencies used later in this script
+-// are installed.
+-require('./bootstrap')
+-
+ // Needed so we can require src/module-cache.coffee during generateModuleCache
+ require('coffee-script/register')
+ require('colors')
+@@ -26,7 +22,6 @@
+   .wrap(yargs.terminalWidth())
+   .argv
+ 
+-const checkChromedriverVersion = require('./lib/check-chromedriver-version')
+ const cleanOutputDirectory = require('./lib/clean-output-directory')
+ const cleanPackageLock = require('./lib/clean-package-lock')
+ const codeSignOnMac = require('./lib/code-sign-on-mac')
+@@ -60,7 +55,6 @@
+ 
+ if (!argv.existingBinaries) {
+   cleanPackageLock()
+-  checkChromedriverVersion()
+   cleanOutputDirectory()
+   copyAssets()
+   transpilePackagesWithCustomTranspilerPaths()
+@@ -76,61 +70,4 @@
+ }
+ 
+ binariesPromise
+-  .then(packageApplication)
+   .then(packagedAppPath => generateStartupSnapshot(packagedAppPath).then(() => packagedAppPath))
+-  .then(packagedAppPath => {
+-    switch (process.platform) {
+-      case 'darwin': {
+-        if (argv.codeSign) {
+-          codeSignOnMac(packagedAppPath)
+-        } else {
+-          console.log('Skipping code-signing. Specify the --code-sign option to perform code-signing'.gray)
+-        }
+-      }
+-      case 'win32': {
+-        if (argv.codeSign) {
+-          const executablesToSign = [ path.join(packagedAppPath, 'Atom.exe') ]
+-          if (argv.createWindowsInstaller) {
+-            executablesToSign.push(path.join(__dirname, 'node_modules', 'electron-winstaller', 'vendor', 'Update.exe'))
+-          }
+-          codeSignOnWindows(executablesToSign)
+-        } else {
+-          console.log('Skipping code-signing. Specify the --code-sign option to perform code-signing'.gray)
+-        }
+-        if (argv.createWindowsInstaller) {
+-          return createWindowsInstaller(packagedAppPath)
+-            .then(() => argv.codeSign && codeSignOnWindows([ path.join(CONFIG.buildOutputPath, 'AtomSetup.exe') ]))
+-            .then(() => packagedAppPath)
+-        } else {
+-          console.log('Skipping creating installer. Specify the --create-windows-installer option to create a Squirrel-based Windows installer.'.gray)
+-        }
+-      }
+-      case 'linux': {
+-        if (argv.createDebianPackage) {
+-          createDebianPackage(packagedAppPath)
+-        } else {
+-          console.log('Skipping creating debian package. Specify the --create-debian-package option to create it.'.gray)
+-        }
+-
+-        if (argv.createRpmPackage) {
+-          createRpmPackage(packagedAppPath)
+-        } else {
+-          console.log('Skipping creating rpm package. Specify the --create-rpm-package option to create it.'.gray)
+-        }
+-      }
+-    }
+-
+-    return Promise.resolve(packagedAppPath)
+-  }).then(packagedAppPath => {
+-    if (argv.compressArtifacts) {
+-      compressArtifacts(packagedAppPath)
+-    } else {
+-      console.log('Skipping artifacts compression. Specify the --compress-artifacts option to compress Atom binaries (and symbols on macOS)'.gray)
+-    }
+-
+-    if (argv.install != null) {
+-      installApplication(packagedAppPath, argv.install)
+-    } else {
+-      console.log('Skipping installation. Specify the --install option to install Atom'.gray)
+-    }
+-  })
+--- a/script/lib/generate-startup-snapshot.js
++++ b/script/lib/generate-startup-snapshot.js
+@@ -79,7 +79,7 @@
+     } else if (process.platform === 'win32') {
+       nodeBundledInElectronPath = path.join(packagedAppPath, 'atom.exe')
+     } else {
+-      nodeBundledInElectronPath = path.join(packagedAppPath, 'atom')
++      nodeBundledInElectronPath = 'electron'
+     }
+     childProcess.execFileSync(
+       nodeBundledInElectronPath,
+@@ -87,6 +87,7 @@
+       {env: Object.assign({}, process.env, {ELECTRON_RUN_AS_NODE: 1})}
+     )
+ 
++/*
+     const generatedStartupBlobPath = path.join(CONFIG.buildOutputPath, 'snapshot_blob.bin')
+     console.log(`Generating startup blob at "${generatedStartupBlobPath}"`)
+     childProcess.execFileSync(
+@@ -104,5 +105,6 @@
+     console.log(`Moving generated startup blob into "${startupBlobDestinationPath}"`)
+     fs.unlinkSync(startupBlobDestinationPath)
+     fs.renameSync(generatedStartupBlobPath, startupBlobDestinationPath)
++*/
+   })
+ }
+--- a/script/package.json
++++ b/script/package.json
+@@ -7,9 +7,7 @@
+     "coffeelint": "1.15.7",
+     "colors": "1.1.2",
+     "donna": "1.0.16",
+-    "electron-chromedriver": "~1.7",
+     "electron-link": "0.2.0",
+-    "electron-mksnapshot": "~1.7",
+     "electron-packager": "7.3.0",
+     "electron-winstaller": "2.6.4",
+     "fs-admin": "^0.1.5",
+--- a/src/compile-cache.js
++++ b/src/compile-cache.js
+@@ -122,7 +122,7 @@ exports.install = function (resourcesPath, nodeRequire) {
+       return {
+         column,
+         line: row,
+-        source: path.join(resourcesPath, 'app', 'static', relativePath),
++        source: path.join(resourcesPath, 'static', relativePath),
+         name: null
+       }
+     }
+--- a/src/main-process/start.js
++++ b/src/main-process/start.js
+@@ -95,5 +95,5 @@ function handleStartupEventWithSquirrel () {
+ function setupCompileCache () {
+   const CompileCache = require('../compile-cache')
+   CompileCache.setAtomHomeDirectory(process.env.ATOM_HOME)
+-  CompileCache.install(process.resourcesPath, require)
++  CompileCache.install('/usr/lib/atom', require)
+ }
+--- a/src/module-cache.coffee
++++ b/src/module-cache.coffee
+@@ -195,7 +195,7 @@ resolveModulePath = (relativePath, parentModule) ->
+   return
+ 
+ registerBuiltins = (devMode) ->
+-  if devMode or not cache.resourcePath.startsWith("#{process.resourcesPath}#{path.sep}")
++  if devMode or not cache.resourcePath.startsWith("/usr/lib/atom")
+     fs = require 'fs-plus'
+     atomJsPath = path.join(cache.resourcePath, 'exports', 'atom.js')
+     cache.builtins.atom = atomJsPath if fs.isFileSync(atomJsPath)
+--- a/src/package-manager.js
++++ b/src/package-manager.js
+@@ -807,7 +807,7 @@ module.exports = class PackageManager {
+   }
+ 
+   isBundledPackagePath (packagePath) {
+-    if (this.devMode && !this.resourcePath.startsWith(`${process.resourcesPath}${path.sep}`)) {
++    if (this.devMode && this.resourcePath !== '/usr/lib/atom') {
+       return false
+     }
+ 
+--- a/src/task-bootstrap.js
++++ b/src/task-bootstrap.js
+@@ -3,7 +3,7 @@ const [compileCachePath, taskPath] = process.argv.slice(2)
+ 
+ const CompileCache = require('./compile-cache')
+ CompileCache.setCacheDirectory(compileCachePath)
+-CompileCache.install(`${process.resourcesPath}`, require)
++CompileCache.install('/usr/lib/atom', require)
+ 
+ const setupGlobals = function () {
+   global.attachEvent = function () {}
+--- a/static/index.js
++++ b/static/index.js
+@@ -23,7 +23,7 @@
+       process.resourcesPath = path.normalize(process.resourcesPath)
+ 
+       setupAtomHome()
+-      const devMode = getWindowLoadSettings().devMode || !getWindowLoadSettings().resourcePath.startsWith(process.resourcesPath + path.sep)
++      const devMode = getWindowLoadSettings().devMode || !getWindowLoadSettings().resourcePath.startsWith('/usr/lib/atom')
+       useSnapshot = !devMode && typeof snapshotResult !== 'undefined'
+ 
+       if (devMode) {
+@@ -90,7 +90,7 @@
+   function setupWindow () {
+     const CompileCache = useSnapshot ? snapshotResult.customRequire('../src/compile-cache.js') : require('../src/compile-cache')
+     CompileCache.setAtomHomeDirectory(process.env.ATOM_HOME)
+-    CompileCache.install(process.resourcesPath, require)
++    CompileCache.install('/usr/lib/atom', require)
+ 
+     const ModuleCache = useSnapshot ? snapshotResult.customRequire('../src/module-cache.js') : require('../src/module-cache')
+     ModuleCache.register(getWindowLoadSettings())
