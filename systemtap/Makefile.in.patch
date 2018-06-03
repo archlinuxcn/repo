@@ -1,0 +1,12 @@
+--- Makefile.in	2017-10-19 01:59:37.000000000 +0800
++++ Makefile.new.in	2018-06-03 19:28:58.614694247 +0800
+@@ -602,7 +602,7 @@
+               -DDOCDIR='"$(docdir)"' \
+               -DPYEXECDIR='"$(pyexecdir)"' \
+               -DPY3EXECDIR='"$(py3execdir)"' \
+-	      -I$(srcdir)/includes -I$(builddir)/includes/sys
++	      -I$(srcdir)/includes -isystem $(builddir)/includes/sys
+ 
+ AM_CFLAGS = -D_GNU_SOURCE -fexceptions -Wall -Wextra -Werror -Wunused -Wformat=2 -W
+ AM_CXXFLAGS = -Wall -Wextra -Werror
+

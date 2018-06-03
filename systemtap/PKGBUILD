@@ -1,0 +1,54 @@
+# Maintainer : Christian Rebischke <Chris.Rebischke@archlinux.org>
+# Contributor:dront78 <dront78@gmail.com>
+pkgname=systemtap
+pkgver=3.2
+pkgrel=2
+pkgdesc="provides infrastructure to simplify the gathering of information about the running system."
+url="http://sourceware.org/systemtap/"
+arch=('x86_64' 'i686')
+license=('GPL')
+depends=('elfutils' 'nss' 'python2')
+makedepends=('python2-setuptools' 'xmlto')
+optdepends=('sqlite3: for storing results in a database')
+source=("${pkgname}-${pkgver}.tar.gz::https://sourceware.org/systemtap/ftp/releases/${pkgname}-${pkgver}.tar.gz"
+        'stp_remove_install_hooks.patch'
+        'stap-serverd.cxx.patch'
+	'catch_polymorphic_by_value.patch')
+sha512sums=('6036ed1b5189fd3fcfdeeaa526a3539ac632d0b687a063b5e3424e8f613bfc2c8d079742b0262b547128e97e30e4beb61898b23761657aee519e61346ac92e94'
+            '1d2758e9f875e06d08d37679587454fb43e025aa83ceeb405b1bc8d3277476502f2d67cf9e8383cc4c63ae545d7d0e9ebaab814f880b2f53bba47bef4afcd537'
+            '92110e7cedf52c845b4685acb6d5fc7926edfade4f87a1c90728f5e0067c2aada4ca02359f045192609c2abbfcc65e5ccbc4245629eea85ef042e9d6dd254f09'
+	    'c11fc4ff027718f78948559f463ac6538395067982ad1cb489f0d06e15eac4ea22c5b1b4060671a97d3d908ce944747f334299c0824e992c6e63f3c8b51406c9')
+install='systemtap.install'
+
+prepare() {
+  cd "${pkgname}-${pkgver}"
+  sed -i -E 's|-I(.*includes/sys)|-isystem \1|g' `find . -name Makefile.am`
+  sed -i -E 's|-I(.*includes)|-isystem \1|g' `find . -name Makefile.am`
+  patch -i "${srcdir}/catch_polymorphic_by_value.patch"
+  patch -i "${srcdir}/stap-serverd.cxx.patch"
+  patch -Np1 -i "${srcdir}/stp_remove_install_hooks.patch"
+  autoreconf -i
+}
+
+build() {
+  cd "${pkgname}-${pkgver}"
+  ./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --libexecdir=/usr/lib/"${pkgname}" \
+    --libdir=/usr/lib/"${pkgname}" \
+    --mandir=/usr/share/man/ \
+    --localstatedir=/var \
+    --enable-pie \
+    --disable-docs \
+    --enable-htmldocs
+  make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  make DESTDIR="${pkgdir}" install
+  rmdir "${pkgdir}/var/run/stap-server/"
+  rmdir "${pkgdir}/var/run/"
+}
+

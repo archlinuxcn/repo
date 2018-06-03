@@ -1,0 +1,56 @@
+--- stap-serverd.old.cxx	2018-06-03 19:59:30.848751898 +0800
++++ stap-serverd.cxx	2018-06-03 20:12:43.326457912 +0800
+@@ -2156,10 +2156,18 @@
+   int                rc;
+   char              *rc1;
+   char               tmpdir[PATH_MAX];
+-  char               requestFileName[PATH_MAX];
+-  char               requestDirName[PATH_MAX];
+-  char               responseDirName[PATH_MAX];
+-  char               responseFileName[PATH_MAX];
++  const char requestFileName_str[] = "%s/request.zip";
++  const char requestDirName_str[] = "%s/request";
++  const char responseFileName_str[] = "%s/response";
++  const char responseDirName_str[] = "%s/response.zip";
++  const std::size_t requestFileName_len = PATH_MAX + sizeof(requestFileName_str);
++  const std::size_t requestDirName_len = PATH_MAX + sizeof(requestDirName_str);
++  const std::size_t responseFileName_len = PATH_MAX + sizeof(responseFileName_str);
++  const std::size_t responseDirName_len = PATH_MAX + sizeof(responseDirName_str);
++  char               requestFileName[requestFileName_len];
++  char               requestDirName[requestDirName_len];
++  char               responseDirName[responseDirName_len];
++  char               responseFileName[responseFileName_len];
+   string stapstderr; /* Cannot be global since we need a unique
+                         copy for each connection.*/
+   vector<string>     argv;
+@@ -2223,9 +2231,9 @@
+     }
+ 
+   /* Create a temporary files names and directories.  */
+-  snprintf (requestFileName, PATH_MAX, "%s/request.zip", tmpdir);
++  snprintf (requestFileName, requestFileName_len, requestFileName_str, tmpdir);
+ 
+-  snprintf (requestDirName, PATH_MAX, "%s/request", tmpdir);
++  snprintf (requestDirName, requestDirName_len, requestDirName_str, tmpdir);
+   rc = mkdir(requestDirName, 0700);
+   if (rc)
+     {
+@@ -2233,7 +2241,7 @@
+       goto cleanup;
+     }
+ 
+-  snprintf (responseDirName, PATH_MAX, "%s/response", tmpdir);
++  snprintf (responseDirName, responseDirName_len, responseDirName_str, tmpdir);
+   rc = mkdir(responseDirName, 0700);
+   if (rc)
+     {
+@@ -2243,7 +2251,7 @@
+   // Set this early, since it gets used for errors to be returned to the client.
+   stapstderr = string(responseDirName) + "/stderr";
+ 
+-  snprintf (responseFileName, PATH_MAX, "%s/response.zip", tmpdir);
++  snprintf (responseFileName, responseFileName_len, responseFileName_str, tmpdir);
+ 
+   /* Read data from the socket.
+    * If the user is requesting/requiring authentication, authenticate
+

@@ -1,0 +1,18 @@
+post_install() {
+  getent group stapusr >/dev/null || groupadd -g 156 -r stapusr 2>/dev/null || groupadd -r stapusr
+  getent group stapsys >/dev/null || groupadd -g 157 -r stapsys 2>/dev/null || groupadd -r stapsys
+  getent group stapdev >/dev/null || groupadd -g 158 -r stapdev 2>/dev/null || groupadd -r stapdev
+
+  getent group stapusr >/dev/null && chgrp stapusr /usr/bin/stapbpf
+  chmod 04110 /usr/bin/stapbpf
+
+  getent group stapusr >/dev/null && chgrp stapusr /usr/bin/staprun
+  chmod 04110 /usr/bin/staprun
+
+  echo "CONFIG_DEBUG_INFO is disabled on default. You need to recompile"
+  echo "the kernel with CONFIG_DEBUG_INFO enabled."
+}
+
+post_upgrade() {
+  post_install $1
+}

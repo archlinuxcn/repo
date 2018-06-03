@@ -1,0 +1,12 @@
+--- translate_old.cxx	2018-06-03 18:58:24.581183525 +0800
++++ translate.cxx	2018-06-03 18:58:52.690021974 +0800
+@@ -7860,7 +7860,7 @@
+ 	  if (versions.size() >= 3 && s.verbose > 1)
+ 	    clog << _F("ignoring extra parts of compat version: %s", s.compatible.c_str()) << endl;
+ 	}
+-      catch (const runtime_error)
++      catch (const runtime_error &)
+ 	{
+ 	  throw SEMANTIC_ERROR(_F("parse error in compatibility version: %s", s.compatible.c_str()));
+ 	}
+
