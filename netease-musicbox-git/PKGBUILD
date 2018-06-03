@@ -1,9 +1,11 @@
 # Maintainer: Jiachen Yang <farseerfc@gmail.com>
+# Contributor: Ariel AxionL <axionl@aosc.io>
+
 pkgbase=netease-musicbox-git
 pkgname=(netease-musicbox-git netease-musicbox-py2-git)
 _gitname=musicbox
 pkgver=r557.f4a7dfa
-pkgrel=1
+pkgrel=2
 pkgdesc="A sexy command line interface musicbox for NetEase based on Python"
 arch=(any)
 url="https://github.com/darknessomi/musicbox"
@@ -12,18 +14,26 @@ optdepends=('aria2: music caching'
             'libnotify: notifications'
            )
 license=('MIT')
-_py2depends=('python2' 'mpg123' 'python2-beautifulsoup4' 'python2-requests' 'python2-setuptools' 'python2-crypto' 'python2-future' 'python2-lxml')
-_py3depends=('python' 'mpg123' 'python-beautifulsoup4' 'python-requests' 'python-setuptools' 'python-crypto' 'python-future' 'python-lxml')
+_py2depends=('python2' 'mpg123' 'python2-beautifulsoup4' 
+             'python2-requests' 'python2-setuptools' 
+             'python2-crypto' 'python2-future' 'python2-lxml' 
+             'python2-cryptography' )
+_py3depends=('python' 'mpg123' 'python-beautifulsoup4' 
+             'python-requests' 'python-setuptools' 
+             'python-crypto' 'python-future' 'python-lxml' 
+             'python-cryptography')
 makedepends=('git'
   ${_py2depends[@]}
   ${_py3depends[@]}
 ) # both python and python2 depends goes to makedepends
 options=(!emptydirs)
-source=("git+https://github.com/darknessomi/musicbox")
-sha256sums=('SKIP')
 provides=('netease-musicbox')
 conflicts=('netease-musicbox')
 install=$pkgname.install
+
+source=("git+https://github.com/darknessomi/musicbox")
+
+sha256sums=('SKIP')
 
 pkgver() {
   cd $_gitname
