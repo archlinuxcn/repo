@@ -28,9 +28,13 @@ def pre_build():
 
     aur_pre_build()
     for line in edit_file('PKGBUILD'):
-        print(line.replace("'cargo' ",""))
+        if 'makedepends=(' in line:
+            print(line.replace('makedepends=(', 'makedepends=("clang" "jack" '))
+        else:
+            print(line.replace("'cargo' ",""))
 
 def post_build():
+    run_cmd('git add -f *.patch.xz'.split(' '))
     aur_post_build()
 
 if __name__ == '__main__':
