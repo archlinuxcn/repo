@@ -7,10 +7,10 @@ ac_add_options --enable-optimize="-O2"
 ac_add_options --enable-rust-simd
 
 ac_add_options --enable-release
-
 ac_add_options --enable-official-branding
 ac_add_options --enable-update-channel=release
 ac_add_options --with-distribution-id=org.archlinux
+
 export MOZILLA_OFFICIAL=1
 export MOZ_TELEMETRY_REPORTING=1
 export MOZ_SOURCE_REPO=https://hg.mozilla.org/mozilla-unified
@@ -27,6 +27,8 @@ ac_add_options --with-system-jpeg
 ac_add_options --with-system-zlib
 ac_add_options --with-system-bz2
 ac_add_options --with-system-libvpx
+ac_add_options --with-system-harfbuzz
+ac_add_options --with-system-graphite2
 ac_add_options --enable-system-hunspell
 ac_add_options --enable-system-sqlite
 ac_add_options --enable-system-ffi
@@ -35,14 +37,14 @@ ac_add_options --disable-libproxy
 #ac_add_options --enable-shared-js
 
 # Features
+ac_add_options --enable-jack
+ac_add_options --enable-alsa
 ac_add_options --enable-startup-notification
 ac_add_options --enable-crashreporter
 ac_add_options --disable-updater
 
 ac_add_options --disable-gconf
 ac_add_options --disable-tests
-# mozilla bug #1393000 #1341234
-ac_add_options --disable-stylo
 
 STRIP_FLAGS="--strip-debug"
  
