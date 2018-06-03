@@ -4,8 +4,6 @@ from lilaclib import *
 
 build_prefix = 'archlinuxcn-x86_64'
 
-depends = ['perl-rpc-xml']
-
 pre_build = aur_pre_build
 post_build = aur_post_build
 
