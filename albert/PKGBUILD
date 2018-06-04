@@ -1,6 +1,6 @@
 # Maintainer: Manuel Schneider  <manuelschneid3r at googles mail>
 pkgname=albert
-pkgver=0.14.19
+pkgver=0.14.20
 pkgrel=1
 pkgdesc="A sophisticated standalone keyboard launcher."
 arch=('i686' 'x86_64' 'armv7h')
@@ -29,8 +29,6 @@ optdepends=(
   'python: Python extension'
   'virtualbox: VirtualBox plugin'
 )
-provides=()
-conflicts=()
 #source=("mirrors/albert::git+https://github.com/albertlauncher/albert.git#branch=dev"
 source=("mirrors/albert::git+https://github.com/albertlauncher/albert.git#tag=v${pkgver}"
         "mirrors/plugins::git+https://github.com/albertlauncher/plugins.git"
