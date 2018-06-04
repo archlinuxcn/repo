@@ -5,4 +5,5 @@ post_upgrade() {
     echo ">>> If you believe there is a problem with this AUR package please report it to the AUR page"
     echo ">>> If you believe there is a problem with Discord please report it to:"
     echo ">>> https://discord.gg/discord-testers or https://discord.gg/discord-linux."
+    /opt/discord/postinst.sh > /dev/null
 }

@@ -1,4 +1,5 @@
-# Maintainer: Cayde Dixon <me@cazzar.net>
+# Maintainer: Anna <morganamilo@gmail.com>
+# Contributor: Cayde Dixon <me@cazzar.net>
 # Contributor: Anthony Anderson <aantony4122@gmail.com>
 
 
@@ -6,7 +7,7 @@ _branch='discord'
 
 pkgname=discord
 pkgver=0.0.5
-pkgrel=2
+pkgrel=3
 pkgdesc="All-in-one voice and text chat for gamers that's free and secure."
 arch=('x86_64')
 url='https://discordapp.com/'
@@ -21,7 +22,7 @@ optdepends=(
 install="Discord.install"
 source=(Discord.desktop LICENSE)
 source_x86_64=("https://dl.discordapp.net/apps/linux/${pkgver}/${_branch}-${pkgver}.tar.gz")
-md5sums=('a9046504943624ac4861983d67a1404b'
+md5sums=('203b6c7c05e56ce3b9d9eb55d7e11d17'
          '26b3229c74488c64d94798e48bc49fcd')
 md5sums_x86_64=('18a8e7f86d26a1472dbfff060e1671e4')
 
@@ -39,8 +40,7 @@ package() {
 
 
   # Desktop Entry
-  install -d "${pkgdir}/usr/share/applications"
-  install "${srcdir}/Discord.desktop" "${pkgdir}/usr/share/applications"
+  install -Dm644 "${srcdir}/Discord.desktop" "${pkgdir}/usr/share/applications/Discord.desktop"
 
   # Main binary
   install -d "${pkgdir}/usr/bin"
