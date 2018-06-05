@@ -5,7 +5,7 @@
 pkgname=nvchecker-git
 epoch=1
 pkgver=1.1dev.r68
-pkgrel=1
+pkgrel=2
 pkgdesc="a tool for checking if a new version of some software has been released."
 arch=('any')
 url="https://github.com/lilydjwg/nvchecker"
@@ -15,6 +15,7 @@ makedepends=('git')
 optdepends=('python-aiohttp: HTTP client (only one needed)'
             'python-tornado: HTTP client (only one needed)'
             'python-pycurl: better HTTP support for Tornado'
+            'pyalpm: for "sort_version_key = vercmp" config'
             'git'
             'mercurial')
 source=('git://github.com/lilydjwg/nvchecker.git')
