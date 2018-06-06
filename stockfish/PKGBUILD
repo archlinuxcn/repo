@@ -6,7 +6,8 @@
 
 pkgname=stockfish
 pkgver=9
-pkgrel=1
+pkgrel=2
+epoch=1
 pkgdesc="A strong chess engine written by Tord Romstad, Marco Costalba, Joona Kiiski"
 arch=('i686' 'x86_64')
 url="https://stockfishchess.org/"
