@@ -2,7 +2,7 @@
 pkgname=deepin-qq-im
 _qqver=8.9
 _qqbuild=19983
-_deepinver=20
+_deepinver=22
 pkgver=${_qqver}.${_qqbuild}deepin${_deepinver}
 pkgrel=2
 pkgdesc="Tencent QQ Client on Deepin Wine"
@@ -14,7 +14,7 @@ _mirror="https://mirrors.tuna.tsinghua.edu.cn/deepin"
 source=("$_mirror/pool/non-free/d/deepin.com.qq.im/deepin.com.qq.im_${pkgver}_i386.deb"
 	"http://dldir1.qq.com/qqfile/qq/QQ${_qqver}/${_qqbuild}/QQ${_qqver}.exe"
 	"run.sh")
-md5sums=('9d6fcd0a6086c068b9776a62a67f077d'
+md5sums=('8cc202749ac759c1a6d3f387e6b83387'
          'a60127de3c7c11342f644ad87f4c7b7d'
          '2946b58e28067f84186fc27c3e7a6dc0')
 
