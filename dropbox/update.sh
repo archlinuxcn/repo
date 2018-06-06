@@ -2,5 +2,5 @@
 set -e
 
 pkgver=$(python ./check_ver.py)
-sed "s/^pkgver=.*/pkgver=$pkgver/" -i PKGBUILD
+sed "s/^pkgver=.*/pkgver=$pkgver/;s/^pkgrel=.*/pkgrel=1/" -i PKGBUILD
 updpkgsums
