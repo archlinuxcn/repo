@@ -10,7 +10,7 @@ def pre_build():
     for line in edit_file('PKGBUILD'):
         if 'depends=(' in line:
 #            print(line.replace("'ffmpeg'","'ffmpeg-git'"))
-            pass
+            print(line)
         else:
             line=re.sub(r'#(dvd|cd|smb|libarchive|lua$|x11|wayland|uchardet|rubberband|dvbin)',r'\1',line)
             print(line)
