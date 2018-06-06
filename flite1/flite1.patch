@@ -1,0 +1,18 @@
+diff -ru flite-1.4-release.orig/config/common_make_rules flite-1.4-release/config/common_make_rules
+--- flite-1.4-release.orig/config/common_make_rules	2009-07-30 16:52:56.000000000 +0200
++++ flite-1.4-release/config/common_make_rules	2016-06-11 16:15:58.358220227 +0200
+@@ -108,12 +108,12 @@
+ 	$(CC) $(SHFLAGS) $(DEFS) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+ 
+ $(OBJDIR)/.build_lib: $(FULLOBJS)
+-	@ (cd $(OBJDIR) && $(AR) cruv ../../../$(LIBDIR)/lib$(LIBNAME).a $(OBJS))
++	@ (cd $(OBJDIR) && $(AR) crv ../../../$(LIBDIR)/lib$(LIBNAME).a $(OBJS))
+ 	@ $(RANLIB) $(LIBDIR)/lib$(LIBNAME).a
+ 	@ touch $(OBJDIR)/.build_lib
+ 
+ $(OBJDIR)/.build_so: $(FULLSHOBJS)
+-	@ (cd $(OBJDIR) && $(AR) cruv ../../../$(LIBDIR)/lib$(LIBNAME).shared.a $(SOOBJS))
++	@ (cd $(OBJDIR) && $(AR) crv ../../../$(LIBDIR)/lib$(LIBNAME).shared.a $(SOOBJS))
+ 	@ $(RANLIB) $(LIBDIR)/lib$(LIBNAME).shared.a
+ 	@ touch $(OBJDIR)/.build_so
+ 
