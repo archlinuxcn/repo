@@ -7,12 +7,12 @@
 pkgname=wps-office
 pkgver=10.1.0.6634
 #_pkgver=10.1.0.5707~a21
-pkgrel=2
+pkgrel=3
 pkgdesc="Kingsoft Office (WPS Office) is an office productivity suite"
 arch=('i686' 'x86_64')
 license=("custom")
 url="http://wps-community.org/"
-depends=('fontconfig' 'libxrender' 'desktop-file-utils' 'shared-mime-info' 'xdg-utils' 'glu' 'qt4' 'openssl-1.0' 'sdl2' 'libpulse' 'hicolor-icon-theme')
+depends=('fontconfig' 'libxrender' 'desktop-file-utils' 'shared-mime-info' 'xdg-utils' 'glu' 'openssl-1.0' 'sdl2' 'libpulse' 'hicolor-icon-theme')
 optdepends=('cups: for printing support'
             'libjpeg-turbo: JPEG image codec support'
             'pango: for complex (right-to-left) text support'
