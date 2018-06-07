@@ -1,13 +1,14 @@
 # Maintainer: Frederik Schwan <frederik dot schwan at linux dot com>
 
 pkgname=gitea
-pkgver=1.4.1
+pkgver=1.4.2
 pkgrel=1
 pkgdesc='Git with a cup of tea, forked from Gogs. Is a Self Hosted Git Service in the Go Programming Language.'
 arch=('x86_64' 'i686' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url='http://gitea.io'
 license=('MIT')
-makedepends=('go' 'git')
+depends=('git')
+makedepends=('go')
 optdepends=('sqlite: SQLite support'
             'mariadb: MariaDB support'
             'postgresql: PostgreSQL support'
@@ -17,11 +18,12 @@ optdepends=('sqlite: SQLite support'
             'openssh: GIT over SSH support')
 conflicts=('gitea-git' 'gitea-git-dev')
 backup=('etc/gitea/app.ini')
-install=gitea.install
 source=(https://github.com/go-gitea/gitea/archive/v${pkgver}.tar.gz
+        gitea.tmpfiles
         gitea.service
         app.ini)
-sha512sums=('3b812bd61215230035ec9241e953f239981d04580d931f379aa550e11d2f7facd56bf70ac9e2d866224d341570a238bcc5c2fa71fd1432cfb95b8c8b703784e6'
+sha512sums=('ab4cd43753afffec53a46c093bf92a9c31a633f9c8b5d730e8782eceee1e581cce673945005aaa6a94428d8acfcf2e6618f3abcc49f2ac5439aa8a4fb910b550'
+            'bd96440ad9e5ec33ca04153f47a7a3876f78771f0a47ff72779b98f5965b40a1167e6aebf18dfc8ecf0719a25d19d56f43441b7ff3321f724329b42371a0e69d'
             'e27fc8d70a3ea1f7d0a040ea5f46be4e3c3de5591d29382cbc94eb20332a41e32c608dc8ccae776e56869c9a73efd55695881a33c770ee227bc8f4da09f06c76'
             '3d8439ad48621a4a87634588377d133ae13a9ce30830d140beee1d69e3d4d40f6c47df663e97620d88c42e892c7fc0845f4091574c6314bed53fd20c7416b949')
 
@@ -37,7 +39,8 @@ build() {
 }
 
 package() {
-  # the ownership is managed in the install script
+  install -Dm644 "${srcdir}/gitea.tmpfiles" "${pkgdir}/usr/lib/tmpfiles.d/gitea.conf"
+
   install -dm 750 "${pkgdir}/var/lib/gitea/"
   install -dm 750 "${pkgdir}/var/lib/gitea/"{repos,tmp,attachments,data,indexer,conf}
   install -dm 750 "${pkgdir}/var/log/gitea/"
