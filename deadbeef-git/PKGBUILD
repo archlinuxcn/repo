@@ -2,7 +2,7 @@
 # Maintainer: Soukyuu <chrno-sphered at hotmail dot com>
 # Contributor: archtux <antonio dot arias99999 at gmail dot com>
 pkgname=deadbeef-git
-pkgver=r7718.e200b36c
+pkgver=r7722.b247e129
 pkgrel=1
 pkgdesc="A GTK+ audio player for GNU/Linux (devel branch)"
 url="http://deadbeef.sourceforge.net"
@@ -38,16 +38,11 @@ provides=('deadbeef')
 source=('git+https://github.com/DeaDBeeF-Player/deadbeef')
 md5sums=('SKIP')
 
-prepare() {
-  cd "$srcdir/deadbeef"
- 
-  ./autogen.sh
-  ./configure --prefix=/usr
-}
-
 build() {
   cd "$srcdir/deadbeef"
-  
+  ./autogen.sh
+  ./configure --prefix=/usr
+
   make
 }
 
