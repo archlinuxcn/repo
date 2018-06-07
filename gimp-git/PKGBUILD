@@ -4,7 +4,7 @@
 
 pkgname=gimp-git
 epoch=1
-pkgver=2.10.2.559.g3773ccbe1f
+pkgver=2.10.2.707.g4d03c16695
 pkgrel=1
 pkgdesc="GNU Image Manipulation Program"
 arch=('i686' 'x86_64')
@@ -25,7 +25,7 @@ optdepends=('aalib: ASCII art'
 options=('!libtool' '!makeflags')
 provides=('gimp')
 conflicts=('gimp')
-source=(git://git.gnome.org/gimp
+source=(git+https://gitlab.gnome.org/GNOME/gimp.git
 configure.patch
 linux.gpl)
 md5sums=('SKIP'

@@ -11,8 +11,8 @@ arch=('i686' 'x86_64')
 url="http://www.gegl.org"
 license=('GPL3' 'LGPL3')
 depends=('babl-git' 'libspiro' 'json-glib' 'glu' 'openexr' 'libgexiv2')
-makedepends=('git' 'intltool' 'python2' 'ruby' 'lua'
-             'libraw' 'ffmpeg' 'librsvg' 'jasper'
+makedepends=('git' 'intltool' 'python2' 'ruby' 'lua' 'enscript' 'sdl'
+             'libraw' 'ffmpeg' 'librsvg' 'jasper' 'asciidoc' 'vala'
              'graphviz' 'libtiff' 'suitesparse' 'gobject-introspection')
 optdepends=('ffmpeg: for using the ffmpeg plugin'
             'librsvg: for using the svg plugin'
@@ -24,7 +24,7 @@ optdepends=('ffmpeg: for using the ffmpeg plugin'
 provides=("gegl=${pkgver}")
 conflicts=('gegl>=0.3.0')
 options=(!libtool)
-source=(git://git.gnome.org/gegl)
+source=(git+https://gitlab.gnome.org/GNOME/gegl.git)
 md5sums=('SKIP')
 
 _gitroot=GITURL
