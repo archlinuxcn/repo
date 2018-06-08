@@ -6,24 +6,30 @@
 
 _pkgname=rtorrent
 pkgname=rtorrent-ipv6
-pkgver=0.9.6
-pkgrel=4
+pkgver=0.9.7
+pkgrel=1
 pkgdesc='Ncurses BitTorrent client based on libTorrent, with IPv6 patch'
 url='http://rakshasa.github.io/rtorrent/'
 license=('GPL')
 arch=('i686' 'x86_64')
-depends=('libtorrent-ipv6=0.13.6' 'curl' 'xmlrpc-c' 'libsigc++')
+depends=('libtorrent-ipv6=0.13.7' 'curl' 'xmlrpc-c' 'libsigc++')
 makedepends=('git')
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")
-source=("$_pkgname-$pkgver::git+https://github.com/rakshasa/${_pkgname}.git#commit=b088c1c657a646b0a8ca97a538a1ec9d719f5541")
-sha256sums=('SKIP')
+source=("$_pkgname::git+https://github.com/rakshasa/${_pkgname}.git#commit=5be10fe2513b11368519a2ea984d41e96898bc4c"
+        'rtorrent-feature-bind-to-0.9.7.patch')
+sha256sums=('SKIP'
+            '4ac23255bed12a31763a08d78b206b664db500396a146369aa997b1e1354963b')
 
-build() {
-    cd "${srcdir}/${_pkgname}-${pkgver}"
+prepare() {
+    cd "${srcdir}/${_pkgname}"
+    patch -Np1 -i ../rtorrent-feature-bind-to-0.9.7.patch
     sed '/AM_PATH_CPPUNIT/d' -i configure.ac
     ./autogen.sh
+}
 
+build() {
+    cd "${srcdir}/${_pkgname}"
     export CXXFLAGS="${CXXFLAGS} -std=c++11 -fno-strict-aliasing"
     ./configure \
         --prefix=/usr \
@@ -35,7 +41,7 @@ build() {
 }
 
 package() {
-    cd "${srcdir}/${_pkgname}-${pkgver}"
+    cd "${srcdir}/${_pkgname}"
     make DESTDIR="${pkgdir}" install
     install -D doc/rtorrent.rc "${pkgdir}"/usr/share/doc/rtorrent/rtorrent.rc
 }
