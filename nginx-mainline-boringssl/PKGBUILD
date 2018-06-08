@@ -5,7 +5,7 @@
 # Contributor: Kasei Wang <cnsdwpc at gmail.com>
 
 pkgname=nginx-mainline-boringssl
-pkgver=1.13.12
+pkgver=1.15.0
 pkgrel=1
 pkgdesc='Lightweight HTTP server and IMAP/POP3 proxy server, mainline release'
 arch=('i686' 'x86_64')
@@ -31,7 +31,7 @@ source=($url/download/nginx-$pkgver.tar.gz{,.asc}
         "service"
         "logrotate")
 validpgpkeys=('B0F4253373F8F6F510D42178520A9993A1C052F8') # Maxim Dounin <mdounin@mdounin.ru>
-sha256sums=('fb92f5602cdb8d3ab1ad47dbeca151b185d62eedb67d347bbe9d79c1438c85de'
+sha256sums=('b0b58c9a3fd73aa8b89edf5cfadc6641a352e0e6d3071db1eb3215d72b7fb516'
             'SKIP'
             'SKIP'
             '05fdc0c0483410944b988d7f4beabb00bec4a44a41bd13ebc9b78585da7d3f9b'
