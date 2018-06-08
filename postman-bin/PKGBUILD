@@ -1,7 +1,7 @@
 # Maintainer: Claudio d'Angelis <claudiodangelis at gmail dot com>
 pkgname=postman-bin
 pkgver=6.1.3
-pkgrel=1
+pkgrel=2
 pkgdesc="Build, test, and document your APIs faster"
 arch=('x86_64')
 url="https://www.getpostman.com"
@@ -33,6 +33,6 @@ package() {
         "${pkgdir}/usr/share/applications/postman.desktop"
     # Icon
     install -d -m755 "${pkgdir}/usr/share/icons/hicolor/128x128/apps"
-    ln -s "/opt/postman/resources/app/assets/icon.png" \
+    ln -s "/opt/postman/app/resources/app/assets/icon.png" \
         "${pkgdir}/usr/share/icons/hicolor/128x128/apps/postman.png"
 }
