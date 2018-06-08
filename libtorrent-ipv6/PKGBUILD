@@ -8,8 +8,8 @@
 
 _pkgname=libtorrent
 pkgname=libtorrent-ipv6
-pkgver=0.13.6
-pkgrel=4
+pkgver=0.13.7
+pkgrel=1
 pkgdesc='BitTorrent library with a focus on high performance and good code, with ipv6 support'
 url='http://rakshasa.github.io/rtorrent/'
 arch=('x86_64')
@@ -18,16 +18,19 @@ depends=('openssl')
 makedepends=('git')
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")
-source=("$_pkgname-$pkgver::git+https://github.com/rakshasa/libtorrent.git#commit=9eb9ba21720e544af3550f59900318a9b4d4a532")
-sha256sums=('SKIP')
+source=("$_pkgname::git+https://github.com/rakshasa/libtorrent.git#commit=9f15199ce2312350735b1d87e6db033414b41db0"
+        'libtorrent-feature-bind-to-0.13.7.patch')
+sha256sums=('SKIP'
+            'ef0b0ce4378647ac0246dd88f68dc5fbf01336cac13de60e1f4600dd329629f3')
 
 prepare() {
-    cd "${srcdir}/${_pkgname}-${pkgver}"
+    cd "${srcdir}/${_pkgname}"
+    patch -Np1 -i ../libtorrent-feature-bind-to-0.13.7.patch
     sed '/AM_PATH_CPPUNIT/d' -i configure.ac
 }
 
 build() {
-    cd "${srcdir}/${_pkgname}-${pkgver}"
+    cd "${srcdir}/${_pkgname}"
     ./autogen.sh
 
     export CXXFLAGS="${CXXFLAGS} -std=c++11 -fno-strict-aliasing"
@@ -39,6 +42,6 @@ build() {
 }
 
 package() {
-    cd "${srcdir}/${_pkgname}-${pkgver}"
+    cd "${srcdir}/${_pkgname}"
     make DESTDIR="${pkgdir}" install
 }
