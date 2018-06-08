@@ -6,10 +6,14 @@
 
 from lilaclib import *
 
-depends=['fmt', 'xcb-imdkit-git', 'fcitx5-git', 'libime-git']
+depends=['fmt', 'xcb-imdkit-git', 'fcitx5-git', 'libime-git', ('fcitx5-qt-git', 'fcitx5-qt5-git')]
 
 build_prefix = 'extra-x86_64'
-pre_build = aur_pre_build
+
+def pre_build():
+    aur_pre_build()
+    add_depends(['fcitx5-qt5-git'])
+
 post_build = aur_post_build
 
 if __name__ == '__main__':
