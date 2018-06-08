@@ -1,6 +1,6 @@
 # Maintainer: Manuel Schneider  <manuelschneid3r at googles mail>
 pkgname=albert
-pkgver=0.14.20
+pkgver=0.14.21
 pkgrel=1
 pkgdesc="A sophisticated standalone keyboard launcher."
 arch=('i686' 'x86_64' 'armv7h')
