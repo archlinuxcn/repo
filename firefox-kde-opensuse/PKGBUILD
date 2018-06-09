@@ -10,7 +10,7 @@ _gtk3_wayland=false
 
 # try to build with PGO
 # currently broken
-_pgo=true
+#_pgo=true
 
 # globalmenu
 # to support globalmenu a patch from ubuntu is applied
@@ -20,8 +20,8 @@ _pgo=true
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=60.0.1
-pkgrel=2
+pkgver=60.0.2
+pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -39,8 +39,8 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
             'speech-dispatcher: Text-to-Speech')
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
-_patchrev=847ae61baab6
-options=('!emptydirs'  'strip')
+_patchrev=bf0d08380dcf
+options=('!emptydirs'  'debug' 'strip')
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 _repo=https://hg.mozilla.org/mozilla-unified
 source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
@@ -235,14 +235,14 @@ END
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
 md5sums=('SKIP'
-         '0a9a1df3daa55652c9e88465aa3bb7a4'
+         '8831241577913001175641c092c9d3ea'
          '14e0f6237a79b85e60256f4808163160'
          'c9385708f41599649e4e14fd3af506ce'
          '05bb69d25fb3572c618e3adf1ee7b670'
          '6e335a517c68488941340ee1c23f97b0'
          'df9f710c842d4847aae5bc667f97f4a2'
          'dbf69e423c18e08536d9999f0d405a7a'
-         'd1f33934ce9574df158e252a9ae873b3'
+         '3640c50476625fc9e292074ebaf4fff9'
          '0661e259fe57df87fca791f4aeb78da0'
          'd0bb97636b07d521f279c01233f0cbdb'
          'fe24f5ea463013bb7f1c12d12dce41b2'
