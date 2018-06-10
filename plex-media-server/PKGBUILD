@@ -7,8 +7,8 @@
 # Contributor: Praekon <praekon@googlemail.com>
 
 pkgname=plex-media-server
-pkgver=1.13.2.5142
-_pkgsum=3ba6662e9
+pkgver=1.13.2.5154
+_pkgsum=fd05be322
 pkgrel=1
 pkgdesc='Plex Media Server'
 arch=('i686' 'x86_64')
@@ -29,8 +29,8 @@ sha256sums=('7ab1ee8da9012d257b7f473fb79d76b201ca592cbe3722f977a43b58bfad180e'
             '9a214a37cc8dd5fd912d5bcca16445f023f892aafd4ca54226aeb2b4910d23a2'
             'ebf153d5789f9d24cb98ae607d227286e1da6ce54e149c8be4f47e08ee729573'
             'dbfb5a9a7146a975863c0932f1a68c4b040ec5d7e693361f39ddfbf60885e631')
-sha256sums_i686=('39f4cf179619e835bb21400e5aa10b79cddb5ffd92f358aa9c9f2ab9a53fdba8')
-sha256sums_x86_64=('c2546fba438301e9b5ac3cd92c14b7a5aff8c3729170e8437af7bc216c22d87e')
+sha256sums_i686=('be251f9010134cad34d2b299d997a4810ae91929359c1cc3f802024714f27776')
+sha256sums_x86_64=('d79aa82f379260c4c734b72a7404a3cd76f5731f41534fef5ff2840d614f1e26')
 
 package() {
   install -dm 755 "${pkgdir}"/{opt,etc/conf.d,usr/lib/systemd/system}
