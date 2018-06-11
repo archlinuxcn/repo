@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #
-# This file is the most simple lilac.py file,
-# and it suits for most packages in AUR.
+# Auto update if have upstream new ver. but pkgver drop 'v'
+# eg: pkgver v0.1 => 0.1
 #
 
 from lilaclib import *
