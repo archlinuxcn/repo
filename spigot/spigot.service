@@ -1,6 +1,6 @@
 [Unit]
 Description=Spigot
-After=local-fs.target network.target
+After=local-fs.target network.target multi-user.target
 
 [Service]
 Type=forking
@@ -10,4 +10,3 @@ User=craftbukkit
 Group=craftbukkit
 
 [Install]
-WantedBy=multi-user.target
