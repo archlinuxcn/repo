@@ -2,7 +2,7 @@
 
 pkgname=hdf5_18-cpp-fortran
 _pkgname=hdf5
-pkgver=1.8.20
+pkgver=1.8.21
 pkgrel=1
 arch=('i686' 'x86_64')
 pkgdesc="General purpose library and file format for storing scientific data"
@@ -12,8 +12,8 @@ depends=('zlib' 'sh' 'gcc-libs')
 makedepends=('time' 'gcc-fortran')
 provides=('hdf5_18')
 conflicts=('hdf5_18')
-source=("https://support.hdfgroup.org/ftp/HDF5/current18/src/${_pkgname}-${pkgver}.tar.bz2")
-sha1sums=('21d689a04eb20ad6ea9e422b6e10f7f288d8b516')
+source=("https://support.hdfgroup.org/ftp/HDF5/releases/${_pkgname}-1.8/${_pkgname}-${pkgver}/src/${_pkgname}-${pkgver}.tar.bz2")
+sha1sums=('182b48c50b15b1271573b9536a0b0aa8800b7303')
 
 build() {
 	cd "$srcdir/${_pkgname}-${pkgver/_/-}"
@@ -52,4 +52,3 @@ package() {
 	install -m644 "$srcdir/${_pkgname}-${pkgver/_/-}/COPYING" \
 		"$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
 }
-
