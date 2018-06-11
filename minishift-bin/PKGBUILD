@@ -1,9 +1,10 @@
 # Maintainer: Tomas Kral <tomas.kral@gmail.com>
+# Contributor: Sergi Jimenez <sjr@redhat.com>
 
 pkgname=minishift-bin
-minishift_version=1.18.0
-pkgver=${minishift_version//-/_}
-pkgrel=1
+_minishift_version=1.18.0
+pkgver=${_minishift_version//-/_}
+pkgrel=2
 pkgdesc="Tool that makes it easy to run OpenShift locally."
 url="https://github.com/minishift/minishift"
 license=('Apache')
@@ -16,15 +17,15 @@ optdepends=(
   'docker-machine-kvm: to use minishisft with KVM virtualization'
 )
 
-source=(https://github.com/minishift/minishift/releases/download/v${minishift_version}/minishift-${minishift_version}-linux-amd64.tgz)
+source=(https://github.com/minishift/minishift/releases/download/v${_minishift_version}/minishift-${_minishift_version}-linux-amd64.tgz)
 sha256sums=('a2091a4f053839a34e03bdb617ae02f348155afe58331e3a6220ef491dc88014')
 
 
 prepare() {
-    tar -xf minishift-${minishift_version}-linux-amd64.tgz
+    tar -xf minishift-${_minishift_version}-linux-amd64.tgz
 }
 
 package() {
-  install -Dm755 "${srcdir}/minishift-${minishift_version}-linux-amd64/minishift" "${pkgdir}/usr/bin/minishift"
-  install -Dm644 "${srcdir}/minishift-${minishift_version}-linux-amd64/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  install -Dm755 "${srcdir}/minishift-${_minishift_version}-linux-amd64/minishift" "${pkgdir}/usr/bin/minishift"
+  install -Dm644 "${srcdir}/minishift-${_minishift_version}-linux-amd64/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
