@@ -1,6 +1,6 @@
 [Unit]
 Description=Minecraft Server
-After=local-fs.target network.target
+After=local-fs.target network.target multi-user.target
 
 [Service]
 Type=forking
@@ -10,4 +10,3 @@ User=minecraft
 Group=minecraft
 
 [Install]
-WantedBy=multi-user.target
