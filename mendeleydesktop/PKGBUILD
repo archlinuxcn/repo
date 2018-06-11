@@ -2,7 +2,7 @@
 # Maintainer: Alesandar Trifunović <akstrfn at gmail dot com>
 
 pkgname=mendeleydesktop
-pkgver=1.19
+pkgver=1.19.1
 pkgrel=1
 pkgdesc="Academic software for managing and sharing research papers (desktop client)"
 url=http://www.mendeley.com/release-notes/
@@ -11,8 +11,8 @@ depends=(qt5-webengine)
 license=(custom:mendeley_eula)
 source_i686=("https://desktop-download.mendeley.com/download/linux/$pkgname-$pkgver-linux-i486.tar.bz2")
 source_x86_64=("https://desktop-download.mendeley.com/download/linux/$pkgname-$pkgver-linux-x86_64.tar.bz2")
-sha512sums_i686=('9dd0a62b02a3b9a389cd6deb8c642b30c07043e695f01a7f928bc791f535aae98ebba85e7f8b28aeecb8b95d7d6c6e6eb9bc1744965ed145163af662415d627f')
-sha512sums_x86_64=('cea139a30e220cc28ab82189ae81304a9f1003fc0afbecd7e14dc4956af69e14c8ff6110bbbf9eee1ab205950e6b45b91b04c623f5f2e418329d8d85953a6710')
+sha512sums_i686=('8975d2a1ba3017c2f0dcb5cdd464d008913cddc76eae13b1cbb251adb4d77e77d8267f14b86ed4c3b7f1817316679e7e5a79618cf39154f662aed2173ced09c7')
+sha512sums_x86_64=('fd9ecc4d907c267a0416b472931e08179cfd385a37573b6601227c1760cde935280517aea617e31910dbf029ade7dd78cf5a48236df94ce52b2030a0edb7ba11')
 
 if [[ $CARCH = i686 ]];then
 $CARCH=i486
