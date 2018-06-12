@@ -9,7 +9,7 @@
 
 pkgname=pcl
 pkgver=1.8.1
-pkgrel=5
+pkgrel=6
 pkgdesc="A comprehensive open source library for n-D Point Clouds and 3D geometry processing"
 arch=('x86_64' 'i686')
 url='http://www.pointclouds.org'
@@ -20,10 +20,12 @@ makedepends=('cmake' 'gl2ps' 'python2' 'libxt')
 optdepends=('cuda' 'openni2' 'python2-sphinx')
 source=("pcl-${pkgver}.tar.gz"::"https://github.com/PointCloudLibrary/pcl/archive/pcl-${pkgver}.tar.gz" 
         "https://github.com/PointCloudLibrary/pcl/commit/f527e5819d6a4d0e8ed46658032975b73d617f60.patch"
-        "https://github.com/jspricke/pcl/commit/7e0c0eba0bc6917592bb7f0db88dde48c168d24a.patch")
+        "https://github.com/jspricke/pcl/commit/7e0c0eba0bc6917592bb7f0db88dde48c168d24a.patch"
+        "https://github.com/PointCloudLibrary/pcl/commit/b588c546e8e78bfdd238f0f943236257549107dd.patch")
 sha256sums=('5a102a2fbe2ba77c775bf92c4a5d2e3d8170be53a68c3a76cfc72434ff7b9783' 
             '6d48d5665e393c8f5ef3d8f2ead0c903a5cb63dff0c9aed32975bfb96ab843f2'
-            '6740f62c0448c321f35b36188b410d386664f5b1bb379af242370f1bebb8923d')
+            '6740f62c0448c321f35b36188b410d386664f5b1bb379af242370f1bebb8923d'
+            '78610e04b7119a23b8841c656caaa41a28ab26d4820ee1f9616d7abf107fde9f')
 
 prepare() {
   cd "${srcdir}/pcl-pcl-${pkgver}"
@@ -41,6 +43,7 @@ prepare() {
   # Patch that was merged into master : https://github.com/PointCloudLibrary/pcl/pull/1979
   patch -Np1 -i ${srcdir}/f527e5819d6a4d0e8ed46658032975b73d617f60.patch
   patch -Np1 -i ${srcdir}/7e0c0eba0bc6917592bb7f0db88dde48c168d24a.patch
+  patch -Np1 -i ${srcdir}/b588c546e8e78bfdd238f0f943236257549107dd.patch
   # [[ -d build ]] && rm -r build
 }
 
