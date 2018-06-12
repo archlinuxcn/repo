@@ -6,24 +6,27 @@
 
 pkgname=megasync
 pkgver=3.6.6.0
-pkgrel=1
+_sdkver=3.3.8
+pkgrel=2
 pkgdesc="Sync your files to your Mega account. Official app"
 arch=('i686' 'x86_64')
 url="https://github.com/meganz/megasync"
 license=('custom:MEGA LIMITED CODE REVIEW LICENCE')
 depends=('c-ares' 'crypto++' 'libsodium' 'hicolor-icon-theme' 'libuv' 'qt5-svg' 'libmediainfo')
-makedepends=('git' 'qt5-tools' 'swig' 'doxygen')
+makedepends=('qt5-tools' 'swig' 'doxygen')
 optdepends=('sni-qt: fix systray issue on KDE and LXQt')
-source=("git+https://github.com/meganz/MEGAsync.git#tag=v${pkgver}_Linux")
-md5sums=('SKIP')
+source=("https://github.com/meganz/MEGAsync/archive/v${pkgver}_Linux.tar.gz"
+        "https://github.com/meganz/sdk/archive/v${_sdkver}.tar.gz")
+sha256sums=('377a0b77b2506ebe0052d6366c3b5b74c3012cb4938e4df5e4b003677073f5fa'
+            'a64bf54b335ebbfc0138f4d81f3106bc4f02e9c1c8f840cd90515a7b34c01cd4')
 
 prepare(){
-    cd "${srcdir}/MEGAsync"
-    git submodule update --init --recursive
+    rm -rf MEGAsync-${pkgver}_Linux/src/MEGASync/mega
+    mv sdk-${_sdkver} MEGAsync-${pkgver}_Linux/src/MEGASync/mega
 }
 
 build(){
-    cd "${srcdir}/MEGAsync/src/MEGASync/mega"
+    cd "MEGAsync-${pkgver}_Linux/src/MEGASync/mega"
     ./autogen.sh
     ./configure \
         --prefix=/usr \
@@ -43,14 +46,14 @@ build(){
         --without-termcap \
 	--without-ffmpeg
 
-    cd "${srcdir}/MEGAsync/src"
+    cd "${srcdir}/MEGAsync-${pkgver}_Linux/src"
     qmake-qt5 CONFIG+="release" MEGA.pro
     lrelease-qt5 MEGASync/MEGASync.pro
     make
 }
 
 package (){
-    cd "${srcdir}/MEGAsync"
+    cd "MEGAsync-${pkgver}_Linux"
     install -Dm 644 LICENCE.md "${pkgdir}/usr/share/licenses/megasync/LICENCE.md"
     install -Dm 644 installer/terms.txt "${pkgdir}/usr/share/licenses/megasync/terms.txt"
 
