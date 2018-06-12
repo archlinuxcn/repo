@@ -1,8 +1,8 @@
 # Maintainer: Patrizio Bekerle <patrizio at bekerle dot com>
 
 pkgname=qownnotes
-pkgver=18.06.1
-tag="80b9a703058e70c123155372221fbd386e6a9b40"
+pkgver=18.06.2
+tag="4c8f78cc4797161f21f17556662c37a2f5784664"
 pkgrel=1
 pkgdesc="Open source notepad and todo list manager with markdown support and ownCloud/Nextcloud integration"
 arch=('i686' 'x86_64' 'armv7h')
@@ -12,7 +12,7 @@ groups=('qownnotes')
 depends=('qt5-base' 'qt5-svg' 'qt5-declarative' 'openssl')
 makedepends=('qt5-tools')
 source=("https://download.tuxfamily.org/${pkgname}/src/${pkgname}-${pkgver}.tar.xz")
-sha256sums=('4590d9a2c654811653388ab58e7bd399b48d9b6369b44622b2a8e3945faf608a')
+sha256sums=('e64d2cb4d3bcce25dccbc66ebb16f202f55185c3aefec7b2ee76f03c04a8f4a0')
 
 prepare() {
     cd "${pkgname}-${pkgver}"
@@ -32,7 +32,7 @@ package() {
     install -D -m755 QOwnNotes "${pkgdir}/usr/bin/QOwnNotes"
 
     # install visuals
-    install -D -m644 QOwnNotes.desktop "${pkgdir}/usr/share/applications/QOwnNotes.desktop"
+    install -D -m644 PBE.QOwnNotes.desktop "${pkgdir}/usr/share/applications/PBE.QOwnNotes.desktop"
     install -D -m644 "images/icons/128x128/apps/QOwnNotes.png" "${pkgdir}/usr/share/pixmaps/QOwnNotes.png"
     for format in {16x16,24x24,32x32,48x48,64x64,96x96,128x128,256x256,512x512}; do
         install -D -m644 "images/icons/${format}/apps/QOwnNotes.png" "${pkgdir}/usr/share/icons/hicolor/$format/apps/QOwnNotes.png"
