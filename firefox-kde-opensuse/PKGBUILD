@@ -21,7 +21,7 @@ _pgo=true
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
 pkgver=60.0.2
-pkgrel=3
+pkgrel=4
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -182,8 +182,8 @@ build() {
     CXX=/usr/bin/g++-7
     
     if in_array ccache ${BUILDENV[*]} ; then
-      CC=/usr/lib/ccache/bin/cc
-      CXX=/usr/lib/ccache/bin/c++
+      CC="ccache gcc-7"
+      CXX="ccache g++-7"
     fi
     
     CCACHE_CC=/usr/bin/gcc-7 \
