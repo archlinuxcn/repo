@@ -1,0 +1,36 @@
+diff -ura a/lib/main.html b/lib/main.html
+--- a/lib/main.html	2018-04-11 01:16:20.000000000 +0200
++++ b/lib/main.html	2018-06-13 07:35:01.495445739 +0200
+@@ -114,7 +114,7 @@
+   <script src="../node_modules/react-redux/dist/react-redux.min.js"></script>
+   <script type='text/javascript'>
+     const electron = require('electron')
+-    electron.webFrame.setZoomLevelLimits(1, 1)
++    electron.webFrame.setVisualZoomLevelLimits(1, 1)
+     var scriptUrl = window._.find(electron.remote.process.argv, (a) => a === '--hot')
+       ? 'http://localhost:8080/assets/main.js'
+       : '../compiled/main.js'
+diff -ura a/lib/main-window.js b/lib/main-window.js
+--- a/lib/main-window.js	2018-04-11 01:16:20.000000000 +0200
++++ b/lib/main-window.js	2018-06-13 07:34:34.968829173 +0200
+@@ -17,7 +17,7 @@
+   autoHideMenuBar: showMenu,
+   webPreferences: {
+     zoomFactor: 1.0,
+-    blinkFeatures: 'OverlayScrollbars'
++    enableBlinkFeatures: 'OverlayScrollbars'
+   },
+   icon: path.resolve(__dirname, '../resources/app.png')
+ })
+diff -ura a/package.json b/package.json
+--- a/package.json	2018-06-13 07:45:37.000000000 +0200
++++ b/package.json	2018-06-13 07:46:48.993660686 +0200
+@@ -110,7 +110,7 @@
+     "css-loader": "^0.19.0",
+     "devtron": "^1.1.0",
+     "dom-storage": "^2.0.2",
+-    "electron": "1.7.11",
++    "electron": "2.0.2",
+     "electron-packager": "^8.6.0",
+     "eslint": "^3.13.1",
+     "eslint-config-standard": "^6.2.1",
