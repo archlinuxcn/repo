@@ -10,7 +10,10 @@ depends=['fmt', 'xcb-imdkit-git', 'fcitx5-git']
 
 build_prefix = 'extra-x86_64'
 
-pre_build = vcs_update
+def pre_build():
+    vcs_update()
+    run_cmd(['updpkgsums'])
+
 
 def post_build():
     git_add_files("PKGBUILD")
