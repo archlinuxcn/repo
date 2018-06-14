@@ -1,6 +1,6 @@
 diff -ura a/gruntfile.js b/gruntfile.js
---- a/gruntfile.js	2018-02-03 15:50:49.000000000 +0100
-+++ b/gruntfile.js	2018-02-03 20:06:27.823432173 +0100
+--- a/gruntfile.js	2018-06-14 04:02:20.000000000 +0200
++++ b/gruntfile.js	2018-06-14 08:38:45.786543071 +0200
 @@ -6,6 +6,7 @@
  
  module.exports = function (grunt) {
@@ -31,27 +31,27 @@ diff -ura a/gruntfile.js b/gruntfile.js
    grunt.registerTask('compile', function () {
      var done = this.async()
 diff -ura a/package.json b/package.json
---- a/package.json	2018-02-03 15:50:49.000000000 +0100
-+++ b/package.json	2018-02-03 20:06:05.383251764 +0100
-@@ -104,14 +104,14 @@
+--- a/package.json	2018-06-14 04:02:20.000000000 +0200
++++ b/package.json	2018-06-14 08:38:07.322269574 +0200
+@@ -121,14 +121,14 @@
      "devtron": "^1.1.0",
      "dom-storage": "^2.0.2",
-     "electron": "1.7.11",
+     "electron": "1.8.7",
 -    "electron-packager": "^6.0.0",
 +    "electron-packager": "^8.6.0",
      "eslint": "^3.13.1",
      "eslint-config-standard": "^6.2.1",
      "eslint-config-standard-jsx": "^3.2.0",
-     "eslint-plugin-react": "^7.2.0",
+     "eslint-plugin-react": "^7.8.2",
      "eslint-plugin-standard": "^3.0.1",
      "faker": "^3.1.0",
 -    "grunt": "^0.4.5",
 +    "grunt": "^1.0.1",
      "grunt-electron-installer": "2.1.0",
      "history": "^1.17.0",
-     "jsdom": "^9.4.2",
-@@ -125,15 +125,11 @@
-     "react-router-redux": "^4.0.4",
+     "identity-obj-proxy": "^3.0.0",
+@@ -147,15 +147,11 @@
+     "react-test-renderer": "^15.6.2",
      "standard": "^8.4.0",
      "style-loader": "^0.12.4",
 -    "stylus": "^0.52.4",

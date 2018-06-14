@@ -5,8 +5,8 @@
 # Contributor: Romain Bazile <gromain {dot} baz {at} gmail {dot} com>
 pkgname=boostnote
 _pkgname=Boostnote
-pkgver=0.11.4
-pkgrel=2
+pkgver=0.11.6
+pkgrel=1
 pkgdesc="Open source note-taking app for programmers"
 arch=('any')
 url="https://boostnote.io/"
@@ -23,12 +23,12 @@ source=(
   "electron-v2-compatibility.patch"
   )
 
-sha512sums=('218fd8d362053b26a01fd92cd6b115211f3809c00342dafbd6bc4f3f9c6d0e95aaeb367b7d3474857fb4e714b5e8a556d85feeb3bea648a785084a13d5b4ccde'
+sha512sums=('2e516d8fa64c35fe1c092ffeb616f5d3acb0c870efcc7c64de6124e18deddc3720bc45f39f2de9fb50d35aa73f8cf77bdf2700dd5e79d195e95424ee12a18fc5'
             '1f0ccd2a3632a12c4714d97b9f909ddc94b53d6f86a9e4bdcab31abd55a93071a2c35c6e1e9527b747de6dd74b8a5276414980c11e174085f28b8f2d2721230a'
             '18bcda13580da8ceeaa86793a77ec00a053b8fd51451dad7e2b1a19553fe1a467ac647b44b789212e783f3f6a80968cc9404e884ef7ff6b1f6588473b3229d40'
-            '415eb95c889eee8076cc92ea30058505f9f3c1b73b0bc9712b92ffc65ddb5be250e962b20449946be2fffccaf31153b9923fa63e11412525db33dbf1c3215974'
-            'd6ff77413aa606c38db9a38cde0f38b2818194649cf0def93d003b52f90825c2f095ab82d98bb8200080546fe96f0d9c356eec32e21a9fb2bf46831699af550e'
-            '21d97cb7a877333dd6c3d980a6ab0a606b53d88b5234648d07e7b4435330e3e16727afc8beded158e14f6397713cdb00d655b131021bc191ca116567ef92d068')
+            'ccd0b8903f9a755f733df13fdd2049ca06c4e85f27c56dcae101ad9610799a83a74e9050aa881c1f656880d3720137a64a39b299d392dbf724c10c74018f2889'
+            '5cf9835598bb4f81ce8075a578f92c6d5068a02d0a09edce376c6929bcb081bbe7b776ef89b20d9ef295d3d3753c82eab07ff7f0f78230980d8273ab56f45a9b'
+            '64e305386ed95df7bf580f1a46fe724de93a567dd272995fa3072d3c028bb5a09889123f1c44dd4066c5181471de55563120be4bc98ebe742eabdfb5587420f7')
 
 prepare() {
   cd "${_pkgname}-${pkgver}"
@@ -41,10 +41,10 @@ prepare() {
 build() {
   cd "${_pkgname}-${pkgver}"
 
-  npm install --no-optional
+  npm install --no-optional --no-shrinkwrap
   grunt compile
   rm -r node_modules/
-  npm install --production --no-optional
+  npm install --production --no-optional --no-shrinkwrap
 }
 
 package() {
