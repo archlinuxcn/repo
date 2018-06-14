@@ -11,7 +11,7 @@ _mozc_rev=280e38fe3d9db4df52f0713acf2ca65898cd697a
 _japanese_usage_dictionary_rev=e5b3425575734c323e1d947009dd74709437b684
 _gyp_rev=920ee58c3d3109dea3cd37d88054014891a93db7
 _protobuf_rev=a428e42072765993ff674fda72863c9f1aa2d268
-_zipcode_rel=201703
+_zipcode_rel=201805
 
 _pkgbase=mozc
 pkgname=fcitx5-mozc-git
@@ -31,8 +31,8 @@ source=(git+https://gitlab.com/fcitx/mozc.git#branch=fcitx
         #japanese_usage_dictionary::git+https://github.com/hiroyuki-komatsu/japanese-usage-dictionary.git#commit=${_japanese_usage_dictionary_rev}
         #mozc-gyp::git+https://chromium.googlesource.com/external/gyp#commit=${_gyp_rev}
         #git+https://github.com/google/protobuf.git#commit=${_protobuf_rev}
-        http://downloads.sourceforge.net/pnsft-aur/x-ken-all-${_zipcode_rel}.zip
-        http://downloads.sourceforge.net/pnsft-aur/jigyosyo-${_zipcode_rel}.zip
+        https://downloads.sourceforge.net/pnsft-aur/x-ken-all-${_zipcode_rel}.zip
+        https://downloads.sourceforge.net/pnsft-aur/jigyosyo-${_zipcode_rel}.zip
         https://download.fcitx-im.org/fcitx-mozc/fcitx-mozc-icon.tar.gz
         git+https://chromium.googlesource.com/breakpad/breakpad
         git+https://github.com/google/googletest.git
