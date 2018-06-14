@@ -72,8 +72,8 @@ if [[ BRANCH = "emacs-26" ]]; then
 else
   pkgname=emacs-git
 fi
-pkgver=27.0.50.133354
-pkgrel=1
+pkgver=27.0.50.133355
+pkgrel=2
 pkgdesc="GNU Emacs. Development."
 arch=('x86_64') # Arch Linux only. Users of derivatives are on their own.
 url="http://www.gnu.org/software/emacs/"
@@ -91,7 +91,7 @@ if [[ $CLANG = "YES" ]]; then
   makedepends+=( 'clang' 'lld') ;
 fi
 
-if [[ $LTO = "yes" ]]; then
+if [[ $LTO = "YES" ]]; then
   export CFLAGS+=" -flto"
   export tXXFLAGS+=" -flto"
 fi
@@ -225,7 +225,7 @@ fi
 if [[ $CLI = "YES" ]]; then
   _conf+=( '--without-x' '--with-x-toolkit=no' '--without-xft' '--without-lcms2' '--without-rsvg' );
 elif [[ $NOTKIT = "YES" ]]; then
-  _conf+=( '--with-x-toolkit=no' 'without-toolkit-scrollbars' '--with-xft' '--without-xaw3d' );
+  _conf+=( '--with-x-toolkit=no' '--without-toolkit-scroll-bars' '--with-xft' '--without-xaw3d' );
 elif [[ $LUCID = "YES" ]]; then
   _conf+=( '--with-x-toolkit=lucid' '--with-xft' '--with-xaw3d' );
 elif [[ $GTK2 = "YES" ]]; then
