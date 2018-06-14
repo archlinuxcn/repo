@@ -10,11 +10,12 @@ depends=['fmt', 'xcb-imdkit-git', 'fcitx5-git', 'libime-git', ('fcitx5-qt-git', 
 
 build_prefix = 'extra-x86_64'
 
-def pre_build():
-    aur_pre_build()
-    add_depends(['fcitx5-qt5-git'])
+pre_build = vcs_pre_build
 
-post_build = aur_post_build
+def post_build():
+    git_add_files('PKGBUILD')
+    git_commit()
+    update_aur_repo()
 
 if __name__ == '__main__':
   single_main()

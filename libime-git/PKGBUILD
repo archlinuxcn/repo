@@ -7,11 +7,11 @@ pkgver=r138.a1fa220
 pkgrel=2
 pkgdesc="A library to support generic input method implementation"
 arch=('i686' 'x86_64')
-url="https://github.com/fcitx/libime"
+url="https://gitlab.com/fcitx/libime"
 license=('GPL')
 depends=('boost-libs' 'fcitx5-git')
 makedepends=('boost' 'extra-cmake-modules' 'git' 'python')
-source=("git+https://github.com/fcitx/libime.git")
+source=("git+$url.git")
 sha512sums=('SKIP')
 
 pkgver() {

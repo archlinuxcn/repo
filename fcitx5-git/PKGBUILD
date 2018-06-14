@@ -7,13 +7,13 @@ pkgver=r401.9c23d1d
 pkgrel=1
 pkgdesc="Next generation of fcitx"
 arch=('i686' 'x86_64')
-url="https://github.com/fcitx/fcitx5"
+url="https://gitlab.com/fcitx/fcitx5"
 license=('GPL')
 depends=('cairo' 'enchant' 'iso-codes' 'libgl' 'libxkbcommon-x11' 'pango' 'systemd' 'wayland'
          'wayland-protocols' 'xcb-imdkit-git' 'xcb-util-wm' 'libxkbfile'
     	 'fmt' 'libxkbfile' 'gdk-pixbuf2')
 makedepends=('extra-cmake-modules' 'git')
-source=("git+https://github.com/fcitx/fcitx5.git")
+source=("git+$url.git")
 sha512sums=('SKIP')
 
 pkgver() {

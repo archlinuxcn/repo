@@ -7,11 +7,11 @@ pkgver=r28.b63515c
 pkgrel=1.2
 pkgdesc="Gtk im module for fcitx5 and glib based dbus client library"
 arch=('i686' 'x86_64')
-url="https://github.com/fcitx/fcitx5"
+url="https://gitlab.com/fcitx/fcitx5-gtk"
 license=('GPL')
 depends=('fcitx5-git' 'gtk2' 'gtk3')
 makedepends=('extra-cmake-modules' 'gobject-introspection' 'git')
-source=("git+https://github.com/fcitx/fcitx5-gtk.git")
+source=("git+$url.git")
 sha512sums=('SKIP')
 
 pkgver() {
