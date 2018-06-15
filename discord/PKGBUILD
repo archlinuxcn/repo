@@ -1,13 +1,11 @@
 # Maintainer: Anna <morganamilo@gmail.com>
+# Co-Maintainer: E5ten <e5ten.arch@gmail.com>
 # Contributor: Cayde Dixon <me@cazzar.net>
 # Contributor: Anthony Anderson <aantony4122@gmail.com>
 
-
-_branch='discord'
-
 pkgname=discord
 pkgver=0.0.5
-pkgrel=3
+pkgrel=4
 pkgdesc="All-in-one voice and text chat for gamers that's free and secure."
 arch=('x86_64')
 url='https://discordapp.com/'
@@ -20,13 +18,10 @@ optdepends=(
 )
 
 install="Discord.install"
-source=(Discord.desktop LICENSE)
-source_x86_64=("https://dl.discordapp.net/apps/linux/${pkgver}/${_branch}-${pkgver}.tar.gz")
-md5sums=('203b6c7c05e56ce3b9d9eb55d7e11d17'
-         '26b3229c74488c64d94798e48bc49fcd')
-md5sums_x86_64=('18a8e7f86d26a1472dbfff060e1671e4')
-
-
+source=(LICENSE
+"https://dl.discordapp.net/apps/linux/${pkgver}/${pkgname}-${pkgver}.tar.gz")
+md5sums=('26b3229c74488c64d94798e48bc49fcd'
+		 '18a8e7f86d26a1472dbfff060e1671e4')
 
 #This is always latest build, right now I do not know of a version param.
 
@@ -38,19 +33,21 @@ package() {
   # Exec bit
   chmod 755 "${pkgdir}/opt/${pkgname}/Discord"
 
-
   # Desktop Entry
-  install -Dm644 "${srcdir}/Discord.desktop" "${pkgdir}/usr/share/applications/Discord.desktop"
+  install -d "${pkgdir}/usr/share/applications"
+  install "${pkgdir}/opt/${pkgname}/${pkgname}.desktop" "${pkgdir}/usr/share/applications"
+  sed -i s%/usr/share%/opt% ${pkgdir}/usr/share/applications/${pkgname}.desktop
 
   # Main binary
-  install -d "${pkgdir}/usr/bin"
   #install "${srcdir}/Discord.sh" "${pkgdir}/usr/bin/discord"
+  mkdir -p ${pkgdir}/usr/bin
   ln -s "/opt/${pkgname}/Discord" "${pkgdir}/usr/bin/${pkgname}"
 
   # Create symbolic link to the icon
   install -d "${pkgdir}/usr/share/pixmaps"
   ln -s "/opt/${pkgname}/discord.png" "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
-
+  
   # License
   install -Dm644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
+
