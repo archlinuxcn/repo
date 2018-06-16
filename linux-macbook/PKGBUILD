@@ -6,7 +6,7 @@
 #pkgbase=linux               # Build stock -ARCH kernel
 pkgbase=linux-macbook        # Build kernel with a different name
 _srcname=linux-4.17
-pkgver=4.17
+pkgver=4.17.1
 pkgrel=1
 arch=('x86_64')
 url="https://www.kernel.org/"
@@ -15,13 +15,14 @@ makedepends=('xmlto' 'kmod' 'inetutils' 'bc' 'libelf')
 options=('!strip')
 source=(
   https://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.{xz,sign}
-  #https://www.kernel.org/pub/linux/kernel/v4.x/patch-${pkgver}.{xz,sign}
+  https://www.kernel.org/pub/linux/kernel/v4.x/patch-${pkgver}.{xz,sign}
   config         # the main kernel config file
   60-linux.hook  # pacman hook for depmod
   90-linux.hook  # pacman hook for initramfs regeneration
   linux.preset   # standard config files for mkinitcpio ramdisk
   0001-add-sysctl-to-disallow-unprivileged-CLONE_NEWUSER-by.patch
   0002-Revert-drm-i915-edp-Allow-alternate-fixed-mode-for-e.patch
+  0003-ACPI-watchdog-Prefer-iTCO_wdt-always-when-WDAT-table.patch
   macbook-wakeup.service # service file for suspend/resume events
   RFC-PCI-Workaround-to-enable-poweroff-on-Mac-Pro-11.patch
   RFC-v2-PCI-Workaround-to-enable-poweroff-on-Mac-Pro-11.patch
@@ -32,12 +33,15 @@ validpgpkeys=(
 )
 sha256sums=('9faa1dd896eaea961dc6e886697c0b3301277102e5bc976b2758f9a62d3ccd13'
             'SKIP'
+            '31f2f5309d99db632160538d43cf737166ae8b24c1b8091522ca1f9a804c25a1'
+            'SKIP'
             '0269d9a56f0d0306c9bd5c179a7e32214b0a1c082d3bca581661203b27305f17'
             'ae2e95db94ef7176207c690224169594d49445e04249d2499e9d2fbc117a0b21'
             '75f99f5239e03238f88d1a834c50043ec32b1dc568f2cc291b07d04718483919'
             'ad6344badc91ad0630caacde83f7f9b97276f80d26a20619a87952be65492c65'
-            '8d6a5f34b3d79e75b0cb888c6bcf293f84c5cbb2757f7bdadafee7e0ea77d7dd'
-            '92615acad59cbef9fd43b2710f5a77ffea45a86543ccff1b12eb676a9c8058cc'
+            'e3c08f9b91611186e5ec579187ecea2a0143e5c2dc7ffc30ac6ea6e2b6d130fd'
+            '5403dead9161344b2c01027526146a250147680f4a2d32a54d40c55fc1becc8a'
+            'd55e7de60b12bca26ded4c1bb8eb5860a9092374914a201a0f6a0ed2849d099f'
             'c5a714823c3418692bc5c212dd5d094a0e2ae6147d6726822911f1c26e3a1d1b'
             '7c99aaeaea7837f83a3ad215cf07277934ccf39720acee7f1c371dc86bdf89fc'
             '09189eb269a9fd16898cf90a477df23306236fb897791e8d04e5a75d5007bbff')
@@ -49,13 +53,10 @@ prepare() {
   cd ${_srcname}
 
   # add upstream patch
-  #patch -p1 -i ../patch-${pkgver}
+  patch -p1 -i ../patch-${pkgver}
 
   # add latest fixes from stable queue, if needed
   # http://git.kernel.org/?p=linux/kernel/git/stable/stable-queue.git
-
-  # start of macbook specific patches
-  # https://patchwork.kernel.org/patch/9140867/
 
   msg "patch -Np1 -i ../RFC-PCI-Workaround-to-enable-poweroff-on-Mac-Pro-11.patch"
   patch -Np1 -i ../RFC-PCI-Workaround-to-enable-poweroff-on-Mac-Pro-11.patch
@@ -69,6 +70,9 @@ prepare() {
 
   # https://bugs.archlinux.org/task/56711
   patch -Np1 -i ../0002-Revert-drm-i915-edp-Allow-alternate-fixed-mode-for-e.patch
+
+  # https://bugs.archlinux.org/task/56780
+  patch -Np1 -i ../0003-ACPI-watchdog-Prefer-iTCO_wdt-always-when-WDAT-table.patch
 
   cat ../config - >.config <<END
 CONFIG_LOCALVERSION="${_kernelname}"
