@@ -18,16 +18,14 @@ post_install() {
 
 _EOF
 
-  echo -n "updating font cache... "
-  # a full forced directory scan is required here
-  /usr/bin/fc-cache -f
-  echo "done."
+  post_upgrade $1
 }
 
 post_upgrade() {
-  echo -n "updating font cache... "
-  /usr/bin/fc-cache -f
-  echo "done."
+  echo -n "Rebuilding fontconfig cache..."
+  # a full forced directory scan is required here
+  /usr/bin/fc-cache -rs
+  echo " done."
 }
 
 post_remove() {
