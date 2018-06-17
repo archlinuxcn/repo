@@ -1,8 +1,8 @@
 # Maintainer: Hexchain Tong <i at hexchain dot org>
 
 pkgname=tinc-pre
-pkgver=1.1pre15
-pkgrel=2
+pkgver=1.1pre16
+pkgrel=1
 pkgdesc="VPN (Virtual Private Network) daemon (Pre-release)"
 arch=(i686 x86_64 armv7h armv6h)
 url="http://www.tinc-vpn.org/"
@@ -12,7 +12,6 @@ makedepends=('git' 'autoconf')
 optdepends=('python2' 'wxpython: gui support')
 provides=('tinc-pre' 'tinc-pre-systemd')
 conflicts=('tinc' 'tinc-pre-systemd')
-install="${pkgname}.install"
 source=("git+https://github.com/gsliepen/tinc.git#tag=release-$pkgver")
 sha256sums=('SKIP')
 
