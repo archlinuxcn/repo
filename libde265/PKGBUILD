@@ -9,26 +9,34 @@ arch=('i686' 'x86_64')
 url="https://github.com/strukturag/libde265"
 license=('LGPL3')
 depends=('gcc-libs')
-makedepends=('ffmpeg' 'qt5-base' 'sdl')
+makedepends=('git' 'ffmpeg' 'qt5-base' 'sdl')
 optdepends=('ffmpeg: for sherlock265'
             'qt5-base: for sherlock265'
             'sdl: dec265 YUV overlay output')
-source=("$url/archive/v$pkgver.tar.gz")
-md5sums=('189b4deb376ff879f8cbb2b7ffc24f97')
+source=("git://github.com/strukturag/libde265.git")
+md5sums=('SKIP')
+
+pkgver () {
+  cd "$pkgname"
+  git describe --tags `git rev-list --tags --max-count=1` | cut -c 2-
+}
 
 prepare() {
-  cd "$pkgname-$pkgver"
+  cd "$pkgname"
+  git fetch --tags
+  latestTag=$(git describe --tags `git rev-list --tags --max-count=1`)
+  git checkout $latestTag
   sed -ri 's/(PIX_FMT_)/AV_\1/g' sherlock265/VideoDecoder.cc
 }
 
 build() {
-  cd "$pkgname-$pkgver"
+  cd "$pkgname"
   ./autogen.sh
   ./configure --prefix=/usr --enable-static=no
   make
 }
 
 package() {
-  cd "$pkgname-$pkgver"
+  cd "$pkgname"
   make DESTDIR="$pkgdir" install
 }
