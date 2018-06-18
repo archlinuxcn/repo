@@ -2,7 +2,7 @@
 # Contributor Pascal Grossé <pascal.grosse@gmail.com>
 
 pkgname=tome4
-pkgver='1.5.9'
+pkgver='1.5.10'
 pkgrel='1'
 pkgdesc="An open-source, single-player, role-playing roguelike game set in the world of Eyal."
 arch=('i686' 'x86_64')
@@ -16,7 +16,7 @@ source=("http://te4.org/dl/t-engine/t-engine4-src-${pkgver}.tar.bz2"
 	tome4
 	tome4.desktop)
 conflicts=('tome4-beta' 'tome4-git' 'tome4-nomusic')
-sha256sums=('2f4f98be127447f03733d0618f6e4134c618b088e36ba3c84067e3e99ff8750e'
+sha256sums=('a76d29d2c0b964e9ab121873041c55930db1a0ccdaf877228dcba62ee06b8555'
             '37f5be7020a06228b7d22f4c622ab5a8843b4dbea7493d7e3b324bd592cd818e'
             '3a1e4901337f91697bcfaf095f488c447c27ccc2484a543e31f024d5aefb61a0'
             '80e663d9eb2d41c6d9c0a6b4b5b52eb33b0872c3412a617530777fd137c0baa1')
