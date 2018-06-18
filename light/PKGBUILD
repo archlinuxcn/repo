@@ -2,15 +2,15 @@
 # Contributor: Fredrik Haikarainen <fredrik.haikarainen@gmail.com>
 
 pkgname=light
-pkgver=1.0
-pkgrel=2
+pkgver=1.1
+pkgrel=1
 pkgdesc='Program to easily change brightness on backlight-controllers.'
 arch=('i686' 'x86_64')
 url="https://github.com/haikarainen/light"
 license=('GPL3')
 makedepends=('help2man')
-source=("https://github.com/haikarainen/light/archive/v${pkgver}.tar.gz")
-sha256sums=('974608ee42ffe85cfd23184306d56d86ec4e6f4b0518bafcb7b3330998b1af64')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/haikarainen/light/archive/${pkgver}.tar.gz")
+sha256sums=('1f80b1fe3244d1c656677a92db0747a5af86dab93c1afe7b78c2732ab0c431b2')
 
 build() {
   cd "${srcdir}/light-${pkgver}"
