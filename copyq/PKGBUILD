@@ -2,8 +2,8 @@
 # Contributor: Karol "Kenji Takahashi" Woźniak <kenji.sx>
 
 pkgname=copyq
-pkgver=3.4.0
-pkgrel=2
+pkgver=3.5.0
+pkgrel=1
 pkgdesc="Clipboard manager with searchable and editable history"
 url="https://github.com/hluk/${pkgname}"
 depends=('libxtst' 'qt5-script' 'qt5-svg' 'qt5-x11extras')
@@ -12,7 +12,7 @@ makedepends=('cmake' 'qt5-tools')
 license=('GPL3')
 arch=('x86_64')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('2e9b5975310a46bfe39873392a1b27ef36be96783608440317885a8c140ab280')
+sha256sums=('86876e9ca66d0ac57ce86512df73f36bae3f10f06a9c66d05dc8785abf884df6')
 
 build() {
     cd "CopyQ-${pkgver}"
