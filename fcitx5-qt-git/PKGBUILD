@@ -5,7 +5,7 @@
 _pkgname=fcitx5-qt
 pkgbase=$_pkgname-git
 pkgname=(fcitx5-qt5-git fcitx5-qt4-git)
-pkgver=r133.4781aa0
+pkgver=r134.2be4206
 pkgrel=1
 pkgdesc="Fcitx Qt Library"
 arch=('x86_64')
