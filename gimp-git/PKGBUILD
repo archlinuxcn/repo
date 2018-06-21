@@ -6,7 +6,7 @@
 
 pkgname=gimp-git
 epoch=1
-pkgver=2.10.2.826.g993bbd354e
+pkgver=2.10.2.833.g8a881ca61a
 pkgrel=1
 pkgdesc="GNU Image Manipulation Program"
 arch=('i686' 'x86_64')
@@ -19,11 +19,13 @@ depends=('pygtk' 'lcms2>=2.2' 'libwmf>=0.2.8'
 	'babl-git' 'gegl-git' 'icu' 'enchant' 'gtk3' 'iso-codes' 'aalib' 'libmng' 'libheif' 'webkitgtk' 'libxpm' 'libxmu')
 makedepends=('git' 'gutenprint>=5.0.0' 'intltool>=0.40.1' \
                    'gnome-python>=2.16.2' \
-                   'alsa-lib>=1.0.0' 'libxslt' 'glib-networking' 'aalib' 'libmng' 'libheif' 'ghostscript' 'webkitgtk' 'libwebp' 'libxpm' 'xdg-utils')
+                   'alsa-lib>=1.0.0' 'libxslt' 'glib-networking' 'ghostscript' 'libwebp' 'xdg-utils')
 optdepends=('gutenprint: for sophisticated printing only as gimp has built-in cups print support'
             'alsa-lib: for MIDI event controller module'
             'curl: for URI support'
-            'ghostscript: for postscript support')
+            'ghostscript: for postscript support'
+            'libwebp: WebP support'
+            'xdg-utils: email support')
 options=('!libtool')
 provides=('gimp-git')
 conflicts=('gimp-gtk3-git')
