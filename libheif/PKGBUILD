@@ -7,9 +7,8 @@ pkgdesc="HEIF file format decoder and encoder"
 arch=('i686' 'x86_64')
 url="https://github.com/strukturag/libheif"
 license=('GPL3')
-depends=('libde265' 'libjpeg' 'libpng')
-makedepends=('git' 'x265')
-optdepends=('x265: HEIF encoding')
+depends=('libde265' 'libjpeg' 'libpng' 'x265')
+makedepends=('git')
 source=("git://github.com/strukturag/libheif.git")
 sha256sums=('SKIP')
 
