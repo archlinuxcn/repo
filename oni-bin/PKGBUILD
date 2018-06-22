@@ -2,7 +2,7 @@
 # Maintainer: Terje Larsen <terlar@gmail.com>
 # Maintainer: Ariel AxionL <axionl@aosc.io>
 pkgname=oni-bin
-pkgver=0.3.4
+pkgver=0.3.5
 pkgrel=1
 pkgdesc='Oni: Modern Modal Editing - powered by Neovim.'
 arch=('x86_64')
@@ -40,8 +40,8 @@ sha256sums=('a446f219aabe3667850444bbd5f11b7e931889b4d5dbf3bc074fe00f25f1124c'
             '396c174850dcabb2add952767fd35b860d5e368a75efba4576b8a0efdc8ea719'
             '5465269347564615deae17f69e3b11307082f886086ea523d0c09c4661d3e1f2'
             '72420b6c8588df601b973b715fc88f3d9e4d75ce53b633abff8c7ff848aed59a')
+sha256sums_x86_64=('97b6bbf91ed17b635ca0a9a65e55d1229080ce36a0bac196456f07811c3415af')
 
-sha256sums_x86_64=('61db303d270dac8d6fa34afdb3512a0027b8e7d67b1ff94e8c6f266bb17b58ea')
 
 package() {
     # Create path
