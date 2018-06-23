@@ -16,7 +16,7 @@ _use_wayland=0           # Build Wayland NOTE: extremely experimental and don't 
 ## -- Package and components information -- ##
 ##############################################
 pkgname=chromium-dev
-pkgver=68.0.3423.2
+pkgver=69.0.3464.0
 pkgrel=1
 pkgdesc="The open-source project behind Google Chrome (Dev Channel)"
 arch=('x86_64')
@@ -41,7 +41,7 @@ depends=(
          'openh264'
          'vulkan-icd-loader'
          'libpulse'
-         'libwebp'
+#          'libwebp'
          'opus'
          )
 makedepends=("libva" 
@@ -78,31 +78,34 @@ source=( #"https://gsdview.appspot.com/chromium-browser-official/chromium-${pkgv
         'git+https://github.com/foutrelis/chromium-launcher.git'
         'chromium-dev.svg'
         # Patch form Gentoo
-        'https://raw.githubusercontent.com/gentoo/gentoo/master/www-client/chromium/files/chromium-compiler-r1.patch'
+        'https://raw.githubusercontent.com/gentoo/gentoo/master/www-client/chromium/files/chromium-compiler-r3.patch'
         'https://raw.githubusercontent.com/gentoo/gentoo/master/www-client/chromium/files/chromium-webrtc-r0.patch'
         'https://raw.githubusercontent.com/gentoo/gentoo/master/www-client/chromium/files/chromium-ffmpeg-r1.patch'
+        'https://raw.githubusercontent.com/gentoo/gentoo/master/www-client/chromium/files/chromium-disable_xml_catalogs.patch'
          # Misc Patches
         'chromium-ffmpeg-clang.patch'
         'chromium-intel-vaapi_r18.diff.base64::https://chromium-review.googlesource.com/changes/532294/revisions/18/patch?download'
         # Patch from crbug (chromium bugtracker) or Arch chromium package
-        'chromium-widevine-r1.patch'
+        'chromium-widevine-r2.patch::https://git.archlinux.org/svntogit/packages.git/plain/trunk/chromium-widevine-r2.patch?h=packages/chromium'
         'chromium-skia-harmony.patch::https://git.archlinux.org/svntogit/packages.git/plain/trunk/chromium-skia-harmony.patch?h=packages/chromium'
+        'fix_mixup_between_DIP_pixel_coordinates.diff.base64::https://chromium-review.googlesource.com/changes/1083692/revisions/3/patch?download'
         )
 sha256sums=( #"$(curl -sL https://gsdview.appspot.com/chromium-browser-official/chromium-${pkgver}.tar.xz.hashes | grep sha256 | cut -d ' ' -f3)"
             "$(curl -sL https://commondatastorage.googleapis.com/chromium-browser-official/chromium-${pkgver}.tar.xz.hashes | grep sha256 | cut -d ' ' -f3)"
             'SKIP'
             'dd2b5c4191e468972b5ea8ddb4fa2e2fa3c2c94c79fc06645d0efc0e63ce7ee1'
             # Patch form Gentoo
-            'c910f9260198bab40b330eec58e336b90677d907797aac308d87315e260b2582'
+            '09777d4bbc474f9ce8da68cda177e02cfa786b026194b894ff7f24bb2c539145'
             'bcb2f4588cf5dcf75cde855c7431e94fdcc34bdd68b876a90f65ab9938594562'
             'aa885330bc4180b78d915f9dfdfc3210038a0acab7b16735ea9828ab6a633bde'
+            '446b50b297f1df57e933ad843ee97ea717e98bc90a389cd1156fcf23d8413a5b'
             # Misc Patches
             '16741344288d200fadf74546855e00aa204122e744b4811a36155efd5537bd95'
             '957d777c67756074c8e028d08c1e88e738f881b3a8569e60c5bdd1da6737e305'
             # Patch from crbug (chromium bugtracker) or Arch chromium package
-            '0d537830944814fe0854f834b5dc41dc5fc2428f77b2ad61d4a5e76b0fe99880'
-#             'd4a99239701256edb37ef3a5504fa87ca2219349834cbf59b9fe42bf7ac496d8'
+            '02c69bb3954087db599def7f5b6d65cf8f7cf2ed81dfbdaa4bb7b51863b4df15'
             'feca54ab09ac0fc9d0626770a6b899a6ac5a12173c7d0c1005bc3964ec83e7b3'
+            'd3330d7f7fa256e99488a6c9edce793c9fc1054e3766a66fde74ed2bd8ed496f'
             )
 install=chromium-dev.install
 
@@ -138,8 +141,10 @@ _keeplibs=(
            'net/third_party/http2'
            'net/third_party/mozilla_security_manager'
            'net/third_party/nss'
+           'net/third_party/quic'
            'net/third_party/spdy'
            'third_party/WebKit'
+           'third_party/abseil-cpp'
            'third_party/analytics'
            'third_party/angle'
            'third_party/angle/src/common/third_party/base'
@@ -150,6 +155,9 @@ _keeplibs=(
            'third_party/angle/third_party/glslang'
            'third_party/angle/third_party/spirv-headers'
            'third_party/angle/third_party/spirv-tools'
+           'third_party/angle/third_party/vulkan-headers'
+           'third_party/angle/third_party/vulkan-loader'
+           'third_party/angle/third_party/vulkan-tools'
            'third_party/angle/third_party/vulkan-validation-layers'
            'third_party/apple_apsl'
            'third_party/blink'
@@ -199,6 +207,7 @@ _keeplibs=(
            'third_party/libaom'
            'third_party/libaom/source/libaom/third_party/x86inc'
            'third_party/libjingle'
+           'third_party/libjpeg'
            'third_party/libphonenumber'
            'third_party/libsecret'
            'third_party/libsrtp'
@@ -207,6 +216,7 @@ _keeplibs=(
            'third_party/libvpx'
            'third_party/libvpx/source/libvpx/third_party/x86inc'
            'third_party/libwebm'
+           'third_party/libwebp'
            'third_party/libxml/chromium'
            'third_party/libyuv'
            'third_party/llvm'
@@ -236,7 +246,9 @@ _keeplibs=(
            'third_party/polymer'
            'third_party/protobuf'
            'third_party/protobuf/third_party/six'
+           'third_party/pyjson5'
            'third_party/qcms'
+           'third_party/rnnoise'
            'third_party/s2cellid'
            'third_party/sfntly'
            'third_party/shaderc'
@@ -246,6 +258,7 @@ _keeplibs=(
            'third_party/skia/third_party/spirv-headers'
            'third_party/skia/third_party/spirv-tools'
            'third_party/skia/third_party/vulkan'
+           'third_party/skia/third_party/vulkanmemoryallocator'
            'third_party/smhasher'
            'third_party/spirv-headers'
            'third_party/SPIRV-Tools'
@@ -330,10 +343,10 @@ _use_system=(
 #              'icu'         # https://crbug.com/678661
              'libdrm'
 #              'libevent'    # Get segfaults and other problems https://bugs.gentoo.org/593458
-             'libjpeg'
+#              'libjpeg'     # needs bundled by blink
              'libpng'
 #              'libvpx'      # Needs update
-             'libwebp'
+#              'libwebp'     # Needs update
              'libxml'
              'libxslt'
              'openh264'
@@ -416,23 +429,15 @@ prepare() {
 
   msg2 "Patching the sources"
   # Patch sources from Gentoo.
-  patch -p1 -i "${srcdir}/chromium-compiler-r1.patch"
+  patch -p1 -i "${srcdir}/chromium-compiler-r3.patch"
   patch -p1 -i "${srcdir}/chromium-webrtc-r0.patch"
   patch -p1 -i "${srcdir}/chromium-ffmpeg-r1.patch"
+  patch -p1 -i "${srcdir}/chromium-disable_xml_catalogs.patch"
 
   # Misc patches
 
   # Pats to chromium dev's about why always they forget add/remove missing build rules.
-  # Not this time :)
-
-  # https://crbug.com/710701
-  _chrome_build_hash=$(curl -s "https://chromium.googlesource.com/chromium/src.git/+/${pkgver}?format=TEXT")
-  _chrome_build_hash=$(echo $_chrome_build_hash | base64 -d | grep -Po '^parent \K[0-9a-f]{40}$')
-  if [[ -z $_chrome_build_hash ]]; then
-    error "Unable to fetch Chrome build hash."
-    return 1
-  fi
-  echo "LASTCHANGE=${_chrome_build_hash}-" > build/util/LASTCHANGE
+  # not this time (?)
 
   # Allow building against system libraries in official builds.
   sed 's|OFFICIAL_BUILD|GOOGLE_CHROME_BUILD|' \
@@ -450,23 +455,21 @@ prepare() {
     -i third_party/ffmpeg/chromium/scripts/generate_gn.py
   export PNACLPYTHON=/usr/bin/python2
 
-  (mkdir -p "${srcdir}/python"; cd ${srcdir}/python; ln -s /usr/bin/python2 python)
-  export PATH="${srcdir}/python:${PATH}"
-
   # Setup vulkan
   export VULKAN_SDK="/usr"
   sed 's|/x86_64-linux-gnu||' -i gpu/vulkan/BUILD.gn
+
 
   # https://chromium-review.googlesource.com/c/chromium/src/+/532294
   #base64 -d "${srcdir}/chromium-intel-vaapi_r18.diff.base64" | patch -p1 -i -
 
   # Patch from crbug (chromium bugtracker) or Arch chromium package
+
   # https://crbug.com/skia/6663#c10
   patch -p4 -i "${srcdir}/chromium-skia-harmony.patch"
 
   # https://crbug.com/473866
-  patch -p0 -i "${srcdir}/chromium-widevine-r1.patch"
-  sed 's|@WIDEVINE_VERSION@|The Cake Is a Lie|g' -i third_party/widevine/cdm/stub/widevine_cdm_version.h
+  patch -p1 -i "${srcdir}/chromium-widevine-r2.patch"
 
   # Setup nodejs dependency.
   mkdir -p third_party/node/linux/node-linux-x64/bin/
@@ -547,6 +550,7 @@ package() {
   _libs=(
          'libEGL.so'
          'libGLESv2.so'
+         'libVkICD_mock_icd.so'
          'libVkLayer_core_validation.so'
          'libVkLayer_object_tracker.so'
          'libVkLayer_parameter_validation.so'
@@ -565,6 +569,7 @@ package() {
           'snapshot_blob.bin'
           'v8_context_snapshot.bin'
           'icudtl.dat'
+          'transport_security_state_generator'
           #
           'MEIPreload/manifest.json'
           'MEIPreload/preloaded_data.pb'
@@ -589,7 +594,6 @@ package() {
               'chrome_100_percent.pak'
               'chrome_200_percent.pak'
               'headless_lib.pak'
-              'keyboard_resources.pak'
               'resources.pak'
               'views_mus_resources.pak'
               )
