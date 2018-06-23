@@ -1,7 +1,6 @@
 pkgname=babel-eslint
-pkgver=8.2.3
-
-pkgrel=1
+pkgver=8.2.4
+pkgrel=2
 pkgdesc='allows you to lint ALL valid Babel code with the fantastic ESLint'
 arch=('any')
 url='https://github.com/babel/babel-eslint'
@@ -10,11 +9,10 @@ depends=('eslint')
 makedepends=('npm')
 source=("https://registry.npmjs.org/$pkgname/-/$pkgname-$pkgver.tgz")
 noextract=("$pkgname-$pkgver.tgz")
-sha512sums=('d077924ed69783f126ec50945b1c0e4fe29e1523b53bb2ee46ece193b83ed418f0765406947ab83b2322dc6a86c6b35f12af23122e879ade7294441486eae089')
+sha512sums=('3608ebe7446017e7316036f618e9aa65c1bfae6faab29bd2893c62d140fea260c03c72e72f31734ced6d532a8ab815e52d96ff475956b21b3cdd3fa63617afc2')
 
 package() {
   npm install -g --user root --prefix "$pkgdir"/usr "$srcdir"/$pkgname-$pkgver.tgz
-  rm -r "$pkgdir"/usr/etc
 
   # Fix permissions
   find "$pkgdir/usr" -type d -exec chmod 755 '{}' +
