@@ -3,7 +3,7 @@
 
 _gemname=jekyll
 pkgname=$_gemname
-pkgver=3.8.0
+pkgver=3.8.3
 pkgrel=1
 pkgdesc='A simple, blog aware, static site generator.'
 arch=('any')
@@ -35,7 +35,7 @@ replaces=('ruby-jekyll')
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
-sha512sums=('225aefe8105f8cc29f07eac7feb4c515a0f4f79977482435756e202e66e18a966797d7dc35b67d243760008c9269d6486247394525ff0d468118c1c0211e44ac')
+sha512sums=('3b1b486dcae67a92751f410c4984b25355abf6a04b445b8c6e17f102b9a8ee47a7ef143ea2f54afa3a537a92b7a28ec75383581eb018dd73bcd055aafec58ecf')
 
 package() {
   local _gemdir="$(ruby -e'puts Gem.default_dir')"
