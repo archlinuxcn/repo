@@ -1,0 +1,35 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+
+pkgname=archrepo2-git
+epoch=1
+pkgver=v0.5.r5.g763d1ec
+pkgrel=1
+pkgdesc="Arch Linux repository manager"
+arch=('any')
+url="https://github.com/lilydjwg/archrepo2"
+license=('MIT')
+depends=('python' 'python-setuptools' 'python-tornado' 'python-pyinotify' 'pacman')
+makedepends=('git')
+source=('git://github.com/lilydjwg/archrepo2.git')
+md5sums=('SKIP')
+
+_gitroot=archrepo2
+
+pkgver() {
+  cd "$srcdir/$_gitroot"
+  git describe | sed -E 's/([^-]*-g)/r\1/;s/-/./g'
+}
+
+build() {
+  cd $srcdir/$_gitroot
+  python3 setup.py build
+}
+
+package() {
+  cd $srcdir/$_gitroot
+  python3 setup.py install --root="$pkgdir" --optimize=1 --skip-build
+  install -Dm644 misc/archrepo2.service $pkgdir/usr/lib/systemd/system/archrepo2.service
+  install -Dm644 misc/archrepo2.ini.example $pkgdir/etc/archrepo2.ini
+}
+
+# vim:set ts=2 sw=2 et:
