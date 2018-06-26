@@ -3,7 +3,7 @@
 _pkgname=jdk
 pkgname=jdk-devel
 _major=11
-_build=19 
+_build=19
 _jname=${_pkgname}${_major}
 pkgver=${_major}b${_build}
 pkgrel=1
