@@ -3,7 +3,7 @@
 # Contributor: Florian Pritz <f-p@gmx.at>
 
 pkgname=inxi
-pkgver=3.0.12
+pkgver=3.0.13
 pkgrel=1
 pkgdesc="Full featured CLI system information tool"
 arch=('any')
@@ -35,7 +35,7 @@ optdepends=(
 )
 options=('zipman')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/smxi/inxi/archive/${pkgver}-1.tar.gz")
-sha256sums=('2b714cf4f51461c0b2be34690496cfddb72d082525488047be38371e4428e084')
+sha256sums=('66f2d61a7862aa5f78f2f6962258cb82fcd5f5db287b76851560cf51512a39bf')
 
 package() {
   cd "${pkgname}-${pkgver}-1"
