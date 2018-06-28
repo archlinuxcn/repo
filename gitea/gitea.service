@@ -21,7 +21,7 @@ Group=git
 WorkingDirectory=/var/lib/gitea
 ExecStart=/usr/bin/gitea web --config /etc/gitea/app.ini
 Restart=always
-Environment=USER=git HOME=/var/lib/gitea/repos GITEA_WORK_DIR=/var/lib/gitea
+Environment=USER=git HOME=/var/lib/gitea/repos GITEA_WORK_DIR=/var/lib/gitea TIDB_PPROF=0
 
 [Install]
 WantedBy=multi-user.target
