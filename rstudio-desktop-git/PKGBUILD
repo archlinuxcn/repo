@@ -3,7 +3,7 @@
 
 pkgname=rstudio-desktop-git
 _gitname=rstudio
-pkgver=23431.01c1c00c04
+pkgver=23482.7ad5fe536d
 _gwtver=2.8.1
 _ginver=2.1.2
 _qtver=5.10.1
@@ -39,7 +39,7 @@ pkgver() {
     printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
-prepare() {
+build() {
     msg "Extracting dependencies..."
     cd "${srcdir}/${_gitname}/src/gwt"
     install -d dictionaries
@@ -60,13 +60,11 @@ prepare() {
  
     msg "Downloading and installing R packages..."
     bash install-packages
-}
-
-build() {
     rm -rf "${srcdir}/${_gitname}/build"
     mkdir "${srcdir}/${_gitname}/build"
     cd "${srcdir}/${_gitname}/build"
     export QT_SDK_DIR="${srcdir}/Qt${_qtver}"
+
     cmake -DRSTUDIO_TARGET=Desktop \
           -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_INSTALL_PREFIX=/usr/lib/rstudio \
