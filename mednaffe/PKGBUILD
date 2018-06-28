@@ -1,0 +1,40 @@
+# Maintainer: Vaporeon <vaporeon@vaporeon.io>
+# Contributor: casa <sympho08@yandex.ru>
+
+pkgname=mednaffe
+pkgver=0.8.8
+pkgrel=1
+pkgdesc="front-end (GUI) for mednafen emulator"
+arch=('i686' 'x86_64')
+url="https://github.com/AmatCoder/mednaffe"
+license=('GPL')
+depends=('gtk3')
+optdepends=('mednafen')
+makedepends=('git')
+provides=('mednaffe')
+conflicts=('mednaffe')
+source=(git://github.com/AmatCoder/mednaffe.git)
+sha1sums=('SKIP')
+
+prepare () {
+  cd "$srcdir"/$pkgname
+  git fetch --tags
+  latestTag=$(git describe --tags `git rev-list --tags --max-count=1`)
+  git checkout $latestTag
+}
+
+pkgver () {
+  cd "$srcdir"/$pkgname
+  git describe --tags `git rev-list --tags --max-count=1` | cut -c 1-
+}
+
+build() {
+  cd "$srcdir"/$pkgname
+  ./configure --prefix=/usr --enable-gtk3
+  make
+}
+
+package() {
+  cd "$srcdir"/$pkgname
+  make prefix="$pkgdir"/usr install
+}
