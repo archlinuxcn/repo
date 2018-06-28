@@ -9,6 +9,12 @@ set_target_properties(Telegram PROPERTIES SKIP_BUILD_RPATH TRUE)
 # lines.
 include(../../Telegram/gyp/PrecompiledHeader.cmake)
 add_precompiled_header(Telegram ../../Telegram/SourceFiles/stdafx.h)
+add_precompiled_header(lib_export ../../Telegram/SourceFiles/export/export_pch.h)
+
+# use gcc-ar and gcc-nm, also from gyp.diff
+# https://github.com/telegramdesktop/tdesktop/commit/1e10529f20507e1d22a287ef5e4de88f72d592ca
+set(CMAKE_NM "/usr/bin/gcc-nm")
+set(CMAKE_RANLIB "/usr/bin/gcc-ranlib")
 
 # vim: ft=cmake
 # -------------- debian/CMakeLists.inj end --------------
