@@ -2,7 +2,7 @@
 # shellcheck disable=SC2034,SC2154
 
 pkgname=pikaur
-pkgver=0.14.5
+pkgver=0.14.6
 pkgrel=1
 pkgdesc="AUR helper with minimal dependencies. Review PKGBUILDs all in once, next build them all without user interaction."
 arch=('any')
@@ -11,7 +11,7 @@ license=('GPL3')
 source=(
 	"$pkgname-$pkgver.tar.gz"::https://github.com/actionless/pikaur/archive/"$pkgver".tar.gz
 )
-md5sums=('2e6020c9f4bb92835899839d5d69ac3a')
+md5sums=('c11852739cd02afb729b90f9b9b0d34c')
 depends=(
 	'pacman>=5.1'
 	'pyalpm'
