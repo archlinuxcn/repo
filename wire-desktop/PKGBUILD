@@ -1,26 +1,25 @@
 # Maintainer: Conor Anderson <conor@conr.ca>
 pkgname=wire-desktop
 pkgver=3.2.2840
-_pkgver=3.0.2840
-pkgrel=1
+pkgrel=2
 pkgdesc='Modern, private messenger. Based on Electron.'
 arch=('x86_64' 'i686')
 url='https://wire.com/'
 license=('GPL3')
 conflicts=('wire-desktop-bin')
 depends=('alsa-lib' 'gconf' 'gtk2' 'libxss' 'libxtst' 'nss' 'xdg-utils')
-makedepends=('npm' 'cargo' 'git' 'python2' )
+makedepends=('npm' 'python2' 'cargo' 'git' )
 optdepends=('hunspell-en: for English spellcheck support'
             'noto-fonts-emoji: for colorful emoji made by Google'
             'ttf-emojione: for colorful emoji made by EmojiOne')
 provides=('wire-desktop')
-source=("${_pkgver}.tar.gz::https://github.com/wireapp/wire-desktop/archive/release/"$_pkgver".tar.gz"
+source=("${pkgver}.tar.gz::https://github.com/wireapp/wire-desktop/archive/release/"$pkgver".tar.gz"
         "${pkgname}.desktop")
-sha256sums=('cb4f0a56d13ad1ee7f1861db92f3c2526cc40bb4aa39e9f12ee72d8f16c2c9eb'
+sha256sums=('74fa4c4c9d880550047d554d25cb3ce3cb2104c95e5d18597f4fe167b3f3f3a0'
             'cc9056cecff2aa49a9ce9c8376d57ec8c7c2cb8174f7966b5cdccbeb2e3751ea')
 
 build() {
-  cd "${srcdir}/${pkgname}-release-${_pkgver}"
+  cd "${srcdir}/${pkgname}-release-${pkgver}"
   npm install
   $(npm bin)/grunt 'linux-other'
 }
@@ -28,7 +27,7 @@ build() {
 package() {
   # Place files
   install -d "${pkgdir}/usr/lib/${pkgname}"
-  cp -a "${srcdir}/${pkgname}-release-${_pkgver}"/wrap/dist/linux*unpacked/* "${pkgdir}/usr/lib/${pkgname}"
+  cp -a "${srcdir}/${pkgname}-release-${pkgver}"/wrap/dist/linux*unpacked/* "${pkgdir}/usr/lib/${pkgname}"
   
   # Symlink main binary
   install -d "${pkgdir}/usr/bin"
@@ -38,7 +37,7 @@ package() {
   desktop-file-install -m 644 --dir "${pkgdir}/usr/share/applications/" "${srcdir}/${pkgname}.desktop"
   for res in 32x32 256x256; do
     install -dm755 "${pkgdir}/usr/share/icons/hicolor/${res}/apps"
-    install -Dm644 "${srcdir}/${pkgname}-release-${_pkgver}/resources/icons/${res}.png" \
+    install -Dm644 "${srcdir}/${pkgname}-release-${pkgver}/resources/icons/${res}.png" \
       "${pkgdir}/usr/share/icons/hicolor/${res}/apps/${pkgname}.png"
   done
 
