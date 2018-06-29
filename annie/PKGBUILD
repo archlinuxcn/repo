@@ -2,7 +2,7 @@
 # Contributor:  Joaquin Garmendia <joaquingc123 at gmail dot com>
 
 pkgname=annie
-pkgver=0.7.4
+pkgver=0.7.5
 pkgrel=1
 arch=('x86_64' 'i686')
 pkgdesc="A fast, simple and clean video downloader written in Go"
@@ -12,7 +12,7 @@ makedepends=("go")
 depends=("ffmpeg")
 conflicts=("annie")
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/iawia002/annie/archive/${pkgver}.tar.gz")
-sha256sums=('0b2125a21e7ffa51ebae5c4c6e1b28e0d20a5aeba588ad3d0ab6875c72c348a1')
+sha256sums=('bf74a5e626ec0319fea990fc5665a2710232c069b8fcbc5ea136433076eade57')
 
 prepare(){
 	mkdir -p "$srcdir/src/github.com/iawia002/annie"
