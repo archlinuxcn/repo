@@ -4,7 +4,7 @@
 
 pkgname=xnp2
 pkgver=0.86
-pkgrel=1
+pkgrel=2
 pkgdesc="X Neko Project II, a PC-9801 emulator"
 arch=('i686' 'x86_64')
 url='http://www.nonakap.org/np2'
@@ -13,24 +13,29 @@ depends=('gtk2'
          'sdl2_mixer'
          )
 source=("http://www.nonakap.org/np2/release/xnp2-${pkgver}.tar.bz2"
-        'patch.patch')
-sha1sums=('02ade03afe672cc18068e75374eecc26ec53e32e'
-          'f0056b23ae5fdc2b435f16a4879e495c45807375')
+        'patch.patch'
+        )
+sha256sums=('e0b8c93f54682a4b3373907fd9ffe78094f95f7430dffc5038eccbcc4c3f78fd'
+            '03547eda251aa8678abcfb0f3780bec02deb16f3d326ac3cabaccd2d8fef7746'
+            )
 
 prepare() {
-  cd "xnp2-${pkgver}"
-  patch -p1 -i "${srcdir}/patch.patch"
+  mkdir -p build
+
+  patch -d "xnp2-${pkgver}" -p1 -i "${srcdir}/patch.patch"
+
+  cd build
+  ../xnp2-${pkgver}/x11/configure \
+    --prefix=/usr \
+    --enable-build-all \
+    --enable-ia32
+    #--enable-gtk3
 }
 
 build() {
-  cd "xnp2-${pkgver}/x11"
-  ./configure \
-    --prefix=/usr \
-    --enable-build-all \
-    #--enable-gtk3
-  LC_ALL=C make
+  make -C build
 }
 
 package() {
-  make -C "xnp2-${pkgver}/x11" DESTDIR="${pkgdir}/" install
+  make -C build DESTDIR="${pkgdir}/" install
 }
