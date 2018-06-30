@@ -1,6 +1,6 @@
 diff -ura a/gruntfile.js b/gruntfile.js
---- a/gruntfile.js	2018-06-14 04:02:20.000000000 +0200
-+++ b/gruntfile.js	2018-06-14 08:38:45.786543071 +0200
+--- a/gruntfile.js	2018-06-29 17:51:15.000000000 +0200
++++ b/gruntfile.js	2018-06-30 08:32:21.891318254 +0200
 @@ -6,6 +6,7 @@
  
  module.exports = function (grunt) {
@@ -31,12 +31,12 @@ diff -ura a/gruntfile.js b/gruntfile.js
    grunt.registerTask('compile', function () {
      var done = this.async()
 diff -ura a/package.json b/package.json
---- a/package.json	2018-06-14 04:02:20.000000000 +0200
-+++ b/package.json	2018-06-14 08:38:07.322269574 +0200
-@@ -121,14 +121,14 @@
+--- a/package.json	2018-06-29 17:51:15.000000000 +0200
++++ b/package.json	2018-06-30 08:31:50.711679561 +0200
+@@ -118,14 +118,14 @@
      "devtron": "^1.1.0",
      "dom-storage": "^2.0.2",
-     "electron": "1.8.7",
+     "electron": "2.0.3",
 -    "electron-packager": "^6.0.0",
 +    "electron-packager": "^8.6.0",
      "eslint": "^3.13.1",
@@ -50,7 +50,7 @@ diff -ura a/package.json b/package.json
      "grunt-electron-installer": "2.1.0",
      "history": "^1.17.0",
      "identity-obj-proxy": "^3.0.0",
-@@ -147,15 +147,11 @@
+@@ -144,15 +144,11 @@
      "react-test-renderer": "^15.6.2",
      "standard": "^8.4.0",
      "style-loader": "^0.12.4",
@@ -67,3 +67,10 @@ diff -ura a/package.json b/package.json
    "optional": false,
    "ava": {
      "files": [
+@@ -175,4 +171,4 @@
+       "jest-localstorage-mock"
+     ]
+   }
+-}
++}
+\ Geen regeleindeteken (LF) aan einde van bestand
