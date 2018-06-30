@@ -1,9 +1,9 @@
-# Maintainer: andmars < andreas.marschall @ unitybox.de >
-# Contributor: PyroPeter < googlemail.com @ abi1789 >
+# Maintainer: andmars <andreas.marschall @ unitybox.de>
+# Contributor: PyroPeter <googlemail.com @ abi1789>
 # Contributor: Ivan Shapovalov <intelfx@intelfx.name>
 
 pkgname=hplip-plugin
-pkgver=3.18.5
+pkgver=3.18.6
 pkgrel=1
 pkgdesc="Binary plugin for HPs hplip printer driver library"
 arch=('i686' 'x86_64')
@@ -11,9 +11,9 @@ url="http://hplipopensource.com/node/309"
 license=('custom:proprietary')
 depends=("hplip>=$pkgver") 
 backup=(var/lib/hp/hplip.state)
-source=("http://www.openprinting.org/download/printdriver/auxfiles/HP/plugins/hplip-$pkgver-plugin.run")
-#source=("http://hplipopensource.com/hplip-web/plugin/hplip-$pkgver-plugin.run")
-md5sums=('61a38473514458367402e841e768fc18')
+#source=("http://www.openprinting.org/download/printdriver/auxfiles/HP/plugins/hplip-$pkgver-plugin.run")
+source=("https://developers.hp.com/sites/default/files/hplip-$pkgver-plugin.run")
+md5sums=('c86f38efb36a33493e9565af0d321c9f')
 
 prepare() {
     sh "hplip-$pkgver-plugin.run" --target "$srcdir/hplip-$pkgver-plugin" --noexec
@@ -26,8 +26,6 @@ package(){
         _arch='x86_32'
     elif [ $CARCH = "x86_64" ]; then
         _arch='x86_64'
-    elif [ $CARCH = "armv7h" ]; then
-        _arch='arm32'
     fi
 
     # Create folders
