@@ -1,7 +1,7 @@
 # Maintainer: Ariel AxionL <axionl@aosc.io>
 pkgname=skim-git
 pkgver=r376.589eda7
-pkgrel=1
+pkgrel=2
 pkgdesc="Fuzzy Finder in rust!"
 arch=('x86_64')
 depends=('bash')
@@ -28,7 +28,7 @@ pkgver() {
 
 build() {
     cd "$srcdir/$pkgname/"
-        cargo build --release
+    cargo build --release
 }
 
 package() {
@@ -37,14 +37,15 @@ package() {
 
     cd $srcdir/$pkgname
 
-        # Vim plugin
-        install -Dm644 plugin/skim.vim ${pkgdir}/usr/share/vim/vimfiles/plugin/skim.vim
+    # Vim plugin
+    install -Dm644 plugin/skim.vim ${pkgdir}/usr/share/vim/vimfiles/plugin/skim.vim
 
-        # Completion and keybindings
-        install -dm755 "$pkgdir/usr/share/skim"
-        install -m644 shell/*.bash shell/*.zsh "$pkgdir/usr/share/skim"
+    # Completion and keybindings
+    install -dm755 "$pkgdir/usr/share/skim"
+    install -m644 shell/*.bash shell/*.zsh "$pkgdir/usr/share/skim"
 
-        # Binaries
-        install -Dm755 bin/sk-tmux ${pkgdir}/usr/bin/sk-tmux
-        install -Dm755 target/release/sk ${pkgdir}/usr/bin/sk
+    # Binaries
+    install -Dm755 bin/sk-tmux ${pkgdir}/usr/bin/sk-tmux
+    install -Dm755 target/release/sk ${pkgdir}/usr/bin/sk
 }
+# vim set: ts=4 sw=4 et
