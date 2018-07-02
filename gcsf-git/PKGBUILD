@@ -1,0 +1,39 @@
+# Maintainer: Ariel AxionL <axionl@aosc.io>
+pkgname=gcsf-git
+pkgver=r139.ac09234
+pkgrel=1
+pkgdesc="a FUSE file system based on Google Drive (Written by Rust)"
+arch=('x86_64')
+depends=('fuse2' 'gcc-libs')
+makedepends=('git' 'rust')
+optdepends=("ranger: A simple, vim-like file manager")
+conflicts=("gcsf")
+provides=("gcsf")
+url="https://github.com/harababurel/gcsf"
+license=('MIT')
+
+source=("$pkgname::git+$url.git")
+
+sha256sums=('SKIP')
+
+pkgver() {
+    cd "$srcdir/$pkgname"
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+    cd $pkgname
+    cargo fmt --all -- --write-mode=diff
+    cargo build --release
+}
+
+package() {
+    cd $srcdir/$pkgname
+
+    # License
+    install -Dm644 LICENSE $pkgdir/usr/share/licenses/$pkgname/LICENSE
+
+    # Binaries
+    install -Dm755 target/release/gcsf $pkgdir/usr/bin/gcsf
+}
+# vim set: ts=4 sw=4 et
