@@ -1,8 +1,0 @@
-#!/bin/bash
-
-post_upgrade() {
-  if [[ -d var/lib/carbon/whisper ]] && [[ $(usr/bin/stat -c %U var/lib/carbon/whisper) == root ]]; then
-    usr/bin/systemd-sysusers /usr/lib/sysusers.d/carbon.conf
-    chown -R carbon:carbon var/lib/carbon/whisper var/log/carbon
-  fi
-}
