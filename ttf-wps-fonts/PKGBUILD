@@ -7,8 +7,7 @@ pkgdesc="Symbol fonts required by wps-office."
 arch=(any)
 depends=(fontconfig xorg-font-utils)
 makedepends=(git)
-source=($pkgname::git+https://github.com/wayne-hartmann/ttf-wps-fonts.git)
-install=$pkgname.install
+source=($pkgname::git+https://github.com/iamdh4/ttf-wps-fonts.git)
 md5sums=('SKIP')
 
 package() {
