@@ -1,0 +1,19 @@
+ETCD_DATA_DIR="/var/lib/etcd"
+
+pre_upgrade() {
+cat << EOF
+	To upgrade an existing etcd deployment please read the docs located at:
+	  /usr/share/doc/etcd/upgrades/
+EOF
+}
+
+post_install() {
+    mkdir -p "${ETCD_DATA_DIR}"
+    # create an etcd user
+    id -u etcd &>/dev/null || useradd -r -M -U -d /dev/null -s /bin/nologin etcd
+    chown -R etcd:etcd "${ETCD_DATA_DIR}"
+}
+
+post_upgrade() {
+    post_install
+}
