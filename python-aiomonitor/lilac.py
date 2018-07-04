@@ -3,10 +3,10 @@
 from lilaclib import *
 
 build_prefix = 'extra-x86_64'
-depends = ['python-aioconsole', 'python-terminaltables']
+depends = ['python-aioconsole']
 
 def pre_build():
-  pypi_pre_build(depends=depends[:])
+  pypi_pre_build(depends=depends[:] + ['python-terminaltables'])
 
 def post_build():
   pypi_post_build()
