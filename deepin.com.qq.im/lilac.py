@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from lilaclib import *
 
-build_prefix = 'archlinuxcn'
+build_prefix = 'multilib-archlinuxcn'
 pre_build = aur_pre_build
 post_build = aur_post_build
 
