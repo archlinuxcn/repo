@@ -1,8 +1,8 @@
 # Maintainer: wszqkzqk <wszqkzqk@gmail.com>
 # Maintainer: skywol <skywol@qq.com>
 pkgname=deepin-wine32-preloader
-pkgvers=2.18-12
-pkgver=2.18_12
+pkgvers=2.18-14~rc1
+pkgver=2.18_14
 pkgrel=1
 epoch=
 pkgdesc="Deepin Wine Preloader"
@@ -23,7 +23,7 @@ install=
 changelog=
 source=("https://mirrors.ustc.edu.cn/deepin/pool/non-free/d/deepin-wine/${pkgname}_${pkgvers}_i386.deb")
 noextract=("${pkgname}_${pkgvers}_i386.deb")
-md5sums=('60709236578da1e0fcf6856009892c4d')
+md5sums=('566254a1ba14af55ed1ff491d979fd20')
 validpgpkeys=()
 
 prepare() {
