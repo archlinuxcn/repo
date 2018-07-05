@@ -15,4 +15,3 @@ name=${1#$PWD/}; shift
 
 # Mainline vboxsf accepts regular mount opts
 exec /usr/bin/mount -cit vboxsf "$name" "$@"
-

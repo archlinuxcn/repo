@@ -11,7 +11,7 @@ pkgname=('virtualbox-svn'
          'virtualbox-guest-utils-nox-svn'
          'virtualbox-ext-vnc-svn')
 pkgver=72794
-pkgrel=1
+pkgrel=2
 _vboxsf_commit='6a782003ad95a383c8b19b570a532271f090ad35'
 arch=('x86_64')
 url='http://virtualbox.org'
@@ -21,8 +21,8 @@ makedepends=('alsa-lib'
              'cdrkit'
              'curl'
              'dev86'
-             'git'
              'device-mapper'
+             'git'
              'glu'
              'gsoap'
              'iasl'
@@ -55,6 +55,8 @@ makedepends=('alsa-lib'
              'subversion')
 makedepends_x86_64=('gcc-multilib' 'lib32-glibc')
 source=("VirtualBox::svn+http://www.virtualbox.org/svn/vbox/trunk"
+        # We need to build a modified version of vboxsf for Linux 4.16
+        # https://bugzilla.redhat.com/show_bug.cgi?id=1481630#c65
         "git+https://github.com/jwrdegoede/vboxsf#commit=$_vboxsf_commit"
         'virtualbox-host-dkms.conf'
         'virtualbox-guest-dkms.conf'
@@ -71,15 +73,18 @@ source=("VirtualBox::svn+http://www.virtualbox.org/svn/vbox/trunk"
         '002-dri-driver-path.patch'
         '005-gsoap-build.patch'
         '006-rdesktop-vrdp-keymap-path.patch'
+        '007-python3.6-support.patch'
         '008-no-vboxvideo.patch'
         '009-include-path.patch'
+        '010-qt-5.11.patch'
+        # The following patch and mount.vboxsf wrapper should be removed
+        # once support for mainline-style options string gets upstreamed
         '012-vboxsf-automount.patch'
         'mount.vboxsf')
-        
 sha256sums=('SKIP'
             'SKIP'
             'deb03efa7ad0376aa55a087f2e882afe00935f10b0e7aa853ba9147090d341ec'
-            '113f9b92141b85df01f1e74d22f01d1f1aa81650eb79b89ceefc3cae20afe2e2'
+            'c328376b05183d269f98319ec660f54c55e298f77d229977606862b064651a7c'
             '43a97d07edd6f3f0e1181e84483759ad0a20c4e57ee93ca1a18530918979f9d8'
             '2101ebb58233bbfadf3aa74381f22f7e7e508559d2b46387114bc2d8e308554c'
             'da4c49f6ca94e047e196cdbcba2c321199f4760056ea66e0fbc659353e128c9e'
@@ -93,12 +98,13 @@ sha256sums=('SKIP'
             'f67674931c30187f867233e3a4ae662f93c9110fbd0bfce50dd9f391f4533bc0'
             '7d2da8fe10a90f76bbfc80ad1f55df4414f118cd10e10abfb76070326abebd46'
             '5d5af2de5b1f1c61ec793503350f2440661cf8fd640f11b8a86f10bce499c0dc'
+            '802c3f9bf0a19b10056c375c5c7c5eb4aba14300446acefab3dbd5de366ada2b'
             '8b7f241107863f82a5b0ae336aead0b3366a40103ff72dbebf33f54b512a0cbc'
             '1acc7014bcb3d9ca6da29eed813c3d6e91a688c43f9d93802fd4e3814f67ace4'
+            'c6ef35e6893d557c7c2269ff79bc299fe9058cfb2c933a7efdc7a8a7b6d9c5da'
             'a784f3cc24652a16385cc63abac6c5178932ca5f3861be7650631b7dafa753a4'
-            '077e4134378e2f5df9edee1c746029fa1b23d729627ca2c677903d5da6ac0d37')
-
-
+            'f3ed6741f8977f40900c8aa372fa082df1f8723d497d4fff445153c543bc8947')
+            
 pkgver() {
   cd "VirtualBox"
   local ver="$(svnversion)"
@@ -128,8 +134,7 @@ prepare() {
 
     msg2 'Remove gcc version censorship'
     sed -i 's/^check_gcc$/#check_gcc/' configure
-    sed -i 's/python3.5m"/python3.5m python3.6 python3.6m"/' configure
-
+    
     sed -i '2i# include <QStyle>' src/VBox/Frontends/VirtualBox/src/runtime/UIMachineLogic.cpp
     sed -i '2i# include <QStyle>' src/VBox/Frontends/VirtualBox/src/selector/UISelectorWindow.cpp
 }
@@ -269,15 +274,14 @@ package_virtualbox-sdk-svn() {
     pushd sdk/installer
     VBOX_INSTALL_PATH="/usr/lib/virtualbox" python vboxapisetup.py install --root "$pkgdir"
     popd
-    rm -rf sdk/installer
     cp -r sdk "$pkgdir/usr/lib/virtualbox"
+    rm -r "$pkgdir/usr/lib/virtualbox/sdk/installer"
     # licence
     install -Dm644 "$srcdir/VirtualBox/COPYING" \
         "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
 package_virtualbox-host-dkms-svn() {
-    _pkgname=virtualbox-host-dkms
     pkgdesc='VirtualBox Host kernel modules sources'
     depends=('dkms' 'gcc' 'make')
     replaces=('virtualbox-source'
@@ -296,19 +300,18 @@ package_virtualbox-host-dkms-svn() {
     cp -r src "$pkgdir/usr/src/vboxhost-svn_OSE"
     # licence
     install -Dm644 "$srcdir/VirtualBox/COPYING" \
-        "$pkgdir/usr/share/licenses/$_pkgname/LICENSE"
+        "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
     # module loading
-    local _p="$pkgdir/usr/lib/modules-load.d/$_pkgname.conf"
+    local _p="$pkgdir/usr/lib/modules-load.d/virtualbox-host-dkms.conf"
     install -Dm644 /dev/null "$_p"
     printf "vboxdrv\nvboxpci\nvboxnetadp\nvboxnetflt\n" > "$_p"
     # starting vbox 5.1, dkms.conf file was dropped
     local _p="$pkgdir/usr/src/vboxhost-svn_OSE/dkms.conf"
-    install -Dm644 "$srcdir/$_pkgname.conf" "$_p"
+    install -Dm644 "$srcdir/virtualbox-host-dkms.conf" "$_p"
     sed -i "s,@VERSION@,svn," "$_p"
 }
 
 package_virtualbox-guest-dkms-svn() {
-    _pkgname=virtualbox-guest-dkms
     pkgdesc='VirtualBox Guest kernel modules sources'
     depends=('dkms' 'gcc' 'make')
     replaces=('virtualbox-archlinux-source'
@@ -327,14 +330,14 @@ package_virtualbox-guest-dkms-svn() {
     cp -r src "$pkgdir/usr/src/vboxguest-svn_OSE"
     # licence
     install -Dm644 "$srcdir/VirtualBox/COPYING" \
-        "$pkgdir/usr/share/licenses/$_pkgname/LICENSE"
+        "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
     # module loading
-    local _p="$pkgdir/usr/lib/modules-load.d/$_pkgname.conf"
+    local _p="$pkgdir/usr/lib/modules-load.d/virtualbox-guest-dkms.conf"
     install -Dm644 /dev/null "$_p"
     printf "vboxguest\nvboxsf\nvboxvideo\n" > "$_p"
     # starting vbox 5.1, dkms.conf file was dropped
     local _p="$pkgdir/usr/src/vboxguest-svn_OSE/dkms.conf"
-    install -Dm644 "$srcdir/$_pkgname.conf" "$_p"
+    install -Dm644 "$srcdir/virtualbox-guest-dkms.conf" "$_p"
     sed -i "s,@VERSION@,svn," "$_p"
 
     # vboxsf module for Linux 4.16 and later
@@ -353,6 +356,7 @@ package_virtualbox-guest-utils-svn() {
              'libxdamage' 'libxext' 'libxfixes' 'libxmu' 'libxt' 'xorg-xrandr'
              'VIRTUALBOX-GUEST-MODULES-SVN')
     replaces=('virtualbox-archlinux-additions' 'virtualbox-guest-additions')
+    provides=('virtualbox-guest-utils')
     conflicts=('virtualbox-archlinux-additions' 'virtualbox-guest-additions' 'virtualbox-guest-utils-nox' 'virtualbox-guest-utils')
 
     source "VirtualBox/env.sh"
@@ -380,6 +384,7 @@ package_virtualbox-guest-utils-svn() {
 package_virtualbox-guest-utils-nox-svn() {
     pkgdesc='VirtualBox Guest userspace utilities without X support'
     depends=('glibc' 'pam' 'VIRTUALBOX-GUEST-MODULES-SVN')
+    provides=('virtualbox-guest-utils-nox')
     conflicts=('virtualbox-guest-utils' 'virtualbox-guest-utils-nox')
 
     source "VirtualBox/env.sh"
