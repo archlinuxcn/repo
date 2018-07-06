@@ -1,7 +1,7 @@
 # Maintainer: Ariel AxionL <axionl@aosc.io>
 pkgname=trojan-git
 pkgver=r202.ceeba96
-pkgrel=1
+pkgrel=2
 pkgdesc="An unidentifiable mechanism that helps you bypass GFW"
 arch=('x86_64')
 url="https://github.com/trojan-gfw/trojan"
@@ -26,7 +26,7 @@ build() {
 }
 
 package() {
-    install -Dm644 LICENSE $pkgdir/usr/share/license/$pkgname/LICENSE
+    install -Dm644 LICENSE $pkgdir/usr/share/licenses/$pkgname/LICENSE
     cd $pkgname
     make DESTDIR=$pkgdir install
 }
