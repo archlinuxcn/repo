@@ -9,6 +9,7 @@ from lilaclib import *
 def post_build():
     git_add_files('PKGBUILD')
     git_commit()
+    update_aur_repo()
 
 build_prefix = 'extra-x86_64'
 pre_build = vcs_update

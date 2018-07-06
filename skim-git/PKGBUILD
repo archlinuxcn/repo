@@ -1,11 +1,11 @@
 # Maintainer: Ariel AxionL <axionl@aosc.io>
 pkgname=skim-git
 pkgver=r376.589eda7
-pkgrel=2
+pkgrel=3
 pkgdesc="Fuzzy Finder in rust!"
 arch=('x86_64')
 depends=('bash')
-makedepends=('git' 'rust' 'cargo')
+makedepends=('git' 'rust')
 optdepends=("vim: Vi Improved, a highly configurable, improved version of the vi text editor."
             "zsh: A very advanced and programmable command interpreter (shell) for UNIX"
             "zsh-completions: Additional completion definitions for Zsh"
@@ -15,7 +15,7 @@ provides=("skim")
 url="https://github.com/lotabout/skim"
 license=('MIT')
 
-source=("$pkgname::git+${url}"
+source=("$pkgname::git+$url"
         "https://raw.githubusercontent.com/lotabout/skim/master/LICENSE")
 
 sha256sums=('SKIP'
@@ -32,20 +32,20 @@ build() {
 }
 
 package() {
-        # License
-    install -Dm644 LICENSE ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+    # License
+    install -Dm644 LICENSE $pkgdir/usr/share/licenses/$pkgname/LICENSE
 
     cd $srcdir/$pkgname
 
     # Vim plugin
-    install -Dm644 plugin/skim.vim ${pkgdir}/usr/share/vim/vimfiles/plugin/skim.vim
+    install -Dm644 plugin/skim.vim $pkgdir/usr/share/vim/vimfiles/plugin/skim.vim
 
     # Completion and keybindings
-    install -dm755 "$pkgdir/usr/share/skim"
-    install -m644 shell/*.bash shell/*.zsh "$pkgdir/usr/share/skim"
+    install -dm755 $pkgdir/usr/share/skim
+    install -m644 shell/*.bash shell/*.zsh $pkgdir/usr/share/skim
 
     # Binaries
-    install -Dm755 bin/sk-tmux ${pkgdir}/usr/bin/sk-tmux
-    install -Dm755 target/release/sk ${pkgdir}/usr/bin/sk
+    install -Dm755 bin/sk-tmux $pkgdir/usr/bin/sk-tmux
+    install -Dm755 target/release/sk $pkgdir/usr/bin/sk
 }
 # vim set: ts=4 sw=4 et
