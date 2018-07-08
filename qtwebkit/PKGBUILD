@@ -3,7 +3,7 @@
 
 pkgname=qtwebkit
 pkgver=2.3.4
-pkgrel=6
+pkgrel=7
 arch=('i686' 'x86_64')
 url='http://trac.webkit.org/wiki/QtWebKit'
 pkgdesc='An open source web browser engine (Qt port)'
@@ -13,7 +13,7 @@ makedepends=('gperf' 'python2' 'ruby' 'git' 'mesa')
 conflicts=('qt<4.8')
 _qtver=4.8.7
 source=("https://sources.archlinux.org/other/packages/${pkgname}/${pkgname}-${pkgver}.tar.xz"
-        "http://download.qt-project.org/official_releases/qt/4.8/${_qtver}/qt-everywhere-opensource-src-${_qtver}.tar.gz"
+        "https://download.qt.io/archive/qt/4.8/${_qtver}/qt-everywhere-opensource-src-${_qtver}.tar.gz"
         'use-python2.patch'
         'qwebview.patch' 'gcc-5.patch' 'fix-build-in-usr.patch')
 sha1sums=('31bc60de1cf26bb0766d539b4d564651ddbb0650'
