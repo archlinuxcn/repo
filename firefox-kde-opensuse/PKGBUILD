@@ -20,8 +20,8 @@ _pgo=true
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=60.0.2
-pkgrel=4
+pkgver=61.0.1
+pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -31,7 +31,7 @@ depends=('mozilla-common' 'libxt' 'startup-notification' 'mime-types'
 	 'libvpx' 'icu'  'libevent' 'nss>=3.28.3' 'nspr>=4.10.6' 'hunspell'
 	 'sqlite' 'libnotify' 'kmozillahelper' 'ffmpeg' 'gtk3')
 
-makedepends=("clang" "jack" 'unzip' 'zip' 'diffutils' 'python2' 'yasm' 'mesa' 'imake'
+makedepends=("clang" "jack" 'unzip' 'zip' 'diffutils' 'python' 'yasm' 'mesa' 'imake'
              'xorg-server-xvfb' 'libpulse' 'inetutils' 'autoconf2.13' 'rust'
              'mercurial' 'llvm' 'clang'
              'gtk2')
@@ -42,7 +42,7 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
             'speech-dispatcher: Text-to-Speech')
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
-_patchrev=bf0d08380dcf
+_patchrev=42510f8eee28
 options=('!emptydirs'  'debug' 'strip')
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 _repo=https://hg.mozilla.org/mozilla-unified
@@ -61,12 +61,6 @@ source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
 	unity-menubar.patch
 	add_missing_pgo_rule.patch
         pgo_fix_missing_kdejs.patch
-        fix_pgo_bug1389436_explicitly_instantiate_gfxFont.patch
-        no-crmf.diff
-
-        complete-csd-window-offset-mozilla-1457691.patch.xz
-        0001-Bug-1435212-Add-support-for-FFmpeg-4.0.-r-bryce.patch.xz
-
         https://dev.gentoo.org/~axs/mozilla/patchsets/source/firefox-60.0-patches-01.tar.xz
 )
 
@@ -123,14 +117,7 @@ prepare() {
 
   # add missing file Makefile for pgo builds
   patch -Np1 -i "$srcdir"/pgo_fix_missing_kdejs.patch
-
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1371991
-  patch -Np1 -i ../no-crmf.diff
-
   
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1283299#c158
-  patch -Np1 -i ../complete-csd-window-offset-mozilla-1457691.patch
-
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1435212
   #patch -Np1 -i ../0001-Bug-1435212-Add-support-for-FFmpeg-4.0.-r-bryce.patch
 
@@ -138,6 +125,8 @@ prepare() {
   for file in "$srcdir"/firefox/*.patch ; do
     case $file in
       *gentoo*) : ;;
+      *ffmpeg*) : ;;
+      *004_fix_lto_builds*) : ;;
       *)
         patch -Np1 -i "$file"
         ;;
@@ -160,13 +149,8 @@ prepare() {
 build() {
   #export CXXFLAGS="${CFLAGS}"
   cd mozilla-unified
-
-  export PATH="$srcdir/path:$PATH"
-  export PYTHON="/usr/bin/python2"
   export MOZ_SOURCE_REPO="$_repo"
   
-  # _FORTIFY_SOURCE causes configure failures
-  CPPFLAGS+=" -O2"
 
   # Hardening
   LDFLAGS+=" -Wl,-z,now"
@@ -250,20 +234,16 @@ END
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
 md5sums=('SKIP'
-         '8831241577913001175641c092c9d3ea'
+         'c29437a9ebf93ffb5876e5df80f650f5'
          '14e0f6237a79b85e60256f4808163160'
          'c9385708f41599649e4e14fd3af506ce'
          '05bb69d25fb3572c618e3adf1ee7b670'
          '6e335a517c68488941340ee1c23f97b0'
-         'df9f710c842d4847aae5bc667f97f4a2'
-         'dbf69e423c18e08536d9999f0d405a7a'
-         '3640c50476625fc9e292074ebaf4fff9'
+         'd7ce23a18da21c05cd756766e177834f'
+         '9a9a8cd8da7231e3bfc57132a7863021'
+         'd501f3cf592451a6d377fa748b6967b6'
          '0661e259fe57df87fca791f4aeb78da0'
-         'd0bb97636b07d521f279c01233f0cbdb'
+         'b3c34d2c275f5373cfcbde17b74d2aa5'
          'fe24f5ea463013bb7f1c12d12dce41b2'
          '3fa8bd22d97248de529780f5797178af'
-         'b358b5ed3726ecd4ed054bdc09901982'
-         '5223d4854f784003e3b575684cc004fe'
-         '6c776f60394176fda2084bee667593f2'
-         'd16e8582bacf6fc98e669ed87f4d6f4a'
          '716f1c21a1020657928d4140d5563233')
