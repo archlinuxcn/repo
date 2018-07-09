@@ -6,8 +6,8 @@
 # https://github.com/mymedia2/tdesktop
 
 pkgname=telegram-desktop-systemqt-notoemoji
-pkgver=1.3.8
-pkgrel=1
+pkgver=1.3.9
+pkgrel=2
 pkgdesc='Official Telegram Desktop client (with noto emoji)'
 arch=('x86_64')
 url="https://desktop.telegram.org/"
@@ -30,7 +30,7 @@ source=(
     "CMakeLists.inj"
     "tdesktop.patch"
     "no-gtk2.patch"
-    "parallel-lto.patch.in"
+    "build-time-optimize.patch.in"
     "libtgvoip.patch"
     "libtgvoip-2.patch"
 )
@@ -44,7 +44,7 @@ sha512sums=('SKIP'
             'ccbfca942e9fc5ce94a7e9c74429f3463886a35d887aad39ea74a95a2bfc664e5d6641bf1c46e1cf9b786c8aaa21449ac6bbbbc52c84dea550add80d8ea060d4'
             '37eda4cd7c88f8b55f7bc6786dd23af691060c9040b8e5d65dda07ab234397af23c3f699abe2bfec8919f501ce45b8f1d25180f5077480b1ca966308c62f8ecb'
             'c05351aa9f6503daa6ef8b01adb73c7e71fd01377d833f47f826e184d78dd79628ce7c686ae23a40b7468adcd5af0af9ebce4783113957b6126892aca83c7712'
-            '3344965dbec7b18293d7b4f812975688fba42e71721150cb365b3eeb69b5dc0a64494476bdc41007aa8cf4414993148d06089af057bb6b634257a51602af03f7'
+            'fa7042f370ae4e2e14d083395743cdee25bfedc39ab5273b5d1ab12fb074757cf76dab065f2abcb44cad018920e711142fbf24a2b9cd30f517c5a5b46d6a6182'
             'd60694dc701aa985b0e82a12c9732b945082470441c687b33167a94f94efcf253baf43bb7280ec160ba338485ee5c62de138e4804cae05f27cc5cf4298166d39'
             '251f43bcdfd688a4c7dda082e981569c6cd6332289652576cfdc9f6376eee6e28195ec4a60bcfa002c6358d0f3cbdf215b7d390bbcce2ed560abfc9c606566b5')
 
@@ -59,8 +59,9 @@ prepare() {
     patch -Np1 -i "$srcdir/tdesktop.patch"
     patch -Np1 -i "$srcdir/no-gtk2.patch"
 
-    sed "s/@NPROC@/$(nproc)/g" "$srcdir/parallel-lto.patch.in" >"$srcdir/parallel-lto.patch"
-    patch -Np1 -i "$srcdir/parallel-lto.patch"
+    # speed up builds: disable debugging information and use parallel LTO
+    sed "s/@NPROC@/$(nproc)/g" "$srcdir/build-time-optimize.patch.in" >"$srcdir/build-time-optimize.patch"
+    patch -Np1 -i "$srcdir/build-time-optimize.patch"
 
     cd "Telegram/ThirdParty/libtgvoip"
     patch -Np1 -i "$srcdir/libtgvoip.patch"

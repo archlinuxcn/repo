@@ -1,0 +1,23 @@
+diff --git a/Telegram/gyp/settings_linux.gypi b/Telegram/gyp/settings_linux.gypi
+index b00fd50ea..2e81951e0 100644
+--- a/Telegram/gyp/settings_linux.gypi
++++ b/Telegram/gyp/settings_linux.gypi
+@@ -45,14 +45,14 @@
+         }], [ '"<!(uname -m)" == "x86_64"', {
+           # 32 bit version can't be linked with debug info or LTO,
+           # virtual memory exhausted :(
+-          'cflags_c': [ '-g' ],
+-          'cflags_cc': [ '-g' ],
+-          'ldflags': [ '-g' ],
++          'cflags_c': [ '-g0' ],
++          'cflags_cc': [ '-g0' ],
++          'ldflags': [ '-g0' ],
+           'configurations': {
+             'Release': {
+               'cflags_c': [ '-flto' ],
+               'cflags_cc': [ '-flto' ],
+-              'ldflags': [ '-flto', '-fuse-linker-plugin' ],
++              'ldflags': [ '-flto=@NPROC@', '-fuse-linker-plugin' ],
+             },
+           },
+         }]
