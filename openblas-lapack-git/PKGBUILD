@@ -94,8 +94,8 @@ package_openblas-git() {
 
 package_openblas-lapack-git() {
   depends=('openblas-git')
-  provides=('openblas-lapack' "blas=${_lapackver}" "lapack=${_lapackver}"
-            "cblas=${_lapackver}" "lapacke=${_lapackver}")
+  provides=('openblas-lapack' "blas=${_lapack_ver}" "lapack=${_lapack_ver}"
+            "cblas=${_lapack_ver}" "lapacke=${_lapack_ver}")
   conflicts=('blas' 'lapack' 'cblas')
   rm -rf pkg
   mkdir -p "${pkgdir}/usr/"{include,lib}/
