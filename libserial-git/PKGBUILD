@@ -1,7 +1,7 @@
 # Maintainer: Shelvacu <aur@shelvacu.com>
 
 pkgname="libserial-git"
-pkgver=r380.4d2523c
+pkgver=r387.27028e1
 pkgrel=1
 pkgdesc="A library for accessing serial ports on POSIX systems (git version)"
 arch=('x86_64')
@@ -23,9 +23,9 @@ build() {
 
   sed -i -e 's/ test / /g' -e 's/ examples / /g' Makefile.am
 
-  make -f Makefile.dist
-
-  ./configure --prefix=/usr
+  mkdir -pv m4
+  autoreconf -i --force  --verbose
+  ./configure --prefix=/usr --disable-tests
 
   cd sip
   python2 configure.py # Workaround from https://github.com/crayzeewulf/libserial/issues/62
