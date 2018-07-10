@@ -1,4 +1,4 @@
-From 38e940ad80f96eb800273e5890fd7763fe1b369b Mon Sep 17 00:00:00 2001
+From 0f544debdf6255e542ab422e9355db4405e97a8a Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sat, 20 Sep 2014 12:13:37 -0400
 Subject: [PATCH 1/2] fix for pch
@@ -8,11 +8,11 @@ Subject: [PATCH 1/2] fix for pch
  1 file changed, 1 insertion(+)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 883297269..6bf936b64 100644
+index 94b0fc4be..88f0f77b1 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -544,6 +544,7 @@ add_custom_command(
-     DEPENDS ${PROJECT_SOURCE_DIR}/all.h
+@@ -598,6 +598,7 @@ execute_process(
+     COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/all.h ${PROJECT_BINARY_DIR}/all.h
      WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
      )
 +set(BUILD_PCH false)
@@ -20,5 +20,5 @@ index 883297269..6bf936b64 100644
  precompiled_header(QT_INCLUDES all ${BUILD_PCH})
  
 -- 
-2.14.2
+2.16.1
 
