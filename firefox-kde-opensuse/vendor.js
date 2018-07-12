@@ -1,6 +1,8 @@
 // Use LANG environment variable to choose locale
 pref("intl.locale.requested", "");
 
+// Use system-provided dictionaries
+pref("spellchecker.dictionary_path", "/usr/share/hunspell");
 // Disable default browser checking.
 pref("browser.shell.checkDefaultBrowser", false);
 
@@ -8,5 +10,3 @@ pref("browser.shell.checkDefaultBrowser", false);
 pref("extensions.autoDisableScopes", 11);
 pref("extensions.shownSelectionUI", true);
 
-// Opt all of us into e10s, instead of just 50%
-pref("browser.tabs.remote.autostart", true);

@@ -21,7 +21,7 @@ _pgo=true
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
 pkgver=61.0.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -61,7 +61,8 @@ source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
 	unity-menubar.patch
 	add_missing_pgo_rule.patch
         pgo_fix_missing_kdejs.patch
-        https://dev.gentoo.org/~axs/mozilla/patchsets/source/firefox-60.0-patches-01.tar.xz
+        https://dev.gentoo.org/~anarchy/mozilla/patchsets/firefox-61.0-patches-01.tar.xz
+        https://gitweb.gentoo.org/repo/gentoo.git/plain/www-client/firefox/files/firefox-61.0-mozHunspell.patch
 )
 
 
@@ -117,6 +118,9 @@ prepare() {
 
   # add missing file Makefile for pgo builds
   patch -Np1 -i "$srcdir"/pgo_fix_missing_kdejs.patch
+
+  # Add missing include of nsCOMPtr.h, bug #660726
+  patch -Np1 -i "$srcdir/"firefox-61.0-mozHunspell.patch
   
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1435212
   #patch -Np1 -i ../0001-Bug-1435212-Add-support-for-FFmpeg-4.0.-r-bryce.patch
@@ -126,7 +130,6 @@ prepare() {
     case $file in
       *gentoo*) : ;;
       *ffmpeg*) : ;;
-      *004_fix_lto_builds*) : ;;
       *)
         patch -Np1 -i "$file"
         ;;
@@ -234,9 +237,9 @@ END
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
 md5sums=('SKIP'
-         'c29437a9ebf93ffb5876e5df80f650f5'
+         '49c2d3dc354e18ab12c8c4e6f7d68d6b'
          '14e0f6237a79b85e60256f4808163160'
-         'c9385708f41599649e4e14fd3af506ce'
+         '5cee310a9040ccc5abcf29742b84aeb8'
          '05bb69d25fb3572c618e3adf1ee7b670'
          '6e335a517c68488941340ee1c23f97b0'
          'd7ce23a18da21c05cd756766e177834f'
@@ -246,4 +249,5 @@ md5sums=('SKIP'
          'b3c34d2c275f5373cfcbde17b74d2aa5'
          'fe24f5ea463013bb7f1c12d12dce41b2'
          '3fa8bd22d97248de529780f5797178af'
-         '716f1c21a1020657928d4140d5563233')
+         '20f84d63538909f6b069de1b6b10f4b3'
+         '13d3ece023495d23f665c78f19b70be8')
