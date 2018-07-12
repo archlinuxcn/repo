@@ -6,8 +6,8 @@
 _pkgbase=bomi
 
 pkgname=$_pkgbase-git
-pkgver=0.9.11.r37.g2d2a3515
-pkgrel=0
+pkgver=0.9.11.r39.g5f0cc0a7
+pkgrel=1
 pkgdesc="Powerful and easy-to-use GUI multimedia player based on mpv (git version)"
 arch=('i686' 'x86_64')
 url="http://bomi-player.github.io"
@@ -26,9 +26,9 @@ optdepends=('libva-intel-driver: hardware acceleration support for Intel GPU'
 provides=('bomi')
 conflicts=('cmplayer' 'bomi')
 source=(git+https://github.com/d-s-x/${_pkgbase}.git
-        qml_internal_types.patch)
+        add_sup_subext.patch)
 md5sums=('SKIP'
-         '965ead6202472215d8cb2d875584dfb7')
+         'dacb0df199eea0f6e3d5c037c8c5429d')
 #options=(debug !strip)
 
 pkgver() {
@@ -39,12 +39,9 @@ pkgver() {
 prepare() {
     cd "$srcdir/$_pkgbase"
 
-    ./configure --prefix=/usr
+    patch -Np1 -i $srcdir/add_sup_subext.patch
 
-    # Temporary fix until the upstream is fixed.
-    if ! grep PlayInfoText ./src/bomi/imports/bomi/qmldir; then
-      patch -p1 -i "$srcdir/qml_internal_types.patch"
-    fi
+    ./configure --prefix=/usr
 }
 
 build() {
