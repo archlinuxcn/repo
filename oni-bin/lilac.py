@@ -5,7 +5,7 @@ from lilaclib import *
 build_prefix = 'extra-x86_64'
 
 def pre_build():
-    version = _G.newver.replace('-', '')
+    version = _G.newver.lstrip('v')
     update_pkgver_and_pkgrel(version)
     run_cmd(['updpkgsums'])
 
