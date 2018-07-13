@@ -1,22 +1,24 @@
 # Maintainer: Konstantinos Sideris <siderisk at auth dot gr>
-
+# Contributors: Ariel AxionL <axionl@aosc.io>
 pkgname=nheko-git
-pkgver=0.4.3.r699.4073d61
+pkgver=r716.4f41c0d
 pkgrel=1
+epoch=1
 pkgdesc="Desktop client for the Matrix protocol"
-arch=("i686" "x86_64")
-
+arch=("x86_64")
 url="https://github.com/mujx/nheko"
 license=("GPL3")
 
-depends=("qt5-base" "lmdb" "qt5-multimedia" "qt5-svg" "boost" "libsodium" "openssl")
-makedepends=("git" "cmake" "gcc" "fontconfig" "qt5-tools")
+depends=("qt5-multimedia" "lmdb" "boost-libs"
+         "libsodium" "hicolor-icon-theme")
+makedepends=("git" "cmake" "gcc" "fontconfig" "boost" "qt5-svg"
+             "qt5-tools" "pkgconf" "gtest" "doxygen")
 
 provides=("nheko")
 conflicts=("nheko")
 
 source=($pkgname::git://github.com/mujx/nheko.git)
-md5sums=("SKIP")
+md5sums=('SKIP')
 
 prepare() {
   cd "$pkgname"
@@ -24,15 +26,23 @@ prepare() {
 
 pkgver() {
     cd "$pkgname"
-    printf "0.4.3.r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 build() {
     cd "$pkgname"
-    cmake -Hdeps -B.deps -DUSE_BUNDLED_BOOST=OFF
-    cmake --build .deps
-
-    cmake -H. -Bbuild -DCMAKE_BUILD_TYPE=Release
+    # Build Deps
+    cmake -Hdeps -Bbuild_deps \
+        -DUSE_BUNDLED_BOOST=OFF
+    cmake --build build_deps
+    
+    # Build nheko
+    cmake -H. -Bbuild \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DLMDBXX_INCLUDE_DIR=build_deps/usr/include \
+        -DOLM_LIBRARY=build_deps/usr/lib64/libolm.a \
+        -DOLM_INCLUDE_DIR=build_deps/usr/include \
+        -DTWEENY_INCLUDE_DIR=build_deps/usr/include
     cmake --build build
 }
 
