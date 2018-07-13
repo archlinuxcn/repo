@@ -1,12 +1,12 @@
 # Contributor: Zeph <zeph33@gmail.com>
 # Maintainer: Zeph <zeph33@gmail.com>
 pkgname=pamac-aur
-_pkgver=6.4.0
+_pkgver=6.4.1
 pkgver=$_pkgver
 pkgrel=2
 pkgdesc="A Gtk3 frontend for libalpm"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
-url="https://github.com/manjaro/pamac"
+url="https://gitlab.manjaro.org/applications/pamac"
 license=('GPL3')
 depends=('glib2>=2.42' 'json-glib' 'libsoup' 'dbus-glib' 'polkit' 'vte3>=0.38' 'gtk3>=3.22'
          'libnotify' 'desktop-file-utils' 'pacman>=5.1' 'gnutls>=3.4'
@@ -22,13 +22,11 @@ provides=('pamac')
 options=(!emptydirs)
 install=pamac.install
 
-source=("pamac-$pkgver-$pkgrel.tar.gz::$url/archive/v$_pkgver.tar.gz"
-        #"git-$pkgver-$pkgrel.patch::https://github.com/manjaro/pamac/compare/v$_pkgver...master.patch"
-       )
-sha256sums=('4bb1223d318037f9b17c3b44197aae40ae19fb8a508e2540d6d09959796a0265')
+source=("pamac-$pkgver-$pkgrel.tar.gz::$url/-/archive/v$_pkgver/pamac-v$_pkgver.tar.gz")
+sha256sums=('9a361f79f46858e2888022cf83f48944af4d75777d58b5014c7c20e07363557e')
 
 prepare() {
-  cd "$srcdir/pamac-$pkgver"
+  cd "$srcdir/pamac-v$pkgver"
   # patches here
   #patch -p1 -i "$srcdir/git-$pkgver-$pkgrel.patch"
 
@@ -37,7 +35,7 @@ prepare() {
 }
 
 build() {
-  cd "$srcdir/pamac-$pkgver"
+  cd "$srcdir/pamac-v$pkgver"
   mkdir -p builddir
   cd builddir
   meson --prefix=/usr --sysconfdir=/etc
@@ -47,7 +45,7 @@ build() {
 }
 
 package() {
-  cd "$srcdir/pamac-$pkgver/builddir"
+  cd "$srcdir/pamac-v$pkgver/builddir"
   
   DESTDIR="$pkgdir" ninja install
   # remove pamac-tray-appindicator
