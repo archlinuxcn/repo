@@ -1,0 +1,47 @@
+diff --git a/sslcls.c b/sslcls.c
+index ea4c303..38b4cdc 100644
+--- a/sslcls.c
++++ b/sslcls.c
+@@ -55,6 +55,7 @@ const SSL_METHOD *sycSSLv2_server_method(void) {
+ }
+ #endif
+ 
++#if HAVE_SSLv3_client_method
+ const SSL_METHOD *sycSSLv3_client_method(void) {
+    const SSL_METHOD *result;
+    Debug("SSLv3_client_method()");
+@@ -62,7 +63,9 @@ const SSL_METHOD *sycSSLv3_client_method(void) {
+    Debug1("SSLv3_client_method() -> %p", result);
+    return result;
+ }
++#endif
+ 
++#if HAVE_SSLv3_server_method
+ const SSL_METHOD *sycSSLv3_server_method(void) {
+    const SSL_METHOD *result;
+    Debug("SSLv3_server_method()");
+@@ -70,6 +73,7 @@ const SSL_METHOD *sycSSLv3_server_method(void) {
+    Debug1("SSLv3_server_method() -> %p", result);
+    return result;
+ }
++#endif
+ 
+ const SSL_METHOD *sycSSLv23_client_method(void) {
+    const SSL_METHOD *result;
+diff --git a/sslcls.h b/sslcls.h
+index 152fe5b..70d05b6 100644
+--- a/sslcls.h
++++ b/sslcls.h
+@@ -12,8 +12,12 @@ void sycSSL_load_error_strings(void);
+ int sycSSL_library_init(void);
+ const SSL_METHOD *sycSSLv2_client_method(void);
+ const SSL_METHOD *sycSSLv2_server_method(void);
++#if HAVE_SSLv3_client_method
+ const SSL_METHOD *sycSSLv3_client_method(void);
++#endif
++#if HAVE_SSLv3_server_method
+ const SSL_METHOD *sycSSLv3_server_method(void);
++#endif
+ const SSL_METHOD *sycSSLv23_client_method(void);
+ const SSL_METHOD *sycSSLv23_server_method(void);
+ const SSL_METHOD *sycTLSv1_client_method(void);

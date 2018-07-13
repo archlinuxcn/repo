@@ -1,0 +1,14 @@
+diff --git a/src/main-fuse.cpp b/src/main-fuse.cpp
+index f6b28c7..059666f 100644
+--- a/src/main-fuse.cpp
++++ b/src/main-fuse.cpp
+@@ -18,6 +18,9 @@
+ #ifdef DARLING
+ #	include "stat_xlate.h"
+ #endif
++#if __linux__
++#	include <attr/attributes.h>
++#endif
+ 
+ std::shared_ptr<Reader> g_fileReader;
+ std::unique_ptr<HFSHighLevelVolume> g_volume;
