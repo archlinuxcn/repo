@@ -1,8 +1,8 @@
 # Maintainer: David Runge <dave@sleepmap.de>
 
 pkgname=grub-customizer
-pkgver=5.0.6
-pkgrel=8
+pkgver=5.0.8
+pkgrel=1
 pkgdesc="A graphical grub2 settings manager"
 url="https://launchpad.net/grub-customizer"
 arch=('x86_64')
@@ -15,7 +15,7 @@ provides=('grub-customizer')
 backup=('etc/grub-customizer/grub.cfg')
 source=("https://launchpad.net/${pkgname}/${pkgver%.*}/${pkgver}/+download/${pkgname}_${pkgver}.tar.gz"
         'grub.cfg')
-sha512sums=('4bf29daac0c34b38179866b30ab035f54cd6156c3fbe333d7c0b0f7e715ab047201006fe1cab29d53126a1170f9990e2c69e426fb0f2d43a48d6337e8ba3079d'
+sha512sums=('ce8a4893fd4591ad2319009421f91f97f2e977b5198bf3c6b73e89c022f38bbbdec12e930984fd9167df9f8587f58b13d2296c6d92cd1cc8a179380dc0747975'
             '40156b6546a4d7e8abbef2ab3dece0481a4a2ca276b9a15c5a7bf7e3b11004335b6a747be391b5c1accb35c9e9e3bc628e571cd245e5f2980e5ecd6a3ceb24f5')
 
 prepare(){
