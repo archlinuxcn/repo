@@ -1,7 +1,7 @@
 #!/bin/bash
 
 PACKAGE_NAME="electron-netease-cloud-music"
-EW_DIR="/usr/lib/$PACKAGE_NAME/app.asar"
+EW_DIR="/usr/lib/$PACKAGE_NAME/electron-netease-cloud-music.asar"
 
 exec electron $EW_DIR
 
