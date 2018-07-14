@@ -3,7 +3,7 @@
 # Maintainer: Ariel AxionL <axionl@aosc.io>
 pkgname=oni-bin
 pkgver=0.3.6
-pkgrel=1
+pkgrel=2
 pkgdesc='Oni: Modern Modal Editing - powered by Neovim.'
 arch=('x86_64')
 conflicts=("oni")
