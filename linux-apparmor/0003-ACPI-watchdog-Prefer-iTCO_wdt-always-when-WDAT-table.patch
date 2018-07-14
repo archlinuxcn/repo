@@ -1,10 +1,10 @@
-From 1e45a10dbea00f3a9ead21a9b3d25ad00021261d Mon Sep 17 00:00:00 2001
-Message-Id: <1e45a10dbea00f3a9ead21a9b3d25ad00021261d.1528777685.git.jan.steffens@gmail.com>
-In-Reply-To: <9a5adbc45b1c7d43fe4b27936f2a6939660617a1.1528777685.git.jan.steffens@gmail.com>
-References: <9a5adbc45b1c7d43fe4b27936f2a6939660617a1.1528777685.git.jan.steffens@gmail.com>
+From 598ca9d1cc714cb530141c20a90dc25d34f861fd Mon Sep 17 00:00:00 2001
+Message-Id: <598ca9d1cc714cb530141c20a90dc25d34f861fd.1531335939.git.jan.steffens@gmail.com>
+In-Reply-To: <a2d2476ffec7d988b1a5396586869570e0d6f9d8.1531335939.git.jan.steffens@gmail.com>
+References: <a2d2476ffec7d988b1a5396586869570e0d6f9d8.1531335939.git.jan.steffens@gmail.com>
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
 Date: Tue, 22 May 2018 14:16:50 +0300
-Subject: [PATCH 3/3] ACPI / watchdog: Prefer iTCO_wdt always when WDAT table
+Subject: [PATCH 3/4] ACPI / watchdog: Prefer iTCO_wdt always when WDAT table
  uses RTC SRAM
 
 After we added quirk for Lenovo Z50-70 it turns out there are at least
@@ -128,5 +128,5 @@ index 4bde16fb97d8..95600309ce42 100644
  }
  
 -- 
-2.17.1
+2.18.0
 

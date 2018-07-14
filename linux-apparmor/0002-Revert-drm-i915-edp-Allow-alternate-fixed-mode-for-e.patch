@@ -1,10 +1,10 @@
-From 6cc33158e691a70111672a6105c7a37e66e6d3c3 Mon Sep 17 00:00:00 2001
-Message-Id: <6cc33158e691a70111672a6105c7a37e66e6d3c3.1528777685.git.jan.steffens@gmail.com>
-In-Reply-To: <9a5adbc45b1c7d43fe4b27936f2a6939660617a1.1528777685.git.jan.steffens@gmail.com>
-References: <9a5adbc45b1c7d43fe4b27936f2a6939660617a1.1528777685.git.jan.steffens@gmail.com>
+From bc49947e26285cf644492f9d58981e3c985d8c76 Mon Sep 17 00:00:00 2001
+Message-Id: <bc49947e26285cf644492f9d58981e3c985d8c76.1531335939.git.jan.steffens@gmail.com>
+In-Reply-To: <a2d2476ffec7d988b1a5396586869570e0d6f9d8.1531335939.git.jan.steffens@gmail.com>
+References: <a2d2476ffec7d988b1a5396586869570e0d6f9d8.1531335939.git.jan.steffens@gmail.com>
 From: Jani Nikula <jani.nikula@intel.com>
 Date: Wed, 16 May 2018 11:01:10 +0300
-Subject: [PATCH 2/3] Revert "drm/i915/edp: Allow alternate fixed mode for eDP
+Subject: [PATCH 2/4] Revert "drm/i915/edp: Allow alternate fixed mode for eDP
  if available."
 
 This reverts commit dc911f5bd8aacfcf8aabd5c26c88e04c837a938e.
@@ -61,10 +61,10 @@ Link: https://patchwork.freedesktop.org/patch/msgid/20180516080110.22770-1-jani.
  6 files changed, 8 insertions(+), 45 deletions(-)
 
 diff --git a/drivers/gpu/drm/i915/intel_dp.c b/drivers/gpu/drm/i915/intel_dp.c
-index b7b4cfdeb974..48cb8df5ae97 100644
+index cd6e87756509..492b0cb9bb2b 100644
 --- a/drivers/gpu/drm/i915/intel_dp.c
 +++ b/drivers/gpu/drm/i915/intel_dp.c
-@@ -1671,23 +1671,6 @@ static int intel_dp_compute_bpp(struct intel_dp *intel_dp,
+@@ -1674,23 +1674,6 @@ static int intel_dp_compute_bpp(struct intel_dp *intel_dp,
  	return bpp;
  }
  
@@ -88,7 +88,7 @@ index b7b4cfdeb974..48cb8df5ae97 100644
  bool
  intel_dp_compute_config(struct intel_encoder *encoder,
  			struct intel_crtc_state *pipe_config,
-@@ -1734,16 +1717,8 @@ intel_dp_compute_config(struct intel_encoder *encoder,
+@@ -1737,16 +1720,8 @@ intel_dp_compute_config(struct intel_encoder *encoder,
  		pipe_config->has_audio = intel_conn_state->force_audio == HDMI_AUDIO_ON;
  
  	if (intel_dp_is_edp(intel_dp) && intel_connector->panel.fixed_mode) {
@@ -107,7 +107,7 @@ index b7b4cfdeb974..48cb8df5ae97 100644
  
  		if (INTEL_GEN(dev_priv) >= 9) {
  			int ret;
-@@ -6121,7 +6096,6 @@ static bool intel_edp_init_connector(struct intel_dp *intel_dp,
+@@ -6123,7 +6098,6 @@ static bool intel_edp_init_connector(struct intel_dp *intel_dp,
  	struct drm_i915_private *dev_priv = to_i915(dev);
  	struct drm_connector *connector = &intel_connector->base;
  	struct drm_display_mode *fixed_mode = NULL;
@@ -115,7 +115,7 @@ index b7b4cfdeb974..48cb8df5ae97 100644
  	struct drm_display_mode *downclock_mode = NULL;
  	bool has_dpcd;
  	struct drm_display_mode *scan;
-@@ -6176,14 +6150,13 @@ static bool intel_edp_init_connector(struct intel_dp *intel_dp,
+@@ -6178,14 +6152,13 @@ static bool intel_edp_init_connector(struct intel_dp *intel_dp,
  	}
  	intel_connector->edid = edid;
  
@@ -132,7 +132,7 @@ index b7b4cfdeb974..48cb8df5ae97 100644
  		}
  	}
  
-@@ -6220,8 +6193,7 @@ static bool intel_edp_init_connector(struct intel_dp *intel_dp,
+@@ -6222,8 +6195,7 @@ static bool intel_edp_init_connector(struct intel_dp *intel_dp,
  			      pipe_name(pipe));
  	}
  
@@ -163,10 +163,10 @@ index a80fbad9be0f..7f3e83f17adb 100644
  void intel_panel_fini(struct intel_panel *panel);
  void intel_fixed_panel_mode(const struct drm_display_mode *fixed_mode,
 diff --git a/drivers/gpu/drm/i915/intel_dsi.c b/drivers/gpu/drm/i915/intel_dsi.c
-index 51a1d6868b1e..cf39ca90d887 100644
+index 384b37e2da70..f349b3920199 100644
 --- a/drivers/gpu/drm/i915/intel_dsi.c
 +++ b/drivers/gpu/drm/i915/intel_dsi.c
-@@ -1846,7 +1846,7 @@ void intel_dsi_init(struct drm_i915_private *dev_priv)
+@@ -1852,7 +1852,7 @@ void intel_dsi_init(struct drm_i915_private *dev_priv)
  	connector->display_info.width_mm = fixed_mode->width_mm;
  	connector->display_info.height_mm = fixed_mode->height_mm;
  
@@ -176,10 +176,10 @@ index 51a1d6868b1e..cf39ca90d887 100644
  
  	intel_dsi_add_properties(intel_connector);
 diff --git a/drivers/gpu/drm/i915/intel_dvo.c b/drivers/gpu/drm/i915/intel_dvo.c
-index eb0c559b2715..a70d767313aa 100644
+index 6604806f89d5..61d908e0df0e 100644
 --- a/drivers/gpu/drm/i915/intel_dvo.c
 +++ b/drivers/gpu/drm/i915/intel_dvo.c
-@@ -536,7 +536,7 @@ void intel_dvo_init(struct drm_i915_private *dev_priv)
+@@ -542,7 +542,7 @@ void intel_dvo_init(struct drm_i915_private *dev_priv)
  			 */
  			intel_panel_init(&intel_connector->panel,
  					 intel_dvo_get_current_mode(intel_encoder),
@@ -189,10 +189,10 @@ index eb0c559b2715..a70d767313aa 100644
  		}
  
 diff --git a/drivers/gpu/drm/i915/intel_lvds.c b/drivers/gpu/drm/i915/intel_lvds.c
-index e125d16a1aa7..d278f24ba6ae 100644
+index 34dd1e5233ac..48f618dc9abb 100644
 --- a/drivers/gpu/drm/i915/intel_lvds.c
 +++ b/drivers/gpu/drm/i915/intel_lvds.c
-@@ -1175,8 +1175,7 @@ void intel_lvds_init(struct drm_i915_private *dev_priv)
+@@ -1180,8 +1180,7 @@ void intel_lvds_init(struct drm_i915_private *dev_priv)
  out:
  	mutex_unlock(&dev->mode_config.mutex);
  
@@ -238,5 +238,5 @@ index 41d00b1603e3..b443278e569c 100644
  		drm_mode_destroy(intel_connector->base.dev,
  				panel->downclock_mode);
 -- 
-2.17.1
+2.18.0
 
