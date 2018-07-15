@@ -10,8 +10,8 @@
 
 pkgname=uwsgi-plugin-rack22
 pkgdesc="Plugin for Ruby 2.2 support"
-pkgver=2.0.12
-pkgrel=2
+pkgver=2.0.17.1
+pkgrel=1
 arch=(i686 x86_64)
 url="http://projects.unbit.it/uwsgi"
 license=(GPL2)
@@ -22,10 +22,10 @@ source=(http://projects.unbit.it/downloads/uwsgi-$pkgver.tar.gz
         uwsgi_ruby20_compatibility.patch
         uwsgi_trick_chroot.patch)
 
-md5sums=('1451cab954bad0d7d7429e4d2c84b5df'
+md5sums=('0b1d89f62d0a291ba837c57b2f5dae39'
          '9aced0faffc5fc04afccf946e8a2a886'
          '4d09535ce379c8acd76160f35d5d6b55'
-         '0c09a52fdb88f08c36a8b380f451ce6d')
+         'a49705b98c28dee890b2f88cbaa58be3')
 
 prepare(){
     cd $srcdir/uwsgi-$pkgver
