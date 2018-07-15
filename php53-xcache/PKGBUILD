@@ -3,7 +3,7 @@
 
 pkgname=php53-xcache
 pkgver=3.2.0
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 pkgdesc='A PHP 5.3 opcode cacher'
 url='http://xcache.lighttpd.net/'
@@ -17,8 +17,8 @@ md5sums=('3655bd20483dc23d24f87f9dc924a62e'
 
 build() {
 	cd $srcdir/xcache-$pkgver
-	phpize
-	./configure --prefix=/usr
+	phpize53
+	./configure --prefix=/usr --sysconfdir=/etc/php53 --with-php-config=/usr/bin/php-config53
 	make
 }
 
@@ -33,7 +33,7 @@ package() {
 	cd $srcdir/xcache-$pkgver
 	make INSTALL_ROOT=$pkgdir install
 
-	install -Dm644 $srcdir/xcache.ini $pkgdir/etc/php/conf.d/xcache.ini
+	install -Dm644 $srcdir/xcache.ini $pkgdir/etc/php53/conf.d/xcache.ini
 
 	install -dm755 $pkgdir/usr/share/webapps/php53-xcache
 	cp -r htdocs/* $pkgdir/usr/share/webapps/php53-xcache/
