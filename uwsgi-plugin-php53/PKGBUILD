@@ -10,7 +10,7 @@
 
 pkgname=uwsgi-plugin-php53
 pkgdesc="Plugin for PHP 5.3 support"
-pkgver=2.0.11.1
+pkgver=2.0.17.1
 pkgrel=1
 arch=(i686 x86_64)
 url="http://projects.unbit.it/uwsgi"
@@ -22,16 +22,16 @@ source=(http://projects.unbit.it/downloads/uwsgi-$pkgver.tar.gz
         uwsgi_fix_rpath.patch
         uwsgi_trick_chroot.patch)
 
-md5sums=('087ba7b53bd4afc0f0218f5eb3398809'
+md5sums=('0b1d89f62d0a291ba837c57b2f5dae39'
          '9aced0faffc5fc04afccf946e8a2a886'
          '1a4516d5cdcf5b95b036f4eae2d0c152'
-         '0c09a52fdb88f08c36a8b380f451ce6d')
+         'a49705b98c28dee890b2f88cbaa58be3')
 
 prepare(){
     cd $srcdir/uwsgi-$pkgver
     cp $srcdir/archlinux.ini buildconf/archlinux.ini
     #sed -i 's/LIBS .*-lphp5.*/LIBS = []/' plugins/php/uwsgiplugin.py
-    for patch in uwsgi_fix_rpath.patch uwsgi_trick_chroot.patch; do
+    for patch in uwsgi_trick_chroot.patch; do
         patch -Np1 -i $srcdir/$patch
     done
 }
@@ -39,7 +39,7 @@ prepare(){
 build() {
   pushd $srcdir/uwsgi-$pkgver
 
-  python2 uwsgiconfig.py --plugin plugins/php archlinux php53
+  UWSGICONFIG_PHPPATH=/usr/bin/php-config53 python2 uwsgiconfig.py --plugin plugins/php archlinux php53
 }
 
 package(){

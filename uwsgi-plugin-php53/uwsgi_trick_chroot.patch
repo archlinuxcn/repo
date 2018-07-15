@@ -7,7 +7,7 @@ index e447123..4d55f2c 100644
          pass
  
 -    if uc:
--        plugin_dest = uc.get('plugin_dir') + '/' + name + '_plugin'
+-        plugin_dest = uc.get('plugin_build_dir', uc.get('plugin_dir')) + '/' + name + '_plugin'
 -    else:
 -        plugin_dest = name + '_plugin'
 +    plugin_dest = name + '_plugin'
