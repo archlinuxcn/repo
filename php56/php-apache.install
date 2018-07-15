@@ -1,0 +1,11 @@
+post_install() {
+    echo "You will need to add the following line after the existing LoadModule instructions in /etc/httpd/conf/httpd.conf :"
+    echo "LoadModule php5_module modules/libphp56.so"
+    echo
+    echo "Additionally, include this line at the end of /etc/httpd/conf/httpd.conf if you want .php files to be handled by php 5.6 :"
+    echo "Include conf/extra/php56_module.conf"
+    echo
+    echo "Be aware that ONLY A SINGLE PHP MODULE can be loaded into an Apache instance."
+    echo "If you want php 5 and php 7 to cohabitate, you'll have to use another method such as php-fpm, fcgi or cgi for the other PHP version."
+}
+
