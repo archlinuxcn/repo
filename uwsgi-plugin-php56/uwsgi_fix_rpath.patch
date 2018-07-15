@@ -1,0 +1,66 @@
+diff --git a/plugins/jvm/uwsgiplugin.py b/plugins/jvm/uwsgiplugin.py
+index ac7eb3e..0911288 100644
+--- a/plugins/jvm/uwsgiplugin.py
++++ b/plugins/jvm/uwsgiplugin.py
+@@ -59,11 +59,6 @@ if "-framework JavaVM" in JVM_LIBPATH:
+ 
+ GCC_LIST = ['jvm_plugin']
+ 
+-if 'LD_RUN_PATH' in os.environ:
+-    os.environ['LD_RUN_PATH'] += ':' + JVM_LIBPATH[0][2:]
+-else:
+-    os.environ['LD_RUN_PATH'] = JVM_LIBPATH[0][2:]
+-
+ def post_build(config):
+     if os.system("javac %s/plugins/jvm/uwsgi.java" % os.getcwd()) != 0:
+         os._exit(1)
+diff --git a/plugins/php/uwsgiplugin.py b/plugins/php/uwsgiplugin.py
+index fb9e5bb..fd12c91 100644
+--- a/plugins/php/uwsgiplugin.py
++++ b/plugins/php/uwsgiplugin.py
+@@ -22,7 +22,6 @@ CFLAGS = [os.popen(PHPPATH + ' --includes').read().rstrip(), '-Wno-error=sign-co
+ LDFLAGS = os.popen(PHPPATH + ' --ldflags').read().rstrip().split()
+ if ld_run_path:
+     LDFLAGS.append('-L%s' % ld_run_path)
+-    os.environ['LD_RUN_PATH'] = ld_run_path
+ 
+ LIBS = [os.popen(PHPPATH + ' --libs').read().rstrip(), '-lphp5']
+ 
+diff --git a/plugins/python/uwsgiplugin.py b/plugins/python/uwsgiplugin.py
+index c4f03e1..8d4b2e0 100644
+--- a/plugins/python/uwsgiplugin.py
++++ b/plugins/python/uwsgiplugin.py
+@@ -45,10 +45,8 @@ if not 'UWSGI_PYTHON_NOLIB' in os.environ:
+     else:
+         try:
+             LDFLAGS.append("-L%s" % sysconfig.get_config_var('LIBDIR'))
+-            os.environ['LD_RUN_PATH'] = "%s" % (sysconfig.get_config_var('LIBDIR'))
+         except:
+             LDFLAGS.append("-L%s/lib" % sysconfig.PREFIX)
+-            os.environ['LD_RUN_PATH'] = "%s/lib" % sysconfig.PREFIX
+ 
+         LIBS.append('-lpython%s' % get_python_version())
+ else:
+diff --git a/plugins/rack/uwsgiplugin.py b/plugins/rack/uwsgiplugin.py
+index 8dee214..2375bc9 100644
+--- a/plugins/rack/uwsgiplugin.py
++++ b/plugins/rack/uwsgiplugin.py
+@@ -44,7 +44,6 @@ LIBS = os.popen(RUBYPATH + " -e \"require 'rbconfig';print %s::CONFIG['LIBS']\""
+ 
+ if has_shared == 'yes':
+     LDFLAGS.append('-L' + libpath )
+-    os.environ['LD_RUN_PATH'] = libpath
+     LIBS.append(os.popen(RUBYPATH + " -e \"require 'rbconfig';print '-l' + %s::CONFIG['RUBY_SO_NAME']\"" % rbconfig).read().rstrip())
+ else:
+     GCC_LIST.append("%s/%s" % (libpath, os.popen(RUBYPATH + " -e \"require 'rbconfig';print %s::CONFIG['LIBRUBY_A']\"" % rbconfig).read().rstrip()))
+diff --git a/plugins/ruby19/uwsgiplugin.py b/plugins/ruby19/uwsgiplugin.py
+index ecea48d..4f35984 100644
+--- a/plugins/ruby19/uwsgiplugin.py
++++ b/plugins/ruby19/uwsgiplugin.py
+@@ -40,6 +40,5 @@ LDFLAGS = os.popen(RUBYPATH + " -e \"require 'rbconfig';print %s::CONFIG['LDFLAG
+ 
+ libpath = os.popen(RUBYPATH + " -e \"require 'rbconfig';print %s::CONFIG['libdir']\"" % rbconfig).read().rstrip()
+ LDFLAGS.append('-L' + libpath )
+-os.environ['LD_RUN_PATH'] = libpath
+ LIBS = os.popen(RUBYPATH + " -e \"require 'rbconfig';print '-l' + %s::CONFIG['RUBY_SO_NAME']\"" % rbconfig).read().rstrip().split()
+ 

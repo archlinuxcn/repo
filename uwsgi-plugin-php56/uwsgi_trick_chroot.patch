@@ -1,0 +1,16 @@
+diff --git a/uwsgiconfig.py b/uwsgiconfig.py
+index e447123..4d55f2c 100644
+--- a/uwsgiconfig.py
++++ b/uwsgiconfig.py
+@@ -1129,10 +1129,7 @@ def build_plugin(path, uc, cflags, ldflags, libs, name = None):
+     except:
+         pass
+ 
+-    if uc:
+-        plugin_dest = uc.get('plugin_build_dir', uc.get('plugin_dir')) + '/' + name + '_plugin'
+-    else:
+-        plugin_dest = name + '_plugin'
++    plugin_dest = name + '_plugin'
+ 
+     shared_flag = '-shared'
+ 
