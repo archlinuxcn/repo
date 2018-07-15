@@ -1,0 +1,87 @@
+--- configure	2018-01-03 01:28:11.000000000 +0100
++++ configure	2018-02-26 11:20:37.169756435 +0100
+@@ -35874,9 +35874,9 @@
+ 	    ENCHANT_SEARCH_DIRS="/usr/local /usr"
+ 	fi
+ 	for i in $ENCHANT_SEARCH_DIRS; do
+-		if test -f $i/include/enchant/enchant.h; then
++		if test -f $i/include/enchant-2/enchant.h; then
+ 			ENCHANT_DIR=$i
+-			ENCHANT_INCDIR=$i/include/enchant
++			ENCHANT_INCDIR=$i/include/enchant-2
+ 		elif test -f $i/include/enchant.h; then
+ 			ENCHANT_DIR=$i
+ 			ENCHANT_INCDIR=$i/include
+@@ -35898,7 +35898,7 @@
+ 
+ 
+   if test "$ext_shared" = "yes"; then
+-    ENCHANT_SHARED_LIBADD="-lenchant $ENCHANT_SHARED_LIBADD"
++    ENCHANT_SHARED_LIBADD="-lenchant-2 $ENCHANT_SHARED_LIBADD"
+     if test -n "$ENCHANT_LIBDIR"; then
+ 
+   if test "$ENCHANT_LIBDIR" != "/usr/$PHP_LIBDIR" && test "$ENCHANT_LIBDIR" != "/usr/lib"; then
+@@ -35982,7 +35982,7 @@
+   case enchant in
+   c|c_r|pthread*) ;;
+   *)
+-      LIBS="-lenchant $LIBS"
++      LIBS="-lenchant-2 $LIBS"
+    ;;
+   esac
+ 
+@@ -36118,13 +36118,13 @@
+     esac
+   done
+ 
+-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for enchant_broker_set_param in -lenchant" >&5
+-$as_echo_n "checking for enchant_broker_set_param in -lenchant... " >&6; }
++  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for enchant_broker_set_param in -lenchant-2" >&5
++$as_echo_n "checking for enchant_broker_set_param in -lenchant-2... " >&6; }
+ if test "${ac_cv_lib_enchant_enchant_broker_set_param+set}" = set; then :
+   $as_echo_n "(cached) " >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lenchant  $LIBS"
++LIBS="-lenchant-2  $LIBS"
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+--- ext/enchant/enchant.c	2018-01-02 22:36:05.000000000 +0000
++++ ext/enchant/enchant.c	2018-01-21 22:34:50.205791491 +0000
+@@ -750,7 +750,7 @@
+ 			for (i = 0; i < n_sugg; i++) {
+ 				add_next_index_string(sugg, suggs[i]);
+ 			}
+-			enchant_dict_free_suggestions(pdict->pdict, suggs);
++			enchant_dict_free_string_list(pdict->pdict, suggs);
+ 		}
+ 
+ 
+@@ -807,7 +807,7 @@
+ 			add_next_index_string(return_value, suggs[i]);
+ 		}
+ 
+-		enchant_dict_free_suggestions(pdict->pdict, suggs);
++		enchant_dict_free_string_list(pdict->pdict, suggs);
+ 	}
+ }
+ /* }}} */
+@@ -827,7 +827,7 @@
+ 
+ 	PHP_ENCHANT_GET_DICT;
+ 
+-	enchant_dict_add_to_personal(pdict->pdict, word, wordlen);
++	enchant_dict_add(pdict->pdict, word, wordlen);
+ }
+ /* }}} */
+ 
+@@ -865,7 +865,7 @@
+ 
+ 	PHP_ENCHANT_GET_DICT;
+ 
+-	RETURN_BOOL(enchant_dict_is_in_session(pdict->pdict, word, wordlen));
++	RETURN_BOOL(enchant_dict_is_added(pdict->pdict, word, wordlen));
+ }
+ /* }}} */
+ 
