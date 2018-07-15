@@ -28,7 +28,7 @@ pkgname=("${pkgbase}"
          "${pkgbase}-xsl")
 pkgver=5.3.29
 _suhosinver=5.3.9-0.9.10
-pkgrel=8.1
+pkgrel=9
 pkgdesc="A general-purpose scripting language that is especially suited to web development"
 arch=('i686' 'x86_64')
 license=('PHP')
@@ -39,7 +39,7 @@ makedepends=('apache' 'c-client' 'postgresql-libs' 'libldap' 'smtp-forwarder'
              'curl' 'libxslt' 'openssl-1.0' 'db' 'gmp' 'systemd')
 
 source=("http://php.net/distributions/${_pkgbase}-${pkgver}.tar.xz"
-        "http://download.suhosin.org/suhosin-patch-${_suhosinver}.patch.gz"
+        "https://distfiles.macports.org/php5/suhosin-patch-${_suhosinver}.patch.gz"
         'php.ini.patch' 'apache.conf' 'php-fpm.conf.in.patch'
         'logrotate.d.php-fpm' 'php-fpm.service' 'php-fpm.tmpfiles'
         'suhosin.patch'
@@ -116,6 +116,12 @@ prepare() {
 
 	# Allow php-tidy to compile with tidy-html5
 	sed 's/buffio\.h/tidybuffio\.h/' -i ext/tidy/tidy.c
+
+    msg "Enchant 2 fixes"
+    sed -i -e 's|include/enchant|include/enchant-2|' -e 's|-lenchant|-lenchant-2|' configure
+
+    msg "ICU fixes"
+    sed -i '/U_NAMESPACE_END/a using namespace icu;' ext/intl/msgformat/msgformat_helpers.cpp
 }
 
 build() {
