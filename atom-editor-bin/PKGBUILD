@@ -6,7 +6,7 @@
 # Contributor: Danny Arnold <despair.blue at gmail dot com>
 
 pkgname=atom-editor-bin
-pkgver=1.28.1
+pkgver=1.28.2
 pkgrel=1
 pkgdesc="Atom is a hackable text editor for the 21st century built on Electron - Precompiled binary from official repository"
 arch=('x86_64')
@@ -18,7 +18,7 @@ depends=('git' 'gconf' 'gtk2' 'libnotify' 'libxtst' 'nss' 'python2' 'xdg-utils' 
 optdepends=('gvfs')
 conflicts=('atom' 'atom-editor' 'atom-editor-git' 'atom-editor-git-tagged' 'apm' 'atom-notracking')
 install=$pkgname.install
-sha512sums=('46f85d1d798f3afe277537e6c61f0c529f869896337b5eb64a6967ec54b7924e3aab869df200f05a23dd7d17e9e887cd6bb90880bc87dccf0d339a9bfaff36d3'
+sha512sums=('4bb369921cf945f5ab9652391910aa8d78571ed84bef6287d1f2d365e340fa81af87ba96d1b99159db8795e6839ae084bc1b6e9dc6d1f8a8ae520d84379e7367'
             '66aa0c1d574def8691c0059f3b26d4b820c430a146db73c23e31a85f7d4894a3b710cef14726c3bebcc88c8c91149012d6caa4e27e62608fe7022516c10e45fe'
             '374b9f8fa1e0d2cab77d4cea9c718fb889bb6db3dbf9762ad5cbb88f3a0936023f36641012fc90e029832a772b8d4fdfe6b72f304e3950c02a7c9bf4d6d3d4ec')
 source=("atom-amd64-v${pkgver}.deb::https://atom-installer.github.com/v${pkgver}/atom-amd64.deb"
