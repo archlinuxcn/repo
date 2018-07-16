@@ -1,6 +1,6 @@
 # Maintainer: Jacob Mischka <jacob@mischka.me>
 pkgname=brave
-pkgver=0.24.1
+pkgver=0.24.2developer
 pkgrel=1
 pkgdesc='Web browser that blocks ads and trackers by default.'
 arch=('x86_64')
@@ -11,19 +11,20 @@ makedepends=('npm' 'python2' 'git')
 optdepends=('cups: Printer support'
             'pepper-flash: Adobe Flash support')
 provides=('brave-browser')
-source=('git://github.com/brave/browser-laptop.git')
+source=('git://github.com/brave/browser-laptop.git#branch=0.24.x')
 md5sums=('SKIP')
 
 prepare () {
   cd "$srcdir"/browser-laptop
   git fetch --tags
-  latestTag=$(git describe --tags `git rev-list --tags --max-count=1`)
+  latestTag=$(git describe --abbrev=0 --tags)
   git checkout $latestTag
 }
 
 pkgver () {
   cd "$srcdir"/browser-laptop
-  git describe --tags `git rev-list --tags --max-count=1` | cut -c 2-
+#  git describe --tags `git rev-list --tags --max-count=1` | cut -c 2-
+   git describe --abbrev=0 --tags | cut -c 2-
 }
 
 build() {

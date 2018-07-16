@@ -1,17 +1,17 @@
-# Maintainer: bartus {aur@bartus.33mail.com}
+# Maintainer : bartus <arch-user-repoᘓbartus.33mail.com>
 
 
 pkgname=blender-2.8-git
-pkgver=2.8_r78447.72e04f98909
+pkgver=2.8_r78752.b29b73a67ec
 pkgrel=1
 pkgdesc="Development version of Blender 2.8 branch"
 arch=('i686' 'x86_64')
 url="http://blender.org/"
-depends=('alembic' 'libgl' 'python' 'python-numpy' 'python-requests' 'openjpeg' 'desktop-file-utils' 'hicolor-icon-theme'
-         'ffmpeg' 'fftw' 'openal' 'freetype2' 'libxi' 'openimageio' 'opencolorio' 'python' 'libspnav'
-         'openvdb' 'opencollada' 'opensubdiv' 'openshadinglanguage' 'libsndfile' 'libtiff' 'libpng' 'openjpeg' 'sdl2' 'jack')
+depends=('alembic' 'libgl' 'python' 'python-numpy' 'openjpeg' 'desktop-file-utils' 'hicolor-icon-theme'
+         'ffmpeg' 'fftw' 'openal' 'freetype2' 'libxi' 'openimageio' 'opencolorio'
+         'openvdb' 'opencollada' 'opensubdiv' 'openshadinglanguage' 'libtiff' 'libpng')
 optdepends=('cuda: CUDA support in Cycles')
-makedepends=('cuda' 'git' 'cmake' 'boost' 'mesa' 'llvm')
+makedepends=('git' 'cmake' 'boost' 'mesa' 'llvm' 'cuda')
 provides=('blender-2.8')
 conflicts=('blender-2.8')
 license=('GPL')
@@ -79,7 +79,7 @@ build() {
         -DWITH_FFTW3=ON \
         -DWITH_SYSTEM_GLEW=ON \
         -DWITH_CODEC_FFMPEG=ON \
-        -DWITH_PYTHON_INSTALL=ON \
+        -DWITH_PYTHON_INSTALL=OFF \
         -DPYTHON_VERSION=${_pyver} \
         -DWITH_MOD_OCEANSIM=ON \
         -DWITH_CYCLES_OPENSUBDIV=ON \
@@ -90,11 +90,6 @@ build() {
         -DWITH_OPENVDB=ON \
         -DWITH_OPENVDB_BLOSC=ON \
         -DWITH_OPENCOLLADA=ON \
-        -DWITH_SYSTEM_OPENJPEG=ON \
-        -DWITH_SDL=ON \
-        -DWITH_JACK=ON \
-        -DWITH_ALEMBIC=ON \
-        -DWITH_CODEC_SNDFILE=ON \
         $_EXTRAOPTS
   make
 }
