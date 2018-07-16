@@ -1,0 +1,13 @@
+post_install() {
+    /usr/bin/getent group kalu >/dev/null 2>&1 ||  usr/sbin/groupadd -g 214 kalu &>/dev/null
+}
+
+post_upgrade() {
+    post_install
+}
+
+post_remove() {
+    if /usr/bin/getent group kalu >/dev/null 2>&1; then
+        /usr/sbin/groupdel kalu
+    fi
+}
