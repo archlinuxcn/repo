@@ -1,7 +1,7 @@
 # Maintainer: Merrick Luo <merrick@luois.me>
 pkgname=iease-music
 pkgver=1.2.6
-pkgrel=1
+pkgrel=2
 pkgdesc='Elegant neteaseMusic desktop app, Rock with NeteaseMusic.'
 arch=('x86_64')
 url='https://github.com/trazyn/ieaseMusic'
@@ -26,5 +26,5 @@ package() {
 	cp -r ${srcdir}/opt ${pkgdir}/
 	cp -r ${srcdir}/usr ${pkgdir}/
 	mkdir -p ${pkgdir}/usr/bin/
-	ln -s /opt/ieaseMusic/iease-music ${pkgdir}/usr/bin/
+	ln -s /opt/ieaseMusic/ieaseMusic ${pkgdir}/usr/bin/iease-music
 }
