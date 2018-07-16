@@ -1,19 +1,21 @@
 # Maintainer: Ariel AxionL <axionl@aosc.io>
+# Contributor: GreaterFire <GreaterFire@protonmail.com>
 pkgname=trojan-git
 pkgver=r228.6d66df4
-pkgrel=2
+pkgrel=3
 pkgdesc="An unidentifiable mechanism that helps you bypass GFW"
 arch=('x86_64')
 url="https://github.com/trojan-gfw/trojan"
 license=('GPL3')
 depends=('boost-libs' 'libmariadbclient')
-optdepends=('ca-certificates: server certificate verification' 'mariadb: advanced user management')
+optdepends=('ca-certificates: server certificate verification'
+            'mariadb: advanced user management')
 makedepends=('git' 'cmake' 'boost' 'openssl' 'libmariadbclient')
-source=("$pkgname::git+$url"
-        "https://raw.githubusercontent.com/trojan-gfw/trojan/master/LICENSE")
+conflicts=('trojan')
+provides=('trojan')
+source=("$pkgname::git+$url")
 backup=('etc/trojan/config.json')
-sha512sums=('SKIP'
-            '552aec8d120c9d931769f6a6b794716fce978d0055715de21746dc0f064f4a0f72b6be42d4828b98a56715b23fa427c1f66fd20aca0ef1751cc384c420db1605')
+sha512sums=('SKIP')
 
 pkgver() {
     cd "$srcdir/$pkgname"
@@ -27,7 +29,6 @@ build() {
 }
 
 package() {
-    install -Dm644 LICENSE $pkgdir/usr/share/licenses/$pkgname/LICENSE
     cd $pkgname
     make DESTDIR=$pkgdir install
 }
