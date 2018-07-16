@@ -4,11 +4,12 @@
 _gemname="i18n"
 pkgname="ruby-${_gemname}"
 pkgver="0.9.1"
-pkgrel=2
+pkgrel=3
 pkgdesc="New wave internationalisation support for Ruby"
 arch=("any")
 license=("MIT")
 depends=("rubygems" "ruby-concurrent-ruby")
+makedepends=("ruby-rdoc")
 options=(!emptydirs)
 url="http://rubygems.org/gems/${_gemname}"
 source=("https://rubygems.org/downloads/${_gemname}-${pkgver}.gem")
