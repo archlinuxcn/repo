@@ -3,9 +3,9 @@
 _pkgname=jdk
 pkgname=jdk8
 _major=8
-_minor=172
-_build=b11
-_hash=a58eab1ec242421181065cdc37240b08
+_minor=181
+_build=b13
+_hash=96a7b8442fe848ef90c96a2fad6ed6d1
 pkgver=${_major}u${_minor}
 pkgrel=1
 pkgdesc="Oracle Java $_major Development Kit"
@@ -48,7 +48,7 @@ source=("http://download.oracle.com/otn-pub/java/jdk/$pkgver-$_build/$_hash/$_pk
         "jmc-$_jname.desktop"
         "jvisualvm-$_jname.desktop"
         "policytool-$_jname.desktop")
-md5sums=('eda2945e8c02b84adbf78f46c37b71c1'
+md5sums=('ef599e322eee42f6769991dd3e3b1a31'
          'b3c7031bc65c28c2340302065e7d00d3'
          '8a66f50efdc867ffd6a27168bc93b210'
          '1cbde70639abd98db4bace284dbf2bc4'
@@ -67,9 +67,6 @@ package() {
     install -d "$pkgdir"/usr/share/licenses/java$_major-$_pkgname
 
     msg2 "Removing redundancies..."
-    #rm    db/bin/*.bat
-    rm    db/3RDPARTY
-    rm    db/LICENSE
     rm -r jre/lib/desktop/icons/HighContrast/
     rm -r jre/lib/desktop/icons/HighContrastInverse/
     rm -r jre/lib/desktop/icons/LowContrast/
@@ -134,7 +131,7 @@ package() {
     mv man/ "$pkgdir"/usr/share
 
     # Move/link licenses
-    mv db/NOTICE COPYRIGHT LICENSE *.txt "$pkgdir"/usr/share/licenses/java$_major-$_pkgname/
+    mv COPYRIGHT LICENSE *.txt "$pkgdir"/usr/share/licenses/java$_major-$_pkgname/
     ln -sf /usr/share/licenses/java$_major-$_pkgname/ "$pkgdir"/usr/share/licenses/$pkgname
 
     msg2 "Installing Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files..."
