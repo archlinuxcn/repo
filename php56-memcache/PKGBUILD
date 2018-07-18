@@ -12,6 +12,7 @@ url="https://pecl.php.net/package/memcache"
 license=('PHP')
 provides=("php-memcache=${pkgver}-${pkgrel}")
 depends=('php56>=5.6.17-3')
+makedepends=('git')
 checkdepends=('memcached')
 backup=('etc/php56/conf.d/memcache.ini')
 #source=(https://pecl.php.net/get/memcache-${pkgver}.tgz)
