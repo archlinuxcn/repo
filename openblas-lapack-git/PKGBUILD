@@ -4,7 +4,7 @@
 # Contributor: Giuseppe Borzi <gborzi _AT_ ieee _DOT_ org>
 
 pkgbase=openblas-git
-pkgname=(openblas-git openblas-lapack-git)
+pkgname=(openblas-git--dummy-for-debug openblas-git openblas-lapack-git)
 _pkgname=OpenBLAS
 pkgver=v0.2.20.r608.ge71d70ba
 pkgrel=1
@@ -12,10 +12,7 @@ pkgdesc="Optimized BLAS library based on GotoBLAS2 1.13 BSD"
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://xianyi.github.com/OpenBLAS/"
 license=('BSD')
-depends=('gcc-libs')
 makedepends=('git' 'perl' 'gcc-fortran')
-provides=('openblas')
-conflicts=('openblas')
 options=(!emptydirs debug strip)
 source=("git://github.com/xianyi/OpenBLAS")
 md5sums=('SKIP')
@@ -74,7 +71,17 @@ build() {
   }
 }
 
+package_openblas-git--dummy-for-debug() {
+  provides=()
+  conflicts=()
+  # This dummy package is provided to work around FS#59378
+}
+
 package_openblas-git() {
+  depends=('gcc-libs')
+  provides=('openblas')
+  conflicts=('openblas')
+
   cd "${_pkgname}"
 
   make "${_config[@]}" PREFIX="${pkgdir}/usr" install &> install.log || {
