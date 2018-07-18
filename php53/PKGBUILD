@@ -28,7 +28,7 @@ pkgname=("${pkgbase}"
          "${pkgbase}-xsl")
 pkgver=5.3.29
 _suhosinver=5.3.9-0.9.10
-pkgrel=9
+pkgrel=10
 pkgdesc="A general-purpose scripting language that is especially suited to web development"
 arch=('i686' 'x86_64')
 license=('PHP')
@@ -36,7 +36,7 @@ url='http://php.net'
 makedepends=('apache' 'c-client' 'postgresql-libs' 'libldap' 'smtp-forwarder'
              'sqlite' 'unixodbc' 'net-snmp' 'libzip' 'enchant' 'file' 'freetds'
              'libmcrypt' 'tidyhtml' 'aspell' 'libltdl' 'libpng' 'libjpeg' 'freetype2' 'icu'
-             'curl' 'libxslt' 'openssl-1.0' 'db' 'gmp' 'systemd')
+             'curl' 'libxslt' 'openssl-1.0' 'db' 'gmp' 'systemd' 'patchelf')
 
 source=("http://php.net/distributions/${_pkgbase}-${pkgver}.tar.xz"
         "https://distfiles.macports.org/php5/suhosin-patch-${_suhosinver}.patch.gz"
@@ -371,6 +371,7 @@ package_php53-embed() {
 	depends=("${pkgbase}")
 	provides=("${_pkgbase}-embed=$pkgver")
 
+	patchelf --set-soname libphp53.so ${srcdir}/build-embed/libs/libphp5.so
 	install -D -m755 ${srcdir}/build-embed/libs/libphp5.so ${pkgdir}/usr/lib/libphp53.so
 	install -D -m644 ${srcdir}/${_pkgbase}-${pkgver}/sapi/embed/php_embed.h ${pkgdir}/usr/include/${pkgbase}/sapi/embed/php_embed.h
 }
