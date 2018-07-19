@@ -53,7 +53,7 @@ build() {
     --prefix=/usr --sysconfdir=/etc \
     --enable-mp --enable-gimp-console --enable-python --with-aa
 
-  PYTHONPATH="/usr/share/glib-2.0:${PYTHONPATH}" make
+  PYTHONPATH="/usr/share/glib-2.0:${PYTHONPATH}" make -j2
 }
 
 package() {
