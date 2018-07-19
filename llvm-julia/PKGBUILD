@@ -1,67 +1,56 @@
 # Maintainer: Evangelos Foutras <evangelos@foutrelis.com>
 # Contributor: Jan "heftig" Steffens <jan.steffens@gmail.com>
-# Contributor: Sebastian Nowicki <sebnow@gmail.com>
-# Contributor: Devin Cofer <ranguvar{AT]archlinux[DOT}us>
-# Contributor: Tobias Kieslich <tobias@justdreams.de>
-# Contributor: Geoffroy Carrier <geoffroy.carrier@aur.archlinux.org>
-# Contributor: Tomas Lindquist Olsen <tomas@famolsen.dk>
-# Contributor: Roberto Alsina <ralsina@kde.org>
-# Contributor: Gerardo Exequiel Pozzi <vmlinuz386@yahoo.com.ar>
 
-pkgname=('llvm-julia' 'llvm-libs-julia' 'llvm-ocaml-julia' 'lld-julia' 'lldb-julia'
-         'clang-julia' 'clang-tools-extra-julia')
-pkgver=5.0.1
-pkgrel=1
-_ocaml_ver=4.05.0
+pkgname=('llvm-julia' 'llvm-libs-julia' 'llvm-ocaml-julia')
+pkgver=6.0.1
+pkgrel=2
+_ocaml_ver=4.06.0
 arch=(i686 x86_64 armv7h aarch64)
-url="http://llvm.org/"
+url="https://llvm.org/"
 license=('custom:University of Illinois/NCSA Open Source License')
-makedepends=('cmake' 'libffi' 'python2' "ocaml=$_ocaml_ver" 'python-sphinx'
-             'ocaml-ctypes' 'ocaml-findlib' 'libedit' 'swig')
-# Use gcc-multilib to build 32-bit compiler-rt libraries on x86_64 (FS#41911)
-makedepends_x86_64=('gcc-multilib')
+makedepends=('cmake' 'ninja' 'libffi' 'libedit' 'ncurses' 'libxml2' 'python-sphinx'
+             "ocaml=$_ocaml_ver" 'ocaml-ctypes' 'ocaml-findlib')
 options=('staticlibs' '!strip')
 source=(https://releases.llvm.org/$pkgver/llvm-$pkgver.src.tar.xz
-        https://releases.llvm.org/$pkgver/cfe-$pkgver.src.tar.xz
-        https://releases.llvm.org/$pkgver/clang-tools-extra-$pkgver.src.tar.xz
-        https://releases.llvm.org/$pkgver/compiler-rt-$pkgver.src.tar.xz
-        https://releases.llvm.org/$pkgver/lld-$pkgver.src.tar.xz
-        https://releases.llvm.org/$pkgver/lldb-$pkgver.src.tar.xz
-        llvm-D27629-AArch64-large_model.patch
-        llvm-instcombine-ptrtoint.patch
-        llvm-D34078-vectorize-fdiv.patch
-        llvm-arm-reset.patch
-        llvm-D38924-faultmap-reset.patch
-        llvm-D38925-neg-implicit-null.patch
         # Arch patches
-        0001-GCC-compatibility-Ignore-the-fno-plt-flag.patch
-        0002-Enable-SSP-and-PIE-by-default.patch
-        disable-llvm-symbolizer-test.patch
-        llvm-config.h)
-sha256sums=('5fa7489fc0225b11821cab0362f5813a05f2bcf2533e8a4ea9c9c860168807b0'
-            '135f6c9b0cd2da1aff2250e065946258eb699777888df39ca5a5b4fe5e23d0ff'
-            '9aada1f9d673226846c3399d13fab6bba4bfd38bcfe8def5ee7b0ec24f8cd225'
-            '4edd1417f457a9b3f0eb88082530490edf3cf6a7335cdce8ecbc5d3e16a895da'
-            'd5b36c0005824f07ab093616bdff247f3da817cae2c51371e1d1473af717d895'
-            'b7c1c9e67975ca219089a3a6a9c77c2d102cead2dc38264f2524aa3326da376a'
-            'b80285028d65417116c53915505ab418b0f9e0a697c67803abf459108f7fd501'
-            '43f021afc8037e537ba4c5f82fe1d8a9dcbcf15e8b9fffc527260f0385451350'
-            '5ea9c995aba1627440d3985c425472301c711b134ce3fd9e655d0245d0832699'
-            '55bec3bbcde3bc149df2049bc53101d79c2e012f4b791132725a445d724fddea'
-            'a60cc1a6ec0869c9dcddfd11ef710e3e484883080b78b234ce4bb6d72621768b'
-            'db1e2652b2c3aa19957927b78eaae596bff7629646145235c99394f0d4cb7ba6'
-            'a1ba7fb859ac157c4b4342435cd656e29b1e1d9bddcb8ae0158a91c0a8ba6203'
-            '186f2d10b013395f2dd6e1fd3baf4961a2e40c403f115517c9b253682934f50f'
-            '6fff47ab5ede79d45fe64bb4903b7dfc27212a38e6cd5d01e60ebd24b7557359'
+        D44391-export-LLVM_DYLIB_COMPONENTS-in-LLVMConfig.cmake.patch
+        D44420-cmake-fix-a-typo-in-llvm_config-macro.patch
+        llvm-config.h
+        llvm-D27629-AArch64-large_model.patch
+        llvm-D34078-vectorize-fdiv.patch
+        # llvm-instcombine-ptrtoint.patch
+       )
+sha256sums=('b6d6c324f9c71494c0ccaf3dac1f16236d970002b42bb24a6c9e1634f7d0f4e2'
+            '96e2f3ca8b7d1bdbe2606a1eebb12c57b39838d1bcc15e40388e8d59649a9f4a'
+            '5cc114fd711e6ea836a6270b2f713e2e751c49e8b5ffa6c6812127ca801acef3'
             '597dc5968c695bbdbb0eac9e8eb5117fcd2773bc91edf5ec103ecffffab8bc48')
 
-# _FLTO='-flto'
+# $(eval $(call LLVM_PATCH,llvm-6.0-NVPTX-addrspaces)) # NVPTX
+# $(eval $(call LLVM_PATCH,llvm-D42262-jumpthreading-not-i1)) # remove for 7.0
+# $(eval $(call LLVM_PATCH,llvm-PPC-addrspaces)) # remove for 7.0
+# $(eval $(call LLVM_PATCH,llvm-D42260)) # remove for 7.0
+# $(eval $(call LLVM_PATCH,llvm-rL326843-missing-header)) # remove for 7.0
+# $(eval $(call LLVM_PATCH,llvm-6.0-r327540)) # remove for 7.0
+# $(eval $(call LLVM_PATCH,llvm-6.0.0_D27296-libssp)) # remove for 7.0
+# $(eval $(call LLVM_PATCH,llvm-6.0-D44650)) # mingw32 build fix
+# $(eval $(call LLVM_PATCH,llvm-D45008)) # remove for 7.0
+# $(eval $(call LLVM_PATCH,llvm-D45070)) # remove for 7.0
+# $(eval $(call LLVM_PATCH,llvm-6.0.0-ifconv-D45819)) # remove for 7.0
+# $(eval $(call LLVM_PATCH,llvm-D46460))
+# $(eval $(call LLVM_PATCH,llvm-rL332680)) # remove for 7.0
+# $(eval $(call LLVM_PATCH,llvm-rL332682)) # remove for 7.0
+# $(eval $(call LLVM_PATCH,llvm-rL332302)) # remove for 7.0
+# $(eval $(call LLVM_PATCH,llvm-rL332694)) # remove for 7.0
+# $(eval $(call LLVM_PATCH,llvm-rL327898)) # remove for 7.0
+# $(eval $(call LLVM_PATCH,llvm-6.0-DISABLE_ABI_CHECKS))
+
 _FLTO=''
 
-if [[ "${CARCH}" == "aarch64" ]] || [[ "${CARCH}" == "armv7h" ]]; then
-    # GCC miscompiles LLVM on AArch64 with LTO and segfault on arm during linking...
-    _FLTO=''
-fi
+# _FLTO='-flto'
+# if [[ "${CARCH}" == "aarch64" ]] || [[ "${CARCH}" == "armv7h" ]]; then
+#     # GCC miscompiles LLVM on AArch64 with LTO and segfault on arm during linking...
+#     _FLTO=''
+# fi
 
 apply_julia_patch() {
   local name=$1
@@ -84,28 +73,21 @@ EOF
   cd "$srcdir/llvm-$pkgver.src"
   mkdir -p build
 
-  mv "$srcdir/cfe-$pkgver.src" tools/clang
-  mv "$srcdir/clang-tools-extra-$pkgver.src" tools/clang/tools/extra
-  mv "$srcdir/compiler-rt-$pkgver.src" projects/compiler-rt
-  mv "$srcdir/lld-$pkgver.src" tools/lld
-  mv "$srcdir/lldb-$pkgver.src" tools/lldb
-
-  apply_julia_patch D27629-AArch64-large_model
-  apply_julia_patch instcombine-ptrtoint
-  apply_julia_patch D34078-vectorize-fdiv
-  apply_julia_patch arm-reset
-  apply_julia_patch D38924-faultmap-reset
-  apply_julia_patch D38925-neg-implicit-null
+  # TODO
+  # apply_julia_patch D27629-AArch64-large_model
+  # apply_julia_patch instcombine-ptrtoint
+  # apply_julia_patch D34078-vectorize-fdiv
+  # apply_julia_patch arm-reset
+  # apply_julia_patch D38924-faultmap-reset
+  # apply_julia_patch D38925-neg-implicit-null
 
   # Arch patches
   msg "Applying Arch patches"
-  # Disable test that fails when compiled as PIE
-  # https://bugs.llvm.org/show_bug.cgi?id=31870
-  patch -Np1 <../disable-llvm-symbolizer-test.patch
+  # https://reviews.llvm.org/D44391
+  patch -Np1 -i ../D44391-export-LLVM_DYLIB_COMPONENTS-in-LLVMConfig.cmake.patch
 
-  # Enable SSP and PIE by default
-  patch -Np1 -d tools/clang <../0001-GCC-compatibility-Ignore-the-fno-plt-flag.patch
-  patch -Np1 -d tools/clang <../0002-Enable-SSP-and-PIE-by-default.patch
+  # https://reviews.llvm.org/D44420
+  patch -Np0 -i ../D44420-cmake-fix-a-typo-in-llvm_config-macro.patch
 }
 
 build() {
@@ -116,46 +98,45 @@ build() {
   CXXFLAGS+=' -ggdb1 -O3 -fasynchronous-unwind-tables'
   LDFLAGS+=' -O3 -fasynchronous-unwind-tables'
 
-  cmake \
-      -DCMAKE_BUILD_TYPE=Release \
-      -DCMAKE_INSTALL_PREFIX=/usr \
-      -DLLVM_BUILD_LLVM_DYLIB=ON \
-      -DLLVM_LINK_LLVM_DYLIB=ON \
-      -DLLVM_INSTALL_UTILS=ON \
-      -DLLVM_ENABLE_RTTI=ON \
-      -DLLVM_ENABLE_FFI=ON \
-      -DLLVM_BUILD_TESTS=ON \
-      -DLLVM_BUILD_DOCS=ON \
-      -DLLVM_ENABLE_SPHINX=ON \
-      -DLLVM_ENABLE_DOXYGEN=OFF \
-      -DSPHINX_WARNINGS_AS_ERRORS=OFF \
-      -DFFI_INCLUDE_DIR=$(pkg-config --variable=includedir libffi) \
-      -DLLVM_BINUTILS_INCDIR=/usr/include \
-      ..
-
-  make
-  make ocaml_doc
-
-  # Disable automatic installation of components that go into subpackages
-  sed -i '/\(clang\|lld\|lldb\)\/cmake_install.cmake/d' tools/cmake_install.cmake
-  sed -i '/extra\/cmake_install.cmake/d' tools/clang/tools/cmake_install.cmake
-  sed -i '/compiler-rt\/cmake_install.cmake/d' projects/cmake_install.cmake
+  cmake .. -G Ninja \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DLLVM_HOST_TRIPLE=$CHOST \
+    -DLLVM_BUILD_LLVM_DYLIB=ON \
+    -DLLVM_LINK_LLVM_DYLIB=ON \
+    -DLLVM_INSTALL_UTILS=ON \
+    -DLLVM_ENABLE_RTTI=ON \
+    -DLLVM_ENABLE_FFI=ON \
+    -DLLVM_BUILD_TESTS=ON \
+    -DLLVM_BUILD_DOCS=ON \
+    -DLLVM_ENABLE_SPHINX=ON \
+    -DLLVM_ENABLE_DOXYGEN=OFF \
+    -DSPHINX_WARNINGS_AS_ERRORS=OFF \
+    -DFFI_INCLUDE_DIR=$(pkg-config --variable=includedir libffi) \
+    -DLLVM_BINUTILS_INCDIR=/usr/include
+  ninja all ocaml_doc
 }
 
 check() {
   cd "$srcdir/llvm-$pkgver.src/build"
-  # make check-{llvm,clang,clang-tools,lld}
+  # ninja check
 }
 
 package_llvm-julia() {
-  pkgdesc="Low Level Virtual Machine (with patch for julia)"
+  pkgdesc="Collection of modular and reusable compiler and toolchain technologies (with patch for julia)"
   depends=("llvm-libs-julia=$pkgver-$pkgrel" 'perl')
+  optdepends=('python-setuptools: for using lit (LLVM Integrated Tester)')
   conflicts=("llvm")
   provides=("llvm=$pkgver-$pkgrel")
 
   cd "$srcdir/llvm-$pkgver.src"
 
-  make -C build DESTDIR="$pkgdir" install
+  DESTDIR="$pkgdir" ninja install
+
+  # Include lit for running tests with clang and friends
+  pushd ../utils/lit
+  python3 setup.py install --root="$pkgdir" -O1
+  popd
 
   # Remove documentation sources
   rm -r "$pkgdir"/usr/share/doc/llvm/html/{_sources,.buildinfo}
@@ -170,26 +151,26 @@ package_llvm-julia() {
   mv "$pkgdir/usr/share/doc/llvm/ocaml-html" "$srcdir/ocaml.doc"
 
   if [[ $CARCH == x86_64 ]]; then
-      # Needed for multilib (https://bugs.archlinux.org/task/29951)
-      # Header stub is taken from Fedora
-      mv "$pkgdir/usr/include/llvm/Config/llvm-config"{,-64}.h
-      cp "$srcdir/llvm-config.h" "$pkgdir/usr/include/llvm/Config/llvm-config.h"
+    # Needed for multilib (https://bugs.archlinux.org/task/29951)
+    # Header stub is taken from Fedora
+    mv "$pkgdir/usr/include/llvm/Config/llvm-config"{,-64}.h
+    cp "$srcdir/llvm-config.h" "$pkgdir/usr/include/llvm/Config/llvm-config.h"
   fi
 
-  install -Dm644 LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 ../LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
 package_llvm-libs-julia() {
-  pkgdesc="Low Level Virtual Machine (runtime libraries) (with patch for julia)"
-  depends=('gcc-libs' 'zlib' 'libffi' 'libedit' 'ncurses')
+  pkgdesc="LLVM runtime libraries (with patch for julia)"
+  depends=('gcc-libs' 'zlib' 'libffi' 'libedit' 'ncurses' 'libxml2')
   conflicts=("llvm-libs")
   provides=("llvm-libs=$pkgver-$pkgrel")
 
   install -d "$pkgdir/usr/lib"
   cp -P \
-     "$srcdir"/lib{LLVM,LTO}*.so* \
-     "$srcdir"/LLVMgold.so \
-     "$pkgdir/usr/lib/"
+    "$srcdir"/lib{LLVM,LTO}*.so* \
+    "$srcdir"/LLVMgold.so \
+    "$pkgdir/usr/lib/"
 
   # Symlink LLVMgold.so from /usr/lib/bfd-plugins
   # https://bugs.archlinux.org/task/28479
@@ -197,7 +178,7 @@ package_llvm-libs-julia() {
   ln -s ../LLVMgold.so "$pkgdir/usr/lib/bfd-plugins/LLVMgold.so"
 
   install -Dm644 "$srcdir/llvm-$pkgver.src/LICENSE.TXT" \
-          "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+    "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
 package_llvm-ocaml-julia() {
@@ -213,109 +194,4 @@ package_llvm-ocaml-julia() {
   cp -a "$srcdir/ocaml.doc" "$pkgdir/usr/share/doc/llvm-ocaml/html"
 
   install -Dm644 LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-}
-
-package_lld-julia() {
-  pkgdesc="Linker from the LLVM project (with patch for julia)"
-  url="http://lld.llvm.org/"
-  depends=("llvm-libs=$pkgver-$pkgrel")
-  conflicts=("lld")
-  provides=("lld=$pkgver-$pkgrel")
-
-  cd "$srcdir/llvm-$pkgver.src"
-
-  make -C build/tools/lld DESTDIR="$pkgdir" install
-
-  # Remove documentation sources
-  rm -r "$pkgdir"/usr/share/doc/lld/html/{_sources,.buildinfo}
-
-  install -Dm644 tools/lld/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-}
-
-package_lldb-julia() {
-  pkgdesc="Next generation, high-performance debugger (with patch for julia)"
-  url="http://lldb.llvm.org/"
-  depends=("llvm-libs-julia=$pkgver-$pkgrel" 'libxml2' 'python2' 'python2-six')
-  conflicts=("lldb")
-  provides=("lldb=$pkgver-$pkgrel")
-
-  cd "$srcdir/llvm-$pkgver.src"
-
-  make -C build/tools/lldb DESTDIR="$pkgdir" install
-
-  # https://bugs.archlinux.org/task/50759
-  sed -i "/import_module('_lldb')/s/_lldb/lldb.&/" \
-      "$pkgdir/usr/lib/python2.7/site-packages/lldb/__init__.py"
-
-  # Remove bundled six library
-  rm "$pkgdir/usr/lib/python2.7/site-packages/six.py"
-
-  # Compile Python scripts
-  python2 -m compileall "$pkgdir/usr/lib/python2.7/site-packages/lldb"
-  python2 -O -m compileall "$pkgdir/usr/lib/python2.7/site-packages/lldb"
-
-  install -Dm644 tools/lldb/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-}
-
-package_clang-julia() {
-  pkgdesc="C language family frontend for LLVM (with patch for julia)"
-  url="http://clang.llvm.org/"
-  depends=("llvm-libs-julia=$pkgver-$pkgrel" 'gcc' 'libxml2')
-  optdepends=('openmp: OpenMP support in clang with -fopenmp'
-              'python2: for scan-view and git-clang-format')
-  provides=("clang=$pkgver-$pkgrel" "clang-analyzer=$pkgver")
-  conflicts=('clang' 'clang-analyzer')
-  replaces=('clang-analyzer-julia')
-
-  cd "$srcdir/llvm-$pkgver.src"
-
-  make -C build/tools/clang DESTDIR="$pkgdir" install
-  make -C build/projects/compiler-rt DESTDIR="$pkgdir" install
-
-  # Remove documentation sources
-  rm -r "$pkgdir"/usr/share/doc/clang/html/{_sources,.buildinfo}
-
-  # Move analyzer scripts out of /usr/libexec
-  mv "$pkgdir"/usr/libexec/{ccc,c++}-analyzer "$pkgdir/usr/lib/clang/"
-  rmdir "$pkgdir/usr/libexec"
-  sed -i 's|libexec|lib/clang|' "$pkgdir/usr/bin/scan-build"
-
-  # Install Python bindings
-  install -d "$pkgdir/usr/lib/python2.7/site-packages"
-  cp -a tools/clang/bindings/python/clang "$pkgdir/usr/lib/python2.7/site-packages/"
-
-  # Use Python 2
-  sed -i 's|/usr/bin/env python|&2|' \
-      "$pkgdir/usr/bin/scan-view" \
-      "$pkgdir/usr/bin/git-clang-format" \
-      "$pkgdir/usr/share/clang/clang-format-diff.py"
-
-  # Compile Python scripts
-  python2 -m compileall "$pkgdir"
-  python2 -O -m compileall "$pkgdir"
-
-  install -Dm644 tools/clang/LICENSE.TXT \
-          "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-}
-
-package_clang-tools-extra-julia() {
-  pkgdesc="Extra tools built using clang's tooling APIs (with patch for julia)"
-  url="http://clang.llvm.org/"
-  depends=("clang-julia=$pkgver-$pkgrel")
-  provides=("clang-tools-extra=$pkgver-$pkgrel")
-  conflicts=("clang-tools-extra")
-
-  cd "$srcdir/llvm-$pkgver.src"
-
-  make -C build/tools/clang/tools/extra DESTDIR="$pkgdir" install
-
-  # Remove documentation sources
-  rm -r "$pkgdir"/usr/share/doc/clang-tools/html/{_sources,.buildinfo}
-
-  # Use Python 2
-  sed -i 's|/usr/bin/env python|&2|' \
-      "$pkgdir"/usr/share/clang/{clang-tidy-diff,run-clang-tidy,run-find-all-symbols}.py
-
-  install -Dm644 tools/clang/tools/extra/LICENSE.TXT \
-          "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
