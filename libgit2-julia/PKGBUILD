@@ -3,8 +3,8 @@
 # Contributor: Dave Reisner <d@falconindy.com>
 
 pkgname=libgit2-julia
-pkgver=0.26.0
-pkgrel=3
+pkgver=0.27.2
+pkgrel=1
 epoch=1
 pkgdesc='A linkable library for Git'
 arch=(i686 x86_64 armv7h aarch64)
@@ -16,8 +16,8 @@ conflicts=(libgit2)
 license=('GPL2')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/libgit2/libgit2/archive/v${pkgver}.tar.gz"
         libgit2-agent-nonfatal.patch)
-sha1sums=('d4e44fcf3ada97caeaa3ab698105c107600bb3ab'
-          '5b333adbd3bfa5e546053d2439d15f684cb0c44f')
+sha256sums=('ffacdbd5588aeb03e98e3866a7e2ceace468723a439bdc9bb01362fe140fa9e5'
+            'a60e169812b802e3fcb4ee7501786346eb87db9ffa3c8ae3311de47ce5a15f10')
 options=(!strip)
 
 prepare() {
