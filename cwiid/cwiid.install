@@ -1,0 +1,7 @@
+post_install() {
+  printf "$(tput setaf 4)In order to use wminput ensure you load the uinput kernel module and have assigned correct access to /dev/uinput$(tput sgr0)\n"
+}
+
+post_upgrade() {
+  post_install
+}

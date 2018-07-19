@@ -1,9 +1,9 @@
 # Maintainer: Shengyu Zhang <la@archlinuxcn.org>
 
 pkgname=cquery
-pkgver=v20180302
+pkgver=v20180718
 __pkgver=${pkgver:1}
-pkgrel=6
+pkgrel=2
 pkgdesc='Low-latency vscode language server for large C++ code-bases, powered by libclang.'
 arch=('x86_64')
 url='https://github.com/cquery-project/cquery/'
@@ -12,13 +12,15 @@ depends=('clang')
 makedepends=('git' 'python' 'llvm')
 conflicts=('cquery-git')
 source=("https://github.com/cquery-project/$pkgname/archive/$pkgver.tar.gz"
-        'git+https://github.com/miloyip/rapidjson'
-        'git+https://github.com/onqtam/doctest'
-        'git+https://github.com/greg7mdp/sparsepp'
-        'git+https://github.com/emilk/loguru'
-        'git+https://github.com/msgpack/msgpack-c'
+        'git+https://github.com/miloyip/rapidjson?commit=daabb88'
+        'git+https://github.com/onqtam/doctest?commit=b40b7e7'
+        'git+https://github.com/greg7mdp/sparsepp?commit=1ca7189'
+        'git+https://github.com/emilk/loguru?commit=6bf94c5'
+        'git+https://github.com/msgpack/msgpack-c?commit=208595b'
+        'git+https://github.com/zeux/pugixml?commit=24a7064'
         )
-sha256sums=('273b317f6ad13f29db1e5e14ff7103e8946e6208ab246166ce1afc6f3381d65e'
+sha256sums=('72361e5e6f7a4a6b5ae27d555354efb4b012d20798b50ddd19cfd81bdf56cc1c'
+            'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
@@ -27,11 +29,12 @@ sha256sums=('273b317f6ad13f29db1e5e14ff7103e8946e6208ab246166ce1afc6f3381d65e'
 
 prepare() {
     cd $pkgname-$__pkgver
-    cp -r $srcdir/rapidjson third_party
-    cp -r $srcdir/doctest third_party
-    cp -r $srcdir/sparsepp third_party
-    cp -r $srcdir/loguru third_party
-    cp -r $srcdir/msgpack-c third_party
+    cp -r -u $srcdir/rapidjson third_party
+    cp -r -u $srcdir/doctest third_party
+    cp -r -u $srcdir/sparsepp third_party
+    cp -r -u $srcdir/loguru third_party
+    cp -r -u $srcdir/msgpack-c third_party
+    cp -r -u $srcdir/pugixml third_party
 }
 
 build() {
