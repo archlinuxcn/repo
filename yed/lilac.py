@@ -27,16 +27,7 @@ depends = ['archlinux-java-run']
 
 def pre_build():
     aur_pre_build()
-
-    for line in edit_file('PKGBUILD'):
-        # edit PKGBUILD
-        if line.strip().startswith("depends="):
-            depends = re.findall("depends=\s*\((.*)\)", line)[0]
-            words = depends.split(" ")
-            words.append("'java-environment'")
-            words.append("'bash'")
-            line = "depends=(%s)" % (" ".join(words))
-        print(line)
+    add_depends(["java-environment", "bash"])
 
 post_build = aur_post_build
 
