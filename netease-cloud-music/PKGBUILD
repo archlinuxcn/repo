@@ -1,9 +1,8 @@
-# Maintainer: Justin Wong <justin.w.xd at gmail dot com>
-# Co-Maintainer: Peter Cai <peter at typeblog dot net>
-_distro="ubuntu"
+# Maintainer: Peter Cai <peter at typeblog dot net>
+_pkgrel=1 # Pkgrel from Deepin Linux
 
 pkgname=netease-cloud-music
-pkgver=1.1.0
+pkgver=1.1.3
 pkgrel=1
 pkgdesc="Netease Cloud Music, converted from .deb package"
 arch=("x86_64")
@@ -18,13 +17,14 @@ depends=(
 	"glibc" "cairo" "vlc" "fontconfig"
 	"dbus" "cups" "expat" "gdk-pixbuf2"
 	"glib2" "pango" "libpulse" "sqlite"
-	"gcc-libs" "libx11" "zlib"
+	"gcc-libs" "libx11" "zlib" "qcef"
+	"taglib" "libxext" "libxtst"
 )
 source=(
-	"http://d1.music.126.net/dmusic/${pkgname}_${pkgver/_/-}_amd64_${_distro}.deb"
+	"http://packages.deepin.com/deepin/pool/main/n/netease-cloud-music/netease-cloud-music_${pkgver}-${_pkgrel}_amd64.deb"
 	"http://music.163.com/html/web2/service.html"
 )
-md5sums=('a678960abf7b83ac89eb9a034a580e8a'
+md5sums=('43012625c61e4bfc1dd1dcb68976488b'
          'SKIP')
 
 package() {
@@ -32,4 +32,3 @@ package() {
   tar -xvf data.tar.xz -C ${pkgdir}
   install -D -m644 service.html ${pkgdir}/usr/share/licenses/$pkgname/license.html
 }
-
