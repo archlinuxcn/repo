@@ -1,6 +1,6 @@
 _pkgname=trio
 pkgname=python-trio
-pkgver=0.4.0
+pkgver=0.5.0
 pkgrel=1
 pkgdesc="An async/await-native I/O library for humans and snake people"
 arch=('any')
@@ -9,8 +9,8 @@ license=('MIT')
 depends=('python' 'python-attrs' 'python-sortedcontainers' 'python-idna' 'python-async_generator')
 makedepends=('python-setuptools')
 provides=('python-multio-provider')
-source=('https://pypi.python.org/packages/30/a7/df0e9d376a0d2e4a0e7c2ecb282242d9d4c1a07a558290e5e6d071546a6d/trio-0.4.0.tar.gz')
-md5sums=('80553acbf89c9670f7a90f06c9c8d960')
+source=('https://files.pythonhosted.org/packages/37/75/1d0c6f3ab220c54dfde2c2c0b3547f6d275389e18c14aa74dcf86985549b/trio-0.5.0.tar.gz')
+md5sums=('ec533fdd8865761d1bc2e43a8ca9521f')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
