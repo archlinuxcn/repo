@@ -1,0 +1,12 @@
+[Unit]
+Description=LXD - unix socket
+After=network.target
+
+[Socket]
+ListenStream=/var/lib/lxd/unix.socket
+SocketMode=0660
+Socketuser=root
+SocketGroup=lxd
+
+[Install]
+WantedBy=sockets.target
