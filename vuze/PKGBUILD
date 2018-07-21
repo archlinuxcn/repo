@@ -4,11 +4,11 @@
 # Contributor: phoenixlzx < phoenixlzx AT phoenixsec DOT org >
 
 pkgname=vuze
-pkgver=5.7.5.0
+pkgver=5.7.6.0
 pkgrel=1
 _ver=${pkgver//./} 
 pkgdesc="A feature-rich Java-based BitTorrent client (previously called 'Azureus')"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://sourceforge.net/projects/azureus/"
 license=('GPL')
 depends=('desktop-file-utils' 'java-runtime')
@@ -18,55 +18,50 @@ optdepends=('vuze-plugin-countrylocator: Country flags for the "Peers" tab'
 options=('!strip')
 install=$pkgname.install
 source=("http://downloads.sourceforge.net/azureus/vuze/Vuze_${_ver}/Vuze_${_ver}_linux.tar.bz2")
-md5sums=('fb8f224700331de86caa8648418fb41b')
+md5sums=('0c6cba3f2ef401df5c09e020ce9b1ff3')
 
 package() {
-  cd vuze
+  cd $pkgname
 
   msg2 "Creating directory structure..."
-  install -d "$pkgdir"/opt/vuze/
+  install -d "$pkgdir"/opt/$pkgname/
   install -d "$pkgdir"/usr/bin/
   install -d "$pkgdir"/usr/share/applications/
-  install -d "$pkgdir"/usr/share/licenses/vuze/
+  install -d "$pkgdir"/usr/share/licenses/$pkgname/
   install -d "$pkgdir"/usr/share/pixmaps/
 
   msg2 "Moving stuff in place..."
   # Launchers
-  mv vuze "$pkgdir"/usr/bin/vuze
-  ln -s vuze "$pkgdir"/usr/bin/azureus
+  mv $pkgname "$pkgdir"/usr/bin/$pkgname
+  ln -s $pkgname "$pkgdir"/usr/bin/azureus
 
   # swt.jar
-  case "$CARCH" in
-    i686)   mv swt/swt32.jar "$pkgdir"/opt/vuze/swt.jar ;;
-    x86_64) mv swt/swt64.jar "$pkgdir"/opt/vuze/swt.jar ;;
-  esac
+  mv swt/swt64.jar "$pkgdir"/opt/$pkgname/swt.jar
 
   # Icon and desktop 
-  mv vuze.png "$pkgdir"/usr/share/pixmaps/
-  mv vuze.desktop "$pkgdir"/usr/share/applications/
+  mv $pkgname.png "$pkgdir"/usr/share/pixmaps/
+  mv $pkgname.desktop "$pkgdir"/usr/share/applications/
 
   # Licenses
-  mv GPL.txt      "$pkgdir"/usr/share/licenses/vuze/
-  mv GPLv3.txt    "$pkgdir"/usr/share/licenses/vuze/
-  mv LICENSES.txt "$pkgdir"/usr/share/licenses/vuze/
-  mv TOS.txt      "$pkgdir"/usr/share/licenses/vuze/
+  for i in GPL.txt GPLv3.txt LICENSES.txt TOS.txt; do
+    mv $i "$pkgdir"/usr/share/licenses/$pkgname/
+  done
 
   msg2 "Removing redundancies..."
   rm -r swt/
   rm    azureus
   rm    installer.log
   rm    README.txt
-  rm    vuze.schemas
+  rm    $pkgname.schemas
 
   msg2 "Installing to /opt..."
-  mv * "$pkgdir"/opt/vuze/
+  mv * "$pkgdir"/opt/$pkgname/
 
   msg2 "Fixing paths..."
-  sed 's|#PROGRAM_DIR=.*|PROGRAM_DIR="/opt/vuze"|' \
-      -i "$pkgdir"/usr/bin/vuze \
+  sed -i "s|#PROGRAM_DIR=.*|PROGRAM_DIR=\"/opt/$pkgname\"|" "$pkgdir"/usr/bin/$pkgname
 
   msg2 "Adding support for magnet links..."
-  sed -r -e 's|Exec=vuze %f|Exec=vuze %U|' \
-         -e 's|(x-bittorrent)|\1;x-scheme-handler/magnet;|' \
-      -i "$pkgdir"/usr/share/applications/vuze.desktop
+  sed -r -e "s|Exec=$pkgname %f|Exec=$pkgname %U|" \
+         -e "s|(x-bittorrent)|\1;x-scheme-handler/magnet;|" \
+         -i "$pkgdir"/usr/share/applications/$pkgname.desktop
 }
