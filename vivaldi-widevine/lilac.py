@@ -13,6 +13,10 @@ def pre_build():
     aur_pre_build()
 
     for line in edit_file('PKGBUILD'):
+        if line.strip().startswith('sha256sums='):
+            # Skip sha256sum check for the first dependency (the HTML file)
+            print('sha256sums=(\'SKIP\'')
+            continue
         print(line)
         if line.strip().startswith('options='):
             print('depends+=("gcc-libs")') # Should depend on gcc-libs

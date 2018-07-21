@@ -3,12 +3,14 @@
 
 pkgname='google-authenticator-libpam-git'
 
-pkgver=r209.9d858ec
+pkgver=r379.a48e649
 pkgver() {
   cd "$srcdir/$pkgname"
+  local count=$(git rev-list --count HEAD)
+  count=$(($count + 200)) # Avoid conflicting with the original repo's count
   ( set -o pipefail
     git describe --long 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
-    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+    printf "r%s.%s" "$count" "$(git rev-parse --short HEAD)"
   )
 }
 
@@ -22,11 +24,11 @@ makedepends=('git')
 optdepends=('qrencode: scannable QR codes for google auth phone app')
 provides=('google-authenticator-libpam')
 conflicts=('google-authenticator-libpam')
-source=("$pkgname"::'git+https://github.com/google/google-authenticator.git')
+source=("$pkgname"::'git+https://github.com/google/google-authenticator-libpam.git')
 md5sums=(SKIP)
 
 build() {
-  cd "${srcdir}/${pkgname}/libpam"
+  cd "${srcdir}/${pkgname}"
   ./bootstrap.sh
   ./configure --prefix=/usr
   make
@@ -34,6 +36,6 @@ build() {
 
 
 package() {
-  cd "${srcdir}/${pkgname}/libpam"
+  cd "${srcdir}/${pkgname}"
   make DESTDIR="${pkgdir}/" install
 }
