@@ -2,24 +2,21 @@
 
 _pkgbasename=ncurses
 pkgname=lib32-${_pkgbasename}5-compat-libs
-_pkgver=6.0-20170527
-pkgver=${_pkgver/-/+}
+pkgver=6.1
 pkgrel=1
 pkgdesc="System V Release 4.0 curses emulation library (32-bit), ABI 5"
 arch=('x86_64')
-url='http://invisible-island.net/ncurses/ncurses.html'
+url="http://www.gnu.org/software/ncurses/"
 license=('MIT')
 depends=('lib32-glibc' "lib32-${_pkgbasename}")
 makedepends=("gcc-multilib")
-# Temporary URL, the upstream invisible-island URL will be used again when the
-# core ncurses package is updated to a more recent version.
-source=(https://www.mirrorservice.org/sites/lynx.isc.org/ncurses/current/ncurses-${_pkgver}.tgz{,.asc})
-md5sums=('c0e32e50ed6fd81af7ecc4910de9fa3f'
+source=(https://ftp.gnu.org/pub/gnu/ncurses/ncurses-$pkgver.tar.gz{,.sig})
+md5sums=('98c889aaf8d23910d2b92d65be2e737a'
          'SKIP')
 validpgpkeys=('C52048C0C0748FEE227D47A2702353E0F7E48EDB') # Thomas Dickey
 
 build() {
-  cd ${_pkgbasename}-${_pkgver}
+  cd ${_pkgbasename}-${pkgver}
 
   export CC="gcc -m32"
   export CXX="g++ -m32"
@@ -32,7 +29,7 @@ build() {
 }
 
 package() {
-  cd ${_pkgbasename}-${_pkgver}
+  cd ${_pkgbasename}-${pkgver}
   make install.libs
 
   install -dm755 ${pkgdir}/usr/lib32
