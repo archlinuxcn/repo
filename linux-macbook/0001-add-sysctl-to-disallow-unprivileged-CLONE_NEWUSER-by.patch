@@ -1,8 +1,8 @@
-From 9a5adbc45b1c7d43fe4b27936f2a6939660617a1 Mon Sep 17 00:00:00 2001
-Message-Id: <9a5adbc45b1c7d43fe4b27936f2a6939660617a1.1528777685.git.jan.steffens@gmail.com>
+From a2d2476ffec7d988b1a5396586869570e0d6f9d8 Mon Sep 17 00:00:00 2001
+Message-Id: <a2d2476ffec7d988b1a5396586869570e0d6f9d8.1531335939.git.jan.steffens@gmail.com>
 From: Serge Hallyn <serge.hallyn@canonical.com>
 Date: Fri, 31 May 2013 19:12:12 +0100
-Subject: [PATCH 1/3] add sysctl to disallow unprivileged CLONE_NEWUSER by
+Subject: [PATCH 1/4] add sysctl to disallow unprivileged CLONE_NEWUSER by
  default
 
 Signed-off-by: Serge Hallyn <serge.hallyn@ubuntu.com>
@@ -99,5 +99,5 @@ index 246d4d4ce5c7..f64432b45cec 100644
  static DEFINE_MUTEX(userns_state_mutex);
  
 -- 
-2.17.1
+2.18.0
 
