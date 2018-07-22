@@ -1,6 +1,6 @@
 # Maintainer: Salvador Pardiñas <darkfm@vera.com.uy>
 pkgname=woeusb-git
-pkgver=r716.1aaec5f
+pkgver=3.2.1.r1.g5470bd6
 pkgrel=1
 pkgdesc="A Linux program to create Windows USB stick installer from a real Windows DVD or an image"
 arch=('x86_64')
@@ -22,9 +22,8 @@ noextract=()
 md5sums=('SKIP')
 
 pkgver() {
-	cd "$srcdir/WoeUSB"
-# Git, no tags available
-	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  cd "$srcdir/WoeUSB"
+  git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g' | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 prepare() {
