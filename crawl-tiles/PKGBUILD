@@ -7,8 +7,7 @@
 _srcname=crawl
 pkgname=crawl-tiles
 pkgver=0.21.1
-pkgrel=2
-epoch=
+pkgrel=3
 pkgdesc="Dungeon Crawl Stone Soup with graphical tiles and sound support"
 arch=('i686' 'x86_64')
 url="https://crawl.develz.org/"
@@ -22,25 +21,31 @@ depends=(
 	'glu'
   'ttf-dejavu'
 )
-makedepends=('advancecomp')
-checkdepends=()
-optdepends=()
+makedepends=('git' 'advancecomp')
 provides=('crawl')
 conflicts=('crawl')
-backup=()
-options=()
-source=("https://github.com/crawl/$_srcname/archive/$pkgver.tar.gz")
-md5sums=('634808232f0811c7f16594a8c35d8b72')
+source=("git://github.com/crawl/$_srcname.git")
+md5sums=('SKIP')
 
 prepare() {
-	cd "$_srcname-$pkgver/crawl-ref/source"
+    cd "$_srcname"
+    git fetch --tags
+    latestTag=$(git describe --tags `git rev-list --tags --max-count=1`)
+    git checkout $latestTag
+
+	cd "crawl-ref/source"
 	
 	echo $_makeflags
 	echo $pkgver > util/release_ver
 }
 
+pkgver () {
+  cd "$_srcname"
+  git describe --tags `git rev-list --tags --max-count=1` | cut -c 1-
+}
+
 build() {
-	cd "$_srcname-$pkgver/crawl-ref/source"
+	cd "$_srcname/crawl-ref/source"
 
 	make \
 		prefix=/usr \
@@ -55,7 +60,7 @@ build() {
 # Tests cannot be run without a debug build.
 # To enable them, add the debug target to build()
 #check() {
-#	cd "$_srcname-$pkgver/crawl-ref/source"
+#	cd "$_srcname/crawl-ref/source"
 #	make -k test \
 #		prefix=/usr \
 #		bin_prefix=bin \
@@ -66,7 +71,7 @@ build() {
 #}
 
 package() {
-	cd "$_srcname-$pkgver/crawl-ref/source"
+	cd "$_srcname/crawl-ref/source"
 
 	make install \
 		prefix=/usr \
