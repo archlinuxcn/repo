@@ -5,7 +5,7 @@ pkgname='google-authenticator-libpam-git'
 
 pkgver=r379.a48e649
 pkgver() {
-  cd "$srcdir/$pkgname"
+  cd "$srcdir/$pkgname-2"
   local count=$(git rev-list --count HEAD)
   count=$(($count + 200)) # Avoid conflicting with the original repo's count
   ( set -o pipefail
