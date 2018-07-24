@@ -3,6 +3,7 @@ from lilaclib import *
 
 build_prefix = 'archlinuxcn-x86_64'
 depends = ['gn-git']
+time_limit_hours = 2
 
 def pre_build():
     aur_pre_build()
