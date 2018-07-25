@@ -16,7 +16,7 @@ _use_wayland=0           # Build Wayland NOTE: extremely experimental and don't 
 ## -- Package and components information -- ##
 ##############################################
 pkgname=chromium-dev
-pkgver=69.0.3464.0
+pkgver=69.0.3493.3
 pkgrel=1
 pkgdesc="The open-source project behind Google Chrome (Dev Channel)"
 arch=('x86_64')
@@ -43,10 +43,12 @@ depends=(
          'libpulse'
 #          'libwebp'
          'opus'
+         'libva'
          )
 makedepends=("libva" 
              'gperf'
              'ninja'
+             'python2-protobuf'
              'python2-beautifulsoup4'
              'python2-html5lib'
              'python2-simplejson'
@@ -57,6 +59,7 @@ makedepends=("libva"
              'nodejs'
              'ncurses5-compat-libs'
              'lld'
+             'gn-git'
              )
 optdepends=(
             'pepper-flash: PPAPI Flash Player'
@@ -78,10 +81,9 @@ source=( #"https://gsdview.appspot.com/chromium-browser-official/chromium-${pkgv
         'git+https://github.com/foutrelis/chromium-launcher.git'
         'chromium-dev.svg'
         # Patch form Gentoo
-        'https://raw.githubusercontent.com/gentoo/gentoo/master/www-client/chromium/files/chromium-compiler-r3.patch'
+        'https://raw.githubusercontent.com/gentoo/gentoo/master/www-client/chromium/files/chromium-compiler-r4.patch'
         'https://raw.githubusercontent.com/gentoo/gentoo/master/www-client/chromium/files/chromium-webrtc-r0.patch'
-        'https://raw.githubusercontent.com/gentoo/gentoo/master/www-client/chromium/files/chromium-ffmpeg-r1.patch'
-        'https://raw.githubusercontent.com/gentoo/gentoo/master/www-client/chromium/files/chromium-disable_xml_catalogs.patch'
+        'https://raw.githubusercontent.com/gentoo/gentoo/master/www-client/chromium/files/chromium-ffmpeg-ebp-r1.patch'
          # Misc Patches
         'chromium-ffmpeg-clang.patch'
         'chromium-intel-vaapi_r18.diff.base64::https://chromium-review.googlesource.com/changes/532294/revisions/18/patch?download'
@@ -95,10 +97,9 @@ sha256sums=( #"$(curl -sL https://gsdview.appspot.com/chromium-browser-official/
             'SKIP'
             'dd2b5c4191e468972b5ea8ddb4fa2e2fa3c2c94c79fc06645d0efc0e63ce7ee1'
             # Patch form Gentoo
-            '09777d4bbc474f9ce8da68cda177e02cfa786b026194b894ff7f24bb2c539145'
+            'c8225c0c14288c21f5cc448afc0f67fc4563517c39a8680af9e659f5b2d8f418'
             'bcb2f4588cf5dcf75cde855c7431e94fdcc34bdd68b876a90f65ab9938594562'
-            'aa885330bc4180b78d915f9dfdfc3210038a0acab7b16735ea9828ab6a633bde'
-            '446b50b297f1df57e933ad843ee97ea717e98bc90a389cd1156fcf23d8413a5b'
+            'fa31a6815332a7fa199915458c80f152f2d6808835d780652675707d3395c091'
             # Misc Patches
             '16741344288d200fadf74546855e00aa204122e744b4811a36155efd5537bd95'
             '957d777c67756074c8e028d08c1e88e738f881b3a8569e60c5bdd1da6737e305'
@@ -205,6 +206,7 @@ _keeplibs=(
            'third_party/libXNVCtrl'
            'third_party/libaddressinput'
            'third_party/libaom'
+           'third_party/libaom/source/libaom/third_party/vector'
            'third_party/libaom/source/libaom/third_party/x86inc'
            'third_party/libjingle'
            'third_party/libjpeg'
@@ -429,10 +431,9 @@ prepare() {
 
   msg2 "Patching the sources"
   # Patch sources from Gentoo.
-  patch -p1 -i "${srcdir}/chromium-compiler-r3.patch"
+  patch -p1 -i "${srcdir}/chromium-compiler-r4.patch"
   patch -p1 -i "${srcdir}/chromium-webrtc-r0.patch"
-  patch -p1 -i "${srcdir}/chromium-ffmpeg-r1.patch"
-  patch -p1 -i "${srcdir}/chromium-disable_xml_catalogs.patch"
+  patch -p1 -i "${srcdir}/chromium-ffmpeg-ebp-r1.patch"
 
   # Misc patches
 
@@ -519,11 +520,9 @@ build() {
   chromium/scripts/generate_gn.py
   popd &> /dev/null
 
-  msg2 "Build GN"
-  tools/gn/bootstrap/bootstrap.py -v -s --no-clean
 
   msg2 "Starting building Chromium..."
-  LC_ALL=C out/Release/gn gen out/Release -v --args="${_flags[*]}" --script-executable=/usr/bin/python2
+  LC_ALL=C gn gen out/Release -v --args="${_flags[*]}" --script-executable=/usr/bin/python2
 
   # Build all.
   LC_ALL=C ninja -l$(nproc) -C out/Release -v chrome chrome_sandbox chromedriver #widevinecdmadapter
