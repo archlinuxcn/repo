@@ -7,7 +7,7 @@ pkgdesc="A fast and easy-to-use status bar"
 arch=("i686" "x86_64")
 url="https://github.com/jaagr/polybar"
 license=("MIT")
-depends=("cairo" "xcb-util-image" "xcb-util-wm" "xcb-util-xrm" "xcb-util-cursor")
+depends=('libmpdclient' 'libnl' 'cairo' 'jsoncpp' 'pulseaudio' 'i3-wm' 'xcb-util-cursor' 'xcb-util-image' 'curl' 'wireless_tools' 'xcb-util-wm' 'alsa-lib' 'xcb-util-xrm' )
 optdepends=("alsa-lib: alsa module support"
             "pulseaudio: pulseaudio module support"
             "libmpdclient: mpd module support"
@@ -18,7 +18,7 @@ optdepends=("alsa-lib: alsa module support"
             "ttf-unifont: Font used in example config"
             "siji-git: Font used in example config"
             "curl: github module support")
-makedepends=('libmpdclient' 'alsa-lib' 'python2' 'i3-wm' 'libnl' 'pulseaudio' 'curl' 'git' 'cmake' 'python' 'jsoncpp' 'pkg-config' 'wireless_tools' )
+makedepends=("cmake" "git" "python" "python2" "pkg-config")
 conflicts=("polybar-git")
 install="${pkgname}.install"
 source=("${pkgname}::git+${url}.git#tag=${pkgver}")
