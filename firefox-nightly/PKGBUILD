@@ -7,7 +7,7 @@ _channel=nightly
 pkgbase=firefox-nightly
 pkgname=()
 _version=63.0a1
-pkgver=63.0a1.20180723.11
+pkgver=63.0a1.20180725.23
 pkgrel=1
 arch=('x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -22,17 +22,16 @@ optdepends=('pulseaudio: audio support'
             'speech-dispatcher: text-to-speech'
             'startup-notification: support for FreeDesktop Startup Notification')
 _url="https://ftp.mozilla.org/pub/${_name}/nightly/latest-mozilla-central-l10n"
-_filename_prefix="20180723.11-"
-source=("${pkgbase}.desktop" 'vendor.js')
+_filename_prefix="20180725.23-"
+source=("${pkgbase}.desktop")
 sha512sums=('b514abafc559ec03a4222442fa4306db257c3de9e18ed91a0b37cc9d7058a8e08a241442e54a67659a3ab4512a5dae6a0b94ea7a33d08ef0b8a76a9eac902095'
-            'c9443c2fb0897193af036bfd156d732b5ffabc20ec008f351918661c4ff30a67eb62a971cc628e3f58d2017c0844e601609164171e926ebc36faf3a04ff085b5'
-            'c302f50362068ae1e84cb808e1b6f19fa38e670698cd92ecbdadcb804ca398bfb3adeceaf9e90ffc1b3d83e6a0b3431f739590b60609190945ee0d076205bd3a'
+            '4dc31a8932a2dc550c66f09d5617fb60ba9336254ee7ea7fbfc8654ba4b5c5673158beafe7dae92fcccd5ad8aa9f8aaaf9521d16b9ffccb3aad30482267e49d2'
             'SKIP'
-            '049c986cee6ebe707f60a0865e1553c22de6c0de65feb4a2f0a1283765f20db1f8a651cd0bdc638860f1c7bd8de6dc90b278b4ffffe0d9a50277153eeb25e48e'
+            '210dfa38965fa10246851dfaad062b55b0e6f86849ff6de42b8e55df6468f7ae0703662b7a0cf8a51762df97c747242576b3f737fd31c7480a835e852b78db14'
             'SKIP'
-            '86801bdef159fdeba1864327a559f9bd95e19cf3603c9c7914b900d3c02a8cdc58ec28a93817d2515427cd924d49635041673e74c35044f6db7e35c163343f1b'
+            '5b2fac78e711f24ca7b91dbe3f7a9b8f031505de6745fe4bc991fe36e6d49dc3148d24f9a375a8a5a1cac66cdffb054e1fa2abf0ce232c42faced6af727c0695'
             'SKIP'
-            '101d3a4aee4588a19b5b98277698d44d20d488144af9e8bd47fb281021c4dce2e5c1eaa1d0ecff2f214bf078e130e9b6bdc18efccd8619bf5bb54f53f021db75'
+            'b36dfaaf3975b20df00e72ff2a6e7abee1f2d94995ce1f68174dc3315056a509bb7d1ac3c9f9a8eb4c7e43bcd3339804f94b9dbd3ce2293670f959131a43dab2'
             'SKIP')
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla’s GnuPG release key
 
@@ -82,8 +81,14 @@ _package() {
       install -Dm644 "${SRC_LOC}"/chrome/icons/default/default${i}.png "${DEST_LOC}"/${i}x${i}/apps/${pkgbase}.png
   done
 
+  cat <<EOF | install -Dm644 /dev/stdin "${pkgdir}"/${OPT_PATH}/browser/defaults/preferences/vendor.js
+pref("intl.locale.requested", "");
+EOF
+
   # Disable auto-updates
-  install -Dm644 "${srcdir}"/vendor.js -t "${pkgdir}"/${OPT_PATH}/browser/defaults/preferences
+  cat <<EOF | install -Dm644 /dev/stdin "${pkgdir}"/${OPT_PATH}/distribution/policies.json
+{"policies": {"DisableAppUpdate": true}}
+EOF
 
   # Use system-provided dictionaries
   rm -rf "${pkgdir}"/${OPT_PATH}/{dictionaries,hyphenation}

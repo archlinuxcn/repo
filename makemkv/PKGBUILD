@@ -1,8 +1,8 @@
 # Maintainer: Olaf Bauer <hydro@freenet.de>
 
 pkgname=makemkv
-pkgver=1.12.2
-pkgrel=2
+pkgver=1.12.3
+pkgrel=1
 pkgdesc="DVD and Blu-ray to MKV converter and network streamer"
 arch=('i686' 'x86_64')
 url="http://www.makemkv.com"
@@ -16,20 +16,12 @@ source=(${url}/download/${pkgname}-bin-${pkgver}.tar.gz
         ${url}/download/${pkgname}-oss-${pkgver}.tar.gz
         makemkv.1
         makemkvcon.1
-        mmdtsdec.1
-        makemkv-ffmpeg.patch)
-md5sums=('5d2832b02a939c52d02600d910f27a7f'
-         '2f9b765106aea740ddd51a69939d98a6'
+        mmdtsdec.1)
+md5sums=('21c866b3b21f258d0a7a1046768f5e7c'
+         '018ce3aa31ebd87a1deb3001170540d2'
          '1f9b3a91427a2015434e501542443f4c'
          '7f4b112c5178860cc2eb25059ae1af2a'
-         '9476154228bf1b1f983178ba8565ac44'
-         'edcbb4314e28cb35329ae6c7a13c82dd')
-
-prepare() {
-  cd "${srcdir}/${pkgname}-oss-${pkgver}"
-  patch -Np1 -i ${srcdir}/makemkv-ffmpeg.patch
-}
-
+         '9476154228bf1b1f983178ba8565ac44')
 
 build() {
   cd "${srcdir}/${pkgname}-oss-${pkgver}"

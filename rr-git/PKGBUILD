@@ -3,7 +3,7 @@
 
 pkgname=rr-git
 pkgver=5.2.0.r33.g34d5bd23
-pkgrel=1
+pkgrel=2
 pkgdesc='a nondeterministic debugger'
 arch=(i686 x86_64)
 url='http://rr-project.org/'
@@ -35,7 +35,7 @@ build() {
 
   cd build
   # Debug build has `Werror` on
-  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release ..
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=Release ..
   make
 }
 

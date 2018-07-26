@@ -5,18 +5,15 @@
 _pkgbasename=python2
 pkgname=lib32-$_pkgbasename
 pkgver=2.7.14
-pkgrel=1
+pkgrel=2
 _pybasever=2.7
 pkgdesc="A high-level scripting language (32 bit)"
 arch=('x86_64')
 license=('PSF')
 url="https://www.python.org/"
-depends=(lib32-{bzip2,db,expat,gdbm,libffi,openssl,sqlite,zlib})
-makedepends=('lib32-tk' 'gcc-multilib')
-optdepends=(
-  'lib32-tk: for IDLE'
-  "python2>=${pkgver}: building packages which require python sources"
-)
+depends=(lib32-{bzip2,db,expat,gdbm,libffi,openssl,sqlite,zlib} python2)
+makedepends=('lib32-tk')
+optdepends=('lib32-tk: for IDLE')
 conflicts=('lib32-python<3')
 options=('!makeflags')
 source=("https://www.python.org/ftp/python/${pkgver%rc?}/Python-${pkgver}.tar.xz"
