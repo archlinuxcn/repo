@@ -11,7 +11,8 @@ build_prefix = 'extra-x86_64'
 #pre_build = aur_pre_build
 def pre_build():
   aur_pre_build()
-  add_makedepends([
+#  add_makedepends([
+  add_depends([
     "alsa-lib",
     "pulseaudio",
     "libmpdclient",
