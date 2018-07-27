@@ -7,22 +7,24 @@ arch=('x86_64')
 url='https://github.com/trazyn/ieaseMusic'
 license=('MIT')
 depends=('gconf' 'libnotify' 'nss' 'libxss' 'libappindicator-gtk3' 'libxtst')
-makedepends=('git' 'wget' 'rpmextract')
+#makedepends=('git' 'wget' 'rpmextract')
 options=()
-source=("git://github.com/trazyn/ieaseMusic.git")
+_rpmname="ieaseMusic-${pkgver}-linux-x86_64.rpm"
+#source=("git://github.com/trazyn/ieaseMusic.git")
+source=("https://github.com/trazyn/ieaseMusic/releases/download/v${pkgver}/${_rpmname}")
 sha1sums=('SKIP')
-install='iease-music.install'
+install=('iease-music.install')
 
-pkgver () {
-  cd "$srcdir"/ieaseMusic
-  git describe --tags `git rev-list --tags --max-count=1` | cut -c 2-
-}
+#pkgver () {
+#  cd "$srcdir"/ieaseMusic
+#  git describe --tags `git rev-list --tags --max-count=1` | cut -c 2-
+#}
 
 package() {
-  cd ${srcdir}
-  _rpmname="ieaseMusic-${pkgver}-linux-x86_64.rpm"
-  wget "$url/releases/download/v${pkgver}/${_rpmname}"
-  rpmextract.sh ${_rpmname}
+#  cd ${srcdir}
+#  _rpmname="ieaseMusic-${pkgver}-linux-x86_64.rpm"
+#  wget "$url/releases/download/v${pkgver}/${_rpmname}"
+#  rpmextract.sh ${_rpmname}
 	cp -r ${srcdir}/opt ${pkgdir}/
 	cp -r ${srcdir}/usr ${pkgdir}/
 	mkdir -p ${pkgdir}/usr/bin/
