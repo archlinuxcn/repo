@@ -1,30 +1,24 @@
 # Maintainer: Ariel AxionL <arielaxionl@gmail.com>
 pkgname=wewechat
 pkgver=1.1.7
-pkgrel=1
+pkgrel=2
+_rpmname="wewechat-$pkgver-linux-x86_64.rpm"
 pkgdesc='Unofficial WeChat client built with React, MobX and Electron.'
 arch=('x86_64')
 url='https://github.com/trazyn/weweChat'
 license=('MIT')
 depends=('gconf' 'libnotify' 'nss' 'libxss' 'libappindicator-gtk3')
-makedepends=('git' 'wget' 'rpmextract')
-options=()
-source=("git+$url.git"
+makedepends=('rpmextract')
+source=("https://github.com/trazyn/weweChat/releases/download/v${pkgver}/${_rpmname}"
         "https://raw.githubusercontent.com/trazyn/weweChat/master/LICENSE")
-sha256sums=('SKIP'
-            'b64d5463454e756d3008ff1a0511179b777884a0b4ed50dfe33e9182cf0c54db')
 
-pkgver () {
-  cd "$srcdir"/weweChat
-  git describe --tags `git rev-list --tags --max-count=1` | cut -c 2-
-}
+sha256sums=('94d8f4c0036449bb3b1a3cb54a9d70b9810944cc4d76e4e529737369915d88c8'
+            'b64d5463454e756d3008ff1a0511179b777884a0b4ed50dfe33e9182cf0c54db')
 
 package() {
   install -Dm644 LICENSE ${pkgdir}/usr/share/licenses/$pkgname/LICENSE
 
   cd ${srcdir}
-  _rpmname="wewechat-$pkgver-linux-x86_64.rpm"
-  wget "$url/releases/download/v${pkgver}/${_rpmname}"
   rpmextract.sh ${_rpmname}
 	cp -r ${srcdir}/opt ${pkgdir}/
 	cp -r ${srcdir}/usr ${pkgdir}/
