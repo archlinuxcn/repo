@@ -23,7 +23,7 @@ pkgrel=1
 arch=('i686' 'x86_64')
 url="http://kodi.tv"
 license=('GPL2')
-makedepends=('afpfs-ng' 'bluez-libs' 'boost' 'cmake' 'curl' 'cwiid' 'doxygen'
+makedepends=('fstrcmp' 'afpfs-ng' 'bluez-libs' 'boost' 'cmake' 'curl' 'cwiid' 'doxygen'
              'git' 'ffmpeg' 'fmt' 'glew' 'gperf' 'hicolor-icon-theme' 'jasper' 'java-runtime=8'
              'libaacs' 'libass' 'libbluray' 'libcdio' 'libcec' 'libgl' 'libmariadbclient'
              'libmicrohttpd' 'libmodplug' 'libmpeg2' 'libnfs' 'libplist' 'libxrandr'
@@ -65,7 +65,7 @@ package_kodi-git() {
   depends=('curl' 'bluez-libs' 'desktop-file-utils' 'ffmpeg' 'glew'
            'hicolor-icon-theme' 'libcdio' 'libcec' 'libmariadbclient' 'libmicrohttpd'
            'libxrandr' 'libxslt' 'lzo' 'mesa' 'python2-pillow' 'python2-simplejson'
-           'smbclient' 'taglib' 'tinyxml' 'xorg-xdpyinfo')
+           'smbclient' 'fstrcmp' 'taglib' 'tinyxml' 'xorg-xdpyinfo')
   optdepends=('gdb: for meaningful backtraces in case of trouble - STRONGLY RECOMMENDED'
               'afpfs-ng: Apple shares support'
               'bluez: Blutooth support'
