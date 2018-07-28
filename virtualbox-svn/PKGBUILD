@@ -10,7 +10,7 @@ pkgname=('virtualbox-svn'
          'virtualbox-guest-utils-svn'
          'virtualbox-guest-utils-nox-svn'
          'virtualbox-ext-vnc-svn')
-pkgver=73096
+pkgver=73366
 pkgrel=1
 _vboxsf_commit='6a782003ad95a383c8b19b570a532271f090ad35'
 arch=('x86_64')
@@ -26,6 +26,7 @@ makedepends=('alsa-lib'
              'glu'
              'gsoap'
              'iasl'
+             'opus'
              'jdk7-openjdk'
              'libidl2'
              'libpulse'
@@ -73,7 +74,6 @@ source=("VirtualBox::svn+http://www.virtualbox.org/svn/vbox/trunk"
         '002-dri-driver-path.patch'
         '005-gsoap-build.patch'
         '006-rdesktop-vrdp-keymap-path.patch'
-        '007-python3.6-support.patch'
         '008-no-vboxvideo.patch'
         '009-include-path.patch'
         '010-qt-5.11.patch'
@@ -98,7 +98,6 @@ sha256sums=('SKIP'
             'f67674931c30187f867233e3a4ae662f93c9110fbd0bfce50dd9f391f4533bc0'
             '7d2da8fe10a90f76bbfc80ad1f55df4414f118cd10e10abfb76070326abebd46'
             '5d5af2de5b1f1c61ec793503350f2440661cf8fd640f11b8a86f10bce499c0dc'
-            '802c3f9bf0a19b10056c375c5c7c5eb4aba14300446acefab3dbd5de366ada2b'
             '8b7f241107863f82a5b0ae336aead0b3366a40103ff72dbebf33f54b512a0cbc'
             '1acc7014bcb3d9ca6da29eed813c3d6e91a688c43f9d93802fd4e3814f67ace4'
             'c6ef35e6893d557c7c2269ff79bc299fe9058cfb2c933a7efdc7a8a7b6d9c5da'
