@@ -314,3 +314,16 @@
      2018-07-28 e68d2ec actionless fix(install info fetcher): inprecise prompt when package_A depends on package_B and package_C (provided by package_B)
      2018-07-28 3b01361 actionless feat: implement --dynamic-users flag and config option
      2018-07-27 b7bce43 actionless feat(aur: get_json_from_url): better exception text
+1.2.7           Release 1.2.7
+    
+    2018-07-28 d2d318b feat(config): add `ui.PrintCommands` to print each command which pikaur spawning
+    2018-07-28 d862f96 refactor(main): use `sudo -v` instead of `sudo pacman -T` for a sudo loop
+    2018-07-28 59e544a fix(args): don't use `-r` args since it's 'undeprecated' in pacman
+1.2.8           Bugfix release 1.2.8
+    
+    Notable changes:
+     2018-07-28 57bb4e0 actionless fix(args: help): remove '-r' from pikaur help since it's used again by pacman
+1.2.9           Bugfix release 1.2.9
+    
+    Notable changes:
+     2018-07-28 abaaea1 fix(exceptions: PackageNotFound): default value for `wanted_by`
