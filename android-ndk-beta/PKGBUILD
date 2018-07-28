@@ -1,11 +1,11 @@
-# Maintainer: Yen Chi Hsuan <yan12125@gmail.com>
+# Maintainer: Chih-Hsuan Yen <yan12125@gmail.com>
 # Contributor: Alexander F Rødseth <xyproto@archlinux.org>
 # Contributor: Daniel Micay <danielmicay@gmail.com>
 # Contributor: frownlee <florez.brownlee@gmail.com>
 
 pkgname=android-ndk-beta
 _pkgname=${pkgname/-beta*/}
-pkgver=r17_beta2
+pkgver=r18_beta1
 pkgrel=1
 pkgdesc='Android C/C++ developer kit (beta)'
 arch=('x86_64')
@@ -14,13 +14,13 @@ license=('GPL' 'LGPL' 'custom')
 options=('!strip' 'staticlibs')
 backup=('etc/profile.d/android-ndk-beta.sh')
 install="$pkgname.install"
-depends=('ncurses5-compat-libs')
+depends=('glibc')
 optdepends=(
   'python: various helper scripts'
 )
 source=('android-ndk-beta.sh' "https://dl.google.com/android/repository/${_pkgname}-${pkgver/_/-}-linux-x86_64.zip")
 sha256sums=('cadefdccf5da51dc56156fbc41945a2c27d913d12a043b32f47e15f253b0943d'
-            'a14b51d875c2accc19b46d90588a796765ff2defb878df781438fb0be0553762')
+            'c9fe5b5102a596d3f8ee65f26e34a5bc994b2ca8bfa5a884444205201324f4c2')
 
 package() {
   install -d "$pkgdir/opt"
