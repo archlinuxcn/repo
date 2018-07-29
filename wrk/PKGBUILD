@@ -2,14 +2,13 @@
 # Contributor: Pierre Carrier <pierre at gcarrier dot fr>
 pkgname=wrk
 pkgver=4.1.0
-pkgrel=2
+pkgrel=3
 pkgdesc="Modern HTTP benchmarking tool"
-arch=(i686 x86_64)
-url=https://github.com/wg/wrk
+arch=(any)
+url="https://github.com/wg/wrk/"
 license=(Apache)
 depends=('openssl' 'luajit')
-makedepends=()
-source=(https://github.com/wg/$pkgname/archive/${pkgver}.tar.gz)
+source=("https://github.com/wg/$pkgname/archive/${pkgver}.tar.gz")
 sha256sums=('6fa1020494de8c337913fd139d7aa1acb9a020de6f7eb9190753aa4b1e74271e')
 options=('!makeflags'
          '!buildflags')
