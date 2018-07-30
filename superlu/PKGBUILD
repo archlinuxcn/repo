@@ -2,7 +2,7 @@
 # Contributor: Giuseppe Borzi <gborzi@ieee.org>
 pkgname=superlu
 pkgver=5.2.1
-pkgrel=3
+pkgrel=4
 pkgdesc="Set of subroutines to solve a sparse linear system"
 arch=('i686' 'x86_64')
 url="http://crd-legacy.lbl.gov/~xiaoye/SuperLU/"
@@ -15,6 +15,7 @@ source=(${url}${pkgname}_$pkgver.tar.gz ${url}License.txt
 sha512sums=('30538b4c2809294b8f34646bce6445944f21a1dffaf3ec0a0f29a55d5261caa56e4279d7722bb95cc9d89450d36ded969617edc82ecce7d0f1dfb24040d80d07'
             '10d4e497b4cc3aa2aaa2807e75641f9c0046f38876587adda33202546b7218a5d77843742e43ceca917726be0b985e7364b924e40d7377efafeba27bbbb5b7de'
             '2601258c06e5f9f88654adb662ebeb2641d03f0d12e13fd1c8470880290ea00043557b05443d55e19efe3832283ae2d6cf7bd2aa9a8519528f50f12ce86af2fd')
+options=('staticlibs')
 
 build() {
   cd "$srcdir/SuperLU_$pkgver"
@@ -24,7 +25,7 @@ build() {
   cd shared
   make -f ../SRC/Makefile VPATH=../SRC srcdir=../SRC CC=cc \
           CFLAGS="$CFLAGS -fPIC" FORTRAN=gfortran FFLAGS="$CFLAGS -fPIC" \
-          PLAT="" BLASDEF="" BLASLIB="-lblas" CDEFS="-DAdd_" NOOPTS="-fPIC" \
+          PLAT="" BLASDEF="-DUSE_VENDOR_BLAS" BLASLIB="-lblas" CDEFS="-DAdd_" NOOPTS="-fPIC" \
           ARCH="echo" ARCHFLAGS="" RANLIB="echo" \
           SUPERLULIB=$srcdir/SuperLU_$pkgver/lib/lib$pkgname.a
   gcc -shared -Wl,-soname,lib$pkgname.so.4 -o ../lib/lib$pkgname.so.$pkgver \
