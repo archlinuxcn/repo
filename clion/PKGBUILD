@@ -10,7 +10,7 @@ pkgname=(clion clion-jre clion-cmake clion-gdb clion-lldb)
 _pkgname=clion
 _dlname=CLion
 pkgver=2018.2
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc="C/C++ IDE. Free 30-day trial."
 arch=('x86_64')
@@ -23,6 +23,7 @@ source=("https://download.jetbrains.com/cpp/${_dlname}-${pkgver}.tar.gz"
 sha256sums=('ffa5be2c7ddf22227229f1daa99e667bcdb5d375748a50d1b4d934db68a57222'
             '9f0f4335f410e0587018c85ebfcf4b65a7a47ad682a58972624378953ef288d6')
 noextract=("${_dlname}-${pkgver}.tar.gz")
+backup=("opt/${pkgbase}/bin/clion64.vmoptions")
 
 build() {
     mkdir -p "${srcdir}/opt/${pkgbase}"
