@@ -1,13 +1,13 @@
 # Maintainer: Michael Carlberg <c@rlberg.se>
 # Contributor: Michael Carlberg <c@rlberg.se>
 pkgname=polybar
-pkgver=3.2.0
-pkgrel=3
+pkgver=3.2.1
+pkgrel=1
 pkgdesc="A fast and easy-to-use status bar"
 arch=("i686" "x86_64")
 url="https://github.com/jaagr/polybar"
 license=("MIT")
-depends=('libmpdclient' 'libnl' 'cairo' 'jsoncpp' 'pulseaudio' 'i3-wm' 'xcb-util-cursor' 'xcb-util-image' 'curl' 'wireless_tools' 'xcb-util-wm' 'alsa-lib' 'xcb-util-xrm' )
+depends=('pulseaudio' 'wireless_tools' 'libnl' 'curl' 'xcb-util-cursor' 'cairo' 'xcb-util-xrm' 'xcb-util-wm' 'jsoncpp' 'alsa-lib' 'xcb-util-image' 'libmpdclient' 'i3-wm' )
 optdepends=("alsa-lib: alsa module support"
             "pulseaudio: pulseaudio module support"
             "libmpdclient: mpd module support"
