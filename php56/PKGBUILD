@@ -31,8 +31,8 @@ pkgname=("${pkgbase}"
          "${pkgbase}-sqlite"
          "${pkgbase}-tidy"
          "${pkgbase}-xsl")
-pkgver=5.6.36
-pkgrel=2
+pkgver=5.6.37
+pkgrel=1
 pkgdesc="A general-purpose scripting language that is especially suited to web development"
 arch=('i686' 'x86_64')
 license=('PHP')
@@ -48,7 +48,7 @@ source=("https://secure.php.net/distributions/${_pkgbase}-${pkgver}.tar.xz"
         'logrotate.d.php-fpm' 'php-fpm.service' 'php-fpm.tmpfiles'
         'use-enchant2.patch'
         'php-freetype-2.9.1.patch')
-sha512sums=('807c68ab85b6685b19707bd18cfd46f3695b2dc67f9f17f85476634e4a80a036cb413ccae05ed5ba529eafe8df57ebf758dd664ed2942ec44f90a6e8b0172e5e'
+sha512sums=('1c2e64166b30d9a2dcccd29cf34e2b8ca851827ffda30ab690f41feef7bc7f49194bc79cdd373b4aaf1191779d78469b2a04b2e2215f06865b4f3b983cf9e062'
             'SKIP'
             'e742d6e3e43bce75e11b4646cdbf06c5661c66cc22d5615caff1e293ed35e95973290940c93d6abeec2d43f02761baabf24e6954720d7df8f2bd7de2c3f9ba0d'
             'a20711e301648c0e7080688d2a2522f8b6a94d35dc4a09169795618f7b09613490b46ae1805ffffca63bc29f3f4b1d36705dec1bcc55e293fc51a31a6c346d8c'
