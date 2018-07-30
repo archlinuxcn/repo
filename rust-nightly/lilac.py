@@ -55,13 +55,18 @@ def pre_build():
   version = toml['pkg']['rust']['version'].split('-', 1)[0]
   cargo_version = toml['pkg']['cargo']['version'].split('-', 1)[0]
   rustfmt_version = toml['pkg']['rustfmt-preview']['version'].split('-', 1)[0]
+  clippy_version = toml['pkg']['clippy-preview']['version'].split('-', 1)[0]
+  clippy_url = toml['pkg']['clippy-preview']['target'] \
+      ['x86_64-unknown-linux-gnu']['xz_url']
 
   if not debug:
-    oldfiles = glob.glob('*.xz') + glob.glob('*.xz.asc') + glob.glob('*.part')
+    oldfiles = (glob.glob('*.xz') + glob.glob('*.xz.asc') +
+                glob.glob('*.part'))
     for f in oldfiles:
       os.unlink(f)
 
-  stds = [Std(target, toml['pkg']['rust-std']['target'][target]) for target in STDS]
+  stds = [Std(target, toml['pkg']['rust-std']['target'][target])
+          for target in STDS]
 
   loader = tornado.template.Loader('.')
   content = loader.load('PKGBUILD.tmpl').generate(
@@ -71,6 +76,8 @@ def pre_build():
     version_date_raw = version_date,
     cargo_version = cargo_version,
     rustfmt_version = rustfmt_version,
+    clippy_version = clippy_version,
+    clippy_url = clippy_url,
   )
   with open('PKGBUILD', 'wb') as output:
     output.write(content)

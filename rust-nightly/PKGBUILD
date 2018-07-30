@@ -3,6 +3,7 @@
 pkgname=(rust-nightly
          rustfmt-nightly
          cargo-nightly
+         rust-clippy-nightly
          rust-src-nightly
          rust-docs-nightly
          rust-std-nightly-arm-unknown-linux-gnueabihf
@@ -30,6 +31,8 @@ source=(
         'https://static.rust-lang.org/dist/2018-07-30/rust-nightly-x86_64-unknown-linux-gnu.tar.xz.asc'
         'https://static.rust-lang.org/dist/2018-07-30/rust-src-nightly.tar.xz'
         'https://static.rust-lang.org/dist/2018-07-30/rust-src-nightly.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2018-07-30/clippy-nightly-x86_64-unknown-linux-gnu.tar.xz'
+        'https://static.rust-lang.org/dist/2018-07-30/clippy-nightly-x86_64-unknown-linux-gnu.tar.xz.asc'
 
         'https://static.rust-lang.org/dist/2018-07-30/rust-std-nightly-arm-unknown-linux-gnueabihf.tar.xz'
         'https://static.rust-lang.org/dist/2018-07-30/rust-std-nightly-arm-unknown-linux-gnueabihf.tar.xz.asc'
@@ -53,6 +56,8 @@ source=(
         'https://static.rust-lang.org/dist/2018-07-30/rust-std-nightly-aarch64-linux-android.tar.xz.asc'
         'git://github.com/rust-lang/zsh-config')
 sha512sums=(
+            'SKIP'
+            'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
@@ -136,6 +141,17 @@ package_rustfmt-nightly() {
   conflicts=('rustfmt' 'rustup')
 
   cd rust-nightly-$CARCH-unknown-linux-gnu/rustfmt-preview
+  mkdir -p "$pkgdir/usr"
+  cp -r bin "$pkgdir/usr"
+}
+
+package_rust-clippy-nightly() {
+  pkgdesc="A collection of lints to catch common mistakes and improve your Rust code (nightly version)"
+  provides=('rust-clippy=0.0.212')
+  conflicts=('rust-clippy')
+  depends=("rust-nightly=$epoch:$pkgver")
+
+  cd rust-nightly-$CARCH-unknown-linux-gnu/clippy-preview
   mkdir -p "$pkgdir/usr"
   cp -r bin "$pkgdir/usr"
 }
