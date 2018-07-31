@@ -7,7 +7,7 @@ pkgdesc="Hello Minecraft! Launcher, a powerful Minecraft launcher."
 arch=(any)
 license=('GPL3')
 url="https://github.com/mclauncher/HMCL"
-makedepends=('unzip')
+makedepends=('imagemagick' 'unzip' )
 depends=('java-openjfx>=8' 'hicolor-icon-theme')
 noextract=("HMCL-$pkgver.jar")
 source=('hmcl-launch-script'
