@@ -292,6 +292,13 @@
     Notable changes:
      2018-07-29 2a80cb7 fix(install cli): installing split packages from local PKGBUILD file
      2018-07-29 f9e6bd0 fix(build: prepare_build_destination): don't copy build files twice
+1.2.11          Release 1.2.11
+    
+    Notable changes:
+     2018-07-31 aec0e51 actionless fix(install cli): regression: when --sysupgrade passed run `pacman --sysupgrade` even if there are on updates found
+     2018-07-29 3b67ee4 actionless fix(args): fix overlapping -k between --keepbuild and --check
+     2018-07-29 44ba50f actionless feat(args): use `-o` as shortcut for `--repo` in `-S` and `-P`
+     2018-07-29 fc7affe actionless fix(build, install): use common routine for installing aur deps to avoid mis-marking explicitly installed pkgs as deps
 1.2.2           Release 1.2.2
     
      2018-07-24 7f10c9c actionless chore(fish): add completion for new CLI flags
