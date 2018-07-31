@@ -1,29 +1,25 @@
 # $Id$
+# Maintainer: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 # Maintainer: Tobias Powalowski <tpowa@archlinux.org>
 # Maintainer: Thomas Baechler <thomas@archlinux.org>
 # Maintainer: Tony Lambiris <tony@critialstack.com>
 
-#pkgbase=linux               # Build stock -ARCH kernel
-pkgbase=linux-macbook        # Build kernel with a different name
-_srcname=linux-4.17
-pkgver=4.17.10
+#pkgbase=linux               # Build stock -arch kernel
+pkgbase=linux-macbook       # Build kernel with a different name
+pkgver=4.17.11
 pkgrel=1
 arch=('x86_64')
 url="https://www.kernel.org/"
 license=('GPL2')
-makedepends=('xmlto' 'kmod' 'inetutils' 'bc' 'libelf')
+makedepends=('xmlto' 'kmod' 'inetutils' 'bc' 'libelf' 'git')
 options=('!strip')
+_srcname=archlinux-linux
 source=(
-  https://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.{xz,sign}
-  https://www.kernel.org/pub/linux/kernel/v4.x/patch-${pkgver}.{xz,sign}
+  "$_srcname::git+https://github.com/archlinux/linux?signed#tag=v$pkgver-arch${pkgrel%%.*}"
   config         # the main kernel config file
   60-linux.hook  # pacman hook for depmod
   90-linux.hook  # pacman hook for initramfs regeneration
   linux.preset   # standard config files for mkinitcpio ramdisk
-  0001-add-sysctl-to-disallow-unprivileged-CLONE_NEWUSER-by.patch
-  0002-Revert-drm-i915-edp-Allow-alternate-fixed-mode-for-e.patch
-  0003-ACPI-watchdog-Prefer-iTCO_wdt-always-when-WDAT-table.patch
-  0004-mac80211-disable-BHs-preemption-in-ieee80211_tx_cont.patch
   macbook-wakeup.service # service file for suspend/resume events
   RFC-PCI-Workaround-to-enable-poweroff-on-Mac-Pro-11.patch
   RFC-v2-PCI-Workaround-to-enable-poweroff-on-Mac-Pro-11.patch
@@ -31,85 +27,36 @@ source=(
 validpgpkeys=(
   'ABAF11C65A2970B130ABE3C479BE3E4300411886'  # Linus Torvalds
   '647F28654894E3BD457199BE38DBBDC86092693E'  # Greg Kroah-Hartman
+  '8218F88849AAC522E94CF470A5E9288C4FA415FA'  # Jan Alexander Steffens (heftig)
 )
-sha256sums=('9faa1dd896eaea961dc6e886697c0b3301277102e5bc976b2758f9a62d3ccd13'
-            'SKIP'
-            '41ad005296c7a1b5245a87881f666b3f4d7aa05a6b9409454b2e473d473c4cee'
-            'SKIP'
-            'f8e890eac9779a89009c1e2339f757e9781864df09805211fad005146fe2578b'
+sha256sums=('SKIP'
+            'aa7b6756f193f3b3a3fc4947e7a77b09e249df2e345e6495292055d757ba8be6'
             'ae2e95db94ef7176207c690224169594d49445e04249d2499e9d2fbc117a0b21'
             '75f99f5239e03238f88d1a834c50043ec32b1dc568f2cc291b07d04718483919'
             'ad6344badc91ad0630caacde83f7f9b97276f80d26a20619a87952be65492c65'
-            '92f848d0e21fbb2400e50d1c1021514893423641e5450896d7b1d88aa880b2b9'
-            'fc3c50ae6bd905608e0533a883ab569fcf54038fb9d6569b391107d9fd00abbc'
-            'bc50c605bd0e1fa7437c21ddef728b83b6de3322b988e14713032993dfa1fc69'
-            '66284102261c4ed53db050e9045c8672ba0e5171884b46e58f6cd417774d8578'
             'c5a714823c3418692bc5c212dd5d094a0e2ae6147d6726822911f1c26e3a1d1b'
             '7c99aaeaea7837f83a3ad215cf07277934ccf39720acee7f1c371dc86bdf89fc'
             '09189eb269a9fd16898cf90a477df23306236fb897791e8d04e5a75d5007bbff')
 
 _kernelname=${pkgbase#linux}
-: ${_kernelname:=-ARCH}
+: ${_kernelname:=-arch}
 
 prepare() {
   cd ${_srcname}
-
-  # add upstream patch
-  patch -p1 -i ../patch-${pkgver}
-
-  # add latest fixes from stable queue, if needed
-  # http://git.kernel.org/?p=linux/kernel/git/stable/stable-queue.git
+  scripts/setlocalversion --save-scmversion
 
   msg "patch -Np1 -i ../RFC-PCI-Workaround-to-enable-poweroff-on-Mac-Pro-11.patch"
   patch -Np1 -i ../RFC-PCI-Workaround-to-enable-poweroff-on-Mac-Pro-11.patch
 
-  # https://patchwork.kernel.org/patch/9288825/
   msg "patch -Np1 -i ../RFC-v2-PCI-Workaround-to-enable-poweroff-on-Mac-Pro-11.patch"
   patch -Np1 -i ../RFC-v2-PCI-Workaround-to-enable-poweroff-on-Mac-Pro-11.patch
 
-  # disable USER_NS for non-root users by default
-  patch -Np1 -i ../0001-add-sysctl-to-disallow-unprivileged-CLONE_NEWUSER-by.patch
-
-  # https://bugs.archlinux.org/task/56711
-  patch -Np1 -i ../0002-Revert-drm-i915-edp-Allow-alternate-fixed-mode-for-e.patch
-
-  # https://bugs.archlinux.org/task/56780
-  patch -Np1 -i ../0003-ACPI-watchdog-Prefer-iTCO_wdt-always-when-WDAT-table.patch
-
-  # Fix iwd provoking a BUG
-  patch -Np1 -i ../0004-mac80211-disable-BHs-preemption-in-ieee80211_tx_cont.patch
-
-  cat ../config - >.config <<END
-CONFIG_LOCALVERSION="${_kernelname}"
-CONFIG_LOCALVERSION_AUTO=n
-END
-
-  # set extraversion to pkgrel and empty localversion
-  sed -e "/^EXTRAVERSION =/s/=.*/= -${pkgrel}/" \
-      -e "/^EXTRAVERSION =/aLOCALVERSION =" \
-      -i Makefile
-
-  # don't run depmod on 'make install'. We'll do this ourselves in packaging
-  sed -i '2iexit 0' scripts/depmod.sh
-
-  # get kernel version
-  make prepare
-
-  # load configuration
-  # Configure the kernel. Replace the line below with one of your choice.
-  #make menuconfig # CLI menu for configuration
-  #make nconfig # new CLI menu for configuration
-  #make xconfig # X-based configuration
-  #make oldconfig # using old config from previous kernel version
-  # ... or manually edit .config
-
-  # rewrite configuration
-  yes "" | make config >/dev/null
+  cp ../config .config
+  make olddefconfig
 }
 
 build() {
   cd ${_srcname}
-
   make bzImage modules
 }
 
@@ -129,7 +76,7 @@ _package() {
   _basekernel=${_basekernel%.*}
 
   mkdir -p "${pkgdir}"/{boot,usr/lib/modules}
-  make INSTALL_MOD_PATH="${pkgdir}/usr" modules_install
+  make INSTALL_MOD_PATH="${pkgdir}/usr" DEPMOD=/doesnt/exist modules_install
   cp arch/x86/boot/bzImage "${pkgdir}/boot/vmlinuz-${pkgbase}"
 
   # make room for external modules
