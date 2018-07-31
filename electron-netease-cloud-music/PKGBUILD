@@ -2,7 +2,7 @@
 # Contributor: Rocka <i at Rocka dot me>
 
 pkgname=electron-netease-cloud-music
-pkgver=0.5.2
+pkgver=0.5.3
 pkgrel=1
 pkgdesc="UNOFFICAL clinet for music.163.com. Powered by Electron and Vue"
 arch=('x86_64')
@@ -16,8 +16,7 @@ source_x86_64=("https://github.com/Rocket1184/electron-netease-cloud-music/relea
   'electron-netease-cloud-music.sh'
   'electron-netease-cloud-music.png'
 )
-
-md5sums_x86_64=('c6c0e7e90513b0b925e143954b2dd1fb'
+md5sums_x86_64=('31df50b1a6969d6746b55ee3607c981d'
                 '7f35c2dbfc5cd0fd63cd0be16cf35f3c'
                 '7ecfe9b9b1c98b43cd9d4c1762a9b96d'
                 '3d4d42071b1a86d8e3bf04e0839c3dc4')
