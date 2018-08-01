@@ -1,7 +1,7 @@
 # Maintainer: Ondrej Jirman <megous@megous.com>
 
 pkgname=megatools
-pkgver=1.10.0
+pkgver=1.10.2
 pkgrel=1
 pkgdesc="Command line client application for Mega.nz"
 arch=('i686' 'x86_64' 'armv7h')
@@ -11,7 +11,7 @@ depends=('curl' 'glib2' 'openssl')
 makedepends=('asciidoc')
 source=("http://megatools.megous.com/builds/megatools-${pkgver}.tar.gz")
 options=(!libtool)
-sha256sums=('788a51d0977db95c371c97917aee3d39e145044b6bb70d671bc76c2ea6c4171b')
+sha256sums=('179e84c68e24696c171238a72bcfe5e28198e4c4e9f9043704f36e5c0b17c38a')
 
 build() {
   cd "megatools-${pkgver}"
