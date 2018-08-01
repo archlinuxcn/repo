@@ -1,7 +1,7 @@
 # Maintainer: Ariel AxionL <axionl@aosc.io>
 pkgname=gcsf
 pkgver=0.1.17
-pkgrel=1
+pkgrel=2
 pkgdesc="a FUSE file system based on Google Drive (Written by Rust)"
 arch=('x86_64')
 depends=('fuse2' 'openssl')
@@ -12,7 +12,7 @@ provides=("gcsf")
 url="https://github.com/harababurel/gcsf"
 license=('MIT')
 install="gcsf.install"
-source=("$pkgname.tar.gz::https://github.com/harababurel/gcsf/archive/$pkgver.tar.gz"
+source=("$pkgname-$pkgver.tar.gz::https://github.com/harababurel/gcsf/archive/$pkgver.tar.gz"
         "gcsf.install")
 sha256sums=('d306a5838f31e030bebb5ac21115cc67f32aec3e56694718d1979a1a921ea3d8'
             '379c996c9cf50bfffdd381d1f9f99695b1af5bab17b0ccd14006999d6e0351c1')
