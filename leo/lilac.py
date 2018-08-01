@@ -1,36 +1,19 @@
 #!/usr/bin/env python3
 #
-# This is a complex version of lilac.py for building
-# a package from AUR.
-#
-# You can do something before/after building a package,
-# including modify the 'pkgver' and 'md5sum' in PKBUILD.
-#
-# This is especially useful when a AUR package is
-# out-of-date and you want to build a new one, or you
-# want to build a package directly from sourceforge but
-# using PKGBUILD from AUR.
-#
-# See also:
-# [1] ruby-sass/lilac.py
-# [2] aufs3-util-lily-git/lilac.py
-# [3] octave-general/lilac.py
+# Auto update if have upstream new ver. but pkgver drop 'v'
+# eg: pkgver v0.1 => 0.1
 #
 
 from lilaclib import *
 
 build_prefix = 'extra-x86_64'
 
-
 def pre_build():
-    aur_pre_build()
-    run_cmd(["bash", '-c', 'patch -Np2 -R <PKGBUILD.diff'])
+  update_pkgver_and_pkgrel(_G.newver)
 
-post_build = aur_post_build
-
-# do some cleanup here after building the package, regardless of result
-# def post_build_always(success):
-#   pass
+def post_build():
+  git_add_files('PKGBUILD')
+  git_commit()
 
 if __name__ == '__main__':
-    single_main(build_prefix)
+  single_main()
