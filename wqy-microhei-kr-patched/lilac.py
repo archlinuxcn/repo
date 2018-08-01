@@ -16,7 +16,10 @@ def pre_build ():
         if not line.startswith("install="): ## remove install file
             print(line)
     git_add_files(['PKGBUILD'])
-    git_rm_files(['-f','wqy-microhei.install'])
+    try:
+        os.unlink('wqy-microhei-kr-patched.install')
+    except FileNotFoundError:
+        pass
     git_commit()
 
 
