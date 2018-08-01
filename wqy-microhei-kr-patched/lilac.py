@@ -16,7 +16,7 @@ def pre_build ():
         if not line.startswith("install="): ## remove install file
             print(line)
     git_add_files(['PKGBUILD'])
-    git_rm_files(['wqy-microhei.install'])
+    git_rm_files(['-f','wqy-microhei.install'])
     git_commit()
 
 
