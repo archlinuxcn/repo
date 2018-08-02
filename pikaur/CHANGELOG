@@ -299,6 +299,13 @@
      2018-07-29 3b67ee4 actionless fix(args): fix overlapping -k between --keepbuild and --check
      2018-07-29 44ba50f actionless feat(args): use `-o` as shortcut for `--repo` in `-S` and `-P`
      2018-07-29 fc7affe actionless fix(build, install): use common routine for installing aur deps to avoid mis-marking explicitly installed pkgs as deps
+1.2.12          Bugfix release 1.2.12
+    
+     2018-08-01 39b0104 fix(build: version_already_installed): use .SRCINFO from aur repo path, not from build dir (in case if package was never built before)
+     2018-08-01 1f16a01 feat(install cli): print blank line after refreshing repo packages db
+1.2.13          Bugfix release 1.2.13
+    
+    2018-08-01 e6df5a5 fix(pikspect): write buffer from time to time
 1.2.2           Release 1.2.2
     
      2018-07-24 7f10c9c actionless chore(fish): add completion for new CLI flags
