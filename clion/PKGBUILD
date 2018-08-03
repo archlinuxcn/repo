@@ -10,7 +10,7 @@ pkgname=(clion clion-jre clion-cmake clion-gdb clion-lldb)
 _pkgname=clion
 _dlname=CLion
 pkgver=2018.2
-pkgrel=2
+pkgrel=3
 epoch=1
 pkgdesc="C/C++ IDE. Free 30-day trial."
 arch=('x86_64')
@@ -26,6 +26,7 @@ noextract=("${_dlname}-${pkgver}.tar.gz")
 backup=("opt/${pkgbase}/bin/clion64.vmoptions")
 
 build() {
+    rm -rf "${srcdir}/opt"
     mkdir -p "${srcdir}/opt/${pkgbase}"
     bsdtar --strip-components 1 -xf "${_dlname}-${pkgver}.tar.gz" \
            -C "${srcdir}/opt/${pkgbase}"
