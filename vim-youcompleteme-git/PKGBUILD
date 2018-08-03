@@ -15,10 +15,10 @@
 # Contributor: Andy Weidenbaum <archbaum@gmail.com>
 
 pkgname=vim-youcompleteme-git
-pkgver=2361.e1ead995
+pkgver=2373.15362d9c
 _CLANG_VERSION_MAX=6.1
 _CLANG_VERSION_MIN=6.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A code-completion engine for Vim"
 arch=('i686' 'x86_64')
 url='http://valloric.github.com/YouCompleteMe/'
@@ -44,13 +44,11 @@ source=('git+https://github.com/Valloric/YouCompleteMe.git'
         'git+https://github.com/ross/requests-futures.git'
         'git+https://github.com/Valloric/ycmd.git'
         'frozendict::git+https://github.com/slezica/python-frozendict.git'
-        'git+https://github.com/vheon/JediHTTP.git'
         'git+https://github.com/nosami/OmniSharpServer.git'
         'git+https://github.com/icsharpcode/NRefactory.git'
         'git+https://github.com/jbevain/cecil.git'
         'use-system-completer.patch')
 sha256sums=('SKIP'
-            'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
@@ -79,7 +77,7 @@ prepare() {
   cd "$srcdir/YouCompleteMe/third_party/ycmd"
   patch -Np1 -i "$srcdir/use-system-completer.patch"
   git submodule init
-  for _m in JediHTTP OmniSharpServer frozendict; do
+  for _m in OmniSharpServer frozendict; do
     git config submodule.third_party/$_m.url "$srcdir/$_m"
     git submodule update third_party/$_m
   done
@@ -112,7 +110,7 @@ build() {
   cd "$srcdir/YouCompleteMe/third_party/requests-futures"
   python3 -m compileall -x 'setup.py' .
 
-  for _m in JediHTTP frozendict; do
+  for _m in frozendict; do
     cd "$srcdir/YouCompleteMe/third_party/ycmd/third_party/$_m"
     python3 -m compileall -x '(tests/|setup.py)' .
   done
@@ -136,9 +134,6 @@ package() {
   for _f in .git .gitignore .gitmodules .hgignore .hgtags .travis.yml; do
     find "$srcdir" -name "$_f" -exec rm -rf {} +
   done
-  rm -fr "$srcdir/YouCompleteMe/third_party/ycmd/third_party/JediHTTP/jedihttp/tests"
-  rm -fr "$srcdir/YouCompleteMe/third_party/ycmd/third_party/JediHTTP/vendor/*"
-  rm -fr "$srcdir/YouCompleteMe/third_party/ycmd/third_party/JediHTTP/travis"
   rm -fr "$srcdir/YouCompleteMe/third_party/requests-futures/setup.py"
   rm -fr "$srcdir/YouCompleteMe/third_party/ycmd/third_party/frozendict/setup.py"
   rm -fr "$srcdir/YouCompleteMe/third_party/ycmd/ycmd/tests"
@@ -156,7 +151,7 @@ package() {
   ln -s "/usr/lib/clang/${_CLANG_VERSION_MIN}"* \
     "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/clang_includes"
 
-  cp -r "$srcdir/YouCompleteMe/third_party/ycmd/third_party/"{frozendict,JediHTTP,tern_runtime} \
+  cp -r "$srcdir/YouCompleteMe/third_party/ycmd/third_party/"{frozendict,tern_runtime} \
     "$pkgdir/usr/share/vim/vimfiles/third_party/ycmd/third_party"
 
   cp -r "$srcdir/YouCompleteMe/third_party/ycmd/third_party/OmniSharpServer/OmniSharp/bin/Release" \
