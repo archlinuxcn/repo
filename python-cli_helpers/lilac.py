@@ -9,6 +9,12 @@ def pre_build():
     pypi_pre_build(
         depends=['python', 'python-terminaltables', 'python-tabulate'])
 
+    for line in edit_file('PKGBUILD'):
+        if line.startswith('_pkgname='):
+            print('_pkgname=%s' % "cli_helpers")
+        else:
+            print(line)
+
 
 def post_build():
     pypi_post_build()
