@@ -2,31 +2,15 @@
 _pkgbase='yuzu'
 pkgbase="$_pkgbase-git"
 pkgname=("$_pkgbase-git" "$_pkgbase-qt-git")
-pkgver=r7480.884a4e1e
+pkgver=r7544.4de18e05
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger"
 arch=('i686' 'x86_64')
 url="https://github.com/yuzu-emu/yuzu/"
 license=('GPL2')
 makedepends=('git' 'cmake' 'sdl2' 'qt5-base' 'shared-mime-info' 'desktop-file-utils' 'python2')
-source=("$_pkgbase::git+https://github.com/yuzu-emu/yuzu"
-        'git+https://github.com/yuzu-emu/ext-boost'
-        'git+https://github.com/philsquared/Catch'
-        'git+https://github.com/MerryMage/dynarmic'
-        'git+https://github.com/herumi/xbyak'
-        'git+https://github.com/fmtlib/fmt'
-	'git+https://github.com/svn2github/inih'
-	'git+https://github.com/yuzu-emu/unicorn'
-	'git+https://github.com/lz4/lz4')
-md5sums=('SKIP'
-         'SKIP'
-         'SKIP'
-         'SKIP'
-         'SKIP'
-         'SKIP'
-	 'SKIP'
-	 'SKIP'
-	 'SKIP')
+source=("$_pkgbase::git+https://github.com/yuzu-emu/yuzu")
+md5sums=('SKIP')
 
 pkgver() {
 	cd "$srcdir/$_pkgbase"
@@ -38,20 +22,7 @@ prepare() {
 	mkdir -p build
 
 	git submodule init
-	git config submodule.boost.url "$srcdir/ext-boost"
-	git config submodule.catch.url "$srcdir/Catch"
-	git config submodule.dynarmic.url "$srcdir/dynarmic"
-	git config submodule.xbyak.url "$srcdir/xbyak"
-	git config submodule.fmt.url "$srcdir/fmt"
-	git config submodule.inih.url "$srcdir/inih"
-	git config submodule.unicorn.url "$srcdir/unicorn"
-	git config submodule.lz4.url "$srcdir/lz4"
-	git submodule update
-
-	cd externals/dynarmic
-	git config submodule.externals/fmt.url "$srcdir/fmt"
-	git config submodule.externals/xbyak.url "$srcdir/xbyak"
-	git submodule update
+	git submodule update --recursive
 }
 
 build() {
