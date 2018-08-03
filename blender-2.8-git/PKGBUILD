@@ -74,6 +74,7 @@ build() {
   cmake "$srcdir/blender" \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DWITH_INSTALL_PORTABLE=OFF \
+        -DWITH_CXX11=ON \
         -DWITH_ALEMBIC=NO \
         -DWITH_OPENCOLORIO=ON \
         -DWITH_FFTW3=ON \
