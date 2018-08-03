@@ -1,8 +1,8 @@
 # Maintainer: Ariel AxionL <axionl@aosc.io>
 # Contributor: GreaterFire <GreaterFire@protonmail.com>
 pkgname=trojan-git
-pkgver=r233.674944d
-pkgrel=1
+pkgver=r237.42f4fe9
+pkgrel=2
 pkgdesc="An unidentifiable mechanism that helps you bypass GFW"
 arch=('x86_64')
 url="https://github.com/trojan-gfw/trojan"
@@ -11,6 +11,7 @@ depends=('boost-libs' 'libmariadbclient')
 optdepends=('ca-certificates: server certificate verification'
             'mariadb: advanced user management')
 makedepends=('git' 'cmake' 'boost' 'openssl' 'libmariadbclient')
+checkdepends=('openssl' 'python' 'curl')
 conflicts=('trojan')
 provides=('trojan')
 source=("$pkgname::git+$url")
@@ -26,6 +27,11 @@ build() {
     cd $pkgname
     cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr .
     make
+}
+
+check() {
+    cd $pkgname
+    ctest
 }
 
 package() {
