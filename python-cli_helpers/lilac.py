@@ -7,8 +7,7 @@ build_prefix = 'archlinuxcn-x86_64'
 
 def pre_build():
     pypi_pre_build(
-        depends=['python', 'python-terminaltables', 'python-tabulate'],
-        license='BSD')
+        depends=['python', 'python-terminaltables', 'python-tabulate'])
 
 
 def post_build():
