@@ -1,5 +1,5 @@
 post_install() {
-  setcap cap_net_raw=ep usr/bin/besttrace 2>/dev/null || chmod +s usr/bin/besttrace 
+   setcap cap_net_raw=ep usr/bin/besttrace 2>/dev/null || chmod +s usr/bin/besttrace
 }
 
 post_upgrade() {
