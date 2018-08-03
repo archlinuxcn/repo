@@ -1,15 +1,17 @@
 # Maintainer: Vic Luo <vicluo96 at gmail.com>
+# Contributor: Litao Lu <lulitao1997 at gmail.com>
 
 pkgname=cquery-git
 _pkgname=cquery
-pkgver=1625.0f181a6f
-pkgrel=1
+pkgver=1942.3ac1ff24
+pkgrel=2
 pkgdesc='Low-latency vscode language server for large C++ code-bases, powered by libclang.'
-arch=('any')
+arch=('x86_64')
 url='https://github.com/cquery-project/cquery/'
 license=('MIT')
 depends=('clang')
-makedepends=("git" "python" "llvm")
+makedepends=('cmake' 'git')
+
 source=('git+https://github.com/cquery-project/cquery.git')
 md5sums=(
     'SKIP'
@@ -22,22 +24,18 @@ pkgver() {
 
 prepare() {
     cd $_pkgname
-    git submodule update --init
+    git submodule update --init --recursive
 }
 
 build() {
     cd $_pkgname
-    # --variant=custom will not add extra CXXFLAGS
-    python waf configure --variant=custom --prefix="$pkgdir/usr" --llvm-config=/usr/bin/llvm-config
-    python waf build --variant=custom
+    mkdir -p build
+    cd build
+    cmake -DSYSTEM_CLANG=ON -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release ..
+    make -j$(nproc)
 }
 
-#check() {
-#    cd $_pkgname
-#    yes | build/custom/bin/cquery --test-unit --test-index --clang-sanity-check
-#}
-
 package() {
-    cd $_pkgname
-    python waf install --variant=custom
+    cd $_pkgname/build
+    make DESTDIR="$pkgdir/" install
 }
