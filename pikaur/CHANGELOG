@@ -1,163 +1,24 @@
+
+
+Mon Jan 29 04:27:29 2018 +0100
+-------------------------------------------------
 0.0.1           Pre-release
     
     Implemented only `-S` and `-Ss` by now.
+
+
+Wed Jan 31 07:27:03 2018 +0100
+-------------------------------------------------
 0.1             Initial release
-0.10            Version 0.10
-    
-     2018-04-18 2de42d8 actionless chore: bump version to 0.10
-     2018-04-18 4a6207d actionless chore(screenshots): add for --keepbuild --devel --needed
-     2018-04-18 ad16286 actionless fix(srcinfo): return None if value not found
-     2018-04-18 b2cbbeb actionless style(build): pylint and typing
-     2018-04-18 e438861 actionless fix(install cli): correctly exclude aur package from install dep tree
-     2018-04-18 27abbac actionless fix(install_cli): correctly skip package which is already up to date
-     2018-04-18 52c0acd actionless style(build): nicer output
-0.10.1          Bugfix release 0.10.1
-    
-     2018-04-19 a91f286 actionless chore: bump version to 0.10.1
-     2018-04-19 7476e55 actionless Revert "chore(install cli): fully bypass pacman args"
-     2018-04-19 32727a8 actionless fix(install cli): check --needed only for packages which are installed locally
-     2018-04-18 ff6e318 actionless chore(install cli): fully bypass pacman args
-     2018-04-18 6d66af5 actionless fix(install cli): don't try to remove package which was already removed when reverting transaction on failed build
-     2018-04-18 c4733c4 actionless fix(install cli): correctly bypass --ignore arg to pacman
-     2018-04-18 d1d3dab actionless fix(build): already_installed detection for non-devel AUR packages
-0.10.2          Release 0.10.2
-    
-    Accumulated small fixes not to wait for 0.11
-    
-     2018-05-11 dc7ff63 actionless chore: bump version to 0.10.2
-     2018-05-11 70e6bc5 actionless chore(pkgbuild): choose versioning schema as adviced in Arch Wiki
-     2018-05-11 3fb191e actionless Revert "fix(core: copy_tree): pass update=True to dir_util.copy_tree)"
-     2018-05-09 a97a94f actionless fix(pikspect): change pool import
-     2018-05-08 a22ff59 actionless fix(core: copy_tree): pass update=True to dir_util.copy_tree)
-0.10.3          Hotfix release
-    
-     2018-05-14 d8aeada actionless chore: bump version to 0.10.3
-     2018-05-14 fca331c actionless fix(pikspect): always use fixed number of threads (to avoid deadlocks)
-     2018-05-13 6f5eb73 actionless fix(aur): regression after style update for new mypy version
-0.11            Release 0.11
-    
-    Changes from 0.10.3:
-    
-     2018-05-21 2939d48 actionless feat(install cli; pprint): print new repo deps in install/upgrade prompt
-     2018-05-21 511ff53 actionless feat(pacman: PackageDB): implement find_one_repo() method
-     2018-05-20 cc401f6 actionless feat(pikspect, install cli): don't ask twice about package replacements
-     2018-05-20 6f9a27c actionless feat(pikspect, install cli): don't ask twice about package conflicts
-     2018-05-20 ff7f3f0 actionless feat(args): validate some args for compatibility
-0.11.1          Release 0.11.1
-    
-     2018-05-21 d36610a actionless fix(install_cli): print also new repo deps for explicit AUR packages and AUR deps
-     2018-05-21 3582f0b actionless fix(prompt): split last line of the prompt to workawound input/gettext problem in python #179
-     2018-05-21 2daa5b9 actionless fix(core: datatype): more mypy fixage..(error in -Ss without args)
-     2018-05-21 eca8cbd actionless feat(package_update: devel postfixes): add `-nightly` #177
-     2018-05-21 b88f1cd actionless fix(args: help): remove pikaur-specific opts when passing --help to pacman #178
-0.11.2          Bugfix release 0.11.2
-    
-     2018-05-21 b0887b9 actionless fix(replacements): reversed criteria for repo priority
-     2018-05-21 08953d8 actionless fix(pprint: pformat sysupgrade): show deps' repo name
-     2018-05-21 0b24abf actionless fix(install_cli): initialize more class properties
-0.11.3          Release 0.11.3
-    
-     2018-05-29 9964516 actionless fix(build): compatibility with `makepkg --packagelist` from pacman 5.1
-     2018-05-28 d84a2a6 actionless refactor(pacman, search cli): more work on package ordering
-     2018-05-28 bcbd496 actionless fix(pacman, search cli): show search results sorted by repo priority
-     2018-05-24 2c29716 Bert Peters Create Dutch translation.
-     2018-05-21 603987f actionless fix(install_cli, build): discard in-memory cache of local package db after each pacman operation
-0.11.4          Bugfix release 0.11.4
-    
-    Arch detection of the built package with a new pacman version
-0.11.5          Bugfix release 0.11.5
-    
-     2018-05-30 a9ebdfb actionless fix(build: set_built_package_path): cover the case if makepkg --packagelist returned
-    a relative path
-     2018-05-29 8e796e1 actionless fix(package_update: get_remote_package_version): leftover after refactoring to use find_one()
-    
-    Docs improvements:
-     2018-05-30 e45b3d5 actionless doc(readme): extend description of pacman wrapping
-     2018-05-30 dba41f5 steven-omaha doc(readme: faq): clean old or uninstalled AUR packages in ~/.cache/pikaur/pkg
-0.11.6          fix(build: set_built_package_path): move relative path detection up to cover case with custom dest dir
-0.12            Release 0.12
-    
-     2018-06-03 66751db actionless fix(install cli: get repo deps info): make it recursive to show deps of deps
-     2018-06-03 e3f9bce steven-omaha Implementation of news functionality from archlinux.org (#191)
-     2018-06-01 0809cb4 actionless fix(build: get_built_deps): case when split package is depend on the other part of split package and both are requested explicitly (by user or as deps of an other package)
-     2018-05-31 482d673 actionless fix(search cli): bypass --refresh/--y to pacman when doing search
-     2018-05-31 3d4cf6f actionless fix(install cli): can't explicitly install ignored package
-0.13            Release 0.13
-    
-     2018-06-10 a2d1d07 actionless fix(core: get_editor): type hint
-     2018-06-10 af9a9aa actionless feat(install cli): nicer message about missing deps
-     2018-06-10 bf77e7a actionless fix(pacman: find_repo_pkgs): better handle not found
-     2018-06-10 14947c9 actionless fix(install_cli): prompt deadlock - 2
-     2018-06-10 082b24a actionless fix(pikspect): don't clear buffer after show() filter
-     2018-06-10 3aed87f actionless fix(install_cli): prompt deadlock
-     2018-06-10 18ee141 actionless fix(pikspect): regression on displayed auto-answer
-0.13.1          Bugfix release 0.13.1
-    
-     2018-06-13 9aed7fb actionless fix(build): don't attempt to clone split packages twice
-     2018-06-13 d7cc9ae actionless fix(install_cli): ignore refresh in both --print-format
-     2018-06-13 0f1793e actionless fix(install_cli): get upgradeable packages from --print-format
-     2018-06-13 e90c2c9 actionless fix(install_cli): regression printing upgradeable packages
-     2018-06-13 6d29aa1 actionless fix(install_cli: parse_pacman): typecheck
-     2018-06-13 8c047b1 actionless fix(aur_deps): check all repo-provided deps
-     2018-06-13 71ce9d4 actionless feat(install cli): parse provided package choice from pacman output
-0.13.2          Bugfix release 0.13.2
-    
-     2018-06-13 4b979ab actionless fix(pikspect: tty_restore): don't restore when piped
-0.14            Release 0.14
-    
-    Revert experimental pacman wrapping.
-    Improve overview prompt and [m]anual package selection.
-    
-     2018-06-17 501677f actionless style(core): distutils exception import
-     2018-06-17 6b5d5ce actionless fix(core: spawn): use tempfile instead of PIPE
-     2018-06-17 bb9991d actionless style(install info fetcher): pylint
-     2018-06-17 8763ecb actionless refactor(install info fetcher): extract deps marking into separate method
-0.14.1          Hotfix release 0.14.1
-    
-     2018-06-17 2245a4e actionless fix(install info fetcher): don't show explicitly requested package as its provided name
-     2018-06-17 89aa35f actionless feat(install info fetcher): correctly show in prompt packages which are providing some dep (not explicitly requested package)
-     2018-06-17 02eac14 actionless fix(aur_deps: find_repo_deps): show in prompt makedepends and checkdepends
-0.14.2          Release 0.14.2
-    
-     2018-06-17 efb0088 actionless fix(pacman: find_upgradeable): revert --Qu to --Su --print
-0.14.3          Bugfix release 0.14.3
-    
-     2018-06-17 f9aee10 actionless fix(pacman: find_upgradeable): don't filter out deps
-    
-    re #199
-0.14.4          Bugfix release 0.14.4
-    
-     2018-06-17 877d2de actionless fix(pacman): split -Qu and -Su logic
-0.14.5          Release 0.14.5
-    
-     2018-06-26 c23bf10 actionless fix(build): don't throw exception while throwing an exception
-     2018-06-25 42c8458 actionless fix(build: remove deps): work with sets as with sets, not lists
-     2018-06-25 b5e553a actionless fix(build, install cli): bypass user decision on conflict resolution from Install Cli to Build Cli phase
-     2018-06-25 c2496f4 actionless fix(conflicts): compute conflicts for aur pkgs deps
-     2018-06-25 1ed1319 actionless fix(build: remove deps): resolve diff inconsistency in case if package was replaced by a different provider
-     2018-06-25 01471b8 actionless fix(pacman: pkg_db: get_provided_pkgs): case when package is providing itself (like `jack` is provided by `jack` and `jack2`)
-     2018-06-19 af54476 actionless fix(install info fetcher): --needed handling when installing repo pkgs
-0.14.6          Release 0.14.6
-    
-     2018-06-29 8722a16 actionless refactor: raise SysExit() instead of doing sys.exit()
-     2018-06-28 ae3e0c8 actionless feat(main, install cli): implement sudo loop
-     2018-06-28 dc83554 actionless feat(args, main): show stack trace on Ctrl+C if --debug is passed
-     2018-06-28 ff83ae0 actionless fix(main: entry_point): add -Sy
-     2018-06-28 c8d0288 actionless fix(install cli): nothing to do message when installing package via provided name
-0.15            Release 0.15
-    
-    Notable changes:
-     2018-07-11 c36021a actionless refactor(search cli): move print-related routine to `pikaur.print_department`
-     2018-07-11 4354b26 actionless refactor(aur_deps, pacman): preserve versioned part of the requirements
-     2018-07-11 f8b2bd5 actionless fix(pacman): detect not found packages in locales which are not using spaces
-     2018-07-11 737f043 actionless fix(aur_deps): don't split doubled version requirements when querying them from pacman
-     2018-07-11 540283d actionless fix(aur_deps): handle some edge case with provided packages
-     2018-07-11 b2e8532 actionless fix(pacman): discard provided packages as well when discarding local cache
-0.15.1          Release 0.15.1
-    
-     2018-07-12 10075eb actionless fix(build: set_package_path): behavior with non-default build dir
-     2018-07-12 857058b actionless feat: correctly handle suggestion for package replacements in prompt
+
+
+Wed Feb 7 11:38:59 2018 +0100
+-------------------------------------------------
 0.3             Version 0.3
+
+
+Fri Feb 9 18:16:23 2018 +0100
+-------------------------------------------------
 0.4             Release 0.4
     
     158fcbe chore: bump version to 0.4
@@ -167,6 +28,10 @@
     b8a50ab doc(readme): more verbose description
     2791da7 refactor(pacman): dedup some cache-related code
     f749a55 half-revert previous commit
+
+
+Tue Feb 13 20:35:10 2018 +0100
+-------------------------------------------------
 0.5             Version 0.5
     
     26492ee fix(build): attempt starting build until all the deps will presented or build will fail; builds with big number of aur dependencies, or like two-level aur deps (aur pkg depends on aur pkg which depends on aur pkg)
@@ -176,6 +41,10 @@
     47cd501 refactor(meta_package, conflicts): split check_conflicts into smaller routines and move into a new module
     8c2a3f0 fix(build): add missing build_dir property
     4a3b8a8 refactor(build): split into smaller routines
+
+
+Thu Feb 22 03:05:41 2018 +0100
+-------------------------------------------------
 0.6             Version 0.6
     
      2018-02-22 2227248 actionless chore(maintenance_scripts: tag_release): force tag
@@ -185,6 +54,10 @@
      2018-02-22 70c6503 actionless feat(install cli): implement [m]anual package selection
      2018-02-22 2b17668 actionless chore(travis): enable pylint
      2018-02-22 87d4540 actionless fix(meta_pkg: find_aur_deps): some local pkgs were not added to the list of deps
+
+
+Thu Mar 1 05:34:25 2018 +0100
+-------------------------------------------------
 0.7             Version 0.7
     
      2018-03-01 3101288 actionless chore: bump version to 0.7
@@ -194,6 +67,10 @@
      2018-02-26 fb77eab Antoine Pietri Leverage systemd dynamic users to run pikaur as root
      2018-03-01 f1b9b36 actionless chore(args): rename --names-only to --namesonly (like in --dbonly and --downloadonly)
      2018-03-01 4cfe97c actionless feat(main: search_cli): flag to search in package names only (--names-only)
+
+
+Wed Mar 7 13:27:36 2018 +0100
+-------------------------------------------------
 0.8             Release 0.8
     
      2018-03-07 ca9a81b actionless chore: bump version to 0.8
@@ -203,6 +80,10 @@
      2018-03-06 f16e552 actionless Merge branch 'master' into i18n
      2018-03-05 28200b5 actionless fix(aur_deps, conflicts): fixup after previous commit
      2018-03-05 8582054 actionless style: pylint
+
+
+Sun Mar 18 03:04:03 2018 +0100
+-------------------------------------------------
 0.9             Version 0.9
     
     $ ./maintenance_scripts/show_recent_history.sh | grep -v -i -e style -e travis -e docker -e chore -e typing -e move
@@ -212,6 +93,10 @@
      2018-03-15 b822191 actionless fix(build, install_cli): play with ask bits once again
      2018-03-15 5585108 actionless fix(build, install cli): set --ask=127 (yes to all questions)
      2018-03-15 bb7f545 actionless fix(build, install_cli): --ask should have bitwise value
+
+
+Sun Mar 25 00:53:34 2018 +0100
+-------------------------------------------------
 0.9.1           Version 0.9.1
     
      2018-03-24 3823f50 actionless fix(install_cli): run pacman on sysupgrade too
@@ -221,6 +106,10 @@
      2018-03-24 f385d14 actionless feat: add DevelPkgsExpiration config option and `--devel` cli arg
      2018-03-24 bb1e2f5 actionless fix(build: MakepkgConfig): read ~/.makepkg.config and /pacman/makepkg.conf
      2018-03-23 6286bea actionless fix(build): raise error if built package is not found by its path
+
+
+Wed Mar 28 05:31:25 2018 +0200
+-------------------------------------------------
 0.9.2           Version 0.9.2
     
      2018-03-28 95f99bf actionless fix(install cli): support --needed option when displaying packages to be installed from the repo
@@ -230,6 +119,10 @@
      2018-03-28 437c020 actionless fix(main: upgrade cli): don't print the same message as pacman will print again later on
      2018-03-28 af611df actionless fix(search cli): duplicated variable name
      2018-03-28 6fc8d59 actionless fix(build: srcinfo: get_depends): exclude not only self name but all the names provded by base package
+
+
+Thu Apr 5 03:33:54 2018 +0200
+-------------------------------------------------
 0.9.3           Release 0.9.3
     
      2018-04-05 00dc5aa actionless chore: bump version to 0.9.3
@@ -239,6 +132,261 @@
      2018-04-05 638e85c actionless refactor(build: srcinfo): handling dependencies for multipackages
      2018-04-04 958f72b guschtlswife German translation. Initial commit.
      2018-04-04 a954f18 Jake Stanger Add missing translation for Y
+
+
+Wed Apr 18 01:42:45 2018 +0200
+-------------------------------------------------
+0.10            Version 0.10
+    
+     2018-04-18 2de42d8 actionless chore: bump version to 0.10
+     2018-04-18 4a6207d actionless chore(screenshots): add for --keepbuild --devel --needed
+     2018-04-18 ad16286 actionless fix(srcinfo): return None if value not found
+     2018-04-18 b2cbbeb actionless style(build): pylint and typing
+     2018-04-18 e438861 actionless fix(install cli): correctly exclude aur package from install dep tree
+     2018-04-18 27abbac actionless fix(install_cli): correctly skip package which is already up to date
+     2018-04-18 52c0acd actionless style(build): nicer output
+
+
+Thu Apr 19 14:59:02 2018 +0200
+-------------------------------------------------
+0.10.1          Bugfix release 0.10.1
+    
+     2018-04-19 a91f286 actionless chore: bump version to 0.10.1
+     2018-04-19 7476e55 actionless Revert "chore(install cli): fully bypass pacman args"
+     2018-04-19 32727a8 actionless fix(install cli): check --needed only for packages which are installed locally
+     2018-04-18 ff6e318 actionless chore(install cli): fully bypass pacman args
+     2018-04-18 6d66af5 actionless fix(install cli): don't try to remove package which was already removed when reverting transaction on failed build
+     2018-04-18 c4733c4 actionless fix(install cli): correctly bypass --ignore arg to pacman
+     2018-04-18 d1d3dab actionless fix(build): already_installed detection for non-devel AUR packages
+
+
+Fri May 11 21:14:28 2018 +0200
+-------------------------------------------------
+0.10.2          Release 0.10.2
+    
+    Accumulated small fixes not to wait for 0.11
+    
+     2018-05-11 dc7ff63 actionless chore: bump version to 0.10.2
+     2018-05-11 70e6bc5 actionless chore(pkgbuild): choose versioning schema as adviced in Arch Wiki
+     2018-05-11 3fb191e actionless Revert "fix(core: copy_tree): pass update=True to dir_util.copy_tree)"
+     2018-05-09 a97a94f actionless fix(pikspect): change pool import
+     2018-05-08 a22ff59 actionless fix(core: copy_tree): pass update=True to dir_util.copy_tree)
+
+
+Mon May 14 20:52:50 2018 +0200
+-------------------------------------------------
+0.10.3          Hotfix release
+    
+     2018-05-14 d8aeada actionless chore: bump version to 0.10.3
+     2018-05-14 fca331c actionless fix(pikspect): always use fixed number of threads (to avoid deadlocks)
+     2018-05-13 6f5eb73 actionless fix(aur): regression after style update for new mypy version
+
+
+Mon May 21 03:55:21 2018 +0200
+-------------------------------------------------
+0.11            Release 0.11
+    
+    Changes from 0.10.3:
+    
+     2018-05-21 2939d48 actionless feat(install cli; pprint): print new repo deps in install/upgrade prompt
+     2018-05-21 511ff53 actionless feat(pacman: PackageDB): implement find_one_repo() method
+     2018-05-20 cc401f6 actionless feat(pikspect, install cli): don't ask twice about package replacements
+     2018-05-20 6f9a27c actionless feat(pikspect, install cli): don't ask twice about package conflicts
+     2018-05-20 ff7f3f0 actionless feat(args): validate some args for compatibility
+
+
+Mon May 21 14:02:18 2018 +0200
+-------------------------------------------------
+0.11.1          Release 0.11.1
+    
+     2018-05-21 d36610a actionless fix(install_cli): print also new repo deps for explicit AUR packages and AUR deps
+     2018-05-21 3582f0b actionless fix(prompt): split last line of the prompt to workawound input/gettext problem in python #179
+     2018-05-21 2daa5b9 actionless fix(core: datatype): more mypy fixage..(error in -Ss without args)
+     2018-05-21 eca8cbd actionless feat(package_update: devel postfixes): add `-nightly` #177
+     2018-05-21 b88f1cd actionless fix(args: help): remove pikaur-specific opts when passing --help to pacman #178
+
+
+Mon May 21 17:27:24 2018 +0200
+-------------------------------------------------
+0.11.2          Bugfix release 0.11.2
+    
+     2018-05-21 b0887b9 actionless fix(replacements): reversed criteria for repo priority
+     2018-05-21 08953d8 actionless fix(pprint: pformat sysupgrade): show deps' repo name
+     2018-05-21 0b24abf actionless fix(install_cli): initialize more class properties
+
+
+Tue May 29 12:37:39 2018 +0200
+-------------------------------------------------
+0.11.3          Release 0.11.3
+    
+     2018-05-29 9964516 actionless fix(build): compatibility with `makepkg --packagelist` from pacman 5.1
+     2018-05-28 d84a2a6 actionless refactor(pacman, search cli): more work on package ordering
+     2018-05-28 bcbd496 actionless fix(pacman, search cli): show search results sorted by repo priority
+     2018-05-24 2c29716 Bert Peters Create Dutch translation.
+     2018-05-21 603987f actionless fix(install_cli, build): discard in-memory cache of local package db after each pacman operation
+
+
+Tue May 29 12:55:06 2018 +0200
+-------------------------------------------------
+0.11.4          Bugfix release 0.11.4
+    
+    Arch detection of the built package with a new pacman version
+
+
+Wed May 30 16:37:15 2018 +0200
+-------------------------------------------------
+0.11.5          Bugfix release 0.11.5
+    
+     2018-05-30 a9ebdfb actionless fix(build: set_built_package_path): cover the case if makepkg --packagelist returned
+    a relative path
+     2018-05-29 8e796e1 actionless fix(package_update: get_remote_package_version): leftover after refactoring to use find_one()
+    
+    Docs improvements:
+     2018-05-30 e45b3d5 actionless doc(readme): extend description of pacman wrapping
+     2018-05-30 dba41f5 steven-omaha doc(readme: faq): clean old or uninstalled AUR packages in ~/.cache/pikaur/pkg
+
+
+Wed May 30 16:41:28 2018 +0200
+-------------------------------------------------
+0.11.6          fix(build: set_built_package_path): move relative path detection up to cover case with custom dest dir
+
+
+Sun Jun 3 11:47:02 2018 +0200
+-------------------------------------------------
+0.12            Release 0.12
+    
+     2018-06-03 66751db actionless fix(install cli: get repo deps info): make it recursive to show deps of deps
+     2018-06-03 e3f9bce steven-omaha Implementation of news functionality from archlinux.org (#191)
+     2018-06-01 0809cb4 actionless fix(build: get_built_deps): case when split package is depend on the other part of split package and both are requested explicitly (by user or as deps of an other package)
+     2018-05-31 482d673 actionless fix(search cli): bypass --refresh/--y to pacman when doing search
+     2018-05-31 3d4cf6f actionless fix(install cli): can't explicitly install ignored package
+
+
+Mon Jun 11 15:15:09 2018 +0200
+-------------------------------------------------
+0.13            Release 0.13
+    
+     2018-06-10 a2d1d07 actionless fix(core: get_editor): type hint
+     2018-06-10 af9a9aa actionless feat(install cli): nicer message about missing deps
+     2018-06-10 bf77e7a actionless fix(pacman: find_repo_pkgs): better handle not found
+     2018-06-10 14947c9 actionless fix(install_cli): prompt deadlock - 2
+     2018-06-10 082b24a actionless fix(pikspect): don't clear buffer after show() filter
+     2018-06-10 3aed87f actionless fix(install_cli): prompt deadlock
+     2018-06-10 18ee141 actionless fix(pikspect): regression on displayed auto-answer
+
+
+Wed Jun 13 03:15:27 2018 +0200
+-------------------------------------------------
+0.13.1          Bugfix release 0.13.1
+    
+     2018-06-13 9aed7fb actionless fix(build): don't attempt to clone split packages twice
+     2018-06-13 d7cc9ae actionless fix(install_cli): ignore refresh in both --print-format
+     2018-06-13 0f1793e actionless fix(install_cli): get upgradeable packages from --print-format
+     2018-06-13 e90c2c9 actionless fix(install_cli): regression printing upgradeable packages
+     2018-06-13 6d29aa1 actionless fix(install_cli: parse_pacman): typecheck
+     2018-06-13 8c047b1 actionless fix(aur_deps): check all repo-provided deps
+     2018-06-13 71ce9d4 actionless feat(install cli): parse provided package choice from pacman output
+
+
+Wed Jun 13 03:36:55 2018 +0200
+-------------------------------------------------
+0.13.2          Bugfix release 0.13.2
+    
+     2018-06-13 4b979ab actionless fix(pikspect: tty_restore): don't restore when piped
+
+
+Sun Jun 17 09:25:10 2018 +0200
+-------------------------------------------------
+0.14            Release 0.14
+    
+    Revert experimental pacman wrapping.
+    Improve overview prompt and [m]anual package selection.
+    
+     2018-06-17 501677f actionless style(core): distutils exception import
+     2018-06-17 6b5d5ce actionless fix(core: spawn): use tempfile instead of PIPE
+     2018-06-17 bb9991d actionless style(install info fetcher): pylint
+     2018-06-17 8763ecb actionless refactor(install info fetcher): extract deps marking into separate method
+
+
+Sun Jun 17 10:45:44 2018 +0200
+-------------------------------------------------
+0.14.1          Hotfix release 0.14.1
+    
+     2018-06-17 2245a4e actionless fix(install info fetcher): don't show explicitly requested package as its provided name
+     2018-06-17 89aa35f actionless feat(install info fetcher): correctly show in prompt packages which are providing some dep (not explicitly requested package)
+     2018-06-17 02eac14 actionless fix(aur_deps: find_repo_deps): show in prompt makedepends and checkdepends
+
+
+Sun Jun 17 22:17:28 2018 +0200
+-------------------------------------------------
+0.14.2          Release 0.14.2
+    
+     2018-06-17 efb0088 actionless fix(pacman: find_upgradeable): revert --Qu to --Su --print
+
+
+Sun Jun 17 22:38:50 2018 +0200
+-------------------------------------------------
+0.14.3          Bugfix release 0.14.3
+    
+     2018-06-17 f9aee10 actionless fix(pacman: find_upgradeable): don't filter out deps
+    
+    re #199
+
+
+Sun Jun 17 23:40:26 2018 +0200
+-------------------------------------------------
+0.14.4          Bugfix release 0.14.4
+    
+     2018-06-17 877d2de actionless fix(pacman): split -Qu and -Su logic
+
+
+Thu Jun 28 15:50:31 2018 +0200
+-------------------------------------------------
+0.14.5          Release 0.14.5
+    
+     2018-06-26 c23bf10 actionless fix(build): don't throw exception while throwing an exception
+     2018-06-25 42c8458 actionless fix(build: remove deps): work with sets as with sets, not lists
+     2018-06-25 b5e553a actionless fix(build, install cli): bypass user decision on conflict resolution from Install Cli to Build Cli phase
+     2018-06-25 c2496f4 actionless fix(conflicts): compute conflicts for aur pkgs deps
+     2018-06-25 1ed1319 actionless fix(build: remove deps): resolve diff inconsistency in case if package was replaced by a different provider
+     2018-06-25 01471b8 actionless fix(pacman: pkg_db: get_provided_pkgs): case when package is providing itself (like `jack` is provided by `jack` and `jack2`)
+     2018-06-19 af54476 actionless fix(install info fetcher): --needed handling when installing repo pkgs
+
+
+Fri Jun 29 18:47:01 2018 +0200
+-------------------------------------------------
+0.14.6          Release 0.14.6
+    
+     2018-06-29 8722a16 actionless refactor: raise SysExit() instead of doing sys.exit()
+     2018-06-28 ae3e0c8 actionless feat(main, install cli): implement sudo loop
+     2018-06-28 dc83554 actionless feat(args, main): show stack trace on Ctrl+C if --debug is passed
+     2018-06-28 ff83ae0 actionless fix(main: entry_point): add -Sy
+     2018-06-28 c8d0288 actionless fix(install cli): nothing to do message when installing package via provided name
+
+
+Thu Jul 12 00:30:20 2018 +0200
+-------------------------------------------------
+0.15            Release 0.15
+    
+    Notable changes:
+     2018-07-11 c36021a actionless refactor(search cli): move print-related routine to `pikaur.print_department`
+     2018-07-11 4354b26 actionless refactor(aur_deps, pacman): preserve versioned part of the requirements
+     2018-07-11 f8b2bd5 actionless fix(pacman): detect not found packages in locales which are not using spaces
+     2018-07-11 737f043 actionless fix(aur_deps): don't split doubled version requirements when querying them from pacman
+     2018-07-11 540283d actionless fix(aur_deps): handle some edge case with provided packages
+     2018-07-11 b2e8532 actionless fix(pacman): discard provided packages as well when discarding local cache
+
+
+Fri Jul 13 02:01:46 2018 +0200
+-------------------------------------------------
+0.15.1          Release 0.15.1
+    
+     2018-07-12 10075eb actionless fix(build: set_package_path): behavior with non-default build dir
+     2018-07-12 857058b actionless feat: correctly handle suggestion for package replacements in prompt
+
+
+Thu Jul 19 02:29:54 2018 +0200
+-------------------------------------------------
 1.0             Release 1.0
     
     Notable changes:
@@ -246,11 +394,23 @@
      2018-07-17 2008a66 actionless fix(main): gracefully exit on argparse exception
      2018-07-17 8cc54ef actionless feat(install cli): ignore space changes when showing git diff of AUR package
      2018-07-13 e9613f7 actionless feat(aur_deps): when computing aur deps take packages which are requested to be installed (positional args) as first priority
+
+
+Thu Jul 19 16:24:28 2018 +0200
+-------------------------------------------------
 1.0.1           Remove ruby from build deps
+
+
+Fri Jul 20 12:18:11 2018 +0200
+-------------------------------------------------
 1.0.2           Bugfix release 1.0.2
     
      2018-07-20 2f18cb3 actionless fix(build): regression: --needed started
     to work only if built package was already in cache
+
+
+Sun Jul 22 05:12:49 2018 +0200
+-------------------------------------------------
 1.1.0           Release 1.1
     
     Notable changes:
@@ -259,17 +419,33 @@
      2018-07-21 affceba feat(config, build): add SkipFailedBuild option
      2018-07-21 5c67f4e fix(main): don't complain if pikaur's stdout is intercepted
      2018-07-20 5ad21af feat(pikspect): buffer output before writing to avoid flickering
+
+
+Sun Jul 22 05:20:04 2018 +0200
+-------------------------------------------------
 1.1.1           Bugfix release 1.1.1
     
     copy function creating problems again :-)
+
+
+Sun Jul 22 05:40:09 2018 +0200
+-------------------------------------------------
 1.1.2           Bugfix release 1.1.2
     
     more fixes for installing local PKGBUILD (`-P`)
+
+
+Sun Jul 22 18:20:27 2018 +0200
+-------------------------------------------------
 1.1.3           Bugfix release 1.1.3
     
      2018-07-22 081ba66 actionless fix(build, core): race condition when updating aur repos with systemd dynamic users
      2018-07-22 ec1735e actionless fix(core: copy): isolate cp -r command if running pikaur from root via sudo
      2018-07-22 3d69888 Osman Karagöz chore(locale): update TR translation
+
+
+Sun Jul 22 19:48:44 2018 +0200
+-------------------------------------------------
 1.2.0           Release 1.2
     
      2018-07-22 9ad7e9e actionless feat: retrieve PKGBUILDs from AUR and ABS (-G/--getpkgbuild)
@@ -279,6 +455,10 @@
          2018-07-22 081ba66 actionless fix(build, core): race condition when updating aur repos with systemd dynamic users
          2018-07-22 ec1735e actionless fix(core: copy): isolate cp -r command if running pikaur from root via sudo
          2018-07-22 3d69888 Osman Karagöz chore(locale): update TR translation
+
+
+Mon Jul 23 07:05:31 2018 +0200
+-------------------------------------------------
 1.2.1           Release 1.2.1
     
     Notable changes:
@@ -287,34 +467,18 @@
      2018-07-23 dd38835 fix(pikspect): add more timeout between the loops to relax cpu a bit
      2018-07-23 352dea5 fix(install info fetcher): don't allow marking explicitly requested AUR pkgs as providing for
      2018-07-23 9af622f feat(install cli, config): add build.DiffPager config option
-1.2.10          Bugfix release 1.2.10
-    
-    Notable changes:
-     2018-07-29 2a80cb7 fix(install cli): installing split packages from local PKGBUILD file
-     2018-07-29 f9e6bd0 fix(build: prepare_build_destination): don't copy build files twice
-1.2.11          Release 1.2.11
-    
-    Notable changes:
-     2018-07-31 aec0e51 actionless fix(install cli): regression: when --sysupgrade passed run `pacman --sysupgrade` even if there are on updates found
-     2018-07-29 3b67ee4 actionless fix(args): fix overlapping -k between --keepbuild and --check
-     2018-07-29 44ba50f actionless feat(args): use `-o` as shortcut for `--repo` in `-S` and `-P`
-     2018-07-29 fc7affe actionless fix(build, install): use common routine for installing aur deps to avoid mis-marking explicitly installed pkgs as deps
-1.2.12          Bugfix release 1.2.12
-    
-     2018-08-01 39b0104 fix(build: version_already_installed): use .SRCINFO from aur repo path, not from build dir (in case if package was never built before)
-     2018-08-01 1f16a01 feat(install cli): print blank line after refreshing repo packages db
-1.2.13          Bugfix release 1.2.13
-    
-    2018-08-01 e6df5a5 fix(pikspect): write buffer from time to time
-1.2.14          Bugfix release 1.2.14
-    
-    Notables changes:
-     feat(args, pacman, main): bypass all the key-value flags to pacman as well as bool ones
-     fix(pikspect): don't touch write buffer if it's empty
+
+
+Tue Jul 24 08:32:02 2018 +0200
+-------------------------------------------------
 1.2.2           Release 1.2.2
     
      2018-07-24 7f10c9c actionless chore(fish): add completion for new CLI flags
      2018-07-24 ca6552b actionless chore(zsh): complete AUR packages and add new command-line args
+
+
+Wed Jul 25 07:54:39 2018 +0200
+-------------------------------------------------
 1.2.3           Release 1.2.3
     
     Notable changes:
@@ -323,14 +487,26 @@
      2018-07-25 5b54ff7 feat(replacements): print warning if package is available in the repo but not installable
      2018-07-25 4c05d51 fix(replacements): don't fail if package is available in the repo but not installable
      2018-07-24 6265b85 fix(exceptions: PackageNotFoundIn*): be more verbose with the message
+
+
+Thu Jul 26 05:55:17 2018 +0200
+-------------------------------------------------
 1.2.4           Bugfix release 1.2.4
     
     2018-07-26 a3e0116 fix(print_department): print not found packages all to stderr
     2018-07-26 7da055e fix(build: copy_aur_repo): attempt to remove destination only if it exists
     2018-07-26 954f313 fix(build: copy_aur_repo): spawn mkdir to avoid problems with systemd dynamic users
+
+
+Thu Jul 26 19:45:38 2018 +0200
+-------------------------------------------------
 1.2.5           Bugfix release 1.2.5
     
     2018-07-26 88c8273 actionless fix(install cli): fix showing arch news
+
+
+Sat Jul 28 03:43:45 2018 +0200
+-------------------------------------------------
 1.2.6           Release 1.2.6
     
     Notable changes:
@@ -338,16 +514,83 @@
      2018-07-28 e68d2ec actionless fix(install info fetcher): inprecise prompt when package_A depends on package_B and package_C (provided by package_B)
      2018-07-28 3b01361 actionless feat: implement --dynamic-users flag and config option
      2018-07-27 b7bce43 actionless feat(aur: get_json_from_url): better exception text
+
+
+Sat Jul 28 18:42:56 2018 +0200
+-------------------------------------------------
 1.2.7           Release 1.2.7
     
     2018-07-28 d2d318b feat(config): add `ui.PrintCommands` to print each command which pikaur spawning
     2018-07-28 d862f96 refactor(main): use `sudo -v` instead of `sudo pacman -T` for a sudo loop
     2018-07-28 59e544a fix(args): don't use `-r` args since it's 'undeprecated' in pacman
+
+
+Sat Jul 28 18:56:59 2018 +0200
+-------------------------------------------------
 1.2.8           Bugfix release 1.2.8
     
     Notable changes:
      2018-07-28 57bb4e0 actionless fix(args: help): remove '-r' from pikaur help since it's used again by pacman
+
+
+Sat Jul 28 19:29:33 2018 +0200
+-------------------------------------------------
 1.2.9           Bugfix release 1.2.9
     
     Notable changes:
      2018-07-28 abaaea1 fix(exceptions: PackageNotFound): default value for `wanted_by`
+
+
+Sun Jul 29 12:40:41 2018 +0200
+-------------------------------------------------
+1.2.10          Bugfix release 1.2.10
+    
+    Notable changes:
+     2018-07-29 2a80cb7 fix(install cli): installing split packages from local PKGBUILD file
+     2018-07-29 f9e6bd0 fix(build: prepare_build_destination): don't copy build files twice
+
+
+Tue Jul 31 14:43:58 2018 +0200
+-------------------------------------------------
+1.2.11          Release 1.2.11
+    
+    Notable changes:
+     2018-07-31 aec0e51 actionless fix(install cli): regression: when --sysupgrade passed run `pacman --sysupgrade` even if there are on updates found
+     2018-07-29 3b67ee4 actionless fix(args): fix overlapping -k between --keepbuild and --check
+     2018-07-29 44ba50f actionless feat(args): use `-o` as shortcut for `--repo` in `-S` and `-P`
+     2018-07-29 fc7affe actionless fix(build, install): use common routine for installing aur deps to avoid mis-marking explicitly installed pkgs as deps
+
+
+Wed Aug 1 21:55:10 2018 +0200
+-------------------------------------------------
+1.2.12          Bugfix release 1.2.12
+    
+     2018-08-01 39b0104 fix(build: version_already_installed): use .SRCINFO from aur repo path, not from build dir (in case if package was never built before)
+     2018-08-01 1f16a01 feat(install cli): print blank line after refreshing repo packages db
+
+
+Wed Aug 1 22:05:01 2018 +0200
+-------------------------------------------------
+1.2.13          Bugfix release 1.2.13
+    
+    2018-08-01 e6df5a5 fix(pikspect): write buffer from time to time
+
+
+Fri Aug 3 06:53:36 2018 +0200
+-------------------------------------------------
+1.2.14          Bugfix release 1.2.14
+    
+    Notables changes:
+     feat(args, pacman, main): bypass all the key-value flags to pacman as well as bool ones
+     fix(pikspect): don't touch write buffer if it's empty
+
+
+Sat Aug 4 03:19:20 2018 +0200
+-------------------------------------------------
+1.2.15          Bugfix release 1.2.15
+    
+    Notable changes:
+     c3da0e5 fix(build: version_already_installed): use .SRCINFO from
+    ar, not ath (and copy to make sure it's always present)
+     4c6abd3 feat(main): print nice error if `asp` is not installed
+     7ba077c fix(pacman: find_repo_package): correct exception type when looking up package group
