@@ -3,9 +3,9 @@
 # Contributor: Kevin MacMartin <prurigro at gmail dot com>
 
 pkgname=vitetris
-pkgver=0.57
-pkgrel=2
-pkgdesc="A terminal-based Tetris clone with 2-player mode"
+pkgver=0.57.2
+pkgrel=1
+pkgdesc="Virtual terminal *tris clone"
 arch=('i686' 'x86_64')
 url="http://victornils.net/tetris"
 license=('BSD')
@@ -13,12 +13,12 @@ depends=('ncurses')
 makedepends=('patch')
 options=('!makeflags')
 install=$pkgname.install
-source=(http://victornils.net/tetris/${pkgname}-${pkgver}.tar.gz
+source=($pkgname-$pkgver.tar.gz::https://github.com/vicgeralds/$pkgname/archive/v$pkgver.tar.gz
         $pkgname-makefile.patch
         $pkgname.tmpfiles.conf)
-md5sums=('07d02ee03e2edd66a8741729e237f21f'
-         '23be30294af1dbc43c594a8b737091c8'
-         'c4c6a6d4250c0aa3bbf3c4a7d911fa1c')
+sha256sums=('c023b33f663a7a47418652b520e83cdcf8d395584e30ec4bcb5e2b3563d4372b'
+            '2a9e1ea8daf42b833719c2fa1098f9e9c6259b8e077ca387eecd9a2ee54cc8af'
+            '898c741a41defccd6b38fe3a5b97fb84d5656b2c9df05c79196ac1bf2151ba7d')
 
 prepare() {
   cd ${pkgname}-${pkgver}
