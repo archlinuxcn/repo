@@ -594,3 +594,13 @@ Sat Aug 4 03:19:20 2018 +0200
     ar, not ath (and copy to make sure it's always present)
      4c6abd3 feat(main): print nice error if `asp` is not installed
      7ba077c fix(pacman: find_repo_package): correct exception type when looking up package group
+
+
+Mon Aug 6 01:19:28 2018 +0200
+-------------------------------------------------
+1.2.16          Release 1.2.16
+    
+     2b57809 feat(main, core): use sudo loop for all the operations which require sudo, not only for install cli
+     40b70fd feat(main): if systemd dynamic users always enabled don't ask for sudo password for info/search operations
+     2bbdc5a feat(build: recovery prompt): add `[d] delete build dir and try again`
+     5b70220 fix(build: with_makepkg): s/validity/source verification/
