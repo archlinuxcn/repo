@@ -1,7 +1,7 @@
 _pkgname=aiomonitor
 pkgname=python-aiomonitor
 pkgver=0.3.1
-pkgrel=1
+pkgrel=2
 pkgdesc="aiomonitor adds monitor and python REPL capabilities for asyncio application"
 arch=('any')
 url="https://github.com/aio-libs/aiomonitor"

@@ -1,7 +1,7 @@
 _pkgname=asks
 pkgname=python-asks
 pkgver=2.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc="asks - async http"
 arch=('any')
 url="https://github.com/theelous3/asks"

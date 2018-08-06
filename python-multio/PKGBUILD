@@ -1,7 +1,7 @@
 _pkgname=multio
 pkgname=python-multio
 pkgver=0.2.3
-pkgrel=1
+pkgrel=2
 pkgdesc="multio - an unified async library for curio and trio"
 arch=('any')
 url="https://github.com/theelous3/multio"

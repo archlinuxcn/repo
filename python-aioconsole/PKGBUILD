@@ -1,7 +1,7 @@
 _pkgname=aioconsole
 pkgname=python-aioconsole
 pkgver=0.1.10
-pkgrel=1
+pkgrel=2
 pkgdesc="Asynchronous console and interfaces for asyncio"
 arch=('any')
 url="https://github.com/vxgmichel/aioconsole"
