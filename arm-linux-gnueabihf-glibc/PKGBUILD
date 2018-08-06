@@ -7,8 +7,8 @@
 
 _target="arm-linux-gnueabihf"
 pkgname=${_target}-glibc
-pkgver=2.26
-pkgrel=4
+pkgver=2.28
+pkgrel=1
 pkgdesc="GNU C Library (${_target})"
 arch=('any')
 url="http://www.gnu.org/software/libc/"
@@ -19,24 +19,18 @@ provides=("${_target}-glibc-headers=${pkgver}" "${_target}-eglibc")
 conflicts=("${_target}-glibc-headers" "${_target}-eglibc")
 replaces=("${_target}-glibc-headers")
 options=(!buildflags !strip staticlibs)
-_commit=58270c0049404ef2f878fdd45df55f17f0b8c1f7
+_commit=23158b08a0908f381459f273a984c6fd328363cb
 source=(http://ftp.gnu.org/gnu/libc/glibc-${pkgver}.tar.xz
-        glibc-${_commit}.patch
-        0001-Don-t-use-IFUNC-resolver-for-longjmp-or-system-in-li.patch
-        0002-x86-Add-x86_64-to-x86-64-HWCAP-BZ-22093.patch)
-md5sums=('102f637c3812f81111f48f2427611be1'
-         '7ce099a4060f59b7b7dd5ca66605f4e8'
-         'cbc073315c00b03898b7fc614274d6b3'
-         'bd9b13f3294b6357baa809e4416b9f44')
+        bz20338.patch)
+md5sums=('c81d2388896379997bc359d4f2084239'
+         'dc0d3ad59aeaaf591b085a77de6e03e9')
 
 prepare() {
+  rm -rf glibc-build
   mkdir glibc-build
   cd glibc-$pkgver
 
-  patch -p1 -i "$srcdir/glibc-$_commit.patch"
-
-  patch -p1 -i "$srcdir/0001-Don-t-use-IFUNC-resolver-for-longjmp-or-system-in-li.patch"
-  patch -p1 -i "$srcdir/0002-x86-Add-x86_64-to-x86-64-HWCAP-BZ-22093.patch"
+  patch -p1 -i "$srcdir/bz20338.patch"
 }
 
 build() {
@@ -89,7 +83,7 @@ package() {
 
   # Remove unneeded for compilation files
   rm -rf "$pkgdir/usr/$_target/"{bin,sbin,etc,share,var}
-  for f in "${pkgdir}"/usr/${_target}/lib/lib{c,pthread}.so; do
+  for f in "${pkgdir}"/usr/${_target}/lib/libc.so; do
     sed -i "$f" -e "s://*lib/l:l:g"
   done
 }
