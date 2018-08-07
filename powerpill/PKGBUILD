@@ -1,7 +1,7 @@
 #Maintainer: Xyne <ac xunilhcra enyx, backwards>
 pkgname=powerpill
-pkgver=2018.5
-pkgrel=1.1
+pkgver=2018.7
+pkgrel=3
 pkgdesc='Pacman wrapper for faster downloads.'
 arch=(any)
 license=(GPL)
@@ -10,16 +10,16 @@ depends=(aria2 'pm2ml>2012.12.12' pyalpm python3 python3-xcgf python3-xcpf refle
 optdepends=('python3-threaded_servers: internal Pacserve support' 'rsync: Rsync download support')
 backup=(etc/powerpill/powerpill.json)
 source=(
-  https://xyne.archlinux.ca/projects/powerpill/src/powerpill-2018.5.tar.xz
-#  https://xyne.archlinux.ca/projects/powerpill/src/powerpill-2018.5.tar.xz.sig
+  https://xyne.archlinux.ca/projects/powerpill/src/powerpill-2018.7.tar.xz
+#  https://xyne.archlinux.ca/projects/powerpill/src/powerpill-2018.7.tar.xz.sig
 )
 sha512sums=(
-  bbbae6da80bc9cf2efae8f15bf70c2b13ad511bb6575d3dd7ec21f085a4b95177968ad51a36899653cd87347e0d2b37d96656363e99513155dd36a2254934c10
-#  a736ab872b9e5468007c68fbaeba3e4f378d96b688ffcdc4d0def0b808340a7fb35f70743a41aff72cf4a68ff23bd7fbcc9c757e91f4bfee69ae221ca8cbebaa
+  97650365b59a285671580ac7631c518be30f7e0616bb80e4e83f18b2ce30f62d50a99ceecb01eff52451c16e69ebe1b5b4f3fabc339a751f6b844f13e1f34669
+#  6e32d591eed2ca11f120e61e0ce90fe6817ee2366afc1ea0a39b33369e494d6e7ba34af14ee4ad4cb027dcac4284b5e7cebe3caf8884201fd11599f101329dbf
 )
 md5sums=(
-  9b5a5bc9b142eae25f89f00152790568
-#  0b6debb94e1b209b71861211dc236670
+  885e9da2d42579a4241e3f0914c61651
+#  6cc604a0e81582090a48ee739b917b1f
 )
 #validpgpkeys=('EC3CBE7F607D11E663149E811D1F0DC78F173680')
 
@@ -27,10 +27,11 @@ package ()
 {
   cd "$srcdir/$pkgname-$pkgver"
   python3 setup.py install --prefix=/usr --root="$pkgdir" --optimize=1
-  install -Dm755 "powerpill" "$pkgdir/usr/bin/powerpill"
-  install -Dm644 "powerpill.json" "$pkgdir/etc/powerpill/powerpill.json"
-  install -Dm644 "man/powerpill.json.1.gz" "$pkgdir/usr/share/man/man1/powerpill.json.1.gz"
-  install -Dm644 "powerpill-bash-completion.sh" "$pkgdir/usr/share/bash-completion/completions/powerpill"
+  install -Dm755 'powerpill' "$pkgdir/usr/bin/powerpill"
+  install -Dm644 'powerpill.json' "$pkgdir/etc/powerpill/powerpill.json"
+  install -Dm644 'man/powerpill.json.1.gz' "$pkgdir/usr/share/man/man1/powerpill.json.1.gz"
+  install -Dm644 'powerpill-bash-completion.sh' "$pkgdir/usr/share/bash-completion/completions/powerpill"
+  install -Dm644 '_powerpill.zsh' "$pkgdir/usr/share/zsh/site-functions/_powerpill"
 }
 
 # vim: set ts=2 sw=2 et:
