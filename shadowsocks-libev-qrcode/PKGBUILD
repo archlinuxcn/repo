@@ -1,23 +1,22 @@
 # Maintainer: OriginCode <origincoder@yahoo.com>
-
 pkgname=shadowsocks-libev-qrcode
 pkgver=r12.cf20ba5
-pkgrel=1
+pkgrel=2
 pkgdesc="Generate QR code from a shadowsocks-libev config file."
 arch=('any')
 url="https://github.com/OriginCode/shadowsocks-libev-qrcode"
-license=('WTFPL')
-depends=(
-	'python-qrcode'
-	'python-argparse'
-)
-makedepends=('git')
+license=('custom: WTFPL')
+depends=('python-qrcode'
+		'python-argparse')
 provides=('ss-qrcode')
-conflicts=()
-source=('git+https://github.com/OriginCode/shadowsocks-libev-qrcode')
-md5sums=('SKIP')
+source=('https://raw.githubusercontent.com/OriginCode/shadowsocks-libev-qrcode/master/LICENSE'
+		'https://raw.githubusercontent.com/OriginCode/shadowsocks-libev-qrcode/master/ss-qrcode')
+
+sha256sums=('40f2791ae84e097cc964b740cbd974e78296a36aa1490dcb76dcc004bf865ac8'
+            '2817af77c08037f09b3f925eab0ed3aa7c63515d0dd4c03bb1e2cad877ce24e6')
 
 package() {
-	install -d "${pkgdir}/usr/bin"
-	cp "${srcdir}/${pkgname}/ss-qrcode" "${pkgdir}/usr/bin"
+	cd ${srcdir}
+	install -Dm644 LICENSE ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+	install -Dm755 ss-qrcode ${pkgdir}/usr/bin/ss-qrcode
 }
