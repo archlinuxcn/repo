@@ -1,5 +1,5 @@
 pkgname=kdocker
-pkgver=5.1
+pkgver=5.2
 pkgrel=1
 pkgdesc="An application to help you dock any application into the system tray"
 arch=('i686' 'x86_64')
@@ -7,7 +7,7 @@ url="https://github.com/user-none/KDocker"
 license=('GPL2')
 depends=('qt5-base' 'qt5-x11extras' 'libxpm' 'libxmu')
 source=(https://github.com/user-none/KDocker/archive/${pkgver}.tar.gz)
-sha256sums=('4d0e6e9d35d0afe3358f38cfab7e25fe12c0c60b97d14aaaa2f8572674879034')
+sha256sums=('ffcb11ac0cf50ae80a35e000b7a7470259e624511d1281579386a9cb68935cba')
 
 build() {
     cd "$srcdir/KDocker-$pkgver"
