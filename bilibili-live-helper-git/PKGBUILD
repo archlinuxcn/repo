@@ -1,13 +1,13 @@
 # Maintainer: OriginCode <origincoder@yahoo.com>
 _pkgname=bilibili-live-helper
 pkgname=bilibili-live-helper-git
-_entryname="Bilibili Live Helper"
+entryname="Bilibili Live Helper"
 pkgver=r36.122df52
 pkgrel=2
 pkgdesc="A Helper for Bilibili Live."
 arch=('x86_64')
 url="https://github.com/pandaGao/bilibili-live-helper"
-install=$pkgname.install
+install=${pkgname}.install
 license=('MIT')
 depends=('libxtst' 'gtk2' 'libxss' 'nss' 'gconf' 'alsa-lib')
 makedepends=('git' 'npm')
@@ -30,14 +30,14 @@ build() {
 	cd "$srcdir/$_pkgname"
 	npm run-script build
 	cd builds
-	mv Bilibili直播弹幕库-linux-x64 $_pkgname
+	mv Bilibili直播弹幕库-linux-x64 ${_pkgname}
 	cd ${_pkgname}
-	mv Bilibili直播弹幕库 $_pkgname
+	mv Bilibili直播弹幕库 ${_pkgname}
 }
 
 package() {
-	install -d "$pkgdir/opt/$_pkgname"
-	cp -r $srcdir/$_pkgname/builds/$_pkgname/* "$pkgdir/opt/$_pkgname"
-	install -Dm755 ./"$_entryname.desktop" "$pkgdir/usr/share/applications/$_entryname.desktop"
-	install -Dm444 ./"$_pkgname.ico" "$pkgdir/usr/share/icons/hicolor/128x128/$_pkgname.ico"
+	install -d "${pkgdir}/opt/${_pkgname}"
+	cp -r ${srcdir}/${_pkgname}/builds/${_pkgname}/* "${pkgdir}/opt/${_pkgname}"
+	install -Dm755 ./"${entryname}.desktop" "${pkgdir}/usr/share/applications/${entryname}.desktop"
+	install -Dm444 ./"${_pkgname}.ico" "${pkgdir}/usr/share/icons/hicolor/128x128/${_pkgname}.ico"
 }
