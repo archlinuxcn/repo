@@ -4,18 +4,19 @@
 # Maintainer: Thomas Baechler <thomas@archlinux.org>
 # Maintainer: Tony Lambiris <tony@critialstack.com>
 
-#pkgbase=linux               # Build stock -arch kernel
-pkgbase=linux-macbook       # Build kernel with a different name
-pkgver=4.17.11
+#pkgbase=linux               # Build stock -ARCH kernel
+pkgbase=linux-macbook        # Build kernel with a different name
+_srcver=4.17.13-arch1
+pkgver=${_srcver//-/.}
 pkgrel=1
-arch=('x86_64')
-url="https://www.kernel.org/"
-license=('GPL2')
-makedepends=('xmlto' 'kmod' 'inetutils' 'bc' 'libelf' 'git')
+arch=(x86_64)
+url="https://github.com/archlinux/linux/commits/v$_srcver"
+license=(GPL2)
+makedepends=(xmlto kmod inetutils bc libelf git)
 options=('!strip')
 _srcname=archlinux-linux
 source=(
-  "$_srcname::git+https://github.com/archlinux/linux?signed#tag=v$pkgver-arch${pkgrel%%.*}"
+  "$_srcname::git+https://github.com/archlinux/linux?signed#tag=v$_srcver"
   config         # the main kernel config file
   60-linux.hook  # pacman hook for depmod
   90-linux.hook  # pacman hook for initramfs regeneration
@@ -31,7 +32,7 @@ validpgpkeys=(
 )
 sha256sums=('SKIP'
             'aa7b6756f193f3b3a3fc4947e7a77b09e249df2e345e6495292055d757ba8be6'
-            'ae2e95db94ef7176207c690224169594d49445e04249d2499e9d2fbc117a0b21'
+            '36e326d8a88b4087a3a0ee0d47643fc03baeda487659980d0e9d08791e4c729c'
             '75f99f5239e03238f88d1a834c50043ec32b1dc568f2cc291b07d04718483919'
             'ad6344badc91ad0630caacde83f7f9b97276f80d26a20619a87952be65492c65'
             'c5a714823c3418692bc5c212dd5d094a0e2ae6147d6726822911f1c26e3a1d1b'
@@ -39,174 +40,197 @@ sha256sums=('SKIP'
             '09189eb269a9fd16898cf90a477df23306236fb897791e8d04e5a75d5007bbff')
 
 _kernelname=${pkgbase#linux}
-: ${_kernelname:=-arch}
+: ${_kernelname:=-ARCH}
 
 prepare() {
-  cd ${_srcname}
+  cd $_srcname
+
+  msg2 "Setting version..."
   scripts/setlocalversion --save-scmversion
+  echo "-$pkgrel" > localversion.10-pkgrel
+  echo "$_kernelname" > localversion.20-pkgname
 
-  msg "patch -Np1 -i ../RFC-PCI-Workaround-to-enable-poweroff-on-Mac-Pro-11.patch"
-  patch -Np1 -i ../RFC-PCI-Workaround-to-enable-poweroff-on-Mac-Pro-11.patch
+  local src
+  for src in "${source[@]}"; do
+    src="${src%%::*}"
+    src="${src##*/}"
+    [[ $src = *.patch ]] || continue
+    msg2 "Applying patch $src..."
+    patch -Np1 < "../$src"
+  done
 
-  msg "patch -Np1 -i ../RFC-v2-PCI-Workaround-to-enable-poweroff-on-Mac-Pro-11.patch"
-  patch -Np1 -i ../RFC-v2-PCI-Workaround-to-enable-poweroff-on-Mac-Pro-11.patch
-
+  msg2 "Setting config..."
   cp ../config .config
   make olddefconfig
+
+  make -s kernelrelease > ../version
+  msg2 "Prepared %s version %s" "$pkgbase" "$(<../version)"
 }
 
 build() {
-  cd ${_srcname}
+  cd $_srcname
   make bzImage modules
 }
 
 _package() {
   pkgdesc="The ${pkgbase/linux/Linux} kernel and modules"
-  [ "${pkgbase}" = "linux" ] && groups=('base')
-  depends=('coreutils' 'linux-firmware' 'kmod' 'mkinitcpio>=0.7')
+  [[ $pkgbase = linux ]] && groups=(base)
+  depends=(coreutils linux-firmware kmod mkinitcpio)
   optdepends=('crda: to set the correct wireless channels of your country')
-  backup=("etc/mkinitcpio.d/${pkgbase}.preset")
+  backup=("etc/mkinitcpio.d/$pkgbase.preset")
   install=linux.install
 
-  cd ${_srcname}
+  local kernver="$(<version)"
 
-  # get kernel version
-  _kernver="$(make kernelrelease)"
-  _basekernel=${_kernver%%-*}
-  _basekernel=${_basekernel%.*}
+  cd $_srcname
 
-  mkdir -p "${pkgdir}"/{boot,usr/lib/modules}
-  make INSTALL_MOD_PATH="${pkgdir}/usr" DEPMOD=/doesnt/exist modules_install
-  cp arch/x86/boot/bzImage "${pkgdir}/boot/vmlinuz-${pkgbase}"
+  msg2 "Installing boot image..."
+  install -Dm644 "$(make -s image_name)" "$pkgdir/boot/vmlinuz-$pkgbase"
 
-  # make room for external modules
-  local _extramodules="extramodules-${_basekernel}${_kernelname}"
-  ln -s "../${_extramodules}" "${pkgdir}/usr/lib/modules/${_kernver}/extramodules"
+  msg2 "Installing modules..."
+  local modulesdir="$pkgdir/usr/lib/modules/$kernver"
+  mkdir -p "$modulesdir"
+  make INSTALL_MOD_PATH="$pkgdir/usr" DEPMOD=/doesnt/exist modules_install
 
-  # add real version for building modules and running depmod from hook
-  echo "${_kernver}" |
-    install -Dm644 /dev/stdin "${pkgdir}/usr/lib/modules/${_extramodules}/version"
+  # a place for external modules,
+  # with version file for building modules and running depmod from hook
+  local extramodules="extramodules$_kernelname"
+  local extradir="$pkgdir/usr/lib/modules/$extramodules"
+  install -Dt "$extradir" -m644 ../version
+  ln -sr "$extradir" "$modulesdir/extramodules"
 
   # remove build and source links
-  rm "${pkgdir}"/usr/lib/modules/${_kernver}/{source,build}
+  rm "$modulesdir"/{source,build}
 
-  # now we call depmod...
-  depmod -b "${pkgdir}/usr" -F System.map "${_kernver}"
+  msg2 "Running depmod..."
+  depmod -b "$pkgdir/usr" -E Module.symvers -e "$kernver"
 
-  # add vmlinux
-  install -Dt "${pkgdir}/usr/lib/modules/${_kernver}/build" -m644 vmlinux
+  msg2 "Installing hooks..."
 
   # sed expression for following substitutions
-  local _subst="
-    s|%PKGBASE%|${pkgbase}|g
-    s|%KERNVER%|${_kernver}|g
-    s|%EXTRAMODULES%|${_extramodules}|g
+  local subst="
+    s|%PKGBASE%|$pkgbase|g
+    s|%KERNVER%|$kernver|g
+    s|%EXTRAMODULES%|$extramodules|g
   "
-
-  # hack to allow specifying an initially nonexisting install file
-  sed "${_subst}" "${startdir}/${install}" > "${startdir}/${install}.pkg"
-  true && install=${install}.pkg
 
   # copy macbook-wakeup.service to systemd
   mkdir -p "${pkgdir}/usr/lib/systemd/system"
   cp "${srcdir}/macbook-wakeup.service" "${pkgdir}/usr/lib/systemd/system"
 
-  # install mkinitcpio preset file
-  sed "${_subst}" ../linux.preset |
-    install -Dm644 /dev/stdin "${pkgdir}/etc/mkinitcpio.d/${pkgbase}.preset"
+  # hack to allow specifying an initially nonexisting install file
+  sed "$subst" "$startdir/$install" > "$startdir/$install.pkg"
+  true && install=$install.pkg
 
-  # install pacman hooks
-  sed "${_subst}" ../60-linux.hook |
-    install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/60-${pkgbase}.hook"
-  sed "${_subst}" ../90-linux.hook |
-    install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/90-${pkgbase}.hook"
+  # fill in mkinitcpio preset and pacman hooks
+  sed "$subst" ../linux.preset | install -Dm644 /dev/stdin \
+    "$pkgdir/etc/mkinitcpio.d/$pkgbase.preset"
+  sed "$subst" ../60-linux.hook | install -Dm644 /dev/stdin \
+    "$pkgdir/usr/share/libalpm/hooks/60-$pkgbase.hook"
+  sed "$subst" ../90-linux.hook | install -Dm644 /dev/stdin \
+    "$pkgdir/usr/share/libalpm/hooks/90-$pkgbase.hook"
+
+  msg2 "Fixing permissions..."
+  chmod -Rc u=rwX,go=rX "$pkgdir"
 }
 
 _package-headers() {
   pkgdesc="Header files and scripts for building modules for ${pkgbase/linux/Linux} kernel"
 
-  cd ${_srcname}
-  local _builddir="${pkgdir}/usr/lib/modules/${_kernver}/build"
+  local builddir="$pkgdir/usr/lib/modules/$(<version)/build"
 
-  install -Dt "${_builddir}" -m644 Makefile .config Module.symvers
-  install -Dt "${_builddir}/kernel" -m644 kernel/Makefile
+  cd $_srcname
 
-  mkdir "${_builddir}/.tmp_versions"
-
-  cp -t "${_builddir}" -a include scripts
-
-  install -Dt "${_builddir}/arch/x86" -m644 arch/x86/Makefile
-  install -Dt "${_builddir}/arch/x86/kernel" -m644 arch/x86/kernel/asm-offsets.s
-
-  cp -t "${_builddir}/arch/x86" -a arch/x86/include
-
-  install -Dt "${_builddir}/drivers/md" -m644 drivers/md/*.h
-  install -Dt "${_builddir}/net/mac80211" -m644 net/mac80211/*.h
-
-  # http://bugs.archlinux.org/task/13146
-  install -Dt "${_builddir}/drivers/media/i2c" -m644 drivers/media/i2c/msp3400-driver.h
-
-  # http://bugs.archlinux.org/task/20402
-  install -Dt "${_builddir}/drivers/media/usb/dvb-usb" -m644 drivers/media/usb/dvb-usb/*.h
-  install -Dt "${_builddir}/drivers/media/dvb-frontends" -m644 drivers/media/dvb-frontends/*.h
-  install -Dt "${_builddir}/drivers/media/tuners" -m644 drivers/media/tuners/*.h
-
-  # add xfs and shmem for aufs building
-  mkdir -p "${_builddir}"/{fs/xfs,mm}
-
-  # copy in Kconfig files
-  find . -name Kconfig\* -exec install -Dm644 {} "${_builddir}/{}" \;
+  msg2 "Installing build files..."
+  install -Dt "$builddir" -m644 Makefile .config Module.symvers System.map vmlinux
+  install -Dt "$builddir/kernel" -m644 kernel/Makefile
+  install -Dt "$builddir/arch/x86" -m644 arch/x86/Makefile
+  cp -t "$builddir" -a scripts
 
   # add objtool for external module building and enabled VALIDATION_STACK option
-  install -Dt "${_builddir}/tools/objtool" tools/objtool/objtool
+  install -Dt "$builddir/tools/objtool" tools/objtool/objtool
 
-  # remove unneeded architectures
-  local _arch
-  for _arch in "${_builddir}"/arch/*/; do
-    [[ ${_arch} == */x86/ ]] && continue
-    rm -r "${_arch}"
+  # add xfs and shmem for aufs building
+  mkdir -p "$builddir"/{fs/xfs,mm}
+
+  # ???
+  mkdir "$builddir/.tmp_versions"
+
+  msg2 "Installing headers..."
+  cp -t "$builddir" -a include
+  cp -t "$builddir/arch/x86" -a arch/x86/include
+  install -Dt "$builddir/arch/x86/kernel" -m644 arch/x86/kernel/asm-offsets.s
+
+  install -Dt "$builddir/drivers/md" -m644 drivers/md/*.h
+  install -Dt "$builddir/net/mac80211" -m644 net/mac80211/*.h
+
+  # http://bugs.archlinux.org/task/13146
+  install -Dt "$builddir/drivers/media/i2c" -m644 drivers/media/i2c/msp3400-driver.h
+
+  # http://bugs.archlinux.org/task/20402
+  install -Dt "$builddir/drivers/media/usb/dvb-usb" -m644 drivers/media/usb/dvb-usb/*.h
+  install -Dt "$builddir/drivers/media/dvb-frontends" -m644 drivers/media/dvb-frontends/*.h
+  install -Dt "$builddir/drivers/media/tuners" -m644 drivers/media/tuners/*.h
+
+  msg2 "Installing KConfig files..."
+  find . -name 'Kconfig*' -exec install -Dm644 {} "$builddir/{}" \;
+
+  msg2 "Removing unneeded architectures..."
+  local arch
+  for arch in "$builddir"/arch/*/; do
+    [[ $arch = */x86/ ]] && continue
+    echo "Removing $(basename "$arch")"
+    rm -r "$arch"
   done
 
-  # remove files already in linux-docs package
-  rm -r "${_builddir}/Documentation"
+  msg2 "Removing documentation..."
+  rm -r "$builddir/Documentation"
 
-  # remove now broken symlinks
-  find -L "${_builddir}" -type l -printf 'Removing %P\n' -delete
+  msg2 "Removing broken symlinks..."
+  find -L "$builddir" -type l -printf 'Removing %P\n' -delete
 
-  # Fix permissions
-  chmod -R u=rwX,go=rX "${_builddir}"
+  msg2 "Removing loose objects..."
+  find "$builddir" -type f -name '*.o' -printf 'Removing %P\n' -delete
 
-  # strip scripts directory
-  local _binary _strip
-  while read -rd '' _binary; do
-    case "$(file -bi "${_binary}")" in
-      *application/x-sharedlib*)  _strip="${STRIP_SHARED}"   ;; # Libraries (.so)
-      *application/x-archive*)    _strip="${STRIP_STATIC}"   ;; # Libraries (.a)
-      *application/x-executable*) _strip="${STRIP_BINARIES}" ;; # Binaries
-      *) continue ;;
+  msg2 "Stripping build tools..."
+  local file
+  while read -rd '' file; do
+    case "$(file -bi "$file")" in
+      application/x-sharedlib\;*)      # Libraries (.so)
+        strip -v $STRIP_SHARED "$file" ;;
+      application/x-archive\;*)        # Libraries (.a)
+        strip -v $STRIP_STATIC "$file" ;;
+      application/x-executable\;*)     # Binaries
+        strip -v $STRIP_BINARIES "$file" ;;
+      application/x-pie-executable\;*) # Relocatable binaries
+        strip -v $STRIP_SHARED "$file" ;;
     esac
-    /usr/bin/strip ${_strip} "${_binary}"
-  done < <(find "${_builddir}/scripts" -type f -perm -u+w -print0 2>/dev/null)
+  done < <(find "$builddir" -type f -perm -u+x ! -name vmlinux -print0)
+
+  msg2 "Fixing permissions..."
+  chmod -Rc u=rwX,go=rX "$pkgdir"
 }
 
 _package-docs() {
   pkgdesc="Kernel hackers manual - HTML documentation that comes with the ${pkgbase/linux/Linux} kernel"
 
-  cd ${_srcname}
-  local _builddir="${pkgdir}/usr/lib/modules/${_kernver}/build"
+  local builddir="$pkgdir/usr/lib/modules/$(<version)/build"
 
-  mkdir -p "${_builddir}"
-  cp -t "${_builddir}" -a Documentation
+  cd $_srcname
 
-  # Fix permissions
-  chmod -R u=rwX,go=rX "${_builddir}"
+  msg2 "Installing documentation..."
+  mkdir -p "$builddir"
+  cp -t "$builddir" -a Documentation
+
+  msg2 "Fixing permissions..."
+  chmod -Rc u=rwX,go=rX "$pkgdir"
 }
 
-pkgname=("${pkgbase}" "${pkgbase}-headers" "${pkgbase}-docs")
-for _p in ${pkgname[@]}; do
-  eval "package_${_p}() {
-    $(declare -f "_package${_p#${pkgbase}}")
-    _package${_p#${pkgbase}}
+pkgname=("$pkgbase" "$pkgbase-headers" "$pkgbase-docs")
+for _p in "${pkgname[@]}"; do
+  eval "package_$_p() {
+    $(declare -f "_package${_p#$pkgbase}")
+    _package${_p#$pkgbase}
   }"
 done
 
