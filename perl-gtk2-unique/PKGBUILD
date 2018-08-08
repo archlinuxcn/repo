@@ -16,7 +16,7 @@ makedepends=('perl-extutils-depends' 'perl-extutils-pkgconfig')
 depends=('perl' 'gtk2-perl' 'libunique')
 checkdepends=('xorg-server-xvfb')
 options=('!emptydirs')
-source=("http://search.cpan.org/CPAN/authors/id/P/PO/POTYL/${_cpanname}-${pkgver}.tar.gz"
+source=("https://cpan.metacpan.org/authors/id/P/PO/POTYL/${_cpanname}-${pkgver}.tar.gz"
         "$pkgname.patch"
 		"fix_segfault_2nd_instance.patch")
 md5sums=('0beb552933b765a017588563a71af123'
