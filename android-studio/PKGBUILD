@@ -7,9 +7,9 @@
 # Maintainer: Philippe Hürlimann <p@hurlimann.org>
 
 pkgname=android-studio
-pkgver=3.1.3.0
+pkgver=3.1.4.0
 pkgrel=1
-_build=173.4819257
+_build=173.4907809
 pkgdesc="The official Android IDE (Stable branch)"
 arch=('i686' 'x86_64')
 url="http://tools.android.com/"
@@ -21,7 +21,7 @@ optdepends=('gtk2: GTK+ look and feel'
 options=('!strip')
 source=("https://dl.google.com/dl/android/studio/ide-zips/$pkgver/android-studio-ide-$_build-linux.zip"
         "$pkgname.desktop")
-sha256sums=('d86748e44d658fd39581b40f7b706fb397fc1eca5dd6f8066a56c0beb856dea4'
+sha256sums=('c2e55502982bbf4d59acc8f0107bb6a1d2d6de74acf17aa3188b55eaf3f5a677'
             '73cd2dde1d0f99aaba5baad1e2b91c834edd5db3c817f6fb78868d102360d3c4')
 
 if [ "$CARCH" = "i686" ]; then
