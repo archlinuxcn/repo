@@ -50,8 +50,8 @@ _build() (
   CXXFLAGS+=" -fno-delete-null-pointer-checks"
   CFLAGS+=" -fno-delete-null-pointer-checks"
 
-  CFLAGS+=" -Wno-expansion-to-defined"
-  CXXFLAGS+=" -Wno-expansion-to-defined"
+  CFLAGS+=" -Wno-expansion-to-defined -Wno-class-memaccess"
+  CXXFLAGS+=" -Wno-expansion-to-defined -Wno-class-memaccess"
 
   ../$pkgbase-$pkgver/configure --prefix=/usr \
     --libexecdir=/usr/lib/webkit${_ver} \
