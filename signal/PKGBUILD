@@ -5,7 +5,7 @@
 # Contributor: mrxx <mrxx at cyberhome dot at>
 # Contributor: Jonhoo <jon at thesquareplanet.com>
 pkgname=signal
-pkgver=1.14.4
+pkgver=1.15.3
 pkgrel=1
 license=('GPL3')
 pkgdesc='Signal Private Messenger for the Desktop'
@@ -26,8 +26,8 @@ sha512sums=('SKIP'
 
 prepare() {
   cd "${pkgname}-git-repo"
-  # Fix issues/1988
-  #sed -i 's/"electron": "1.7.12"/"electron": "1.8.2"/' package.json
+  # Fix segfault (without binary openssl)
+  sed -i 's|"https://github.com/scottnonnenberg-signal/node-sqlcipher.git#ed4f4d179ac010c6347b291cbd4c2ebe5c773741"|"3.2.1"|' package.json
 }
 
 build() {
