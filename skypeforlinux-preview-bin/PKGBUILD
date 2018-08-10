@@ -3,8 +3,8 @@
 
 _pkgname=skypeforlinux
 pkgname=$_pkgname-preview-bin
-pkgver=8.28.76.19
-pkgrel=2
+pkgver=8.28.76.42
+pkgrel=1
 pkgdesc="Skype for Linux - Preview/Insider Version"
 arch=("x86_64")
 url="http://www.skype.com"
@@ -21,7 +21,7 @@ source=(
 "https://archive.archlinux.org/packages/g/glibc/glibc-2.27-3-${CARCH}.pkg.tar.xz"
 )
 noextract=("glibc-2.27-3-${CARCH}.pkg.tar.xz")
-sha256sums=('a83f19f1943898c45f6a7ce500331eb523b2f0f55399f39e2479b567ef2ffd71'
+sha256sums=('b3814b7a0844980d924b9972bf2ff712743486999555a860cab31d8397468eba'
             'a9e1b18d7f613be660556dbd6883781e88a0f5113230147e230d3e2f268792dc')
 
 package() {
