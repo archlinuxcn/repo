@@ -3,7 +3,7 @@
 
 pkgname=docear
 pkgver=1.2.0_stable
-pkgrel=4
+pkgrel=5
 pkgdesc="Docear is an academic literature suite for searching, organizing and creating academic literature, built upon the mind mapping software Freeplane and the reference manager JabRef."
 arch=('any')
 url="http://www.docear.org/"
@@ -20,12 +20,12 @@ options=()
 install=
 changelog=
 source=("${pkgname}_${pkgver}.tar.gz::http://docear.org/downloads/docear_linux.tar.gz"
-        "https://www.dropbox.com/s/roqtejlo3b8gizg/docear-metadata-lib-0.0.1.jar?raw=1"
+        "docear-metadata-lib-0.0.1::https://www.dropbox.com/s/1g7ztpmvulr03or/docear-metadata-lib-0.0.1?dl=1"
         "docear.desktop")
 md5sums=('679747b7624e29efa0f82ca7fa96bc53'
          '0247fc67435670827a7ba0e86d409a4a'
          '6023a37923cd962f53db05ed5e2a6b21')
-noextract=(docear-metadata-lib-0.0.1.jar?raw=1)
+noextract=(docear-metadata-lib-0.0.1)
 
 build() {
   # echo "Cleaning src directory..."
@@ -59,7 +59,7 @@ package()
   install -d "${pkgdir}/usr/share/applications"
   install -Dm 644 "$srcdir/docear.desktop" "${pkgdir}/usr/share/applications/docear.desktop"
 
-  install -Dm 644 "$srcdir/docear-metadata-lib-0.0.1.jar?raw=1" "${pkgdir}/usr/share/docear/plugins/org.docear.plugin.bibtex/lib/docear-metadata-lib-0.0.1.jar"
+  install -Dm 644 "$srcdir/docear-metadata-lib-0.0.1" "${pkgdir}/usr/share/docear/plugins/org.docear.plugin.bibtex/lib/docear-metadata-lib-0.0.1.jar"
 
   # enable antialiasing when start up docear
   echo "-Dawt.useSystemAAFontSettings=on" >> "${pkgdir}/usr/share/docear/init.xargs"
