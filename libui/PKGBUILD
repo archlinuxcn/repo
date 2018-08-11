@@ -1,8 +1,8 @@
 # Contributor: Laurent Tréguier <laurent@treguier.org>
 
 pkgname=libui
-pkgver=0.3.5.alpha
-_pkgver=alpha3.5
+pkgver=0.4.alpha
+_pkgver=alpha4
 pkgrel=1
 pkgdesc='A portable GUI library for C'
 arch=('i686' 'x86_64')
@@ -13,7 +13,7 @@ makedepends=('cmake')
 provides=('libui')
 conflicts=('libui-git')
 source=("https://github.com/andlabs/libui/archive/${_pkgver}.tar.gz")
-md5sums=('72987ae25cc8e88e18976858ef1ab028')
+md5sums=('9ca3e7e387eaaa9bf8c71f0c64b9a271')
 
 build() {
     cd "${srcdir}/${pkgname}-${_pkgver}"
