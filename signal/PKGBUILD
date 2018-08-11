@@ -5,11 +5,11 @@
 # Contributor: mrxx <mrxx at cyberhome dot at>
 # Contributor: Jonhoo <jon at thesquareplanet.com>
 pkgname=signal
-pkgver=1.15.3
+pkgver=1.15.4
 pkgrel=1
 license=('GPL3')
 pkgdesc='Signal Private Messenger for the Desktop'
-depends=('electron')
+depends=('electron' 'openssl-1.0')
 makedepends=('python2' 'npm' 'yarn' 'git' 'nvm')
 provides=('signal')
 conflicts=('signal-desktop' 'signal-desktop-beta' 'signal-desktop-bin')
