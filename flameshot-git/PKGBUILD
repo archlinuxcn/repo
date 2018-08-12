@@ -2,7 +2,7 @@
 
 _pkgname=flameshot
 pkgname=flameshot-git
-pkgver=r468.7ba0266
+pkgver=r475.b0000f8
 pkgrel=1
 pkgdesc="Powerful yet simple to use screenshot software"
 arch=('i686' 'x86_64')
@@ -24,11 +24,11 @@ pkgver() {
 
 build() {
   cd "${srcdir}/${_pkgname}"
-  qmake CONFIG+=packaging BASEDIR="${pkgdir}"
+  qmake CONFIG+=packaging
   make
 }
 
 package() {
   cd "${srcdir}/${_pkgname}"
-  make install
+  make INSTALL_ROOT="${pkgdir}" install
 }
