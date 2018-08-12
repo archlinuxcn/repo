@@ -7,8 +7,6 @@ post_install(){
     chown -R mysql:mysql "/var/lib/mysql" &>/dev/null
   fi
 
-  /usr/bin/systemd-tmpfiles --create mysqld.conf
-
   echo ":: You need to initialize the MySQL data directory prior to starting"
   echo "   the service. This can be done with mysqld --initialize command, e.g.:"
   echo "   mysqld --initialize --user=mysql --basedir=/usr --datadir=/var/lib/mysql"

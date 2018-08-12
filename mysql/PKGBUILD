@@ -5,13 +5,13 @@
 
 pkgname=('mysql' 'libmysqlclient' 'mysql-clients')
 pkgbase=mysql
-pkgver=8.0.11
+pkgver=8.0.12
 pkgrel=1
 pkgdesc="Fast SQL database server, community edition"
 arch=('x86_64')
 makedepends=('openssl' 'zlib' 'cmake' 'systemd-tools' 'libaio' 'jemalloc'
              'rpcsvc-proto' 'libtirpc')
-_boost_ver=1.66.0
+_boost_ver=1.67.0
 license=('GPL')
 url="https://www.mysql.com/products/community/"
 options=('!libtool')
@@ -21,8 +21,8 @@ source=("https://dev.mysql.com/get/Downloads/MySQL-5.7/${pkgbase}-${pkgver}.tar.
         "mysqld-tmpfile.conf"
         "mysqld.service"
         "my-default.cnf")
-sha256sums=('3bde3e30d5d4afcedfc6db9eed5c984237ac7db9480a9cc3bddc026d50700bf9'
-            'bd0df411efd9a585e5a2212275f8762079fed8842264954675a4fddc46cfcf60'
+sha256sums=('69f16e20834dbc60cb28d6df7351deda323330b9de685d22415f135bcedd1b20'
+            '8aa4e330c870ef50a896634c931adf468b21f8a69b77007e45c444151229f665'
             '368f9fd2454d80eb32abb8f29f703d1cf9553353fb9e1ae4529c4b851cb8c5dd'
             '2af318c52ae0fe5428e8a9245d1b0fc3bc5ce153842d1563329ceb1edfa83ddd'
             '50212165bdb09855b97b15a917464ba34f82edf30a0c43f9a0c93a27071df556'
@@ -77,7 +77,7 @@ package_libmysqlclient(){
   pkgdesc="MySQL client libraries"
   depends=('libsasl' 'zlib')
   conflicts=('libmariadbclient')
-  provides=("libmariadbclient=${pkgver}")
+  provides=("libmariadbclient=${pkgver}" "libmysqlclient=${pkgver}")
 
   cd build
   for dir in include libmysql libservices
@@ -98,7 +98,7 @@ package_mysql-clients(){
   pkgdesc="MySQL client tools"
   depends=('libmysqlclient' 'zlib' 'openssl' 'jemalloc')
   conflicts=('mariadb-clients')
-  provides=("mariadb-clients=${pkgver}")
+  provides=("mariadb-clients=${pkgver}" "mysql-clients=${pkgver}")
 
   cd build
   make -C "client" DESTDIR="${pkgdir}" install
@@ -125,7 +125,7 @@ package_mysql(){
   install="${pkgbase}.install"
   depends=('mysql-clients' 'libsasl' 'zlib' 'jemalloc' 'libaio' 'libtirpc')
   conflicts=('mariadb')
-  provides=("mariadb=${pkgver}")
+  provides=("mariadb=${pkgver}" "mysql=${pkgver}")
   options=('emptydirs')
 
   cd build
