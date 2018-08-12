@@ -3,8 +3,8 @@
 
 
 pkgname=frpc
-pkgver=0.20.0
-pkgrel=2
+pkgver=0.21.0
+pkgrel=1
 pkgdesc="A fast reverse proxy to help you expose a local server behind a NAT or firewall to the internet. client"
 license=('Apache')
 url="https://github.com/fatedier/frp"
@@ -17,9 +17,9 @@ source_i686=("https://github.com/fatedier/frp/releases/download/v${pkgver}/frp_$
 source_arm=("https://github.com/fatedier/frp/releases/download/v${pkgver}/frp_${pkgver}_linux_arm.tar.gz")
 md5sums=('e3bfa7c428433fa6cbb5aa64515d8899'
          '7aaf36865c656232b441e7bbaf2993dd')
-md5sums_x86_64=('d8d573f44235d84a3b7cb04faf66d744')
-md5sums_i686=('4200e240343acc8458ccbf6e62196bbf')
-md5sums_arm=('06eea7fe56a7c5933d148497ae9fc36f')
+md5sums_x86_64=('396e4452e4550a74e9dff96942a8527f')
+md5sums_i686=('ecba717f8c73ef6f47dfc673f92fd08b')
+md5sums_arm=('0e64a76e753fb62ac08093a117c81c50')
 
 package() {
     case $CARCH in
