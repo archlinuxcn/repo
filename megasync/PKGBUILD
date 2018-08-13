@@ -6,8 +6,8 @@
 
 pkgname=megasync
 pkgver=3.6.6.0
-_sdkver=3.3.9
-pkgrel=3
+_sdkver=3.4.0
+pkgrel=4
 pkgdesc="Sync your files to your Mega account. Official app"
 arch=('i686' 'x86_64')
 url="https://github.com/meganz/megasync"
@@ -18,7 +18,7 @@ optdepends=('sni-qt: fix systray issue on KDE and LXQt')
 source=("https://github.com/meganz/MEGAsync/archive/v${pkgver}_Linux.tar.gz"
         "https://github.com/meganz/sdk/archive/v${_sdkver}.tar.gz")
 sha256sums=('377a0b77b2506ebe0052d6366c3b5b74c3012cb4938e4df5e4b003677073f5fa'
-            '522b63bf2f2d1eeff0644ef106fff94fcd4f6a844e01539cc6cfb30d16463dba')
+            '0a13576ac3efb741dd67c43698a99ff1ff721cc806f28908cc0bdba808d4988b')
 
 prepare(){
     rm -rf MEGAsync-${pkgver}_Linux/src/MEGASync/mega
