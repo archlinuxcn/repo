@@ -1,6 +1,6 @@
 # Maintainer: Claudio d'Angelis <claudiodangelis at gmail dot com>
 pkgname=postman-bin
-pkgver=6.2.3
+pkgver=6.2.4
 pkgrel=1
 pkgdesc="Build, test, and document your APIs faster"
 arch=('x86_64')
@@ -11,7 +11,7 @@ source=(
     "postman.desktop"
 )
 md5sums=(
-    "7087ad7499367ea43104bb4436efc555"
+    "01599329ab1e9419de0111e140979f2a"
     "ebf1903fa3299a8cf3eb578674ee090f"
 )
 depends=(gconf libxss gtk2 libxtst nss alsa-lib)
