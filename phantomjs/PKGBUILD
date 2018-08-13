@@ -7,9 +7,9 @@
 
 pkgname=phantomjs
 pkgver=2.1.1
-pkgrel=12
-pkgdesc="Headless WebKit with JavaScript API"
-url="http://www.phantomjs.org/"
+pkgrel=13
+pkgdesc='Headless WebKit with JavaScript API'
+url='http://www.phantomjs.org/'
 license=('BSD' 'LGPL' 'MIT')
 arch=('i686' 'x86_64')
 depends=('icu>=61' 'libjpeg-turbo' 'libpng' 'fontconfig' 'gperf' 'ruby' 'python2' 'openssl-1.0')
@@ -20,8 +20,15 @@ sha512sums=('SKIP'
             'e349a14c5d32e5627f28be6ebd20104370ec6b7f086f670e7f19b484b38839220cfeb49178765f38d918d05fb889bbc990f8a3809db6d9e1cbde0af5b9dd923b')
 
 prepare() {
-  cd $pkgname
-  git submodule update --init
+  cd $pkgname-$pkgver
+
+  rmdir src/qt/qt{base,webkit}
+  mv ../qtbase-$_qtbase_commit src/qt/qtbase
+  mv ../qtwebkit-$_qtwebkit_commit src/qt/qtwebkit
+  # Make qt build like a git clone
+  # https://bugreports.qt.io/browse/QTBUG-32397
+  mkdir src/qt/qt{base,webkit}/.git
+
   patch -Np1 -d src/qt/qtwebkit <../icu59.patch
   mkdir "$srcdir/python2-path"
   ln -s /usr/bin/python2 "$srcdir/python2-path/python"
