@@ -7,8 +7,8 @@
 
 pkgbase=linux-mainline               # Build stock -ARCH kernel
 #pkgbase=linux-custom       # Build kernel with a different name
-_tag=v4.18-rc8
-pkgver=4.18rc8
+_tag=v4.18
+pkgver=4.18
 pkgrel=1
 arch=('x86_64')
 url="https://www.kernel.org/"
