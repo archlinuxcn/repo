@@ -3,8 +3,8 @@
 
 _pkgname=skypeforlinux
 pkgname=$_pkgname-stable-bin
-pkgver=8.27.0.85
-pkgrel=2
+pkgver=8.28.0.41
+pkgrel=1
 pkgdesc="Skype for Linux - Stable/Release Version"
 arch=("x86_64")
 url="http://www.skype.com"
@@ -20,7 +20,7 @@ source=(
 "https://archive.archlinux.org/packages/g/glibc/glibc-2.27-3-${CARCH}.pkg.tar.xz"
 )
 noextract=("glibc-2.27-3-${CARCH}.pkg.tar.xz")
-sha256sums=('755a23c4f32a26c0404e9418e0210bcf025717d6448bd0c63af97d9b37e8c7d9'
+sha256sums=('5df85705c6844552a201e9040184990829d45db7039263486f65fc85c371cdcf'
             'a9e1b18d7f613be660556dbd6883781e88a0f5113230147e230d3e2f268792dc')
 
 package() {
