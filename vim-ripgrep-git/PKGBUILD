@@ -1,7 +1,7 @@
 # Maintainer: Ariel AxionL <axionl@aosc.io>
 
 pkgname=vim-ripgrep-git
-pkgver=r19.88ce369
+pkgver=r25.f7c1549
 pkgrel=1
 pkgdesc="Use RipGrep in Vim and display results in a quickfix list."
 arch=('any')
