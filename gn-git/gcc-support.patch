@@ -1,22 +1,5 @@
 --- src/gn/build/gen.py.orig	2018-07-21 16:28:08.909054488 +0200
 +++ src/gn/build/gen.py	2018-07-21 19:15:30.284412730 +0200
-@@ -293,11 +297,11 @@
-         # probably resolve this and (re-)add a way to build against libc++.
-         cflags.append('--sysroot=' + linux_sysroot)
-         ldflags.append('--sysroot=' + linux_sysroot)
--      cflags.append('-stdlib=libstdc++')
--      ldflags.extend(['-static-libstdc++',
--                      '-stdlib=libstdc++',
--                      '-Wl,--as-needed',
--                     ])
-+      if "clang" in cc:
-+        cflags.append('-stdlib=libstdc++')
-+        ldflags.extend(['-static-libstdc++',
-+                        '-stdlib=libstdc++'])
-+      ldflags.append('-Wl,--as-needed')
-       libs.extend([
-           '-lgcc_s',
-           '-lpthread',
 @@ -308,8 +312,11 @@
        ldflags.append(min_mac_version_flag)
  

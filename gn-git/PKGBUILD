@@ -3,7 +3,7 @@
 #
 pkgname=gn-git
 pkgdesc='Meta-build system which generates Ninja build files'
-pkgver=r1459.f9dbfd12
+pkgver=r1464.e134e493
 pkgrel=1
 license=('BSD')
 arch=('x86_64' 'i686')
@@ -14,7 +14,7 @@ makedepends=('python2' 'ninja' 'git')
 url='https://gn.googlesource.com/gn'
 source=("gn::git+${url}" gcc-support.patch)
 sha512sums=('SKIP'
-            '14f5a6236c09d1e11f6ce8984cbe1e635dc582a38ba801b719404bdaaf0b9f708262fdf13b5d6496e8af7fd50d411ab90747af1d816fa78a6a8b808ae88cb4f8')
+            '951cc9c43040fa8341e46e44390d9db654a504b3e1cce34a013806c59a29e28ab23cdb47518e96986ec12f8aa2f995da5beb44f981cada9eb9aebe6bc7621f1a')
 
 pkgver () {
 	export GIT_DIR="${startdir}/gn"
