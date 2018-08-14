@@ -7,18 +7,14 @@
 ## Mozc compile option
 _bldtype=Debug
 
-_mozc_rev=280e38fe3d9db4df52f0713acf2ca65898cd697a
-_japanese_usage_dictionary_rev=e5b3425575734c323e1d947009dd74709437b684
-_gyp_rev=920ee58c3d3109dea3cd37d88054014891a93db7
-_protobuf_rev=a428e42072765993ff674fda72863c9f1aa2d268
-_zipcode_rel=201805
+_zipcode_rel=201807
 
 _pkgbase=mozc
 pkgname=fcitx5-mozc-git
 pkgdesc="Fcitx5 Module of A Japanese Input Method for Chromium OS, Windows, Mac and Linux (the Open Source Edition of Google Japanese Input)"
-pkgver=2.18.2612.102.1.r1316.ffb9ffb0
+pkgver=2.18.2612.102.1.r1317.f059c021
 _fcitx_patchver=2.18.2612.102.1
-pkgrel=1
+pkgrel=1.1
 arch=('x86_64')
 url="https://github.com/google/mozc"
 license=('custom')
@@ -28,9 +24,6 @@ replaces=('mozc-fcitx')
 conflicts=('mozc' 'mozc-server' 'mozc-utils-gui' 'mozc-fcitx' 'fcitx-mozc')
 source=(git+https://gitlab.com/fcitx/mozc.git#branch=fcitx
         zero_query_dict-iterator-decrement.patch
-        #japanese_usage_dictionary::git+https://github.com/hiroyuki-komatsu/japanese-usage-dictionary.git#commit=${_japanese_usage_dictionary_rev}
-        #mozc-gyp::git+https://chromium.googlesource.com/external/gyp#commit=${_gyp_rev}
-        #git+https://github.com/google/protobuf.git#commit=${_protobuf_rev}
         https://downloads.sourceforge.net/pnsft-aur/x-ken-all-${_zipcode_rel}.zip
         https://downloads.sourceforge.net/pnsft-aur/jigyosyo-${_zipcode_rel}.zip
         https://download.fcitx-im.org/fcitx-mozc/fcitx-mozc-icon.tar.gz
@@ -44,8 +37,8 @@ source=(git+https://gitlab.com/fcitx/mozc.git#branch=fcitx
 	)
 sha512sums=('SKIP'
             '9284b6865ee063a294369f40947a2ff7fc3ce49a2bbe9ebbf282a0e0bf199cedc18e1bc51ba8c3e4ed00404f8ef36e6a9db0602b51083f358a1ff555fd031858'
-            'e218ae353d2c6f6c9b7c6a0a39398d215fb6218b7842838f137aae793a3d8ec20737b2c82f82f3e8646f5ffce2f052537d22481d958a6eb997f88dc4c8aeca46'
-            '4f1274c4acf4f30f72b5bd1827e4dda253fd97951217c15517954b211c08c6b2280c452c1e82e3e9cbf85ac60df96f620a5f7b3a097696d35eeb037ec1b6dd46'
+            '36603203eee8ef044903af05d38b87496cd5cf3c2eb99d9c390aca5b2a6975bc96a85342bf0996a98d374566f507ae84a6693be26d9e7b10b5bb74b04e6d2e7f'
+            '0c868dc42f8f162f489aa72039852e67fe03d4f10770a90c3b1b863beff86382d31585fbd63c3ece3911a599a047c0add1249319e2d4e3e3ba441e0614e6fa84'
             '5507c637e5a65c44ccf6e32118b6d16647ece865171b9a77dd3c78e6790fbd97e6b219e68d2e27750e22074eb536bccf8d553c295d939066b72994b86b2f251a'
             'SKIP'
             'SKIP'

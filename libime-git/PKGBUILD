@@ -4,7 +4,7 @@
 
 pkgname=libime-git
 pkgver=r138.a1fa220
-pkgrel=2.1
+pkgrel=2.2
 pkgdesc="A library to support generic input method implementation"
 arch=('i686' 'x86_64')
 url="https://gitlab.com/fcitx/libime"

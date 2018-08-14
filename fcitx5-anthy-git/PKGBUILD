@@ -2,7 +2,7 @@
 
 pkgname=fcitx5-anthy-git
 pkgver=r140.c166ae2
-pkgrel=1
+pkgrel=1.1
 pkgdesc="Anthy input method for fcitx5"
 arch=('x86_64')
 url="https://gitlab.com/fcitx/fcitx5-anthy"
