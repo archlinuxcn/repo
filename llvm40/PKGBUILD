@@ -11,7 +11,7 @@
 
 pkgname=('llvm40' 'llvm40-libs' 'clang40')
 pkgver=4.0.1
-pkgrel=6
+pkgrel=7
 _prefix="/usr/lib/llvm-4.0"
 arch=('i686' 'x86_64')
 url="http://llvm.org/"
@@ -28,7 +28,8 @@ source=(https://releases.llvm.org/$pkgver/llvm-$pkgver.src.tar.xz{,.sig}
         PR37486-Fix-lli-fails-to-build-with-gcc-8.patch
         PR37031-Fix-Mips-breakages.patch
         PR37032-Fix-ldd-x86_64-darwin13-build-fails.patch
-        D32089-Avoid-undefined-behavior-in-unittest.patch)
+        D32089-Avoid-undefined-behavior-in-unittest.patch
+        D47281-Use-pre-computed-size-of-struct-ustat.patch)
 sha256sums=('da783db1f82d516791179fe103c71706046561f7972b18f0049242dee6712b51'
             'SKIP'
             '61738a735852c23c3bdbe52d035488cdb2083013f384d67c1ba36fabebd8769b'
@@ -42,7 +43,8 @@ sha256sums=('da783db1f82d516791179fe103c71706046561f7972b18f0049242dee6712b51'
             '080e90dabbd386fb8c4771ab7537acff157b72bb0f2591609805cacf684cceed'
             '506bdbcb30c8bb4a8e3406f14ae972441835dceede61ece9e0117cb0f357e514'
             '6d5498068cf4f6141ee2c8abc1828cc3797e309e545a4e80fa544ac253fc619b'
-            '25121be62f3213030deb7db1ddf2d200971f8111c9d72a59e45db3ddca322bb2')
+            '25121be62f3213030deb7db1ddf2d200971f8111c9d72a59e45db3ddca322bb2'
+            'aa42070d84d055311d39d8020d1606e116687ef2c6d515364e55d3e1d42db98d')
 validpgpkeys=('11E521D646982372EB577A1F8F0871F202119294')
 
 prepare() {
@@ -81,6 +83,10 @@ prepare() {
   # Avoid undefined behavior in unittest by not making a named ArrayRef from a std::initializer_list
   # https://reviews.llvm.org/D32089
   patch -Np0 < ../D32089-Avoid-undefined-behavior-in-unittest.patch
+
+  # Use pre-computed size of struct ustat for Linux
+  # https://reviews.llvm.org/D47281
+  patch -Np0 -d projects/compiler-rt < ../D47281-Use-pre-computed-size-of-struct-ustat.patch
 }
 
 build() {
