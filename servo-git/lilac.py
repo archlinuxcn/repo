@@ -12,6 +12,7 @@ depends = ['depot-tools-git']
 def post_build():
     git_add_files('PKGBUILD')
     git_commit()
+    update_aur_repo()
 
 pre_build = vcs_update
 
