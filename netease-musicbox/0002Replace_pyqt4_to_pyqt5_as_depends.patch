@@ -1,0 +1,48 @@
+diff -ura NetEase-MusicBox-0.2.5.3/NEMbox/osdlyrics.py NetEase-MusicBox-0.2.5.3.new/NEMbox/osdlyrics.py
+--- NetEase-MusicBox-0.2.5.3/NEMbox/osdlyrics.py	2018-06-08 21:01:27.000000000 +0800
++++ NetEase-MusicBox-0.2.5.3.new/NEMbox/osdlyrics.py	2018-08-16 11:11:04.421430904 +0800
+@@ -19,16 +19,16 @@
+ config = Config()
+ 
+ try:
+-    from PyQt4 import QtGui, QtCore, QtDBus
++    from PyQt5 import QtGui, QtWidgets, QtCore, QtDBus
+     pyqt_activity = True
+ except ImportError:
+     pyqt_activity = False
+-    log.warn("PyQt4 module not installed.")
++    log.warn("PyQt5 module not installed.")
+     log.warn("Osdlyrics Not Available.")
+ 
+ if pyqt_activity:
+ 
+-    class Lyrics(QtGui.QWidget):
++    class Lyrics(QtWidgets.QWidget):
+ 
+         def __init__(self):
+             super(Lyrics, self).__init__()
+@@ -52,10 +52,10 @@
+             self.setMinimumSize(600, 50)
+             osdlyrics_size = config.get("osdlyrics_size")
+             self.resize(osdlyrics_size[0], osdlyrics_size[1])
+-            scn = QtGui.QApplication.desktop().screenNumber(
+-                QtGui.QApplication.desktop().cursor().pos())
+-            bl = QtGui.QApplication.desktop().screenGeometry(scn).bottomLeft()
+-            br = QtGui.QApplication.desktop().screenGeometry(scn).bottomRight()
++            scn = QtWidgets.QApplication.desktop().screenNumber(
++                QtWidgets.QApplication.desktop().cursor().pos())
++            bl = QtWidgets.QApplication.desktop().screenGeometry(scn).bottomLeft()
++            br = QtWidgets.QApplication.desktop().screenGeometry(scn).bottomRight()
+             bc = (bl + br) / 2
+             frameGeo = self.frameGeometry()
+             frameGeo.moveCenter(bc)
+@@ -114,7 +114,7 @@
+ 
+     def show_lyrics():
+ 
+-        app = QtGui.QApplication(sys.argv)
++        app = QtWidgets.QApplication(sys.argv)
+         lyrics = Lyrics()
+         QtDBus.QDBusConnection.sessionBus().registerService('org.musicbox.Bus')
+         QtDBus.QDBusConnection.sessionBus().registerObject('/', lyrics)
+只在 NetEase-MusicBox-0.2.5.3.new/NEMbox 存在：__pycache__
