@@ -72,7 +72,7 @@ if [[ $BRANCH = "emacs-26" ]]; then
 else
   pkgname=emacs-git
 fi
-pkgver=27.0.50.133488
+pkgver=27.0.50.133972
 pkgrel=1
 pkgdesc="GNU Emacs. Development."
 arch=('x86_64') # Arch Linux only. Users of derivatives are on their own.
@@ -150,7 +150,7 @@ fi
 
 #######################################################################
 conflicts=('emacs')
-provides=('emacs')
+replaces=('emacs')
 source=("emacs-git::git+https://github.com/emacs-mirror/emacs.git#branch=$BRANCH")
 md5sums=('SKIP')
 # If Github access is blocked for reasons, use Savannah's servers instead.
