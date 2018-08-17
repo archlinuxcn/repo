@@ -641,3 +641,16 @@ Sun Aug 12 20:06:32 2018 +0200
 1.2.20          Hotfix release 1.2.20
     
      2018-08-12 79c38ac actionless fix(install, build): fix more corner cases regarding --needed flag, reviewing build files, last installed aur repo commit hash and built pkgs cache
+
+
+Thu Aug 16 20:07:44 2018 +0200
+-------------------------------------------------
+1.2.21          Release 1.2.21
+    
+    Notable changes:
+     2018-08-16 6df4608 actionless fix(print dept): package replacement message
+     2018-08-14 7f045e5 actionless chore(build): remove --skipinteg since it's already covered by pgp and checksum skip menu options
+     2018-08-13 8a139ff actionless refactor(build: copy aur repo): generalize mkdir error-handling
+     2018-08-13 21b3cf8 actionless fix(build: copy_aur_repo): mkdir after removing dir
+     2018-08-13 6c96852 actionless feat(build, install, config): don't remove build dir for dev packages by default; add KeepDevBuildDir config option
+     2018-08-12 acc53d5 actionless fix(install cli): exit if repo pkg is not found
