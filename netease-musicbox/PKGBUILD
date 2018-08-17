@@ -4,11 +4,11 @@
 pkgname=netease-musicbox
 _gitname=musicbox
 pkgver=0.2.5.3
-pkgrel=1
+pkgrel=2
 pkgdesc="A sexy command line interface musicbox for NetEase based on Python"
 arch=(any)
 url="https://github.com/darknessomi/musicbox"
-depends=('mpg123' 'python-pycryptodomex' 'python-requests')
+depends=('mpg123' 'python-pycryptodomex' 'python-requests' 'python-future')
 makedepends=('python-setuptools')
 optdepends=('aria2: music caching'
             'libnotify: notifications'
