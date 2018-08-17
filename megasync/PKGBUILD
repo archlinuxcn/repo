@@ -5,9 +5,10 @@
 # Contributor: Hexchain Tong <i at hexchain dot org>
 
 pkgname=megasync
-pkgver=3.6.6.0
+_extname=Win
+pkgver=3.6.7.0
 _sdkver=3.4.0
-pkgrel=4
+pkgrel=1
 pkgdesc="Sync your files to your Mega account. Official app"
 arch=('i686' 'x86_64')
 url="https://github.com/meganz/megasync"
@@ -15,18 +16,18 @@ license=('custom:MEGA LIMITED CODE REVIEW LICENCE')
 depends=('c-ares' 'crypto++' 'libsodium' 'hicolor-icon-theme' 'libuv' 'qt5-svg' 'libmediainfo')
 makedepends=('qt5-tools' 'swig' 'doxygen')
 optdepends=('sni-qt: fix systray issue on KDE and LXQt')
-source=("https://github.com/meganz/MEGAsync/archive/v${pkgver}_Linux.tar.gz"
+source=("https://github.com/meganz/MEGAsync/archive/v${pkgver}_${_extname}.tar.gz"
         "https://github.com/meganz/sdk/archive/v${_sdkver}.tar.gz")
-sha256sums=('377a0b77b2506ebe0052d6366c3b5b74c3012cb4938e4df5e4b003677073f5fa'
+sha256sums=('7c896e97cc5de168ee75ce6b99f72e33c90dfe31da62ce00d9f4f5ae9f9a96ee'
             '0a13576ac3efb741dd67c43698a99ff1ff721cc806f28908cc0bdba808d4988b')
 
 prepare(){
-    rm -rf MEGAsync-${pkgver}_Linux/src/MEGASync/mega
-    mv sdk-${_sdkver} MEGAsync-${pkgver}_Linux/src/MEGASync/mega
+    rm -rf MEGAsync-${pkgver}_${_extname}/src/MEGASync/mega
+    mv sdk-${_sdkver} MEGAsync-${pkgver}_${_extname}/src/MEGASync/mega
 }
 
 build(){
-    cd "MEGAsync-${pkgver}_Linux/src/MEGASync/mega"
+    cd "MEGAsync-${pkgver}_${_extname}/src/MEGASync/mega"
     ./autogen.sh
     ./configure \
         --prefix=/usr \
@@ -46,14 +47,14 @@ build(){
         --without-termcap \
 	--without-ffmpeg
 
-    cd "${srcdir}/MEGAsync-${pkgver}_Linux/src"
+    cd "${srcdir}/MEGAsync-${pkgver}_${_extname}/src"
     qmake-qt5 CONFIG+="release" MEGA.pro
     lrelease-qt5 MEGASync/MEGASync.pro
     make
 }
 
 package (){
-    cd "MEGAsync-${pkgver}_Linux"
+    cd "MEGAsync-${pkgver}_${_extname}"
     install -Dm 644 LICENCE.md "${pkgdir}/usr/share/licenses/megasync/LICENCE.md"
     install -Dm 644 installer/terms.txt "${pkgdir}/usr/share/licenses/megasync/terms.txt"
 
