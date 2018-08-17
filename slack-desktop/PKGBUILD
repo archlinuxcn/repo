@@ -4,23 +4,18 @@
 
 pkgname=slack-desktop
 pkgver=3.2.1
-pkgrel=4
+pkgrel=5
 pkgdesc="Slack Desktop (Beta) for Linux"
 arch=('x86_64')
 url="https://slack.com/downloads"
 license=('custom')
-depends=('alsa-lib' 'gconf' 'gtk3' 'libcurl-compat' 'libsecret' 'libxss' 'libxtst' 'nss')
+depends=('alsa-lib' 'gconf' 'gtk3' 'libcurl-compat' 'libsecret' 'libxss' 'libxtst' 'nss' 'glibc>=2.28-4')
 optdepends=('gnome-keyring')
-makedepends=('patchelf')
-options=('!strip' 'staticlibs')
 source=("https://downloads.slack-edge.com/linux_releases/${pkgname}-${pkgver}-amd64.deb"
-        "${pkgname}.patch"
-        "https://archive.archlinux.org/packages/g/glibc/glibc-2.27-3-x86_64.pkg.tar.xz")
-noextract=("${pkgname}-${pkgver}-amd64.deb"
-           "glibc-2.27-3-x86_64.pkg.tar.xz")
+        "${pkgname}.patch")
+noextract=("${pkgname}-${pkgver}-amd64.deb")
 sha256sums=('503995fe48cdb435a479669971e2a7ea7223428adc3c4f9fee94dbbdf9bcad24'
-            'c952eb32dd59beff9fc5374853b04acde4a60ed8c39934fcd0b66829455d594d'
-            'a9e1b18d7f613be660556dbd6883781e88a0f5113230147e230d3e2f268792dc')
+            'c952eb32dd59beff9fc5374853b04acde4a60ed8c39934fcd0b66829455d594d')
 
 package() {
     bsdtar -O -xf "slack-desktop-${pkgver}"*.deb data.tar.xz | bsdtar -C "${pkgdir}" -xJf -
@@ -40,14 +35,4 @@ package() {
     install -dm755 "${pkgdir}/usr/share/licenses/${pkgname}"
     mv "${pkgdir}/usr/lib/slack/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}"
     ln -s "/usr/share/licenses/${pkgname}/LICENSE" "${pkgdir}/usr/lib/slack/LICENSE"
-
-    # Patch slack to use glibc 2.27
-    _idir="/usr/lib/slack"
-    _pdir="${pkgdir}${_idir}"
-    _pbin="${_pdir}/slack"
-    mkdir -p "$_pdir/glibc"
-    tar -xJf "glibc-2.27-3-x86_64.pkg.tar.xz" -C "$_pdir/glibc"
-    rm "$_pdir/glibc/"{.BUILDINFO,.INSTALL,.MTREE,.PKGINFO}
-    patchelf --set-interpreter "$_idir/glibc/usr/lib/ld-linux-x86-64.so.2" "$_pbin"
-    patchelf --set-rpath "$_idir:$_idir/glibc/usr/lib" "$_pbin"
 }
