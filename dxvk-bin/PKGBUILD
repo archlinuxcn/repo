@@ -2,29 +2,34 @@
 
 pkgbase=dxvk-bin
 pkgname=('dxvk-win64-bin' 'dxvk-win32-bin' 'dxvk-bin')
-pkgver=0.65
-pkgrel=6
-pkgdesc="A Vulkan-based compatibility layer for Direct3D 11 which allows running 3D applications on Linux using Wine (binary files)"
+pkgver=0.70
+pkgrel=2
+pkgdesc="A Vulkan-based compatibility layer for Direct3D 10/11 which allows running 3D applications on Linux using Wine (binary files)"
 arch=('x86_64' 'i686')
 url="https://github.com/doitsujin/dxvk"
 license=('zlib/libpng')
 provides=("dxvk")
 conflicts=("dxvk-git")
 options=(!strip)
-source=("https://github.com/doitsujin/dxvk/releases/download/v$pkgver/dxvk-$pkgver.tar.gz")
-sha256sums=("7b4eb42e693f925d0aff90bae261b20c50428602382ee94a3e3860b2ad1ebad0")
+source=("https://github.com/doitsujin/dxvk/releases/download/v$pkgver/dxvk-$pkgver.tar.gz"
+    "setup_dxvk_aur.verb"
+)
+sha256sums=("310546d530be494a35cae49b707fef4b073269d811aac25bdf72899ed1df4e9f"
+    "1a88e01e02ef9bfd9bf43d8dec4e70b425fb25812f597463ee4145705c82a504")
 
 _extract_bin() {
 	mkdir -p $pkgdir/usr/share/dxvk
 	tar -xf dxvk-"$pkgver".tar.gz -C "$pkgdir/usr/share/dxvk" --strip-components=1 dxvk-"$pkgver"/x$1
 	mkdir -p $pkgdir/usr/bin
-	ln -s "/usr/share/dxvk/x$1/setup_dxvk.sh" "$pkgdir/usr/bin/setup_dxvk$1"
+	cat setup_dxvk_aur.verb | sed s/"DXVK_ARCH=64"/"DXVK_ARCH=$1"/g > "$pkgdir/usr/share/dxvk/x$1/setup_dxvk_aur.verb"
+	echo "winetricks --force /usr/share/dxvk/x$1/setup_dxvk_aur.verb" > "$pkgdir/usr/bin/setup_dxvk$1"
+	chmod +x "$pkgdir/usr/bin/setup_dxvk$1"
 }
 
 package_dxvk-win64-bin () {
         arch=('x86_64')
         provides=("dxvk" "dxvk64")
-        depends=('vulkan-icd-loader' 'wine>=3.10')
+        depends=('vulkan-icd-loader' 'wine>=3.10' 'winetricks')
         conflicts=("dxvk-git" "dxvk-bin<0.63-5" "dxvk-win64-git")
         replaces=("dxvk-bin<0.63-5")
         _extract_bin 64
@@ -32,7 +37,7 @@ package_dxvk-win64-bin () {
 package_dxvk-win32-bin () {
         arch=('x86_64' 'i686')
         provides=("dxvk" "dxvk32")
-        depends=('lib32-vulkan-icd-loader' 'wine>=3.10')
+        depends=('lib32-vulkan-icd-loader' 'wine>=3.10' 'winetricks')
         conflicts=("dxvk-git<0.63-5" "dxvk-bin<0.63-5" "dxvk-win32-git")
         replaces=("dxvk-bin")
         _extract_bin 32
