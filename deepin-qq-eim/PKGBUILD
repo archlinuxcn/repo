@@ -1,7 +1,7 @@
 # Maintainer: Skywol <Skywol@qq.com>
 pkgname=deepin-qq-eim
 _pkgname=deepin.com.qq.b.eim
-pkgver=1.90.2220deepin0
+pkgver=1.90.2220deepin1
 pkgrel=1
 epoch=
 pkgdesc="Deepin Wine QQEIM 1.90"
@@ -22,7 +22,7 @@ install=
 changelog=
 source=("https://mirrors.ustc.edu.cn/deepin/pool/non-free/d/${_pkgname}/${_pkgname}_${pkgver}_i386.deb")
 noextract=("${_pkgname}_${pkgver}_i386.deb")
-md5sums=('c6e7c4990e25e6885cb55e3b19818d5c')
+md5sums=('23b90ffce6d145a8b66722cfadd6ab92')
 validpgpkeys=()
 
 prepare() {
