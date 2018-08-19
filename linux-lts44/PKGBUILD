@@ -3,7 +3,7 @@
 
 pkgbase=linux-lts44
 _srcname=linux-4.4
-pkgver=4.4.148
+pkgver=4.4.150
 pkgrel=1
 arch=('x86_64')
 url="https://www.kernel.org/"
@@ -21,7 +21,7 @@ source=("https://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.xz"
         'change-default-console-loglevel.patch'
         0001-sdhci-revert.patch)
 sha256sums=('401d7c8fef594999a460d10c72c5a94e9c2e1022f16795ec51746b0d165418b2'
-            '82649bb2721ba9b57ab9a4a647f729173a7a0dcefbe06501f065f80073cba225' # patch
+            '890fd5a5ff6f42c0346316677bc3ad080900ad9756fd9720bfb4f8f7b04dba44' # patch
             '2e1424d8f66218bd103e9c1803cf9a1575528a7879466e0ec8a56f3fdb1bc362'
             '834bd254b56ab71d73f59b3221f056c72f559553c04718e350ab2a3e2991afe0'
             'f0d90e756f14533ee67afda280500511a62465b4f76adcc5effa95a40045179c'
