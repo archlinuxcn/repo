@@ -1,8 +1,8 @@
 # Maintainer: SKywol <skywol@qq.com>
 # Maintainer: wszqkzqk <wszqkzqk@gmail.com>
 pkgname=deepin.com.qq.office
-pkgver=2.0.0deepin3
-pkgrel=3
+pkgver=2.0.0deepin4
+pkgrel=1
 epoch=
 pkgdesc="Deepin Wine TIM 2.0.0"
 arch=('i686' 'x86_64')
@@ -22,7 +22,7 @@ install=
 changelog=
 source=("https://mirrors.ustc.edu.cn/deepin/pool/non-free/d/${pkgname}/${pkgname}_${pkgver}_i386.deb")
 noextract=("${pkgname}_${pkgver}_i386.deb")
-md5sums=('2acda3caeb774ac97fdb8754e8b1d549')
+md5sums=('d5c37cb4f960e13111ce24dbc0dd2d58')
 validpgpkeys=()
 
 prepare() {
