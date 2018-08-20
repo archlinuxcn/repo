@@ -1,9 +1,9 @@
-# Maintainer: grimi <grimi at poczta dot fm>
+# Maintainer: grimi
 
 _pkgname=fs-uae-arcade
 pkgname=fs-uae-arcade-devel
 pkgver=2.9.7dev2
-pkgrel=1
+pkgrel=2
 pkgdesc="Full-screen game browser for FS-UAE (development version)."
 arch=("any")
 url="http://fs-uae.net/download-devel"
@@ -21,6 +21,9 @@ sha256sums=('f1d0610a8e87ead4d4d0321a972854c78707a46f452ee2a23603623f44f8f681')
 
 prepare() {
    cd ${_pkgname}-${pkgver}
+   # fix typing module compatybility problem
+   local pyver="$(python -c 'import sys; print("%d.%d" % sys.version_info[:2])')"
+   cp -f /usr/lib/python${pyver}/typing.py fstd/typing.py
    # disable included OpenGL
    sed '/OpenGL/d' -i setup.py
 }
