@@ -1,9 +1,9 @@
-# Maintainer: grimi <grimi at poczta dot fm>
+# Maintainer: grimi
 
 _pkgname=fs-uae-launcher
 pkgname=fs-uae-launcher-devel
 pkgver=2.9.7dev2
-pkgrel=1
+pkgrel=2
 pkgdesc="Launcher and configuration program for FS-UAE (development version)."
 arch=("any")
 url="http://fs-uae.net/download-devel"
@@ -21,6 +21,9 @@ sha256sums=('a51fafef1ce8eac66a051402fb19ddcfba1935a1858d616bcc592264fa3deaa6')
 
 prepare() {
    cd ${_pkgname}-${pkgver}
+   # fix typing module compatybility problem
+   local pyver="$(python -c 'import sys; print("%d.%d" % sys.version_info[:2])')"
+   cp -f /usr/lib/python${pyver}/typing.py fstd/typing.py
    # disable included, OpenGL
    sed '/OpenGL/d' -i setup.py
 }
