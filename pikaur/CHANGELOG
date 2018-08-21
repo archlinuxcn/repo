@@ -654,3 +654,14 @@ Thu Aug 16 20:07:44 2018 +0200
      2018-08-13 21b3cf8 actionless fix(build: copy_aur_repo): mkdir after removing dir
      2018-08-13 6c96852 actionless feat(build, install, config): don't remove build dir for dev packages by default; add KeepDevBuildDir config option
      2018-08-12 acc53d5 actionless fix(install cli): exit if repo pkg is not found
+
+
+Tue Aug 21 03:07:47 2018 +0200
+-------------------------------------------------
+1.2.22          Release 1.2.22
+    
+    Notable changes:
+     2018-08-21 c67ed12 actionless fix(install cli): retrieve dev pkgs' srcs synchronously to avoid race condition in systemd dynamic users
+     2018-08-20 2137593 actionless feat(prompt): stop any output from other threads if prompt raised a question to the user
+     2018-08-20 ad45d7c actionless fix(args): --ignore pkgs can be delimited by comma
+     2018-08-19 936db05 Alexandre Lopes chore(locale): update PT translation (#273)
