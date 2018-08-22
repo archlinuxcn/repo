@@ -1,0 +1,41 @@
+--- abiword-3.0.2/src/af/xap/xp/enchant_checker.cpp.orig	2013-04-07 13:53:03.000000000 +0000
++++ abiword-3.0.2/src/af/xap/xp/enchant_checker.cpp	2017-11-19 22:54:41.236180298 +0000
+@@ -127,7 +127,7 @@
+ 				pvSugg->addItem (ucszSugg);
+ 		}
+ 
+-		enchant_dict_free_suggestions (m_dict, suggestions);
++		enchant_dict_free_string_list (m_dict, suggestions);
+ 	}
+ 
+ 	return pvSugg;
+@@ -139,7 +139,7 @@
+ 
+ 	if (word && len) {
+ 		UT_UTF8String utf8 (word, len);
+-		enchant_dict_add_to_personal (m_dict, utf8.utf8_str(), utf8.byteLength());
++		enchant_dict_add (m_dict, utf8.utf8_str(), utf8.byteLength());
+ 		return true;
+ 	}
+ 	return false;
+@@ -150,7 +150,7 @@
+ 	UT_return_val_if_fail (m_dict, false);
+ 
+ 	UT_UTF8String ignore (toCorrect, toCorrectLen);
+-	return enchant_dict_is_in_session (m_dict, ignore.utf8_str(), ignore.byteLength()) != 0;
++	return enchant_dict_is_added (m_dict, ignore.utf8_str(), ignore.byteLength()) != 0;
+ }
+ 
+ void EnchantChecker::ignoreWord (const UT_UCSChar *toCorrect, size_t toCorrectLen)
+
+--- abiword-3.0.2/configure	2018-08-14 17:58:49.176036155 +0100
++++ abiword-3.0.2/configure	2018-08-14 17:57:54.396998207 +0100
+@@ -4197,7 +4197,7 @@
+ "
+ 
+ # optional deps
+-enchant_req='enchant >= 1.2.0'
++enchant_req='enchant-2 >= 1.2.0'
+ gio_req='gio-2.0'
+ goffice_req='libgoffice-0.10 >= 0.10.0'
+ 
