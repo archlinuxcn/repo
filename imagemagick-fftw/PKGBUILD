@@ -4,7 +4,7 @@
 pkgbase=imagemagick-fftw
 pkgname=(libmagick-fftw imagemagick-fftw)
 pkgver=7.0.8.10
-pkgrel=1
+pkgrel=2
 pkgdesc="An image viewing/manipulation program"
 url="https://www.imagemagick.org/"
 arch=(x86_64)
