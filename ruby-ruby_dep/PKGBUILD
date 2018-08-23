@@ -3,13 +3,13 @@
 _gemname=ruby_dep
 pkgname=ruby-$_gemname
 pkgver=1.5.0
-pkgrel=3
+pkgrel=4
 pkgdesc='Automatically helps determine supported Rubies based on .travis.yml file'
 url='https://github.com/e2/ruby_dep'
 arch=('any')
 license=('MIT')
 depends=('ruby')
-makedepends=('ruby-bundler>=1.11')
+makedepends=('ruby-bundler>=1.11' 'ruby-rdoc')
 options=('!emptydirs')
 source=(${pkgname}-${pkgver}.tar.gz::https://github.com/e2/${_gemname}/archive/v${pkgver}.tar.gz)
 sha512sums=('75baa2bcccdde98ba9440bfc4c578c7efca0287e2a08d850070ab26089fc9256aaf553e9e20281294370c197ddc180a69271f96533680fb2bbbca436583b7d5e')
