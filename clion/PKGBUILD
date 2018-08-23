@@ -9,7 +9,7 @@ pkgbase=clion
 pkgname=(clion clion-jre clion-cmake clion-gdb clion-lldb)
 _pkgname=clion
 _dlname=CLion
-pkgver=2018.2.1
+pkgver=2018.2.2
 pkgrel=1
 epoch=1
 pkgdesc="C/C++ IDE. Free 30-day trial."
@@ -20,10 +20,9 @@ license=('custom')
 makedepends=('rsync')
 source=("https://download.jetbrains.com/cpp/${_dlname}-${pkgver}.tar.gz"
         "jetbrains-${pkgbase}.desktop")
-sha256sums=('986956c4dee1bc1b930bfcf4b68d3f097493f481d0f4820eeaef4f0bcc29d999'
+sha256sums=('f267c262560985b75d30db12f8b496d803d2ef82331708cfaed24bae409c59f2'
             '9f0f4335f410e0587018c85ebfcf4b65a7a47ad682a58972624378953ef288d6')
 noextract=("${_dlname}-${pkgver}.tar.gz")
-backup=("opt/${pkgbase}/bin/clion64.vmoptions")
 
 build() {
     rm -rf "${srcdir}/opt"
@@ -54,6 +53,7 @@ package_clion() {
         'python2: Python 2 programming language support'
         'doxygen: Code documentation generation'
     )
+    backup=("opt/${pkgbase}/bin/clion64.vmoptions")
 
     rsync -rtl "${srcdir}/opt" "${pkgdir}" \
           --exclude=/opt/${pkgbase}/jre64 \
