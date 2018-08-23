@@ -2,14 +2,13 @@
 
 pkgname=ruby-json
 pkgver=2.1.0
-pkgrel=3
+pkgrel=4
 pkgdesc="This is a JSON implementation as a Ruby extension in C"
-arch=('x86_64')
-url="https://rubygems.org/gems/json"
+arch=('any')
+url='http://json-jruby.rubyforge.org/'
 license=('Ruby')
 depends=('ruby')
-optdepends=('ruby-test-unit' 'ruby-rake' 'jruby')
-makedepends=('rubygems' 'ruby-rdoc')
+makedepends=('ruby-rdoc')
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/${pkgname#ruby-}-$pkgver.gem)
 noextract=(${pkgname#ruby-}-$pkgver.gem)
