@@ -1,0 +1,27 @@
+From e12b5ee34c619e88509f59424068417790b69e04 Mon Sep 17 00:00:00 2001
+From: Sakaki <sakaki@deciban.com>
+Date: Fri, 18 Aug 2017 10:08:23 -0400
+Subject: terminal: add include for sysmacros.h
+
+That file is, in some cases, not included implicitly by sys/types.h.
+
+This commit explicitly includes it.
+---
+ src/libply-splash-core/ply-terminal.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/libply-splash-core/ply-terminal.c b/src/libply-splash-core/ply-terminal.c
+index a0954f2..f3b32fe 100644
+--- a/src/libply-splash-core/ply-terminal.c
++++ b/src/libply-splash-core/ply-terminal.c
+@@ -32,6 +32,7 @@
+ #include <sys/socket.h>
+ #include <sys/stat.h>
+ #include <sys/types.h>
++#include <sys/sysmacros.h>
+ #include <termios.h>
+ #include <unistd.h>
+ #include <wchar.h>
+-- 
+cgit v1.1
+
