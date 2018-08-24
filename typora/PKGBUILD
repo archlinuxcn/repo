@@ -1,5 +1,5 @@
 pkgname=typora
-pkgver=0.9.54
+pkgver=0.9.56
 pkgrel=1
 pkgdesc="Typora will give you a seamless experience as both a reader and a writer."
 arch=('x86_64')
@@ -12,7 +12,7 @@ source=(
     "https://typora.io/./linux/${pkgname}_${pkgver}_amd64.deb"
 )
 md5sums=('2bf190ba0c77de908b2127aac4ba6f73'
-         'f954824e35bbb7236b4b218ccd6e73c2')
+         '1e40eca2d0479891c646d018aaae8295')
 
 package() {
     _src="$srcdir/$pkgname"
