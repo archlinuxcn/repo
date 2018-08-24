@@ -2,7 +2,7 @@
 
 pkgname=ccls-git
 _pkgname=ccls
-pkgver=1589.89af70f
+pkgver=1668.48c92c0
 pkgrel=1
 pkgdesc='C/C++ language server supporting cross references, hierarchies, completion and semantic highlighting'
 arch=('any')
@@ -26,7 +26,7 @@ prepare() {
 
 build() {
   cd $_pkgname
-  cmake -H. -Bbuild -DCMAKE_INSTALL_PREFIX=/usr -DSYSTEM_CLANG=on -DUSE_SHARED_LLVM=on
+  cmake -H. -Bbuild -DCMAKE_INSTALL_PREFIX=/usr -DSYSTEM_CLANG=on -DUSE_SHARED_LLVM=on -DLLVM_ENABLE_RTTI=on
   cmake --build build
 }
 
