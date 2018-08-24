@@ -1,7 +1,7 @@
 # Maintainer: Frantic1048 <archer@frantic1048.com>
 pkgdesc='Plex HTTP Anidb Metadata Agent (HAMA)'
 pkgname='plex-hama-bundle-git'
-pkgver=r620.0a66565
+pkgver=r621.42c040f
 pkgrel=1
 makedepends=('git')
 depends=('plex-media-server')
@@ -17,7 +17,7 @@ source=(
 )
 sha512sums=('SKIP'
             '835ba0d4dd472c39dbb275fc9a6fb9d531e3d965fdd37d9ab82874ccdf2a8a415b75f1c5c7db0b316b12a390dd39188cc292804482ea9e6c15d448dd04628521'
-            '1e5bb063dfdc9956e5d341f79144727d8e60158e271bc7ac27640fc4eb8ae8ec17aa1fd6908c9d477afc3b8af1e0a6799bd5bcc23eb4c59a1cdf0b3ba2e048ae')
+            'SKIP')
 
 pkgver () {
 	cd "${pkgname}"
