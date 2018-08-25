@@ -2,7 +2,7 @@
 # Maintainer: fuero <fuerob@gmail.com>
 
 pkgname=lazygit
-pkgver=0.1.79
+pkgver=0.1.80
 pkgrel=1
 pkgdesc="A simple terminal UI for git commands"
 arch=("x86_64")
@@ -13,8 +13,8 @@ makedepends=("go-pie")
 provides=("lazygit")
 conflicts=("lazygit-git")
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/jesseduffield/${pkgname}/archive/v${pkgver}.tar.gz")
-sha256sums=("eed9516d1b944ce4528a5d308d1dd49ee7932cf1d8ec6955556cc4dfe737f9a3")
-_commit="22de5e7b235389bcbb32e132ddc86c8726516268"
+sha256sums=("a076d4fac93cfd41afcc1c4a5c3b3c55a1315aec452573686b97a47e8885c45f")
+_commit="93ab892bdd1226f9a519a938c8b28590e71e54f3"
 
 build () {
   echo "Linking to repository path..."
