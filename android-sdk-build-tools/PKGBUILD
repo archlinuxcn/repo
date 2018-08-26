@@ -1,12 +1,12 @@
 # Maintainer: xgdgsc <xgdgsc @t gmail dot com>
 
 pkgname=android-sdk-build-tools
-_ver=27.0.3
+_ver=28.0.2
 pkgver=r$_ver
 pkgrel=1
 pkgdesc='Build-Tools for Google Android SDK (aapt, aidl, dexdump, dx, llvm-rs-cc)'
 arch=('i686' 'x86_64')
-url="http://developer.android.com/sdk/index.html"
+url="https://developer.android.com/studio/releases/build-tools"
 license=('custom')
 depends_i686=('gcc-libs' 'zlib')
 optdepends=()
@@ -14,8 +14,8 @@ depends_x86_64=('lib32-gcc-libs' 'lib32-zlib')
 _sdk=android-sdk
 
 source=("https://dl-ssl.google.com/android/repository/build-tools_${pkgver}-linux.zip")
-sha1sums=('d85e7a6320eddffe7eeace3437605079dac938ca')
-_android=android-8.1.0
+sha1sums=('b4492209810a3fd48deaa982f9852fef12433d55')
+_android=android-9
 options=('!strip')
 
 package() {
