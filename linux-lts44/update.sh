@@ -4,9 +4,23 @@ set -eu
 
 cd "$(dirname "$0")"
 
-VERSION="$(curl -sSf https://www.kernel.org/releases.json | jq -r '.releases[].version' | grep '^4\.4\.')"
-HASH="$(curl -sSLf https://www.kernel.org/pub/linux/kernel/v4.x/sha256sums.asc | grep "patch-${VERSION}.xz" | cut -d' ' -f1)"
+RELEASES_URL="https://www.kernel.org/releases.json"
+SHA256SUMS_URL="https://www.kernel.org/pub/linux/kernel/v4.x/sha256sums.asc"
 
-sed -i "s/pkgver=.*/pkgver=${VERSION}/" PKGBUILD
-sed -i "s/.* # patch$/            '$HASH' # patch/" PKGBUILD
+VERSION="$(curl -sSLf "$RELEASES_URL" |
+    jq -r '[.releases[].version] | map(select(startswith("4.4.")))[]')"
+
+HASH="$(curl -sSLf "$SHA256SUMS_URL" |
+    awk "\$2 == \"patch-$VERSION.xz\" {print \$1}")"
+
+sed -i \
+    -e "s/pkgver=.*/pkgver=${VERSION}/" \
+    -e "s/.* # patch$/            '$HASH' # patch/" \
+    PKGBUILD
+
 makepkg --printsrcinfo > .SRCINFO
+
+git add .
+if ! git diff-index --quiet HEAD; then
+    git commit -m "Updated to $VERSION"
+fi
