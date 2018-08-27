@@ -2,7 +2,7 @@
 _pkgrel=1 # Pkgrel from Deepin Linux
 
 pkgname=netease-cloud-music
-pkgver=1.1.3
+pkgver=1.1.3.1
 pkgrel=1
 pkgdesc="Netease Cloud Music, converted from .deb package"
 arch=("x86_64")
@@ -24,8 +24,8 @@ source=(
 	"http://packages.deepin.com/deepin/pool/main/n/netease-cloud-music/netease-cloud-music_${pkgver}-${_pkgrel}_amd64.deb"
 	"http://music.163.com/html/web2/service.html"
 )
-md5sums=('43012625c61e4bfc1dd1dcb68976488b'
-         'SKIP')
+md5sums=('53c47c1bf6797b2a0e455bc59833ab2d'
+         '075d24742f9bfc000991d5f9a1aaa563')
 
 package() {
   cd ${srcdir}
