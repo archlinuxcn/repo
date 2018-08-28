@@ -1,6 +1,6 @@
 pkgname="i3lock-color"
 pkgver=2.11
-pkgrel=3
+pkgrel=4
 _version="2.11-c"
 pkgdesc="An improved screenlocker based upon XCB and PAM with color configuration support"
 arch=('i686' 'x86_64')
@@ -19,7 +19,7 @@ build() {
 	sed -i -e 's:login:system-auth:' pam/i3lock 
 	
 	autoreconf -fi
-	./configure --prefix="$pkgdir/usr/" --sysconfdir="$pkgdir/etc/"
+	./configure --prefix="$pkgdir/usr/" --sysconfdir="$pkgdir/etc/" --enable-debug=no --disable-sanitizers
 	make
 }
 
