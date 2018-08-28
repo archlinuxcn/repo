@@ -2,15 +2,40 @@
 _pkgbase='yuzu'
 pkgbase="$_pkgbase-git"
 pkgname=("$_pkgbase-git" "$_pkgbase-qt-git")
-pkgver=r7544.4de18e05
+pkgver=r8293.4d7e1662c
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger"
 arch=('i686' 'x86_64')
 url="https://github.com/yuzu-emu/yuzu/"
 license=('GPL2')
 makedepends=('git' 'cmake' 'sdl2' 'qt5-base' 'shared-mime-info' 'desktop-file-utils' 'python2')
-source=("$_pkgbase::git+https://github.com/yuzu-emu/yuzu")
-md5sums=('SKIP')
+source=("$_pkgbase::git+https://github.com/yuzu-emu/yuzu"
+	'git+https://github.com/yuzu-emu/ext-boost'
+	'git+https://github.com/philsquared/Catch'
+	'git+https://github.com/MerryMage/dynarmic'
+	'git+https://github.com/herumi/xbyak'
+	'git+https://github.com/fmtlib/fmt'
+	'git+https://github.com/svn2github/inih'
+	'git+https://github.com/yuzu-emu/unicorn'
+	'git+https://github.com/lz4/lz4'
+	'git+https://github.com/ogniK5377/opus'
+	'git+https://github.com/DarkLordZach/mbedtls'
+	'git+https://github.com/kinetiknz/cubeb'
+	# cubeb submodule dependencies
+	'git+https://github.com/arsenm/sanitizers-cmake')
+md5sums=('SKIP'
+	'SKIP'
+	'SKIP'
+	'SKIP'
+	'SKIP'
+	'SKIP'
+	'SKIP'
+	'SKIP'
+	'SKIP'
+	'SKIP'
+	'SKIP'
+	'SKIP'
+	'SKIP')
 
 pkgver() {
 	cd "$srcdir/$_pkgbase"
@@ -20,9 +45,23 @@ pkgver() {
 prepare() {
 	cd "$srcdir/$_pkgbase"
 	mkdir -p build
-
+	
 	git submodule init
-	git submodule update --recursive
+	git config submodule.boost.url "$srcdir/ext-boost"
+	git config submodule.catch.url "$srcdir/Catch"
+	git config submodule.dynarmic.url "$srcdir/dynarmic"
+	git config submodule.xbyak.url "$srcdir/xbyak"
+	git config submodule.fmt.url "$srcdir/fmt"
+	git config submodule.inih.url "$srcdir/inih"
+	git config submodule.unicorn.url "$srcdir/unicorn"
+	git config submodule.opus.url "$srcdir/opus"
+	git config submodule.mbedtls.url "$srcdir/mbedtls"
+	git config submodule.cubeb.url "$srcdir/cubeb"
+	git submodule update
+
+	cd externals/cubeb
+	git config submodule.cmake/sanitizers-cmake.url "$srcdir/sanitizers-cmake"
+	git submodule update
 }
 
 build() {
@@ -31,11 +70,6 @@ build() {
 	  -DCMAKE_INSTALL_PREFIX=/usr \
 	  -DCMAKE_BUILD_TYPE=Release
 	make
-}
-
-check() {
-	cd "$srcdir/$_pkgbase/build"
-	make test
 }
 
 package_yuzu-git() {
@@ -50,6 +84,11 @@ package_yuzu-qt-git() {
 	            'qt5-wayland: for Wayland support')
 
 	cd "$srcdir/$_pkgbase/build"
+	
+	# screw cubeb and it's shitty cmake
+	mkdir -p "$srcdir/$_pkgbase/include/cubeb"
+	
 	make DESTDIR="$pkgdir/" install
+	
 	rm "$pkgdir/usr/bin/${_pkgbase}-cmd"
 }
