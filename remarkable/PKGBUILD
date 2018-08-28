@@ -29,7 +29,7 @@ source=("https://github.com/jamiemcg/Remarkable/archive/v${pkgver}.tar.gz"
         "remarkable.install")
 
 sha1sums=('a492dc5d0a276f36846a99287ae93c02e22a5cd8'
-          'c91182e1521927e02328eb407a4e4f1ad910d16d'
+          '8c052787c16a81b9d4c325d2270cdd3412951f6c'
           'bdbfb750df9e5fb3022f47a46a80555259628cd1')
 
 prepare() {
