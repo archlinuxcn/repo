@@ -1,0 +1,60 @@
+From 3288e1988bec9ba6a6d2b33fa90ea0024c4d7f7f Mon Sep 17 00:00:00 2001
+From: axionl <axionl@aosc.io>
+Date: Wed, 29 Aug 2018 21:25:57 +0800
+Subject: [PATCH 2/2] Replace_pyqt4_to_pyqt5_as_depends
+
+---
+ NEMbox/osdlyrics.py | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/NEMbox/osdlyrics.py b/NEMbox/osdlyrics.py
+index bd96e09..5e66843 100644
+--- a/NEMbox/osdlyrics.py
++++ b/NEMbox/osdlyrics.py
+@@ -19,16 +19,16 @@ log = logger.getLogger(__name__)
+ config = Config()
+ 
+ try:
+-    from PyQt4 import QtGui, QtCore, QtDBus
++    from PyQt5 import QtGui, QtWidgets, QtCore, QtDBus
+     pyqt_activity = True
+ except ImportError:
+     pyqt_activity = False
+-    log.warn("PyQt4 module not installed.")
++    log.warn("PyQt5 module not installed.")
+     log.warn("Osdlyrics Not Available.")
+ 
+ if pyqt_activity:
+ 
+-    class Lyrics(QtGui.QWidget):
++    class Lyrics(QtWidgets.QWidget):
+ 
+         def __init__(self):
+             super(Lyrics, self).__init__()
+@@ -52,10 +52,10 @@ if pyqt_activity:
+             self.setMinimumSize(600, 50)
+             osdlyrics_size = config.get("osdlyrics_size")
+             self.resize(osdlyrics_size[0], osdlyrics_size[1])
+-            scn = QtGui.QApplication.desktop().screenNumber(
+-                QtGui.QApplication.desktop().cursor().pos())
+-            bl = QtGui.QApplication.desktop().screenGeometry(scn).bottomLeft()
+-            br = QtGui.QApplication.desktop().screenGeometry(scn).bottomRight()
++            scn = QtWidgets.QApplication.desktop().screenNumber(
++                QtWidgets.QApplication.desktop().cursor().pos())
++            bl = QtWidgets.QApplication.desktop().screenGeometry(scn).bottomLeft()
++            br = QtWidgets.QApplication.desktop().screenGeometry(scn).bottomRight()
+             bc = (bl + br) / 2
+             frameGeo = self.frameGeometry()
+             frameGeo.moveCenter(bc)
+@@ -114,7 +114,7 @@ if pyqt_activity:
+ 
+     def show_lyrics():
+ 
+-        app = QtGui.QApplication(sys.argv)
++        app = QtWidgets.QApplication(sys.argv)
+         lyrics = Lyrics()
+         QtDBus.QDBusConnection.sessionBus().registerService('org.musicbox.Bus')
+         QtDBus.QDBusConnection.sessionBus().registerObject('/', lyrics)
+-- 
+2.18.0
+
