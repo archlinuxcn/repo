@@ -9,13 +9,15 @@ set -u
 pkgbase='cndrvcups-lb'
 pkgname="${pkgbase}"
 #_pkgver='3.40'; _commonver='3.80'; _dl='8/0100002708/17'
-_pkgver='3.50'; _commonver='3.90'; _dl='8/0100007658/05'
+#_pkgver='3.50'; _commonver='3.90'; _dl='8/0100007658/05'
+_pkgver='3.60'; _commonver='4.00'; _dl='0/0100009240/02'
+
 pkgver="${_pkgver}"
-pkgrel='1'
-pkgdesc='Canon UFR II /LIPSLX printer driver build from source for LBP iR MF ImageCLASS ImageRUNNER Laser Shot i-SENSYS ImagePRESS ADVANCE printers and copiers'
+pkgrel=1
+pkgdesc='CUPS Canon UFR II LIPSLX CARPS2 printer driver for LBP iR MF ImageCLASS ImageRUNNER Laser Shot i-SENSYS ImagePRESS ADVANCE printers and copiers'
 arch=('i686' 'x86_64')
 # Direct links to the download reference go bad on the next version. We want something that will persist for a while.
-url='https://www.canon.co.uk/for_work/products/office_print_copy_solutions/office_black_white/imagerunner_1730i/'
+url='https://www.canon-europe.com/support/products/imagerunner/imagerunner-1730i.aspx'
 #url='https://www.usa.canon.com/internet/portal/us/home/support/details/printers/black-and-white-laser/mf212w/imageclass-mf212w'
 license=('custom')
 depends=("cndrvcups-common-lb>=${_commonver}") # >= makes upgrades easier
@@ -34,9 +36,9 @@ source=(
   "http://gdlp01.c-wss.com/gds/${_dl}/linux-UFRII-drv-v${_pkgver//\./}-uken.tar.gz"
   'how-to.txt'
 )
-sha256sums=('c00324177a6f77f0a6deb4ecc6bee8150607dd4029bad3dfc1a521f84f811e7f'
+sha256sums=('a5bf2c2d53049ad64acf2ed8b6dc954ff261c4b996ce1cc81471e5baaf5e40cd'
             '62c4bfe3e4155e5e805b51eaa4b9dd3581ba029259c2817d9ebe66077aad7280')
-sha512sums=('2eeb1448cb76ac156e1e5f6df46141ee5605b0bed1c25f31b0f039fb9f579fe3d5732b132cae391e78276c550febc19366f958d1fb53c93f955303f1f5c37ab3'
+sha512sums=('c8b2abb2d0e9ccf972241dda5154c0ddd1ba9cfe6c721c242c40c90cf29e8d0b2c6a559907318cd191232f699a42425cc4148aebcaab6aa111f1cb5439777ce7'
             '736e1785c443c4d129c8801a127410012889f46691259e8a7f6a54106a0647beb5b6267aabb78b3ed0a1c7a9d8ce216e159515d3aad425812e5be52c8b58e4ee')
 
 # build instructions are adapted from upstream file
@@ -48,38 +50,29 @@ prepare() {
   set +u
 }
 
+_setvars() {
+  declare -A _lib32dirs=([i686]='lib' [x86_64]='lib32')
+  _vars=(
+    _bindir='/usr/bin'
+    libs32="/usr/${_lib32dirs[${CARCH}]}"
+    _libdir='/usr/lib'
+    _prefix='/usr'
+    _includedir='/usr/include'
+    locallibs='/usr/lib/'
+  )
+}
+
 build() {
   set -u
 
-  set +u; msg2 'Building ppd'; set -u
-  cd "${_srcdir}/ppd"
-  autoreconf -fi
-  ./autogen.sh --prefix='/usr'
-
-  set +u; msg2 'Building pstoufr2cpca'; set -u
-  cd '../pstoufr2cpca'
-  autoreconf -fi
-  ./autogen.sh --prefix='/usr' --libdir='/usr/lib'
-
-  set +u; msg2 'Building cpca'; set -u
-  cd '../cpca'
-  autoreconf -fi
-  ./autogen.sh --prefix='/usr' --enable-progpath='/usr/bin' --libdir='/usr/lib'
-
-  set +u; msg2 'Building cngplp'; set -u
-  cd '../cngplp'
-  aclocal
-  autoreconf -fi
-  ./autogen.sh --prefix='/usr' --libdir='/usr/lib'
-
-  set +u; msg2 'Building cngplp/files'; set -u
-  cd 'files'
-  autoreconf -fi
-  ./autogen.sh --prefix='/usr'
-
-  set +u; msg2 'Building all'; set -u
-  cd "${srcdir}/${_srcdir}"
-  make
+  cd "${_srcdir}"
+  local _vars; _setvars
+  sed -n -e '/^%setup/,/^%install/ p' cndrvcups-*.spec | \
+  grep -v '^%' | \
+  sed -e 's:%{:${:g' \
+      -e 's:^./autogen.sh\b:autoreconf -fi\n& --prefix=${_prefix}:g ' \
+  | env "${_vars[@]}" \
+  sh -e -u -x --
 
   set +u
 }
@@ -89,45 +82,25 @@ package() {
 
   cd "${_srcdir}"
 
-  declare -A _lib32dirs=([i686]='lib' [x86_64]='lib32')
-  local _lib32dir="${_lib32dirs[${CARCH}]}"
+  local _vars; _setvars
+  sed -n -e '/^%install/,/^%clean/ p' cndrvcups-*.spec | \
+  grep -v '^%' | \
+  sed -e 's:%{:${:g' \
+      -e 's:${RPM_BUILD_ROOT}:"&":g' \
+  | env RPM_BUILD_ROOT="${pkgdir}" \
+  "${_vars[@]}" \
+  sh -e -u -x --
 
-  make install DESTDIR="${pkgdir}"
+  _fin
+
+  set +u
+}
+
+_fin() {
+  # grep -he '^*ModelName:' "${pkgdir}/usr/share/cups/model"/*.ppd | sort -u > "${startdir}/models.${_pkgver}.txt"
+
+  # Compressing hinders package compression which results in a much larger package
   gzip "${pkgdir}/usr/share/cups/model"/*.ppd
-
-  cd 'libs'
-  install -s -Dpm755 'cnpkbidi' -t "${pkgdir}/usr/bin/"
-  install -Dpm4755 'cnpkmoduleufr2' -t "${pkgdir}/usr/bin/"
-
-  local _libs=(
-    'libcanonufr2.so.1.0.0'
-    'libufr2filter.so.1.0.0'
-    'libEnoJBIG.so.1.0.0'
-    'libEnoJPEG.so.1.0.0'
-    'libcaiocnpkbidi.so.1.0.0'
-    'libcnlbcm.so.1.0'
-  )
-  install -s -Dpm755 "${_libs[@]}" -t "${pkgdir}/usr/${_lib32dir}/"
-  install -Dpm755 'libcanonufr2.la' -t "${pkgdir}/usr/${_lib32dir}/"
-
-  install -Dpm644 cnpkbidi_info* -t "${pkgdir}/usr/share/cnpkbidi/"
-  install -Dpm644 ThLB* -t "${pkgdir}/usr/share/ufr2filter/"
-
-  cd '../data'
-  install -Dpm644 CnLB* -t "${pkgdir}/usr/share/caepcm/"
-
-  local _lib _libt
-  cd "${pkgdir}/usr/${_lib32dir}"
-  for _lib in "${_libs[@]}"; do
-    echo "soname ${_lib}"
-    test -f "${_lib}" || echo "${}"
-    if [[ "${_lib}" =~ ^(lib[^.]+\.so\.[0-9]+)\. ]]; then
-      _libt="${BASH_REMATCH[1]}"
-      ln -s "${_lib}" "${_libt}"
-      _libt="${_libt%.*}"
-      ln -s "${_lib}" "${_libt}"
-    fi
-  done
 
   # according to Gentoo ebuild v2.90 c3pldrv dlopens the absolute path
   # /usr/lib/libcnlbcm.so
@@ -153,7 +126,5 @@ package() {
     done
   fi
   install -Dpm644 README* -t "${pkgdir}/usr/share/doc/${pkgname}/"
-
-  set +u
 }
 set +u
