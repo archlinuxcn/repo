@@ -7,21 +7,23 @@
 
 pkgbase=ppsspp-git
 pkgname=('ppsspp-git' 'ppsspp-headless-git' 'ppsspp-qt-git')
-pkgver=1.6.3.r380.773dba1be
+pkgver=1.6.3.r386.c413da784
 pkgrel=1
 pkgdesc='A PSP emulator written in C++'
 arch=('x86_64')
 url='http://www.ppsspp.org/'
 license=('GPL2')
 depends=('gcc-libs' 'glew' 'glibc' 'libgl' 'sdl2' 'zlib')
-makedepends=('cmake' 'git' 'glu' 'libzip' 'qt5-tools')
+makedepends=('cmake' 'git' 'glu' 'libglvnd' 'libzip' 'qt5-tools')
 source=('git+https://github.com/hrydgard/ppsspp.git'
+        'git+https://github.com/Kingcom/armips.git'
+        'git+https://github.com/discordapp/discord-rpc.git'
         'ppsspp-ffmpeg::git+https://github.com/hrydgard/ppsspp-ffmpeg.git'
         'ppsspp-glslang::git+https://github.com/hrydgard/glslang.git'
         'git+https://github.com/hrydgard/ppsspp-lang.git'
-        'git+https://github.com/Kingcom/armips.git'
-        'armips-tinyformat::git+https://github.com/Kingcom/tinyformat.git'
+        'git+https://github.com/Tencent/rapidjson.git'
         'git+https://github.com/KhronosGroup/SPIRV-Cross.git'
+        'armips-tinyformat::git+https://github.com/Kingcom/tinyformat.git'
         'ppsspp.sh'
         'ppsspp-headless.sh'
         'ppsspp-qt.sh'
@@ -29,6 +31,8 @@ source=('git+https://github.com/hrydgard/ppsspp.git'
         'ppsspp-qt.desktop'
         'ppsspp-flags.patch')
 sha256sums=('SKIP'
+            'SKIP'
+            'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
@@ -58,7 +62,7 @@ prepare() {
     git config submodule.${submodule}.url ../ppsspp-${submodule#*/}
     git submodule update ${submodule}
   done
-  for submodule in ext/{SPIRV-Cross,armips}; do
+  for submodule in ext/{SPIRV-Cross,armips,discord-rpc,rapidjson}; do
     git submodule init ${submodule}
     git config submodule.${submodule}.url ../${submodule#*/}
     git submodule update ${submodule}
