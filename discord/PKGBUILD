@@ -5,7 +5,7 @@
 
 pkgname=discord
 pkgver=0.0.5
-pkgrel=4
+pkgrel=5
 pkgdesc="All-in-one voice and text chat for gamers that's free and secure."
 arch=('x86_64')
 url='https://discordapp.com/'
@@ -15,6 +15,7 @@ optdepends=(
   'libpulse: For pulseaudio support'
   'noto-fonts-emoji: Google font for emoji support.'
   'ttf-symbola: Font for emoji support.'
+  'noto-fonts-cjk: Font for special characters such as /shrug face.'
 )
 
 install="Discord.install"
