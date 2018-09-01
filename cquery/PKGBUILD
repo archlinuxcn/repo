@@ -3,13 +3,13 @@
 pkgname=cquery
 pkgver=v20180718
 __pkgver=${pkgver:1}
-pkgrel=2
-pkgdesc='Low-latency vscode language server for large C++ code-bases, powered by libclang.'
+pkgrel=3
+pkgdesc='cquery is a highly-scalable, low-latency language server for C/C++/Objective-C.'
 arch=('x86_64')
 url='https://github.com/cquery-project/cquery/'
 license=('MIT')
-depends=('clang')
-makedepends=('git' 'python' 'llvm')
+depends=('clang>=6.0.0')
+makedepends=('git' 'cmake>=3.1')
 conflicts=('cquery-git')
 source=("https://github.com/cquery-project/$pkgname/archive/$pkgver.tar.gz"
         'git+https://github.com/miloyip/rapidjson?commit=daabb88'
@@ -36,21 +36,13 @@ prepare() {
     cp -r -u $srcdir/msgpack-c third_party
     cp -r -u $srcdir/pugixml third_party
 }
-
 build() {
-    cd $pkgname-$__pkgver
-    # --variant=custom will not add extra CXXFLAGS
-    python waf configure --variant=custom --prefix="$pkgdir/usr" --llvm-config=/usr/bin/llvm-config
-    python waf build --variant=custom
+    mkdir -p $pkgname-$__pkgver/build
+    cd $pkgname-$__pkgver/build
+    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DSYSTEM_CLANG=ON ..
+		cmake --build .
 }
-
-check() {
-    cd $pkgname-$__pkgver
-    # yes | build/custom/bin/cquery --test-unit --test-index --clang-sanity-check
-    yes | build/custom/bin/cquery --test-unit --clang-sanity-check
-}
-
 package() {
-    cd $pkgname-$__pkgver
-    python waf install --variant=custom
+    cd $pkgname-$__pkgver/build
+    make DESTDIR="$pkgdir" install
 }
