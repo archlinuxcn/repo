@@ -2,9 +2,9 @@
 
 pkgname=lastpass
 pkgver=4.17.0.4
-pkgrel=1
-_universalver=4.1.51
-_chromever=4.1.52
+pkgrel=2
+_universalver=4.1.59
+_chromever=4.17.0.4
 _amo_file=1053588
 _crx_id=hdokiejnpimakedhajhdlcegeplioahd
 pkgdesc="The Universal LastPass installer for Firefox, Chrome, and Opera"
@@ -14,13 +14,12 @@ license=('custom')
 makedepends=('unzip')
 optdepends=('firefox'
             'chromium'
-            'google-chrome'
-            'opera')
+            'google-chrome')
 options=('!strip')
 # Apparently, API endpoints are all the rage -- so this isn't actually a file...
 source=("${pkgname}-${pkgver}.xpi::https://addons.mozilla.org/firefox/downloads/file/${_amo_file}/"
-        "lpchrome-${_chromever}.crx::${url}/lpchrome_linux.crx"
-        "lplinux-${_universalver}.tar.bz2::${url}/lplinux.tar.bz2"
+        #"lpchrome-${_chromever}.crx::https://clients2.google.com/service/update2/crx?response=redirect&prodversion=68.0.3440.106&x=id%3D${_crx_id}%26uc"
+        "lplinux-${_universalver}.tar.bz2::https://download.cloud.lastpass.com/linux/lplinux.tar.bz2"
         "com.lastpass.nplastpass.json"
         "firefox-com.lastpass.nplastpass.json"
         "lastpass_policy_sources.json"
@@ -29,8 +28,7 @@ source=("${pkgname}-${pkgver}.xpi::https://addons.mozilla.org/firefox/downloads/
 noextract=("${pkgname}-${pkgver}.xpi"
            "lpchrome-${_chromever}.crx")
 sha256sums=('936e6aa954fdf617be237d4268451ca30f38c7d3a5208d25a0501c8c450ce2c4'
-            '47937f48972b73f024a1e616547405d41e368cb3756f97958423d20d2196762d'
-            '22690e30f5670205df2e5508ae799757b81060aa25b33bb115eeea6ba90e4425'
+            '905474aceb9998ba25118c572f727336d239a146aad705207f78cacf9052ea29'
             'e8eb3b585809d6644807727c5bd0a74ead96dd2c5a7e6d2ce29e0b6ea28b9e59'
             '82af9e9296f92e92ca325449e0c2b2deb3c21f65afea45aeb823090cb32aad76'
             'f82b920620575654fcbc0baf9b5d6c275835cbfc05b779ad309de5c6411c8bc9'
@@ -45,8 +43,8 @@ fi
 prepare() {
     cd "${srcdir}"
 
-    tail -c +307 lpchrome-${_chromever}.crx > lpchrome-${_chromever}.zip
-    unzip -qqo lpchrome-${_chromever}.zip -d lpchrome-${_chromever}
+    #tail -c +307 lpchrome-${_chromever}.crx > lpchrome-${_chromever}.zip
+    #unzip -qqo lpchrome-${_chromever}.zip -d lpchrome-${_chromever}
 
     unzip -qqo "${pkgname}-${pkgver}.xpi" -d "${pkgname}-${pkgver}"
 }
@@ -83,11 +81,14 @@ package() {
         install -Dm644 lastpass_policy_sources.json "$pkgdir"/etc/$i/policies/managed/lastpass.json
     done
     for i in google-chrome chromium ; do
-        install -Dm644 lastpass_policy_install.json "$pkgdir"/usr/share/$i/extensions/hdokiejnpimakedhajhdlcegeplioahd.json
+        install -Dm644 lastpass_policy_install.json "$pkgdir"/usr/share/$i/extensions/${_crx_id}.json
     done
 
     # Opera
-    install -Dm755 lpchrome-${_chromever}/libnplastpass${_64}.so "${pkgdir}"/usr/lib/opera/plugins/libnplastpass.so
+    # Plugin does not exist in Chrome Webstore version of .crx, install
+    # instructions claim to use that, no viable solution at the moment so this
+    # is disabled until an Opera user is motivated to acquire a source.
+    #install -Dm755 lpchrome-${_chromever}/libnplastpass${_64}.so "${pkgdir}"/usr/lib/opera/plugins/libnplastpass.so
 
     install -Dm644 License.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
