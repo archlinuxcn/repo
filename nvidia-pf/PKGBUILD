@@ -3,7 +3,7 @@
 pkgname=nvidia-pf
 pkgver=396.54
 _extramodules=extramodules-4.18-pf
-pkgrel=1
+pkgrel=2
 pkgdesc="NVIDIA drivers for linux-pf"
 arch=('i686' 'x86_64')
 url="http://www.nvidia.com/"
@@ -43,5 +43,4 @@ package() {
 
     gzip "${pkgdir}/usr/lib/modules/${_extramodules}/"*.ko
 }
-md5sums=('195afa93d400bdbb9361ede6cef95143'
-         '84f1f2ecdccf377fc86323f8ad7b7469')
+md5sums=('195afa93d400bdbb9361ede6cef95143')
