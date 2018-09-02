@@ -3,7 +3,7 @@
 # Some lines from  linux-bfs and linux-ck
 # Credits to respective maintainers
 _major=4
-_minor=15
+_minor=18
 #_patchlevel=0
 #_subversion=1
 _basekernel=${_major}.${_minor}
@@ -581,8 +581,8 @@ package_linux-pf-headers() {
   # add dvb headers for external modules
   # in reference to:
   # http://bugs.archlinux.org/task/9912
-  mkdir -p "${pkgdir}/usr/lib/modules/${_kernver}/build/drivers/media/dvb-core"
-  cp drivers/media/dvb-core/*.h "${pkgdir}/usr/lib/modules/${_kernver}/build/drivers/media/dvb-core/"
+  #mkdir -p "${pkgdir}/usr/lib/modules/${_kernver}/build/drivers/media/dvb-core"
+  #cp drivers/media/dvb-core/*.h "${pkgdir}/usr/lib/modules/${_kernver}/build/drivers/media/dvb-core/"
   # and...
   # http://bugs.archlinux.org/task/11194
   ###
@@ -660,9 +660,9 @@ package_linux-pf-headers() {
 pkgdesc="Linux kernel and modules with the pf-kernel patch and aufs4"
 
 # makepkg -g >>PKGBUILD
-sha256sums=('5a26478906d5005f4f809402e981518d2b8844949199f60c4b6e1f986ca2a769'
-            'fe56ec204359110ef6743a6d177546649ae8f431e280166439b4aac864f637e0'
+sha256sums=('19d8bcf49ef530cd4e364a45b4a22fa70714b70349c8100e7308488e26f1eaf1'
+            '11fd715eadbc678fc04a502d3582e04945510018ed75760705151deea6416af8'
             '82d660caa11db0cd34fd550a049d7296b4a9dcd28f2a50c81418066d6e598864'
             'e442a951ad7ded6c178aebab8b4fdfa135dd194b672d1762ece36a044c9ce378'
-            '1be3d8d3164c7cc489250246d760f153768fdbf0d9d9500e14942a8571dc0dfc'
+            '3acb5cabf61ffff2912a4e8149f894ce3d3ba61afcbac837f7c2c56e4cb6a7bf'
             'SKIP')
