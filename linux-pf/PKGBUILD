@@ -65,7 +65,7 @@ _CPUSUFFIXES=( core2 k7 k8 k10 barcelona bobcat
 pkgname=('linux-pf')
 true && pkgname=('linux-pf' 'linux-pf-headers')
 pkgver=${_basekernel}.${_pfrel}
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 url="http://pf.natalenko.name/"
 license=('GPL2')
@@ -77,6 +77,7 @@ source=("ftp://www.kernel.org/pub/linux/kernel/v${_major}.x/linux-${_basekernel}
         '90-linux-pf.hook'
         "${_pfpatchname}::${_pfpatchhome}/v${_basekernel}...v${_basekernel}${_kernelname}${_pfrel}.diff"     # the -pf patchset
         "git+$_aufs4"
+        0001-pds-0.98w-098x.patch
 )
 
 
@@ -123,6 +124,8 @@ prepare() {
 
   # add latest fixes from stable queue, if needed
   # http://git.kernel.org/?p=linux/kernel/git/stable/stable-queue.git
+
+  patch -p1 -i $srcdir/0001-pds-0.98w-098x.patch
 
   # end linux-ARCH patches
 
@@ -661,8 +664,9 @@ pkgdesc="Linux kernel and modules with the pf-kernel patch and aufs4"
 
 # makepkg -g >>PKGBUILD
 sha256sums=('19d8bcf49ef530cd4e364a45b4a22fa70714b70349c8100e7308488e26f1eaf1'
-            '11fd715eadbc678fc04a502d3582e04945510018ed75760705151deea6416af8'
+            '02e0bfa219df73187b15f0b5ba8e4dc93b0da7aec0c8fabd9e59ed2a87b924fb'
             '82d660caa11db0cd34fd550a049d7296b4a9dcd28f2a50c81418066d6e598864'
             'e442a951ad7ded6c178aebab8b4fdfa135dd194b672d1762ece36a044c9ce378'
             '3acb5cabf61ffff2912a4e8149f894ce3d3ba61afcbac837f7c2c56e4cb6a7bf'
-            'SKIP')
+            'SKIP'
+            '3784198c7de85c49e8e747c8aa98e84a59eabdd7561d27add348ac0bd8f11ae3')
