@@ -672,3 +672,14 @@ Wed Aug 22 13:06:13 2018 +0200
 1.2.23          Bugfix release 1.2.23:
     
      2018-08-22 35be8fb actionless fix(prompt): don't use printlock when print answer in requireenterconfirm=no prompt
+
+
+Mon Sep 3 04:00:42 2018 +0200
+-------------------------------------------------
+1.2.24          Release 1.2.24:
+    
+    Notable changes:
+     2018-08-30 724d5d9 fix(main: handle_sig_int): skip printlock
+     2018-08-30 3875b24 fix(main: handle_sig_int): use SysExit exception instead of sys.exit()
+     2018-08-24 61b23f7 fix(install info fetcher: mark_dependant): package got marked as provider as mistake
+     2018-08-22 a98a19d fix(pacman: install built deps): stop if there are no deps to install
