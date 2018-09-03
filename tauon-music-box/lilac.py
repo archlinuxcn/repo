@@ -10,10 +10,12 @@ build_prefix = 'extra-x86_64'
 
 depends = ["python-hsaudiotag3k", "python-stagger-git"]
 
-pre_build = aur_pre_build
-post_build = aur_post_build
+def pre_build():
+	update_pkgver_and_pkgrel(_G.newver.lstrip('v'))
+
+def post_build():
+	git_add_files('PKGBUILD')
+	git_commit()
 
 if __name__ == '__main__':
-    single_main(build_prefix)
-
-
+    single_main()
