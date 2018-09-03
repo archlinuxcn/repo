@@ -1,13 +1,15 @@
-# Maintainer: Carsten Feuls <archlinux@carstenfeuls.de> 
+# Maintainer: Bert Peters <bert@bertptrs.nl>
+# Contributor: Carsten Feuls <archlinux@carstenfeuls.de>
 
 pkgname=ruby-listen
 pkgver=3.1.5
-pkgrel=1
+pkgrel=2
 pkgdesc="The Listen gem listens to file modifications and notifies you about the changes. Works everywhere!"
 arch=('any')
 url="https://rubygems.org/gems/listen"
 license=("MIT")
 depends=('ruby' 'ruby-rb-inotify>=0.9' 'ruby-rb-fsevent>=0.9.3')
+makedepends=('ruby-rdoc')
 source=("https://rubygems.org/downloads/listen-$pkgver.gem")
 noextract=("listen-$pkgver.gem")
 options=('!emptydirs')
