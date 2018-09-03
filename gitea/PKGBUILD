@@ -1,8 +1,8 @@
 # Maintainer: Frederik Schwan <frederik dot schwan at linux dot com>
 
 pkgname=gitea
-pkgver=1.5.0
-pkgrel=2
+pkgver=1.5.1
+pkgrel=1
 pkgdesc='Git with a cup of tea, forked from Gogs. Is a Self Hosted Git Service in the Go Programming Language.'
 arch=('x86_64' 'i686' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url='http://gitea.io'
@@ -22,7 +22,7 @@ source=(https://github.com/go-gitea/gitea/archive/v${pkgver}.tar.gz
         gitea.tmpfiles
         gitea.service
         app.ini)
-sha512sums=('06cbcadc138496abf500b8d219d0770c5f6b8af419f9c3733596ee7e20cb50235815433979b2b1daa0a6117e6eb84de9678667236549e018079c49b793f22d68'
+sha512sums=('16d10d98caf377d3bd5b4933316290e853a8fc46f5fdb3c206b9607750b5bdbdfd5c50bf8dd59906d7476d0e9211a67332eb4b780d8d37cdfb1c0bc3141ceed7'
             'c5fa7ae2e251ef86f002b001b9c46528f5a39e118ec56bd72e69ae62e9674bd5ffd2b2762e078fdf16c6ae8991c18b33b91a16e4cc9922744bfab5bc3377c079'
             '485f627daee2eebbd081f44bce5686eb2ee373a0fb24616fa1940d275caf1a192b29ef20b236a99f5ace99922dbb19cdc0db39b761fa8002d6f4bebe625ae8db'
             '3d8439ad48621a4a87634588377d133ae13a9ce30830d140beee1d69e3d4d40f6c47df663e97620d88c42e892c7fc0845f4091574c6314bed53fd20c7416b949')
