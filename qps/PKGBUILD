@@ -4,12 +4,12 @@
 
 pkgname=qps
 pkgver=1.10.18
-pkgrel=1
+pkgrel=2
 pkgdesc="a visual process manager, an X11 version of 'top' or 'ps'."
 url="https://github.com/lxqt/qps"
 depends=('qt5-x11extras' 'qt5-tools')
 makedepends=('cmake')
-arch=('x86_64')
+arch=('i686' 'x86_64')
 license=("GPL")
 source=("$pkgname-$pkgver.tar.xz::https://github.com/QtDesktop/qps/releases/download/$pkgver/$pkgname-$pkgver.tar.xz"
 	"qps.desktop")
