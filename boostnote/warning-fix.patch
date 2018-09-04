@@ -1,6 +1,6 @@
 diff -ura a/gruntfile.js b/gruntfile.js
---- a/gruntfile.js	2018-06-29 17:51:15.000000000 +0200
-+++ b/gruntfile.js	2018-06-30 08:32:21.891318254 +0200
+--- a/gruntfile.js	2018-09-04 09:11:27.000000000 +0200
++++ b/gruntfile.js	2018-09-04 12:29:45.072029833 +0200
 @@ -6,6 +6,7 @@
  
  module.exports = function (grunt) {
@@ -31,43 +31,27 @@ diff -ura a/gruntfile.js b/gruntfile.js
    grunt.registerTask('compile', function () {
      var done = this.async()
 diff -ura a/package.json b/package.json
---- a/package.json	2018-06-29 17:51:15.000000000 +0200
-+++ b/package.json	2018-06-30 08:31:50.711679561 +0200
-@@ -118,14 +118,14 @@
-     "devtron": "^1.1.0",
-     "dom-storage": "^2.0.2",
-     "electron": "2.0.3",
--    "electron-packager": "^6.0.0",
-+    "electron-packager": "^8.6.0",
-     "eslint": "^3.13.1",
-     "eslint-config-standard": "^6.2.1",
-     "eslint-config-standard-jsx": "^3.2.0",
+--- a/package.json	2018-09-04 09:11:27.000000000 +0200
++++ b/package.json	2018-09-04 12:30:40.252950385 +0200
+@@ -126,7 +126,7 @@
      "eslint-plugin-react": "^7.8.2",
      "eslint-plugin-standard": "^3.0.1",
      "faker": "^3.1.0",
 -    "grunt": "^0.4.5",
-+    "grunt": "^1.0.1",
++    "grunt": "^1.0.3",
      "grunt-electron-installer": "2.1.0",
      "history": "^1.17.0",
      "identity-obj-proxy": "^3.0.0",
-@@ -144,15 +144,11 @@
-     "react-test-renderer": "^15.6.2",
+@@ -146,7 +146,7 @@
+     "signale": "^1.2.1",
      "standard": "^8.4.0",
      "style-loader": "^0.12.4",
 -    "stylus": "^0.52.4",
-+    "stylus": "^0.54.4",
++    "stylus": "^0.54.5",
      "stylus-loader": "^2.3.1",
      "webpack": "^1.12.2",
      "webpack-dev-server": "^1.12.0"
-   },
--  "optionalDependencies": {
--    "grunt-electron-installer-debian": "^0.2.0",
--    "grunt-electron-installer-redhat": "^0.3.1"
--  },
-   "optional": false,
-   "ava": {
-     "files": [
-@@ -175,4 +171,4 @@
+@@ -177,4 +177,4 @@
        "jest-localstorage-mock"
      ]
    }
