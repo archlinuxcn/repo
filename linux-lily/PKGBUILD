@@ -7,7 +7,7 @@
 pkgbase=linux-lily       # Build kernel with a different name
 _srcver=4.17.19-arch1
 pkgver=${_srcver//-/.}
-pkgrel=1
+pkgrel=3
 arch=(x86_64)
 url="https://github.com/archlinux/linux/commits/v$_srcver"
 license=(GPL2)
@@ -101,13 +101,20 @@ _package() {
 
   msg2 "Generating debug symbol files..."
   export dbgdir="$pkgdir-debug/usr/lib/debug"
+
+  # temp vmlinux instance
+  local builddir="$pkgdir/usr/lib/modules/$(<../version)/build"
+  install -Dt "$builddir" -m644 vmlinux
+
   mkdir -p "$dbgdir"
   pushd "$pkgdir"
-  find . -name '*.ko' -print0 | parallel -j$(nproc) -0 $startdir/kostrip
+  find . \( -name '*.ko' -o -name vmlinux \) -print0 | parallel -j$(nproc) -0 $startdir/kostrip
   popd
+  rm "$builddir"/vmlinux
+  rmdir -p "$builddir" || true
+
   msg2 "Compressing modules..."
   find "${pkgdir}" -name '*.ko' -print0 | parallel -j$(nproc) -0 xz
-
 
   msg2 "Running depmod..."
   depmod -b "$pkgdir/usr" -E Module.symvers -e "$kernver"
@@ -149,7 +156,7 @@ _package-headers() {
   local builddir="$pkgdir/usr/lib/modules/$(<../version)/build"
 
   msg2 "Installing build files..."
-  install -Dt "$builddir" -m644 Makefile .config Module.symvers System.map vmlinux
+  install -Dt "$builddir" -m644 Makefile .config Module.symvers System.map
   install -Dt "$builddir/kernel" -m644 kernel/Makefile
   install -Dt "$builddir/arch/x86" -m644 arch/x86/Makefile
   cp -t "$builddir" -a scripts
@@ -195,6 +202,8 @@ _package-headers() {
 
   msg2 "Removing broken symlinks..."
   find -L "$builddir" -type l -printf 'Removing %P\n' -delete
+  # symlink to linux-lily-debug
+  ln -srv "$pkgdir/usr/lib/debug/usr/lib/modules/$(<../version)/build/vmlinux.debug" "$builddir"/vmlinux
 
   msg2 "Removing loose objects..."
   find "$builddir" -type f -name '*.o' -printf 'Removing %P\n' -delete
