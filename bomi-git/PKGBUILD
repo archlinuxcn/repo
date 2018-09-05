@@ -7,7 +7,7 @@ _pkgbase=bomi
 
 pkgname=$_pkgbase-git
 pkgver=0.9.11.r39.g5f0cc0a7
-pkgrel=1.1
+pkgrel=2
 pkgdesc="Powerful and easy-to-use GUI multimedia player based on mpv (git version)"
 arch=('i686' 'x86_64')
 url="http://bomi-player.github.io"
@@ -26,9 +26,11 @@ optdepends=('libva-intel-driver: hardware acceleration support for Intel GPU'
 provides=('bomi')
 conflicts=('cmplayer' 'bomi')
 source=(git+https://github.com/d-s-x/${_pkgbase}.git
-        add_sup_subext.patch)
+        add_sup_subext.patch
+        upgrade_waf.patch)
 md5sums=('SKIP'
-         'dacb0df199eea0f6e3d5c037c8c5429d')
+         'dacb0df199eea0f6e3d5c037c8c5429d'
+         '6bbade797cd850a576794fbf8aef0247')
 #options=(debug !strip)
 
 pkgver() {
@@ -40,6 +42,14 @@ prepare() {
     cd "$srcdir/$_pkgbase"
 
     patch -Np1 -i $srcdir/add_sup_subext.patch
+
+    # While compiling mpv, an error occurs in waf python code.
+    # Upgrading waf version fixes it.
+    patch -Np1 -i $srcdir/upgrade_waf.patch
+    pushd src/mpv
+    rm waf
+    ./bootstrap.py
+    popd
 
     ./configure --prefix=/usr
 }
