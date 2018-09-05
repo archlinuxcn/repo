@@ -1,0 +1,14 @@
+# mkinitcpio preset file for the 'linux-aarch64' package
+
+ALL_config="/etc/mkinitcpio.conf"
+ALL_kver="4.18.5-1-ARCH"
+
+PRESETS=('default' 'fallback')
+
+#default_config="/etc/mkinitcpio.conf"
+default_image="/boot/initramfs-linux-phicomm-n1.img"
+#default_options=""
+
+#fallback_config="/etc/mkinitcpio.conf"
+fallback_image="/boot/initramfs-linux-phicomm-n1-fallback.img" 
+fallback_options="-S autodetect"

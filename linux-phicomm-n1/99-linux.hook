@@ -1,0 +1,11 @@
+[Trigger]
+Type = File
+Operation = Install
+Operation = Upgrade
+Target = boot/zImage
+Target = usr/lib/initcpio/*
+
+[Action]
+Description = Updating %PKGBASE% initcpios
+When = PostTransaction
+Exec = /usr/bin/sh -ce "/usr/bin/mkinitcpio -p %PKGBASE% && mkimage -A arm64 -O linux -T ramdisk -C gzip -n uInitrd -d /boot/initramfs-linux-phicomm-n1.img /boot/uInitrd"
