@@ -1,16 +1,12 @@
 post_install() {
   /bin/cat << EOF
 ===>
-===> Please set the Anti-aliasing font settings for Java app
-===> adding the following line to the user's file ~/.bash_profile
-===> (not in ~/.bashrc):
+===> Please set the anti-aliasing font and others settings of 
+===> pycharm in this file (if is needed):
 ===>
-===> export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=setting'
-===> 
-===> Replace 'setting' with on, lcd, gasp, etc. By default is 
-===> configured with lcd.
+===> /opt/pycharm-professional/bin/pycharm64.vmoptions
 ===>
-===> Please read the following link for more options: 
+===> Please read the following link for more font options: 
 ===> https://wiki.archlinux.org/index.php/Java_Runtime_Environment_Fonts
 ===> 
 EOF

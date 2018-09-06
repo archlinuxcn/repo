@@ -1,5 +1,3 @@
-#!/bin/bash -l
+#!/bin/sh
 
-[[ -f ~/.bash_profile ]] && . ~/.bash_profile
-
-sh /opt/pycharm-professional/bin/pycharm.sh "$@"
+exec /opt/pycharm-professional/bin/pycharm.sh "$@"

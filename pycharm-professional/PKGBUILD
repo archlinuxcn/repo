@@ -1,10 +1,10 @@
 # Maintainer: XavierCLL <xavier.corredor.llano (a) gmail.com>
 
 pkgname=pycharm-professional
-pkgver=2018.2.2
-_pkgver=2018.2.2
+pkgver=2018.2.3
+_pkgver=2018.2.3
 pkgrel=1
-pkgdesc="Powerful Python and Django IDE. Professional edition."
+pkgdesc="Powerful Python and Django IDE. Professional Edition."
 arch=('x86_64')
 url='http://www.jetbrains.com/pycharm/'
 conflicts=('pycharm' 'pycharm-community')
@@ -12,7 +12,7 @@ provides=('pycharm')
 license=('custom')
 install=${pkgname}.install
 backup=(opt/$pkgname/bin/pycharm.vmoptions opt/$pkgname/bin/pycharm64.vmoptions)
-depends=('gcc-libs' 'giflib' 'glibc' 'sh' 'ttf-font' 'libxtst' 'libxslt')
+depends=('giflib' 'glibc' 'sh' 'ttf-font' 'libxtst' 'libxslt' 'python')
 source=(https://download.jetbrains.com/python/$pkgname-$_pkgver.tar.gz
         'pycharm-professional.desktop'
         'pycharm-professional.install'
@@ -20,11 +20,11 @@ source=(https://download.jetbrains.com/python/$pkgname-$_pkgver.tar.gz
         'charm.desktop'
         'charm')
 # https://download.jetbrains.com/python/pycharm-professional-${_pkgver}.tar.gz.sha256
-sha256sums=('e7ce851728c411ff2112b82bfabbcb8d20d0433a8d7ce06887588cb278f8c8b1'
-            '016db1860a8b36d408c827f90aeb04b9d55cf21ea36788a9d8510cc54fae1c49'
-            'fecb420a4644255cfbb486c1c82644e17e523bb61707108689f4fb702549d0eb'
-            '54603a788b4ecad5d0a92e5b7fe37a98979250d2b5fd7d037759b4254b0b1607'
-            'e1cf2a280d90a55710131bdf33f4026a427d10131ddd5c776a936ee1ecf5a6fb'
+sha256sums=('141669a6e8073da0fa328a4aa749fb79a1342ee68edcaee19023e7d59a9dc548'
+            'aaf7113e8c56e4d977eca204d57350d9493eda2710abefd2488a2b5d47c53344'
+            '40b297ac1d883583ed5d7aae75fb09497a2af5bda9dd4aff83bd6d2892ab6c95'
+            '818ed42f4200ae13315587abf6f247f93e68c658a94794f73924c985cdc145d0'
+            '21e77b6b18e14636f9827e1f8d45bbc8dba8fb14ea5f4cde285c1ef4bb01c85e'
             '7e9bc3873f6c8039b4d7c181806ce4363632ff5811e966142749396cd849d86f')
 makedepends=('python2-setuptools' 'python-setuptools')
 optdepends=('ipython2: For enhanced interactive Python shell v2 inside Pycharm'
@@ -56,6 +56,9 @@ build() {
 }
 
 package() {
+  # workaround FS#40934
+  sed -i 's/lcd/on/' pycharm-$_pkgver/bin/*.vmoptions
+
   # base
   install -dm 755 $pkgdir/opt/$pkgname
   cp -dr --no-preserve=ownership pycharm-$_pkgver/* $pkgdir/opt/$pkgname
