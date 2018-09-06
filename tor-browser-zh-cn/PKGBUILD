@@ -9,7 +9,7 @@
 #
 # Before running makepkg, you must do this:
 #
-# gpg --keyserver hkp://pgp.mit.edu:11371 --recv-keys D1483FA6C3C07136
+# gpg --keyserver hkp://pgp.mit.edu:11371 --recv-keys 0x4E2C6E8793298290
 #
 
 # To port this PKGBUILD to another language of tor-browser you have to
@@ -21,7 +21,7 @@ _language='zh-CN'
 
 _pkgname='tor-browser'
 pkgname="${_pkgname}-${_language,,}"
-pkgver='7.5.6'
+pkgver='8.0'
 pkgrel='1'
 pkgdesc="Tor Browser Bundle: anonymous browsing using Firefox and Tor (${_language})"
 url='https://www.torproject.org/projects/torbrowser.html'
