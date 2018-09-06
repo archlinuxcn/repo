@@ -4,7 +4,7 @@
 # Contributor: frownlee <florez.brownlee@gmail.com>
 
 pkgname=android-ndk
-pkgver=r17.b
+pkgver=r17.c
 pkgrel=1
 pkgdesc='Android C/C++ developer kit'
 arch=('x86_64')
@@ -18,7 +18,7 @@ replaces=('android-ndk64')
 depends=('ncurses5-compat-libs')
 source=('android-ndk.sh' "https://dl.google.com/android/repository/${pkgname}-${pkgver/./}-linux-x86_64.zip")
 sha1sums=('234f2814d10de08499032fd6772d701d9160433a'
-          'dd5762ee7ef4995ad04fe0c45a608c344d99ca9f')
+          '12cacc70c3fd2f40574015631c00f41fb8a39048')
 
 package() {
   install -d "$pkgdir/opt"
