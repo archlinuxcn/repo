@@ -10,14 +10,13 @@ pkgdesc="a tool for checking if a new version of some software has been released
 arch=('any')
 url="https://github.com/lilydjwg/nvchecker"
 license=('MIT')
-depends=('python' 'python-setuptools' 'python-structlog')
+depends=('python' 'python-setuptools' 'python-structlog' 'python-tornado' 'python-pycurl')
 makedepends=('git')
-optdepends=('python-aiohttp: HTTP client (only one needed)'
-            'python-tornado: HTTP client (only one needed)'
-            'python-pycurl: better HTTP support for Tornado'
-            'pyalpm: for "sort_version_key = vercmp" config'
+optdepends=('pyalpm: for "sort_version_key = vercmp" config'
             'git'
             'mercurial')
+conflicts=('nvchecker')
+provides=("nvchecker=$pkgver")
 source=('git://github.com/lilydjwg/nvchecker.git')
 md5sums=('SKIP')
 
