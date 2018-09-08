@@ -1,0 +1,29 @@
+# HG changeset patch
+# User Giampiero Gabbiani <giampiero@gabbiani.org>
+# Date 1504091210 -7200
+# Branch fedora26-adaptations
+# Node ID 6008c4bd6ba67387bffde6b2b23e7aa01f137e9c
+# Parent  fbd6ca1c14368c388e177f5a7103378dd22b4296
+fixed wrong assignment to buffer pointer
+
+diff --git a/src/3ds/SoStream.cpp b/src/3ds/SoStream.cpp
+--- a/src/3ds/SoStream.cpp
++++ b/src/3ds/SoStream.cpp
+@@ -185,7 +185,7 @@
+   if (!gotNum) { setBadBit(); return FALSE; } \
+  \
+   char *ce; \
+-  s = '\0'; \
++  *s = '\0'; \
+   _convertType_ tempVal = _convertFunc_(buf, &ce, 0); \
+  \
+   if (ce != s) \
+@@ -282,7 +282,7 @@
+ gotAll: \
+   \
+   char *ce; \
+-  s = '\0'; \
++  *s = '\0'; \
+   double tempVal = _convertFunc_(buf, &ce); \
+  \
+   if (ce != s) \

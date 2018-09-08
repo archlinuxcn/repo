@@ -1,0 +1,28 @@
+# HG changeset patch
+# User Volker Enderlein <volkerenderlein@hotmail.com>
+# Date 1503595317 -7200
+# Node ID 7ba0af2dabad860d2957f770e86a7e15e7432e9f
+# Parent  10d8002bcf0df2ac8327b40435215b1a112fef8e
+Added fix for issue #128 provided by Fedora devs to SbHash.h
+
+diff --git a/src/misc/SbHash.h b/src/misc/SbHash.h
+--- a/src/misc/SbHash.h
++++ b/src/misc/SbHash.h
+@@ -89,6 +89,8 @@
+       cc_memalloc_deallocate(entry->memhandler, ptr);
+     }
+   SbHashEntry(const Key & key, const Type & obj) : key(key), obj(obj) {}
++  SbHashEntry(const Key & key, const Type & obj, cc_memalloc *memhandler) 
++		: key(key), obj(obj), memhandler(memhandler) {}
+ 
+     Key key;
+     Type obj;
+@@ -218,7 +218,7 @@
+     /* Key not already in the hash table; insert a new
+      * entry as the first element in the bucket
+      */
+-    entry = new (this->memhandler) SbHashEntry<Type, Key>(key, obj);
++    entry = new (this->memhandler) SbHashEntry<Type, Key>(key, obj, this->memhandler);
+     entry->next = this->buckets[i];
+     this->buckets[i] = entry;
+ 
