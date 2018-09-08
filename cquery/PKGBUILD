@@ -3,7 +3,7 @@
 pkgname=cquery
 pkgver=v20180718
 __pkgver=${pkgver:1}
-pkgrel=4
+pkgrel=5
 pkgdesc='cquery is a highly-scalable, low-latency language server for C/C++/Objective-C.'
 arch=('x86_64')
 url='https://github.com/cquery-project/cquery/'
@@ -12,12 +12,12 @@ depends=('clang>=6.0.0')
 makedepends=('git' 'cmake>=3.1')
 conflicts=('cquery-git')
 source=("https://github.com/cquery-project/$pkgname/archive/$pkgver.tar.gz"
-        'git+https://github.com/miloyip/rapidjson?commit=daabb88'
-        'git+https://github.com/onqtam/doctest?commit=b40b7e7'
-        'git+https://github.com/greg7mdp/sparsepp?commit=1ca7189'
-        'git+https://github.com/emilk/loguru?commit=6bf94c5'
-        'git+https://github.com/msgpack/msgpack-c?commit=208595b'
-        'git+https://github.com/zeux/pugixml?commit=24a7064'
+        'git+https://github.com/miloyip/rapidjson#commit=daabb88'
+        'git+https://github.com/onqtam/doctest#commit=b40b7e7'
+        'git+https://github.com/greg7mdp/sparsepp#commit=1ca7189'
+        'git+https://github.com/emilk/loguru#commit=6bf94c5'
+        'git+https://github.com/msgpack/msgpack-c#commit=208595b'
+        'git+https://github.com/zeux/pugixml#commit=24a7064'
         )
 sha256sums=('72361e5e6f7a4a6b5ae27d555354efb4b012d20798b50ddd19cfd81bdf56cc1c'
             'SKIP'
