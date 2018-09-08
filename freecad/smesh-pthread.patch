@@ -1,0 +1,18 @@
+--- a/src/3rdParty/salomesmesh/CMakeLists.txt	2018-04-06 10:48:37.000000000 +0200
++++ a/src/3rdParty/salomesmesh/CMakeLists.txt	2018-04-06 10:48:37.000000000 +0200
+@@ -85,6 +85,7 @@
+ else(MSVC)
+     if(BUILD_FEM_NETGEN)
+         set(SMESH_LIBS
++            pthread
+             ${NGLIB_LIBRARIES}
+             ${OCC_LIBRARIES}
+             ${OCC_OCAF_LIBRARIES}
+@@ -92,6 +93,7 @@
+         ADD_DEFINITIONS(${NETGEN_DEFINITIONS})
+     else(BUILD_FEM_NETGEN)
+         set(SMESH_LIBS
++            pthread
+             ${OCC_LIBRARIES}
+             ${OCC_OCAF_LIBRARIES}
+         )
