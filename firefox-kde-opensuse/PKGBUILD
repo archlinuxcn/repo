@@ -20,7 +20,7 @@ _pgo=true
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=61.0.2
+pkgver=62.0
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
@@ -42,7 +42,7 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
             'speech-dispatcher: Text-to-Speech')
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
-_patchrev=42510f8eee28
+_patchrev=18f97bd2c2bf
 options=('!emptydirs'  'debug' 'strip')
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 _repo=https://hg.mozilla.org/mozilla-unified
@@ -61,7 +61,7 @@ source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
 	unity-menubar.patch
 	add_missing_pgo_rule.patch
         pgo_fix_missing_kdejs.patch
-        https://dev.gentoo.org/~anarchy/mozilla/patchsets/firefox-61.0-patches-01.tar.xz
+        https://dev.gentoo.org/~anarchy/mozilla/patchsets/firefox-62.0-patches-01.tar.xz
         https://gitweb.gentoo.org/repo/gentoo.git/plain/www-client/firefox/files/firefox-61.0-mozHunspell.patch
 )
 
@@ -243,11 +243,11 @@ md5sums=('SKIP'
          '05bb69d25fb3572c618e3adf1ee7b670'
          '6e335a517c68488941340ee1c23f97b0'
          'd7ce23a18da21c05cd756766e177834f'
-         '9a9a8cd8da7231e3bfc57132a7863021'
-         'd501f3cf592451a6d377fa748b6967b6'
+         '35a4fac33f4f3abd0d059e7ee9858617'
+         '008ee1ff02326a12879ec8856864971e'
          '0661e259fe57df87fca791f4aeb78da0'
-         'b3c34d2c275f5373cfcbde17b74d2aa5'
+         '379c447c7d7c9988738737f92abaf5ee'
          'fe24f5ea463013bb7f1c12d12dce41b2'
          '3fa8bd22d97248de529780f5797178af'
-         '20f84d63538909f6b069de1b6b10f4b3'
+         '9f098bf9bf478a36ba00694bb7722fc2'
          '13d3ece023495d23f665c78f19b70be8')
