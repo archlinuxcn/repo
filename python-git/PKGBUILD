@@ -8,7 +8,7 @@
 # Contributor: Jason Chu <jason@archlinux.org>
 
 pkgname=python-git
-pkgver=3.8.0a0.r102146.593bb30e82
+pkgver=3.8.0a0.r102160.fa221d804f
 pkgrel=1
 _pybasever=3.8
 pkgdesc="Next generation of the python high-level scripting language"
@@ -22,9 +22,11 @@ optdepends=('sqlite'
             'xz: for lzma'
             'tk: for tkinter')
 source=("git+https://github.com/python/cpython#branch=master"
-        dont-make-libpython-readonly.patch)
+        dont-make-libpython-readonly.patch
+        no-testCongestion.patch)
 sha512sums=('SKIP'
-            '2ef96708d5b13ae2a3d2cc62c87b4780e60ecfce914e190564492def3a11d5e56977659f41c7f9d12266e58050c766bce4e2b5d50b708eb792794fa8357920c4')
+            '2ef96708d5b13ae2a3d2cc62c87b4780e60ecfce914e190564492def3a11d5e56977659f41c7f9d12266e58050c766bce4e2b5d50b708eb792794fa8357920c4'
+            '1009dd9630ce937a786a7211eb5c68c65b3277994b32fe4d2702e4689baeb0a49db51a593f436e51e32cf7c266b6fbd10785b9089cdf50f123077dbf8365e594')
 
 pkgver() {
   cd cpython
@@ -43,6 +45,10 @@ prepare() {
   # FS#23997
   sed -i -e "s|^#.* /usr/local/bin/python|#!/usr/bin/python|" Lib/cgi.py
 
+  # https://bugs.python.org/issue34587 - testCongestion hangs
+  # https://bugs.python.org/issue34354 - testCongestion leaks memory
+  patch -Np1 -i ../no-testCongestion.patch
+
   # Ensure that we are using the system copy of various libraries (expat, libffi, and libmpdec),
   # rather than copies shipped in the tarball
   rm -r Modules/expat
@@ -53,7 +59,7 @@ prepare() {
 build() {
   cd cpython
 
-  # no --enable-optimizations as PGO eats more than 4G memory
+  # --enable-optimizations takes too much time
   ./configure --prefix=/usr \
               --enable-shared \
               --with-threads \
@@ -101,12 +107,9 @@ package() {
 
   make DESTDIR="${pkgdir}" EXTRA_CFLAGS="$CFLAGS" ENSUREPIP=install altinstall maninstall
 
-  # Why are these not done by default...
-  ln -s python3               "${pkgdir}"/usr/bin/python
-  ln -s python3-config        "${pkgdir}"/usr/bin/python-config
-  ln -s idle3                 "${pkgdir}"/usr/bin/idle
-  ln -s pydoc3                "${pkgdir}"/usr/bin/pydoc
-  ln -s python${_pybasever}.1 "${pkgdir}"/usr/share/man/man1/python.1
+  # Work around a conflict with the 'python' package.
+  rm "${pkgdir}/usr/lib/libpython3.so"
+  rm "${pkgdir}/usr/share/man/man1/python3.1"
 
   # some useful "stuff" FS#46146
   install -dm755 "${pkgdir}"/usr/lib/python${_pybasever}/Tools/{i18n,scripts}
