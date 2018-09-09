@@ -95,7 +95,7 @@ package_kodi-git() {
 
   # Licenses
   install -dm755 "$pkgdir/usr/share/licenses/$pkgname"
-  for licensef in LICENSE.md copying.txt; do
+  for licensef in LICENSE.md; do
     mv "$pkgdir/usr/share/doc/kodi/$licensef" \
       "$pkgdir/usr/share/licenses/$pkgname"
   done
