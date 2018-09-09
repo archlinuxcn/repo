@@ -8,10 +8,14 @@ pkgname=('vmware-horizon-client'
 	'vmware-horizon-virtual-printing'
 	'vmware-horizon-tsdr'
 	'vmware-horizon-mmr')
-# https://download3.vmware.com/software/view/viewclients/CART19FQ2/VMware-Horizon-Client-4.8.0-8518891.x64.bundle
-pkgver=4.8.0
-_build=8518891
-_cart='CART19FQ2'
+	# Currently unused bundled packages:
+	#  vmware-horizon-media-provider
+	#  vmware-horizon-seamless-window
+	#  vmware-horizon-serialportclient
+# https://download3.vmware.com/software/view/viewclients/CART19FQ3/VMware-Horizon-Client-4.9.0-9507999.x64.bundle
+pkgver=4.9.0
+_build=9507999
+_cart='CART19FQ3'
 pkgrel=1
 pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop'
 arch=('x86_64')
@@ -23,7 +27,7 @@ source=("${pkgbase}-${pkgver}-${_build}-x86_64.bundle::https://download3.vmware.
         'vmware-horizon-usb'
         'vmware-horizon-usb.service'
         'vmware-horizon-virtual-printing.service')
-sha256sums=('40a3a5a194b3185fb129c30d8f2319868af28b4bf91f22da684e02e742aaaea8'
+sha256sums=('6fdc4f0a26f28df7db2ec28641b762553f48ef0cd0a6b586f2c35c44f4d7dfa5'
             'd8794c22229afdeb698dae5908b7b2b3880e075b19be38e0b296bb28f4555163'
             '008b60ebf45f7d1e033c8ad8ce1688d5e1c59fc0668493067fb89b563b1dc00f'
             'f0944ca74a44292e7f853792335d3bbd1a89a1d4964d6d74a7e9485a8b068b0b'
@@ -106,6 +110,10 @@ build() {
 			"${srcdir}"/extract/vmware-horizon-pcoip/pcoip/lib/vmware/lib{crypto,ssl}.so.1.0.2
 	fi
 
+	# disable seamless window feature with vmware-view-crtbora
+	# this requires binary libraries with messy linking...
+	sed -i 's/vmware-view-crtbora/vmware-view/' "${srcdir}"/extract/vmware-horizon-client/bin/vmware-view
+
 	sed -i '/Name=/a Comment=Connect to VMware Horizon View virtual machines' \
 		"${srcdir}"/extract/vmware-horizon-client/share/applications/vmware-view.desktop
 }
@@ -144,6 +152,14 @@ package_vmware-horizon-client() {
 	mkdir -p "${pkgdir}/usr/"
 	cp -a pcoip/lib/ "${pkgdir}/usr/"
 	cp -a pcoip/bin/ "${pkgdir}/usr/"
+
+	#cd "${srcdir}/extract/vmware-horizon-seamless-window/"
+
+	#mkdir -p "${pkgdir}/usr/"
+	#install -D -m0755 vmware-view-crtbora "${pkgdir}/usr/lib/vmware/view/bin/vmware-view-crtbora"
+	#cp -a lib/ "${pkgdir}/usr/"
+
+	rm -rf "${pkgdir}/usr/lib/vmware/view/crtbora/"
 }
 
 package_vmware-horizon-rtav() {
