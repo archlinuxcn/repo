@@ -2,9 +2,9 @@
 
 pkgname=ruby-json
 pkgver=2.1.0
-pkgrel=4
+pkgrel=5
 pkgdesc="This is a JSON implementation as a Ruby extension in C"
-arch=('any')
+arch=('x86_64')
 url='http://json-jruby.rubyforge.org/'
 license=('Ruby')
 depends=('ruby')
