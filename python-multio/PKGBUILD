@@ -1,15 +1,15 @@
 _pkgname=multio
 pkgname=python-multio
-pkgver=0.2.3
-pkgrel=2
+pkgver=0.2.4
+pkgrel=1
 pkgdesc="multio - an unified async library for curio and trio"
 arch=('any')
 url="https://github.com/theelous3/multio"
 license=('MIT')
 depends=('python' 'python-multio-provider')
 makedepends=('python-setuptools')
-source=('https://files.pythonhosted.org/packages/af/3b/c074da0bb2175b508bfb354c020475b2089498f5fc91c1df8b7fecbac525/multio-0.2.3.tar.gz')
-md5sums=('b9964647a546f1fe4e4fe6b2bc95b90e')
+source=('https://files.pythonhosted.org/packages/2f/71/e3cc66826887a9f8e949c2052d574a436be75b7c1bf7b7bef0ee5d00fbf5/multio-0.2.4.tar.gz')
+md5sums=('b204e2c38c3fd7bd0c2465cf379ec2e9')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
