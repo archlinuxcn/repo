@@ -1,8 +1,8 @@
 # Maintainer: Sean Enck <enckse@gmail.com>
 # Maintainer: Sherlock Holo <sherlockya(at)gmail.com>
 pkgname=python-telegram-bot
-pkgver=10.1.0
-pkgrel=2
+pkgver=11.1.0
+pkgrel=1
 pkgdesc="A Python wrapper around the Telegram Bot API"
 url="https://github.com/python-telegram-bot/python-telegram-bot"
 depends=('python-future' 'python-urllib3')
@@ -14,7 +14,7 @@ license=('LGPL3')
 arch=('any')
 #source=("https://pypi.python.org/packages/f9/89/b946d746abb68588efd57297a9490ccc2e9faaae6c5f20712495d132588e/python-telegram-bot-10.0.0.tar.gz")
 source=("https://github.com/python-telegram-bot/python-telegram-bot/releases/download/v$pkgver/python-telegram-bot-$pkgver.tar.gz")
-sha256sums=('ca2f8a44ddef7271477e16f4986647fa90ef4df5b55a7953e53b9c9d2672f639')
+sha256sums=('cca4e32ebb8da7fdf35ab2fa2b3edd441211364819c5592fc253acdb7561ea5b')
 
 prepare(){
     cd $srcdir
