@@ -3,7 +3,7 @@
 pkgname=armadillo
 pkgver=9.100.5
 _pkgver=9.100.5                        # For use with RC releases, to replace the - with _
-pkgrel=1
+pkgrel=2
 pkgdesc="C++ linear algebra library"
 arch=('i686' 'x86_64')
 url="http://arma.sourceforge.net/"
