@@ -144,20 +144,9 @@ function ks_config_menu()
 }
 
 
-function ks_config_fonts()
-{
-	if [ -d /usr/share/fonts/wps-office ] ; then
-		cd /usr/share/fonts/wps-office
-		mkfontscale
-		mkfontdir
-		fc-cache -f
-	fi
-}
-
 function ks_config()
 {
 	ks_config_menu	
-	ks_config_fonts
 }
 
 function ks_remove()
@@ -172,11 +161,6 @@ function ks_remove()
 
 	if [ -x /usr/bin/update-desktop-database ] ; then
 		update-desktop-database -q "${ksv_xdg_dir}/applications"
-	fi
-
-	if [ -d /usr/share/fonts/wps-office ] ; then
-		cd /usr/share/fonts
-		fc-cache -f
 	fi
 }
 
