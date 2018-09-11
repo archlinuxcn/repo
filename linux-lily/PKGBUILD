@@ -144,7 +144,7 @@ _package() {
   chmod -Rc u=rwX,go=rX "$pkgdir"
 
   # for systemtap
-  install -D -m644 System.map "${pkgdir}/boot/System.map-${_kernver}"
+  install -D -m644 System.map "${pkgdir}/boot/System.map-${kernver}"
 }
 
 _package-headers() {
