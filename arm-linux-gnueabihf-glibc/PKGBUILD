@@ -1,0 +1,89 @@
+# Contributor: Alexander 'hatred' Drozdov <adrozdoff@gmail.com>
+# Contributor: toha257 <toha257@gmail.com>
+# Contributor: Allan McRae <allan@archlinux.org>
+# Contributor: Bartłomiej Piotrowski <bpiotrowski@archlinux.org>
+# Contributor: Kevin Mihelich <kevin@archlinuxarm.org>
+# Maintainer: Tavian Barnes <tavianator@tavianator.com>
+
+_target="arm-linux-gnueabihf"
+pkgname=${_target}-glibc
+pkgver=2.28
+pkgrel=1
+pkgdesc="GNU C Library (${_target})"
+arch=('any')
+url="http://www.gnu.org/software/libc/"
+license=(GPL LGPL)
+depends=("${_target}-linux-api-headers>=4.12.7-1")
+makedepends=("${_target}-gcc-stage2>=7.2.0-3" gperf)
+provides=("${_target}-glibc-headers=${pkgver}" "${_target}-eglibc")
+conflicts=("${_target}-glibc-headers" "${_target}-eglibc")
+replaces=("${_target}-glibc-headers")
+options=(!buildflags !strip staticlibs)
+_commit=23158b08a0908f381459f273a984c6fd328363cb
+source=(http://ftp.gnu.org/gnu/libc/glibc-${pkgver}.tar.xz
+        bz20338.patch)
+md5sums=('c81d2388896379997bc359d4f2084239'
+         'dc0d3ad59aeaaf591b085a77de6e03e9')
+
+prepare() {
+  rm -rf glibc-build
+  mkdir glibc-build
+  cd glibc-$pkgver
+
+  patch -p1 -i "$srcdir/bz20338.patch"
+}
+
+build() {
+  cd glibc-build
+
+  echo "slibdir=/lib" >> configparms
+  echo "rtlddir=/lib" >> configparms
+  echo "sbindir=/bin" >> configparms
+  echo "rootsbindir=/bin" >> configparms
+
+  # remove fortify for building libraries
+  CPPFLAGS=${CPPFLAGS/-D_FORTIFY_SOURCE=2/}
+
+  export BUILD_CC=gcc
+  export CC=${_target}-gcc
+  export CXX=${_target}-g++
+  export AR=${_target}-ar
+  export RANLIB=${_target}-ranlib
+
+  "$srcdir/glibc-$pkgver/configure" \
+      --prefix=/ \
+      --libdir=/lib \
+      --libexecdir=/lib \
+      --with-headers=/usr/${_target}/include \
+      --enable-add-ons \
+      --enable-bind-now \
+      --enable-lock-elision \
+      --disable-multi-arch \
+      --enable-obsolete-nsl \
+      --enable-obsolete-rpc \
+      --enable-stack-protector=strong \
+      --enable-stackguard-randomization \
+      --disable-profile \
+      --disable-werror \
+      --target=${_target} \
+      --host=${_target} \
+      --build=${CHOST}
+
+  echo "build-programs=no" >> configparms
+  make
+}
+
+package() {
+  cd glibc-build
+
+  make install_root="$pkgdir/usr/$_target" install
+
+  mkdir -p "$pkgdir/usr/$_target/usr"
+  ln -s ../{include,lib} "$pkgdir/usr/$_target/usr"
+
+  # Remove unneeded for compilation files
+  rm -rf "$pkgdir/usr/$_target/"{bin,sbin,etc,share,var}
+  for f in "${pkgdir}"/usr/${_target}/lib/libc.so; do
+    sed -i "$f" -e "s://*lib/l:l:g"
+  done
+}
