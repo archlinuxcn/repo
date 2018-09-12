@@ -1,0 +1,26 @@
+diff --git a/configure b/configure
+index 128da55c..c4bb08c4 100755
+--- a/configure
++++ b/configure
+@@ -1969,7 +1969,7 @@ extern "C" int main(void)
+ }
+ EOF
+   found=
+-  SUPPYTHONLIBS="python2.7 python2.6 python3.1 python3.2 python3.3 python3.4 python3.4m python3.5 python3.5m python3.6 python3.6m"
++  SUPPYTHONLIBS="python2.7 python2.6 python3.1 python3.2 python3.3 python3.4 python3.4m python3.5 python3.5m python3.6 python3.6m python3.7 python3.7m"
+   for p in $PYTHONDIR; do
+     for d in $SUPPYTHONLIBS; do
+       for b in lib/x86_64-linux-gnu lib/i386-linux-gnu lib64 lib/64 lib; do
+diff --git a/src/libs/xpcom18a4/python/src/ErrorUtils.cpp b/src/libs/xpcom18a4/python/src/ErrorUtils.cpp
+index f211c7a9..fd6811c0 100644
+--- a/src/libs/xpcom18a4/python/src/ErrorUtils.cpp
++++ b/src/libs/xpcom18a4/python/src/ErrorUtils.cpp
+@@ -440,7 +440,7 @@ char *PyTraceback_AsString(PyObject *exc_tb)
+ #if PY_MAJOR_VERSION <= 2
+ 	char *tempResult = PyString_AsString(obResult);
+ #else
+-	char *tempResult = PyUnicode_AsUTF8(obResult);
++	const char *tempResult = PyUnicode_AsUTF8(obResult);
+ #endif
+ 	result = (char *)PyMem_Malloc(strlen(tempResult)+1);
+ 	if (result==NULL)
