@@ -1,8 +1,8 @@
-# Maintainer: yk <yk at archlinuxcn dot org>
+# Maintainer: silver_remal <adumail2 at gmail dot com>
 
 _pkgname=desktop-app
 pkgname=leanote
-pkgver=2.6
+pkgver=2.6.1
 pkgrel=1
 pkgdesc="Knowledge, Blog, Sharing, Cooperation."
 arch=("i686" "x86_64")
@@ -23,8 +23,8 @@ sha256sums=('8dab30fe0835432e44b5a3a1d46aebde8716a2a47ba4031cbe2a01560987aa83'
 
 source_x86_64=("${pkgname}-${pkgver}.zip::https://sourceforge.net/projects/leanote-desktop-app/files/${pkgver}/leanote-desktop-linux-x64-v${pkgver}.zip/download")
 source_i686=("${pkgname}-${pkgver}.zip::https://sourceforge.net/projects/leanote-desktop-app/files/${pkgver}/leanote-desktop-linux-ia32-v${pkgver}.zip/download")
-sha256sums_x86_64=('125c167daa6d98f080ca4e436ad3debf3f90951b3839f1a0f934b188b755e105')
-sha256sums_i686=('decef71d12f841e88c8910af95ba7d65652fc4a960a9d4d61dae7cabf13df786')
+sha256sums_x86_64=('5353d454f7875253748cf1e85c14a741ddbfdc72bf4a196770ac411999f50aa0')
+sha256sums_i686=('d49133ce0f9fd5fcd9d5923c61f3dcd53fe736dc5d28c8e0479104722ec07422')
 noextract=("${pkgname}-${pkgver}.zip")
 
 prepare() {
