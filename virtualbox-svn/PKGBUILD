@@ -12,7 +12,7 @@ pkgname=('virtualbox-svn'
          'virtualbox-ext-vnc-svn')
 pkgver=73488
 pkgrel=1
-_vboxsf_commit='6a782003ad95a383c8b19b570a532271f090ad35'
+_vboxsf_commit='9451f61e6787e95aa51e42b6381db6b059bc49da'
 arch=('x86_64')
 url='http://virtualbox.org'
 license=('GPL' 'custom')
@@ -77,6 +77,7 @@ source=("VirtualBox::svn+http://www.virtualbox.org/svn/vbox/trunk"
         '008-no-vboxvideo.patch'
         '009-include-path.patch'
         '010-qt-5.11.patch'
+        '011-python-3-7.patch'
         # The following patch and mount.vboxsf wrapper should be removed
         # once support for mainline-style options string gets upstreamed
         '012-vboxsf-automount.patch'
@@ -101,6 +102,7 @@ sha256sums=('SKIP'
             '8b7f241107863f82a5b0ae336aead0b3366a40103ff72dbebf33f54b512a0cbc'
             '1acc7014bcb3d9ca6da29eed813c3d6e91a688c43f9d93802fd4e3814f67ace4'
             'c6ef35e6893d557c7c2269ff79bc299fe9058cfb2c933a7efdc7a8a7b6d9c5da'
+            '9535774f1858c0ad92f0edee99875dcf683e41a4c7c95494c8aeb81591426e5a'
             'a784f3cc24652a16385cc63abac6c5178932ca5f3861be7650631b7dafa753a4'
             'f3ed6741f8977f40900c8aa372fa082df1f8723d497d4fff445153c543bc8947')
             
