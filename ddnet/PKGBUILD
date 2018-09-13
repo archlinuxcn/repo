@@ -1,7 +1,7 @@
 # Maintainer: Rafael Fontenelle <rafaelff@gnome.org>
 
 pkgname=ddnet
-pkgver=11.4.2
+pkgver=11.4.3
 pkgrel=1
 pkgdesc="DDraceNetwork, a mod of Teeworlds"
 arch=('x86_64')
@@ -18,7 +18,7 @@ replaces=('teeworlds-ddnet')
 source=("https://ddnet.tw/downloads/DDNet-$pkgver.tar.xz"
         'ddnet.desktop' 'ddnet-server.desktop'
         'DDNet.png' 'DDNet-Server.png')
-sha256sums=('88f0c2d1c084a0fc5ea5ce6facc3ef47a1c4541115b303291c87ef4fe0e761bb'
+sha256sums=('c2a88d48e0585f60e058822e3716f7cd00bf53543873c89375961eb193e24a73'
             'c60de83f47b5981e79dc0d028c1fe239c898f6319653b94bb74e578cf699a216'
             'fc8c27e129f92c5dddf96a079306a2439c8cc14d4b8ce719c5fa2f59aceee367'
             '1dc83efd9fdab2597fc4d41358628422a9550d4d23b60d273f2f30cf7b76dfaa'
@@ -29,55 +29,28 @@ build() {
     mkdir build
 
     cd build
-    cmake ../DDNet-$pkgver -DCMAKE_BUILD_TYPE=Release
+    cmake ../DDNet-$pkgver        \
+      -DCMAKE_BUILD_TYPE=Release  \
+      -DCMAKE_INSTALL_PREFIX=/usr
     make all tools
 }
 
 check() {
-    cd build
-    make -k run_tests
+    make -k run_tests -C build
 }
 
 package() {
-    cd build
-
-      # Install DDNet client/server binaries
-    install -d -m755 "$pkgdir/usr/bin"
-    install -m755 DDNet                "$pkgdir/usr/bin/"
-    install -m755 DDNet-Server         "$pkgdir/usr/bin/"
-
-      # Install extra tools
-    install -d -m755 "$pkgdir/usr/lib/ddnet/tools/"
-    install -m755 config_retrieve      "$pkgdir/usr/lib/ddnet/tools/"
-    install -m755 config_store         "$pkgdir/usr/lib/ddnet/tools/"
-    install -m755 confusables          "$pkgdir/usr/lib/ddnet/tools/"
-    install -m755 crapnet              "$pkgdir/usr/lib/ddnet/tools/"
-    install -m755 dilate               "$pkgdir/usr/lib/ddnet/tools/"
-    install -m755 dummy_map            "$pkgdir/usr/lib/ddnet/tools/"
-    install -m755 fake_server          "$pkgdir/usr/lib/ddnet/tools/"
-    install -m755 map_diff             "$pkgdir/usr/lib/ddnet/tools/"
-    install -m755 map_extract          "$pkgdir/usr/lib/ddnet/tools/"
-    install -m755 map_replace_image    "$pkgdir/usr/lib/ddnet/tools/"
-    install -m755 map_resave           "$pkgdir/usr/lib/ddnet/tools/"
-    install -m755 packetgen            "$pkgdir/usr/lib/ddnet/tools/"
-    install -m755 tileset_borderadd    "$pkgdir/usr/lib/ddnet/tools/"
-    install -m755 tileset_borderfix    "$pkgdir/usr/lib/ddnet/tools/"
-    install -m755 tileset_borderrem    "$pkgdir/usr/lib/ddnet/tools/"
-    install -m755 tileset_borderset    "$pkgdir/usr/lib/ddnet/tools/"
-    install -m755 uuid                 "$pkgdir/usr/lib/ddnet/tools/"
-
-      # Install data files
-    install -d -m755 "$pkgdir/usr/share/ddnet/data/"
-    cp -r data/* "$pkgdir/usr/share/ddnet/data/"
+    make install DESTDIR="$pkgdir" -C build
 
       # Install desktop and icon files
     install -d -m755 "$pkgdir/usr/share/applications/"
     install -d -m755 "$pkgdir/usr/share/pixmaps/"
-    install -m644 "$srcdir/ddnet.desktop"        "$pkgdir/usr/share/applications/"
-    install -m644 "$srcdir/ddnet-server.desktop" "$pkgdir/usr/share/applications/"
-    install -m644 "$srcdir/DDNet.png"            "$pkgdir/usr/share/pixmaps/"
-    install -m644 "$srcdir/DDNet-Server.png"     "$pkgdir/usr/share/pixmaps/"
+    install -m644 ddnet.desktop        "$pkgdir/usr/share/applications/"
+    install -m644 ddnet-server.desktop "$pkgdir/usr/share/applications/"
+    install -m644 DDNet.png            "$pkgdir/usr/share/pixmaps/"
+    install -m644 DDNet-Server.png     "$pkgdir/usr/share/pixmaps/"
 
       # Install license files
-    install -Dm644 ../DDNet-$pkgver/license.txt "$pkgdir/usr/share/licenses/$pkgname/license.txt"
+    install -d -m755 "$pkgdir/usr/share/licenses/$pkgname/"
+    install -Dm644 DDNet-$pkgver/license.txt  "$pkgdir/usr/share/licenses/$pkgname/"
 }
