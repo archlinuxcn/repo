@@ -6,8 +6,6 @@
 
 from lilaclib import *
 
-depends=["python-pytoml"]
-
 build_prefix = 'extra-x86_64'
 
 pre_build = vcs_update
