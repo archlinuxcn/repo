@@ -7,7 +7,7 @@ arch=('i686' 'x86_64')
 conflicts=("ydcv")
 provides=("ydcv")
 url="https://github.com/farseerfc/ydcv-rs"
-license=('MIT' 'GPL2')
+license=('GPL2')
 depends=("openssl" "libdbus" "libxcb")
 optdepends=()
 makedepends=('git' 'cargo')
@@ -21,12 +21,12 @@ pkgver() {
 
 build() {
 	cd $_pkgname
-	cargo build --no-default-features --features "notify-rust" --release
+	cargo build --release
 }
 
 check() {
 	cd $_pkgname
-	cargo test --no-default-features --features "notify-rust" --release
+	cargo test --release
 }
 
 package() {
