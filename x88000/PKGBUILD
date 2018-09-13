@@ -1,7 +1,7 @@
 # Maintainer: heavysink <winstonwu91@gmail.com>
 
 pkgname=x88000
-pkgver=1.5.1
+pkgver=1.5.3
 pkgrel=1
 pkgdesc="NEC - PC8801 Emulator on the Linux platform "
 arch=('i686' 'x86_64')
