@@ -2,7 +2,7 @@
 
 pkgname=poi
 _pkgname=poi
-pkgver=9.0.0.beta.3.0.gfab6233b
+pkgver=9.0.1.0.gda246987
 pkgrel=1
 pkgdesc="Scalable KanColle browser and tool"
 arch=('any')
@@ -35,7 +35,6 @@ build() {
     cd "${srcdir}/${_pkgname}"
     git clean -xdf
     npm install
-    npm run deploy
     gulp build
     # workaround: require electron >= 3.0.0
     cd app_compiled
