@@ -4,7 +4,7 @@
 _pkgname=darling-dmg
 pkgname=$_pkgname-git
 pkgver=1.0.4.r73.g97a92a6
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc="FUSE module for .dmg files (containing an HFS+ filesystem)"
 arch=('i686' 'x86_64')
@@ -13,44 +13,42 @@ url='https://www.darlinghq.org'
 depends=('bzip2' 'fuse' 'icu' 'libxml2' 'openssl' 'zlib')
 # boost is used only in check() but the build step requires it to build a test executable
 makedepends=('cmake' 'git' 'boost')
-source=("git+https://github.com/darlinghq/darling-dmg"
-        enoattr.patch)
-sha256sums=('SKIP'
-            'c0d15ceffbf957d823dc69b8c5adbfc4ef8c9ddd500fe8e118bac51f4d8ad0f7')
+source=("git+https://github.com/darlinghq/darling-dmg")
+sha256sums=('SKIP')
 conflicts=('darling-git' "$_pkgname")
 provides=("$_pkgname=$pkgver")
 
 pkgver() {
-  cd "$srcdir/$_pkgname"
+  cd $_pkgname
   ( set -o pipefail
-    git describe --long --tag 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/^v//' ||
-    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+    git describe --long --tag 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/^v//'
   )
 }
 
 prepare() {
-    cd "$srcdir/$_pkgname"
-    patch -Np1 -i ../enoattr.patch
+  cd $_pkgname
+  mkdir -p build
 }
 
 build() {
-    cd "$srcdir/$_pkgname"
-    mkdir -p build && cd build
+  cd $_pkgname/build
 
-    cmake -DWITH_TESTS=1 -DCMAKE_INSTALL_PREFIX:PATH=/usr ..
+  cmake \
+    -DCMAKE_INSTALL_PREFIX:PATH=/usr \
+    -DWITH_TESTS=1 \
+    ..
 
-    make
+  make
 }
 
 check() {
-    cd "$srcdir/$_pkgname/build"
+  cd $_pkgname/build
 
-    make test
+  make test
 }
 
 package() {
-    cd "$srcdir/$_pkgname/build"
+  cd $_pkgname/build
 
-    make DESTDIR="$pkgdir" install
+  make DESTDIR="$pkgdir" install
 }
-
