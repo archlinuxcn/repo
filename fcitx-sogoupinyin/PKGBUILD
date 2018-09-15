@@ -5,7 +5,7 @@
 
 pkgname=fcitx-sogoupinyin
 pkgver=2.2.0.0108
-pkgrel=3
+pkgrel=4
 pkgdesc="Sogou Pinyin for Linux"
 arch=('x86_64' 'i686')
 url="https://pinyin.sogou.com/linux/"
@@ -37,6 +37,7 @@ package(){
     rm -r "$pkgdir"/etc/X11
 
     ln -s /usr/lib/libopencc.so "$pkgdir"/usr/lib/libopencc.so.1
+    ln -s /usr/lib/libidn.so "$pkgdir"/usr/lib/libidn.so.11
 
     # install -m755 sogou-autostart "$pkgdir"/usr/bin
 
