@@ -7,7 +7,7 @@ _gopkgname='github.com/mholt/caddy'
 
 pkgname=caddy
 pkgver=0.11.0
-pkgrel=3
+pkgrel=4
 pkgdesc='HTTP/2 Web Server with Automatic HTTPS'
 arch=('x86_64' 'i686' 'armv6h' 'armv7h' 'aarch64')
 url='https://caddyserver.com'
@@ -74,14 +74,14 @@ package() {
 }
 
 plugins=(
-#    'dns'
+    'dns'
 #    'docker'
 #    'dyndns'
 #    'hook.service'
 #    'http.authz'
 #    'http.awses'
 #    'http.awslambda'
-#    'http.cache'
+    'http.cache'
 #    'http.cgi'
 #    'http.cors'
 #    'http.datadog'
@@ -113,7 +113,7 @@ plugins=(
 #    'net'
 #    'tls.dns.auroradns'
 #    'tls.dns.azure'
-#    'tls.dns.cloudflare'
+    'tls.dns.cloudflare'
 #    'tls.dns.cloudxns'
 #    'tls.dns.digitalocean'
 #    'tls.dns.dnsimple'
