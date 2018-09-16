@@ -2,13 +2,13 @@
 # Previous maintainer: Joel Teichroeb <joel@teichroeb.net>
 
 pkgname=rr-git
-pkgver=5.2.0.r64.g47451927
+pkgver=5.2.0.r69.gb6d6df52
 pkgrel=1
 pkgdesc='a nondeterministic debugger'
 arch=(i686 x86_64)
 url='http://rr-project.org/'
 license=('custom')
-depends=(python2-pexpect gdb capnproto)
+depends=(python2 python-pexpect gdb capnproto)
 makedepends=('git' 'cmake' 'capnproto')
 if [[ $CARCH = x86_64 ]]; then
     makedepends+=('gcc-multilib')
@@ -27,6 +27,7 @@ pkgver() {
 prepare() {
   cd rr
   # patch -Np1 < ../
+  sed -i -e 's/std=c++11/std=c++14/' CMakeLists.txt
 }
 
 build() {
