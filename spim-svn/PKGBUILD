@@ -1,8 +1,8 @@
 # Maintainer: Chih-Hsuan Yen <yan12125@gmail.com>
 
 pkgname=spim-svn
-pkgver=715
-pkgrel=2
+pkgver=717
+pkgrel=1
 pkgdesc="A MIPS32 simulator (SVN version)"
 arch=('i686' 'x86_64')
 url="https://sourceforge.net/projects/spimsimulator/"
@@ -16,24 +16,16 @@ provides=("spim=$pkgver")
 _svntrunk='svn+https://svn.code.sf.net/p/spimsimulator/code'
 source=("$_svntrunk/spim"
         "$_svntrunk/CPU"
-        "$_svntrunk/Tests"
-        fix-install.patch)
+        "$_svntrunk/Tests")
 sha256sums=('SKIP'
             'SKIP'
-            'SKIP'
-            '36db36d77c49ae082c0cdf9c7dc46a3dd7a144747cecb60c2b149daa59a20af1')
+            'SKIP')
 
 pkgver() {
   cd spim
 
   local ver="$(svnversion)"
   printf "${ver//[[:alpha:]]}"
-}
-
-prepare() {
-  cd spim
-
-  patch -Np0 -i ../fix-install.patch
 }
 
 build() {
