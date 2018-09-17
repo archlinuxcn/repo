@@ -23,10 +23,10 @@ optdepends=('sqlite'
             'tk: for tkinter')
 source=("git+https://github.com/python/cpython#branch=master"
         dont-make-libpython-readonly.patch
-        no-testCongestion.patch)
+        0001-compileall-Fix-ddir-when-recursing.patch)
 sha512sums=('SKIP'
             '2ef96708d5b13ae2a3d2cc62c87b4780e60ecfce914e190564492def3a11d5e56977659f41c7f9d12266e58050c766bce4e2b5d50b708eb792794fa8357920c4'
-            '1009dd9630ce937a786a7211eb5c68c65b3277994b32fe4d2702e4689baeb0a49db51a593f436e51e32cf7c266b6fbd10785b9089cdf50f123077dbf8365e594')
+            'ebd04c3b6d41321b1f0d439d356e0ce463760db55dc64109854c70d017cf56608aa19de9fc4a21bf840795ff202b4703444f9af8074b661780798c17e03089ff')
 
 pkgver() {
   cd cpython
@@ -42,12 +42,14 @@ prepare() {
   # FS#45809
   patch -p1 -i ../dont-make-libpython-readonly.patch
 
+  # FS#59997
+  patch -p1 -i ../0001-compileall-Fix-ddir-when-recursing.patch
+
   # FS#23997
   sed -i -e "s|^#.* /usr/local/bin/python|#!/usr/bin/python|" Lib/cgi.py
 
-  # https://bugs.python.org/issue34587 - testCongestion hangs
-  # https://bugs.python.org/issue34354 - testCongestion leaks memory
-  patch -Np1 -i ../no-testCongestion.patch
+  # Speed up LTO
+  sed -i -e "s|-flto |-flto=4 |g" configure configure.ac
 
   # Ensure that we are using the system copy of various libraries (expat, libffi, and libmpdec),
   # rather than copies shipped in the tarball
@@ -59,11 +61,14 @@ prepare() {
 build() {
   cd cpython
 
-  # --enable-optimizations takes too much time
+  # PGO should be done with -O3
+  CFLAGS="${CFLAGS/-O2/-O3}"
+
   ./configure --prefix=/usr \
               --enable-shared \
               --with-threads \
               --with-computed-gotos \
+              --enable-optimizations \
               --with-lto \
               --enable-ipv6 \
               --with-system-expat \
@@ -104,6 +109,9 @@ package() {
 
   # Hack to avoid building again
   sed -i 's/^all:.*$/all: build_all/' Makefile
+
+  # PGO should be done with -O3
+  CFLAGS="${CFLAGS/-O2/-O3}"
 
   make DESTDIR="${pkgdir}" EXTRA_CFLAGS="$CFLAGS" ENSUREPIP=install altinstall maninstall
 

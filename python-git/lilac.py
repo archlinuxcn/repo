@@ -1,12 +1,7 @@
-#!/usr/bin/env python3
-#
-# This file is the most simple lilac.py file,
-# and it suits for most packages in AUR.
-#
-
 from lilaclib import *
 
 build_prefix = 'extra-x86_64'
+time_limit_hours = 1.5
 
 def post_build():
     git_add_files('PKGBUILD')
