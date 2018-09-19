@@ -1,7 +1,7 @@
 # Maintainer: Ariel AxionL <axionl@aosc.io>
 # Contributor: GreaterFire <GreaterFire@protonmail.com>
 pkgname=trojan-git
-pkgver=r292.1df6c77
+pkgver=r295.4a6b846
 pkgrel=1
 pkgdesc="An unidentifiable mechanism that helps you bypass GFW"
 arch=('x86_64')
