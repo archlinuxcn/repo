@@ -1,0 +1,36 @@
+diff --git a/webpack.config.js b/webpack.config.js
+index a03e8ed..7714f7a 100644
+--- a/webpack.config.js
++++ b/webpack.config.js
+@@ -8,13 +8,24 @@ var nodeModules = {};
+ 
+ // This is to filter out node_modules as we don't want them
+ // to be made part of any bundles.
+-fs.readdirSync('node_modules')
+-  .filter(function(x) {
+-    return ['.bin'].indexOf(x) === -1;
+-  })
+-  .forEach(function(mod) {
+-    nodeModules[mod] = 'commonjs ' + mod;
+-  });
++
++function addToNodeModulesMap(modName) {
++  if (modName.indexOf('bin') !== -1) {
++    return;
++  }
++  nodeModules[modName] = 'commonjs ' + modName;
++}
++
++for (const dirname of fs.readdirSync('node_modules')) {
++  if (dirname[0] === '@') {
++    const inner_dirs = fs.readdirSync(path.join('node_modules', dirname));
++    for (const inner_dirname of inner_dirs) {
++      addToNodeModulesMap(path.join(dirname, inner_dirname));
++    }
++  } else {
++    addToNodeModulesMap(dirname);
++  }
++}
+ 
+ var rules = [
+   {
