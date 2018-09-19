@@ -2,13 +2,13 @@
 
 pkgname=minikube-bin
 pkgver=0.28.2
-pkgrel=5
+pkgrel=6
 pkgdesc="A tool that makes it easy to run Kubernetes locally"
 url="https://github.com/kubernetes/minikube"
 license=('Apache')
 arch=('x86_64')
 optdepends=(
-  'kubectl-bin: to manage the cluster'
+  'kubectl: to manage the cluster'
   'crictl: to use --vm-driver=none'
   'virtualbox: to use --vm-driver=virtualbox (default)'
   'docker-machine-kvm: to use --vm-driver=kvm'
