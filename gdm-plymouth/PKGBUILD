@@ -6,7 +6,7 @@
 _pkgbase=gdm
 pkgbase=gdm-plymouth
 pkgname=(gdm-plymouth libgdm-plymouth)
-pkgver=3.28.2
+pkgver=3.30.0
 pkgrel=1
 pkgdesc="Gnome Display Manager with Plymouth support."
 arch=('x86_64')
@@ -17,15 +17,20 @@ makedepends=('intltool' 'yelp-tools' 'gobject-introspection')
 checkdepends=('check')
 source=("https://gitlab.gnome.org/GNOME/gdm/-/archive/${pkgver}/${_pkgbase}-${pkgver}.tar.gz"
 	"0002-Xsession-Don-t-start-ssh-agent-by-default.patch"
+	"0003-autogoo-make-udev-rules-dir-configurable.patch"
 	"gdm.sysusers")
-sha256sums=('58886a0e544e1b4ecf817ab8a9ab8f12770cfc2408417dbe42b4973a032f4616'
+sha256sums=('b2064b9dfb0d55a7a398478a94c9f342e0098340324cddad5beb1aa57a0aa795'
             '63f99db7623f078e390bf755350e5793db8b2c4e06622caf42eddc63cd39ecca'
+            '86dd6513fece2daac1d3e89c740162e2046e36be7aae255fa30115cbb6eeda12'
             '6d9c8e38c7de85b6ec75e488585b8c451f5d9b4fabd2a42921dc3bfcc4aa3e13')
 
 prepare() {
   cd $_pkgbase-${pkgver}
 
   patch -Np1 -i ../0002-Xsession-Don-t-start-ssh-agent-by-default.patch
+
+  # Remove for releases after 3.30
+  patch -Np1 -i ../0003-autogoo-make-udev-rules-dir-configurable.patch
 
   NOCONFIGURE=1 ./autogen.sh
 }

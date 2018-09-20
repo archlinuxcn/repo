@@ -1,0 +1,63 @@
+diff --git a/Makefile.am b/Makefile.am
+index 1b710098635d9d05f6821746571198d28ecea44b..7896f59daf351927e01ce8d895bb7eba629d640b 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -30,4 +30,4 @@ EXTRA_DIST = \
+ DISTCLEANFILES = \
+ 	$(NULL)
+ 
+-AM_DISTCHECK_CONFIGURE_FLAGS = --enable-split-authentication --enable-introspection --without-systemdsystemunitdir
++AM_DISTCHECK_CONFIGURE_FLAGS = --enable-split-authentication --enable-introspection --without-systemdsystemunitdir --without-udevdir
+diff --git a/configure.ac b/configure.ac
+index 1a25c80871de0079d8d3133d648bda1e85182c88..bba96d2b6d3416cbbc582633085b32a4a1d9f193 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -254,7 +254,10 @@ AC_ARG_WITH(tcp-wrappers,
+                            [Use TCP Wrappers @<:@default=auto@:>@]),,
+             with_tcp_wrappers=auto)
+ 
+-
++AC_ARG_WITH([udevdir],
++            AS_HELP_STRING([--with-udevdir=DIR],
++                           [Directory for udev files]),
++                [with_udevdir=$withval], [with_udevdir=$($PKG_CONFIG --variable=udevdir udev)])
+ AC_ARG_WITH([systemdsystemunitdir],
+             AS_HELP_STRING([--with-systemdsystemunitdir=DIR],
+                            [Directory for systemd service files]),
+@@ -867,6 +870,11 @@ AC_PATH_PROG(SYSTEMD_X_SERVER, systemd-multi-seat-x, [/lib/systemd/systemd-multi
+ AC_SUBST(SYSTEMD_X_SERVER)
+ AC_DEFINE_UNQUOTED(SYSTEMD_X_SERVER,"$SYSTEMD_X_SERVER",[Path to systemd X server wrapper])
+ 
++if test "x$with_udevdir" != xno; then
++        AC_SUBST(UDEV_DIR, [$with_udevdir])
++fi
++AM_CONDITIONAL(INSTALL_UDEV_RULES, test x$with_udevdir != xno)
++
+ if test "x$with_systemdsystemunitdir" != xno; then
+         AC_SUBST(SYSTEMD_SYSTEM_UNIT_DIR, [$with_systemdsystemunitdir])
+ fi
+@@ -1517,6 +1525,7 @@ echo \
+         XDMCP support:            ${XDMCP_SUPPORT}
+         SELinux support:          ${use_selinux}
+         systemd unit dir:         ${with_systemdsystemunitdir}
++        udev dir:                 ${with_udevdir}
+         plymouth support:         ${use_plymouth}
+         wayland support:          ${enable_wayland_support}
+         Build with RBAC:          ${msg_rbac_shutdown}
+diff --git a/data/Makefile.am b/data/Makefile.am
+index 7c6a2eb38a85759218278b6ab9c7725f26eef990..162074f1c571b9d76164ac485643a28f0712292f 100644
+--- a/data/Makefile.am
++++ b/data/Makefile.am
+@@ -154,8 +154,10 @@ if ENABLE_ARCH_PAM_CONFIG
+ pam_files = $(pam_arch_files)
+ endif
+ 
+-udevrulesdir = /lib/udev/rules.d
++if INSTALL_UDEV_RULES
++udevrulesdir = $(UDEV_DIR)/rules.d
+ udevrules_DATA = 61-gdm.rules
++endif
+ 
+ EXTRA_DIST += $(srcdir)/61-gdm.rules.in
+ 61-gdm.rules: $(srcdir)/61-gdm.rules.in
+
