@@ -1,7 +1,7 @@
 # Maintainer: Shengyu Zhang <la@archlinuxcn.org>
 
 pkgname=srain-dev
-pkgver=1.0.0rc1.1073.2cd1ed4
+pkgver=1.0.0rc1.1073.1e1993c
 _pkgver=1.0.0rc1
 pkgrel=1
 pkgdesc="Modern IRC client, develop and debug version"
@@ -29,10 +29,10 @@ pkgver() {
 build() {
     cd ${pkgname%-dev}
 
-    ./configure                     \
-        --prefix=${_prefix}         \
-        --datadir=${_prefix}/share  \
-        --sysconfdir=/etc           \
+    ./configure                         \
+        --prefix="${_prefix}"           \
+        --datadir="${_prefix}/share"    \
+        --sysconfdir="/etc"             \
         --enable-debug
     make
     make doc
@@ -41,14 +41,14 @@ build() {
 package() {
     cd ${pkgname%-dev}
 
-    make DESTDIR=${pkgdir} install
-    make DESTDIR=${pkgdir} install-doc
-    mv ${pkgdir}${_prefix}/bin/srain{,-dev}
+    make DESTDIR="${pkgdir}" install
+    make DESTDIR="${pkgdir}" install-doc
+    mv "${pkgdir}${_prefix}/bin/srain"{,-dev}
 
-    cat << EOF > ${pkgdir}${_prefix}/bin/srain
+    cat << EOF > "${pkgdir}${_prefix}/bin/srain"
 #!/bin/sh
-gdb ${_prefix}/bin/srain-dev -ex "r \$@" -ex "bt" -ex "q"
+gdb "${_prefix}/bin/srain-dev" -ex "r \$@" -ex "bt" -ex "q"
 EOF
 
-    chmod 755 ${pkgdir}${_prefix}/bin/srain
+    chmod 755 "${pkgdir}${_prefix}/bin/srain"
 }
