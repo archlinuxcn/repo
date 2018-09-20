@@ -4,7 +4,7 @@
 # Contributor: frownlee <florez.brownlee@gmail.com>
 
 pkgname=android-ndk
-pkgver=r17.c
+pkgver=r18
 pkgrel=1
 pkgdesc='Android C/C++ developer kit'
 arch=('x86_64')
@@ -13,22 +13,18 @@ license=('GPL' 'LGPL' 'custom')
 options=('!strip' 'staticlibs')
 backup=('etc/profile.d/android-ndk.sh')
 install="$pkgname.install"
-provides=('android-ndk')
 replaces=('android-ndk64')
-depends=('ncurses5-compat-libs')
-source=('android-ndk.sh' "https://dl.google.com/android/repository/${pkgname}-${pkgver/./}-linux-x86_64.zip")
-sha1sums=('234f2814d10de08499032fd6772d701d9160433a'
-          '12cacc70c3fd2f40574015631c00f41fb8a39048')
+depends=('glibc')
+source=('android-ndk.sh')
+source_x86_64=("https://dl.google.com/android/repository/$pkgname-${pkgver/./}-linux-x86_64.zip")
+sha1sums=('2479a8d74428eb651ad2b9772ad655d7a90af410')
+sha1sums_x86_64=('2ac2e8e1ef73ed551cac3a1479bb28bd49369212')
 
 package() {
-  install -d "$pkgdir/opt"
+  install -Ddm755 "$pkgdir/opt"
   mv "$pkgname-${pkgver/./}" "$pkgdir/opt/$pkgname"
 
   install -Dm755 android-ndk.sh "$pkgdir/etc/profile.d/android-ndk.sh"
-
-  # Fix broken permissions
-  chmod -R o=g "$pkgdir/opt/$pkgname"
-  find "$pkgdir/opt/$pkgname" -perm 744 -exec chmod 755 {} +
 }
 
 # vim: ts=2 sw=2 et:
