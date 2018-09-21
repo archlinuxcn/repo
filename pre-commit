@@ -6,6 +6,7 @@
 import os
 import sys
 import re
+import ast
 from subprocess import Popen, PIPE
 from unittest import TestCase, TestSuite, TestLoader, TextTestRunner, skip
 from io import TextIOWrapper, StringIO
@@ -77,6 +78,21 @@ def pkgpath(pkgname):
         return os.path.join(SUBFOLDER, pkgname)
     else:
         return pkgname
+
+
+def lilac_has_update_on(pkgname):
+    lilac_path = os.path.join(pkgpath(pkgname), 'lilac.py')
+    with git_open(lilac_path) as lilac_py:
+        lilac_ast = ast.parse(lilac_py.read())
+        ## For simplicity we only check top level assignments
+        ## to find `update_on`, which shoud be enough
+        for block in lilac_ast.body:
+            if isinstance(block, ast.Assign):
+                for target in block.targets:
+                    if target.id == 'update_on':
+                        return True
+    return False
+
 
 class NvcheckerSyntaxTest(TestCase):
     def test_nvchecker_ini(self):
@@ -164,11 +180,14 @@ class ConfigSectionTest(TestCase):
                 continue
             if not git_isfile(pkgpath(package), 'lilac.py'):
                 continue
+            if lilac_has_update_on(package):
+                continue
 
             with self.subTest(package=package):
                 self.assertIn(package, self.config,
                               msg=('package "\033[1;31m{0}\033[m" is not in ' +
-                                   '"nvchecker.ini"').format(package))
+                                   '"nvchecker.ini" and does not have "update_on" in ' +
+                                   '"\033[1;31m{0}/lilac.py\033[m"').format(package))
 
     @skip("37 packages violating this")
     def test_folders_in_nvchecker(self):
