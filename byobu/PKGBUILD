@@ -3,7 +3,7 @@
 # Submitter: oozyslug <oozyslug at gmail dot com>
 
 pkgname=byobu
-pkgver=5.125
+pkgver=5.127
 pkgrel=1
 pkgdesc="Enhanced profile and useful notifications for tmux/screen"
 arch=("any")
@@ -15,7 +15,7 @@ makedepends=("gettext")
 optdepends=("screen: alternative back-end for byobu (default: tmux)"
             "python2: needed for byobu-config")
 source=("${url}/trunk/${pkgver}/+download/${pkgname}_${pkgver}.orig.tar.gz")
-md5sums=('f90f15771325e8be9360f301b52182d2')
+md5sums=('18ddaa94dd2eccd7ff771c9050001056')
 
 prepare() {
   cd "${srcdir}/${pkgname}-${pkgver}"
