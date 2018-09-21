@@ -146,7 +146,7 @@ class ConfigSectionTest(TestCase):
                                          'contains ill-formed key ' +
                                          '"\033[1;31m{1}\033[m"').format(section, key))
 
-    @skip("226 packages violating this")
+    @skip("113 packages violating this")
     def test_have_lilac_py(self):
         for section in self.config.sections():
             if "manual" not in self.config[section]:
@@ -189,7 +189,7 @@ class ConfigSectionTest(TestCase):
                                    '"nvchecker.ini" and does not have "update_on" in ' +
                                    '"\033[1;31m{0}/lilac.py\033[m"').format(package))
 
-    @skip("37 packages violating this")
+    @skip("35 packages violating this")
     def test_folders_in_nvchecker(self):
         packagesfolder = SUBFOLDER
         if not git_isdir(packagesfolder):
