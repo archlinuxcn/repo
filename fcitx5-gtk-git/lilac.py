@@ -8,6 +8,14 @@ from lilaclib import *
 
 depends=['fmt', 'xcb-imdkit-git', 'fcitx5-git']
 
+update_on = [{
+    'gitlab': 'fcitx/fcitx5-gtk'
+},{
+    'archpkg': 'gtk3',
+    'from_pattern': r'^(\d+\.\d+)\..*',
+    'to_pattern': r'\1',
+}]
+
 build_prefix = 'extra-x86_64'
 pre_build = vcs_update
 

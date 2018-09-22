@@ -9,7 +9,11 @@ from lilaclib import *
 depends=['fmt', 'xcb-imdkit-git', 'fcitx5-git', 'libime-git', ('fcitx5-qt-git', 'fcitx5-qt5-git')]
 
 update_on = [{
-    "gitlab": "fcitx/fcitx5-chinese-addons"
+    'gitlab': 'fcitx/fcitx5-chinese-addons'
+},{
+    'archpkg': 'boost-libs',
+    'from_pattern': r'^(\d+\.\d+)\..*',
+    'to_pattern': r'\1',
 }]
 
 build_prefix = 'extra-x86_64'
