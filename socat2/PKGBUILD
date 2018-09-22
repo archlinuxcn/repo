@@ -11,7 +11,7 @@
 pkgname=socat2
 _pkgname=socat
 pkgver=2.0.0_b9
-pkgrel=1
+pkgrel=2
 pkgdesc='Multipurpose relay, version 2 (development version)'
 url='http://www.dest-unreach.org/socat/socat-version2.html'
 license=('GPL2')
