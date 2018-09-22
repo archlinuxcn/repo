@@ -1,20 +1,21 @@
 # shellcheck disable=SC2034,SC2164,SC2154
 # Maintainer: Sven-Hendrik Haase <sh@lutzhaase.com>
 # Contributor: Andrew Gallant <jamslam@gmail.com>
-pkgname=ripgrep-broadwell-git
+pkgname=ripgrep-skylake-git
 pkgver=0.10.0.20180914
 pkgrel=1
-pkgdesc="A search tool that combines the usability of ag with the raw speed of grep. Git version, optimized for broadwell CPUs"
+pkgdesc="A search tool that combines the usability of ag with the raw speed of grep. Git version, optimized for skylake CPUs"
 arch=('x86_64')
 url="https://github.com/BurntSushi/ripgrep"
 license=('MIT' 'UNLICENSE')
-depends=('gcc-libs')
+depends=('gcc-libs' 'pcre2')
 makedepends=('cargo-nightly' 'git' 'asciidoc')
 options=('debug')
 source=("https://github.com/BurntSushi/$pkgname/archive/$pkgver.tar.gz")
 source=("git+$url")
 sha256sums=('SKIP')
-conflicts=(ripgrep)
+conflicts=(ripgrep ripgrep-broadwell-git)
+replaces=(ripgrep-broadwell-git)
 
 pkgver () {
   cd ripgrep
@@ -25,7 +26,7 @@ pkgver () {
 build () {
   cd ripgrep
   echo "lto = true" >> Cargo.toml
-  RUSTFLAGS="-C target-cpu=broadwell" cargo build --release --features 'simd-accel avx-accel'
+  RUSTFLAGS="-C target-cpu=skylake" cargo build --release --features 'simd-accel avx-accel pcre2'
   git checkout Cargo.toml
 }
 

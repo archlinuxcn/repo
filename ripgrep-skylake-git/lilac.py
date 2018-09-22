@@ -6,6 +6,9 @@ depends = [
   ('rust-nightly', 'rust-nightly'),
   ('rust-nightly', 'cargo-nightly'),
 ]
+update_on = [{
+  'github': 'BurntSushi/ripgrep',
+}]
 
 pre_build = vcs_update
 
