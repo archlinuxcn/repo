@@ -4,12 +4,11 @@ from lilaclib import *
 
 build_prefix = 'extra-x86_64'
 
-depends = ['python-outcome', 'python-sniffio']
+update_on = [{'pypi': 'outcome'}]
 
 def pre_build():
   pypi_pre_build(
-    depends=['python-attrs', 'python-sortedcontainers', 'python-idna', 'python-async_generator', 'python-outcome', 'python-sniffio'],
-    provides=['python-multio-provider'],
+    depends=['python-attrs'],
     depends_setuptools=False)
 
 def post_build():
