@@ -1,7 +1,7 @@
 # Maintainer: Shengyu Zhang <la@archlinuxcn.org>
 
 pkgname=srain-git
-pkgver=1.0.0rc1.1067.0542dd1
+pkgver=1.0.0rc1.1073.28fdede
 _pkgver=1.0.0rc1
 pkgrel=1
 pkgdesc="Modern IRC client, git version"
@@ -28,10 +28,10 @@ pkgver() {
 build() {
     cd ${pkgname%-git}
 
-    ./configure                     \
-        --prefix=${_prefix}         \
-        --datadir=${_prefix}/share  \
-        --sysconfdir=/etc           \
+    ./configure                         \
+        --prefix="${_prefix}"           \
+        --datadir="${_prefix}/share"    \
+        --sysconfdir="/etc"             \
         --disable-debug
     make
     make doc
@@ -40,6 +40,6 @@ build() {
 package() {
     cd ${pkgname%-git}
 
-    make DESTDIR=${pkgdir} install
-    make DESTDIR=${pkgdir} install-doc
+    make DESTDIR="${pkgdir}" install
+    make DESTDIR="${pkgdir}" install-doc
 }

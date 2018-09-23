@@ -1,7 +1,7 @@
 # Maintainer: MadPhysicist <jfoxrabinovitz at gmail dot com>
 pkgname=panoply
 pkgver=4.9.4
-pkgrel=3
+pkgrel=5
 pkgdesc='NetCDF, HDF and GRIB Data Viewer by NASA GISS'
 arch=('any')
 url='http://www.giss.nasa.gov/tools/panoply/'
@@ -29,7 +29,8 @@ source=("http://www.giss.nasa.gov/tools/panoply/download/PanoplyJ-${pkgver}.zip"
         'panoply128.png'
         'panoply.desktop')
 noextract=()
-sha1sums=('bafb15e52e1554c5bb5e86e8931135651e1abbcd'
+_sha1="$(curl https://www.giss.nasa.gov/tools/panoply/download/Panoply-${pkgver}.sha1.txt 2>/dev/null | grep 'PanoplyJ.*.zip' | grep -o '^[^ ]*')"
+sha1sums=("${_sha1}"
           'a83855747414873269e21aaff1a53d13ab5de304'
           '707208d062922b5426303238870e0dd269257697'
           '97c70755c7d87217556de5b2f1012b3be0d375fb'
@@ -40,15 +41,6 @@ sha1sums=('bafb15e52e1554c5bb5e86e8931135651e1abbcd'
           '39c9a58c25d8f764c928e9dfe75f4f73bb9198f0')
 
 prepare() {
-    _sha1sum1=$(curl https://www.giss.nasa.gov/tools/panoply/download/Panoply-${pkgver}.sha1.txt | grep 'PanoplyJ.*.zip' | sed -e 's/ \*PanoplyJ.*.zip//g')
-    _sha1sum2=$(sha1sum PanoplyJ-${pkgver}.zip | awk '{print $1}')
-    if [[ $_sha1sum1 != $_sha1sum2 ]]
-    then
-      echo 'Error! Checksum not equal'
-      echo $_sha1sum1
-      echo $_sha1sum2
-      exit 1
-    fi
     cd ${srcdir}/PanoplyJ
     patch -uN -i ../panoply-script.patch || return 1
     unzip -px jars/Panoply.jar gov/nasa/giss/panoply/about/panoply4.png > ../panoply192.png

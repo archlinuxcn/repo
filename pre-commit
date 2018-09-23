@@ -6,6 +6,7 @@
 import os
 import sys
 import re
+import ast
 from subprocess import Popen, PIPE
 from unittest import TestCase, TestSuite, TestLoader, TextTestRunner, skip
 from io import TextIOWrapper, StringIO
@@ -13,6 +14,7 @@ from configparser import ConfigParser
 
 DIRS, FILES = None, None
 GIT_BRANCH = 'HEAD'
+SUBFOLDER = 'archlinuxcn'
 
 
 def readutf8(st):
@@ -70,10 +72,35 @@ def git_isfile(path, name):
     global FILES
     return os.path.join(path, name) in FILES
 
+
+def pkgpath(pkgname):
+    if git_isdir(SUBFOLDER):
+        return os.path.join(SUBFOLDER, pkgname)
+    else:
+        return pkgname
+
+
+def lilac_has_update_on(pkgname):
+    lilac_path = os.path.join(pkgpath(pkgname), 'lilac.py')
+    with git_open(lilac_path) as lilac_py:
+        lilac_ast = ast.parse(lilac_py.read())
+        ## For simplicity we only check top level assignments
+        ## to find `update_on`, which shoud be enough
+        for block in lilac_ast.body:
+            if isinstance(block, ast.Assign):
+                for target in block.targets:
+                    if target.id == 'update_on':
+                        return True
+    return False
+
+
 class NvcheckerSyntaxTest(TestCase):
     def test_nvchecker_ini(self):
         self.config = ConfigParser(dict_type=dict, allow_no_value=True)
-        with git_open('nvchecker.ini') as configfile:
+        nvcheckerpath = 'nvchecker.ini'
+        if git_isfile(SUBFOLDER, 'nvchecker.ini'):
+            nvcheckerpath = f'{SUBFOLDER}/nvchecker.ini'
+        with git_open(nvcheckerpath) as configfile:
             self.config.read_file(configfile)
 
 
@@ -81,8 +108,12 @@ class ConfigSectionTest(TestCase):
     def setUp(self):
         self.item_key_regex = re.compile('([_0-9a-zA-Z]+)')
         self.config = ConfigParser(dict_type=dict, allow_no_value=True)
-        with git_open('nvchecker.ini') as configfile:
+        nvcheckerpath = 'nvchecker.ini'
+        if git_isfile(SUBFOLDER, 'nvchecker.ini'):
+            nvcheckerpath = f'{SUBFOLDER}/nvchecker.ini'
+        with git_open(nvcheckerpath) as configfile:
             self.config.read_file(configfile)
+
 
     def test_config_section(self):
         self.assertIn("__config__", self.config,
@@ -100,7 +131,7 @@ class ConfigSectionTest(TestCase):
             if section == "__config__":
                 continue
             with self.subTest(section=section):
-                self.assertTrue(git_isdir(section),
+                self.assertTrue(git_isdir(pkgpath(section)),
                                 msg=('nvchecker.ini contains ' +
                                      '"\033[1;31m{0}\033[m" section but there is no ' +
                                      '"\033[1;31m{0}\033[m" package').format(section))
@@ -115,44 +146,56 @@ class ConfigSectionTest(TestCase):
                                          'contains ill-formed key ' +
                                          '"\033[1;31m{1}\033[m"').format(section, key))
 
-    @skip("226 packages violating this")
+    @skip("113 packages violating this")
     def test_have_lilac_py(self):
         for section in self.config.sections():
             if "manual" not in self.config[section]:
                 with self.subTest(section=section):
-                    self.assertTrue(git_isfile(section, "lilac.py"),
+                    self.assertTrue(git_isfile(pkgpath(section), "lilac.py"),
                                     msg=('package "\033[1;31m{0}\033[m" does not ' +
                                          'have lilac.py').format(section))
 
     def test_folders(self):
-        for package in git_listdir('.'):
-            if not git_isdir(package):
+        packagesfolder = SUBFOLDER
+        if not git_isdir(packagesfolder):
+            packagesfolder = '.'
+        for package in git_listdir(packagesfolder):
+            if not git_isdir(pkgpath(package)):
                 continue
             if package[0] == '.':
                 continue
             with self.subTest(package=package):
-                self.assertTrue(git_isfile(package, "PKGBUILD"),
+                self.assertTrue(git_isfile(pkgpath(package), "PKGBUILD"),
                                 msg=('package "\033[1;31m{0}\033[m" does not ' +
                                      'have PKGBUILD').format(package))
 
     def test_lilac_py_has_nvchecker_config(self):
-        for package in git_listdir('.'):
-            if not git_isdir(package):
+        packagesfolder = SUBFOLDER
+        if not git_isdir(packagesfolder):
+            packagesfolder = '.'
+        for package in git_listdir(packagesfolder):
+            if not git_isdir(pkgpath(package)):
                 continue
             if package[0] == '.':
                 continue
-            if not git_isfile(package, 'lilac.py'):
+            if not git_isfile(pkgpath(package), 'lilac.py'):
+                continue
+            if lilac_has_update_on(package):
                 continue
 
             with self.subTest(package=package):
                 self.assertIn(package, self.config,
                               msg=('package "\033[1;31m{0}\033[m" is not in ' +
-                                   '"nvchecker.ini"').format(package))
+                                   '"nvchecker.ini" and does not have "update_on" in ' +
+                                   '"\033[1;31m{0}/lilac.py\033[m"').format(package))
 
-    @skip("37 packages violating this")
+    @skip("35 packages violating this")
     def test_folders_in_nvchecker(self):
-        for package in git_listdir('.'):
-            if not git_isdir(package):
+        packagesfolder = SUBFOLDER
+        if not git_isdir(packagesfolder):
+            packagesfolder = '.'
+        for package in git_listdir(packagesfolder):
+            if not git_isdir(pkgpath(package)):
                 continue
             if package[0] == '.':
                 continue

@@ -7,6 +7,18 @@ import time
 
 from lilaclib import *
 
+update_on = [{
+  'github': 'vim/vim',
+}, {
+  'archpkg': 'python',
+  'from_pattern': r'^(\d+\.\d+)\..*',
+  'to_pattern': r'\1',
+}, {
+  'archpkg': 'ruby',
+  'from_pattern': r'^(\d+\.\d+)\..*',
+  'to_pattern': r'\1',
+}]
+
 build_prefix = 'extra-x86_64'
 p = None
 repo_dir = 'vim'

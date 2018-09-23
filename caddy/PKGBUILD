@@ -45,6 +45,8 @@ patch_plugins() {
 prepare() {
     export CGO_ENABLED=0
     export CGO_ENABLED=0
+    export CGO_ENABLED=0
+    export CGO_ENABLED=0
     export GOPATH="$srcdir/build"
     rm -rf "$GOPATH/src/$gopkgname"
     mkdir --parents `dirname "$GOPATH/src/$_gopkgname"`
