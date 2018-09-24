@@ -1,11 +1,12 @@
 # Contributor: Zeph <zeph33@gmail.com>
 # Maintainer: Zeph <zeph33@gmail.com>
+# https://gitlab.manjaro.org/packages/extra/pamac
 pkgname=pamac-aur
-_pkgver=7.0.1
-pkgver=7.1.0rc3
-#pkgver=$_pkgver
+_pkgver=7.1.0
+pkgver=$_pkgver
+#pkgver=7.1.0rc3
 pkgrel=1
-_commit=250cad77f395b9521c0560edd39328ee99095456
+#_commit=250cad77f395b9521c0560edd39328ee99095456
 pkgdesc="A Gtk3 frontend for libalpm"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://gitlab.manjaro.org/applications/pamac"
@@ -24,13 +25,13 @@ provides=('pamac')
 options=(!emptydirs)
 install=pamac.install
 
-source=(#"pamac-$pkgver-$pkgrel.tar.gz::$url/-/archive/v$_pkgver/$pkgname-v$_pkgver.tar.gz")
-        "pamac-$pkgver-$pkgrel.tar.gz::$url/-/archive/$_commit/$pkgname-$_commit.tar.gz")
+source=("pamac-$pkgver-$pkgrel.tar.gz::$url/-/archive/v$_pkgver/pamac-v$_pkgver.tar.gz")
+ #       "pamac-$pkgver-$pkgrel.tar.gz::$url/-/archive/$_commit/pamac-$_commit.tar.gz")
 
-sha256sums=('7e40ed9c19980fbdc3a3496a56c55999f3d877c798986d39710a9454e9b5c9be')
+sha256sums=('3e6b922d7cefd2e08719d0d79c6a526bc1854e9b69d4c88cbfa50cafa154171e')
 
 prepare() {
-  mv "$srcdir/pamac-$_commit" "$srcdir/pamac-v$_pkgver"
+#  mv "$srcdir/pamac-$_commit" "$srcdir/pamac-v$_pkgver"
   cd "$srcdir/pamac-v$_pkgver"
   # patches here
   #patch -p1 -i "$srcdir/git-$pkgver-$pkgrel.patch"
