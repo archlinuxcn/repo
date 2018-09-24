@@ -7,7 +7,7 @@ _channel=nightly
 pkgbase=firefox-nightly
 pkgname=()
 _version=64.0a1
-pkgver=64.0a1.20180923.11
+pkgver=64.0a1.20180924.00
 pkgrel=1
 arch=('x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -22,16 +22,16 @@ optdepends=('pulseaudio: audio support'
             'speech-dispatcher: text-to-speech'
             'startup-notification: support for FreeDesktop Startup Notification')
 _url="https://ftp.mozilla.org/pub/${_name}/nightly/latest-mozilla-central-l10n"
-_filename_prefix="20180923.11-"
+_filename_prefix="20180924.00-"
 source=("${pkgbase}.desktop")
 sha512sums=('b514abafc559ec03a4222442fa4306db257c3de9e18ed91a0b37cc9d7058a8e08a241442e54a67659a3ab4512a5dae6a0b94ea7a33d08ef0b8a76a9eac902095'
-            'db8059f39f211c08f58d152b719dc83a3b7a7ab58382780660989e6b7c8a079ddf78855a28b00d27ed4e8a581b259da52b8fc4719bb92beefee4604efdfd9487'
+            '20dcd3f0ed807ceaf6500d34f3828ae6ba30c46b9f9ffa0fc9f0e55ae6b760700795abc0452a96a699d3ffd28d8b9280d29f0271503fde041365ad4760ccb3b0'
             'SKIP'
-            'db70bb2d1aa133052c6eebe5b9ac392db4e2d262273f2a019920b2b15dd26b27b09b920a09ddedae7b456a145b792a89f108415b470de629076300634833a2eb'
+            'd569d3e71917260c81622cef0d33dee95f801ca7309064e238b156fd6163647f180dd21707b3e8dda4384e69b62dc78c488b65fd25c234769f794f7b015dad91'
             'SKIP'
-            '6df2d74d02bf5ad03a178434341bd49b55bc2fed27b89a5cb6ae5f4063ee2e23c00de35599cdf471c44becdec6eb5d1fabea096de546dfe36fc76339cac9e891'
+            'cb37a880b25a66c643013ec2f8e4fa452310b8ed62d0dd91c2e61a0755a623ccfffee09115985385aded9b1b1ff01067c93576dcdd7a298f2d63deed758e5447'
             'SKIP'
-            '3f2186ea1d367e5d74bd6a6215101afa4dac0fbd937412a3c2b80ab8a109ef22a120569415393af4c061b63c41ecc94b3840ac166e7de66aabde2461e99a04fd'
+            '6f45ff027f665ea916cef59537dfc712c617693a60b00bd55d3b5606a5f9846474bc1aa58288639023b428f7668167a0600d4cfa75010accd623497809213a72'
             'SKIP')
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla’s GnuPG release key
 
