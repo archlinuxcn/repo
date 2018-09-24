@@ -8,7 +8,7 @@ pkgbase=linux-phicomm-n1
 _srcname=linux-4.18
 _kernelname=${pkgbase#linux}
 _desc="AArch64 kernel for Phicomm N1"
-pkgver=4.18.5
+pkgver=4.18.9
 pkgrel=1
 arch=('aarch64')
 url="http://www.kernel.org/"
@@ -25,12 +25,12 @@ source=("http://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.xz"
         'linux.preset'
         '99-linux.hook')
 md5sums=('bee5fe53ee1c3142b8f0c12c0d3348f9'
-         'c49635fe383e69a7a134d633912d646a'
+         '0f4c59c6427fb4f698771a7c851740ec'
          'be4199c685434f12190bb627bb714ff2'
          'b4d613a58a28445ce8363d734be3b971'
          'b9bec2a58df6dff282df758edf8f526e'
          '9915046e15f82e917bc98c7721e63ac4'
-         '0d2fb0d6ad977f104915f757d3f6af04'
+         '96969a438a2a4e39df5ed44e8ba68c03'
          'f6ee374f560e1b9df6a7de2399027d1b'
          'd1c40c7367a7081f3b4c03264780f9d4')
 
@@ -38,13 +38,13 @@ prepare() {
   cd "${srcdir}/${_srcname}"
 
   # add upstream patch
-  git apply --whitespace=nowarn ../patch-${pkgver}
+  patch -p1 < ../patch-${pkgver}
 
   # ALARM patches
-  git apply ../0001-net-smsc95xx-Allow-mac-address-to-be-set-as-a-parame.patch
-  git apply ../0002-arm64-dts-rockchip-disable-pwm0-on-rk3399-firefly.patch
-  git apply ../0003-arm64-dts-rockchip-add-usb3-controller-node-for-RK33.patch
-  git apply ../0004-arm64-dts-rockchip-enable-usb3-nodes-on-rk3328-rock6.patch
+  patch -p1 < ../0001-net-smsc95xx-Allow-mac-address-to-be-set-as-a-parame.patch
+  patch -p1 < ../0002-arm64-dts-rockchip-disable-pwm0-on-rk3399-firefly.patch
+  patch -p1 < ../0003-arm64-dts-rockchip-add-usb3-controller-node-for-RK33.patch
+  patch -p1 < ../0004-arm64-dts-rockchip-enable-usb3-nodes-on-rk3328-rock6.patch
 
   cat "${srcdir}/config" > ./.config
 
