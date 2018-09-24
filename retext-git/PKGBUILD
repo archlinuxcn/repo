@@ -1,64 +1,74 @@
-# Contributor: Mohammadreza Abdollahzadeh <morealaz at gmail dot com>
-# former Co-maintainer: Jan Korte <j.korte@me.com>
-# Maintainer: Stefan Husmann <stefan-husmann@t-online.de>
+# Maintainer: Jiachen Yang <farseerfc@gmail.com>
+# AUR Maintainer: Hyacinthe Cartiaux <hyacinthe.cartiaux@free.fr>
+# Contributor: Bartosz Chmura <chmurli@gmail.com>
+# Contributor: Alessio Sergi <asergi at archlinux dot us>
+# Contributor: alfplayer
+# Contributor: menta
 
+_pkgname=ReText
 pkgname=retext-git
-pkgver=7.0.0.r100.g5bc778e
+_pkgname=retext
+pkgver=7.0.0.r110.g9125041
 pkgrel=1
-pkgdesc="A simple editor for Markdown and ReStructuredText markup languages."
+pkgdesc="A simple editor for Markdown and ReStructuredText markup languages"
 arch=('any')
 url="https://github.com/retext-project/retext"
 license=('GPL3')
-depends=('python-pyqt5'
-         'python-markups'
-         'shared-mime-info'
-         'xdg-utils'
-         'desktop-file-utils'
-         'gconf')
-makedepends=('imagemagick' 'git' 'qt5-tools')
-optdepends=('python-markdown: for Markdown language support'
-            'python-docutils: for reStructuredText language support'
+# for desktop integration: 'shared-mime-info' 'xdg-utils' 'desktop-file-utils'
+# for toolbar icons (see http://sourceforge.net/p/retext/tickets/44/): 'gconf'
+depends=('python-pyqt5' 'python-markups>=2.0.0' 'shared-mime-info' 'xdg-utils'
+         'desktop-file-utils' 'hicolor-icon-theme' 'python-markdown')
+makedepends=('imagemagick' 'qt5-tools' 'python-setuptools' 'git')
+checkdepends=('xorg-server-xvfb' 'python-chardet' 'python-docutils' 'python-pygments')
+optdepends=('python-docutils: for reStructuredText language support'
+            'qt5-webkit: for WebKit preview'
             'python-pyenchant: for spell checking support')
-provides=("${pkgname%-git}")
-conflicts=("${pkgname%-git}")
-source=("$pkgname::git+${url}.git"
-        "retext.desktop"
+source=(
+        "git+https://github.com/retext-project/retext"
         "x-retext-markdown.xml"
         "x-retext-rst.xml")
 sha256sums=('SKIP'
-            'a784275c951b330c2fc2ac2f5ac82b457ca09d37a0cf6e9e27e1e5716084d118'
             'b51611479d3224eec2b58264ed91ace3eccb502b7b806dae3e7a3ab4aab8c4b8'
             '6fef80cccb14813d9cc74810c397a6cd7831d1ca243536759a47c6e8b6cc977a')
+validpgpkeys=('F24299FF1BBC9018B906A4CB6026936D2F1C8AE0') # Dmitry Shachnev <mitya57@debian.org>
 
 pkgver() {
-	cd $pkgname
-	( set -o pipefail
-	  git describe --long 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
-	  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
-	)
+  cd $_pkgname
+  ( set -o pipefail
+    git describe --long 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  )
 }
 
 build () {
-	cd $pkgname/locale
-	lrelease-qt5 *.ts
+    cd "$srcdir/$_pkgname"
+    python3 setup.py build
+}
+
+check() {
+    cd "$srcdir/$_pkgname"
+    xvfb-run python3 setup.py test
 }
 
 package () {
-	cd $pkgname
-	python setup.py install --root="$pkgdir"
+    cd "$srcdir/$_pkgname"
+    python3 setup.py install --root="$pkgdir" -O1
 
-	# install icons
-	for size in 16 22 24 32 48 128; do
-		mkdir -p "$pkgdir"/usr/share/icons/hicolor/${size}x${size}/apps
-		convert -resize $size icons/retext.png "$pkgdir"/usr/share/icons/hicolor/${size}x${size}/apps/retext.png
-	done
-	install -Dm644 icons/retext.svg "$pkgdir"/usr/share/icons/scalable/apps/retext.svg
+    # create /usr/share/* dirs
+    _SHAREDIR="$pkgdir/usr/share"
+    install -d -m 755 "$_SHAREDIR"/{applications,mime/packages}
 
-	# install mime files
-	install -Dm644 "$srcdir"/x-retext-markdown.xml "$pkgdir"/usr/share/mime/packages/x-retext-markdown.xml
-	install -Dm644 "$srcdir"/x-retext-rst.xml "$pkgdir"/usr/share/mime/packages/x-retext-rst.xml
+    # install icons
+    _ICONSDIR="$_SHAREDIR/icons/hicolor"
+    for size in 16 22 24 32 48 128; do
+      install -d -m 755 "$_ICONSDIR"/${size}x${size}/apps
+      convert -resize $size icons/$_pkgname.png "$_ICONSDIR"/${size}x${size}/apps/$_pkgname.png
+    done
+    install -d -m 755 $_ICONSDIR/scalable/apps
+    install -m 644 icons/$_pkgname.svg "$_ICONSDIR"/scalable/apps/$_pkgname.svg
 
-	# install desktop file
-	install -Dm644 "$srcdir"/retext.desktop "$pkgdir"/usr/share/applications/retext.desktop
+    # install mime files
+    install -m 644 "$srcdir"/x-retext-{markdown,rst}.xml "$_SHAREDIR"/mime/packages/
 }
 
+# vim:set ts=2 sw=2 et:
