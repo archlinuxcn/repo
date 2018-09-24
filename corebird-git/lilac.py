@@ -6,6 +6,13 @@
 
 from lilaclib import *
 
+depends = ['gtk4']
+update_on = [{
+    "aur": ""
+},{
+    "github": "baedert/corebird"
+}]
+
 build_prefix = 'archlinuxcn-x86_64'
 pre_build = aur_pre_build
 post_build = aur_post_build
