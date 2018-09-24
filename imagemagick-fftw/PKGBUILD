@@ -1,9 +1,8 @@
-# $Id$
 # Maintainer: Eric Bélanger <eric@archlinux.org>
 
 pkgbase=imagemagick-fftw
 pkgname=(libmagick-fftw imagemagick-fftw)
-pkgver=7.0.8.11
+pkgver=7.0.8.12
 pkgrel=1
 pkgdesc="An image viewing/manipulation program"
 url="https://www.imagemagick.org/"
@@ -11,13 +10,13 @@ arch=(x86_64)
 license=(custom)
 depends=(libltdl lcms2 fontconfig libxext liblqr libraqm libpng libxml2)
 makedepends=(ghostscript openexr libwmf librsvg libxml2 openjpeg2 libraw opencl-headers libwebp
-             chrpath ocl-icd glu ghostpcl ghostxps libheif 'fftw')
+             chrpath ocl-icd glu ghostpcl ghostxps libheif jbigkit 'fftw')
 checkdepends=(gsfonts ttf-dejavu)
 _relname=ImageMagick-${pkgver%%.*}
 _tarname=ImageMagick-${pkgver%.*}-${pkgver##*.}
 source=(https://www.imagemagick.org/download/releases/$_tarname.tar.xz{,.asc}
         arch-fonts.diff)
-sha256sums=('c15f14c054b4fde417e7b82c23950047203f81e582de7f1270cf3bdfa8a38a03'
+sha256sums=('48df5877fe85603940310fe5c811a89af416882b60379918a95dcd4de6582b55'
             'SKIP'
             'a85b744c61b1b563743ecb7c7adad999d7ed9a8af816650e3ab9321b2b102e73')
 validpgpkeys=(D8272EF51DA223E4D05B466989AB63D48277377A)  # Lexie Parsimoniae
@@ -64,8 +63,7 @@ build() {
     --with-fftw \
     --without-fpx \
     --without-gcc-arch \
-    --without-gvc \
-    --without-jbig
+    --without-gvc
   sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
   make
 }
