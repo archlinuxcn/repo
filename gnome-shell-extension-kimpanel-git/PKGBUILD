@@ -1,8 +1,8 @@
 # Maintainer: Sherlock Holo <sherlockya(at)gmail.com>
 
 pkgname=gnome-shell-extension-kimpanel-git
-pkgver=20171209
-pkgrel=3
+pkgver=20180924
+pkgrel=1
 pkgdesc="KDE's kimpanel implementation for GNOME Shell, now support fcitx"
 arch=("i686" "x86_64")
 license=('GPL')
@@ -29,9 +29,9 @@ build() {
   #  cd $_gitname
   #fi
 
-  # patch for gnome 3.30
-  cd $srcdir/kimpanel-for-gnome-shell
-  sed 's/global.screen/global.display/g' panel.js -i
+  ## patch for gnome 3.30
+  #cd $srcdir/kimpanel-for-gnome-shell
+  #sed 's/global.screen/global.display/g' panel.js -i
 
   rm -rf build
   mkdir build
