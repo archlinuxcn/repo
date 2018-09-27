@@ -2,11 +2,14 @@
 # Maintainer: Zeph <zeph33@gmail.com>
 # https://gitlab.manjaro.org/packages/extra/pamac
 pkgname=pamac-aur
-_pkgver=7.1.1
-pkgver=$_pkgver
-#pkgver=7.1.0rc3
-pkgrel=1
-#_commit=250cad77f395b9521c0560edd39328ee99095456
+pkgver=7.1.1
+pkgrel=2
+_pkgfixver=$pkgver
+
+_pkgvercommit=v$pkgver
+_pkgvercommit=a94f21571c0f28f80b7bc405a249a0cdd1a6281d
+sha256sums=('2b8162a93bad0e383c29283edfd607a687aef43911ba136ac779b0a0dcb22c55')
+
 pkgdesc="A Gtk3 frontend for libalpm"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://gitlab.manjaro.org/applications/pamac"
@@ -25,23 +28,17 @@ provides=('pamac')
 options=(!emptydirs)
 install=pamac.install
 
-source=("pamac-$pkgver-$pkgrel.tar.gz::$url/-/archive/v$_pkgver/pamac-v$_pkgver.tar.gz")
- #       "pamac-$pkgver-$pkgrel.tar.gz::$url/-/archive/$_commit/pamac-$_commit.tar.gz")
-
-sha256sums=('0f6a2cdc5f713bdae155936c881e1a85725b754e150da8902712047cfead8619')
+source=("pamac-$pkgver-$pkgrel.tar.gz::$url/-/archive/$_pkgvercommit/pamac-$_pkgvercommit.tar.gz")
 
 prepare() {
-#  mv "$srcdir/pamac-$_commit" "$srcdir/pamac-v$_pkgver"
-  cd "$srcdir/pamac-v$_pkgver"
-  # patches here
-  #patch -p1 -i "$srcdir/git-$pkgver-$pkgrel.patch"
+  cd "$srcdir/pamac-$_pkgvercommit"
 
   # adjust version string
-  sed -i -e "s|\"$_pkgver\"|\"$pkgver-$pkgrel\"|g" src/version.vala
+  sed -i -e "s|\"$_pkgfixver\"|\"$pkgver-$pkgrel\"|g" src/version.vala
 }
 
 build() {
-  cd "$srcdir/pamac-v$_pkgver"
+  cd "$srcdir/pamac-$_pkgvercommit"
   mkdir -p builddir
   cd builddir
   meson --prefix=/usr --sysconfdir=/etc
@@ -51,11 +48,8 @@ build() {
 }
 
 package() {
-  cd "$srcdir/pamac-v$_pkgver/builddir"
+  cd "$srcdir/pamac-$_pkgvercommit/builddir"
   
   DESTDIR="$pkgdir" ninja install
-  # remove pamac-tray-appindicator
-#  rm "$pkgdir/usr/bin/pamac-tray-appindicator"
-#  rm "$pkgdir/etc/xdg/autostart/pamac-tray-appindicator.desktop"
 }
 # vim:set ts=2 sw=2 et:
