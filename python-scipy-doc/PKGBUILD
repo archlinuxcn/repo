@@ -2,16 +2,16 @@
 # Contributor: David McInnis < dave@dave3.xyz>
 
 pkgname=python-scipy-doc
-pkgver=0.19.1
+pkgver=1.1.0
 pkgrel=1
 pkgdesc="Documentation for SciPy"
 makedepends=('unzip')
 arch=('any')
 url='http://docs.scipy.org'
 license=('BSD')
-source=("$pkgname-$pkgver.zip::https://docs.scipy.org/doc/scipy/scipy-html-$pkgver.zip")
+source=("$pkgname-$pkgver.zip::https://docs.scipy.org/doc/scipy-$pkgver/scipy-html-$pkgver.zip")
 noextract=("$pkgname-$pkgver.zip")
-sha256sums=('e123b40d3d550ed55df0f8fbe808ff28f6e4343c3773c553afff508819e800ba')
+sha256sums=('01fb4c8b2a981f4595035232da6fc53687a8ce6d78cd0efab7f5a27333cbf02f')
 
 package()
 {
