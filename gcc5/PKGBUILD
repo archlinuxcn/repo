@@ -7,7 +7,7 @@ pkgname=('gcc5')
 pkgver=5.5.0
 _ver=5
 _islver=0.18
-pkgrel=2
+pkgrel=3
 pkgdesc="The GNU Compiler Collection (5.x.x)"
 arch=('i686' 'x86_64')
 license=('GPL' 'LGPL' 'FDL' 'custom')
@@ -15,12 +15,17 @@ url="https://gcc.gnu.org/gcc-5/"
 depends=('glibc' 'binutils' 'libmpc')
 options=('!emptydirs')
 source=(https://gcc.gnu.org/pub/gcc/releases/gcc-${pkgver}/gcc-${pkgver}.tar.xz
-        http://isl.gforge.inria.fr/isl-${_islver}.tar.bz2)
+        http://isl.gforge.inria.fr/isl-${_islver}.tar.bz2
+        glibc2.28-ustat.patch)
 sha512sums=('670ff52c2ae12c7852c12987e91798c5aa8bd6daf21f0d6e0cd57a4aa59cc4f06a837fe76426eaa1424cfddca937bed377680700eadc04d76b9180d462364fa1'
-            '85d0b40f4dbf14cb99d17aa07048cdcab2dc3eb527d2fbb1e84c41b2de5f351025370e57448b63b2b8a8cf8a0843a089c3263f9baee1542d5c2e1cb37ed39d94')
+            '85d0b40f4dbf14cb99d17aa07048cdcab2dc3eb527d2fbb1e84c41b2de5f351025370e57448b63b2b8a8cf8a0843a089c3263f9baee1542d5c2e1cb37ed39d94'
+            '633d96bf2d78d3187d8b26dd4c12b1b8fcbe784cbaa6f3b312326dc4ea118b3f0980bfd0e50cd6be79563dd29c296a2fafe056f4dbbb486414331cebcc1109bf')
 
 prepare() {
   cd gcc-$pkgver
+
+  # Fix build with glibc 2.28, which removes <sys/ustat.h>
+  patch -p0 -i "$srcdir/glibc2.28-ustat.patch"
 
   # link isl for in-tree build
   ln -s ../isl-${_islver} isl
@@ -56,7 +61,7 @@ build() {
       --libdir=/usr/lib --libexecdir=/usr/lib \
       --mandir=/usr/share/man --infodir=/usr/share/info \
       --with-bugurl=https://bugs.archlinux.org/ \
-      --enable-languages=c,c++,fortran,go,lto,objc,obj-c++ \
+      --enable-languages=c,c++,fortran,lto \
       --enable-shared --enable-threads=posix --enable-libmpx \
       --with-system-zlib --with-isl --enable-__cxa_atexit \
       --disable-libunwind-exceptions --enable-clocale=gnu \
@@ -68,8 +73,10 @@ build() {
       --enable-checking=release \
       --program-suffix=-${_ver} \
       --enable-version-specific-runtime-libs
-      #--enable-install-libiberty
 
+  # without LD_PRELOAD, the build fails for some people with:
+  #    [Makefile:605: libstdc++.la] Error 139
+  export LD_PRELOAD=/usr/lib/libstdc++.so
   make
 }
 
