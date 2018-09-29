@@ -1,6 +1,6 @@
 # Maintainer: jD91mZM2 <me@krake.one>
 pkgname="hyperfine"
-pkgver=1.2.0
+pkgver=1.3.0
 pkgrel=1
 pkgdesc="A command-line benchmarking tool"
 url="https://github.com/sharkdp/hyperfine"
@@ -10,7 +10,7 @@ makedepends=("rust")
 optdepends=()
 depends=()
 source=("https://github.com/sharkdp/$pkgname/archive/v$pkgver.tar.gz")
-sha256sums=('324ab37890a1cc64680b0e5eae03eebda53b6005166148150a7c82f045e7015b')
+sha256sums=('bab21d0dede8b437c0d4351d3959b3bfab8fe9f1d547997ed4d1d0f0c1d5801f')
 
 build() {
     cd "$srcdir/$pkgname-$pkgver"
