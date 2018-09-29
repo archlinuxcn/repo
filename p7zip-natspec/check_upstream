@@ -1,13 +1,11 @@
 #!/bin/bash
 
-pkgname=p7zip
-pkgver=9.38.1
-pkgrel=4
+. $(dirname $0)/PKGBUILD
 arch=x86_64
 mirror=http://mirrors.kernel.org/archlinux
 
-url=$mirror/extra/os/$arch/$pkgname-$pkgver-$pkgrel-$arch.pkg.tar.xz
+url=$mirror/extra/os/$arch/$_pkgname-$pkgver-$_upstream_pkgrel-$arch.pkg.tar.xz
 if ! curl -# --head $url | head -n1 | grep -e '200 OK'; then
-  echo also upstream is changed
+  echo upstream seems to be changed
   exit 1
 fi
