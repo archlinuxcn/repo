@@ -1,16 +1,17 @@
-# Maintainer: Emmanuel Gil Peyrot <linkmauve@linkmauve.fr>
+# Maintainer: Tim Schumacher <timschumi@gmx.de>
+# Contributor: Emmanuel Gil Peyrot <linkmauve@linkmauve.fr>
 # Contributor: ceri
 
 _pkgbase='citra'
 pkgbase="$_pkgbase-git"
 pkgname=("$_pkgbase-git" "$_pkgbase-qt-git")
-pkgver=r6882.d6a9b0162
+pkgver=r6924.7c97e8df6
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo 3DS emulator/debugger"
 arch=('i686' 'x86_64')
 url="https://github.com/citra-emu/citra/"
 license=('GPL2')
-makedepends=('git' 'cmake' 'sdl2' 'qt5-base' 'qt5-multimedia' 'shared-mime-info' 'desktop-file-utils')
+makedepends=('git' 'cmake' 'sdl2' 'qt5-base' 'shared-mime-info' 'desktop-file-utils' 'qt5-multimedia')
 source=("$_pkgbase::git+https://github.com/citra-emu/citra")
 md5sums=('SKIP')
 
@@ -23,6 +24,7 @@ prepare() {
 	cd "$srcdir/$_pkgbase"
 	mkdir -p build
 
+	git submodule init
 	git submodule update --init --recursive
 }
 
@@ -41,17 +43,17 @@ check() {
 }
 
 package_citra-git() {
-	depends=('sdl2' 'curl' 'alsa-lib')
+	depends=('sdl2' 'libpng')
 
-	install -Dm755 "$srcdir/$_pkgbase/build/src/citra/citra" "$pkgdir/usr/bin/$_pkgbase"
+	install -Dm755 "$srcdir/$_pkgbase/build/bin/citra" "$pkgdir/usr/bin/citra"
 }
 
 package_citra-qt-git() {
-	depends=('qt5-base' 'sdl2' 'shared-mime-info' 'qt5-multimedia' 'desktop-file-utils' 'curl' 'hicolor-icon-theme')
+	depends=('qt5-base' 'sdl2' 'shared-mime-info' 'desktop-file-utils')
 	optdepends=('libxkbcommon-x11: for X11 support'
 	            'qt5-wayland: for Wayland support')
 
 	cd "$srcdir/$_pkgbase/build"
 	make DESTDIR="$pkgdir/" install
-	rm "$pkgdir/usr/bin/$_pkgbase"
+	rm "$pkgdir/usr/bin/citra"
 }
