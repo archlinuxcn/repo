@@ -1,7 +1,7 @@
 # Maintainer: Josip Ponjavic <josipponjavic at gmail dot com>
 
 pkgname=i3status-rust-git
-pkgver=0.9.0.r535.geef95a8
+pkgver=0.9.0.r553.g4d2e595
 pkgrel=1
 pkgdesc='Very resourcefriendly and feature-rich replacement for i3status to use with bar programs (like i3bar and swaybar), written in pure Rust'
 arch=('x86_64')
@@ -15,7 +15,8 @@ optdepends=('alsa-utils: For volume block'
             'networkmanager: For networkmanager block'
             'powerline-fonts: For all themes using the powerline arrow char'
             'speedtest-cli: For the speedtest block'
-            'ttf-font-awesome-4: For the awesome icons')
+            'ttf-font-awesome-4: For the awesome icons'
+            'upower: For the battery block')
 provides=("${pkgname%-*}")
 conflicts=("${pkgname%-*}")
 install="${pkgname%-*}.install"
