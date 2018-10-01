@@ -3,13 +3,13 @@
 # Contributor: Florian Pritz <f-p@gmx.at>
 
 pkgname=inxi
-pkgver=3.0.24
+pkgver=3.0.26
 pkgrel=1
 pkgdesc="Full featured CLI system information tool"
-arch=('any')
+arch=(any)
 url="https://github.com/smxi/inxi"
-license=('GPL')
-depends=('coreutils' 'pciutils' 'perl' 'procps-ng')
+license=(GPL)
+depends=(coreutils pciutils perl procps-ng)
 optdepends=(
   "bind-tools: -i wlan IP"
   "dmidecode: inxi -M if no sys machine data"
@@ -35,7 +35,7 @@ optdepends=(
 )
 options=('zipman')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/smxi/inxi/archive/${pkgver}-1.tar.gz")
-sha256sums=('3f1e5a88fe8cf697f86caea4763911102e163d0cdb63ddf21bda1a67e51f780d')
+sha256sums=('037f03e8962f36503fe3d25159d3629c8726344402b03ba2fca024723a4f71f2')
 
 package() {
   cd "${pkgname}-${pkgver}-1"
