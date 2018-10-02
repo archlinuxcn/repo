@@ -3,12 +3,13 @@
 
 pkgname=ruby-listen
 pkgver=3.1.5
-pkgrel=2
+pkgrel=3
 pkgdesc="The Listen gem listens to file modifications and notifies you about the changes. Works everywhere!"
 arch=('any')
 url="https://rubygems.org/gems/listen"
 license=("MIT")
-depends=('ruby' 'ruby-rb-inotify>=0.9' 'ruby-rb-fsevent>=0.9.3')
+depends=('ruby' 'ruby-rb-inotify>=0.9' 'ruby-rb-fsevent>=0.9.3'
+		 'ruby-ruby_dep>=1.2')
 makedepends=('ruby-rdoc')
 source=("https://rubygems.org/downloads/listen-$pkgver.gem")
 noextract=("listen-$pkgver.gem")
