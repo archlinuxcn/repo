@@ -1,0 +1,12 @@
+diff -ura '--exclude=electron-builder.json' package.orig/tasks/release.js package.new/tasks/release.js
+--- package.orig/tasks/release.js	2018-09-10 09:55:15.444036168 +0200
++++ package.new/tasks/release.js	2018-09-10 10:01:28.053423434 +0200
+@@ -9,6 +9,8 @@
+ const publish = getEnvName() !== 'production' ? 'never' : 'onTagOrDraft';
+ gulp.task('release:darwin', () => build({ publish, x64: true, mac: [] }));
+ gulp.task('release:win32', () => build({ publish, x64: true, ia32: true, win: [ 'nsis', 'appx' ] }));
++gulp.task('release:linux-x64', () => build({ x64: true, linux: [], c: { productName: 'rocketchat' } })); 
++gulp.task('release:linux-ia32', () => build({ ia32: true, linux: [], c: { productName: 'rocketchat' } })); 
+ gulp.task('release:linux', (cb) => {
+     build({ publish, x64: true, linux: [], c: { productName: 'rocketchat' } })
+         .then(() => build({

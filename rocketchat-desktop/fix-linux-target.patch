@@ -1,0 +1,15 @@
+diff -ura package.orig/electron-builder.json package.new/electron-builder.json
+--- package.orig/electron-builder.json	2018-09-10 09:55:15.434036072 +0200
++++ package.new/electron-builder.json	2018-09-10 09:55:34.767553057 +0200
+@@ -63,10 +63,7 @@
+   },
+   "linux": {
+     "target": [
+-      "tar.gz",
+-      "deb",
+-      "rpm",
+-      "snap"
++      "dir"
+     ],
+     "executableName": "rocketchat-desktop",
+     "category": "GNOME;GTK;Network;InstantMessaging",
