@@ -3,7 +3,7 @@
 
 _gemname=jekyll
 pkgname=$_gemname
-pkgver=3.8.3
+pkgver=3.8.4
 pkgrel=1
 pkgdesc='A simple, blog aware, static site generator.'
 arch=('any')
@@ -21,9 +21,7 @@ depends=('ruby>=2.1.0'
     'ruby-rouge>1.7' 'ruby-rouge<4.0'
     'ruby-safe_yaml>=1.0' 'ruby-safe_yaml<2.0'
     'ruby-i18n>=0.7' 'ruby-i18n<1.0'
-    'ruby-concurrent-ruby>=1.0' 'ruby-concurrent-ruby<2.0' # missing dependency for ruby-i18n
     'ruby-em-websocket>=0.5' 'ruby-em-websocket<1.0'
-    'ruby-ruby_dep' # missing dependency for ruby-listen
     )
 optdepends=('ruby-jekyll-paginate'
     'ruby-jekyll-gist'
@@ -35,7 +33,7 @@ replaces=('ruby-jekyll')
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
-sha512sums=('3b1b486dcae67a92751f410c4984b25355abf6a04b445b8c6e17f102b9a8ee47a7ef143ea2f54afa3a537a92b7a28ec75383581eb018dd73bcd055aafec58ecf')
+sha512sums=('139c235941951ad25888aa8b3fe3039d2de55d9e1056ad313828269f36fd8ae554c2f8e664411ade8f7a094d0135b8d7d382b92e66857251d8b20a806bce9d24')
 
 package() {
   local _gemdir="$(ruby -e'puts Gem.default_dir')"
