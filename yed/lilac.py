@@ -24,11 +24,9 @@ build_prefix = 'extra-x86_64'
 
 depends = ['archlinux-java-run']
 
+update_on = [{'aur':''}]
 
-def pre_build():
-    aur_pre_build()
-    add_depends(["java-environment", "bash"])
-
+pre_build = aur_pre_build
 post_build = aur_post_build
 
 # do some cleanup here after building the package, regardless of result
