@@ -6,7 +6,7 @@
 
 pkgname=rar
 pkgver=5.6.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A command-line port of the rar compression utility"
 url="http://www.rarlab.com"
 arch=('i686' 'x86_64')
@@ -14,6 +14,7 @@ license=('custom')
 depends=('gcc-libs')
 backup=('etc/rarfiles.lst')
 conflicts=('rar-beta' 'unrar')
+provides=('unrar')
 source=('rar.1')
 source_i686+=("http://www.rarlab.com/rar/rarlinux-${pkgver}.tar.gz")
 source_x86_64+=("http://www.rarlab.com/rar/rarlinux-x64-${pkgver}.tar.gz")
