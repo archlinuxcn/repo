@@ -1,0 +1,91 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+# Contributor: Bruno Pagani (a.k.a. ArchangeGabriel) <bruno.n.pagani@gmail.com>
+# Contributor: Cedric MATHIEU <me.xenom @ gmail.com>
+
+_name=thunderbird
+_channel=nightly
+pkgbase=thunderbird-nightly
+pkgname=()
+_version=64.0a1
+pkgver=64.0a1.20181003.10
+pkgrel=1
+arch=('x86_64')
+license=('MPL' 'GPL' 'LGPL')
+depends=('alsa-lib' 'cairo' 'dbus-glib' 'desktop-file-utils' 'fontconfig'
+         'freetype2' 'gtk2' 'hicolor-icon-theme' 'hunspell' 'libevent' 'libjpeg'
+         'libmng' 'libpng' 'libvpx' 'libxt' 'mozilla-common' 'nspr' 'nss'
+         'shared-mime-info' 'sqlite' 'startup-notification')
+_url="https://ftp.mozilla.org/pub/${_name}/nightly/latest-comm-central-l10n"
+_filename_prefix="20181003.10-"
+source=("${pkgbase}.desktop")
+sha512sums=('ef9cf2a1aecda97587095c2096e6e7d27840da80ec0071341421cbb4bf4d2e06a01b5c95dac3f3c8ea520700035328f8e6becffa0243c1a8da8c6c710126d5a4'
+            '20d25ffbe9c35c01a846a783797d5251971ce8fcd897dc49ae6305df7482b75d680d345d85fc89ca36484348b4a7f5c526cd5da985d832ee4f0c72319e81aa28'
+            'SKIP'
+            '8dffdfe60d8ce696a2c632e548887770a312116232c2fb01fe7ebe6bb8dcb19d0df43715667a7c263a441ad0c9ab2156e6bc8c7fe0a2fe4c1d7a900d4b47ba60'
+            'SKIP'
+            '437410a84ae0b173991731eb9b5be8db4339f6b98859d2ed8850a16f9fcffb424a36039a7692fd856ab946950814bfc943ed1ddbda5c8220ed0ec230893f3534'
+            'SKIP'
+            '800327adf9f6987e6d973683f3e7f3f624aad5e390b0038c9e2cb1c80c172468642f4e4cee20a3bc99d914100a31fe02ab64ae3a9f66e648547a30a202e956aa'
+            'SKIP')
+validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla’s GnuPG release key
+
+_languages=(en-US zh-CN ja zh-TW)
+
+for _lang in "${_languages[@]}"; do
+  _locale=${_lang}
+  _pkgname=thunderbird-nightly-${_locale,,}
+  _src="${_name}-${_version}.${_lang}.linux"
+  _filename="${_filename_prefix}${_src}-x86_64.tar.bz2"
+
+  pkgname+=($_pkgname)
+  source+=("${_filename}"::"${_url}/${_src}-x86_64.tar.bz2"
+           "${_filename}.asc"::"${_url}/${_src}-x86_64.tar.bz2.asc")
+  eval "package_$_pkgname() {
+    msg2 'Removing old thunderbird directory...'
+    rm -rf thunderbird
+    msg2 'Extract ${_filename}...'
+    bsdtar -xf ${_filename}
+    _package $_lang
+  }"
+done
+
+# Don't extract anything because they'll override each other
+noextract=(${source[@]%%::*})
+
+_package() {
+  OPT_PATH="opt/${pkgbase}"
+  pkgdesc="Standalone Web Browser from Mozilla — Nightly build ($1)"
+  url="https://www.mozilla.org/$1/${_name}/${_channel}"
+  provides=(thunderbird-${_channel}=$pkgver)
+  conflicts=(thunderbird-${_channel} thunderbird-${_channel}-i18n-${1,,})
+  replaces=(thunderbird-${_channel}-i18n-${1,,})
+
+  # Install the package files
+  install -d "${pkgdir}"/{usr/bin,opt}
+  cp -r ${_name} "${pkgdir}"/${OPT_PATH}
+  ln -s "/${OPT_PATH}/${_name}" "${pkgdir}"/usr/bin/${pkgbase}
+
+  # Install .desktop files
+  install -Dm644 "${srcdir}"/${pkgbase}.desktop -t "${pkgdir}"/usr/share/applications
+
+  # Install icons
+  SRC_LOC="${srcdir}"/${_name}
+  DEST_LOC="${pkgdir}"/usr/share/icons/hicolor
+  for i in 16 32 48 64 128; do
+      install -Dm644 "${SRC_LOC}"/chrome/icons/default/default${i}.png "${DEST_LOC}"/${i}x${i}/apps/${pkgbase}.png
+  done
+
+  cat <<EOF | install -Dm644 /dev/stdin "${pkgdir}"/${OPT_PATH}/defaults/preferences/vendor.js
+pref("intl.locale.requested", "");
+EOF
+
+  # Disable auto-updates
+  cat <<EOF | install -Dm644 /dev/stdin "${pkgdir}"/${OPT_PATH}/distribution/policies.json
+{"policies": {"DisableAppUpdate": true}}
+EOF
+
+  # Use system-provided dictionaries
+  rm -rf "${pkgdir}"/${OPT_PATH}/{dictionaries,hyphenation}
+  ln -sf /usr/share/hunspell "${pkgdir}"/${OPT_PATH}/dictionaries
+  ln -sf /usr/share/hyphen "${pkgdir}"/${OPT_PATH}/hyphenation
+}
