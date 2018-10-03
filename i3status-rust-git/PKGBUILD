@@ -1,26 +1,27 @@
 # Maintainer: Josip Ponjavic <josipponjavic at gmail dot com>
 
 pkgname=i3status-rust-git
-pkgver=0.9.0.r553.g4d2e595
+pkgver=0.9.0.r557.g07e5ffe
 pkgrel=1
 pkgdesc='Very resourcefriendly and feature-rich replacement for i3status to use with bar programs (like i3bar and swaybar), written in pure Rust'
 arch=('x86_64')
 url='https://github.com/greshake/i3status-rust'
 license=('GPL3')
-depends=('dbus')
+depends=('libpulse')
 makedepends=('git' 'rust')
-optdepends=('alsa-utils: For volume block'
+optdepends=('alsa-utils: For the volume block'
             'curl: For the weather block'
-            'lm_sensors: For temperature block'
-            'networkmanager: For networkmanager block'
+            'lm_sensors: For the temperature block'
+            'networkmanager: For the networkmanager block'
             'powerline-fonts: For all themes using the powerline arrow char'
+            'pulseaudio: For the volume block'
             'speedtest-cli: For the speedtest block'
             'ttf-font-awesome-4: For the awesome icons'
             'upower: For the battery block')
 provides=("${pkgname%-*}")
 conflicts=("${pkgname%-*}")
 install="${pkgname%-*}.install"
-source=("git+$url")
+source=("${pkgname%-*}::git+$url")
 sha1sums=('SKIP')
 
 pkgver() {
@@ -30,7 +31,7 @@ pkgver() {
 
 build() {
   cd "${pkgname%-*}"
-  cargo build --release
+  cargo build --release --features "pulseaudio"
 }
 
 package() {
