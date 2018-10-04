@@ -1,0 +1,34 @@
+# Maintainer: Timofey TItovets <nefelim4ag@gmail.com>
+
+_pkgname=go-langserver
+pkgname=$_pkgname-git
+pkgver=v1.0.0.r287.g73491f4
+pkgrel=1
+pkgdesc="go-langserver is a Go language server that speaks Language Server Protocol. It supports editor features such as go-to-definition, hover, and find-references for Go projects."
+arch=('any')
+url="https://github.com/sourcegraph/go-langserver"
+license=('MIT')
+makedepends=('git' 'go')
+provides=($_pkgname)
+conflicts=($_pkgname)
+options=('!strip' '!emptydirs')
+source=($pkgname::git://github.com/sourcegraph/go-langserver.git)
+md5sums=('SKIP')
+
+_gourl=github.com/sourcegraph/go-langserver
+
+pkgver() {
+        cd $pkgname
+        git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+        mkdir -p "$srcdir/build/src/github.com/sourcegraph/"
+        cp -a ./${pkgname} "$srcdir/build/src/github.com/sourcegraph/${pkgname}"
+        GOPATH="$srcdir/build" go get -v -u $_gourl
+}
+
+package() {
+  cd build
+  install -Dm755 bin/go-langserver "$pkgdir/usr/bin/go-langserver"
+}
