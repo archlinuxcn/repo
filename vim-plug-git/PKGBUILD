@@ -1,0 +1,35 @@
+# Maintainer: oozyslug <oozyslug at gmail dot com>
+# Contributor: oozyslug <oozyslug at gmail dot com>
+# Submitter: oozyslug <oozyslug at gmail dot com>
+
+pkgname=vim-plug-git
+pkgver=0.9.1.83.gb6050d6
+pkgrel=1
+pkgdesc="A vim plugin manager"
+arch=('any')
+url="http://github.com/junegunn/vim-plug"
+license=('MIT')
+depends=('vim')
+makedepends=('git')
+conflicts=('vim-plug')
+provides=('vim-plug')
+source=(${pkgname}::git+https://github.com/junegunn/vim-plug
+	LICENSE-MIT.txt
+	plug.vimrc
+	)
+
+sha512sums=('SKIP'
+	    'aef00f3c6c9e529f40180f5e05a0c06dc614df3419969469baf574ed85611321c34415c3c731ffd5f6dfcf4ec9a34698b7851e2d9b5a46efa8de2410aa626fa8'
+	    '8e15c2074d0ce36daa0568167bcbcaf1038b8f65edcab661c9d41a9a18714b27accab28f5065408852329827ff4c84c03102c17bd542962cde1f057e88c4044c'
+	    )
+install=vim-plug.install
+pkgver() {
+  cd ${pkgname}
+  git describe | sed 's/^v//;s/-/./g'
+}
+
+package() {
+  install -Dm 644 ${pkgname}/plug.vim ${pkgdir}/usr/share/vim/vimfiles/autoload/plug.vim
+  install -Dm 644 LICENSE-MIT.txt ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+  install -Dm 644 plug.vimrc ${pkgdir}/usr/share/vim-plug/vimrc.sample
+}

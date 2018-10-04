@@ -1,0 +1,17 @@
+post_install() {
+  echo "
+    >>> To use vim-plug, please check the file /usr/share/vim-plug/vimrc.sample
+    >>> and update your ~/.vimrc file, accordingly
+  "
+}
+post_upgrade() {
+  post_install $1
+}
+
+post_remove() {
+  echo "
+    >>> Please remember to remove plugins from your ~/.vimrc file
+    >>> and from your ~/.vim directory!
+  "
+}
+
