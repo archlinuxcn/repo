@@ -28,6 +28,34 @@ Fri Feb 9 18:16:23 2018 +0100
     b8a50ab doc(readme): more verbose description
     2791da7 refactor(pacman): dedup some cache-related code
     f749a55 half-revert previous commit
+    56dcc43 fix(build, install_cli): allow reinstalling deps to avoid missing them if they were removed as dep of conflicting package
+    2e50f02 fix(cli_install): don't recursively remove conflicting packages
+    5100d5b fix(build): retrieving package name of multiarch package
+    8ee76d3 fix(pacman): fix cache name for get_repo_provided_dict and get_local_provided_dict
+    7e8575e fix(build): use makepkg --packagelist and /etc/makepkg.conf instead of glob
+    c66ece3 fix(meta package): uncomment back resolving conflicts by provided package but now it should work (i guess :D)
+    c7e8e48 fix(meta pkg): disable conflict resolving against Provides section in locally installed pkgs
+    9602b02 chore(build): add todo note
+    f311290 chore(build): add todo note
+    4ab04fc fix: improve conflict resolving
+    43b80c4 fix(build): don't try to install package dependency if it's already provided by one of installed packages
+    bb6f0d5 fix(pkgbuild): add chrpath dep
+    fbb3aa1 fix(pkgbuild): add fakeroot dependency
+    9cdada2 fix(build): remove already installed dependency to avoid reinstalling it again later
+    230674c fix(build): install already built deps which are needed for making new packages
+    6483217 fix(build): pass --force to makepkg if no --needed was passed to pikaur
+    493d64a doc(build): add todo
+    ef9bb43 style: var names
+    3efc8b2 fix: don't raise error on broken pipe (like `head` command)
+    bcbaa05 fix(packaging: fish): remove first line from package list
+    9f632df fix(PKGBUILD): use unique package name for git clone repo
+    31aef06 fix(packaging: fish): path to pkg cache
+    e316981 fix: correctly bypassing -Sg for completion and small rehaul in bypassing options to pacman
+    321b28f chore: add completion for fish
+    8a152c0 test: add simple assertion compare_versions
+    b2b4258 try to fix comparing versions once again :-)
+    71470dc fix: compare_version if one of the version have '+' or ':' but other don't
+    428c0a4 feat(meta pkg): add __repr__ for PackageUpdate
 
 
 Tue Feb 13 20:35:10 2018 +0100
@@ -41,6 +69,41 @@ Tue Feb 13 20:35:10 2018 +0100
     47cd501 refactor(meta_package, conflicts): split check_conflicts into smaller routines and move into a new module
     8c2a3f0 fix(build): add missing build_dir property
     4a3b8a8 refactor(build): split into smaller routines
+    6bd46ec feat: print progress bar while reading local packages db
+    e188b85 feat: print progress bar while reading repo packages db
+    3f10044 refactor(aur): represent aur package as class
+    c400c0a feat(pacman, meta_pkg, install_cli): ask about packages replacements
+    86edfe9 fix(meta package: find aur deps): check versions of packages which specified in dependencies not directly (via Provided field)
+    5f8864e feat(build): allow overriding PKGEXT in PKGBUILD
+    18c280c style: pylint
+    3b47cb5 refactor(install cli): extract find packages/deps - related stuff to a separate method
+    1582988 fix(core: version_matchers): comment out debug print
+    23980b5 refactor(meta_package): pass wanted_by to exception instead of printing info right there
+    842139e fix(install_cli): use the same message as pacman
+    5a4c878 style: pylint
+    366c935 fix(meta_package: find_aur_deps): raise exceptions instead of exiting
+    7e45dd4 fix(build, install_cli): raise exception when deps failed to install instead of exiting
+    ecca514 fix(build): retry with sudo if permission error when removing old build dir
+    13ed8c8 doc: remove mention about transaction lock
+    f1d7ab4 feat(metapkg: find_aur_deps): check deps' versions
+    f15fc11 feat(install cli): revert remove/install transaction for aur/repo if the step failed
+    854794e fix(core:get_package_name_and_version_matcher_from_depend_line): use helper for comparing versions
+    fca4df1 fix(install cli): ignore package conflicts in --downloadonly mode
+    12765d7 feat: sort aur packages search results by votes and rating - 2
+    770823b feat: sort aur packages search results by votes and rating
+    88ad83e style(args): pylint
+    fa2158d refactor(install cli): convert into class
+    674f104 refactor(install cli): split main function into smaller routines
+    fd3a429 style(args): pylint
+    e171aa9 style(args): pylint
+    55ba0a4 style: pylint
+    ff44419 refactor: extract install cli to a separate module
+    2de5443 remove ./pkg/ mention
+    2baaac3 feat(install, upgrade cli): use common package list view and prompt
+    eba1776 feat(pprint): print pacman and alpm versions as well
+    7edea89 fix(pprint): make string diff more robust in corner cases
+    c82d0c6 fix(install cli): print not found AUR packages only when they are exist
+    35155c0 fix(tag_release): reset pkgrel to 1
 
 
 Thu Feb 22 03:05:41 2018 +0100
@@ -54,6 +117,34 @@ Thu Feb 22 03:05:41 2018 +0100
      2018-02-22 70c6503 actionless feat(install cli): implement [m]anual package selection
      2018-02-22 2b17668 actionless chore(travis): enable pylint
      2018-02-22 87d4540 actionless fix(meta_pkg: find_aur_deps): some local pkgs were not added to the list of deps
+     2018-02-21 f9a3595 actionless fix(pprint): formatting of colored text
+     2018-02-21 f7bd247 actionless feat(pprint: upgradeable): print repo in verbose mode
+     2018-02-21 8d63782 actionless fix(version): make matchers parsing ordered
+     2018-02-21 0a6bc05 actionless feat(PKGBUILD): set current pkgver before the build
+     2018-02-21 dd94b80 actionless feat(install cli): print packages from unofficial repos separately
+     2018-02-21 a7c80c7 actionless feat(pacman): save package Repository field
+     2018-02-20 d08a379 actionless fix(meta_pkg, conflicts, pacman): return version matchers for packages provided by other packages
+     2018-02-18 4c43ad4 actionless fix(main: sysupgrade): also install packages from positional cli args
+     2018-02-18 9a27fa8 actionless feat(metapkg: find_aur_deps): store who depends on package in version mismatch exception
+     2018-02-18 be0cafd actionless feat(install cli): improve output to show ignored packages
+     2018-02-18 8d80cf1 actionless fix(install_cli): return if there are no packages to be installed
+     2018-02-18 de54e64 actionless fix(conflicts): check each new package to be listed in 'Conflicts' section of already installed (local) packages
+     2018-02-18 e4cf908 actionless feat(install cli): rename build dir after successfull transaction
+     2018-02-17 325cab9 actionless fix(main: search cli): dedup search results; re: #15
+     2018-02-17 dee8109 actionless fix(main: search cli): if multiple search words provided join search result by result.Name
+     2018-02-17 985bded actionless fix(core: configreader): prevent attempts to do multiline parsing
+     2018-02-17 7e46569 actionless fix(core: configreader): inline_comment_prefixes=('#', ';')
+     2018-02-16 bd6523d actionless feat(build, install cli): propose to fix the problem if can't pull the repo from AUR
+     2018-02-15 a8d428b actionless fix(install cli): don't pass to pacman --ignore arg
+     2018-02-15 c2aae09 actionless fix(core: configreader): use non-strict config parser
+     2018-02-14 b3fd2d2 actionless fix(core: ConfigReader): don't process fallback value
+     2018-02-14 7f6f005 actionless fix(core: config-reader; pacman): ignore 'Server' field
+     2018-02-14 fb0a565 actionless feat: support IgnorePkg from /etc/pacman.conf
+     2018-02-13 8878414 Asger Hautop Drewsen Fix #6
+     2018-02-13 5de8019 actionless chore(entrypoint): remove unused imports
+     2018-02-13 ae6d26a actionless fix(setup.py): correct license
+     2018-02-13 4924f8f actionless chore(maintenance_scripts: tag_release): update setup.py version as well
+     2018-02-13 fa04a94 actionless chore: add setup.py
 
 
 Thu Mar 1 05:34:25 2018 +0100
@@ -67,6 +158,53 @@ Thu Mar 1 05:34:25 2018 +0100
      2018-02-26 fb77eab Antoine Pietri Leverage systemd dynamic users to run pikaur as root
      2018-03-01 f1b9b36 actionless chore(args): rename --names-only to --namesonly (like in --dbonly and --downloadonly)
      2018-03-01 4cfe97c actionless feat(main: search_cli): flag to search in package names only (--names-only)
+     2018-03-01 da4c4a8 actionless feat: use pyalpm for package search ; format repo search results instead of using preformatted from pacman ; use lowercase AUR pkg attributes
+     2018-02-28 a197681 actionless feat(aur, main, prompt): print some status/error messages to stderr
+     2018-02-28 4087cf4 actionless feat(pprint, package_update, pacman): print status messages to stderr
+     2018-02-28 719ba10 actionless fix(main): correct SIGPIPE handling (like piping to `head` command)
+     2018-02-28 487e167 actionless feat(package_update): mroe verbose logging when reading aur updates
+     2018-02-26 2ce545f actionless refactor(package_update: find_aur_updates): don't take any arguments (the same as find_repo_updates())
+     2018-02-26 5c6c8eb actionless fix(pprint): last block of version diff
+     2018-02-26 7576be2 actionless fix(PKGBUILD): return back missing packaging files
+     2018-02-26 8e8b655 actionless refactor(package_update: find_repo_updates): use new pyalpm-based PackageDB instead of spawning pacman -Qu
+     2018-02-26 1535c72 actionless refactor: use pyalpm for pacman db
+     2018-02-26 5ab20ae actionless fix(build): save built package path only if it's really exist
+     2018-02-26 65c4740 actionless refactor(version): use pyalpm for vercmp
+     2018-02-26 5e423b8 actionless refactor(pacman): use pyalpm for PacmanConfig
+     2018-02-26 38324b4 actionless feat(build): separate package builds by the new line
+     2018-02-26 a5338de actionless doc(readme): update dirs description
+     2018-02-26 a0f9882 actionless feat(main): implement -Sc/-Scc
+     2018-02-26 d2a8d70 actionless chore(PKGBUILD): use setuptools
+     2018-02-26 d07137f Asger Hautop Drewsen Fix version diff of ignored packages
+     2018-02-26 15166e4 Asger Hautop Drewsen Remove duplicated --noconfirm from Dockerfile
+     2018-02-26 cecbfe6 actionless chore(packaging: fish, bash): add completion for --noedit option
+     2018-02-26 c448edf actionless doc: update screenshot
+     2018-02-25 a325e23 actionless refactor(version: diff): split version to calculate diffs
+     2018-02-26 6fc8293 actionless feat(install_cli): print version of ignored package
+     2018-02-25 58e445b actionless fix(build, install_cli): multipackage builds
+     2018-02-25 88108d4 actionless fix(install_cli): typo
+     2018-02-25 fb0e25f actionless fix(install_cli): get sudo permission for further questions via pacman instead of `true`
+     2018-02-25 96f2071 actionless feat(main: help): beautify help message
+     2018-02-25 d97f1f7 actionless fix(install_cli, prompt): small fixes for noconfirm
+     2018-02-25 1e35281 actionless feat(main): add help for pikaur-specific option
+     2018-02-25 adb9a1f actionless feat: implement --noedit flag and fix --noconfirm flag for some operations
+     2018-02-25 0cb3967 actionless fix(install cli): assume package is 'any' if no 'supported_archs' provided
+     2018-02-25 c2254b8 actionless fix(install cli): exit on build dependency cycle
+     2018-02-25 aa67d2b actionless refactor(version: compare_versions): don't cache vercmp call
+     2018-02-24 3ff9f79 actionless revert multiple task executor
+     2018-02-24 446a4af Asger Hautop Drewsen Use libalpm directly instead of calling vercmp
+     2018-02-24 a81e9f6 actionless chore(core): remove unnecessary function
+     2018-02-24 dde4bd8 actionless refactor(version): make it follow spec more accurate - 2
+     2018-02-24 29166ee actionless refactor(version): make it follow spec more accurate
+     2018-02-24 7d14f21 actionless fix(version: version_matcher): use new compare_versions implementation
+     2018-02-24 4ab6f1e actionless refactor(version): dedup synchronous implementation of `compare_versions`
+     2018-02-24 0157f07 actionless refactor(package_update: find_aur_updates): use executor pool
+     2018-02-24 6df2771 actionless feat(version): use `vercmp` from pacman instead of own implementation
+     2018-02-24 a947091 actionless feat(core): implement executor pool
+     2018-02-24 14ae934 actionless feat(core): make it possible to use taskexecutor from within event loop
+     2018-02-22 ddb9b33 nl6720 Prefer $VISUAL over $EDITOR
+     2018-02-23 9a49c31 actionless feat: ask to retry more commands if they failed
+     2018-02-23 028a1f4 actionless feat(main: upgrade): try to retry if database refresh failed
 
 
 Wed Mar 7 13:27:36 2018 +0100
@@ -80,6 +218,41 @@ Wed Mar 7 13:27:36 2018 +0100
      2018-03-06 f16e552 actionless Merge branch 'master' into i18n
      2018-03-05 28200b5 actionless fix(aur_deps, conflicts): fixup after previous commit
      2018-03-05 8582054 actionless style: pylint
+     2018-03-05 62991be actionless refactor(find_{local,repo}_packages): return packages, not their names
+     2018-03-05 a09473f actionless fix(pacman: package db: repo): use priority from /etc/pacman.conf
+     2018-03-05 20c5255 Chris Tam No sudo when no arguments are given
+     2018-03-04 cfbd511 Chris Tam Human readable datetime info for AUR
+     2018-03-04 fbc81af Alexandre Macabies i18n: initial refactor; add French strings
+     2018-03-04 56cf501 actionless fix(aur_deps): exit loop condition
+     2018-03-03 19c662f Sami Boukortt chore(packaging: fish): accept more extensions when completing for -U
+     2018-03-03 65d68b6 actionless fix(install_cli: get_editor): allow editor to be command with some arguments
+     2018-03-03 71bc5ba actionless fix(dockerfile): install binutils; makepkg --noconfirm
+     2018-03-03 d5c4b49 actionless fix(dockerfile): chown build dir ; don't install pyalpm
+     2018-03-03 7b45edd actionless fix(dockerfile): install `sudo`
+     2018-03-03 ddc0c71 actionless fix(dockerfile): run makepkg as user
+     2018-03-03 4837eca actionless test(dockerfile): check if package can be built
+     2018-03-03 117c8ac actionless refactor(pprint, version): move some version-related stuff to version module
+     2018-03-03 36aa399 actionless refactor(pprint, main: print_upgradeable): inline the function
+     2018-03-03 0011bd1 actionless chore(install cli): add @TODO note
+     2018-03-02 eacd9a4 actionless style: pylint
+     2018-03-02 1a67760 actionless refactor(main, pprint): move stuff related to search cli to a separate module
+     2018-03-02 b254807 actionless feat(packaging: bash): completion for AUR packages
+     2018-03-02 461ff32 actionless fix(main: search cli): less loggin in quiet mode
+     2018-03-02 fd8d6e3 actionless feat(aur, main: search cli): implement AUR pkgs listing (-Ss, -Ssq) - shell completion for AUR packages
+     2018-03-02 2c8c15e actionless feat(pprint: progress bar): make it more pacman-styled
+     2018-03-02 8ead68e actionless feat(core: MultipleTasksExecutorPool): optional progressbar
+     2018-03-02 293b90c actionless fix(core: MultipleTasksExecutorPool): case when cmd_id is <int>0
+     2018-03-02 3757134 actionless refactor(core): common get_event_loop wrapping
+     2018-03-02 28fd297 actionless fix(pprint: progressbar): use stderr
+     2018-03-01 1c1b20d actionless style(main: help cli): simplify print statement
+     2018-03-01 9003263 actionless style: pylint
+     2018-03-01 addb780 actionless fix(main: search cli): fix progressbar length
+     2018-03-01 7d7a358 actionless refactor(main: cli_search_packages): prepare for repo-only and aur-only cli options
+     2018-03-01 9172463 actionless fix(pprint: aur_search_results): correct condition for [installed] status
+     2018-03-01 a0bf560 actionless fix(packaging: zsh): add --noedit and --namesonly
+     2018-03-01 a53c6ea actionless chore(packaging): add zsh completion
+     2018-03-01 c954847 actionless fix(install_cli): don't ask see AUR repo diff if --noconfirm passed
+     2018-03-01 836d6f9 actionless fix(package_update): s/description/desc/
 
 
 Sun Mar 18 03:04:03 2018 +0100
@@ -93,6 +266,43 @@ Sun Mar 18 03:04:03 2018 +0100
      2018-03-15 b822191 actionless fix(build, install_cli): play with ask bits once again
      2018-03-15 5585108 actionless fix(build, install cli): set --ask=127 (yes to all questions)
      2018-03-15 bb7f545 actionless fix(build, install_cli): --ask should have bitwise value
+     2018-03-13 c868605 actionless fix(apply): --aur and --repo option to -Sc/-Scc
+     2018-03-13 f800813 actionless refactor(pacman): clean-up after the previous commits
+     2018-03-13 7725471 actionless refactor(conflicts): clean-up after the previous commits
+     2018-03-13 7fc2050 actionless doc(readme): add faq section
+     2018-03-13 4e3b33f Yauhen Kirylau Noconfirm experiments (#74)
+     2018-03-13 f89d3cd actionless fix(conflicts): don't check replacement if package is all required missing info
+     2018-03-13 a675d21 actionless fix(build): choosing package from multipackage
+     2018-03-11 da0dc2c actionless fix(pacman; aur_deps; conflicts): provided_name and pkg_name are swapped in provided_dict structure
+     2018-03-11 9f720c3 actionless fix(PKGBUILD): set -o pipefail
+     2018-03-11 7504779 actionless fix(config): create config root dir if it doesn't exist
+     2018-03-11 10c231c actionless feat(main): implement -Vq
+     2018-03-11 7fe1dc3 actionless fix(build; install cli): improve handling of --downloadonly
+     2018-03-11 ceee36e actionless fix(readme): fix toc
+     2018-03-11 1b39773 actionless doc(readme): add toc
+     2018-03-11 bee1b34 actionless feat: implement --aur and --repo cli options to operate only on aur or repos
+     2018-03-11 30af2da actionless fix(main: help): show pikaur-specific options only for relevant pacman operation
+     2018-03-11 f7b076d actionless feat(pprint): make version colors configurable
+     2018-03-11 6e7cabc actionless fix(version): default comparison result
+     2018-03-11 59a719b actionless feat(config): implement pikaur.conf and [sync]AlwaysShowPkgOrigin option there
+     2018-03-09 0bd0bd7 actionless fix(search cli): convert enum value to str - 2
+     2018-03-09 4f05d3c actionless fix(search cli): convert enum value to str
+     2018-03-08 bebd1cc actionless fix(install_cli): don't replace packages by default if --noconfirm passed
+     2018-03-08 ad06927 actionless fix(pikaur: conflicts): check Replaces-packages' repo priority
+     2018-03-08 9a91423 actionless fix(package_update: find_repo_updates): use pyalpm to determine available updates
+     2018-03-08 094ee87 actionless fix(prompt): fallback value
+     2018-03-08 47586cb actionless fix(build): initialize new_make_deps_to_install variable
+     2018-03-08 4d9aeaa actionless fix(install_cli): --noconfirm option if $EDITOR or $VISUAL are unset
+     2018-03-08 a813531 actionless refactor(pacman): types
+     2018-03-08 6dc1e90 Danil Antoshkin Updating the Russian translation (#66)
+     2018-03-07 551c9f4 actionless feat(package_update): allow plural in log message
+     2018-03-07 4f91884 actionless refactor(args): add type hints
+     2018-03-07 69aec99 actionless refactor(aur): add type hints
+     2018-03-07 900c653 actionless fix(aur: find_aur_packages): reduce chunk size frmo 250 to 200 to avoid too large response from AUR RPC
+     2018-03-07 c19d634 actionless Merge branch 'master' of github.com:actionless/pikaur
+     2018-03-07 536957e actionless fix(build): wrong path to PKGBUILD if PKGDEST is set
+     2018-03-07 f3b650a Daniil Yarancev Add translation for new string
+     2018-03-07 3e331ac actionless fix(install_cli): make one more string translateable
 
 
 Sun Mar 25 00:53:34 2018 +0100
@@ -106,6 +316,13 @@ Sun Mar 25 00:53:34 2018 +0100
      2018-03-24 f385d14 actionless feat: add DevelPkgsExpiration config option and `--devel` cli arg
      2018-03-24 bb1e2f5 actionless fix(build: MakepkgConfig): read ~/.makepkg.config and /pacman/makepkg.conf
      2018-03-23 6286bea actionless fix(build): raise error if built package is not found by its path
+     2018-03-23 8440e3f actionless refactor(core: configreader): move all the parsing logic to one place
+     2018-03-23 31fe0a4 actionless refactor(core: configreader): use own implementation instead of extending default `configparser` module
+     2018-03-23 c556591 actionless fix(core: configreader): use codecs.open
+     2018-03-21 e2c0ad2 actionless feat(pacman: find_repo_packages, PackageDB.search): support for package groups
+     2018-03-21 4c6567d actionless feat(args): add `-a` for `--aur`
+     2018-03-21 383ce97 actionless fix(pprint): flush stderr after writing there
+     2018-03-21 366ac0b actionless fix(build): don't add self name to dependencies
 
 
 Wed Mar 28 05:31:25 2018 +0200
@@ -119,6 +336,27 @@ Wed Mar 28 05:31:25 2018 +0200
      2018-03-28 437c020 actionless fix(main: upgrade cli): don't print the same message as pacman will print again later on
      2018-03-28 af611df actionless fix(search cli): duplicated variable name
      2018-03-28 6fc8d59 actionless fix(build: srcinfo: get_depends): exclude not only self name but all the names provded by base package
+     2018-03-28 30b1d24 actionless fix(async, aur, core, search cli): handle AUR errors
+     2018-03-26 886f973 actionless fix(prompt: ask_to_continue): handling default answer
+     2018-03-26 4070b10 actionless fix(build: srcinfo): re-read it after re-generating
+     2018-03-25 541e854 Jake Stanger Add `# type: ignore` comments.
+     2018-03-25 1943bdb Jake Stanger Change function name
+     2018-03-25 f35ba7a Jake Stanger Move return statement to the right bloody place
+     2018-03-25 887f8bf Jake Stanger Added missing return statement
+     2018-03-25 c935000 Jake Stanger Defaulted as `none`, added internationalization call
+     2018-03-25 a550d44 Jake Stanger Add missing internationalization calls for strings
+     2018-03-25 9aca066 Jake Stanger Update to correct category name
+     2018-03-25 dc52f62 Jake Stanger Change imports to relative
+     2018-03-25 6f12016 Jake Stanger Change category to more appropriate name
+     2018-03-25 97b20f7 Jake Stanger Change default for enter confirm
+     2018-03-25 3a5e851 Jake Stanger Add config option for enter to confirm
+     2018-03-25 ec7d058 Jake Stanger Added args for noconfirm option
+     2018-03-25 acdf297 Jake Stanger Added support for toggling enter key requirement
+     2018-03-25 d5ecefa actionless fix(search cli): fix sorting; display `0` if zero votes instead of hiding a label
+     2018-03-25 6336937 actionless fix(config): use XDG_CACHE_HOME if set
+     2018-03-25 2312966 actionless fix(build: set_package_path): 'any' arch in multipackage builds
+     2018-03-25 fb77af5 actionless feat(install cli, build): implement `KeepBuildDir` option to skip removing build directory between the builds
+     2018-03-25 482fda4 actionless refactor(main): move help printer to args module
 
 
 Thu Apr 5 03:33:54 2018 +0200
@@ -132,6 +370,30 @@ Thu Apr 5 03:33:54 2018 +0200
      2018-04-05 638e85c actionless refactor(build: srcinfo): handling dependencies for multipackages
      2018-04-04 958f72b guschtlswife German translation. Initial commit.
      2018-04-04 a954f18 Jake Stanger Add missing translation for Y
+     2018-04-04 f6a00a1 Jake Stanger Allow for easy translation of Y/N.
+     2018-03-31 a21e8ee actionless fix(install_cli): aur updates were skipped on sysupgrade
+     2018-03-31 2bb6b3a actionless refactor(install cli): remove some variables duplication
+     2018-03-31 5826a68 actionless feat(aur_deps, install_cli): save reference of aur deps and so discard dep tree if one of deps failed
+     2018-03-31 32d9054 actionless refactor(build): don't use asyncio for cmd spawning
+     2018-03-31 2bcdf78 actionless refactor(args): don't use asyncio for cmd spawning
+     2018-03-31 a0ce5f6 actionless refactor(main): don't use asyncio for cmd spawning
+     2018-03-31 dfcbfdb actionless fix(build, exceptions): update typing for the previous two commits
+     2018-03-31 81d060a actionless refactor(install_cli): don't use asyncio
+     2018-03-31 da73aa4 actionless refactor(build): use threading to clone the repos
+     2018-03-31 b683542 actionless refactor(aur): use threaded urllib instead of asyncio
+     2018-03-30 847f2d8 actionless refactor(aur): rewrite aur search from asyncio to threaded urllib
+     2018-03-30 743b7ca actionless chore(locale): rename pt to pt_BR (since we don't have any other pt_* locales)
+     2018-03-30 f19c8fa actionless refactor(async): remove 2 unused functions
+     2018-03-30 e1db4ab Alexandre Lopes Acrescentado traduções pt_BR (#105)
+     2018-03-30 db55ac8 actionless fix(install_cli): typo in message
+     2018-03-30 645008e Jake Stanger Reduce text size to match other settings (#103)
+     2018-03-29 dce311f Alexandre Lopes Added portuguese translations (#99)
+     2018-03-29 d0e3360 Jake Stanger Fix require enter (#102)
+     2018-03-28 4d82245 Jonas Platte Fix typo in README.md
+     2018-03-28 3f7c47a actionless fix(core: open_file): try to detect file encoding only when reading
+     2018-03-28 608414a Christopher Cooper change readme [ui] config header case
+     2018-03-28 f6d66bd actionless refactor(core: open_file, detect_bom_type): conform more to project coding style
+     2018-03-28 983fe94 actionless fix(core: open_file): automatically detect file encoding
 
 
 Wed Apr 18 01:42:45 2018 +0200
@@ -145,6 +407,101 @@ Wed Apr 18 01:42:45 2018 +0200
      2018-04-18 e438861 actionless fix(install cli): correctly exclude aur package from install dep tree
      2018-04-18 27abbac actionless fix(install_cli): correctly skip package which is already up to date
      2018-04-18 52c0acd actionless style(build): nicer output
+     2018-04-18 a047702 actionless fix(build): correctly retrieve version from srcinfo
+     2018-04-17 2e85b36 actionless fix(build): don't reconstruct args when installing deps
+     2018-04-17 e9bd18a actionless fix(build): sum make and check deps after the iteration (type mismatch)
+     2018-04-17 66ef23d actionless fix(build, aur_deps): take also `checkdepends` into account
+     2018-04-17 aa31c46 actionless fix(build): pass '--noprepare', '--nocheck', '--nodeps' instead of '-rs' to makepkg --nobuild when retrieving version
+     2018-04-17 72b13ae actionless fix(build): pass -rs to makepkg when doing --nobuild to get the pkgver
+     2018-04-17 683bec4 actionless fix(install cli): better handling of --needed option for AUR packages - 2
+     2018-04-17 b2a79a1 actionless refactor(build): rename attribute for storing cached installation state
+     2018-04-17 2d18949 actionless fix(install cli): better handling of --needed option for AUR packages
+     2018-04-17 c1dec54 actionless chore(package_update: find_aur_updates): if --devel is passed set `devel_packages_expiration` to `0` (now it makes sense, when --needed option for devel AUR packages is implemented correctly
+     2018-04-17 b4618f1 Antoine Pietri fix(core: isolate_root_cmd): use Dynamic User's /tmp as its new $home
+     2018-04-17 4b9c71e actionless refactor(version): simplify `get_version_diff`
+     2018-04-17 9d1c360 arivarton Fixed Plural-Forms.
+     2018-04-17 2811693 actionless fix(core: isolate_root_cmd): set HOME for systemd DynamicUser (when running pikaur as root)
+     2018-04-17 d078193 actionless doc(readme, pkgbuild): revert to the previous description thanks to pikspect
+     2018-04-17 d195f9d actionless chore: bump version to 0.9.4
+     2018-04-16 fcd3f3d arivarton Added icelandic locale.
+     2018-04-17 e88fa82 actionless Revert "feat(build): remove installed repo deps only if --downloadonly was passed (to avoid reinstalling those deps again on the next stages)"
+     2018-04-17 7b92ae0 actionless refactor(build): remove unused variable
+     2018-04-17 7177168 actionless fix(build): preserver symlinks when copying repo into the build dir
+     2018-04-17 94540a0 actionless feat(build): remove installed repo deps only if --downloadonly was passed (to avoid reinstalling those deps again on the next stages)
+     2018-04-17 be6f676 actionless fix(build: install repo deps): find deps satisfied via packages provided by locally installed packages and check their versions
+     2018-04-15 f2692a3 guschtlswife Add new strings. Minor improvements.
+     2018-04-14 3fc6ec6 actionless chore(locale): regenerate pots
+     2018-04-14 43bf32b actionless feat(install cli, config): implement [build]NoEdit config option to force --noedit behavior
+     2018-04-14 5f02aa5 actionless fix(build): typo
+     2018-04-14 d3baac0 actionless feat(build): make makepkg obey pikaur's --color arg
+     2018-04-14 0b13067 actionless fix(args): exclude --color from reconstructed args
+     2018-04-14 72d8887 actionless style: pylint
+     2018-04-14 8defa55 actionless chore(dockerfile): enable color output
+     2018-04-14 9c65f6e actionless fix(pikspect): don't rstrip historic output when comparing with expected question
+     2018-04-14 f78f0fc actionless feat(pprint, pacman): use colors only on tty or if set explicitly via --color
+     2018-04-14 1a0db63 actionless fix(args): add missing `color` option
+     2018-04-14 824b284 actionless refactor(pacman): use coloring only if on real tty or if set to always
+     2018-04-14 2979743 actionless refactor(install cli, build, pprint, etc): use stderr for all the warnings and questions
+     2018-04-14 728d34e actionless fix(main: sysupgrade): colored output of --refresh
+     2018-04-14 7e4a999 actionless fix(build): don't install AUR dep --asdep if it is already installed explicitly
+     2018-04-14 81d1ab2 actionless fix(build): discard local cache before storing local packages state
+     2018-04-14 6a1d9bf actionless refactor(build): reimplement makepkg's --syncdeps and --rmdeps to make root isolation work again
+     2018-04-14 56ec6dc actionless fix(pikspect): limit historic output size by max question length
+     2018-04-14 fc02752 actionless fix(build): get deps from srcinfo in build dir, not repo
+     2018-04-14 a1311f7 actionless style: pylint
+     2018-04-14 1e68406 actionless refactor(config): remove redundant constants
+     2018-04-14 ed5f6f9 actionless feat(args, main: sysupgrade, clean): count --refresh and --clean opts
+     2018-04-14 425debd actionless refactor(config, build): join BUILD and AUR dirs right in the config module
+     2018-04-14 5192f0d actionless refactor(config, build): join PACKAGE_CACHE_PATH right in the config module
+     2018-04-14 3c5496b actionless refactor(pikspect): remove redundant lock
+     2018-04-14 6694b3e actionless refactor(pikspect): remove redundant constant
+     2018-04-14 4d71c97 actionless feat(pikspect): set geometry of real terminal to pty
+     2018-04-13 14b89a5 actionless fix(pikspect): don't do tty stuff if we are not on tty
+     2018-04-13 ea21937 actionless fix(pikspect): don't stuck if previous command wasn't require any stdin
+     2018-04-13 f861a9d actionless feat(build, install cli): make pacman skip 'main' question
+     2018-04-13 f10304a actionless fix(pprint: color_line, bold_line): make it more conform to pacman's coloring
+     2018-04-12 16c50bb morganamilo chore(locale): update .po templates
+     2018-04-12 0f69dce morganamilo feat(search cli): show if package is out of date
+     2018-04-12 b4d1375 actionless refactor(srcinfo, build): store deps in dict instead of list of tuples
+     2018-04-11 0589da8 actionless chore(PKGBUILD): remove `sudo` from the deps
+     2018-04-11 b4cdd91 actionless fix(build): check the versions of locally installed dependencies
+     2018-04-10 f428316 actionless refactor/wip(args, build, main): parse cli args in module via import instead of passing it to each function as arg
+     2018-04-10 883384a actionless fix(build): choose between copy method on depend if dir exists or not
+     2018-04-10 6746834 actionless fix(build): create build dir if it not exists
+     2018-04-10 79ad1cb actionless doc(main): add @TODO note
+     2018-04-10 1d828ea actionless fix(install_cli): remove repo package name from install list if it's up to date
+     2018-04-10 f9a47f0 actionless feat(install cli): print version when skipping up-to-date package
+     2018-04-10 d682042 actionless feat(install cli): print version when skipping AUR package
+     2018-04-10 139db23 actionless feat(build): download package source to determine version of -git and other devel packages
+     2018-04-10 bbc6a4f actionless fix(install cli): don't continue install sequence if there are n oexplicit packages to install and it's not sysupgrade
+     2018-04-10 32c41e3 actionless fix(install cli): remove package from install list if it's up-to-date
+     2018-04-10 a78b778 actionless fix(build): use copy_tree from distutils to avoid problem in --keepbuild
+     2018-04-10 fd149e9 actionless fix(srcinfo): case when srcinfo is not generated yet
+     2018-04-10 f13c9a3 actionless refactor(package_update): extract is_devel_pkg into separate function
+     2018-04-10 4bb73e4 actionless fix(aur, progressbar): implement threadsafe progressbar for `-Ss` (list all packages including AUR)
+     2018-04-10 11b4870 actionless refactor(pprint): extract progressbar to a separate module
+     2018-04-09 dda31b0 actionless refactor(search cli): remove unused loop var
+     2018-04-09 5a297fd actionless fix(search_cli): aur search with --namesonly
+     2018-04-09 6a6f8f6 actionless feat(search_cli): reraise exceptions from the worker thread
+     2018-04-09 c2d142f actionless fix(args): parse positional arguments given not after each other
+     2018-04-07 4768c2b guschtlswife Update de.po from template and add new strings.
+     2018-04-07 ccb999d actionless feat(args, build, install cli): implement -k/--keepbuild option to not remove build dir between the builds
+     2018-04-07 c75010f actionless fix(prompt: retry_interactive_command): don't retry if --noconfirm passed
+     2018-04-07 51e94f9 actionless fix(install_cli): Don't ask about conflicts of repo packages (ask only for AUR packages, for repo pacman will ask later on/again)
+     2018-04-07 d979bfb actionless chore(install_cli): install repo packages before starting to build AUR ones
+     2018-04-07 6adc32d actionless style(install cli): pylint
+     2018-04-07 e68a5e1 actionless fix(install_cli): if local package is too old try to find it in AUR and recompute deps if it was found
+     2018-04-07 474a9cb actionless refactor(aur_deps): return empty list for packages which have no deps
+     2018-04-07 8bac4f8 actionless fix(aur_deps): check versions of explicitly chosen AUR packages which could be deps
+     2018-04-06 723e341 Martin Trigaux Add extra space in confirmation prompt
+     2018-04-06 35a121e actionless fix(prompt: retry_interactive_command_or_exit): use PikaurArgs
+     2018-04-06 ecd199b actionless fix(prompt: retry_interactive_command): use PikaurArgs
+     2018-04-06 295d7f0 actionless fix(prompt: ask_to_continue): make pikaur args required and fix --noconfirm with default No answer
+     2018-04-06 f39277f actionless doc(install cli): comment
+     2018-04-05 8507c30 actionless style(install cli): add comments to class attributes
+     2018-04-05 fcd6193 actionless refactor(build: clone_aur_repos): small style improvement
+     2018-04-05 2975f8f actionless refactor(build): extact SrcInfo class to a separate module
+     2018-04-05 e0eeba7 actionless style(maintenance_scripts: tag_release): typo
 
 
 Thu Apr 19 14:59:02 2018 +0200
@@ -158,6 +515,8 @@ Thu Apr 19 14:59:02 2018 +0200
      2018-04-18 6d66af5 actionless fix(install cli): don't try to remove package which was already removed when reverting transaction on failed build
      2018-04-18 c4733c4 actionless fix(install cli): correctly bypass --ignore arg to pacman
      2018-04-18 d1d3dab actionless fix(build): already_installed detection for non-devel AUR packages
+     2018-04-18 2281326 actionless chore(setup.py, pkgbuild): drop dependency on setuptools
+     2018-04-18 73f715c actionless doc(install cli): add @TODO note
 
 
 Fri May 11 21:14:28 2018 +0200
@@ -171,6 +530,53 @@ Fri May 11 21:14:28 2018 +0200
      2018-05-11 3fb191e actionless Revert "fix(core: copy_tree): pass update=True to dir_util.copy_tree)"
      2018-05-09 a97a94f actionless fix(pikspect): change pool import
      2018-05-08 a22ff59 actionless fix(core: copy_tree): pass update=True to dir_util.copy_tree)
+     2018-05-08 d2452f9 actionless wip(pikaur: pikspect): replace Popen.communicate to Popen.wait
+     2018-05-08 d8f2c6d actionless doc(install cli: get_all_packages_info): add comments
+     2018-05-08 1085f80 actionless fix(install cli): don't retrieve repo/aur updates if --aur/--repo flag was passed
+     2018-05-06 7aa78c1 actionless fix(package_update: PackageUpdate): make Repository field optional
+     2018-05-04 1286b60 actionless refactor: typing and mypy 0.600
+     2018-05-04 14afcd5 actionless fix(version, srcinfo, aur_deps): support multiple version matchers (like `linux>=4.16,linux<4.17`)
+     2018-05-04 ff61de1 actionless fix(srcinfo, build): retrieve package-specific deps when building multipackages
+     2018-05-03 9818081 actionless fix(main): don't try to handle SIGINT twice
+     2018-05-01 40ebd11 Andri Viðar Tryggvason Add an edit flag that will force noedit to be canceled. Closes #130 (#158)
+     2018-04-28 e2eaad5 Christopher Cooper only regenerate srcinfo when PKGBUILD contents are changed
+     2018-04-28 144827e guschtlswife de.po Minor fixes
+     2018-04-27 92c7ab6 actionless style(build): remove unused imports
+     2018-04-27 461c2b4 actionless fix(srcinfo): count arch-specific deps
+     2018-04-27 efbcf6c actionless refactor(build): extract MakepkgConfig class into separate module
+     2018-04-26 607b526 actionless chore: add flake8 check in CI
+     2018-04-26 f8bfce8 actionless style(build): make message more precise
+     2018-04-26 b8bdac8 actionless refactor(pikspect: restore_tty): re-implement it as class
+     2018-04-25 cac24e3 actionless fix(pikspect, main): more fixes on SIGINT (Ctrl+C) handling
+     2018-04-25 151a7c1 rpetrov94 added config to hide prompt to show build files diff (#153)
+     2018-04-24 8a13a01 actionless fix(pikspect): reset tty settings on SIGINT
+     2018-04-22 4071904 actionless feat(main): check runtime deps
+     2018-04-22 c40936b actionless fix(core, install cli, build): don't use `sudo` when already running as a super user
+     2018-04-22 6efe5f4 actionless feat(config, pprint, readme): implement config option to choose sorting when upgrading multiple packages/doing sysupgrade
+     2018-04-22 7115be1 actionless fix(main: info cli): `pikaur -Si` without extra args shows info for all the repo and AUR packages available
+     2018-04-22 2990709 actionless feat(build, install cli): use threading to speed-up repo checkout on `-Syu --devel --needed`
+     2018-04-22 281f652 actionless feat(pikspect): implement `print_output` and `save_output` options
+     2018-04-22 e8c3d0a actionless refactor(install cli): extract architecture check into separate function
+     2018-04-22 5812e66 actionless feat(install cli): more distinctive error message on build fail
+     2018-04-22 f10dfe1 actionless feat(pprint): add infrastucture for thread-safe printing (basically — to avoid lines printed from different thretoadmesswitehothacher)
+     2018-04-21 399eb3a actionless style: remove linebreaks
+     2018-04-21 69d189b actionless fix(exceptions: SysExit): call super init
+     2018-04-21 e036fcd actionless feat(exceptions; main): introduce SysExit() exception for exiting from inside the threads (but not only)
+     2018-04-21 7505030 actionless style: remove linebreaks
+     2018-04-21 9015cbe actionless fix(install_cli): case if pkgbuild was removed during review stage
+     2018-04-21 3c130e0 actionless wip(pikspect: output handler): delay between sending characters to std in
+     2018-04-22 71898a9 jingyu9575 fix(aur): remove req.set_proxy to fix 404 error (#152)
+     2018-04-21 530ae78 actionless fix(install_cli): return back `replacements` module and use to exclude from the transaction AUR packages which are going to be replaced by repo packages
+     2018-04-21 73d8f3b actionless fix(build, install cli): use makepkg's CARCH instead platform.machine()
+     2018-04-21 7930b6f Osman Karagöz Update install_cli.py
+     2018-04-21 c954b36 osmank3 When using without enter confirm, translated short keys not working correctly error is fixed
+     2018-04-21 e395ceb osmank3 Turkish translation: correction to conflict of short keys
+     2018-04-20 d383460 actionless refactor(pkgbuild): discover langpacks automatically
+     2018-04-20 d313caf actionless chore(makefile): add Danish lang
+     2018-04-20 7edad3a Jonas Tranberg Removed misplaced space
+     2018-04-20 8a27776 Jonas Tranberg added danish locale support
+     2018-04-20 03243e0 osmank3 Turkish translation added.
+     2018-04-19 82c76d6 actionless fix(version: get_common_version): be aware what vercmp('.', '+') == 0 when formatting colored version diff
 
 
 Mon May 14 20:52:50 2018 +0200
@@ -193,6 +599,19 @@ Mon May 21 03:55:21 2018 +0200
      2018-05-20 cc401f6 actionless feat(pikspect, install cli): don't ask twice about package replacements
      2018-05-20 6f9a27c actionless feat(pikspect, install cli): don't ask twice about package conflicts
      2018-05-20 ff7f3f0 actionless feat(args): validate some args for compatibility
+     2018-05-20 d05e693 actionless feat(main: query: upgradeable): print repo or `aur/` prefix if `sync.AlwaysShowPkgOrigin` option is enabled
+     2018-05-20 94689cb actionless feat(aur): make it possible to search and install AUR packages by `aur/` prefix
+     2018-05-20 77c4730 actionless fix(pacman, search_cli): index repo pkgs by `repo_name/pkg_name`
+     2018-05-19 d805c63 actionless style(exception: DependencyVersionMismatch): make mypy happy again
+     2018-05-19 070bed5 actionless fix(exception: DependencyVersionMismatch): one more regression after mypy improvements
+     2018-05-15 681356b actionless fix(install_cli): don't attempt to clone the same aur repo twice (split packages related)
+     2018-05-15 be90ea6 actionless style(install_cli): line length
+     2018-05-15 ef6f408 actionless fix(core: copy_tree): remove dest_dir and try again - 2
+     2018-05-15 0a4f66a actionless refactor(config): implement get_int and get_boolean to make mypy's life easier and generally have more robust config api - 2
+     2018-05-15 d534f5f actionless refactor(config): implement get_int and get_boolean to make mypy's life easier and generally have more robust config api
+     2018-05-15 48ce6a8 actionless feat(config): misc.PacmanPath
+     2018-05-15 f3b55db actionless feat(config: PikaurConfig): implement __getattr__ for strings
+     2018-05-15 0c61e6d actionless fix(core: copy_tree): remove dest_dir and try again
 
 
 Mon May 21 14:02:18 2018 +0200
@@ -273,6 +692,33 @@ Mon Jun 11 15:15:09 2018 +0200
      2018-06-10 082b24a actionless fix(pikspect): don't clear buffer after show() filter
      2018-06-10 3aed87f actionless fix(install_cli): prompt deadlock
      2018-06-10 18ee141 actionless fix(pikspect): regression on displayed auto-answer
+     2018-06-10 f4ce101 actionless fix(pikspect): don't fully clean historic output on filter match
+     2018-06-10 b47ede1 actionless fix(main): commented-out ctrl+c handler
+     2018-06-10 aef43d0 actionless fix(pikspect): better do `grep -v`
+     2018-06-10 e74022d actionless fix(pikspect): synchronize returncode to end of the output
+     2018-06-08 66a590d actionless fix(install_cli): package ignore handling regression
+     2018-06-08 7be1405 actionless fix(install_cli: pacman_wrap): don't try to remove non-existent arg - 2
+     2018-06-08 e7e3441 actionless fix(install_cli: pacman_wrap): don't try to remove non-existent arg
+     2018-06-08 219b28b guschtlswife chore(locale: de): add/update strings + cleanup. (#206)
+     2018-06-08 3e17167 actionless fix(install_cli): missing prompt character in --sysupgrade
+     2018-06-08 90ede58 actionless feat(pikspect, install cli): add .hide_each_line() method and use it to improve pacman wrapping experience
+     2018-06-08 ea10d21 actionless fix(install_cli, pacman): gracefully handle unexpected --print-format output - 2
+     2018-06-08 d2c1a57 actionless fix(install_cli, pacman): gracefully handle unexpected --print-format output
+     2018-06-08 ee1be6f actionless feat(install cli): don't show prompt in --noconfirm mode
+     2018-06-08 46e35d3 actionless feat(pikspect, install cli): add .hide_after() and .show_after() methods and use them to improve pacman wrapping experience
+     2018-06-08 6cc81d6 actionless fix(install_cli): group selection pacman question
+     2018-06-08 69c8352 actionless feat(pprint): purge line
+     2018-06-08 6a5727e actionless fix(install_cli): load local db before starting pacman in --noconfirm mode
+     2018-06-08 da118aa actionless fix(install_cli): --noconfirm mode
+     2018-06-08 9c78ceb actionless fix(pacman: find_repo_packages): case when no repo packages found
+     2018-06-08 28f8252 actionless fix(install_cli): show upgrade message only on --sysupgrade
+     2018-06-08 601ffff actionless chore(news): internationalization support
+     2018-06-08 4f6bc4a actionless fix(install_cli): print not found deps only if they really present
+     2018-06-08 7c324ab actionless chore(args): assign '-r' to '--repo'
+     2018-06-08 cd64a30 actionless fix(install_cli): comment out back nothing todo handler
+     2018-06-06 8c66ff5 Bundy01 chore(locale): add Spanish (es) translation (#205)
+     2018-06-05 f533db1 actionless fix(news, main): create cache root dir if doesn't exists
+     2018-06-04 1b9e95b Bundy01 chore(locale): update FR translation (#198)
 
 
 Wed Jun 13 03:15:27 2018 +0200
@@ -286,6 +732,18 @@ Wed Jun 13 03:15:27 2018 +0200
      2018-06-13 6d29aa1 actionless fix(install_cli: parse_pacman): typecheck
      2018-06-13 8c047b1 actionless fix(aur_deps): check all repo-provided deps
      2018-06-13 71ce9d4 actionless feat(install cli): parse provided package choice from pacman output
+     2018-06-12 026d212 actionless style(pikspect: tty_restore): add typehints
+     2018-06-12 b655e22 actionless fix(pacman, pikspect): pylint
+     2018-06-12 b1b16d2 actionless feat(pikspect: tty_restore; prompt): implement tty save/restore for sub tty
+     2018-06-12 a21fcb3 actionless fix(pacman, install_cli): better support for installing repo packages via Provided field (prompt still shows up only the latest candidate)
+     2018-06-12 5f52867 actionless Revert "fix(pacman: find_repo_package): don't return package deps as search result"
+     2018-06-12 3d66ea7 actionless style(aur_deps): pylint
+     2018-06-12 66d71ce actionless fix(aur_deps): partially revert 1cdb23f0b7f1d1d143955b8bea1cfa1cc66a3e2a
+     2018-06-12 35303dd actionless Revert "refactor(aur_deps): remove unused code branch (find provided pkgs in repo)"
+     2018-06-12 6411ff2 actionless fix(pacman: find_repo_package): don't return package deps as search result
+     2018-06-11 635707d actionless fix(main): restore tty on any exit, not only Ctrl+C
+     2018-06-11 54b11d1 actionless fix(install_cli): reset repo packages cache if --refresh was passed
+     2018-06-11 48bd74a actionless fix(install cli): join pacman pool in noconfirm mode
 
 
 Wed Jun 13 03:36:55 2018 +0200
@@ -306,6 +764,39 @@ Sun Jun 17 09:25:10 2018 +0200
      2018-06-17 6b5d5ce actionless fix(core: spawn): use tempfile instead of PIPE
      2018-06-17 bb9991d actionless style(install info fetcher): pylint
      2018-06-17 8763ecb actionless refactor(install info fetcher): extract deps marking into separate method
+     2018-06-17 64df273 actionless feat(install info fetcher): show in prompt .makedepends and .checkdepends of aur packages
+     2018-06-17 dd2546f actionless fix(prompt, pikspect): return back tty restoring; don't flush any stream
+     2018-06-17 2747544 actionless fix(aur_deps): regression when search repo packages with multiple version matcher
+     2018-06-17 233b53e actionless chore(vulture): update whitelist
+     2018-06-17 c6fab21 actionless fix(aur_deps): pass full version matcher to find_repo_package()
+     2018-06-17 72298f6 actionless wip(pikspect): don't drain tty on restore
+     2018-06-17 b4486f9 actionless style: .join all the pools
+     2018-06-17 d004da4 actionless wip(prompt): comment out TTYRestore call
+     2018-06-17 36e3804 actionless fix(pacman: print_format): caching if none found
+     2018-06-17 17dab01 actionless fix(version): regression because of using instance methods instead of closure
+     2018-06-17 522d893 actionless refactor(pacman: get_pacman_command): import args module instead of bypassing them as param
+     2018-06-17 277089e actionless style(install info fetcher): move import up
+     2018-06-17 1cc52c0 actionless refactor(package_update): split it to InstallInfo, InstallInfoFetcher and updates
+     2018-06-17 366562c actionless refactor(install cli): move out stuff related to new pkgs' InstallInfo/PackageUpdate to `package_update.InstallInfoFetcher`
+     2018-06-17 bfc8bbe actionless refactor(version): remove get_package_name_and_version_matcher_from_depend_line()
+     2018-06-17 0fc02bd actionless refactor(version): move all VersionMatcher-related logic to the class itself
+     2018-06-17 9eeb316 actionless refactor(install cli, aur_deps): use thread pool to hurry up iterations
+     2018-06-17 facea7c actionless feat(install cli, print_dept): colorized output for package deps, group and providers in install prompt
+     2018-06-17 78b8095 actionless fix(install cli): improve printing which packages depend on which via version deps
+     2018-06-17 a1b676d actionless refactor(package_update): use lowercase class attributes
+     2018-06-16 d38c36e actionless feat(install cli, print_dept): print which pkg require deps
+     2018-06-16 f568184 actionless refactor(install cli): move .provided_by and .members_of detection to a more common routine
+     2018-06-16 a8dad01 actionless feat(install cli, print_dept): print package group if it was requested as a member of group; fix [m]anual package selection for them
+     2018-06-16 03fac6a actionless fix(install cli): don't print twice the same deps
+     2018-06-16 f440b19 actionless Revert "doc(readme): update readme since -Syu not splitted anymore to -Sy and -Su"
+     2018-06-16 d3301d1 actionless Revert "doc(readme): remove note on argument wrapping since there is no special case with Syu vs Sy+Su anymore"
+     2018-06-16 c58a72b actionless feat(prompt, pikspect): make auto_proceed and hide_pacman_prompt configurable (for now only from python api, not config file)
+     2018-06-16 d0fb84d actionless fix(install cli, aur): manual package selection of aur packages
+     2018-06-16 18ea550 actionless chore(aur_deps, install cli): add more refactoring notes
+     2018-06-16 b0260a6 actionless refactor(install cli): revert to Syu separation and remove pacman prompt hiding, prompt improvements for packages installed via provided
+     2018-06-16 1725c32 actionless Revert "refactor(pacman): remove unused .get_repo_priority()"
+     2018-06-13 237ad6e actionless chore(vulture): start maintaining whitelist for false alarms
+     2018-06-13 c235a48 actionless chore(PKGBUILD): fix license name
 
 
 Sun Jun 17 10:45:44 2018 +0200
@@ -351,6 +842,11 @@ Thu Jun 28 15:50:31 2018 +0200
      2018-06-25 1ed1319 actionless fix(build: remove deps): resolve diff inconsistency in case if package was replaced by a different provider
      2018-06-25 01471b8 actionless fix(pacman: pkg_db: get_provided_pkgs): case when package is providing itself (like `jack` is provided by `jack` and `jack2`)
      2018-06-19 af54476 actionless fix(install info fetcher): --needed handling when installing repo pkgs
+     2018-06-18 f0e70db actionless fix(build): bypass --noconfirm to pacman commands if pikaur was invoked with --noconfirm
+     2018-06-18 47534cd actionless chore: start using coveralls (#216)
+     2018-06-18 9a7863a actionless chore(locale): update label for [v]iew package details
+     2018-06-18 e7897d6 actionless fix(install cli): do you want to proceed without editing?
+     2018-06-18 4960bbf actionless fix(aur_deps): remove additional exceptions handling in thread
 
 
 Fri Jun 29 18:47:01 2018 +0200
@@ -375,6 +871,14 @@ Thu Jul 12 00:30:20 2018 +0200
      2018-07-11 737f043 actionless fix(aur_deps): don't split doubled version requirements when querying them from pacman
      2018-07-11 540283d actionless fix(aur_deps): handle some edge case with provided packages
      2018-07-11 b2e8532 actionless fix(pacman): discard provided packages as well when discarding local cache
+     2018-07-11 84c25be actionless fix(args, makepkg_config): separate --mflags by coma
+     2018-07-11 51c4e4c actionless feat(args, makepkg_config): add --makepkg-path cli arg
+     2018-07-10 68ac970 actionless feat: add --mflags and --makepkg-config args
+     2018-07-05 d5c8279 actionless feat(build, args): don't rebuild package if it's already in `~/.cache/pikaur/pkg/` and no `--rebuild` flag was passed
+     2018-07-05 4e7a254 Caio Salvador fix: use direct path to python3 to avoid problems when default python3 is not cpython
+     2018-07-04 72e5aa9 Bundy01 Updating locales
+     2018-07-03 9352aef actionless fix(aur_deps): don't try to remove package with failing version matcher if it was already removed
+     2018-06-29 c80d7b8 Alexandre Lopes chore(locale): update PT translation (#226)
 
 
 Fri Jul 13 02:01:46 2018 +0200
@@ -455,6 +959,12 @@ Sun Jul 22 19:48:44 2018 +0200
          2018-07-22 081ba66 actionless fix(build, core): race condition when updating aur repos with systemd dynamic users
          2018-07-22 ec1735e actionless fix(core: copy): isolate cp -r command if running pikaur from root via sudo
          2018-07-22 3d69888 Osman Karagöz chore(locale): update TR translation
+    
+    1.1.2           Bugfix release 1.1.2
+        more fixes for installing local PKGBUILD (`-P`)
+    
+    1.1.1           Bugfix release 1.1.1
+        copy function creating problems again :-)
 
 
 Mon Jul 23 07:05:31 2018 +0200
@@ -693,3 +1203,32 @@ Thu Sep 6 04:59:18 2018 +0200
      2018-09-05 42ef5d2 actionless fix(main: cache clean): raise SysExit() instead of calling sys.exit()
      2018-09-05 0ef48be actionless fix(main: cache clean): correctly bypass -Scc to pacman
      2018-09-05 8ad1186 鳶一雨音 chore(locale): add Chinese(simplified) translations.  (#284)
+
+
+Thu Oct 4 05:13:45 2018 +0200
+-------------------------------------------------
+1.3.0           Release 1.3.0
+    
+    Notable changes:
+     2018-10-04 72406f8 actionless feat(config): print warning when moving aur_repos from ~/.cache to ~/.local/
+     2018-10-04 cd2077f actionless feat(config): move aur_repos from ~/.cache to ~/.local/share
+     2018-10-04 4565c0b actionless feat(config, core): make sudo loop interval configurable
+     2018-10-03 0d7d149 actionless fix(install cli: manual package selection): bug in lists' diff
+     2018-10-03 3a6e696 Felix Glaser chore(locale): update translation file for german (#301)
+     2018-10-03 7f1958c Felix Glaser doc(readme): Fix the wording in some places of the readme (#300)
+     2018-09-26 27ae2b3 actionless fix(build): don't show confirm prompt twice on wrong arch
+     2018-09-24 55f526c Bert Peters chore(locale): Update Dutch translation. (#297)
+     2018-09-20 1a2a246 actionless feat(config, install cli): add build.GitDiffArgs config option to specify flags to pass to git diff when reviewing build files
+     2018-09-19 d41598c actionless feat(config, args, main): implement --pikaur-config flag and use it for passing user's config to root when using dynamic users
+     2018-09-19 aaf377a actionless fix(build): aur deps are not being removed when using --downloadonly flag
+     2018-09-19 0168cf6 actionless fix(pacman: install built deps): ignore --downloadonly flag for --upgrade pacman command
+     2018-09-16 3490656 actionless fix(install cli): don't exit immediately on a wrong architecture
+     2018-09-12 f423417 Zhustec change zh_cn locale to zh_CN (#289)
+     2018-09-06 47e7647 Bundy01 chore(locale: es, fr): update (#287)
+
+
+Thu Oct 4 05:19:15 2018 +0200
+-------------------------------------------------
+1.3.0.1         Hotfix release 1.3.0.1
+    
+    Fix changelog generation
