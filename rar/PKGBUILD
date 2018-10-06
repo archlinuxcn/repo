@@ -6,7 +6,7 @@
 
 pkgname=rar
 pkgver=5.6.1
-pkgrel=2
+pkgrel=3
 pkgdesc="A command-line port of the rar compression utility"
 url="http://www.rarlab.com"
 arch=('i686' 'x86_64')
@@ -26,11 +26,9 @@ sha512sums_x86_64=('b873397cc44ffe722248638f0315a445e7f8b39ce310d45b79e27d8c2662
 package() {
     cd "${srcdir}/${pkgname}"
     install -Dm755 rar          "${pkgdir}/usr/bin/rar"
+    install -Dm755 unrar        "${pkgdir}/usr/bin/unrar"
     install -Dm755 default.sfx  "${pkgdir}/usr/lib/default.sfx"
     install -Dm644 license.txt  "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
     install -Dm644 ../rar.1     "${pkgdir}/usr/share/man/man1/rar.1"
     install -Dm644 rarfiles.lst "${pkgdir}/etc/rarfiles.lst"
-
-    # rar is a superset of unrar - needed for some UI tools to support RAR format.
-    ln -s "/usr/bin/rar" "${pkgdir}/usr/bin/unrar"
 }
