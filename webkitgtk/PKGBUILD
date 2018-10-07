@@ -30,8 +30,8 @@ sha256sums=('588aea051bfbacced27fdfe0335a957dca839ebe36aa548df39c7bbafdb65bf7'
             'df8284004f25d189184aab1009df696c915212e0e439a555dbd0dbec06111e2e')
 
 prepare() {
-  mkdir build-gtk{,2} path
-  ln -s /usr/bin/python2 path/python
+  mkdir -p build-gtk{,2} path
+  ln -s -f /usr/bin/python2 path/python
 
   cd $pkgbase-$pkgver
   patch -Np1 -i ../webkitgtk-2.4.9-abs.patch
