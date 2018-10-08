@@ -20,8 +20,8 @@ _pgo=true
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=62.0.2
-pkgrel=1
+pkgver=62.0.3
+pkgrel=2
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -62,7 +62,6 @@ source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
 	add_missing_pgo_rule.patch
         pgo_fix_missing_kdejs.patch
         https://dev.gentoo.org/~anarchy/mozilla/patchsets/firefox-62.0-patches-01.tar.xz
-        https://gitweb.gentoo.org/repo/gentoo.git/plain/www-client/firefox/files/firefox-61.0-mozHunspell.patch
 )
 
 
@@ -118,9 +117,6 @@ prepare() {
 
   # add missing file Makefile for pgo builds
   patch -Np1 -i "$srcdir"/pgo_fix_missing_kdejs.patch
-
-  # Add missing include of nsCOMPtr.h, bug #660726
-  patch -Np1 -i "$srcdir/"firefox-61.0-mozHunspell.patch
   
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1435212
   #patch -Np1 -i ../0001-Bug-1435212-Add-support-for-FFmpeg-4.0.-r-bryce.patch
@@ -249,5 +245,4 @@ md5sums=('SKIP'
          '379c447c7d7c9988738737f92abaf5ee'
          'fe24f5ea463013bb7f1c12d12dce41b2'
          '3fa8bd22d97248de529780f5797178af'
-         '9f098bf9bf478a36ba00694bb7722fc2'
-         '13d3ece023495d23f665c78f19b70be8')
+         '9f098bf9bf478a36ba00694bb7722fc2')
