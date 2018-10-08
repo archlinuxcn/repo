@@ -6,14 +6,14 @@ pkgbase=webkitgtk
 pkgname=(webkitgtk webkitgtk2)
 epoch=3
 pkgver=2.4.11
-pkgrel=13
+pkgrel=14
 pkgdesc="Legacy Web content engine"
 arch=(i686 x86_64 armv7h)
 url="https://webkitgtk.org/"
 license=(custom)
 depends=(libxt libxslt sqlite libsoup 'enchant>=2.2' libgl geoclue2 gst-plugins-base-libs
          libsecret libwebp harfbuzz-icu 'icu>=61')
-makedepends=(gtk3 gtk2 gperf gobject-introspection python2 mesa ruby)
+makedepends=(gtk3 gtk2 gperf gobject-introspection python2 mesa ruby gtk-doc)
 optdepends=('gst-plugins-base: free media decoding'
             'gst-plugins-good: media decoding'
             'gst-libav: nonfree media decoding')
@@ -40,6 +40,9 @@ prepare() {
   patch -Np1 -i ../enchant-2.x.patch
   # https://www.archlinux.org/todo/enchant-221-rebuild/
   patch -Np1 -i ../pkgconfig-enchant-2.patch
+
+  # needed as autotools-related files are patched
+  autoreconf -ifv
 }
 
 _build() (
@@ -58,7 +61,7 @@ _build() (
     --libexecdir=/usr/lib/webkit${_ver} \
     --enable-introspection \
     --disable-webkit2 \
-    --disable-gtk-doc \
+    --enable-gtk-doc \
     "$@"
 
   # https://bugzilla.gnome.org/show_bug.cgi?id=655517
