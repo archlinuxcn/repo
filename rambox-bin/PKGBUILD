@@ -2,7 +2,7 @@
 
 pkgname=rambox-bin
 _pkgname=rambox
-pkgver=0.5.17
+pkgver=0.6.0
 pkgrel=1
 pkgdesc='Free and Open Source messaging and emailing app that combines common web applications into one.'
 arch=('i686' 'x86_64')
@@ -11,19 +11,20 @@ provides=("rambox")
 url='http://rambox.pro/'
 license=('GPL3')
 source=("${_pkgname}.sh" "${_pkgname}.desktop" "${_pkgname}.png")
-source_i686=("https://github.com/saenzramiro/rambox/releases/download/$pkgver/rambox-$pkgver-ia32.tar.gz")
-source_x86_64=("https://github.com/saenzramiro/rambox/releases/download/$pkgver/rambox-$pkgver-x64.tar.gz")
+source_i686=("https://github.com/ramboxapp/community-edition/releases/download/$pkgver/Rambox-$pkgver-linux-ia32.tar.gz")
+source_x86_64=("https://github.com/ramboxapp/community-edition/releases/download/$pkgver/Rambox-$pkgver-linux-x64.tar.gz")
 
 sha256sums=('ee2573d62b580e8ee584335534976396761b5da53a009bccb881b9cf6cb2041d'
             '61ad70a929c402e24c79b8868208310f9b3c4d7801db2b791af38293231ee524'
             '0bf4d0c849ad6151f77b346fea0424fab910f434378f9890b16fd15a32a10064')
-sha256sums_i686=('cd50ecd0a345122e568addc123df89cee9b14e47d01dec9ff409dbb8f4ba7b1c')
-sha256sums_x86_64=('e1167d03c28107f77a1c1ed530d2a47651d4b24994b2e10a9cebf7adeb90e207')
+sha256sums_i686=('1b5d1cbbadc522f57be9849973ab20bdd0ba0283579aee0dbb7d998c050edb1a')
+sha256sums_x86_64=('8cb004c297d9e7b1724656b9066e8dc6c1c6ccf9a17e23959038adffe8868788')
 
-# default path after extraction
-_path="Rambox-${pkgver}"
-# special path for i686
-[[ "$CARCH" = "i686" ]] && _path="Rambox-${pkgver}-ia32"
+# path after extraction
+_path="Rambox-${pkgver}-linux"
+# append architecture
+[[ "$CARCH" = "i686" ]] && _path="${_path}-ia32"
+[[ "$CARCH" = "x86_64" ]] && _path="${_path}-x64"
 
 package() {
     install -d ${pkgdir}/{opt/rambox,usr/{bin,share/pixmaps}}
