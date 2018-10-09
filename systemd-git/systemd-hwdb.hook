@@ -1,0 +1,11 @@
+[Trigger]
+Type = File
+Operation = Install
+Operation = Upgrade
+Operation = Remove
+Target = usr/lib/udev/hwdb.d/*
+
+[Action]
+Description = Updating udev hardware database...
+When = PostTransaction
+Exec = /usr/share/libalpm/scripts/systemd-hook hwdb

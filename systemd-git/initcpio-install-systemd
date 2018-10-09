@@ -1,0 +1,202 @@
+#!/bin/bash
+
+strip_quotes() {
+  local len=${#1} quotes=$'[\'"]' str=${!1}
+
+  if [[ ${str:0:1} = ${str: -1} && ${str:0:1} = $quotes ]]; then
+    printf -v "$1" %s "${str:1:-1}"
+  fi
+}
+
+add_udev_rule() {
+    # Add an udev rules file to the initcpio image. Dependencies on binaries
+    # will be discovered and added.
+    #   $1: path to rules file (or name of rules file)
+
+    local rules= rule= key= value= binary=
+
+    rules=$(PATH=/usr/lib/udev/rules.d:/lib/udev/rules.d type -P "$1")
+    if [[ -z $rules ]]; then
+        # complain about not found rules
+        return 1
+    fi
+
+    add_file "$rules"
+
+    while IFS=, read -ra rule; do
+        # skip empty lines, comments
+        [[ -z $rule || $rule = @(+([[:space:]])|#*) ]] && continue
+
+        for pair in "${rule[@]}"; do
+            IFS=' =' read -r key value <<< "$pair"
+            case $key in
+                RUN@({program}|+)|IMPORT{program}|ENV{REMOVE_CMD})
+                    strip_quotes 'value'
+                    # just take the first word as the binary name
+                    binary=${value%% *}
+                    [[ ${binary:0:1} == '$' ]] && continue
+                    if [[ ${binary:0:1} != '/' ]]; then
+                        binary=$(PATH=/usr/lib/udev:/lib/udev type -P "$binary")
+                    fi
+                    add_binary "$binary"
+                    ;;
+            esac
+        done
+    done <"$rules"
+}
+
+add_systemd_unit() {
+    # Add a systemd unit file to the initcpio image. Hard dependencies on binaries
+    # and other unit files will be discovered and added.
+    #   $1: path to rules file (or name of rules file)
+
+    local unit= rule= entry= key= value= binary= dep=
+
+    unit=$(PATH=/usr/lib/systemd/system:/lib/systemd/system type -P "$1")
+    if [[ -z $unit ]]; then
+        # complain about not found unit file
+        return 1
+    fi
+
+    add_file "$unit"
+
+    while IFS='=' read -r key values; do
+        read -ra values <<< "$values"
+
+        case $key in
+            Requires|OnFailure)
+                # only add hard dependencies (not Wants)
+                map add_systemd_unit "${values[@]}"
+                ;;
+            Exec*)
+                # don't add binaries unless they are required
+                if [[ ${values[0]:0:1} != '-' ]]; then
+                    add_binary "${values[0]}"
+                fi
+                ;;
+        esac
+
+    done <"$unit"
+
+    # preserve reverse soft dependency
+    for dep in {/usr,}/lib/systemd/system/*.wants/${unit##*/}; do
+        if [[ -L $dep ]]; then
+            add_symlink "$dep"
+        fi
+    done
+
+    # add hard dependencies
+    if [[ -d $unit.requires ]]; then
+        for dep in "$unit".requires/*; do
+            add_systemd_unit ${dep##*/}
+        done
+    fi
+}
+
+add_systemd_drop_in() {
+    local unit=$1 dropin_name=$2
+
+    mkdir -p "$BUILDROOT/etc/systemd/system/$unit.d"
+    cat >"$BUILDROOT/etc/systemd/system/$unit.d/$2.conf"
+}
+
+build() {
+    local rules unit
+
+    # from base
+    add_binary /bin/mount
+    add_binary /usr/bin/kmod /usr/bin/modprobe
+    add_binary /usr/lib/systemd/systemd /init
+    add_binary /usr/bin/sulogin
+
+    map add_binary \
+        /usr/bin/systemd-tmpfiles \
+        /usr/lib/systemd/systemd-hibernate-resume \
+        /usr/lib/systemd/systemd-shutdown \
+        /usr/lib/systemd/systemd-sulogin-shell \
+        /usr/lib/systemd/system-generators/systemd-fstab-generator \
+        /usr/lib/systemd/system-generators/systemd-gpt-auto-generator \
+        /usr/lib/systemd/system-generators/systemd-hibernate-resume-generator
+
+    # for journalctl in emergency shell
+    add_binary journalctl
+
+    # udev rules and systemd units
+    map add_udev_rule "$rules" \
+            50-udev-default.rules \
+            60-persistent-storage.rules \
+            64-btrfs.rules \
+            80-drivers.rules \
+            99-systemd.rules
+
+    map add_systemd_unit \
+            initrd-cleanup.service \
+            initrd-fs.target \
+            initrd-parse-etc.service \
+            initrd-root-fs.target \
+            initrd-root-device.target \
+            initrd-switch-root.service \
+            initrd-switch-root.target \
+            initrd-udevadm-cleanup-db.service \
+            initrd.target \
+            kmod-static-nodes.service \
+            local-fs.target \
+            local-fs-pre.target \
+            paths.target \
+            reboot.target \
+            slices.target \
+            sockets.target \
+            swap.target \
+            systemd-fsck@.service \
+            systemd-hibernate-resume@.service \
+            systemd-journald.service \
+            systemd-journald-audit.socket \
+            systemd-journald-dev-log.socket \
+            systemd-modules-load.service \
+            systemd-tmpfiles-setup-dev.service \
+            systemd-udev-trigger.service \
+            systemd-udevd-control.socket \
+            systemd-udevd-kernel.socket \
+            systemd-udevd.service \
+            timers.target \
+            rescue.target \
+            emergency.target
+
+    add_symlink "/usr/lib/systemd/system/default.target" "initrd.target"
+    add_symlink "/usr/lib/systemd/system/ctrl-alt-del.target" "reboot.target"
+
+    add_binary "$(readlink -f /usr/lib/libnss_files.so)"
+    printf '%s\n' >"$BUILDROOT/etc/nsswitch.conf" \
+        'passwd: files' \
+        'group: files' \
+        'shadow: files'
+
+    echo "root:x:0:0:root:/:/bin/sh" >"$BUILDROOT/etc/passwd"
+    echo "root:x:0:root" >"$BUILDROOT/etc/group"
+    echo "root::::::::" >"$BUILDROOT/etc/shadow"
+
+    add_systemd_drop_in systemd-udevd.service resolve-names <<EOF
+[Service]
+ExecStart=
+ExecStart=/usr/lib/systemd/systemd-udevd --resolve-names=never
+EOF
+
+    add_dir "/etc/modules-load.d"
+    (
+      . "$_f_config"
+      set -f
+      printf '%s\n' ${MODULES[@]} >"$BUILDROOT/etc/modules-load.d/MODULES.conf"
+    )
+}
+
+help() {
+    cat <<HELPEOF
+This will install a basic systemd setup in your initramfs, and is meant to
+replace the 'base', 'usr', 'udev' and 'resume' hooks. Other hooks with runtime
+components will need to be ported, and will not work as intended. You also may
+wish to still include the 'base' hook (before this hook) to ensure that a
+rescue shell exists on your initramfs.
+HELPEOF
+}
+
+# vim: set ft=sh ts=4 sw=4 et:

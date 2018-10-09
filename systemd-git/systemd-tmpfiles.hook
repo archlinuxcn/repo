@@ -1,0 +1,10 @@
+[Trigger]
+Type = File
+Operation = Install
+Operation = Upgrade
+Target = usr/lib/tmpfiles.d/*.conf
+
+[Action]
+Description = Creating temporary files...
+When = PostTransaction
+Exec = /usr/share/libalpm/scripts/systemd-hook tmpfiles

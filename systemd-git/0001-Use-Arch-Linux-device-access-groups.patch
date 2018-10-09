@@ -1,0 +1,75 @@
+From 34e4b4953cb99642e9144d97823edf32b06ffe93 Mon Sep 17 00:00:00 2001
+Message-Id: <34e4b4953cb99642e9144d97823edf32b06ffe93.1520376078.git.jan.steffens@gmail.com>
+From: "Jan Alexander Steffens (heftig)" <jan.steffens@gmail.com>
+Date: Tue, 6 Mar 2018 23:39:47 +0100
+Subject: [PATCH] Use Arch Linux' device access groups
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+  cdrom   → optical
+  dialout → uucp
+  tape    → storage
+---
+ rules/50-udev-default.rules.in | 14 +++++++-------
+ sysusers.d/basic.conf.in       |  6 +++---
+ 2 files changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/rules/50-udev-default.rules.in b/rules/50-udev-default.rules.in
+index 191f56f42..f81c4d0fc 100644
+--- a/rules/50-udev-default.rules.in
++++ b/rules/50-udev-default.rules.in
+@@ -22,7 +22,7 @@ SUBSYSTEM=="tty", KERNEL=="sclp_line[0-9]*", GROUP="tty", MODE="0620"
+ SUBSYSTEM=="tty", KERNEL=="ttysclp[0-9]*", GROUP="tty", MODE="0620"
+ SUBSYSTEM=="tty", KERNEL=="3270/tty[0-9]*", GROUP="tty", MODE="0620"
+ SUBSYSTEM=="vc", KERNEL=="vcs*|vcsa*", GROUP="tty"
+-KERNEL=="tty[A-Z]*[0-9]|ttymxc[0-9]*|pppox[0-9]*|ircomm[0-9]*|noz[0-9]*|rfcomm[0-9]*", GROUP="dialout"
++KERNEL=="tty[A-Z]*[0-9]|ttymxc[0-9]*|pppox[0-9]*|ircomm[0-9]*|noz[0-9]*|rfcomm[0-9]*", GROUP="uucp"
+ 
+ SUBSYSTEM=="mem", KERNEL=="mem|kmem|port", GROUP="kmem", MODE="0640"
+ 
+@@ -57,13 +57,13 @@ KERNEL=="irlpt[0-9]*", GROUP="lp"
+ SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ENV{ID_USB_INTERFACES}=="*:0701??:*", GROUP="lp"
+ 
+ SUBSYSTEM=="block", GROUP="disk"
+-SUBSYSTEM=="block", KERNEL=="sr[0-9]*", GROUP="cdrom"
+-SUBSYSTEM=="scsi_generic", SUBSYSTEMS=="scsi", ATTRS{type}=="4|5", GROUP="cdrom"
+-KERNEL=="sch[0-9]*", GROUP="cdrom"
+-KERNEL=="pktcdvd[0-9]*", GROUP="cdrom"
+-KERNEL=="pktcdvd", GROUP="cdrom"
++SUBSYSTEM=="block", KERNEL=="sr[0-9]*", GROUP="optical"
++SUBSYSTEM=="scsi_generic", SUBSYSTEMS=="scsi", ATTRS{type}=="4|5", GROUP="optical"
++KERNEL=="sch[0-9]*", GROUP="optical"
++KERNEL=="pktcdvd[0-9]*", GROUP="optical"
++KERNEL=="pktcdvd", GROUP="optical"
+ 
+-SUBSYSTEM=="scsi_generic|scsi_tape", SUBSYSTEMS=="scsi", ATTRS{type}=="1|8", GROUP="tape"
++SUBSYSTEM=="scsi_generic|scsi_tape", SUBSYSTEMS=="scsi", ATTRS{type}=="1|8", GROUP="storage"
+ SUBSYSTEM=="scsi_generic", SUBSYSTEMS=="scsi", ATTRS{type}=="0", GROUP="disk"
+ KERNEL=="qft[0-9]*|nqft[0-9]*|zqft[0-9]*|nzqft[0-9]*|rawqft[0-9]*|nrawqft[0-9]*", GROUP="disk"
+ KERNEL=="loop-control", GROUP="disk", OPTIONS+="static_node=loop-control"
+diff --git a/sysusers.d/basic.conf.in b/sysusers.d/basic.conf.in
+index 8e358c02d..33e513a36 100644
+--- a/sysusers.d/basic.conf.in
++++ b/sysusers.d/basic.conf.in
+@@ -24,14 +24,14 @@ g utmp    -     -            -
+ 
+ # Hardware access groups
+ g audio   -     -            -
+-g cdrom   -     -            -
+-g dialout -     -            -
+ g disk    -     -            -
+ g input   -     -            -
+ g kvm     -     -            -
+ g lp      -     -            -
++g optical -     -            -
+ g render  -     -            -
+-g tape    -     -            -
++g storage -     -            -
++g uucp    -     -            -
+ g video   -     -            -
+ 
+ # Default group for normal users
+-- 
+2.16.2
+

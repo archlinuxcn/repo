@@ -1,0 +1,32 @@
+#!/bin/sh -e
+
+systemd_live() {
+  if [ ! -d /run/systemd/system ]; then
+    echo >&2 "  Skipped: Current root is not booted."
+    exit 0
+  fi
+}
+
+udevd_live() {
+  if [ ! -d /run/udev ]; then
+    echo >&2 "  Skipped: Device manager is not running."
+    exit 0
+  fi
+}
+
+case $1 in
+  catalog)  /usr/bin/journalctl --update-catalog ;;
+  hwdb)     /usr/bin/systemd-hwdb --usr update ;;
+  update)   touch -c /usr ;;
+  sysusers) /usr/bin/systemd-sysusers ;;
+  tmpfiles) /usr/bin/systemd-tmpfiles --create ;;
+
+  daemon-reload) systemd_live; /usr/bin/systemctl daemon-reload ;;
+  udev-reload)   udevd_live;   /usr/bin/udevadm control --reload ;;
+  binfmt)        systemd_live; /usr/lib/systemd/systemd-binfmt ;;
+  sysctl)        systemd_live; /usr/lib/systemd/systemd-sysctl ;;
+
+  *) echo >&2 "  Invalid operation '$1'"; exit 1 ;;
+esac
+
+exit 0

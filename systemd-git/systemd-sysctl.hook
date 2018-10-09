@@ -1,0 +1,10 @@
+[Trigger]
+Type = File
+Operation = Install
+Operation = Upgrade
+Target = usr/lib/sysctl.d/*.conf
+
+[Action]
+Description = Applying kernel sysctl settings...
+When = PostTransaction
+Exec = /usr/share/libalpm/scripts/systemd-hook sysctl
