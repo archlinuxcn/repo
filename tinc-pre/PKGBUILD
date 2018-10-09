@@ -1,7 +1,7 @@
 # Maintainer: Hexchain Tong <i at hexchain dot org>
 
 pkgname=tinc-pre
-pkgver=1.1pre16
+pkgver=1.1pre17
 pkgrel=1
 pkgdesc="VPN (Virtual Private Network) daemon (Pre-release)"
 arch=(i686 x86_64 armv7h armv6h)
@@ -35,6 +35,6 @@ package() {
 
     mkdir -p "$pkgdir/etc/tinc/"
     mkdir -p "$pkgdir/usr/share/doc/tinc-pre/"
-    cp -rv --no-preserve='ownership' "$srcdir/tinc/doc/sample-config/" "$pkgdir/usr/share/doc/tinc-pre/"
-    install -Dm644 "$srcdir/tinc/bash_completion.d/tinc" -t "$pkgdir/usr/share/bash-completion/completions/"
+    cp -rv --no-preserve='ownership' "doc/sample-config/" "$pkgdir/usr/share/doc/tinc-pre/"
+    install -Dm644 "bash_completion.d/tinc" -t "$pkgdir/usr/share/bash-completion/completions/"
 }
