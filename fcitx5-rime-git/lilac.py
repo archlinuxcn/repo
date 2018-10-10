@@ -9,7 +9,7 @@ from lilaclib import *
 depends=['fmt', 'xcb-imdkit-git', 'fcitx5-git']
 
 update_on = [{
-    'gitlab': 'fcitx5-rime'
+    'gitlab': 'fcitx/fcitx5-rime'
 }]
 
 
