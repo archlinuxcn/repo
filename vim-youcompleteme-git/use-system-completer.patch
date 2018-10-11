@@ -1,5 +1,5 @@
 diff --git a/ycmd/completers/go/go_completer.py b/ycmd/completers/go/go_completer.py
-index b9b975e4..618ad00d 100644
+index 6e26aa19..da3befc4 100644
 --- a/ycmd/completers/go/go_completer.py
 +++ b/ycmd/completers/go/go_completer.py
 @@ -31,7 +31,7 @@ import threading
@@ -11,18 +11,17 @@ index b9b975e4..618ad00d 100644
  from ycmd.completers.completer import Completer
  
  BINARY_NOT_FOUND_MESSAGE = ( '{0} binary not found. Did you build it? '
-@@ -48,15 +48,9 @@ GOCODE_NO_COMPLETIONS_MESSAGE = 'No completions found.'
+@@ -48,14 +48,9 @@ GOCODE_NO_COMPLETIONS_MESSAGE = 'No completions found.'
  GOCODE_PANIC_MESSAGE = ( 'Gocode panicked trying to find completions, '
                           'you likely have a syntax error.' )
  
--DIR_OF_THIRD_PARTY = os.path.abspath(
--  os.path.join( os.path.dirname( __file__ ), '..', '..', '..', 'third_party' ) )
+-GO_DIR = os.path.abspath(
+-  os.path.join( os.path.dirname( __file__ ), '..', '..', '..', 'third_party',
+-                'go', 'src', 'github.com' ) )
  GO_BINARIES = dict( {
--  'gocode': os.path.join( DIR_OF_THIRD_PARTY,
--                          'gocode',
+-  'gocode': os.path.join( GO_DIR, 'mdempsky', 'gocode',
 -                          ExecutableName( 'gocode' ) ),
--  'godef': os.path.join( DIR_OF_THIRD_PARTY,
--                         'godef',
+-  'godef': os.path.join( GO_DIR, 'rogpeppe', 'godef',
 -                         ExecutableName( 'godef' ) )
 +  'gocode': '/usr/bin/gocode',
 +  'godef': '/usr/bin/godef',
