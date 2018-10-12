@@ -13,11 +13,8 @@ depends=['ruby-coderay', 'ruby-method_source', 'ruby-slop-3']
 #}]
 
 build_prefix = 'archlinuxcn-x86_64-build'
-pre_build = vcs_update
-
-def post_build():
-  git_add_files('PKGBUILD')
-  git_commit()
+pre_build = aur_pre_build
+post_build = aur_post_build
 
 if __name__ == '__main__':
   single_main()
