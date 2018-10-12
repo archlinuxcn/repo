@@ -3,12 +3,18 @@
 from lilaclib import *
 
 build_prefix = 'extra-x86_64'
+update_on = [{
+    'github': 'coredns/coredns',
+    'use_latest_release': True
+}]
 
-update_on = [{'aur':'coredns'}]
-depends = ['git']
+def pre_build():
+    update_pkgver_and_pkgrel(_G.newver.lstrip('v'))
+    run_cmd(['updpkgsums'])
 
-pre_build = aur_pre_build
-post_build = aur_post_build
+def post_build():
+    git_add_files('PKGBUILD')
+    git_commit()
 
 if __name__ == '__main__':
         single_main()
