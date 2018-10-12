@@ -9,4 +9,4 @@ Target = usr/lib/modules/%EXTRAMODULES%/*
 [Action]
 Description = Updating %PKGBASE% module dependencies...
 When = PostTransaction
-Exec = /usr/bin/depmod --quick %KERNVER%
+Exec = /usr/bin/depmod %KERNVER%

@@ -1,7 +1,22 @@
+display_requirements () {
+cat <<-EOF
+
+  To get suspend working properly you must do the following:
+
+  Enable the macbook-wakeup service for suspend/resume on LID events:
+  systemctl enable --now macbook-wakeup.service
+
+  Optionally, include the kernel boot option processor.ignore_ppc=1
+  to allow frequency changing on battery power.
+
+EOF
+}
+
 post_upgrade() {
   if findmnt --fstab -uno SOURCE /boot &>/dev/null && ! mountpoint -q /boot; then
     echo "WARNING: /boot appears to be a separate partition but is not mounted."
   fi
+  display_requirements
 }
 
 post_remove() {

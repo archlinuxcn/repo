@@ -2,10 +2,11 @@ diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
 index 37ff015..47b303a 100644
 --- a/drivers/pci/quirks.c
 +++ b/drivers/pci/quirks.c
-@@ -2776,6 +2776,27 @@ static void quirk_hotplug_bridge(struct pci_dev *dev)
+@@ -2886,6 +2893,27 @@ static void quirk_hotplug_bridge(struct pci_dev *dev)
+ }
  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HINT, 0x0020, quirk_hotplug_bridge);
  
- /*
++/*
 + * Apple: Avoid programming the memory/io aperture of 00:1c.0
 + *
 + * BIOS does not declare any resource for 00:1c.0, but with
@@ -26,7 +27,6 @@ index 37ff015..47b303a 100644
 +
 +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x8c10, quirk_apple_mbp_poweroff);
 +
-+/*
-  * This is a quirk for the Ricoh MMC controller found as a part of
-  * some mulifunction chips.
- 
+ /*
+  * This is a quirk for the Ricoh MMC controller found as a part of some
+  * multifunction chips.

@@ -23,10 +23,38 @@ index ee72ebe..e347047 100644
  	case pci_fixup_enable:
  		start = __start_pci_fixups_enable;
  		end = __end_pci_fixups_enable;
-@@ -4762,6 +4769,24 @@
+@@ -2886,6 +2893,27 @@ static void quirk_hotplug_bridge(struct pci_dev *dev)
+ }
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HINT, 0x0020, quirk_hotplug_bridge);
+ 
++/*
++ * Apple: Avoid programming the memory/io aperture of 00:1c.0
++ *
++ * BIOS does not declare any resource for 00:1c.0, but with
++ * hotplug flag set, thus OS allocate:
++ * [mem 0x7fa00000 - 0x7fbfffff]
++ * [mem 0x7fc00000-0x7fdfffff 64bit pref]
++ * which is conflict with an unreported device, which
++ * causes unpredictable result such as accessing io port.
++ * So clear the hotplug flag to work around it.
++ */
++static void quirk_apple_mbp_poweroff(struct pci_dev *dev)
++{
++	if (dmi_match(DMI_BOARD_VENDOR, "Apple Inc.") &&
++	    dmi_match(DMI_PRODUCT_NAME, "MacBookPro11,4") ||
++	    dmi_match(DMI_PRODUCT_NAME, "MacBookPro11,5"))
++		dev->is_hotplug_bridge = 0;
++}
++
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x8c10, quirk_apple_mbp_poweroff);
++
+ /*
+  * This is a quirk for the Ricoh MMC controller found as a part of some
+  * multifunction chips.
+@@ -4665,6 +4672,24 @@ static void quirk_intel_qat_vf_cap(struct pci_dev *pdev)
  }
  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443, quirk_intel_qat_vf_cap);
-
+ 
 +/*
 + * On Mac Pro 11, the allocation of pci bridge memory resource
 + * broke ACPI Sleep Type register region.
@@ -45,7 +73,7 @@ index ee72ebe..e347047 100644
 +}
 +DECLARE_PCI_FIXUP_ASSIGN(PCI_VENDOR_ID_INTEL, 0x8c10, quirk_mac_disable_mmio_bar);
 +
- /* FLR may cause some 82579 devices to hang. */
+ /* FLR may cause some 82579 devices to hang */
  static void quirk_intel_no_flr(struct pci_dev *dev)
  {
 diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
@@ -62,19 +90,19 @@ index 55641a3..730d6fd 100644
  	default:
  		pbus_size_io(bus, realloc_head ? 0 : additional_io_size,
 diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index 6a67ab9..3ba05f0 100644
+index e373e2e10f6a..8ec44c7450e0 100644
 --- a/include/asm-generic/vmlinux.lds.h
 +++ b/include/asm-generic/vmlinux.lds.h
-@@ -299,6 +299,9 @@
- 		VMLINUX_SYMBOL(__start_pci_fixups_final) = .;		\
+@@ -346,6 +346,9 @@
+ 		__start_pci_fixups_final = .;				\
  		KEEP(*(.pci_fixup_final))				\
- 		VMLINUX_SYMBOL(__end_pci_fixups_final) = .;		\
-+		VMLINUX_SYMBOL(__start_pci_fixups_assign) = .;		\
+ 		__end_pci_fixups_final = .;				\
++		__start_pci_fixups_assign = .;				\
 +		KEEP(*(.pci_fixup_assign))				\
-+		VMLINUX_SYMBOL(__end_pci_fixups_assign) = .;		\
- 		VMLINUX_SYMBOL(__start_pci_fixups_enable) = .;		\
++		__end_pci_fixups_assign = .;				\
+ 		__start_pci_fixups_enable = .;				\
  		KEEP(*(.pci_fixup_enable))				\
- 		VMLINUX_SYMBOL(__end_pci_fixups_enable) = .;		\
+ 		__end_pci_fixups_enable = .;				\
 diff --git a/include/linux/pci.h b/include/linux/pci.h
 index b67e4df..14a35bb 100644
 --- a/include/linux/pci.h
@@ -108,4 +136,3 @@ index 48958d3..248acdb 100644
 +	".pci_fixup_assign", \
  	".pci_fixup_enable", ".pci_fixup_resume", \
  	".pci_fixup_resume_early", ".pci_fixup_suspend"
-
