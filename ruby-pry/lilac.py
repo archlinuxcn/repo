@@ -12,7 +12,7 @@ depends=['ruby-coderay', 'ruby-method_source', 'ruby-slop-3']
 #    'aur': 'ruby-pry'
 #}]
 
-build_prefix = 'archlinuxcn-x86_64-build'
+build_prefix = 'archlinuxcn-x86_64'
 pre_build = aur_pre_build
 post_build = aur_post_build
 
