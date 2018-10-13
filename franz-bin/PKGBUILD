@@ -1,23 +1,42 @@
-# Maintainer: Utsob Roy uroybd@gmail.com
-# Contributor: Utsob Roy uroybd@gmail.com
+# Maintainer: "Amhairghin" Oscar Garcia Amor (https://ogarcia.me)
+# Contributor: Utsob Roy <uroybd(at)gmail(dot)com>
+
 pkgname=franz-bin
 pkgver=5.0.0_beta.18
-pkgrel=1
-pkgdesc="Messaging app for WhatsApp, Slack, Telegram, HipChat, Hangouts and many many more. Binrary from debian package without compiling."
+pkgrel=2
+pkgdesc='Franz is a free messaging app for services like WhatsApp, Slack, Messenger and many more'
 arch=('x86_64')
-url="https://meetfranz.com"
+url='https://meetfranz.com'
 license=('Apache')
-groups=('')
-depends=('gconf' 'libnotify' 'libappindicator-gtk2' 'libxtst' 'nss' 'libxss')
+depends=('alsa-lib' 'gconf' 'gtk2' 'libsecret' 'libxss' 'libxtst' 'nss')
+optdepends=('gnome-keyring')
+conflicts=('franz')
 options=('!strip' '!emptydirs')
-install=${pkgname}.install
-source_x86_64=("https://github.com/meetfranz/franz/releases/download/v${pkgver//_/-}/franz_${pkgver//_/-}_amd64.deb")
-sha512sums_x86_64=('dcee8ff93392c41f1d5e6d4c058fc5e05b592e6db23589f81207eeee0012d96fa569f0d8a79506e46b1ebd5575c4cb0840eedcc686fd9e4463323a0a29641faf')
+source=("https://github.com/meetfranz/franz/releases/download/v${pkgver//_/-}/franz_${pkgver//_/-}_amd64.deb"
+        "${pkgname}.patch")
+sha256sums=('f5761b4441a02227915d347a56a06944760a50c91ef9e11e28f848fc35622fb9'
+            'e0d03405a75a0cd4492875b111d4750b8a925b514f3ce9ef47b69b9fcaee2b7f')
 
-package(){
+package() {
+  # Extract package data
+  bsdtar -xJf data.tar.xz
 
-	# Extract package data
-	tar xf data.tar.xz -C "${pkgdir}"
+  # Install package data
+  mv "usr" "${pkgdir}"
+  install -dm755 "${pkgdir}/usr/bin" "${pkgdir}/usr/lib"
+  mv "opt/Franz" "${pkgdir}/usr/lib/franz"
+  ln -s "../lib/franz/franz" "${pkgdir}/usr/bin/franz"
 
-	install -D -m644 "${pkgdir}/opt/Franz/LICENSES.chromium.html" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  # Permission fix
+  chmod 644 "${pkgdir}/usr/lib/franz/libnode.so"
+
+  # Fix binary path in .desktop file
+  patch -d "${pkgdir}" -p1 <"${pkgname}".patch
+
+  # Link licenses
+  install -dm755 "${pkgdir}/usr/share/licenses/${pkgname}"
+  ln -s "/usr/lib/franz/LICENSE.electron.txt" \
+    "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE.electron.txt"
+  ln -s "/usr/lib/franz/LICENSES.chromium.html" \
+    "${pkgdir}/usr/share/licenses/${pkgname}/LICENSES.chromium.html"
 }
