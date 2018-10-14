@@ -1,0 +1,47 @@
+diff --git a/vmmon/Makefile b/vmmon/Makefile
+index de8162e..6124a71 100644
+--- a/vmmon/Makefile
++++ b/vmmon/Makefile
+@@ -43,7 +43,11 @@ INCLUDE      += -I$(SRCROOT)/shared
+ endif
+ 
+ 
++ifdef KVERSION
++VM_UNAME = $(KVERSION)
++else
+ VM_UNAME = $(shell uname -r)
++endif
+ 
+ # Header directory for the running kernel
+ ifdef LINUXINCLUDE
+From: Michal Kubecek <mkubecek@suse.cz>
+Date: Mon, 26 Mar 2018 13:33:32 +0200
+Subject: [PATCH] vmmon: fix indirect call with retpoline build
+diff --git a/vmmon/common/task.c b/vmmon/common/task.c
+index 98cc74a..400ebfe 100644
+--- a/vmmon/common/task.c
++++ b/vmmon/common/task.c
+@@ -2308,12 +2308,23 @@ TaskSwitchToMonitor(VMCrossPage *crosspage)
+    {
+       uint64 raxGetsWiped, rcxGetsWiped;
+ 
++#ifdef CALL_NOSPEC
++      __asm__ __volatile__(CALL_NOSPEC
++                           : "=a" (raxGetsWiped),
++                             "=c" (rcxGetsWiped)
++                           : "0" (codePtr),
++                             "1" (crosspage),
++                             THUNK_TARGET(codePtr)
++                           : "rdx", "r8", "r9", "r10", "r11", "cc", "memory");
++#else
+       __asm__ __volatile__("call *%%rax"
+                            : "=a" (raxGetsWiped),
+                              "=c" (rcxGetsWiped)
+                            : "0" (codePtr),
+                              "1" (crosspage)
+                            : "rdx", "r8", "r9", "r10", "r11", "cc", "memory");
++#endif
++
+    }
+ #elif defined(_MSC_VER)
+    /*

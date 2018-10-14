@@ -1,0 +1,19 @@
+post_install() {
+  cat << EOF
+
+==> Before using VMware, you need to reboot or load vmw_vmci and vmmon kernel modules (in a terminal on root: modprobe -a vmw_vmci vmmon)
+==> You may also need to enable some of these services:
+- vmware-networks.service: to have network access in VMs
+- vmware-usbarbitrator.service: to connect USB devices inside VMs
+- vmware-hostd.service: to share VMs on the network
+
+EOF
+}
+
+post_remove() {
+  cat << EOF
+
+==> To remove VMware settings, delete /etc/vmware and /etc/vmware-installer directories.
+
+EOF
+}
