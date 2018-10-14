@@ -3,7 +3,7 @@
 
 pkgname=servo-git
 _pkgname=servo
-pkgver=34214.93fbc1575f
+pkgver=34785.e4657c1496
 pkgrel=1
 pkgdesc="Parallel Browser Project: web browser written in Rust"
 arch=('i686' 'x86_64')
@@ -20,6 +20,15 @@ md5sums=('SKIP')
 pkgver() {
   cd "$_pkgname"
   echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+prepare() {
+
+  cd "$_pkgname"
+  echo <<EOFPATCH | tee -a components/net/Cargo.toml
+[replace]
+"openssl:0.9.24" = { git = "https://github.com/ishitatsuyuki/rust-openssl", branch = "0.9.x" }
+EOFPATCH
 }
 
 build() {
