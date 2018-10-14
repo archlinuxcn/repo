@@ -5,7 +5,7 @@
 pkgbase=('monero')
 pkgname=('monero' 'libmonero-wallet')
 pkgver=0.13.0.2
-pkgrel=2
+pkgrel=3
 pkgdesc="Monero: the secure, private, untraceable currency - release version (includes daemon, wallet and miner)"
 license=('custom:Cryptonote')
 arch=('x86_64' 'i686' 'armv7h' 'aarch64')
@@ -31,7 +31,6 @@ build() {
   cd "${srcdir}/${_monero}"
   CMAKE_FLAGS+=" -DCMAKE_BUILD_TYPE=Release "
   CMAKE_FLAGS+=" -DCMAKE_INSTALL_PREFIX=/usr "
-  CMAKE_FLAGS+=" -DBUILD_TESTS=ON "
   CMAKE_FLAGS+=" -DBUILD_GUI_DEPS=ON "
   #CMAKE_FLAGS+=" -DCMAKE_LINKER=/usr/bin/ld.gold " # #974 ld segfault on ARM, re-implement if needed
   mkdir -p $_build && cd $_build
