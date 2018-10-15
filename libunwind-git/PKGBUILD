@@ -7,7 +7,7 @@
 #  - build v5 with system libatomic_ops
 
 pkgname=libunwind-git
-pkgver=1.3.rc1.26.gd329565
+pkgver=1.3.rc1.33.gf551e162
 pkgrel=1
 pkgdesc='Portable and efficient C programming interface (API) to determine the call-chain of a program'
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -16,9 +16,9 @@ license=('GPL')
 depends=('glibc' 'xz')
 makedepends=('git')
 source=('git://git.savannah.gnu.org/libunwind.git'
-        0003-Prefer-EXTBL-unwinding-on-ARM.patch)
+        0001-Prefer-EXTBL-unwinding-on-ARM.patch)
 md5sums=('SKIP'
-         '148852d93dc2e2a85ac167de707353f3')
+         '7cb666de58048d759e06a31debf0bb6e')
 options=('debug' '!strip')
 provides=(libunwind)
 conflicts=(libunwind)
@@ -32,7 +32,7 @@ pkgver() {
 prepare() {
   cd libunwind
 
-  patch -Np1 < ../0003-Prefer-EXTBL-unwinding-on-ARM.patch
+  patch -Np1 < ../0001-Prefer-EXTBL-unwinding-on-ARM.patch
 }
 
 build() {

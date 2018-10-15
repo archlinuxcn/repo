@@ -1,7 +1,7 @@
-From bdb92508cb945f74399c1912d4e872191c9a9181 Mon Sep 17 00:00:00 2001
+From bc7b50355cb37cfa56f6131b2f9174b499053188 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sat, 1 Oct 2016 16:55:40 +0000
-Subject: [PATCH 3/3] Prefer EXTBL unwinding on ARM
+Subject: [PATCH] Prefer EXTBL unwinding on ARM
 
 It is part of the C++ ABI so a EXTBL unwind info that's not `CANT_UNWIND`
 should always be reliable/correct.
@@ -10,11 +10,11 @@ using the debug info instead.
 ---
  include/tdep-arm/libunwind_i.h |  4 ++++
  src/arm/Gex_tables.c           | 18 ++++++++++++++----
- src/arm/Gstep.c                | 29 ++++++++++++++++++-----------
- 3 files changed, 36 insertions(+), 15 deletions(-)
+ src/arm/Gstep.c                | 35 +++++++++++++++++++++--------------
+ 3 files changed, 39 insertions(+), 18 deletions(-)
 
 diff --git a/include/tdep-arm/libunwind_i.h b/include/tdep-arm/libunwind_i.h
-index 2602f41..074fc8c 100644
+index 2602f41c..074fc8cb 100644
 --- a/include/tdep-arm/libunwind_i.h
 +++ b/include/tdep-arm/libunwind_i.h
 @@ -253,6 +253,7 @@ dwarf_put (struct dwarf_cursor *c, dwarf_loc_t loc, unw_word_t val)
@@ -36,7 +36,7 @@ index 2602f41..074fc8c 100644
                                    unw_proc_info_t *pi, void *arg);
  extern int tdep_search_unwind_table (unw_addr_space_t as, unw_word_t ip,
 diff --git a/src/arm/Gex_tables.c b/src/arm/Gex_tables.c
-index 3f6b5cf..c87d394 100644
+index d6573a65..a895e0cc 100644
 --- a/src/arm/Gex_tables.c
 +++ b/src/arm/Gex_tables.c
 @@ -506,18 +506,20 @@ arm_phdr_cb (struct dl_phdr_info *info, size_t size, void *data)
@@ -80,7 +80,7 @@ index 3f6b5cf..c87d394 100644
  arm_put_unwind_info (unw_addr_space_t as, unw_proc_info_t *proc_info, void *arg)
  {
 diff --git a/src/arm/Gstep.c b/src/arm/Gstep.c
-index ae2f10f..b3f0d75 100644
+index adec02e0..c43daa1c 100644
 --- a/src/arm/Gstep.c
 +++ b/src/arm/Gstep.c
 @@ -53,8 +53,15 @@ arm_exidx_step (struct cursor *c)
@@ -99,18 +99,21 @@ index ae2f10f..b3f0d75 100644
      }
  
    if (c->dwarf.pi.format != UNW_INFO_FORMAT_ARM_EXIDX)
-@@ -94,8 +101,18 @@ unw_step (unw_cursor_t *cursor)
+@@ -94,8 +101,21 @@ unw_step (unw_cursor_t *cursor)
    if (unw_is_signal_frame (cursor) > 0)
-      return unw_handle_signal_frame (cursor);
+      return arm_handle_signal_frame (cursor);
  
 +  /* First, try extbl-based unwinding. */
 +  if (UNW_TRY_METHOD (UNW_ARM_METHOD_EXIDX))
 +    {
++      Debug (13, "%s(ret=%d), trying extbl\n",
++             UNW_TRY_METHOD(UNW_ARM_METHOD_DWARF) ? "dwarf_step() failed " : "",
++             ret);
 +      ret = arm_exidx_step (c);
 +      if (ret > 0)
 +        return 1;
 +      if (ret == 0)
-+        return 0;
++        return ret;
 +    }
 +
  #ifdef CONFIG_DEBUG_FRAME
@@ -119,13 +122,16 @@ index ae2f10f..b3f0d75 100644
    if (UNW_TRY_METHOD(UNW_ARM_METHOD_DWARF))
      {
        ret = dwarf_step (&c->dwarf);
-@@ -114,16 +131,6 @@ unw_step (unw_cursor_t *cursor)
+@@ -114,19 +134,6 @@ unw_step (unw_cursor_t *cursor)
      }
  #endif /* CONFIG_DEBUG_FRAME */
  
 -  /* Next, try extbl-based unwinding. */
 -  if (UNW_TRY_METHOD (UNW_ARM_METHOD_EXIDX))
 -    {
+-      Debug (13, "%s(ret=%d), trying extbl\n",
+-             UNW_TRY_METHOD(UNW_ARM_METHOD_DWARF) ? "dwarf_step() failed " : "",
+-             ret);
 -      ret = arm_exidx_step (c);
 -      if (ret > 0)
 -        return 1;
@@ -137,5 +143,5 @@ index ae2f10f..b3f0d75 100644
       Note: This won't work in case the ARM EABI is used. */
  #ifdef __FreeBSD__
 -- 
-2.14.3
+2.16.1
 
