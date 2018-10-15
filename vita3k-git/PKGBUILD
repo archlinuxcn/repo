@@ -1,36 +1,47 @@
 # Maintainer: aimileus < $(echo YWltaWxpdXNAcHJvdG9ubWFpbC5jb20K | base64 -d) 
 pkgname=vita3k-git
 _pkgname=vita3k
-pkgver=r597.5b97fe1
+pkgver=r687.ebee18e
 pkgrel=1
 pkgdesc="PlayStation Vita emulator"
 arch=('x86_64')
 url="https://vita3k.github.io/"
 license=('GPL2')
-depends=('unicorn' 'sdl2')
-makedepends=('git' 'cmake')
+depends=('unicorn' 'sdl2' 'boost-libs')
+makedepends=('git' 'cmake' 'boost')
 provides=('vita3k')
 conflicts=('vita3k')
+_submodules=(
+  "serge1/ELFIO"
+  "aquynh/capstone"
+  "vitasdk/vita-headers"
+  "jbeder/yaml-cpp"
+  "cginternals/glbinding"
+  "vitasdk/vita-toolchain"
+  "jonasmr/microprofile"
+  "tcbrindle/sdl2-cmake-scripts"
+  "gabime/spdlog.git"
+  "tronkko/dirent"
+  "B-Con/crypto-algorithms"
+  "ocornut/imgui"
+  "google/googletest"
+  "Vita3K/shaders-db"
+  "KhronosGroup/glslang"
+  "KhronosGroup/SPIRV-Cross"
+  "Vita3K/ext-boost"
+  "Vita3K/dlmalloc"
+)
 source=(
   "git+https://github.com/vita3k/vita3k.git"
-  "git+https://github.com/aquynh/capstone.git"
-  "git+https://github.com/serge1/ELFIO.git"
-  "git+https://github.com/cginternals/glbinding.git"
-  "git+https://github.com/jonasmr/microprofile.git"
-  "git+https://github.com/tcbrindle/sdl2-cmake-scripts.git"
-  "git+https://github.com/vitasdk/vita-headers.git"
-  "git+https://github.com/vitasdk/vita-toolchain.git"
-  "git+https://github.com/jbeder/yaml-cpp.git"
 )
+
 md5sums=('SKIP'
-         'SKIP'
-         'SKIP'
-         'SKIP'
-         'SKIP'
-         'SKIP'
-         'SKIP'
-         'SKIP'
          'SKIP')
+
+for _subm in $_submodules; do
+source+=("git+https://github.com/${_subm}.git")
+md5sum+=('SKIP')
+done
 
 pkgver() {
 	cd "$_pkgname"
@@ -40,14 +51,9 @@ pkgver() {
 prepare() {
 	cd "$_pkgname"
 	git submodule init
-	git config submodule.src/external/capstone.url "$srcdir/capstone"
-	git config submodule.src/external/elfio.url "$srcdir/ELFIO"
-	git config submodule.src/external/glbinding.url "$srcdir/glbinding"
-	git config submodule.src/external/microprofile.url "$srcdir/microprofile"
-	git config submodule.src/external/sdl2-cmake-scripts.url "$srcdir/sdl2-cmake-scripts"
-	git config submodule.src/external/vita-headers.url "$srcdir/vita-headers"
-	git config submodule.src/external/vita-toolchain.url "$srcdir/vita-toolchain"
-	git config submodule.src/external/yaml-cpp.url "$srcdir/yaml-cpp"
+        for _subm in $_submodules; do
+	    git config "submodule.src/external/$(basename $_subm).url" "$srcdir/$(basename $_subm)"
+        done
 	git submodule update
 }
 
