@@ -1,14 +1,35 @@
+# not autostarting TeamViewer makes remote support impossible
+_opt_AutoStart=1
+
 post_install() {
-  echo "The Teamviewer daemon must be running for Teamviewer to work."
-  echo "Execute 'systemctl enable teamviewerd' in a terminal."
+  systemctl daemon-reload
+  if [ "${_opt_AutoStart}" -eq 0 ]; then
+    if ! systemctl -q is-active 'teamviewerd.service'; then
+      echo "The Teamviewer daemon must be running for Teamviewer to work."
+      echo "Execute 'sudo systemctl enable --now teamviewerd' in a terminal."
+    fi
+  else
+    systemctl enable --now 'teamviewerd.service'
+  fi
 }
 
 post_upgrade() {
   post_install
 }
 
+pre_remove() {
+  if [ "${_opt_AutoStart}" -ne 0 ]; then
+    systemctl disable --now 'teamviewerd.service'
+  fi
+}
+
+pre_upgrade() {
+  pre_remove
+}
+
 post_remove() {
   rm -rf /opt/teamviewer
+  systemctl daemon-reload
 }
 
 # vim: ts=2 sw=2 et:
