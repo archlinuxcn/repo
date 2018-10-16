@@ -1,10 +1,10 @@
-# Maintainer : Daniel Bermond < yahoo-com: danielbermond >
+# Maintainer : Daniel Bermond < gmail-com: danielbermond >
 # Contributor: Kamran Mackey <kamranm1200@gmail.com>
 # Contributor: richteer <richteer at lastprime.net>
 # Contributor: DrZaius <lou at fakeoutdoorsman.com>
 
 pkgname=ffmpeg-git
-pkgver=4.1.r92186.ge1e6a31216
+pkgver=4.1.r92190.gb2adc31697
 pkgrel=1
 pkgdesc='Complete solution to record, convert and stream audio and video (git version)'
 arch=('i686' 'x86_64')
@@ -22,7 +22,7 @@ makedepends=('git' 'ffnvcodec-headers' 'ladspa' 'nasm')
 optdepends=('ladspa: LADSPA filters')
 provides=('libavcodec.so' 'libavdevice.so' 'libavfilter.so' 'libavformat.so'
           'libavresample.so' 'libavutil.so' 'libpostproc.so' 'libswresample.so'
-          'libswscale.so' 'ffmpeg' 'qt-faststart')
+          'libswscale.so' 'ffmpeg')
 conflicts=('ffmpeg')
 source=("$pkgname"::'git://source.ffmpeg.org/ffmpeg.git')
 sha256sums=('SKIP')
@@ -40,7 +40,7 @@ pkgver() {
 build() {
     cd "$pkgname"
     
-    msg2 'Running ffmpeg configure script. Please wait...'
+    printf '%s\n' '  -> Running ffmpeg configure script...'
     
     ./configure \
         --prefix='/usr' \
@@ -97,5 +97,5 @@ package() {
     
     make DESTDIR="$pkgdir" install
     
-    install -D -m755 tools/qt-faststart "${pkgdir}/usr/bin/qt-faststart"
+    install -D -m755 tools/qt-faststart -t "${pkgdir}/usr/bin"
 }
