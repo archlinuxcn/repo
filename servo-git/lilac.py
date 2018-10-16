@@ -9,6 +9,11 @@ from lilaclib import *
 build_prefix = 'extra-x86_64'
 depends = ['depot-tools-git']
 
+update_on = [{
+    'github': 'Eijebong/servo',
+    'branch': 'hyperup',
+}]
+
 def post_build():
     git_add_files('PKGBUILD')
     git_commit()
