@@ -8,8 +8,6 @@ from lilaclib import *
 
 build_prefix = 'extra-x86_64'
 
-depends=['boost-65-compat']
-
 pre_build = vcs_update
 
 def post_build():
