@@ -10,8 +10,7 @@ build_prefix = 'extra-x86_64'
 depends = ['depot-tools-git']
 
 update_on = [{
-    'github': 'Eijebong/servo',
-    'branch': 'hyperup',
+    'github': 'servo/servo',
 }]
 
 def post_build():
