@@ -1,12 +1,12 @@
 # Maintainer: Det <nimetonmaili g-mail>
 
 pkgname=jdk
-pkgver=11
+pkgver=11.0.1
 _major=${pkgver/.*}
-_build=28
-_hash=55eed80b163941c8885ad9298e6d786a
+_build=13
+_hash=90cf5d8f270a4347a95050320eef3fb7
 _jname=${pkgname}${_major}
-pkgrel=2
+pkgrel=1
 pkgdesc="Oracle Java Development Kit"
 arch=('x86_64')
 url="http://www.oracle.com/technetwork/java/javase/downloads/index.html"
@@ -17,7 +17,7 @@ optdepends=('alsa-lib: for basic sound support'
             'gtk2: for Gtk+ look and feel (desktop)')
 provides=("java-runtime=$_major" "java-runtime-headless=$_major" "java-web-start=$_major" "java-environment=$_major"
           "java-runtime-jre=$_major" "java-runtime-headless-jre=$_major" "java-web-start-jre=$_major" "java-environment-jdk=$_major"
-          "java-openjfx=$_major" "$_jname")
+          "$_jname")
 conflicts=("$_jname")
 _jvmdir=/usr/lib/jvm/java-$_major-$pkgname
 backup=("etc/java-$_jname/management/jmxremote.access"
@@ -34,7 +34,7 @@ source=("http://download.oracle.com/otn-pub/java/jdk/${pkgver}+${_build}/${_hash
         'jconsole.desktop'
         'java_16.png'
         'java_48.png')
-sha256sums=('246a0eba4927bf30180c573b73d55fc10e226c05b3236528c3a721dff3b50d32'
+sha256sums=('e7fd856bacad04b6dbf3606094b6a81fa9930d6dbb044bbd787be7ea93abc885'
             'a7514af04107ed225ebafefd9997ee0332e8ecc4ef12a7dec5aaff7e8a2385d1'
             'f0a863cfdf57e963d74a84b914096c79951e7a6001a35370acf4bebfc5f4a081'
             'd27fec1d74f7a3081c3d175ed184d15383666dc7f02cc0f7126f11549879c6ed'
