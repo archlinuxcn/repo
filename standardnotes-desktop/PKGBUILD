@@ -1,8 +1,8 @@
 # Maintainer: Daniel Haß <aur@hass.onl>
 pkgname=standardnotes-desktop
 _pkgname=desktop
-pkgver=2.3.7
-pkgrel=2
+pkgver=2.3.8
+pkgrel=1
 pkgdesc="A standard notes app with an un-standard focus on longevity, portability, and privacy."
 arch=('x86_64')
 url="https://standardnotes.org/"
