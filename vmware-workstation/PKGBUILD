@@ -17,7 +17,7 @@ pkgname=vmware-workstation
 pkgver=15.0.0
 _buildver=10134415
 _pkgver=${pkgver}_${_buildver}
-pkgrel=1
+pkgrel=2
 pkgdesc='The industry standard for running multiple operating systems as virtual machines on a single Linux PC.'
 arch=(x86_64)
 url='https://www.vmware.com/products/workstation-for-linux.html'
@@ -36,11 +36,13 @@ depends=(
   dkms
   ncurses5-compat-libs
   fuse2
-  gtk3 # for gtk-query-settings binary
   gtkmm3
   libcanberra
   pcsclite
   hicolor-icon-theme
+  # needed to use Arch GTK3 library (for theme integration)
+  gtk3
+  gcr
   # needed to replace internal libs:
   #zlib
 )
@@ -141,7 +143,7 @@ source+=(
 sha256sums+=(
   'a5c405eb46d3155b46accfb3e8cc513115937a44e5b02e637f4ee2d71dd6d8ef'
   '5549df5e55b08d6d36381c812689e15de595225cacc055106705282be88be52f'
-  'cb9ecff2d9210ea0022d5ac1b2c274dba0ec9b79c031386627f2a668913e1a38'
+  '29e0b0db9c0296ab81eee543803c4bd430e2c69c76e33492910e17280da1c05c'
 )
 
 _fusion_isoimages=(darwin darwinPre15)
