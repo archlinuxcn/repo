@@ -7,8 +7,8 @@ AUR package of [sogoupinyin for Linux](http://pinyin.sogou.com/linux/).
 This package is available on both [AUR](https://aur.archlinux.org/packages/fcitx-sogoupinyin/) and [archlinuxcn repository](https://www.archlinuxcn.org/archlinux-cn-repo-and-mirror/).
 
 ```bash
-# Use pacaur or any other AUR helpers to install from AUR
-pacaur -S fcitx-sogoupinyin
+# Use yay or any other AUR helpers to install from AUR
+yay -S fcitx-sogoupinyin
 ```
 
 Don't forget to add this input method in Fcitx configuration.
@@ -34,7 +34,3 @@ Try one of the following methods:
 ### Not working
 
 It's probably caused by fcitx not working. See [Fcitx#Troubleshooting](https://wiki.archlinux.org/index.php/Fcitx#Troubleshooting) on ArchWiki.
-
-## Known issues
-
-* Not work in [sublime-text-dev](https://aur.archlinux.org/packages/sublime-text-dev). Use [sublime-text-dev-imfix2](https://aur.archlinux.org/packages/sublime-text-dev-imfix2/) instead.
