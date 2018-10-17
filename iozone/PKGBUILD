@@ -5,7 +5,7 @@ validpgpkeys=('748231EBCBD808A14F5E85D28C004C2F93481F6B')
 # Past maintainer: Joris Steyn <jorissteyn@gmail.com>
 # Contributor: TDY <tdy@gmx.com>
 pkgname=iozone
-pkgver=3.482
+pkgver=3.484
 _pkgver=${pkgver/./_}
 pkgrel=1
 pkgdesc="A filesystem benchmark tool"
@@ -17,7 +17,7 @@ optdepends=('gnuplot: for generating graph reports')
 install=$pkgname.install
 source=("http://www.${pkgname}.org/src/current/${pkgname}${_pkgver}.tar"
 	"${pkgname}${_pkgver}.tar.sig")
-sha512sums=('05aec9a6be296340a243cc5beb848dd5405a197fe7c2c4ba0d0a209f907c18f372cef259f55303b013d10ccef5370f2ff76f524840ee155000efaeea86136a5d'
+sha512sums=('bb1ac0c1724a5d3c20e90c56c0b4a438b4aa50384cddc76f4b77f2c465f052fd3fae9217b77688a2c6caf5e90611123a97ea0cd8074b3678068a90e6dd7857b7'
 	    'SKIP')
 
 build() {
