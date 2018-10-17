@@ -10,7 +10,7 @@ pkgdesc="Sogou Pinyin for Linux"
 arch=('x86_64' 'i686')
 url="https://pinyin.sogou.com/linux/"
 license=('custom')
-depends=('fcitx' 'opencc' 'libidn' 'lsb-release' 'xorg-xprop' 'qtwebkit')
+depends=('fcitx' 'opencc' 'libidn11' 'lsb-release' 'xorg-xprop' 'qtwebkit')
 
 _i686_time=1524572032
 _x86_64_time=1524572264
@@ -37,7 +37,6 @@ package(){
     rm -r "$pkgdir"/etc/X11
 
     ln -s /usr/lib/libopencc.so "$pkgdir"/usr/lib/libopencc.so.1
-    ln -s /usr/lib/libidn.so "$pkgdir"/usr/lib/libidn.so.11
 
     # install -m755 sogou-autostart "$pkgdir"/usr/bin
 
