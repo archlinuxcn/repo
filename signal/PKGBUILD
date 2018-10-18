@@ -5,7 +5,7 @@
 # Contributor: mrxx <mrxx at cyberhome dot at>
 # Contributor: Jonhoo <jon at thesquareplanet.com>
 pkgname=signal
-pkgver=1.16.2
+pkgver=1.16.3
 pkgrel=1
 license=('GPL3')
 pkgdesc='Signal Private Messenger for the Desktop'
