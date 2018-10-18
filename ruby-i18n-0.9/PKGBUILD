@@ -1,11 +1,12 @@
-# Maintainer: Nils Czernia <nils at czserver.de>
+# Maintainer: Shengyu Zhang <la@archlinuxcn.org>
+# Contributor: Nils Czernia <nils at czserver.de>
 # Contributor: Severen Redwood <severen@shrike.me>
 
 _gemname="i18n"
-pkgname="ruby-${_gemname}"
-pkgver=1.1.0
-pkgrel=3
-pkgdesc="New wave internationalisation support for Ruby"
+pkgname="ruby-${_gemname}-0.9"
+pkgver="0.9.1"
+pkgrel=1
+pkgdesc="New wave internationalisation support for Ruby, version 0.9.x"
 arch=("any")
 license=("MIT")
 depends=("rubygems" "ruby-concurrent-ruby")
@@ -13,8 +14,11 @@ makedepends=("ruby-rdoc")
 options=(!emptydirs)
 url="http://rubygems.org/gems/${_gemname}"
 source=("https://rubygems.org/downloads/${_gemname}-${pkgver}.gem")
-sha256sums=('b9cadce8a3ceaa1a815ab5e2e4a127b653b2ac13363c545dde5ac32014adfb5e')
+sha256sums=("1af5e4f1ed73f2258066503bec3612092c2580d5a58f84d8318a5fd7a35b5c0c")
 noextract=("${_gemname}-${pkgver}.gem")
+provides=("ruby-i18n=${pkgver}")
+conflicts=('ruby-i18n')
+replaces=('ruby-i18n')
 
 package() {
   cd "${srcdir}"
