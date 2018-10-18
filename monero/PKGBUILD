@@ -2,10 +2,10 @@
 # Contributor: redfish <redfish at galactica dot pw>
 # Contributor: Onishin <onishin at onishin dot org>
 
-pkgbase=('monero')
+pkgbase="monero"
 pkgname=('monero' 'libmonero-wallet')
-pkgver=0.13.0.2
-pkgrel=3
+pkgver=0.13.0.3
+pkgrel=1
 pkgdesc="Monero: the secure, private, untraceable currency - release version (includes daemon, wallet and miner)"
 license=('custom:Cryptonote')
 arch=('x86_64' 'i686' 'armv7h' 'aarch64')
