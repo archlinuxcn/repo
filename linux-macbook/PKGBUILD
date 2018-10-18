@@ -5,7 +5,7 @@
 
 #pkgbase=linux               # Build stock -ARCH kernel
 pkgbase=linux-macbook        # Build kernel with a different name
-_srcver=4.18.13-arch1
+_srcver=4.18.14-arch1
 pkgver=${_srcver//-/.}
 pkgrel=1
 arch=(x86_64)
