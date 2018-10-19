@@ -8,13 +8,18 @@
 # Contributor: hack.augusto <hack.augusto@gmail.com>
 
 pkgname=depot-tools-git
-pkgver=r5469.488362624
+pkgver=r5472.93277a7fc
 pkgrel=1
 pkgdesc='Build tools for working with Chromium development, include gclient'
 arch=('any')
 url='https://dev.chromium.org/developers/how-tos/install-depot-tools'
-source=("${pkgname}::git+https://chromium.googlesource.com/chromium/tools/depot_tools.git"
-	'repo_fix.sh' 'fixshebangs.py')
+source=(
+  "${pkgname}::git+https://chromium.googlesource.com/chromium/tools/depot_tools.git"
+  'repo_fix.sh'
+  'fixshebangs.py'
+  'gsutil-use-google-cloud-sdk.patch'
+  'vpython-use-system-python2.patch'
+)
 license=('Custom')
 depends=('git' 'ninja' 'python2')
 optdepends=(
@@ -27,9 +32,11 @@ options=('!strip')
 install="depot_tools.install"
 sha512sums=('SKIP'
             'bde33ffcad42a4d554d5490b6562981ef4b9f3abebadbed909749ee05ba391da4b5acb31b901e785b6f019b4ed3f9c740ab92623dd6a87e67b4b599a0010374b'
-            '33d772f68deddefce985d2820d3ef60fa730a1f3bc404cef3c8b1b517369501b9c3a07bc7b1b3df4d0589b45cbe4850f935699676c3e10c437bceffb37eb8214')
+            '33d772f68deddefce985d2820d3ef60fa730a1f3bc404cef3c8b1b517369501b9c3a07bc7b1b3df4d0589b45cbe4850f935699676c3e10c437bceffb37eb8214'
+            '4043722867ebefc3d65b03f6faa016ef31c510587d499a96e3f3ae1f6e19b49299f5b540e3f2d5176e9ecfd73645d9b815d8c052fcc327687091a2355f817d6a'
+            '4efd6fa204e429619d2da999d07d27eabd748b1941a913cfd5a83cf23fd93b3c8c021ed97c3f30dcc17f67b0dd32486bc361da374aa26e2be2d1d3ed922712c7')
 
-scripts_to_fix_exec=(
+_scripts_to_fix_exec=(
 	cit
 	clang-format
 	clang_format_merge_driver
@@ -57,7 +64,6 @@ prepare () {
 	# gclient.py require a fix for work correctly with python2-colorama
 	# Another way is make default python2, but I don't think is a good idea!
 	# Fixing python scripts.
-	msg "Patching scripts for python2 usage..."
 	"${srcdir}/fixshebangs.py"
 
 	# Fix gclient.py
@@ -66,10 +72,16 @@ prepare () {
 		gclient.py
 
 	# Fixing scripts which use "exec python"
-	for script in "${scripts_to_fix_exec[@]}"
+	for script in "${_scripts_to_fix_exec[@]}"
 	do
 		sed -r -i -e 's/exec python/exec python2/' "${script}"
 	done
+
+  # Make gsutil use google-cloud-sdk instead of downloading from Google Storage
+  patch -Np1 -i ../gsutil-use-google-cloud-sdk.patch
+
+  # Force vpython to use system Python 2
+  patch -Np1 -i ../vpython-use-system-python2.patch
 }
 
 package()
@@ -108,12 +120,9 @@ package()
 	EOF
 	chmod 755 "${pkgdir}/opt/depot_tools/ninja"
 
-	# gsutil v4.19 is included in google-cloud-sdk, and I guess 4.19 is compatible with 4.13 and 4.15
-	# download_from_google_storage.py expects version 4.15 and gsutil.py expects 4.13
-	GSUTIL_PATH="${pkgdir}/opt/depot_tools/external_bin/gsutil"
-	install -d "${GSUTIL_PATH}/gsutil_4.13"
-	ln -s /opt/google-cloud-sdk/platform/gsutil "${GSUTIL_PATH}/gsutil_4.13/gsutil"
-	ln -s "gsutil_4.13" "${GSUTIL_PATH}/gsutil_4.15"
+  # some commands (e.g., gsutil) calls vpython directly
+  install -Ddm755 "$pkgdir"/usr/bin
+  ln -s /opt/depot_tools/vpython "$pkgdir"/usr/bin/vpython
 
 	rm -rf "${pkgdir}/opt/depot_tools/.git"
 }
