@@ -19,9 +19,11 @@ def post_build():
     update_aur_repo()
 
 def pre_build():
+    # run updpkgsums before and after vcs_update
+    # as the PR is constantly updating to be mergable with the master branch
+    run_cmd(['updpkgsums'])
     vcs_update()
     run_cmd(['updpkgsums'])
-    # run updpkgsums as the PR is constantly updating to be mergable with the master branch
 
 if __name__ == '__main__':
     single_main(build_prefix)
