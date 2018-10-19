@@ -18,7 +18,10 @@ def post_build():
     git_commit()
     update_aur_repo()
 
-pre_build = vcs_update
+def pre_build():
+    vcs_update()
+    run_cmd(['updpkgsums'])
+    # run updpkgsums as the PR is constantly updating to be mergable with the master branch
 
 if __name__ == '__main__':
     single_main(build_prefix)
