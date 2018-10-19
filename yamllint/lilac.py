@@ -11,6 +11,7 @@ depends = ['python-pathspec']
 def pre_build():
   pypi_pre_build(
     depends=['python-yaml', 'python-pathspec'],
+    check='nose',
   )
 
 def post_build():
