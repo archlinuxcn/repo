@@ -1,5 +1,4 @@
-# ------------- debian/CMakeLists.inj begin -------------
-# The text will be putted into the appropriate CMakeLists by debian/rules script
+# The text will be put into the appropriate CMakeLists by the PKGBUILD
 
 # Avoid rpath compiler parameter
 set_target_properties(Telegram PROPERTIES SKIP_BUILD_RPATH TRUE)
@@ -9,12 +8,11 @@ set_target_properties(Telegram PROPERTIES SKIP_BUILD_RPATH TRUE)
 # lines.
 include(../../Telegram/gyp/PrecompiledHeader.cmake)
 add_precompiled_header(Telegram ../../Telegram/SourceFiles/stdafx.h)
+add_precompiled_header(lib_base ../../Telegram/SourceFiles/base/base_pch.h)
 add_precompiled_header(lib_export ../../Telegram/SourceFiles/export/export_pch.h)
+add_precompiled_header(lib_storage ../../Telegram/SourceFiles/storage/storage_pch.h)
 
-# use gcc-ar and gcc-nm, also from gyp.diff
-# https://github.com/telegramdesktop/tdesktop/commit/1e10529f20507e1d22a287ef5e4de88f72d592ca
-set(CMAKE_NM "/usr/bin/gcc-nm")
-set(CMAKE_RANLIB "/usr/bin/gcc-ranlib")
+# You can discover new PCHs using this link:
+# https://github.com/telegramdesktop/tdesktop/search?q=pch_header&unscoped_q=pch_header
 
 # vim: ft=cmake
-# -------------- debian/CMakeLists.inj end --------------

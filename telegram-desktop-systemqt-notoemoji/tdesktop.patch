@@ -9,10 +9,10 @@ index 0554fa179..3ea027406 100644
    </qresource>
  </RCC>
 diff --git a/Telegram/SourceFiles/core/launcher.cpp b/Telegram/SourceFiles/core/launcher.cpp
-index 207885898..1a70da99a 100644
+index d4bdadc17..8a420c74b 100644
 --- a/Telegram/SourceFiles/core/launcher.cpp
 +++ b/Telegram/SourceFiles/core/launcher.cpp
-@@ -37,9 +37,10 @@ void Launcher::init() {
+@@ -39,9 +39,10 @@ void Launcher::init() {
  
  	QCoreApplication::setApplicationName(qsl("TelegramDesktop"));
  
@@ -25,7 +25,7 @@ index 207885898..1a70da99a 100644
  
  	initHook();
  }
-@@ -57,6 +58,13 @@ int Launcher::exec() {
+@@ -59,6 +60,13 @@ int Launcher::exec() {
  	Logs::start(this); // must be started before Platform is started
  	Platform::start(); // must be started before QApplication is created
  
@@ -204,10 +204,10 @@ index 2959cec77..04ad00645 100644
  		CrashReports::ClearAnnotationRef("CrashString");
  	}
 diff --git a/Telegram/SourceFiles/ui/twidget.cpp b/Telegram/SourceFiles/ui/twidget.cpp
-index 0f610cb8a..b005589b6 100644
+index 71f318229..461f52278 100644
 --- a/Telegram/SourceFiles/ui/twidget.cpp
 +++ b/Telegram/SourceFiles/ui/twidget.cpp
-@@ -227,9 +227,9 @@ void sendSynteticMouseEvent(QWidget *widget, QEvent::Type type, Qt::MouseButton
+@@ -233,9 +233,9 @@ void sendSynteticMouseEvent(QWidget *widget, QEvent::Type type, Qt::MouseButton
  			, button
  			, QGuiApplication::mouseButtons() | button
  			, QGuiApplication::keyboardModifiers()
@@ -220,7 +220,7 @@ index 0f610cb8a..b005589b6 100644
  		ev.setTimestamp(getms());
  		QGuiApplication::sendEvent(windowHandle, &ev);
 diff --git a/Telegram/gyp/PrecompiledHeader.cmake b/Telegram/gyp/PrecompiledHeader.cmake
-index a0e1e0489..bd9bce0c1 100644
+index a0e1e0489..223113081 100644
 --- a/Telegram/gyp/PrecompiledHeader.cmake
 +++ b/Telegram/gyp/PrecompiledHeader.cmake
 @@ -114,7 +114,7 @@ function(add_precompiled_header _target _input)
@@ -228,7 +228,7 @@ index a0e1e0489..bd9bce0c1 100644
        add_custom_command(
          OUTPUT "${_output_c}"
 -        COMMAND "${CMAKE_C_COMPILER}" ${_compiler_FLAGS} -x c-header -o "${_output_c}" -c "${_pchfile}"
-+        COMMAND "${CMAKE_C_COMPILER}" "$(C_DEFINES)" "$(C_INCLUDES)" "$(C_FLAGS)" -x c-header -o "${_output_c}" -c "${_pchfile}"
++        COMMAND "${CMAKE_C_COMPILER}" ${_compiler_FLAGS} "$(C_DEFINES)" "$(C_INCLUDES)" "$(C_FLAGS)" -x c-header -o "${_output_c}" -c "${_pchfile}"
          DEPENDS "${_pchfile}" "${_pch_c_flags_file}"
          IMPLICIT_DEPENDS C "${_pch_header}"
          COMMENT "Precompiling ${_name} for ${_target} (C)")
@@ -237,30 +237,31 @@ index a0e1e0489..bd9bce0c1 100644
        add_custom_command(
          OUTPUT "${_output_cxx}"
 -        COMMAND "${CMAKE_CXX_COMPILER}" ${_compiler_FLAGS} -x c++-header -o "${_output_cxx}" -c "${_pchfile}"
-+        COMMAND "${CMAKE_CXX_COMPILER}" "$(CXX_DEFINES)" "$(CXX_INCLUDES)" "$(CXX_FLAGS)" -x c++-header -o "${_output_cxx}" -c "${_pchfile}"
++        COMMAND "${CMAKE_CXX_COMPILER}" ${_compiler_FLAGS} "$(CXX_DEFINES)" "$(CXX_INCLUDES)" "$(CXX_FLAGS)" -x c++-header -o "${_output_cxx}" -c "${_pchfile}"
          DEPENDS "${_pchfile}" "${_pch_cpp_flags_file}"
          IMPLICIT_DEPENDS CXX "${_pch_header}"
          COMMENT "Precompiling header ${_name} for ${_target} (C++)")
 diff --git a/Telegram/gyp/Telegram.gyp b/Telegram/gyp/Telegram.gyp
-index 65917d9b5..d91e55c7a 100644
+index dd7779c7e..c5dd775e4 100644
 --- a/Telegram/gyp/Telegram.gyp
 +++ b/Telegram/gyp/Telegram.gyp
-@@ -74,14 +74,12 @@
+@@ -75,7 +75,6 @@
        'codegen.gyp:codegen_numbers',
        'codegen.gyp:codegen_style',
        'tests/tests.gyp:tests',
 -      'utils.gyp:Updater',
        '../ThirdParty/libtgvoip/libtgvoip.gyp:libtgvoip',
        'crl.gyp:crl',
-       'lib_export.gyp:lib_export',
+       'lib_base.gyp:lib_base',
+@@ -84,7 +83,6 @@
      ],
  
      'defines': [
 -      'AL_LIBTYPE_STATIC',
        'AL_ALEXT_PROTOTYPES',
        'TGVOIP_USE_CXX11_LIB',
-       '<!@(python -c "for s in \'<(build_defines)\'.split(\',\'): print(s)")',
-@@ -90,15 +88,7 @@
+       'XXH_INLINE_ALL',
+@@ -94,16 +92,8 @@
      'include_dirs': [
        '<(src_loc)',
        '<(SHARED_INTERMEDIATE_DIR)',
@@ -273,10 +274,11 @@ index 65917d9b5..d91e55c7a 100644
 -      '<(libs_loc)/range-v3/include',
 -      '<(minizip_loc)',
 -      '<(sp_media_key_tap_loc)',
-+      '/usr/include/minizip',
        '<(emoji_suggestions_loc)',
++      '/usr/include/minizip',
        '<(submodules_loc)/GSL/include',
        '<(submodules_loc)/variant/include',
+       '<(submodules_loc)/crl/src',
 diff --git a/Telegram/gyp/qt.gypi b/Telegram/gyp/qt.gypi
 index 0b783ec21..3f917765a 100644
 --- a/Telegram/gyp/qt.gypi
@@ -463,10 +465,10 @@ index 17219fa2c..b00fd50ea 100644
        ],
        'cflags_c': [
 diff --git a/Telegram/gyp/telegram_linux.gypi b/Telegram/gyp/telegram_linux.gypi
-index 01231c4d1..00a9c0875 100644
+index 80259c687..5f33ff961 100644
 --- a/Telegram/gyp/telegram_linux.gypi
 +++ b/Telegram/gyp/telegram_linux.gypi
-@@ -20,10 +20,11 @@
+@@ -23,10 +23,11 @@
        'linux_path_va%': '/usr/local',
        'linux_path_vdpau%': '/usr/local',
        'linux_path_breakpad%': '/usr/local',
@@ -479,7 +481,7 @@ index 01231c4d1..00a9c0875 100644
        '/usr/local/include',
        '<(linux_path_ffmpeg)/include',
        '<(linux_path_openal)/include',
-@@ -32,6 +33,7 @@
+@@ -35,6 +36,7 @@
        '<(linux_path_range)/include',
      ],
      'library_dirs': [
@@ -487,7 +489,7 @@ index 01231c4d1..00a9c0875 100644
        '/usr/local/lib',
        '<(linux_path_ffmpeg)/lib',
        '<(linux_path_openal)/lib',
-@@ -40,25 +42,15 @@
+@@ -43,25 +45,16 @@
        '<(linux_path_breakpad)/lib',
      ],
      'libraries': [
@@ -519,10 +521,11 @@ index 01231c4d1..00a9c0875 100644
 +      'minizip',
 +      'opus',
 +      'z',
++      'lzma',
  #      '<!(pkg-config 2> /dev/null --libs <@(pkgconfig_libs))',
      ],
      'cflags_cc': [
-@@ -87,16 +79,14 @@
+@@ -90,16 +83,14 @@
        },
      },
      'conditions': [
@@ -543,10 +546,10 @@ index 01231c4d1..00a9c0875 100644
        }]
      ],
 diff --git a/Telegram/gyp/telegram_sources.txt b/Telegram/gyp/telegram_sources.txt
-index 7a103286b..397d2a2ac 100644
+index a21f20b56..ffc1a1ef8 100644
 --- a/Telegram/gyp/telegram_sources.txt
 +++ b/Telegram/gyp/telegram_sources.txt
-@@ -797,14 +797,7 @@
+@@ -761,14 +761,7 @@
  <(emoji_suggestions_loc)/emoji_suggestions.cpp
  <(emoji_suggestions_loc)/emoji_suggestions.h
  
@@ -560,5 +563,5 @@ index 7a103286b..397d2a2ac 100644
 -<(minizip_loc)/unzip.h
 +<(src_loc)/qt_functions.cpp
  
- platforms: mac
- <(sp_media_key_tap_loc)/SPMediaKeyTap.m
+ platforms: win
+ <(res_loc)/winrc/Telegram.rc
