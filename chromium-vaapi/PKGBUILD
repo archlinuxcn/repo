@@ -29,6 +29,7 @@ optdepends=('pepper-flash: support for Flash content'
             'gnome-keyring: for storing passwords in GNOME keyring'
             'kwallet: for storing passwords in KWallet'
             'libva-intel-driver: support HW acceleration on Intel graphics cards'
+            'libva-mesa-driver: support HW acceleration on AMD graphics cards'
             'libva-vdpau-driver-chromium: support HW acceleration on Nvidia graphics cards')
 install=chromium.install
 source=(https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$pkgver.tar.xz
