@@ -1,0 +1,14 @@
+[Unit]
+Description=Placement driver for TiKV
+Documentation=https://github.com/pingcap/pd
+After=network.target
+
+[Service]
+User=pd
+WorkingDirectory=~
+ExecStart=/usr/bin/pd-server --config=/etc/pd/pd.toml
+ExecReload=/bin/kill -SIGUSR1 $MAINPID
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
