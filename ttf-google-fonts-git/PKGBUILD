@@ -9,7 +9,7 @@
 # Contributor: Alexander De Sousa <archaur.xandy21@spamgourmet.com>
 
 pkgname=ttf-google-fonts-git
-pkgver=r1249.98670058
+pkgver=r1333.ef5baa48
 pkgrel=1
 epoch=1
 pkgdesc="TrueType fonts from the Google Fonts project (git version)"
@@ -116,14 +116,4 @@ package() {
 
   done < <(find "$srcdir" -type f -iname \*.ttf -print0)
 
-  # NOTE: Since the nanum* and hanna Korean font families have special characters we need to change
-  # those folder names to prevent errors during package compression.
-  mv "$pkgdir"/usr/share/fonts/배달의민족-한나 "$pkgdir"/usr/share/fonts/bm-hanna_ttf
-  mv "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE.배달의민족-한나 "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE.bm-hanna_ttf
-
-  mv "$pkgdir"/usr/share/fonts/나눔명조 "$pkgdir"/usr/share/fonts/nanum-myeongjo
-  mv "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE.나눔명조 "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE.nanum-myeongjo
-
-  mv "$pkgdir"/usr/share/fonts/나눔고딕 "$pkgdir"/usr/share/fonts/nanum-gothic
-  mv "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE.나눔고딕 "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE.nanum-gothic
 }
