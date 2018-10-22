@@ -5,21 +5,14 @@ import subprocess
 import atexit
 import time
 
-from lilaclib import *
+from lilaclib import (
+  run_cmd, at_dir, git_pull, vcs_update,
+  update_pkgrel, git_add_files, git_commit,
+  single_main,
+)
 
-update_on = [{
-  'github': 'vim/vim',
-}, {
-  'archpkg': 'python',
-  'from_pattern': r'^(\d+\.\d+)\..*',
-  'to_pattern': r'\1',
-}, {
-  'archpkg': 'ruby',
-  'from_pattern': r'^(\d+\.\d+)\..*',
-  'to_pattern': r'\1',
-}]
+update_on = 'to be overridden'
 
-build_prefix = 'extra-x86_64'
 p = None
 repo_dir = 'vim'
 
