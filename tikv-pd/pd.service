@@ -5,7 +5,6 @@ After=network.target
 
 [Service]
 User=pd
-WorkingDirectory=~
 ExecStart=/usr/bin/pd-server --config=/etc/pd/pd.toml
 ExecReload=/bin/kill -SIGUSR1 $MAINPID
 Restart=on-failure

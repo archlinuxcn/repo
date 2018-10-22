@@ -1,7 +1,7 @@
 # Maintainer: Xuanwo <xuanwo@archlinuxcn.org>
 pkgname=tikv-pd
 pkgver=2.0.5
-pkgrel=2
+pkgrel=3
 pkgdesc='Manage and schedule the TiKV cluster.'
 makedepends=('go' 'make')
 arch=('x86_64')
@@ -15,7 +15,7 @@ source=(pd-${pkgver}.tar.gz::https://github.com/pingcap/pd/archive/v${pkgver}.ta
         pd-tmpfiles.conf
         pd.toml)
 sha256sums=('4f3d267aa0c34828aea8b4797a02041efa32e81cda2c72d51e0b1f5bafab858b'
-            'bc1c5dea8daa72ea602e6f5735cff55d2c46d8846168bac9b66a6f9d1993715e'
+            'b03d12f2f8d6eb2e9d654d6258ca39000225cdf1418840f7e35081631bc4d924'
             '5edd250ba9e70a4f8d27581ed658f0fbfeca58ca62429dec12bb5fffc0919b67'
             '15633aaa2d7726375112a1b5af88105878f09c176a542cde6d0e5f0c4eee4495'
             '11bc441dfd0327c56218f214a9869da20ccdf7e5265c2f5ffca45089ba8094db')
@@ -57,9 +57,6 @@ package() {
   install -Dm644 "$srcdir/pd-tmpfiles.conf" "$pkgdir/usr/lib/tmpfiles.d/pd.conf"
   # Install default pd config
   install -Dm644 pd.toml "$pkgdir/etc/pd/pd.toml"
-
-  # Remove .git
-  find "$pkgdir" -type d -name ".git" -exec rm -r '{}' +
 }
 
 # vim: ft=sh syn=sh et
