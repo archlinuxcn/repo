@@ -7,10 +7,18 @@
 from lilaclib import *
 
 build_prefix = 'extra-x86_64'
-pre_build = aur_pre_build
-post_build = aur_post_build
+
+update_on = [{
+    'vcs': 'git+http://anongit.freedesktop.org/git/plymouth',
+}]
+
+def post_build():
+    git_add_files('PKGBUILD')
+    git_commit()
+
+def pre_build():
+    run_cmd(['updpkgsums'])
+    vcs_update()
 
 if __name__ == '__main__':
     single_main(build_prefix)
-
-
