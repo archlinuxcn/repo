@@ -1,0 +1,16 @@
+[Unit]
+Description=TiDB is a distributed HTAP database compatible with the MySQL protocol
+Documentation=https://github.com/pingcap/tidb
+Requires=tikv.service
+After=tikv.service network.target
+
+[Service]
+User=tidb
+WorkingDirectory=/var/lib/tidb
+LimitNOFILE=1048576
+ExecStart=/usr/bin/tidb-server --config=/etc/tidb/tidb.toml
+ExecReload=/bin/kill -SIGUSR1 $MAINPID
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
