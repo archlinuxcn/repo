@@ -86,10 +86,10 @@ is_player_online() {
 	# and since playernames may not contain this string the clean player-list can easily be retrieved.
 	# Otherwiese check the first digit after the last occurrence of "There are". If it is 0 then there
 	# are no players on the server. Should this test fail as well. Assume that a player is online.
-	if [[ $(echo "${response}" | grep ":" | sed -r -e '$!d' -e 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' -e 's/.*\: //' | tr -d '\n' | wc -c) -le 1 ]]; then
+	if [[ $(echo "${response}" | grep ":" | sed -r -e '$!d' -e 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})*)?[JKmsuG]//g' -e 's/.*\: //' | tr -d '\n' | wc -c) -le 1 ]]; then
 		# No player is online
 		return 0
-	elif [[ $(echo "${response}" | grep "There are" | sed -r -e '$!d' -e 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' -e 's/.*\: //' -e 's/^([^.]+).*$/\1/; s/^[^0-9]*([0-9]+).*$/\1/' | tr -d '\n') -eq 0 ]]; then
+	elif [[ $(echo "${response}" | grep "There are" | sed -r -e '$!d' -e 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})*)?[JKmsuG]//g' -e 's/.*\: //' -e 's/^([^.]+).*$/\1/; s/^[^0-9]*([0-9]+).*$/\1/' | tr -d '\n') -eq 0 ]]; then
 		# No player is online
 		return 0
 	else
