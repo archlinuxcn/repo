@@ -1,0 +1,16 @@
+[Unit]
+Description=Distributed transactional key-value database, originally created to complement TiDB
+Documentation=https://github.com/tikv/tikv
+Requires=pd.service
+After=pd.service network.target
+
+[Service]
+User=tikv
+WorkingDirectory=/var/lib/tikv
+LimitNOFILE=1048576
+ExecStart=/usr/bin/tikv-server --config=/etc/tikv/tikv.toml
+ExecReload=/bin/kill -SIGUSR1 $MAINPID
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
