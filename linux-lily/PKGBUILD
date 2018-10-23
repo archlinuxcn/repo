@@ -1,13 +1,12 @@
-# $Id$
 # Maintainer: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 # Maintainer: Tobias Powalowski <tpowa@archlinux.org>
 # Maintainer: Thomas Baechler <thomas@archlinux.org>
 
 #pkgbase=linux               # Build stock -ARCH kernel
 pkgbase=linux-lily       # Build kernel with a different name
-_srcver=4.17.19-arch1
+_srcver=4.18.16-arch1
 pkgver=${_srcver//-/.}
-pkgrel=3
+pkgrel=1
 arch=(x86_64)
 url="https://github.com/archlinux/linux/commits/v$_srcver"
 license=(GPL2)
@@ -28,7 +27,7 @@ validpgpkeys=(
   '8218F88849AAC522E94CF470A5E9288C4FA415FA'  # Jan Alexander Steffens (heftig)
 )
 sha256sums=(
-            '36e326d8a88b4087a3a0ee0d47643fc03baeda487659980d0e9d08791e4c729c'
+            'ae2e95db94ef7176207c690224169594d49445e04249d2499e9d2fbc117a0b21'
             '75f99f5239e03238f88d1a834c50043ec32b1dc568f2cc291b07d04718483919'
             'ad6344badc91ad0630caacde83f7f9b97276f80d26a20619a87952be65492c65')
 
@@ -78,6 +77,7 @@ _package() {
 
   cd $_srcname
 
+  # after cd or it won't be found
   local kernver="$(<../version)"
 
   msg2 "Installing boot image..."
@@ -111,7 +111,6 @@ _package() {
   find . \( -name '*.ko' -o -name vmlinux \) -print0 | parallel -j$(nproc) -0 $startdir/kostrip
   popd
   rm "$builddir"/vmlinux
-  rmdir -p "$builddir" || true
 
   msg2 "Compressing modules..."
   find "${pkgdir}" -name '*.ko' -print0 | parallel -j$(nproc) -0 xz
@@ -120,7 +119,6 @@ _package() {
   depmod -b "$pkgdir/usr" -E Module.symvers -e "$kernver"
 
   msg2 "Installing hooks..."
-
   # sed expression for following substitutions
   local subst="
     s|%PKGBASE%|$pkgbase|g
@@ -153,6 +151,7 @@ _package-headers() {
 
   cd $_srcname
 
+  # after cd or it won't be found
   local builddir="$pkgdir/usr/lib/modules/$(<../version)/build"
 
   msg2 "Installing build files..."
@@ -223,6 +222,10 @@ _package-headers() {
     esac
   done < <(find "$builddir" -type f -perm -u+x ! -name vmlinux -print0)
 
+  msg2 "Adding symlink..."
+  mkdir -p "$pkgdir/usr/src"
+  ln -sr "$builddir" "$pkgdir/usr/src/$pkgbase-$pkgver"
+
   msg2 "Fixing permissions..."
   chmod -Rc u=rwX,go=rX "$pkgdir"
 }
@@ -230,13 +233,30 @@ _package-headers() {
 _package-docs() {
   pkgdesc="Kernel hackers manual - HTML documentation that comes with the ${pkgbase/linux/Linux} kernel"
 
-  local builddir="$pkgdir/usr/lib/modules/$(<version)/build"
-
   cd $_srcname
+
+  # after cd or it won't be found
+  local builddir="$pkgdir/usr/lib/modules/$(<../version)/build"
 
   msg2 "Installing documentation..."
   mkdir -p "$builddir"
   cp -t "$builddir" -a Documentation
+
+  msg2 "Removing doctrees..."
+  rm -r "$builddir/Documentation/output/.doctrees"
+
+  msg2 "Moving HTML docs..."
+  local src dst
+  while read -rd '' src; do
+    dst="$builddir/Documentation/${src#$builddir/Documentation/output/}"
+    mkdir -p "${dst%/*}"
+    mv "$src" "$dst"
+    rmdir -p --ignore-fail-on-non-empty "${src%/*}"
+  done < <(find "$builddir/Documentation/output" -type f -print0)
+
+  msg2 "Adding symlink..."
+  mkdir -p "$pkgdir/usr/share/doc"
+  ln -sr "$builddir/Documentation" "$pkgdir/usr/share/doc/$pkgbase"
 
   msg2 "Fixing permissions..."
   chmod -Rc u=rwX,go=rX "$pkgdir"
