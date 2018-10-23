@@ -1,7 +1,7 @@
 # Maintainer: Maxim Andersson <thesilentboatman@gmail.com>
 
 pkgname=tealdeer
-pkgver=1.0.0
+pkgver=1.1.0
 pkgrel=1
 pkgdesc="An implementation of tldr in Rust"
 arch=('i686' 'x86_64')
@@ -11,7 +11,7 @@ makedepends=('rust' 'cargo')
 provides=('tldr')
 conflicts=('tldr' 'nodejs-tldr' 'nodejs-tldr-git' 'tldr-cpp-client' 'tldr-git' 'tldr-python-client')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/dbrgn/${pkgname}/archive/v${pkgver}.tar.gz")
-sha256sums=('9d9712e1b1a17c23793e81691ca6f8e4d45b7fd77efa300261e066c2d254705b')
+sha256sums=('647990936af527e9738e8befb432fdf8dd40e7b2ab0066afc652330fddd3dd0e')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
