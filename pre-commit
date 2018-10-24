@@ -12,6 +12,9 @@ from unittest import TestCase, TestSuite, TestLoader, TextTestRunner, skip
 from io import TextIOWrapper, StringIO
 from configparser import ConfigParser
 
+# need python-pyaml package
+import yaml
+
 DIRS, FILES = None, None
 GIT_BRANCH = 'HEAD'
 SUBFOLDER = 'archlinuxcn'
@@ -80,7 +83,9 @@ def pkgpath(pkgname):
         return pkgname
 
 
-def lilac_has_update_on(pkgname):
+def lilac_py_has_update_on(pkgname):
+    if not git_isfile(pkgpath(pkgname), 'lilac.py'):
+        return False
     lilac_path = os.path.join(pkgpath(pkgname), 'lilac.py')
     with git_open(lilac_path) as lilac_py:
         lilac_ast = ast.parse(lilac_py.read())
@@ -93,6 +98,15 @@ def lilac_has_update_on(pkgname):
                         return True
     return False
 
+def lilac_yaml_has_update_on(pkgname):
+    if not git_isfile(pkgpath(pkgname), 'lilac.yaml'):
+        return False
+    lilac_path = os.path.join(pkgpath(pkgname), 'lilac.yaml')
+    with git_open(lilac_path) as lilac_yaml:
+        lilac_ast = yaml.load(lilac_yaml.read())
+        if 'update_on' in lilac_ast:
+            return True
+    return False
 
 class NvcheckerSyntaxTest(TestCase):
     def test_nvchecker_ini(self):
@@ -178,16 +192,21 @@ class ConfigSectionTest(TestCase):
                 continue
             if package[0] == '.':
                 continue
-            if not git_isfile(pkgpath(package), 'lilac.py'):
+            has_lilac_py = git_isfile(pkgpath(package), 'lilac.py')
+            has_lilac_yaml = git_isfile(pkgpath(package), 'lilac.yaml')
+            if not (has_lilac_py or has_lilac_yaml):
                 continue
-            if lilac_has_update_on(package):
+            
+            if any([lilac_py_has_update_on(package),
+                    lilac_yaml_has_update_on(package)]):
                 continue
 
             with self.subTest(package=package):
                 self.assertIn(package, self.config,
                               msg=('package "\033[1;31m{0}\033[m" is not in ' +
                                    '"nvchecker.ini" and does not have "update_on" in ' +
-                                   '"\033[1;31m{0}/lilac.py\033[m"').format(package))
+                                   '"\033[1;31m{0}/lilac.py\033[m" or ' + 
+                                   '"\033[1;31m{0}/lilac.yaml\033[m"').format(package))
 
     @skip("35 packages violating this")
     def test_folders_in_nvchecker(self):
