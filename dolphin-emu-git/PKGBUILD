@@ -3,7 +3,7 @@
 
 pkgbase=dolphin-emu-git
 pkgname=('dolphin-emu-git' 'dolphin-emu-nogui-git')
-pkgver=5.0.r8915.9c9d598ec0
+pkgver=5.0.r8775.cd29cdb584
 pkgrel=1
 pkgdesc='A GameCube / Wii / Triforce emulator'
 arch=('x86_64')
@@ -41,7 +41,7 @@ build() {
   cmake ../dolphin-emu \
     -DCMAKE_INSTALL_PREFIX='/usr' \
     -DCMAKE_INSTALL_LIBDIR='/usr/lib' \
-    -DENABLE_QT2='TRUE' \
+    -DENABLE_QT='TRUE' \
     -DUSE_SHARED_ENET='TRUE' \
     -DXXHASH_FOUND='TRUE'\
     -DDISTRIBUTOR='aur.archlinux.org'

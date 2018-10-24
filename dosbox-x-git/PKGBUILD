@@ -21,7 +21,6 @@ pkgver() {
 
 build() {
   cd "$srcdir/dosbox-x"
-  sed -i 's/CODEC_FLAG2_FAST/AV_CODEC_FLAG2_FAST/g' src/hardware/hardware.cpp
   ./build
 }
 
