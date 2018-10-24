@@ -20,7 +20,7 @@ sed -i \
 
 makepkg --printsrcinfo > .SRCINFO
 
-git add .
+git add -u
 if ! git diff-index --quiet HEAD; then
     git commit -m "Updated to $VERSION"
 fi
