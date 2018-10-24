@@ -9,7 +9,7 @@
 _gtk3_wayland=false
 
 # try to build with PGO
-# currently broken
+# currently needs gcc7
 _pgo=true
 
 # globalmenu
@@ -20,8 +20,8 @@ _pgo=true
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=62.0.3
-pkgrel=2
+pkgver=63.0
+pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -34,7 +34,7 @@ depends=('mozilla-common' 'libxt' 'startup-notification' 'mime-types'
 makedepends=("clang" "jack" 'unzip' 'zip' 'diffutils' 'python' 'yasm' 'mesa' 'imake'
              'xorg-server-xvfb' 'libpulse' 'inetutils' 'autoconf2.13' 'rust'
              'mercurial' 'llvm' 'clang'
-             'gtk2')
+             'gtk2' 'nodejs' 'cbindgen')
 if [[ -n $_pgo ]] ; then
   makedepends+=('gcc7')
 fi
@@ -42,16 +42,15 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
             'speech-dispatcher: Text-to-Speech')
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
-_patchrev=18f97bd2c2bf
+_patchrev=4b99400f6d17
 options=('!emptydirs'  'debug' 'strip')
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
-_repo=https://hg.mozilla.org/mozilla-unified
-source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
+_repo=https://hg.mozilla.org/mozilla-unified #_RELEASE
+source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_BUILD2"
         mozconfig
         firefox.desktop
         vendor.js
         kde.js
-        firefox-fixed-loading-icon.png
 	# Firefox patchset
 	firefox-branded-icons-$_patchrev.patch::$_patchurl/firefox-branded-icons.patch
 	firefox-kde-$_patchrev.patch::$_patchurl/firefox-kde.patch
@@ -61,7 +60,8 @@ source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
 	unity-menubar.patch
 	add_missing_pgo_rule.patch
         pgo_fix_missing_kdejs.patch
-        https://dev.gentoo.org/~anarchy/mozilla/patchsets/firefox-62.0-patches-01.tar.xz
+        2001_system_graphite2_support.patch
+        2000_system_harfbuzz_support.patch
 )
 
 
@@ -91,8 +91,6 @@ prepare() {
            >> .mozconfig
   fi
      
-
-
   echo -n "$_google_api_key" >google-api-key
   echo "ac_add_options --with-google-api-keyfile=\"$PWD/google-api-key\"" >>.mozconfig
 
@@ -118,43 +116,14 @@ prepare() {
   # add missing file Makefile for pgo builds
   patch -Np1 -i "$srcdir"/pgo_fix_missing_kdejs.patch
   
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1435212
-  #patch -Np1 -i ../0001-Bug-1435212-Add-support-for-FFmpeg-4.0.-r-bryce.patch
-
-  # gentoo patches
-  for file in "$srcdir"/firefox/*.patch ; do
-    case $file in
-      *gentoo*) : ;;
-      *ffmpeg*) : ;;
-      *)
-        patch -Np1 -i "$file"
-        ;;
-    esac
-  done
-  
-  # WebRTC build tries to execute "python" and expects Python 2
-  mkdir -p "$srcdir/path"
-  ln -sf /usr/bin/python2 "$srcdir/path/python"
-
-  # Fix tab loading icon (flickers with libpng 1.6)
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=841734
-  # TODO: Remove this; Firefox 34 might use CSS animations for the loading icon
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=759252
-  cp "$srcdir/firefox-fixed-loading-icon.png" \
-     browser/themes/linux/tabbrowser/loading.png
-     
+  patch -Np1 -i "$srcdir"/2000_system_harfbuzz_support.patch
+  patch -Np1 -i "$srcdir"/2001_system_graphite2_support.patch     
 }
 
 build() {
   #export CXXFLAGS="${CFLAGS}"
   cd mozilla-unified
   export MOZ_SOURCE_REPO="$_repo"
-  
-
-  # Hardening
-  LDFLAGS+=" -Wl,-z,now"
-
-
  
   if [[ -n $_lowmem || $CARCH == i686 ]]; then
     LDFLAGS+=" -Xlinker --no-keep-memory"
@@ -237,12 +206,12 @@ md5sums=('SKIP'
          '14e0f6237a79b85e60256f4808163160'
          '5cee310a9040ccc5abcf29742b84aeb8'
          '05bb69d25fb3572c618e3adf1ee7b670'
-         '6e335a517c68488941340ee1c23f97b0'
          'd7ce23a18da21c05cd756766e177834f'
-         '35a4fac33f4f3abd0d059e7ee9858617'
-         '008ee1ff02326a12879ec8856864971e'
+         'c3ecdeebb20d59753c6081d2d469900a'
+         'a21ba1d5b1ed9dc4c7b497f53d50626a'
          '0661e259fe57df87fca791f4aeb78da0'
-         '379c447c7d7c9988738737f92abaf5ee'
+         'e2164985cd64b6267041a64eda90c272'
          'fe24f5ea463013bb7f1c12d12dce41b2'
          '3fa8bd22d97248de529780f5797178af'
-         '9f098bf9bf478a36ba00694bb7722fc2')
+         'f31a90ed4c0b0c15346ea5098765771f'
+         'a85ca9c88f49184c8b0feae206f0ba0c')
