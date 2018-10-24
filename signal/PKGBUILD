@@ -5,7 +5,7 @@
 # Contributor: mrxx <mrxx at cyberhome dot at>
 # Contributor: Jonhoo <jon at thesquareplanet.com>
 pkgname=signal
-pkgver=1.16.3
+pkgver=1.17.0
 pkgrel=1
 license=('GPL3')
 pkgdesc='Signal Private Messenger for the Desktop'
@@ -33,6 +33,7 @@ prepare() {
 build() {
   cd "${pkgname}-git-repo"
   
+  export npm_config_cache="$srcdir/npm_cache"
   _npm_prefix=$(npm config get prefix)
   npm config delete prefix
   
