@@ -2,7 +2,7 @@
 # Contributor : Jingbei Li <i@jingbei.li>
 
 pkgname=plantuml
-pkgver=1.2018.11
+pkgver=1.2018.12
 pkgrel=1
 pkgdesc="Component that allows to quickly write uml diagrams"
 arch=(any)
@@ -12,7 +12,7 @@ depends=("graphviz")
 makedepends=("apache-ant" "java-environment=8")
 source=("http://downloads.sourceforge.net/project/$pkgname/$pkgver/$pkgname-$pkgver.tar.gz"
         "$pkgname.run")
-sha256sums=('77a2b237b4a220a27d331588c692302359a89c7d4ab823061f7583de9410cc25'
+sha256sums=('534397b95d47c52534df531187aaf866e47f7fec10581ad3185d5735e43a914d'
             'dff39e4d8dd8eedb58c1b0a0cf64ab2c404b713e3a42fa5fdf0b6792ca382ed5')
 optdepends=('plantuml-ascii-math')
 
