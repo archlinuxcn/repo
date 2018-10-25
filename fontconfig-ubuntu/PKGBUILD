@@ -1,14 +1,18 @@
-# Maintainer : Daniel Bermond < yahoo-com: danielbermond >
+# Maintainer : Daniel Bermond < gmail-com: danielbermond >
 # Contributor: Det
 # Contributor: Joris Steyn, Florian Dejonckheere, Tevin Zhang, Andrea Fagiani, Biru Ionut, Paul Bredbury
 # Installation order:  freetype2 → fontconfig-ubuntu → cairo-ubuntu
 
+# nice pages to test font matching:
+# http://zipcon.net/~swhite/docs/computers/browsers/fonttest.html
+# http://getemoji.com/
+
 _srcname=fontconfig
-_ubver=0ubuntu2
+_ubver=5ubuntu3
 
 pkgname=fontconfig-ubuntu
-pkgver=2.12.6
-pkgrel=2
+pkgver=2.13.0
+pkgrel=1
 pkgdesc='A library for configuring and customizing font access (with Ubuntu patches)'
 arch=('i686' 'x86_64')
 url='https://launchpad.net/ubuntu/+source/fontconfig'
@@ -19,26 +23,24 @@ makedepends=('autoconf-archive' 'gperf' 'python-lxml' 'python-six' 'docbook-util
 provides=("fontconfig=${pkgver}")
 conflicts=('fontconfig')
 install="${pkgname}.install"
-source=("https://launchpad.net/ubuntu/+archive/primary/+files/fontconfig_$pkgver.orig.tar.bz2"
-        "https://launchpad.net/ubuntu/+archive/primary/+files/fontconfig_$pkgver-$_ubver.debian.tar.xz"
+source=("https://launchpad.net/ubuntu/+archive/primary/+files/fontconfig_${pkgver}.orig.tar.bz2"
+        "https://launchpad.net/ubuntu/+archive/primary/+files/fontconfig_${pkgver}-${_ubver}.debian.tar.xz"
         '53-monospace-lcd-filter.patch'
         'fontconfig-ubuntu.hook')
-sha256sums=('cf0c30807d08f6a28ab46c61b8dbd55c97d2f292cf88f3a07d3384687f31f017'
-            '75c259e2d6b1944fe76a49f89b806b3ee34fe7a42eb25efd289e38b1b5e16517'
+sha256sums=('91dde8492155b7f34bb95079e79be92f1df353fcc682c19be90762fd3e12eeb9'
+            'ff3bed047dc345a5925be6bf7c4739d4d416ad8ab89dd9c4261f23da1f45f6a6'
             'c759702ba66fe88768aa93035637401085bb5c02d898c960b68291aea10daa8d'
             '672f6a1c5e164671955ce807e670306194142a1794ce88df653aa717a972e274')
-
-# nice pages to test font matching:
-# http://zipcon.net/~swhite/docs/computers/browsers/fonttest.html
-# http://getemoji.com/
 
 prepare() {
     cd "${_srcname}-${pkgver}"
     
+    local _patch
+    
     # apply Debian patches
-    for _patch in $(cat "${srcdir}/debian/patches/series")
+    for _patch in $(cat "${srcdir}/debian/patches/series" | grep '\.patch$\|\.diff$')
     do
-        msg2 "Applying Debian patch: ${_patch}"
+        printf '%s\n' "  -> Applying Debian patch: ${_patch}"
         patch -Np1 -i "${srcdir}/debian/patches/${_patch}"
     done
     
