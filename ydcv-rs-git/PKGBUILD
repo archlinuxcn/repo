@@ -1,7 +1,7 @@
 pkgname=ydcv-rs-git
 _pkgname="ydcv-rs"
 pkgdesc="A Rust version of ydcv."
-pkgver=0.3.11.117
+pkgver=0.3.11.120
 pkgrel=1
 arch=('i686' 'x86_64')
 conflicts=("ydcv")
