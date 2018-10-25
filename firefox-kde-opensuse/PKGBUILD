@@ -21,7 +21,7 @@ _pgo=true
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
 pkgver=63.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -45,8 +45,8 @@ conflicts=('firefox')
 _patchrev=4b99400f6d17
 options=('!emptydirs'  'debug' 'strip')
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
-_repo=https://hg.mozilla.org/mozilla-unified #_RELEASE
-source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_BUILD2"
+_repo=https://hg.mozilla.org/mozilla-unified
+source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
         mozconfig
         firefox.desktop
         vendor.js
@@ -187,15 +187,6 @@ END
     "$pkgdir/usr/share/icons/hicolor/384x384/apps/firefox.png"
 
   install -Dm644 "$srcdir/firefox.desktop" "$pkgdir/usr/share/applications/firefox.desktop"
-
-  # Use system-provided dictionaries
-  rm -rf "$pkgdir"/usr/lib/firefox/{dictionaries,hyphenation}
-  ln -s /usr/share/hunspell "$pkgdir/usr/lib/firefox/dictionaries"
-  ln -s /usr/share/hyphen "$pkgdir/usr/lib/firefox/hyphenation"
-
-  # Use system certificates
-  ln -srf "$pkgdir/usr/lib/libnssckbi.so" \
-     "$pkgdir/usr/lib/$_pkgname/libnssckbi.so"
 
   #workaround for now
   #https://bugzilla.mozilla.org/show_bug.cgi?id=658850
