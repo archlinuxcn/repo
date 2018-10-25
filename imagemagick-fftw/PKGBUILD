@@ -2,7 +2,7 @@
 
 pkgbase=imagemagick-fftw
 pkgname=(libmagick-fftw imagemagick-fftw)
-pkgver=7.0.8.13
+pkgver=7.0.8.14
 pkgrel=1
 pkgdesc="An image viewing/manipulation program"
 url="https://www.imagemagick.org/"
@@ -16,10 +16,10 @@ _relname=ImageMagick-${pkgver%%.*}
 _tarname=ImageMagick-${pkgver%.*}-${pkgver##*.}
 source=(https://www.imagemagick.org/download/releases/$_tarname.tar.xz{,.asc}
         arch-fonts.diff IM7-GS-policy.patch)
-sha256sums=('1543ad705ef45cf490de8e8db913e13b1e7baea057036db69feb475467d66873'
+sha256sums=('70c3d8c800cfd0282c0e0d9930b83f472f9593a882adc77532aa82c0d7ca0bb1'
             'SKIP'
             'a85b744c61b1b563743ecb7c7adad999d7ed9a8af816650e3ab9321b2b102e73'
-            '70a5358fe0e33a4aed34a32cd32be6c9f38277de3560605d8e93f5d486d1e112')
+            'f20c09860da65a4259ec9627ceeca7d993949b7460fa199c5ffd874633814cf6')
 validpgpkeys=(D8272EF51DA223E4D05B466989AB63D48277377A)  # Lexie Parsimoniae
 
 shopt -s extglob
@@ -73,6 +73,7 @@ build() {
 check() (
   cd $_tarname
   ulimit -n 4096
+  sed -e '/validate-formats/d' -i Makefile # these fail due to the security patch
   make check
 )
 
