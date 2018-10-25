@@ -17,8 +17,6 @@ STDS = [
   'i686-unknown-linux-gnu',
   'i686-pc-windows-gnu', # need libgcc_s_dw2-1.dll
   'x86_64-pc-windows-gnu',
-  'asmjs-unknown-emscripten',
-  'wasm32-unknown-emscripten',
   'wasm32-unknown-unknown',
   'aarch64-linux-android',
 ]
