@@ -4,8 +4,8 @@
  Name=Atom
  Comment=A hackable text editor for the 21st Century.
  GenericName=Text Editor
--Exec=/usr/share/atom/atom %F
-+Exec=env PYTHON=python2 /usr/share/atom/atom %U
+-Exec=/usr/bin/atom %F
++Exec=env PYTHON=python2 /usr/bin/atom %U
  Icon=atom
  Type=Application
  StartupNotify=true
