@@ -2,7 +2,7 @@
 # Contributor: Rich Li <rich@dranek.com>
 
 pkgname=gmt
-pkgver=5.4.3
+pkgver=5.4.4
 pkgrel=1
 pkgdesc="Generic Mapping Tools: Collection of tools for manipulating geographic and Cartesian data sets, and generating EPS maps."
 arch=(i686 x86_64)
@@ -19,7 +19,7 @@ optdepends=(
 conflicts=('gmt4')
 install='gmt.install'
 source=("ftp://ftp.soest.hawaii.edu/gmt/${pkgname}-${pkgver}-src.tar.xz")
-md5sums=('77b295e89aac05d6d2d5cfa0402bffe2')
+md5sums=('91b2651ebf9ff792c11aee3e58c40d9f')
 
 prepare() {
   cd "${srcdir}/${pkgname}-${pkgver}"
