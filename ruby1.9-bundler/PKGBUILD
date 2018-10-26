@@ -3,7 +3,7 @@
 
 pkgname=ruby1.9-bundler
 _gemname=${pkgname#ruby1.9-}
-pkgver=1.16.6
+pkgver=1.17.0
 pkgrel=1
 pkgdesc="Manages an application's dependencies through its entire life, across many machines, systematically and repeatably."
 arch=('any')
@@ -13,7 +13,7 @@ depends=('ruby1.9')
 options=('!emptydirs')
 source=("https://rubygems.org/downloads/$_gemname-$pkgver.gem")
 noextract=("$_gemname-$pkgver.gem")
-sha256sums=('07b445ea98d39032d257016a971a0c0947556eea7855ce64970da2a82e098605')
+sha256sums=('a674b4a3e813b2902504a0ce9e84e9ba84979d59fd353362e541ed59ce4edecc')
 
 package() {
   cd "$srcdir"
