@@ -1,35 +1,39 @@
 post_install() {
     getent passwd zeronet &>/dev/null || {
         echo -n ">>> Creating zeronet user... "
-        useradd --system --user-group --home /var/lib/zeronet zeronet
+        useradd --system --user-group -m --home /var/lib/zeronet zeronet
         echo "done"
     } # NOTE: we do not autoremove user due to security concerns (Arch policy)
+
+    mkdir -p /var/log/zeronet
+    chown zeronet:zeronet /var/log/zeronet
+
+    # This is not usual practice but to editting from web interface
+    chown zeronet:zeronet /etc/zeronet.conf
+
     post_upgrade
-    # Don't run thesre operations automatically, because they are security-sensitive
-    echo ">>> Default mode is clearnet+Tor. Give zeronet permissions to configure hidden service:"
-    echo ">>>   sudo usermod -a -G tor zeronet"
-    echo ">>>   sudo mkdir -m 750 /var/lib/tor-auth && sudo chown tor:tor /var/lib/tor-auth"
-    echo ">>> Add/edit the following options in /etc/tor/torrc:"
-    echo ">>>   CookieAuthentication 1"
-    echo ">>>   CookieAuthFileGroupReadable 1"
-    echo ">>>   CookieAuthFile /var/lib/tor-auth/control_auth_cookie"
-    echo ">>> Restart tor (reload not enough):"
-    echo ">>>   sudo systemctl restart tor"
-    echo ">>> Run daemon and check status and view log:"
-    echo ">>>   sudo systemctl start zeronet"
-    echo ">>>   sudo systemctl status zeronet"
-    echo ">>>   sudo journalctl -u zeronet"
-    echo ">>> NOTE: all operations including editing zerosite files,"
-    echo ">>>       should be done as user zeronet and config must be passed"
-    echo ">>>       for data directory to be selected to /var/lib/zeronet: "
-    echo ">>>   sudo -u zeronet python2 zeronet.py --config_file /etc/zeronet.conf ..."
-    echo ">>>      OR"
-    echo ">>>   sudo su - zeronet"
-    echo ">>>   cd /opt/zeronet"
-    echo ">>>   python2 zeronet.py --config_file /etc/zeronet.conf ..."
+
+    echo "Original maintainer: redfish(AUR)"
+
+    # Show the ArchWiki link
+    echo ">>> To enable TOR support, please read this ArchWiki page:"
+    echo ">>>   https://wiki.archlinux.org/index.php/ZeroNet#Tor"
+    # Show warning
+    echo ">>> All operations, including editing ZeroNet site files, should be done as user zeronet."
+    # Show info
+    echo ">>> You can enable zeronet.service using systemctl to make zeronet autostart."
 }
 
+## each separate version number must be less than 3 digit wide !
+function version { echo "$@" | gawk -F. '{ printf("%03d%03d%03d\n", $1,$2,$3); }'; }
+
 post_upgrade() {
-    chown zeronet:zeronet /var/lib/zeronet
-    chown zeronet:zeronet /var/log/zeronet
+    chown -R zeronet:zeronet /opt/zeronet
+
+    if [ "$(version "$(echo $2 | sed s/\.r.*//)")" -lt "$(version 0.6.3)" ]
+    then
+	# In 0.6.3+, we do this on install, but for already installed versions:
+        # This is not usual practice but to editting from web interface
+        chown zeronet:zeronet /etc/zeronet.conf
+    fi
 }

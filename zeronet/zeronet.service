@@ -5,15 +5,7 @@ Description=Decentralized websites using Bitcoin crypto and the BitTorrent netwo
 User=zeronet
 Group=zeronet
 WorkingDirectory=/opt/zeronet
-StandardOutput=null
-StandardError=null
-PrivateTmp=true
-PrivateDevices=true
-ProtectSystem=full
-ProtectHome=true
-NoNewPrivileges=true
-CapabilityBoundingSet=
-ExecStart=/opt/zeronet/zeronet.py --config_file /etc/zeronet.conf
+ExecStart=/usr/bin/env python2 zeronet.py --config_file /etc/zeronet.conf
 Restart=on-failure
 
 [Install]

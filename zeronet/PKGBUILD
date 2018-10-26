@@ -1,39 +1,34 @@
-# Maintainer: redfish <redfish at galactica dot pw>
+# Maintainer: Sakuraba Amane <tobiichiamane@archlinuxcn.org>
 
 pkgname='zeronet'
-pkgver=0.6.1
+pkgver=0.6.4
 pkgrel=1
-_commit='4efcfa8bf49a1d9ce9b6b8095b4cd92d30c70d74'
 arch=('any')
 url="https://zeronet.io/"
-depends=('python2>=2.7.10'
+depends=('python2'
          'python2-gevent'
-         'python2-msgpack'
-		)
-makedepends=('git')
+         'python2-msgpack')
+optdepends=('tor: anonymity')
 license=('GPL2')
 pkgdesc="Decentralized websites using Bitcoin crypto and the BitTorrent network."
-source=("git+https://github.com/HelloZeroNet/ZeroNet.git#commit=$_commit"
+source=("https://github.com/HelloZeroNet/ZeroNet/archive/v$pkgver.tar.gz"
         "zeronet.conf"
         "zeronet.service")
-sha512sums=('SKIP'
-            '000884cd9f1e5c0b34e45f590fc5f6d0c4ed8bc95dfec84fc66d93a4504a6a1acbab6c8c0f71a43fc5834ab4fec30cb9aa29ab7b55a36f9a7743a37020f26618'
-            'e3e9f6947480e7f6d496caaaa81ab00ea99dbafac46fa8607235965d89f7bdc20c73b137830a938b469158b1ee803c2a771d3a10bda14a8e5e217931013f5a0c')
+sha256sums=('e37a2acb1313d4e170bab2e7b469288916630cb1d4717aec0e2a188f92721f57'
+            'ea735e82dbb10a2c1fda7abfeb2f38c2429044d8254f9e2396c50cecb6f778f8'
+            '46fcbaddf5346ba384539efd6873c26bef4e767e328c6543f9fd511022aea9e7')
 install="zeronet.install"
 backup=("etc/zeronet.conf")
 options=(!strip) # ignore test binaries in the depsendency libs that fail strip
 
 # Upstream uses camel case
-_pkgarchive="ZeroNet"
+_pkgarchive="ZeroNet-$pkgver"
 
 package() {
    mkdir -p "$pkgdir/opt/zeronet"
-   mkdir -p "$pkgdir/var/lib/zeronet"
-   mkdir -p "$pkgdir/var/log/zeronet"
 
    # There is no setup.py shipped, so brute-force copy
    cp -a "$srcdir/$_pkgarchive/." "$pkgdir/opt/zeronet/"
-   python2 -m compileall $pkgdir/opt/zeronet
 
    install -D -m644 "$srcdir/zeronet.conf" "$pkgdir/etc/zeronet.conf"
    install -D -m644 "$srcdir/zeronet.service" "$pkgdir/usr/lib/systemd/system/zeronet.service"
