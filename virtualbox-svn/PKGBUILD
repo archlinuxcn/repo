@@ -135,9 +135,6 @@ prepare() {
 
     msg2 'Remove gcc version censorship'
     sed -i 's/^check_gcc$/#check_gcc/' configure
-    
-    sed -i '2i# include <QStyle>' src/VBox/Frontends/VirtualBox/src/runtime/UIMachineLogic.cpp
-    sed -i '2i# include <QStyle>' src/VBox/Frontends/VirtualBox/src/selector/UISelectorWindow.cpp
 }
 
 build() {
