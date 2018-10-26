@@ -2,7 +2,7 @@
 
 pkgname='zeronet'
 pkgver=0.6.4
-pkgrel=1
+pkgrel=2
 arch=('any')
 url="https://zeronet.io/"
 depends=('python2'
