@@ -3,7 +3,7 @@
 
 pkgname=tome4-git
 _pkgname=tome4
-pkgver=1.5.0.r576.g98647f4cf
+pkgver=1.5.0.r584.g1f0a36a91
 pkgrel=1
 pkgdesc="An open-source, single-player, role-playing roguelike game set in the world of Eyal."
 arch=('i686' 'x86_64')
