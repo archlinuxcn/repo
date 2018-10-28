@@ -3,24 +3,24 @@
 # Contributor: TDY <tdy@archlinux.info>
 
 pkgname=foxitreader
-pkgver=2.4.1.0609
-_foxitrevision=r08f07f8
-pkgrel=10
+pkgver=2.4.4.0911
+_foxitrevision=r057d814
+pkgrel=1
 pkgdesc="A fast, secure and complete PDF viewer"
 arch=('x86_64')
 url="https://www.foxitsoftware.com/products/pdf-reader/"
 license=('custom:EULA')
 depends=('libsecret' 'libxslt' 'libxcomposite' 'libgl' 'libxrender' 'gstreamer0.10-base'
-         'libxi' 'libsm' 'fontconfig' 'dbus' 'openssl-1.0')
-makedepends=('p7zip')
+         'libxi' 'libsm' 'fontconfig' 'dbus' 'openssl-1.0' 'desktop-file-utils')
+makedepends=('p7zip' 'chrpath')
 optdepends=('gtk2: use GTK+ dialogs under GTK+ based desktop environments')
-source=("http://cdn09.foxitsoftware.com/pub/foxit/reader/desktop/linux/2.x/${pkgver%.*.*}/en_us/FoxitReader${pkgver}_Server_x64_enu_Setup.run.tar.gz"
+source=("http://cdn09.foxitsoftware.com/pub/foxit/reader/desktop/linux/2.x/${pkgver%.*.*}/en_us/FoxitReader.enu.setup.${pkgver}.x64.run.tar.gz"
         "https://www.foxitsoftware.com/products/pdf-reader/eula.html"
         "${pkgname}.patch"
         "${pkgname}-excluded_files")
-sha256sums=('d8093dd3b3aeb4e788cbdff5f9d05d7557eb440810f6da6bdc4e23447d3a27ba'
-            'c1485614de2b8087d14ab2d7b10e51faaaaf83a96f8bce6a0e1791effadf6079'
-            'd85bfa4b293927975182aa6b1582ac064c5732711e5678d5f1ec35e65c78e6d1'
+sha256sums=('6b579bd4ecdf86f7e70a009886c511da0b5085b831b0d6afc42442cabc249b90'
+            '7814e03ea944f5ee5ff791e97c13446a5274989a1679758a92af0405d0fc7dce'
+            'ee0f65819d00fea89f40112c769c704c7b663ff852e9d1d6e36d1b6d054d9c05'
             'e558529c6dbea047eee744b011ffcc214547c503896b14211ebf5f6309ef4e9f')
 
 build() {
@@ -57,7 +57,16 @@ build() {
   done
   # Apply final patches
   cd "${srcdir}/${pkgname}-build"
-  patch -p4 --no-backup-if-mismatch -i "${srcdir}/${pkgname}.patch"
+  patch -p1 --no-backup-if-mismatch -i "${srcdir}/${pkgname}.patch"
+  # Remove insecure RPATH
+  for _file in "lib/libFcitxQt5DBusAddons.so.1.0" \
+               "lib/libQt5PrintSupport.so.5.3.2" \
+               "platforminputcontexts/libfcitxplatforminputcontextplugin.so" \
+               "printsupport/libcupsprintersupport.so"
+  do
+    echo "  -> Removing insecure RPATH from ${_file}"
+    chrpath --delete "${_file}"
+  done
   # Remove unneeded files
   rm "Activation" "Activation.desktop" "Activation.sh" \
      "countinstalltion" "countinstalltion.sh" \

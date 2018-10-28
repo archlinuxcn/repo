@@ -1,25 +1,24 @@
-diff -Naur foxitreader.orig/usr/lib/foxitreader/FoxitReader.desktop foxitreader/usr/lib/foxitreader/FoxitReader.desktop
---- foxitreader.orig/usr/lib/foxitreader/FoxitReader.desktop	2017-02-28 02:59:33.000000000 +0100
-+++ foxitreader/usr/lib/foxitreader/FoxitReader.desktop	2017-04-21 01:46:30.036707144 +0200
-@@ -1,10 +1,11 @@
+diff -Naur foxitreader.orig/FoxitReader.desktop foxitreader/FoxitReader.desktop
+--- foxitreader.orig/FoxitReader.desktop	2018-02-13 18:54:39.000000000 +0100
++++ foxitreader/FoxitReader.desktop	2018-10-28 16:55:01.954090619 +0100
+@@ -1,10 +1,12 @@
  [Desktop Entry]
  Name=Foxit Reader
 -Comment=View pdf documents
--Keywords=pdf;octet-stream;
 +Comment=View PDF documents
-+Keywords=pdf;
+ Keywords=pdf;ppdf;
  StartupNotify=true
  Terminal=false
  Type=Application
  Categories=Application;Office;Viewer;X-Red-Hat-Base;
--MimeType=application/pdf;application/octet-stream;
+ MimeType=application/pdf;application/ppdf;
 -Icon=FoxitReader
-+MimeType=application/pdf;
 +Icon=foxitreader
 +Exec=foxitreader %F
-diff -Naur foxitreader.orig/usr/lib/foxitreader/FoxitReader.sh foxitreader/usr/lib/foxitreader/FoxitReader.sh
---- foxitreader.orig/usr/lib/foxitreader/FoxitReader.sh	2017-02-28 02:58:36.000000000 +0100
-+++ foxitreader/usr/lib/foxitreader/FoxitReader.sh	2017-04-21 01:46:01.919583196 +0200
++
+diff -Naur foxitreader.orig/FoxitReader.sh foxitreader/FoxitReader.sh
+--- foxitreader.orig/FoxitReader.sh	2018-02-13 16:57:48.000000000 +0100
++++ foxitreader/FoxitReader.sh	2018-10-28 16:54:35.792773802 +0100
 @@ -1,3 +1,5 @@
  #!/bin/sh
 - appname="FoxitReader"
