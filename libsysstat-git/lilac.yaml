@@ -1,0 +1,18 @@
+# XXX: The format for `maintainers` is subjected to changes.
+# See https://github.com/archlinuxcn/lilac/pull/68
+
+maintainers:
+  - github: yan12125
+    email: yan12125@gmail.com
+
+build_prefix: extra-x86_64
+
+depends:
+  - lxqt-build-tools-git
+
+update_on:
+  - aur: libsysstat-git
+  - github: lxqt/libsysstat
+
+pre_build: aur_pre_build
+post_build: aur_post_build
