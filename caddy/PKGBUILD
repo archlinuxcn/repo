@@ -7,7 +7,7 @@ _gopkgname='github.com/mholt/caddy'
 
 pkgname=caddy
 pkgver=0.11.0
-pkgrel=7
+pkgrel=8
 pkgdesc='HTTP/2 Web Server with Automatic HTTPS'
 arch=('x86_64' 'i686' 'armv6h' 'armv7h' 'aarch64')
 url='https://caddyserver.com'
@@ -43,41 +43,35 @@ patch_plugins() {
 }
 
 prepare() {
-    export CGO_ENABLED=0
-    export CGO_ENABLED=0
-    export CGO_ENABLED=0
-    export CGO_ENABLED=0
-    export CGO_ENABLED=0
     export GOPATH="$srcdir/build"
-    rm -rf "$GOPATH/src/$gopkgname"
-    mkdir --parents `dirname "$GOPATH/src/$_gopkgname"`
-    mv -Tv "$srcdir/$pkgname-$pkgver" "$GOPATH/src/$_gopkgname"
+    rm -rf "${GOPATH}/src/${gopkgname}"
+    mkdir --parents `dirname "${GOPATH}/src/${_gopkgname}"`
+    mv -Tv "${srcdir}/${pkgname}-${pkgver}" "${GOPATH}/src/${_gopkgname}"
 
-    if [ ${#plugins[@]} -gt 0 ]; then
+    if [ ${#_plugins[@]} -gt 0 ]; then
         echo enabled plugins: ${plugins[@]}
-        cd $GOPATH/src/$_gopkgname/caddy/caddymain/
+        cd ${GOPATH}/src/${_gopkgname}/caddy/caddymain/
         patch_plugins < run.go > run1.go
         mv run1.go run.go
-        go get -v -d $_gopkgname/caddy/caddymain
+        go get -v -d ${_gopkgname}/caddy/caddymain
     fi
 }
 
 build() {
-    export GOPATH="$srcdir/build"
-    go build -v -o $srcdir/caddy -ldflags "-X $_gopkgname/caddy/caddymain.gitTag=v$pkgver" $_gopkgname/caddy
+    export CGO_ENABLED=0
+    go build -v -o ${srcdir}/caddy -ldflags "-X ${_gopkgname}/caddy/caddymain.gitTag=v${pkgver}" ${_gopkgname}/caddy
 }
 
 package() {
-    install -D -m 0755 caddy "$pkgdir/usr/bin/caddy"
-    install -D -m 0644 caddy-at-your-service-white.svg "$pkgdir/usr/share/caddy/caddy-at-your-service-white.svg"
-    install -D -m 0644 index.html "$pkgdir/usr/share/caddy/index.html"
-    install -D -m 0644 caddy.service "$pkgdir/usr/lib/systemd/system/caddy.service"
-    install -D -m 0644 caddy.tmpfiles "$pkgdir/usr/lib/tmpfiles.d/caddy.conf"
-    install -D -m 0644 caddy.conf "$pkgdir/etc/caddy/caddy.conf"
-    install -d -m 0755 "$pkgdir/etc/caddy/caddy.conf.d"
+    install -D -m 0755 caddy "${pkgdir}/usr/bin/caddy"
+    install -D -m 0644 caddy-at-your-service-white.svg "${pkgdir}/usr/share/caddy/caddy-at-your-service-white.svg"
+    install -D -m 0644 index.html "${pkgdir}/usr/share/caddy/index.html"
+    install -D -m 0644 caddy.service "${pkgdir}/usr/lib/systemd/system/caddy.service"
+    install -D -m 0644 caddy.tmpfiles "${pkgdir}/usr/lib/tmpfiles.d/caddy.conf"
+    install -D -m 0644 caddy.conf "${pkgdir}/etc/caddy/caddy.conf"
 }
 
-plugins=(
+_plugins=(
     'dns'
 #    'docker'
 #    'dyndns'
