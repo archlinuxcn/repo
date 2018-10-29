@@ -7,7 +7,7 @@ _gopkgname='github.com/mholt/caddy'
 
 pkgname=caddy
 pkgver=0.11.0
-pkgrel=8
+pkgrel=9
 pkgdesc='HTTP/2 Web Server with Automatic HTTPS'
 arch=('x86_64' 'i686' 'armv6h' 'armv7h' 'aarch64')
 url='https://caddyserver.com'
@@ -30,13 +30,13 @@ sha256sums=('81e593d258460a9f5c6b5a5f46890a08b6b1ce15f5c0fc7bcaf09826368c3a1a'
             '80520b80ccabf077a3269f6a1bf55faa3811ef5adce115131b35ef2044d37b64'
             'f5a0fbb961e7c9ecf99e88d0959a3164cbea54660c1c08c3ba3cdf1d45563929')
 
-patch_plugins() {
+_patch_plugins() {
     IFS=''
     n=0
     while read -r line; do
         echo "$line"
         if [[ $n = 0 && $line =~ ^import ]]; then
-            go run $srcdir/plugins.go "${plugins[@]}"
+            go run $srcdir/plugins.go "${_plugins[@]}"
             n=1
         fi
     done
@@ -49,9 +49,9 @@ prepare() {
     mv -Tv "${srcdir}/${pkgname}-${pkgver}" "${GOPATH}/src/${_gopkgname}"
 
     if [ ${#_plugins[@]} -gt 0 ]; then
-        echo enabled plugins: ${plugins[@]}
+        echo enabled plugins: ${_plugins[@]}
         cd ${GOPATH}/src/${_gopkgname}/caddy/caddymain/
-        patch_plugins < run.go > run1.go
+        _patch_plugins < run.go > run1.go
         mv run1.go run.go
         go get -v -d ${_gopkgname}/caddy/caddymain
     fi
