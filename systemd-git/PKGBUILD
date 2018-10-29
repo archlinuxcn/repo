@@ -123,7 +123,7 @@ package_systemd-git() {
            'libgcrypt' 'libsystemd' 'libidn2' 'lz4' 'pam' 'libelf' 'libseccomp'
            'util-linux' 'xz' 'pcre2' 'audit')
   provides=("${_pkgbase}=$pkgver" 'nss-myhostname' "systemd-tools=$pkgver" "udev=$pkgver")
-  replaces=("${_pkgbase}" 'nss-myhostname' 'systemd-tools' 'udev')
+  replaces=() # Because some issues, I removed that.
   conflicts=("${_pkgbase}" 'nss-myhostname' 'systemd-tools' 'udev')
   optdepends=('libmicrohttpd: remote journald capabilities'
               'quota-tools: kernel-level quota management'
