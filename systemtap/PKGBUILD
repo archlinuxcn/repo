@@ -13,9 +13,12 @@ makedepends=('python2-setuptools' 'xmlto' 'cpio')
 optdepends=('sqlite3: for storing results in a database')
 source=("${pkgname}-${pkgver}.tar.gz::https://sourceware.org/systemtap/ftp/releases/${pkgname}-${pkgver}.tar.gz"
         "${pkgname}-${pkgver}.tar.gz.asc::https://sourceware.org/systemtap/ftp/releases/${pkgname}-${pkgver}.tar.gz.asc"
+        "systemtap.sysusers"
         )
 sha512sums=('66b5ba1902ed974101429dce9fee849273d3dc64e862c057177d158c5f284cc93299819ee8ee49d4bd3b7ff47a3512b1c68b74cad374147ce67fa406c7518c79'
-            'SKIP')
+            'SKIP'
+            '0b54000f0bb6ed9eb4f43dbdc2fd66fcc178fc24688610fcb7b2ace5195bf96a956e24f2c281545db1a5a7c98aa951af63e8bd00de1f0347bae6f379f3671344'
+            )
 install='systemtap.install'
 validpgpkeys=('5D38116FA4D3A7CC77E378D37E83610126DCC2E8')
 
@@ -44,5 +47,8 @@ package() {
   make DESTDIR="${pkgdir}" install
   rm -rf "${pkgdir}/var"
   rm -rf "${pkgdir}/etc"
+
+  cd "${srcdir}"
+  install -Dm644 ${pkgname}.sysusers "${pkgdir}"/usr/lib/sysusers.d/${pkgname}.conf
 }
 
