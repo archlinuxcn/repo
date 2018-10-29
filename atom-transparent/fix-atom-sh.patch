@@ -1,6 +1,6 @@
 --- a/atom.sh
 +++ b/atom.sh
-@@ -1,26 +1,5 @@
+@@ -1,29 +1,5 @@
  #!/bin/bash
  
 -if [ "$(uname)" == 'Darwin' ]; then
@@ -16,6 +16,9 @@
 -  atom-beta)
 -    CHANNEL=beta
 -    ;;
+-  atom-nightly)
+-    CHANNEL=nightly
+-    ;;
 -  atom-dev)
 -    CHANNEL=dev
 -    ;;
@@ -27,9 +30,9 @@
  export ATOM_DISABLE_SHELLING_OUT_FOR_ENVIRONMENT=true
  
  while getopts ":wtfvh-:" opt; do
-@@ -59,85 +38,22 @@
-   exec 2> /dev/null
- fi
+@@ -65,95 +41,19 @@
+ ATOM_HOME="${ATOM_HOME:-$HOME/.atom}"
+ mkdir -p "$ATOM_HOME"
  
 -if [ $OS == 'Mac' ]; then
 -  if [ -L "$0" ]; then
@@ -44,11 +47,22 @@
 -    ATOM_PATH="$(dirname "$ATOM_APP")"
 -    ATOM_APP_NAME="$(basename "$ATOM_APP")"
 -  fi
--
--  if [ "$CHANNEL" == 'beta' ]; then
--    ATOM_EXECUTABLE_NAME="Atom Beta"
++ATOM_PATH="/usr/lib/atom/atom"
+ 
+-  if [ ! -z "${ATOM_APP_NAME}" ]; then
+-    # If ATOM_APP_NAME is known, use it as the executable name
+-    ATOM_EXECUTABLE_NAME="${ATOM_APP_NAME%.*}"
 -  else
--    ATOM_EXECUTABLE_NAME="Atom"
+-    # Else choose it from the inferred channel name
+-    if [ "$CHANNEL" == 'beta' ]; then
+-      ATOM_EXECUTABLE_NAME="Atom Beta"
+-    elif [ "$CHANNEL" == 'nightly' ]; then
+-      ATOM_EXECUTABLE_NAME="Atom Nightly"
+-    elif [ "$CHANNEL" == 'dev' ]; then
+-      ATOM_EXECUTABLE_NAME="Atom Dev"
+-    else
+-      ATOM_EXECUTABLE_NAME="Atom"
+-    fi
 -  fi
 -
 -  if [ -z "${ATOM_PATH}" ]; then
@@ -83,6 +97,9 @@
 -    beta)
 -      ATOM_PATH="$USR_DIRECTORY/share/atom-beta/atom"
 -      ;;
+-    nightly)
+-      ATOM_PATH="$USR_DIRECTORY/share/atom-nightly/atom"
+-      ;;
 -    dev)
 -      ATOM_PATH="$USR_DIRECTORY/share/atom-dev/atom"
 -      ;;
@@ -91,14 +108,8 @@
 -      ;;
 -  esac
 -
--  ATOM_HOME="${ATOM_HOME:-$HOME/.atom}"
--  mkdir -p "$ATOM_HOME"
-+ATOM_PATH="/usr/lib/atom/atom"
- 
 -  : ${TMPDIR:=/tmp}
-+ATOM_HOME="${ATOM_HOME:-$HOME/.atom}"
-+mkdir -p "$ATOM_HOME"
- 
+-
 -  [ -x "$ATOM_PATH" ] || ATOM_PATH="$TMPDIR/atom-build/Atom/atom"
 -
 -  if [ $EXPECT_OUTPUT ]; then

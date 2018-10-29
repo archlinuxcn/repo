@@ -10,12 +10,12 @@
    childProcess.execFileSync(
 -    CONFIG.getApmBinPath(),
 +    'apm',
-     ['--loglevel=error', 'install'],
-     {env: installEnv, cwd: packagePath, stdio: 'inherit'}
+     ['--loglevel=error', ci ? 'ci' : 'install'],
+     {env: installEnv, cwd: packagePath, stdio: stdioOptions || 'inherit'}
    )
 --- a/src/package-manager.js
 +++ b/src/package-manager.js
-@@ -166,13 +166,7 @@
+@@ -169,13 +169,7 @@
        return configPath || this.apmPath
      }
  

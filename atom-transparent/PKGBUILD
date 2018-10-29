@@ -1,10 +1,9 @@
-# Maintainer: Frantic1048 <archer@frantic1048.com>
-# Upstream URL: https://github.com/atom/atom
+# Maintainer: frantic1048<archer@frantic1048.com>
 
 pkgname=atom-transparent
-pkgver=1.27.1
+pkgver=1.32.0
 pkgrel=1
-pkgdesc='A hackable text editor for the 21st Century - with transparent background support'
+pkgdesc='A hackable text editor for the 21st Century, with transparency patch.'
 arch=('x86_64')
 url='https://github.com/atom/atom'
 license=('MIT' 'custom')
@@ -12,30 +11,27 @@ depends=('apm' 'electron' 'libxkbfile')
 makedepends=('git' 'npm')
 optdepends=('ctags: symbol indexing support'
             'git: Git and GitHub integration')
-conflicts=('atom-editor')
-replaces=('atom-editor-transparent')
+replaces=('atom-editor' 'atom-editor-transparent')
 options=(!emptydirs)
 source=("atom-${pkgver}.tar.gz::https://github.com/atom/atom/archive/v${pkgver}.tar.gz"
         'atom.js'
         'dugite-use-system-git.patch'
         'fix-atom-sh.patch'
         'fix-license-path.patch'
-        'fix-node8.patch'
         'fix-restart.patch'
         'symbols-view-use-system-ctags.patch'
         'use-system-apm.patch'
         'use-system-electron.patch'
         'enable-transparency.patch')
-sha256sums=('147c237d944d0261ac2caf525badd8c76cf92da99bb6901c89e491fb5f0c16bf'
+sha256sums=('abb1a091fa493f186749d50c9444e762ed46f57c39055d022a50e166c7ffa8c6'
             'cdf87ab82cfcf69e8904684c59b08c35a68540ea16ab173fce06037ac341efcd'
-            '3fadee5a2d8c1ff35e085f9b9f3cf2eb71627bda9e8b10c2a0bd85b268591bf6'
-            'd8d77adebd7bd4eaf024988c68c30dc6b968044f7a6381227d13b6d77fa2b442'
-            '7f0142c91e24236a3a6dcc70af9d4217f65c5a764091876a916e3bbafa4ed0fa'
-            'eb771d7c009be8d48c1387ed63f3e575dc12f3bd69455b4be4b78ab57cb49b86'
-            'f81a8dd53403fe76d80716b65d69bec141fae0b1a9a6ef56314f9e815e48f132'
+            '530b46d31df0f5e8f5881e1608a66fe75d549092a6db2e72ba3ad69c48714153'
+            'ab9eed3d4c8bfefea256953428379ab1e636b9c7d4c4af30ddc3f485330183c2'
+            'c8a931f36af3722c57c4d1b70c1e58aa1a18372e8e26c28a4e01253e05295205'
+            'cbac8d28e32a32760cd6b16d313e05e32af57bfdea1c248636e1b1ae74e4e92c'
             '3c68e6b3751313e1d386e721f8f819fb051351fb2cf8e753b1d773a0f475fef8'
-            '4b91a1acd112838bd001f4e3c555de2a5fc7446c9eab6bc5dae0ca640306e81b'
-            '1d0ff39e5bc5c0bfbb08a533bff9fb834a8dbc70d280bf93b5e2649fff181221'
+            '53f43c9328a66e24b3467a0a06d9dfde83475f7e54251bf7a523beafaa043806'
+            '25ffc77d9d0f89a598041f5c823f5e65a662681f570f3894cb74aca7306e1026'
             '2cb262dfd15f67dd1a01a9b314983f535da8b06ce4a814d214e12ec369631d58')
 
 prepare() {
@@ -45,31 +41,15 @@ prepare() {
   patch -Np1 -i "${srcdir}"/use-system-electron.patch
   patch -Np1 -i "${srcdir}"/use-system-apm.patch
   patch -Np1 -i "${srcdir}"/fix-license-path.patch
-  patch -Np1 -i "${srcdir}"/fix-node8.patch
   patch -Np1 -i "${srcdir}"/fix-restart.patch
   patch -Np1 -i "${srcdir}"/enable-transparency.patch
-
-  # Workaround for Node 10
-  sed -e 's|"electron-link": "0.2.0"|"electron-link": "../../electron-link"|' \
-      -i script/package.json
-  cd ..
-  git clone https://github.com/atom/electron-link.git
-  cd electron-link
-  git checkout v0.2.0
-  sed -e 's/"leveldown": "^1.6.0"/"leveldown": "^2.0.1"/' -i package.json
-  npm install
-  npx babel src -d lib
-  cd node_modules/levelup
-  sed -e 's/"leveldown": "^1.1.0"/"leveldown": "^2.0.1"/' -i package.json
 }
 
 build() {
   cd "${srcdir}/atom-${pkgver}"
 
-  export ATOM_RESOURCE_PATH="$srcdir/atom-$pkgver"
-  # If unset, ~/.atom/.node-gyp/.atom/.npm is used
-  export NPM_CONFIG_CACHE="${HOME}/.atom/.npm"
-  apm clean
+  ATOM_RESOURCE_PATH="${PWD}" \
+  npm_config_target=$(tail -c +2 /usr/lib/electron/version) \
   apm install
 
   # Use system ctags
@@ -78,7 +58,7 @@ build() {
   rm -r vendor
   cd ../..
 
-  # Use system git (TODO: set LOCAL_GIT_DIRECTORY=/usr)
+  # Use system git
   cd node_modules/dugite
   patch -Np1 -i "${srcdir}"/dugite-use-system-git.patch
   rm -r git
@@ -100,7 +80,8 @@ package() {
   install -d -m 755 "${pkgdir}/usr/share/applications"
   sed -e "s|<%= appName %>|Atom|" \
       -e "s/<%= description %>/${pkgdesc}/" \
-      -e "s|<%= installDir %>/share/<%= appFileName %>/atom|/usr/lib/atom/atom|" \
+      -e "s|<%= installDir %>|/usr|" \
+      -e "s|<%= appFileName %>|atom|" \
       -e "s|<%= iconPath %>|atom|" \
       resources/linux/atom.desktop.in > "${pkgdir}/usr/share/applications/atom.desktop"
 
@@ -117,7 +98,6 @@ package() {
   node -e "require('./script/lib/get-license-text')().then((licenseText) => require('fs').writeFileSync('${pkgdir}/usr/share/licenses/${pkgname}/LICENSE.md', licenseText))"
 
   # Remove useless stuff
-  rm "${pkgdir}"/usr/lib/atom/node_modules/.bin/pegjs
   find "${pkgdir}"/usr/lib/atom/node_modules \
       -name "*.a" -exec rm '{}' \; \
       -or -name "*.bat" -exec rm '{}' \; \

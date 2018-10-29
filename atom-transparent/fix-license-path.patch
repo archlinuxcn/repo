@@ -1,6 +1,6 @@
 --- a/src/main-process/atom-application.js
 +++ b/src/main-process/atom-application.js
-@@ -414,7 +414,7 @@
+@@ -416,7 +416,7 @@
      this.openPathOnEvent('application:open-your-keymap', 'atom://.atom/keymap')
      this.openPathOnEvent('application:open-your-snippets', 'atom://.atom/snippets')
      this.openPathOnEvent('application:open-your-stylesheet', 'atom://.atom/stylesheet')
@@ -11,7 +11,7 @@
        for (let window of this.getAllWindows()) {
 --- a/src/workspace.js
 +++ b/src/workspace.js
-@@ -1124,7 +1124,7 @@
+@@ -1132,7 +1132,7 @@
  
    // Open Atom's license in the active pane.
    openLicense () {

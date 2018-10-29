@@ -4,10 +4,10 @@
      "url": "https://github.com/atom/atom/issues"
    },
    "license": "MIT",
--  "electronVersion": "1.7.15",
+-  "electronVersion": "2.0.9",
    "dependencies": {
-     "@atom/nsfw": "^1.0.18",
-     "@atom/watcher": "1.0.3",
+     "@atom/nsfw": "1.0.18",
+     "@atom/source-map-support": "^0.3.4",
 --- a/script/build
 +++ b/script/build
 @@ -2,10 +2,6 @@
@@ -21,87 +21,93 @@
  // Needed so we can require src/module-cache.coffee during generateModuleCache
  require('coffee-script/register')
  require('colors')
-@@ -26,7 +22,6 @@
+@@ -28,7 +24,6 @@
    .wrap(yargs.terminalWidth())
    .argv
  
 -const checkChromedriverVersion = require('./lib/check-chromedriver-version')
  const cleanOutputDirectory = require('./lib/clean-output-directory')
- const cleanPackageLock = require('./lib/clean-package-lock')
  const codeSignOnMac = require('./lib/code-sign-on-mac')
+ const codeSignOnWindows = require('./lib/code-sign-on-windows')
 @@ -60,7 +55,6 @@
+ let binariesPromise = Promise.resolve()
  
  if (!argv.existingBinaries) {
-   cleanPackageLock()
 -  checkChromedriverVersion()
    cleanOutputDirectory()
    copyAssets()
    transpilePackagesWithCustomTranspilerPaths()
-@@ -76,61 +70,4 @@
- }
+@@ -79,67 +73,5 @@
  
- binariesPromise
--  .then(packageApplication)
-   .then(packagedAppPath => generateStartupSnapshot(packagedAppPath).then(() => packagedAppPath))
--  .then(packagedAppPath => {
--    switch (process.platform) {
--      case 'darwin': {
--        if (argv.codeSign) {
--          codeSignOnMac(packagedAppPath)
--        } else {
--          console.log('Skipping code-signing. Specify the --code-sign option to perform code-signing'.gray)
--        }
--      }
--      case 'win32': {
--        if (argv.codeSign) {
--          const executablesToSign = [ path.join(packagedAppPath, 'Atom.exe') ]
--          if (argv.createWindowsInstaller) {
--            executablesToSign.push(path.join(__dirname, 'node_modules', 'electron-winstaller', 'vendor', 'Update.exe'))
+ if (!argv.generateApiDocs) {
+   binariesPromise
+-    .then(packageApplication)
+     .then(packagedAppPath => generateStartupSnapshot(packagedAppPath).then(() => packagedAppPath))
+-    .then(packagedAppPath => {
+-      switch (process.platform) {
+-        case 'darwin': {
+-          if (argv.codeSign) {
+-            codeSignOnMac(packagedAppPath)
+-          } else {
+-            console.log('Skipping code-signing. Specify the --code-sign option to perform code-signing'.gray)
 -          }
--          codeSignOnWindows(executablesToSign)
--        } else {
--          console.log('Skipping code-signing. Specify the --code-sign option to perform code-signing'.gray)
+-          break
 -        }
--        if (argv.createWindowsInstaller) {
--          return createWindowsInstaller(packagedAppPath)
--            .then(() => argv.codeSign && codeSignOnWindows([ path.join(CONFIG.buildOutputPath, 'AtomSetup.exe') ]))
--            .then(() => packagedAppPath)
--        } else {
--          console.log('Skipping creating installer. Specify the --create-windows-installer option to create a Squirrel-based Windows installer.'.gray)
+-        case 'win32': {
+-          if (argv.codeSign) {
+-            const executablesToSign = [ path.join(packagedAppPath, 'Atom.exe') ]
+-            if (argv.createWindowsInstaller) {
+-              executablesToSign.push(path.join(__dirname, 'node_modules', 'electron-winstaller', 'vendor', 'Update.exe'))
+-            }
+-            codeSignOnWindows(executablesToSign)
+-          } else {
+-            console.log('Skipping code-signing. Specify the --code-sign option to perform code-signing'.gray)
+-          }
+-          if (argv.createWindowsInstaller) {
+-            return createWindowsInstaller(packagedAppPath)
+-              .then((installerPath) => {
+-                argv.codeSign && codeSignOnWindows([installerPath])
+-                return packagedAppPath
+-              })
+-          } else {
+-            console.log('Skipping creating installer. Specify the --create-windows-installer option to create a Squirrel-based Windows installer.'.gray)
+-          }
+-          break
+-        }
+-        case 'linux': {
+-          if (argv.createDebianPackage) {
+-            createDebianPackage(packagedAppPath)
+-          } else {
+-            console.log('Skipping creating debian package. Specify the --create-debian-package option to create it.'.gray)
+-          }
+-
+-          if (argv.createRpmPackage) {
+-            createRpmPackage(packagedAppPath)
+-          } else {
+-            console.log('Skipping creating rpm package. Specify the --create-rpm-package option to create it.'.gray)
+-          }
+-          break
 -        }
 -      }
--      case 'linux': {
--        if (argv.createDebianPackage) {
--          createDebianPackage(packagedAppPath)
--        } else {
--          console.log('Skipping creating debian package. Specify the --create-debian-package option to create it.'.gray)
--        }
 -
--        if (argv.createRpmPackage) {
--          createRpmPackage(packagedAppPath)
--        } else {
--          console.log('Skipping creating rpm package. Specify the --create-rpm-package option to create it.'.gray)
--        }
+-      return Promise.resolve(packagedAppPath)
+-    }).then(packagedAppPath => {
+-      if (argv.compressArtifacts) {
+-        compressArtifacts(packagedAppPath)
+-      } else {
+-        console.log('Skipping artifacts compression. Specify the --compress-artifacts option to compress Atom binaries (and symbols on macOS)'.gray)
 -      }
--    }
 -
--    return Promise.resolve(packagedAppPath)
--  }).then(packagedAppPath => {
--    if (argv.compressArtifacts) {
--      compressArtifacts(packagedAppPath)
--    } else {
--      console.log('Skipping artifacts compression. Specify the --compress-artifacts option to compress Atom binaries (and symbols on macOS)'.gray)
--    }
--
--    if (argv.install != null) {
--      installApplication(packagedAppPath, argv.install)
--    } else {
--      console.log('Skipping installation. Specify the --install option to install Atom'.gray)
--    }
--  })
+-      if (argv.install != null) {
+-        installApplication(packagedAppPath, argv.install)
+-      } else {
+-        console.log('Skipping installation. Specify the --install option to install Atom'.gray)
+-      }
+-    })
+ }
 --- a/script/lib/generate-startup-snapshot.js
 +++ b/script/lib/generate-startup-snapshot.js
-@@ -79,7 +79,7 @@
+@@ -89,7 +89,7 @@
      } else if (process.platform === 'win32') {
        nodeBundledInElectronPath = path.join(packagedAppPath, 'atom.exe')
      } else {
@@ -110,7 +116,7 @@
      }
      childProcess.execFileSync(
        nodeBundledInElectronPath,
-@@ -87,6 +87,7 @@
+@@ -97,6 +97,7 @@
        {env: Object.assign({}, process.env, {ELECTRON_RUN_AS_NODE: 1})}
      )
  
@@ -118,7 +124,7 @@
      const generatedStartupBlobPath = path.join(CONFIG.buildOutputPath, 'snapshot_blob.bin')
      console.log(`Generating startup blob at "${generatedStartupBlobPath}"`)
      childProcess.execFileSync(
-@@ -104,5 +105,6 @@
+@@ -114,5 +115,6 @@
      console.log(`Moving generated startup blob into "${startupBlobDestinationPath}"`)
      fs.unlinkSync(startupBlobDestinationPath)
      fs.renameSync(generatedStartupBlobPath, startupBlobDestinationPath)
@@ -127,13 +133,13 @@
  }
 --- a/script/package.json
 +++ b/script/package.json
-@@ -7,9 +7,7 @@
+@@ -9,9 +9,7 @@
      "coffeelint": "1.15.7",
      "colors": "1.1.2",
      "donna": "1.0.16",
--    "electron-chromedriver": "~1.7",
-     "electron-link": "0.2.0",
--    "electron-mksnapshot": "~1.7",
+-    "electron-chromedriver": "~2.0",
+     "electron-link": "0.2.2",
+-    "electron-mksnapshot": "~2.0",
      "electron-packager": "7.3.0",
      "electron-winstaller": "2.6.4",
      "fs-admin": "^0.1.5",
@@ -148,34 +154,26 @@
          name: null
        }
      }
---- a/src/main-process/start.js
-+++ b/src/main-process/start.js
-@@ -95,5 +95,5 @@ function handleStartupEventWithSquirrel () {
- function setupCompileCache () {
-   const CompileCache = require('../compile-cache')
-   CompileCache.setAtomHomeDirectory(process.env.ATOM_HOME)
--  CompileCache.install(process.resourcesPath, require)
-+  CompileCache.install('/usr/lib/atom', require)
+ function getConfig () {
+--- a/src/module-cache.js
++++ b/src/module-cache.js
+@@ -227,7 +227,7 @@
  }
---- a/src/module-cache.coffee
-+++ b/src/module-cache.coffee
-@@ -195,7 +195,7 @@ resolveModulePath = (relativePath, parentModule) ->
-   return
  
- registerBuiltins = (devMode) ->
--  if devMode or not cache.resourcePath.startsWith("#{process.resourcesPath}#{path.sep}")
-+  if devMode or not cache.resourcePath.startsWith("/usr/lib/atom")
-     fs = require 'fs-plus'
-     atomJsPath = path.join(cache.resourcePath, 'exports', 'atom.js')
-     cache.builtins.atom = atomJsPath if fs.isFileSync(atomJsPath)
+ function registerBuiltins (devMode) {
+-  if (devMode || !cache.resourcePath.startsWith(`${process.resourcesPath}${path.sep}`)) {
++  if (devMode || !cache.resourcePath.startsWith('/usr/lib/atom/')) {
+     const fs = require('fs-plus')
+     const atomJsPath = path.join(cache.resourcePath, 'exports', 'atom.js')
+     if (fs.isFileSync(atomJsPath)) { cache.builtins.atom = atomJsPath }
 --- a/src/package-manager.js
 +++ b/src/package-manager.js
-@@ -807,7 +807,7 @@ module.exports = class PackageManager {
+@@ -825,7 +825,7 @@ module.exports = class PackageManager {
    }
  
    isBundledPackagePath (packagePath) {
 -    if (this.devMode && !this.resourcePath.startsWith(`${process.resourcesPath}${path.sep}`)) {
-+    if (this.devMode && this.resourcePath !== '/usr/lib/atom') {
++    if (this.devMode && !this.resourcePath.startsWith('/usr/lib/atom/')) {
        return false
      }
  
