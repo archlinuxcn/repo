@@ -2,12 +2,11 @@
 
 pkgname=vim-rust-git
 pkgver=20181026
-pkgrel=1
+pkgrel=2
 pkgdesc="Rust language support for Vim"
 arch=('any')
 depends=('vim')
 makedepends=('git')
-groups=('vim-plugins')
 url="https://github.com/rust-lang/rust.vim"
 license=('MIT' 'Apache')
 source=(${pkgname%-git}::git+https://github.com/rust-lang/rust.vim)
