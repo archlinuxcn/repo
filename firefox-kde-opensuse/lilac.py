@@ -1,41 +1,10 @@
 #!/usr/bin/env python3
-
 from lilaclib import *
 
-import os
-import re
-import ntpath
-
+update_on = [{'aur': None}, {'archpkg': 'icu'}]
 build_prefix = 'archlinuxcn-x86_64'
-
-def get_source_list():
-    buf = ''
-    for line in open('PKGBUILD'):
-        if not line.strip().startswith('#'):
-            buf += line
-
-    match = re.search('source=\(([^)]+)\)', buf)
-    result = match.group(1)
-
-    return [ntpath.basename(f) for f in result.split()]
-
-def pre_build():
-    # clean the patches
-    l = get_source_list()
-    for f in l:
-        if os.path.exists(f):
-            os.remove(f)
-
-    aur_pre_build()
-    for line in edit_file('PKGBUILD'):
-        if 'makedepends=(' in line:
-            print(line.replace('makedepends=(', 'makedepends=("clang" "jack" '))
-        else:
-            print(line.replace("'cargo' ",""))
-
-def post_build():
-    run_cmd('git add -f *.patch.xz'.split(' '))
-    aur_post_build()
+pre_build = aur_pre_build
+post_build = aur_post_build
 
 if __name__ == '__main__':
-  single_main(build_prefix)
+    single_main(build_prefix)
