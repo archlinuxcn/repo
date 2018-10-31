@@ -3,14 +3,13 @@
 
 pkgname=trayer-srg
 pkgver=1.1.8
-pkgrel=1
+pkgrel=2
 pkgdesc="trayer fork with multi monitor support, cleaned up codebase and other fancy stuff"
 arch=('i686' 'x86_64')
 url="https://github.com/sargon/trayer-srg"
 license=('MIT')
 depends=('gtk2')
 conflicts=('trayer' 'trayer-srg-git')
-replaces=('trayer' 'trayer-srg-git')
 provides=('trayer-srg')
 source=("https://github.com/sargon/${pkgname}/archive/trayer-${pkgver}.tar.gz")
 sha256sums=('c62e5a700618511f2e51c225d3536945eeb60d4680f2b66fde30e64788dcefaa')
