@@ -5,7 +5,7 @@
 
 pkgname=intel-opencl-sdk
 pkgver=2017_7.0.0.2568
-pkgrel=1
+pkgrel=2
 pkgdesc="Intel SDK for OpenCL Applications"
 arch=('x86_64')
 url="https://software.intel.com/en-us/intel-opencl/download"
@@ -37,7 +37,7 @@ package() {
   rm -rf "${pkgdir}"/opt/intel/opencl-sdk/uninstall*
 
   # Fix runtime_lib_dir and sdk_dir
-  sed -i -e 's|/etc/alternatives/opencl-intel-tools|/opt/intel/opencl-sdk|g' \
+  sed -i -e 's|/etc/alternatives/opencl-intel-tools|/opt/intel/opencl-sdk/SDK|g' \
 	-e 's|$(dirname $(readlink /etc/alternatives/opencl-libOpenCL.so))|/opt/intel/opencl-runtime/lib64|g' \
 	"${pkgdir}"/opt/intel/opencl-sdk/SDK/bin/{KBServer64,ioc64}
 
