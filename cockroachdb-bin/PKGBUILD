@@ -4,7 +4,7 @@
 pkgname=cockroachdb-bin
 conflicts=('cockroachdb')
 provides=('cockroachdb')
-pkgver=2.0.6
+pkgver=2.1.0
 pkgrel=1
 pkgdesc="An open source, survivable, strongly consistent, scale-out SQL database"
 arch=('x86_64')
@@ -25,7 +25,7 @@ source=("https://binaries.cockroachdb.com/cockroach-v${pkgver}.linux-amd64.tgz"
         cockroach.default
         cockroach.sysusers
         cockroach.tmpfiles)
-sha256sums=('ccc357fb41c211a3511605c140057bd01a3642cb8a228684fca9cee2849ef139'
+sha256sums=('cc51fa388908e7942d3f3214a38096756a981b9ce0f577307b3ae390b6a8e8b1'
             '68040689c4342e0018adec3eb0fb1f2ae68aaeef918e7b4493518523381b7129'
             'b3ef077aa9a0d4b697722de993fa83959f10910ae600de90bcdcdd49fafce371'
             '2d36597f7117c38b006835ae7f537487207d8ec407aa9d9980794b2030cbc067'
@@ -33,10 +33,10 @@ sha256sums=('ccc357fb41c211a3511605c140057bd01a3642cb8a228684fca9cee2849ef139'
             '23681c6986fb33d57957660543f6e9dcbbcf6d2ae2f9fa2dbdb5efec5aa0d95f'
             '2cd6aceddb7240c6ef395f7d92e26de4da63f7700504f6ce47e2aab4e39a4122'
             'b34067e89373e1a47367b454862f43061ad1680542b39b6d95ed29c354473e15'
-            '6c336d30983d6295995823a134e3cc85a06ef9418339b53cf6f375df816bea51'
-            '55f380f5cb201c6afeafbf1a6fb5a6400dbffa0edc134d30960d1d04e3d19ef2'
-            '8be2f52529135d8d173bba130e000a187bbadc869ac2c603a4714af435840821'
-            'c74cf876197312b91970bdd7832081750d2ab4d47e553bb46f38d57cba52641e')
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP')
 
 build() {
     # XXX arch ships a newer, but compatible version of ncurses
