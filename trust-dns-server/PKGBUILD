@@ -1,7 +1,7 @@
 # Maintainer: Daniel M. Capella <polycitizen@gmail.com>
 
 pkgname=trust-dns-server
-pkgver=0.14.0
+pkgver=0.15.0
 pkgrel=1
 pkgdesc='Safe and secure DNS server with DNSec support'
 arch=('x86_64')
@@ -10,7 +10,7 @@ license=('Apache')
 depends=('openssl')
 makedepends=('rust')
 source=("$pkgname-$pkgver.tar.gz::https://crates.io/api/v1/crates/$pkgname/$pkgver/download")
-sha512sums=('3b22bbf1cd2fc2629ad4ec569df9b8fcbf4d390d0e07012eafd22efcc358b59e6a18eadfa32e6a478b298e4152c539e659712704981856d59f0f11f54cd82cef')
+sha512sums=('c45eb9e0dddcbe73f784a9334a4c8ae7bc4235b55897fc1b439296d792399d27c1e6d973ac88f295f67d7000a8d34e3e1abb3d90b582d3d8e820bfe5d288d978')
 
 build() {
   cd $pkgname-$pkgver
