@@ -155,7 +155,7 @@ def lilac_yaml_has_update_on(pkgname):
 
 def extract_srcinfo(pkgbuild):
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    with Popen([dir_path + '/parse-pkgbuild', '/dev/stdin'], stdin=PIPE, stdout=PIPE) as p:
+    with Popen(['bash', dir_path + '/parse-pkgbuild', '/dev/stdin'], stdin=PIPE, stdout=PIPE) as p:
         outs, errs = p.communicate(input = pkgbuild.encode('UTF-8'))
         return outs.decode('UTF-8')
 
