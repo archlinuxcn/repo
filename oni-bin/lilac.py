@@ -11,9 +11,9 @@ def pre_build():
     pkgver, pkgrel = get_pkgver_and_pkgrel()
 
     for line in edit_file('PKGBUILD'):
-        if line.startwith('_betaver=') and pkgver != _betaver.replace('-', ''):
+        if line.startswith('_betaver=') and pkgver != _betaver.replace('-', ''):
             line = f'_betaver={_betaver}'
-        elif line.startwith('pkgrel='):
+        elif line.startswith('pkgrel='):
             if pkgver != _betaver.replace('-', ''):
                 line = 'pkgrel=1'
             else:
