@@ -44,6 +44,7 @@ DUMP_GROUPS_TIMEFORMAT = '%Y%m%d%H%z'
 GROUPS, PACKAGES = None, None
 
 CHECK_ALL = False
+IGNORE_SRCINFO = False
 
 
 def readutf8(st):
@@ -300,6 +301,8 @@ class ConfigSectionTest(TestCase):
                 continue
             if not(package in CHANGED_PACKAGES or CHECK_ALL):
                 continue
+            if IGNORE_SRCINFO:
+                continue
             pkgbuild_path = os.path.join(pkgpath(package), 'PKGBUILD')
             with git_open(pkgbuild_path) as pkgbuild_file:
                 pkgbuild = pkgbuild_file.read()
@@ -357,6 +360,8 @@ if __name__ == '__main__':
         sys.exit(0)
     if '-a' in sys.argv or '--all' in sys.argv:
         CHECK_ALL = True
+    if '--no-srcinfo' in sys.argv:
+        IGNORE_SRCINFO = True
 
     dump_groups()
     git_write_tree_index()

@@ -11,7 +11,7 @@ install:
 
 script:
     - python3 --version
-    - ./pre-commit --all # checking all PKGBUILD
+    - ./pre-commit --all --no-srcinfo # checking all PKGBUILD
 
 matrix:
     fast_finish: true
