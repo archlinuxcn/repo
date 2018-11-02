@@ -11,7 +11,7 @@ install:
 
 script:
     - python3 --version
-    - ./pre-commit  # checking nvchecker.ini
+    - ./pre-commit --all # checking all PKGBUILD
 
 matrix:
     fast_finish: true

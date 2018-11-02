@@ -1,12 +1,26 @@
 #!/usr/bin/env python
 
-# ln -s ../../pre-commit .git/hooks
-# pre-commit hook to check nvchecker.ini and repo tree
+"""
+pre-commit hook to check nvchecker.ini and repo tree
+
+To use it normally as git pre-commit hook, make a symlink:
+$ ln -s ../../pre-commit .git/hooks
+
+To check modified packages, run without options:
+$ ./pre-commit
+
+To fully test all packages, run with "-a" option:
+$ ./pre-commit -a
+"""
 
 import os
 import sys
 import re
 import ast
+import gzip
+import json
+import subprocess
+from time import strftime
 from subprocess import Popen, PIPE
 from unittest import TestCase, TestSuite, TestLoader, TextTestRunner, skip
 from io import TextIOWrapper, StringIO
@@ -17,7 +31,19 @@ import yaml
 
 DIRS, FILES = None, None
 GIT_BRANCH = 'HEAD'
+ORIGIN_BRANCH = 'origin/master'
+CHANGED_PACKAGES = set()
 SUBFOLDER = 'archlinuxcn'
+
+# URL for downloading latest database of packages and groups in official repos
+DUMP_GROUPS_URL = 'https://build.archlinuxcn.org/~farseerfc/dump-groups.gz'
+DUMP_GROUPS_TMP = '/tmp/dump-groups-%s.gz'
+# Cache downloaded database for 1 hour
+DUMP_GROUPS_TIMEFORMAT = '%Y%m%d%H%z'
+
+GROUPS, PACKAGES = None, None
+
+CHECK_ALL = False
 
 
 def readutf8(st):
@@ -29,6 +55,25 @@ def git_write_tree_index():
     cmd = ['git', 'write-tree']
     with Popen(cmd, stdout=PIPE) as p:
         GIT_BRANCH = readutf8(p.stdout)
+
+def git_diff_tree():
+    global GIT_BRANCH, ORIGIN_BRANCH, CHANGED_FILES
+    ## git diff-tree
+    ## -r Recurse into sub-trees.
+    ## -z \0 line termination on output and do not quote filenames.
+    cmd = ['git', 'diff-tree', ORIGIN_BRANCH + '..' + GIT_BRANCH, '-r', '-z', '--name-only']
+    with Popen(cmd, stdout=PIPE) as p:
+        changed_tree = readutf8(p.stdout)
+        for line in changed_tree.split('\0')[:-1]: # ignore last \0
+            paths = line.strip().partition('/')
+            if git_isdir(SUBFOLDER):
+                if len(paths) > 2:
+                    if git_isdir(os.path.join(SUBFOLDER, paths[1])):
+                        CHANGED_PACKAGES.add(paths[1])
+            else:
+                if len(paths) > 1:
+                    if git_isdir(paths[0]):
+                        CHANGED_PACKAGES.add(paths[0])
 
 
 def git_ls_tree():
@@ -108,6 +153,37 @@ def lilac_yaml_has_update_on(pkgname):
             return True
     return False
 
+def extract_srcinfo(pkgbuild):
+    with Popen(['./parse-pkgbuild', '/dev/stdin'], stdin=PIPE, stdout=PIPE) as p:
+        outs, errs = p.communicate(input = pkgbuild.encode('UTF-8'))
+        return outs.decode('UTF-8')
+
+def depends_strip_version(depends):
+    if '>' in depends:
+        return depends[:depends.rfind('>')].strip()
+    if '<' in depends:
+        return depends[:depends.rfind('<')].strip()
+    if depends.count('=') > 1:
+        return depends[:depends.rfind('=')].strip()
+    return depends.strip()
+
+def refresh_dump_groups():
+    dump_groups_path = DUMP_GROUPS_TMP % (strftime(DUMP_GROUPS_TIMEFORMAT))
+    if os.path.exists(dump_groups_path):
+        return gzip.open(dump_groups_path, 'rt')
+    import urllib.request
+    urllib.request.urlretrieve(DUMP_GROUPS_URL, dump_groups_path)
+    return gzip.open(dump_groups_path, 'rt')
+
+def dump_groups():
+    global GROUPS, PACKAGES
+    with refresh_dump_groups() as dump:
+        result = json.loads(dump.read())
+        if result['format_version'] !=2:
+            raise ValueError('dump-groups format mismatch')
+        GROUPS = result['groups']
+        PACKAGES = result['packages']
+
 class NvcheckerSyntaxTest(TestCase):
     def test_nvchecker_ini(self):
         self.config = ConfigParser(dict_type=dict, allow_no_value=True)
@@ -178,6 +254,8 @@ class ConfigSectionTest(TestCase):
                 continue
             if package[0] == '.':
                 continue
+            if not(package in CHANGED_PACKAGES or CHECK_ALL):
+                continue
             with self.subTest(package=package):
                 self.assertTrue(git_isfile(pkgpath(package), "PKGBUILD"),
                                 msg=('package "\033[1;31m{0}\033[m" does not ' +
@@ -191,6 +269,8 @@ class ConfigSectionTest(TestCase):
             if not git_isdir(pkgpath(package)):
                 continue
             if package[0] == '.':
+                continue
+            if not(package in CHANGED_PACKAGES or CHECK_ALL):
                 continue
             has_lilac_py = git_isfile(pkgpath(package), 'lilac.py')
             has_lilac_yaml = git_isfile(pkgpath(package), 'lilac.yaml')
@@ -207,6 +287,36 @@ class ConfigSectionTest(TestCase):
                                    '"nvchecker.ini" and does not have "update_on" in ' +
                                    '"\033[1;31m{0}/lilac.py\033[m" or ' + 
                                    '"\033[1;31m{0}/lilac.yaml\033[m"').format(package))
+    
+    def test_pkgbuild(self):
+        packagesfolder = SUBFOLDER
+        if not git_isdir(packagesfolder):
+            packagesfolder = '.'
+        for package in git_listdir(packagesfolder):
+            if not git_isdir(pkgpath(package)):
+                continue
+            if package[0] == '.':
+                continue
+            if not(package in CHANGED_PACKAGES or CHECK_ALL):
+                continue
+            pkgbuild_path = os.path.join(pkgpath(package), 'PKGBUILD')
+            with git_open(pkgbuild_path) as pkgbuild_file:
+                pkgbuild = pkgbuild_file.read()
+                if not (('replaces' in pkgbuild) or ('groups' in pkgbuild)):
+                    continue
+                srcinfo = extract_srcinfo(pkgbuild)
+                with self.subTest(package=package):
+                    for line in srcinfo.split('\n'):
+                        if 'replaces = ' in line:
+                            for pkg in PACKAGES.keys():
+                                self.assertNotEqual("replaces = " + pkg, depends_strip_version(line),
+                                    msg=('PKGBUILD of package "\033[1;31m{0}\033[m" contains '
+                                    '"\033[1;31mreplaces = {1}\033[m" in "{2}" repo').format(package, pkg, ','.join(PACKAGES[pkg])))
+                        if 'groups = ' in line:
+                            for grp in GROUPS.keys():
+                                self.assertNotEqual("groups = " + grp, depends_strip_version(line),
+                                    msg=('PKGBUILD of package "\033[1;31m{0}\033[m" contains '
+                                    '"\033[1;31mgroups = {1}\033[m" in "{2}" repo').format(package, grp, ','.join(GROUPS[grp])))
 
     @skip("35 packages violating this")
     def test_folders_in_nvchecker(self):
@@ -217,6 +327,8 @@ class ConfigSectionTest(TestCase):
             if not git_isdir(pkgpath(package)):
                 continue
             if package[0] == '.':
+                continue
+            if not(package in CHANGED_PACKAGES or CHECK_ALL):
                 continue
             with self.subTest(package=package):
                 self.assertIn(package, self.config,
@@ -235,9 +347,20 @@ def run_test(testcase, msg):
         sys.exit(1)
 
 
+def usage():
+    print(__doc__)
+
 if __name__ == '__main__':
+    if '-h' in sys.argv or '--help' in sys.argv:
+        usage()
+        sys.exit(0)
+    if '-a' in sys.argv or '--all' in sys.argv:
+        CHECK_ALL = True
+
+    dump_groups()
     git_write_tree_index()
     DIRS, FILES = git_ls_tree()
+    git_diff_tree()
     run_test(NvcheckerSyntaxTest,
              msg='\033[1;31mThere are fatal error inside repo, ' +
                  'blocking git commit. Please fix the errors and commit ' +
