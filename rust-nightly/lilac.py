@@ -23,8 +23,6 @@ STDS = [
 
 config_url = 'https://static.rust-lang.org/dist/channel-rust-nightly.toml'
 
-build_prefix = 'extra-x86_64'
-
 toolchain = {
   'x86_64-pc-windows-gnu': ['mingw-w64-gcc'],
   'i686-pc-windows-gnu': ['mingw-w64-gcc'],
