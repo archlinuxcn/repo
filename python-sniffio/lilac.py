@@ -2,10 +2,6 @@
 
 from lilaclib import *
 
-build_prefix = 'extra-x86_64'
-
-update_on = [{'pypi': 'sniffio'}]
-
 def pre_build():
   pypi_pre_build(
     depends=[],

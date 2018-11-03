@@ -11,8 +11,6 @@ from lilaclib import (
   single_main,
 )
 
-update_on = 'to be overridden'
-
 p = None
 repo_dir = 'vim'
 
