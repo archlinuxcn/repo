@@ -4,7 +4,7 @@
 
 pkgname=musescore-git
 _realver=2.0.4
-pkgver=13251.8366ff1e4
+pkgver=13893.4a9769217
 pkgrel=1
 epoch=1
 pkgdesc="A music score editor - git-version"
@@ -25,11 +25,13 @@ replaces=('musescore-svn')
 source=('git://github.com/musescore/MuseScore.git'
   'mime.xml'
   '0001-fix-for-pch.patch'
-  '0002-add-back-native-style.patch')
+  '0002-add-back-native-style.patch'
+  '0001-Fix-webengine-installation.patch')
 md5sums=('SKIP'
          '969696178e56de36f9af37d7da61baaa'
          '23beb91bfc1e17368a50b12afe8ddbaf'
-         '44848366f6cccd8727c178ad3c74de05')
+         '44848366f6cccd8727c178ad3c74de05'
+         '7d59b37ae10834acef679683a8137695')
 options=(strip debug)
 
 pkgver() {
@@ -46,6 +48,9 @@ build() {
   # This patch add (back) an option to use system theme.
   # More patch may be coming adding icon theme support later if necessary.
   patch -Np1 < ../0002-add-back-native-style.patch
+
+  # Upstream install script is broken
+  patch -Np1 < ../0001-Fix-webengine-installation.patch
 
   # Fix Musescore + gcc's broken pch.
   # `-DCMAKE_CXX_FLAGS_RELWITHDEBINFO="-fPIC"`:
