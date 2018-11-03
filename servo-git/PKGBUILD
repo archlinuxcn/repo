@@ -3,7 +3,7 @@
 
 pkgname=servo-git
 _pkgname=servo
-pkgver=35001.8aded34bf6
+pkgver=35011.ba1ed11ced
 pkgrel=1
 pkgdesc="Parallel Browser Project: web browser written in Rust"
 arch=('i686' 'x86_64')
@@ -18,8 +18,7 @@ _branch=servo
 source=(
 'git+https://github.com/servo/servo.git'
 )
-md5sums=('SKIP'
-         '80a16e20142ec721761857caf040538a')
+md5sums=('SKIP')
 
 pkgver() {
   cd "$_branch"
