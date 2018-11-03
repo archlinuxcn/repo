@@ -4,7 +4,7 @@
 
 pkgbase="monero"
 pkgname=('monero' 'libmonero-wallet')
-pkgver=0.13.0.3
+pkgver=0.13.0.4
 pkgrel=1
 pkgdesc="Monero: the secure, private, untraceable currency - release version (includes daemon, wallet and miner)"
 license=('custom:Cryptonote')
@@ -66,18 +66,19 @@ package_monero() {
   install -Dm644 "${srcdir}/${_monero}/utils/systemd/monerod.service" "${pkgdir}/usr/lib/systemd/system/monerod.service"
 
   install -Dm755 "${srcdir}/${_monero}/build/bin/monero-blockchain-ancestry" "${pkgdir}/usr/bin/monero-blockchain-ancestry"
-  install -Dm755 "${srcdir}/${_monero}/build/bin/monero-blockchain-blackball" "${pkgdir}/usr/bin/monero-blockchain-blackball"
   install -Dm755 "${srcdir}/${_monero}/build/bin/monero-blockchain-depth" "${pkgdir}/usr/bin/monero-blockchain-depth"
   install -Dm755 "${srcdir}/${_monero}/build/bin/monero-blockchain-export" "${pkgdir}/usr/bin/monero-blockchain-export"
   install -Dm755 "${srcdir}/${_monero}/build/bin/monero-blockchain-import" "${pkgdir}/usr/bin/monero-blockchain-import"
+  install -Dm755 "${srcdir}/${_monero}/build/bin/monero-blockchain-mark-spent-outputs" "${pkgdir}/usr/bin/monero-blockchain-mark-spent-outputs"
   install -Dm755 "${srcdir}/${_monero}/build/bin/monero-blockchain-usage" "${pkgdir}/usr/bin/monero-blockchain-usage"
+
+  install -Dm755 "${srcdir}/${_monero}/build/bin/monerod" "${pkgdir}/usr/bin/monerod"
 
   install -Dm755 "${srcdir}/${_monero}/build/bin/monero-gen-trusted-multisig" "${pkgdir}/usr/bin/monero-gen-trusted-multisig"
 
   install -Dm755 "${srcdir}/${_monero}/build/bin/monero-wallet-cli" "${pkgdir}/usr/bin/monero-wallet-cli"
   install -Dm755 "${srcdir}/${_monero}/build/bin/monero-wallet-rpc" "${pkgdir}/usr/bin/monero-wallet-rpc"
 
-  install -Dm755 "${srcdir}/${_monero}/build/bin/monerod" "${pkgdir}/usr/bin/monerod"
 }
 
 package_libmonero-wallet() {
