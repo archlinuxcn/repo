@@ -3,7 +3,7 @@
 # Contributor: csslayer <wengxt AT gmail com>
 
 pkgname=fcitx5-git
-pkgver=r406.04cc37d
+pkgver=r407.7ccf3f6
 pkgrel=1
 pkgdesc="Next generation of fcitx"
 arch=('i686' 'x86_64')
