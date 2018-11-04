@@ -2,12 +2,11 @@
 
 pkgname=vim-ripgrep-git
 pkgver=r27.ec87af6
-pkgrel=1
+pkgrel=2
 pkgdesc="Use RipGrep in Vim and display results in a quickfix list."
 arch=('any')
 url="https://github.com/jremmen/vim-ripgrep"
 license=('MIT')
-groups=("vim-plugins")
 depends=('ripgrep' 'vim')
 makedepends=('git')
 source=("$pkgname::git+$url.git"
