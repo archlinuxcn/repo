@@ -3,8 +3,8 @@
 # Contributor: csslayer <wengxt AT gmail com>
 
 pkgname=fcitx5-chinese-addons-git
-pkgver=r116.2176e97
-pkgrel=2
+pkgver=r117.cf54d3a
+pkgrel=1
 pkgdesc="Addons related to Chinese, including IME previous bundled inside fcitx4"
 arch=('i686' 'x86_64')
 url="https://gitlab.com/fcitx/fcitx5-chinese-addons"
