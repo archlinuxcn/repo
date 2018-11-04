@@ -45,7 +45,6 @@ package_nautilus-typeahead() {
   depends+=(libnautilus-extension-typeahead)
   conflicts=(nautilus)
   provides=(nautilus)
-  groups=(gnome)
 
   DESTDIR="$pkgdir" ninja -C build install
 
