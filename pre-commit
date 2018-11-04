@@ -3,8 +3,10 @@
 """
 pre-commit hook to check nvchecker.ini and repo tree
 
-To use it normally as git pre-commit hook, make a symlink:
+To use it normally as git pre-commit hook,
+make a symlink and install dependencies:
 $ ln -s ../../pre-commit .git/hooks
+$ pacman -Syu --needed python-yaml python-jsonschema
 
 To check modified packages, run without options:
 $ ./pre-commit
@@ -29,6 +31,9 @@ from configparser import ConfigParser
 # need python-yaml package
 import yaml
 
+# need python-jsonschema package
+import jsonschema
+
 DIRS, FILES = None, None
 GIT_BRANCH = 'HEAD'
 ORIGIN_BRANCH = 'origin/master'
@@ -42,6 +47,13 @@ DUMP_GROUPS_TMP = '/tmp/dump-groups-%s.gz'
 DUMP_GROUPS_TIMEFORMAT = '%Y%m%d%H%z'
 
 GROUPS, PACKAGES = None, None
+
+# URL for downloading lilac-yaml-schema.yaml
+YAML_SCHEMA_URL = 'https://raw.githubusercontent.com/archlinuxcn/lilac/master/docs/lilac-yaml-schema.yaml'
+YAML_SCHEMA_TMP = '/tmp/lilac-yaml-schema-%s.yaml'
+# Cache downloaded database for 1 day
+YAML_SCHEMA_TIMEFORMAT = '%Y%m%d%z'
+YAML_SCHEMA = None
 
 CHECK_ALL = False
 IGNORE_SRCINFO = False
@@ -57,15 +69,17 @@ def git_write_tree_index():
     with Popen(cmd, stdout=PIPE) as p:
         GIT_BRANCH = readutf8(p.stdout)
 
+
 def git_diff_tree():
     global GIT_BRANCH, ORIGIN_BRANCH, CHANGED_FILES
-    ## git diff-tree
-    ## -r Recurse into sub-trees.
-    ## -z \0 line termination on output and do not quote filenames.
-    cmd = ['git', 'diff-tree', ORIGIN_BRANCH + '..' + GIT_BRANCH, '-r', '-z', '--name-only']
+    # git diff-tree
+    # -r Recurse into sub-trees.
+    # -z \0 line termination on output and do not quote filenames.
+    cmd = ['git', 'diff-tree', ORIGIN_BRANCH + '..' + GIT_BRANCH,
+           '-r', '-z', '--name-only']
     with Popen(cmd, stdout=PIPE) as p:
         changed_tree = readutf8(p.stdout)
-        for line in changed_tree.split('\0')[:-1]: # ignore last \0
+        for line in changed_tree.split('\0')[:-1]:  # ignore last \0
             paths = line.strip().partition('/')
             if git_isdir(SUBFOLDER):
                 if len(paths) > 2:
@@ -79,17 +93,17 @@ def git_diff_tree():
 
 def git_ls_tree():
     cmd = ['git', 'ls-tree', '-rtz', '--full-name', GIT_BRANCH]
-    ## git ls-tree
-    ## -r Recurse into sub-trees.
-    ## -t Show tree entries even when going to recurse them.
-    ## -z \0 line termination on output and do not quote filenames.
+    # git ls-tree
+    # -r Recurse into sub-trees.
+    # -t Show tree entries even when going to recurse them.
+    # -z \0 line termination on output and do not quote filenames.
     dirs = []
     files = []
     with Popen(cmd, stdout=PIPE) as p:
         alllines = readutf8(p.stdout)
-        for line in alllines.split('\0')[:-1]: # ignore last \0
-            ## OUTPUT FORMAT
-            ## <mode> SP <type> SP <object> TAB <file>
+        for line in alllines.split('\0')[:-1]:  # ignore last \0
+            # OUTPUT FORMAT
+            # <mode> SP <type> SP <object> TAB <file>
             first, _, path = line.partition('\t')
             _, t, _ = first.split(' ')
             if t == 'tree':
@@ -135,14 +149,15 @@ def lilac_py_has_update_on(pkgname):
     lilac_path = os.path.join(pkgpath(pkgname), 'lilac.py')
     with git_open(lilac_path) as lilac_py:
         lilac_ast = ast.parse(lilac_py.read())
-        ## For simplicity we only check top level assignments
-        ## to find `update_on`, which shoud be enough
+        # For simplicity we only check top level assignments
+        # to find `update_on`, which shoud be enough
         for block in lilac_ast.body:
             if isinstance(block, ast.Assign):
                 for target in block.targets:
                     if target.id == 'update_on':
                         return True
     return False
+
 
 def lilac_yaml_has_update_on(pkgname):
     if not git_isfile(pkgpath(pkgname), 'lilac.yaml'):
@@ -154,11 +169,14 @@ def lilac_yaml_has_update_on(pkgname):
             return True
     return False
 
+
 def extract_srcinfo(pkgbuild):
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    with Popen(['bash', dir_path + '/parse-pkgbuild', '/dev/stdin'], stdin=PIPE, stdout=PIPE) as p:
-        outs, errs = p.communicate(input = pkgbuild.encode('UTF-8'))
+    with Popen(['bash', dir_path + '/parse-pkgbuild', '/dev/stdin'],
+               stdin=PIPE, stdout=PIPE) as p:
+        outs, errs = p.communicate(input=pkgbuild.encode('UTF-8'))
         return outs.decode('UTF-8')
+
 
 def depends_strip_version(depends):
     if '>' in depends:
@@ -169,6 +187,7 @@ def depends_strip_version(depends):
         return depends[:depends.rfind('=')].strip()
     return depends.strip()
 
+
 def refresh_dump_groups():
     dump_groups_path = DUMP_GROUPS_TMP % (strftime(DUMP_GROUPS_TIMEFORMAT))
     if os.path.exists(dump_groups_path):
@@ -177,14 +196,45 @@ def refresh_dump_groups():
     urllib.request.urlretrieve(DUMP_GROUPS_URL, dump_groups_path)
     return gzip.open(dump_groups_path, 'rt')
 
+
 def dump_groups():
     global GROUPS, PACKAGES
     with refresh_dump_groups() as dump:
         result = json.loads(dump.read())
-        if result['format_version'] !=2:
+        if result['format_version'] != 2:
             raise ValueError('dump-groups format mismatch')
         GROUPS = result['groups']
         PACKAGES = result['packages']
+
+
+def refresh_lilac_yaml_schema():
+    schema_path = YAML_SCHEMA_TMP % (strftime(YAML_SCHEMA_TIMEFORMAT))
+    if os.path.exists(schema_path):
+        return open(schema_path, 'r')
+    import urllib.request
+    urllib.request.urlretrieve(YAML_SCHEMA_URL, schema_path)
+    return open(schema_path, 'r')
+
+
+def load_lilac_yaml_schema():
+    global YAML_SCHEMA
+    with refresh_lilac_yaml_schema() as schema:
+        YAML_SCHEMA = yaml.load(schema)
+
+
+def list_packages():
+    packagesfolder = SUBFOLDER
+    if not git_isdir(packagesfolder):
+        packagesfolder = '.'
+    for package in git_listdir(packagesfolder):
+        if not git_isdir(pkgpath(package)):
+            continue
+        if package[0] == '.':
+            continue
+        if not(package in CHANGED_PACKAGES or CHECK_ALL):
+            continue
+        yield package
+
 
 class NvcheckerSyntaxTest(TestCase):
     def test_nvchecker_ini(self):
@@ -206,7 +256,6 @@ class ConfigSectionTest(TestCase):
         with git_open(nvcheckerpath) as configfile:
             self.config.read_file(configfile)
 
-
     def test_config_section(self):
         self.assertIn("__config__", self.config,
                       msg='nvchecker.ini has no ' +
@@ -224,9 +273,10 @@ class ConfigSectionTest(TestCase):
                 continue
             with self.subTest(section=section):
                 self.assertTrue(git_isdir(pkgpath(section)),
-                                msg=('nvchecker.ini contains ' +
-                                     '"\033[1;31m{0}\033[m" section but there is no ' +
-                                     '"\033[1;31m{0}\033[m" package').format(section))
+                                msg=('nvchecker.ini contains '
+                                     '"\033[1;31m{0}\033[m" section '
+                                     'but there is no "\033[1;31m{0}\033[m" '
+                                     'package').format(section))
             with self.subTest(section=section):
                 self.assertGreater(len(self.config[section].items()), 0,
                                    msg=('section "\033[1;31m{0}\033[m" ' +
@@ -234,9 +284,10 @@ class ConfigSectionTest(TestCase):
             for key, value in self.config[section].items():
                 with self.subTest(section=section, key=key, value=value):
                     self.assertTrue(self.item_key_regex.match(key),
-                                    msg=('nvchecker.ini section "\033[1;31m{0}\033[m" ' +
-                                         'contains ill-formed key ' +
-                                         '"\033[1;31m{1}\033[m"').format(section, key))
+                                    msg=('nvchecker.ini section '
+                                         '"\033[1;31m{0}\033[m" contains '
+                                         'ill-formed key "\033[1;31m{1}\033[m"'
+                                         '').format(section, key))
 
     @skip("113 packages violating this")
     def test_have_lilac_py(self):
@@ -244,99 +295,84 @@ class ConfigSectionTest(TestCase):
             if "manual" not in self.config[section]:
                 with self.subTest(section=section):
                     self.assertTrue(git_isfile(pkgpath(section), "lilac.py"),
-                                    msg=('package "\033[1;31m{0}\033[m" does not ' +
-                                         'have lilac.py').format(section))
+                                    msg=('package "\033[1;31m{0}\033[m" does '
+                                         'not have lilac.py').format(section))
 
     def test_folders(self):
-        packagesfolder = SUBFOLDER
-        if not git_isdir(packagesfolder):
-            packagesfolder = '.'
-        for package in git_listdir(packagesfolder):
-            if not git_isdir(pkgpath(package)):
-                continue
-            if package[0] == '.':
-                continue
-            if not(package in CHANGED_PACKAGES or CHECK_ALL):
-                continue
+        for package in list_packages():
             with self.subTest(package=package):
                 self.assertTrue(git_isfile(pkgpath(package), "PKGBUILD"),
-                                msg=('package "\033[1;31m{0}\033[m" does not ' +
-                                     'have PKGBUILD').format(package))
+                                msg=('package "\033[1;31m{0}\033[m" does '
+                                     'not have PKGBUILD').format(package))
+
+    def test_lilac_yaml_schema(self):
+        for package in list_packages():
+            has_lilac_yaml = git_isfile(pkgpath(package), 'lilac.yaml')
+            if not git_isfile(pkgpath(package), 'lilac.yaml'):
+                continue
+            with self.subTest(package=package):
+                lilac_yaml_path = os.path.join(pkgpath(package), 'lilac.yaml')
+                with git_open(lilac_yaml_path) as lilac_yaml_file:
+                    lilac_yaml = yaml.load(lilac_yaml_file.read())
+                    try:
+                        jsonschema.validate(lilac_yaml, YAML_SCHEMA)
+                    except jsonschema.exceptions.ValidationError as e:
+                        self.fail(msg='package "\033[1;31m{0}\033[m" contains '
+                                  'invalidate "\033[1;31mlilac.yaml\033[m"'
+                                  ''.format(package))
 
     def test_lilac_py_has_nvchecker_config(self):
-        packagesfolder = SUBFOLDER
-        if not git_isdir(packagesfolder):
-            packagesfolder = '.'
-        for package in git_listdir(packagesfolder):
-            if not git_isdir(pkgpath(package)):
-                continue
-            if package[0] == '.':
-                continue
-            if not(package in CHANGED_PACKAGES or CHECK_ALL):
-                continue
+        for package in list_packages():
             has_lilac_py = git_isfile(pkgpath(package), 'lilac.py')
             has_lilac_yaml = git_isfile(pkgpath(package), 'lilac.yaml')
             if not (has_lilac_py or has_lilac_yaml):
                 continue
-            
+
             if any([lilac_py_has_update_on(package),
                     lilac_yaml_has_update_on(package)]):
                 continue
 
             with self.subTest(package=package):
                 self.assertIn(package, self.config,
-                              msg=('package "\033[1;31m{0}\033[m" is not in ' +
-                                   '"nvchecker.ini" and does not have "update_on" in ' +
-                                   '"\033[1;31m{0}/lilac.py\033[m" or ' + 
-                                   '"\033[1;31m{0}/lilac.yaml\033[m"').format(package))
-    
+                              msg=('package "\033[1;31m{0}\033[m" is not in '
+                                   '"nvchecker.ini" and does not have '
+                                   '"update_on" in '
+                                   '"\033[1;31m{0}/lilac.py\033[m" or '
+                                   '"\033[1;31m{0}/lilac.yaml\033[m" '
+                                   'files').format(package))
+
     def test_pkgbuild(self):
-        packagesfolder = SUBFOLDER
-        if not git_isdir(packagesfolder):
-            packagesfolder = '.'
-        for package in git_listdir(packagesfolder):
-            if not git_isdir(pkgpath(package)):
-                continue
-            if package[0] == '.':
-                continue
-            if not(package in CHANGED_PACKAGES or CHECK_ALL):
-                continue
+        def check_var_srcinfo(var, package, against, line):
+            if (var + ' = ') not in line:
+                return
+            with self.subTest(package=package, line=line.strip()):
+                for pkg in against.keys():
+                    self.assertNotEqual(var + ' = ' + pkg,
+                        depends_strip_version(line),
+                        msg=('PKGBUILD of package "\033[1;31m{0}\033[m" '
+                                'contains "\033[1;31m{1} = {2}\033[m" in '
+                                '"{3}" repo').format(package, var, pkg,
+                                                     ','.join(against[pkg])))
+        for package in list_packages():
             if IGNORE_SRCINFO:
                 continue
             pkgbuild_path = os.path.join(pkgpath(package), 'PKGBUILD')
             with git_open(pkgbuild_path) as pkgbuild_file:
                 pkgbuild = pkgbuild_file.read()
                 if not (('replaces' in pkgbuild) or ('groups' in pkgbuild)):
+                    # only parse pkgbuild as srcinfo when necessory
                     continue
                 srcinfo = extract_srcinfo(pkgbuild)
-                with self.subTest(package=package):
-                    for line in srcinfo.split('\n'):
-                        if 'replaces = ' in line:
-                            for pkg in PACKAGES.keys():
-                                self.assertNotEqual("replaces = " + pkg, depends_strip_version(line),
-                                    msg=('PKGBUILD of package "\033[1;31m{0}\033[m" contains '
-                                    '"\033[1;31mreplaces = {1}\033[m" in "{2}" repo').format(package, pkg, ','.join(PACKAGES[pkg])))
-                        if 'groups = ' in line:
-                            for grp in GROUPS.keys():
-                                self.assertNotEqual("groups = " + grp, depends_strip_version(line),
-                                    msg=('PKGBUILD of package "\033[1;31m{0}\033[m" contains '
-                                    '"\033[1;31mgroups = {1}\033[m" in "{2}" repo').format(package, grp, ','.join(GROUPS[grp])))
+                for line in srcinfo.split('\n'):
+                    check_var_srcinfo('replaces', package, PACKAGES, line)
+                    check_var_srcinfo('groups', package, GROUPS, line)
 
     @skip("35 packages violating this")
     def test_folders_in_nvchecker(self):
-        packagesfolder = SUBFOLDER
-        if not git_isdir(packagesfolder):
-            packagesfolder = '.'
-        for package in git_listdir(packagesfolder):
-            if not git_isdir(pkgpath(package)):
-                continue
-            if package[0] == '.':
-                continue
-            if not(package in CHANGED_PACKAGES or CHECK_ALL):
-                continue
+        for package in list_packages():
             with self.subTest(package=package):
                 self.assertIn(package, self.config,
-                              msg=('package "\033[1;31m{0}\033[m" is not in ' +
+                              msg=('package "\033[1;31m{0}\033[m" is not in '
                                    '"nvchecker.ini"').format(package))
 
 
@@ -354,6 +390,7 @@ def run_test(testcase, msg):
 def usage():
     print(__doc__)
 
+
 if __name__ == '__main__':
     if '-h' in sys.argv or '--help' in sys.argv:
         usage()
@@ -364,6 +401,7 @@ if __name__ == '__main__':
         IGNORE_SRCINFO = True
 
     dump_groups()
+    load_lilac_yaml_schema()
     git_write_tree_index()
     DIRS, FILES = git_ls_tree()
     git_diff_tree()
