@@ -1,6 +1,6 @@
 # Maintainer: Ariel AxionL <axionl@aosc.io>
 pkgname=skim-git
-pkgver=r397.ea17f2c
+pkgver=r402.0cdf36f
 pkgrel=1
 pkgdesc="Fuzzy Finder in rust!"
 arch=('x86_64')
