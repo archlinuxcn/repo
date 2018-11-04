@@ -1,9 +1,8 @@
-build_prefix: extra-x86_64
 update_on:
-  - github: vim/vim
-  - archpkg: python
-    from_pattern: '^(\d+\.\d+)\..*'
-    to_pattern: '\1'
-  - archpkg: ruby
-    from_pattern: ^(\d+\.\d+)\..*
-    to_pattern: \1
+- github: vim/vim
+- archpkg: python
+  from_pattern: '^(\d+\.\d+)\..*'
+  to_pattern: '\1'
+- archpkg: ruby
+  from_pattern: ^(\d+\.\d+)\..*
+  to_pattern: \1
