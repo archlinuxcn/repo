@@ -48,11 +48,6 @@ DUMP_GROUPS_TIMEFORMAT = '%Y%m%d%H%z'
 
 GROUPS, PACKAGES = None, None
 
-# URL for downloading lilac-yaml-schema.yaml
-YAML_SCHEMA_URL = 'https://raw.githubusercontent.com/archlinuxcn/lilac/master/docs/lilac-yaml-schema.yaml'
-YAML_SCHEMA_TMP = '/tmp/lilac-yaml-schema-%s.yaml'
-# Cache downloaded database for 1 day
-YAML_SCHEMA_TIMEFORMAT = '%Y%m%d%z'
 YAML_SCHEMA = None
 
 CHECK_ALL = False
@@ -207,18 +202,9 @@ def dump_groups():
         PACKAGES = result['packages']
 
 
-def refresh_lilac_yaml_schema():
-    schema_path = YAML_SCHEMA_TMP % (strftime(YAML_SCHEMA_TIMEFORMAT))
-    if os.path.exists(schema_path):
-        return open(schema_path, 'r')
-    import urllib.request
-    urllib.request.urlretrieve(YAML_SCHEMA_URL, schema_path)
-    return open(schema_path, 'r')
-
-
 def load_lilac_yaml_schema():
     global YAML_SCHEMA
-    with refresh_lilac_yaml_schema() as schema:
+    with open('lilac-yaml-schema.yaml', 'r') as schema:
         YAML_SCHEMA = yaml.load(schema)
 
 

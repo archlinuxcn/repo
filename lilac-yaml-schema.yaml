@@ -1,0 +1,81 @@
+$schema: http://json-schema.org/draft-07/schema#
+$id: http://example.com/product.schema.json
+title: lilac.yaml
+description: Descriptive configuration data for lilac packaging
+type: object
+properties:
+  build_prefix:
+    description: The prefix of build command to be used. E.g. extra-x86_64, multilib or archlinuxcn-x86_64.
+    type: string
+    default: extra-x86_64
+    enum:
+      - extra-x86_64
+      - archlinuxcn-x86_64
+      - multilib
+      - multilib-archlinuxcn
+  pre_build:
+    description: Name of function to be used as the pre_build function.
+    type: string
+  post_build:
+    description: Name of function to be used as the post_build function.
+    type: string
+  post_build_always:
+    description: Name of function to be used as the post_build_always function.
+    type: string
+  time_limit_hours:
+    description: Time limit in hours. The build will be aborted if it doesn't finish in time. Default is one hour.
+    type: number
+  depends:
+    description: Packages in the repo to be installed before build.
+    type: array
+    items:
+      anyOf:
+        - type: string
+          description: Package (directory) name
+        - type: object
+          description: Package base (directory) as key and package name as value
+          minProperties: 1
+          maxProperties: 1
+          additionalProperties:
+            type: string
+  update_on:
+    description: Configure how nvchecker should check for updates / rebuilds? The first should check for updates and others for rebuilds.
+    type: array
+    items:
+      anyOf:
+        - type: object
+          description: nvchecker configuration section
+        - type: string
+          description: Shorthand for simple check sources (e.g. "aur"). Must be the first one if used.
+    minItems: 1
+  maintainers:
+    description: List of maintainers for receiving email notifications
+    type: array
+    items:
+      anyOf:
+        - type: object
+          description: GitHub username with a public email address
+          properties:
+            github:
+              type: string
+          required:
+            - github
+        - type: object
+          description: GitHub username and an email address in the form "Name <user@host>". The GitHub public email does not matter.
+          properties:
+            github:
+              type: string
+            email:
+              type: string
+          required:
+            - github
+            - email
+    minItems: 1
+  output_packages:
+    description: The package names a split-package will produce. This is read by the cleanup script to determine what to clean up. You should fill in this if your package is a split-package and doesn't contain plain "package_xxx" functions.
+    type: array
+    items:
+      type: string
+required:
+  - update_on
+  - maintainers
