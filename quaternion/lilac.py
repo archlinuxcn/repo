@@ -4,11 +4,9 @@ from lilaclib import *
 
 build_prefix = 'extra-x86_64'
 
-def pre_build():
-	aur_pre_build()
-	add_makedepends(["qt5ct"])
+pre_build = aur_pre_build
 
 post_build = aur_post_build
 
 if __name__ == '__main__':
-  single_main()
+    single_main()
