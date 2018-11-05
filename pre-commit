@@ -6,7 +6,7 @@ pre-commit hook to check nvchecker.ini and repo tree
 To use it normally as git pre-commit hook,
 make a symlink and install dependencies:
 $ ln -s ../../pre-commit .git/hooks
-$ pacman -Syu --needed python-yaml python-jsonschema
+$ pacman -Syu --needed python-yaml python-jsonschema pyalpm
 
 To check modified packages, run without options:
 $ ./pre-commit
@@ -46,7 +46,7 @@ DUMP_GROUPS_TMP = '/tmp/dump-groups-%s.gz'
 # Cache downloaded database for 1 hour
 DUMP_GROUPS_TIMEFORMAT = '%Y%m%d%H%z'
 
-GROUPS, PACKAGES = None, None
+GROUPS, PACKAGES = {}, {}
 
 YAML_SCHEMA = None
 
@@ -183,23 +183,44 @@ def depends_strip_version(depends):
     return depends.strip()
 
 
-def refresh_dump_groups():
-    dump_groups_path = DUMP_GROUPS_TMP % (strftime(DUMP_GROUPS_TIMEFORMAT))
-    if os.path.exists(dump_groups_path):
-        return gzip.open(dump_groups_path, 'rt')
-    import urllib.request
-    urllib.request.urlretrieve(DUMP_GROUPS_URL, dump_groups_path)
-    return gzip.open(dump_groups_path, 'rt')
-
-
 def dump_groups():
     global GROUPS, PACKAGES
-    with refresh_dump_groups() as dump:
-        result = json.loads(dump.read())
-        if result['format_version'] != 2:
-            raise ValueError('dump-groups format mismatch')
-        GROUPS = result['groups']
-        PACKAGES = result['packages']
+    try:
+        import pyalpm
+        import pycman
+        # now that we are running on archlinux so dump from pacman's syncdb
+        handle = pycman.config.init_with_config('/etc/pacman.conf')
+        OFFICIAL = ['core', 'extra', 'community']
+        syncdbs = [db for db in handle.get_syncdbs() if db.name in OFFICIAL]
+        for db in syncdbs:
+            for pkg in db.pkgcache:
+                name = pkg.name
+                if name in PACKAGES:
+                    PACKAGES[name].append(db.name)
+                else:
+                    PACKAGES[name] = [db.name, ]
+            for grp in db.grpcache:
+                name,pkgs = grp
+                if name in GROUPS:
+                    GROUPS[name].append(db.name)
+                else:
+                    GROUPS[name] = [db.name, ]
+    except ImportError:
+        # not running on an archlinux/pacman so download from URL
+        def refresh_dump_groups():
+            dump_groups_path = DUMP_GROUPS_TMP % (strftime(DUMP_GROUPS_TIMEFORMAT))
+            if os.path.exists(dump_groups_path):
+                return gzip.open(dump_groups_path, 'rt')
+            import urllib.request
+            urllib.request.urlretrieve(DUMP_GROUPS_URL, dump_groups_path)
+            return gzip.open(dump_groups_path, 'rt')
+
+        with refresh_dump_groups() as dump:
+            result = json.loads(dump.read())
+            if result['format_version'] != 2:
+                raise ValueError('dump-groups format mismatch')
+            GROUPS = result['groups']
+            PACKAGES = result['packages']
 
 
 def load_lilac_yaml_schema():
