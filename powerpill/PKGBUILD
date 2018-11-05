@@ -1,7 +1,7 @@
 #Maintainer: Xyne <ac xunilhcra enyx, backwards>
 pkgname=powerpill
-pkgver=2018.9.8
-pkgrel=3
+pkgver=2018.11
+pkgrel=1
 pkgdesc='Pacman wrapper for faster downloads.'
 arch=(any)
 license=(GPL)
@@ -10,16 +10,16 @@ depends=(aria2 'pm2ml>2012.12.12' pyalpm python3 python3-xcgf python3-xcpf)
 optdepends=('python3-threaded_servers: internal Pacserve support' 'reflector: Reflector and Rsync support' 'rsync: Rsync download support')
 backup=(etc/powerpill/powerpill.json)
 source=(
-  https://xyne.archlinux.ca/projects/powerpill/src/powerpill-2018.9.8.tar.xz
-#  https://xyne.archlinux.ca/projects/powerpill/src/powerpill-2018.9.8.tar.xz.sig
+  https://xyne.archlinux.ca/projects/powerpill/src/powerpill-2018.11.tar.xz
+#  https://xyne.archlinux.ca/projects/powerpill/src/powerpill-2018.11.tar.xz.sig
 )
 sha512sums=(
-  12a464787be26c69b468de818da35d0c9f73396b705877923237792b0cbeb321f45097bcb9af4e74aababb2fe24df33b9f6ccc49c7ce185fa8fc1e3a13b99b4f
-#  5cfe5bae1e0b05bd7affce46a5d36930b661b99d0313e148d4e95b79f4c1c106b2e85d5905bd6b70696bb87bff111ad46e4a718ca977af078f77827e530eeacd
+  af1df264f92efe3622ad543093e77482f7219d628a12c7902d17319e201837b5c736c09038499fa97432a45e020b3881c4a37eb1a9654c2ffbc5fa85989a7f58
+#  2ff3e80fcca07f8bdaf34ff8824d31b31b9144718ccb52421212b1cfef9034f89c775a5e77001a58b4319f832a70c62c77acc5b18d05232be6152a0bd79d7dd0
 )
 md5sums=(
-  b49a2cfbd1dd4ad8bd90c88ba17bbbd2
-#  1619c95179a8e80e4f554dcb2ee5d725
+  0ae8494ebfd21d6144681ef7b4247162
+#  c35a6c2ed6bf0599fb88c27d4d1fe1b6
 )
 #validpgpkeys=('EC3CBE7F607D11E663149E811D1F0DC78F173680')
 
