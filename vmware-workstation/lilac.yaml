@@ -1,0 +1,17 @@
+# XXX: The format for `maintainers` is subjected to changes.
+# See https://github.com/archlinuxcn/lilac/pull/68
+
+maintainers:
+  - github: TobiichiAmane
+    email: tobiichiamane@archlinuxcn.org
+
+build_prefix: archlinuxcn-x86_64
+
+depends:
+  - ncurses5-compat-libs
+
+update_on:
+  - aur: vmware-workstation
+
+pre_build: aur_pre_build
+post_build: aur_post_build
