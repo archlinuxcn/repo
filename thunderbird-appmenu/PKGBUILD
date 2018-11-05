@@ -24,11 +24,9 @@ conflicts=("thunderbird")
 options=(!emptydirs !makeflags)
 source=(https://ftp.mozilla.org/pub/mozilla.org/thunderbird/releases/$pkgver/source/thunderbird-$pkgver.source.tar.xz
         $_pkgname.desktop
-        thunderbird-60.2.1-buildfix.patch
         unity-menubar.patch)
 sha256sums=('23fc097a5aa62006919029df890e5e2bec38c2c3e6081723040ef702ff6e4a7b'
             '3534ea85d8e0e35dba5f40a7a07844df19f3a480e1358fc50c2502f122dab789'
-            '884c5a6742677c83173812f7abb1e409a2b13371ba6079c4cb69b3e95010de05'
             'c6082f9ab534cdc67c53fa1685df628f03b0674390522f32fe640ce92f1b15ab')
 
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
@@ -88,7 +86,6 @@ ac_add_options --enable-startup-notification
 ac_add_options --disable-crashreporter
 ac_add_options --disable-updater
 END
-  patch -Np1 < ../thunderbird-60.2.1-buildfix.patch
 
   # actual appmenu patch from ubuntu repos
   patch -Np1 -i ../unity-menubar.patch
