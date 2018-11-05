@@ -1,9 +1,9 @@
-# Maintainer: Kewl <xrjy@nygb.rh.bet(rot13)>
+# Maintainer: Batou <batou at cryptolab net>
 # Contributor: Karol "Kenji Takahashi" Woźniak <kenji.sx>
 
 pkgname=copyq
-pkgver=3.6.1
-pkgrel=2
+pkgver=3.7.0
+pkgrel=1
 pkgdesc="Clipboard manager with searchable and editable history"
 url="https://github.com/hluk/${pkgname}"
 depends=('libxtst' 'qt5-script' 'qt5-svg' 'qt5-x11extras')
@@ -12,7 +12,7 @@ makedepends=('cmake' 'qt5-tools')
 license=('GPL3')
 arch=('x86_64')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('79bb76c0afcfd769932a9d3b6cfa985dadc1b71443be2277ef0367fa6a4a658f')
+sha256sums=('8da0cb6d3d18b05158cce60968aa70e384004c5056a0c505bda7abbce1f2e24d')
 
 build() {
     cd "CopyQ-${pkgver}"
