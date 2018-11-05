@@ -1,0 +1,28 @@
+# Maintainer: Sakuraba Amane <tobiichiamane@archlinuxcn.org>
+
+pkgname=lilacinfo
+pkgver=r10.1dd14e3
+pkgrel=1
+pkgdesc="A tool to get package build status from lilac"
+arch=('any')
+url="https://github.com/TobiichiAmane/lilacinfo"
+license=('GPLv3')
+makedepends=('git')
+source=('git://github.com/TobiichiAmane/lilacinfo.git')
+md5sums=('SKIP')
+depends=('bash' 'jq' 'wget')
+
+pkgver() {
+	cd "lilacinfo" || exit 1
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+check() {
+	cd "$srcdir/lilacinfo" || exit 1
+}
+
+package() {
+	cd "lilacinfo" || exit 1
+	install -Dm755 "$srcdir/lilacinfo/src/lilacinfo" "$pkgdir/usr/bin/lilacinfo"
+	install -Dm644 "$srcdir/lilacinfo/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
