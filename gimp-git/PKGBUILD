@@ -50,7 +50,7 @@ pkgver() {
   	$(git rev-parse --short HEAD)
 }
 
-prepare() {
+build() {
   cd $_pkgname
 
   _mypaintver=$(echo /usr/lib/libmypaint-*.so | grep -o -E '\-[0-9]+(\.[0-9]+)*' | head -1)
@@ -75,10 +75,6 @@ prepare() {
   	--with-openexr
 
   sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
-}
-
-build() {
-  cd $_pkgname
 
   PYTHONPATH=/usr/share/glib-2.0:$PYTHONPATH make
 }
