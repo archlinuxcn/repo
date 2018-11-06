@@ -1,7 +1,7 @@
 post_install() {
 	systemctl --quiet daemon-reload
 	systemctl --quiet preset caddy.service
-	makedir -p /etc/caddy/caddy.conf.d
+	mkdir -p /etc/caddy/caddy.conf.d
 }
 
 post_upgrade() {
