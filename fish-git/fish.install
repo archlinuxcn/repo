@@ -1,0 +1,13 @@
+post_install() {
+  grep -qe '^/usr/bin/fish$' etc/shells || echo '/usr/bin/fish' >> etc/shells
+}
+
+post_upgrade() {
+  post_install
+}
+
+pre_remove() {
+  sed -ri '\|^/usr/bin/fish$|d' etc/shells
+}
+
+# vim:set ts=2 sw=2 et:

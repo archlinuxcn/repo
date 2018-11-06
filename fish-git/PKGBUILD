@@ -1,0 +1,49 @@
+# Maintainer: Levente Polyak <anthraxx[at]archlinux[dot]org>
+# Contributor: Bartłomiej Piotrowski <bpiotrowski@archlinux.org>
+# Contributor: Kaiting Chen <kaitocracy@gmail.com>
+# Contributor: Abhishek Dasgupta <abhidg@gmail.com>
+# Contributor: Eric Belanger <eric@archlinux.org>
+# Contributor: Jan Fader <jan.fader@web.de>
+
+pkgname=fish-git
+pkgver=r9021.4d4227e57
+pkgrel=1
+pkgdesc='Smart and user friendly shell intended mostly for interactive use'
+url='https://fishshell.com/'
+arch=('x86_64')
+license=('GPL2')
+depends=('bc' 'inetutils' 'which' 'pcre2')
+optdepends=('python: for manual page completion parser and web configuration tool')
+makedepends=('doxygen' 'git')
+conflicts=('fish')
+install=fish.install
+source=("fish-shell::git+https://github.com/fish-shell/fish-shell.git"
+        "fish.install")
+
+sha512sums=('SKIP'
+            '1893c79e507e6bc3c7ec05fb0e67a6c9e377512cd3345c458c423ba67f1d4ff6f0f12bd6dd2522f1758e5a87d6d327053eb93f514875d0be6c6cb92936c3fcfb')
+
+pkgver() {
+    cd "$srcdir/fish-shell"
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+    cd fish-shell
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)" > version
+    autoreconf -fiv
+}
+
+build() {
+    cd fish-shell
+    ./configure --prefix=/usr \
+      --sysconfdir=/etc
+    make
+}
+
+package() {
+    cd fish-shell
+    make DESTDIR="${pkgdir}" install
+}
+
+# vim: ts=2 sw=4 et:
