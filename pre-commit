@@ -325,7 +325,7 @@ class ConfigSectionTest(TestCase):
                         jsonschema.validate(lilac_yaml, YAML_SCHEMA)
                     except jsonschema.exceptions.ValidationError as e:
                         self.fail(msg='package "\033[1;31m{0}\033[m" contains '
-                                  'invalidate "\033[1;31mlilac.yaml\033[m"'
+                                  'invalid "\033[1;31mlilac.yaml\033[m"'
                                   ''.format(package))
 
     def test_lilac_py_has_nvchecker_config(self):
