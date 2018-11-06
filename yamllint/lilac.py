@@ -4,14 +4,11 @@ import fileinput
 
 from lilaclib import *
 
-build_prefix = 'extra-x86_64'
-
-depends = ['python-pathspec']
-
 def pre_build():
   pypi_pre_build(
     depends=['python-yaml', 'python-pathspec'],
-    check='nose',
+    # fails too much when not isolated
+    # check='nose',
   )
 
 def post_build():

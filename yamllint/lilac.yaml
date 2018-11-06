@@ -1,0 +1,9 @@
+maintainers:
+- github: lilydjwg
+depends:
+- python-pathspec
+update_on:
+- pypi: yamllint
+- archpkg: python
+  from_pattern: '^(\d+\.\d+)\..*'
+  to_pattern: '\1'
