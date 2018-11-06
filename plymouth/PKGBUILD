@@ -5,8 +5,8 @@
 #
 
 pkgname=plymouth
-pkgver=0.9.3
-pkgrel=5
+pkgver=0.9.4
+pkgrel=1
 pkgdesc="A graphical boot splash screen with kernel mode-setting support"
 url="http://www.freedesktop.org/wiki/Software/Plymouth/"
 arch=('x86_64')
@@ -37,11 +37,9 @@ source=("http://www.freedesktop.org/software/${pkgname}/releases/${pkgname}-${pk
 	'plymouth.initcpio_install'
 	'sd-plymouth.initcpio_install'
 	'plymouth-quit.service.in.patch'
-	'plymouth-set-default-theme.in.patch'
-	'plymouth-update-initrd.patch'
-	'sysmacros.patch')
+	'plymouth-update-initrd.patch')
 
-md5sums=('b261c720888a5431cdfce8494805eab3'
+md5sums=('4efa5551d230165981b105e7c6a50aa7'
          '65fa2763d5c9bb9f80973ea5e6e3db3e'
          'd67132b297ccfb1a877a2efd78076963'
          '02861a13840dee3a5f2224b598274220'
@@ -57,16 +55,12 @@ md5sums=('b261c720888a5431cdfce8494805eab3'
          'c17e915b19a469198a37dd7376a846c7'
          'af3c3eadc80e240416d11b2d5983dfb5'
          '165a39dbedcc6e123c8ca05d5b4b2e25'
-         'f79edbbb30c71b0dbcd102c7dd31660b'
-         '0357775c16b5f90f1af485e6a4c80a9e'
-         'd2805e2ac2b4dcaf44f63e9a5f898e94')
+         '0357775c16b5f90f1af485e6a4c80a9e')
 
 prepare() {
 	cd "$srcdir"/${pkgname}-${pkgver}
-	patch -p1 -i $srcdir/plymouth-set-default-theme.in.patch
 	patch -p1 -i $srcdir/plymouth-update-initrd.patch
 	patch -p1 -i $srcdir/plymouth-quit.service.in.patch
-	patch -p1 -i $srcdir/sysmacros.patch
 }
 
 build() {
