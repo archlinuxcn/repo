@@ -21,11 +21,10 @@ import re
 import ast
 import gzip
 import json
-import subprocess
 from time import strftime
 from subprocess import Popen, PIPE
-from unittest import TestCase, TestSuite, TestLoader, TextTestRunner, skip
-from io import TextIOWrapper, StringIO
+from unittest import TestCase, TestLoader, TextTestRunner, skip
+from io import StringIO
 from configparser import ConfigParser
 
 # need python-yaml package
@@ -66,7 +65,7 @@ def git_write_tree_index():
 
 
 def git_diff_tree():
-    global GIT_BRANCH, ORIGIN_BRANCH, CHANGED_FILES
+    global GIT_BRANCH, ORIGIN_BRANCH, CHANGED_PACKAGES
     # git diff-tree
     # -r Recurse into sub-trees.
     # -z \0 line termination on output and do not quote filenames.
@@ -169,7 +168,7 @@ def extract_srcinfo(pkgbuild):
     dir_path = os.path.dirname(os.path.realpath(__file__))
     with Popen(['bash', dir_path + '/parse-pkgbuild', '/dev/stdin'],
                stdin=PIPE, stdout=PIPE) as p:
-        outs, errs = p.communicate(input=pkgbuild.encode('UTF-8'))
+        outs,_ = p.communicate(input=pkgbuild.encode('UTF-8'))
         return outs.decode('UTF-8')
 
 
@@ -186,7 +185,6 @@ def depends_strip_version(depends):
 def dump_groups():
     global GROUPS, PACKAGES
     try:
-        import pyalpm
         import pycman
         # now that we are running on archlinux so dump from pacman's syncdb
         handle = pycman.config.init_with_config('/etc/pacman.conf')
@@ -200,7 +198,7 @@ def dump_groups():
                 else:
                     PACKAGES[name] = [db.name, ]
             for grp in db.grpcache:
-                name,pkgs = grp
+                name,_ = grp
                 if name in GROUPS:
                     GROUPS[name].append(db.name)
                 else:
@@ -314,7 +312,6 @@ class ConfigSectionTest(TestCase):
 
     def test_lilac_yaml_schema(self):
         for package in list_packages():
-            has_lilac_yaml = git_isfile(pkgpath(package), 'lilac.yaml')
             if not git_isfile(pkgpath(package), 'lilac.yaml'):
                 continue
             with self.subTest(package=package):
@@ -323,7 +320,7 @@ class ConfigSectionTest(TestCase):
                     lilac_yaml = yaml.load(lilac_yaml_file.read())
                     try:
                         jsonschema.validate(lilac_yaml, YAML_SCHEMA)
-                    except jsonschema.exceptions.ValidationError as e:
+                    except jsonschema.exceptions.ValidationError:
                         self.fail(msg='package "\033[1;31m{0}\033[m" contains '
                                   'invalid "\033[1;31mlilac.yaml\033[m"'
                                   ''.format(package))
