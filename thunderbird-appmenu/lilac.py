@@ -5,6 +5,7 @@ from lilaclib import *
 
 
 def pre_build():
+  print(_G.newver)
   update_pkgver_and_pkgrel(_G.newver[:_G.newver.find('-')])
 
 def post_build():
