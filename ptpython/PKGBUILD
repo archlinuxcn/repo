@@ -1,17 +1,18 @@
 # Maintainer: Carl George < arch at cgtx dot us >
 # Contributor: Erik Johnson <palehose at gmail dot com>
+# Contributor: <kwrazi at gmail dot com>
 
 pkgbase="ptpython"
 pkgname=("ptpython" "ptpython2")
-pkgver="0.41"
-pkgrel=2
+pkgver="2.0.4"
+pkgrel="1"
 pkgdesc="Python REPL build on top of prompt_toolkit"
 arch=("any")
 url="https://github.com/jonathanslenders/ptpython"
 license=("BSD")
 makedepends=("python-setuptools" "python2-setuptools")
 source=("https://files.pythonhosted.org/packages/source/${pkgbase:0:1}/$pkgbase/$pkgbase-$pkgver.tar.gz")
-sha256sums=('a78b27a85c5dbe9d89376e7f3aa70a9d8fa15cb45ee5f73a3cc3963b9b528ac1')
+sha256sums=('ebe9d68ea7532ec8ab306d4bdc7ec393701cd9bbd6eff0aa3067c821f99264d4')
 
 prepare() {
     cp -a "${srcdir}/${pkgbase}-${pkgver}" "${srcdir}/${pkgbase}2-${pkgver}"
@@ -28,7 +29,7 @@ package_ptpython() {
     depends=(
         "python-docopt"
         "python-jedi>=0.9.0"
-        "python-prompt_toolkit>=1.0.14"
+        "python-prompt_toolkit-2>=2.0.6"
         "python-pygments"
     )
     optdepends=(
@@ -44,7 +45,7 @@ package_ptpython2() {
     depends=(
         "python2-docopt"
         "python2-jedi>=0.9.0"
-        "python2-prompt_toolkit>=1.0.14"
+        "python2-prompt_toolkit-2>=2.0.6"
         "python2-pygments"
     )
     optdepends=(
