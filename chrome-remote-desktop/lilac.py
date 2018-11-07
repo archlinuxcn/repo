@@ -15,6 +15,7 @@ def pre_build():
         if line.strip() == 'source_x86_64=("http://dl.google.com/linux/direct/${pkgname}_current_amd64.deb")':
             line = 'source_x86_64=("${pkgname}_${pkgver}_amd64.deb::http://dl.google.com/linux/direct/>${pkgname}_current_amd64.deb")'
         print(line)
+    run_cmd(['updpkgsums'])
 
 if __name__ == '__main__':
   single_main(build_prefix)
