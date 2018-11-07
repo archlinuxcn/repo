@@ -5,7 +5,6 @@ from lilaclib import *
 
 
 def pre_build():
-    print(_G.newver.lstrop('v'))
     update_pkgver_and_pkgrel(_G.newver.lstrip('v'))
 
 
