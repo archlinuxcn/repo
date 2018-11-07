@@ -9,7 +9,6 @@ from lilaclib import *
 build_prefix = 'extra-x86_64'
 
 def pre_build():
-    aur_pre_build()
     vcs_update()
 
 def post_build():
