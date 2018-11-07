@@ -309,6 +309,11 @@ class ConfigSectionTest(TestCase):
                 self.assertTrue(git_isfile(pkgpath(package), "PKGBUILD"),
                                 msg=('package "\033[1;31m{0}\033[m" does '
                                      'not have PKGBUILD').format(package))
+            with self.subTest(package=package):
+                self.assertFalse(package in PACKAGES,
+                                msg=('package "\033[1;31m{0}\033[m" exists in '
+                                     'official repo').format(package))
+
 
     def test_lilac_yaml_schema(self):
         for package in list_packages():
