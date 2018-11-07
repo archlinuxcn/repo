@@ -3,7 +3,7 @@
 # Contributor: hexchain <i at hexchain.org>
 
 pkgname=electronic-wechat
-pkgver=2.2.0
+pkgver=2.2.1
 pkgrel=1
 pkgdesc="A better WeChat client"
 arch=('x86_64')
@@ -15,17 +15,16 @@ makedepends=('git' 'npm' 'python2' 'imagemagick')
 source=(
     "$pkgname-$pkgver.tar.gz::https://github.com/kooritea/electronic-wechat/archive/v$pkgver.tar.gz"
     'electronic-wechat.desktop'
-    'remove-bundle-electron.patch'
     'electronic-wechat.sh'
 )
-sha256sums=('950133a7afc313c09d06a8a70dae2d48d48f69ab18d382bff57c6d3e4981885e'
+sha256sums=('f78ca4e94753f09a243a20e17fa4866fd565b9a671d43f565797f10bf15e91b5'
             '56c0db46c3b9fc31ac16265d0346ef47a6422392607bcce954e0f550894475be'
-            '8a4a6a109f6881798c291ffa11fcd76ac482ccf5b01f0566c16b007dda0b9fac'
             '10696031537d5d749b1d8914829057d73aaccb788263b4df8bc5ff7ed7939bff')
 
 prepare() {
     cd "$pkgname-$pkgver"
-    patch -p1 < "$srcdir/remove-bundle-electron.patch"
+    # remove Electron bundle
+    sed -i '/"electron\(-packager\)*":/d' package.json
 }
 
 build() {
