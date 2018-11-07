@@ -5,20 +5,20 @@
 # Contributor: Mateus Rodrigues Costa <charles [dot] costar [at] gmail [dot] com>
 
 pkgname=chrome-remote-desktop
-pkgver=70.0.3538.21
-pkgrel=2
+pkgver=71.0.3578.31
+pkgrel=1
 pkgdesc="Access other computers or allow another user to access your computer securely over the Internet"
 arch=("x86_64")
 url="https://chrome.google.com/webstore/detail/gbchcmhmhahfdphkhkmpfmihenigjmpp"
 license=("BSD")
-depends=("gtk3" "libxss" "nss" "python2" "python2-psutil" "xorg-server-xvfb" "xorg-setxkbmap" "xorg-xauth" "xorg-xdpyinfo")
+depends=("gtk3" "libxss" "nss" "python2" "python2-psutil" "xorg-server-xvfb" "xorg-setxkbmap" "xorg-xauth" "xorg-xdpyinfo" "xorg-xrandr")
 install="${pkgname}.install"
 source=("${pkgname}-${pkgver}.deb::http://dl.google.com/linux/direct/${pkgname}_current_amd64.deb"
         "${pkgname}.service" 
         "crd")
-sha256sums=("dc19c4cc4b1a8223720524873327ca6b2cb2b2bbbef8a699a13ebf527b6c2c72"
-            "e5da5ae89b5bc599f72f415d1523341b25357931b0de46159fce50ab83615a4b"
-            "27dee2d383e6bd993fe0557d5c222fa80ab6d16d43775dedff6218713c7a1c06")
+sha256sums=('e6ec5831a4ab09b7afee71a48627646828b4f2545988539a908d0d6108e87fb5'
+            'e5da5ae89b5bc599f72f415d1523341b25357931b0de46159fce50ab83615a4b'
+            '27dee2d383e6bd993fe0557d5c222fa80ab6d16d43775dedff6218713c7a1c06')
 
 build() {
   cd "${srcdir}"
