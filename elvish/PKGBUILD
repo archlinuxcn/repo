@@ -2,7 +2,7 @@
 
 pkgname=elvish
 pkgver=0.12
-pkgrel=1
+pkgrel=2
 pkgdesc="A friendly and expressive Unix shell."
 arch=('i686' 'x86_64')
 url="https://github.com/elves/elvish"
@@ -10,7 +10,7 @@ license=('custom:2-clause BSD')
 provides=('elvish')
 makedepends=('git' 'go')
 depends=('glibc')
-source=("git+https://github.com/elves/elvish.git#tag=$pkgver")
+source=("git+https://github.com/elves/elvish.git#tag=v$pkgver")
 md5sums=('SKIP')
 install=elvish.install
 
