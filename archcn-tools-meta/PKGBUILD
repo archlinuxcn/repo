@@ -1,0 +1,18 @@
+# Maintainer: Sakuraba Amane <tobiichiamane@archlinuxcn.org>
+
+pkgbase=archcn-tools-meta
+pkgname=archcn-tools-meta
+pkgver=18.11
+pkgrel=1
+arch=('x86_64')
+url='https://www.archlinuxcn.org/'
+license=(GPL)
+pkgdesc='Meta package for a set of tools often used by Arch CN maintainers'
+depends=(openssh
+         devtools
+         pacman-contrib
+         pyalpm
+         python-yaml
+         python-jsonschema
+         devtools-cn-git
+         lilacinfo)
