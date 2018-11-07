@@ -1,0 +1,41 @@
+# Contributor: Alexander Fehr <pizzapunk gmail com>
+# Maintainer: Daniel J Griffiths <ghost1227@archlinux.us>
+
+_pkgname=filezilla
+pkgname=$_pkgname-svn
+pkgver=9011
+pkgrel=1
+pkgdesc="Fast and reliable FTP, FTPS and SFTP client"
+arch=('x86_64')
+url="http://filezilla-project.org/"
+license=('GPL')
+depends=('dbus' 'xdg-utils' 'wxgtk3' 'libidn' 'hicolor-icon-theme' 'sqlite' 'gnutls' 'libfilezilla-svn')
+makedepends=('subversion')
+provides=("$_pkgname")
+conflicts=("$_pkgname")
+source=("$_pkgname::svn+https://svn.filezilla-project.org/svn/FileZilla3/trunk")
+md5sums=("SKIP")
+
+pkgver() {
+    cd $_pkgname
+    svnversion | sed 's:M$::'
+}
+
+build() {
+  cd "${_pkgname}"
+  autoreconf -i
+  ./configure \
+    --prefix=/usr \
+    --disable-manualupdatecheck \
+    --disable-autoupdatecheck \
+    --with-pugixml=builtin \
+    --with-wx-config=/usr/bin/wx-config-gtk3
+
+  make
+}
+
+package() {
+  cd "${_pkgname}"
+
+  make DESTDIR="${pkgdir}" install
+}
