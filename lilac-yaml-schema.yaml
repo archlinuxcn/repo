@@ -71,10 +71,5 @@ properties:
             - github
             - email
     minItems: 1
-  output_packages:
-    description: The package names a split-package will produce. This is read by the cleanup script to determine what to clean up. You should fill in this if your package is a split-package and doesn't contain plain "package_xxx" functions.
-    type: array
-    items:
-      type: string
 required:
   - maintainers
