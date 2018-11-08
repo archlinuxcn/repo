@@ -137,7 +137,6 @@ package_vmware-horizon-client() {
 	install=vmware-horizon-client.install
 
 	cd "${srcdir}/extract/vmware-horizon-client/"
-
 	rm -rf lib/vmware/xkeymap
 
 	mkdir -p "${pkgdir}/usr/"
@@ -150,6 +149,7 @@ package_vmware-horizon-client() {
 	cp -a debug/ "${pkgdir}/usr/share/doc/vmware-horizon-client/"
 
 	cd "${srcdir}/extract/vmware-horizon-pcoip/"
+	rm -rf pcoip/lib/vmware/xkeymap
 
 	mkdir -p "${pkgdir}/usr/"
 	cp -a pcoip/lib/ "${pkgdir}/usr/"

@@ -11,9 +11,18 @@ post_build = aur_post_build
 
 PATCH=b"""
 diff --git a/vmware-horizon-client/PKGBUILD b/vmware-horizon-client/PKGBUILD
-index 863c57b1f..6da732b33 100644
+index 863c57b1f..6d84fccc8 100644
 --- a/vmware-horizon-client/PKGBUILD
 +++ b/vmware-horizon-client/PKGBUILD
+@@ -16,7 +16,7 @@ pkgname=('vmware-horizon-client'
+ pkgver=4.9.0
+ _build=9507999
+ _cart='CART19FQ3'
+-pkgrel=1
++pkgrel=2
+ pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop'
+ arch=('x86_64')
+ url='https://www.vmware.com/go/viewclients'
 @@ -122,7 +122,7 @@ package_vmware-horizon-client() {
  	conflicts=('vmware-view-open-client' 'vmware-view-open-client-beta' 'vmware-view-client'
  		'vmware-horizon-pcoip')
@@ -23,15 +32,22 @@ index 863c57b1f..6da732b33 100644
  		'libxtst' 'openssl' 'binutils' 'glib2' 'expat')
  	optdepends=('alsa-lib: audio support via alsa'
  		'freerdp: RDP remote desktop connections'
-@@ -138,6 +138,8 @@ package_vmware-horizon-client() {
+@@ -137,6 +137,7 @@ package_vmware-horizon-client() {
+ 	install=vmware-horizon-client.install
  
  	cd "${srcdir}/extract/vmware-horizon-client/"
- 
 +	rm -rf lib/vmware/xkeymap
-+
+ 
  	mkdir -p "${pkgdir}/usr/"
  	cp -a bin/ "${pkgdir}/usr/"
- 	cp -a lib/ "${pkgdir}/usr/"
+@@ -148,6 +149,7 @@ package_vmware-horizon-client() {
+ 	cp -a debug/ "${pkgdir}/usr/share/doc/vmware-horizon-client/"
+ 
+ 	cd "${srcdir}/extract/vmware-horizon-pcoip/"
++	rm -rf pcoip/lib/vmware/xkeymap
+ 
+ 	mkdir -p "${pkgdir}/usr/"
+ 	cp -a pcoip/lib/ "${pkgdir}/usr/"
 """
 
 import subprocess
