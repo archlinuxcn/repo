@@ -2,7 +2,8 @@
 from lilaclib import *
 
 update_on = [{'aur': None}, {'archpkg': 'icu'}]
-build_prefix = 'archlinuxcn-x86_64'
+build_prefix = 'extra-x86_64'
+depends = ['kmozillahelper']
 
 def pre_build():
     aur_pre_build()
