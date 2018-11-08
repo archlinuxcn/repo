@@ -4,6 +4,7 @@ import re
 
 update_on = [{'aur':None}, {'github':'mpv-player/mpv'}]
 build_prefix = 'archlinuxcn-x86_64'
+depends = ['shaderc']
 
 def pre_build():
     aur_pre_build()
@@ -11,7 +12,7 @@ def pre_build():
         if 'depends=(' in line:
             print(line)
         else:
-            line=re.sub(r'#(dvd|cd|smb|libarchive|lua$|x11|wayland|uchardet|rubberband|dvbin)',r'\1',line)
+            line=re.sub(r'#(dvd|cd|smb|libarchive|lua$|x11|wayland|uchardet|rubberband|dvbin|vulkan|shaderc)',r'\1',line)
             print(line)
 
 post_build = aur_post_build
