@@ -1,7 +1,7 @@
 # Maintainer: Guillaume Hayot <ghayot@postblue.info>
 
 pkgname=gnome-shell-extension-gsconnect
-pkgver=14
+pkgver=15
 pkgrel=1
 pkgdesc="KDE Connect implementation with GNOME Shell integration"
 arch=('any')
@@ -17,7 +17,7 @@ optdepends=(
   'gsound: Themed sound effects'
 )
 source=(https://github.com/andyholmes/$pkgname/archive/v$pkgver.tar.gz)
-sha256sums=('86dd959cda3dafc0c4f6d6c6e69b1a3acda8284c21a07dc1a73e42cda9b4a915')
+sha256sums=('d2ea8e1ab16e1a9a06b8c82c1a312e35329cae455b2b8d98b3515e323ce228e5')
 
 package() {
   cd "$pkgname-$pkgver"
