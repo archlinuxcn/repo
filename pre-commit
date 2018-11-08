@@ -333,8 +333,7 @@ class ConfigSectionTest(TestCase):
     def test_lilac_py_has_nvchecker_config(self):
         for package in list_packages():
             has_lilac_py = git_isfile(pkgpath(package), 'lilac.py')
-            has_lilac_yaml = git_isfile(pkgpath(package), 'lilac.yaml')
-            if not (has_lilac_py or has_lilac_yaml):
+            if not has_lilac_py:
                 continue
 
             if any([lilac_py_has_update_on(package),
