@@ -408,7 +408,7 @@ prepare() {
     rm manifest.plist
   done
 
-  sed -i -e "s|/usr/lib/vmware/|${pkgdir/vmware-workstation/vmware-workstation-macos}/usr/lib/vmware/|" "$srcdir/unlocker.py"
+  sed -i -e "s|/usr/lib/vmware/|${pkgdir/%vmware-workstation/vmware-workstation-macos}/usr/lib/vmware/|" "$srcdir/unlocker.py"
 }
 
 package_vmware-workstation() {
