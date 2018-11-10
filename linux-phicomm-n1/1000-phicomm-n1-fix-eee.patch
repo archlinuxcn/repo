@@ -1,0 +1,21 @@
+From f8edca8d8b8096190d800dc8ed6ecaee48269ed7 Mon Sep 17 00:00:00 2001
+From: Jerry <Jerry981028@gmail.com>
+Date: Sat, 3 Nov 2018 18:50:16 +0800
+Subject: [PATCH] fix s905d-p230 eee
+
+---
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dts | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dts
+index a9f9bb90a877..773457189ffb 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dts
+@@ -93,6 +93,7 @@
+ 		max-speed = <1000>;
+ 		interrupt-parent = <&gpio_intc>;
+ 		interrupts = <29 IRQ_TYPE_LEVEL_LOW>;
++		eee-broken-1000t;
+ 	};
+ };
+ 
