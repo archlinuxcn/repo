@@ -1,0 +1,16 @@
+maintainers:
+  - github: a-wing
+
+build_prefix: archlinuxcn-x86_64
+
+depends:
+  - ruby-i18n
+  - ruby-minitest
+  - ruby-tzinfo
+
+update_on:
+  - aur: ruby-activesupport
+  - gems: activesupport
+
+pre_build:  aur_pre_build
+post_build:  aur_post_build
