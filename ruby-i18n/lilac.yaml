@@ -1,0 +1,13 @@
+maintainers:
+  - github: a-wing
+
+build_prefix: archlinuxcn-x86_64
+
+depends:
+  - ruby-concurrent-ruby
+
+update_on:
+  - aur: ruby-i18n
+
+pre_build:  aur_pre_build
+post_build:  aur_post_build
