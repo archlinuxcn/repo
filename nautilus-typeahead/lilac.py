@@ -2,8 +2,8 @@
 
 from lilaclib import *
 
-build_prefix = 'extra-x86_64'
-post_build = aur_post_build
+#build_prefix = 'extra-x86_64'
+#post_build = aur_post_build
 
 # Remove all groups when fetching from AUR
 def pre_build():
@@ -13,5 +13,5 @@ def pre_build():
 			continue
 		print(line)
 
-if __name__ == '__main__':
-  single_main()
+#if __name__ == '__main__':
+#  single_main()
