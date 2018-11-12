@@ -3,7 +3,7 @@
 from lilaclib import *
 
 #build_prefix = 'extra-x86_64'
-#post_build = aur_post_build
+post_build = aur_post_build
 
 # Remove all groups when fetching from AUR
 def pre_build():
