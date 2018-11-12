@@ -11,7 +11,7 @@ license=('GPL')
 depends=('git')
 provides=("$_pkgname=$pkgver")
 conflicts=("$_pkgname")
-source=("$_pkgname"::"git+$url.git#branch=release/0.4.0")
+source=("$_pkgname"::"git+$url.git")
 md5sums=('SKIP')
 
 pkgver() {
