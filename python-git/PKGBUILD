@@ -86,9 +86,6 @@ build() {
 }
 
 check() {
-  # https://bugs.python.org/issue34022
-  # test_cmd_line_script, test_multiprocessing_main_handling, test_runpy
-
   # test_ttk_guionly hangs under certain circumstances
 
   cd cpython
@@ -99,8 +96,7 @@ check() {
 
   LD_LIBRARY_PATH="${srcdir}/cpython":${LD_LIBRARY_PATH} \
   LC_CTYPE=en_US.UTF-8 xvfb-run -s "-screen 0 1280x720x24 -ac +extension GLX" -a -n "$servernum" \
-    "${srcdir}/cpython/python" -m test.regrtest -v -uall -x test_ttk_guionly \
-    -x test_cmd_line_script -x test_multiprocessing_main_handling -x test_runpy
+    "${srcdir}/cpython/python" -m test.regrtest -v -uall -x test_ttk_guionly
 }
 
 package() {
