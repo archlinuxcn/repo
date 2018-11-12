@@ -1,7 +1,7 @@
 # Maintainer: aimileus < $(echo YWltaWxpdXNAcHJvdG9ubWFpbC5jb20K | base64 -d) 
 pkgname=vita3k-git
 _pkgname=vita3k
-pkgver=r687.ebee18e
+pkgver=r692.07d9dc0
 pkgrel=1
 pkgdesc="PlayStation Vita emulator"
 arch=('x86_64')
@@ -59,17 +59,15 @@ prepare() {
 
 build() {
 	cd "$_pkgname"
-	msg2 "Create build"
-	mkdir -p build && cd build
-	msg2 "Create cmake"
-	cmake -DCMAKE_INSTALL_PREFIX=/usr ..
+	./gen-linux.sh
+	cd build-linux
 	make
 }
 
 package() {
-	cd $_pkgname
-	install -Dm755 build/bin/Vita3K "$pkgdir/opt/vita3k/vita3k"
-	install -Dm644 build/bin/shaders/* -t "$pkgdir/opt/vita3k/shaders"
+	cd $_pkgname/build-linux
+	install -Dm755 bin/Vita3K "$pkgdir/opt/vita3k/vita3k"
+	install -Dm644 bin/shaders/* -t "$pkgdir/opt/vita3k/shaders"
 	echo -e "#!/bin/sh\nexec /opt/vita3k/vita3k \$@" >"vita3k.sh"
 	install -Dm755 vita3k.sh "$pkgdir/usr/bin/vita3k"
 	chmod 755 "$pkgdir/usr/bin/vita3k"
