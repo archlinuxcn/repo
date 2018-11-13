@@ -2,6 +2,9 @@
 # Maintainer: Felix Yan <felixonmars@archlinux.org>
 # Contributor: csslayer <wengxt AT gmail com>
 
+_SPELL_EN_DICT_VER='20121020' # defined in upstream src/modules/spell/dict/CMakeLists.txt
+_SPELL_EN_DICT_SHA256='c44a5d7847925eea9e4d2d04748d442cd28dd9299a0b572ef7d91eac4f5a6ceb'
+
 pkgname=fcitx5-git
 pkgver=r407.7ccf3f6
 pkgrel=1
@@ -13,12 +16,19 @@ depends=('cairo' 'enchant' 'iso-codes' 'libgl' 'libxkbcommon-x11' 'pango' 'syste
          'wayland-protocols' 'xcb-imdkit-git' 'xcb-util-wm' 'libxkbfile'
     	 'fmt' 'libxkbfile' 'gdk-pixbuf2')
 makedepends=('extra-cmake-modules' 'git')
-source=("git+$url.git")
-sha512sums=('SKIP')
+
+source=("git+$url.git"
+	"en_dict-${_SPELL_EN_DICT_VER}.tar.gz::http://download.fcitx-im.org/data/en_dict-${_SPELL_EN_DICT_VER}.tar.gz")
+sha256sums=('SKIP' "${_SPELL_EN_DICT_SHA256}")
 
 pkgver() {
   cd fcitx5
   printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd fcitx5/src/modules/spell/dict
+  cp $srcdir/en_dict-${_SPELL_EN_DICT_VER}.tar.gz .
 }
 
 build(){
