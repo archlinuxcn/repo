@@ -2,8 +2,8 @@
 
 pkgname=visual-studio-code-bin
 _pkgname=visual-studio-code
-pkgver=1.28.2
-pkgrel=2
+pkgver=1.29.0
+pkgrel=1
 pkgdesc="Visual Studio Code (vscode): Editor for building and debugging modern web and cloud applications (official binary version)"
 arch=('x86_64' 'i686')
 url="https://code.visualstudio.com/"
@@ -12,17 +12,16 @@ provides=('code')
 conflicts=('code')
 depends=(fontconfig libxtst gtk3 python cairo alsa-lib nss gcc-libs libnotify libxss gconf 'glibc>=2.28-4')
 optdepends=('gvfs: Needed for move to trash functionality'
-            'libdbusmenu-glib: Needed for KDE global menu'
-            'python-pylint: Linter support for Python')
+            'libdbusmenu-glib: Needed for KDE global menu')
 source_x86_64=(code_x64_${pkgver}.tar.gz::https://vscode-update.azurewebsites.net/${pkgver}/linux-x64/stable
                ${_pkgname}.desktop
                )
 source_i686=(code_ia32_${pkgver}.tar.gz::https://vscode-update.azurewebsites.net/${pkgver}/linux-ia32/stable
               ${_pkgname}.desktop
               )
-sha256sums_x86_64=('dead6eccaf545dec13f4c3500097a877f5bb970568c9902934c7b19af284a0fc'
+sha256sums_x86_64=('8ecbbf632d7e2cd95b0331f7bcbfd304878ce48be6eb95f9d9c8eb060189e2ec'
                    '488592034dd5f979083bbd80788d33e253bb3ac3e52d50faee80e715a924a212')
-sha256sums_i686=('f98b67d03bc1f58cb5a410d64e18f7bd2d71773605fa35b4de3ce08f01eaef8f'
+sha256sums_i686=('aa6972a1670dc5b5b8a0d9ed38d930c4feab783aed0ee13e153cee351ab60a8b'
                  '488592034dd5f979083bbd80788d33e253bb3ac3e52d50faee80e715a924a212')
 package() {
   _pkg=VSCode-linux-x64
