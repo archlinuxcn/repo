@@ -12,5 +12,7 @@ update_on:
   - aur: ruby-activesupport
   - gems: activesupport
 
-pre_build:  aur_pre_build
-post_build:  aur_post_build
+pre_build: vcs_update
+post_build:
+    - git_add_files('PKGBUILD')
+    - git_commit()
