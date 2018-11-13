@@ -2,7 +2,7 @@
 
 Deepin打包的TIM容器移植到Archlinux
 
-构建状态: ![https://github.com/countstarlight/deepin-wine-tim-arch](https://travis-ci.org/countstarlight/deepin-wine-tim-arch.svg?branch=master)
+构建状态: [![travis-ci](https://travis-ci.org/countstarlight/deepin-wine-tim-arch.svg?branch=master)](https://travis-ci.org/countstarlight/deepin-wine-tim-arch)
 
 感谢:
 

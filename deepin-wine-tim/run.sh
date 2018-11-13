@@ -5,14 +5,12 @@
 #   Author:     Li LongYu <lilongyu@linuxdeepin.com>
 #               Peng Hao <penghao@linuxdeepin.com>
 
-#               wszqkzqk <wszqkzqk@gmail.com>
-
 WINEPREFIX="$HOME/.deepinwine/Deepin-TIM"
 APPDIR="/opt/deepinwine/apps/Deepin-TIM"
 APPVER="2.1.5"
-TIMVER="2.1.5"
 APPTAR="files.7z"
 PACKAGENAME="com.qq.tim"
+WINE_CMD="wine"
 
 HelpApp()
 {
@@ -23,12 +21,18 @@ HelpApp()
 }
 CallApp()
 {
-	if [ ! -f $WINEPREFIX/reinstalled ]
+	if [ ! -f "$WINEPREFIX/reinstalled" ]
 	then
 		touch $WINEPREFIX/reinstalled
-		env WINEPREFIX=$WINEPREFIX wine $APPDIR/TIM$TIMVER.exe
+		env WINEPREFIX="$WINEPREFIX" $WINE_CMD $APPDIR/TIM$APPVER.exe
 	else
-		bash "$WINEPREFIX/drive_c/deepin/EnvInit.sh"
+        #disable Tencent MiniBrowser
+        _DeleteRegistry "HKCU\\Software\\Tencent\\MiniBrowser"
+
+        #Support use native file dialog
+        export ATTACH_FILE_DIALOG=1
+
+        env WINEPREFIX="$WINEPREFIX" WINEDEBUG=-msvcrt $WINE_CMD "c:\\Program Files\\Tencent\\TIM\\Bin\\TIM.exe" &
 	fi
 }
 ExtractApp()
@@ -37,7 +41,6 @@ ExtractApp()
 	7z x "$APPDIR/$APPTAR" -o"$1"
 	mv "$1/drive_c/users/@current_user@" "$1/drive_c/users/$USER"
 	sed -i "s#@current_user@#$USER#" $1/*.reg
-	sed -i "s/deepin-wine/wine/" $1/drive_c/deepin/EnvInit.sh
 }
 DeployApp()
 {
