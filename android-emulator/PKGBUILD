@@ -1,7 +1,7 @@
 # Maintainer: Zhang Hai <dreaming.in.code.zh@gmail.com>
 
 pkgname=android-emulator
-pkgver=27.3.10
+pkgver=28.0.16
 pkgrel=1
 pkgdesc='Google Android Emulator'
 arch=('x86_64')
@@ -10,10 +10,10 @@ license=('custom')
 depends=('libpulse' 'libx11' 'libxcb' 'libxdamage' 'libxext'
          'libxfixes' 'ncurses5-compat-libs' 'zlib')
 install="${pkgname}.install"
-source=('https://dl.google.com/android/repository/emulator-linux-4969155.zip'
+source=('https://dl.google.com/android/repository/emulator-linux-5112988.zip'
         "${pkgname}.sh"
         "${pkgname}.csh")
-sha1sums=('5b037b25bc6567fda3071457f0009c057670d9e8'
+sha1sums=('b5973367e6d40e5e455bbaf537758ccb9df34ed3'
           '4537a7ce30bedf87cedafc2020822219ad58310d'
           '2fb371b5774b67143f0610dfbec4963a4e2f11cc')
 
@@ -21,8 +21,6 @@ package() {
 
   install -Dm755 "${pkgname}.sh" "${pkgdir}/etc/profile.d/${pkgname}.sh"
   install -Dm755 "${pkgname}.csh" "${pkgdir}/etc/profile.d/${pkgname}.csh"
-
-  rm -rf emulator/lib64/libstdc++
 
   install -d "${pkgdir}/opt/android-sdk/"
   cp -a emulator "${pkgdir}/opt/android-sdk/"
