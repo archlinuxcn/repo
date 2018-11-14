@@ -13,6 +13,5 @@ update_on:
   - gems: activesupport
 
 pre_build: vcs_update
-post_build:
-    - git_add_files('PKGBUILD')
-    - git_commit()
+post_build: git_pkgbuild_commit
+
