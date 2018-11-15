@@ -1,0 +1,11 @@
+maintainers:
+    - github: farseerfc
+
+depends:
+    - zfs-utils-git
+
+update_on:
+    - aur: zfs-dkms-git
+
+pre_build: aur_pre_build
+post_build: aur_post_build

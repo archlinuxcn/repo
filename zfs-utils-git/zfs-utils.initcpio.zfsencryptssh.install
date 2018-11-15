@@ -1,0 +1,39 @@
+#!/bin/bash
+
+make_etc_passwd() {
+    echo 'root:x:0:0:root:/root:/bin/zfsdecrypt_shell' > "${BUILDROOT}"/etc/passwd
+    echo '/bin/zfsdecrypt_shell' > "${BUILDROOT}"/etc/shells
+}
+
+make_zfsdecrypt_shell() {
+    decrypt_shell='#!/bin/sh
+if [ -f "/.encryptionroot" ]; then
+    # source zfs hook functions
+    . /hooks/zfs
+    # decrypt bootfs
+    zfs_decrypt_fs "$(cat /.encryptionroot)"
+    # kill pending decryption attempt to allow the boot process to continue
+    killall zfs
+else
+    echo "ZFS is not ready yet. Please wait!"
+fi'
+    printf '%s' "$decrypt_shell" > "${BUILDROOT}"/bin/zfsdecrypt_shell
+    chmod a+x "${BUILDROOT}"/bin/zfsdecrypt_shell
+}
+
+build ()
+{
+    make_etc_passwd
+    make_zfsdecrypt_shell
+}
+
+help ()
+{
+    cat<<HELPEOF
+This hook is meant to be used in conjunction with mkinitcpio-dropbear, 
+mkinitcpio-netconf and/ormkinitcpio-ppp. This will provide a way to unlock 
+your encrypted ZFS root filesystem remotely.
+HELPEOF
+}
+
+# vim: set ts=4 sw=4 ft=sh et:

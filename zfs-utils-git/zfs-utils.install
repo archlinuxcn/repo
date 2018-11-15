@@ -1,0 +1,18 @@
+post_upgrade() {
+    
+    # If upgrading from 2017.12.08.r3208.4e9b15696-1 or older
+    # display zfs-import warning
+    if [[ $(vercmp $2 2017.12.08.r3208.4e9b15696-1) -le 0 ]]; then
+        echo '>>> WARNING: A new systemd unit file was added to archzfs!'
+        echo '>>>          You may need enable zfs-import.target'
+        echo '>>>          See https://github.com/archzfs/archzfs/issues/186'
+    fi
+    
+    # If upgrading from 2018.02.02.r3272.1b66810ba-1 or older
+    # display encryption format change warning
+    if [[ $(vercmp $2 2018.02.02.r3272.1b66810ba-1) -le 0 ]]; then
+        echo '>>> WARNING: The on-disk format for encrypted datasets has changed!'
+        echo '>>>          All encrypted datasets will mount read only and need to be migrated.'
+        echo '>>>          See https://github.com/archzfs/archzfs/issues/222'
+    fi
+}
