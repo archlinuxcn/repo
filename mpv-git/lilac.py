@@ -4,7 +4,6 @@ import re
 
 update_on = [{'aur':None}, {'github':'mpv-player/mpv'}]
 build_prefix = 'archlinuxcn-x86_64'
-depends = ['shaderc']
 
 def pre_build():
     aur_pre_build()
