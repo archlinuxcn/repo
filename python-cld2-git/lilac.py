@@ -1,8 +1,9 @@
+# Trimmed lilac.py
 #!/usr/bin/env python3
 
 from lilaclib import *
 
-build_prefix = 'extra-x86_64'
+#build_prefix = 'extra-x86_64'
 depends = ['cld2-git']
 
 def pre_build():
@@ -13,5 +14,5 @@ def post_build():
   git_commit()
   update_aur_repo()
 
-if __name__ == '__main__':
-  single_main()
+#if __name__ == '__main__':
+#  single_main()
