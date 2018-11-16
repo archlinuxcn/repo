@@ -1,3 +1,4 @@
+# Trimmed lilac.py
 #!/usr/bin/env python3
 #
 # This file is the most simple lilac.py file,
@@ -6,13 +7,13 @@
 
 from lilaclib import *
 
-build_prefix = 'extra-x86_64'
+#build_prefix = 'extra-x86_64'
 
 depends=['libpcl', 'freeradius-client']
 
-pre_build = aur_pre_build
-post_build = aur_post_build
+#pre_build = aur_pre_build
+#post_build = aur_post_build
 
-if __name__ == '__main__':
-    single_main(build_prefix)
+#if __name__ == '__main__':
+#    single_main(build_prefix)
 
