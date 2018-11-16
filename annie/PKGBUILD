@@ -1,10 +1,11 @@
 # Maintainer: metal A-wing <1 at 233 dot email>
-# Contributor:  Joaquin Garmendia <joaquingc123 at gmail dot com>
+# Contributor: Joaquin Garmendia <joaquingc123 at gmail dot com>
+# Contributor: Ariel AxionL <i [at] axionl [dot] me>
 
 pkgname=annie
-pkgver=0.7.20
+pkgver=0.8.4
 pkgrel=1
-arch=('x86_64' 'i686')
+arch=('x86_64')
 pkgdesc="A fast, simple and clean video downloader written in Go"
 url="https://github.com/iawia002/annie"
 license=("MIT")
@@ -12,22 +13,21 @@ makedepends=("go")
 depends=("ffmpeg")
 conflicts=("annie")
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/iawia002/annie/archive/${pkgver}.tar.gz")
-sha256sums=('73a3a87e87de560464432627f05298365ae6e60835ccd568cceb349f09e480d2')
+sha256sums=('b12794ebe0ab50bc4992bd72c41318519cdc602c9cb96a01568433df58601b42')
 
 prepare(){
-	mkdir -p "$srcdir/src/github.com/iawia002/annie"
-	cp -r "$srcdir/$pkgname-$pkgver/"{downloader,config,extractors,parser,request,static,utils,vendor} \
-		"$srcdir/src/github.com/iawia002/annie"
+	install -dm755 build/src/github.com/iawia002
+	cp ${pkgname}-${pkgver} build/src/github.com/iawia002/${pkgname} -r
 }
 
 
 build(){
-	cd "${pkgname}-${pkgver}"
-	GOPATH="$srcdir" go build
+	export GOPATH="${srcdir}/build"
+	go build github.com/iawia002/annie
 }
 
 package(){
-	install -Dm755 "${srcdir}/${pkgname}-${pkgver}/${pkgname}-${pkgver}" "${pkgdir}/usr/bin/${pkgname}"
+	install -Dm755 "${srcdir}/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
 	install -Dm644 "${srcdir}/${pkgname}-${pkgver}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
-
+# vim:set ts=4 sw=4 et:
