@@ -1,3 +1,4 @@
+# Trimmed lilac.py
 #!/usr/bin/env python3
 #
 # This file is the most simple lilac.py file,
@@ -6,9 +7,9 @@
 
 from lilaclib import *
 
-build_prefix = 'multilib-archlinuxcn'
-pre_build = aur_pre_build
-post_build = aur_post_build
+#build_prefix = 'multilib-archlinuxcn'
+#pre_build = aur_pre_build
+#post_build = aur_post_build
 
 def pre_build():
     aur_pre_build()
@@ -21,5 +22,5 @@ def pre_build():
     git_add_files('PKGBUILD')
     git_commit()
 
-if __name__ == '__main__':
-  single_main(build_prefix)
+#if __name__ == '__main__':
+#  single_main(build_prefix)
