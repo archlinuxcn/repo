@@ -1,3 +1,4 @@
+# Trimmed lilac.py
 #!/usr/bin/env python3
 #
 # This is a complex version of lilac.py for building
@@ -19,16 +20,16 @@
 
 from lilaclib import *
 
-build_prefix = 'extra-x86_64'
+#build_prefix = 'extra-x86_64'
 
 
-pre_build = aur_pre_build
+#pre_build = aur_pre_build
 
-post_build = aur_post_build
+#post_build = aur_post_build
 
 # do some cleanup here after building the package, regardless of result
 # def post_build_always(success):
 #   pass
 
-if __name__ == '__main__':
-    single_main(build_prefix)
+#if __name__ == '__main__':
+#    single_main(build_prefix)
