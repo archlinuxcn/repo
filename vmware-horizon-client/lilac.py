@@ -19,7 +19,7 @@ index 6da4e8fc4..cde7c812f 100644
  _build=9507999
  _cart='CART19FQ3'
 -pkgrel=3
-+pkgrel=4
++pkgrel=6
  pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop'
  arch=('x86_64')
  url='https://www.vmware.com/go/viewclients'
@@ -44,7 +44,7 @@ index 6da4e8fc4..cde7c812f 100644
  	cp -a debug/ "${pkgdir}/usr/share/doc/vmware-horizon-client/"
  
  	cd "${srcdir}/extract/vmware-horizon-pcoip/"
-+	rm -rf lib/vmware/xkeymap
++	rm -rf pcoip/lib/vmware/xkeymap
  
  	mkdir -p "${pkgdir}/usr/"
  	cp -a pcoip/lib/ "${pkgdir}/usr/"
