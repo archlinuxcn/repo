@@ -14,15 +14,6 @@ diff --git a/vmware-horizon-client/PKGBUILD b/vmware-horizon-client/PKGBUILD
 index 6da4e8fc4..cde7c812f 100644
 --- a/vmware-horizon-client/PKGBUILD
 +++ b/vmware-horizon-client/PKGBUILD
-@@ -16,7 +16,7 @@ pkgname=('vmware-horizon-client'
- pkgver=4.9.0
- _build=9507999
- _cart='CART19FQ3'
--pkgrel=3
-+pkgrel=6
- pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop'
- arch=('x86_64')
- url='https://www.vmware.com/go/viewclients'
 @@ -122,7 +122,7 @@ package_vmware-horizon-client() {
  	conflicts=('vmware-view-open-client' 'vmware-view-open-client-beta' 'vmware-view-client'
  		'vmware-horizon-pcoip')
