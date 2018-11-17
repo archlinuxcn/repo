@@ -1,6 +1,30 @@
+diff -ura a/browser/lib/newNote.js b/browser/lib/newNote.js
+--- a/browser/lib/newNote.js	2018-11-15 11:24:56.000000000 +0100
++++ b/browser/lib/newNote.js	2018-11-17 11:37:35.152421985 +0100
+@@ -1,11 +1,8 @@
+ import { hashHistory } from 'react-router'
+ import dataApi from 'browser/main/lib/dataApi'
+ import ee from 'browser/main/lib/eventEmitter'
+-import AwsMobileAnalyticsConfig from 'browser/main/lib/AwsMobileAnalyticsConfig'
+ 
+ export function createMarkdownNote (storage, folder, dispatch, location) {
+-  AwsMobileAnalyticsConfig.recordDynamicCustomEvent('ADD_MARKDOWN')
+-  AwsMobileAnalyticsConfig.recordDynamicCustomEvent('ADD_ALLNOTE')
+   return dataApi
+     .createNote(storage, {
+       type: 'MARKDOWN_NOTE',
+@@ -30,8 +27,6 @@
+ }
+ 
+ export function createSnippetNote (storage, folder, dispatch, location, config) {
+-  AwsMobileAnalyticsConfig.recordDynamicCustomEvent('ADD_SNIPPET')
+-  AwsMobileAnalyticsConfig.recordDynamicCustomEvent('ADD_ALLNOTE')
+   return dataApi
+     .createNote(storage, {
+       type: 'SNIPPET_NOTE',
 diff -ura a/browser/main/Detail/MarkdownNoteDetail.js b/browser/main/Detail/MarkdownNoteDetail.js
---- a/browser/main/Detail/MarkdownNoteDetail.js	2018-07-19 08:21:35.000000000 +0200
-+++ b/browser/main/Detail/MarkdownNoteDetail.js	2018-07-19 12:13:11.146091379 +0200
+--- a/browser/main/Detail/MarkdownNoteDetail.js	2018-11-15 11:24:56.000000000 +0100
++++ b/browser/main/Detail/MarkdownNoteDetail.js	2018-11-17 11:38:07.298768413 +0100
 @@ -15,7 +15,6 @@
  import StatusBar from '../StatusBar'
  import _ from 'lodash'
@@ -9,7 +33,7 @@ diff -ura a/browser/main/Detail/MarkdownNoteDetail.js b/browser/main/Detail/Mark
  import ConfigManager from 'browser/main/lib/ConfigManager'
  import TrashButton from './TrashButton'
  import FullscreenButton from './FullscreenButton'
-@@ -117,7 +116,6 @@
+@@ -124,7 +123,6 @@
            type: 'UPDATE_NOTE',
            note: note
          })
@@ -17,7 +41,7 @@ diff -ura a/browser/main/Detail/MarkdownNoteDetail.js b/browser/main/Detail/Mark
        })
    }
  
-@@ -156,7 +154,6 @@
+@@ -163,7 +161,6 @@
  
    handleStarButtonClick (e) {
      const { note } = this.state
@@ -26,8 +50,8 @@ diff -ura a/browser/main/Detail/MarkdownNoteDetail.js b/browser/main/Detail/Mark
      note.isStarred = !note.isStarred
  
 diff -ura a/browser/main/Detail/SnippetNoteDetail.js b/browser/main/Detail/SnippetNoteDetail.js
---- a/browser/main/Detail/SnippetNoteDetail.js	2018-07-19 08:21:35.000000000 +0200
-+++ b/browser/main/Detail/SnippetNoteDetail.js	2018-07-19 12:14:00.360531159 +0200
+--- a/browser/main/Detail/SnippetNoteDetail.js	2018-11-15 11:24:56.000000000 +0100
++++ b/browser/main/Detail/SnippetNoteDetail.js	2018-11-17 11:38:51.445122461 +0100
 @@ -19,7 +19,6 @@
  import _ from 'lodash'
  import {findNoteTitle} from 'browser/lib/findNoteTitle'
@@ -36,7 +60,7 @@ diff -ura a/browser/main/Detail/SnippetNoteDetail.js b/browser/main/Detail/Snipp
  import TrashButton from './TrashButton'
  import RestoreButton from './RestoreButton'
  import PermanentDeleteButton from './PermanentDeleteButton'
-@@ -127,7 +126,6 @@
+@@ -140,7 +139,6 @@
            type: 'UPDATE_NOTE',
            note: note
          })
@@ -44,7 +68,7 @@ diff -ura a/browser/main/Detail/SnippetNoteDetail.js b/browser/main/Detail/Snipp
        })
    }
  
-@@ -166,7 +164,6 @@
+@@ -179,7 +177,6 @@
  
    handleStarButtonClick (e) {
      const { note } = this.state
@@ -52,7 +76,7 @@ diff -ura a/browser/main/Detail/SnippetNoteDetail.js b/browser/main/Detail/Snipp
  
      note.isStarred = !note.isStarred
  
-@@ -364,9 +361,6 @@
+@@ -375,9 +372,6 @@
      const mode = syntax != null ? syntax.name : null
      if (mode != null) {
        snippets[index].mode = mode
@@ -62,7 +86,7 @@ diff -ura a/browser/main/Detail/SnippetNoteDetail.js b/browser/main/Detail/Snipp
      }
      this.setState(state => ({note: Object.assign(state.note, {snippets: snippets})}))
  
-@@ -388,10 +382,6 @@
+@@ -399,10 +393,6 @@
        }), () => {
          this.save()
        })
@@ -74,27 +98,27 @@ diff -ura a/browser/main/Detail/SnippetNoteDetail.js b/browser/main/Detail/Snipp
    }
  
 diff -ura a/browser/main/Detail/TagSelect.js b/browser/main/Detail/TagSelect.js
---- a/browser/main/Detail/TagSelect.js	2018-07-19 08:21:35.000000000 +0200
-+++ b/browser/main/Detail/TagSelect.js	2018-07-19 12:14:19.694305305 +0200
+--- a/browser/main/Detail/TagSelect.js	2018-11-15 11:24:56.000000000 +0100
++++ b/browser/main/Detail/TagSelect.js	2018-11-17 11:39:09.005030042 +0100
 @@ -3,7 +3,6 @@
  import CSSModules from 'browser/lib/CSSModules'
  import styles from './TagSelect.styl'
  import _ from 'lodash'
 -import AwsMobileAnalyticsConfig from 'browser/main/lib/AwsMobileAnalyticsConfig'
  import i18n from 'browser/lib/i18n'
- 
- class TagSelect extends React.Component {
-@@ -56,7 +55,6 @@
+ import ee from 'browser/main/lib/eventEmitter'
+ import Autosuggest from 'react-autosuggest'
+@@ -27,7 +26,6 @@
    }
  
-   submitTag () {
+   addNewTag (newTag) {
 -    AwsMobileAnalyticsConfig.recordDynamicCustomEvent('ADD_TAG')
-     let { value } = this.props
-     let newTag = this.refs.newTag.value.trim().replace(/ +/g, '_')
-     newTag = newTag.charAt(0) === '#' ? newTag.substring(1) : newTag
+ 
+     newTag = newTag.trim().replace(/ +/g, '_')
+     if (newTag.charAt(0) === '#') {
 diff -ura a/browser/main/Main.js b/browser/main/Main.js
---- a/browser/main/Main.js	2018-07-19 08:21:35.000000000 +0200
-+++ b/browser/main/Main.js	2018-07-19 12:14:36.051347482 +0200
+--- a/browser/main/Main.js	2018-11-15 11:24:56.000000000 +0100
++++ b/browser/main/Main.js	2018-11-17 11:39:27.158283298 +0100
 @@ -10,7 +10,6 @@
  import dataApi from 'browser/main/lib/dataApi'
  import _ from 'lodash'
@@ -103,7 +127,7 @@ diff -ura a/browser/main/Main.js b/browser/main/Main.js
  import eventEmitter from 'browser/main/lib/eventEmitter'
  import { hashHistory } from 'react-router'
  import store from 'browser/main/store'
-@@ -26,10 +25,6 @@
+@@ -25,10 +24,6 @@
    constructor (props) {
      super(props)
  
@@ -115,8 +139,8 @@ diff -ura a/browser/main/Main.js b/browser/main/Main.js
  
      this.state = {
 diff -ura a/browser/main/modals/CreateFolderModal.js b/browser/main/modals/CreateFolderModal.js
---- a/browser/main/modals/CreateFolderModal.js	2018-07-19 08:21:35.000000000 +0200
-+++ b/browser/main/modals/CreateFolderModal.js	2018-07-19 12:14:51.851712364 +0200
+--- a/browser/main/modals/CreateFolderModal.js	2018-11-15 11:24:56.000000000 +0100
++++ b/browser/main/modals/CreateFolderModal.js	2018-11-17 11:39:41.414896738 +0100
 @@ -6,7 +6,6 @@
  import store from 'browser/main/store'
  import consts from 'browser/lib/consts'
@@ -133,38 +157,9 @@ diff -ura a/browser/main/modals/CreateFolderModal.js b/browser/main/modals/Creat
      if (this.state.name.trim().length > 0) {
        const { storage } = this.props
        const input = {
-diff -ura a/browser/main/modals/NewNoteModal.js b/browser/main/modals/NewNoteModal.js
---- a/browser/main/modals/NewNoteModal.js	2018-07-19 08:21:35.000000000 +0200
-+++ b/browser/main/modals/NewNoteModal.js	2018-07-19 12:15:11.568837239 +0200
-@@ -5,7 +5,6 @@
- import { hashHistory } from 'react-router'
- import ee from 'browser/main/lib/eventEmitter'
- import ModalEscButton from 'browser/components/ModalEscButton'
--import AwsMobileAnalyticsConfig from 'browser/main/lib/AwsMobileAnalyticsConfig'
- import i18n from 'browser/lib/i18n'
- 
- class NewNoteModal extends React.Component {
-@@ -24,8 +23,6 @@
-   }
- 
-   handleMarkdownNoteButtonClick (e) {
--    AwsMobileAnalyticsConfig.recordDynamicCustomEvent('ADD_MARKDOWN')
--    AwsMobileAnalyticsConfig.recordDynamicCustomEvent('ADD_ALLNOTE')
-     const { storage, folder, dispatch, location } = this.props
-     dataApi
-       .createNote(storage, {
-@@ -59,8 +56,6 @@
-   }
- 
-   handleSnippetNoteButtonClick (e) {
--    AwsMobileAnalyticsConfig.recordDynamicCustomEvent('ADD_SNIPPET')
--    AwsMobileAnalyticsConfig.recordDynamicCustomEvent('ADD_ALLNOTE')
-     const { storage, folder, dispatch, location } = this.props
- 
-     dataApi
 diff -ura a/browser/main/modals/PreferencesModal/InfoTab.js b/browser/main/modals/PreferencesModal/InfoTab.js
---- a/browser/main/modals/PreferencesModal/InfoTab.js	2018-07-19 08:21:35.000000000 +0200
-+++ b/browser/main/modals/PreferencesModal/InfoTab.js	2018-07-19 12:15:47.909689742 +0200
+--- a/browser/main/modals/PreferencesModal/InfoTab.js	2018-11-15 11:24:56.000000000 +0100
++++ b/browser/main/modals/PreferencesModal/InfoTab.js	2018-11-17 11:40:38.001418930 +0100
 @@ -3,7 +3,6 @@
  import styles from './InfoTab.styl'
  import ConfigManager from 'browser/main/lib/ConfigManager'
@@ -246,8 +241,8 @@ diff -ura a/browser/main/modals/PreferencesModal/InfoTab.js b/browser/main/modal
      )
    }
 diff -ura a/browser/main/NoteList/index.js b/browser/main/NoteList/index.js
---- a/browser/main/NoteList/index.js	2018-07-19 08:21:35.000000000 +0200
-+++ b/browser/main/NoteList/index.js	2018-07-19 12:16:10.730230097 +0200
+--- a/browser/main/NoteList/index.js	2018-11-15 11:24:56.000000000 +0100
++++ b/browser/main/NoteList/index.js	2018-11-17 11:41:44.764678765 +0100
 @@ -17,7 +17,6 @@
  import path from 'path'
  import { hashHistory } from 'react-router'
@@ -256,15 +251,15 @@ diff -ura a/browser/main/NoteList/index.js b/browser/main/NoteList/index.js
  import Markdown from '../../lib/markdown'
  import i18n from 'browser/lib/i18n'
  import { confirmDeleteNote } from 'browser/lib/confirmDeleteNote'
-@@ -633,7 +632,6 @@
+@@ -681,7 +680,6 @@
              note: newNote
            })
          })
 -        AwsMobileAnalyticsConfig.recordDynamicCustomEvent('EDIT_NOTE')
-         console.log('Notes went to trash')
        })
        .catch((err) => {
-@@ -652,8 +650,6 @@
+         console.error('Notes could not go to trash: ' + err)
+@@ -699,8 +697,6 @@
      const firstNote = selectedNotes[0]
      const eventName = firstNote.type === 'MARKDOWN_NOTE' ? 'ADD_MARKDOWN' : 'ADD_SNIPPET'
  
@@ -274,14 +269,14 @@ diff -ura a/browser/main/NoteList/index.js b/browser/main/NoteList/index.js
        .createNote(storage.key, {
          type: firstNote.type,
 diff -ura a/package.json b/package.json
---- a/package.json	2018-07-19 08:21:35.000000000 +0200
-+++ b/package.json	2018-07-19 12:16:38.697563991 +0200
-@@ -52,8 +52,6 @@
+--- a/package.json	2018-11-15 11:24:56.000000000 +0100
++++ b/package.json	2018-11-17 11:41:58.158006105 +0100
+@@ -51,8 +51,6 @@
      "@rokt33r/markdown-it-math": "^4.0.1",
      "@rokt33r/season": "^5.3.0",
      "@susisu/mte-kernel": "^2.0.0",
 -    "aws-sdk": "^2.48.0",
 -    "aws-sdk-mobile-analytics": "^0.9.2",
      "chart.js": "^2.7.2",
-     "codemirror": "^5.39.0",
+     "codemirror": "^5.40.2",
      "codemirror-mode-elixir": "^1.1.1",
