@@ -1,0 +1,16 @@
+maintainers:
+  - github: a-wing
+
+build_prefix: archlinuxcn-x86_64
+
+depends:
+  - ruby-activesupport
+  - ruby-activemodel
+  - ruby-arel
+
+update_on:
+  - gems: activerecord
+  - aur: ruby-activerecord
+
+post_build: git_pkgbuild_commit
+
