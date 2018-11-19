@@ -137,30 +137,36 @@ def pkgpath(pkgname):
         return pkgname
 
 
-def lilac_py_has_update_on(pkgname):
+def lilac_py_has_update_on(pkgname, testcase):
     if not git_isfile(pkgpath(pkgname), 'lilac.py'):
         return False
     lilac_path = os.path.join(pkgpath(pkgname), 'lilac.py')
     with git_open(lilac_path) as lilac_py:
-        lilac_ast = ast.parse(lilac_py.read())
-        # For simplicity we only check top level assignments
-        # to find `update_on`, which shoud be enough
-        for block in lilac_ast.body:
-            if isinstance(block, ast.Assign):
-                for target in block.targets:
-                    if target.id == 'update_on':
-                        return True
+        try:
+            lilac_ast = ast.parse(lilac_py.read())
+            # For simplicity we only check top level assignments
+            # to find `update_on`, which shoud be enough
+            for block in lilac_ast.body:
+                if isinstance(block, ast.Assign):
+                    for target in block.targets:
+                        if target.id == 'update_on':
+                            return True
+        except:
+            testcase.fail(msg="{} can not parse".format(lilac_path))
     return False
 
 
-def lilac_yaml_has_update_on(pkgname):
+def lilac_yaml_has_update_on(pkgname, testcase):
     if not git_isfile(pkgpath(pkgname), 'lilac.yaml'):
         return False
     lilac_path = os.path.join(pkgpath(pkgname), 'lilac.yaml')
     with git_open(lilac_path) as lilac_yaml:
-        lilac_ast = yaml.load(lilac_yaml.read())
-        if 'update_on' in lilac_ast:
-            return True
+        try:
+            lilac_ast = yaml.load(lilac_yaml.read())
+            if 'update_on' in lilac_ast:
+                return True
+        except:
+            testcase.fail(msg="{} can not parse".format(lilac_path))
     return False
 
 
@@ -336,12 +342,11 @@ class ConfigSectionTest(TestCase):
             if not has_lilac_py:
                 continue
 
-            if any([lilac_py_has_update_on(package),
-                    lilac_yaml_has_update_on(package)]):
-                continue
-
             with self.subTest(package=package):
-                self.assertIn(package, self.config,
+                if any([lilac_py_has_update_on(package, self),
+                        lilac_yaml_has_update_on(package, self)]):
+                    continue
+       	        self.assertIn(package, self.config,
                               msg=('package "\033[1;31m{0}\033[m" is not in '
                                    '"nvchecker.ini" and does not have '
                                    '"update_on" in '
