@@ -8,11 +8,11 @@
 # http://getemoji.com/
 
 _srcname=fontconfig
-_ubver=5ubuntu3
+_ubuver=5ubuntu3
 
 pkgname=fontconfig-ubuntu
 pkgver=2.13.0
-pkgrel=1
+pkgrel=2
 pkgdesc='A library for configuring and customizing font access (with Ubuntu patches)'
 arch=('i686' 'x86_64')
 url='https://launchpad.net/ubuntu/+source/fontconfig'
@@ -24,7 +24,7 @@ provides=("fontconfig=${pkgver}")
 conflicts=('fontconfig')
 install="${pkgname}.install"
 source=("https://launchpad.net/ubuntu/+archive/primary/+files/fontconfig_${pkgver}.orig.tar.bz2"
-        "https://launchpad.net/ubuntu/+archive/primary/+files/fontconfig_${pkgver}-${_ubver}.debian.tar.xz"
+        "https://launchpad.net/ubuntu/+archive/primary/+files/fontconfig_${pkgver}-${_ubuver}.debian.tar.xz"
         '53-monospace-lcd-filter.patch'
         'fontconfig-ubuntu.hook')
 sha256sums=('91dde8492155b7f34bb95079e79be92f1df353fcc682c19be90762fd3e12eeb9'
@@ -38,11 +38,14 @@ prepare() {
     local _patch
     
     # apply Debian patches
-    for _patch in $(cat "${srcdir}/debian/patches/series" | grep '\.patch$\|\.diff$')
+    while read _patch
     do
-        printf '%s\n' "  -> Applying Debian patch: ${_patch}"
-        patch -Np1 -i "${srcdir}/debian/patches/${_patch}"
-    done
+        if printf '%s' "$_patch" | grep -q '\.patch$\|\.diff$'
+        then
+            printf '%s\n' "  -> Applying Debian patch: ${_patch}"
+            patch -Np1 -i "${srcdir}/debian/patches/${_patch}"
+        fi
+    done < "${srcdir}/debian/patches/series"
     
     ## patch
     #patch -p1 -i conf.d/53-monospace-lcd-filter.conf ../53-monospace-lcd-filter.patch
@@ -70,11 +73,11 @@ package() {
     make DESTDIR="$pkgdir" install
     
     # pacman hook
-    install -D -m644 "${srcdir}/${pkgname}.hook" "${pkgdir}/usr/share/libalpm/hooks/fontconfig.hook"
+    install -D -m644 "${srcdir}/${pkgname}.hook" -t "${pkgdir}/usr/share/libalpm/hooks"
     
     # license
     install -D -m644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
     
     # Debian changelog
-    install -D -m644 "${srcdir}/debian/changelog" "${pkgdir}/usr/share/doc/fontconfig/changelog"
+    install -D -m644 "${srcdir}/debian/changelog" -t "${pkgdir}/usr/share/doc/${pkgname}"
 }
