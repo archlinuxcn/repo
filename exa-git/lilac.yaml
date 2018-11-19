@@ -1,0 +1,13 @@
+maintainers:
+- github: lilydjwg
+
+pre_build: vcs_update
+post_build: git_pkgbuild_commit
+
+depends:
+  - rust-nightly: rust-std-nightly-x86_64-unknown-linux-gnu
+  - rust-nightly: rust-nightly
+  - rust-nightly: cargo-nightly
+
+update_on:
+- github: ogham/exa
