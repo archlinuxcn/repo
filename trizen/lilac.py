@@ -5,5 +5,3 @@
 #
 
 from lilaclib import *
-
- update_on = [{'aur':'trizen'}] 
