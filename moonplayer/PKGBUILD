@@ -3,7 +3,7 @@
 # contributer: rob.til.freedman@googlemail.com
 
 pkgname=moonplayer
-pkgver=2.1.r299
+pkgver=2.2.r316
 pkgrel=1
 pkgdesc="A qt font-end for mplayer with the abilities of watching and downloading videos from chinese network"
 arch=('i686' 'x86_64')
@@ -26,7 +26,7 @@ build() {
 	find . -name '*.py' -exec sed -i \
 	's|#![ ]*/usr/bin/python$|&2|;s|#![ ]*/usr/bin/env python$|&2|' {} +
 
-	qmake-qt5 moonplayer.pro
+	qmake-qt5 PREFIX=/usr moonplayer.pro
 
 	make
 }

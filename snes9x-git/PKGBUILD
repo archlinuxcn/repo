@@ -2,7 +2,7 @@
 
 pkgbase=snes9x-git
 pkgname=('snes9x-git' 'snes9x-gtk-git')
-pkgver=1.57.r1.g61cced4
+pkgver=1.57.r27.gd878b46
 pkgrel=1
 pkgdesc="Port of the Snes9x emulator (git version). Includes Gtk version."
 arch=('i686' 'x86_64')
@@ -39,7 +39,7 @@ build() {
 package_snes9x-git() {
 
   pkgdesc="A portable Emulator for the Super Nintendo Entertainment System"
-  depends=('libpng' 'libxext' 'libsm' 'libxv' 'minizip')
+  depends=('libpng' 'libxinerama' 'libxext' 'libsm' 'libxv' 'minizip')
   conflicts=('snes9x')
   provides=('snesx')
 
@@ -48,7 +48,7 @@ package_snes9x-git() {
   install -d "${pkgdir}/usr/share/doc/${pkgname}"
   install -D -m644 ../docs/{snes9x.conf.default,{control-inputs,controls,snapshots}.txt} \
     "${pkgdir}/usr/share/doc/${pkgname}/"
-  install -D -m644 ../docs/snes9x-license.txt \
+  install -D -m644 ../LICENSE \
     "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 
 }
@@ -66,7 +66,7 @@ package_snes9x-gtk-git() {
   install -d "${pkgdir}/usr/share/doc/${pkgname}"
   install -D -m644 ../docs/{snes9x.conf.default,{control-inputs,controls,snapshots}.txt} \
     "${pkgdir}/usr/share/doc/${pkgname}/"
-  install -D -m644 ../docs/snes9x-license.txt \
+  install -D -m644 ../LICENSE \
     "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 
 }
