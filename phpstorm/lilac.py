@@ -8,7 +8,7 @@
 from lilaclib import *
 
 #build_prefix = 'extra-x86_64'
-update_on = [{'aur':'phpstorm'}]
+#update_on = [{'aur':'phpstorm'}]
 
 #pre_build = aur_pre_build
 #post_build = aur_post_build
