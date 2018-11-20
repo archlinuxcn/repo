@@ -1,7 +1,7 @@
-From 3288e1988bec9ba6a6d2b33fa90ea0024c4d7f7f Mon Sep 17 00:00:00 2001
-From: axionl <axionl@aosc.io>
-Date: Wed, 29 Aug 2018 21:25:57 +0800
-Subject: [PATCH 2/2] Replace_pyqt4_to_pyqt5_as_depends
+From 9a6793e6dab6811c220222f15c68099d6fc902d2 Mon Sep 17 00:00:00 2001
+From: axionl <i@axionl.me>
+Date: Wed, 21 Nov 2018 01:34:22 +0900
+Subject: [PATCH] [Fixed] Replace_pyqt4_to_pyqt5_as_depends
 
 ---
  NEMbox/osdlyrics.py | 16 ++++++++--------
@@ -56,5 +56,5 @@ index bd96e09..5e66843 100644
          QtDBus.QDBusConnection.sessionBus().registerService('org.musicbox.Bus')
          QtDBus.QDBusConnection.sessionBus().registerObject('/', lyrics)
 -- 
-2.18.0
+2.19.1
 

@@ -3,7 +3,7 @@
 
 pkgname=netease-musicbox-git
 _gitname=musicbox
-pkgver=r578.273bc1e
+pkgver=r579.8ce4a7e
 pkgrel=1
 pkgdesc="A sexy command line interface musicbox for NetEase based on Python"
 arch=(any)
@@ -22,13 +22,11 @@ license=('MIT')
 
 source=("${_gitname}::git+https://github.com/darknessomi/musicbox"
         "LICENSE::https://raw.githubusercontent.com/darknessomi/musicbox/master/LICENSE.txt"
-        "0001-Remove_python_requests_cache_as_depends.patch"
-        "0002-Replace_pyqt4_to_pyqt5_as_depends.patch")
+        "0001-Fixed-Replace_pyqt4_to_pyqt5_as_depends.patch")
 
 sha256sums=('SKIP'
             '50efc98142cfffe413d73c87c91f2687dfb774217af923f03dfdc8426c9d9552'
-            '0faefb24ad158814cda0a5fd2262c2308182d22791587382d68da09922338052'
-            'f9c95f8441f43fc13c2cadb1f62b6e33658474f7671d11b3f0a66fe322e0a9e9')
+            '55b4dd116b8b7a1b47854f52ce1e9f8422fb72702beb4c259bda388e23060484')
 
 pkgver() {
   cd "${srcdir}/${_gitname}"
@@ -37,8 +35,7 @@ pkgver() {
 
 prepare() {
   cd "${srcdir}/${_gitname}"
-  git apply "${srcdir}/0001-Remove_python_requests_cache_as_depends.patch"
-  git apply "${srcdir}/0002-Replace_pyqt4_to_pyqt5_as_depends.patch"
+  patch -Np1 -i "${srcdir}/0001-Fixed-Replace_pyqt4_to_pyqt5_as_depends.patch"
 }
 
 package() {
