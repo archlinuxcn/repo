@@ -1,52 +1,31 @@
-# Maintainer: twa022 <twa022 at gmail dot com>
+# Maintainer: Tom Hale <tom[noodle]hale[point]ee>
+# Contributor: twa022 <twa022 at gmail dot com>
 
-_pkgname=nixnote
 pkgname=nixnote2
-pkgver=2.0.2
+pkgver=2.1.0
 pkgrel=1
-pkgdesc="Evernote clone (formerly Nevernote)"
-url="http://www.nixnote.org"
-arch=('x86_64' 'i686')
-license=('GPL2')
-conflicts=("${_pkgname}-beta" "${_pkgname}")
-provides=("${_pkgname}=${pkgver}")
-replaces=('nevernote')
-depends=('poppler-qt5' 'qt5-webkit' 'tidy' 'boost-libs')
-makedepends=('boost' 'opencv' 'hunspell')
-optdepends=('opencv:   Webcam plugin'
-            'hunspell: Spell check plugin')
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/baumgarr/nixnote2/archive/v${pkgver}.tar.gz")
-sha256sums=('b214aa8a76277fb3c0762a654f227db12216f32f69b9de688f0d8cecc4aaddad')
+pkgdesc='Evernote clone (formerly Nevernote) - git checkout'
+url="https://github.com/robert7/$pkgname"
+arch=(x86_64)
+license=(GPL3)
+depends=(hunspell java-runtime hicolor-icon-theme poppler-qt5 tidy qt5-webkit)
+makedepends=(boost gcc git qt5-tools)
+conflicts=(nixnote2-git)
+replaces=(nevernote nixnote nixnote-beta)
+source=("${url}/archive/v${pkgver}.tar.gz")
+sha256sums=('fc946e527e2205ea7cb75d25ff3fc1da6e5676898dc60126d2cc9db54c35b83f')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
-
-  qmake PREFIX=/usr ./NixNote2.pro
-  make
-  
-  # Build the plugins
-  cd plugins/hunspell
-  qmake Hunspell.pro
-  make
-  cd -
-  
-  cd plugins/webcam
-  qmake WebCam.pro
-  make
+  qmake PREFIX=/usr
+  make -j $(( 1 + ($(nproc)-1) / 2 ))  # Use ceil(#processors / 2) jobs
 }
 
 package() {
   cd "${srcdir}/${pkgname}-${pkgver}"
-  make INSTALL_ROOT="${pkgdir}" install
-  
-  mkdir -p "${pkgdir}"/usr/lib/nixnote2/plugins
-  install -m755 plugins/*so "${pkgdir}"/usr/lib/nixnote2/plugins/
-  # Binaries should really be in lib, not share
-  ln -s '../..'/lib/nixnote2/plugins "${pkgdir}"/usr/share/nixnote2/plugins
-  
-  install -m644 theme.ini "${pkgdir}"/usr/share/nixnote2/theme.ini
-  
-  sed -i 's:nevernote:nixnote:g' shortcuts_howto.txt
-  install -Dm644 shortcuts_howto.txt "${pkgdir}"/usr/doc/nixnote2/shortcuts_howto.txt
-  install -Dm644 shortcuts.txt "${pkgdir}"/usr/doc/nixnote2/shortcuts_sample.txt
+  make INSTALL_ROOT="$pkgdir" install
+  install -Dm644 -t "${pkgdir}/usr/share/doc/${pkgname}/" CONTRIBUTING.md debian/changelog
+  # shortcuts.txt is referenced in doc:
+  # https://github.com/robert7/nixnote2/wiki/HowTo---Customize-keyboard-shortcuts
+  install -Dm644 -t "${pkgdir}/usr/share/${pkgname}/" shortcuts.txt
 }
