@@ -1,0 +1,12 @@
+maintainers:
+  - github: a-wing
+
+build_prefix: extra-x86_64
+
+update_on:
+  - github: joewalnes/websocketd
+    use_latest_release: true
+  - aur: websocketd
+
+post_build: git_pkgbuild_commit
+
