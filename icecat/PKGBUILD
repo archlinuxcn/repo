@@ -6,36 +6,39 @@
 # Contributor: Muhammad 'MJ' Jassim <UnbreakableMJ@gmail.com> 
 
 pkgname=icecat
-pkgver=52.6.0
+pkgver=60.3.0
 _pkgver=${pkgver}-gnu1
 _pkgverbase=${pkgver%%.*}
-pkgrel=1.1
+pkgrel=1
 pkgdesc="GNU version of the Firefox browser."
 arch=(i686 x86_64)
 url="http://www.gnu.org/software/gnuzilla/"
 license=('GPL' 'MPL' 'LGPL')
 depends=('gtk3' 'gtk2' 'mozilla-common' 'libxt' 'startup-notification' 'mime-types' 'dbus-glib' 'alsa-lib' 'ffmpeg'
          'libvpx' 'icu' 'libevent' 'nss' 'hunspell' 'sqlite' 'ttf-font')
-makedepends=('unzip' 'zip' 'diffutils' 'python2' 'yasm' 'mesa' 'imake' 'gconf' 'autoconf2.13'
-             'libpulse' 'gst-plugins-base-libs' 'inetutils' 'rust')
+makedepends=('unzip' 'zip' 'diffutils' 'python2' 'yasm' 'mesa' 'imake' 'autoconf2.13'
+             'libpulse' 'gst-plugins-base-libs' 'inetutils' 'rust' 'llvm' 'clang')
 optdepends=('networkmanager: Location detection via available WiFi networks'
             'libnotify: Notification integration'
+            'pulseaudio: Audio support'
             'speech-dispatcher: Text-to-Speech')
-source=(http://ftpmirror.gnu.org/gnuzilla/${pkgver}/${pkgname}-${_pkgver}.tar.bz2{,.sig}
-#source=(https://ftp.gnu.org/gnu/gnuzilla/${pkgver}/${pkgname}-${_pkgver}.tar.bz2{,.sig}      ## Main upstream download site
+
+## Set this variable to 1 if you want to build with clang compiler ##
+_CLANG=1
+
+[ "$_CLANG" ] && [ "$_CLANG" -eq "1" ] && makedepends+=(clang)
+
+#source=(http://ftpmirror.gnu.org/gnuzilla/${pkgver}/${pkgname}-${_pkgver}.tar.bz2{,.sig}
+source=(https://ftp.gnu.org/gnu/gnuzilla/${pkgver}/${pkgname}-${_pkgver}.tar.bz2{,.sig}      ## Main upstream download site
 #source=(https://mirrors.kernel.org/gnu/gnuzilla/${pkgver}/${pkgname}-${_pkgver}.tar.bz2      ## Good mirror
 #source=(http://jenkins.trisquel.info/icecat/${pkgname}-${_pkgver}.tar.bz2      ## Official developer (Ruben Rodriguez) site. Probably only has developer releases.
-        mozconfig icecat.desktop icecat-safe.desktop vendor.js
-        fix-wifi-scanner.diff no-crmf.diff)
+#source=(http://alpha.gnu.org/gnu/gnuzilla/${pkgver}/${pkgname}-${_pkgver}.tar.bz2{,.sig}
+        icecat.desktop icecat-safe.desktop)
 
-sha256sums=('0a0cf3acb2067e0580204b44bb5a02fab2033c6bbf7c0b47522a3c4c1f29d625'
+sha256sums=('6145327092b4b195a4f63d0e86f4857eeba5607ffeb69b6f3bceb36e89a19645'
             'SKIP'
-            '558575fd72237d5953f386170eb9ef848beae6ac08d2b53518ae6365e4cc274b'
             'c44eab35f71dd3028a74632463710d674b2e8a0682e5e887535e3233a3b7bbb3'
-            '190577ad917bccfc89a9bcafbc331521f551b6f54e190bb6216eada48dcb1303'
-            '4b50e9aec03432e21b44d18c4c97b2630bace606b033f7d556c9d3e3eb0f4fa4'
-            '9765bca5d63fb5525bbd0520b7ab1d27cabaed697e2fc7791400abc3fa4f13b8'
-            'ada119174a2a1779c4195a1b4506e8ae67c49c5306103158805a390237acc1c6')
+            '190577ad917bccfc89a9bcafbc331521f551b6f54e190bb6216eada48dcb1303')
 
 validpgpkeys=(A57369A8BABC2542B5A0368C3C76EED7D7E04784) # Ruben Rodriguez (GNU IceCat releases key) <ruben@gnu.org>
 
@@ -47,19 +50,45 @@ prepare() {
   sed -e 's;$(libdir)/$(MOZ_APP_NAME)-$(MOZ_APP_VERSION);$(libdir)/$(MOZ_APP_NAME);g' -i config/baseconfig.mk
   sed -e 's;$(libdir)/$(MOZ_APP_NAME)-devel-$(MOZ_APP_VERSION);$(libdir)/$(MOZ_APP_NAME)-devel;g' -i config/baseconfig.mk
 
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1314968
-  patch -Np1 -i ../fix-wifi-scanner.diff
+  printf '%b' "  \e[1;36m->\e[0m\033[1m Starting build...\n"
+  
+  cat >.mozconfig <<END
+ac_add_options --enable-application=browser
 
-  # https://bugs.archlinux.org/task/54395
-  patch -Np1 -i ../no-crmf.diff
+ac_add_options --prefix=/usr
+ac_add_options --libdir=/usr/lib
+ac_add_options --enable-linker=gold
+ac_add_options --enable-hardening
+ac_add_options --enable-optimize
+ac_add_options --enable-rust-simd
+# Branding
+ac_add_options --enable-official-branding
+ac_add_options --with-distribution-id=org.gnu
 
-  msg2 "Starting build..."
+# System libraries
+ac_add_options --with-system-zlib
+ac_add_options --with-system-bz2
+ac_add_options --with-system-icu
+ac_add_options --with-system-jpeg
+ac_add_options --with-system-libvpx
+ac_add_options --with-system-nspr
+ac_add_options --with-system-nss
+ac_add_options --enable-system-sqlite
+ac_add_options --enable-system-ffi
 
-  cp -v ${srcdir}/mozconfig .mozconfig
+# Features
+ac_add_options --enable-alsa
+ac_add_options --enable-startup-notification
+ac_add_options --disable-crashreporter
+ac_add_options --disable-updater
+ac_add_options --disable-debug-symbols
+ac_add_options --disable-tests
+ac_add_options --disable-eme
+ac_add_options --disable-gconf
 
-  # WebRTC build tries to execute "python" and expects Python 2
-  mkdir -p "$srcdir/path"
-  ln -s /usr/bin/python2 "$srcdir/path/python"
+ac_add_options --with-app-basename=icecat
+ac_add_options --with-app-name=icecat
+END
 }
 
 build() {
@@ -67,24 +96,36 @@ build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
   ICECATDIR="/usr/lib/${pkgname}" && export ICECATDIR
 
-  # _FORTIFY_SOURCE causes configure failures
-  CPPFLAGS+=" -O2"
+  # Build with clang
+  if [ "$_CLANG" -eq "1" ]; then
+    export CC=clang
+    export CXX=clang++
+  fi
 
-  # Hardening
-#  LDFLAGS+=" -Wl,-z,now"
-
-  export PATH="$srcdir/path:$PATH"
-
-  make -f client.mk build
+  # Do PGO
+  #xvfb-run -a -n 95 -s "-extension GLX -screen 0 1280x1024x24" \
+  #  MOZ_PGO=1 ./mach build
+  ./mach build
+  ./mach buildsymbols
 }
 
 package () {
-
   cd "${srcdir}/${pkgname}-${pkgver}"
+  DESTDIR="$pkgdir" ./mach install
 
-  make -f client.mk DESTDIR="${pkgdir}" install
+  _vendorjs="$pkgdir/usr/lib/${pkgname}/browser/defaults/preferences/vendor.js"
+  install -Dm644 /dev/stdin "$_vendorjs" <<END
+// Use LANG environment variable to choose locale
+pref("intl.locale.requested", "");
 
-  msg2 "Finishing..."
+// Disable default browser checking.
+pref("browser.shell.checkDefaultBrowser", false);
+
+// Opt all of us into e10s, instead of just 50%
+pref("browser.tabs.remote.autostart", true);
+END
+
+  printf '%b' "  \e[1;36m->\e[0m\033[1m Finishing...\n"
   install -m755 -d ${pkgdir}/usr/share/applications
   install -m755 -d ${pkgdir}/usr/share/pixmaps
 
@@ -95,12 +136,4 @@ package () {
   install -Dm644 ${srcdir}/${pkgname}-${pkgver}/browser/branding/official/default48.png ${pkgdir}/usr/share/pixmaps/icecat.png
   install -Dm644 ${srcdir}/icecat.desktop ${pkgdir}/usr/share/applications/
   install -Dm644 ${srcdir}/icecat-safe.desktop ${pkgdir}/usr/share/applications/
-
-  # implement vendor.js setting the locale to match the os don't disable our languages extensions
-  # https://projects.archlinux.org/svntogit/packages.git/commit/trunk/PKGBUILD?h=packages/firefox&id=281a95c2cca0db88904603d7808936f52797a690
-  install -Dm644 "${srcdir}"/vendor.js "${pkgdir}${ICECATDIR}/browser/defaults/preferences/vendor.js"
-
-  # We don't want the development stuff
-  rm -rv "$pkgdir"/usr/{include,lib/icecat-devel,share/idl}
 }
-
