@@ -1,0 +1,27 @@
+# Colored makepkg-like functions
+all_off="$(tput sgr0)"
+bold="${all_off}$(tput bold)"
+blue="${bold}$(tput setaf 4)"
+yellow="${bold}$(tput setaf 3)"
+
+msg_blue() {
+    printf "${blue}==>${bold} $1${all_off}\n"
+}
+
+note() {
+    printf "${blue}==>${yellow} NOTE:${bold} $1${all_off}\n"
+}
+
+_update() {
+    if  getent passwd parsoid &>/dev/null; then
+        userdel -rf parsoid &>/dev/null
+    fi
+}
+
+post_install() {
+    _update
+    echo ">> Before run Parsoid, modify /usr/share/webapps/parsoid/config.yaml ."
+    echo ">> Reference comments in this file for help ."
+}
+
+
