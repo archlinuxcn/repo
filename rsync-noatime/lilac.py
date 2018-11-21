@@ -1,3 +1,4 @@
+# Trimmed lilac.py
 #!/usr/bin/env python3
 
 from types import SimpleNamespace
@@ -6,7 +7,7 @@ from lilaclib import *
 
 g = SimpleNamespace()
 
-build_prefix = 'extra-x86_64'
+#build_prefix = 'extra-x86_64'
 
 def pre_build():
   g.files = download_official_pkgbuild('rsync')
@@ -38,5 +39,5 @@ def post_build():
   git_add_files(g.files)
   git_commit()
 
-if __name__ == '__main__':
-  single_main()
+#if __name__ == '__main__':
+#  single_main()
