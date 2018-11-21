@@ -4,6 +4,7 @@
 # and it suits for most packages in AUR.
 #
 
+'''
 from lilaclib import *
 
 build_prefix = 'extra-x86_64'
@@ -12,4 +13,4 @@ post_build = aur_post_build
 depends = [('java-service-wrapper')]
 if __name__ == '__main__':
   single_main()
-
+'''

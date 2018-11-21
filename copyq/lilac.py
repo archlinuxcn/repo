@@ -4,6 +4,7 @@
 # and it suits for most packages in AUR.
 #
 
+'''
 from lilaclib import *
 
 
@@ -13,3 +14,4 @@ post_build = aur_post_build
 
 if __name__ == '__main__':
   single_main()
+'''
