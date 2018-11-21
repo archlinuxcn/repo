@@ -1,8 +1,9 @@
+# Trimmed lilac.py
 #!/usr/bin/env python3
 
 from lilaclib import *
 
-build_prefix = 'extra-x86_64'
+#build_prefix = 'extra-x86_64'
 
 def pre_build():
   aur_pre_build()
@@ -13,7 +14,7 @@ def pre_build():
     else:
         print(line)
 
-post_build = aur_post_build
+#post_build = aur_post_build
 
-if __name__ == '__main__':
-  single_main()
+#if __name__ == '__main__':
+#  single_main()
