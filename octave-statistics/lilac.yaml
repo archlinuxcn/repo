@@ -1,0 +1,12 @@
+maintainers:
+  - github: zsrkmyn
+    email: Stephen Zhang <zsrkmyn@archlinuxcn.org>
+
+pre_build: aur_pre_build
+
+post_build: aur_post_build
+
+update_on:
+  - url: http://octave.sourceforge.net/statistics/
+    regex: PackageVersion:[^\d]*(\d+\.\d+\.\d+)
+    user_agent: curl/7.40.0
