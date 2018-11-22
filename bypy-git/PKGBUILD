@@ -1,4 +1,4 @@
-# Maintainer: Yen Chi Hsuan <yan12125 at gmail dot com>
+# Contributor: Chih-Hsuan Yen <yan12125@gmail.com>
 # Contributor: wenLiangcan <boxeed at gmail dot com>
 
 pkgname=bypy-git
