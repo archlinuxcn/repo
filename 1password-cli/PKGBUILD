@@ -23,8 +23,6 @@ sha256sums_armv6h=("${sha256sums_arm}")
 
 check() {
   if (( ! SKIPPGPCHECK )); then
-    # https://discussions.agilebits.com/discussion/comment/420654/#Comment_420654
-    gpg --recv-keys 3FEF9748469ADBE15DA7CA80AC2D62742012EA22
     gpg --verify-files ${srcdir}/op.sig
   fi
 }
