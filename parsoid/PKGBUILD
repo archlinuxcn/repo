@@ -9,6 +9,7 @@ arch=('any')
 url="https://www.mediawiki.org/wiki/Parsoid"
 license=('GPL2')
 depends=('nodejs' 'npm')
+makedepends=('git' 'python2')
 optdepends=(
     'mediawiki: MediaWiki engine'
 )
@@ -36,6 +37,7 @@ prepare() {
 }
 build() { 
     cd $srcdir/parsoid
+    alias python="python2"
     npm install
 }
 package() {
