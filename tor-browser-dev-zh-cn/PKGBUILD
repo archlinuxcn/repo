@@ -1,11 +1,12 @@
-# Maintainer: end222 <pabloorduna98 at gmail dot com>
-# Ex-Maintainer: Jean Lucas <jean at 4ray dot co>
+# Maintainer: Horo a.k.a KenOokamiHoro <horo at yoitsu dot moe>
+# Contributor: end222 <pabloorduna98 at gmail dot com>
+# Cotributor: Jean Lucas <jean at 4ray dot co>
 # Contributor: sekret, mail=$(echo c2VrcmV0QHBvc3Rlby5zZQo= | base64 -d)
 
 pkgname=tor-browser-dev-zh-cn
-pkgver=8.5a1
+pkgver=8.5a4
 _language='zh-CN'
-pkgrel=2
+pkgrel=1
 pkgdesc="(Simplified Chinese version) Tor Browser is +1 for privacy and -1 for mass surveillance"
 arch=('i686' 'x86_64')
 url="https://www.torproject.org/projects/torbrowser.html.en"
@@ -24,9 +25,9 @@ source_x86_64=("https://dist.torproject.org/torbrowser/${pkgver}/tor-browser-lin
 source+=(${pkgname}.desktop
          ${pkgname}.png
          ${pkgname}.sh)
-sha256sums_i686=('e61381bf71cdf53b96e161fced8d2a09daaeffdac355712efcf99d4c99f4608c'
+sha256sums_i686=('a4a06e064dd51ec6a69cd0cc4968bfcb671b8418f3ed270e4cdf9c738bfbc268'
                  'SKIP')
-sha256sums_x86_64=('4b70742d924d2b1b1d85a24717e1bd0869fa73ff28821ec440eed1753029c866'
+sha256sums_x86_64=('654a26d9ddf288b37a2256ed26aaab2a8b237458e1392b1cd0be688d2b8a5bd1'
                    'SKIP')
 sha512sums+=('5127d8ce8b5ad873b7ca7bbff5f4dfcee152f75f1bfbe0e9539c11fdbbc36357fcb1fdec621e379c705fe9f2b4a0303deb36e09bea309919c2c463da05aa17cf'
              '236338469e13b4991c2abb94d4844d0149bb98094f1661b0a41256df0400cfe9904882117aae9edbea9261d99aea42745e03d745b523243d9a75fa5151062e18'
