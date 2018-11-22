@@ -17,10 +17,6 @@ conflicts=('onedrive')
 source=('git+https://github.com/skilion/onedrive.git')
 sha256sums=('SKIP')
 
-prepare() {
-  sed -i 's/std\.c\./core.stdc./g' $_pkgname/src/sqlite.d
-}
-
 pkgver() {
   cd $_pkgname
 
