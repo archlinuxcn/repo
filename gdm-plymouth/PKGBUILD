@@ -7,7 +7,7 @@ _pkgbase=gdm
 pkgbase=gdm-plymouth
 pkgname=(gdm-plymouth libgdm-plymouth)
 pkgver=3.30.2
-pkgrel=1
+pkgrel=1.1
 pkgdesc="Gnome Display Manager with Plymouth support."
 arch=('x86_64')
 license=(GPL)
@@ -65,7 +65,6 @@ package_gdm-plymouth() {
   backup=(etc/pam.d/gdm-autologin etc/pam.d/gdm-fingerprint etc/pam.d/gdm-launch-environment
           etc/pam.d/gdm-password etc/pam.d/gdm-smartcard etc/gdm/custom.conf
           etc/gdm/Xsession etc/gdm/PostSession/Default etc/gdm/PreSession/Default)
-  groups=(gnome)
   install=gdm-plymouth.install
 
   cd $_pkgbase-${pkgver}
