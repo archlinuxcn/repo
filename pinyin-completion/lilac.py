@@ -1,12 +1,10 @@
+#!/usr/bin/env python3
 from lilaclib import *
 
+update_on = [{'aur':None}, {'github':'petronny/pinyin-completion'}]
 build_prefix = 'extra-x86_64'
-
-pre_build = vcs_update
-
-def post_build():
-  git_add_files('PKGBUILD')
-  git_commit()
+pre_build = aur_pre_build
+post_build = aur_post_build
 
 if __name__ == '__main__':
-  single_main()
+    single_main(build_prefix)
