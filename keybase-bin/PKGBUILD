@@ -12,7 +12,7 @@ pkgver=2.11.0_20181120190730+0b238440b2
 src_prefix=https://s3.amazonaws.com/prerelease.keybase.io/linux_binaries/deb
 deb_pkgver="${pkgver/_/-}"
 deb_pkgver="${deb_pkgver/+/.}"
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 depends=(fuse gconf libxss gtk2) # don't change this without changing the SRCINFO template too
 # keybase-release is a deprecated AUR package
