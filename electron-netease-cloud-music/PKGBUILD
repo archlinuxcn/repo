@@ -3,7 +3,7 @@
 
 pkgname=electron-netease-cloud-music
 pkgver=0.5.6
-pkgrel=1
+pkgrel=2
 pkgdesc="UNOFFICAL clinet for music.163.com. Powered by Electron and Vue"
 arch=('x86_64')
 url="https://github.com/Rocket1184/electron-netease-cloud-music"
