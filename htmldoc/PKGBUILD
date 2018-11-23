@@ -8,15 +8,26 @@
 
 pkgname=htmldoc
 pkgver=1.9.4
-pkgrel=2
+pkgrel=3
 pkgdesc='HTML Conversion Software'
 arch=('i686' 'x86_64')
-url='http://www.msweet.org/htmldoc/index.html'
+url='https://www.msweet.org/htmldoc/index.html'
 license=('GPL2')
-depends=('libxpm' 'gnutls' 'fltk')
+depends=('libxpm' 'gnutls' 'fltk' 'shared-mime-info')
 changelog=ChangeLog
-source=("${pkgname}-${pkgver}.tar.gz"::"https://github.com/michaelrsweet/${pkgname}/archive/v${pkgver}.tar.gz")
-sha256sums=('663598a33f21b4d180f4ffd7219c68f7c84fedb7f1a253a804830a40befb113c')
+source=("https://github.com/michaelrsweet/htmldoc/releases/download/v${pkgver}/htmldoc-${pkgver}-source.tar.gz"{,.sig})
+noextract=("htmldoc-${pkgver}-source.tar.gz")
+sha256sums=('8e33d22e0d757099bcbc09d513dae599bdb735450f2af24597f325a7a854d1f7'
+            'SKIP')
+validpgpkeys=('845464660B686AAB36540B6F999559A027815955') # Michael R Sweet
+
+prepare() {
+    mkdir -p "${pkgname}-${pkgver}"
+    cd "${pkgname}-${pkgver}"
+    
+    # source file misses a top-level directory
+    bsdtar -xf "${srcdir}/htmldoc-${pkgver}-source.tar.gz"
+}
 
 build() {
     cd "${pkgname}-${pkgver}"
