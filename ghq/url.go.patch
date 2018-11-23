@@ -1,0 +1,11 @@
+--- url.go.orig	2018-04-01 14:54:03.651421007 +0900
++++ url.go	2018-04-01 14:54:19.417513434 +0900
+@@ -48,7 +48,7 @@
+ }
+ 
+ func ConvertGitURLHTTPToSSH(url *url.URL) (*url.URL, error) {
+-	sshURL := fmt.Sprintf("ssh://git@%s/%s", url.Host, url.Path)
++	sshURL := fmt.Sprintf("ssh://git@%s%s", url.Host, url.Path)
+ 	return url.Parse(sshURL)
+ }
+ 
