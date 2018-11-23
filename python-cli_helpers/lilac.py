@@ -1,8 +1,9 @@
+# Trimmed lilac.py
 #!/usr/bin/env python3
 
 from lilaclib import *
 
-build_prefix = 'archlinuxcn-x86_64'
+#build_prefix = 'archlinuxcn-x86_64'
 
 
 def pre_build():
@@ -20,5 +21,5 @@ def post_build():
     pypi_post_build()
 
 
-if __name__ == '__main__':
-    single_main()
+#if __name__ == '__main__':
+#    single_main()
