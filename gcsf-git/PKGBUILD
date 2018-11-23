@@ -1,7 +1,7 @@
 # Maintainer: Ariel AxionL <axionl@aosc.io>
 pkgname=gcsf-git
-pkgver=r180.3ef78c5
-pkgrel=2
+pkgver=r182.ccb9d36
+pkgrel=1
 pkgdesc="a FUSE file system based on Google Drive (Written by Rust)"
 arch=('x86_64')
 depends=('fuse2' 'gcc-libs')
