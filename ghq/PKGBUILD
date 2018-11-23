@@ -6,21 +6,38 @@ pkgdesc="Remote repository management made easy"
 arch=('i686' 'x86_64')
 url="https://github.com/motemen/ghq"
 license=('MIT')
+makedepends=('go' 'git')
 provides=('ghq')
 optdepends=('zsh: ghq function for zsh')
 
-source=("https://raw.githubusercontent.com/motemen/ghq/master/LICENSE")
+source=("ghq-${pkgver}.tar.gz::https://github.com/motemen/ghq/archive/v${pkgver}.tar.gz"
+        "url.go.patch"
+        "url_test.go.patch")
 
-source_i686=("https://github.com/motemen/ghq/releases/download/v$pkgver/ghq_linux_386.zip")
-source_x86_64=("https://github.com/motemen/ghq/releases/download/v$pkgver/ghq_linux_amd64.zip")
-
-package() {
-	install -Dm 644 LICENSE ${pkgdir}/usr/share/licenses/ghq/LICENSE
-	install -Dm 644 ${srcdir}/zsh/_ghq ${pkgdir}/usr/share/zsh/site-functions/_ghq
-	install -Dm 755 ${srcdir}/ghq ${pkgdir}/usr/bin/ghq
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  export GOPATH="$srcdir/build"
+  go get -t -d -v
+  patch < ../url.go.patch
+  patch < ../url_test.go.patch
+  go build .
 }
 
-md5sums=('4a2daf6d07c0f705e71f52a5805c3d3d')
-md5sums_i686=('ef2e725bf93f17472ff07213bad0b9a1')
-md5sums_x86_64=('fba7206be2afbabcf4e2bcc7e87df507')
+check() {
+  cd "$srcdir/$pkgname-$pkgver"
+  export GOPATH="$srcdir/build"
+  go test -x -v .
+}
 
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  install -Dm 755 ghq-$pkgver "$pkgdir/usr/bin/ghq"
+  install -Dm 644 zsh/_ghq "$pkgdir/usr/share/zsh/site-functions/_ghq"
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/ghq/LICENSE"
+}
+sh512sums=('e3df98794a423000676987812ded7dab30367dfbc82a2b7a8d2ebbea12fa81b2'
+            '1cea43d09f4b9199ab0d04cb51f9cc1a3cfa351d12676a9aff38b1768a5d7d2a'
+            'a1213418e95d722d2d1dc78539c4beb432bce22439df99e402eb7ce09ff3b671')
+md5sums=('cd486f7b8e464ca89c0aff4f421ecaf1'
+         'f60e476bd339fd994915c95923207fbd'
+         'b5d0219abc687f0c09f973b2e97bd5c8')

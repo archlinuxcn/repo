@@ -1,0 +1,21 @@
+--- url_test.go.orig	2017-08-22 11:49:51.000000000 +0900
++++ url_test.go	2017-09-18 14:13:08.087122344 +0900
+@@ -3,6 +3,7 @@
+ import (
+ 	. "github.com/onsi/gomega"
+ 	"net/url"
++	"os"
+ 	"testing"
+ )
+ 
+@@ -36,8 +37,9 @@
+ 	Expect(differentNameRepository.Host).To(Equal("github.com"))
+ 	Expect(err).To(BeNil())
+ 
++	os.Setenv("GITHUB_USER", "ghq-test")
+ 	sameNameRepository, err := NewURL("same-name-ghq")
+-	Expect(sameNameRepository.String()).To(Equal("https://github.com/same-name-ghq/same-name-ghq"))
++	Expect(sameNameRepository.String()).To(Equal("https://github.com/ghq-test/same-name-ghq"))
+ 	Expect(sameNameRepository.Host).To(Equal("github.com"))
+ 	Expect(err).To(BeNil())
+ }
