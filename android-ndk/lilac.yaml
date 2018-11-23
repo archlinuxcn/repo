@@ -7,6 +7,6 @@ build_prefix: extra-x86_64
 
 update_on:
   - url: https://developer.android.com/ndk/downloads/index.html
-    regex: Latest Stable Version\((r\d+[a-z]?)\)
+    regex: Latest Stable Version \((r\d+[a-z]?)\)
     from_pattern: r(\d+)([a-z])
     to_pattern: r\1.\2
