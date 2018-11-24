@@ -1,11 +1,11 @@
 # Maintainer: Christian Hesse <mail@eworm.de>
 
 pkgname=opera-beta
-pkgver=55.0.2994.34
-pkgrel=1.1
+pkgver=57.0.3098.36
+pkgrel=1
 pkgdesc='A fast and secure web browser and Internet suite - beta stream'
 arch=('x86_64')
-url='http://www.opera.com/browser/'
+url='https://www.opera.com/computer'
 license=('custom:opera')
 depends=('alsa-lib' 'nss' 'gtk3' 'gconf' 'libxss' 'libxtst' 'desktop-file-utils')
 optdepends=('curl: opera crash reporter and autoupdate checker'
@@ -22,7 +22,7 @@ _source='https://get.geo.opera.com/pub/'
 source=("${_source}/${pkgname}/${pkgver}/linux/${pkgname}_${pkgver}_amd64.deb"
 	'opera'
 	'default')
-sha256sums=('8de68878279e8faa7a0d8c2d21ac855bb7fcefcd20650566a634d42c91371169'
+sha256sums=('44c201a4f5dccbef0d92bbfc38bdf7492cdb0384e42fd38906c994633793e0e1'
 	'508512464e24126fddfb2c41a1e2e86624bdb0c0748084b6a922573b6cf6b9c5'
 	'99fc0d2822edd14e234d451995db47148125e4580221a292598959421d131231')
 
