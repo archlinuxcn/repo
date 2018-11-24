@@ -5,20 +5,23 @@
 pkgname=vivaldi-widevine
 pkgdesc="A browser plugin designed for the viewing of premium video content, standalone for vivaldi"
 pkgver=4.10.1196.0
-_chrome_ver=70.0.3538.103
-pkgrel=1
+_chrome_ver=70.0.3538.110
+_channel=stable
+pkgrel=2
 epoch=1
 arch=('x86_64')
 url='https://www.widevine.com/'
 source=('chrome-eula_text.html::https://www.google.com/intl/en/chrome/privacy/eula_text.html'
-	"google-chrome-${_channel}_${pkgver}_amd64.deb::https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb")
+# Try using chrome version-specific version. It only seems to work for the latests chrome version.
+# 	"google-chrome-${_channel}_${pkgver}_amd64.deb::https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
+	"https://dl.google.com/linux/deb/pool/main/g/google-chrome-${_channel}/google-chrome-${_channel}_${_chrome_ver}-1_amd64.deb")
 options=("!strip")
 depends+=("gcc-libs")
 license=('custom')
 depends=('vivaldi-ffmpeg-codecs' 'glib2')
 conflicts=('chromium-widevine' 'google-chrome')
 sha256sums=('SKIP'
-            '88979cf1d4c28deb079cf7fdb120b430d9b4b83f9eeeacf2b998c276ee342db6')
+            'efd6aa29f5d1ce80a3908ee40b0c6e71aa354ad8fcd9788b1ff6893bef92d0be')
 
 prepare() {
   bsdtar -xf data.tar.xz opt/google/chrome/libwidevinecdm.so
