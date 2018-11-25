@@ -20,8 +20,8 @@ _pgo=true
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=63.0.1
-pkgrel=2
+pkgver=63.0.3
+pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -43,7 +43,7 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
 _patchrev=4b99400f6d17
-options=('!emptydirs'  'debug' 'strip')
+options=('!emptydirs')
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 _repo=https://hg.mozilla.org/mozilla-unified
 source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
@@ -62,7 +62,6 @@ source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
         pgo_fix_missing_kdejs.patch
         2001_system_graphite2_support.patch
         2000_system_harfbuzz_support.patch
-        0001-Keep-mozilla-release-building-with-newer-cbindgen-ve.patch
 )
 
 
@@ -119,10 +118,6 @@ prepare() {
   
   patch -Np1 -i "$srcdir"/2000_system_harfbuzz_support.patch
   patch -Np1 -i "$srcdir"/2001_system_graphite2_support.patch
-
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1503401
-  patch -Np1 -i "$srcdir"/0001-Keep-mozilla-release-building-with-newer-cbindgen-ve.patch
-
 }
 
 build() {
@@ -210,5 +205,4 @@ md5sums=('SKIP'
          'fe24f5ea463013bb7f1c12d12dce41b2'
          '3fa8bd22d97248de529780f5797178af'
          'f31a90ed4c0b0c15346ea5098765771f'
-         'a85ca9c88f49184c8b0feae206f0ba0c'
-         '66b80264cbcf301a0a6fb71a5516afcf')
+         'a85ca9c88f49184c8b0feae206f0ba0c')
