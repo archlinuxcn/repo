@@ -18,10 +18,10 @@ pkgbase=vmware-workstation
 pkgname=('vmware-workstation'
         'vmware-workstation-macos'
         'vmware-xkeymaps')
-pkgver=15.0.0
-_buildver=10134415
+pkgver=15.0.2
+_buildver=10952284
 _pkgver=${pkgver}_${_buildver}
-pkgrel=2.3
+pkgrel=1
 arch=(x86_64)
 url='https://www.vmware.com/products/workstation-for-linux.html'
 license=(custom)
@@ -53,7 +53,7 @@ source=(
   'vmnet.patch'
 )
 sha256sums=(
-  '00c50710ef23a88fdff2d6c81554820d45797c62c8d72630cd2c69fd43014d94'
+  '22675343abd4d88a78399c9af8b271912161d28d58bbb58f0af0804a9957a96a'
 
   '12e7b16abf8d7e858532edabb8868919c678063c566a6535855b194aac72d55e'
   'da1698bf4e73ae466c1c7fc93891eba4b9c4581856649635e6532275dbfea141'
@@ -85,7 +85,7 @@ options=(!strip emptydirs)
 _isoimages=(linux linuxPreGlibc25 netware solaris windows winPre2k winPreVista)
 _isovirtualprinterimages=(Linux Windows)
 
-_vmware_fusion_ver=11.0.0_10120384
+_vmware_fusion_ver=11.0.2_10952296
 # List of VMware Fusion versions: https://softwareupdate.vmware.com/cds/vmw-desktop/fusion/
 
 makedepends+=(
