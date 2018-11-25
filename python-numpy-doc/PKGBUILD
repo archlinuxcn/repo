@@ -3,16 +3,16 @@
 # Contributor: Patrice Peterson <runiq at archlinux dot us>
 
 pkgname=python-numpy-doc
-pkgver=1.13.0
+pkgver=1.15.1
 pkgrel=1
 pkgdesc="Documentation for NumPy"
 makedepends=('unzip')
 arch=('any')
 url='http://docs.scipy.org'
 license=('BSD')
-source=("$pkgname-$pkgver.zip::http://docs.scipy.org/doc/numpy/numpy-html-${pkgver}.zip")
+source=("$pkgname-$pkgver.zip::http://docs.scipy.org/doc/numpy-${pkgver}/numpy-html-${pkgver}.zip")
 noextract=("$pkgname-$pkgver.zip")
-md5sums=('9e3a32f4babcc269d45850615aedbe61')
+md5sums=('95b5d45d5c7ab7ba43fd1609baeddfc1')
 
 package()
 {
