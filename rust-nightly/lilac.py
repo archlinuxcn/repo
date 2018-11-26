@@ -19,6 +19,7 @@ STDS = [
   'x86_64-pc-windows-gnu',
   'wasm32-unknown-unknown',
   'aarch64-linux-android',
+  'x86_64-unknown-linux-musl',
 ]
 
 config_url = 'https://static.rust-lang.org/dist/channel-rust-nightly.toml'
