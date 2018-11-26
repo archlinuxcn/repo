@@ -2,3 +2,6 @@ maintainers:
 - github: masakichi
 update_on:
 - github: neologd/mecab-ipadic-neologd
+
+pre_build: vcs_update
+post_build: git_pkgbuild_commit
