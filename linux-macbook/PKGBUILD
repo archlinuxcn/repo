@@ -7,7 +7,7 @@
 pkgbase=linux-macbook        # Build kernel with a different name
 _srcver=4.19.4-arch1
 pkgver=${_srcver//-/.}
-pkgrel=1
+pkgrel=2
 arch=(x86_64)
 url="https://git.archlinux.org/linux.git/log/?h=v$_srcver"
 license=(GPL2)
