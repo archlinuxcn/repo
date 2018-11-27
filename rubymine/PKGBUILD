@@ -8,7 +8,7 @@
 pkgname=rubymine
 _pkgname=RubyMine
 pkgver=2018.3
-pkgrel=1
+pkgrel=2
 pkgdesc="Ruby and Rails IDE with the full stack of essential developer tools."
 arch=('i686' 'x86_64')
 options=(!strip)
@@ -26,10 +26,6 @@ sha256sums=('119a7dbe43054b59663623f978236f12ccfe1140ad23af4c9f30c6a0e9cb4001'
 
 prepare() {
     cd "${srcdir}/${_pkgname}-${pkgver}"
-
-    # Remove junk
-    rm "build.txt"
-    rm "Install-Linux-tar.txt"
 
     #Remove non-linux libs
     rm -rf "lib/libpty/macosx"
