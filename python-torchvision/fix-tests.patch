@@ -1,0 +1,29 @@
+From 4db0398a2b02aae790013efbc868f2d795eb2ef7 Mon Sep 17 00:00:00 2001
+From: vfdev <vfdev.5@gmail.com>
+Date: Fri, 4 May 2018 22:41:13 +0200
+Subject: [PATCH] Update test_utils.py (#486)
+
+Remove test with variables
+---
+ test/test_utils.py | 8 --------
+ 1 file changed, 8 deletions(-)
+
+diff --git a/test/test_utils.py b/test/test_utils.py
+index df6ae972..2f8392e0 100644
+--- a/test/test_utils.py
++++ b/test/test_utils.py
+@@ -18,14 +18,6 @@ def test_make_grid_not_inplace(self):
+         utils.make_grid(t, normalize=True, scale_each=True)
+         assert torch.equal(t, t_clone), 'make_grid modified tensor in-place'
+ 
+-    def test_make_grid_raises_with_variable(self):
+-        t = torch.autograd.Variable(torch.rand(3, 10, 10))
+-        with self.assertRaises(TypeError):
+-            utils.make_grid(t)
+-
+-        with self.assertRaises(TypeError):
+-            utils.make_grid([t, t, t, t])
+-
+ 
+ if __name__ == '__main__':
+     unittest.main()
