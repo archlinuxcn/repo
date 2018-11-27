@@ -1,21 +1,26 @@
+# Maintainer: BennyYip <yebenmy@protonmail.com>
 pkgname=pijul
-pkgver=0.8.3
+pkgver=0.11.1
 pkgrel=1
-pkgdesc="Patch-based distributed version control system"
-url='https://pijul.org'
-makedepends=('cargo')
-depends=('gcc-libs')
-arch=('i686' 'x86_64')
-license=('GPL')
-source=("${url}/releases/${pkgname}-${pkgver}.tar.gz")
-sha256sums=('45ef9ca3ae9d62953731b0c4b88c78fda7efae48e6970454c20581d49e10d4f6')
+pkgdesc="A patch-based distributed version control system, easy to use and fast. Command-line interface."
+arch=('x86_64')
+url="https://pijul.org/"
+license=('GPL-2.0+')
+makedepends=('rust' 'cargo')
+provides=('pijul')
+depends=('libsodium')
+source=(pijul.tar.gz::"https://crates.io//api/v1/crates/$pkgname/$pkgver/download")
+sha256sums=('10ed9a0c7a3f8bed92fbb0fac07d1731333d214cdc299577510783d3ef6bcdd5')
 
 build() {
-  cd "$pkgname-$pkgver"/pijul
-  cargo build --release
+  cd $srcdir/$pkgname-$pkgver
+  CARGO_INCREMENTAL=0 cargo build --release
 }
 
 package() {
-  cd "$pkgname-$pkgver"/pijul
-  install -Dm755 "target/release/$pkgname" "$pkgdir/usr/bin/$pkgname"
+  cd $srcdir/$pkgname-$pkgver
+  cargo install --root="$pkgdir/usr"
+  rm -f "$pkgdir/usr/.crates.toml"
 }
+
+# vim:set sw=2 et:
