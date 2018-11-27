@@ -1,6 +1,6 @@
 # Contributor: Tom < reztho at archlinux dot us >
 pkgname=openmsx-catapult-git
-pkgver=936.7f9c72a
+pkgver=937.68b2c99
 pkgrel=1
 pkgdesc="Front-end for openMSX: the MSX emulator that aims for perfection."
 arch=('i686' 'x86_64')
