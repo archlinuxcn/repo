@@ -9,7 +9,7 @@ pkgbase=clion
 pkgname=(clion clion-jre clion-cmake clion-gdb clion-lldb)
 _pkgname=clion
 _dlname=CLion
-pkgver=2018.2.6
+pkgver=2018.3
 pkgrel=1
 epoch=1
 pkgdesc="C/C++ IDE. Free 30-day trial."
@@ -20,7 +20,7 @@ license=('custom')
 makedepends=('rsync')
 source=("https://download.jetbrains.com/cpp/${_dlname}-${pkgver}.tar.gz"
         "jetbrains-${pkgbase}.desktop")
-sha256sums=('2e1742c6769cceb806acedaffeaf764cdf5990d7dbd0165741400e788d1af5d5'
+sha256sums=('fbdb5b4265062405828130540ecb1a0b022103dbc9a2e4ce179c34428507169e'
             '9f0f4335f410e0587018c85ebfcf4b65a7a47ad682a58972624378953ef288d6')
 noextract=("${_dlname}-${pkgver}.tar.gz")
 
@@ -35,6 +35,7 @@ build() {
 }
 
 package_clion() {
+    depends=('libdbusmenu-glib')
     optdepends=(
         'clion-jre: JetBrains custom Java Runtime (Recommended)'
         'clion-cmake: JetBrains packaged CMake tools'
