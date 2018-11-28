@@ -11,5 +11,12 @@ from lilaclib import *
 #pre_build = aur_pre_build
 #post_build = aur_post_build
 
+def pre_build():
+    aur_pre_build()
+    for line in edit_file('PKGBUILD'):
+        if line.startswith('makedepends'):
+            line = "makedepends=('vala' 'git' 'cmake' 'intltool')"
+        print(line)
+
 #if __name__ == '__main__':
 #  single_main()
