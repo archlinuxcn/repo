@@ -6,10 +6,10 @@ _ver=0.1.160
 pkgver=${_ver}.1
 # upstream version
 _pkgver=${_ver}-1
-pkgrel=1
-pkgdesc="virtio drivers for Windows (2000, XP, Vista, 7, 8, 10) guests and floppy images for Windows XP"
+pkgrel=2
+pkgdesc='virtio drivers for Windows (2000, XP, Vista, 7, 8, 10) guests and floppy images for Windows XP'
 arch=('any')
-url="https://fedoraproject.org/wiki/Windows_Virtio_Drivers"
+url='https://docs.fedoraproject.org/en-US/quick-docs/creating-windows-virtual-machines-using-virtio-drivers/index.html'
 license=('GPL2')
 optdepends=('qemu')
 # https://fedorapeople.org/groups/virt/virtio-win/CHANGELOG
@@ -37,4 +37,4 @@ package() {
     "${pkgdir}/usr/share/virtio/${pkgname}_x86_32.vfd"
 }
 
-# vim:set ts=2 sw=2 ft=sh et:
+# vim:set ts=2 sw=2 et:
