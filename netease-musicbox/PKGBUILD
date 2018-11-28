@@ -3,8 +3,8 @@
 
 pkgname=netease-musicbox
 _gitname=musicbox
-pkgver=0.2.5.3
-pkgrel=2
+pkgver=0.2.5.4
+pkgrel=1
 pkgdesc="A sexy command line interface musicbox for NetEase based on Python"
 arch=(any)
 url="https://github.com/darknessomi/musicbox"
@@ -20,26 +20,25 @@ conflicts=('netease-musicbox')
 install=$pkgname.install
 license=('MIT')
 
-source=("musicbox-$pkgver.tar.gz::https://files.pythonhosted.org/packages/12/63/d65c908d4e76ad04622597f5d6e1f5742bc50fbd12e20f80a23736d533fe/NetEase-MusicBox-$pkgver.tar.gz"
+source=("musicbox-$pkgver.tar.gz::https://github.com/darknessomi/musicbox/archive/0.2.5.4.tar.gz"
         "LICENSE::https://raw.githubusercontent.com/darknessomi/musicbox/master/LICENSE.txt"
-        "0001Remove_python_requests_cache_as_depends.patch"
-        "0002Replace_pyqt4_to_pyqt5_as_depends.patch")
+        "0001Replace_pyqt4_to_pyqt5_as_depends.patch"
+        "0002Remove_python_requests_cache_as_depends.patch")     
 
-sha256sums=('1688d8ff1898bc4a0b785187d122eed47c61a1ec017cf07d95139692dd0ea008'
+sha256sums=('4fdfd9061dfdec181736b56166a11bfe27ae9c4011f9c266b57fdfbca232afa3'
             '50efc98142cfffe413d73c87c91f2687dfb774217af923f03dfdc8426c9d9552'
-            '85c4bd50059c6f038bcb1add01d67ecdb4f87d2861a30bcbe0ef97b8ee5172a2'
-            '0d1a68ccb2c588753a1548775ae7a94de39f33d54744bde507a3bf9532039b0c')
+            'c910c12c5ffe23b3cc582fb718017c8dee5ef4e9dacfb1944f35266a79f8bbee'
+            '24b74424cd624742e35631fafd24ad6fd6527807728deeb1cc0a81a1415370b7')
 
 prepare() {
-  cd "${srcdir}/NetEase-MusicBox-${pkgver}"
-  patch -Np1 -i "${srcdir}/0001Remove_python_requests_cache_as_depends.patch"
-  patch -Np1 -i "${srcdir}/0002Replace_pyqt4_to_pyqt5_as_depends.patch"
+  cd "${srcdir}/musicbox-${pkgver}"
+  patch -Np1 -i "${srcdir}/0001Replace_pyqt4_to_pyqt5_as_depends.patch"
+  patch -Np1 -i "${srcdir}/0002Remove_python_requests_cache_as_depends.patch"
 }
 
 package() {
   install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
-  cd "${srcdir}/NetEase-MusicBox-${pkgver}"
+  cd "${srcdir}/musicbox-${pkgver}"
   python setup.py install --root="${pkgdir}/" --optimize=1
-  mkdir -p "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:

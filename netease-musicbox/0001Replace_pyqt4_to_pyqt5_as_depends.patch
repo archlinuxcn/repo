@@ -1,6 +1,6 @@
-diff -ura NetEase-MusicBox-0.2.5.3/NEMbox/osdlyrics.py NetEase-MusicBox-0.2.5.3.new/NEMbox/osdlyrics.py
---- NetEase-MusicBox-0.2.5.3/NEMbox/osdlyrics.py	2018-06-08 21:01:27.000000000 +0800
-+++ NetEase-MusicBox-0.2.5.3.new/NEMbox/osdlyrics.py	2018-08-16 11:11:04.421430904 +0800
+diff -ura --color musicbox-0.2.5.4/NEMbox/osdlyrics.py musicbox-0.2.5.4.new/NEMbox/osdlyrics.py
+--- musicbox-0.2.5.4/NEMbox/osdlyrics.py	2018-11-28 15:23:07.000000000 +0900
++++ musicbox-0.2.5.4.new/NEMbox/osdlyrics.py	2018-11-28 18:13:03.653877974 +0900
 @@ -19,16 +19,16 @@
  config = Config()
  
@@ -30,7 +30,7 @@ diff -ura NetEase-MusicBox-0.2.5.3/NEMbox/osdlyrics.py NetEase-MusicBox-0.2.5.3.
 -            bl = QtGui.QApplication.desktop().screenGeometry(scn).bottomLeft()
 -            br = QtGui.QApplication.desktop().screenGeometry(scn).bottomRight()
 +            scn = QtWidgets.QApplication.desktop().screenNumber(
-+                QtWidgets.QApplication.desktop().cursor().pos())
++                + QtWidgets.QApplication.desktop().cursor().pos())
 +            bl = QtWidgets.QApplication.desktop().screenGeometry(scn).bottomLeft()
 +            br = QtWidgets.QApplication.desktop().screenGeometry(scn).bottomRight()
              bc = (bl + br) / 2
@@ -45,4 +45,3 @@ diff -ura NetEase-MusicBox-0.2.5.3/NEMbox/osdlyrics.py NetEase-MusicBox-0.2.5.3.
          lyrics = Lyrics()
          QtDBus.QDBusConnection.sessionBus().registerService('org.musicbox.Bus')
          QtDBus.QDBusConnection.sessionBus().registerObject('/', lyrics)
-只在 NetEase-MusicBox-0.2.5.3.new/NEMbox 存在：__pycache__
