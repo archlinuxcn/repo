@@ -1,0 +1,17 @@
+maintainers:
+  - github: a-wing
+
+build_prefix: archlinuxcn-x86_64
+
+depends:
+  - ruby-actionview
+  - ruby-activesupport
+  - ruby-rack-test
+  - ruby-rails-html-sanitizer
+
+update_on:
+  - gems: actionpack
+  - aur: ruby-actionpack
+
+post_build: git_pkgbuild_commit
+
