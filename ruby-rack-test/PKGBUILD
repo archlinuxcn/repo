@@ -3,7 +3,7 @@
 
 _gemname=rack-test
 pkgname=ruby-$_gemname
-pkgver=1.0.0
+pkgver=1.1.0
 pkgrel=1
 pkgdesc='Simple testing API built on Rack'
 arch=(any)
@@ -13,7 +13,7 @@ depends=(ruby ruby-rack)
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
-sha1sums=('4c99cf0a82372a1bc5968c1551d9e606b68b4879')
+sha1sums=('b80bc5ca38a885e747271675ba91dd3d02136bf1')
 
 package() {
   local _gemdir="$(ruby -e'puts Gem.default_dir')"
