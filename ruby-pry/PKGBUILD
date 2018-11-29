@@ -4,7 +4,7 @@
 
 _gemname=pry
 pkgname=ruby-$_gemname
-pkgver=1.0.0.pre1
+pkgver=0.12.2
 pkgrel=1
 pkgdesc='An IRB alternative and runtime developer console.'
 arch=(any)
@@ -15,7 +15,7 @@ makedepends=(rubygems ruby-rdoc)
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
-sha256sums=('c1315e3eed1ab7d3f8621177dd7ee816e65ba7ac11e4821d50c2a8b0d951c7b5')
+sha256sums=('c9bc4f2dffe767043bde6b2aad52aa24916b68727420bd38f34d860c7a383503')
 
 package() {
   local _gemdir="$(ruby -e'puts Gem.default_dir')"
