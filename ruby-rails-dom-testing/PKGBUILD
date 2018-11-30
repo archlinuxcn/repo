@@ -3,7 +3,7 @@
 
 _gemname=rails-dom-testing
 pkgname=ruby-$_gemname
-pkgver=2.0.1
+pkgver=2.0.3
 pkgrel=1
 pkgdesc='Dom and Selector assertions for Rails applications'
 arch=(any)
@@ -13,7 +13,7 @@ depends=(ruby ruby-nokogiri ruby-activesupport)
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
-sha1sums=('26cd420f73c38658c5ee4b7758acbe511d73bade')
+sha1sums=('d7e6d2f8e3fe188b607b70ab031971490a6b3f26')
 
 package() {
   local _gemdir="$(ruby -e'puts Gem.default_dir')"
