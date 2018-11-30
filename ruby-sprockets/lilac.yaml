@@ -1,0 +1,14 @@
+maintainers:
+  - github: a-wing
+
+build_prefix: archlinuxcn-x86_64
+
+depends:
+  - ruby-concurrent-ruby
+
+update_on:
+  - gems: sprockets
+  - aur: ruby-sprockets
+
+post_build: git_pkgbuild_commit
+
