@@ -46,7 +46,10 @@ package() {
     install -m644 shell/*.bash shell/*.zsh $pkgdir/usr/share/skim
 
     ## Fish keybindings
-	install -Dm644 shell/key-bindings.fish $pkgdir/usr/share/fish/functions/skim_key_bindings.fish
+    install -Dm644 shell/key-bindings.fish $pkgdir/usr/share/fish/functions/skim_key_bindings.fish
+
+    # Manual
+    install -Dm644 shell/skim.1 $pkgdir/usr/share/man/man1/skim.1
 
     # Binaries
     install -Dm755 bin/sk-tmux $pkgdir/usr/bin/sk-tmux
