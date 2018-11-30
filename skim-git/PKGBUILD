@@ -6,20 +6,18 @@ pkgdesc="Fuzzy Finder in rust!"
 arch=('x86_64')
 depends=('bash')
 makedepends=('git' 'rust')
-optdepends=("vim: Vi Improved, a highly configurable, improved version of the vi text editor."
-            "zsh: A very advanced and programmable command interpreter (shell) for UNIX"
-            "zsh-completions: Additional completion definitions for Zsh"
-            "bash-completion: Programmable completion for the bash shell")
+optdepends=("fish: fish keybindings"
+            "tmux: fzf-tmux script for launching fzf in a tmux pane"
+	        "vim: plugin"
+	        "zsh: zsh keybindings")
 conflicts=("skim")
 provides=("skim")
 url="https://github.com/lotabout/skim"
 license=('MIT')
 
-source=("$pkgname::git+$url"
-        "https://raw.githubusercontent.com/lotabout/skim/master/LICENSE")
+source=("$pkgname::git+$url")
 
-sha256sums=('SKIP'
-            '97b46715104924e7ceb1f9061c21bcc13d61322f306d6b119cd47ccbf86b22ea')
+sha256sums=('SKIP')
 
 pkgver() {
     cd "$srcdir/$pkgname"
@@ -32,10 +30,13 @@ build() {
 }
 
 package() {
+    cd $srcdir/$pkgname
+
     # License
     install -Dm644 LICENSE $pkgdir/usr/share/licenses/$pkgname/LICENSE
 
-    cd $srcdir/$pkgname
+    # Man Page
+    install -Dm644 shell/skim.1 $pkgdir/usr/share/man/man1/skim.1
 
     # Vim plugin
     install -Dm644 plugin/skim.vim $pkgdir/usr/share/vim/vimfiles/plugin/skim.vim
@@ -43,6 +44,9 @@ package() {
     # Completion and keybindings
     install -dm755 $pkgdir/usr/share/skim
     install -m644 shell/*.bash shell/*.zsh $pkgdir/usr/share/skim
+
+    ## Fish keybindings
+	install -Dm644 shell/key-bindings.fish $pkgdir/usr/share/fish/functions/skim_key_bindings.fish
 
     # Binaries
     install -Dm755 bin/sk-tmux $pkgdir/usr/bin/sk-tmux
