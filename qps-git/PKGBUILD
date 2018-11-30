@@ -2,14 +2,14 @@
 
 _pkgname=qps
 pkgname=$_pkgname-git
-pkgver=r160.b090ebc
+pkgver=r161.cec51eb
 pkgrel=1
 pkgdesc='Qt process manager'
 arch=('i686' 'x86_64')
 url='https://github.com/QtDesktop/qps'
 license=('GPL')
 depends=('qt5-x11extras' 'gtk-update-icon-cache')
-makedepends=('git' 'qt5-tools' 'lxqt-build-tools-git' 'cmake' )
+makedepends=('git' 'lxqt-build-tools-git' 'cmake' 'qt5-tools' )
 provides=("$_pkgname")
 conflicts=("$_pkgname")
 source=("git+https://github.com/QtDesktop/qps.git")
