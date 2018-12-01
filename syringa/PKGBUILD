@@ -1,0 +1,32 @@
+# Maintainer: Xuanwo <xuanwo@archlinuxcn.org>
+pkgname=syringa
+pkgver=0.1.0
+pkgrel=1
+pkgdesc='A bridge to lilac for archlinuxcn.'
+makedepends=('make' 'rustup')
+arch=('x86_64')
+url='https://github.com/Xuanwo/syringa'
+license=('Apache')
+provides=('syringa')
+source=(syringa-${pkgver}.tar.gz::https://github.com/Xuanwo/syringa/archive/v${pkgver}.tar.gz)
+sha256sums=('7078b76bb042ba9e8668c54054d1c94268cde17a1c56427c51ba0b98f794a1b4')
+
+prepare() {
+  cd syringa-${pkgver}
+  _rust_version='stable'
+  rustup install ${_rust_version}
+  rustup default ${_rust_version}
+  rustup component add rustfmt-preview
+}
+
+build() {
+  cd syringa-${pkgver}
+  cargo build --release
+}
+
+package() {
+  # Install binary
+  install -Dm755 "$srcdir/syringa-${pkgver}/target/release/syringa" "$pkgdir/usr/bin/syringa"
+}
+
+# vim: ft=sh syn=sh et
