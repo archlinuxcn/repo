@@ -6,12 +6,12 @@
 set -u
 pkgbase=linux-lts316
 _srcname=linux-3.16
-pkgver=3.16.57
+pkgver=3.16.61
 pkgrel=1
 arch=('i686' 'x86_64')
 url="https://www.kernel.org/"
 license=('GPL2')
-makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc' 'gcc5')
+makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc')
 options=('!strip')
 _verwatch=('https://mirrors.edge.kernel.org/pub/linux/kernel/v3.x/' '.*patch-\(3\.16\.[0-9]\+\)\.xz.*' 'f')
 source=("https://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
@@ -23,25 +23,37 @@ source=("https://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
         # standard config files for mkinitcpio ramdisk
         'linux.preset'
         'change-default-console-loglevel.patch'
+        '0000-unknown-rela-relocation-4-binutils.2.31.kernel.3.16.patch' # https://www.reddit.com/r/linuxquestions/comments/903xwq/unable_to_compile_working_kernel_modules_anymore/
         'update.sh'
         )
 sha256sums=('4813ad7927a7d92e5339a873ab16201b242b2748934f12cb5df9ba2cfe1d77a0'
-            'aaaf463912a5cb17db3894de5e1a45a0609b1191e6d8f8d09e760804b1ec67bb'
+            '946d72d9bbb1fecef70b4e93334395fbc686e7202f0008db028532fe48516cf6'
             '3bce3e9adce8ae3f826eebab75e9784ca92a914e526ae352de61c1da93aab8d3'
             '9d82115ea8921d3f4f7f28ba162a3a3f256f88f14f8fad49a833eddb77c0efea'
             '834bd254b56ab71d73f59b3221f056c72f559553c04718e350ab2a3e2991afe0'
             'f0d90e756f14533ee67afda280500511a62465b4f76adcc5effa95a40045179c'
             '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99'
+            '0399497c991372817b2ae25e1570d30588e16183a2122367276d542952f03b56'
             '4dad3093e0c2bd7dafd30a0344b4df6432c3a7d1422edc4e0d1e6201aa513648')
 
 _kernelname=${pkgbase#linux}
+
+# CFLAGS CXXFLAGS are not used at all.
+# LDFLAGS only works on the make command line. It is not used from the environment.
+_makeopts=(
+  #CC='gcc-5' CXX='g++-5' HOSTCC='gcc-5' HOSTCXX='g++-5' # LD='ld.gold'
+  #CC='gcc-6' CXX='g++-6' HOSTCC='gcc-6' HOSTCXX='g++-6'
+  LDFLAGS='-z max-page-size=0x200000' # http://lists.gnu.org/archive/html/bug-binutils/2018-03/msg00193.html
+)
+#makedepends+=('gcc5')
 
 prepare() {
   set -u
   cd "${srcdir}/${_srcname}"
 
   # add upstream patch
-  patch -p1 -i "${srcdir}/patch-${pkgver}"
+  patch -Nup1 -i "${srcdir}/patch-${pkgver}"
+  set +u; msg2 "Complete: patch-${pkgver}"; set -u
 
   # add latest fixes from stable queue, if needed
   # http://git.kernel.org/?p=linux/kernel/git/stable/stable-queue.git
@@ -49,7 +61,10 @@ prepare() {
   # set DEFAULT_CONSOLE_LOGLEVEL to 4 (same value as the 'quiet' kernel param)
   # remove this when a Kconfig knob is made available by upstream
   # (relevant patch sent upstream: https://lkml.org/lkml/2011/7/26/227)
-  patch -p1 -i "${srcdir}/change-default-console-loglevel.patch"
+  patch -Nup1 -i "${srcdir}/change-default-console-loglevel.patch"
+
+  # diff -pNaru5 src1 src2 > '0000-unknown-rela-relocation-4-binutils.2.31.kernel.3.16.patch'
+  patch -Nup2 -i "${srcdir}/0000-unknown-rela-relocation-4-binutils.2.31.kernel.3.16.patch"
 
   declare -A _config=([i686]='config' [x86_64]='config.x86_64')
   cat "${srcdir}/${_config[${CARCH}]}" > './.config'
@@ -67,7 +82,9 @@ prepare() {
   sed -i '2iexit 0' scripts/depmod.sh
 
   set +u; msg2 'get kernel version'; set +u
-  make -s -j1 prepare
+  set -x
+  make -s -j1 prepare "${_makeopts[@]}"
+  set +x
 
   if ! diff -pNau5 "${srcdir}/config.cmp" './.config'; then
     ln -s "${PWD}/.config" "${startdir}/${_config[${CARCH}]}.new"
@@ -88,7 +105,9 @@ prepare() {
   # ... or manually edit .config
 
   set +u; msg2 'rewrite configuration'; set +u
-  yes "" | make -j1 config >/dev/null
+  set -x
+  yes "" | make -j1 config "${_makeopts[@]}" >/dev/null
+  set +x
   set +u
 }
 
@@ -102,14 +121,18 @@ build() {
     _mflags+=('-j' "${_nproc}")
   fi
 
-  nice make -s CC="gcc-5" "${_mflags[@]}" ${MAKEFLAGS} LOCALVERSION= bzImage modules
+  rm -f vmlinux vmlinux.o # force relink, for debugging binutils 2.31.1
+
+  set -x
+  nice make -s "${_makeopts[@]}" "${_mflags[@]}" ${MAKEFLAGS} LOCALVERSION= bzImage modules
+  set +x
   set +u
 }
 
 _package() {
   set -u
   pkgdesc="The ${pkgbase/linux/Linux} kernel and modules"
-  [ "${pkgbase}" = "linux" ] && groups=('base')
+  #[ "${pkgbase}" = "linux" ] && groups=('base')
   depends=('coreutils' 'linux-firmware' 'kmod' 'mkinitcpio>=0.7')
   optdepends=('crda: to set the correct wireless channels of your country')
   backup=("etc/mkinitcpio.d/${pkgbase}.preset")
@@ -120,12 +143,12 @@ _package() {
   KARCH=x86
 
   # get kernel version
-  _kernver="$(make -j1 LOCALVERSION= kernelrelease)"
+  _kernver="$(make -j1 "${_makeopts[@]}" LOCALVERSION= kernelrelease)"
   _basekernel=${_kernver%%-*}
   _basekernel=${_basekernel%.*}
 
   mkdir -p "${pkgdir}"/{lib/modules,lib/firmware,boot}
-  make -j1 LOCALVERSION= INSTALL_MOD_PATH="${pkgdir}" modules_install
+  make -j1 "${_makeopts[@]}" LOCALVERSION= INSTALL_MOD_PATH="${pkgdir}" modules_install
   cp arch/$KARCH/boot/bzImage "${pkgdir}/boot/vmlinuz-${pkgbase}"
 
   # set correct depmod command for install

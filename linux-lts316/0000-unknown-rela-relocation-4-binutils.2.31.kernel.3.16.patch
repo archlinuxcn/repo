@@ -1,0 +1,30 @@
+diff -pNaru5 src1/linux-3.16/arch/x86/kernel/module.c src2/linux-3.16/arch/x86/kernel/module.c
+--- src1/linux-3.16/arch/x86/kernel/module.c	2014-08-03 18:25:02.000000000 -0400
++++ src2/linux-3.16/arch/x86/kernel/module.c	2018-12-01 20:13:20.479487508 -0500
+@@ -178,10 +178,11 @@ int apply_relocate_add(Elf64_Shdr *sechd
+ 			*(s32 *)loc = val;
+ 			if ((s64)val != *(s32 *)loc)
+ 				goto overflow;
+ 			break;
+ 		case R_X86_64_PC32:
++		case R_X86_64_PLT32:
+ 			val -= (u64)loc;
+ 			*(u32 *)loc = val;
+ #if 0
+ 			if ((s64)val != *(s32 *)loc)
+ 				goto overflow;
+diff -pNaru5 src1/linux-3.16/arch/x86/tools/relocs.c src2/linux-3.16/arch/x86/tools/relocs.c
+--- src1/linux-3.16/arch/x86/tools/relocs.c	2018-12-01 20:10:30.802647293 -0500
++++ src2/linux-3.16/arch/x86/tools/relocs.c	2018-12-01 20:13:41.022841461 -0500
+@@ -761,10 +761,11 @@ static int do_reloc64(struct section *se
+ 		offset += per_cpu_load_addr;
+ 
+ 	switch (r_type) {
+ 	case R_X86_64_NONE:
+ 	case R_X86_64_PC32:
++	case R_X86_64_PLT32:
+ 		/*
+ 		 * NONE can be ignored and PC relative relocations don't
+ 		 * need to be adjusted.
+ 		 */
+ 		break;
