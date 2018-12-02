@@ -8,8 +8,8 @@
 
 _pkgname=thunderbird
 pkgname=thunderbird-appmenu
-pkgver=60.3.1
-pkgrel=2
+pkgver=60.3.2
+pkgrel=1
 pkgdesc="Thunderbird from extra with appmenu patch"
 arch=(x86_64)
 license=(MPL GPL LGPL)
@@ -25,7 +25,7 @@ options=(!emptydirs !makeflags)
 source=(https://ftp.mozilla.org/pub/mozilla.org/thunderbird/releases/$pkgver/source/thunderbird-$pkgver.source.tar.xz
         $_pkgname.desktop
         unity-menubar.patch)
-sha256sums=('94a5f62c949429790ed6036ca1e90c3c6a76a29aefe2d66aabe3d0fd62e444a9'
+sha256sums=('979707651662ed3654a327e9c568dac5894e73a40d2776bb94ed2950dab4e041'
             '3534ea85d8e0e35dba5f40a7a07844df19f3a480e1358fc50c2502f122dab789'
             'c6082f9ab534cdc67c53fa1685df628f03b0674390522f32fe640ce92f1b15ab')
 
