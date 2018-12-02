@@ -1,0 +1,51 @@
+# Maintainer: Jerome Leclanche <jerome@leclan.ch>
+
+_pkgname=lxqt-config
+pkgname=$_pkgname-git
+pkgver=0.13.0.477.gf8581ab
+pkgrel=2
+pkgdesc="LXQt system configuration."
+arch=("i686" "x86_64")
+url="https://lxqt.org"
+license=("GPL2")
+depends=("liblxqt-git" "libkscreen" "libxcursor" "qt5-svg" "hicolor-icon-theme")
+makedepends=("git" "cmake" "qt5-tools" "lxqt-build-tools-git" "xf86-input-libinput")
+provides=("$_pkgname=$pkgver")
+conflicts=("$_pkgname")
+source=("git+https://github.com/lxqt/$_pkgname.git"
+        touchpad-settings.patch::https://github.com/lxqt/lxqt-config/pull/109.patch)
+sha256sums=('SKIP'
+            'SKIP')
+
+
+pkgver() {
+  cd "$_pkgname"
+  git describe --always | sed "s/-/./g"
+}
+
+prepare() {
+  cd "$_pkgname"
+
+  patch -Np1 -i ../touchpad-settings.patch
+
+  mkdir -p build
+}
+
+build() {
+  cd "$_pkgname/build"
+
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=lib \
+    ..
+
+  make
+}
+
+package() {
+  cd "$_pkgname/build"
+
+  make DESTDIR="$pkgdir" install
+}
+
+# vim: set ts=2 sw=2 et:
