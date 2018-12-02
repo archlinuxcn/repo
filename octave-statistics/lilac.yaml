@@ -8,5 +8,5 @@ post_build: aur_post_build
 
 update_on:
   - url: http://octave.sourceforge.io/statistics/
-    regex: <dt>Version</dt>\n<dd>(\d+.\d+.\d+)</dd>
+    regex: <dt>Version</dt>\\n<dd>(\\d+.\\d+.\\d+)</dd>
     user_agent: curl/7.40.0
