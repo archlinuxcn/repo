@@ -1,0 +1,69 @@
+diff -ura systemtap.orig/stapbpf/Makefile.am systemtap.new/stapbpf/Makefile.am
+--- systemtap.orig/stapbpf/Makefile.am	2018-12-03 20:22:17.647860633 +0800
++++ systemtap.new/stapbpf/Makefile.am	2018-12-03 20:22:47.867576087 +0800
+@@ -39,13 +39,4 @@
+ git_version.stamp ../git_version.h:
+ 	$(MAKE) -C .. $(notdir $@)
+ 
+-# Why the "id -u" condition?  This way, an unprivileged user can run
+-# make install, and have "sudo stap ...." or "sudo stapbpf ...." work later.
+-install-exec-hook:
+-	if [ `id -u` -eq 0 ]; then \
+-		getent group stapusr >/dev/null || groupadd -g 156 -r stapusr 2>/dev/null || groupadd -r stapusr; \
+-		getent group stapusr >/dev/null \
+-		&& chgrp stapusr "$(DESTDIR)$(bindir)/stapbpf" \
+-		&& chmod 04110 "$(DESTDIR)$(bindir)/stapbpf"; \
+-	fi
+ endif
+diff -ura systemtap.orig/stapbpf/Makefile.in systemtap.new/stapbpf/Makefile.in
+--- systemtap.orig/stapbpf/Makefile.in	2018-12-03 20:22:17.647860633 +0800
++++ systemtap.new/stapbpf/Makefile.in	2018-12-03 20:23:02.981208916 +0800
+@@ -839,15 +839,6 @@
+ @HAVE_BPF_DECLS_TRUE@git_version.stamp ../git_version.h:
+ @HAVE_BPF_DECLS_TRUE@	$(MAKE) -C .. $(notdir $@)
+ 
+-# Why the "id -u" condition?  This way, an unprivileged user can run
+-# make install, and have "sudo stap ...." or "sudo stapbpf ...." work later.
+-@HAVE_BPF_DECLS_TRUE@install-exec-hook:
+-@HAVE_BPF_DECLS_TRUE@	if [ `id -u` -eq 0 ]; then \
+-@HAVE_BPF_DECLS_TRUE@		getent group stapusr >/dev/null || groupadd -g 156 -r stapusr 2>/dev/null || groupadd -r stapusr; \
+-@HAVE_BPF_DECLS_TRUE@		getent group stapusr >/dev/null \
+-@HAVE_BPF_DECLS_TRUE@		&& chgrp stapusr "$(DESTDIR)$(bindir)/stapbpf" \
+-@HAVE_BPF_DECLS_TRUE@		&& chmod 04110 "$(DESTDIR)$(bindir)/stapbpf"; \
+-@HAVE_BPF_DECLS_TRUE@	fi
+ 
+ # Tell versions [3.59,3.63) of GNU make to not export all variables.
+ # Otherwise a system limit (for SysV at least) may be exceeded.
+diff -ura systemtap.orig/staprun/Makefile.am systemtap.new/staprun/Makefile.am
+--- systemtap.orig/staprun/Makefile.am	2018-12-03 20:22:17.647860633 +0800
++++ systemtap.new/staprun/Makefile.am	2018-12-03 20:23:30.052290218 +0800
+@@ -74,11 +74,3 @@
+ 	$(MAKE) -C .. $(notdir $@)
+ 
+ 
+-# Why the "id -u" condition?  This way, an unprivileged user can run
+-# make install, and have "sudo stap ...." or "sudo staprun ...." work later.
+-install-exec-hook:
+-	if [ `id -u` -eq 0 ]; then \
+-		getent group stapusr >/dev/null || groupadd -g 156 -r stapusr 2>/dev/null || groupadd -r stapusr; \
+-		getent group stapusr >/dev/null && chgrp stapusr "$(DESTDIR)$(bindir)/staprun"; \
+-		chmod 04110 "$(DESTDIR)$(bindir)/staprun"; \
+-	fi
+diff -ura systemtap.orig/staprun/Makefile.in systemtap.new/staprun/Makefile.in
+--- systemtap.orig/staprun/Makefile.in	2018-12-03 20:22:17.647860633 +0800
++++ systemtap.new/staprun/Makefile.in	2018-12-03 20:23:43.517303843 +0800
+@@ -1112,14 +1112,6 @@
+ git_version.stamp ../git_version.h:
+ 	$(MAKE) -C .. $(notdir $@)
+ 
+-# Why the "id -u" condition?  This way, an unprivileged user can run
+-# make install, and have "sudo stap ...." or "sudo staprun ...." work later.
+-install-exec-hook:
+-	if [ `id -u` -eq 0 ]; then \
+-		getent group stapusr >/dev/null || groupadd -g 156 -r stapusr 2>/dev/null || groupadd -r stapusr; \
+-		getent group stapusr >/dev/null && chgrp stapusr "$(DESTDIR)$(bindir)/staprun"; \
+-		chmod 04110 "$(DESTDIR)$(bindir)/staprun"; \
+-	fi
+ 
+ # Tell versions [3.59,3.63) of GNU make to not export all variables.
+ # Otherwise a system limit (for SysV at least) may be exceeded.
