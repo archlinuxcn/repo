@@ -6,12 +6,6 @@
 
 from lilaclib import *
 
-depends=['fmt', 'xcb-imdkit-git']
-
-update_on = [{
-    'gitlab': 'fcitx/fcitx5'
-}]
-
 build_prefix = 'extra-x86_64'
 pre_build = vcs_update
 
