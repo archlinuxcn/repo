@@ -7,6 +7,6 @@ pre_build: aur_pre_build
 post_build: aur_post_build
 
 update_on:
-  - url: http://octave.sourceforge.io/signal/
-    regex: <dt>Version</dt>\\n<dd>(\\d+.\\d+.\\d+)</dd>
+  - url: https://octave.sourceforge.io/signal/
+    regex: <dt>Version</dt>\n\s*<dd>(\d+.\d+.\d+)</dd>
     user_agent: curl/7.40.0
