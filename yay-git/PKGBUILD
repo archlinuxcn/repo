@@ -23,10 +23,10 @@ pkgver() {
 
 build() {
   cd "$srcdir/$_pkgname"
-  make VERSION=$pkgver
+  make VERSION=$pkgver DESTDIR="$pkgdir" PREFIX=/usr
 }
 
 package() {
   cd "$srcdir/$_pkgname"
-  make VERSION=$pkgver DESTDIR="$pkgdir" install
+  make VERSION=$pkgver DESTDIR="$pkgdir" PREFIX=/usr install
 }
