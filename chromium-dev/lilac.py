@@ -13,7 +13,7 @@ def pre_build():
         if 'ninja' in line and 'chrome' in line:
             print(line.replace('ninja','ninja -l$(nproc)'))
         elif 'makedepends=(' in line:
-            print(line.replace('makedepends=(', 'makedepends=("libva" '))
+            print(line.replace('makedepends=(', 'makedepends=("libva" "java-runtime"'))
         else:
             print(line)
 
