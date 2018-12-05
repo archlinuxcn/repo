@@ -19,3 +19,11 @@
 
 from lilaclib import *
 
+def pre_build():
+    aur_pre_build()
+    for line in edit_file('PKGBUILD'):
+        if line.strip().startwith('depends='):
+            print('depends=("zfs-utils-git" "lsb-release" "dkms")')
+        else:
+            print(line)
+
