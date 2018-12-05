@@ -2,7 +2,7 @@
 
 pkgname=ddnet
 pkgver=11.5
-pkgrel=1
+pkgrel=2
 pkgdesc="DDraceNetwork, a mod of Teeworlds"
 arch=('x86_64')
 url="https://ddnet.tw"
@@ -32,7 +32,7 @@ build() {
     cmake ../DDNet-$pkgver        \
       -DCMAKE_BUILD_TYPE=Release  \
       -DCMAKE_INSTALL_PREFIX=/usr \
-      -DAUTOUPDATE=OFF
+      #-DAUTOUPDATE=OFF
     make all tools
 }
 
