@@ -5,7 +5,7 @@
 
 _gemname=actionpack
 pkgname=ruby-$_gemname
-pkgver=5.2.2.rc1
+pkgver=5.2.2
 pkgrel=1
 pkgdesc='Web-flow and rendering framework putting the VC in MVC (part of Rails).'
 arch=(any)
@@ -15,7 +15,7 @@ depends=(ruby ruby-activesupport ruby-rack ruby-rack-test ruby-actionview ruby-r
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
-sha1sums=('94af80896514956c2dc48e4ae97b2cc2af847c71')
+sha1sums=('807a97b3512cc46e91a7c4638c38f353a80e5a6a')
 
 package() {
   local _gemdir="$(ruby -e'puts Gem.default_dir')"
