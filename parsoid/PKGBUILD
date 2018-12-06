@@ -14,7 +14,6 @@ optdepends=(
     'mediawiki: MediaWiki engine'
 )
 conflicts=('parsoid-git')
-replaces=('parsoid-git')
 provides=('parsoid')
 backup=(usr/share/webapps/parsoid/localsettings.js
 	usr/share/webapps/parsoid/config.yaml)
