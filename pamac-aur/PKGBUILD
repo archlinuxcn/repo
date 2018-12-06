@@ -3,12 +3,12 @@
 # https://gitlab.manjaro.org/packages/extra/pamac
 pkgname=pamac-aur
 pkgver=7.3.1
-pkgrel=1
+pkgrel=2
 _pkgfixver=$pkgver
 
 _pkgvercommit=v$pkgver
-#_pkgvercommit=dc9740eb755182dd32292b595512caebef5da1a2
-sha256sums=('39a166701a604e69a426640fe80329398179954bc85091d1b419b288368f2295')
+_pkgvercommit=42b90c025eba29adc139c3a3f0b1c0c06d42f5e9
+sha256sums=('5f9d777feade0819ec532e6014d3e7c312276e8bc923d9a152be5cee8134696e')
 
 pkgdesc="A Gtk3 frontend for libalpm"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
