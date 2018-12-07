@@ -1,7 +1,7 @@
 # Maintainer: Xuanwo <xuanwo@archlinuxcn.org>
 pkgname=tikv-pd
-pkgver=2.0.5
-pkgrel=3
+pkgver=2.1.0
+pkgrel=1
 pkgdesc='Manage and schedule the TiKV cluster.'
 makedepends=('go' 'make')
 arch=('x86_64')
@@ -14,7 +14,7 @@ source=(pd-${pkgver}.tar.gz::https://github.com/pingcap/pd/archive/v${pkgver}.ta
         pd-sysusers.conf
         pd-tmpfiles.conf
         pd.toml)
-sha256sums=('4f3d267aa0c34828aea8b4797a02041efa32e81cda2c72d51e0b1f5bafab858b'
+sha256sums=('aaecda749989e4b028a034ede3e7d6f66cd43616c3245016f652a3bfa5a1c1b3'
             'b03d12f2f8d6eb2e9d654d6258ca39000225cdf1418840f7e35081631bc4d924'
             '5edd250ba9e70a4f8d27581ed658f0fbfeca58ca62429dec12bb5fffc0919b67'
             '15633aaa2d7726375112a1b5af88105878f09c176a542cde6d0e5f0c4eee4495'
@@ -37,9 +37,9 @@ build() {
   cd $GOPATH/src/$_gopkgname
 
   go build -o bin/pd-server cmd/pd-server/main.go
-  go build -o bin/pd-ctl cmd/pd-ctl/main.go
-  go build -o bin/pd-tso-bench cmd/pd-tso-bench/main.go
-  go build -o bin/pd-recover cmd/pd-recover/main.go
+  go build -o bin/pd-ctl tools/pd-ctl/main.go
+  go build -o bin/pd-tso-bench tools/pd-tso-bench/main.go
+  go build -o bin/pd-recover tools/pd-recover/main.go
 
 }
 
