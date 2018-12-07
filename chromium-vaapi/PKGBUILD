@@ -10,7 +10,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=chromium-vaapi
-pkgver=70.0.3538.110
+pkgver=71.0.3578.80
 pkgrel=1
 _launcher_ver=6
 pkgdesc="Chromium with VA-API support to enable hardware acceleration"
@@ -34,19 +34,17 @@ optdepends=('pepper-flash: support for Flash content'
 install=chromium.install
 source=(https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$pkgver.tar.xz
         chromium-launcher-$_launcher_ver.tar.gz::https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver.tar.gz
-        include-stdint.h-in-pdfium_mem_buffer_file_write.h.patch
         chromium-harfbuzz-r0.patch
-        chromium-widevine-r2.patch
         chromium-system-icu.patch
+        chromium-widevine.patch
         chromium-skia-harmony.patch
         cfi-vaapi-fix.patch
         chromium-vaapi-r21.patch)
-sha256sums=('445ef88fcf283206c1eba4faeb1c186c805e053d8b4ffeac1fcb88187bc1942f'
+sha256sums=('025b3520750d11f260acc4cbff5759137444ffb4c82361138dfd22f87b77ad0d'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
-            'cd1e87bf3618b7897c5caf7b0f4213cfa5ce917acb0613ecd2ab3f830f0cbfbb'
             '1b370d49c43e88acfe7c0b1f9517047e927f3407bd80b4a48bba32c001f80136'
-            '02c69bb3954087db599def7f5b6d65cf8f7cf2ed81dfbdaa4bb7b51863b4df15'
             'c4f2d1bed9034c02b8806f00c2e8165df24de467803855904bff709ceaf11af5'
+            'd081f2ef8793544685aad35dea75a7e6264a2cb987ff3541e6377f4a3650a28b'
             'feca54ab09ac0fc9d0626770a6b899a6ac5a12173c7d0c1005bc3964ec83e7b3'
             'adf301b50b5a03c98b7602c17e1f34e37260c07c88bcb7e1661122af61f50e23'
             '7985b5b6820300beeb119b601bb9fe3d2a662daf5dc90619a0f125ea84907ce5')
@@ -99,18 +97,23 @@ prepare() {
     third_party/blink/renderer/core/xml/parser/xml_document_parser.cc \
     third_party/libxml/chromium/libxml_utils.cc
 
-  # https://crbug.com/879900
-  patch -Np1 -i ../include-stdint.h-in-pdfium_mem_buffer_file_write.h.patch
+  # Load Widevine CDM if available
+  patch -Np1 -i ../chromium-widevine.patch
 
   # https://crbug.com/skia/6663#c10
   patch -Np4 -i ../chromium-skia-harmony.patch
 
   # Fixes from Gentoo
   patch -Np1 -i ../chromium-harfbuzz-r0.patch
-  patch -Np1 -i ../chromium-widevine-r2.patch
 
   # https://bugs.gentoo.org/661880#c21
   patch -Np1 -i ../chromium-system-icu.patch
+
+
+  # Remove compiler flags not supported by our system clang
+  sed -i \
+    -e '/"-Wno-defaulted-function-deleted"/d' \
+    build/config/compiler/BUILD.gn
 
   # Force script incompatible with Python 3 to use /usr/bin/python2
   sed -i '1s|python$|&2|' third_party/dom_distiller_js/protoc_plugins/*.py
@@ -118,9 +121,8 @@ prepare() {
   mkdir -p third_party/node/linux/node-linux-x64/bin
   ln -s /usr/bin/node third_party/node/linux/node-linux-x64/bin/
 
-  # VA-API patch
   msg2 'Applying VA-API patches'
-  patch -Np1 -i ../cfi-vaapi-fix.patch
+  # patch -Np1 -i ../cfi-vaapi-fix.patch
   patch -Np1 -i ../chromium-vaapi-r21.patch
 
   # Remove bundled libraries for which we will use the system copies; this
