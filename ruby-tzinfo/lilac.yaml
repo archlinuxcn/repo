@@ -1,8 +1,13 @@
 maintainers:
   - github: a-wing
 
+build_prefix: archlinuxcn-x86_64
+
+depends:
+  - ruby-thread_safe
+
 update_on:
+  - gems: tzinfo
   - aur: ruby-tzinfo
 
-pre_build:  aur_pre_build
-post_build:  aur_post_build
+post_build: git_pkgbuild_commit
