@@ -7,7 +7,7 @@ pkgbase=systemd-git
 _pkgbase=systemd
 pkgname=('systemd-git' 'libsystemd-git' 'systemd-resolvconf-git' 'systemd-sysvcompat-git')
 pkgdesc="systemd (git version)"
-pkgver=239.3095
+pkgver=239.3186
 pkgrel=1
 arch=('x86_64')
 url='https://www.github.com/systemd/systemd'
@@ -16,7 +16,7 @@ makedepends=('acl' 'cryptsetup' 'docbook-xsl' 'gperf' 'lz4' 'xz' 'pam' 'libelf'
              'libmicrohttpd' 'libxslt' 'util-linux' 'linux-api-headers'
              'python-lxml' 'quota-tools' 'shadow' 'gnu-efi-libs' 'git'
              'meson' 'libseccomp' 'pcre2' 'audit' 'kexec-tools' 'libxkbcommon'
-             'bash-completion')
+             'bash-completion' 'libdrm')
 options=('strip' '!distcc' '!ccache')
 source=('git+https://github.com/systemd/systemd'
         '0001-Use-Arch-Linux-device-access-groups.patch'
@@ -36,7 +36,9 @@ source=('git+https://github.com/systemd/systemd'
         'systemd-sysusers.hook'
         'systemd-tmpfiles.hook'
         'systemd-udev-reload.hook'
-        'systemd-update.hook')
+        'systemd-update.hook'
+        '0002-fixed_libdrm_not_found.patch')
+
 sha512sums=('SKIP'
             '9348683829190628e25b7b3300fd880c426d555bde330d5fc5150a9a54b3ad9d4d1f2e69ea1dc6d6f086693dacc53c5af30f1fa7ad9b479791fd77bcdafa430e'
             'f0d933e8c6064ed830dec54049b0a01e27be87203208f6ae982f10fb4eddc7258cb2919d594cbfb9a33e74c3510cfd682f3416ba8e804387ab87d1a217eb4b73'
@@ -55,12 +57,15 @@ sha512sums=('SKIP'
             '08a590d08043a21f30f04252164b94df972b1ff1022a0469d6aef713e14484a3a037cce290a2a582851e6fac3e64add69d6cc8fc130bbeeaea08626ebf3e1763'
             '577e33a1c50b4b41157a67f64162b035dd0c4a541e19cee55a100048bdb50cb2c82852741b1372989a0fe4c4782ba477522747fcc81d72aed99b3db512a86447'
             'e4a9d7607fe93daf1d45270971c8d8455c4bfc2c0bea8bcad05aeb89847edee23cd1a41073a72042622acf417018fe254f5bfc137604fe2c71292680bf67a1c2'
-            '209b01b044877cc986757fa4009a92ea98f480306c2530075d153203c3cd2b3afccab6aacc1453dee8857991e04270572f1700310705d7a0f4d5bed27fab8c67')
+            '209b01b044877cc986757fa4009a92ea98f480306c2530075d153203c3cd2b3afccab6aacc1453dee8857991e04270572f1700310705d7a0f4d5bed27fab8c67'
+            'a2aba4f35607d333e4815cd6782a7a0159af19097a2cfc557809252253821aceae5e9b5a117103170439a09f930183ac326ecd91b583966816058045094c4f7e')
+
 prepare() {
   cd "$_pkgbase"
 
   # Replace cdrom/dialout/tape groups with optical/uucp/storage
   patch -Np1 -i ../0001-Use-Arch-Linux-device-access-groups.patch
+  patch -Np1 -i ../0002-fixed_libdrm_not_found.patch
 }
 
 pkgver() {
@@ -106,7 +111,7 @@ build() {
     -Dsysvinit-path=
     -Dsysvrcnd-path=
   )
-  
+
   arch-meson "$_pkgbase" build "${_meson_options[@]}"
 
   ninja -C build
@@ -243,3 +248,4 @@ package_systemd-sysvcompat-git() {
     ln -s systemctl "$pkgdir"/usr/bin/$tool
   done
 }
+# vim:set ts=2 sw=2 et:
