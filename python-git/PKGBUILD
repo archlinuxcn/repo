@@ -69,7 +69,6 @@ build() {
               --enable-shared \
               --with-threads \
               --with-computed-gotos \
-              --enable-optimizations \
               --with-lto \
               --enable-ipv6 \
               --with-system-expat \
@@ -96,7 +95,7 @@ check() {
 
   LD_LIBRARY_PATH="${srcdir}/cpython":${LD_LIBRARY_PATH} \
   LC_CTYPE=en_US.UTF-8 xvfb-run -s "-screen 0 1280x720x24 -ac +extension GLX" -a -n "$servernum" \
-    "${srcdir}/cpython/python" -m test.regrtest -v -uall -x test_ttk_guionly
+    "${srcdir}/cpython/python" -m test.regrtest -w -uall -x test_ttk_guionly -j -1
 }
 
 package() {
