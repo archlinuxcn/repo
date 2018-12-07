@@ -25,6 +25,13 @@ prepare() {
 }
 
 build() {
+    export GOPATH="${srcdir}/build"
+    export BUILDPATH="${srcdir}/build/src/github.com/m13253"
+
+    cd ${srcdir}/${pkgbase}-${pkgver}
+    sed -i 's/\/local//g' systemd/doh-client.service
+    sed -i 's/\/local//g' systemd/doh-server.service
+
     cd ${BUILDPATH}/${pkgbase}/doh-client
     go get -v -gcflags "-trimpath $GOPATH/src"
 
