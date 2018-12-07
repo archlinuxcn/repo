@@ -4,12 +4,13 @@
 # Maintainer: Thomas Guimbretiere <profmobius@mojang.com>
 pkgname=minecraft-launcher
 pkgver=2.1.1431
-pkgrel=1
+pkgrel=2
 pkgdesc="Official Minecraft Launcher"
 arch=('x86_64')
 url="https://mojang.com/"
 license=('All rights reserved')
 depends=('java-runtime=8' 'xorg-xrandr' 'libxss' 'alsa-lib' 'gtk2' 'gconf' 'libxtst' 'nss')
+optdepends=('flite: narrator support')
 source=(
 "Minecraft-$pkgver.tar.gz::https://launcher.mojang.com/download/Minecraft.tar.gz"
 minecraft-launcher.desktop
