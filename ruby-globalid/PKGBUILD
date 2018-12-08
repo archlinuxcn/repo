@@ -4,7 +4,7 @@
 _gemname=globalid
 pkgname=ruby-$_gemname
 pkgver=0.4.1
-pkgrel=2
+pkgrel=3
 pkgdesc='Refer to any model with a URI: gid://app/class/id'
 arch=(any)
 url='http://www.rubyonrails.org'
