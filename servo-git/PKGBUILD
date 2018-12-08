@@ -3,7 +3,7 @@
 
 pkgname=servo-git
 _pkgname=servo
-pkgver=35459.3c19cd49ec
+pkgver=35467.8fb1b567fa
 pkgrel=1
 pkgdesc="Parallel Browser Project: web browser written in Rust"
 arch=('i686' 'x86_64')
