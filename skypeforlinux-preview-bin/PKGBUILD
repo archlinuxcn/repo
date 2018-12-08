@@ -3,7 +3,7 @@
 
 _pkgname=skypeforlinux
 pkgname=$_pkgname-preview-bin
-pkgver=8.36.76.26
+pkgver=8.36.76.38
 pkgrel=1
 pkgdesc="Skype for Linux - Preview/Insider Version"
 arch=("x86_64")
@@ -18,7 +18,7 @@ replaces=("$_pkgname-bin")
 source=(
 "https://repo.skype.com/deb/pool/main/s/$_pkgname/${_pkgname}_${pkgver}_amd64.deb"
 )
-sha256sums=('b3416e3d3624032d4b289bec2922331c442b5c4cf44f22551b4dfa7e67ad4af8')
+sha256sums=('5b51d587160cc1d7ae9b6b1f46f6b0a450eda1cef3bdcbf11f38b62954e2de97')
 
 package() {
   tar -xJC "$pkgdir" -f data.tar.xz
