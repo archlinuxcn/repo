@@ -4,7 +4,7 @@
 _gemname=activejob
 pkgname=ruby-$_gemname
 pkgver=5.2.2
-pkgrel=2
+pkgrel=3
 pkgdesc='Job framework with pluggable queues.'
 arch=(any)
 url='http://rubyonrails.org'
