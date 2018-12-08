@@ -53,8 +53,11 @@ def pre_build():
   cargo_version = toml['pkg']['cargo']['version'].split('-', 1)[0]
   rustfmt_version = toml['pkg']['rustfmt-preview']['version'].split('-', 1)[0]
   clippy_version = toml['pkg']['clippy-preview']['version'].split('-', 1)[0]
-  clippy_url = toml['pkg']['clippy-preview']['target'] \
-      ['x86_64-unknown-linux-gnu']['xz_url']
+  try:
+    clippy_url = toml['pkg']['clippy-preview']['target'] \
+        ['x86_64-unknown-linux-gnu']['xz_url']
+  except IndexError:
+    raise Exception('no clippy available?')
 
   if not debug:
     oldfiles = (glob.glob('*.xz') + glob.glob('*.xz.asc') +
