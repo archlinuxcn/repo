@@ -56,7 +56,7 @@ def pre_build():
   try:
     clippy_url = toml['pkg']['clippy-preview']['target'] \
         ['x86_64-unknown-linux-gnu']['xz_url']
-  except IndexError:
+  except KeyError:
     raise Exception('no clippy available?')
 
   if not debug:
