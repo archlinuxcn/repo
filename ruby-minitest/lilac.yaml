@@ -1,8 +1,14 @@
 maintainers:
   - github: a-wing
 
+build_prefix: archlinuxcn-x86_64
+
+depends:
+  - ruby-hoe
+
 update_on:
+  - gems: minitest
   - aur: ruby-minitest
 
-pre_build:  aur_pre_build
-post_build:  aur_post_build
+post_build: git_pkgbuild_commit
+
