@@ -1,7 +1,7 @@
 # Maintainer: Xuanwo <xuanwo@archlinuxcn.org>
 pkgname=syringa
-pkgver=0.1.0
-pkgrel=2
+pkgver=0.2.0
+pkgrel=1
 pkgdesc='A bridge to lilac for archlinuxcn.'
 makedepends=('make' 'rustup')
 arch=('x86_64')
@@ -9,7 +9,7 @@ url='https://github.com/Xuanwo/syringa'
 license=('Apache')
 provides=('syringa')
 source=(syringa-${pkgver}.tar.gz::https://github.com/Xuanwo/syringa/archive/v${pkgver}.tar.gz)
-sha256sums=('7078b76bb042ba9e8668c54054d1c94268cde17a1c56427c51ba0b98f794a1b4')
+sha256sums=('cee75ceb9a7197106416b83ba0fa5472d1bbe06d05cd1cda2143cf74079ab81b')
 
 prepare() {
   cd syringa-${pkgver}
