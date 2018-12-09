@@ -4,12 +4,12 @@
 _gemname=minitest
 pkgname=ruby-$_gemname
 pkgver=5.11.3
-pkgrel=1
+pkgrel=2
 pkgdesc='minitest provides a complete suite of testing facilities supporting TDD, BDD, mocking, and benchmarking'
 arch=(any)
 url='https://rubygems.org/gems/minitest'
 license=(MIT)
-depends=(ruby ruby-rdoc)
+depends=('ruby-rdoc' 'ruby' 'ruby-hoe' )
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
