@@ -11,7 +11,7 @@ _api_id='17349'
 _api_hash='344583e45741c457fe1862106095a5eb'
 
 pkgname=telegram-desktop-systemqt-notoemoji
-pkgver=1.4.7
+pkgver=1.4.8
 pkgrel=1
 pkgdesc='Official Telegram Desktop client (with noto emoji)'
 arch=('x86_64')
@@ -51,8 +51,8 @@ sha512sums=('SKIP'
             'fa7042f370ae4e2e14d083395743cdee25bfedc39ab5273b5d1ab12fb074757cf76dab065f2abcb44cad018920e711142fbf24a2b9cd30f517c5a5b46d6a6182'
             'b87414ceaae19185a8a5749cea1f6d9f3fc3c69b8dd729e3db8790cde00b987c3c827cd30baf0eac579d1884e34aa2f37bb90778c3c0bc9ca211d75a82891b9d'
             'b20674f61ff6378749d1f59a6a0da194d33ccc786bd783f6ed62027924a3a8a8d27c9763bf376480432d6536896b0c7eeb8c495c5b8cefff7cf5fe84da50947e'
-            '1bbca36ca1df9e3ef481224b82ccdeb797cf5f8ceb36ea181202c0db342bebcf802d191ee97cf36004ab992f6c23682d56c2c5bf1635ddd0432cd8adce441553'
-            'c05351aa9f6503daa6ef8b01adb73c7e71fd01377d833f47f826e184d78dd79628ce7c686ae23a40b7468adcd5af0af9ebce4783113957b6126892aca83c7712'
+            '26158910692f37f2f340165a194c2c4a4aedc5da140d80f877fecb9a6f577b15a7083468ed53ec9a915e581794ed82dec2b2b3751c017a3cc32f9ed65066e3fe'
+            'a8f1708616a598fea3cb94e3b63b02a7b13b55abd129a5dc02ad502529f4ebe7a673b6a350b669290fd26135358d21e2e10bf4a11d88f58f0685b7c4ab515bc5'
             'd60694dc701aa985b0e82a12c9732b945082470441c687b33167a94f94efcf253baf43bb7280ec160ba338485ee5c62de138e4804cae05f27cc5cf4298166d39')
 
 prepare() {
@@ -66,6 +66,7 @@ prepare() {
     git config submodule.Telegram/ThirdParty/xxHash.url "$srcdir/xxHash"
     git submodule update
 
+    set -x
     patch -Np1 -i "$srcdir/tdesktop.patch"
     patch -Np1 -i "$srcdir/no-gtk2.patch"
 
@@ -77,6 +78,7 @@ prepare() {
     patch -Np1 -i "$srcdir/libtgvoip.patch"
 
     cp -vf "$srcdir/telegram-emoji-gen-${_emojiver#v}/telegram-noto-emoji/"*.webp "$srcdir/tdesktop/Telegram/Resources/emoji"
+    set +x
 }
 
 build() {

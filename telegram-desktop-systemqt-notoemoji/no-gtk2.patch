@@ -1,5 +1,5 @@
 diff --git a/Telegram/SourceFiles/platform/linux/linux_libs.cpp b/Telegram/SourceFiles/platform/linux/linux_libs.cpp
-index b2d12a838..77c6abf7d 100644
+index f8d74fee1..c9d059fa6 100644
 --- a/Telegram/SourceFiles/platform/linux/linux_libs.cpp
 +++ b/Telegram/SourceFiles/platform/linux/linux_libs.cpp
 @@ -240,24 +240,12 @@ void start() {
@@ -7,7 +7,7 @@ index b2d12a838..77c6abf7d 100644
  		}
  	}
 -	if (!gtkLoaded || !indicatorLoaded) {
--		if (loadLibrary(lib_indicator, "appindicator", 1)) {
+-		if (loadLibrary(lib_indicator, "ayatana-appindicator", 1) || loadLibrary(lib_indicator, "appindicator", 1)) {
 -			if (loadLibrary(lib_gtk, "gtk-x11-2.0", 0)) {
 -				gtkLoaded = indicatorLoaded = false;
 -				gtkLoaded = setupGtkBase(lib_gtk);
