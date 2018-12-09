@@ -2,7 +2,6 @@ maintainers:
   - github: bennyyip
 
 update_on:
-  - aur: python-poppler-qt5-git
+  - github: wbsoft/python-poppler-qt5
 
-pre_build:  aur_pre_build
-post_build:  aur_post_build
+pre_build: vcs_update

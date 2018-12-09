@@ -1,4 +1,5 @@
 # Maintainer: Kenneth Lyons (ixjlyons) <ixjlyons@gmail.com>
+# Maintainer: Ben Yip <yebenmy@protonmail.com>
 
 pkgname=python-poppler-qt5-git
 pkgver=0.24.2.r16.g50fb2eb
@@ -8,7 +9,7 @@ arch=('any')
 url='https://github.com/wbsoft/python-poppler-qt5'
 license=('LGPL')
 depends=('python' 'python-pyqt5' 'poppler-qt5')
-makedepends=('git' 'python-sip')
+makedepends=('git' 'sip' 'python-sip')
 provides=("${pkgname%-git}=$pkgver-$pkgrel")
 conflicts=("${pkgname%-git}")
 source=(${pkgname}::'git+https://github.com/wbsoft/python-poppler-qt5.git')
