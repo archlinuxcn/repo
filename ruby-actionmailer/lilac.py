@@ -2,4 +2,6 @@
 from lilaclib import *
 
 def pre_build():
+  add_depends(["ruby-activejob"])
   update_pkgver_and_pkgrel(_G.newver)
+
