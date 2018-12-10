@@ -22,14 +22,20 @@ optdepends=('libfdk-aac: FDK AAC codec support'
             'python: scripting support'
             'vlc: VLC Media Source support')
 source=($_srcname-$pkgver.tar.gz::https://github.com/jp9000/obs-studio/archive/$pkgver.tar.gz
-        "https://github.com/obsproject/obs-studio/commit/a64ae11bce8ed9a7c8f1deba3338f77595dba903.patch")
+        "https://github.com/obsproject/obs-studio/commit/a64ae11bce8ed9a7c8f1deba3338f77595dba903.patch"
+        "https://github.com/obsproject/obs-studio/commit/cf73fa6da19f798ce04907781d6dc00484820b77.patch")
 sha256sums=('8712becf41f6e4b801aeaea0ab2c3ec98da3356c60853971d0a9730d3281cebe'
-            '0afe5444e5ab5514905f93b2758d525233e48b80463a51fabf44a5821265a6cd')
+            '0afe5444e5ab5514905f93b2758d525233e48b80463a51fabf44a5821265a6cd'
+            '23e19b7ce9c1492f27e7a1961dad7047bd93417706f57f0f64292353b67be845')
 
 prepare() {
   cd $_srcname-$pkgver
 
+  # VA-API patch
   patch -Np1 -i "${srcdir}/a64ae11bce8ed9a7c8f1deba3338f77595dba903.patch"
+
+  # libfdk-aac 2.0.0
+  patch -Np1 -i "${srcdir}/cf73fa6da19f798ce04907781d6dc00484820b77.patch"
 }
 
 build() {
