@@ -1,10 +1,4 @@
 post_install() {
-  getent group stapusr >/dev/null && chgrp stapusr /usr/bin/stapbpf || chgrp 156 /usr/bin/stapbpf
-  chmod 04110 /usr/bin/stapbpf
-
-  getent group stapusr >/dev/null && chgrp stapusr /usr/bin/staprun || chgrp 156 /usr/bin/staprun
-  chmod 04110 /usr/bin/staprun
-
   echo "CONFIG_DEBUG_INFO is disabled on default. You need to recompile"
   echo "the kernel with CONFIG_DEBUG_INFO enabled."
 }

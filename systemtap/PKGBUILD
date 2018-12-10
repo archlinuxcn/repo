@@ -51,6 +51,13 @@ package() {
   rm -rf "${pkgdir}/var"
   rm -rf "${pkgdir}/etc"
 
+  # group id 156 is stapusr
+  chgrp 156 "${pkgdir}"/usr/bin/stapbpf
+  chmod 04110 "${pkgdir}"/usr/bin/stapbpf
+
+  chgrp 156 "${pkgdir}"/usr/bin/staprun
+  chmod 04110 "${pkgdir}"/usr/bin/staprun
+
   cd "${srcdir}"
   install -Dm644 ${pkgname}.sysusers "${pkgdir}"/usr/lib/sysusers.d/${pkgname}.conf
 }
