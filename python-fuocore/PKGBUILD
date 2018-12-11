@@ -1,0 +1,23 @@
+# Maintainer: Bruce Zhang <zttt183525594@gmail.com>
+pkgname=python-fuocore
+_pkgname=fuocore
+pkgver=2.1
+pkgrel=1
+pkgdesc="Core modules for FeelUOwn Music Player"
+arch=('any')
+url="https://github.com/cosven/feeluown-core"
+license=('MIT')
+depends=('python' 'mpv' 'python-beautifulsoup4' 'python-marshmallow' 'python-pycrypto' 'python-requests' 'python-mutagen' 'python-fuzzywuzzy')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/7b/73/4ea34fbedab3c376c64bf3cc8cd388187f2d0813884cab8f1ca1bef05dcf/$_pkgname-$pkgver.tar.gz")
+sha256sums=('394600b7fbbb1b8022ee58001e8cfd474ba5067cafeafb8a50fa2b6a633172a8')
+
+build() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  python setup.py build
+}
+
+package() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  python setup.py install --root="$pkgdir" --optimize=1 --skip-build
+}
