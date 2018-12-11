@@ -3,12 +3,12 @@
 # Contributor: Florian Pritz <f-p@gmx.at>
 
 pkgname=inxi
-pkgver=3.0.28
+pkgver=3.0.29
 pkgrel=1
 pkgdesc="Full featured CLI system information tool"
 arch=(any)
 url="https://github.com/smxi/inxi"
-license=(GPL)
+license=(GPL3)
 depends=(coreutils pciutils perl procps-ng)
 optdepends=(
   "bind-tools: -i wlan IP"
@@ -33,9 +33,9 @@ optdepends=(
   "xorg-xprop: inxi -S desktop data"
   "xorg-xrandr: inxi -G single screen resolution"
 )
-options=('zipman')
+options=(zipman)
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/smxi/inxi/archive/${pkgver}-1.tar.gz")
-sha256sums=('345abdeac58791d8ba40824ca4b9deed0984591fee862de58763e88e308a997d')
+sha256sums=('f6037e668933f2028b67ce12e80ea662dec3d3c20d260d26dc1d9ab86f75803c')
 
 package() {
   cd "${pkgname}-${pkgver}-1"
