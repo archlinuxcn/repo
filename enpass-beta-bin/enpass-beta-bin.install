@@ -1,0 +1,12 @@
+post_install() {
+    post_upgrade
+}
+post_upgrade() {
+cat << EOF
+    If you encounter scaling issues try:
+
+        QT_AUTO_SCREEN_SCALE_FACTOR=0 enpass-beta-bin
+
+    If this worked you can put in /etc/environment to be persistent.
+EOF
+}
