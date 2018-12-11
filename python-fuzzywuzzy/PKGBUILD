@@ -1,0 +1,29 @@
+# Maintainer: Bruce Zhang <zttt183525594@gmail.com>
+_pkgname=fuzzywuzzy
+pkgname=python-fuzzywuzzy
+pkgver=0.17.0
+pkgrel=1
+pkgdesc="Fuzzy string matching like a boss"
+arch=("any")
+url="https://pypi.python.org/pypi/fuzzywuzzy"
+license=("custom:SeatGeek")
+depends=("python")
+optdepends=('python-levenshtein: provides a 4-10x speedup in string matching')
+makedepends=("python-setuptools")  
+conflicts=("python-fuzzywuzzy-git")
+source=("https://files.pythonhosted.org/packages/81/54/586e9f34401dc7f5248589765bb67d49b837e2f309f25a33e82e896cba0a/fuzzywuzzy-${pkgver}.tar.gz"
+        "LICENSE")
+sha256sums=('6f49de47db00e1c71d40ad16da42284ac357936fa9b66bea1df63fed07122d62'
+            'SKIP')
+
+build() {
+    cd "${srcdir}/${_pkgname}-${pkgver}"
+    python setup.py build
+}
+
+package() {
+    cd "${srcdir}/${_pkgname}-${pkgver}"
+    python setup.py install --root="$pkgdir" --optimize=1 --skip-build
+    install -d -m 755 ${pkgdir}/usr/share/licenses/${pkgname}
+    install -D -m 644 $srcdir/LICENSE ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+}

@@ -6,8 +6,8 @@ _name=firefox
 _channel=nightly
 pkgbase=firefox-nightly
 pkgname=()
-_version=65.0a1
-pkgver=65.0a1.20181210.11
+_version=66.0a1
+pkgver=66.0a1.20181211.01
 pkgrel=1
 arch=('x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -22,16 +22,16 @@ optdepends=('pulseaudio: audio support'
             'speech-dispatcher: text-to-speech'
             'startup-notification: support for FreeDesktop Startup Notification')
 _url="https://ftp.mozilla.org/pub/${_name}/nightly/latest-mozilla-central-l10n"
-_filename_prefix="20181210.11-"
+_filename_prefix="20181211.01-"
 source=("${pkgbase}.desktop")
 sha512sums=('b514abafc559ec03a4222442fa4306db257c3de9e18ed91a0b37cc9d7058a8e08a241442e54a67659a3ab4512a5dae6a0b94ea7a33d08ef0b8a76a9eac902095'
-            '5b48a43a46f7efa6390eeecb7a66c5693538b8f8c378e2f396241922b480f90d8bd4254e2adcbec23b1fc4a9f4e7c5a946b14ccaa149c4d6090856c765c3f894'
+            'dd1bc7dcc4922ac47e36cfd1f6a73709183070002e35aa971e425075d7830b3da957080ba1e035d92fc8d9e8198435543fdbd77bacc32eed80b59d3e5abd1e0f'
             'SKIP'
-            '0d55711353738042ff7bb0bbef956bfff1931f739fb218989e10b1e0eaa95b2a0226bbe4e0f0ac2e9417fcaddcbec2c875b7db06f43069a1262fc6c0d9d0f19d'
+            '49b351560d3fa1141ca6f2330a0d2bbb2bd5f83f1eae9882fb5c90a1a8c680907cf0c75d3c85cdb76c85ecf0bb7a6ae7166ddb9fafe706dee3651643f26652e9'
             'SKIP'
-            '6cec54f821056c6f4e411b6aaaa18350ca0c38fd521a1d6116255d91bd01be0a020cc07305151a0316f9ae407b6d9f3f31b1185dad8cc71ecf7e5900666a31fb'
+            'f6b21b0053ce423feb008677207a17b5fcc3c7ef5f723b2794eaf4059ee0492dc9930b7124bb29dc824fd3b6b9d6ee3d5e00a39b16ebc45e00214640a93c7762'
             'SKIP'
-            'bfc14d84032490fdb8463ec1fcd4bd0dd53412364a8bfec64a66089ff4c3af89bd9836a9c1bfdedafa036db05553bcb6d90d61ed4f68e01f329606969160f6c8'
+            '9b4f0bed705b8355a2191aa21974e9aca584a1c918eb87c489eff312428357e81bed5e89099fb6bec472f2e542eca6ecbbbb7ae8207ad120cbb880c48c4e1500'
             'SKIP')
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353') # Mozilla’s GnuPG release key
 
