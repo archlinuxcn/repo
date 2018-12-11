@@ -6,12 +6,12 @@
 _gemname=actionmailer
 pkgname=ruby-$_gemname
 pkgver=5.2.2
-pkgrel=2
+pkgrel=3
 pkgdesc='Email composition, delivery, and receiving framework (part of Rails).'
 arch=(any)
 url='http://www.rubyonrails.org'
 license=(MIT)
-depends=(ruby ruby-actionpack ruby-actionview ruby-mail ruby-rails-dom-testing)
+depends=('ruby-activejob' 'ruby' 'ruby-actionview' 'ruby-mail' 'ruby-actionpack' 'ruby-rails-dom-testing' )
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
