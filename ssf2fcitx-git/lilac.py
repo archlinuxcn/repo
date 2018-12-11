@@ -1,3 +1,6 @@
 from lilaclib import *
 
-depends = ['qt5-base']
+depends = []
+
+if __name__ == "__main__":
+    single_main('extra-x86_64')
