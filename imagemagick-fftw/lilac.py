@@ -1,11 +1,8 @@
-# Trimmed lilac.py
 from types import SimpleNamespace
 
 from lilaclib import *
 
 g = SimpleNamespace()
-
-#build_prefix = 'extra-x86_64'
 
 def pre_build():
   g.oldfiles = clean_directory()
@@ -46,6 +43,3 @@ def post_build():
   git_add_files(g.files)
   git_commit()
   update_aur_repo()
-
-#if __name__ == '__main__':
-#  single_main()
