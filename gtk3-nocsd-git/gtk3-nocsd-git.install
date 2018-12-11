@@ -1,0 +1,7 @@
+function post_install {
+    echo "You need to restart your X session to apply the changes."
+}
+
+function post_upgrade {
+    post_install
+}
