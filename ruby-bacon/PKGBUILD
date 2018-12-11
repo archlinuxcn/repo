@@ -4,7 +4,7 @@
 _gemname=bacon
 pkgname=ruby-$_gemname
 pkgver=1.2.0
-pkgrel=1
+pkgrel=2
 pkgdesc='a small RSpec clone'
 arch=(any)
 url='http://github.com/chneukirchen/bacon'
