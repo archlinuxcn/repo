@@ -1,7 +1,7 @@
 from lilaclib import *
 import os
 
-depends = ['simgear']
+depends = ['simgear' 'flightgear-data']
 
 build_prefix = 'extra-x86_64'
 
