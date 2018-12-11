@@ -1,5 +1,5 @@
 _npmname=vtop
-_npmver=0.6.0
+_npmver=0.6.1
 pkgname=$_npmname # All lowercase
 pkgver=$_npmver
 pkgrel=1
@@ -11,7 +11,7 @@ depends=('nodejs')
 makedepends=('npm')
 source=(http://registry.npmjs.org/$_npmname/-/$_npmname-$_npmver.tgz)
 noextract=($_npmname-$_npmver.tgz)
-sha1sums=('43da9914b4854d6b37664808c35826c136f3bc44')
+sha1sums=('ee1098505f3300e762a7e663455c6fa68be07fbf')
 
 package() {
   cd $srcdir
