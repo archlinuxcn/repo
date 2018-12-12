@@ -1,0 +1,27 @@
+commit 310c68a744ae8163c96b88944d96a6f6b14b3cdf
+Author: John Preston <johnprestonmail@gmail.com>
+Date:   Wed Dec 5 14:42:19 2018 +0400
+
+    Disable DemiBold fallback for Semibold.
+    
+    This reverts changes from commit 089c4ceb30.
+    
+    There were complaints that Persian font becomes unreadable :(
+
+diff --git a/Telegram/SourceFiles/ui/style/style_core_font.cpp b/Telegram/SourceFiles/ui/style/style_core_font.cpp
+index a2ab5f89f..d268a71e1 100644
+--- a/Telegram/SourceFiles/ui/style/style_core_font.cpp
++++ b/Telegram/SourceFiles/ui/style/style_core_font.cpp
+@@ -58,9 +58,9 @@ FontData::FontData(int size, uint32 flags, int family, Font *other)
+ 
+ 	f.setPixelSize(size);
+ 	if (_flags & FontBold) {
+-		f.setBold(_flags & FontBold);
+-	} else if (fontFamilies[family] == "Open Sans Semibold") {
+-		f.setWeight(QFont::DemiBold);
++		f.setBold(true);
++	//} else if (fontFamilies[family] == "Open Sans Semibold") {
++	//	f.setWeight(QFont::DemiBold);
+ 	}
+ 	f.setItalic(_flags & FontItalic);
+ 	f.setUnderline(_flags & FontUnderline);
