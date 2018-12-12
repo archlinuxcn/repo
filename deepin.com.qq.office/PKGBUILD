@@ -2,14 +2,14 @@
 # Maintainer: wszqkzqk <wszqkzqk@gmail.com>
 pkgname=deepin.com.qq.office
 pkgver=2.0.0deepin4
-pkgrel=1
+pkgrel=2
 epoch=
 pkgdesc="Deepin Wine TIM 2.0.0"
 arch=('i686' 'x86_64')
 url="http://office.qq.com/"
 license=('Proprietary')
 groups=()
-depends=('deepin-wine')
+depends=('deepin-wine' 'wqy-microhei')
 makedepends=('tar')
 checkdepends=()
 optdepends=()
