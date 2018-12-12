@@ -91,25 +91,22 @@ zfs_mount_handler () {
     # Mount the root, and any child datasets
     for dataset in ${zfs_datasets}; do
         mountpoint=$(zfs get -H -o value mountpoint "${dataset}")
-        case ${mountpoint} in
-            "none")
-                # skip this line/dataset.
-                ;;
-            "legacy")
-                if [ -f "${tab_file}" ]; then
-                    if findmnt -snero source -F "${tab_file}" -S "${dataset}" > /dev/null 2>&1; then
-                        opt=$(findmnt -snero options -F "${tab_file}" -S "${dataset}")
-                        mnt=$(findmnt -snero target -F "${tab_file}" -S "${dataset}")
-                        zfs_decrypt_fs "${dataset}"
-                        mount -t zfs -o "${opt}" "${dataset}" "${node}${mnt}"
-                    fi
+        canmount=$(zfs get -H -o value canmount "${dataset}")
+        # skip dataset
+        [ ${canmount} = "off" -o ${mountpoint} = "none" ] && continue
+        if [ ${mountpoint} = "legacy" ]; then
+            if [ -f "${tab_file}" ]; then
+                if findmnt -snero source -F "${tab_file}" -S "${dataset}" > /dev/null 2>&1; then
+                    opt=$(findmnt -snero options -F "${tab_file}" -S "${dataset}")
+                    mnt=$(findmnt -snero target -F "${tab_file}" -S "${dataset}")
+                    zfs_decrypt_fs "${dataset}"
+                    mount -t zfs -o "${opt}" "${dataset}" "${node}${mnt}"
                 fi
-                ;;
-            *)
-                zfs_decrypt_fs "${dataset}"
-                mount -t zfs -o "zfsutil,${rwopt_exp}" "${dataset}" "${node}/${mountpoint##${rootmnt}}"
-                ;;
-        esac
+            fi
+        else
+            zfs_decrypt_fs "${dataset}"
+            mount -t zfs -o "zfsutil,${rwopt_exp}" "${dataset}" "${node}/${mountpoint##${rootmnt}}"
+        fi
     done
 }
 
