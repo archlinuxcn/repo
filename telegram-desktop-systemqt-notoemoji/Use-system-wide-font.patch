@@ -1,0 +1,34 @@
+Description: Remove links to packaged Open Sans font
+ This makes Telegram Desktop use system-wide fonts.
+ Warnings about non-existent fonts in resources are also disabled.
+Author: Nicholas Guriev <guriev-ns@ya.ru>
+Bug-Debian: https://bugs.debian.org/890341
+Last-Update: Sat, 31 Mar 2018 14:36:39 +0300
+
+--- a/Telegram/Resources/qrc/telegram.qrc
++++ b/Telegram/Resources/qrc/telegram.qrc
+@@ -42,9 +42,6 @@
+     <file alias="js/script.js">../export_html/js/script.js</file>
+   </qresource>
+   <qresource prefix="/gui">
+-    <file alias="fonts/OpenSans-Regular.ttf">../fonts/OpenSans-Regular.ttf</file>
+-    <file alias="fonts/OpenSans-Bold.ttf">../fonts/OpenSans-Bold.ttf</file>
+-    <file alias="fonts/OpenSans-Semibold.ttf">../fonts/OpenSans-Semibold.ttf</file>
+     <file alias="art/bg.jpg">../art/bg.jpg</file>
+     <file alias="art/bg_initial.jpg">../art/bg_initial.jpg</file>
+     <file alias="art/logo_256.png">../art/logo_256.png</file>
+--- a/Telegram/SourceFiles/ui/twidget.cpp
++++ b/Telegram/SourceFiles/ui/twidget.cpp
+@@ -70,9 +70,9 @@ void Start() {
+ 	}
+ 	Started = true;
+ 
+-	auto regular = LoadCustomFont(qsl(":/gui/fonts/OpenSans-Regular.ttf"), qsl("Open Sans"));
+-	auto bold = LoadCustomFont(qsl(":/gui/fonts/OpenSans-Bold.ttf"), qsl("Open Sans"), style::internal::FontBold);
+-	auto semibold = LoadCustomFont(qsl(":/gui/fonts/OpenSans-Semibold.ttf"), qsl("Open Sans Semibold"));
++	auto regular = ValidateFont(qsl("Open Sans"));
++	auto bold = ValidateFont(qsl("Open Sans"), style::internal::FontBold);
++	auto semibold = ValidateFont(qsl("Open Sans Semibold"));
+ 
+ #ifdef Q_OS_WIN
+ 	// Attempt to workaround a strange font bug with Open Sans Semibold not loading.

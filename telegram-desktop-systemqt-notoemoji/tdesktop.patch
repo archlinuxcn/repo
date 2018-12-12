@@ -1,6 +1,6 @@
-From 1d382bc490484b6515ff599def7150f4a6e7386c Mon Sep 17 00:00:00 2001
+From 179bb4a7ee16fae8912b73500bca0bbf2cfef7dd Mon Sep 17 00:00:00 2001
 From: Allen Wild <allenwild93@gmail.com>
-Date: Sat, 8 Dec 2018 15:30:09 -0500
+Date: Tue, 11 Dec 2018 19:58:46 -0500
 Subject: [PATCH] tdesktop.patch
 
 ---
@@ -8,7 +8,7 @@ Subject: [PATCH] tdesktop.patch
  Telegram/SourceFiles/core/launcher.cpp        | 12 ++-
  .../SourceFiles/platform/linux/linux_libs.h   |  2 +-
  Telegram/SourceFiles/qt_functions.cpp         | 94 +++++++++++++++++++
- Telegram/SourceFiles/qt_static_plugins.cpp    |  9 --
+ Telegram/SourceFiles/qt_static_plugins.cpp    | 10 --
  Telegram/SourceFiles/ui/text/text.cpp         |  6 +-
  Telegram/SourceFiles/ui/text/text_block.cpp   |  3 +
  Telegram/SourceFiles/ui/twidget.cpp           |  4 +-
@@ -18,9 +18,9 @@ Subject: [PATCH] tdesktop.patch
  Telegram/gyp/qt_moc.gypi                      |  2 +-
  Telegram/gyp/qt_rcc.gypi                      |  2 +-
  Telegram/gyp/settings_linux.gypi              |  4 +-
- Telegram/gyp/telegram_linux.gypi              | 50 ++++------
+ Telegram/gyp/telegram_linux.gypi              | 41 ++++----
  Telegram/gyp/telegram_sources.txt             |  9 +-
- 16 files changed, 150 insertions(+), 128 deletions(-)
+ 16 files changed, 150 insertions(+), 120 deletions(-)
  create mode 100644 Telegram/SourceFiles/qt_functions.cpp
 
 diff --git a/Telegram/Resources/qrc/telegram_linux.qrc b/Telegram/Resources/qrc/telegram_linux.qrc
@@ -179,10 +179,10 @@ index 000000000..4a722b8d7
 +        flags |= QTextItem::StrikeOut;
 +}
 diff --git a/Telegram/SourceFiles/qt_static_plugins.cpp b/Telegram/SourceFiles/qt_static_plugins.cpp
-index e29f348c8..122ff0f5d 100644
+index a757d085f..122ff0f5d 100644
 --- a/Telegram/SourceFiles/qt_static_plugins.cpp
 +++ b/Telegram/SourceFiles/qt_static_plugins.cpp
-@@ -15,13 +15,4 @@ Q_IMPORT_PLUGIN(QWebpPlugin)
+@@ -15,14 +15,4 @@ Q_IMPORT_PLUGIN(QWebpPlugin)
  Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin)
  Q_IMPORT_PLUGIN(QGenericEnginePlugin)
  #elif defined Q_OS_LINUX // Q_OS_WIN | Q_OS_MAC
@@ -195,6 +195,7 @@ index e29f348c8..122ff0f5d 100644
 -Q_IMPORT_PLUGIN(QIbusPlatformInputContextPlugin)
 -Q_IMPORT_PLUGIN(QFcitxPlatformInputContextPlugin)
 -Q_IMPORT_PLUGIN(QHimePlatformInputContextPlugin)
+-Q_IMPORT_PLUGIN(NimfInputContextPlugin)
  #endif // Q_OS_WIN | Q_OS_MAC | Q_OS_LINUX
 diff --git a/Telegram/SourceFiles/ui/text/text.cpp b/Telegram/SourceFiles/ui/text/text.cpp
 index bc4d3d57b..370e5fe85 100644
@@ -491,7 +492,7 @@ index 17219fa2c..b00fd50ea 100644
        ],
        'cflags_c': [
 diff --git a/Telegram/gyp/telegram_linux.gypi b/Telegram/gyp/telegram_linux.gypi
-index dc0f4b90d..5f33ff961 100644
+index ffe0e5a96..82316d15b 100644
 --- a/Telegram/gyp/telegram_linux.gypi
 +++ b/Telegram/gyp/telegram_linux.gypi
 @@ -23,10 +23,11 @@
@@ -515,7 +516,7 @@ index dc0f4b90d..5f33ff961 100644
        '/usr/local/lib',
        '<(linux_path_ffmpeg)/lib',
        '<(linux_path_openal)/lib',
-@@ -43,25 +45,16 @@
+@@ -43,26 +45,16 @@
        '<(linux_path_breakpad)/lib',
      ],
      'libraries': [
@@ -524,6 +525,7 @@ index dc0f4b90d..5f33ff961 100644
 -      'ibusplatforminputcontextplugin',
 -      'fcitxplatforminputcontextplugin',
 -      'himeplatforminputcontextplugin',
+-      'nimfplatforminputcontextplugin',
 -      'liblzma.a',
 -      'libopenal.a',
 -      'libavformat.a',
@@ -551,7 +553,7 @@ index dc0f4b90d..5f33ff961 100644
  #      '<!(pkg-config 2> /dev/null --libs <@(pkgconfig_libs))',
      ],
      'cflags_cc': [
-@@ -90,26 +83,15 @@
+@@ -91,15 +83,14 @@
        },
      },
      'conditions': [
@@ -568,19 +570,8 @@ index dc0f4b90d..5f33ff961 100644
 +          '<!(pkg-config 2> /dev/null --cflags appindicator3-0.1)',
 +          '<!(pkg-config 2> /dev/null --cflags gtk+-3.0)',
          ],
--      }], ['<!(pkg-config ayatana-appindicator3-0.1; echo $?) == 0', {
--        'cflags_cc': [ '<!(pkg-config --cflags ayatana-appindicator3-0.1)' ],
--        'defines': [ 'TDESKTOP_USE_AYATANA_INDICATORS' ],
--      }], ['<!(pkg-config ayatana-appindicator-0.1; echo $?) == 0', {
--        'cflags_cc': [ '<!(pkg-config --cflags ayatana-appindicator-0.1)' ],
--        'defines': [ 'TDESKTOP_USE_AYATANA_INDICATORS' ],
--      }], ['<!(pkg-config appindicator3-0.1; echo $?) == 0', {
--        'cflags_cc': [ '<!(pkg-config --cflags appindicator3-0.1)' ],
--      }], ['<!(pkg-config appindicator-0.1; echo $?) == 0', {
--        'cflags_cc': [ '<!(pkg-config --cflags appindicator-0.1)' ],
-       }]
-     ],
-   }]],
+       }], ['<!(pkg-config ayatana-appindicator3-0.1; echo $?) == 0', {
+         'cflags_cc': [ '<!(pkg-config --cflags ayatana-appindicator3-0.1)' ],
 diff --git a/Telegram/gyp/telegram_sources.txt b/Telegram/gyp/telegram_sources.txt
 index 03c8a1335..77884c330 100644
 --- a/Telegram/gyp/telegram_sources.txt
@@ -602,5 +593,5 @@ index 03c8a1335..77884c330 100644
  platforms: win
  <(res_loc)/winrc/Telegram.rc
 -- 
-2.19.2
+2.20.0
 
