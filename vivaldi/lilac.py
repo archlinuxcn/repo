@@ -20,7 +20,7 @@ def pre_build():
 
   _g.aur_pre_files = clean_directory()
   name = os.path.basename(os.getcwd())
-  aur_building_files = download_aur_pkgbuild(name)
+  aur_building_files = _download_aur_pkgbuild(name)
   # remove .* file from aur
   aur_building_files = [x for x in aur_building_files if x not in glob.glob(".*")]
   _g.aur_building_files = aur_building_files
