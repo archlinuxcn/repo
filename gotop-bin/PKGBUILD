@@ -2,7 +2,7 @@
 
 pkgname=gotop-bin
 pkgver=1.7.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A terminal based graphical activity monitor inspired by gtop and vtop"
 arch=("x86_64" "i686")
 url="https://github.com/cjbassi/gotop"
@@ -19,7 +19,7 @@ case "$CARCH" in
 esac
 
 source=("https://github.com/cjbassi/gotop/releases/download/$pkgver/gotop_${pkgver}_linux_$_arch.tgz")
-md5sums=("SKIP")
+sha256sums=("f020a2bae52d3c578c348a7514e80fb023f16206f59e6e7eaff981914590601c")
 
 package() {
     mkdir -p "$pkgdir/usr/bin"
