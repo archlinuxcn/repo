@@ -5,7 +5,7 @@
 
 pkgname=dropbox
 pkgver=63.4.102
-pkgrel=1
+pkgrel=2
 pkgdesc="A free service that lets you bring your photos, docs, and videos anywhere and share them easily."
 arch=("i686" "x86_64")
 url="https://www.dropbox.com"
