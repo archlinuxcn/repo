@@ -4,7 +4,7 @@
 _gemname=activestorage
 pkgname=ruby-$_gemname
 pkgver=5.2.2
-pkgrel=1
+pkgrel=2
 pkgdesc='Local and cloud file storage framework.'
 arch=(any)
 url='http://rubyonrails.org'
