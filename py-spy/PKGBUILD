@@ -1,14 +1,14 @@
 # Maintainer: Clayton Craft <clayton at craftyguy dot net>
 pkgname=py-spy
-pkgver=0.1.8
-pkgrel=3
+pkgver=0.1.10
+pkgrel=1
 pkgdesc="Sampling profiler for Python programs"
 arch=('x86_64')
 license=('GPL3')
 url="https://github.com/benfred/py-spy"
 makedepends=('rust' 'cargo')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/benfred/py-spy/archive/v$pkgver.tar.gz")
-sha512sums=('68831d1c066887f3473e9eef1a773c0f9e1eb9252f929b0884b1d04faede90a72d7e3eb949d14e2e75c12e2645bf6b57ea5f94d5514491f46594231ad68ad1d1')
+sha512sums=('527aa93d88db3b6544b4a2fed7930198c2aa16e2aa4f4579478fdb36d367adc9ce82ca66ce31de5ddb9ce847ce22faf4ed0b8795d8ff518ac1aaa61c2382a008')
 
 build() {
         cd "${srcdir}/${pkgname}-${pkgver}"
