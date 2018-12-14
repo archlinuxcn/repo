@@ -3,7 +3,7 @@
 pkgname=visual-studio-code-bin
 _pkgname=visual-studio-code
 pkgver=1.30.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Visual Studio Code (vscode): Editor for building and debugging modern web and cloud applications (official binary version)"
 arch=('x86_64' 'i686')
 url="https://code.visualstudio.com/"
@@ -14,15 +14,17 @@ depends=(fontconfig libxtst gtk3 python cairo alsa-lib nss gcc-libs libnotify li
 optdepends=('gvfs: Needed for move to trash functionality'
             'libdbusmenu-glib: Needed for KDE global menu')
 source_x86_64=(code_x64_${pkgver}.tar.gz::https://vscode-update.azurewebsites.net/${pkgver}/linux-x64/stable
-               ${_pkgname}.desktop
+               ${_pkgname}.desktop ${_pkgname}-url-handler.desktop
                )
 source_i686=(code_ia32_${pkgver}.tar.gz::https://vscode-update.azurewebsites.net/${pkgver}/linux-ia32/stable
-              ${_pkgname}.desktop
+              ${_pkgname}.desktop ${_pkgname}-url-handler.desktop
               )
 sha256sums_x86_64=('818ab50bd1e1d0c93ca2cbb21d3bd8697563fd7399049de79ebd040c9cf376fd'
-                   '488592034dd5f979083bbd80788d33e253bb3ac3e52d50faee80e715a924a212')
+                   '2072dcb0d7e54ea5c2221ca95c0da517186ad4e39e2a20243adb0ec583265a41'
+                   '727adaf263801462744c65bc0fad1b64ab31b3c96ed1a11e5b61bffbd5d71bc7')
 sha256sums_i686=('414a02532374e219b990255a14eee06ec4467ef58b148f7586cbee636c93a22d'
-                 '488592034dd5f979083bbd80788d33e253bb3ac3e52d50faee80e715a924a212')
+                 '2072dcb0d7e54ea5c2221ca95c0da517186ad4e39e2a20243adb0ec583265a41'
+                 '727adaf263801462744c65bc0fad1b64ab31b3c96ed1a11e5b61bffbd5d71bc7')
 package() {
   _pkg=VSCode-linux-x64
   if [ "${CARCH}" = "i686" ]; then
@@ -38,6 +40,7 @@ package() {
   install -m644 "${srcdir}/${_pkg}/resources/app/LICENSE.txt" "${pkgdir}/usr/share/licenses/${_pkgname}/LICENSE"
   install -m644 "${srcdir}/${_pkg}/resources/app/resources/linux/code.png" "${pkgdir}/usr/share/icons/${_pkgname}.png"
   install -m644 "${srcdir}/${_pkgname}.desktop" "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
+  install -m644 "${srcdir}/${_pkgname}-url-handler.desktop" "${pkgdir}/usr/share/applications/${_pkgname}-url-handler.desktop"
 
   cp -r "${srcdir}/${_pkg}/"* "${pkgdir}/opt/${_pkgname}" -R
   ln -s /opt/${_pkgname}/bin/code "${pkgdir}"/usr/bin/code
