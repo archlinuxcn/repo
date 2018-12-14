@@ -1,55 +1,56 @@
-# Maintainer: Chih-Hsuan Yen <yan12125@archlinux.org>
+# Maintainer: Fredy García <frealgagu at gmail.com>
+# Contributor: Chih-Hsuan Yen <yan12125@archlinux.org>
 # Contributor: foutrelis
 # Contributor: Andreas Radke <andyrtr@archlinux.org>
 
 pkgbase=webkitgtk
 pkgname=(webkitgtk webkitgtk2)
-epoch=3
 pkgver=2.4.11
-pkgrel=14.3
+pkgrel=15
+epoch=3
 pkgdesc="Legacy Web content engine"
-arch=(i686 x86_64 armv7h)
-url="https://webkitgtk.org/"
-license=(custom)
-depends=(libxt libxslt sqlite libsoup 'enchant>=2.2' libgl geoclue2 gst-plugins-base-libs
-         libsecret libwebp harfbuzz-icu 'icu>=63')
-makedepends=(gtk3 gtk2 gperf gobject-introspection python2 mesa ruby)
-optdepends=('gst-plugins-base: free media decoding'
-            'gst-plugins-good: media decoding'
-            'gst-libav: nonfree media decoding')
-options=(!emptydirs)
-install=webkitgtk.install
-source=(https://webkitgtk.org/releases/$pkgbase-${pkgver}.tar.xz
-        webkitgtk-2.4.9-abs.patch
-        icu59.patch
-        enchant-2.x.patch
-        pkgconfig-enchant-2.patch)
-sha256sums=('588aea051bfbacced27fdfe0335a957dca839ebe36aa548df39c7bbafdb65bf7'
-            'ec294bbb5588a1802a68e3615c6718486b22f922645c5fef686d3d103014bf70'
-            'a1118b3c9317806438c1e2f46f17e15556aae34665f739ca72b94b10b16ae422'
-            '8db282f3b7f0e21ff51121c2579466c3194475a20d35c4fbd0e53f35b5639919'
-            'df8284004f25d189184aab1009df696c915212e0e439a555dbd0dbec06111e2e')
+arch=("armv7h" "i686" "x86_64")
+url="https://${pkgbase}.org/"
+license=("custom")
+depends=("enchant>=2.2" "geoclue2" "gst-plugins-base-libs" "harfbuzz-icu" "libgl" "libsecret" "libwebp" "libxslt" "libxt")
+optdepends=("gst-libav: nonfree media decoding"
+            "gst-plugins-base: free media decoding"
+            "gst-plugins-good: media decoding")
+makedepends=("gobject-introspection" "gperf" "gtk2" "gtk3" "mesa" "python2" "ruby")
+options=("!emptydirs")
+install="${pkgbase}.install"
+source=("https://${pkgbase}.org/releases/${pkgbase}-${pkgver}.tar.xz"
+        "${pkgbase}-2.4.9-abs.patch"
+        "enchant-2.x.patch"
+        "icu59.patch"
+        "pkgconfig-enchant-2.patch")
+sha256sums=("588aea051bfbacced27fdfe0335a957dca839ebe36aa548df39c7bbafdb65bf7"
+            "e40f1e08665e1646ebc490141678f26c9c4a2792207fdf7c05978547eae9f61c"
+            "7e37e059f071aaef93e387675de1a0c6a3dcf61ef67a3221a078caca69e22079"
+            "4e94e35b036f8a87a64e02d747d4103c0553dfe637fda372785c2b95211445ca"
+            "a1e2f24b28273746b2fbaecef42495f6314c76b16a446c22dc123e6a3afb58c8")
 
 prepare() {
-  mkdir -p build-gtk{,2} path
-  ln -s -f /usr/bin/python2 path/python
+  mkdir -p "${srcdir}/build-gtk"{,2} "${srcdir}/path"
+  ln -rTsf "/usr/bin/python2" "${srcdir}/path/python"
 
-  cd $pkgbase-$pkgver
-  patch -Np1 -i ../webkitgtk-2.4.9-abs.patch
-  patch -Np1 -i ../icu59.patch
-  patch -Np1 -i ../enchant-2.x.patch
+  cd "${srcdir}/${pkgbase}-${pkgver}"
+  patch -Np1 -i "${srcdir}/${pkgbase}-2.4.9-abs.patch"
+  patch -Np1 -i "${srcdir}/enchant-2.x.patch"
+  patch -Np1 -i "${srcdir}/icu59.patch"
   # https://www.archlinux.org/todo/enchant-221-rebuild/
-  patch -Np1 -i ../pkgconfig-enchant-2.patch
+  patch -Np1 -i "${srcdir}/pkgconfig-enchant-2.patch"
 
-  # needed as autotools-related files are patched
+  # Needed as autotools-related files are patched
   autoreconf -ifv
 }
 
 _build() (
-  _ver="$1"; shift
-  cd build-${_ver}
+  _ver="${1}"; shift
 
-  PATH="$srcdir/path:$PATH"
+  cd "${srcdir}/build-${_ver}"
+
+  PATH="${srcdir}/path:${PATH}"
 
   CXXFLAGS+=" -fno-delete-null-pointer-checks"
   CFLAGS+=" -fno-delete-null-pointer-checks"
@@ -57,7 +58,8 @@ _build() (
   CFLAGS+=" -Wno-expansion-to-defined -Wno-class-memaccess"
   CXXFLAGS+=" -Wno-expansion-to-defined -Wno-class-memaccess"
 
-  ../$pkgbase-$pkgver/configure --prefix=/usr \
+  "${srcdir}/${pkgbase}-${pkgver}/configure" \
+    --prefix=/usr \
     --libexecdir=/usr/lib/webkit${_ver} \
     --enable-introspection \
     --disable-webkit2 \
@@ -65,37 +67,35 @@ _build() (
     "$@"
 
   # https://bugzilla.gnome.org/show_bug.cgi?id=655517
-  sed -i 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
+  sed -i "s/ -shared / -Wl,-O1,--as-needed\0/g" "${srcdir}/build-${_ver}/libtool"
 
   make all stamp-po
 )
 
 build() {
-  _build gtk
-  _build gtk2 --with-gtk=2.0
+  _build "gtk"
+  _build "gtk2" --with-gtk=2.0
 }
 
 package_webkitgtk() {
   pkgdesc+=" for GTK+ 3"
-  depends+=(gtk3)
-  optdepends+=('gtk2: Netscape plugin support')
-  provides=("webkitgtk3=${pkgver}" "libwebkit3=${pkgver}")
-  conflicts=(webkitgtk3 libwebkit3)
-  replaces=(webkitgtk3 libwebkit3)
+  depends+=("gtk3")
+  optdepends+=("gtk2: Netscape plugin support")
+  provides=("${pkgbase}3=${pkgver}" "libwebkit3=${pkgver}")
+  conflicts=("${pkgbase}3" "libwebkit3")
+  replaces=("${pkgbase}3" "libwebkit3")
 
-  make -C build-gtk -j1 DESTDIR="$pkgdir" install
-  install -Dm644 $pkgbase-$pkgver/Source/WebKit/LICENSE \
-    "$pkgdir/usr/share/licenses/webkitgtk/LICENSE"
+  make -C "${srcdir}/build-gtk" DESTDIR="${pkgdir}" install
+  install -Dm644 "${srcdir}/${pkgbase}-${pkgver}/Source/WebKit/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
 
 package_webkitgtk2() {
   pkgdesc+=" for GTK+ 2"
-  depends+=(gtk2)
+  depends+=("gtk2")
   provides=("libwebkit=${pkgver}")
-  conflicts=(libwebkit)
-  replaces=(libwebkit)
+  conflicts=("libwebkit")
+  replaces=("libwebkit")
 
-  make -C build-gtk2 -j1 DESTDIR="$pkgdir" install
-  install -Dm644 $pkgbase-$pkgver/Source/WebKit/LICENSE \
-    "$pkgdir/usr/share/licenses/webkitgtk2/LICENSE"
+  make -C "${srcdir}/build-gtk2" DESTDIR="${pkgdir}" install
+  install -Dm644 "${srcdir}/${pkgbase}-${pkgver}/Source/WebKit/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
