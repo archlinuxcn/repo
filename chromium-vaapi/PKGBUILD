@@ -10,7 +10,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=chromium-vaapi
-pkgver=71.0.3578.80
+pkgver=71.0.3578.98
 pkgrel=1
 _launcher_ver=6
 pkgdesc="Chromium with VA-API support to enable hardware acceleration"
@@ -40,7 +40,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-skia-harmony.patch
         cfi-vaapi-fix.patch
         chromium-vaapi-r21.patch)
-sha256sums=('025b3520750d11f260acc4cbff5759137444ffb4c82361138dfd22f87b77ad0d'
+sha256sums=('1c56a9e30825774c83d568d194e9585625c6e90f81ee0ef09760fcedc86b9d45'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
             '1b370d49c43e88acfe7c0b1f9517047e927f3407bd80b4a48bba32c001f80136'
             'c4f2d1bed9034c02b8806f00c2e8165df24de467803855904bff709ceaf11af5'
