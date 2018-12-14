@@ -10,7 +10,7 @@ pkgname=('virtualbox-svn'
          'virtualbox-guest-utils-svn'
          'virtualbox-guest-utils-nox-svn'
          'virtualbox-ext-vnc-svn')
-pkgver=76139
+pkgver=76226
 pkgrel=1
 _vboxsf_commit='9451f61e6787e95aa51e42b6381db6b059bc49da'
 arch=('x86_64')
