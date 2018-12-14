@@ -1,0 +1,10 @@
+maintainers:
+  - github: VOID001
+depends:
+  - mingw-w64-gcc-base
+  - mingw-w64-headers
+  - mingw-w64-binutils
+pre_build: aur_pre_build
+post_build: aur_post_build
+update_on:
+  - aur: mingw-w64-crt
