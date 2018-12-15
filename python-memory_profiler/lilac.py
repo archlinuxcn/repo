@@ -1,16 +1,13 @@
-# Trimmed lilac.py
-#!/usr/bin/env python3
-
 from lilaclib import *
-
-#build_prefix = 'extra-x86_64'
 
 def pre_build():
   pypi_pre_build(depends=['python-psutil'])
+  for line in edit_file('PKGBUILD'):
+    if line.startswith('_pkgname'):
+      print('_pkgname=memory_profiler')
+    else:
+      print(line)
 
 def post_build():
   pypi_post_build()
   update_aur_repo()
-
-#if __name__ == '__main__':
-#  single_main()
