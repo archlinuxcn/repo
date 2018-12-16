@@ -1,5 +1,5 @@
 # Maintainer:  Peter Mattern <pmattern@arcor.de>
-# Contributor: Chih-Hsuan Yen <yan12125@gmail.com>
+# Contributor: Yen Chi Hsuan <yan12125@gmail.com>
 # Contributor: Jerome Leclanche <jerome@leclan.ch>
 
 _pkgname=lxqt-panel
@@ -8,34 +8,35 @@ pkgver=0.13.0.1104.gc6f910fd
 pkgrel=2
 pkgdesc='The LXQt desktop panel'
 arch=('i686' 'x86_64')
-url='https://github.com/lxqt/lxqt-panel'
+url='https://github.com/lxde/lxqt-panel'
 license=('GPL2')
 depends=(
-  "alsa-lib" "libpulse" "lm_sensors" "libstatgrab" "libsysstat-git" "solid"
-  "libxcomposite" "lxmenu-data" "libdbusmenu-qt5"
-  "lxqt-globalkeys-git"
+      "alsa-lib" "libpulse" "lm_sensors" "libstatgrab" "libsysstat-git"
+      "solid"
+      "menu-cache" "libxcomposite" "lxmenu-data" "libdbusmenu-qt5"
+      "lxqt-globalkeys-git"
 )
 makedepends=("git" "cmake" "qt5-tools" "lxqt-build-tools-git")
-provides=("$_pkgname=$pkgver")
+provides=("$_pkgname")
 conflicts=("$_pkgname")
-source=("git+https://github.com/lxqt/$_pkgname.git")
+source=("git+https://github.com/lxde/$_pkgname.git")
 sha256sums=('SKIP')
 
 pkgver() {
-  cd "$srcdir/$_pkgname"
-  git describe --always | sed "s/-/./g"
+      cd "$srcdir/$_pkgname"
+      git describe --always | sed "s/-/./g"
 }
 
 build() {
-  mkdir -p build
-  cd build
-  cmake "$srcdir/$_pkgname" \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_INSTALL_LIBDIR=/usr/lib
-  make
+      mkdir -p build
+      cd build
+      cmake "$srcdir/$_pkgname" \
+            -DCMAKE_INSTALL_PREFIX=/usr \
+            -DCMAKE_INSTALL_LIBDIR=/usr/lib
+      make
 }
 
 package() {
-  cd build
-  make DESTDIR="$pkgdir" install
+      cd build
+      make DESTDIR="$pkgdir" install
 }
