@@ -4,11 +4,11 @@
 
 #pkgbase=linux               # Build stock -ARCH kernel
 pkgbase=linux-lily       # Build kernel with a different name
-_srcver=4.18.16-arch1
+_srcver=4.19.9-arch1
 pkgver=${_srcver//-/.}
 pkgrel=1
 arch=(x86_64)
-url="https://github.com/archlinux/linux/commits/v$_srcver"
+url="https://git.archlinux.org/linux.git/log/?h=v$_srcver"
 license=(GPL2)
 makedepends=(parallel kmod inetutils bc libelf git)
 options=('strip' 'debug')
@@ -28,7 +28,7 @@ validpgpkeys=(
 )
 sha256sums=(
             'ae2e95db94ef7176207c690224169594d49445e04249d2499e9d2fbc117a0b21'
-            '75f99f5239e03238f88d1a834c50043ec32b1dc568f2cc291b07d04718483919'
+            'c043f3033bb781e2688794a59f6d1f7ed49ef9b13eb77ff9a425df33a244a636'
             'ad6344badc91ad0630caacde83f7f9b97276f80d26a20619a87952be65492c65')
 
 _kernelname=${pkgbase#linux}
@@ -79,14 +79,17 @@ _package() {
 
   # after cd or it won't be found
   local kernver="$(<../version)"
-
-  msg2 "Installing boot image..."
-  install -Dm644 "$(make -s image_name)" "$pkgdir/boot/vmlinuz-$pkgbase"
-
-  msg2 "Installing modules..."
   local modulesdir="$pkgdir/usr/lib/modules/$kernver"
   msg2 "modulesdir is $modulesdir"
   mkdir -p "$modulesdir"
+
+  msg2 "Installing boot image..."
+  # systemd expects to find the kernel here to allow hibernation
+  # https://github.com/systemd/systemd/commit/edda44605f06a41fb86b7ab8128dcf99161d2344
+  install -Dm644 "$(make -s image_name)" "$modulesdir/vmlinuz"
+  install -Dm644 "$modulesdir/vmlinuz" "$pkgdir/boot/vmlinuz-$pkgbase"
+
+  msg2 "Installing modules..."
   make INSTALL_MOD_PATH="$pkgdir/usr" DEPMOD=/bin/true modules_install
 
   # a place for external modules,
