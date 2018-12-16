@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b9d0501d..efda8f09 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -26,6 +26,9 @@ project(linphoneqt VERSION 4.1.1)
+ set(APP_LIBRARY app-library)
+ include(application_info.cmake)
+ 
++# Pointing RPATH to /opt/linphone-desktop/lib{,64} to be used when installing
++SET(CMAKE_INSTALL_RPATH "/opt/linphone-desktop/lib:/opt/linphone-desktop/lib64")
++
+ # ------------------------------------------------------------------------------
+ 
+ set(TARGET_NAME linphone-qt)

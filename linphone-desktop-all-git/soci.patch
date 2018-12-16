@@ -1,0 +1,26 @@
+diff --git a/src/core/soci-simple.cpp b/src/core/soci-simple.cpp
+index 7960b0ef..74cf7b21 100644
+--- a/src/core/soci-simple.cpp
++++ b/src/core/soci-simple.cpp
+@@ -340,7 +340,7 @@ struct statement_wrapper
+     std::map<std::string, std::vector<std::tm> > use_dates_v;
+ 
+     // format is: "YYYY MM DD hh mm ss"
+-    char date_formatted[20];
++    char date_formatted[72];
+ 
+     bool is_ok;
+     std::string error_message;
+diff --git a/src/core/use-type.cpp b/src/core/use-type.cpp
+index 646a9e7d..06cdc263 100644
+--- a/src/core/use-type.cpp
++++ b/src/core/use-type.cpp
+@@ -81,7 +81,7 @@ void standard_use_type::dump_value(std::ostream& os) const
+             {
+                 std::tm const& t = exchange_type_cast<x_stdtm>(data_);
+ 
+-                char buf[32];
++                char buf[72];
+                 snprintf(buf, sizeof(buf), "%04d-%02d-%02d %02d:%02d:%02d",
+                               t.tm_year + 1900, t.tm_mon + 1, t.tm_mday,
+                               t.tm_hour, t.tm_min, t.tm_sec);

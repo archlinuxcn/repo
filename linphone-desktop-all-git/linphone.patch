@@ -1,0 +1,24 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 62acd791f..55646a5e7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -23,6 +23,8 @@
+ cmake_minimum_required(VERSION 3.0)
+ project(linphone VERSION 3.12.0 LANGUAGES C CXX)
+ 
++# Pointing RPATH to /opt/linphone-desktop/lib{,64} to be used when installing
++SET(CMAKE_INSTALL_RPATH "/opt/linphone-desktop/lib:/opt/linphone-desktop/lib64")
+ 
+ set(LINPHONE_MAJOR_VERSION ${PROJECT_VERSION_MAJOR})
+ set(LINPHONE_MINOR_VERSION ${PROJECT_VERSION_MINOR})
+@@ -51,8 +53,8 @@ option(ENABLE_JAVA_WRAPPER "Build the Java wrapper for Liblinphone." OFF)
+ option(ENABLE_JAVADOC "Add a target to generate documentation for Java API" NO)
+ option(ENABLE_LDAP "Enable LDAP support." NO)
+ option(ENABLE_LIME "Enable Instant Messaging Encryption." YES)
+-option(ENABLE_RELATIVE_PREFIX "Find resources relatively to the installation directory." NO)
+-option(ENABLE_STRICT "Build with strict compile options." YES)
++option(ENABLE_RELATIVE_PREFIX "Find resources relatively to the installation directory." YES)
++option(ENABLE_STRICT "Build with strict compile options." NO)
+ option(ENABLE_TOOLS "Turn on or off compilation of tools." YES)
+ option(ENABLE_TUNNEL "Turn on compilation of tunnel support." NO)
+ option(ENABLE_TUTORIALS "Enable compilation of tutorials." YES)
