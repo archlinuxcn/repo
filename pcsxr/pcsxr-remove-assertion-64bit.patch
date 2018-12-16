@@ -1,0 +1,12 @@
+diff --git a/pcsxr/libpcsxcore/ix86_64/ix86-64.c b/pcsxr/libpcsxcore/ix86_64/ix86-64.c
+index f48b742e..c69192e0 100644
+--- a/pcsxr/libpcsxcore/ix86_64/ix86-64.c
++++ b/pcsxr/libpcsxcore/ix86_64/ix86-64.c
+@@ -231,7 +231,6 @@ void x86SetJ8( u8* j8 )
+ 
+ 	if ( jump > 0x7f ) {
+ 		SysPrintf( "j8 greater than 0x7f!!\n" );
+-		assert(0);
+ 	}
+ 	*j8 = (u8)jump;
+ }

@@ -1,0 +1,22 @@
+diff --git a/pcsxr/libpcsxcore/cdriso.c b/pcsxr/libpcsxcore/cdriso.c
+index b7eedea2..8ad16d15 100644
+--- a/pcsxr/libpcsxcore/cdriso.c
++++ b/pcsxr/libpcsxcore/cdriso.c
+@@ -1146,7 +1146,7 @@ static int cdread_sub_mixed(FILE *f, unsigned int base, void *dest, int sector)
+ 	return ret;
+ }
+ 
+-static int uncompress2(void *out, unsigned long *out_size, void *in, unsigned long in_size)
++static int uncompress2_internal(void *out, unsigned long *out_size, void *in, unsigned long in_size)
+ {
+ 	static z_stream z;
+ 	int ret = 0;
+@@ -1225,7 +1225,7 @@ static int cdread_compressed(FILE *f, unsigned int base, void *dest, int sector)
+ 	if (is_compressed) {
+ 		cdbuffer_size_expect = sizeof(compr_img->buff_raw[0]) << compr_img->block_shift;
+ 		cdbuffer_size = cdbuffer_size_expect;
+-		ret = uncompress2(compr_img->buff_raw[0], &cdbuffer_size, compr_img->buff_compressed, size);
++		ret = uncompress2_internal(compr_img->buff_raw[0], &cdbuffer_size, compr_img->buff_compressed, size);
+ 		if (ret != 0) {
+ 			SysPrintf("uncompress failed with %d for block %d, sector %d\n",
+ 					ret, block, sector);
