@@ -1,7 +1,7 @@
 # Maintainer: Plague-doctor <plague <at>> privacyrequired <<dot>> com >
 
 pkgname=vscodium
-pkgver=1.29.1
+pkgver=1.30.0
 pkgrel=1
 pkgdesc="Binary releases of VS Code without MS branding/telemetry/licensing."
 arch=('x86_64')
@@ -16,7 +16,7 @@ optdepends=(
         'libdbusmenu-glib: For KDE global menu'
 )
 provides=('code')
-conflicts=('visual-studio-code-bin')
+conflicts=('visual-studio-code-bin' 'code')
 source=(
         vscodium.desktop
         ${pkgname}-${pkgver}-${pkgrel}.tar.gz::${url}/releases/download/${pkgver}/VSCode-linux-x64-${pkgver}.tar.gz
@@ -24,7 +24,7 @@ source=(
 noextract=("${pkgname}-${pkgver}-${pkgrel}.tar.gz")
 
 sha256sums=('e4f3503d6c6eb9d967f9d35e58f5f801da98c4ccf7bd31dc752d1cef05781717'
-            'e458271c62de9886307e13288a39e5b13a68780ea1d1533cceb71dc9bbf9a5c9')
+            '452a0e870e26a8bb876f3502fe04b221fd9758273a7437120099a48920f21a01')
 
 prepare() {
     mkdir -p ${srcdir}/vscodium
