@@ -5,4 +5,4 @@ if [[ ! (-r /proc/sys/kernel/unprivileged_userns_clone && $(< /proc/sys/kernel/u
     FLAG="--no-sandbox"
 fi
 
-exec "/usr/lib/brave-bin/brave" "$FLAG" -- "$@"
+exec "/usr/lib/brave-bin/brave" $@ $FLAG

@@ -106,7 +106,7 @@ Comment[zh_CN]=访问互联网
 Comment[zh_HK]=連線到網際網路
 Comment[zh_TW]=連線到網際網路
 StartupNotify=true
-StartupWMClass=brave
+StartupWMClass=brave-browser
 TryExec=brave
 Exec=brave %U
 Terminal=false
@@ -114,3 +114,12 @@ Icon=brave
 Type=Application
 Categories=Network;WebBrowser;
 MimeType=text/html;text/xml;application/xhtml_xml;image/webp;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;
+
+[Desktop Action new-window]
+Name=New Window
+Exec=brave
+
+[Desktop Action new-private-window]
+Name=New Incognito Window
+Exec=brave --incognito
+MimeType=x-scheme-handler/unknown;x-scheme-handler/about;text/html;text/xml;application/xhtml_xml;image/webp;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;
