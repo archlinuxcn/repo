@@ -309,12 +309,16 @@ class ConfigSectionTest(TestCase):
                                     msg=('package "\033[1;31m{0}\033[m" does '
                                          'not have lilac.py').format(section))
 
-    def test_folders(self):
+    @skip("PKGBUILDs may be added later by lilac")
+    def test_pkgbuild_exists(self):
         for package in list_packages():
             with self.subTest(package=package):
                 self.assertTrue(git_isfile(pkgpath(package), "PKGBUILD"),
                                 msg=('package "\033[1;31m{0}\033[m" does '
                                      'not have PKGBUILD').format(package))
+
+    def test_package_in_official(self):
+        for package in list_packages():
             with self.subTest(package=package):
                 self.assertFalse(package in PACKAGES,
                                 msg=('package "\033[1;31m{0}\033[m" exists in '
