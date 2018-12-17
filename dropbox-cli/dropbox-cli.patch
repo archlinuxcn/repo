@@ -1,15 +1,17 @@
---- dropbox.py	2011-04-04 20:32:01.000000000 +0200
-+++ dropbox.py	2011-04-28 22:55:17.976623103 +0200
+diff --git a/dropbox-cli.py b/dropbox-cli.py
+index 3f301c0..1cd865c 100644
+--- a/dropbox-cli.py
++++ b/dropbox-cli.py
 @@ -1,4 +1,4 @@
--#!/usr/bin/python
+-#!/usr/bin/env python2
 +#!/usr/bin/python2
  #
- # Copyright 2008 Evenflow, Inc.
+ # Copyright (c) Dropbox, Inc.
  #
-@@ -610,6 +610,8 @@
+@@ -787,6 +787,8 @@ def requires_dropbox_running(meth):
  
  def start_dropbox():
-     db_path = os.path.expanduser(u"~/.dropbox-dist/dropboxd").encode(sys.getfilesystemencoding())
+     db_path = DROPBOXD_PATH.encode(sys.getfilesystemencoding())
 +    if not os.path.exists(db_path):
 +        db_path = u"/usr/bin/dropbox"
      if os.access(db_path, os.X_OK):
