@@ -5,30 +5,30 @@
 # Contributor: damir <damir@archlinux.org>
 
 pkgname=amarok
-pkgver=2.9.0.r271.82018b9fcf
+pkgver=2.9.0.r274.641b794b5b
 pkgrel=1
 pkgdesc="The powerful music player for KDE"
 arch=("x86_64")
-url="http://amarok.kde.org/"
+url="http://${pkgname}.kde.org/"
 license=("FDL" "GPL2" "LGPL2.1")
 depends=("kcmutils" "kdnssd" "kirigami2" "knewstuff" "ktexteditor" "libgpod" "liblastfm-qt5" "libmtp" "libmygpo-qt5" "libofa" "libssh-gnutls" "mariadb" "phonon-qt5" "qt5-webengine" "taglib-extras" "threadweaver")
 makedepends=("extra-cmake-modules" "gdk-pixbuf2" "git" "knotifyconfig" "libgpod" "libmtp" "libmygpo-qt5" "loudmouth")
 optdepends=("ifuse: support for Apple iPod Touch and iPhone"
             "loudmouth: backend needed by mp3tunes for syncing")
-_commit=3be247f8a178b3656d470e9f7bbc8a208e9bf547
-#source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.xz"{,.sig})
-source=("git://git.kde.org/amarok.git#commit=$_commit")
+_commit="641b794b5b97cbb1751d1ad8228f41c559b159f5"
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/KDE/${pkgname}/archive/${_commit}.tar.gz")
+sha256sums=("606b0e9cc4af758e63b4687e660d2ec394d53776213de1cff952a0c7ae8290ae")
 
-sha256sums=("SKIP")
-validpgpkeys=("D81C0CB38EB725EF6691C385BB463350D6EF31EF") # Heiko Becker <heirecka@exherbo.org>
+#source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.xz"{,.sig})
+#validpgpkeys=("D81C0CB38EB725EF6691C385BB463350D6EF31EF") # Heiko Becker <heirecka@exherbo.org>
 
 prepare() {
-  mkdir -p "${srcdir}/${pkgname}/build"
+  mkdir -p "${srcdir}/${pkgname}-${_commit}/build"
 }
 
 build() {
-  cd "${srcdir}/${pkgname}/build"
-  cmake .. \
+  cd "${srcdir}/${pkgname}-${_commit}/build"
+  cmake "${srcdir}/${pkgname}-${_commit}" \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_INSTALL_LIBDIR=lib \
     -DBUILD_TESTING=OFF
@@ -36,6 +36,6 @@ build() {
 }
 
 package() {
-  cd "${srcdir}/${pkgname}/build"
+  cd "${srcdir}/${pkgname}-${_commit}/build"
   make DESTDIR="${pkgdir}" install
 }
