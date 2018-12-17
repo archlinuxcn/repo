@@ -3,7 +3,7 @@
 
 _gemname=nokogiri
 pkgname="ruby-${_gemname}"
-pkgver=1.9.0.rc1
+pkgver=1.9.0
 pkgrel=1
 pkgdesc='HTML, XML, SAX, and Reader parser'
 arch=('any')
@@ -14,7 +14,7 @@ makedepends=('ruby-pkg-config' 'ruby-rdoc')
 options=('!emptydirs')
 source=("https://rubygems.org/downloads/${_gemname}-${pkgver}.gem")
 noextract=("${_gemname}-${pkgver}.gem")
-sha256sums=('138f8570c9999c09c3c166fc1847cb90897235ba5f4d6422a62d5a271c8bb09a')
+sha256sums=('e0dc98da58f955789c6fe6273c9eebf93568b38e93feafa7356cb79a71b4b62d')
 
 package() {
 	local _gemdir="$(ruby -e'puts Gem.default_dir')"
