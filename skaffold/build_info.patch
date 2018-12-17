@@ -1,0 +1,24 @@
+diff --git a/Makefile b/Makefile
+index f8516e5..4b0a773 100644
+--- a/Makefile
++++ b/Makefile
+@@ -33,8 +33,9 @@ SUPPORTED_PLATFORMS := linux-$(GOARCH) darwin-$(GOARCH) windows-$(GOARCH).exe
+ BUILD_PACKAGE = $(REPOPATH)/cmd/skaffold
+ 
+ VERSION_PACKAGE = $(REPOPATH)/pkg/skaffold/version
+-COMMIT = $(shell git rev-parse HEAD)
++COMMIT ?= $(shell git rev-parse HEAD)
+ VERSION ?= $(shell git describe --always --tags --dirty)
++TREE_STATE ?= $(if $(shell git status --porcelain),dirty,clean)
+ 
+ GO_GCFLAGS := "all=-trimpath=${PWD}"
+ GO_ASMFLAGS := "all=-trimpath=${PWD}"
+@@ -44,7 +45,7 @@ GO_LDFLAGS += -extldflags \"${LDFLAGS}\"
+ GO_LDFLAGS += -X $(VERSION_PACKAGE).version=$(VERSION)
+ GO_LDFLAGS += -X $(VERSION_PACKAGE).buildDate=$(shell date +'%Y-%m-%dT%H:%M:%SZ')
+ GO_LDFLAGS += -X $(VERSION_PACKAGE).gitCommit=$(COMMIT)
+-GO_LDFLAGS += -X $(VERSION_PACKAGE).gitTreeState=$(if $(shell git status --porcelain),dirty,clean)
++GO_LDFLAGS += -X $(VERSION_PACKAGE).gitTreeState=$(TREE_STATE)
+ GO_LDFLAGS +="
+ 
+ GO_FILES := $(shell find . -type f -name '*.go' -not -path "./vendor/*")
