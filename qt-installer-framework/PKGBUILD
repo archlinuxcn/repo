@@ -1,17 +1,19 @@
 # Maintainer: Muflone http://www.muflone.com/contacts/english/
+# Co-Maintainer Skycoder42 <skycoder42.de@gmx.de>
 # Contributor: Danny Dutton <duttondj@vt.edu>
 
 pkgbase=qt-installer-framework
 pkgname=(qt-installer-framework qt-installer-framework-docs)
-pkgver=3.0.4
+pkgver=3.0.6
 pkgrel=1
 pkgdesc='The Qt Installer Framework used for the Qt SDK installer'
 arch=('x86_64')
 url='http://qt-project.org/wiki/Qt-Installer-Framework'
 license=('FDL' 'LGPL')
 makedepends=('qt5-tools' 'qt5-declarative' 'clang')
-source=("https://download.qt.io/official_releases/${pkgbase}/${pkgver}/${pkgbase}-opensource-src-${pkgver}.gz")
-sha256sums=('07df3fb3ed65c25263523251d3e62a80dec8cf176111a3174204196910425861')
+source=("https://download.qt.io/official_releases/${pkgbase}/${pkgver}/${pkgbase}-opensource-src-${pkgver}.tar.gz")
+#md5sums=('8907ee07987010f0998e976a13318be3')
+sha256sums=('5e32adca8f27f8a0730a036cb233b3668d158a546b20e41256e2811e47bade15')
 
 build() {
   # Build tools and libraries
