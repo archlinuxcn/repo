@@ -6,13 +6,14 @@
 _gemname=rails
 pkgname=ruby-$_gemname
 pkgver=5.2.2
-pkgrel=2
+pkgrel=3
 pkgdesc='Full-stack web application framework.'
 arch=(any)
 url='http://www.rubyonrails.org'
 license=(MIT)
 depends=(ruby ruby-activesupport ruby-actionpack ruby-actionview ruby-activemodel \
-	ruby-activerecord ruby-actionmailer ruby-railties ruby-bundler ruby-sprockets-rails)
+	ruby-activerecord ruby-actionmailer ruby-railties ruby-bundler ruby-sprockets-rails \
+  ruby-activestorage ruby-activejob ruby-actioncable)
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
