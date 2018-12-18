@@ -5,8 +5,8 @@
 # Contributor: Matthias Meulien <orontee@gmail.com>
 
 pkgname=global
-pkgver=6.6.2
-pkgrel=3
+pkgver=6.6.3
+pkgrel=1
 pkgdesc="A source code tag system"
 arch=("i686" "x86_64")
 url="https://www.gnu.org/software/${pkgname}/"
@@ -17,7 +17,7 @@ optdepends=("ctags" "emacs" "idutils" "python-pygments" "vim")
 makedepends=("python")
 options=(!emptydirs !libtool)
 source=("https://ftp.gnu.org/pub/gnu/${pkgname}/${pkgname}-${pkgver}.tar.gz")
-sha256sums=("43c64711301c2caf40dc56d7b91dd03d2b882a31fa31812bf20de0c8fb2e717f")
+sha256sums=("cbee98ef6c1b064bc5b062d14a6d94dca67289e8374860817057db7688bc651c")
 
 prepare() {
   cd "${srcdir}/${pkgname}-${pkgver}"
@@ -25,7 +25,7 @@ prepare() {
 
   # Package idutils from AUR installs lid as lid-idutils
   # See: https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=idutils
-  msg "Change idutils lid executable name to lid-idutils"
+  # Change idutils lid executable name to lid-idutils
   sed -i 's/usable("lid")/usable("lid-idutils")/g' ${pkgname}/${pkgname}.c
 }
 
