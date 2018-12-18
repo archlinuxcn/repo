@@ -4,8 +4,8 @@
 pkgname=oni-bin
 _betaver=0.3.7-beta3
 _basicver=${_betaver/-*}
-pkgver=${_betaver/-}
-pkgrel=2
+pkgver=0.3.7beta3
+pkgrel=3
 pkgdesc='Oni: Modern Modal Editing - powered by Neovim.'
 arch=('x86_64')
 conflicts=("oni")
