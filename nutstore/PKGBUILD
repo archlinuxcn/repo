@@ -1,8 +1,8 @@
 #Maintainer: Bhoppi Chaw <bhoppi#outlook,com>
 
 pkgname=nutstore
-pkgver=4.1.4
-pkgrel=3
+pkgver=4.1.5
+pkgrel=1
 pkgdesc='a cloud service that lets you sync and share files anywhere.'
 arch=(x86_64)
 url='https://www.jianguoyun.com/'
@@ -14,7 +14,7 @@ source_x86_64=("https://www.jianguoyun.com/static/exe/st/$pkgver/nutstore_client
 #source_i686=("https://www.jianguoyun.com/static/exe/st/$pkgver/nutstore_client-$pkgver-linux-x86-public.tar.gz")
 sha256sums=('3091740b20ddd31ba4407b8daba1077c4677040cdc47bccfab2f7f3947676384'
             'f3d2861ff48f2d193a4eced23a02b4eba9fab4c1d3f727e934ed7c59f38f0f7e')
-sha256sums_x86_64=('b0ec672174b7f3d100d41bb6ab8768d45cfb36aef47b5e80a3560bec8842bf84')
+sha256sums_x86_64=('9d41854c2d654085c2004b5da738c3ba9152d5de8c15a9fb9d1df8efd2e021a3')
 
 build() {
     cd $srcdir/gnome-config
