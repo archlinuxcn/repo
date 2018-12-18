@@ -1,9 +1,10 @@
+# Trimmed lilac.py
 #!/usr/bin/env python3
 
 from lilaclib import *
 
-build_prefix = 'extra-x86_64'
-post_build = aur_post_build
+#build_prefix = 'extra-x86_64'
+#post_build = aur_post_build
 
 _pkg_name = 'vuze'
 
@@ -36,7 +37,7 @@ def pre_build():
   with open(install_file, 'wb') as f:
     f.write(dotinstall.encode())
 
-if __name__ == '__main__':
-  single_main(build_prefix)
+#if __name__ == '__main__':
+#  single_main(build_prefix)
 
 # vim: set ts=2 sw=2 et:
