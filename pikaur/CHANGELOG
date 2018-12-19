@@ -1309,3 +1309,16 @@ Wed Dec 12 20:40:56 2018 +0100
      2018-12-12 fd99181 actionless fix(build, srcinfo): when building split package retrieve all depends from the base PKGBUILD, not from package-specific sections
      2018-12-11 9ebeaa4 actionless fix(locale: de): incorrect template var in translated string
      2018-12-10 e784b5c actionless feat(info cli): unify output format with pacman's -Si
+
+
+Tue Dec 18 20:07:15 2018 +0100
+-------------------------------------------------
+1.3.4           Release 1.3.4
+    
+    Notable changes:
+     2018-12-16 d77abd4 actionless feat(info cli): show None value in gray color
+     2018-12-16 391d213 actionless feat(aur, info_cli): show aur git clone url for AUR packages
+     2018-12-12 5da6b1b lasers test_sysupgrade: remove strips
+     2018-12-13 5cc6aea actionless fix(install cli, build): when split packages have base depends section those deps should be installed during the build
+     2018-12-13 09987eb actionless fix(main: cache clean): correctly handle countable --clean arg
+     2018-12-12 95fee07 lasers main: don't print empty upgradeable lines
