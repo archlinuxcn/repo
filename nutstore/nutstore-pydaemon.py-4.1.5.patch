@@ -1,0 +1,15 @@
+@@ -32,3 +32,3 @@
+ def get_nutstore_dir():
+-    dist = get_dist_dir()
++    dist = os.getenv('HOME') + '/.nutstore/dist'
+     if os.path.basename(dist) != "dist":
+@@ -42,3 +42,3 @@
+ if not os.path.exists(LOGDIR):
+-    os.mkdir(LOGDIR)
++    os.makedirs(LOGDIR, exist_ok=True)
+ # Don't try config logging with config file
+@@ -54,4 +54,2 @@
+ logging.basicConfig(
+-                filename=LOGFILE,
+-                filemode='a',
+                 datefmt="%m/%d/%Y %H:%M:%S",
