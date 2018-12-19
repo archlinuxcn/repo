@@ -3,17 +3,17 @@
 
 _gemname=crass
 pkgname=ruby-$_gemname
-pkgver=1.0.2
+pkgver=1.0.4
 pkgrel=1
 pkgdesc='CSS parser based on the CSS Syntax Level 3 spec.'
 arch=(any)
 url='https://github.com/rgrove/crass/'
 license=(MIT)
-depends=(ruby)
+depends=('ruby-rdoc' 'ruby' )
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
-sha1sums=('5a855504ff288cd8c36482c26d965d05b370dbbd')
+sha1sums=('9e92149b78cc901fa612d6cc94a22463c996a5cd')
 
 package() {
   local _gemdir="$(ruby -e'puts Gem.default_dir')"
