@@ -1,6 +1,65 @@
-diff -pNaru5 src1/linux-3.16/arch/x86/kernel/module.c src2/linux-3.16/arch/x86/kernel/module.c
---- src1/linux-3.16/arch/x86/kernel/module.c	2014-08-03 18:25:02.000000000 -0400
-+++ src2/linux-3.16/arch/x86/kernel/module.c	2018-12-01 20:13:20.479487508 -0500
+From b21ebf2fb4cde1618915a97cc773e287ff49173e Mon Sep 17 00:00:00 2001
+From: "H.J. Lu" <hjl.tools@gmail.com>
+Date: Wed, 7 Feb 2018 14:20:09 -0800
+Subject: x86: Treat R_X86_64_PLT32 as R_X86_64_PC32
+
+On i386, there are 2 types of PLTs, PIC and non-PIC.  PIE and shared
+objects must use PIC PLT.  To use PIC PLT, you need to load
+_GLOBAL_OFFSET_TABLE_ into EBX first.  There is no need for that on
+x86-64 since x86-64 uses PC-relative PLT.
+
+On x86-64, for 32-bit PC-relative branches, we can generate PLT32
+relocation, instead of PC32 relocation, which can also be used as
+a marker for 32-bit PC-relative branches.  Linker can always reduce
+PLT32 relocation to PC32 if function is defined locally.   Local
+functions should use PC32 relocation.  As far as Linux kernel is
+concerned, R_X86_64_PLT32 can be treated the same as R_X86_64_PC32
+since Linux kernel doesn't use PLT.
+
+R_X86_64_PLT32 for 32-bit PC-relative branches has been enabled in
+binutils master branch which will become binutils 2.31.
+
+[ hjl is working on having better documentation on this all, but a few
+  more notes from him:
+
+   "PLT32 relocation is used as marker for PC-relative branches. Because
+    of EBX, it looks odd to generate PLT32 relocation on i386 when EBX
+    doesn't have GOT.
+
+    As for symbol resolution, PLT32 and PC32 relocations are almost
+    interchangeable. But when linker sees PLT32 relocation against a
+    protected symbol, it can resolved locally at link-time since it is
+    used on a branch instruction. Linker can't do that for PC32
+    relocation"
+
+  but for the kernel use, the two are basically the same, and this
+  commit gets things building and working with the current binutils
+  master   - Linus ]
+
+Signed-off-by: H.J. Lu <hjl.tools@gmail.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+---
+ arch/x86/kernel/machine_kexec_64.c | 1 +
+ arch/x86/kernel/module.c           | 1 +
+ arch/x86/tools/relocs.c            | 3 +++
+ 3 files changed, 5 insertions(+)
+
+# File not present in linux-3.16
+#diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+#index 1f790cf9d38f..3b7427aa7d85 100644
+#--- a/arch/x86/kernel/machine_kexec_64.c
+#+++ b/arch/x86/kernel/machine_kexec_64.c
+#@@ -542,6 +542,7 @@ int arch_kexec_apply_relocations_add(const Elf64_Ehdr *ehdr,
+#        goto overflow;
+#      break;
+#    case R_X86_64_PC32:
+#+   case R_X86_64_PLT32:
+#      value -= (u64)address;
+#      *(u32 *)location = value;
+#      break;
+diff -pNaru5 linux-3.16.61.orig/arch/x86/kernel/module.c linux-3.16/arch/x86/kernel/module.c
+--- linux-3.16.61.orig/arch/x86/kernel/module.c	2014-08-03 18:25:02.000000000 -0400
++++ linux-3.16/arch/x86/kernel/module.c	2018-12-02 20:13:13.245493421 -0500
 @@ -178,10 +178,11 @@ int apply_relocate_add(Elf64_Shdr *sechd
  			*(s32 *)loc = val;
  			if ((s64)val != *(s32 *)loc)
@@ -13,10 +72,10 @@ diff -pNaru5 src1/linux-3.16/arch/x86/kernel/module.c src2/linux-3.16/arch/x86/k
  #if 0
  			if ((s64)val != *(s32 *)loc)
  				goto overflow;
-diff -pNaru5 src1/linux-3.16/arch/x86/tools/relocs.c src2/linux-3.16/arch/x86/tools/relocs.c
---- src1/linux-3.16/arch/x86/tools/relocs.c	2018-12-01 20:10:30.802647293 -0500
-+++ src2/linux-3.16/arch/x86/tools/relocs.c	2018-12-01 20:13:41.022841461 -0500
-@@ -761,10 +761,11 @@ static int do_reloc64(struct section *se
+diff -pNaru5 linux-3.16.61.orig/arch/x86/tools/relocs.c linux-3.16/arch/x86/tools/relocs.c
+--- linux-3.16.61.orig/arch/x86/tools/relocs.c	2018-12-02 20:13:11.958832565 -0500
++++ linux-3.16/arch/x86/tools/relocs.c	2018-12-02 20:13:13.245493421 -0500
+@@ -761,13 +761,16 @@ static int do_reloc64(struct section *se
  		offset += per_cpu_load_addr;
  
  	switch (r_type) {
@@ -26,5 +85,10 @@ diff -pNaru5 src1/linux-3.16/arch/x86/tools/relocs.c src2/linux-3.16/arch/x86/to
  		/*
  		 * NONE can be ignored and PC relative relocations don't
  		 * need to be adjusted.
++		 *
++		 * NB: R_X86_64_PLT32 can be treated as R_X86_64_PC32.
  		 */
  		break;
+ 
+ 	case R_X86_64_32:
+ 	case R_X86_64_32S:

@@ -4,36 +4,39 @@
 # Contributor: Thomas Baechler <thomas@archlinux.org>
 
 set -u
-pkgbase=linux-lts316
-_srcname=linux-3.16
-pkgver=3.16.61
-pkgrel=1
+pkgbase="linux-lts316"
+_srcname="linux-3.16"
+pkgver="3.16.62"
+pkgrel='1'
 arch=('i686' 'x86_64')
 url="https://www.kernel.org/"
 license=('GPL2')
 makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc')
 options=('!strip')
 _verwatch=('https://mirrors.edge.kernel.org/pub/linux/kernel/v3.x/' '.*patch-\(3\.16\.[0-9]\+\)\.xz.*' 'f')
-source=("https://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
-        "https://www.kernel.org/pub/linux/kernel/v3.x/patch-${pkgver}.xz"
-        # the main kernel config files
-        'config' 'config.x86_64'
-        # pacman hook for initramfs regeneration
-        '99-linux.hook'
-        # standard config files for mkinitcpio ramdisk
-        'linux.preset'
-        'change-default-console-loglevel.patch'
-        '0000-unknown-rela-relocation-4-binutils.2.31.kernel.3.16.patch' # https://www.reddit.com/r/linuxquestions/comments/903xwq/unable_to_compile_working_kernel_modules_anymore/
-        'update.sh'
-        )
+source=(
+  "https://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
+  "https://www.kernel.org/pub/linux/kernel/v3.x/patch-${pkgver}.xz"
+  # the main kernel config files
+  'config' 'config.x86_64'
+  # pacman hook for initramfs regeneration
+  '99-linux.hook'
+  # standard config files for mkinitcpio ramdisk
+  'linux.preset'
+  'change-default-console-loglevel.patch'
+  '0000-unknown-rela-relocation-4-binutils.2.31.kernel.3.16.patch' # https://www.reddit.com/r/linuxquestions/comments/903xwq/unable_to_compile_working_kernel_modules_anymore/
+  '0001-binutils.2.31.max-page-size.patch' # http://lists.gnu.org/archive/html/bug-binutils/2018-03/msg00193.html
+  'update.sh'
+)
 sha256sums=('4813ad7927a7d92e5339a873ab16201b242b2748934f12cb5df9ba2cfe1d77a0'
-            '946d72d9bbb1fecef70b4e93334395fbc686e7202f0008db028532fe48516cf6'
+            'ee24505b8ca695ef4c049fb1f17ce1fffe8248c96b61564e5cfba924e4abc825'
             '3bce3e9adce8ae3f826eebab75e9784ca92a914e526ae352de61c1da93aab8d3'
             '9d82115ea8921d3f4f7f28ba162a3a3f256f88f14f8fad49a833eddb77c0efea'
             '834bd254b56ab71d73f59b3221f056c72f559553c04718e350ab2a3e2991afe0'
             'f0d90e756f14533ee67afda280500511a62465b4f76adcc5effa95a40045179c'
             '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99'
-            '0399497c991372817b2ae25e1570d30588e16183a2122367276d542952f03b56'
+            'b0f101562baca5f8aed72ba90638763ef2be8f4618c111a50334970dd03dfb4b'
+            'f71e0de924013fe60c3cbed45f322e6a09942db978daeddd18adb8582373b5ed'
             '4dad3093e0c2bd7dafd30a0344b4df6432c3a7d1422edc4e0d1e6201aa513648')
 
 _kernelname=${pkgbase#linux}
@@ -43,7 +46,7 @@ _kernelname=${pkgbase#linux}
 _makeopts=(
   #CC='gcc-5' CXX='g++-5' HOSTCC='gcc-5' HOSTCXX='g++-5' # LD='ld.gold'
   #CC='gcc-6' CXX='g++-6' HOSTCC='gcc-6' HOSTCXX='g++-6'
-  LDFLAGS='-z max-page-size=0x200000' # http://lists.gnu.org/archive/html/bug-binutils/2018-03/msg00193.html
+  #LDFLAGS='-z max-page-size=0x200000' # http://lists.gnu.org/archive/html/bug-binutils/2018-03/msg00193.html
 )
 #makedepends+=('gcc5')
 
@@ -63,8 +66,12 @@ prepare() {
   # (relevant patch sent upstream: https://lkml.org/lkml/2011/7/26/227)
   patch -Nup1 -i "${srcdir}/change-default-console-loglevel.patch"
 
-  # diff -pNaru5 src1 src2 > '0000-unknown-rela-relocation-4-binutils.2.31.kernel.3.16.patch'
-  patch -Nup2 -i "${srcdir}/0000-unknown-rela-relocation-4-binutils.2.31.kernel.3.16.patch"
+  # diff -pNaru5 'linux-3.16'{.61.orig,} > 'new_0000-unknown-rela-relocation-4-binutils.2.31.kernel.3.16.patch'
+  #(cd ..; cp -pr "${_srcname}"{,.61.orig})
+  patch -Nup1 -i "${srcdir}/0000-unknown-rela-relocation-4-binutils.2.31.kernel.3.16.patch"
+  # false
+
+  patch -Nup1 -i "${srcdir}/0001-binutils.2.31.max-page-size.patch"
 
   declare -A _config=([i686]='config' [x86_64]='config.x86_64')
   cat "${srcdir}/${_config[${CARCH}]}" > './.config'
@@ -137,6 +144,7 @@ _package() {
   optdepends=('crda: to set the correct wireless channels of your country')
   backup=("etc/mkinitcpio.d/${pkgbase}.preset")
   install=linux.install
+  provides=("linux=${pkgver}")
 
   cd "${srcdir}/${_srcname}"
 
@@ -199,6 +207,7 @@ _package() {
 _package-headers() {
   set -u
   pkgdesc="Header files and scripts for building modules for ${pkgbase/linux/Linux} kernel"
+  provides=("linux-headers=${pkgver}")
 
   install -dm755 "${pkgdir}/usr/lib/modules/${_kernver}"
 
