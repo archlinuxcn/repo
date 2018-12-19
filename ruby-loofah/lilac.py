@@ -2,5 +2,7 @@
 from lilaclib import *
 
 def pre_build():
-  update_pkgver_and_pkgrel(_G.newver)
   add_makedepends(["ruby-rdoc"])
+  add_depends(["ruby-crass"])
+  update_pkgver_and_pkgrel(_G.newver)
+
