@@ -1,0 +1,14 @@
+post_install() {
+  _extramodules="extramodules-$(uname -r | cut -f-2 -d'.')-$(uname -r|sed -e 's/.*-//g')"
+  depmod $(cat /usr/lib/modules/${_extramodules}/version)
+}
+
+post_upgrade() {
+  post_install
+}
+
+post_remove() {
+  post_install
+}
+
+# vim: ts=2 sw=2 et:
