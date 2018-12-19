@@ -2,20 +2,20 @@
 # Maintainer: Eric Bélanger <eric@archlinux.org>
 
 pkgname=wget-lily
-pkgver=1.19.5
+pkgver=1.20
 pkgrel=1
 pkgdesc='Network utility to retrieve files from the Web'
 url='https://www.gnu.org/software/wget/wget.html'
 arch=('x86_64')
 license=('GPL3')
-depends=('glibc' 'gnutls' 'libidn' 'libutil-linux' 'libpsl' 'pcre')
+depends=('glibc' 'gnutls' 'libidn2' 'libutil-linux' 'libpsl' 'pcre2')
 checkdepends=('perl-http-daemon' 'perl-io-socket-ssl' 'python')
 optdepends=('ca-certificates: HTTPS downloads')
 conflicts=('wget')
 provides=("wget=$pkgver")
 backup=('etc/wgetrc')
 source=(https://ftp.gnu.org/gnu/wget/wget-${pkgver}.tar.lz{,.sig} wget.patch)
-sha256sums=('29fbe6f3d5408430c572a63fe32bd43d5860f32691173dfd84edc06869edca75'
+sha256sums=('b0b80f565ac27f5e56c847431c75b4f8fcb31af9dad2bf5ce947d89651f3681e'
             'SKIP' aa28cf8532f6b7cc1fe689eb253b0453102990eb725a6583704ca4f3e665c9b0)
 validpgpkeys=('AC404C1C0BF735C63FF4D562263D6DF2E163E1EA'
               '7845120B07CBD8D6ECE5FF2B2A1743EDA91A35B6'
