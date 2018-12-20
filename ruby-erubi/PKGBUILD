@@ -4,7 +4,7 @@
 _gemname=erubi
 pkgname=ruby-$_gemname
 pkgver=1.8.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Small ERB Implementation'
 arch=(any)
 url='https://github.com/jeremyevans/erubi'
