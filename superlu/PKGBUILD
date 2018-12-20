@@ -2,7 +2,7 @@
 # Contributor: Giuseppe Borzi <gborzi@ieee.org>
 pkgname=superlu
 pkgver=5.2.1
-pkgrel=4
+pkgrel=6
 pkgdesc="Set of subroutines to solve a sparse linear system"
 arch=('i686' 'x86_64')
 url="http://crd-legacy.lbl.gov/~xiaoye/SuperLU/"
@@ -11,10 +11,10 @@ depends=('gcc-libs' 'blas')
 makedepends=('gcc-fortran' 'tcsh')
 install=${pkgname}.install
 source=(${url}${pkgname}_$pkgver.tar.gz ${url}License.txt
-        ${url}superlu_ug.pdf)
+        ${url}ug.pdf)
 sha512sums=('30538b4c2809294b8f34646bce6445944f21a1dffaf3ec0a0f29a55d5261caa56e4279d7722bb95cc9d89450d36ded969617edc82ecce7d0f1dfb24040d80d07'
             '10d4e497b4cc3aa2aaa2807e75641f9c0046f38876587adda33202546b7218a5d77843742e43ceca917726be0b985e7364b924e40d7377efafeba27bbbb5b7de'
-            '2601258c06e5f9f88654adb662ebeb2641d03f0d12e13fd1c8470880290ea00043557b05443d55e19efe3832283ae2d6cf7bd2aa9a8519528f50f12ce86af2fd')
+            '19f8c8609f6c6d77c657756695c40da0dd0554a511b7090d8d17566e0d770c32e7f2d087530cc51aae80042e6068b0182a01ddaed6a7a086a77e087459b271e2')
 options=('staticlibs')
 
 build() {
@@ -65,7 +65,7 @@ package() {
   ln -s lib$pkgname.so.$pkgver lib$pkgname.so.4
   ln -s lib$pkgname.so.4 lib$pkgname.so
   install -m644 $srcdir/SuperLU_$pkgver/SRC/*.h $pkgdir/usr/include/$pkgname
-  install -m644 $srcdir/superlu_ug.pdf $pkgdir/usr/share/doc/$pkgname/superlu_ug.pdf
+  install -m644 $srcdir/ug.pdf $pkgdir/usr/share/doc/$pkgname/ug.pdf
   install -m644 $srcdir/SuperLU_$pkgver/README $pkgdir/usr/share/doc/$pkgname
   install -m644 $srcdir/License.txt $pkgdir/usr/share/licenses/$pkgname
 }
