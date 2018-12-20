@@ -3,12 +3,12 @@
 _gemname=loofah
 pkgname=ruby-$_gemname
 pkgver=2.2.3
-pkgrel=2
+pkgrel=3
 pkgdesc='HTML sanitization for Rails applications'
 arch=(any)
 url='https://github.com/flavorjones/loofah'
 license=(MIT)
-depends=(ruby ruby-nokogiri)
+depends=('ruby' 'ruby-crass' 'ruby-nokogiri' )
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
