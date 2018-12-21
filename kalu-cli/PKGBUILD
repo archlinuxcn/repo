@@ -5,7 +5,7 @@
 _pkgname=kalu
 pkgname=$_pkgname-cli
 pkgver=4.3.0
-pkgrel=3
+pkgrel=4
 pkgdesc="Upgrade notifier w/ AUR support, watched (AUR) packages, news (CLI only)"
 arch=('i686' 'x86_64')
 url="https://jjacky.com/kalu"
