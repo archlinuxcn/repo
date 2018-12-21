@@ -2,7 +2,7 @@
 
 pkgname=logcat-color
 pkgver=0.6.0
-pkgrel=3
+pkgrel=4
 pkgdesc='A colorful alternative to "adb logcat"'
 arch=('any')
 url='https://github.com/marshall/logcat-color'
