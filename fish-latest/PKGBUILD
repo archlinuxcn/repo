@@ -7,7 +7,7 @@
 
 pkgname=fish-latest
 pkgver=3.0b1
-pkgrel=1
+pkgrel=2
 pkgdesc="User friendly shell intended mostly for interactive use."
 arch=('i686' 'x86_64' 'arm')
 url="http://fishshell.com"
@@ -20,7 +20,7 @@ provides=('fish' 'fish-shell')
 conflicts=('fish' 'fish-shell' 'fish-git')
 install='fish.install'
 source=("https://github.com/fish-shell/fish-shell/archive/${pkgver}.tar.gz")
-md5sums=('SKIP')
+md5sums=('26e3db1c3c76c976c23a746b06d46d02')
 
 build() {
 	cd "$srcdir/fish-shell-${pkgver}"
