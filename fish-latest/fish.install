@@ -1,0 +1,20 @@
+post_install() {
+  if [ ! "`grep /usr/bin/fish etc/shells`" ]; then
+    echo "updating /etc/shells... done."
+    sed -i "s|/bin/bash|/bin/bash\n/usr/bin/fish|" etc/shells
+  fi
+}
+
+post_upgrade() {
+  post_install $1
+}
+
+pre_remove() {
+  echo -ne "updating /etc/shells... \n"
+  sed -i '/^\/usr\/bin\/fish/d' /etc/shells
+}
+
+op=$1
+shift
+
+$op $*
