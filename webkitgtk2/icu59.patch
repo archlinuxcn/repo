@@ -1,0 +1,42 @@
+diff --git a/Source/JavaScriptCore/API/JSStringRef.h b/Source/JavaScriptCore/API/JSStringRef.h
+index aded736..30a6b73 100644
+--- a/Source/JavaScriptCore/API/JSStringRef.h
++++ b/Source/JavaScriptCore/API/JSStringRef.h
+@@ -32,6 +32,7 @@
+ #include <stdbool.h>
+ #endif
+ #include <stddef.h> /* for size_t */
++#include <uchar.h>
+ 
+ #ifdef __cplusplus
+ extern "C" {
+@@ -43,7 +44,7 @@ extern "C" {
+ @typedef JSChar
+ @abstract A Unicode character.
+ */
+-    typedef unsigned short JSChar;
++    typedef char16_t JSChar;
+ #else
+     typedef wchar_t JSChar;
+ #endif
+diff --git a/Source/WebKit2/Shared/API/c/WKString.h b/Source/WebKit2/Shared/API/c/WKString.h
+index dd5b877..2df4a3b 100644
+--- a/Source/WebKit2/Shared/API/c/WKString.h
++++ b/Source/WebKit2/Shared/API/c/WKString.h
+@@ -28,6 +28,7 @@
+ 
+ #include <WebKit2/WKBase.h>
+ #include <stddef.h>
++#include <uchar.h>
+ 
+ #ifndef __cplusplus
+ #include <stdbool.h>
+@@ -39,7 +40,7 @@ extern "C" {
+ 
+ #if !defined(WIN32) && !defined(_WIN32) \
+     && !((defined(__CC_ARM) || defined(__ARMCC__)) && !defined(__linux__)) /* RVCT */
+-    typedef unsigned short WKChar;
++    typedef char16_t WKChar;
+ #else
+     typedef wchar_t WKChar;
+ #endif

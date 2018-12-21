@@ -1,0 +1,28 @@
+diff --git a/Source/WebCore/platform/gtk/GtkClickCounter.cpp b/Source/WebCore/platform/gtk/GtkClickCounter.cpp
+index baa8917..7db658c 100644
+--- a/Source/WebCore/platform/gtk/GtkClickCounter.cpp
++++ b/Source/WebCore/platform/gtk/GtkClickCounter.cpp
+@@ -85,8 +85,8 @@ int GtkClickCounter::clickCountForGdkButtonEvent(GtkWidget* widget, GdkEventButt
+     guint32 eventTime = getEventTime(event);
+ 
+     if ((event->type == GDK_2BUTTON_PRESS || event->type == GDK_3BUTTON_PRESS)
+-        || ((abs(buttonEvent->x - m_previousClickPoint.x()) < doubleClickDistance)
+-            && (abs(buttonEvent->y - m_previousClickPoint.y()) < doubleClickDistance)
++        || ((fabs(buttonEvent->x - m_previousClickPoint.x()) < doubleClickDistance)
++            && (fabs(buttonEvent->y - m_previousClickPoint.y()) < doubleClickDistance)
+             && (eventTime - m_previousClickTime < static_cast<guint>(doubleClickTime))
+             && (buttonEvent->button == m_previousClickButton)))
+         m_currentClickCount++;
+diff --git a/Source/WebCore/platform/gtk/LocalizedStringsGtk.cpp b/Source/WebCore/platform/gtk/LocalizedStringsGtk.cpp
+index 30d7d13..2563be6 100644
+--- a/Source/WebCore/platform/gtk/LocalizedStringsGtk.cpp
++++ b/Source/WebCore/platform/gtk/LocalizedStringsGtk.cpp
+@@ -659,7 +659,7 @@ String localizedMediaTimeDescription(float time)
+     if (!std::isfinite(time))
+         return String::fromUTF8(_("indefinite time"));
+ 
+-    int seconds = static_cast<int>(abs(time));
++    int seconds = static_cast<int>(fabs(time));
+     int days = seconds / (60 * 60 * 24);
+     int hours = seconds / (60 * 60);
+     int minutes = (seconds / 60) % 60;

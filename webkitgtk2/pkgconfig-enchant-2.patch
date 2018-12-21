@@ -1,0 +1,13 @@
+diff --git a/Source/autotools/FindDependencies.m4 b/Source/autotools/FindDependencies.m4
+index 60ee32d..cf1019f 100644
+--- a/Source/autotools/FindDependencies.m4
++++ b/Source/autotools/FindDependencies.m4
+@@ -154,7 +154,7 @@ AC_SUBST(PANGO_CFLAGS)
+ AC_SUBST(PANGO_LIBS)
+ 
+ if test "$enable_spellcheck" = "yes"; then
+-    PKG_CHECK_MODULES(ENCHANT, enchant >= enchant_required_version, [], [enable_spellcheck="no"])
++    PKG_CHECK_MODULES(ENCHANT, enchant-2 >= enchant_required_version, [], [enable_spellcheck="no"])
+     AC_SUBST(ENCHANT_CFLAGS)
+     AC_SUBST(ENCHANT_LIBS)
+ fi

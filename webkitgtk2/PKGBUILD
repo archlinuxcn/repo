@@ -3,27 +3,26 @@
 # Contributor: foutrelis
 # Contributor: Andreas Radke <andyrtr@archlinux.org>
 
-pkgname=webkitgtk
+pkgname=webkitgtk2
 pkgver=2.4.11
 pkgrel=16
 epoch=3
-pkgdesc="Legacy Web content engine for GTK+ 3"
+pkgdesc="Legacy Web content engine for GTK+ 2"
 arch=("armv7h" "i686" "x86_64")
-url="https://${pkgname}.org/"
+url="https://${pkgname%2}.org/"
 license=("custom")
-depends=("enchant>=2.2" "geoclue2" "gst-plugins-base-libs" "gtk3" "harfbuzz-icu" "libgl" "libsecret" "libwebp" "libxslt" "libxt")
+depends=("enchant>=2.2" "geoclue2" "gst-plugins-base-libs" "gtk2" "harfbuzz-icu" "libgl" "libsecret" "libwebp" "libxslt" "libxt")
 optdepends=("gst-libav: nonfree media decoding"
             "gst-plugins-base: free media decoding"
-            "gst-plugins-good: media decoding"
-            "gtk2: Netscape plugin support")
+            "gst-plugins-good: media decoding")
 makedepends=("gobject-introspection" "gperf" "gtk2" "gtk3" "mesa" "python2" "ruby")
-provides=("${pkgname}3=${pkgver}" "libwebkit3=${pkgver}")
-conflicts=("${pkgname}3" "libwebkit3")
-replaces=("${pkgname}3" "libwebkit3")
+provides=("libwebkit=${pkgver}")
+conflicts=("libwebkit")
+replaces=("libwebkit")
 options=("!emptydirs")
-install="${pkgname}.install"
-source=("https://${pkgname}.org/releases/${pkgname}-${pkgver}.tar.xz"
-        "${pkgname}-2.4.9-abs.patch"
+install="${pkgname%2}.install"
+source=("https://${pkgname%2}.org/releases/${pkgname%2}-${pkgver}.tar.xz"
+        "${pkgname%2}-2.4.9-abs.patch"
         "enchant-2.x.patch"
         "icu59.patch"
         "pkgconfig-enchant-2.patch")
@@ -34,11 +33,11 @@ sha256sums=("588aea051bfbacced27fdfe0335a957dca839ebe36aa548df39c7bbafdb65bf7"
             "a1e2f24b28273746b2fbaecef42495f6314c76b16a446c22dc123e6a3afb58c8")
 
 prepare() {
-  mkdir -p "${srcdir}/build-gtk" "${srcdir}/path"
+  mkdir -p "${srcdir}/build-gtk2" "${srcdir}/path"
   ln -rTsf "/usr/bin/python2" "${srcdir}/path/python"
 
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  patch -Np1 -i "${srcdir}/${pkgname}-2.4.9-abs.patch"
+  cd "${srcdir}/${pkgname%2}-${pkgver}"
+  patch -Np1 -i "${srcdir}/${pkgname%2}-2.4.9-abs.patch"
   patch -Np1 -i "${srcdir}/enchant-2.x.patch"
   patch -Np1 -i "${srcdir}/icu59.patch"
   # https://www.archlinux.org/todo/enchant-221-rebuild/
@@ -49,7 +48,7 @@ prepare() {
 }
 
 build() (
-  cd "${srcdir}/build-gtk"
+  cd "${srcdir}/build-gtk2"
 
   PATH="${srcdir}/path:${PATH}"
 
@@ -59,20 +58,21 @@ build() (
   CFLAGS+=" -Wno-expansion-to-defined -Wno-class-memaccess"
   CXXFLAGS+=" -Wno-expansion-to-defined -Wno-class-memaccess"
 
-  "${srcdir}/${pkgname}-${pkgver}/configure" \
+  "${srcdir}/${pkgname%2}-${pkgver}/configure" \
     --prefix=/usr \
     --libexecdir=/usr/lib/${pkgname} \
     --enable-introspection \
+    --with-gtk=2.0 \
     --disable-webkit2 \
     --disable-gtk-doc
 
   # https://bugzilla.gnome.org/show_bug.cgi?id=655517
-  sed -i "s/ -shared / -Wl,-O1,--as-needed\0/g" "${srcdir}/build-gtk/libtool"
+  sed -i "s/ -shared / -Wl,-O1,--as-needed\0/g" "${srcdir}/build-gtk2/libtool"
 
   make all stamp-po
 )
 
 package() {
-  make -C "${srcdir}/build-gtk" DESTDIR="${pkgdir}" install
-  install -Dm644 "${srcdir}/${pkgname}-${pkgver}/Source/WebKit/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  make -C "${srcdir}/build-gtk2" DESTDIR="${pkgdir}" install
+  install -Dm644 "${srcdir}/${pkgname%2}-${pkgver}/Source/WebKit/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }

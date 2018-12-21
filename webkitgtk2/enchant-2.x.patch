@@ -1,0 +1,13 @@
+diff --git a/Source/WebCore/platform/text/enchant/TextCheckerEnchant.cpp b/Source/WebCore/platform/text/enchant/TextCheckerEnchant.cpp
+index d2d2c6f..905ca5b 100644
+--- a/Source/WebCore/platform/text/enchant/TextCheckerEnchant.cpp
++++ b/Source/WebCore/platform/text/enchant/TextCheckerEnchant.cpp
+@@ -128,7 +128,7 @@ Vector<String> TextCheckerEnchant::getGuessesForWord(const String& word)
+         for (i = 0; i < numberOfSuggestions; i++)
+             guesses.append(String::fromUTF8(suggestions[i]));
+ 
+-        enchant_dict_free_suggestions(*iter, suggestions);
++        enchant_dict_free_string_list(*iter, suggestions);
+     }
+ 
+     return guesses;
