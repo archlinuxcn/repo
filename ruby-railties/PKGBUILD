@@ -6,12 +6,12 @@
 _gemname=railties
 pkgname=ruby-$_gemname
 pkgver=5.2.2
-pkgrel=4
+pkgrel=5
 pkgdesc='Tools for creating, working with, and running Rails applications.'
 arch=(any)
 url='http://www.rubyonrails.org'
 license=(MIT)
-depends=('ruby-activesupport' 'ruby-actionpack' 'ruby-thor' 'ruby' 'ruby-method_source' )
+depends=('ruby-thor' 'ruby-actionpack' 'ruby-activesupport' 'ruby-rake' 'ruby-method_source' 'ruby' )
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 sha1sums=('c14475048029c3896763b8b49a73be303b3610f8')
