@@ -1,8 +1,8 @@
 # Maintainer: Lin Ruoshui <LinRs at yandex.com>
 # Contributor: hexchain <i at hexchain.org>
 pkgname=hmcl
-pkgver=3.2.115
-_pkgver=3.2.115
+pkgver=3.2.116
+_pkgver=3.2.116
 pkgrel=1
 pkgdesc="Hello Minecraft! Launcher, a powerful Minecraft launcher."
 arch=(any)
@@ -47,4 +47,4 @@ package() {
 }
 sha256sums=('0300218f29af82e9b302a94b37a4c9a92aea26b960bfd1b2e16c0130ac61cfcf'
             '648306b8b67fa9bcb531f065dabec20502ec8717788d1f65cf8e21b55c6c706c'
-            '9fb694ab7d2a4c9204a03befa637f2f05227ce2d2987122c11899f8eae443cdb')
+            'e2536c0c83a326bacea33898eabb692f45f77e3246eccfaeb3e01ccba697efe0')
