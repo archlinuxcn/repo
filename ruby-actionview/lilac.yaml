@@ -1,17 +1,15 @@
 maintainers:
   - github: a-wing
 
-build_prefix: archlinuxcn-x86_64
-
 depends:
   - ruby-activesupport
   - ruby-builder
-  - ruby-erubis
+  - ruby-erubi
   - ruby-rails-html-sanitizer
 
 update_on:
   - gems: actionview
-  - aur: ruby-actionview
+#  - aur: ruby-actionview
 
 post_build: git_pkgbuild_commit
 
