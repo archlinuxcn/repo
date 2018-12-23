@@ -1,0 +1,84 @@
+diff -ur javahelp2.orig/javahelp_nbproject/nbproject/build-impl.xml javahelp2/javahelp_nbproject/nbproject/build-impl.xml
+--- javahelp2.orig/javahelp_nbproject/nbproject/build-impl.xml	2018-05-13 16:36:07.494913119 +0300
++++ javahelp2/javahelp_nbproject/nbproject/build-impl.xml	2018-05-13 16:37:56.886754697 +0300
+@@ -46,8 +46,8 @@
+         <property file="${user.properties.file}"/>
+         <!-- The two properties below are usually overridden -->
+         <!-- by the active platform. Just a fallback. -->
+-        <property name="default.javac.source" value="1.4"/>
+-        <property name="default.javac.target" value="1.4"/>
++        <property name="default.javac.source" value="1.6"/>
++        <property name="default.javac.target" value="1.6"/>
+     </target>
+     <target depends="-pre-init,-init-private,-init-user" name="-init-project">
+         <property file="nbproject/configs/${config}.properties"/>
+diff -ur javahelp2.orig/javahelp_nbproject/nbproject/project.properties javahelp2/javahelp_nbproject/nbproject/project.properties
+--- javahelp2.orig/javahelp_nbproject/nbproject/project.properties	2018-05-13 16:36:07.494913119 +0300
++++ javahelp2/javahelp_nbproject/nbproject/project.properties	2018-05-13 16:37:47.776602638 +0300
+@@ -57,8 +57,8 @@
+ # Space-separated list of extra javac options
+ javac.compilerargs=-Xlint -Xlint:-serial
+ javac.deprecation=false
+-javac.source=1.4
+-javac.target=1.4
++javac.source=1.6
++javac.target=1.6
+ javac.test.classpath=\
+     ${javac.classpath}:\
+     ${build.classes.dir}:\
+diff -ur javahelp2.orig/JSearchClient_nbproject/nbproject/build-impl.xml javahelp2/JSearchClient_nbproject/nbproject/build-impl.xml
+--- javahelp2.orig/JSearchClient_nbproject/nbproject/build-impl.xml	2018-05-13 16:36:07.494913119 +0300
++++ javahelp2/JSearchClient_nbproject/nbproject/build-impl.xml	2018-05-13 16:36:47.188918719 +0300
+@@ -39,8 +39,8 @@
+         <property file="${user.properties.file}"/>
+         <!-- The two properties below are usually overridden -->
+         <!-- by the active platform. Just a fallback. -->
+-        <property name="default.javac.source" value="1.4"/>
+-        <property name="default.javac.target" value="1.4"/>
++        <property name="default.javac.source" value="1.6"/>
++        <property name="default.javac.target" value="1.6"/>
+     </target>
+     <target depends="-pre-init,-init-private,-init-user" name="-init-project">
+         <property file="nbproject/configs/${config}.properties"/>
+diff -ur javahelp2.orig/JSearchClient_nbproject/nbproject/project.properties javahelp2/JSearchClient_nbproject/nbproject/project.properties
+--- javahelp2.orig/JSearchClient_nbproject/nbproject/project.properties	2018-05-13 16:36:07.494913119 +0300
++++ javahelp2/JSearchClient_nbproject/nbproject/project.properties	2018-05-13 16:36:28.778607505 +0300
+@@ -46,8 +46,8 @@
+ # Space-separated list of extra javac options
+ javac.compilerargs=
+ javac.deprecation=false
+-javac.source=1.4
+-javac.target=1.4
++javac.source=1.6
++javac.target=1.6
+ javac.test.classpath=\
+     ${javac.classpath}:\
+     ${build.classes.dir}:\
+diff -ur javahelp2.orig/JSearchIndexer_nbproject/nbproject/build-impl.xml javahelp2/JSearchIndexer_nbproject/nbproject/build-impl.xml
+--- javahelp2.orig/JSearchIndexer_nbproject/nbproject/build-impl.xml	2018-05-13 16:36:07.494913119 +0300
++++ javahelp2/JSearchIndexer_nbproject/nbproject/build-impl.xml	2018-05-13 16:37:25.276226083 +0300
+@@ -39,8 +39,8 @@
+         <property file="${user.properties.file}"/>
+         <!-- The two properties below are usually overridden -->
+         <!-- by the active platform. Just a fallback. -->
+-        <property name="default.javac.source" value="1.4"/>
+-        <property name="default.javac.target" value="1.4"/>
++        <property name="default.javac.source" value="1.6"/>
++        <property name="default.javac.target" value="1.6"/>
+     </target>
+     <target depends="-pre-init,-init-private,-init-user" name="-init-project">
+         <property file="nbproject/configs/${config}.properties"/>
+diff -ur javahelp2.orig/JSearchIndexer_nbproject/nbproject/project.properties javahelp2/JSearchIndexer_nbproject/nbproject/project.properties
+--- javahelp2.orig/JSearchIndexer_nbproject/nbproject/project.properties	2018-05-13 16:36:07.494913119 +0300
++++ javahelp2/JSearchIndexer_nbproject/nbproject/project.properties	2018-05-13 16:37:07.645930030 +0300
+@@ -47,8 +47,8 @@
+ # Space-separated list of extra javac options
+ javac.compilerargs=
+ javac.deprecation=false
+-javac.source=1.4
+-javac.target=1.4
++javac.source=1.6
++javac.target=1.6
+ javac.test.classpath=\
+     ${javac.classpath}:\
+     ${build.classes.dir}:\
