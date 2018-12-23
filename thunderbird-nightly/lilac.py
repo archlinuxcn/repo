@@ -1,10 +1,11 @@
+# Trimmed lilac.py
 #!/usr/bin/env python3
 
 from datetime import datetime
 
 from lilaclib import *
 
-build_prefix = 'extra-x86_64'
+#build_prefix = 'extra-x86_64'
 
 def pre_build():
   version, dt = _G.newver.split(None, 1)
@@ -25,5 +26,5 @@ def post_build():
   git_add_files('PKGBUILD')
   git_commit()
 
-if __name__ == '__main__':
-  single_main()
+#if __name__ == '__main__':
+#  single_main()
