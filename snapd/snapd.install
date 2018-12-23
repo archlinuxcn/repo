@@ -1,0 +1,9 @@
+pre_remove() {
+  /usr/lib/snapd/snap-mgmt --purge || :
+  rm -f /etc/udev/rules.d/70-snap.*.rules || true
+  rm -f /etc/dbus-1/system.d/snap.* || true
+  rm -f /var/lib/snapd/system-key || true
+}
+
+# vim:set ts=2 sw=2 et:
+
