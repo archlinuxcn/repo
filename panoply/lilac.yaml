@@ -2,8 +2,9 @@
 
 maintainers:
   - github: heavysink
+    email: winstonwu91@gmail.com
 
 build_prefix: extra-x86_64
 
 update_on:
-  - cmd: curlhttps://www.giss.nasa.gov/tools/panoply/download/|grep'Thecurrentversion'|sed's/^.*[^0-9]\([0-9]*\.[0-9]*\.[0-9]*\).*$/\1/'
+  - cmd: curl https://www.giss.nasa.gov/tools/panoply/download/ | grep 'The current version' | sed 's/^.*[^0-9]\([0-9]*\.[0-9]*\.[0-9]*\).*$/\1/'
