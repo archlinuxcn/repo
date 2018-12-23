@@ -1,0 +1,11 @@
+--- modules/hdf5/src/c/h5_writeDataToFile.c	2017-02-15 19:49:05.972121123 +0100
++++ modules/hdf5/src/c/h5_writeDataToFile.c.new	2017-02-15 19:42:50.787848227 +0100
+@@ -2166,7 +2166,7 @@
+     return dset;
+ }
+ 
+-hid_t writeDoubleComplexMatrix6(int parent, const char* name, int dims, int* pdims, double* real, double* img)
++int writeDoubleComplexMatrix6(int parent, const char* name, int dims, int* pdims, double* real, double* img)
+ {
+     hid_t space = 0;
+     hid_t dset = 0;
