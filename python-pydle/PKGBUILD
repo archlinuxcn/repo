@@ -1,14 +1,15 @@
 _pkgname=pydle
 pkgname=python-pydle
-pkgver=0.8.4
+pkgver=0.8.5
 pkgrel=1
 pkgdesc="A compact, flexible and standards-abiding IRC library for Python 3."
 arch=('any')
 url="https://github.com/Shizmob/pydle"
 license=('BSD')
 depends=('python' 'python-tornado' 'python-setuptools')
-source=('https://files.pythonhosted.org/packages/e7/1d/2ea6dd2a2f0d3478feb31d34f5febeeaaedf5547831b275929518c55fe42/pydle-0.8.4.tar.gz')
-md5sums=('fe4996347839c4aadf58adc70be9d6d1')
+_name=${pkgname#python-}
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
+md5sums=('f6737cf59052652ce6f139417c33475b')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
