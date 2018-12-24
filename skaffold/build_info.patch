@@ -1,13 +1,14 @@
 diff --git a/Makefile b/Makefile
-index f8516e5..4b0a773 100644
+index 68bc2ef..e2918d0 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -33,8 +33,9 @@ SUPPORTED_PLATFORMS := linux-$(GOARCH) darwin-$(GOARCH) windows-$(GOARCH).exe
+@@ -32,9 +32,10 @@ SUPPORTED_PLATFORMS := linux-$(GOARCH) darwin-$(GOARCH) windows-$(GOARCH).exe
  BUILD_PACKAGE = $(REPOPATH)/cmd/skaffold
  
  VERSION_PACKAGE = $(REPOPATH)/pkg/skaffold/version
 -COMMIT = $(shell git rev-parse HEAD)
 +COMMIT ?= $(shell git rev-parse HEAD)
+ BASE_URL ?= https://skaffold.dev
  VERSION ?= $(shell git describe --always --tags --dirty)
 +TREE_STATE ?= $(if $(shell git status --porcelain),dirty,clean)
  
