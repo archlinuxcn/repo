@@ -1,0 +1,24 @@
+_pkgname=furigana
+pkgname=python-furigana
+pkgver=0.0.7.1
+pkgrel=1
+pkgdesc="convert Kanji in Japanese into Kanji with Hiragana placed above"
+arch=('any')
+url="https://github.com/MikimotoH/furigana"
+license=('MIT')
+depends=('python' 'python-setuptools')
+_name=${pkgname#python-}
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
+md5sums=('3666ac132d5b8ea47773e8a413310abe')
+
+build() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  LANG=en_US.UTF-8 python3 setup.py build
+}
+
+package() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  LANG=en_US.UTF-8 python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+}
+
+# vim:set sw=2 et:

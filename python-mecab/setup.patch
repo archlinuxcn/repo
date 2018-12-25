@@ -1,0 +1,11 @@
+--- setup.py.orig	2014-10-27 23:13:54.149118580 +0900
++++ setup.py	2014-10-27 23:32:14.945120395 +0900
+@@ -7,7 +7,7 @@
+     return os.popen(str).readlines()[0][:-1]
+ 
+ def cmd2(str):
+-    return string.split (cmd1(str))
++    return cmd1(str).split()
+ 
+ setup(name = "mecab-python",
+ 	version = cmd1("mecab-config --version"),

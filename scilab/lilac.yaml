@@ -4,7 +4,6 @@ maintainers:
 build_prefix: extra-x86_64
 
 depends:
-  - jre8-openjdk
   - javahelp2
   - saxon-he
   - jlatexmath-fop
@@ -21,9 +20,5 @@ depends:
   - jgraphx
   - bwidget
 
-pre_build: aur_pre_build
-
-post_build: aur_post_build
-
 update_on:
-  - aur: scilab
+  - manual: 6.0.1-5
