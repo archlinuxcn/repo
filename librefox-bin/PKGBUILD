@@ -1,0 +1,60 @@
+# Maintainer: Horo <horo at yoitsu dot moe>
+
+pkgname=librefox-bin
+pkgbase=librefox
+pkgver=2.1
+_firefox_ver=64.0.0
+_name=Librefox-${pkgver}-Firefox-Linux-${_firefox_ver}-x64
+pkgrel=1
+pkgdesc="Patched Firefox for an enforced privacy and security"
+arch=('x86_64')
+license=('MPL' 'GPL' 'LGPL')
+depends=('dbus-glib' 'gtk3' 'libxt' 'nss' 'mime-types')
+optdepends=('pulseaudio: audio support'
+            'ffmpeg: h.264 video'
+            'gtk2: flash plugin support'
+            'hunspell: spell checking'
+            'hyphen: hyphenation'
+            'libnotify: notification integration'
+            'networkmanager: location detection via available WiFi networks'
+            'speech-dispatcher: text-to-speech'
+            'startup-notification: support for FreeDesktop Startup Notification')
+source=("${pkgbase}.tar.xz::https://github.com/intika/Librefox/releases/download/Librefox-v${pkgver}-${_firefox_ver}/${_name}.tar.xz"
+        "${pkgbase}.desktop")
+sha256sums=('0ad576311da91732c6219f79b8d1e0ea97c76ac8065768878de5d80f26bd8b09'
+            '9a328a6d500fdfaf92d1b2d9de3a959929b7b3975f98d268265985a61ad297b8')
+
+package() {
+
+  OPT_PATH="opt/${pkgbase}"
+  mkdir -p ${pkgdir}"/${OPT_PATH}"
+
+  # Install the package files
+  cp -r ${_name}/* "${pkgdir}"/${OPT_PATH}
+  install -d "${pkgdir}"/{usr/bin,opt}
+  ln -s "/${OPT_PATH}/firefox" "${pkgdir}"/usr/bin/${pkgbase}
+
+  # Install .desktop files
+  install -Dm644 "${srcdir}"/${pkgbase}.desktop -t "${pkgdir}"/usr/share/applications
+
+  # Install icons
+  SRC_LOC="${srcdir}/${_name}/browser"
+  DEST_LOC="${pkgdir}"/usr/share/icons/hicolor
+  for i in 16 32 48 64 128; do
+      install -Dm644 "${SRC_LOC}"/chrome/icons/default/default${i}.png "${DEST_LOC}"/${i}x${i}/apps/${pkgbase}.png
+  done
+
+  cat <<EOF | install -Dm644 /dev/stdin "${pkgdir}"/${OPT_PATH}/browser/defaults/preferences/vendor.js
+  pref("intl.locale.requested", "");
+EOF
+
+  # Disable auto-updates
+  cat <<EOF | install -Dm644 /dev/stdin "${pkgdir}"/${OPT_PATH}/distribution/policies.json
+{"policies": {"DisableAppUpdate": true}}
+EOF
+
+  # Use system-provided dictionaries
+  rm -rf "${pkgdir}"/${OPT_PATH}/{dictionaries,hyphenation}
+  ln -sf /usr/share/hunspell "${pkgdir}"/${OPT_PATH}/dictionaries
+  ln -sf /usr/share/hyphen "${pkgdir}"/${OPT_PATH}/hyphenation
+}
