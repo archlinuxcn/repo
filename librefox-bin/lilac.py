@@ -6,11 +6,6 @@ build_prefix = 'extra-x86_64'
 
 
 def pre_build():
-    # prepare PKGBUILD etc.
-    pass
-
-
-def post_build():
     # do something after successful build
     url, ver, firefox_ver = s.head(
         "https://github.com/intika/Librefox/releases/latest").headers['Location'].split("-v")
@@ -22,12 +17,12 @@ def post_build():
         print(line)
 
     run_cmd(['updpkgsums'])
+
+
+def post_build():
     git_add_files('PKGBUILD')
     git_commit()
 
-
-# def post_build_always():
-#   clean up, regardless of build result
 
 if __name__ == '__main__':
     single_main()
