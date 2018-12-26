@@ -7,5 +7,8 @@ build_prefix: extra-x86_64
 depends:
   - libldac
 
+pre_build: vcs_update
+post_build: git_pkgbuild_commit
+
 update_on:
   - github: EHfive/pulseaudio-modules-bt
