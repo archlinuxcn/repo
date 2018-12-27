@@ -1,20 +1,19 @@
 # Maintainer: Andy Weidenbaum <archbaum@gmail.com>
+# Maintainer: Jianqiu Zhang <zhangjianqiu13@gmail.com>
 
 pkgname=swagger-editor-git
-pkgver=20180404
-pkgrel=3
+pkgver=20181220
+pkgrel=1
 pkgdesc="Swagger Editor"
-arch=('x86_64')
+arch=('i686' 'x86_64')
 depends=('darkhttpd' 'nodejs')
-makedepends=('git' 'npm' 'yarn')
+makedepends=('git' 'npm' 'python2')
 url="https://github.com/swagger-api/swagger-editor"
 license=('Apache')
 source=(git+https://github.com/swagger-api/swagger-editor
-        swagger-editor.service
-        swagger-editor-chromium.desktop)
+        swagger-editor.service)
 sha256sums=('SKIP'
-            'ca2474524032867d5ea1662535250d9339d9e8f80be1d4d23e429b73e0a5eed4'
-            '822b42ea77a4b89292a9dc22bc05c75207d5bcbf66e2a3da0e017dcb5ae714a8')
+            'ca2474524032867d5ea1662535250d9339d9e8f80be1d4d23e429b73e0a5eed4')
 provides=('swagger-editor')
 conflicts=('swagger-editor')
 options=('!strip')
@@ -31,14 +30,8 @@ build() {
   msg2 'Fetching NPM dependencies...'
   npm install --python=python2
 
-  msg2 "Try to build swagger"
+  msg2 'Building...'
   npm run build
-
-  #msg2 'Fetching Web assets...'
-  yarn install #--allow-root --config.interactive=false
-
-  # msg2 'Compiling Web assets...'
-  # grunt build
 }
 
 package() {
@@ -55,10 +48,6 @@ package() {
   msg2 'Installing swagger-editor.service...'
   install -Dm 644 "$srcdir/swagger-editor.service" \
     "$pkgdir/usr/lib/systemd/system/swagger-editor.service"
-
-  msg2 'Installing desktop entry'
-  install -Dm 644 "$srcdir/swagger-editor-chromium.desktop" \
-      "$pkgdir/usr/share/applications/swagger-editor-chromium.desktop"
 
   msg2 'Cleaning up pkgdir...'
   find "$pkgdir" -type d -name .git -exec rm -r '{}' +
