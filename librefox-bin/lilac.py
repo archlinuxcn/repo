@@ -11,9 +11,9 @@ def pre_build():
         "https://github.com/intika/Librefox/releases/latest").headers['Location'].split("-v")
     for line in edit_file('PKGBUILD'):
         if 'pkgver=' in line:
-            line = 'pkgver='+ver
+            line = 'pkgver="{}"'.format(ver)
         if '_firefox_ver=' in line:
-            line = '_firefox_ver'+firefox_ver
+            line = '_firefox_ver="{}"'.format(firefox_ver)
         print(line)
 
     run_cmd(['updpkgsums'])
