@@ -1,3 +1,9 @@
+v1.5.1-2
+- Removed FBINFO_CAN_FORCE_OUTPUT (breaks 4.20 / apparently never worked right)
+  (https://github.com/torvalds/linux/commit/04cfcc7ab358e331b32cabde1e853a125f3f8735#diff-43768cc89c01c730cb119634b42dfa81)
+- Also added dynamic patching ability (borrowed from "linux" PKGBUILD)
+- Fixed namcap relro warning
+
 v1.5.1
 EVDI driver used in DisplayLink Ubuntu Software v4.4
 

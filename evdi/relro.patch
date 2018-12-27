@@ -1,0 +1,11 @@
+diff --git a/library/Makefile b/library/Makefile
+index 9b4e856..8a13662 100644
+--- a/library/Makefile
++++ b/library/Makefile
+@@ -14,5 +14,5 @@ clean:
+ 	$(CC) -c -o $@ $< $(CFLAGS)
+ 
+ libevdi.so: evdi_lib.o
+-	$(CC) $^ -o $@ -lc -lgcc -shared -Wl,-soname,libevdi.so.0
++	$(CC) $^ -o $@ -lc -lgcc -shared -Wl,-soname,libevdi.so.0 $(LDFLAGS)
+ 
