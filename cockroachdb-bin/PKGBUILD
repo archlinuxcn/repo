@@ -4,15 +4,13 @@
 pkgname=cockroachdb-bin
 conflicts=('cockroachdb')
 provides=('cockroachdb')
-pkgver=2.1.0
+pkgver=2.1.3
 pkgrel=1
 pkgdesc="An open source, survivable, strongly consistent, scale-out SQL database"
 arch=('x86_64')
 url="https://www.cockroachlabs.com/"
 license=('Apache' 'BSD' 'custom:PostgreSQL' 'custom:CCL')
-depends=('glibc' 'ncurses')
-makedepends=('patchelf')
-options=('!strip') # XXX breaks the patched binary
+depends=('glibc')
 source=("https://binaries.cockroachdb.com/cockroach-v${pkgver}.linux-amd64.tgz"
         "https://raw.githubusercontent.com/cockroachdb/cockroach/v${pkgver}/LICENSE"
         "https://raw.githubusercontent.com/cockroachdb/cockroach/v${pkgver}/licenses/BSD-biogo.txt"
@@ -25,7 +23,7 @@ source=("https://binaries.cockroachdb.com/cockroach-v${pkgver}.linux-amd64.tgz"
         cockroach.default
         cockroach.sysusers
         cockroach.tmpfiles)
-sha256sums=('cc51fa388908e7942d3f3214a38096756a981b9ce0f577307b3ae390b6a8e8b1'
+sha256sums=('01489f09f9372283a8be43e83357948833beb352940e1c8626b9d3302a8d2f51'
             '68040689c4342e0018adec3eb0fb1f2ae68aaeef918e7b4493518523381b7129'
             'b3ef077aa9a0d4b697722de993fa83959f10910ae600de90bcdcdd49fafce371'
             '2d36597f7117c38b006835ae7f537487207d8ec407aa9d9980794b2030cbc067'
@@ -39,10 +37,6 @@ sha256sums=('cc51fa388908e7942d3f3214a38096756a981b9ce0f577307b3ae390b6a8e8b1'
             'SKIP')
 
 build() {
-    # XXX arch ships a newer, but compatible version of ncurses
-    patchelf --replace-needed libncurses.so.5 libncursesw.so.6 \
-             "${srcdir}/cockroach-v${pkgver}.linux-amd64/cockroach"
-
     # generate bash completion
     "${srcdir}/cockroach-v${pkgver}.linux-amd64/cockroach" \
         gen autocomplete --out "${srcdir}/cockroach.bash"
