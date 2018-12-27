@@ -1,0 +1,25 @@
+# Maintainer: Christian Rebischke <chris.rebischke[at]archlinux[dot]org>
+# Contributor: Ariel AxionL <i [at] axionl [dot] me>
+
+pkgname=python-requests-cache
+pkgver=0.4.13
+pkgrel=2
+pkgdesc="Persistent cache for requests library"
+arch=('any')
+depends=('python')
+makedepends=('python-setuptools' 'python-requests')
+url="https://github.com/reclosedev/requests-cache"
+license=('BSD')
+
+source=("requests-cache-${pkgver}.tar.gz::https://github.com/reclosedev/requests-cache/archive/v${pkgver}.tar.gz")
+
+sha512sums=('54d814c9c4da1b1fa6f4ec124faee7e74e7ca52bc90ae7c948f19e9cb7657fe2b41f5de6c5fafe259526312d82dc5efd81ad01a741a66baf12ea2a358334f912')
+
+package() {
+  cd "${srcdir}/requests-cache-${pkgver}"
+  python setup.py install -O1 --root="${pkgdir}"
+  install -Dm 644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  install -Dm 644 README.rst "${pkgdir}/usr/share/doc/${pkgname}/README"
+}
+
+# vim:set et sw=2 ts=2 tw=79:

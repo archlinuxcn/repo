@@ -2,8 +2,12 @@
 
 maintainers:
   - github: farseerfc
+  - github: axionl
 
-build_prefix: archlinuxcn-x86_64
+build_prefix: extra-x86_64
+
+depends:
+  - python-requests-cache
 
 pre_build: vcs_update
 

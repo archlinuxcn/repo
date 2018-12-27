@@ -1,22 +1,23 @@
-From 9a6793e6dab6811c220222f15c68099d6fc902d2 Mon Sep 17 00:00:00 2001
+From 399c5524c76c7bf0662aa56047c4f5b686f8c669 Mon Sep 17 00:00:00 2001
 From: axionl <i@axionl.me>
-Date: Wed, 21 Nov 2018 01:34:22 +0900
-Subject: [PATCH] [Fixed] Replace_pyqt4_to_pyqt5_as_depends
+Date: Thu, 27 Dec 2018 23:20:02 +0900
+Subject: [PATCH] Replace_pyqt4_to_pyqt5_as_depends.patch
 
 ---
- NEMbox/osdlyrics.py | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ NEMbox/osdlyrics.py | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
 diff --git a/NEMbox/osdlyrics.py b/NEMbox/osdlyrics.py
-index bd96e09..5e66843 100644
+index ca15941..6a51996 100644
 --- a/NEMbox/osdlyrics.py
 +++ b/NEMbox/osdlyrics.py
-@@ -19,16 +19,16 @@ log = logger.getLogger(__name__)
+@@ -17,24 +17,25 @@ log = logger.getLogger(__name__)
  config = Config()
  
  try:
 -    from PyQt4 import QtGui, QtCore, QtDBus
 +    from PyQt5 import QtGui, QtWidgets, QtCore, QtDBus
+ 
      pyqt_activity = True
  except ImportError:
      pyqt_activity = False
@@ -28,15 +29,25 @@ index bd96e09..5e66843 100644
  
 -    class Lyrics(QtGui.QWidget):
 +    class Lyrics(QtWidgets.QWidget):
- 
          def __init__(self):
              super(Lyrics, self).__init__()
-@@ -52,10 +52,10 @@ if pyqt_activity:
+             self.__dbusAdaptor = LyricsAdapter(self)
+             self.initUI()
+ 
+         def initUI(self):
+-            self.setStyleSheet("background:" + config.get("osdlyrics_background"))
++            self.setStyleSheet(
++                "background:" + config.get("osdlyrics_background"))
+             if config.get("osdlyrics_transparent"):
+                 self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+             self.setAttribute(QtCore.Qt.WA_ShowWithoutActivating)
+@@ -51,11 +52,10 @@ if pyqt_activity:
              self.setMinimumSize(600, 50)
              osdlyrics_size = config.get("osdlyrics_size")
              self.resize(osdlyrics_size[0], osdlyrics_size[1])
 -            scn = QtGui.QApplication.desktop().screenNumber(
--                QtGui.QApplication.desktop().cursor().pos())
+-                QtGui.QApplication.desktop().cursor().pos()
+-            )
 -            bl = QtGui.QApplication.desktop().screenGeometry(scn).bottomLeft()
 -            br = QtGui.QApplication.desktop().screenGeometry(scn).bottomRight()
 +            scn = QtWidgets.QApplication.desktop().screenNumber(
@@ -46,15 +57,15 @@ index bd96e09..5e66843 100644
              bc = (bl + br) / 2
              frameGeo = self.frameGeometry()
              frameGeo.moveCenter(bc)
-@@ -114,7 +114,7 @@ if pyqt_activity:
+@@ -117,7 +117,7 @@ if pyqt_activity:
  
      def show_lyrics():
  
 -        app = QtGui.QApplication(sys.argv)
 +        app = QtWidgets.QApplication(sys.argv)
          lyrics = Lyrics()
-         QtDBus.QDBusConnection.sessionBus().registerService('org.musicbox.Bus')
-         QtDBus.QDBusConnection.sessionBus().registerObject('/', lyrics)
+         QtDBus.QDBusConnection.sessionBus().registerService("org.musicbox.Bus")
+         QtDBus.QDBusConnection.sessionBus().registerObject("/", lyrics)
 -- 
-2.19.1
+2.20.1
 
