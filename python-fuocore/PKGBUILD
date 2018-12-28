@@ -1,23 +1,24 @@
-# Maintainer: Bruce Zhang <zttt183525594@gmail.com>
-pkgname=python-fuocore
 _pkgname=fuocore
-pkgver=2.2b1
+pkgname=python-fuocore
+pkgver=2.2
 pkgrel=1
-pkgdesc="Core modules for FeelUOwn Music Player"
+pkgdesc="feeluown core"
 arch=('any')
 url="https://github.com/cosven/feeluown-core"
-license=('MIT')
-depends=('python' 'mpv' 'python-beautifulsoup4' 'python-marshmallow' 'python-pycrypto' 'python-requests' 'python-mutagen' 'python-fuzzywuzzy')
-makedepends=('python-setuptools')
-source=("https://files.pythonhosted.org/packages/2f/7e/fd775eab1d178a02a5b42b855a728dcf0bd774e939605aec1be9a2f07912/fuocore-${pkgver}.tar.gz")
-sha256sums=('c2ce3b9cd1aa967b4c90db305df35ca9f3117c644775d1afa465fa7acda59109')
+license=('(FIXME)')
+depends=('python' 'python-pycrypto' 'python-fuzzywuzzy' 'python-setuptools')
+_name=${pkgname#python-}
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
+md5sums=('564087ab9dea023b476a1dedb53f415b')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
-  python setup.py build
+  LANG=en_US.UTF-8 python3 setup.py build
 }
 
 package() {
   cd "$srcdir/$_pkgname-$pkgver"
-  python setup.py install --root="$pkgdir" --optimize=1 --skip-build
+  LANG=en_US.UTF-8 python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 }
+
+# vim:set sw=2 et:
