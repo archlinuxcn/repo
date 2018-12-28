@@ -1,37 +1,10 @@
 post_install() {
     post_upgrade
 }
+
 post_upgrade() {
 cat << EOF
-    If you encounter scaling issues try:
-
-        export QT_AUTO_SCREEN_SCALE_FACTOR=0
-
-    before running enpass.
-    If this worked, you have 3 options:
-
-    1. Add the above line to your ".bashrc"
-
-    2. Add the above line to
-        /opt/Enpass/bin/runenpass.sh
-
-    BEFORE the "exec" command.
-    Keep in mind that changes to runenpass.sh
-    will be overwritten upon the next update.
-
-    3. Create a copy of:
-
-        /usr/share/applications/enpass.desktop
-
-    to
-
-        ~/.local/share/applications/enpass.desktop
-
-    and replace the "Exec=" line with:
-
-        Exec=env QT_AUTO_SCREEN_SCALE_FACTOR=0 /opt/Enpass/bin/runenpass.sh %U
-
-    This will NOT fix scaling if you run enpass from
-    your commandline!
+If you encounter scaling issues, try the following:
+  $ QT_AUTO_SCREEN_SCALE_FACTOR=0 enpass
 EOF
 }

@@ -1,7 +1,7 @@
 pkgname='enpass-bin'
 _pkgname='enpass'
-pkgver=5.6.9
-pkgrel=3
+pkgver=6.0.0.230
+pkgrel=1
 pkgdesc='A multiplatform password manager'
 arch=('x86_64')
 url='http://enpass.io/'
@@ -10,7 +10,7 @@ depends=('libxss' 'lsof')
 provides=("${_pkgname}")
 install='enpass-bin.install'
 source=("http://repo.sinew.in/pool/main/e/enpass/${_pkgname}_${pkgver}_amd64.deb")
-sha256sums=('46f13df93ac8e0637428b86fa0fa6c2809dd1ff0b29a678d991f2cf5daed9e84')
+sha256sums=('621b427939f927672691d21b1dd0f887f3e83c36c5dca408071a8b30c9fb34ff')
 
 # Disable strip as otherwise the browser extension will not work
 options=('!strip')
@@ -20,7 +20,7 @@ package() {
     tar xfz "${srcdir}/data.tar.gz" -C "${pkgdir}"
 
     # Remove unnecessary files which are included in the .deb
-    find "${pkgdir}" -name '*~' -delete
+    # find "${pkgdir}" -name '*~' -delete
 
     # Update permissions to match the default system ones
     chmod 755 "${pkgdir}/opt/"
@@ -28,7 +28,7 @@ package() {
 
     # Symlink "runenpass.sh" to "/usr/bin" so it is accessible via cli
     mkdir -p "${pkgdir}/usr/bin"
-    ln -s '/opt/Enpass/bin/runenpass.sh' "${pkgdir}/usr/bin/enpass"
+    ln -s '/opt/enpass/Enpass' "${pkgdir}/usr/bin/enpass"
 }
 
 
