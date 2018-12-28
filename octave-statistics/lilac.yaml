@@ -8,6 +8,9 @@ pre_build: aur_pre_build
 
 post_build: aur_post_build
 
+depends:
+  - octave-io
+
 update_on:
   - url: https://octave.sourceforge.io/statistics/
     regex: <dt>Version</dt>\n\s*<dd>(\d+.\d+.\d+)</dd>
