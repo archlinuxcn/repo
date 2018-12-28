@@ -1,9 +1,9 @@
 # Maintainer: Xuanwo <xuanwo@archlinuxcn.org>
 pkgname=tidb
-pkgver=2.1.0
-pkgrel=2
+pkgver=2.1.2
+pkgrel=1
 pkgdesc='A distributed HTAP database compatible with the MySQL protocol'
-makedepends=('go' 'make')
+makedepends=('go' 'make' 'git')
 arch=('x86_64')
 url='https://github.com/pingcap/tidb'
 license=('Apache')
@@ -15,11 +15,11 @@ source=(tidb-${pkgver}.tar.gz::https://github.com/pingcap/tidb/archive/v${pkgver
         tidb-sysusers.conf
         tidb-tmpfiles.conf
         tidb.toml)
-sha256sums=('b091f427567695eb1e6e8f9897381cb04d638d6b857e2900b3999c23dca6bf7c'
+sha256sums=('414a3fda48e082405cf41bb5978451d0826125ab6e94642c9243657195b0c4e9'
             '22318c19bb89ff5a0852df5186cc1496214cd49f2264192413a326d1e8c93dc9'
             '2b147d80985e714d5f861baf76591104c07058b9b6fa573bf0676d675cf8fc20'
             '30ce83fbec8f102c30e438282bb5b18c026d08480f2386d68f1116c12481bf66'
-            '329fc0e0429c42613b653b1d44d237264deefee4734cc464d61d24d9f865dc49')
+            'a34a8ca1f13c965cc0e872fc671f377b64a80cc11225cd6359bf7415b4c86a06')
 
 _gopkgname='github.com/pingcap/tidb'
 
@@ -37,7 +37,10 @@ build() {
 
   cd $GOPATH/src/$_gopkgname
 
-  go build -o bin/tidb-server tidb-server/main.go
+  # A workaround for https://github.com/pingcap/tidb/issues/8827
+  rm go.sum
+
+  GO111MODULE=on go build -o bin/tidb-server tidb-server/main.go
 }
 
 package() {
