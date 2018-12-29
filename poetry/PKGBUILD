@@ -2,7 +2,7 @@
 
 pkgname=poetry
 pkgver=0.12.10
-pkgrel=1
+pkgrel=2
 pkgdesc="Python dependency management and packaging made easy."
 arch=('any')
 url="https://poetry.eustace.io/"
@@ -15,11 +15,9 @@ source=(
   "https://github.com/sdispater/poetry/archive/${pkgver}.tar.gz"
   "poetry.py"
 )
-sha256sums=(
-  'b15bf7834dfcdab609b9ff2e2fe7c1ae48acc9bfe8ac865e6b53bdab92ffa2a0'
-  '967866041224213e8ca9050938ff2ae3853b48c359ffbe42b6100ebef2ede66f'
-  'e9fee925c0fb42df53389bdfc8ebbe01bfd4f6146ed0a55786bd2ba741169c0c'
-)
+sha256sums=('b15bf7834dfcdab609b9ff2e2fe7c1ae48acc9bfe8ac865e6b53bdab92ffa2a0'
+            '967866041224213e8ca9050938ff2ae3853b48c359ffbe42b6100ebef2ede66f'
+            'e9fee925c0fb42df53389bdfc8ebbe01bfd4f6146ed0a55786bd2ba741169c0c')
 
 package() {
   cd "${srcdir}"
