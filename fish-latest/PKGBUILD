@@ -24,6 +24,7 @@ md5sums=('7c30bf204817b5f7d8cfb55452d0f03f')
 
 build() {
 	cd "$srcdir/fish-shell-${pkgver}"
+  echo "${pkgver}-${pkgrel}-archcn" > version
 	autoreconf --no-recursive
 	./configure --prefix=/usr --sysconfdir=/etc --docdir=/usr/share/doc/fish --without-included-pcre2
 	make
