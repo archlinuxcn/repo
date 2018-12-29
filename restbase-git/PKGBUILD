@@ -1,0 +1,51 @@
+# Contributor: Jonas Heinrich <onny@project-insanity.org>
+# Maintainer: Horo <horo@yoitsu.moe>
+
+pkgname=restbase-git
+_pkgname=restbase
+pkgver=v0.19.2.r110.gab6b3688
+pkgrel=1
+pkgdesc="A a caching / storing API proxy backing the Wikimedia REST API"
+arch=('any')
+url="https://www.mediawiki.org/wiki/RESTBase"
+license=('Apache')
+depends=('nodejs')
+makedepends=('git' 'npm')
+optdepends=(
+    'mediawiki: MediaWiki engine'
+)
+conflicts=('restbase')
+replaces=('restbase')
+provides=('restbase')
+backup=(usr/share/webapps/restbase/config.yaml)
+source=("git+https://github.com/wikimedia/restbase"
+        "restbase.service"
+        "restbase.install"
+        "restbase.sysusers"
+        "restbase.tmpfiles")
+sha512sums=('SKIP'
+            'd6b2685549abab0d0df77af5ab2b44e07f4f6d453b687d5848231039966ebc039b260f8ba7aa2fc428f316d804367c08600c8596f2c9f89de21fcd3f72919067'
+            '0f73630f2e1f7809ac82cfa1e4fa9d37096723aefad3fec2a6e579649d4cdf89f2471df5d37a51d75d288669d6fac51b82219cb15c8c19d7fa9529cf9510a157'
+            '67f919c091991c80c4a8e8c7cb03da32e0e5ce0e9c6d4c5775c515fd73d499d576aa9d0b2a67e71ece288790655a3078e8e9865a64528e753a1165d6a2fa5900'
+            'bf4f05bace9a7d4373d7a9c630748e8f5b48424283bfb1a2d60db54c4400b5d72661c610bc9256435556d9b08d831acf4a1fa8f503194d4134596de3f06712ba')
+options=('!strip')
+install="restbase.install"
+pkgver() {
+  cd "$_pkgname"
+  git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g' 
+}
+build() { 
+    cd $srcdir/restbase
+    npm install
+}
+package() {
+    cd $srcdir/restbase
+    cp config.example.yaml config.yaml
+    mkdir -p "${pkgdir}/usr/share/webapps/${_pkgname}"
+    tar c --exclude=.git . | tar x -C "${pkgdir}/usr/share/webapps/${_pkgname}/"
+    install -Dm644 "${srcdir}/restbase.service" "${pkgdir}/usr/lib/systemd/system/restbase.service"
+    install -Dm644 "$srcdir"/restbase.sysusers "$pkgdir"/usr/lib/sysusers.d/restbase.conf
+    install -Dm644 "$srcdir"/restbase.tmpfiles "$pkgdir"/usr/lib/tmpfiles.d/restbase.conf
+    install -D "LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+

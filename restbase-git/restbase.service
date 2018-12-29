@@ -1,0 +1,28 @@
+[Unit]
+Description=Mediawiki RESTBase Service
+Documentation=https://www.mediawiki.org/wiki/RESTBase
+Wants=local-fs.target network.target
+After=local-fs.target network.target
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+Type=simple
+User=restbase
+Group=restbase
+WorkingDirectory=/usr/share/webapps/restbase
+ExecStart=/usr/bin/node /usr/share/webapps/restbase/server.js
+KillMode=process
+Restart=on-success
+PrivateTmp=true
+StandardOutput=syslog
+PrivateDevices=true
+ProtectSystem=full
+ProtectHome=true
+NoNewPrivileges=true
+CapabilityBoundingSet=
+ReadOnlyPaths=/
+ReadWritePaths=/run
+ReadWritePaths=/usr/share/webapps/restbase
+StandardOutput=syslog
