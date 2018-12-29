@@ -2,35 +2,46 @@
 # Contributor: Artyom Olshevskiy <siasia@siasia>
 
 pkgname='java-service-wrapper'
-pkgver=3.5.34
+pkgver=3.5.37
 pkgrel=1
 pkgdesc="Enables a Java Application to be run as a Windows Service or Unix Daemon"
 url="https://wrapper.tanukisoftware.com/doc/english/introduction.html"
 arch=('i686' 'x86_64' 'aarch64' 'armv6h' 'armv7h')
 license=('GPL2')
 conflicts=('java-service-wrapper-bin')
-makedepends=('apache-ant' 'java-environment>=7')
-source=("https://wrapper.tanukisoftware.com/download/${pkgver}/wrapper_${pkgver}_src.tar.gz")
-sha256sums=('d5c8f2530bba5ac5d938b25ccd2aee30f577e518098ae964d25be41fe06d3db6')
+makedepends=('apache-ant' 'jdk8-openjdk')
+source=("https://wrapper.tanukisoftware.com/download/${pkgver}/wrapper_${pkgver}_src.tar.gz"
+        'java10.patch')
+sha256sums=('a2a27e65904688da3e84f5745d3a71371a6ecba43675d8d824c3774e879281c9'
+            'f5dbf6150278f09a0e3269ace9f3e38a4361d2f3e3c72c3649bb78ad9f1e1499')
 
 prepare() {
-    sed -i "${srcdir}/wrapper_${pkgver}_src/build.xml" \
-        -e "s:value=\"1.4\":value=\"1.7\":"
+    cd "${srcdir}/wrapper_${pkgver}_src"
+
+    if [[ $(javac -version |grep 10.0) ]]; then
+        _target=1.10
+        patch -Np0 -i "$srcdir/java10.patch"
+    else
+        _target=1.7
+    fi
 
     # Prevent building the testsuite on the x64, this requires the cunit pkg
     # from the AUR, its a pain and useless to keep it a build-dep
-    sed -i "${srcdir}/wrapper_${pkgver}_src/src/c/Makefile-linux-x86"*.make \
+    sed -i "src/c/Makefile-linux-x86"*.make \
         -e "s|all: .*|all: init wrapper libwrapper.so|"
 }
 
 build() {
     cd "${srcdir}/wrapper_${pkgver}_src"
-    source /etc/profile.d/apache-ant.sh
-    source /etc/profile.d/jre.sh
+    export ANT_HOME=/usr/share/ant
+    export ANT_OPTS="-Dfile.encoding=UTF-8"
     export JAVA_HOME="${JAVA_HOME:-/usr/lib/jvm/default}"
 
-    [[ "$CARCH" = @(x86_64|aarch64) ]] && _bits=64 || _bits=32
-    ant -Dbits=${_bits} -Dos.arch="$(uname -m)" jar compile-c-unix
+    [[ "$CARCH" = @(x86_64|aarch64) ]] && _bits=64    || _bits=32
+    [[ "$CARCH" = arm*              ]] && _arch=armhf || _arch=x86
+
+    ant -Dbits="$_bits" -Ddist.arch="$_arch" -Djavac.target.version="$_target" \
+        jar compile-c-unix
 }
 
 package() {

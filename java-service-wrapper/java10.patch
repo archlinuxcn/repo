@@ -1,0 +1,42 @@
+--- build.xml.orig	2018-12-24 04:26:08.343432389 -0500
++++ build.xml	2018-12-24 04:26:59.394029875 -0500
+@@ -553,39 +553,6 @@
+             </fileset> 
+         </copy>
+         
+-        <!-- Generate the jni header files.  This is done here rather than with the
+-             c code to make intermediate pre-release distributions possible. -->
+-        <javah
+-            destdir="${src.dir}/c"
+-            classpath="${build.classes}">
+-            <class name="org.tanukisoftware.wrapper.WrapperManager"/>
+-        </javah>
+-        <fixcrlf srcdir="${src.dir}/c" includes="org_tanukisoftware_wrapper_WrapperManager.h" eol="lf" />
+-        <javah
+-            destdir="${src.dir}/c"
+-            classpath="${build.classes}">
+-            <class name="org.tanukisoftware.wrapper.WrapperProcessInputStream"/>
+-        </javah>
+-        <fixcrlf srcdir="${src.dir}/c" includes="org_tanukisoftware_wrapper_WrapperProcessInputStream.h" eol="lf" />
+-        <javah
+-            destdir="${src.dir}/c"
+-            classpath="${build.classes}">
+-            <class name="org.tanukisoftware.wrapper.WrapperProcessOutputStream"/>
+-        </javah>
+-        <fixcrlf srcdir="${src.dir}/c" includes="org_tanukisoftware_wrapper_WrapperProcessOutputStream.h" eol="lf" />
+-        <javah
+-            destdir="${src.dir}/c"
+-            classpath="${build.classes}">
+-            <class name="org.tanukisoftware.wrapper.WrapperProcessConfig"/>
+-        </javah>
+-        <fixcrlf srcdir="${src.dir}/c" includes="org_tanukisoftware_wrapper_WrapperProcessConfig.h" eol="lf" />
+-        <javah
+-            destdir="${src.dir}/c"
+-            classpath="${build.classes}">
+-            <class name="org.tanukisoftware.wrapper.WrapperResources"/>
+-        </javah>
+-        <fixcrlf srcdir="${src.dir}/c" includes="org_tanukisoftware_wrapper_WrapperResources.h" eol="lf" />
+-
+         <available property="junit.present"
+             classname="junit.framework.TestCase">
+             <classpath refid="project.class.path"/>
