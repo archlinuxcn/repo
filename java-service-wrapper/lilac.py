@@ -16,7 +16,7 @@ def pre_build():
     for line in edit_file('PKGBUILD'):
         if "java-environment>=" in line:
             line = line.replace("java-environment>=7","jdk8-openjdk")
-            print(line)
+        print(line)
 
 
 if __name__ == '__main__':
