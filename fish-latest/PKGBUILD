@@ -7,7 +7,7 @@
 
 pkgname=fish-latest
 pkgver=3.0.0
-pkgrel=1.1
+pkgrel=1.2
 pkgdesc="User friendly shell intended mostly for interactive use."
 arch=('i686' 'x86_64' 'arm')
 url="http://fishshell.com"
@@ -24,7 +24,7 @@ md5sums=('7c30bf204817b5f7d8cfb55452d0f03f')
 
 build() {
 	cd "$srcdir/fish-shell-${pkgver}"
-  echo "${pkgver}-${pkgrel}-archcn" > version
+  echo "${pkgver}" > version
 	autoreconf --no-recursive
 	./configure --prefix=/usr --sysconfdir=/etc --docdir=/usr/share/doc/fish --without-included-pcre2
 	make
