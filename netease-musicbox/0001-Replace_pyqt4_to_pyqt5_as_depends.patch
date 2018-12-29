@@ -1,6 +1,6 @@
 diff -ura --color musicbox-0.2.5.4/NEMbox/osdlyrics.py musicbox-0.2.5.4.new/NEMbox/osdlyrics.py
 --- musicbox-0.2.5.4/NEMbox/osdlyrics.py	2018-11-28 15:23:07.000000000 +0900
-+++ musicbox-0.2.5.4.new/NEMbox/osdlyrics.py	2018-11-28 18:13:03.653877974 +0900
++++ musicbox-0.2.5.4.new/NEMbox/osdlyrics.py	2018-12-27 22:17:27.205920448 +0900
 @@ -19,16 +19,16 @@
  config = Config()
  
@@ -30,7 +30,7 @@ diff -ura --color musicbox-0.2.5.4/NEMbox/osdlyrics.py musicbox-0.2.5.4.new/NEMb
 -            bl = QtGui.QApplication.desktop().screenGeometry(scn).bottomLeft()
 -            br = QtGui.QApplication.desktop().screenGeometry(scn).bottomRight()
 +            scn = QtWidgets.QApplication.desktop().screenNumber(
-+                + QtWidgets.QApplication.desktop().cursor().pos())
++                QtWidgets.QApplication.desktop().cursor().pos())
 +            bl = QtWidgets.QApplication.desktop().screenGeometry(scn).bottomLeft()
 +            br = QtWidgets.QApplication.desktop().screenGeometry(scn).bottomRight()
              bc = (bl + br) / 2
