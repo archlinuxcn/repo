@@ -1,16 +1,42 @@
 language: python
 
+dist: xenial
+
 python:
     - "3.6"
 
 # Use container-based infrastructure for quicker build start-up
 sudo: false
 
+addons:
+  apt:
+    packages:
+      - libarchive13
+      - libarchive-dev
+
 install:
-    - pip install pyaml jsonschema
+    - wget http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.1_1.1.0j-1~deb9u1_amd64.deb
+    - sudo dpkg -i libssl*.deb
+    - wget https://build.archlinuxcn.org/~void001/files/pacman_5.1.2-1_amd64.deb -O /tmp/pacman.deb
+    - sudo dpkg -i /tmp/pacman.deb
+    - wget https://build.archlinuxcn.org/~void001/files/devtools-conf.tar.gz -O /tmp/devtools.tar.gz
+    - wget https://build.archlinuxcn.org/~void001/files/syncdb.tar.gz -O /tmp/syncdb.tar.gz
+    - sudo mkdir -p /var/lib/pacman/sync
+    - sudo mkdir -p /var/lib/pacman/local
+    - sudo mkdir -p /etc/pacman.d/
+    - sudo wget https://build.archlinuxcn.org/~void001/files/mirrorlist -O /etc/pacman.d/mirrorlist
+    - sudo tar -xvf /tmp/devtools.tar.gz -C /usr/share
+    - sudo tar -xvf /tmp/syncdb.tar.gz -C /var/lib/pacman/sync
+      #- ls -al /var/lib/pacman/sync
+    - sudo pacman-db-upgrade
+      #- dpkg-query -L pacman
+    - pip install pyaml jsonschema pyalpm
+    - env
 
 script:
     - python3 --version
+    - mv .lilaclib.py lilaclib.py
+    - export PYTHONPATH=$PYTHONPATH:$(pwd)
     - ./pre-commit --all # checking all PKGBUILD
 
 matrix:

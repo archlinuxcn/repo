@@ -15,7 +15,6 @@ class DependencyChecker:
     build_prefix_pkgs = {}
 
     def run(self, pkg_item: any):
-        # print("run pkg_item = {0}".format(pkg_item))
         pkg_name = ""
         pkg_base = ""
         err_dep = []
@@ -35,7 +34,6 @@ class DependencyChecker:
         cn_deps, build_prefix = self._parse_lilac(pkg_base)
 
         if cn_deps is None:
-            # print("package {} doesn't contain a lilac.py, skip checking".format(pkg_item))
             return []
 
         # Search all packages, Init pyalpm handle  from pacman.conf
@@ -52,9 +50,11 @@ class DependencyChecker:
                 allpkgs.extend(db.search(""))
             self.build_prefix_pkgs[build_prefix] = allpkgs
 
+
+        if self.check_pass.get(pkg_item):
+            return []
+
         for dep in depends:
-            if self.check_pass.get(dep):
-                continue
             if self._dep_satisfied_in_syncdb(dep, allpkgs):
                 continue
             if self._dep_satisfied_in_cn_repo(dep, cn_deps):
@@ -87,7 +87,6 @@ class DependencyChecker:
             cmd = shlex.split(
                 "/bin/bash -c '{}/printpkgenv.sh {} {} 2>/dev/null'".format(self.REPO_ROOT, pkgbuild_dir, pkg_name))
 
-        # print("command = {}".format(cmd))
         proc = subprocess.Popen(cmd, stdout=subprocess.PIPE,
                                 encoding="UTF-8", stderr=None)
 
@@ -106,7 +105,6 @@ class DependencyChecker:
 
         proc.communicate()
 
-        # print("DEBUG info = {}".format(info))
         info["depends"].extend(info.get("makedepends"))
         info["depends"].extend(info.get("depends_x86_64"))
 
@@ -136,7 +134,6 @@ class DependencyChecker:
             cn_deps = []
         if build_prefix is None or build_prefix == "":
             build_prefix = "extra-x86_64"
-        # print("DEBUG: cn_dep = {}, build_prefix = {}".format(cn_deps, build_prefix))
 
         return (cn_deps, build_prefix)
 
@@ -146,7 +143,6 @@ class DependencyChecker:
         try:
             _file = open(path, "r")
             yaml_obj = yaml.load(_file)
-            # print("DEBUG package = {} yaml_obj = {}".format(path, yaml_obj))
             if "depends" in yaml_obj:
                 cn_deps = []
                 depends = yaml_obj.get("depends")
@@ -170,7 +166,10 @@ class DependencyChecker:
         spec = importlib.util.spec_from_file_location(
             "dumb" + ".pkg", path)
         mod = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(mod)
+        try:
+            spec.loader.exec_module(mod)
+        except Exception as e:
+            pass
 
         try:
             assert mod.depends
@@ -255,43 +254,3 @@ class DependencyChecker:
         pkgname = depstr[0:name_index]
         pkgver = depstr[ver_index:]
         return pkgname, pkgver
-
-
-
-# err = ck.run("php56-memcache")
-# print("err = {}".format(err))
-# sys.exit(0)
-# 
-# all_pkg = next(os.walk("/home/void001/packager/repo")
-#                )[1]  # type: List[str]
-# 
-# all_pkg.remove("chromium-dev")
-# all_pkg.remove("tor-browser")
-# 
-# errinfos = {}
-# 
-# for pkg in all_pkg:
-#     if pkg.startswith("."):
-#         continue
-#     try:
-#         err_dep = ck.run(pkg)  # type: array
-# 
-#         if len(err_dep) > 0:
-#             print(
-#                 "{} not pass, because the following dependency not satisfied: {}".format(pkg, err_dep))
-#             errinfos[pkg] = "Failed dependency check because the following dependency not satisfied: {}".format(
-#                 err_dep)
-#         else:
-#             print("CHECK PASS FOR {}".format(pkg))
-#     except Exception as e:
-#         print("checking {} cause Exception {}".format(pkg, e))
-#         errinfos[pkg] = "Cause an exception: {}".format(e)
-#         pass
-# 
-# if len(errinfos) > 0:
-#     print("Some packages didn't pass the dependencycheck:")
-#     err_items = []
-#     for name, cause in errinfos.items():
-#         print("{}: {}".format(name, cause))
-#         err_items.append(name)
-#     print("Error packages (name only): {}".format(err_items))

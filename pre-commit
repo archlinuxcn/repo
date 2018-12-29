@@ -191,8 +191,8 @@ def depends_strip_version(depends):
 
 def dump_groups():
     global GROUPS, PACKAGES
-    try:
-        import pycman
+    import pycman
+    if os.getenv("TRAVIS_BUILD_ID") is None:
         # now that we are running on archlinux so dump from pacman's syncdb
         handle = pycman.config.init_with_config('/etc/pacman.conf')
         OFFICIAL = ['core', 'extra', 'community']
@@ -210,7 +210,7 @@ def dump_groups():
                     GROUPS[name].append(db.name)
                 else:
                     GROUPS[name] = [db.name, ]
-    except ImportError:
+    else:
         # not running on an archlinux/pacman so download from URL
         def refresh_dump_groups():
             dump_groups_path = DUMP_GROUPS_TMP % (strftime(DUMP_GROUPS_TIMEFORMAT))
@@ -253,11 +253,17 @@ class RepoTreeTest(TestCase):
     def test_static_dep(self):
         ck = dep_check.DependencyChecker()
         ck.REPO_ROOT = os.getcwd()
+        err_pkgs = {}
         for package in list_packages():
             err_deps = ck.run(package)
-            self.assertEqual(len(err_deps), 0,
-                             msg=('package "\033[1;31m{0}\033[m" has missing dependencies'
-                                   '{1}').format(package, err_deps))
+            if len(err_deps) > 0:
+                err_pkgs[package] = err_deps
+        hint = ""
+        for pkg, cause in err_pkgs.items():
+            hint = hint + "{0} doesn't satisify dependency: {1}\n".format(pkg, cause)
+        self.assertEqual(not err_pkgs, True,
+                         msg=('dependency check failed\n'
+                               '{0}').format(hint))
 
     @skip("PKGBUILDs may be added later by lilac")
     def test_pkgbuild_exists(self):
