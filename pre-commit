@@ -21,6 +21,7 @@ import re
 import ast
 import gzip
 import json
+import check as dep_check
 from time import strftime
 from subprocess import Popen, PIPE
 from unittest import TestCase, TestLoader, TextTestRunner, skip
@@ -249,6 +250,15 @@ def list_packages():
 
 class RepoTreeTest(TestCase):
 
+    def test_static_dep(self):
+        ck = dep_check.DependencyChecker()
+        ck.REPO_ROOT = os.getcwd()
+        for package in list_packages():
+            err_deps = ck.run(package)
+            self.assertEqual(len(err_deps), 0,
+                             msg=('package "\033[1;31m{0}\033[m" has missing dependencies'
+                                   '{1}').format(package, err_deps))
+
     @skip("PKGBUILDs may be added later by lilac")
     def test_pkgbuild_exists(self):
         for package in list_packages():
@@ -319,7 +329,6 @@ class RepoTreeTest(TestCase):
                 for line in srcinfo.split('\n'):
                     check_var_srcinfo('replaces', package, PACKAGES, line)
                     check_var_srcinfo('groups', package, GROUPS, line)
-
 
 
 def run_test(testcase, msg):
