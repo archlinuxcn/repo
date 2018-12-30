@@ -2,7 +2,7 @@
 
 pkgname=nbuexplorer
 pkgver=3.3
-pkgrel=2
+pkgrel=3
 pkgdesc='Nokia NBU, NBF, NFB, NFC and ARC backup file parser, extractor and viewer.'
 arch=('any')
 url='https://sourceforge.net/projects/nbuexplorer/'
