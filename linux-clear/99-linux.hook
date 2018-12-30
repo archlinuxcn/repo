@@ -1,0 +1,9 @@
+[Trigger]
+Type = File
+Operation = Remove
+Target = boot/vmlinuz-%PKGBASE%
+
+[Action]
+Description = Remove %PKGBASE% initramfs files...
+When = PreTransaction
+Exec = /usr/bin/rm -f /boot/initramfs-%PKGBASE%.img /boot/initramfs-%PKGBASE%-fallback.img
