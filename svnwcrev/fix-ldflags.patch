@@ -1,0 +1,20 @@
+Index: Makefile
+===================================================================
+--- Makefile	(revision 18)
++++ Makefile	(working copy)
+@@ -6,7 +6,7 @@
+ CPPFLAGS=-I$(SUBVERSION_INCLUDE) -I$(APR_INCLUDE)
+ CXXFLAGS=-g3
+ 
+-LDLIBS=-lpthread -L$(LIBRARIES) -lsvn_client-1 -lsvn_wc-1 -lsvn_subr-1 -lapr-1
++LDLIBS=$(LDFLAGS) -lpthread -L$(LIBRARIES) -lsvn_client-1 -lsvn_wc-1 -lsvn_subr-1 -lapr-1
+ 
+ objects=src/status.o src/SVNWcRev.o
+ 
+@@ -36,4 +36,4 @@
+ $(VERSIONFILE):
+ 	( $(VERSIONTEXT) )> $(VERSIONFILE)
+ 
+-	
+\ No newline at end of file
++	
