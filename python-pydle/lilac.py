@@ -1,13 +1,9 @@
-#!/usr/bin/env python3
+# Trimmed lilac.py
 
 from lilaclib import *
 
-build_prefix = 'extra-x86_64'
 
 def pre_build():
   pypi_pre_build(depends = ['python-tornado'], depends_setuptools = True)
 
-post_build = pypi_post_build
 
-if __name__ == '__main__':
-  single_main()
