@@ -1,0 +1,13 @@
+maintainers:
+  - github: yan12125
+
+build_prefix: extra-x86_64
+
+depends:
+  - nmtree
+
+update_on:
+  - github: macports/macports-base
+    use_max_tag: true
+    from_pattern: v([\d.]+)(?:-([a-z]+\d))?
+    to_pattern: \1\2
