@@ -4,31 +4,28 @@
 
 pkgname=isl
 pkgver=0.20
-pkgrel=4
+pkgrel=5
 pkgdesc="Library for manipulating sets and relations of integer points bounded by linear constraints"
 arch=('i686' 'x86_64')
 url="http://isl.gforge.inria.fr/"
-makedepends=('git')
 depends=('gmp')
 license=('MIT')
 conflicts=('isl-git' 'isl14' 'isl15' 'isl16' 'isl17')
-source=("isl::git+http://repo.or.cz/isl.git#tag=isl-${pkgver}")
-sha256sums=('SKIP')
-
+source=("http://isl.gforge.inria.fr/isl-${pkgver}.tar.gz")
+sha256sums=('cf4ec18538df940ad5d5760af1246825cc58dd295241ab41d3f3962b24f55199')
 build() {
-  cd ${srcdir}/${pkgname}
-  ./autogen.sh
+  cd ${srcdir}/${pkgname}-${pkgver}
   ./configure --prefix=/usr
   make
 }
 
 check() {
-  cd ${srcdir}/${pkgname}
+  cd ${srcdir}/${pkgname}-${pkgver}
   make check
 }
 
 package() {
-  cd ${srcdir}/${pkgname}
+  cd ${srcdir}/${pkgname}-${pkgver}
 
   make DESTDIR="$pkgdir" install
 
