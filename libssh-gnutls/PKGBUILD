@@ -2,7 +2,7 @@
 
 pkgbase=libssh-gnutls
 pkgname=(${pkgbase} ${pkgbase}-docs)
-pkgver=0.8.5
+pkgver=0.8.6
 pkgrel=1
 pkgdesc="Library for accessing ssh client services through C libraries - compiled with gnutls (libgcrypt), documentation for libssh"
 arch=("x86_64")
@@ -10,25 +10,22 @@ url="http://www.libssh.org/"
 license=("LGPL")
 makedepends=("cmake" "cmocka" "doxygen" "python")
 source=("https://www.libssh.org/files/${pkgver%.*}/${pkgname%-gnutls}-${pkgver}.tar.xz"{,.asc})
-sha256sums=("07d2c431240fc88f6b06bcb36ae267f9afeedce2e32f6c42f8844b205ab5a335" "SKIP")
+sha256sums=("1046b95632a07fc00b1ea70ee683072d0c8a23f544f4535440b727812002fd01" "SKIP")
 validpgpkeys=("8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D") # Andreas Schneider <asn@cryptomilk.org>
 
 prepare() {
   cd "${srcdir}"
-  # disable the test. It is confused by our clean container setup.
-  # 'extra-x86-build' uses user 'nobody' that has a record in /etc/passwd file
-  # but $HOME envvar is set to '/build'. The test expects that $HOME corresponds to passwd file.
-  sed "s/cmocka_unit_test(torture_path_expand_tilde_unix),//" -i "libssh-${pkgver}/tests/unittests/torture_misc.c"
   mkdir -p "${srcdir}/build"
 }
 
 build() {
   cd "${srcdir}/build"
-  cmake ../${pkgname%-gnutls}-${pkgver} \
+  cmake \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DWITH_GSSAPI=OFF \
     -DWITH_GCRYPT=ON \
-    -DUNIT_TESTING=ON
+    -DUNIT_TESTING=ON \
+    "${srcdir}/${pkgname%-gnutls}-${pkgver}"
   make
   make docs
 }
