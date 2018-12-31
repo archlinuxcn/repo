@@ -1,43 +1,38 @@
-# Maintainer: Timothy Redaelli <timothy.redaelli@gmail.com>
+# Maintainer: Chih-Hsuan Yen <yan12125@archlinux.org>
+# Contributor: Timothy Redaelli <timothy.redaelli@gmail.com>
 
 pkgname="libnbcompat"
-pkgver=20111103
+pkgver=20180822
+_commit=be9f9298fd165ea01a0769c4ffa29a3ec0d22023
 pkgrel=1
 pkgdesc="Portable NetBSD compatibility library"
 arch=('i686' 'x86_64')
 url="http://www.netbsd.org/"
 license=('BSD')
-makedepends=('bmake' 'cvs')
-
-_cvsroot=":pserver:anoncvs@anoncvs.NetBSD.org:/cvsroot"
-_cvsmod="pkgsrc/pkgtools/$pkgname/files"
+# The git repo is maintained by Debian
+# LICENSE is extracted from nbcompat.h
+source=("git+https://github.com/jgoerzen/libnbcompat#commit=$_commit"
+        'LICENSE')
+md5sums=('SKIP'
+         'beab088c74f4e3e456da604c0d62c2e3')
+makedepends=('bmake' 'git')
+options=('!makeflags')
 
 build() {
-  cd "$srcdir"
-  msg "Connecting to NetBSD CVS server...."
+  cd libnbcompat
 
-  if [[ -d "$_cvsmod/CVS" ]]; then
-    cd "$_cvsmod"
-    cvs -z3 update -d
-  else
-    cvs -z3 -d "$_cvsroot" co -D "$pkgver" -f "$_cvsmod"
-    cd "$_cvsmod"
-  fi
-
-  msg "CVS checkout done or server timeout"
-  msg "Starting build..."
-
-  rm -rf "$srcdir/$_cvsmod-build"
-  cp -r "$srcdir/$_cvsmod" "$srcdir/$_cvsmod-build"
-  cd "$srcdir/$_cvsmod-build"
-
-  ./configure --prefix=/usr --enable-db --enable-bsd-getopt CPPFLAGS="${CPPFLAGS} -D_GNU_SOURCE"
+  ./configure \
+    --prefix=/usr \
+    --enable-db \
+    --enable-bsd-getopt
 
   bmake
 }
 
 package() {
-  cd "$srcdir/$_cvsmod-build"
+  cd libnbcompat
 
-  bmake install DESTDIR="$pkgdir/"
+  bmake install DESTDIR="$pkgdir"
+
+  install -Dm644 ../LICENSE -t "$pkgdir"/usr/share/licenses/$pkgname
 }
