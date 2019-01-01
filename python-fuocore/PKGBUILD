@@ -1,15 +1,15 @@
 _pkgname=fuocore
 pkgname=python-fuocore
-pkgver=2.3a0
-pkgrel=2
+pkgver=2.3
+pkgrel=1
 pkgdesc="feeluown core"
 arch=('any')
 url="https://github.com/cosven/feeluown-core"
-license=('MIT')
-depends=('python' 'mpv' 'python-beautifulsoup4' 'python-marshmallow' 'python-pycrypto' 'python-requests' 'python-mutagen' 'python-fuzzywuzzy' 'python-setuptools')
+license=(MIT)
+depends=('python' 'python' 'mpv' 'python-beautifulsoup4' 'python-marshmallow' 'python-pycrypto' 'python-requests' 'python-mutagen' 'python-fuzzywuzzy' 'python-setuptools' 'python-setuptools')
 _name=${pkgname#python-}
 source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
-md5sums=('f7f126d608efc798dff0d621c0e008a9')
+md5sums=('295490a6e945e452f7a0c23d430c3b62')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
