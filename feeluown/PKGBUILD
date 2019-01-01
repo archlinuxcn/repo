@@ -1,30 +1,24 @@
-# Maintainer: Bruce Zhang <zttt183525594@gmail.com>
+_pkgname=feeluown
 pkgname=feeluown
-pkgver=2.2
-pkgrel=2
-pkgdesc="FeelUOwn Music Player"
+pkgver=2.3
+pkgrel=1
+pkgdesc="*nix music player"
 arch=('any')
 url="https://github.com/cosven/FeelUOwn"
-license=('GPL3')
-depends=('python-quamash' 'python-fuocore' 'python-pyqt5')
-makedepends=('python-setuptools')
-source=(
-	"https://files.pythonhosted.org/packages/80/85/14910d675db89f13079f79ece4a237d563d4d50f71d38eae9762d3e65851/feeluown-$pkgver.tar.gz" 
-	"feeluown.desktop"
-)
-sha256sums=(
-	'0cd607d115b8641c21a4740b3c7646b67a4b6493c76bbc8c1d9110770bba0938' 
-	'45802543ffd7c7dd05f1a36782c5b4f40b8393aa8c1131f83d0b9eccd14b2a18'
-)
+license=('(FIXME)')
+depends=('python' 'python-quamash' 'python-fuocore' 'python-setuptools')
+_name=${pkgname#python-}
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
+md5sums=('2dc449e5c60a5a84d9cd7802421b5d6a')
 
 build() {
-	cd "$pkgname-$pkgver"
-	python setup.py build
+  cd "$srcdir/$_pkgname-$pkgver"
+  LANG=en_US.UTF-8 python3 setup.py build
 }
 
 package() {
-	cd "$pkgname-$pkgver"
-	python setup.py install --root="$pkgdir/" --optimize=1 --skip-build
-    install -D -m644 "$srcdir/$pkgname-$pkgver/feeluown/feeluown.png" "$pkgdir/usr/share/icons/hicolor/512x512/apps/feeluown.png"
-    install -D -m644 "$srcdir/feeluown.desktop" "$pkgdir/usr/share/applications/feeluown.desktop"
+  cd "$srcdir/$_pkgname-$pkgver"
+  LANG=en_US.UTF-8 python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 }
+
+# vim:set sw=2 et:
