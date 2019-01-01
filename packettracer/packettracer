@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# Modified and improved version of Cisco's Script
+
+# As for now, PacketTracer works with built-in arch libraries
+# If you exprerience any troubles, try to uncomment
+# the following line
+
+export LD_LIBRARY_PATH="/usr/share/packettracer/bin"
+
+exec /usr/share/packettracer/bin/PacketTracer7 "$@"
+

@@ -1,0 +1,50 @@
+<ConfigRoot>
+  <httpPort>-1</httpPort>
+  <httpsPort>443</httpsPort>
+  <EndpointList>
+    <_length>7</_length>
+    <_type>vim.ProxyService.EndpointSpec[]</_type>
+    <e id="0">
+      <_type>vim.ProxyService.NamedPipeServiceSpec</_type>
+      <accessMode>httpAndHttps</accessMode>
+      <pipeName>/var/run/vmware/proxy-webserver</pipeName>
+      <serverNamespace>/</serverNamespace>
+    </e>
+    <e id="1">
+      <_type>vim.ProxyService.LocalServiceSpec</_type>
+      <accessMode>httpsWithRedirect</accessMode>
+      <port>8307</port>
+      <serverNamespace>/sdk</serverNamespace>
+    </e>
+    <e id="2">
+      <_type>vim.ProxyService.LocalServiceSpec</_type>
+      <accessMode>httpsWithRedirect</accessMode>
+      <port>8308</port>
+      <serverNamespace>/ui</serverNamespace>
+    </e>
+    <e id="3">
+      <_type>vim.ProxyService.NamedPipeServiceSpec</_type>
+      <accessMode>httpsOnly</accessMode>
+      <pipeName>/var/run/vmware/proxy-vpxa</pipeName>
+      <serverNamespace>/vpxa</serverNamespace>
+    </e>
+    <e id="4">
+      <_type>vim.ProxyService.NamedPipeServiceSpec</_type>
+      <accessMode>httpsWithRedirect</accessMode>
+      <pipeName>/var/run/vmware/proxy-mob</pipeName>
+      <serverNamespace>/mob</serverNamespace>
+    </e>
+    <e id="5">
+      <_type>vim.ProxyService.LocalServiceSpec</_type>
+      <accessMode>httpAndHttps</accessMode>
+      <port>12001</port>
+      <serverNamespace>/ha-nfc</serverNamespace>
+    </e>
+    <e id="6">
+      <_type>vim.ProxyService.LocalServiceSpec</_type>
+      <accessMode>httpAndHttps</accessMode>
+      <port>12000</port>
+      <serverNamespace>/nfc</serverNamespace>
+    </e>
+  </EndpointList>
+</ConfigRoot>

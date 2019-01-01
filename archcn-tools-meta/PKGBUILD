@@ -1,0 +1,23 @@
+# Maintainer: Sakuraba Amane <tobiichiamane@archlinuxcn.org>
+# Maintainer: Jiachen Yang <farseerfc@gmail.com>
+
+pkgname=archcn-tools-meta
+pkgver=18.11.7
+pkgrel=1
+arch=('any')
+url='https://www.archlinuxcn.org/'
+license=(GPL)
+pkgdesc='Meta package for a set of tools often used by Arch CN maintainers'
+depends=(openssh
+         devtools
+         pacman-contrib
+         pyalpm
+         python-yaml
+         python-jsonschema
+         devtools-cn-git
+         pkgfile
+         pkgtools
+         lilacinfo)
+optdepends=('gnupg: for local package signing'
+            'archlinuxcn-keyring: packager keyring'
+            'git: for working with archlinuxcn/repo')

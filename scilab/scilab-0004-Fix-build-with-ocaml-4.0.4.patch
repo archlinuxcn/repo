@@ -1,0 +1,12 @@
+--- modules/scicos/src/modelica_compiler/optimization.ml.orig	2018-05-16 19:42:49.168681800 +0200
++++ modules/scicos/src/modelica_compiler/optimization.ml	2018-05-16 19:44:53.999181477 +0200
+@@ -163,7 +163,8 @@
+     let m, e = frexp f in
+     let sm = string_of_float m in
+     let s = String.make 16 '0' in
+-    String.blit sm 2 s 0 (String.length sm - 2);
++    let sss = Bytes.make 16 '0' in
++    String.blit sm 2 sss 0 (String.length sm - 2);
+     let e' = Num.power_num (Num.Int 2) (Num.num_of_int e) in
+     Num.div_num (Num.mult_num (Num.num_of_string s) e') scaling_factor
+   in

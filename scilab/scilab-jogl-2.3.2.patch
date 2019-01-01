@@ -1,0 +1,556 @@
+commit db79126ed25fc254e83f8a96b164cb2dbf0d6204
+Author: Clément DAVID <clement.david@scilab-enterprises.com>
+Date:   Wed Dec 2 15:09:07 2015 +0100
+
+    Update to JoGL 2.3.2
+    
+    Change-Id: Ic188bb392d1dd8441d1a4132004f77b63a3353df
+
+diff --git a/scilab/configure b/scilab/configure
+index fd385a8..51e5ff2 100755
+--- a/scilab/configure
++++ b/scilab/configure
+@@ -15265,7 +15265,7 @@ EOF
+ 
+     CLASSPATH=$ac_java_classpath
+     export CLASSPATH
+-    cmd="$JAVA conftestSharedChecker jogl2 javax.media.opengl.glu.GLUnurbs $jar_resolved   "
++    cmd="$JAVA conftestSharedChecker jogl2 jogamp.opengl.x11.glx.GLX $jar_resolved   "
+     if (echo $cmd >&5 ; eval $cmd >conftestSharedChecker.java.output 2>&5); then
+         PACKAGE_JAR_FILE=$(tail -n 1 conftestSharedChecker.java.output);
+         { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PACKAGE_JAR_FILE" >&5
+@@ -15277,10 +15277,10 @@ $as_echo "$PACKAGE_JAR_FILE" >&6; }
+       { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+ $as_echo "no" >&6; }
+       if test "" = "yes"; then
+-         { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Could not find or use the Java package/jar jogl2 used by Scilab 3D rendering - Version 2.0 (looking for package javax.media.opengl.glu.GLUnurbs)" >&5
+-$as_echo "$as_me: WARNING: Could not find or use the Java package/jar jogl2 used by Scilab 3D rendering - Version 2.0 (looking for package javax.media.opengl.glu.GLUnurbs)" >&2;}
++         { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Could not find or use the Java package/jar jogl2 used by Scilab 3D rendering - Version 2.3 (looking for package jogamp.opengl.x11.glx.GLX)" >&5
++$as_echo "$as_me: WARNING: Could not find or use the Java package/jar jogl2 used by Scilab 3D rendering - Version 2.3 (looking for package jogamp.opengl.x11.glx.GLX)" >&2;}
+       else
+-          as_fn_error $? "Could not find or use the Java package/jar jogl2 used by Scilab 3D rendering - Version 2.0 (looking for package javax.media.opengl.glu.GLUnurbs)" "$LINENO" 5
++          as_fn_error $? "Could not find or use the Java package/jar jogl2 used by Scilab 3D rendering - Version 2.3 (looking for package jogamp.opengl.x11.glx.GLX)" "$LINENO" 5
+       fi
+     fi
+     if test -f conftestSharedChecker.java.output; then
+@@ -15291,8 +15291,8 @@ $as_echo "$as_me: WARNING: Could not find or use the Java package/jar jogl2 used
+ 
+ 
+ 
+-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking minimal version (Specification-Version 2.2) of jogl2" >&5
+-$as_echo_n "checking minimal version (Specification-Version 2.2) of jogl2... " >&6; }
++    { $as_echo "$as_me:${as_lineno-$LINENO}: checking minimal version (Specification-Version 2.3) of jogl2" >&5
++$as_echo_n "checking minimal version (Specification-Version 2.3) of jogl2... " >&6; }
+     export JARFILE=$JOGL2;
+     if test "x" == "x"; then
+ 
+@@ -15305,7 +15305,7 @@ import java.util.jar.JarFile;
+ 
+ public class conftest {
+     public static void main(String[] argv) {
+-        String minVersion="2.2";
++        String minVersion="2.3";
+         try {
+             String version = new JarFile(System.getenv("JARFILE")).getManifest().getMainAttributes().getValue("Specification-Version");
+             System.out.println(version);
+@@ -15358,7 +15358,7 @@ EOF
+                    STDOUT=`cat conftest.java.output`
+                 fi
+                 echo "configure: CLASSPATH was $CLASSPATH" >&5
+-                  as_fn_error $? "Wrong version of jogl2. Expected at least 2.2. Found $STDOUT" "$LINENO" 5
++                  as_fn_error $? "Wrong version of jogl2. Expected at least 2.3. Found $STDOUT" "$LINENO" 5
+                             fi
+         fi
+         if test -f conftest.java.output; then
+@@ -15368,7 +15368,7 @@ EOF
+         echo "configure: failed program was:" >&5
+         cat conftest.java >&5
+         echo "configure: CLASSPATH was $CLASSPATH" >&5
+-          as_fn_error $? "Wrong version of jogl2. Expected at least 2.2. Found $STDOUT" "$LINENO" 5
++          as_fn_error $? "Wrong version of jogl2. Expected at least 2.3. Found $STDOUT" "$LINENO" 5
+             fi
+ 
+     else
+@@ -15382,7 +15382,7 @@ import java.util.jar.JarFile;
+ 
+ public class conftest {
+     public static void main(String[] argv) {
+-        String minVersion="2.2";
++        String minVersion="2.3";
+         try {
+             String version = new JarFile(System.getenv("JARFILE")).getManifest().getMainAttributes().getValue("Specification-Version");
+             System.out.println("Specification-Version" + ": " + version);
+@@ -15752,7 +15752,7 @@ EOF
+ 
+     CLASSPATH=$ac_java_classpath
+     export CLASSPATH
+-    cmd="$JAVA conftestSharedChecker gluegen2-rt jogamp.common.os.MachineDescriptionRuntime $jar_resolved   "
++    cmd="$JAVA conftestSharedChecker gluegen2-rt com.jogamp.common.os.Platform $jar_resolved   "
+     if (echo $cmd >&5 ; eval $cmd >conftestSharedChecker.java.output 2>&5); then
+         PACKAGE_JAR_FILE=$(tail -n 1 conftestSharedChecker.java.output);
+         { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PACKAGE_JAR_FILE" >&5
+@@ -15764,10 +15764,10 @@ $as_echo "$PACKAGE_JAR_FILE" >&6; }
+       { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+ $as_echo "no" >&6; }
+       if test "" = "yes"; then
+-         { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Could not find or use the Java package/jar gluegen2-rt used by Scilab 3D rendering (looking for package jogamp.common.os.MachineDescriptionRuntime)" >&5
+-$as_echo "$as_me: WARNING: Could not find or use the Java package/jar gluegen2-rt used by Scilab 3D rendering (looking for package jogamp.common.os.MachineDescriptionRuntime)" >&2;}
++         { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Could not find or use the Java package/jar gluegen2-rt used by Scilab 3D rendering (looking for package com.jogamp.common.os.Platform)" >&5
++$as_echo "$as_me: WARNING: Could not find or use the Java package/jar gluegen2-rt used by Scilab 3D rendering (looking for package com.jogamp.common.os.Platform)" >&2;}
+       else
+-          as_fn_error $? "Could not find or use the Java package/jar gluegen2-rt used by Scilab 3D rendering (looking for package jogamp.common.os.MachineDescriptionRuntime)" "$LINENO" 5
++          as_fn_error $? "Could not find or use the Java package/jar gluegen2-rt used by Scilab 3D rendering (looking for package com.jogamp.common.os.Platform)" "$LINENO" 5
+       fi
+     fi
+     if test -f conftestSharedChecker.java.output; then
+diff --git a/scilab/configure.ac b/scilab/configure.ac
+index 6404101..0a80deb 100644
+--- a/scilab/configure.ac
++++ b/scilab/configure.ac
+@@ -940,11 +940,11 @@ if test "$with_javasci" != no -o "$with_gui" != no -o "$enable_build_help" != no
+                 AC_SUBST(SKINLF)
+ 
+                 # JOGL 2
+-                AC_JAVA_CHECK_JAR([jogl2],[javax.media.opengl.glu.GLUnurbs],[Scilab 3D rendering - Version 2.0])
++                AC_JAVA_CHECK_JAR([jogl2],[jogamp.opengl.x11.glx.GLX],[Scilab 3D rendering - Version 2.3])
+                 JOGL2=$PACKAGE_JAR_FILE
+                 AC_SUBST(JOGL2)
+ 
+-                AC_JAVA_CHECK_VERSION_MANIFEST([jogl2],$JOGL2,[2.2],[Specification-Version])
++                AC_JAVA_CHECK_VERSION_MANIFEST([jogl2],$JOGL2,[2.3],[Specification-Version])
+ 
+                 if test "$MACOSX" = 1; then
+                    echo "Check of the presence of libjogl.jnilib and libjogl_awt.jnilib disabled under Mac OS X"
+@@ -971,7 +971,7 @@ interface for JOGL2 - or libGL (OpenGL library) are installed and if the version
+                 fi
+ 
+                 # JoGL Native <=> Java connector
+-                AC_JAVA_CHECK_JAR([gluegen2-rt],[jogamp.common.os.MachineDescriptionRuntime],[Scilab 3D rendering])
++                AC_JAVA_CHECK_JAR([gluegen2-rt],[com.jogamp.common.os.Platform],[Scilab 3D rendering])
+                 GLUEGEN2_RT=$PACKAGE_JAR_FILE
+                 AC_SUBST(GLUEGEN2_RT)
+ 
+diff --git a/scilab/modules/gui/src/java/org/scilab/modules/gui/SwingView.java b/scilab/modules/gui/src/java/org/scilab/modules/gui/SwingView.java
+index 18593ca..892843a 100644
+--- a/scilab/modules/gui/src/java/org/scilab/modules/gui/SwingView.java
++++ b/scilab/modules/gui/src/java/org/scilab/modules/gui/SwingView.java
+@@ -87,10 +87,10 @@ import java.util.Map;
+ import java.util.Set;
+ import java.util.UUID;
+ 
+-import javax.media.opengl.GL;
+-import javax.media.opengl.GLCapabilities;
+-import javax.media.opengl.GLProfile;
+-import javax.media.opengl.awt.GLCanvas;
++import com.jogamp.opengl.GL;
++import com.jogamp.opengl.GLCapabilities;
++import com.jogamp.opengl.GLProfile;
++import com.jogamp.opengl.awt.GLCanvas;
+ import javax.swing.JComponent;
+ import javax.swing.JSeparator;
+ import javax.swing.SwingUtilities;
+diff --git a/scilab/modules/gui/src/java/org/scilab/modules/gui/bridge/ScilabBridge.java b/scilab/modules/gui/src/java/org/scilab/modules/gui/bridge/ScilabBridge.java
+index 112a904..d1a2438 100644
+--- a/scilab/modules/gui/src/java/org/scilab/modules/gui/bridge/ScilabBridge.java
++++ b/scilab/modules/gui/src/java/org/scilab/modules/gui/bridge/ScilabBridge.java
+@@ -23,7 +23,7 @@ import java.awt.Cursor;
+ import java.awt.Font;
+ import java.awt.image.BufferedImage;
+ 
+-import javax.media.opengl.GL;
++import com.jogamp.opengl.GL;
+ 
+ import org.scilab.modules.gui.canvas.Canvas;
+ import org.scilab.modules.gui.canvas.ScilabCanvas;
+diff --git a/scilab/modules/gui/src/java/org/scilab/modules/gui/bridge/canvas/SwingScilabCanvas.java b/scilab/modules/gui/src/java/org/scilab/modules/gui/bridge/canvas/SwingScilabCanvas.java
+index 477fa3f..9e969b4 100644
+--- a/scilab/modules/gui/src/java/org/scilab/modules/gui/bridge/canvas/SwingScilabCanvas.java
++++ b/scilab/modules/gui/src/java/org/scilab/modules/gui/bridge/canvas/SwingScilabCanvas.java
+@@ -35,8 +35,8 @@ import java.awt.event.MouseListener;
+ import java.awt.event.MouseMotionListener;
+ import java.awt.image.BufferedImage;
+ 
+-import javax.media.opengl.GL;
+-import javax.media.opengl.GLAutoDrawable;
++import com.jogamp.opengl.GL;
++import com.jogamp.opengl.GLAutoDrawable;
+ import javax.swing.JPanel;
+ 
+ import org.scilab.forge.scirenderer.Canvas;
+diff --git a/scilab/modules/gui/src/java/org/scilab/modules/gui/bridge/canvas/SwingScilabCanvasImpl.java b/scilab/modules/gui/src/java/org/scilab/modules/gui/bridge/canvas/SwingScilabCanvasImpl.java
+index 76e976a..31bc493 100644
+--- a/scilab/modules/gui/src/java/org/scilab/modules/gui/bridge/canvas/SwingScilabCanvasImpl.java
++++ b/scilab/modules/gui/src/java/org/scilab/modules/gui/bridge/canvas/SwingScilabCanvasImpl.java
+@@ -22,12 +22,12 @@ import java.awt.HeadlessException;
+ import java.util.Calendar;
+ import java.util.StringTokenizer;
+ 
+-import javax.media.opengl.GL;
+-import javax.media.opengl.GLCapabilities;
+-import javax.media.opengl.GLException;
+-import javax.media.opengl.GLProfile;
+-import javax.media.opengl.awt.GLCanvas;
+-import javax.media.opengl.awt.GLJPanel;
++import com.jogamp.opengl.GL;
++import com.jogamp.opengl.GLCapabilities;
++import com.jogamp.opengl.GLException;
++import com.jogamp.opengl.GLProfile;
++import com.jogamp.opengl.awt.GLCanvas;
++import com.jogamp.opengl.awt.GLJPanel;
+ 
+ import org.scilab.modules.action_binding.InterpreterManagement;
+ import org.scilab.modules.commons.OS;
+diff --git a/scilab/modules/gui/src/java/org/scilab/modules/gui/canvas/Canvas.java b/scilab/modules/gui/src/java/org/scilab/modules/gui/canvas/Canvas.java
+index 03e7b5b..c84b257 100644
+--- a/scilab/modules/gui/src/java/org/scilab/modules/gui/canvas/Canvas.java
++++ b/scilab/modules/gui/src/java/org/scilab/modules/gui/canvas/Canvas.java
+@@ -17,7 +17,7 @@ package org.scilab.modules.gui.canvas;
+ 
+ import java.awt.image.BufferedImage;
+ 
+-import javax.media.opengl.GL;
++import com.jogamp.opengl.GL;
+ 
+ import org.scilab.modules.gui.dockable.Dockable;
+ 
+diff --git a/scilab/modules/gui/src/java/org/scilab/modules/gui/canvas/ScilabCanvas.java b/scilab/modules/gui/src/java/org/scilab/modules/gui/canvas/ScilabCanvas.java
+index 6fb2ef9..ce0f1a9 100644
+--- a/scilab/modules/gui/src/java/org/scilab/modules/gui/canvas/ScilabCanvas.java
++++ b/scilab/modules/gui/src/java/org/scilab/modules/gui/canvas/ScilabCanvas.java
+@@ -19,7 +19,7 @@ package org.scilab.modules.gui.canvas;
+ 
+ import java.awt.image.BufferedImage;
+ 
+-import javax.media.opengl.GL;
++import com.jogamp.opengl.GL;
+ 
+ import org.scilab.modules.gui.bridge.ScilabBridge;
+ import org.scilab.modules.gui.dockable.ScilabDockable;
+diff --git a/scilab/modules/gui/src/java/org/scilab/modules/gui/canvas/ScilabCanvasBridge.java b/scilab/modules/gui/src/java/org/scilab/modules/gui/canvas/ScilabCanvasBridge.java
+index 2d7e304..56c4ee4 100644
+--- a/scilab/modules/gui/src/java/org/scilab/modules/gui/canvas/ScilabCanvasBridge.java
++++ b/scilab/modules/gui/src/java/org/scilab/modules/gui/canvas/ScilabCanvasBridge.java
+@@ -17,7 +17,7 @@ package org.scilab.modules.gui.canvas;
+ 
+ import java.awt.image.BufferedImage;
+ 
+-import javax.media.opengl.GL;
++import com.jogamp.opengl.GL;
+ 
+ import org.scilab.modules.gui.bridge.canvas.SwingScilabCanvas;
+ import org.scilab.modules.gui.utils.Position;
+diff --git a/scilab/modules/gui/src/java/org/scilab/modules/gui/canvas/SimpleCanvas.java b/scilab/modules/gui/src/java/org/scilab/modules/gui/canvas/SimpleCanvas.java
+index 307486a..91a40b0 100644
+--- a/scilab/modules/gui/src/java/org/scilab/modules/gui/canvas/SimpleCanvas.java
++++ b/scilab/modules/gui/src/java/org/scilab/modules/gui/canvas/SimpleCanvas.java
+@@ -18,7 +18,7 @@ package org.scilab.modules.gui.canvas;
+ import org.scilab.modules.gui.utils.Position;
+ import org.scilab.modules.gui.utils.Size;
+ 
+-import javax.media.opengl.GL;
++import com.jogamp.opengl.GL;
+ import java.awt.image.BufferedImage;
+ 
+ /**
+diff --git a/scilab/modules/scirenderer/scirenderer-libs.properties b/scilab/modules/scirenderer/scirenderer-libs.properties
+index 4d1636d..0ea2197 100644
+--- a/scilab/modules/scirenderer/scirenderer-libs.properties
++++ b/scilab/modules/scirenderer/scirenderer-libs.properties
+@@ -1,7 +1,7 @@
+ ; Define all libs needed by scirenderer
+ 
+ ; Uncomment this line and declare path to jogl2.jar gluegen2-rt.jar jlatexmath.jar and native libraries
+-jogl2.jar = /usr/share/java/jogl2.jar
+-gluegen2.jar = /usr/share/java/gluegen2-rt.jar
++jogl2.jar = /usr/lib/java/jogl2.jar
++gluegen2.jar = /usr/lib/java/gluegen2-rt.jar
+ jlatexmath.jar = /usr/share/java/jlatexmath.jar
+ jni.path = /usr/lib/jni
+diff --git a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/JoGLCanvas.java b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/JoGLCanvas.java
+index 011f09a..590ebf6 100644
+--- a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/JoGLCanvas.java
++++ b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/JoGLCanvas.java
+@@ -19,16 +19,16 @@ import java.awt.image.BufferedImage;
+ import java.lang.reflect.InvocationTargetException;
+ import java.util.concurrent.Semaphore;
+ 
+-import javax.media.opengl.DebugGL2;
+-import javax.media.opengl.GL2;
+-import javax.media.opengl.GLAutoDrawable;
+-import javax.media.opengl.GLCapabilities;
+-import javax.media.opengl.GLContext;
+-import javax.media.opengl.GLDrawableFactory;
+-import javax.media.opengl.GLEventListener;
+-import javax.media.opengl.GLException;
+-import javax.media.opengl.GLOffscreenAutoDrawable;
+-import javax.media.opengl.GLProfile;
++import com.jogamp.opengl.DebugGL2;
++import com.jogamp.opengl.GL2;
++import com.jogamp.opengl.GLAutoDrawable;
++import com.jogamp.opengl.GLCapabilities;
++import com.jogamp.opengl.GLContext;
++import com.jogamp.opengl.GLDrawableFactory;
++import com.jogamp.opengl.GLEventListener;
++import com.jogamp.opengl.GLException;
++import com.jogamp.opengl.GLOffscreenAutoDrawable;
++import com.jogamp.opengl.GLProfile;
+ import javax.swing.SwingUtilities;
+ 
+ import org.scilab.forge.scirenderer.Canvas;
+diff --git a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/JoGLCanvasFactory.java b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/JoGLCanvasFactory.java
+index 4fec356..6de9267 100644
+--- a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/JoGLCanvasFactory.java
++++ b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/JoGLCanvasFactory.java
+@@ -16,7 +16,7 @@ package org.scilab.forge.scirenderer.implementation.jogl;
+ 
+ import org.scilab.forge.scirenderer.Canvas;
+ 
+-import javax.media.opengl.GLAutoDrawable;
++import com.jogamp.opengl.GLAutoDrawable;
+ 
+ /**
+  * @author Pierre Lando
+diff --git a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/JoGLCapacity.java b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/JoGLCapacity.java
+index 4597be3..4ed3220 100644
+--- a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/JoGLCapacity.java
++++ b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/JoGLCapacity.java
+@@ -14,7 +14,7 @@
+ 
+ package org.scilab.forge.scirenderer.implementation.jogl;
+ 
+-import javax.media.opengl.GL2;
++import com.jogamp.opengl.GL2;
+ 
+ /**
+  * This class store current OpenGl context capacity.
+diff --git a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/JoGLDrawingTools.java b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/JoGLDrawingTools.java
+index 6a78491..ced3389 100644
+--- a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/JoGLDrawingTools.java
++++ b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/JoGLDrawingTools.java
+@@ -33,7 +33,7 @@ import org.scilab.forge.scirenderer.tranformations.TransformationManagerImpl;
+ import org.scilab.forge.scirenderer.tranformations.TransformationManagerListener;
+ import org.scilab.forge.scirenderer.tranformations.Vector3d;
+ 
+-import javax.media.opengl.GL2;
++import com.jogamp.opengl.GL2;
+ 
+ /**
+  *
+diff --git a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/JoGLParameters.java b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/JoGLParameters.java
+index 429e1a3..c26d5a2 100644
+--- a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/JoGLParameters.java
++++ b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/JoGLParameters.java
+@@ -14,8 +14,8 @@
+ 
+ package org.scilab.forge.scirenderer.implementation.jogl;
+ 
+-import javax.media.opengl.GL;
+-import javax.media.opengl.glu.GLU;
++import com.jogamp.opengl.GL;
++import com.jogamp.opengl.glu.GLU;
+ 
+ /**
+  * @author Pierre Lando
+diff --git a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/buffers/JoGLBuffersManager.java b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/buffers/JoGLBuffersManager.java
+index d5f1f06..99e6854 100644
+--- a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/buffers/JoGLBuffersManager.java
++++ b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/buffers/JoGLBuffersManager.java
+@@ -19,7 +19,7 @@ import org.scilab.forge.scirenderer.buffers.DataBuffer;
+ import org.scilab.forge.scirenderer.buffers.ElementsBuffer;
+ import org.scilab.forge.scirenderer.buffers.IndicesBuffer;
+ 
+-import javax.media.opengl.GL2;
++import com.jogamp.opengl.GL2;
+ import java.util.Collection;
+ import java.util.HashSet;
+ import java.util.Set;
+diff --git a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/buffers/JoGLDataBuffer.java b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/buffers/JoGLDataBuffer.java
+index 25d3a3e..b56c9d7 100644
+--- a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/buffers/JoGLDataBuffer.java
++++ b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/buffers/JoGLDataBuffer.java
+@@ -16,7 +16,7 @@ package org.scilab.forge.scirenderer.implementation.jogl.buffers;
+ 
+ import org.scilab.forge.scirenderer.buffers.DataBuffer;
+ 
+-import javax.media.opengl.GL;
++import com.jogamp.opengl.GL;
+ import java.nio.Buffer;
+ 
+ /**
+diff --git a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/buffers/JoGLElementsBuffer.java b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/buffers/JoGLElementsBuffer.java
+index d5d53e3..2d96bec 100644
+--- a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/buffers/JoGLElementsBuffer.java
++++ b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/buffers/JoGLElementsBuffer.java
+@@ -16,7 +16,7 @@ package org.scilab.forge.scirenderer.implementation.jogl.buffers;
+ 
+ import org.scilab.forge.scirenderer.buffers.ElementsBuffer;
+ 
+-import javax.media.opengl.GL2;
++import com.jogamp.opengl.GL2;
+ import java.nio.Buffer;
+ import java.nio.FloatBuffer;
+ 
+diff --git a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/buffers/JoGLIndicesBuffer.java b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/buffers/JoGLIndicesBuffer.java
+index 2a14656..f7f019f 100644
+--- a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/buffers/JoGLIndicesBuffer.java
++++ b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/buffers/JoGLIndicesBuffer.java
+@@ -16,7 +16,7 @@ package org.scilab.forge.scirenderer.implementation.jogl.buffers;
+ 
+ import org.scilab.forge.scirenderer.buffers.IndicesBuffer;
+ 
+-import javax.media.opengl.GL;
++import com.jogamp.opengl.GL;
+ import java.nio.Buffer;
+ import java.nio.IntBuffer;
+ import java.util.Collection;
+diff --git a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/clipping/JoGLClippingManager.java b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/clipping/JoGLClippingManager.java
+index 22d28b2..57885f0 100644
+--- a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/clipping/JoGLClippingManager.java
++++ b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/clipping/JoGLClippingManager.java
+@@ -18,7 +18,7 @@ import org.scilab.forge.scirenderer.clipping.ClippingManager;
+ import org.scilab.forge.scirenderer.clipping.ClippingPlane;
+ import org.scilab.forge.scirenderer.implementation.jogl.JoGLDrawingTools;
+ 
+-import javax.media.opengl.GL2;
++import com.jogamp.opengl.GL2;
+ 
+ /**
+  * @author Pierre Lando
+diff --git a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/clipping/JoGLClippingPlane.java b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/clipping/JoGLClippingPlane.java
+index cf3ed8b..a5a5770 100644
+--- a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/clipping/JoGLClippingPlane.java
++++ b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/clipping/JoGLClippingPlane.java
+@@ -20,7 +20,7 @@ import org.scilab.forge.scirenderer.tranformations.Transformation;
+ import org.scilab.forge.scirenderer.tranformations.TransformationFactory;
+ import org.scilab.forge.scirenderer.tranformations.Vector4d;
+ 
+-import javax.media.opengl.GL2;
++import com.jogamp.opengl.GL2;
+ 
+ /**
+  * @author Pierre Lando
+diff --git a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/drawer/JoGLShapeDrawer.java b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/drawer/JoGLShapeDrawer.java
+index 5008513..786fe41 100644
+--- a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/drawer/JoGLShapeDrawer.java
++++ b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/drawer/JoGLShapeDrawer.java
+@@ -26,7 +26,7 @@ import org.scilab.forge.scirenderer.texture.Texture;
+ import org.scilab.forge.scirenderer.lightning.LightManager;
+ import org.scilab.forge.scirenderer.shapes.appearance.Material;
+ 
+-import javax.media.opengl.GL2;
++import com.jogamp.opengl.GL2;
+ import java.nio.FloatBuffer;
+ import java.nio.IntBuffer;
+ 
+diff --git a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/lightning/JoGLLight.java b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/lightning/JoGLLight.java
+index f06809e..9e89b7c 100644
+--- a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/lightning/JoGLLight.java
++++ b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/lightning/JoGLLight.java
+@@ -14,7 +14,7 @@
+ 
+ package org.scilab.forge.scirenderer.implementation.jogl.lightning;
+ 
+-import javax.media.opengl.GL2;
++import com.jogamp.opengl.GL2;
+ 
+ import org.scilab.forge.scirenderer.implementation.jogl.utils.GLShortCuts;
+ import org.scilab.forge.scirenderer.lightning.Light;
+diff --git a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/lightning/JoGLLightManager.java b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/lightning/JoGLLightManager.java
+index 0c8ae45..42d1e32 100644
+--- a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/lightning/JoGLLightManager.java
++++ b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/lightning/JoGLLightManager.java
+@@ -20,7 +20,7 @@ import org.scilab.forge.scirenderer.lightning.Light;
+ import org.scilab.forge.scirenderer.lightning.LightManager;
+ import org.scilab.forge.scirenderer.shapes.appearance.Material;
+ 
+-import javax.media.opengl.GL2;
++import com.jogamp.opengl.GL2;
+ 
+ /**
+  * JoGL implementation of {@link LightManager}
+diff --git a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/picking/GLPickingManager.java b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/picking/GLPickingManager.java
+index 898d1ec..f74bcda 100644
+--- a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/picking/GLPickingManager.java
++++ b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/picking/GLPickingManager.java
+@@ -14,7 +14,7 @@
+ 
+ package org.scilab.forge.scirenderer.implementation.jogl.picking;
+ 
+-import javax.media.opengl.GL;
++import com.jogamp.opengl.GL;
+ 
+ /**
+  * @author Pierre Lando
+diff --git a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/picking/JoGLPickingTools.java b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/picking/JoGLPickingTools.java
+index f9fe5a8..9ac3537 100644
+--- a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/picking/JoGLPickingTools.java
++++ b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/picking/JoGLPickingTools.java
+@@ -19,7 +19,7 @@ import org.scilab.forge.scirenderer.implementation.jogl.JoGLDrawingTools;
+ import org.scilab.forge.scirenderer.picking.PickingTools;
+ import org.scilab.forge.scirenderer.tranformations.Vector3d;
+ 
+-import javax.media.opengl.GL2;
++import com.jogamp.opengl.GL2;
+ import java.awt.Point;
+ import java.nio.FloatBuffer;
+ 
+diff --git a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/renderer/JoGLRenderer.java b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/renderer/JoGLRenderer.java
+index 3f4b47d..9f9f856 100644
+--- a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/renderer/JoGLRenderer.java
++++ b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/renderer/JoGLRenderer.java
+@@ -18,7 +18,7 @@ import org.scilab.forge.scirenderer.Drawer;
+ import org.scilab.forge.scirenderer.implementation.jogl.JoGLDrawingTools;
+ import org.scilab.forge.scirenderer.renderer.Renderer;
+ 
+-import javax.media.opengl.GL2;
++import com.jogamp.opengl.GL2;
+ 
+ /**
+  * @author Pierre Lando
+diff --git a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/renderer/JoGLRendererManager.java b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/renderer/JoGLRendererManager.java
+index 4b4dd17..440750f 100644
+--- a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/renderer/JoGLRendererManager.java
++++ b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/renderer/JoGLRendererManager.java
+@@ -18,7 +18,7 @@ import org.scilab.forge.scirenderer.implementation.jogl.JoGLDrawingTools;
+ import org.scilab.forge.scirenderer.renderer.Renderer;
+ import org.scilab.forge.scirenderer.renderer.RendererManager;
+ 
+-import javax.media.opengl.GL2;
++import com.jogamp.opengl.GL2;
+ import java.util.HashSet;
+ import java.util.Set;
+ import java.util.Stack;
+diff --git a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/texture/JoGLTextureManager.java b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/texture/JoGLTextureManager.java
+index ba3eb4f..14649cc 100644
+--- a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/texture/JoGLTextureManager.java
++++ b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/texture/JoGLTextureManager.java
+@@ -32,11 +32,11 @@ import org.scilab.forge.scirenderer.tranformations.TransformationManager;
+ import org.scilab.forge.scirenderer.tranformations.Vector3d;
+ 
+ 
+-import javax.media.opengl.GL;
+-import javax.media.opengl.GL2;
+-import javax.media.opengl.GL2ES1;
+-import javax.media.opengl.GL2GL3;
+-import javax.media.opengl.GLProfile;
++import com.jogamp.opengl.GL;
++import com.jogamp.opengl.GL2;
++import com.jogamp.opengl.GL2ES1;
++import com.jogamp.opengl.GL2GL3;
++import com.jogamp.opengl.GLProfile;
+ import java.awt.Dimension;
+ import java.nio.ByteBuffer;
+ import java.nio.FloatBuffer;
+diff --git a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/utils/GLShortCuts.java b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/utils/GLShortCuts.java
+index 1d799e9..8a493fb 100644
+--- a/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/utils/GLShortCuts.java
++++ b/scilab/modules/scirenderer/src/org/scilab/forge/scirenderer/implementation/jogl/utils/GLShortCuts.java
+@@ -17,7 +17,7 @@ package org.scilab.forge.scirenderer.implementation.jogl.utils;
+ import org.scilab.forge.scirenderer.shapes.appearance.Appearance;
+ import org.scilab.forge.scirenderer.shapes.appearance.Color;
+ 
+-import javax.media.opengl.GL2;
++import com.jogamp.opengl.GL2;
+ 
+ /**
+  *

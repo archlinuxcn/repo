@@ -1,0 +1,19 @@
+
+## arg 1:  the new package version
+post_install() {
+   echo "Intel-MKL: To configure the mkl thread number edit: /etc/intel-mkl-th.conf"
+   echo "for more details visit: http://software.intel.com/sites/products/documentation/hpc/mkl/lin/MKL_UG_managing_performance/Using_Additional_Threading_Control.htm"
+
+   ldconfig ;
+}
+
+post_upgrade() {
+    post_install $1
+}
+
+## arg 1:  the old package version
+post_remove() {
+   ldconfig ;
+}
+
+# vim:set ts=2 sw=2 et:

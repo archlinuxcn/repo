@@ -1,0 +1,39 @@
+post_install() {
+    getent passwd zeronet &>/dev/null || {
+        echo -n ">>> Creating zeronet user... "
+        useradd --system --user-group -m --home /var/lib/zeronet zeronet
+        echo "done"
+    } # NOTE: we do not autoremove user due to security concerns (Arch policy)
+
+    mkdir -p /var/log/zeronet
+    chown zeronet:zeronet /var/log/zeronet
+
+    # This is not usual practice but to editting from web interface
+    chown zeronet:zeronet /etc/zeronet.conf
+
+    post_upgrade
+
+    echo "Original maintainer: redfish(AUR)"
+
+    # Show the ArchWiki link
+    echo ">>> To enable TOR support, please read this ArchWiki page:"
+    echo ">>>   https://wiki.archlinux.org/index.php/ZeroNet#Tor"
+    # Show warning
+    echo ">>> All operations, including editing ZeroNet site files, should be done as user zeronet."
+    # Show info
+    echo ">>> You can enable zeronet.service using systemctl to make zeronet autostart."
+}
+
+## each separate version number must be less than 3 digit wide !
+function version { echo "$@" | gawk -F. '{ printf("%03d%03d%03d\n", $1,$2,$3); }'; }
+
+post_upgrade() {
+    chown -R zeronet:zeronet /opt/zeronet
+
+    if [ "$(version "$(echo $2 | sed s/\.r.*//)")" -lt "$(version 0.6.3)" ]
+    then
+	# In 0.6.3+, we do this on install, but for already installed versions:
+        # This is not usual practice but to editting from web interface
+        chown zeronet:zeronet /etc/zeronet.conf
+    fi
+}

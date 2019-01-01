@@ -1,0 +1,308 @@
+--- scilab-6.0.0.orig/modules/hdf5/src/cpp/H5ReferenceData.cpp	2017-02-14 12:40:34.000000000 +0100
++++ scilab-6.0.0/modules/hdf5/src/cpp/H5ReferenceData.cpp	2017-02-15 20:08:00.761619371 +0100
+@@ -42,7 +42,11 @@
+     for (int i = 0; i < totalSize; i++)
+     {
+         void * ref = &(((void **)cdata)[i]);
+-        hid_t obj = H5Rdereference(file, datasetReference ? H5R_DATASET_REGION : H5R_OBJECT, ref);
++        hid_t obj = H5Rdereference(file,
++    #if H5_VERSION_GE(1,10,0)
++                                   H5P_DATASET_ACCESS_DEFAULT,
++    #endif
++                                   datasetReference ? H5R_DATASET_REGION : H5R_OBJECT, ref);
+         H5O_info_t info;
+         H5Oget_info(obj, &info);
+         H5Oclose(obj);
+@@ -84,7 +88,11 @@
+ 
+     file = getFile().getH5Id();
+     ref = &(((void **)cdata)[0]);
+-    obj = H5Rdereference(file, datasetReference ? H5R_DATASET_REGION : H5R_OBJECT, ref);
++    obj = H5Rdereference(file,
++#if H5_VERSION_GE(1,10,0)
++                         H5P_DATASET_ACCESS_DEFAULT,
++#endif
++                         datasetReference ? H5R_DATASET_REGION : H5R_OBJECT, ref);
+     if (obj < 0)
+     {
+         throw H5Exception(__LINE__, __FILE__, _("Cannot open object at the given position."));
+@@ -126,7 +134,11 @@
+     for (int i = 0; i < totalSize; i++)
+     {
+         void * ref = &(((void **)cdata)[i]);
+-        hid_t obj = H5Rdereference(file, datasetReference ? H5R_DATASET_REGION : H5R_OBJECT, ref);
++        hid_t obj = H5Rdereference(file,
++    #if H5_VERSION_GE(1,10,0)
++                                   H5P_DATASET_ACCESS_DEFAULT,
++    #endif
++                                   datasetReference ? H5R_DATASET_REGION : H5R_OBJECT, ref);
+         objs[i] = &H5Object::getObject(getParent(), obj);
+     }
+ 
+@@ -181,7 +193,11 @@
+     char * cdata = static_cast<char *>(data) + offset + pos * (stride ? stride : dataSize);
+     void ** ref = &(((void **)cdata)[0]);
+     hid_t file = getFile().getH5Id();
+-    hid_t obj = H5Rdereference(file, datasetReference ? H5R_DATASET_REGION : H5R_OBJECT, ref);
++    hid_t obj = H5Rdereference(file,
++#if H5_VERSION_GE(1,10,0)
++                               H5P_DATASET_ACCESS_DEFAULT,
++#endif
++                               datasetReference ? H5R_DATASET_REGION : H5R_OBJECT, ref);
+     if (obj < 0)
+     {
+         os << "NULL";
+--- scilab-6.0.0.orig/modules/hdf5/src/c/h5_readDataFromFile_v1.c	2017-02-14 12:40:34.000000000 +0100
++++ scilab-6.0.0/modules/hdf5/src/c/h5_readDataFromFile_v1.c	2017-02-15 20:08:00.758286029 +0100
+@@ -474,7 +474,11 @@
+         }
+ 
+         //Open the referenced object, get its name and type.
+-        obj = H5Rdereference(_iDatasetId, H5R_OBJECT, &Ref);
++        obj = H5Rdereference(_iDatasetId,
++    #if H5_VERSION_GE(1,10,0)
++                             H5P_DATASET_ACCESS_DEFAULT,
++    #endif
++                             H5R_OBJECT, &Ref);
+         readDouble_v1(obj, _iRows, _iCols, _pdblData);
+     }
+ 
+@@ -501,14 +505,22 @@
+     }
+ 
+     //Open the referenced object, get its name and type.
+-    obj = H5Rdereference(_iDatasetId, H5R_OBJECT, &pRef[0]);
++    obj = H5Rdereference(_iDatasetId,
++#if H5_VERSION_GE(1,10,0)
++                         H5P_DATASET_ACCESS_DEFAULT,
++#endif
++                         H5R_OBJECT, &pRef[0]);
+     status = readDouble_v1(obj, _iRows, _iCols, _pdblReal);
+     if (status < 0)
+     {
+         return -1;
+     }
+ 
+-    obj = H5Rdereference(_iDatasetId, H5R_OBJECT, &pRef[1]);
++    obj = H5Rdereference(_iDatasetId,
++#if H5_VERSION_GE(1,10,0)
++                         H5P_DATASET_ACCESS_DEFAULT,
++#endif
++                         H5R_OBJECT, &pRef[1]);
+     status = readDouble_v1(obj, _iRows, _iCols, _pdblImg);
+     if (status < 0)
+     {
+@@ -834,7 +846,11 @@
+         /*
+         * Open the referenced object, get its name and type.
+         */
+-        obj = H5Rdereference(_iDatasetId, H5R_OBJECT, &pData[i]);
++        obj = H5Rdereference(_iDatasetId,
++    #if H5_VERSION_GE(1,10,0)
++                             H5P_DATASET_ACCESS_DEFAULT,
++    #endif
++                             H5R_OBJECT, &pData[i]);
+         if (_iComplex)
+         {
+             status = readComplexPoly_v1(obj, &_piNbCoef[i], &_pdblReal[i], &_pdblImg[i]);
+@@ -1069,7 +1085,11 @@
+     }
+ 
+     //read Row data
+-    obj = H5Rdereference(_iDatasetId, H5R_OBJECT, &pRef[0]);
++    obj = H5Rdereference(_iDatasetId,
++#if H5_VERSION_GE(1,10,0)
++                         H5P_DATASET_ACCESS_DEFAULT,
++#endif
++                         H5R_OBJECT, &pRef[0]);
+     status = readInteger32Matrix_v1(obj, 1, _iRows, _piNbItemRow);
+     if (status < 0)
+     {
+@@ -1077,7 +1097,11 @@
+     }
+ 
+     //read cols data
+-    obj = H5Rdereference(_iDatasetId, H5R_OBJECT, &pRef[1]);
++    obj = H5Rdereference(_iDatasetId,
++#if H5_VERSION_GE(1,10,0)
++                         H5P_DATASET_ACCESS_DEFAULT,
++#endif
++                         H5R_OBJECT, &pRef[1]);
+     status = readInteger32Matrix_v1(obj, 1, _iNbItem, _piColPos);
+     if (status < 0)
+     {
+@@ -1085,7 +1109,11 @@
+     }
+ 
+     //read sparse data
+-    obj = H5Rdereference(_iDatasetId, H5R_OBJECT, &pRef[2]);
++    obj = H5Rdereference(_iDatasetId,
++#if H5_VERSION_GE(1,10,0)
++                         H5P_DATASET_ACCESS_DEFAULT,
++#endif
++                         H5R_OBJECT, &pRef[2]);
+ 
+     if (_iComplex)
+     {
+@@ -1131,7 +1159,11 @@
+     }
+ 
+     //read Row data
+-    obj = H5Rdereference(_iDatasetId, H5R_OBJECT, &pRef[0]);
++    obj = H5Rdereference(_iDatasetId,
++#if H5_VERSION_GE(1,10,0)
++                         H5P_DATASET_ACCESS_DEFAULT,
++#endif
++                         H5R_OBJECT, &pRef[0]);
+     status = readInteger32Matrix_v1(obj, 1, _iRows, _piNbItemRow);
+     if (status < 0)
+     {
+@@ -1139,7 +1171,11 @@
+     }
+ 
+     //read cols data
+-    obj = H5Rdereference(_iDatasetId, H5R_OBJECT, &pRef[1]);
++    obj = H5Rdereference(_iDatasetId,
++#if H5_VERSION_GE(1,10,0)
++                         H5P_DATASET_ACCESS_DEFAULT,
++#endif
++                         H5R_OBJECT, &pRef[1]);
+     status = readInteger32Matrix_v1(obj, 1, _iNbItem, _piColPos);
+     if (status < 0)
+     {
+@@ -1234,7 +1270,11 @@
+ {
+     hobj_ref_t poRef = ((hobj_ref_t *) _piItemRef)[_iItemPos];
+ 
+-    *_piItemDataset = H5Rdereference(_iDatasetId, H5R_OBJECT, &poRef);
++    *_piItemDataset = H5Rdereference(_iDatasetId,
++#if H5_VERSION_GE(1,10,0)
++                                     H5P_DATASET_ACCESS_DEFAULT,
++#endif
++                                     H5R_OBJECT, &poRef);
+ 
+     if (*_piItemDataset == 0)
+     {
+--- scilab-6.0.0.orig/modules/hdf5/src/c/h5_readDataFromFile.c	2017-02-14 12:40:34.000000000 +0100
++++ scilab-6.0.0/modules/hdf5/src/c/h5_readDataFromFile.c	2017-02-15 20:08:00.758286029 +0100
+@@ -742,7 +742,11 @@
+         /*
+          * Open the referenced object, get its name and type.
+          */
+-        obj = H5Rdereference(_iDatasetId, H5R_OBJECT, &pData[i]);
++        obj = H5Rdereference(_iDatasetId,
++    #if H5_VERSION_GE(1,10,0)
++                             H5P_DATASET_ACCESS_DEFAULT,
++    #endif
++                             H5R_OBJECT, &pData[i]);
+         if (_iComplex)
+         {
+             status = readComplexPoly(obj, &_piNbCoef[i], &_pdblReal[i], &_pdblImg[i]);
+@@ -976,7 +980,11 @@
+     }
+ 
+     //read Row data
+-    obj = H5Rdereference(_iDatasetId, H5R_OBJECT, &pRef[0]);
++    obj = H5Rdereference(_iDatasetId,
++#if H5_VERSION_GE(1,10,0)
++                         H5P_DATASET_ACCESS_DEFAULT,
++#endif
++                         H5R_OBJECT, &pRef[0]);
+     status = readInteger32Matrix(obj, _piNbItemRow);
+     if (status < 0)
+     {
+@@ -984,7 +992,11 @@
+     }
+ 
+     //read cols data
+-    obj = H5Rdereference(_iDatasetId, H5R_OBJECT, &pRef[1]);
++    obj = H5Rdereference(_iDatasetId,
++#if H5_VERSION_GE(1,10,0)
++                         H5P_DATASET_ACCESS_DEFAULT,
++#endif
++                         H5R_OBJECT, &pRef[1]);
+     status = readInteger32Matrix(obj, _piColPos);
+     if (status < 0)
+     {
+@@ -992,7 +1004,11 @@
+     }
+ 
+     //read sparse data
+-    obj = H5Rdereference(_iDatasetId, H5R_OBJECT, &pRef[2]);
++    obj = H5Rdereference(_iDatasetId,
++#if H5_VERSION_GE(1,10,0)
++                         H5P_DATASET_ACCESS_DEFAULT,
++#endif
++                         H5R_OBJECT, &pRef[2]);
+ 
+     if (_iComplex)
+     {
+@@ -1043,7 +1059,11 @@
+     }
+ 
+     //read Row data
+-    obj = H5Rdereference(_iDatasetId, H5R_OBJECT, &pRef[0]);
++    obj = H5Rdereference(_iDatasetId,
++#if H5_VERSION_GE(1,10,0)
++                         H5P_DATASET_ACCESS_DEFAULT,
++#endif
++                         H5R_OBJECT, &pRef[0]);
+     status = readInteger32Matrix(obj, _piNbItemRow);
+     if (status < 0)
+     {
+@@ -1053,7 +1073,11 @@
+     if (_iNbItem != 0)
+     {
+         //read cols data
+-        obj = H5Rdereference(_iDatasetId, H5R_OBJECT, &pRef[1]);
++        obj = H5Rdereference(_iDatasetId,
++    #if H5_VERSION_GE(1,10,0)
++                             H5P_DATASET_ACCESS_DEFAULT,
++    #endif
++                             H5R_OBJECT, &pRef[1]);
+         status = readInteger32Matrix(obj, _piColPos);
+         if (status < 0)
+         {
+@@ -1154,7 +1178,11 @@
+ {
+     hobj_ref_t poRef = ((hobj_ref_t *) _piItemRef)[_iItemPos];
+ 
+-    *_piItemDataset = H5Rdereference(_iDatasetId, H5R_OBJECT, &poRef);
++    *_piItemDataset = H5Rdereference(_iDatasetId,
++#if H5_VERSION_GE(1,10,0)
++                                     H5P_DATASET_ACCESS_DEFAULT,
++#endif
++                                     H5R_OBJECT, &poRef);
+ 
+     if (*_piItemDataset == 0)
+     {
+--- scilab-6.0.0.orig/modules/hdf5/sci_gateway/cpp/sci_hdf5_load_v3.cpp	2017-02-14 12:40:34.000000000 +0100
++++ scilab-6.0.0/modules/hdf5/sci_gateway/cpp/sci_hdf5_load_v3.cpp	2017-02-15 20:11:46.775525827 +0100
+@@ -648,7 +648,11 @@
+         //import field
+         for (int j = 0; j < refcount; ++j)
+         {
+-            int data = H5Rdereference(refs, H5R_OBJECT, &vrefs[j]);
++            int data = H5Rdereference(refs,
++#if H5_VERSION_GE(1,10,0)
++              H5P_DATASET_ACCESS_DEFAULT,
++#endif
++              H5R_OBJECT, &vrefs[j]);
+             if (data < 0)
+             {
+                 freeStringMatrix(dfield, fields.data());
+--- scilab-6.0.0.orig/modules/hdf5/sci_gateway/cpp/sci_hdf5_listvar_v3.cpp	2017-02-14 12:40:34.000000000 +0100
++++ scilab-6.0.0/modules/hdf5/sci_gateway/cpp/sci_hdf5_listvar_v3.cpp	2017-02-15 20:11:36.838833848 +0100
+@@ -735,7 +735,11 @@
+             //import field
+             for (int j = 0; j < refcount; ++j)
+             {
+-                int data = H5Rdereference(refs, H5R_OBJECT, &vrefs[j]);
++                int data = H5Rdereference(refs,
++#if H5_VERSION_GE(1,10,0)
++                  H5P_DATASET_ACCESS_DEFAULT,
++#endif
++                  H5R_OBJECT, &vrefs[j]);
+                 if (data < 0)
+                 {
+                     return false;

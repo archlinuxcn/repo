@@ -1,0 +1,29 @@
+--- configure.old	2016-04-24 14:32:13.301199078 +0200
++++ configure	2016-04-24 14:34:47.821731712 +0200
+@@ -17159,7 +17159,7 @@
+ 
+     DEFAULT_JAR_DIR="$(pwd)/thirdparty/ $(pwd)/jar/ /usr/local/java/ /usr/local/java/jar /usr/local/share/java/ /usr/local/share/java/jar/ /usr/local/lib/java/ $(find /usr/share/java/ -maxdepth 1 -type d 2>/dev/null | sort) $(find /usr/lib64/ -maxdepth 1 -type d 2>/dev/null) $(find  /usr/lib/ -maxdepth 1 -type d 2>/dev/null) $(find /usr/share/*/lib -maxdepth 1 -type d 2>/dev/null) /opt/java/lib/"
+ 
+-    jar_resolved="$(find $DEFAULT_JAR_DIR -maxdepth 1 \( -type f -name 'fop.jar' -or -name 'libfop.jar' -or -name 'libfop-java.jar' -or -name 'fop*.jar' \) 2>/dev/null |tr '\n' ':')."
++    jar_resolved="$(find $DEFAULT_JAR_DIR -maxdepth 1 \( -type f -name 'fop.jar' -or -name 'libfop.jar' -or -name 'libfop-java.jar' \) 2>/dev/null |tr '\n' ':')."
+ 
+     if test ! -f conftestSharedChecker.class ; then
+ 
+@@ -19139,7 +19139,7 @@
+ 
+     DEFAULT_JAR_DIR="$(pwd)/thirdparty/ $(pwd)/jar/ /usr/local/java/ /usr/local/java/jar /usr/local/share/java/ /usr/local/share/java/jar/ /usr/local/lib/java/ $(find /usr/share/java/ -maxdepth 1 -type d 2>/dev/null | sort) $(find /usr/lib64/ -maxdepth 1 -type d 2>/dev/null) $(find  /usr/lib/ -maxdepth 1 -type d 2>/dev/null) $(find /usr/share/*/lib -maxdepth 1 -type d 2>/dev/null) /opt/java/lib/"
+ 
+-    jar_resolved="$(find $DEFAULT_JAR_DIR -maxdepth 1 \( -type f -name 'xmlgraphics-commons.jar' -or -name 'libxmlgraphics-commons.jar' -or -name 'libxmlgraphics-commons-java.jar' -or -name 'xmlgraphics-commons*.jar' \) 2>/dev/null |tr '\n' ':')."
++    jar_resolved="$(find $DEFAULT_JAR_DIR -maxdepth 1 \( -type f -name 'xmlgraphics-commons.jar' -or -name 'libxmlgraphics-commons.jar' -or -name 'libxmlgraphics-commons-java.jar' \) 2>/dev/null |tr '\n' ':')."
+ 
+     if test ! -f conftestSharedChecker.class ; then
+ 
+@@ -20019,7 +20019,7 @@
+ 
+     DEFAULT_JAR_DIR="$(pwd)/thirdparty/ $(pwd)/jar/ /usr/local/java/ /usr/local/java/jar /usr/local/share/java/ /usr/local/share/java/jar/ /usr/local/lib/java/ $(find /usr/share/java/ -maxdepth 1 -type d 2>/dev/null | sort) $(find /usr/lib64/ -maxdepth 1 -type d 2>/dev/null) $(find  /usr/lib/ -maxdepth 1 -type d 2>/dev/null) $(find /usr/share/*/lib -maxdepth 1 -type d 2>/dev/null) /opt/java/lib/"
+ 
+-    jar_resolved="$(find $DEFAULT_JAR_DIR -maxdepth 1 \( -type f -name 'commons-logging.jar' -or -name 'libcommons-logging.jar' -or -name 'libcommons-logging-java.jar' -or -name 'commons-logging*.jar' \) 2>/dev/null |tr '\n' ':')."
++    jar_resolved="$(find $DEFAULT_JAR_DIR -maxdepth 1 \( -type f -name 'commons-logging.jar' -or -name 'libcommons-logging.jar' -or -name 'libcommons-logging-java.jar' \) 2>/dev/null |tr '\n' ':')."
+ 
+     if test ! -f conftestSharedChecker.class ; then
+ 

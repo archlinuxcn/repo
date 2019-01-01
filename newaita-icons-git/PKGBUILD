@@ -1,0 +1,34 @@
+# Maintainer: Helder Bertoldo <helder.bertoldo@gmail.com>
+# Contributor:
+
+_gitname=Newaita
+_author=cbrnix
+pkgname=newaita-icons-git
+pkgver=r665.c75cb572a
+pkgrel=1
+pkgdesc="Newaita icon theme is a Linux icon theme combining old style and color of material design. Request icons: https://store.kde.org/p/1243493/ Make a small donation to support the project: http://bit.do/Donate-Newaita-Paypal"
+arch=('i686' 'x86_64')
+url="https://github.com/${_author}/${_gitname}"
+license=('CC BY-NC-SA 3.0')
+makedepends=('git')
+options=('!strip')
+provides=("newaita-icons" "newaita")
+conflicts=("newaita-icons" "newaita")
+source=("git+${url}.git")
+sha256sums=('SKIP')
+
+pkgver(){
+    cd "${_gitname}"
+    ( set -o pipefail
+        git describe --long 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
+        printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+    )
+}
+
+package() {
+    install -d ${pkgdir}/usr/share/icons
+    cp -r ${_gitname}/* ${pkgdir}/usr/share/icons/
+    find ${pkgdir}/usr -type f -exec chmod 644 {} \;
+    find ${pkgdir}/usr -type d -exec chmod 755 {} \;
+    rm -rf "$pkgdir/usr/share/icons/README.md"
+}
