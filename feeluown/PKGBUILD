@@ -1,12 +1,12 @@
 _pkgname=feeluown
 pkgname=feeluown
 pkgver=2.3
-pkgrel=1
+pkgrel=2
 pkgdesc="*nix music player"
 arch=('any')
 url="https://github.com/cosven/FeelUOwn"
-license=('(FIXME)')
-depends=('python' 'python-quamash' 'python-fuocore' 'python-setuptools')
+license=('GPL3')
+depends=('python' 'python-quamash' 'python-fuocore' 'python-setuptools' 'python-pyqt5')
 _name=${pkgname#python-}
 source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
 md5sums=('2dc449e5c60a5a84d9cd7802421b5d6a')
