@@ -1,14 +1,15 @@
 _pkgname=pycares
 pkgname=python-pycares
-pkgver=2.3.0
-pkgrel=2
+pkgver=2.4.0
+pkgrel=1
 pkgdesc="Python interface for c-ares"
 arch=('x86_64' 'i686')
 url="http://github.com/saghul/pycares"
 license=('(FIXME)')
 depends=('python' 'c-ares' 'python-setuptools')
-source=('https://files.pythonhosted.org/packages/89/5c/3a7e1a52d6abb52b9ca1a56d2df699936e89d8b98f75cfd60d03363e7c10/pycares-2.3.0.tar.gz')
-md5sums=('74893b2b380fbb45329a406ae4b1ae89')
+_name=${pkgname#python-}
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
+md5sums=('816056fc321717812de706c06d767a99')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
