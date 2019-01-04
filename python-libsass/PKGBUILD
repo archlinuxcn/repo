@@ -1,6 +1,6 @@
 _pkgname=libsass
 pkgname=python-libsass
-pkgver=0.16.1
+pkgver=0.17.0
 pkgrel=1
 pkgdesc="Sass for Python: A straightforward binding of libsass for Python."
 arch=('x86_64')
@@ -10,7 +10,7 @@ depends=('python' 'python-six' 'libsass' 'python-setuptools')
 _name=${pkgname#python-}
 makedepends=('gcc')
 source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
-md5sums=('a230ec627cd355b9154b5afe7d6006d5')
+md5sums=('1937ec5525d5367e50f20ed26c5050a7')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
