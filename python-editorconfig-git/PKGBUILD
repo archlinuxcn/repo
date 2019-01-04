@@ -1,0 +1,37 @@
+# Maintainer: Chih-Hsuan Yen <yan12125@archlinux.org>
+# Forked from community/python-editorconfig
+# Contributor: Felix Yan <felixonmars@archlinux.org>
+
+pkgname=python-editorconfig-git
+pkgver=0.12.0.r21.g6722ab5
+pkgrel=1
+pkgdesc='EditorConfig File Locator and Interpreter for Python'
+arch=('any')
+license=('PSF')
+url='https://github.com/editorconfig/editorconfig-core-py'
+depends=('python-setuptools')
+makedepends=('git')
+conflicts=('python-editorconfig')
+provides=("python-editorconfig=$pkgver")
+source=("git+https://github.com/editorconfig/editorconfig-core-py")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd editorconfig-core-py
+  ( set -o pipefail
+    git describe --long --tags 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/^v//'
+  )
+}
+
+build() {
+  cd editorconfig-core-py
+  python setup.py build
+}
+
+package() {
+  cd editorconfig-core-py
+  python setup.py install --root="$pkgdir" --optimize=1 --skip-build
+
+  # FS#55201
+  mv "$pkgdir"/usr/bin/editorconfig{,3}
+}
