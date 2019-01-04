@@ -1,18 +1,19 @@
 # Maintainer:  Gabriel Souza Franco <Z2FicmllbGZyYW5jb3NvdXphQGdtYWlsLmNvbQ==>
-# Contributor: Florian Pritz <bluewind@xinu.at>
+# Contributor: Florian Pritz
 # Contributor: Christian Hesse <mail@eworm.de>
 # Contributor: Thomas Dziedzic < gostrc at gmail >
 # Contributor: mickele
 # Contributor: marcus fritzsch <fritschy@googlemail.com>
 
-pkgname=coin
+pkgbase=coin
+pkgname=(coin coin-docs)
 pkgver=3.1.3
-pkgrel=17
+pkgrel=18
 pkgdesc='A high-level 3D graphics toolkit on top of OpenGL'
-url='http://www.coin3d.org/'
+url='https://bitbucket.org/Coin3D/coin'
 license=('GPL')
 arch=('i686' 'x86_64')
-depends=('libgl' 'expat')
+depends=('libgl' 'libsm')
 makedepends=('doxygen')
 optdepends=('openal: sound/dynamic linking support'
             'fontconfig: dynamic linking support'
@@ -75,16 +76,25 @@ build() {
 	make
 }
 
-package() {
+package_coin() {
+	optdepends+=('coin-docs: Coin documentation')
+
 	cd Coin-${pkgver}
 
-	make DESTDIR="${pkgdir}" install
+	make DESTDIR="${pkgdir}" HTMLDIRS= install
 
 	# final adjustments
-	for _FILE in threads deprecated errors events ; do
+	for _FILE in threads deprecated errors events; do
 		mv  "${pkgdir}/usr/share/man/man3/${_FILE}.3" "${pkgdir}/usr/share/man/man3/coin-${_FILE}.3"
 	done
-
-	rm -f "$pkgdir/usr/share/man/man3/_build"*
 }
 
+package_coin-docs() {
+	pkgdesc='A high-level 3D graphics toolkit on top of OpenGL (docs)'
+	arch=(any)
+	depends=()
+
+	cd Coin-${pkgver}/html
+
+	make DESTDIR="${pkgdir}" install-html
+}
