@@ -1,3 +1,4 @@
+# Trimmed lilac.py
 #!/usr/bin/env python3
 #
 # This file is the most simple lilac.py file,
@@ -6,9 +7,6 @@
 
 from lilaclib import *
 import glob
-
-build_prefix = 'extra-x86_64'
-depends = ['ncurses5-compat-libs']
 
 _g = SimpleNamespace()
 
@@ -42,6 +40,6 @@ def post_build():
   del _g.aur_pre_files, _g.aur_building_files
 
 
-if __name__ == '__main__':
-    single_main(build_prefix)
+#if __name__ == '__main__':
+#    single_main(build_prefix)
 
