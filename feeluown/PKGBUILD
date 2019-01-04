@@ -2,7 +2,7 @@
 _pkgname=feeluown
 pkgname=feeluown
 pkgver=2.3
-pkgrel=3
+pkgrel=4
 pkgdesc="FeelUOwn Music Player"
 arch=('any')
 url="https://github.com/cosven/FeelUOwn"
@@ -14,10 +14,8 @@ source=(
 	"https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz" 
 	"feeluown.desktop"
 )
-sha256sums=(
-	'SKIP' 
-	'45802543ffd7c7dd05f1a36782c5b4f40b8393aa8c1131f83d0b9eccd14b2a18'
-)
+sha256sums=('846f6919c1d3a4acfa5ccd5b645bead6515a67ba42aa3d41e04eef6c6b924fb5'
+            '45802543ffd7c7dd05f1a36782c5b4f40b8393aa8c1131f83d0b9eccd14b2a18')
 
 build() {
 	cd "$pkgname-$pkgver"
