@@ -12,6 +12,7 @@ arch=( 'i686' 'x86_64' )
 url="https://www.netbsd.org/"
 license=( 'custom' )
 makedepends=( 'bmake' 'cvs' 'libnbcompat' )
+options+=('!makeflags')
 _pkgname=mtree
 provides=('mtree' 'mtree-git')
 conflicts=('mtree' 'mtree-git')
