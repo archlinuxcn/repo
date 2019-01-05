@@ -3,7 +3,7 @@
 
 _gemname=rake-compiler
 pkgname=ruby-$_gemname
-pkgver=1.0.6
+pkgver=1.0.7
 pkgrel=1
 pkgdesc='Rake-based Ruby Extension (C, Java) task generator.'
 arch=(any)
@@ -14,7 +14,7 @@ makedepends=(ruby-rdoc)
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
-sha256sums=('f2784b927f093a8ac5860d22e4a34c77c2a56391d0071e4df888e796eaca57b4')
+sha256sums=('755de500565a06900d7f4286f1c761f5681a88c2420f64a27db4f2dd6e0a14dd')
 
 package() {
   local _gemdir="$(ruby -e'puts Gem.default_dir')"

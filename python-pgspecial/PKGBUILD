@@ -1,14 +1,15 @@
 _pkgname=pgspecial
 pkgname=python-pgspecial
-pkgver=1.11.2
-pkgrel=3
+pkgver=1.11.5
+pkgrel=2
 pkgdesc="Meta-commands handler for Postgres Database."
 arch=('any')
 url="https://www.dbcli.com"
 license=('LICENSE.txt')
 depends=('python' 'python-setuptools')
-source=('https://files.pythonhosted.org/packages/96/11/55e1e2fb15032ade24a7e20cb8f90c8024bd75e11b806504fbf75bae6525/pgspecial-1.11.2.tar.gz')
-md5sums=('670dac5bf53d582203cac6dbada49b76')
+_name=${pkgname#python-}
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
+md5sums=('212f043a1587b6e80e274b78a3f1f7a5')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
