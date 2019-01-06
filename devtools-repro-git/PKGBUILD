@@ -1,0 +1,28 @@
+#Maintainer: Morten Linderud <foxboron@archlinux.org 
+
+pkgname=devtools-repro-git
+pkgver=r116.a1dc7bd
+pkgrel=1
+pkgdesc='Tools to reproduce arch linux packages'
+arch=('any')
+license=('MIT')
+makedepends=('git' 'asciidoc')
+depends=('diffoscope' 'curl' 'gnupg' 'git')
+url="http://github.com/foxboron/devtools-repro"
+source=("git+https://github.com/foxboron/devtools-repro.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd devtools-repro
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build(){
+  cd devtools-repro
+  make man
+}
+
+package() {
+  cd devtools-repro
+  make PREFIX=/usr DESTDIR="$pkgdir" PROGNM=$pkgname install
+}
