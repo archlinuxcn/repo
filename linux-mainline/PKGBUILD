@@ -8,8 +8,8 @@
 
 pkgbase=linux-mainline               # Build stock -ARCH kernel
 #pkgbase=linux-custom       # Build kernel with a different name
-_tag=v4.20
-pkgver=4.20
+_tag=v5.0-rc1
+pkgver=5.0rc1
 pkgrel=1
 arch=(x86_64)
 url="https://git.archlinux.org/linux.git/log/?h=v$_srcver"
@@ -30,7 +30,7 @@ validpgpkeys=(
   '8218F88849AAC522E94CF470A5E9288C4FA415FA'  # Jan Alexander Steffens (heftig)
 )
 sha256sums=('SKIP'
-            '588a2eb551397cd6b5cfc2434fb6936819779f43ff03f112289e17fa08390ca9'
+            '3f72b50a40e98737a6195b6d2b3c8c301007d40730bc4ec37fdf9e57dceb6fb9'
             'ae2e95db94ef7176207c690224169594d49445e04249d2499e9d2fbc117a0b21'
             '834bd254b56ab71d73f59b3221f056c72f559553c04718e350ab2a3e2991afe0'
             'ad6344badc91ad0630caacde83f7f9b97276f80d26a20619a87952be65492c65')
@@ -77,15 +77,17 @@ _package() {
   install=linux.install
 
   local kernver="$(<version)"
+  local modulesdir="$pkgdir/usr/lib/modules/$kernver"
 
   cd $_srcname
 
   msg2 "Installing boot image..."
-  install -Dm644 "$(make -s image_name)" "$pkgdir/boot/vmlinuz-$pkgbase"
+  # systemd expects to find the kernel here to allow hibernation
+  # https://github.com/systemd/systemd/commit/edda44605f06a41fb86b7ab8128dcf99161d2344
+  install -Dm644 "$(make -s image_name)" "$modulesdir/vmlinuz"
+  install -Dm644 "$modulesdir/vmlinuz" "$pkgdir/boot/vmlinuz-$pkgbase"
 
   msg2 "Installing modules..."
-  local modulesdir="$pkgdir/usr/lib/modules/$kernver"
-  mkdir -p "$modulesdir"
   make INSTALL_MOD_PATH="$pkgdir/usr" modules_install
 
   # a place for external modules,
