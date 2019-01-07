@@ -20,7 +20,8 @@ pkgname+='-beta'
 #pkgver=13.2.26559
 #pkgver=14.0.8346
 #pkgver=14.0.12762
-pkgver=14.0.14470
+#pkgver=14.0.14470
+pkgver=14.1.3399
 pkgrel=1
 pkgdesc='All-In-One Software for Remote Support and Online Meetings'
 arch=('i686' 'x86_64' 'armv7h')
@@ -56,12 +57,12 @@ source_x86_64=("${_dl}/download/linux/version_${pkgver%%.*}x/teamviewer_${pkgver
 source_i686=("${_dl}/download/linux/version_${pkgver%%.*}x/teamviewer_${pkgver}_i386.deb")
 source_armv7h=("${_dl}/download/linux/version_${pkgver%%.*}x/teamviewer-host_${pkgver}_armhf.deb")
 #source_armv7h=("${_dl}/download/linux/version_${pkgver%%.*}x/teamviewer-host_13.2.13582_armhf.deb")
-md5sums_i686=('d470976a72ef6220a4e2c72d0359ada5')
-md5sums_x86_64=('497c203b081bf904b2519fb119361652')
-md5sums_armv7h=('0e5a8b8d20e68ebe0447b1c977c7455e')
-sha256sums_i686=('9b61d0780274007985f54cee07efc6bb5b7ede3300608bb408a66bca3e74fb5e')
-sha256sums_x86_64=('29d57df2b08cb7ccff426b613697c98298c80cbfa546bf019b2830dce60848b6')
-sha256sums_armv7h=('4c5a56dc75aff3edb0c015ec361e060652baeb1c6ba2b68d42e1d9dbe2f683ae')
+md5sums_i686=('799fc973c25665773e5f61fd7ae8071c')
+md5sums_x86_64=('63a59074359e6c71a1dc5137a399705d')
+md5sums_armv7h=('cdd57fb5323e555b2a0d2740dc0f8da2')
+sha256sums_i686=('35fb1a033431b1f889f8ae35fe203591b3cf7afe937c94a2ab07e340ea23bdba')
+sha256sums_x86_64=('45f341f07240e2f84e054d5a56f818db140d5bb6da1a3abe53230a1d656cd698')
+sha256sums_armv7h=('0c1802e8a0ece737acc3fb609c5ddfc3f446e9960c62d56d47def7feae0f744f')
 
 case "${_opt_Type}" in
 'R')
