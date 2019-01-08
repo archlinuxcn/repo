@@ -6,4 +6,4 @@
 
 from lilaclib import *
 
-
+build_prefix = 'archlinuxcn-x86_64'
