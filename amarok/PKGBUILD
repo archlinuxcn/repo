@@ -5,7 +5,7 @@
 # Contributor: damir <damir@archlinux.org>
 
 pkgname=amarok
-pkgver=2.9.0.r274.641b794b5b
+pkgver=2.9.0.r320.5a69fc04b4
 pkgrel=1
 pkgdesc="The powerful music player for KDE"
 arch=("x86_64")
@@ -15,9 +15,9 @@ depends=("kcmutils" "kdnssd" "kirigami2" "knewstuff" "ktexteditor" "libgpod" "li
 makedepends=("extra-cmake-modules" "gdk-pixbuf2" "git" "knotifyconfig" "libgpod" "libmtp" "libmygpo-qt5" "loudmouth")
 optdepends=("ifuse: support for Apple iPod Touch and iPhone"
             "loudmouth: backend needed by mp3tunes for syncing")
-_commit="641b794b5b97cbb1751d1ad8228f41c559b159f5"
+_commit="5a69fc04b4f7ed5fcd725b6db97f835d5a824b74"
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/KDE/${pkgname}/archive/${_commit}.tar.gz")
-sha256sums=("606b0e9cc4af758e63b4687e660d2ec394d53776213de1cff952a0c7ae8290ae")
+sha256sums=("b65943643fabf451985c5c99eefd67d18355ec8c8201e618fb66e19a89df2bab")
 
 #source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.xz"{,.sig})
 #validpgpkeys=("D81C0CB38EB725EF6691C385BB463350D6EF31EF") # Heiko Becker <heirecka@exherbo.org>
