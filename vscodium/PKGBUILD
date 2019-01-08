@@ -19,12 +19,12 @@ provides=('code')
 conflicts=('visual-studio-code-bin' 'code')
 source=(
         vscodium.desktop
-        ${pkgname}-${pkgver}-${pkgrel}.tar.gz::${url}/releases/download/${pkgver}/VSCode-linux-x64-${pkgver}.tar.gz
+        ${pkgname}-${pkgver}-${pkgrel}.tar.gz::${url}/releases/download/${pkgver}/VSCode-linux-ia32-${pkgver}.tar.gz
        )
 noextract=("${pkgname}-${pkgver}-${pkgrel}.tar.gz")
 
 sha256sums=('e4f3503d6c6eb9d967f9d35e58f5f801da98c4ccf7bd31dc752d1cef05781717'
-            'ca248685d48dfbbf1f9ffa9ca4c4716d119b1b64a15927cef2eaaaa7959d66fe')
+            'b21940aa3aff89b85c6a09f7b7f582c0a3b5b8970f1f7ac380bf316f1f683aa4')
 
 prepare() {
     mkdir -p ${srcdir}/vscodium
