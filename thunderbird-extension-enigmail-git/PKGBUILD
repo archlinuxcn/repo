@@ -7,7 +7,7 @@
 # Contributor: Hinrich Harms <arch hinrich de>
 
 pkgname=thunderbird-extension-enigmail-git
-pkgver=1.9.r1082.g9da0dd1b
+pkgver=1.9.r1101.g22d8f16b
 pkgrel=1
 pkgdesc="OpenPGP message encryption and authentication for Thunderbird (development version)"
 arch=('any')
@@ -17,7 +17,7 @@ depends=('gnupg' 'thunderbird')
 makedepends=('git' 'zip' 'python2' 'perl')
 provides=('thunderbird-extension-enigmail' 'thunderbird-enigmail')
 conflicts=('thunderbird-extension-enigmail' 'thunderbird-enigmail')
-source=("enigmail-git::git+https://git.code.sf.net/p/enigmail/source")
+source=("enigmail-git::git+https://gitlab.com/enigmail/enigmail.git")
 sha512sums=('SKIP')
 
 pkgver()
