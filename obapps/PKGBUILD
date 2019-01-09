@@ -5,12 +5,12 @@
 
 pkgname=obapps
 pkgver=0.1.7
-pkgrel=5
+pkgrel=6
 pkgdesc="Graphical tool for configuring application settings in Openbox."
 arch=('any')
 url="http://obapps.sourceforge.net/"
 license=('MIT')
-depends=('wxpython2.8' 'python2-xlib')
+depends=('wxpython' 'python2-xlib')
 options=(!docs)
 source=("http://downloads.sourceforge.net/project/${pkgname}/${pkgname}-${pkgver}.tar.gz"
         "obapps-python2.patch")
