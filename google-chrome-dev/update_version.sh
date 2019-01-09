@@ -11,7 +11,10 @@ VER=$(curl -sL "https://dl.google.com/linux/chrome/rpm/stable/x86_64/repodata/ot
 	grep "${PKG}" | cut -d ' ' -f 2)
 
 # Insert latest version into PKGBUILD and update hashes
-sed -i "s/^pkgver=.*/pkgver=${VER}/" PKGBUILD
+sed -i \
+	-e "s/^pkgver=.*/pkgver=${VER}/" \
+	-e 's/pkgrel=.*/pkgrel=1/' \
+	PKGBUILD
 updpkgsums
 
 # Check whether this changed anything
