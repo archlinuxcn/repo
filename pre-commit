@@ -252,18 +252,17 @@ class RepoTreeTest(TestCase):
 
     def test_static_dep(self):
         ck = dep_check.DependencyChecker()
-        ck.REPO_ROOT = os.getcwd()
-        err_pkgs = {}
+        if git_isdir(SUBFOLDER):
+            ck.REPO_ROOT = os.path.join(os.getcwd(), SUBFOLDER)
+        else:
+            ck.REPO_ROOT = os.getcwd()
         for package in list_packages():
             err_deps = ck.run(package)
-            if len(err_deps) > 0:
-                err_pkgs[package] = err_deps
-        hint = ""
-        for pkg, cause in err_pkgs.items():
-            hint = hint + "{0} doesn't satisify dependency: {1}\n".format(pkg, cause)
-        self.assertEqual(not err_pkgs, True,
-                         msg=('dependency check failed\n'
-                               '{0}').format(hint))
+            with self.subTest(package=package):
+                self.assertFalse(len(err_deps) > 0,
+                                 msg='"\033[1;31m{0}\033[m" '
+                                     'doesn\'t satisify dependency: '
+                                     '{1}\n'.format(package, err_deps))
 
     @skip("PKGBUILDs may be added later by lilac")
     def test_pkgbuild_exists(self):
