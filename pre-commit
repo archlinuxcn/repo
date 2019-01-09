@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-pre-commit hook to check nvchecker.ini and repo tree
+pre-commit hook to check repo tree
 
 To use it normally as git pre-commit hook,
 make a symlink and install dependencies:
@@ -247,67 +247,7 @@ def list_packages():
         yield package
 
 
-class NvcheckerSyntaxTest(TestCase):
-    def test_nvchecker_ini(self):
-        self.config = ConfigParser(dict_type=dict, allow_no_value=True)
-        nvcheckerpath = 'nvchecker.ini'
-        if git_isfile(SUBFOLDER, 'nvchecker.ini'):
-            nvcheckerpath = f'{SUBFOLDER}/nvchecker.ini'
-        with git_open(nvcheckerpath) as configfile:
-            self.config.read_file(configfile)
-
-
-class ConfigSectionTest(TestCase):
-    def setUp(self):
-        self.item_key_regex = re.compile('([_0-9a-zA-Z]+)')
-        self.config = ConfigParser(dict_type=dict, allow_no_value=True)
-        nvcheckerpath = 'nvchecker.ini'
-        if git_isfile(SUBFOLDER, 'nvchecker.ini'):
-            nvcheckerpath = f'{SUBFOLDER}/nvchecker.ini'
-        with git_open(nvcheckerpath) as configfile:
-            self.config.read_file(configfile)
-
-    def test_config_section(self):
-        self.assertIn("__config__", self.config,
-                      msg='nvchecker.ini has no ' +
-                          '""\033[1;31m__config__\033[m" section')
-        self.assertIn("oldver", self.config["__config__"],
-                      msg='"__config__" section has no ' +
-                          '"\033[1;31moldver\033[m" setting')
-        self.assertIn("newver", self.config["__config__"],
-                      msg='"__config__" section has no ' +
-                          '"\033[1;31mnewver\033[m" setting')
-
-    def test_sections(self):
-        for section in self.config.sections():
-            if section == "__config__":
-                continue
-            with self.subTest(section=section):
-                self.assertTrue(git_isdir(pkgpath(section)),
-                                msg=('nvchecker.ini contains '
-                                     '"\033[1;31m{0}\033[m" section '
-                                     'but there is no "\033[1;31m{0}\033[m" '
-                                     'package').format(section))
-            with self.subTest(section=section):
-                self.assertGreater(len(self.config[section].items()), 0,
-                                   msg=('section "\033[1;31m{0}\033[m" ' +
-                                        'is empty').format(section))
-            for key, value in self.config[section].items():
-                with self.subTest(section=section, key=key, value=value):
-                    self.assertTrue(self.item_key_regex.match(key),
-                                    msg=('nvchecker.ini section '
-                                         '"\033[1;31m{0}\033[m" contains '
-                                         'ill-formed key "\033[1;31m{1}\033[m"'
-                                         '').format(section, key))
-
-    @skip("113 packages violating this")
-    def test_have_lilac_py(self):
-        for section in self.config.sections():
-            if "manual" not in self.config[section]:
-                with self.subTest(section=section):
-                    self.assertTrue(git_isfile(pkgpath(section), "lilac.py"),
-                                    msg=('package "\033[1;31m{0}\033[m" does '
-                                         'not have lilac.py').format(section))
+class RepoTreeTest(TestCase):
 
     @skip("PKGBUILDs may be added later by lilac")
     def test_pkgbuild_exists(self):
@@ -340,19 +280,15 @@ class ConfigSectionTest(TestCase):
                                   'invalid "\033[1;31mlilac.yaml\033[m"'
                                   ''.format(package))
 
-    def test_lilac_py_has_nvchecker_config(self):
+    def test_lilac_py_has_update_on(self):
         for package in list_packages():
-            has_lilac_py = git_isfile(pkgpath(package), 'lilac.py')
-            if not has_lilac_py:
+            if not any([git_isfile(pkgpath(package), 'lilac.py'),
+                        git_isfile(pkgpath(package), 'lilac.yaml')]):
                 continue
-
             with self.subTest(package=package):
-                if any([lilac_py_has_update_on(package, self),
-                        lilac_yaml_has_update_on(package, self)]):
-                    continue
-       	        self.assertIn(package, self.config,
-                              msg=('package "\033[1;31m{0}\033[m" is not in '
-                                   '"nvchecker.ini" and does not have '
+                self.assertTrue(any([lilac_py_has_update_on(package, self),
+                                     lilac_yaml_has_update_on(package, self)]),
+                                msg=('package "\033[1;31m{0}\033[m" does not have '
                                    '"update_on" in '
                                    '"\033[1;31m{0}/lilac.py\033[m" or '
                                    '"\033[1;31m{0}/lilac.yaml\033[m" '
@@ -384,13 +320,6 @@ class ConfigSectionTest(TestCase):
                     check_var_srcinfo('replaces', package, PACKAGES, line)
                     check_var_srcinfo('groups', package, GROUPS, line)
 
-    @skip("35 packages violating this")
-    def test_folders_in_nvchecker(self):
-        for package in list_packages():
-            with self.subTest(package=package):
-                self.assertIn(package, self.config,
-                              msg=('package "\033[1;31m{0}\033[m" is not in '
-                                   '"nvchecker.ini"').format(package))
 
 
 def run_test(testcase, msg):
@@ -422,11 +351,7 @@ if __name__ == '__main__':
     git_write_tree_index()
     DIRS, FILES = git_ls_tree()
     git_diff_tree()
-    run_test(NvcheckerSyntaxTest,
-             msg='\033[1;31mThere are fatal error inside repo, ' +
-                 'blocking git commit. Please fix the errors and commit ' +
-                 'again\033[m')
-    run_test(ConfigSectionTest,
+    run_test(RepoTreeTest,
              msg=('\033[1;31mThere are {0} error(s) inside repo, ' +
                   'blocking git commit. Please fix the errors and commit ' +
                   'again\033[m'))
