@@ -5,12 +5,8 @@
 # enable this if you run out of memory during linking
 #_lowmem=true
 
-# enable gtk3 wayland (experimental)
-_gtk3_wayland=false
-
-# try to build with PGO
-# currently needs gcc7
-# _pgo=true
+# build with PGO
+_pgo=true
 
 # globalmenu
 # to support globalmenu a patch from ubuntu is applied
@@ -21,7 +17,7 @@ _gtk3_wayland=false
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
 pkgver=64.0
-pkgrel=1.1
+pkgrel=2
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -35,9 +31,7 @@ makedepends=('unzip' 'zip' 'diffutils' 'python' 'yasm' 'mesa' 'imake'
              'xorg-server-xvfb' 'libpulse' 'inetutils' 'autoconf2.13' 'rust'
               'mercurial' 'llvm' 'clang'
              'gtk2' 'nodejs' 'cbindgen')
-if [[ -n $_pgo ]] ; then
-  makedepends+=('gcc7')
-fi
+
 optdepends=('networkmanager: Location detection via available WiFi networks'
             'speech-dispatcher: Text-to-Speech')
 provides=("firefox=${pkgver}")
@@ -62,9 +56,11 @@ source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
         pgo_fix_missing_kdejs.patch
         2001_system_graphite2_support.patch
         2000_system_harfbuzz_support.patch
+        # pgo fixes
+        mozilla-1516803.patch
+        mozilla-1516081.patch
+        pgo.patch
 )
-
-
 
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
 # Note: These are for Arch Linux use ONLY. For your own distribution, please
@@ -86,11 +82,6 @@ prepare() {
 
   cp "$srcdir/mozconfig" .mozconfig
 
-  if [ $_gtk3_wayland = true ] ; then
-      echo "ac_add_options --enable-default-toolkit=cairo-gtk3-wayland" \
-           >> .mozconfig
-  fi
-     
   echo -n "$_google_api_key" >google-api-key
   echo "ac_add_options --with-google-api-keyfile=\"$PWD/google-api-key\"" >>.mozconfig
 
@@ -109,15 +100,27 @@ prepare() {
   
   # add globalmenu support
   patch -Np1 -i "$srcdir/unity-menubar.patch"
-
-  # add missing rule for pgo builds
-  patch -Np1 -i "$srcdir"/add_missing_pgo_rule.patch
-
-  # add missing file Makefile for pgo builds
-  patch -Np1 -i "$srcdir"/pgo_fix_missing_kdejs.patch
   
   patch -Np1 -i "$srcdir"/2000_system_harfbuzz_support.patch
   patch -Np1 -i "$srcdir"/2001_system_graphite2_support.patch
+
+  if [[ $_pgo ]] ; then
+    # https://bugzilla.mozilla.org/show_bug.cgi?id=1516803
+    patch -Np1 -i  "$srcdir"/mozilla-1516803.patch
+    # https://bugzilla.mozilla.org/show_bug.cgi?id=1516081
+    patch -Np1 -i  "$srcdir"/mozilla-1516081.patch
+
+    # add missing rule for pgo builds
+    patch -Np1 -i "$srcdir"/add_missing_pgo_rule.patch
+
+    patch -Np1 -i "$srcdir"/pgo.patch
+
+    # add missing file Makefile for pgo builds
+    patch -Np1 -i "$srcdir"/pgo_fix_missing_kdejs.patch
+
+    echo "ac_add_options --enable-lto" >> .mozconfig
+    echo "ac_add_options --disable-elf-hack" >> .mozconfig
+  fi
 }
 
 build() {
@@ -125,31 +128,30 @@ build() {
   cd mozilla-unified
   export MOZ_SOURCE_REPO="$_repo"
   export MOZBUILD_STATE_PATH="$srcdir/mozbuild"
- 
+
+
+  export CC=gcc
+  export CXX=g++
+  export AR="gcc-ar"
+  export NM="gcc-nm"
+  export RANLIB="gcc-ranlib"
+
+  export MOZ_MAKE_FLAGS="$MAKEFLAGS"
+  export STRIP=/bin/true
+
   if [[ -n $_lowmem || $CARCH == i686 ]]; then
     LDFLAGS+=" -Xlinker --no-keep-memory"
   fi
 
   if [[ -n $_pgo ]]; then
-    CC=/usr/bin/gcc-7
-    CXX=/usr/bin/g++-7
+    export DISPLAY=:99
+    export MOZ_PGO=1
     
-    if in_array ccache ${BUILDENV[*]} ; then
-      CC="ccache gcc-7"
-      CXX="ccache g++-7"
-    fi
-    AS="/usr/bin/gcc" \ #FIXME see https://bugzilla.mozilla.org/show_bug.cgi?id=1514671
-    CCACHE_CC=/usr/bin/gcc-7 \
-    CC=$CC\
-    CXX=$CXX \
-      DISPLAY=:99 MOZ_PGO=1 \
-             xvfb-run \
-             -a \
-             -s "-extension GLX -screen 0 1280x1024x24" \
-             ./mach build
+    xvfb-run \
+      -a \
+      -s "-extension GLX -screen 0 1280x1024x24" \
+      ./mach build
   else
-    export CC=/usr/bin/gcc
-    export CXX=/usr/bin/g++
     ./mach build
   fi
   ./mach buildsymbols
@@ -208,4 +210,7 @@ md5sums=('SKIP'
          'fe24f5ea463013bb7f1c12d12dce41b2'
          '3fa8bd22d97248de529780f5797178af'
          'f31a90ed4c0b0c15346ea5098765771f'
-         'a85ca9c88f49184c8b0feae206f0ba0c')
+         'a85ca9c88f49184c8b0feae206f0ba0c'
+         'becf6bf9ceb6008401832c855ccadff9'
+         'fded487ab30d9ed99a3e5ea6807a0dca'
+         'f867ae41a722630cc5567e2dcc51676d')
