@@ -2,14 +2,15 @@
 
 pkgname=makemkv
 pkgver=1.14.2
-pkgrel=1
+pkgrel=2
 pkgdesc="DVD and Blu-ray to MKV converter and network streamer"
 arch=('i686' 'x86_64')
 url="http://www.makemkv.com"
 license=('LGPL' 'MPL' 'custom')
 depends=('qt5-base' 'libxkbcommon-x11' 'hicolor-icon-theme' 'icu' 'ffmpeg')
 if [ "$CARCH" = "x86_64" ]; then
-  optdepends=('lib32-glibc: dts support')
+  optdepends=('lib32-glibc: dts support'
+              'ccextractor: extract CC streams from some DVD media')
 fi
 install=makemkv.install
 source=(${url}/download/${pkgname}-bin-${pkgver}.tar.gz
