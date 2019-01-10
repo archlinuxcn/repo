@@ -1,0 +1,32 @@
+# Maintainer: Bill Kolokithas <kolokithas.b@gmail.com>
+
+_gitname=j4-dmenu-desktop
+pkgname=$_gitname-git
+pkgver=2.16.r14.g6bb15e8
+pkgrel=1
+pkgdesc="A rewrite of i3-dmenu-desktop, which is much faster"
+arch=('i686' 'x86_64')
+url="https://github.com/enkore/j4-dmenu-desktop"
+license=('GPL3')
+depends=('dmenu')
+makedepends=('git' 'cmake')
+provides=('j4-dmenu-desktop')
+conflicts=('j4-dmenu-desktop')
+source=("git://github.com/enkore/j4-dmenu-desktop")
+md5sums=('SKIP')
+
+pkgver() {
+	cd $_gitname
+	git describe --long | sed -r 's/^r//;s/([^-]*-g)/r\1/;s/-/./g'
+}
+
+build() {
+	cd $_gitname
+	cmake -DCMAKE_INSTALL_PREFIX=/usr -DNO_TESTS=1 .
+	make
+}
+
+package() {
+	cd $_gitname
+	make DESTDIR="$pkgdir"/ install
+}
