@@ -6,8 +6,8 @@
 
 pkgbase=phpstorm
 pkgname=(phpstorm phpstorm-jre)
-pkgver=2018.3.2
-_pkgver=183.4886.46
+pkgver=2018.3.3
+_pkgver=183.5153.36
 pkgrel=1
 pkgdesc='Lightweight and Smart PHP IDE'
 arch=('x86_64' 'i686')
@@ -17,7 +17,7 @@ makedepends=('rsync')
 options=('!strip')
 source=(https://download.jetbrains.com/webide/PhpStorm-${pkgver}.tar.gz
         jetbrains-phpstorm.desktop)
-sha512sums=('bc3d9678e587e8fb65a367fabfc1fec047aeb42279114f8c98d8e5ad607d1ca7039a84aac3f9fef4ef29c94f1423e616de636dc9bdf28a8240d829097ad9becb'
+sha512sums=('e8a17cff15001c522d1a562d61eaefb36730e4db55faed62e7f880ac498de30f0819f145c2723b4220b484ff654d40df6c966a43ad59bf58055afd3544574b7a'
             'fe312d7c637ec20bd946f2e22681243a51f29afc1052ae3fe5afd0fe01f77c222bf1e2c98f0afad8d5385466215653b7ffa8718da05b6dac100ba768ff2be1d6')
 
 package_phpstorm() {
