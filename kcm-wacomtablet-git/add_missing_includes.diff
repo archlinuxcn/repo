@@ -1,0 +1,11 @@
+diff -rup wacomtablet-3.1.0/src/kcmodule/styluspagewidget.cpp wacomtablet-3.1.0.new/src/kcmodule/styluspagewidget.cpp
+--- wacomtablet-3.1.0/src/kcmodule/styluspagewidget.cpp	2018-06-22 15:07:58.000000000 +0200
++++ wacomtablet-3.1.0.new/src/kcmodule/styluspagewidget.cpp	2018-07-10 17:38:09.239242847 +0200
+@@ -25,6 +25,7 @@
+ #include "profilemanagement.h"
+ 
+ // common includes
++#include "logging.h"
+ #include "property.h"
+ #include "deviceprofile.h"
+ #include "dbustabletinterface.h"
