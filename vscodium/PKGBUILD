@@ -1,6 +1,6 @@
 # Maintainer: Plague-doctor <plague <at>> privacyrequired <<dot>> com >
 
-pkgname=vscodium
+pkgname=vscodium-bin
 pkgver=1.30.2
 pkgrel=2
 pkgdesc="Binary releases of VS Code without MS branding/telemetry/licensing."
@@ -17,14 +17,16 @@ optdepends=(
 )
 provides=('code')
 conflicts=('visual-studio-code-bin' 'code')
+replaces=('vscodium')
 source=(
         vscodium.desktop
-        ${pkgname}-${pkgver}-${pkgrel}.tar.gz::${url}/releases/download/${pkgver}/VSCode-linux-ia32-${pkgver}.tar.gz
+        ${pkgname}-${pkgver}-${pkgrel}.tar.gz::${url}/releases/download/${pkgver}/VSCode-linux-x64-${pkgver}.tar.gz
        )
 noextract=("${pkgname}-${pkgver}-${pkgrel}.tar.gz")
 
+
 sha256sums=('e4f3503d6c6eb9d967f9d35e58f5f801da98c4ccf7bd31dc752d1cef05781717'
-            'b21940aa3aff89b85c6a09f7b7f582c0a3b5b8970f1f7ac380bf316f1f683aa4')
+            '081783f0c186129040b6741a4aa64da27127ed9040b1d82db22706b19fd32ea9')
 
 prepare() {
     mkdir -p ${srcdir}/vscodium
