@@ -1,8 +1,8 @@
 # Maintainer: wszqkzqk <wszqkzqk@gmail.com>
 # Maintainer: skywol <skywol@qq.com>
 pkgname=deepin-libwine
-pkgvers=2.18-16~rc2
-pkgver=2.18_16
+pkgvers=2.18-17~rc1
+pkgver=2.18_17
 pkgrel=1
 epoch=
 pkgdesc="Deepin Libwine"
@@ -23,7 +23,7 @@ install=
 changelog=
 source=("https://mirrors.ustc.edu.cn/deepin/pool/non-free/d/deepin-wine/${pkgname}_${pkgvers}_i386.deb")
 noextract=("${pkgname}_${pkgvers}_i386.deb")
-md5sums=('3e9687db126acccfe282fe11c4ff3c2c')
+md5sums=('86dfe475822a9bffaea088fff23f9e05')
 validpgpkeys=()
 
 prepare() {
