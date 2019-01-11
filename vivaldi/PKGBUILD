@@ -2,9 +2,9 @@
 # Contributor: TZ86
 
 pkgname=vivaldi
-_rpmversion=2.1.1337.51-1
-pkgver=2.1.1337.51
-pkgrel=2
+_rpmversion=2.2.1388.37-1
+pkgver=2.2.1388.37
+pkgrel=1
 pkgdesc='An advanced browser made with the power user in mind.'
 url="https://vivaldi.com"
 options=(!strip !zipman)
@@ -20,7 +20,7 @@ optdepends=(
     'libnotify: native notifications'
 )
 source=("https://downloads.vivaldi.com/stable/vivaldi-stable-${_rpmversion}.x86_64.rpm")
-sha512sums=('34e6219275b1274aafad53117680910704871423bf7110e8f200748a34b7b6e5798d988f4fb2395a629d5b737516c3a4f9dbf583a71aff24c241eb8f242c6bce')
+sha512sums=('28e1e28135ea173dc08f32fd06d754c0abf7f897ea70236b4ce449967c4dbab71199131418f0cc134741398102c893e09d40b1af6f1fd82b42a6367d46ef6363')
 
 package() {
     cp -a {opt,usr} "$pkgdir"

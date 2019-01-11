@@ -1,0 +1,4 @@
+packagesfile=$(curl -m 10 -s https://repo.vivaldi.com/stable/rpm/x86_64/repodata/repomd.xml | grep 'other.xml' | sed 's/.*\/\(.*other\.xml\.gz\).*/\1/')
+update__rpmversion=$(curl -m 10 -s https://repo.vivaldi.com/stable/rpm/x86_64/repodata/$packagesfile | zcat | grep -A1 '<package.*vivaldi-stable'| grep '<version' | sed -re 's/.*ver="([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)".*rel="([0-9]+)".*/\1-\2/' | sort -V | tail -n1)
+update_pkgver=${update__rpmversion/-*/}
+echo $update__rpmversion
