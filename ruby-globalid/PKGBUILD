@@ -3,8 +3,8 @@
 
 _gemname=globalid
 pkgname=ruby-$_gemname
-pkgver=0.4.1
-pkgrel=4
+pkgver=0.4.2
+pkgrel=1
 pkgdesc='Refer to any model with a URI: gid://app/class/id'
 arch=(any)
 url='http://www.rubyonrails.org'
@@ -13,7 +13,7 @@ depends=(ruby ruby-activesupport)
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
-sha1sums=('79c51c607689deb06fed616ceaba4ddd7608f277')
+sha1sums=('ceb9a5c85aca8acd965920059454424103d56f2f')
 
 package() {
   local _gemdir="$(ruby -e'puts Gem.default_dir')"
