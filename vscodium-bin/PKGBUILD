@@ -1,7 +1,7 @@
 # Maintainer: Plague-doctor <plague <at>> privacyrequired <<dot>> com >
 
 _pkgname=vscodium
-pkgname=$_pkgname-git
+pkgname=$_pkgname-bin
 pkgver=1.30.2
 pkgrel=3
 pkgdesc="Binary releases of VS Code without MS branding/telemetry/licensing."
@@ -21,7 +21,7 @@ conflicts=('visual-studio-code-bin' 'code')
 replaces=($_pkgname)
 source=(
         vscodium.desktop
-        ${pkgname}-${pkgver}-${pkgrel}.tar.gz::${url}/releases/download/${pkgver}/VSCode-linux-x64-${pkgver}.tar.gz
+        ${_pkgname}-${pkgver}-${pkgrel}.tar.gz::${url}/releases/download/${pkgver}/VSCode-linux-x64-${pkgver}.tar.gz
        )
 
 
