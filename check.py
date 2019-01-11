@@ -2,7 +2,9 @@ import os
 import importlib.util
 import shlex
 import subprocess
+import types
 from typing import List
+import sys
 
 import yaml
 import pycman.config
@@ -13,6 +15,18 @@ class DependencyChecker:
     check_pass = {}
     REPO_ROOT = ""
     build_prefix_pkgs = {}
+
+    def __init__(self):
+        lilaclib = sys.modules['lilaclib'] = types.ModuleType('lilaclib')
+
+        lilac_apis = [
+            'aur_pre_build', 'aur_post_build',
+            'pypi_pre_build', 'pypi_post_build',
+            'vcs_update',
+        ]
+
+        for func_name in lilac_apis:
+            setattr(lilaclib, func_name, None)
 
     def run(self, pkg_item: any):
         pkg_name = ""

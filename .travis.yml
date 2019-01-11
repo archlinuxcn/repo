@@ -35,7 +35,6 @@ install:
 
 script:
     - python3 --version
-    - mv .lilaclib.py lilaclib.py
     - export PYTHONPATH=$PYTHONPATH:$(pwd)
     - ./pre-commit --all # checking all PKGBUILD
 
