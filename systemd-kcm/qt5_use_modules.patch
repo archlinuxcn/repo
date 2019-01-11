@@ -1,0 +1,8 @@
+--- a/src/CMakeLists.txt	2018-06-06 07:27:52.477251004 +0200
++++ b/src/CMakeLists.txt	2018-06-06 07:28:26.045157447 +0200
+@@ -38,4 +38,4 @@
+                       ${JOURNALD_LIBRARIES})
+ install(TARGETS kcm_systemd DESTINATION ${CMAKE_INSTALL_PLUGINDIR})
+ 
+-qt5_use_modules(kcm_systemd Widgets DBus)
++target_link_libraries(kcm_systemd Qt5::Widgets Qt5::DBus)
