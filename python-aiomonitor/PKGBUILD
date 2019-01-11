@@ -1,6 +1,6 @@
 _pkgname=aiomonitor
 pkgname=python-aiomonitor
-pkgver=0.4.0
+pkgver=0.4.1
 pkgrel=1
 pkgdesc="aiomonitor adds monitor and python REPL capabilities for asyncio application"
 arch=('any')
@@ -9,7 +9,7 @@ license=('Apache')
 depends=('python' 'python-aioconsole' 'python-terminaltables' 'python-setuptools')
 _name=${pkgname#python-}
 source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
-md5sums=('0e81e01a92646697fbc0124580d03649')
+md5sums=('29ba62220f0428176bc4e28fafeb3546')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
