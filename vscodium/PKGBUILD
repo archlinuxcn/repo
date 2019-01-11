@@ -1,8 +1,9 @@
 # Maintainer: Plague-doctor <plague <at>> privacyrequired <<dot>> com >
 
-pkgname=vscodium-bin
+_pkgname=vscodium
+pkgname=$_pkgname-git
 pkgver=1.30.2
-pkgrel=2
+pkgrel=3
 pkgdesc="Binary releases of VS Code without MS branding/telemetry/licensing."
 arch=('x86_64')
 url="https://github.com/VSCodium/vscodium"
@@ -17,28 +18,26 @@ optdepends=(
 )
 provides=('code')
 conflicts=('visual-studio-code-bin' 'code')
-replaces=('vscodium')
+replaces=($_pkgname)
 source=(
         vscodium.desktop
         ${pkgname}-${pkgver}-${pkgrel}.tar.gz::${url}/releases/download/${pkgver}/VSCode-linux-x64-${pkgver}.tar.gz
        )
-noextract=("${pkgname}-${pkgver}-${pkgrel}.tar.gz")
 
 
 sha256sums=('e4f3503d6c6eb9d967f9d35e58f5f801da98c4ccf7bd31dc752d1cef05781717'
             '081783f0c186129040b6741a4aa64da27127ed9040b1d82db22706b19fd32ea9')
 
-prepare() {
-    mkdir -p ${srcdir}/vscodium
-    tar -xf ${srcdir}/${pkgname}-${pkgver}-${pkgrel}.tar.gz -C ${srcdir}/vscodium
-}
 
 package() {
     install -d -m755 ${pkgdir}/usr/bin
     install -d -m755 ${pkgdir}/usr/share/{vscodium,applications,pixmaps}
-    cp -r ${srcdir}/${pkgname} ${pkgdir}/usr/share
-    ln -s /usr/share/${pkgname}/bin/vscodium ${pkgdir}/usr/bin/${pkgname}
+    # copy over all extracted files
+    cp -Pr ${srcdir}/* ${pkgdir}/usr/share/vscodium
+    # remove extra source symlinks
+    find ${pkgdir}/usr/share/vscodium/ -type l -delete
+    ln -s /usr/share/${_pkgname}/bin/vscodium ${pkgdir}/usr/bin/${_pkgname}
     install -D -m644 vscodium.desktop ${pkgdir}/usr/share/applications/vscodium.desktop
-    install -D -m644 ${srcdir}/${pkgname}/resources/app/resources/linux/code.png \
+    install -D -m644 ${srcdir}/resources/app/resources/linux/code.png \
             ${pkgdir}/usr/share/pixmaps/vscodium.png
 }
