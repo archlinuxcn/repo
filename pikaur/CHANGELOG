@@ -1332,3 +1332,13 @@ Wed Jan 2 18:10:17 2019 +0100
      2019-01-02 fcd6d02 actionless fix(install_cli): install files prompt not shown under some conditions because of mid-indentation of the code block
      2018-12-29 12a7d7c actionless chore(args): remove undocumented --debug flag and use pacman's --verbose for the same purpose
      2018-12-25 589c0bc actionless chore(config): change default SudoLoopInterval from 1 to 59
+
+
+Sat Jan 12 04:28:44 2019 +0100
+-------------------------------------------------
+1.3.6           Release 1.3.6
+    
+    Notable changes:
+     2019-01-11 c891468 actionless fix(install_cli, install_info_fetcher: manual package selection): working with AlwaysShowPkgOrigin=yes and other sidecases
+     2019-01-11 756d210 actionless fix(aur: find_aur_packages): if part of package results was cached not found packages were not always marked as not found
+     2019-01-11 60fc64a actionless fix(pacman): handle 'database not found' reply from pacman
