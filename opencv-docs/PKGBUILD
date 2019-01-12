@@ -5,16 +5,16 @@
 #pkgbase=opencv
 pkgname=opencv-docs
 _realname=opencv
-pkgver=4.0.0
+pkgver=4.0.1
 pkgrel=1
 pkgdesc="Open Source Computer Vision Library docs"
 arch=('any')
 license=('BSD')
 url="http://opencv.org/"
- 
+
 source=("http://downloads.sourceforge.net/opencvlibrary/$pkgver/$_realname-$pkgver-docs.zip")
-md5sums=('dbe825b44d003f465634b972ad8af638')
- 
+md5sums=('36c14f195c84336b5c94373c309d4b2a')
+
 build() {
   cd "$srcdir/$pkgver"
 }
