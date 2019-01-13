@@ -2,13 +2,13 @@
 
 pkgname=ccls-git
 _pkgname=ccls
-pkgver=1819.58f80115
+pkgver=1820.5ac8472e
 pkgrel=1
 pkgdesc='C/C++ language server supporting cross references, hierarchies, completion and semantic highlighting'
 arch=('any')
 url='https://github.com/MaskRay/ccls'
-license=('MIT')
-depends=('clang')
+license=('Apache')
+depends=('clang' 'llvm')
 makedepends=("cmake" "git" "llvm")
 source=('git+https://github.com/MaskRay/ccls.git')
 md5sums=('SKIP')
@@ -21,7 +21,6 @@ pkgver() {
 prepare() {
   cd $_pkgname
   git submodule update --init
-  install -d build
 }
 
 build() {
