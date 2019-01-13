@@ -2,13 +2,13 @@
 
 pkgname=macports-base
 pkgver=2.5.4
-pkgrel=2
+pkgrel=3
 epoch=1
 pkgdesc='The MacPorts command-line client'
 url='https://www.macports.org/'
 arch=('i686' 'x86_64')
 license=('BSD')
-depends=('curl' 'openssl' 'sqlite')
+depends=('curl' 'openssl' 'sqlite' 'libreadline.so')
 # tcl: MacPorts comes with its own vendored tclsh, while a system interpreter
 # is still needed to build tcllib
 makedepends=('tcl' 'nmtree')
@@ -44,6 +44,9 @@ build() {
 package() {
   cd MacPorts-$pkgver
   make DESTDIR="$pkgdir" install
+
+  # makepkg only looks for executable files for sodepends handling
+  find "$pkgdir"/opt/local -name '*.so' -exec chmod +x {} \;
 
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
