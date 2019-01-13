@@ -1,0 +1,13 @@
+maintainers:
+  - github: yan12125
+
+build_prefix: extra-x86_64
+
+depends:
+  - firefox-beta-bin
+
+pre_build: aur_pre_build
+
+# Can't query using pkgbase due to https://bugs.archlinux.org/task/57230
+update_on:
+  - aur: firefox-beta-i18n-en-us
