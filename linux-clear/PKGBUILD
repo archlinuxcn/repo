@@ -9,9 +9,12 @@ _makenconfig=
 
 _enable_gcc_more_v="y"
 # Optionally select a sub architecture by number if building in a clean chroot
-# Leaving this entry blank will require user interaction during the build 
+# Leaving this entry blank will require user interaction during the build
 # which will cause a failure to build if using makechrootpkg. Note that the
 # generic (default) option is 26.
+#
+# Note - the march=native option is unavailable by this method, use the nconfig
+# and manually select it.
 #
 #  1. AMD Opteron/Athlon64/Hammer/K8 (MK8)
 #  2. AMD Opteron/Athlon64/Hammer/K8 with SSE3 (MK8SSE3)
@@ -39,13 +42,11 @@ _enable_gcc_more_v="y"
 #  24. Intel Cannon Lake (MCANNONLAKE)
 #  25. Intel Ice Lake (MICELAKE)
 #  26. Generic-x86-64 (GENERIC_CPU)
-#  27. Native optimizations autodetected by GCC (MNATIVE)
 _subarch=26
 
 # Compile ONLY probed modules
-# As of mainline 2.6.32, running with this option will only build the modules
-# that you currently have probed in your system VASTLY reducing the number of
-# modules built and the build time to do it.
+# Build in only the modules that you currently have probed in your system VASTLY
+# reducing the number of modules built and the build time.
 #
 # WARNING - ALL modules must be probed BEFORE you begin making the pkg!
 #
@@ -63,10 +64,10 @@ _rev_override="n"
 
 ### IMPORTANT: Do no edit below this line unless you know what you're doing
 
-_major=4.19
-_minor=15
+_major=4.20
+_minor=2
 _srcname=linux-${_major}
-_clr=${_major}.14-682
+_clr=${_major}.2-682
 pkgbase=linux-clear
 pkgver=${_major}.${_minor}
 pkgrel=4
@@ -336,9 +337,9 @@ for _p in "${pkgname[@]}"; do
   }"
 done
 
-sha256sums=('0c68f5655528aed4f99dae71a5b259edc93239fa899e2df79c055275c21749a1'
+sha256sums=('ad0823183522e743972382df0aa08fb5ae3077f662b125f1e599b0b2aaa12438'
             'SKIP'
-            '051507958d5ed9b2eac34abdc49f5fa1600646bf804076cda448aacb93019b98'
+            '5b4fc9453182f74f28cda6e9c59a2b71f61ac862cbe30f67c8d225d72f1fdf10'
             'SKIP'
             '29f9e8dc27e6c9b6488cecd7fe2394030307799e511db2d197d9e6553a7f9e40'
             '226e30068ea0fecdb22f337391385701996bfbdba37cdcf0f1dbf55f1080542d'
