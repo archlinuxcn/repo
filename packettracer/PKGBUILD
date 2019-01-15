@@ -6,20 +6,20 @@
 # Contributor: z3ntu <WEI16416@spengergasse.at>
 
 pkgname=packettracer
-pkgver=7.2
+pkgver=7.2.1
 pkgrel=1
 pkgdesc="Network design and emulation software for Cisco's Networking Academy instructors and students."
 arch=( 'x86_64' )
-depends_x86_64=('openssl-1.0' 'libpng12' 'icu52')
+depends_x86_64=('openssl-1.0' 'libpng12' 'icu')
 url="http://www.netacad.com/about-networking-academy/packet-tracer"
 license=('custom')
 
 source=('packettracer' 'linguist' 'packettracer.sh')
-source_x86_64=('local://Packet Tracer 7.2 for Linux 64 bit.tar.gz')
+source_x86_64=("local://Packet Tracer ${pkgver} for Linux 64 bit.tar.gz")
 sha512sums=('7135a62c5e46d9742eb8bdb5b3b171201243487e3681d152595121cfa1b9e5f3a0f89a6e54f25b7aa4cd2ae87156db4351b992a4988d364ba36c7bd71829c4d2'
-	    'dab1f7f9c77c900a65899f2d795d9df39136de7e6ab1f544c538311012a212edbbb2101741672fdbe729c43e5bef0cb323800aa40b68b0cacf14342a1b040800'
-	    '3f4732213a9ca7c95f742edbdccf4d84c95e1c9e00d3dfa72e79b8039ef86bed29bc5b76586402a233ce3af409c0a56c759c2554e17962c292a6bd333654ce71')
-sha512sums_x86_64=('c5315fece36504ea551b8bcc9abc8c92829b90eb986e6e231cbbb7add981bac3d7d15343efe0a74527a25d768dcb60cf603699528ff3bde42251678ce0f70f6d')
+            'dab1f7f9c77c900a65899f2d795d9df39136de7e6ab1f544c538311012a212edbbb2101741672fdbe729c43e5bef0cb323800aa40b68b0cacf14342a1b040800'
+            '3f4732213a9ca7c95f742edbdccf4d84c95e1c9e00d3dfa72e79b8039ef86bed29bc5b76586402a233ce3af409c0a56c759c2554e17962c292a6bd333654ce71')
+sha512sums_x86_64=('359f1b2740459cf58b2e71da3edd52eb8c49c3197c3a5af25682e469c00e8e35de90b2d43cdd8d9c614cbed0aac554b150d578d6a25295ea547025e090b4ff25')
 
 # We don't want to strip anything from the static libraries
 # We want to keep all binaries orginal (Cisco is goofy)
@@ -40,6 +40,9 @@ package() {
   cp -r ./Sounds/* "${pkgdir}/usr/share/packettracer/Sounds"
   cp -r ./templates/* "${pkgdir}/usr/share/packettracer/templates"
 
+  # fix folder permissions to 755 to avoid 555 folders
+  find "${pkgdir}/usr/share/packettracer/" -type d -print0 | xargs -0 chmod 755
+
   # Help Files that are optinal uncomment to include them (55 MB)
   # cp -r ./help/* "${pkgdir}/usr/share/packettracer/help"
 
@@ -58,7 +61,7 @@ package() {
   install -D -m644 ./art/pkz.png "${pkgdir}/usr/share/icons/hicolor/48x48/mimetypes/application-x-pkz.png"
 
   # EULA
-  install -D -m644 eula72.txt "${pkgdir}/usr/share/licenses/$pkgname/eula72.txt"
+  install -D -m644 eula721.txt "${pkgdir}/usr/share/licenses/$pkgname/eula721.txt"
 
   # Shell script to start PT and tell it to use included qt files
   # Arch's QT causes PT to crash when saving!
