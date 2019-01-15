@@ -7,5 +7,5 @@ depends:
   - thunderbird-beta-bin
 
 update_on:
-  - aur: thunderbird-beta-bin
-    strip-release: true
+  - url: https://ftp.mozilla.org/pub/thunderbird/releases/
+    regex: /([\d.]+b\d)

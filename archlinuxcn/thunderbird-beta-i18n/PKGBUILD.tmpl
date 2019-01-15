@@ -28,8 +28,9 @@ noextract=(${source[@]%%::*})
 {% for lang_iso639, lang_name in languages.items() %}
 package_thunderbird-beta-i18n-{{ lang_iso639.lower() }}() {
   pkgdesc="{{ lang_name }} language pack for Thunderbird Beta"
-  depends=("thunderbird-beta-bin>=$pkgver")
+  # Not assigning upper bound here due to https://bugs.archlinux.org/task/48252
+  depends=("thunderbird>={{ min_pkgver }}")
   install -Dm644 thunderbird-beta-i18n-$pkgver-{{ lang_iso639 }}.xpi \
-    "$pkgdir/opt/thunderbird-beta/extensions/langpack-{{ lang_iso639 }}@thunderbird.mozilla.org.xpi"
+    "$pkgdir/usr/share/mozilla/extensions/{3550f703-e582-4d05-9a08-453d09bdfdc6}/langpack-{{ lang_iso639 }}@thunderbird.mozilla.org.xpi"
 }
 {% end %}

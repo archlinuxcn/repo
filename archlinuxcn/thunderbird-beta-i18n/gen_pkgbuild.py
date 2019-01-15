@@ -1,5 +1,6 @@
 import io
 import logging
+import re
 import sys
 
 from lxml import etree
@@ -49,6 +50,7 @@ def main(pkgver):
     loader = tornado.template.Loader('.')
     content = loader.load('PKGBUILD.tmpl').generate(
         pkgver=pkgver,
+        min_pkgver=re.sub(r'b\d', 'b0', pkgver),
         languages=languages,
         sha256sums=sha256sums,
     )
