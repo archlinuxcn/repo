@@ -3,9 +3,10 @@
 
 from lilaclib import *
 
-#build_prefix = 'extra-x86_64'
-#pre_build = aur_pre_build
-#post_build = aur_post_build
+def pre_build():
+    update_pkgver_and_pkgrel(_G.newver.replace('v', ''))
 
-#if __name__ == '__main__':
-#  single_main()
+def post_build():
+    git_add_files('PKGBUILD')
+    git_commit()
+    update_aur_repo()
