@@ -7,7 +7,7 @@
 
 pkgname="google-cloud-sdk"
 pkgver=229.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A set of command-line tools for the Google Cloud Platform. Includes gcloud (with beta and alpha commands), gsutil, and bq."
 url="https://cloud.google.com/sdk/"
 license=("Apache")
@@ -61,9 +61,13 @@ package() {
   # The Google code uses a _TraceAction() method which spams the screen even
   # in "quiet" mode, we're throwing away output on purpose to keep it clean
   #  ref: lib/googlecloudsdk/core/platforms_install.py
-  python2 "${pkgdir}/opt/${pkgname}/bin/bootstrapping/install.py" --quiet \
-    --usage-reporting False --path-update False --bash-completion False \
-    --additional-components "${_additional_components[@]}" 1 > /dev/null
+  python2 "${pkgdir}/opt/${pkgname}/bin/bootstrapping/install.py" \
+    --quiet \
+    --usage-reporting False \
+    --path-update False \
+    --bash-completion False \
+    --additional-components "${_additional_components[@]}" \
+    1 > /dev/null
 
   msg2 "Cleaning up artifacts of the bootstrap script"
   rm -rf "${pkgdir}/opt/${pkgname}/.install/.backup"
