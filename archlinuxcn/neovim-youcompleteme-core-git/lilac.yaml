@@ -6,9 +6,15 @@ build_prefix: extra-x86_64
 depends:
   - python-requests-futures
 
-pre_build: vcs_update
-
 post_build: git_pkgbuild_commit
 
 update_on:
   - vcs
+  - archpkg: boost-libs
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1
+  - archpkg: clang
+    strip-release: true
+  - archpkg: python
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1
