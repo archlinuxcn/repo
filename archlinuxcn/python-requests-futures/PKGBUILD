@@ -3,7 +3,7 @@
 
 pkgname=python-requests-futures
 pkgver=0.9.9
-pkgrel=1
+pkgrel=2
 pkgdesc='Asynchronous Python HTTP for Humans.'
 license=('Apache')
 arch=('any')
