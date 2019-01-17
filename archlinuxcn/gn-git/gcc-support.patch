@@ -1,7 +1,18 @@
---- src/gn/build/gen.py.orig	2018-07-21 16:28:08.909054488 +0200
-+++ src/gn/build/gen.py	2018-07-21 19:15:30.284412730 +0200
-@@ -308,8 +312,11 @@
-       ldflags.append(min_mac_version_flag)
+diff --git a/build/gen.py b/build/gen.py
+index ee4f8e14..89714678 100755
+--- a/build/gen.py
++++ b/build/gen.py
+@@ -299,7 +299,7 @@ def WriteGNNinja(path, platform, host, options):
+           ldflags.append('-Wl,-strip-all')
+ 
+       # Enable identical code-folding.
+-      if not platform.is_darwin():
++      if not platform.is_darwin() and "clang" in cc:
+         ldflags.append('-Wl,--icf=all')
+ 
+     cflags.extend([
+@@ -332,8 +332,11 @@ def WriteGNNinja(path, platform, host, options):
+       ldflags.extend(['-maix64', '-pthread'])
  
      if options.use_lto:
 -      cflags.extend(['-flto', '-fwhole-program-vtables'])
@@ -12,5 +23,5 @@
 +        cflags.append('-fwhole-program-vtables')
 +        ldflags.append('-fwhole-program-vtables')
  
-   elif is_win:
+   elif platform.is_msvc():
      if not options.debug:
