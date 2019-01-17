@@ -4,7 +4,7 @@
 # Contributor: frownlee <florez.brownlee@gmail.com>
 
 pkgname=android-ndk
-pkgver=r18.b
+pkgver=r19
 pkgrel=1
 pkgdesc='Android C/C++ developer kit'
 arch=('x86_64')
@@ -18,7 +18,7 @@ depends=('glibc')
 source=('android-ndk.sh')
 source_x86_64=("https://dl.google.com/android/repository/$pkgname-${pkgver/./}-linux-x86_64.zip")
 sha1sums=('2479a8d74428eb651ad2b9772ad655d7a90af410')
-sha1sums_x86_64=('500679655da3a86aecf67007e8ab230ea9b4dd7b')
+sha1sums_x86_64=('f02ad84cb5b6e1ff3eea9e6168037c823408c8ac')
 
 package() {
   install -Ddm755 "$pkgdir/opt"
