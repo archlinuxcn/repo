@@ -6,16 +6,11 @@
 
 from lilaclib import *
 
-depends=['fmt', 'xcb-imdkit-git', 'fcitx5-git']
-
-update_on = [{
-    'gitlab': 'fcitx/fcitx5-rime'
-}]
-
-
 build_prefix = 'extra-x86_64'
 
-pre_build = vcs_update
+def pre_build():
+    vcs_update()
+    update_pkgrel()
 
 def post_build():
     git_add_files("PKGBUILD")

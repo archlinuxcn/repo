@@ -5,7 +5,9 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-pre_build: vcs_update
+depends:
+  - fcitx5-git
+  - xcb-imdkit-git
 
 update_on:
   - gitlab: fcitx/libime
