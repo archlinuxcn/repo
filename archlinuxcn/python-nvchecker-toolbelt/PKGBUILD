@@ -1,8 +1,8 @@
 # Maintainer: Chih-Hsuan Yen <yan12125@gmail.com>
 
 pkgname=python-nvchecker-toolbelt
-pkgver=0.2
-pkgrel=2
+pkgver=0.3
+pkgrel=1
 pkgdesc='Utilities around nvchecker'
 arch=(any)
 url='https://gitlab.com/yan12125/nvchecker-toolbelt'
