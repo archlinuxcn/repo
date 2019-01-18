@@ -1,0 +1,43 @@
+diff --git a/XCPF/PacmanConfig.py b/XCPF/PacmanConfig.py
+index 2ed4f136e..cfa04d727 100644
+--- a/XCPF/PacmanConfig.py
++++ b/XCPF/PacmanConfig.py
+@@ -25,7 +25,7 @@
+ ################################################################################
+ 
+ from collections import OrderedDict
+-from pycman.config import pacman_conf_enumerator, _logmask, cb_log, LIST_OPTIONS, BOOLEAN_OPTIONS
++from pycman.config import PacmanConfEnumeratorSession, _logmask, cb_log, LIST_OPTIONS, BOOLEAN_OPTIONS
+ import os
+ import pyalpm
+ 
+@@ -51,17 +51,18 @@ class PacmanConfig(OrderedDict):
+       self.load_from_options(options)
+ 
+   def load_from_file(self, filename):
+-    for section, key, value in pacman_conf_enumerator(filename):
+-      if key == 'Architecture' and value == 'auto':
+-        continue
+-      elif key == 'Color':
+-        self[section][key] = 'auto'
+-        continue
+-      self.setdefault(section, OrderedDict())
+-      if key in LIST_OPTIONS:
+-        self[section].setdefault(key, []).append(value)
+-      else:
+-        self[section][key] = value
++    with PacmanConfEnumeratorSession(filename) as pacman_conf_enumerator:
++      for section, key, value in pacman_conf_enumerator():
++        if key == 'Architecture' and value == 'auto':
++          continue
++        elif key == 'Color':
++          self[section][key] = 'auto'
++          continue
++        self.setdefault(section, OrderedDict())
++        if key in LIST_OPTIONS:
++          self[section].setdefault(key, []).append(value)
++        else:
++          self[section][key] = value
+     if "CacheDir" not in self.options:
+       self.options["CacheDir"]= ["/var/cache/pacman/pkg"]
+     for key, value in self.items():
