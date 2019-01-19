@@ -5,12 +5,12 @@
 
 pkgname=discord
 pkgver=0.0.8
-pkgrel=1
+pkgrel=2
 pkgdesc="All-in-one voice and text chat for gamers that's free and secure."
 arch=('x86_64')
 url='https://discordapp.com/'
 license=('custom')
-depends=('gtk2' 'gconf' 'libnotify' 'libxss' 'glibc' 'alsa-lib' 'nspr' 'nss' 'libc++')
+depends=('gtk3' 'gconf' 'libnotify' 'libxss' 'glibc' 'alsa-lib' 'nspr' 'nss' 'libc++')
 optdepends=(
   'libpulse: For pulseaudio support'
   'noto-fonts-emoji: Google font for emoji support.'
