@@ -1,8 +1,8 @@
 # Maintainer: Caleb Bassi <calebjbassi@gmail.com>
 
 pkgname=gotop-bin
-pkgver=1.7.1
-pkgrel=2
+pkgver=2.0.0
+pkgrel=1
 pkgdesc="A terminal based graphical activity monitor inspired by gtop and vtop"
 arch=("x86_64" "i686")
 url="https://github.com/cjbassi/gotop"
@@ -20,7 +20,7 @@ case "$CARCH" in
 esac
 
 source=("https://github.com/cjbassi/gotop/releases/download/$pkgver/gotop_${pkgver}_linux_$_arch.tgz")
-sha256sums=("ee36818daed804e32e19b8b7024a30d8a0200898cc9670d540d5af175db6ec93")
+sha256sums=("7a5668187f3465123606e5530d724a28e8c9451f02297fb93ea97880257eb37c")
 
 package() {
   install -Dm755 "$srcdir/gotop" "$pkgdir/usr/bin/gotop"
