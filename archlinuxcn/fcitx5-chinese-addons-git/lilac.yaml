@@ -5,9 +5,7 @@ build_prefix: extra-x86_64
 
 update_on:
     - gitlab: fcitx/fcitx5-chinese-addons
-    - archpkg: boost-libs
-      from_pattern: ^(\d+\.\d+)\..*
-      to_pattern: \1
+    - alias: boost
 
 depends:
     - xcb-imdkit-git

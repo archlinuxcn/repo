@@ -7,10 +7,9 @@
 
 from lilaclib import *
 
-depends=['fmt', 'xcb-imdkit-git', 'fcitx5-git']
-
-#build_prefix = 'archlinuxcn-x86_64'
-#pre_build = vcs_update
+def pre_build():
+  update_pkgrel()
+  vcs_update()
 
 def post_build():
   git_add_files('PKGBUILD')
