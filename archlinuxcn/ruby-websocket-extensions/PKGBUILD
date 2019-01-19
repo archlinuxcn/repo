@@ -4,7 +4,7 @@
 _gemname=websocket-extensions
 pkgname=ruby-$_gemname
 pkgver=0.1.3
-pkgrel=2
+pkgrel=3
 pkgdesc='Generic extension manager for WebSocket connections'
 arch=(any)
 url='https://github.com/faye/websocket-extensions-ruby'
