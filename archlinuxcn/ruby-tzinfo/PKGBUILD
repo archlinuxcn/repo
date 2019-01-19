@@ -5,11 +5,11 @@
 _gemname='tzinfo'
 pkgname="ruby-${_gemname}"
 pkgver=2.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Daylight savings aware transformations between times in different time zones'
 arch=('any')
 license=('MIT')
-depends=('ruby-thread_safe' 'rubygems' 'ruby-rdoc' )
+depends=('rubygems' 'ruby-thread_safe' 'ruby-rdoc' )
 options=(!emptydirs)
 url="http://rubygems.org/gems/${_gemname}"
 source=("https://rubygems.org/downloads/${_gemname}-${pkgver}.gem")
