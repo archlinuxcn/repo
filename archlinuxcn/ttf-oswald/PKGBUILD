@@ -1,21 +1,21 @@
 # Maintainer: Tyler Swagar <buttpickle69@shaw.ca>
 
 pkgname=ttf-oswald
-_commit='1e5d467208dd1306173960dc7b176686d630f307'
-pkgver=4.100
-pkgrel=2
+_commit='dbb34644e36024fef3def6d268d30ead8f0ce113'
+pkgver=4.101
+pkgrel=1
 pkgdesc='Sans-serif typeface from Google by Vernon Adams'
 arch=('any')
 url='https://fonts.google.com/specimen/Oswald'
 license=('custom:SIL Open Font License v1.1')
 depends=('fontconfig' 'xorg-fonts-encodings' 'xorg-font-utils')
 conflicts=('ttf-google-fonts-opinionated-git' 'otf-oswald-ib')
-source=("Oswald-Bold-${pkgver}.ttf::https://github.com/google/fonts/raw/${_commit}/ofl/oswald/Oswald-Bold.ttf"
-        "Oswald-ExtraLight-${pkgver}.ttf::https://github.com/google/fonts/raw/${_commit}/ofl/oswald/Oswald-ExtraLight.ttf"
-        "Oswald-Light-${pkgver}.ttf::https://github.com/google/fonts/raw/${_commit}/ofl/oswald/Oswald-Light.ttf"
-        "Oswald-Medium-${pkgver}.ttf::https://github.com/google/fonts/raw/${_commit}/ofl/oswald/Oswald-Medium.ttf"
-        "Oswald-Regular-${pkgver}.ttf::https://github.com/google/fonts/raw/${_commit}/ofl/oswald/Oswald-Regular.ttf"
-        "Oswald-SemiBold-${pkgver}.ttf::https://github.com/google/fonts/raw/${_commit}/ofl/oswald/Oswald-SemiBold.ttf"
+source=("Oswald-Bold-${pkgver}.ttf::https://github.com/google/fonts/raw/${_commit}/ofl/oswald/static/Oswald-Bold.ttf"
+        "Oswald-ExtraLight-${pkgver}.ttf::https://github.com/google/fonts/raw/${_commit}/ofl/oswald/static/Oswald-ExtraLight.ttf"
+        "Oswald-Light-${pkgver}.ttf::https://github.com/google/fonts/raw/${_commit}/ofl/oswald/static/Oswald-Light.ttf"
+        "Oswald-Medium-${pkgver}.ttf::https://github.com/google/fonts/raw/${_commit}/ofl/oswald/static/Oswald-Medium.ttf"
+        "Oswald-Regular-${pkgver}.ttf::https://github.com/google/fonts/raw/${_commit}/ofl/oswald/static/Oswald-Regular.ttf"
+        "Oswald-SemiBold-${pkgver}.ttf::https://github.com/google/fonts/raw/${_commit}/ofl/oswald/static/Oswald-SemiBold.ttf"
         "${pkgname}-${pkgver}-OFL.txt::https://github.com/google/fonts/raw/${_commit}/ofl/oswald/OFL.txt")
 sha256sums=('0cde70ba3b3398ab0bc19be74c7517442ef711846d33f286d7932fef9784e2d8'
             'f7e415a9685e50df9b4821a4c676089ed3cfea4037232f2ad4a994932bc9a24a'
