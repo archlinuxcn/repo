@@ -2,9 +2,5 @@ maintainers:
 - github: lilydjwg
 update_on:
 - github: vim/vim
-- archpkg: python
-  from_pattern: '^(\d+\.\d+)\..*'
-  to_pattern: '\1'
-- archpkg: ruby
-  from_pattern: ^(\d+\.\d+)\..*
-  to_pattern: \1
+- alias: python
+- alias: ruby
