@@ -44,7 +44,9 @@ class Std:
     self.target = target
     self.optdepends = toolchain.get(target)
 
-def pre_build():
+PKGBUILD: str
+
+def prepare():
   toml = s.get(config_url).text
   toml = pytoml.loads(toml)
 
@@ -57,19 +59,14 @@ def pre_build():
     clippy_url = toml['pkg']['clippy-preview']['target'] \
         ['x86_64-unknown-linux-gnu']['xz_url']
   except KeyError:
-    raise Exception('no clippy available?')
-
-  if not debug:
-    oldfiles = (glob.glob('*.xz') + glob.glob('*.xz.asc') +
-                glob.glob('*.part'))
-    for f in oldfiles:
-      os.unlink(f)
+    return 'no clippy available?'
 
   stds = [Std(target, toml['pkg']['rust-std']['target'][target])
           for target in STDS]
 
   loader = tornado.template.Loader('.')
-  content = loader.load('PKGBUILD.tmpl').generate(
+  global PKGBUILD
+  PKGBUILD = loader.load('PKGBUILD.tmpl').generate(
     stds = stds,
     version = version,
     version_date = version_date.replace('-', ''),
@@ -79,8 +76,16 @@ def pre_build():
     clippy_version = clippy_version,
     clippy_url = clippy_url,
   )
+
+def pre_build():
+  if not debug:
+    oldfiles = (glob.glob('*.xz') + glob.glob('*.xz.asc') +
+                glob.glob('*.part'))
+    for f in oldfiles:
+      os.unlink(f)
+
   with open('PKGBUILD', 'wb') as output:
-    output.write(content)
+    output.write(PKGBUILD)
 
 def post_build():
   git_add_files(['PKGBUILD'])
