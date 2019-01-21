@@ -1,0 +1,8 @@
+maintainers:
+  - github: petronny
+build_prefix: extra-x86_64
+update_on:
+  - aur: gn-git
+  - vcs: git+https://gn.googlesource.com/gn
+pre_build: aur_pre_build
+post_build: aur_post_build

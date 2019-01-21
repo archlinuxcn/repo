@@ -1,0 +1,8 @@
+maintainers:
+  - github: petronny
+build_prefix: extra-x86_64
+update_on:
+  - aur: gnome-shell-extension-topicons-plus-git
+    use_last_modified: true
+  - github: huttli/TopIcons-plus
+post_build: aur_post_build
