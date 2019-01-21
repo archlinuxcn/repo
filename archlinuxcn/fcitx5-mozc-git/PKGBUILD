@@ -14,7 +14,7 @@ pkgname=fcitx5-mozc-git
 pkgdesc="Fcitx5 Module of A Japanese Input Method for Chromium OS, Windows, Mac and Linux (the Open Source Edition of Google Japanese Input)"
 pkgver=2.18.2612.102.1.r1317.f059c021
 _fcitx_patchver=2.18.2612.102.1
-pkgrel=1.2
+pkgrel=1.3
 arch=('x86_64')
 url="https://github.com/google/mozc"
 license=('custom')
@@ -37,8 +37,8 @@ source=(git+https://gitlab.com/fcitx/mozc.git#branch=fcitx
 	)
 sha512sums=('SKIP'
             '9284b6865ee063a294369f40947a2ff7fc3ce49a2bbe9ebbf282a0e0bf199cedc18e1bc51ba8c3e4ed00404f8ef36e6a9db0602b51083f358a1ff555fd031858'
-            '36603203eee8ef044903af05d38b87496cd5cf3c2eb99d9c390aca5b2a6975bc96a85342bf0996a98d374566f507ae84a6693be26d9e7b10b5bb74b04e6d2e7f'
-            '0c868dc42f8f162f489aa72039852e67fe03d4f10770a90c3b1b863beff86382d31585fbd63c3ece3911a599a047c0add1249319e2d4e3e3ba441e0614e6fa84'
+            '59d0a5e62c698ebc64008f1fb2ed68ebbbd7798d9d95f2e4852261fb09d53e9f8c102f385ed8f2001e3da6c2a0a50d64f1f20e70671948b492f972c487655efe'
+            'daf41f63bd1afc0937beb12aa007ead8a239fabc3af2237e4adf75238b0e0e520f6051f5a98d413a541f901e17a1488eb3fad6d0bba1f1561987365236d64146'
             '5507c637e5a65c44ccf6e32118b6d16647ece865171b9a77dd3c78e6790fbd97e6b219e68d2e27750e22074eb536bccf8d553c295d939066b72994b86b2f251a'
             'SKIP'
             'SKIP'
@@ -83,7 +83,7 @@ prepare() {
   PYTHONPATH="$PWD:$PYTHONPATH" python2 dictionary/gen_zip_code_seed.py --zip_code="${srcdir}/x-ken-all.csv" --jigyosyo="${srcdir}/JIGYOSYO.CSV" >> data/dictionary_oss/dictionary09.txt
   msg "Done."
 
-  # disable fcitx4 target 
+  # disable fcitx4 target
   rm unix/fcitx/fcitx.gyp
 
   ## Copy third party deps

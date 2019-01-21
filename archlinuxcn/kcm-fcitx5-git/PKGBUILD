@@ -6,7 +6,7 @@
 _pkgname=kcm-fcitx5
 pkgname=$_pkgname-git
 pkgver=r240.62e087f
-pkgrel=1.1
+pkgrel=1.3
 pkgdesc="KDE Config Module for Fcitx5"
 arch=('i686' 'x86_64')
 url="https://gitlab.com/fcitx/kcm-fcitx5"
@@ -29,7 +29,7 @@ prepare() {
 
 build() {
   cd build
-    
+
   cmake ../$_pkgname \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
