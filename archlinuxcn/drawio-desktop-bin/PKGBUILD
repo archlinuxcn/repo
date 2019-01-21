@@ -1,0 +1,53 @@
+# Maintainer: Megumi fox <megumifox@archlinuxcn.org>
+_pkgname=drawio-desktop
+pkgname=$_pkgname-bin
+pkgver=10.0.24
+pkgrel=1
+pkgdesc='Diagram drawing application built on web technology'
+arch=('x86_64')
+url='https://github.com/jgraph/drawio'
+license=('Apache')
+depends=(electron gconf libnotify)
+makedepends=(npm)
+provides=($_pkgname)
+conflicts=($_pkgname)
+source=("drawio-desktop-$pkgver.war::https://github.com/jgraph/drawio/releases/download/v$pkgver/draw.war"
+		"draw.io.desktop"
+		"draw.io.sh")
+noextract=("drawio-desktop-$pkgver.war")
+sha256sums=('7340d0084245abe0bc8dc92e97e51287fba0a5dbecaf9bd8e2d4954d5b57b265' 'SKIP' 'SKIP')
+
+
+build() {
+  rm -rf "$srcdir/drawio-$pkgver"
+  mkdir "$srcdir/drawio-$pkgver"
+  cd "$srcdir/drawio-$pkgver"
+
+  bsdtar -xf "../drawio-desktop-$pkgver.war" -C .
+  rm -rf "META-INF" "WEB-INF"
+  cd "$srcdir/drawio-$pkgver"
+
+  npm install --cache ../npm-cache --only=production
+  rm -f 'package-lock.json'
+}
+
+package() {
+  cd "$srcdir/drawio-$pkgver"
+
+  mkdir -p "$pkgdir/usr/lib"
+  cp -rp . "$pkgdir/usr/lib/draw.io"
+
+  # create desktop file
+  install -Dm644 "$srcdir/draw.io.desktop" -t "$pkgdir/usr/share/applications"
+
+  # create run script
+  install -Dm755 "$srcdir/draw.io.sh" "$pkgdir/usr/bin/draw.io"
+
+  # create icons
+  find 'images' -regex '.*/drawlogo[0-9]+\.png' |
+  grep -o '[0-9]\+' |
+  while read size; do
+    install -Dm644 "images/drawlogo$size.png" \
+    "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps/draw.io.png"
+  done
+}
