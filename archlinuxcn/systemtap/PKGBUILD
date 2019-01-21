@@ -3,12 +3,12 @@
 # Contributor : dront78 <dront78@gmail.com>
 pkgname=systemtap
 pkgver=4.0
-pkgrel=1
+pkgrel=2
 pkgdesc="provides infrastructure to simplify the gathering of information about the running system."
 url="http://sourceware.org/systemtap/"
 arch=('x86_64' 'i686')
 license=('GPL')
-depends=('elfutils' 'nss' 'python2' 'json-c' 'avahi')
+depends=('elfutils' 'nss' 'python2' 'json-c' 'avahi' 'readline' 'nspr')
 makedepends=('python2-setuptools' 'xmlto' 'cpio')
 optdepends=('sqlite3: for storing results in a database')
 source=("${pkgname}-${pkgver}.tar.gz::https://sourceware.org/systemtap/ftp/releases/${pkgname}-${pkgver}.tar.gz"
