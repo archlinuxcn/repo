@@ -6,13 +6,6 @@
 
 from lilaclib import *
 
-build_prefix = 'extra-x86_64'
-depends = ['depot-tools-git']
-
-update_on = [{
-    'github': 'servo/servo',
-}]
-
 def post_build():
     git_add_files('PKGBUILD')
     git_commit()
@@ -23,4 +16,4 @@ def pre_build():
     vcs_update()
 
 if __name__ == '__main__':
-    single_main(build_prefix)
+    single_main()
