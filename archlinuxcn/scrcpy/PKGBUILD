@@ -1,8 +1,8 @@
 # Contributor: Andrew Rabert <draje@nullsum.net>
 
 pkgname=scrcpy
-pkgver=1.5
-pkgrel=3
+pkgver=1.6
+pkgrel=1
 pkgdesc='Display and control your Android device'
 arch=('i686' 'x86_64')
 url='https://github.com/Genymobile/scrcpy'
@@ -10,12 +10,12 @@ license=('Apache')
 depends=('ffmpeg' 'sdl2')
 makedepends=('gcc' 'meson')
 optdepends=('android-tools: required if adb is not already installed')
-source=("https://github.com/Genymobile/scrcpy/archive/v${pkgver}-fixversion.tar.gz"
-        "https://github.com/Genymobile/scrcpy/releases/download/v${pkgver}-fixversion/scrcpy-server-v${pkgver}.jar")
-sha256sums=('79249fb0881c8de6af23ed58e2b31dc6738174d7e49c490ae6e7992f7b3ec2cd'
-            'd97aab6f60294e33e7ff79c2856ad3e01f912892395131f4f337e9ece03c24de')
+source=("https://github.com/Genymobile/scrcpy/archive/v${pkgver}.tar.gz"
+        "https://github.com/Genymobile/scrcpy/releases/download/v${pkgver}/scrcpy-server-v${pkgver}.jar")
+sha256sums=('b41925d087420cbe24d7fa901cbb537f492c28c50d875fcf738e7fe4b26d7d05'
+            '08df924bf6d10943df9eaacfff548a99871ebfca4641f8c7ddddb73f27cb905b')
 
-src_name="scrcpy-${pkgver}-fixversion"
+src_name="scrcpy-${pkgver}"
 src_server="scrcpy-server-v${pkgver}.jar"
 
 server_path='/usr/share/scrcpy/scrcpy-server.jar'
