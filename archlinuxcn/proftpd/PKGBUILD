@@ -3,7 +3,7 @@
 
 pkgname=proftpd
 pkgver=1.3.6
-pkgrel=4
+pkgrel=5
 epoch=1
 pkgdesc='High-performance, scalable FTP server'
 arch=('x86_64' 'i686')
@@ -38,7 +38,7 @@ build() {
     --sbindir=/usr/bin \
     --libexecdir=/usr/lib \
     --disable-pam \
-    --with-modules=mod_sftp:mod_quotatab:mod_quotatab_sql:mod_quotatab_file:mod_tls:mod_ldap:mod_sql:mod_sql_mysql:mod_sql_postgres:mod_facl \
+    --with-modules=mod_sftp:mod_quotatab:mod_quotatab_sql:mod_quotatab_file:mod_tls:mod_ldap:mod_sql:mod_sql_mysql:mod_sql_postgres:mod_facl:mod_dynmasq \
     --sysconfdir=/etc \
     --localstatedir=/run/proftpd \
     --enable-ctrls \
