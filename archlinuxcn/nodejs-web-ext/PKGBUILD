@@ -3,7 +3,7 @@
 _npmname=web-ext
 pkgname=nodejs-$_npmname
 pkgver=2.9.3
-pkgrel=1
+pkgrel=2
 pkgdesc='A command line tool to help build, run, and test web extensions'
 arch=(any)
 url='https://developer.mozilla.org/en-US/Add-ons/WebExtensions'
@@ -13,15 +13,10 @@ makedepends=('yarn' 'node-gyp' 'python2' 'git')
 # to speed up the build
 options=('!strip')
 # unit tests expect a git repo
-source=("git+https://github.com/mozilla/web-ext.git#tag=$pkgver"
-        exclude-scoped-modules.diff)
-sha256sums=('SKIP'
-            'badc28aad41212d3b08255298b48e43022f918a73e030a7f0245047cb9e33228')
+source=("git+https://github.com/mozilla/web-ext.git#tag=$pkgver")
+sha256sums=('SKIP')
 
 prepare() {
-  cd "$srcdir/$_npmname"
-  patch -Np1 -i ../exclude-scoped-modules.diff
-
   cd "$srcdir"
   # -build for running webpack and tests, and the original for actual packaging
   cp -r $_npmname{,-build}

@@ -1,10 +1,11 @@
 # Maintainer: Shengyu Zhang <la@archlinuxcn.org>
+# Co-Maintainer: Bjoern Franke <bjo@nord-west.org>
 # Contributor: Carsten Feuls <archlinux@carstenfeuls.de>
 
 _gemname=jekyll
 pkgname=$_gemname
-pkgver=3.8.4
-pkgrel=4
+pkgver=3.8.5
+pkgrel=2
 pkgdesc='A simple, blog aware, static site generator.'
 arch=('any')
 url='https://github.com/jekyll/jekyll'
@@ -14,7 +15,7 @@ depends=('ruby>=2.1.0'
     'ruby-colorator>=1.0' 'ruby-colorator<=2.0'
     'ruby-jekyll-sass-converter>=1.0' 'ruby-jekyll-sass-converter<2.0'
     'ruby-jekyll-watch>=2.0' 'ruby-jekyll-watch<3.0'
-    'ruby-kramdown>=1.14' 'ruby-kramdown<2.0'
+    'ruby-kramdown-1>=1.14' 'ruby-kramdown-1<2.0'
     'ruby-liquid>=4.0' 'ruby-liquid<5.0'
     'ruby-mercenary>=0.3.3' 'ruby-mercenary<0.4'
     'ruby-pathutil>=0.9' 'ruby-pathutil<1.0'
@@ -33,7 +34,7 @@ replaces=('ruby-jekyll')
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
-sha512sums=('139c235941951ad25888aa8b3fe3039d2de55d9e1056ad313828269f36fd8ae554c2f8e664411ade8f7a094d0135b8d7d382b92e66857251d8b20a806bce9d24')
+sha512sums=('1a45814567caa1cb4902d749330c3f6287fb7f0e84a1bc81eb7ce49ce48ed182799733b227671dfe4de9d5229877ffb581fedb927b831c6a68ab699c7d6b763a')
 
 package() {
   local _gemdir="$(ruby -e'puts Gem.default_dir')"
