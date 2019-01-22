@@ -1,8 +1,8 @@
 # Maintainer: Megumi fox <megumifox@archlinuxcn.org>
 _pkgname=drawio-desktop
 pkgname=$_pkgname-bin
-pkgver=10.0.24
-pkgrel=1.1
+pkgver=10.1.2
+pkgrel=1
 pkgdesc='Diagram drawing application built on web technology'
 arch=('x86_64')
 url='https://github.com/jgraph/drawio'
@@ -15,7 +15,9 @@ source=("drawio-desktop-$pkgver.war::https://github.com/jgraph/drawio/releases/d
 		"draw.io.desktop"
 		"draw.io.sh")
 noextract=("drawio-desktop-$pkgver.war")
-sha256sums=('7340d0084245abe0bc8dc92e97e51287fba0a5dbecaf9bd8e2d4954d5b57b265' 'SKIP' 'SKIP')
+sha256sums=('4b7598ac6aea1818757dcea45feac8cf3d5b83a6d1472b13d52176caaaf715a4'
+            '21e5dac375c7ccb9b8aed0e2b1e74d0def76089821f66240bdc0bc6fe57db8a4'
+            'f81df3844b8fa2e847223e470f4721d067b18aa16caf89880aa3f0d89499f727')
 
 
 build() {
