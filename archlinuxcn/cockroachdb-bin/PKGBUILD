@@ -4,12 +4,12 @@
 pkgname=cockroachdb-bin
 conflicts=('cockroachdb')
 provides=('cockroachdb')
-pkgver=2.1.3
+pkgver=2.1.4
 pkgrel=1
 pkgdesc="An open source, survivable, strongly consistent, scale-out SQL database"
 arch=('x86_64')
 url="https://www.cockroachlabs.com/"
-license=('Apache' 'BSD' 'custom:PostgreSQL' 'custom:CCL')
+license=('Apache' 'BSD' 'custom:PostgreSQL' 'custom:CCL' 'custom:LevelDB')
 depends=('glibc')
 source=("https://binaries.cockroachdb.com/cockroach-v${pkgver}.linux-amd64.tgz"
         "https://raw.githubusercontent.com/cockroachdb/cockroach/v${pkgver}/LICENSE"
@@ -17,18 +17,20 @@ source=("https://binaries.cockroachdb.com/cockroach-v${pkgver}.linux-amd64.tgz"
         "https://raw.githubusercontent.com/cockroachdb/cockroach/v${pkgver}/licenses/BSD-golang.txt"
         "https://raw.githubusercontent.com/cockroachdb/cockroach/v${pkgver}/licenses/BSD-grpc.txt"
         "https://raw.githubusercontent.com/cockroachdb/cockroach/v${pkgver}/licenses/BSD-vitess.txt"
+        "https://raw.githubusercontent.com/cockroachdb/cockroach/v${pkgver}/licenses/LevelDB.txt"
         "https://raw.githubusercontent.com/cockroachdb/cockroach/v${pkgver}/licenses/CCL.txt"
         "https://raw.githubusercontent.com/cockroachdb/cockroach/v${pkgver}/licenses/PostgreSQL.txt"
         cockroach.service
         cockroach.default
         cockroach.sysusers
         cockroach.tmpfiles)
-sha256sums=('01489f09f9372283a8be43e83357948833beb352940e1c8626b9d3302a8d2f51'
+sha256sums=('3742f9f7ba252490b623ab6b83f36722ae2fdfe5d217db4b57e1d758231d86d9'
             '68040689c4342e0018adec3eb0fb1f2ae68aaeef918e7b4493518523381b7129'
             'b3ef077aa9a0d4b697722de993fa83959f10910ae600de90bcdcdd49fafce371'
             '2d36597f7117c38b006835ae7f537487207d8ec407aa9d9980794b2030cbc067'
             'af1c246b8eb8b2d2ee3f1471247569d7f35cefff40e9b967d563622bb04c1e69'
             '23681c6986fb33d57957660543f6e9dcbbcf6d2ae2f9fa2dbdb5efec5aa0d95f'
+            'b568f1f37a5a1d37a3e981e7c8b7fc4856ca33b2ca0a45bc8e847aaaf7afe485'
             '2cd6aceddb7240c6ef395f7d92e26de4da63f7700504f6ce47e2aab4e39a4122'
             'b34067e89373e1a47367b454862f43061ad1680542b39b6d95ed29c354473e15'
             'SKIP'
@@ -72,6 +74,7 @@ package() {
   install -Dm644 "${srcdir}/BSD-golang.txt" "${pkgdir}/usr/share/licenses/${pkgname}/BSD-golang.txt"
   install -Dm644 "${srcdir}/BSD-grpc.txt"   "${pkgdir}/usr/share/licenses/${pkgname}/BSD-grpc.txt"
   install -Dm644 "${srcdir}/BSD-vitess.txt" "${pkgdir}/usr/share/licenses/${pkgname}/BSD-vitess.txt"
+  install -Dm644 "${srcdir}/BSD-vitess.txt" "${pkgdir}/usr/share/licenses/${pkgname}/LevelDB.txt"
   install -Dm644 "${srcdir}/CCL.txt"        "${pkgdir}/usr/share/licenses/${pkgname}/CCL.txt"
   install -Dm644 "${srcdir}/PostgreSQL.txt" "${pkgdir}/usr/share/licenses/${pkgname}/PostgreSQL.txt"
 }
