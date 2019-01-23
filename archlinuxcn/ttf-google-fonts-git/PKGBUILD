@@ -9,7 +9,7 @@
 # Contributor: Alexander De Sousa <archaur.xandy21@spamgourmet.com>
 
 pkgname=ttf-google-fonts-git
-pkgver=r1333.ef5baa48
+pkgver=r1377.1ebe5dcf
 pkgrel=1
 epoch=1
 pkgdesc="TrueType fonts from the Google Fonts project (git version)"
@@ -58,7 +58,8 @@ conflicts=('adobe-source-code-pro-fonts'
            'ttf-source-code-pro-ibx'
            'ttf-source-sans-pro-ibx'
            'ttf-vollkorn-ibx'
-           'ttf-arabeyes-fonts')
+           'ttf-arabeyes-fonts'
+           'ttf-google-fonts-typewolf')
 provides=('adobe-source-code-pro-fonts'
           'adobe-source-sans-pro-fonts'
           'jsmath-fonts'
@@ -116,4 +117,8 @@ package() {
 
   done < <(find "$srcdir" -type f -iname \*.ttf -print0)
 
+  # NOTE: Since the zcool xiaowei chinese font has special characters. We need to change
+  # the folder name to prevent errors during package compression.
+  mv "$pkgdir"/usr/share/fonts/站酷小薇体 "$pkgdir"/usr/share/fonts/zcool-xiaowei-regular
+  mv "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE.站酷小薇体 "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE.zcool-xiaowei-regular
 }
