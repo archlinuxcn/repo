@@ -2,7 +2,7 @@
 # Maintainer: Sven-Hendrik Haase <sh@lutzhaase.com>
 # Contributor: Andrew Gallant <jamslam@gmail.com>
 pkgname=ripgrep-skylake-git
-pkgver=0.10.0.20190114
+pkgver=0.10.0.20190122
 pkgrel=1
 pkgdesc="A search tool that combines the usability of ag with the raw speed of grep. Git version, optimized for skylake CPUs"
 arch=('x86_64')
@@ -27,7 +27,7 @@ pkgver () {
 build () {
   cd ripgrep
   echo "lto = true" >> Cargo.toml
-  RUSTFLAGS="-C target-cpu=skylake" cargo build --release --features 'simd-accel avx-accel pcre2'
+  RUSTFLAGS="-C target-cpu=skylake" cargo build --release --features 'simd-accel pcre2'
   git checkout Cargo.toml
 }
 
