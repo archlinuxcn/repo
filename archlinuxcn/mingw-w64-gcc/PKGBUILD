@@ -24,14 +24,15 @@ options=('!strip' 'staticlibs' '!emptydirs' '!buildflags')
 #source=(https://sources.archlinux.org/other/gcc/gcc-${pkgver/+/-}.tar.xz{,.sig}
 source=(https://ftp.gnu.org/gnu/gcc/gcc-$pkgver/gcc-$pkgver.tar.xz{,.sig}
        "http://isl.gforge.inria.fr/isl-${_islver}.tar.bz2"
-       bz86593.patch)
+       bz86593.patch gcc9-pr85644.patch)
 validpgpkeys=(F3691687D867B81B51CE07D9BBE43771487328A9  # bpiotrowski@archlinux.org
               13975A70E63C361C73AE69EF6EEB81F8981C74C7  # richard.guenther@gmail.com
               33C235A34C46AA3FFB293709A328C3A2C3C45C06) # Jakub Jelinek <jakub@redhat.com>
 sha256sums=('196c3c04ba2613f893283977e6011b2345d1cd1af9abeac58e916b1aab3e0080'
             'SKIP'
             'd59726f34f7852a081fbd3defd1ab2136f174110fc2e0c8d10bb122173fa9ed8'
-            '5e8e3819f493749e5fac1a786661e014c9e1d7819796092b5768d2fc37778476')
+            '5e8e3819f493749e5fac1a786661e014c9e1d7819796092b5768d2fc37778476'
+            '1710a0fbb5de56887da35880ace1d644fd8e95b7eeaa0226241c28d697cba4be')
 
 prepare() {
   ln -sf gcc-${pkgver/+/-} gcc
@@ -40,6 +41,9 @@ prepare() {
   # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=86593
   rm -f gcc/testsuite/g++.dg/pr86593.C
   patch -p1 -i "$srcdir/bz86593.patch"
+
+  # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=86832
+  patch -p0 -i "$srcdir"/gcc9-pr85644.patch
 
   # link isl for in-tree builds
   ln -sf ../isl-${_islver} isl
