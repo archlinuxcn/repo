@@ -5,22 +5,19 @@
 # Contributor: codekoala <codekoala at gmail dot com>
 
 pkgname=etcd
-pkgver=3.3.10
+pkgver=3.3.11
 pkgrel=1
 pkgdesc='A highly-available key value store for shared configuration and service discovery.'
 arch=('x86_64' 'armv6h' 'armv7h')
-url='https://github.com/coreos/etcd'
+url='https://github.com/etcd-io/etcd'
 license=('Apache')
 makedepends=('go')
 backup=('etc/conf.d/etcd')
 install="${pkgname}".install
-source=("${pkgname}"-"${pkgver}".tar.gz::https://github.com/coreos/"${pkgname}"/releases/download/v"${pkgver}"/v"${pkgver}".tar.gz
-        "${pkgname}"-"${pkgver}".tar.gz.asc::https://github.com/coreos/"${pkgname}"/releases/download/v"${pkgver}"/v"${pkgver}".tar.gz.asc
+source=("${pkgname}"-"${pkgver}".tar.gz::https://github.com/etcd-io/"${pkgname}"/archive/v"${pkgver}".tar.gz
          10-EnvironmentFile.conf
          etcd.env)
-validpgpkeys=('18AD5014C99EF7E3BA5F6CE950BDD3E0FC8A365E') # CoreOS Application Signing Key <security@coreos.com>
-sha512sums=('848e241e816312307f74520b99aeabf7def6862093897035ace16cb230817d8e2681d7d2f1c1ac220d7c2b4c7c0a1262bbe3e4db927524f785de888566d2097c'
-            'SKIP'
+sha512sums=('4274c4988b6e7fe61dbcc88c88ed6647debd7a67c448b9101c77bebeef6400e65b9e2cc930f635c3f59105554411e1ac606c6a146ad6927a01d2e921b1a92949'
             'fa85d772929ea7e0a18bddd4b9c41d043a7f75e560eacfab67b979985e510dea694c332b5130570e47101c1ec5c25925872c6a581568390e7b141d9c6c26aae2'
             '040cee3c04dd5bb253415169d1f6f50bbccac10b687706c1b168184985c0c6c6cc67858f0c71d2ebb475891e54b370fa39b20ead5155658d01fac31d7d388324')
 
@@ -51,5 +48,3 @@ package() {
   cp -r "${srcdir}"/"${pkgname}"-"${pkgver}"/Documentation/* "${pkgdir}"/usr/share/doc/"${pkgname}"/
   install -m644 "${srcdir}"/"${pkgname}"-"${pkgver}"/"${pkgname}".conf.yml.sample "${pkgdir}"/usr/share/doc/"${pkgname}"
 }
-
-# vim:set ts=2 sw=2 et:

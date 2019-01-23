@@ -1,82 +1,79 @@
-# Maintainer: Joffrey Darcq <j-off@live.fr>
+# Maintainer: Joffrey <j-off@live.fr>
 # Contributor: eolianoe <eolianoe [at] gmail [DoT] com>
 # Contributor: Edvinas Valatka <edacval@gmail.com>
 # Contributor: Aaron Lindsay <aaron@aclindsay.com>
 
 pkgname=seafile-server
-pkgver=6.2.5
-pkgrel=3
-pkgdesc="Seafile is an online file storage and collaboration tool"
+pkgver=6.3.4
+pkgrel=2
+pkgdesc='Seafile server core'
 arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
-url="https://github.com/haiwen/${pkgname}"
+url='https://github.com/haiwen/seafile-server'
 license=('AGPL3')
-makedepends=("vala" "intltool")
-depends=("ccnet-server" "libevhtp-seafile" "libarchive"
-         "wget" "sqlite" "fuse" "git" "ffmpeg")
-optdepends=("python2-wsgidav-seafile: webdav-support")
-conflicts=('seafile')
-changelog="ChangeLog"
-source=("${pkgname}-${pkgver}-server.tar.gz::${url}/archive/v${pkgver}-server.tar.gz"
-        "fix_seafile-admin.diff"
-        "fix_mysql_support.diff"
-        "seafile-server@.service"
-        "0001-Revert-server-put-pids-folder-out-of-seafile-data.patch"
-        "libseafile.in.patch"
-        "openssl-1.1.diff"
+depends=(
+    "ccnet-server>=$pkgver"
+    'fuse2'
+    'libevhtp-seafile'
+    'libarchive'
 )
-sha256sums=('8cc17303b3b3949cfb4e914264f6446057bb2eee0b5e6e3a3399294ab566c0e0'
-            '91f56d852cb4670ce052f1539ebe51c3ec74189150dc24ed34245ca3397d29a7'
-            'c144d93638dfb44d1474c46e427977f4c314def3ca6a31bf495b6b4ce523741f'    
-            'da31d1b61031cbacc42e1ab708c67c83dba933ff391b07677dabab7ab79729f4'
-            '114920836eec03ac152a88cdfb55de5cd554240ca246dd69d3d9b52b74ec8809'
-            'a2d7f7cf0c59aba97650af62b3cefd0ceb71a1007c34d9369a88e5769c7f6076'
-            'ffa351b22e89a66f80139888e4e7a2c2bde41fd648d57c71dcf10884dc03bbc3')
+makedepends=('vala')
+conflicts=('seafile')
+changelog='ChangeLog'
+source=(
+    "$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver-server.tar.gz"
+    'fix_pids-folder-out-of-seafile-data.diff'
+    'fix_seafile-admin.diff'
+    'fix_mysql_support.diff'
+    'seafile-server@.service'
+)
+sha256sums=(
+    '1ba4c641bad8d7592fd2592827e81470c88b8e802707d2b1e6d551c16d0da100'
+    'd725bda36aedd424d426d7ce62e19c7036ccfc6a5759df12f139656ba15e425c'
+    '51a7f13b8c3dfcb3f510c68c9791bf6ace1a0b332ba26fdf55c850409bf387fa'
+    'd625d1ac5fc666386a53059b1d31bce0e63c79b69c11bfb769f6390afb629611'
+    'da31d1b61031cbacc42e1ab708c67c83dba933ff391b07677dabab7ab79729f4'
+)
 
 prepare() {
-    cd "${srcdir}/${pkgname}-${pkgver}-server"
-
+    cd "$srcdir/$pkgname-$pkgver-server"
     # Remove scripts for tests and others OS
     rm -rf "./scripts/"{build,upgrade/win32,*.bat,*.md} "./integration-tests"
 
-    patch -p1 -i "${srcdir}/fix_seafile-admin.diff"
-    patch -p1 -i "${srcdir}/fix_mysql_support.diff" 
-    patch -p1 -i "${srcdir}/0001-Revert-server-put-pids-folder-out-of-seafile-data.patch"
-    patch -p1 -i "${srcdir}/libseafile.in.patch"
-    patch -p1 -i "${srcdir}/openssl-1.1.diff"
+    # Apply patchs
+    sed -i "s|(DESTDIR)@prefix@|@prefix@|" "./lib/libseafile.pc.in"
+    for diff in "$srcdir"/*.diff; do patch -p1 -i "$diff"; done
 
-    # Use python lib seahub interpreter for all scripts
-    grep -s -l -r '#!/usr/bin/env python' "./" \
-    | xargs sed -i -e '1 s|#!/usr/bin/env python|#!/usr/lib/seahub/bin/python2|'
+    # Fix python path
+    shebang='#!/usr/bin/env python'; pyenv='PYTHON=python[.0-9]+' 
+    grep -s -l -r    "$shebang" | xargs sed -i -E "1 s|$shebang|${shebang}2|"
+    grep -s -l -r -E "$pyenv"   | xargs sed -i -E "s|$pyenv|PYTHON=python2|g"
 }
 
 build() {
-    cd "${srcdir}/${pkgname}-${pkgver}-server"
-
+    cd "$srcdir/$pkgname-$pkgver-server"
     ./autogen.sh
     ./configure \
         --enable-fuse \
         --enable-python \
         --prefix=/usr \
-        PYTHON=/usr/bin/python2
+        PYTHON='/usr/bin/python2'
     make
 }
 
 package() {
-    cd "${srcdir}/${pkgname}-${pkgver}-server"
+    cd "$srcdir/$pkgname-$pkgver-server"
+    make DESTDIR="$pkgdir" install
 
-    make DESTDIR="${pkgdir}" install
+    # Prepare directories layout for deploying
+    mkdir -p "$pkgdir/usr/share/$pkgname/runtime"
+    cp -r -p "./scripts" "$pkgdir/usr/share/$pkgname/scripts"
 
-    # Prepare directories layout for an easy deploying
-    # https://manual.seafile.com/deploy/using_mysql.html
-    mkdir -p "${pkgdir}/usr/share/${pkgname}/runtime"
-    cp -r -p "./scripts" "${pkgdir}/usr/share/${pkgname}/scripts"
+    mv "$pkgdir/usr/share/$pkgname/scripts/seahub.conf" \
+       "$pkgdir/usr/share/$pkgname/runtime/"
+    mv "$pkgdir/usr/share/$pkgname/scripts/upgrade" \
+       "$pkgdir/usr/share/$pkgname/"
 
-    mv "${pkgdir}/usr/share/${pkgname}/scripts/seahub.conf" \
-       "${pkgdir}/usr/share/${pkgname}/runtime/"
-    mv "${pkgdir}/usr/share/${pkgname}/scripts/upgrade" \
-       "${pkgdir}/usr/share/${pkgname}/"
-
-    # Install systemd service
-    install -Dm644 "${srcdir}/seafile-server@.service" \
-                   "${pkgdir}/usr/lib/systemd/system/seafile-server@.service"
+    install -Dm644 \
+        "$srcdir/seafile-server@.service" \
+        "$pkgdir/usr/lib/systemd/system/seafile-server@.service"
 }
