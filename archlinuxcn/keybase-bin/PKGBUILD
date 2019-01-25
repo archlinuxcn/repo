@@ -8,13 +8,14 @@ pkgname=keybase-bin
 pkgdesc='the Keybase Go client, filesystem, and GUI'
 license=('BSD')
 url='https://keybase.io'
-pkgver=2.13.1_20190115203650+eec94506e4
-src_prefix=https://s3.amazonaws.com/prerelease.keybase.io/linux_binaries/deb
+pkgver=3.0.0_20190125162145+5b9b6acf43
+src_prefix=https://prerelease.keybase.io/linux_binaries/deb
 deb_pkgver="${pkgver/_/-}"
 deb_pkgver="${deb_pkgver/+/.}"
 pkgrel=1
 arch=('i686' 'x86_64')
 depends=(fuse gconf libxss gtk2 lsof) # don't change this without changing the SRCINFO template too
+                                      # also make sure to change the keybase-git PKGBUILD
 # keybase-release is a deprecated AUR package
 conflicts=(keybase keybase-release keybase-git)
 source_i686=(
@@ -47,5 +48,5 @@ package() {
 # You can cross reference these hashes with Keybase Debian repo metadata:
 # https://prerelease.keybase.io/deb/dists/stable/main/binary-amd64/Packages
 # https://prerelease.keybase.io/deb/dists/stable/main/binary-i386/Packages
-sha256sums_i686=(db1223089b7e4a72e11d43be958f9261c6e82c59cad1248090fdf3e64e163df8)
-sha256sums_x86_64=(198be713affcee193b57570901bde1fc800e294d9cb21acad544a36ca71cc604)
+sha256sums_i686=(9bb64055ce2dbacff67e8847fe14fdb966dd0270c5580b8f1051f08b07eff906)
+sha256sums_x86_64=(3a2da94202424ebdb0cd7f755997c0fa88b41ff0a66b88f2c58180ab84a50952)
