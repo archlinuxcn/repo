@@ -3,7 +3,7 @@
 
 _pkgname=pyalpm
 pkgname=$_pkgname-git
-pkgver=0.8.4.r13.g6b47d16
+pkgver=0.8.4.r23.gacd7fdc
 pkgrel=1
 pkgdesc="Libalpm bindings for Python 3 (Git version)"
 arch=('x86_64')
@@ -11,7 +11,7 @@ url="https://git.archlinux.org/pyalpm.git/"
 license=('GPL3')
 depends=('python>=3.6' 'pacman>=5')
 makedepends=('git')
-checkdepends=('python-nose')
+checkdepends=('python-pytest')
 provides=("$_pkgname=$pkgver")
 conflicts=("$_pkgname")
 source=('git+https://git.archlinux.org/pyalpm.git')
@@ -33,7 +33,7 @@ build() {
 check() {
   cd $_pkgname
 
-  PYTHONPATH="$(ls -d build/lib.linux-$CARCH-*)" nosetests -v tests
+  PYTHONPATH="$(ls -d build/lib.linux-$CARCH-*)" pytest -v test
 }
 
 package() {
