@@ -10,7 +10,8 @@ def pre_build():
     depends = ['python-six', 'libsass'],
     depends_setuptools = True,
     makedepends = ['gcc'],
-    arch = ['x86_64']
+    arch = ['x86_64'],
+    provides = ['sassc']
   )
 
 def post_build():
