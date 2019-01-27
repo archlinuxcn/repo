@@ -11,7 +11,7 @@
 
 pkgname=chromium-vaapi
 pkgver=71.0.3578.98
-pkgrel=1
+pkgrel=3
 _launcher_ver=6
 pkgdesc="Chromium with VA-API support to enable hardware acceleration"
 arch=('x86_64')
@@ -34,6 +34,7 @@ optdepends=('pepper-flash: support for Flash content'
 install=chromium.install
 source=(https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$pkgver.tar.xz
         chromium-launcher-$_launcher_ver.tar.gz::https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver.tar.gz
+        fix-nav-preload-with-third-party-cookie-blocking.patch
         chromium-harfbuzz-r0.patch
         chromium-system-icu.patch
         chromium-widevine.patch
@@ -42,6 +43,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-vaapi-r21.patch)
 sha256sums=('1c56a9e30825774c83d568d194e9585625c6e90f81ee0ef09760fcedc86b9d45'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
+            'd2c497f3400baad7d380305f4705fd1e5b9f70a8460384490a1bb78e1c2b0f23'
             '1b370d49c43e88acfe7c0b1f9517047e927f3407bd80b4a48bba32c001f80136'
             'c4f2d1bed9034c02b8806f00c2e8165df24de467803855904bff709ceaf11af5'
             'd081f2ef8793544685aad35dea75a7e6264a2cb987ff3541e6377f4a3650a28b'
@@ -96,6 +98,9 @@ prepare() {
     third_party/blink/renderer/core/xml/*.cc \
     third_party/blink/renderer/core/xml/parser/xml_document_parser.cc \
     third_party/libxml/chromium/libxml_utils.cc
+
+  # https://crbug.com/913220
+  patch -Np1 -i ../fix-nav-preload-with-third-party-cookie-blocking.patch
 
   # Load Widevine CDM if available
   patch -Np1 -i ../chromium-widevine.patch

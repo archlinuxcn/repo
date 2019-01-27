@@ -1,0 +1,40 @@
+From c0d0bacc0ae01f15c4d06405057fd35f371bcaf3 Mon Sep 17 00:00:00 2001
+From: Matt Falkenhagen <falken@chromium.org>
+Date: Tue, 18 Dec 2018 08:31:08 +0000
+Subject: [PATCH] service worker: Fix nav preload with third-party cookie
+ blocking.
+
+In non-ServiceWorkerServicification, the navigation preload request
+wasn't setting site_for_cookies field when converting from a URLRequest
+to ResourceRequest, so StaticCookiePolicy was blocking cookie access
+when third-party cookie blocking was enabled.  This meant that cookies
+weren't sent in the navigation preload request.
+
+ServiceWorkerServicification already set set_for_cookies since it just
+passed the ResourceRequest on to the URLLoader for navigation preload.
+
+Test coverage is added as a //chrome browser test.
+
+Bug: 913220
+Change-Id: I03acb2c0b67d4645d3f6147b2ac9426a68935dee
+Reviewed-on: https://chromium-review.googlesource.com/c/1379792
+Commit-Queue: Matt Falkenhagen <falken@chromium.org>
+Reviewed-by: Tsuyoshi Horo <horo@chromium.org>
+Cr-Commit-Position: refs/heads/master@{#617414}
+---
+ .../browser/service_worker/service_worker_fetch_dispatcher.cc   | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/content/browser/service_worker/service_worker_fetch_dispatcher.cc b/content/browser/service_worker/service_worker_fetch_dispatcher.cc
+index 413842dd85..049da64651 100644
+--- a/content/browser/service_worker/service_worker_fetch_dispatcher.cc
++++ b/content/browser/service_worker/service_worker_fetch_dispatcher.cc
+@@ -616,7 +616,7 @@ bool ServiceWorkerFetchDispatcher::MaybeStartNavigationPreload(
+   network::ResourceRequest request;
+   request.method = original_request->method();
+   request.url = original_request->url();
+-  // TODO(horo): Set site_for_cookies to support Same-site Cookies.
++  request.site_for_cookies = original_request->site_for_cookies();
+   request.request_initiator =
+       original_request->initiator().has_value()
+           ? original_request->initiator()
