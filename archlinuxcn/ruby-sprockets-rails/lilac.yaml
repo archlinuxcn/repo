@@ -1,7 +1,7 @@
 maintainers:
   - github: a-wing
 
-build_prefix: archlinuxcn-x86_64
+#build_prefix: archlinuxcn-x86_64
 
 depends:
   - ruby-actionpack
@@ -11,6 +11,7 @@ depends:
 update_on:
   - gems: sprockets-rails
   - aur: ruby-sprockets-rails
+  - alias: ruby
 
 post_build: git_pkgbuild_commit
 
