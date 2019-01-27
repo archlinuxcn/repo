@@ -1,0 +1,141 @@
+# Maintainer: a-wing <1@233.email>
+
+meta_list=(
+  'actioncable'
+  'actionmailer'
+  'actionpack'
+  'actionview'
+  'activejob'
+  'activemodel'
+  'activerecord'
+  'activestorage'
+  'activesupport'
+  'railties'
+  'rails'
+  )
+
+pkgver=5.2.2
+
+for name in ${meta_list[@]}
+do
+  #echo ruby-${name}
+  pkgname=(${pkgname[@]} ruby-${name})
+  source=(${source[@]} https://rubygems.org/downloads/${name}-$pkgver.gem)
+  noextract=(${noextract[@]} $name-$pkgver.gem)
+done
+
+pkgrel=6
+pkgdesc='Full-stack web application framework.'
+arch=('any')
+url="http://rubyonrails.org"
+license=('MIT')
+depends=('ruby')
+
+md5sums=('d5bbfc41bed79886fedfb3a8075962f5'
+         '9199d2dfb2621052c52ab46e92a50121'
+         'a8925a83bc454bc43d12e5751b5692b7'
+         '1e0d8bc1b04342870cb6024493293f30'
+         'b038b9ff57f9b29891104bd95c880d95'
+         'aa0fa159783e549aacd258145e822db1'
+         '7b5b39af64c2b1b2a812661791e3503a'
+         'f602245ca45af1ce58b37a0b5bb4666a'
+         'bb1f5a2934ff06b31c3eef563db790bc'
+         '5e457d760ef3006645e605ebd30cbc14'
+         '71175f797c9767de404e91b29ad61582')
+
+packaging() {
+  local _gemdir="$(ruby -e'puts Gem.default_dir')"
+  gem install --ignore-dependencies --no-user-install -i "$pkgdir/$_gemdir" -n "$pkgdir/usr/bin" $1-$pkgver.gem
+  rm "$pkgdir/$_gemdir/cache/$1-$pkgver.gem"
+  install -D -m644 "$pkgdir/$_gemdir/gems/$1-$pkgver/MIT-LICENSE" "$pkgdir/usr/share/licenses/ruby-$1/MIT-LICENSE"
+}
+
+
+package_ruby-actioncable() {
+  pkgdesc='WebSocket framework for Rails.'
+  depends=('ruby' 'ruby-actionpack' 'ruby-nio4r' 'ruby-websocket-driver')
+
+  packaging `echo ${FUNCNAME} | cut -d - -f 2`
+}
+
+package_ruby-actionmailer() {
+  pkgdesc='Email composition, delivery, and receiving framework (part of Rails).'
+  depends=('ruby-activejob' 'ruby' 'ruby-actionview' 'ruby-mail' 'ruby-actionpack' 'ruby-rails-dom-testing')
+
+  packaging `echo ${FUNCNAME} | cut -d - -f 2`
+}
+
+package_ruby-actionpack() {
+  pkgdesc='Web-flow and rendering framework putting the VC in MVC (part of Rails).'
+  depends=('ruby-rack-test' 'ruby' 'ruby-rails-html-sanitizer' 'ruby-rack' 'ruby-actionview' 'ruby-rails-dom-testing' 'ruby-activesupport' )
+
+  packaging `echo ${FUNCNAME} | cut -d - -f 2`
+}
+
+package_ruby-actionview() {
+  pkgdesc='Rendering framework putting the V in MVC (part of Rails).'
+  depends=('ruby' 'ruby-activesupport' 'ruby-builder' 'ruby-erubi' 'ruby-rails-html-sanitizer')
+
+  packaging `echo ${FUNCNAME} | cut -d - -f 2`
+}
+
+package_ruby-activejob() {
+  pkgdesc='Job framework with pluggable queues.'
+  depends=('ruby' 'ruby-activesupport' 'ruby-globalid')
+
+  packaging `echo ${FUNCNAME} | cut -d - -f 2`
+}
+
+package_ruby-activemodel() {
+  pkgdesc='A toolkit for building modeling frameworks (part of Rails).'
+  depends=('ruby' 'ruby-activesupport')
+
+  packaging `echo ${FUNCNAME} | cut -d - -f 2`
+}
+
+package_ruby-activerecord() {
+  pkgdesc='Object-relational mapper framework (part of Rails).'
+  depends=('ruby' 'ruby-activesupport' 'ruby-activemodel' 'ruby-arel')
+
+  packaging `echo ${FUNCNAME} | cut -d - -f 2`
+}
+
+package_ruby-activestorage() {
+  pkgdesc='Local and cloud file storage framework.'
+  depends=('ruby' 'ruby-actionpack' 'ruby-activerecord' 'ruby-marcel')
+
+  packaging `echo ${FUNCNAME} | cut -d - -f 2`
+}
+
+package_ruby-activesupport() {
+  pkgdesc='A toolkit of support libraries and Ruby core extensions extracted from the Rails framework.'
+  depends=('ruby' 'ruby-concurrent-ruby' 'ruby-i18n' 'ruby-minitest' 'ruby-tzinfo')
+
+  packaging `echo ${FUNCNAME} | cut -d - -f 2`
+}
+
+package_ruby-railties() {
+  pkgdesc='Tools for creating, working with, and running Rails applications.'
+  depends=('ruby-thor' 'ruby-actionpack' 'ruby-activesupport' 'ruby-rake' 'ruby-method_source' 'ruby' )
+
+  packaging `echo ${FUNCNAME} | cut -d - -f 2`
+}
+
+package_ruby-rails() {
+  pkgdesc='Full-stack web application framework.'
+  depends=('ruby' 'ruby-activesupport' 'ruby-actionpack' 'ruby-actionview' 'ruby-activemodel' \
+    'ruby-activerecord' 'ruby-actionmailer' 'ruby-railties' 'ruby-bundler' 'ruby-sprockets-rails' \
+    'ruby-activestorage' 'ruby-activejob' 'ruby-actioncable')
+
+
+  #packaging `echo ${FUNCNAME} | cut -d - -f 2`
+  local _gemname=`echo ${FUNCNAME} | cut -d - -f 2`
+
+  local _gemdir="$(ruby -e'puts Gem.default_dir')"
+  # No documentatoin due to https://github.com/rdoc/rdoc/issues/361
+  # For Ruby 2.6.0: https://www.ruby-lang.org/en/news/2018/12/25/ruby-2-6-0-released/
+  gem install --no-document --ignore-dependencies --no-user-install \
+  	  -i "$pkgdir/$_gemdir" -n "$pkgdir/usr/bin" $_gemname-$pkgver.gem
+  rm "$pkgdir/$_gemdir/cache/$_gemname-$pkgver.gem"
+}
+
