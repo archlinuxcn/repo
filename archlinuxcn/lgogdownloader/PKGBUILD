@@ -2,7 +2,7 @@
 
 pkgname=lgogdownloader
 pkgver=3.4
-pkgrel=2
+pkgrel=3
 pkgdesc="An open source downloader for GOG.com games, uses the GOG.com API"
 url="https://sites.google.com/site/gogdownloader/"
 arch=('x86_64')
