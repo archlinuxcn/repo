@@ -9,7 +9,7 @@
 # Contributor: Daniel Micay <danielmicay@gmail.com>
 
 pkgname=neovim-youcompleteme-core-git
-pkgver=r2475.10f7dea1
+pkgver=r2478.c25e449f
 pkgrel=1
 pkgdesc='A code-completion engine for Vim'
 arch=(i686 x86_64)
@@ -19,7 +19,7 @@ depends=('neovim' 'boost-libs' 'python>=3.2' 'clang>=6.0'
          'python-bottle' 'python-waitress' 'python-frozendict'
          'python-requests-futures' 'python-future' 'python-neovim'
          'python-regex')
-makedepends=('git' 'cmake' 'boost')
+makedepends=('git' 'cmake' 'boost' 'pybind11')
 optdepends=(
   'gocode-git: Go semantic completion'
   'godef-git: Go semantic completion'
@@ -50,7 +50,9 @@ prepare() {
   git config submodule.third_party/ycmd.url "$srcdir/ycmd"
   git submodule update
 
-  git -C third_party/ycmd checkout master
+  # Force system headers/libs
+  cd third_party/ycmd/cpp
+  rm -rf BoostParts llvm pybind11
 }
 
 build() {
@@ -72,11 +74,10 @@ package() {
   cd YouCompleteMe
   install -Ddm755 "$pkg_ycmd_dir"
 
-  cp -r autoload doc plugin python "$pkgdir/usr/share/nvim/runtime"
-  cp -r third_party/ycmd/{ycmd,ycm_core.so,CORE_VERSION} "$pkg_ycmd_dir"
-  clang_version="$(clang --version|sed -n 's/clang version \([0-9.]\+\) .*/\1/p')"
-  ln -s "/usr/lib/clang/$clang_version/include/" "$pkg_ycmd_dir/clang_includes"
-  unset clang_version
+  cp -dr --no-preserve=ownership autoload doc plugin python "$pkgdir/usr/share/nvim/runtime"
+  cp -dr --no-preserve=ownership third_party/ycmd/{ycmd,ycm_core.so,CORE_VERSION} "$pkg_ycmd_dir"
+  install -Ddm755 "$pkg_ycmd_dir/third_party/clang/"
+  ln -s /usr/lib "$pkg_ycmd_dir/third_party/clang/lib"
 
   install -Ddm755 "$pkg_ycmd_dir/third_party/tern_runtime/node_modules/"
   install -Ddm755 "$pkg_ycmd_dir/third_party/gocode/"
@@ -85,7 +86,7 @@ package() {
   ln -s /usr/bin/gocode "$pkg_ycmd_dir/third_party/gocode/"
   ln -s /usr/bin/godef "$pkg_ycmd_dir/third_party/godef/"
 
-  find "$pkgdir" \( -name .git -or -name 'test*' -or -name 'run_tests.py' -or -name 'CMakeFiles' \) -exec rm -fr {} +
+  find "$pkgdir" \( -name .git -or -name 'test*' -or -name 'run_tests.py' \) -exec rm -fr {} +
 
   python -m compileall -d /usr/share/nvim/runtime "$pkgdir/usr/share/nvim/runtime"
   python -O -m compileall -d /usr/share/nvim/runtime "$pkgdir/usr/share/nvim/runtime"
