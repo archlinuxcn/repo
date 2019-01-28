@@ -3,7 +3,7 @@
 # Contributor: FzerorubigD <Fzerorubigd {AT} GMail {DOT} com>
 pkgname=obfs4proxy
 _gitname=obfs4
-pkgver=0.0.7
+pkgver=0.0.8
 pkgrel=1
 pkgdesc='The obfourscator - a pluggable transport proxy written in Go'
 arch=('i686' 'x86_64')
@@ -11,8 +11,8 @@ url='https://gitweb.torproject.org/pluggable-transports/obfs4.git/'
 license=('BSD')
 makedepends=('git' 'go')
 optdepends=('tor: you need tor to use this package')
-source=("git+https://git.torproject.org/pluggable-transports/obfs4.git#tag=obfs4proxy-${pkgver}")
-sha256sums=('SKIP')
+source=("https://people.torproject.org/~yawning/releases/obfs4proxy/obfs4proxy-${pkgver}.tar.xz")
+sha512sums=('2b92fd3353184f9aa4fc08e9415b92908c10bbd462d8a7576fa81bc67636d49aa645b1efef64f948bad2c4ee67f4b74d68c3e289b4da66128f3d94f8d9987bc1')
 
 build()	{
   cd "${srcdir}/${_gitname}/obfs4proxy"
