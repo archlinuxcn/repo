@@ -5,7 +5,7 @@
 
 pkgname=antimicro
 pkgver=2.24.1
-pkgrel=2
+pkgrel=3
 pkgdesc="Graphical program used to map keyboard keys and mouse controls to a gamepad"
 arch=("i686" "x86_64")
 url="https://github.com/juliagoda/${pkgname}"
@@ -18,7 +18,7 @@ sha256sums=("1a7f8693b2f969426a1ae1177af9d76389274308ae2f713a694df7c616369b31")
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
 
-  cmake \
+  cmake . \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_INSTALL_LIBDIR=/usr/lib \
     -DUSE_SDL_2=ON \
