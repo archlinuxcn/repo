@@ -1,6 +1,6 @@
 # Maintainer: Brian Bidulock <bidulock@openss7.org>
 pkgname=ocserv
-pkgver=0.12.1
+pkgver=0.12.2
 pkgrel=1
 pkgdesc="OpenConnect VPN Server"
 arch=('i686' 'x86_64')
@@ -30,3 +30,4 @@ package() {
   install -Dm0600 doc/sample.passwd "$pkgdir/etc/ocserv-passwd"
   install -Dm0644 doc/systemd/standalone/ocserv.service "$pkgdir/usr/lib/systemd/system/ocserv.service"
 }
+sha256sums=('da318005266de07d257daf407d087446d993c9035d4ca00156f65c3bae1ec851')
