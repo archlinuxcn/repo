@@ -70,5 +70,4 @@ package() {
   install -d "$pkgdir"/usr/share/{doc,licenses}/raine
   install -m644 docs/* changes/* "$pkgdir"/usr/share/doc/raine
   head -n5 source/raine.c > "$pkgdir"/usr/share/licenses/raine/LICENSE
-  rm "$pkgdir"/usr/share/{applications,pixmaps}/neoraine.*
 }

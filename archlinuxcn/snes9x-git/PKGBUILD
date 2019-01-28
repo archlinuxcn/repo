@@ -2,15 +2,15 @@
 
 pkgbase=snes9x-git
 pkgname=('snes9x-git' 'snes9x-gtk-git')
-pkgver=1.58.r2.gf820fa7
+pkgver=1.58.r63.g3426f14
 pkgrel=1
 pkgdesc="Port of the Snes9x emulator (git version). Includes Gtk version."
 arch=('i686' 'x86_64')
 url="http://www.snes9x.com/"
 license=('LGPL')
 depends=('minizip')
-makedepends=('git' 'intltool' 'nasm' 'mesa' 'libpulse'  'libpng' 'sdl2' 'gtk3' 'libxv'
-             'adwaita-icon-theme' 'autogen' 'minizip')
+makedepends=('git' 'portaudio' 'glslang' 'intltool' 'nasm' 'mesa' 'libpulse'  'libpng' 'sdl2' 'gtk3' 'libxv'
+             'adwaita-icon-theme' 'autogen' 'meson' 'minizip')
 source=("$pkgname"::'git://github.com/snes9xgit/snes9x.git')
 sha1sums=('SKIP')
 
@@ -21,6 +21,11 @@ pkgver() {
 
 }
 
+prepare() {
+  cd "${pkgbase}"
+  git submodule init
+  git submodule update
+}
 build() {
 
   cd ${pkgbase}/unix
@@ -30,9 +35,10 @@ build() {
   make
 
   cd ../gtk
-  ./autogen.sh
-  ./configure --prefix=/usr --with-netplay --with-opengl
-  make
+  meson -Dbuildtype=release -Dprefix=/usr -Dlocalstatedir=/var -Dsharedstatedir=/var/lib . build
+  meson configure build
+  cd build
+  ninja
 
 }
 
@@ -57,12 +63,12 @@ package_snes9x-gtk-git() {
 
   pkgdesc="A portable Emulator for the Super Nintendo Entertainment System - GTK version"
   license=('custom' 'LGPL')
-  depends=('sdl2' 'libpulse' 'gtk3' 'libxv' 'adwaita-icon-theme' 'minizip' 'libgl')
+  depends=('sdl2' 'glslang' 'portaudio' 'libpulse' 'gtk3' 'libxv' 'adwaita-icon-theme' 'minizip' 'libgl')
   conflicts=('snes9x-gtk')
   provides=('snes9x-gtk')
 
   cd ${pkgbase}/gtk
-  make DESTDIR="${pkgdir}" install
+  DESTDIR="${pkgdir}" ninja -C build install
   install -d "${pkgdir}/usr/share/doc/${pkgname}"
   install -D -m644 ../{unix/snes9x.conf.default,docs/{control-inputs,controls,snapshots}.txt} \
     "${pkgdir}/usr/share/doc/${pkgname}/"

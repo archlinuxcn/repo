@@ -2,13 +2,13 @@
 # Maintainer: Heavysink <winstonwu91 at gmail>
 pkgname=openmsx-git
 _pkgname=openMSX
-pkgver=13445.268c04775
+pkgver=13633.a1143e0c7
 pkgrel=1
 pkgdesc="The MSX emulator that aims for perfection."
 arch=('i686' 'x86_64')
 url="http://openmsx.org/"
 license=('custom')
-depends=('libxml2' 'sdl' 'sdl_image' 'sdl_ttf' 'tcl' 'libpng' 'zlib' 'alsa-lib' 'glew' 'libogg' 'libtheora' 'libvorbis')
+depends=('libxml2' 'sdl2' 'sdl2_ttf' 'tcl' 'libpng' 'zlib' 'alsa-lib' 'glew' 'libogg' 'libtheora' 'libvorbis')
 makedepends=('git' 'python2')
 optdepends=('python2' 'jack-audio-connection-kit' 'catalyst-utils' 'nvidia-utils' 'nvidia-304xx-utils')
 install=openmsx.install
@@ -25,7 +25,7 @@ build() {
   cd "${srcdir}/openMSX"
   
   # Changing some default configurations...
-  sed -i 's@<SDL_ttf.h>@<SDL/SDL_ttf.h>@' build/libraries.py
+  sed -i 's@<SDL_ttf.h>@<SDL2/SDL_ttf.h>@' build/libraries.py
   sed -i 's@SYMLINK_FOR_BINARY:=true@SYMLINK_FOR_BINARY:=false@' build/custom.mk
   sed -i 's@INSTALL_BASE:=/opt/openMSX@INSTALL_BASE:=/usr/share/openmsx@' build/custom.mk
   echo 'INSTALL_DOC_DIR:=/usr/share/doc/openmsx' >> build/custom.mk
