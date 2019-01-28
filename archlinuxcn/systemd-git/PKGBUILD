@@ -72,7 +72,7 @@ pkgver() {
 
   version="$(git describe --abbrev=0 --tags)"
   count="$(git rev-list --count ${version}..)"
-  printf '%s.%s' "${version#v}" "${count}"
+  printf '%s.%s' "${version#v}" "${count}" | sed "s/-//g"
 }
 
 build() {
