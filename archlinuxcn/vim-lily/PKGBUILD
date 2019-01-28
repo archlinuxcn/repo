@@ -8,7 +8,7 @@ _versiondir="vim$(echo $pkgver | awk -F. '{print $1$2}')"
 arch=('i686' 'x86_64')
 license=('custom:vim')
 url="http://www.vim.org"
-makedepends=('gpm' 'gtk2' 'perl' 'python2' 'python' 'ruby' 'gettext'
+makedepends=('gpm' 'gtk3' 'perl' 'python2' 'python' 'ruby' 'gettext'
              'pkg-config' 'sed' 'luajit' 'git' 'tar' 'desktop-file-utils' 'libxt')
 source=('tmpfiles.conf'
         'vimdoc.hook'
@@ -65,7 +65,7 @@ build() {
   make distclean || true
   CFLAGS='-g -O2' STRIP=true ./configure --prefix=/usr --localstatedir=/var/lib/vim \
     --mandir=/usr/share/man --with-luajit \
-    --enable-acl --enable-gui=gtk2 --enable-fontset --enable-xsmp \
+    --enable-acl --enable-gui=gtk3 --enable-fontset --enable-xsmp \
     --enable-python3interp --enable-rubyinterp=dynamic --enable-pythoninterp \
     --enable-luainterp=dynamic --enable-perlinterp=dynamic \
     --enable-cscope --enable-multibyte --with-features=huge \
@@ -119,7 +119,7 @@ package_vim-lily() {
 
 package_gvim-lily() {
   pkgdesc='Vi Improved, a highly configurable, improved version of the vi text editor (with advanced features, such as a GUI) with additional scripting support'
-  depends=('gpm' 'gtk2' 'vim-runtime-lily' 'desktop-file-utils' 'libxt')
+  depends=('gpm' 'gtk3' 'vim-runtime-lily' 'desktop-file-utils' 'libxt')
   optdepends=('luajit' 'ruby' 'python' 'python2' 'perl')
   conflicts=('vim' 'gvim' 'vim-python3' 'gvim-python3' 'vim-minimal')
   provides=("vim=${pkgver}-${pkgrel}" "gvim=${pkgver}-${pkgrel}" "gvim-python3=${pkgver}-${pkgrel}")
