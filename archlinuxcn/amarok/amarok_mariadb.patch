@@ -1,7 +1,8 @@
-diff -ura amarok-eb9706eaee14e07d894cf2ad442268a6f62d915a/cmake/modules/FindMySQL.cmake amarok-diff/cmake/modules/FindMySQL.cmake
---- amarok-eb9706eaee14e07d894cf2ad442268a6f62d915a/cmake/modules/FindMySQL.cmake	2019-01-12 04:54:33.000000000 +0800
-+++ amarok-diff/cmake/modules/FindMySQL.cmake	2019-01-27 21:52:42.770416475 +0800
-@@ -42,7 +42,16 @@
+diff --git a/cmake/modules/FindMySQL.cmake b/cmake/modules/FindMySQL.cmake
+index 7aab8ab..a6a59dc 100644
+--- a/cmake/modules/FindMySQL.cmake
++++ b/cmake/modules/FindMySQL.cmake
+@@ -42,7 +42,16 @@ if(MYSQLCONFIG_EXECUTABLE)
          # At least on OpenSUSE --libmysql-libs doesn't exist, so we just use
          # MYSQL_LIBRARIES for that. We'll see if that's enough when testing
          # below.

@@ -5,31 +5,35 @@
 # Contributor: damir <damir@archlinux.org>
 
 pkgname=amarok
-pkgver=2.9.0.r337.eb9706eaee
-pkgrel=2
+pkgver=2.9.0.r354.2351bcd67b
+pkgrel=1
 pkgdesc="The powerful music player for KDE"
 arch=("x86_64")
 url="http://${pkgname}.kde.org/"
 license=("FDL" "GPL2" "LGPL2.1")
-depends=("kcmutils" "kdnssd" "kirigami2" "knewstuff" "ktexteditor" "libgpod" "liblastfm-qt5" "libmtp" "libmygpo-qt5" "libofa" "libssh" "mariadb" "phonon-qt5" "qt5-webengine" "taglib-extras" "threadweaver")
+depends=("kcmutils" "kdnssd" "kirigami2" "knewstuff" "ktexteditor" "libgpod" "liblastfm-qt5" "libmtp" "libmygpo-qt5" "libofa" "mariadb" "phonon-qt5" "qt5-webengine" "taglib-extras" "threadweaver")
 makedepends=("extra-cmake-modules" "gdk-pixbuf2" "git" "knotifyconfig" "libgpod" "libmtp" "libmygpo-qt5" "loudmouth")
 optdepends=("ifuse: support for Apple iPod Touch and iPhone"
             "loudmouth: backend needed by mp3tunes for syncing")
-_commit="eb9706eaee14e07d894cf2ad442268a6f62d915a"
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/KDE/${pkgname}/archive/${_commit}.tar.gz"
-        "amarok.patch")
-sha256sums=("83e1039a98e8185d3c4c81fcb296f4e35a1e31df2c993df961f8579399a63da4"
-            "3f947cd9b49a4062cebe610592d651c2a7d60277b6350dde4a2756b5d5166b6f")
+_commit="2351bcd67b33d43449283e50b1dbc7de012a2414"
+source=(
+  "${pkgname}-${pkgver}.tar.gz::https://github.com/KDE/${pkgname}/archive/${_commit}.tar.gz"
+  "${pkgname}_mariadb.patch"
+)
+sha256sums=(
+  "6ff5156f1753d3f17a7f61773704b790be626cd5919da19e6c00697f0cb3c5fd"
+  "029937d925993fa0b3cbe460f6d0c8f9fd624fc8dffff22acbbd3da600720dab"
+)
 
 #git describe --long --tags 2> /dev/null | sed "s/^[A-Za-z\.\-]*//;s/\([^-]*-\)g/r\1/;s/-/./g"
 #source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.xz"{,.sig})
 #validpgpkeys=("D81C0CB38EB725EF6691C385BB463350D6EF31EF") # Heiko Becker <heirecka@exherbo.org>
 
 prepare() {
-  mkdir -p "${srcdir}/${pkgname}-${_commit}/build"
-
   cd "${srcdir}/${pkgname}-${_commit}"
-  patch -Np1 -i "${srcdir}/amarok.patch"
+  patch -Np1 -i "${srcdir}/amarok_mariadb.patch"
+
+  mkdir -p "${srcdir}/${pkgname}-${_commit}/build"
 }
 
 build() {
