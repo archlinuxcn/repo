@@ -1,6 +1,6 @@
 # Maintainer: Xuanwo <xuanwo@archlinuxcn.org>
 pkgname=tikv-pd
-pkgver=2.1.2
+pkgver=2.1.3
 pkgrel=1
 pkgdesc='Manage and schedule the TiKV cluster.'
 makedepends=('go' 'make')
@@ -14,7 +14,7 @@ source=(pd-${pkgver}.tar.gz::https://github.com/pingcap/pd/archive/v${pkgver}.ta
         pd-sysusers.conf
         pd-tmpfiles.conf
         pd.toml)
-sha256sums=('3e67bff1942307c07404f6e7bbb02e5b94bfb7352de2e0f9c85afa5a58f1c11b'
+sha256sums=('a7fa5305ac1ce5c4ebef06d39726010a1a0938532074d5068dc4140e03fea848'
             'b03d12f2f8d6eb2e9d654d6258ca39000225cdf1418840f7e35081631bc4d924'
             '5edd250ba9e70a4f8d27581ed658f0fbfeca58ca62429dec12bb5fffc0919b67'
             '15633aaa2d7726375112a1b5af88105878f09c176a542cde6d0e5f0c4eee4495'
@@ -34,13 +34,14 @@ build() {
   export PATH=$GOPATH/bin:$PATH
   export CGO_ENABLED=0
 
+  _LDFLAGS="-X $_gopkgname/server.PDReleaseVersion=$pkgver -X $_gopkgname/server.PDGitBranch=master -X $_gopkgname/server.PDGitHash=v$pkgver"
+
   cd $GOPATH/src/$_gopkgname
 
-  go build -o bin/pd-server cmd/pd-server/main.go
-  go build -o bin/pd-ctl tools/pd-ctl/main.go
-  go build -o bin/pd-tso-bench tools/pd-tso-bench/main.go
-  go build -o bin/pd-recover tools/pd-recover/main.go
+  # Remove all git operations.
+  sed -i '/(shell git/d' Makefile
 
+  LDFLAGS=$_LDFLAGS make build
 }
 
 package() {
