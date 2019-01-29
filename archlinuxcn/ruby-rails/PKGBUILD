@@ -1,6 +1,7 @@
 # Maintainer: a-wing <1@233.email>
 
-meta_list=(
+_meta_list=(
+  'rails'
   'actioncable'
   'actionmailer'
   'actionpack'
@@ -11,17 +12,16 @@ meta_list=(
   'activestorage'
   'activesupport'
   'railties'
-  'rails'
   )
 
 pkgver=5.2.2
 
-for name in ${meta_list[@]}
+for _name in ${_meta_list[@]}
 do
   #echo ruby-${name}
-  pkgname=(${pkgname[@]} ruby-${name})
-  source=(${source[@]} https://rubygems.org/downloads/${name}-$pkgver.gem)
-  noextract=(${noextract[@]} $name-$pkgver.gem)
+  pkgname=(${pkgname[@]} ruby-${_name})
+  source=(${source[@]} https://rubygems.org/downloads/${_name}-$pkgver.gem)
+  noextract=(${noextract[@]} $_name-$pkgver.gem)
 done
 
 pkgrel=7
@@ -31,7 +31,8 @@ url="http://rubyonrails.org"
 license=('MIT')
 depends=('ruby')
 
-md5sums=('d5bbfc41bed79886fedfb3a8075962f5'
+md5sums=('71175f797c9767de404e91b29ad61582'
+         'd5bbfc41bed79886fedfb3a8075962f5'
          '9199d2dfb2621052c52ab46e92a50121'
          'a8925a83bc454bc43d12e5751b5692b7'
          '1e0d8bc1b04342870cb6024493293f30'
@@ -40,8 +41,7 @@ md5sums=('d5bbfc41bed79886fedfb3a8075962f5'
          '7b5b39af64c2b1b2a812661791e3503a'
          'f602245ca45af1ce58b37a0b5bb4666a'
          'bb1f5a2934ff06b31c3eef563db790bc'
-         '5e457d760ef3006645e605ebd30cbc14'
-         '71175f797c9767de404e91b29ad61582')
+         '5e457d760ef3006645e605ebd30cbc14')
 
 packaging() {
   local _gemdir="$(ruby -e'puts Gem.default_dir')"
