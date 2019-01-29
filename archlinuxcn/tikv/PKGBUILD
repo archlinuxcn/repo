@@ -1,6 +1,6 @@
 # Maintainer: Xuanwo <xuanwo@archlinuxcn.org>
 pkgname=tikv
-pkgver=2.1.2
+pkgver=2.1.3
 pkgrel=1
 pkgdesc='Distributed transactional key-value database, originally created to complement TiDB'
 makedepends=('go' 'make' 'rustup' 'awk' 'cmake' 'gcc')
@@ -15,7 +15,7 @@ source=(tikv-${pkgver}.tar.gz::https://github.com/tikv/tikv/archive/v${pkgver}.t
         tikv-sysusers.conf
         tikv-tmpfiles.conf
         tikv.toml)
-sha256sums=('f2094871aa8c66337befef9e723677106d52f736ff2913246081b02725dbce0b'
+sha256sums=('a5d580c8b7b12dec5a6919237bb0475cec27db59d7f3a6f73b9416db27372bb0'
             '870b8eaf83bc0d22b05b0f3a7890660e483cf77bb1d84bc50ad04fb23068cd8c'
             '744b252e29099b0099dc41e30bc3badd33b3d661c7126af8044faa4fc2df8927'
             '935291bac6a216c6f880df9bfaec8900266413bb202ac483e79f291e1f28e9f1'
@@ -28,7 +28,14 @@ prepare() {
 
 build() {
     cd tikv-${pkgver}
-    cargo build --release --features "portable sse no-fail"
+
+    # Remove all git operations.
+    sed -i '/(TIKV_BUILD_GIT_/d' Makefile
+
+    export TIKV_BUILD_GIT_HASH=v$pkgver
+    export TIKV_BUILD_GIT_BRANCH=master
+
+    make release
 }
 
 package() {
