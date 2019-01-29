@@ -14,7 +14,8 @@ HASH="$(curl -sSLf "$SHA256SUMS_URL" |
     awk "\$2 == \"patch-$VERSION.xz\" {print \$1}")"
 
 sed -i \
-    -e "s/pkgver=.*/pkgver=${VERSION}/" \
+    -e "s/^pkgver=.*/pkgver=${VERSION}/" \
+    -e 's/^pkgrel=.*/pkgrel=1/' \
     -e "s/.* # patch$/            '$HASH' # patch/" \
     PKGBUILD
 
