@@ -6,7 +6,7 @@
 # https://github.com/mymedia2/tdesktop
 
 pkgname=telegram-desktop-systemqt-notoemoji
-pkgver=1.5.6
+pkgver=1.5.8
 pkgrel=1
 pkgdesc='Official Telegram Desktop client (with noto emoji)'
 arch=('x86_64')
