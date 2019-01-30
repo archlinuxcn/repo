@@ -1,16 +1,17 @@
-pkgname='tor-browser'
+_appname='tor-browser'
+_language='zh-CN'
 
 post_install() {
 	echo
-	echo "==> ${pkgname} will be extracted to ~/.${pkgname}"
-	echo "==> the first time you run ${pkgname} as your normal user!"
+	echo "==> ${_appname} (${_language}) will be extracted to ~/.${_appname}-${_language,,}"
+	echo "==> the first time you run it as your normal user!"
 	echo "==> Just start it and have fun."
 	echo
 }
 
 post_upgrade() {
 	echo
-	echo "==> The ${pkgname} copy in your home directory will be upgraded at the"
+	echo "==> The ${_appname} (${_language}) copy in your home directory will be upgraded at the"
 	echo "==> first time you run it as your normal user!"
 	echo "==> Just start and have fun."
 	echo
@@ -18,9 +19,9 @@ post_upgrade() {
 
 post_remove() {
 	echo
-	echo "==> You have to remove the tor-brower directory in your home"
+	echo "==> You have to remove the ${_appname} directory in your home"
 	echo "==> directory by hand: As your normal user, do:"
 	echo "==> "
-	echo "==> rm -rf ~/.${pkgname}"
+	echo "==> rm -rf ~/.${_appname}-${_language,,}"
 	echo
 }

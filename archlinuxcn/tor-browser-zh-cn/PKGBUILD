@@ -12,17 +12,17 @@
 # gpg --keyserver hkp://pgp.mit.edu:11371 --recv-keys 0x4E2C6E8793298290
 #
 
-# To port this PKGBUILD to another language of tor-browser you have to
-# change ONLY the variable ${_language} below
+# To port this PKGBUILD to another language of tor-browser you have to change
+# ONLY the variable `${_language}` both below and in `tor-browser.install`
 
 _language='zh-CN'
 
 # This PKGBUILD is based on https://aur.archlinux.org/packages/tor-browser/
 
-_pkgname='tor-browser'
-pkgname="${_pkgname}-${_language,,}"
-pkgver='8.0.4'
-pkgrel='1'
+_appname='tor-browser'
+pkgname="${_appname}-${_language,,}"
+pkgver='8.0.5'
+pkgrel='2'
 pkgdesc="Tor Browser Bundle: anonymous browsing using Firefox and Tor (${_language})"
 url='https://www.torproject.org/projects/torbrowser.html'
 arch=('i686' 'x86_64')
@@ -38,17 +38,17 @@ optdepends=('zenity: simple dialog boxes'
 	'gst-libav: H.264 video'
 	'libpulse: PulseAudio audio driver'
 	'libnotify: Gnome dialog boxes')
-install="${_pkgname}.install"
+install="${_appname}.install"
 
 _archstr=$([[ "${CARCH}" == 'x86_64' ]] && echo -n "${_idstr64}" || echo -n "${_idstr32}")
 
 validpgpkeys=('EF6E286DDA85EA2A4BA7DE684E2C6E8793298290')
 
-source_i686=("https://dist.torproject.org/torbrowser/${pkgver}/${_pkgname}-${_idstr32}-${pkgver}_${_language}.tar.xz"{,.asc})
-source_x86_64=("https://dist.torproject.org/torbrowser/${pkgver}/${_pkgname}-${_idstr64}-${pkgver}_${_language}.tar.xz"{,.asc})
-source=("${_pkgname}.desktop"
-	"${_pkgname}.png"
-	"${_pkgname}.sh")
+source_i686=("https://dist.torproject.org/torbrowser/${pkgver}/${_appname}-${_idstr32}-${pkgver}_${_language}.tar.xz"{,.asc})
+source_x86_64=("https://dist.torproject.org/torbrowser/${pkgver}/${_appname}-${_idstr64}-${pkgver}_${_language}.tar.xz"{,.asc})
+source=("${_appname}.desktop"
+	"${_appname}.png"
+	"${_appname}.sh")
 
 sha256sums=('e9b6620a5683b2df7878d35a087039bf4449eb8648361a12ddbd968d98b59e8b'
             '17fc2f5784d080233aca16e788d62ab6fe3e57cf781b123cfe32767de97d6d3b'
@@ -58,26 +58,26 @@ sha256sums_i686=('SKIP'
 sha256sums_x86_64=('SKIP'
                    'SKIP')
 
-noextract=("${_pkgname}-${_idstr64}-${pkgver}_${_language}.tar.xz"
-	"${_pkgname}-${_idstr32}-${pkgver}_${_language}.tar.xz")
+noextract=("${_appname}-${_idstr64}-${pkgver}_${_language}.tar.xz"
+	"${_appname}-${_idstr32}-${pkgver}_${_language}.tar.xz")
 
 package() {
 
 	cd "${srcdir}"
 
-	sed -i "s/__REPL_LANGUAGE__/${_language}/g"	"${_pkgname}.desktop"
-	sed -i "s/__REPL_NAME__/${pkgname}/g"		"${_pkgname}.desktop"
+	sed -i "s/__REPL_LANGUAGE__/${_language}/g"	"${_appname}.desktop"
+	sed -i "s/__REPL_NAME__/${pkgname}/g"		"${_appname}.desktop"
 
-	sed -i "s/__REPL_NAME__/${pkgname}/g"		"${_pkgname}.sh"
-	sed -i "s/__REPL_VERSION__/${pkgver}/g"		"${_pkgname}.sh"
-	sed -i "s/__REPL_RELEASE__/${pkgrel}/g"		"${_pkgname}.sh"
-	sed -i "s/__REPL_LANGUAGE__/${_language}/g"	"${_pkgname}.sh"
-	sed -i "s/__REPL_ARCH__/${_archstr}/g"		"${_pkgname}.sh"
+	sed -i "s/__REPL_NAME__/${pkgname}/g"		"${_appname}.sh"
+	sed -i "s/__REPL_VERSION__/${pkgver}/g"		"${_appname}.sh"
+	sed -i "s/__REPL_RELEASE__/${pkgrel}/g"		"${_appname}.sh"
+	sed -i "s/__REPL_LANGUAGE__/${_language}/g"	"${_appname}.sh"
+	sed -i "s/__REPL_ARCH__/${_archstr}/g"		"${_appname}.sh"
 
-	install -Dm 644 "${_pkgname}.desktop"	"${pkgdir}/usr/share/applications/${pkgname}.desktop"
-	install -Dm 644 "${_pkgname}.png"	"${pkgdir}/usr/share/pixmaps/${pkgname}.png"
-	install -Dm 755 "${_pkgname}.sh"	"${pkgdir}/usr/bin/${pkgname}"
+	install -Dm 644 "${_appname}.desktop"	"${pkgdir}/usr/share/applications/${pkgname}.desktop"
+	install -Dm 644 "${_appname}.png"	"${pkgdir}/usr/share/pixmaps/${pkgname}.png"
+	install -Dm 755 "${_appname}.sh"	"${pkgdir}/usr/bin/${pkgname}"
 
-	install -Dm 644 "${_pkgname}-${_archstr}-${pkgver}_${_language}.tar.xz" "${pkgdir}/opt/${pkgname}/${_pkgname}-${_archstr}-${pkgver}_${_language}.tar.xz"
+	install -Dm 644 "${_appname}-${_archstr}-${pkgver}_${_language}.tar.xz" "${pkgdir}/opt/${pkgname}/${_appname}-${_archstr}-${pkgver}_${_language}.tar.xz"
 
 }
