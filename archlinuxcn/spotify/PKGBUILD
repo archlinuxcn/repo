@@ -2,11 +2,11 @@
 # Contributor: Eothred <yngve.levinsen@gmail.com>
 
 pkgname=spotify
-pkgver=1.0.96.181
+pkgver=1.0.98.78
 _i386_pkgver=1.0.72.117
-_anotherpkgver=.gf6bc1b6b
+_anotherpkgver=.gb45d2a6b
 _i386_anotherpkgver=.g6bd7cc73
-_amd64_pkgrel=12
+_amd64_pkgrel=10
 _i386_pkgrel=35
 pkgrel=1
 pkgdesc="A proprietary music streaming service"
@@ -23,7 +23,7 @@ sha256sums=('2a9f88dd80a542e0e9cfeea0b823d7cec54b67b42b402c5efee09d333a1820de'
             '989920e9360cadc1a8103b8c04acf0c87cb7911eb9a09dddb0cf4708d6249d34'
             'af54f3b90cac46fa100b3f919a9225d10d847617d24aa9af3d832e7689f482c3'
             '4e8bea31ca27e16cac9c9dcd8f6ec27e1f82b45de86d6fee7a1e77e23f884b92')
-sha256sums_x86_64=('2753635edf06280148a4f7886cc980ebef57d5f4c9d71ab25a782e95b2c8c34e')
+sha256sums_x86_64=('917a025985b2f27d4d7448e8128e93c22e76deff740faf69977dad558b85660a')
 sha256sums_i686=('f5ac29e8374901ce7401825d13471c03bcf6ec8106f8c210c710b0a8d7b22ca9')
 
 source_x86_64=("http://repository.spotify.com/pool/non-free/s/spotify-client/spotify-client_${pkgver}${_anotherpkgver}-${_amd64_pkgrel}_amd64.deb")
