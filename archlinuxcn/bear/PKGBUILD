@@ -3,7 +3,7 @@
 pkgname=bear
 _pkgname=Bear
 pkgver=2.3.13
-pkgrel=1
+pkgrel=2
 pkgdesc="tool to generate compilation database for clang tooling"
 arch=('i686' 'x86_64')
 url="https://github.com/rizsotto/Bear"
@@ -27,7 +27,7 @@ build() {
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_INSTALL_SYSCONFDIR=/etc \
 		-DCMAKE_BUILD_TYPE=plain \
-		-DCMAKE_INSTALL_LIBDIR=/usr/lib \
+		-DCMAKE_INSTALL_LIBDIR=lib \
 		..
 	cmake --build . -- -v
 }
