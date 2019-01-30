@@ -12,7 +12,7 @@
 #
 
 pkgname='tor-browser'
-pkgver='8.0.4'
+pkgver='8.0.5'
 pkgrel='1'
 pkgdesc='Tor Browser Bundle: anonymous browsing using Firefox and Tor (international PKGBUILD)'
 url='https://www.torproject.org/projects/torbrowser.html'
