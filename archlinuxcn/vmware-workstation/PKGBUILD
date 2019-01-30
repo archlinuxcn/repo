@@ -21,7 +21,7 @@ pkgname=('vmware-workstation'
 pkgver=15.0.2
 _buildver=10952284
 _pkgver=${pkgver}_${_buildver}
-pkgrel=2
+pkgrel=3
 arch=(x86_64)
 url='https://www.vmware.com/products/workstation-for-linux.html'
 license=(custom)
@@ -249,7 +249,7 @@ _realpackage() {
 
   install -Dm 644 "$srcdir/pam.d-vmware-authd" "$pkgdir/etc/pam.d/vmware-authd"
 
-  echo -e "vmw_vmci\nvmmon" > "$pkgdir/usr/lib/modules-load.d/vmware.conf"
+  echo -e "vmw_vmci\nvmmon\nvmnet" > "$pkgdir/usr/lib/modules-load.d/vmware.conf"
 
   for service_file in \
     vmware-hostd-certificates.service \
