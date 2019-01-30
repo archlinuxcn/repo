@@ -1,0 +1,13 @@
+=== modified file 'usr/share/byobu/desktop/byobu.desktop'
+--- usr/share/byobu/desktop/byobu.desktop	2018-08-12 14:10:27 +0000
++++ usr/share/byobu/desktop/byobu.desktop	2019-01-24 00:09:41 +0000
+@@ -2,7 +2,7 @@
+ Name=Byobu Terminal
+ Comment=Advanced Command Line and Text Window Manager
+ Icon=/usr/share/byobu/pixmaps/byobu.svg
+-Exec=gnome-terminal --app-id us.kirkland.terminals.byobu --class=us.kirkland.terminals.byobu -e byobu
++Exec=gnome-terminal --name=us.kirkland.terminals.byobu --class=us.kirkland.terminals.byobu -- byobu
+ Type=Application
+ Categories=GNOME;GTK;System;Utility;TerminalEmulator;
+ StartupWMClass=us.kirkland.terminals.byobu
+
