@@ -11,7 +11,7 @@ pkgname=('virtualbox-svn'
          'virtualbox-guest-utils-nox-svn'
          'virtualbox-ext-vnc-svn')
 pkgver=77065
-pkgrel=2
+pkgrel=3
 _vboxsf_commit='9451f61e6787e95aa51e42b6381db6b059bc49da'
 arch=('x86_64')
 url='http://virtualbox.org'
@@ -174,50 +174,50 @@ package_virtualbox-svn() {
     cd "VirtualBox/out/linux.$BUILD_PLATFORM_ARCH/release/bin"
 
     # binaries
-    install -dm755 "$pkgdir/usr/bin"
-    install -m755 VBox.sh "$pkgdir/usr/bin/VBox"
+    install -dm0755 "$pkgdir/usr/bin"
+    install -m0755 VBox.sh "$pkgdir/usr/bin/VBox"
     for i in VBoxHeadless VBoxManage VBoxSDL VirtualBox vboxwebsrv VBoxBalloonCtrl; do
         ln -sf VBox "$pkgdir/usr/bin/$i"
         ln -sf VBox "$pkgdir/usr/bin/${i,,}"
     done
-    install -m755 VBoxTunctl "$pkgdir/usr/bin"
-    install -m755 rdesktop-vrdp "$pkgdir/usr/bin"
+    install -m0755 VBoxTunctl "$pkgdir/usr/bin"
+    install -m0755 rdesktop-vrdp "$pkgdir/usr/bin"
 
     # libraries
-    install -dm755 "$pkgdir/usr/lib/virtualbox"
-    install -m755 *.so "$pkgdir/usr/lib/virtualbox"
-    install -m644 *.rc *.r0 VBoxEFI*.fd "$pkgdir/usr/lib/virtualbox"
+    install -dm0755 "$pkgdir/usr/lib/virtualbox"
+    install -m0755 *.so "$pkgdir/usr/lib/virtualbox"
+    install -m0644 *.rc *.r0 VBoxEFI*.fd "$pkgdir/usr/lib/virtualbox"
     ## setuid root binaries
-    install -m4755 VirtualBox VBoxSDL VBoxHeadless VBoxNetDHCP VBoxNetAdpCtl VBoxNetNAT -t "$pkgdir/usr/lib/virtualbox"
+    install -m4755 VBoxSDL VirtualBoxVM VBoxHeadless VBoxNetDHCP VBoxNetAdpCtl VBoxNetNAT -t "$pkgdir/usr/lib/virtualbox"
     ## other binaries
-    install -m755 VBoxManage VBoxSVC VBoxExtPackHelperApp VBoxXPCOMIPCD VBoxTestOGL VBoxBalloonCtrl vboxwebsrv webtest -t "$pkgdir/usr/lib/virtualbox"
+    install -m0755 VirtualBox VBoxManage VBoxSVC VBoxExtPackHelperApp VBoxXPCOMIPCD VBoxTestOGL VBoxBalloonCtrl vboxwebsrv webtest -t "$pkgdir/usr/lib/virtualbox"
 
     # components
-    install -dm755 "$pkgdir/usr/lib/virtualbox/components"
-    install -m755 components/* -t "$pkgdir/usr/lib/virtualbox/components"
+    install -dm0755 "$pkgdir/usr/lib/virtualbox/components"
+    install -m0755 components/* -t "$pkgdir/usr/lib/virtualbox/components"
 
     # extensions packs
     ## as virtualbox install itself stuff in this directory, move it to /var and
     ## trick it with a symlink
     ## FIXME: trick is disabled for now
-    #install -dm755 "$pkgdir/var/lib/virtualbox/extensions"
-    #install -dm755 "$pkgdir/usr/share/virtualbox/extensions"
+    #install -dm0755 "$pkgdir/var/lib/virtualbox/extensions"
+    #install -dm0755 "$pkgdir/usr/share/virtualbox/extensions"
     #ln -s ../../../var/lib/virtualbox/extensions "$pkgdir/usr/lib/virtualbox/ExtensionPacks"
-    install -dm755 "$pkgdir/usr/lib/virtualbox/ExtensionPacks"
+    install -dm0755 "$pkgdir/usr/lib/virtualbox/ExtensionPacks"
 
     # languages
-    install -dm755 "$pkgdir/usr/share/virtualbox/nls"
-    install -m755 nls/*.qm -t "$pkgdir/usr/share/virtualbox/nls"
+    install -dm0755 "$pkgdir/usr/share/virtualbox/nls"
+    install -m0755 nls/*.qm -t "$pkgdir/usr/share/virtualbox/nls"
 
     # rdesktop keymaps
-    install -dm755 "$pkgdir/usr/share/virtualbox/rdesktop-vrdp-keymaps"
-    install -m644 rdesktop-vrdp-keymaps/* "$pkgdir/usr/share/virtualbox/rdesktop-vrdp-keymaps"
+    install -dm0755 "$pkgdir/usr/share/virtualbox/rdesktop-vrdp-keymaps"
+    install -m0644 rdesktop-vrdp-keymaps/* "$pkgdir/usr/share/virtualbox/rdesktop-vrdp-keymaps"
 
     # useless scripts
-    install -m755 VBoxCreateUSBNode.sh VBoxSysInfo.sh -t "$pkgdir/usr/share/virtualbox"
+    install -m0755 VBoxCreateUSBNode.sh VBoxSysInfo.sh -t "$pkgdir/usr/share/virtualbox"
 
     # icons
-    install -Dm644 VBox.png "$pkgdir/usr/share/pixmaps/VBox.png"
+    install -Dm0644 VBox.png "$pkgdir/usr/share/pixmaps/VBox.png"
 
     pushd icons >/dev/null
     for i in *; do
@@ -227,26 +227,26 @@ package_virtualbox-svn() {
     popd >/dev/null
 
     #desktop
-    install -Dm644 virtualbox.desktop "$pkgdir/usr/share/applications/virtualbox.desktop"
-    install -Dm644 virtualbox.xml "$pkgdir/usr/share/mime/packages/virtualbox.xml"
+    install -Dm0644 virtualbox.desktop "$pkgdir/usr/share/applications/virtualbox.desktop"
+    install -Dm0644 virtualbox.xml "$pkgdir/usr/share/mime/packages/virtualbox.xml"
 
     #install configuration
-    install -dm755 "$pkgdir/etc/vbox"
+    install -dm0755 "$pkgdir/etc/vbox"
     echo 'INSTALL_DIR=/usr/lib/virtualbox' > "$pkgdir/etc/vbox/vbox.cfg"
 
     # back to srcdir
     cd "$srcdir"
 
     #licence
-    install -Dm644 VirtualBox/COPYING "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+    install -Dm0644 VirtualBox/COPYING "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 
     # install systemd stuff
-    install -Dm644 60-vboxdrv.rules "$pkgdir/usr/lib/udev/rules.d/60-vboxdrv.rules"
-    install -Dm644 vboxweb.service "$pkgdir/usr/lib/systemd/system/vboxweb.service"
-    install -Dm644 virtualbox.sysusers "$pkgdir/usr/lib/sysusers.d/virtualbox.conf"
+    install -Dm0644 60-vboxdrv.rules "$pkgdir/usr/lib/udev/rules.d/60-vboxdrv.rules"
+    install -Dm0644 vboxweb.service "$pkgdir/usr/lib/systemd/system/vboxweb.service"
+    install -Dm0644 virtualbox.sysusers "$pkgdir/usr/lib/sysusers.d/virtualbox.conf"
 
     # install module reloading shortcut (with a symlink with default helper)
-    install -Dm755 vboxreload "$pkgdir/usr/bin"
+    install -Dm0755 vboxreload "$pkgdir/usr/bin"
     ln -s vboxreload "$pkgdir/usr/bin/rcvboxdrv"
 }
 
@@ -256,12 +256,12 @@ package_virtualbox-sdk-svn() {
     provides=('virtualbox-sdk')
     conflicts=('virtualbox-sdk')
 
-    install -dm755 "$pkgdir/usr/lib/virtualbox"
+    install -dm0755 "$pkgdir/usr/lib/virtualbox"
 
     source "VirtualBox/env.sh"
     cd "VirtualBox/out/linux.$BUILD_PLATFORM_ARCH/release/bin"
 
-    install -Dm755 vboxshell.py "$pkgdir/usr/lib/virtualbox/vboxshell.py"
+    install -Dm0755 vboxshell.py "$pkgdir/usr/lib/virtualbox/vboxshell.py"
     # python sdk
     pushd sdk/installer
     VBOX_INSTALL_PATH="/usr/lib/virtualbox" python vboxapisetup.py install --root "$pkgdir"
@@ -269,7 +269,7 @@ package_virtualbox-sdk-svn() {
     cp -r sdk "$pkgdir/usr/lib/virtualbox"
     rm -r "$pkgdir/usr/lib/virtualbox/sdk/installer"
     # licence
-    install -Dm644 "$srcdir/VirtualBox/COPYING" \
+    install -Dm0644 "$srcdir/VirtualBox/COPYING" \
         "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
@@ -286,20 +286,20 @@ package_virtualbox-host-dkms-svn() {
                 'linux-zen-headers: build modules against ZEN kernel')
     install=virtualbox-host-dkms.install
 
-    install -dm755 "$pkgdir/usr/src"
+    install -dm0755 "$pkgdir/usr/src"
     source "VirtualBox/env.sh"
     cd "VirtualBox/out/linux.$BUILD_PLATFORM_ARCH/release/bin"
     cp -r src "$pkgdir/usr/src/vboxhost-svn_OSE"
     # licence
-    install -Dm644 "$srcdir/VirtualBox/COPYING" \
+    install -Dm0644 "$srcdir/VirtualBox/COPYING" \
         "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
     # module loading
     local _p="$pkgdir/usr/lib/modules-load.d/virtualbox-host-dkms.conf"
-    install -Dm644 /dev/null "$_p"
+    install -Dm0644 /dev/null "$_p"
     printf "vboxdrv\nvboxpci\nvboxnetadp\nvboxnetflt\n" > "$_p"
     # starting vbox 5.1, dkms.conf file was dropped
     local _p="$pkgdir/usr/src/vboxhost-svn_OSE/dkms.conf"
-    install -Dm644 "$srcdir/virtualbox-host-dkms.conf" "$_p"
+    install -Dm0644 "$srcdir/virtualbox-host-dkms.conf" "$_p"
     sed -i "s,@VERSION@,svn," "$_p"
 }
 
@@ -316,20 +316,20 @@ package_virtualbox-guest-dkms-svn() {
                 'linux-zen-headers: build modules against ZEN kernel')
     install=virtualbox-guest-dkms.install
 
-    install -dm755 "$pkgdir/usr/src"
+    install -dm0755 "$pkgdir/usr/src"
     source "VirtualBox/env.sh"
     cd "VirtualBox/out/linux.$BUILD_PLATFORM_ARCH/release/bin/additions"
     cp -r src "$pkgdir/usr/src/vboxguest-svn_OSE"
     # licence
-    install -Dm644 "$srcdir/VirtualBox/COPYING" \
+    install -Dm0644 "$srcdir/VirtualBox/COPYING" \
         "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
     # module loading
     local _p="$pkgdir/usr/lib/modules-load.d/virtualbox-guest-dkms.conf"
-    install -Dm644 /dev/null "$_p"
+    install -Dm0644 /dev/null "$_p"
     printf "vboxguest\nvboxsf\nvboxvideo\n" > "$_p"
     # starting vbox 5.1, dkms.conf file was dropped
     local _p="$pkgdir/usr/src/vboxguest-svn_OSE/dkms.conf"
-    install -Dm644 "$srcdir/virtualbox-guest-dkms.conf" "$_p"
+    install -Dm0644 "$srcdir/virtualbox-guest-dkms.conf" "$_p"
     sed -i "s,@VERSION@,svn," "$_p"
 
     # vboxsf module for Linux 4.16 and later
@@ -338,7 +338,7 @@ package_virtualbox-guest-dkms-svn() {
     rm -rf "$pkgdir/usr/src/vboxsf-svn_OSE/vboxsf/.git"
     echo "obj-m = vboxsf/" >"$pkgdir/usr/src/vboxsf-svn_OSE/Makefile"
     local _p="$pkgdir/usr/src/vboxsf-svn_OSE/dkms.conf"
-    install -Dm644 "$srcdir/virtualbox-vboxsf-dkms.conf" "$_p"
+    install -Dm0644 "$srcdir/virtualbox-vboxsf-dkms.conf" "$_p"
     sed -i "s,@VERSION@,svn," "$_p"
 }
 
@@ -354,23 +354,23 @@ package_virtualbox-guest-utils-svn() {
     source "VirtualBox/env.sh"
     pushd "VirtualBox/out/linux.$BUILD_PLATFORM_ARCH/release/bin/additions"
     install -d "$pkgdir/usr/bin"
-    install -m755 VBoxClient VBoxControl VBoxService "$srcdir/mount.vboxsf" "$pkgdir/usr/bin"
-    install -Dm755 mount.vboxsf "$pkgdir/usr/lib/virtualbox/mount.vboxsf"
-    install -m755 -D "$srcdir"/VirtualBox/src/VBox/Additions/x11/Installer/98vboxadd-xclient \
+    install -m0755 VBoxClient VBoxControl VBoxService "$srcdir/mount.vboxsf" "$pkgdir/usr/bin"
+    install -Dm0755 mount.vboxsf "$pkgdir/usr/lib/virtualbox/mount.vboxsf"
+    install -m0755 -D "$srcdir"/VirtualBox/src/VBox/Additions/x11/Installer/98vboxadd-xclient \
         "$pkgdir"/usr/bin/VBoxClient-all
-    install -m644 -D "$srcdir"/VirtualBox/src/VBox/Additions/x11/Installer/vboxclient.desktop \
+    install -m0644 -D "$srcdir"/VirtualBox/src/VBox/Additions/x11/Installer/vboxclient.desktop \
         "$pkgdir"/etc/xdg/autostart/vboxclient.desktop
     install -d "$pkgdir/usr/lib/xorg/modules/dri"
-    install -m755 VBoxOGL*.so "$pkgdir/usr/lib"
+    install -m0755 VBoxOGL*.so "$pkgdir/usr/lib"
     ln -s /usr/lib/VBoxOGL.so "$pkgdir/usr/lib/xorg/modules/dri/vboxvideo_dri.so"
-    install -m755 -D pam_vbox.so "$pkgdir/usr/lib/security/pam_vbox.so"
+    install -m0755 -D pam_vbox.so "$pkgdir/usr/lib/security/pam_vbox.so"
     popd
     # systemd stuff
-    install -Dm644 60-vboxguest.rules "$pkgdir/usr/lib/udev/rules.d/60-vboxguest.rules"
-    install -Dm644 vboxservice.service "$pkgdir/usr/lib/systemd/system/vboxservice.service"
-    install -Dm644 virtualbox-guest-utils.sysusers "$pkgdir/usr/lib/sysusers.d/virtualbox-guest-utils.conf"
+    install -Dm0644 60-vboxguest.rules "$pkgdir/usr/lib/udev/rules.d/60-vboxguest.rules"
+    install -Dm0644 vboxservice.service "$pkgdir/usr/lib/systemd/system/vboxservice.service"
+    install -Dm0644 virtualbox-guest-utils.sysusers "$pkgdir/usr/lib/sysusers.d/virtualbox-guest-utils.conf"
     # licence
-    install -Dm644 VirtualBox/COPYING "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+    install -Dm0644 VirtualBox/COPYING "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
 package_virtualbox-guest-utils-nox-svn() {
@@ -382,16 +382,16 @@ package_virtualbox-guest-utils-nox-svn() {
     source "VirtualBox/env.sh"
     pushd "VirtualBox/out/linux.$BUILD_PLATFORM_ARCH/release/bin/additions"
     install -d "$pkgdir/usr/bin"
-    install -m755 VBoxControl VBoxService "$srcdir/mount.vboxsf" "$pkgdir/usr/bin"
-    install -Dm755 mount.vboxsf "$pkgdir/usr/lib/virtualbox/mount.vboxsf"
-    install -m755 -D pam_vbox.so "$pkgdir/usr/lib/security/pam_vbox.so"
+    install -m0755 VBoxControl VBoxService "$srcdir/mount.vboxsf" "$pkgdir/usr/bin"
+    install -Dm0755 mount.vboxsf "$pkgdir/usr/lib/virtualbox/mount.vboxsf"
+    install -m0755 -D pam_vbox.so "$pkgdir/usr/lib/security/pam_vbox.so"
     popd
     # systemd stuff
-    install -Dm644 60-vboxguest.rules "$pkgdir/usr/lib/udev/rules.d/60-vboxguest.rules"
-    install -Dm644 vboxservice-nox.service "$pkgdir/usr/lib/systemd/system/vboxservice.service"
-    install -Dm644 virtualbox-guest-utils.sysusers "$pkgdir/usr/lib/sysusers.d/virtualbox-guest-utils.conf"
+    install -Dm0644 60-vboxguest.rules "$pkgdir/usr/lib/udev/rules.d/60-vboxguest.rules"
+    install -Dm0644 vboxservice-nox.service "$pkgdir/usr/lib/systemd/system/vboxservice.service"
+    install -Dm0644 virtualbox-guest-utils.sysusers "$pkgdir/usr/lib/sysusers.d/virtualbox-guest-utils.conf"
     # licence
-    install -Dm644 "$srcdir/VirtualBox/COPYING" \
+    install -Dm0644 "$srcdir/VirtualBox/COPYING" \
         "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
@@ -405,9 +405,9 @@ package_virtualbox-ext-vnc-svn() {
 
     source "VirtualBox/env.sh"
     cd "VirtualBox/out/linux.$BUILD_PLATFORM_ARCH/release/packages"
-    install -Dm644 VNC-*.vbox-extpack "$pkgdir/usr/share/virtualbox/extensions/VNC-svn.vbox-extpack"
+    install -Dm0644 VNC-*.vbox-extpack "$pkgdir/usr/share/virtualbox/extensions/VNC-svn.vbox-extpack"
     # licence
-    install -Dm644 "$srcdir/VirtualBox/COPYING" \
+    install -Dm0644 "$srcdir/VirtualBox/COPYING" \
         "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
