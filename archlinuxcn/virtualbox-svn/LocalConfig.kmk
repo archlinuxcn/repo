@@ -25,8 +25,12 @@ VBOX_GCC_WARN =
 # fix gsoap missing zlib include and produce errors with --as-needed
 VBOX_GSOAP_CXX_LIBS := gsoapssl++ z
 
-# use system xorg
+# use system xorg and gl headers
 VBOX_USE_SYSTEM_XORG_HEADERS = 1
+VBOX_USE_SYSTEM_GL_HEADERS = 1
 
 # no update request. update are handled via pacman
 VBOX_WITH_UPDATE_REQUEST := 0
+
+# build shared library
+VBOX_GUI_WITH_SHARED_LIBRARY = 1
