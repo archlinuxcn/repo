@@ -10,8 +10,8 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=chromium-vaapi
-pkgver=71.0.3578.98
-pkgrel=3
+pkgver=72.0.3626.81
+pkgrel=1
 _launcher_ver=6
 pkgdesc="Chromium with VA-API support to enable hardware acceleration"
 arch=('x86_64')
@@ -23,7 +23,7 @@ depends=('gtk3' 'nss' 'alsa-lib' 'xdg-utils' 'libxss' 'libcups' 'libgcrypt'
 provides=('chromium')
 conflicts=('chromium')
 makedepends=('python' 'python2' 'gperf' 'yasm' 'mesa' 'ninja' 'nodejs' 'git'
-             'clang' 'lld' 'gn')
+             'clang' 'lld' 'gn' 'java-runtime-headless')
 optdepends=('pepper-flash: support for Flash content'
             'kdialog: needed for file dialogs in KDE'
             'gnome-keyring: for storing passwords in GNOME keyring'
@@ -34,22 +34,18 @@ optdepends=('pepper-flash: support for Flash content'
 install=chromium.install
 source=(https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$pkgver.tar.xz
         chromium-launcher-$_launcher_ver.tar.gz::https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver.tar.gz
-        fix-nav-preload-with-third-party-cookie-blocking.patch
-        chromium-harfbuzz-r0.patch
         chromium-system-icu.patch
+        chromium-webrtc-missing-header.patch
         chromium-widevine.patch
         chromium-skia-harmony.patch
-        cfi-vaapi-fix.patch
         chromium-vaapi-r21.patch)
-sha256sums=('1c56a9e30825774c83d568d194e9585625c6e90f81ee0ef09760fcedc86b9d45'
+sha256sums=('dfe89fe389008e6d2098099948d10774989d2f3e8dca6ace78ea4ec636dd8006'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
-            'd2c497f3400baad7d380305f4705fd1e5b9f70a8460384490a1bb78e1c2b0f23'
-            '1b370d49c43e88acfe7c0b1f9517047e927f3407bd80b4a48bba32c001f80136'
-            'c4f2d1bed9034c02b8806f00c2e8165df24de467803855904bff709ceaf11af5'
+            'e2d284311f49c529ea45083438a768db390bde52949995534034d2a814beab89'
+            '63cbed7d7af327c17878a2066c303f106ff08636372721845131f7ff13d87b44'
             'd081f2ef8793544685aad35dea75a7e6264a2cb987ff3541e6377f4a3650a28b'
-            'feca54ab09ac0fc9d0626770a6b899a6ac5a12173c7d0c1005bc3964ec83e7b3'
-            'adf301b50b5a03c98b7602c17e1f34e37260c07c88bcb7e1661122af61f50e23'
-            '7985b5b6820300beeb119b601bb9fe3d2a662daf5dc90619a0f125ea84907ce5')
+            '5887f78b55c4ecbbcba5930f3f0bb7bc0117c2a41c2f761805fcf7f46f1ca2b3'
+            'f3fffc4c053077b0a2cb584c42882b0d38473bb2762e2daf86bbacc2fe0a7f77')
 
 # Possible replacements are listed in build/linux/unbundle/replace_gn_files.py
 # Keys are the names in the above script; values are the dependencies in Arch
@@ -99,17 +95,14 @@ prepare() {
     third_party/blink/renderer/core/xml/parser/xml_document_parser.cc \
     third_party/libxml/chromium/libxml_utils.cc
 
-  # https://crbug.com/913220
-  patch -Np1 -i ../fix-nav-preload-with-third-party-cookie-blocking.patch
-
   # Load Widevine CDM if available
   patch -Np1 -i ../chromium-widevine.patch
 
   # https://crbug.com/skia/6663#c10
-  patch -Np4 -i ../chromium-skia-harmony.patch
+  patch -Np0 -i ../chromium-skia-harmony.patch
 
-  # Fixes from Gentoo
-  patch -Np1 -i ../chromium-harfbuzz-r0.patch
+  # https://webrtc.googlesource.com/src.git/+/3e70781361ed
+  patch -Np0 -i ../chromium-webrtc-missing-header.patch
 
   # https://bugs.gentoo.org/661880#c21
   patch -Np1 -i ../chromium-system-icu.patch
@@ -127,7 +120,6 @@ prepare() {
   ln -s /usr/bin/node third_party/node/linux/node-linux-x64/bin/
 
   msg2 'Applying VA-API patches'
-  # patch -Np1 -i ../cfi-vaapi-fix.patch
   patch -Np1 -i ../chromium-vaapi-r21.patch
 
   # Remove bundled libraries for which we will use the system copies; this

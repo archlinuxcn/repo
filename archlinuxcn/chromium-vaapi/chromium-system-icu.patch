@@ -1,7 +1,7 @@
-diff --git a/third_party/blink/renderer/platform/text/character_property_data_generator.h b/third_party/blink/renderer/platform/text/character_property_data_generator.h
+diff --git a/third_party/blink/renderer/platform/text/character_property_data.h b/third_party/blink/renderer/platform/text/character_property_data.h
 index 28fb6a9..bb4dbd7 100644
---- a/third_party/blink/renderer/platform/text/character_property_data_generator.h
-+++ b/third_party/blink/renderer/platform/text/character_property_data_generator.h
+--- a/third_party/blink/renderer/platform/text/character_property_data.h
++++ b/third_party/blink/renderer/platform/text/character_property_data.h
 @@ -244,10 +244,12 @@ static const UChar32 kIsHangulRanges[] = {
      0xD7B0, 0xD7FF,
      // Halfwidth Hangul Jamo
@@ -15,5 +15,5 @@ index 28fb6a9..bb4dbd7 100644
 +  0xFFDC,
 +};
  
- }  // namespace blink
- 
+ #if !defined(USING_SYSTEM_ICU)
+ // Freezed trie tree, see character_property_data_generator.cc.
