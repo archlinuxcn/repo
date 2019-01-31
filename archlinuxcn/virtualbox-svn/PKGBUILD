@@ -10,8 +10,8 @@ pkgname=('virtualbox-svn'
          'virtualbox-guest-utils-svn'
          'virtualbox-guest-utils-nox-svn'
          'virtualbox-ext-vnc-svn')
-pkgver=76342
-pkgrel=1
+pkgver=77065
+pkgrel=2
 _vboxsf_commit='9451f61e6787e95aa51e42b6381db6b059bc49da'
 arch=('x86_64')
 url='http://virtualbox.org'
@@ -76,7 +76,6 @@ source=("VirtualBox::svn+http://www.virtualbox.org/svn/vbox/trunk"
         '006-rdesktop-vrdp-keymap-path.patch'
         '008-no-vboxvideo.patch'
         '009-include-path.patch'
-        '010-qt-5.11.patch'
         '011-python-3-7.patch'
         '012-vbglR3GuestCtrlDetectPeekGetCancelSupport.patch'
         # The following patch and mount.vboxsf wrapper should be removed
@@ -102,7 +101,6 @@ sha256sums=('SKIP'
             '13c6ca9be0f91582445fd2a14a8c58a0625a15d9cb98cb6e8c2736d77ea976ab'
             '8b7f241107863f82a5b0ae336aead0b3366a40103ff72dbebf33f54b512a0cbc'
             '1acc7014bcb3d9ca6da29eed813c3d6e91a688c43f9d93802fd4e3814f67ace4'
-            'c6ef35e6893d557c7c2269ff79bc299fe9058cfb2c933a7efdc7a8a7b6d9c5da'
             '55224cb74b54b331d691f171efc0d4c058a14f738551f1d8f559146c2908635d'
             '06485dce54a5f21b85f4360db884d98c1ab091d3f2535881ec9fcd82feb06b7e'
             'a784f3cc24652a16385cc63abac6c5178932ca5f3861be7650631b7dafa753a4'
@@ -131,12 +129,6 @@ prepare() {
 
     msg2 'Use our CFLAGS'
     echo "VBOX_GCC_OPT=$CXXFLAGS" >> LocalConfig.kmk
-
-    msg2 'Use system GL headers'
-    echo 'VBOX_USE_SYSTEM_GL_HEADERS=true' >> LocalConfig.kmk
-
-    msg2 'Remove gcc version censorship'
-    sed -i 's/^check_gcc$/#check_gcc/' configure
 }
 
 build() {
@@ -156,7 +148,7 @@ build() {
     kmk
 
     msg2 'Build rdesktop-vrdp'
-    kmk -C src/VBox/RDP/client-1.8.3
+    kmk -C src/VBox/RDP/client-1.8.4
 
     msg2 'Build VNC extension pack'
     kmk -C src/VBox/ExtPacks/VNC packing
@@ -167,7 +159,7 @@ package_virtualbox-svn() {
     depends=('glibc' 'openssl' 'curl' 'gcc-libs' 'libpng' 'python' 'sdl'
              'libvpx' 'libxml2' 'procps-ng' 'shared-mime-info' 'zlib'
              'libxcursor' 'libxinerama' 'libx11' 'libxext' 'libxmu' 'libxt'
-             'qt5-base' 'qt5-x11extras' 'VIRTUALBOX-HOST-MODULES-SVN')
+             'opus' 'desktop-file-utils' 'hicolor-icon-theme' 'qt5-base' 'qt5-x11extras' 'VIRTUALBOX-HOST-MODULES-SVN')
     optdepends=('vde2: Virtual Distributed Ethernet support'
                 'virtualbox-guest-iso: Guest Additions CD image'
                 'virtualbox-ext-vnc: VNC server support'
@@ -353,7 +345,7 @@ package_virtualbox-guest-dkms-svn() {
 package_virtualbox-guest-utils-svn() {
     pkgdesc='VirtualBox Guest userspace utilities'
     depends=('glibc' 'pam' 'libx11' 'libxcomposite'
-             'libxdamage' 'libxext' 'libxfixes' 'libxmu' 'libxt' 'xorg-xrandr'
+             'libxdamage' 'libxrandr' 'libxext' 'libxfixes' 'libxmu' 'libxt' 'xorg-xrandr'
              'VIRTUALBOX-GUEST-MODULES-SVN')
     replaces=('virtualbox-archlinux-additions' 'virtualbox-guest-additions')
     provides=('virtualbox-guest-utils')
