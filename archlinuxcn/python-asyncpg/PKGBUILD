@@ -1,0 +1,24 @@
+_pkgname=asyncpg
+pkgname=python-asyncpg
+pkgver=0.18.3
+pkgrel=1
+pkgdesc="An asyncio PosgtreSQL driver"
+arch=('any')
+url="https://github.com/MagicStack/asyncpg"
+license=('Apache')
+depends=('python')
+_name=${pkgname#python-}
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_pkgname}-${pkgver}.tar.gz")
+md5sums=('a660b4f5b7f774341d98aae362294c97')
+
+build() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  LANG=en_US.UTF-8 python3 setup.py build
+}
+
+package() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  LANG=en_US.UTF-8 python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+}
+
+# vim:set sw=2 et:
