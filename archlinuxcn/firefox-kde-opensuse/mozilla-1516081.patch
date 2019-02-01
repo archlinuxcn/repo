@@ -23,10 +23,10 @@ diff -up firefox-64.0/build/moz.configure/toolchain.configure.1516081 firefox-64
 diff -up firefox-64.0/toolkit/components/terminator/nsTerminator.cpp.1516081 firefox-64.0/toolkit/components/terminator/nsTerminator.cpp
 --- firefox-64.0/toolkit/components/terminator/nsTerminator.cpp.1516081	2019-01-03 15:30:08.207368056 +0100
 +++ firefox-64.0/toolkit/components/terminator/nsTerminator.cpp	2019-01-03 15:31:33.445034029 +0100
-@@ -441,6 +441,12 @@ nsTerminator::StartWatchdog()
+@@ -419,6 +419,12 @@
      }
    }
- # endif
+ #endif
 +  // Disable watchdog for PGO train builds - writting profile information at
 +  // exit may take time and it is better to make build hang rather than
 +  // silently produce poorly performing binary.
