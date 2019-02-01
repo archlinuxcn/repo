@@ -11,7 +11,7 @@
 
 pkgname=chromium-vaapi
 pkgver=72.0.3626.81
-pkgrel=1
+pkgrel=2
 _launcher_ver=6
 pkgdesc="Chromium with VA-API support to enable hardware acceleration"
 arch=('x86_64')
@@ -38,14 +38,14 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-webrtc-missing-header.patch
         chromium-widevine.patch
         chromium-skia-harmony.patch
-        chromium-vaapi-r21.patch)
+        enable-vaapi.patch)
 sha256sums=('dfe89fe389008e6d2098099948d10774989d2f3e8dca6ace78ea4ec636dd8006'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
             'e2d284311f49c529ea45083438a768db390bde52949995534034d2a814beab89'
             '63cbed7d7af327c17878a2066c303f106ff08636372721845131f7ff13d87b44'
             'd081f2ef8793544685aad35dea75a7e6264a2cb987ff3541e6377f4a3650a28b'
             '5887f78b55c4ecbbcba5930f3f0bb7bc0117c2a41c2f761805fcf7f46f1ca2b3'
-            'f3fffc4c053077b0a2cb584c42882b0d38473bb2762e2daf86bbacc2fe0a7f77')
+            '561151f381db44908ab5649f3579049e4cbce04cbed76e32d767b156bf83944d')
 
 # Possible replacements are listed in build/linux/unbundle/replace_gn_files.py
 # Keys are the names in the above script; values are the dependencies in Arch
@@ -120,7 +120,7 @@ prepare() {
   ln -s /usr/bin/node third_party/node/linux/node-linux-x64/bin/
 
   msg2 'Applying VA-API patches'
-  patch -Np1 -i ../chromium-vaapi-r21.patch
+  patch -Np1 -i ../enable-vaapi.patch
 
   # Remove bundled libraries for which we will use the system copies; this
   # *should* do what the remove_bundled_libraries.py script does, with the
