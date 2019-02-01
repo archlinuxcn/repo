@@ -1,0 +1,88 @@
+pkgbase = webkitgtk
+	pkgdesc = Legacy Web content engine
+	pkgver = 2.4.11
+	pkgrel = 12
+	url = https://webkitgtk.org/
+	install = webkitgtk.install
+	arch = i686
+	arch = x86_64
+	license = custom
+	makedepends = gtk3
+	makedepends = gtk2
+	makedepends = gperf
+	makedepends = gobject-introspection
+	makedepends = python2
+	makedepends = mesa
+	makedepends = ruby
+	depends = libxt
+	depends = libxslt
+	depends = sqlite
+	depends = libsoup
+	depends = enchant>=2.2
+	depends = libgl
+	depends = geoclue2
+	depends = gst-plugins-base-libs
+	depends = libsecret
+	depends = libwebp
+	depends = harfbuzz-icu
+	depends = icu>=61
+	optdepends = gst-plugins-base: free media decoding
+	optdepends = gst-plugins-good: media decoding
+	optdepends = gst-libav: nonfree media decoding
+	options = !emptydirs
+	source = https://webkitgtk.org/releases/webkitgtk-2.4.11.tar.xz
+	source = webkitgtk-2.4.9-abs.patch
+	source = icu59.patch
+	source = enchant-2.x.patch
+	source = pkgconfig-enchant-2.patch
+	sha256sums = 588aea051bfbacced27fdfe0335a957dca839ebe36aa548df39c7bbafdb65bf7
+	sha256sums = ec294bbb5588a1802a68e3615c6718486b22f922645c5fef686d3d103014bf70
+	sha256sums = a1118b3c9317806438c1e2f46f17e15556aae34665f739ca72b94b10b16ae422
+	sha256sums = 8db282f3b7f0e21ff51121c2579466c3194475a20d35c4fbd0e53f35b5639919
+	sha256sums = df8284004f25d189184aab1009df696c915212e0e439a555dbd0dbec06111e2e
+
+pkgname = webkitgtk
+	pkgdesc = Legacy Web content engine for GTK+ 3
+	depends = libxt
+	depends = libxslt
+	depends = sqlite
+	depends = libsoup
+	depends = enchant>=2.2
+	depends = libgl
+	depends = geoclue2
+	depends = gst-plugins-base-libs
+	depends = libsecret
+	depends = libwebp
+	depends = harfbuzz-icu
+	depends = icu>=61
+	depends = gtk3
+	optdepends = gst-plugins-base: free media decoding
+	optdepends = gst-plugins-good: media decoding
+	optdepends = gst-libav: nonfree media decoding
+	optdepends = gtk2: Netscape plugin support
+	provides = webkitgtk3=2.4.11
+	provides = libwebkit3=2.4.11
+	conflicts = webkitgtk3
+	conflicts = libwebkit3
+	replaces = webkitgtk3
+	replaces = libwebkit3
+
+pkgname = webkitgtk2
+	pkgdesc = Legacy Web content engine for GTK+ 2
+	depends = libxt
+	depends = libxslt
+	depends = sqlite
+	depends = libsoup
+	depends = enchant>=2.2
+	depends = libgl
+	depends = geoclue2
+	depends = gst-plugins-base-libs
+	depends = libsecret
+	depends = libwebp
+	depends = harfbuzz-icu
+	depends = icu>=61
+	depends = gtk2
+	provides = libwebkit=2.4.11
+	conflicts = libwebkit
+	replaces = libwebkit
+

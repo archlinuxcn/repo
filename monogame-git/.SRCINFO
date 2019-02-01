@@ -1,0 +1,33 @@
+pkgbase = monogame-git
+	pkgdesc = Open Source implementation of the Microsoft XNA 4 Framework.
+	pkgver = 3.5
+	pkgrel = 2
+	url = http://www.monogame.net/
+	arch = any
+	groups = any
+	license = Microsoft Public License (Ms-PL)
+	makedepends = git
+	makedepends = nvidia-texture-tools
+	makedepends = dos2unix
+	makedepends = monodevelop
+	makedepends = assimp-net
+	depends = freeimage
+	depends = ffmpeg
+	depends = gtk-sharp-3
+	depends = openal
+	depends = opentk
+	provides = monogame
+	conflicts = monogame
+	conflicts = tao-framework
+	conflicts = tao-framework-svn
+	source = git+https://github.com/mono/MonoGame.git
+	source = monogame.pc.in
+	source = mgcb.sh
+	source = monogame-pipeline.sh
+	md5sums = SKIP
+	md5sums = c41ca3ef34fc31b114b77bdff626c5a0
+	md5sums = a0ff773f5647651148ecb443a29b9ea9
+	md5sums = 46a2caa68e21fd99aa4b30b78ab1a109
+
+pkgname = monogame-git
+
