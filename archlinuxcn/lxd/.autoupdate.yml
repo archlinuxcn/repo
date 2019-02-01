@@ -1,0 +1,12 @@
+source:
+    github: 'lxc/lxd'
+    release-prefix: 'lxd-'
+
+
+format: 'archlinux'
+
+script:
+    - sed -i "s|^pkgver.*|pkgver=$RELEASE_VERSION|" PKGBUILD
+    - cp "$RELEASE_FILE" lxd-$RELEASE_VERSION.tar.gz
+    - updpkgsums
+    - mksrcinfo
