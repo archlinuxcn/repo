@@ -1,0 +1,16 @@
+# Config for LXD, provided by @jpic
+
+[Unit]
+Description=DNS and DHCP for LXD
+After=network.target
+Documentation=man:dnsmasq(8)
+
+[Service]
+Type=dbus
+BusName=uk.org.thekelleys.dnsmasq.lxd
+ExecStartPre=/usr/bin/dnsmasq --test -C /etc/dnsmasq-lxd.conf
+ExecStart=/usr/bin/dnsmasq -k -C /etc/dnsmasq-lxd.conf --user=dnsmasq --enable-dbus=uk.org.thekelleys.dnsmasq.lxd --pid-file
+ExecReload=/bin/kill -HUP $MAINPID
+
+[Install]
+WantedBy=multi-user.target
