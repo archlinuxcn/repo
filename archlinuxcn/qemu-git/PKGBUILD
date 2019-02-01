@@ -8,9 +8,9 @@ pkgbase=qemu-git
 _gitname=qemu
 pkgname=(qemu-git qemu-headless-git qemu-arch-extra-git qemu-headless-arch-extra-git qemu-block-{iscsi-git,rbd-git,gluster-git} qemu-guest-agent-git)
 pkgdesc="A generic and open source machine emulator and virtualizer. Git version."
-pkgver=v3.1.0.r1311.ge8977901b7
+pkgver=v3.1.0.r1379.ge83d74286c
 pkgrel=1
-epoch=5
+epoch=6
 arch=(i686 x86_64)
 license=(GPL2 LGPL2.1)
 url="http://wiki.qemu.org/"
@@ -73,7 +73,6 @@ _build() (
     --libexecdir=/usr/lib/qemu \
     --python=/usr/bin/python2 \
     --smbd=/usr/bin/smbd \
-    --with-sdlabi=2.0 \
     --enable-modules \
     --enable-jemalloc \
     --disable-werror \
@@ -235,4 +234,3 @@ package_qemu-guest-agent-git() {
 }
 
 # vim:set ts=2 sw=2 et:
-set  限制解除 
