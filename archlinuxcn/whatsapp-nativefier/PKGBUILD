@@ -1,7 +1,7 @@
 # Maintainer: Fredy García <frealgagu at gmail dot com>
 
 pkgname=whatsapp-nativefier
-pkgver=0.3.1846
+pkgver=0.3.2041
 pkgrel=1
 pkgdesc="WhatsApp desktop built with nativefier (electron)"
 arch=("armv7l" "i686" "x86_64")
@@ -26,6 +26,7 @@ build() {
     --height "600px" \
     --inject "${pkgname}-inject.js" \
     --verbose \
+    --single-instance \
     --tray \
     "https://web.${pkgname%-nativefier}.com"
 }
