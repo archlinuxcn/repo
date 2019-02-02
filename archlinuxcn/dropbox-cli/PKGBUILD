@@ -5,23 +5,19 @@
 # Contributor: carstene1ns <arch carsten-teibes de>
 
 pkgname=dropbox-cli
-pkgver=2018.11.28
+pkgver=2019.01.31
 pkgrel=1
 pkgdesc="Command line interface for Dropbox"
 arch=("any")
 url="http://www.${pkgname%-cli}.com"
 license=("GPL")
-depends=("${pkgname%-cli}" "python2")
+depends=("${pkgname%-cli}" "python")
 install="${pkgname}.install"
-source=("${pkgname}-${pkgver}.py::https://linux.${pkgname%-cli}.com/packages/${pkgname%-cli}.py"
-        "${pkgname}.patch")
-sha256sums=("73148121d1ef67b4793c04cee1dd2689d6fcbc42f744a5cf350cd9c2080f3e3c"
-            "63c653b19dd8ec1c72d4debcaded8be1c996effb79b1372ca0fb7bb24a8a2c1e")
+source=("${pkgname}-${pkgver}.py::https://linux.${pkgname%-cli}.com/packages/${pkgname%-cli}.py")
+sha256sums=("fee0780a6f3819064080bafd333d70442bdc48f15ad64c8d1fecdabfbf99c3c5")
 
 prepare() {
-  cd "${srcdir}"
   cp -L "${srcdir}/${pkgname}-${pkgver}.py" "${srcdir}/${pkgname}.py"
-  patch -i "${srcdir}/${pkgname}.patch"
 }
 
 package() {
