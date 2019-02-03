@@ -2,15 +2,6 @@ diff --git a/build/gen.py b/build/gen.py
 index ee4f8e14..89714678 100755
 --- a/build/gen.py
 +++ b/build/gen.py
-@@ -299,7 +299,7 @@ def WriteGNNinja(path, platform, host, options):
-           ldflags.append('-Wl,-strip-all')
- 
-       # Enable identical code-folding.
--      if not platform.is_darwin():
-+      if not platform.is_darwin() and "clang" in cc:
-         ldflags.append('-Wl,--icf=all')
- 
-     cflags.extend([
 @@ -332,8 +332,11 @@ def WriteGNNinja(path, platform, host, options):
        ldflags.extend(['-maix64', '-pthread'])
  

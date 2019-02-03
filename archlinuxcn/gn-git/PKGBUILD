@@ -3,7 +3,7 @@
 #
 pkgname=gn-git
 pkgdesc='Meta-build system which generates Ninja build files'
-pkgver=r1523.377ad041
+pkgver=r1525.5519dc2f
 pkgrel=1
 license=('BSD')
 arch=('x86_64' 'i686')
@@ -14,7 +14,7 @@ makedepends=('python2' 'ninja' 'git')
 url='https://gn.googlesource.com/gn'
 source=("gn::git+${url}" gcc-support.patch)
 sha512sums=('SKIP'
-            '33b8f6da50dc4989ea2f5b13d638a24d89f6847ddb0fad8845575c6f490a25ff2772aee15d1d83e57a1554dee3cd19e88d69823664099714e551d3edd9c56aa7')
+            'fe2576ac88859494f7829de8b4fec1dc87ba9a418ac5b80028dea52471ffdfb65570728f5b2e8a9328d404394e6e22a5ebfd3765660e27324918f7a23fea3854')
 
 pkgver () {
 	export GIT_DIR="${startdir}/gn"
@@ -28,7 +28,7 @@ prepare () {
 
 build () {
 	cd gn
-	CC=cc CXX=c++ AR=ar python2 build/gen.py --use-lto
+	CC=cc CXX=c++ AR=ar python2 build/gen.py --use-lto --no-strip
 	ninja -C out
 }
 
