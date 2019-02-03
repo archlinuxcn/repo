@@ -2,7 +2,7 @@
 _pkgname=drawio-desktop
 pkgname=$_pkgname-bin
 pkgver=10.1.2
-pkgrel=1
+pkgrel=2
 pkgdesc='Diagram drawing application built on web technology'
 arch=('x86_64')
 url='https://github.com/jgraph/drawio'
@@ -17,7 +17,7 @@ source=("drawio-desktop-$pkgver.war::https://github.com/jgraph/drawio/releases/d
 noextract=("drawio-desktop-$pkgver.war")
 sha256sums=('4b7598ac6aea1818757dcea45feac8cf3d5b83a6d1472b13d52176caaaf715a4'
             '21e5dac375c7ccb9b8aed0e2b1e74d0def76089821f66240bdc0bc6fe57db8a4'
-            'f81df3844b8fa2e847223e470f4721d067b18aa16caf89880aa3f0d89499f727')
+            'SKIP')
 
 
 build() {
@@ -36,8 +36,8 @@ build() {
 package() {
   cd "$srcdir/drawio-$pkgver"
 
-  mkdir -p "$pkgdir/usr/lib"
-  cp -rp . "$pkgdir/usr/lib/draw.io"
+  mkdir -p "$pkgdir/opt/"
+  cp -rp . "$pkgdir/opt/draw.io"
 
   # create desktop file
   install -Dm644 "$srcdir/draw.io.desktop" -t "$pkgdir/usr/share/applications"
