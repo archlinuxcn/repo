@@ -2,7 +2,7 @@
 # Contributor: Utsob Roy <uroybd(at)gmail(dot)com>
 
 pkgname=franz-bin
-pkgver=5.0.0_beta.22
+pkgver=5.0.0_beta.24
 pkgrel=1
 pkgdesc='Franz is a free messaging app for services like WhatsApp, Slack, Messenger and many more'
 arch=('x86_64')
@@ -14,7 +14,7 @@ conflicts=('franz')
 options=('!strip' '!emptydirs')
 source=("https://github.com/meetfranz/franz/releases/download/v${pkgver//_/-}/franz_${pkgver//_/-}_amd64.deb"
         "${pkgname}.patch")
-sha256sums=('52444cf6c07283a6e4c2daa4ffa5d4176ae00018e48b34faa318936c3c666e51'
+sha256sums=('c3bbce1acb86f9b16336e6e3cebe3f6e8b9200f731e2a91c78dbd97f2c3a3e99'
             'e0d03405a75a0cd4492875b111d4750b8a925b514f3ce9ef47b69b9fcaee2b7f')
 
 package() {
@@ -28,7 +28,7 @@ package() {
   ln -s "../lib/franz/franz" "${pkgdir}/usr/bin/franz"
 
   # Permission fix
-  chmod 644 "${pkgdir}/usr/lib/franz/libnode.so"
+  chmod 644 "${pkgdir}/usr/lib/franz/"*.so
 
   # Fix binary path in .desktop file
   patch -d "${pkgdir}" -p1 <"${pkgname}".patch
