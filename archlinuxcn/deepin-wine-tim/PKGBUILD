@@ -3,7 +3,7 @@
 # Maintainer: ssfdust <ssfdust@gmail.com>
 
 pkgname=deepin-wine-tim
-pkgver=2.1.5
+pkgver=2.3.1_3
 deepintimver=2.0.0deepin4
 pkgrel=4
 pkgdesc="Tencent TIM (com.qq.office) on Deepin Wine For Archlinux"
@@ -15,14 +15,14 @@ conflicts=('wine-tim' 'deepin.com.qq.office' 'deepin-tim-for-arch')
 install="deepin-wine-tim.install"
 _mirror="https://mirrors.ustc.edu.cn/deepin"
 source=("$_mirror/pool/non-free/d/deepin.com.qq.office/deepin.com.qq.office_${deepintimver}_i386.deb"
-  "http://dldir1.qq.com/qqfile/qq/TIM${pkgver}/23141/TIM${pkgver}.exe"
+  "https://qd.myapp.com/myapp/qqteam/tim/down/TIM${pkgver}.exe"
   "run.sh"
   "reg_files.tar.bz2"
   "update.policy")
 md5sums=('d5c37cb4f960e13111ce24dbc0dd2d58'
-  '9d228e78e544b6b5f103de233d169240'
-  '8d003ad13cfc2088c0c2314649171be0'
-  'ebde755e3bd213550f5ccc69d3192060'
+  'ecd2cbce6f497f045e7920e3c7468db2'
+  'cd6a7a61ff94739d9f125840df0592bb'
+  '6675c8950e976b1ca01fd6001aa79523'
   'a66646b473a3fbad243ac1afd64da07a')
 
 build() {
