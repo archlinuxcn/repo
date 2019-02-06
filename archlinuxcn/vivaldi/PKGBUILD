@@ -48,5 +48,11 @@ package() {
         | sed -rne 's/.*(<html lang.*>.*html>).*/\1/p' \
         | w3m -I 'utf-8' -T 'text/html' \
         > "$pkgdir/usr/share/licenses/$pkgname/eula.txt"
+
+    # remove anything under /bin
+    rm -rf $pkgdir/bin
+    # move anything under /share
+    mv $pkgdir/share/* $pkgdir/usr/share/
+    rmdir $pkgdir/share
 }
 
