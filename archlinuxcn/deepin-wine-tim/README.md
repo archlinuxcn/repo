@@ -1,6 +1,6 @@
 # 在Archlinux及衍生发行版上运行TIM
 
-Deepin打包的TIM容器移植到Archlinux
+Deepin打包的TIM容器移植到Archlinux，包含定制的注册表配置，TIM安装包替换为官方最新
 
 构建状态: [![travis-ci](https://travis-ci.org/countstarlight/deepin-wine-tim-arch.svg?branch=master)](https://travis-ci.org/countstarlight/deepin-wine-tim-arch)
 
@@ -8,9 +8,9 @@ Deepin打包的TIM容器移植到Archlinux
 
 * [Wuhan Deepin Technology Co.,Ltd.](http://www.deepin.org/)
 
-* @[wszqkzqk](https://github.com/wszqkzqk) 的 [wszqkzqk-deepin-wine-tim-arch](https://github.com/wszqkzqk/wszqkzqk-deepin-wine-tim-arch)
+* [@wszqkzqk](https://github.com/wszqkzqk) 的 [wszqkzqk-deepin-wine-tim-arch](https://github.com/wszqkzqk/wszqkzqk-deepin-wine-tim-arch)
 
-* @[ssfdust](https://github.com/ssfdust) 的 [wszqkzqk-deepin-wine-tim-arch](https://github.com/ssfdust/wszqkzqk-deepin-wine-tim-arch)
+* [@ssfdust](https://github.com/ssfdust) 的 [wszqkzqk-deepin-wine-tim-arch](https://github.com/ssfdust/wszqkzqk-deepin-wine-tim-arch)
 
 存在如下问题：
   * 1.不能视频通话
