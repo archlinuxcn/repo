@@ -4,7 +4,7 @@
 pkgname=vivaldi
 _rpmversion=2.3.1440.41-1
 pkgver=2.3.1440.41
-pkgrel=2
+pkgrel=3
 pkgdesc='An advanced browser made with the power user in mind.'
 url="https://vivaldi.com"
 options=(!strip !zipman)
@@ -23,7 +23,7 @@ source=("https://downloads.vivaldi.com/stable/vivaldi-stable-${_rpmversion}.x86_
 sha512sums=('37d04a01c80e82431e2bc28a4dfb234e467809e8273d3c23f5c959bec9375abe42b71758c59726c19d601b4e19521b3a4aea3dbff02afad7ff2e5b230a4b3f5a')
 
 package() {
-    cp -a {opt,usr/bin,usr/share} "$pkgdir"
+    cp --parents -a {opt,usr/bin,usr/share} "$pkgdir"
 
     # suid sandbox
     chmod 4755 "$pkgdir/opt/$pkgname/vivaldi-sandbox"
