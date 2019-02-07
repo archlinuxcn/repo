@@ -3,7 +3,7 @@
 _gemname=rails-html-sanitizer
 pkgname=ruby-$_gemname
 pkgver=1.0.4
-pkgrel=3
+pkgrel=4
 pkgdesc='HTML sanitization for Rails applications'
 arch=(any)
 url='https://github.com/rails/rails-html-sanitizer'
@@ -21,4 +21,4 @@ package() {
   rm "$pkgdir/$_gemdir/cache/$_gemname-$pkgver.gem"
 }
 
-makedepends=('ruby-rdoc' )
+makedepends=('ruby-rdoc')
