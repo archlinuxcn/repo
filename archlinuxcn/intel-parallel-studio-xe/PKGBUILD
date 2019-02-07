@@ -1,5 +1,6 @@
 # Maintainer: Stephen Cox: stephencoxmail -at- gmail com
-# Previous Maintainers: Ignat Harczuk: ignathe -at- gmail com and Mark Wells: mwellsa -at- gmail com
+# Contributor: Ignat Harczuk: ignathe -at- gmail com
+# Contributor: Mark Wells: mwellsa -at- gmail com
 # Contributor: simone riva: siomone.rva -a- gmail com
 # Intel Parallel Studio XE 2019 for Linux - ( Intel compiler icc suite )
 ##########################################################################
@@ -33,8 +34,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 pkgbase="intel-parallel-studio-xe"
-pkgname=('intel-compiler-base' 'intel-fortran-compiler' 'intel-ipp' 'intel-mkl' 'intel-mpi' 'intel-tbb_psxe' 'intel-advisor' 'intel-vtune-amplifier' 'intel-inspector' )
-packager="Ignat Harczuk"
+pkgname=('intel-compiler-base' 'intel-fortran-compiler' 'intel-ipp' 'intel-mkl' 'intel-mpi' 'intel-tbb_psxe' 'intel-advisor' 'intel-vtune-amplifier' 'intel-inspector')
+packager="Stephen Cox"
 
 ########################################
 #OPTIONS begin
@@ -51,33 +52,33 @@ _remove_static_objects_ipp=false
 ########################################
 
 _year='2019'
-_v_a='1'
-_v_b='144'
+_v_a='2'
+_v_b='187'
 # year, version a and version b found in /opt/intel/compilers_and_libraries_YEAR_A_B
 
-_update='1'
+_update='2'
 
 pkgrel=1
 
 
 _sp='cluster_edition'
-_icc_ver='19.0.1'
-_mpi_ver='2019.1.144'
-_mkl_ver='2019.1.144'
-_tbb_ver='2019.1.144'
-_vtune_ver='2019.1.0.579888'
-_inspector_ver='2019.1.0.579146'
-_advisor_ver='2019.1.0.579143'
+_icc_ver='19.0.2'
+_mpi_ver='2019.2.187'
+_mkl_ver='2019.2.187'
+_tbb_ver='2019.2.187'
+_vtune_ver='2019.2.0.588069'
+_inspector_ver='2019.2.0.588057'
+_advisor_ver='2019.2.0.588361'
 
-_vtune_man_ver='2019.1.0.579888'
-_inspector_man_ver='2019.1.0.5579146'
-_advisor_man_ver='2019.1.0.579143'
+_vtune_man_ver='2019.2.0.588069'
+_inspector_man_ver='2019.2.0.588057'
+_advisor_man_ver='2019.2.0.588361'
 
 
 pkgver=${_year}.${_v_a}.${_v_b}
 
-_dir_nr='14850'
-_mpi_dir_nr='14879'
+_dir_nr='15088'
+_mpi_dir_nr='15040'
 
 options=(strip libtool staticlibs)
 
@@ -111,8 +112,8 @@ source=(
 )
 
 
-sha256sums=('3a1eb39f15615f7a2688426b9835e5e841e0c030f21dcfc899fe23e09bd2c645'
-            'dac86a5db6b86503313742b17535856a432955604f7103cb4549a9bfc256c3cd'
+sha256sums=('8c526bdd95d1da454e5cada00f7a2353089b86d0c9df2088ca7f842fe3ff4cae'
+            '6a3305933b5ef9e3f7de969e394c91620f3fa4bb815a4f439577739d04778b20'
             '75fcdfc246949341afddcf51b2037f606f25612a04c199ac1a743247aa7c4ea5'
             '278f9545d14c1fbec737bbfbcafb1b9090d35aab0dfeddc99d4c6e296b56057b'
             'e3103fb1c5e2ec9f0cc4090abb7e273563e735d88e185f527c66b2aebd52e733'
