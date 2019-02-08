@@ -1,9 +1,9 @@
-# Maintainer: Felix Yan <felixonmars@archlinux.org>
+# Maintainer: Christoph Bayer <chrbayer@criby.de>
 # Contributor: Stefan Husmann <stefan-husmann@t-online.de>
 
 pkgname=wiredtiger
-pkgver=3.1.0.20181203
-_commit=b51da4ed903efd9daf4b9c04385f01bbb8d37d7d
+pkgver=3.1.0.20190207
+_commit=bedf230af338faa9b9ba8741b9a2e5f36353e2f0
 pkgrel=1
 pkgdesc="High performance, scalable, production quality, NoSQL, Open Source extensible platform for data management"
 arch=('x86_64')
@@ -11,7 +11,7 @@ url="http://source.wiredtiger.com/"
 license=('GPL')
 depends=('snappy' 'lz4' 'zlib' 'gperftools')
 source=("$pkgname-$_commit.tar.gz::https://github.com/wiredtiger/wiredtiger/archive/$_commit.tar.gz")
-sha512sums=('af935628a7149924e0cd89b5f82054acd2cca58d4814794693de83d79ba28612b74d186d5d49e761d8a428408aad36cdfcb76aaf6d9c8ae9351e67535b5175ed')
+sha512sums=('57153f1ea8b7278fcd724d5aa910bf0d5dabebeb8754f5eabd49be9cae8cb83b266a962224fc2784b15d7f1d22e57a7ff2202b84838b147879401a24e30e78af')
 
 prepare() {
   mv wiredtiger-{$_commit,$pkgver}
