@@ -1,6 +1,6 @@
 _pkgname=plotly
 pkgname=python-plotly
-pkgver=3.6.0
+pkgver=3.6.1
 pkgrel=1
 pkgdesc="Python plotting library for collaborative, interactive, publication-quality graphs."
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 depends=('python' 'python-requests' 'python-pytz' 'python-setuptools')
 _name=${pkgname#python-}
 source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_pkgname}-${pkgver}.tar.gz")
-md5sums=('60acce42fe3d88a637c3bf6fbc591af4')
+md5sums=('6b16f33ac1c3d065ed609f08c427474f')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
