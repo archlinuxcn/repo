@@ -6,8 +6,8 @@
 
 pkgbase=phpstorm
 pkgname=(phpstorm phpstorm-jre)
-pkgver=2018.3.3
-_pkgver=183.5153.36
+pkgver=2018.3.4
+_pkgver=183.5429.47
 pkgrel=1
 pkgdesc='Lightweight and Smart PHP IDE'
 arch=('x86_64' 'i686')
@@ -17,13 +17,14 @@ makedepends=('rsync')
 options=('!strip')
 source=(https://download.jetbrains.com/webide/PhpStorm-${pkgver}.tar.gz
         jetbrains-phpstorm.desktop)
-sha512sums=('e8a17cff15001c522d1a562d61eaefb36730e4db55faed62e7f880ac498de30f0819f145c2723b4220b484ff654d40df6c966a43ad59bf58055afd3544574b7a'
+sha512sums=('804011211843c20fe0feb58d0041dfac9f955a7ce954f6119b96bf6dbd387e097718cb4f061ab3ad21ed8d565cf2e00cd56e5baa19720ba313605333091be19f'
             'fe312d7c637ec20bd946f2e22681243a51f29afc1052ae3fe5afd0fe01f77c222bf1e2c98f0afad8d5385466215653b7ffa8718da05b6dac100ba768ff2be1d6')
 
 package_phpstorm() {
   optdepends=('phpstorm-jre: JetBrains custom Java Runtime (Recommended)'
               'java-runtime: JRE - Required if phpstorm-jre is not installed'
-              'gnome-keyring: save login/deployment credentials safely')
+              'gnome-keyring: save login/deployment credentials safely'
+              'java-openjfx: rendering Markdown files')
 
   install -d -m 755 "${pkgdir}/opt/"
   install -d -m 755 "${pkgdir}/usr/bin/"
