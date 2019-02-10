@@ -1,3 +1,4 @@
-# Creates an nvm-exec script in NVM_DIR which passes through to the installed nvm-exec
-
-[ -e "$NVM_DIR/nvm-exec" ] || (mkdir -p "$NVM_DIR" && (echo '/usr/share/nvm/nvm-exec "$@"' > "$NVM_DIR/nvm-exec") && chmod +x "$NVM_DIR/nvm-exec")
+# "nvm exec" and certain 3rd party scripts expect "nvm.sh" and "nvm-exec" to exist under $NVM_DIR
+[ -e "$NVM_DIR" ] || mkdir -p "$NVM_DIR"
+[ -e "$NVM_DIR/nvm.sh" ] || ln -s /usr/share/nvm/nvm.sh "$NVM_DIR/nvm.sh"
+[ -e "$NVM_DIR/nvm-exec" ] || ln -s /usr/share/nvm/nvm-exec "$NVM_DIR/nvm-exec"
