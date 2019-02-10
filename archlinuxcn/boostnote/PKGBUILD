@@ -5,7 +5,7 @@
 # Contributor: Romain Bazile <gromain {dot} baz {at} gmail {dot} com>
 pkgname=boostnote
 _pkgname=Boostnote
-pkgver=0.11.13
+pkgver=0.11.15
 pkgrel=1
 pkgdesc="Open source note-taking app for programmers"
 arch=('any')
@@ -22,7 +22,7 @@ source=(
   "remove-analytics.patch"
   )
 
-sha512sums=('e796d3469a72eed30c30ca1df91901959eadd39fae15802af2ce75ab8158142ad04bce9a4eb959bb7318765005f428c18bc1e83ff19860d95f758abf29205da3'
+sha512sums=('531e58d0e8620d745dab1245b036cf39a88e8951d2b1d11dabb4ce6c52cce97c2a961bbc25516cbb2b5b543d359bff66aa2f4f5f6894eb39392630ee1699d69e'
             '1f0ccd2a3632a12c4714d97b9f909ddc94b53d6f86a9e4bdcab31abd55a93071a2c35c6e1e9527b747de6dd74b8a5276414980c11e174085f28b8f2d2721230a'
             '18bcda13580da8ceeaa86793a77ec00a053b8fd51451dad7e2b1a19553fe1a467ac647b44b789212e783f3f6a80968cc9404e884ef7ff6b1f6588473b3229d40'
             'a52e5631867e2c5f18465dee6a3201b9b5c546bda373205c4891c9f7b6114599e0854e2b49defb55ee7bea0778a7fde9c9d9f7271dceeeece743a2d72e2fd0c6'
