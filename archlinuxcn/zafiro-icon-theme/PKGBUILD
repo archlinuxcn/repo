@@ -1,14 +1,14 @@
 # Maintainer: Ariel AxionL <axionl@aosc.io>
 
 pkgname=('zafiro-icon-theme')
-pkgver=0.8.6
+pkgver=0.8.7
 pkgrel=1
 pkgdesc="A icon pack flat with light colors."
 arch=('any')
 url="https://github.com/zayronxio/Zafiro-icons"
 license=('Artistic2.0')
 source=("https://github.com/zayronxio/Zafiro-icons/archive/v$pkgver.tar.gz")
-sha256sums=('82f52dc6a71d50381c96648e910a7a4ef76938dbd15191bd26948f90eaf65fb7')
+sha256sums=('23e3e50aae41f3f624b2a8aed07b560b0309fb31c554a3554177ee0195c997db')
 
 package() {
   install -dm 755 $pkgdir/usr/share/icons
