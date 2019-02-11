@@ -2,8 +2,8 @@
 
 _pkgname=vscodium
 pkgname=$_pkgname-bin
-pkgver=1.30.2
-pkgrel=4
+pkgver=1.31.0
+pkgrel=1
 pkgdesc="Binary releases of VS Code without MS branding/telemetry/licensing."
 arch=('x86_64')
 url="https://github.com/VSCodium/vscodium"
@@ -21,12 +21,12 @@ conflicts=('visual-studio-code-bin' 'code')
 replaces=($_pkgname)
 source=(
         vscodium.desktop
-        ${_pkgname}-${pkgver}-${pkgrel}.tar.gz::${url}/releases/download/${pkgver}/VSCode-linux-x64-${pkgver}.tar.gz
+        ${_pkgname}-${pkgver}-${pkgrel}.tar.gz::${url}/releases/download/${pkgver}/VSCodium-linux-x64-${pkgver}.tar.gz
        )
 
 
 sha256sums=('e4f3503d6c6eb9d967f9d35e58f5f801da98c4ccf7bd31dc752d1cef05781717'
-            '081783f0c186129040b6741a4aa64da27127ed9040b1d82db22706b19fd32ea9')
+            '2a830f7120b0c9780297ed632e4f7a51a9f733aebdc71b3e189bc54a7f0bfc27')
 
 
 package() {
