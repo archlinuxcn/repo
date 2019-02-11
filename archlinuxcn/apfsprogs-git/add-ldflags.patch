@@ -1,0 +1,13 @@
+diff --git a/apfsck/Makefile b/apfsck/Makefile
+index d516a3a..dee5c50 100644
+--- a/apfsck/Makefile
++++ b/apfsck/Makefile
+@@ -3,7 +3,7 @@ OBJS = $(SRCS:.c=.o)
+ DEPS = $(SRCS:.c=.d)
+ 
+ apfsck: $(OBJS)
+-	gcc $(CFLAGS) -o apfsck $(OBJS)
++	gcc $(CFLAGS) $(LDFLAGS) -o apfsck $(OBJS)
+ 
+ %.o: %.c
+ 	gcc $(CFLAGS) -o $@ -MMD -MP -c $<
