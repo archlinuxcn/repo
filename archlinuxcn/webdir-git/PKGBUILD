@@ -1,12 +1,12 @@
 pkgname=webdir-git
-pkgver=0.1.0.68.g78f51b3
+pkgver=0.1.0.114.gafe24ef
 pkgrel=1
 pkgdesc="A simple asynchronous static file server"
 arch=('x86_64' 'i686')
 url="https://github.com/Tyzzer/webdir"
 license=('MIT')
 depends=()
-makedepends=('cargo')
+makedepends=('cargo' 'git')
 optdepends=()
 provides=('webdir')
 conflicts=('webdir')
@@ -20,7 +20,7 @@ pkgver() {
 
 build() {
 	cd $pkgname
-	cargo build --release --features sendfile
+	cargo build --release
 }
 
 package() {
