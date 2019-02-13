@@ -6,6 +6,7 @@
 #
 
 from lilaclib import *
+from lilaclib import _download_aur_pkgbuild
 import glob
 
 _g = SimpleNamespace()
