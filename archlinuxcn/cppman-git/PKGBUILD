@@ -1,7 +1,7 @@
 # Maintainer: Wei-Ning Huang <aitjcize@gmail.com>
 pkgname=cppman-git
 _pkgname=cppman
-pkgver=r45948.07dac94e5
+pkgver=r366.13b20bc
 epoch=1
 pkgrel=1
 pkgdesc="C++ 98/11/14 manual pages for Linux/MacOS"
@@ -16,6 +16,7 @@ sha256sums=("SKIP")
 
 
 pkgver() {
+  cd "$_pkgname"
   printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
