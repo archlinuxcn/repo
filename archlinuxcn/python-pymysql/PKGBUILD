@@ -1,14 +1,15 @@
 _pkgname=PyMySQL
 pkgname=python-pymysql
-pkgver=0.9.2
-pkgrel=2
+pkgver=0.9.3
+pkgrel=1
 pkgdesc="Pure Python MySQL Driver"
 arch=('any')
 url="https://github.com/PyMySQL/PyMySQL/"
 license=('"MIT"')
-depends=('python' 'python-setuptools')
-source=('https://files.pythonhosted.org/packages/d9/ab/bc9be64876fc9b1590d8ae62b471981b4489c23d6c3f0319af570748d408/PyMySQL-0.9.2.tar.gz')
-md5sums=('001a13b534d9e62f300f7c3285b9cda5')
+depends=('python')
+_name=${pkgname#python-}
+source=("https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
+md5sums=('e5d9183cc0a775ac29f9e0365cca6556')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
