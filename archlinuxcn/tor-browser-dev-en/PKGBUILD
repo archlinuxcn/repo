@@ -1,9 +1,10 @@
-# Maintainer: end222 <pabloorduna98 at gmail dot com>
+# Maintainer: Yurii Kolesnykov <root@yurikoles.com>
+# Ex-Maintainer: end222 <pabloorduna98 at gmail dot com>
 # Ex-Maintainer: Jean Lucas <jean at 4ray dot co>
 # Contributor: sekret, mail=$(echo c2VrcmV0QHBvc3Rlby5zZQo= | base64 -d)
 
 pkgname=tor-browser-dev-en
-pkgver=8.0a7
+pkgver=8.5a7
 _language='en-US'
 pkgrel=1
 pkgdesc="Tor Browser is +1 for privacy and -1 for mass surveillance"
@@ -24,17 +25,17 @@ source_x86_64=("https://dist.torproject.org/torbrowser/${pkgver}/tor-browser-lin
 source+=(${pkgname}.desktop
          ${pkgname}.png
          ${pkgname}.sh)
-sha256sums_i686=('fc3de129219f8682d4efd1204e6cf52d8dc12f3d2f93a1bc4369c099dcc9b36a'
+sha256sums=('13d2e1fe85a9a08e9f66116f3c2d6f1e5d37e07d2ad8b08ae4f01890e864a722'
+            '4f01e363738e36dc41ca431fbbf5a00b014dc37e2c9a3cfaf2ce182103a1d068'
+            'ce19dd89a8ecd9289136f97f0122b7301bdda9bcf0208f4277817e23ea9a95d8')
+sha256sums_i686=('b311ae08ce206595253033237c9d34ab43fbdfc16b915b8f361dcc45ed4f1fee'
                  'SKIP')
-sha256sums_x86_64=('10f3595d2742249b43c4220ee9d150735ad04bc5aa6550aef6cebf6abde6668b'
+sha256sums_x86_64=('49c66dd4d5edaeedca8abbaf05daa444c342d84c81eb8df1157d900fe110e6b3'
                    'SKIP')
-sha1sums+=('344ded68e188649c0d0347f8f675e006c36c03f1'
-           'aa3f84762b5f0b39aea5e03befdb03c4f53e8078'
-           '309aac05a0b0f022eda2f292fb572b523726409c')
 validpgpkeys=('EF6E286DDA85EA2A4BA7DE684E2C6E8793298290'
 	      'A4300A6BC93C0877A4451486D1483FA6C3C07136')
-noextract_i686=("tor-browser-linux32-${pkgver}_${_language}.tar.xz")
-noextract_x86_64=("tor-browser-linux64-${pkgver}_${_language}.tar.xz")
+noextract=("tor-browser-linux32-${pkgver}_${_language}.tar.xz"
+	   "tor-browser-linux64-${pkgver}_${_language}.tar.xz")
 
 package() {
   cd ${srcdir}
