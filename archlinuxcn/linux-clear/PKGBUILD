@@ -70,7 +70,7 @@ _srcname=linux-${_major}
 _clr=${_major}.7-694
 pkgbase=linux-clear
 pkgver=${_major}.${_minor}
-pkgrel=4
+pkgrel=5
 arch=('x86_64')
 url="https://github.com/clearlinux-pkgs/linux"
 license=('GPL2')
@@ -93,7 +93,8 @@ source=(
 _kernelname=${pkgbase#linux}
 : ${_kernelname:=-clear}
 
-prepare() {
+
+build() {
     cd ${_srcname}
 
     ### Add upstream patches
@@ -180,10 +181,6 @@ CONFIG_MODULE_COMPRESS_XZ=y|' ./.config
     ### Save configuration for later reuse
 
         cp -Tf ./.config "${startdir}/config-${pkgver}-${pkgrel}${_kernelname}"
-}
-
-build() {
-    cd ${_srcname}
 
     make bzImage modules
 }
