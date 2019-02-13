@@ -1,7 +1,7 @@
 # Maintainer: BennyYip <yebenmy@protonmail.com>
 pkgname=cargo-sweep
 _pkgname=cargo-sweep
-pkgver=0.2.0
+pkgver=0.4.1
 pkgrel=1
 pkgdesc="A tool for cleaning unused build files created by Cargo"
 arch=('x86_64')
@@ -11,7 +11,7 @@ makedepends=('rust' 'cargo')
 depends=()
 provides=("$_pkgname")
 source=($_pkgname.tar.gz::"https://crates.io//api/v1/crates/$_pkgname/$pkgver/download")
-sha256sums=('0370b9a16aa8caf167e99133f3c63b082de71f3175faa628b3fb4938067772ec')
+sha256sums=('de0e5df1d0dad7a1518e295c93784c7562d279108e2b2219dda4cd663f2d049e')
 
 build() {
   cd $srcdir/$_pkgname-$pkgver
