@@ -10,13 +10,13 @@ _curlver=7.63.0
 _sslver=1.1.1a
 _xzver=5.2.4
 _bzipver=1.0.6
-_zstdver=1.3.7
+_zstdver=1.3.8
 _libarchive_ver=3.3.3
-_gpgerrorver=1.33
+_gpgerrorver=1.34
 _libassuanver=2.5.2
 _gpgmever=1.12.0
 _gnupgver=2.2.12
-pkgrel=1
+pkgrel=2
 pkgdesc="Statically-compiled pacman (to fix or install systems without libc)"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://www.archlinux.org/pacman/"
@@ -35,7 +35,7 @@ source+=("https://c-ares.haxx.se/download/c-ares-${_cares_ver}.tar.gz"{,.asc})
 validpgpkeys+=('27EDEAF22F3ABCEB50DB9A125CC908FDB71E12C2') # Daniel Stenberg <daniel@haxx.se>
 # curl
 source+=("https://curl.haxx.se/download/curl-${_curlver}.tar.gz"{,.asc}
-         "curl-3399.patch::https://github.com/curl/curl/pull/3399.patch")
+         "https://github.com/curl/curl/commit/6dc1780ea54129b3e6721fe9ee3f9d4f1d7abc1b.patch")
 # openssl
 source+=("https://www.openssl.org/source/openssl-${_sslver}.tar.gz"{,.asc}
          "ca-dir.patch")
@@ -66,15 +66,15 @@ sha512sums=('3c123005587359315ab0c24d50a58d10f365eb92b24840213559cd951c863beaa2e
             'SKIP'
             '25ad69a1978de2178ac7a456e72152907203931ad895234c14781c27681ea2c5d6669794880c4ebae6e38b8014c6538bc88a6afec2c192210b6d491d60b8f691'
             'SKIP'
-            '233ccf215722657f8db5fd8e959836515361aa76bb67ae058ab8d946ae7673e623acb144b72ef429a240075ea23fd57adbbc0248a575537f4fcd18910bac289f'
+            '8a351ee445f79e54b46cc584fc0c341875d012f1db6e858de1b790177f12c622361eeccec1758d439ef1d839c9688899dd761b949b33311aa717709ba6040c05'
             '1523985ba90f38aa91aa6c2d57652f4e243cb2a095ce6336bf34b39b5a9b5b876804299a6825c758b65990e57948da532cca761aa12b10958c97478d04dd6d34'
             'SKIP'
             '3857c298663728a465b5f95a3ef44547efbfb420d755e9dde7f20aa3905171b400e1c126d8db5c2b916c733bbd0724d8753cad16c9baf7b12dcd225a3ee04a97'
             'e5bf6eb88365d2dbdc774db49261fb9fae0544ed297891fc20f1ed223f4072cb0357cbd98146ac35b6d29410a12b6739bbd111cd57d4a225bef255ed46988578'
             'SKIP'
             '00ace5438cfa0c577e5f578d8a808613187eff5217c35164ffe044fbafdfec9e98f4192c02a7d67e01e5a5ccced630583ad1003c37697219b0f147343a3fdd12'
-            'fb9ac61b79b22a628e602e68f7c59c85a00020f7f25b8653076895da7589ca1203adc7fe3d9b865f36648bc30d765b9630cf0955f970596253da74c089b97af1'
-            'c0396a63ea54e321b207d84fb4eac247ba8a791058db00a8bbf1dd7698c6593b13c77de08fc0971cccd6c3c27925637d1f9fdc59c4cac1344ddfe4c25adc2e42'
+            '5c1c0a7a998b814a9edc1466f6d321b0d8ffcf927295fd5499137c9075a8823be03d98f61ea5212d1969f8d52b32e940b1cc10d1507d7702424ea2eea0e79a1b'
+            'f21b558ad13d550e25cc07a12aeedfbaf035828c38382935e8f2c595a7affe6b41190ae5af3126db05cee4355d5e2a514759871baf09f3174993ce60ee5492c4'
             'SKIP'
             '1c6f87e3f785a053e6b736eb3554fa704c798c7078307391ca45961e06d9282c659c8e46d230d1f52e67acc2cc12d841f9ec0d5184443f68555d3f0d240865b3'
             'SKIP'
@@ -102,7 +102,7 @@ prepare() {
 
     cd "${srcdir}"/curl-${_curlver}
     # See https://github.com/curl/curl/issues/3392
-    patch -p1 -i "${srcdir}"/curl-3399.patch
+    patch -p1 -i "${srcdir}"/6dc1780ea54129b3e6721fe9ee3f9d4f1d7abc1b.patch
 }
 
 build() {
