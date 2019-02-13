@@ -19,7 +19,7 @@ conflicts=('moonplayer')
 sha1sums=('SKIP')
 
 build() {
-	cd $srcdir/$pkgname/src
+	cd $srcdir/$pkgname-$pkgver/src
 #
 	find . -name '*.py' -exec sed -i \
 	's|#![ ]*/usr/bin/python$|&2|;s|#![ ]*/usr/bin/env python$|&2|' {} +
@@ -30,7 +30,7 @@ build() {
 }
 
 package() {
-	cd $srcdir/$pkgname/src
+	cd $srcdir/$pkgname-$pkgver/src
 
 	make INSTALL_ROOT=$pkgdir install
 

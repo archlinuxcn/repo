@@ -21,7 +21,8 @@ pkgver() {
 
 build() {
   cd "$srcdir/dosbox-x"
-  ./build
+  sed -i 's/enable-debug=heavy/disable-debug/g' build-debug
+  ./build-debug
 }
 
 package() {
