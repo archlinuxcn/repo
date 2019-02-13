@@ -5,7 +5,7 @@
 
 pkgbase=systemd-git
 _pkgbase=systemd
-pkgname=('systemd-git' 'libsystemd-git' 'systemd-resolvconf-git' 'systemd-sysvcompat-git')
+pkgname=('systemd-git' 'systemd-libs-git' 'systemd-resolvconf-git' 'systemd-sysvcompat-git')
 pkgdesc="systemd (git version)"
 pkgver=241rc2.66
 pkgrel=1
@@ -92,6 +92,9 @@ build() {
   )
 
   local _meson_options=(
+    # TODO: enable for v241
+    #-Dversion-tag="${pkgver}-${pkgrel}-arch"
+
     -Dgnu-efi=true
     -Dima=false
     -Dlibidn2=true
@@ -100,6 +103,7 @@ build() {
     -Ddbuspolicydir=/usr/share/dbus-1/system.d
     # TODO(dreisner): consider changing this to unified
     -Ddefault-hierarchy=hybrid
+    -Ddefault-locale=C
     -Ddefault-kill-user-processes=false
     -Dfallback-hostname='archlinux'
     -Dntp-servers="${_timeservers[*]}"
@@ -114,16 +118,15 @@ build() {
   ninja -C build
 }
 
-# check() {
-#   meson test -C build
-# }
+check() {
+  meson test -C build
+}
 
 package_systemd-git() {
   pkgdesc="system and service manager (git version)"
   license=('GPL2' 'LGPL2.1')
   depends=('acl' 'bash' 'cryptsetup' 'dbus' 'iptables' 'kbd' 'kmod' 'hwids' 'libcap'
-           'libgcrypt' 'libsystemd' 'libidn2' 'lz4' 'pam' 'libelf' 'libseccomp'
-           'util-linux' 'xz' 'pcre2' 'audit')
+           'libgcrypt' 'systemd-libs' 'libidn2' 'libidn2.so' 'lz4' 'pam' 'libelf'           'libseccomp' 'util-linux' 'xz' 'pcre2' 'audit')
   provides=("${_pkgbase}=$pkgver" 'nss-myhostname' "systemd-tools=$pkgver" "udev=$pkgver")
   conflicts=("${_pkgbase}" 'nss-myhostname' 'systemd-tools' 'udev')
   optdepends=('libmicrohttpd: remote journald capabilities'
@@ -153,9 +156,9 @@ package_systemd-git() {
   # we'll create this on installation
   rmdir "$pkgdir"/var/log/journal/remote
 
-  # runtime libraries shipped with libsystemd
-  install -d -m0755 libsystemd
-  mv "$pkgdir"/usr/lib/lib{nss,systemd,udev}*.so* libsystemd
+  # runtime libraries shipped with systemd-libs
+  install -d -m0755 systemd-libs
+  mv "$pkgdir"/usr/lib/lib{nss,systemd,udev}*.so* systemd-libs
 
   # manpages shipped with systemd-sysvcompat
   rm "$pkgdir"/usr/share/man/man8/{halt,poweroff,reboot,runlevel,shutdown,telinit}.8
@@ -203,15 +206,16 @@ package_systemd-git() {
   install -D -m0644 systemd-user.pam "$pkgdir"/etc/pam.d/systemd-user
 }
 
-package_libsystemd-git() {
+package_systemd-libs-git() {
   pkgdesc="systemd client libraries (git version)"
   depends=('glibc' 'libcap' 'libgcrypt' 'lz4' 'xz')
-  license=('GPL2')
-  provides=('libsystemd.so' 'libudev.so' 'libsystemd')
-  conflicts=('libsystemd')
+  license=('LGPL2.1')
+  provides=('libsystemd' 'systemd-libs' 'libsystemd.so' 'libudev.so')
+  conflicts=('libsystemd' 'systemd-libs')
+  replaces=('libsystemd-git')
 
   install -d -m0755 "$pkgdir"/usr
-  mv libsystemd "$pkgdir"/usr/lib
+  mv systemd-libs "$pkgdir"/usr/lib
 }
 
 package_systemd-resolvconf-git() {
