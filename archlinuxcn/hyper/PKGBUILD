@@ -1,9 +1,10 @@
 # Maintainer: Aaron Abbott <aabmass@gmail.com>
 # Contributer: fleischie
 # Contributer: auk
+# Contributer: blind
 
 pkgname=hyper
-pkgver=2.0.0
+pkgver=2.1.2
 pkgrel=1
 epoch=
 pkgdesc="A terminal built on web technologies"
@@ -32,7 +33,7 @@ source=(
     "Hyper.desktop"
 )
 noextract=()
-md5sums=('02e48495d91da10a8e010fe37f754e42'
+md5sums=('85ae1268bb1062b2a22f3f6e9b4ff98b'
          'f3481e14cba331160339b3b5ab78872b'
          '74cb7ba38e37332aa8300e4b6ba9c61c')
 validpgpkeys=()
