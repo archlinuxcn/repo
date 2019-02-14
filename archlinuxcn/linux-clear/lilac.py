@@ -1,31 +1,49 @@
 from lilaclib import *
 
-PATCH="""
-diff --git a/archlinuxcn/linux-clear/PKGBUILD b/archlinuxcn/linux-clear/PKGBUILD
-index 54d613ee5..45e32e7ab 100644
+PATCH=b"""
 --- a/archlinuxcn/linux-clear/PKGBUILD
 +++ b/archlinuxcn/linux-clear/PKGBUILD
-@@ -93,7 +93,8 @@ source=(
- _kernelname=${pkgbase#linux}
- : ${_kernelname:=-clear}
+@@ -115,7 +115,6 @@
+     ### Setting config
+         msg2 "Setting config..."
+         cp -Tf $srcdir/clearlinux/config ./.config
+-        make olddefconfig
  
--prepare() {
+     ### Copying i915 firmware and intel-ucode
+         msg2 "Copying i915 firmware and intel-ucode..."
+@@ -124,10 +123,6 @@
+         cp  ${srcdir}/intel-ucode-with-caveats/06* firmware/intel-ucode/
+         rm -f firmware/intel-ucode/0f*
+ 
+-    ### Prepared version
+-        make -s kernelrelease > ../version
+-        msg2 "Prepared %s version %s" "$pkgbase" "$(<../version)"
+-
+     ### Set ACPI_REV_OVERRIDE_POSSIBLE to prevent optimus lockup
+         if [ "${_rev_override}" = "y" ]; then
+         msg2 "Enabling ACPI Rev Override Possible..."
+@@ -153,6 +148,8 @@
+         patch -Np1 -i "$srcdir/kernel_gcc_patch-$_gcc_more_v/enable_additional_cpu_optimizations_for_gcc_v8.1+_kernel_v4.13+.patch"
+         fi
+ 
++        make olddefconfig
 +
-+build() {
-     cd ${_srcname}
- 
-     ### Add upstream patches
-@@ -180,10 +181,6 @@ CONFIG_MODULE_COMPRESS_XZ=y|' ./.config
+     ### Get kernel version
+         if [ "${_enable_gcc_more_v}" = "y" ] || [ -n "${_subarch}" ]; then
+         yes "$_subarch" | make oldconfig
+@@ -180,6 +177,11 @@
      ### Save configuration for later reuse
  
          cp -Tf ./.config "${startdir}/config-${pkgver}-${pkgrel}${_kernelname}"
--}
--
--build() {
--    cd ${_srcname}
- 
-     make bzImage modules
++
++    ### Prepared version
++        make -s kernelrelease > ../version
++        msg2 "Prepared %s version %s" "$pkgbase" "$(<../version)"
++
  }
+ 
+ build() {
+
 """
 
 import subprocess
