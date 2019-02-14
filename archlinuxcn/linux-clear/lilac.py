@@ -22,15 +22,19 @@ PATCH=b"""
      ### Set ACPI_REV_OVERRIDE_POSSIBLE to prevent optimus lockup
          if [ "${_rev_override}" = "y" ]; then
          msg2 "Enabling ACPI Rev Override Possible..."
-@@ -153,6 +148,8 @@
+@@ -153,10 +148,12 @@
          patch -Np1 -i "$srcdir/kernel_gcc_patch-$_gcc_more_v/enable_additional_cpu_optimizations_for_gcc_v8.1+_kernel_v4.13+.patch"
          fi
  
-+        make olddefconfig
 +
      ### Get kernel version
          if [ "${_enable_gcc_more_v}" = "y" ] || [ -n "${_subarch}" ]; then
          yes "$_subarch" | make oldconfig
+         else
++        make olddefconfig
+         make prepare
+         fi
+ 
 @@ -180,6 +177,11 @@
      ### Save configuration for later reuse
  

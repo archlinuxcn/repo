@@ -70,7 +70,7 @@ _srcname=linux-${_major}
 _clr=${_major}.8-696
 pkgbase=linux-clear
 pkgver=${_major}.${_minor}
-pkgrel=7
+pkgrel=8
 arch=('x86_64')
 url="https://github.com/clearlinux-pkgs/linux"
 license=('GPL2')
@@ -148,12 +148,12 @@ CONFIG_MODULE_COMPRESS_XZ=y|' ./.config
         patch -Np1 -i "$srcdir/kernel_gcc_patch-$_gcc_more_v/enable_additional_cpu_optimizations_for_gcc_v8.1+_kernel_v4.13+.patch"
         fi
 
-        make olddefconfig
 
     ### Get kernel version
         if [ "${_enable_gcc_more_v}" = "y" ] || [ -n "${_subarch}" ]; then
         yes "$_subarch" | make oldconfig
         else
+        make olddefconfig
         make prepare
         fi
 
