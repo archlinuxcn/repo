@@ -21,8 +21,8 @@ _language='zh-CN'
 
 _appname='tor-browser'
 pkgname="${_appname}-${_language,,}"
-pkgver='8.0.5'
-pkgrel='2'
+pkgver='8.0.6'
+pkgrel='1'
 pkgdesc="Tor Browser Bundle: anonymous browsing using Firefox and Tor (${_language})"
 url='https://www.torproject.org/projects/torbrowser.html'
 arch=('i686' 'x86_64')
