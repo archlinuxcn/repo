@@ -3,7 +3,7 @@
 # Contributor: Stefan Cocora <stefan dot cocora at gmail dot com>
 
 pkgname=skaffold
-pkgver=0.22.0
+pkgver=0.23.0
 pkgrel=1
 pkgdesc="A command line tool that facilitates continuous development for Kubernetes applications"
 arch=("x86_64")
@@ -15,9 +15,9 @@ optdepends=("google-cloud-sdk: To use GKE"
             "minikube: To use Minikube")
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/GoogleContainerTools/${pkgname}/archive/v${pkgver}.tar.gz"
         "build_info.patch")
-sha256sums=("298d466a4032d4bfa77cb762b0137bd53ed78c9ef3170e3c9c62cfa78c887821"
+sha256sums=("eaeaf6fb76e9d43d0cc996cd102d76a5dd343d9403cd7b930f469b99a65eebf7"
             "39b1e127a29979ef559e0a92cd721b23d6eac4251c703befd882b8667ac9789e")
-_commit="2187105aae414f500789ca6873898efeb104d7a7"
+_commit="2590e9d480ffb63e9d954fd1e317b93d5b3d3b9b"
 
 prepare() {
   cd "${srcdir}/${pkgname}-${pkgver}"
