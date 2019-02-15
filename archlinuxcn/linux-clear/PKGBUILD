@@ -65,12 +65,12 @@ _rev_override="n"
 ### IMPORTANT: Do no edit below this line unless you know what you're doing
 
 _major=4.20
-_minor=8
+_minor=10
 _srcname=linux-${_major}
 _clr=${_major}.8-696
 pkgbase=linux-clear
 pkgver=${_major}.${_minor}
-pkgrel=9
+pkgrel=10
 arch=('x86_64')
 url="https://github.com/clearlinux-pkgs/linux"
 license=('GPL2')
@@ -135,7 +135,7 @@ prepare() {
         sed -i "s|# CONFIG_CRYPTO_USER is not set|CONFIG_CRYPTO_USER=m|g" ./.config
 
     ### Compress modules
-        msg "Enabling XZ compressed modules..."
+        msg2 "Enabling XZ compressed modules..."
         sed -i 's|^# CONFIG_MODULE_COMPRESS|\
 CONFIG_MODULE_COMPRESS=y\
 # CONFIG_MODULE_COMPRESS_GZIP is not set\
@@ -251,7 +251,6 @@ _package() {
 
 _package-headers() {
     pkgdesc="Header files and scripts for building modules for linux-clear"
-    depends=('linux-clear')
 
     local builddir="$pkgdir/usr/lib/modules/$(<version)/build"
 
@@ -341,7 +340,7 @@ done
 
 sha256sums=('ad0823183522e743972382df0aa08fb5ae3077f662b125f1e599b0b2aaa12438'
             'SKIP'
-            '12df4b41babb5d4875f5c567d7510a089dc4f0e6408b524c935cf499301928c0'
+            '1e653ce01ea5ffb2a6f60b1947a67173be9e8f836467e537208bf2b243e1425b'
             'SKIP'
             '29f9e8dc27e6c9b6488cecd7fe2394030307799e511db2d197d9e6553a7f9e40'
             '226e30068ea0fecdb22f337391385701996bfbdba37cdcf0f1dbf55f1080542d'
