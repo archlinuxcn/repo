@@ -30,7 +30,7 @@ build()
   cd src/vldp2
   ./configure --disable-accel-detect
   make -f Makefile.linux_x64
-  cd ../game
+  cd ..
   ln -s Makefile.vars.linux_x64 Makefile.vars
   make
   cd ..
