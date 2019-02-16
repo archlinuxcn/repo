@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+set -u
+
+THIS_PATH="$(dirname "$(readlink -f "$0")")"
+
+source "$THIS_PATH/functions.sh"
+changePath
+
+#Common variable for the pid of running instance (initially none)
+JDPID=0
+
+#check if jdownloader is running (0=yes, 2=no). This function sets environment variable JDPID
+function getStatus(){
+  if [ -f "JD2.lock" ]; then
+    FUSER_STR="$(fuser "JD2.lock" 2>/dev/null)"
+    if [ $? -eq 0 ]; then
+      # get the PID
+      JDPID="$(echo "$FUSER_STR" | rev | cut -f 1 -d ' ' | rev)"
+      return 0
+    else
+      return 2
+    fi
+    
+  else
+    return 2
+  fi  
+}
+
+
+
+ACTION="${1:-}"
+
+if [ -z "$ACTION" ]; then
+  echo "$0 start/stop/status"
+  exit 2 
+fi
+
+getStatus
+JDRUNS=$?
+
+if [ "$ACTION" = "status" ]; then
+  if [ $JDRUNS -eq 0 ]; then
+    echo "JDownloader is running under PID $JDPID"
+    exit 0
+  else
+    echo "JDownloader is currently not running"
+    exit 2
+  fi
+elif [ "$ACTION" = "start" ]; then
+  if [ $JDRUNS -eq 0 ]; then
+    echo "JDownloader is already running under PID $JDPID"
+    exit 0
+  fi
+  if [ "$JD_SCOPE" = "global" ]; then
+    if [ -t 0 ] && isRoot ; then
+      systemctl status jdownloader >/dev/null
+      if [ $? -ne 0 ] || isRoot ; then
+        echo "redirecting to systemctl..."
+        systemctl start jdownloader
+        exit $?
+      fi
+    fi
+  fi
+  
+  
+  /usr/bin/JDownloaderHeadless --daemon
+  exit $?
+elif [ "$ACTION" = "stop" ]; then
+  if [ $JDRUNS -ne 0 ]; then
+    echo "JDownloader is not running"
+    exit 2
+  fi
+  if [ "$JD_SCOPE" = "global" ]; then
+    if [ -t 0 ] && isRoot ; then
+      systemctl status jdownloader >/dev/null
+      if [ $? -eq 0 ]; then
+        echo "redirecting to systemctl..."
+        systemctl stop jdownloader
+        exit $?
+      fi
+    fi
+  fi
+  
+  while true; do
+    ps -p $JDPID >/dev/null 2>/dev/null
+    if [ $? -ne 0 ]; then
+      break
+    fi
+    echo "trying to kill jdownloader with PID $JDPID"
+    kill $JDPID
+    sleep 5
+  done
+  exit 0
+else
+  echo "unknown command!"
+  exit 2
+fi
+

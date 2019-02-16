@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+THIS_PATH="$(dirname "$(readlink -f "$0")")"
+source "$THIS_PATH/functions.sh"
+changeUser
+changePath
+downloadJDownloader
+
+exec java -jar JDownloader.jar "$@"

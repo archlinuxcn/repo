@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+set -u
+THIS_PATH="$(dirname "$(readlink -f "$0")")"
+source "$THIS_PATH/functions.sh"
+
+changeUser
+changePath
+downloadJDownloader
+
+function showFailure(){
+  local FAILURE="$1"
+  if [ -t 0 ] ; then
+    echo "WARNING: $FAILURE"
+  else
+    echo "ERROR: $FAILURE"
+    echo "You could run \"JDownloaderHeadlessCleanLogin\" to remove entire MyJDownloader Settings."
+    echo "Afterwards you should run \"JDownloaderHeadless\" in a terminal"
+    exit 2
+  fi
+}
+AS_DAEMON=2
+if [ "${1:-}" == "--daemon" ]; then
+  AS_DAEMON=0
+  shift
+fi
+
+#check for config
+if [ ! -f "cfg/org.jdownloader.api.myjdownloader.MyJDownloaderSettings.json" ]; then
+  showFailure "Configurationfile not set"
+fi
+
+
+grep email "cfg/org.jdownloader.api.myjdownloader.MyJDownloaderSettings.json" >/dev/null
+if [ $? -ne 0 ]; then
+   showFailure "Email seems not to be set"
+fi
+
+grep password "cfg/org.jdownloader.api.myjdownloader.MyJDownloaderSettings.json" >/dev/null
+if [ $? -ne 0 ]; then
+   showFailure "Password seems not to be set"
+fi
+
+LOGFILE="JDownloader.service.log"
+if [ -t 0 -a "${AS_DAEMON}" -eq 2 ] ; then
+  exec java -Djava.awt.headless=true -jar JDownloader.jar -norestart "$@"
+else
+  if [ -f "$LOGFILE" ]; then
+    # Save the old Logfile (this automatically removes the n-2 one, if there is one)
+    mv "${LOGFILE}" "${LOGFILE}.old"
+  fi 
+  echo "All output is redirected to \"$(readlink -f "${LOGFILE}")\"" 
+  if [ "${AS_DAEMON}" -eq 0 ]; then
+    nohup java -Djava.awt.headless=true -jar JDownloader.jar "$@" >"${LOGFILE}" 2>&1 &
+  else
+    exec java -Djava.awt.headless=true -jar JDownloader.jar "$@" >"${LOGFILE}" 2>&1 
+  fi
+fi
+sleep 5

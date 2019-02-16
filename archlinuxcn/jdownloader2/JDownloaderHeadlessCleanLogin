@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+THIS_PATH="$(dirname "$(readlink -f "$0")")"
+source "$THIS_PATH/functions.sh"
+changeUser
+changePath
+
+LOGFILE="JDownloader.service.log"
+
+if [ -f "cfg/org.jdownloader.api.myjdownloader.MyJDownloaderSettings.json" ]; then
+  echo "do you really want to delete the entire MyJDownloaderSettings config file? Type: yes/no, default: no"
+  read ANSWER
+  if [ "$ANSWER" == "yes" ]; then
+    rm "cfg/org.jdownloader.api.myjdownloader.MyJDownloaderSettings.json"
+    echo "deleted."
+  else
+    echo "aborted."
+  fi
+else
+  echo "There is no MyJDownloader config file"
+fi
