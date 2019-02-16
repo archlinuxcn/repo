@@ -5,18 +5,18 @@
 pkgname=pacman-static
 pkgver=5.1.2
 _cares_ver=1.15.0
-_nghttp2_ver=1.35.1
-_curlver=7.63.0
+_nghttp2_ver=1.36.0
+_curlver=7.64.0
 _sslver=1.1.1a
 _xzver=5.2.4
 _bzipver=1.0.6
 _zstdver=1.3.8
 _libarchive_ver=3.3.3
-_gpgerrorver=1.34
+_gpgerrorver=1.35
 _libassuanver=2.5.2
 _gpgmever=1.12.0
 _gnupgver=2.2.12
-pkgrel=2
+pkgrel=3
 pkgdesc="Statically-compiled pacman (to fix or install systems without libc)"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://www.archlinux.org/pacman/"
@@ -34,8 +34,7 @@ source+=("https://github.com/nghttp2/nghttp2/releases/download/v$_nghttp2_ver/ng
 source+=("https://c-ares.haxx.se/download/c-ares-${_cares_ver}.tar.gz"{,.asc})
 validpgpkeys+=('27EDEAF22F3ABCEB50DB9A125CC908FDB71E12C2') # Daniel Stenberg <daniel@haxx.se>
 # curl
-source+=("https://curl.haxx.se/download/curl-${_curlver}.tar.gz"{,.asc}
-         "https://github.com/curl/curl/commit/6dc1780ea54129b3e6721fe9ee3f9d4f1d7abc1b.patch")
+source+=("https://curl.haxx.se/download/curl-${_curlver}.tar.gz"{,.asc})
 # openssl
 source+=("https://www.openssl.org/source/openssl-${_sslver}.tar.gz"{,.asc}
          "ca-dir.patch")
@@ -61,12 +60,11 @@ source+=("libarchive-${_libarchive_ver}.tar.gz::https://github.com/libarchive/li
 
 sha512sums=('3c123005587359315ab0c24d50a58d10f365eb92b24840213559cd951c863beaa2e3805bf728975fdae55dc2619e1c2dfeafaef2ee57f3882a30c4d5e8777750'
             'SKIP'
-            'fcd3f79f913afbeee1c75003bb39df918e6122bbf728b3ad4192d5849d8fb96705e04f5505465d63f25a565b2f1da6abd8fabdebb6e3347500f7abd31980861d'
+            '4e0d5c5cdb4f1b7e5f12790850237f36649af4aa9596033392725972e4e0e5a33bb78bd1aa0735e35e489b523b7e9a236a7b5847dfca69bd7583fcab36c13c76'
             'a1de6c5e7e1a6a13c926aae690e83d5caa51e7313d63da1cf2af6bc757c41d585aad5466bc3ba7b7f7793cb1748fa589f40972b196728851c8b059cfc8c3be50'
             'SKIP'
-            '25ad69a1978de2178ac7a456e72152907203931ad895234c14781c27681ea2c5d6669794880c4ebae6e38b8014c6538bc88a6afec2c192210b6d491d60b8f691'
+            'ea0e68f9cbf2eb4f235d8506962dcc7709f769ef3526c0e4c130fdaf7186a1a13b303c6ce919cb9125bbf7c64ddf4f8efb3d9269b906f856e6d7b3def027fb81'
             'SKIP'
-            '8a351ee445f79e54b46cc584fc0c341875d012f1db6e858de1b790177f12c622361eeccec1758d439ef1d839c9688899dd761b949b33311aa717709ba6040c05'
             '1523985ba90f38aa91aa6c2d57652f4e243cb2a095ce6336bf34b39b5a9b5b876804299a6825c758b65990e57948da532cca761aa12b10958c97478d04dd6d34'
             'SKIP'
             '3857c298663728a465b5f95a3ef44547efbfb420d755e9dde7f20aa3905171b400e1c126d8db5c2b916c733bbd0724d8753cad16c9baf7b12dcd225a3ee04a97'
@@ -74,7 +72,7 @@ sha512sums=('3c123005587359315ab0c24d50a58d10f365eb92b24840213559cd951c863beaa2e
             'SKIP'
             '00ace5438cfa0c577e5f578d8a808613187eff5217c35164ffe044fbafdfec9e98f4192c02a7d67e01e5a5ccced630583ad1003c37697219b0f147343a3fdd12'
             '5c1c0a7a998b814a9edc1466f6d321b0d8ffcf927295fd5499137c9075a8823be03d98f61ea5212d1969f8d52b32e940b1cc10d1507d7702424ea2eea0e79a1b'
-            'f21b558ad13d550e25cc07a12aeedfbaf035828c38382935e8f2c595a7affe6b41190ae5af3126db05cee4355d5e2a514759871baf09f3174993ce60ee5492c4'
+            '9b1983f18f44f51b89a034c15b27415f710c21ead12dd63821aa489fb4c6d4b649a658ce1d5e1f3424cee483d3243be151b8fe32a24642af4531ded508aa4ac7'
             'SKIP'
             '1c6f87e3f785a053e6b736eb3554fa704c798c7078307391ca45961e06d9282c659c8e46d230d1f52e67acc2cc12d841f9ec0d5184443f68555d3f0d240865b3'
             'SKIP'
@@ -99,10 +97,6 @@ fi
 prepare() {
     cd "${srcdir}"/libarchive-${_libarchive_ver}
     autoreconf -fi
-
-    cd "${srcdir}"/curl-${_curlver}
-    # See https://github.com/curl/curl/issues/3392
-    patch -p1 -i "${srcdir}"/6dc1780ea54129b3e6721fe9ee3f9d4f1d7abc1b.patch
 }
 
 build() {
@@ -211,14 +205,14 @@ build() {
     ./configure --prefix="${srcdir}"/temp/usr \
         --disable-shared
     make -C src
-    make -C src install-libLTLIBRARIES install-binSCRIPTS install-nodist_includeHEADERS
+    make -C src install-{{,dist_}binSCRIPTS,libLTLIBRARIES,nodist_includeHEADERS,pkgconfigDATA}
 
     # libassuan
     cd "${srcdir}"/libassuan-${_libassuanver}
     ./configure --prefix="${srcdir}"/temp/usr \
         --disable-shared
     make -C src
-    make -C src install-libLTLIBRARIES install-binSCRIPTS install-nodist_includeHEADERS
+    make -C src install-{binSCRIPTS,libLTLIBRARIES,nodist_includeHEADERS,pkgconfigDATA}
 
     # gpgme
     cd "${srcdir}"/gpgme-${_gpgmever}
@@ -227,7 +221,7 @@ build() {
         --disable-shared \
         --disable-languages
     make -C src
-    make -C src install-libLTLIBRARIES install-binSCRIPTS install-nodist_includeHEADERS
+    make -C src install-{binSCRIPTS,libLTLIBRARIES,nodist_includeHEADERS}
 
     # ew libtool
     rm "${srcdir}"/temp/usr/lib/lib*.la
@@ -253,6 +247,8 @@ package() {
     make -C src/util  DESTDIR="${pkgdir}" install
     make -C src/pacman  DESTDIR="${pkgdir}" install-binPROGRAMS
 
-    cp -a "${srcdir}"/temp/usr/{include,lib} "${pkgdir}"/usr/lib/pacman/
-    sed -i "s@${srcdir}/temp/usr@/usr/lib/pacman@g" "${pkgdir}"/usr/lib/pacman/lib/pkgconfig/*.pc
+    cp -a "${srcdir}"/temp/usr/{bin,include,lib} "${pkgdir}"/usr/lib/pacman/
+    sed -i "s@${srcdir}/temp/usr@/usr/lib/pacman@g" \
+        "${pkgdir}"/usr/lib/pacman/lib/pkgconfig/*.pc \
+        "${pkgdir}"/usr/lib/pacman/bin/*
 }
