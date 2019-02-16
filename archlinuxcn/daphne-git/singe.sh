@@ -9,7 +9,7 @@ echo "Singe Launcher : Script dir is $SCRIPT_DIR"
 cd "$SCRIPT_DIR"
 
 # point to our linked libs that user may not have
-LD_LIBRARY_PATH=$PWD:$LD_LIBRARY_PATH
+LD_LIBRARY_PATH=$PWD:$DAPHNE_DATA:$LD_LIBRARY_PATH
 
 if [ -z $1 ] ; then
 	echo "Specify a game to try: timegal"

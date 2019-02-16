@@ -10,7 +10,7 @@ echo "Daphne Launcher : Script dir is $SCRIPT_DIR"
 cd "$SCRIPT_DIR"
 
 # point to our linked libs that user may not have
-export LD_LIBRARY_PATH=$SCRIPT_DIR:$DAPHNE_SHARE:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$SCRIPT_DIR:$DAPHNE_DATA:$LD_LIBRARY_PATH
 
 if [ -z $1 ] ; then
 	echo "Specify a game to try: ace astron badlands bega cliff cobra esh"

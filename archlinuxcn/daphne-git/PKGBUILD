@@ -4,7 +4,7 @@
 pkgname=daphne-git
 _pkgname=daphne
 pkgver=100.0e76a0d
-pkgrel=5
+pkgrel=6
 pkgdesc="A command-line multiple arcade laserdisc emulator. GIT fork"
 url="http://www.daphne-emu.com/"
 license=('GPL')
@@ -15,8 +15,8 @@ provides=('daphne')
 conflicts=('daphne')
 source=('git://github.com/DavidGriffith/daphne.git' 'daphne.sh' 'singe.sh')
 sha256sums=('SKIP'
-            '2d15d860a03a691e2ddfd8068f8bbb1e75d5d948608c464c46cf2700a4ad8a9b'
-            '81b3b822e080eb487878e70e0434561612be36a77b9c8e5dcba0bf1a0e31e15f')
+            '4c98c302a40cc0d51bcc7ec464d5cb597cb46309339ca3e5e41b548b412283c0'
+            'a3a8d0002d6f19681011853aee690344956f2b1fe6976cc988b3ee13a82a8fce')
 
 pkgver()
 {
@@ -30,7 +30,7 @@ build()
   cd src/vldp2
   ./configure --disable-accel-detect
   make -f Makefile.linux_x64
-  cd ..
+  cd ../game
   ln -s Makefile.vars.linux_x64 Makefile.vars
   make
   cd ..
@@ -43,6 +43,7 @@ package()
   install -Dm755 ${srcdir}/daphne.sh ${pkgdir}/usr/bin/daphne
   install -Dm755 ${srcdir}/singe.sh ${pkgdir}/usr/bin/singe
   install -Dm755 ${_pkgname}.bin ${pkgdir}/usr/share/${_pkgname}/${_pkgname}
+  install -Dm755 libvldp2.so ${pkgdir}/usr/share/${_pkgname}/libvldp2.so
   install -d ${pkgdir}/usr/share/${_pkgname}/{pics,pics/obsolete,roms/cputest,sound}
   install -m644 pics/*.* ${pkgdir}/usr/share/${_pkgname}/pics/
   install -m644 pics/obsolete/*.* ${pkgdir}/usr/share/${_pkgname}/pics/obsolete/
