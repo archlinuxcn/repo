@@ -1,7 +1,7 @@
 # Maintainer: EHfive <eh5@sokka.cn>
 
 pkgname=libldac
-pkgver=2.0.2.2
+pkgver=2.0.2.3
 pkgrel=1
 pkgdesc="AOSP libldac dispatcher "
 arch=("i686" "x86_64" "arm" "armv6h" "armv7h" "aarch64")
@@ -10,10 +10,10 @@ license=('Apache 2.0')
 depends=()
 makedepends=("cmake>=3.0" "make")
 optdepends=()
-provides=("ldacBT=2.0.2.2" "ldacBT_enc.so=2.0.2.2" "ldacBT_abr.so=2.0.2.2")
-source=("https://github.com/EHfive/ldacBT/releases/download/v2.0.2.2/ldacBT-2.0.2.2.tar.gz")
+provides=("ldacBT=$pkgver" "ldacBT_enc.so=$pkgver" "ldacBT_abr.so=$pkgver")
+source=("https://github.com/EHfive/ldacBT/releases/download/v$pkgver/ldacBT-$pkgver.tar.gz")
 
-sha256sums=('2baebf72de366178de67d014e52490577673858d030284243d61d0e507753d5e')
+sha256sums=('4bd8eece78bb5c1361fab95743e7100506e2408a25c4a592a0f8d349746dc5b4')
 
 
 build() {
@@ -29,5 +29,8 @@ build() {
 
 package() {
     cd "$srcdir/ldacBT"
+
     make DESTDIR="$pkgdir" install
+    install -Dm 644 LICENSE -t "$pkgdir"/usr/share/licenses/ldacBT
+    install -Dm 644 libldac/LICENSE libldac/NOTICE -t "$pkgdir"/usr/share/licenses/ldacBT/libldac
 }
