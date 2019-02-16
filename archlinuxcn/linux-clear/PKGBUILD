@@ -67,10 +67,10 @@ _rev_override="n"
 _major=4.20
 _minor=10
 _srcname=linux-${_major}
-_clr=${_major}.8-696
+_clr=${_major}.8-697
 pkgbase=linux-clear
 pkgver=${_major}.${_minor}
-pkgrel=10
+pkgrel=11
 arch=('x86_64')
 url="https://github.com/clearlinux-pkgs/linux"
 license=('GPL2')
@@ -116,12 +116,12 @@ prepare() {
         msg2 "Setting config..."
         cp -Tf $srcdir/clearlinux/config ./.config
 
-    ### Copying i915 firmware and intel-ucode
-        msg2 "Copying i915 firmware and intel-ucode..."
-        cp -a /usr/lib/firmware/i915 firmware/
-        cp -a ${srcdir}/intel-ucode firmware/
-        cp  ${srcdir}/intel-ucode-with-caveats/06* firmware/intel-ucode/
-        rm -f firmware/intel-ucode/0f*
+    ### Compress modules
+        msg2 "Enabling XZ compressed modules..."
+        sed -i 's|^# CONFIG_MODULE_COMPRESS|\
+CONFIG_MODULE_COMPRESS=y\
+# CONFIG_MODULE_COMPRESS_GZIP is not set\
+CONFIG_MODULE_COMPRESS_XZ=y|' ./.config
 
     ### Set ACPI_REV_OVERRIDE_POSSIBLE to prevent optimus lockup
         if [ "${_rev_override}" = "y" ]; then
@@ -129,17 +129,12 @@ prepare() {
         sed -i "s|# CONFIG_ACPI_REV_OVERRIDE_POSSIBLE is not set|CONFIG_ACPI_REV_OVERRIDE_POSSIBLE=y|g" ./.config
         fi
 
-    ### Bluez package on arch needs this module for bluetooth to work
-        # https://bugs.archlinux.org/task/55880
-        msg2 "Enabling crypto_user module..."
-        sed -i "s|# CONFIG_CRYPTO_USER is not set|CONFIG_CRYPTO_USER=m|g" ./.config
-
-    ### Compress modules
-        msg2 "Enabling XZ compressed modules..."
-        sed -i 's|^# CONFIG_MODULE_COMPRESS|\
-CONFIG_MODULE_COMPRESS=y\
-# CONFIG_MODULE_COMPRESS_GZIP is not set\
-CONFIG_MODULE_COMPRESS_XZ=y|' ./.config
+    ### Copying i915 firmware and intel-ucode
+        msg2 "Copying i915 firmware and intel-ucode..."
+        cp -a /usr/lib/firmware/i915 firmware/
+        cp -a ${srcdir}/intel-ucode firmware/
+        cp  ${srcdir}/intel-ucode-with-caveats/06* firmware/intel-ucode/
+        rm -f firmware/intel-ucode/0f*
 
     ### Patch source to unlock additional gcc CPU optimizations
         # https://github.com/graysky2/kernel_gcc_patch
@@ -148,14 +143,16 @@ CONFIG_MODULE_COMPRESS_XZ=y|' ./.config
         patch -Np1 -i "$srcdir/kernel_gcc_patch-$_gcc_more_v/enable_additional_cpu_optimizations_for_gcc_v8.1+_kernel_v4.13+.patch"
         fi
 
-
     ### Get kernel version
         if [ "${_enable_gcc_more_v}" = "y" ] || [ -n "${_subarch}" ]; then
         yes "$_subarch" | make oldconfig
         else
-        make olddefconfig
         make prepare
         fi
+
+    ### Prepared version
+        make -s kernelrelease > ../version
+        msg2 "Prepared %s version %s" "$pkgbase" "$(<../version)"
 
     ### Optionally load needed modules for the make localmodconfig
         # See https://aur.archlinux.org/packages/modprobed-db
@@ -177,11 +174,6 @@ CONFIG_MODULE_COMPRESS_XZ=y|' ./.config
     ### Save configuration for later reuse
 
         cp -Tf ./.config "${startdir}/config-${pkgver}-${pkgrel}${_kernelname}"
-
-    ### Prepared version
-        make -s kernelrelease > ../version
-        msg2 "Prepared %s version %s" "$pkgbase" "$(<../version)"
-
 }
 
 build() {
