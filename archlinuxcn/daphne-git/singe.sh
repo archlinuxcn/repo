@@ -1,7 +1,7 @@
 #!/bin/sh
 
 SCRIPT_DIR=`dirname "$0"`
-DAPHNE_BIN=/usr/share/daphne.bin
+DAPHNE_BIN=/usr/share/daphne/daphne.bin
 DAPHNE_SHARE=~/.daphne
 DAPHNE_DATA=/usr/share/daphne
 
