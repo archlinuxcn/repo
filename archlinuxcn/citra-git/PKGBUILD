@@ -6,12 +6,12 @@ _pkgbase='citra'
 pkgbase="$_pkgbase-git"
 pkgname=("$_pkgbase-git" "$_pkgbase-qt-git")
 pkgver=r7596.de1128c60
-pkgrel=1
+pkgrel=3
 pkgdesc="An experimental open-source Nintendo 3DS emulator/debugger"
 arch=('i686' 'x86_64')
 url="https://github.com/citra-emu/citra/"
 license=('GPL2')
-makedepends=('git' 'cmake' 'sdl2' 'qt5-base' 'shared-mime-info' 'desktop-file-utils' 'qt5-multimedia' 'ffmpeg' 'ninja' 'qt5-tools')
+makedepends=('git' 'cmake' 'sdl2' 'qt5-base' 'shared-mime-info' 'desktop-file-utils' 'qt5-multimedia' 'ffmpeg' 'ninja' 'qt5-tools' 'clang' 'llvm')
 source=("$_pkgbase::git+https://github.com/citra-emu/citra")
 md5sums=('SKIP')
 
@@ -32,12 +32,17 @@ build() {
 	cd "$srcdir/$_pkgbase/build"
 	cmake .. \
 	  -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=lib \
 	  -DENABLE_QT_TRANSLATION=ON \
 	  -DCITRA_ENABLE_COMPATIBILITY_REPORTING=ON \
 	  -DENABLE_COMPATIBILITY_LIST_DOWNLOAD=ON \
 	  -DUSE_DISCORD_PRESENCE=ON \
 	  -DENABLE_FFMPEG=ON \
 	  -DCMAKE_BUILD_TYPE=Release \
+    -DDYNARMIC_USE_LLVM=TRUE \
+    -DENABLE_NC=TRUE \
+    -DFMT_INSTALL=TRUE \
+    -DTEAKRA_BUILD_TOOLS=TRUE \
 	  -GNinja
 	ninja
 }
@@ -48,13 +53,13 @@ check() {
 }
 
 package_citra-git() {
-	depends=('sdl2' 'libpng')
+	depends=('sdl2' 'ffmpeg' 'llvm-libs')
 
 	install -Dm755 "$srcdir/$_pkgbase/build/bin/citra" "$pkgdir/usr/bin/citra"
 }
 
 package_citra-qt-git() {
-	depends=('qt5-base' 'sdl2' 'shared-mime-info' 'desktop-file-utils' 'ffmpeg')
+	depends=('qt5-multimedia' 'sdl2' 'shared-mime-info' 'desktop-file-utils' 'ffmpeg' 'llvm-libs')
 	optdepends=('libxkbcommon-x11: for X11 support'
 		    'qt5-wayland: for Wayland support')
 
