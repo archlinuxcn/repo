@@ -2,7 +2,7 @@
 
 SCRIPT_DIR=`dirname "$0"`
 if realpath / >/dev/null; then SCRIPT_DIR=$(realpath "$SCRIPT_DIR"); fi
-DAPHNE_BIN=/usr/share/daphne.bin
+DAPHNE_BIN=/usr/share/daphne/daphne.bin
 DAPHNE_SHARE=~/.daphne
 DAPHNE_DATA=/usr/share/daphne
 
