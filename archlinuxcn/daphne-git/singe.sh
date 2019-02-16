@@ -1,7 +1,7 @@
 #!/bin/sh
 
 SCRIPT_DIR=`dirname "$0"`
-DAPHNE_BIN=/usr/share/daphne/daphne.bin
+DAPHNE_BIN=/usr/share/daphne/daphne
 DAPHNE_SHARE=~/.daphne
 DAPHNE_DATA=/usr/share/daphne
 
@@ -18,7 +18,7 @@ fi
 
 
 #strace -o strace.txt \
-./$DAPHNE_BIN singe vldp \
+$DAPHNE_BIN singe vldp \
 -framefile $DAPHNE_SHARE/singe/$1/$1.txt \
 -script $DAPHNE_SHARE/singe/$1/$1.singe \
 -homedir $DAPHNE_SHARE \

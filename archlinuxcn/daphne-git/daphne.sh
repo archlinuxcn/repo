@@ -2,7 +2,7 @@
 
 SCRIPT_DIR=`dirname "$0"`
 if realpath / >/dev/null; then SCRIPT_DIR=$(realpath "$SCRIPT_DIR"); fi
-DAPHNE_BIN=/usr/share/daphne/daphne.bin
+DAPHNE_BIN=/usr/share/daphne/daphne
 DAPHNE_SHARE=~/.daphne
 DAPHNE_DATA=/usr/share/daphne
 
@@ -27,7 +27,7 @@ case "$1" in
 esac
 
 #strace -o strace.txt \
-./$DAPHNE_BIN $1 vldp \
+$DAPHNE_BIN $1 vldp \
 $FASTBOOT \
 -framefile $DAPHNE_SHARE/$VLDP_DIR/$1/$1.txt \
 -homedir $DAPHNE_SHARE \
