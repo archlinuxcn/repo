@@ -5,7 +5,7 @@ pkgbase=mendeleydesktop
 pkgname=('mendeleydesktop'
          'mendeleydesktop-bundled')
 pkgver=1.19.3
-pkgrel=2
+pkgrel=3
 pkgdesc="Academic software for managing and sharing research papers."
 url=http://www.mendeley.com/release-notes/
 arch=(i686 x86_64)
@@ -77,7 +77,7 @@ package_mendeleydesktop-bundled() {
     conflicts=('mendeleydesktop')
     cd "$pkgbase-$pkgver-linux-$CARCH"
 
-    sed -i 's/Exec=/&LD_LIBRARY_PATH=\/opt\/mendeleydesktop\/lib\/mendeleydesktop\/plugins\/platforms /' bin/install-mendeley-link-handler.sh
+    sed -i 's/Exec=/&env LD_LIBRARY_PATH=\/opt\/mendeleydesktop\/lib\/mendeleydesktop\/plugins\/platforms /' bin/install-mendeley-link-handler.sh
 
     install -d "$pkgdir/opt/$pkgbase"
     cp -a bin lib share "$pkgdir/opt/$pkgbase/"
