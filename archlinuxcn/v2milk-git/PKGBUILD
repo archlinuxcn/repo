@@ -1,0 +1,44 @@
+# Maintainer: Bruce Zhang <zttt183525594@gmail.com>
+pkgname=v2milk-git
+_pkgname=V2Milk
+pkgver=r39.70bb3fd
+pkgrel=1
+pkgdesc="V2Ray cross-platform client."
+arch=('x86_64')
+url="https://github.com/LowPowerTime/V2Milk"
+license=('GPL3')
+depends=('electron')
+makedepends=('git')
+source=(
+	'git+https://github.com/LowPowerTime/V2Milk.git'
+	'v2milk.sh'
+	'v2milk.desktop'
+)
+md5sums=('SKIP'
+         '76d1b04ca3279eb1b83bb4141ea95998'
+         '7c7d7db869486d3dde95f7bd5ef46db3')
+
+pkgver() {
+	cd "$srcdir/${_pkgname}"
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+	cd "$srcdir/${_pkgname}/APP"
+	sed -i '/\"electron\":/d' package.json
+	npm install
+}
+
+package() {
+	cd "$srcdir/${_pkgname}/APP"
+
+	# Install app
+	mkdir -p $pkgdir/opt/v2milk
+	find * -type f -exec install -Dm644 {} "${pkgdir}/opt/v2milk/{}" \;
+	
+	# Install files
+	mkdir -p $pkgdir/usr/bin
+	mkdir -p $pkgdir/usr/share/applications
+	install -Dm755 $srcdir/v2milk.sh $pkgdir/usr/bin/v2milk
+    install -Dm644 $srcdir/v2milk.desktop $pkgdir/usr/share/applications/v2milk.desktop
+}
