@@ -1,0 +1,87 @@
+# Maintainer: Sven-Hendrik Haase <sh@lutzhaase.com>
+# Maintainer: Felix Yan <felixonmars@archlinux.org>
+# Contributor: Thomas Baechler <thomas@archlinux.org>
+
+pkgbase=nvidia-beta
+pkgname=(nvidia-beta nvidia-dkms-beta)
+pkgver=418.30
+_extramodules=extramodules-ARCH
+pkgrel=1
+pkgdesc="NVIDIA drivers for linux"
+arch=('x86_64')
+url="http://www.nvidia.com/"
+makedepends=("nvidia-utils=${pkgver}" 'libglvnd' 'linux' 'linux-headers>=4.20' 'linux-headers<4.21')
+license=('custom')
+options=('!strip')
+_pkg="NVIDIA-Linux-x86_64-${pkgver}"
+source=("http://us.download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/${_pkg}.run"
+        kernel-4.16.patch)
+sha512sums=('f227923528d54e66d9f79bfaf7239a0e7dd6d59cfa7a7766b36c9a91be091ac0702874f9ed460d4171fb6b67d88adbe2415c70e4f82ff87c8baebd045a493831'
+            'ad1185d998adbf89abf7aea300e5b3bbabe2296016f42592fbc232a6c3983f233df1103d37f35a041f12cc1c722d3edce813a4a1b215784a49c7f0e3e652b5af')
+
+prepare() {
+    sh "${_pkg}.run" --extract-only
+    cd "${_pkg}"
+
+    # Restore phys_to_dma support (still needed for 396.18)
+    # https://bugs.archlinux.org/task/58074
+    patch -Np1 -i ../kernel-4.16.patch
+
+    cp -a kernel kernel-dkms
+    cd kernel-dkms
+    sed -i "s/__VERSION_STRING/${pkgver}/" dkms.conf
+    sed -i 's/__JOBS/`nproc`/' dkms.conf
+    sed -i 's/__DKMS_MODULES//' dkms.conf
+    sed -i '$iBUILT_MODULE_NAME[0]="nvidia"\
+DEST_MODULE_LOCATION[0]="/kernel/drivers/video"\
+BUILT_MODULE_NAME[1]="nvidia-uvm"\
+DEST_MODULE_LOCATION[1]="/kernel/drivers/video"\
+BUILT_MODULE_NAME[2]="nvidia-modeset"\
+DEST_MODULE_LOCATION[2]="/kernel/drivers/video"\
+BUILT_MODULE_NAME[3]="nvidia-drm"\
+DEST_MODULE_LOCATION[3]="/kernel/drivers/video"' dkms.conf
+
+    # Gift for linux-rt guys
+    sed -i 's/NV_EXCLUDE_BUILD_MODULES/IGNORE_PREEMPT_RT_PRESENCE=1 NV_EXCLUDE_BUILD_MODULES/' dkms.conf
+}
+
+build() {
+    _kernver="$(cat /usr/lib/modules/${_extramodules}/version)"
+    cd "${_pkg}"/kernel
+    make SYSSRC=/usr/lib/modules/"${_kernver}/build" module
+}
+
+package_nvidia-beta() {
+    pkgdesc="NVIDIA drivers for linux (Beta version)"
+    depends=('linux>=4.20' 'linux<4.21' "nvidia-utils=${pkgver}" 'libglvnd')
+    provides=("nvidia=${pkgver}")
+    conflicts=('nvidia')
+    install -Dt "${pkgdir}/usr/lib/modules/${_extramodules}" -m644 \
+      "${srcdir}/${_pkg}/kernel"/nvidia{,-modeset,-drm,-uvm}.ko
+
+    find "${pkgdir}" -name '*.ko' -exec gzip -n {} +
+
+    echo "blacklist nouveau" |
+        install -Dm644 /dev/stdin "${pkgdir}/usr/lib/modprobe.d/${pkgname}.conf"
+
+    install -Dt "${pkgdir}/usr/share/licenses/${pkgname}" -m644 "${srcdir}/${_pkg}/LICENSE"
+}
+
+package_nvidia-dkms-beta() {
+    pkgdesc="NVIDIA driver sources for linux (Beta version)"
+    depends=('dkms' "nvidia-utils=$pkgver" 'libglvnd')
+    optdepends=('linux-headers: Build the module for Arch kernel'
+                'linux-lts-headers: Build the module for LTS Arch kernel')
+    provides=("nvidia=$pkgver" "nvidia-dkms=$pkgver")
+    conflicts+=('nvidia' 'nvidia-dkms')
+
+    cd ${_pkg}
+
+    install -dm 755 "${pkgdir}"/usr/src
+    cp -dr --no-preserve='ownership' kernel-dkms "${pkgdir}/usr/src/nvidia-${pkgver}"
+
+    echo "blacklist nouveau" |
+        install -Dm644 /dev/stdin "${pkgdir}/usr/lib/modprobe.d/${pkgname}.conf"
+
+    install -Dt "${pkgdir}/usr/share/licenses/${pkgname}" -m644 "${srcdir}/${_pkg}/LICENSE"
+}
