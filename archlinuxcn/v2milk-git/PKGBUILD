@@ -2,13 +2,13 @@
 pkgname=v2milk-git
 _pkgname=V2Milk
 pkgver=r39.70bb3fd
-pkgrel=1
+pkgrel=2
 pkgdesc="V2Ray cross-platform client."
 arch=('x86_64')
 url="https://github.com/LowPowerTime/V2Milk"
 license=('GPL3')
 depends=('electron')
-makedepends=('git')
+makedepends=('git' 'npm')
 source=(
 	'git+https://github.com/LowPowerTime/V2Milk.git'
 	'v2milk.sh'
