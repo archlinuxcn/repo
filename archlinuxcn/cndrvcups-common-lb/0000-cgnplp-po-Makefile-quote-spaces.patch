@@ -1,0 +1,46 @@
+--- cndrvcups-common-4.00/cngplp/po/Makefile.orig	2018-11-03 12:01:57.233864195 -0400
++++ cndrvcups-common-4.00/cngplp/po/Makefile	2018-11-03 11:55:35.019161804 -0400
+@@ -130,36 +130,36 @@ $(srcdir)/$(GETTEXT_PACKAGE).pot: $(POTF
+ install: install-exec install-data
+ install-exec:
+ install-data: install-data-yes
+ install-data-no: all
+ install-data-yes: all
+-	$(MKINSTALLDIRS) $(DESTDIR)$(datadir); \
++	$(MKINSTALLDIRS) "$(DESTDIR)$(datadir)"; \
+ 	catalogs='$(CATALOGS)'; \
+ 	for cat in $$catalogs; do \
+ 	  cat=`basename $$cat`; \
+ 	  case "$$cat" in \
+ 	    *.gmo) destdir=$(gnulocaledir);; \
+ 	    *)     destdir=$(localedir);; \
+ 	  esac; \
+ 	  lang=`echo $$cat | sed 's/\$(CATOBJEXT)$$//'`; \
+-	  dir=$(DESTDIR)$$destdir/$$lang/LC_MESSAGES; \
+-	  $(MKINSTALLDIRS) $$dir; \
++	  dir="$(DESTDIR)$$destdir/$$lang/LC_MESSAGES"; \
++	  $(MKINSTALLDIRS) "$$dir"; \
+ 	  if test -r $$cat; then \
+-	    $(INSTALL_DATA) $$cat $$dir/$(GETTEXT_PACKAGE)$(INSTOBJEXT); \
++	    $(INSTALL_DATA) $$cat "$$dir/$(GETTEXT_PACKAGE)$(INSTOBJEXT)"; \
+ 	    echo "installing $$cat as $$dir/$(GETTEXT_PACKAGE)$(INSTOBJEXT)"; \
+ 	  else \
+-	    $(INSTALL_DATA) $(srcdir)/$$cat $$dir/$(GETTEXT_PACKAGE)$(INSTOBJEXT); \
++	    $(INSTALL_DATA) $(srcdir)/$$cat "$$dir/$(GETTEXT_PACKAGE)$(INSTOBJEXT)"; \
+ 	    echo "installing $(srcdir)/$$cat as" \
+ 		 "$$dir/$(GETTEXT_PACKAGE)$(INSTOBJEXT)"; \
+ 	  fi; \
+ 	  if test -r $$cat.m; then \
+-	    $(INSTALL_DATA) $$cat.m $$dir/$(GETTEXT_PACKAGE)$(INSTOBJEXT).m; \
++	    $(INSTALL_DATA) $$cat.m "$$dir/$(GETTEXT_PACKAGE)$(INSTOBJEXT).m"; \
+ 	    echo "installing $$cat.m as $$dir/$(GETTEXT_PACKAGE)$(INSTOBJEXT).m"; \
+ 	  else \
+ 	    if test -r $(srcdir)/$$cat.m ; then \
+ 	      $(INSTALL_DATA) $(srcdir)/$$cat.m \
+-		$$dir/$(GETTEXT_PACKAGE)$(INSTOBJEXT).m; \
++		"$$dir/$(GETTEXT_PACKAGE)$(INSTOBJEXT).m"; \
+ 	      echo "installing $(srcdir)/$$cat as" \
+ 		   "$$dir/$(GETTEXT_PACKAGE)$(INSTOBJEXT).m"; \
+ 	    else \
+ 	      true; \
+ 	    fi; \

@@ -1,0 +1,15 @@
+--- cndrvcups-common-4.00/c3plmod_ipc/Makefile.orig	2018-11-03 13:39:48.641785549 -0400
++++ cndrvcups-common-4.00/c3plmod_ipc/Makefile	2018-11-03 13:40:00.611833670 -0400
+@@ -9,11 +9,11 @@
+ # Compiler Definition
+ CC=gcc
+ 
+ # Directories
+ CLIBDIR=$(LIBDIR)
+-CLIENT_INSTALLDIR = $(DESTDIR)$(CLIBDIR)
++CLIENT_INSTALLDIR = "$(DESTDIR)$(CLIBDIR)"
+ IPCLIBDIR = ./ipclib
+ 
+ # Compile/Link Options
+ #LINKOPTIONS_R=-o
+ LINKOPTIONS_R=-g -o
