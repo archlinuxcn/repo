@@ -47,7 +47,7 @@ def apply_patch(filename, patch):
     patch_proc.communicate(patch)
 
 def pre_build():
-    aur_pre_build()
+    aur_pre_build("firefox-kde-opensuse")
     apply_patch("PKGBUILD", PATCH)
 
     for line in edit_file('PKGBUILD'):
