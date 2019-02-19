@@ -6,7 +6,7 @@
 # Maintainer: Sakuraba Amane <tobiichiamane@archlinuxcn.org>
 
 pkgname=fish-latest
-pkgver=3.0.1
+pkgver=3.0.2
 pkgrel=1
 pkgdesc="User friendly shell intended mostly for interactive use."
 arch=('i686' 'x86_64' 'arm')
@@ -20,7 +20,7 @@ provides=('fish' 'fish-shell')
 conflicts=('fish' 'fish-shell' 'fish-git')
 install='fish.install'
 source=("https://github.com/fish-shell/fish-shell/archive/${pkgver}.tar.gz")
-md5sums=('3465e3a746495afde42c3e4c1a2bb8dd')
+md5sums=('5251cab4e22c99e4750e271f0ad85def')
 
 build() {
 	cd "$srcdir/fish-shell-${pkgver}"
