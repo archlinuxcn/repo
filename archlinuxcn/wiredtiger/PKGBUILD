@@ -4,17 +4,20 @@
 pkgname=wiredtiger
 pkgver=3.1.0.20190207
 _commit=bedf230af338faa9b9ba8741b9a2e5f36353e2f0
-pkgrel=1
+pkgrel=2
 pkgdesc="High performance, scalable, production quality, NoSQL, Open Source extensible platform for data management"
 arch=('x86_64')
 url="http://source.wiredtiger.com/"
 license=('GPL')
 depends=('snappy' 'lz4' 'zlib' 'gperftools')
+makedepends=('aspell-en')
 source=("$pkgname-$_commit.tar.gz::https://github.com/wiredtiger/wiredtiger/archive/$_commit.tar.gz")
 sha512sums=('57153f1ea8b7278fcd724d5aa910bf0d5dabebeb8754f5eabd49be9cae8cb83b266a962224fc2784b15d7f1d22e57a7ff2202b84838b147879401a24e30e78af')
 
 prepare() {
   mv wiredtiger-{$_commit,$pkgver}
+  sed -i 's/print\(.*\)$/print(\1)/' ${srcdir}/wiredtiger-${pkgver}/dist/wtperf_config.py
+  sed -i 's/\\n/^^/g' ${srcdir}/wiredtiger-${pkgver}/src/docs/Doxyfile
 }
 
 build() {
