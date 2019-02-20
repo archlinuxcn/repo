@@ -9,6 +9,6 @@ def pre_build():
         line = line.strip()
         if line.startswith('pkgver=') and "_" not in line:
             print("_" + line + "_release")
-        else if line.startswith('package()'):
+        elif line.startswith('package()'):
             print("pkgver=$_pkgver")
         print(line)
