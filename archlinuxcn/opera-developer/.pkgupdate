@@ -1,0 +1,1 @@
+update_pkgver=$(curl -sS http://deb.opera.com/opera/dists/testing/non-free/binary-amd64/Packages.gz | gunzip | grep 'opera-developer.*deb' | sed -e 's/.*opera-developer_\(.*\)_.*/\1/')
