@@ -25,7 +25,7 @@ url="http://kodi.tv"
 license=('GPL2')
 makedepends=('fstrcmp' 'flatbuffers' 'afpfs-ng' 'bluez-libs' 'boost' 'cmake' 'curl' 'cwiid' 'doxygen'
              'git' 'ffmpeg' 'fmt' 'glew' 'gperf' 'hicolor-icon-theme' 'jasper' 'java-runtime=8'
-             'libaacs' 'libass' 'libbluray' 'libcdio' 'libcec' 'libgl' 'libmariadbclient'
+             'libaacs' 'libass' 'libbluray' 'libcdio' 'libcec' 'libgl' 'mariadb-libs'
              'libmicrohttpd' 'libmodplug' 'libmpeg2' 'libnfs' 'libplist' 'libxrandr'
              'libxslt' 'lirc' 'lzo' 'mesa' 'nasm' 'nss-mdns' 'python2-pillow'
              'python2-pybluez' 'python2-simplejson' 'rapidjson' 'rtmpdump' 'shairplay'
@@ -63,7 +63,7 @@ build() {
 package_kodi-git() {
   pkgdesc="A software media player and entertainment hub for digital media (master branch)"
   depends=('curl' 'bluez-libs' 'flatbuffers' 'desktop-file-utils' 'ffmpeg' 'glew'
-           'hicolor-icon-theme' 'libcdio' 'libcec' 'libmariadbclient' 'libmicrohttpd'
+           'hicolor-icon-theme' 'libcdio' 'libcec' 'mariadb-libs' 'libmicrohttpd'
            'libxrandr' 'libxslt' 'lzo' 'mesa' 'python2-pillow' 'python2-simplejson'
            'smbclient' 'fstrcmp' 'taglib' 'tinyxml' 'xorg-xdpyinfo')
   optdepends=('gdb: for meaningful backtraces in case of trouble - STRONGLY RECOMMENDED'
