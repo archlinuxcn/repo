@@ -1,4 +1,5 @@
-# Maintainer: Padfoot <padfoot at exemail dot com dot au>
+# Maintainer: Einhard Leichtfuß <archer@respiranto.de>
+# Contributor: Padfoot <padfoot at exemail dot com dot au>
 # Contributor: Andrey Vihrov <andrey.vihrov at gmail.com>
 # Contributor: ava1ar <mail.avatar at gmail.com>
 # Contributor: Alessio Sergi <asergi at archlinux dot us>
@@ -14,7 +15,7 @@ depends=('gstreamer0.10-base' 'libkeybinder2' 'libnotify' 'xfconf')
 optdepends=('gstreamer0.10-base-plugins: for sound card support'
 'xfce4-notifyd: for OSD notifications')
 source=(http://archive.xfce.org/src/apps/${pkgname}/0.1/${pkgname}-${pkgver}.tar.bz2)
-md5sums=('03c0ee58aa0a080d35313ac517a975ea')
+sha512sums=('7241b53f88b44e18a7501e775498701fe622c35b9304e883159dd98fc76745d50f23a192bb0416ccf301ddf393af7a3dc10c3057d77898c8e13d11fd058c801e')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
