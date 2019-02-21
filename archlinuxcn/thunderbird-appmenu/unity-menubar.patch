@@ -14,7 +14,7 @@
                  style="border:0px;padding:0px;margin:0px;-moz-appearance:none">
 --- a/browser/base/content/browser.js
 +++ b/browser/base/content/browser.js
-@@ -5547,11 +5547,17 @@
+@@ -5557,11 +5557,17 @@ function onViewToolbarsPopupShowing(aEve
  
    let toolbarNodes = gNavToolbox.childNodes;
  
@@ -45,7 +45,7 @@
                id="organizeButton" label="&organize.label;"
 --- a/layout/build/moz.build
 +++ b/layout/build/moz.build
-@@ -71,6 +71,10 @@
+@@ -71,6 +71,10 @@ elif CONFIG['MOZ_WIDGET_TOOLKIT'] == 'an
          '/dom/system',
          '/dom/system/android',
      ]
@@ -69,7 +69,7 @@
  using namespace mozilla;
  using namespace mozilla::net;
  using namespace mozilla::dom;
-@@ -157,6 +161,9 @@
+@@ -154,6 +158,9 @@ nsresult nsLayoutStatics::Initialize() {
    nsGkAtoms::AddRefAtoms();
    nsHTMLTags::RegisterAtoms();
    nsRDFAtoms::RegisterAtoms();
@@ -81,7 +81,7 @@
  
 --- a/modules/libpref/init/all.js
 +++ b/modules/libpref/init/all.js
-@@ -265,6 +265,9 @@
+@@ -265,6 +265,9 @@ pref("dom.script_loader.bytecode_cache.s
  pref("browser.sessionhistory.max_total_viewers", -1);
  
  pref("ui.use_native_colors", true);
@@ -112,7 +112,7 @@
                  onget="return this.popupBoxObject.triggerNode"/>
 --- a/toolkit/content/xul.css
 +++ b/toolkit/content/xul.css
-@@ -312,6 +312,18 @@
+@@ -312,6 +312,18 @@ toolbar[type="menubar"][autohide="true"]
  }
  %endif
  
@@ -133,7 +133,7 @@
  }
 --- a/widget/gtk/moz.build
 +++ b/widget/gtk/moz.build
-@@ -39,10 +39,18 @@
+@@ -39,10 +39,18 @@ UNIFIED_SOURCES += [
      'nsAppShell.cpp',
      'nsBidiKeyboard.cpp',
      'nsColorPicker.cpp',
@@ -152,7 +152,7 @@
      'nsNativeThemeGTK.cpp',
      'nsSound.cpp',
      'nsToolkit.cpp',
-@@ -54,6 +62,8 @@
+@@ -54,6 +62,8 @@ UNIFIED_SOURCES += [
  ]
  
  SOURCES += [
@@ -161,7 +161,7 @@
      'nsWindow.cpp', # conflicts with X11 headers
  ]
  
-@@ -124,6 +134,7 @@
+@@ -124,6 +134,7 @@ FINAL_LIBRARY = 'xul'
  
  LOCAL_INCLUDES += [
      '/layout/generic',
@@ -5266,8 +5266,8 @@
  #include "nsNativeThemeGTK.h"
  #include "HeadlessThemeGTK.h"
  
-@@ -115,6 +117,9 @@
- }
+@@ -114,6 +116,9 @@ NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(GfxI
+ }  // namespace mozilla
  #endif
  
 +NS_GENERIC_FACTORY_SINGLETON_CONSTRUCTOR(nsNativeMenuService,
@@ -5276,30 +5276,30 @@
  #ifdef NS_PRINTING
  NS_GENERIC_FACTORY_CONSTRUCTOR(nsDeviceContextSpecGTK)
  NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(nsPrintSettingsServiceGTK, Init)
-@@ -227,6 +232,7 @@
+@@ -218,6 +223,7 @@ NS_DEFINE_NAMED_CID(NS_IMAGE_TO_PIXBUF_C
  NS_DEFINE_NAMED_CID(NS_IDLE_SERVICE_CID);
  NS_DEFINE_NAMED_CID(NS_GFXINFO_CID);
  #endif
 +NS_DEFINE_NAMED_CID(NS_NATIVEMENUSERVICE_CID);
  
- 
  static const mozilla::Module::CIDEntry kWidgetCIDs[] = {
-@@ -262,6 +268,7 @@
-     { &kNS_IDLE_SERVICE_CID, false, nullptr, nsIdleServiceGTKConstructor },
-     { &kNS_GFXINFO_CID, false, nullptr, mozilla::widget::GfxInfoConstructor },
+     {&kNS_WINDOW_CID, false, nullptr, nsWindowConstructor},
+@@ -264,6 +270,7 @@ static const mozilla::Module::CIDEntry k
+     {&kNS_IDLE_SERVICE_CID, false, nullptr, nsIdleServiceGTKConstructor},
+     {&kNS_GFXINFO_CID, false, nullptr, mozilla::widget::GfxInfoConstructor},
  #endif
-+    { &kNS_NATIVEMENUSERVICE_CID, true, NULL, nsNativeMenuServiceConstructor },
-     { nullptr }
- };
++    {&kNS_NATIVEMENUSERVICE_CID, true, nullptr, nsNativeMenuServiceConstructor},
+     {nullptr}};
  
-@@ -299,6 +306,7 @@
-     { "@mozilla.org/widget/idleservice;1", &kNS_IDLE_SERVICE_CID },
-     { "@mozilla.org/gfx/info;1", &kNS_GFXINFO_CID },
+ static const mozilla::Module::ContractIDEntry kWidgetContracts[] = {
+@@ -306,6 +313,7 @@ static const mozilla::Module::ContractID
+     {"@mozilla.org/widget/idleservice;1", &kNS_IDLE_SERVICE_CID},
+     {"@mozilla.org/gfx/info;1", &kNS_GFXINFO_CID},
  #endif
-+    { "@mozilla.org/widget/nativemenuservice;1", &kNS_NATIVEMENUSERVICE_CID },
-     { nullptr }
- };
++    {"@mozilla.org/widget/nativemenuservice;1", &kNS_NATIVEMENUSERVICE_CID},
+     {nullptr}};
  
+ static void nsWidgetGtk2ModuleDtor() {
 --- a/widget/gtk/nsWindow.cpp
 +++ b/widget/gtk/nsWindow.cpp
 @@ -67,6 +67,7 @@
@@ -5310,18 +5310,17 @@
  #include "mozilla/Preferences.h"
  #include "nsIPrefService.h"
  #include "nsIGConfService.h"
-@@ -5155,6 +5156,11 @@
-     SetWindowDecoration(aShouldHide ? eBorderStyle_none : mBorderStyle);
+@@ -4653,6 +4654,10 @@ void nsWindow::HideWindowChrome(bool aSh
+   SetWindowDecoration(aShouldHide ? eBorderStyle_none : mBorderStyle);
  }
  
-+void
-+nsWindow::SetMenuBar(UniquePtr<nsMenuBar> aMenuBar) {
-+    mMenuBar = mozilla::Move(aMenuBar);
++void nsWindow::SetMenuBar(UniquePtr<nsMenuBar> aMenuBar) {
++  mMenuBar = mozilla::Move(aMenuBar);
 +}
 +
- bool
- nsWindow::CheckForRollup(gdouble aMouseX, gdouble aMouseY,
-                          bool aIsWheel, bool aAlwaysRollup)
+ bool nsWindow::CheckForRollup(gdouble aMouseX, gdouble aMouseY, bool aIsWheel,
+                               bool aAlwaysRollup) {
+   nsIRollupListener *rollupListener = GetActiveRollupListener();
 --- a/widget/gtk/nsWindow.h
 +++ b/widget/gtk/nsWindow.h
 @@ -40,6 +40,8 @@
@@ -5333,27 +5332,27 @@
  #undef LOG
  #ifdef MOZ_LOGGING
  
-@@ -163,6 +165,8 @@
-                                       nsIScreen* aTargetScreen = nullptr) override;
-     virtual void       HideWindowChrome(bool aShouldHide) override;
+@@ -157,6 +159,8 @@ class nsWindow final : public nsBaseWidg
+                                   nsIScreen* aTargetScreen = nullptr) override;
+   virtual void HideWindowChrome(bool aShouldHide) override;
  
-+    void               SetMenuBar(mozilla::UniquePtr<nsMenuBar> aMenuBar);
++  void SetMenuBar(mozilla::UniquePtr<nsMenuBar> aMenuBar);
 +
-     /**
-      * GetLastUserInputTime returns a timestamp for the most recent user input
-      * event.  This is intended for pointer grab requests (including drags).
-@@ -600,6 +604,8 @@
+   /**
+    * GetLastUserInputTime returns a timestamp for the most recent user input
+    * event.  This is intended for pointer grab requests (including drags).
+@@ -583,6 +587,8 @@ class nsWindow final : public nsBaseWidg
  
-     mozilla::UniquePtr<mozilla::CurrentX11TimeGetter> mCurrentTimeGetter;
-     static CSDSupportLevel sCSDSupportLevel;
+   mozilla::UniquePtr<mozilla::CurrentX11TimeGetter> mCurrentTimeGetter;
+   static CSDSupportLevel sCSDSupportLevel;
 +
-+    mozilla::UniquePtr<nsMenuBar> mMenuBar;
++  mozilla::UniquePtr<nsMenuBar> mMenuBar;
  };
  
  #endif /* __nsWindow_h__ */
 --- a/widget/moz.build
 +++ b/widget/moz.build
-@@ -64,9 +64,9 @@
+@@ -64,9 +64,9 @@ elif toolkit == 'cocoa':
          'nsISystemStatusBar.idl',
          'nsITaskbarProgress.idl',
      ]
@@ -5368,7 +5367,7 @@
  
 --- a/xpfe/appshell/nsWebShellWindow.cpp
 +++ b/xpfe/appshell/nsWebShellWindow.cpp
-@@ -71,7 +71,7 @@
+@@ -70,7 +70,7 @@
  
  #include "gfxPlatform.h"
  

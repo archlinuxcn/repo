@@ -8,7 +8,7 @@
 
 _pkgname=thunderbird
 pkgname=thunderbird-appmenu
-pkgver=60.5.0
+pkgver=60.5.1
 pkgrel=1
 pkgdesc="Thunderbird from extra with appmenu patch"
 arch=(x86_64)
@@ -25,9 +25,9 @@ options=(!emptydirs !makeflags)
 source=(https://ftp.mozilla.org/pub/mozilla.org/thunderbird/releases/$pkgver/source/thunderbird-$pkgver.source.tar.xz
         $_pkgname.desktop
         unity-menubar.patch)
-sha256sums=('6f96e87e832e4089c69418db64e19afd54a0acefe3e0364087a8bc6f442b9566'
+sha256sums=('69a3f741b7378b50a3b6a3b59f6c4fedd2d82d469ab234390627e15da1b58e03'
             '3534ea85d8e0e35dba5f40a7a07844df19f3a480e1358fc50c2502f122dab789'
-            'c6082f9ab534cdc67c53fa1685df628f03b0674390522f32fe640ce92f1b15ab')
+            '22786f52773b93046fdb12378f67343b1d7d3390e83a00ff4aa03948c2b1c9e2')
 
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
 # Note: These are for Arch Linux use ONLY. For your own distribution, please
