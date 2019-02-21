@@ -1,0 +1,60 @@
+From dc7aff5e5331820205282576f6ade015f672969b Mon Sep 17 00:00:00 2001
+From: Christian Hesse <mail@eworm.de>
+Date: Tue, 2 Jan 2018 14:32:21 +0100
+Subject: Use descriptive file names for sysusers and tmpfiles configuration
+
+These files were installed to:
+
+${INSTALL_SYSTEMD_SYSUSERSDIR}/sysusers.conf
+${INSTALL_SYSTEMD_TMPFILESDIR}/tmpfiles.conf
+
+Instead rename the files to more descriptive file names 'mariadb.conf'.
+---
+ support-files/CMakeLists.txt | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/support-files/CMakeLists.txt b/support-files/CMakeLists.txt
+index 4ad3810e082..8363922d468 100644
+--- a/support-files/CMakeLists.txt
++++ b/support-files/CMakeLists.txt
+@@ -117,7 +117,8 @@ IF(UNIX)
+       CONFIGURE_FILE(sysusers.conf.in
+               ${CMAKE_CURRENT_BINARY_DIR}/sysusers.conf @ONLY)
+       INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/sysusers.conf
+-              DESTINATION ${INSTALL_SYSTEMD_SYSUSERSDIR} COMPONENT Server)
++              DESTINATION ${INSTALL_SYSTEMD_SYSUSERSDIR}
++              RENAME mariadb.conf COMPONENT Server)
+     ENDIF()
+ 
+     IF(INSTALL_SYSTEMD_TMPFILESDIR)
+@@ -125,7 +126,8 @@ IF(UNIX)
+       CONFIGURE_FILE(tmpfiles.conf.in
+               ${CMAKE_CURRENT_BINARY_DIR}/tmpfiles.conf @ONLY)
+       INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/tmpfiles.conf
+-              DESTINATION ${INSTALL_SYSTEMD_TMPFILESDIR} COMPONENT Server)
++              DESTINATION ${INSTALL_SYSTEMD_TMPFILESDIR}
++              RENAME mariadb.conf COMPONENT Server)
+     ENDIF()
+ 
+     # @ in directory name broken between CMake version 2.8.12.2 and 3.3
+From c86912c8896b65c1dd9226c1bc2987189d4840c2 Mon Sep 17 00:00:00 2001
+From: Christian Hesse <mail@eworm.de>
+Date: Tue, 2 Jan 2018 14:36:49 +0100
+Subject: Make systemd-tmpfiles create MYSQL_DATADIR
+
+This is a no-op if the directory exists, but makes sure it is created by
+systemd-tmpfiles with proper permissions otherwise.
+
+This solves packaging issues when the user MYSQLD_USER is created by
+systemd-sysusers and uid is not known in advance.
+---
+ support-files/tmpfiles.conf.in | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/support-files/tmpfiles.conf.in b/support-files/tmpfiles.conf.in
+index 03d66abc0c7..3c89cb258c9 100644
+--- a/support-files/tmpfiles.conf.in
++++ b/support-files/tmpfiles.conf.in
+@@ -1 +1,2 @@
+ d @MYSQL_UNIX_DIR@ 0755 @MYSQLD_USER@ @MYSQLD_USER@ -
++d @MYSQL_DATADIR@ 0700 @MYSQLD_USER@ @MYSQLD_USER@ -

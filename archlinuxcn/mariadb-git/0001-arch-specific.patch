@@ -1,0 +1,134 @@
+From 07abbcbbe129a4c44c58fa2496b0921e52a759c2 Mon Sep 17 00:00:00 2001
+From: Christian Hesse <mail@eworm.de>
+Date: Tue, 29 Jan 2019 23:12:01 +0100
+Subject: enable PrivateTmp for a little bit more security
+---
+ support-files/mariadb.service.in  | 2 +-
+ support-files/mariadb@.service.in | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/support-files/mariadb.service.in b/support-files/mariadb.service.in
+index 8d43b6db428..a96fbcc9d2c 100644
+--- a/support-files/mariadb.service.in
++++ b/support-files/mariadb.service.in
+@@ -117,7 +117,7 @@ UMask=007
+ 
+ # If you don't use the /tmp directory for SELECT ... OUTFILE and
+ # LOAD DATA INFILE you can enable PrivateTmp=true for a little more security.
+-PrivateTmp=false
++PrivateTmp=true
+ 
+ ##
+ ## Options previously available to be set via [mysqld_safe]
+diff --git a/support-files/mariadb@.service.in b/support-files/mariadb@.service.in
+index a2f5cff0828..83d75f80b87 100644
+--- a/support-files/mariadb@.service.in
++++ b/support-files/mariadb@.service.in
+@@ -41,7 +41,7 @@ Type=notify
+ 
+ # Setting this to true can break replication and the Type=notify settings
+ # See also bind-address mysqld option.
+-PrivateNetwork=false
++PrivateNetwork=true
+ 
+ ##############################################################################
+ ## Package maintainers
+From 0e4a158086b765aa3a12b84646aefb9b192443f7 Mon Sep 17 00:00:00 2001
+From: Christian Hesse <mail@eworm.de>
+Date: Tue, 29 Jan 2019 23:12:54 +0100
+Subject: force preloading jemalloc for memory management
+---
+ support-files/mariadb.service.in  | 1 +
+ support-files/mariadb@.service.in | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/support-files/mariadb.service.in b/support-files/mariadb.service.in
+index a96fbcc9d2c..6bb5d4227b9 100644
+--- a/support-files/mariadb.service.in
++++ b/support-files/mariadb.service.in
+@@ -140,6 +140,7 @@ LimitNOFILE=16364
+ # Library substitutions. previously [mysqld_safe] malloc-lib with explicit paths
+ # (in LD_LIBRARY_PATH) and library name (in LD_PRELOAD).
+ # Environment="LD_LIBRARY_PATH=/path1 /path2" "LD_PRELOAD=
++Environment="LD_PRELOAD=/usr/lib/libjemalloc.so"
+ 
+ # Flush caches. previously [mysqld_safe] flush-caches=1
+ # ExecStartPre=sync
+diff --git a/support-files/mariadb@.service.in b/support-files/mariadb@.service.in
+index 83d75f80b87..d1d24d685f9 100644
+--- a/support-files/mariadb@.service.in
++++ b/support-files/mariadb@.service.in
+@@ -161,6 +161,7 @@ LimitNOFILE=16364
+ # Library substitutions. previously [mysqld_safe] malloc-lib with explicit paths
+ # (in LD_LIBRARY_PATH) and library name (in LD_PRELOAD).
+ # Environment="LD_LIBRARY_PATH=/path1 /path2" "LD_PRELOAD=
++Environment="LD_PRELOAD=/usr/lib/libjemalloc.so"
+ 
+ # Flush caches. previously [mysqld_safe] flush-caches=1
+ # ExecStartPre=sync
+From 72b42fb1a344bfc3f3c3c905fe85c93ac4a752e3 Mon Sep 17 00:00:00 2001
+From: Christian Hesse <mail@eworm.de>
+Date: Tue, 29 Jan 2019 23:14:23 +0100
+Subject: fix path to our config
+---
+ support-files/rpm/enable_encryption.preset | 2 +-
+ support-files/rpm/my.cnf                   | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/support-files/rpm/enable_encryption.preset b/support-files/rpm/enable_encryption.preset
+index 722db7e5fa1..978a7494c6b 100644
+--- a/support-files/rpm/enable_encryption.preset
++++ b/support-files/rpm/enable_encryption.preset
+@@ -1,5 +1,5 @@
+ #
+-# !include this file into your my.cnf (or any of *.cnf files in /etc/my.cnf.d)
++# !include this file into your my.cnf (or any of *.cnf files in /etc/mysql/my.cnf.d)
+ # and it will enable data at rest encryption. This is a simple way to
+ # ensure that everything that can be encrypted will be and your
+ # data will not leak unencrypted.
+diff --git a/support-files/rpm/my.cnf b/support-files/rpm/my.cnf
+index 913b88f8328..17d25361178 100644
+--- a/support-files/rpm/my.cnf
++++ b/support-files/rpm/my.cnf
+@@ -7,5 +7,5 @@
+ #
+ # include all files from the config directory
+ #
+-!includedir /etc/my.cnf.d
++!includedir /etc/mysql/my.cnf.d
+ 
+From 820b47c1e70d36f1272cca3ddbdf4bbd2dd62bde Mon Sep 17 00:00:00 2001
+From: Christian Hesse <mail@eworm.de>
+Date: Wed, 30 Jan 2019 00:46:47 +0100
+Subject: remove aliases from systemd unit files
+---
+ support-files/mariadb.service.in  | 2 --
+ support-files/mariadb@.service.in | 2 --
+ 2 files changed, 4 deletions(-)
+
+diff --git a/support-files/mariadb.service.in b/support-files/mariadb.service.in
+index 8d43b6db428..d7fa6bf5b14 100644
+--- a/support-files/mariadb.service.in
++++ b/support-files/mariadb.service.in
+@@ -20,8 +20,6 @@ After=network.target
+ 
+ [Install]
+ WantedBy=multi-user.target
+-Alias=mysql.service
+-Alias=mysqld.service
+ 
+ 
+ [Service]
+diff --git a/support-files/mariadb@.service.in b/support-files/mariadb@.service.in
+index a2f5cff0828..3fc41358e14 100644
+--- a/support-files/mariadb@.service.in
++++ b/support-files/mariadb@.service.in
+@@ -27,8 +27,6 @@ ConditionPathExists=@sysconf2dir@/my%I.cnf
+ 
+ [Install]
+ WantedBy=multi-user.target
+-Alias=mysql.service
+-Alias=mysqld.service
+ 
+ 
+ [Service]

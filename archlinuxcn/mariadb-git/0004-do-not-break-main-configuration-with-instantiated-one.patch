@@ -1,0 +1,56 @@
+From 8fe9b2658664d0ece15fe57442706446fed66d6e Mon Sep 17 00:00:00 2001
+From: Christian Hesse <mail@eworm.de>
+Date: Tue, 15 Jan 2019 17:22:56 +0100
+Subject: do not break main configuration with instantiated one
+
+The main configuration file /etc/my.cnf includes all configuration files in
+/etc/my.cnf.d/. However an instantiated service mariadb@example.service
+reads its configuration from /etc/my.cnf.d/myexample.cnf. This breaks
+the main configuration as that includes a snippet intended for an instance.
+
+This can be fixed by changing the path: Let the instantiated service
+read its configuration from /etc/myexample.cnf.
+---
+ support-files/mariadb@.service.in | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/support-files/mariadb@.service.in b/support-files/mariadb@.service.in
+index a2f5cff0828..1207e690f47 100644
+--- a/support-files/mariadb@.service.in
++++ b/support-files/mariadb@.service.in
+@@ -1,7 +1,7 @@
+ # Multi instance version of mariadb. For if you run multiple versions at once.
+ # Also used for mariadb@bootstrap to bootstrap Galera.
+ #
+-# create config file @sysconf2dir@/my{instancename}.cnf
++# create config file @sysconfdir@/my{instancename}.cnf
+ #
+ # start as systemctl start mariadb@{instancename}.server
+ 
+@@ -23,7 +23,7 @@ Documentation=man:mysqld(8)
+ Documentation=https://mariadb.com/kb/en/library/systemd/
+ After=network.target
+ 
+-ConditionPathExists=@sysconf2dir@/my%I.cnf
++ConditionPathExists=@sysconfdir@/my%I.cnf
+ 
+ [Install]
+ WantedBy=multi-user.target
+@@ -75,7 +75,7 @@ PermissionsStartOnly=true
+ ExecStartPre=/bin/sh -c "systemctl unset-environment _WSREP_START_POSITION%I"
+ 
+ ExecStartPre=/bin/sh -c "[ ! -e @bindir@/galera_recovery ] && VAR= || \
+- VAR=`@bindir@/galera_recovery --defaults-file=@sysconf2dir@/my%I.cnf`; [ $? -eq 0 ] \
++ VAR=`@bindir@/galera_recovery --defaults-file=@sysconfdir@/my%I.cnf`; [ $? -eq 0 ] \
+  && systemctl set-environment _WSREP_START_POSITION%I=$VAR || exit 1"
+ 
+ # Alternate: (remove ConditionPathExists above)
+@@ -96,7 +96,7 @@ ExecStartPre=/bin/sh -c "[ ! -e @bindir@/galera_recovery ] && VAR= || \
+ 
+ # Note: Place $MYSQLD_OPTS at the very end for its options to take precedence.
+ 
+-ExecStart=@sbindir@/mysqld --defaults-file=@sysconf2dir@/my%I.cnf \
++ExecStart=@sbindir@/mysqld --defaults-file=@sysconfdir@/my%I.cnf \
+   $_WSREP_NEW_CLUSTER $_WSREP_START_POSITION%I $MYSQLD_OPTS
+ # Alternate: (remove ConditionPathExists above)
+ # use [mysqld.INSTANCENAME] as sections in my.cnf
