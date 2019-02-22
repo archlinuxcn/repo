@@ -2,7 +2,7 @@
 # Contributor: Sherlock Holo <sherlockya(at)gmail.com>
 pkgname=filebrowser-bin
 pkgver=2.0.3
-pkgrel=1
+pkgrel=2
 pkgdesc="Web File Manager which can be used as a middleware or standalone app."
 arch=('x86_64')
 url="https://github.com/filebrowser/filebrowser"
