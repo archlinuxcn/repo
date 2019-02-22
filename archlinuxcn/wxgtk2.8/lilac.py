@@ -6,6 +6,18 @@
 #
 
 from lilaclib import *
+import re
+
+def pre_build():
+    aur_pre_build()
+    for line in edit_file('PKGBUILD'):
+        # edit PKGBUILD
+        if line.strip().startswith("depends="):
+            depends = re.findall("depends=\s*\((.*)\)", line)[0]
+            words = depends.split(" ")
+            words.append("'gstreamer0.10-base'")
+            line = "depends=(%s)" % (" ".join(words))
+        print(line)
 
 #build_prefix = 'extra-x86_64'
 #pre_build = aur_pre_build

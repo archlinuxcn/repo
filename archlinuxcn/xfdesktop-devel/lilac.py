@@ -6,6 +6,14 @@
 #
 
 from lilaclib import *
+import re
+
+def pre_build():
+    aur_pre_build()
+    for line in edit_file('PKGBUILD'):
+        # edit PKGBUILD
+        if line.strip().startswith("groups="):
+            pass
 
 #build_prefix = 'extra-x86_64'
 #pre_build = aur_pre_build

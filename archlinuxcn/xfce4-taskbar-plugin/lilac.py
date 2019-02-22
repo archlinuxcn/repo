@@ -6,6 +6,15 @@
 #
 
 from lilaclib import *
+import re
+
+def pre_build():
+    aur_pre_build()
+    for line in edit_file('PKGBUILD'):
+        # edit PKGBUILD
+        if line.strip().startswith("source="):
+            line = 'source=("https://git.xfce.org/archive/xfce4-taskbar-plugin")'
+        print(line)
 
 #build_prefix = 'extra-x86_64'
 #pre_build = aur_pre_build
