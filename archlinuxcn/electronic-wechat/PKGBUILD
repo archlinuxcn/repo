@@ -3,7 +3,7 @@
 # Contributor: hexchain <i at hexchain.org>
 
 pkgname=electronic-wechat
-pkgver=2.3.0
+pkgver=2.3.1
 pkgrel=1
 pkgdesc="A better WeChat client"
 arch=('x86_64')
@@ -17,7 +17,7 @@ source=(
     'electronic-wechat.desktop'
     'electronic-wechat.sh'
 )
-sha256sums=('a2318446532162fbba2b203e906a1606d1fae364e868aabf10e7dc0489405da0'
+sha256sums=('9282d07bf65e0e5c5c5fda44d2b05ff9003abedf727ae7bec90aa79f3afa6ce1'
             '56c0db46c3b9fc31ac16265d0346ef47a6422392607bcce954e0f550894475be'
             '10696031537d5d749b1d8914829057d73aaccb788263b4df8bc5ff7ed7939bff')
 
