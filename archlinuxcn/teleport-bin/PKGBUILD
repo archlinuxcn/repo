@@ -3,8 +3,8 @@
 # Co-Maintainer: Ariel AxionL <arielaxionl@gmail.com | axionl@aosc.io>
 
 pkgname=teleport-bin
-pkgver=3.1.0
-pkgrel=3
+pkgver=3.1.7
+pkgrel=1
 pkgdesc="Modern SSH server for teams managing distributed infrastructure"
 arch=('x86_64' 'arm')
 url="https://github.com/gravitational/teleport"
@@ -18,10 +18,10 @@ source_x86_64=(
     "teleport.install"
 )
 
-sha256sums_x86_64=('be9ccfbcf6863f4b3a11e2f36ad6d70ce93f414e3d28ba7b3a7bbacbc3b0af10'
+sha256sums_x86_64=('040d2bac51002a6490dda8f5e541da5cd7eef165bd35723b22b70f679b036d9a'
                    '48b27cf06bd88f3121f3febec352269f75e4f30e8e7cd80a72c630b3cf34a5e6'
                    'cff4e3c69677210bdde9a781146df06fba3a62cef72ed6854cd1923a05444435')
-sha256sums_arm=('2bf2244dca052a848ff41ee9c50b0d18d754daeb8107f20036d39b5a5e7ae5b5'
+sha256sums_arm=('40bdbcd42485e9cbe0e9377b77fe2465eb4b225e6fb900ec8c7c98fe5ea0ffd7'
                 '48b27cf06bd88f3121f3febec352269f75e4f30e8e7cd80a72c630b3cf34a5e6'
                 'cff4e3c69677210bdde9a781146df06fba3a62cef72ed6854cd1923a05444435')
 source_arm=(
