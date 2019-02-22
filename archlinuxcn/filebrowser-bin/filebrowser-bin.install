@@ -1,0 +1,34 @@
+post_install() {
+  echo "
+Welcome to the filebrowser!
+For the first time you need to initialize, for example:
+
+-----------------------------------------------------------------------------
+$ sudo mkdir -p /usr/share/filebrowser/storage
+$ cd /usr/share/filebrowser/storage
+$ sudo filebrowser config init
+...(Setting your filebrowser)
+$ sudo filebrowser config export /etc/filebrowser/config.json
+$ sudo systemctl enable --now filebrowser@config
+-----------------------------------------------------------------------------
+
+More: https://github.com/filebrowser/filebrowser
+      https://docs.filebrowser.xyz/
+"
+}
+
+post_upgrade() {
+  echo "
+If you upgrade the filebrowser from 1.x
+You must need to read the: https://docs.filebrowser.xyz/upgrade-from-1.x
+And the systemd unit and config file also need to be changed by yourself.
+
+More: https://github.com/filebrowser/filebrowser
+      https://docs.filebrowser.xyz/
+"
+}
+
+post_remove() {
+  echo "You need to remove database and config by yourself."
+}
+# vim: set ts=2 sw=2 et:

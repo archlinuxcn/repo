@@ -1,0 +1,13 @@
+[Unit]
+Description=Filebrowser Service
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/usr/share/filebrowser
+ExecStart=/usr/bin/filebrowser --config /etc/filebrowser/%i.json
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
