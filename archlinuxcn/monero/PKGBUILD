@@ -4,8 +4,8 @@
 
 pkgbase="monero"
 pkgname=('monero' 'libmonero-wallet')
-pkgver=0.13.0.4
-pkgrel=2
+pkgver=0.14.0.0
+pkgrel=1
 pkgdesc="Monero: the secure, private, untraceable currency - release version (includes daemon, wallet and miner)"
 license=('custom:Cryptonote')
 arch=('x86_64' 'i686' 'armv7h' 'aarch64')
@@ -15,10 +15,9 @@ makedepends=('git' 'cmake' 'boost' 'gtest' 'qt5-tools')
 provides=('monero' 'libmonero-wallet')
 conflicts=('bitmonero-git' 'libmonero-wallet-git')
 
-source=("${pkgname}"::"git+https://github.com/monero-project/monero#tag=v${pkgver}"
-        "0001-miner-fix-build-with-boost-1.69.patch")
+source=("${pkgname}"::"git+https://github.com/monero-project/monero#tag=v${pkgver}")
 
-sha256sums+=('SKIP' "f788a74fce1cd33d979836bea90c211a5ba70737353099b834386670e6539367")
+sha256sums+=('SKIP')
 
 _monero="${pkgbase}"
 _build="build"
@@ -26,9 +25,6 @@ _build="build"
 prepare()
 {
   git -C "${pkgname}" submodule update --init --recursive --force
-
-  cd "${srcdir}/${_monero}"
-  patch -Np1 -i "${srcdir}/0001-miner-fix-build-with-boost-1.69.patch" -d "${srcdir}/monero"
 }
 
 build() {
@@ -82,7 +78,6 @@ package_monero() {
 
   install -Dm755 "${srcdir}/${_monero}/build/bin/monero-wallet-cli" "${pkgdir}/usr/bin/monero-wallet-cli"
   install -Dm755 "${srcdir}/${_monero}/build/bin/monero-wallet-rpc" "${pkgdir}/usr/bin/monero-wallet-rpc"
-
 }
 
 package_libmonero-wallet() {
