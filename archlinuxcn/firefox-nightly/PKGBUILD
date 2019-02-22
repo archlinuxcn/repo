@@ -8,7 +8,7 @@ pkgbase=firefox-nightly
 pkgname=()
 _version=67.0a1
 pkgver=67.0a1.20190221.12
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 license=('MPL' 'GPL' 'LGPL')
 depends=('dbus-glib' 'gtk3' 'libxt' 'nss' 'mime-types')
@@ -83,15 +83,11 @@ _package() {
 
   cat <<EOF | install -Dm644 /dev/stdin "${pkgdir}"/${OPT_PATH}/browser/defaults/preferences/vendor.js
 pref("intl.locale.requested", "");
+pref("spellchecker.dictionary_path", "/usr/share/hunspell");
 EOF
 
   # Disable auto-updates
   cat <<EOF | install -Dm644 /dev/stdin "${pkgdir}"/${OPT_PATH}/distribution/policies.json
 {"policies": {"DisableAppUpdate": true}}
 EOF
-
-  # Use system-provided dictionaries
-  rm -rf "${pkgdir}"/${OPT_PATH}/{dictionaries,hyphenation}
-  ln -sf /usr/share/hunspell "${pkgdir}"/${OPT_PATH}/dictionaries
-  ln -sf /usr/share/hyphen "${pkgdir}"/${OPT_PATH}/hyphenation
 }
