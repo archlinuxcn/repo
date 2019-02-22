@@ -6,19 +6,20 @@
 # Contributor: Hexchain Tong <i at hexchain dot org>
 
 pkgname=megasync
-_extname=Linux
-pkgver=3.7.1.0
-pkgrel=2
+pkgver=4.0.2.0
+pkgrel=1
 pkgdesc="Sync your files to your Mega account. Official app"
 arch=('i686' 'x86_64')
 url="https://github.com/meganz/MEGAsync"
 license=('custom:MEGA LIMITED CODE REVIEW LICENCE')
 depends=('c-ares' 'crypto++' 'libsodium' 'hicolor-icon-theme' 'libuv'
-         'qt5-svg' 'libmediainfo' 'libraw')
+         'qt5-svg' 'libmediainfo' 'libraw' 'qt5-base')
 makedepends=('qt5-tools' 'swig' 'doxygen' 'lsb-release' 'git')
 optdepends=('sni-qt: fix systray issue on KDE and LXQt')
+_extname=Linux
+_sdk_commit="4dea1c5c03589655a1187dbea60dce2df1a69188"
 source=("git+https://github.com/meganz/MEGAsync.git#tag=v${pkgver}_${_extname}"
-        "git+https://github.com/meganz/sdk.git")
+        "git+https://github.com/meganz/sdk.git#commit=${_sdk_commit}")
 sha256sums=('SKIP'
             'SKIP')
 
