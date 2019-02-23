@@ -1,65 +1,94 @@
 # Maintainer: Ashley Whetter <(firstname) @ awhetter.co.uk>
+# Co-Maintainer: NicoHood <archlinux {cat} nicohood {dog} de>
+# PGP ID: 97312D5EB9D7AE7D0BD4307351DAE9B7C1AE9161
 # Contributor: Eothred <yngve.levinsen@gmail.com>
 
 pkgname=spotify
 pkgver=1.0.98.78
-_i386_pkgver=1.0.72.117
-_anotherpkgver=.gb45d2a6b
-_i386_anotherpkgver=.g6bd7cc73
-_amd64_pkgrel=10
-_i386_pkgrel=35
-pkgrel=1
-pkgdesc="A proprietary music streaming service"
-arch=('x86_64' 'i686')
-license=('custom:"Copyright (c) 2006-2010 Spotify Ltd"')
-url="http://www.spotify.com"
-options=('!strip')
-
-source=('spotify_x86_64'
-'spotify_i686'
-'spotify.protocol'
-'LICENSE')
-sha256sums=('2a9f88dd80a542e0e9cfeea0b823d7cec54b67b42b402c5efee09d333a1820de'
-            '989920e9360cadc1a8103b8c04acf0c87cb7911eb9a09dddb0cf4708d6249d34'
-            'af54f3b90cac46fa100b3f919a9225d10d847617d24aa9af3d832e7689f482c3'
-            '4e8bea31ca27e16cac9c9dcd8f6ec27e1f82b45de86d6fee7a1e77e23f884b92')
-sha256sums_x86_64=('917a025985b2f27d4d7448e8128e93c22e76deff740faf69977dad558b85660a')
-sha256sums_i686=('f5ac29e8374901ce7401825d13471c03bcf6ec8106f8c210c710b0a8d7b22ca9')
-
-source_x86_64=("http://repository.spotify.com/pool/non-free/s/spotify-client/spotify-client_${pkgver}${_anotherpkgver}-${_amd64_pkgrel}_amd64.deb")
-
-source_i686=("http://repository.spotify.com/pool/non-free/s/spotify-client/spotify-client_${_i386_pkgver}${_i386_anotherpkgver}-${_i386_pkgrel}_i386.deb")
-
-depends=("alsa-lib>=1.0.14" "gconf" "gtk2" "glib2" "nss" "libsystemd" "libxtst" "libx11" "libxss" "openssl-1.0" "desktop-file-utils" "rtmpdump")
+_commit=gb45d2a6b
+_ver_x86_64=10
+#_ver_i686=10
+pkgrel=2
+pkgdesc='A proprietary music streaming service'
+arch=('x86_64')
+license=('custom')
+url='https://www.spotify.com'
+depends=('alsa-lib>=1.0.14' 'gconf' 'gtk2' 'glib2' 'nss' 'libsystemd' 'libxtst'
+         'libx11' 'libxss' 'desktop-file-utils' 'rtmpdump' 'openssl-1.0')
 depends_x86_64=('libcurl-gnutls')
 depends_i686=('libcurl-compat')
-optdepends=('ffmpeg-compat-54: Adds support for playback of local files'
-'zenity: Adds support for importing local files'
-'libnotify: Desktop notifications'
-)
+optdepends=('ffmpeg-compat-57: Adds support for playback of local files'
+            'zenity: Adds support for importing local files'
+            'libnotify: Desktop notifications')
+options=('!strip')
+
+# http://repository.spotify.com/dists/stable/Release
+# http://repository.spotify.com/dists/stable/non-free/binary-amd64/Packages
+# http://repository.spotify.com/dists/stable/non-free/binary-i386/Packages
+# http://repository.spotify.com/dists/stable/Release.gpg
+source=('spotify.protocol'
+        'LICENSE'
+        "${pkgname}-${pkgver}-Release::http://repository.spotify.com/dists/stable/Release"
+        "${pkgname}-${pkgver}-Release.sig::http://repository.spotify.com/dists/stable/Release.gpg")
+source_x86_64=("${pkgname}-${pkgver}-x86_64.deb::https://repository-origin.spotify.com/pool/non-free/s/spotify-client/spotify-client_${pkgver}.${_commit}-${_ver_x86_64}_amd64.deb"
+               "${pkgname}-${pkgver}-x86_64-Packages::http://repository.spotify.com/dists/stable/non-free/binary-amd64/Packages")
+# source_i686=("${pkgname}-${pkgver}-i686.deb::https://repository-origin.spotify.com/pool/non-free/s/spotify-client/spotify-client_${pkgver}.${_commit}-${_ver_i686}_i386.deb"
+#              "${pkgname}-${pkgver}-i686-Packages::http://repository.spotify.com/dists/stable/non-free/binary-i386/Packages")
+sha512sums=('999abe46766a4101e27477f5c9f69394a4bb5c097e2e048ec2c6cb93dfa1743eb436bde3768af6ba1b90eaac78ea8589d82e621f9cbe7d9ab3f41acee6e8ca20'
+            '2e16f7c7b09e9ecefaa11ab38eb7a792c62ae6f33d95ab1ff46d68995316324d8c5287b0d9ce142d1cf15158e61f594e930260abb8155467af8bc25779960615'
+            '235795bf313113b228dac4f6b2ec3a8d06c5c0d7a5cb12618407a389f8cdd83a94e2c6d0ca48989e18a5d90437f9c629d6d666181b6b8929f1a27c37249120a8'
+            'SKIP')
+sha512sums_x86_64=('f20f2c998a205f189a19f332b2e738a0ec98a34520765c0e1d27d95d92f7c9c2f78da32f9edcc61146be87e8d8df7d3521d2e84b427cd25586b9fe6bec8d1602'
+                   '7f69b6a5b8647002be50210cf894b35fe0d2bc04e6b43321047e2229cd0ddae32c5684ea6befd9195c5fed730cfdaaecbdda14a1a8037c2be9e3d536d98a61a3')
+# Old key: 0DF731E45CE24F27EEEB1450EFDC8610341D9410
+# Old key (17.12.2018): 931FF8E79F0876134EDDBDCCA87FF9DF48BF1C90
+validpgpkeys=('931FF8E79F0876134EDDBDCCA87FF9DF48BF1C90') # Spotify <tux@spotify.com>
+
+# Spotify uses different names for the arch
+if [ "${CARCH}" = "i686" ]; then
+    _SPOTIFY_ARCH=i386
+else
+    _SPOTIFY_ARCH=amd64
+fi
+
+prepare() {
+    # Validate hashes from the PGP signed "Release" file
+    echo "$(grep non-free/binary-${_SPOTIFY_ARCH}/Packages ${pkgname}-${pkgver}-Release | tail -n 2 | head -n 1 | awk '{print $1}') ${pkgname}-${pkgver}-${CARCH}-Packages" \
+        > "${pkgname}-${pkgver}-${CARCH}-Packages.sha256"
+    sha256sum -c "${pkgname}-${pkgver}-${CARCH}-Packages.sha256"
+
+    echo "$(grep SHA512 ${pkgname}-${pkgver}-${CARCH}-Packages | head -n 1 | awk '{print $2}') ${pkgname}-${pkgver}-${CARCH}.deb" \
+        > "${pkgname}-${pkgver}-${CARCH}.deb.sha512"
+    sha512sum -c "${pkgname}-${pkgver}-${CARCH}.deb.sha512"
+}
 
 package() {
-	cd "${srcdir}"
+    cd "${srcdir}"
 
-	tar -xzf data.tar.gz -C "${pkgdir}"
+    tar -xzf data.tar.gz -C "${pkgdir}"
 
-	install -D "${pkgdir}"/usr/share/spotify/spotify.desktop "${pkgdir}"/usr/share/applications/spotify.desktop
-	install -D "${pkgdir}"/usr/share/spotify/icons/spotify-linux-512.png "${pkgdir}"/usr/share/pixmaps/spotify-client.png
+    install -Dm644 "${pkgdir}"/usr/share/spotify/spotify.desktop "${pkgdir}"/usr/share/applications/spotify.desktop
+    install -Dm644 "${pkgdir}"/usr/share/spotify/icons/spotify-linux-512.png "${pkgdir}"/usr/share/pixmaps/spotify-client.png
 
-	for size in 22 24 32 48 64 128 256 512; do
-		install -D "${pkgdir}/usr/share/spotify/icons/spotify-linux-$size.png" \
-			"${pkgdir}/usr/share/icons/hicolor/${size}x${size}/apps/spotify.png"
-	done
+    for size in 22 24 32 48 64 128 256 512; do
+        install -Dm644 "${pkgdir}/usr/share/spotify/icons/spotify-linux-$size.png" \
+            "${pkgdir}/usr/share/icons/hicolor/${size}x${size}/apps/spotify.png"
+    done
 
-	chmod -R go-w "${pkgdir}"/usr
+    # Move spotify binary to its proper location
+    mkdir -p "${pkgdir}"/opt/spotify
+    mv "${pkgdir}/usr/share/spotify" "${pkgdir}/opt/"
 
-	# Bin Script
-	rm "${pkgdir}"/usr/bin/spotify
-	install -Dm755 "${srcdir}/spotify_${CARCH}" "${pkgdir}/usr/bin/spotify"
+    # Symlink spotify binary which is located in /opt
+    ln -sf /opt/spotify/spotify "${pkgdir}/usr/bin/spotify"
 
-	# Copy protocol file for KDE
-	install -Dm644 "${srcdir}/spotify.protocol" "${pkgdir}/usr/share/kservices5/spotify.protocol"
+    # Copy protocol file for KDE
+    install -Dm644 "${srcdir}/spotify.protocol" "${pkgdir}/usr/share/kservices5/spotify.protocol"
 
-	# License
-	install -D -m644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+    # Install license
+    # https://www.spotify.com/legal/end-user-agreement
+    install -Dm 644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+
+    # Fix permissions
+    chmod -R go-w "${pkgdir}"
 }
