@@ -4,9 +4,9 @@
 
 pkgbase=nvidia-beta
 pkgname=(nvidia-beta nvidia-dkms-beta)
-pkgver=418.30
+pkgver=418.43
 _extramodules=extramodules-ARCH
-pkgrel=5
+pkgrel=1
 pkgdesc="NVIDIA drivers for linux"
 arch=('x86_64')
 url="http://www.nvidia.com/"
@@ -16,7 +16,7 @@ options=('!strip')
 _pkg="NVIDIA-Linux-x86_64-${pkgver}"
 source=("http://us.download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/${_pkg}.run"
         kernel-4.16.patch)
-sha512sums=('f227923528d54e66d9f79bfaf7239a0e7dd6d59cfa7a7766b36c9a91be091ac0702874f9ed460d4171fb6b67d88adbe2415c70e4f82ff87c8baebd045a493831'
+sha512sums=('bfd43bec59de7523e879354224f2a678b6bcce53136f10d139882d9ea5d100c034fce2a15100607cb4622a3d158dbbfb41aacc528b04307c989c915b78298045'
             'ad1185d998adbf89abf7aea300e5b3bbabe2296016f42592fbc232a6c3983f233df1103d37f35a041f12cc1c722d3edce813a4a1b215784a49c7f0e3e652b5af')
 
 prepare() {
