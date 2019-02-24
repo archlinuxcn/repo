@@ -1,11 +1,12 @@
 # Contributor: Caleb Maclennan <caleb@alerque.com>
 # Contributor: Jacob Mischka <jacob@mischka.me>
 # Contributor: Manuel Mazzuola <origin.of@gmail.com>
+# Contributor: now-im <now im 627 @ gmail . com>
 # Mantainer: Simón Oroño <simonorono@protonmail.com>
 # https://aur.archlinux.org/packages/brave-bin/
 
 pkgname=brave-bin
-pkgver=0.59.35
+pkgver=0.60.45
 pkgrel=1
 pkgdesc='Web browser that blocks ads and trackers by default (binary release).'
 arch=('x86_64')
@@ -22,7 +23,7 @@ source=("$pkgname-$pkgver.zip::https://github.com/brave/brave-browser/releases/d
         "$pkgname.desktop"
         "logo.png")
 options=(!strip)
-sha512sums=('f17a21431c0ba32a65ced2741aa4cdefc2ee2919e4238aa1a817178359db1dd5e9e77fd1a6ac7ab9a98d0420da1ce42761f6d41dfae68852d84db45f17e14c59'
+sha512sums=('6ff3a2137562f4cdf331b803a8ce045f0a958955f8995785b5b662c15022fbdf3c40cf8df6b59580de7894467db7420db2e124aadc61b51e8f1bc64c6b0b6040'
             'b8823586fead21247c8208bd842fb5cd32d4cb3ca2a02339ce2baf2c9cb938dfcb8eb7b24c95225ae625cd0ee59fbbd8293393f3ed1a4b45d13ba3f9f62a791f'
             '20b010e199127fa185da2e78eb97724a1b4d6d279c79b87bb0901ceb832d19ea755485c9039d06d92e6ffd686683990cd1939dc78f37859a798f4a8ba40e05b5'
             'c21aecaafec43bc1ce1ea3439667efb4c7ea5e54bfa87346a9ae9650de1e90c80174b1610a9216f936f693593816c9585c6be1875b3bd318d067079c06251e92'
