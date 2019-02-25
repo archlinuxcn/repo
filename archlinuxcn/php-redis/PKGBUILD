@@ -1,0 +1,42 @@
+# Contributor: Alex "grevus" Lobtsov <alex@lobtsov.com>
+# Contributor: Kai Korla <balticer@balticer.de>
+pkgname=php-redis
+_extname=phpredis
+pkgver=4.2.0
+pkgrel=1
+pkgdesc="PHP extension for interfacing with Redis"
+url="http://pecl.php.net/package/redis"
+arch=('x86_64')
+license=('PHP')
+makedepends=(
+   'php-igbinary'
+)
+depends=(
+    'php-igbinary'
+)
+conflicts=('phpredis-git')
+provides=('php-redis')
+backup=('etc/php/conf.d/redis.ini')
+
+source=(
+    "https://github.com/phpredis/${_extname}/archive/{$pkgver^^}.tar.gz"
+)
+
+sha256sums=('SKIP')
+install=php-redis.install
+
+build() {
+  cd "$srcdir/redis-$pkgver"
+
+  phpize
+  ./configure --prefix=/usr --enable-redis-igbinary --enable-redis-lzf
+  make
+}
+
+package() {
+  cd "$srcdir/redis-$pkgver"
+
+  make INSTALL_ROOT="$pkgdir" install
+  echo ';extension=redis.so' > redis.ini
+  install -Dm644 redis.ini "$pkgdir/etc/php/conf.d/redis.ini"
+}

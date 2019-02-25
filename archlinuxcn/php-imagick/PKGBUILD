@@ -11,7 +11,7 @@ license=('PHP')
 depends=('php' 'imagemagick>=6.5.3')
 backup=("etc/php/conf.d/${_extname}.ini")
 install="php-${_extname}.install"
-source=("https://github.com/mkoppanen/${_extname}/archive/${pkgver}.tar.gz")
+source=("https://github.com/mkoppanen/${_extname}/archive/${pkgver^^}.tar.gz")
 md5sums=('72871a70f5fbec8277b52c7f26492183')
 
 build() {
@@ -26,6 +26,6 @@ package() {
   cd "${_extname}-${pkgver}"
 
   make INSTALL_ROOT="${pkgdir}" install
-  echo "#extension=${_extname}.so" > "${_extname}.ini"
+  echo ";extension=${_extname}.so" > "${_extname}.ini"
   install -Dm644 "${_extname}.ini" "${pkgdir}/etc/php/conf.d/${_extname}.ini"
 }
