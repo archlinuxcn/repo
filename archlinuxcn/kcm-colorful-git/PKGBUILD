@@ -1,9 +1,10 @@
-# Maintainer: Jianqiu Zhang <void001@archlinuxcn.org>
+# Maintainer: Megumi_fox  <megumifox@archlinuxcn.org>
+# Contributor: Jianqiu Zhang <void001@archlinuxcn.org>
 
 
 pkgname=kcm-colorful-git
 pkgver=0.0.1
-pkgrel=1
+pkgrel=1.1
 pkgdesc='Make your KDE plasma colorful'
 arch=('x86_64')
 url="https://github.com/IsoaSFlus/kcm-colorful"
@@ -16,6 +17,11 @@ source=(
 )
 
 sha256sums=('SKIP')
+
+pkgver() {
+	cd $_gitname
+	git describe --long | sed -r 's/^r//;s/([^-]*-g)/r\1/;s/-/./g'
+}
 
 prepare() {
     cd $srcdir/kcm-colorful
