@@ -1,4 +1,2 @@
-#! /bin/sh
-
-exec java -jar /opt/plantuml/plantuml.jar "$@"
-
+#!/bin/sh
+exec /usr/bin/java -jar '/usr/share/java/plantuml/plantuml.jar' "$@"
