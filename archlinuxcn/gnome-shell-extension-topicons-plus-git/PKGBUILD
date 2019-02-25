@@ -1,8 +1,9 @@
 # Maintainer: Justin Dray <justin@dray.be>
 # Contributor: surefire@cryptomile.net
 
+_srcname=TopIcons-plus
 pkgname=gnome-shell-extension-topicons-plus-git
-pkgver=21+23+g1766933
+pkgver=22+2+g379abcc
 pkgrel=1
 pkgdesc="Shows legacy tray icons on top."
 arch=('any')
@@ -13,21 +14,21 @@ makedepends=('git')
 conflicts=('gnome-shell-extension-topicons-plus')
 provides=('gnome-shell-extension-topicons-plus')
 groups=('gnome-shell-extensions')
-source=("git+https://github.com/huttli/TopIcons-plus.git")
+source=("git+https://github.com/phocean/${_srcname}.git")
 sha256sums=('SKIP')
 
 pkgver() {
-	cd TopIcons-plus
+	cd "${_srcname}"
 	git describe --tags --long | sed 's/^v//; s/-/+/g'
 }
 
 build() {
-	cd TopIcons-plus
+	cd "${_srcname}"
 	make build
 }
 
 package() {
-	cd TopIcons-plus
+	cd "${_srcname}"
 	local uuid=$(grep -Po '(?<="uuid": ")[^"]*' _build/metadata.json)
 	local destdir="$pkgdir/usr/share/gnome-shell/extensions/$uuid"
 
