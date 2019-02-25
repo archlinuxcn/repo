@@ -5,6 +5,7 @@
 
 pkgname=spotify
 pkgver=1.0.98.78
+epoch=1
 _commit=gb45d2a6b
 _ver_x86_64=10
 #_ver_i686=10
