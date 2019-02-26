@@ -1,7 +1,7 @@
 # Maintainer: Megumi_fox  <megumifox@archlinuxcn.org>
 # Contributor: Jianqiu Zhang <void001@archlinuxcn.org>
 
-
+_gitname=kcm-colorful
 pkgname=kcm-colorful-git
 pkgver=0.0.1
 pkgrel=1.1
@@ -20,7 +20,7 @@ sha256sums=('SKIP')
 
 pkgver() {
 	cd $_gitname
-	git describe --long | sed -r 's/^r//;s/([^-]*-g)/r\1/;s/-/./g'
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 prepare() {
