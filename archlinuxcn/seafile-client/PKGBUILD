@@ -3,19 +3,19 @@
 # Contributor: Edvinas Valatka <edacval@gmail.com>
 
 pkgname=seafile-client
-pkgver=6.1.5
+pkgver=6.2.9
 pkgrel=1
 pkgdesc="GUI client for synchronizing your local files with seafile server"
 arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
 url="https://github.com/haiwen/${pkgname}"
 license=('Apache')
-depends=('ccnet' "seafile" "qt5-tools" "qt5-webkit" "qt5-base"
+depends=("seafile" "qt5-tools" "qt5-webkit" "qt5-base"
          "gtk-update-icon-cache" "qt5-webengine")
 makedepends=("cmake")
 conflicts=('seafile-client-qt5')
 provides=('seafile-client-qt5')
 source=("${pkgname}-v${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('a86bf72cc10915d8f7eeefb6da6cecdbc3e77b9140a1ecfe1972a375539aa126')
+sha256sums=('3504a0276f8be8115952d613d336367c31d47b5221c45d499d2d3bec0d8c9cac')
 
 prepare() {
   cd "${srcdir}"
@@ -26,8 +26,6 @@ prepare() {
 
 build () {
   cd "$srcdir/build"
-
-  export PKG_CONFIG_PATH=/usr/lib/openssl-1.0/pkgconfig
 
   cmake \
     -DBUILD_SHIBBOLETH_SUPPORT=ON \
