@@ -4,11 +4,11 @@
 _pkgname=qtermwidget
 pkgname=$_pkgname-git
 pkgver=0.14.1
-pkgrel=1
+pkgrel=1.1
 pkgdesc="A terminal widget for Qt"
 arch=("i686" "x86_64")
 url="https://github.com/lxqt/qtermwidget"
-license=("GPL2")
+license=("LGPL" "custom:BSD" "custom:Public Domain")
 provides=("$_pkgname=$pkgver")
 conflicts=("$_pkgname")
 depends=(qt5-base)
