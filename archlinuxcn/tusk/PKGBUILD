@@ -4,8 +4,8 @@
 # Contributor: liberodark
 
 pkgname=tusk
-pkgver=0.21.0
-pkgrel=2
+pkgver=0.22.0
+pkgrel=1
 pkgdesc="Refined Evernote desktop app"
 arch=('x86_64')
 url="https://github.com/klaussinani/tusk"
@@ -21,7 +21,7 @@ source=(
 )
 
 sha256sums=(
-    'c7db7d3ef890dbc39fe13239eb6078f085d99153649c37bec99feed511135b32'
+    '9e45f45d208e2aa1404500c6b0104a43cd402c21e1000f83a42dc2e22b738f01'
     'b72cfcd35a727cb982f82d9f97f9e4330e81fbc70af47d1bc7f5baa7837a29f3'
     '2e8e1f13a86bd4a8fdbd2a4a69cde6b09e035b31352ad60f5a81d61a7abfe5bf'
 )
