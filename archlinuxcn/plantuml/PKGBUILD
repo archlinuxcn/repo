@@ -3,13 +3,13 @@
 
 pkgname=plantuml
 pkgver=1.2019.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Component that allows to quickly write uml diagrams"
 arch=(any)
 url="http://plantuml.com/"
 license=('GPL')
 depends=("graphviz")
-makedepends=("apache-ant" "java-environment=8")
+makedepends=("apache-ant" "java-environment=11")
 source=("http://downloads.sourceforge.net/project/$pkgname/$pkgver/$pkgname-$pkgver.tar.gz"
         "$pkgname.run")
 sha256sums=('5c4ccdb0c33f64cfee87391cdb5b92f0920312fd6a9e4163dad4401777022288'
