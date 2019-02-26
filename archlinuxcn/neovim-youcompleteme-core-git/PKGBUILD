@@ -10,15 +10,14 @@
 
 pkgname=neovim-youcompleteme-core-git
 pkgver=r2484.44335613
-pkgrel=1
+pkgrel=1.1
 pkgdesc='A code-completion engine for Vim'
 arch=(i686 x86_64)
 url='https://valloric.github.io/YouCompleteMe/'
 license=('GPL3')
 depends=('neovim' 'boost-libs' 'python>=3.2' 'clang>=6.0'
          'python-bottle' 'python-waitress' 'python-frozendict'
-         'python-requests-futures' 'python-future' 'python-neovim'
-         'python-regex')
+         'python-requests-futures' 'python-future' 'python-neovim')
 makedepends=('git' 'cmake' 'boost' 'pybind11')
 optdepends=(
   'gocode-git: Go semantic completion'
@@ -26,7 +25,8 @@ optdepends=(
   'nodejs-tern: JavaScript semantic completion'
   'racerd-git: Rust semantic completion'
   'typescript: Typescript semantic completion'
-  'python-jedi: Python semantic completion')
+  'python-jedi: Python semantic completion'
+  'python-regex: improved error handling during startup')
 # https://github.com/Valloric/ycmd/pull/885
 #'omnisharp-roslyn: C# semantic completion'
 
