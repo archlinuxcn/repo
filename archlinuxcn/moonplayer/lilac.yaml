@@ -7,4 +7,4 @@ maintainers:
 build_prefix: extra-x86_64
 
 update_on:
-  - cmd: curl --silent "https://api.github.com/repos/coslyk/moonplayer/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'
+  - cmd: curl -n "https://api.github.com/repos/coslyk/moonplayer/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'
