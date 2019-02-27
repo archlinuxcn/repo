@@ -4,7 +4,7 @@ pkgbase="cups-git"
 _pkgbase=cups
 pkgname=('libcups-git' 'cups-git')
 pkgver=2.3b7.r92.gca2990c7f
-pkgrel=1
+pkgrel=3
 arch=('x86_64')
 license=('GPL')
 url="https://www.cups.org/"
@@ -101,7 +101,7 @@ check() {
 package_libcups-git() {
 pkgdesc="The CUPS Printing System - client libraries and headers (GIT version)"
 depends=('gnutls' 'libtiff>=4.0.0' 'libpng>=1.5.7' 'krb5' 'avahi' 'libusb')
-provides=("libcups")
+provides=("libcups=${pkgver}")
 conflicts=('libcups')
 
   cd ${_pkgbase}
