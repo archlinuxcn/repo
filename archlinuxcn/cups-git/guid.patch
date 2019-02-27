@@ -1,0 +1,42 @@
+diff --git a/scheduler/cups-exec.c b/scheduler/cups-exec.c
+index aab43a797..46c549075 100644
+--- a/scheduler/cups-exec.c
++++ b/scheduler/cups-exec.c
+@@ -133,8 +133,13 @@ main(int  argc,				/* I - Number of command-line args */
+     if (setgid(gid))
+       exit(errno + 100);
+ 
+-    if (setgroups(1, &gid))
++#include <pwd.h>
++    struct passwd * pwd = getpwuid(uid);
++    if(initgroups(pwd->pw_name,pwd->pw_gid))
++    {
++      fprintf(stderr, "DEBUG: initgroups failed\n");
+       exit(errno + 100);
++    }
+ 
+     if (uid && setuid(uid))
+       exit(errno + 100);
+diff --git a/scheduler/util.c b/scheduler/util.c
+index 19ebf069b..4638562bd 100644
+--- a/scheduler/util.c
++++ b/scheduler/util.c
+@@ -300,7 +300,16 @@ cupsdPipeCommand(int        *pid,	/* O - Process ID or 0 on error */
+     */
+ 
+     if (!getuid() && user)
+-      setuid(user);			/* Run as restricted user */
++    {
++#include <pwd.h>
++      struct passwd * pwd = getpwuid(user);
++      if(initgroups(pwd->pw_name,pwd->pw_gid))
++      {
++        fprintf(stderr, "DEBUG: initgroups failed\n");
++        exit(errno + 100);
++      }
++      setuid(user); /* Run as restricted user */
++    }
+ 
+     if ((fd = open("/dev/null", O_RDONLY)) > 0)
+     {
+
