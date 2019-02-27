@@ -3,7 +3,7 @@
 pkgname=php-redis
 _extname=phpredis
 pkgver=4.2.0
-pkgrel=3
+pkgrel=4
 pkgdesc="PHP extension for interfacing with Redis"
 url="http://pecl.php.net/package/redis"
 arch=('x86_64')
@@ -26,7 +26,7 @@ sha256sums=('SKIP')
 install=php-redis.install
 
 build() {
-  cd "$srcdir/redis-${pkgver^^}"
+  cd "$srcdir/$_extname-${pkgver^^}"
 
   phpize
   ./configure --prefix=/usr --enable-redis-igbinary --enable-redis-lzf
@@ -34,7 +34,7 @@ build() {
 }
 
 package() {
-  cd "$srcdir/redis-${pkgver^^}"
+  cd "$srcdir/$_extname-${pkgver^^}"
 
   make INSTALL_ROOT="$pkgdir" install
   echo ';extension=redis.so' > redis.ini
