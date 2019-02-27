@@ -4,8 +4,9 @@ pkgname=tela-icon-theme-git
 _gitname=Tela-icon-theme
 pkgdesc="A flat colorful Design icon theme."
 pkgver=25.3f7085f
-pkgrel=1
+pkgrel=2
 arch=('any')
+makedepends=('git')
 url="https://github.com/vinceliuice/Tela-icon-theme"
 license=('GPL3')
 source=("git+https://github.com/vinceliuice/Tela-icon-theme.git")
@@ -22,4 +23,3 @@ package() {
 	sed -i '/gtk-update-icon-cache/d' Install
 	./Install -d "${pkgdir}"/usr/share/icons
 }
-	

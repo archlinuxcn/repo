@@ -2,11 +2,12 @@
 
 pkgname="flat-remix-git"
 pkgver=r193.325e2b7b
-pkgrel=1
+pkgrel=2
 pkgdesc="Flat remix is a pretty simple icon theme inspired on material design."
 arch=('any')
+makedepends=('git')
 url="https://drasite.com/flat-remix"
-license=('GPL 3.0')
+license=('GPL3')
 source=("${pkgname}::git+https://github.com/daniruiz/flat-remix.git")
 sha256sums=('SKIP')
 
