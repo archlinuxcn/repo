@@ -1,21 +1,34 @@
 # Contributor: Florian Klink <flokli at flokli dot de>
-
-_python=python
-_distname=pystache
-pkgname=$_python-$_distname
+pkgname=python-pystache
+_pkgname=pystache
 pkgver=0.5.4
-pkgrel=3
+pkgrel=4
 pkgdesc="The mustache template engine written in python"
-arch=(any)
+arch=("any")
 url="http://github.com/defunkt/pystache"
 license=('MIT')
-depends=('python' 'python-setuptools')
-provides=('python-pystache')
-conflicts=('python-pystache')
-source=( "https://pypi.python.org/packages/source/${_distname:0:1}/$_distname/$_distname-$pkgver.tar.gz")
-md5sums=('485885e67a0f6411d5252e69b20a35ca')
+makedepends=('python-setuptools')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/defunkt/$_pkgname/archive/v$pkgver.tar.gz")
+sha256sums=('163f5b8fb45f6be3a5074a53a47e79ef51ec015ee43f3ec34b16be279147c96f')
+
+build() {
+	cd "$_pkgname-$pkgver"
+	python setup.py build
+}
+
+check() {
+	# This package uses 2to3 to convert itself to Python 3 on the fly
+	# So we need to jump through some hoops here
+	rm -rf test_dir
+	mkdir test_dir
+	cd "$_pkgname-$pkgver"
+	python setup.py install --root=../test_dir
+	PYTHONPATH=../test_dir/usr/lib/python3.7/site-packages/ \
+		../test_dir/usr/bin/pystache-test .
+}
 
 package() {
-  cd "$srcdir/$_distname-$pkgver"
-  $_python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 || exit 1
+	cd "$_pkgname-$pkgver"
+	python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1
+	install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE
 }
