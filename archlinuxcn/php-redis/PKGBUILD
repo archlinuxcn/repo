@@ -3,13 +3,14 @@
 pkgname=php-redis
 _extname=phpredis
 pkgver=4.2.0
-pkgrel=4
+pkgrel=5
 pkgdesc="PHP extension for interfacing with Redis"
 url="http://pecl.php.net/package/redis"
 arch=('x86_64')
 license=('PHP')
 makedepends=(
    'php-igbinary'
+   'git'
 )
 depends=(
     'php-igbinary'
@@ -20,10 +21,17 @@ backup=('etc/php/conf.d/redis.ini')
 
 source=(
     "https://github.com/phpredis/${_extname}/archive/${pkgver^^}.tar.gz"
+    "git://github.com/nemequ/liblzf.git"
 )
 
-sha256sums=('SKIP')
+sha256sums=('SKIP' 'SKIP')
 install=php-redis.install
+
+prepare() {
+  cd "$srcdir/$_extname-${pkgver^^}"
+
+  cp -rf "$srcdir/liblzf" .
+}
 
 build() {
   cd "$srcdir/$_extname-${pkgver^^}"
