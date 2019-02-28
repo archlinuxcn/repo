@@ -1,6 +1,6 @@
 # Maintainer: Xuanwo <xuanwo@archlinuxcn.org>
 pkgname=tidb
-pkgver=2.1.3
+pkgver=2.1.5
 pkgrel=1
 pkgdesc='A distributed HTAP database compatible with the MySQL protocol'
 makedepends=('go' 'make' 'git')
@@ -15,7 +15,7 @@ source=(tidb-${pkgver}.tar.gz::https://github.com/pingcap/tidb/archive/v${pkgver
         tidb-sysusers.conf
         tidb-tmpfiles.conf
         tidb.toml)
-sha256sums=('57035a47221e6abc11644f7a09981f8f9e80a79f303833c3df5e3081e98ecb17'
+sha256sums=('83e393087ce7fc1f460246b731c1714275fdff41eba028d6c49a95c4f23e7422'
             '22318c19bb89ff5a0852df5186cc1496214cd49f2264192413a326d1e8c93dc9'
             '2b147d80985e714d5f861baf76591104c07058b9b6fa573bf0676d675cf8fc20'
             '30ce83fbec8f102c30e438282bb5b18c026d08480f2386d68f1116c12481bf66'
