@@ -2,7 +2,7 @@
 
 pkgbase=imagemagick-fftw
 pkgname=(libmagick-fftw imagemagick-fftw)
-pkgver=7.0.8.28
+pkgver=7.0.8.29
 pkgrel=1
 pkgdesc="An image viewing/manipulation program"
 url="https://www.imagemagick.org/"
@@ -16,7 +16,7 @@ _relname=ImageMagick-${pkgver%%.*}
 _tarname=ImageMagick-${pkgver%.*}-${pkgver##*.}
 source=(https://www.imagemagick.org/download/releases/$_tarname.tar.xz{,.asc}
         arch-fonts.diff IM7-GS-policy.patch)
-sha256sums=('d7aeb906b1c6b8d3292d4a8a94f6ac58683e25d972bbb8ebae8b300d8d707a1b'
+sha256sums=('41590d506e2b4a7df7325934cb906db067d5cbb387c80fb05643186c8b6439e3'
             'SKIP'
             'a85b744c61b1b563743ecb7c7adad999d7ed9a8af816650e3ab9321b2b102e73'
             'f20c09860da65a4259ec9627ceeca7d993949b7460fa199c5ffd874633814cf6')
