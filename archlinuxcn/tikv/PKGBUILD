@@ -1,6 +1,6 @@
 # Maintainer: Xuanwo <xuanwo@archlinuxcn.org>
 pkgname=tikv
-pkgver=2.1.3
+pkgver=2.1.5
 pkgrel=1
 pkgdesc='Distributed transactional key-value database, originally created to complement TiDB'
 makedepends=('go' 'make' 'rustup' 'awk' 'cmake' 'gcc')
@@ -9,17 +9,17 @@ url='https://github.com/tikv/tikv'
 license=('Apache')
 provides=('tikv-server')
 backup=(etc/tikv/tikv.toml)
-depends=('tikv-pd')
+depends=('tikv-pd' 'gcc-libs')
 source=(tikv-${pkgver}.tar.gz::https://github.com/tikv/tikv/archive/v${pkgver}.tar.gz
         tikv.service
         tikv-sysusers.conf
         tikv-tmpfiles.conf
         tikv.toml)
-sha256sums=('a5d580c8b7b12dec5a6919237bb0475cec27db59d7f3a6f73b9416db27372bb0'
+sha256sums=('f338555e26300521439255683a6bebc6b35251c4630f9eaa05aaa22f9599e4f2'
             '870b8eaf83bc0d22b05b0f3a7890660e483cf77bb1d84bc50ad04fb23068cd8c'
             '744b252e29099b0099dc41e30bc3badd33b3d661c7126af8044faa4fc2df8927'
             '935291bac6a216c6f880df9bfaec8900266413bb202ac483e79f291e1f28e9f1'
-            '248790d756d15322ed7af13f30525744c472190ac68a26b486c5eed24427abdf')
+            '24aff9d7aa90a18ac3a0474f4e4575baa5051a7ee0bb9a4c3a3d4aff49af7ac7')
 
 prepare() {
     cd tikv-${pkgver}
