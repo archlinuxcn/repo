@@ -6,15 +6,15 @@
 
 pkgname=plymouth
 pkgver=0.9.4
-pkgrel=1
+pkgrel=4
 pkgdesc="A graphical boot splash screen with kernel mode-setting support"
 url="http://www.freedesktop.org/wiki/Software/Plymouth/"
 arch=('x86_64')
 license=('GPL')
-
 depends=('libdrm' 'pango' 'systemd')
 makedepends=('docbook-xsl')
-optdepends=('ttf-dejavu')
+optdepends=('ttf-dejavu: For true type font support'
+	    'xf86-video-fbdev: Support special graphic cards on early startup')
 provides=('plymouth')
 conflicts=('plymouth-git' 'plymouth-legacy' 'plymouth-nosystemd')
 backup=('etc/plymouth/plymouthd.conf')
@@ -47,7 +47,7 @@ md5sums=('4efa5551d230165981b105e7c6a50aa7'
          '1430ae2ec501d600f8f6771454dc9bbe'
          '870ea3e63c6989e2badf79d1fbafa914'
          'a3cfc30df846b2d7057a29e7fbe8733a'
-         'f803c315739f46128b99232d64c268ca'
+         'b95f6979dc2f373045b2ab88a36d6771'
          '006847d16b852c7a50ee2f241fd9647e'
          '606cd558141551a1ce0d80150a045d83'
          '672ad913e2383483bcb4599a0a6bee48'
@@ -79,8 +79,11 @@ build() {
 		--enable-tracing \
 		--enable-pango \
 		--enable-gtk=no \
-		--with-release-file=/etc/os-release \
+		--enable-tracing \
+		--disable-tests \
+		--enable-gdm-transition \
 		--with-logo=/usr/share/plymouth/arch-logo.png \
+		--with-release-file=/etc/os-release \
 		--with-background-color=0x000000 \
 		--with-background-start-color-stop=0x000000 \
 		--with-background-end-color-stop=0x4D4D4D \
