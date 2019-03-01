@@ -2,7 +2,7 @@
 
 pkgname=pulseaudio-modules-bt-git
 pkgver=r102.8a58314
-pkgrel=1
+pkgrel=2
 pkgdesc="PulseAudio Bluetooth modules with SBC, AAC, APTX, APTX-HD, Sony LDAC (A2DP codec) support"
 arch=("i686" "x86_64" "arm" "armv6h" "armv7h" "aarch64")
 url="https://github.com/EHfive/pulseaudio-modules-bt"
@@ -25,7 +25,7 @@ pkgver() {
 
 prepare() {
     cd "$srcdir/pulseaudio-modules-bt"
-    rm -r pa libldac
+    rm -rf pa libldac
     ln -sf -T "../pulseaudio" "pa"
     ln -sf -T "../libldac" "libldac"
     cd "pa"
