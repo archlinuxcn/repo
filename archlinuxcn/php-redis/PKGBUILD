@@ -2,8 +2,8 @@
 # Contributor: Kai Korla <balticer@balticer.de>
 pkgname=php-redis
 _extname=phpredis
-pkgver=4.2.0
-pkgrel=6
+pkgver=4.3.0rc1
+pkgrel=1
 pkgdesc="PHP extension for interfacing with Redis"
 url="http://pecl.php.net/package/redis"
 arch=('x86_64')
@@ -24,7 +24,8 @@ source=(
     "git://github.com/nemequ/liblzf.git"
 )
 
-sha256sums=('SKIP' 'SKIP')
+sha256sums=('bf85a57da2785c9934cd2d9839b9fe56ca5307e978bc283ed5f9cf8678073ecd'
+            'SKIP')
 install=php-redis.install
 
 prepare() {
