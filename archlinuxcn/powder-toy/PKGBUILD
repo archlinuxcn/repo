@@ -12,11 +12,11 @@ NATIVE_OPTIMIZATIONS=n
 
 pkgname=powder-toy
 #pkgver=${_sver}.${_mver}
-pkgver=94.0
+pkgver=94.1
 _sver=${pkgver/.*/}
 _mver=${pkgver/*./}
 _build=340
-pkgrel=3
+pkgrel=1
 pkgdesc="Desktop version of the classic falling sand physics sandbox, simulates air pressure, velocity & heat!"
 arch=(i686 x86_64)
 depends=('sdl2' 'lua52' 'fftw' 'bzip2' 'zlib')
@@ -33,6 +33,7 @@ prepare() {
   #Also I do not know the logic behind the generated snapshotids.
   sed 's|//#define I|#define I|' -i src/Config.h
 
+  sed "s|Version=.*|Version=$pkgver|" -i ../${pkgname}.desktop
 }
 
 build() {
@@ -71,6 +72,6 @@ package() {
   install -Dm 644 "${srcdir}/${pkgname}.png" "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
 }
 
-md5sums=('56a0a8485d20549ed5291b1d04c665af'
-         '8901d334c53c04738cbd3518c80fa37c'
+md5sums=('7e55a347df49c5df23dc977fb719c208'
+         'e223e1d622f11c03af26ba3e60c7d500'
          'bb40bf9c2fa3982e2872b5d32de3b006')
