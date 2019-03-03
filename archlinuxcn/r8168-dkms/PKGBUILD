@@ -23,6 +23,8 @@ install=r8168-dkms.install
  
 
 package() {
+	echo "blacklist r8169" | \
+		install -Dm644 /dev/stdin "$pkgdir/usr/lib/modprobe.d/r8168.conf"
 	install -Dm644 dkms.conf "${pkgdir}/usr/src/${_pkgbase}-${pkgver}/dkms.conf"
 
 	sed -e "s/@PKGNAME@/${_pkgbase}/g" \
