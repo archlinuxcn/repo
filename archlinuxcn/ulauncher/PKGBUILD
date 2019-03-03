@@ -3,7 +3,7 @@
 # To install, run `makepkg -is`
 
 pkgname=ulauncher
-pkgver=4.3.1.r4
+pkgver=4.3.2.r8
 pkgrel=1
 pkgdesc='Application launcher for Linux'
 arch=('any')
@@ -14,7 +14,7 @@ depends=('gobject-introspection-runtime' 'libappindicator-gtk3' 'libkeybinder3' 
 makedepends=('python2-distutils-extra')
 provides=("${pkgname%-*}")
 conflicts=("${pkgname%-*}")
-source=("https://github.com/Ulauncher/Ulauncher/releases/download/4.3.1.r4/ulauncher_4.3.1.r4.tar.gz")
+source=("https://github.com/Ulauncher/Ulauncher/releases/download/4.3.2.r8/ulauncher_4.3.2.r8.tar.gz")
 sha256sums=('SKIP')
 
 prepare() {
