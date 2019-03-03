@@ -9,7 +9,7 @@ pkgdesc="GTK+ implementation of wxWidgets API for GUI"
 arch=('i686' 'x86_64')
 url="http://wxwidgets.org"
 license=('custom:wxWindows')
-depends=('gtk2' 'gstreamer0.10-base' 'sdl' 'libsm')
+depends=('gtk2' 'gstreamer0.10-base' 'sdl' 'libsm' 'gstreamer0.10-base')
 makedepends=('gstreamer0.10-base-plugins' 'gconf' 'glu')
 provides=("wxgtk2.8=${pkgver}")
 conflicts=('wxgtk2.8-light')
