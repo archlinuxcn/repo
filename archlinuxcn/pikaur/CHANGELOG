@@ -1342,3 +1342,21 @@ Sat Jan 12 04:28:44 2019 +0100
      2019-01-11 c891468 actionless fix(install_cli, install_info_fetcher: manual package selection): working with AlwaysShowPkgOrigin=yes and other sidecases
      2019-01-11 756d210 actionless fix(aur: find_aur_packages): if part of package results was cached not found packages were not always marked as not found
      2019-01-11 60fc64a actionless fix(pacman): handle 'database not found' reply from pacman
+
+
+Sun Mar 3 21:13:21 2019 +0100
+-------------------------------------------------
+1.4             Release 1.4
+    
+    Most notable changes:
+     2019-03-03 f881170 actionless fix(conflicts, install_cli): count repo packages which are going to be installed when computing aur conflicts
+     2019-03-03 d8f4234 actionless fix(install_cli), test(basic: conflict): returncode when aur package conflicts with repo package
+     2019-02-26 982d046 actionless feat(print dept: print ignored): improve template
+     2019-02-16 ecbab8a Hans-Nikolai Viessmann add support to store signature file in package cache (#350)
+     2019-02-02 aaae30a Versus Void Raise error when PKGBUILD is absent or ill-formated.
+     2019-02-02 449e946 Versus Void Default to PKGBUILD when no positional args supplied.
+     2019-01-26 a041c95 bmccorm2 Update README.md
+     2019-01-16 003daae actionless fix(install_cli): apply the previous fix also for Arch News thread
+     2019-01-16 6bd9343 actionless fix(install_cli): correctly reraise exception from refresh pkg db thread
+     2019-01-14 9a4f09d Bundy01 Translation update ES, FR
+     2019-01-13 979c1ee actionless feat(install cli): when --needed: exclude from prompt repo and non-devel aur pkgs
