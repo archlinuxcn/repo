@@ -1,11 +1,11 @@
 
 # Maintainer: Taiko2k <captain dot gxj at gmail dot com>
 pkgname='tauon-music-box'
-pkgver=3.7.0
-pkgrel=2
+pkgver=3.8.0
+pkgrel=1
 pkgdesc='A streamlined music player that uses BASS'
 arch=('x86_64')
-url="https://github.com/taiko2k/tauonmb"
+url="https://github.com/Taiko2k/TauonMusicBox"
 license=('custom')
 
 depends=('python' 'noto-fonts' 'noto-fonts-emoji' 'sdl2_image' 'python-pillow'
@@ -19,10 +19,10 @@ optdepends=('ffmpeg: File transcoding'
             'unrar: RAR archive extraction support'
             'python-plexapi: PLEX client streaming')
 
-source=("${url}/releases/download/v${pkgver}/Tauon.Music.Box.v${pkgver}-1.Linux.Bass.64bit.zip"
+source=("${url}/releases/download/v${pkgver}/Tauon.Music.Box.v${pkgver}.Linux.Bass.64bit.zip"
 		"gtk-update-icon-cache.hook")
 
-sha256sums=('e88760683c783ae0e4afd8983e8efeea4a854528dbc33f24833fc608c076bdd6'
+sha256sums=('793fb0527a7ff6e76cbfadb223b13e0aa8cb5085a96feee16ce7732c96fb8f5e'
             'a681c96c808b0e53e0193cf68f8eb8d546447ff6c248cb202e4ffccdb3ef7f19')
 
 package() {
