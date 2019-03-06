@@ -21,7 +21,7 @@ pkgname=('vmware-workstation'
 pkgver=15.0.2
 _buildver=10952284
 _pkgver=${pkgver}_${_buildver}
-pkgrel=3
+pkgrel=4
 arch=(x86_64)
 url='https://www.vmware.com/products/workstation-for-linux.html'
 license=(custom)
@@ -43,6 +43,7 @@ source=(
 
   'vmware-hostd-certificates.service'
   'vmware-hostd.service'
+  'vmware-authd.service'
   'vmware-networks-configuration.service'
   'vmware-networks.service'
   'vmware-usbarbitrator.service'
@@ -51,34 +52,36 @@ source=(
   'Makefile'
   'vmmon.patch'
   'vmnet.patch'
+
+  "https://softwareupdate.vmware.com/cds/vmw-desktop/fusion/${_vmware_fusion_ver/_//}/packages/com.vmware.fusion.tools.darwinPre15.zip.tar"
+  "https://softwareupdate.vmware.com/cds/vmw-desktop/fusion/${_vmware_fusion_ver/_//}/packages/com.vmware.fusion.tools.darwin.zip.tar"
+  'unlocker.py'
 )
-sha256sums=(
-  '22675343abd4d88a78399c9af8b271912161d28d58bbb58f0af0804a9957a96a'
-
-  '12e7b16abf8d7e858532edabb8868919c678063c566a6535855b194aac72d55e'
-  'da1698bf4e73ae466c1c7fc93891eba4b9c4581856649635e6532275dbfea141'
-  '53af82a619c8b1bca39bb493beb0ff031c978bb763715ef264b135f4a1d67d1e'
-  'd50aa0a3fe94025178965d988e18d41eb60aa1ce2b28ee6e3ca15edeabfa2ca7'
-  '8e4d08668a66be79a900521792b39c16a026cc90659241edee80b64e701bfbcd'
-  'b94959a11b28e51b541321be0588190eb10825e9ff55cbd16eb01483a839a69f'
-
-  '6873de5bf5a9ebb795101693919ce73b52f65c2f2c232584bb1382dce60f1d51'
-  '434cd4aa440d36b75ee20e0b588aaad874bb0d796173990bc4046667c66f5099'
-  '27a64a3811b864c945fb2de318f4beffabdb59bccd3a77820ec7b547cf5fe430'
-  '3c802523606184a5e8ebbe931d9c6c70d83ff8c6833b9f48aa264f0bd5a18a88'
-  'ad522a8cbc6103134ce5e677a01b503cd21875cbceb37bd13fd870ebd9ad0e6d'
-
-  'f9440479f3ae5ad0a39bba3150276627878bf83d6879444fb327c53a1dbb5a4d'
-  '70301aa4eff4f42d7d39b276445dc7d8f44b8a0e184775e8a9e3055bb9d8590a'
-  'e3812b78158672c7d96b6a58877681462f3fbdfe99a948b32c80c755c8682450'
-  'a651de50e91f386057d69d11e2cdf6e020229aae0631f25073ca09fbb878d1db'
-  'd7a9fbf39a0345ae2f14f7f389f30b1110f605d187e0c241e99bbb18993c250d'
-
-  '05e26d8b21d190ebabb7f693998114d9d5991d9dfb71acb4d990293a65b6b487'
-  '6ce902b1dab8fc69be253abd8e79017011985eca850ff7acc7282f9ab668e35d'
-  '687cf3419ef0f01f883724f0b9807cc5613c3fe1b50ca3b653add9ed2283613b'
-  'c2e981d5d6a4fab4d33d4e3df394bdb597834fae14ebb535a40271c3f2677f0d'
-)
+sha256sums=('22675343abd4d88a78399c9af8b271912161d28d58bbb58f0af0804a9957a96a'
+            '12e7b16abf8d7e858532edabb8868919c678063c566a6535855b194aac72d55e'
+            'da1698bf4e73ae466c1c7fc93891eba4b9c4581856649635e6532275dbfea141'
+            '53af82a619c8b1bca39bb493beb0ff031c978bb763715ef264b135f4a1d67d1e'
+            'd50aa0a3fe94025178965d988e18d41eb60aa1ce2b28ee6e3ca15edeabfa2ca7'
+            '8e4d08668a66be79a900521792b39c16a026cc90659241edee80b64e701bfbcd'
+            'b94959a11b28e51b541321be0588190eb10825e9ff55cbd16eb01483a839a69f'
+            '6873de5bf5a9ebb795101693919ce73b52f65c2f2c232584bb1382dce60f1d51'
+            '434cd4aa440d36b75ee20e0b588aaad874bb0d796173990bc4046667c66f5099'
+            '27a64a3811b864c945fb2de318f4beffabdb59bccd3a77820ec7b547cf5fe430'
+            '3c802523606184a5e8ebbe931d9c6c70d83ff8c6833b9f48aa264f0bd5a18a88'
+            'ad522a8cbc6103134ce5e677a01b503cd21875cbceb37bd13fd870ebd9ad0e6d'
+            'f9440479f3ae5ad0a39bba3150276627878bf83d6879444fb327c53a1dbb5a4d'
+            '42594b60085d0bbef01ab07b9f8b0d18640001107ce61cc0ddf02d0ab415140f'
+            'e4c2e97acf07c52de570dd4333d67acfb593db719937a563c6075ab773dcce33'
+            'e3812b78158672c7d96b6a58877681462f3fbdfe99a948b32c80c755c8682450'
+            'c0a5aea785db06921fb350d36d5e0fd9a14f5eee0c835686ec6fea1af8c92245'
+            'd7a9fbf39a0345ae2f14f7f389f30b1110f605d187e0c241e99bbb18993c250d'
+            '05e26d8b21d190ebabb7f693998114d9d5991d9dfb71acb4d990293a65b6b487'
+            '6ce902b1dab8fc69be253abd8e79017011985eca850ff7acc7282f9ab668e35d'
+            'd6c2bbe974f41f555927071eb0f8238fdf30cb3fae62ef00acbc5fc2917986ac'
+            '955329f91f25f523f5974992923238d2718bc6255acc7e18fabf80cf20206531'
+            '02cc231902c9fc1b4faf2fc2664e7f3d2121ad4b8a92e18a759b044d20a7b724'
+            'f6b542320ae2aa33bf6c5cb7ccdda702ae5067c3e3ae2e55c1b876a2d65356a3'
+            '29e0b0db9c0296ab81eee543803c4bd430e2c69c76e33492910e17280da1c05c')
 options=(!strip emptydirs)
 
 
@@ -88,20 +91,9 @@ _isovirtualprinterimages=(Linux Windows)
 _vmware_fusion_ver=11.0.2_10952296
 # List of VMware Fusion versions: https://softwareupdate.vmware.com/cds/vmw-desktop/fusion/
 
-makedepends+=(
+makedepends=(
   python2
   unzip
-)
-
-source+=(
-  "https://softwareupdate.vmware.com/cds/vmw-desktop/fusion/${_vmware_fusion_ver/_//}/packages/com.vmware.fusion.tools.darwinPre15.zip.tar"
-  "https://softwareupdate.vmware.com/cds/vmw-desktop/fusion/${_vmware_fusion_ver/_//}/packages/com.vmware.fusion.tools.darwin.zip.tar"
-  'unlocker.py'
-)
-sha256sums+=(
-  '02cc231902c9fc1b4faf2fc2664e7f3d2121ad4b8a92e18a759b044d20a7b724'
-  'f6b542320ae2aa33bf6c5cb7ccdda702ae5067c3e3ae2e55c1b876a2d65356a3'
-  '29e0b0db9c0296ab81eee543803c4bd430e2c69c76e33492910e17280da1c05c'
 )
 
 _fusion_isoimages=(darwin darwinPre15)
