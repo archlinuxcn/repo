@@ -7,7 +7,7 @@ _pkgbase=bomi
 
 pkgname=$_pkgbase-git
 pkgver=0.9.11.r39.g5f0cc0a7
-pkgrel=2
+pkgrel=3
 pkgdesc="Powerful and easy-to-use GUI multimedia player based on mpv (git version)"
 arch=('i686' 'x86_64')
 url="http://bomi-player.github.io"
@@ -30,7 +30,7 @@ source=(git+https://github.com/d-s-x/${_pkgbase}.git
         upgrade_waf.patch)
 md5sums=('SKIP'
          'dacb0df199eea0f6e3d5c037c8c5429d'
-         '6bbade797cd850a576794fbf8aef0247')
+         'fbcd3b66086bb2f7c94c07c63c335fb3')
 #options=(debug !strip)
 
 pkgver() {
