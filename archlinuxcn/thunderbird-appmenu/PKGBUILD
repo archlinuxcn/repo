@@ -8,14 +8,14 @@
 
 _pkgname=thunderbird
 pkgname=thunderbird-appmenu
-pkgver=60.5.1
-pkgrel=2
+pkgver=60.5.2
+pkgrel=1
 pkgdesc="Thunderbird from extra with appmenu patch"
 arch=(x86_64)
 license=(MPL GPL LGPL)
 url="https://aur.archlinux.org/packages/thunderbird-appmenu/"
 depends=(gtk3 gtk2 mozilla-common libxt startup-notification mime-types dbus-glib alsa-lib
-         nss hunspell sqlite ttf-font libvpx icu)
+         nss hunspell sqlite ttf-font icu)
 makedepends=(unzip zip diffutils python2 yasm mesa imake gconf libpulse inetutils xorg-server-xvfb
              autoconf2.13 rust clang llvm)
 optdepends=('libcanberra: sound support')
@@ -25,7 +25,7 @@ options=(!emptydirs !makeflags)
 source=(https://ftp.mozilla.org/pub/mozilla.org/thunderbird/releases/$pkgver/source/thunderbird-$pkgver.source.tar.xz
         $_pkgname.desktop
         unity-menubar.patch)
-sha256sums=('69a3f741b7378b50a3b6a3b59f6c4fedd2d82d469ab234390627e15da1b58e03'
+sha256sums=('4b5260c069c018c966bd00d5e05a8f2fa3a639bc20614910e46b7e9af89545af'
             '3534ea85d8e0e35dba5f40a7a07844df19f3a480e1358fc50c2502f122dab789'
             '22786f52773b93046fdb12378f67343b1d7d3390e83a00ff4aa03948c2b1c9e2')
 
@@ -72,7 +72,7 @@ ac_add_options --with-system-zlib
 ac_add_options --with-system-bz2
 ac_add_options --with-system-icu
 ac_add_options --with-system-jpeg
-ac_add_options --with-system-libvpx
+#ac_add_options --with-system-libvpx
 ac_add_options --with-system-nspr
 ac_add_options --with-system-nss
 ac_add_options --enable-system-hunspell
