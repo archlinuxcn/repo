@@ -1,0 +1,29 @@
+# Maintainer: Bruce Zhang <zttt183525594@gmail.com>
+pkgname=opencv-python
+_name=opencv_python
+pkgver=4.0.0.21
+pkgrel=1
+_py=cp37
+pkgdesc="Wrapper package for OpenCV python bindings."
+arch=('x86_64' 'i686')
+url="https://github.com/skvark/opencv-python"
+license=('MIT')
+depends=()
+makedepends=('python-pip')
+options=('!strip')
+source_x86_64=(
+	"https://files.pythonhosted.org/packages/$_py/${_name::1}/$_name/$_name-$pkgver-$_py-${_py}m-manylinux1_x86_64.whl"
+)
+source_i686=(
+	"https://files.pythonhosted.org/packages/$_py/${_name::1}/$_name/$_name-$pkgver-$_py-${_py}m-manylinux1_i686.whl"
+)
+noextract=(
+	"$_name-$pkgver-$_py-${_py}m-manylinux1_x86_64.whl"
+	"$_name-$pkgver-$_py-${_py}m-manylinux1_i686.whl"
+)
+sha256sums_x86_64=("9acea43d03440e7a0bd9a9ad599394382a529d49ec6995414797645acfc3e629")
+sha256sums_i686=("ae6f1aaa64d3b9a82792669e5be04d2544ce8c2e4a71ecfac09e0a4ed7b60908")
+
+package() {
+	PIP_CONFIG_FILE=/dev/null pip install --isolated --root="$pkgdir" --ignore-installed --no-deps *.whl
+}
