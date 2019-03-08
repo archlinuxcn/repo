@@ -3,11 +3,10 @@
 from lilaclib import *
 
 def pre_build():
-    pypi_pre_build(
-        depends = ['python-bleach', 'python-jinja', 'python-werkzeug', 'python-html5lib', 'python-misaka', 'python-itsdangerous', 'python-six', 'python-cffi', 'sqlite'],
-        depends_setuptools = True,
-        arch = ['any']
-    )
+    pkgver = get_pkgver_and_pkgrel()
+    update_pkgver(_G.newver)
+    if pkgver != _G.newver:
+        update_pkgrel(1)
 
 def post_build():
     pypi_post_build()
