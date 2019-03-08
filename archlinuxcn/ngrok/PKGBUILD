@@ -3,26 +3,26 @@
 # Contributer: Peter Sutton (foxxy) <foxxy@foxdogstudios.com>
 
 pkgname=ngrok
-pkgver=2.3.13
+pkgver=2.3.15
 pkgrel=1
 pkgdesc='A tunneling, reverse proxy for developing and understanding networked, HTTP services'
 url='https://ngrok.com'
 license=('Apache')
-source_i686=("ngrok::https://bin.equinox.io/a/g1Nmu3VU8Kn/ngrok-2.3.13-linux-386")
-source_x86_64=("ngrok::https://bin.equinox.io/a/drE1eZCsw6j/ngrok-2.3.13-linux-amd64")
-source_armv7h=("ngrok::https://bin.equinox.io/a/5XGo58kqfJR/ngrok-2.3.13-linux-arm")
-source_aarch64=("ngrok::https://bin.equinox.io/a/5YHWzLSugFS/ngrok-2.3.13-linux-arm64")
-sha256sums_i686=('0cebad9e55e00529e805b6dd5beb3889d3b6be954540a47928de6c940ae08790')
-sha256sums_x86_64=('6428d172b4e0a1e2f7316e9340bf074cc2823b78d2b5be3e2e33fb33be7b4329')
-sha256sums_armv7h=('8618c74377c8aabb5a93a1df4fa3cd4147ca4b535737e73cb7de661046834700')
-sha256sums_aarch64=('097328db5f503e1e9a6fc3bba717f602f73212816f30d0fa4df46f29a662d622')
+source_i686=("https://bin.equinox.io/a/69wy2ozvjqo/ngrok-${pkgver}-linux-386")
+source_x86_64=("https://bin.equinox.io/a/7GwWiZuTWsF/ngrok-${pkgver}-linux-amd64")
+source_armv7h=("https://bin.equinox.io/a/2vXJBm1a435/ngrok-${pkgver}-linux-arm")
+source_aarch64=("https://bin.equinox.io/a/mkXQR3dwNn/ngrok-${pkgver}-linux-arm64")
+sha256sums_i686=('8cf2e741074fb53074d2caa76b970aee72deffc33006d2d7fec309b9f55233ce')
+sha256sums_x86_64=('597ff719093b702ebfe6afbfa051c8005afcf5fd6a300b1feb7f8be05457ccb9')
+sha256sums_armv7h=('27886aeefbfd14d08d56f753bfce87b438cb53cf8ed9fc92a448090c9ed4390a')
+sha256sums_aarch64=('9e82f5b0dcce429aa12453c5892dc2c1cbd91cbbbce038f1e3b0cafb895bd680')
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 
 package() {
   cd "${srcdir}"
 
   # Install the program.
-  install -Dm755 ngrok  "${pkgdir}/usr/bin/ngrok"
+  install -Dm755 ngrok-${pkgver}-linux-* "${pkgdir}/usr/bin/ngrok"
 }
 
 # vim: ft=sh ts=2 sw=2 et
