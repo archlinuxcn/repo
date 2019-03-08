@@ -2,7 +2,7 @@
 # Contributor: Eduardo Sánchez Muñoz <eduardosanchezmunoz@gmail.com>
 
 pkgname=htmlcxx
-pkgver=0.86
+pkgver=0.87
 pkgrel=1
 pkgdesc="A simple non-validating CSS1 and HTML parser for C++."
 arch=('i686' 'x86_64')
@@ -12,8 +12,8 @@ depends=()
 makedepends=()
 conflicts=('htmlcxx' 'libhtmlcxx' 'libcss_parser')
 provides=('htmlcxx' 'libhtmlcxx' 'libcss_parser')
-source=("http://downloads.sourceforge.net/project/${pkgname}/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.gz")
-sha256sums=('07542b5ea2442143b125ba213b6823ff4a23fff352ecdd84bbebe1d154f4f5c1')
+source=("https://sourceforge.net/projects/${pkgname}/files/v${pkgver}/${pkgname}-${pkgver}.tar.gz")
+sha256sums=('5d38f938cf4df9a298a5346af27195fffabfef9f460fc2a02233cbcfa8fc75c8')
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
