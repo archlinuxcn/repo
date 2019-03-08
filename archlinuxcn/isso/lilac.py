@@ -9,5 +9,6 @@ def pre_build():
         update_pkgrel(1)
 
 def post_build():
-    pypi_post_build()
+    git_add_files('PKGBUILD')
+    git_commit()
     update_aur_repo()
