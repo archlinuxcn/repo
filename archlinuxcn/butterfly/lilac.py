@@ -3,10 +3,7 @@
 from lilaclib import *
 
 def pre_build():
-    pkgver = get_pkgver_and_pkgrel()
-    update_pkgver(_G.newver)
-    if pkgver != _G.newver:
-        update_pkgrel(1)
+    update_pkgver_and_pkgrel(_G.newver)
 
 def post_build():
     git_add_files('PKGBUILD')
