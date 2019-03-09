@@ -1,61 +1,60 @@
 # Maintainer: Peter Cai <peter@typeblog.net>
 
 pkgbase=linux-surface-petercxy
-_srcname=linux-4.19
-_jakeday_commit=5d21cc824c9b41e65f92fdebcbcccd2181b9393f
+_srcname=linux-5.0
 _srcdir=${_srcname}
-pkgver=4.19.27
-pkgrel=1
+_has_patch=false # TODO: set this to true if the kernel has patch version
+_patch_commit=ba44e8265bfc72a24e9b1cbc3608e0cc09a9e953 # PeterCxy/linux-surface-patches
+pkgver=5.0
+pkgrel=2
 arch=('x86_64')
 url="https://www.kernel.org/"
 license=('GPL2')
 makedepends=('xmlto' 'kmod' 'inetutils' 'bc' 'libelf')
 options=('!strip')
-source=(https://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.{xz,sign}
-        https://www.kernel.org/pub/linux/kernel/v4.x/patch-${pkgver}.xz
+source=(https://www.kernel.org/pub/linux/kernel/v5.x/${_srcname}.tar.{xz,sign}
+        https://github.com/PeterCxy/linux-surface-patches/archive/${_patch_commit}.zip
         'config'         # the main kernel config file
         'config-surface'
         '60-linux.hook'  # pacman hook for depmod
         '90-linux.hook'  # pacman hook for initramfs regeneration
         'linux-surface-petercxy.preset'   # standard config files for mkinitcpio ramdisk
-        '0001-add-sysctl-to-disallow-unprivileged-CLONE_NEWUSER-by.patch'
-        "https://github.com/jakeday/linux-surface/archive/${_jakeday_commit}.zip"
 )
+if $_has_patch; then
+  source+=("https://www.kernel.org/pub/linux/kernel/v5.x/patch-${pkgver}.xz")
+fi
 validpgpkeys=('ABAF11C65A2970B130ABE3C479BE3E4300411886' # Linus Torvalds <torvalds@linux-foundation.org>
               '647F28654894E3BD457199BE38DBBDC86092693E' # Greg Kroah-Hartman (Linux kernel stable release signing key) <greg@kroah.com>
              )
-sha256sums=('0c68f5655528aed4f99dae71a5b259edc93239fa899e2df79c055275c21749a1'
+sha256sums=('437b141a6499159f5a7282d5eb4b2be055f8e862ccce44d7464e8759c31a2e43'
             'SKIP'
-            '477e37ea3b4d5a84c59f25fa614dbf57e464b51a10ef7a4e72afbcbc0b0f3839'
-            '2dbe737dd5d186ca0b3b1753ad3d7a4a722b3eb03ec224dc24b49dd491c18cf1'
+            'fc3ebbb55983330ea12c4c29e21007ab1aa4c4f924af71dd69f18b35d470d387'
+            'df2ce998b050c707950c555f7f6ec0efcb8498fca10b4bce45f681844c8aa0ab'
             '44f8e07a08bfb4ec320626a2eede7149863a5c0ac8b95c235570a9f48a8a082a'
             'ae2e95db94ef7176207c690224169594d49445e04249d2499e9d2fbc117a0b21'
             '75f99f5239e03238f88d1a834c50043ec32b1dc568f2cc291b07d04718483919'
-            'ad6344badc91ad0630caacde83f7f9b97276f80d26a20619a87952be65492c65'
-            '36b1118c8dedadc4851150ddd4eb07b1c58ac5bbf3022cc2501a27c2b476da98'
-            '4be67c0b26a8bac319e47241b61a640b1d08499960c97e7cbacdae0f7ed9b4ff')
+            'ad6344badc91ad0630caacde83f7f9b97276f80d26a20619a87952be65492c65')
 
 _kernelname=${pkgbase#linux}
 
 prepare() {
   cd ${_srcdir}
 
-  # add upstream patch
-  patch -p1 -i ../patch-${pkgver}
-  chmod +x tools/objtool/sync-check.sh  # GNU patch doesn't support git-style file mode
+  if $_has_patch; then
+    # add upstream patch
+    patch -p1 -i ../patch-${pkgver}
+    chmod +x tools/objtool/sync-check.sh  # GNU patch doesn't support git-style file mode
+  fi
 
   # security patches
 
   # add latest fixes from stable queue, if needed
   # http://git.kernel.org/?p=linux/kernel/git/stable/stable-queue.git
 
-  # add patch from jakeday for surface devices
-  for p in $(find "../linux-surface-${_jakeday_commit}/patches/${_srcname#linux-}" -name "*.patch"); do
+  # add patch for surface devices
+  for p in $(find "../linux-surface-patches-${_patch_commit}/patches/" -name "*.patch" | sort); do
     patch -Np1 -i $p
   done
-
-  # disable USER_NS for non-root users by default
-  patch -Np1 -i ../0001-add-sysctl-to-disallow-unprivileged-CLONE_NEWUSER-by.patch
 
   #cp -Tf ../config .config
 
