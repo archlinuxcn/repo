@@ -42,6 +42,8 @@ prepare() {
   # Don't build tests
   truncate -s 0 cmake/FindGMock.cmake
   truncate -s 0 tests/CMakeLists.txt
+
+  sed -i 's/-Werror//g' CMakeLists.txt
 }
 
 build() {
