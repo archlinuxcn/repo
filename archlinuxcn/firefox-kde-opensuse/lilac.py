@@ -10,7 +10,13 @@ def pre_build():
     aur_pre_build()
 
     for line in edit_file('PKGBUILD'):
-        print(line.replace("'cargo'", ''))
+        print(line.replace("'cargo'", '').replace("'libvpx'", ''))
+    for line in edit_file('mozconfig'):
+        if 'libvpx' in line:
+            print('#' + line)
+        else:
+            print(line)
+
 
 post_build = aur_post_build
 
