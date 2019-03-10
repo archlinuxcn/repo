@@ -1,7 +1,7 @@
 # Maintainer: Philip Goto <philip.goto@gmail.com>
 
 pkgname=elementary-code
-pkgver=3.0.2
+pkgver=3.1.0
 pkgrel=2
 pkgdesc="Code editor designed for elementary OS"
 arch=('i686' 'x86_64' 'armv6h' 'armv7h')
@@ -29,10 +29,10 @@ makedepends=(editorconfig-core-c
              zeitgeist)
 conflicts=(elementary-code-git)
 source=("https://github.com/elementary/code/archive/${pkgver}.tar.gz")
-sha256sums=('a504957d7eb1a9925dbb9c73dbb3053484100191c0b919f2dd02c3b3bed42d80')
+sha256sums=('445b6101b78156eae96be31ce4b2ab2779545c1d3d7e468e48985738ec3a88ab')
 
 build() {
-    arch-meson code-${pkgver} build -Db_pie=false
+    arch-meson code-${pkgver} build
     ninja -C build
 }
 
