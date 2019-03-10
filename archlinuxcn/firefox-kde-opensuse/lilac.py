@@ -16,6 +16,7 @@ def pre_build():
             print('#' + line)
         else:
             print(line)
+    run_cmd(['updpkgsums'])
 
 
 post_build = aur_post_build
