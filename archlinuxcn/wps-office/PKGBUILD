@@ -5,7 +5,7 @@
 # Contributor: Ariel AxionL <axionl at aosc dot io>
 
 pkgname=wps-office
-pkgver=10.1.0.6757
+pkgver=10.1.0.6758
 #_pkgver=10.1.0.5707~a21
 pkgrel=1
 pkgdesc="Kingsoft Office (WPS Office) is an office productivity suite"
@@ -22,10 +22,10 @@ conflicts=('kingsoft-office')
 options=('!emptydirs')
 install=${pkgname}.install
 [[ "$CARCH" = "i686" ]] && _archext=x86 || _archext=x86_64
-source_i686=("http://kdl.cc.ksosoft.com/wps-community/download/6757/wps-office_${pkgver}_x86.tar.xz")
-source_x86_64=("http://kdl.cc.ksosoft.com/wps-community/download/6757/wps-office_${pkgver}_x86_64.tar.xz")
-sha1sums_i686=('3c6095380c32252afd7838f295259b14a0bf726e')
-sha1sums_x86_64=('03a781599dfcf001fc3bcf1d49699bd1a44aaceb')
+source_i686=("http://kdl.cc.ksosoft.com/wps-community/download/${pkgver##*.}/wps-office_${pkgver}_x86.tar.xz")
+source_x86_64=("http://kdl.cc.ksosoft.com/wps-community/download/${pkgver##*.}/wps-office_${pkgver}_x86_64.tar.xz")
+sha1sums_i686=('92920b7622d074cbbb889c4b11c62130f142c614')
+sha1sums_x86_64=('ca04c54d1a1721d69a6d9f2fda66d4abc6ea4292')
 
 prepare() {
     cd wps-office_${pkgver}_$_archext
