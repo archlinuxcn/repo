@@ -1,0 +1,79 @@
+diff -rupN src_orig/VBox/HostDrivers/Support/linux/Makefile src/VBox/HostDrivers/Support/linux/Makefile
+--- src_orig/VBox/HostDrivers/Support/linux/Makefile	2019-03-11 11:47:24.057144874 +0800
++++ src/VBox/HostDrivers/Support/linux/Makefile	2019-03-11 11:49:12.474003711 +0800
+@@ -137,6 +137,7 @@ VBOXMOD_OBJS += SUPDrvDTrace.o
+ endif
+ VBOXMOD_INCL  = \
+ 	$(VBOXDRV_DIR) \
++	$(VBOXDRV_DIR)vboxdrv \
+ 	$(VBOXDRV_DIR)include \
+ 	$(VBOXDRV_DIR)r0drv/linux
+ ifdef VBOX_WITH_NATIVE_DTRACE
+@@ -165,7 +166,7 @@ endif
+ ifdef VBOX_WITH_TEXT_MODMEM_HACK
+ VBOXMOD_DEFS += RTMEMALLOC_EXEC_HEAP VBOX_WITH_TEXT_MODMEM_HACK
+ endif
+-VBOXMOD_CFLAGS = -include $(VBOXDRV_DIR)include/VBox/SUPDrvMangling.h \
++VBOXMOD_CFLAGS = -include $(VBOXDRV_DIR)vboxdrv/include/VBox/SUPDrvMangling.h \
+ 	-fno-omit-frame-pointer -fno-pie -Wno-declaration-after-statement
+ 
+ 
+diff -rupN src_orig/VBox/HostDrivers/VBoxNetAdp/linux/Makefile src/VBox/HostDrivers/VBoxNetAdp/linux/Makefile
+--- src_orig/VBox/HostDrivers/VBoxNetAdp/linux/Makefile	2019-03-11 11:47:24.053811535 +0800
++++ src/VBox/HostDrivers/VBoxNetAdp/linux/Makefile	2019-03-11 11:50:09.534104474 +0800
+@@ -47,6 +47,7 @@ VBOXMOD_OBJS += \
+ endif
+ VBOXMOD_INCL = \
+ 	$(VBOXNETADPT_DIR) \
++	$(VBOXNETADPT_DIR)vboxnetadp \
+ 	$(VBOXNETADPT_DIR)include \
+ 	$(VBOXNETADPT_DIR)r0drv/linux
+ VBOXMOD_DEFS = \
+@@ -58,7 +59,7 @@ VBOXMOD_DEFS = \
+ 	RT_WITH_VBOX \
+ 	VBOX_WITH_HARDENING \
+ 	VBOX_WITH_64_BITS_GUESTS # <-- must be consistent with Config.kmk!
+-VBOXMOD_CFLAGS = -include $(KBUILD_EXTMOD)/include/VBox/SUPDrvMangling.h -fno-pie -Wno-declaration-after-statement
++VBOXMOD_CFLAGS = -include $(KBUILD_EXTMOD)/vboxnetadp/include/VBox/SUPDrvMangling.h -fno-pie -Wno-declaration-after-statement
+ 
+ include $(obj)/Makefile-footer.gmk
+ 
+diff -rupN src_orig/VBox/HostDrivers/VBoxNetFlt/linux/Makefile src/VBox/HostDrivers/VBoxNetFlt/linux/Makefile
+--- src_orig/VBox/HostDrivers/VBoxNetFlt/linux/Makefile	2019-03-11 11:47:24.053811535 +0800
++++ src/VBox/HostDrivers/VBoxNetFlt/linux/Makefile	2019-03-11 11:50:49.124174253 +0800
+@@ -50,6 +50,7 @@ VBOXMOD_OBJS += \
+ endif
+ VBOXMOD_INCL = \
+ 	$(VBOXNETFLT_DIR) \
++	$(VBOXNETFLT_DIR)vboxnetflt \
+ 	$(VBOXNETFLT_DIR)include \
+ 	$(VBOXNETFLT_DIR)r0drv/linux
+ VBOXMOD_DEFS = \
+@@ -61,7 +62,7 @@ VBOXMOD_DEFS = \
+ 	RT_WITH_VBOX \
+ 	VBOX_WITH_HARDENING \
+ 	VBOX_WITH_64_BITS_GUESTS # <-- must be consistent with Config.kmk!
+-VBOXMOD_CFLAGS = -include $(VBOXNETFLT_DIR)include/VBox/SUPDrvMangling.h -fno-pie -Wno-declaration-after-statement
++VBOXMOD_CFLAGS = -include $(VBOXNETFLT_DIR)vboxnetflt/include/VBox/SUPDrvMangling.h -fno-pie -Wno-declaration-after-statement
+ 
+ include $(obj)/Makefile-footer.gmk
+ 
+diff -rupN src_orig/VBox/HostDrivers/VBoxPci/linux/Makefile src/VBox/HostDrivers/VBoxPci/linux/Makefile
+--- src_orig/VBox/HostDrivers/VBoxPci/linux/Makefile	2019-03-11 11:47:24.053811535 +0800
++++ src/VBox/HostDrivers/VBoxPci/linux/Makefile	2019-03-11 11:51:22.547566408 +0800
+@@ -51,6 +51,7 @@ VBOXMOD_OBJS += \
+ endif
+ VBOXMOD_INCL = \
+ 	$(VBOXPCI_DIR) \
++	$(VBOXPCI_DIR)vboxpci \
+ 	$(VBOXPCI_DIR)include \
+ 	$(VBOXPCI_DIR)r0drv/linux
+ VBOXMOD_DEFS = \
+@@ -61,6 +62,6 @@ VBOXMOD_DEFS = \
+ 	VBOX \
+ 	RT_WITH_VBOX \
+ 	VBOX_WITH_HARDENING
+-VBOXMOD_CFLAGS = -include $(VBOXPCI_DIR)include/VBox/SUPDrvMangling.h -fno-pie
++VBOXMOD_CFLAGS = -include $(VBOXPCI_DIR)vboxpci/include/VBox/SUPDrvMangling.h -fno-pie
+ 
+ include $(obj)/Makefile-footer.gmk
