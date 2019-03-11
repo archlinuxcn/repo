@@ -524,6 +524,7 @@ package_vmware-keymaps() {
   provides=(
     vmware-keymaps
   )
+  replaces=(vmware-xkeymaps)
 
   mkdir -p \
     "$pkgdir/usr/lib/vmware"
