@@ -21,6 +21,7 @@ pkgname=('vmware-workstation'
 pkgver=15.0.2
 _buildver=10952284
 _pkgver=${pkgver}_${_buildver}
+_vmware_fusion_ver=11.0.2_10952296
 pkgrel=5
 arch=(x86_64)
 url='https://www.vmware.com/products/workstation-for-linux.html'
@@ -88,12 +89,12 @@ options=(!strip emptydirs)
 _isoimages=(linux linuxPreGlibc25 netware solaris windows winPre2k winPreVista)
 _isovirtualprinterimages=(Linux Windows)
 
-_vmware_fusion_ver=11.0.2_10952296
 # List of VMware Fusion versions: https://softwareupdate.vmware.com/cds/vmw-desktop/fusion/
 
 makedepends=(
   python2
   unzip
+  xorg-server-xvfb
 )
 
 _fusion_isoimages=(darwin darwinPre15)
@@ -387,10 +388,11 @@ fi
 }
 
 prepare() {
+  set -x
   extracted_dir="$srcdir/extracted"
   [[ -d "$extracted_dir" ]] && rm -r "$extracted_dir"
 
-  bash \
+  xvfb-run bash \
     "$(readlink -f "$srcdir/VMware-Workstation-Full-${_pkgver/_/-}.${CARCH}.bundle")" \
     --extract "$extracted_dir"
 
