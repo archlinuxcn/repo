@@ -388,7 +388,6 @@ fi
 }
 
 prepare() {
-  set -x
   extracted_dir="$srcdir/extracted"
   [[ -d "$extracted_dir" ]] && rm -r "$extracted_dir"
 
