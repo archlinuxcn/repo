@@ -3,11 +3,12 @@
 _pkgname=PyMuPDF
 pkgname=python-pymupdf
 pkgver=1.14.8
-pkgrel=1
+pkgrel=2
 pkgdesc="Python bindings for the PDF rendering library MuPDF"
 arch=('any')
 url="https://github.com/rk700/PyMuPDF"
 license=('GPLv3+')
+makedepends=('python-setuptools')
 depends=('python' 'libmupdf' 'jbig2dec'  'openjpeg2'  'libjpeg' 'openssl' 'freetype2')
 _name=${pkgname#python-}
 source=(
