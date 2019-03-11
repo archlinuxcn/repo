@@ -17,11 +17,11 @@
 pkgbase=vmware-workstation
 pkgname=('vmware-workstation'
         'vmware-workstation-macos'
-        'vmware-xkeymaps')
+        'vmware-keymaps')
 pkgver=15.0.2
 _buildver=10952284
 _pkgver=${pkgver}_${_buildver}
-pkgrel=4
+pkgrel=5
 arch=(x86_64)
 url='https://www.vmware.com/products/workstation-for-linux.html'
 license=(custom)
@@ -418,7 +418,7 @@ package_vmware-workstation() {
     vmware-ovftool
   )
   depends=(
-    vmware-xkeymaps
+    vmware-keymaps
     dkms
     ncurses5-compat-libs
     fuse2
@@ -476,7 +476,7 @@ package_vmware-workstation-macos() {
     vmware-ovftool
   )
   depends=(
-    vmware-xkeymaps
+    vmware-keymaps
     dkms
     ncurses5-compat-libs
     fuse2
@@ -519,10 +519,10 @@ package_vmware-workstation-macos() {
   #install -Dm 644 vmware-workstation/etc/vmware/license-ws-150-e1-201804 "$pkgdir/etc/vmware/license-ws-150-e1-201804"
 }
 
-package_vmware-xkeymaps() {
+package_vmware-keymaps() {
   pkgdesc='The xkeymap files for VMware products.'
   provides=(
-    vmware-xkeymaps
+    vmware-keymaps
   )
 
   mkdir -p \
@@ -533,6 +533,5 @@ package_vmware-xkeymaps() {
   cp -r \
     vmware-player-app/lib/xkeymap \
     "$pkgdir/usr/lib/vmware/"
-
 }
 
