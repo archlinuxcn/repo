@@ -1,0 +1,14 @@
+update_on:
+    - github: KaidanIM/Kaidan
+    - aur: kaidan-git
+
+depends:
+    - qxmpp
+
+maintainers:
+    - github: farseerfc
+
+pre_build: vcs_update
+post_build: git_pkgbuild_commit
+
+build_prefix: extra-x86_64
