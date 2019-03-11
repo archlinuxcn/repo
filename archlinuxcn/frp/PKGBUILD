@@ -1,7 +1,7 @@
 # Maintainer: Vimsucks <dev@vimsucks.com>
 
 pkgname=frp
-pkgver=0.24.1
+pkgver=0.25.0
 pkgrel=1
 pkgdesc="A fast reverse proxy to help you expose a local server behind a NAT or firewall to the internet."
 license=('Apache')
@@ -18,12 +18,12 @@ md5sums=('6f9c6681357f3f984983457151d7f0c5'
          'e3bfa7c428433fa6cbb5aa64515d8899'
          '346fabd46c12c039e39a26986629bc6d'
          'dd170d972b1ea8c681bde054dbebf888')
-md5sums_x86_64=('4852f4352940401122e735c980c43335')
-md5sums_i686=('e436e7e82d861cfc3b0f91354a9a773b')
-md5sums_arm=('d03febc04ca031cc5bb9214579785cf7')
-md5sums_armv6h=('d03febc04ca031cc5bb9214579785cf7')
-md5sums_armv7h=('d03febc04ca031cc5bb9214579785cf7')
-md5sums_aarch64=('ca83ae1920e67ed09bf2ae4fc6512645')
+md5sums_x86_64=('565c4b241e9ae31a6c4292915845c624')
+md5sums_i686=('93951b3e6dcb41474463cc52d93de9a2')
+md5sums_arm=('16c0d8c13877b8abc49b18f0c12c7983')
+md5sums_armv6h=('16c0d8c13877b8abc49b18f0c12c7983')
+md5sums_armv7h=('16c0d8c13877b8abc49b18f0c12c7983')
+md5sums_aarch64=('19517f51eff5d4a607bae9b5edb89b25')
 install=$pkgname.install
 backup=(etc/frp/{frpc.ini,frps.ini,frpc_full.ini,frps_full.ini})
 
