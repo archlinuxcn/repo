@@ -1,7 +1,7 @@
 # Maintainer: Jameson Pugh <imntreal@gmail.com>
 
 pkgname=breeze-plymouth
-pkgver=5.15.2
+pkgver=5.15.3
 pkgrel=1
 pkgdesc="Breeze theme for plymouth"
 arch=(any)
@@ -9,9 +9,11 @@ url='https://projects.kde.org/breeze-plymouth'
 license=(LGPL)
 depends=(plymouth)
 makedepends=(extra-cmake-modules)
-source=("http://download.kde.org/stable/plasma/${pkgver}/${pkgname}-${pkgver}.tar.xz"{,.sig})
-sha256sums=('f093566ae51218b4461d1dbebb7a8ee402077bda2e67d840dc71309926c9d758'
-            'SKIP')
+source=("http://download.kde.org/stable/plasma/${pkgver}/${pkgname}-${pkgver}.tar.xz"{,.sig}
+				'breeze-plymouth.cpiohook')
+sha256sums=('674090b5776aca915b58cfbeada45895fc51bac0e2d31509628277a2fd24c538'
+            'SKIP'
+            '91a6557231d8832dcb3b6ae056742bb88467f245d22fc57fa7a5b732ee780e4c')
 validpgpkeys=('2D1D5B0588357787DE9EE225EC94D18F7F05997E'  # Jonathan Riddell
               '0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D'  # Bhushan Shah <bshah@kde.org>
               'D07BD8662C56CB291B316EB2F5675605C74E02CF'  # David Edmundson
@@ -30,4 +32,7 @@ build() {
 package() {
   cd "${srcdir}/${pkgname}-${pkgver}/build"
   make DESTDIR="${pkgdir}" install
+	
+	install -dm755 "${pkgdir}/etc/initcpio/install"
+	install -m644 "${srcdir}/breeze-plymouth.cpiohook" "${pkgdir}/etc/initcpio/install/breeze-plymouth"
 }

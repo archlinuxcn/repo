@@ -1,0 +1,49 @@
+#!/bin/bash
+
+build() {
+    # Add Plymouth plugin 'label.so'.
+    PLYMOUTH_PLUGIN_PATH="$(plymouth --get-splash-plugin-path)"
+    PLYMOUTH_MODULE_NAME="label.so"
+    
+    if [[ -f "${PLYMOUTH_PLUGIN_PATH}/${PLYMOUTH_MODULE_NAME}" ]]; then
+        add_binary "${PLYMOUTH_PLUGIN_PATH}/${PLYMOUTH_MODULE_NAME}"
+    else
+        echo "The plymouth plugin (${PLYMOUTH_MODULE_NAME}) doesn't exist!" > /dev/stderr
+        exit 1
+    fi
+    
+    font_config_path="/etc/fonts"
+    font_confd_path="/etc/fonts/conf.avail"
+    noto_font_path="/usr/share/fonts/noto"
+    
+    # Add font configuration files.
+    add_file "${font_config_path}/fonts.conf"
+    add_dir "/var/cache/fontconfig"
+
+    # Add Noto Sans font.
+    if [[ -e "${noto_font_path}/NotoSans-Regular.ttf" && -e "${font_confd_path}/66-noto-sans.conf" ]]; then
+        add_file "${noto_font_path}/NotoSans-Regular.ttf"
+        add_file "${font_confd_path}/66-noto-sans.conf" "${font_config_path}/conf.d/66-noto-sans.conf"
+    else
+        echo "The system is missing the Noto Sans font!" > /dev/stderr
+        exit 1
+    fi
+    
+    # Add Noto Serif font.
+    if [[ -e "${noto_font_path}/NotoSerif-Regular.ttf" && -e "${font_confd_path}/66-noto-serif.conf" ]]; then
+        add_file "${noto_font_path}/NotoSerif-Regular.ttf"
+        add_file "${font_confd_path}/66-noto-serif.conf" "${font_config_path}/conf.d/66-noto-serif.conf"
+    else
+        echo "The system is missing the Noto Serif font!" > /dev/stderr
+        exit 1
+    fi
+}
+
+help() {
+  cat <<HELPEOF
+This hook includes all necessary font related files and the additional plymouth
+plugin (label.so) into the initramfs image. Used by the breeze-plymouth theme.
+HELPEOF
+}
+
+# vim: set ft=sh ts=4 sw=4 et:
