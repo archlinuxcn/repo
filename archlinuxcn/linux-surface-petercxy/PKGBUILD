@@ -3,10 +3,10 @@
 pkgbase=linux-surface-petercxy
 _srcname=linux-5.0
 _srcdir=${_srcname}
-_has_patch=false # TODO: set this to true if the kernel has patch version
-_patch_commit=d4ba59414c9971cb0a87825f4710a06061086e20 # PeterCxy/linux-surface-patches
-pkgver=5.0
-pkgrel=3
+_has_patch=true # TODO: set this to false if the kernel has no patch version
+_patch_commit=03def2829b552e461158b4370ddc413a86b99126 # PeterCxy/linux-surface-patches
+pkgver=5.0.1
+pkgrel=1
 arch=('x86_64')
 url="https://www.kernel.org/"
 license=('GPL2')
@@ -28,12 +28,13 @@ validpgpkeys=('ABAF11C65A2970B130ABE3C479BE3E4300411886' # Linus Torvalds <torva
              )
 sha256sums=('437b141a6499159f5a7282d5eb4b2be055f8e862ccce44d7464e8759c31a2e43'
             'SKIP'
-            '1c4ba8ddd486384dc3c190fabc2725c76f1ffa138629fd558d40e458a8328d81'
+            'c0ff7881cf01d02c43505a16bd441756eb6a57f5607d0b769b7f081439dad569'
             'df2ce998b050c707950c555f7f6ec0efcb8498fca10b4bce45f681844c8aa0ab'
             '7d7663a54bbd9ad006988137131b4d813663b6d44bc9ad689c4f10a298a6bac4'
             'ae2e95db94ef7176207c690224169594d49445e04249d2499e9d2fbc117a0b21'
             '75f99f5239e03238f88d1a834c50043ec32b1dc568f2cc291b07d04718483919'
-            'ad6344badc91ad0630caacde83f7f9b97276f80d26a20619a87952be65492c65')
+            'ad6344badc91ad0630caacde83f7f9b97276f80d26a20619a87952be65492c65'
+            'd05db91f6b95f963bb4c92fedb1ccb300378c23cc16b09f27d2190841620d5a4')
 
 _kernelname=${pkgbase#linux}
 
