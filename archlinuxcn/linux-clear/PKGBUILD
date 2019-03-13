@@ -129,6 +129,8 @@ CONFIG_MODULE_COMPRESS_XZ=y|' ./.config
         sed -i "s|# CONFIG_ACPI_REV_OVERRIDE_POSSIBLE is not set|CONFIG_ACPI_REV_OVERRIDE_POSSIBLE=y|g" ./.config
         fi
 
+### Disable modle sig force
+	    sed -i "s|CONFIG_MODULE_SIG_FORCE=y|CONFIG_MODULE_SIG_FORCE=n|g" ./.config 
     ### Copying i915 firmware and intel-ucode
         msg2 "Copying i915 firmware and intel-ucode..."
         cp -a /usr/lib/firmware/i915 firmware/
