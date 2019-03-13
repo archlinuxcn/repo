@@ -1,9 +1,9 @@
 # Maintainer: Peter Cai <peter@typeblog.net>
 
-_commit=0ce9a594ea8f97b5eff77cd14642340aa40791df # Commit in PeterCxy/evdev-right-click-emulation
-_date=20190312 # Update this with the commit ID
+_commit=350939b8d2e95ed1be352f1ac734bdedf14e43c7 # Commit in PeterCxy/evdev-right-click-emulation
+_date=20190313 # Update this with the commit ID
 pkgname=evdev-right-click-emulation
-pkgver=20190312.${_commit:0:6}
+pkgver=${_date}.${_commit:0:6}
 pkgrel=1
 pkgdesc="Implement Long-Press-to-Right-Click on Touchscreen Linux Device with Xorg or Wayland"
 arch=(x86_64)
@@ -18,8 +18,9 @@ source=(
   "evdev-rce.service"
 )
 sha1sums=('SKIP'
-          'd2fe3eaca1d47f416fb93d9472f17f81b48cba41'
-          '6c6cd2a3610bc20760fcd3ef43e49c9d0455ec12')
+          '38286fe398788a9909a98eb4c57c4444f8599c54'
+          '47fd73fbd6a5c36932567ad11ac14246868b0d14')
+backup=("etc/evdev-rce.conf")
 
 build() {
   cd ${srcdir}/${pkgname}
