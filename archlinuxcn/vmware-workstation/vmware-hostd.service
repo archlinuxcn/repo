@@ -1,7 +1,7 @@
 [Unit]
 Description=VMware Host Daemon
-Wants=vmware-hostd-certificates.service
-After=vmware-hostd-certificates.service
+Wants=vmware-hostd-certificates.service vmware-authd.service
+After=vmware-hostd-certificates.service vmware-authd.service
 
 [Service]
 ExecStartPre=/usr/bin/mkdir -p /var/run/vmware

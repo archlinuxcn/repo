@@ -4,8 +4,8 @@
 # Contributor: Anthony Anderson <aantony4122@gmail.com>
 
 pkgname=discord
-pkgver=0.0.8
-pkgrel=2
+pkgver=0.0.9
+pkgrel=1
 pkgdesc="All-in-one voice and text chat for gamers that's free and secure."
 arch=('x86_64')
 url='https://discordapp.com/'
@@ -22,7 +22,7 @@ install="Discord.install"
 source=(LICENSE
 "https://dl.discordapp.net/apps/linux/${pkgver}/${pkgname}-${pkgver}.tar.gz")
 md5sums=('26b3229c74488c64d94798e48bc49fcd'
-         '64b0614a7316abeca146302c5a7ba825')
+         '3fc3bd78302f4a27dc730e82089b99d9')
 
 #This is always latest build, right now I do not know of a version param.
 

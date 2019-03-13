@@ -1,19 +1,11 @@
-# Trimmed lilac.py
 #!/usr/bin/env python3
 
 from lilaclib import *
 
 def pre_build():
-  pypi_pre_build(
-    depends = ['python-pyopenssl', 'python-tornado', 'tornado_systemd'],
-    depends_setuptools = True,
-    optdepends = ['python-libsass'],
-    arch = ['any']
-  )
+    update_pkgver_and_pkgrel(_G.newver)
 
 def post_build():
-  pypi_post_build()
-  update_aur_repo()
-
-#if __name__ == '__main__':
-#  single_main()
+    git_add_files('PKGBUILD')
+    git_commit()
+    update_aur_repo()

@@ -2,7 +2,7 @@
 
 pkgname=('anbox-git' 'anbox-modules-dkms-git')
 _pkgname=anbox
-pkgver=r1055.bb97f3a
+pkgver=r1063.d521e28
 pkgrel=1
 epoch=1
 arch=('x86_64')
@@ -42,6 +42,8 @@ prepare() {
   # Don't build tests
   truncate -s 0 cmake/FindGMock.cmake
   truncate -s 0 tests/CMakeLists.txt
+
+  sed -i 's/-Werror//g' CMakeLists.txt
 }
 
 build() {

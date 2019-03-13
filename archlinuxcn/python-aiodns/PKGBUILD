@@ -1,6 +1,6 @@
 _pkgname=aiodns
 pkgname=python-aiodns
-pkgver=1.2.0
+pkgver=2.0.0
 pkgrel=1
 pkgdesc="Simple DNS resolver for asyncio"
 arch=('any')
@@ -8,8 +8,8 @@ url="http://github.com/saghul/aiodns"
 license=(MIT)
 depends=('python' 'python-pycares' 'python-setuptools')
 _name=${pkgname#python-}
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
-md5sums=('b0fb02275cafcbe5ad531c72ba950615')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_pkgname}-${pkgver}.tar.gz")
+md5sums=('3e121f9eb7ef3ba3556ba7ec28c6f63a')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"

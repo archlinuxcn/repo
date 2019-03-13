@@ -7,8 +7,8 @@
 # Contributor: William Penton <william@penton.us>
 
 pkgname=gitkraken
-pkgrel=4
-pkgver=4.2.2
+pkgrel=1
+pkgver=5.0.1
 pkgdesc="The intuitive, fast, and beautiful cross-platform Git client."
 url="https://www.gitkraken.com/"
 provides=('gitkraken')
@@ -26,7 +26,7 @@ source=(
     "eula.html"
     "gitkraken.sh"
 )
-sha256sums=('3ecb2dd53605a0bca306971498f9e77823297d06c7966e831663adab4851559e'
+sha256sums=('3e834f42de517e191f9a5a2cd2a022533c5bcf91215a323f08c53d45703f6025'
             '81b32ad2fae47fcdf8adb4fdb5c734430ed993f712e75bd62297ae8540fdf889'
             'a2b3551f83bcbe56da961615f066bb736cd15d98e41c93b3b4add0d56606d902'
             '9566342308bf35b56e626fa1b0d716eb16991712cc43b617c4f0d95e005311d1'

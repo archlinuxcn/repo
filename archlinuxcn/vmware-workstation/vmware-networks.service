@@ -5,7 +5,6 @@ After=vmware-networks-configuration.service
 
 [Service]
 Type=forking
-Restart=always
 ExecStartPre=-/sbin/modprobe vmnet
 ExecStart=/usr/bin/vmware-networks --start
 ExecStop=/usr/bin/vmware-networks --stop

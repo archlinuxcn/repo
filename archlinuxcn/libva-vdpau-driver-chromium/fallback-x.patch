@@ -1,16 +1,17 @@
-diff -urN libva-vdpau-driver-0.7.4/src/vdpau_driver.c libva-vdpau-driver-0.7.4.chromium/src/vdpau_driver.c
---- libva-vdpau-driver-0.7.4/src/vdpau_driver.c	2012-10-05 16:02:58.000000000 +0100
-+++ libva-vdpau-driver-0.7.4.chromium/src/vdpau_driver.c	2016-10-05 18:47:12.937566583 +0100
-@@ -174,7 +174,7 @@
+Index: vdpau-video-0.7.4/src/vdpau_driver.c
+===================================================================
+--- vdpau-video-0.7.4.orig/src/vdpau_driver.c
++++ vdpau-video-0.7.4/src/vdpau_driver.c
+@@ -174,7 +174,7 @@ vdpau_common_Terminate(vdpau_driver_data
      }
      vdpau_gate_exit(driver_data);
  
 -    if (driver_data->vdp_dpy) {
-+    if ((!driver_data->x_fallback) && driver_data->vdp_dpy) {
++    if (!driver_data->x_fallback && driver_data->vdp_dpy) {
          XCloseDisplay(driver_data->vdp_dpy);
          driver_data->vdp_dpy = NULL;
      }
-@@ -187,9 +187,14 @@
+@@ -187,9 +187,14 @@ vdpau_common_Initialize(vdpau_driver_dat
      /* Create a dedicated X11 display for VDPAU purposes */
      const char * const x11_dpy_name = XDisplayString(driver_data->x11_dpy);
      driver_data->vdp_dpy = XOpenDisplay(x11_dpy_name);
@@ -28,9 +29,10 @@ diff -urN libva-vdpau-driver-0.7.4/src/vdpau_driver.c libva-vdpau-driver-0.7.4.c
      VdpStatus vdp_status;
      driver_data->vdp_device = VDP_INVALID_HANDLE;
      vdp_status = vdp_device_create_x11(
-diff -urN libva-vdpau-driver-0.7.4/src/vdpau_driver.h libva-vdpau-driver-0.7.4.chromium/src/vdpau_driver.h
---- libva-vdpau-driver-0.7.4/src/vdpau_driver.h	2012-10-05 16:02:58.000000000 +0100
-+++ libva-vdpau-driver-0.7.4.chromium/src/vdpau_driver.h	2016-10-05 18:48:33.701593155 +0100
+Index: vdpau-video-0.7.4/src/vdpau_driver.h
+===================================================================
+--- vdpau-video-0.7.4.orig/src/vdpau_driver.h
++++ vdpau-video-0.7.4/src/vdpau_driver.h
 @@ -21,6 +21,7 @@
  #ifndef VDPAU_DRIVER_H
  #define VDPAU_DRIVER_H
@@ -39,7 +41,7 @@ diff -urN libva-vdpau-driver-0.7.4/src/vdpau_driver.h libva-vdpau-driver-0.7.4.c
  #include <va/va_backend.h>
  #include "vaapi_compat.h"
  #include "vdpau_gate.h"
-@@ -100,6 +101,7 @@
+@@ -100,6 +101,7 @@ struct vdpau_driver_data {
      uint64_t                    va_display_attrs_mtime[VDPAU_MAX_DISPLAY_ATTRIBUTES];
      unsigned int                va_display_attrs_count;
      char                        va_vendor[256];

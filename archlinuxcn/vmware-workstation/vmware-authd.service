@@ -1,0 +1,9 @@
+[Unit]
+Description=VMware Authentication Daemon
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/vmware-authdlauncher
+
+[Install]
+WantedBy=multi-user.target

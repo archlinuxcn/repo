@@ -3,12 +3,9 @@
 from lilaclib import *
 
 def pre_build():
-    pypi_pre_build(
-        depends = ['python-bleach', 'python-jinja', 'python-werkzeug', 'python-html5lib-9x07', 'python-misaka', 'python-itsdangerous', 'python-six', 'python-cffi', 'sqlite'],
-        depends_setuptools = True,
-        arch = ['any']
-    )
+    update_pkgver_and_pkgrel(_G.newver)
 
 def post_build():
-    pypi_post_build()
+    git_add_files('PKGBUILD')
+    git_commit()
     update_aur_repo()

@@ -8,7 +8,7 @@
 
 pkgname=monodevelop-stable
 _pkgname=monodevelop
-pkgver=7.8.0.1471
+pkgver=7.8.1.8
 pkgrel=1
 pkgdesc="An IDE primarily designed for C# and other .NET languages"
 arch=('x86_64' 'i686')
@@ -51,8 +51,5 @@ package() {
   XDG_CONFIG_HOME="$srcdir"/config LD_PRELOAD="" make DESTDIR="$pkgdir" install
   # delete conflicting files
   find "$pkgdir"/usr/share/mime/ -type f -delete
-
-  # NuGet.exe is missing somehow, fixed FS#43423
-  #install -Dm755 "${srcdir}"/monodevelop/main/external/nuget-binary/nuget.exe "${pkgdir}"/usr/lib/monodevelop/AddIns/MonoDevelop.PackageManagement/nuget.exe
 }
 
