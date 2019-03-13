@@ -2,8 +2,8 @@
 # Contributor: Nick Hu <nickhu00@gmail.com>
 # Contributor: Fernando Carmona Varo <ferkiwi @t gmail dot com>
 pkgname=cataclysm-dda-ncurses
-pkgver=0.C
-pkgrel=6
+pkgver=0.D
+pkgrel=1
 pkgdesc="Cataclysm: Dark Days Ahead is an actively maintained roguelike set in a post-apocalyptic world, forked from the original. (ncurses only)"
 arch=('i686' 'x86_64')
 url="http://www.cataclysmdda.com/"
@@ -16,7 +16,7 @@ conflicts=('cataclysm-dda' 'cataclysm-dda-git' 'cataclysm-dda-ncurses-bin')
 
 install='cataclysm-dda-ncurses.install'
 source=("https://github.com/CleverRaven/Cataclysm-DDA/archive/${pkgver}.tar.gz")
-sha256sums=('69e947824626fffb505ca4ec44187ec94bba32c1e5957ba5c771b3445f958af6')
+sha256sums=('6cc97b3e1e466b8585e8433a6d6010931e9a073f6ec060113161b38052d82882')
 
 prepare() {
   cd "$srcdir/Cataclysm-DDA-${pkgver}"
