@@ -2,7 +2,7 @@
 
 _pkgname=PyMuPDF
 pkgname=python-pymupdf
-pkgver=1.14.8
+pkgver=1.14.10
 pkgrel=2
 pkgdesc="Python bindings for the PDF rendering library MuPDF"
 arch=('any')
@@ -13,15 +13,13 @@ depends=('python' 'libmupdf' 'jbig2dec'  'openjpeg2'  'libjpeg' 'openssl' 'freet
 _name=${pkgname#python-}
 source=(
 "https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz"
-'pymupdf-arch.patch'
 )
-md5sums=('3e48407ac5663f144b3b619c31d06545'
-         '8d10cb0a11f293301d176f4fc630cd4d')
+md5sums=('540bc8cbbe91ca6df3eb2d3078b9a16f')
 
 
 prepare() {
   cd "$srcdir/$_pkgname-$pkgver"
-  patch -Np2 -i "${srcdir}/pymupdf-arch.patch"
+  sed -i "s/# 'jbig2dec'/'jbig2dec'/" setup.py
 }
 
 build() {
