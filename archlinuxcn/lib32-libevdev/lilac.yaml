@@ -3,7 +3,10 @@
 maintainers:
   - github: OriginCode
 
-build_prefix: multilib-archlinuxcn
+build_prefix: multilib
+
+depends:
+    - lib32-check
 
 pre_build: aur_pre_build
 
