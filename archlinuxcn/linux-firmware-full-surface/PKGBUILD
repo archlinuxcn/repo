@@ -21,7 +21,7 @@ _jakeday_commit=5d21cc824c9b41e65f92fdebcbcccd2181b9393f
 _core_repo_ver=20190212.28f5f7d # Update this on each release to correspond to linux-firmware of core
 _last_updated=20190307
 pkgver=20190307.28f5f7.5d21cc
-pkgrel=1
+pkgrel=2
 pkgdesc="Firmware files for Linux, patched for surface"
 makedepends=('git' 'unzip')
 arch=('any')
@@ -48,7 +48,6 @@ build() {
 }
 
 package_orig() {
-  groups=('base')
   provides=("linux-firmware=${_core_repo_ver}")
   conflicts=('linux-firmware'
              'linux-firmware-git'
