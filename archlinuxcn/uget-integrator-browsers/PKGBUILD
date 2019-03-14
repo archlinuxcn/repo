@@ -6,7 +6,7 @@ url="https://github.com/ugetdm/uget-integrator"
 license=('GPL3')
 depends=('uget-integrator')
 pkgver=1.0.0
-pkgrel=1
+pkgrel=2
 makedepends=()
 source=("ugetdm-chrome-$pkgver::https://raw.githubusercontent.com/ugetdm/uget-integrator/v$pkgver/conf/com.ugetdm.chrome.json"
         "ugetdm-firefox-$pkgver::https://raw.githubusercontent.com/ugetdm/uget-integrator/v$pkgver/conf/com.ugetdm.firefox.json")
