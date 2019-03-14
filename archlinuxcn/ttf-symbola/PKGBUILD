@@ -5,8 +5,8 @@
 # Contributor: Jesse Jaara <gmail.com: jesse.jaara>
 
 pkgname=ttf-symbola
-pkgver=11.00
-pkgrel=3
+pkgver=12.00
+pkgrel=1
 pkgdesc="Font for unicode symbols (part of Unicode Fonts for Ancient Scripts)."
 arch=('any')
 conflicts=('ttf-symbola-ib')
@@ -17,7 +17,7 @@ depends=('fontconfig' 'xorg-font-utils')
 makedepends=('unzip')
 source=("${pkgname}-${pkgver}.zip::http://users.teilar.gr/~g1951d/Symbola.zip"
         "LICENSE")
-sha512sums=('be7b3fd8b2070a6713b189c0ee0c6d8aef481eb0c7e476dabfa3eb1a599cc7f3a00f14d7b9ca1f563722d550c098f272f62bb99fc490aba8132ed5ae7de59a7b'
+sha512sums=('96057c9dbf8a1ab48323d49f727dc00eb8ab66a60e4037b622280d6b84a2c692129e174994a36683ba78bee43e2a2096c4d87ac5c350be78f4d8d6cd7218a528'
             '9afe91785611955511248fd31a86c7e370b23b1b2c37f9345c8f274b3e0e1dbf9c0da8f9edac62d27d318e56485b80966aa7622f167f4da5d5925a7935bfa3da')
 
 package() {
