@@ -1,7 +1,7 @@
 # Maintainer: Iwan Timmer <irtimmer@gmail.com>
 
 pkgname=pcp
-pkgver=4.2.0
+pkgver=4.3.1
 pkgrel=1
 pkgdesc="System performance and analysis framework"
 arch=('i686' 'x86_64' 'armv6h' 'armv7h')
@@ -15,10 +15,10 @@ optdepends=('libmicrohttpd: support for pmwebd'
 	    'perl-xml-tokeparser: support for sar2pcp'
 	    'perl-date-parse: support for sar2pcp')
 install="pcp.install"
-source=("https://bintray.com/artifact/download/pcp/source/pcp-$pkgver.src.tar.gz"
+source=("https://github.com/performancecopilot/pcp/archive/4.3.1.tar.gz"
         "pcp.install"
         "pcp.tmpfiles")
-sha256sums=('f50706b5b198a9aeeedd8fa05ec7065a4e837e2e297651e4ad0731a0e506846c'
+sha256sums=('1d351503f432efa989ec3fef07c0a268bc9592af2d547dd91a62e95a8495fee4'
             '590d816edc87dd03e3700d7637f57ca81d24d63802f32f772709e0c33a4ca0b5'
             '48ce114e95ab640bfe6c6c9608c96c22a75b65ccb38dfa89bfa2b12621845f20')
 
