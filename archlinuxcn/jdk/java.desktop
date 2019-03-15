@@ -1,25 +1,10 @@
-#
-# Copyright (c) 2006, 2010, Oracle and/or its affiliates. All rights reserved.
-# Use is subject to license terms.
-#
-# Desktop entry for automatic execution of files identified as either the
-# x-jar or x-java-archive (historical) mime type.
-#
-# Note: This file may be installed under both "control-center-2.0" and
-# "applications".  Depending upon the version of GNOME, the copy in
-# "applications" may take precedence.
-#
-# One might be tempted to add "Java" to the Catergories, but the definition
-# is "uses Swing/ATW" whhich may not be true.
-#
 [Desktop Entry]
-Encoding=UTF-8
-Name=Java
-Comment=Java Virtual Machine
-Exec=/usr/lib/jvm/java-<version>-jdk/bin/java -jar
-Icon=java-jdk<version>
+Name=Oracle Java 11 Runtime
+Comment=Oracle Java 11 Runtime
+Keywords=java;runtime
+Exec=/usr/lib/jvm/java-11-jdk/bin/java -jar
 Terminal=false
 Type=Application
+Icon=java11-jdk
+MimeType=application/x-java-archive;application/java-archive;application/x-jar;
 NoDisplay=true
-Categories=Applications;
-MimeType=application/x-java-archive;application/x-jar;
