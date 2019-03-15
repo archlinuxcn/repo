@@ -22,6 +22,7 @@ prepare(){
   cd "$srcdir/$pkgname-$pkgver"
   patch -p1 <../pr24.patch
   patch -p1 <../libpng16.patch
+  sed -i "s|-Werror ||g" wscript
 }
 
 build() {
