@@ -1,0 +1,119 @@
+diff --git a/doc/rxvt.1.pod b/doc/rxvt.1.pod
+index 169e104..4bb13b3 100644
+--- a/doc/rxvt.1.pod
++++ b/doc/rxvt.1.pod
+@@ -427,6 +427,11 @@ B<secondaryScreen>.
+ Turn on/off secondary screen scroll (default enabled); resource
+ B<secondaryScroll>.
+ 
++=item B<-ssw>|B<+ssw>
++
++Turn on/off secondary screen wheel support (default disabled); resource
++B<secondaryWheel>.
++
+ =item B<-hold>|B<+hold>
+ 
+ Turn on/off hold window after exit support. If enabled, @@RXVT_NAME@@
+@@ -1044,6 +1049,13 @@ option is enabled, scrolls on the secondary screen will change the
+ scrollback buffer and, when secondaryScreen is off, switching
+ to/from the secondary screen will instead scroll the screen up.
+ 
++=item B<secondaryWheel:> I<boolean>
++
++Turn on/off secondary wheel (default disabled). If enabled, when on
++secondary screen, using the mouse wheel will not scroll in the buffer
++but instead send 3 "fake" keystrokes (Up/Down arrow) to the running
++application (allows e.g. natural scrolling in B<man>, B<less>, etc).
++
+ =item B<hold>: I<boolean>
+ 
+ Turn on/off hold window after exit support. If enabled, @@RXVT_NAME@@
+diff --git a/src/command.C b/src/command.C
+index d212764..3b7e266 100644
+--- a/src/command.C
++++ b/src/command.C
+@@ -2237,10 +2237,46 @@ rxvt_term::button_release (XButtonEvent &ev)
+                 }
+               else
+ # endif
++#ifndef NO_SECONDARY_SCREEN
+                 {
+-                  scr_page (dirn, lines);
+-                  scrollBar.show (1);
++                  /* on SECONDARY screen, we send "fake" UP/DOWN keys instead
++                   * (this allows to scroll within man, less, etc) */
++                  if (option (Opt_secondaryWheel) && current_screen != PRIMARY)
++                    {
++                       XKeyEvent event;
++                       event.display     = ev.display;
++                       event.window      = ev.window;
++                       event.root        = ev.root;
++                       event.subwindow   = ev.subwindow;
++                       event.time        = ev.time;
++                       event.x           = ev.x;
++                       event.y           = ev.y;
++                       event.x_root      = ev.x_root;
++                       event.y_root      = ev.y_root;
++                       event.same_screen = ev.same_screen;
++                       event.state       = 0;
++                       event.keycode     = XKeysymToKeycode(ev.display,
++                                            (dirn == UP) ? XK_Up : XK_Down);
++                       for ( ; lines > 0; --lines)
++                         {
++                            event.type = KeyPress;
++                            XSendEvent (event.display, event.window, True,
++                                        KeyPressMask, (XEvent *) &event);
++                            event.type = KeyRelease;
++                            XSendEvent (event.display, event.window, True,
++                                        KeyPressMask, (XEvent *) &event);
++                          }
++                    }
++                  /* on PRIMARY screen, we scroll in the buffer */
++                  else
++#endif
++                    {
++                       scr_page (dirn, lines);
++                       scrollBar.show (1);
++                    }
++#ifndef NO_SECONDARY_SCREEN
+                 }
++#endif
+             }
+             break;
+ #endif
+diff --git a/src/optinc.h b/src/optinc.h
+index 09f9a26..c79a5be 100644
+--- a/src/optinc.h
++++ b/src/optinc.h
+@@ -27,6 +27,7 @@
+  def(cursorBlink)
+  def(secondaryScreen)
+  def(secondaryScroll)
++ def(secondaryWheel)
+  def(pastableTabs)
+  def(cursorUnderline)
+ #if ENABLE_FRILLS
+diff --git a/src/rsinc.h b/src/rsinc.h
+index 682322c..6325057 100644
+--- a/src/rsinc.h
++++ b/src/rsinc.h
+@@ -104,6 +104,7 @@
+ #ifndef NO_SECONDARY_SCREEN
+   def (secondaryScreen)
+   def (secondaryScroll)
++  def (secondaryWheel)
+ #endif
+ #if OFF_FOCUS_FADING
+   def (fade)
+diff --git a/src/xdefaults.C b/src/xdefaults.C
+index 2308844..0f5d2d0 100644
+--- a/src/xdefaults.C
++++ b/src/xdefaults.C
+@@ -264,6 +264,7 @@ optList[] = {
+ #ifndef NO_SECONDARY_SCREEN
+               BOOL (Rs_secondaryScreen, "secondaryScreen", "ssc", Opt_secondaryScreen, 0, "enable secondary screen"),
+               BOOL (Rs_secondaryScroll, "secondaryScroll", "ssr", Opt_secondaryScroll, 0, "enable secondary screen scroll"),
++              BOOL (Rs_secondaryWheel, "secondaryWheel", "ssw", Opt_secondaryWheel, 0, "enable secondary screen wheel"),
+ #endif
+ #if ENABLE_PERL
+               RSTRG (Rs_perl_lib, "perl-lib", "string"), //, "colon-separated directories with extension scripts"),TODO
