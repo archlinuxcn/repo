@@ -1,0 +1,48 @@
+From d4824fb46a07f3dbecf6358020f0f0da2c586475 Mon Sep 17 00:00:00 2001
+From: Tom Anderson <thomasanderson@chromium.org>
+Date: Sat, 16 Feb 2019 05:35:55 +0000
+Subject: [PATCH] Fix build with libstdc++
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+When building with libstdc++ (use_custom_libcxx=false), we get (different) build
+erros when building with clang and gcc.
+
+clang:
+    base/optional.h:348:61: error: no member named 'value' in
+    'std::is_constructible<media::learning::Value, const
+    base::Optional<media::learning::Value> &>'
+
+gcc:
+    base/optional.h:347:57: error: incomplete type
+    ‘std::is_constructible<media::learning::Value,
+    base::Optional<media::learning::Value>&>’ used in nested name specifier
+
+BUG=931373
+
+Change-Id: I133ff4f30398202b5726c605fafee8aa916179d3
+Reviewed-on: https://chromium-review.googlesource.com/c/1475936
+Auto-Submit: Thomas Anderson <thomasanderson@chromium.org>
+Commit-Queue: Frank Liberato <liberato@chromium.org>
+Reviewed-by: Frank Liberato <liberato@chromium.org>
+Cr-Original-Commit-Position: refs/heads/master@{#632921}
+Cr-Mirrored-From: https://chromium.googlesource.com/chromium/src
+Cr-Mirrored-Commit: 08b9fbc728043c89f21af46796bacd7324b7ce06
+---
+ learning/common/value.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/learning/common/value.h b/learning/common/value.h
+index 62f4953f6..ef37eebd4 100644
+--- a/learning/common/value.h
++++ b/learning/common/value.h
+@@ -27,7 +27,7 @@ class COMPONENT_EXPORT(LEARNING_COMMON) Value {
+  public:
+   Value();
+   template <typename T>
+-  explicit Value(T x) : value_(x) {
++  explicit Value(const T& x) : value_(x) {
+     // We want to rule out mostly pointers, since they wouldn't make much sense.
+     // Note that the implicit cast would likely fail anyway.
+     static_assert(std::is_arithmetic<T>::value || std::is_enum<T>::value,

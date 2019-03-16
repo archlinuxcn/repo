@@ -1,0 +1,16 @@
+post_upgrade() {
+  if (($(vercmp $2 42.0.2311.90-1) < 0)); then
+    echo ':: This Chromium package no longer supports custom flags passed via the'
+    echo '   /etc/chromium/default file (or any other files under /etc/chromium/).'
+    echo
+    echo '   The new /usr/bin/chromium launcher script will automatically detect'
+    echo '   Pepper Flash (if installed) and pass the correct flags to Chromium.'
+    echo
+    echo '   If you need to pass extra command-line arguments to Chromium, you'
+    echo '   can put them in a "chromium-flags.conf" file under $HOME/.config/'
+    echo '   (or $XDG_CONFIG_HOME). Arguments are split on whitespace and shell'
+    echo '   quoting rules apply but no further parsing is performed.'
+  fi
+}
+
+# vim:set ts=2 sw=2 et:
