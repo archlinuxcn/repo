@@ -8,7 +8,7 @@
 # Contributor: Jason Chu <jason@archlinux.org>
 
 pkgname=python-git
-pkgver=3.8.0a0.r103513.65f64b1903
+pkgver=3.8.0a0.r103521.d2fdd1fedf
 pkgrel=1
 _pybasever=3.8
 pkgdesc="Next generation of the python high-level scripting language"
@@ -90,7 +90,7 @@ check() {
 
   LD_LIBRARY_PATH="${srcdir}/cpython":${LD_LIBRARY_PATH} \
   LC_CTYPE=en_US.UTF-8 xvfb-run -s "-screen 0 1280x720x24 -ac +extension GLX" -a -n "$servernum" \
-    "${srcdir}/cpython/python" -m test.regrtest -w -uall -x test_ttk_guionly -j -1
+    "${srcdir}/cpython/python" -m test.regrtest -w -uall -x test_ttk_guionly -x test_distutils -j -1
 }
 
 package() {
