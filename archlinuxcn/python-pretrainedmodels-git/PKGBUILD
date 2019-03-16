@@ -1,0 +1,34 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+pkgname=python-pretrainedmodels-git
+pkgver=r136.25b4abd
+pkgrel=1
+pkgdesc="Pretrained ConvNets for PyTorch"
+arch=(any)
+url="https://github.com/Cadene/pretrained-models.pytorch"
+license=('BSD')
+depends=(python-munch python-pytorch python-scipy python-torchvision python-tqdm )
+makedepends=(git python-setuptools)
+provides=(python-pretrainedmodels-git)
+conflicts=(python-pretrainedmodels-git)
+source=('python-pretrainedmodels-git::git+https://github.com/Cadene/pretrained-models.pytorch.git')
+noextract=()
+md5sums=('SKIP')
+
+pkgver() {
+	cd "$srcdir/${pkgname}"
+
+# Git, no tags available
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+	cd "$srcdir/${pkgname}"
+	python setup.py build
+}
+
+package() {
+	cd "$srcdir/${pkgname}"
+	python setup.py install --root=$pkgdir --optimize=1 --skip-build
+ 	install -Dm644 LICENSE.txt -t "$pkgdir"/usr/share/licenses/$pkgname
+}
+# vim:set ts=2 sw=2 et:
