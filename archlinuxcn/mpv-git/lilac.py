@@ -3,7 +3,7 @@ from lilaclib import *
 import re
 
 update_on = [{'aur':None}, {'github':'mpv-player/mpv'}]
-build_prefix = 'archlinuxcn-x86_64'
+build_prefix = 'extra-x86_64'
 
 def pre_build():
     aur_pre_build()

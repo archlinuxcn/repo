@@ -2,13 +2,9 @@
 from lilaclib import *
 
 update_on = [{'aur':None}, {'github':'d-s-x/bomi'}]
-build_prefix = 'archlinuxcn-x86_64'
+build_prefix = 'extra-x86_64'
 depends = ['libchardet']
-
-def pre_build():
-    run_cmd('rm -rf bomi'.split(' '))
-    aur_pre_build()
-
+pre_build = aur_pre_build
 post_build = aur_post_build
 
 if __name__ == '__main__':

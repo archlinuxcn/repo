@@ -2,7 +2,7 @@
 from lilaclib import *
 
 update_on = [{'aur':None}]
-build_prefix = 'archlinuxcn-x86_64'
+build_prefix = 'extra-x86_64'
 depends = ['python-dill', ('python-dill', 'python2-dill')]
 pre_build = aur_pre_build
 post_build = aur_post_build

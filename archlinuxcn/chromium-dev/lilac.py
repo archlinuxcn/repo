@@ -2,8 +2,8 @@
 from lilaclib import *
 
 update_on = [{'aur':None}]
-build_prefix = 'archlinuxcn-x86_64'
-depends = ['gn-git']
+build_prefix = 'extra-x86_64'
+depends = ['gn-git', 'openh264']
 time_limit_hours = 4
 
 def pre_build():

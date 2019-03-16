@@ -1,6 +1,9 @@
 maintainers:
   - github: petronny
-build_prefix: archlinuxcn-x86_64
+build_prefix: extra-x86_64
+depends:
+  - python3-xcpf
+  - python3-xcgf
 update_on:
   - aur: python3-aur
 pre_build: aur_pre_build
