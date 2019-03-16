@@ -1,4 +1,4 @@
-# Maintainer:
+# Maintainer: Senderman <doletov.fyodor@yandex.ru>
 
 pkgname=grub2-theme-arch-leap
 pkgver=1
