@@ -1,14 +1,14 @@
 # Maintainer: Bruce Zhang <zttt183525594@gmail.com>
 pkgname=hlsdl
-pkgver=0.24
-pkgrel=2
+pkgver=0.26
+pkgrel=1
 pkgdesc="C program to download VOD and LIVE HLS (.m3u8) streams"
 arch=('x86_64')
 url="https://github.com/e2iplayer/hlsdl"
 license=('MIT')
 depends=('curl')
 source=("https://github.com/e2iplayer/hlsdl/archive/hlsdlv$pkgver.tar.gz")
-sha256sums=('7e5dc4e0c91baa3ca21b7792e75081a937060b9d60facb58ac99e94224e886a0')
+sha256sums=('85ed6b7592f6d3ad2e6871e4ec6d4de88f01b1b9f7976f1f4042c5356603911c')
 
 build() {
 	cd "$pkgname-hlsdlv$pkgver"
