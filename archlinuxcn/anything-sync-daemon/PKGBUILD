@@ -13,7 +13,7 @@ conflicts=('monitorix-sync-daemon' 'user-profile-sync-daemon' 'goanysync' 'goany
 source=("http://repo-ck.com/source/$pkgname/$pkgname-$pkgver.tar.xz")
 backup=('etc/asd.conf')
 install=asd.install
-sha256sums=('cd25290a11fed7fe7047b42c631137db8a9bf784dcde814ef4c0e62a35b9771e')
+sha256sums=('f38cd0400066e3c335ba8a87c687176ba5174ecbdfe4cfee20158c70232712eb')
 
 build() {
   cd "$pkgname-$pkgver"
