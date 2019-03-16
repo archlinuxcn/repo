@@ -3,9 +3,13 @@
 maintainers:
   - github: ykelvis
 
-build_prefix: archlinuxcn-x86_64
+build_prefix: extra-x86_64
 
 post_build: aur_post_build
+
+depends:
+  - gstreamer0.10-base
+  - gstreamer0.10-base-plugins
 
 update_on:
   - aur: wxgtk2.8
