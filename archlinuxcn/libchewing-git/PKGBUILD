@@ -3,50 +3,48 @@
 
 _pkgname=libchewing
 pkgname=libchewing-git
-pkgver=0.5.1.r84.g05bb0be
+pkgver=0.5.1.r95.gb082732
 pkgrel=1
 epoch=1
 pkgdesc='Intelligent Chinese phonetic input method'
 url='http://chewing.im/'
 arch=('i686' 'x86_64')
-license=('GPL')
+license=('LGPL2.1')
 conflicts=("$_pkgname")
 provides=("$_pkgname=$pkgver")
 depends=('sqlite')
-makedepends=('git')
-source=("git+https://github.com/chewing/libchewing/"
-        "issue219.patch"::"https://github.com/chewing/libchewing/pull/294.patch")
-md5sums=('SKIP'
-         '22a1d758203218c3f1e264eac77017e5')
+makedepends=('cmake' 'git')
+source=("git+https://github.com/chewing/libchewing/")
+md5sums=('SKIP')
 
 pkgver() {
-  cd "${_pkgname}"
+  cd "$_pkgname"
   ( set -o pipefail
     git describe --long --tag 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/^v//'
   )
 }
 
 prepare() {
-  cd "${_pkgname}"
-
-  patch -Np1 -i ../issue219.patch
-
-  autoreconf -fvi
+  cd "$_pkgname"
+  mkdir build
 }
 
 build() {
-  cd "${_pkgname}"
-  ./configure --prefix=/usr --disable-static
+  cd $_pkgname/build
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=/usr/lib \
+    ..
   make
 }
 
 check() {
-  cd "${_pkgname}"
+  cd $_pkgname/build
   # parallel testing is broken (https://github.com/chewing/libchewing/issues/293)
   make -j1 check
 }
 
 package() {
-  cd "${_pkgname}"
-  make DESTDIR="${pkgdir}" install
+  cd $_pkgname/build
+  make DESTDIR="$pkgdir" install
 }
