@@ -164,6 +164,7 @@ build() {
   export NM=nm
 
   local _flags=(
+    'use_jumbo_build = true'
     'custom_toolchain="//build/toolchain/linux/unbundle:default"'
     'host_toolchain="//build/toolchain/linux/unbundle:default"'
     'clang_use_chrome_plugins=false'
