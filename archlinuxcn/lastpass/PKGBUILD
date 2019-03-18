@@ -1,11 +1,11 @@
 # Maintainer: Eli Schwartz <eschwartz@archlinux.org>
 
 pkgname=lastpass
-pkgver=4.24.0.5
+pkgver=4.25.0.4
 pkgrel=1
 _universalver=4.1.59
 _chromever=4.17.0.4
-_amo_file=1668752
+_amo_file=1696557
 _crx_id=hdokiejnpimakedhajhdlcegeplioahd
 pkgdesc="The Universal LastPass installer for Firefox, Chrome, and Opera"
 arch=('i686' 'x86_64')
@@ -27,7 +27,7 @@ source=("${pkgname}-${pkgver}.xpi::https://addons.mozilla.org/firefox/downloads/
         "License.txt")
 noextract=("${pkgname}-${pkgver}.xpi"
            "lpchrome-${_chromever}.crx")
-sha256sums=('5b46a6b167bbbdc02f2ea41d47e86b45f940cc9dce0cd40279295a7ed502a9fa'
+sha256sums=('b17e13409675d4c42eabfac0e7dfae6976d56f5db29e0992a578ba5a10323b0e'
             '905474aceb9998ba25118c572f727336d239a146aad705207f78cacf9052ea29'
             'e8eb3b585809d6644807727c5bd0a74ead96dd2c5a7e6d2ce29e0b6ea28b9e59'
             '82af9e9296f92e92ca325449e0c2b2deb3c21f65afea45aeb823090cb32aad76'
