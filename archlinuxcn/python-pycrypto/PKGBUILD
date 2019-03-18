@@ -1,31 +1,24 @@
-# Maintainer: Bruce Zhang <zttt183525594@gmail.com>
-pkgname='python-pycrypto'
-_pkgname='pycrypto'
+_pkgname=pycrypto
+pkgname=python-pycrypto
 pkgver=2.6.1
-pkgrel=1
-pkgdesc='Cryptographic primitives and algorithms for Python'
+pkgrel=2
+pkgdesc="Cryptographic modules for Python."
 arch=('i686' 'x86_64')
-url='https://pypi.python.org/pypi/pycrypto'
-license=('custom')
-depends=('python' 'gmp')
-makedepends=('python-setuptools')
-provides=('python-pycryptodome' 'python-crypto')
-source=(
-	"https://files.pythonhosted.org/packages/60/db/645aa9af249f059cc3a368b118de33889219e0362141e75d4eaf6f80f163/pycrypto-$pkgver.tar.gz" 
-	"https://raw.githubusercontent.com/dlitz/pycrypto/master/COPYRIGHT"
-)
-sha256sums=(
-	'f2ce1e989b272cfcb677616763e0a2e7ec659effa67a88aa92b3a65528f60a3c' 
-	'SKIP'
-)
+url="http://www.pycrypto.org/"
+license=('Public')
+depends=('python' 'python-setuptools')
+_name=${pkgname#python-}
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_pkgname}-${pkgver}.tar.gz")
+md5sums=('55a61a054aa66812daf5161a0d5d7eda')
 
 build() {
-	cd "$_pkgname-$pkgver"
-	python setup.py build
+  cd "$srcdir/$_pkgname-$pkgver"
+  LANG=en_US.UTF-8 python3 setup.py build
 }
 
 package() {
-	cd "$_pkgname-$pkgver"
-	python setup.py install --root="$pkgdir/" --optimize=1 --skip-build
-	install -Dm644 "$srcdir"/COPYRIGHT "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+  cd "$srcdir/$_pkgname-$pkgver"
+  LANG=en_US.UTF-8 python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 }
+
+# vim:set sw=2 et:
