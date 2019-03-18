@@ -8,9 +8,9 @@ url="https://github.com/Cadene/pretrained-models.pytorch"
 license=('BSD')
 depends=(python-munch python-pytorch python-scipy python-torchvision python-tqdm )
 makedepends=(git python-setuptools)
-provides=(python-pretrainedmodels-git)
-conflicts=(python-pretrainedmodels-git)
-source=('python-pretrainedmodels-git::git+https://github.com/Cadene/pretrained-models.pytorch.git')
+provides=(python-pretrainedmodels)
+conflicts=(python-pretrainedmodels)
+source=("${pkgname}::git+https://github.com/Cadene/pretrained-models.pytorch.git")
 noextract=()
 md5sums=('SKIP')
 
