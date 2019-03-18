@@ -3,12 +3,13 @@
 
 pkgname='archlinuxcn-keyring'
 pkgver='20190315'
-pkgrel=1
+pkgrel=2
 pkgdesc='Arch Linux CN PGP keyring'
 arch=('any')
 url='https://github.com/archlinuxcn/repo'
 license=('GPL')
 depends=('archlinux-keyring')
+optdepends=('pkgstats: install to submit package usage statistics')
 install="archlinuxcn-keyring.install"
 source=("archlinuxcn-keyring-$pkgver.tar.gz::https://github.com/archlinuxcn/archlinuxcn-keyring/archive/$pkgver.tar.gz")
 sha512sums=('c0cfc868feb9cada62b3b4d3edaa668c155b6a285e1cd6e2dedd0bdcec753bb31864348f93a80d5826b30963d5c29a4236a268e5ac8c40b76cf28367ee873c1f')
