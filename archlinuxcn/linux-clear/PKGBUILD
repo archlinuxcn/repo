@@ -43,6 +43,7 @@ _enable_gcc_more_v="y"
 #  25. Intel Ice Lake (MICELAKE)
 #  26. Generic-x86-64 (GENERIC_CPU)
 _subarch=26
+_subarch=
 
 # Compile ONLY probed modules
 # Build in only the modules that you currently have probed in your system VASTLY
@@ -69,8 +70,8 @@ _minor=2
 _srcname=linux-${_major}
 _clr=${_major}.1-716
 pkgbase=linux-clear
-pkgver=${_major}.${_minor}
-pkgrel=12
+pkgver=5.0.2
+pkgrel=1
 arch=('x86_64')
 url="https://github.com/clearlinux-pkgs/linux"
 license=('GPL2')
