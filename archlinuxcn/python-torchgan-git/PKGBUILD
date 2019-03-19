@@ -2,7 +2,7 @@
 
 pkgname=python-torchgan-git
 pkgver=0.0.2.r27.g9650398
-pkgrel=1
+pkgrel=2
 pkgdesc="Research Framework for easy and efficient training of GANs based on PyTorch"
 arch=(any)
 url="https://github.com/torchgan/torchgan"
@@ -27,7 +27,7 @@ build() {
 
 check() {
   cd "${srcdir}/${pkgname}"
-#  pytest -v
+  pytest -v
 }
 
 package() {
