@@ -2,7 +2,7 @@
 pkgname=python-quamash
 _pkgname=Quamash
 pkgver=0.6.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Implementation of the asyncio (PEP 3156) event-loop with Qt"
 arch=('any')
 url="https://github.com/harvimt/quamash"
@@ -20,11 +20,11 @@ sha256sums=(
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
-  python setup.py build
+  QUAMASH_QTIMPL=PyQt5 python setup.py build
 }
 
 package() {
   cd "$srcdir/$_pkgname-$pkgver"
-  python setup.py install --root="$pkgdir" --optimize=1 --skip-build
+  QUAMASH_QTIMPL=PyQt5 python setup.py install --root="$pkgdir" --optimize=1 --skip-build
   install -Dm644 "$srcdir"/LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
 }
