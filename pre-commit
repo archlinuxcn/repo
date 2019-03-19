@@ -162,7 +162,7 @@ def lilac_yaml_has_update_on(pkgname, testcase):
     lilac_path = os.path.join(pkgpath(pkgname), 'lilac.yaml')
     with git_open(lilac_path) as lilac_yaml:
         try:
-            lilac_ast = yaml.load(lilac_yaml.read())
+            lilac_ast = yaml.load(lilac_yaml.read(), Loader=yaml.SafeLoader)
             if 'update_on' in lilac_ast:
                 return True
         except:
@@ -230,7 +230,7 @@ def dump_groups():
 def load_lilac_yaml_schema():
     global YAML_SCHEMA
     with open('lilac-yaml-schema.yaml', 'r') as schema:
-        YAML_SCHEMA = yaml.load(schema)
+        YAML_SCHEMA = yaml.load(schema, Loader=yaml.SafeLoader)
 
 
 def list_packages():
@@ -272,7 +272,7 @@ class RepoTreeTest(TestCase):
             with self.subTest(package=package):
                 lilac_yaml_path = os.path.join(pkgpath(package), 'lilac.yaml')
                 with git_open(lilac_yaml_path) as lilac_yaml_file:
-                    lilac_yaml = yaml.load(lilac_yaml_file.read())
+                    lilac_yaml = yaml.load(lilac_yaml_file.read(), Loader=yaml.SafeLoader)
                     try:
                         jsonschema.validate(lilac_yaml, YAML_SCHEMA)
                     except jsonschema.exceptions.ValidationError:
