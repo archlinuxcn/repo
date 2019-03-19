@@ -7,7 +7,7 @@
 
 from lilaclib import *
 
-depends = [
+repo_depends = [
     ('llvm-pypy-stm', 'llvm-libs-pypy-stm'),
     ('llvm-pypy-stm', 'llvm-pypy-stm'),
     ('llvm-pypy-stm', 'clang-pypy-stm')

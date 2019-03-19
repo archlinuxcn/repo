@@ -11,7 +11,7 @@ from lilaclib import *
 #pre_build = aur_pre_build
 #post_build = aur_post_build
 
-depends = []
+repo_depends = []
 
 #if __name__ == '__main__':
 #      single_main(build_prefix)

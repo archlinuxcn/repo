@@ -20,7 +20,7 @@
 
 from lilaclib import *
 
-depends = ['awesome34']
+repo_depends = ['awesome34']
 
 #build_prefix = 'extra-x86_64'
 

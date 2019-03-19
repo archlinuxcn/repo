@@ -20,7 +20,7 @@
 
 from lilaclib import *
 
-depends = ['lua51-logging', 'lua51-doc']
+repo_depends = ['lua51-logging', 'lua51-doc']
 
 #build_prefix = 'extra-x86_64'
 

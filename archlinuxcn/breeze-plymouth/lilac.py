@@ -7,7 +7,7 @@
 
 from lilaclib import *
 
-depends = ['plymouth-git']
+repo_depends = ['plymouth-git']
 
 #build_prefix = 'extra-x86_64'
 #pre_build = aur_pre_build

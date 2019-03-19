@@ -25,8 +25,8 @@ properties:
   time_limit_hours:
     description: Time limit in hours. The build will be aborted if it doesn't finish in time. Default is one hour.
     type: number
-  depends:
-    description: Packages in the repo to be installed before build.
+  repo_depends:
+    description: Packages in the repo to be built and installed before building the current package.
     type: array
     items:
       anyOf:
