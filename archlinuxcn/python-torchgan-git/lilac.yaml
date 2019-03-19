@@ -1,0 +1,14 @@
+maintainers:
+  - github: hubutui
+
+build_prefix: extra-x86_64
+
+pre_build: vcs_update
+
+post_build: git_pkgbuild_commit
+
+depends:
+  - python-torchvision
+
+update_on:
+  - github: torchgan/torchgan
