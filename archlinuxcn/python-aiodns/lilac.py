@@ -4,7 +4,7 @@
 from lilaclib import *
 
 #build_prefix = 'extra-x86_64'
-depends = ['python-pycares']
+repo_depends = ['python-pycares']
 
 def pre_build():
   pypi_pre_build(depends=['python-pycares'], license='MIT')

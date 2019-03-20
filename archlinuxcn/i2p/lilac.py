@@ -10,7 +10,7 @@ from lilaclib import *
 build_prefix = 'extra-x86_64'
 pre_build = aur_pre_build
 post_build = aur_post_build
-depends = [('java-service-wrapper')]
+repo_depends = [('java-service-wrapper')]
 if __name__ == '__main__':
   single_main()
 '''

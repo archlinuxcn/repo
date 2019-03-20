@@ -7,7 +7,7 @@
 
 from lilaclib import *
 
-depends = ['lua51-logging']
+repo_depends = ['lua51-logging']
 
 #build_prefix = 'extra-x86_64'
 #pre_build = aur_pre_build

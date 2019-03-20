@@ -11,7 +11,7 @@ from lilaclib import *
 #pre_build = aur_pre_build
 #post_build = aur_post_build
 
-depends = ["gnome-vfs-nosmb", "orbit2", "libbonobo"]
+repo_depends = ["gnome-vfs-nosmb", "orbit2", "libbonobo"]
 
 #if __name__ == '__main__':
 #      single_main(build_prefix)

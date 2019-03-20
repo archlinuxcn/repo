@@ -1,7 +1,7 @@
 from lilaclib import *
 import os
 
-depends = []
+repo_depends = []
 
 # build_prefix = 'extra-x86_64'
 

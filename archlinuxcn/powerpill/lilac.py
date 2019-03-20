@@ -8,7 +8,7 @@
 from lilaclib import *
 
 #build_prefix = 'extra-x86_64'
-depends = ['python3-memoizedb', 'python3-xcgf', 'python3-xcpf', 'pm2ml']
+repo_depends = ['python3-memoizedb', 'python3-xcgf', 'python3-xcpf', 'pm2ml']
 
 def pre_build():
   # obtain base PKGBUILD, e.g.

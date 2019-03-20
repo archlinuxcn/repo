@@ -7,5 +7,5 @@
 from lilaclib import *
 
 
-depends = ["gnome-mime-data"]
+repo_depends = ["gnome-mime-data"]
 

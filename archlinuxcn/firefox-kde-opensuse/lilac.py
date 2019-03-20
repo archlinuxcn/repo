@@ -3,7 +3,7 @@ from lilaclib import *
 
 update_on = [{'aur': None}, {'archpkg': 'icu'}]
 build_prefix = 'extra-x86_64'
-depends = ['kmozillahelper']
+repo_depends = ['kmozillahelper']
 time_limit_hours = 4
 
 def pre_build():
