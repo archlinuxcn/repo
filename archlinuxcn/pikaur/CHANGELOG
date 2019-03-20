@@ -1360,3 +1360,17 @@ Sun Mar 3 21:13:21 2019 +0100
      2019-01-16 6bd9343 actionless fix(install_cli): correctly reraise exception from refresh pkg db thread
      2019-01-14 9a4f09d Bundy01 Translation update ES, FR
      2019-01-13 979c1ee actionless feat(install cli): when --needed: exclude from prompt repo and non-devel aur pkgs
+
+
+Wed Mar 20 01:10:16 2019 +0100
+-------------------------------------------------
+1.4.1           Release 1.4.1
+    
+    Notable changes:
+     2019-03-20 75126e8 actionless fix(install_cli: get_all_pkgs_info): don't check --needed if package installed via its Provides field, not directly
+     2019-03-20 2a617cc actionless fix(install_cli: _init): exit if there are no packages to be installed or upgraded
+     2019-03-19 8b5d60f actionless fix(install_cli: get_all_pkgs_info): don't check --needed when installing a new package
+     2019-03-15 277d66d actionless feat(aur_deps): in case if resolving aur deps failed print which of the packages caused that
+     2019-03-15 e63f7d6 Jason doc(readme): Amend spelling mistake (#352)
+     2019-03-14 3edafac actionless fix(install_cli: get_installed_status, review_build_files): if aur repo didn't changed and --needed or --devel is used mark package as already reviewed
+     2019-03-05 9654ef2 Drommer Full russian translation (#355)
