@@ -32,7 +32,7 @@ check() {
 
 package() {
 	cd "${srcdir}/${pkgname}"
-	python setup.py install --root=${pkgdir} --optimize=1 --skip-build
+	python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
  	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:
