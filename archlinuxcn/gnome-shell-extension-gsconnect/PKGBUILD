@@ -2,7 +2,7 @@
 
 pkgname=gnome-shell-extension-gsconnect
 pkgver=21
-pkgrel=1
+pkgrel=2
 pkgdesc="KDE Connect implementation with GNOME Shell integration"
 arch=('any')
 url="https://github.com/andyholmes/gnome-shell-extension-gsconnect"
@@ -10,7 +10,6 @@ license=('GPL')
 makedepends=('meson' 'ninja')
 depends=('gnome-shell')
 optdepends=(
-  'sshfs: Browse remote files'
   'folks: Contacts integration (Evolution)'
   'libgdata: Contacts integration (GNOME Online Accounts)'
   'gsound: Themed sound effects'
