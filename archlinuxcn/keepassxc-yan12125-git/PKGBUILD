@@ -12,7 +12,7 @@
 
 _pkgname=keepassxc
 pkgname=$_pkgname-yan12125-git
-pkgver=2.4.0beta2.r14.g14e868d2
+pkgver=2.4.0.r5.g31bd90a8
 pkgrel=1
 pkgdesc="A reboot of an open source password safe which helps you to manage your passwords in an easy and secure way"
 arch=(x86_64)
@@ -24,7 +24,7 @@ makedepends=(cmake qt5-tools git)
 checkdepends=(xorg-server-xvfb openbox)
 conflicts=("$_pkgname")
 provides=("$_pkgname=$pkgver")
-source=('git+https://github.com/keepassxreboot/keepassxc.git#branch=release/2.4.0'
+source=('git+https://github.com/keepassxreboot/keepassxc.git#branch=develop'
         'multiple-urls-v1.patch::https://github.com/keepassxreboot/keepassxc/pull/1769.patch'
         'run_test.sh')
 sha256sums=('SKIP'
