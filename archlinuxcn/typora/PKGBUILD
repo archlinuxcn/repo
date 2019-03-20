@@ -1,6 +1,6 @@
 # Maintainer: Jonathan Duck <duckbrain30@gmail.com>
 pkgname=typora
-pkgver=0.9.65
+pkgver=0.9.67
 pkgrel=1
 pkgdesc="Typora will give you a seamless experience as both a reader and a writer."
 arch=('x86_64')
@@ -10,7 +10,7 @@ url="https://typora.io/"
 depends=('gconf' 'libxss')
 optdepends=('noto-fonts-emoji: Or some other emoji font to see emojis')
 source=("https://typora.io/./linux/$filename")
-md5sums=('a7d0a1977d17070721db14e1dcf44fb2')
+md5sums=('d3206bfbe28b9216a43c46dd2928779e')
 
 package() {
 	bsdtar -xf data.tar.xz -C "$pkgdir/"
