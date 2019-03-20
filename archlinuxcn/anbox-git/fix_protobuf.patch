@@ -1,0 +1,74 @@
+--- a/src/anbox/bridge/android_api_stub.cpp
++++ b/src/anbox/bridge/android_api_stub.cpp
+@@ -26,6 +26,7 @@
+ #include "anbox_rpc.pb.h"
+ 
+ #include <boost/filesystem.hpp>
++#include <google/protobuf/stubs/callback.h>
+ 
+ namespace fs = boost::filesystem;
+ 
+diff --git a/src/anbox/bridge/platform_api_skeleton.cpp b/src/anbox/bridge/platform_api_skeleton.cpp
+index b445748..0db56a8 100644
+--- a/src/anbox/bridge/platform_api_skeleton.cpp
++++ b/src/anbox/bridge/platform_api_skeleton.cpp
+@@ -28,6 +28,8 @@
+ 
+ #include "anbox_bridge.pb.h"
+ 
++#include <google/protobuf/stubs/callback.h>
++
+ namespace anbox {
+ namespace bridge {
+ PlatformApiSkeleton::PlatformApiSkeleton(
+diff --git a/src/anbox/container/management_api_skeleton.cpp b/src/anbox/container/management_api_skeleton.cpp
+index 9beff47..424960e 100644
+--- a/src/anbox/container/management_api_skeleton.cpp
++++ b/src/anbox/container/management_api_skeleton.cpp
+@@ -25,6 +25,8 @@
+ #include "anbox_container.pb.h"
+ #include "anbox_rpc.pb.h"
+ 
++#include <google/protobuf/stubs/callback.h>
++
+ namespace anbox {
+ namespace container {
+ ManagementApiSkeleton::ManagementApiSkeleton(
+diff --git a/src/anbox/container/management_api_stub.cpp b/src/anbox/container/management_api_stub.cpp
+index ef2d103..4c3b944 100644
+--- a/src/anbox/container/management_api_stub.cpp
++++ b/src/anbox/container/management_api_stub.cpp
+@@ -22,6 +22,8 @@
+ #include "anbox_container.pb.h"
+ #include "anbox_rpc.pb.h"
+ 
++#include <google/protobuf/stubs/callback.h>
++
+ namespace anbox {
+ namespace container {
+ 
+diff --git a/src/anbox/rpc/pending_call_cache.cpp b/src/anbox/rpc/pending_call_cache.cpp
+index 1e0ff78..aefe7e3 100644
+--- a/src/anbox/rpc/pending_call_cache.cpp
++++ b/src/anbox/rpc/pending_call_cache.cpp
+@@ -20,6 +20,8 @@
+ 
+ #include "anbox_rpc.pb.h"
+ 
++#include <google/protobuf/stubs/callback.h>
++
+ namespace anbox {
+ namespace rpc {
+ PendingCallCache::PendingCallCache() {}
+diff --git a/src/anbox/rpc/template_message_processor.h b/src/anbox/rpc/template_message_processor.h
+index 3032840..12180a7 100644
+--- a/src/anbox/rpc/template_message_processor.h
++++ b/src/anbox/rpc/template_message_processor.h
+@@ -20,6 +20,7 @@
+ #define ANBOX_RPC_TEMPLATE_MESSAGE_PROCESSOR_H_
+ 
+ #include <google/protobuf/stubs/common.h>
++#include <google/protobuf/stubs/callback.h>
+ 
+ #include "anbox/rpc/message_processor.h"
+
