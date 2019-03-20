@@ -16,12 +16,12 @@ pkgname=(
   linux-firmware-full-surface-book-2-1793
   linux-firmware-full-surface-go
 )
-_commit=28f5f7dc1f077ea37d663f70de4490844db0449d # master
+_commit=efd2c1cc375cff1c17b4259d99a7fee240c3b510 # master
 _jakeday_commit=5d21cc824c9b41e65f92fdebcbcccd2181b9393f
-_core_repo_ver=20190212.28f5f7d # Update this on each release to correspond to linux-firmware of core
-_last_updated=20190307
-pkgver=20190307.28f5f7.5d21cc
-pkgrel=2
+_core_repo_ver=20190313.efd2c1c # Update this on each release to correspond to linux-firmware of core
+_last_updated=20190320
+pkgver=20190320.efd2c1.5d21cc
+pkgrel=1
 pkgdesc="Firmware files for Linux, patched for surface"
 makedepends=('git' 'unzip')
 arch=('any')
