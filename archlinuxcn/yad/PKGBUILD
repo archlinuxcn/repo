@@ -5,12 +5,12 @@
 
 pkgname=yad
 pkgver=0.42.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A fork of zenity - display graphical dialogs from shell scripts or command line"
 url="https://github.com/v1cont/yad"
 arch=('x86_64' 'i686')
 license=('GPL3')
-depends=('gtk3' 'webkit2gtk')
+depends=('gtk3' 'webkit2gtk' 'gtkspell3')
 makedepends=('autoconf' 'automake' 'intltool')
 source=("${url}/archive/v${pkgver}.tar.gz")
 sha512sums=('700b11f449b63ec1bc8fecf0d2df3ed18bc7078472de0f3ee034c28e3e096eb61559529cc094c76fc8a9959bbb3e5f159d621ad9739d857b0d9b8d7ff386deaa')
@@ -19,7 +19,7 @@ build() {
     cd "${srcdir}/${pkgname}-${pkgver}"
     autoreconf -ivf
     intltoolize
-    ./configure \
+    LIBS="-lglib-2.0" ./configure \
       --prefix=/usr \
       --with-gtk=gtk3 \
       --enable-icon-browser \
