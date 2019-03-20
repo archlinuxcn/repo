@@ -6,7 +6,7 @@
 
 pkgname=python-torchvision
 pkgver=0.2.2
-pkgrel=3
+pkgrel=4
 pkgdesc='Datasets, transforms, and models specific to computer vision'
 arch=(any)
 url=https://github.com/pytorch/vision
@@ -18,7 +18,7 @@ source=("torchvision-${pkgver}.tar.gz"::"https://github.com/pytorch/vision/archi
 sha512sums=('2831391b71257ae4daacd4e7d3f933a910fad548df8df1a70d2358947244de59a70ceb76c544ed3eb1bd07b9e170640234f49b4743d9bb9da0e2b33861c36849')
 
 build() {
-  cd vision-${pkgver}
+  cd "vision-${pkgver}"
   python setup.py build
 }
 
@@ -29,7 +29,7 @@ check() {
 
 package() {
   cd "vision-${pkgver}"
-  python setup.py install --root=${pkgdir} --optimize=1 --skip-build
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:
