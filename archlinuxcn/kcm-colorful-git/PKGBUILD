@@ -3,13 +3,13 @@
 
 _gitname=kcm-colorful
 pkgname=kcm-colorful-git
-pkgver=0.0.1.r32.bab3db5
+pkgver=0.9.6.r0.g22ffde1
 pkgrel=1
 pkgdesc='Make your KDE plasma colorful'
 arch=('x86_64')
 url="https://github.com/IsoaSFlus/kcm-colorful"
 license=('GPL2')
-depends=('kconfigwidgets' 'systemsettings')
+depends=('kconfigwidgets' 'systemsettings' 'kcolorchooser')
 makedepends=('cmake' 'git' 'extra-cmake-modules' 'qt5-base' 'frameworkintegration' 'kcmutils')
 
 source=(
@@ -34,11 +34,11 @@ build() {
     cd $srcdir/kcm-colorful
     mkdir -p build
     cd build
-    cmake -DCMAKE_INSTALL_PREFIX="$pkgdir/usr" ..
+    cmake -DCMAKE_INSTALL_PREFIX="/usr" -DCMAKE_INSTALL_LIBDIR=lib ..
     make
 }
 
 package() {
     cd $srcdir/kcm-colorful/build
-    make install
+    make DESTDIR="$pkgdir" install
 }
