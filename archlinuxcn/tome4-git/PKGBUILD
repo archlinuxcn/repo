@@ -36,6 +36,7 @@ pkgver() {
 prepare() {
 	cd "$srcdir"/t-engine4
 	patch -p1 < "${srcdir}/aur-${_pkgname}.patch"
+  sed -i "s|#include <GL/glext.h>||g" src/tgl.h
 }
 
 ###############################################################################
