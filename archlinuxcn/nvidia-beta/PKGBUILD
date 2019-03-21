@@ -10,7 +10,7 @@ pkgrel=6
 pkgdesc="NVIDIA drivers for linux"
 arch=('x86_64')
 url="http://www.nvidia.com/"
-makedepends=("nvidia-utils-beta=${pkgver}" 'libglvnd' 'linux' 'linux-headers>=4.20' 'linux-headers<4.21')
+makedepends=("nvidia-utils-beta=${pkgver}" 'libglvnd' 'linux' 'linux-headers')
 license=('custom')
 options=('!strip')
 _pkg="NVIDIA-Linux-x86_64-${pkgver}"
