@@ -9,7 +9,7 @@ pkgdesc='Make your KDE plasma colorful'
 arch=('x86_64')
 url="https://github.com/IsoaSFlus/kcm-colorful"
 license=('GPL2')
-depends=('kconfigwidgets')
+depends=('kconfigwidgets' 'systemsettings')
 makedepends=('cmake' 'git' 'extra-cmake-modules' 'qt5-base' 'frameworkintegration' 'kcmutils')
 
 source=(
@@ -20,7 +20,7 @@ sha256sums=('SKIP')
 
 pkgver() {
 	cd $_gitname
-	printf "0.0.1.r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+	printf "0.9.6.r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 prepare() {
