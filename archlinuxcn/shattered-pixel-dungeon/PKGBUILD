@@ -3,7 +3,7 @@
 
 pkgname=shattered-pixel-dungeon
 _pkgname=$pkgname-gdx
-pkgver=0.7.1d
+pkgver=0.7.2a
 _srcdir=$_pkgname-$pkgver
 pkgrel=1
 pkgdesc='Shattered fork of the popular rogue-like game'
@@ -18,7 +18,7 @@ source=(
   "$pkgname.sh"
   "$pkgname.desktop"
 )
-sha512sums=('600e1335210b34ea8d16d7bd3bb111c232711b4ab678a383c11ac8024ca96295e864bc3f06f5731daf6c3feac657802afb7b7f6089f671226d5a12a90ef82ca0'
+sha512sums=('13b690b1a8649c5c01158fbaf981db44d8b778c0b988f9fe8bca3736806c97e2b00471fc749de5b08054f5badce9096936c46d86ac29516606cbd455fc1dca3d'
             '88814d1f33eea6bd5656d3ca731ed5a6cfce10ecdae24012252c5b32c4b194ec75fb0e22cac70897802679086c6a32e210d52933ec45ca94ff350ac4ad7c266e'
             '204a7bcedbbc14bdad6586e4b759b326191a7fd2c344dadc7032495d4caa5fe32edac4118d7294229a6fe24f6684416fff37e260bbc9dde9e50846a03ba77db8')
 
