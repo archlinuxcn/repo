@@ -53,7 +53,7 @@ build() {
 
 package_nvidia-beta() {
     pkgdesc="NVIDIA drivers for linux (Beta version)"
-    depends=('linux>=4.20' 'linux<4.21' "nvidia-utils-beta=${pkgver}" 'libglvnd')
+    depends=('linux' "nvidia-utils-beta=${pkgver}" 'libglvnd')
     provides=("nvidia=${pkgver}")
     conflicts=('nvidia')
     install -Dt "${pkgdir}/usr/lib/modules/${_extramodules}" -m644 \
