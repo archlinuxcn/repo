@@ -1,7 +1,7 @@
 # Maintainer: Vasia Novikov <n1dr+cmarchlinux@yaaandex.com> (replace "aaa" with "a")
 
 pkgname=rua
-pkgver=0.13.0
+pkgver=0.13.1
 pkgrel=1
 pkgdesc='secure jailed AUR helper in rust'
 url='https://github.com/vn971/rua'
@@ -13,7 +13,7 @@ depends=('bubblewrap' 'git')
 
 #options+=(!strip)  # uncomment to have readable stack traces
 
-sha256sums=(435b9f44267bf1c67c9c4d36d0cbc043b5674b98415cdb7c1dc0385ef16bd36e)
+sha256sums=(8284ff9f90c24eafe34a6353d06c7b8a843db32032133a59a6985cc797df0b0e)
 
 build () {
   cd "$srcdir/$pkgname-$pkgver"
