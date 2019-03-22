@@ -5,12 +5,12 @@
 pkgname=deepin-wine-tim
 pkgver=2.3.2.21158
 deepintimver=2.0.0deepin4
-pkgrel=5
+pkgrel=6
 pkgdesc="Tencent TIM (com.qq.office) on Deepin Wine For Archlinux"
 arch=("x86_64")
 url="http://tim.qq.com/"
 license=('custom')
-depends=('p7zip' 'wine' 'wine-mono' 'wine_gecko' 'xorg-xwininfo' 'xdotool' 'wqy-microhei' 'adobe-source-han-sans-cn-fonts' 'adobe-source-han-serif-cn-fonts' 'lib32-alsa-lib' 'lib32-alsa-plugins' 'lib32-libpulse' 'lib32-openal' 'lib32-mpg123' 'lib32-gnutls')
+depends=('p7zip' 'wine' 'wine-mono' 'wine_gecko' 'xorg-xwininfo' 'wqy-microhei' 'adobe-source-han-sans-cn-fonts' 'adobe-source-han-serif-cn-fonts' 'lib32-alsa-lib' 'lib32-alsa-plugins' 'lib32-libpulse' 'lib32-openal' 'lib32-mpg123' 'lib32-gnutls')
 conflicts=('wine-tim' 'deepin.com.qq.office' 'deepin-tim-for-arch')
 install="deepin-wine-tim.install"
 _mirror="https://mirrors.ustc.edu.cn/deepin"
@@ -21,8 +21,8 @@ source=("$_mirror/pool/non-free/d/deepin.com.qq.office/deepin.com.qq.office_${de
   "update.policy")
 md5sums=('d5c37cb4f960e13111ce24dbc0dd2d58'
   '11477a70c36eee0574860590b4bc8bd0'
-  'f6bc17d613cc49b933910effc5dd4554'
-  'a68c3271fa4858d956aac29ade6c602e'
+  'afeded77e4fc00afaa4e79dee87b38b9'
+  'ee35c8c0f69e03bb581ac39007d5cd3a'
   'a66646b473a3fbad243ac1afd64da07a')
 
 build() {

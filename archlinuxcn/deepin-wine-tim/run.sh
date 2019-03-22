@@ -27,7 +27,7 @@ CallApp()
 		env WINEPREFIX="$WINEPREFIX" $WINE_CMD $APPDIR/TIM$APPVER.exe
 	else
         #disable Tencent MiniBrowser
-        _DeleteRegistry "HKCU\\Software\\Tencent\\MiniBrowser"
+        #_DeleteRegistry "HKCU\\Software\\Tencent\\MiniBrowser"
 
         #Support use native file dialog
         export ATTACH_FILE_DIALOG=1
