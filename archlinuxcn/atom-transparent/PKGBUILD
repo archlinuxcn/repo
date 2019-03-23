@@ -1,7 +1,7 @@
-# Maintainer: frantic1048<archer@frantic1048.com>
+# Maintainer: OriginCode <origincoder@yahoo.com
 
 pkgname=atom-transparent
-pkgver=1.32.0
+pkgver=1.35.1
 pkgrel=1
 pkgdesc='A hackable text editor for the 21st Century, with transparency patch.'
 arch=('x86_64')
@@ -16,22 +16,26 @@ options=(!emptydirs)
 source=("atom-${pkgver}.tar.gz::https://github.com/atom/atom/archive/v${pkgver}.tar.gz"
         'atom.js'
         'dugite-use-system-git.patch'
+        'electron-3.patch'
         'fix-atom-sh.patch'
         'fix-license-path.patch'
+        'fix-middle-click.patch'
         'fix-restart.patch'
         'symbols-view-use-system-ctags.patch'
         'use-system-apm.patch'
         'use-system-electron.patch'
         'enable-transparency.patch')
-sha256sums=('abb1a091fa493f186749d50c9444e762ed46f57c39055d022a50e166c7ffa8c6'
+sha256sums=('a50bcfcda4cfe6017fb76defc3a0eeaca209954d86a631f5963e69a0c064c2e8'
             'cdf87ab82cfcf69e8904684c59b08c35a68540ea16ab173fce06037ac341efcd'
             '530b46d31df0f5e8f5881e1608a66fe75d549092a6db2e72ba3ad69c48714153'
+            '328da3b30f4e20e56b38e588d9fe871c01bbbe69865a79e9586919564bdfa869'
             'ab9eed3d4c8bfefea256953428379ab1e636b9c7d4c4af30ddc3f485330183c2'
-            'c8a931f36af3722c57c4d1b70c1e58aa1a18372e8e26c28a4e01253e05295205'
-            'cbac8d28e32a32760cd6b16d313e05e32af57bfdea1c248636e1b1ae74e4e92c'
+            '5c77deec5896b658395bdf695c3bc044c9140ad0a5a87f34520c4a31972e51d1'
+            '142d540259296396f6d528ecf2f7c6a363f89f8a0d2ad66497f8392da06202bc'
+            'c4b883265d16ee30402c449d07be78b7088c1aa60c4f3e712b8bfe857c95f346'
             '3c68e6b3751313e1d386e721f8f819fb051351fb2cf8e753b1d773a0f475fef8'
             '53f43c9328a66e24b3467a0a06d9dfde83475f7e54251bf7a523beafaa043806'
-            '25ffc77d9d0f89a598041f5c823f5e65a662681f570f3894cb74aca7306e1026'
+            '457bd1b06604aec1e2ebb6e0ea473742747e183e833fffb36377aad64c37bcd5'
             '2cb262dfd15f67dd1a01a9b314983f535da8b06ce4a814d214e12ec369631d58')
 
 prepare() {
@@ -43,10 +47,18 @@ prepare() {
   patch -Np1 -i "${srcdir}"/fix-license-path.patch
   patch -Np1 -i "${srcdir}"/fix-restart.patch
   patch -Np1 -i "${srcdir}"/enable-transparency.patch
+  
+  # Fix for Electron 3
+  patch -Np1 -i "${srcdir}"/electron-3.patch
 }
 
 build() {
   cd "${srcdir}/atom-${pkgver}"
+
+  # Fix for Electron 3
+  npm install --package-lock-only @atom/nsfw@1.0.20 node-abi
+
+  rm package-lock.json
 
   ATOM_RESOURCE_PATH="${PWD}" \
   npm_config_target=$(tail -c +2 /usr/lib/electron/version) \
@@ -62,6 +74,11 @@ build() {
   cd node_modules/dugite
   patch -Np1 -i "${srcdir}"/dugite-use-system-git.patch
   rm -r git
+  cd ../..
+
+  # https://bugs.archlinux.org/task/61047
+  cd node_modules/tabs
+  patch -Np1 -i "${srcdir}"/fix-middle-click.patch
   cd ../..
 
   cd script
@@ -101,6 +118,8 @@ package() {
   find "${pkgdir}"/usr/lib/atom/node_modules \
       -name "*.a" -exec rm '{}' \; \
       -or -name "*.bat" -exec rm '{}' \; \
+      -or -name "*.c" -exec rm '{}' \; \
+      -or -name "*.cpp" -exec rm '{}' \; \
       -or -name "*.node" -exec chmod a-x '{}' \; \
       -or -name "benchmark" -prune -exec rm -r '{}' \; \
       -or -name "doc" -prune -exec rm -r '{}' \; \
