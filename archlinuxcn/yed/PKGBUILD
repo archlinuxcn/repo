@@ -11,62 +11,21 @@
 
 pkgname=yed
 pkgver=3.19
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc='Very powerful graph editor written in java'
 arch=('any')
 url='http://www.yworks.com/en/products_yed_about.html'
 license=('custom')
-depends=('archlinux-java-run>=4' 'java-openjfx>=8' 'java-openjfx<11'
-
-         # Additional dependencies for the JavaFX UI, determined using
-         # ldd /usr/lib/jvm/java-8-openjdk/jre/lib/amd64/libglass.so|awk '{print $3}'|xargs pacman -Qo|awk '{print $4}'|sort -u
-         'atk'
-         'bzip2'
-         'cairo'
-         'expat'
-         'fontconfig'
-         'freetype2'
-         'fribidi'
-         'gcc-libs'
-         'gdk-pixbuf2'
-         'glib2'
-         'glibc'
-         'graphite'
-         'gtk2'
-         'harfbuzz'
-         'libdatrie'
-         'libffi'
-         'libpng'
-         'libthai'
-         'libutil-linux'
-         'libx11'
-         'libxau'
-         'libxcb'
-         'libxcomposite'
-         'libxcursor'
-         'libxdamage'
-         'libxdmcp'
-         'libxext'
-         'libxfixes'
-         'libxi'
-         'libxinerama'
-         'libxrandr'
-         'libxrender'
-         'libxtst'
-         'pango'
-         'pcre'
-         'pixman'
-         'zlib'
-         )
+depends=('java-runtime')
 source=("https://www.yworks.com/resources/yed/demo/yEd-${pkgver}.zip"
         'yed.desktop'
         'yed')
 sha256sums=('1595816007ced156d21576691fe5247135d85d674231a708a49553de685c65e3'
             '245182a52896bdff3f2c995a066623619d600665630e789910c92d36725a0aca'
-            '2752e6ccc5cb5e19f483e5fd5f3274e81c8ef32d77c92b0d18951c8325179abd')
+            '731b54c6e731704efe9847d78e2df474d59042452ace29d2786d76891295249e')
 
-install=${pkgname}.install
+install=yed.install
 
 package() {
   # Install jars
