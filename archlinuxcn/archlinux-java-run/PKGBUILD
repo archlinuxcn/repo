@@ -4,20 +4,17 @@
 # https://github.com/michaellass/AUR
 
 pkgname=archlinux-java-run
-pkgver=4
+pkgver=5
 pkgrel=1
 pkgdesc="Java Application Launcher for Arch Linux"
 arch=(any)
 url="https://github.com/michaellass/archlinux-java-run"
 license=('MIT')
 depends=(bash java-runtime-common)
-makedepends=(git)
-source=("archlinux-java-run::git+https://github.com/michaellass/archlinux-java-run.git#tag=v${pkgver}")
-sha256sums=('SKIP')
+source=(https://github.com/michaellass/${pkgname}/archive/v${pkgver}.tar.gz)
+sha256sums=('eae4381967bfabbff4705e8b7e42627d9d2e3f667d20af09c9938bf92d9db5c2')
 
 package() {
-  cd  "${srcdir}/${pkgname}"
-  install -Dm755 archlinux-java-run.sh "${pkgdir}"/usr/bin/archlinux-java-run
-  install -Dm644 LICENSE "${pkgdir}"/usr/share/licenses/${pkgname}/LICENSE
-  install -Dm644 README.md "${pkgdir}"/usr/share/doc/${pkgname}/README.md
+  cd  "${srcdir}/${pkgname}-${pkgver}"
+  make PREFIX=/usr DESTDIR="${pkgdir}" install
 }
