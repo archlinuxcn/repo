@@ -3,7 +3,7 @@
 pkgname="dcron-git"
 epoch=1
 pkgver=4.5.r9.g6186237
-pkgrel=1
+pkgrel=2
 pkgdesc="dillon's lightweight cron daemon, git version"
 arch=("i686" "x86_64" "armv6h" "armv7h")
 license=("GPL")
@@ -15,9 +15,11 @@ optdepends=("msmtp-mta: sending cron job output via email")
 provides=("cron")
 conflicts=("cron")
 source=("git+https://github.com/dubiousjim/dcron.git#commit=6186237"
+        "subreap.patch"
         "dcron.hook"
         "service")
 md5sums=('SKIP'
+         '6fae004ddaac5645dfdeac8703526154'
          '509724f00d1fa3ce7a98b92afb294b5a'
          '2eefc422db24bf2ac38e3a16292ccdc4')
 
@@ -32,6 +34,7 @@ build() {
   # fix paths to point to /usr/bin
   sed -i 's=/usr/sbin/sendmail=/usr/bin/sendmail=g' defs.h
   sed -i 's=/usr/sbin/run-cron=/usr/bin/run-cron=g' extra/root.crontab
+  patch -Np1 < ../subreap.patch
 
   # by default, any member of group "users" can edit their own crontab
   make \

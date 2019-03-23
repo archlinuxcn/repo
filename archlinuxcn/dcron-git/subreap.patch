@@ -1,0 +1,20 @@
+diff --git a/main.c b/main.c
+index 0eba280..666c785 100644
+--- a/main.c
++++ b/main.c
+@@ -11,6 +11,7 @@
+  */
+ 
+ #include "defs.h"
++#include <sys/prctl.h>
+ 
+ Prototype short DebugOpt;
+ Prototype short LogLevel;
+@@ -289,6 +290,7 @@ main(int ac, char **av)
+ 	 *             of 1 second.
+ 	 */
+ 
++        prctl(PR_SET_CHILD_SUBREAPER, 1);
+ 	printlogf(LOG_NOTICE,"%s " VERSION " dillon's cron daemon, started with loglevel %s\n", av[0], LevelAry[LogLevel]);
+ 	SynchronizeDir(CDir, NULL, 1);
+ 	SynchronizeDir(SCDir, "root", 1);
