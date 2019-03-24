@@ -1,0 +1,15 @@
+--- wine-staging-osu-3.7/dlls/winealsa.drv/mmdevdrv.c.old	2018-05-09 17:25:19.908329171 +0200
++++ wine-staging-osu-3.7/dlls/winealsa.drv/mmdevdrv.c	2018-05-09 17:25:40.811577308 +0200
+@@ -53,9 +53,9 @@
+ 
+ #define NULL_PTR_ERR MAKE_HRESULT(SEVERITY_ERROR, FACILITY_WIN32, RPC_X_NULL_REF_POINTER)
+ 
+-static const REFERENCE_TIME DefaultPeriod = 100000;
+-static const REFERENCE_TIME MinimumPeriod = 50000;
+-#define                     EXTRA_SAFE_RT   40000
++static const REFERENCE_TIME DefaultPeriod = 4000;
++static const REFERENCE_TIME MinimumPeriod = 2000;
++#define                     EXTRA_SAFE_RT   1000
+ 
+ struct ACImpl;
+ typedef struct ACImpl ACImpl;

@@ -1,0 +1,52 @@
+--- wine-osu/dlls/winepulse.drv/mmdevdrv.c.orig.old
++++ wine-osu/dlls/winepulse.drv/mmdevdrv.c
+@@ -69,8 +69,8 @@
+     Priority_Preferred
+ };
+ 
+-static const REFERENCE_TIME MinimumPeriod = 30000;
+-static const REFERENCE_TIME DefaultPeriod = 100000;
++static const REFERENCE_TIME MinimumPeriod = 1000;
++static const REFERENCE_TIME DefaultPeriod = 2000;
+ 
+ static pa_context *pulse_ctx;
+ static pa_mainloop *pulse_ml;
+@@ -406,9 +406,9 @@
+     ss.channels = map.channels;
+ 
+     attr.maxlength = -1;
+-    attr.tlength = -1;
+-    attr.minreq = attr.fragsize = pa_frame_size(&ss);
+-    attr.prebuf = 0;
++    attr.minreq = -1;
++    attr.tlength = attr.fragsize = pa_usec_to_bytes(1000, &ss);
++    attr.prebuf = -1;
+ 
+     stream = pa_stream_new(ctx, "format test stream", &ss, &map);
+     if (stream)
+@@ -417,9 +417,9 @@
+         ret = -1;
+     else if (render)
+         ret = pa_stream_connect_playback(stream, NULL, &attr,
+-        PA_STREAM_START_CORKED|PA_STREAM_FIX_RATE|PA_STREAM_FIX_CHANNELS|PA_STREAM_EARLY_REQUESTS, NULL, NULL);
++        PA_STREAM_START_CORKED|PA_STREAM_FIX_RATE|PA_STREAM_FIX_CHANNELS|PA_STREAM_EARLY_REQUESTS|PA_STREAM_ADJUST_LATENCY, NULL, NULL);
+     else
+-        ret = pa_stream_connect_record(stream, NULL, &attr, PA_STREAM_START_CORKED|PA_STREAM_FIX_RATE|PA_STREAM_FIX_CHANNELS|PA_STREAM_EARLY_REQUESTS);
++        ret = pa_stream_connect_record(stream, NULL, &attr, PA_STREAM_START_CORKED|PA_STREAM_FIX_RATE|PA_STREAM_FIX_CHANNELS|PA_STREAM_EARLY_REQUESTS|PA_STREAM_ADJUST_LATENCY);
+     if (ret >= 0) {
+         while (pa_mainloop_iterate(ml, 1, &ret) >= 0 &&
+                 pa_stream_get_state(stream) == PA_STREAM_CREATING)
+@@ -1767,6 +1767,13 @@
+     /* Uh oh, really low latency requested.. */
+     if (duration <= 2 * period)
+         period /= 2;
++    
++    const char *env = getenv("STAGING_AUDIO_DURATION");
++    if(env) {
++        int val = atoi(env);
++        duration = val;
++        printf("Set audio duration to %d (STAGING_AUDIO_DURATION).\n", val);
++    }
+ 
+     period_bytes = pa_frame_size(&This->ss) * MulDiv(period, This->ss.rate, 10000000);
+ 
