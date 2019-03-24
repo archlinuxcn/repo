@@ -4,7 +4,7 @@ maintainers:
   - github: SilverRainZ
     email: Shengyu Zhang <la@archlinuxcn.org>
 
-build_prefix: archlinuxcn-x86_64
+build_prefix: extra-x86_64
 
 pre_build: aur_pre_build
 
@@ -13,3 +13,6 @@ post_build: aur_post_build
 update_on:
   - aur: ruby-i18n-0.9
   - alias: ruby
+
+depends:
+  - ruby-concurrent-ruby
