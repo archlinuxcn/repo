@@ -6,7 +6,7 @@
 # Contributor: Jonhoo <jon at thesquareplanet.com>
 # Contributor: torvic9 <vic999 at mailbox.org>
 pkgname=signal
-pkgver=1.22.0
+pkgver=1.23.1
 pkgrel=1
 license=('GPL3')
 pkgdesc='Signal Private Messenger for the Desktop'
@@ -29,8 +29,8 @@ sha512sums=('SKIP'
 
 prepare() {
   cd "${pkgname}-git-repo"  
-  # Upgrade electron
-  sed -i 's/"electron": "3.0.14"/"electron": "3.1.1"/' package.json
+  # Downgrade electron
+  sed -i 's/"electron": "4.1.1"/"electron": "3.1.6"/' package.json
 
   # Allow higher node minor versions
   sed -i 's/"node": "/&^/' package.json
