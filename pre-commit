@@ -257,6 +257,7 @@ class RepoTreeTest(TestCase):
                                 msg=('package "\033[1;31m{0}\033[m" does '
                                      'not have PKGBUILD').format(package))
 
+    @skip("lilac can now check and drop packages in official repos")
     def test_package_in_official(self):
         for package in list_packages():
             with self.subTest(package=package):
