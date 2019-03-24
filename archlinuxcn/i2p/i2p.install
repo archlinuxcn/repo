@@ -1,21 +1,20 @@
 post_install() {
-    getent passwd i2p &>/dev/null || {
-        echo -n ">>> Creating i2p user... "
-        useradd --system --user-group --home /opt/i2p i2p
-        echo "done"
-    }
-    post_upgrade
+  echo "==> "
+  echo "==> I2P Router settings can be adjusted at"
+  echo "==> http://127.0.0.1:7657/config.jsp"
+  echo "==> "
 }
 
+## arg 1:  the new package version
+## arg 2:  the old package version
 post_upgrade() {
-    systemd-tmpfiles --create i2prouter.conf
-    chown -R i2p:i2p /opt/i2p
-}
-
-pre_remove() {
-    getent passwd i2p &>/dev/null && {
-        echo -n ">>> Removing i2p user... "
-        userdel i2p
-        echo "done"
+    if (( $(vercmp $2 0.9.39) < 0 )); then
+    [[ $(id -g i2p) = '985' ]] || {
+        echo -n ">>> Updating i2p user..."
+        groupmod --gid 985 i2p
+        usermod  --uid 985 -s /bin/sh i2p
+        chown -R 985:985 /opt/i2p
+        echo " done"
     }
+    fi
 }
