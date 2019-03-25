@@ -3,7 +3,7 @@
 
 pkgname=ffsend-bin
 pkgver=0.2.39
-pkgrel=1
+pkgrel=2
 pkgdesc="Easily and securely share files from the command line. A Firefox Send client."
 url="https://gitlab.com/timvisee/ffsend"
 license=('GPL3')
