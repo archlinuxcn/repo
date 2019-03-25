@@ -3,8 +3,8 @@
 
 pkgbase='frp'
 pkgname=('frpc' 'frps')
-pkgver=0.25.1
-pkgrel=2
+pkgver=0.25.2
+pkgrel=1
 pkgdesc="A fast reverse proxy to help you expose a local server behind a NAT or firewall to the internet."
 arch=('x86_64' 'i686' 'arm' 'armv6h' 'armv7h' 'aarch64')
 license=('Apache')
@@ -12,17 +12,9 @@ url="https://github.com/fatedier/frp"
 depends=('glibc')
 makedepends=('go')
 
-source=("${pkgbase}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
-        'frps.service'
-        'frpc.service'
-        'frps@.service'
-        'frpc@.service')
+source=("${pkgbase}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
 
-md5sums=('2cdc851ddaa9ee4d1cd444664e33cd37'
-         '6f9c6681357f3f984983457151d7f0c5'
-         'e3bfa7c428433fa6cbb5aa64515d8899'
-         '346fabd46c12c039e39a26986629bc6d'
-         'dd170d972b1ea8c681bde054dbebf888')
+sha256sums=('e9f3756eaceacea046f57135166577d1c27b70ffee53ccd32da77b7077209d06')
 
 prepare() {
   cd "${pkgbase}-${pkgver}"
@@ -49,8 +41,8 @@ packaging() {
   install -Dm644 ${srcdir}/${pkgbase}-${pkgver}/conf/${1}.ini ${pkgdir}/etc/frp/${1}.ini
   install -Dm644 ${srcdir}/${pkgbase}-${pkgver}/conf/${1}_full.ini ${pkgdir}/etc/frp/${1}_full.ini
 
-	install -Dm644 ${srcdir}/${1}.service  ${pkgdir}/usr/lib/systemd/system/${1}.service
-	install -Dm644 ${srcdir}/${1}@.service  ${pkgdir}/usr/lib/systemd/system/${1}@.service
+	install -Dm644 ${srcdir}/${pkgbase}-${pkgver}/conf/systemd/${1}.service  ${pkgdir}/usr/lib/systemd/system/${1}.service
+	install -Dm644 ${srcdir}/${pkgbase}-${pkgver}/conf/systemd/${1}@.service  ${pkgdir}/usr/lib/systemd/system/${1}@.service
 }
 
 package_frpc() {
