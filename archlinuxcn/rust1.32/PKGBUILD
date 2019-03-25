@@ -1,0 +1,77 @@
+# Maintainer: Johannes Löthberg <johannes@kyriasis.com>
+# Contributor: Alexander F Rødseth <xyproto@archlinux.org>
+# Contributor: Daniel Micay <danielmicay@gmail.com>
+# Contributor: userwithuid <userwithuid@gmail.com>
+
+# Remember to bump lib32-rust as well!
+
+pkgname=('rust1.32' 'rust1.32-docs')
+epoch=1
+pkgver=1.32.0
+pkgrel=1
+
+pkgdesc='Systems programming language focused on safety, speed and concurrency'
+url='https://www.rust-lang.org/'
+arch=('x86_64')
+license=('MIT' 'Apache')
+
+makedepends=('rust' 'llvm' 'libffi' 'perl' 'python2' 'curl' 'cmake')
+checkdepends=('procps-ng' 'gdb')
+
+options=('!emptydirs')
+
+source=("https://static.rust-lang.org/dist/rustc-$pkgver-src.tar.gz"{,.asc}
+        config.toml)
+
+sha256sums=('4c594c7712a0e7e8eae6526c464bf6ea1d82f77b4f61717c3fc28fb27ba2224a'
+            'SKIP'
+            'ce1c2648e70a14362d33d0cbbd3e35846ea9d43a8d0abc36071563fc087b82d5')
+validpgpkeys=('108F66205EAEB0AAA8DD5E1C85AB96E6FA1BE5FE') # Rust Language (Tag and Release Signing Key) <rust-key@rust-lang.org>
+
+prepare() {
+  cd "rustc-$pkgver-src"
+
+  cp "$srcdir"/config.toml config.toml
+}
+
+build() {
+  cd "rustc-$pkgver-src"
+
+  python2 ./x.py build -j"$(nproc)"
+}
+
+package_rust1.32() {
+  depends=('gcc-libs' 'llvm-libs' 'curl' 'libssh2')
+  provides=('cargo' 'rustfmt' 'rust=1:1.32')
+  conflicts=('cargo' 'rustfmt')
+  replaces=('cargo' 'rustfmt')
+
+  cd "rustc-$pkgver-src"
+
+  DESTDIR="$pkgdir" python2 ./x.py install
+
+  for license in APACHE MIT; do install -Dm644 "LICENSE-$license" \
+    "$pkgdir/usr/share/licenses/$pkgname/LICENSE-$license"; done
+
+  cd "$pkgdir/usr/lib"
+
+  rm rustlib/{components,manifest-rustc,rust-installer-version}
+  ln -sf rustlib/$CARCH-unknown-linux-gnu/lib/*.so .
+
+  # move docs out of the way for splitting
+  mv "$pkgdir"/usr/share/doc "$srcdir"
+
+  install -d "$pkgdir"/usr/share/bash-completion
+  mv "$pkgdir"/etc/bash_completion.d/ "$pkgdir"/usr/share/bash-completion/completions/
+}
+
+package_rust1.32-docs() {
+  install -d "$pkgdir/usr/share/doc/"
+  mv "$srcdir"/doc/* "$pkgdir"/usr/share/doc/rust/
+
+  msg2 "Packaging license files for the documentation"
+  for license in APACHE MIT; do install -Dm644 "rustc-$pkgver-src/LICENSE-$license" \
+    "$pkgdir/usr/share/licenses/$pkgname/LICENSE-$license"; done
+}
+
+# vim:set ts=2 sw=2 et:

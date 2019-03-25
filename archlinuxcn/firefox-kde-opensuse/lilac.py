@@ -1,16 +1,14 @@
 #!/usr/bin/env python3
 from lilaclib import *
 
-update_on = [{'aur': None}, {'archpkg': 'icu'}]
 build_prefix = 'extra-x86_64'
-repo_depends = ['kmozillahelper']
 time_limit_hours = 4
 
 def pre_build():
     aur_pre_build()
 
     for line in edit_file('PKGBUILD'):
-        print(line.replace("'cargo'", '').replace("'libvpx'", ''))
+        print(line.replace("'cargo'", '').replace("'libvpx'", '').replace("'rust'", "'rust<=1:1.32'"))
     for line in edit_file('mozconfig'):
         if 'libvpx' in line:
             print('#' + line)

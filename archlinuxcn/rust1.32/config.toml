@@ -1,0 +1,27 @@
+[llvm]
+link-shared = true
+
+[build]
+cargo = "/usr/bin/cargo"
+rustc = "/usr/bin/rustc"
+python = "python2.7"
+extended = true
+sanitizers = false
+
+[install]
+prefix = "/usr"
+
+[rust]
+# 0 or the new default of 16 is faster, but can result in worse performance
+# https://github.com/rust-lang/rust/issues/47745
+codegen-units = 1
+
+debuginfo = true
+debuginfo-lines = true
+
+channel = "stable"
+
+rpath = false
+
+[target.x86_64-unknown-linux-gnu]
+llvm-config = "/usr/bin/llvm-config"
