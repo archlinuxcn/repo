@@ -14,7 +14,7 @@
              <menu id="file-menu" label="&fileMenu.label;"
 --- a/browser/base/content/browser.js
 +++ b/browser/base/content/browser.js
-@@ -5568,11 +5568,17 @@ function onViewToolbarsPopupShowing(aEve
+@@ -5595,11 +5595,17 @@ function onViewToolbarsPopupShowing(aEve
  
    let toolbarNodes = gNavToolbox.querySelectorAll("toolbar");
  
@@ -70,8 +70,8 @@
  nsINode* XULPopupElement::GetTriggerNode() const {
 --- a/dom/xul/moz.build
 +++ b/dom/xul/moz.build
-@@ -75,6 +75,11 @@ LOCAL_INCLUDES += [
-     '/layout/xul',
+@@ -76,6 +76,11 @@ LOCAL_INCLUDES += [
+     '/layout/xul/tree',
  ]
  
 +if 'gtk' in CONFIG['MOZ_WIDGET_TOOLKIT']:
@@ -97,7 +97,7 @@
      LOCAL_INCLUDES += [
 --- a/modules/libpref/init/all.js
 +++ b/modules/libpref/init/all.js
-@@ -271,6 +271,9 @@ pref("dom.window.event.enabled", false);
+@@ -275,6 +275,9 @@ pref("dom.window.event.enabled", true);
  pref("browser.sessionhistory.max_total_viewers", -1);
  
  pref("ui.use_native_colors", true);
@@ -109,7 +109,7 @@
  // Pop up context menu on mouseup instead of mousedown, if that's the OS default.
 --- a/toolkit/content/xul.css
 +++ b/toolkit/content/xul.css
-@@ -254,6 +254,18 @@ toolbar[type="menubar"] {
+@@ -250,6 +250,18 @@ toolbar[type="menubar"] {
  }
  %endif
  
@@ -334,6 +334,7 @@
 +
 +#define _IMPL_NS_LAYOUT
 +
++#include "mozilla/dom/Document.h"
 +#include "mozilla/dom/Element.h"
 +#include "mozilla/Assertions.h"
 +#include "mozilla/ComputedStyle.h"
@@ -351,7 +352,6 @@
 +#include "nsGtkUtils.h"
 +#include "nsAtom.h"
 +#include "nsIContent.h"
-+#include "nsIDocument.h"
 +#include "nsIPresShell.h"
 +#include "nsIRunnable.h"
 +#include "nsITimer.h"
@@ -445,7 +445,7 @@
 +static void
 +AttachXBLBindings(nsIContent *aContent)
 +{
-+    nsIDocument *doc = aContent->OwnerDoc();
++    dom::Document *doc = aContent->OwnerDoc();
 +    nsIPresShell *shell = doc->GetShell();
 +    if (!shell) {
 +        return;
@@ -1310,6 +1310,7 @@
 +
 +#include "mozilla/Assertions.h"
 +#include "mozilla/DebugOnly.h"
++#include "mozilla/dom/Document.h"
 +#include "mozilla/dom/Element.h"
 +#include "mozilla/dom/Event.h"
 +#include "mozilla/dom/KeyboardEvent.h"
@@ -1318,7 +1319,6 @@
 +#include "mozilla/Preferences.h"
 +#include "nsAutoPtr.h"
 +#include "nsContentUtils.h"
-+#include "nsIDocument.h"
 +#include "nsIDOMEventListener.h"
 +#include "nsIRunnable.h"
 +#include "nsIWidget.h"
@@ -1876,12 +1876,12 @@
 +#include <gtk/gtk.h>
 +
 +class nsIContent;
-+class nsIDocument;
 +class nsIWidget;
 +class nsMenuBarDocEventListener;
 +
 +namespace mozilla {
 +namespace dom {
++class Document;
 +class KeyboardEvent;
 +}
 +}
@@ -1956,7 +1956,7 @@
 +
 +    GtkWidget *mTopLevel;
 +    DbusmenuServer *mServer;
-+    nsCOMPtr<nsIDocument> mDocument;
++    nsCOMPtr<mozilla::dom::Document> mDocument;
 +    RefPtr<DocEventListener> mEventListener;
 +
 +    uint32_t mAccessKey;
@@ -2225,6 +2225,7 @@
 +#include "mozilla/ArrayUtils.h"
 +#include "mozilla/Assertions.h"
 +#include "mozilla/ComputedStyle.h"
++#include "mozilla/dom/Document.h"
 +#include "mozilla/dom/Element.h"
 +#include "mozilla/dom/KeyboardEventBinding.h"
 +#include "mozilla/dom/XULCommandEvent.h"
@@ -2238,7 +2239,6 @@
 +#include "nsGlobalWindowInner.h"
 +#include "nsGtkUtils.h"
 +#include "nsIContent.h"
-+#include "nsIDocument.h"
 +#include "nsIRunnable.h"
 +#include "nsQueryObject.h"
 +#include "nsReadableUtils.h"
@@ -2569,7 +2569,7 @@
 +                                            true);
 +    }
 +
-+    nsIDocument *doc = ContentNode()->OwnerDoc();
++    dom::Document *doc = ContentNode()->OwnerDoc();
 +    ErrorResult rv;
 +    RefPtr<dom::Event> event =
 +        doc->CreateEvent(NS_LITERAL_STRING("xulcommandevent"),
@@ -2669,7 +2669,7 @@
 +void
 +nsMenuItem::UpdateAccel()
 +{
-+    nsIDocument *doc = ContentNode()->GetUncomposedDoc();
++    dom::Document *doc = ContentNode()->GetUncomposedDoc();
 +    if (doc) {
 +        nsCOMPtr<nsIContent> oldKeyContent;
 +        oldKeyContent.swap(mKeyContent);
@@ -2826,7 +2826,7 @@
 +void
 +nsMenuItem::UpdateContentAttributes()
 +{
-+    nsIDocument *doc = ContentNode()->GetUncomposedDoc();
++    dom::Document *doc = ContentNode()->GetUncomposedDoc();
 +    if (!doc) {
 +        return;
 +    }
@@ -3081,6 +3081,7 @@
 +#include "mozilla/ArrayUtils.h"
 +#include "mozilla/Assertions.h"
 +#include "mozilla/ComputedStyle.h"
++#include "mozilla/dom/Document.h"
 +#include "mozilla/dom/Element.h"
 +#include "mozilla/Preferences.h"
 +#include "nsAttrValue.h"
@@ -3089,7 +3090,6 @@
 +#include "nsGkAtoms.h"
 +#include "nsIContent.h"
 +#include "nsIContentPolicy.h"
-+#include "nsIDocument.h"
 +#include "nsILoadGroup.h"
 +#include "nsImageToPixbuf.h"
 +#include "nsIPresShell.h"
@@ -3239,7 +3239,7 @@
 +void
 +nsMenuObjectIconLoader::LoadIcon(ComputedStyle *aComputedStyle)
 +{
-+    nsIDocument *doc = mOwner->ContentNode()->OwnerDoc();
++    dom::Document *doc = mOwner->ContentNode()->OwnerDoc();
 +
 +    nsCOMPtr<nsIURI> uri;
 +    nsIntRect imageRect;
@@ -4044,11 +4044,11 @@
 +
 +#include "mozilla/Assertions.h"
 +#include "mozilla/DebugOnly.h"
++#include "mozilla/dom/Document.h"
 +#include "mozilla/dom/Element.h"
 +#include "nsContentUtils.h"
 +#include "nsAtom.h"
 +#include "nsIContent.h"
-+#include "nsIDocument.h"
 +
 +#include "nsMenuContainer.h"
 +
@@ -4387,7 +4387,7 @@
 +}
 --- /dev/null
 +++ b/widget/gtk/nsNativeMenuDocListener.h
-@@ -0,0 +1,152 @@
+@@ -0,0 +1,157 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
 + */
@@ -4408,8 +4408,13 @@
 +
 +class nsAtom;
 +class nsIContent;
-+class nsIDocument;
 +class nsNativeMenuChangeObserver;
++
++namespace mozilla {
++namespace dom {
++class Document;
++}
++}
 +
 +/*
 + * This class keeps a mapping of content nodes to observers and forwards DOM
@@ -4504,7 +4509,7 @@
 +    static void RemoveUpdateBlocker();
 +
 +    nsCOMPtr<nsIContent> mRootNode;
-+    nsIDocument *mDocument;
++    mozilla::dom::Document *mDocument;
 +    nsIContent *mLastSource;
 +    nsNativeMenuChangeObserver *mLastTarget;
 +    nsTArray<nsAutoPtr<MutationRecord> > mPendingMutations;
@@ -5138,7 +5143,7 @@
 --- a/widget/gtk/nsWidgetFactory.cpp
 +++ b/widget/gtk/nsWidgetFactory.cpp
 @@ -48,6 +48,8 @@
- #include "GfxInfoX11.h"
+ #  include "GfxInfoX11.h"
  #endif
  
 +#include "nsNativeMenuService.h"
@@ -5182,7 +5187,7 @@
  static void nsWidgetGtk2ModuleDtor() {
 --- a/widget/gtk/nsWindow.cpp
 +++ b/widget/gtk/nsWindow.cpp
-@@ -71,6 +71,7 @@
+@@ -70,6 +70,7 @@
  
  #include "mozilla/Assertions.h"
  #include "mozilla/Likely.h"
@@ -5190,7 +5195,7 @@
  #include "mozilla/Preferences.h"
  #include "nsIPrefService.h"
  #include "nsIGConfService.h"
-@@ -4815,6 +4816,10 @@ void nsWindow::HideWindowChrome(bool aSh
+@@ -4765,6 +4766,10 @@ void nsWindow::HideWindowChrome(bool aSh
    SetWindowDecoration(aShouldHide ? eBorderStyle_none : mBorderStyle);
  }
  
@@ -5221,7 +5226,7 @@
    /**
     * GetLastUserInputTime returns a timestamp for the most recent user input
     * event.  This is intended for pointer grab requests (including drags).
-@@ -644,6 +648,8 @@ class nsWindow final : public nsBaseWidg
+@@ -616,6 +620,8 @@ class nsWindow final : public nsBaseWidg
  
    mozilla::UniquePtr<mozilla::CurrentX11TimeGetter> mCurrentTimeGetter;
    static CSDSupportLevel sCSDSupportLevel;
@@ -5232,9 +5237,9 @@
  #endif /* __nsWindow_h__ */
 --- a/widget/moz.build
 +++ b/widget/moz.build
-@@ -65,9 +65,9 @@ elif toolkit == 'cocoa':
-         'nsISystemStatusBar.idl',
-         'nsITaskbarProgress.idl',
+@@ -68,9 +68,9 @@ elif toolkit == 'cocoa':
+         'nsITouchBarInput.idl',
+         'nsITouchBarUpdater.idl',
      ]
 -    EXPORTS += [
 -        'nsINativeMenuService.h',
@@ -5247,14 +5252,14 @@
  
 --- a/xpfe/appshell/nsWebShellWindow.cpp
 +++ b/xpfe/appshell/nsWebShellWindow.cpp
-@@ -68,7 +68,7 @@
+@@ -70,7 +70,7 @@
  
  #include "gfxPlatform.h"
  
 -#ifdef XP_MACOSX
 +#if defined(XP_MACOSX) || defined(MOZ_WIDGET_GTK)
- #include "nsINativeMenuService.h"
- #define USE_NATIVE_MENUS
+ #  include "nsINativeMenuService.h"
+ #  define USE_NATIVE_MENUS
  #endif
 --- /dev/null
 +++ b/xpcom/ds/NativeMenuAtoms.py
@@ -5278,7 +5283,7 @@
  import sys
  
  # Static atom definitions, used to generate nsGkAtomList.h.
-@@ -2391,7 +2392,7 @@ STATIC_ATOMS = [
+@@ -2464,7 +2465,7 @@ STATIC_ATOMS = [
      InheritingAnonBoxAtom("AnonBox_mozSVGForeignContent", ":-moz-svg-foreign-content"),
      InheritingAnonBoxAtom("AnonBox_mozSVGText", ":-moz-svg-text"),
      # END ATOMS
