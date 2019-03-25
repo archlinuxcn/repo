@@ -3,10 +3,10 @@
 pkgname=virtio-win
 _ver=0.1.164
 # package version
-pkgver=${_ver}.1
+pkgver=${_ver}.2
 # upstream version
-_pkgver=${_ver}-1
-pkgrel=2.1
+_pkgver=${_ver}-2
+pkgrel=1
 pkgdesc='virtio drivers for Windows (2000, XP, Vista, 7, 8, 10) guests and floppy images for Windows XP'
 arch=('any')
 url='https://docs.fedoraproject.org/en-US/quick-docs/creating-windows-virtual-machines-using-virtio-drivers/index.html'
@@ -22,9 +22,9 @@ source=("${pkgname}-${_pkgver}.iso::${_url}/${pkgname}-${_pkgver}/${pkgname}.iso
 noextract=("${pkgname}-${_pkgver}.iso"
            "${pkgname}-${_pkgver}_amd64.vfd"
            "${pkgname}-${_pkgver}_x86.vfd")
-sha256sums=('7a770f738d5853378204648a583d559753920f4f95aa54b5d4c6ff16ab37eaea'
-            'ee2698c8dc3e7622eaee59eb8d8bcd5b3125c245ac32ca5a731c3c5f03d91422'
-            'd06fc0cd9187041f9c64be9163302da8888413784c7d2502ace06d48468932bf')
+sha256sums=('594678f509ba6827c7b75d076ecfb64d45c6ad95e9fccba7258e6eee9a6a3560'
+            'd83eda5ccfd65ed5be444050363f6e3a54a7468c977a64605e5bec7272a4e716'
+            '823757c380711f91841153b67067185197d336b5a83a70530f005c81cdafbb21')
 
 package() {
   install -Dm 644 ${pkgname}-${_pkgver}.iso \
