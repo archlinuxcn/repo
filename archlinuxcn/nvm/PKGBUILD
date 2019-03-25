@@ -2,14 +2,14 @@
 
 pkgname=nvm
 pkgver=0.34.0
-pkgrel=2
+pkgrel=3
 pkgdesc="Node Version Manager - Simple bash script to manage multiple active node.js versions"
 url="https://github.com/creationix/nvm"
 arch=('any')
 license=('MIT')
 optdepends=('bash: bash completion')
 install="${pkgname}.install"
-source=("https://github.com/creationix/nvm/archive/v${pkgver}.zip"
+source=("${pkgname}-${pkgver}.zip::https://github.com/creationix/nvm/archive/v${pkgver}.zip"
         "init-nvm.sh"
         "install-nvm-exec")
 sha256sums=('7785788fadae495cd65c7612f4b4ed16955048eaebfe69a6009e5e3265b280f0'
