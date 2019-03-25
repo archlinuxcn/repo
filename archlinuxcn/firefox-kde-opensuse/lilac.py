@@ -8,9 +8,9 @@ def pre_build():
     aur_pre_build()
 
     for line in edit_file('PKGBUILD'):
-        print(line.replace("'cargo'", '').replace("'libvpx'", '').replace("'rust'", "'rust<=1:1.32'"))
+        print(line.replace("'cargo'", '').replace("'libvpx'", ''))
     for line in edit_file('mozconfig'):
-        if 'libvpx' in line:
+        if 'libvpx' in line or 'enable-rust-simd' in line:
             print('#' + line)
         else:
             print(line)
