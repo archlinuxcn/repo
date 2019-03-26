@@ -3,7 +3,7 @@
 
 pkgname=teams-for-linux
 pkgver=0.1.17
-pkgrel=1
+pkgrel=2
 pkgdesc="Unofficial Microsoft Teams client for Linux using Electron."
 arch=("aarch64" "armv7h" "i686" "x86_64")
 url="https://github.com/IsmaelMartinez/${pkgname}"
@@ -12,8 +12,8 @@ depends=("gtk3" "libxss" "nss")
 makedepends=("node-gyp" "python2" "yarn")
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/IsmaelMartinez/${pkgname}/archive/v${pkgver}.tar.gz"
         "${pkgname}.desktop")
-sha256sums=('9f9828fc699b130b15f69759cc225897c89c26852f1ea7e475f748ef70594e07'
-            'f33ab4997c329567bbe172fe77ee6cbced5c5d4354e12ef52a89dd702422fded')
+sha256sums=("9f9828fc699b130b15f69759cc225897c89c26852f1ea7e475f748ef70594e07"
+            "f33ab4997c329567bbe172fe77ee6cbced5c5d4354e12ef52a89dd702422fded")
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
@@ -39,5 +39,5 @@ package() {
     _filename="$(basename ${_file})"
     install -Dm644 "${_file}" "${pkgdir}/usr/share/icons/hicolor/${_filename%.png}/apps/${pkgname}.png"
   done
-  ln -sf "/opt/${pkgname}/${pkgname%-for-linux}" "${pkgdir}/usr/bin/${pkgname}"
+  ln -sf "/opt/${pkgname}/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
 }
