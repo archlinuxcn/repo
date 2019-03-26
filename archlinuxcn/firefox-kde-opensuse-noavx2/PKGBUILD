@@ -6,7 +6,7 @@
 #_lowmem=true
 
 # build with PGO
-_pgo=
+_pgo=true
 
 # globalmenu
 # to support globalmenu a patch from ubuntu is applied
@@ -15,8 +15,8 @@ _pgo=
 # /view/head:/debian/patches/unity-menubar.patch
 
 _pkgname=firefox
-pkgname=$_pkgname-kde-opensuse-noavx2
-pkgver=65.0.2
+pkgname=$_pkgname-kde-opensuse
+pkgver=66.0.1
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
@@ -24,19 +24,20 @@ license=('MPL' 'GPL' 'LGPL')
 url="https://build.opensuse.org/package/show/mozilla:Factory/MozillaFirefox"
 depends=('mozilla-common' 'libxt' 'startup-notification' 'mime-types'
          'dbus-glib' 'hicolor-icon-theme'
-	 'icu'  'libevent' 'nss>=3.28.3' 'nspr>=4.10.6' 'hunspell'
+	  'icu'  'libevent' 'nss>=3.28.3' 'nspr>=4.10.6' 'hunspell'
 	 'sqlite' 'libnotify' 'kmozillahelper' 'ffmpeg' 'gtk3')
 
-makedepends=('unzip' 'zip' 'diffutils' 'python' 'yasm' 'mesa' 'imake'
+makedepends=('unzip' 'zip' 'diffutils' 'python2-setuptools' 'yasm' 'mesa' 'imake'
              'xorg-server-xvfb' 'libpulse' 'inetutils' 'autoconf2.13' 'rust'
               'mercurial' 'llvm' 'clang'
-             'gtk2' 'nodejs' 'cbindgen')
+             'gtk2' 'nodejs' 'cbindgen' 'nasm' 'python' 'python2-psutil' 'xz')
 
 optdepends=('networkmanager: Location detection via available WiFi networks'
-            'speech-dispatcher: Text-to-Speech')
+            'speech-dispatcher: Text-to-Speech'
+            'pulseaudio: Audio support')
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
-_patchrev=87f893cf45b9
+_patchrev=eca1c1f2fe50
 options=('!emptydirs')
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 _repo=https://hg.mozilla.org/mozilla-unified
@@ -60,6 +61,8 @@ source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
         mozilla-1516803.patch
         mozilla-1516081.patch
         pgo.patch
+        # https://bugzilla.mozilla.org/show_bug.cgi?id=1521249
+        0001-bz-1468911.patch.xz
 )
 
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
@@ -83,10 +86,10 @@ prepare() {
   cp "$srcdir/mozconfig" .mozconfig
 
   echo -n "$_google_api_key" >google-api-key
-  echo "ac_add_options --with-google-api-keyfile=\"$PWD/google-api-key\"" >>.mozconfig
+  echo "ac_add_options --with-google-location-service-api-keyfile=\"$PWD/google-api-key\"" >>.mozconfig
 
   echo -n "$_google_default_client_id $_google_default_client_secret" >google-oauth-api-key
-  echo "ac_add_options --with-google-api-keyfile=\"$PWD/google-oauth-api-key\"" >>.mozconfig
+  echo "ac_add_options --with-google-safebrowsing-api-keyfile=\"$PWD/google-oauth-api-key\"" >>.mozconfig
 
   echo -n "$_mozilla_api_key" >mozilla-api-key
   echo "ac_add_options --with-mozilla-api-keyfile=\"$PWD/mozilla-api-key\"" >>.mozconfig
@@ -104,6 +107,11 @@ prepare() {
   patch -Np1 -i "$srcdir"/2000_system_harfbuzz_support.patch
   patch -Np1 -i "$srcdir"/2001_system_graphite2_support.patch
 
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=1521249
+  # patch -Np1 -i ../0001-bz-1468911.patch patch is to large for the AUR
+  xcat "$srcdir"/0001-bz-1468911.patch.xz | patch -Np1
+
+  
   if [[ $_pgo ]] ; then
     # https://bugzilla.mozilla.org/show_bug.cgi?id=1516803
     patch -Np1 -i  "$srcdir"/mozilla-1516803.patch
@@ -119,8 +127,8 @@ prepare() {
     patch -Np1 -i "$srcdir"/pgo_fix_missing_kdejs.patch
 
     echo "ac_add_options --enable-lto" >> .mozconfig
+    echo "ac_add_options --disable-elf-hack" >> .mozconfig
   fi
-  echo "ac_add_options --disable-elf-hack" >> .mozconfig
 }
 
 build() {
@@ -128,7 +136,7 @@ build() {
   cd mozilla-unified
   export MOZ_SOURCE_REPO="$_repo"
   export MOZBUILD_STATE_PATH="$srcdir/mozbuild"
-
+  export MOZ_APP_REMOTINGNAME=$pkgname
 
   export CC=gcc
   export CXX=g++
@@ -198,19 +206,20 @@ END
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
 md5sums=('SKIP'
-         '7a93c5b10defc17661cb13138d38b6bc'
+         'db76bcc7f9f6bcc7893fb27b59b8537f'
          '14e0f6237a79b85e60256f4808163160'
          '5cee310a9040ccc5abcf29742b84aeb8'
          '05bb69d25fb3572c618e3adf1ee7b670'
          'd7ce23a18da21c05cd756766e177834f'
-         'bf2f398aac1ae3d29ae6477325c50c0f'
-         'b2fef35fb6a6a019b597dc559a1d0e12'
+         'acb2d5930350fb287709283103cfffe2'
+         '7dbeb468613520beba5de17471487e6c'
          'f1c5db18b8910b80f1933af1f4fe7c2b'
-         '51d059491a3aba215b6cea959e9c5d05'
+         '97cb13d3dfb6222d09070d2c22019deb'
          'fe24f5ea463013bb7f1c12d12dce41b2'
          '3fa8bd22d97248de529780f5797178af'
          '554514bf00a7927a85280f19e52a55fb'
          '5b0d39aebb1ce84f89bda300320b851f'
          'becf6bf9ceb6008401832c855ccadff9'
          '79d27c8896913c7d87b148240995ab69'
-         'f867ae41a722630cc5567e2dcc51676d')
+         'f867ae41a722630cc5567e2dcc51676d'
+         '47a4608970217485250b7e9bc59609e3')

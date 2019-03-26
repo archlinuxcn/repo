@@ -1,0 +1,9 @@
+maintainers:
+  - github: farseerfc
+build_prefix: extra-x86_64
+repo_depends:
+  - kmozillahelper
+update_on:
+  - aur: firefox-kde-opensuse
+  - archpkg: icu
+post_build: aur_post_build
