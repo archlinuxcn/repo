@@ -1,0 +1,31 @@
+diff --git a/kernel-shark/src/KsCaptureDialog.cpp b/kernel-shark/src/KsCaptureDialog.cpp
+index 1272c2e..33c61cc 100644
+--- a/kernel-shark/src/KsCaptureDialog.cpp
++++ b/kernel-shark/src/KsCaptureDialog.cpp
+@@ -208,7 +208,7 @@ void KsCaptureControl::_importSettings()
+ 	/* Get the configuration document. */
+ 	fileName = QFileDialog::getOpenFileName(this,
+ 						"Import from Filter",
+-						KS_DIR,
++						QDir::homePath(),
+ 						"Kernel Shark Config files (*.json);;");
+ 
+ 	if (fileName.isEmpty())
+@@ -259,7 +259,7 @@ void KsCaptureControl::_exportSettings()
+ 	QString fileName =
+ 		QFileDialog::getSaveFileName(this,
+ 					     "Export to File",
+-					     KS_DIR,
++					     QDir::homePath(),
+ 					     "Kernel Shark Config files (*.json);;");
+ 
+ 	if (fileName.isEmpty())
+@@ -314,7 +314,7 @@ void KsCaptureControl::_browse()
+ 	QString fileName =
+ 		QFileDialog::getSaveFileName(this,
+ 					     "Save File",
+-					     KS_DIR,
++					     QDir::homePath(),
+ 					     "trace-cmd files (*.dat);;All files (*)");
+ 
+ 	if (!fileName.isEmpty())

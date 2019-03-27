@@ -1,0 +1,62 @@
+# patched archlinuxcn version: Sasasu <su@sasasu.me>
+# AUR: Troy Engel <troyengel+arch@gmail.com>
+
+pkgbase=trace-cmd
+pkgname=(trace-cmd kernelshark)
+pkgver=2.7
+pkgrel=3
+_tagname="kernelshark-v0.9.8"
+pkgdesc="user-space front-end command-line tool for Ftrace, inclduing the GUI interface application kernelshark as well as trace-graph and trace-view."
+arch=('x86_64' 'aarch64')
+url="http://git.kernel.org/?p=linux/kernel/git/rostedt/trace-cmd.git"
+license=('GPL2')
+makedepends=('python2' 'docbook-xsl' 'asciidoc' 'doxygen' 'extra-cmake-modules' 'freeglut' 'glu' 'qt5-base')
+optdepends=('python2: for python2 plugin')
+conflicts=('trace-cmd-git')
+source=(
+  "https://git.kernel.org/pub/scm/linux/kernel/git/rostedt/trace-cmd.git/snapshot/trace-cmd-$_tagname.tar.gz"
+  "001_do_not_isntall_cmd_when_gui.patch"
+  "002_load_from_home.patch"
+  "003_fix_plug_dir.patch"
+)
+sha256sums=('935add73511240c36712e1b0fb5a1efcf1a1995e2632271c0285e5aac908fc2b'
+            '2b7ab38d1a54378f1594dd3a74cbc669a1370e56502099058202b486e149d99f'
+            '8f673b43e22baccf91a2fd55892f6dc0a1b55e76d226ef84703c3a287a883270'
+            '7ee3e1f2ffaef6a36a39c5aa5aa4a3ea9c486a5226f1c72e087df6b09752f2ff')
+
+prepare() {
+  cd "${srcdir}/trace-cmd-$_tagname"
+  patch -p1 <"${srcdir}/001_do_not_isntall_cmd_when_gui.patch"
+  patch -p1 <"${srcdir}/002_load_from_home.patch"
+  patch -p1 <"${srcdir}/003_fix_plug_dir.patch"
+}
+
+build() {
+  cd "${srcdir}/trace-cmd-$_tagname"
+
+  make PYTHON_VERS=python2 all
+  # target `gui` must run after `all`
+  make PYTHON_VERS=python2 doc gui
+}
+
+package_trace-cmd() {
+  pkgdesc="user-space front-end command-line tool for Ftrace"
+  pkgver=2.7
+  pkgrel=3
+  provides=('trace-cmd=2.7')
+
+  cd "${srcdir}/trace-cmd-$_tagname"
+  make PYTHON_VERS=python2 prefix="/usr" DESTDIR="$pkgdir" install_cmd install_doc
+}
+
+package_kernelshark() {
+  pkgdesc="GUI interface analysis tool for trace-cmd's binary format"
+  pkgver=0.9.8
+  pkgrel=1
+  depends=('freeglut' 'glu' 'qt5-base')
+  optdepends=('trace-cmd: for the recode button')
+  provides=('kernelshark=0.9.7')
+
+  cd "${srcdir}/trace-cmd-$_tagname"
+  make PYTHON_VERS=python2 prefix="/usr" DESTDIR="$pkgdir" install_gui
+}
