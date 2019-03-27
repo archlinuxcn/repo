@@ -1,0 +1,90 @@
+diff --git a/kernel-shark/CMakeLists.txt b/kernel-shark/CMakeLists.txt
+index 20ced14..a191a0c 100644
+--- a/kernel-shark/CMakeLists.txt
++++ b/kernel-shark/CMakeLists.txt
+@@ -11,6 +11,7 @@ set(KS_VERSION_STRING ${KS_VERSION_MAJOR}.${KS_VERSION_MINOR}.${KS_VERSION_PATCH
+ message("\n project: Kernel Shark: (version: ${KS_VERSION_STRING})\n")
+ 
+ set(KS_DIR ${CMAKE_SOURCE_DIR})
++set(KS_PLUG_DIR "/usr/local/lib/kshark" CACHE STRING "Directory for load plug.")
+ 
+ # Make a directory to hold configuration files. To change this do:
+ # cmake .. -DKS_CONF_DIR=/your/preferred/path
+diff --git a/kernel-shark/build/deff.h.cmake b/kernel-shark/build/deff.h.cmake
+index 80d624c..88d9f0e 100644
+--- a/kernel-shark/build/deff.h.cmake
++++ b/kernel-shark/build/deff.h.cmake
+@@ -17,6 +17,9 @@
+ /** KernelShark configuration directory path. */
+ #cmakedefine KS_CONF_DIR "@KS_CONF_DIR@"
+ 
++/** KernelShark plugin load directory path. */
++#cmakedefine KS_PLUG_DIR "@KS_PLUG_DIR@"
++
+ /** Location of the trace-cmd executable. */
+ #cmakedefine TRACECMD_BIN_DIR "@TRACECMD_BIN_DIR@"
+ 
+diff --git a/kernel-shark/src/KsUtils.cpp b/kernel-shark/src/KsUtils.cpp
+index b934ce3..5fcfa69 100644
+--- a/kernel-shark/src/KsUtils.cpp
++++ b/kernel-shark/src/KsUtils.cpp
+@@ -428,8 +428,8 @@ void KsPluginManager::registerFromList(kshark_context *kshark_ctx)
+ 		char *lib;
+ 		int n;
+ 
+-		n = asprintf(&lib, "%s/lib/plugin-%s.so",
+-			     KS_DIR, plugin.toStdString().c_str());
++		n = asprintf(&lib, "%s/plugin-%s.so",
++			     KS_PLUG_DIR, plugin.toStdString().c_str());
+ 		if (n <= 0)
+ 			return;
+ 
+@@ -463,8 +463,8 @@ void KsPluginManager::unregisterFromList(kshark_context *kshark_ctx)
+ 		char *lib;
+ 		int n;
+ 
+-		n = asprintf(&lib, "%s/lib/plugin-%s.so",
+-			     KS_DIR, plugin.toStdString().c_str());
++		n = asprintf(&lib, "%s/plugin-%s.so",
++			     KS_PLUG_DIR, plugin.toStdString().c_str());
+ 		if (n <= 0)
+ 			return;
+ 
+@@ -508,8 +508,8 @@ void KsPluginManager::registerPlugin(const QString &plugin)
+ 			 * The argument is the name of the plugin. From the
+ 			 * name get the library .so file.
+ 			 */
+-			n = asprintf(&lib, "%s/lib/plugin-%s.so",
+-					KS_DIR, plugin.toStdString().c_str());
++			n = asprintf(&lib, "%s/plugin-%s.so",
++					KS_PLUG_DIR, plugin.toStdString().c_str());
+ 			if (n > 0) {
+ 				kshark_register_plugin(kshark_ctx, lib);
+ 				_registeredKsPlugins[i] = true;
+@@ -518,7 +518,7 @@ void KsPluginManager::registerPlugin(const QString &plugin)
+ 
+ 			return;
+ 
+-		} else if (plugin.contains("/lib/plugin-" + _ksPluginList[i],
++		} else if (plugin.contains("/plugin-" + _ksPluginList[i],
+ 					   Qt::CaseInsensitive)) {
+ 			/*
+ 			 * The argument is the name of the library .so file.
+@@ -570,7 +570,7 @@ void KsPluginManager::unregisterPlugin(const QString &plugin)
+ 			 * The argument is the name of the plugin. From the
+ 			 * name get the library .so file.
+ 			 */
+-			n = asprintf(&lib, "%s/lib/plugin-%s.so", KS_DIR,
++			n = asprintf(&lib, "%s/plugin-%s.so", KS_PLUG_DIR,
+ 				     plugin.toStdString().c_str());
+ 			if (n > 0) {
+ 				kshark_unregister_plugin(kshark_ctx, lib);
+@@ -579,7 +579,7 @@ void KsPluginManager::unregisterPlugin(const QString &plugin)
+ 			}
+ 
+ 			return;
+-		} else if  (plugin.contains("/lib/plugin-" +
++		} else if  (plugin.contains("/plugin-" +
+ 			                   _ksPluginList[i], Qt::CaseInsensitive)) {
+ 			/*
+ 			 * The argument is the name of the library .so file.

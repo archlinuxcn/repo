@@ -1,0 +1,11 @@
+--- a/Makefile	2019-01-22 04:41:44.000000000 +0800
++++ b/Makefile	2019-03-27 17:12:46.906529150 +0800
+@@ -331,7 +331,7 @@
+ 	@echo "Note: to install the gui, type \"make install_gui\""
+ 	@echo "      to install man pages, type \"make install_doc\""
+ 
+-install_gui: install_cmd gui
++install_gui: gui
+ 	$(Q)$(MAKE) $(S) -C $(kshark-dir)/build install
+ 
+ install_libs: libs
