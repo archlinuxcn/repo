@@ -2,9 +2,9 @@
 # Contributor: Det <nimetonmaili g-mail>
 
 pkgname=jre
-pkgver=11.0.2
-_build=9
-_hash=f51449fcd52f4d52b93a989c5c56ed3c
+pkgver=12
+_build=33
+_hash=312335d836a34c7c8bba9d963e26dc23
 _majver="${pkgver%%.*}"
 pkgrel=1
 pkgdesc='Oracle Java Runtime Environment'
@@ -32,7 +32,7 @@ backup=("etc/java${_majver}-${pkgname}/management/jmxremote.access"
         "etc/java${_majver}-${pkgname}/sound.properties")
 install="${pkgname}.install"
 source=("https://download.oracle.com/otn-pub/java/jdk/${pkgver}+${_build}/${_hash}/jdk-${pkgver}_linux-x64_bin.tar.gz")
-sha256sums=('7b4fd8ffcf53e9ff699d964a80e4abf9706b5bdb5644a765c2b96f99e3a2cdc8')
+sha256sums=('183d4d897bbf47bdae43b2bb4fc0465a9178209b5250555ac7fdb8fab6cc43a6')
 
 DLAGENTS=('https::/usr/bin/curl -fLC - --retry 3 --retry-delay 3 -b oraclelicense=a -o %o %u')
 
@@ -57,6 +57,14 @@ package() {
     cp -a lib "${pkgdir}/${_jvmdir}"
     rm -r "${pkgdir}/${_jvmdir}/lib/jfr"
     rm "${pkgdir}/${_jvmdir}/lib/"{ct.sym,libattach.so,libsaproc.so,src.zip}
+    
+    # man pages
+    local _file
+    #for _file in java jjs jrunscript keytool pack200 rmid rmiregistry unpack200
+    for _file in man/man1/{java,jjs,jrunscript,keytool,pack200,rmid,rmiregistry,unpack200}.1
+    do
+        install -D -m644 "$_file" "${pkgdir}/usr/share/${_file%.1}-jdk${_majver}.1"
+    done
     
     install -D -m644 release -t "${pkgdir}/${_jvmdir}"
     
