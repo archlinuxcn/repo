@@ -1,4 +1,5 @@
-# Maintainer: Sebastian Lau <lauseb644 _at_ gmail _dot_ com>
+# Maintainer: Taijian <taijian@posteo.de>
+# Contributor: Sebastian Lau <lauseb644 _at_ gmail _dot_ com>
 # Contributor: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 # Contributor: Jan de Groot <jgc@archlinux.org>
 # Contributor: Damian01w <damian01w@gmail.com>
@@ -6,45 +7,50 @@
 _pkgbase=gdm
 pkgbase=gdm-plymouth
 pkgname=(gdm-plymouth libgdm-plymouth)
-pkgver=3.30.2
-pkgrel=1.2
-pkgdesc="Gnome Display Manager with Plymouth support."
-arch=('x86_64')
+pkgver=3.32.0+2+g820f90f5
+pkgrel=1
+pkgdesc="Display manager and login screen with plymouth support"
+url="https://wiki.gnome.org/Projects/GDM"
+arch=(x86_64)
 license=(GPL)
-url="http://www.gnome.org"
-depends=('plymouth' 'gnome-shell>=3.28.0' 'gnome-session' 'upower' 'xorg-xrdb' 'xorg-server' 'xorg-server-xwayland' 'xorg-xhost')
-makedepends=('intltool' 'yelp-tools' 'gobject-introspection')
-checkdepends=('check')
-source=("https://gitlab.gnome.org/GNOME/gdm/-/archive/${pkgver}/${_pkgbase}-${pkgver}.tar.gz"
-	"0002-Xsession-Don-t-start-ssh-agent-by-default.patch"
-	"gdm.sysusers")
-sha256sums=('8ed69c69bc9cf273b3752e925fb267d7dcd00f16ce1da270f079803c47160ba1'
-            '63f99db7623f078e390bf755350e5793db8b2c4e06622caf42eddc63cd39ecca'
-            '6d9c8e38c7de85b6ec75e488585b8c451f5d9b4fabd2a42921dc3bfcc4aa3e13')
+depends=(plymouth gnome-shell gnome-session upower xorg-xrdb xorg-server xorg-xhost)
+makedepends=(yelp-tools gobject-introspection git docbook-xsl)
+checkdepends=(check)
+_commit=820f90f5a78b81b2e4610da14627266c2135c8b0  # master
+source=("git+https://gitlab.gnome.org/GNOME/gdm.git#commit=$_commit"
+        0001-Xsession-Don-t-start-ssh-agent-by-default.patch)
+sha256sums=('SKIP'
+            '3412f7da0205409f08a126a1d166b644fe0f1d0444f7cdebdce8e59cea2d672c')
+
+pkgver() {
+  cd gdm
+  git describe --tags | sed 's/-/+/g'
+}
 
 prepare() {
-  cd $_pkgbase-${pkgver}
-
-  patch -Np1 -i ../0002-Xsession-Don-t-start-ssh-agent-by-default.patch
+  mkdir build
+  cd gdm
+  patch -Np1 -i ../0001-Xsession-Don-t-start-ssh-agent-by-default.patch
 
   NOCONFIGURE=1 ./autogen.sh
 }
 
 build() {
-  cd $_pkgbase-${pkgver}
-  ./configure \
+  cd build
+  ../gdm/configure \
     --prefix=/usr \
-    --sbindir=/usr/bin \
     --sysconfdir=/etc \
-    --libexecdir=/usr/lib \
     --localstatedir=/var \
-    --disable-static \
+    --sbindir=/usr/bin \
+    --libexecdir=/usr/lib \
+    with_dbus_sys=/usr/share/dbus-1/system.d \
     --disable-schemas-compile \
+    --disable-static \
     --enable-gdm-xsession \
     --enable-ipv6 \
-    --with-plymouth \
     --with-default-pam-config=arch \
     --with-default-path=/usr/local/bin:/usr/local/sbin:/usr/bin \
+    --with-plymouth \
     --without-tcp-wrappers
 
   sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
@@ -53,43 +59,41 @@ build() {
 }
 
 check() {
-  cd $_pkgbase-${pkgver}
-  make check
+  make -C build check
 }
 
 package_gdm-plymouth() {
   depends+=(libgdm-plymouth)
+  optdepends=('fprintd: fingerprint authentication')
   provides=("gdm")
   conflicts=("gdm")
-  optdepends=('fprintd: fingerprint authentication')
   backup=(etc/pam.d/gdm-autologin etc/pam.d/gdm-fingerprint etc/pam.d/gdm-launch-environment
           etc/pam.d/gdm-password etc/pam.d/gdm-smartcard etc/gdm/custom.conf
           etc/gdm/Xsession etc/gdm/PostSession/Default etc/gdm/PreSession/Default)
-  install=gdm-plymouth.install
 
-  cd $_pkgbase-${pkgver}
-  make DESTDIR="$pkgdir" install
+  DESTDIR="$pkgdir" make -C build install
 
-  chown -R 120:120 "$pkgdir/var/lib/gdm"
+  chown -Rc 120:120 "$pkgdir/var/lib/gdm"
 
   # Unused or created at start
   rm -r "$pkgdir"/var/{cache,log,run}
 
-  install -Dm644 ../gdm.sysusers "$pkgdir/usr/lib/sysusers.d/gdm.conf"
+  install -Dm644 /dev/stdin "$pkgdir/usr/lib/sysusers.d/gdm.conf" <<END
+g gdm 120 -
+u gdm 120 "Gnome Display Manager" /var/lib/gdm
+END
 
-  ### Split libgdm
-  make -C libgdm DESTDIR="$pkgdir" uninstall
-  mv "$pkgdir/usr/share/glib-2.0/schemas/org.gnome.login-screen.gschema.xml" "$srcdir"
+### Split libgdm
+  mkdir -p libgdm/{lib,share}
+  mv -t libgdm       "$pkgdir"/usr/include
+  mv -t libgdm/lib   "$pkgdir"/usr/lib/{girepository-1.0,libgdm*,pkgconfig}
+  mv -t libgdm/share "$pkgdir"/usr/share/{gir-1.0,glib-2.0}
 }
 
 package_libgdm-plymouth() {
-  pkgdesc="GDM support library including Plymouth support"
+  pkgdesc="GDM support library with plymouth support"
   depends=(systemd glib2 dconf)
   provides=("libgdm")
   conflicts=("libgdm")
-
-  cd $_pkgbase-${pkgver}
-  make -C libgdm DESTDIR="$pkgdir" install
-  install -Dm644 "$srcdir/org.gnome.login-screen.gschema.xml" \
-    "$pkgdir/usr/share/glib-2.0/schemas/org.gnome.login-screen.gschema.xml"
+  mv libgdm "$pkgdir/usr"
 }
