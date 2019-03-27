@@ -1,7 +1,7 @@
 # Maintainer: Ariel AxionL <axionl@aosc.io>
 pkgname=skim-git
 pkgver=r555.2fbfbf1
-pkgrel=1
+pkgrel=2
 pkgdesc="Fuzzy Finder in rust!"
 arch=('x86_64')
 depends=('bash')
@@ -32,24 +32,20 @@ build() {
 package() {
     cd $srcdir/$pkgname
 
-    # License
-    install -Dm644 LICENSE $pkgdir/usr/share/licenses/$pkgname/LICENSE
+    # Binaries
+    install -Dt "$pkgdir"/usr/bin target/release/sk bin/sk-tmux
 
     # Man Page
-    install -Dm644 shell/skim.1 $pkgdir/usr/share/man/man1/skim.1
-
-    # Vim plugin
-    install -Dm644 plugin/skim.vim $pkgdir/usr/share/vim/vimfiles/plugin/skim.vim
+    install -Dm644 -t "$pkgdir"/usr/share/man/man1 man/man1/*
 
     # Completion and keybindings
-    install -dm755 $pkgdir/usr/share/skim
-    install -m644 shell/*.bash shell/*.zsh $pkgdir/usr/share/skim
+    install -Dm644 -t "$pkgdir"/usr/share/skim shell/*.bash shell/*.zsh
+    install -Dm644 shell/key-bindings.fish "$pkgdir"/usr/share/fish/functions/skim_key_bindings.fish
 
-    ## Fish keybindings
-	install -Dm644 shell/key-bindings.fish $pkgdir/usr/share/fish/functions/skim_key_bindings.fish
+    # Vim plugin
+    install -Dm644 -t "$pkgdir"/usr/share/vim/vimfiles/plugin plugin/skim.vim
 
-    # Binaries
-    install -Dm755 bin/sk-tmux $pkgdir/usr/bin/sk-tmux
-    install -Dm755 target/release/sk $pkgdir/usr/bin/sk
+    # License
+    install -Dm644 -t "$pkgdir"/usr/share/licenses/skim LICENSE
 }
 # vim set: ts=4 sw=4 et
