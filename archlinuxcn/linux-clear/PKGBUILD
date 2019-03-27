@@ -65,24 +65,25 @@ _rev_override="n"
 ### IMPORTANT: Do no edit below this line unless you know what you're doing
 
 _major=5.0
-_minor=4
+_minor=5
 _srcname=linux-${_major}
-_clr=${_major}.3-721
+_clr=${_major}.4-722
 pkgbase=linux-clear
-pkgver=5.0.4
+pkgver=5.0.5
 pkgrel=1
 arch=('x86_64')
 url="https://github.com/clearlinux-pkgs/linux"
 license=('GPL2')
 makedepends=('bc' 'git' 'inetutils' 'kmod' 'libelf' 'linux-firmware' 'xmlto')
 options=('!strip')
+_ucode='20190312'
 _gcc_more_v='20180509'
 source=(
   "https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-${_major}.tar.xz"
   "https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-${_major}.tar.sign"
   "https://cdn.kernel.org/pub/linux/kernel/v5.x/patch-${pkgver}.xz"
   "clearlinux::git+https://github.com/clearlinux-pkgs/linux.git#tag=${_clr}"
-  'https://downloadmirror.intel.com/28087/eng/microcode-20180807a.tgz'
+  "intel-ucode-${_ucode}.tar.gz::https://github.com/intel/Intel-Linux-Processor-Microcode-Data-Files/archive/microcode-${_ucode}.tar.gz"
   "enable_additional_cpu_optimizations-$_gcc_more_v.tar.gz::https://github.com/graysky2/kernel_gcc_patch/archive/$_gcc_more_v.tar.gz"
   '60-linux.hook'  # pacman hook for depmod
   '90-linux.hook'  # pacman hook for initramfs regeneration
@@ -132,10 +133,10 @@ CONFIG_MODULE_COMPRESS_XZ=y|' ./.config
 ### Disable modle sig force
 	    sed -i "s|CONFIG_MODULE_SIG_FORCE=y|CONFIG_MODULE_SIG_FORCE=n|g" ./.config 
     ### Copying i915 firmware and intel-ucode
-        msg2 "Copying i915 firmware and intel-ucode..."
+        msg2 "Copying i915 firmware and intel-ucode-${_ucode}..."
         cp -a /usr/lib/firmware/i915 firmware/
-        cp -a ${srcdir}/intel-ucode firmware/
-        cp  ${srcdir}/intel-ucode-with-caveats/06* firmware/intel-ucode/
+        cp -a ${srcdir}/Intel-Linux-Processor-Microcode-Data-Files-microcode-${_ucode}/intel-ucode firmware/
+        cp  ${srcdir}/Intel-Linux-Processor-Microcode-Data-Files-microcode-${_ucode}/intel-ucode-with-caveats/06* firmware/intel-ucode/
         rm -f firmware/intel-ucode/0f*
 
     ### Patch source to unlock additional gcc CPU optimizations
@@ -334,9 +335,9 @@ done
 
 sha256sums=('437b141a6499159f5a7282d5eb4b2be055f8e862ccce44d7464e8759c31a2e43'
             'SKIP'
-            'f83a9669cc5d7fa0c8f4f235ebe5a33029c9153f6d1607be3a78e933949aeb9a'
+            '70051be96455f84e13af8a3e487a6da2ed3274843bbd26049004d4e7578365ea'
             'SKIP'
-            '46ab18699ec42eb6cc01ee1846ec4d7ca979766dee2156f92d69e2f6df548137'
+            '2a4438a66ed1a9b82be943d6d19366c006787ba5af302f425674ca6d8c928099'
             '226e30068ea0fecdb22f337391385701996bfbdba37cdcf0f1dbf55f1080542d'
             'ae2e95db94ef7176207c690224169594d49445e04249d2499e9d2fbc117a0b21'
             'c043f3033bb781e2688794a59f6d1f7ed49ef9b13eb77ff9a425df33a244a636'
