@@ -4,7 +4,7 @@
 
 pkgname=moonplayer-git
 _pkgname=moonplayer
-pkgver=2.6.r447
+pkgver=2.6.r448
 pkgrel=1
 pkgdesc="A qt font-end for mplayer with the abilities of watching and downloading videos from chinese network"
 arch=('i686' 'x86_64')
