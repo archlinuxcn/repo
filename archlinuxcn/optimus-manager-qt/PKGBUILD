@@ -9,13 +9,18 @@ arch=('x86_64')
 url="https://github.com/Shatur95/optimus-manager-qt"
 license=('GPL3')
 depends=('qt5-base' 'optimus-manager>=0.8')
-makedepends=('qt5-tools' 'git')
-source=(${pkgname}.tar.gz::"https://github.com/Shatur95/optimus-manager-qt/archive/${pkgver}.tar.gz")
-sha256sums=('7545dae6078b70db758852c24abfd50a475e40968fbbb2d38ed134d19fc2bfba')
+makedepends=('qt5-tools' 'git' 'knotifications' 'kiconthemes')
+source=(${pkgname}.tar.gz::"https://github.com/Shatur95/optimus-manager-qt/archive/${pkgver}.tar.gz"
+        "git+https://github.com/itay-grudev/SingleApplication.git")
+sha256sums=('7545dae6078b70db758852c24abfd50a475e40968fbbb2d38ed134d19fc2bfba'
+            'SKIP')
 
 # Move submodules into the project
 prepare() {
-    git clone "https://github.com/itay-grudev/SingleApplication.git" "${pkgname}-${pkgver}/src/third-party/singleapplication"
+  cd "${pkgname}-${pkgver}"
+  git init
+  rm -r "src/third-party/singleapplication"
+  git submodule add "${srcdir}/SingleApplication" "src/third-party/singleapplication"
 }
 
 build() {
