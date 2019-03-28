@@ -9,32 +9,32 @@ declare -r game="minecraft"
 # Avoid altering any of those later in the code since they may be readonly (IDLE_SERVER is an exception!)
 
 # You may use this script for any game server of your choice, just alter the config file
-[[ ! -z "${SERVER_ROOT}" ]]  && declare -r SERVER_ROOT=${SERVER_ROOT}   || SERVER_ROOT="/srv/${game}"
-[[ ! -z "${BACKUP_DEST}" ]]  && declare -r BACKUP_DEST=${BACKUP_DEST}   || BACKUP_DEST="/srv/${game}/backup"
-[[ ! -z "${BACKUP_PATHS}" ]] && declare -r BACKUP_PATHS=${BACKUP_PATHS} || BACKUP_PATHS="world"
-[[ ! -z "${KEEP_BACKUPS}" ]] && declare -r KEEP_BACKUPS=${KEEP_BACKUPS} || KEEP_BACKUPS="10"
-[[ ! -z "${GAME_USER}" ]]    && declare -r GAME_USER=${GAME_USER}       || GAME_USER="minecraft"
-[[ ! -z "${MAIN_EXECUTABLE}" ]] && declare -r MAIN_EXECUTABLE=${MAIN_EXECUTABLE} || MAIN_EXECUTABLE="minecraft_server.jar"
-[[ ! -z "${SESSION_NAME}" ]] && declare -r SESSION_NAME=${SESSION_NAME} || SESSION_NAME="${game}"
+[[ -n "${SERVER_ROOT}" ]]  && declare -r SERVER_ROOT=${SERVER_ROOT}   || SERVER_ROOT="/srv/${game}"
+[[ -n "${BACKUP_DEST}" ]]  && declare -r BACKUP_DEST=${BACKUP_DEST}   || BACKUP_DEST="/srv/${game}/backup"
+[[ -n "${BACKUP_PATHS}" ]] && declare -r BACKUP_PATHS=${BACKUP_PATHS} || BACKUP_PATHS="world"
+[[ -n "${KEEP_BACKUPS}" ]] && declare -r KEEP_BACKUPS=${KEEP_BACKUPS} || KEEP_BACKUPS="10"
+[[ -n "${GAME_USER}" ]]    && declare -r GAME_USER=${GAME_USER}       || GAME_USER="minecraft"
+[[ -n "${MAIN_EXECUTABLE}" ]] && declare -r MAIN_EXECUTABLE=${MAIN_EXECUTABLE} || MAIN_EXECUTABLE="minecraft_server.jar"
+[[ -n "${SESSION_NAME}" ]] && declare -r SESSION_NAME=${SESSION_NAME} || SESSION_NAME="${game}"
 
 # Command and parameter declaration with which to start the server
-[[ ! -z "${SERVER_START_CMD}" ]] && declare -r SERVER_START_CMD=${SERVER_START_CMD} || SERVER_START_CMD="java -Xms512M -Xmx1024M -XX:ParallelGCThreads=1 -jar './${MAIN_EXECUTABLE}' nogui"
+[[ -n "${SERVER_START_CMD}" ]] && declare -r SERVER_START_CMD=${SERVER_START_CMD} || SERVER_START_CMD="java -Xms512M -Xmx1024M -XX:ParallelGCThreads=1 -jar './${MAIN_EXECUTABLE}' nogui"
 
 # System parameters for the control script
-[[ ! -z "${IDLE_SERVER}" ]]       && tmp_IDLE_SERVER=${IDLE_SERVER}   || IDLE_SERVER="false"
-[[ ! -z "${IDLE_SESSION_NAME}" ]] && declare -r IDLE_SESSION_NAME=${IDLE_SESSION_NAME} || IDLE_SESSION_NAME="idle_server_${SESSION_NAME}"
-[[ ! -z "${GAME_PORT}" ]]         && declare -r GAME_PORT=${GAME_PORT}       || GAME_PORT="25565"
-[[ ! -z "${CHECK_PLAYER_TIME}" ]] && declare -r CHECK_PLAYER_TIME=${CHECK_PLAYER_TIME} || CHECK_PLAYER_TIME="30"
-[[ ! -z "${IDLE_IF_TIME}" ]]      && declare -r IDLE_IF_TIME=${IDLE_IF_TIME} || IDLE_IF_TIME="1200"
+[[ -n "${IDLE_SERVER}" ]]       && tmp_IDLE_SERVER=${IDLE_SERVER}   || IDLE_SERVER="false"
+[[ -n "${IDLE_SESSION_NAME}" ]] && declare -r IDLE_SESSION_NAME=${IDLE_SESSION_NAME} || IDLE_SESSION_NAME="idle_server_${SESSION_NAME}"
+[[ -n "${GAME_PORT}" ]]         && declare -r GAME_PORT=${GAME_PORT}       || GAME_PORT="25565"
+[[ -n "${CHECK_PLAYER_TIME}" ]] && declare -r CHECK_PLAYER_TIME=${CHECK_PLAYER_TIME} || CHECK_PLAYER_TIME="30"
+[[ -n "${IDLE_IF_TIME}" ]]      && declare -r IDLE_IF_TIME=${IDLE_IF_TIME} || IDLE_IF_TIME="1200"
 
 # Additional configuration options which only few may need to alter
-[[ ! -z "${GAME_COMMAND_DUMP}" ]] && declare -r GAME_COMMAND_DUMP=${GAME_COMMAND_DUMP} || GAME_COMMAND_DUMP="/tmp/${myname}_${SESSION_NAME}_command_dump.txt"
+[[ -n "${GAME_COMMAND_DUMP}" ]] && declare -r GAME_COMMAND_DUMP=${GAME_COMMAND_DUMP} || GAME_COMMAND_DUMP="/tmp/${myname}_${SESSION_NAME}_command_dump.txt"
 
 # Variables passed over the command line will always override the one from a config file
 source /etc/conf.d/"${game}" 2>/dev/null || >&2 echo "Could not source /etc/conf.d/${game}"
 
 # Preserve the content of IDLE_SERVER without making it readonly
-[[ ! -z ${tmp_IDLE_SERVER} ]] && IDLE_SERVER=${tmp_IDLE_SERVER}
+[[ -n ${tmp_IDLE_SERVER} ]] && IDLE_SERVER=${tmp_IDLE_SERVER}
 
 
 # Strictly disallow uninitialized Variables
@@ -50,9 +50,9 @@ else
 fi
 
 # Choose which flavor of netcat is to be used
-if which netcat &> /dev/null; then
+if command -vnetcat &> /dev/null; then
 	NETCAT_CMD="netcat"
-elif which ncat &> /dev/null; then
+elif command -vncat &> /dev/null; then
 	NETCAT_CMD="ncat"
 else
 	NETCAT_CMD=""
@@ -82,14 +82,16 @@ game_command() {
 # Check whether there are player on the server through list
 is_player_online() {
 	response="$(sleep_time=0.6 return_stdout=true game_command list)"
+	# Delete leading line and free response string from fancy characters
+	response="$(echo "${response}" | sed -r -e '$!d' -e 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})*)?[JKmsuG]//g')"
 	# The list command prints a line containing the usernames after the last occurrence of ": "
 	# and since playernames may not contain this string the clean player-list can easily be retrieved.
 	# Otherwiese check the first digit after the last occurrence of "There are". If it is 0 then there
 	# are no players on the server. Should this test fail as well. Assume that a player is online.
-	if [[ $(echo "${response}" | grep ":" | sed -r -e '$!d' -e 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})*)?[JKmsuG]//g' -e 's/.*\: //' | tr -d '\n' | wc -c) -le 1 ]]; then
+	if [[ $(echo "${response}" | grep ":" | sed -e 's/.*\: //' | tr -d '\n' | wc -c) -le 1 ]]; then
 		# No player is online
 		return 0
-	elif [[ $(echo "${response}" | grep "There are" | sed -r -e '$!d' -e 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})*)?[JKmsuG]//g' -e 's/.*\: //' -e 's/^([^.]+).*$/\1/; s/^[^0-9]*([0-9]+).*$/\1/' | tr -d '\n') -eq 0 ]]; then
+	elif [[ "x$(echo "${response}" | grep "There are" | sed -r -e 's/.*\: //' -e 's/^([^.]+).*$/\1/; s/^[^0-9]*([0-9]+).*$/\1/' | tr -d '\n')" == "x0" ]]; then
 		# No player is online
 		return 0
 	else
@@ -293,7 +295,7 @@ server_restart() {
 # Backup the directories specified in BACKUP_PATHS
 backup_files() {
 	# Check for the availability of the tar binaries
-	if ! which tar &> /dev/null; then
+	if ! command -vtar &> /dev/null; then
 		>&2 echo "The tar binaries are needed for a backup."
 		exit 11
 	fi
@@ -327,7 +329,7 @@ backup_files() {
 # Restore backup
 backup_restore() {
 	# Check for the availability of the tar binaries
-	if ! which tar &> /dev/null; then
+	if ! command -vtar &> /dev/null; then
 		>&2 echo "The tar binaries are needed for a backup."
 		exit 11
 	fi
