@@ -1,0 +1,49 @@
+# Maintainer: Shatur <genaloner@gmail.com>
+
+pkgbase=optimus-manager-qt
+pkgname=(optimus-manager-qt optimus-manager-qt-kf5)
+pkgver=1.1.0
+pkgrel=2
+pkgdesc="A Qt interface for Optimus Manager that allows to configure and switch GPUs on Optimus laptops using the tray menu"
+arch=('x86_64')
+url="https://github.com/Shatur95/optimus-manager-qt"
+license=('GPL3')
+depends=('qt5-base' 'optimus-manager>=0.8')
+makedepends=('qt5-tools' 'git')
+source=(${pkgname}.tar.gz::"https://github.com/Shatur95/optimus-manager-qt/archive/${pkgver}.tar.gz")
+sha256sums=('7545dae6078b70db758852c24abfd50a475e40968fbbb2d38ed134d19fc2bfba')
+
+# Move submodules into the project
+prepare() {
+    git clone "https://github.com/itay-grudev/SingleApplication.git" "${pkgname}-${pkgver}/src/third-party/singleapplication"
+}
+
+build() {
+  mkdir build
+  cd build
+  qmake "../${pkgname}-${pkgver}"
+  make
+
+  cd ..
+  mkdir build-kf5
+  cd build-kf5
+  qmake "DEFINES += PLASMA" "../${pkgname}-${pkgver}"
+  make
+}
+
+package_optimus-manager-qt() {
+    cd "build"
+    make INSTALL_ROOT="${pkgdir}/" install
+    install -Dm755 optimus-manager-qt "${pkgdir}/usr/bin/optimus-manager-qt"
+}
+
+package_optimus-manager-qt-kf5() {
+    depends+=('knotifications' 'kiconthemes')
+    pkgdesc="optimus-manager-qt with KDE API features."
+    provides=(optimus-manager-qt)
+    conflicts=(optimus-manager-qt)
+    cd "build-kf5"
+    make INSTALL_ROOT="${pkgdir}/" install
+    install -Dm755 optimus-manager-qt "${pkgdir}/usr/bin/optimus-manager-qt"
+} 
+
