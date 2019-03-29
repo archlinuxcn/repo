@@ -1,8 +1,8 @@
 # Maintainer: Rafael Fontenelle <rafaelff@gnome.org>
 
 pkgname=ddnet
-pkgver=11.9
-pkgrel=2
+pkgver=12.0
+pkgrel=1
 pkgdesc="DDraceNetwork, a cooperative racing mod of Teeworlds"
 arch=('x86_64')
 url="https://ddnet.tw"
@@ -13,7 +13,7 @@ checkdepends=('gtest')
 optdepends=('ddnet-skins: more skins for your tee'
             'ddnet-maps-git: have all DDNet maps available offline')
 source=("https://ddnet.tw/downloads/DDNet-$pkgver.tar.xz")
-sha256sums=('25a8982c7a5ad3bb5ceb9daab42f5f33ab48fd2d51b22073b838405715211bb3')
+sha256sums=('b8f7ff50a7b34a3003f2e16e9f62ba788381a87a54d377d5678bd0714940c1d4')
 
 prepare() {
     [ -d build ] && rm -rf build
