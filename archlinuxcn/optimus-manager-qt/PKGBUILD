@@ -1,7 +1,7 @@
 # Maintainer: Shatur <genaloner@gmail.com>
 
 pkgbase=optimus-manager-qt
-pkgname=(optimus-manager-qt optimus-manager-qt-kf5)
+pkgname=(optimus-manager-qt optimus-manager-qt-kde)
 pkgver=1.1.0
 pkgrel=3
 pkgdesc="A Qt interface for Optimus Manager that allows to configure and switch GPUs on Optimus laptops using the tray menu"
@@ -10,7 +10,7 @@ url="https://github.com/Shatur95/optimus-manager-qt"
 license=('GPL3')
 depends=('qt5-base' 'optimus-manager>=0.8')
 makedepends=('qt5-tools' 'git' 'knotifications' 'kiconthemes')
-source=(${pkgname}.tar.gz::"https://github.com/Shatur95/optimus-manager-qt/archive/${pkgver}.tar.gz"
+source=(${pkgname}-${pkgver}.tar.gz::"https://github.com/Shatur95/optimus-manager-qt/archive/${pkgver}.tar.gz"
         "git+https://github.com/itay-grudev/SingleApplication.git")
 sha256sums=('7545dae6078b70db758852c24abfd50a475e40968fbbb2d38ed134d19fc2bfba'
             'SKIP')
@@ -42,7 +42,9 @@ package_optimus-manager-qt() {
     install -Dm755 optimus-manager-qt "${pkgdir}/usr/bin/optimus-manager-qt"
 }
 
-package_optimus-manager-qt-kf5() {
+package_optimus-manager-qt-kde() {
+    _pkgname=optimus-manager-qt-kde
+    replaces=($_pkgname)
     depends+=('knotifications' 'kiconthemes')
     pkgdesc="optimus-manager-qt with KDE API features."
     provides=(optimus-manager-qt)
