@@ -30,7 +30,7 @@ pkgver() {
     printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
-prepare() {
+build() {
     msg "Extracting dependencies..."
     cd "${srcdir}/${_gitname}/src/gwt"
     install -d lib/{gin,gwt}
@@ -49,9 +49,6 @@ prepare() {
  
     msg "Downloading and installing R packages..."
     bash install-packages
-}
-
-build() {
     rm -rf "${srcdir}/${_gitname}/build"
     mkdir "${srcdir}/${_gitname}/build"
     cd "${srcdir}/${_gitname}/build"
