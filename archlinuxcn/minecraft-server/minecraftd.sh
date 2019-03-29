@@ -50,9 +50,9 @@ else
 fi
 
 # Choose which flavor of netcat is to be used
-if command -vnetcat &> /dev/null; then
+if command -v netcat &> /dev/null; then
 	NETCAT_CMD="netcat"
-elif command -vncat &> /dev/null; then
+elif command -v ncat &> /dev/null; then
 	NETCAT_CMD="ncat"
 else
 	NETCAT_CMD=""
@@ -295,7 +295,7 @@ server_restart() {
 # Backup the directories specified in BACKUP_PATHS
 backup_files() {
 	# Check for the availability of the tar binaries
-	if ! command -vtar &> /dev/null; then
+	if ! command -v tar &> /dev/null; then
 		>&2 echo "The tar binaries are needed for a backup."
 		exit 11
 	fi
@@ -329,7 +329,7 @@ backup_files() {
 # Restore backup
 backup_restore() {
 	# Check for the availability of the tar binaries
-	if ! command -vtar &> /dev/null; then
+	if ! command -v tar &> /dev/null; then
 		>&2 echo "The tar binaries are needed for a backup."
 		exit 11
 	fi
