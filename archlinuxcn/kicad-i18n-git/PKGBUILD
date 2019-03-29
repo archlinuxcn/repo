@@ -2,7 +2,7 @@
 # Maintainer: lilac <lilac@build.archlinuxcn.org>
 
 pkgname=kicad-i18n-git
-pkgver=r1633.5292d3b
+pkgver=r1634.72fbacf
 pkgrel=1
 pkgdesc="Translations for KiCad source code."
 arch=('i686' 'x86_64')
