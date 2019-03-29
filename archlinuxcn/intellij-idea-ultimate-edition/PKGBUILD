@@ -4,7 +4,7 @@ pkgbase=intellij-idea-ultimate-edition
 pkgname=(intellij-idea-ultimate-edition intellij-idea-ultimate-edition-jre)
 pkgver=2019.1
 _buildver=191.6183.87
-pkgrel=1
+pkgrel=2
 arch=('any')
 pkgdesc="An intelligent IDE for Java, Groovy and other programming languages with advanced refactoring features intensely focused on developer productivity."
 url="https://www.jetbrains.com/idea/"
@@ -23,7 +23,10 @@ prepare() {
 package_intellij-idea-ultimate-edition() {
   backup=("opt/$pkgname/bin/idea.vmoptions" "opt/${pkgname}/bin/idea64.vmoptions" "opt/${pkgname}/bin/idea.properties")
   depends=('giflib' 'libxtst')
-  optdepends=('intellij-idea-ultimate-edition-jre: JetBrains custom JRE (Recommended)' 'java-environment: Required if intellij-idea-ultimate-edition-jre is not installed')
+  optdepends=(
+    'intellij-idea-ultimate-edition-jre: JetBrains custom JRE (Recommended)' 'java-environment: Required if intellij-idea-ultimate-edition-jre is not installed'
+    'libdbusmenu-glib: For global menu support'
+  )
 
   cd "$srcdir"
 
