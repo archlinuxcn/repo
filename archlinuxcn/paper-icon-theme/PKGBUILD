@@ -24,4 +24,7 @@ build() {
 package() {
   cd "$pkgname-v.$pkgver"
   DESTDIR="${pkgdir}" ninja -C "build" install
+
+  mkdir -p "${pkgdir}/usr/share/licenses/${pkgname}"
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE_CC_BY_SA4"
 }
