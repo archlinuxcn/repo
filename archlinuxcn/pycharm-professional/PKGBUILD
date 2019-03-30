@@ -1,31 +1,28 @@
 # Maintainer: XavierCLL <xavier.corredor.llano (a) gmail.com>
 
 pkgname=pycharm-professional
-pkgver=2018.3.5
-_pkgver=2018.3.5
+pkgver=2019.1.0
+_pkgver=2019.1
 pkgrel=1
 pkgdesc="Powerful Python and Django IDE. Professional Edition."
 arch=('x86_64')
-url='http://www.jetbrains.com/pycharm/'
+url='https://www.jetbrains.com/pycharm/'
 conflicts=('pycharm' 'pycharm-community-edition')
 provides=('pycharm')
 license=('custom')
-install=${pkgname}.install
 backup=(opt/$pkgname/bin/pycharm.vmoptions opt/$pkgname/bin/pycharm64.vmoptions)
-depends=('giflib' 'glibc' 'sh' 'ttf-font' 'libxtst' 'libxslt' 'python')
-source=(https://download.jetbrains.com/python/$pkgname-$_pkgver.tar.gz
-        'pycharm-professional.desktop'
-        'pycharm-professional.install'
-        'pycharm'
-        'charm.desktop'
-        'charm')
+depends=('giflib' 'glibc' 'sh' 'ttf-font' 'libxtst' 'libxslt' 'python' 'java-runtime')
+source=("https://download.jetbrains.com/python/$pkgname-$_pkgver-no-jbr.tar.gz"
+        "pycharm-professional.desktop"
+        "pycharm"
+        "charm.desktop"
+        "charm")
 # https://download.jetbrains.com/python/pycharm-professional-${_pkgver}.tar.gz.sha256
-sha256sums=('f7d33d3bd7950df8d7006857b903a77fd78667727c35800a76ede177539a50c9'
+sha256sums=('680ff974d9f5c4fbec6575cb8d6e39a3cb8c4bfcbcb415669db2aeb982a2d11a'
             'aaf7113e8c56e4d977eca204d57350d9493eda2710abefd2488a2b5d47c53344'
-            '40b297ac1d883583ed5d7aae75fb09497a2af5bda9dd4aff83bd6d2892ab6c95'
             '818ed42f4200ae13315587abf6f247f93e68c658a94794f73924c985cdc145d0'
             '21e77b6b18e14636f9827e1f8d45bbc8dba8fb14ea5f4cde285c1ef4bb01c85e'
-            'f23c1c7e63d9a8b9ae2e2c6139bb77cd7a6e6eb32ad22f47c74d9daca9a891d1')
+            '029490b735ec0f5785a083f65172f6eece3fa64dad94b8b56f0db73c5418cfa2')
 makedepends=('python2-setuptools' 'python-setuptools')
 optdepends=('ipython2: For enhanced interactive Python shell v2 inside Pycharm'
             'ipython: For enhanced interactive Python shell v3 inside Pycharm'
