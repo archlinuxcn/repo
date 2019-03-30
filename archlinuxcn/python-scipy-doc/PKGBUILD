@@ -2,7 +2,7 @@
 # Contributor: David McInnis <dave@dave3.xyz>
 
 pkgname=python-scipy-doc
-pkgver=1.2.0
+pkgver=1.2.1
 pkgrel=1
 pkgdesc="Documentation for SciPy"
 makedepends=('unzip')
@@ -12,7 +12,7 @@ url='http://docs.scipy.org'
 license=('BSD')
 source=("$pkgname-$pkgver.zip::https://docs.scipy.org/doc/scipy-$pkgver/scipy-html-$pkgver.zip")
 noextract=("$pkgname-$pkgver.zip")
-sha256sums=('40e54c58f94a3228305c16f50c2689f51c03862336e772359ab56c5fdb0dcd74')
+sha256sums=('1043f18171674d8b22732241421c6f56b19895fcd4753c4010468fabb34f4f86')
 
 package()
 {
