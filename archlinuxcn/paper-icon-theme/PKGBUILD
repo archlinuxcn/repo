@@ -1,0 +1,27 @@
+# Maintainer: Bruce Zhang
+# Contributor: postblue
+
+pkgname=paper-icon-theme
+pkgver=1.5.0
+pkgrel=1
+pkgdesc="Paper is an open source desktop theme and icon project by Sam Hewitt"
+arch=('any')
+url="https://snwh.org/paper"
+license=("CCPL:by-sa-4.0")
+depends=('gtk-update-icon-cache')
+makedepends=('meson')
+provides=('paper-icon-theme')
+conflicts=('paper-icon-theme-git')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/snwh/$pkgname/archive/v.$pkgver.tar.gz")
+md5sums=('e7e2e22a4a34432f43846c815cbdbeb4')
+sha512sums=('be84bc332eba0e9c216435a130d3eed180fe1807d81ff7b3aadb3914fc130c9e243fb7fccef8febae1da6655f8e8a1bcf9420afb429e11e4c79bcbbb5bcd291b')
+
+build() {
+  cd "$pkgname-v.$pkgver"
+  meson "build" --prefix=/usr
+}
+
+package() {
+  cd "$pkgname-v.$pkgver"
+  DESTDIR="${pkgdir}" ninja -C "build" install
+}
