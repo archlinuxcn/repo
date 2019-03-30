@@ -1,7 +1,7 @@
 # Maintainer: Stefan Husmann <stefan-husmann@t-online.de>
 
 pkgname=perl-cpanel-json-xs
-pkgver=4.10
+pkgver=4.11
 pkgrel=1
 pkgdesc="cPanel fork of JSON::XS, fast and correct serializing"
 arch=('i686' 'x86_64')
@@ -10,7 +10,7 @@ options=('!emptydirs')
 depends=('perl')
 url='https://metacpan.org/release/Cpanel-JSON-XS'
 source=("https://cpan.metacpan.org/authors/id/R/RU/RURBAN/Cpanel-JSON-XS-$pkgver.tar.gz")
-sha512sums=('ffc7804200b904fac34784763c768c552d19cb1b39d556ec5ca19a88eaa53bb0ea929702eabe2f3f49f175253135b55a6e509606eb3f2421925b0266df6b96bb')
+sha512sums=('a14fe211b769184c28d946b9e88d9a380331d6a16c67a0f286fb4bf0f25e2a3b80f3df907bdf1a7eceaa8a34e69f13b3296cc135bc1ea2d2fcba6355dcf88579')
 _distdir="Cpanel-JSON-XS-$pkgver"
 
 build() {
