@@ -3,9 +3,9 @@
 
 pkgname=bypy-git
 _pkgname=bypy
-pkgver=1.6.4.r0.g52af6fd
+pkgver=1.6.4.r1.gc59b618
 epoch=1
-pkgrel=1.1
+pkgrel=1
 pkgdesc="Python client for Baidu Cloud Storage (百度网盘)"
 arch=("any")
 url="https://github.com/houtianze/bypy"
@@ -34,5 +34,5 @@ check() {
 
 package() {
     cd "${srcdir}/${_pkgname}"
-    PYTHONIOENCODING="utf-8" LANG=en_US.UTF-8 python setup.py install --root="${pkgdir}" --optimize=1
+    PYTHONIOENCODING="utf-8" python setup.py install --root="${pkgdir}" --optimize=1
 }
