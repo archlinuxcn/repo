@@ -3,12 +3,12 @@
 
 pkgname=kicad-i18n-git
 pkgver=r1634.72fbacf
-pkgrel=1
+pkgrel=2
 pkgdesc="Translations for KiCad source code."
 arch=('i686' 'x86_64')
 url="http://kicad-pcb.org/"
 license=('GPL')
-depends=('kicad-git')
+depends=('kicad')
 makedepends=('cmake' 'git' 'gettext')
 source=("${pkgname}"'::git+https://github.com/kicad/kicad-i18n')
 md5sums=('SKIP')
