@@ -1,8 +1,11 @@
-# Maintainer: Nick Østergaard <oe.nick at gmail dot com>
+# Maintainer: Edward Pacman <edward at edward-p dot xyz>
+# Contributer: Nick Østergaard <oe.nick at gmail dot com>
 
 pkgname=kicad-git
-pkgver=r12596.0f1ab3be2
-pkgrel=1
+_langpack=kicad-i18n-git
+replaces=(${_langpack})
+pkgver=r12605.33e594e63
+pkgrel=2
 pkgdesc="Electronic schematic and printed circuit board (PCB) design tools"
 arch=('i686' 'x86_64')
 url="http://kicad-pcb.org/"
@@ -14,8 +17,10 @@ optdepends=('kicad-library: for footprints')
 conflicts=('kicad' 'kicad-bzr')
 provides=('kicad')
 install=kicad.install
-source=("${pkgname}"'::git+https://git.launchpad.net/kicad')
-md5sums=('SKIP')
+source=("${pkgname}"'::git+https://git.launchpad.net/kicad'
+        "${_langpack}"'::git+https://github.com/kicad/kicad-i18n')
+md5sums=('SKIP'
+         'SKIP')
 
 pkgver() {
   cd "${srcdir}/${pkgname}"
@@ -41,10 +46,21 @@ build() {
     -DKICAD_SCRIPTING_WXPYTHON_PHOENIX=ON
 
   make
+
+  cd "${srcdir}/${_langpack}"
+  mkdir -p build
+  cd build
+  cmake .. -DCMAKE_INSTALL_PREFIX=/usr
+
+  make
 }
 
 package() {
   cd "${srcdir}/${pkgname}"
+  cd build
+  make DESTDIR="${pkgdir}" install
+
+  cd "${srcdir}/${_langpack}"
   cd build
   make DESTDIR="${pkgdir}" install
 }
