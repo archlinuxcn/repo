@@ -27,10 +27,10 @@ build() {
   python setup.py build
 }
 
-check() {
-  cd "${_pkgname}-${pkgver}"
-  pytest -v
-}
+#check() {
+#  cd "${_pkgname}-${pkgver}"
+#  pytest -v
+#}
 
 package() {
   cd "${_pkgname}-${pkgver}"
