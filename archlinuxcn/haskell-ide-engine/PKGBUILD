@@ -1,6 +1,6 @@
 # Maintainer: Philippe Hürlimann <p@hurlimann.org>
 pkgname=haskell-ide-engine
-pkgver=0.6.0.0
+pkgver=0.7.0.0
 pkgrel=1
 pkgdesc="The engine for haskell ide-integration. Not an IDE"
 arch=('x86_64')
