@@ -1,0 +1,16 @@
+post_install()
+{
+    echo "-----------------------------------------------"
+    echo "wps-dark-theme-hook is installed"
+    echo "Please reinstall wps-office to trigger the hook"
+    echo "-----------------------------------------------"
+}
+
+post_remove()
+{
+    echo "-----------------------------------------------------------------"
+    echo "wps-dark-theme-hook is removed"
+    echo "Please reinstall wps-office to restore to default desktop entries"
+    echo "-----------------------------------------------------------------"
+}
+
