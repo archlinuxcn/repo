@@ -1,13 +1,13 @@
 # Maintainer: Michael Carlberg <c@rlberg.se>
 # Contributor: Michael Carlberg <c@rlberg.se>
 pkgname=polybar
-pkgver=3.3.0
+pkgver=3.3.1
 pkgrel=1
 pkgdesc="A fast and easy-to-use status bar"
 arch=("i686" "x86_64")
 url="https://github.com/jaagr/polybar"
 license=("MIT")
-depends=('xcb-util-xrm' 'xcb-util-cursor' 'curl' 'xcb-util-wm' 'libmpdclient' 'jsoncpp' 'pulseaudio' 'libnl' 'cairo' 'wireless_tools' 'i3-wm' 'alsa-lib' 'xcb-util-image' )
+depends=('alsa-lib' 'cairo' 'curl' 'i3-wm' 'jsoncpp' 'libmpdclient' 'libnl' 'pulseaudio' 'wireless_tools' 'xcb-util-cursor' 'xcb-util-image' 'xcb-util-wm' 'xcb-util-xrm')
 optdepends=("alsa-lib: alsa module support"
             "pulseaudio: pulseaudio module support"
             "libmpdclient: mpd module support"
@@ -22,11 +22,10 @@ optdepends=("alsa-lib: alsa module support"
 makedepends=("cmake" "git" "python" "python2" "pkg-config")
 conflicts=("polybar-git")
 install="${pkgname}.install"
-source=("${pkgname}::git+${url}.git#tag=${pkgver}")
-md5sums=("SKIP")
+source=(${url}/releases/download/${pkgver}/polybar-${pkgver}.tar)
+sha256sums=('b0982a729f99f658d77969fd582d074843a57982b5e7c6b2b6efee5480b2a81c')
 
 prepare() {
-  git -C "${pkgname}" submodule update --init --recursive
   mkdir -p "${pkgname}/build"
 }
 
