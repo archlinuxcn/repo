@@ -3,7 +3,7 @@
 pkgbase=vim-lily
 pkgname=(gvim-lily vim-runtime-lily vim-lily)
 pkgver=8.1.1103
-pkgrel=1
+pkgrel=2
 _versiondir="vim$(echo $pkgver | awk -F. '{print $1$2}')"
 arch=('i686' 'x86_64')
 license=('custom:vim')
@@ -182,12 +182,6 @@ package_vim-runtime-lily() {
   # fix FS#17216
   sed -i 's|messages,/var|messages,/var/log/messages.log,/var|' \
     "${pkgdir}"/usr/share/vim/${_versiondir}/filetype.vim
-
-  # patch filetype.vim for better handling of pacman related files
-  sed -i "s/rpmsave/pacsave/;s/rpmnew/pacnew/;s/,\*\.ebuild/\0,PKGBUILD*,*.install/" \
-    "${pkgdir}"/usr/share/vim/${_versiondir}/filetype.vim
-  sed -i "/find the end/,+3{s/changelog_date_entry_search/changelog_date_end_entry_search/}" \
-    "${pkgdir}"/usr/share/vim/${_versiondir}/ftplugin/changelog.vim
 
   # rgb.txt file
   install -Dm644 "${srcdir}"/vim-repo/runtime/rgb.txt \
