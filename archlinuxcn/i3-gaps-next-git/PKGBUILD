@@ -1,8 +1,8 @@
 # Maintainer: Ingo Bürk <admin at airblader dot de>
 
 pkgname=i3-gaps-next-git
-pkgver=4.16.1.r144.g7501804b
-pkgrel=3
+pkgver=4.16.1.r166.g007218a8
+pkgrel=1
 pkgdesc='A fork of i3wm tiling window manager (development branch) with more features, including gaps'
 arch=('i686' 'x86_64')
 url='https://github.com/Airblader/i3/tree/gaps-next'
@@ -45,6 +45,7 @@ build() {
     --disable-sanitizers
 
   # See https://lists.archlinux.org/pipermail/arch-dev-public/2013-April/024776.html
+export MAKEFLAGS="-j1"
   make CPPFLAGS+="-U_FORTIFY_SOURCE"
 }
 
