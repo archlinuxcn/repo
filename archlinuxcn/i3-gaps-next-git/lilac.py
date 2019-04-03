@@ -2,6 +2,15 @@
 
 from lilaclib import *
 
+def pre_build():
+    aur_pre_build()
+    for line in edit_file('PKGBUILD'):
+        if line.strip().startswith('make CPPFLAGS+="-U_FORTIFY_SOURCE"'):
+            print('export MAKEFLAGS="-j1"')
+            print(line)
+        else:
+            print(line)
+
 #  PATCH = r"""
 #  diff --git a/archlinuxcn/i3-gaps-next-git/PKGBUILD b/archlinuxcn/i3-gaps-next-git/PKGBUILD
 #  index 5c4c197f7..c399b212a 100644
