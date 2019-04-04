@@ -1,8 +1,8 @@
 # Maintainer: XavierCLL <xavier.corredor.llano (a) gmail.com>
 
 pkgname=pycharm-professional
-pkgver=2019.1.0
-_pkgver=2019.1
+pkgver=2019.1.1
+_pkgver=2019.1.1
 pkgrel=1
 pkgdesc="Powerful Python and Django IDE. Professional Edition."
 arch=('x86_64')
@@ -11,14 +11,14 @@ conflicts=('pycharm' 'pycharm-community-edition')
 provides=('pycharm')
 license=('custom')
 backup=(opt/$pkgname/bin/pycharm.vmoptions opt/$pkgname/bin/pycharm64.vmoptions)
-depends=('giflib' 'glibc' 'sh' 'ttf-font' 'libxtst' 'libxslt' 'python' 'java-runtime')
-source=("https://download.jetbrains.com/python/$pkgname-$_pkgver-no-jbr.tar.gz"
+depends=('giflib' 'glibc' 'sh' 'ttf-font' 'libxtst' 'libxslt' 'python')
+source=("https://download.jetbrains.com/python/$pkgname-$_pkgver.tar.gz"
         "pycharm-professional.desktop"
         "pycharm"
         "charm.desktop"
         "charm")
 # https://download.jetbrains.com/python/pycharm-professional-${_pkgver}.tar.gz.sha256
-sha256sums=('680ff974d9f5c4fbec6575cb8d6e39a3cb8c4bfcbcb415669db2aeb982a2d11a'
+sha256sums=('68a05bb3f037caf5944d17d03aeabd2be34a07eedb164d77f0617d22cf919141'
             'aaf7113e8c56e4d977eca204d57350d9493eda2710abefd2488a2b5d47c53344'
             '818ed42f4200ae13315587abf6f247f93e68c658a94794f73924c985cdc145d0'
             '21e77b6b18e14636f9827e1f8d45bbc8dba8fb14ea5f4cde285c1ef4bb01c85e'
