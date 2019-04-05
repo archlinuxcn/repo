@@ -1,0 +1,13 @@
+[Unit]
+Descriptio=Net Speeder Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/net-speeder %i ip
+KillSignal=SIGINT
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
