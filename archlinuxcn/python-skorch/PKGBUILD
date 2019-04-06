@@ -1,0 +1,32 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+_pkgname=skorch
+pkgname=python-skorch
+pkgver=0.5.0
+pkgrel=1
+pkgdesc='A scikit-learn compatible neural network library that wraps pytorch'
+arch=(any)
+url=https://github.com/skorch-dev/skorch
+license=(BSD)
+depends=(python-numpy python-pytorch python-scikit-learn python-scipy python-tabulate python-tqdm)
+makedepends=(python-setuptools)
+checkdepends=(flake8 python-flaky python-pytest python-pytest-cov)
+source=("${_pkgname}-${pkgver}.tar.gz"::"https://github.com/skorch-dev/skorch/archive/v${pkgver}.tar.gz")
+sha512sums=('3c5ba03cf38ab927e4b1fe1dd7d18b4f0fb173756006e4a04cfef3c3522f92de01a0ca9d4c95569eca2e100b8398dba62e945322bab48462c44af1b0d4725984')
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py build
+}
+
+check() {
+  cd "${_pkgname}-${pkgver}"
+  pytest -v
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:
