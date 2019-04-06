@@ -1,7 +1,7 @@
 _pkgname=cli_helpers
 pkgname=python-cli_helpers
-pkgver=1.1.0
-pkgrel=2
+pkgver=1.2.0
+pkgrel=1
 pkgdesc="Helpers for building command-line apps"
 arch=('any')
 url="https://github.com/dbcli/cli_helpers"
@@ -9,7 +9,7 @@ license=('(FIXME)')
 depends=('python' 'python' 'python-terminaltables' 'python-tabulate' 'python-setuptools')
 _name=${pkgname#python-}
 source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_pkgname}-${pkgver}.tar.gz")
-md5sums=('1b98a2f6b8d848a705f648f3e1456201')
+md5sums=('849ef12da236856f0f465694dc14ec51')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
