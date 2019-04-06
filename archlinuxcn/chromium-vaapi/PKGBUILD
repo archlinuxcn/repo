@@ -10,7 +10,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=chromium-vaapi
-pkgver=73.0.3683.86
+pkgver=73.0.3683.103
 pkgrel=1
 _launcher_ver=6
 pkgdesc="Chromium with VA-API support to enable hardware acceleration"
@@ -39,7 +39,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-avoid-log-flooding-in-GLSurfacePresentationHelper.patch
         chromium-widevine.patch
         chromium-skia-harmony.patch)
-sha256sums=('9ebb731576d25901cee5505f3458cf7780b0a39243743d7779f66514716bbfa3'
+sha256sums=('eb02c419de98bb8849fd0a37a3e7bbb813938c37e3d6b2c2526df3e84f9653af'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
             'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb'
             'e87ede45edf39ac19e56ac1ae49c9d1f5f5130e5838bcbb4c3d4fb16e55575c0'
@@ -118,12 +118,6 @@ prepare() {
 
   # https://bugs.gentoo.org/661880#c21
   patch -Np1 -i ../chromium-system-icu.patch
-
-  # Remove compiler flags not supported by our system clang
-  sed -i \
-    -e '/"-fsplit-lto-unit"/d' \
-    -e '/"-Wno-defaulted-function-deleted"/d' \
-    build/config/compiler/BUILD.gn
 
   # Force script incompatible with Python 3 to use /usr/bin/python2
   sed -i '1s|python$|&2|' third_party/dom_distiller_js/protoc_plugins/*.py
