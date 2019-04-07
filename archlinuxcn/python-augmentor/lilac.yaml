@@ -3,10 +3,7 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-repo_depends:
-  - python-augmentor
-
 update_on:
   - github: mdbloice/Augmentor
-    use_latest_release: true
+    use_max_tag: true
   - alias: python
