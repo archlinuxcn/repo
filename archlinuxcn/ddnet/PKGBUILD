@@ -2,12 +2,12 @@
 
 pkgname=ddnet
 pkgver=12.0.1
-pkgrel=1.1
+pkgrel=2
 pkgdesc="DDraceNetwork, a cooperative racing mod of Teeworlds"
 arch=('x86_64')
 url="https://ddnet.tw"
 license=('custom:BSD' 'CCPL:by-nc-sa')
-depends=('sdl2' 'freetype2' 'opusfile' 'curl' 'glew' 'wavpack' 'libwebsockets')
+depends=('sdl2' 'freetype2' 'opusfile' 'curl' 'glew' 'wavpack' 'libwebsockets' 'pnglite')
 makedepends=('cmake' 'python' 'imagemagick' 'gendesk')
 checkdepends=('gtest')
 optdepends=('ddnet-skins: more skins for your tee'
