@@ -179,7 +179,7 @@ package_mariadb-git() {
   cd "$pkgdir"
 
   # no SysV init, please!
-  rm -r etc/mysql/{init.d,logrotate.d}
+  rm -r etc/mysql/logrotate.d
   rm usr/bin/rcmysql
   rm usr/share/mysql/{binary-configure,mysql{,d_multi}.server}
 
