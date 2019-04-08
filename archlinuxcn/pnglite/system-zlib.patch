@@ -1,0 +1,13 @@
+Index: pnglite-0.1.17/pnglite.c
+===================================================================
+--- pnglite-0.1.17.orig/pnglite.c	2008-04-18 17:14:43.000000000 +1000
++++ pnglite-0.1.17/pnglite.c	2008-04-18 17:14:53.000000000 +1000
+@@ -5,7 +5,7 @@
+ #define USE_ZLIB 1
+ 
+ #if USE_ZLIB
+-#include "../zlib/zlib.h"
++#include <zlib.h>
+ #else
+ #include "zlite.h"
+ #endif
