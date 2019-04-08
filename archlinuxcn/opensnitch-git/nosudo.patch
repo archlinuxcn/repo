@@ -1,0 +1,51 @@
+diff --git a/daemon/Makefile b/daemon/Makefile
+index ece2090..2d364f8 100644
+--- a/daemon/Makefile
++++ b/daemon/Makefile
+@@ -1,10 +1,9 @@
+ all: opensnitchd
+ 
+ install:
+-	@mkdir -p /etc/opensnitchd/rules
+-	@cp opensnitchd /usr/local/bin/
+-	@cp opensnitchd.service /etc/systemd/system/
+-	@systemctl daemon-reload
++	@mkdir -p $(DESTDIR)/etc/opensnitchd/rules
++	@cp opensnitchd $(DESTDIR)/usr/bin/
++	@cp opensnitchd.service $(DESTDIR)/usr/lib/systemd/system/
+ 
+ deps: 
+ 	@dep ensure
+diff --git a/daemon/opensnitchd.service b/daemon/opensnitchd.service
+index e504417..4dfa8fd 100644
+--- a/daemon/opensnitchd.service
++++ b/daemon/opensnitchd.service
+@@ -8,7 +8,7 @@ After=network.target
+ Type=simple
+ PermissionsStartOnly=true
+ ExecStartPre=/bin/mkdir -p /etc/opensnitchd/rules
+-ExecStart=/usr/local/bin/opensnitchd -log-file /var/log/opensnitchd.log -rules-path /etc/opensnitchd/rules -ui-socket unix:///tmp/osui.sock
++ExecStart=/usr/bin/opensnitchd -log-file /var/log/opensnitchd.log -rules-path /etc/opensnitchd/rules -ui-socket unix:///tmp/osui.sock
+ Restart=always
+ RestartSec=30
+ 
+diff --git a/ui/Makefile b/ui/Makefile
+index 29c1d35..b7ef78b 100644
+--- a/ui/Makefile
++++ b/ui/Makefile
+@@ -1,13 +1,13 @@
+ all: opensnitch/resources_rc.py
+ 
+ install:
+-	@pip3 install .
++	@echo 'nope'
+ 
+ opensnitch/resources_rc.py: deps
+ 	@pyrcc5 -o opensnitch/resources_rc.py opensnitch/res/resources.qrc
+ 
+ deps:
+-	@sudo pip3 install -r requirements.txt
++	@echo 'nope'
+ 
+ clean:
+ 	@rm -rf *.pyc
