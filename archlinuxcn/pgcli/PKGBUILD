@@ -2,7 +2,7 @@
 # Contributor: Sven-Hendrik Haase <sh@lutzhaase.com>
 
 pkgname=pgcli
-pkgver=2.0.2
+pkgver=2.1.0
 pkgrel=2
 pkgdesc="a command line interface for Postgres with auto-completion and syntax highlighting"
 url="http://pgcli.com/"
@@ -13,7 +13,7 @@ makedepends=('python-distribute')
 source=($pkgname-$pkgver.zip::https://github.com/dbcli/pgcli/archive/v$pkgver.zip)
 provides=('pgcli')
 conflicts=('pgcli-git')
-md5sums=('295cf14b353476dcee319504e57fcdbe')
+md5sums=('92e6d5b977a0c687ed0d5710db975a41')
 
 package() {
     cd "$srcdir/pgcli-${pkgver}"
