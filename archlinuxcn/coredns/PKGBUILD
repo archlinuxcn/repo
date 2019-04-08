@@ -1,7 +1,7 @@
 # Maintainer: Lorenzo Fontana <lo@linux.com>
 # Maintainer: Xuanwo <xuanwo@archlinuxcn.org>
 pkgname=coredns
-pkgver=1.4.0
+pkgver=1.5.0
 pkgrel=1
 pkgdesc='A DNS server that chains plugins'
 makedepends=('go' 'make' 'git')
@@ -15,34 +15,24 @@ source=(coredns-${pkgver}.tar.gz::https://github.com/coredns/${pkgname}/archive/
         coredns.service
         coredns-sysusers.conf
         Corefile)
-sha256sums=('c3c0e5562d862d2f675b7b2dc7b619fdc906fbd19dd857d7436d0745b0d9a6b1'
+sha256sums=('69d9a7df50ecb8cc44656064537927e2abd5ff5d6b82de067e6328723b81efe3'
             '947b4838af48212ecd8e565155c97ca61ff7d408d0b8622499925b6e232656c4'
             '178c632fd855a5a35ae69e13ab554d5abad696cf75d23c6b6b37f0ace3b4b0f2'
             'd53c611f35fe67b5f631dd2e4731f75de72c3f7d07ee10f21b11360c690bfc45')
 
-_gopkgname='github.com/coredns/coredns'
-
-prepare() {
-  export GOPATH="$srcdir/build"
-  rm -rf "$GOPATH/src/$_gopkgname"
-  mkdir -p `dirname "$GOPATH/src/$_gopkgname"`
-  mv -Tv "$srcdir/$pkgname-${pkgver}" "$GOPATH/src/$_gopkgname"
-}
-
 build() {
   export GOPATH="$srcdir/build"
   export PATH=$GOPATH/bin:$PATH
-  cd $GOPATH/src/$_gopkgname
-  make GOPATH=$GOPATH godeps
 
+  cd $pkgname-${pkgver}
   # In order to build with PIE buildmode, we need to use CGO.
   # Currently, we will keep cgo disabled for better performance.
-  CGO_ENABLED=0 go build -v -ldflags="-s -w" -o coredns
+  GO111MODULE=on CGO_ENABLED=0 go build -v -ldflags="-s -w" -o coredns
 }
 
 package() {
   # Install binary
-  install -Dm755 "$srcdir/build/src/$_gopkgname/coredns" "$pkgdir/usr/bin/coredns"
+  install -Dm755 "$srcdir/$pkgname-${pkgver}/coredns" "$pkgdir/usr/bin/coredns"
   # Install systemd service
   install -Dm644 "$srcdir/coredns.service" "$pkgdir/usr/lib/systemd/system/coredns.service"
   # Install coredns sysusers
