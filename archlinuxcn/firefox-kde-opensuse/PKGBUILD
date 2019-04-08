@@ -5,8 +5,6 @@
 # enable this if you run out of memory during linking
 #_lowmem=true
 
-# build with PGO
-_pgo=true
 
 # globalmenu
 # to support globalmenu a patch from ubuntu is applied
@@ -14,10 +12,10 @@ _pgo=true
 # http://bazaar.launchpad.net/~mozillateam/firefox/firefox-trunk.head
 # /view/head:/debian/patches/unity-menubar.patch
 
-_pkgname=firefox
-pkgname=$_pkgname-kde-opensuse
+pkgbase=firefox-kde-opensuse
+pkgname=(firefox-kde-opensuse firefox-kde-opensuse-noavx2)
 pkgver=66.0.2
-pkgrel=1
+pkgrel=2
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -111,29 +109,33 @@ prepare() {
   # patch -Np1 -i ../0001-bz-1468911.patch patch is to large for the AUR
   xzcat "$srcdir"/0001-bz-1468911.patch.xz | patch -Np1
 
+  echo "ac_add_options --disable-elf-hack" >> .mozconfig
+
+  cd ..
+
+  # prepare for pgo and noavx2 version respectively
+  cp -r mozilla-unified avx2
+  cp -r mozilla-unified noavx2
   
-  if [[ $_pgo ]] ; then
-    # https://bugzilla.mozilla.org/show_bug.cgi?id=1516803
-    patch -Np1 -i  "$srcdir"/mozilla-1516803.patch
-    # https://bugzilla.mozilla.org/show_bug.cgi?id=1516081
-    patch -Np1 -i  "$srcdir"/mozilla-1516081.patch
+  cd avx2
 
-    # add missing rule for pgo builds
-    patch -Np1 -i "$srcdir"/add_missing_pgo_rule.patch
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=1516803
+  patch -Np1 -i  "$srcdir"/mozilla-1516803.patch
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=1516081
+  patch -Np1 -i  "$srcdir"/mozilla-1516081.patch
 
-    patch -Np1 -i "$srcdir"/pgo.patch
+  # add missing rule for pgo builds
+  patch -Np1 -i "$srcdir"/add_missing_pgo_rule.patch
 
-    # add missing file Makefile for pgo builds
-    patch -Np1 -i "$srcdir"/pgo_fix_missing_kdejs.patch
+  patch -Np1 -i "$srcdir"/pgo.patch
 
-    echo "ac_add_options --enable-lto" >> .mozconfig
-    echo "ac_add_options --disable-elf-hack" >> .mozconfig
-  fi
+  # add missing file Makefile for pgo builds
+  patch -Np1 -i "$srcdir"/pgo_fix_missing_kdejs.patch
+
+  echo "ac_add_options --enable-lto" >> .mozconfig
 }
 
-build() {
-  #export CXXFLAGS="${CFLAGS}"
-  cd mozilla-unified
+_real_build() {
   export MOZ_SOURCE_REPO="$_repo"
   export MOZBUILD_STATE_PATH="$srcdir/mozbuild"
   export MOZ_APP_REMOTINGNAME=$pkgname
@@ -165,9 +167,14 @@ build() {
   ./mach buildsymbols
 }
 
-package() {
-  cd mozilla-unified
+build(){
+  cd noavx2
+  _real_build
+  cd avx2
+  _real_build
+}
 
+_real_package() {
   [[ "$CARCH" == "i686" ]] && cp "$srcdir/kde.js" obj-i686-pc-linux-gnu/dist/bin/defaults/pref
   [[ "$CARCH" == "x86_64" ]] && cp "$srcdir/kde.js" obj-x86_64-pc-linux-gnu/dist/bin/defaults/pref
 
@@ -205,6 +212,19 @@ END
   #https://bugzilla.mozilla.org/show_bug.cgi?id=658850
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
+
+package_firefox-kde-opensuse(){
+  conflicts+=(firefox-kde-opensuse-noavx2)
+
+  cd avx2
+  _real_package
+}
+
+package_firefox-kde-opensuse-noavx2(){
+  cd noavx2
+  _real_package
+}
+
 md5sums=('SKIP'
          'db76bcc7f9f6bcc7893fb27b59b8537f'
          '14e0f6237a79b85e60256f4808163160'
