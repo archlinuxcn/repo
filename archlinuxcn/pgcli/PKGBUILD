@@ -3,12 +3,12 @@
 
 pkgname=pgcli
 pkgver=2.1.0
-pkgrel=2
+pkgrel=3
 pkgdesc="a command line interface for Postgres with auto-completion and syntax highlighting"
 url="http://pgcli.com/"
 arch=(any)
 license=('BSD')
-depends=('python' 'python-sqlparse' 'python-psycopg2' 'python-click' 'python-prompt_toolkit' 'python-humanize>=0.5.1' 'python-configobj>=5.0.6' 'python-pgspecial>=1.11.5' 'python-setproctitle' 'python-cli_helpers>=1.0.1' 'python-keyring' 'python-dbus' 'python-pygments')
+depends=('python' 'python-sqlparse' 'python-psycopg2' 'python-click' 'python-prompt_toolkit' 'python-humanize>=0.5.1' 'python-configobj>=5.0.6' 'python-pgspecial>=1.11.5' 'python-setproctitle' 'python-cli_helpers>=1.2.0' 'python-keyring' 'python-dbus' 'python-pygments')
 makedepends=('python-distribute')
 source=($pkgname-$pkgver.zip::https://github.com/dbcli/pgcli/archive/v$pkgver.zip)
 provides=('pgcli')
