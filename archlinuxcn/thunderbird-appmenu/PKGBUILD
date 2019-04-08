@@ -8,8 +8,8 @@
 
 _pkgname=thunderbird
 pkgname=thunderbird-appmenu
-pkgver=60.5.3
-pkgrel=4
+pkgver=60.6.1
+pkgrel=2
 pkgdesc="Thunderbird from extra with appmenu patch"
 arch=(x86_64)
 license=(MPL GPL LGPL)
@@ -24,9 +24,11 @@ conflicts=("thunderbird")
 options=(!emptydirs !makeflags)
 source=(https://ftp.mozilla.org/pub/mozilla.org/thunderbird/releases/$pkgver/source/thunderbird-$pkgver.source.tar.xz
         $_pkgname.desktop
+        rust-1.33.patch
         unity-menubar.patch)
-sha256sums=('83c91c4dc9b537aca99db45f99ccf2258cd830c704fb4aa994df18272c8a5211'
+sha256sums=('17aef9232a76bdc812422883c02b01b4ecb7633c3ee9870da5e4ec0e20ba5f67'
             '3534ea85d8e0e35dba5f40a7a07844df19f3a480e1358fc50c2502f122dab789'
+            '97bdb978d59cf5f0f967750e9d8dfbc8fc73367b08437838c44a308fe2ee5442'
             '22786f52773b93046fdb12378f67343b1d7d3390e83a00ff4aa03948c2b1c9e2')
 
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
@@ -44,6 +46,12 @@ _mozilla_api_key=16674381-f021-49de-8622-3021c5942aff
 prepare() {
   cd $_pkgname-$pkgver
 
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=1539901 (Patch from Fedora)
+  patch -Np1 -i ../rust-1.33.patch
+
+  # actual appmenu patch from ubuntu repos
+  patch -Np1 -i ../unity-menubar.patch
+
   echo -n "$_google_api_key" >google-api-key
   echo -n "$_mozilla_api_key" >mozilla-api-key
 
@@ -56,7 +64,8 @@ ac_add_options --enable-release
 ac_add_options --enable-linker=gold
 ac_add_options --enable-hardening
 ac_add_options --enable-optimize
-ac_add_options --enable-rust-simd
+# https://bugzilla.mozilla.org/show_bug.cgi?id=1521249
+#ac_add_options --enable-rust-simd
 
 # Branding
 ac_add_options --enable-official-branding
@@ -64,7 +73,8 @@ ac_add_options --enable-update-channel=release
 ac_add_options --with-distribution-id=org.archlinux
 
 # Keys
-ac_add_options --with-google-api-keyfile=${PWD@Q}/google-api-key
+ac_add_options --with-google-location-service-api-keyfile=${PWD@Q}/google-api-key
+ac_add_options --with-google-safebrowsing-api-keyfile=${PWD@Q}/google-api-key
 ac_add_options --with-mozilla-api-keyfile=${PWD@Q}/mozilla-api-key
 
 # System libraries
@@ -72,7 +82,6 @@ ac_add_options --with-system-zlib
 ac_add_options --with-system-bz2
 ac_add_options --with-system-icu
 ac_add_options --with-system-jpeg
-#ac_add_options --with-system-libvpx
 ac_add_options --with-system-nspr
 ac_add_options --with-system-nss
 ac_add_options --enable-system-hunspell
@@ -87,8 +96,6 @@ ac_add_options --disable-crashreporter
 ac_add_options --disable-updater
 END
 
-  # actual appmenu patch from ubuntu repos
-  patch -Np1 -i ../unity-menubar.patch
 }
 
 build() {
