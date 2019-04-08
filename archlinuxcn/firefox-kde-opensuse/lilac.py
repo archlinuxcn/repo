@@ -14,6 +14,7 @@ def pre_build():
             print('#' + line)
         else:
             print(line)
+    update_pkgrel()
     run_cmd(['updpkgsums'])
 
 

@@ -48,5 +48,4 @@ ac_add_options --disable-tests
 
 #STRIP_FLAGS="--strip-debug"
  
-# PGO
-mk_add_options PROFILE_GEN_SCRIPT='EXTRA_TEST_ARGS=10 $(MAKE) -C $(MOZ_OBJDIR) pgo-profile-run'
+ac_add_options --disable-elf-hack
