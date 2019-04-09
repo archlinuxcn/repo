@@ -3,14 +3,11 @@
 maintainers:
   - github: farseerfc
 
-repo_depends:
-  - python-unicode-slugify-git
-  - python-grpcio-tools
-
 build_prefix: extra-x86_64
 
 pre_build: vcs_update
 post_build: git_pkgbuild_commit
 
 update_on:
-  - github: evilsocket/opensnitch
+  - github: mozilla/unicode-slugify
+  - aur: python-unicode-slugify-git
