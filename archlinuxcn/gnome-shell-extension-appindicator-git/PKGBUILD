@@ -4,15 +4,15 @@
 # Contributor: Frikilinux <frikilinux at gmail dot com>
 
 pkgname=gnome-shell-extension-appindicator-git
-pkgver=27+2+ga72f8be
+pkgver=28+1+ga22d55a
 pkgrel=1
 epoch=1
-pkgdesc="Integrates AppIndicators into GNOME Shell"
+pkgdesc='Integrates AppIndicators into GNOME Shell'
+url='https://github.com/ubuntu/gnome-shell-extension-appindicator'
+license=('GPL')
 arch=('any')
-url="https://github.com/ubuntu/gnome-shell-extension-appindicator"
 conflicts=(${pkgname%-git})
 provides=(${pkgname%-git})
-license=('GPL')
 makedepends=('git')
 depends=('gnome-shell>=3.32')
 optdepends=(
@@ -24,12 +24,12 @@ source=("${pkgname}::git+${url}.git")
 sha512sums=('SKIP')
 
 pkgver() {
-  cd "${pkgname}"
+  cd ${pkgname}
   git describe --long --tags | sed 's/^v//; s/-/+/g'
 }
 
 package() {
-  cd "${pkgname}"
+  cd ${pkgname}
   # Locate the extension.
   local _uuid="$(grep -Po '(?<="uuid": ")[^"]*' metadata.json)"
   local _destdir="$pkgdir/usr/share/gnome-shell/extensions/$_uuid"
