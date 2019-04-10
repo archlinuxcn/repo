@@ -4,16 +4,16 @@
 pkgbase=mendeleydesktop
 pkgname=('mendeleydesktop'
          'mendeleydesktop-bundled')
-pkgver=1.19.3
-pkgrel=3
+pkgver=1.19.4
+pkgrel=1
 pkgdesc="Academic software for managing and sharing research papers."
 url=http://www.mendeley.com/release-notes/
 arch=(i686 x86_64)
 license=(custom:mendeley_eula)
 source_i686=("https://desktop-download.mendeley.com/download/linux/$pkgbase-$pkgver-linux-i486.tar.bz2")
 source_x86_64=("https://desktop-download.mendeley.com/download/linux/$pkgbase-$pkgver-linux-x86_64.tar.bz2")
-sha512sums_i686=('30e0460522474e68c1664256afc6e1d3af68443f75b0b5a76b76102ea812ed680d8d20e1d3f9dc4fc29408dd5e7718a8436ba34fc91a896fd9cbda702abcc3e8')
-sha512sums_x86_64=('2c2d92d45730797f93eec74b23ea8d7f654388fd778063dcd92705fe019939f6d557bcaac13a14b021fcc4d785938921b19a9c8b821dfe6c18fb5c213eaa8a26')
+sha512sums_i686=('d70e2e7d29bee69b943f800e971a1e02b3c09c80e25113fc91ed2df158100d77fc46932074bcbd19bd0871676f9e0afa0e0fd20dfa860b3ddce72c89597dbdfd')
+sha512sums_x86_64=('b3e6cf2ab2a1584121d57f9400ac363a006828c4077d66781c04ba75af18830ca803074c6517675b8d1f979087b1778ba25435ed549eaa4e38b5684d5ed07f6e')
 
 if [[ $CARCH = i686 ]];then
     $CARCH=i486
