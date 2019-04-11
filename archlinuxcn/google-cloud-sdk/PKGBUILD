@@ -7,7 +7,7 @@
 
 pkgname="google-cloud-sdk"
 pkgver=241.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A set of command-line tools for the Google Cloud Platform. Includes gcloud (with beta and alpha commands), gsutil, and bq."
 url="https://cloud.google.com/sdk/"
 license=("Apache")
@@ -64,8 +64,7 @@ package() {
   mkdir "${pkgdir}/opt"
   cp -r "${srcdir}/${pkgname}" "${pkgdir}/opt"
 
-  msg2 "Running bootstrapping script and adding additional components"
-  _additional_components=(alpha beta)
+  msg2 "Running bootstrapping script"
 
   # The Google code uses a _TraceAction() method which spams the screen even
   # in "quiet" mode, we're throwing away output on purpose to keep it clean
@@ -75,7 +74,7 @@ package() {
     --usage-reporting False \
     --path-update False \
     --bash-completion False \
-    --additional-components "${_additional_components[@]}" \
+    --additional-components "" \
     1 > /dev/null
 
   msg2 "Cleaning up artifacts of the bootstrap script"
