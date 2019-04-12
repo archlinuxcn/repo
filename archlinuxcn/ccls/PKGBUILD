@@ -2,7 +2,7 @@
 
 pkgname=ccls
 pkgver=0.20190314
-pkgrel=1
+pkgrel=2
 pkgdesc='C/C++/ObjC language server supporting cross references, hierarchies, completion and semantic highlighting'
 arch=('x86_64')
 url='https://github.com/MaskRay/ccls'
@@ -19,7 +19,7 @@ prepare() {
 
 build() {
   cd $pkgname-$pkgver
-  cmake -H. -Bbuild -DCMAKE_INSTALL_PREFIX=/usr
+  cmake -H. -Bbuild -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_CXX_COMPILER=clang++
   cmake --build build
 }
 
