@@ -1,0 +1,239 @@
+From 6858f59ba184e9cf55de03153b0bb000902e8a4b Mon Sep 17 00:00:00 2001
+From: Chih-Hsuan Yen <yan12125@gmail.com>
+Date: Sun, 3 Sep 2017 02:23:05 +0800
+Subject: [PATCH 1/3] [WIP] Support multiple URLs in a single entry
+
+Rebased with manual tests
+---
+ src/browser/BrowserService.cpp | 29 +++++++++++++++++++++++++---
+ src/browser/BrowserService.h   |  1 +
+ src/core/Entry.cpp             | 35 ++++++++++++++++++++++++++++++++++
+ src/core/Entry.h               |  6 ++++++
+ src/format/KdbxXmlWriter.cpp   |  4 ++++
+ 5 files changed, 72 insertions(+), 3 deletions(-)
+
+diff --git a/src/browser/BrowserService.cpp b/src/browser/BrowserService.cpp
+index 945f1303a..0a3750dc0 100644
+--- a/src/browser/BrowserService.cpp
++++ b/src/browser/BrowserService.cpp
+@@ -389,7 +389,9 @@ QList<Entry*> BrowserService::searchEntries(QSharedPointer<Database> db, const Q
+         return entries;
+     }
+ 
+-    for (Entry* entry : EntrySearcher().search(baseDomain(hostname), rootGroup)) {
++    // XXX: will this include disabled entries or ones in recycle bin?
++    // TODO: check if this is compatible with https://github.com/keepassxreboot/keepassxc/pull/2253
++    for (Entry* entry : rootGroup->entriesRecursive()) {
+         QString entryUrl = entry->url();
+         QUrl entryQUrl(entryUrl);
+         QString entryScheme = entryQUrl.scheme();
+@@ -404,14 +406,35 @@ QList<Entry*> BrowserService::searchEntries(QSharedPointer<Database> db, const Q
+ 
+         // Filter to match hostname in URL field
+         if ((!entryUrl.isEmpty() && hostname.contains(entryUrl))
+-            || (matchUrlScheme(entryUrl) && hostname.endsWith(entryQUrl.host()))) {
+-            entries.append(entry);
++            || (matchUrlScheme(entryUrl) && hostname.endsWith(entryQUrl.host()))
++            || matchAdditionalURLs(entry, hostname, url)) {
++                entries.append(entry);
+         }
+     }
+ 
+     return entries;
+ }
+ 
++bool BrowserService::matchAdditionalURLs(const Entry* entry, const QString& hostname, const QString& url)
++{
++    for (QString altURL : entry->altURLs()) {
++        if (matchUrlScheme(altURL) && hostname.endsWith(QUrl(altURL).host())) {
++            return true;
++        }
++    }
++
++    for (QString regExURL : entry->regExURLs()) {
++        // XXX: does allowing arbitrary URLs bring security issues
++        QRegularExpression rx(regExURL);
++        auto match = rx.match(url);
++        if (match.hasMatch()) {
++            return true;
++        }
++    }
++
++    return false;
++}
++
+ QList<Entry*> BrowserService::searchEntries(const QString& url, const StringPairList& keyList)
+ {
+     // Get the list of databases to search
+diff --git a/src/browser/BrowserService.h b/src/browser/BrowserService.h
+index 6c84696f9..db2204177 100644
+--- a/src/browser/BrowserService.h
++++ b/src/browser/BrowserService.h
+@@ -106,6 +106,7 @@ public slots:
+     int
+     sortPriority(const Entry* entry, const QString& host, const QString& submitUrl, const QString& baseSubmitUrl) const;
+     bool matchUrlScheme(const QString& url);
++    bool matchAdditionalURLs(const Entry* entry, const QString& hostname, const QString& url);
+     bool removeFirstDomain(QString& hostname);
+     QString baseDomain(const QString& url) const;
+     QSharedPointer<Database> getDatabase();
+diff --git a/src/core/Entry.cpp b/src/core/Entry.cpp
+index 55f56f583..88bc0e303 100644
+--- a/src/core/Entry.cpp
++++ b/src/core/Entry.cpp
+@@ -394,6 +394,41 @@ QSharedPointer<Totp::Settings> Entry::totpSettings() const
+     return m_data.totpSettings;
+ }
+ 
++QStringList Entry::additionalURLs(QString key) const
++{
++    QStringList urlList;
++
++    if (m_attributes->hasKey(key)) {
++        urlList = m_attributes->value(key).split('\n', QString::SkipEmptyParts);
++    }
++
++    return urlList;
++}
++
++void Entry::migrateAttributes()
++{
++    renameAttribute("altURLs", "URL_ALT");
++    renameAttribute("regExURLs", "URL_REGEX");
++}
++
++void Entry::renameAttribute(const QString& from, const QString& to)
++{
++    if (m_attributes->hasKey(from)) {
++        qDebug() << "Migrate the attribute" << from << " in entry" << title() << "to" << to;
++        m_attributes->rename(from, to);
++    }
++}
++
++QStringList Entry::altURLs() const
++{
++    return additionalURLs("URL_ALT");
++}
++
++QStringList Entry::regExURLs() const
++{
++    return additionalURLs("URL_REGEX");
++}
++
+ void Entry::setUuid(const QUuid& uuid)
+ {
+     Q_ASSERT(!uuid.isNull());
+diff --git a/src/core/Entry.h b/src/core/Entry.h
+index 655cc3621..e75f8ee0f 100644
+--- a/src/core/Entry.h
++++ b/src/core/Entry.h
+@@ -107,6 +107,8 @@ class Entry : public QObject
+     QString notes() const;
+     QString totp() const;
+     QSharedPointer<Totp::Settings> totpSettings() const;
++    QStringList altURLs() const;
++    QStringList regExURLs() const;
+ 
+     bool hasTotp() const;
+     bool isExpired() const;
+@@ -218,6 +220,8 @@ class Entry : public QObject
+     bool canUpdateTimeinfo() const;
+     void setUpdateTimeinfo(bool value);
+ 
++    void migrateAttributes();
++
+ signals:
+     /**
+      * Emitted when a default attribute has been changed.
+@@ -240,6 +244,8 @@ private slots:
+     static EntryReferenceType referenceType(const QString& referenceStr);
+ 
+     template <class T> bool set(T& property, const T& value);
++    QStringList additionalURLs(QString key) const;
++    void renameAttribute(const QString& from, const QString& to);
+ 
+     QUuid m_uuid;
+     EntryData m_data;
+diff --git a/src/format/KdbxXmlWriter.cpp b/src/format/KdbxXmlWriter.cpp
+index a95a60091..626d96414 100644
+--- a/src/format/KdbxXmlWriter.cpp
++++ b/src/format/KdbxXmlWriter.cpp
+@@ -251,6 +251,10 @@ void KdbxXmlWriter::writeRoot()
+ 
+     m_xml.writeStartElement("Root");
+ 
++    for (Entry* entry : m_db->rootGroup()->entriesRecursive()) {
++        entry->migrateAttributes();
++    }
++
+     writeGroup(m_db->rootGroup());
+     writeDeletedObjects();
+ 
+
+From d9a90b6f6aacab7ed25f025133160c385df9cd9d Mon Sep 17 00:00:00 2001
+From: Chih-Hsuan Yen <yan12125@gmail.com>
+Date: Fri, 21 Sep 2018 23:21:42 +0800
+Subject: [PATCH 2/3] Fix matching for entries with URL_{ALT,REGEX} attributes
+ but no url field
+
+---
+ src/browser/BrowserService.cpp | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/src/browser/BrowserService.cpp b/src/browser/BrowserService.cpp
+index 0a3750dc0..e29c15e0f 100644
+--- a/src/browser/BrowserService.cpp
++++ b/src/browser/BrowserService.cpp
+@@ -392,6 +392,11 @@ QList<Entry*> BrowserService::searchEntries(QSharedPointer<Database> db, const Q
+     // XXX: will this include disabled entries or ones in recycle bin?
+     // TODO: check if this is compatible with https://github.com/keepassxreboot/keepassxc/pull/2253
+     for (Entry* entry : rootGroup->entriesRecursive()) {
++        if (matchAdditionalURLs(entry, hostname, url)) {
++            entries.append(entry);
++            continue;
++        }
++
+         QString entryUrl = entry->url();
+         QUrl entryQUrl(entryUrl);
+         QString entryScheme = entryQUrl.scheme();
+@@ -406,8 +411,7 @@ QList<Entry*> BrowserService::searchEntries(QSharedPointer<Database> db, const Q
+ 
+         // Filter to match hostname in URL field
+         if ((!entryUrl.isEmpty() && hostname.contains(entryUrl))
+-            || (matchUrlScheme(entryUrl) && hostname.endsWith(entryQUrl.host()))
+-            || matchAdditionalURLs(entry, hostname, url)) {
++            || (matchUrlScheme(entryUrl) && hostname.endsWith(entryQUrl.host()))) {
+                 entries.append(entry);
+         }
+     }
+@@ -418,6 +422,7 @@ QList<Entry*> BrowserService::searchEntries(QSharedPointer<Database> db, const Q
+ bool BrowserService::matchAdditionalURLs(const Entry* entry, const QString& hostname, const QString& url)
+ {
+     for (QString altURL : entry->altURLs()) {
++        // TODO: match port and scheme
+         if (matchUrlScheme(altURL) && hostname.endsWith(QUrl(altURL).host())) {
+             return true;
+         }
+
+From a1f4eea455aab6256f4a149894a9a9cb926a548d Mon Sep 17 00:00:00 2001
+From: Chih-Hsuan Yen <yan12125@gmail.com>
+Date: Thu, 22 Nov 2018 22:33:22 +0800
+Subject: [PATCH 3/3] Fix building
+
+Inclusion of <QDebug> was dropped in d612cad09a4f1cd8ef9bf6be8bf90b75248ecfef
+---
+ src/core/Entry.cpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/core/Entry.cpp b/src/core/Entry.cpp
+index 88bc0e303..17e874321 100644
+--- a/src/core/Entry.cpp
++++ b/src/core/Entry.cpp
+@@ -26,6 +26,7 @@
+ #include "core/Metadata.h"
+ #include "totp/totp.h"
+ 
++#include <QDebug>
+ #include <QDir>
+ #include <QRegularExpression>
+ #include <utility>

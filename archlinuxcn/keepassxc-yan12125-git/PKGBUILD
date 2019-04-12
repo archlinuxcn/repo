@@ -25,10 +25,10 @@ checkdepends=(xorg-server-xvfb openbox)
 conflicts=("$_pkgname")
 provides=("$_pkgname=$pkgver")
 source=('git+https://github.com/keepassxreboot/keepassxc.git#branch=develop'
-        'multiple-urls-v1.patch::https://github.com/keepassxreboot/keepassxc/pull/1769.patch'
+        'multiple-urls-v1.patch'
         'run_test.sh')
 sha256sums=('SKIP'
-            'SKIP'
+            '17a6c2fde82544fb17eb4ec527b8912e57555e8d1ea9cefcdf0ce8d463640b5d'
             '503272fd54f31a7c34c6c60bb5b9bc11169b34084de4e1417d766cc5a6f88029')
 validpgpkeys=('BF5A669F2272CF4324C1FDA8CFB4C2166397D0D2') # KeePassXC Release <release@keepassxc.org>
 
@@ -56,6 +56,7 @@ build() {
     -DWITH_GUI_TESTS=ON \
     -DWITH_XC_ALL=ON \
     -DWITH_XC_KEESHARE_SECURE=ON \
+    -DWITH_XC_UPDATECHECK=OFF \
     ..
 
   make
