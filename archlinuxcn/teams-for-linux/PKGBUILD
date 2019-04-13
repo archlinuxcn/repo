@@ -2,8 +2,8 @@
 # Contributor: Ivelin Velkov <ivelin dot velkov at gmail dot com>
 
 pkgname=teams-for-linux
-pkgver=0.1.17
-pkgrel=2
+pkgver=0.2.0
+pkgrel=1
 pkgdesc="Unofficial Microsoft Teams client for Linux using Electron."
 arch=("aarch64" "armv7h" "i686" "x86_64")
 url="https://github.com/IsmaelMartinez/${pkgname}"
@@ -12,7 +12,7 @@ depends=("gtk3" "libxss" "nss")
 makedepends=("node-gyp" "python2" "yarn")
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/IsmaelMartinez/${pkgname}/archive/v${pkgver}.tar.gz"
         "${pkgname}.desktop")
-sha256sums=("9f9828fc699b130b15f69759cc225897c89c26852f1ea7e475f748ef70594e07"
+sha256sums=("11790851a576c135dcfec1fa5c1935ac5793929ab19442a7c5fac75cae09b121"
             "f33ab4997c329567bbe172fe77ee6cbced5c5d4354e12ef52a89dd702422fded")
 
 build() {
