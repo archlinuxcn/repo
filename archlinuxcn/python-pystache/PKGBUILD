@@ -2,11 +2,12 @@
 pkgname=python-pystache
 _pkgname=pystache
 pkgver=0.5.4
-pkgrel=4
+pkgrel=5
 pkgdesc="The mustache template engine written in python"
 arch=("any")
 url="http://github.com/defunkt/pystache"
 license=('MIT')
+depends=('python')
 makedepends=('python-setuptools')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/defunkt/$_pkgname/archive/v$pkgver.tar.gz")
 sha256sums=('163f5b8fb45f6be3a5074a53a47e79ef51ec015ee43f3ec34b16be279147c96f')
