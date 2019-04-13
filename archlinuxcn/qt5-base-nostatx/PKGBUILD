@@ -35,7 +35,6 @@ optdepends=('qt5-svg: to use SVG icon themes'
             'freetds: MS SQL driver'
             'gtk3: GTK platform plugin')
 conflicts=('qtchooser')
-groups=('qt' 'qt5')
 _pkgfqn="${_pkgbase/5-/}-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz")
 sha256sums=('562c095a59c95f393762ec53bc05c0d80fad1758fd5ff7a5231967d1a98d56c1')
