@@ -2,13 +2,13 @@
 # Contributor: Adam Harvey <adam@adamharvey.name>
 
 pkgname=apfs-fuse-git
-pkgver=r76.f7b4277
+pkgver=r77.670e45e
 pkgrel=1
 pkgdesc="FUSE driver for APFS (Apple File System)"
 arch=('i686' 'x86_64')
 url="https://github.com/sgan81/apfs-fuse"
 license=('GPL2')
-depends=('fuse2' 'bzip2' 'zlib')
+depends=('fuse3' 'bzip2' 'zlib')
 makedepends=('git' 'cmake')
 provides=("${pkgname%-git}=$pkgver")
 conflicts=("${pkgname%-git}")
