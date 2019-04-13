@@ -13,19 +13,19 @@ pkgver=1.4.0
 pkgrel=1
 pkgdesc="Additional statistics functions for Octave."
 arch=(any)
-url="http://octave.sourceforge.net/$_pack/"
+url="https://octave.sourceforge.io/$_pack/"
 license=('custom')
 groups=('octave-forge')
-depends=('octave>=3.6.1' 'octave-io>=1.0.18')
+depends=('octave>=4.0.0' 'octave-io>=1.0.18')
 makedepends=()
 optdepends=()
 backup=()
 options=()
 install=$pkgname.install
 _archive=$_pack-$pkgver.tar.gz
-source=("http://downloads.sourceforge.net/octave/$_archive")
+source=("https://downloads.sourceforge.net/octave/$_archive")
 noextract=("$_archive")
-md5sums=('f695ada508642f2fd43c9018953aa85f')
+sha256sums=('3021ccec2517a8146820d41900a69abf0d05772260d1f41ff640da7d2909b620')
 
 _octave_run() {
 	octave --no-history --no-init-file --no-window-system -q -f --eval "$*"
