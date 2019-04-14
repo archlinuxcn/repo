@@ -2,7 +2,7 @@
 
 pkgname=ddnet
 pkgver=12.1
-pkgrel=1
+pkgrel=2
 pkgdesc="DDraceNetwork, a cooperative racing mod of Teeworlds"
 arch=('x86_64')
 url="https://ddnet.tw"
@@ -34,8 +34,10 @@ prepare() {
     convert ../DDNet-$pkgver/other/icons/DDNet.ico        ddnet.png
 
       # Generate .desktop files
-    gendesk --pkgname="DDNet" --pkgdesc="DDNet" \
-            --icon="ddnet" --categories="Game;ArcadeGame"
+    gendesk --pkgname="DDNet" --pkgdesc="DDNet"           \
+            --icon="ddnet" --categories="Game;ArcadeGame" \
+            --mimetypes="x-scheme-handler/ddnet"          \
+            --exec="DDNet %u"
     gendesk --pkgname="DDNet-Server" --name="DDNet Server"          \
             --pkgdesc="DDNet Server" --terminal=true                \
             --icon="ddnet-server"    --categories="Game;ArcadeGame" \
