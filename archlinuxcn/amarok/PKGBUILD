@@ -5,7 +5,7 @@
 # Contributor: damir <damir@archlinux.org>
 
 pkgname=amarok
-pkgver=2.9.0.r354.2351bcd67b
+pkgver=2.9.0.r362.f0d3e6f069
 pkgrel=1
 pkgdesc="The powerful music player for KDE"
 arch=("x86_64")
@@ -13,15 +13,17 @@ url="http://${pkgname}.kde.org/"
 license=("FDL" "GPL2" "LGPL2.1")
 depends=("kcmutils" "kdnssd" "kirigami2" "knewstuff" "ktexteditor" "libgpod" "liblastfm-qt5" "libmtp" "libmygpo-qt5" "libofa" "mariadb" "phonon-qt5" "qt5-webengine" "taglib-extras" "threadweaver")
 makedepends=("extra-cmake-modules" "gdk-pixbuf2" "git" "knotifyconfig" "libgpod" "libmtp" "libmygpo-qt5" "loudmouth")
-optdepends=("ifuse: support for Apple iPod Touch and iPhone"
-            "loudmouth: backend needed by mp3tunes for syncing")
-_commit="2351bcd67b33d43449283e50b1dbc7de012a2414"
+optdepends=(
+  "ifuse: support for Apple iPod Touch and iPhone"
+  "loudmouth: backend needed by mp3tunes for syncing"
+)
+_commit="f0d3e6f069dd2e60b299ea855e5ac4759582923e"
 source=(
   "${pkgname}-${pkgver}.tar.gz::https://github.com/KDE/${pkgname}/archive/${_commit}.tar.gz"
   "${pkgname}_mariadb.patch"
 )
 sha256sums=(
-  "6ff5156f1753d3f17a7f61773704b790be626cd5919da19e6c00697f0cb3c5fd"
+  "60e162ce5c96b77064a9c5f9313b507a5f784752d166e22fb0264650e30beaec"
   "029937d925993fa0b3cbe460f6d0c8f9fd624fc8dffff22acbbd3da600720dab"
 )
 
