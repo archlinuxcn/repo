@@ -3,7 +3,7 @@
 
 pkgname=netease-musicbox-git
 _gitname=musicbox
-pkgver=r589.1234e66
+pkgver=r590.8a7c1cf
 pkgrel=1
 pkgdesc="A sexy command line interface musicbox for NetEase based on Python"
 arch=(any)
