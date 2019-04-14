@@ -1,72 +1,76 @@
 # Maintainer: Fredy García <frealgagu at gmail dot com>
 
 pkgname=linphone-desktop-all-git
-pkgver=4.1.1.r647.ffd98dbc
+pkgver=4.1.1.r655.95245907
 pkgrel=1
 pkgdesc="A free VoIP and video softphone based on the SIP protocol (Installed in /opt with all deps included)."
 arch=("x86_64")
 url="https://www.${pkgname%-desktop-all-git}.org/"
 license=("GPL2")
 depends=("alsa-utils" "desktop-file-utils" "glew" "gsm" "java-runtime" "libbsd" "pulseaudio" "qt5-graphicaleffects" "qt5-quickcontrols" "qt5-quickcontrols2" "qt5-speech" "qt5-svg" "qt5-tools" "v4l-utils")
-makedepends=("cmake" "doxygen" "git" "graphviz" "ladspa" "nasm" "python-pystache" "yasm")
+makedepends=("cmake" "doxygen" "git" "graphviz" "ladspa" "nasm" "python-pystache" "python-setuptools" "yasm")
 provides=("${pkgname%-all-git}" "${pkgname%-git}")
 conflicts=("${pkgname%-desktop-all-git}" "${pkgname%-all-git}" "${pkgname%-git}")
-source=("${pkgname%-all-git}::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/${pkgname%-all-git}.git"
-        "bcg729::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/bcg729.git"
-        "bcmatroska2::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/bcmatroska2.git"
-        "bctoolbox::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/bctoolbox.git"
-        "bcunit::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/bcunit.git"
-        "belcard::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/belcard.git"
-        "belle-sip::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/belle-sip.git"
-        "belr::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/belr.git"
-        "bzrtp::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/bzrtp.git"
-        "bv16-floatingpoint::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/bv16-floatingpoint.git"
-        "codec2::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/codec2.git"
-        "decaf::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/decaf.git"
-        "ffmpeg::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/ffmpeg.git"
-        "gsm::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/gsm.git"
-        "libjpeg-turbo::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/libjpeg-turbo.git"
-        "libvpx::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/libvpx.git"
-        "libxml2::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/libxml2.git"
-        "libxsd::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/libxsd.git"
-        "mbedtls::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/mbedtls.git"
-        "minizip::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/minizip.git"
-        "opencore-amr::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/opencore-amr.git"
-        "openh264::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/openh264.git"
-        "opus::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/opus.git"
-        "soci::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/soci.git"
-        "speex::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/speex.git"
-        "sqlite3::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/sqlite3.git"
-        "srtp::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/srtp.git"
-        "vo-amrwbenc::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/vo-amrwbenc.git"
-        "xerces-c::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/xerces-c.git"
-        "zlib::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/zlib.git"
-        "zxing-cpp::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/zxing-cpp.git"
-        "lime::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/lime.git"
-        "${pkgname%-desktop-all-git}-cmake-builder::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/${pkgname%-desktop-all-git}-cmake-builder.git"
-        "${pkgname%-desktop-all-git}-sdk::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/${pkgname%-desktop-all-git}-sdk.git"
-        "${pkgname%-desktop-all-git}::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/${pkgname%-desktop-all-git}.git"
-        "mediastreamer2::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/mediastreamer2.git"
-        "msamr::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/msamr.git"
-        "mscodec2::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/mscodec2.git"
-        "msopenh264::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/msopenh264.git"
-        "mssilk::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/mssilk.git"
-        "mswasapi::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/mswasapi.git"
-        "mswebrtc::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/mswebrtc.git"
-        "ortp::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/ortp.git"
-        "webrtc::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/webrtc.git"
-        "${pkgname%-desktop-all-git}.desktop"
-        "${pkgname%-all-git}.patch"
-        "${pkgname%-desktop-all-git}.patch"
-        "soci.patch")
-sha256sums=("SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP"
-            "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP"
-            "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP"
-            "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP"
-            "346d983f503873811b3a4f72772e5afe4990275526c9e15c1b5cde2ad69a0544"
-            "e7574cdb0a5f8d334b1ed1d938fd6c7639e5785b80f01d39e81a682595af4171"
-            "88bc7f2f6ca9cf9ad54c1e4f42fe02597070aa2cb6c8d21c3b619739550a6651"
-            "61a9a107267658971348343433a0709af7e1160d4227867faa8decd255f0289c")
+source=(
+  "${pkgname%-all-git}::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/${pkgname%-all-git}.git"
+  "bcg729::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/bcg729.git"
+  "bcmatroska2::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/bcmatroska2.git"
+  "bctoolbox::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/bctoolbox.git"
+  "bcunit::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/bcunit.git"
+  "belcard::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/belcard.git"
+  "belle-sip::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/belle-sip.git"
+  "belr::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/belr.git"
+  "bzrtp::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/bzrtp.git"
+  "bv16-floatingpoint::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/bv16-floatingpoint.git"
+  "codec2::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/codec2.git"
+  "decaf::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/decaf.git"
+  "ffmpeg::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/ffmpeg.git"
+  "gsm::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/gsm.git"
+  "libjpeg-turbo::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/libjpeg-turbo.git"
+  "libvpx::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/libvpx.git"
+  "libxml2::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/libxml2.git"
+  "libxsd::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/libxsd.git"
+  "mbedtls::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/mbedtls.git"
+  "minizip::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/minizip.git"
+  "opencore-amr::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/opencore-amr.git"
+  "openh264::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/openh264.git"
+  "opus::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/opus.git"
+  "soci::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/soci.git"
+  "speex::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/speex.git"
+  "sqlite3::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/sqlite3.git"
+  "srtp::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/srtp.git"
+  "vo-amrwbenc::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/vo-amrwbenc.git"
+  "xerces-c::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/xerces-c.git"
+  "zlib::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/zlib.git"
+  "zxing-cpp::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/zxing-cpp.git"
+  "lime::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/lime.git"
+  "${pkgname%-desktop-all-git}-cmake-builder::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/${pkgname%-desktop-all-git}-cmake-builder.git"
+  "${pkgname%-desktop-all-git}-sdk::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/${pkgname%-desktop-all-git}-sdk.git"
+  "${pkgname%-desktop-all-git}::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/${pkgname%-desktop-all-git}.git"
+  "mediastreamer2::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/mediastreamer2.git"
+  "msamr::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/msamr.git"
+  "mscodec2::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/mscodec2.git"
+  "msopenh264::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/msopenh264.git"
+  "mssilk::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/mssilk.git"
+  "mswasapi::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/mswasapi.git"
+  "mswebrtc::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/mswebrtc.git"
+  "ortp::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/ortp.git"
+  "webrtc::git+https://gitlab.${pkgname%-desktop-all-git}.org/BC/public/external/webrtc.git"
+  "${pkgname%-desktop-all-git}.desktop"
+  "${pkgname%-all-git}.patch"
+  "${pkgname%-desktop-all-git}.patch"
+  "soci.patch"
+)
+sha256sums=(
+  "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP"
+  "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP"
+  "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP"
+  "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP" "SKIP"
+  "346d983f503873811b3a4f72772e5afe4990275526c9e15c1b5cde2ad69a0544"
+  "e7574cdb0a5f8d334b1ed1d938fd6c7639e5785b80f01d39e81a682595af4171"
+  "c1f54c0634c2d42d091890ed5a73bcecf8c7c2d0c7f052a0014840ab36c64a01"
+  "61a9a107267658971348343433a0709af7e1160d4227867faa8decd255f0289c"
+)
 
 prepare() {
   cd "${srcdir}/${pkgname%-all-git}"
@@ -133,11 +137,6 @@ prepare() {
   cd "${srcdir}/${pkgname%-all-git}/${pkgname%-desktop-all-git}-sdk/external/soci"
 
   patch -Np1 -i "${srcdir}/soci.patch"
-  
-  #Temporal fix
-  cd "${srcdir}/${pkgname%-all-git}/${pkgname%-desktop-all-git}-sdk/external/opencore-amr"
-  
-  git checkout 6e799838855bca868ef50a0953f0c771924321c3
 }
 
 pkgver() {
