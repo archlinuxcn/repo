@@ -6,7 +6,7 @@
 pkgname=boostnote
 _pkgname=Boostnote
 pkgver=0.11.15
-pkgrel=1
+pkgrel=2
 pkgdesc="Open source note-taking app for programmers"
 arch=('any')
 url="https://boostnote.io/"
@@ -20,19 +20,25 @@ source=(
   "${pkgname}.desktop"
   "warning-fix.patch"
   "remove-analytics.patch"
+  "fix-js-sequence-diagrams.patch"
+  "electron_4.patch"
   )
 
 sha512sums=('531e58d0e8620d745dab1245b036cf39a88e8951d2b1d11dabb4ce6c52cce97c2a961bbc25516cbb2b5b543d359bff66aa2f4f5f6894eb39392630ee1699d69e'
             '1f0ccd2a3632a12c4714d97b9f909ddc94b53d6f86a9e4bdcab31abd55a93071a2c35c6e1e9527b747de6dd74b8a5276414980c11e174085f28b8f2d2721230a'
             '18bcda13580da8ceeaa86793a77ec00a053b8fd51451dad7e2b1a19553fe1a467ac647b44b789212e783f3f6a80968cc9404e884ef7ff6b1f6588473b3229d40'
             'a52e5631867e2c5f18465dee6a3201b9b5c546bda373205c4891c9f7b6114599e0854e2b49defb55ee7bea0778a7fde9c9d9f7271dceeeece743a2d72e2fd0c6'
-            '65280bb7e30e07746a63b93be0e32299424683ade760d52031765099048761c863bd2905fbe98a808d85b991777734c6645e887d51493db063984ff236c4fae8')
+            '65280bb7e30e07746a63b93be0e32299424683ade760d52031765099048761c863bd2905fbe98a808d85b991777734c6645e887d51493db063984ff236c4fae8'
+            'c39485dadfaa4c8769e7a1eb4cda637563d95dc3cbd8d391c133dd0cdf7d46ecda1c7a11d46a94ba5de5207dc407c3f07c0f617a81aaab8acd05813f30c9f0cc'
+            'b6e704343c4bdf48273ea680761ccae38cd87a3ea8f87db3b5cf18c99921351b4519c6a4b2cf20417d58a02a4a20e59f354ff96b1cdbc6328e83bff527654647')
 
 prepare() {
   cd "${_pkgname}-${pkgver}"
 
   patch -Np1 -i "${srcdir}/warning-fix.patch"
   patch -Np1 -i "${srcdir}/remove-analytics.patch"
+  patch -Np1 -i "${srcdir}/fix-js-sequence-diagrams.patch"
+  patch -Np1 -i "${srcdir}/electron_4.patch"
 }
 
 build() {

@@ -1,0 +1,73 @@
+diff -ura a/browser/components/MarkdownPreview.js b/browser/components/MarkdownPreview.js
+--- a/browser/components/MarkdownPreview.js	2019-02-08 12:33:20.000000000 +0100
++++ b/browser/components/MarkdownPreview.js	2019-04-14 09:28:50.488863230 +0200
+@@ -8,7 +8,7 @@
+ import Raphael from 'raphael'
+ import flowchart from 'flowchart'
+ import mermaidRender from './render/MermaidRender'
+-import SequenceDiagram from 'js-sequence-diagrams'
++import SequenceDiagram from '@rokt33r/js-sequence-diagrams'
+ import Chart from 'chart.js'
+ import eventEmitter from 'browser/main/lib/eventEmitter'
+ import htmlTextHelper from 'browser/lib/htmlTextHelper'
+diff -ura a/lib/main.html b/lib/main.html
+--- a/lib/main.html	2019-02-08 12:33:20.000000000 +0100
++++ b/lib/main.html	2019-04-14 09:30:07.858815447 +0200
+@@ -17,9 +17,11 @@
+   <style>
+     @font-face {
+       font-family: 'OpenSans';
+-      src: url('../resources/fonts/Lato-Regular.woff2') format('woff2'), /* Modern Browsers */
+-      url('../resources/fonts/Lato-Regular.woff') format('woff'), /* Modern Browsers */
+-      url('../resources/fonts/Lato-Regular.ttf') format('truetype');
++      src: url('../resources/fonts/Lato-Regular.woff2') format('woff2'),
++        /* Modern Browsers */
++        url('../resources/fonts/Lato-Regular.woff') format('woff'),
++        /* Modern Browsers */
++        url('../resources/fonts/Lato-Regular.ttf') format('truetype');
+       font-style: normal;
+       font-weight: normal;
+       text-rendering: optimizeLegibility;
+@@ -27,9 +29,11 @@
+ 
+     @font-face {
+       font-family: 'Lato';
+-      src: url('../resources/fonts/Lato-Regular.woff2') format('woff2'), /* Modern Browsers */
+-      url('../resources/fonts/Lato-Regular.woff') format('woff'), /* Modern Browsers */
+-      url('../resources/fonts/Lato-Regular.ttf') format('truetype');
++      src: url('../resources/fonts/Lato-Regular.woff2') format('woff2'),
++        /* Modern Browsers */
++        url('../resources/fonts/Lato-Regular.woff') format('woff'),
++        /* Modern Browsers */
++        url('../resources/fonts/Lato-Regular.ttf') format('truetype');
+       font-style: normal;
+       font-weight: normal;
+       text-rendering: optimizeLegibility;
+@@ -131,7 +135,7 @@
+     window._ = require('lodash')
+   </script>
+ 
+-  <script src="../node_modules/js-sequence-diagrams/fucknpm/sequence-diagram-min.js"></script>
++  <script src="../node_modules/@rokt33r/js-sequence-diagrams/dist/sequence-diagram-min.js"></script>
+   <script src="../node_modules/react/dist/react.min.js"></script>
+   <script src="../node_modules/react-dom/dist/react-dom.min.js"></script>
+   <script src="../node_modules/redux/dist/redux.min.js"></script>
+diff -ura a/package.json b/package.json
+--- a/package.json	2019-02-08 12:33:20.000000000 +0100
++++ b/package.json	2019-04-14 09:30:50.725905845 +0200
+@@ -50,6 +50,7 @@
+   "homepage": "https://boostnote.io",
+   "dependencies": {
+     "@enyaxu/markdown-it-anchor": "^5.0.2",
++    "@rokt33r/js-sequence-diagrams": "^2.0.6-2",
+     "@rokt33r/markdown-it-math": "^4.0.1",
+     "@rokt33r/season": "^5.3.0",
+     "@susisu/mte-kernel": "^2.0.0",
+@@ -72,7 +73,6 @@
+     "iconv-lite": "^0.4.19",
+     "immutable": "^3.8.1",
+     "invert-color": "^2.0.0",
+-    "js-sequence-diagrams": "^1000000.0.6",
+     "js-yaml": "^3.12.0",
+     "katex": "^0.9.0",
+     "lodash": "^4.11.1",

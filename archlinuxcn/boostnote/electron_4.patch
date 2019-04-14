@@ -1,0 +1,35 @@
+diff -ura a/lib/main-app.js b/lib/main-app.js
+--- a/lib/main-app.js	2019-02-08 12:33:20.000000000 +0100
++++ b/lib/main-app.js	2019-04-14 10:06:21.472641974 +0200
+@@ -10,19 +10,20 @@
+ 
+ var mainWindow = null
+ 
+-var shouldQuit = app.makeSingleInstance(function (commandLine, workingDirectory) {
+-  if (mainWindow) {
+-    if (process.platform === 'win32') {
+-      mainWindow.minimize()
+-      mainWindow.restore()
+-    }
+-    mainWindow.focus()
+-  }
+-  return true
+-})
++const gotTheLock = app.requestSingleInstanceLock()
+ 
+-if (shouldQuit) {
++if (!gotTheLock) {
+   app.quit()
++} else {
++  app.on('second-instance', (event, commandLine, workingDirectory) => {
++    if (mainWindow) {
++      if (process.platform === 'win32') {
++        mainWindow.minimize()
++        mainWindow.restore()
++      }
++      mainWindow.focus()
++    }
++  })
+ }
+ 
+ var isUpdateReady = false
