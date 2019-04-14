@@ -3,7 +3,7 @@
 
 pkgname=lazygit
 pkgver=0.7.2
-pkgrel=1
+pkgrel=2
 pkgdesc="A simple terminal UI for git commands"
 arch=("x86_64")
 url="https://github.com/jesseduffield/${pkgname}"
@@ -22,7 +22,7 @@ prepare() {
 
 build () {
   cd "${srcdir}/src/github.com/jesseduffield/${pkgname}"
-  GOPATH="${srcdir}" PATH="${PATH}:${GOPATH}/bin" go build -x -i -v -ldflags "-X main.commit=${_commit} -X main.date=$(date -u +%Y-%m-%dT%H:%M:%SZ) -X main.buildSource=binaryRelease -X main.version=${pkgver}" -o "${pkgname}.bin"
+  GOPATH="${srcdir}" PATH="${PATH}:${GOPATH}/bin" go build -x -i -v -ldflags "-extldflags ${LDFLAGS} -X main.commit=${_commit} -X main.date=$(date -u +%Y-%m-%dT%H:%M:%SZ) -X main.buildSource=binaryRelease -X main.version=${pkgver}" -o "${pkgname}.bin"
 }
 
 package () {
