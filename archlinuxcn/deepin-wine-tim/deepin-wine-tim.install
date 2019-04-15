@@ -1,7 +1,0 @@
-post_upgrade() {
-    find /home -maxdepth 2 -name ".deepinwine" -exec rm -f \{\}/Deepin-TIM/reinstalled \;
-}
-pre_remove() {
-    echo "deleting the TIM bottle..."
-    find /home -maxdepth 2 -name ".deepinwine" -exec rm -rf \{\}/Deepin-TIM/ \;
-}
