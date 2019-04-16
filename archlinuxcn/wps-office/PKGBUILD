@@ -5,10 +5,10 @@
 # Contributor: Ariel AxionL <axionl at aosc dot io>
 
 pkgname=wps-office
-pkgver=11.1.0.8372
+pkgver=11.1.0.8392
 #_pkgver=8372
-pkgrel=2
-_pkgrel=1
+pkgrel=1
+#_pkgrel=1
 pkgdesc="Kingsoft Office (WPS Office) is an office productivity suite"
 arch=('i686' 'x86_64')
 license=("custom")
@@ -23,16 +23,18 @@ conflicts=('kingsoft-office')
 options=('!emptydirs')
 install=${pkgname}.install
 [[ "$CARCH" = "i686" ]] && _archext=x86 || _archext=x86_64
-source_i686=("http://kdl.cc.ksosoft.com/wps-community/download/${pkgver##*.}/wps-office-${pkgver}-${_pkgrel}.i686.rpm"
+source_i686=("http://kdl.cc.ksosoft.com/wps-community/download/${pkgver##*.}/wps-office_${pkgver}_i386.deb"
             'add_no_kdialog_variable.patch')
-source_x86_64=("http://kdl.cc.ksosoft.com/wps-community/download/${pkgver##*.}/wps-office-${pkgver}-${_pkgrel}.x86_64.rpm"
+source_x86_64=("http://kdl.cc.ksosoft.com/wps-community/download/${pkgver##*.}/wps-office_${pkgver}_amd64.deb"
                'add_no_kdialog_variable.patch')
-sha1sums_i686=('9deb3908d8edad310258de0e31bcafdb5ff6bc5c'
+sha1sums_i686=('60b1c9e33ee6fc1edcefe40dc9ec529d4a668825'
                'dd8b5283ee17a88a3eb0531976abccd6e5e08c48')
-sha1sums_x86_64=('d3abdfe94a579083c8bd5e0c817de877e7531e48'
+sha1sums_x86_64=('edb1bc215e46c46bb979869e374788498486b56c'
                  'dd8b5283ee17a88a3eb0531976abccd6e5e08c48')
 
 prepare() {
+    tar -Jxf data.tar.xz
+
     cd "${srcdir}/usr/bin"
     sed -i 's|/opt/kingsoft/wps-office|/usr/lib|' wps wpp et
 #   sed -i 's|/office6/${gApp}  ${gOptExt}|/office6/${gApp} -style gtk+ ${gOptExt}|' wps
@@ -43,12 +45,12 @@ prepare() {
 }
 
 package() {
-    #cd wps-office_${pkgver}_$_archext
+#   cd wps-office_${pkgver}_$_archext
     cd "${srcdir}/opt/kingsoft/wps-office/"
 
     install -d "${pkgdir}/usr/lib"
     cp -r office6 "${pkgdir}/usr/lib"
-    chmod -x "${pkgdir}/usr/lib/office6/wpsoffice"
+#   chmod -x "${pkgdir}/usr/lib/office6/wpsoffice"
     install -Dm644 office6/mui/default/EULA.txt "${pkgdir}/usr/share/licenses/$pkgname/EULA.txt"
 
     install -d "${pkgdir}/usr/bin"
@@ -65,10 +67,10 @@ package() {
 
     install -d "${pkgdir}/usr/share/mime"
     cp -r mime/* "${pkgdir}/usr/share/mime"
-    #cp -r "$srcdir/usr/share" "${pkgdir}/usr/"
+#   cp -r "$srcdir/usr/share" "${pkgdir}/usr/"
 
-    #install -d "${pkgdir}/usr/share/fonts/wps-office"
-    #cp -r fonts/* "${pkgdir}/usr/share/fonts/wps-office"
+#   install -d "${pkgdir}/usr/share/fonts/wps-office"
+#   cp -r fonts/* "${pkgdir}/usr/share/fonts/wps-office"
 
     install -Dm644 -t "${pkgdir}/etc/xdg/menus/applications-merged" "${srcdir}/etc/xdg/menus/applications-merged/wps-office.menu"
 }
