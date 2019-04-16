@@ -6,13 +6,14 @@
 
 pkgname="mozjpeg"
 pkgver=3.3.1
-pkgrel=1
+pkgrel=2
 pkgdesc="JPEG image codec with accelerated baseline decoding and superior encoding"
 url="https://github.com/mozilla/mozjpeg"
 license=("BSD")
 arch=("i686" "x86_64" "armv7h")
+depends=("glibc")
 makedepends=("nasm")
-source=("https://github.com/mozilla/${pkgname}/archive/v${pkgver}.tar.gz")
+source=("$url/archive/v${pkgver}.tar.gz")
 sha1sums=('1a4be569d62f51e1377e46b8b22b6a64fb121794')
 
 provides=("libjpeg=8.1.2" "turbojpeg" "libjpeg-turbo")
@@ -39,7 +40,6 @@ package() {
 		exampledir="/usr/share/doc/${pkgname}" \
 		install
 
-	install -d "${pkgdir}/usr/share/licenses/${pkgname}"
-	ln -t "${pkgdir}/usr/share/licenses/${pkgname}" -s "../../doc/${pkgname}/README"{,-turbo.txt,-mozilla.txt}
+	install -D LICENSE.md "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 	install -m644 jpegint.h "${pkgdir}/usr/include"
 }
