@@ -1,44 +1,41 @@
-# Maintainer: Salvador Pardiñas <darkfm@vera.com.uy>
+# Maintainer: Maxim Kurnosenko <asusx2@mail.ru>
+# Contibutor: Salvador Pardiñas <darkfm@vera.com.uy>
+
 pkgname=woeusb-git
-pkgver=3.2.12.r2.g5e9a3a7
+pkgver=3.3.0.r0.g5e9a3a7
 pkgrel=1
 pkgdesc="A Linux program to create Windows USB stick installer from a real Windows DVD or an image"
 arch=('x86_64')
-url="https://github.com/slacka/WoeUSB"
+url="https://github.com/WoeUSB/WoeUSB-frontend-wxgtk"
 license=('GPL3')
-groups=()
-depends=('wxgtk3' 'grub' 'dosfstools'
-		'parted' 'wget' 'ntfs-3g')
-optdepends=('gksu')
+depends=('wxgtk3' 'grub' 'dosfstools' 'parted' 'wget' 'ntfs-3g')
+optdepends=('gksu'
+            'p7zip: For extracting EFI bootloader from Windows 7 installation media for EFI booting support')
 makedepends=('git')
 provides=("woeusb")
-conflicts=("")
-replaces=()
-backup=()
-options=()
-install=
-source=('git+https://github.com/slacka/WoeUSB.git')
-noextract=()
+conflicts=("woeusb")
+source=('git+https://github.com/WoeUSB/WoeUSB-frontend-wxgtk.git')
 md5sums=('SKIP')
 
 pkgver() {
-  cd "$srcdir/WoeUSB"
-  git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g' | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+    cd "$srcdir/WoeUSB-frontend-wxgtk"
+    git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 prepare() {
-	cd "$srcdir/WoeUSB"
+	cd "$srcdir/WoeUSB-frontend-wxgtk"
+    ./setup-development-environment.bash
 	autoreconf --force --install
 }
 
 build() {
-	cd "$srcdir/WoeUSB"
+	cd "$srcdir/WoeUSB-frontend-wxgtk"
 	autoconf
 	./configure --with-wx-config=wx-config-gtk3
 	make
 }
 
 package() {
-	cd "$srcdir/WoeUSB"
-	make DESTDIR="$pkgdir/" prefix="/usr/" install
+	cd "$srcdir/WoeUSB-frontend-wxgtk"
+	make DESTDIR="$pkgdir/" prefix="/usr" install
 }
