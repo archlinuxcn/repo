@@ -14,7 +14,7 @@ makedepends=('go')
 
 source=("${pkgbase}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
 
-sha256sums=('e9f3756eaceacea046f57135166577d1c27b70ffee53ccd32da77b7077209d06')
+sha256sums=('b5a52c1f84af57af57d955c130876ad966baa66f48d063b10956e806dde45823')
 
 prepare() {
   cd "${pkgbase}-${pkgver}"
@@ -46,7 +46,7 @@ packaging() {
 
 package_frpc() {
   _name=`echo ${FUNCNAME} | cut -d _ -f 2`
-
+  conflicts=('frp')
   backup=("etc/frp/${_name}.ini" "etc/frp/${_name}_full.ini")
 
   packaging ${_name}
@@ -54,7 +54,7 @@ package_frpc() {
 
 package_frps() {
   _name=`echo ${FUNCNAME} | cut -d _ -f 2`
-
+  conflicts=('frp')
   backup=("etc/frp/${_name}.ini" "etc/frp/${_name}_full.ini")
 
   packaging ${_name}
