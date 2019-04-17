@@ -1,63 +1,62 @@
 # Maintainer: Vimsucks <dev@vimsucks.com>
+# Contributor: Metal A-wing <1 at 233 dot email>
 
-pkgname=frp
+pkgbase='frp'
+pkgname=('frpc' 'frps')
 pkgver=0.26.0
 pkgrel=1
 pkgdesc="A fast reverse proxy to help you expose a local server behind a NAT or firewall to the internet."
+arch=('x86_64' 'i686' 'arm' 'armv6h' 'armv7h' 'aarch64')
 license=('Apache')
 url="https://github.com/fatedier/frp"
-arch=('x86_64' 'i686' 'arm' 'armv6h' 'armv7h' 'aarch64')
-source=(frps.service frpc.service frps@.service frpc@.service)
-source_x86_64=("https://github.com/fatedier/frp/releases/download/v${pkgver}/frp_${pkgver}_linux_amd64.tar.gz")
-source_i686=("https://github.com/fatedier/frp/releases/download/v${pkgver}/frp_${pkgver}_linux_386.tar.gz")
-source_arm=("https://github.com/fatedier/frp/releases/download/v${pkgver}/frp_${pkgver}_linux_arm.tar.gz")
-source_armv6h=("https://github.com/fatedier/frp/releases/download/v${pkgver}/frp_${pkgver}_linux_arm.tar.gz")
-source_armv7h=("https://github.com/fatedier/frp/releases/download/v${pkgver}/frp_${pkgver}_linux_arm.tar.gz")
-source_aarch64=("https://github.com/fatedier/frp/releases/download/v${pkgver}/frp_${pkgver}_linux_arm64.tar.gz")
-md5sums=('6f9c6681357f3f984983457151d7f0c5'
-         'e3bfa7c428433fa6cbb5aa64515d8899'
-         '346fabd46c12c039e39a26986629bc6d'
-         'dd170d972b1ea8c681bde054dbebf888')
-md5sums_x86_64=('0447057bf8f94ee9d310972fc00f2b80')
-md5sums_i686=('0d10842539025461fc258e60cb2228c4')
-md5sums_arm=('e9e2d0041baff6c02906a41a80b80e8d')
-md5sums_armv6h=('e9e2d0041baff6c02906a41a80b80e8d')
-md5sums_armv7h=('e9e2d0041baff6c02906a41a80b80e8d')
-md5sums_aarch64=('752462348b11d2cec82262987648682f')
-install=$pkgname.install
-backup=(etc/frp/{frpc.ini,frps.ini,frpc_full.ini,frps_full.ini})
+depends=('glibc')
+makedepends=('go')
 
-package() {
-	case $CARCH in
-		x86_64)ARCH=amd64
-			;;
-		i686)ARCH=386
-			;;
-		arm)ARCH=arm
-			;;
-		armv6h)ARCH=arm
-			;;
-		armv7h)ARCH=arm
-			;;
-		aarch64)ARCH=arm64
-			;;
-	esac
-	frpdir=$srcdir/frp_${pkgver}_linux_${ARCH}
+source=("${pkgbase}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
 
-	mkdir -p $pkgdir/usr/bin
-	install -m755  $frpdir/frpc $pkgdir/usr/bin/frpc
-	install -m755  $frpdir/frps $pkgdir/usr/bin/frps
+sha256sums=('e9f3756eaceacea046f57135166577d1c27b70ffee53ccd32da77b7077209d06')
 
-	mkdir -p $pkgdir/etc/frp
-	install -Dm644 $frpdir/frpc.ini $pkgdir/etc/frp/frpc.ini
-	install -Dm644 $frpdir/frpc_full.ini $pkgdir/etc/frp/frpc_full.ini
-	install -Dm644 $frpdir/frps.ini $pkgdir/etc/frp/frps.ini
-	install -Dm644 $frpdir/frps_full.ini $pkgdir/etc/frp/frps_full.ini
-
-	install -Dm644 $frpdir/LICENSE $pkgdir/usr/share/licenses/$pkgname/LICENSE
-
-	install -Dm644 frps.service  $pkgdir/usr/lib/systemd/system/frps.service
-	install -Dm644 frpc.service  $pkgdir/usr/lib/systemd/system/frpc.service
-	install -Dm644 frps@.service  $pkgdir/usr/lib/systemd/system/frps@.service
-	install -Dm644 frpc@.service  $pkgdir/usr/lib/systemd/system/frpc@.service
+prepare() {
+  cd "${pkgbase}-${pkgver}"
+  sed -i 's#go build -o bin/#go build -mod=vendor -o bin/#g' Makefile
 }
+
+build() {
+  #make all
+  #export GOPATH=`pwd`"/vendor"
+  cd "${pkgbase}-${pkgver}"
+  make build
+}
+
+check() {
+  cd "${pkgbase}-${pkgver}"
+  sed -i 's#go test -v#go test -mod=vendor -v#g' Makefile
+  make test
+}
+
+packaging() {
+	install -Dm755  ${srcdir}/${pkgbase}-${pkgver}/bin/${1} ${pkgdir}/usr/bin/${1}
+
+  install -Dm644 ${srcdir}/${pkgbase}-${pkgver}/conf/${1}.ini ${pkgdir}/etc/frp/${1}.ini
+  install -Dm644 ${srcdir}/${pkgbase}-${pkgver}/conf/${1}_full.ini ${pkgdir}/etc/frp/${1}_full.ini
+
+	install -Dm644 ${srcdir}/${pkgbase}-${pkgver}/conf/systemd/${1}.service  ${pkgdir}/usr/lib/systemd/system/${1}.service
+	install -Dm644 ${srcdir}/${pkgbase}-${pkgver}/conf/systemd/${1}@.service  ${pkgdir}/usr/lib/systemd/system/${1}@.service
+}
+
+package_frpc() {
+  _name=`echo ${FUNCNAME} | cut -d _ -f 2`
+
+  backup=("etc/frp/${_name}.ini" "etc/frp/${_name}_full.ini")
+
+  packaging ${_name}
+}
+
+package_frps() {
+  _name=`echo ${FUNCNAME} | cut -d _ -f 2`
+
+  backup=("etc/frp/${_name}.ini" "etc/frp/${_name}_full.ini")
+
+  packaging ${_name}
+}
+
