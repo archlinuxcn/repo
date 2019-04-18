@@ -1,12 +1,12 @@
 # Author and Maintainer: renyuneyun <renyuneyun@gmail.com>
 # Original author: Samantha McVey <samantham@posteo.net>
-# Copyright (C) 2017 - 2018
+# Copyright (C) 2017 - 2019
 # This file and project are licensed under the GPLv2 or greater at your choice.
 # For more information view the license included or visit:
 # https://www.gnu.org/licenses/gpl-2.0.html
 
-pkgname=('pacman-pstatus')
-pkgver=0.2.3
+pkgname=pacman-pstatus
+pkgver=0.3.0
 pkgrel=1
 arch=('any')
 url='https://gitlab.com/renyuneyun/pacman-ps'
@@ -42,8 +42,8 @@ package() {
   ln -sr ${pkgdir}${LIB_DIR}/pacman-ps.py ${pkgdir}${BIN_DIR}/pacman-ps
   ln -sr ${pkgdir}${LIB_DIR}/ps-lsof.py ${pkgdir}${BIN_DIR}/ps-lsof
 
-  install -D -m 755 ${repodir}/pacman-ps-posthook.sh ${pkgdir}${BIN_DIR}/pacman-ps-posthook
-  install -D -m 755 ${repodir}/pacman-ps-prehook.sh ${pkgdir}${BIN_DIR}/pacman-ps-prehook
+  install -D -m 755 ${repodir}/pacman-ps-record.sh ${pkgdir}${BIN_DIR}/pacman-ps-record.sh
+  install -D -m 755 ${repodir}/pacman-ps-optimize-db.sh ${pkgdir}${BIN_DIR}/pacman-ps-optimize-db.sh
 
   install -D -m 644 ${repodir}/license.txt ${pkgdir}${LICENSE_DIR}/${pkgname}/license.txt
 
