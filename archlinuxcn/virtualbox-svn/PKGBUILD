@@ -11,8 +11,8 @@ pkgname=('virtualbox-svn'
          'virtualbox-guest-utils-nox-svn'
          'virtualbox-ext-vnc-svn')
 pkgver=77983
-pkgrel=1
-_vboxsf_commit='6738af37c935f3d9b0db138678c2cd3d8bc1fc99'
+pkgrel=2
+_vboxsf_commit='8dd4b8bd5cfe6ddae8fe7056dff790013b985d22'
 arch=('x86_64')
 url='http://virtualbox.org'
 license=('GPL' 'custom')
@@ -75,7 +75,7 @@ source=("VirtualBox::svn+http://www.virtualbox.org/svn/vbox/trunk"
         '005-gsoap-build.patch'
         '006-rdesktop-vrdp-keymap-path.patch'
         '008-no-vboxvideo.patch'
-        '109-include-path.patch1'
+        '009-include-path.patch'
         '011-python-3-7.patch'
         '012-vbglR3GuestCtrlDetectPeekGetCancelSupport.patch'
         # The following patch and mount.vboxsf wrapper should be removed
@@ -100,7 +100,7 @@ sha256sums=('SKIP'
             '7d2da8fe10a90f76bbfc80ad1f55df4414f118cd10e10abfb76070326abebd46'
             '13c6ca9be0f91582445fd2a14a8c58a0625a15d9cb98cb6e8c2736d77ea976ab'
             '8b7f241107863f82a5b0ae336aead0b3366a40103ff72dbebf33f54b512a0cbc'
-            '0993f4832442341399b1cb908ec11d3e3a87d3b9d5e7e1be37b0ba0b96606f4e'
+            '7055014fde94a41f20d9581615c818fd1f2d249a06864585f562b0a677131e70'
             '55224cb74b54b331d691f171efc0d4c058a14f738551f1d8f559146c2908635d'
             '06485dce54a5f21b85f4360db884d98c1ab091d3f2535881ec9fcd82feb06b7e'
             'a784f3cc24652a16385cc63abac6c5178932ca5f3861be7650631b7dafa753a4'
@@ -124,9 +124,6 @@ prepare() {
         fi
     done
    
-    msg2 "Fixing include path for DKMS modules"
-    patch -p0 -i "$srcdir/109-include-path.patch1"
-
     msg2 'Applying local config'
     cp "$srcdir/LocalConfig.kmk" .
 
