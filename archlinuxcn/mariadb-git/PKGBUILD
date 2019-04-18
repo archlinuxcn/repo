@@ -5,8 +5,8 @@ pkgbase=mariadb-git
 _pkgbase=mariadb
 pkgname=('mariadb-libs-git' 'mariadb-clients-git' 'mariadb-git' 'mytop-git')
 pkgdesc='Fast SQL database server, derived from MySQL (GIT version)'
-pkgver=10.4.2.r212.g4932aba9217
-pkgrel=2
+pkgver=10.4.4.r65.g878ca5ca4f8
+pkgrel=1
 arch=('x86_64')
 license=('GPL')
 url='https://mariadb.org/'
@@ -22,6 +22,10 @@ sha256sums=('SKIP'
             '1cd009b473d5965c7cbe6d48fff272030a2ccdd9c7e67b4f837d03252786a09a'
             'd12806e4f90cc0fc081205dd4c0a5e0e7c455844f04276811b61b57fd24f5545'
             '66e0acac7436fd8925710ef5cc66ba1a8f63a385ce374f01ae83096cc33d97a0')
+pkgver() {
+  cd "$_pkgbase"
+  git describe --long --tags | sed 's/^mariadb.//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
 
 prepare() {
   cd $_pkgbase/
