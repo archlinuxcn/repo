@@ -10,8 +10,8 @@ pkgname=('virtualbox-svn'
          'virtualbox-guest-utils-svn'
          'virtualbox-guest-utils-nox-svn'
          'virtualbox-ext-vnc-svn')
-pkgver=77983
-pkgrel=2
+pkgver=78203
+pkgrel=1
 _vboxsf_commit='8dd4b8bd5cfe6ddae8fe7056dff790013b985d22'
 arch=('x86_64')
 url='http://virtualbox.org'
