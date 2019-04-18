@@ -2,93 +2,104 @@
 _pkgbase='yuzu'
 pkgbase="$_pkgbase-git"
 pkgname=("$_pkgbase-git" "$_pkgbase-qt-git")
-pkgver=r11259.6951741a9
+pkgver=r11356.83b830eb2
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger"
 arch=('i686' 'x86_64')
 url="https://github.com/yuzu-emu/yuzu/"
 license=('GPL2')
-makedepends=('git' 'cmake' 'sdl2' 'qt5-base' 'shared-mime-info' 'desktop-file-utils' 'python2')
+makedepends=('git' 'cmake' 'sdl2' 'qt5-base' 'doxygen' 'shared-mime-info' 'desktop-file-utils' 'python2')
 source=("$_pkgbase::git+https://github.com/yuzu-emu/yuzu"
-	'git+https://github.com/yuzu-emu/ext-boost'
-	'git+https://github.com/philsquared/Catch'
-	'git+https://github.com/MerryMage/dynarmic'
-	'git+https://github.com/herumi/xbyak'
-	'git+https://github.com/fmtlib/fmt'
-	'git+https://github.com/svn2github/inih'
-	'git+https://github.com/yuzu-emu/unicorn'
-	'git+https://github.com/lz4/lz4'
-	'git+https://github.com/ogniK5377/opus'
-	'git+https://github.com/DarkLordZach/mbedtls'
-	'git+https://github.com/kinetiknz/cubeb'
-	# cubeb submodule dependencies
-	'git+https://github.com/arsenm/sanitizers-cmake')
+        'git+https://github.com/yuzu-emu/ext-boost'
+        'git+https://github.com/philsquared/Catch'
+        'git+https://github.com/MerryMage/dynarmic'
+        'git+https://github.com/herumi/xbyak'
+        'git+https://github.com/fmtlib/fmt'
+        'git+https://github.com/svn2github/inih'
+        'git+https://github.com/yuzu-emu/unicorn'
+        'git+https://github.com/lz4/lz4'
+        'git+https://github.com/ogniK5377/opus'
+        'git+https://github.com/DarkLordZach/mbedtls'
+        'git+https://github.com/kinetiknz/cubeb'
+        # Add new sirit submodule (https://github.com/yuzu-emu/yuzu/pull/2235)
+        'git+https://github.com/ReinUsesLisp/sirit.git'
+        # sirit submodule dependencies
+        'git+https://github.com/KhronosGroup/SPIRV-Headers.git'
+        # cubeb submodule dependencies
+        'git+https://github.com/arsenm/sanitizers-cmake')
 md5sums=('SKIP'
-	'SKIP'
-	'SKIP'
-	'SKIP'
-	'SKIP'
-	'SKIP'
-	'SKIP'
-	'SKIP'
-	'SKIP'
-	'SKIP'
-	'SKIP'
-	'SKIP'
-	'SKIP')
+        'SKIP'
+        'SKIP'
+        'SKIP'
+        'SKIP'
+        'SKIP'
+        'SKIP'
+        'SKIP'
+        'SKIP'
+        'SKIP'
+        'SKIP'
+        'SKIP'
+        'SKIP'
+        'SKIP'
+        'SKIP')
 
 pkgver() {
-	cd "$srcdir/$_pkgbase"
-	echo "r$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+        cd "$srcdir/$_pkgbase"
+        echo "r$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
 }
 
 prepare() {
-	cd "$srcdir/$_pkgbase"
-	mkdir -p build
-	
-	git submodule init
-	git config submodule.boost.url "$srcdir/ext-boost"
-	git config submodule.catch.url "$srcdir/Catch"
-	git config submodule.dynarmic.url "$srcdir/dynarmic"
-	git config submodule.xbyak.url "$srcdir/xbyak"
-	git config submodule.fmt.url "$srcdir/fmt"
-	git config submodule.inih.url "$srcdir/inih"
-	git config submodule.unicorn.url "$srcdir/unicorn"
-	git config submodule.opus.url "$srcdir/opus"
-	git config submodule.mbedtls.url "$srcdir/mbedtls"
-	git config submodule.cubeb.url "$srcdir/cubeb"
-	git submodule update
+        cd "$srcdir/$_pkgbase"
+        mkdir -p build
 
-	cd externals/cubeb
-	git config submodule.cmake/sanitizers-cmake.url "$srcdir/sanitizers-cmake"
-	git submodule update
+        git submodule init
+        git config submodule.boost.url "$srcdir/ext-boost"
+        git config submodule.catch.url "$srcdir/Catch"
+        git config submodule.dynarmic.url "$srcdir/dynarmic"
+        git config submodule.xbyak.url "$srcdir/xbyak"
+        git config submodule.fmt.url "$srcdir/fmt"
+        git config submodule.inih.url "$srcdir/inih"
+        git config submodule.unicorn.url "$srcdir/unicorn"
+        git config submodule.opus.url "$srcdir/opus"
+        git config submodule.mbedtls.url "$srcdir/mbedtls"
+        git config submodule.cubeb.url "$srcdir/cubeb"
+        git config submodule.sirit.url "$srcdir/sirit"
+        git submodule update
+
+        cd externals/cubeb
+        git config submodule.cmake/sanitizers-cmake.url "$srcdir/sanitizers-cmake"
+        git submodule update
+
+        cd ../sirit
+        git config submodule.SPIRV-Headers.url "$srcdir/SPIRV-Headers"
+        git submodule update --init # not sure why I need --init here
 }
 
 build() {
-	cd "$srcdir/$_pkgbase/build"
-	cmake .. \
-	  -DCMAKE_INSTALL_PREFIX=/usr \
-	  -DCMAKE_BUILD_TYPE=Release
-	make
+        cd "$srcdir/$_pkgbase/build"
+        cmake .. \
+          -DCMAKE_INSTALL_PREFIX=/usr \
+          -DCMAKE_BUILD_TYPE=Release
+        make
 }
 
 package_yuzu-git() {
-	depends=('sdl2' 'libpng')
+        depends=('sdl2' 'libpng')
 
-	install -Dm755 "$srcdir/$_pkgbase/build/bin/yuzu-cmd" "$pkgdir/usr/bin/${_pkgbase}-cmd"
+        install -Dm755 "$srcdir/$_pkgbase/build/bin/yuzu-cmd" "$pkgdir/usr/bin/${_pkgbase}-cmd"
 }
 
 package_yuzu-qt-git() {
-	depends=('qt5-base' 'sdl2' 'shared-mime-info' 'desktop-file-utils')
-	optdepends=('libxkbcommon-x11: for X11 support'
-	            'qt5-wayland: for Wayland support')
+        depends=('qt5-base' 'sdl2' 'shared-mime-info' 'desktop-file-utils')
+        optdepends=('libxkbcommon-x11: for X11 support'
+                    'qt5-wayland: for Wayland support')
 
-	cd "$srcdir/$_pkgbase/build"
-	
-	# screw cubeb and it's shitty cmake
-	mkdir -p "$srcdir/$_pkgbase/include/cubeb"
-	
-	make DESTDIR="$pkgdir/" install
-	
-	rm "$pkgdir/usr/bin/${_pkgbase}-cmd"
+        cd "$srcdir/$_pkgbase/build"
+
+        # screw cubeb and it's shitty cmake
+        mkdir -p "$srcdir/$_pkgbase/include/cubeb"
+
+        make DESTDIR="$pkgdir/" install
+
+        rm "$pkgdir/usr/bin/${_pkgbase}-cmd"
 }

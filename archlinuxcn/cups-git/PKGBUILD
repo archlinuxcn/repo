@@ -3,7 +3,7 @@
 pkgbase="cups-git"
 _pkgbase=cups
 pkgname=('libcups-git' 'cups-git')
-pkgver=2.3b7.r98.g21609267e
+pkgver=2.3b7.r141.gd22e887a1
 pkgrel=1
 arch=('x86_64')
 license=('GPL')
@@ -29,8 +29,9 @@ sha256sums=('SKIP'
             'ff3eb0782af0405f5dafe89e04b1b4ea7a49afc5496860d724343bd04f375832'
             'b8fc2e3bc603495f0278410350ea8f0161d9d83719feb64f573b63430cb4800b'
             '23349c96f2f7aeb7d48e3bcd35a969f5d5ac8f55a032b0cfaa0a03d7e37ea9af'
-            'f909719e2595e016c320afa421cad74ccda285ac59b11749ddac58e707d4330a'
+            '08b017a08a94eaf46c8ba47a176a5bbd2acacf512de2d4e539f483c310ab5ea9'
             'd4537526c1e075866ae22ad263da000fc2a592d36c26b79a459a1cfdade2bb2d')
+
 pkgver() {
   cd "$_pkgbase"
   git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'

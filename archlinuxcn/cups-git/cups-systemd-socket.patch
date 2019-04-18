@@ -33,11 +33,11 @@ diff -up cups-2.0.2/scheduler/org.cups.cupsd.path.in.ustTJg cups-2.0.2/scheduler
 diff -up cups-2.0.2/scheduler/org.cups.cupsd.service.in.ustTJg cups-2.0.2/scheduler/org.cups.cupsd.service.in
 --- cups-2.0.2/scheduler/org.cups.cupsd.service.in.ustTJg	2014-10-21 13:55:01.000000000 +0200
 +++ cups-2.0.2/scheduler/org.cups.cupsd.service.in	2015-02-10 13:40:24.296545049 +0100
-@@ -1,10 +1,11 @@
- [Unit]
+@@ -2,10 +2,11 @@
  Description=CUPS Scheduler
  Documentation=man:cupsd(8)
-+After=network.target
+ After=sssd.service
++After=network.taget
  
  [Service]
  ExecStart=@sbindir@/cupsd -l
@@ -46,4 +46,3 @@ diff -up cups-2.0.2/scheduler/org.cups.cupsd.service.in.ustTJg cups-2.0.2/schedu
  Restart=on-failure
  
  [Install]
-
