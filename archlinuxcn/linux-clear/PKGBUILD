@@ -95,6 +95,9 @@ _kernelname=${pkgbase#linux}
 : ${_kernelname:=-clear}
 
 prepare() {
+ _real_prepare | head -n10000000
+}
+_real_prepare() {
     cd ${_srcname}
 
     ### Add upstream patches
@@ -117,6 +120,8 @@ prepare() {
         msg2 "Setting config..."
         cp -Tf $srcdir/clearlinux/config ./.config
 
+    ### Disable modle sig force
+	    sed -i "s|CONFIG_MODULE_SIG_FORCE=y|CONFIG_MODULE_SIG_FORCE=n|g" ./.config 
     ### Compress modules
         msg2 "Enabling XZ compressed modules..."
         sed -i 's|^# CONFIG_MODULE_COMPRESS|\
@@ -130,9 +135,8 @@ CONFIG_MODULE_COMPRESS_XZ=y|' ./.config
         sed -i "s|# CONFIG_ACPI_REV_OVERRIDE_POSSIBLE is not set|CONFIG_ACPI_REV_OVERRIDE_POSSIBLE=y|g" ./.config
         fi
 
-### Disable modle sig force
-	    sed -i "s|CONFIG_MODULE_SIG_FORCE=y|CONFIG_MODULE_SIG_FORCE=n|g" ./.config 
-		make olddefconfig
+        make olddefconfig
+
     ### Copying i915 firmware and intel-ucode
         msg2 "Copying i915 firmware and intel-ucode-${_ucode}..."
         cp -a /usr/lib/firmware/i915 firmware/
@@ -170,6 +174,9 @@ CONFIG_MODULE_COMPRESS_XZ=y|' ./.config
             make localmodconfig
             fi
         fi
+
+    ### do not run `make olddefconfig` as it sets default options
+        yes "" | make config >/dev/null
 
     ### Running make nconfig
 

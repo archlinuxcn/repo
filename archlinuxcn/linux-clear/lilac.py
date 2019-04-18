@@ -8,6 +8,11 @@ def pre_build():
     for line in edit_file('PKGBUILD'):
         if line.strip().startswith('_subarch='):
             print('_subarch=26')
+        elif line.strip().startswith('prepare() {'):
+            print('prepare() {')
+            print(' _real_prepare | head -n10000000') # limit package() output to 10,000,000 lines
+            print('}')
+            print('_real_prepare() {')
         elif line.strip().startswith('_major='):
             major = line[len('_major='):].strip()
             print(line)
