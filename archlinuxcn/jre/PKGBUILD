@@ -2,9 +2,9 @@
 # Contributor: Det <nimetonmaili g-mail>
 
 pkgname=jre
-pkgver=12
-_build=33
-_hash=312335d836a34c7c8bba9d963e26dc23
+pkgver=12.0.1
+_build=12
+_hash=69cfe15208a647278a19ef0990eea691
 _majver="${pkgver%%.*}"
 pkgrel=1
 pkgdesc='Oracle Java Runtime Environment'
@@ -32,7 +32,7 @@ backup=("etc/java${_majver}-${pkgname}/management/jmxremote.access"
         "etc/java${_majver}-${pkgname}/sound.properties")
 install="${pkgname}.install"
 source=("https://download.oracle.com/otn-pub/java/jdk/${pkgver}+${_build}/${_hash}/jdk-${pkgver}_linux-x64_bin.tar.gz")
-sha256sums=('183d4d897bbf47bdae43b2bb4fc0465a9178209b5250555ac7fdb8fab6cc43a6')
+sha256sums=('9fd6dcdaf2cfca7da59e39b009a0f5bcd53bec2fb16105f7ca8d689cdab68d75')
 
 DLAGENTS=('https::/usr/bin/curl -fLC - --retry 3 --retry-delay 3 -b oraclelicense=a -o %o %u')
 
@@ -60,7 +60,6 @@ package() {
     
     # man pages
     local _file
-    #for _file in java jjs jrunscript keytool pack200 rmid rmiregistry unpack200
     for _file in man/man1/{java,jjs,jrunscript,keytool,pack200,rmid,rmiregistry,unpack200}.1
     do
         install -D -m644 "$_file" "${pkgdir}/usr/share/${_file%.1}-jdk${_majver}.1"
