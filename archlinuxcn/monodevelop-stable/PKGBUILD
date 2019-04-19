@@ -8,14 +8,14 @@
 
 pkgname=monodevelop-stable
 _pkgname=monodevelop
-pkgver=7.8.1.8
+pkgver=7.8.3.2
 pkgrel=1
 pkgdesc="An IDE primarily designed for C# and other .NET languages"
 arch=('x86_64' 'i686')
 url="http://www.monodevelop.com"
 license=('GPL')
 depends=('mono>=5.10.1.47' 'mono-addins>=0.6.2' 'gtk-sharp-2' 'fsharp>=4.5.0' 'libssh2' 'curl' 'msbuild-stable')
-makedepends=('rsync' 'cmake' 'git' 'nuget' 'openssl-1.0' 'xterm')
+makedepends=('rsync' 'cmake' 'git' 'nuget' 'openssl-1.0' 'xterm' 'pkgconf' 'autoconf' 'automake')
 replaces=('monodevelop-debugger-gdb')
 provides=('monodevelop' 'monodevelop-debugger-gdb')
 conflicts=('monodevelop')
