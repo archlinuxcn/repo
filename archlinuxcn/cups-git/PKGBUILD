@@ -3,7 +3,7 @@
 pkgbase="cups-git"
 _pkgbase=cups
 pkgname=('libcups-git' 'cups-git')
-pkgver=2.3b7.r141.gd22e887a1
+pkgver=2.3b7.r146.g507c4adcc
 pkgrel=1
 arch=('x86_64')
 license=('GPL')
@@ -62,6 +62,8 @@ prepare() {
   sed -i -e '7iMaxLogSize 0' conf/cupsd.conf.in
   
   sed -i -e 's/WARNING_OPTIONS="-Werror /WARNING_OPTIONS="/g' config-scripts/cups-compiler.m4
+  sed -i -e 's/subtype)/subtypes)/g' test/ippeveprinter.c
+
   # Rebuild configure script for not zipping man-pages.
   aclocal -I config-scripts
   autoconf -I config-scripts
