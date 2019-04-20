@@ -2,8 +2,8 @@
 
 pkgbase=optimus-manager-qt
 pkgname=(optimus-manager-qt optimus-manager-qt-kde)
-pkgver=1.1.1
-pkgrel=3
+pkgver=1.1.2
+pkgrel=1
 pkgdesc="A Qt interface for Optimus Manager that allows to configure and switch GPUs on Optimus laptops using the tray menu"
 arch=('x86_64')
 url="https://github.com/Shatur95/optimus-manager-qt"
@@ -12,7 +12,7 @@ depends=('qt5-base' 'optimus-manager>=0.8')
 makedepends=('qt5-tools' 'git' 'knotifications' 'kiconthemes')
 source=(${pkgname}-${pkgver}.tar.gz::"https://github.com/Shatur95/optimus-manager-qt/archive/${pkgver}.tar.gz"
         "git+https://github.com/itay-grudev/SingleApplication.git")
-sha256sums=('eb9ae8c73b9ae5156ac6bc03bf714bba2f204412c7b64c5f900a8778decc8891'
+sha256sums=('3a98888c6401ca887923288cb353d34a18cf27683a432f6835361a835b564280'
             'SKIP')
 
 # Move submodules into the project
