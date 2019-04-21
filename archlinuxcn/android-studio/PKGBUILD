@@ -3,13 +3,14 @@
 # Contributor: Jakub Schmidtke <sjakub-at-gmail-dot-com>
 # Contributor: Christoph Brill <egore911-at-gmail-dot-com>
 # Contributor: Lubomir 'Kuci' Kucera <kuci24-at-gmail-dot-com>
-# Maintainer: Tad Fisher <tadfisher at gmail dot com>
-# Maintainer: Philippe Hürlimann <p@hurlimann.org>
+# Contributor: Tad Fisher <tadfisher at gmail dot com>
+# Contributor: Philippe Hürlimann <p@hurlimann.org>
+# Maintainer: Kordian Bruck <k@bruck.me>
 
 pkgname=android-studio
-pkgver=3.3.2.0
-pkgrel=1
-_build=182.5314842
+pkgver=3.4.0.18
+pkgrel=2
+_build=183.5452501
 pkgdesc="The official Android IDE (Stable branch)"
 arch=('i686' 'x86_64')
 url="http://tools.android.com/"
@@ -19,9 +20,9 @@ depends=('alsa-lib' 'freetype2' 'libxrender' 'libxtst')
 optdepends=('gtk2: GTK+ look and feel'
             'libgl: emulator support')
 options=('!strip')
-source=("https://dl.google.com/dl/android/studio/ide-zips/$pkgver/android-studio-ide-$_build-linux.zip"
+source=("https://dl.google.com/dl/android/studio/ide-zips/$pkgver/android-studio-ide-$_build-linux.tar.gz"
         "$pkgname.desktop")
-sha256sums=('8257d3eab61c3da088e26689888a13e53e210c109a4e775ed71158b4471bb06a'
+sha256sums=('ad2bd4be87a55cfaeee6f28d40d925691314c11862b303d411f9776b76fa1c45'
             '73cd2dde1d0f99aaba5baad1e2b91c834edd5db3c817f6fb78868d102360d3c4')
 
 if [ "$CARCH" = "i686" ]; then
@@ -33,7 +34,7 @@ package() {
 
   # Install the application
   install -d $pkgdir/{opt/$pkgname,usr/bin}
-  cp -a bin gradle lib jre plugins $pkgdir/opt/$pkgname
+  cp -a bin gradle lib jre plugins build.txt product-info.json $pkgdir/opt/$pkgname
   ln -s /opt/android-studio/bin/studio.sh $pkgdir/usr/bin/$pkgname
 
   # Add the icon and desktop file
