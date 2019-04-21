@@ -1,0 +1,41 @@
+# Contributor: Iru Dog <mytbk920423 at gmail.com>
+# Maintainer: Iru Dog <mytbk920423 at gmail.com>
+pkgname=fqterm-qt5-git
+pkgver=0.9.8.6
+pkgrel=1
+pkgdesc='a terminal emulator used for Telnet-based BBS, with Telnet and SSH support'
+arch=('i686' 'x86_64')
+url='https://github.com/mytbk/fqterm/'
+license=('GPL2')
+depends=('qt5-script' 'qt5-tools' 'qt5-multimedia')
+makedepends=('git' 'cmake')
+provides=('fqterm')
+conflicts=('fqterm' 'fqterm-svn')
+source=('git+https://github.com/mytbk/fqterm.git')
+md5sums=('SKIP')
+
+pkgver(){
+  cd "${srcdir}/fqterm"
+  git describe --always | tr '-' '.'
+}
+
+build() {
+  mkdir -p "${srcdir}/build"
+  cd "${srcdir}/build"
+
+  sed -i "s#0.9.8#0.9.8 (Built with $(pacman -Q qt5-base), Arch Linux ${CARCH})#g" \
+      ../fqterm/res/userconf/fqterm.cfg.orig
+  cmake -DCMAKE_INSTALL_PREFIX=/usr \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DUSE_QT5=1 \
+      -DCMAKE_C_FLAGS="${CFLAGS}" \
+      -DCMAKE_CXX_FLAGS="${CXXFLAGS}" \
+      ../fqterm
+  make
+}
+
+package(){
+  cd "${srcdir}/build"
+  make DESTDIR="$pkgdir/" install
+}
+
