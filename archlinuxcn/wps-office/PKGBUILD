@@ -7,7 +7,7 @@
 pkgname=wps-office
 pkgver=11.1.0.8392
 #_pkgver=8372
-pkgrel=1
+pkgrel=2
 #_pkgrel=1
 pkgdesc="Kingsoft Office (WPS Office) is an office productivity suite"
 arch=('i686' 'x86_64')
@@ -61,6 +61,9 @@ package() {
 
     install -d "${pkgdir}/usr/share/applications"
     cp -r applications/* "${pkgdir}/usr/share/applications"
+
+    install -d "${pkgdir}/usr/share/desktop-directories"
+    cp -r desktop-directories/* "${pkgdir}/usr/share/desktop-directories"
 
     install -d "${pkgdir}/usr/share/icons"
     cp -r icons/* "${pkgdir}/usr/share/icons"
