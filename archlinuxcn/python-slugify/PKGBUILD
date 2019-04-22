@@ -1,29 +1,35 @@
-# Maintainer: Thomas Jost <schnouki@schnouki.net>
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+# Contributor: Thomas Jost <schnouki@schnouki.net>
 # Contributor: Andrey Mikhaylenko <neithere at gmail dot com>
-pkgname=(python-slugify python2-slugify)
-pkgbase=python-slugify
-pkgver=3.0.1
+
+pkgname=python-slugify
+pkgver=3.0.2
 pkgrel=1
 pkgdesc="A Python slugify application that handles unicode"
 arch=(any)
 url="https://github.com/un33k/python-slugify"
-license=('BSD')
-makedepends=("python-setuptools" "python2-setuptools")
-source=(https://github.com/un33k/python-slugify/archive/${pkgver}.tar.gz)
-md5sums=('7f873c723703729426e5f303d9eaa9b2')
-sha256sums=('32b9c416ee5be1f8131352575df51e86862845799404fcce8dee269498402635')
+license=('MIT')
+depends=("python-text-unidecode")
+optdepends=("python-unidecode: Unidecode support")
+makedepends=("python-setuptools")
+checkdepends=("flake8" "python-pytest" "python-pytest-cov")
+source=(${pkgname}-${pkgver}::https://github.com/un33k/python-slugify/archive/${pkgver}.tar.gz)
+sha512sums=('c8a7e321c1706fb7296badf3167aa3bdedd1b9ba4741bee987381a92cbfa1741d7c7128823a46d724929132cd1080686ae86045b08a377ea37efd01df8b021a9')
 
-package_python-slugify() {
-  depends=("python" "python-text-unidecode")
-  optdepends=("python-unidecode: Unidecode support")
-  cd "$srcdir/$pkgbase-$pkgver"
-  python setup.py install --root="$pkgdir" --optimize=1
+build() {
+  cd "${pkgname}-${pkgver}"
+  python setup.py build
 }
 
-package_python2-slugify() {
-  depends=("python2" "python2-text-unidecode")
-  optdepends=("python2-unidecode: Unidecode support")
-  cd "$srcdir/$pkgbase-$pkgver"
-  python2 setup.py install --root="$pkgdir" --optimize=1
-  mv "$pkgdir/usr/bin/slugify" "$pkgdir/usr/bin/slugify2"
+check() {
+  cd "${pkgname}-${pkgver}"
+  pytest -v test.py
 }
+
+package() {
+  cd "${srcdir}/${pkgbase}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:
+
