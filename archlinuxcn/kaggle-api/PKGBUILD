@@ -1,15 +1,15 @@
-# Maintainer: asermax <asermax@gmail.com>
-_branch='bd75dbfc4dbfb19a5d8538f157acf8b882249320'
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+# Contributor: asermax <asermax@gmail.com>
 
 pkgname=kaggle-api
-pkgver=1.5.1.1
+_pkgname=kaggle
+_name=${_pkgname#python-}
+pkgver=1.5.3
 pkgrel=1
 pkgdesc='Kaggle API CLI'
-
 arch=('any')
-url="http://kaggle.com/"
+url="https://github.com/Kaggle/kaggle-api"
 license=('Apache')
-
 depends=(
   'python'
   'python-urllib3'
@@ -23,27 +23,17 @@ depends=(
 makedepends=(
   'python-setuptools'
 )
+source=(${pkgname}-${pkgver}.tar.gz::"https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
+sha512sums=('8f467cb6ef4fb11bf10cfbbae5acde5be7cea7b5ec34f3dcdd4c88dc206aa3e8119a762c04c9bd470224eaf952293547eaa3745fd873a0fa14601699c5558ac0')
 
-source=(
-  "https://github.com/Kaggle/kaggle-api/archive/${_branch}.tar.gz"
-)
-
-md5sums=('76b306e54e4a7295d383483babb20283')
-
-prepare() {
-  cd "$srcdir"/kaggle-api-$_branch
-  # remove urllib3 version restriction
-  sed -e '/urllib3/d' \
-      -e "s/,<.*'/'/" \
-      -i setup.py
+build() {	
+  cd "${_pkgname}-${pkgver}"
+  python setup.py build
 }
 
 package() {
-  cd "${pkgname}-${_branch}"
-
-  # Python setup
-  python setup.py install --root="${pkgdir}"/ --prefix=/usr --optimize=1
-
-  # License
-  install -Dm644 LICENSE "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
+  cd "${_pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
 }
+# vim:set ts=2 sw=2 et:
+
