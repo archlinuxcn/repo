@@ -1,3 +1,4 @@
+# Maintainer: Sakuraba Amane <tobiichiamane@archlinuxcn.org>
 # Maintainer: Jean-Marc Lenoir <archlinux "at" jihemel "dot" com>
 # Contributor: Maxwell Pray a.k.a. Synthead <synthead@gmail.com>
 
@@ -13,59 +14,18 @@
 ############################################################################
 
 #PKGEXT=.pkg.tar
-pkgname=vmware-workstation
-pkgver=15.0.4
-_buildver=12990004
+pkgbase=vmware-workstation
+pkgname=('vmware-workstation'
+        'vmware-workstation-macos'
+        'vmware-keymaps')
+pkgver=15.0.2
+_buildver=10952284
 _pkgver=${pkgver}_${_buildver}
-pkgrel=1
-pkgdesc='The industry standard for running multiple operating systems as virtual machines on a single Linux PC.'
+_vmware_fusion_ver=11.0.2_10952296
+pkgrel=5
 arch=(x86_64)
 url='https://www.vmware.com/products/workstation-for-linux.html'
 license=(custom)
-install="vmware-workstation.install"
-conflicts=(
-  vmware-modules-dkms
-  vmware-ovftool
-  vmware-patch
-  vmware-systemd-services
-)
-provides=(
-  vmware-ovftool
-)
-depends=(
-  vmware-keymaps
-  dkms
-  ncurses5-compat-libs
-  fuse2
-  gtkmm3
-  libcanberra
-  pcsclite
-  hicolor-icon-theme
-  # needed to use Arch GTK3 library (for theme integration)
-  gtk3
-  gcr
-  # needed to replace internal libs:
-  #zlib
-)
-optdepends=(
-  'linux-headers: build modules against Arch kernel'
-)
-makedepends=(
-  sqlite
-)
-backup=(
-  'etc/vmware/config'
-  'etc/vmware/hostd/authorization.xml'
-  'etc/vmware/hostd/config.xml'
-  'etc/vmware/hostd/datastores.xml'
-  'etc/vmware/hostd/dispatcher.xml'
-  'etc/vmware/hostd/proxy.xml'
-  'etc/vmware/hostd/tagExtractor.xml'
-  'etc/vmware/netmap.conf'
-  'etc/vmware/ssl/hostd.ssl.config'
-  'etc/pam.d/vmware-authd'
-  'etc/conf.d/vmware'
-)
 source=(
   "https://download3.vmware.com/software/wkst/file/VMware-Workstation-Full-${_pkgver/_/-}.${CARCH}.bundle"
 
@@ -93,64 +53,51 @@ source=(
   'Makefile'
   'vmmon.patch'
   'vmnet.patch'
+
+  "https://softwareupdate.vmware.com/cds/vmw-desktop/fusion/${_vmware_fusion_ver/_//}/packages/com.vmware.fusion.tools.darwinPre15.zip.tar"
+  "https://softwareupdate.vmware.com/cds/vmw-desktop/fusion/${_vmware_fusion_ver/_//}/packages/com.vmware.fusion.tools.darwin.zip.tar"
+  'unlocker.py'
 )
-sha256sums=(
-  '2d9e82471e5ad8316de1bcdaf2851ea9e3777545fbfc8a4bc78570035311d959'
-
-  '12e7b16abf8d7e858532edabb8868919c678063c566a6535855b194aac72d55e'
-  'da1698bf4e73ae466c1c7fc93891eba4b9c4581856649635e6532275dbfea141'
-  '53af82a619c8b1bca39bb493beb0ff031c978bb763715ef264b135f4a1d67d1e'
-  'd50aa0a3fe94025178965d988e18d41eb60aa1ce2b28ee6e3ca15edeabfa2ca7'
-  '8e4d08668a66be79a900521792b39c16a026cc90659241edee80b64e701bfbcd'
-  'b94959a11b28e51b541321be0588190eb10825e9ff55cbd16eb01483a839a69f'
-
-  '6873de5bf5a9ebb795101693919ce73b52f65c2f2c232584bb1382dce60f1d51'
-  '434cd4aa440d36b75ee20e0b588aaad874bb0d796173990bc4046667c66f5099'
-  '27a64a3811b864c945fb2de318f4beffabdb59bccd3a77820ec7b547cf5fe430'
-  '3c802523606184a5e8ebbe931d9c6c70d83ff8c6833b9f48aa264f0bd5a18a88'
-  'ad522a8cbc6103134ce5e677a01b503cd21875cbceb37bd13fd870ebd9ad0e6d'
-
-  'f9440479f3ae5ad0a39bba3150276627878bf83d6879444fb327c53a1dbb5a4d'
-  '42594b60085d0bbef01ab07b9f8b0d18640001107ce61cc0ddf02d0ab415140f'
-  'e4c2e97acf07c52de570dd4333d67acfb593db719937a563c6075ab773dcce33'
-  'e3812b78158672c7d96b6a58877681462f3fbdfe99a948b32c80c755c8682450'
-  'c0a5aea785db06921fb350d36d5e0fd9a14f5eee0c835686ec6fea1af8c92245'
-  'd7a9fbf39a0345ae2f14f7f389f30b1110f605d187e0c241e99bbb18993c250d'
-
-  '05e26d8b21d190ebabb7f693998114d9d5991d9dfb71acb4d990293a65b6b487'
-  '6ce902b1dab8fc69be253abd8e79017011985eca850ff7acc7282f9ab668e35d'
-  'c85deed2bbba2b5eebc12b7937171d0784f1b50cbba86c50642ba69834384438'
-  '955329f91f25f523f5974992923238d2718bc6255acc7e18fabf80cf20206531'
-)
+sha256sums=('22675343abd4d88a78399c9af8b271912161d28d58bbb58f0af0804a9957a96a'
+            '12e7b16abf8d7e858532edabb8868919c678063c566a6535855b194aac72d55e'
+            'da1698bf4e73ae466c1c7fc93891eba4b9c4581856649635e6532275dbfea141'
+            '53af82a619c8b1bca39bb493beb0ff031c978bb763715ef264b135f4a1d67d1e'
+            'd50aa0a3fe94025178965d988e18d41eb60aa1ce2b28ee6e3ca15edeabfa2ca7'
+            '8e4d08668a66be79a900521792b39c16a026cc90659241edee80b64e701bfbcd'
+            'b94959a11b28e51b541321be0588190eb10825e9ff55cbd16eb01483a839a69f'
+            '6873de5bf5a9ebb795101693919ce73b52f65c2f2c232584bb1382dce60f1d51'
+            '434cd4aa440d36b75ee20e0b588aaad874bb0d796173990bc4046667c66f5099'
+            '27a64a3811b864c945fb2de318f4beffabdb59bccd3a77820ec7b547cf5fe430'
+            '3c802523606184a5e8ebbe931d9c6c70d83ff8c6833b9f48aa264f0bd5a18a88'
+            'ad522a8cbc6103134ce5e677a01b503cd21875cbceb37bd13fd870ebd9ad0e6d'
+            'f9440479f3ae5ad0a39bba3150276627878bf83d6879444fb327c53a1dbb5a4d'
+            '42594b60085d0bbef01ab07b9f8b0d18640001107ce61cc0ddf02d0ab415140f'
+            'e4c2e97acf07c52de570dd4333d67acfb593db719937a563c6075ab773dcce33'
+            'e3812b78158672c7d96b6a58877681462f3fbdfe99a948b32c80c755c8682450'
+            'c0a5aea785db06921fb350d36d5e0fd9a14f5eee0c835686ec6fea1af8c92245'
+            'd7a9fbf39a0345ae2f14f7f389f30b1110f605d187e0c241e99bbb18993c250d'
+            '05e26d8b21d190ebabb7f693998114d9d5991d9dfb71acb4d990293a65b6b487'
+            '6ce902b1dab8fc69be253abd8e79017011985eca850ff7acc7282f9ab668e35d'
+            'd6c2bbe974f41f555927071eb0f8238fdf30cb3fae62ef00acbc5fc2917986ac'
+            '955329f91f25f523f5974992923238d2718bc6255acc7e18fabf80cf20206531'
+            '02cc231902c9fc1b4faf2fc2664e7f3d2121ad4b8a92e18a759b044d20a7b724'
+            'f6b542320ae2aa33bf6c5cb7ccdda702ae5067c3e3ae2e55c1b876a2d65356a3'
+            '29e0b0db9c0296ab81eee543803c4bd430e2c69c76e33492910e17280da1c05c')
 options=(!strip emptydirs)
 
 
 _isoimages=(linux linuxPreGlibc25 netware solaris windows winPre2k winPreVista)
 _isovirtualprinterimages=(Linux Windows)
 
-if [ -n "$_enable_macOS_guests" ]; then
-
-_vmware_fusion_ver=11.0.3_12992109
 # List of VMware Fusion versions: https://softwareupdate.vmware.com/cds/vmw-desktop/fusion/
 
-makedepends+=(
+makedepends=(
   python2
   unzip
-)
-
-source+=(
-  "https://softwareupdate.vmware.com/cds/vmw-desktop/fusion/${_vmware_fusion_ver/_//}/packages/com.vmware.fusion.tools.darwinPre15.zip.tar"
-  "https://softwareupdate.vmware.com/cds/vmw-desktop/fusion/${_vmware_fusion_ver/_//}/packages/com.vmware.fusion.tools.darwin.zip.tar"
-  'unlocker.py'
-)
-sha256sums+=(
-  '0de0f886ad5d53bcdb2adf3969f2c63d4dcbca6ee4c6c7bd2ea4f5237dc52a75'
-  '40a5e530c5b0dc9572931cd892504fafe6ff50cad7bc626a2487fa436a918ee1'
-  '29e0b0db9c0296ab81eee543803c4bd430e2c69c76e33492910e17280da1c05c'
+  xorg-server-xvfb
 )
 
 _fusion_isoimages=(darwin darwinPre15)
-fi
 
 
 _create_database_file() {
@@ -176,26 +123,7 @@ if [ -n "$_enable_macOS_guests" ]; then
 fi
 }
 
-prepare() {
-  extracted_dir="$srcdir/extracted"
-  [[ -d "$extracted_dir" ]] && rm -r "$extracted_dir"
-
-  bash \
-    "$(readlink -f "$srcdir/VMware-Workstation-Full-${_pkgver/_/-}.${CARCH}.bundle")" \
-    --extract "$extracted_dir"
-
-if [ -n "$_enable_macOS_guests" ]; then
-  for isoimage in ${_fusion_isoimages[@]}
-  do
-    unzip -q com.vmware.fusion.tools.$isoimage.zip
-    rm manifest.plist
-  done
-
-  sed -i -e "s|/usr/lib/vmware/|${pkgdir}/usr/lib/vmware/|" "$srcdir/unlocker.py"
-fi
-}
-
-package() {
+_realpackage() {
   local vmware_installer_version=$(cat "$srcdir/extracted/vmware-installer/manifest.xml" | grep -oPm1 "(?<=<version>)[^<]+")
 
   # Make directories and copy files.
@@ -236,6 +164,10 @@ package() {
     vmware-network-editor/lib \
     "$pkgdir/usr/lib/vmware"
 
+  # remove xkeymap
+  rm -r \
+    "$pkgdir/usr/lib/vmware/xkeymap"
+
   cp -r \
     vmware-player-setup/vmware-config \
     "$pkgdir/usr/lib/vmware/setup"
@@ -243,6 +175,7 @@ package() {
   cp -rL \
     vmware-workstation-server/config/etc/vmware/* \
     vmware-workstation-server/etc/vmware/* \
+    "$srcdir"/{bootstrap,config} \
     "$pkgdir/etc/vmware"
 
   cp -r \
@@ -302,9 +235,6 @@ package() {
   install -Dm 644 vmware-vmx/extra/modules.xml "$pkgdir/usr/lib/vmware/modules/modules.xml"
   install -Dm 644 vmware-installer/bootstrap "$pkgdir/etc/vmware-installer/bootstrap"
   install -Dm 644 "$srcdir/vmware-vix-bootstrap" "$pkgdir/etc/vmware-vix/bootstrap"
-  install -Dm 644 "$srcdir"/{bootstrap,config} "$pkgdir/etc/vmware"
-
-  rm -r "$pkgdir/usr/lib/vmware/xkeymap" # these files are now provided by vmware-keymaps package
 
   for hostd_file in config datastores environments proxy vmAutoStart; do
     install -Dm 644 "$srcdir/$hostd_file.xml" "$pkgdir/etc/vmware/hostd/$hostd_file.xml"
@@ -312,12 +242,11 @@ package() {
 
   install -Dm 644 "$srcdir/pam.d-vmware-authd" "$pkgdir/etc/pam.d/vmware-authd"
 
-  echo -e "vmw_vmci\nvmmon" > "$pkgdir/usr/lib/modules-load.d/vmware.conf"
+  echo -e "vmw_vmci\nvmmon\nvmnet" > "$pkgdir/usr/lib/modules-load.d/vmware.conf"
 
   for service_file in \
     vmware-hostd-certificates.service \
     vmware-hostd.service \
-    vmware-authd.service \
     vmware-networks-configuration.service \
     vmware-networks.service \
     vmware-usbarbitrator.service
@@ -438,7 +367,7 @@ package() {
 
 if [ -n "$_enable_macOS_guests" ]; then
   msg "Patching VMware for macOS guest support"
-  python2 "$srcdir/unlocker.py" > /dev/null
+  python2 "$srcdir/unlocker.py"
 
   for isoimage in ${_fusion_isoimages[@]}
   do
@@ -456,6 +385,75 @@ fi
         -e 's/if "$BINDIR"\/vmware-modconfig --appname=.*/if true ||/' \
         -i "$pkgdir/usr/bin/$program"
   done
+}
+
+prepare() {
+  extracted_dir="$srcdir/extracted"
+  [[ -d "$extracted_dir" ]] && rm -r "$extracted_dir"
+
+  xvfb-run bash \
+    "$(readlink -f "$srcdir/VMware-Workstation-Full-${_pkgver/_/-}.${CARCH}.bundle")" \
+    --extract "$extracted_dir"
+
+  for isoimage in ${_fusion_isoimages[@]}
+  do
+    unzip -q com.vmware.fusion.tools.$isoimage.zip
+    rm manifest.plist
+  done
+
+  sed -i -e "s|/usr/lib/vmware/|${pkgdir/%vmware-workstation/vmware-workstation-macos}/usr/lib/vmware/|" "$srcdir/unlocker.py"
+}
+
+package_vmware-workstation() {
+  unset _enable_macOS_guests
+  pkgdesc='The industry standard for running multiple operating systems as virtual machines on a single Linux PC.'
+  install="vmware-workstation.install"
+  conflicts=(
+    vmware-workstation-macos
+    vmware-modules-dkms
+    vmware-ovftool
+    vmware-patch
+    vmware-systemd-services
+  )
+  provides=(
+    vmware-ovftool
+  )
+  depends=(
+    vmware-keymaps
+    dkms
+    ncurses5-compat-libs
+    fuse2
+    gtkmm3
+    libcanberra
+    pcsclite
+    hicolor-icon-theme
+    # needed to use Arch GTK3 library (for theme integration)
+    gtk3
+    gcr
+    # needed to replace internal libs:
+    #zlib
+  )
+  optdepends=(
+    'linux-headers: build modules against Arch kernel'
+  )
+  makedepends=(
+    sqlite
+  )
+  backup=(
+    'etc/vmware/config'
+    'etc/vmware/hostd/authorization.xml'
+    'etc/vmware/hostd/config.xml'
+    'etc/vmware/hostd/datastores.xml'
+    'etc/vmware/hostd/dispatcher.xml'
+    'etc/vmware/hostd/proxy.xml'
+    'etc/vmware/hostd/tagExtractor.xml'
+    'etc/vmware/netmap.conf'
+    'etc/vmware/ssl/hostd.ssl.config'
+    'etc/pam.d/vmware-authd'
+    'etc/conf.d/vmware'
+  )
+
+  _realpackage
 
   # to solve bugs with incompatibles library versions:
   #ln -sf /usr/lib/libz.so.1 "$pkgdir/usr/lib/vmware/lib/libz.so.1/"
@@ -463,3 +461,79 @@ fi
   # Preview license
   #install -Dm 644 vmware-workstation/etc/vmware/license-ws-150-e1-201804 "$pkgdir/etc/vmware/license-ws-150-e1-201804"
 }
+
+package_vmware-workstation-macos() {
+  _enable_macOS_guests=y
+  pkgdesc='The industry standard for running multiple operating systems as virtual machines on a single Linux PC. Pre-patched for macOS support.'
+  install="vmware-workstation-macos.install"
+  conflicts=(
+    vmware-workstation
+    vmware-modules-dkms
+    vmware-ovftool
+    vmware-patch
+    vmware-systemd-services
+  )
+  provides=(
+    vmware-ovftool
+  )
+  depends=(
+    vmware-keymaps
+    dkms
+    ncurses5-compat-libs
+    fuse2
+    gtkmm3
+    libcanberra
+    pcsclite
+    hicolor-icon-theme
+    # needed to use Arch GTK3 library (for theme integration)
+    gtk3
+    gcr
+    # needed to replace internal libs:
+    #zlib
+  )
+  optdepends=(
+    'linux-headers: build modules against Arch kernel'
+  )
+  makedepends=(
+    sqlite
+  )
+  backup=(
+    'etc/vmware/config'
+    'etc/vmware/hostd/authorization.xml'
+    'etc/vmware/hostd/config.xml'
+    'etc/vmware/hostd/datastores.xml'
+    'etc/vmware/hostd/dispatcher.xml'
+    'etc/vmware/hostd/proxy.xml'
+    'etc/vmware/hostd/tagExtractor.xml'
+    'etc/vmware/netmap.conf'
+    'etc/vmware/ssl/hostd.ssl.config'
+    'etc/pam.d/vmware-authd'
+    'etc/conf.d/vmware'
+  )
+
+  _realpackage
+
+  # to solve bugs with incompatibles library versions:
+  #ln -sf /usr/lib/libz.so.1 "$pkgdir/usr/lib/vmware/lib/libz.so.1/"
+  
+  # Preview license
+  #install -Dm 644 vmware-workstation/etc/vmware/license-ws-150-e1-201804 "$pkgdir/etc/vmware/license-ws-150-e1-201804"
+}
+
+package_vmware-keymaps() {
+  pkgdesc='The xkeymap files for VMware products.'
+  provides=(
+    vmware-keymaps
+  )
+  replaces=(vmware-xkeymaps)
+
+  mkdir -p \
+    "$pkgdir/usr/lib/vmware"
+
+  cd "$srcdir/extracted"
+  
+  cp -r \
+    vmware-player-app/lib/xkeymap \
+    "$pkgdir/usr/lib/vmware/"
+}
+
