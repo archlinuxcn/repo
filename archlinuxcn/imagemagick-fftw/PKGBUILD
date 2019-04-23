@@ -1,14 +1,14 @@
-# Maintainer: Eric Bélanger <eric@archlinux.org>
+# Maintainer: Antonio Rojas <arojas@archlinux.org>
+# Contributor: Eric Bélanger <eric@archlinux.org>
 
 pkgbase=imagemagick-fftw
-pkgname=(libmagick-fftw imagemagick-fftw)
+pkgname=(imagemagick-fftw)
 pkgver=7.0.8.41
-pkgrel=1
+pkgrel=2
 pkgdesc="An image viewing/manipulation program"
 url="https://www.imagemagick.org/"
 arch=(x86_64)
 license=(custom)
-depends=(libltdl lcms2 fontconfig libxext liblqr libraqm libpng libxml2)
 makedepends=(ghostscript openexr libwmf librsvg libxml2 openjpeg2 libraw opencl-headers libwebp
              chrpath ocl-icd glu ghostpcl ghostxps libheif jbigkit 'fftw')
 checkdepends=(gsfonts ttf-dejavu)
@@ -25,7 +25,7 @@ validpgpkeys=(D8272EF51DA223E4D05B466989AB63D48277377A)  # Lexie Parsimoniae
 shopt -s extglob
 
 prepare() {
-  mkdir -p binpkg/usr/lib/pkgconfig {binpkg,docpkg}/usr/share
+  mkdir -p docpkg/usr/share
 
   cd $_tarname
 
@@ -77,10 +77,8 @@ check() (
   make check
 )
 
-package_libmagick-fftw() {
-  provides=("libmagick=$pkgver")
-  conflicts=("libmagick")
-  pkgdesc+=" (library)"
+package_imagemagick-fftw() {
+  depends=(libltdl lcms2 fontconfig libxext liblqr libraqm libpng libxml2)
   optdepends=('ghostscript: PS/PDF support'
               'libheif: HEIF support'
               'libraw: DNG support'
@@ -91,40 +89,24 @@ package_libmagick-fftw() {
               'ocl-icd: OpenCL support'
               'openexr: OpenEXR support'
               'openjpeg2: JPEG2000 support'
-              'pango: Text rendering')
+              'pango: Text rendering'
+              'imagemagick-doc: manual and API docs')
+  options=(!emptydirs libtool)
   backup=(etc/$_relname/{colors,delegates,log,mime,policy,quantization-table,thresholds,type,type-{dejavu,ghostscript}}.xml)
-  options=('!emptydirs' libtool)
+  conflicts=(imagemagick6 imagemagick)
+  provides=(libmagick libmagick-fftw)
+  replaces=(imagemagick6 libmagick libmagick-fftw)
 
   cd $_tarname
   make DESTDIR="$pkgdir" install
 
+  find "$pkgdir/usr/lib/perl5" -name '*.so' -exec chrpath -d {} +
   rm "$pkgdir"/etc/$_relname/type-{apple,urw-base35,windows}.xml
   rm "$pkgdir"/usr/lib/*.la
 
   install -Dt "$pkgdir/usr/share/licenses/$pkgname" -m644 LICENSE NOTICE
 
-# Split 'imagemagick'
-  cd ../binpkg
-  mv "$pkgdir/usr/bin" usr/
-  mv "$pkgdir/usr/lib/perl5" usr/lib/
-  mv "$pkgdir/usr/share/man" usr/share/
-
 # Split docs
   mv "$pkgdir/usr/share/doc" "$srcdir/docpkg/usr/share/"
-}
-
-package_imagemagick-fftw() {
-  provides=("imagemagick=$pkgver")
-  conflicts=("imagemagick")
-  depends=("libmagick-fftw=$pkgver-$pkgrel")
-  optdepends=('imagemagick-doc: manual and API docs')
-  options=('!emptydirs')
-
-  mv binpkg/* "$pkgdir"
-
-  find "$pkgdir/usr/lib/perl5" -name '*.so' -exec chrpath -d {} +
-
-  cd $_tarname
-  install -Dt "$pkgdir/usr/share/licenses/$pkgname" -m644 LICENSE NOTICE
 }
 
