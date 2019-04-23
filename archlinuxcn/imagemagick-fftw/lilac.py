@@ -28,9 +28,9 @@ def pre_build():
     elif packaging_imagemagick and 'conflicts=' in line:
       line = '  conflicts=(imagemagick6 imagemagick)'
     elif packaging_imagemagick and 'provides=' in line:
-      line = '  provides=(libmagick libmagick-fftw)'
+      line = '  provides=(libmagick libmagick-fftw imagemagick=$pkgver)'
     elif packaging_imagemagick and 'replaces=' in line:
-      line = '  replaces=(imagemagick6 libmagick libmagick-fftw)'
+      line = '  replaces=(libmagick-fftw)'
     elif packaging_imagemagick and line == '}':
       packaging_imagemagick = False
     elif line.startswith('package_imagemagick-doc('):
