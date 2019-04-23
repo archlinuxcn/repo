@@ -2,8 +2,7 @@
 # Contributor: asermax <asermax@gmail.com>
 
 pkgname=kaggle-api
-_pkgname=kaggle
-_name=${_pkgname#python-}
+_name=kaggle
 pkgver=1.5.3
 pkgrel=1
 pkgdesc='Kaggle API CLI'
@@ -27,12 +26,12 @@ source=(${pkgname}-${pkgver}.tar.gz::"https://files.pythonhosted.org/packages/so
 sha512sums=('8f467cb6ef4fb11bf10cfbbae5acde5be7cea7b5ec34f3dcdd4c88dc206aa3e8119a762c04c9bd470224eaf952293547eaa3745fd873a0fa14601699c5558ac0')
 
 build() {	
-  cd "${_pkgname}-${pkgver}"
+  cd "${_name}-${pkgver}"
   python setup.py build
 }
 
 package() {
-  cd "${_pkgname}-${pkgver}"
+  cd "${_name}-${pkgver}"
   python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
 }
 # vim:set ts=2 sw=2 et:
