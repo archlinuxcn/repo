@@ -4,7 +4,7 @@
 
 pkgname=slack-desktop
 pkgver=3.3.8
-pkgrel=2
+pkgrel=3
 pkgdesc="Slack Desktop (Beta) for Linux"
 arch=('x86_64')
 url="https://slack.com/downloads"
@@ -29,6 +29,7 @@ package() {
 
     # Remove all unnecessary stuff
     rm -rf "${pkgdir}/etc"
+    rm -rf "${pkgdir}/usr/lib/slack/src"
     rm -rf "${pkgdir}/usr/share/lintian"
     rm -rf "${pkgdir}/usr/share/doc"
 
