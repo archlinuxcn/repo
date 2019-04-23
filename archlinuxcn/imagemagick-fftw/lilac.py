@@ -9,12 +9,12 @@ def pre_build():
   g.files = download_official_pkgbuild('imagemagick')
 
   makedepends = False
-  change_depends = False
+  packaging_imagemagick = False
   for line in edit_file('PKGBUILD'):
     if line.startswith('pkgbase='):
       line = 'pkgbase=imagemagick-fftw'
     elif line.startswith('pkgname='):
-      line = 'pkgname=(libmagick-fftw imagemagick-fftw)'
+      line = 'pkgname=(imagemagick-fftw)'
     elif line.startswith('makedepends=('):
       makedepends = True
     elif makedepends and line.endswith(')'):
@@ -23,17 +23,16 @@ def pre_build():
     elif '--without-fftw' in line:
       line = line.replace('--without-fftw', '--with-fftw')
     elif line.startswith('package_imagemagick('):
-      change_depends = True
+      packaging_imagemagick = True
       line = 'package_imagemagick-fftw() {'
-      line += '\n  provides=("imagemagick=$pkgver")\n'
-      line += '  conflicts=("imagemagick")'
-    elif line.startswith('package_libmagick('):
-      line = 'package_libmagick-fftw() {'
-      line += '\n  provides=("libmagick=$pkgver")\n'
-      line += '  conflicts=("libmagick")'
-    elif change_depends and line.lstrip().startswith('depends='):
-      line = line.replace('libmagick', 'libmagick-fftw')
-      change_depends = False
+    elif packaging_imagemagick and 'conflicts=' in line:
+      line = '  conflicts=(imagemagick6 imagemagick)'
+    elif packaging_imagemagick and 'provides=' in line:
+      line = '  provides=(libmagick libmagick-fftw)'
+    elif packaging_imagemagick and 'replaces=' in line:
+      line = '  replaces=(imagemagick6 libmagick libmagick-fftw)'
+    elif packaging_imagemagick and line == '}':
+      packaging_imagemagick = False
     elif line.startswith('package_imagemagick-doc('):
       break
     print(line)
