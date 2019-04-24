@@ -1,7 +1,7 @@
 # Maintainer: Bruce Zhang <zttt183525594@gmail.com>
 _pkgname=feeluown
 pkgname=feeluown
-pkgver=3.0a6
+pkgver=3.0a7
 pkgrel=1
 pkgdesc="FeelUOwn Music Player"
 arch=('any')
@@ -14,7 +14,7 @@ source=(
 	"https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz" 
 	"feeluown.desktop"
 )
-sha256sums=('7a69ec01a57cf4712da728099194dcf09c0209f5315102533aa84f9686d1d415'
+sha256sums=('aa1860b600dc77e5a7c7c5db08c4b9aef69d5dd91d79136163a81d4857b7b9f7'
             '2b2716ee280c1eeba6d20227173e1325c64a4a3fcb200e038e7777de5cddaebb')
 
 build() {
