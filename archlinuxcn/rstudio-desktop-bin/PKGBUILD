@@ -14,13 +14,13 @@
 # NOTE: If you are experiencing segmentation fault, delete the ".rstudio-desktop" folder from your home directory then restart the program should fix the issue.
 
 pkgname=rstudio-desktop-bin
-pkgver=1.1.463
+pkgver=1.2.1335
 pkgrel=1
 pkgdesc="An integrated development environment (IDE) for R (binary from RStudio official repository)"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 license=('GPL')
 url="http://www.rstudio.org/"
-depends=('r' 'hicolor-icon-theme' 'libxcomposite' 'libxslt' 'shared-mime-info' 'libxrandr')
+depends=('r' 'hicolor-icon-theme' 'shared-mime-info' 'orc' 'openssl-1.0')
 #makedepends=('patchelf')
 optdepends=('pandoc: markdown support'
             'pandoc-citeproc: markdown support')
@@ -28,21 +28,16 @@ conflicts=('rstudio-desktop' 'rstudio-desktop-git' 'rstudio-desktop-preview-bin'
 provides=("rstudio-desktop=${pkgver}")
 options=(!strip)
 
-md5sums_i686=(
-8a6755fa9fae2bafce289df3358aaf63
-795a3ca3f2048c4dc32d25560e191c35
-eca697b2b8efbed3d2241f6b0c8c15e4)
 md5sums_x86_64=(
-bc50d6bd34926c1cc3ae4a209d67d649
+c142d69c210257fb10d18c045fff13c7
 84e61f5eda991b978fa168d6762f7990
 391ba54997d6faddbfe41a185a823ee4)
 
-source_i686=("https://download1.rstudio.org/rstudio-${pkgver}-i386.deb"
-"http://archive.ubuntu.com/ubuntu/pool/main/g/gstreamer0.10/libgstreamer0.10-0_0.10.36-1.2ubuntu3_i386.deb"
-"http://security.ubuntu.com/ubuntu/pool/main/g/gst-plugins-base0.10/libgstreamer-plugins-base0.10-0_0.10.36-1.1ubuntu2.1_i386.deb")
-source_x86_64=("https://download1.rstudio.org/rstudio-${pkgver}-amd64.deb"
+source_x86_64=("https://download1.rstudio.org/desktop/xenial/amd64/rstudio-${pkgver}-amd64.deb"
 "http://archive.ubuntu.com/ubuntu/pool/main/g/gstreamer0.10/libgstreamer0.10-0_0.10.36-1.2ubuntu3_amd64.deb"
 "http://security.ubuntu.com/ubuntu/pool/main/g/gst-plugins-base0.10/libgstreamer-plugins-base0.10-0_0.10.36-1.1ubuntu2.1_amd64.deb")
+
+noextract=('libgstreamer0.10-0_0.10.36-1.2ubuntu3_amd64.deb' 'libgstreamer-plugins-base0.10-0_0.10.36-1.1ubuntu2.1_amd64.deb')
 
 install="$pkgname".install
 
@@ -53,7 +48,7 @@ package() {
   msg "Converting debian package..."
 
   cd "$srcdir"
-  tar zxpf data.tar.gz -C "$pkgdir"
+  tar Jxpf data.tar.xz -C "$pkgdir"
   install -dm755 "$pkgdir/usr/bin"
 
   ARCH=${CARCH/686/386/}
@@ -62,7 +57,7 @@ package() {
   ar x libgstreamer0.10-0_0.10.36-1.2ubuntu3_${ARCH}.deb
   tar Jxf data.tar.xz \
       --wildcards \
-      -C "${pkgdir}/usr/lib/rstudio/bin" \
+      -C "${pkgdir}/usr/lib/rstudio/lib" \
       ./usr/lib/${CARCH/686/386}-linux-gnu/libgstreamer-0.10.so.\* \
       ./usr/lib/${CARCH/686/386}-linux-gnu/libgstbase-0.10.so.\* \
       --strip-components=4
@@ -70,7 +65,7 @@ package() {
   ar x libgstreamer-plugins-base0.10-0_0.10.36-1.1ubuntu2.1_${ARCH}.deb
   tar Jxf data.tar.xz \
       --wildcards \
-      -C "${pkgdir}/usr/lib/rstudio/bin" \
+      -C "${pkgdir}/usr/lib/rstudio/lib" \
       ./usr/lib/${CARCH/686/386/}-linux-gnu/libgstapp-0.10.so.\* \
       ./usr/lib/${CARCH/686/386/}-linux-gnu/libgstinterfaces-0.10.so.\* \
       ./usr/lib/${CARCH/686/386/}-linux-gnu/libgstpbutils-0.10.so.\* \
@@ -94,7 +89,7 @@ package() {
   find "$pkgdir/usr" -type d -print0 | xargs -0 chmod 755
   find "$pkgdir/usr" -type f -name '*.so.*' -print0 | xargs -0 chmod 644
 
-  cd "$pkgdir/usr/lib/rstudio/bin"
+  cd "$pkgdir/usr/lib/rstudio/lib"
   ls libQt*.so.*| grep '\.[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}$'|
   while read x;do
     if [[ ! -e "${x%.+([0-9]).+([0-9])}" ]];then
@@ -108,18 +103,19 @@ package() {
     fi
   done
 
-  ln -sf /usr/lib/qt/plugins/platforminputcontexts/libfcitxplatforminputcontextplugin.so plugins/platforminputcontexts/
-  ls /usr/lib/libFcitxQt5WidgetsAddons.so{,.*} \
-      /usr/lib/libFcitxQt5DBusAddons.so{,.*} |
-      while read x;do
-          ln -sf "$x" ./
-      done
+#  cd ..
+#  ln -sf /usr/lib/qt/plugins/platforminputcontexts/libfcitxplatforminputcontextplugin.so plugins/platforminputcontexts/
+#  ls /usr/lib/libFcitxQt5WidgetsAddons.so{,.*} \
+#     /usr/lib/libFcitxQt5DBusAddons.so{,.*} |
+#      while read x;do
+#          ln -sf "$x" ./
+#      done
 
 
   cd "$pkgdir/usr/bin"
   #ln -s -f ../lib/rstudio/bin/rstudio rstudio-bin
   echo '#!/bin/sh
-export QT_DIR=/usr/lib/rstudio/bin
+export QT_DIR=/usr/lib/rstudio
 export QT_PLUGIN_PATH=$QT_DIR/plugins
 export QT_QPA_PLATFORM_PLUGIN_PATH=$QT_PLUGIN_PATH/platforms
 export KDEDIRS=/usr
