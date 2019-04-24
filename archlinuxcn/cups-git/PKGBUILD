@@ -3,7 +3,7 @@
 pkgbase="cups-git"
 _pkgbase=cups
 pkgname=('libcups-git' 'cups-git')
-pkgver=2.3b7.r149.gab8fab615
+pkgver=2.3b7.r152.gb13a9a963
 pkgrel=1
 arch=('x86_64')
 license=('GPL')
