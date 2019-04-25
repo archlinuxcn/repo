@@ -1,8 +1,7 @@
 # Maintainer: Vyacheslav Konovalov <echo dnlhY2hrb25vdmFsb3ZAZ21haWwuY29tCg== | base64 -d>
 
 pkgname=redis-desktop-manager
-_pkgver=0.9.9
-pkgver=${_pkgver/-/_}
+pkgver=2019.0
 pkgrel=1
 pkgdesc='Open source cross-platform Redis Desktop Manager based on Qt 5'
 arch=('x86_64')
@@ -19,9 +18,9 @@ depends=(
   'qt5-graphicaleffects'
   'qt5-svg'
   'libssh2')
-makedepends=('git' 'python2' 'gcc' )
+makedepends=('gcc' 'git' 'python2')
 conflicts=('redis-desktop-manager-bin')
-source=("rdm::git://github.com/uglide/RedisDesktopManager.git#tag=${_pkgver}"
+source=("rdm::git://github.com/uglide/RedisDesktopManager.git#tag=$pkgver"
         'rdm.sh'
         'rdm.desktop')
 sha256sums=('SKIP'
@@ -33,8 +32,8 @@ prepare() {
   git submodule update --init --recursive
   git submodule add https://chromium.googlesource.com/linux-syscall-support 3rdparty/linux-syscall-support
 
-  python2 build/utils/set_version.py "${_pkgver}" > src/version.h
-  python2 build/utils/set_version.py "${_pkgver}" > 3rdparty/crashreporter/src/version.h
+  python2 build/utils/set_version.py "$pkgver" > src/version.h
+  python2 build/utils/set_version.py "$pkgver" > 3rdparty/crashreporter/src/version.h
 
   _lssdir='3rdparty/gbreakpad/src/third_party/lss/'
   mkdir -p ${_lssdir}
@@ -48,7 +47,7 @@ build() {
 
   cd $srcdir/rdm/3rdparty/crashreporter
   sed -ie 's/(APP_NAME)/("RedisDesktopManager")/g' src/main.cpp
-  sed -ie "s/(APP_VERSION)/(\"${_pkgver}\")/g" src/main.cpp
+  sed -ie "s/(APP_VERSION)/(\"$pkgver\")/g" src/main.cpp
   sed -ie 's/(CRASH_SERVER_URL)/("\/crash-report")/g' src/main.cpp
   qmake CONFIG+=release DESTDIR="$srcdir/rdm/bin/linux/release" QMAKE_LFLAGS_RPATH=""
   make -j 2
