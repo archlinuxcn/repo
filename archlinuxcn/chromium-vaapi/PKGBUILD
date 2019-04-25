@@ -10,8 +10,8 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=chromium-vaapi
-pkgver=73.0.3683.103
-pkgrel=2
+pkgver=74.0.3729.108
+pkgrel=1
 _launcher_ver=6
 pkgdesc="Chromium with VA-API support to enable hardware acceleration"
 arch=('x86_64')
@@ -34,19 +34,15 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-drirc-disable-10bpc-color-configs.conf
         chromium-vaapi.patch
         chromium-system-icu.patch
-        chromium-color_utils-use-std-sqrt.patch
-        chromium-media-fix-build-with-libstdc++.patch
-        chromium-avoid-log-flooding-in-GLSurfacePresentationHelper.patch
+        chromium-glibc-2.29.patch
         chromium-widevine.patch
         chromium-skia-harmony.patch)
-sha256sums=('eb02c419de98bb8849fd0a37a3e7bbb813938c37e3d6b2c2526df3e84f9653af'
+sha256sums=('1e1e5e06fe24309377630800b44b5c6b624b7c722b5d9789abe80a962b945b6f'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
             'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb'
             'e87ede45edf39ac19e56ac1ae49c9d1f5f5130e5838bcbb4c3d4fb16e55575c0'
             'e2d284311f49c529ea45083438a768db390bde52949995534034d2a814beab89'
-            'b3b6f5147d519c586cbdaf3b227dd1719676fa3a65edd6f08989087afd287afa'
-            'f51fe91427d8638c5551746d2ec7de99e8059dd76889cfeaee8ca3d8fed62265'
-            'f2b12ccf83a8e0adda4a87ae5c983df5e092ccf1f9a6f2e05799ce4d451dbda1'
+            '89ca1ac8394ec0920357ff64ba46573e978e9be64f82aa0fc225b36e30d5842c'
             'd081f2ef8793544685aad35dea75a7e6264a2cb987ff3541e6377f4a3650a28b'
             '5887f78b55c4ecbbcba5930f3f0bb7bc0117c2a41c2f761805fcf7f46f1ca2b3')
 
@@ -98,14 +94,8 @@ prepare() {
     third_party/blink/renderer/core/xml/parser/xml_document_parser.cc \
     third_party/libxml/chromium/libxml_utils.cc
 
-  # https://crbug.com/819294#c88
-  patch -Np1 -i ../chromium-color_utils-use-std-sqrt.patch
-
-  # https://crbug.com/931373
-  patch -d media -Np1 -i ../../chromium-media-fix-build-with-libstdc++.patch
-
-  # https://crbug.com/879929
-  patch -Np1 -i ../chromium-avoid-log-flooding-in-GLSurfacePresentationHelper.patch
+  # https://crbug.com/949312
+  patch -Np1 -i ../chromium-glibc-2.29.patch
 
   # Enable VAAPI on Linux
   patch -Np1 -i ../chromium-vaapi.patch
