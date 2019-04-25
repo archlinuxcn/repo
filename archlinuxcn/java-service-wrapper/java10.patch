@@ -1,6 +1,15 @@
---- build.xml.orig	2018-12-24 04:26:08.343432389 -0500
-+++ build.xml	2018-12-24 04:26:59.394029875 -0500
-@@ -553,39 +553,6 @@
+--- build.xml    2018-01-09 11:05:11.144063035 +0100
++++ build.xml    2018-01-09 11:08:31.392063791 +0100
+@@ -562,7 +562,7 @@
+         <mkdir dir="${lib.dir}"/>
+
+         <!-- compile everything under src/java -->
+-        <javac srcdir="${src.dir}/java" destdir="${build.classes}"
++        <javac srcdir="${src.dir}/java" destdir="${build.classes}" nativeheaderdir="${src.dir}/c"
+                deprecation="on"
+                debug="on"
+                optimize="on"
+@@ -592,39 +592,6 @@
              </fileset> 
          </copy>
          
