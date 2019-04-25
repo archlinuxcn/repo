@@ -67,10 +67,10 @@ _rev_override="n"
 _major=5.0
 _minor=9
 _srcname=linux-${_major}
-_clr=${_major}.8-734
+_clr=${_major}.9-739
 pkgbase=linux-clear
 pkgver=5.0.9
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 url="https://github.com/clearlinux-pkgs/linux"
 license=('GPL2')
@@ -111,7 +111,7 @@ _real_prepare() {
         echo "$_kernelname" > localversion.20-pkgname
 
     ### Add Clearlinux patches
-        for i in $(grep '^Patch' ${srcdir}/clearlinux/linux.spec | grep -Ev '^Patch0126|^Patch0001|^Patch0002' | sed -n 's/.*: //p'); do
+        for i in $(grep '^Patch' ${srcdir}/clearlinux/linux.spec | grep -Ev '^Patch0126' | sed -n 's/.*: //p'); do
         msg2 "Applying patch ${i}..."
         patch -Np1 -i "$srcdir/clearlinux/${i}"
         done
