@@ -23,7 +23,11 @@ sha256sums=('1e26be6516c6c7867c4b89ac0d6a27519b6a8250f5356e183b3b9bd7a745e59b'
 
 prepare() {
 	cd "$srcdir/$_name-$pkgver"
-	patch -p1 < "$srcdir/build.patch"
+
+	if [ "$pkgver" = "3.2.3" ]; then
+		patch -p1 < "$srcdir/build.patch"
+	fi
+	
 	npm install
 	bower install
 }
