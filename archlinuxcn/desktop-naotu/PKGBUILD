@@ -2,13 +2,13 @@
 pkgname=desktop-naotu
 _name=DesktopNaotu
 pkgver=3.2.3
-pkgrel=1
+pkgrel=2
 pkgdesc="桌面版脑图 (百度脑图离线版，思维导图) 跨平台支持 Windows/Linux/Mac OS. (A cross-platform multilingual Mind Map Tool)"
 arch=('x86_64')
 url="https://github.com/NaoTu/DesktopNaotu"
 license=('GPL2')
 depends=('electron')
-makedepends=('npm' 'bower')
+makedepends=('npm' 'bower' 'git' 'gulp')
 conflicts=('naotu')
 source=(
 	"$pkgname-$pkgver.tar.gz::https://github.com/NaoTu/DesktopNaotu/archive/v${pkgver}.tar.gz"
