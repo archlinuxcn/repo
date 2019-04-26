@@ -1,0 +1,44 @@
+# Maintainer: Bruce Zhang
+pkgname=desktop-naotu
+_name=DesktopNaotu
+pkgver=3.2.3
+pkgrel=1
+pkgdesc="桌面版脑图 (百度脑图离线版，思维导图) 跨平台支持 Windows/Linux/Mac OS. (A cross-platform multilingual Mind Map Tool)"
+arch=('x86_64')
+url="https://github.com/NaoTu/DesktopNaotu"
+license=('GPL2')
+depends=('electron')
+makedepends=('npm' 'bower')
+conflicts=('naotu')
+source=(
+	"$pkgname-$pkgver.tar.gz::https://github.com/NaoTu/DesktopNaotu/archive/v${pkgver}.tar.gz"
+	"build.patch"
+	"desktop-naotu.sh"
+	"desktop-naotu.desktop"
+)
+sha256sums=('1e26be6516c6c7867c4b89ac0d6a27519b6a8250f5356e183b3b9bd7a745e59b'
+            '826a91abc8eaaac5d23774c032f32c0925d3282fd8a70cc3a1206005b5c44f3a'
+            '79470caeef344ee5c35c833fe0d09f49d9dcf8792377b2464a94cf1b2f148ccc'
+            'bb82fce20f15a8cba3cd817c49d2e25e4cf61436a33cf946b724f2734b66a2dc')
+
+prepare() {
+	cd "$srcdir/$_name-$pkgver"
+	patch -p1 < "$srcdir/build.patch"
+	npm install
+	bower install
+}
+
+build() {
+	cd "$srcdir/$_name-$pkgver"
+	gulp
+	npm run packlinux
+}
+
+package() {
+	cd "$srcdir/$_name-$pkgver"
+	install -Dm644 "$srcdir/OutApp/DesktopNaotu-linux-x64/resources/app.asar" "$pkgdir/usr/share/desktop-naotu/app.asar"
+
+	install -Dm644 "$srcdir/$_name-$pkgver/app/static/favicon.png" "$pkgdir/usr/share/icons/hicolor/48x48/apps/desktop-naotu.png"
+	install -Dm755 "$srcdir/desktop-naotu.sh" "$pkgdir/usr/bin/desktop-naotu"
+	install -Dm644 "$srcdir/desktop-naotu.desktop" "$pkgdir/usr/share/applications/desktop-naotu.desktop"
+}
