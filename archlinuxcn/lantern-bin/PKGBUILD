@@ -2,7 +2,6 @@
 
 pkgname=lantern-bin
 pkgver=5.3.4
-
 pkgrel=1
 pkgdesc='Free desktop application that delivers fast, reliable and secure access to the open Internet. (Stable Channel, binary)'
 arch=('i686' 'x86_64')
@@ -23,7 +22,7 @@ options=(emptydirs)
 
 package() {
     msg2 'Extracting the data.tar.xz...'
-    bsdtar -xf data.tar.xz -C "${pkgdir}/"
+    bsdtar -xf data.tar.gz -C "${pkgdir}/"
 
     msg2 'Install systemd service file...'
     install -Dm644 "${srcdir}/lantern.service" "${pkgdir}/usr/lib/systemd/system/lantern.service"
