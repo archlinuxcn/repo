@@ -5,7 +5,7 @@ _srcname=linux-5.0
 _srcdir=${_srcname}
 _has_patch=true # TODO: set this to false if the kernel has no patch version
 _patch_commit=2ec1729218c3b91557d084bb53487eebd177d827 # PeterCxy/linux-surface-patches
-pkgver=5.0.8
+pkgver=5.0.10
 pkgrel=1
 arch=('x86_64')
 url="https://www.kernel.org/"
@@ -34,7 +34,7 @@ sha256sums=('437b141a6499159f5a7282d5eb4b2be055f8e862ccce44d7464e8759c31a2e43'
             'ae2e95db94ef7176207c690224169594d49445e04249d2499e9d2fbc117a0b21'
             '75f99f5239e03238f88d1a834c50043ec32b1dc568f2cc291b07d04718483919'
             'ad6344badc91ad0630caacde83f7f9b97276f80d26a20619a87952be65492c65'
-            '735404f3c76533574155ea1325ed76d158f3ee9ca5a745c6d0dcf4ec4b280ca3')
+            'b291c978cee9a9018d29d31e8e838de93ad727da6932220388d4c3aaf3253b56')
 
 _kernelname=${pkgbase#linux}
 
