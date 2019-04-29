@@ -16,7 +16,7 @@ pkgver() {
 
 package_alacritty-git() {
 	pkgdesc="A cross-platform, GPU-accelerated terminal emulator"
-	depends=('freetype2' 'fontconfig' 'xclip')
+	depends=('freetype2' 'fontconfig' 'xclip' 'libxcb')
 	provides=('alacritty')
 	conflicts=('alacritty')
 
