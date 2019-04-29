@@ -9,7 +9,7 @@
 pkgname=monodevelop-stable
 _pkgname=monodevelop
 pkgver=7.8.3.2
-pkgrel=1
+pkgrel=2
 pkgdesc="An IDE primarily designed for C# and other .NET languages"
 arch=('x86_64' 'i686')
 url="http://www.monodevelop.com"
@@ -51,5 +51,8 @@ package() {
   XDG_CONFIG_HOME="$srcdir"/config LD_PRELOAD="" make DESTDIR="$pkgdir" install
   # delete conflicting files
   find "$pkgdir"/usr/share/mime/ -type f -delete
-}
 
+  #Correct Invalid Env Paths in static launcher
+  sed -i "s/export LD_LIBRARY_PATH.*/export LD_LIBRARY_PATH\=\"\/usr\/lib\/monodevelop\/bin\:\$\{LD_LIBRARY_PATH\}\"/g" $pkgdir/usr/bin/monodevelop;
+  sed -i "s/EXE_PATH=.*/EXE_PATH=\/usr\/lib\/monodevelop\/bin\/MonoDevelop.exe/g" $pkgdir/usr/bin/monodevelop;
+}
