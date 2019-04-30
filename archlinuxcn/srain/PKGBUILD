@@ -1,7 +1,7 @@
 # Maintainer: Shengyu Zhang <la@archlinuxcn.org>
 
 pkgname=srain
-pkgver=1.0.0rc2
+pkgver=1.0.0rc3
 pkgrel=1
 pkgdesc="Modern IRC client, git version"
 arch=('i686' 'x86_64')
@@ -15,7 +15,7 @@ optdepends=(
 conflicts=('srain')
 provides=('srain')
 source=("https://github.com/SrainApp/${pkgname}/archive/${pkgver}.tar.gz")
-sha256sums=('39782f044ab7b780c84cfa61c93f3617bdcb7506a74a67dea186d3d0356229a7')
+sha256sums=('26610536b7baa0a9f21cb01b531f7982e794e3f7cf339a03706f465687292463')
 
 _prefix='/usr'
 
