@@ -1,6 +1,6 @@
-diff -up src/xrdp-0.9.4/instfiles/xrdp.service.in.orig src/xrdp-0.9.4/instfiles/xrdp.service.in
---- src/xrdp-0.9.4/instfiles/xrdp.service.in.orig	2017-07-18 22:23:49.000000000 -0600
-+++ src/xrdp-0.9.4/instfiles/xrdp.service.in	2017-11-18 23:48:10.000000000 -0700
+diff -up src/xrdp-0.9.9/instfiles/xrdp.service.in.orig src/xrdp-0.9.9/instfiles/xrdp.service.in
+--- src/xrdp-0.9.9/instfiles/xrdp.service.in.orig	2018-10-19 01:09:19.000000000 -0600
++++ src/xrdp-0.9.9/instfiles/xrdp.service.in	2019-01-13 06:49:55.000000000 -0700
 @@ -6,11 +6,9 @@ After=network.target xrdp-sesman.service
  
  [Service]
@@ -16,9 +16,9 @@ diff -up src/xrdp-0.9.4/instfiles/xrdp.service.in.orig src/xrdp-0.9.4/instfiles/
  
  [Install]
  WantedBy=multi-user.target
-diff -up src/xrdp-0.9.4/instfiles/xrdp-sesman.service.in.orig src/xrdp-0.9.4/instfiles/xrdp-sesman.service.in
---- src/xrdp-0.9.4/instfiles/xrdp-sesman.service.in.orig	2017-07-18 22:23:49.000000000 -0600
-+++ src/xrdp-0.9.4/instfiles/xrdp-sesman.service.in	2017-11-18 23:47:37.000000000 -0700
+diff -up src/xrdp-0.9.9/instfiles/xrdp-sesman.service.in.orig src/xrdp-0.9.9/instfiles/xrdp-sesman.service.in
+--- src/xrdp-0.9.9/instfiles/xrdp-sesman.service.in.orig	2018-10-19 01:09:19.000000000 -0600
++++ src/xrdp-0.9.9/instfiles/xrdp-sesman.service.in	2019-01-13 06:49:55.000000000 -0700
 @@ -7,11 +7,9 @@ BindsTo=xrdp.service
  
  [Service]
@@ -34,9 +34,9 @@ diff -up src/xrdp-0.9.4/instfiles/xrdp-sesman.service.in.orig src/xrdp-0.9.4/ins
  
  [Install]
  WantedBy=multi-user.target
-diff -up src/xrdp-0.9.4/instfiles/xrdp.sh.orig src/xrdp-0.9.4/instfiles/xrdp.sh
---- src/xrdp-0.9.4/instfiles/xrdp.sh.orig	2017-06-26 07:09:39.000000000 -0600
-+++ src/xrdp-0.9.4/instfiles/xrdp.sh	2017-11-18 23:44:01.000000000 -0700
+diff -up src/xrdp-0.9.9/instfiles/xrdp.sh.orig src/xrdp-0.9.9/instfiles/xrdp.sh
+--- src/xrdp-0.9.9/instfiles/xrdp.sh.orig	2018-10-18 23:50:31.000000000 -0600
++++ src/xrdp-0.9.9/instfiles/xrdp.sh	2019-01-13 06:49:55.000000000 -0700
 @@ -17,7 +17,7 @@
  # Description: starts xrdp
  ### END INIT INFO
@@ -46,10 +46,17 @@ diff -up src/xrdp-0.9.4/instfiles/xrdp.sh.orig src/xrdp-0.9.4/instfiles/xrdp.sh
  LOG=/dev/null
  CFGDIR=/etc/xrdp
  
-diff -up src/xrdp-0.9.4/sesman/startwm.sh.orig src/xrdp-0.9.4/sesman/startwm.sh
---- src/xrdp-0.9.4/sesman/startwm.sh.orig	2017-07-18 22:23:49.000000000 -0600
-+++ src/xrdp-0.9.4/sesman/startwm.sh	2017-11-18 23:42:35.000000000 -0700
-@@ -56,6 +56,17 @@ wm_start()
+diff -up src/xrdp-0.9.9/sesman/startwm.sh.orig src/xrdp-0.9.9/sesman/startwm.sh
+--- src/xrdp-0.9.9/sesman/startwm.sh.orig	2018-10-25 00:20:43.000000000 -0600
++++ src/xrdp-0.9.9/sesman/startwm.sh	2019-01-13 06:52:12.000000000 -0700
+@@ -58,11 +58,22 @@ post_start()
+ #start the window manager
+ wm_start()
+ {
+-  if [ -r /etc/default/locale ]; then
+-    . /etc/default/locale
++  if [ -r /etc/locale.conf ]; then
++    . /etc/locale.conf
      export LANG LANGUAGE
    fi
  
