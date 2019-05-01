@@ -6,9 +6,9 @@
 
 pkgname=qsyncthingtray-lite
 _pkgname=QSyncthingTray
-pkgver=0.5.8.r12.gc7ed486
-_commit=c7ed486603072db444589386b385cd0577f4c13c
-pkgrel=2
+pkgver=0.5.8.r13.g3168f48
+_commit=3168f48188591624c4972881889249a715981ea2
+pkgrel=1
 pkgdesc="tray app for syncthing - without the default embedded web interface"
 arch=('i686' 'x86_64')
 url="https://github.com/sieren/QSyncthingTray"
