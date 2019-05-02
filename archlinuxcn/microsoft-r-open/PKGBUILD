@@ -1,10 +1,10 @@
 # Maintainer: Alexander Phinikarides (alexisph -at- gmail -dot- com)
 
 pkgname=microsoft-r-open
-pkgver=3.5.1
+pkgver=3.5.2
 pkgrel=1
 _majorver=3.5
-_mrandate=2018-08-01
+_mrandate=2019-02-01
 pkgdesc="Language and environment for statistical computing and graphics, enhanced by Microsoft"
 arch=('x86_64')
 license=('GPL')
@@ -12,28 +12,28 @@ url='https://mran.revolutionanalytics.com/open/'
 provides=("r=${pkgver}")
 conflicts=('r' 'r-mkl')
 depends=('bzip2'
-        'curl'
-        'desktop-file-utils'
-        'gcc-libs'
-        'icu60'
-        'libjpeg'
-        'libpng'
-        'libpng12'
-        'libtiff'
-        'libxmu'
-        'libxt'
-        'ncurses'
-        'pango'
-        'pcre'
-        'perl'
-        'readline'
-        'unzip'
-        'xz'
-        'zip'
-        'zlib')
+         'curl'
+         'desktop-file-utils'
+         'gcc-libs'
+         'icu60'
+         'libjpeg'
+         'libpng'
+         'libpng12'
+         'libtiff'
+         'libxmu'
+         'libxt'
+         'ncurses'
+         'pango'
+         'pcre'
+         'perl'
+         'readline'
+         'unzip'
+         'xz'
+         'zip'
+         'zlib')
 makedepends=('java-environment'
-            'gcc-fortran'
-            'tk')
+             'gcc-fortran'
+             'tk')
 optdepends=('tk: tcl/tk interface'
             'texlive-bin: latex sty files')
 backup=('etc/R/Makeconf'
@@ -41,17 +41,17 @@ backup=('etc/R/Makeconf'
         'etc/R/ldpaths'
         'etc/R/repositories'
         'etc/R/javaconf')
-options=('!makeflags' '!emptydirs')
+options=('!emptydirs')
 install=microsoft-r-open.install
-source=("https://mran.blob.core.windows.net/install/mro/${pkgver}/microsoft-r-open-${pkgver}.tar.gz"
+source=("https://mran.blob.core.windows.net/install/mro/${pkgver}/rhel/microsoft-r-open-${pkgver}.tar.gz"
         'mro.desktop'
         'mro.png'
         'R.conf')
-md5sums=('fd1e4123943cfad35fc85c219c22bb46'
+md5sums=('b6e4d3826b2a1f77f45fd504a7043322'
          '70e8f9d0b1eebeb1f0b45f4568bc0701'
          '8e0c51650b8a63f110fa7b09e699e9c4'
          '1dfa62c812aed9642f6e4ac34999b9fe')
-sha512sums=('98a1b701b9cdee46a53a6f86468057d7a475bc7ffdc2b1d87c9c1b753c6bede72d53bbc790e8fbd1b2b1dca8561a3a1136ceb0d4764288574efe3b55aead2268'
+sha512sums=('a3f05b9466a9a25f5556fd27ec3cc42171c1c0d253c112b33608609d744078e6b836f57782ae85d4049d04dcf7548cc9953e4ab0599a7b20343f0f4bbec8c3a2'
             '2b0221bd1e0fdd399284333e6f2020bb9ad11395ad39dd2fca688b7ebc68fbbc60de59a757e1898be8bcd9e2926afccc121043f38445e7693f177c3076f92b61'
             '1491b01d3d14b86d26c383e00e2305858a52ddd498158c9f7f6b33026ee01f246408b1676cffea73f7783c8c4cf546285705c43c0286adbd75ad77706918b5fe'
             'aae388c5b6c02d9fb857914032b0cd7d68a9f21e30c39ba11f5a29aaf1d742545482054b57ce18872eabb6605bbb359b2fc1e9be5ce6881443fdbdf6b67fab3b')
@@ -61,7 +61,6 @@ prepare() {
   # extract rpms
   bsdtar -xf "rpm/${pkgname}-mro-${pkgver}.rpm"
   bsdtar -xf "rpm/${pkgname}-mkl-${pkgver}.rpm"
-  bsdtar -xf "rpm/${pkgname}-foreachiterators-${pkgver}.rpm"
 }
 
 package() {
