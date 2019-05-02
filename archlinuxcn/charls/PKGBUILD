@@ -12,20 +12,23 @@ source=("${pkgname}-${pkgver}.tar.gz::https://github.com/team-charls/charls/arch
 sha512sums=("0a2862fad6d65b941c81f5f838db1fdc6a4625887281ddbf27e21be9084f607d27c8a27d246d6252e08358b2ed4aa0c2b7407048ca559fb40e94313ca72487dd")
 
 build() {
-	cd "${pkgname}-${pkgver}"
-  mkdir build
-  cd build
+  cd "${pkgname}-${pkgver}"
   cmake \
     -DCMAKE_INSTALL_PREFIX:PATH=/usr \
     -DCMAKE_BUILD_TYPE:STRING=Release \
     -DBUILD_SHARED_LIBS:BOOL=ON \
-    ..
+    .
 	make
 }
 
+check() {
+  cd "${pkgname}-${pkgver}"
+  ./charlstest -unittest -dontwait
+}
+
 package() {
-	cd "${pkgname}-${pkgver}/build"
-	make DESTDIR="${pkgdir}" install
+  cd "${pkgname}-${pkgver}"
+  make DESTDIR="${pkgdir}" install
   install -D -m644 ${srcdir}/${pkgname}-${pkgver}/License.txt ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
 }
 # vim:set ts=2 sw=2 et:
