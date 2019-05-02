@@ -14,8 +14,8 @@
 
 pkgbase=firefox-kde-opensuse
 pkgname=(firefox-kde-opensuse firefox-kde-opensuse-noavx2)
-pkgver=66.0.2
-pkgrel=5
+pkgver=66.0.3
+pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -27,7 +27,7 @@ depends=('mozilla-common' 'libxt' 'startup-notification' 'mime-types'
 
 makedepends=('unzip' 'zip' 'diffutils' 'python2-setuptools' 'yasm' 'mesa' 'imake'
              'xorg-server-xvfb' 'libpulse' 'inetutils' 'autoconf2.13' 'rust'
-              'mercurial' 'llvm' 'clang'
+              'mercurial' 'llvm' 'clang' 'cargo'
              'gtk2' 'nodejs' 'cbindgen' 'nasm' 'python' 'python2-psutil' 'xz')
 
 optdepends=('networkmanager: Location detection via available WiFi networks'

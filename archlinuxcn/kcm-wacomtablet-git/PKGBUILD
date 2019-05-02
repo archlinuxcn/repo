@@ -1,22 +1,24 @@
 # Maintainer: Megumifox <i@megumifox.com>
 
 pkgname=kcm-wacomtablet-git
-pkgver=714.400d0d0
+pkgver=716.20d6c28
 pkgrel=1
 epoch=1
 pkgdesc="KDE GUI for the Wacom Linux Drivers"
 arch=('i686' 'x86_64')
 url="https://www.linux-apps.com/p/1127862/"
 license=('GPL')
-depends=('plasma-framework' 'xf86-input-wacom')
+depends=('plasma-framework' 'xf86-input-wacom' 'libx11')
 makedepends=('git' 'cmake' 'extra-cmake-modules' 'kdoctools')
 provides=('kcm-wacomtablet')
 conflicts=('kcm-wacomtablet')
 replaces=('kcm-wacomtablet-frameworks-git')
 source=('git://anongit.kde.org/wacomtablet.git'
+         'wacomtablet-3.1.1-xlib-optional.patch'
          'add_missing_includes.diff')
 md5sums=('SKIP'
-         'SKIP')
+         'c3d87e1e792edb5cc6535fbf11cf14f8'
+         '2ce92eaa8446aa530a5849e7bbc0e937')
 
 pkgver() {
   cd "$srcdir/wacomtablet"
@@ -25,6 +27,7 @@ pkgver() {
 
 prepare() {
   cd "$srcdir/wacomtablet"
+  patch -Np1 < "$srcdir/wacomtablet-3.1.1-xlib-optional.patch"
   patch -Np1 < "$srcdir/add_missing_includes.diff"
 }
 
