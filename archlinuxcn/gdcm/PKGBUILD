@@ -1,0 +1,68 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+# Contributor: Chris <christopher.r.mullins g-mail>
+# Contributor: Andrzej Giniewicz <gginiu@gmail.com>
+
+pkgname=gdcm
+pkgver=2.8.9
+pkgrel=1
+pkgdesc='a C++ library for DICOM medical files'
+arch=('x86_64')
+url='http://gdcm.sourceforge.net'
+license=('BSD')
+depends=(
+    "expat"
+    "libxml2"
+    "openjpeg2"
+    "poppler"
+    "python"
+)
+makedepends=(
+    "cmake"
+    "swig"
+)
+optdepends=("python: for python binding")
+source=("http://sourceforge.net/projects/gdcm/files/gdcm%202.x/GDCM%20${pkgver}/gdcm-${pkgver}.tar.gz")
+sha512sums=("a8a315bc43f34460af90aeeab3695389bdc4e4d1c827e5a34d399c854751f396d83bc365f2d124cee06a9df349762c4987b7d7c7bb405622204ecf5b09de3bf2")
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  mkdir -p build
+  cd build
+  CFLAGS=-fvisibility=hidden CXXFLAGS=-fvisibility=hidden \
+  cmake \
+    -DCMAKE_INSTALL_PREFIX:FILEPATH=/usr \
+    -DCMAKE_BUILD_TYPE:STRING=Release \
+    -DCMAKE_SKIP_RPATH:BOOL=ON \
+    -DGDCM_BUILD_SHARED_LIBS:BOOL=ON \
+    -DGDCM_DOCUMENTATION:BOOL=OFF \
+    -DGDCM_BUILD_EXAMPLES:BOOL=OFF \
+    -DGDCM_BUILD_APPLICATIONS:BOOL=OFF \
+    -DGDCM_USE_SYSTEM_CHARLS:BOOL=OFF \
+    -DGDCM_USE_SYSTEM_EXPAT:BOOL=ON \
+    -DGDCM_USE_SYSTEM_JSON:BOOL=OFF \
+    -DGDCM_USE_SYSTEM_LIBXML2:BOOL=ON \
+    -DGDCM_USE_SYSTEM_OPENJPEG:BOOL=ON \
+    -DGDCM_USE_SYSTEM_OPENSSL:BOOL=ON \
+    -DGDCM_USE_SYSTEM_POPPLER:BOOL=ON \
+    -DGDCM_USE_SYSTEM_UUID:BOOL=ON \
+    -DGDCM_USE_SYSTEM_ZLIB:BOOL=ON \
+    -DGDCM_WRAP_PYTHON:BOOL=ON \
+    ..
+    make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  install -Dm644 Copyright.txt "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
+
+  cd "${srcdir}/${pkgname}-${pkgver}/build"
+  make DESTDIR="${pkgdir}" install
+
+# fix python binding installation
+  install -d "${pkgdir}/usr/lib/python3.7/site-packages"
+  mv "${pkgdir}/usr/lib/_gdcmswig.so" "${pkgdir}/usr/lib/python3.7/site-packages"
+  mv "${pkgdir}/usr/lib/gdcmswig.py" "${pkgdir}/usr/lib/python3.7/site-packages"
+  mv "${pkgdir}/usr/lib/gdcm.py" "${pkgdir}/usr/lib/python3.7/site-packages"
+}
+# vim:set ts=2 sw=2 et:
+
