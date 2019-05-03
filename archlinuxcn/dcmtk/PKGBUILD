@@ -1,0 +1,57 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+# Contributor: Miguel Useche <migueluseche@skatox.com>
+# Contributor: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
+
+pkgname=dcmtk
+_pkgname=dcmtk-DCMTK
+pkgver=3.6.4
+pkgrel=1
+pkgdesc="A collection of libraries and applications implementing large parts the DICOM standard"
+arch=("x86_64")
+url="http://dicom.offis.de/dcmtk"
+license=('custom')
+depends=('libpng' 'libtiff' 'libxml2' 'libwrap')
+makedepends=('cmake')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/DCMTK/dcmtk/archive/DCMTK-${pkgver}.tar.gz")
+sha512sums=("f9811b8b94c3557a6649e498c5497e4b38a20c65d77cea99bb7eb2a955c7b3663767c66d81c3445949d58ac2d406397e08e9ef6ef73297f8235dc804a4b2c17c")
+
+build() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  mkdir build
+  cd build
+  cmake .. \
+    -DCMAKE_BUILD_TYPE:STRING="Release" \
+    -DCMAKE_INSTALL_LIBDIR:PATH=lib \
+    -DCMAKE_SKIP_RPATH:BOOL=ON \
+    -DBUILD_SHARED_LIBS:BOOL=ON \
+    -DDCMTK_ENABLE_CXX11:BOOL=ON \
+    -DDCMTK_ENABLE_PRIVATE_TAGS:BOOL=ON \
+    -DDCMTK_ENABLE_STL:BOOL=ON \
+    -DDCMTK_FORCE_FPIC_ON_UNIX:BOOL=ON \
+    -DDCMTK_WITH_OPENSSL:BOOL=ON \
+    -DDCMTK_WITH_PNG:BOOL=ON \
+    -DDCMTK_WITH_TIFF:BOOL=ON \
+    -DDCMTK_WITH_XML:BOOL=ON \
+    -DDCMTK_WITH_ZLIB:BOOL=ON \
+    -DCMAKE_INSTALL_PREFIX=/usr
+  make
+}
+
+check() {
+  cd "${srcdir}/${_pkgname}-${pkgver}/build"
+  make test
+}
+
+package() {
+  cd "${srcdir}/${_pkgname}-${pkgver}/build"
+  make DESTDIR="${pkgdir}/" install
+  install -D -m644 ${srcdir}/${pkgname}-${pkgver}/COPYRIGHT ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+
+  # Move configuration files from /usr/etc to /etc
+  mv "${pkgdir}/usr/etc/" "${pkgdir}/"
+
+  # Remove empty files (0 length)
+  find "${pkgdir}" -type f -empty -exec rm -v {} \;
+}
+# vim:set ts=2 sw=2 et:
+
