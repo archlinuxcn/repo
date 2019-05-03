@@ -1,9 +1,8 @@
-tree 0f4b37852646eae176de06a5d92cd2f68ffaf318
-parent a38dc4152f043e81310b0deff46f9a770b9f5fcb
-author Matthew Denton <mpdenton@chromium.org> 1555962368 -0700
-committer Matthew Denton <mpdenton@chromium.org> 1555962368 -0700
-
-Update Linux Seccomp syscall restrictions to EPERM posix_spawn/vfork
+From 65046b8f90d0336cbe5f2f15cc7da5cb798360ad Mon Sep 17 00:00:00 2001
+From: Matthew Denton <mpdenton@chromium.org>
+Date: Wed, 24 Apr 2019 15:44:40 +0000
+Subject: [PATCH] Update Linux Seccomp syscall restrictions to EPERM
+ posix_spawn/vfork
 
 Glibc's system() function switched to using posix_spawn, which uses
 CLONE_VFORK. Pepperflash includes a sandbox debugging check which
@@ -15,9 +14,17 @@ CLONE_VFORK and CLONE_VM.
 
 Bug: 949312
 Change-Id: I3f4b90114b2fc1d9929e3c0a85bbe8f10def3c20
+Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/1568086
+Commit-Queue: Robert Sesek <rsesek@chromium.org>
+Reviewed-by: Robert Sesek <rsesek@chromium.org>
+Cr-Commit-Position: refs/heads/master@{#653590}
+---
+ .../baseline_policy_unittest.cc               | 29 +++++++++++++++++++
+ .../syscall_parameters_restrictions.cc        | 13 +++++++--
+ 2 files changed, 40 insertions(+), 2 deletions(-)
 
 diff --git a/sandbox/linux/seccomp-bpf-helpers/baseline_policy_unittest.cc b/sandbox/linux/seccomp-bpf-helpers/baseline_policy_unittest.cc
-index cdeb210..40fcebf 100644
+index cdeb210ccb..40fcebf933 100644
 --- a/sandbox/linux/seccomp-bpf-helpers/baseline_policy_unittest.cc
 +++ b/sandbox/linux/seccomp-bpf-helpers/baseline_policy_unittest.cc
 @@ -10,7 +10,9 @@
@@ -30,7 +37,7 @@ index cdeb210..40fcebf 100644
  #include <sys/prctl.h>
  #include <sys/resource.h>
  #include <sys/socket.h>
-@@ -130,6 +132,33 @@
+@@ -130,6 +132,33 @@ BPF_TEST_C(BaselinePolicy, ForkArmEperm, BaselinePolicy) {
    BPF_ASSERT_EQ(EPERM, fork_errno);
  }
  
@@ -65,10 +72,10 @@ index cdeb210..40fcebf 100644
    base::Thread thread("sandbox_tests");
    BPF_ASSERT(thread.Start());
 diff --git a/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.cc b/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.cc
-index 100afe5..348ab6e 100644
+index 100afe50e3..348ab6e8c5 100644
 --- a/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.cc
 +++ b/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.cc
-@@ -135,7 +135,8 @@
+@@ -135,7 +135,8 @@ namespace sandbox {
  #if !defined(OS_NACL_NONSFI)
  // Allow Glibc's and Android pthread creation flags, crash on any other
  // thread creation attempts and EPERM attempts to use neither
@@ -78,7 +85,7 @@ index 100afe5..348ab6e 100644
  ResultExpr RestrictCloneToThreadsAndEPERMFork() {
    const Arg<unsigned long> flags(0);
  
-@@ -154,8 +155,16 @@
+@@ -154,8 +155,16 @@ ResultExpr RestrictCloneToThreadsAndEPERMFork() {
        AnyOf(flags == kAndroidCloneMask, flags == kObsoleteAndroidCloneMask,
              flags == kGlibcPthreadFlags);
  
