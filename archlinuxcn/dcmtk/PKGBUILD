@@ -40,7 +40,7 @@ build() {
 package() {
   cd "${srcdir}/${_pkgname}-${pkgver}/build"
   make DESTDIR="${pkgdir}/" install
-  install -D -m644 ${srcdir}/${pkgname}-${pkgver}/COPYRIGHT ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+  install -D -m644 ${srcdir}/${_pkgname}-${pkgver}/COPYRIGHT ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
 
   # Move configuration files from /usr/etc to /etc
   mv "${pkgdir}/usr/etc/" "${pkgdir}/"
