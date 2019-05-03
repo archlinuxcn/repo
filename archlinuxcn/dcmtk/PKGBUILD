@@ -37,11 +37,6 @@ build() {
   make
 }
 
-check() {
-  cd "${srcdir}/${_pkgname}-${pkgver}/build"
-  make test
-}
-
 package() {
   cd "${srcdir}/${_pkgname}-${pkgver}/build"
   make DESTDIR="${pkgdir}/" install
