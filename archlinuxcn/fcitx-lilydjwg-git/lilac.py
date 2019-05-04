@@ -1,6 +1,3 @@
-# Trimmed lilac.py
-#!/usr/bin/env python3
-
 import os
 import subprocess
 import atexit
@@ -8,7 +5,6 @@ import time
 
 from lilaclib import *
 
-#build_prefix = 'extra-x86_64'
 p = None
 repo_dir = 'fcitx-repo'
 
@@ -51,6 +47,3 @@ def post_build_always(*, success=None, **kwargs):
       run_cmd(["git", "push", "origin", "lilydjwg"], use_pty=True)
     git_add_files('PKGBUILD')
     git_commit()
-
-#if __name__ == '__main__':
-#  single_main()
