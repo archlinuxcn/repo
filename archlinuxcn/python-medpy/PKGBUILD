@@ -3,7 +3,7 @@
 pkgname=python-medpy
 _pkgname=medpy
 pkgver=0.4.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Medical image processing in Python"
 arch=("x86_64")
 url="https://github.com/loli/medpy"
@@ -12,7 +12,7 @@ depends=(boost-libs python-numpy python-scipy python-simpleitk)
 makedepends=(boost python-setuptools)
 checkdepends=(python-nose)
 source=("${pkgname}-${pkgver}.tar.gz"::"https://github.com/loli/medpy/archive/${pkgver}.tar.gz")
-sha512sums=("539570d99fc786b5c27f76046999b9d87e343f32c7442b34bc49c56831d2e93efe13a72f1f3577f96e8026ad4d4380994ede7882c9219d6ef8f5673bdb2ab91e")
+sha512sums=('539570d99fc786b5c27f76046999b9d87e343f32c7442b34bc49c56831d2e93efe13a72f1f3577f96e8026ad4d4380994ede7882c9219d6ef8f5673bdb2ab91e')
 
 build() {
   cd "${_pkgname}-${pkgver}"
