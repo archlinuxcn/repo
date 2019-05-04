@@ -10,7 +10,7 @@ source=($_pkgname::git+https://github.com/jwilm/alacritty.git)
 sha256sums=('SKIP')
 
 pkgver() {
-	cd $_pkgname
+	cd $_pkgname/alacritty
 	echo "$(grep '^version =' Cargo.toml|head -n1|cut -d\" -f2).$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)"
 }
 
