@@ -1,9 +1,9 @@
-pre_build: aur_pre_build
+pre_build: vcs_update
 
-post_build: aur_post_build
+post_build: git_pkgbuild_commit
 
 update_on:
-    - aur: vimix-gtk-themes-git
+    - github: vinceliuice/vimix-gtk-themes
 
 maintainers:
     - github: dctxmei
