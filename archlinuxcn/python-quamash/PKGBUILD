@@ -2,7 +2,7 @@
 pkgname=python-quamash
 _pkgname=Quamash
 pkgver=0.6.1
-pkgrel=4
+pkgrel=5
 pkgdesc="Implementation of the asyncio (PEP 3156) event-loop with Qt"
 arch=('any')
 url="https://github.com/harvimt/quamash"
@@ -11,7 +11,6 @@ depends=('python')
 makedepends=('python-setuptools' 'icu' 'python-pyqt5' 'qt5-base')
 optdepends=(
   'python-pyqt5: PyQt5 implementation' 
-  'python-pyqt4: PyQt4 implementation' 
   'python-pyside: PySide implementation'
 )
 source=(
