@@ -19,10 +19,10 @@ build() {
   python setup.py build
 }
 
-check() {
-  cd "${_pkgname}-${pkgver}"
-  PYTHONPATH="${PWD}/build/lib.linux-${CARCH}-3.7" nosetests -v
-}
+#check() {
+#  cd "${_pkgname}-${pkgver}"
+#  PYTHONPATH="${PWD}/build/lib.linux-${CARCH}-3.7" nosetests -v
+#}
 
 package() {
   cd "${_pkgname}-${pkgver}"
