@@ -71,5 +71,9 @@ properties:
             - github
             - email
     minItems: 1
+  managed:
+    description: Whether the package should be built by lilac or not
+    type: boolean
+    default: true
 required:
   - maintainers
