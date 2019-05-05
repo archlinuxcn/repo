@@ -29,7 +29,7 @@ prepare() {
 }
 
 package() {
-  depends=("firefox")
+  depends=("firefox-esr")
   cd "${srcdir}"
 
   if [[ -f ${_pkgname}-${pkgver}/install.rdf ]]; then
