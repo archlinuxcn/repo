@@ -10,7 +10,7 @@ pkgdesc="Plugin for firefox which ensures you are using https whenever it's poss
 arch=('any')
 url="https://www.eff.org/https-everywhere"
 license=('GPL2')
-groups=('firefox-addons')
+groups=('firefox-esr-addons')
 makedepends=("unzip")
 source=("${_pkgname}-${pkgver}.xpi::https://www.eff.org/files/https-everywhere-${pkgver}-eff.xpi"
         "${_pkgname}-${pkgver}.xpi.sig::https://www.eff.org/files/https-everywhere-${pkgver}-eff.xpi.sig")
