@@ -2,29 +2,30 @@
 
 _pkgname=fs-uae-arcade
 pkgname=fs-uae-arcade-devel
-pkgver=2.9.7dev2
-pkgrel=2
+pkgver=2.9.8dev2
+pkgrel=1
 pkgdesc="Full-screen game browser for FS-UAE (development version)."
 arch=("any")
 url="http://fs-uae.net/download-devel"
 license=("GPL2")
 depends=("fs-uae-devel" "python-pyqt5" "python-setuptools" "python-opengl>=3.1.0"
          "python-lhafile" "hicolor-icon-theme")
-source=("http://fs-uae.net/devel/${pkgver}/${_pkgname}-${pkgver}.tar.gz")
-#source=("http://ppa.launchpad.net/fengestad/devel/ubuntu/pool/main/f/${_pkgname}/${_pkgname}_${pkgver}.orig.tar.gz")
+#source=("http://fs-uae.net/devel/${pkgver}/${_pkgname}-${pkgver}.tar.gz")
+source=("http://downloadcontent.opensuse.org/repositories/home:/FrodeSolheim:/devel/Debian_9.0/${_pkgname}_${pkgver/dev/~dev}.orig.tar.gz")
 provides=("fs-uae-game-center")
 conflicts=("fs-uae-game-center" "fs-uae-game-center-devel")
 replaces=("fs-uae-game-center-devel")
-sha256sums=('f1d0610a8e87ead4d4d0321a972854c78707a46f452ee2a23603623f44f8f681')
+sha256sums=('d8148594602a6a30998d698886f33af53c96d1d0c20701a9b70cfb455035e123')
 
 
 
 prepare() {
    cd ${_pkgname}-${pkgver}
-   # fix typing module compatybility problem
-   local pyver="$(python -c 'import sys; print("%d.%d" % sys.version_info[:2])')"
-   cp -f /usr/lib/python${pyver}/typing.py fstd/typing.py
-   # disable included OpenGL
+   ## fix typing module compatybility problem
+   #local pyver="$(python -c 'import sys; print("%d.%d" % sys.version_info[:2])')"
+   #cp -f /usr/lib/python${pyver}/typing.py fstd/typing.py
+
+   ## disable included OpenGL
    sed '/OpenGL/d' -i setup.py
 }
 
