@@ -3,7 +3,7 @@
 # Contributor: Alessio 'mOLOk' Bolognino <themolok@gmail.com>
 
 pkgname=bwidget
-pkgver=1.9.12
+pkgver=1.9.13
 pkgrel=1
 pkgdesc="A suite of megawidgets for Tk"
 arch=('any')
@@ -11,7 +11,7 @@ url="https://wiki.tcl.tk/2251"
 license=('GPL')
 depends=('bash' 'tcl')
 source=("http://downloads.sourceforge.net/project/tcllib/BWidget/$pkgver/bwidget-$pkgver.tar.gz")
-sha256sums=('2f682da93e07ff8cadd6c0580e7d4de3c8828134eab662dbe3d0e6ffc9443263')
+sha256sums=('76d8f42280e7160242186d12437949830eabd5009a6c14f4e7dba0f661403a81')
 
 package() {
   cd "${srcdir}"
