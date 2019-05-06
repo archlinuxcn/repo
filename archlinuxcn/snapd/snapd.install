@@ -5,5 +5,10 @@ pre_remove() {
   rm -f /var/lib/snapd/system-key || true
 }
 
+post_upgrade() {
+  # since 2.39+ void permission bits are 111 instead of 000
+  chmod 111 /var/lib/snapd/void || true
+}
+
 # vim:set ts=2 sw=2 et:
 
