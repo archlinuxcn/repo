@@ -6,13 +6,13 @@
 
 pkgsubn=https-everywhere
 pkgname=${pkgsubn}-chrome-git
-pkgver=65589.6b9e695030
+pkgver=65591.66c2e971c0
 pkgrel=1
 pkgdesc="Chrome/Chromium extension to use HTTPS whenever possible - git/dev"
 arch=('any')
 url='https://www.eff.org/https-everywhere'
 license=('GPL')
-makedepends=(git perl python36 python-lxml libxml2 vim zip rsync)
+makedepends=(git perl python python-lxml libxml2 vim zip rsync)
 source=("git+https://github.com/EFForg/${pkgsubn}.git")
 sha512sums=('SKIP')
 
@@ -21,8 +21,17 @@ pkgver() {
 	local ver="$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
 	printf "%s" "${ver//-/.}"
 }
+
 build() {
 	cd "${srcdir}/${pkgsubn}"
+  for file in `find -type f -name '*.py'`; do
+    sed -i 's/python3.6/python/g' "$file"
+  done
+
+  for file2 in `find -type f -name '*.sh'`; do
+    sed -i 's/python3.6/python/g' "$file2"
+  done
+
 	./make.sh
 }
 package() {
