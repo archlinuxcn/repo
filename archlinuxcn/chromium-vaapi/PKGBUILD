@@ -11,7 +11,7 @@
 
 pkgname=chromium-vaapi
 pkgver=74.0.3729.131
-pkgrel=1
+pkgrel=2
 _launcher_ver=6
 pkgdesc="Chromium with VA-API support to enable hardware acceleration"
 arch=('x86_64')
@@ -35,6 +35,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-vaapi.patch
         chromium-system-icu.patch
         chromium-glibc-2.29.patch
+        chromium-fix-the-flash-for-new-windows.patch
         chromium-widevine.patch
         chromium-skia-harmony.patch)
 sha256sums=('d178c7842f8f858ac876d88ce866cbd2132d7ca6c73940613ebf7e9c3fada986'
@@ -43,6 +44,7 @@ sha256sums=('d178c7842f8f858ac876d88ce866cbd2132d7ca6c73940613ebf7e9c3fada986'
             'e87ede45edf39ac19e56ac1ae49c9d1f5f5130e5838bcbb4c3d4fb16e55575c0'
             'e2d284311f49c529ea45083438a768db390bde52949995534034d2a814beab89'
             'dd791f154b48e69cd47fd94753c45448655b529590995fd71ac1591c53a3d60c'
+            '6d82c052eb1f1ae5644a09f7ad7a88d9e2966d1836124445ca4df93b7657c10a'
             'd081f2ef8793544685aad35dea75a7e6264a2cb987ff3541e6377f4a3650a28b'
             '5887f78b55c4ecbbcba5930f3f0bb7bc0117c2a41c2f761805fcf7f46f1ca2b3')
 
@@ -99,6 +101,9 @@ prepare() {
 
   # Enable VAAPI on Linux
   patch -Np1 -i ../chromium-vaapi.patch
+
+  # https://crbug.com/956061
+  patch -Np1 -i ../chromium-fix-the-flash-for-new-windows.patch
 
   # Load Widevine CDM if available
   patch -Np1 -i ../chromium-widevine.patch
