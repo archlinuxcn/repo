@@ -5,13 +5,13 @@
 pkgname=dcmtk
 _pkgname=dcmtk-DCMTK
 pkgver=3.6.4
-pkgrel=1
+pkgrel=2
 pkgdesc="A collection of libraries and applications implementing large parts the DICOM standard"
 arch=("x86_64")
 url="http://dicom.offis.de/dcmtk"
-license=('custom')
-depends=('libpng' 'libtiff' 'libxml2' 'libwrap')
-makedepends=('cmake')
+license=("custom")
+depends=("libpng" "libtiff" "libxml2" "libwrap")
+makedepends=("cmake")
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/DCMTK/dcmtk/archive/DCMTK-${pkgver}.tar.gz")
 sha512sums=("f9811b8b94c3557a6649e498c5497e4b38a20c65d77cea99bb7eb2a955c7b3663767c66d81c3445949d58ac2d406397e08e9ef6ef73297f8235dc804a4b2c17c")
 
@@ -20,7 +20,7 @@ build() {
   mkdir build
   cd build
   cmake .. \
-    -DCMAKE_BUILD_TYPE:STRING="Release" \
+    -DCMAKE_BUILD_TYPE:STRING=Release \
     -DCMAKE_INSTALL_LIBDIR:PATH=lib \
     -DCMAKE_SKIP_RPATH:BOOL=ON \
     -DBUILD_SHARED_LIBS:BOOL=ON \
@@ -40,7 +40,7 @@ build() {
 package() {
   cd "${srcdir}/${_pkgname}-${pkgver}/build"
   make DESTDIR="${pkgdir}/" install
-  install -D -m644 ${srcdir}/${_pkgname}-${pkgver}/COPYRIGHT ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+  install -D -m644 "${srcdir}/${_pkgname}-${pkgver}/COPYRIGHT" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 
   # Move configuration files from /usr/etc to /etc
   mv "${pkgdir}/usr/etc/" "${pkgdir}/"
