@@ -4,13 +4,16 @@ pkgname=tela-icon-theme-git
 _gitname=Tela-icon-theme
 pkgdesc="A flat colorful Design icon theme."
 pkgver=87.2f053185
-pkgrel=1
+pkgrel=2
 arch=('any')
 url="https://github.com/vinceliuice/Tela-icon-theme"
 license=('GPL3')
-source=("git+https://github.com/vinceliuice/Tela-icon-theme.git")
-sha256sums=('SKIP')
+makedepends=('git')
 options=('!strip')
+
+source=("git+https://github.com/vinceliuice/Tela-icon-theme.git")
+
+sha256sums=('SKIP')
 
 pkgver() {
 	cd "${srcdir}/${_gitname}"
