@@ -11,9 +11,10 @@
 # Contributor: Paolo Stivanin <admin at polslinux dot it>
 
 _pkgname=keepassxc
-pkgname=$_pkgname-yan12125-git
+pkgname=$_pkgname-yan12125
 pkgver=2.4.1.r41.gbc891761
-pkgrel=1
+_commit=bc891761b6d15345f240e79c7439b27869d94871
+pkgrel=2
 pkgdesc="A reboot of an open source password safe which helps you to manage your passwords in an easy and secure way"
 arch=(x86_64)
 url="https://keepassxc.org/"
@@ -24,7 +25,7 @@ makedepends=(cmake qt5-tools git)
 checkdepends=(xorg-server-xvfb openbox)
 conflicts=("$_pkgname")
 provides=("$_pkgname=$pkgver")
-source=('git+https://github.com/keepassxreboot/keepassxc.git#branch=develop'
+source=("git+https://github.com/keepassxreboot/keepassxc.git#commit=$_commit"
         'multiple-urls-v1.patch'
         'run_test.sh')
 sha256sums=('SKIP'
