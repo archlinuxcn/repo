@@ -1,8 +1,8 @@
 # Maintainer: Luke Yue <lukedyue@gmail.com>
 
 pkgname=clash
-pkgver=0.13.0
-pkgrel=2
+pkgver=0.14.0
+pkgrel=1
 pkgdesc="A rule based proxy in Go."
 arch=('x86_64')
 url="https://github.com/Dreamacro/clash"
@@ -19,7 +19,7 @@ source=("clash@.service"
 
 sha512sums=('e9e215e0a06d0d1072467342dd72e777725b94634714c5bd5fdee31f48897d9b8ab7e83830d836533d6862fa6ebfda56dbf138edd873140de61d8ccdf2a54572'
             '338c3a5904623bec48c03b2ef8cf452979c229fc5b89b2e0447664b40cd6e29c83cae47a19145be76d3ee2f0b6a54184a0cff69b834ba6107b444caacc02decf'
-            '4a981b3eab173e4f5d5cba2d54f260fa24064dd9fe4883a69ff906a5af8ceb458566c0524393dce43166628f7ac500549af1c67d75832ad7f4c7e8d62380a84d'
+            'f2619d3a706fa18aed46d1d8af8dd982ca706e134f9d16fea7e9d5ff0438df3af2c6ae838670bfe1862a0e7235435e38868a3007d9389e8949ea97533268b728'
             '46478b083104014b881ad546b89cfb16f040588f38e8c04ca664078061ba0e0653a394365d128410a9646f9159c9d9c7644a3ea42b22e4a4f240dfd6bea666c5')
 
 prepare() {
