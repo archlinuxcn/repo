@@ -1,0 +1,106 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+pkgname=insight-toolkit
+_pkgname=InsightToolkit
+pkgver=5.0rc02
+_pkgver=5.0
+pkgrel=5
+pkgdesc="Cross-platform system that provides developers with an extensive suite of software tools for image analysis"
+arch=("x86_64")
+url="http://www.itk.org"
+license=("Apache")
+depends=(
+  "dcmtk"
+  "eigen"
+  "expat"
+  "fftw"
+  "hdf5"
+  "libjpeg"
+  "libpng"
+  "libtiff"
+  "openjpeg2"
+  "python"
+  "zlib"
+)
+makedepends=(
+  "cmake"
+  "git"
+  "gtest"
+  "swig"
+  "valgrind"
+  "wget"
+)
+source=(
+  "https://github.com/InsightSoftwareConsortium/ITK/releases/download/v${pkgver}/${_pkgname}-${pkgver}.tar.gz"
+  "https://github.com/InsightSoftwareConsortium/ITK/releases/download/v${pkgver}/InsightData-${pkgver}.tar.gz"
+)
+sha512sums=(
+  "87a8d97af8c52621d1512777e776bcee61a741ba709d1260d510bc3836209fd7161d565aafb433a3948225a9009ddde38f42c6be92043b64aef36afc9a89bde2"
+  "d7a8639c7f66e7fe7a29348d30b60928b03dc17f9d557af9fd0ca48a792992e60b39b0ea08d27456d73f1bdf1c26e2be84690a2add03ff18de267636e7db8866"
+)
+
+build() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  # currently could not build with system gdcm
+  # dirty hack to make gdcm use system openjpeg2
+  sed -i "s/GDCM_USE_SYSTEM_OPENJPEG OFF/GDCM_USE_SYSTEM_OPENJPEG ON/" "${srcdir}/${_pkgname}-${pkgver}/Modules/ThirdParty/GDCM/src/CMakeLists.txt"
+  # dirty hack to use latest openjpeg2 from ArchLinux
+  sed -i "s/find_package(OpenJPEG 2.0.0 REQUIRED)/find_package(OpenJPEG REQUIRED)/" "${srcdir}/${_pkgname}-${pkgver}/Modules/ThirdParty/GDCM/src/gdcm/CMakeLists.txt"
+  mkdir build
+  cd build
+  cmake \
+    -DBUILD_DOCUMENTATION:BOOL=OFF \
+    -DBUILD_EXAMPLES:BOOL=ON \
+    -DBUILD_SHARED_LIBS:BOOL=ON \
+    -DBUILD_TESTING:BOOL=OFF \
+    -DCMAKE_BUILD_TYPE:STRING=Release \
+    -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=ON \
+    -DCMAKE_INSTALL_PREFIX:FILEPATH=/usr \
+    -DCMAKE_INSTALL_PREFIX:PATH=/usr \
+    -DCMAKE_SKIP_RPATH:BOOL=ON \
+    -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON \
+    -DITK_BUILD_DEFAULT_MODULES:BOOL=ON \
+    -DITK_FUTURE_LEGACY_REMOVE:BOOL=ON \
+    -DITK_LEGACY_REMOVE:BOOL=ON \
+    -DITK_USE_FFTWD:BOOL=ON \
+    -DITK_USE_FFTWF:BOOL=ON \
+    -DITK_USE_KWSTYLE:BOOL=OFF \
+    -DITK_USE_SYSTEM_CASTXML:BOOL=OFF \
+    -DITK_USE_SYSTEM_DCMTK:BOOL=ON \
+    -DITK_USE_SYSTEM_EIGEN:BOOL=ON \
+    -DITK_USE_SYSTEM_EXPAT:BOOL=ON \
+    -DITK_USE_SYSTEM_FFTW:BOOL=ON \
+    -DITK_USE_SYSTEM_GDCM:BOOL=OFF \
+    -DITK_USE_SYSTEM_HDF5:BOOL=ON \
+    -DITK_USE_SYSTEM_JPEG:BOOL=ON \
+    -DITK_USE_SYSTEM_LIBRARIES:BOOL=ON \
+    -DITK_USE_SYSTEM_PNG:BOOL=ON \
+    -DITK_USE_SYSTEM_SWIG:BOOL=ON \
+    -DITK_USE_SYSTEM_TIFF:BOOL=ON \
+    -DITK_USE_SYSTEM_VXL:BOOL=OFF \
+    -DITK_USE_SYSTEM_ZLIB:BOOL=ON \
+    -DITK_WRAP_IMAGE_DIMS="2;3;4" \
+    -DITK_WRAP_PYTHON:BOOL=ON \
+    -DModule_ITKDCMTK:BOOL=ON \
+    -DModule_ITKGDCM:BOOL=ON \
+    -DModule_ITKReview:BOOL=ON \
+    -DModule_ITKVideoBridgeOpenCV:BOOL=OFF \
+    -DModule_ITKVideoBridgeVXL:BOOL=OFF \
+    -DModule_ITKVtkGlue:BOOL=OFF \
+    ..
+  make
+}
+
+package() {
+  cd "${srcdir}/${_pkgname}-${pkgver}/build"
+  make DESTDIR="${pkgdir}" install
+  install -D -m644 "${srcdir}/${_pkgname}-${pkgver}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  # install examples
+  cp -r "${srcdir}/${_pkgname}-${pkgver}/Examples" "${pkgdir}/usr/share/doc/ITK-${_pkgver}"
+  # remove uneed files
+  rm -rf "${pkgdir}/usr/lib/cmake/ITK-${_pkgver}/WrapITK/"
+  rm -f "${pkgdir}/usr/vcl_compiler_detection.h"
+  rm -rf "${pkgdir}/usr/compilers"
+}
+# vim:set ts=2 sw=2 et:
+
