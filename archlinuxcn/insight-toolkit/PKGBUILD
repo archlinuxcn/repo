@@ -4,7 +4,7 @@ pkgname=insight-toolkit
 _pkgname=InsightToolkit
 pkgver=5.0rc02
 _pkgver=5.0
-pkgrel=5
+pkgrel=6
 pkgdesc="Cross-platform system that provides developers with an extensive suite of software tools for image analysis"
 arch=("x86_64")
 url="http://www.itk.org"
@@ -34,10 +34,8 @@ source=(
   "https://github.com/InsightSoftwareConsortium/ITK/releases/download/v${pkgver}/${_pkgname}-${pkgver}.tar.gz"
   "https://github.com/InsightSoftwareConsortium/ITK/releases/download/v${pkgver}/InsightData-${pkgver}.tar.gz"
 )
-sha512sums=(
-  "87a8d97af8c52621d1512777e776bcee61a741ba709d1260d510bc3836209fd7161d565aafb433a3948225a9009ddde38f42c6be92043b64aef36afc9a89bde2"
-  "d7a8639c7f66e7fe7a29348d30b60928b03dc17f9d557af9fd0ca48a792992e60b39b0ea08d27456d73f1bdf1c26e2be84690a2add03ff18de267636e7db8866"
-)
+sha512sums=('87a8d97af8c52621d1512777e776bcee61a741ba709d1260d510bc3836209fd7161d565aafb433a3948225a9009ddde38f42c6be92043b64aef36afc9a89bde2'
+            'd7a8639c7f66e7fe7a29348d30b60928b03dc17f9d557af9fd0ca48a792992e60b39b0ea08d27456d73f1bdf1c26e2be84690a2add03ff18de267636e7db8866')
 
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
