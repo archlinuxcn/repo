@@ -6,7 +6,7 @@
 set -u
 pkgbase="linux-lts316"
 _srcname="linux-3.16"
-pkgver="3.16.65"
+pkgver="3.16.66"
 pkgrel='1'
 arch=('i686' 'x86_64')
 url="https://www.kernel.org/"
@@ -29,9 +29,9 @@ source=(
   'update.sh'
 )
 sha256sums=('4813ad7927a7d92e5339a873ab16201b242b2748934f12cb5df9ba2cfe1d77a0'
-            '1c19893c5a99d6a5b3c52c905de30e68cda3f79fb543ecb99e9490c0a1eba9c2'
+            '970275f6d6361874bffde80148aeb77115dad4c5d84ada9e7f2913d75c2d15cf'
             '3bce3e9adce8ae3f826eebab75e9784ca92a914e526ae352de61c1da93aab8d3'
-            '9d82115ea8921d3f4f7f28ba162a3a3f256f88f14f8fad49a833eddb77c0efea'
+            '4075225384463e76cc861761fb5fe4b1ce2c49e8ab1b201b1bda969ec9d441fd'
             '834bd254b56ab71d73f59b3221f056c72f559553c04718e350ab2a3e2991afe0'
             'f0d90e756f14533ee67afda280500511a62465b4f76adcc5effa95a40045179c'
             '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99'
