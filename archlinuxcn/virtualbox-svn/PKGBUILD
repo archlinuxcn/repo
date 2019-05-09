@@ -10,9 +10,9 @@ pkgname=('virtualbox-svn'
          'virtualbox-guest-utils-svn'
          'virtualbox-guest-utils-nox-svn'
          'virtualbox-ext-vnc-svn')
-pkgver=78203
+pkgver=78447
 pkgrel=1
-_vboxsf_commit='8dd4b8bd5cfe6ddae8fe7056dff790013b985d22'
+_vboxsf_commit='87b9015c57dd7f226c768131bf8b4c0249de9835'
 arch=('x86_64')
 url='http://virtualbox.org'
 license=('GPL' 'custom')
@@ -75,7 +75,6 @@ source=("VirtualBox::svn+http://www.virtualbox.org/svn/vbox/trunk"
         '005-gsoap-build.patch'
         '006-rdesktop-vrdp-keymap-path.patch'
         '008-no-vboxvideo.patch'
-        '009-include-path.patch'
         '011-python-3-7.patch'
         '012-vbglR3GuestCtrlDetectPeekGetCancelSupport.patch'
         # The following patch and mount.vboxsf wrapper should be removed
@@ -100,7 +99,6 @@ sha256sums=('SKIP'
             '7d2da8fe10a90f76bbfc80ad1f55df4414f118cd10e10abfb76070326abebd46'
             '13c6ca9be0f91582445fd2a14a8c58a0625a15d9cb98cb6e8c2736d77ea976ab'
             '8b7f241107863f82a5b0ae336aead0b3366a40103ff72dbebf33f54b512a0cbc'
-            '7055014fde94a41f20d9581615c818fd1f2d249a06864585f562b0a677131e70'
             '55224cb74b54b331d691f171efc0d4c058a14f738551f1d8f559146c2908635d'
             '06485dce54a5f21b85f4360db884d98c1ab091d3f2535881ec9fcd82feb06b7e'
             'a784f3cc24652a16385cc63abac6c5178932ca5f3861be7650631b7dafa753a4'
