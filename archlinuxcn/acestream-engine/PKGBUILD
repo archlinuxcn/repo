@@ -10,7 +10,7 @@
 _ubuntuver=18.04
 pkgname=acestream-engine
 pkgver=3.1.35
-pkgrel=1
+pkgrel=2
 pkgdesc="ACE Stream engine"
 arch=("x86_64")
 url="http://acestream.org"
@@ -21,7 +21,7 @@ install="acestream-engine.install"
 source=(
   "acestream-engine.service"
   "$pkgname-$pkgver.tar.gz::http://acestream.org/downloads/linux-beta/acestream_${pkgver}_ubuntu_${_ubuntuver}_x86_64.tar.gz"
-  "python2-m2crypto-0.24.0.tar.xz::https://archive.archlinux.org/packages/p/python2-m2crypto/python2-m2crypto-0.24.0-4-x86_64.pkg.tar.xz"
+  "python2-m2crypto-0.24.0-4-x86_64.pkg.tar.xz"
 )
 sha256sums=(
   "b9863a9dd3ee6d41d18475f5f539107fe81a573f45ca1cb98013441f955f1af0"
