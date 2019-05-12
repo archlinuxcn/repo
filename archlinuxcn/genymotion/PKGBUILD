@@ -4,7 +4,7 @@
 #Contributor: Andrea Cattaneo <andrea.cattaneo.dev@gmail.com>
 
 pkgname=genymotion
-pkgver=3.0.1
+pkgver=3.0.2
 pkgrel=1
 pkgdesc="Complete set of tools that provides a virtual environment for Android."
 arch=('x86_64')
@@ -18,7 +18,7 @@ source=("genymotion.desktop"
         "https://dl.genymotion.com/releases/genymotion-$pkgver/$pkgname-${pkgver}-linux_$_ARCH.bin")
 sha512sums=('48e9bafe1d64b688c51eceb8d129f44d690060ff9a6d82eefcf3295f7834516ce62439faf4f4454287f594fc410aafbafd30a43537ea3d295c42bee8e4e03ac7'
             'fabbccd65c22c2dc26b32a847c9fa81d4b7d3e2a13e976cd01c1517654e4bd7e4eac485152dbe8e97b1953ffda62f40e99223a76d24f0c8dfc6530fe3908b665'
-            '1feefaec29bbcd20fb55671b3038769a38783df9478fee2ee7bd392d5824d75ebfc2d542b18f91c2beb9a657bcdcc862b680ce82187f3e4a81feaa1b09503b2e')
+            '5075d9a9c6c5e84ff90e05e4fa70db98cf89ad25e8765566176b94559f60cc170e383a02f50c752fb63859b757645390d977081d2f79ce0fab8607ebf3e08e01')
 
 package(){
   cd $srcdir
