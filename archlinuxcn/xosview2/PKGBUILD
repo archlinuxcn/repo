@@ -1,28 +1,28 @@
 # Maintainer: Kolei Chen <chenkolei at gmail dot com>
 
 pkgname=xosview2
-pkgver=2.3.1
+pkgver=2.3.0
 pkgrel=1
 pkgdesc="A lightweight system monitor"
 url="http://xosview.sourceforge.net/"
 license=('GPL' 'BSD')
 arch=('x86_64' 'armv7h' 'aarch64')
-depends=('gawk' 'libxext' 'libxft' 'libxpm' 'libsm')
+depends=('gawk' 'libxext' 'gcc' 'libxft' 'libxpm' 'libsm')
 source=("https://downloads.sourceforge.net/project/xosview/xosview2-${pkgver}.tar.gz")
-sha512sums=('c90fc4f79d1f776eba90620376d318302135fc18e79a49e1aa57607276b57d46c66eb647ad92b3ac314b74d64247887e81e1541f81dd276e1e5ef2206e241060')
+sha512sums=('75ea06dd0542773d465a3aa4cc617f28a537dcb7c2acf87b30ea0845a0a59dcd36127a8b167d7e23974bcd39f9a9338e1277fc8e440b18da921bc427b5ee616d')
 
 prepare() {
-	cd $srcdir/$pkgname-$pkgver
-	./configure --prefix=/usr
+cd $srcdir/$pkgname-$pkgver
+./configure --prefix=/usr
 }
 
 build() {
-	cd $srcdir/$pkgname-$pkgver
-	make
+cd $srcdir/$pkgname-$pkgver
+make $MAKEFLAGS
 }
 
 package() {
-	cd $srcdir/$pkgname-$pkgver
-	make DESTDIR=$pkgdir install
+cd $srcdir/$pkgname-$pkgver
+make DESTDIR=$pkgdir install
 }
 
