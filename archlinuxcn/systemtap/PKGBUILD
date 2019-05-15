@@ -3,7 +3,7 @@
 # Contributor : dront78 <dront78@gmail.com>
 pkgname=systemtap
 pkgver=4.1
-pkgrel=1
+pkgrel=2
 pkgdesc="provides infrastructure to simplify the gathering of information about the running system."
 url="http://sourceware.org/systemtap/"
 arch=('x86_64')
@@ -13,19 +13,12 @@ makedepends=('python2-setuptools' 'xmlto' 'cpio')
 optdepends=('sqlite3: for storing results in a database')
 source=("${pkgname}-${pkgver}.tar.gz::https://sourceware.org/systemtap/ftp/releases/${pkgname}-${pkgver}.tar.gz"
         "${pkgname}-${pkgver}.tar.gz.asc::https://sourceware.org/systemtap/ftp/releases/${pkgname}-${pkgver}.tar.gz.asc"
-        "systemtap.patch"
         "systemtap.sysusers")
 sha512sums=('fbd606d9842ac63af6e607613a112b08d7593da74ad0398716cdc46f74a977a8e6b9fae92e1f63779ccfc94cffa25f29dee2ae44f67ecc4cedae630e50a2e7b6'
             'SKIP'
-            'fc56a452b726ac4f4887f103f3a7325ad48664d88506e21b2c65910f716a344d4ec5eb6ccc179db98b4ccbe1be631a8a925c48a51bd1d6f034abe1d93adaec65'
             '0b54000f0bb6ed9eb4f43dbdc2fd66fcc178fc24688610fcb7b2ace5195bf96a956e24f2c281545db1a5a7c98aa951af63e8bd00de1f0347bae6f379f3671344')
 install='systemtap.install'
 validpgpkeys=('F75E6545B9F8AA15AA932A444DE16D68FDBFFFB8')
-
-prepare() {
-  cd "${pkgname}-${pkgver}"
-  patch -Np1 -i "${srcdir}/systemtap.patch"
-}
 
 build() {
   cd "${pkgname}-${pkgver}"
