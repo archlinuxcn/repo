@@ -3,7 +3,7 @@
 pkgname=visual-studio-code-bin
 _pkgname=visual-studio-code
 pkgver=1.34.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Visual Studio Code (vscode): Editor for building and debugging modern web and cloud applications (official binary version)"
 arch=('x86_64' 'i686')
 url="https://code.visualstudio.com/"
@@ -52,5 +52,5 @@ package() {
   # XFCE bug workaround
   # see https://aur.archlinux.org/packages/visual-studio-code-bin/#comment-692211
   mkdir -p "${pkgdir}/usr/share/icons/hicolor/512x512/apps"
-  cp "${srcdir}/code.png" "${pkgdir}/usr/share/icons/hicolor/512x512/apps/code.png"
+  install -m644 "${srcdir}/code.png" "${pkgdir}/usr/share/icons/hicolor/512x512/apps/visual-studio-code.png"
 }
