@@ -14,30 +14,31 @@ optdepends=('libunity: quicklists, counters, and progress bars for apps using li
 makedepends=('git' 'cmake' 'extra-cmake-modules' 'python' 'ruby' 'subversion')
 conflicts=('latte-dock')
 provides=('latte-dock')
-source=("git://anongit.kde.org/latte-dock.git")
-sha256sums=('SKIP')
+source=("git://anongit.kde.org/latte-dock.git"
+        "0001-Revert-track-applets-mouse-click-events-differently.patch")
+sha256sums=('SKIP'
+            '9d57a8f0b88b3c6944297de2be8493d937bbbc9e83d319743c3b0570e19dac80')
 
 pkgver() {
-   cd ${_gitname}
+    cd ${_gitname}
+    git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
 
-   git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
-   
+prepare() {
+    cd ${_gitname}
+    patch -Np1 -i "${srcdir}/0001-Revert-track-applets-mouse-click-events-differently.patch"
 }
 
 build() {
-   cd ${_gitname}
-
-   mkdir build && cd build
-   cmake -DCMAKE_INSTALL_PREFIX=/usr \
+    cd ${_gitname}
+    mkdir build && cd build
+    cmake -DCMAKE_INSTALL_PREFIX=/usr \
         -DKDE_L10N_BRANCH=trunk \
         -DKDE_L10N_AUTO_TRANSLATIONS=OFF \
         -DCMAKE_BUILD_TYPE=Release ..
-   make fetch-translations
-  
+    make fetch-translations
 }
 
 package() {
-  
-   make -C ${_gitname}/build DESTDIR=${pkgdir} install
-
+    make -C ${_gitname}/build DESTDIR=${pkgdir} install
 }
