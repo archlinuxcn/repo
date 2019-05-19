@@ -2,8 +2,8 @@
 
 pkgname=('anbox-git' 'anbox-modules-dkms-git')
 _pkgname=anbox
-pkgver=r1063.d521e28
-pkgrel=2
+pkgver=r1096.ea2b7a3
+pkgrel=1
 epoch=1
 arch=('x86_64')
 url="http://anbox.io/"
@@ -18,7 +18,7 @@ source=("git+https://github.com/anbox/anbox.git"
 	'anbox.desktop'
 	'anbox-bridge.network'
 	'anbox-bridge.netdev'
-	'fix_protobuf.patch')
+    'fix_linux_5.1.x.patch')
 sha256sums=('SKIP'
             'SKIP'
             '5be94b63dc30d141f15ca7d1be6e3e81f26ef33f844614975537562f5d08236c'
@@ -28,7 +28,7 @@ sha256sums=('SKIP'
             '7332d09865be553a259a53819cebddd21f661c7a251d78c2f46acd75c66676b6'
             '44899328725667041e6e84912da81c1d0147b708006eb2c2bb6503f271629ff0'
             '559190df4d6d595480b30d8b13b862081fc4aac52790e33eb24cf7fbcb8003b8'
-						'SKIP')
+            '5347416029565220a43a2278058d922456ef739ad113deee84c9956a82861b24')
 
 pkgver() {
   cd "$srcdir/$_pkgname"
@@ -46,7 +46,6 @@ prepare() {
   truncate -s 0 tests/CMakeLists.txt
 
   sed -i 's/-Werror//g' CMakeLists.txt
-  patch -p1 < ../fix_protobuf.patch
 }
 
 build() {
@@ -80,6 +79,7 @@ package_anbox-modules-dkms-git() {
   arch=('any')
 
   cd "$srcdir/anbox-modules"
+  patch -p1 < ../fix_linux_5.1.x.patch
   modules=(ashmem binder)
   for mod in "${modules[@]}"; do
     install -dm 755 $pkgdir/usr/src
