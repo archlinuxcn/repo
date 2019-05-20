@@ -5,7 +5,7 @@
 
 pkgname=dia-git
 _pkgname=dia
-pkgver=6233.24c91435
+pkgver=6272.2dbbb055
 pkgrel=1
 pkgdesc="A GTK+ based diagram creation program (GIT VERSION)"
 arch=('x86_64')
@@ -33,6 +33,7 @@ prepare() {
   sed -i "s/cc.find_library('emf'/cc.find_library('EMF'/g" meson.build
   sed -i "s/cc.find_library('ogdf'/cc.find_library('OGDF'/g" meson.build
   sed -i 's/python23/python3/g' build-aux/*.py
+  sed -i 's|#include "tool-icons.h"||g' objects/standard/outline.c
   sed -i 's/22.0.0/99.0.0/g' meson.build
 }
 
@@ -41,7 +42,7 @@ build() {
 
   export PYTHON=/usr/bin/python2
   arch-meson . build
-  ninja -j2 -C build
+  ninja -j1 -C build
 }
 
 package() {
