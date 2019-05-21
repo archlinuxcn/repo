@@ -1,0 +1,22 @@
+#!/bin/bash
+
+_prompt_modify_path()
+{
+	cat << EOF
+>>>> Add export PATH="\${PATH}:/opt/depot_tools" to .bashrc/.zshrc or setenv PATH "\${PATH}:/opt/depot_tools" to ~/.tcshrc if you don't find any depot_tools related commands."
+EOF
+}
+
+post_install()
+{
+	echo ">>>> Please note that this tools and some related projects (for example ChromeOS) use python2."
+	echo ">>>> They assume that python2 is the default python interpreter. ArchLinux default is python3, so be prepared to fix python references in your works."
+	echo ">>>> This package contains a repo_fix.sh script. Use it to fix python2 references in python's script created after 'repo init' command"
+	echo ">>>> For getting started with depot_tools, visit this page: https://dev.chromium.org/developers/how-tos/depottools"
+	_prompt_modify_path
+}
+
+post_upgrade()
+{
+	_prompt_modify_path
+}
