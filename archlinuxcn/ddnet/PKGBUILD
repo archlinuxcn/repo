@@ -1,7 +1,7 @@
 # Maintainer: Rafael Fontenelle <rafaelff@gnome.org>
 
 pkgname=ddnet
-pkgver=12.4.2
+pkgver=12.4.3
 pkgrel=1
 pkgdesc="DDraceNetwork, a cooperative racing mod of Teeworlds"
 arch=('x86_64')
@@ -13,7 +13,7 @@ checkdepends=('gtest')
 optdepends=('ddnet-skins: more skins for your tee'
             'ddnet-maps-git: have all DDNet maps available offline')
 source=("https://ddnet.tw/downloads/DDNet-$pkgver.tar.xz")
-sha256sums=('9c31aaeb7c45c94ee6e202bb96c3db80051d2c182a7794703ade10af2f4747e3')
+sha256sums=('2983249f56f224d417be0f1bac82a2db619a4a3da671a8fe494cc9171c95472a')
 
 # Set 1 to enable MySQL support and add dependencies
 _enable_mysql=0
