@@ -1,0 +1,32 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+_modules='itk itk-core itk-filtering itk-io itk-numerics itk-registration itk-segmentation'
+_py=cp37
+pkgname=python-itk
+pkgver=5.0.0
+pkgrel=1
+pkgdesc="An open-source toolkit for multidimensional image analysis. This package include itk-core, itk-filtering, itk-io, itk-numerics, itk-registration, and itk-segmentation module."
+arch=('x86_64')
+url='https://itk.org/'
+license=('Apache')
+depends=('python-numpy')
+makedepends=('python-pip')
+conflicts=(insight-toolkit)
+options=('!strip')
+for _name in ${_modules}; do
+  source+=("https://files.pythonhosted.org/packages/${_py}/${_name::1}/${_name}/${_name/-/_}-${pkgver}-${_py}-${_py}m-manylinux1_x86_64.whl")
+done
+sha512sums=('47763e262a6ea4c07fdffd4be0ba7ddb438e62852aeccc25b8e9d02a2320f2e848f08667e9b0f8eb787880c3df40585a4c334c9be9e401cbf21ef11ea2d9cc16'
+            '091df5cfc9fdfbda552f73c7e04eec82f86d4d1d6bc795c994ada74bdb548d173e153f5838235d90742d207b91754a277eb78f10c4e52ec8b1af930374524216'
+            'ff2a1dd23573ba92247f89bc6f6ee83317e202cd3cd3d2a0e6b98b7e607fdebc82ee582d2add7220fdebd27ae62898ef14108cfb8b115a8b5cbf0fe41973bd53'
+            'bc392d83e19434e7e202971e7f5973b103ca491eb6576284bbfa3b39bbedfc6457ce16e03a6d4cc11e267d3e065739cf3822d21277d354a2a4a9a8c51ad97580'
+            'd2d6bcae8a77de4b3046369a30cc2076a249487e88471c7402dec1385ee5209d82e65ef7eb1b1b07f1478f27debf56abce770202c2851eb790ecdb72fcd76f73'
+            '1959c87b23a456c2169e9de8e20c618a8e9191df5ec8c4d6c0f9d2a9947bf1a5b8ff72c1384950f943f902fa8f2a8d132c2555f3ebb721f125973f14d2f266ab'
+            'd4b0e52a83d1426f9731dd23ae91710b049fec1abc00e337bd456deeb485ff6e4ab52a93b627814c12a9458f3c8128f41b1ff98a9e0147219402123e1e301f06')
+
+package() {
+	PIP_CONFIG_FILE=/dev/null pip install --isolated --root="${pkgdir}" --ignore-installed --no-deps *.whl
+	python -O -m compileall "${pkgdir}/usr/lib/python3.7/site-packages/itk"
+}
+# vim:set ts=2 sw=2 et:
+
