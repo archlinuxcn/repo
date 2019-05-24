@@ -1,29 +1,18 @@
 # Maintainer: Peter Cai <peter at typeblog dot net>
 pkgname=netease-cloud-music
-pkgver=1.2.0.2
-_pkgrel=-1
+pkgver=1.2.1
+_pkgdate=20190428
 pkgrel=1
 pkgdesc="Netease Cloud Music, converted from .deb package"
 arch=("x86_64")
 url="http://music.163.com/"
 license=('custom')
-depends=(
-	"alsa-lib" "gtk2" "nss" "libxss"
-	"qt5-multimedia" "qt5-x11extras"
-	"gst-libav" "gst-plugins-base"
-	"gst-plugins-good" "gst-plugins-ugly"
-	"gnome-themes-standard" "gconf" "atk"
-	"glibc" "cairo" "vlc" "fontconfig"
-	"dbus" "expat" "gdk-pixbuf2"
-	"glib2" "pango" "libpulse" "sqlite"
-	"gcc-libs" "libx11" "zlib" "qcef"
-	"taglib" "libxext" "libxtst"
-)
+depends=()
 source=(
-	"http://packages.deepin.com/deepin/pool/main/n/netease-cloud-music/netease-cloud-music_${pkgver}${_pkgrel}_amd64.deb"
+	"http://d1.music.126.net/dmusic/netease-cloud-music_${pkgver}_amd64_ubuntu_${_pkgdate}.deb"
 	"http://music.163.com/html/web2/service.html"
 )
-md5sums=('408ee3d039d3f886dac286dbeac6a149'
+md5sums=('1f47c7dc3d9ce46da8099e539ee8a74d'
          'SKIP')
 
 package() {
