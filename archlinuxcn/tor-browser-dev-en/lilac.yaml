@@ -6,9 +6,5 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-pre_build: aur_pre_build
-
-post_build: aur_post_build
-
 update_on:
-  - aur: tor-browser-dev
+  - cmd: curl -n https://dist.torproject.org/torbrowser/ | grep -E '.[0-9]a' | tail -1 | grep -o -P '(?<=a href=").*(?=/")'
