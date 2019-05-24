@@ -75,6 +75,7 @@ package_anbox-modules-dkms-git() {
   arch=('any')
 
   cd "$srcdir/anbox-modules"
+  patch -p1 < ../fix_linux_5.1.x.patch
   modules=(ashmem binder)
   for mod in "${modules[@]}"; do
     install -dm 755 $pkgdir/usr/src
