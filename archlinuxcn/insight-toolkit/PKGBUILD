@@ -1,7 +1,7 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
 pkgname=insight-toolkit
-_pkgname=IKT
+_pkgname=ITK
 pkgver=5.0.0
 _pkgver=5.0
 pkgrel=1
@@ -95,7 +95,7 @@ package() {
   # install examples
   cp -r "${srcdir}/${_pkgname}-${pkgver}/Examples" "${pkgdir}/usr/share/doc/ITK-${_pkgver}"
   # remove uneed files
-  rm -rf "${pkgdir}/usr/lib/cmake/ITK-${_pkgver}/WrapITK/"
+  rm -rf "${pkgdir}/usr/lib/cmake/${_pkgname}-${_pkgver}/WrapITK/"
   rm -f "${pkgdir}/usr/vcl_compiler_detection.h"
   rm -rf "${pkgdir}/usr/compilers"
 }
