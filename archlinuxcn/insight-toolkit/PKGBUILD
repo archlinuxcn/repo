@@ -4,7 +4,7 @@ pkgname=insight-toolkit
 _pkgname=ITK
 pkgver=5.0.0
 _pkgver=5.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Cross-platform system that provides developers with an extensive suite of software tools for image analysis"
 arch=("x86_64")
 url="http://www.itk.org"
@@ -33,9 +33,7 @@ makedepends=(
 source=(
   "https://github.com/InsightSoftwareConsortium/ITK/archive/v${pkgver}.tar.gz"
 )
-sha512sums=(
-    "7eecd62ab3124147f0abce482699dfdc43610703959d4a3f667c8ce12a6ecacf836a863d146f3cc7d5220b4aa05adf70a0d4dc6fa8e87bac215565badc96acff"
-)
+sha512sums=('7eecd62ab3124147f0abce482699dfdc43610703959d4a3f667c8ce12a6ecacf836a863d146f3cc7d5220b4aa05adf70a0d4dc6fa8e87bac215565badc96acff')
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
   # currently could not build with system gdcm
