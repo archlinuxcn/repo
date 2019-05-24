@@ -9,9 +9,7 @@ pkgdesc="An open-source toolkit for multidimensional image analysis. This packag
 arch=('x86_64')
 url='https://itk.org/'
 license=('Apache')
-depends=('python-numpy')
 makedepends=('python-pip')
-conflicts=(insight-toolkit)
 options=('!strip')
 for _name in ${_modules}; do
   source+=("https://files.pythonhosted.org/packages/${_py}/${_name::1}/${_name}/${_name/-/_}-${pkgver}-${_py}-${_py}m-manylinux1_x86_64.whl")
