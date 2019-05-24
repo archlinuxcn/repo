@@ -4,9 +4,9 @@
 
 pkgbase=nvidia-beta
 pkgname=(nvidia-beta nvidia-dkms-beta)
-pkgver=418.56
+pkgver=430.14
 _extramodules=extramodules-ARCH
-pkgrel=8
+pkgrel=1
 pkgdesc="NVIDIA drivers for linux"
 arch=('x86_64')
 url="http://www.nvidia.com/"
@@ -15,7 +15,7 @@ license=('custom')
 options=('!strip')
 _pkg="NVIDIA-Linux-x86_64-${pkgver}"
 source=("http://us.download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/${_pkg}.run")
-sha512sums=('859b9a27b75416f269037f4ae2af16b4807c704edc63d70be4b2ea96661ef29efde8e4793c015a25ce56a55ee55a707273e9ec55c9d6e3a0caaf8442ccb43910')
+sha512sums=('9d99d4292cf4943378c225eb95ad3a43fa73f2b0d23e35648d77903045d1fc9223a8753cef93022764c18e823f3fc682d23f0d9a64745457d2e2c8ff20e474be')
 
 prepare() {
     sh "${_pkg}.run" --extract-only
