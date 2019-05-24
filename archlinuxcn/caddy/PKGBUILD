@@ -8,7 +8,7 @@ _gopkgname='github.com/mholt/caddy'
 
 pkgname=caddy
 pkgver=1.0.0
-pkgrel=2
+pkgrel=3
 pkgdesc='HTTP/2 Web Server with Automatic HTTPS'
 arch=('x86_64' 'i686' 'armv6h' 'armv7h' 'aarch64')
 url='https://caddyserver.com'
@@ -94,7 +94,7 @@ _plugins=(
     #    'http.expires'
     #    'http.filebrowser'
     #    'http.filter'
-    #    'http.forwardproxy'
+    'http.forwardproxy'
     #    'http.geoip'
     #    'http.git'
     #    'http.gopkg'
@@ -107,7 +107,7 @@ _plugins=(
     #    'http.login'
     #    'http.mailout'
     #    'http.minify'
-    #    'http.nobots'
+    'http.nobots'
     #    'http.prometheus'
     #    'http.proxyprotocol'
     #    'http.ratelimit'
