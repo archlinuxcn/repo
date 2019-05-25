@@ -45,7 +45,7 @@ build() {
     -DwxWidgets_CONFIG_EXECUTABLE=/usr/bin/wx-config-gtk3 \
     -DKICAD_SCRIPTING_WXPYTHON_PHOENIX=ON
 
-  make V=1
+  make VERBOSE=1
 
   cd "${srcdir}/${_langpack}"
   mkdir -p build
