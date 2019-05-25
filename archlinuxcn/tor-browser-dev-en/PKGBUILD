@@ -7,7 +7,7 @@
 _pkgname=tor-browser-dev
 pkgname=tor-browser-dev-en
 pkgver=9.0a1
-pkgrel=2
+pkgrel=3
 pkgdesc="Tor Browser Bundle (alpha version; locale-aware international PKGBUILD)"
 arch=('i686' 'x86_64')
 _idstr32='linux32'
@@ -36,9 +36,9 @@ source+=(${pkgname}.desktop
 sha256sums=('13d2e1fe85a9a08e9f66116f3c2d6f1e5d37e07d2ad8b08ae4f01890e864a722'
             '13267084e2b6dd1dbbb93f685d61da4cb48184a76a1c06a42ecc575855e24c57'
             'ce19dd89a8ecd9289136f97f0122b7301bdda9bcf0208f4277817e23ea9a95d8')
-sha256sums_i686=('SKIP'
+sha256sums_i686=('ebfe183ba29d795404dce541dbec92102193d65f1b651062818ba6a96d2306a1'
                  'SKIP')
-sha256sums_x86_64=('SKIP'
+sha256sums_x86_64=('f7518f4445591d851ebd9d51f9d966b964398ef50e4b523f7f78ee5f3f066d76'
                    'SKIP')
 # skip checksumming the tor-provided release package, since we dynamically
 # select the package for the user locale. we'll just rely on GPG sig.
