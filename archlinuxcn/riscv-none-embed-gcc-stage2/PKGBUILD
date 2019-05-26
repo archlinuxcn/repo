@@ -21,8 +21,14 @@ depends=("$_target-binutils" "libmpc" "$_target-newlib")
 options=('!emptydirs' '!strip')
 makedepends=('python')
 source=("https://gcc.gnu.org/pub/gcc/releases/gcc-$pkgver/gcc-$pkgver.tar.xz"
-        "embed.patch")
+        "embed.patch"
+        "0001-SiFive-CLIC-patches-for-preemptible-and-stack-swappi.patch"
+        "0002-Finish-CLIC-support-resolving-patch-merge-error-and-.patch"
+        "0003-RISC-V-Add-short-forward-branch-optimization-for-sif.patch")
 md5sums=('6069ae3737cf02bf2cb44a391ef0e937'
+         'SKIP'
+         'SKIP'
+         'SKIP'
          'SKIP')
 
 prepare() {
@@ -38,6 +44,11 @@ prepare() {
   ./multilib-generator $GCC_MULTILIB > t-elf-multilib
   cd $srcdir/gcc-$pkgver
   patch --forward --strip=1 --input="${srcdir}/embed.patch"
+  echo "patch unmerged work from SiFive/gcc."
+  patch --forward --strip=1 --input="${srcdir}/0001-SiFive-CLIC-patches-for-preemptible-and-stack-swappi.patch"
+  patch --forward --strip=1 --input="${srcdir}/0002-Finish-CLIC-support-resolving-patch-merge-error-and-.patch"
+  patch --forward --strip=1 --input="${srcdir}/0003-RISC-V-Add-short-forward-branch-optimization-for-sif.patch"
+
 }
 
 build() {

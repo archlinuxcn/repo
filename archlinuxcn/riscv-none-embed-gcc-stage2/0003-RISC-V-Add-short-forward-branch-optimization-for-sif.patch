@@ -1,0 +1,284 @@
+From 17fc91857ce3d7ec5f4755c616aa4598c6daa783 Mon Sep 17 00:00:00 2001
+From: Jim Wilson <jimw@sifive.com>
+Date: Thu, 4 Apr 2019 08:34:32 -0700
+Subject: [PATCH 3/3] RISC-V: Add short-forward-branch optimization for
+ sifive-7 core.
+
+	gcc/
+	* config/riscv/constraints.md (L): New.
+	* config/riscv/predicates.md (lui_operand): New.
+	(sfb_alu_operand): New.
+	* config/riscv/riscv-protos.h (riscv_expand_conditional_move): Declare.
+	* config/riscv/riscv.c (riscv_expand_conditional_move): New.
+	(riscv_print_operand): Add support for 'w' and 'y'.  Update comment.
+	* config/riscv/riscv.h (TARGET_SFB_ALU): New.
+	* config/riscv/riscv.md (type): Add sfb_alu.
+	(branch_order<mode>, branch_zero<mode>): Delete.
+	(branch<mode>): New, combined from the two deleted patterns.
+	(mov<mode>cc, mov<GPR:mode><X:mode>cc): New, using TARGET_SFB_ALU.
+	* config/riscv/sifive-7.md: Update bypasses for sfb alu support.
+	(sifive_7_sfb_alu): New.
+---
+ gcc/config/riscv/constraints.md |  5 ++++
+ gcc/config/riscv/predicates.md  |  8 +++++
+ gcc/config/riscv/riscv-protos.h |  1 +
+ gcc/config/riscv/riscv.c        | 28 +++++++++++++++--
+ gcc/config/riscv/riscv.h        | 11 +++++++
+ gcc/config/riscv/riscv.md       | 53 +++++++++++++++++++++++----------
+ gcc/config/riscv/sifive-7.md    | 12 ++++++--
+ 7 files changed, 97 insertions(+), 21 deletions(-)
+
+diff --git a/gcc/config/riscv/constraints.md b/gcc/config/riscv/constraints.md
+index a736013d9f6..96d09e6a313 100644
+--- a/gcc/config/riscv/constraints.md
++++ b/gcc/config/riscv/constraints.md
+@@ -54,6 +54,11 @@
+   (and (match_code "const_int")
+        (match_test "IN_RANGE (ival, 0, IMM_REACH-1)")))
+ 
++(define_constraint "L"
++  "A U-type 20-bit signed immediate."
++  (and (match_code "const_int")
++       (match_test "LUI_OPERAND (ival)")))
++
+ ;; Floating-point constant +0.0, used for FCVT-based moves when FMV is
+ ;; not available in RV32.
+ (define_constraint "G"
+diff --git a/gcc/config/riscv/predicates.md b/gcc/config/riscv/predicates.md
+index 83e698793b3..655713bdcbf 100644
+--- a/gcc/config/riscv/predicates.md
++++ b/gcc/config/riscv/predicates.md
+@@ -27,6 +27,14 @@
+   (ior (match_operand 0 "const_arith_operand")
+        (match_operand 0 "register_operand")))
+ 
++(define_predicate "lui_operand"
++  (and (match_code "const_int")
++       (match_test "LUI_OPERAND (INTVAL (op))")))
++
++(define_predicate "sfb_alu_operand"
++  (ior (match_operand 0 "arith_operand")
++       (match_operand 0 "lui_operand")))
++
+ (define_predicate "const_csr_operand"
+   (and (match_code "const_int")
+        (match_test "IN_RANGE (INTVAL (op), 0, 31)")))
+diff --git a/gcc/config/riscv/riscv-protos.h b/gcc/config/riscv/riscv-protos.h
+index 8b510f87df8..612188f76fb 100644
+--- a/gcc/config/riscv/riscv-protos.h
++++ b/gcc/config/riscv/riscv-protos.h
+@@ -59,6 +59,7 @@ extern const char *riscv_output_return ();
+ extern void riscv_expand_int_scc (rtx, enum rtx_code, rtx, rtx);
+ extern void riscv_expand_float_scc (rtx, enum rtx_code, rtx, rtx);
+ extern void riscv_expand_conditional_branch (rtx, enum rtx_code, rtx, rtx);
++extern void riscv_expand_conditional_move (rtx, rtx, rtx, rtx_code, rtx, rtx);
+ #endif
+ extern rtx riscv_legitimize_call_address (rtx);
+ extern void riscv_set_return_address (rtx, rtx);
+diff --git a/gcc/config/riscv/riscv.c b/gcc/config/riscv/riscv.c
+index 0dcfec1974d..105b42c7264 100644
+--- a/gcc/config/riscv/riscv.c
++++ b/gcc/config/riscv/riscv.c
+@@ -2307,6 +2307,18 @@ riscv_expand_conditional_branch (rtx label, rtx_code code, rtx op0, rtx op1)
+   emit_jump_insn (gen_condjump (condition, label));
+ }
+ 
++/* If (CODE OP0 OP1) holds, move CONS to DEST; else move ALT to DEST.  */
++
++void
++riscv_expand_conditional_move (rtx dest, rtx cons, rtx alt, rtx_code code,
++			       rtx op0, rtx op1)
++{
++  riscv_emit_int_compare (&code, &op0, &op1);
++  rtx cond = gen_rtx_fmt_ee (code, GET_MODE (op0), op0, op1);
++  emit_insn (gen_rtx_SET (dest, gen_rtx_IF_THEN_ELSE (GET_MODE (dest), cond,
++						      cons, alt)));
++}
++
+ /* Implement TARGET_FUNCTION_ARG_BOUNDARY.  Every parameter gets at
+    least PARM_BOUNDARY bits of alignment, but will be given anything up
+    to PREFERRED_STACK_BOUNDARY bits if the type requires it.  */
+@@ -3161,6 +3173,8 @@ riscv_memmodel_needs_release_fence (enum memmodel model)
+    'C'	Print the integer branch condition for comparison OP.
+    'A'	Print the atomic operation suffix for memory model OP.
+    'F'	Print a FENCE if the memory model requires a release.
++   'w'	Print nothing if OP is zero, otherwise print OP followed by a comma.
++   'y'	Print 'z' if OP is zero, otherwise print nothing.
+    'z'	Print x0 if OP is zero, otherwise print OP normally.
+    'x'	Print CONST_INT OP as a CSR register name or as a hex number.
+    'i'	Print i if the operand is not a register.  */
+@@ -3207,9 +3221,13 @@ riscv_print_operand (FILE *file, rtx op, int letter)
+       switch (code)
+ 	{
+ 	case REG:
+-	  if (letter && letter != 'z')
++	  if (letter && letter == 'y')
++	    break;
++	  else if (letter && letter != 'w' && letter != 'z')
+ 	    output_operand_lossage ("invalid use of '%%%c'", letter);
+ 	  fprintf (file, "%s", reg_names[REGNO (op)]);
++	  if (letter == 'w')
++	    fputs(",", file);
+ 	  break;
+ 
+ 	case MEM:
+@@ -3220,7 +3238,11 @@ riscv_print_operand (FILE *file, rtx op, int letter)
+ 	  break;
+ 
+ 	default:
+-	  if (letter == 'z' && op == CONST0_RTX (GET_MODE (op)))
++	  if (letter == 'w')
++	    break;
++	  else if (letter == 'y' && op == CONST0_RTX (GET_MODE (op)))
++	    fputs ("z", file);
++	  else if (letter == 'z' && op == CONST0_RTX (GET_MODE (op)))
+ 	    fputs (reg_names[GP_REG_FIRST], file);
+ 	  else if (letter == 'x' && GET_CODE (op) == CONST_INT)
+ 	    {
+@@ -3248,7 +3270,7 @@ riscv_print_operand (FILE *file, rtx op, int letter)
+ 	      else
+ 		asm_fprintf (file, "0x%wx", reg_num);
+ 	    }
+-	  else if (letter && letter != 'z')
++	  else if (letter && letter != 'y' && letter != 'z')
+ 	    output_operand_lossage ("invalid use of '%%%c'", letter);
+ 	  else
+ 	    output_addr_const (file, riscv_strip_unspec_address (op));
+diff --git a/gcc/config/riscv/riscv.h b/gcc/config/riscv/riscv.h
+index c93743f9549..4edd2a60194 100644
+--- a/gcc/config/riscv/riscv.h
++++ b/gcc/config/riscv/riscv.h
+@@ -662,6 +662,17 @@ typedef struct {
+ #define BRANCH_COST(speed_p, predictable_p) \
+   ((!(speed_p) || (predictable_p)) ? 2 : riscv_branch_cost)
+ 
++/* True if the target optimizes short forward branches around integer
++   arithmetic instructions into predicated operations, e.g., for
++   conditional-move operations.  The macro assumes that all branch
++   instructions (BEQ, BNE, BLT, BLTU, BGE, BGEU, C.BEQZ, and C.BNEZ)
++   support this feature.  The macro further assumes that any integer
++   arithmetic and logical operation (ADD[I], SUB, SLL[I], SRL[I], SRA[I],
++   SLT[I][U], AND[I], XOR[I], OR[I], LUI, AUIPC, and their compressed
++   counterparts, including C.MV and C.LI) can be in the branch shadow.  */
++
++#define TARGET_SFB_ALU (riscv_microarchitecture == sifive_7)
++
+ #define LOGICAL_OP_NON_SHORT_CIRCUIT 0
+ 
+ /* Control the assembler format that we output.  */
+diff --git a/gcc/config/riscv/riscv.md b/gcc/config/riscv/riscv.md
+index a27e921d5a9..22ede6d8478 100644
+--- a/gcc/config/riscv/riscv.md
++++ b/gcc/config/riscv/riscv.md
+@@ -174,7 +174,7 @@
+ (define_attr "type"
+   "unknown,branch,jump,call,load,fpload,store,fpstore,
+    mtc,mfc,const,arith,logical,shift,slt,imul,idiv,move,fmove,fadd,fmul,
+-   fmadd,fdiv,fcmp,fcvt,fsqrt,multi,auipc,nop,ghost"
++   fmadd,fdiv,fcmp,fcvt,fsqrt,multi,auipc,sfb_alu,nop,ghost"
+   (cond [(eq_attr "got" "load") (const_string "load")
+ 
+ 	 ;; If a doubleword move uses these expensive instructions,
+@@ -1821,31 +1821,52 @@
+ 
+ ;; Conditional branches
+ 
+-(define_insn "*branch_order<mode>"
++(define_insn "*branch<mode>"
+   [(set (pc)
+ 	(if_then_else
+ 	 (match_operator 1 "order_operator"
+ 			 [(match_operand:X 2 "register_operand" "r")
+-			  (match_operand:X 3 "register_operand" "r")])
++			  (match_operand:X 3 "reg_or_0_operand" "rJ")])
+ 	 (label_ref (match_operand 0 "" ""))
+ 	 (pc)))]
+   ""
+-  "b%C1\t%2,%3,%0"
++  "b%C1%y3\t%2,%w3%0"
+   [(set_attr "type" "branch")
+    (set_attr "mode" "none")])
+ 
+-(define_insn "*branch_zero<mode>"
+-  [(set (pc)
+-	(if_then_else
+-	 (match_operator 1 "signed_order_operator"
+-			 [(match_operand:X 2 "register_operand" "r")
+-			  (const_int 0)])
+-	 (label_ref (match_operand 0 "" ""))
+-	 (pc)))]
+-  ""
+-  "b%C1z\t%2,%0"
+-  [(set_attr "type" "branch")
+-   (set_attr "mode" "none")])
++;; Patterns for implementations that optimize short forward branches
++
++(define_expand "mov<mode>cc"
++  [(set (match_operand:GPR 0 "register_operand")
++	(if_then_else:GPR (match_operand 1 "comparison_operator")
++			  (match_operand:GPR 2 "register_operand")
++			  (match_operand:GPR 3 "sfb_alu_operand")))]
++  "TARGET_SFB_ALU"
++{
++  rtx cmp = operands[1];
++  /* We only handle word mode integer compares for now.  */
++  if (GET_MODE (XEXP (cmp, 0)) != word_mode)
++    FAIL;
++  riscv_expand_conditional_move (operands[0], operands[2], operands[3],
++				 GET_CODE (cmp), XEXP (cmp, 0), XEXP (cmp, 1));
++  DONE;
++})
++
++(define_insn "*mov<GPR:mode><X:mode>cc"
++  [(set (match_operand:GPR 0 "register_operand" "=r,r")
++	(if_then_else:GPR
++	 (match_operator 5 "order_operator"
++		[(match_operand:X 1 "register_operand" "r,r")
++		 (match_operand:X 2 "reg_or_0_operand" "rJ,rJ")])
++	 (match_operand:GPR 3 "register_operand" "0,0")
++	 (match_operand:GPR 4 "sfb_alu_operand" "rJ,IL")))]
++  "TARGET_SFB_ALU"
++  "@
++   b%C5%y2 %1, %w2 1f; mv %0, %z4; 1: # movcc
++   b%C5%y2 %1, %w2 1f; li %0, %4; 1: # movcc"
++  [(set_attr "length" "8")
++   (set_attr "type" "sfb_alu")
++   (set_attr "mode" "<GPR:MODE>")])
+ 
+ ;; Used to implement built-in functions.
+ (define_expand "condjump"
+diff --git a/gcc/config/riscv/sifive-7.md b/gcc/config/riscv/sifive-7.md
+index d58e01f8936..526278e46d4 100644
+--- a/gcc/config/riscv/sifive-7.md
++++ b/gcc/config/riscv/sifive-7.md
+@@ -37,6 +37,11 @@
+        (eq_attr "type" "branch"))
+   "sifive_7_B")
+ 
++(define_insn_reservation "sifive_7_sfb_alu" 2
++  (and (eq_attr "tune" "sifive_7")
++       (eq_attr "type" "sfb_alu"))
++  "sifive_7_A+sifive_7_B")
++
+ (define_insn_reservation "sifive_7_jump" 1
+   (and (eq_attr "tune" "sifive_7")
+        (eq_attr "type" "jump,call"))
+@@ -101,10 +106,13 @@
+        (eq_attr "type" "mfc"))
+   "sifive_7_A")
+ 
+-(define_bypass 1 "sifive_7_load,sifive_7_alu,sifive_7_mul,sifive_7_f2i"
++(define_bypass 1 "sifive_7_load,sifive_7_alu,sifive_7_mul,sifive_7_f2i,sifive_7_sfb_alu"
+   "sifive_7_alu,sifive_7_branch")
+ 
+-(define_bypass 1 "sifive_7_load,sifive_7_alu,sifive_7_mul,sifive_7_f2i"
++(define_bypass 1 "sifive_7_alu,sifive_7_sfb_alu"
++  "sifive_7_sfb_alu")
++
++(define_bypass 1 "sifive_7_load,sifive_7_alu,sifive_7_mul,sifive_7_f2i,sifive_7_sfb_alu"
+   "sifive_7_store" "riscv_store_data_bypass_p")
+ 
+ (define_bypass 2 "sifive_7_i2f"
+-- 
+2.21.0
+
