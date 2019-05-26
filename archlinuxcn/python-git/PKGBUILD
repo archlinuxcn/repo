@@ -9,7 +9,7 @@
 
 pkgname=python-git
 pkgver=3.8.0a0.r104231.7114c6504a
-pkgrel=1
+pkgrel=2
 _pybasever=3.8
 pkgdesc="Next generation of the python high-level scripting language"
 arch=('i686' 'x86_64')
@@ -23,9 +23,11 @@ optdepends=('sqlite'
             'xz: for lzma'
             'tk: for tkinter')
 source=("git+https://github.com/python/cpython#branch=master"
-        0001-compileall-Fix-ddir-when-recursing.patch)
+        0001-compileall-Fix-ddir-when-recursing.patch
+        issue37053-workaround.patch)
 sha512sums=('SKIP'
-            'ebd04c3b6d41321b1f0d439d356e0ce463760db55dc64109854c70d017cf56608aa19de9fc4a21bf840795ff202b4703444f9af8074b661780798c17e03089ff')
+            'ebd04c3b6d41321b1f0d439d356e0ce463760db55dc64109854c70d017cf56608aa19de9fc4a21bf840795ff202b4703444f9af8074b661780798c17e03089ff'
+            'e649bcfd65a4aa3ca48ec4e51a61402661d7fcf37b00619b08efc657373030d8e1715fa34eb8afd4bd5d6d7990050dbbbde5965502358844df4f7ff4b0a067ed')
 
 pkgver() {
   cd cpython
@@ -43,6 +45,10 @@ prepare() {
 
   # FS#23997
   sed -i -e "s|^#.* /usr/local/bin/python|#!/usr/bin/python|" Lib/cgi.py
+
+  # Workaround for https://bugs.python.org/issue37053
+  # See also https://bugs.python.org/issue37049 for related discussions
+  patch -Np1 -i ../issue37053-workaround.patch
 
   # Speed up LTO
   sed -i -e "s|-flto |-flto=4 |g" configure configure.ac
