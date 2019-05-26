@@ -1,0 +1,66 @@
+# Maintainer: Jiuyang Liu <liujiuyang1994@gmail.com>
+
+# riscv-none-embed is maintained by gnu-mcu-eclipse, because of SiFive branch is badly maintained.
+# seprating from gdb, this binutils doesn't contains gdb, which is going to compile later.
+
+# binutils is following the upstream: https://github.com/gnu-mcu-eclipse/riscv-binutils-gdb/tree/sifive-binutils-$pkgver-gme
+# more information from https://github.com/gnu-mcu-eclipse/riscv-none-gcc-build/
+
+# original configure file locate at https://github.com/gnu-mcu-eclipse/riscv-none-gcc-build/blob/master/scripts/container-apps-functions-source.sh
+
+_target=riscv-none-embed
+pkgname=$_target-binutils
+pkgver=2.32
+pkgrel=1
+pkgdesc='A set of programs to assemble and manipulate binary and object files for the RISC-V (bare-metal) target'
+arch=(x86_64)
+url='http://www.gnu.org/software/binutils/'
+license=(GPL)
+depends=(zlib)
+source=("https://ftp.gnu.org/gnu/binutils/binutils-$pkgver.tar.xz"
+        "embed.patch")
+md5sums=('0d174cdaf85721c5723bf52355be41e6'
+         'SKIP')
+
+prepare() {
+  # hack! - some configure tests for header files using "$CPP $CPPFLAGS"
+  sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" \
+    "$srcdir/binutils-$pkgver/libiberty/configure"
+  cd $srcdir/binutils-$pkgver
+  patch --forward --strip=1 --input="${srcdir}/embed.patch"
+}
+
+build() {
+  cd binutils-$pkgver
+
+  unset CPPFLAGS
+
+  ./configure --target=$_target \
+              --prefix=/usr \
+              --with-sysroot=/usr/$_target \
+              --disable-nls \
+              --disable-werror \
+              --disable-sim \
+              --disable-gdb \
+              --enable-interwork \
+              --enable-plugins \
+              --enable-build-warnings=no \
+              --disable-rpath
+  make
+}
+
+check() {
+  # unset LDFLAGS as testsuite makes assumptions about which ones are active
+  # do not abort on errors - manually check log files
+  make -C "binutils-$pkgver" LDFLAGS="" -k check
+}
+
+package() {
+  make -C "binutils-$pkgver" DESTDIR="$pkgdir" install
+
+  # Remove file conflicting with host binutils and manpages for MS Windows tools
+  #rm "$pkgdir"/usr/share/man/man1/arm-none-eabi-{dlltool,windres,windmc}*
+
+  # Remove info documents that conflict with host version
+  rm -r "$pkgdir"/usr/share/info
+}

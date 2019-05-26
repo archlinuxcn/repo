@@ -1,0 +1,81 @@
+diff --git a/config.sub b/config.sub
+index 75bb6a3135b..544376d0637 100755
+--- a/config.sub
++++ b/config.sub
+@@ -1363,7 +1363,7 @@ case $os in
+ 	     | powermax* | dnix* | nx6 | nx7 | sei* | dragonfly* \
+ 	     | skyos* | haiku* | rdos* | toppers* | drops* | es* \
+ 	     | onefs* | tirtos* | phoenix* | fuchsia* | redox* | bme* \
+-	     | midnightbsd* | amdhsa* | unleashed* | emscripten*)
++	     | midnightbsd* | amdhsa* | unleashed* | emscripten* | embed)
+ 	# Remember, each alternative MUST END IN *, to match a version number.
+ 		;;
+ 	qnx*)
+diff --git a/gcc/config.gcc b/gcc/config.gcc
+index 09d305457e4..ae43431e51a 100644
+--- a/gcc/config.gcc
++++ b/gcc/config.gcc
+@@ -2201,8 +2201,17 @@ riscv*-*-linux*)
+ 	# automatically detect that GAS supports it, yet we require it.
+ 	gcc_cv_initfini_array=yes
+ 	;;
+-riscv*-*-elf* | riscv*-*-rtems*)
+-	tm_file="elfos.h newlib-stdint.h ${tm_file} riscv/elf.h"
++# [GNU MCU Eclipse]
++riscv*-*-elf* | riscv*-*-rtems* | riscv-none-embed)
++	# [GNU MCU Eclipse]
++	case ${target} in
++	riscv-none-embed)
++	  tm_file="elfos.h newlib-stdint.h ${tm_file} riscv/elf-embed.h"
++	  ;;
++	*)
++	  tm_file="elfos.h newlib-stdint.h ${tm_file} riscv/elf.h"
++	  ;;
++	esac
+ 	case ${target} in
+ 	*-*-rtems*)
+ 	  tm_file="${tm_file} rtems.h riscv/rtems.h"
+diff --git a/gcc/config/riscv/elf-embed.h b/gcc/config/riscv/elf-embed.h
+new file mode 100644
+index 00000000000..9ba14e130e5
+--- /dev/null
++++ b/gcc/config/riscv/elf-embed.h
+@@ -0,0 +1,38 @@
++/* Target macros for riscv*-embed targets.
++   Copyright (C) 1994-2019 Free Software Foundation, Inc.
++
++This file is part of GCC.
++
++GCC is free software; you can redistribute it and/or modify
++it under the terms of the GNU General Public License as published by
++the Free Software Foundation; either version 3, or (at your option)
++any later version.
++
++GCC is distributed in the hope that it will be useful,
++but WITHOUT ANY WARRANTY; without even the implied warranty of
++MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++GNU General Public License for more details.
++
++You should have received a copy of the GNU General Public License
++along with GCC; see the file COPYING3.  If not see
++<http://www.gnu.org/licenses/>.  */
++
++#define LINK_SPEC "\
++-melf" XLEN_SPEC "lriscv \
++%{mno-relax:--no-relax} \
++%{shared}"
++
++/* Link against Newlib libraries, because the ELF backend assumes Newlib.
++   Handle the circular dependence between libc and libgloss. */
++#undef  LIB_SPEC
++// GNU MCU Eclipse
++// #define LIB_SPEC "--start-group -lc %{!specs=nosys.specs:-lgloss} --end-group"
++// The sequence is copied from arm-none-eabi, might not be exactly right.
++#define LIB_SPEC "--start-group -lgcc -lg -lc --end-group"
++
++#undef  STARTFILE_SPEC
++#define STARTFILE_SPEC "crt0%O%s crtbegin%O%s"
++
++#undef  ENDFILE_SPEC
++#define ENDFILE_SPEC "crtend%O%s"
++

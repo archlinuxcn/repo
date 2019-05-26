@@ -1,0 +1,71 @@
+# Maintainer: Jiuyang Liu <liujiuyang1994@gmail.com>
+
+# riscv-none-embed is maintained by gnu-mcu-eclipse, because of SiFive branch is badly maintained.
+# This gdb may need more test.
+
+# gdb is following the original upstream.
+# more information from https://github.com/gnu-mcu-eclipse/riscv-none-gcc-build/
+
+# original configure file locate at https://github.com/gnu-mcu-eclipse/riscv-none-gcc-build/blob/master/scripts/container-apps-functions-source.sh
+
+_target=riscv-none-embed
+pkgname=$_target-gdb
+pkgver=8.3
+pkgrel=1
+pkgdesc='The GNU Debugger for the RISC-V (bare-metal) target'
+arch=(x86_64)
+url='http://www.gnu.org/software/gdb/'
+license=(GPL3)
+depends=(xz ncurses expat python guile2.0 gdb-common mpfr)
+optdepends=('stlink: for debugging over STLINK')
+options=(!emptydirs)
+source=("https://ftp.gnu.org/gnu/gdb/gdb-$pkgver.tar.xz"
+        "embed.patch")
+md5sums=('bbd95b2f9b34621ad7a19a3965476314'
+         'SKIP')
+
+
+prepare() {
+  cd gdb-$pkgver
+  sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" libiberty/configure
+  cd $srcdir/gdb-$pkgver
+  patch --forward --strip=1 --input="${srcdir}/embed.patch"
+}
+
+build() {
+  cd gdb-$pkgver
+
+  ./configure \
+    --disable-binutils \
+    --disable-gas \
+    --disable-gprof \
+    --disable-ld \
+    --disable-nls \
+    --disable-rpath \
+    --disable-sim \
+    --disable-werror \
+    --enable-build-warnings=no \
+    --prefix=/usr \
+    --target=$_target \
+    --with-expat \
+    --with-lzma=yes \
+    --with-system-gdbinit=/etc/gdb/gdbinit \
+    --with-system-zlib \
+    --without-babeltrace \
+    --without-guile \
+    --without-libunwind-ia64
+
+  make
+}
+
+package() {
+  cd gdb-$pkgver
+
+  make -C gdb DESTDIR=$pkgdir install
+
+  # Following files conflict with 'gdb'/'gdb-common' packages
+  rm -r $pkgdir/usr/include/gdb/
+  rm -r $pkgdir/usr/share/gdb/
+  rm -r $pkgdir/usr/share/info/
+  rm -r $pkgdir/usr/share/man/man5/
+}

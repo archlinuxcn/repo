@@ -1,0 +1,100 @@
+# Maintainer: Jiuyang Liu <liujiuyang1994@gmail.com>
+
+# riscv-none-embed is maintained by gnu-mcu-eclipse, because of SiFive branch is badly maintained.
+# This is first stage of gcc.
+
+# gcc is following the upstream: https://github.com/gnu-mcu-eclipse/riscv-none-gcc
+# more information from https://github.com/gnu-mcu-eclipse/riscv-none-gcc-build/
+
+# original configure file locate at https://github.com/gnu-mcu-eclipse/riscv-none-gcc-build/blob/master/scripts/container-apps-functions-source.sh
+
+_target=riscv-none-embed
+pkgname=$_target-gcc-stage1
+pkgver=9.1.0
+pkgrel=1
+pkgdesc='Cross compiler for 32-bit and 64-bit RISC-V'
+arch=('x86_64')
+url='https://gcc.gnu.org/'
+license=('GPL' 'LGPL' 'FDL')
+groups=('risc-v')
+depends=("$_target-binutils" "libmpc")
+options=('!emptydirs' '!strip')
+makedepends=('python')
+source=("https://gcc.gnu.org/pub/gcc/releases/gcc-$pkgver/gcc-$pkgver.tar.xz"
+        "embed.patch")
+md5sums=('6069ae3737cf02bf2cb44a391ef0e937'
+         'SKIP')
+
+prepare() {
+  # hack! - some configure tests for header files using "$CPP $CPPFLAGS"
+  sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" \
+    "$srcdir/gcc-$pkgver/"{libiberty,gcc}/configure
+
+  rm -rf "$srcdir/gcc-build"
+  mkdir "$srcdir/gcc-build"
+  export GCC_MULTILIB="rv32e-ilp32e--c rv32em-ilp32e--c rv32eac-ilp32e-- rv32emac-ilp32e-- rv32i-ilp32--c rv32im-ilp32--c rv32iac-ilp32-- rv32imac-ilp32-- rv32imaf-ilp32f-- rv32imafc-ilp32f-rv32imafdc- rv32imafdc-ilp32d-- rv64imac-lp64-- rv64imafc-lp64f-rv64imafdc- rv64imafdc-lp64d--"
+  IFS=$' '
+  cd $srcdir/gcc-$pkgver/gcc/config/riscv/
+  ./multilib-generator $GCC_MULTILIB > t-elf-multilib
+  cd $srcdir/gcc-$pkgver
+  patch --forward --strip=1 --input="${srcdir}/embed.patch"
+}
+
+build() {
+  cd gcc-build
+
+  export CFLAGS="-Wno-tautological-compare -Wno-deprecated-declarations -Wno-unused-value -Wno-implicit-fallthrough -Wno-implicit-function-declaration -Wno-unused-but-set-variable -Wno-shift-negative-value -Wno-misleading-indentation -Wno-strict-overflow -Wno-sign-compare"
+  export CXXFLAGS="-Wno-format-security -Wno-char-subscripts -Wno-deprecated -Wno-array-bounds -Wno-invalid-offsetof -Wno-implicit-fallthrough -Wno-format-security -Wno-suggest-attribute=format -Wno-format-extra-args -Wno-format -Wno-varargs -Wno-shift-count-overflow -Wno-ignored-attributes -Wno-tautological-compare -Wno-unused-label -Wno-unused-parameter -Wno-literal-suffix -Wno-expansion-to-defined -Wno-maybe-uninitialized -Wno-shift-negative-value -Wno-memset-elt-size -Wno-dangling-else -Wno-sequence-point -Wno-misleading-indentation -Wno-int-in-bool-context"
+
+
+  "$srcdir/gcc-$pkgver/configure" \
+    --prefix=/usr \
+    --program-prefix=$_target- \
+    --with-local-prefix=/usr/$_target \
+    --with-sysroot=/usr/$_target \
+    --with-build-sysroot=/usr/$_target \
+    --with-python-dir=share/gcc-$_target \
+    --libdir=/usr/lib \
+    --libexecdir=/usr/lib \
+    --target=$_target \
+    --host=$CHOST \
+    --build=$CHOST \
+    --enable-languages=c \
+    --disable-decimal-float \
+    --disable-libffi \
+    --disable-libgomp \
+    --disable-libmudflap \
+    --disable-libquadmath \
+    --disable-libssp \
+    --disable-libstdcxx-pch \
+    --disable-nls \
+    --disable-threads \
+    --disable-tls \
+    --enable-checking=no \
+    --with-newlib \
+    --without-headers \
+    --with-gnu-as \
+    --with-gnu-ld \
+    --with-abi="ilp32" \
+    --with-arch="rv32imac" \
+    --disable-rpath \
+    --disable-build-format-warnings
+  make
+}
+
+package() {
+  make -C gcc-build DESTDIR="$pkgdir" install-gcc install-target-libgcc
+
+  # Strip target binaries
+  find "$pkgdir/usr/lib/gcc/$_target/" -type f \
+    -and \( -name \*.a -or -name \*.o \) -exec $_target-objcopy \
+    -R .comment -R .note -R .debug_info -R .debug_aranges -R .debug_pubnames \
+    -R .debug_pubtypes -R .debug_abbrev -R .debug_line -R .debug_str \
+    -R .debug_ranges -R .debug_loc '{}' \;
+
+  # Strip host binaries
+  find "$pkgdir/usr/bin/" "$pkgdir/usr/lib/gcc/$_target/" -type f \
+    -and \( -executable \) -exec strip '{}' \;
+  # Remove files that conflict with host gcc package
+  rm -r "$pkgdir/usr/share/"{man/man7,info}
+}
