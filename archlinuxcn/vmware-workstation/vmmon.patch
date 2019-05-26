@@ -14,196 +14,6 @@ index de8162e..6124a71 100644
  
  # Header directory for the running kernel
  ifdef LINUXINCLUDE
-From: Michal Kubecek <mkubecek@suse.cz>
-Date: Mon, 26 Mar 2018 13:33:32 +0200
-Subject: [PATCH] vmmon: fix indirect call with retpoline build
-diff --git a/vmmon/common/task.c b/vmmon/common/task.c
-index 98cc74a..400ebfe 100644
---- a/vmmon/common/task.c
-+++ b/vmmon/common/task.c
-@@ -2322,12 +2322,23 @@ TaskSwitchToMonitor(VMCrossPage *crosspage)
-    {
-       uint64 raxGetsWiped, rcxGetsWiped;
- 
-+#ifdef CALL_NOSPEC
-+      __asm__ __volatile__(CALL_NOSPEC
-+                           : "=a" (raxGetsWiped),
-+                             "=c" (rcxGetsWiped)
-+                           : "0" (codePtr),
-+                             "1" (crosspage),
-+                             THUNK_TARGET(codePtr)
-+                           : "rdx", "r8", "r9", "r10", "r11", "cc", "memory");
-+#else
-       __asm__ __volatile__("call *%%rax"
-                            : "=a" (raxGetsWiped),
-                              "=c" (rcxGetsWiped)
-                            : "0" (codePtr),
-                              "1" (crosspage)
-                            : "rdx", "r8", "r9", "r10", "r11", "cc", "memory");
-+#endif
-+
-    }
- #elif defined(_MSC_VER)
-    /*
-From 8ba37a5023f939ba8d2e0d91b916ff442b1c18dd Mon Sep 17 00:00:00 2001
-From: Michal Kubecek <mkubecek@suse.cz>
-Date: Mon, 31 Dec 2018 00:05:42 +0100
-Subject: [PATCH] modules: replace SUBDIRS with M
-
-Since commit 0126be38d988 ("kbuild: announce removal of SUBDIRS if used")
-in v5.0-rc1, using SUBDIRS when building out of tree modules produces
-a deprecation warning. As M used to work since pretty much ever, use it
-unconditionally.
----
- vmmon-only/Makefile | 2 +-
- vmnet-only/Makefile | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/vmmon-only/Makefile b/vmmon-only/Makefile
-index ccdd295..b4b71fb 100644
---- a/vmmon-only/Makefile
-+++ b/vmmon-only/Makefile
-@@ -111,7 +111,7 @@ prebuild:: ;
- postbuild:: ;
- 
- $(DRIVER_KO): prebuild
--	$(MAKE) -C $(BUILD_DIR) SUBDIRS=$$PWD SRCROOT=$$PWD/$(SRCROOT) \
-+	$(MAKE) -C $(BUILD_DIR) M=$$PWD SRCROOT=$$PWD/$(SRCROOT) \
- 	  MODULEBUILDDIR=$(MODULEBUILDDIR) modules
- 	$(MAKE) -C $$PWD SRCROOT=$$PWD/$(SRCROOT) \
- 	  MODULEBUILDDIR=$(MODULEBUILDDIR) postbuild
-From ca44ce7215b91f82ff500843784b4e86a720fffe Mon Sep 17 00:00:00 2001
-From: Michal Kubecek <mkubecek@suse.cz>
-Date: Mon, 31 Dec 2018 00:11:35 +0100
-Subject: [PATCH] vmmon: totalram_pages is a function since 5.0
-
-Since commit ca79b0c211af ("mm: convert totalram_pages and totalhigh_pages
-variables to atomic") in v5.0-rc1, totalram_pages() is an accessor function
-and the actual variable is an atomic.
----
- vmmon-only/linux/hostif.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
-
-diff --git a/vmmon-only/linux/hostif.c b/vmmon-only/linux/hostif.c
-index af4b1d9..d32653c 100644
---- a/vmmon-only/linux/hostif.c
-+++ b/vmmon-only/linux/hostif.c
-@@ -182,6 +182,15 @@ static void UnlockEntry(void *clientData, MemTrackEntry *entryPtr);
- uint8 monitorIPIVector;
- uint8 hvIPIVector;
- 
-+static unsigned long compat_totalram_pages(void)
-+{
-+#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 0, 0)
-+	return totalram_pages;
-+#else
-+	return totalram_pages();
-+#endif
-+}
-+
- /*
-  *-----------------------------------------------------------------------------
-  *
-@@ -1633,14 +1642,7 @@ unsigned int
- HostIF_EstimateLockedPageLimit(const VMDriver* vm,                // IN
-                                unsigned int currentlyLockedPages) // IN
- {
--   /*
--    * This variable is available and exported to modules,
--    * since at least 2.6.0.
--    */
--
--   extern unsigned long totalram_pages;
--
--   unsigned int totalPhysicalPages = totalram_pages;
-+   unsigned int totalPhysicalPages = compat_totalram_pages();
- 
-    /*
-     * Use the memory information linux exports as of late for a more
-From 97d03d41984a0ade064fa6ac0400eb61de7929ff Mon Sep 17 00:00:00 2001
-From: Michal Kubecek <mkubecek@suse.cz>
-Date: Mon, 31 Dec 2018 00:15:11 +0100
-Subject: [PATCH] vmmon: bring back the do_gettimeofday() helper
-
-The do_gettimeofday() helper was removed by commit e4b92b108c6c
-("timekeeping: remove obsolete time accessors") in v5.0-rc1. Bring it back
-for users in vmmon-only/linux/hostif.c.
-
-This feels like a quick and clumsy band aid to allow build with post-4.20
-kernels. On a closer look, the whole gymnastics around uptimeState and
-HostIFReadUptimeWork() with jiffies and wall time checking and correcting
-each other seems to be a workaround for an absence of high resolution
-monotonic time. Considering ktime_get_ts64() is available since 3.17 and
-before that, ktime_get_ts() since 2.6.17, perhaps the time has come to
-clean all this machinery up. But something like this would be beyond the
-scope of this repository.
----
- vmmon-only/linux/hostif.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/vmmon-only/linux/hostif.c b/vmmon-only/linux/hostif.c
-index d32653c..cf4197b 100644
---- a/vmmon-only/linux/hostif.c
-+++ b/vmmon-only/linux/hostif.c
-@@ -191,6 +191,17 @@ static unsigned long compat_totalram_pages(void)
- #endif
- }
- 
-+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 0, 0)
-+static void do_gettimeofday(struct timeval *tv)
-+{
-+	struct timespec64 now;
-+
-+	ktime_get_real_ts64(&now);
-+	tv->tv_sec = now.tv_sec;
-+	tv->tv_usec = now.tv_nsec / 1000;
-+}
-+#endif
-+
- /*
-  *-----------------------------------------------------------------------------
-  *
-From 92b90ac11baf215ba73cb94e5aebf0576f1966a0 Mon Sep 17 00:00:00 2001
-From: Michal Kubecek <mkubecek@suse.cz>
-Date: Sat, 5 Jan 2019 01:54:57 +0100
-Subject: [PATCH] modules: handle access_ok() with two arguments
-
-Since commit 96d4f267e40f ("Remove 'type' argument from access_ok()
-function") in v5.0-rc1, the type argument of access_ok() was dropped.
-The same commit also dropped macros VERIFY_READ and VERIFY_WRITE so check
-for their existence on pre-5.0 kernels to allow build against kernels with
-this change backported.
----
- vmmon-only/linux/hostif.c | 8 +++++++-
- vmnet-only/userif.c       | 8 +++++++-
- 2 files changed, 14 insertions(+), 2 deletions(-)
-
-diff --git a/vmmon-only/linux/hostif.c b/vmmon-only/linux/hostif.c
-index cf4197b..ef88a22 100644
---- a/vmmon-only/linux/hostif.c
-+++ b/vmmon-only/linux/hostif.c
-@@ -202,6 +202,12 @@ static void do_gettimeofday(struct timeval *tv)
- }
- #endif
- 
-+#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 0, 0) && defined(VERIFY_WRITE)
-+	#define write_access_ok(addr, size) access_ok(VERIFY_WRITE, addr, size)
-+#else
-+	#define write_access_ok(addr, size) access_ok(addr, size)
-+#endif
-+
- /*
-  *-----------------------------------------------------------------------------
-  *
-@@ -3418,7 +3424,7 @@ HostIF_MapUserMem(VA addr,                  // IN: User memory virtual address
- 
-    ASSERT(handle);
- 
--   if (!access_ok(VERIFY_WRITE, p, size)) {
-+   if (!write_access_ok(p, size)) {
-       printk(KERN_ERR "%s: Couldn't verify write to uva 0x%p with size %"
-              FMTSZ"u\n", __func__, p, size);
- 
 From 41413a9b6e660a93600a438944d85b6f51eb680c Mon Sep 17 00:00:00 2001
 From: Michal Kubecek <mkubecek@suse.cz>
 Date: Tue, 5 Mar 2019 13:21:35 +0100
@@ -221,7 +31,7 @@ diff --git a/vmmon-only/linux/hostif.c b/vmmon-only/linux/hostif.c
 index ef88a22..8ca17de 100644
 --- a/vmmon-only/linux/hostif.c
 +++ b/vmmon-only/linux/hostif.c
-@@ -2304,7 +2304,7 @@ isVAReadable(VA r)  // IN:
+@@ -2328,7 +2328,7 @@ isVAReadable(VA r)  // IN:
     int ret;
  
     old_fs = get_fs();
@@ -230,7 +40,7 @@ index ef88a22..8ca17de 100644
     r = APICR_TO_ADDR(r, APICR_VERSION);
     ret = HostIF_CopyFromUser(&dummy, r, sizeof dummy);
     set_fs(old_fs);
-@@ -2581,7 +2581,7 @@ HostIF_SemaphoreWait(VMDriver *vm,   // IN:
+@@ -2605,7 +2605,7 @@ HostIF_SemaphoreWait(VMDriver *vm,   // IN:
     }
  
     old_fs = get_fs();
@@ -239,7 +49,7 @@ index ef88a22..8ca17de 100644
  
     {
        struct poll_wqueues table;
-@@ -2710,7 +2710,7 @@ HostIF_SemaphoreSignal(uint64 *args)  // IN:
+@@ -2734,7 +2734,7 @@ HostIF_SemaphoreSignal(uint64 *args)  // IN:
     }
  
     old_fs = get_fs();
