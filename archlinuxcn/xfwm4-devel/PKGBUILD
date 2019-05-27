@@ -3,7 +3,7 @@
 _pkgname=xfwm4
 pkgname=${_pkgname}-devel
 pkgver=4.13.2
-pkgrel=1
+pkgrel=2
 pkgdesc="Xfce window manager"
 arch=('i686' 'x86_64')
 url="https://www.xfce.org/"
