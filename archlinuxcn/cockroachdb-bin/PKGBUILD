@@ -4,8 +4,8 @@
 pkgname=cockroachdb-bin
 conflicts=('cockroachdb')
 provides=('cockroachdb')
-pkgver=2.1.6
-pkgrel=1
+pkgver=19.1.0
+pkgrel=2
 pkgdesc="An open source, survivable, strongly consistent, scale-out SQL database"
 arch=('x86_64')
 url="https://www.cockroachlabs.com/"
@@ -24,7 +24,7 @@ source=("https://binaries.cockroachdb.com/cockroach-v${pkgver}.linux-amd64.tgz"
         cockroach.default
         cockroach.sysusers
         cockroach.tmpfiles)
-sha256sums=('b4da5469f470adb290e275107c09d65f9382596107db04f2ca117f0b54f7add3'
+sha256sums=('4ddeca598404f6e99ecc3528c3af409184a78849552c85aa9d8d85aa72e2c994'
             '68040689c4342e0018adec3eb0fb1f2ae68aaeef918e7b4493518523381b7129'
             'b3ef077aa9a0d4b697722de993fa83959f10910ae600de90bcdcdd49fafce371'
             '2d36597f7117c38b006835ae7f537487207d8ec407aa9d9980794b2030cbc067'
@@ -39,9 +39,11 @@ sha256sums=('b4da5469f470adb290e275107c09d65f9382596107db04f2ca117f0b54f7add3'
             'SKIP')
 
 build() {
-    # generate bash completion
+    # generate shell completion
     "${srcdir}/cockroach-v${pkgver}.linux-amd64/cockroach" \
-        gen autocomplete --out "${srcdir}/cockroach.bash"
+        gen autocomplete bash --out "${srcdir}/cockroach.bash"
+    "${srcdir}/cockroach-v${pkgver}.linux-amd64/cockroach" \
+        gen autocomplete zsh --out "${srcdir}/cockroach.zsh"
 
     # generate man pages
     "${srcdir}/cockroach-v${pkgver}.linux-amd64/cockroach" \
@@ -65,8 +67,9 @@ package() {
   install -d "${pkgdir}/usr/share/man/man1/"
   install -m644 "${srcdir}"/man/*.1 "${pkgdir}/usr/share/man/man1/"
 
-  # bash completion
+  # shell completion
   install -Dm644 cockroach.bash "${pkgdir}/usr/share/bash-completion/completions/cockroach"
+  install -Dm644 cockroach.zsh  "${pkgdir}/usr/share/zsh/site-functions/_cockroach"
 
   # licenses
   install -Dm644 "${srcdir}/LICENSE"        "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"

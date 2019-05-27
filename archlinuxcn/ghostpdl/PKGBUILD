@@ -16,7 +16,7 @@
 
 set -u
 pkgname='ghostpdl'
-pkgver='9.26'
+pkgver='9.27'
 pkgrel='1'
 pkgdesc='Ghostscript RIP for PS, PDF, PCL-5, PCL-XL, SVG and XPS.'
 arch=('i686' 'x86_64')
@@ -28,7 +28,7 @@ depends=('ghostscript' 'glu' 'freeglut' 'libjpeg' 'libxt')
 _giturl="https://github.com/ArtifexSoftware/${pkgname}-downloads"
 _verwatch=("${_giturl}/releases.atom" '\s\+<title>Ghostscript/GhostPDL \([0-9\.]\+\)</title>.*' 'f')
 source=("${_giturl}/releases/download/gs${pkgver//./}/${pkgname}-${pkgver}.tar.xz")
-sha256sums=('9c586554c653bb92ef5d271b12ad76ac6fabc05193173cb9e2b799bb069317fe')
+sha256sums=('4d76052187da48457677a04c2c7dcac813889f92b055285f30e03499b0ddc70f')
 
 prepare() {
   set -u
@@ -82,14 +82,14 @@ package() {
     #install -d "${pkgdir}/usr/share/${pkgname}/doc"
     local _doc
     for _doc in 'README.txt' doc/ghost* 'doc/who_owns_what.txt'; do
-      install -Dpm644 "${_doc}" -t "${pkgdir}/usr/share/${pkgname}/doc/"
+      install -Dpm644 "${_doc}" -t "${pkgdir}/usr/share/${pkgname}/doc/" || :
     done
   else # as of 9.18
     cp -pr {xps,pcl}/'tools' "${pkgdir}/usr/share/${pkgname}/"
     cp -pr 'pcl/urwfonts' "${pkgdir}/usr/share/${pkgname}/"
     local _doc
     for _doc in 'doc/Readme.htm' doc/pclxps/ghost* 'doc/who_owns_what.txt'; do
-      install -Dpm644 "${_doc}" -t "${pkgdir}/usr/share/${pkgname}/doc/"
+      install -Dpm644 "${_doc}" -t "${pkgdir}/usr/share/${pkgname}/doc/" || :
     done
   fi
 

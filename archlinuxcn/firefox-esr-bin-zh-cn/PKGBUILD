@@ -1,20 +1,21 @@
-# Maintainer: Manuel Kauschinger <admin at bruzzzla dot de>
-# Previous Maintainer: Will Adams <info at clementlumber dot com>
-# Previous Maintainer: T. Jameson Little <t.jameson.little at gmail dot com>
-# Previous Maintainer: Stephen Michael <ihateseptictanks at gmail dot com>
-# Previous Maintainer: Simon Tunnat <simon+aur@tunn.at>
+# Maintainer: Dct Mei <dctxmei@gmail.com>
+# Contributor: Manuel Kauschinger <admin at bruzzzla dot de>
+# Contributor: Will Adams <info at clementlumber dot com>
+# Contributor: T. Jameson Little <t.jameson.little at gmail dot com>
+# Contributor: Stephen Michael <ihateseptictanks at gmail dot com>
+# Contributor: Simon Tunnat <simon+aur@tunn.at>
 # Contributor: Bartlomiej Piotrowski <nospam@bpiotrowski.pl>
 
 pkgname=firefox-esr-bin-zh-cn
 _pkgname=${pkgname/-bin-zh-cn/}
 pkgver=60.6.1
-pkgrel=1
+pkgrel=2
 pkgdesc='Standalone web browser from mozilla.org - Extended Support Release'
 url='http://www.mozilla.org/zh-CN/firefox/organizations/'
 arch=('i686' 'x86_64')
 depends=('gtk2' 'gtk3' 'libxt' 'dbus-glib' 'nss')
 makedepends=()
-provides=('firefox=60')
+provides=('firefox=60' 'firefox-esr')
 license=('MPL' 'GPL' 'LGPL')
 install=$_pkgname.install
 

@@ -2,7 +2,7 @@
 
 pkgname=macports-base
 pkgver=2.5.4
-pkgrel=4
+pkgrel=6
 epoch=1
 pkgdesc='The MacPorts command-line client'
 url='https://www.macports.org/'

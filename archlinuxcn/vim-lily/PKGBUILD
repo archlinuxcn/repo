@@ -2,7 +2,7 @@
 
 pkgbase=vim-lily
 pkgname=(gvim-lily vim-runtime-lily vim-lily)
-pkgver=8.1.1177
+pkgver=8.1.1407
 pkgrel=1
 _versiondir="vim$(echo $pkgver | awk -F. '{print $1$2}')"
 arch=('i686' 'x86_64')
@@ -16,7 +16,7 @@ source=('tmpfiles.conf'
 sha1sums=('f4d0ccb87d0add6bd76280ed82f401e9a91aabc5'
           'adc4c82b6c4097944e5a767270a772721455eb8c'
           'SKIP')
-options=('debug')
+options=('debug' 'strip')
 
 pkgver() {
   cd vim-repo

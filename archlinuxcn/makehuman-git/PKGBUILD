@@ -1,0 +1,41 @@
+# Maintainer: Emanuel Couto <unit73e@gmail.com>
+
+_prjname=makehuman
+pkgname=makehuman-git
+pkgver=r2462.eaf64acb
+pkgrel=1
+pkgdesc="Parametrical modeling program for creating human bodies (git latest)"
+arch=('any')
+url="http://www.makehumancommunity.org/"
+license=('AGPL3')
+depends=('python' 'python-numpy' 'python-pyqt5' 'python-opengl' 'qt5-svg')
+makedepends=('git' 'git-lfs')
+source=("git+https://github.com/makehumancommunity/${_prjname}.git")
+sha256sums=('SKIP')
+
+pkgver() {
+	cd "$srcdir/${_prjname}"
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+	cd "$srcdir/${_prjname}/makehuman"
+
+	# Build as detailed on readme
+	python download_assets_git.py
+	python compile_models.py
+	python compile_proxies.py
+	python compile_targets.py
+}
+
+package() {
+	cd "$srcdir/${_prjname}"
+
+	# No standard UNIX structure so install in opt
+	install -d -m755 "$pkgdir/opt/makehuman"
+	cp -R makehuman/* "$pkgdir/opt/makehuman"
+	
+	# Creates a symlink to the binary
+	install -d m755 "$pkgdir/usr/bin"
+	ln -s "/opt/makehuman/makehuman.py" "$pkgdir/usr/bin/makehuman"
+}

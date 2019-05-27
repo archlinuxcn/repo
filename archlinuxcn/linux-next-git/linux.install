@@ -1,0 +1,7 @@
+post_upgrade() {
+  if findmnt --fstab -uno SOURCE /boot &>/dev/null && ! mountpoint -q /boot; then
+    echo "WARNING: /boot appears to be a separate partition but is not mounted."
+  fi
+}
+
+# vim:set ft=sh ts=8 sts=2 sw=2 et:

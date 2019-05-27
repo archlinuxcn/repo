@@ -3,19 +3,18 @@
 # All my PKGBUILDs are managed at https://github.com/eli-schwartz/pkgbuilds
 
 pkgname=pacman-static
-pkgver=5.1.2
+pkgver=5.1.3
 _cares_ver=1.15.0
 _nghttp2_ver=1.36.0
-_curlver=7.64.0
-_sslver=1.1.1a
+_curlver=7.64.1
+_sslver=1.1.1b
 _xzver=5.2.4
 _bzipver=1.0.6
-_zstdver=1.3.8
+_zstdver=1.4.0
 _libarchive_ver=3.3.3
-_gpgerrorver=1.35
-_libassuanver=2.5.2
-_gpgmever=1.12.0
-_gnupgver=2.2.12
+_gpgerrorver=1.36
+_libassuanver=2.5.3
+_gpgmever=1.13.0
 pkgrel=3
 pkgdesc="Statically-compiled pacman (to fix or install systems without libc)"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
@@ -45,7 +44,7 @@ validpgpkeys+=('3690C240CE51B4670D30AD1C38EE757D69184620') # Lasse Collin <lasse
 # bzip2
 source+=("https://sources.archlinux.org/other/packages/bzip2/bzip2-${_bzipver}.tar.gz")
 # zstd
-source+=("https://github.com/facebook/zstd/releases/download/v${_zstdver}/zstd-${_zstdver}.tar.gz")
+source+=("${pkgname}-${pkgver}.tar.gz::https://github.com/facebook/zstd/archive/v${_zstdver}.tar.gz")
 # libgpg-error
 source+=("https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-${_gpgerrorver}.tar.bz2"{,.sig})
 validpgpkeys+=('D8692123C4065DEA5E0F3AB5249B39D24F25E3B6'  # Werner Koch
@@ -58,27 +57,48 @@ source+=("https://www.gnupg.org/ftp/gcrypt/gpgme/gpgme-${_gpgmever}.tar.bz2"{,.s
 # libarchive
 source+=("libarchive-${_libarchive_ver}.tar.gz::https://github.com/libarchive/libarchive/archive/v${_libarchive_ver}.tar.gz")
 
-sha512sums=('3c123005587359315ab0c24d50a58d10f365eb92b24840213559cd951c863beaa2e3805bf728975fdae55dc2619e1c2dfeafaef2ee57f3882a30c4d5e8777750'
+sha512sums=('b556b6d01d651a675ce1e153ede776e682ca0eb671cd2be00d7b7c602504dd119291f38ef5c318e675b4ce865db7e1c57e0ebc157510f0fc72e656feb8947e54'
             'SKIP'
             '4e0d5c5cdb4f1b7e5f12790850237f36649af4aa9596033392725972e4e0e5a33bb78bd1aa0735e35e489b523b7e9a236a7b5847dfca69bd7583fcab36c13c76'
             'a1de6c5e7e1a6a13c926aae690e83d5caa51e7313d63da1cf2af6bc757c41d585aad5466bc3ba7b7f7793cb1748fa589f40972b196728851c8b059cfc8c3be50'
             'SKIP'
-            'ea0e68f9cbf2eb4f235d8506962dcc7709f769ef3526c0e4c130fdaf7186a1a13b303c6ce919cb9125bbf7c64ddf4f8efb3d9269b906f856e6d7b3def027fb81'
+            'c8f8c4397e0e2975e7553f36637b7e7caa29d7953229dcf4d8051f9bae0cf55572d6e25fc27d9c34fe8783cf87893d96d447601c74662374b8bbd393b6cb6825'
             'SKIP'
-            '1523985ba90f38aa91aa6c2d57652f4e243cb2a095ce6336bf34b39b5a9b5b876804299a6825c758b65990e57948da532cca761aa12b10958c97478d04dd6d34'
+            'b54025fbb4fe264466f3b0d762aad4be45bd23cd48bdb26d901d4c41a40bfd776177e02230995ab181a695435039dbad313f4b9a563239a70807a2e19ecf045d'
             'SKIP'
             '3857c298663728a465b5f95a3ef44547efbfb420d755e9dde7f20aa3905171b400e1c126d8db5c2b916c733bbd0724d8753cad16c9baf7b12dcd225a3ee04a97'
             'e5bf6eb88365d2dbdc774db49261fb9fae0544ed297891fc20f1ed223f4072cb0357cbd98146ac35b6d29410a12b6739bbd111cd57d4a225bef255ed46988578'
             'SKIP'
             '00ace5438cfa0c577e5f578d8a808613187eff5217c35164ffe044fbafdfec9e98f4192c02a7d67e01e5a5ccced630583ad1003c37697219b0f147343a3fdd12'
-            '5c1c0a7a998b814a9edc1466f6d321b0d8ffcf927295fd5499137c9075a8823be03d98f61ea5212d1969f8d52b32e940b1cc10d1507d7702424ea2eea0e79a1b'
-            '9b1983f18f44f51b89a034c15b27415f710c21ead12dd63821aa489fb4c6d4b649a658ce1d5e1f3424cee483d3243be151b8fe32a24642af4531ded508aa4ac7'
+            '8614934e25eb1e82b554c483bc9d2d055f51344697295e83b22a8d726321b12068cfa7f7d2a9fe28a2de7c9edda59733826277efc7046e13674d6f7f02af5671'
+            '6e5f853f77dc04f0091d94b224cab8e669042450f271b78d0ea0219658d059c9cab1ab0eaa020a4227f451520b417fc340b85971a6f5e144fa69be57e15df346'
             'SKIP'
-            '1c6f87e3f785a053e6b736eb3554fa704c798c7078307391ca45961e06d9282c659c8e46d230d1f52e67acc2cc12d841f9ec0d5184443f68555d3f0d240865b3'
+            'e7ccb651ea75b07b2e687d48d86d0ab83cba8e2af7f30da2aec794808e13e6ec93f21d607db50d3431f1c23cb3a07a2793b71170e69fa2f5a82cffb81961f617'
             'SKIP'
-            'c228b3df28377df882be536ada56dc9c73150048a58e591aa4495f89c854af95820152cd60139840f994c249e9c7df50d8b89eb9d6dc4ce02aa80bbfebcdd014'
+            '47a7a67dcc6d111cddd805d288d42e870948114a6dc09ce0675ad8b3d1580bbc2a683e1e70cb2f416919cf2129c72a9ff30e2e3b9527809d04e863cc1f87267b'
             'SKIP'
             '10063764b610c0c966ba0177cac0d2cb781e297a45545cc8a587741513089af26f40769670894c86e7985b73c47e9cb985253bc3bef3a12fa83fe2a6a30acb6d')
+b2sums=('f933a37f201ef842b0e4bb041961db6def67c7e811299966b6e2054ae640180a5a10ba904aa4c4356e351a5cefb228d8853e79c5707ddf08dfa271b054d3b169'
+        'SKIP'
+        '7c116988c22801688c50d6d514ddb904920cc54d3c3d141137e6ed8b2182ef4e670f0a0fdebaeabfe0df8cdea4cfd1ee3fb083628f035201f104de6f3614dd25'
+        'c4028bb2840af23274b79c73600bfcf73a348c7ab63ae3c215829e0fe2cf149f4ad38a3ec657c3997bad818ced3cacaed0579dd0dd2ef42eaffd074bdc4f22ed'
+        'SKIP'
+        'f58ea20ff06c3c95fa0b588b7b1b83173c3ddb3b7c17c7bd7fc630b0710980ea8be90e965364636253e23c846e6fd14b21246ccfc73c3d89561afdf791a97ae4'
+        'SKIP'
+        '7ad9da9548052e2a033a684038f97c420cfffd57994604bcb3fa12640796c8c0aea3d24fb05648ee4940fbec40b81462e81c353da5a41a2575c0585d9718eae8'
+        'SKIP'
+        'e2ff99e8236487f43171c771d0ee89137b73f3d0b2756bcb0d6525c810ffa9f5a3763c3744327fb47cef21eabfc50fff96632f4bbe2cd244206a99daffa0c25a'
+        '877242324afd3c7eb21d3a9414c53843f4d1bb089206e8e545e280b32ff5372f7fb4a1b0c27cb6fdf0d0a27a668e9772ecc3fffc181df95d081ca9c2e987b83b'
+        'SKIP'
+        'b31533af7c71d715e6600874bb0a11b9b3aebbb08af0414a6d88bd5a2ad879a482ad408338159cb6c241815da8f48798d2ea7789ea971431d0be42ee827b0a7e'
+        '1b92a055712bb47c3d56c51f3ddddeaba00f9b746f7e47a2fa1a0afdf9798ff90f0ec734880a5d03644d47deb0e55f75c2cd3cbdab1a146dba5f49d4efeb2ae0'
+        '81684f6e47192c50cfa408977d53dc3812befca28733b531d51dffa0a6799a47366a50f64755557a7b3111a179ac4aba9e6a527418461cdbcccea80ae6bed4fa'
+        'SKIP'
+        'ae3a5a9a03e85d62cf87271cd4a0718a2b89a4f90ea814837913e4b2bb6e5af9746e766d99685cc0cc3a801efaee597e491a2bc03d42ac26059580ea4680fd7a'
+        'SKIP'
+        '71fbb034e3c5939d1953554ccbe0e89e2089c53a4c79e90ee51bdf96500bf4be8a5e1633772ab8dadd44616dde7be551ad7d3af0a59d7e1df10a19cd9cf56baa'
+        'SKIP'
+        '888c56d8e8d9c83008ff851af9097638bea448e2b24583f06c437e41d8820e020a6f57836a96417133cfde96c245d106cbf82169c1544fc29530a2a2c7537930')
 
 export LDFLAGS="$LDFLAGS -static"
 export CC=musl-gcc
@@ -221,7 +241,7 @@ build() {
         --disable-shared \
         --disable-languages
     make -C src
-    make -C src install-{binSCRIPTS,libLTLIBRARIES,nodist_includeHEADERS}
+    make -C src install-{binSCRIPTS,libLTLIBRARIES,nodist_includeHEADERS,pkgconfigDATA}
 
     # ew libtool
     rm "${srcdir}"/temp/usr/lib/lib*.la

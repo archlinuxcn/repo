@@ -1,0 +1,38 @@
+# Maintainer: Chih-Hsuan Yen <yan12125@archlinux.org>
+
+pkgname=lxqt-git-meta
+pkgver=1
+pkgrel=1
+arch=(any)
+url='https://lxqt.org/'
+license=(GPL)
+pkgdesc='Meta package for LXQt git packages'
+depends=(
+  compton-conf-git
+  lximage-qt-git
+  lxqt-about-git
+  lxqt-admin-git
+  lxqt-archiver-git
+  lxqt-config-git
+  lxqt-globalkeys-git
+  lxqt-notificationd-git
+  lxqt-openssh-askpass-git
+  lxqt-panel-git
+  lxqt-policykit-git
+  lxqt-powermanagement-git
+  lxqt-qtplugin-git
+  lxqt-runner-git
+  lxqt-session-git
+  lxqt-sudo-git
+  lxqt-themes-git
+  obconf-qt-git
+  pavucontrol-qt-git
+  pcmanfm-qt-git
+  qps-git
+  qterminal-git
+  screengrab-git
+)
+
+package() {
+  true  # dummy
+}

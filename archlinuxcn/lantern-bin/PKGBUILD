@@ -1,8 +1,7 @@
 # Maintainer:  lilydjwg@gmail.com
 
 pkgname=lantern-bin
-pkgver=5.3.4
-
+pkgver=5.4.0
 pkgrel=1
 pkgdesc='Free desktop application that delivers fast, reliable and secure access to the open Internet. (Stable Channel, binary)'
 arch=('i686' 'x86_64')
@@ -17,13 +16,13 @@ source_i686=("${pkgname}-${pkgver}-i686.deb::https://raw.githubusercontent.com/g
 source_x86_64=("${pkgname}-${pkgver}-x86_64.deb::https://raw.githubusercontent.com/getlantern/lantern-binaries/master/lantern-installer-64-bit.deb")
 install=lantern.install
 sha256sums=('4dc6f71c0e95ff04daa05c6de06847d87c10fbecd82869e93591886f9cab46a7')
-sha256sums_i686=('5399c9a423974d6511597a24b6433414b1e2aa18eaca9bface89fa8cc167d05e')
-sha256sums_x86_64=('564b7b14129bb29d8131b0bc89543f29750caa383d74c930dcb019ceb57a0409')
+sha256sums_i686=('9a0e19edb8d73c37a473c9f90d33cf6c3ebdab162004bb84c605c85518b486e2')
+sha256sums_x86_64=('b7302d617aabc8e7e9951890a81de032747dc831969e14ea660e0a3d0bd96069')
 options=(emptydirs)
 
 package() {
     msg2 'Extracting the data.tar.xz...'
-    bsdtar -xf data.tar.xz -C "${pkgdir}/"
+    bsdtar -xf data.tar.gz -C "${pkgdir}/"
 
     msg2 'Install systemd service file...'
     install -Dm644 "${srcdir}/lantern.service" "${pkgdir}/usr/lib/systemd/system/lantern.service"

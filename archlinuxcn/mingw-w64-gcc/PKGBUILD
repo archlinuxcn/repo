@@ -4,9 +4,9 @@
 _targets="i686-w64-mingw32 x86_64-w64-mingw32"
 
 pkgname=mingw-w64-gcc
-pkgver=8.3.0
-_islver=0.20
-pkgrel=3
+pkgver=9.1.0
+_islver=0.21
+pkgrel=1
 pkgdesc="Cross GCC for the MinGW-w64 cross-compiler"
 arch=('x86_64')
 url="http://gcc.gnu.org"
@@ -23,13 +23,13 @@ backup=()
 options=('!strip' 'staticlibs' '!emptydirs' '!buildflags')
 #source=(https://sources.archlinux.org/other/gcc/gcc-${pkgver/+/-}.tar.xz{,.sig}
 source=(https://ftp.gnu.org/gnu/gcc/gcc-$pkgver/gcc-$pkgver.tar.xz{,.sig}
-       "http://isl.gforge.inria.fr/isl-${_islver}.tar.bz2" bz86593.patch gcc9-pr88568-2.patch)
+       "http://isl.gforge.inria.fr/isl-${_islver}.tar.bz2")
 validpgpkeys=(F3691687D867B81B51CE07D9BBE43771487328A9  # bpiotrowski@archlinux.org
               13975A70E63C361C73AE69EF6EEB81F8981C74C7  # richard.guenther@gmail.com
               33C235A34C46AA3FFB293709A328C3A2C3C45C06) # Jakub Jelinek <jakub@redhat.com>
-sha256sums=('64baadfe6cc0f4947a84cb12d7f0dfaf45bb58b7e92461639596c21e02d97d2c'
+sha256sums=('79a66834e96a6050d8fe78db2c3b32fb285b230b855d0a66288235bc04b327a0'
             'SKIP'
-            'b587e083eb65a8b394e833dea1744f21af3f0e413a448c17536b5549ae42a4c2' SKIP SKIP)
+            'd18ca11f8ad1a39ab6d03d3dcb3365ab416720fcb65b42d69f34f51bf0a0e859')
 
 prepare() {
   ln -sf gcc-${pkgver/+/-} gcc
@@ -37,14 +37,6 @@ prepare() {
 
   # link isl for in-tree builds
   ln -sf ../isl-${_islver} isl
-
-  # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=86593
-  rm -f gcc/testsuite/g++.dg/pr86593.C
-  patch -p1 -i "$srcdir/bz86593.patch"
-
-  # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=88568
-  rm -f gcc/testsuite/g++.dg/other/pr88568.C
-  patch -p0 -i "$srcdir/gcc9-pr88568-2.patch"
 }
 
 build() {

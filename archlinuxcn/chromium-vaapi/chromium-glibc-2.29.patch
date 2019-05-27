@@ -1,0 +1,105 @@
+From 65046b8f90d0336cbe5f2f15cc7da5cb798360ad Mon Sep 17 00:00:00 2001
+From: Matthew Denton <mpdenton@chromium.org>
+Date: Wed, 24 Apr 2019 15:44:40 +0000
+Subject: [PATCH] Update Linux Seccomp syscall restrictions to EPERM
+ posix_spawn/vfork
+
+Glibc's system() function switched to using posix_spawn, which uses
+CLONE_VFORK. Pepperflash includes a sandbox debugging check which
+relies on us EPERM-ing process creation like this, rather than crashing
+the process with SIGSYS.
+
+So whitelist clone() calls, like posix_spawn, that include the flags
+CLONE_VFORK and CLONE_VM.
+
+Bug: 949312
+Change-Id: I3f4b90114b2fc1d9929e3c0a85bbe8f10def3c20
+Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/1568086
+Commit-Queue: Robert Sesek <rsesek@chromium.org>
+Reviewed-by: Robert Sesek <rsesek@chromium.org>
+Cr-Commit-Position: refs/heads/master@{#653590}
+---
+ .../baseline_policy_unittest.cc               | 29 +++++++++++++++++++
+ .../syscall_parameters_restrictions.cc        | 13 +++++++--
+ 2 files changed, 40 insertions(+), 2 deletions(-)
+
+diff --git a/sandbox/linux/seccomp-bpf-helpers/baseline_policy_unittest.cc b/sandbox/linux/seccomp-bpf-helpers/baseline_policy_unittest.cc
+index cdeb210ccb..40fcebf933 100644
+--- a/sandbox/linux/seccomp-bpf-helpers/baseline_policy_unittest.cc
++++ b/sandbox/linux/seccomp-bpf-helpers/baseline_policy_unittest.cc
+@@ -10,7 +10,9 @@
+ #include <sched.h>
+ #include <signal.h>
+ #include <stddef.h>
++#include <stdlib.h>
+ #include <string.h>
++#include <sys/mman.h>
+ #include <sys/prctl.h>
+ #include <sys/resource.h>
+ #include <sys/socket.h>
+@@ -130,6 +132,33 @@ BPF_TEST_C(BaselinePolicy, ForkArmEperm, BaselinePolicy) {
+   BPF_ASSERT_EQ(EPERM, fork_errno);
+ }
+ 
++BPF_TEST_C(BaselinePolicy, SystemEperm, BaselinePolicy) {
++  errno = 0;
++  int ret_val = system("echo SHOULD NEVER RUN");
++  BPF_ASSERT_EQ(-1, ret_val);
++  BPF_ASSERT_EQ(EPERM, errno);
++}
++
++BPF_TEST_C(BaselinePolicy, CloneVforkEperm, BaselinePolicy) {
++  errno = 0;
++  // Allocate a couple pages for the child's stack even though the child should
++  // never start.
++  constexpr size_t kStackSize = 4096 * 4;
++  void* child_stack = mmap(nullptr, kStackSize, PROT_READ | PROT_WRITE,
++                           MAP_PRIVATE | MAP_ANONYMOUS | MAP_STACK, -1, 0);
++  BPF_ASSERT_NE(child_stack, nullptr);
++  pid_t pid = syscall(__NR_clone, CLONE_VM | CLONE_VFORK | SIGCHLD,
++                      static_cast<char*>(child_stack) + kStackSize, nullptr,
++                      nullptr, nullptr);
++  const int clone_errno = errno;
++  TestUtils::HandlePostForkReturn(pid);
++
++  munmap(child_stack, kStackSize);
++
++  BPF_ASSERT_EQ(-1, pid);
++  BPF_ASSERT_EQ(EPERM, clone_errno);
++}
++
+ BPF_TEST_C(BaselinePolicy, CreateThread, BaselinePolicy) {
+   base::Thread thread("sandbox_tests");
+   BPF_ASSERT(thread.Start());
+diff --git a/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.cc b/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.cc
+index 100afe50e3..348ab6e8c5 100644
+--- a/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.cc
++++ b/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.cc
+@@ -135,7 +135,8 @@ namespace sandbox {
+ #if !defined(OS_NACL_NONSFI)
+ // Allow Glibc's and Android pthread creation flags, crash on any other
+ // thread creation attempts and EPERM attempts to use neither
+-// CLONE_VM, nor CLONE_THREAD, which includes all fork() implementations.
++// CLONE_VM nor CLONE_THREAD (all fork implementations), unless CLONE_VFORK is
++// present (as in newer versions of posix_spawn).
+ ResultExpr RestrictCloneToThreadsAndEPERMFork() {
+   const Arg<unsigned long> flags(0);
+ 
+@@ -154,8 +155,16 @@ ResultExpr RestrictCloneToThreadsAndEPERMFork() {
+       AnyOf(flags == kAndroidCloneMask, flags == kObsoleteAndroidCloneMask,
+             flags == kGlibcPthreadFlags);
+ 
++  // The following two flags are the two important flags in any vfork-emulating
++  // clone call. EPERM any clone call that contains both of them.
++  const uint64_t kImportantCloneVforkFlags = CLONE_VFORK | CLONE_VM;
++
++  const BoolExpr is_fork_or_clone_vfork =
++      AnyOf((flags & (CLONE_VM | CLONE_THREAD)) == 0,
++            (flags & kImportantCloneVforkFlags) == kImportantCloneVforkFlags);
++
+   return If(IsAndroid() ? android_test : glibc_test, Allow())
+-      .ElseIf((flags & (CLONE_VM | CLONE_THREAD)) == 0, Error(EPERM))
++      .ElseIf(is_fork_or_clone_vfork, Error(EPERM))
+       .Else(CrashSIGSYSClone());
+ }
+ 

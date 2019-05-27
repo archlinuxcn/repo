@@ -3,7 +3,7 @@
 # Contributor: Kevin MacMartin <prurigro at gmail dot com>
 
 pkgname=vitetris
-pkgver=0.57.2
+pkgver=0.58.0
 pkgrel=1
 pkgdesc="Virtual terminal *tris clone"
 arch=('i686' 'x86_64')
@@ -12,11 +12,10 @@ license=('BSD')
 depends=('ncurses')
 makedepends=('patch')
 options=('!makeflags')
-install=$pkgname.install
 source=($pkgname-$pkgver.tar.gz::https://github.com/vicgeralds/$pkgname/archive/v$pkgver.tar.gz
         $pkgname-makefile.patch
         $pkgname.tmpfiles.conf)
-sha256sums=('c023b33f663a7a47418652b520e83cdcf8d395584e30ec4bcb5e2b3563d4372b'
+sha256sums=('e7e7cb74bb814b9fec80fe4ede3c3f04134d8217d630e092a097238248d604f9'
             '2a9e1ea8daf42b833719c2fa1098f9e9c6259b8e077ca387eecd9a2ee54cc8af'
             '898c741a41defccd6b38fe3a5b97fb84d5656b2c9df05c79196ac1bf2151ba7d')
 

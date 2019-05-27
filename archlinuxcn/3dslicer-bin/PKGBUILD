@@ -1,0 +1,40 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+pkgname=3dslicer-bin
+_pkgname=Slicer
+_exec=('Slicer')
+pkgver=4.10.1
+pkgrel=1
+pkgdesc="A multi-platform, free open source software package for visualization and medical image computing"
+arch=('x86_64')
+url="https://www.slicer.org"
+license=('BSD')
+makedepends=('gendesk')
+provides=('3dslicer=${pkgver}')
+conflicts=('3dslicer')
+source=(
+    "${pkgname}-${pkgver}.tar.gz::https://download.slicer.org/bitstream/944596"
+    "3dslicer.svg::https://www.slicer.org/w/images/9/9f/3DSlicerLogo-HorizontalF.svg"
+)
+sha512sums=(
+    "a1f8e13fd3c514e74ca74e186c09a0a78bf67f06cf2388980c8d8587fed2c9024f888fdfa1491b9471af415f2c7f25eeca486ed6eaca6fc6dd01a67d58106fa7"
+    "67986a7bd90c95c4a91ddaecd86ceb3b54729f62c7e19ba3559f6180659902275a2f5a794cada3e9412664fb97cc6d57a02055826c4c135f2005d2c92d0ef878"
+)
+
+prepare() {
+  msg2 "Creating desktop file"
+  gendesk -f -n --pkgname 3dslicer \
+    --pkgdesc "${pkgdesc}" \
+    --categories "Graphics;MedicalSoftware;Science;" \
+    --icon "3dslicer" \
+    --exec "Slicer"
+}
+package() {
+  install -d "${pkgdir}/opt/3dslicer" "${pkgdir}/usr/bin"
+  mv "${srcdir}/${_pkgname}-${pkgver}-linux-amd64/"* "${pkgdir}/opt/3dslicer"
+  ln -s /opt/3dslicer/Slicer "${pkgdir}/usr/bin"
+  install -Dm644 "${srcdir}/3dslicer.desktop" "${pkgdir}/usr/share/applications/3dslicer.desktop"
+  install -Dm644 "${srcdir}/3dslicer.svg" "${pkgdir}/usr/share/pixmaps/3dslicer.svg"
+}
+# vim:set ts=2 sw=2 et:
+

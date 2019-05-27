@@ -1,0 +1,41 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+pkgname=python-apex-git
+pkgver=0.1.r434.14e34f7
+_pkgver=0.1
+pkgrel=1
+pkgdesc="A PyTorch Extension for easy mixed precision and distributed training"
+arch=('x86_64')
+url="https://github.com/NVIDIA/apex"
+license=('BSD')
+depends=(python-pytorch-cuda)
+makedepends=(git python-setuptools)
+checkdepends=(python-pytest)
+provides=(python-apex=${pkgver})
+conflicts=(python-apex)
+source=("${pkgname}::git+https://github.com/NVIDIA/apex.git")
+sha512sums=('SKIP')
+
+pkgver() {
+	cd "${srcdir}/${pkgname}"
+	ver=$(printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)")
+  echo ${_pkgver}.${ver}
+}
+
+prepare() { 
+  # use gcc compatible with current cuda version
+  export CC=/opt/cuda/bin/gcc
+  export CXX=/opt/cuda/bin/g++
+}
+
+build() {
+	cd "${srcdir}/${pkgname}"
+	python setup.py --cuda_ext --cpp_ext build
+}
+
+package() {
+	cd "${srcdir}/${pkgname}"
+	python setup.py --cuda_ext --cpp_ext install --root="${pkgdir}" --optimize=1 --skip-build
+ 	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

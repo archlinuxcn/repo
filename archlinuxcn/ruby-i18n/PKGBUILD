@@ -3,8 +3,8 @@
 
 _gemname="i18n"
 pkgname="ruby-${_gemname}"
-pkgver=1.1.1
-pkgrel=3
+pkgver=1.6.0
+pkgrel=1
 pkgdesc="New wave internationalisation support for Ruby"
 arch=("any")
 license=("MIT")
@@ -13,7 +13,7 @@ makedepends=("ruby-rdoc")
 options=(!emptydirs)
 url="http://rubygems.org/gems/${_gemname}"
 source=("https://rubygems.org/downloads/${_gemname}-${pkgver}.gem")
-sha256sums=('a7b7e411cd9dbbfd0c4e2cfda9353dffbd149940528bef98d7ea3673430d97bd')
+sha256sums=("941b77be3243ae41091349c0c598bc170ba4aeaf893b757b111a05933db5ddc1")
 noextract=("${_gemname}-${pkgver}.gem")
 
 package() {

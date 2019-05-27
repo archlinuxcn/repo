@@ -2,32 +2,23 @@
 # Contributor : Christian Rebischke <Chris.Rebischke@archlinux.org>
 # Contributor : dront78 <dront78@gmail.com>
 pkgname=systemtap
-pkgver=4.0
+pkgver=4.1
 pkgrel=2
 pkgdesc="provides infrastructure to simplify the gathering of information about the running system."
 url="http://sourceware.org/systemtap/"
-arch=('x86_64' 'i686')
+arch=('x86_64')
 license=('GPL')
 depends=('elfutils' 'nss' 'python2' 'json-c' 'avahi' 'readline' 'nspr')
 makedepends=('python2-setuptools' 'xmlto' 'cpio')
 optdepends=('sqlite3: for storing results in a database')
 source=("${pkgname}-${pkgver}.tar.gz::https://sourceware.org/systemtap/ftp/releases/${pkgname}-${pkgver}.tar.gz"
         "${pkgname}-${pkgver}.tar.gz.asc::https://sourceware.org/systemtap/ftp/releases/${pkgname}-${pkgver}.tar.gz.asc"
-        "systemtap.patch"
-        "systemtap.sysusers"
-        )
-sha512sums=('66b5ba1902ed974101429dce9fee849273d3dc64e862c057177d158c5f284cc93299819ee8ee49d4bd3b7ff47a3512b1c68b74cad374147ce67fa406c7518c79'
+        "systemtap.sysusers")
+sha512sums=('fbd606d9842ac63af6e607613a112b08d7593da74ad0398716cdc46f74a977a8e6b9fae92e1f63779ccfc94cffa25f29dee2ae44f67ecc4cedae630e50a2e7b6'
             'SKIP'
-            'cdde26e9c4605a0967ac8a31d9ae454e921774f39602cb505f1ecf65a8ef6c4c733bd8aa251a824571223daf0bd854fc2d461637ed10fe9a811e8abe30ef2324'
-            '0b54000f0bb6ed9eb4f43dbdc2fd66fcc178fc24688610fcb7b2ace5195bf96a956e24f2c281545db1a5a7c98aa951af63e8bd00de1f0347bae6f379f3671344'
-            )
+            '0b54000f0bb6ed9eb4f43dbdc2fd66fcc178fc24688610fcb7b2ace5195bf96a956e24f2c281545db1a5a7c98aa951af63e8bd00de1f0347bae6f379f3671344')
 install='systemtap.install'
-validpgpkeys=('5D38116FA4D3A7CC77E378D37E83610126DCC2E8')
-
-prepare() {
-  cd "${pkgname}-${pkgver}"
-  patch -Np1 -i "${srcdir}/systemtap.patch"
-}
+validpgpkeys=('F75E6545B9F8AA15AA932A444DE16D68FDBFFFB8')
 
 build() {
   cd "${pkgname}-${pkgver}"

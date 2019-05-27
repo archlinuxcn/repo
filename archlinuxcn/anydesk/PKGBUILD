@@ -1,7 +1,7 @@
 # Maintainer: Oliver Jaksch <arch-aur@com-in.de>
 
 pkgname=anydesk
-pkgver=4.0.1
+pkgver=5.0.0
 pkgrel=1
 pkgdesc="'AnyDesk Free' is an All-In-One Software for Remote Support"
 arch=('i686' 'x86_64')
@@ -14,8 +14,8 @@ conflicts=('anydesk-test')
 source_i686=(http://download.anydesk.com/linux/${pkgname}_${pkgver}-1_i386.deb)
 source_x86_64=(http://download.anydesk.com/linux/${pkgname}_${pkgver}-1_amd64.deb)
 
-sha256sums_i686=('b54ca44c8bf8c9e117e39d4293ec0db48afb296245b0ec7eecddaf0284ed91d5')
-sha256sums_x86_64=('b82af2bc51c78d442724e036bee4cd1e089f01543d5144aa420f109a1c77e9aa')
+sha256sums_i686=('bb680cf99fc9a5e88721b833d34c0aed82b5cb5953685c0e8ddcf8b2398128eb')
+sha256sums_x86_64=('4339c58c228ce7518f72dd3ab3a0cebf8ac012061a11633d8caacda461f06499')
 
 package() {
     cd "${pkgdir}"

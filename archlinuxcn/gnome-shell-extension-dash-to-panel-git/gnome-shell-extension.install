@@ -1,7 +1,9 @@
 post_install() {
-	echo "==> ****************************************************"
-  	echo "==> Don't forget to Restart GNOME Shell ([Alt]+[F2], r)."
-  	echo "==> ****************************************************"
+	if [ "$XDG_SESSION_TYPE" == "x11" ]; then
+		echo "==> ****************************************************"
+		echo "==> Don't forget to Restart GNOME Shell ([Alt]+[F2], r)."
+		echo "==> ****************************************************"
+	fi
 }
 
 post_upgrade() {

@@ -1,10 +1,10 @@
-# Maintainer: SY Zhang <lastavengers@archlinuxcn.org>
+# Maintainer: Shengyu Zhang <la@archlinuxcn.org>
 # Contributor: Shen Miren <dickeny@gmail.com>
 # Contributor: renyuneyun <renyuneyun@gmail.com>
 
 pkgname=mentohust
 pkgver=0.3.1
-pkgrel=5
+pkgrel=6
 pkgdesc="A Ruijie and Cernet supplicant"
 arch=('i686' 'x86_64')
 url="https://code.google.com/archive/p/mentohust/"
@@ -25,11 +25,11 @@ sha256sums=('e7d15008487d1130c90037581f8243ac145d0114006a08e3f0ac00751b2e1c6a'
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
 	./configure --prefix=/usr
+	make
 }
 
 package() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
-	make
 	make install DESTDIR="${pkgdir}"
 	cd -
 

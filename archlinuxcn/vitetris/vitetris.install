@@ -1,7 +1,0 @@
-post_install() {
-    systemd-tmpfiles --create vitetris.conf
-}
-
-post_upgrade() {
-    post_install
-}
