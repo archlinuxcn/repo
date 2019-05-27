@@ -55,8 +55,8 @@ source=(
   'vmmon.patch'
   'vmnet.patch'
 
-  "https://softwareupdate.vmware.com/cds/vmw-desktop/fusion/${_vmware_fusion_ver/_//}/packages/com.vmware.fusion.tools.darwinPre15.zip.tar"
-  "https://softwareupdate.vmware.com/cds/vmw-desktop/fusion/${_vmware_fusion_ver/_//}/packages/com.vmware.fusion.tools.darwin.zip.tar"
+  "com.vmware.fusion.tools.darwinPre15.zip.tar.${_vmware_fusion_ver}::https://softwareupdate.vmware.com/cds/vmw-desktop/fusion/${_vmware_fusion_ver/_//}/packages/com.vmware.fusion.tools.darwinPre15.zip.tar"
+  "com.vmware.fusion.tools.darwin.zip.tar.${_vmware_fusion_ver}::https://softwareupdate.vmware.com/cds/vmw-desktop/fusion/${_vmware_fusion_ver/_//}/packages/com.vmware.fusion.tools.darwin.zip.tar"
   'unlocker.py'
 )
 sha256sums=('55f8b9d4015fa958eba1aac72cc9985d34f22d1df5d027d7c34f1f4bf4f0c01d'
