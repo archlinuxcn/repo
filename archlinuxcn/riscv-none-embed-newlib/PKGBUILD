@@ -1,12 +1,6 @@
 # Maintainer: Jiuyang Liu <liujiuyang1994@gmail.com>
 
-# riscv-none-embed is maintained by gnu-mcu-eclipse, because of SiFive branch is badly maintained.
-# This is newlib and newlib-nano in one package, which can be compiled by gcc-stage1.
-
-# newlib is following the upstream: https://github.com/gnu-mcu-eclipse/riscv-newlib
-# more information from https://github.com/gnu-mcu-eclipse/riscv-none-gcc-build/
-
-# original configure file locate at https://github.com/gnu-mcu-eclipse/riscv-none-gcc-build/blob/master/scripts/container-apps-functions-source.sh
+# Follow the upstream of https://github.com/sifive/freedom-tools/blob/master/Makefile
 
 _target=riscv-none-embed
 pkgname=$_target-newlib
@@ -31,21 +25,17 @@ prepare() {
 }
 
 build() {
-  export CFLAGS_FOR_TARGET='-g -O2 -ffunction-sections -fdata-sections'
   cd $srcdir/build-newlib
   ../newlib-$pkgver/configure \
     --target=$_target \
     --prefix=/usr \
+    --enable-newlib-io-c99-formats \
     --enable-newlib-io-long-double \
-    --enable-newlib-register-fini \
-    --enable-newlib-retargetable-locking \
-    --disable-newlib-supplied-syscalls \
-    --disable-nls \
     --enable-newlib-io-long-long \
-    --enable-newlib-io-c99-formats
+    CFLAGS_FOR_TARGET="-Os -mcmodel=medany" \
+    CXXFLAGS_FOR_TARGET="-Os -mcmodel=medany"
   make
 
-  export CFLAGS_FOR_TARGET='-g -Os -ffunction-sections -fdata-sections'
   cd $srcdir/build-newlib-nano
   ../newlib-$pkgver/configure \
     --target=$_target \
@@ -60,7 +50,10 @@ build() {
     --enable-newlib-global-atexit \
     --enable-newlib-nano-formatted-io \
     --enable-newlib-nano-malloc \
-    --enable-newlib-reent-small
+    --enable-newlib-reent-small \
+    --enable-newlib-register-fini \
+    CFLAGS_FOR_TARGET="-Os -ffunction-sections -fdata-sections -mcmodel=medany" \
+    CXXFLAGS_FOR_TARGET="-Os -ffunction-sections -fdata-sections -mcmodel=medany"
   make
 }
 

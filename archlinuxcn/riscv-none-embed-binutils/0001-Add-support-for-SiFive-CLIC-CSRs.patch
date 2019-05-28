@@ -1,0 +1,105 @@
+From 3613b170bb24afaa84f8064055fc84c6f07f92a4 Mon Sep 17 00:00:00 2001
+From: Jim Wilson <jimw@sifive.com>
+Date: Thu, 21 Feb 2019 19:21:23 -0800
+Subject: [PATCH 1/2] Add support for SiFive CLIC CSRs.
+
+---
+ gas/testsuite/gas/riscv/priv-reg.d |  4 ++++
+ gas/testsuite/gas/riscv/priv-reg.s |  6 ++++++
+ include/opcode/riscv-opc.h         | 19 +++++++++++++++++++
+ 3 files changed, 29 insertions(+)
+
+diff --git a/gas/testsuite/gas/riscv/priv-reg.d b/gas/testsuite/gas/riscv/priv-reg.d
+index 9ec5d97ed8..964c99412d 100644
+--- a/gas/testsuite/gas/riscv/priv-reg.d
++++ b/gas/testsuite/gas/riscv/priv-reg.d
+@@ -251,3 +251,7 @@ Disassembly of section .text:
+ [ 	]+3c4:[ 	]+3bd02573[ 	]+csrr[ 	]+a0,pmpaddr13
+ [ 	]+3c8:[ 	]+3be02573[ 	]+csrr[ 	]+a0,pmpaddr14
+ [ 	]+3cc:[ 	]+3bf02573[ 	]+csrr[ 	]+a0,pmpaddr15
++[ 	]+3d0:[ 	]+30702573[ 	]+csrr[ 	]+a0,mtvt
++[ 	]+3d4:[ 	]+34502573[ 	]+csrr[ 	]+a0,mnxti
++[ 	]+3d8:[ 	]+34602573[ 	]+csrr[ 	]+a0,mintstatus
++[ 	]+3dc:[ 	]+34811173[ 	]+csrrw[ 	]+sp,mscratchcsw,sp
+diff --git a/gas/testsuite/gas/riscv/priv-reg.s b/gas/testsuite/gas/riscv/priv-reg.s
+index 72d97f9609..76e743c91c 100644
+--- a/gas/testsuite/gas/riscv/priv-reg.s
++++ b/gas/testsuite/gas/riscv/priv-reg.s
+@@ -267,3 +267,9 @@
+ 	csr pmpaddr13
+ 	csr pmpaddr14
+ 	csr pmpaddr15
++
++# CLIC registers
++	csr mtvt
++	csr mnxti
++	csr mintstatus
++	csrrw sp,mscratchcsw,sp
+diff --git a/include/opcode/riscv-opc.h b/include/opcode/riscv-opc.h
+index f09200c073..b5b98f8e4c 100644
+--- a/include/opcode/riscv-opc.h
++++ b/include/opcode/riscv-opc.h
+@@ -575,6 +575,8 @@
+ #define MASK_CUSTOM3_RD_RS1  0x707f
+ #define MATCH_CUSTOM3_RD_RS1_RS2 0x707b
+ #define MASK_CUSTOM3_RD_RS1_RS2  0x707f
++
++/* These registers are in priv spec 1.10.  */
+ #define CSR_USTATUS 0x0
+ #define CSR_UIE 0x4
+ #define CSR_UTVEC 0x5
+@@ -796,6 +798,13 @@
+ #define CSR_DCSR 0x7b0
+ #define CSR_DPC 0x7b1
+ #define CSR_DSCRATCH 0x7b2
++
++/* CLIC registers.  */
++#define CSR_MTVT 0x307
++#define CSR_MNXTI 0x345
++#define CSR_MINTSTATUS 0x346
++#define CSR_MSCRATCHCSW 0x348
++
+ /* These registers are present in priv spec 1.9.1, dropped in 1.10.  */
+ #define CSR_HSTATUS 0x200
+ #define CSR_HEDELEG 0x202
+@@ -1116,6 +1125,7 @@ DECLARE_INSN(custom3_rd_rs1, MATCH_CUSTOM3_RD_RS1, MASK_CUSTOM3_RD_RS1)
+ DECLARE_INSN(custom3_rd_rs1_rs2, MATCH_CUSTOM3_RD_RS1_RS2, MASK_CUSTOM3_RD_RS1_RS2)
+ #endif
+ #ifdef DECLARE_CSR
++/* These registers are in priv spec 1.10.  */
+ DECLARE_CSR(ustatus, CSR_USTATUS)
+ DECLARE_CSR(uie, CSR_UIE)
+ DECLARE_CSR(utvec, CSR_UTVEC)
+@@ -1337,6 +1347,13 @@ DECLARE_CSR(tdata3, CSR_TDATA3)
+ DECLARE_CSR(dcsr, CSR_DCSR)
+ DECLARE_CSR(dpc, CSR_DPC)
+ DECLARE_CSR(dscratch, CSR_DSCRATCH)
++
++/* These registers were added by the fast interrupt path spec.  */
++DECLARE_CSR(mtvt, CSR_MTVT)
++DECLARE_CSR(mnxti, CSR_MNXTI)
++DECLARE_CSR(mintstatus, CSR_MINTSTATUS)
++DECLARE_CSR(mscratchcsw, CSR_MSCRATCHCSW)
++
+ /* These registers are present in priv spec 1.9.1, dropped in 1.10.  */
+ DECLARE_CSR(hstatus, CSR_HSTATUS)
+ DECLARE_CSR(hedeleg, CSR_HEDELEG)
+@@ -1358,6 +1375,7 @@ DECLARE_CSR(mucounteren, CSR_MUCOUNTEREN)
+ DECLARE_CSR(mscounteren, CSR_MSCOUNTEREN)
+ DECLARE_CSR(mhcounteren, CSR_MHCOUNTEREN)
+ #endif
++
+ #ifdef DECLARE_CSR_ALIAS
+ /* Ubadaddr is 0x043 in 1.9.1, but 0x043 is utval in 1.10.  */
+ DECLARE_CSR_ALIAS(ubadaddr, CSR_UTVAL)
+@@ -1368,6 +1386,7 @@ DECLARE_CSR_ALIAS(sptbr, CSR_SATP)
+ /* Mbadaddr is 0x343 in 1.9.1, but 0x343 is mtval in 1.10.  */
+ DECLARE_CSR_ALIAS(mbadaddr, CSR_MTVAL)
+ #endif
++
+ #ifdef DECLARE_CAUSE
+ DECLARE_CAUSE("misaligned fetch", CAUSE_MISALIGNED_FETCH)
+ DECLARE_CAUSE("fault fetch", CAUSE_FAULT_FETCH)
+-- 
+2.21.0
+

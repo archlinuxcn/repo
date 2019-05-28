@@ -1,12 +1,6 @@
 # Maintainer: Jiuyang Liu <liujiuyang1994@gmail.com>
 
-# riscv-none-embed is maintained by gnu-mcu-eclipse, because of SiFive branch is badly maintained.
-# seprating from gdb, this binutils doesn't contains gdb, which is going to compile later.
-
-# binutils is following the upstream: https://github.com/gnu-mcu-eclipse/riscv-binutils-gdb/tree/sifive-binutils-$pkgver-gme
-# more information from https://github.com/gnu-mcu-eclipse/riscv-none-gcc-build/
-
-# original configure file locate at https://github.com/gnu-mcu-eclipse/riscv-none-gcc-build/blob/master/scripts/container-apps-functions-source.sh
+# Follow the upstream of https://github.com/sifive/freedom-tools/blob/master/Makefile
 
 _target=riscv-none-embed
 pkgname=$_target-binutils
@@ -18,8 +12,12 @@ url='http://www.gnu.org/software/binutils/'
 license=(GPL)
 depends=(zlib)
 source=("https://ftp.gnu.org/gnu/binutils/binutils-$pkgver.tar.xz"
+        "0001-Add-support-for-SiFive-CLIC-CSRs.patch"
+        "0002-RISC-V-Compress-3-operand-beq-bne-against-x0.patch"
         "embed.patch")
 md5sums=('0d174cdaf85721c5723bf52355be41e6'
+         'SKIP'
+         'SKIP'
          'SKIP')
 
 prepare() {
@@ -28,6 +26,9 @@ prepare() {
     "$srcdir/binutils-$pkgver/libiberty/configure"
   cd $srcdir/binutils-$pkgver
   patch --forward --strip=1 --input="${srcdir}/embed.patch"
+  echo "patch unmerged work from SiFive/gcc."
+  patch --forward --strip=1 --input="${srcdir}/0001-Add-support-for-SiFive-CLIC-CSRs.patch"
+  patch --forward --strip=1 --input="${srcdir}/0002-RISC-V-Compress-3-operand-beq-bne-against-x0.patch"
 }
 
 build() {
@@ -35,17 +36,23 @@ build() {
 
   unset CPPFLAGS
 
-  ./configure --target=$_target \
-              --prefix=/usr \
-              --with-sysroot=/usr/$_target \
-              --disable-nls \
-              --disable-werror \
-              --disable-sim \
-              --disable-gdb \
-              --enable-interwork \
-              --enable-plugins \
-              --enable-build-warnings=no \
-              --disable-rpath
+  ./configure \
+    --disable-gdb \
+    --disable-libdecnumber \
+    --disable-libreadline \
+    --disable-sim \
+    --disable-werror \
+    --prefix=/usr \
+    --target=$_target \
+    --with-expat=yes \
+    --with-gmp=no \
+    --with-mpc=no \
+    --with-mpfr=no \
+    --with-python=no \
+    --with-sysroot=/usr/$_target \
+    CFLAGS="-O2" \
+    CXXFLAGS="-O2"
+
   make
 }
 
@@ -62,5 +69,5 @@ package() {
   #rm "$pkgdir"/usr/share/man/man1/arm-none-eabi-{dlltool,windres,windmc}*
 
   # Remove info documents that conflict with host version
-  rm -r "$pkgdir"/usr/share/info
+  rm -r "$pkgdir/usr/share/"{info,locale}
 }

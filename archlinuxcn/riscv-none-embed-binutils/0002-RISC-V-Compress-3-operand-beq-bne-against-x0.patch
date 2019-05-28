@@ -1,0 +1,65 @@
+From 4d3261650997f61d7132385f001c1bb449ad0944 Mon Sep 17 00:00:00 2001
+From: Jim Wilson <jimw@sifive.com>
+Date: Wed, 3 Apr 2019 11:25:45 -0700
+Subject: [PATCH 2/2] RISC-V: Compress 3-operand beq/bne against x0.
+
+backport patch from upstream
+
+	gas/
+	* config/tc-riscv.c (validate_riscv_insn) <'C'>: Add 'z' support.
+	(riscv_ip) <'C'>: Add 'z' support.
+	opcodes/
+	* riscv-opc.c (riscv_opcodes) <beq>: Use Cz to compress 3 operand form.
+	<bne>: Likewise.
+---
+ gas/config/tc-riscv.c | 6 ++++++
+ opcodes/riscv-opc.c   | 2 ++
+ 2 files changed, 8 insertions(+)
+
+diff --git a/gas/config/tc-riscv.c b/gas/config/tc-riscv.c
+index 993161568f..99b007f59f 100644
+--- a/gas/config/tc-riscv.c
++++ b/gas/config/tc-riscv.c
+@@ -586,6 +586,7 @@ validate_riscv_insn (const struct riscv_opcode *opc, int length)
+ 	  case 'v': used_bits |= ENCODE_RVC_IMM (-1U); break;
+ 	  case 'w': break; /* RS1S, constrained to equal RD */
+ 	  case 'x': break; /* RS2S, constrained to equal RD */
++	  case 'z': break; /* RS2S, contrained to be x0 */
+ 	  case 'K': used_bits |= ENCODE_RVC_ADDI4SPN_IMM (-1U); break;
+ 	  case 'L': used_bits |= ENCODE_RVC_ADDI16SP_IMM (-1U); break;
+ 	  case 'M': used_bits |= ENCODE_RVC_SWSP_IMM (-1U); break;
+@@ -1472,6 +1473,11 @@ riscv_ip (char *str, struct riscv_cl_insn *ip, expressionS *imm_expr,
+ 		      || regno != X_SP)
+ 		    break;
+ 		  continue;
++		case 'z': /* RS2, contrained to equal x0.  */
++		  if (!reg_lookup (&s, RCLASS_GPR, &regno)
++		      || regno != 0)
++		    break;
++		  continue;
+ 		case '>':
+ 		  if (my_getSmallExpression (imm_expr, imm_reloc, s, p)
+ 		      || imm_expr->X_op != O_constant
+diff --git a/opcodes/riscv-opc.c b/opcodes/riscv-opc.c
+index 72e6b9d48f..bd652590b5 100644
+--- a/opcodes/riscv-opc.c
++++ b/opcodes/riscv-opc.c
+@@ -247,6 +247,7 @@ const struct riscv_opcode riscv_opcodes[] =
+ {"and",         0, {"I", 0},   "d,s,j",  MATCH_ANDI, MASK_ANDI, match_opcode, INSN_ALIAS },
+ {"beqz",        0, {"C", 0},   "Cs,Cp",  MATCH_C_BEQZ, MASK_C_BEQZ, match_opcode, INSN_ALIAS|INSN_CONDBRANCH },
+ {"beqz",        0, {"I", 0},   "s,p",  MATCH_BEQ, MASK_BEQ | MASK_RS2, match_opcode, INSN_ALIAS|INSN_CONDBRANCH },
++{"beq",         0, {"C", 0},   "Cs,Cz,Cp",  MATCH_C_BEQZ, MASK_C_BEQZ, match_opcode, INSN_ALIAS|INSN_CONDBRANCH },
+ {"beq",         0, {"I", 0},   "s,t,p",  MATCH_BEQ, MASK_BEQ, match_opcode, INSN_CONDBRANCH },
+ {"blez",        0, {"I", 0},   "t,p",  MATCH_BGE, MASK_BGE | MASK_RS1, match_opcode, INSN_ALIAS|INSN_CONDBRANCH },
+ {"bgez",        0, {"I", 0},   "s,p",  MATCH_BGE, MASK_BGE | MASK_RS2, match_opcode, INSN_ALIAS|INSN_CONDBRANCH },
+@@ -262,6 +263,7 @@ const struct riscv_opcode riscv_opcodes[] =
+ {"bgtu",        0, {"I", 0},   "t,s,p",  MATCH_BLTU, MASK_BLTU, match_opcode, INSN_ALIAS|INSN_CONDBRANCH },
+ {"bnez",        0, {"C", 0},   "Cs,Cp",  MATCH_C_BNEZ, MASK_C_BNEZ, match_opcode, INSN_ALIAS|INSN_CONDBRANCH },
+ {"bnez",        0, {"I", 0},   "s,p",  MATCH_BNE, MASK_BNE | MASK_RS2, match_opcode, INSN_ALIAS|INSN_CONDBRANCH },
++{"bne",         0, {"C", 0},   "Cs,Cz,Cp",  MATCH_C_BNEZ, MASK_C_BNEZ, match_opcode, INSN_ALIAS|INSN_CONDBRANCH },
+ {"bne",         0, {"I", 0},   "s,t,p",  MATCH_BNE, MASK_BNE, match_opcode, INSN_CONDBRANCH },
+ {"addi",        0, {"C", 0},   "Ct,Cc,CK", MATCH_C_ADDI4SPN, MASK_C_ADDI4SPN, match_c_addi4spn, INSN_ALIAS },
+ {"addi",        0, {"C", 0},   "d,CU,Cj",  MATCH_C_ADDI, MASK_C_ADDI, match_rd_nonzero, INSN_ALIAS },
+-- 
+2.21.0
+

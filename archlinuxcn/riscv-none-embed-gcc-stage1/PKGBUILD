@@ -1,12 +1,6 @@
 # Maintainer: Jiuyang Liu <liujiuyang1994@gmail.com>
 
-# riscv-none-embed is maintained by gnu-mcu-eclipse, because of SiFive branch is badly maintained.
-# This is first stage of gcc.
-
-# gcc is following the upstream: https://github.com/gnu-mcu-eclipse/riscv-none-gcc
-# more information from https://github.com/gnu-mcu-eclipse/riscv-none-gcc-build/
-
-# original configure file locate at https://github.com/gnu-mcu-eclipse/riscv-none-gcc-build/blob/master/scripts/container-apps-functions-source.sh
+# Follow the upstream of https://github.com/sifive/freedom-tools/blob/master/Makefile
 
 _target=riscv-none-embed
 pkgname=$_target-gcc-stage1
@@ -54,42 +48,34 @@ prepare() {
 build() {
   cd gcc-build
 
-  export CFLAGS="-Wno-tautological-compare -Wno-deprecated-declarations -Wno-unused-value -Wno-implicit-fallthrough -Wno-implicit-function-declaration -Wno-unused-but-set-variable -Wno-shift-negative-value -Wno-misleading-indentation -Wno-strict-overflow -Wno-sign-compare"
-  export CXXFLAGS="-Wno-format-security -Wno-char-subscripts -Wno-deprecated -Wno-array-bounds -Wno-invalid-offsetof -Wno-implicit-fallthrough -Wno-format-security -Wno-suggest-attribute=format -Wno-format-extra-args -Wno-format -Wno-varargs -Wno-shift-count-overflow -Wno-ignored-attributes -Wno-tautological-compare -Wno-unused-label -Wno-unused-parameter -Wno-literal-suffix -Wno-expansion-to-defined -Wno-maybe-uninitialized -Wno-shift-negative-value -Wno-memset-elt-size -Wno-dangling-else -Wno-sequence-point -Wno-misleading-indentation -Wno-int-in-bool-context"
-
-
   "$srcdir/gcc-$pkgver/configure" \
-    --prefix=/usr \
-    --program-prefix=$_target- \
-    --with-local-prefix=/usr/$_target \
-    --with-sysroot=/usr/$_target \
-    --with-build-sysroot=/usr/$_target \
-    --with-python-dir=share/gcc-$_target \
-    --libdir=/usr/lib \
-    --libexecdir=/usr/lib \
-    --target=$_target \
-    --host=$CHOST \
-    --build=$CHOST \
-    --enable-languages=c \
-    --disable-decimal-float \
-    --disable-libffi \
     --disable-libgomp \
     --disable-libmudflap \
     --disable-libquadmath \
     --disable-libssp \
-    --disable-libstdcxx-pch \
     --disable-nls \
+    --disable-shared \
     --disable-threads \
     --disable-tls \
-    --enable-checking=no \
-    --with-newlib \
-    --without-headers \
-    --with-gnu-as \
-    --with-gnu-ld \
+    --enable-checking=yes \
+    --enable-languages=c \
+    --enable-multilib \
+    --libexecdir=/usr/lib \
+    --prefix=/usr \
+    --target=$_target \
     --with-abi="ilp32" \
     --with-arch="rv32imac" \
-    --disable-rpath \
-    --disable-build-format-warnings
+    --with-bugurl='https://bugs.archlinux.org/' \
+    --with-newlib \
+    --with-pkgversion='Arch Repository' \
+    --with-python-dir=share/gcc-riscv-none-embed \
+    --with-sysroot=/usr/$_target \
+    --with-system-zlib \
+    CFLAGS="-O2" \
+    CXXFLAGS="-O2" \
+    CFLAGS_FOR_TARGET="-Os -mcmodel=medany" \
+    CXXFLAGS_FOR_TARGET="-Os -mcmodel=medany"
+
   make
 }
 
