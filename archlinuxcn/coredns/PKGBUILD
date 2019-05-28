@@ -2,7 +2,7 @@
 # Maintainer: Xuanwo <xuanwo@archlinuxcn.org>
 pkgname=coredns
 pkgver=1.5.0
-pkgrel=2
+pkgrel=3
 pkgdesc='A DNS server that chains plugins'
 makedepends=('go' 'make' 'git')
 conflicts=('coredns-bin')
@@ -14,10 +14,12 @@ backup=(etc/coredns/Corefile)
 source=(coredns-${pkgver}.tar.gz::https://github.com/coredns/${pkgname}/archive/v${pkgver}.tar.gz
         coredns.service
         coredns-sysusers.conf
+        coredns-tmpfiles.conf
         Corefile)
 sha256sums=('69d9a7df50ecb8cc44656064537927e2abd5ff5d6b82de067e6328723b81efe3'
             '947b4838af48212ecd8e565155c97ca61ff7d408d0b8622499925b6e232656c4'
-            '178c632fd855a5a35ae69e13ab554d5abad696cf75d23c6b6b37f0ace3b4b0f2'
+            'f4fd89dcb36f52466ebb1a2ae435dc960cdc828a071f3aaae1d83a39696bff30'
+            '20052dded9a02e05013a602e597002ee2a003ecfab3309d30969c28207fc5b72'
             'd53c611f35fe67b5f631dd2e4731f75de72c3f7d07ee10f21b11360c690bfc45')
 
 build() {
@@ -37,6 +39,8 @@ package() {
   install -Dm644 "$srcdir/coredns.service" "$pkgdir/usr/lib/systemd/system/coredns.service"
   # Install coredns sysusers
   install -Dm644 "$srcdir/coredns-sysusers.conf" "$pkgdir/usr/lib/sysusers.d/coredns.conf"
+  # Install coredns tmpfiles
+  install -Dm644 "$srcdir/coredns-tmpfiles.conf" "$pkgdir/usr/lib/tmpfiles.d/coredns.conf"
   # Install default coredns config
   install -Dm644 Corefile "$pkgdir/etc/coredns/Corefile"
 }
