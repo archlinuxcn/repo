@@ -2,8 +2,8 @@
 
 pkgbase=intellij-idea-ultimate-edition
 pkgname=(intellij-idea-ultimate-edition intellij-idea-ultimate-edition-jre)
-pkgver=2019.1.2
-_buildver=191.7141.44
+pkgver=2019.1.3
+_buildver=191.7479.19
 pkgrel=1
 arch=('any')
 pkgdesc="An intelligent IDE for Java, Groovy and other programming languages with advanced refactoring features intensely focused on developer productivity."
@@ -12,7 +12,7 @@ license=('Commercial')
 options=(!strip)
 source=("https://download.jetbrains.com/idea/ideaIU-$pkgver.tar.gz"
         "jetbrains-idea.desktop")
-sha256sums=('f090f524c01f1a47bdf2d2cfc9dc6be046137466efa14046916eeb9d1467a81b'
+sha256sums=('e3c19c6ebd99bd78c5e7b14c58362ddb441ad31d56d477ac719e89d367f9e14d'
             '83af2ba8f9f14275a6684e79d6d4bd9b48cd852c047dacfc81324588fa2ff92b')
 
 prepare() {
