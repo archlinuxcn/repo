@@ -7,7 +7,7 @@ pkgbase=systemd-git
 _pkgbase=systemd
 pkgname=('systemd-git' 'systemd-libs-git' 'systemd-resolvconf-git' 'systemd-sysvcompat-git')
 pkgdesc="systemd (git version)"
-pkgver=242.626
+pkgver=242.629
 pkgrel=1
 arch=('x86_64')
 url='https://www.github.com/systemd/systemd'
@@ -99,6 +99,7 @@ build() {
     -Dlibidn2=true
     -Dlz4=true
     -Ddbuspolicydir=/usr/share/dbus-1/system.d
+    -Dman=true
     -Ddefault-hierarchy=hybrid
     -Ddefault-locale=C
     -Ddefault-kill-user-processes=false
@@ -160,14 +161,14 @@ package_systemd-git() {
   mv "$pkgdir"/usr/lib/lib{nss,systemd,udev}*.so* systemd-libs
 
   # manpages shipped with systemd-sysvcompat
-  # rm "$pkgdir"/usr/share/man/man8/{halt,poweroff,reboot,runlevel,shutdown,telinit}.8
+  rm "$pkgdir"/usr/share/man/man8/{halt,poweroff,reboot,runlevel,shutdown,telinit}.8
 
   # executable (symlinks) shipped with systemd-sysvcompat
   rm "$pkgdir"/usr/bin/{halt,init,poweroff,reboot,runlevel,shutdown,telinit}
 
   # files shipped with systemd-resolvconf
-  # rm "$pkgdir"/usr/{bin/resolvconf,share/man/man1/resolvconf.1}
-  rm "$pkgdir"/usr/lib/{sysctl.d/50-pid-max.conf,tmpfiles.d/systemd-tmp.conf}
+  rm "$pkgdir"/usr/share/man/man1/resolvconf.1
+  # rm "$pkgdir"/usr/lib/{sysctl.d/50-pid-max.conf,tmpfiles.d/systemd-tmp.conf}
   rm "$pkgdir"/usr/bin/resolvconf
 
   # avoid a potential conflict with [core]/filesystem
@@ -240,8 +241,8 @@ package_systemd-sysvcompat-git() {
   conflicts=('sysvinit' 'systemd-sysvcompat')
   depends=("${pkgbase}")
 
-  # install -D -m0644 -t "$pkgdir"/usr/share/man/man8 \
-  # build/man/{telinit,halt,reboot,poweroff,runlevel,shutdown}.8
+  install -D -m0644 -t "$pkgdir"/usr/share/man/man8 \
+    build/man/{telinit,halt,reboot,poweroff,runlevel,shutdown}.8
 
   install -d -m0755 "$pkgdir"/usr/bin
   ln -s ../lib/systemd/systemd "$pkgdir"/usr/bin/init
