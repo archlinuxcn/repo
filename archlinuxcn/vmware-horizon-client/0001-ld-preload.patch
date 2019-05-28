@@ -1,0 +1,15 @@
+--- a/vmware-horizon-client/bin/vmware-view	2019-05-28 10:24:21.000000000 +0200
++++ b/vmware-horizon-client/bin/vmware-view	2019-05-28 10:51:19.859301412 +0200
+@@ -16,6 +16,12 @@ snapPath="/snap/gnome-system-monitor/cur
+ cpu=`cat /proc/cpuinfo | grep ARM | wc -l`
+ pid_self=$$
+
++# Starting vmware-view-crtbora results in symbol lookup error. For any reason
++# libgiomm and libpangomm are loaded from /usr/lib/, not /usr/lib/vmware/.
++# Preload these libraries to mitigate the issue.
++LD_PRELOAD="/usr/lib/vmware/libgiomm-2.4.so.1 /usr/lib/vmware/libpangomm-1.4.so.1"
++export LD_PRELOAD
++
+ # Set media provider install path base on $VMWARE_HORIZON_MEDIA_PROVIDER_PATH
+ if [[ "$VMWARE_HORIZON_MEDIA_PROVIDER_PATH" = "" ]]; then
+     mediaproviderPath="/usr/lib/vmware/mediaprovider"
