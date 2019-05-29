@@ -1,0 +1,33 @@
+From 469b97b618314ec009a37cad22e9d2541d6481f7 Mon Sep 17 00:00:00 2001
+From: Sergey Shatunov <me@prok.pw>
+Date: Fri, 1 Jun 2018 21:07:13 +0700
+Subject: [PATCH] Fix build with Qt 5.11+
+
+---
+ CMakeLists.txt | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 376583c..7c0c6eb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -44,10 +44,9 @@ endif()
+ 
+ add_library(MultiMC_quazip SHARED ${QUAZIP_SRC})
+ target_include_directories(MultiMC_quazip PUBLIC "quazip" "${CMAKE_CURRENT_BINARY_DIR}" PRIVATE ${ZLIB_INCLUDE_DIRS})
+-target_link_libraries(MultiMC_quazip ${ZLIB_LIBRARIES})
++target_link_libraries(MultiMC_quazip Qt5::Core ${ZLIB_LIBRARIES})
+ target_compile_definitions(MultiMC_quazip PRIVATE "-DQUAZIP_BUILD")
+ set_target_properties(MultiMC_quazip PROPERTIES CXX_VISIBILITY_PRESET hidden VISIBILITY_INLINES_HIDDEN 1)
+-qt5_use_modules(MultiMC_quazip Core)
+ 
+ # Install it
+ install(
+@@ -84,6 +83,5 @@ set(QUAZIP_TEST_SRC
+ )
+ 
+ add_executable(MultiMC_quazip_test ${QUAZIP_TEST_SRC})
+-target_link_libraries(MultiMC_quazip_test MultiMC_quazip)
+-qt5_use_modules(MultiMC_quazip_test Network Test)
++target_link_libraries(MultiMC_quazip_test MultiMC_quazip Qt5::Network Qt5::Test)
+ add_test(NAME quazip_testsuite COMMAND MultiMC_quazip_test)
