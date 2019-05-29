@@ -5,7 +5,7 @@
 
 pkgname=qt4
 pkgver=4.8.7
-pkgrel=29
+pkgrel=30
 arch=('x86_64')
 url='https://www.qt.io'
 license=('GPL3' 'LGPL' 'FDL' 'custom')
@@ -37,7 +37,7 @@ source=("https://download.qt.io/archive/qt/4.8/${pkgver}/${_pkgfqn}.tar.gz"
         'disable-sslv3.patch'
         'l-qclipboard_fix_recursive.patch'
         'l-qclipboard_delay.patch'
-        'qt4-gcc6.patch' 'qt4-gcc8.patch' 'qt4-glibc-2.25.patch' 'qt4-icu59.patch' 'qt4-openssl-1.1.patch')
+        'qt4-gcc6.patch' 'qt4-gcc8.patch' 'qt4-gcc9.patch' 'qt4-glibc-2.25.patch' 'qt4-icu59.patch' 'qt4-openssl-1.1.patch')
 sha256sums=('e2882295097e47fe089f8ac741a95fef47e0a73a3f3cdf21b56990638f626ea0'
             '157eb47865f0b43e4717819783823c569127a2e9fc48309982ca0f2b753517a1'
             'd63f22858174489068c30a12b9115d1b4e23ade00c31c117513212e9a225c1ce'
@@ -54,6 +54,7 @@ sha256sums=('e2882295097e47fe089f8ac741a95fef47e0a73a3f3cdf21b56990638f626ea0'
             'af3648ddb2372333b0e428788fd2ffbcfe571653fb46f898a55ae5a202f7e242'
             '51da49e41edac66559d3ec8dd0a152995a51a53e5d1f63f09fa089a8af7e3112'
             '0497411e54a0461f76ffa204236f5146a2ed0d272ae66afcfabd74090459208b'
+            '8d6104d7bc3b050ec87e82b9df245154cd1d80e03eb3bbe633084d6b3c079d5e'
             'e6555f4a681227447e94e9f14e11626d50b7e5108aad06088311e87063bc0347'
             '61d6bf45649c728dec5f8d22be5b496ed9d40f52c2c70102696d07133cd1750d'
             'ff3ddb5428cd2ff243558dc0c75b35f470077e9204bbc989ddcba04c866c1b68')
@@ -97,6 +98,9 @@ prepare() {
 
   # Fix build with GCC-8.3
   patch -Np0 -i "$srcdir"/qt4-gcc8.patch
+
+  # Fix build with GCC9
+  patch -Np0 -i "$srcdir"/qt4-gcc9.patch
 
   # Fix build of Qt4 applications with glibc 2.25 (Fedora)
   patch -p1 -i "$srcdir"/qt4-glibc-2.25.patch
