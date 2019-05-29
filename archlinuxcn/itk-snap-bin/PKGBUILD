@@ -9,7 +9,7 @@ pkgdesc="A software application used to segment structures in 3D medical images"
 arch=('x86_64')
 url="https://www.itksnap.org"
 license=('GPL')
-depends=('curl' 'glib2')
+depends=('curl' 'glib2' 'libpng12')
 makedepends=('gendesk')
 provides=('itk-snap')
 conflicts=('itk-snap')
@@ -31,8 +31,9 @@ prepare() {
     --exec "itksnap"
 }
 package() {
-  install -d "${pkgdir}/usr"
-  mv "${srcdir}/itksnap-${_pkgver}-beta-20181028-Linux-gcc64/"* "${pkgdir}/usr"
+  install -d "${pkgdir}/usr" "${pkgdir}/usr/lib/snap-${_pkgver}-beta"
+  mv "${srcdir}/itksnap-${_pkgver}-beta-20181028-Linux-gcc64/bin" "${pkgdir}/usr"
+  mv "${srcdir}/itksnap-${_pkgver}-beta-20181028-Linux-gcc64/lib/snap-${_pkgver}-beta/ITK-SNAP" "${pkgdir}/usr/lib/snap-${_pkgver}-beta"
   install -Dm644 "${srcdir}/${_pkgname}.desktop" "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
   install -Dm644 "${srcdir}/${_pkgname}.png" "${pkgdir}/usr/share/pixmaps/${_pkgname}.png"
 }
