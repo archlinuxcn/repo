@@ -16,29 +16,22 @@ _bundled_with_client=('vmware-horizon-pcoip'
 pkgver=5.0.0
 _build=12557422
 _cart='CART20FQ1'
-pkgrel=2
+pkgrel=3
 pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop'
 arch=('x86_64')
 url='https://www.vmware.com/go/viewclients'
 license=('custom')
-makedepends=('libxslt')
+makedepends=('libxslt' 'patchelf')
 source=("${pkgbase}-${pkgver}-${_build}-x86_64.bundle::https://download3.vmware.com/software/view/viewclients/${_cart}/VMware-Horizon-Client-${pkgver}-${_build}.x64.bundle"
         'http://sources.gentoo.org/cgi-bin/viewvc.cgi/gentoo-x86/eclass/vmware-bundle.eclass'
-        '0001-ld-preload.patch'
         'vmware-horizon-usb'
         'vmware-horizon-usb.service'
         'vmware-horizon-virtual-printing.service')
 sha256sums=('e2e4af4f82638f28824ebd01c57a099915b57930d885a16f785234882157aaad'
             'd8794c22229afdeb698dae5908b7b2b3880e075b19be38e0b296bb28f4555163'
-            '974a6e2f513c114df9923d4366308e31ab53cfaef89d5f794204f1eeb1d98f01'
             '008b60ebf45f7d1e033c8ad8ce1688d5e1c59fc0668493067fb89b563b1dc00f'
             'a897c1b9e8928fc222880ebbfc7bb6aff940bff4acf4e4e0cd4002fff81c7226'
             'e47e770a1e19ed321de7c2765b2d682f59ac466aef92b2e4ea5e65cacf56de36')
-
-# VMware bundles old versions of openssl. Usually we can use system openssl.
-# If things break because VMware relies on legacy or buggy code you can use
-# bundled openssl.
-_USE_BUNDLED_OPENSSL=1
 
 # We need these functions for the Gentoo eclass...
 ebegin() {
@@ -84,36 +77,13 @@ build() {
 
 			# ELF executables and libraries only
 			file --mime "${FILE}" | egrep -q "application/x-(pie-)?(executable|sharedlib)" || continue
-
-			# even openssl 1.0.[12].x has library file names ending in .so.1.0.0
-			if [ ${_USE_BUNDLED_OPENSSL:=0} -eq 0 ]; then
-				sed -i -e 's/libssl.so.1.0.[12]/libssl.so.1.0.0/' \
-					-e 's/libcrypto.so.1.0.[12]/libcrypto.so.1.0.0/' \
-					"${FILE}"
-			else
-				# Some files link against openssl...
-				# Use the bundled version there.
-				sed -i -e 's/libssl.so.1.0.[012]/libssl-vmw.so.0/' \
-					-e 's/libcrypto.so.1.0.[012]/libcrypto-vmw.so.0/' \
-					"${FILE}"
-			fi
 		done
 	done
 
-	# now that we fixed dynamic linking...
-	# ... let's finish the hack
-	if [ ${_USE_BUNDLED_OPENSSL:=0} -eq 0 ]; then
-		rm -f "${srcdir}"/extract/vmware-horizon-pcoip/pcoip/lib/vmware/lib{crypto,ssl}.so.1.0.2
-
-		ln -sf ../libcrypto.so.1.0.0 "${srcdir}"/extract/vmware-horizon-pcoip/pcoip/lib/vmware/libcrypto.so.1.0.0
-		ln -sf ../libssl.so.1.0.0 "${srcdir}"/extract/vmware-horizon-pcoip/pcoip/lib/vmware/libssl.so.1.0.0
-	else
-		rename -- '.so.1.0.2' '-vmw.so.0' \
-			"${srcdir}"/extract/vmware-horizon-pcoip/pcoip/lib/vmware/lib{crypto,ssl}.so.1.0.2
-	fi
-
-	# and some more dynamic linking...
-	patch -Np1 < ../0001-ld-preload.patch
+	# remove rpath to fix dynamic linking...
+	for LIB in ${srcdir}/extract/vmware-horizon-pcoip/pcoip/lib/vmware/lib*.so*; do
+		patchelf --remove-rpath "${LIB}"
+	done
 
 	# remove keymap files, depend on vmware-keymaps instead
 	rm -rf "${srcdir}"/extract/vmware-horizon-pcoip/pcoip/lib/vmware/xkeymap/
