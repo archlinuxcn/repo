@@ -1,7 +1,8 @@
 # Maintainer: Skywol <Skywol@qq.com>
 # Maintainer: wszqkzqk <wszqkzqk@gmail.com>
 pkgname=deepin-wine-helper
-pkgver=1.1deepin12
+_pkgver=1.2deepin0
+pkgver=1.2
 pkgrel=1
 epoch=
 pkgdesc="Deepin Wine Helper"
@@ -20,13 +21,13 @@ backup=()
 options=()
 install=
 changelog=
-source=("https://mirrors.ustc.edu.cn/deepin/pool/non-free/d/${pkgname}/${pkgname}_${pkgver}_i386.deb")
-noextract=("${pkgname}_${pkgver}_i386.deb")
-md5sums=('719d79d0f68f31a023e4110d85e6ef31')
+source=("https://mirrors.ustc.edu.cn/deepin/pool/non-free/d/${pkgname}/${pkgname}_${_pkgver}_i386.deb")
+noextract=("${pkgname}_${_pkgver}_i386.deb")
+md5sums=('5fa3a733aa0f7dbf46717d26fb2c9677')
 validpgpkeys=()
 
 prepare() {
-	ar -x ${pkgname}_${pkgver}_i386.deb
+	ar -x ${pkgname}_${_pkgver}_i386.deb
 	mkdir ${pkgname}-${pkgver}
 	tar -xf data.tar.xz --directory="${pkgname}-${pkgver}"	
 }
