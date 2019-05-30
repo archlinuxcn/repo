@@ -1,0 +1,16 @@
+post_install() {
+  
+  cat << _EOF
+
+  ==> vcpkg user note:
+  ------------------------------------------------------------------------------
+    "VCPKG_ROOT" is set to "/usr/share/vcpkg"
+    "VCPKG_DOWNLOADS" is set to "/var/cache/vcpkg"
+    To cooperate with CMake, add "-DCMAKE_TOOLCHAIN_FILE=/usr/share/vcpkg/scripts/buildsystems/vcpkg.cmake"
+
+_EOF
+}
+
+post_upgrade() {
+  post_install
+}
