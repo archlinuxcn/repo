@@ -5,16 +5,16 @@
 # Contributor: mrxx <mrxx at cyberhome dot at>
 # Contributor: Jonhoo <jon at thesquareplanet.com>
 # Contributor: torvic9 <vic999 at mailbox.org>
+
 pkgname=signal
-pkgver=1.24.1
+pkgver=1.25.0
 pkgrel=1
 license=('GPL3')
-pkgdesc='Signal Private Messenger for the Desktop'
+pkgdesc='Private messenger for the desktop'
 depends=('electron' 'openssl-1.0')
 makedepends=('python' 'python2' 'npm' 'yarn' 'git' 'nodejs-lts-dubnium')
-provides=('signal')
 conflicts=('signal-desktop-beta-bin' 'signal-desktop-bin')
-arch=("i686" "x86_64")
+arch=('i686' 'x86_64')
 url='https://github.com/signalapp/Signal-Desktop'
 source=("${pkgname}-git-repo::git+https://github.com/signalapp/Signal-Desktop.git#tag=v${pkgver}"
         "${pkgname}.sh"
@@ -36,18 +36,16 @@ prepare() {
 
   # Allow higher node minor versions
   sed -i 's/"node": "/&^/' package.json
-  
+
   # Download modules
   yarn install
-  
-  # use dynamic linking
+
+  # Use dynamic linking
   patch -Np1 -i "../openssl-linking.patch"
 }
 
 build() {
   cd "${pkgname}-git-repo"
-
-  export npm_config_cache="$srcdir/npm_cache"
 
   # Build Signal
   yarn generate
@@ -57,17 +55,15 @@ build() {
 package() {
   cd "${pkgname}-git-repo"
 
-  install -dm755 "${pkgdir}/usr/lib/${pkgname}"
+  install -dm 755 "${pkgdir}/usr/lib/${pkgname}"
   cp -r release/linux-unpacked/resources "${pkgdir}/usr/lib/${pkgname}/"
 
-  install -dm755 "${pkgdir}/usr/share/icons/hicolor"
   for i in 16 24 32 48 64 128 256 512; do
-    install -Dm644 build/icons/png/${i}* "${pkgdir}/usr/share/icons/hicolor/${i}x${i}/apps/${pkgname}.png"
+    install -Dm 644 build/icons/png/${i}* "${pkgdir}/usr/share/icons/hicolor/${i}x${i}/apps/${pkgname}.png"
   done
 
-  install -dm755 "${pkgdir}/usr/bin"
-  install -Dm755 "${srcdir}/${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}-desktop"
+  install -Dm 755 "${srcdir}/${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}-desktop"
 
-  install -Dm644 "${srcdir}"/${pkgname}.desktop "${pkgdir}"/usr/share/applications/${pkgname}.desktop
-  install -Dm644 "${srcdir}"/${pkgname}-tray.desktop "${pkgdir}"/usr/share/applications/${pkgname}-tray.desktop
+  install -Dm 644 "${srcdir}"/${pkgname}.desktop "${pkgdir}"/usr/share/applications/${pkgname}.desktop
+  install -Dm 644 "${srcdir}"/${pkgname}-tray.desktop "${pkgdir}"/usr/share/applications/${pkgname}-tray.desktop
 }
