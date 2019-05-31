@@ -24,6 +24,8 @@ source=(
         'https://static.rust-lang.org/dist/{{version_date_raw}}/rust-src-nightly.tar.xz.asc'
         '{{ clippy_url }}'
         '{{ clippy_url }}.asc'
+        '{{ rls_url }}'
+        '{{ rls_url }}.asc'
 {% for x in stds %}
         {{ "'%s'" % x.url }}
         {{ "'%s.asc'" % x.url }}{% end %}
@@ -76,7 +78,7 @@ package_rust-docs-nightly() {
 package_rustfmt-nightly() {
   pkgdesc="A safe, concurrent, practical language from Mozilla. (rustfmt formatter, for nightly version)"
   provides=('rustfmt={{rustfmt_version}}')
-  conflicts=('rustfmt' 'rustup')
+  conflicts=('rust' 'rustup')
 
   cd rust-nightly-$CARCH-unknown-linux-gnu/rustfmt-preview
   mkdir -p "$pkgdir/usr"
@@ -86,7 +88,7 @@ package_rustfmt-nightly() {
 package_rust-clippy-nightly() {
   pkgdesc="A collection of lints to catch common mistakes and improve your Rust code (nightly version)"
   provides=('rust-clippy={{clippy_version}}')
-  conflicts=('rust-clippy')
+  conflicts=('rust' 'rustup')
   depends=("rust-nightly=$epoch:$pkgver")
 
   cd rust-nightly-$CARCH-unknown-linux-gnu/clippy-preview
@@ -94,10 +96,21 @@ package_rust-clippy-nightly() {
   cp -r bin "$pkgdir/usr"
 }
 
+package_rust-rls-nightly() {
+  pkgdesc="Rust language server (nightly version)"
+  provides=('rust-rls={{rls_version}}')
+  conflicts=('rust' 'rustup')
+  depends=("rust-nightly=$epoch:$pkgver")
+
+  cd rust-nightly-$CARCH-unknown-linux-gnu/rls-preview
+  mkdir -p "$pkgdir/usr"
+  cp -r bin "$pkgdir/usr"
+}
+
 package_cargo-nightly() {
   pkgdesc="Rust package manager (nightly version)"
   provides=('cargo={{cargo_version}}')
-  conflicts=('cargo' 'rustup')
+  conflicts=('rust' 'rustup')
 
   cd rust-nightly-$CARCH-unknown-linux-gnu/cargo
   mkdir -p "$pkgdir/usr"
