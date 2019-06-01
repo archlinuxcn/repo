@@ -2,25 +2,24 @@
 # Contributor: shyokou <shyokou at gmail dot com>
 # Contributor: FzerorubigD <Fzerorubigd {AT} GMail {DOT} com>
 pkgname=obfs4proxy
-_gitname=obfs4
-pkgver=0.0.8
+pkgver=0.0.10
 pkgrel=1
 pkgdesc='The obfourscator - a pluggable transport proxy written in Go'
-arch=('i686' 'x86_64')
+arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 url='https://gitweb.torproject.org/pluggable-transports/obfs4.git/'
 license=('BSD')
 makedepends=('git' 'go')
 optdepends=('tor: you need tor to use this package')
 source=("https://people.torproject.org/~yawning/releases/obfs4proxy/obfs4proxy-${pkgver}.tar.xz")
-sha512sums=('2b92fd3353184f9aa4fc08e9415b92908c10bbd462d8a7576fa81bc67636d49aa645b1efef64f948bad2c4ee67f4b74d68c3e289b4da66128f3d94f8d9987bc1')
+sha512sums=('0781ac16b3f81513c65d08cd6f0af890eaec01b99e51a3151c23f573055562d8658d41d3b90817b55bd910a75236c483f59e3733bdb1bba18178d36e0aa187bd')
 
 build()	{
-  cd "${srcdir}/${_gitname}/obfs4proxy"
-  GOPATH="$srcdir" GOBIN="$PWD" go get -v
+  cd "${srcdir}/"
+  GOPATH="${srcdir}/go" go build -o obfs4proxy/obfs4proxy ./obfs4proxy
 }
 
 package()	{
-  cd "${srcdir}/${_gitname}"
+  cd "${srcdir}/"
   install -Dm0755 obfs4proxy/obfs4proxy "${pkgdir}/usr/bin/obfs4proxy"
   install -Dm0644 doc/obfs4proxy.1 "${pkgdir}/usr/share/man/man1/obfs4proxy.1"
   install -Dm0644 ChangeLog "${pkgdir}/usr/share/doc/${pkgname}/ChangeLog"
