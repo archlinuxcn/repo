@@ -16,7 +16,7 @@ pkgname=(rust-nightly
          rust-std-nightly-aarch64-linux-android
          rust-std-nightly-x86_64-unknown-linux-musl
         )
-pkgver=1.36.0_20190522
+pkgver=1.37.0_20190601
 pkgrel=1
 epoch=4
 pkgdesc="A safe, concurrent, practical language from Mozilla (nightly version)"
@@ -26,33 +26,37 @@ license=('MIT' 'Apache')
 validpgpkeys=('108F66205EAEB0AAA8DD5E1C85AB96E6FA1BE5FE')
 makedepends=('git')
 source=(
-        'https://static.rust-lang.org/dist/2019-05-22/rust-nightly-x86_64-unknown-linux-gnu.tar.xz'
-        'https://static.rust-lang.org/dist/2019-05-22/rust-nightly-x86_64-unknown-linux-gnu.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2019-05-22/rust-src-nightly.tar.xz'
-        'https://static.rust-lang.org/dist/2019-05-22/rust-src-nightly.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2019-05-22/clippy-nightly-x86_64-unknown-linux-gnu.tar.xz'
-        'https://static.rust-lang.org/dist/2019-05-22/clippy-nightly-x86_64-unknown-linux-gnu.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2019-06-01/rust-nightly-x86_64-unknown-linux-gnu.tar.xz'
+        'https://static.rust-lang.org/dist/2019-06-01/rust-nightly-x86_64-unknown-linux-gnu.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2019-06-01/rust-src-nightly.tar.xz'
+        'https://static.rust-lang.org/dist/2019-06-01/rust-src-nightly.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2019-06-01/clippy-nightly-x86_64-unknown-linux-gnu.tar.xz'
+        'https://static.rust-lang.org/dist/2019-06-01/clippy-nightly-x86_64-unknown-linux-gnu.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2019-06-01/rls-nightly-x86_64-unknown-linux-gnu.tar.xz'
+        'https://static.rust-lang.org/dist/2019-06-01/rls-nightly-x86_64-unknown-linux-gnu.tar.xz.asc'
 
-        'https://static.rust-lang.org/dist/2019-05-22/rust-std-nightly-arm-unknown-linux-gnueabihf.tar.xz'
-        'https://static.rust-lang.org/dist/2019-05-22/rust-std-nightly-arm-unknown-linux-gnueabihf.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2019-05-22/rust-std-nightly-armv7-unknown-linux-gnueabihf.tar.xz'
-        'https://static.rust-lang.org/dist/2019-05-22/rust-std-nightly-armv7-unknown-linux-gnueabihf.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2019-05-22/rust-std-nightly-x86_64-unknown-linux-gnu.tar.xz'
-        'https://static.rust-lang.org/dist/2019-05-22/rust-std-nightly-x86_64-unknown-linux-gnu.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2019-05-22/rust-std-nightly-i686-unknown-linux-gnu.tar.xz'
-        'https://static.rust-lang.org/dist/2019-05-22/rust-std-nightly-i686-unknown-linux-gnu.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2019-05-22/rust-std-nightly-i686-pc-windows-gnu.tar.xz'
-        'https://static.rust-lang.org/dist/2019-05-22/rust-std-nightly-i686-pc-windows-gnu.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2019-05-22/rust-std-nightly-x86_64-pc-windows-gnu.tar.xz'
-        'https://static.rust-lang.org/dist/2019-05-22/rust-std-nightly-x86_64-pc-windows-gnu.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2019-05-22/rust-std-nightly-wasm32-unknown-unknown.tar.xz'
-        'https://static.rust-lang.org/dist/2019-05-22/rust-std-nightly-wasm32-unknown-unknown.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2019-05-22/rust-std-nightly-aarch64-linux-android.tar.xz'
-        'https://static.rust-lang.org/dist/2019-05-22/rust-std-nightly-aarch64-linux-android.tar.xz.asc'
-        'https://static.rust-lang.org/dist/2019-05-22/rust-std-nightly-x86_64-unknown-linux-musl.tar.xz'
-        'https://static.rust-lang.org/dist/2019-05-22/rust-std-nightly-x86_64-unknown-linux-musl.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2019-06-01/rust-std-nightly-arm-unknown-linux-gnueabihf.tar.xz'
+        'https://static.rust-lang.org/dist/2019-06-01/rust-std-nightly-arm-unknown-linux-gnueabihf.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2019-06-01/rust-std-nightly-armv7-unknown-linux-gnueabihf.tar.xz'
+        'https://static.rust-lang.org/dist/2019-06-01/rust-std-nightly-armv7-unknown-linux-gnueabihf.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2019-06-01/rust-std-nightly-x86_64-unknown-linux-gnu.tar.xz'
+        'https://static.rust-lang.org/dist/2019-06-01/rust-std-nightly-x86_64-unknown-linux-gnu.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2019-06-01/rust-std-nightly-i686-unknown-linux-gnu.tar.xz'
+        'https://static.rust-lang.org/dist/2019-06-01/rust-std-nightly-i686-unknown-linux-gnu.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2019-06-01/rust-std-nightly-i686-pc-windows-gnu.tar.xz'
+        'https://static.rust-lang.org/dist/2019-06-01/rust-std-nightly-i686-pc-windows-gnu.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2019-06-01/rust-std-nightly-x86_64-pc-windows-gnu.tar.xz'
+        'https://static.rust-lang.org/dist/2019-06-01/rust-std-nightly-x86_64-pc-windows-gnu.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2019-06-01/rust-std-nightly-wasm32-unknown-unknown.tar.xz'
+        'https://static.rust-lang.org/dist/2019-06-01/rust-std-nightly-wasm32-unknown-unknown.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2019-06-01/rust-std-nightly-aarch64-linux-android.tar.xz'
+        'https://static.rust-lang.org/dist/2019-06-01/rust-std-nightly-aarch64-linux-android.tar.xz.asc'
+        'https://static.rust-lang.org/dist/2019-06-01/rust-std-nightly-x86_64-unknown-linux-musl.tar.xz'
+        'https://static.rust-lang.org/dist/2019-06-01/rust-std-nightly-x86_64-unknown-linux-musl.tar.xz.asc'
         'git://github.com/rust-lang/zsh-config')
 sha512sums=(
+            'SKIP'
+            'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
@@ -99,7 +103,7 @@ package_rust-nightly() {
               'rust-std-nightly-aarch64-linux-android: cross compile for aarch64-linux-android'
               'rust-std-nightly-x86_64-unknown-linux-musl: cross compile for x86_64-unknown-linux-musl'
               'cargo-nightly: Rust package manager')
-  provides=(rust=1.36.0)
+  provides=(rust=1.37.0)
   conflicts=(rust)
   options=(staticlibs)
 
@@ -121,7 +125,7 @@ package_rust-docs-nightly() {
   pkgdesc="A safe, concurrent, practical language from Mozilla. (Language and API documentation, for nightly version)"
   arch=('any')
   optdepends=('rust-nightly: to compile and run the programs you can write using this documentation')
-  provides=('rust-doc=1.36.0')
+  provides=('rust-doc=1.37.0')
   conflicts=('rust-doc')
 
   cd rust-nightly-$CARCH-unknown-linux-gnu/rust-docs
@@ -132,7 +136,7 @@ package_rust-docs-nightly() {
 package_rustfmt-nightly() {
   pkgdesc="A safe, concurrent, practical language from Mozilla. (rustfmt formatter, for nightly version)"
   provides=('rustfmt=1.2.2')
-  conflicts=('rustfmt' 'rustup')
+  conflicts=('rust' 'rustup')
 
   cd rust-nightly-$CARCH-unknown-linux-gnu/rustfmt-preview
   mkdir -p "$pkgdir/usr"
@@ -142,7 +146,7 @@ package_rustfmt-nightly() {
 package_rust-clippy-nightly() {
   pkgdesc="A collection of lints to catch common mistakes and improve your Rust code (nightly version)"
   provides=('rust-clippy=0.0.212')
-  conflicts=('rust-clippy')
+  conflicts=('rust' 'rustup')
   depends=("rust-nightly=$epoch:$pkgver")
 
   cd rust-nightly-$CARCH-unknown-linux-gnu/clippy-preview
@@ -150,10 +154,21 @@ package_rust-clippy-nightly() {
   cp -r bin "$pkgdir/usr"
 }
 
+package_rust-rls-nightly() {
+  pkgdesc="Rust language server (nightly version)"
+  provides=('rust-rls=1.36.0')
+  conflicts=('rust' 'rustup')
+  depends=("rust-nightly=$epoch:$pkgver")
+
+  cd rust-nightly-$CARCH-unknown-linux-gnu/rls-preview
+  mkdir -p "$pkgdir/usr"
+  cp -r bin "$pkgdir/usr"
+}
+
 package_cargo-nightly() {
   pkgdesc="Rust package manager (nightly version)"
-  provides=('cargo=0.37.0')
-  conflicts=('cargo' 'rustup')
+  provides=('cargo=0.38.0')
+  conflicts=('rust' 'rustup')
 
   cd rust-nightly-$CARCH-unknown-linux-gnu/cargo
   mkdir -p "$pkgdir/usr"
@@ -164,7 +179,7 @@ package_rust-src-nightly() {
   pkgdesc="A safe, concurrent, practical language from Mozilla. (Source code, for nightly version)"
   arch=('any')
   optdepends=('rust-nightly')
-  provides=('rust-src=1.36.0')
+  provides=('rust-src=1.37.0')
   conflicts=('rust-src')
 
   cd rust-src-nightly/rust-src
