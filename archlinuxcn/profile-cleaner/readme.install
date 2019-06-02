@@ -1,0 +1,10 @@
+post_install() {
+	echo '--------------------------------------------------------------------------'
+	echo '  Make sure that target browsers or email clients are not running when'
+	echo '  invoking profile-cleaner. Failure to do so will result in the open files'
+	echo '  NOT getting cleaned and reindexed.'
+	echo 
+	echo '  $HOME/.config/profile-cleaner.conf will be created when the script is'
+	echo '  called to run the first time. Edit it to select a color scheme.'
+	echo '--------------------------------------------------------------------------'
+}
