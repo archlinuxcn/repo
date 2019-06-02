@@ -6,7 +6,7 @@ import tornado.template
 
 import pytoml
 
-from lilaclib import s, git_add_files, git_commit, single_main
+from lilaclib import s, git_add_files, git_commit, single_main, update_pkgrel, get_pkgver_and_pkgrel
 
 debug = False
 
@@ -88,6 +88,8 @@ def prepare():
   )
 
 def pre_build():
+  oldver, oldrel = get_pkgver_and_pkgrel()
+
   if not debug:
     oldfiles = (glob.glob('*.xz') + glob.glob('*.xz.asc') +
                 glob.glob('*.part'))
@@ -96,6 +98,10 @@ def pre_build():
 
   with open('PKGBUILD', 'wb') as output:
     output.write(PKGBUILD)
+
+  newver, _ = get_pkgver_and_pkgrel()
+  if oldver == newver:
+    update_pkgrel(rel=int(oldrel + 1))
 
 def post_build():
   git_add_files(['PKGBUILD'])
