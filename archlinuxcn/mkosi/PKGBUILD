@@ -2,7 +2,7 @@
 # Contributor: Dave Reisner <dreisner@archlinux.org>
 
 pkgname=mkosi
-pkgver=4
+pkgver=5
 pkgrel=1
 pkgdesc='Build Legacy-Free OS Images'
 arch=('any')
@@ -25,10 +25,9 @@ optdepends=('dnf: build Fedora or Mageia images'
             'cryptsetup: add dm-verity partitions'
             'edk2-ovmf: run bootable images in QEMU'
             'qemu: run bootable images in QEMU'
-            'qemu-kvm: run bootable images in QEMU'
             'sbsigntools: sign EFI binaries for UEFI SecureBoot')
 source=("https://github.com/systemd/mkosi/archive/v$pkgver.tar.gz")
-sha256sums=('855666aa7a16fcc41b0a2e5f12dc1916d19e03c9d174332ef0fd53cb137da8f2')
+sha256sums=('88e995dac8dfc665d2e741bd24f94c5aeb7f11fc79f2cd8560001f68a86a4bda')
 
 package() {
   cd "mkosi-$pkgver"
