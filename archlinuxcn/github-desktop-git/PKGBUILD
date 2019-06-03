@@ -5,8 +5,6 @@
 _pkgname='github-desktop'
 pkgname="${_pkgname}-git"
 pkgver=1.6.6.linux2.r1.g58a7331bf
-_pkgver="${pkgver}-linux2"
-gitname="release-${_pkgver}"
 pkgrel=1
 pkgdesc="GUI for managing Git and GitHub."
 arch=('x86_64')
@@ -17,9 +15,8 @@ optdepends=('hub: CLI interface for GitHub.')
 makedepends=('xorg-server-xvfb' 'nodejs-lts-carbon' 'yarn' 'python2')
 provides=(${_pkgname})
 conflicts=(${_pkgname})
-DLAGENTS=("https::/usr/bin/git clone --branch ${gitname} --single-branch %u")
 source=(
-  git+https://github.com/shiftkey/desktop.git
+  git+https://github.com/shiftkey/desktop.git#branch=linux
   ${_pkgname}.desktop
 )
 sha256sums=(
@@ -28,7 +25,7 @@ sha256sums=(
 )
 pkgver() {
   cd desktop
-  git describe --long --tags | sed 's/^release.//;s/\([^-]*-g\)/r\1/;s/-/./g'
+  printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 build() {
   cd desktop
