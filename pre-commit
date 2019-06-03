@@ -281,6 +281,7 @@ class RepoTreeTest(TestCase):
                                   'invalid "\033[1;31mlilac.yaml\033[m"'
                                   ''.format(package))
 
+    @skip('lilac now requires lilac.yaml for non managed packages, thus we will no longer enforce update_on')
     def test_lilac_py_has_update_on(self):
         for package in list_packages():
             if not any([git_isfile(pkgpath(package), 'lilac.py'),
