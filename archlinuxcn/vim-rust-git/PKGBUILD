@@ -2,7 +2,7 @@
 
 pkgname=vim-rust-git
 pkgver=20190519
-pkgrel=1
+pkgrel=2
 pkgdesc="Rust language support for Vim"
 arch=('any')
 depends=('vim')
@@ -26,7 +26,7 @@ package() {
 
   msg 'Installing dirs...'
   install -dm 755 "$pkgdir/usr/share/vim/vimfiles"
-  for _dir in after autoload compiler doc ftdetect ftplugin indent plugin syntax syntax_checkers; do
+  for _dir in after autoload compiler doc ftdetect ftplugin indent plugin syntax syntax_checkers ctags; do
     cp -dpr --no-preserve=ownership $_dir "$pkgdir/usr/share/vim/vimfiles/$_dir"
   done
 }
