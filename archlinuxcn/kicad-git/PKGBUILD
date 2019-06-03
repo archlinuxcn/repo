@@ -30,7 +30,7 @@ build() {
   cd "${srcdir}/${pkgname}"
   mkdir -p build
   cd build
-  cmake .. -DCMAKE_BUILD_TYPE=Debug \
+  cmake .. -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_INSTALL_LIBDIR=lib \
     -DKICAD_USE_OCE=OFF \
