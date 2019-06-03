@@ -1,0 +1,74 @@
+Add ability to use system-av1 (media-libs/libaom and media-libs/dav1d) instead of bundled.
+
+--- a/config/external/moz.build
++++ b/config/external/moz.build
+@@ -37,8 +37,9 @@ if not CONFIG['MOZ_SYSTEM_LIBVPX']:
+     external_dirs += ['media/libvpx']
+ 
+ if CONFIG['MOZ_AV1']:
+-    external_dirs += ['media/libaom']
+-    external_dirs += ['media/libdav1d']
++    if not CONFIG['MOZ_SYSTEM_AV1']:
++        external_dirs += ['media/libaom']
++        external_dirs += ['media/libdav1d']
+ 
+ if not CONFIG['MOZ_SYSTEM_PNG']:
+     external_dirs += ['media/libpng']
+--- a/config/system-headers.mozbuild
++++ b/config/system-headers.mozbuild
+@@ -1316,6 +1316,14 @@ if CONFIG['MOZ_ENABLE_CONTENTMANAGER']:
+         'SelectSingleContentItemPage.h',
+     ]
+ 
++if CONFIG['MOZ_SYSTEM_AV1']:
++    system_headers += [
++        'aom/aom_decoder.h',
++        'aom/aomdx.h',
++        'aom/aom_image.h',
++        'dav1d/dav1d.h',
++    ]
++
+ if CONFIG['MOZ_SYSTEM_LIBVPX']:
+     system_headers += [
+         'vpx_mem/vpx_mem.h',
+--- a/dom/media/platforms/moz.build
++++ b/dom/media/platforms/moz.build
+@@ -78,6 +78,11 @@ if CONFIG['MOZ_AV1']:
+         'agnostic/AOMDecoder.cpp',
+         'agnostic/DAV1DDecoder.cpp',
+     ]
++    if CONFIG['MOZ_SYSTEM_AV1']:
++        CXXFLAGS += CONFIG['MOZ_SYSTEM_LIBAOM_CFLAGS']
++        OS_LIBS += CONFIG['MOZ_SYSTEM_LIBAOM_LIBS']
++        CXXFLAGS += CONFIG['MOZ_SYSTEM_LIBDAV1D_CFLAGS']
++        OS_LIBS += CONFIG['MOZ_SYSTEM_LIBDAV1D_LIBS']
+ 
+ if CONFIG['MOZ_OMX']:
+     EXPORTS += [
+--- a/toolkit/moz.configure
++++ b/toolkit/moz.configure
+@@ -464,6 +464,24 @@ def av1(value, target, c_compiler):
+ set_config('MOZ_AV1', av1)
+ set_define('MOZ_AV1', av1)
+ 
++option('--with-system-av1',
++       help="Use system av1 (located with pkgconfig)")
++
++system_libaom_info = pkg_check_modules('MOZ_SYSTEM_LIBAOM', 'aom >= 1.0.0',
++                                       when='--with-system-av1')
++
++system_libdav1d_info = pkg_check_modules('MOZ_SYSTEM_LIBDAV1D', 'dav1d >= 0.1.1',
++                                         when='--with-system-av1')
++
++@depends(system_libaom_info, system_libdav1d_info)
++def system_av1(system_libaom_info, system_libdav1d_info):
++    has_av1_libs = False
++    if system_libaom_info and system_libdav1d_info:
++        has_av1_libs = True
++    return has_av1_libs
++
++set_config('MOZ_SYSTEM_AV1', depends_if(system_av1)(lambda _: True))
++
+ # Built-in fragmented MP4 support.
+ # ==============================================================
+ option('--disable-fmp4', env='MOZ_FMP4',
