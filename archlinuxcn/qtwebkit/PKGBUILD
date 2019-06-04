@@ -39,6 +39,7 @@ build() {
   cd ${pkgname}-${pkgver}
 
   OPTS="--no-webkit2 --no-xslt"
+OPTS+=" QMAKE_CFLAGS_RELEASE=-w QMAKE_CXXFLAGS_RELEASE=-w"
   if [ "${CARCH}" = "i686" ]; then
       # FS#33418
       OPTS="${OPTS} --no-force-sse2"
