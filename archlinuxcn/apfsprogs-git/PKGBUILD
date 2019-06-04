@@ -2,7 +2,7 @@
 
 _pkgname=apfsprogs
 pkgname=$_pkgname-git
-pkgver=r250.cb51cd8
+pkgver=r304.26f3461
 pkgrel=1
 pkgdesc='Experimental APFS tools for linux'
 arch=(x86_64)
@@ -13,9 +13,13 @@ makedepends=('git')
 conflicts=("$_pkgname")
 provides=("$_pkgname=$pkgver")
 source=('git+https://github.com/eafer/apfsprogs'
-        'add-ldflags.patch')
+        'add-ldflags.patch'
+        'destdir.patch')
 sha256sums=('SKIP'
-            'a47c0056a94cf8bc7bba443e467a1a434356cad71ce0a88be460c727e6aee6c9')
+            '30c173d08a6ceeb40ba09f267f3bbacc1486fa51e155fef17456da03bd35d741'
+            '65c7af8a2538536bcf9e62b152893849b2cd1092040f5bc6ec2a33040027f8ac')
+
+_progs=(apfsck mkapfs)
 
 pkgver() {
   cd $_pkgname
@@ -25,16 +29,22 @@ pkgver() {
 prepare() {
   cd $_pkgname
   patch -Np1 -i ../add-ldflags.patch
+  patch -Np1 -i ../destdir.patch
 }
 
 build() {
-  cd $_pkgname/apfsck
+  cd $_pkgname
 
-  make
+  make -C lib
+  for prog in "${_progs[@]}" ; do
+    make -C $prog
+  done
 }
 
 package() {
-  cd $_pkgname/apfsck
+  cd $_pkgname
 
-  install -Dm755 apfsck -t "$pkgdir"/usr/bin
+  for prog in "${_progs[@]}" ; do
+    make -C $prog install DESTDIR="$pkgdir" BINDIR=/usr/bin MANDIR=/usr/share/man8
+  done
 }
