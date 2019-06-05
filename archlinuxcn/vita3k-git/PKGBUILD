@@ -1,13 +1,13 @@
 # Maintainer: aimileus < $(echo YWltaWxpdXNAcHJvdG9ubWFpbC5jb20K | base64 -d) 
 pkgname=vita3k-git
 _pkgname=vita3k
-pkgver=r929.2a455075
+pkgver=r1060.96d96c68
 pkgrel=1
 pkgdesc="PlayStation Vita emulator"
 arch=('x86_64')
 url="https://vita3k.github.io/"
 license=('GPL2')
-depends=('unicorn' 'sdl2' 'boost-libs' 'python')
+depends=('unicorn' 'sdl2' 'boost-libs' 'python2')
 makedepends=('git' 'cmake' 'boost')
 provides=('vita3k')
 conflicts=('vita3k')
@@ -61,7 +61,7 @@ build() {
 	cd "$_pkgname"
 	./gen-linux.sh
 	cd build-linux
-	make
+	make UNICORN_QEMU_FLAGS="--python=/usr/bin/python2" 
 }
 
 package() {
