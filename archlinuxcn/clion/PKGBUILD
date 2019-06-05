@@ -10,7 +10,7 @@ pkgname=(clion clion-jre clion-cmake clion-gdb clion-lldb)
 _pkgname=clion
 _dlname=CLion
 pkgver=2019.1.4
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc="C/C++ IDE. Free 30-day trial."
 arch=('x86_64')
@@ -54,7 +54,9 @@ package_clion() {
         'python2: Python 2 programming language support'
         'doxygen: Code documentation generation'
     )
-    backup=("opt/${pkgbase}/bin/clion64.vmoptions")
+    backup=("opt/${pkgbase}/bin/clion.vmoptions"
+            "opt/${pkgbase}/bin/clion64.vmoptions"
+            "opt/${pkgbase}/bin/idea.properties")
 
     rsync -rtl "${srcdir}/opt" "${pkgdir}" \
           --exclude=/opt/${pkgbase}/jre64 \
