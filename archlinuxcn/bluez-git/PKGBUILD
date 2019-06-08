@@ -3,7 +3,7 @@
 pkgname=bluez-git
 _pkgname=bluez
 pkgver=5.50.r408.g9c64e3528
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc="Libraries and tools for the Bluetooth protocol stack"
 
@@ -69,5 +69,4 @@ package() {
   make DESTDIR="${pkgdir}" install
   install -Dm644 src/main.conf        "${pkgdir}/etc/bluetooth/main.conf"
   install -Dm644 ${srcdir}/bluetooth.modprobe "${pkgdir}/usr/lib/modprobe.d/bluetooth-usb.conf"
-  sed -i 's|/usr/lib/bluetooth/bluetoothd|/usr/lib/bluetoothd|g' ${pkgdir}/usr/lib/systemd/system/bluetooth.service
 }
