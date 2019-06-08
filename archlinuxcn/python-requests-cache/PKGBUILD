@@ -1,22 +1,36 @@
 # Maintainer: Christian Rebischke <chris.rebischke[at]archlinux[dot]org>
+# Contributor: Ariel AxionL <i [at] axionl [dot] me>
+
 _pyname=requests-cache
 pkgname=python-requests-cache
-makedepends=('python' 'python-setuptools' 'python-requests')
-pkgver=0.4.13
+pkgver=0.5.0
 pkgrel=1
 pkgdesc="Persistent cache for requests library"
 arch=('any')
 url="https://github.com/reclosedev/requests-cache"
 license=('BSD')
-source=("${_pyname}-${pkgver}.tar.gz::https://github.com/reclosedev/${_pyname}/archive/v${pkgver}.tar.gz")
-sha512sums=('54d814c9c4da1b1fa6f4ec124faee7e74e7ca52bc90ae7c948f19e9cb7657fe2b41f5de6c5fafe259526312d82dc5efd81ad01a741a66baf12ea2a358334f912')
+depends=('python')
+makedepends=('python-setuptools')
+checkdepends=('python-mock')
+
+source=("${_pyname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/r/${_pyname}/${_pyname}-${pkgver}.tar.gz")
+
+sha512sums=('421d124e2bbe5e6d9eac42c25787fa2f447a690db262380f87b982a2b8a039acccadf03c853be7b6f2540c6b8c250def4d41afa30af6639415123676ffdda05f')
+
+build() {
+    cd ${_pyname}-${pkgver}
+    python setup.py build
+}
+
+check() {
+    cd ${_pyname}-${pkgver}
+    python test/test_cache.py
+}
 
 package() {
-    depends=('python')
     cd "${srcdir}/${_pyname}-${pkgver}"
-    python setup.py install -O1 --root="${pkgdir}"
+    python setup.py install -O1 --root="${pkgdir}" --skip-build
     install -Dm 644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
     install -Dm 644 README.rst "${pkgdir}/usr/share/doc/${pkgname}/README"
-
 }
 # vim:set et sw=2 ts=2 tw=79:

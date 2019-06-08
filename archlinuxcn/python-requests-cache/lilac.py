@@ -9,5 +9,4 @@ def pre_build():
 
 
 def post_build():
-    git_add_files('PKGBUILD')
-    git_commit()
+    git_pkgbuild_commit()
