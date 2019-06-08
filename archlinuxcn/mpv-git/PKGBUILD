@@ -117,7 +117,7 @@ for feature in "${_opt_features[@]}"; do
       ;;
     vulkan)
       makedepends+=('vulkan-headers')
-      depends+=('vulkan-icd-loader')
+      depends+=('libplacebo')
       ;;
     shaderc|uchardet|rubberband)
       depends+=("$feature")
