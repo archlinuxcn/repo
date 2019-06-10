@@ -3,8 +3,8 @@
 
 _gemname=websocket-extensions
 pkgname=ruby-$_gemname
-pkgver=0.1.3
-pkgrel=5
+pkgver=0.1.4
+pkgrel=1
 pkgdesc='Generic extension manager for WebSocket connections'
 arch=('any')
 url="https://github.com/faye/websocket-extensions-ruby"
@@ -14,7 +14,7 @@ makedepends=('ruby-rdoc')
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
-sha1sums=('e3ec3cdccf56d8649c47e92820e05d7e7b635c23')
+sha1sums=('3a4e6c171ecc660dafb2ecbd28a08ff7efdd8ad2')
 
 package() {
   local _gemdir="$(ruby -e'puts Gem.default_dir')"
