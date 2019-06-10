@@ -1,6 +1,6 @@
 _pkgname=cli_helpers
 pkgname=python-cli_helpers
-pkgver=1.2.0
+pkgver=1.2.1
 pkgrel=1
 pkgdesc="Helpers for building command-line apps"
 arch=('any')
@@ -9,7 +9,7 @@ license=('(FIXME)')
 depends=('python' 'python' 'python-terminaltables' 'python-tabulate' 'python-setuptools')
 _name=${pkgname#python-}
 source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_pkgname}-${pkgver}.tar.gz")
-md5sums=('849ef12da236856f0f465694dc14ec51')
+md5sums=('73719f707113aa3f6802253c7e73f948')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
