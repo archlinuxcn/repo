@@ -1,13 +1,13 @@
-# Maintainer: Sebastian Lau <lauseb644 _at_ gmail .dot. com>
+# Maintainer: Taijian <taijian@posteo.de>
 # Contributors: Patrick Burroughs (Celti), Abbradar, Zephyr, Christian Autermann, Biginoz, Martin Lee, Ricardo Funke,
 #               PirateJonno, lh, Cilyan Olowen, Shaffer, Brcha, Lyle Putnam, Det, Boohbah,
-#               Lara Maia, Padfoot, Jorge Barroso, carstene1ns
+#               Lara Maia, Padfoot, Jorge Barroso, carstene1ns, Sebastian Lau
 
 pkgname=plymouth-git
-pkgver=0.9.4.r117.gfba0f33
+pkgver=0.9.4.r113.g566af35
 pkgrel=1
 pkgdesc="A graphical boot splash screen with kernel mode-setting support (Development version)"
-url="http://www.freedesktop.org/wiki/Software/Plymouth/"
+url="https://www.freedesktop.org/wiki/Software/Plymouth/"
 arch=('i686' 'x86_64')
 license=('GPL')
 
@@ -20,7 +20,7 @@ backup=('etc/plymouth/plymouthd.conf')
 
 options=('!libtool' '!emptydirs')
 
-source=("git+http://anongit.freedesktop.org/git/plymouth"
+source=("git+https://gitlab.freedesktop.org/plymouth/plymouth.git"
         'arch-logo.png'
 	'plymouth.encrypt_hook'
 	'plymouth.encrypt_install'
@@ -51,8 +51,8 @@ md5sums=('SKIP'
          '606cd558141551a1ce0d80150a045d83'
          '672ad913e2383483bcb4599a0a6bee48'
          '32f04fdbd1eb94ade30d1e63fdcdd9b5'
-         '00ea5c07671271e65f94a08f279ab8b7'
-         '8cda8604c53fcc3063cc403d09751e7c'
+         '1979a4d9a1f496b52be9c29a7adb698b'
+         'a08c422b67314e21100207f61caef095'
          '69f16be8d44b25c199eb53c436884b07'
          '98c20619291ee7c5a1c5f24b50e92db8')
 
