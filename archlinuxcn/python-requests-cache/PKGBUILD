@@ -4,7 +4,7 @@
 _pyname=requests-cache
 pkgname=python-requests-cache
 pkgver=0.5.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Persistent cache for requests library"
 arch=('any')
 url="https://github.com/reclosedev/requests-cache"
@@ -15,7 +15,7 @@ checkdepends=('python-mock')
 
 source=("${_pyname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/r/${_pyname}/${_pyname}-${pkgver}.tar.gz")
 
-sha512sums=('421d124e2bbe5e6d9eac42c25787fa2f447a690db262380f87b982a2b8a039acccadf03c853be7b6f2540c6b8c250def4d41afa30af6639415123676ffdda05f')
+sha512sums=('dfb4b0451fab4c0386b3720e2e76eb2ec1b95d73d9022b63f7fe1f0cceed90a119ddf877d19ca704ae6e254782a09310d36ff84d24d589d60b9a55baf9e94a04')
 
 build() {
     cd ${_pyname}-${pkgver}
@@ -23,8 +23,8 @@ build() {
 }
 
 check() {
-    cd ${_pyname}-${pkgver}
-    python test/test_cache.py
+    cd ${_pyname}-${pkgver}/tests
+    python test_cache.py
 }
 
 package() {
