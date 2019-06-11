@@ -3,7 +3,7 @@ from lilaclib import *
 
 update_on = [{'aur':None}]
 build_prefix = 'extra-x86_64'
-repo_depends = ['qt-installer-framework']
+repo_depends = ['gstreamer0.10-base', 'qt-installer-framework']
 
 def pre_build():
     run_cmd(["rm", "-f", "eula.html"])
