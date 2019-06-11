@@ -4,14 +4,14 @@
 _pyname=requests-cache
 pkgname=python-requests-cache
 pkgver=0.5.0
-pkgrel=2
+pkgrel=3
 pkgdesc="Persistent cache for requests library"
 arch=('any')
 url="https://github.com/reclosedev/requests-cache"
 license=('BSD')
 depends=('python')
 makedepends=('python-setuptools')
-checkdepends=('python-mock')
+checkdepends=('python-mock' 'python-requests')
 
 source=("${_pyname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/r/${_pyname}/${_pyname}-${pkgver}.tar.gz")
 
