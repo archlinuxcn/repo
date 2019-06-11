@@ -22,7 +22,7 @@ set -u
 _ubver='19.01'; _libgee='libgee>=0.18.0'
 pkgname='timeshift'
 pkgver="${_ubver}"
-pkgrel=2
+pkgrel=3
 pkgdesc='A system restore utility for Linux'
 arch=('i686' 'x86_64')
 #url='https://launchpad.net/~teejee2008/+archive/ubuntu/ppa'
@@ -53,7 +53,7 @@ prepare() {
   set -u
   cd "${_srcdir}"
   # ndowens04 2019-01-30 02:45
-  sed -e 's:--thread:& Core/AppExcludeEntry.vala:' -i 'src/makefile'
+  #sed -e 's:--thread:& Core/AppExcludeEntry.vala:' -i 'src/makefile'
   set +u
 }
 
