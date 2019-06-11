@@ -2,7 +2,7 @@
 
 _pkgname=lucene
 pkgname=apache-$_pkgname
-pkgver=8.0.0
+pkgver=8.1.1
 pkgrel=1
 pkgdesc="Apache Lucene is a high-performance, full-featured text search engine library written entirely in Java."
 arch=('any')
@@ -11,7 +11,7 @@ license=('APACHE')
 depends=('java-runtime')
 _mirror="http://mirrors.tuna.tsinghua.edu.cn/apache"
 source=("$_mirror/$_pkgname/java/$pkgver/$_pkgname-${pkgver}.tgz")
-md5sums=('46958d2f9121f76bf4d22ec4a1c98a23')
+md5sums=('af3491509910ef8940baa107a8f87ef8')
 
 package() {
 	cd "${srcdir}/$_pkgname-$pkgver"
