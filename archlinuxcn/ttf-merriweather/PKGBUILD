@@ -1,8 +1,8 @@
 # Maintainer: Tyler Swagar <buttpickle69@shaw.ca>
 
 pkgname=ttf-merriweather
-_commit='a792c77e48a672b821c0a4f98900ed39b6b0b3e9'
-pkgver=2.003
+_commit='ae0bf55e53517ac98cc74c375a383ad4c36f937a'
+pkgver=2.005
 pkgrel=1
 epoch=1
 pkgdesc='A typeface that is pleasant to read on screens by Sorkin Type Co'
@@ -11,23 +11,23 @@ url='http://sorkintype.com/'
 license=('custom:SIL Open Font License v1.1')
 depends=('fontconfig' 'xorg-fonts-encodings' 'xorg-font-utils')
 conflicts=('ttf-google-fonts-opinionated-git' 'ttf-merriweather-ib')
-source=("Merriweather-Black-${pkgver}.ttf::https://github.com/EbenSorkin/Merriweather/raw/${_commit}/fonts/ttf/Merriweather-Black.ttf"
-        "Merriweather-BlackItalic-${pkgver}.ttf::https://github.com/EbenSorkin/Merriweather/raw/${_commit}/fonts/ttf/Merriweather-BlackItalic.ttf"
-        "Merriweather-Bold-${pkgver}.ttf::https://github.com/EbenSorkin/Merriweather/raw/${_commit}/fonts/ttf/Merriweather-Bold.ttf"
-        "Merriweather-BoldItalic-${pkgver}.ttf::https://github.com/EbenSorkin/Merriweather/raw/${_commit}/fonts/ttf/Merriweather-BoldItalic.ttf"
-        "Merriweather-Italic-${pkgver}.ttf::https://github.com/EbenSorkin/Merriweather/raw/${_commit}/fonts/ttf/Merriweather-Italic.ttf"
-        "Merriweather-Light-${pkgver}.ttf::https://github.com/EbenSorkin/Merriweather/raw/${_commit}/fonts/ttf/Merriweather-Light.ttf"
-        "Merriweather-LightItalic-${pkgver}.ttf::https://github.com/EbenSorkin/Merriweather/raw/${_commit}/fonts/ttf/Merriweather-LightItalic.ttf"
-        "Merriweather-Regular-${pkgver}.ttf::https://github.com/EbenSorkin/Merriweather/raw/${_commit}/fonts/ttf/Merriweather-Regular.ttf"
-        "${pkgname}-${pkgver}-OFL.txt::https://github.com/EbenSorkin/Merriweather/raw/${_commit}/OFL.txt")
-sha256sums=('c62d90972158ee114b7dc10cc4496f2795087551a0c3ecba0a3653a5ab387be6'
-            'd2dd7ddf29c1fa41a5d232ffa7c8fc76a0d5b31fd2c29c26f32e14fb1cbe743a'
-            '60c5d1fb1ebc9b001a2768ef20ab6ee213386aea6e4a952479a57fd83d3d6eb3'
-            '263492fbb7c1da5a9ff8a74796d34c0bfa91fa35f60ba186b46f8a56d8ba92c8'
-            '4bf969bb2dddf44326a7dc152440d9130fcd5a5e2790c834268a2df46362a5b8'
-            '8f1134ed77d1095bdaa804b1cf9adabe21a758060db3de0d29b5e32882eb374a'
-            '94c743e850aafad18156e16885b63e03dd316e7ad33f61c1987c19991e6741d8'
-            '6f3c50b5537925e499cbe79374d74290cb741f7ac2f15f3ddf25713473ff76cf'
+source=("Merriweather-Black-${pkgver}.ttf::https://github.com/SorkinType/Merriweather/raw/${_commit}/fonts/ttfs/Merriweather-Black.ttf"
+        "Merriweather-BlackItalic-${pkgver}.ttf::https://github.com/SorkinType/Merriweather/raw/${_commit}/fonts/ttfs/Merriweather-BlackItalic.ttf"
+        "Merriweather-Bold-${pkgver}.ttf::https://github.com/SorkinType/Merriweather/raw/${_commit}/fonts/ttfs/Merriweather-Bold.ttf"
+        "Merriweather-BoldItalic-${pkgver}.ttf::https://github.com/SorkinType/Merriweather/raw/${_commit}/fonts/ttfs/Merriweather-BoldItalic.ttf"
+        "Merriweather-Italic-${pkgver}.ttf::https://github.com/SorkinType/Merriweather/raw/${_commit}/fonts/ttfs/Merriweather-Italic.ttf"
+        "Merriweather-Light-${pkgver}.ttf::https://github.com/SorkinType/Merriweather/raw/${_commit}/fonts/ttfs/Merriweather-Light.ttf"
+        "Merriweather-LightItalic-${pkgver}.ttf::https://github.com/SorkinType/Merriweather/raw/${_commit}/fonts/ttfs/Merriweather-LightItalic.ttf"
+        "Merriweather-Regular-${pkgver}.ttf::https://github.com/SorkinType/Merriweather/raw/${_commit}/fonts/ttfs/Merriweather-Regular.ttf"
+        "${pkgname}-${pkgver}-OFL.txt::https://github.com/SorkinType/Merriweather/raw/${_commit}/OFL.txt")
+sha256sums=('73e4deb0e7c241a7e98ddcb9216c322be2a7f50df9b542f4aa3233154c12a852'
+            '1f83c77a970d9832143f481b32ea705f97f238a0e7bb2c6ecd30a1de1b902f54'
+            'a03a68750a3ef5c50833ba8313e7ee4a1907c811da1a6e96a2f64718850706f4'
+            '96c3e940049b0f7fb500620998d5aa0ad0a901c6a67c359859dd90b88d20e373'
+            'e9e7c00e9606290a2fc4e478f76256fe5e7b39f4e5c79bb3264595ffb18402bc'
+            '5acd66e1d1841fc30649e195480a9552fa7e55d62c73b8b4795513761f911fb6'
+            'ba900a4ad03e5ee0fe0d91c083a0711bb1f434074950535a24583ad9e0bbf83d'
+            '22ce375fea4f4c394dafb0637b7c18fc1783c64524da6806159c771efbe9a47a'
             'a7ba785ad99b6eae0444ab89910e512d4af9865937fddbcb5c72c4f59f55d6ad')
 
 package() {
