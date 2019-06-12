@@ -6,8 +6,8 @@ pkgname=pacman-static
 pkgver=5.1.3
 _cares_ver=1.15.0
 _nghttp2_ver=1.36.0
-_curlver=7.64.1
-_sslver=1.1.1b
+_curlver=7.65.0
+_sslver=1.1.1c
 _xzver=5.2.4
 _bzipver=1.0.6
 _zstdver=1.4.0
@@ -15,7 +15,7 @@ _libarchive_ver=3.3.3
 _gpgerrorver=1.36
 _libassuanver=2.5.3
 _gpgmever=1.13.0
-pkgrel=3
+pkgrel=4
 pkgdesc="Statically-compiled pacman (to fix or install systems without libc)"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://www.archlinux.org/pacman/"
@@ -33,11 +33,13 @@ source+=("https://github.com/nghttp2/nghttp2/releases/download/v$_nghttp2_ver/ng
 source+=("https://c-ares.haxx.se/download/c-ares-${_cares_ver}.tar.gz"{,.asc})
 validpgpkeys+=('27EDEAF22F3ABCEB50DB9A125CC908FDB71E12C2') # Daniel Stenberg <daniel@haxx.se>
 # curl
-source+=("https://curl.haxx.se/download/curl-${_curlver}.tar.gz"{,.asc})
+source+=("https://curl.haxx.se/download/curl-${_curlver}.tar.gz"{,.asc}
+         "https://github.com/curl/curl/commit/c6b58137237a89081b4efc33ae0ecf7282e40132.patch")
 # openssl
 source+=("https://www.openssl.org/source/openssl-${_sslver}.tar.gz"{,.asc}
          "ca-dir.patch")
-validpgpkeys+=('8657ABB260F056B1E5190839D9C4D26D0E604491') # Matt Caswell <matt@openssl.org>
+validpgpkeys+=('8657ABB260F056B1E5190839D9C4D26D0E604491'  # Matt Caswell <matt@openssl.org>
+               '7953AC1FBC3DC8B3B292393ED5E9E43F7DF9EE8C') # Richard Levitte <levitte@openssl.org>
 # xz
 source+=("https://tukaani.org/xz/xz-${_xzver}.tar.gz"{,.sig})
 validpgpkeys+=('3690C240CE51B4670D30AD1C38EE757D69184620') # Lasse Collin <lasse.collin@tukaani.org>
@@ -62,9 +64,10 @@ sha512sums=('b556b6d01d651a675ce1e153ede776e682ca0eb671cd2be00d7b7c602504dd11929
             '4e0d5c5cdb4f1b7e5f12790850237f36649af4aa9596033392725972e4e0e5a33bb78bd1aa0735e35e489b523b7e9a236a7b5847dfca69bd7583fcab36c13c76'
             'a1de6c5e7e1a6a13c926aae690e83d5caa51e7313d63da1cf2af6bc757c41d585aad5466bc3ba7b7f7793cb1748fa589f40972b196728851c8b059cfc8c3be50'
             'SKIP'
-            'c8f8c4397e0e2975e7553f36637b7e7caa29d7953229dcf4d8051f9bae0cf55572d6e25fc27d9c34fe8783cf87893d96d447601c74662374b8bbd393b6cb6825'
+            '8b4a61e1ed5e4417f8162ca91ec5f5b89305c290298e1d5d2e8222fdeec766f02704788a9206784ebfd9b6198fc9a288ca25f5957b57382bffeeff28c3db8556'
             'SKIP'
-            'b54025fbb4fe264466f3b0d762aad4be45bd23cd48bdb26d901d4c41a40bfd776177e02230995ab181a695435039dbad313f4b9a563239a70807a2e19ecf045d'
+            'f2f0245724b1901a899423d7cac1906d2f55a44779a9aac2a41dd52839c865a65007c8f15c88be4d309840b371a5994b552b0d2aab0bf6d2ce9549479fa13b3e'
+            '8e2c5cc11c120efbb7d7850980cb6eaa782d29b4996b3f3378d37613c1679f852d7cc08a90d62e78fcec3439f06bdbee70064579a8c2adaffd91532a97f646ff'
             'SKIP'
             '3857c298663728a465b5f95a3ef44547efbfb420d755e9dde7f20aa3905171b400e1c126d8db5c2b916c733bbd0724d8753cad16c9baf7b12dcd225a3ee04a97'
             'e5bf6eb88365d2dbdc774db49261fb9fae0544ed297891fc20f1ed223f4072cb0357cbd98146ac35b6d29410a12b6739bbd111cd57d4a225bef255ed46988578'
@@ -83,9 +86,10 @@ b2sums=('f933a37f201ef842b0e4bb041961db6def67c7e811299966b6e2054ae640180a5a10ba9
         '7c116988c22801688c50d6d514ddb904920cc54d3c3d141137e6ed8b2182ef4e670f0a0fdebaeabfe0df8cdea4cfd1ee3fb083628f035201f104de6f3614dd25'
         'c4028bb2840af23274b79c73600bfcf73a348c7ab63ae3c215829e0fe2cf149f4ad38a3ec657c3997bad818ced3cacaed0579dd0dd2ef42eaffd074bdc4f22ed'
         'SKIP'
-        'f58ea20ff06c3c95fa0b588b7b1b83173c3ddb3b7c17c7bd7fc630b0710980ea8be90e965364636253e23c846e6fd14b21246ccfc73c3d89561afdf791a97ae4'
+        '742e4668103554cdb50f24694bee2510d55ba83f81a1e8f696e157fcdd9a80f4efb23a920734ba6340180eb54ea28e772cbefc1f14911085d03fac099a579901'
         'SKIP'
-        '7ad9da9548052e2a033a684038f97c420cfffd57994604bcb3fa12640796c8c0aea3d24fb05648ee4940fbec40b81462e81c353da5a41a2575c0585d9718eae8'
+        'dceb8bec87136ac5c77f91fb29b588530da74fbbf7ecaa4d8c14271def4835ea0e7b03c20ae41dca485ea3017782cf737195598904d6d656ba4d57efd87b3eee'
+        'bd157b244bedcefb8e646a743732945119b267236789ac69c38856570318aca09299bdaaea3f20294863b633e6fd4dfe124820597185b3b7461cfdf094daadb0'
         'SKIP'
         'e2ff99e8236487f43171c771d0ee89137b73f3d0b2756bcb0d6525c810ffa9f5a3763c3744327fb47cef21eabfc50fff96632f4bbe2cd244206a99daffa0c25a'
         '877242324afd3c7eb21d3a9414c53843f4d1bb089206e8e545e280b32ff5372f7fb4a1b0c27cb6fdf0d0a27a668e9772ecc3fffc181df95d081ca9c2e987b83b'
@@ -115,6 +119,10 @@ if [[ $CARCH = i686 ]]; then
 fi
 
 prepare() {
+    cd "${srcdir}"/curl-${_curlver}
+    # backport fix for "Operation too slow" timeouts in pacman (FS#62708)
+    patch -p1 -i ../c6b58137237a89081b4efc33ae0ecf7282e40132.patch
+
     cd "${srcdir}"/libarchive-${_libarchive_ver}
     autoreconf -fi
 }
