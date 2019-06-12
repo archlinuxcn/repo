@@ -1,8 +1,7 @@
 # Maintainer: Shengyu Zhang <la@archlinuxcn.org>
 
 pkgname=srain-git
-pkgver=1.0.0rc3.1210.9b6b3b5
-_pkgver=1.0.0rc3
+pkgver=1.0.0rc4.35.gb7d42e1
 pkgrel=1
 pkgdesc="Modern IRC client, git version"
 arch=('i686' 'x86_64')
@@ -22,7 +21,7 @@ _prefix='/usr'
 
 pkgver() {
     cd ${pkgname%-git}
-    echo "${_pkgver}.$(git rev-list --count HEAD).$(git describe --always)"
+    git describe --tags | sed 's/-/./g'
 }
 
 build() {
