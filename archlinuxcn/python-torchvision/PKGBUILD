@@ -9,7 +9,7 @@ _pkgname=vision
 pkgver=0.3.0
 pkgrel=1
 pkgdesc='Datasets, transforms, and models specific to computer vision'
-arch=(any)
+arch=('x86_64')
 url=https://github.com/pytorch/vision
 license=(BSD)
 depends=(python-numpy python-pillow python-pytorch python-scipy python-six python-tqdm)
@@ -19,7 +19,7 @@ source=("https://github.com/pytorch/vision/archive/v${pkgver}.tar.gz")
 sha512sums=('a402221827319c9792e7ff8edb8218737e09b8dade186a3b7adeb7501f2f60d030e0cc22e5b78163368056370daea4682da0748c72a736df0f4ee4443a8150fe')
 
 build() {
-  cd "vision-${pkgver}"
+  cd "${_pkgname}-${pkgver}"
   python setup.py build
 }
 
