@@ -2,7 +2,7 @@
 
 pkgname=srain
 pkgver=1.0.0rc4
-pkgrel=1
+pkgrel=2
 pkgdesc="Modern IRC client, git version"
 arch=('i686' 'x86_64')
 license=('GPL')
