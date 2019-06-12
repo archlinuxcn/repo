@@ -15,7 +15,7 @@ depends=('perl' 'cairo-perl' 'glib-perl' 'gtk2-perl' 'gtkimageview')
 makedepends=('perl-extutils-depends' 'perl-extutils-pkgconfig')
 checkdepends=('perl-test-pod' 'xorg-server-xvfb')
 options=('!emptydirs')
-source=("http://search.cpan.org/CPAN/authors/id/R/RA/RATCLIFFE/Gtk2-ImageView-$pkgver.tar.gz")
+source=("https://cpan.metacpan.org/authors/id/R/RA/RATCLIFFE/Gtk2-ImageView-$pkgver.tar.gz")
 md5sums=('7c961071b347b6a64b8351fdd87ec4c0')
 
 build() {
