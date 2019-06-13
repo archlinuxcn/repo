@@ -18,7 +18,7 @@ prepare() {
   cd "${_pkgname}-${pkgver}"
   _ver=$(protoc --version|cut -d ' ' -f 2)
   # using protobuf from official repo
-  sed -i "s/3.6.1/${_ver}/" compile.sh
+  sed -i "s/DESIRED_PROTO_VERSION=.*/DESIRED_PROTO_VERSION=${_ver}/" compile.sh
   # fix version
   sed -i "/^sha/s/^/#/" setup.py
   sed -i "/^version_git/c\version_git='${pkgver}'" setup.py
