@@ -5,7 +5,7 @@ build_prefix = 'extra-x86_64'
 time_limit_hours = 4
 
 def pre_build():
-    update_pkgrel()
+    update_pkgver_and_pkgrel(_G.newver)
     run_cmd(['updpkgsums'])
 
 
