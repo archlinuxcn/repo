@@ -5,8 +5,7 @@ build_prefix = 'extra-x86_64'
 time_limit_hours = 4
 
 def pre_build():
-    update_pkgver_and_pkgrel(_G.newver)
-    run_cmd(['updpkgsums'])
+    update_pkgver_and_pkgrel(_G.newver[:_G.newver.find('-')], updpkgsums=True)
 
 
 post_build = git_pkgbuild_commit
