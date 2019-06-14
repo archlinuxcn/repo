@@ -6,8 +6,8 @@
 # Contributor: Hexchain Tong <i at hexchain dot org>
 
 pkgname=megasync
-pkgver=4.0.2.0
-pkgrel=2.1
+pkgver=4.1.1.0
+pkgrel=1
 pkgdesc="Easy automated syncing between your computers and your MEGA cloud drive"
 arch=('i686' 'x86_64')
 url="https://github.com/meganz/MEGAsync"
@@ -16,8 +16,8 @@ depends=('c-ares' 'crypto++' 'libsodium' 'hicolor-icon-theme' 'libuv'
          'qt5-svg' 'libmediainfo' 'libraw' 'qt5-base' 'ffmpeg')
 makedepends=('qt5-tools' 'swig' 'doxygen' 'lsb-release' 'git')
 optdepends=('sni-qt: fix systray issue on KDE and LXQt')
-_extname="Linux_Ubuntu_18.10build"
-_sdk_commit="4dea1c5c03589655a1187dbea60dce2df1a69188"
+_extname="Linux"
+_sdk_commit="30853f9834a147e7e67011ab91e78674a7963add"
 source=("git+https://github.com/meganz/MEGAsync.git#tag=v${pkgver}_${_extname}"
         "meganz-sdk::git+https://github.com/meganz/sdk.git#commit=${_sdk_commit}")
 sha256sums=('SKIP'
@@ -26,7 +26,7 @@ sha256sums=('SKIP'
 prepare() {
     cd "MEGAsync"
     git submodule init
-    git config submodule.src/MEGASync/mega.url "$srcdir/meganz-sdk"
+    git config submodule.src/MEGASync/mega.url "../meganz-sdk"
     git submodule update
 }
 
