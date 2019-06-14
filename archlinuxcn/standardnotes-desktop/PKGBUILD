@@ -1,8 +1,8 @@
 # Maintainer: Daniel Haß <aur@hass.onl>
 pkgname=standardnotes-desktop
 _pkgname=desktop
-pkgver=3.0.12
-pkgrel=2
+pkgver=3.0.14
+pkgrel=1
 pkgdesc="A standard notes app with an un-standard focus on longevity, portability, and privacy."
 arch=('x86_64')
 url="https://standardnotes.org/"
@@ -15,12 +15,10 @@ source=("git://github.com/standardnotes/desktop.git"
         "git://github.com/sn-extensions/extensions-manager.git"
         "git://github.com/sn-extensions/batch-manager.git"
         'standardnotes-desktop.desktop'
-        'standardnotes-desktop.js'
-        'fix-electron-deprecations.patch')
+        'standardnotes-desktop.js')
 sha256sums=('SKIP' 'SKIP' 'SKIP'
             '11e0f47494b09b95710399427f849d5693e97e39e7346469ac82da61138b7ca6'
-            '16934b1dc1d88d668dd657e991cc58c7292a398fec3aab193478e9988882673d'
-            '4572643e004de151e19079e60b1327e389429455b3db49358b6298c9dec8a9d4')
+	    '16934b1dc1d88d668dd657e991cc58c7292a398fec3aab193478e9988882673d')
 
 prepare() {
     cd $_pkgname
@@ -29,8 +27,6 @@ prepare() {
     git config submodule.extensions-manager.url $srcdir/extensions-manager
     git config submodule.batch-manager.url $srcdir/batch-manager
     git submodule update
-
-    patch -Np1 -i "${srcdir}/fix-electron-deprecations.patch"
 }
 
 build() {
