@@ -1,0 +1,32 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+pkgname=python-graphviz
+_pkgname=graphviz
+pkgver=0.11
+pkgrel=1
+pkgdesc='Simple Python interface for Graphviz.'
+arch=(any)
+url='https://github.com/xflr6/graphviz'
+license=(MIT)
+depends=('graphviz')
+makedepends=('python-setuptools')
+checkdepends=('python-mock' 'python-pytest' 'python-pytest-cov' 'python-pytest-mock')
+source=("${pkgname}-${pkgver}::https://github.com/xflr6/${_pkgname}/archive/${pkgver}.tar.gz")
+sha256sums=('ecf65e3eabbfc0590d9bf693ca8fc485fc22baf3cd90525163b30600e83788f2')
+
+build() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  python setup.py build
+}
+
+check() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  pytest -v
+}
+
+package() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  install -Dm 644 LICENSE.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+# vim:set ts=2 sw=2 et:
