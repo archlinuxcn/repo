@@ -3,25 +3,25 @@
 
 pkgname=hmcl
 _pkgname=HMCL
-pkgver=3.2.129
+pkgver=3.2.130
 _pkgver=3.2
-pkgrel=4
+pkgrel=1
 pkgdesc="Hello Minecraft! Launcher, a powerful Minecraft launcher."
 arch=('x86_64')
 license=('GPL3')
 url="https://github.com/huanghongxun/HMCL"
 depends=('java-openjfx>=8')
-makedepends=('git' 'imagemagick' 'java-environment=8')
+makedepends=('imagemagick' 'java-environment=8')
 source=(
     "hmcl-launch-script"
     "${pkgname}.desktop"
-    "${pkgname}-${pkgver}::git+${url}.git#tag=v${pkgver}"
+    "${pkgname}-${pkgver}.tgz::${url}/archive/v${pkgver}.tar.gz"
 )
 sha256sums=('c6310315a7bc5f0512d1d307bdf1c4fffa3c55707f019274b32f9b2d132688d1'
             '5780cf70f1afec0eb3cd8fc43297d361903c7204e274a28c5edf9b8ac3eea83e'
             'SKIP')
 build() {
-    cd "${pkgname}-${pkgver}"
+    cd "${_pkgname}-${pkgver}"
     export JAVA_HOME="/usr/lib/jvm/default/"
     sh gradlew build
 }
@@ -34,7 +34,7 @@ package() {
 	    "${pkgdir}/usr/share/applications/${pkgname}.desktop"
 
 
-    cd "${pkgname}-${pkgver}/${_pkgname}/build"
+    cd "${_pkgname}-${pkgver}/${_pkgname}/build"
     #install license
     install -Dm644 "../../license-header.txt" \
 	    "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
