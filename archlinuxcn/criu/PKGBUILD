@@ -1,7 +1,7 @@
 # Contributor: Pavel Borzenkov <pavel@voidptr.ru>
 # Maintainer: aksr <aksr at t-com dot me>
 pkgname=criu
-pkgver=3.11
+pkgver=3.12
 pkgrel=1
 pkgdesc="A Checkpoint/Restore functionality for Linux in Userspace."
 url="http://criu.org"
@@ -12,9 +12,9 @@ depends=('protobuf-c' 'libnl' 'libnet')
 makedepends=('xmlto' 'asciidoc' 'python')
 options=("!buildflags")
 changelog=Changelog
-md5sums=('85090b5a2b2c3605e0131baab5ca57e9')
-sha1sums=('f351da016b83576ee05f19c989b5960a3cf65b07')
-sha256sums=('886b5851a3f46755a4074414e1d09638dfbd3fddebe00706a7b5783eacafd10e')
+md5sums=('408ff60418db114caaf6bfed384e2e71')
+sha1sums=('b2ceaf9705aa8239915010136a59664d31044fe3')
+sha256sums=('0ef276cefa4bad2ab9f3ac63c975fe95d0522fd2b8469852c7524487aabf0efc')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
