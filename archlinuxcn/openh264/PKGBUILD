@@ -2,7 +2,7 @@
 # Contributor: drakkan <nicola.murino at gmail dot com>
 
 pkgname=openh264
-pkgver=1.8.0
+pkgver=2.0.0
 pkgrel=1
 pkgdesc='OpenH264 is a codec library which supports H.264 encoding and decoding'
 license=('BSD')
@@ -11,7 +11,7 @@ url="http://www.openh264.org/"
 depends=('gcc-libs')
 makedepends=('nasm')
 source=("https://github.com/cisco/openh264/archive/v${pkgver}.tar.gz")
-sha256sums=('08670017fd0bb36594f14197f60bebea27b895511251c7c64df6cd33fc667d34')
+sha256sums=('73c35f80cc487560d11ecabb6d31ad828bd2f59d412f9cd726cc26bfaf4561fd')
 
 build() {
   cd "openh264-$pkgver"
