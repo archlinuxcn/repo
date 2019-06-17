@@ -1,0 +1,42 @@
+# Maintainer: Edward Pacman <edward@edward-p.xyz>
+
+pkgname=netfilter-fullconenat-dkms-git
+pkgver=r70.d4daedd
+pkgrel=3
+pkgdesc="A kernel module that turns MASQUERADE into full cone SNAT"
+arch=('any')
+url="https://github.com/Chion82/netfilter-full-cone-nat"
+license=('GPL2')
+depends=('dkms')
+makedepends=('git')
+optdepends=('iptables-fullconenat: iptables with FULLCONENAT')
+source=("dkms.conf"
+        "Kbuild"
+        "${pkgname}::git+https://github.com/Chion82/netfilter-full-cone-nat.git")
+sha256sums=('d6823506b2c9e99b282d29270b0001de946dfe48462056b80aa9b564d67f7642'
+            '7ff12ad066a68c65f23fc7e01654ca459ce3458172e3dce30f42553fa44dd7c2'
+            'SKIP')
+
+pkgver() {
+  cd "$srcdir/${pkgname}"
+  ( set -o pipefail
+    git describe --long 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  )
+}
+
+package() {
+  # Install Kbuild
+  install -Dm644 Kbuild "${pkgdir}/usr/src/${pkgname}-${pkgver}/Kbuild"
+  # Install dkms.conf
+  install -Dm644 dkms.conf "${pkgdir}/usr/src/${pkgname}-${pkgver}/dkms.conf"
+  
+  # Install sources (including Makefile)
+  install -Dm644 ${pkgname}/xt_FULLCONENAT.c "${pkgdir}/usr/src/${pkgname}-${pkgver}/xt_FULLCONENAT.c"
+
+  # Set name and version
+  sed -e "s/@PKGNAME@/${pkgname}/" \
+      -e "s/@PKGVER@/${pkgver}/" \
+      -i "${pkgdir}"/usr/src/${pkgname}-${pkgver}/dkms.conf
+
+}
