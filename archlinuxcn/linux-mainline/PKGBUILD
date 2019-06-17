@@ -8,8 +8,8 @@
 
 pkgbase=linux-mainline               # Build stock -ARCH kernel
 #pkgbase=linux-custom       # Build kernel with a different name
-_tag=v5.2-rc4
-pkgver=5.2rc4
+_tag=v5.2-rc5
+pkgver=5.2rc5
 pkgrel=1
 arch=(x86_64)
 url="https://kernel.org/"
@@ -65,8 +65,8 @@ prepare() {
 
 build() {
   cd $_srcname
-#mainline: disabled for 5.1-rc5
-#make bzImage modules htmldocs
+  #mainline: disabled for 5.1-rc5
+  #make bzImage modules htmldocs
   make bzImage modules
 }
 
