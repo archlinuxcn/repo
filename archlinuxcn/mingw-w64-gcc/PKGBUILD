@@ -47,7 +47,8 @@ build() {
         --target=${_target} \
         --enable-languages=c,lto,c++,objc,obj-c++,fortran,ada \
         --enable-shared --enable-static \
-        --enable-threads=posix --enable-fully-dynamic-string --enable-libstdcxx-time=yes \
+        --enable-threads=posix --enable-fully-dynamic-string \
+        --enable-libstdcxx-time=yes --enable-libstdcxx-filesystem-ts=yes \
         --with-system-zlib --enable-cloog-backend=isl \
         --enable-lto --disable-dw2-exceptions --enable-libgomp \
         --disable-multilib --enable-checking=release
