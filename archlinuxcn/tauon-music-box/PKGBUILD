@@ -1,29 +1,27 @@
-
 # Maintainer: Taiko2k <captain dot gxj at gmail dot com>
 pkgname='tauon-music-box'
 pkgver=4.4.0
-pkgrel=1
+pkgrel=2
 pkgdesc='A streamlined music player that uses BASS'
 arch=('x86_64')
 url="https://github.com/Taiko2k/TauonMusicBox"
 license=('custom')
 
-depends=('python' 'noto-fonts' 'noto-fonts-emoji' 'sdl2_image' 'python-pillow'
-		 'python-pylast' 'python-gobject' 'xdg-utils' 'python-beautifulsoup4'
-		 'python-requests' 'python-cairo' 'hicolor-icon-theme' 'python-stagger'
-		 'python-hsaudiotag3k' 'python-flask' 'desktop-file-utils')
+depends=('python3' 'noto-fonts' 'noto-fonts-emoji' 'sdl2_image' 'python-pillow' 'python-pylast' 'python-gobject'
+  'xdg-utils' 'python-beautifulsoup4' 'python-requests' 'python-cairo' 'python-stagger' 'python-hsaudiotag3k'
+  'python-flask' 'python-setproctitle' 'flac' 'python-musicbrainzngs' 'python-discogs-client')
 
 optdepends=('ffmpeg: File transcoding'
-            'noto-fonts-cjk: Matching font for CJK characters'
-            'p7zip: 7z archive extraction support'
-            'unrar: RAR archive extraction support'
-            'python-plexapi: PLEX client streaming')
+  'noto-fonts-cjk: Matching font for CJK characters'
+  'p7zip: 7z archive extraction support'
+  'unrar: RAR archive extraction support'
+  'python-plexapi: PLEX client streaming')
 
 source=("${url}/releases/download/v${pkgver}/Tauon.Music.Box.v${pkgver}.Linux.Bass.64bit.zip"
-		"gtk-update-icon-cache.hook")
+  "gtk-update-icon-cache.hook")
 
 sha256sums=('afe5eb14d982e19c970913575f3230584898e97ba0fcdddd7e022892fb9cead6'
-            'a681c96c808b0e53e0193cf68f8eb8d546447ff6c248cb202e4ffccdb3ef7f19')
+  'a681c96c808b0e53e0193cf68f8eb8d546447ff6c248cb202e4ffccdb3ef7f19')
 
 package() {
   install -dm755 "$pkgdir/opt/"
