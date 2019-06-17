@@ -1,0 +1,9 @@
+post_install(){
+    echo "Assuming eth0 is WAN interface:"
+    echo -e "\tiptables -t nat -A POSTROUTING -o eth0 -j FULLCONENAT #same as MASQUERADE"
+    echo -e "\tiptables -t nat -A PREROUTING -i eth0 -j FULLCONENAT  #automatically restore NAT for inbound packets"
+}
+
+post_upgrade() {
+    post_install
+}

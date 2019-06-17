@@ -1,0 +1,14 @@
+[Unit]
+Description=IPv4 Packet Filtering Framework
+Before=network-pre.target
+Wants=network-pre.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/iptables-restore /etc/iptables/iptables.rules
+ExecReload=/usr/bin/iptables-restore /etc/iptables/iptables.rules
+ExecStop=/usr/lib/systemd/scripts/iptables-flush
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,14 @@
+[Unit]
+Description=ARP table
+Before=network-pre.target
+Wants=network-pre.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c 'arptables-restore < /etc/arptables.conf'
+ExecReload=/bin/sh -c 'arptables-restore < /etc/arptables.conf'
+ExecStop=/bin/sh -c 'arptables-restore < /dev/null'
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
