@@ -9,7 +9,6 @@ arch=('x86_64')
 url="http://mxnet.io/"
 license=('Apache')
 depends=(
-  'blas'
   'cblas'
   'cuda'
   'cudnn'
@@ -19,6 +18,7 @@ depends=(
   'lapack'
   'nccl'
   'ninja'
+  'openblas'
   'opencv'
   'python-graphviz'
   'python-numpy'
@@ -31,7 +31,7 @@ makedepends=(
   'gtk3'
 )
 # test will fail without a gpu
-#checkdepends=(ipython python-mock python-nose python-nose-timer python-scipy)
+checkdepends=(ipython python-mock python-nose python-nose-timer python-scipy)
 source=("${pkgname}-${pkgver}::git+https://github.com/apache/incubator-mxnet.git#tag=${pkgver}")
 sha512sums=('SKIP')
 
