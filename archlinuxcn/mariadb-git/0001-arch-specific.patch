@@ -119,16 +119,3 @@ index 8d43b6db428..d7fa6bf5b14 100644
  
  
  [Service]
-diff --git a/support-files/mariadb@.service.in b/support-files/mariadb@.service.in
-index a2f5cff0828..3fc41358e14 100644
---- a/support-files/mariadb@.service.in
-+++ b/support-files/mariadb@.service.in
-@@ -27,8 +27,6 @@ ConditionPathExists=@sysconf2dir@/my%I.cnf
- 
- [Install]
- WantedBy=multi-user.target
--Alias=mysql.service
--Alias=mysqld.service
- 
- 
- [Service]
