@@ -4,6 +4,5 @@
 from lilaclib import *
 
 def post_build():
-    git_add_files('PKGBUILD')
-    git_commit()
+    git_pkgbuild_commit()
     update_aur_repo()
