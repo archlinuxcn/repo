@@ -9,6 +9,7 @@ arch=('x86_64')
 url="http://mxnet.io/"
 license=('Apache')
 depends=(
+  'blas'
   'cblas'
   'cuda'
   'cudnn'
@@ -18,7 +19,6 @@ depends=(
   'lapack'
   'nccl'
   'ninja'
-  'openblas'
   'opencv'
   'python-graphviz'
   'python-numpy'
@@ -57,21 +57,21 @@ build() {
     -DUSE_NCCL:BOOL=ON \
     -GNinja \
     ..
-  ninja -v
+  ninja -v -l$(nproc)
 
   cd "${srcdir}/${pkgname}-${pkgver}/python"
   python setup.py build --with-cython
 }
 
-#check() {
-#  cd "${srcdir}/${pkgname}-${pkgver}/build"
-#  ctest --verbose
-#  export PYTHONPATH="${srcdir}/${pkgname}-${pkgver}/python/build/lib.linux-${CARCH}-3.7"
-#  cd "${srcdir}/${pkgname}-${pkgver}"
-#  nosetests -v tests/python/common
-#  nosetests -v tests/python/unittest
-#  nosetests -v tests/python/train
-#}
+check() {
+  cd "${srcdir}/${pkgname}-${pkgver}/build"
+  ctest --verbose
+  export PYTHONPATH="${srcdir}/${pkgname}-${pkgver}/python/build/lib.linux-${CARCH}-3.7"
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  nosetests -v tests/python/common
+  nosetests -v tests/python/unittest
+  nosetests -v tests/python/train
+}
 
 package() {
   cd "${srcdir}/${pkgname}-${pkgver}/build"
@@ -81,7 +81,7 @@ package() {
   cd "${srcdir}/${pkgname}-${pkgver}/python"
   python setup.py install --root="${pkgdir}" --optimize=1 --with-cython --skip-build
   install -Dm644 "${srcdir}/${pkgname}-${pkgver}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
-  echo "remove confilict files"
+  # remove conflict files
   rm -rfv "${pkgdir}/usr/mxnet"
   rm -vf "${pkgdir}/usr/include/omp.h"
   rm -vf "${pkgdir}/usr/lib/libgomp.so"
