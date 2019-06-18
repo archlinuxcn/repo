@@ -36,15 +36,15 @@ source=("${pkgname}-${pkgver}::git+https://github.com/apache/incubator-mxnet.git
 sha512sums=('SKIP')
 
 prepare() {
-	cd "${srcdir}/${pkgname}-${pkgver}"
-	git submodule update --init --recursive	
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  git submodule update --init --recursive	
 }
 
 build() {
-	cd "${srcdir}/${pkgname}-${pkgver}"
-	mkdir build
-	cd build
-	cmake \
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  mkdir build
+  cd build
+  cmake \
     -DCMAKE_BUILD_TYPE:String=Release \
     -DCMAKE_C_COMPILER=/opt/cuda/bin/gcc \
     -DCMAKE_CXX_COMPILER=/opt/cuda/bin/g++ \
@@ -56,11 +56,11 @@ build() {
     -DUSE_MKL_IF_AVAILABLE:BOOL=OFF \
     -DUSE_NCCL:BOOL=ON \
     -GNinja \
-	  ..
-	ninja -v
+    ..
+  ninja -v
 
-	cd "${srcdir}/${pkgname}-${pkgver}/python"
-	python setup.py build --with-cython
+  cd "${srcdir}/${pkgname}-${pkgver}/python"
+  python setup.py build --with-cython
 }
 
 #check() {
@@ -74,13 +74,13 @@ build() {
 #}
 
 package() {
-	cd "${srcdir}/${pkgname}-${pkgver}/build"
+  cd "${srcdir}/${pkgname}-${pkgver}/build"
   # install mxnet core component
   DESTDIR="${pkgdir}" ninja install
-	# install python binding
-	cd "${srcdir}/${pkgname}-${pkgver}/python"
-	python setup.py install --root="${pkgdir}" --optimize=1 --with-cython --skip-build
-	install -Dm644 "${srcdir}/${pkgname}-${pkgver}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  # install python binding
+  cd "${srcdir}/${pkgname}-${pkgver}/python"
+  python setup.py install --root="${pkgdir}" --optimize=1 --with-cython --skip-build
+  install -Dm644 "${srcdir}/${pkgname}-${pkgver}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
   echo "remove confilict files"
   rm -rfv "${pkgdir}/usr/mxnet"
   rm -vf "${pkgdir}/usr/include/omp.h"
