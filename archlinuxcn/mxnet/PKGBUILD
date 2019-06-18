@@ -1,0 +1,94 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+# Contributor: Jingbei Li <i@jingbei.li>
+
+pkgname=mxnet
+pkgver=1.5.0.rc0
+pkgrel=1
+pkgdesc="A flexible and efficient library for deep learning"
+arch=('x86_64')
+url="http://mxnet.io/"
+license=('Apache')
+depends=(
+  'cblas'
+  'cuda'
+  'cudnn'
+  'double-conversion'
+  'hdf5'
+  'intel-tbb'
+  'lapack'
+  'nccl'
+  'ninja'
+  'openblas'
+  'opencv'
+  'python-graphviz'
+  'python-numpy'
+  'python-requests'
+)
+makedepends=(
+  'cython'
+  'cmake'
+  'git'
+  'gtk3'
+)
+# test will fail without a gpu
+#checkdepends=(ipython python-mock python-nose python-nose-timer python-scipy)
+source=("${pkgname}-${pkgver}::git+https://github.com/apache/incubator-mxnet.git#tag=${pkgver}")
+sha512sums=('SKIP')
+
+prepare() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	git submodule update --init --recursive	
+}
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	mkdir build
+	cd build
+	cmake \
+    -DCMAKE_BUILD_TYPE:String=Release \
+    -DCMAKE_C_COMPILER=/opt/cuda/bin/gcc \
+    -DCMAKE_CXX_COMPILER=/opt/cuda/bin/g++ \
+    -DCMAKE_EXE_LINKER_FLAGS=-lcblas \
+    -DCMAKE_INSTALL_LIBDIR:PATH=lib \
+    -DCMAKE_INSTALL_PREFIX:PATH=/usr \
+    -DCMAKE_SHARED_LINKER_FLAGS=-lcblas \
+    -DUSE_BLAS=open \
+    -DUSE_MKL_IF_AVAILABLE:BOOL=OFF \
+    -DUSE_NCCL:BOOL=ON \
+    -GNinja \
+	  ..
+	ninja -v
+
+	cd "${srcdir}/${pkgname}-${pkgver}/python"
+	python setup.py build --with-cython
+}
+
+#check() {
+#  cd "${srcdir}/${pkgname}-${pkgver}/build"
+#  ctest --verbose
+#  export PYTHONPATH="${srcdir}/${pkgname}-${pkgver}/python/build/lib.linux-${CARCH}-3.7"
+#  cd "${srcdir}/${pkgname}-${pkgver}"
+#  nosetests -v tests/python/common
+#  nosetests -v tests/python/unittest
+#  nosetests -v tests/python/train
+#}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}/build"
+  # install mxnet core component
+  DESTDIR="${pkgdir}" ninja install
+	# install python binding
+	cd "${srcdir}/${pkgname}-${pkgver}/python"
+	python setup.py install --root="${pkgdir}" --optimize=1 --with-cython --skip-build
+	install -Dm644 "${srcdir}/${pkgname}-${pkgver}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  echo "remove confilict files"
+  rm -rfv "${pkgdir}/usr/mxnet"
+  rm -vf "${pkgdir}/usr/include/omp.h"
+  rm -vf "${pkgdir}/usr/lib/libgomp.so"
+  rm -vf "${pkgdir}/usr/lib/libiomp5.so"
+  rm -vf "${pkgdir}/usr/lib/libomp.so"
+  ln -s '/usr/lib/libmxnet.so' "${pkgdir}/usr/lib/python3.7/site-packages/mxnet/libmxnet.so"
+  ln -s "/usr/include" "${pkgdir}/usr/lib/python3.7/site-packages/mxnet/include"
+}
+# vim:set ts=2 sw=2 et:
+
