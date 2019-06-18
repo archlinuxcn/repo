@@ -6,7 +6,7 @@ _pkgname=thunderbird-beta
 pkgver=68.0b1
 _major=${pkgver/rc*}
 _build=${pkgver/*rc}
-pkgrel=1
+pkgrel=2
 pkgdesc="Standalone Mail/News reader - Bleeding edge binary version"
 arch=('x86_64')
 url="https://www.mozilla.org/thunderbird"
@@ -42,7 +42,8 @@ package() {
 
   # Launchers
   ln -s /opt/$_pkgname/thunderbird "$pkgdir"/usr/bin/$_pkgname
-  ln -sf thunderbird "$pkgdir"/opt/$_pkgname/thunderbird-bin
+  # breaks application as of 68.0b1
+  # ln -sf thunderbird "$pkgdir"/opt/$_pkgname/thunderbird-bin
 
   # vendor.js
   _vendorjs="$pkgdir/opt/$_pkgname/defaults/preferences/vendor.js"
