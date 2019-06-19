@@ -1,0 +1,81 @@
+diff --color -U 5 -r -Z -B ./org/gtk/gtkplacessidebar.c ./mod/gtk/gtkplacessidebar.c
+--- ./org/gtk/gtkplacessidebar.c	2018-09-22 01:04:58.832337000 +0200
++++ ./mod/gtk/gtkplacessidebar.c	2018-09-22 01:24:14.618504785 +0200
+@@ -631,10 +631,11 @@
+ }
+ 
+ static void
+ add_special_dirs (GtkPlacesSidebar *sidebar)
+ {
++  return;
+   GList *dirs;
+   gint index;
+ 
+   dirs = NULL;
+   for (index = 0; index < G_USER_N_DIRECTORIES; index++)
+@@ -1418,12 +1419,10 @@
+       BookmarkQueryClosure *clos;
+ 
+       root = sl->data;
+       is_native = g_file_is_native (root);
+ 
+-      if (_gtk_bookmarks_manager_get_is_builtin (sidebar->bookmarks_manager, root))
+-        continue;
+ 
+       if (sidebar->local_only && !is_native)
+         continue;
+ 
+       clos = g_slice_new (BookmarkQueryClosure);
+@@ -1527,10 +1526,21 @@
+                  _("Other Locations"), start_icon, NULL, "other-locations:///",
+                  NULL, NULL, NULL, NULL, 0, _("Show other locations"));
+ 
+       g_object_unref (start_icon);
+     }
++  else if (!sidebar->local_only)
++    {
++      start_icon = g_themed_icon_new_with_default_fallbacks (ICON_NAME_NETWORK);
++
++      add_place (sidebar, PLACES_BUILT_IN,
++                 SECTION_OTHER_LOCATIONS,
++                 _("Networks"), start_icon, NULL, "network:///",
++                 NULL, NULL, NULL, NULL, 0, _("Show other locations"));
++
++      g_object_unref (start_icon);
++    }
+ 
+   gtk_widget_show_all (GTK_WIDGET (sidebar));
+   /* We want this hidden by default, but need to do it after the show_all call */
+   gtk_sidebar_row_hide (GTK_SIDEBAR_ROW (sidebar->new_bookmark_row), TRUE);
+ 
+@@ -4143,11 +4153,11 @@
+   sidebar->dragging_over = FALSE;
+   sidebar->drag_data_info = DND_UNKNOWN;
+ 
+   gtk_container_add (GTK_CONTAINER (sidebar), sidebar->list_box);
+ 
+-  sidebar->hostname = g_strdup (_("Computer"));
++  sidebar->hostname = g_strdup (_("File System"));
+   sidebar->hostnamed_cancellable = g_cancellable_new ();
+   g_dbus_proxy_new_for_bus (G_BUS_TYPE_SYSTEM,
+                             G_DBUS_PROXY_FLAGS_GET_INVALIDATED_PROPERTIES,
+                             NULL,
+                             "org.freedesktop.hostname1",
+Tylko w ./mod/gtk: gtkplacessidebar.c.orig
+diff --color -U 5 -r -Z -B ./org/gtk/ui/gtkfilechooserwidget.ui ./mod/gtk/ui/gtkfilechooserwidget.ui
+--- ./org/gtk/ui/gtkfilechooserwidget.ui	2017-11-16 14:21:24.000000000 +0100
++++ ./mod/gtk/ui/gtkfilechooserwidget.ui	2018-09-22 01:21:49.227346988 +0200
+@@ -14,11 +14,12 @@
+             <child>
+               <object class="GtkPlacesSidebar" id="places_sidebar">
+                 <property name="visible">1</property>
+                 <property name="hscrollbar-policy">never</property>
+                 <property name="local-only">1</property>
+-                <property name="show-other-locations">1</property>
++                <property name="show-other-locations">0</property>
++                <property name="show-trash">0</property>
+                 <style>
+                   <class name="sidebar"/>
+                 </style>
+                 <signal name="open-location" handler="places_sidebar_open_location_cb" swapped="no"/>
+                 <signal name="show-error-message" handler="places_sidebar_show_error_message_cb" swapped="no"/>

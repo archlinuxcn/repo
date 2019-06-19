@@ -1,0 +1,16 @@
+diff --color -U 5 -r -Z -B ./org/gtk/gtkwindow.c ./mod/gtk/gtkwindow.c
+--- ./org/gtk/gtkwindow.c	2018-01-15 14:21:38.000000000 +0100
++++ ./mod/gtk/gtkwindow.c	2018-05-30 01:00:23.948990000 +0200
+@@ -4100,10 +4100,12 @@
+   display = gdk_screen_get_display (screen);
+
+ #ifdef GDK_WINDOWING_X11
+   if (GDK_IS_X11_DISPLAY (display))
+     {
++      if (g_strcmp0 (g_getenv ("GTK_CSD"), "1") != 0)
++        return FALSE;
+       if (!gdk_screen_is_composited (screen))
+         return FALSE;
+
+       if (!gdk_x11_screen_supports_net_wm_hint (screen, gdk_atom_intern_static_string ("_GTK_FRAME_EXTENTS")))
+         return FALSE;

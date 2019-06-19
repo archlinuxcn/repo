@@ -1,0 +1,17 @@
+diff --color -U 5 -r -Z -B ./org/gtk/a11y/gtkaccessibility.c ./mod/gtk/a11y/gtkaccessibility.c
+--- ./org/gtk/a11y/gtkaccessibility.c	2017-10-02 18:00:49.000000000 +0200
++++ ./mod/gtk/a11y/gtkaccessibility.c	2017-10-30 21:26:10.880336153 +0100
+@@ -987,10 +987,13 @@
+ 
+   _gtk_accessibility_override_atk_util ();
+   do_window_event_initialization ();
+ 
+ #ifdef GDK_WINDOWING_X11
++  GLogWriterOutput mushrooms_null_writer () { return G_LOG_WRITER_HANDLED; }
++  g_log_set_writer_func (mushrooms_null_writer, NULL, NULL);
+   atk_bridge_adaptor_init (NULL, NULL);
++  g_log_set_writer_func (g_log_writer_default, NULL, NULL);
+ #endif
+ 
+   atk_misc_instance = g_object_new (GTK_TYPE_MISC_IMPL, NULL);
+ }

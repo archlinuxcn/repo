@@ -1,0 +1,98 @@
+
+/* GTK3-mushrooms */
+button,
+button.titlebutton,
+button.image-button,
+button.text-button,
+button.image-button.text-button,
+.stack-switcher > button.text-button {
+	padding: 3px 6px;
+	min-height: 20px;
+	min-width: 0;
+}
+.stack-switcher > button.text-button {
+	min-width: 80px;
+}
+button.text-button.image-button label {
+	padding: 0 2px;
+}
+notebook > header.top tab,
+notebook > header.bottom tab {
+	padding: 0 5px;
+}
+notebook > header.left tab,
+notebook > header.right tab {
+	padding: 0 8px;
+}
+notebook tab button {
+	padding: 0px;
+	min-height: 15px;
+}
+entry,
+spinbutton:not(.vertical) {
+	min-height: 26px;
+}
+treeview button {
+	padding: 0 7px;
+	min-height: 23px;
+}
+progressbar.horizontal trough,
+progressbar.horizontal progress,
+progressbar.vertical trough,
+progressbar.vertical progress,
+levelbar trough {
+	min-height: 9px;
+	min-width: 9px;
+}
+scale {
+	padding: 10px 0;
+}
+headerbar, switch slider {
+	min-height: 0;
+}
+popover:not(.emoji-picker) > *:not(grid) {
+	margin: -3px;
+}
+tooltip * {
+	padding: 0px;
+}
+placessidebar row {
+	min-height: 29px;
+}
+placessidebar row button.sidebar-button {
+	min-height: 20px;
+	min-width: 20px;
+	padding: 0;
+}
+filechooser > box.search-bar, filechooser > box:last-child {
+	border-bottom: 1px solid alpha(#000, 0.15);
+}
+filechooser > actionbar > revealer > box {
+	border-top: 1px solid alpha(#000, 0.15);
+}
+* {
+	-GtkDialog-action-area-border: 5;
+}
+messagedialog > box {
+	padding: 7px;
+}
+messagedialog buttonbox {
+	margin-top: -17px;
+}
+menu, .menu, .context-menu, tooltip {
+	border-radius: 0;
+}
+.background:not(.csd):not(.solid-csd) .titlebar:not(.default-decoration),
+.background:not(.csd):not(.solid-csd) .titlebar:not(.default-decoration) headerbar {
+	background: inherit;
+}
+entry undershoot.left,
+entry undershoot.right,
+spinbutton:not(.vertical) undershoot.left,
+spinbutton:not(.vertical) undershoot.right,
+scrolledwindow undershoot.left,
+scrolledwindow undershoot.right,
+scrolledwindow undershoot.top,
+scrolledwindow undershoot.bottom {
+	background-image: none;
+}

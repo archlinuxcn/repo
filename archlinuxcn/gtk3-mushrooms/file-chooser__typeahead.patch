@@ -1,0 +1,82 @@
+diff --color -U 5 -r -Z -B ./org/gtk/gtkfilechooserwidget.c ./mod/gtk/gtkfilechooserwidget.c
+--- ./org/gtk/gtkfilechooserwidget.c	2017-10-02 18:00:49.000000000 +0200
++++ ./mod/gtk/gtkfilechooserwidget.c	2017-10-30 21:23:33.040328332 +0100
+@@ -1398,11 +1398,11 @@
+         {
+           location_popup_handler (impl, event->string);
+           return TRUE;
+         }
+     }
+-  else if (gtk_search_entry_handle_event (GTK_SEARCH_ENTRY (priv->search_entry), (GdkEvent *)event))
++  else if (FALSE && gtk_search_entry_handle_event (GTK_SEARCH_ENTRY (priv->search_entry), (GdkEvent *)event))
+     {
+       if (priv->operation_mode != OPERATION_MODE_SEARCH)
+         operation_mode_set (impl, OPERATION_MODE_SEARCH);
+       return TRUE;
+     }
+@@ -2475,11 +2475,11 @@
+ static void
+ file_list_set_sort_column_ids (GtkFileChooserWidget *impl)
+ {
+   GtkFileChooserWidgetPrivate *priv = impl->priv;
+ 
+-  gtk_tree_view_set_search_column (GTK_TREE_VIEW (priv->browse_files_tree_view), -1);
++  gtk_tree_view_set_search_column (GTK_TREE_VIEW (priv->browse_files_tree_view), 0);
+ 
+   gtk_tree_view_column_set_sort_column_id (priv->list_name_column, MODEL_COL_NAME);
+   gtk_tree_view_column_set_sort_column_id (priv->list_time_column, MODEL_COL_TIME);
+   gtk_tree_view_column_set_sort_column_id (priv->list_size_column, MODEL_COL_SIZE);
+   gtk_tree_view_column_set_sort_column_id (priv->list_location_column, MODEL_COL_LOCATION_TEXT);
+@@ -7151,12 +7151,10 @@
+ {
+   GList *l, *files, *files_with_info, *infos;
+   GFile *file;
+   gboolean select = FALSE;
+ 
+-  if (gtk_tree_model_iter_n_children (GTK_TREE_MODEL (impl->priv->search_model), NULL) == 0)
+-    select = TRUE;
+ 
+   files = NULL;
+   files_with_info = NULL;
+   infos = NULL;
+   for (l = hits; l; l = l->next)
+@@ -7495,11 +7493,11 @@
+   GtkFileChooserWidget *impl = load_data->impl;
+   GtkFileChooserWidgetPrivate *priv = impl->priv;
+ 
+   gtk_tree_view_set_model (GTK_TREE_VIEW (priv->browse_files_tree_view),
+                            GTK_TREE_MODEL (priv->recent_model));
+-  gtk_tree_view_set_search_column (GTK_TREE_VIEW (priv->browse_files_tree_view), -1);
++  gtk_tree_view_set_search_column (GTK_TREE_VIEW (priv->browse_files_tree_view), 0);
+ 
+   gtk_tree_view_column_set_sort_column_id (priv->list_name_column, -1);
+   gtk_tree_view_column_set_sort_column_id (priv->list_time_column, -1);
+   gtk_tree_view_column_set_sort_column_id (priv->list_size_column, -1);
+   gtk_tree_view_column_set_sort_column_id (priv->list_location_column, -1);
+@@ -8421,14 +8419,10 @@
+   gtk_binding_entry_add_signal (binding_set,
+                                 GDK_KEY_s, GDK_MOD1_MASK,
+                                 "search-shortcut",
+                                 0);
+   gtk_binding_entry_add_signal (binding_set,
+-                                GDK_KEY_f, GDK_CONTROL_MASK,
+-                                "search-shortcut",
+-                                0);
+-  gtk_binding_entry_add_signal (binding_set,
+                                 GDK_KEY_r, GDK_MOD1_MASK,
+                                 "recent-shortcut",
+                                 0);
+   gtk_binding_entry_add_signal (binding_set,
+                                 GDK_KEY_p, GDK_MOD1_MASK,
+@@ -8542,10 +8536,11 @@
+   /* Some qdata, qdata can't be set with GtkBuilder */
+   g_object_set_data (G_OBJECT (impl->priv->browse_files_tree_view), "fmq-name", "file_list");
+   g_object_set_data (G_OBJECT (impl->priv->browse_files_tree_view), I_("GtkFileChooserWidget"), impl);
+ 
+   /* Setup file list treeview */
++  gtk_tree_view_set_enable_search (GTK_TREE_VIEW (impl->priv->browse_files_tree_view), TRUE);
+   selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (impl->priv->browse_files_tree_view));
+   gtk_tree_selection_set_select_function (selection,
+                                           list_select_func,
+                                           impl, NULL);
+   gtk_tree_view_enable_model_drag_source (GTK_TREE_VIEW (impl->priv->browse_files_tree_view),

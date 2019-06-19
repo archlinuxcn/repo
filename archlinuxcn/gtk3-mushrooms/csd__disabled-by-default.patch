@@ -1,0 +1,22 @@
+diff --color -U 5 -r -Z -B ./org/gtk/gtkwindow.c ./mod/gtk/gtkwindow.c
+--- ./org/gtk/gtkwindow.c	2018-01-15 14:21:38.000000000 +0100
++++ ./mod/gtk/gtkwindow.c	2018-05-29 10:39:33.013711354 +0200
+@@ -4151,10 +4151,18 @@
+     {
+       gtk_style_context_add_class (gtk_widget_get_style_context (widget), "solid-csd");
+     }
+
+   priv->client_decorated = TRUE;
++#ifdef GDK_WINDOWING_X11
++  if (GDK_IS_X11_DISPLAY (gtk_widget_get_display (widget)) && g_getenv("GTK_CSD") == FALSE)
++    {
++      gtk_style_context_remove_class (gtk_widget_get_style_context (widget), GTK_STYLE_CLASS_CSD);
++      gtk_style_context_remove_class (gtk_widget_get_style_context (widget), "solid-csd");
++      priv->client_decorated = FALSE;
++    }
++#endif
+ }
+
+ static void
+ on_titlebar_title_notify (GtkHeaderBar *titlebar,
+                           GParamSpec   *pspec,

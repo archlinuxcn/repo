@@ -1,0 +1,18 @@
+diff --color -U 5 -r -Z -B ./org/gtk/ui/gtkstatusbar.ui ./mod/gtk/ui/gtkstatusbar.ui
+--- ./org/gtk/ui/gtkstatusbar.ui	2017-10-02 18:00:49.000000000 +0200
++++ ./mod/gtk/ui/gtkstatusbar.ui	2017-10-30 20:40:46.896867851 +0100
+@@ -3,12 +3,12 @@
+   <!-- interface-requires gtk+ 3.10 -->
+   <template class="GtkStatusbar" parent="GtkBox">
+     <property name="spacing">2</property>
+     <property name="margin-start">10</property>
+     <property name="margin-end">10</property>
+-    <property name="margin-top">6</property>
+-    <property name="margin-bottom">6</property>
++    <property name="margin-top">1</property>
++    <property name="margin-bottom">1</property>
+     <child>
+       <object class="GtkFrame" id="frame">
+         <property name="visible">1</property>
+         <property name="shadow-type">none</property>
+         <child>

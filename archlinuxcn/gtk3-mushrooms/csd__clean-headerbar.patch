@@ -1,0 +1,104 @@
+diff --color -U 5 -r -Z -B ./org/gtk/gtkheaderbar.c ./mod/gtk/gtkheaderbar.c
+--- ./org/gtk/gtkheaderbar.c	2018-01-15 14:21:38.000000000 +0100
++++ ./mod/gtk/gtkheaderbar.c	2018-05-30 02:00:19.887457964 +0200
+@@ -298,10 +298,31 @@
+       priv->titlebar_end_separator = NULL;
+     }
+
+   priv->titlebar_icon = NULL;
+
++  gboolean csd_cleaned_headerbar = (!gtk_style_context_has_class (gtk_widget_get_style_context (toplevel), "csd") &&
++                                    !gtk_style_context_has_class (gtk_widget_get_style_context (toplevel), "solid-csd"));
++  if (csd_cleaned_headerbar)
++    {
++      if (priv->label_box != NULL)
++        {
++          priv->label_box = NULL;
++          priv->title_label = NULL;
++          priv->subtitle_label = NULL;
++        }
++      static gboolean style_added = FALSE;
++      if (!style_added)
++        {
++          style_added = TRUE;
++          GtkCssProvider *provider = gtk_css_provider_new ();
++          gtk_css_provider_load_from_data (provider,
++            "headerbar, .titlebar { border-radius: 0; border-top: 0; box-shadow: none; }", -1, NULL);
++          gtk_style_context_add_provider_for_screen (gtk_widget_get_screen (widget),
++            GTK_STYLE_PROVIDER (provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
++        }
++    }
+   if (!priv->shows_wm_decorations)
+     return;
+
+   direction = gtk_widget_get_direction (widget);
+
+@@ -325,10 +346,12 @@
+
+   is_sovereign_window = (!gtk_window_get_modal (window) &&
+                           gtk_window_get_transient_for (window) == NULL &&
+                           gtk_window_get_type_hint (window) == GDK_WINDOW_TYPE_HINT_NORMAL);
+
++  if (csd_cleaned_headerbar)
++      layout_desc = strstr (layout_desc, "menu") ? g_strdup ("menu") : g_strdup ("");
+   tokens = g_strsplit (layout_desc, ":", 2);
+   if (tokens)
+     {
+       for (i = 0; i < 2; i++)
+         {
+@@ -389,13 +412,13 @@
+                   accessible = gtk_widget_get_accessible (button);
+                   if (GTK_IS_ACCESSIBLE (accessible))
+                     atk_object_set_name (accessible, _("Application menu"));
+
+                   priv->titlebar_icon = image;
+-                  if (!_gtk_header_bar_update_window_icon (bar, window))
++                  if (csd_cleaned_headerbar || !_gtk_header_bar_update_window_icon (bar, window))
+                     gtk_image_set_from_icon_name (GTK_IMAGE (priv->titlebar_icon),
+-                                                  "application-x-executable-symbolic", GTK_ICON_SIZE_MENU);
++                                                  "pan-down-symbolic", GTK_ICON_SIZE_MENU);
+                 }
+               else if (strcmp (t[j], "minimize") == 0 &&
+                        is_sovereign_window)
+                 {
+                   button = gtk_button_new ();
+@@ -1359,10 +1382,11 @@
+     }
+
+   gtk_widget_set_visible (priv->subtitle_sizing_label, priv->has_subtitle || (priv->subtitle && priv->subtitle[0]));
+
+   g_object_notify_by_pspec (G_OBJECT (bar), header_bar_props[PROP_SUBTITLE]);
++  g_object_notify_by_pspec (G_OBJECT (bar), header_bar_props[PROP_TITLE]);
+ }
+
+ /**
+  * gtk_header_bar_get_subtitle:
+  * @bar: a #GtkHeaderBar
+diff --color -U 5 -r -Z -B ./org/gtk/gtkwindow.c ./mod/gtk/gtkwindow.c
+--- ./org/gtk/gtkwindow.c	2018-01-15 14:21:38.000000000 +0100
++++ ./mod/gtk/gtkwindow.c	2018-05-30 02:00:46.846359548 +0200
+@@ -4161,10 +4161,12 @@
+                           GtkWindow    *self)
+ {
+   const gchar *title;
+
+   title = gtk_header_bar_get_title (titlebar);
++  if (gtk_header_bar_get_subtitle (titlebar))
++    title = g_strconcat (title, " — ", gtk_header_bar_get_subtitle (titlebar), NULL);
+   gtk_window_set_title_internal (self, title, FALSE);
+ }
+
+ /**
+  * gtk_window_set_titlebar:
+@@ -9274,10 +9276,11 @@
+
+ static void
+ gtk_window_do_popup (GtkWindow      *window,
+                      GdkEventButton *event)
+ {
++  if (!window->priv->client_decorated) return;
+   if (!gdk_window_show_window_menu (_gtk_widget_get_window (GTK_WIDGET (window)),
+                                     (GdkEvent *) event))
+     gtk_window_do_popup_fallback (window, event);
+ }
+

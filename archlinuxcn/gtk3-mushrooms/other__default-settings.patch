@@ -1,0 +1,48 @@
+diff --color -U 5 -r -Z -B ./org/gtk/gtkscrolledwindow.c ./mod/gtk/gtkscrolledwindow.c
+--- ./org/gtk/gtkscrolledwindow.c	2017-10-02 18:00:49.000000000 +0200
++++ ./mod/gtk/gtkscrolledwindow.c	2017-10-30 21:18:17.203646016 +0100
+@@ -4408,11 +4408,11 @@
+   GtkScrolledWindowPrivate *priv = scrolled_window->priv;
+   gboolean use_indicators;
+ 
+   use_indicators = priv->overlay_scrolling;
+ 
+-  if (g_strcmp0 (g_getenv ("GTK_OVERLAY_SCROLLING"), "0") == 0)
++  if (g_strcmp0 (g_getenv ("GTK_OVERLAY_SCROLLING"), "1") != 0)
+     use_indicators = FALSE;
+ 
+   if (priv->use_indicators != use_indicators)
+     {
+       priv->use_indicators = use_indicators;
+diff --color -U 5 -r -Z -B ./org/gtk/gtksettings.c ./mod/gtk/gtksettings.c
+--- ./org/gtk/gtksettings.c	2017-10-26 06:32:02.000000000 +0200
++++ ./mod/gtk/gtksettings.c	2017-10-30 21:18:17.206979350 +0100
+@@ -59,11 +59,11 @@
+ #include "deprecated/gtkrc.h"
+ 
+ #ifdef GDK_WINDOWING_QUARTZ
+ #define PRINT_PREVIEW_COMMAND "open -a /Applications/Preview.app %f"
+ #else
+-#define PRINT_PREVIEW_COMMAND "evince --unlink-tempfile --preview --print-settings %s %f"
++#define PRINT_PREVIEW_COMMAND "atril --unlink-tempfile --preview --print-settings %s %f"
+ #endif
+ 
+ /**
+  * SECTION:gtksettings
+  * @Short_description: Sharing settings between applications
+diff --color -U 5 -r -Z -B ./org/gtk/org.gtk.Settings.FileChooser.gschema.xml ./mod/gtk/org.gtk.Settings.FileChooser.gschema.xml
+--- ./org/gtk/org.gtk.Settings.FileChooser.gschema.xml	2016-10-22 06:17:51.000000000 +0200
++++ ./mod/gtk/org.gtk.Settings.FileChooser.gschema.xml	2017-10-30 21:18:17.206979350 +0100
+@@ -117,11 +117,11 @@
+       <description>
+ 	The size (width, height) of the GtkFileChooserDialog's window, in pixels.
+       </description>
+     </key>
+     <key name='startup-mode' enum='org.gtk.Settings.FileChooser.StartupMode'>
+-      <default>'recent'</default>
++      <default>'cwd'</default>
+       <summary>Startup mode</summary>
+       <description>
+ 	Either "recent" or "cwd"; controls whether the file chooser
+ 	starts up showing the list of recently-used files, or the
+ 	contents of the current working directory.

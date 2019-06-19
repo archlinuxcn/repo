@@ -1,0 +1,58 @@
+diff --color -U 5 -r -Z -B ./org/gtk/gtkprintunixdialog.c ./mod/gtk/gtkprintunixdialog.c
+--- ./org/gtk/gtkprintunixdialog.c	2017-10-02 18:00:49.000000000 +0200
++++ ./mod/gtk/gtkprintunixdialog.c	2017-10-30 20:39:40.803531243 +0100
+@@ -747,10 +747,15 @@
+                           _("_Print"), GTK_RESPONSE_OK,
+                           NULL);
+   gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
+   widget = gtk_dialog_get_widget_for_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
+   gtk_widget_set_sensitive (widget, FALSE);
++  GtkCssProvider *provider = gtk_css_provider_new ();
++  gtk_css_provider_load_from_data (provider, ".dialog-action-box { margin: 0; }", -1, NULL);
++  GtkStyleContext *context = gtk_widget_get_style_context (gtk_widget_get_parent (gtk_dialog_get_action_area (GTK_DIALOG (dialog))));
++  gtk_style_context_add_provider (context, GTK_STYLE_PROVIDER (provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
++  gtk_style_context_save (context);
+ 
+   /* Treeview auxiliary functions need to be setup here */
+   gtk_tree_model_filter_set_visible_func (priv->printer_list_filter,
+                                           (GtkTreeModelFilterVisibleFunc) is_printer_active,
+                                           dialog,
+diff --color -U 5 -r -Z -B ./org/gtk/ui/gtkprintunixdialog.ui ./mod/gtk/ui/gtkprintunixdialog.ui
+--- ./org/gtk/ui/gtkprintunixdialog.ui	2017-10-02 18:00:49.000000000 +0200
++++ ./mod/gtk/ui/gtkprintunixdialog.ui	2017-10-30 20:37:01.923523370 +0100
+@@ -46,31 +46,32 @@
+     <property name="upper">1000</property>
+     <property name="value">100</property>
+     <property name="step-increment">1</property>
+   </object>
+   <template class="GtkPrintUnixDialog" parent="GtkDialog">
++    <property name="border-width">5</property>
+     <property name="can-focus">False</property>
+     <property name="type-hint">dialog</property>
+     <signal name="notify::page-setup" handler="redraw_page_layout_preview" swapped="no"/>
+     <signal name="response" handler="error_dialogs" swapped="no"/>
+     <child internal-child="vbox">
+       <object class="GtkBox" id="dialog-vbox1">
+         <property name="orientation">vertical</property>
+         <property name="spacing">2</property>
+-        <property name="border-width">0</property>
++        <property name="border-width">2</property>
+         <style>
+-          <class name="view"/>
+         </style>
+         <child>
+           <object class="GtkBox" id="box1">
++            <property name="border-width">5</property>
+             <property name="visible">1</property>
+             <property name="orientation">vertical</property>
+             <child>
+               <object class="GtkNotebook" id="notebook">
+                 <property name="visible">1</property>
+                 <property name="can-focus">1</property>
+-                <property name="show-border">0</property>
++                <property name="show-border">1</property>
+                 <child>
+                   <object class="GtkBox" id="general_main_box">
+                     <property name="visible">1</property>
+                     <property name="border-width">12</property>
+                     <property name="orientation">vertical</property>

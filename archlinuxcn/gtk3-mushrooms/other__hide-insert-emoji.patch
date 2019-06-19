@@ -1,0 +1,34 @@
+diff --color -U 5 -r -Z -B ./org/gtk/gtkentry.c ./mod/gtk/gtkentry.c
+--- ./org/gtk/gtkentry.c	2018-01-09 21:28:23.000000000 +0100
++++ ./mod/gtk/gtkentry.c	2018-03-13 20:59:04.689968427 +0100
+@@ -9598,11 +9598,12 @@
+                                     mode == DISPLAY_NORMAL &&
+                                     info_entry_priv->editable);
+           g_signal_connect_swapped (menuitem, "activate",
+                                     G_CALLBACK (gtk_entry_insert_emoji), entry);
+           gtk_widget_show (menuitem);
+-          gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
++          if (g_getenv ("GTKM_INSERT_EMOJI") != FALSE)
++            gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
+         }
+ 
+       g_signal_emit (entry, signals[POPULATE_POPUP], 0, menu);
+ 
+       if (info->trigger_event && gdk_event_triggers_context_menu (info->trigger_event))
+diff --color -U 5 -r -Z -B ./org/gtk/gtktextview.c ./mod/gtk/gtktextview.c
+--- ./org/gtk/gtktextview.c	2018-01-09 21:28:23.000000000 +0100
++++ ./mod/gtk/gtktextview.c	2018-03-13 20:59:17.309968373 +0100
+@@ -9524,11 +9524,12 @@
+           menuitem = gtk_menu_item_new_with_mnemonic (_("Insert _Emoji"));
+           gtk_widget_set_sensitive (menuitem, can_insert);
+           g_signal_connect_swapped (menuitem, "activate",
+                                     G_CALLBACK (gtk_text_view_insert_emoji), text_view);
+           gtk_widget_show (menuitem);
+-          gtk_menu_shell_append (GTK_MENU_SHELL (priv->popup_menu), menuitem);
++          if (g_getenv ("GTKM_INSERT_EMOJI") != FALSE)
++            gtk_menu_shell_append (GTK_MENU_SHELL (priv->popup_menu), menuitem);
+         }
+ 
+       g_signal_emit (text_view, signals[POPULATE_POPUP],
+ 		     0, priv->popup_menu);
+ 

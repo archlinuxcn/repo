@@ -1,0 +1,16 @@
+diff --color -U 5 -r -Z -B ./org/gtk/gtkwindow.c ./mod/gtk/gtkwindow.c
+--- ./org/gtk/gtkwindow.c	2017-10-27 22:06:52.000000000 +0200
++++ ./mod/gtk/gtkwindow.c	2017-10-30 21:26:46.180337901 +0100
+@@ -149,11 +149,11 @@
+  *
+  * GtkWindow adds the .titlebar and .default-decoration style classes to the
+  * widget that is added as a titlebar child.
+  */
+ 
+-#define MNEMONICS_DELAY 300 /* ms */
++#define MNEMONICS_DELAY 0 /* ms */
+ #define NO_CONTENT_CHILD_NAT 200
+ /* In case the content (excluding header bar and shadows) of the window
+  * would be empty, either because there is no visible child widget or only an
+  * empty container widget, we use NO_CONTENT_CHILD_NAT as natural width/height
+  * instead.
