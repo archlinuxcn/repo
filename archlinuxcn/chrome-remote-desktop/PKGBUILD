@@ -6,18 +6,22 @@
 
 pkgname=chrome-remote-desktop
 pkgver=74.0.3729.56
-pkgrel=1
+pkgrel=2
 pkgdesc="Access other computers or allow another user to access your computer securely over the Internet"
 arch=("x86_64")
-url="https://chrome.google.com/webstore/detail/gbchcmhmhahfdphkhkmpfmihenigjmpp"
+url="https://remotedesktop.google.com"
 license=("BSD")
 depends=("gtk3" "libxss" "nss" "python2-psutil" "xorg-server-xvfb" "xorg-setxkbmap" "xorg-xauth" "xorg-xdpyinfo" "xorg-xrandr")
 install="${pkgname}.install"
-source=("${pkgname}-${pkgver}.deb::http://dl.google.com/linux/direct/${pkgname}_current_amd64.deb"
-        "${pkgname}.service" 
-        "crd")
+source=(
+  "${pkgname}-${pkgver}.deb::http://dl.google.com/linux/direct/${pkgname}_current_amd64.deb"
+  "${pkgname}.service"
+  "pamrule"
+  "crd"
+)
 sha256sums=('08a85ecff0acb80e71b35e15e28314cd6b0ed16fdf3b2da269b3335b22d4f263'
             'e5da5ae89b5bc599f72f415d1523341b25357931b0de46159fce50ab83615a4b'
+            'fcc38269eb1cc902abff9688eda9377a22367e39b9f111f87c0dd8e77adb82e2'
             '27dee2d383e6bd993fe0557d5c222fa80ab6d16d43775dedff6218713c7a1c06')
 
 build() {
@@ -40,6 +44,7 @@ package() {
   cp -r "${srcdir}/opt/"* "${pkgdir}/opt"
   install -Dm644 "${srcdir}/usr/share/doc/${pkgname}/copyright" "${pkgdir}/usr/share/licenses/${pkgname}/copyright"
   install -Dm644 "${srcdir}/${pkgname}.service" "${pkgdir}/usr/lib/systemd/user/${pkgname}.service"
+  install -Dm644 "${srcdir}/pamrule" "${pkgdir}/etc/pam.d/${pkgname}"
   install -Dm755 "${srcdir}/crd" "${pkgdir}/usr/bin/crd"
   install -dm755 "${pkgdir}/etc/chromium/native-messaging-hosts"
   
