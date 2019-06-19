@@ -17,7 +17,6 @@ depends=(
   'intel-tbb'
   'lapack'
   'nccl'
-  'ninja'
   'openblas'
   'opencv'
   'python-graphviz'
@@ -25,10 +24,13 @@ depends=(
   'python-requests'
 )
 makedepends=(
+  'clang'
   'cython'
   'cmake'
   'git'
   'gtk3'
+  'ninja'
+  'openmp'
 )
 # test will fail without a gpu
 checkdepends=(ipython python-mock python-nose python-nose-timer python-scipy)
@@ -46,8 +48,8 @@ build() {
   cd build
   cmake \
     -DCMAKE_BUILD_TYPE:String=Release \
-    -DCMAKE_C_COMPILER=/opt/cuda/bin/gcc \
-    -DCMAKE_CXX_COMPILER=/opt/cuda/bin/g++ \
+    -DCMAKE_C_COMPILER=clang \
+    -DCMAKE_CXX_COMPILER=clang++ \
     -DCMAKE_EXE_LINKER_FLAGS=-lcblas \
     -DCMAKE_INSTALL_LIBDIR:PATH=lib \
     -DCMAKE_INSTALL_PREFIX:PATH=/usr \
