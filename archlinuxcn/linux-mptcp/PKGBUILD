@@ -6,10 +6,10 @@
 # Contributor: Élie Bouttier <elie@bouttier.eu>
 
 pkgbase=linux-mptcp
-pkgver=0.94.5
+pkgver=0.94.6
 pkgrel=1
 epoch=1
-_commit=69c160dbc3f52063cbaecdf1e8cef66e826339e1
+_commit=7515c39648625462d5923e06bbfa799b26135ca6
 _srcname=mptcp-${_commit}
 arch=('x86_64')
 url="http://www.multipath-tcp.org/"
@@ -23,7 +23,7 @@ source=("https://github.com/multipath-tcp/mptcp/archive/${_commit}/${pkgbase}-${
         'linux-mptcp.preset'   # standard config files for mkinitcpio ramdisk
         '0001-add-sysctl-to-disallow-unprivileged-CLONE_NEWUSER-by.patch'
         '0002-drm-i915-edp-Only-use-the-alternate-fixed-mode-if-it.patch')
-sha256sums=('9e1386804e9f85c20c99f4a7e504df4c712c7ffea62ee6e624455dcb14e6c38c'
+sha256sums=('e948e2b45d75c4618afd3ef600be40dfdedf60ee3a680ec84d55b0059a868729'
             '68fd7fb4ec91d883b9ee534208be27788781c6b234d45f83b16e3c9dd2d3bbf0'
             'ae2e95db94ef7176207c690224169594d49445e04249d2499e9d2fbc117a0b21'
             '75f99f5239e03238f88d1a834c50043ec32b1dc568f2cc291b07d04718483919'
@@ -80,7 +80,7 @@ build() {
 }
 
 _package() {
-  pkgdesc="The Linux kernel and modules with Multipath TCP support (based on linux 4.14.123)"
+  pkgdesc="The Linux kernel and modules with Multipath TCP support (based on linux 4.14.127)"
   [ "${pkgbase}" = "linux" ] && groups=('base')
   depends=('coreutils' 'linux-firmware' 'kmod' 'mkinitcpio>=0.7')
   optdepends=('crda: to set the correct wireless channels of your country'
