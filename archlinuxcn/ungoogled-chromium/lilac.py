@@ -57,7 +57,7 @@ def pre_build():
             print(line)
             print()
             print('  #https://bugs.gentoo.org/686982')
-            print('  patch -Np1 -i "$srcdir/gcc9.patch"')
+            print('  patch -Np1 -i "$srcdir/fixforgcc9.patch"')
             print()
         else:
             print(line)
