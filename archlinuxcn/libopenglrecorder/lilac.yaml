@@ -4,10 +4,13 @@ maintainers:
   - github: heavysink
     email: winstonwu91@gmail.com
 
-build_prefix: archlinuxcn-x86_64
+build_prefix: extra-x86_64
 
 pre_build: vcs_update
 
 update_on:
   - aur: libopenglrecorder
   - archpkg: libvpx
+
+repo_depends:
+  - openh264
