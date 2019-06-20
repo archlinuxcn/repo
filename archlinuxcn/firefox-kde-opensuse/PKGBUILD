@@ -15,15 +15,15 @@
 pkgbase=firefox-kde-opensuse
 pkgname=(firefox-kde-opensuse firefox-kde-opensuse-noavx2)
 pkgver=67.0.3
-pkgrel=1
+pkgrel=2
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
 url="https://build.opensuse.org/package/show/mozilla:Factory/MozillaFirefox"
 depends=('mozilla-common' 'libxt' 'startup-notification' 'mime-types'
          'dbus-glib' 'hicolor-icon-theme'
-         'libvpx' 'icu'  'libevent' 'nss>=3.28.3' 'nspr>=4.10.6' 'hunspell'
-         'sqlite' 'libnotify' 'kmozillahelper' 'ffmpeg' 'gtk3'
+     'libvpx' 'icu'  'libevent' 'nss>=3.28.3' 'nspr>=4.10.6' 'hunspell'
+     'sqlite' 'libnotify' 'kmozillahelper' 'ffmpeg' 'gtk3'
          # system av1
          'dav1d' 'aom'
          # system harfbuzz
@@ -33,7 +33,7 @@ depends=('mozilla-common' 'libxt' 'startup-notification' 'mime-types'
 
 makedepends=('unzip' 'zip' 'diffutils' 'python2-setuptools' 'yasm' 'mesa' 'imake'
              'xorg-server-xvfb' 'libpulse' 'inetutils' 'autoconf2.13' 'rust'
-              'mercurial' 'llvm' 'clang' 'cargo'
+             'cargo' 'mercurial' 'llvm' 'clang'
              'gtk2' 'nodejs' 'cbindgen' 'nasm' 'python' 'python2-psutil' 'xz')
 
 optdepends=('networkmanager: Location detection via available WiFi networks'
@@ -155,6 +155,7 @@ prepare() {
     patch -Np1 -i "$srcdir"/pgo_fix_missing_kdejs.patch
 
     echo "ac_add_options --enable-lto" >> .mozconfig
+    echo "ac_add_options --enable-rust-simd" >> .mozconfig
 }
 
 _real_build() {
