@@ -53,12 +53,12 @@ def pre_build():
         if line.strip().startswith('source='):
             print(line)
             print("        'fixforgcc9.patch::https://686982.bugs.gentoo.org/attachment.cgi?id=578490'")
-        elif line.strip().startswith('cd "$srcdir/chromium-$pkgver"'):
-            print(line)
+        elif line.strip().startswith("msg2 'Pruning binaries'"):
             print()
             print('  #https://bugs.gentoo.org/686982')
             print('  patch -Np1 -i "$srcdir/fixforgcc9.patch"')
             print()
+            print(line)
         else:
             print(line)
     

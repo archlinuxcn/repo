@@ -10,12 +10,12 @@ def pre_build():
         if line.strip().startswith('source='):
             print(line)
             print("        'fixforgcc9.patch::https://686982.bugs.gentoo.org/attachment.cgi?id=578490'")
-        elif line.strip().startswith('cd "$srcdir/chromium-$pkgver"'):
-            print(line)
+        elif line.strip().startswith('# Allow building against system libraries in official builds'):
             print()
             print('  #https://bugs.gentoo.org/686982')
             print('  patch -Np1 -i "$srcdir/fixforgcc9.patch"')
             print()
+            print(line)
         elif line.strip().startswith('local _flags=('):
             print(line)
             print("    'use_jumbo_build = true'")
