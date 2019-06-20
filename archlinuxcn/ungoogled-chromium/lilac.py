@@ -59,6 +59,8 @@ def pre_build():
             print('  patch -Np1 -i "$srcdir/fixforgcc9.patch"')
             print()
             print(line)
+        elif line.strip().startswith('https://github.com/Eloston/ungoogled-chromium/archive/$pkgver-$pkgrel.tar.gz'):
+            print('https://github.com/Eloston/ungoogled-chromium/archive/$pkgver-$_rev.tar.gz')
         else:
             print(line)
     
