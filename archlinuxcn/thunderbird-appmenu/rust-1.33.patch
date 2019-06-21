@@ -9,17 +9,6 @@ diff -up thunderbird-60.5.3/servo/components/style/gecko/regen_atoms.py.rust-1.3
  #[macro_export]
  macro_rules! atom {{
  {}
-diff -up thunderbird-60.5.3/servo/components/style/gecko_string_cache/namespace.rs.rust-1.33-build thunderbird-60.5.3/servo/components/style/gecko_string_cache/namespace.rs
---- thunderbird-60.5.3/servo/components/style/gecko_string_cache/namespace.rs.rust-1.33-build	2019-03-04 19:17:27.000000000 +0100
-+++ thunderbird-60.5.3/servo/components/style/gecko_string_cache/namespace.rs	2019-03-13 15:05:58.966726107 +0100
-@@ -11,6 +11,7 @@ use std::fmt;
- use std::ops::Deref;
- use string_cache::{Atom, WeakAtom};
- 
-+/// Macro text
- #[macro_export]
- macro_rules! ns {
-     () => { $crate::string_cache::Namespace(atom!("")) };
 diff -up thunderbird-60.5.3/servo/components/style/properties/properties.mako.rs.rust-1.33-build thunderbird-60.5.3/servo/components/style/properties/properties.mako.rs
 --- thunderbird-60.5.3/servo/components/style/properties/properties.mako.rs.rust-1.33-build	2019-03-04 19:17:30.000000000 +0100
 +++ thunderbird-60.5.3/servo/components/style/properties/properties.mako.rs	2019-03-13 15:05:58.966726107 +0100
@@ -48,23 +37,3 @@ diff -up thunderbird-60.5.3/servo/components/style/properties/properties.mako.rs
  #[macro_export]
  macro_rules! longhand_properties_idents {
      ($macro_name: ident) => {
-diff -up thunderbird-60.5.3/servo/components/style_traits/values.rs.rust-1.33-build thunderbird-60.5.3/servo/components/style_traits/values.rs
---- thunderbird-60.5.3/servo/components/style_traits/values.rs.rust-1.33-build	2019-03-04 19:17:27.000000000 +0100
-+++ thunderbird-60.5.3/servo/components/style_traits/values.rs	2019-03-13 15:37:34.077560034 +0100
-@@ -135,6 +135,7 @@ where
-     }
- }
- 
-+/// Neco
- #[macro_export]
- macro_rules! serialize_function {
-     ($dest: expr, $name: ident($( $arg: expr, )+)) => {
-@@ -404,7 +405,7 @@ impl_to_css_for_predefined_type!(::csspa
- impl_to_css_for_predefined_type!(::cssparser::Color);
- impl_to_css_for_predefined_type!(::cssparser::UnicodeRange);
- 
--#[macro_export]
-+/// Define an enum type with unit variants that each correspond to a CSS keyword.
- macro_rules! define_css_keyword_enum {
-     (pub enum $name:ident { $($variant:ident = $css:expr,)+ }) => {
-         #[allow(missing_docs)]
