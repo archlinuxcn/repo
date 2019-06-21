@@ -2,15 +2,18 @@
 # Maintainer: Felix Yan <felixonmars@archlinux.org>
 # Contributor: csslayer <wengxt AT gmail com>
 
-pkgname=xcb-imdkit-git
+_pkgname=xcb-imdkit
+pkgname=${_pkgname}-git
 pkgver=r60.b82eddb
-pkgrel=1.4
+pkgrel=1.5
 pkgdesc="Input method development support for xcb"
 arch=('i686' 'x86_64')
 url="https://github.com/wengxt/xcb-imdkit"
 license=('GPL')
 depends=('xcb-util' 'xcb-util-keysyms')
 makedepends=('extra-cmake-modules' 'git')
+provides=(${_pkgname})
+conflicts=(${_pkgname})
 source=("git+https://github.com/wengxt/xcb-imdkit.git")
 sha512sums=('SKIP')
 
