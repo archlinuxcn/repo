@@ -4,7 +4,7 @@ _pkgbase=iptables
 pkgbase=iptables-fullconenat
 pkgname=(iptables-fullconenat iptables-fullconenat-nft)
 pkgver=1.8.3
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc='Linux kernel packet control tool with FULLCONENAT support.'
 arch=(x86_64)
@@ -13,6 +13,7 @@ url='https://www.netfilter.org/projects/iptables/index.html'
 depends=(libnftnl libpcap libnfnetlink libnetfilter_conntrack bash netfilter-fullconenat-dkms-git)
 makedepends=(linux-api-headers)
 provides=('iptables')
+conflicts=(iptables)
 install=${pkgbase}.install
 backup=(etc/ethertypes etc/iptables/{ip,ip6}tables.rules)
 source=(https://www.netfilter.org/projects/iptables/files/$_pkgbase-$pkgver.tar.bz2{,.sig}
@@ -69,8 +70,8 @@ package_iptables-fullconenat() {
 package_iptables-fullconenat-nft() {
   pkgdesc+=' (using nft interface)'
   depends+=(nftables)
-  provides=(iptables arptables ebtables)
-  conflicts=(iptables arptables ebtables)
+  provides=(iptables iptables-fullconenat arptables ebtables)
+  conflicts=(iptables iptables-fullconenat arptables ebtables)
   backup+=(etc/{arp,eb}tables.conf)
 
   _package nft
