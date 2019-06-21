@@ -1,12 +1,9 @@
 #!/usr/bin/python3
 
 from lilaclib import *
-from lilac2.api import _download_aur_pkgbuild
+from lilac2.api import _download_aur_pkgbuild, _g
 import glob
 
-_g = SimpleNamespace()
-
-  
 def aur_pre_build_edit(
   name: Optional[str] = None, *, do_vcs_update: Optional[bool] = None,
 ) -> None:
@@ -22,14 +19,14 @@ def aur_pre_build_edit(
 
   rev = "", ""
   for line in edit_file('PKGBUILD'):
-        if line.strip().startswith('_rev='):
-            rev = line[len('_rev='):].strip()
-            print(line)
-        elif line.strip().startswith('pkgrel='):
-               # evaluate and replace pkgrel= variable
-               print(f"pkgrel={rev}")
-        else:
-            print(line)
+    if line.strip().startswith('_rev='):
+      rev = line[len('_rev='):].strip()
+      print(line)
+    elif line.strip().startswith('pkgrel='):
+      # evaluate and replace pkgrel= variable
+      print(f"pkgrel={rev}")
+    else:
+      print(line)
 
   new_pkgver, new_pkgrel = get_pkgver_and_pkgrel()
   if pkgver and pkgver == new_pkgver:
@@ -69,6 +66,6 @@ def pre_build():
     run_cmd(["updpkgsums"])
 
 
-#if __name__ == '__main__':
-#    single_main('extra-x86_64')
+if __name__ == '__main__':
+    single_main('extra-x86_64')
 
