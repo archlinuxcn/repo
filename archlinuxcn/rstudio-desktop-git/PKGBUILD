@@ -3,7 +3,7 @@
 
 pkgname=rstudio-desktop-git
 _gitname=rstudio
-pkgver=25672.87c77e8c78
+pkgver=25707.d56e3f2ff8
 _gwtver=2.8.2
 _ginver=2.1.2
 pkgrel=1
@@ -23,7 +23,8 @@ source=("git+https://github.com/rstudio/rstudio.git"
         "https://s3.amazonaws.com/rstudio-buildtools/gwt-${_gwtver}.zip")
 sha256sums=('SKIP'
             'b98e704164f54be596779696a3fcd11be5785c9907a99ec535ff6e9525ad5f9a'
-            'SKIP')
+            '970701dacc55170088f5eb327137cb4a7581ebb4734188dfcc2fad9941745d1b')
+noextract=("gin-${_ginver}.zip")
 
 pkgver() {
     cd "${srcdir}/${_gitname}"
@@ -46,9 +47,10 @@ build() {
     ln -sfT /usr/share/mathjax mathjax-26
     ln -sfT /usr/bin/pandoc pandoc/pandoc
     ln -sfT /usr/bin/pandoc-citeproc pandoc/pandoc-citeproc
- 
+    
     msg "Downloading and installing R packages..."
-    bash install-packages
+    R_LIBS_SITE='' R_LIBS_USER='' bash install-packages
+
     rm -rf "${srcdir}/${_gitname}/build"
     mkdir "${srcdir}/${_gitname}/build"
     cd "${srcdir}/${_gitname}/build"

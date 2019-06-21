@@ -21,18 +21,18 @@ index 8d43b6db428..a96fbcc9d2c 100644
  ##
  ## Options previously available to be set via [mysqld_safe]
 diff --git a/support-files/mariadb@.service.in b/support-files/mariadb@.service.in
-index a2f5cff0828..83d75f80b87 100644
+index a2f5cff0828..30631a8738a 100644
 --- a/support-files/mariadb@.service.in
 +++ b/support-files/mariadb@.service.in
-@@ -41,7 +41,7 @@ Type=notify
+@@ -138,7 +138,7 @@ UMask=007
  
- # Setting this to true can break replication and the Type=notify settings
- # See also bind-address mysqld option.
--PrivateNetwork=false
-+PrivateNetwork=true
+ # If you don't use the /tmp directory for SELECT ... OUTFILE and
+ # LOAD DATA INFILE you can enable PrivateTmp=true for a little more security.
+-PrivateTmp=false
++PrivateTmp=true
  
- ##############################################################################
- ## Package maintainers
+ ##
+ ## Options previously available to be set via [mysqld_safe]
 From 0e4a158086b765aa3a12b84646aefb9b192443f7 Mon Sep 17 00:00:00 2001
 From: Christian Hesse <mail@eworm.de>
 Date: Tue, 29 Jan 2019 23:12:54 +0100
@@ -66,37 +66,6 @@ index 83d75f80b87..d1d24d685f9 100644
  
  # Flush caches. previously [mysqld_safe] flush-caches=1
  # ExecStartPre=sync
-From 72b42fb1a344bfc3f3c3c905fe85c93ac4a752e3 Mon Sep 17 00:00:00 2001
-From: Christian Hesse <mail@eworm.de>
-Date: Tue, 29 Jan 2019 23:14:23 +0100
-Subject: fix path to our config
----
- support-files/rpm/enable_encryption.preset | 2 +-
- support-files/rpm/my.cnf                   | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/support-files/rpm/enable_encryption.preset b/support-files/rpm/enable_encryption.preset
-index 722db7e5fa1..978a7494c6b 100644
---- a/support-files/rpm/enable_encryption.preset
-+++ b/support-files/rpm/enable_encryption.preset
-@@ -1,5 +1,5 @@
- #
--# !include this file into your my.cnf (or any of *.cnf files in /etc/my.cnf.d)
-+# !include this file into your my.cnf (or any of *.cnf files in /etc/mysql/my.cnf.d)
- # and it will enable data at rest encryption. This is a simple way to
- # ensure that everything that can be encrypted will be and your
- # data will not leak unencrypted.
-diff --git a/support-files/rpm/my.cnf b/support-files/rpm/my.cnf
-index 913b88f8328..17d25361178 100644
---- a/support-files/rpm/my.cnf
-+++ b/support-files/rpm/my.cnf
-@@ -7,5 +7,5 @@
- #
- # include all files from the config directory
- #
--!includedir /etc/my.cnf.d
-+!includedir /etc/mysql/my.cnf.d
- 
 From 820b47c1e70d36f1272cca3ddbdf4bbd2dd62bde Mon Sep 17 00:00:00 2001
 From: Christian Hesse <mail@eworm.de>
 Date: Wed, 30 Jan 2019 00:46:47 +0100

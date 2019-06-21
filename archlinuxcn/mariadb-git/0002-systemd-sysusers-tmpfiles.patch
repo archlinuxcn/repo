@@ -1,7 +1,8 @@
-From dc7aff5e5331820205282576f6ade015f672969b Mon Sep 17 00:00:00 2001
+From aef4f58adf90e9fee4348c1cf6484faeae159255 Mon Sep 17 00:00:00 2001
 From: Christian Hesse <mail@eworm.de>
 Date: Tue, 2 Jan 2018 14:32:21 +0100
-Subject: Use descriptive file names for sysusers and tmpfiles configuration
+Subject: [PATCH 1/2] Use descriptive file names for sysusers and tmpfiles
+ configuration
 
 These files were installed to:
 
@@ -9,15 +10,17 @@ ${INSTALL_SYSTEMD_SYSUSERSDIR}/sysusers.conf
 ${INSTALL_SYSTEMD_TMPFILESDIR}/tmpfiles.conf
 
 Instead rename the files to more descriptive file names 'mariadb.conf'.
+
+Signed-off-by: Christian Hesse <mail@eworm.de>
 ---
  support-files/CMakeLists.txt | 6 ++++--
  1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/support-files/CMakeLists.txt b/support-files/CMakeLists.txt
-index 4ad3810e082..8363922d468 100644
+index 3655c87b94e..63443245e6e 100644
 --- a/support-files/CMakeLists.txt
 +++ b/support-files/CMakeLists.txt
-@@ -117,7 +117,8 @@ IF(UNIX)
+@@ -118,7 +118,8 @@ IF(UNIX)
        CONFIGURE_FILE(sysusers.conf.in
                ${CMAKE_CURRENT_BINARY_DIR}/sysusers.conf @ONLY)
        INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/sysusers.conf
@@ -27,7 +30,7 @@ index 4ad3810e082..8363922d468 100644
      ENDIF()
  
      IF(INSTALL_SYSTEMD_TMPFILESDIR)
-@@ -125,7 +126,8 @@ IF(UNIX)
+@@ -126,7 +127,8 @@ IF(UNIX)
        CONFIGURE_FILE(tmpfiles.conf.in
                ${CMAKE_CURRENT_BINARY_DIR}/tmpfiles.conf @ONLY)
        INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/tmpfiles.conf
@@ -37,16 +40,18 @@ index 4ad3810e082..8363922d468 100644
      ENDIF()
  
      # @ in directory name broken between CMake version 2.8.12.2 and 3.3
-From c86912c8896b65c1dd9226c1bc2987189d4840c2 Mon Sep 17 00:00:00 2001
+From 974bd397ff3492c57799e11a02cc3c07081bb1fc Mon Sep 17 00:00:00 2001
 From: Christian Hesse <mail@eworm.de>
 Date: Tue, 2 Jan 2018 14:36:49 +0100
-Subject: Make systemd-tmpfiles create MYSQL_DATADIR
+Subject: [PATCH 2/2] Make systemd-tmpfiles create MYSQL_DATADIR
 
 This is a no-op if the directory exists, but makes sure it is created by
 systemd-tmpfiles with proper permissions otherwise.
 
 This solves packaging issues when the user MYSQLD_USER is created by
 systemd-sysusers and uid is not known in advance.
+
+Signed-off-by: Christian Hesse <mail@eworm.de>
 ---
  support-files/tmpfiles.conf.in | 1 +
  1 file changed, 1 insertion(+)

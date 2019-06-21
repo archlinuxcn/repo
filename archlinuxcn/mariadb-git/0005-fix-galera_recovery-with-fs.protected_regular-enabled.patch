@@ -1,7 +1,7 @@
-From 5936f0be4a49eda7b05ea1591bbbba3d72e4d7b9 Mon Sep 17 00:00:00 2001
+From 471952a37f2523a00d2b4fd617128b3fa9d0cf03 Mon Sep 17 00:00:00 2001
 From: Christian Hesse <mail@eworm.de>
 Date: Fri, 25 Jan 2019 14:50:53 +0100
-Subject: fix galera_recovery with fs.protected_regular enabled
+Subject: [PATCH 1/1] fix galera_recovery with fs.protected_regular enabled
 
 The fs.protected_regular sysctls was added in Linux 4.19 to make some
 data spoofing attacks harder. With systemd v241 these will be enabled
@@ -12,12 +12,14 @@ With this protection enabled galera_recovery fails with EPERM
 The script changes ownership of $log_file to $user, though $user never
 touches it. The shell redirection writes output to the file, not mysqld.
 So just drop chown to fix this.
+
+Signed-off-by: Christian Hesse <mail@eworm.de>
 ---
  scripts/galera_recovery.sh | 3 +--
  1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/scripts/galera_recovery.sh b/scripts/galera_recovery.sh
-index c58f3d8f6b9..c70decc0005 100644
+index 709c4b0eed5..8df2abc3fd5 100644
 --- a/scripts/galera_recovery.sh
 +++ b/scripts/galera_recovery.sh
 @@ -101,8 +101,7 @@ wsrep_recover_position() {
