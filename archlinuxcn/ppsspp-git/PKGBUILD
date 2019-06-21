@@ -8,12 +8,12 @@
 pkgbase=ppsspp-git
 pkgname=('ppsspp-git' 'ppsspp-headless-git' 'ppsspp-qt-git')
 pkgver=1.8.0.r298.53e826337
-pkgrel=1
+pkgrel=2
 pkgdesc='A PSP emulator written in C++'
 arch=('x86_64')
 url='http://www.ppsspp.org/'
 license=('GPL2')
-depends=('gcc-libs' 'glew' 'glibc' 'libgl' 'sdl2' 'zlib')
+depends=('gcc-libs' 'glew' 'glibc' 'libgl' 'sdl2' 'zlib' 'python')
 makedepends=('cmake' 'git' 'glu' 'libglvnd' 'libzip' 'qt5-tools')
 source=('git+https://github.com/hrydgard/ppsspp.git'
         'git+https://github.com/Kingcom/armips.git'
