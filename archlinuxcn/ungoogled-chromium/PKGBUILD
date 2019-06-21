@@ -29,9 +29,10 @@ conflicts=('chromium')
 source=(https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$pkgver.tar.xz
         'fixforgcc9.patch::https://686982.bugs.gentoo.org/attachment.cgi?id=578490'
         chromium-launcher-$_launcher_ver.tar.gz::https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver.tar.gz
-        https://github.com/Eloston/ungoogled-chromium/archive/$pkgver-$pkgrel.tar.gz
+https://github.com/Eloston/ungoogled-chromium/archive/$pkgver-$_rev.tar.gz
         https://github.com/ungoogled-software/ungoogled-chromium-archlinux/archive/${_archver}.tar.gz)
 sha256sums=('da828bc8d887821380b461abfbbd0e17538c211d56f240f03711b918c77a66d6'
+            '09c5f16b726ef7031d74807b534fbbfa49a7276ee2a239b70602de2704fa197c'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
             'a50251006b0056cad5b80216060002b7f979ace69c97799a3412d10a0fc19afb'
             '1f917c3dc3948fb37784994195233e8929fe65433ea18cf83545cf81ae61a34f')
@@ -67,14 +68,14 @@ depends+=(${_system_libs[@]})
 
 prepare() {
   _ungoogled_archlinux_repo="$srcdir/$pkgname-archlinux-${_archver}"
-  _ungoogled_repo="$srcdir/$pkgname-$pkgver-$pkgrel"
+  _ungoogled_repo="$srcdir/$pkgname-$pkgver-$_rev"
   _utils="${_ungoogled_repo}/utils"
 
   cd "$srcdir/chromium-$pkgver"
 
-#https://bugs.gentoo.org/686982
-patch -Np1 -i "$srcdir/gcc9.patch"
 
+  #https://bugs.gentoo.org/686982
+  patch -Np1 -i "$srcdir/fixforgcc9.patch"
 
   msg2 'Pruning binaries'
   python "$_utils/prune_binaries.py" ./ "$_ungoogled_repo/pruning.list"
@@ -108,15 +109,11 @@ patch -Np1 -i "$srcdir/gcc9.patch"
 
 build() {
   _ungoogled_archlinux_repo="$srcdir/$pkgname-archlinux-${_archver}"
-  _ungoogled_repo="$srcdir/$pkgname-$pkgver-$pkgrel"
+  _ungoogled_repo="$srcdir/$pkgname-$pkgver-$_rev"
 
   make -C chromium-launcher-$_launcher_ver
 
   cd "$srcdir/chromium-$pkgver"
-
-#https://bugs.gentoo.org/686982
-patch -Np1 -i "$srcdir/gcc9.patch"
-
 
   if check_buildoption ccache y; then
     # Avoid falling back to preprocessor mode when sources contain time macros
@@ -153,10 +150,6 @@ package() {
     "$pkgdir/usr/share/licenses/chromium/LICENSE.launcher"
 
   cd "$srcdir/chromium-$pkgver"
-
-#https://bugs.gentoo.org/686982
-patch -Np1 -i "$srcdir/gcc9.patch"
-
 
   install -D out/Default/chrome "$pkgdir/usr/lib/chromium/chromium"
   install -Dm4755 out/Default/chrome_sandbox "$pkgdir/usr/lib/chromium/chrome-sandbox"
