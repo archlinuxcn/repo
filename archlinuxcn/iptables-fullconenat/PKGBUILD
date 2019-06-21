@@ -1,12 +1,12 @@
 # Maintainer: Edward Pacman <edward@edward-p.xyz>
 
-_pkgrealbase=iptables
+_pkgbase=iptables
 pkgbase=iptables-fullconenat
 pkgname=(iptables-fullconenat iptables-fullconenat-nft)
-pkgver=1.8.2
-pkgrel=2
+pkgver=1.8.3
+pkgrel=1
 epoch=1
-pkgdesc='Linux kernel packet control tool with FULLCONENAT support/'
+pkgdesc='Linux kernel packet control tool with FULLCONENAT support.'
 arch=(x86_64)
 license=(GPL2)
 url='https://www.netfilter.org/projects/iptables/index.html'
@@ -15,11 +15,11 @@ makedepends=(linux-api-headers)
 provides=('iptables')
 install=${pkgbase}.install
 backup=(etc/ethertypes etc/iptables/{ip,ip6}tables.rules)
-source=(https://www.netfilter.org/projects/iptables/files/$_pkgrealbase-$pkgver.tar.bz2{,.sig}
+source=(https://www.netfilter.org/projects/iptables/files/$_pkgbase-$pkgver.tar.bz2{,.sig}
         empty.rules simple_firewall.rules empty-{filter,mangle,nat,raw,security}.rules
         {arp,eb,ip,ip6}tables.service iptables-{legacy,nft}-flush
         "libipt_FULLCONENAT.c::https://raw.githubusercontent.com/Chion82/netfilter-full-cone-nat/master/libipt_FULLCONENAT.c")
-sha1sums=('215c4ef4c6cd29ef0dd265b4fa5ec51a4f930c92'
+sha1sums=('6df99e90cb4d59032ab2050ebb426fe065249bd3'
           'SKIP'
           '83b3363878e3660ce23b2ad325b53cbd6c796ecf'
           'f085a71f467e4d7cb2cf094d9369b0bcc4bab6ec'
@@ -34,12 +34,12 @@ sha1sums=('215c4ef4c6cd29ef0dd265b4fa5ec51a4f930c92'
           '9cec592787e32451f58fa608ea057870e07aa704'
           'd10af7780d1634778d898c709e2d950aa1561856'
           '15c1684f3e671f4d0ede639a7c9c08e1a841511c'
-          'SKIP')
+          'b5dd6f51b9257150290a140453e09d38fb63c391')
 validpgpkeys=('C09DB2063F1D7034BA6152ADAB4655A126D292E4') # Netfilter Core Team
 
 prepare() {
   mkdir build
-  cd $_pkgrealbase-$pkgver
+  cd $_pkgbase-$pkgver
 
   cp ../libipt_FULLCONENAT.c extensions/
   # use system one
@@ -48,7 +48,7 @@ prepare() {
 
 build() {
   cd build
-  ../$_pkgrealbase-$pkgver/configure \
+  ../$_pkgbase-$pkgver/configure \
     --prefix=/usr \
     --sysconfdir=/etc \
     --sbindir=/usr/bin \
