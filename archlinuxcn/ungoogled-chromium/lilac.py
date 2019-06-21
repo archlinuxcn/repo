@@ -61,6 +61,8 @@ def pre_build():
             print(line)
         elif line.strip().startswith('https://github.com/Eloston/ungoogled-chromium/archive/$pkgver-$pkgrel.tar.gz'):
             print('https://github.com/Eloston/ungoogled-chromium/archive/$pkgver-$_rev.tar.gz')
+        elif line.strip().startswith('_ungoogled_repo="$srcdir/$pkgname-$pkgver-$pkgrel"'):
+            print('  _ungoogled_repo="$srcdir/$pkgname-$pkgver-$_rev"')
         else:
             print(line)
     
