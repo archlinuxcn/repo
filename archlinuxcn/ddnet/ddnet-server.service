@@ -1,0 +1,13 @@
+[Unit]
+Description = DDNet Server
+After = network-online.target
+Wants = network-online.target
+
+[Service]
+ExecStart = /usr/bin/DDNet-Server
+WorkingDirectory = /var/lib/ddnet
+User = ddnet
+Group = ddnet
+
+[Install]
+WantedBy = multi-user.target
