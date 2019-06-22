@@ -1,0 +1,36 @@
+# Maintainer: axionl <i at axionl dot me>
+
+pkgname=weibird-git
+pkgver=0.1.4.36.g40fa4cf
+pkgrel=1
+pkgdesc="A GTK+ client for viewing and composing weibo."
+arch=('x86_64')
+makedepends=('git' 'meson' 'json-glib' 'ninja' 'librsvg')
+depends=('glib2' 'webkit2gtk' 'rest')
+conflicts=("weibird")
+provides=("weibird")
+url="https://github.com/JonathanKang/weibird"
+license=("GPL3")
+
+source=("$pkgname::git+https://github.com/JonathanKang/weibird.git")
+
+sha256sums=('SKIP')
+
+pkgver() {
+    cd "${pkgname}"
+    git describe --long | sed 's/[a-zA-Z]*.//;s/-/./g'
+}
+
+build() {
+    cd "${srcdir}/${pkgname}"
+    install -dm755 build
+    meson ./build --prefix=/usr
+    ninja -C ./build
+}
+
+package() {
+    cd "${srcdir}/${pkgname}"
+
+    install -Dm644 ./COPYING ${pkgdir}/usr/share/licenses/weibird/LICENSE
+    DESTDIR="${pkgdir}" ninja -C build install
+}
