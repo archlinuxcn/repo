@@ -2,7 +2,7 @@
 _pkgbase='yuzu'
 pkgbase="$_pkgbase-git"
 pkgname=("$_pkgbase-git" "$_pkgbase-qt-git")
-pkgver=r11841.c0e7b9114
+pkgver=r11901.221996a19
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger"
 arch=('i686' 'x86_64')
@@ -77,7 +77,7 @@ prepare() {
 
 build() {
         cd "$srcdir/$_pkgbase/build"
-        cmake .. \
+        CXXFLAGS+=" -DFMT_USE_USER_DEFINED_LITERALS=0" cmake .. \
           -DCMAKE_INSTALL_PREFIX=/usr \
           -DCMAKE_BUILD_TYPE=Release
         make
