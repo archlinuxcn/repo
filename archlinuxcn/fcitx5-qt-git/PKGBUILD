@@ -38,8 +38,8 @@ _mv_pkg(){
 
 package_fcitx5-qt5-git(){
   depends=('fcitx5-git' 'qt5-x11extras' 'qt5-quickcontrols')
-  provides=('fcitx5-qt5')
-  conflicts=('fcitx5-qt5')
+  provides=('fcitx5-qt5' 'fcitx5-qt')
+  conflicts=('fcitx5-qt5' 'fcitx5-qt')
   pkgdesc="Fcitx Qt Library, for Qt5"
 
   cd /tmp/$_pkgname
