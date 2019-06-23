@@ -5,7 +5,7 @@ set -u
 pkgbase="linux-lts49"
 #pkgbase=linux-lts-custom
 _srcname="linux-4.9"
-pkgver="4.9.182"
+pkgver="4.9.183"
 pkgrel='1'
 arch=('x86_64')
 url="https://www.kernel.org/"
@@ -27,7 +27,7 @@ validpgpkeys=('ABAF11C65A2970B130ABE3C479BE3E4300411886' # Linus Torvalds <torva
              )
 # https://www.kernel.org/pub/linux/kernel/v4.x/sha256sums.asc
 sha256sums=('029098dcffab74875e086ae970e3828456838da6e0ba22ce3f64ef764f3d7f1a'
-            'bc948b48acbf0fee188830aa8ddd0304173eea4ab78d1c2a59acd30312f06ef2'
+            '6b9df938c896e57447004285f46afe22165c9e9668759678128384d2e93c15fb'
             '7e65bcd8a7b2eb3ff75ba46f1e230895623882b4689053e1727ecb9ed1b2ce69'
             'ae2e95db94ef7176207c690224169594d49445e04249d2499e9d2fbc117a0b21'
             '75f99f5239e03238f88d1a834c50043ec32b1dc568f2cc291b07d04718483919'
@@ -61,6 +61,16 @@ prepare() {
   # remove this when a Kconfig knob is made available by upstream
   # (relevant patch sent upstream: https://lkml.org/lkml/2011/7/26/227)
   patch -Nup1 -i "${srcdir}/change-default-console-loglevel.patch"
+
+  # Local or private patches
+  shopt -s nullglob
+  local _lpatch
+  for _lpatch in "${startdir}"/*.localpatch; do
+    set +u; msg2 "Local patch: ${_lpatch##*/}"; set -u
+    patch -Nup1 -i "${_lpatch}"
+  done
+  unset _lpatch
+  shopt -u nullglob
 
   declare -A _config=([x86_64]='config')
   cat "${srcdir}/${_config[${CARCH}]}" > './.config'
