@@ -1,13 +1,13 @@
 pkgname=('alacritty-git' 'alacritty-terminfo-git')
 _pkgname="alacritty"
-pkgver=0.3.3.1250.g72088daf
-pkgrel=1
+pkgver=0.3.3.1233.g0b88b9f
+pkgrel=2
 epoch=1
 arch=('x86_64' 'i686')
 url="https://github.com/jwilm/alacritty"
 license=('Apache-2.0')
-makedepends=('freetype2' 'fontconfig' 'git' 'rust' 'cargo' 'cmake' 'ncurses' 'desktop-file-utils' 'python' 'libxcb')
-source=($_pkgname::git+https://github.com/jwilm/alacritty.git)
+makedepends=('rust' 'cargo' 'cmake' 'fontconfig' 'freetype2' 'git' 'ncurses' 'desktop-file-utils' 'python' 'libxcb')
+source=("$_pkgname::git+https://github.com/jwilm/alacritty.git")
 sha256sums=('SKIP')
 
 pkgver() {
@@ -17,7 +17,7 @@ pkgver() {
 
 package_alacritty-git() {
 	pkgdesc="A cross-platform, GPU-accelerated terminal emulator"
-	depends=('freetype2' 'fontconfig' 'xclip' 'libxcb')
+	depends=('freetype2' 'fontconfig' 'libxcb')
 	provides=('alacritty')
 	conflicts=('alacritty')
 
@@ -40,8 +40,8 @@ package_alacritty-terminfo-git() {
 	provides=('alacritty-terminfo')
 	conflicts=('alacritty-terminfo')
 
-	cd $_pkgname
+	cd $_pkgname/extra
 
 	install -dm 755 "$pkgdir/usr/share/terminfo/a/"
-	tic -o "$pkgdir/usr/share/terminfo" extra/alacritty.info
+	tic -o "$pkgdir/usr/share/terminfo" -xe alacritty,alacritty-direct alacritty.info
 }
