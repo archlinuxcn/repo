@@ -9,7 +9,7 @@
 
 pkgname=brave-bin
 pkgver=0.65.121
-pkgrel=1
+pkgrel=2
 pkgdesc="Web browser that blocks ads and trackers by default (binary release)."
 arch=("x86_64")
 url="https://brave.com/download"
@@ -28,7 +28,7 @@ source=("$pkgname-$pkgver.zip::https://github.com/brave/brave-browser/releases/d
 options=(!strip)
 sha512sums=("34d4e63610ef1e106f2071101299d5d33b6394d5a564c5b1e9cbbea16200bb11d665a99b81f6abee87dff9fba805bdc311c357d5b4beb7f34553bb3b3fc9af86"
             "b8823586fead21247c8208bd842fb5cd32d4cb3ca2a02339ce2baf2c9cb938dfcb8eb7b24c95225ae625cd0ee59fbbd8293393f3ed1a4b45d13ba3f9f62a791f"
-            "20b010e199127fa185da2e78eb97724a1b4d6d279c79b87bb0901ceb832d19ea755485c9039d06d92e6ffd686683990cd1939dc78f37859a798f4a8ba40e05b5"
+            "f5ea8d0c22b414bff87f5c6a5d1547804a307a71f2bc111e4fea362ad2656163219bec1632aaa9e1d9fa2bcaca27350bbdd296e3e51b9e384212de49311e5c6c"
             "c21aecaafec43bc1ce1ea3439667efb4c7ea5e54bfa87346a9ae9650de1e90c80174b1610a9216f936f693593816c9585c6be1875b3bd318d067079c06251e92"
             "d7bef52e336bd908d24bf3a084a1fc480831d27a3c80af4c31872465b6a0ce39bdf298e620ae9865526c974465807559cc75610b835e60b4358f65a8a8ff159e")
 noextract=("$pkgname-$pkgver.zip")
@@ -50,6 +50,4 @@ package() {
     install -Dm0644 "logo.png" "$pkgdir/usr/share/pixmaps/brave.png"
     install -Dm0664 -t "$pkgdir/usr/share/licenses/$pkgname" "MPL2"
     mv "$pkgdir/usr/lib/$pkgname/"{LICENSE,LICENSES.chromium.html} "$pkgdir/usr/share/licenses/$pkgname"
-
-    ln -s /usr/lib/PepperFlash "$pkgdir/usr/lib/pepperflashplugin-nonfree"
 }
