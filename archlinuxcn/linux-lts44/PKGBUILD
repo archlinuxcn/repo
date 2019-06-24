@@ -1,26 +1,38 @@
-# Maintainer: James Bunton <jamesbunton@delx.net.au>
+# Maintainer: Chris Severance aur.severach aATt spamgourmet dott com
+# Contributor: James Bunton <jamesbunton@delx.net.au>
 # Contributor: Andreas Radke <andyrtr@archlinux.org>
 
-pkgbase=linux-lts44
-_srcname=linux-4.4
-pkgver=4.4.182
-pkgrel=1
+set -u
+pkgbase="linux-lts44"
+_srcname="linux-4.4"
+pkgver="4.4.183"
+pkgrel='1'
 arch=('x86_64')
 url="https://www.kernel.org/"
 license=('GPL2')
 makedepends=('xmlto' 'kmod' 'inetutils' 'bc' 'libelf')
 options=('!strip')
-source=(https://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.xz
-        https://www.kernel.org/pub/linux/kernel/v4.x/patch-${pkgver}.xz
-        'config'         # the main kernel config file
-        '60-linux.hook'  # pacman hook for depmod
-        '90-linux.hook'  # pacman hook for initramfs regeneration
-        'linux-lts.preset'   # standard config files for mkinitcpio ramdisk
-        'change-default-console-loglevel.patch'
-        0001-sdhci-revert.patch)
+source=(
+  "https://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.xz"
+  "https://www.kernel.org/pub/linux/kernel/v4.x/patch-${pkgver}.xz"
+  'config'         # the main kernel config file
+  '60-linux.hook'  # pacman hook for depmod
+  '90-linux.hook'  # pacman hook for initramfs regeneration
+  'linux-lts.preset'   # standard config files for mkinitcpio ramdisk
+  'change-default-console-loglevel.patch'
+  '0001-sdhci-revert.patch'
+)
+md5sums=('9a78fa2eb6c68ca5a40ed5af08142599'
+         'de63426b91ec0bab3d6ce6edc8dc802b'
+         'da3ffd24b80766c64b9243b9da94c16f'
+         'ce6c81ad1ad1f8b333fd6077d47abdaf'
+         'a85bfae59eb537b973c388ffadb281ff'
+         'a329f9581060d555dc7358483de9760a'
+         'df7fceae6ee5d7e7be7b60ecd7f6bb35'
+         'e1093d9bc718f362344ab56b85d4fb76')
 sha256sums=('401d7c8fef594999a460d10c72c5a94e9c2e1022f16795ec51746b0d165418b2'
-            'd91f3236a431ec9a8834969cc4d7d8d9ea5ffa42e8d0c62cde12f3b6aa6fb58f' # patch
-            '21980ce4b9f404e2d05e9ec20c23e09f00e4c1e360a5266085df1f76daf6cad5'
+            'e005ec541eb5e03699b58c8ca388681670866e1aac87a3fa2d9a6b2408506718'
+            '4e3f00444a1dad5e8826cb23dbcfa56288022e9256904b21e21d4201d7c53db0'
             'ae2e95db94ef7176207c690224169594d49445e04249d2499e9d2fbc117a0b21'
             '75f99f5239e03238f88d1a834c50043ec32b1dc568f2cc291b07d04718483919'
             'ad6344badc91ad0630caacde83f7f9b97276f80d26a20619a87952be65492c65'
@@ -29,11 +41,22 @@ sha256sums=('401d7c8fef594999a460d10c72c5a94e9c2e1022f16795ec51746b0d165418b2'
 
 _kernelname=${pkgbase#linux}
 
+# CFLAGS CXXFLAGS are not used at all.
+# LDFLAGS only works on the make command line. It is not used from the environment.
+_makeopts=(
+  #CC='gcc-5' CXX='g++-5' HOSTCC='gcc-5' HOSTCXX='g++-5' # LD='ld.gold'
+  #CC='gcc-6' CXX='g++-6' HOSTCC='gcc-6' HOSTCXX='g++-6'
+  #LDFLAGS='-z max-page-size=0x200000' # http://lists.gnu.org/archive/html/bug-binutils/2018-03/msg00193.html
+)
+#makedepends+=('gcc5')
+
 prepare() {
-  cd ${_srcname}
+  set -u
+  cd "${_srcname}"
 
   # add upstream patch
-  patch -p1 -i ../patch-${pkgver}
+  patch -Nup1 -i "${srcdir}/patch-${pkgver}"
+  set +u; msg2 "Complete: patch-${pkgver}"; set -u
 
   # add latest fixes from stable queue, if needed
   # http://git.kernel.org/?p=linux/kernel/git/stable/stable-queue.git
@@ -41,19 +64,33 @@ prepare() {
   # revert http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=9faac7b95ea4f9e83b7a914084cc81ef1632fd91
   # fixes #47778 sdhci broken on some boards
   # https://bugzilla.kernel.org/show_bug.cgi?id=106541
-  patch -Rp1 -i "${srcdir}/0001-sdhci-revert.patch"
+  patch -NuRp1 -i "${srcdir}/0001-sdhci-revert.patch"
 
   # set DEFAULT_CONSOLE_LOGLEVEL to 4 (same value as the 'quiet' kernel param)
   # remove this when a Kconfig knob is made available by upstream
   # (relevant patch sent upstream: https://lkml.org/lkml/2011/7/26/227)
-  patch -p1 -i "${srcdir}/change-default-console-loglevel.patch"
+  patch -Nup1 -i "${srcdir}/change-default-console-loglevel.patch"
 
-  cp -Tf ../config .config
+  # Local or private patches
+  shopt -s nullglob
+  local _lpatch
+  for _lpatch in "${startdir}"/*.localpatch; do
+    set +u; msg2 "Local patch: ${_lpatch##*/}"; set -u
+    patch -Nup1 -i "${_lpatch}"
+  done
+  unset _lpatch
+  shopt -u nullglob
 
+  #cp -Tf ../config .config
+
+  declare -A _config=([x86_64]='config')
+  cat "${srcdir}/${_config[${CARCH}]}" > './.config'
   if [ "${_kernelname}" != "" ]; then
     sed -i "s|CONFIG_LOCALVERSION=.*|CONFIG_LOCALVERSION=\"${_kernelname}\"|g" ./.config
     sed -i "s|CONFIG_LOCALVERSION_AUTO=.*|CONFIG_LOCALVERSION_AUTO=n|" ./.config
   fi
+  cp './.config' "${srcdir}/config.cmp"
+  rm -f "${startdir}/${_config[${CARCH}]}.new"
 
   # set extraversion to pkgrel
   sed -ri "s|^(EXTRAVERSION =).*|\1 -${pkgrel}|" Makefile
@@ -61,8 +98,20 @@ prepare() {
   # don't run depmod on 'make install'. We'll do this ourselves in packaging
   sed -i '2iexit 0' scripts/depmod.sh
 
-  # get kernel version
-  make prepare
+  set +u; msg2 'get kernel version'; set +u
+  set -x
+  make -s -j1 prepare "${_makeopts[@]}"
+  set +x
+
+  if ! diff -pNau5 "${srcdir}/config.cmp" './.config'; then
+    ln -s "${PWD}/.config" "${startdir}/${_config[${CARCH}]}.new"
+    rm "${srcdir}/config.cmp"
+    set +u
+    echo 'Some changes were made. Please merge for automation.'
+    false
+  else
+    rm "${srcdir}/config.cmp"
+  fi
 
   # load configuration
   # Configure the kernel. Replace the line below with one of your choice.
@@ -72,33 +121,50 @@ prepare() {
   #make oldconfig # using old config from previous kernel version
   # ... or manually edit .config
 
-  # rewrite configuration
-  yes "" | make config >/dev/null
+  set +u; msg2 'rewrite configuration'; set +u
+  set -x
+  yes "" | make -j1 config "${_makeopts[@]}" >/dev/null
+  set +x
+  set +u
 }
 
 build() {
-  cd ${_srcname}
+  set -u
+  cd "${srcdir}/${_srcname}"
 
-  make ${MAKEFLAGS} LOCALVERSION= bzImage modules
+  local _mflags=()
+  local _nproc="$(nproc)"; _nproc=$((_nproc>8?8:_nproc))
+  if [ -z "${MAKEFLAGS:=}" ] || [ "${MAKEFLAGS//-j/}" = "${MAKEFLAGS}" ]; then
+    _mflags+=('-j' "${_nproc}")
+  fi
+
+  rm -f vmlinux vmlinux.o # force relink, for debugging binutils 2.31.1
+
+  set -x
+  nice make -s "${_makeopts[@]}" "${_mflags[@]}" ${MAKEFLAGS} LOCALVERSION= bzImage modules
+  set +x
+  set +u
 }
 
 _package() {
+  set -u
   pkgdesc="The ${pkgbase/linux/Linux} kernel and modules"
-  [ "${pkgbase}" = "linux" ] && groups=('base')
+  #[ "${pkgbase}" = "linux" ] && groups=('base')
   depends=('coreutils' 'linux-firmware' 'kmod' 'mkinitcpio>=0.7')
   optdepends=('crda: to set the correct wireless channels of your country')
   backup=("etc/mkinitcpio.d/${pkgbase}.preset")
   install=linux-lts.install
+  provides=("linux=${pkgver}")
 
-  cd ${_srcname}
+  cd "${_srcname}"
 
   # get kernel version
-  _kernver="$(make LOCALVERSION= kernelrelease)"
+  _kernver="$(make -j1 "${_makeopts[@]}" LOCALVERSION= kernelrelease)"
   _basekernel=${_kernver%%-*}
   _basekernel=${_basekernel%.*}
 
   mkdir -p "${pkgdir}"/{boot,usr/lib/modules}
-  make LOCALVERSION= INSTALL_MOD_PATH="${pkgdir}/usr" modules_install
+  make -j1 "${_makeopts[@]}" LOCALVERSION= INSTALL_MOD_PATH="${pkgdir}/usr" modules_install
   cp arch/x86/boot/bzImage "${pkgdir}/boot/vmlinuz-${pkgbase}"
 
   # systemd expects to find the kernel here to allow hibernation
@@ -106,7 +172,7 @@ _package() {
   ln -sr "${pkgdir}/boot/vmlinuz-${pkgbase}" "${pkgdir}/usr/lib/modules/${_kernver}/vmlinuz"
 
   # remove the firmware
-  rm -rf "${pkgdir}/usr/lib/firmware"
+  rm -r "${pkgdir}/usr/lib/firmware"
 
   # make room for external modules
   local _extramodules="extramodules-${_basekernel}${_kernelname:--lts}"
@@ -145,10 +211,13 @@ _package() {
     install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/60-${pkgbase}.hook"
   sed "${_subst}" ../90-linux.hook |
     install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/90-${pkgbase}.hook"
+  set +u
 }
 
 _package-headers() {
+  set -u
   pkgdesc="Header files and scripts for building modules for ${pkgbase/linux/Linux} kernel"
+  provides=("linux-headers=${pkgver}")
 
   cd ${_srcname}
   local _builddir="${pkgdir}/usr/lib/modules/${_kernver}/build"
@@ -210,12 +279,14 @@ _package-headers() {
     esac
     /usr/bin/strip ${_strip} "${_binary}"
   done < <(find "${_builddir}/scripts" -type f -perm -u+w -print0 2>/dev/null)
+  set +u
 }
 
 _package-docs() {
+  set -u
   pkgdesc="Kernel hackers manual - HTML documentation that comes with the ${pkgbase/linux/Linux} kernel"
 
-  cd ${_srcname}
+  cd "${_srcname}"
   local _builddir="${pkgdir}/usr/lib/modules/${_kernver}/build"
 
   mkdir -p "${_builddir}"
@@ -223,6 +294,7 @@ _package-docs() {
 
   # Fix permissions
   chmod -R u=rwX,go=rX "${_builddir}"
+  set +u
 }
 
 pkgname=("${pkgbase}" "${pkgbase}-headers" "${pkgbase}-docs")
@@ -232,3 +304,5 @@ for _p in ${pkgname[@]}; do
     _package${_p#${pkgbase}}
   }"
 done
+
+set +u
