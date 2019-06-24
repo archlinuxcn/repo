@@ -1,0 +1,35 @@
+--- a/usr/lib/systemd/system/mysqld.service
++++ b/usr/lib/systemd/system/mysqld.service
+@@ -52,7 +52,7 @@
+ ExecStart=/usr/bin/mysqld $MYSQLD_OPTS
+ 
+ # Use this to switch malloc implementation
+-EnvironmentFile=-/etc/sysconfig/mysql
++EnvironmentFile=-/etc/conf.d/mysql
+ 
+ # Sets open_files_limit
+ LimitNOFILE = 10000
+@@ -64,4 +64,4 @@
+ # Set enviroment variable MYSQLD_PARENT_PID. This is required for restart.
+ Environment=MYSQLD_PARENT_PID=1
+ 
+-PrivateTmp=false
++PrivateTmp=true
+
+--- a/usr/lib/systemd/system/mysqld@.service
++++ b/usr/lib/systemd/system/mysqld@.service
+@@ -52,7 +52,7 @@
+ ExecStart=/usr/bin/mysqld --defaults-group-suffix=@%I $MYSQLD_OPTS
+ 
+ # Use this to switch malloc implementation
+-EnvironmentFile=-/etc/sysconfig/mysql
++EnvironmentFile=-/etc/conf.d/mysql
+ 
+ # Sets open_files_limit
+ LimitNOFILE = 10000
+@@ -64,4 +64,4 @@
+ # Set enviroment variable MYSQLD_PARENT_PID. This is required for restart.
+ Environment=MYSQLD_PARENT_PID=1
+ 
+-PrivateTmp=false
++PrivateTmp=true

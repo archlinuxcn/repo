@@ -28,4 +28,7 @@
 # sort_buffer_size = 2M
 # read_rnd_buffer_size = 2M 
 
-sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES 
+datadir=/var/lib/mysql
+socket=/run/mysqld/mysqld.sock
+
+sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES

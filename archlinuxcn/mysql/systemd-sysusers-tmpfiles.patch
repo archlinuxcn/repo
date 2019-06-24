@@ -1,0 +1,7 @@
+--- a/usr/lib/tmpfiles.d/mysql.conf
++++ b/usr/lib/tmpfiles.d/mysql.conf
+@@ -21,3 +21,4 @@
+ # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+ 
+ d /var/run/mysqld 0755 mysql mysql  -
++d /var/lib/mysql 0700 mysql mysql  -
