@@ -6,10 +6,10 @@
 # Contributor: Élie Bouttier <elie@bouttier.eu>
 
 pkgbase=linux-mptcp
-pkgver=0.94.6
+pkgver=0.95
 pkgrel=1
 epoch=1
-_commit=7515c39648625462d5923e06bbfa799b26135ca6
+_commit=8bf32af5f92a94f064b324ec1abc3ae030baec56
 _srcname=mptcp-${_commit}
 arch=('x86_64')
 url="http://www.multipath-tcp.org/"
@@ -21,15 +21,13 @@ source=("https://github.com/multipath-tcp/mptcp/archive/${_commit}/${pkgbase}-${
         '60-linux.hook'  # pacman hook for depmod
         '90-linux.hook'  # pacman hook for initramfs regeneration
         'linux-mptcp.preset'   # standard config files for mkinitcpio ramdisk
-        '0001-add-sysctl-to-disallow-unprivileged-CLONE_NEWUSER-by.patch'
-        '0002-drm-i915-edp-Only-use-the-alternate-fixed-mode-if-it.patch')
-sha256sums=('e948e2b45d75c4618afd3ef600be40dfdedf60ee3a680ec84d55b0059a868729'
-            '68fd7fb4ec91d883b9ee534208be27788781c6b234d45f83b16e3c9dd2d3bbf0'
+        '0001-add-sysctl-to-disallow-unprivileged-CLONE_NEWUSER-by.patch')
+sha256sums=('22d4894c6ae6b06d1ad6b0dc8c9bad069ce5c0e3b845e0596aefbc941d112363'
+            '42c0b8df494efba408be2af61c1503fc16d5d6dcfb539944d3fa7098e60cace5'
             'ae2e95db94ef7176207c690224169594d49445e04249d2499e9d2fbc117a0b21'
             '75f99f5239e03238f88d1a834c50043ec32b1dc568f2cc291b07d04718483919'
             'ad6344badc91ad0630caacde83f7f9b97276f80d26a20619a87952be65492c65'
-            '36b1118c8dedadc4851150ddd4eb07b1c58ac5bbf3022cc2501a27c2b476da98'
-            '6364edabad4182dcf148ae7c14d8f45d61037d4539e76486f978f1af3a090794')
+            '36b1118c8dedadc4851150ddd4eb07b1c58ac5bbf3022cc2501a27c2b476da98')
 
 _kernelname=${pkgbase#linux}
 
@@ -38,9 +36,6 @@ prepare() {
 
   # disable USER_NS for non-root users by default
   patch -Np1 -i "${srcdir}/0001-add-sysctl-to-disallow-unprivileged-CLONE_NEWUSER-by.patch"
-
-  # https://bugs.archlinux.org/task/56711
-  patch -Np1 -i "${srcdir}/0002-drm-i915-edp-Only-use-the-alternate-fixed-mode-if-it.patch"
 
   cat "${srcdir}/config" > ./.config
 
@@ -80,7 +75,7 @@ build() {
 }
 
 _package() {
-  pkgdesc="The Linux kernel and modules with Multipath TCP support (based on linux 4.14.127)"
+  pkgdesc="The Linux kernel and modules with Multipath TCP support (based on linux 4.19.55)"
   [ "${pkgbase}" = "linux" ] && groups=('base')
   depends=('coreutils' 'linux-firmware' 'kmod' 'mkinitcpio>=0.7')
   optdepends=('crda: to set the correct wireless channels of your country'
@@ -99,6 +94,10 @@ _package() {
   mkdir -p "${pkgdir}"/{boot,usr/lib/modules}
   make LOCALVERSION= INSTALL_MOD_PATH="${pkgdir}/usr" modules_install
   cp arch/x86/boot/bzImage "${pkgdir}/boot/vmlinuz-${pkgbase}"
+
+  # systemd expects to find the kernel here to allow hibernation
+  # https://github.com/systemd/systemd/commit/edda44605f06a41fb86b7ab8128dcf99161d2344
+  ln -sr "${pkgdir}/boot/vmlinuz-${pkgbase}" "${pkgdir}/usr/lib/modules/${_kernver}/vmlinuz"
 
   # make room for external modules
   local _extramodules="extramodules-${_basekernel}${_kernelname:--mptcp}"
@@ -159,9 +158,6 @@ _package-headers() {
 
   install -Dt "${_builddir}/drivers/md" -m644 drivers/md/*.h
   install -Dt "${_builddir}/net/mac80211" -m644 net/mac80211/*.h
-
-  # http://bugs.archlinux.org/task/9912
-  install -Dt "${_builddir}/drivers/media/dvb-core" -m644 drivers/media/dvb-core/*.h
 
   # http://bugs.archlinux.org/task/13146
   install -Dt "${_builddir}/drivers/media/i2c" -m644 drivers/media/i2c/msp3400-driver.h
