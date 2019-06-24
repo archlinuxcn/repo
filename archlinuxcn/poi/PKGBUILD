@@ -8,7 +8,7 @@ pkgdesc="Scalable KanColle browser and tool"
 arch=('any')
 url="https://github.com/poooi/poi/"
 license=('MIT')
-depends=('npm' 'sh')
+depends=('sh' 'electron')
 makedepends=('git' 'nodejs' 'coreutils' 'findutils' 'sed' 'imagemagick' 'tar' 'zlib' 'unzip' 'gulp' 'npm' 'python2')
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
@@ -36,9 +36,6 @@ build() {
     git clean -xdf
     npm install
     gulp build
-    # workaround: require electron >= 3.0.0
-    cd app_compiled
-    npm install electron@beta
 }
 
 package() {
