@@ -3,9 +3,9 @@ XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 BRAVE_USE_FLASH_IF_AVAILABLE="${BRAVE_USE_FLASH_IF_AVAILABLE:-true}"
 
 # Allow users to override command-line options
-BRAVE_USER_FLAGS_FILE="$XDG_CONFIG_HOME/brave-flags.conf"
+USER_FLAGS_FILE="$XDG_CONFIG_HOME/brave-flags.conf"
 if [[ -f $USER_FLAGS_FILE ]]; then
-   USER_FLAGS="$(cat $USER_FLAGS_FILE)"
+   USER_FLAGS="$(cat $USER_FLAGS_FILE | sed 's/#.*//')"
 fi
 
 if [[ ! (-r /proc/sys/kernel/unprivileged_userns_clone && $(< /proc/sys/kernel/unprivileged_userns_clone) == 1 && -n $(zcat /proc/config.gz | grep CONFIG_USER_NS=y) ) ]]; then
