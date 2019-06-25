@@ -8,7 +8,7 @@ pkgname=qsyncthingtray-lite
 _pkgname=QSyncthingTray
 pkgver=0.5.8.r17.g11936bc
 _commit=11936bc01b849cec3d0dfc82ad83521c20f3686f
-pkgrel=1
+pkgrel=2
 pkgdesc="tray app for syncthing - without the default embedded web interface"
 arch=('i686' 'x86_64')
 url="https://github.com/sieren/QSyncthingTray"
@@ -45,6 +45,6 @@ package() {
   install -Dm755 "build/$_pkgname" "$pkgdir/usr/bin/$_pkgname"
 
   # install .desktop file
-  install -Dm755 "$srcdir/$pkgname.desktop" "$pkgdir/usr/share/applications/$pkgname.desktop"
+  install -Dm644 "$srcdir/$pkgname.desktop" "$pkgdir/usr/share/applications/$pkgname.desktop"
   install -Dm644 "resources/images/Icon1024.png" "$pkgdir/usr/share/pixmaps/qsyncthingtray.png"
 }
