@@ -6,7 +6,7 @@
 # Contributor: Hexchain Tong <i at hexchain dot org>
 
 pkgname=megasync
-pkgver=4.1.1.0
+pkgver=4.2.0
 pkgrel=1
 pkgdesc="Easy automated syncing between your computers and your MEGA cloud drive"
 arch=('i686' 'x86_64')
@@ -16,8 +16,8 @@ depends=('c-ares' 'crypto++' 'libsodium' 'hicolor-icon-theme' 'libuv'
          'qt5-svg' 'libmediainfo' 'libraw' 'qt5-base' 'ffmpeg')
 makedepends=('qt5-tools' 'swig' 'doxygen' 'lsb-release' 'git')
 optdepends=('sni-qt: fix systray issue on KDE and LXQt')
-_extname="Linux"
-_sdk_commit="30853f9834a147e7e67011ab91e78674a7963add"
+_extname="ArchLinux"
+_sdk_commit="8fa7940db5d4cd6d36f52f340961018a846a8544"
 source=("git+https://github.com/meganz/MEGAsync.git#tag=v${pkgver}_${_extname}"
         "meganz-sdk::git+https://github.com/meganz/sdk.git#commit=${_sdk_commit}")
 sha256sums=('SKIP'
@@ -65,10 +65,10 @@ package () {
     cd "MEGAsync"
     install -Dm 644 LICENCE.md "${pkgdir}/usr/share/licenses/megasync/LICENCE"
     install -Dm 644 installer/terms.txt "${pkgdir}/usr/share/licenses/megasync/terms.txt"
-
+    install -Dm 644 src/MEGASync/mega/LICENSE "${pkgdir}/usr/share/licenses/megasync/SDK-LICENCE"
+    
     cd "src"
     make INSTALL_ROOT="${pkgdir}" install
 
-    cd "MEGASync"
-    install -Dm 755 megasync "${pkgdir}/usr/bin/megasync"
+    install -Dm 755 "MEGASync/megasync" "${pkgdir}/usr/bin/megasync"
 }
