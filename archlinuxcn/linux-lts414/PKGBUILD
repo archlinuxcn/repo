@@ -2,31 +2,41 @@
 # Contributor: Andreas Radke <andyrtr@archlinux.org>
 
 set -u
-pkgbase=linux-lts414
-#pkgbase=linux-lts-custom
-_srcname=linux-4.14
-pkgver=4.14.129
-pkgrel=1
+pkgbase="linux-lts414"
+pkgver="4.14.130"
+_srcname="linux-${pkgver%.*}"
+pkgrel='1'
 arch=('x86_64')
 url="https://www.kernel.org/"
 license=('GPL2')
 makedepends=('xmlto' 'kmod' 'inetutils' 'bc' 'libelf')
 options=('!strip')
 _verwatch=('https://mirrors.edge.kernel.org/pub/linux/kernel/v4.x/' '.*"patch-\(4\.14\.[0-9]\+\)\.xz.*' 'f')
-source=(https://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.xz
-        https://www.kernel.org/pub/linux/kernel/v4.x/patch-${pkgver}.xz
-        'config'         # the main kernel config file
-        '60-linux.hook'  # pacman hook for depmod
-        '90-linux.hook'  # pacman hook for initramfs regeneration
-        'linux-lts.preset'   # standard config files for mkinitcpio ramdisk
-        0001-add-sysctl-to-disallow-unprivileged-CLONE_NEWUSER-by.patch
-        0003-Revert-drm-i915-edp-Allow-alternate-fixed-mode-for-e.patch)
-validpgpkeys=('ABAF11C65A2970B130ABE3C479BE3E4300411886' # Linus Torvalds <torvalds@linux-foundation.org>
-              '647F28654894E3BD457199BE38DBBDC86092693E' # Greg Kroah-Hartman (Linux kernel stable release signing key) <greg@kroah.com>
-             )
+source=(
+  "https://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.xz"
+  "https://www.kernel.org/pub/linux/kernel/v4.x/patch-${pkgver}.xz"
+  'config'         # the main kernel config file
+  '60-linux.hook'  # pacman hook for depmod
+  '90-linux.hook'  # pacman hook for initramfs regeneration
+  'linux-lts.preset'   # standard config files for mkinitcpio ramdisk
+  '0001-add-sysctl-to-disallow-unprivileged-CLONE_NEWUSER-by.patch'
+  '0003-Revert-drm-i915-edp-Allow-alternate-fixed-mode-for-e.patch'
+)
+validpgpkeys=(
+  'ABAF11C65A2970B130ABE3C479BE3E4300411886' # Linus Torvalds <torvalds@linux-foundation.org>
+  '647F28654894E3BD457199BE38DBBDC86092693E' # Greg Kroah-Hartman (Linux kernel stable release signing key) <greg@kroah.com>
+)
 # https://www.kernel.org/pub/linux/kernel/v4.x/sha256sums.asc
+md5sums=('bacdb9ffdcd922aa069a5e1520160e24'
+         '5cfff6673a6c2351957c0991bea8f645'
+         'd25ac6fb204de05284286fddacc74247'
+         'ce6c81ad1ad1f8b333fd6077d47abdaf'
+         'a85bfae59eb537b973c388ffadb281ff'
+         'a329f9581060d555dc7358483de9760a'
+         '53523555d234de3b2fde749096ba9948'
+         '95204750f94a5f6d2d19e021736265d5')
 sha256sums=('f81d59477e90a130857ce18dc02f4fbe5725854911db1e7ba770c7cd350f96a7'
-            '7f64e22f9db25c555ef38be0be3fbec4d35482dd80dff96f274a2994d32aec44'
+            '0d1af619766f80a8869274937d6a03769512db148f79ead72f6ef8ebc1682f8f'
             '110d716c119321de712640d683124042ddcbdcac5222645c1b2620a99dd1b00a'
             'ae2e95db94ef7176207c690224169594d49445e04249d2499e9d2fbc117a0b21'
             '75f99f5239e03238f88d1a834c50043ec32b1dc568f2cc291b07d04718483919'
