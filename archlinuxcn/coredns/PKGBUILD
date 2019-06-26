@@ -1,8 +1,8 @@
 # Maintainer: Lorenzo Fontana <lo@linux.com>
 # Maintainer: Xuanwo <xuanwo@archlinuxcn.org>
 pkgname=coredns
-pkgver=1.5.0
-pkgrel=4
+pkgver=1.5.1
+pkgrel=1
 pkgdesc='A DNS server that chains plugins'
 makedepends=('go' 'make' 'git')
 conflicts=('coredns-bin')
@@ -16,7 +16,7 @@ source=(coredns-${pkgver}.tar.gz::https://github.com/coredns/${pkgname}/archive/
         coredns-sysusers.conf
         coredns-tmpfiles.conf
         Corefile)
-sha256sums=('69d9a7df50ecb8cc44656064537927e2abd5ff5d6b82de067e6328723b81efe3'
+sha256sums=('3345f15186353a24257149299103f64ad8531214cb874b9c91cff4db8d45b91a'
             '947b4838af48212ecd8e565155c97ca61ff7d408d0b8622499925b6e232656c4'
             'f4fd89dcb36f52466ebb1a2ae435dc960cdc828a071f3aaae1d83a39696bff30'
             '20052dded9a02e05013a602e597002ee2a003ecfab3309d30969c28207fc5b72'
