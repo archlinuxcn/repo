@@ -7,7 +7,7 @@
 # Contributor: torvic9 <vic999 at mailbox.org>
 
 pkgname=signal
-pkgver=1.25.1
+pkgver=1.25.2
 pkgrel=1
 license=('GPL3')
 pkgdesc='Private messenger for the desktop'
@@ -49,7 +49,7 @@ build() {
 
   # Build Signal
   yarn generate
-  SIGNAL_ENV=production yarn build-release --dir
+  yarn build-release --dir
 }
 
 package() {
