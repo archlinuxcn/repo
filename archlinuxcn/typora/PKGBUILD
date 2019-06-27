@@ -1,6 +1,6 @@
 # Maintainer: Jonathan Duck <duckbrain30@gmail.com>
 pkgname=typora
-pkgver=0.9.70
+pkgver=0.9.72
 pkgrel=1
 pkgdesc="Typora will give you a seamless experience as both a reader and a writer."
 arch=('x86_64')
@@ -10,11 +10,12 @@ url="https://typora.io/"
 depends=('gconf' 'libxss')
 optdepends=('noto-fonts-emoji: Or some other emoji font to see emojis')
 source=("https://typora.io/./linux/$filename")
-md5sums=('3cd8b2103380deeb24585baba0d3390b')
+md5sums=('c1bf1a1b5e39a80b4e411de351313815')
 
 package() {
 	bsdtar -xf data.tar.xz -C "$pkgdir/"
 	rm -rf "$pkgdir/usr/share/lintian/"
+	chmod 4755 "$pkgdir/usr/share/typora/chrome-sandbox"
 	sed -i '/Change Log/d' "$pkgdir/usr/share/applications/typora.desktop"
 	find "$pkgdir" -type d -exec chmod 755 {} \;
 }
