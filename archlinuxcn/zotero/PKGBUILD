@@ -3,7 +3,7 @@
 
 pkgname=zotero
 pkgver=5.0.69
-pkgrel=1
+pkgrel=2
 pkgdesc="Zotero Standalone. Is a free, easy-to-use tool to help you collect, organize, cite, and share your research sources."
 arch=('x86_64')
 url="http://www.zotero.org/download"
@@ -30,4 +30,6 @@ package() {
   install -Dm644 "$pkgdir"/usr/lib/zotero/chrome/icons/default/default256.png "$pkgdir"/usr/share/icons/hicolor/256x256/apps/zotero.png
   # Disable APP update
   sed -i '/pref("app.update.enabled", true);/c\pref("app.update.enabled", false);' "$pkgdir"/usr/lib/zotero/defaults/preferences/prefs.js
+  # No need to keep a shell around when launching Zotero
+  sed -i -r 's/^("\$CALLDIR\/zotero-bin" -app "\$CALLDIR\/application.ini" "\$@")/exec \1/' "$pkgdir"/usr/lib/zotero/zotero
 }
