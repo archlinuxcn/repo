@@ -4,7 +4,7 @@
 pkgbase=mxnet
 pkgname=('mxnet' 'mxnet-mkl' 'mxnet-cuda' 'mxnet-cuda-mkl')
 pkgver=1.5.0.rc2
-pkgrel=1
+pkgrel=2
 pkgdesc="A flexible and efficient library for deep learning"
 arch=('x86_64')
 url="http://mxnet.io/"
@@ -17,22 +17,20 @@ depends=(
   'lapack'
   'openblas'
   'opencv'
+  'protobuf'
   'python-graphviz'
   'python-numpy'
   'python-requests'
+  'zeromq'
 )
 makedepends=(
-  'clang'
   'cmake'
   'cuda'
   'cudnn'
   'cython'
   'git'
   'gtk3'
-  'lapacke'
   'nccl'
-  'ninja'
-  'openmp'
 )
 # test will fail without a gpu
 checkdepends=(
@@ -48,161 +46,117 @@ sha512sums=('SKIP')
 prepare() {
   cd "${srcdir}/${pkgbase}"
   git submodule update --init --recursive
-  cd ..
+  # do not use 3rd party openmp
+  rm -rfv "${srcdir}/${pkgbase}/3rdparty/openmp"
+  # the latest cmake set OpenMP_FOUND instead of OPENMP_FOUND
+  sed -i 's/OPENMP_FOUND/OpenMP_FOUND/g' "${srcdir}/${pkgbase}/CMakeLists.txt"
+  cd "${srcdir}"
+  rm -rf "${srcdir}/${pkgbase}/build"
+  mkdir "${srcdir}/${pkgbase}/build"
   cp -r "${pkgbase}" "${pkgbase}-mkl"
   cp -r "${pkgbase}" "${pkgbase}-cuda"
   cp -r "${pkgbase}" "${pkgbase}-cuda-mkl"
-  export CC=clang
-  export CXX=clang++
+
+  # use gcc version compatible with CUDA
+  export CC=/opt/cuda/bin/gcc
+  export CXX=/opt/cuda/bin/g++
 }
 
 build() {
+  cmake_opts=(
+    -DBUILD_CPP_EXAMPLES:BOOL=ON
+    -DBUILD_CYTHON_MODULES:BOOL=ON
+    -DBUILD_TESTING:BOOL=ON
+    -DCMAKE_BUILD_TYPE:String=Release
+    -DCMAKE_EXE_LINKER_FLAGS="$(pkg-config --libs cblas)"
+    -DCMAKE_INSTALL_LIBDIR:PATH=lib
+    -DCMAKE_INSTALL_PREFIX:PATH=/usr
+    -DCMAKE_SHARED_LINKER_FLAGS="$(pkg-config --libs cblas)"
+    -DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON
+    -DUSE_BLAS=open
+    -DUSE_CPP_PACKAGE:BOOL=ON
+    -DUSE_DIST_KVSTORE:BOOL=ON
+    -DUSE_GPERFTOOLS:BOOL=OFF
+    -DUSE_JEMALLOC:BOOL=OFF
+    -DUSE_LAPACK:BOOL=ON
+    -DUSE_OPENCV:BOOL=ON
+    -DUSE_S3:BOOL=ON
+)
+
   # building without CUDA and without MKL-DNN
-  cd "${srcdir}/${pkgbase}"
-  mkdir build
-  cd build
+  cd "${srcdir}/${pkgbase}/build"
   cmake \
-    -DBUILD_CPP_EXAMPLES=OFF \
-    -DBUILD_TESTING=ON \
-    -DCMAKE_BUILD_TYPE:String=Release \
-    -DCMAKE_C_COMPILER=clang \
-    -DCMAKE_CXX_COMPILER=clang++ \
-    -DCMAKE_EXE_LINKER_FLAGS="$(pkg-config --libs cblas)" \
-    -DCMAKE_INSTALL_LIBDIR:PATH=lib \
-    -DCMAKE_INSTALL_PREFIX:PATH=/usr \
-    -DCMAKE_SHARED_LINKER_FLAGS="$(pkg-config --libs cblas)" \
-    -DUSE_BLAS=open \
+    ${cmake_opts[@]} \
     -DUSE_CUDA:BOOL=OFF \
     -DUSE_CUDNN:BOOL=OFF \
-    -DUSE_GPERFTOOLS:BOOL=OFF \
-    -DUSE_JEMALLOC:BOOL=OFF \
     -DUSE_MKLDNN:BOOL=OFF \
     -DUSE_NCCL:BOOL=OFF \
-    -DUSE_OPENCV:BOOL=ON \
-    -GNinja \
     ..
-  ninja -v -l$(nproc)
-  cd "${srcdir}/${pkgbase}/python"
-  python setup.py build --with-cython
+  make
   
   # building without CUDA and with MKL-DNN
-  cd "${srcdir}/${pkgbase}-mkl"
-  mkdir build
-  cd build
+  cd "${srcdir}/${pkgbase}-mkl/build"
   cmake \
-    -DBUILD_CPP_EXAMPLES=OFF \
-    -DBUILD_TESTING=OFF \
-    -DCMAKE_BUILD_TYPE:String=Release \
-    -DCMAKE_C_COMPILER=clang \
-    -DCMAKE_CXX_COMPILER=clang++ \
-    -DCMAKE_EXE_LINKER_FLAGS="$(pkg-config --libs cblas lapacke)" \
-    -DCMAKE_INSTALL_LIBDIR:PATH=lib \
-    -DCMAKE_INSTALL_PREFIX:PATH=/usr \
-    -DCMAKE_SHARED_LINKER_FLAGS="$(pkg-config --libs cblas lapacke)" \
-    -DUSE_BLAS=open \
+    ${cmake_opts[@]} \
     -DUSE_CUDA:BOOL=OFF \
     -DUSE_CUDNN:BOOL=OFF \
-    -DUSE_GPERFTOOLS:BOOL=OFF \
-    -DUSE_JEMALLOC:BOOL=OFF \
     -DUSE_MKLDNN:BOOL=ON \
-    -DUSE_MKL_IF_AVAILABLE:BOOL=OFF \
     -DUSE_NCCL:BOOL=OFF \
-    -DUSE_OPENCV:BOOL=ON \
-    -GNinja \
     ..
-  ninja -v -l$(nproc)
-  cd "${srcdir}/${pkgbase}-mkl/python"
-  python setup.py build --with-cython
-  
+  make
+
   # building with CUDA and without MKL-DNN
-  cd "${srcdir}/${pkgbase}-cuda"
-  mkdir build
-  cd build
+  cd "${srcdir}/${pkgbase}-cuda/build"
   cmake \
-    -DBUILD_CPP_EXAMPLES=OFF \
-    -DBUILD_TESTING=OFF \
-    -DCMAKE_BUILD_TYPE:String=Release \
-    -DCMAKE_C_COMPILER=clang \
-    -DCMAKE_CXX_COMPILER=clang++ \
-    -DCMAKE_EXE_LINKER_FLAGS="$(pkg-config --libs cblas)" \
-    -DCMAKE_INSTALL_LIBDIR:PATH=lib \
-    -DCMAKE_INSTALL_PREFIX:PATH=/usr \
-    -DCMAKE_SHARED_LINKER_FLAGS="$(pkg-config --libs cblas)" \
-    -DUSE_BLAS=open \
+    ${cmake_opts[@]} \
     -DUSE_CUDA:BOOL=ON \
     -DUSE_CUDNN:BOOL=ON \
-    -DUSE_GPERFTOOLS:BOOL=OFF \
-    -DUSE_JEMALLOC:BOOL=OFF \
-    -DUSE_MKLDNN:BOOL=ON \
+    -DUSE_MKLDNN:BOOL=OFF \
     -DUSE_NCCL:BOOL=ON \
-    -DUSE_OPENCV:BOOL=ON \
-    -GNinja \
     ..
-  ninja -v -l$(nproc)
-  cd "${srcdir}/${pkgbase}-cuda/python"
-  python setup.py build --with-cython
-  
+  make
+
   # building with CUDA and with MKL-DNN
-  cd "${srcdir}/${pkgbase}-cuda-mkl"
-  mkdir build
-  cd build
+  cd "${srcdir}/${pkgbase}-cuda-mkl/build"
   cmake \
-    -DBUILD_CPP_EXAMPLES=OFF \
-    -DBUILD_TESTING=OFF \
-    -DCMAKE_BUILD_TYPE:String=Release \
-    -DCMAKE_C_COMPILER=clang \
-    -DCMAKE_CXX_COMPILER=clang++ \
-    -DCMAKE_EXE_LINKER_FLAGS="$(pkg-config --libs cblas lapacke)" \
-    -DCMAKE_INSTALL_LIBDIR:PATH=lib \
-    -DCMAKE_INSTALL_PREFIX:PATH=/usr \
-    -DCMAKE_SHARED_LINKER_FLAGS="$(pkg-config --libs cblas lapacke)" \
-    -DUSE_BLAS=open \
+    ${cmake_opts[@]} \
     -DUSE_CUDA:BOOL=ON \
     -DUSE_CUDNN:BOOL=ON \
-    -DUSE_GPERFTOOLS:BOOL=OFF \
-    -DUSE_JEMALLOC:BOOL=OFF \
     -DUSE_MKLDNN:BOOL=ON \
     -DUSE_NCCL:BOOL=ON \
-    -DUSE_OPENCV:BOOL=ON \
-    -GNinja \
     ..
-  ninja -v -l$(nproc)
-  cd "${srcdir}/${pkgbase}-cuda-mkl/python"
-  python setup.py build --with-cython
+  make
 }
 
 check() {
   for i in mxnet mxnet-mkl mxnet-cuda mxnet-cuda-mkl; do
     cd "${srcdir}/${i}/build"
     ctest --verbose
-    export PYTHONPATH="${srcdir}/${i}/python/build/lib.linux-${CARCH}-3.7"
+    # create soft line for libmxnet.so
+    ln -sf "${srcdir}/${i}/build/libmxnet.so" "${srcdir}/${i}/python/build/lib.linux-${CARCH}-3.7/libmxnet.so"
     cd "${srcdir}/${i}"
-    nosetests -v tests/python/common
-    nosetests -v tests/python/unittest
-    nosetests -v tests/python/train
+    PYTHONPATH="${srcdir}/${i}/python/build/lib.linux-${CARCH}-3.7" nosetests -v tests/python/common
+    PYTHONPATH="${srcdir}/${i}/python/build/lib.linux-${CARCH}-3.7" nosetests -v tests/python/unittest
+    PYTHONPATH="${srcdir}/${i}/python/build/lib.linux-${CARCH}-3.7" nosetests -v tests/python/train
   done
 }
 
 _package() {
   cd "${srcdir}/${pkgname}/build"
   # install mxnet core component
-  DESTDIR="${pkgdir}" ninja install
+  make DESTDIR="${pkgdir}" install
   install -Dm755 "${srcdir}/${pkgname}/build/im2rec" "${pkgdir}/usr/bin/im2rec"
   # install python binding
-  cd '../python'
+  cd "${srcdir}/${pkgname}/python"
   python setup.py install --root="${pkgdir}" --optimize=1 --with-cython --skip-build
   install -Dm644 "${srcdir}/${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
-  if [ -d "${srcdir}/${pkgname}/build/mklml" ]; then
-    find "${srcdir}/${pkgname}/build/mklml" -name '*.so' -exec install -Dm755 {} "${pkgdir}/usr/lib" \;
-  fi
-  # remove conflict files
   rm -rfv "${pkgdir}/usr/mxnet"
-  rm -vf "${pkgdir}/usr/include/omp.h"
-  rm -vf "${pkgdir}/usr/lib/libgomp.so"
-  rm -vf "${pkgdir}/usr/lib/libiomp5.so"
-  rm -vf "${pkgdir}/usr/lib/libomp.so"
-  ln -s '/usr/lib/libmxnet.so' "${pkgdir}/usr/lib/python3.7/site-packages/mxnet/libmxnet.so"
+  ln -sf '/usr/lib/libmxnet.so' "${pkgdir}/usr/lib/python3.7/site-packages/mxnet/libmxnet.so"
   ln -s "/usr/include" "${pkgdir}/usr/lib/python3.7/site-packages/mxnet/include"
+  # install libmklml_intel.so
+  if [ -d "${srcdir}/${pkgname}/build/mklml" ]; then
+    find "${srcdir}/${pkgname}/build/mklml" -name 'libmklml_intel.so' -exec install -Dm755 {} "${pkgdir}/usr/lib" \;
+  fi
 }
 
 package_mxnet() {
