@@ -4,8 +4,8 @@
 
 set -u
 pkgbase="linux-lts44"
-_srcname="linux-4.4"
-pkgver="4.4.183"
+pkgver="4.4.184"
+_srcname="linux-${pkgver%.*}"
 pkgrel='1'
 arch=('x86_64')
 url="https://www.kernel.org/"
@@ -22,8 +22,12 @@ source=(
   'change-default-console-loglevel.patch'
   '0001-sdhci-revert.patch'
 )
+validpgpkeys=(
+  'ABAF11C65A2970B130ABE3C479BE3E4300411886' # Linus Torvalds <torvalds@linux-foundation.org>
+  '647F28654894E3BD457199BE38DBBDC86092693E' # Greg Kroah-Hartman (Linux kernel stable release signing key) <greg@kroah.com>
+)
 md5sums=('9a78fa2eb6c68ca5a40ed5af08142599'
-         'de63426b91ec0bab3d6ce6edc8dc802b'
+         '284ca9076816b181301490c3d1098dde'
          'da3ffd24b80766c64b9243b9da94c16f'
          'ce6c81ad1ad1f8b333fd6077d47abdaf'
          'a85bfae59eb537b973c388ffadb281ff'
@@ -31,7 +35,7 @@ md5sums=('9a78fa2eb6c68ca5a40ed5af08142599'
          'df7fceae6ee5d7e7be7b60ecd7f6bb35'
          'e1093d9bc718f362344ab56b85d4fb76')
 sha256sums=('401d7c8fef594999a460d10c72c5a94e9c2e1022f16795ec51746b0d165418b2'
-            'e005ec541eb5e03699b58c8ca388681670866e1aac87a3fa2d9a6b2408506718'
+            'c9340487912f61580cd97d03395aeb97ce7709fbd0e464481d9916c8fe2e2448'
             '4e3f00444a1dad5e8826cb23dbcfa56288022e9256904b21e21d4201d7c53db0'
             'ae2e95db94ef7176207c690224169594d49445e04249d2499e9d2fbc117a0b21'
             '75f99f5239e03238f88d1a834c50043ec32b1dc568f2cc291b07d04718483919'
@@ -80,8 +84,6 @@ prepare() {
   done
   unset _lpatch
   shopt -u nullglob
-
-  #cp -Tf ../config .config
 
   declare -A _config=([x86_64]='config')
   cat "${srcdir}/${_config[${CARCH}]}" > './.config'
