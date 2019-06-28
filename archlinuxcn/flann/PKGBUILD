@@ -1,4 +1,5 @@
-# Maintainer: Tim Rakowski <tim.rakowski@gmail.com>
+# Maintainer: acxz <akashpatel2008 at yahoo dot com>
+# Contributor: Tim Rakowski <tim.rakowski@gmail.com>
 # Contributor: Sven-Hendrik Haase <sh@lutzhaase.com>
 # Contributor: Javier Fuentes <0xffaa.rm@gmail.com>
 # Contributor: Figo.zhang <figo1802@gmail.com>
@@ -6,10 +7,10 @@
 
 pkgname=flann
 pkgver=1.9.1
-pkgrel=3
+pkgrel=4
 pkgdesc="FLANN is a library for performing fast approximate nearest neighbor searches in high dimensional spaces"
 arch=('i686' 'x86_64')
-url='http://www.cs.ubc.ca/~mariusm/index.php/FLANN/FLANN'
+url='https://www.cs.ubc.ca/research/flann'
 license=('BSD')
 depends=('lz4' 'hdf5')
 makedepends=('cmake' 'python2' 'texlive-core')
