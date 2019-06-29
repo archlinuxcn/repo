@@ -65,7 +65,6 @@ prepare() {
 build() {
   cmake_opts=(
     -DBUILD_CPP_EXAMPLES:BOOL=ON
-    -DBUILD_CYTHON_MODULES:BOOL=ON
     -DBUILD_TESTING:BOOL=ON
     -DCMAKE_BUILD_TYPE:String=Release
     -DCMAKE_EXE_LINKER_FLAGS="$(pkg-config --libs cblas)"
@@ -93,6 +92,8 @@ build() {
     -DUSE_NCCL:BOOL=OFF \
     ..
   make
+  cd ../python
+  python setup.py build --with-cython
   
   # building without CUDA and with MKL-DNN
   cd "${srcdir}/${pkgbase}-mkl/build"
@@ -104,6 +105,8 @@ build() {
     -DUSE_NCCL:BOOL=OFF \
     ..
   make
+  cd ../python
+  python setup.py build --with-cython
 
   # building with CUDA and without MKL-DNN
   cd "${srcdir}/${pkgbase}-cuda/build"
@@ -115,6 +118,8 @@ build() {
     -DUSE_NCCL:BOOL=ON \
     ..
   make
+  cd ../python
+  python setup.py build --with-cython
 
   # building with CUDA and with MKL-DNN
   cd "${srcdir}/${pkgbase}-cuda-mkl/build"
@@ -126,6 +131,8 @@ build() {
     -DUSE_NCCL:BOOL=ON \
     ..
   make
+  cd ../python
+  python setup.py build --with-cython
 }
 
 check() {
