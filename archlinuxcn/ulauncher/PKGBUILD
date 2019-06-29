@@ -3,34 +3,34 @@
 # To install, run `makepkg -is`
 
 pkgname=ulauncher
-pkgver=4.4.0.r1
+pkgver=5.2.0
 pkgrel=1
 pkgdesc='Application launcher for Linux'
 arch=('any')
-url="http://ulauncher.io"
+url="https://ulauncher.io"
 license=('GPL3')
 depends=('gobject-introspection-runtime' 'libappindicator-gtk3' 'libkeybinder3' 'webkit2gtk'
-         "python2-"{dbus,gobject,pyinotify,pysqlite,levenshtein,xdg,websocket-client})
-makedepends=('python2-distutils-extra')
+         "python-"{dbus,gobject,pyinotify,levenshtein,xdg,websocket-client})
+makedepends=('python-distutils-extra')
 provides=("${pkgname%-*}")
 conflicts=("${pkgname%-*}")
-source=("https://github.com/Ulauncher/Ulauncher/releases/download/4.4.0.r1/ulauncher_4.4.0.r1.tar.gz")
+source=("https://github.com/Ulauncher/Ulauncher/releases/download/5.3.0-beta1/ulauncher_5.3.0.beta1.tar.gz")
 sha256sums=('SKIP')
-
-prepare() {
-  cd ulauncher
-  find -iname "*.py" | xargs sed -i 's=\(^#! */usr/bin.*\)python *$=\1python2='
-}
 
 build() {
   cd ulauncher
-  python2 setup.py build
+  python setup.py build
+}
+
+prepare() {
+  cd ulauncher
+  find -iname "*.py" | xargs sed -i 's=\(^#! */usr/bin.*\)python3 *$=\1python='
 }
 
 package() {
   cd ulauncher
   install -Dm644 build/share/applications/ulauncher.desktop "$pkgdir/usr/share/applications/ulauncher.desktop"
-  python2 setup.py install --root="$pkgdir" --optimize=1 --skip-build
+  python setup.py install --root="$pkgdir" --optimize=1 --skip-build
   rm -rf "$pkgdir"/usr/share/ulauncher/preferences/{no*,src,bow*,gul*,pack*}
-  find $pkgdir -name "*.pyc" | xargs rm
+  find $pkgdir -type d -name __pycache__ | xargs rm -rf
 }
