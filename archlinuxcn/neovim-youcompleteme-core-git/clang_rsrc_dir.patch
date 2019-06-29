@@ -1,0 +1,15 @@
+diff --git a/ycmd/utils.py b/ycmd/utils.py
+index f1c777be..8819e980 100644
+--- a/ycmd/utils.py
++++ b/ycmd/utils.py
+@@ -665,7 +665,9 @@ def ImportAndCheckCore():
+ def GetClangResourceDir():
+   resource_dir = os.path.join( LIBCLANG_DIR, 'clang' )
+   for version in ListDirectory( resource_dir ):
+-    return os.path.join( resource_dir, version )
++    candidate_path = os.path.join( resource_dir, version )
++    if os.path.isdir( candidate_path ):
++      return candidate_path
+ 
+   raise RuntimeError( 'Cannot find Clang resource directory.' )
+ 
