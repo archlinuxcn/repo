@@ -4,7 +4,7 @@
 pkgbase=mxnet
 pkgname=('mxnet' 'mxnet-mkl' 'mxnet-cuda' 'mxnet-cuda-mkl')
 pkgver=1.5.0.rc2
-pkgrel=3
+pkgrel=4
 pkgdesc="A flexible and efficient library for deep learning"
 arch=('x86_64')
 url="http://mxnet.io/"
@@ -31,6 +31,7 @@ makedepends=(
   'git'
   'gtk3'
   'nccl'
+  'patchelf'
 )
 # test will fail without a gpu
 checkdepends=(
@@ -160,10 +161,18 @@ _package() {
   rm -rfv "${pkgdir}/usr/mxnet"
   ln -sf '/usr/lib/libmxnet.so' "${pkgdir}/usr/lib/python3.7/site-packages/mxnet/libmxnet.so"
   ln -s "/usr/include" "${pkgdir}/usr/lib/python3.7/site-packages/mxnet/include"
-  # install libmklml_intel.so
+  # install missing lib files from mklml
+  # currently mkldnn needs mklml libs
+  # install them to /usr/lib/mxnet/mkldnn to avoid conficts with mkl & mkldnn
   if [ -d "${srcdir}/${pkgname}/build/mklml" ]; then
-    find "${srcdir}/${pkgname}/build/mklml" -name 'libmklml_intel.so' -exec install -Dm755 {} "${pkgdir}/usr/lib" \;
+    find "${srcdir}/${pkgname}/build/mklml" -name '*.so' -exec install -Dm755 {} "${pkgdir}/usr/lib/mxnet/mkldnn" \;
   fi
+  find "${pkgdir}/usr/lib" -name 'libmkldnn*' -exec mv {} "${pkgdir}/usr/lib/mxnet/mkldnn" \;
+  # patch rpath
+  find "${pkgdir}" -type f -perm 755 -exec patchelf --set-rpath '/usr/lib/mxnet/mkldnn' {} \;
+  # remove unwantted files
+  rm -rfv "${pkgdir}/usr/lib/cmake"
+  find "${pkgdir}/usr/include" -type f -name 'mkldnn*' -delete
 }
 
 package_mxnet() {
