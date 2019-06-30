@@ -4,13 +4,14 @@
 pkgbase=mxnet
 pkgname=('mxnet' 'mxnet-mkl' 'mxnet-cuda' 'mxnet-cuda-mkl')
 pkgver=1.5.0.rc2
-pkgrel=5
+pkgrel=6
 pkgdesc="A flexible and efficient library for deep learning"
 arch=('x86_64')
 url="http://mxnet.io/"
 license=('Apache')
 depends=(
   'cblas'
+  'curl'
   'double-conversion'
   'hdf5'
   'intel-tbb'
@@ -33,7 +34,6 @@ makedepends=(
   'nccl'
   'patchelf'
 )
-# test will fail without a gpu
 checkdepends=(
   'ipython'
   'python-mock'
@@ -137,11 +137,14 @@ build() {
 }
 
 check() {
-  for i in mxnet mxnet-mkl mxnet-cuda mxnet-cuda-mkl; do
+  # check will fail without a GPU, skip check for mxnet-cuda and mxnet-mkl-cuda
+  #for i in mxnet mxnet-mkl mxnet-cuda mxnet-cuda-mkl; do
+  for i in mxnet mxnet-mkl; do
     cd "${srcdir}/${i}/build"
-    ctest --verbose
+    # increase timeout
+    ctest --verbose --timeout 3000
     # create soft line for libmxnet.so
-    ln -sf "${srcdir}/${i}/build/libmxnet.so" "${srcdir}/${i}/python/build/lib.linux-${CARCH}-3.7/libmxnet.so"
+    ln -sf "${srcdir}/${i}/build/libmxnet.so" "${srcdir}/${i}/python/build/lib.linux-${CARCH}-3.7/mxnet/libmxnet.so"
     cd "${srcdir}/${i}"
     PYTHONPATH="${srcdir}/${i}/python/build/lib.linux-${CARCH}-3.7" nosetests -v tests/python/common
     PYTHONPATH="${srcdir}/${i}/python/build/lib.linux-${CARCH}-3.7" nosetests -v tests/python/unittest
@@ -165,13 +168,13 @@ _package() {
   # currently mkldnn needs mklml libs
   # install them to /usr/lib/mxnet/mkldnn to avoid conficts with mkl & mkldnn
   if [ -d "${srcdir}/${pkgname}/build/mklml" ]; then
-    find "${srcdir}/${pkgname}/build/mklml" -name '*.so' -exec install -Dm755 {} "${pkgdir}/usr/lib/mxnet/mkldnn" \;
+    find "${srcdir}/${pkgname}/build/mklml" -name '*.so' -exec install -Dm755 {} -t "${pkgdir}/usr/lib/mxnet/mkldnn" \;
   fi
   find "${pkgdir}/usr/lib" -name 'libmkldnn*' -exec mv {} "${pkgdir}/usr/lib/mxnet/mkldnn" \;
   # patch rpath
   find "${pkgdir}" -type f -perm 755 -exec patchelf --set-rpath '/usr/lib/mxnet/mkldnn' {} \;
   # remove unwantted files
-  rm -rfv "${pkgdir}/usr/lib/cmake"
+  rm -rfv "${pkgdir}/usr/lib/cmake" "${pkgdir}/usr/share/doc"
   find "${pkgdir}/usr/include" -type f -name 'mkldnn*' -delete
 }
 
