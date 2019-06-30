@@ -6,4 +6,6 @@ def pre_build():
     for line in edit_file('PKGBUILD'):
         if line.startswith('groups='):
             continue
+        if line.startswith('pkgver='):
+            print('epoch=1')
         print(line)
