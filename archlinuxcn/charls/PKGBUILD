@@ -2,12 +2,13 @@
 
 pkgname=charls
 pkgver=2.0.0
-pkgrel=2
-pkgdesc="a C++ JPEG-LS library implementation"
-arch=("x86_64")
-url="https://github.com/team-charls/charls"
-license=("BSD")
-makedepends=("cmake")
+pkgrel=3
+pkgdesc='A C++ JPEG-LS library implementation'
+arch=('x86_64')
+url='https://github.com/team-charls/charls'
+license=('BSD')
+depends=('gcc-libs')
+makedepends=('cmake')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/team-charls/charls/archive/${pkgver}.tar.gz")
 sha512sums=('0a2862fad6d65b941c81f5f838db1fdc6a4625887281ddbf27e21be9084f607d27c8a27d246d6252e08358b2ed4aa0c2b7407048ca559fb40e94313ca72487dd')
 
@@ -18,7 +19,7 @@ build() {
     -DCMAKE_BUILD_TYPE:STRING=Release \
     -DBUILD_SHARED_LIBS:BOOL=ON \
     .
-	make
+  make
 }
 
 check() {
