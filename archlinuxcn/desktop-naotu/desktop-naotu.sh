@@ -1,2 +1,2 @@
 #!/usr/bin/env sh
-exec electron /usr/share/desktop-naotu/app.asar $@
+exec electron4 /usr/share/desktop-naotu/app.asar $@
