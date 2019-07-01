@@ -1,3 +1,3 @@
 #!/bin/sh
-exec electron /opt/google-chinese-handwriting-ime "$@" > /dev/null 2> /dev/null
+exec electron4 /opt/google-chinese-handwriting-ime "$@" > /dev/null 2> /dev/null
 
