@@ -9,6 +9,7 @@ arch=('any')
 url='https://github.com/skywind3000/emake'
 license=('GPL')
 depends=(python2)
+makedepends=(git)
 provides=(emake)
 conflicts=(emake)
 source=("${pkgname}::git+https://github.com/skywind3000/emake.git")
@@ -24,7 +25,7 @@ pkgver() {
 package() {
   cd "${pkgname}"
   install -Dm755 "${srcdir}/${pkgname}/${_pkgname}.py" "${pkgdir}/usr/bin/${_pkgname}"
-  install -Dm755 "${srcdir}/${pkgname}/README.md" -t "${pkgdir}/usr/doc/${_pkgname}"
-  cp -rvf "${srcdir}/${pkgname}/sample" -t "${pkgdir}/usr/doc/${_pkgname}"
+  install -Dm755 "${srcdir}/${pkgname}/README.md" -t "${pkgdir}/usr/share/doc/${_pkgname}"
+  cp -rvf "${srcdir}/${pkgname}/sample" -t "${pkgdir}/usr/share/doc/${_pkgname}"
 }
 # vim:set ts=2 sw=2 et:
