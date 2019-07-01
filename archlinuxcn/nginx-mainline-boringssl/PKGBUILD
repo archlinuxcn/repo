@@ -1,11 +1,11 @@
 # $Id: PKGBUILD 289024 2017-02-15 21:13:17Z bpiotrowski $
-# Maintainer:  Bartłomiej Piotrowski <bpiotrowski@archlinux.org>
+# Maintainer:  Kasei Wang <kasei@kasei.im>
+# Contributor: Bartłomiej Piotrowski <bpiotrowski@archlinux.org>
 # Contributor: Sébastien Luttringer
 # Contributor: Drew DeVault
-# Contributor: Kasei Wang <cnsdwpc at gmail.com>
 
 pkgname=nginx-mainline-boringssl
-pkgver=1.15.9
+pkgver=1.17.1
 pkgrel=1
 pkgdesc='Lightweight HTTP server and IMAP/POP3 proxy server, mainline release'
 arch=('i686' 'x86_64')
@@ -17,7 +17,6 @@ backup=('etc/nginx/fastcgi.conf'
         'etc/nginx/fastcgi_params'
         'etc/nginx/koi-win'
         'etc/nginx/koi-utf'
-        'etc/nginx/mime.types'
         'etc/nginx/nginx.conf'
         'etc/nginx/scgi_params'
         'etc/nginx/uwsgi_params'
@@ -31,7 +30,7 @@ source=($url/download/nginx-$pkgver.tar.gz{,.asc}
         "service"
         "logrotate")
 validpgpkeys=('B0F4253373F8F6F510D42178520A9993A1C052F8') # Maxim Dounin <mdounin@mdounin.ru>
-sha256sums=('e4cfba989bba614cd53f3f406ac6da9f05977d6b1296e5d20a299f10c2d7ae43'
+sha256sums=('6f1825b4514e601579986035783769c456b888d3facbab78881ed9b58467e73e'
             'SKIP'
             'SKIP'
             '05fdc0c0483410944b988d7f4beabb00bec4a44a41bd13ebc9b78585da7d3f9b'
@@ -71,6 +70,7 @@ _mainline_flags=(
 
 build() {
   export CXXFLAGS="$CXXFLAGS -fPIC"
+  export CFLAGS="$CFLAGS -fPIC"
 
   cd ${srcdir}/boringssl
   mkdir build && cd build && cmake ../ && make && cd ${srcdir}/boringssl
