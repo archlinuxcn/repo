@@ -1,0 +1,33 @@
+# Maintainer: axionl <i at axionl dot me>
+pkgname=usbaudio-git
+pkgver=r2.acb9ac8
+pkgrel=1
+pkgdesc="Forward audio from Android devices."
+arch=('x86_64')
+makedepends=('git' 'gcc' 'meson')
+depends=('glibc' 'libusb' 'libpulse' 'vlc')
+conflicts=("usbaudio")
+provides=("usbaudio")
+url="https://github.com/rom1v/usbaudio"
+license=("MIT")
+
+source=("$pkgname::git+https://github.com/rom1v/usbaudio.git")
+
+sha256sums=('SKIP')
+
+pkgver() {
+    cd "$srcdir/$pkgname"
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+    cd "$srcdir/$pkgname/"
+    meson "./build" --buildtype=release --prefix="/usr"
+    ninja -C "./build"
+}
+
+package() {
+    cd "$srcdir/$pkgname"
+    install -Dm644 "LICENSE" "$pkgdir/usr/share/licenses/usbaudio"
+    DESTDIR="$pkgdir" ninja -C "./build" install
+}
