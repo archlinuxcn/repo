@@ -5,12 +5,13 @@
 pkgname=gdcm
 _pkgname=GDCM
 pkgver=3.0.0
-pkgrel=6
+pkgrel=7
 pkgdesc='A C++ library for DICOM medical files'
 arch=('x86_64')
 url='http://gdcm.sourceforge.net'
 license=('BSD')
 depends=(
+  'charls'
   'libxml2'
   'poppler'
   'python'
@@ -24,8 +25,17 @@ makedepends=(
   'swig'
 )
 
-source=("https://github.com/malaterre/GDCM/archive/v${pkgver}.tar.gz")
-sha512sums=('2ac076dd49011234f4431ffe67fcba84a1ca9042ec5fc4dfc8aed2ed16bec5f499fa7aa666e5630796afc266ce76741d931cca333534b55fdc477e25a9189d33')
+source=(
+  "https://github.com/malaterre/GDCM/archive/v${pkgver}.tar.gz"
+  'fix-charls.patch'
+)
+sha512sums=('2ac076dd49011234f4431ffe67fcba84a1ca9042ec5fc4dfc8aed2ed16bec5f499fa7aa666e5630796afc266ce76741d931cca333534b55fdc477e25a9189d33'
+            'd777800718b8e556cbc70f8103d2ca676691a6a7e52d726405ce0644b1f691d01896f77731c6f97f6f4f3de0defbf1dc1abbc03aef41a10c5c111dab1331c07b')
+
+prepare() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  patch -p1 -i "${srcdir}/fix-charls.patch"
+}
 
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
@@ -42,7 +52,7 @@ build() {
     -DGDCM_BUILD_TESTING:BOOL=OFF \
     -DGDCM_DOCUMENTATION:BOOL=ON \
     -DGDCM_LEGACY_REMOVE:BOOL=ON \
-    -DGDCM_USE_SYSTEM_CHARLS:BOOL=OFF \
+    -DGDCM_USE_SYSTEM_CHARLS:BOOL=ON \
     -DGDCM_USE_SYSTEM_EXPAT:BOOL=ON \
     -DGDCM_USE_SYSTEM_LIBXML2:BOOL=ON \
     -DGDCM_USE_SYSTEM_OPENJPEG:BOOL=ON \
