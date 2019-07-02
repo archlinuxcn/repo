@@ -1,17 +1,17 @@
 pkgname=libsolv
-pkgver=0.7.2
-pkgrel=3
+pkgver=0.7.5
+pkgrel=1
 pkgdesc="Library for solving packages and reading repositories"
 arch=('i686' 'x86_64')
 url="https://github.com/openSUSE/$pkgname"
 license=('custom:BSD')
-depends=('bzip2' 'expat' 'rpm-org' 'xz' 'zlib' 'zstd')
+depends=('bzip2' 'expat' 'rpm-org' 'xz' 'zchunk' 'zlib' 'zstd')
 makedepends=('cmake' 'perl' 'python' 'ruby' 'swig')
 optdepends=('perl: for perl bindings'
             'python: for python bindings'
             'ruby: for ruby bindings')
 source=("$url/archive/$pkgver/$pkgname-$pkgver.tar.gz")
-md5sums=('da3e3b0d1d75bfb7d99192239944a68b')
+md5sums=('6455a940bf40070b15dcffa00423044a')
 
 prepare() {
 	cd "$pkgname-$pkgver"
@@ -25,7 +25,7 @@ build() {
 	cmake -DCMAKE_BUILD_TYPE=Release \
 	      -DCMAKE_C_FLAGS="$CFLAGS $CPPFLAGS" \
 	      -DCMAKE_INSTALL_PREFIX=/usr \
-	      -DLIB=/lib \
+	      -DCMAKE_INSTALL_LIBDIR=lib \
 	      -DUSE_VENDORDIRS=ON \
 	      -DFEDORA=1 \
 	      -DENABLE_APPDATA=ON \
@@ -33,6 +33,7 @@ build() {
 	      -DENABLE_BZIP2_COMPRESSION=ON \
 	      -DENABLE_COMPLEX_DEPS=1 \
 	      -DENABLE_COMPS=ON \
+	      -DENABLE_CONDA=ON \
 	      -DENABLE_CUDFREPO=ON \
 	      -DENABLE_DEBIAN=ON \
 	      -DENABLE_HAIKU=OFF \
@@ -47,9 +48,10 @@ build() {
 	      -DENABLE_RPMMD=ON \
 	      -DENABLE_RPMPKG=ON \
 	      -DENABLE_RUBY=ON \
-	      -DENABLE_TCL=OFF \
 	      -DENABLE_SUSEREPO=ON \
+	      -DENABLE_TCL=OFF \
 	      -DENABLE_ZCHUNK_COMPRESSION=ON \
+	      -DWITH_SYSTEM_ZCHUNK=ON \
 	      -DENABLE_ZSTD_COMPRESSION=ON \
 	      -DMULTI_SEMANTICS=ON \
 	      -DWITH_LIBXML2=OFF \
