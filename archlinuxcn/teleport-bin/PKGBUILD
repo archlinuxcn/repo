@@ -3,7 +3,7 @@
 # Co-Maintainer: Ariel AxionL <arielaxionl@gmail.com | axionl@aosc.io>
 
 pkgname=teleport-bin
-pkgver=3.1.8
+pkgver=4.0.2
 pkgrel=1
 pkgdesc="Modern SSH server for teams managing distributed infrastructure"
 arch=('x86_64' 'arm')
@@ -18,10 +18,10 @@ source_x86_64=(
     "teleport.install"
 )
 
-sha256sums_x86_64=('6c862c72dee807b1fb4bc7d5e2e4522e9ddc06b9ffc2c32a9a0b28ea8dfa6e80'
+sha256sums_x86_64=('7e32741427d069763426c694fc833799831d99eb4d754ff2204e7dde5166a66d'
                    '48b27cf06bd88f3121f3febec352269f75e4f30e8e7cd80a72c630b3cf34a5e6'
                    'cff4e3c69677210bdde9a781146df06fba3a62cef72ed6854cd1923a05444435')
-sha256sums_arm=('17a22abf5fe2119256705efd04bf0ae036dbdf980b9028ed03e563cf7180d434'
+sha256sums_arm=('7da1475d2b054ee6cd939169d53e257ebb858e536a8958ef343e47d120ce4791'
                 '48b27cf06bd88f3121f3febec352269f75e4f30e8e7cd80a72c630b3cf34a5e6'
                 'cff4e3c69677210bdde9a781146df06fba3a62cef72ed6854cd1923a05444435')
 source_arm=(
