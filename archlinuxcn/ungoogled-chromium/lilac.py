@@ -47,16 +47,7 @@ def aur_pre_build_edit(
 def pre_build():
     aur_pre_build_edit()
     for line in edit_file('PKGBUILD'):
-        if line.strip().startswith('source='):
-            print(line)
-            print("        'fixforgcc9.patch::https://686982.bugs.gentoo.org/attachment.cgi?id=578490'")
-        elif line.strip().startswith("msg2 'Pruning binaries'"):
-            print()
-            print('  #https://bugs.gentoo.org/686982')
-            print('  patch -Np1 -i "$srcdir/fixforgcc9.patch"')
-            print()
-            print(line)
-        elif line.strip().startswith('https://github.com/Eloston/ungoogled-chromium/archive/$pkgver-$pkgrel.tar.gz'):
+        if line.strip().startswith('https://github.com/Eloston/ungoogled-chromium/archive/$pkgver-$pkgrel.tar.gz'):
             print('https://github.com/Eloston/ungoogled-chromium/archive/$pkgver-$_rev.tar.gz')
         elif line.strip().startswith('_ungoogled_repo="$srcdir/$pkgname-$pkgver-$pkgrel"'):
             print('  _ungoogled_repo="$srcdir/$pkgname-$pkgver-$_rev"')
