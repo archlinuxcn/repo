@@ -3,10 +3,10 @@
 # Derived from official Chromium and Inox PKGBUILDS and ungoogled-chromium buildkit
 
 pkgname=ungoogled-chromium
-pkgver=75.0.3770.80
+pkgver=75.0.3770.100
 _rev=1
-_archver=fd5c39f86aadb4b7fe7724aa6b05000218cbbfe6
-pkgrel=1.4
+_archver=af242f55185ff0ff530d9be502099af0b9f6349b
+pkgrel=1
 _launcher_ver=6
 pkgdesc="A lightweight approach to removing Google web service dependency"
 arch=('x86_64')
@@ -27,15 +27,15 @@ optdepends=('pepper-flash: support for Flash content'
 provides=('chromium')
 conflicts=('chromium')
 source=(https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$pkgver.tar.xz
-        'fixforgcc9.patch::https://686982.bugs.gentoo.org/attachment.cgi?id=578490'
         chromium-launcher-$_launcher_ver.tar.gz::https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver.tar.gz
 https://github.com/Eloston/ungoogled-chromium/archive/$pkgver-$_rev.tar.gz
-        https://github.com/ungoogled-software/ungoogled-chromium-archlinux/archive/${_archver}.tar.gz)
-sha256sums=('da828bc8d887821380b461abfbbd0e17538c211d56f240f03711b918c77a66d6'
-            '09c5f16b726ef7031d74807b534fbbfa49a7276ee2a239b70602de2704fa197c'
+        https://github.com/ungoogled-software/ungoogled-chromium-archlinux/archive/${_archver}.tar.gz
+        gcc-9-fix.patch)
+sha256sums=('9e1360101b6d9f9635e540db77626e3e15b452f413d8750518244ac37b73fca0'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
-            'a50251006b0056cad5b80216060002b7f979ace69c97799a3412d10a0fc19afb'
-            '1f917c3dc3948fb37784994195233e8929fe65433ea18cf83545cf81ae61a34f')
+            '6a0dbafd12f369e4a20e08565c80d8348603b49f7dcc6ada11b2ca6ae3acb7c1'
+            '25116b9affc7ffb93c11dc2e3f15e50d74da405b7b79d868ee65b482daa66777'
+            'dbebf3f50660c30e36ffdf05d9fc3abb338beed5510e051eaee6a2c3fe23a0fa')
 
 # Possible replacements are listed in build/linux/unbundle/replace_gn_files.py
 # Keys are the names in the above script; values are the dependencies in Arch
@@ -73,10 +73,8 @@ prepare() {
 
   cd "$srcdir/chromium-$pkgver"
 
-
-  #https://bugs.gentoo.org/686982
-  patch -Np1 -i "$srcdir/fixforgcc9.patch"
-
+  msg2 'Fixing compile time bug on gcc9'
+  patch -p1 --ignore-whitespace -i ../gcc-9-fix.patch --no-backup-if-mismatch
   msg2 'Pruning binaries'
   python "$_utils/prune_binaries.py" ./ "$_ungoogled_repo/pruning.list"
   msg2 'Applying patches'
