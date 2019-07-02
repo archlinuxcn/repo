@@ -1,0 +1,125 @@
+diff -up rpm-4.10.90.git11978/lib/depends.c.rpmlib-filesystem-check rpm-4.10.90.git11978/lib/depends.c
+--- rpm-4.10.90.git11978/lib/depends.c.rpmlib-filesystem-check	2012-11-01 09:40:26.000000000 +0200
++++ rpm-4.10.90.git11978/lib/depends.c	2012-11-05 10:53:42.294733695 +0200
+@@ -589,6 +589,109 @@ static int rpmdbProvides(rpmts ts, depCa
+     return rc;
+ }
+ 
++/*
++ * Temporary support for live-conversion of the filesystem hierarchy
++ *   mailto: kay@redhat.com, harald@redhat.com
++ *   https://fedoraproject.org/wiki/Features/UsrMove
++ *
++ *   X-CheckUnifiedSystemdir:
++ *     /bin, /sbin, /lib, /lib64 --> /usr
++ *
++ *   X-CheckUnifiedBindir:
++ *     /usr/sbin -> /usr/bin
++ *
++ *   X-CheckMultiArchLibdir:
++ *     /usr/lib64 /usr/lib/<platform tuple> (e.g. x86_64-linux-gnu)
++ *
++ * This code is not needed for new installations, it can be removed after
++ * updates from older systems are no longer supported: Fedora 19 / RHEL 8.
++ */
++
++static int CheckLink(const char *dir, const char *root)
++{
++    char *d = NULL;
++    struct stat sbuf;
++    int rc = 0;
++
++    if (!root)
++	root = "/";
++
++    rasprintf(&d, "%s%s", root, dir);
++    if (!d) {
++	rc = -1;
++	goto exit;
++    }
++
++    /* directory or symlink does not exist, all is fine */
++    if (lstat(d, &sbuf) < 0) {
++	rc = 1;
++	goto exit;
++    }
++
++    /* if it is a symlink, all is fine */
++    if (S_ISLNK(sbuf.st_mode))
++	rc = 1;
++
++exit:
++    free(d);
++    return rc;
++}
++
++static int CheckFilesystemHierarchy(rpmds * dsp, const char *root)
++{
++    static const char *dirs[] = { "bin", "sbin", "lib", "lib64" };
++    int check;
++    int i;
++    rpmds ds;
++    rpmstrPool pool = rpmdsPool(*dsp);
++    int rc = 0;
++
++    for (i = 0; i < sizeof(dirs) / sizeof(dirs[0]); i++) {
++	check = CheckLink(dirs[i], root);
++	if (check < 0) {
++	    rc = -1;
++	    goto exit;
++	}
++
++	if (check == 0)
++	    goto exit;
++    }
++    ds = rpmdsSinglePool(pool, RPMTAG_PROVIDENAME,
++			 "rpmlib(X-CheckUnifiedSystemdir)", "1",
++			 RPMSENSE_EQUAL);
++    rpmdsMerge(dsp, ds);
++    rpmdsFree(ds);
++
++    check = CheckLink("usr/lib64", root);
++    if (check < 0) {
++        rc = -1;
++        goto exit;
++    }
++    if (check > 0) {
++	ds = rpmdsSinglePool(pool, RPMTAG_PROVIDENAME,
++			     "rpmlib(X-CheckMultiArchLibdir)", "1",
++			     RPMSENSE_EQUAL);
++	rpmdsMerge(dsp, ds);
++	rpmdsFree(ds);
++    }
++
++    check = CheckLink("usr/sbin", root);
++    if (check < 0) {
++	rc = -1;
++	goto exit;
++    }
++    if (check > 0) {
++	ds = rpmdsSinglePool(pool, RPMTAG_PROVIDENAME,
++			     "rpmlib(X-CheckUnifiedBindir)", "1",
++			     RPMSENSE_EQUAL);
++	rpmdsMerge(dsp, ds);
++	rpmdsFree(ds);
++    }
++
++exit:
++    return rc;
++}
++
+ /**
+  * Check dep for an unsatisfied dependency.
+  * @param ts		transaction set
+@@ -612,8 +715,10 @@ retry:
+      * Check those dependencies now.
+      */
+     if (dsflags & RPMSENSE_RPMLIB) {
+-	if (tsmem->rpmlib == NULL)
++	if (tsmem->rpmlib == NULL) {
+ 	    rpmdsRpmlibPool(rpmtsPool(ts), &(tsmem->rpmlib), NULL);
++	    CheckFilesystemHierarchy(&(tsmem->rpmlib), rpmtsRootDir(ts));
++	}
+ 	
+ 	if (tsmem->rpmlib != NULL && rpmdsSearch(tsmem->rpmlib, dep) >= 0) {
+ 	    rpmdsNotify(dep, "(rpmlib provides)", rc);
