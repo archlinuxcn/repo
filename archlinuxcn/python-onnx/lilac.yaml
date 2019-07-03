@@ -1,0 +1,12 @@
+maintainers:
+  - github: hubutui
+
+build_prefix: extra-x86_64
+
+repo_depends:
+  - mxnet
+
+update_on:
+  - github: onnx/onnx
+    use_max_tag: true
+  - alias: python
