@@ -1,3 +1,8 @@
+# Once again upstream has failed to keep their code compliant with modern compilers
+# fall back to gcc8 until they fix their code
+export CC=gcc-8
+export CXX=g++-8
+
 mk_add_options AUTOCLOBBER=1
 mk_add_options MOZ_OBJDIR=%SRCDIR%/pmbuild
 ac_add_options --enable-application=palemoon
