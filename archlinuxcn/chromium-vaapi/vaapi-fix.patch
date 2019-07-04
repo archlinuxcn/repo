@@ -1,0 +1,134 @@
+From 757f4ca3fbeee9bb5ef88d3dc5ff6b241541c6b9 Mon Sep 17 00:00:00 2001
+From: Akarshan Biswas <akarshanbiswas@fedoraproject.org>
+Date: Fri, 28 Jun 2019 14:27:33 +0530
+Subject: [PATCH] Do not use VPP on Linux; Add some info logs and fix vaapi DRM
+
+---
+ .../gpu_video_decode_accelerator_factory.cc   |  2 ++
+ .../vaapi/vaapi_video_decode_accelerator.cc   | 16 +++++++++++++
+ media/gpu/vaapi/vaapi_wrapper.cc              | 24 +++++++++++++++----
+ 3 files changed, 37 insertions(+), 5 deletions(-)
+
+diff --git a/media/gpu/gpu_video_decode_accelerator_factory.cc b/media/gpu/gpu_video_decode_accelerator_factory.cc
+index dc9ff3fb3..53189759c 100644
+--- a/media/gpu/gpu_video_decode_accelerator_factory.cc
++++ b/media/gpu/gpu_video_decode_accelerator_factory.cc
+@@ -183,6 +183,8 @@ GpuVideoDecodeAcceleratorFactory::CreateVDA(
+     vda = (this->*create_vda_function)(workarounds, gpu_preferences, media_log);
+     if (vda && vda->Initialize(config, client))
+       return vda;
++      else
++      LOG(ERROR) << "Initialization of one or more VDAs failed.";
+   }
+
+   return nullptr;
+diff --git a/media/gpu/vaapi/vaapi_video_decode_accelerator.cc b/media/gpu/vaapi/vaapi_video_decode_accelerator.cc
+index 3c1316dca..1e7fac393 100644
+--- a/media/gpu/vaapi/vaapi_video_decode_accelerator.cc
++++ b/media/gpu/vaapi/vaapi_video_decode_accelerator.cc
+@@ -627,6 +627,13 @@ void VaapiVideoDecodeAccelerator::AssignPictureBuffers(
+   const unsigned int va_format = GetVaFormatForVideoCodecProfile(profile_);
+   std::vector<VASurfaceID> va_surface_ids;
+
++  // Nvidia doesn't support VAProfileNone, so don't try to create a temporary
++  // copy buffer there. It's not needed anyways for hardware video decoding
++  // to work.
++
++  #if defined(OS_ANDROID) || defined(OS_CHROMEOS)
++
++
+   // If we aren't in BufferAllocationMode::kNone, we have to allocate a
+   // |vpp_vaapi_wrapper_| for VaapiPicture to DownloadFromSurface() the VA's
+   // internal decoded frame.
+@@ -640,6 +647,7 @@ void VaapiVideoDecodeAccelerator::AssignPictureBuffers(
+       NotifyError(PLATFORM_FAILURE);
+     }
+   }
++  #endif
+
+   for (size_t i = 0; i < buffers.size(); ++i) {
+     DCHECK(requested_pic_size_ == buffers[i].size());
+@@ -648,9 +656,13 @@ void VaapiVideoDecodeAccelerator::AssignPictureBuffers(
+     // only used as a copy destination. Therefore, the VaapiWrapper used and
+     // owned by |picture| is |vpp_vaapi_wrapper_|.
+     std::unique_ptr<VaapiPicture> picture = vaapi_picture_factory_->Create(
++    	#if defined(OS_LINUX) && !defined(OS_ANDROID) && !defined(OS_CHROMEOS)
++    	     vaapi_wrapper_,
++        #else
+         (buffer_allocation_mode_ == BufferAllocationMode::kNone)
+             ? vaapi_wrapper_
+             : vpp_vaapi_wrapper_,
++        #endif
+         make_context_current_cb_, bind_image_cb_, buffers[i]);
+     RETURN_AND_NOTIFY_ON_FAILURE(picture, "Failed creating a VaapiPicture",
+                                  PLATFORM_FAILURE, );
+@@ -1063,6 +1075,9 @@ VaapiVideoDecodeAccelerator::GetSupportedProfiles() {
+
+ VaapiVideoDecodeAccelerator::BufferAllocationMode
+ VaapiVideoDecodeAccelerator::DecideBufferAllocationMode() {
++ #if defined(OS_LINUX) && !defined(OS_ANDROID) && !defined(OS_CHROMEOS)
++ 	return BufferAllocationMode::kNormal;
++ #else
+   // TODO(crbug.com/912295): Enable a better BufferAllocationMode for IMPORT
+   // |output_mode_| as well.
+   if (output_mode_ == VideoDecodeAccelerator::Config::OutputMode::IMPORT)
+@@ -1095,6 +1110,7 @@ VaapiVideoDecodeAccelerator::DecideBufferAllocationMode() {
+     return BufferAllocationMode::kReduced;
+
+   return BufferAllocationMode::kSuperReduced;
++  #endif
+ }
+
+ bool VaapiVideoDecodeAccelerator::IsBufferAllocationModeReducedOrSuperReduced()
+diff --git a/media/gpu/vaapi/vaapi_wrapper.cc b/media/gpu/vaapi/vaapi_wrapper.cc
+index f6008d288..d829582a6 100644
+--- a/media/gpu/vaapi/vaapi_wrapper.cc
++++ b/media/gpu/vaapi/vaapi_wrapper.cc
+@@ -266,6 +266,10 @@ void VADisplayState::PreSandboxInitialization() {
+       base::File::FLAG_OPEN | base::File::FLAG_READ | base::File::FLAG_WRITE);
+   if (drm_file.IsValid())
+     VADisplayState::Get()->SetDrmFd(drm_file.GetPlatformFile());
++    const char kNvidiaPath[] = "/dev/dri/nvidiactl";
++    base::File nvidia_file = base::File(
++    	base::FilePath::FromUTF8Unsafe(kNvidiaPath),
++    	base::File::FLAG_OPEN | base::File::FLAG_READ | base::File::FLAG_WRITE);
+ }
+
+ VADisplayState::VADisplayState()
+@@ -303,10 +307,11 @@ bool VADisplayState::InitializeOnce() {
+     case gl::kGLImplementationDesktopGL:
+ #if defined(USE_X11)
+       va_display_ = vaGetDisplay(gfx::GetXDisplay());
+-#else
+-      LOG(WARNING) << "VAAPI video acceleration not available without "
+-                      "DesktopGL (GLX).";
++	if (vaDisplayIsValid(va_display_))
++	break;
++
+ #endif  // USE_X11
++      va_display_ = vaGetDisplayDRM(drm_fd_.get());
+       break;
+     // Cannot infer platform from GL, try all available displays
+     case gl::kGLImplementationNone:
+@@ -339,8 +344,17 @@ bool VADisplayState::InitializeOnce() {
+   int major_version, minor_version;
+   VAStatus va_res = vaInitialize(va_display_, &major_version, &minor_version);
+   if (va_res != VA_STATUS_SUCCESS) {
+-    LOG(ERROR) << "vaInitialize failed: " << vaErrorStr(va_res);
+-    return false;
++    LOG(ERROR) << "vaInitialize failed (ignore if using Wayland desktop environment, refer:(Github)akarshanbiswas/chromium-vaapi/issues/7): " << vaErrorStr(va_res);
++     va_display_ = vaGetDisplayDRM(drm_fd_.get());
++     if (!vaDisplayIsValid(va_display_)) {
++     	LOG(ERROR) << "Could not get a valid DRM VA display";
++     	return false;
++     }
++      va_res = vaInitialize(va_display_, &major_version, &minor_version);
++      if (va_res != VA_STATUS_SUCCESS) {
++      	LOG(ERROR) << "vaInitialize failed using DRM: " << vaErrorStr(va_res);
++      	return false;
++      }
+   }
+
+   va_initialized_ = true;
+--
+2.21.0

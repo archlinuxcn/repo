@@ -1,0 +1,38 @@
+From 62ddcf4e98ef2eb0d33ca55133a89b7626c259a3 Mon Sep 17 00:00:00 2001
+From: David Gobbi <david.gobbi@gmail.com>
+Date: Tue, 2 Jul 2019 15:35:25 -0600
+Subject: [PATCH 2/2] VTK 8.2 requires 'hierarchy' info for wrapping.
+
+The 'hierarchy' file for the VTK wrappers includes information
+about all the types defined by VTK headers.  It is required by
+recent versions of the VTK wrapping code.
+---
+ Utilities/VTK/CMakeLists.txt | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/Utilities/VTK/CMakeLists.txt b/Utilities/VTK/CMakeLists.txt
+index 7f9528331..808424495 100644
+--- a/Utilities/VTK/CMakeLists.txt
++++ b/Utilities/VTK/CMakeLists.txt
+@@ -645,6 +645,18 @@ if(GDCM_WRAP_CSHARP)
+ 
+ endif()
+ 
++if( (GDCM_WRAP_JAVA AND VTK_WRAP_JAVA) OR
++    (GDCM_WRAP_PYTHON AND VTK_WRAP_PYTHON) )
++  if( ${VTK_MAJOR_VERSION} GREATER 7 )
++    set(MODULE_HIERARCHY_NAME ${VTKGDCM_NAME}Hierarchy)
++    set(${VTKGDCM_NAME}_WRAP_DEPENDS ${vtkgdcm_LIBS})
++    include(vtkWrapHierarchy)
++    vtk_wrap_hierarchy(${VTKGDCM_NAME} ${CMAKE_CURRENT_BINARY_DIR} "${vtkgdcm_SRCS}")
++    set(KIT_HIERARCHY_FILE ${CMAKE_CURRENT_BINARY_DIR}/${MODULE_HIERARCHY_NAME}.txt)
++    set(LIB_HIERARCHY_STAMP ${CMAKE_CURRENT_BINARY_DIR}/${MODULE_HIERARCHY_NAME}.stamp.txt)
++  endif()
++endif()
++
+ if(GDCM_WRAP_JAVA)
+   if(VTK_WRAP_JAVA)
+     find_package(Java ${GDCM_DEFAULT_JAVA_VERSION} REQUIRED) # javac, jar
+-- 
+2.17.1
+

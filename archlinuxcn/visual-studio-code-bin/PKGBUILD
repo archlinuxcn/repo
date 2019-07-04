@@ -2,10 +2,10 @@
 
 pkgname=visual-studio-code-bin
 _pkgname=visual-studio-code
-pkgver=1.35.1
+pkgver=1.36.0
 pkgrel=1
 pkgdesc="Visual Studio Code (vscode): Editor for building and debugging modern web and cloud applications (official binary version)"
-arch=('x86_64' 'i686')
+arch=('x86_64')
 url="https://code.visualstudio.com/"
 license=('custom: commercial')
 provides=('code')
@@ -13,27 +13,16 @@ conflicts=('code')
 depends=(fontconfig libxtst gtk3 python cairo alsa-lib nss gcc-libs libnotify libxss 'glibc>=2.28-4' lsof)
 optdepends=('gvfs: Needed for move to trash functionality'
             'libdbusmenu-glib: Needed for KDE global menu')
-source_x86_64=(code_x64_${pkgver}.tar.gz::https://vscode-update.azurewebsites.net/${pkgver}/linux-x64/stable
+source=(code_x64_${pkgver}.tar.gz::https://vscode-update.azurewebsites.net/${pkgver}/linux-x64/stable
                ${_pkgname}.desktop ${_pkgname}-url-handler.desktop
                code.png
                )
-source_i686=(code_ia32_${pkgver}.tar.gz::https://vscode-update.azurewebsites.net/${pkgver}/linux-ia32/stable
-              ${_pkgname}.desktop ${_pkgname}-url-handler.desktop
-               code.png
-              )
-sha256sums_x86_64=('09ec9c69f8309890333af265bacd2e18c0865e991d90b4197a33d6c4c28accbc'
-                   '488592034dd5f979083bbd80788d33e253bb3ac3e52d50faee80e715a924a212'
-                   '727adaf263801462744c65bc0fad1b64ab31b3c96ed1a11e5b61bffbd5d71bc7'
-                   '7537330cec94b308feaa9bb66db45b5554b8379ec7dce83990521d2860bca4b2')
-sha256sums_i686=('64360439cc2fa596838062f7e6f9757b79d4b775a564f18bad6cbad154bf850c'
-                 '488592034dd5f979083bbd80788d33e253bb3ac3e52d50faee80e715a924a212'
-                 '727adaf263801462744c65bc0fad1b64ab31b3c96ed1a11e5b61bffbd5d71bc7'
-                 '7537330cec94b308feaa9bb66db45b5554b8379ec7dce83990521d2860bca4b2')
+sha256sums=('dd35291c2bd73c1ca2d9f76cfe49a47905029e5353f8981e6296f054d30a070a'
+            '488592034dd5f979083bbd80788d33e253bb3ac3e52d50faee80e715a924a212'
+            '727adaf263801462744c65bc0fad1b64ab31b3c96ed1a11e5b61bffbd5d71bc7'
+            '7537330cec94b308feaa9bb66db45b5554b8379ec7dce83990521d2860bca4b2')
 package() {
   _pkg=VSCode-linux-x64
-  if [ "${CARCH}" = "i686" ]; then
-    _pkg=VSCode-linux-ia32
-  fi
 
   install -d "${pkgdir}/usr/share/licenses/${_pkgname}"
   install -d "${pkgdir}/opt/${_pkgname}"
