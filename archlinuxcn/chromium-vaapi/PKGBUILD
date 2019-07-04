@@ -11,7 +11,7 @@
 
 pkgname=chromium-vaapi
 pkgver=75.0.3770.100
-pkgrel=1
+pkgrel=2
 _launcher_ver=6
 pkgdesc="Chromium with VA-API support to enable hardware acceleration"
 arch=('x86_64')
@@ -32,7 +32,6 @@ install=chromium.install
 source=(https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$pkgver.tar.xz
         chromium-launcher-$_launcher_ver.tar.gz::https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver.tar.gz
         chromium-drirc-disable-10bpc-color-configs.conf
-        chromium-vaapi.patch
         vaapi-fix.patch
         chromium-system-icu.patch
         chromium-non-const-deltas.patch
@@ -44,7 +43,6 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
 sha256sums=('9e1360101b6d9f9635e540db77626e3e15b452f413d8750518244ac37b73fca0'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
             'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb'
-            '4befcfa310db89736c890dd41e698a6a77ecec8b6f75077ddbae4a1c0ba80092'
             '83cca45acc2515b9c83f34844494a8788f85bb04c36834b88e905c490988d9bb'
             'e2d284311f49c529ea45083438a768db390bde52949995534034d2a814beab89'
             '09c5f16b726ef7031d74807b534fbbfa49a7276ee2a239b70602de2704fa197c'
@@ -105,8 +103,7 @@ prepare() {
   # https://chromium-review.googlesource.com/1584292
   patch -Np1 -i ../libstdc-do-not-assume-unique_ptr-has-ostream-operator.patch
 
-  # Enable VAAPI on Linux
-  patch -Np1 -i ../chromium-vaapi.patch
+  # Fix VA-API on Intel and Nvidia
   patch -Np1 -i ../vaapi-fix.patch
 
   # https://crbug.com/973216
