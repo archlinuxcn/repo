@@ -32,7 +32,7 @@ build() {
   # possibly _FORTIFY_SOURCE? https://bugs.archlinux.org/task/34759
   #unset CPPFLAGS
 
-  ./mach build --dev
+  ./mach build --release
 }
 
 package() {
