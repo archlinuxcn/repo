@@ -36,7 +36,7 @@ build() {
 }
 
 package() {
-  servopath=$_branch/target/debug
+  servopath=$_branch/target/release
   install -Dm755 "$servopath/servo" "$pkgdir/opt/servo/servo"
 
   mkdir -p "$pkgdir/usr/lib"
