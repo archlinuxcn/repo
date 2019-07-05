@@ -5,12 +5,12 @@
 # Contributor: Ariel AxionL <axionl at aosc dot io>
 
 pkgname=wps-office
-pkgver=11.1.0.8392
+pkgver=11.1.0.8722
 #_pkgver=8372
-pkgrel=4
+pkgrel=1
 #_pkgrel=1
 pkgdesc="Kingsoft Office (WPS Office) is an office productivity suite"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 license=("custom")
 url="http://wps-community.org/"
 depends=('fontconfig' 'xorg-mkfontdir' 'libxrender' 'gtk2' 'desktop-file-utils' 'shared-mime-info' 'xdg-utils' 'glu' 'openssl-1.0' 'sdl2' 'libpulse' 'hicolor-icon-theme' 'libxss')
@@ -22,15 +22,15 @@ optdepends=('cups: for printing support'
 conflicts=('kingsoft-office')
 options=('!emptydirs')
 install=${pkgname}.install
-[[ "$CARCH" = "i686" ]] && _archext=x86 || _archext=x86_64
-source_i686=("http://kdl.cc.ksosoft.com/wps-community/download/${pkgver##*.}/wps-office_${pkgver}_i386.deb"
-            'add_no_kdialog_variable.patch')
-source_x86_64=("http://kdl.cc.ksosoft.com/wps-community/download/${pkgver##*.}/wps-office_${pkgver}_amd64.deb"
-               'add_no_kdialog_variable.patch')
-sha1sums_i686=('60b1c9e33ee6fc1edcefe40dc9ec529d4a668825'
-               'dd8b5283ee17a88a3eb0531976abccd6e5e08c48')
-sha1sums_x86_64=('edb1bc215e46c46bb979869e374788498486b56c'
-                 'dd8b5283ee17a88a3eb0531976abccd6e5e08c48')
+#[[ "$CARCH" = "i686" ]] && _archext=x86 || _archext=x86_64
+#source_i686=("http://kdl.cc.ksosoft.com/wps-community/download/${pkgver##*.}/wps-office_${pkgver}_i386.deb"
+#            'add_no_kdialog_variable.patch')
+source=("http://kdl.cc.ksosoft.com/wps-community/download/${pkgver##*.}/wps-office_${pkgver}_amd64.deb"
+        'add_no_kdialog_variable.patch')
+#sha1sums_i686=('60b1c9e33ee6fc1edcefe40dc9ec529d4a668825'
+#               'dd8b5283ee17a88a3eb0531976abccd6e5e08c48')
+sha1sums=('438cdd5057ebf16bff3b0b6b3a9f06fcfca9a3da'
+          'dd8b5283ee17a88a3eb0531976abccd6e5e08c48')
 
 prepare() {
     tar -Jxf data.tar.xz
