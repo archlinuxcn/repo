@@ -36,7 +36,7 @@ package() {
     cp -Pr ${srcdir}/* ${pkgdir}/usr/share/vscodium
     # remove extra source symlinks
     find ${pkgdir}/usr/share/vscodium/ -type l -delete
-    ln -s /usr/share/${_pkgname}/bin/vscodium ${pkgdir}/usr/bin/${_pkgname}
+    ln -s /usr/share/${_pkgname}/codium ${pkgdir}/usr/bin/${_pkgname}
     install -D -m644 vscodium.desktop ${pkgdir}/usr/share/applications/vscodium.desktop
     install -D -m644 ${srcdir}/resources/app/resources/linux/code.png \
             ${pkgdir}/usr/share/pixmaps/vscodium.png
