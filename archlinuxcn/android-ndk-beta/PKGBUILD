@@ -6,7 +6,7 @@
 pkgname=android-ndk-beta
 _pkgname=${pkgname/-beta*/}
 pkgver=r20_beta3
-pkgrel=1
+pkgrel=2
 pkgdesc='Android C/C++ developer kit (beta)'
 arch=('x86_64')
 url='https://developer.android.com/ndk/'
@@ -16,6 +16,8 @@ backup=("etc/profile.d/$pkgname.sh")
 install="$pkgname.install"
 depends=('glibc')
 optdepends=(
+  'ncurses5-compat-libs: for using gdb'
+  'python2: various helper scripts'
   'python: various helper scripts'
 )
 source=("$pkgname.sh")
@@ -27,14 +29,12 @@ sha256sums=('a39422d48174302e1ee27f07031f20adc78224d12c17a5451129a88b47c901c1')
 sha256sums_x86_64=('351dac526af9b6abbb9424c609d57adde7bbd192a4f53471e74a1cf96143e285')
 
 package() {
-  install -d "$pkgdir/opt"
+  install -Ddm755 "$pkgdir/opt"
   mv "$_pkgname-${pkgver/_/-}" "$pkgdir/opt/$pkgname"
 
-  install -Dm755 $pkgname.sh "$pkgdir/etc/profile.d/$pkgname.sh"
+  install -Dm644 $pkgname.sh -t "$pkgdir/etc/profile.d/"
 
   # make sdkmanager and gradle recognize NDK
   install -Ddm755 "$pkgdir"/opt/android-sdk
   ln -s /opt/$pkgname "$pkgdir"/opt/android-sdk/ndk-bundle
 }
-
-# vim: set ts=2 sw=2 et ft=sh:
