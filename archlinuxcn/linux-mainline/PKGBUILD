@@ -8,8 +8,8 @@
 
 pkgbase=linux-mainline               # Build stock -ARCH kernel
 #pkgbase=linux-custom       # Build kernel with a different name
-_tag=v5.2-rc7
-pkgver=5.2rc7
+_tag=v5.2
+pkgver=5.2
 pkgrel=1
 arch=(x86_64)
 url="https://kernel.org/"
