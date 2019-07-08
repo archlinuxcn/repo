@@ -1,7 +1,7 @@
 # Mantainer: Franco Tortoriello
 
 pkgname=dosbox-x-git
-pkgver=8715.19dc5a7c9
+pkgver=8716.ad09ac8de
 pkgrel=1
 pkgdesc="x86 emulator with builtin DOS, with patches with more features"
 arch=(i686 x86_64)
