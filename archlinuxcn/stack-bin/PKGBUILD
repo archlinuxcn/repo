@@ -1,9 +1,9 @@
 # Maintainer: Phil Ruffwind <rf@rufflewind.com>
 pkgname=stack-bin
 pkgver=2.1.1
-pkgrel=2
+pkgrel=3
 pkgdesc="The Haskell Tool Stack (tool only -- libraries not included)"
-arch=(i686 x86_64)
+arch=(aarch64 i686 x86_64)
 url=https://hackage.haskell.org/package/stack
 license=(BSD3)
 depends=(gmp zlib)
