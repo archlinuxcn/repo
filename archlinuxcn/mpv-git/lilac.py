@@ -2,7 +2,8 @@
 from lilaclib import *
 import re
 
-update_on = [{'aur':None}, {'github':'mpv-player/mpv'}]
+update_on = [{'aur':None}, {'github':'mpv-player/mpv'}, {'vcs':'git+https://git.ffmpeg.org/ffmpeg.git'}]
+repo_depends = ['ffmpeg-git']
 build_prefix = 'extra-x86_64'
 
 def pre_build():
