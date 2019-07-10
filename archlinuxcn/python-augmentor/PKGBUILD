@@ -2,7 +2,7 @@
 
 _pkgname=Augmentor
 pkgname=python-augmentor
-pkgver=0.2.4
+pkgver=0.2.5
 pkgrel=1
 pkgdesc='Image augmentation library in Python for machine learning'
 arch=(any)
@@ -12,7 +12,7 @@ depends=(python-future python-numpy python-pillow python-tqdm)
 makedepends=(python-setuptools)
 checkdepends=(python-pytest)
 source=("${_pkgname}-${pkgver}.tar.gz"::"https://github.com/mdbloice/Augmentor/archive/${pkgver}.tar.gz")
-sha512sums=('4b56a8f6102008ca83136abcc8674d8cbddc75146db54d94ca49897ba0cc050e82cec77507c1dee094cd023fc9146d30f282b7a76a7fb93c6fa24293ad19a33e')
+sha512sums=('f1936dbdec44211fd5bf785f2594d1b0190e8a854aaa9a8b2660e4479602958456e4484ec955e244d554ca5d8142a2d825267f53d24193552ccca0503529c84e')
 
 build() {
   cd "${_pkgname}-${pkgver}"
