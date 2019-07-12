@@ -7,7 +7,7 @@ https://bugzilla.mozilla.org/show_bug.cgi?id=847568
 diff --git a/config/system-headers.mozbuild b/config/system-headers.mozbuild
 --- a/config/system-headers.mozbuild
 +++ b/config/system-headers.mozbuild
-@@ -1235,16 +1235,22 @@ if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'andr
+@@ -1235,16 +1235,22 @@ if CONFIG['OS_TARGET'] == 'Android':
  
  if CONFIG['MOZ_SYSTEM_HARFBUZZ']:
      system_headers += [
@@ -77,11 +77,11 @@ diff --git a/gfx/graphite2/moz-gr-update.sh b/gfx/graphite2/moz-gr-update.sh
 diff --git a/gfx/moz.build b/gfx/moz.build
 --- a/gfx/moz.build
 +++ b/gfx/moz.build
-@@ -5,28 +5,30 @@
- # file, You can obtain one at http://mozilla.org/MPL/2.0/.
- 
+@@ -7,16 +7,19 @@
  with Files('**'):
      BUG_COMPONENT = ('Core', 'Graphics')
+ with Files('wr/**'):
+     BUG_COMPONENT = ('Core', 'Graphics: WebRender')
  
  if CONFIG['MOZ_TREE_CAIRO']:
      DIRS += ['cairo']
@@ -97,22 +97,15 @@ diff --git a/gfx/moz.build b/gfx/moz.build
      'ycbcr',
      'angle',
      'src',
-     'qcms',
-     'gl',
-     'layers',
--    'graphite2/src',
-     'ots/src',
-     'thebes',
-     'ipc',
-     'vr',
-     'config',
-     'webrender_bindings',
- ]
- 
 diff --git a/gfx/thebes/moz.build b/gfx/thebes/moz.build
 --- a/gfx/thebes/moz.build
 +++ b/gfx/thebes/moz.build
-@@ -288,7 +288,10 @@
+@@ -272,16 +272,19 @@ CFLAGS += CONFIG['TK_CFLAGS']
+ if CONFIG['MOZ_WIDGET_TOOLKIT'] in ('android'):
+     CXXFLAGS += CONFIG['CAIRO_FT_CFLAGS']
+ 
+ if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'gtk3':
+     CXXFLAGS += CONFIG['MOZ_PANGO_CFLAGS']
  
  LOCAL_INCLUDES += CONFIG['SKIA_INCLUDES']
  
@@ -122,13 +115,16 @@ diff --git a/gfx/thebes/moz.build b/gfx/thebes/moz.build
 +else:
 +    DEFINES['GRAPHITE2_STATIC'] = True
  
+ if CONFIG['MOZ_SYSTEM_HARFBUZZ']:
+     CXXFLAGS += CONFIG['MOZ_HARFBUZZ_CFLAGS']
+ 
  if CONFIG['CC_TYPE'] == 'clang':
      # Suppress warnings from Skia header files.
-
+     SOURCES['gfxPlatform.cpp'].flags += ['-Wno-implicit-fallthrough']
 diff --git a/old-configure.in b/old-configure.in
 --- a/old-configure.in
 +++ b/old-configure.in
-@@ -3857,16 +3857,37 @@ if test "$USE_FC_FREETYPE"; then
+@@ -2690,16 +2690,37 @@ if test "$USE_FC_FREETYPE"; then
          CPPFLAGS="$CPPFLAGS $FT2_CFLAGS $XCFLAGS"
          MOZ_CHECK_HEADERS([fontconfig/fcfreetype.h], ,
              [AC_MSG_ERROR(Can't find header fontconfig/fcfreetype.h.)], [#include <fontconfig/fontconfig.h>])
@@ -169,20 +165,30 @@ diff --git a/old-configure.in b/old-configure.in
 diff --git a/toolkit/library/moz.build b/toolkit/library/moz.build
 --- a/toolkit/library/moz.build
 +++ b/toolkit/library/moz.build
-@@ -229,5 +229,8 @@
- if CONFIG['MOZ_SYSTEM_HARFBUZZ']:
-     OS_LIBS += CONFIG['MOZ_HARFBUZZ_LIBS']
+@@ -207,16 +207,19 @@ if CONFIG['MOZ_ANDROID_GOOGLE_VR']:
+     OS_LIBS += [
+         '-L%s' % CONFIG['MOZ_ANDROID_GOOGLE_VR_LIBS'],
+         '-lgvr',
+     ]
+ 
+ OS_LIBS += CONFIG['MOZ_CAIRO_OSLIBS']
+ OS_LIBS += CONFIG['MOZ_WEBRTC_X11_LIBS']
  
 +if CONFIG['MOZ_SYSTEM_GRAPHITE2']:
 +    OS_LIBS += CONFIG['MOZ_GRAPHITE2_LIBS']
 +
- if CONFIG['MOZ_SYSTEM_LIBEVENT']:
-     OS_LIBS += CONFIG['MOZ_LIBEVENT_LIBS']
-
+ if CONFIG['MOZ_SYSTEM_HARFBUZZ']:
+     OS_LIBS += CONFIG['MOZ_HARFBUZZ_LIBS']
+ 
+ if CONFIG['MOZ_SYSTEM_JPEG']:
+     OS_LIBS += CONFIG['MOZ_JPEG_LIBS']
+ 
+ if CONFIG['MOZ_SYSTEM_PNG']:
+     OS_LIBS += CONFIG['MOZ_PNG_LIBS']
 diff --git a/toolkit/moz.configure b/toolkit/moz.configure
 --- a/toolkit/moz.configure
 +++ b/toolkit/moz.configure
-@@ -331,16 +331,30 @@ def freetype2_combined_info(fontconfig_i
+@@ -377,16 +377,30 @@ def freetype2_combined_info(fontconfig_i
      return namespace(
          cflags=freetype2_info.cflags + fontconfig_info.cflags,
          libs=freetype2_info.libs + fontconfig_info.libs,
@@ -210,6 +216,6 @@ diff --git a/toolkit/moz.configure b/toolkit/moz.configure
  option('--with-system-harfbuzz',
         help="Use system harfbuzz (located with pkgconfig)")
  
- system_harfbuzz = pkg_check_modules('MOZ_HARFBUZZ', 'harfbuzz >= 1.4.2',
+ system_harfbuzz = pkg_check_modules('MOZ_HARFBUZZ', 'harfbuzz >= 2.3.1',
                                      when='--with-system-harfbuzz')
  
