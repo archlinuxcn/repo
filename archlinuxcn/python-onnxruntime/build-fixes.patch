@@ -1,0 +1,93 @@
+diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
+index 96c89fef..0e37e487 100644
+--- a/cmake/CMakeLists.txt
++++ b/cmake/CMakeLists.txt
+@@ -229,18 +229,10 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/external)
+ #2. if ONNX_CUSTOM_PROTOC_EXECUTABLE is not set, Compile everything(including protoc) from source code.
+ 
+ 
+-# use protobuf as a submodule
+-add_subdirectory(${PROJECT_SOURCE_DIR}/external/protobuf/cmake EXCLUDE_FROM_ALL)
+-set_target_properties(libprotobuf PROPERTIES FOLDER "External/Protobuf")
+-set_target_properties(libprotobuf-lite PROPERTIES FOLDER "External/Protobuf")
+-set_target_properties(libprotoc PROPERTIES FOLDER "External/Protobuf")
+-set_target_properties(protoc PROPERTIES FOLDER "External/Protobuf")
+-if (onnxruntime_USE_FULL_PROTOBUF)
+-  add_library(protobuf::libprotobuf ALIAS libprotobuf)
+-else()
+-  add_library(protobuf::libprotobuf ALIAS libprotobuf-lite)
+-endif()
+-add_executable(protobuf::protoc ALIAS protoc)
++find_package(PkgConfig)
++pkg_check_modules(PROTOBUF REQUIRED IMPORTED_TARGET GLOBAL protobuf)
++add_library(libprotobuf ALIAS PkgConfig::PROTOBUF)
++add_library(protobuf::libprotobuf ALIAS PkgConfig::PROTOBUF)
+ include(protobuf_function.cmake)
+ 
+ 
+@@ -282,8 +274,6 @@ set(ONNXRUNTIME_INCLUDE_DIR ${REPO_ROOT}/include/onnxruntime)
+ 
+ add_subdirectory(external/date EXCLUDE_FROM_ALL)
+ add_subdirectory(external/gsl EXCLUDE_FROM_ALL)
+-add_subdirectory(external/re2 EXCLUDE_FROM_ALL)
+-set_target_properties(re2 PROPERTIES FOLDER "External/re2")
+ add_library(gsl ALIAS GSL)
+ 
+ # bounds checking behavior.
+@@ -306,7 +296,7 @@ function(onnxruntime_add_include_to_target dst_target)
+     endforeach()
+ endfunction()
+ 
+-set(onnxruntime_EXTERNAL_DEPENDENCIES gsl onnx_proto re2)
++set(onnxruntime_EXTERNAL_DEPENDENCIES gsl onnx_proto)
+ 
+ # TVM
+ if (onnxruntime_USE_TVM)
+@@ -620,11 +605,10 @@ if (onnxruntime_BUILD_UNIT_TESTS)
+   # turned ON by the previous step when building a shared lib
+   set(CMAKE_SKIP_BUILD_RPATH OFF)
+   # gtest and gmock
+-  add_subdirectory(${PROJECT_SOURCE_DIR}/external/googletest EXCLUDE_FROM_ALL)
+-  set_target_properties(gmock PROPERTIES FOLDER "External/GTest")
+-  set_target_properties(gmock_main PROPERTIES FOLDER "External/GTest")
+-  set_target_properties(gtest PROPERTIES FOLDER "External/GTest")
+-  set_target_properties(gtest_main PROPERTIES FOLDER "External/GTest")
++  pkg_check_modules(GTEST REQUIRED IMPORTED_TARGET GLOBAL gtest)
++  pkg_check_modules(GMOCK REQUIRED IMPORTED_TARGET GLOBAL gmock)
++  add_library(gtest ALIAS PkgConfig::GTEST)
++  add_library(gmock ALIAS PkgConfig::GMOCK)
+   include(onnxruntime_unittests.cmake)
+ endif()
+ 
+diff --git a/cmake/onnxruntime_python.cmake b/cmake/onnxruntime_python.cmake
+index ace16b1b..c76ebde4 100644
+--- a/cmake/onnxruntime_python.cmake
++++ b/cmake/onnxruntime_python.cmake
+@@ -1,7 +1,6 @@
+ # Copyright (c) Microsoft Corporation. All rights reserved.
+ # Licensed under the MIT License.
+ 
+-include(pybind11)
+ FIND_PACKAGE(NumPy)
+ 
+ if(NOT PYTHON_INCLUDE_DIR)
+@@ -83,7 +82,6 @@ set(onnxruntime_pybind11_state_libs
+ 
+ set(onnxruntime_pybind11_state_dependencies
+     ${onnxruntime_EXTERNAL_DEPENDENCIES}
+-    pybind11
+ )
+ 
+ add_dependencies(onnxruntime_pybind11_state ${onnxruntime_pybind11_state_dependencies})
+diff --git a/onnxruntime/core/util/protobuf_parsing_utils.cc b/onnxruntime/core/util/protobuf_parsing_utils.cc
+index 4e46d0ef..8638f353 100644
+--- a/onnxruntime/core/util/protobuf_parsing_utils.cc
++++ b/onnxruntime/core/util/protobuf_parsing_utils.cc
+@@ -49,7 +49,6 @@
+ #include <google/protobuf/stubs/common.h>
+ #include <google/protobuf/stubs/logging.h>
+ #include <google/protobuf/stubs/stl_util.h>
+-#include <google/protobuf/stubs/io_win32.h>
+ #include "protobuf_parsing_utils.h"
+ #include <string.h>
+ 
