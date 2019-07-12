@@ -3,18 +3,26 @@
 
 _pkgname=drawio-desktop
 pkgname=drawio-desktop-bin
-pkgver=10.8.0
+pkgver=10.9.5
 pkgrel=1
 pkgdesc='Diagram drawing application built on web technology'
 arch=('x86_64')
 url='https://github.com/jgraph/drawio'
 license=('Apache')
-depends=(gconf libnotify)
+depends=(
+  'desktop-file-utils'
+  'gconf'
+  'libnotify'
+  'libxss'
+  'libxtst'
+  'nss'
+)
 provides=(${_pkgname})
 conflicts=(${_pkgname})
-source=("https://github.com/jgraph/drawio-desktop/releases/download/v10.8.0/draw.io-amd64-${pkgver}.deb"
-    'https://github.com/jgraph/drawio-desktop/raw/master/LICENSE')
-sha256sums=('48f45522364a62ebb37348be174ab95e65b4bec576a3c72c435060e05ea686f4'
+source=(
+  "https://github.com/jgraph/drawio-desktop/releases/download/v${pkgver}/draw.io-amd64-${pkgver}.deb"
+  'https://github.com/jgraph/drawio-desktop/raw/master/LICENSE')
+sha256sums=('90cbdb303ccacbda69e152cda88f28615f2fb5dc6705b58dbea5f8c4df822ae1'
             'b40930bbcf80744c86c46a12bc9da056641d722716c378f5659b9e555ef833e1')
 
 prepare() {
@@ -25,5 +33,8 @@ package() {
   cp -rp "${srcdir}/opt" "${pkgdir}"
   cp -rp "${srcdir}/usr" "${pkgdir}"
   install -Dm644 "${srcdir}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+  # move icon to correct location
+  mv "${pkgdir}/usr/share/icons/hicolor/0x0/apps/draw.io.png" "${pkgdir}/usr/share/icons"
+  rm -rfv "${pkgdir}/usr/share/icons/hicolor"
 }
 # vim:set ts=2 sw=2 et:
