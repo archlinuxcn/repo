@@ -1,0 +1,9 @@
+post_install() {
+    echo ":: Setting lightdm-slick-greeter as greeter session on /etc/lightdm/lightdm.conf"
+    sed -i '/^greeter-session=/c\greeter-session=lightdm-slick-greeter' /etc/lightdm/lightdm.conf
+}
+
+post_remove() {
+    echo ":: Removing greeter session on /etc/lightdm/lightdm.conf. Set another greeter session if you plan to keep using lightdm!!"
+    sed -i '/^greeter-session=lightdm-slick-greeter/c\greeter-session=' /etc/lightdm/lightdm.conf
+}
