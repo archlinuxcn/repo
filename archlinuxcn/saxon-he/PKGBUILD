@@ -3,8 +3,8 @@
 # Contributor: Lazaros Koromilas <koromilaz@gmail.com>
 
 pkgname=saxon-he
-_major=9.8
-_minor=0.14
+_major=9.9
+_minor=0.1
 pkgver=${_major}.${_minor}
 _pkgver=${pkgver//./-}
 pkgrel=1
@@ -18,7 +18,7 @@ conflicts=('java-saxon')
 source=("http://sourceforge.net/projects/saxon/files/Saxon-HE/${_major}/SaxonHE${_pkgver}J.zip"
         saxon-xslt.sh
         saxon-xquery.sh)
-md5sums=('8ad95d00fbabee1e7bd92e1e06e1280a'
+md5sums=('674b75477c3bca16e1018280e707bf7b'
          '4197e2b5278a02e0aa7d383d9dc4f11d'
          '1a37078990f913ce7c37eb3a1bd39283')
 
