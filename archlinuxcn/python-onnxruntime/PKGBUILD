@@ -4,14 +4,14 @@ pkgbase=python-onnxruntime
 pkgname=(python-onnxruntime python-onnxruntime-cuda)
 pkgver=0.4.0
 pkgdesc='Cross-platform, high performance scoring engine for ML models'
-pkgrel=1
+pkgrel=2
 arch=(x86_64)
 url='https://github.com/microsoft/onnxruntime'
 license=(MIT)
+depends=(protobuf re2 python-numpy)
 # protobuf 3.7.0 has an issue, which breaks building of onnxruntime
 # https://github.com/protocolbuffers/protobuf/issues/5869
-depends=('protobuf>=3.7.1' re2 python-numpy)
-makedepends=(git cmake cuda cudnn gtest gmock pybind11 python-setuptools)
+makedepends=(git cmake cuda cudnn gtest gmock pybind11 python-setuptools 'protobuf>=3.7.1' )
 # not de-vendored libraries
 # eigen: API changes a lot since extra/eigen 3.3.7 to the commit onnxruntime uses
 # onnx: onnxruntime requires headers, which are not installed in python-onnx
