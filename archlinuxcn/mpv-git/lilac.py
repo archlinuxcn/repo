@@ -15,7 +15,7 @@ def pre_build():
 
     new_pkgver, new_pkgrel = get_pkgver_and_pkgrel()
     if old_pkgver == new_pkgver and new_pkgrel <= old_pkgrel:
-        update_pkgrel(old_pkgrel+1)
+        update_pkgrel(old_pkgrel+0.001)
 
     for line in edit_file('PKGBUILD'):
         if 'depends=(' in line:
