@@ -8,12 +8,12 @@
 # Maintainer: Kordian Bruck <k@bruck.me>
 
 pkgname=android-studio
-pkgver=3.4.1.0
+pkgver=3.4.2.0
 pkgrel=1
-_build=183.5522156
+_build=183.5692245
 pkgdesc="The official Android IDE (Stable branch)"
 arch=('i686' 'x86_64')
-url="http://tools.android.com/"
+url="https://developer.android.com/"
 license=('APACHE')
 makedepends=()
 depends=('alsa-lib' 'freetype2' 'libxrender' 'libxtst')
@@ -22,7 +22,7 @@ optdepends=('gtk2: GTK+ look and feel'
 options=('!strip')
 source=("https://dl.google.com/dl/android/studio/ide-zips/$pkgver/android-studio-ide-$_build-linux.tar.gz"
         "$pkgname.desktop")
-sha256sums=('60488b63302fef657367105d433321de248f1fb692d06dba6661efec434b9478'
+sha256sums=('35eb8c74837d1aab59229101fc91568a607ac04854a40209f7a0ba7ac0601924'
             '73cd2dde1d0f99aaba5baad1e2b91c834edd5db3c817f6fb78868d102360d3c4')
 
 if [ "$CARCH" = "i686" ]; then
