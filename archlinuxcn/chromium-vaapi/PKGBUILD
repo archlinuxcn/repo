@@ -10,8 +10,8 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=chromium-vaapi
-pkgver=75.0.3770.100
-pkgrel=2
+pkgver=75.0.3770.142
+pkgrel=1
 _launcher_ver=6
 pkgdesc="Chromium with VA-API support to enable hardware acceleration"
 arch=('x86_64')
@@ -40,10 +40,10 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-fix-window-flash-for-some-WMs.patch
         chromium-widevine.patch
         chromium-skia-harmony.patch)
-sha256sums=('9e1360101b6d9f9635e540db77626e3e15b452f413d8750518244ac37b73fca0'
+sha256sums=('510e6ca7ccc218b401b375c13656f6aecab196b03142026dc3602b9d1804a5ac'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
             'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb'
-            '83cca45acc2515b9c83f34844494a8788f85bb04c36834b88e905c490988d9bb'
+            '333b1e0997ad8831906f66550efc73f51b8650ec3436a247d920b5d12e2169de'
             'e2d284311f49c529ea45083438a768db390bde52949995534034d2a814beab89'
             '09c5f16b726ef7031d74807b534fbbfa49a7276ee2a239b70602de2704fa197c'
             'e309dfd9d790f32cb1d23103726ac25e405b6ae6757a1c957a8395667d753908'
