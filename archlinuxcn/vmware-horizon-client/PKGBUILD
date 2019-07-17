@@ -16,7 +16,7 @@ _bundled_with_client=('vmware-horizon-pcoip'
 pkgver=5.1.0
 _build=13956721
 _cart='CART20FQ2'
-pkgrel=1
+pkgrel=2
 pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop'
 arch=('x86_64')
 url='https://www.vmware.com/go/viewclients'
@@ -50,6 +50,9 @@ prepare() {
 	for bundle in "${pkgname[@]}" "${_bundled_with_client[@]}"; do
 	        vmware-bundle_extract-bundle-component "${srcdir}/${pkgbase}-${pkgver}-${_build}-${CARCH}.bundle" "${bundle}" "${srcdir}/extract/${bundle}"
 	done
+
+	# remove legacy stuff
+	find "${srcdir}/extract/" -name 'legacy' -print0 | xargs -0 rm -rf
 }
 
 build() {

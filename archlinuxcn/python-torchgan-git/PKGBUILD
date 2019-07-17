@@ -1,7 +1,7 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
 pkgname=python-torchgan-git
-pkgver=0.0.2.r31.g803209b
+pkgver=0.0.2.r33.g8c2bc99
 pkgrel=1
 pkgdesc="Research Framework for easy and efficient training of GANs based on PyTorch"
 arch=(any)
@@ -27,7 +27,7 @@ build() {
 
 check() {
   cd "${srcdir}/${pkgname}"
-  pytest -v
+  PYTHONPATH="${PWD}/build/lib pytest -v"
 }
 
 package() {

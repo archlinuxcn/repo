@@ -1,0 +1,238 @@
+From 2bca6666239ed35b18b936d13b918bb024603679 Mon Sep 17 00:00:00 2001
+From: David Gobbi <david.gobbi@gmail.com>
+Date: Tue, 2 Jul 2019 15:32:23 -0600
+Subject: [PATCH 1/2] VTK 8.2 requires explicit vtkVersion.h include
+
+Every class that uses the VTK version macros must include the
+version header.
+---
+ Utilities/VTK/Testing/Cxx/TestvtkGDCMImageReader.cxx         | 1 +
+ Utilities/VTK/Testing/Cxx/TestvtkGDCMImageReader1.cxx        | 1 +
+ Utilities/VTK/Testing/Cxx/TestvtkGDCMImageReader2_2.cxx      | 5 +++++
+ Utilities/VTK/Testing/Cxx/TestvtkGDCMImageReader2_3.cxx      | 1 +
+ Utilities/VTK/Testing/Cxx/TestvtkGDCMImageReader4.cxx        | 1 +
+ Utilities/VTK/Testing/Cxx/TestvtkGDCMImageWriter1.cxx        | 1 +
+ Utilities/VTK/Testing/Cxx/TestvtkGDCMImageWriter2.cxx        | 1 +
+ Utilities/VTK/Testing/Cxx/TestvtkGDCMImageWriterIsLossy.cxx  | 1 +
+ Utilities/VTK/Testing/Cxx/TestvtkGDCMThreadedImageReader.cxx | 1 +
+ .../VTK/Testing/Cxx/TestvtkGDCMThreadedImageReader2.cxx      | 1 +
+ Utilities/VTK/vtkGDCMImageReader.h                           | 1 +
+ Utilities/VTK/vtkGDCMImageWriter.h                           | 1 +
+ Utilities/VTK/vtkGDCMPolyDataReader.cxx                      | 1 +
+ Utilities/VTK/vtkGDCMPolyDataWriter.cxx                      | 3 ++-
+ Utilities/VTK/vtkGDCMThreadedImageReader.h                   | 1 +
+ Utilities/VTK/vtkImageColorViewer.h                          | 1 +
+ 16 files changed, 21 insertions(+), 1 deletion(-)
+
+diff --git a/Utilities/VTK/Testing/Cxx/TestvtkGDCMImageReader.cxx b/Utilities/VTK/Testing/Cxx/TestvtkGDCMImageReader.cxx
+index 2ee3d7dbc..e784f370c 100644
+--- a/Utilities/VTK/Testing/Cxx/TestvtkGDCMImageReader.cxx
++++ b/Utilities/VTK/Testing/Cxx/TestvtkGDCMImageReader.cxx
+@@ -17,6 +17,7 @@
+ #include "vtkPNGWriter.h"
+ #include "vtkImageData.h"
+ #include "vtkStringArray.h"
++#include "vtkVersion.h"
+ 
+ #include "gdcmFilename.h"
+ #include "gdcmTesting.h"
+diff --git a/Utilities/VTK/Testing/Cxx/TestvtkGDCMImageReader1.cxx b/Utilities/VTK/Testing/Cxx/TestvtkGDCMImageReader1.cxx
+index 2f49c04a6..44aa19502 100644
+--- a/Utilities/VTK/Testing/Cxx/TestvtkGDCMImageReader1.cxx
++++ b/Utilities/VTK/Testing/Cxx/TestvtkGDCMImageReader1.cxx
+@@ -16,6 +16,7 @@
+ #include "vtkStringArray.h"
+ #include "vtkImageData.h"
+ #include "vtkImageChangeInformation.h"
++#include "vtkVersion.h"
+ 
+ #include "gdcmFilename.h"
+ #include "gdcmTesting.h"
+diff --git a/Utilities/VTK/Testing/Cxx/TestvtkGDCMImageReader2_2.cxx b/Utilities/VTK/Testing/Cxx/TestvtkGDCMImageReader2_2.cxx
+index fae5295de..454610480 100644
+--- a/Utilities/VTK/Testing/Cxx/TestvtkGDCMImageReader2_2.cxx
++++ b/Utilities/VTK/Testing/Cxx/TestvtkGDCMImageReader2_2.cxx
+@@ -17,6 +17,7 @@
+ #include "vtkInformation.h"
+ #include "vtkStreamingDemandDrivenPipeline.h"
+ #include "vtkStringArray.h"
++#include "vtkVersion.h"
+ // DEBUG
+ #include "vtkImageColorViewer.h"
+ #include "vtkRenderWindowInteractor.h"
+@@ -60,9 +61,13 @@ static int TestvtkGDCMImageRead(const char *filename, bool verbose)
+   //reader->GetOutput()->Print( std::cout );
+   const int mid = (wext[5] - wext[0]) / 2;
+   wext[4] = wext[5] = mid;
++#if VTK_MAJOR_VERSION > 7 || (VTK_MAJOR_VERSION == 7 && VTK_MINOR_VERSION > 0)
++  int ret = reader->UpdateExtent( wext );
++#else
+   reader->SetUpdateExtent( wext );
+   //reader->Update();
+   int ret = reader->GetExecutive()->Update();
++#endif
+   if( !ret )
+     {
+     std::cerr << "Problem with: " << filename << std::endl;
+diff --git a/Utilities/VTK/Testing/Cxx/TestvtkGDCMImageReader2_3.cxx b/Utilities/VTK/Testing/Cxx/TestvtkGDCMImageReader2_3.cxx
+index e3ab43587..69958b764 100644
+--- a/Utilities/VTK/Testing/Cxx/TestvtkGDCMImageReader2_3.cxx
++++ b/Utilities/VTK/Testing/Cxx/TestvtkGDCMImageReader2_3.cxx
+@@ -16,6 +16,7 @@
+ #include "vtkStringArray.h"
+ #include "vtkImageData.h"
+ #include "vtkImageChangeInformation.h"
++#include "vtkVersion.h"
+ 
+ #include "gdcmFilename.h"
+ #include "gdcmTesting.h"
+diff --git a/Utilities/VTK/Testing/Cxx/TestvtkGDCMImageReader4.cxx b/Utilities/VTK/Testing/Cxx/TestvtkGDCMImageReader4.cxx
+index 8720621a7..e8ce9dbc3 100644
+--- a/Utilities/VTK/Testing/Cxx/TestvtkGDCMImageReader4.cxx
++++ b/Utilities/VTK/Testing/Cxx/TestvtkGDCMImageReader4.cxx
+@@ -18,6 +18,7 @@
+ #include "vtkPNGWriter.h"
+ #include "vtkImageData.h"
+ #include "vtkStringArray.h"
++#include "vtkVersion.h"
+ //#include <vtksys/SystemTools.hxx>
+ 
+ #include "gdcmFilename.h"
+diff --git a/Utilities/VTK/Testing/Cxx/TestvtkGDCMImageWriter1.cxx b/Utilities/VTK/Testing/Cxx/TestvtkGDCMImageWriter1.cxx
+index 9828b53b6..14abf51fe 100644
+--- a/Utilities/VTK/Testing/Cxx/TestvtkGDCMImageWriter1.cxx
++++ b/Utilities/VTK/Testing/Cxx/TestvtkGDCMImageWriter1.cxx
+@@ -17,6 +17,7 @@
+ #include "vtkImageData.h"
+ #include "vtkMultiThreader.h"
+ #include "vtkMedicalImageProperties.h"
++#include "vtkVersion.h"
+ 
+ #include "gdcmTesting.h"
+ #include "gdcmFilename.h"
+diff --git a/Utilities/VTK/Testing/Cxx/TestvtkGDCMImageWriter2.cxx b/Utilities/VTK/Testing/Cxx/TestvtkGDCMImageWriter2.cxx
+index 0e372c5b2..fa1d7d895 100644
+--- a/Utilities/VTK/Testing/Cxx/TestvtkGDCMImageWriter2.cxx
++++ b/Utilities/VTK/Testing/Cxx/TestvtkGDCMImageWriter2.cxx
+@@ -18,6 +18,7 @@
+ #include "vtkMultiThreader.h"
+ #include "vtkMedicalImageProperties.h"
+ #include "vtkStringArray.h"
++#include "vtkVersion.h"
+ 
+ #include "gdcmTesting.h"
+ #include "gdcmFilename.h"
+diff --git a/Utilities/VTK/Testing/Cxx/TestvtkGDCMImageWriterIsLossy.cxx b/Utilities/VTK/Testing/Cxx/TestvtkGDCMImageWriterIsLossy.cxx
+index c28194097..1bbdd1a11 100644
+--- a/Utilities/VTK/Testing/Cxx/TestvtkGDCMImageWriterIsLossy.cxx
++++ b/Utilities/VTK/Testing/Cxx/TestvtkGDCMImageWriterIsLossy.cxx
+@@ -14,6 +14,7 @@
+ #include "vtkGDCMImageReader.h"
+ 
+ #include "vtkImageNoiseSource.h"
++#include "vtkVersion.h"
+ #include "vtkGDCMImageWriter.h"
+ 
+ #include "gdcmTesting.h"
+diff --git a/Utilities/VTK/Testing/Cxx/TestvtkGDCMThreadedImageReader.cxx b/Utilities/VTK/Testing/Cxx/TestvtkGDCMThreadedImageReader.cxx
+index ba6ad521c..8b253ec83 100644
+--- a/Utilities/VTK/Testing/Cxx/TestvtkGDCMThreadedImageReader.cxx
++++ b/Utilities/VTK/Testing/Cxx/TestvtkGDCMThreadedImageReader.cxx
+@@ -14,6 +14,7 @@
+ #include "vtkGDCMThreadedImageReader.h"
+ #include "vtkGDCMImageReader.h"
+ #include "vtkCommand.h"
++#include "vtkVersion.h"
+ 
+ #include "gdcmDirectory.h"
+ #include "gdcmSystem.h"
+diff --git a/Utilities/VTK/Testing/Cxx/TestvtkGDCMThreadedImageReader2.cxx b/Utilities/VTK/Testing/Cxx/TestvtkGDCMThreadedImageReader2.cxx
+index 13718e943..5151893e8 100644
+--- a/Utilities/VTK/Testing/Cxx/TestvtkGDCMThreadedImageReader2.cxx
++++ b/Utilities/VTK/Testing/Cxx/TestvtkGDCMThreadedImageReader2.cxx
+@@ -14,6 +14,7 @@
+ #include "vtkGDCMThreadedImageReader2.h"
+ #include "vtkGDCMImageReader.h"
+ #include "vtkCommand.h"
++#include "vtkVersion.h"
+ 
+ #include "gdcmDirectory.h"
+ #include "gdcmSystem.h"
+diff --git a/Utilities/VTK/vtkGDCMImageReader.h b/Utilities/VTK/vtkGDCMImageReader.h
+index 731b05316..23b1eb631 100644
+--- a/Utilities/VTK/vtkGDCMImageReader.h
++++ b/Utilities/VTK/vtkGDCMImageReader.h
+@@ -66,6 +66,7 @@
+ 
+ #include "vtkMedicalImageReader2.h"
+ #include "vtkImageData.h"
++#include "vtkVersion.h"
+ 
+ #if (VTK_MAJOR_VERSION >= 5) || ( VTK_MAJOR_VERSION == 4 && VTK_MINOR_VERSION > 5 )
+ #else
+diff --git a/Utilities/VTK/vtkGDCMImageWriter.h b/Utilities/VTK/vtkGDCMImageWriter.h
+index 6e3981d92..a178b9e0e 100644
+--- a/Utilities/VTK/vtkGDCMImageWriter.h
++++ b/Utilities/VTK/vtkGDCMImageWriter.h
+@@ -39,6 +39,7 @@
+ #define VTKGDCMIMAGEWRITER_H
+ 
+ #include "vtkImageWriter.h"
++#include "vtkVersion.h"
+ 
+ class vtkLookupTable;
+ class vtkMedicalImageProperties;
+diff --git a/Utilities/VTK/vtkGDCMPolyDataReader.cxx b/Utilities/VTK/vtkGDCMPolyDataReader.cxx
+index 1bf2c5671..bffc0f9a7 100644
+--- a/Utilities/VTK/vtkGDCMPolyDataReader.cxx
++++ b/Utilities/VTK/vtkGDCMPolyDataReader.cxx
+@@ -24,6 +24,7 @@
+ #include "vtkMedicalImageProperties.h"
+ #include "vtkRTStructSetProperties.h"
+ #include "vtkEmptyCell.h"
++#include "vtkVersion.h"
+ #include "gdcmReader.h"
+ #include "gdcmSmartPointer.h"
+ #include "gdcmAttribute.h"
+diff --git a/Utilities/VTK/vtkGDCMPolyDataWriter.cxx b/Utilities/VTK/vtkGDCMPolyDataWriter.cxx
+index a9a8ba9d0..098430c6f 100644
+--- a/Utilities/VTK/vtkGDCMPolyDataWriter.cxx
++++ b/Utilities/VTK/vtkGDCMPolyDataWriter.cxx
+@@ -26,8 +26,9 @@
+ #include "vtkErrorCode.h"
+ #include "vtkMedicalImageProperties.h"
+ #include "vtkRTStructSetProperties.h"
+-#include "gdcmSystem.h"
++#include "vtkVersion.h"
+ 
++#include "gdcmSystem.h"
+ #include "gdcmWriter.h"
+ #include "gdcmUIDs.h"
+ #include "gdcmUIDGenerator.h"
+diff --git a/Utilities/VTK/vtkGDCMThreadedImageReader.h b/Utilities/VTK/vtkGDCMThreadedImageReader.h
+index 9210d1f30..78b9e7c17 100644
+--- a/Utilities/VTK/vtkGDCMThreadedImageReader.h
++++ b/Utilities/VTK/vtkGDCMThreadedImageReader.h
+@@ -38,6 +38,7 @@
+ #define VTKGDCMTHREADEDIMAGEREADER_H
+ 
+ #include "vtkGDCMImageReader.h"
++#include "vtkVersion.h"
+ 
+ class VTK_EXPORT vtkGDCMThreadedImageReader : public vtkGDCMImageReader
+ {
+diff --git a/Utilities/VTK/vtkImageColorViewer.h b/Utilities/VTK/vtkImageColorViewer.h
+index 7673dba5a..2ee867e5d 100644
+--- a/Utilities/VTK/vtkImageColorViewer.h
++++ b/Utilities/VTK/vtkImageColorViewer.h
+@@ -54,6 +54,7 @@
+ #define VTKIMAGECOLORVIEWER_H
+ 
+ #include "vtkObject.h"
++#include "vtkVersion.h"
+ 
+ class vtkAlgorithm;
+ class vtkAlgorithmOutput;
+-- 
+2.17.1
+
