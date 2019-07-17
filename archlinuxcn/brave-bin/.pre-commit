@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# fix environment of githooks
+unset GIT_DIR
+# if PKGBUILD has been altered, update .SRCINFO
+for path in $(git diff --name-only --cached --diff-filter=AM); do
+    if [[ "${path}" =~ .*PKGBUILD$ ]]; then
+        echo -e "\e[01;32m *** Generating and adding .SRCINFO for ${path} ***\e[00m"
+        (makepkg --printsrcinfo > "${PWD}"/.SRCINFO) || exit 1
+        git update-index
+        git add "${PWD}"/.SRCINFO
+    fi
+done
