@@ -3,7 +3,7 @@
 
 set -u
 pkgbase="linux-lts414"
-pkgver="4.14.131"
+pkgver="4.14.133"
 _srcname="linux-${pkgver%.*}"
 pkgrel='1'
 arch=('x86_64')
@@ -21,6 +21,7 @@ source=(
   'linux-lts.preset'   # standard config files for mkinitcpio ramdisk
   '0001-add-sysctl-to-disallow-unprivileged-CLONE_NEWUSER-by.patch'
   '0003-Revert-drm-i915-edp-Allow-alternate-fixed-mode-for-e.patch'
+  '0004-export_kernel_fpu_functions.patch'
 )
 validpgpkeys=(
   'ABAF11C65A2970B130ABE3C479BE3E4300411886' # Linus Torvalds <torvalds@linux-foundation.org>
@@ -28,21 +29,23 @@ validpgpkeys=(
 )
 # https://www.kernel.org/pub/linux/kernel/v4.x/sha256sums.asc
 md5sums=('bacdb9ffdcd922aa069a5e1520160e24'
-         '0ce54a9e1ce40a7b8334fe7c81dbc614'
+         '636afd0a0e839bc7b8c5f7449e222d4d'
          'd25ac6fb204de05284286fddacc74247'
          'ce6c81ad1ad1f8b333fd6077d47abdaf'
          'a85bfae59eb537b973c388ffadb281ff'
          'a329f9581060d555dc7358483de9760a'
          '53523555d234de3b2fde749096ba9948'
-         '95204750f94a5f6d2d19e021736265d5')
+         '95204750f94a5f6d2d19e021736265d5'
+         'f7d76cdef5cf4ac6a49115fc4f1f35d5')
 sha256sums=('f81d59477e90a130857ce18dc02f4fbe5725854911db1e7ba770c7cd350f96a7'
-            '5a589a82c3611c35dcdaf5870218a58784e2dc1ed1ac6a34e0197def6a07759c'
+            '12014642d928d76ba349895b5c8be39228851bc99b80f86e22f35730170ec4fd'
             '110d716c119321de712640d683124042ddcbdcac5222645c1b2620a99dd1b00a'
             'ae2e95db94ef7176207c690224169594d49445e04249d2499e9d2fbc117a0b21'
             '75f99f5239e03238f88d1a834c50043ec32b1dc568f2cc291b07d04718483919'
             'ad6344badc91ad0630caacde83f7f9b97276f80d26a20619a87952be65492c65'
             '36b1118c8dedadc4851150ddd4eb07b1c58ac5bbf3022cc2501a27c2b476da98'
-            'b6c56ff2dffebe164941ac3428351e158c9c059e884057ecfc215eeea12e76eb')
+            'b6c56ff2dffebe164941ac3428351e158c9c059e884057ecfc215eeea12e76eb'
+            'caba7945805b1ade42e42d2f981ccdd8791c76f39166212f7970a78057582474')
 
 _kernelname=${pkgbase#linux}
 
@@ -74,6 +77,9 @@ prepare() {
 
   # https://bugs.archlinux.org/task/56711
   patch -Nup1 -i ../0003-Revert-drm-i915-edp-Allow-alternate-fixed-mode-for-e.patch
+
+  # https://github.com/NixOS/nixpkgs/pull/61076
+  patch -Nup1 -i '../0004-export_kernel_fpu_functions.patch'
 
   # Local or private patches
   shopt -s nullglob

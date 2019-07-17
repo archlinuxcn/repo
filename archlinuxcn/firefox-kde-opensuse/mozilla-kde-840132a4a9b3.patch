@@ -1,0 +1,2452 @@
+# HG changeset patch
+# User msirringhaus@suse.de
+# Date 1559294891 -7200
+#      Fri May 31 11:28:11 2019 +0200
+# Node ID c2aa7198fb925e7fde96abf65b6f68b9b755f112
+# Parent  f11c2d7239c0caa4dc74272716d9e30ced1a1ca3
+Description: Add KDE integration to Firefox (toolkit parts)
+Author: Wolfgang Rosenauer <wolfgang@rosenauer.org>
+Author: Lubos Lunak <lunak@suse.com>
+Bug: https://bugzilla.mozilla.org/show_bug.cgi?id=140751
+     https://bugzilla.novell.com/show_bug.cgi?id=170055
+
+diff --git a/modules/libpref/Preferences.cpp b/modules/libpref/Preferences.cpp
+--- a/modules/libpref/Preferences.cpp
++++ b/modules/libpref/Preferences.cpp
+@@ -81,16 +81,17 @@
+ #include "nsXPCOMCID.h"
+ #include "nsXPCOM.h"
+ #include "nsXULAppAPI.h"
+ #include "nsZipArchive.h"
+ #include "plbase64.h"
+ #include "PLDHashTable.h"
+ #include "plstr.h"
+ #include "prlink.h"
++#include "nsKDEUtils.h"
+ 
+ #ifdef MOZ_MEMORY
+ #  include "mozmemory.h"
+ #endif
+ 
+ #ifdef XP_WIN
+ #  include "windows.h"
+ #endif
+@@ -4507,25 +4508,37 @@ static nsresult pref_ReadDefaultPrefs(co
+   // application pref files for backwards compatibility.
+   static const char* specialFiles[] = {
+ #if defined(XP_MACOSX)
+     "macprefs.js"
+ #elif defined(XP_WIN)
+     "winpref.js"
+ #elif defined(XP_UNIX)
+     "unix.js"
++    , "" // placeholder for KDE  (empty is otherwise harmless)
+ #  if defined(_AIX)
+     ,
+     "aix.js"
+ #  endif
+ #elif defined(XP_BEOS)
+     "beos.js"
+ #endif
+   };
+ 
++  if(nsKDEUtils::kdeSession()) { // TODO what if some setup actually requires the helper?
++    for(int i = 0;
++        i < MOZ_ARRAY_LENGTH(specialFiles);
++        ++i ) {
++      if( *specialFiles[ i ] == '\0' ) {
++        specialFiles[ i ] = "kde.js";
++        break;
++      }
++    }
++  }
++
+   rv = pref_LoadPrefsInDir(defaultPrefDir, specialFiles,
+                            ArrayLength(specialFiles));
+   if (NS_FAILED(rv)) {
+     NS_WARNING("Error parsing application default preferences.");
+   }
+ 
+   // Load jar:$app/omni.jar!/defaults/preferences/*.js
+   // or jar:$gre/omni.jar!/defaults/preferences/*.js.
+@@ -4573,17 +4586,17 @@ static nsresult pref_ReadDefaultPrefs(co
+       }
+ 
+       nsCOMPtr<nsIFile> path = do_QueryInterface(elem);
+       if (!path) {
+         continue;
+       }
+ 
+       // Do we care if a file provided by this process fails to load?
+-      pref_LoadPrefsInDir(path, nullptr, 0);
++      pref_LoadPrefsInDir(path, specialFiles, ArrayLength(specialFiles));
+     }
+   }
+ 
+   if (XRE_IsParentProcess()) {
+     SetupTelemetryPref();
+   }
+ 
+   NS_CreateServicesFromCategory(NS_PREFSERVICE_APPDEFAULTS_TOPIC_ID, nullptr,
+diff --git a/modules/libpref/moz.build b/modules/libpref/moz.build
+--- a/modules/libpref/moz.build
++++ b/modules/libpref/moz.build
+@@ -31,16 +31,20 @@ EXPORTS.mozilla += [
+     'StaticPrefs.h',
+ ]
+ 
+ UNIFIED_SOURCES += [
+     'Preferences.cpp',
+     'SharedPrefMap.cpp',
+ ]
+ 
++LOCAL_INCLUDES += [
++    '/toolkit/xre'
++]
++
+ XPCOM_MANIFESTS += [
+     'components.conf',
+ ]
+ 
+ include('/ipc/chromium/chromium-config.mozbuild')
+ 
+ FINAL_LIBRARY = 'xul'
+ 
+diff --git a/python/mozbuild/mozpack/chrome/flags.py b/python/mozbuild/mozpack/chrome/flags.py
+--- a/python/mozbuild/mozpack/chrome/flags.py
++++ b/python/mozbuild/mozpack/chrome/flags.py
+@@ -223,16 +223,17 @@ class Flags(OrderedDict):
+         'contentaccessible': Flag,
+         'os': StringFlag,
+         'osversion': VersionFlag,
+         'abi': StringFlag,
+         'platform': Flag,
+         'xpcnativewrappers': Flag,
+         'tablet': Flag,
+         'process': StringFlag,
++        'desktop': StringFlag,
+     }
+     RE = re.compile(r'([!<>=]+)')
+ 
+     def __init__(self, *flags):
+         '''
+         Initialize a set of flags given in string form.
+            flags = Flags('contentaccessible=yes', 'appversion>=3.5')
+         '''
+diff --git a/python/mozbuild/mozpack/chrome/manifest.py b/python/mozbuild/mozpack/chrome/manifest.py
+--- a/python/mozbuild/mozpack/chrome/manifest.py
++++ b/python/mozbuild/mozpack/chrome/manifest.py
+@@ -39,16 +39,17 @@ class ManifestEntry(object):
+         'platformversion',
+         'os',
+         'osversion',
+         'abi',
+         'xpcnativewrappers',
+         'tablet',
+         'process',
+         'contentaccessible',
++	'desktop',
+     ]
+ 
+     def __init__(self, base, *flags):
+         '''
+         Initialize a manifest entry with the given base path and flags.
+         '''
+         self.base = base
+         self.flags = Flags(*flags)
+diff --git a/toolkit/components/downloads/moz.build b/toolkit/components/downloads/moz.build
+--- a/toolkit/components/downloads/moz.build
++++ b/toolkit/components/downloads/moz.build
+@@ -41,10 +41,14 @@ XPCOM_MANIFESTS += [
+ 
+ if CONFIG['MOZ_PLACES']:
+     EXTRA_JS_MODULES += [
+         'DownloadHistory.jsm',
+     ]
+ 
+ FINAL_LIBRARY = 'xul'
+ 
++LOCAL_INCLUDES += [
++    '/toolkit/xre'
++]
++
+ with Files('**'):
+     BUG_COMPONENT = ('Toolkit', 'Downloads API')
+diff --git a/toolkit/content/jar.mn b/toolkit/content/jar.mn
+--- a/toolkit/content/jar.mn
++++ b/toolkit/content/jar.mn
+@@ -63,16 +63,18 @@ toolkit.jar:
+    content/global/widgets.css
+    content/global/bindings/autocomplete.xml    (widgets/autocomplete.xml)
+    content/global/bindings/button.xml          (widgets/button.xml)
+    content/global/bindings/calendar.js         (widgets/calendar.js)
+    content/global/bindings/datekeeper.js       (widgets/datekeeper.js)
+    content/global/bindings/datepicker.js       (widgets/datepicker.js)
+    content/global/bindings/datetimebox.css     (widgets/datetimebox.css)
+ *  content/global/bindings/dialog.xml          (widgets/dialog.xml)
++*  content/global/bindings/dialog-kde.xml      (widgets/dialog-kde.xml)
++% override chrome://global/content/bindings/dialog.xml chrome://global/content/bindings/dialog-kde.xml desktop=kde
+    content/global/bindings/general.xml         (widgets/general.xml)
+    content/global/bindings/popup.xml           (widgets/popup.xml)
+    content/global/bindings/richlistbox.xml     (widgets/richlistbox.xml)
+    content/global/bindings/scrollbox.xml       (widgets/scrollbox.xml)
+    content/global/bindings/spinner.js          (widgets/spinner.js)
+    content/global/bindings/tabbox.xml          (widgets/tabbox.xml)
+ *  content/global/bindings/textbox.xml         (widgets/textbox.xml)
+    content/global/bindings/timekeeper.js       (widgets/timekeeper.js)
+diff --git a/toolkit/content/widgets/dialog-kde.xml b/toolkit/content/widgets/dialog-kde.xml
+new file mode 100644
+--- /dev/null
++++ b/toolkit/content/widgets/dialog-kde.xml
+@@ -0,0 +1,499 @@
++<?xml version="1.0"?>
++<!-- This Source Code Form is subject to the terms of the Mozilla Public
++   - License, v. 2.0. If a copy of the MPL was not distributed with this
++   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
++
++<!DOCTYPE bindings [
++  <!ENTITY % globalKeysDTD SYSTEM "chrome://global/locale/globalKeys.dtd">
++  %globalKeysDTD;
++]>
++
++<bindings id="dialogBindings"
++          xmlns="http://www.mozilla.org/xbl"
++          xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
++          xmlns:xbl="http://www.mozilla.org/xbl">
++
++  <binding id="dialog">
++    <content>
++      <xul:vbox class="box-inherit dialog-content-box" flex="1">
++        <children/>
++      </xul:vbox>
++
++      <xul:hbox class="dialog-button-box" anonid="buttons"
++                xbl:inherits="pack=buttonpack,align=buttonalign,dir=buttondir,orient=buttonorient"
++#ifdef XP_UNIX_GNOME
++                >
++        <xul:button dlgtype="disclosure" class="dialog-button" hidden="true"/>
++        <xul:button dlgtype="help" class="dialog-button" hidden="true"/>
++        <xul:button dlgtype="extra2" class="dialog-button" hidden="true"/>
++        <xul:button dlgtype="extra1" class="dialog-button" hidden="true"/>
++        <xul:spacer anonid="spacer" flex="1"/>
++        <xul:button dlgtype="cancel" class="dialog-button"/>
++        <xul:button dlgtype="accept" class="dialog-button" xbl:inherits="disabled=buttondisabledaccept"/>
++#elif XP_UNIX
++                >
++        <xul:button dlgtype="help" class="dialog-button" hidden="true"/>
++        <xul:button dlgtype="extra2" class="dialog-button" hidden="true"/>
++        <xul:spacer anonid="spacer" flex="1"/>
++        <xul:button dlgtype="accept" class="dialog-button" xbl:inherits="disabled=buttondisabledaccept"/>
++        <xul:button dlgtype="extra1" class="dialog-button" hidden="true"/>
++        <xul:button dlgtype="cancel" class="dialog-button"/>
++        <xul:button dlgtype="disclosure" class="dialog-button" hidden="true"/>
++#else
++                pack="end">
++        <xul:button dlgtype="extra2" class="dialog-button" hidden="true"/>
++        <xul:spacer anonid="spacer" flex="1" hidden="true"/>
++        <xul:button dlgtype="accept" class="dialog-button" xbl:inherits="disabled=buttondisabledaccept"/>
++        <xul:button dlgtype="extra1" class="dialog-button" hidden="true"/>
++        <xul:button dlgtype="cancel" class="dialog-button"/>
++        <xul:button dlgtype="help" class="dialog-button" hidden="true"/>
++        <xul:button dlgtype="disclosure" class="dialog-button" hidden="true"/>
++#endif
++      </xul:hbox>
++
++    <xul:keyset>
++      <xul:key phase="capturing" oncommand="document.documentElement.openHelp(event)"
++#ifdef XP_MACOSX
++           key="&openHelpMac.commandkey;" modifiers="accel"/>
++#else
++           keycode="&openHelp.commandkey;"/>
++#endif
++    </xul:keyset>
++
++    </content>
++
++    <implementation>
++      <field name="_mStrBundle">null</field>
++      <field name="_closeHandler">(function(event) {
++        if (!document.documentElement.cancelDialog())
++          event.preventDefault();
++      })</field>
++
++      <!-- Gets populated by elements that are passed to document.l10n.setAttributes
++           to localize the dialog buttons. Needed to properly size the dialog after
++           the asynchronous translation. -->
++      <field name="_l10nButtons">[]</field>
++
++      <property name="buttons"
++                onget="return this.getAttribute('buttons');"
++                onset="this._configureButtons(val); return val;"/>
++
++      <property name="defaultButton">
++        <getter>
++        <![CDATA[
++          if (this.hasAttribute("defaultButton"))
++            return this.getAttribute("defaultButton");
++          return "accept"; // default to the accept button
++        ]]>
++        </getter>
++        <setter>
++        <![CDATA[
++          this._setDefaultButton(val);
++          return val;
++        ]]>
++        </setter>
++      </property>
++
++      <method name="acceptDialog">
++        <body>
++        <![CDATA[
++          return this._doButtonCommand("accept");
++        ]]>
++        </body>
++      </method>
++
++      <method name="cancelDialog">
++        <body>
++        <![CDATA[
++          return this._doButtonCommand("cancel");
++        ]]>
++        </body>
++      </method>
++
++      <method name="getButton">
++        <parameter name="aDlgType"/>
++        <body>
++        <![CDATA[
++          return this._buttons[aDlgType];
++        ]]>
++        </body>
++      </method>
++
++      <method name="moveToAlertPosition">
++        <body>
++        <![CDATA[
++          // hack. we need this so the window has something like its final size
++          if (window.outerWidth == 1) {
++            dump("Trying to position a sizeless window; caller should have called sizeToContent() or sizeTo(). See bug 75649.\n");
++            sizeToContent();
++          }
++
++          if (opener) {
++            var xOffset = (opener.outerWidth - window.outerWidth) / 2;
++            var yOffset = opener.outerHeight / 5;
++
++            var newX = opener.screenX + xOffset;
++            var newY = opener.screenY + yOffset;
++          } else {
++            newX = (screen.availWidth - window.outerWidth) / 2;
++            newY = (screen.availHeight - window.outerHeight) / 2;
++          }
++
++          // ensure the window is fully onscreen (if smaller than the screen)
++          if (newX < screen.availLeft)
++            newX = screen.availLeft + 20;
++          if ((newX + window.outerWidth) > (screen.availLeft + screen.availWidth))
++            newX = (screen.availLeft + screen.availWidth) - window.outerWidth - 20;
++
++          if (newY < screen.availTop)
++            newY = screen.availTop + 20;
++          if ((newY + window.outerHeight) > (screen.availTop + screen.availHeight))
++            newY = (screen.availTop + screen.availHeight) - window.outerHeight - 60;
++
++          window.moveTo( newX, newY );
++        ]]>
++        </body>
++      </method>
++
++      <method name="centerWindowOnScreen">
++        <body>
++        <![CDATA[
++          var xOffset = screen.availWidth / 2 - window.outerWidth / 2;
++          var yOffset = screen.availHeight / 2 - window.outerHeight / 2;
++
++          xOffset = xOffset > 0 ? xOffset : 0;
++          yOffset = yOffset > 0 ? yOffset : 0;
++          window.moveTo(xOffset, yOffset);
++        ]]>
++        </body>
++      </method>
++
++      <constructor>
++      <![CDATA[
++        this._configureButtons(this.buttons);
++
++        // listen for when window is closed via native close buttons
++        window.addEventListener("close", this);
++
++        // for things that we need to initialize after onload fires
++        window.addEventListener("load", this);
++
++        window.moveToAlertPosition = this.moveToAlertPosition;
++        window.centerWindowOnScreen = this.centerWindowOnScreen;
++      ]]>
++      </constructor>
++
++      <method name="handleEvent">
++        <parameter name="aEvent"/>
++        <body><![CDATA[
++          switch (aEvent.type) {
++            case "close": {
++              this._closeHandler(aEvent);
++              break;
++            }
++            case "load": {
++              this.postLoadInit(aEvent);
++              break;
++            }
++          }
++        ]]></body>
++      </method>
++
++      <method name="postLoadInit">
++        <parameter name="aEvent"/>
++        <body>
++        <![CDATA[
++          function focusInit() {
++            const dialog = document.documentElement;
++            const defaultButton = dialog.getButton(dialog.defaultButton);
++            // give focus to the first focusable element in the dialog
++            if (!document.commandDispatcher.focusedElement) {
++              document.commandDispatcher.advanceFocusIntoSubtree(dialog);
++
++              var focusedElt = document.commandDispatcher.focusedElement;
++              if (focusedElt) {
++                var initialFocusedElt = focusedElt;
++                while (focusedElt.localName == "tab" ||
++                       focusedElt.getAttribute("noinitialfocus") == "true") {
++                  document.commandDispatcher.advanceFocusIntoSubtree(focusedElt);
++                  focusedElt = document.commandDispatcher.focusedElement;
++                  if (focusedElt == initialFocusedElt) {
++                    if (focusedElt.getAttribute("noinitialfocus") == "true") {
++                      focusedElt.blur();
++                    }
++                    break;
++                  }
++                }
++
++                if (initialFocusedElt.localName == "tab") {
++                  if (focusedElt.hasAttribute("dlgtype")) {
++                    // We don't want to focus on anonymous OK, Cancel, etc. buttons,
++                    // so return focus to the tab itself
++                    initialFocusedElt.focus();
++                  }
++                } else if (!/Mac/.test(navigator.platform) &&
++                           focusedElt.hasAttribute("dlgtype") && focusedElt != defaultButton) {
++                  defaultButton.focus();
++                }
++              }
++            }
++
++            try {
++              if (defaultButton)
++                window.notifyDefaultButtonLoaded(defaultButton);
++            } catch (e) { }
++          }
++
++          // Give focus after onload completes, see bug 103197.
++          setTimeout(focusInit, 0);
++
++          if (this._l10nButtons.length) {
++            document.l10n.translateElements(this._l10nButtons).then(() => {
++              window.sizeToContent();
++            });
++          }
++        ]]>
++        </body>
++      </method>
++
++      <method name="openHelp">
++        <parameter name="event"/>
++        <body>
++        <![CDATA[
++          var helpButton = document.documentElement.getButton("help");
++          if (helpButton.disabled || helpButton.hidden)
++            return;
++          this._fireButtonEvent("help");
++          event.stopPropagation();
++          event.preventDefault();
++        ]]>
++        </body>
++      </method>
++
++      <property name="mStrBundle">
++        <getter>
++        <![CDATA[
++          if (!this._mStrBundle) {
++            // need to create string bundle manually instead of using <xul:stringbundle/>
++            // see bug 63370 for details
++            this._mStrBundle = Cc["@mozilla.org/intl/stringbundle;1"]
++                                 .getService(Ci.nsIStringBundleService)
++                                 .createBundle("chrome://global/locale/dialog.properties");
++          }
++          return this._mStrBundle;
++        ]]></getter>
++      </property>
++
++      <method name="_configureButtons">
++        <parameter name="aButtons"/>
++        <body>
++        <![CDATA[
++          // by default, get all the anonymous button elements
++          var buttons = {};
++          this._buttons = buttons;
++          buttons.accept = document.getAnonymousElementByAttribute(this, "dlgtype", "accept");
++          buttons.cancel = document.getAnonymousElementByAttribute(this, "dlgtype", "cancel");
++          buttons.extra1 = document.getAnonymousElementByAttribute(this, "dlgtype", "extra1");
++          buttons.extra2 = document.getAnonymousElementByAttribute(this, "dlgtype", "extra2");
++          buttons.help = document.getAnonymousElementByAttribute(this, "dlgtype", "help");
++          buttons.disclosure = document.getAnonymousElementByAttribute(this, "dlgtype", "disclosure");
++
++          for (let button in buttons) {
++            customElements.upgrade(buttons[button]);
++          }
++
++          // look for any overriding explicit button elements
++          var exBtns = this.getElementsByAttribute("dlgtype", "*");
++          var dlgtype;
++          var i;
++          for (i = 0; i < exBtns.length; ++i) {
++            dlgtype = exBtns[i].getAttribute("dlgtype");
++            buttons[dlgtype].hidden = true; // hide the anonymous button
++            buttons[dlgtype] = exBtns[i];
++          }
++
++          // add the label and oncommand handler to each button
++          for (dlgtype in buttons) {
++            var button = buttons[dlgtype];
++            button.addEventListener("command", this._handleButtonCommand, true);
++
++            // don't override custom labels with pre-defined labels on explicit buttons
++            if (!button.hasAttribute("label")) {
++              // dialog attributes override the default labels in dialog.properties
++              if (this.hasAttribute("buttonlabel" + dlgtype)) {
++                button.setAttribute("label", this.getAttribute("buttonlabel" + dlgtype));
++                if (this.hasAttribute("buttonaccesskey" + dlgtype))
++                  button.setAttribute("accesskey", this.getAttribute("buttonaccesskey" + dlgtype));
++              } else if (this.hasAttribute("buttonid" + dlgtype)) {
++                document.l10n.setAttributes(button, this.getAttribute("buttonid" + dlgtype));
++                this._l10nButtons.push(button);
++              } else if (dlgtype != "extra1" && dlgtype != "extra2") {
++                button.setAttribute("label", this.mStrBundle.GetStringFromName("button-" + dlgtype));
++                var accessKey = this.mStrBundle.GetStringFromName("accesskey-" + dlgtype);
++                if (accessKey)
++                  button.setAttribute("accesskey", accessKey);
++              }
++            }
++            // allow specifying alternate icons in the dialog header
++            if (!button.hasAttribute("icon")) {
++              // if there's an icon specified, use that
++              if (this.hasAttribute("buttonicon" + dlgtype))
++                button.setAttribute("icon", this.getAttribute("buttonicon" + dlgtype));
++              // otherwise set defaults
++              else
++                switch (dlgtype) {
++                  case "accept":
++                    button.setAttribute("icon", "accept");
++                    break;
++                  case "cancel":
++                    button.setAttribute("icon", "cancel");
++                    break;
++                  case "disclosure":
++                    button.setAttribute("icon", "properties");
++                    break;
++                  case "help":
++                    button.setAttribute("icon", "help");
++                    break;
++                  default:
++                    break;
++                }
++            }
++          }
++
++          // ensure that hitting enter triggers the default button command
++          this.defaultButton = this.defaultButton;
++
++          // if there is a special button configuration, use it
++          if (aButtons) {
++            // expect a comma delimited list of dlgtype values
++            var list = aButtons.split(",");
++
++            // mark shown dlgtypes as true
++            var shown = { accept: false, cancel: false, help: false,
++                          disclosure: false, extra1: false, extra2: false };
++            for (i = 0; i < list.length; ++i)
++              shown[list[i].replace(/ /g, "")] = true;
++
++            // hide/show the buttons we want
++            for (dlgtype in buttons)
++              buttons[dlgtype].hidden = !shown[dlgtype];
++
++            // show the spacer on Windows only when the extra2 button is present
++            if (/Win/.test(navigator.platform)) {
++              var spacer = document.getAnonymousElementByAttribute(this, "anonid", "spacer");
++              spacer.removeAttribute("hidden");
++              spacer.setAttribute("flex", shown.extra2 ? "1" : "0");
++            }
++          }
++        ]]>
++        </body>
++      </method>
++
++      <method name="_setDefaultButton">
++        <parameter name="aNewDefault"/>
++        <body>
++        <![CDATA[
++          // remove the default attribute from the previous default button, if any
++          var oldDefaultButton = this.getButton(this.defaultButton);
++          if (oldDefaultButton)
++            oldDefaultButton.removeAttribute("default");
++
++          var newDefaultButton = this.getButton(aNewDefault);
++          if (newDefaultButton) {
++            this.setAttribute("defaultButton", aNewDefault);
++            newDefaultButton.setAttribute("default", "true");
++          } else {
++            this.setAttribute("defaultButton", "none");
++            if (aNewDefault != "none")
++              dump("invalid new default button: " + aNewDefault + ", assuming: none\n");
++          }
++        ]]>
++        </body>
++      </method>
++
++      <method name="_handleButtonCommand">
++        <parameter name="aEvent"/>
++        <body>
++        <![CDATA[
++          return document.documentElement._doButtonCommand(
++                                        aEvent.target.getAttribute("dlgtype"));
++        ]]>
++        </body>
++      </method>
++
++      <method name="_doButtonCommand">
++        <parameter name="aDlgType"/>
++        <body>
++        <![CDATA[
++          var button = this.getButton(aDlgType);
++          if (!button.disabled) {
++            var noCancel = this._fireButtonEvent(aDlgType);
++            if (noCancel) {
++              if (aDlgType == "accept" || aDlgType == "cancel") {
++                var closingEvent = new CustomEvent("dialogclosing", {
++                  bubbles: true,
++                  detail: { button: aDlgType },
++                });
++                this.dispatchEvent(closingEvent);
++                window.close();
++              }
++            }
++            return noCancel;
++          }
++          return true;
++        ]]>
++        </body>
++      </method>
++
++      <method name="_fireButtonEvent">
++        <parameter name="aDlgType"/>
++        <body>
++        <![CDATA[
++          var event = document.createEvent("Events");
++          event.initEvent("dialog" + aDlgType, true, true);
++
++          // handle dom event handlers
++          return this.dispatchEvent(event);
++        ]]>
++        </body>
++      </method>
++
++      <method name="_hitEnter">
++        <parameter name="evt"/>
++        <body>
++        <![CDATA[
++          if (evt.defaultPrevented)
++            return;
++
++          var btn = this.getButton(this.defaultButton);
++          if (btn)
++            this._doButtonCommand(this.defaultButton);
++        ]]>
++        </body>
++      </method>
++
++    </implementation>
++
++    <handlers>
++      <handler event="keypress" keycode="VK_RETURN"
++               group="system" action="this._hitEnter(event);"/>
++      <handler event="keypress" keycode="VK_ESCAPE" group="system">
++        if (!event.defaultPrevented)
++          this.cancelDialog();
++      </handler>
++#ifdef XP_MACOSX
++      <handler event="keypress" key="." modifiers="meta" phase="capturing" action="this.cancelDialog();"/>
++#else
++      <handler event="focus" phase="capturing">
++        var btn = this.getButton(this.defaultButton);
++        if (btn)
++          btn.setAttribute("default", event.originalTarget == btn ||
++                           !(event.originalTarget.localName == "button" ||
++                             event.originalTarget.localName == "toolbarbutton"));
++      </handler>
++#endif
++    </handlers>
++
++  </binding>
++
++</bindings>
+diff --git a/toolkit/mozapps/downloads/HelperAppDlg.jsm b/toolkit/mozapps/downloads/HelperAppDlg.jsm
+--- a/toolkit/mozapps/downloads/HelperAppDlg.jsm
++++ b/toolkit/mozapps/downloads/HelperAppDlg.jsm
+@@ -1042,30 +1042,60 @@ nsUnknownContentTypeDialog.prototype = {
+ 
+       if (params.handlerApp &&
+           params.handlerApp.executable &&
+           params.handlerApp.executable.isFile()) {
+         // Remember the file they chose to run.
+         this.chosenApp = params.handlerApp;
+       }
+     } else if ("@mozilla.org/applicationchooser;1" in Cc) {
+-      var nsIApplicationChooser = Ci.nsIApplicationChooser;
+-      var appChooser = Cc["@mozilla.org/applicationchooser;1"]
+-                         .createInstance(nsIApplicationChooser);
+-      appChooser.init(this.mDialog, this.dialogElement("strings").getString("chooseAppFilePickerTitle"));
+-      var contentTypeDialogObj = this;
+-      let appChooserCallback = function appChooserCallback_done(aResult) {
+-        if (aResult) {
+-           contentTypeDialogObj.chosenApp = aResult.QueryInterface(Ci.nsILocalHandlerApp);
+-        }
+-        contentTypeDialogObj.finishChooseApp();
+-      };
+-      appChooser.open(this.mLauncher.MIMEInfo.MIMEType, appChooserCallback);
+-      // The finishChooseApp is called from appChooserCallback
+-      return;
++      // handle the KDE case which is implemented in the filepicker
++      // therefore falling back to Gtk2 like behaviour if KDE is running
++      // FIXME this should be better handled in the nsIApplicationChooser
++      // interface
++      var env = Components.classes["@mozilla.org/process/environment;1"]
++                          .getService(Components.interfaces.nsIEnvironment);
++      if (env.get('KDE_FULL_SESSION') == "true")
++      {
++        var nsIFilePicker = Ci.nsIFilePicker;
++        var fp = Cc["@mozilla.org/filepicker;1"]
++                    .createInstance(nsIFilePicker);
++        fp.init(this.mDialog,
++                this.dialogElement("strings").getString("chooseAppFilePickerTitle"),
++                nsIFilePicker.modeOpen);
++
++        fp.appendFilters(nsIFilePicker.filterApps);
++
++        fp.open(aResult => {
++          if (aResult == nsIFilePicker.returnOK && fp.file) {
++            // Remember the file they chose to run.
++            var localHandlerApp =
++              Cc["@mozilla.org/uriloader/local-handler-app;1"].
++                         createInstance(Ci.nsILocalHandlerApp);
++            localHandlerApp.executable = fp.file;
++            this.chosenApp = localHandlerApp;
++          }
++          this.finishChooseApp();
++        });
++      } else {
++        var nsIApplicationChooser = Ci.nsIApplicationChooser;
++        var appChooser = Cc["@mozilla.org/applicationchooser;1"]
++                           .createInstance(nsIApplicationChooser);
++        appChooser.init(this.mDialog, this.dialogElement("strings").getString("chooseAppFilePickerTitle"));
++        var contentTypeDialogObj = this;
++        let appChooserCallback = function appChooserCallback_done(aResult) {
++          if (aResult) {
++             contentTypeDialogObj.chosenApp = aResult.QueryInterface(Ci.nsILocalHandlerApp);
++          }
++          contentTypeDialogObj.finishChooseApp();
++        };
++        appChooser.open(this.mLauncher.MIMEInfo.MIMEType, appChooserCallback);
++        // The finishChooseApp is called from appChooserCallback
++        return;
++      }
+     } else {
+       var nsIFilePicker = Ci.nsIFilePicker;
+       var fp = Cc["@mozilla.org/filepicker;1"]
+                  .createInstance(nsIFilePicker);
+       fp.init(this.mDialog,
+               this.dialogElement("strings").getString("chooseAppFilePickerTitle"),
+               nsIFilePicker.modeOpen);
+ 
+diff --git a/toolkit/system/unixproxy/nsUnixSystemProxySettings.cpp b/toolkit/system/unixproxy/nsUnixSystemProxySettings.cpp
+--- a/toolkit/system/unixproxy/nsUnixSystemProxySettings.cpp
++++ b/toolkit/system/unixproxy/nsUnixSystemProxySettings.cpp
+@@ -14,16 +14,17 @@
+ #include "nsPrintfCString.h"
+ #include "nsNetCID.h"
+ #include "nsNetUtil.h"
+ #include "nsISupportsPrimitives.h"
+ #include "nsIGSettingsService.h"
+ #include "nsInterfaceHashtable.h"
+ #include "mozilla/Attributes.h"
+ #include "nsIURI.h"
++#include "nsKDEUtils.h"
+ 
+ using namespace mozilla;
+ 
+ class nsUnixSystemProxySettings final : public nsISystemProxySettings {
+  public:
+   NS_DECL_ISUPPORTS
+   NS_DECL_NSISYSTEMPROXYSETTINGS
+ 
+@@ -37,16 +38,18 @@ class nsUnixSystemProxySettings final : 
+   nsCOMPtr<nsIGSettingsCollection> mProxySettings;
+   nsInterfaceHashtable<nsCStringHashKey, nsIGSettingsCollection>
+       mSchemeProxySettings;
+   nsresult GetProxyFromGSettings(const nsACString& aScheme,
+                                  const nsACString& aHost, int32_t aPort,
+                                  nsACString& aResult);
+   nsresult SetProxyResultFromGSettings(const char* aKeyBase, const char* aType,
+                                        nsACString& aResult);
++  nsresult GetProxyFromKDE(const nsACString& aScheme, const nsACString& aHost,
++                           PRInt32 aPort, nsACString& aResult);
+ };
+ 
+ NS_IMPL_ISUPPORTS(nsUnixSystemProxySettings, nsISystemProxySettings)
+ 
+ NS_IMETHODIMP
+ nsUnixSystemProxySettings::GetMainThreadOnly(bool* aMainThreadOnly) {
+   // dbus prevents us from being threadsafe, but this routine should not block
+   // anyhow
+@@ -382,21 +385,50 @@ nsresult nsUnixSystemProxySettings::GetP
+   return NS_OK;
+ }
+ 
+ nsresult nsUnixSystemProxySettings::GetProxyForURI(const nsACString& aSpec,
+                                                    const nsACString& aScheme,
+                                                    const nsACString& aHost,
+                                                    const int32_t aPort,
+                                                    nsACString& aResult) {
++  if (nsKDEUtils::kdeSupport())
++    return GetProxyFromKDE(aScheme, aHost, aPort, aResult);
++
+   if (mProxySettings) {
+     nsresult rv = GetProxyFromGSettings(aScheme, aHost, aPort, aResult);
+     if (NS_SUCCEEDED(rv)) return rv;
+   }
+ 
+   return GetProxyFromEnvironment(aScheme, aHost, aPort, aResult);
+ }
+ 
++nsresult
++nsUnixSystemProxySettings::GetProxyFromKDE(const nsACString& aScheme,
++                                           const nsACString& aHost,
++                                           PRInt32 aPort,
++                                           nsACString& aResult)
++{
++  nsAutoCString url;
++  url = aScheme;
++  url += "://";
++  url += aHost;
++  if( aPort >= 0 )
++  {
++    url += ":";
++    url += nsPrintfCString("%d", aPort);
++  }
++  nsTArray<nsCString> command;
++  command.AppendElement( NS_LITERAL_CSTRING( "GETPROXY" ));
++  command.AppendElement( url );
++  nsTArray<nsCString> result;
++  if( !nsKDEUtils::command( command, &result ) || result.Length() != 1 )
++    return NS_ERROR_FAILURE;
++  aResult = result[0];
++  return NS_OK;
++}
++
++
+ NS_IMPL_COMPONENT_FACTORY(nsUnixSystemProxySettings) {
+   auto result = MakeRefPtr<nsUnixSystemProxySettings>();
+   result->Init();
+   return result.forget().downcast<nsISupports>();
+ }
+diff --git a/toolkit/xre/moz.build b/toolkit/xre/moz.build
+--- a/toolkit/xre/moz.build
++++ b/toolkit/xre/moz.build
+@@ -83,17 +83,19 @@ elif CONFIG['MOZ_WIDGET_TOOLKIT'] == 'co
+         '../components/printingui',
+     ]
+ elif CONFIG['MOZ_WIDGET_TOOLKIT'] == 'uikit':
+     UNIFIED_SOURCES += [
+         'nsNativeAppSupportDefault.cpp',
+         'UIKitDirProvider.mm',
+     ]
+ elif 'gtk' in CONFIG['MOZ_WIDGET_TOOLKIT']:
++    EXPORTS += ['nsKDEUtils.h']
+     UNIFIED_SOURCES += [
++        'nsKDEUtils.cpp',
+         'nsNativeAppSupportUnix.cpp',
+     ]
+ else:
+     UNIFIED_SOURCES += [
+         'nsNativeAppSupportDefault.cpp',
+     ]
+ 
+ if CONFIG['MOZ_HAS_REMOTE']:
+diff --git a/toolkit/xre/nsKDEUtils.cpp b/toolkit/xre/nsKDEUtils.cpp
+new file mode 100644
+--- /dev/null
++++ b/toolkit/xre/nsKDEUtils.cpp
+@@ -0,0 +1,344 @@
++/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
++/* This Source Code Form is subject to the terms of the Mozilla Public
++ * License, v. 2.0. If a copy of the MPL was not distributed with this
++ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
++
++#include "nsKDEUtils.h"
++#include "nsIWidget.h"
++#include "nsISupportsPrimitives.h"
++#include "nsIMutableArray.h"
++#include "nsComponentManagerUtils.h"
++#include "nsArrayUtils.h"
++
++#include <gtk/gtk.h>
++
++#include <limits.h>
++#include <stdio.h>
++#include <sys/wait.h>
++#include <sys/resource.h>
++#include <unistd.h>
++#include <X11/Xlib.h>
++// copied from X11/X.h as a hack since for an unknown
++// reason it's not picked up from X11/X.h
++#ifndef None
++#define None                 0L /* universal null resource or null atom */
++#endif
++
++//#define DEBUG_KDE
++#ifdef DEBUG_KDE
++#define KMOZILLAHELPER "kmozillahelper"
++#else
++// not need for lib64, it's a binary
++#define KMOZILLAHELPER "/usr/lib/mozilla/kmozillahelper"
++#endif
++
++#define KMOZILLAHELPER_VERSION 6
++#define MAKE_STR2( n ) #n
++#define MAKE_STR( n ) MAKE_STR2( n )
++
++static bool getKdeSession()
++    {
++    Display* dpy = XOpenDisplay( NULL );
++    if( dpy == NULL )
++        return false;
++    Atom kde_full_session = XInternAtom( dpy, "KDE_FULL_SESSION", true );
++    bool kde = false;
++    if( kde_full_session != None )
++        {
++        int cnt;
++        if( Atom* props = XListProperties( dpy, DefaultRootWindow( dpy ), &cnt ))
++            {
++            for( int i = 0;
++                 i < cnt;
++                 ++i )
++                {
++                if( props[ i ] == kde_full_session )
++                    {
++                    kde = true;
++#ifdef DEBUG_KDE
++                    fprintf( stderr, "KDE SESSION %d\n", kde );
++#endif
++                    break;
++                    }
++                }
++            XFree( props );
++            }
++        }
++    XCloseDisplay( dpy );
++    return kde;
++    }
++
++static bool getKdeSupport()
++    {
++    nsTArray<nsCString> command;
++    command.AppendElement( NS_LITERAL_CSTRING( "CHECK" ));
++    command.AppendElement( NS_LITERAL_CSTRING( MAKE_STR( KMOZILLAHELPER_VERSION )));
++    bool kde = nsKDEUtils::command( command );
++#ifdef DEBUG_KDE
++    fprintf( stderr, "KDE RUNNING %d\n", kde );
++#endif
++    return kde;
++    }
++
++nsKDEUtils::nsKDEUtils()
++    : commandFile( NULL )
++    , replyFile( NULL )
++    {
++    }
++
++nsKDEUtils::~nsKDEUtils()
++    {
++//    closeHelper(); not actually useful, exiting will close the fd too
++    }
++
++nsKDEUtils* nsKDEUtils::self()
++    {
++    static nsKDEUtils s;
++    return &s;
++    }
++
++static bool helperRunning = false;
++static bool helperFailed = false;
++
++bool nsKDEUtils::kdeSession()
++    {
++    static bool session = getKdeSession();
++    return session;
++    }
++
++bool nsKDEUtils::kdeSupport()
++    {
++    static bool support = kdeSession() && getKdeSupport();
++    return support && helperRunning;
++    }
++
++struct nsKDECommandData
++    {
++    FILE* file;
++    nsTArray<nsCString>* output;
++    GMainLoop* loop;
++    bool success;
++    };
++
++static gboolean kdeReadFunc( GIOChannel*, GIOCondition, gpointer data )
++    {
++    nsKDECommandData* p = static_cast< nsKDECommandData* >( data );
++    char buf[ 8192 ]; // TODO big enough
++    bool command_done = false;
++    bool command_failed = false;
++    while( !command_done && !command_failed && fgets( buf, 8192, p->file ) != NULL )
++        { // TODO what if the kernel splits a line into two chunks?
++//#ifdef DEBUG_KDE
++//        fprintf( stderr, "READ: %s %d\n", buf, feof( p->file ));
++//#endif
++        if( char* eol = strchr( buf, '\n' ))
++            *eol = '\0';
++        command_done = ( strcmp( buf, "\\1" ) == 0 );
++        command_failed = ( strcmp( buf, "\\0" ) == 0 );
++        nsAutoCString line( buf );
++        line.ReplaceSubstring( "\\n", "\n" );
++        line.ReplaceSubstring( "\\" "\\", "\\" ); //  \\ -> \ , i.e. unescape
++        if( p->output && !( command_done || command_failed ))
++            p->output->AppendElement( nsCString( buf )); // TODO utf8?
++        }
++    bool quit = false;
++    if( feof( p->file ) || command_failed )
++        {
++        quit = true;
++        p->success = false;
++        }
++    if( command_done )
++        { // reading one reply finished
++        quit = true;
++        p->success = true;
++        }
++    if( quit )
++        {
++        if( p->loop )
++            g_main_loop_quit( p->loop );
++        return FALSE;
++        }
++    return TRUE;
++    }
++
++bool nsKDEUtils::command( const nsTArray<nsCString>& command, nsTArray<nsCString>* output )
++    {
++    return self()->internalCommand( command, NULL, false, output );
++    }
++
++bool nsKDEUtils::command( nsIArray* command, nsIArray** output)
++    {
++    nsTArray<nsCString> in;
++    PRUint32 length;
++    command->GetLength( &length );
++    for ( PRUint32 i = 0; i < length; i++ )
++        {
++        nsCOMPtr<nsISupportsCString> str = do_QueryElementAt( command, i );
++        if( str )
++            {
++            nsAutoCString s;
++            str->GetData( s );
++            in.AppendElement( s );
++            }
++        }
++
++    nsTArray<nsCString> out;
++    bool ret = self()->internalCommand( in, NULL, false, &out );
++
++    if ( !output ) return ret;
++
++    nsCOMPtr<nsIMutableArray> result = do_CreateInstance( NS_ARRAY_CONTRACTID );
++    if ( !result ) return false;
++
++    for ( PRUint32 i = 0; i < out.Length(); i++ )
++        {
++        nsCOMPtr<nsISupportsCString> rstr = do_CreateInstance( NS_SUPPORTS_CSTRING_CONTRACTID );
++        if ( !rstr ) return false;
++
++        rstr->SetData( out[i] );
++        result->AppendElement( rstr );
++        }
++
++    NS_ADDREF( *output = result);
++    return ret;
++    }
++
++
++bool nsKDEUtils::commandBlockUi( const nsTArray<nsCString>& command, GtkWindow* parent, nsTArray<nsCString>* output )
++    {
++    return self()->internalCommand( command, parent, true, output );
++    }
++
++bool nsKDEUtils::internalCommand( const nsTArray<nsCString>& command, GtkWindow* parent, bool blockUi,
++    nsTArray<nsCString>* output )
++    {
++    if( !startHelper())
++        return false;
++    feedCommand( command );
++    // do not store the data in 'this' but in extra structure, just in case there
++    // is reentrancy (can there be? the event loop is re-entered)
++    nsKDECommandData data;
++    data.file = replyFile;
++    data.output = output;
++    data.success = false;
++    if( blockUi )
++        {
++        data.loop = g_main_loop_new( NULL, FALSE );
++        GtkWidget* window = gtk_window_new( GTK_WINDOW_TOPLEVEL );
++        if( parent && gtk_window_get_group(parent) )
++            gtk_window_group_add_window( gtk_window_get_group(parent), GTK_WINDOW( window ));
++        gtk_widget_realize( window );
++        gtk_widget_set_sensitive( window, TRUE );
++        gtk_grab_add( window );
++        GIOChannel* channel = g_io_channel_unix_new( fileno( data.file ));
++        g_io_add_watch( channel, static_cast< GIOCondition >( G_IO_IN | G_IO_ERR | G_IO_HUP ), kdeReadFunc, &data );
++        g_io_channel_unref( channel );
++        g_main_loop_run( data.loop );
++        g_main_loop_unref( data.loop );
++        gtk_grab_remove( window );
++        gtk_widget_destroy( window );
++        }
++    else
++        {
++        data.loop = NULL;
++        while( kdeReadFunc( NULL, static_cast< GIOCondition >( 0 ), &data ))
++            ;
++        }
++    return data.success;
++    }
++
++bool nsKDEUtils::startHelper()
++    {
++    if( helperRunning )
++        return true;
++    if( helperFailed )
++        return false;
++    helperFailed = true;
++    int fdcommand[ 2 ];
++    int fdreply[ 2 ];
++    if( pipe( fdcommand ) < 0 )
++        return false;
++    if( pipe( fdreply ) < 0 )
++        {
++        close( fdcommand[ 0 ] );
++        close( fdcommand[ 1 ] );
++        return false;
++        }
++    char* args[ 2 ] = { const_cast< char* >( KMOZILLAHELPER ), NULL };
++    switch( fork())
++        {
++        case -1:
++            {
++            close( fdcommand[ 0 ] );
++            close( fdcommand[ 1 ] );
++            close( fdreply[ 0 ] );
++            close( fdreply[ 1 ] );
++            return false;
++            }
++        case 0: // child
++            {
++            if( dup2( fdcommand[ 0 ], STDIN_FILENO ) < 0 )
++                _exit( 1 );
++            if( dup2( fdreply[ 1 ], STDOUT_FILENO ) < 0 )
++                _exit( 1 );
++            int maxfd = 1024; // close all other fds
++            struct rlimit rl;
++            if( getrlimit( RLIMIT_NOFILE, &rl ) == 0 )
++                maxfd = rl.rlim_max;
++            for( int i = 3;
++                 i < maxfd;
++                 ++i )
++                close( i );
++#ifdef DEBUG_KDE
++            execvp( KMOZILLAHELPER, args );
++#else
++            execv( KMOZILLAHELPER, args );
++#endif
++            _exit( 1 ); // failed
++            }
++        default: // parent
++            {
++            commandFile = fdopen( fdcommand[ 1 ], "w" );
++            replyFile = fdopen( fdreply[ 0 ], "r" );
++            close( fdcommand[ 0 ] );
++            close( fdreply[ 1 ] );
++            if( commandFile == NULL || replyFile == NULL )
++                {
++                closeHelper();
++                return false;
++                }
++            // ok, helper ready, getKdeRunning() will check if it works
++            }
++        }
++    helperFailed = false;
++    helperRunning = true;
++    return true;
++    }
++
++void nsKDEUtils::closeHelper()
++    {
++    if( commandFile != NULL )
++        fclose( commandFile ); // this will also make the helper quit
++    if( replyFile != NULL )
++        fclose( replyFile );
++    helperRunning = false;
++    }
++
++void nsKDEUtils::feedCommand( const nsTArray<nsCString>& command )
++    {
++    for( int i = 0;
++         i < command.Length();
++         ++i )
++        {
++        nsCString line = command[ i ];
++        line.ReplaceSubstring( "\\", "\\" "\\" ); // \ -> \\ , i.e. escape
++        line.ReplaceSubstring( "\n", "\\n" );
++#ifdef DEBUG_KDE
++        fprintf( stderr, "COMM: %s\n", line.get());
++#endif
++        fputs( line.get(), commandFile );
++        fputs( "\n", commandFile );
++        }
++    fputs( "\\E\n", commandFile ); // done as \E, so it cannot happen in normal data
++    fflush( commandFile );
++    }
+diff --git a/toolkit/xre/nsKDEUtils.h b/toolkit/xre/nsKDEUtils.h
+new file mode 100644
+--- /dev/null
++++ b/toolkit/xre/nsKDEUtils.h
+@@ -0,0 +1,48 @@
++/* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
++/* This Source Code Form is subject to the terms of the Mozilla Public
++ * License, v. 2.0. If a copy of the MPL was not distributed with this
++ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
++
++#ifndef nsKDEUtils_h__
++#define nsKDEUtils_h__
++
++#include "nsString.h"
++#include "nsTArray.h"
++#include <stdio.h>
++
++typedef struct _GtkWindow GtkWindow;
++
++class nsIArray;
++
++class NS_EXPORT nsKDEUtils
++    {
++    public:
++        /* Returns true if running inside a KDE session (regardless of whether there is KDE
++           support available for Firefox). This should be used e.g. when determining
++           dialog button order but not for code that requires the KDE support. */
++        static bool kdeSession();
++        /* Returns true if running inside a KDE session and KDE support is available
++           for Firefox. This should be used everywhere where the external helper is needed. */
++        static bool kdeSupport();
++        /* Executes the given helper command, returns true if helper returned success. */
++        static bool command( const nsTArray<nsCString>& command, nsTArray<nsCString>* output = NULL );
++        static bool command( nsIArray* command, nsIArray** output = NULL );
++        /* Like command(), but additionally blocks the parent widget like if there was
++           a modal dialog shown and enters the event loop (i.e. there are still paint updates,
++           this is for commands that take long). */
++        static bool commandBlockUi( const nsTArray<nsCString>& command, GtkWindow* parent, nsTArray<nsCString>* output = NULL );
++
++    private:
++        nsKDEUtils();
++        ~nsKDEUtils();
++        static nsKDEUtils* self();
++        bool startHelper();
++        void closeHelper();
++        void feedCommand( const nsTArray<nsCString>& command );
++        bool internalCommand( const nsTArray<nsCString>& command, GtkWindow* parent, bool isParent,
++            nsTArray<nsCString>* output );
++        FILE* commandFile;
++        FILE* replyFile;
++    };
++
++#endif // nsKDEUtils
+diff --git a/uriloader/exthandler/HandlerServiceParent.cpp b/uriloader/exthandler/HandlerServiceParent.cpp
+--- a/uriloader/exthandler/HandlerServiceParent.cpp
++++ b/uriloader/exthandler/HandlerServiceParent.cpp
+@@ -1,17 +1,17 @@
+ #include "mozilla/ipc/ProtocolUtils.h"
+ #include "mozilla/Logging.h"
+ #include "HandlerServiceParent.h"
+ #include "nsIHandlerService.h"
+ #include "nsIMIMEInfo.h"
+ #include "ContentHandlerService.h"
+ #include "nsStringEnumerator.h"
+ #ifdef MOZ_WIDGET_GTK
+-#  include "unix/nsGNOMERegistry.h"
++#  include "unix/nsCommonRegistry.h"
+ #endif
+ 
+ using mozilla::dom::ContentHandlerService;
+ using mozilla::dom::HandlerApp;
+ using mozilla::dom::HandlerInfo;
+ using mozilla::dom::RemoteHandlerApp;
+ 
+ namespace {
+@@ -282,17 +282,17 @@ mozilla::ipc::IPCResult HandlerServicePa
+ mozilla::ipc::IPCResult HandlerServiceParent::RecvExistsForProtocolOS(
+     const nsCString& aProtocolScheme, bool* aHandlerExists) {
+   if (aProtocolScheme.Length() > MAX_SCHEME_LENGTH) {
+     *aHandlerExists = false;
+     return IPC_OK();
+   }
+ #ifdef MOZ_WIDGET_GTK
+   // Check the GNOME registry for a protocol handler
+-  *aHandlerExists = nsGNOMERegistry::HandlerExists(aProtocolScheme.get());
++  *aHandlerExists = nsCommonRegistry::HandlerExists(aProtocolScheme.get());
+ #else
+   *aHandlerExists = false;
+ #endif
+   return IPC_OK();
+ }
+ 
+ /*
+  * Check if a handler exists for the provided protocol. Check the datastore
+@@ -311,17 +311,17 @@ mozilla::ipc::IPCResult HandlerServicePa
+   nsCOMPtr<nsIExternalProtocolService> protoSvc =
+       do_GetService(NS_EXTERNALPROTOCOLSERVICE_CONTRACTID, &rv);
+   if (NS_WARN_IF(NS_FAILED(rv))) {
+     *aHandlerExists = false;
+     return IPC_OK();
+   }
+   rv = protoSvc->ExternalProtocolHandlerExists(aProtocolScheme.get(),
+                                                aHandlerExists);
+-
++##
+   if (NS_WARN_IF(NS_FAILED(rv))) {
+     *aHandlerExists = false;
+   }
+ #else
+   MOZ_RELEASE_ASSERT(false, "No implementation on this platform.");
+   *aHandlerExists = false;
+ #endif
+   return IPC_OK();
+diff --git a/uriloader/exthandler/moz.build b/uriloader/exthandler/moz.build
+--- a/uriloader/exthandler/moz.build
++++ b/uriloader/exthandler/moz.build
+@@ -83,17 +83,19 @@ else:
+     SOURCES += [
+         osdir + '/nsOSHelperAppService.cpp',
+     ]
+     if CONFIG['CC_TYPE'] in ('clang', 'gcc'):
+         CXXFLAGS += ['-Wno-error=shadow']
+ 
+ if 'gtk' in CONFIG['MOZ_WIDGET_TOOLKIT']:
+     UNIFIED_SOURCES += [
++        'unix/nsCommonRegistry.cpp',
+         'unix/nsGNOMERegistry.cpp',
++        'unix/nsKDERegistry.cpp',
+         'unix/nsMIMEInfoUnix.cpp',
+     ]
+ elif CONFIG['MOZ_WIDGET_TOOLKIT'] == 'android':
+     UNIFIED_SOURCES += [
+         'android/nsAndroidHandlerApp.cpp',
+         'android/nsExternalURLHandlerService.cpp',
+         'android/nsMIMEInfoAndroid.cpp',
+     ]
+@@ -133,16 +135,17 @@ include('/ipc/chromium/chromium-config.m
+ FINAL_LIBRARY = 'xul'
+ 
+ LOCAL_INCLUDES += [
+     '/docshell/base',
+     '/dom/base',
+     '/dom/ipc',
+     '/netwerk/base',
+     '/netwerk/protocol/http',
++    '/toolkit/xre',
+ ]
+ 
+ if CONFIG['MOZ_ENABLE_DBUS']:
+     CXXFLAGS += CONFIG['TK_CFLAGS']
+     CXXFLAGS += CONFIG['MOZ_DBUS_CFLAGS']
+ 
+ if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'gtk3':
+     CXXFLAGS += CONFIG['TK_CFLAGS']
+diff --git a/uriloader/exthandler/unix/nsCommonRegistry.cpp b/uriloader/exthandler/unix/nsCommonRegistry.cpp
+new file mode 100644
+--- /dev/null
++++ b/uriloader/exthandler/unix/nsCommonRegistry.cpp
+@@ -0,0 +1,53 @@
++/* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
++/* This Source Code Form is subject to the terms of the Mozilla Public
++ * License, v. 2.0. If a copy of the MPL was not distributed with this
++ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
++
++#include "nsCommonRegistry.h"
++
++#include "nsGNOMERegistry.h"
++#include "nsKDERegistry.h"
++#include "nsString.h"
++#include "nsKDEUtils.h"
++
++/* static */ bool
++nsCommonRegistry::HandlerExists(const char *aProtocolScheme)
++{
++    if( nsKDEUtils::kdeSupport())
++        return nsKDERegistry::HandlerExists( aProtocolScheme );
++    return nsGNOMERegistry::HandlerExists( aProtocolScheme );
++}
++
++/* static */ nsresult
++nsCommonRegistry::LoadURL(nsIURI *aURL)
++{
++    if( nsKDEUtils::kdeSupport())
++        return nsKDERegistry::LoadURL( aURL );
++    return nsGNOMERegistry::LoadURL( aURL );
++}
++
++/* static */ void
++nsCommonRegistry::GetAppDescForScheme(const nsACString& aScheme,
++                                     nsAString& aDesc)
++{
++    if( nsKDEUtils::kdeSupport())
++        return nsKDERegistry::GetAppDescForScheme( aScheme, aDesc );
++    return nsGNOMERegistry::GetAppDescForScheme( aScheme, aDesc );
++}
++
++
++/* static */ already_AddRefed<nsMIMEInfoBase>
++nsCommonRegistry::GetFromExtension(const nsACString& aFileExt)
++{
++    if( nsKDEUtils::kdeSupport())
++        return nsKDERegistry::GetFromExtension( aFileExt );
++    return nsGNOMERegistry::GetFromExtension( aFileExt );
++}
++
++/* static */ already_AddRefed<nsMIMEInfoBase>
++nsCommonRegistry::GetFromType(const nsACString& aMIMEType)
++{
++    if( nsKDEUtils::kdeSupport())
++        return nsKDERegistry::GetFromType( aMIMEType );
++    return nsGNOMERegistry::GetFromType( aMIMEType );
++}
+diff --git a/uriloader/exthandler/unix/nsCommonRegistry.h b/uriloader/exthandler/unix/nsCommonRegistry.h
+new file mode 100644
+--- /dev/null
++++ b/uriloader/exthandler/unix/nsCommonRegistry.h
+@@ -0,0 +1,28 @@
++/* This Source Code Form is subject to the terms of the Mozilla Public
++ * License, v. 2.0. If a copy of the MPL was not distributed with this
++ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
++
++#ifndef nsCommonRegistry_h__
++#define nsCommonRegistry_h__
++
++#include "nsIURI.h"
++#include "nsCOMPtr.h"
++
++class nsMIMEInfoBase;
++
++class nsCommonRegistry
++{
++ public:
++  static bool HandlerExists(const char *aProtocolScheme);
++
++  static nsresult LoadURL(nsIURI *aURL);
++
++  static void GetAppDescForScheme(const nsACString& aScheme,
++                                  nsAString& aDesc);
++
++  static already_AddRefed<nsMIMEInfoBase> GetFromExtension(const nsACString& aFileExt);
++
++  static already_AddRefed<nsMIMEInfoBase> GetFromType(const nsACString& aMIMEType);
++};
++
++#endif
+diff --git a/uriloader/exthandler/unix/nsKDERegistry.cpp b/uriloader/exthandler/unix/nsKDERegistry.cpp
+new file mode 100644
+--- /dev/null
++++ b/uriloader/exthandler/unix/nsKDERegistry.cpp
+@@ -0,0 +1,87 @@
++/* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
++/* This Source Code Form is subject to the terms of the Mozilla Public
++ * License, v. 2.0. If a copy of the MPL was not distributed with this
++ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
++
++#include "nsKDERegistry.h"
++#include "prlink.h"
++#include "prmem.h"
++#include "nsString.h"
++#include "nsMIMEInfoUnix.h"
++#include "nsAutoPtr.h"
++#include "nsKDEUtils.h"
++
++/* static */ bool
++nsKDERegistry::HandlerExists(const char *aProtocolScheme)
++{
++    nsTArray<nsCString> command;
++    command.AppendElement( NS_LITERAL_CSTRING( "HANDLEREXISTS" ));
++    command.AppendElement( nsAutoCString( aProtocolScheme ));
++    return nsKDEUtils::command( command );
++}
++
++/* static */ nsresult
++nsKDERegistry::LoadURL(nsIURI *aURL)
++{
++    nsTArray<nsCString> command;
++    command.AppendElement( NS_LITERAL_CSTRING( "OPEN" ));
++    nsCString url;
++    aURL->GetSpec( url );
++    command.AppendElement( url );
++    bool rv = nsKDEUtils::command( command );
++    if (!rv)
++      return NS_ERROR_FAILURE;
++
++    return NS_OK;
++}
++
++/* static */ void
++nsKDERegistry::GetAppDescForScheme(const nsACString& aScheme,
++                                     nsAString& aDesc)
++{
++    nsTArray<nsCString> command;
++    command.AppendElement( NS_LITERAL_CSTRING( "GETAPPDESCFORSCHEME" ));
++    command.AppendElement( aScheme );
++    nsTArray<nsCString> output;
++    if( nsKDEUtils::command( command, &output ) && output.Length() == 1 )
++        CopyUTF8toUTF16( output[ 0 ], aDesc );
++}
++
++
++/* static */ already_AddRefed<nsMIMEInfoBase>
++nsKDERegistry::GetFromExtension(const nsACString& aFileExt)
++{
++    NS_ASSERTION(aFileExt[0] != '.', "aFileExt shouldn't start with a dot");
++    nsTArray<nsCString> command;
++    command.AppendElement( NS_LITERAL_CSTRING( "GETFROMEXTENSION" ));
++    command.AppendElement( aFileExt );
++    return GetFromHelper( command );
++}
++
++/* static */ already_AddRefed<nsMIMEInfoBase>
++nsKDERegistry::GetFromType(const nsACString& aMIMEType)
++{
++    nsTArray<nsCString> command;
++    command.AppendElement( NS_LITERAL_CSTRING( "GETFROMTYPE" ));
++    command.AppendElement( aMIMEType );
++    return GetFromHelper( command );
++}
++
++/* static */ already_AddRefed<nsMIMEInfoBase>
++nsKDERegistry::GetFromHelper(const nsTArray<nsCString>& command)
++{
++    nsTArray<nsCString> output;
++    if( nsKDEUtils::command( command, &output ) && output.Length() == 3 )
++        {
++        nsCString mimetype = output[ 0 ];
++        RefPtr<nsMIMEInfoUnix> mimeInfo = new nsMIMEInfoUnix( mimetype );
++        NS_ENSURE_TRUE(mimeInfo, nullptr);
++        nsCString description = output[ 1 ];
++        mimeInfo->SetDescription(NS_ConvertUTF8toUTF16(description));
++        nsCString handlerAppName = output[ 2 ];
++        mimeInfo->SetDefaultDescription(NS_ConvertUTF8toUTF16(handlerAppName));
++        mimeInfo->SetPreferredAction(nsIMIMEInfo::useSystemDefault);
++        return mimeInfo.forget();
++        }
++    return nullptr;
++}
+diff --git a/uriloader/exthandler/unix/nsKDERegistry.h b/uriloader/exthandler/unix/nsKDERegistry.h
+new file mode 100644
+--- /dev/null
++++ b/uriloader/exthandler/unix/nsKDERegistry.h
+@@ -0,0 +1,34 @@
++/* This Source Code Form is subject to the terms of the Mozilla Public
++ * License, v. 2.0. If a copy of the MPL was not distributed with this
++ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
++
++#ifndef nsKDERegistry_h__
++#define nsKDERegistry_h__
++
++#include "nsIURI.h"
++#include "nsCOMPtr.h"
++#include "nsTArray.h"
++
++class nsMIMEInfoBase;
++//class nsAutoCString;
++//class nsCString;
++
++class nsKDERegistry
++{
++ public:
++  static bool HandlerExists(const char *aProtocolScheme);
++
++  static nsresult LoadURL(nsIURI *aURL);
++
++  static void GetAppDescForScheme(const nsACString& aScheme,
++                                  nsAString& aDesc);
++
++  static already_AddRefed<nsMIMEInfoBase> GetFromExtension(const nsACString& aFileExt);
++
++  static already_AddRefed<nsMIMEInfoBase> GetFromType(const nsACString& aMIMEType);
++ private:
++  static already_AddRefed<nsMIMEInfoBase> GetFromHelper(const nsTArray<nsCString>& command);
++
++};
++
++#endif //nsKDERegistry_h__
+diff --git a/uriloader/exthandler/unix/nsMIMEInfoUnix.cpp b/uriloader/exthandler/unix/nsMIMEInfoUnix.cpp
+--- a/uriloader/exthandler/unix/nsMIMEInfoUnix.cpp
++++ b/uriloader/exthandler/unix/nsMIMEInfoUnix.cpp
+@@ -1,47 +1,50 @@
+ /* -*- Mode: C++; tab-width: 3; indent-tabs-mode: nil; c-basic-offset: 2 -*-
+  *
+  * This Source Code Form is subject to the terms of the Mozilla Public
+  * License, v. 2.0. If a copy of the MPL was not distributed with this
+  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+ 
+ #include "nsMIMEInfoUnix.h"
+-#include "nsGNOMERegistry.h"
++#include "nsCommonRegistry.h"
+ #include "nsIGIOService.h"
+ #include "nsNetCID.h"
+ #include "nsIIOService.h"
+ #include "nsAutoPtr.h"
+ #ifdef MOZ_ENABLE_DBUS
+ #  include "nsDBusHandlerApp.h"
+ #endif
++#if defined(XP_UNIX) && !defined(XP_MACOSX)
++#include "nsKDEUtils.h"
++#endif
+ 
+ nsresult nsMIMEInfoUnix::LoadUriInternal(nsIURI* aURI) {
+-  return nsGNOMERegistry::LoadURL(aURI);
++  return nsCommonRegistry::LoadURL(aURI);
+ }
+ 
+ NS_IMETHODIMP
+ nsMIMEInfoUnix::GetHasDefaultHandler(bool* _retval) {
+   // if mDefaultApplication is set, it means the application has been set from
+   // either /etc/mailcap or ${HOME}/.mailcap, in which case we don't want to
+   // give the GNOME answer.
+   if (mDefaultApplication) return nsMIMEInfoImpl::GetHasDefaultHandler(_retval);
+ 
+   *_retval = false;
+ 
+   if (mClass == eProtocolInfo) {
+-    *_retval = nsGNOMERegistry::HandlerExists(mSchemeOrType.get());
++    *_retval = nsCommonRegistry::HandlerExists(mSchemeOrType.get());
+   } else {
+     RefPtr<nsMIMEInfoBase> mimeInfo =
+-        nsGNOMERegistry::GetFromType(mSchemeOrType);
++        nsCommonRegistry::GetFromType(mSchemeOrType);
+     if (!mimeInfo) {
+       nsAutoCString ext;
+       nsresult rv = GetPrimaryExtension(ext);
+       if (NS_SUCCEEDED(rv)) {
+-        mimeInfo = nsGNOMERegistry::GetFromExtension(ext);
++        mimeInfo = nsCommonRegistry::GetFromExtension(ext);
+       }
+     }
+     if (mimeInfo) *_retval = true;
+   }
+ 
+   if (*_retval) return NS_OK;
+ 
+   return NS_OK;
+@@ -51,16 +54,33 @@ nsresult nsMIMEInfoUnix::LaunchDefaultWi
+   // if mDefaultApplication is set, it means the application has been set from
+   // either /etc/mailcap or ${HOME}/.mailcap, in which case we don't want to
+   // give the GNOME answer.
+   if (mDefaultApplication) return nsMIMEInfoImpl::LaunchDefaultWithFile(aFile);
+ 
+   nsAutoCString nativePath;
+   aFile->GetNativePath(nativePath);
+ 
++  if( nsKDEUtils::kdeSupport()) {
++    bool supports;
++    if( NS_SUCCEEDED( GetHasDefaultHandler( &supports )) && supports ) {
++      nsTArray<nsCString> command;
++      command.AppendElement( NS_LITERAL_CSTRING( "OPEN" ));
++      command.AppendElement( nativePath );
++      command.AppendElement( NS_LITERAL_CSTRING( "MIMETYPE" ));
++      command.AppendElement( mSchemeOrType );
++      if( nsKDEUtils::command( command ))
++        return NS_OK;
++    }
++    if (!mDefaultApplication)
++      return NS_ERROR_FILE_NOT_FOUND;
++
++    return LaunchWithIProcess(mDefaultApplication, nativePath);
++  }
++
+   nsCOMPtr<nsIGIOService> giovfs = do_GetService(NS_GIOSERVICE_CONTRACTID);
+   if (!giovfs) {
+     return NS_ERROR_FAILURE;
+   }
+ 
+   // nsGIOMimeApp->Launch wants a URI string instead of local file
+   nsresult rv;
+   nsCOMPtr<nsIIOService> ioservice =
+diff --git a/uriloader/exthandler/unix/nsOSHelperAppService.cpp b/uriloader/exthandler/unix/nsOSHelperAppService.cpp
+--- a/uriloader/exthandler/unix/nsOSHelperAppService.cpp
++++ b/uriloader/exthandler/unix/nsOSHelperAppService.cpp
+@@ -5,17 +5,17 @@
+  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+ 
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ 
+ #include "nsOSHelperAppService.h"
+ #include "nsMIMEInfoUnix.h"
+ #ifdef MOZ_WIDGET_GTK
+-#  include "nsGNOMERegistry.h"
++#  include "nsCommonRegistry.h"
+ #endif
+ #include "nsISupports.h"
+ #include "nsString.h"
+ #include "nsReadableUtils.h"
+ #include "nsUnicharUtils.h"
+ #include "nsIURL.h"
+ #include "nsIFileStreams.h"
+ #include "nsILineInputStream.h"
+@@ -1025,17 +1025,17 @@ nsresult nsOSHelperAppService::GetHandle
+ 
+ nsresult nsOSHelperAppService::OSProtocolHandlerExists(
+     const char* aProtocolScheme, bool* aHandlerExists) {
+   nsresult rv = NS_OK;
+ 
+   if (!XRE_IsContentProcess()) {
+ #ifdef MOZ_WIDGET_GTK
+     // Check the GNOME registry for a protocol handler
+-    *aHandlerExists = nsGNOMERegistry::HandlerExists(aProtocolScheme);
++    *aHandlerExists = nsCommonRegistry::HandlerExists(aProtocolScheme);
+ #else
+     *aHandlerExists = false;
+ #endif
+   } else {
+     *aHandlerExists = false;
+     nsCOMPtr<nsIHandlerService> handlerSvc =
+         do_GetService(NS_HANDLERSERVICE_CONTRACTID, &rv);
+     if (NS_SUCCEEDED(rv) && handlerSvc) {
+@@ -1045,17 +1045,17 @@ nsresult nsOSHelperAppService::OSProtoco
+   }
+ 
+   return rv;
+ }
+ 
+ NS_IMETHODIMP nsOSHelperAppService::GetApplicationDescription(
+     const nsACString& aScheme, nsAString& _retval) {
+ #ifdef MOZ_WIDGET_GTK
+-  nsGNOMERegistry::GetAppDescForScheme(aScheme, _retval);
++  nsCommonRegistry::GetAppDescForScheme(aScheme, _retval);
+   return _retval.IsEmpty() ? NS_ERROR_NOT_AVAILABLE : NS_OK;
+ #else
+   return NS_ERROR_NOT_AVAILABLE;
+ #endif
+ }
+ 
+ nsresult nsOSHelperAppService::GetFileTokenForPath(
+     const char16_t* platformAppPath, nsIFile** aFile) {
+@@ -1136,17 +1136,17 @@ already_AddRefed<nsMIMEInfoBase> nsOSHel
+   nsresult rv =
+       LookUpTypeAndDescription(NS_ConvertUTF8toUTF16(aFileExt), majorType,
+                                minorType, mime_types_description, true);
+ 
+   if (NS_FAILED(rv) || majorType.IsEmpty()) {
+ #ifdef MOZ_WIDGET_GTK
+     LOG(("Looking in GNOME registry\n"));
+     RefPtr<nsMIMEInfoBase> gnomeInfo =
+-        nsGNOMERegistry::GetFromExtension(aFileExt);
++        nsCommonRegistry::GetFromExtension(aFileExt);
+     if (gnomeInfo) {
+       LOG(("Got MIMEInfo from GNOME registry\n"));
+       return gnomeInfo.forget();
+     }
+ #endif
+ 
+     rv = LookUpTypeAndDescription(NS_ConvertUTF8toUTF16(aFileExt), majorType,
+                                   minorType, mime_types_description, false);
+@@ -1248,17 +1248,17 @@ already_AddRefed<nsMIMEInfoBase> nsOSHel
+ 
+   // Now look up our extensions
+   nsAutoString extensions, mime_types_description;
+   LookUpExtensionsAndDescription(majorType, minorType, extensions,
+                                  mime_types_description);
+ 
+ #ifdef MOZ_WIDGET_GTK
+   if (handler.IsEmpty()) {
+-    RefPtr<nsMIMEInfoBase> gnomeInfo = nsGNOMERegistry::GetFromType(aMIMEType);
++    RefPtr<nsMIMEInfoBase> gnomeInfo = nsCommonRegistry::GetFromType(aMIMEType);
+     if (gnomeInfo) {
+       LOG(
+           ("Got MIMEInfo from GNOME registry without extensions; setting them "
+            "to %s\n",
+            NS_LossyConvertUTF16toASCII(extensions).get()));
+ 
+       NS_ASSERTION(!gnomeInfo->HasExtensions(), "How'd that happen?");
+       gnomeInfo->SetFileExtensions(NS_ConvertUTF16toUTF8(extensions));
+diff --git a/widget/gtk/moz.build b/widget/gtk/moz.build
+--- a/widget/gtk/moz.build
++++ b/widget/gtk/moz.build
+@@ -124,16 +124,17 @@ include('/ipc/chromium/chromium-config.m
+ 
+ FINAL_LIBRARY = 'xul'
+ 
+ LOCAL_INCLUDES += [
+     '/layout/base',
+     '/layout/generic',
+     '/layout/xul',
+     '/other-licenses/atk-1.0',
++    '/toolkit/xre',
+     '/widget',
+     '/widget/headless',
+ ]
+ 
+ if CONFIG['MOZ_X11']:
+     LOCAL_INCLUDES += [
+         '/widget/x11',
+     ]
+diff --git a/widget/gtk/nsFilePicker.cpp b/widget/gtk/nsFilePicker.cpp
+--- a/widget/gtk/nsFilePicker.cpp
++++ b/widget/gtk/nsFilePicker.cpp
+@@ -4,32 +4,34 @@
+  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+ 
+ #include "mozilla/Types.h"
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <unistd.h>
+ 
+ #include <gtk/gtk.h>
++#include <gdk/gdkx.h>
+ 
+ #include "nsGtkUtils.h"
+ #include "nsIFileURL.h"
+ #include "nsIURI.h"
+ #include "nsIWidget.h"
+ #include "nsIFile.h"
+ #include "nsIStringBundle.h"
+ 
+ #include "nsArrayEnumerator.h"
+ #include "nsMemory.h"
+ #include "nsEnumeratorUtils.h"
+ #include "nsNetUtil.h"
+ #include "nsReadableUtils.h"
+ #include "mozcontainer.h"
+ 
+ #include "nsFilePicker.h"
++#include "nsKDEUtils.h"
+ 
+ using namespace mozilla;
+ 
+ #define MAX_PREVIEW_SIZE 180
+ // bug 1184009
+ #define MAX_PREVIEW_SOURCE_SIZE 4096
+ 
+ nsIFile* nsFilePicker::mPrevDisplayDirectory = nullptr;
+@@ -227,17 +229,19 @@ nsFilePicker::AppendFilters(int32_t aFil
+   mAllowURLs = !!(aFilterMask & filterAllowURLs);
+   return nsBaseFilePicker::AppendFilters(aFilterMask);
+ }
+ 
+ NS_IMETHODIMP
+ nsFilePicker::AppendFilter(const nsAString& aTitle, const nsAString& aFilter) {
+   if (aFilter.EqualsLiteral("..apps")) {
+     // No platform specific thing we can do here, really....
+-    return NS_OK;
++    // Unless it's KDE.
++    if( mMode != modeOpen || !nsKDEUtils::kdeSupport())
++      return NS_OK;
+   }
+ 
+   nsAutoCString filter, name;
+   CopyUTF16toUTF8(aFilter, filter);
+   CopyUTF16toUTF8(aTitle, name);
+ 
+   mFilters.AppendElement(filter);
+   mFilterNames.AppendElement(name);
+@@ -337,16 +341,39 @@ nsresult nsFilePicker::Show(int16_t* aRe
+   return NS_OK;
+ }
+ 
+ NS_IMETHODIMP
+ nsFilePicker::Open(nsIFilePickerShownCallback* aCallback) {
+   // Can't show two dialogs concurrently with the same filepicker
+   if (mRunning) return NS_ERROR_NOT_AVAILABLE;
+ 
++  // KDE file picker is not handled via callback
++  if( nsKDEUtils::kdeSupport()) {
++    mCallback = aCallback;
++    mRunning = true;
++    NS_ADDREF_THIS();
++    g_idle_add([](gpointer data) -> gboolean {
++      nsFilePicker* queuedPicker = (nsFilePicker*) data;
++      int16_t result;
++      queuedPicker->kdeFileDialog(&result);
++      if (queuedPicker->mCallback) {
++        queuedPicker->mCallback->Done(result);
++        queuedPicker->mCallback = nullptr;
++      } else {
++        queuedPicker->mResult = result;
++      }
++      queuedPicker->mRunning = false;
++      NS_RELEASE(queuedPicker);
++      return G_SOURCE_REMOVE;
++    }, this);
++
++    return NS_OK;
++  }
++
+   nsCString title;
+   title.Adopt(ToNewUTF8String(mTitle));
+ 
+   GtkWindow* parent_widget =
+       GTK_WINDOW(mParentWidget->GetNativeData(NS_NATIVE_SHELLWIDGET));
+ 
+   GtkFileChooserAction action = GetGtkFileChooserAction(mMode);
+ 
+@@ -572,16 +599,240 @@ void nsFilePicker::Done(void* file_choos
+     mCallback->Done(result);
+     mCallback = nullptr;
+   } else {
+     mResult = result;
+   }
+   NS_RELEASE_THIS();
+ }
+ 
++nsCString nsFilePicker::kdeMakeFilter( int index )
++    {
++    nsCString buf = mFilters[ index ];
++    for( PRUint32 i = 0;
++         i < buf.Length();
++         ++i )
++        if( buf[ i ] == ';' ) // KDE separates just using spaces
++            buf.SetCharAt( ' ', i );
++    if (!mFilterNames[index].IsEmpty())
++        {
++        buf += "|";
++        buf += mFilterNames[index].get();
++        }
++    return buf;
++    }
++
++static PRInt32 windowToXid( nsIWidget* widget )
++    {
++    GtkWindow *parent_widget = GTK_WINDOW(widget->GetNativeData(NS_NATIVE_SHELLWIDGET));
++    GdkWindow* gdk_window = gtk_widget_get_window( gtk_widget_get_toplevel( GTK_WIDGET( parent_widget )));
++    return GDK_WINDOW_XID( gdk_window );
++    }
++
++NS_IMETHODIMP nsFilePicker::kdeFileDialog(PRInt16 *aReturn)
++    {
++    NS_ENSURE_ARG_POINTER(aReturn);
++
++    if( mMode == modeOpen && mFilters.Length() == 1 && mFilters[ 0 ].EqualsLiteral( "..apps" ))
++        return kdeAppsDialog( aReturn );
++
++    nsCString title;
++    title.Adopt(ToNewUTF8String(mTitle));
++
++    const char* arg = NULL;
++    if( mAllowURLs )
++        {
++        switch( mMode )
++            {
++            case nsIFilePicker::modeOpen:
++            case nsIFilePicker::modeOpenMultiple:
++                arg = "GETOPENURL";
++                break;
++            case nsIFilePicker::modeSave:
++                arg = "GETSAVEURL";
++                break;
++            case nsIFilePicker::modeGetFolder:
++                arg = "GETDIRECTORYURL";
++                break;
++            }
++        }
++    else
++        {
++        switch( mMode )
++            {
++            case nsIFilePicker::modeOpen:
++            case nsIFilePicker::modeOpenMultiple:
++                arg = "GETOPENFILENAME";
++                break;
++            case nsIFilePicker::modeSave:
++                arg = "GETSAVEFILENAME";
++                break;
++            case nsIFilePicker::modeGetFolder:
++                arg = "GETDIRECTORYFILENAME";
++                break;
++            }
++        }
++
++  nsAutoCString directory;
++  if (mDisplayDirectory) {
++    mDisplayDirectory->GetNativePath(directory);
++  } else if (mPrevDisplayDirectory) {
++    mPrevDisplayDirectory->GetNativePath(directory);
++  }
++
++    nsAutoCString startdir;
++  if (!directory.IsEmpty()) {
++    startdir = directory;
++  }
++  if (mMode == nsIFilePicker::modeSave) {
++    if( !startdir.IsEmpty())
++      {
++      startdir += "/";
++      startdir += ToNewUTF8String(mDefault);
++      }
++    else
++      startdir = ToNewUTF8String(mDefault);
++  }
++
++    nsAutoCString filters;
++    PRInt32 count = mFilters.Length();
++    if( count == 0 ) //just in case
++        filters = "*";
++    else
++        {
++        filters = kdeMakeFilter( 0 );
++        for (PRInt32 i = 1; i < count; ++i)
++            {
++            filters += "\n";
++            filters += kdeMakeFilter( i );
++            }
++        }
++
++    nsTArray<nsCString> command;
++    command.AppendElement( nsAutoCString( arg ));
++    command.AppendElement( startdir );
++    if( mMode != nsIFilePicker::modeGetFolder )
++        {
++        command.AppendElement( filters );
++        nsAutoCString selected;
++        selected.AppendInt( mSelectedType );
++        command.AppendElement( selected );
++        }
++    command.AppendElement( title );
++    if( mMode == nsIFilePicker::modeOpenMultiple )
++        command.AppendElement( NS_LITERAL_CSTRING( "MULTIPLE" ));
++    if( PRInt32 xid = windowToXid( mParentWidget ))
++        {
++        command.AppendElement( NS_LITERAL_CSTRING( "PARENT" ));
++        nsAutoCString parent;
++        parent.AppendInt( xid );
++        command.AppendElement( parent );
++        }
++
++    nsTArray<nsCString> output;
++    if( nsKDEUtils::commandBlockUi( command, GTK_WINDOW(mParentWidget->GetNativeData(NS_NATIVE_SHELLWIDGET)), &output ))
++        {
++        *aReturn = nsIFilePicker::returnOK;
++        mFiles.Clear();
++        if( mMode != nsIFilePicker::modeGetFolder )
++            {
++            mSelectedType = atoi( output[ 0 ].get());
++            output.RemoveElementAt( 0 );
++            }
++        if (mMode == nsIFilePicker::modeOpenMultiple)
++            {
++            mFileURL.Truncate();
++            PRUint32 count = output.Length();
++            for( PRUint32 i = 0;
++                 i < count;
++                 ++i )
++                {
++                nsCOMPtr<nsIFile> localfile;
++                nsresult rv = NS_NewNativeLocalFile( output[ i ],
++                                      PR_FALSE,
++                                      getter_AddRefs(localfile));
++                if (NS_SUCCEEDED(rv))
++                    mFiles.AppendObject(localfile);
++                }
++            }
++        else
++            {
++            if( output.Length() == 0 )
++                mFileURL = nsCString();
++            else if( mAllowURLs )
++                mFileURL = output[ 0 ];
++            else // GetFile() actually requires it to be url even for local files :-/
++                {
++                mFileURL = nsCString( "file://" );
++                mFileURL.Append( output[ 0 ] );
++                }
++            }
++  // Remember last used directory.
++  nsCOMPtr<nsIFile> file;
++  GetFile(getter_AddRefs(file));
++  if (file) {
++    nsCOMPtr<nsIFile> dir;
++    file->GetParent(getter_AddRefs(dir));
++    nsCOMPtr<nsIFile> localDir(do_QueryInterface(dir));
++    if (localDir) {
++      localDir.swap(mPrevDisplayDirectory);
++    }
++  }
++        if (mMode == nsIFilePicker::modeSave)
++            {
++            nsCOMPtr<nsIFile> file;
++            GetFile(getter_AddRefs(file));
++            if (file)
++                {
++                bool exists = false;
++                file->Exists(&exists);
++                if (exists) // TODO do overwrite check in the helper app
++                    *aReturn = nsIFilePicker::returnReplace;
++                }
++            }
++        }
++    else
++        {
++        *aReturn = nsIFilePicker::returnCancel;
++        }
++    return NS_OK;
++    }
++
++
++NS_IMETHODIMP nsFilePicker::kdeAppsDialog(PRInt16 *aReturn)
++    {
++    NS_ENSURE_ARG_POINTER(aReturn);
++
++    nsCString title;
++    title.Adopt(ToNewUTF8String(mTitle));
++
++    nsTArray<nsCString> command;
++    command.AppendElement( NS_LITERAL_CSTRING( "APPSDIALOG" ));
++    command.AppendElement( title );
++    if( PRInt32 xid = windowToXid( mParentWidget ))
++        {
++        command.AppendElement( NS_LITERAL_CSTRING( "PARENT" ));
++        nsAutoCString parent;
++        parent.AppendInt( xid );
++        command.AppendElement( parent );
++        }
++
++    nsTArray<nsCString> output;
++    if( nsKDEUtils::commandBlockUi( command, GTK_WINDOW(mParentWidget->GetNativeData(NS_NATIVE_SHELLWIDGET)), &output ))
++        {
++        *aReturn = nsIFilePicker::returnOK;
++        mFileURL = output.Length() > 0 ? output[ 0 ] : nsCString();
++        }
++    else
++        {
++        *aReturn = nsIFilePicker::returnCancel;
++        }
++    return NS_OK;
++    }
++
+ // All below functions available as of GTK 3.20+
+ void* nsFilePicker::GtkFileChooserNew(const gchar* title, GtkWindow* parent,
+                                       GtkFileChooserAction action,
+                                       const gchar* accept_label) {
+   static auto sGtkFileChooserNativeNewPtr =
+       (void* (*)(const gchar*, GtkWindow*, GtkFileChooserAction, const gchar*,
+                  const gchar*))dlsym(RTLD_DEFAULT,
+                                      "gtk_file_chooser_native_new");
+diff --git a/widget/gtk/nsFilePicker.h b/widget/gtk/nsFilePicker.h
+--- a/widget/gtk/nsFilePicker.h
++++ b/widget/gtk/nsFilePicker.h
+@@ -67,16 +67,22 @@ class nsFilePicker : public nsBaseFilePi
+   nsString mDefaultExtension;
+ 
+   nsTArray<nsCString> mFilters;
+   nsTArray<nsCString> mFilterNames;
+ 
+  private:
+   static nsIFile* mPrevDisplayDirectory;
+ 
++  bool kdeRunning();
++  bool getKdeRunning();
++  NS_IMETHODIMP kdeFileDialog(PRInt16 *aReturn);
++  NS_IMETHODIMP kdeAppsDialog(PRInt16 *aReturn);
++  nsCString kdeMakeFilter( int index );
++
+   void* GtkFileChooserNew(const gchar* title, GtkWindow* parent,
+                           GtkFileChooserAction action,
+                           const gchar* accept_label);
+   void GtkFileChooserShow(void* file_chooser);
+   void GtkFileChooserDestroy(void* file_chooser);
+   void GtkFileChooserSetModal(void* file_chooser, GtkWindow* parent_widget,
+                               gboolean modal);
+ 
+diff --git a/xpcom/components/ManifestParser.cpp b/xpcom/components/ManifestParser.cpp
+--- a/xpcom/components/ManifestParser.cpp
++++ b/xpcom/components/ManifestParser.cpp
+@@ -33,16 +33,17 @@
+ #include "nsTextFormatter.h"
+ #include "nsVersionComparator.h"
+ #include "nsXPCOMCIDInternal.h"
+ 
+ #include "nsIConsoleService.h"
+ #include "nsIScriptError.h"
+ #include "nsIXULAppInfo.h"
+ #include "nsIXULRuntime.h"
++#include "nsKDEUtils.h"
+ 
+ using namespace mozilla;
+ 
+ struct ManifestDirective {
+   const char* directive;
+   int argc;
+ 
+   bool ischrome;
+@@ -393,16 +394,17 @@ void ParseManifest(NSLocationType aType,
+   NS_NAMED_LITERAL_STRING(kRemoteEnabled, "remoteenabled");
+   NS_NAMED_LITERAL_STRING(kRemoteRequired, "remoterequired");
+   NS_NAMED_LITERAL_STRING(kApplication, "application");
+   NS_NAMED_LITERAL_STRING(kAppVersion, "appversion");
+   NS_NAMED_LITERAL_STRING(kGeckoVersion, "platformversion");
+   NS_NAMED_LITERAL_STRING(kOs, "os");
+   NS_NAMED_LITERAL_STRING(kOsVersion, "osversion");
+   NS_NAMED_LITERAL_STRING(kABI, "abi");
++  NS_NAMED_LITERAL_STRING(kDesktop, "desktop");
+   NS_NAMED_LITERAL_STRING(kProcess, "process");
+ #if defined(MOZ_WIDGET_ANDROID)
+   NS_NAMED_LITERAL_STRING(kTablet, "tablet");
+ #endif
+ 
+   NS_NAMED_LITERAL_STRING(kMain, "main");
+   NS_NAMED_LITERAL_STRING(kContent, "content");
+ 
+@@ -448,39 +450,44 @@ void ParseManifest(NSLocationType aType,
+         CopyUTF8toUTF16(s, abi);
+         abi.Insert(char16_t('_'), 0);
+         abi.Insert(osTarget, 0);
+       }
+     }
+   }
+ 
+   nsAutoString osVersion;
++  nsAutoString desktop;
+ #if defined(XP_WIN)
+ #  pragma warning(push)
+ #  pragma warning(disable : 4996)  // VC12+ deprecates GetVersionEx
+   OSVERSIONINFO info = {sizeof(OSVERSIONINFO)};
+   if (GetVersionEx(&info)) {
+     nsTextFormatter::ssprintf(osVersion, u"%ld.%ld", info.dwMajorVersion,
+                               info.dwMinorVersion);
+   }
++  desktop = NS_LITERAL_STRING("win");
+ #  pragma warning(pop)
+ #elif defined(MOZ_WIDGET_COCOA)
+   SInt32 majorVersion = nsCocoaFeatures::OSXVersionMajor();
+   SInt32 minorVersion = nsCocoaFeatures::OSXVersionMinor();
+   nsTextFormatter::ssprintf(osVersion, u"%ld.%ld", majorVersion, minorVersion);
++  desktop = NS_LITERAL_STRING("macosx");
+ #elif defined(MOZ_WIDGET_GTK)
+   nsTextFormatter::ssprintf(osVersion, u"%ld.%ld", gtk_major_version,
+                             gtk_minor_version);
++  desktop = nsKDEUtils::kdeSession() ? NS_LITERAL_STRING("kde") : NS_LITERAL_STRING("gnome");
+ #elif defined(MOZ_WIDGET_ANDROID)
+   bool isTablet = false;
+   if (mozilla::AndroidBridge::Bridge()) {
+     mozilla::AndroidBridge::Bridge()->GetStaticStringField(
+         "android/os/Build$VERSION", "RELEASE", osVersion);
+     isTablet = java::GeckoAppShell::IsTablet();
+   }
++  desktop = NS_LITERAL_STRING("android");
+ #endif
+ 
+   if (XRE_IsContentProcess()) {
+     process = kContent;
+   } else {
+     process = kMain;
+   }
+ 
+@@ -567,25 +574,27 @@ void ParseManifest(NSLocationType aType,
+     TriState stOsVersion = eUnspecified;
+     TriState stOs = eUnspecified;
+     TriState stABI = eUnspecified;
+     TriState stProcess = eUnspecified;
+ #if defined(MOZ_WIDGET_ANDROID)
+     TriState stTablet = eUnspecified;
+ #endif
+     int flags = 0;
++    TriState stDesktop = eUnspecified;
+ 
+     while ((token = nsCRT::strtok(whitespace, kWhitespace, &whitespace)) &&
+            ok) {
+       ToLowerCase(token);
+       NS_ConvertASCIItoUTF16 wtoken(token);
+ 
+       if (CheckStringFlag(kApplication, wtoken, appID, stApp) ||
+           CheckOsFlag(kOs, wtoken, osTarget, stOs) ||
+           CheckStringFlag(kABI, wtoken, abi, stABI) ||
++          CheckStringFlag(kDesktop, wtoken, desktop, stDesktop) ||
+           CheckStringFlag(kProcess, wtoken, process, stProcess) ||
+           CheckVersionFlag(kOsVersion, wtoken, osVersion, stOsVersion) ||
+           CheckVersionFlag(kAppVersion, wtoken, appVersion, stAppVersion) ||
+           CheckVersionFlag(kGeckoVersion, wtoken, geckoVersion,
+                            stGeckoVersion)) {
+         continue;
+       }
+ 
+@@ -622,17 +631,17 @@ void ParseManifest(NSLocationType aType,
+       }
+ 
+       LogMessageWithContext(
+           aFile, line, "Unrecognized chrome manifest modifier '%s'.", token);
+       ok = false;
+     }
+ 
+     if (!ok || stApp == eBad || stAppVersion == eBad ||
+-        stGeckoVersion == eBad || stOs == eBad || stOsVersion == eBad ||
++        stGeckoVersion == eBad || stOs == eBad || stOsVersion == eBad || stDesktop == eBad ||
+ #ifdef MOZ_WIDGET_ANDROID
+         stTablet == eBad ||
+ #endif
+         stABI == eBad || stProcess == eBad) {
+       continue;
+     }
+ 
+     if (directive->regfunc) {
+diff --git a/xpcom/components/moz.build b/xpcom/components/moz.build
+--- a/xpcom/components/moz.build
++++ b/xpcom/components/moz.build
+@@ -66,16 +66,17 @@ LOCAL_INCLUDES += [
+     '!..',
+     '../base',
+     '../build',
+     '../ds',
+     '/chrome',
+     '/js/xpconnect/loader',
+     '/layout/build',
+     '/modules/libjar',
++    '/toolkit/xre',
+ ]
+ 
+ if 'gtk' in CONFIG['MOZ_WIDGET_TOOLKIT']:
+     CXXFLAGS += CONFIG['TK_CFLAGS']
+ 
+ if CONFIG['MOZ_LAYOUT_DEBUGGER']:
+     DEFINES['MOZ_LAYOUT_DEBUGGER'] = True
+ 
+diff --git a/xpcom/io/nsLocalFileUnix.cpp b/xpcom/io/nsLocalFileUnix.cpp
+--- a/xpcom/io/nsLocalFileUnix.cpp
++++ b/xpcom/io/nsLocalFileUnix.cpp
+@@ -47,16 +47,17 @@
+ #include "prproces.h"
+ #include "nsIDirectoryEnumerator.h"
+ #include "nsSimpleEnumerator.h"
+ #include "private/pprio.h"
+ #include "prlink.h"
+ 
+ #ifdef MOZ_WIDGET_GTK
+ #  include "nsIGIOService.h"
++#  include "nsKDEUtils.h"
+ #endif
+ 
+ #ifdef MOZ_WIDGET_COCOA
+ #  include <Carbon/Carbon.h>
+ #  include "CocoaFileUtils.h"
+ #  include "prmem.h"
+ #  include "plbase64.h"
+ 
+@@ -1902,62 +1903,77 @@ nsLocalFile::SetPersistentDescriptor(con
+ 
+ NS_IMETHODIMP
+ nsLocalFile::Reveal() {
+   if (!FilePreferences::IsAllowedPath(mPath)) {
+     return NS_ERROR_FILE_ACCESS_DENIED;
+   }
+ 
+ #ifdef MOZ_WIDGET_GTK
+-  nsCOMPtr<nsIGIOService> giovfs = do_GetService(NS_GIOSERVICE_CONTRACTID);
+-  if (!giovfs) {
+-    return NS_ERROR_FAILURE;
+-  }
++  nsAutoCString url;
+ 
+   bool isDirectory;
+   if (NS_FAILED(IsDirectory(&isDirectory))) {
+     return NS_ERROR_FAILURE;
+   }
+ 
++  nsCOMPtr<nsIGIOService> giovfs = do_GetService(NS_GIOSERVICE_CONTRACTID);
+   if (isDirectory) {
+-    return giovfs->ShowURIForInput(mPath);
++    url = mPath;
+   }
+   if (NS_SUCCEEDED(giovfs->OrgFreedesktopFileManager1ShowItems(mPath))) {
+     return NS_OK;
+   }
+   nsCOMPtr<nsIFile> parentDir;
+   nsAutoCString dirPath;
+   if (NS_FAILED(GetParent(getter_AddRefs(parentDir)))) {
+     return NS_ERROR_FAILURE;
+   }
+   if (NS_FAILED(parentDir->GetNativePath(dirPath))) {
+     return NS_ERROR_FAILURE;
+   }
+ 
+-  return giovfs->ShowURIForInput(dirPath);
++  url = dirPath;
+ #elif defined(MOZ_WIDGET_COCOA)
+   CFURLRef url;
+   if (NS_SUCCEEDED(GetCFURL(&url))) {
+     nsresult rv = CocoaFileUtils::RevealFileInFinder(url);
+     ::CFRelease(url);
+     return rv;
+   }
+   return NS_ERROR_FAILURE;
+ #else
+   return NS_ERROR_FAILURE;
+ #endif
++  if(nsKDEUtils::kdeSupport()) {
++    nsTArray<nsCString> command;
++    command.AppendElement( NS_LITERAL_CSTRING("REVEAL") );
++    command.AppendElement( mPath );
++    return nsKDEUtils::command( command ) ? NS_OK : NS_ERROR_FAILURE;
++  }
++
++  if (!giovfs)
++    return NS_ERROR_FAILURE;
++
++  return giovfs->ShowURIForInput(url);
+ }
+ 
+ NS_IMETHODIMP
+ nsLocalFile::Launch() {
+   if (!FilePreferences::IsAllowedPath(mPath)) {
+     return NS_ERROR_FILE_ACCESS_DENIED;
+   }
+ 
+ #ifdef MOZ_WIDGET_GTK
++  if( nsKDEUtils::kdeSupport()) {
++    nsTArray<nsCString> command;
++    command.AppendElement( NS_LITERAL_CSTRING("OPEN") );
++    command.AppendElement( mPath );
++    return nsKDEUtils::command( command ) ? NS_OK : NS_ERROR_FAILURE;
++  }
+   nsCOMPtr<nsIGIOService> giovfs = do_GetService(NS_GIOSERVICE_CONTRACTID);
+   if (!giovfs) {
+     return NS_ERROR_FAILURE;
+   }
+ 
+   return giovfs->ShowURIForInput(mPath);
+ #elif defined(MOZ_WIDGET_ANDROID)
+   // Try to get a mimetype, if this fails just use the file uri alone

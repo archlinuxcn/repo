@@ -2,56 +2,39 @@
 # Contributor: Megumi fox <megumifox@archlinuxcn.org>
 
 _pkgname=drawio-desktop
-pkgname=$_pkgname-bin
-pkgver=10.8.8
-pkgrel=1
+pkgname=drawio-desktop-bin
+pkgver=10.9.5
+pkgrel=2
 pkgdesc='Diagram drawing application built on web technology'
 arch=('x86_64')
 url='https://github.com/jgraph/drawio'
 license=('Apache')
-depends=(electron gconf libnotify)
-makedepends=(npm)
-provides=($_pkgname)
-conflicts=($_pkgname)
-source=("drawio-desktop-$pkgver.war::https://github.com/jgraph/drawio/releases/download/v$pkgver/draw.war"
-		"draw.io.desktop"
-		"draw.io.sh")
-noextract=("drawio-desktop-$pkgver.war")
-sha256sums=('1a1f5bec470026e6505964442e98c3c5c4403b3aa466c3a8818a957868a75036'
-            '21e5dac375c7ccb9b8aed0e2b1e74d0def76089821f66240bdc0bc6fe57db8a4'
-            '9f5e73d5b19fdc30fde67ddb9a7416c4a6cb133ddb001bc41aa5542797f4f654')
+depends=(
+  'desktop-file-utils'
+  'gconf'
+  'libnotify'
+  'libxss'
+  'libxtst'
+  'nss'
+)
+provides=(${_pkgname})
+conflicts=(${_pkgname})
+source=(
+  "https://github.com/jgraph/drawio-desktop/releases/download/v${pkgver}/draw.io-amd64-${pkgver}.deb"
+  'https://github.com/jgraph/drawio-desktop/raw/master/LICENSE')
+sha256sums=('90cbdb303ccacbda69e152cda88f28615f2fb5dc6705b58dbea5f8c4df822ae1'
+            'b40930bbcf80744c86c46a12bc9da056641d722716c378f5659b9e555ef833e1')
 
-
-build() {
-  rm -rf "$srcdir/drawio-$pkgver"
-  mkdir "$srcdir/drawio-$pkgver"
-  cd "$srcdir/drawio-$pkgver"
-
-  bsdtar -xf "../drawio-desktop-$pkgver.war" -C .
-  rm -rf "META-INF" "WEB-INF"
-  cd "$srcdir/drawio-$pkgver"
-
-  npm install --cache ../npm-cache --only=production
-  rm -f 'package-lock.json'
+prepare() {
+  tar xfv data.tar.xz
 }
 
 package() {
-  cd "$srcdir/drawio-$pkgver"
-
-  mkdir -p "$pkgdir/opt/"
-  cp -rp . "$pkgdir/opt/draw.io"
-
-  # create desktop file
-  install -Dm644 "$srcdir/draw.io.desktop" -t "$pkgdir/usr/share/applications"
-
-  # create run script
-  install -Dm755 "$srcdir/draw.io.sh" "$pkgdir/usr/bin/draw.io"
-
-  # create icons
-  find 'images' -regex '.*/drawlogo[0-9]+\.png' |
-  grep -o '[0-9]\+' |
-  while read size; do
-    install -Dm644 "images/drawlogo$size.png" \
-    "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps/draw.io.png"
-  done
+  cp -rp "${srcdir}/opt" "${pkgdir}"
+  cp -rp "${srcdir}/usr" "${pkgdir}"
+  install -Dm644 "${srcdir}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+  # move icon to correct location
+  mv "${pkgdir}/usr/share/icons/hicolor/0x0/apps/draw.io.png" "${pkgdir}/usr/share/icons"
+  rm -rfv "${pkgdir}/usr/share/icons/hicolor"
 }
+# vim:set ts=2 sw=2 et:

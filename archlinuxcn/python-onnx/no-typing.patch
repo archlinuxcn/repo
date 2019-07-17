@@ -1,0 +1,31 @@
+From 3eddf9db09ffef24474f6178b68129ce68dad041 Mon Sep 17 00:00:00 2001
+From: Chih-Hsuan Yen <yan12125@gmail.com>
+Date: Tue, 2 Jul 2019 15:18:58 +0800
+Subject: [PATCH] typing is not needed since Python 3.5 as it's built-in
+
+---
+ setup.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/setup.py b/setup.py
+index 882b22ac0b..8b23efa932 100644
+--- a/setup.py
++++ b/setup.py
+@@ -286,7 +286,7 @@ def run(self):
+     'protobuf',
+     'numpy',
+     'six',
+-    'typing>=3.6.4',
++    'typing>=3.6.4 ; python_version<"3.5"',
+     'typing-extensions>=3.6.2.1',
+ ])
+ 
+@@ -298,7 +298,7 @@ def run(self):
+ tests_require.append('pytest')
+ tests_require.append('nbval')
+ tests_require.append('tabulate')
+-tests_require.append('typing')
++tests_require.append('typing ; python_version<"3.5"')
+ tests_require.append('typing-extensions')
+ 
+ if sys.version_info[0] == 3:

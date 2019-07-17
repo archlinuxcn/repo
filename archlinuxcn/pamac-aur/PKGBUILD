@@ -2,13 +2,13 @@
 # Maintainer: Zeph <zeph33@gmail.com>
 # https://gitlab.manjaro.org/packages/extra/pamac
 pkgname=pamac-aur
-pkgver=8.0.2
+pkgver=8.0.3
 pkgrel=1
 _pkgfixver=$pkgver
 
 _pkgvercommit=v$pkgver
 # _pkgvercommit=3bcb34d8918ba89aa49d45cb6d44936fbd1547d6
-sha256sums=('48b1d163c9ab347d55b91625179bd6027d818089b4344ffb42948c1f4a099dc0')
+sha256sums=('63c65e51f5f62ae79faf315e395e5e15bfa23d5f36b138d02613d32bf097a6e8')
 
 pkgdesc="A Gtk3 frontend for libalpm"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')

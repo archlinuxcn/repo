@@ -6,7 +6,7 @@
 
 pkgsubn=https-everywhere
 pkgname=${pkgsubn}-chrome-git
-pkgver=65843.111e998fe0
+pkgver=65922.b7e401d234
 pkgrel=1
 pkgdesc="Chrome/Chromium extension to use HTTPS whenever possible - git/dev"
 arch=('any')
@@ -24,6 +24,7 @@ pkgver() {
 
 build() {
 	cd "${srcdir}/${pkgsubn}"
+  git submodule update --init
   for file in `find -type f -name '*.py'`; do
     sed -i 's/python3.6/python/g' "$file"
   done

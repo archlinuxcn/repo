@@ -2,7 +2,7 @@
 # Contributor: PlusMinus
 
 pkgname=evdi
-pkgver=1.6.1
+pkgver=1.6.2
 pkgrel=1
 pkgdesc="A Linux® kernel module that enables management of multiple screens."
 arch=('i686' 'x86_64')
@@ -22,7 +22,7 @@ changelog=$pkgname.Changelog
 source=($pkgname-$pkgver-$pkgrel.tar.gz::https://github.com/DisplayLink/evdi/archive/v$pkgver.tar.gz
         relro.patch)
 noextract=()
-md5sums=('19ce351c482c6fd757f97446f7a7669e'
+md5sums=('11e968a27f2432d2c50738976b7f847f'
          '05e64dd295a66c030139d0c8f6f7013b')
 
 prepare() {

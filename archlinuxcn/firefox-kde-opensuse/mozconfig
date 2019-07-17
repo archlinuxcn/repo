@@ -4,13 +4,14 @@ ac_add_options --prefix=/usr
 ac_add_options --enable-linker=gold
 ac_add_options --enable-hardening
 ac_add_options --enable-optimize
-#ac_add_options --enable-rust-simd
+ac_add_options --enable-rust-simd
 
+# Branding
 ac_add_options --enable-release
 ac_add_options --enable-official-branding
 ac_add_options --enable-update-channel=release
 ac_add_options --with-distribution-id=org.archlinux
-
+ac_add_options --with-unsigned-addon-scopes=app,system
 export MOZILLA_OFFICIAL=1
 export MOZ_TELEMETRY_REPORTING=1
 export MOZ_SOURCE_REPO=https://hg.mozilla.org/mozilla-unified
@@ -24,8 +25,10 @@ ac_add_options --with-system-nspr
 ac_add_options --with-system-nss
 ac_add_options --with-system-icu
 ac_add_options --with-system-jpeg
+ac_add_options --with-system-webp
 ac_add_options --with-system-zlib
 ac_add_options --with-system-bz2
+ac_add_options --with-system-libevent
 #ac_add_options --with-system-libvpx
 ac_add_options --with-system-harfbuzz
 ac_add_options --with-system-graphite2
@@ -34,6 +37,7 @@ ac_add_options --enable-system-sqlite
 ac_add_options --enable-system-ffi
 ac_add_options --enable-system-pixman
 ac_add_options --enable-system-av1
+ac_add_options --enable-necko-wifi
 ac_add_options --disable-libproxy
 #ac_add_options --enable-shared-js
 

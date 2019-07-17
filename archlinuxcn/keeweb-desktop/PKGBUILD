@@ -2,10 +2,11 @@
 
 pkgname=keeweb-desktop
 pkgver=1.8.2
-pkgrel=1
+pkgrel=2
 pkgdesc="This webapp is a desktop password manager compatible with KeePass databases."
 arch=('x86_64')
 depends=('gconf' 'libxss' 'gtk2')
+optdepends=('xdotool: for Auto-type feature')
 url="https://github.com/keeweb/keeweb"
 license=('MIT')
 source=(

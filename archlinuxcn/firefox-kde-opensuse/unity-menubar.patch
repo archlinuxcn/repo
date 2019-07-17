@@ -14,7 +14,7 @@
              <menu id="file-menu" label="&fileMenu.label;"
 --- a/browser/base/content/browser.js
 +++ b/browser/base/content/browser.js
-@@ -5776,11 +5776,17 @@ function onViewToolbarsPopupShowing(aEve
+@@ -5977,11 +5977,17 @@ function onViewToolbarsPopupShowing(aEve
  
    let toolbarNodes = gNavToolbox.querySelectorAll("toolbar");
  
@@ -34,7 +34,7 @@
                            "autohide" : "collapsed";
 --- a/browser/components/places/content/places.xul
 +++ b/browser/components/places/content/places.xul
-@@ -173,7 +173,7 @@
+@@ -166,7 +166,7 @@
          <toolbarbutton type="menu" class="tabbable"
                onpopupshowing="document.getElementById('placeContent').focus()"
  #else
@@ -45,7 +45,7 @@
                id="organizeButton" label="&organize.label;"
 --- a/dom/xul/XULPopupElement.cpp
 +++ b/dom/xul/XULPopupElement.cpp
-@@ -157,6 +157,10 @@ void XULPopupElement::GetState(nsString&
+@@ -156,6 +156,10 @@ void XULPopupElement::GetState(nsString&
    // set this here in case there's no frame for the popup
    aState.AssignLiteral("closed");
  
@@ -56,7 +56,7 @@
    nsMenuPopupFrame* menuPopupFrame = do_QueryFrame(GetPrimaryFrame());
    if (menuPopupFrame) {
      switch (menuPopupFrame->PopupState()) {
-@@ -180,6 +184,11 @@ void XULPopupElement::GetState(nsString&
+@@ -179,6 +183,11 @@ void XULPopupElement::GetState(nsString&
          break;
      }
    }
@@ -70,9 +70,9 @@
  nsINode* XULPopupElement::GetTriggerNode() const {
 --- a/dom/xul/moz.build
 +++ b/dom/xul/moz.build
-@@ -76,6 +76,11 @@ LOCAL_INCLUDES += [
-     '/layout/xul/tree',
- ]
+@@ -78,6 +78,11 @@ LOCAL_INCLUDES += [
+ 
+ include('/ipc/chromium/chromium-config.mozbuild')
  
 +if 'gtk' in CONFIG['MOZ_WIDGET_TOOLKIT']:
 +    LOCAL_INCLUDES += [
@@ -97,7 +97,7 @@
      'components.conf',
 --- a/modules/libpref/init/all.js
 +++ b/modules/libpref/init/all.js
-@@ -277,6 +277,9 @@ pref("dom.window.event.enabled", true);
+@@ -246,6 +246,9 @@ pref("dom.window.event.enabled", true);
  pref("browser.sessionhistory.max_total_viewers", -1);
  
  pref("ui.use_native_colors", true);
@@ -105,11 +105,11 @@
 +pref("ui.use_unity_menubar", true);
 +#endif
  pref("ui.click_hold_context_menus", false);
- 
- // Pop up context menu on mouseup instead of mousedown, if that's the OS default.
+ // 0 = false, 1 = true, 2 = autodetect.
+ pref("ui.android.mouse_as_touch", 1);
 --- a/toolkit/content/xul.css
 +++ b/toolkit/content/xul.css
-@@ -244,6 +244,18 @@ toolbar[type="menubar"] {
+@@ -215,6 +215,18 @@ toolbar[type="menubar"] {
  }
  %endif
  
@@ -146,7 +146,7 @@
      'nsWindow.cpp', # conflicts with X11 headers
  ]
  
-@@ -124,6 +133,7 @@ FINAL_LIBRARY = 'xul'
+@@ -127,6 +136,7 @@ FINAL_LIBRARY = 'xul'
  LOCAL_INCLUDES += [
      '/layout/base',
      '/layout/generic',
@@ -324,7 +324,7 @@
 +#endif /* __nsDbusmenu_h__ */
 --- /dev/null
 +++ b/widget/gtk/nsMenu.cpp
-@@ -0,0 +1,845 @@
+@@ -0,0 +1,843 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
 + */
@@ -337,12 +337,13 @@
 +#include "mozilla/dom/Document.h"
 +#include "mozilla/dom/Element.h"
 +#include "mozilla/Assertions.h"
-+#include "mozilla/ComputedStyle.h"
 +#include "mozilla/ComputedStyleInlines.h"
 +#include "mozilla/EventDispatcher.h"
 +#include "mozilla/GuardObjects.h"
 +#include "mozilla/MouseEvents.h"
 +#include "mozilla/Move.h"
++#include "mozilla/PresShell.h"
++#include "mozilla/PresShellInlines.h"
 +#include "nsAutoPtr.h"
 +#include "nsBindingManager.h"
 +#include "nsComponentManagerUtils.h"
@@ -352,7 +353,6 @@
 +#include "nsGtkUtils.h"
 +#include "nsAtom.h"
 +#include "nsIContent.h"
-+#include "nsIPresShell.h"
 +#include "nsIRunnable.h"
 +#include "nsITimer.h"
 +#include "nsString.h"
@@ -446,14 +446,13 @@
 +AttachXBLBindings(nsIContent *aContent)
 +{
 +    dom::Document *doc = aContent->OwnerDoc();
-+    nsIPresShell *shell = doc->GetShell();
++    PresShell *shell = doc->GetPresShell();
 +    if (!shell) {
 +        return;
 +    }
 +
 +    RefPtr<ComputedStyle> style =
-+        shell->StyleSet()->ResolveStyleFor(aContent->AsElement(),
-+                                           LazyComputeBehavior::Allow);
++        shell->StyleSet()->ResolveStyleLazily(*aContent->AsElement());
 +
 +    if (!style) {
 +        return;
@@ -470,11 +469,10 @@
 +    }
 +
 +    RefPtr<nsXBLBinding> binding;
-+    bool dummy;
 +    nsresult rv = xbl->LoadBindings(aContent->AsElement(),
 +                                    display->mBinding->GetURI(),
 +                                    display->mBinding->ExtraData()->Principal(),
-+                                    getter_AddRefs(binding), &dummy);
++                                    getter_AddRefs(binding));
 +    if ((NS_FAILED(rv) && rv != NS_ERROR_XBL_BLOCKED) || !binding) {
 +        return;
 +    }
@@ -2212,7 +2210,7 @@
 +#endif /* __nsMenuContainer_h__ */
 --- /dev/null
 +++ b/widget/gtk/nsMenuItem.cpp
-@@ -0,0 +1,765 @@
+@@ -0,0 +1,764 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
 + */
@@ -2222,7 +2220,6 @@
 +
 +#include "mozilla/ArrayUtils.h"
 +#include "mozilla/Assertions.h"
-+#include "mozilla/ComputedStyle.h"
 +#include "mozilla/dom/Document.h"
 +#include "mozilla/dom/Element.h"
 +#include "mozilla/dom/KeyboardEventBinding.h"
@@ -3078,10 +3075,11 @@
 +#include "imgRequestProxy.h"
 +#include "mozilla/ArrayUtils.h"
 +#include "mozilla/Assertions.h"
-+#include "mozilla/ComputedStyle.h"
 +#include "mozilla/dom/Document.h"
 +#include "mozilla/dom/Element.h"
 +#include "mozilla/Preferences.h"
++#include "mozilla/PresShell.h"
++#include "mozilla/PresShellInlines.h"
 +#include "nsAttrValue.h"
 +#include "nsComputedDOMStyle.h"
 +#include "nsContentUtils.h"
@@ -3090,7 +3088,6 @@
 +#include "nsIContentPolicy.h"
 +#include "nsILoadGroup.h"
 +#include "nsImageToPixbuf.h"
-+#include "nsIPresShell.h"
 +#include "nsIURI.h"
 +#include "nsNetUtil.h"
 +#include "nsPresContext.h"
@@ -3249,7 +3246,7 @@
 +                                                    uriString)) {
 +        NS_NewURI(getter_AddRefs(uri), uriString);
 +    } else {
-+        nsIPresShell *shell = doc->GetShell();
++        PresShell *shell = doc->GetPresShell();
 +        if (!shell) {
 +            return;
 +        }
@@ -3729,7 +3726,7 @@
 +}
 --- /dev/null
 +++ b/widget/gtk/nsMenuObject.h
-@@ -0,0 +1,172 @@
+@@ -0,0 +1,169 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
 + */
@@ -3741,14 +3738,11 @@
 +#define __nsMenuObject_h__
 +
 +#include "mozilla/Attributes.h"
++#include "mozilla/ComputedStyleInlines.h"
 +#include "nsCOMPtr.h"
 +
 +#include "nsDbusmenu.h"
 +#include "nsNativeMenuDocListener.h"
-+
-+namespace mozilla {
-+class ComputedStyle;
-+}
 +
 +class nsIContent;
 +class nsMenuContainer;
@@ -3904,7 +3898,7 @@
 +#endif /* __nsMenuObject_h__ */
 --- /dev/null
 +++ b/widget/gtk/nsMenuSeparator.cpp
-@@ -0,0 +1,85 @@
+@@ -0,0 +1,84 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
 + */
@@ -3913,7 +3907,6 @@
 + * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 +
 +#include "mozilla/Assertions.h"
-+#include "mozilla/ComputedStyle.h"
 +#include "mozilla/Move.h"
 +#include "nsAutoPtr.h"
 +#include "nsCRT.h"
@@ -5140,15 +5133,15 @@
 +#endif /* __nsNativeMenuService_h__ */
 --- a/widget/gtk/nsWindow.cpp
 +++ b/widget/gtk/nsWindow.cpp
-@@ -70,6 +70,7 @@
+@@ -71,6 +71,7 @@
  
  #include "mozilla/Assertions.h"
  #include "mozilla/Likely.h"
 +#include "mozilla/Move.h"
  #include "mozilla/Preferences.h"
  #include "nsIPrefService.h"
- #include "nsIGConfService.h"
-@@ -4843,6 +4844,10 @@ void nsWindow::HideWindowChrome(bool aSh
+ #include "nsIServiceManager.h"
+@@ -5028,6 +5029,10 @@ void nsWindow::HideWindowChrome(bool aSh
    SetWindowDecoration(aShouldHide ? eBorderStyle_none : mBorderStyle);
  }
  
@@ -5158,7 +5151,7 @@
 +
  bool nsWindow::CheckForRollup(gdouble aMouseX, gdouble aMouseY, bool aIsWheel,
                                bool aAlwaysRollup) {
-   nsIRollupListener *rollupListener = GetActiveRollupListener();
+   nsIRollupListener* rollupListener = GetActiveRollupListener();
 --- a/widget/gtk/nsWindow.h
 +++ b/widget/gtk/nsWindow.h
 @@ -38,6 +38,8 @@
@@ -5179,7 +5172,7 @@
    /**
     * GetLastUserInputTime returns a timestamp for the most recent user input
     * event.  This is intended for pointer grab requests (including drags).
-@@ -622,6 +626,8 @@ class nsWindow final : public nsBaseWidg
+@@ -632,6 +636,8 @@ class nsWindow final : public nsBaseWidg
  
    mozilla::UniquePtr<mozilla::CurrentX11TimeGetter> mCurrentTimeGetter;
    static CSDSupportLevel sCSDSupportLevel;
@@ -5236,7 +5229,7 @@
  import sys
  
  # Static atom definitions, used to generate nsGkAtomList.h.
-@@ -2464,7 +2465,7 @@ STATIC_ATOMS = [
+@@ -2476,7 +2477,7 @@ STATIC_ATOMS = [
      InheritingAnonBoxAtom("AnonBox_mozSVGForeignContent", ":-moz-svg-foreign-content"),
      InheritingAnonBoxAtom("AnonBox_mozSVGText", ":-moz-svg-text"),
      # END ATOMS

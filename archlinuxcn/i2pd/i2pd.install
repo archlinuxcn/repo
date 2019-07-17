@@ -1,0 +1,25 @@
+USER=i2pd
+HOME=/var/lib/i2pd
+
+post_install() {
+    getent passwd ${USER} &>/dev/null || {
+        echo -n ">>> Creating ${USER} user... "
+        useradd --system --user-group --home ${HOME} ${USER}
+        echo "done"
+    }
+    post_upgrade
+}
+
+post_upgrade() {
+    systemd-tmpfiles --create i2pd.conf
+    chown -R ${USER}:${USER} ${HOME}
+	chmod -R o-rwx ${HOME}
+}
+
+pre_remove() {
+    getent passwd ${USER} &>/dev/null && {
+        echo -n ">>> Removing ${USER} user... "
+        userdel ${USER}
+        echo "done"
+    }
+}

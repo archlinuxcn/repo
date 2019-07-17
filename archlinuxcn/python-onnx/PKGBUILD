@@ -2,15 +2,17 @@
 
 pkgname=python-onnx
 pkgver=1.5.0
-pkgrel=2
+pkgrel=4
 pkgdesc='Open Neural Network Exchange'
 arch=('x86_64')
 url='https://onnx.ai'
 license=('MIT')
 depends=(
   'protobuf'
+  'python-protobuf'
   'python-numpy'
   'python-six'
+  'python-typing_extensions'
 )
 makedepends=(
   'cmake'
@@ -29,12 +31,15 @@ optdepends=(
   'python-pytorch'
   'python-tensorflow'
 )
-source=("${pkgname}::git+https://github.com/onnx/onnx.git#tag=v${pkgver}")
-sha512sums=('SKIP')
+source=("${pkgname}::git+https://github.com/onnx/onnx.git#tag=v${pkgver}"
+        'no-typing.patch')
+sha512sums=('SKIP'
+            '902df9eb236f69c47d838813687fa8f22fee0efeea6a831a9ed0c78c8f52d93e31c57689141c92a8eb1a4c3592a8e01162c857b72766543a9e1a8f43b1b0efe7')
 
 prepare() {
   cd "${srcdir}/${pkgname}"
   git submodule update --init --recursive
+  patch -Np1 -i ../no-typing.patch
 }
 
 build() {
@@ -44,7 +49,7 @@ build() {
 
 check() {
   cd "${srcdir}/${pkgname}"
-  pytest -v
+  PYTHONPATH=$(pwd)/build/lib.linux-$CARCH-3.7 pytest -v
 }
 
 package() {

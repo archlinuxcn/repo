@@ -1,0 +1,19 @@
+diff --git a/ycmd/completers/rust/rust_completer.py b/ycmd/completers/rust/rust_completer.py
+index dc14d6ee..cf5fd77c 100644
+--- a/ycmd/completers/rust/rust_completer.py
++++ b/ycmd/completers/rust/rust_completer.py
+@@ -33,11 +33,9 @@ from ycmd.utils import LOGGER, re
+ 
+ 
+ LOGFILE_FORMAT = 'rls_'
+-RLS_BIN_DIR = os.path.abspath(
+-  os.path.join( os.path.dirname( __file__ ), '..', '..', '..', 'third_party',
+-                'rls', 'bin' ) )
+-RUSTC_EXECUTABLE = utils.FindExecutable( os.path.join( RLS_BIN_DIR, 'rustc' ) )
+-RLS_EXECUTABLE = utils.FindExecutable( os.path.join( RLS_BIN_DIR, 'rls' ) )
++RLS_BIN_DIR = '/usr/bin'
++RUSTC_EXECUTABLE =  os.path.join( RLS_BIN_DIR, 'rustc' )
++RLS_EXECUTABLE =  os.path.join( RLS_BIN_DIR, 'rls' ) 
+ RLS_VERSION_REGEX = re.compile( r'^rls (?P<version>.*)$' )
+ 
+ 

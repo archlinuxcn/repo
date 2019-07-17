@@ -7,7 +7,7 @@ https://bugzilla.mozilla.org/show_bug.cgi?id=847568
 diff --git a/config/system-headers.mozbuild b/config/system-headers.mozbuild
 --- a/config/system-headers.mozbuild
 +++ b/config/system-headers.mozbuild
-@@ -1228,16 +1228,23 @@ if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'andr
+@@ -1228,16 +1228,23 @@ if CONFIG['OS_TARGET'] == 'Android':
          'utils/TypeHelpers.h',
          'utils/Unicode.h',
          'utils/Vector.h',
@@ -34,7 +34,7 @@ diff --git a/config/system-headers.mozbuild b/config/system-headers.mozbuild
 diff --git a/dom/base/moz.build b/dom/base/moz.build
 --- a/dom/base/moz.build
 +++ b/dom/base/moz.build
-@@ -477,16 +477,19 @@ include('/ipc/chromium/chromium-config.m
+@@ -523,16 +523,19 @@ include('/ipc/chromium/chromium-config.m
  FINAL_LIBRARY = 'xul'
  
  if CONFIG['MOZ_BUILD_APP'] in ['browser', 'mobile/android', 'xulrunner']:
@@ -54,27 +54,14 @@ diff --git a/dom/base/moz.build b/dom/base/moz.build
  countermap = GENERATED_FILES['PropertyUseCounterMap.inc']
  countermap.script = 'gen-usecounters.py:property_map'
  countermap.inputs = ['UseCounters.conf']
-diff --git a/gfx/harfbuzz/README-mozilla b/gfx/harfbuzz/README-mozilla
---- a/gfx/harfbuzz/README-mozilla
-+++ b/gfx/harfbuzz/README-mozilla
-@@ -15,3 +15,8 @@
- 
- If the collection of source files changes, manual updates to moz.build may be
- needed as we don't use the upstream makefiles.
-+
-+The in-tree copy may be omitted during build by --with-system-harfbuzz.
-+Make sure to keep pkg-config version check within toolkit/moz.configure in sync
-+with checkout version or increment latest tag by one if it's not based
-+on upstream release.
-
 diff --git a/gfx/moz.build b/gfx/moz.build
 --- a/gfx/moz.build
 +++ b/gfx/moz.build
-@@ -5,26 +5,28 @@
- # file, You can obtain one at http://mozilla.org/MPL/2.0/.
- 
+@@ -7,16 +7,19 @@
  with Files('**'):
      BUG_COMPONENT = ('Core', 'Graphics')
+ with Files('wr/**'):
+     BUG_COMPONENT = ('Core', 'Graphics: WebRender')
  
  if CONFIG['MOZ_TREE_CAIRO']:
      DIRS += ['cairo']
@@ -90,20 +77,10 @@ diff --git a/gfx/moz.build b/gfx/moz.build
      'qcms',
      'gl',
      'layers',
-     'graphite2/src',
--    'harfbuzz/src',
-     'ots/src',
-     'thebes',
-     'ipc',
-     'vr',
-     'config',
-     'webrender_bindings',
- ]
- 
 diff --git a/gfx/skia/generate_mozbuild.py b/gfx/skia/generate_mozbuild.py
 --- a/gfx/skia/generate_mozbuild.py
 +++ b/gfx/skia/generate_mozbuild.py
-@@ -143,16 +143,19 @@ if CONFIG['CC_TYPE'] == 'gcc':
+@@ -111,16 +111,19 @@ if CONFIG['CC_TYPE'] == 'gcc':
  if CONFIG['CC_TYPE'] in ('clang', 'clang-cl'):
      CXXFLAGS += [
          '-Wno-implicit-fallthrough',
@@ -126,7 +103,7 @@ diff --git a/gfx/skia/generate_mozbuild.py b/gfx/skia/generate_mozbuild.py
 diff --git a/gfx/skia/moz.build b/gfx/skia/moz.build
 --- a/gfx/skia/moz.build
 +++ b/gfx/skia/moz.build
-@@ -817,16 +817,19 @@ if CONFIG['CC_TYPE'] == 'gcc':
+@@ -488,16 +488,19 @@ if CONFIG['CC_TYPE'] == 'gcc':
  if CONFIG['CC_TYPE'] in ('clang', 'clang-cl'):
      CXXFLAGS += [
          '-Wno-implicit-fallthrough',
@@ -149,7 +126,12 @@ diff --git a/gfx/skia/moz.build b/gfx/skia/moz.build
 diff --git a/gfx/thebes/moz.build b/gfx/thebes/moz.build
 --- a/gfx/thebes/moz.build
 +++ b/gfx/thebes/moz.build
-@@ -290,6 +290,9 @@
+@@ -274,11 +274,14 @@ if CONFIG['MOZ_WIDGET_TOOLKIT'] in ('and
+ 
+ if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'gtk3':
+     CXXFLAGS += CONFIG['MOZ_PANGO_CFLAGS']
+ 
+ LOCAL_INCLUDES += CONFIG['SKIA_INCLUDES']
  
  DEFINES['GRAPHITE2_STATIC'] = True
  
@@ -178,7 +160,7 @@ diff --git a/intl/unicharutil/util/moz.build b/intl/unicharutil/util/moz.build
 diff --git a/netwerk/dns/moz.build b/netwerk/dns/moz.build
 --- a/netwerk/dns/moz.build
 +++ b/netwerk/dns/moz.build
-@@ -67,12 +67,15 @@ etld_data = GENERATED_FILES['etld_data.i
+@@ -74,12 +74,15 @@ etld_data = GENERATED_FILES['etld_data.i
  etld_data.script = 'prepare_tlds.py'
  etld_data.inputs = ['effective_tld_names.dat']
  
@@ -197,20 +179,30 @@ diff --git a/netwerk/dns/moz.build b/netwerk/dns/moz.build
 diff --git a/toolkit/library/moz.build b/toolkit/library/moz.build
 --- a/toolkit/library/moz.build
 +++ b/toolkit/library/moz.build
-@@ -226,6 +226,9 @@
- if CONFIG['MOZ_SYSTEM_WEBP']:
-     OS_LIBS += CONFIG['MOZ_WEBP_LIBS']
+@@ -207,16 +207,19 @@ if CONFIG['MOZ_ANDROID_GOOGLE_VR']:
+     OS_LIBS += [
+         '-L%s' % CONFIG['MOZ_ANDROID_GOOGLE_VR_LIBS'],
+         '-lgvr',
+     ]
+ 
+ OS_LIBS += CONFIG['MOZ_CAIRO_OSLIBS']
+ OS_LIBS += CONFIG['MOZ_WEBRTC_X11_LIBS']
  
 +if CONFIG['MOZ_SYSTEM_HARFBUZZ']:
 +    OS_LIBS += CONFIG['MOZ_HARFBUZZ_LIBS']
 +
- if CONFIG['MOZ_SYSTEM_LIBEVENT']:
-     OS_LIBS += CONFIG['MOZ_LIBEVENT_LIBS']
-
+ if CONFIG['MOZ_SYSTEM_JPEG']:
+     OS_LIBS += CONFIG['MOZ_JPEG_LIBS']
+ 
+ if CONFIG['MOZ_SYSTEM_PNG']:
+     OS_LIBS += CONFIG['MOZ_PNG_LIBS']
+ 
+ if CONFIG['MOZ_SYSTEM_WEBP']:
+     OS_LIBS += CONFIG['MOZ_WEBP_LIBS']
 diff --git a/toolkit/moz.configure b/toolkit/moz.configure
 --- a/toolkit/moz.configure
 +++ b/toolkit/moz.configure
-@@ -331,16 +331,26 @@ def freetype2_combined_info(fontconfig_i
+@@ -377,16 +377,26 @@ def freetype2_combined_info(fontconfig_i
      return namespace(
          cflags=freetype2_info.cflags + fontconfig_info.cflags,
          libs=freetype2_info.libs + fontconfig_info.libs,
@@ -224,7 +216,7 @@ diff --git a/toolkit/moz.configure b/toolkit/moz.configure
 +option('--with-system-harfbuzz',
 +       help="Use system harfbuzz (located with pkgconfig)")
 +
-+system_harfbuzz = pkg_check_modules('MOZ_HARFBUZZ', 'harfbuzz >= 1.4.2',
++system_harfbuzz = pkg_check_modules('MOZ_HARFBUZZ', 'harfbuzz >= 2.3.1',
 +                                    when='--with-system-harfbuzz')
 +
 +set_config('MOZ_SYSTEM_HARFBUZZ', depends_if(system_harfbuzz)(lambda _: True))

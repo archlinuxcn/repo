@@ -2,7 +2,7 @@
 
 _pkgname=vscodium
 pkgname=$_pkgname-bin
-pkgver=1.36.0
+pkgver=1.36.1
 pkgrel=1
 pkgdesc="Binary releases of VS Code without MS branding/telemetry/licensing."
 arch=('x86_64')
@@ -25,8 +25,8 @@ source=(
        )
 
 
-sha256sums=('21643c97f15896b8789a20ae5fe5977377703830d8242613e4aab1a9144f8c45'
-            '075fd7bb4419ec9ee72a7afb7b1ccde05562ed2dc82fe7790fc981af0ec27527')
+sha256sums=('4b8f73550d178bcb1505846828602fe5821791876c95b8bfc3b50a75465646cb'
+            'f777f216fc5a73ac5efeb590fffec64e5cb346b0359c16a4705c58bae6fec4ab')
 
 
 package() {
@@ -36,7 +36,7 @@ package() {
     cp -Pr ${srcdir}/* ${pkgdir}/usr/share/vscodium
     # remove extra source symlinks
     find ${pkgdir}/usr/share/vscodium/ -type l -delete
-    ln -s /usr/share/${_pkgname}/bin/vscodium ${pkgdir}/usr/bin/${_pkgname}
+    ln -s /usr/share/${_pkgname}/codium ${pkgdir}/usr/bin/${_pkgname}
     install -D -m644 vscodium.desktop ${pkgdir}/usr/share/applications/vscodium.desktop
     install -D -m644 ${srcdir}/resources/app/resources/linux/code.png \
             ${pkgdir}/usr/share/pixmaps/vscodium.png

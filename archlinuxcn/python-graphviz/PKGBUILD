@@ -2,8 +2,8 @@
 
 pkgname=python-graphviz
 _pkgname=graphviz
-pkgver=0.11
-pkgrel=2
+pkgver=0.11.1
+pkgrel=1
 pkgdesc='Simple Python interface for Graphviz.'
 arch=(any)
 url='https://github.com/xflr6/graphviz'
@@ -12,7 +12,7 @@ depends=('graphviz')
 makedepends=('python-setuptools')
 checkdepends=('python-mock' 'python-pytest' 'python-pytest-cov' 'python-pytest-mock')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/xflr6/${_pkgname}/archive/${pkgver}.tar.gz")
-sha256sums=('ecf65e3eabbfc0590d9bf693ca8fc485fc22baf3cd90525163b30600e83788f2')
+sha256sums=('70e7a1f125805804785252237b5518e2684d625a832a461266ed685cebfa1491')
 
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"

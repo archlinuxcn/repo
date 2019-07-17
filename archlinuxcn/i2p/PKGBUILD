@@ -5,7 +5,7 @@
 #export LG2=en
 
 pkgname=i2p
-pkgver=0.9.40
+pkgver=0.9.41
 pkgrel=1
 pkgdesc="A distributed anonymous network"
 url="https://geti2p.net"
@@ -26,7 +26,11 @@ _url="https://launchpad.net/i2p/trunk/${pkgver}/+download"
 source=("${_url}/i2psource_${pkgver}.tar.bz2"{,.sig}
         'i2prouter.service' 'i2prouter.sh' 'wrapper.config' 'router.config')
 
-sha256sums=('5d31e0a324dfe429135ac17595b3cab3e81d85d4aa7a720db402dec47bfeda23'
+#curl -s "https://geti2p.net/en/download" \
+#    |grep -A1 "<div class=\"hash\">" \
+#    |sed -e "s:.*<code>::" -e "s:</code>::" -e '17,17!d'
+
+sha256sums=('f988877940b2cff1a90534c47b78343de49cd6290817edb57c0142eecf1d164e'
             'SKIP'
             '9bb899ece87099716da29bac8b7da02916fc325699b68989e73c1fe333a6342f'
             'ea8f97e66461d591b1819eab39bbc40056b89ae12f7729b3dd9fd2ce088e5e53'

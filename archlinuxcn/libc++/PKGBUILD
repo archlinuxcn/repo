@@ -5,7 +5,7 @@
 pkgbase=libc++
 pkgname=(${pkgbase}{,abi,experimental})
 pkgver=8.0.0
-pkgrel=1
+pkgrel=2
 url="https://libcxx.llvm.org/"
 license=('MIT' 'custom:University of Illinois/NCSA Open Source License')
 arch=('i686' 'x86_64')
@@ -59,9 +59,6 @@ package_libc++() {
   cd build
   DESTDIR="$pkgdir" ninja install-libcxx
 
-  # Remove ABI and experimental headers.
-  rm -rf "$pkgdir"/usr/include/c++/v1/cxxabi.h "$pkgdir"/usr/include/c++/v1/__cxxabi_config.h "$pkgdir"/usr/include/c++/v1/experimental
-
   # License.
   install -Dm0644 "$srcdir"/llvm/projects/libcxx/CREDITS.TXT "$pkgdir"/usr/share/licenses/"$pkgname"/CREDITS
   install -Dm0644 "$srcdir"/llvm/projects/libcxx/LICENSE.TXT "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE
@@ -73,7 +70,6 @@ package_libc++abi() {
   
   cd build
   DESTDIR="$pkgdir" ninja install-libcxxabi
-  install -Dm0644 -t "$pkgdir"/usr/include/c++/v1 include/c++/v1/cxxabi.h include/c++/v1/__cxxabi_config.h
   install -Dm0644 "$srcdir"/llvm/projects/libcxxabi/CREDITS.TXT "$pkgdir"/usr/share/licenses/"$pkgname"/CREDITS
   install -Dm0644 "$srcdir"/llvm/projects/libcxxabi/LICENSE.TXT "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE
 }
@@ -83,7 +79,6 @@ package_libc++experimental() {
   pkgdesc='LLVM C++ experimental library.'
   
   install -Dm0644 -t "$pkgdir"/usr/lib/ build/lib/libc++experimental.a build/lib/libc++fs.a
-  install -Dm0644 -t "$pkgdir"/usr/include/c++/v1/experimental build/include/c++/v1/experimental/*
   install -Dm0644 llvm/projects/libcxx/CREDITS.TXT "$pkgdir"/usr/share/licenses/"$pkgname"/CREDITS
   install -Dm0644 llvm/projects/libcxx/LICENSE.TXT "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE
 }

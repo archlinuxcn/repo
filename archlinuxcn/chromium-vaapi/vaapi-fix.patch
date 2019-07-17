@@ -1,13 +1,13 @@
-From 757f4ca3fbeee9bb5ef88d3dc5ff6b241541c6b9 Mon Sep 17 00:00:00 2001
+From fe61d25580bd22d68b20323e7cd684dcba0cd3f4 Mon Sep 17 00:00:00 2001
 From: Akarshan Biswas <akarshanbiswas@fedoraproject.org>
-Date: Fri, 28 Jun 2019 14:27:33 +0530
-Subject: [PATCH] Do not use VPP on Linux; Add some info logs and fix vaapi DRM
+Date: Tue, 9 Jul 2019 18:39:54 +0530
+Subject: [PATCH] Disable VAProfileNone on Linux and fix vaapi drm
 
 ---
  .../gpu_video_decode_accelerator_factory.cc   |  2 ++
- .../vaapi/vaapi_video_decode_accelerator.cc   | 16 +++++++++++++
+ .../vaapi/vaapi_video_decode_accelerator.cc   | 21 ++++++++++++++++
  media/gpu/vaapi/vaapi_wrapper.cc              | 24 +++++++++++++++----
- 3 files changed, 37 insertions(+), 5 deletions(-)
+ 3 files changed, 42 insertions(+), 5 deletions(-)
 
 diff --git a/media/gpu/gpu_video_decode_accelerator_factory.cc b/media/gpu/gpu_video_decode_accelerator_factory.cc
 index dc9ff3fb3..53189759c 100644
@@ -20,35 +20,54 @@ index dc9ff3fb3..53189759c 100644
 +      else
 +      LOG(ERROR) << "Initialization of one or more VDAs failed.";
    }
-
+ 
    return nullptr;
 diff --git a/media/gpu/vaapi/vaapi_video_decode_accelerator.cc b/media/gpu/vaapi/vaapi_video_decode_accelerator.cc
-index 3c1316dca..1e7fac393 100644
+index 3c1316dca..a5fa64b5a 100644
 --- a/media/gpu/vaapi/vaapi_video_decode_accelerator.cc
 +++ b/media/gpu/vaapi/vaapi_video_decode_accelerator.cc
-@@ -627,6 +627,13 @@ void VaapiVideoDecodeAccelerator::AssignPictureBuffers(
+@@ -64,6 +64,9 @@ void ReportToUMA(VAVDADecoderFailure failure) {
+                             VAVDA_DECODER_FAILURES_MAX + 1);
+ }
+ 
++// Move this thing to chromeos only as build can fail if treat warnings as errors been set to true
++#if defined(OS_ANDROID) || defined(OS_CHROMEOS)
++
+ // Returns true if the CPU is an Intel Gemini Lake or later (including Kaby
+ // Lake) Cpu platform id's are referenced from the following file in kernel
+ // source arch/x86/include/asm/intel-family.h
+@@ -77,6 +80,8 @@ bool IsGeminiLakeOrLater() {
+   return is_geminilake_or_later;
+ }
+ 
++#endif
++
+ }  // namespace
+ 
+ #define RETURN_AND_NOTIFY_ON_FAILURE(result, log, error_code, ret) \
+@@ -627,6 +632,13 @@ void VaapiVideoDecodeAccelerator::AssignPictureBuffers(
    const unsigned int va_format = GetVaFormatForVideoCodecProfile(profile_);
    std::vector<VASurfaceID> va_surface_ids;
-
+ 
 +  // Nvidia doesn't support VAProfileNone, so don't try to create a temporary
 +  // copy buffer there. It's not needed anyways for hardware video decoding
 +  // to work.
-+
++  
 +  #if defined(OS_ANDROID) || defined(OS_CHROMEOS)
 +
 +
    // If we aren't in BufferAllocationMode::kNone, we have to allocate a
    // |vpp_vaapi_wrapper_| for VaapiPicture to DownloadFromSurface() the VA's
    // internal decoded frame.
-@@ -640,6 +647,7 @@ void VaapiVideoDecodeAccelerator::AssignPictureBuffers(
+@@ -640,6 +652,7 @@ void VaapiVideoDecodeAccelerator::AssignPictureBuffers(
        NotifyError(PLATFORM_FAILURE);
      }
    }
 +  #endif
-
+ 
    for (size_t i = 0; i < buffers.size(); ++i) {
      DCHECK(requested_pic_size_ == buffers[i].size());
-@@ -648,9 +656,13 @@ void VaapiVideoDecodeAccelerator::AssignPictureBuffers(
+@@ -648,9 +661,13 @@ void VaapiVideoDecodeAccelerator::AssignPictureBuffers(
      // only used as a copy destination. Therefore, the VaapiWrapper used and
      // owned by |picture| is |vpp_vaapi_wrapper_|.
      std::unique_ptr<VaapiPicture> picture = vaapi_picture_factory_->Create(
@@ -62,8 +81,8 @@ index 3c1316dca..1e7fac393 100644
          make_context_current_cb_, bind_image_cb_, buffers[i]);
      RETURN_AND_NOTIFY_ON_FAILURE(picture, "Failed creating a VaapiPicture",
                                   PLATFORM_FAILURE, );
-@@ -1063,6 +1075,9 @@ VaapiVideoDecodeAccelerator::GetSupportedProfiles() {
-
+@@ -1063,6 +1080,9 @@ VaapiVideoDecodeAccelerator::GetSupportedProfiles() {
+ 
  VaapiVideoDecodeAccelerator::BufferAllocationMode
  VaapiVideoDecodeAccelerator::DecideBufferAllocationMode() {
 + #if defined(OS_LINUX) && !defined(OS_ANDROID) && !defined(OS_CHROMEOS)
@@ -72,13 +91,13 @@ index 3c1316dca..1e7fac393 100644
    // TODO(crbug.com/912295): Enable a better BufferAllocationMode for IMPORT
    // |output_mode_| as well.
    if (output_mode_ == VideoDecodeAccelerator::Config::OutputMode::IMPORT)
-@@ -1095,6 +1110,7 @@ VaapiVideoDecodeAccelerator::DecideBufferAllocationMode() {
+@@ -1095,6 +1115,7 @@ VaapiVideoDecodeAccelerator::DecideBufferAllocationMode() {
      return BufferAllocationMode::kReduced;
-
+ 
    return BufferAllocationMode::kSuperReduced;
 +  #endif
  }
-
+ 
  bool VaapiVideoDecodeAccelerator::IsBufferAllocationModeReducedOrSuperReduced()
 diff --git a/media/gpu/vaapi/vaapi_wrapper.cc b/media/gpu/vaapi/vaapi_wrapper.cc
 index f6008d288..d829582a6 100644
@@ -93,7 +112,7 @@ index f6008d288..d829582a6 100644
 +    	base::FilePath::FromUTF8Unsafe(kNvidiaPath),
 +    	base::File::FLAG_OPEN | base::File::FLAG_READ | base::File::FLAG_WRITE);
  }
-
+ 
  VADisplayState::VADisplayState()
 @@ -303,10 +307,11 @@ bool VADisplayState::InitializeOnce() {
      case gl::kGLImplementationDesktopGL:
@@ -128,7 +147,8 @@ index f6008d288..d829582a6 100644
 +      	return false;
 +      }
    }
-
+ 
    va_initialized_ = true;
---
+-- 
 2.21.0
+

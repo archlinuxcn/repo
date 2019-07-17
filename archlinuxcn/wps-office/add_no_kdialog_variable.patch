@@ -1,5 +1,5 @@
---- a/usr/bin/et	2019-04-15 13:40:47.535249626 +0800
-+++ b/usr/bin/et	2019-04-15 13:48:33.159393790 +0800
+--- a/usr/bin/et	2019-07-06 12:43:26.678990551 +0800
++++ b/usr/bin/et	2019-07-06 12:46:55.559000098 +0800
 @@ -1,6 +1,7 @@
  #!/bin/bash
  
@@ -8,8 +8,8 @@
  #gOptExt=-multiply
  gTemplateExt=("ett" "xlt" "xltx" "xltm")
  gBinPath=$(dirname "$0")
---- a/usr/bin/wpp	2019-04-15 13:40:47.535249626 +0800
-+++ b/usr/bin/wpp	2019-04-15 13:48:32.152732577 +0800
+--- a/usr/bin/wpp	2019-07-06 12:43:26.678990551 +0800
++++ b/usr/bin/wpp	2019-07-06 12:47:12.832334222 +0800
 @@ -1,6 +1,7 @@
  #!/bin/bash
  
@@ -18,8 +18,8 @@
  #gOptExt=-multiply
  gTemplateExt=("dpt" "pot" "potx" "potm")
  gBinPath=$(dirname "$0")
---- a/usr/bin/wps	2019-04-15 13:40:47.535249626 +0800
-+++ b/usr/bin/wps	2019-04-15 14:20:19.505732892 +0800
+--- a/usr/bin/wps	2019-07-06 12:43:26.678990551 +0800
++++ b/usr/bin/wps	2019-07-06 12:47:04.922333860 +0800
 @@ -1,6 +1,7 @@
  #!/bin/bash
  
@@ -28,8 +28,17 @@
  #gOptExt=-multiply
  gTemplateExt=("wpt" "dot" "dotx" "dotm")
  gBinPath=$(dirname "$0")
---- a/usr/share/applications/wps-office-et.desktop	2019-03-31 23:16:22.000000000 +0800
-+++ b/usr/share/applications/wps-office-et.desktop	2019-04-15 14:20:24.319040150 +0800
+--- a/usr/bin/wpspdf	2019-07-06 12:43:26.678990551 +0800
++++ b/usr/bin/wpspdf	2019-07-06 12:46:47.822333078 +0800
+@@ -1,5 +1,6 @@
+ #!/bin/bash
+ 
++export WPS_NO_KDE_NATIVE_DIALOG=1
+ gBinPath=$(dirname "$0")
+ if [ -d "${gBinPath}/office6" ]; then
+ 	gInstallPath=${gBinPath}
+--- a/usr/share/applications/wps-office-et.desktop	2019-07-04 17:39:36.000000000 +0800
++++ b/usr/share/applications/wps-office-et.desktop	2019-07-06 13:00:36.699037635 +0800
 @@ -1,7 +1,7 @@
  [Desktop Entry]
  Comment=Use WPS Spreadsheets to analyze manage data.
@@ -38,9 +47,20 @@
 +Exec=env WPS_NO_KDE_NATIVE_DIALOG=1 /usr/bin/et %f
  GenericName=WPS Spreadsheets
  GenericName[zh_CN]=WPS 表格
- MimeType=application/wps-office.et;application/wps-office.ett;application/wps-office.xls;application/wps-office.xlt;application/vnd.ms-excel;application/msexcel;application/x-msexcel;application/wps-office.xlsx;application/wps-office.xltx;
---- a/usr/share/applications/wps-office-wpp.desktop	2019-03-31 23:16:22.000000000 +0800
-+++ b/usr/share/applications/wps-office-wpp.desktop	2019-04-15 14:20:23.342378774 +0800
+ MimeType=application/wps-office.et;application/wps-office.ett;application/wps-office.ets;application/wps-office.eto;application/wps-office.xls;application/wps-office.xlt;application/vnd.ms-excel;application/msexcel;application/x-msexcel;application/wps-office.xlsx;application/wps-office.xltx;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+--- a/usr/share/applications/wps-office-pdf.desktop	2019-07-04 17:39:36.000000000 +0800
++++ b/usr/share/applications/wps-office-pdf.desktop	2019-07-06 13:01:06.542372335 +0800
+@@ -1,7 +1,7 @@
+ [Desktop Entry]
+ Comment=Kingsoft Pdf Reader
+ Comment[zh_CN]=金山PDF阅读器
+-Exec=/usr/bin/wpspdf %f
++Exec=env WPS_NO_KDE_NATIVE_DIALOG=1 /usr/bin/wpspdf %f
+ GenericName=Kingsoft Pdf Reader
+ GenericName[zh_CN]=金山 PDF
+ MimeType=application/wps-office.pdf;application/pdf
+--- a/usr/share/applications/wps-office-wpp.desktop	2019-07-04 17:39:36.000000000 +0800
++++ b/usr/share/applications/wps-office-wpp.desktop	2019-07-06 13:01:21.962373039 +0800
 @@ -1,7 +1,7 @@
  [Desktop Entry]
  Comment=Use WPS Presentation to edit and play presentations.
@@ -49,9 +69,9 @@
 +Exec=env WPS_NO_KDE_NATIVE_DIALOG=1 /usr/bin/wpp %f
  GenericName=WPS Presentation
  GenericName[zh_CN]=WPS 演示
- MimeType=application/wps-office.dps;application/wps-office.dpt;application/wps-office.ppt;application/wps-office.pot;application/vnd.ms-powerpoint;application/vnd.mspowerpoint;application/mspowerpoint;application/powerpoint;application/x-mspowerpoint;application/wps-office.pptx;application/wps-office.potx;
---- a/usr/share/applications/wps-office-wps.desktop	2019-03-31 23:16:22.000000000 +0800
-+++ b/usr/share/applications/wps-office-wps.desktop	2019-04-15 14:20:25.279034949 +0800
+ MimeType=application/wps-office.dps;application/wps-office.dpt;application/wps-office.dpss;application/wps-office.dpso;application/wps-office.ppt;application/wps-office.pot;application/vnd.ms-powerpoint;application/vnd.mspowerpoint;application/mspowerpoint;application/powerpoint;application/x-mspowerpoint;application/wps-office.pptx;application/wps-office.potx;application/vnd.openxmlformats-officedocument.presentationml.presentation;application/vnd.openxmlformats-officedocument.presentationml.slideshow
+--- a/usr/share/applications/wps-office-wps.desktop	2019-07-04 17:39:36.000000000 +0800
++++ b/usr/share/applications/wps-office-wps.desktop	2019-07-06 13:01:33.825706915 +0800
 @@ -1,7 +1,7 @@
  [Desktop Entry]
  Comment=Use WPS Writer to edit articles and reports.
@@ -60,4 +80,4 @@
 +Exec=env WPS_NO_KDE_NATIVE_DIALOG=1 /usr/bin/wps %f
  GenericName=WPS Writer
  GenericName[zh_CN]=WPS 文字
- MimeType=application/wps-office.wps;application/wps-office.wpt;application/wps-office.doc;application/wps-office.dot;application/vnd.ms-word;application/msword;application/x-msword;application/msword-template;application/wps-office.docx;application/wps-office.dotx;application/rtf;
+ MimeType=application/wps-office.wps;application/wps-office.wpt;application/wps-office.wpso;application/wps-office.wpss;application/wps-office.doc;application/wps-office.dot;application/vnd.ms-word;application/msword;application/x-msword;application/msword-template;application/wps-office.docx;application/wps-office.dotx;application/rtf;application/vnd.ms-word.document.macroEnabled.12;application/vnd.openxmlformats-officedocument.wordprocessingml.document

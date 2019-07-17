@@ -3,7 +3,7 @@
 #
 pkgname=gn-git
 pkgdesc='Meta-build system which generates Ninja build files'
-pkgver=r1609.c4a88ac9
+pkgver=r1614.152c5144
 pkgrel=1
 license=('BSD')
 arch=('x86_64' 'i686')
@@ -44,9 +44,11 @@ package () {
 		gn/docs/*.md gn/README.md
 
 	install -Dm644 -t "${pkgdir}/usr/share/doc/${pkgname}/example" \
-		gn/tools/gn/example/*.*
+		gn/examples/simple_build/*.*
 	install -Dm644 -t "${pkgdir}/usr/share/doc/${pkgname}/example/build" \
-		gn/tools/gn/example/build/*.*
+		gn/examples/simple_build/build/*.*
+	install -Dm644 -t "${pkgdir}/usr/share/doc/${pkgname}/example/build/toolchain" \
+		gn/examples/simple_build/build/toolchain/*.*
 
 	# Vim support
 	local item

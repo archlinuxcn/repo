@@ -1,11 +1,12 @@
-# Maintainer: Tony Lambiris <tony@critialstack.com>
+# Maintainer: An Nguyen (stk) <an@linux.com>
+# Original Maintainer: Tony Lambiris <tony@critialstack.com>
 # Original Maintainer: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 # Original Maintainer: Tobias Powalowski <tpowa@archlinux.org>
 # Original Contributor: Thomas Baechler <thomas@archlinux.org>
 
 #pkgbase=linux               # Build stock -ARCH kernel
 pkgbase=linux-macbook        # Build kernel with a different name
-_srcver=5.1.5-arch1
+_srcver=5.2-arch2
 pkgver=${_srcver//-/.}
 pkgrel=2
 arch=(x86_64)
@@ -29,7 +30,7 @@ validpgpkeys=(
   '8218F88849AAC522E94CF470A5E9288C4FA415FA'  # Jan Alexander Steffens (heftig)
 )
 sha256sums=('SKIP'
-            '5eb7fb6aa90386735e5d8ee9528e82e12ba89875de058ffa4bf0a844ae055d58'
+            'd8eac4a183fbc5a6391a21beb9be1c9b24b7ff2deeb3cedb8b4635722ddcede9'
             'ae2e95db94ef7176207c690224169594d49445e04249d2499e9d2fbc117a0b21'
             'c043f3033bb781e2688794a59f6d1f7ed49ef9b13eb77ff9a425df33a244a636'
             'ad6344badc91ad0630caacde83f7f9b97276f80d26a20619a87952be65492c65'
