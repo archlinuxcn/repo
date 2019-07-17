@@ -1,3 +1,2 @@
 #!/bin/bash
-
-electron /usr/lib/mattermost-desktop/app.asar --disable-dev-mode "$@"
+exec electron4 /usr/lib/mattermost-desktop/app.asar --disable-dev-mode "$@"
