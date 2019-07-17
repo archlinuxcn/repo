@@ -117,6 +117,9 @@ prepare() {
   patch -Np1 -i "$srcdir"/2001_system_graphite2_support.patch
   patch -Np1 -i "$srcdir"/7002_system_av1_support.patch
 
+  # disable elf-hack for both versions
+  echo "ac_add_options --disable-elf-hack" >> .mozconfig
+
   cd ..
 
   # prepare for pgo and noavx2 version respectively
@@ -139,7 +142,6 @@ prepare() {
     patch -Np1 -i "$srcdir"/pgo_fix_missing_kdejs.patch
 
     echo "ac_add_options --enable-lto" >> .mozconfig
-    echo "ac_add_options --disable-elf-hack" >> .mozconfig
     echo "ac_add_options --enable-rust-simd" >> .mozconfig
 }
 
