@@ -1,6 +1,6 @@
 # Maintainer: erk <v at erk dot io>
 pkgname=vnote-git
-pkgver=2.7.1.gc152c46
+pkgver=2.7.1.g4c3b0c9
 pkgrel=1
 pkgdesc="A Vim-inspired note-taking application, especially for Markdown."
 arch=('any')
@@ -16,7 +16,7 @@ gitname="vnote"
 
 pkgver() {
     cd "$srcdir/$gitname"
-    git describe --tags --long | sed 's/^v//;s|-0-|.|;s|-|.|g;'
+    git describe --tags --long | sed 's/^v//;s|-[0-9]*-|.|;s|-|.|g;'
 }
 
 package() {
