@@ -15,7 +15,10 @@ def pre_build():
 
     new_pkgver, new_pkgrel = get_pkgver_and_pkgrel()
     if old_pkgver == new_pkgver and new_pkgrel <= old_pkgrel:
-        update_pkgrel('%.3f' % (old_pkgrel + 0.001))
+        new_pkgrel = int((old_pkgrel * 1000 + 1)) // 1000
+        if round(old_pkgrel * 1000 + 1) % 1000 != 0:
+            new_pkgrel = '%d.%03d' % (new_pkgrel, round(old_pkgrel * 1000 + 1) % 1000)
+        update_pkgrel(new_pkgrel)
 
     for line in edit_file('PKGBUILD'):
         if 'depends=(' in line:
