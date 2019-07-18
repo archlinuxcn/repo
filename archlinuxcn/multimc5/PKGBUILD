@@ -47,10 +47,10 @@ build() {
 
   cd build
   cmake -DCMAKE_BUILD_TYPE=Release \
-      -DMultiMC_UPDATER=OFF \
-      -DCMAKE_INSTALL_PREFIX="/usr" \
-      -DMultiMC_LAYOUT=lin-system \
-      ..
+	  -DMultiMC_UPDATER=OFF \
+	  -DCMAKE_INSTALL_PREFIX="/usr" \
+	  -DMultiMC_LAYOUT=lin-system \
+	  ..
   make
 }
 
@@ -67,4 +67,3 @@ package() {
   install -D "${srcdir}/MultiMC5-${pkgver}/build/libMultiMC_quazip.so" "${pkgdir}/usr/lib/libMultiMC_quazip.so"
   install -D "${srcdir}/MultiMC5-${pkgver}/build/libMultiMC_nbt++.so" "${pkgdir}/usr/lib/libMultiMC_nbt++.so"
 }
-
