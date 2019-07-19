@@ -1,7 +1,7 @@
 # Maintainer: Jason Stryker <public at jasonstryker dot com>
 
 pkgname=protontricks
-pkgver=1.2.2
+pkgver=1.2.3
 pkgrel=1
 pkgdesc="A simple wrapper that does winetricks things for Proton enabled games."
 arch=('any')
@@ -13,7 +13,7 @@ makedepends=('git' 'python-setuptools')
 provides=("protontricks")
 conflicts=('protontricks-git')
 source=("${url}/archive/${pkgver}.tar.gz")
-sha512sums=('838605ea35590038fabd7cb01963dbd919e0bacf95062acfba40870b1a422279d495a3ea78b3d9d1fffddcbb63b6fc2b7a1585e94bff0addb568e11ca5a2da82')
+sha512sums=('0424e2ab872691faa30856458b4870816d50aeb4a442249f866b6ae66b68ce1e04549b7b36f59f54cacc6243516c895d4937478e90922f4c91d7311980c406e8')
 
 build() {
   cd "${srcdir}/protontricks-${pkgver}"
