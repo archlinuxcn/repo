@@ -14,6 +14,7 @@ def pre_build():
     aur_pre_build()
 
     new_pkgver, new_pkgrel = get_pkgver_and_pkgrel()
+    old_pkgrel, new_pkgrel = float(old_pkgrel), float(new_pkgrel)
     if old_pkgver == new_pkgver and new_pkgrel <= old_pkgrel:
         new_pkgrel = int((old_pkgrel * 1000 + 1)) // 1000
         if round(old_pkgrel * 1000 + 1) % 1000 != 0:
