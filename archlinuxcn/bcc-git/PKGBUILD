@@ -18,6 +18,7 @@ source=('bcc-git::git+https://github.com/iovisor/bcc'
 sha256sums=('SKIP'
             '77a711328281759b9da81a326a16b220132544dd4a83fa9c59781f37c390cf5d'
             '37222cff28f342e89ca9e6ba6eabfffbc079f8c6a3eeab9aebab058a9fc738fa')
+options=('debug' 'strip')
 
 pkgver() {
   cd "${srcdir}/${pkgbase}"
