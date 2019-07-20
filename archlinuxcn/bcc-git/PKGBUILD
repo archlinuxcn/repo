@@ -4,7 +4,7 @@
 pkgbase=bcc-git
 pkgname=('bcc-git' 'bcc-tools-git' 'python-bcc-git')
 pkgver=0.10.0.r75.36219753
-pkgrel=1
+pkgrel=2
 pkgdesc="BPF Compiler Collection - latest git code"
 arch=('x86_64')
 url="https://github.com/iovisor/bcc"
@@ -35,6 +35,7 @@ build() {
   export LDFLAGS=-ltinfo
   # we don't care which python here for the core C library
   cmake .. \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_INSTALL_LIBDIR=/usr/lib
   make
