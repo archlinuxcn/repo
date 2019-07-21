@@ -1,0 +1,15 @@
+maintainers:
+  - github: yan12125
+
+build_prefix: extra-x86_64
+
+repo_depends:
+  - c++utilities-git
+
+pre_build: aur_pre_build
+
+post_build: aur_post_build
+
+update_on:
+  - github: Martchus/qtutilities
+  - aur

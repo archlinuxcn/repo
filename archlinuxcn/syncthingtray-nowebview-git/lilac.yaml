@@ -1,0 +1,13 @@
+maintainers:
+  - github: yan12125
+
+build_prefix: extra-x86_64
+
+repo_depends:
+  - qtutilities-git
+
+post_build: aur_post_build
+
+update_on:
+  - github: Martchus/syncthingtray
+  - aur: syncthingtray-git
