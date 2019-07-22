@@ -1,16 +1,16 @@
 # Maintainer: Jose Riha <jose1711 gmail com>
 
 pkgname=python-m3u8
-pkgver=0.3.8
-pkgrel=2
+pkgver=0.3.10
+pkgrel=1
 pkgdesc="Python m3u8 parser"
 url="https://github.com/globocom/m3u8"
 depends=('python' 'python-iso8601')
 makedepends=('python-setuptools')
 license=('MIT')
 arch=('any')
-source=("https://files.pythonhosted.org/packages/ba/73/45b2700bfb3e31bdc985a4c1afb8e16e85137c2b980faa3ee2711074e650/m3u8-${pkgver}.tar.gz")
-md5sums=('a04e59871d0ce02327b741b539aa6ac9')
+source=("https://files.pythonhosted.org/packages/08/d1/3de706f032da975525f9b78d1858b085155a9fe6669dd5dcebe6e7cacc4e/m3u8-${pkgver}.tar.gz")
+md5sums=('7e1f915779e35e564bd1afe1aa2fe3b0')
 
 build() {
     cd $srcdir/m3u8-${pkgver}
