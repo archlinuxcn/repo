@@ -1,0 +1,11 @@
+--- a/share/applications/baidunetdisk.desktop	2019-06-14 16:29:25.000000000 +0800
++++ b/share/applications/baidunetdisk.desktop	2019-07-22 15:14:55.520143407 +0800
+@@ -1,7 +1,7 @@
+ [Desktop Entry]
+ Name=baidunetdisk
+ Comment=百度网盘
+-Exec="/opt/baidunetdisk/baidunetdisk" %U
++Exec=/usr/bin/baidunetdisk-wrapper.sh %U
+ Terminal=false
+ Type=Application
+ Icon=baidunetdisk
