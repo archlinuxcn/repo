@@ -4,8 +4,8 @@
 
 pkgname=gdcm
 _pkgname=GDCM
-pkgver=3.0.0
-pkgrel=12
+pkgver=3.0.1
+pkgrel=1
 pkgdesc='A C++ library for DICOM medical files'
 arch=('x86_64')
 url='http://gdcm.sourceforge.net'
@@ -35,24 +35,8 @@ makedepends=(
 
 source=(
   "https://github.com/malaterre/GDCM/archive/v${pkgver}.tar.gz"
-  'fix-charls.patch'
-  '0001-VTK-8.2-requires-explicit-vtkVersion.h-include.patch'
-  '0002-VTK-8.2-requires-hierarchy-info-for-wrapping.patch'
-  '0003-Remove-dead-vtkImageViewer-code-from-gdcmviewer.patch'
 )
-sha512sums=('2ac076dd49011234f4431ffe67fcba84a1ca9042ec5fc4dfc8aed2ed16bec5f499fa7aa666e5630796afc266ce76741d931cca333534b55fdc477e25a9189d33'
-            'd777800718b8e556cbc70f8103d2ca676691a6a7e52d726405ce0644b1f691d01896f77731c6f97f6f4f3de0defbf1dc1abbc03aef41a10c5c111dab1331c07b'
-            '7eb880dae563b9b4214a9dd679fec0bac1d7c8b492f343fe5c48d2e9d6fcaa692774324609c88fab22656af2b11324f2418177bbf7b2159824438bee03d73f4a'
-            '57d75cb283c606d3816346d461e880af8e89207a013c5b7794f465172e1557351fa12b475af34a39677b6909bde2b5ddfcbc0c902ea3d1ade68460c020cce775'
-            'ab41eb9c19796d6bbfba2e76cd64058d3bd28847fee224b334f28ed6ac6d07db581062a8b3a7ff3a34e78df9a5aa7832538237ecd9c43e0039ac3ce6ffbfda0a')
-
-prepare() {
-  cd "${srcdir}/${_pkgname}-${pkgver}"
-  patch -p1 -i "${srcdir}/fix-charls.patch"
-  patch -p1 -i "${srcdir}/0001-VTK-8.2-requires-explicit-vtkVersion.h-include.patch"
-  patch -p1 -i "${srcdir}/0002-VTK-8.2-requires-hierarchy-info-for-wrapping.patch"
-  patch -p1 -i "${srcdir}/0003-Remove-dead-vtkImageViewer-code-from-gdcmviewer.patch"
-}
+sha512sums=('1483c65ce93fd9d7240913388899cb78e7da2954880b549a511f51b45a6fc3616e9eca292097749a3945fa4406a069e03d6e798ccf6c1fd8d6c96b1fb70e258f')
 
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
