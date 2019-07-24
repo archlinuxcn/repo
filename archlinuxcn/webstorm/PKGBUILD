@@ -4,9 +4,9 @@
 
 pkgbase=webstorm
 pkgname=(webstorm webstorm-jre)
-pkgver=2019.1.3
-_pkgver=191.7479.14
-pkgrel=1
+pkgver=2019.2
+_pkgver=192.5728.87
+pkgrel=2
 pkgdesc='JavaScript IDE and HTML editor.'
 arch=('x86_64' 'i686')
 url='https://www.jetbrains.com/webstorm/'
@@ -15,7 +15,7 @@ makedepends=('rsync')
 options=('!strip')
 source=(https://download.jetbrains.com/webstorm/WebStorm-${pkgver}.tar.gz
         jetbrains-webstorm.desktop)
-sha512sums=('bb54b97f36fa4c0bcb36ca21b05b2eddcbfe607690ff736c8b50da57c1c637e303494e37ea01165899db2bc01c155c664b2a62cc6a9cf36e11690dc1df16e00c'
+sha512sums=('03af8d78518391c5480c916d279fea0457b9d132c23109c977489bf5627739298aafb50df10c0e4becc4346acfe7ff1ff089715013876d865cf4065738bd238d'
             'e261eb9b7fe61518d3399874492c94b642cb8268861c246692887ef3027380af06b7e692d6733340deebb629a3c8d095364cb6def4071cd5af31cfbfe9ec6b68')
 
 package_webstorm() {
@@ -28,7 +28,7 @@ package_webstorm() {
   install -d -m 755 "${pkgdir}/usr/share/applications/"
   install -d -m 755 "${pkgdir}/usr/share/pixmaps/"
 
-  rsync -rtl "${srcdir}/WebStorm-${_pkgver}/" "${pkgdir}/opt/${pkgbase}" --exclude=/jre64
+  rsync -rtl "${srcdir}/WebStorm-${_pkgver}/" "${pkgdir}/opt/${pkgbase}" --exclude=/jbr
 
   ln -s "/opt/${pkgbase}/bin/${pkgbase}.sh" "${pkgdir}/usr/bin/${pkgbase}"
   install -D -m 644 "${srcdir}/jetbrains-${pkgbase}.desktop" "${pkgdir}/usr/share/applications/"
@@ -37,5 +37,5 @@ package_webstorm() {
 
 package_webstorm-jre() {
   install -d -m 755 "${pkgdir}/opt/${pkgbase}"
-  rsync -rtl "${srcdir}/WebStorm-${_pkgver}/jre64" "${pkgdir}/opt/${pkgbase}"
+  rsync -rtl "${srcdir}/WebStorm-${_pkgver}/jbr" "${pkgdir}/opt/${pkgbase}"
 }
