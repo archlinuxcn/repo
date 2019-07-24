@@ -1,8 +1,8 @@
 # Maintainer: Michael Carlberg <c@rlberg.se>
 # Contributor: Michael Carlberg <c@rlberg.se>
 pkgname=polybar
-pkgver=3.3.1
-pkgrel=2
+pkgver=3.4.0
+pkgrel=1
 pkgdesc="A fast and easy-to-use status bar"
 arch=("i686" "x86_64")
 url="https://github.com/polybar/polybar"
@@ -23,7 +23,7 @@ makedepends=("cmake" "git" "python" "python2" "pkg-config")
 conflicts=("polybar-git")
 install="${pkgname}.install"
 source=(${url}/releases/download/${pkgver}/polybar-${pkgver}.tar)
-sha256sums=('b0982a729f99f658d77969fd582d074843a57982b5e7c6b2b6efee5480b2a81c')
+sha256sums=('69a098f22d7a72eb594030aff687801252b18520b097c12f5c7894a99c4bcd1b')
 
 prepare() {
   mkdir -p "${pkgname}/build"
@@ -31,7 +31,7 @@ prepare() {
 
 build() {
   cd "${pkgname}/build" || exit 1
-  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_CXX_FLAGS="-Wno-deprecated-copy" ..
+  cmake -DCMAKE_INSTALL_PREFIX=/usr ..
   cmake --build .
 }
 
