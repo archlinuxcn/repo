@@ -2,8 +2,8 @@
 
 pkgbase=intellij-idea-ultimate-edition
 pkgname=(intellij-idea-ultimate-edition intellij-idea-ultimate-edition-jre)
-pkgver=2019.1.3
-_buildver=191.7479.19
+pkgver=2019.2
+_buildver=192.5728.98
 pkgrel=1
 arch=('any')
 pkgdesc="An intelligent IDE for Java, Groovy and other programming languages with advanced refactoring features intensely focused on developer productivity."
@@ -12,12 +12,12 @@ license=('Commercial')
 options=(!strip)
 source=("https://download.jetbrains.com/idea/ideaIU-$pkgver.tar.gz"
         "jetbrains-idea.desktop")
-sha256sums=('e3c19c6ebd99bd78c5e7b14c58362ddb441ad31d56d477ac719e89d367f9e14d'
+sha256sums=('80b3e740d156021f1d91bb69a1bcb85f3f4b7b73889e5ec614063a216f69436c'
             '83af2ba8f9f14275a6684e79d6d4bd9b48cd852c047dacfc81324588fa2ff92b')
 
 prepare() {
   # Extract the JRE from the main pacakge
-  mv idea-IU-$_buildver/jre64 "$srcdir"/jre64
+  mv idea-IU-$_buildver/jbr "$srcdir"/jbr
 }
 
 package_intellij-idea-ultimate-edition() {
@@ -47,7 +47,7 @@ package_intellij-idea-ultimate-edition() {
 package_intellij-idea-ultimate-edition-jre() {
   arch=('x86_64')
   install -d -m 755 "$pkgdir"/opt/$pkgbase
-  mv "$srcdir"/jre64 "$pkgdir"/opt/$pkgbase
+  mv "$srcdir"/jbr "$pkgdir"/opt/$pkgbase
 }
 
 # vim:set ts=2 sw=2 et:
