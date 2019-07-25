@@ -1,10 +1,11 @@
-# Maintainer: Sibren Vasse <arch at sibrenvasse dot nl> 
+# Maintainer: Daniel Landau <aur@landau.fi>
+# Contributor: Sibren Vasse <arch at sibrenvasse dot nl> 
 # Contributor:  oozyslug <oozyslug at gmail dot com>
 # Submitter: oozyslug <oozyslug at gmail dot com>
 
 pkgname=byobu
-pkgver=5.127
-pkgrel=2
+pkgver=5.129
+pkgrel=1
 pkgdesc="Enhanced profile and useful notifications for tmux/screen"
 arch=("any")
 url="https://launchpad.net/byobu"
@@ -16,11 +17,9 @@ optdepends=("screen: alternative back-end for byobu (default: tmux)"
             "python2: needed for byobu-config")
 source=("${url}/trunk/${pkgver}/+download/${pkgname}_${pkgver}.orig.tar.gz"
 "gnome3_desktop_application_not_starting.patch"
-"non_ubuntu_color_fix.patch"
 )
-md5sums=('18ddaa94dd2eccd7ff771c9050001056'
-         '23db3b90ae454c00384fcd3af8ad3020'
-         'f93c4defa186db07bae329b3190b1d1a')
+md5sums=('7ec69e1c169e3bc8494423176733c8de'
+         '23db3b90ae454c00384fcd3af8ad3020')
 
 prepare() {
   cd "${srcdir}/${pkgname}-${pkgver}"
@@ -41,5 +40,4 @@ package() {
   make install DESTDIR="$pkgdir"
   cd "$pkgdir"
   patch -p0 < "${srcdir}/gnome3_desktop_application_not_starting.patch"
-  patch -p0 < "${srcdir}/non_ubuntu_color_fix.patch"
 }
