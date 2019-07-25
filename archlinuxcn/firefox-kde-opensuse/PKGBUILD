@@ -12,10 +12,9 @@
 # http://bazaar.launchpad.net/~mozillateam/firefox/firefox-trunk.head
 # /view/head:/debian/patches/unity-menubar.patch
 
-pkgbase=firefox-kde-opensuse
-pkgname=(firefox-kde-opensuse firefox-kde-opensuse-noavx2)
-pkgver=68.0
-pkgrel=3
+pkgname=firefox-kde-opensuse
+pkgver=68.0.1
+pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -120,32 +119,26 @@ prepare() {
   # disable elf-hack for both versions
   echo "ac_add_options --disable-elf-hack" >> .mozconfig
 
-  cd ..
 
-  # prepare for pgo and noavx2 version respectively
-  cp -r mozilla-unified avx2
-  cp -r mozilla-unified noavx2
-  
-  cd avx2
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=1516803
+  patch -Np1 -i  "$srcdir"/mozilla-1516803.patch
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=1516081
+  patch -Np1 -i  "$srcdir"/mozilla-1516081.patch
 
-    # https://bugzilla.mozilla.org/show_bug.cgi?id=1516803
-    patch -Np1 -i  "$srcdir"/mozilla-1516803.patch
-    # https://bugzilla.mozilla.org/show_bug.cgi?id=1516081
-    patch -Np1 -i  "$srcdir"/mozilla-1516081.patch
+  # add missing rule for pgo builds
+  patch -Np1 -i "$srcdir"/add_missing_pgo_rule.patch
 
-    # add missing rule for pgo builds
-    patch -Np1 -i "$srcdir"/add_missing_pgo_rule.patch
+  patch -Np1 -i "$srcdir"/pgo.patch
 
-    patch -Np1 -i "$srcdir"/pgo.patch
+  # add missing file Makefile for pgo builds
+  patch -Np1 -i "$srcdir"/pgo_fix_missing_kdejs.patch
 
-    # add missing file Makefile for pgo builds
-    patch -Np1 -i "$srcdir"/pgo_fix_missing_kdejs.patch
-
-    echo "ac_add_options --enable-lto" >> .mozconfig
-    echo "ac_add_options --enable-rust-simd" >> .mozconfig
+  echo "ac_add_options --enable-lto" >> .mozconfig
+  echo "ac_add_options --enable-rust-simd" >> .mozconfig
 }
 
-_real_build() {
+build() {
+  cd mozilla-unified
   export MOZ_SOURCE_REPO="$_repo"
   export MOZBUILD_STATE_PATH="$srcdir/mozbuild"
   export MOZ_APP_REMOTINGNAME=$pkgname
@@ -177,14 +170,8 @@ _real_build() {
   ./mach buildsymbols
 }
 
-build(){
-  cd noavx2
-  _real_build
-  cd ../avx2
-  _real_build
-}
-
-_real_package() {
+package() {
+  cd mozilla-unified
   [[ "$CARCH" == "i686" ]] && cp "$srcdir/kde.js" obj-i686-pc-linux-gnu/dist/bin/defaults/pref
   [[ "$CARCH" == "x86_64" ]] && cp "$srcdir/kde.js" obj-x86_64-pc-linux-gnu/dist/bin/defaults/pref
 
@@ -221,18 +208,6 @@ END
   #workaround for now
   #https://bugzilla.mozilla.org/show_bug.cgi?id=658850
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
-}
-
-package_firefox-kde-opensuse(){
-  conflicts+=(firefox-kde-opensuse-noavx2)
-
-  cd avx2
-  _real_package
-}
-
-package_firefox-kde-opensuse-noavx2(){
-  cd noavx2
-  _real_package
 }
 
 md5sums=('SKIP'
