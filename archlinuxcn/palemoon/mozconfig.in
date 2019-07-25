@@ -1,13 +1,8 @@
-# Once again upstream has failed to keep their code compliant with modern compilers
-# fall back to gcc8 until they fix their code
-export CC=gcc-8
-export CXX=g++-8
-
 mk_add_options AUTOCLOBBER=1
 mk_add_options MOZ_OBJDIR=%SRCDIR%/pmbuild
 ac_add_options --enable-application=palemoon
 
-ac_add_options --enable-optimize="-O2"
+ac_add_options --enable-optimize="-O2 -Wno-format-overflow"
 
 ac_add_options --enable-official-branding
 export MOZILLA_OFFICIAL=1

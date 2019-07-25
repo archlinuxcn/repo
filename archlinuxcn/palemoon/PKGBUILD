@@ -3,7 +3,7 @@
 # Contributor: ilikenwf
 # Contributor: American_Jesus
 pkgname=palemoon
-pkgver=28.6.0.1
+pkgver=28.6.1
 pkgrel=1
 pkgdesc="Open source web browser based on Firefox focusing on efficiency."
 arch=('i686' 'x86_64')
@@ -12,13 +12,13 @@ license=('MPL' 'GPL' 'LGPL')
 depends=('gtk2' 'dbus-glib' 'desktop-file-utils' 'libxt' 'mime-types' 'alsa-lib'
          'startup-notification')
 makedepends=('git' 'python2' 'autoconf2.13' 'unzip' 'zip' 'yasm' 'gconf'
-             'libpulse' 'gcc8')
+             'libpulse')
 optdepends=('libpulse: PulseAudio audio driver'
             'ffmpeg: various video and audio support')
 source=(git+"https://github.com/MoonchildProductions/UXP#tag=PM${pkgver}_Release"
         mozconfig.in)
 md5sums=('SKIP'
-         '94452a38ce0443eb3741bec9f3c2595b')
+         'f6a92ca06a9ec853396f17610fa0f703')
 
 prepare() {
   sed 's#%SRCDIR%#'"$srcdir"'#g' mozconfig.in > mozconfig
@@ -30,7 +30,7 @@ build() {
 
   export MOZBUILD_STATE_PATH="$srcdir/mozbuild"
   export MOZCONFIG="$srcdir/mozconfig"
-  export CPPFLAGS="$CPPFLAGS -O2"
+  export CPPFLAGS="$CPPFLAGS -O2 -Wno-format-overflow"
   python2 mach build
 }
 
