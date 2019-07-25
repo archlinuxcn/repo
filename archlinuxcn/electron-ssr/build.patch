@@ -1,0 +1,46 @@
+diff -ura electron-ssr-0.2.6/src/main/index.js electron-ssr-0.2.6-new/src/main/index.js
+--- electron-ssr-0.2.6/src/main/index.js        2019-04-12 15:05:00.420443178 +0800
++++ electron-ssr-0.2.6-new/src/main/index.js    2019-04-12 15:06:38.004324260 +0800
+@@ -17,7 +17,8 @@
+ import { loadConfigsFromString } from '../shared/ssr'
+ import { isMac, isWin } from '../shared/env'
+ 
+-const isSecondInstance = app.makeSingleInstance((argv, workingDirectory) => {
++app.requestSingleInstanceLock()
++app.on('second-instance', (event, argv, workingDirectory) => {
+   // Someone tried to run a second instance, we should focus our window.
+   const _window = getWindow()
+   if (_window) {
+@@ -38,13 +39,8 @@
+       addConfigs(configs)
+     }
+   }
+-})
+-
+-if (isSecondInstance) {
+-  // cannot find module '../dialog'
+-  // https://github.com/electron/electron/issues/8862#issuecomment-294303518
+   app.exit()
+-}
++})
+ 
+ bootstrap.then(() => {
+   createWindow()
+
+diff -ura electron-ssr-0.2.6/.electron-vue/release.js electron-ssr-0.2.6-new/.electron-vue/release.
+js 
+--- electron-ssr-0.2.6/.electron-vue/release.js 2019-01-28 15:55:46.000000000 +0800
++++ electron-ssr-0.2.6-new/.electron-vue/release.js     2019-04-23 16:36:49.169513672 +0800
+@@ -112,11 +112,7 @@
+         category: 'Development',
+         synopsis: pkg.description,
+         target: [
+-          'deb',
+-          'rpm',
+-          'tar.gz',
+-          'pacman',
+-          'appImage'
++          'dir'
+         ],
+         desktop: {
+           Name: 'electron-ssr',
