@@ -3,7 +3,7 @@
 _modules='itk itk-core itk-filtering itk-io itk-numerics itk-registration itk-segmentation'
 _py=cp37
 pkgname=python-itk
-pkgver=5.0.0.post1
+pkgver=5.0.1
 pkgrel=1
 pkgdesc="An open-source toolkit for multidimensional image analysis. This package include itk-core, itk-filtering, itk-io, itk-numerics, itk-registration, and itk-segmentation module."
 arch=('x86_64')
@@ -14,13 +14,13 @@ options=('!strip')
 for _name in ${_modules}; do
   source+=("https://files.pythonhosted.org/packages/${_py}/${_name::1}/${_name}/${_name/-/_}-${pkgver}-${_py}-${_py}m-manylinux1_x86_64.whl")
 done
-sha512sums=('dadbaacee42fe5471a6b3fdc3709ae1a98121de297081259251166b0a5e164544f05450f74ef5640abc78b482660295972e97ffdf5e6546afc75eda4c28804d8'
-            '922ced256496ab1ed7582a68fe555850b922cc41777f731c9b0753346499319226575f277233c31d422d1a5e202ab96db0d2a916b4b14513d7a77fcf49088a6f'
-            '2505c29481bf2622a20b31c21a3dce0b78ac44ddb430333e0e686f787d4fec3bacea860815591857439dcbb016e50005969fb7b77295d3da770a13c438668ddb'
-            '4e5be43e108214c35b8291df44138637f76e03f847c511d7189ccd0abff2eb03c3e9eff6341eb9376a6e4ac1c3a6a1c70b9ec509638b077b7f833e82648206da'
-            '6f506b1b6f5c34277ae12d5879f9cd4a99a21bc4ea4bc10dbbb208087c4a04b1a5117b7e863b724b49251baecfa9b8a4c502d7c78e48bef10a02bf6dc99f78d1'
-            '3aa4eb3abd8657914397794bfbefe67b9c63db5ea1c7478204a8b7ef10fdd08819fbf87755a378f20a6541fd6e11d8ee88aa8290b941dadcf78e44b25f7b98fa'
-            '76b811cefe04b932640d631bc9bb33d4c94b3603dc1a4f052ce386f04aa72f9b456bb4f7a0a9b7822c7f6d4fb0cc0135faf6481a28723e92e7d6ef2f53d79182')
+sha512sums=('758beb1f82d4688dbf6ec1dc9b7eb628806a4fc968396d352f4d86dd77c8d7239d7153f4406a58c5ca47d19351995ada76a82723a4359d3bcf511e657344ac0d'
+            'ebc17151c15f5b77de23032eada3e9288e9c4ad13c8d9e62a397c85ad597e70017f34ee9abfb3a2edde4dc2e7572181b0fd8392e67099c4a333d08f97c2fa664'
+            '2697bcfb09a58df7de1db3326db2c459d0dc737c9d07405b5ed226173c5c49d549b7c44068ba3b25121461b7f38cfdf2d5c32a758e00e87e7feb8b1a11beb8cb'
+            'd8068e5d1793fcd8d39d1e7757fd4479599147ce05a21d4757b23fa691f1804c0ce4379b678a52efc495f11ed60c3bda2984bc0e54b68463d05cf43b484c7e22'
+            '779618ce045fa4eb2105978ffcbabce0710833f1af9b8357f4e0f45d4395636645aec3c6d76ea6b5960fb35e43d57c0b3b4e0f73d1cb407cf591cf46621addb1'
+            '44a7516f623e1eb18dd38e19b914570b166b45a2e9d0a35644b19068b095b19fa6caffc1b4b18702af4d44b4e6989abf6aa5dbca4562563815b79c7b3a2a2486'
+            '3b79dfc9a3b5c73002ac8914f950610d7ac7e17ccf11a548589a32f71308d4778e36da44b9cc074877d3c3b276eb32f9ea18170e75e8e8895d37b05f6b18fcc3')
 
 package() {
 	PIP_CONFIG_FILE=/dev/null pip install --isolated --root="${pkgdir}" --ignore-installed --no-deps *.whl
