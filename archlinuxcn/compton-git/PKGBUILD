@@ -5,7 +5,7 @@
 pkgname=compton-git
 _gitname=compton
 epoch=2
-pkgver=1151_Next.23.g6ac5062_2019.07.27
+pkgver=1152_Next.24.g5da71e6_2019.07.27
 pkgrel=1
 pkgdesc="X Compositor (a fork of xcompmgr-dana) (git-version)"
 arch=(i686 x86_64)
@@ -33,7 +33,7 @@ pkgver() {
 
 build() {
   cd "${srcdir}/${_gitname}"
-  meson --buildtype=release . build --prefix=/usr -Dbuild_docs=true
+  meson --buildtype=release . build --prefix=/usr -Dwith_docs=true
   ninja -C build
 }
 
