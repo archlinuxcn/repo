@@ -7,9 +7,10 @@ repo_depends:
   - lxqt-build-tools-git
   - libqtxdg-git
 
-pre_build: vcs_update
+pre_build: aur_pre_build
 
-post_build: git_pkgbuild_commit
+post_build: aur_post_build
 
 update_on:
   - vcs
+  - aur
