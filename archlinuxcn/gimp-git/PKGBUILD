@@ -6,7 +6,7 @@
 pkgname=gimp-git
 _pkgname=${pkgname%-git}
 epoch=1
-pkgver=3.0.r43632.e7e0064bd7
+pkgver=43723.raab75bb1d0.
 pkgrel=1
 pkgdesc="GNU Image Manipulation Program"
 arch=('i686' 'x86_64')
@@ -20,7 +20,7 @@ depends=('pygtk' 'lcms2>=2.2' 'libwmf>=0.2.8' 'icu' 'enchant'
 makedepends=('git' 'intltool' 'gutenprint>=5.0.0' 'intltool>=0.40.1'
              'alsa-lib>=1.0.0' 'libxslt' 'glib-networking'
              'alsa-lib' 'curl' 'ghostscript' 'libxpm' 'webkit2gtk'
-             'libheif' 'libwebp' 'libmng' 'iso-codes' 'aalib' 'zlib')
+             'libheif' 'libwebp' 'libmng' 'iso-codes' 'aalib' 'zlib' 'gobject-introspection')
 checkdepends=('xorg-server-xvfb')
 optdepends=('gutenprint: for sophisticated printing only as gimp has built-in cups print support'
             'alsa-lib: for MIDI event controller module'
@@ -56,10 +56,9 @@ build() {
   _mypaintver=$(echo /usr/lib/libmypaint-*.so | grep -o -E '\-[0-9]+(\.[0-9]+)*' | head -1)
   sed -i "s|\\(libmypaint\\)\\( >= libmypaint_required_version\\)|\\1${_mypaintver}\\2|g" configure.ac
 
-  export PYTHON=/usr/bin/python2
+  export PYTHON=/usr/bin/python3
 
-  autoreconf -vif
-  intltoolize --force
+  ./autogen.sh
 
   ./configure \
   	--prefix=/usr \
