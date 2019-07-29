@@ -11,8 +11,8 @@ url='http://www.pcsx2.net'
 license=('GPL2' 'GPL3' 'LGPL2.1' 'LGPL3')
 depends=('lib32-glew' 'lib32-libaio' 'lib32-libcanberra' 'lib32-libjpeg-turbo'
          'lib32-libpulse' 'lib32-nvidia-cg-toolkit' 'lib32-portaudio'
-         'lib32-sdl2' 'lib32-soundtouch' 'lib32-wxgtk2')
-makedepends=('cmake' 'git' 'png++')
+         'lib32-sdl2' 'lib32-soundtouch' 'lib32-wxgtk2' 'lib32-llvm-libs' 'lib32-gtk2' 'lib32-libpcap' 'lib32-libxml2')
+makedepends=('cmake' 'git' 'png++' 'clang' 'lib32-clang')
 provides=('pcsx2' 'pcsx2-git')
 conflicts=('pcsx2' 'pcsx2-git')
 source=('git+https://github.com/PCSX2/pcsx2.git')
@@ -37,7 +37,7 @@ build() {
   fi
   mkdir build && cd build
 
-  cmake .. \
+  CC=clang CXX=clang++ CXXFLAGS+=' -I/usr/include/harfbuzz' cmake .. \
     -DCMAKE_BUILD_TYPE='Release' \
     -DCMAKE_TOOLCHAIN_FILE='cmake/linux-compiler-i386-multilib.cmake' \
     -DCMAKE_INSTALL_PREFIX='/usr' \
