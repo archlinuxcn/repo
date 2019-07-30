@@ -5,7 +5,7 @@
 
 pkgname=qt4
 pkgver=4.8.7
-pkgrel=30
+pkgrel=31
 arch=('x86_64')
 url='https://www.qt.io'
 license=('GPL3' 'LGPL' 'FDL' 'custom')
@@ -143,6 +143,7 @@ build() {
     -nomake demos \
     -nomake examples \
     -nomake docs \
+    -xmlpatterns \
     -silent \
     -no-rpath \
     -optimized-qmake \
