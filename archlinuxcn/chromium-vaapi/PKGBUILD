@@ -10,7 +10,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=chromium-vaapi
-pkgver=75.0.3770.142
+pkgver=76.0.3809.87
 pkgrel=1
 _launcher_ver=6
 pkgdesc="Chromium with VA-API support to enable hardware acceleration"
@@ -33,24 +33,14 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-launcher-$_launcher_ver.tar.gz::https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver.tar.gz
         chromium-drirc-disable-10bpc-color-configs.conf
         vaapi-fix.patch
-        chromium-system-icu.patch
-        chromium-non-const-deltas.patch
-        libstdc-do-not-assume-unique_ptr-has-ostream-operator.patch
-        disallow-partial-swaps-for-linux-based-on-gl_version.patch
-        chromium-fix-window-flash-for-some-WMs.patch
         chromium-widevine.patch
         chromium-skia-harmony.patch)
-sha256sums=('510e6ca7ccc218b401b375c13656f6aecab196b03142026dc3602b9d1804a5ac'
+sha256sums=('215ca6acee7b4fd3c95fe796260af4dc5454dbba3b701aa43afeb98a06dc4194'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
             'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb'
             '333b1e0997ad8831906f66550efc73f51b8650ec3436a247d920b5d12e2169de'
-            'e2d284311f49c529ea45083438a768db390bde52949995534034d2a814beab89'
-            '09c5f16b726ef7031d74807b534fbbfa49a7276ee2a239b70602de2704fa197c'
-            'e309dfd9d790f32cb1d23103726ac25e405b6ae6757a1c957a8395667d753908'
-            '1e4686de75c019f38a3ed947463e429a777d5387fd29310deef2108c58617b07'
-            '183d8cc712f0bcf1afcb01ce90c4c104a4c8d8070a06f94974a28b007d9e2ce4'
             'd081f2ef8793544685aad35dea75a7e6264a2cb987ff3541e6377f4a3650a28b'
-            '5887f78b55c4ecbbcba5930f3f0bb7bc0117c2a41c2f761805fcf7f46f1ca2b3')
+            '771292942c0901092a402cc60ee883877a99fb804cb54d568c8c6c94565a48e1')
 
 # Possible replacements are listed in build/linux/unbundle/replace_gn_files.py
 # Keys are the names in the above script; values are the dependencies in Arch
@@ -100,29 +90,14 @@ prepare() {
     third_party/blink/renderer/core/xml/parser/xml_document_parser.cc \
     third_party/libxml/chromium/libxml_utils.cc
 
-  # https://chromium-review.googlesource.com/1584292
-  patch -Np1 -i ../libstdc-do-not-assume-unique_ptr-has-ostream-operator.patch
-
   # Fix VA-API on Intel and Nvidia
   patch -Np1 -i ../vaapi-fix.patch
-
-  # https://crbug.com/973216
-  patch -Np1 -i ../disallow-partial-swaps-for-linux-based-on-gl_version.patch
-
-  # https://crbug.com/956061
-  patch -Np1 -i ../chromium-fix-window-flash-for-some-WMs.patch
 
   # Load Widevine CDM if available
   patch -Np1 -i ../chromium-widevine.patch
 
   # https://crbug.com/skia/6663#c10
   patch -Np0 -i ../chromium-skia-harmony.patch
-
-  # https://bugs.gentoo.org/661880#c21
-  patch -Np1 -i ../chromium-system-icu.patch
-
-  # https://bugs.gentoo.org/686982#c5
-  patch -Np1 -i ../chromium-non-const-deltas.patch
 
   # Force script incompatible with Python 3 to use /usr/bin/python2
   sed -i '1s|python$|&2|' third_party/dom_distiller_js/protoc_plugins/*.py
@@ -196,11 +171,6 @@ build() {
 
   if check_option strip y; then
     _flags+=('symbol_level=0')
-
-    # Mimic exclude_unwind_tables=true
-    CFLAGS+='   -fno-unwind-tables -fno-asynchronous-unwind-tables'
-    CXXFLAGS+=' -fno-unwind-tables -fno-asynchronous-unwind-tables'
-    CPPFLAGS+=' -DNO_UNWIND_TABLES'
   fi
 
   gn gen out/Release --args="${_flags[*]}" --script-executable=/usr/bin/python2
