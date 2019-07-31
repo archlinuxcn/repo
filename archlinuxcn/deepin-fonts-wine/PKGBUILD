@@ -1,9 +1,9 @@
 # Maintainer: wszqkzqk <wszqkzqk@gmail.com>
 # Maintainer: skywol <skywol@qq.com>
 pkgname=deepin-fonts-wine
-pkgvers=2.18-18~rc2
+pkgvers=2.18-18
 pkgver=2.18_18
-pkgrel=1
+pkgrel=2
 epoch=
 pkgdesc="Deepin Wine Fonts"
 arch=('i686' 'x86_64')
@@ -23,7 +23,7 @@ install=
 changelog=
 source=("https://mirrors.ustc.edu.cn/deepin/pool/non-free/d/deepin-wine/${pkgname}_${pkgvers}_all.deb")
 noextract=("${pkgname}_${pkgvers}_all.deb")
-md5sums=('988e777588ca119e3a306e7dbfe884c9')
+md5sums=('6c79b2b28192a7968d0b529a21bef703')
 validpgpkeys=()
 
 prepare() {
