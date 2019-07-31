@@ -3,7 +3,7 @@
 
 pkgname=kaggle-api
 _name=kaggle
-pkgver=1.5.4
+pkgver=1.5.5
 pkgrel=1
 pkgdesc='Kaggle API CLI'
 arch=('any')
@@ -23,7 +23,7 @@ makedepends=(
   'python-setuptools'
 )
 source=(${pkgname}-${pkgver}.tar.gz::"https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
-sha512sums=('22980e3289c267186f986a19dacd6760f1a6eab2bc63f5a6f63499dadf87315928f5f397f8a05f3639f6149c5974159b143144a9a7fc845e0dbe376b06b43432')
+sha512sums=('d29d3d545f96cd9dab54ae335506c888f0721838929599bf3fd9220f96f037904f4f0544459e28c2b68c4de1ebe30843287ba66aaf48fd4752b4907d548a4944')
 
 build() {	
   cd "${_name}-${pkgver}"
