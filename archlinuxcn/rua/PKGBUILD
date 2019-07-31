@@ -2,7 +2,7 @@
 
 pkgname=rua
 pkgver=0.13.11
-pkgrel=1
+pkgrel=2
 pkgdesc='secure AUR helper written in Rust, supporting offline builds, filesystem isolation and more'
 url='https://github.com/vn971/rua'
 source=("https://github.com/vn971/rua/archive/${pkgver}.tar.gz")
@@ -10,6 +10,7 @@ arch=('x86_64' 'i686')
 license=('GPL3')
 makedepends=('cargo')
 depends=('bubblewrap' 'git')
+optdepends=('bubblewrap-suid: version of bubblewrap that works on linux-hardened kernel')
 
 #options+=(!strip)  # uncomment if you want readable stack traces
 
