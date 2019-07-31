@@ -1,0 +1,50 @@
+# Maintainer: tildearrow <acc12345acc at gmail dot com>
+# Contributor: Felix Yan <felixonmars@archlinux.org>
+# Contributor: Antonio Rojas <arojas@archlinux.org>
+# Contributor: Andrea Scarpino <andrea@archlinux.org>
+# Contributor: Ariel AxionL <i at axionl dot me>
+
+pkgname=kwin-lowlatency
+pkgver=5.16.4
+pkgrel=1
+pkgdesc='the compositor, with added stutter/latency reductions'
+arch=(x86_64)
+url='https://github.com/tildearrow/kwin-lowlatency'
+license=(LGPL)
+depends=(kscreenlocker xcb-util-cursor plasma-framework kcmutils breeze kinit qt5-sensors)
+makedepends=(git extra-cmake-modules qt5-tools kdoctools)
+optdepends=('qt5-virtualkeyboard: virtual keyboard support for kwin-wayland')
+provides=(kwin)
+conflicts=(kwin)
+# groups=(plasma)
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/tildearrow/kwin-lowlatency/archive/v5.16.4.tar.gz"
+        "kwin-lowlatency.install")
+sha256sums=('9a2badb27843803aabc73bb03c240761e48fa646ea5f4286d8e8c57a62cfeca3'
+            '16fe1be37286020daf30f47c975f7744dba7ce30c276fea97ed13fb8d0869b38')
+install="${pkgname}.install"
+
+prepare() {
+    mkdir -p build
+}
+
+build() {
+  cd ${srcdir}/build
+  cmake ../${pkgname}-${pkgver} \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=lib \
+    -DCMAKE_INSTALL_LIBEXECDIR=lib \
+    -DBUILD_TESTING=OFF
+  make
+}
+
+check() {
+  cd ${srcdir}/build
+  make test
+}
+
+package() {
+  cd build
+  make DESTDIR="${pkgdir}" install
+}
+
+# vim:set ts=4 sw=4 et:
