@@ -43,7 +43,7 @@ index 96c89fef..0e37e487 100644
  
  # TVM
  if (onnxruntime_USE_TVM)
-@@ -620,11 +605,10 @@ if (onnxruntime_BUILD_UNIT_TESTS)
+@@ -620,15 +605,10 @@ if (onnxruntime_BUILD_UNIT_TESTS)
    # turned ON by the previous step when building a shared lib
    set(CMAKE_SKIP_BUILD_RPATH OFF)
    # gtest and gmock
@@ -52,6 +52,10 @@ index 96c89fef..0e37e487 100644
 -  set_target_properties(gmock_main PROPERTIES FOLDER "External/GTest")
 -  set_target_properties(gtest PROPERTIES FOLDER "External/GTest")
 -  set_target_properties(gtest_main PROPERTIES FOLDER "External/GTest")
+-  if(UNIX)
+-    target_compile_options(gmock PRIVATE "-w")
+-    target_compile_options(gtest PRIVATE "-w")
+-  endif()
 +  pkg_check_modules(GTEST REQUIRED IMPORTED_TARGET GLOBAL gtest)
 +  pkg_check_modules(GMOCK REQUIRED IMPORTED_TARGET GLOBAL gmock)
 +  add_library(gtest ALIAS PkgConfig::GTEST)
