@@ -2,9 +2,9 @@
 
 pkgbase=python-onnxruntime
 pkgname=(python-onnxruntime python-onnxruntime-cuda)
-pkgver=0.4.0
+pkgver=0.5.0
 pkgdesc='Cross-platform, high performance scoring engine for ML models'
-pkgrel=2
+pkgrel=1
 arch=(x86_64)
 url='https://github.com/microsoft/onnxruntime'
 license=(MIT)
@@ -30,7 +30,7 @@ sha512sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
-            '4901a35f1c8687555c63aaa9d0dddab9becd59b4779dd1040c19bb7dcf690773df103cffac94228f7019644d0cca03c09df525b8188fc3eef65557af07e25a26')
+            'c598f14c413c35e923e76770214f464922431255b8b0a5e2ff7851b3447f8af7ee2d0f1349aa63d251097902bd6a506626dabc3a8e7f2a63144a1be5478e5470')
 
 prepare() {
   cd onnxruntime
