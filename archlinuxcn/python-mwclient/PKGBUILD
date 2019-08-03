@@ -1,7 +1,7 @@
 _pkgname=mwclient
 pkgname=python-mwclient
-pkgver=0.9.3
-pkgrel=2
+pkgver=0.10.0
+pkgrel=1
 pkgdesc="MediaWiki API client"
 arch=('any')
 url="https://github.com/btongminh/mwclient"
@@ -9,7 +9,7 @@ license=('MIT')
 depends=('python' 'python-requests-oauthlib' 'python-setuptools')
 _name=${pkgname#python-}
 source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_pkgname}-${pkgver}.tar.gz")
-md5sums=('dfa94a6ee233338173257afd823ab57f')
+md5sums=('c1b9f69d0eb71a031c1254b1ed16f678')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
