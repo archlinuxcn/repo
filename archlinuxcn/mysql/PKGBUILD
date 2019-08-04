@@ -6,7 +6,7 @@
 
 pkgname=('mysql' 'libmysqlclient' 'mysql-clients')
 pkgbase=mysql
-pkgver=8.0.16
+pkgver=8.0.17
 pkgrel=1
 pkgdesc="Fast SQL database server, community edition"
 arch=('x86_64')
@@ -21,7 +21,7 @@ source=("https://cdn.mysql.com/Downloads/MySQL-8.0/${pkgbase}-boost-${pkgver}.ta
         "mysql.sysconfig"
         "mysqld_service.patch"
         "systemd-sysusers-tmpfiles.patch")
-sha256sums=('7c936aa7bc9f4c462b24bade2e9abe1b3a6869ea19c46e78ec0a9b2a87a3d17f'
+sha256sums=('d44231316ce30a1d1189125ceed86d3388409778e17d0e3b9a060f532463e29a'
             '6bc24ae510f6b6bbad6b3edda2d0028b29292937b482274a4c2fae335f4de328'
             'e1c23fa0971a13d998f2790379b68c475438d05b6d6f2691b99051dbf497567f'
             '203dcd22fea668477ac7123dbd9909fae72d3d07f8855417a669a9c94db072ae'
@@ -156,7 +156,7 @@ package_mysql(){
   rm "${pkgdir}/usr/bin/mysql_config"
   rm "${pkgdir}/usr/lib/libmysqlclient.so"
   rm "${pkgdir}/usr/lib/libmysqlclient.so.21"
-  rm "${pkgdir}/usr/lib/libmysqlclient.so.21.0.16"
+  rm "${pkgdir}/usr/lib/libmysqlclient.so.21.1.17"
   rm "${pkgdir}/usr/lib/libmysqlservices.a"
   rm "${pkgdir}/usr/lib/mysql/plugin/authentication_ldap_sasl_client.so"
   rm -r "${pkgdir}/usr/include/"
