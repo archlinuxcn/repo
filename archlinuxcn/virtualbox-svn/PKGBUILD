@@ -10,7 +10,7 @@ pkgname=('virtualbox-svn'
          'virtualbox-guest-utils-svn'
          'virtualbox-guest-utils-nox-svn'
          'virtualbox-ext-vnc-svn')
-pkgver=79855
+pkgver=80012
 pkgrel=1
 _vboxsf_commit='87b9015c57dd7f226c768131bf8b4c0249de9835'
 arch=('x86_64')
@@ -186,7 +186,7 @@ package_virtualbox-svn() {
     # libraries
     install -dm0755 "$pkgdir/usr/lib/virtualbox"
     install -m0755 *.so "$pkgdir/usr/lib/virtualbox"
-    install -m0644 *.rc *.r0 VBoxEFI*.fd "$pkgdir/usr/lib/virtualbox"
+    install -m0644 *.r0 VBoxEFI*.fd "$pkgdir/usr/lib/virtualbox"
     ## setuid root binaries
     install -m4755 VBoxSDL VirtualBoxVM VBoxHeadless VBoxNetDHCP VBoxNetAdpCtl VBoxNetNAT -t "$pkgdir/usr/lib/virtualbox"
     ## other binaries
