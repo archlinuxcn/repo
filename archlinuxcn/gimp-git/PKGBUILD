@@ -7,12 +7,12 @@ pkgname=gimp-git
 _pkgname=${pkgname%-git}
 epoch=1
 pkgver=43918.r4a6b58507b.
-pkgrel=1
+pkgrel=2
 pkgdesc="GNU Image Manipulation Program"
 arch=('i686' 'x86_64')
 url="https://www.gimp.org"
 license=('GPL' 'LGPL')
-depends=('pygtk' 'lcms2>=2.2' 'libwmf>=0.2.8' 'icu' 'enchant'
+depends=('pygtk' 'lcms2>=2.2' 'libwmf>=0.2.8' 'icu' 'aalib' 'enchant'
          'libgexiv2' 'librsvg>=2.16.1' 'desktop-file-utils'
          'libexif>=0.6.15' 'libart-lgpl>=2.3.19' 'dbus-glib' 'gtk-doc'
          'poppler-glib' 'poppler-data' 'openexr>=1.6.1' 'mypaint-brushes>=1.3.0'
@@ -20,7 +20,7 @@ depends=('pygtk' 'lcms2>=2.2' 'libwmf>=0.2.8' 'icu' 'enchant'
 makedepends=('git' 'intltool' 'gutenprint>=5.0.0' 'intltool>=0.40.1'
              'alsa-lib>=1.0.0' 'libxslt' 'glib-networking'
              'alsa-lib' 'curl' 'ghostscript' 'libxpm' 'webkit2gtk'
-             'libheif' 'libwebp' 'libmng' 'iso-codes' 'aalib' 'zlib' 'gobject-introspection')
+             'libheif' 'libwebp' 'libmng' 'iso-codes' 'zlib' 'gobject-introspection')
 checkdepends=('xorg-server-xvfb')
 optdepends=('gutenprint: for sophisticated printing only as gimp has built-in cups print support'
             'alsa-lib: for MIDI event controller module'
