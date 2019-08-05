@@ -3,8 +3,8 @@
 pkgbase=vim-lily
 pkgname=(gvim-lily vim-runtime-lily vim-lily)
 pkgver=8.1.1817
-pkgrel=1
 _versiondir="vim$(echo $pkgver | awk -F. '{print $1$2}')"
+pkgrel=1
 arch=('i686' 'x86_64')
 license=('custom:vim')
 url="http://www.vim.org"
@@ -52,11 +52,11 @@ build() {
     --enable-fail-if-missing \
     --with-compiledby=百合仙子 --with-modified-by=百合仙子
 
-  msg2 'Building...'
+  msg2 'Building vim-lily...'
   make
 
   sleep 1
-  msg2 'Rebuilding...'
+  msg2 'Rebuilding vim-lily...'
   sed -i 's/compiled_sys.*/compiled_sys = (char_u *)"次美好的百合森林";/' src/auto/pathdef.c
   make
 
@@ -74,11 +74,11 @@ build() {
     --enable-fail-if-missing \
     --with-compiledby=百合仙子 --with-modified-by=百合仙子
 
-  msg2 'Building...'
+  msg2 'Building gvim-lily...'
   make
 
   sleep 1
-  msg2 'Rebuilding...'
+  msg2 'Rebuilding gvim-lily...'
   sed -i 's/compiled_sys.*/compiled_sys = (char_u *)"次美好的百合森林";/' src/auto/pathdef.c
   make
 
@@ -96,11 +96,6 @@ package_vim-lily() {
 
   # provided by (n)vi in core
   rm ${pkgdir}/usr/bin/{ex,view}
-
-  cd ${pkgdir}/usr/share/vim/${_versiondir}/lang
-  for i in *utf-8*; do
-    ln -s $i `echo $i|tr -d '-'`
-  done
 
   # delete some manpages
   find ${pkgdir}/usr/share/man -type d -name 'man1' 2>/dev/null | \
@@ -131,10 +126,8 @@ package_gvim-lily() {
   # provided by (n)vi in core
   rm ${pkgdir}/usr/bin/{ex,view}
 
-  cd ${pkgdir}/usr/share/vim/${_versiondir}/lang
-  for i in *utf-8*; do
-    ln -s $i `echo $i|tr -d '-'`
-  done
+  mv ${pkgdir}/usr/bin/{vim,gvim}
+  ln -s gvim ${pkgdir}/usr/bin/vim
 
   # delete some manpages
   find ${pkgdir}/usr/share/man -type d -name 'man1' 2>/dev/null | \
