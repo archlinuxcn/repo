@@ -5,8 +5,8 @@ maintainers:
 build_prefix: extra-x86_64
 
 repo_depends:
-  - libc++
-  - libc++abi
+  - libc++: libc++
+  - libc++: libc++abi
   - libpthread-stubs
 
 pre_build: vcs_update
