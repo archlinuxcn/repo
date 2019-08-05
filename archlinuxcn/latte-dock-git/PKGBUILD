@@ -3,7 +3,7 @@
 
 pkgname=latte-dock-git
 _gitname=latte-dock
-pkgver=0.7.96.r1215.g9c3ca1f1
+pkgver=0.9.1.r0.g6cc09eae
 pkgrel=1
 pkgdesc='Latte is a dock based on plasma frameworks that provides an elegant and intuitive experience for your tasks and plasmoids'
 arch=('i686' 'x86_64')
@@ -20,7 +20,7 @@ sha256sums=('SKIP')
 
 pkgver() {
     cd ${_gitname}
-    git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+    git describe --long --tags "$(git rev-list --tags --max-count=1)" | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build() {
