@@ -4,49 +4,52 @@
 # Contributor: Massimiliano Torromeo <massimiliano.torromeo@gmail.com>
 
 pkgname=gegl-git
-pkgver=0.4.16.208
-pkgrel=2
+_pkgname=gegl
+pkgver=0.4.16.223
+pkgrel=1
 pkgdesc="Graph based image processing framework"
 arch=('i686' 'x86_64')
 url="http://www.gegl.org"
 license=('GPL3' 'LGPL3')
-depends=('babl-git' 'libspiro' 'json-glib' 'glu' 'openexr' 'libgexiv2' 'sdl')
-makedepends=('git' 'intltool' 'python2' 'ruby' 'lua' 'enscript'
-             'libraw' 'ffmpeg' 'librsvg' 'jasper' 'asciidoc' 'vala'
-             'graphviz' 'libtiff' 'suitesparse' 'gobject-introspection')
-optdepends=('ffmpeg: for using the ffmpeg plugin'
-            'librsvg: for using the svg plugin'
-            'libtiff: tiff plugin'
-            'jasper: for using the jasper plugin'
-            'libraw: raw plugin'
-            'suitesparse: matting-levin plugin'
-            'lua: lua plugin')
+depends=('babl-git' 'libspiro' 'poppler-glib' 'json-glib' 'libgexiv2' 'libraw' 'openexr' 'librsvg' 'libtiff' 'luajit' 'jasper' 'lensfun' 'suitesparse' 'sdl')
+makedepends=('intltool' 'ruby' 'mesa' 'glu' 'ffmpeg' 'exiv2' 'enscript' 'asciidoc' 'vala' 'gobject-introspection' 'git')
+optdepends=('ffmpeg: ffmpeg plugin')
 provides=("gegl=${pkgver}")
 conflicts=('gegl>=0.3.0')
 options=(!libtool)
 source=(git+https://gitlab.gnome.org/GNOME/gegl.git)
 md5sums=('SKIP')
 
-_gitroot=GITURL
-_gitname=gegl
+pkgver() {
+  cd $_pkgname
+  git describe --always | sed -e 's/GEGL_//' -e 's/-g.*$//' -e 's/[_-]/./g'
+}
 
 build() {
-  cd "$srcdir/$_gitname"
+  #mkdir path
+  #ln -s /usr/bin/python2 path/python
 
-  ./autogen.sh
-  ./configure --prefix=/usr --with-sdl --with-openexr --with-librsvg \
-    --with-libavformat --with-jasper --disable-docs \
-    --enable-workshop \
-	--enable-introspection=yes
+  #export PATH="$srcdir/path:$PATH" PYTHON=/usr/bin/python2
+  cd ${_pkgname}
+  NOCONFIGURE=1 ./autogen.sh
+  ./configure  --prefix=/usr  --with-sdl --with-librsvg \
+    --with-libavformat --with-jasper \
+    --enable-workshop
+
+  # https://bugzilla.gnome.org/show_bug.cgi?id=655517
+  sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
+
   make
 }
 
-package() {
-  cd "$srcdir/$_gitname"
-  make DESTDIR="$pkgdir/" install
+check() {
+  #export PATH="$srcdir/path:$PATH" PYTHON=/usr/bin/python2
+  cd ${_pkgname}
+  make -k check || :
 }
 
-pkgver() {
-  cd $_gitname
-  git describe --always | sed -e 's/GEGL_//' -e 's/-g.*$//' -e 's/[_-]/./g'
+package() {
+  #export PATH="$srcdir/path:$PATH" PYTHON=/usr/bin/python2
+  cd ${_pkgname}
+  make DESTDIR="${pkgdir}" install
 }
