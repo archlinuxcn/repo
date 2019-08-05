@@ -1,11 +1,12 @@
 #Maintainer: weearc <q19981121@163.com>
+#Maintainer: laomocode <3344907598@qq.com>
 pkgname=motrix
 _pkgname=Motrix
 pkgver=v1.4.1
 _pkgver=1.4.1
-pkgrel=1
+pkgrel=2
 epoch=
-pkgdesc="一个基于aria2c的简洁的下载工具。注意：首次启动要使用root权限，否则无法下载！"
+pkgdesc="elegent downloading tool frontend for aria2c,using vue(release version)"
 arch=("x86_64")
 url="https://github.com/agalwood/Motrix"
 license=('MIT')
@@ -36,11 +37,9 @@ options=()
 install=
 changelog=
 source=("Motrix.desktop"
-	"motrix"
 	"Motrix.tar.gz"::"https://github.com/agalwood/Motrix/archive/v$_pkgver.tar.gz")
 noextract=()
-sha256sums=('1b799d1b1e280a27ff625cceb429b1e00c6691eb0256ded44f6a1a0310a899d4'
-	'ec66063afe506835730f6ba4be55d4aa150b9b587a4d0246c307433fcae1a49d'
+sha256sums=('8b53cda5d868a7a0fe2b2efdb4c8ee918fadc74c1083e7a20b5c2dfa9550b806'
 	'cd10cd5c704f0d780ff501e2861a316b95c44d11b653045574ae07b9a3ccaa8b')
 validpgpkeys=()
 
@@ -48,7 +47,7 @@ prepare() {
 	tar -xvf $_pkgname.tar.gz
 	rm $_pkgname.tar.gz
 	mv $_pkgname-$_pkgver $_pkgname
-	yarn config set registry https://registry.npm.taobao.org
+	yarn config set registry 'https://registry.npm.taobao.org'
     npm config set registry 'https://registry.npm.taobao.org'
     export ELECTRON_MIRROR='https://npm.taobao.org/mirrors/electron/'
     export SASS_BINARY_SITE='https://npm.taobao.org/mirrors/node-sass'
@@ -74,7 +73,6 @@ package() {
 	install -d ${pkgdir}/usr/share/applications
 	mv ${srcdir}/$_pkgname/release/linux-unpacked/ ${pkgdir}/opt/motrix
 	install -Dm644 ${srcdir}/$_pkgname/build/256x256.png ${pkgdir}/usr/share/icons/$pkgname.png
-	install -Dm 777 ${srcdir}/motrix ${pkgdir}/usr/bin
 	install -Dm 644 ${srcdir}/Motrix.desktop ${pkgdir}/usr/share/applications
 	rm -rf ${srcdir}
 }
