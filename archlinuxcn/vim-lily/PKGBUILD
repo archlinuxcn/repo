@@ -32,55 +32,45 @@ build() {
   sed -i 's|^.*\(#define VIMRC_FILE.*"\) .*$|\1|' \
     src/feature.h
 
+  local vim_options='--without-x --disable-canberra --disable-fontset --disable-gui --disable-xsmp'
+  local gvim_options='--enable-xsmp --enable-fontset --enable-gui=gtk3'
+
   for name in vim gvim; do
-    mkdir -p "${srcdir}"/$name-build
-    git archive all | tar x -C ../$name-build
+    local _dir="${srcdir}"/$pkgbase
+    rm -rf $_dir
+    mkdir $_dir
+    git archive all | tar x -C ../$pkgbase
+
+    pushd $_dir
+    CFLAGS='-g -O2' STRIP=true ./configure \
+      --prefix=/usr \
+      --localstatedir=/var/lib/vim \
+      --mandir=/usr/share/man \
+      --enable-acl \
+      --enable-cscope \
+      --enable-luainterp=dynamic \
+      --enable-multibyte \
+      --enable-perlinterp=dynamic \
+      --enable-python3interp \
+      --enable-pythoninterp \
+      --enable-rubyinterp=dynamic \
+      --enable-terminal \
+      --with-features=huge \
+      --with-luajit \
+      $(eval "echo \$${name}_options") --enable-fail-if-missing \
+      --with-compiledby=百合仙子 --with-modified-by=百合仙子
+
+    msg2 "Building $name-lily..."
+    make
+
+    sleep 1
+    msg2 "Rebuilding $name-lily..."
+    sed -i 's/compiled_sys.*/compiled_sys = (char_u *)"次美好的百合森林";/' src/auto/pathdef.c
+    make
+
+    popd
+    mv $_dir "${srcdir}"/$name-build
   done
-
-  cd "${srcdir}"/vim-build
-  rm -f src/auto/config.cache
-  make clean || true
-  make distclean || true
-  CFLAGS='-g -O2' STRIP=true ./configure --prefix=/usr --localstatedir=/var/lib/vim \
-    --mandir=/usr/share/man --with-luajit \
-    --enable-acl --disable-gui --without-x --disable-fontset --disable-xsmp \
-    --enable-python3interp --enable-rubyinterp=dynamic --enable-pythoninterp \
-    --enable-luainterp=dynamic --enable-perlinterp=dynamic \
-    --enable-cscope --enable-multibyte --with-features=huge \
-    --enable-terminal \
-    --disable-canberra \
-    --enable-fail-if-missing \
-    --with-compiledby=百合仙子 --with-modified-by=百合仙子
-
-  msg2 'Building vim-lily...'
-  make
-
-  sleep 1
-  msg2 'Rebuilding vim-lily...'
-  sed -i 's/compiled_sys.*/compiled_sys = (char_u *)"次美好的百合森林";/' src/auto/pathdef.c
-  make
-
-  cd "${srcdir}"/gvim-build
-  rm -f src/auto/config.cache
-  make clean || true
-  make distclean || true
-  CFLAGS='-g -O2' STRIP=true ./configure --prefix=/usr --localstatedir=/var/lib/vim \
-    --mandir=/usr/share/man --with-luajit \
-    --enable-acl --enable-gui=gtk3 --enable-fontset --enable-xsmp \
-    --enable-python3interp --enable-rubyinterp=dynamic --enable-pythoninterp \
-    --enable-luainterp=dynamic --enable-perlinterp=dynamic \
-    --enable-cscope --enable-multibyte --with-features=huge \
-    --enable-terminal \
-    --enable-fail-if-missing \
-    --with-compiledby=百合仙子 --with-modified-by=百合仙子
-
-  msg2 'Building gvim-lily...'
-  make
-
-  sleep 1
-  msg2 'Rebuilding gvim-lily...'
-  sed -i 's/compiled_sys.*/compiled_sys = (char_u *)"次美好的百合森林";/' src/auto/pathdef.c
-  make
 
 }
 
@@ -91,6 +81,8 @@ package_vim-lily() {
   conflicts=('vim' 'gvim' 'vim-python3' 'gvim-python3' 'vim-minimal')
   provides=("vim=${pkgver}-${pkgrel}" "vim-python3=${pkgver}-${pkgrel}")
 
+  rm -f "${srcdir}"/$pkgbase
+  ln -sr "${srcdir}"/vim-build "${srcdir}"/$pkgbase
   cd "${srcdir}"/vim-build
   make -j1 VIMRCLOC=/etc DESTDIR="${pkgdir}" install
 
@@ -120,6 +112,8 @@ package_gvim-lily() {
   conflicts=('vim' 'gvim' 'vim-python3' 'gvim-python3' 'vim-minimal')
   provides=("vim=${pkgver}-${pkgrel}" "gvim=${pkgver}-${pkgrel}" "gvim-python3=${pkgver}-${pkgrel}")
 
+  rm -f "${srcdir}"/$pkgbase
+  ln -sr "${srcdir}"/gvim-build "${srcdir}"/$pkgbase
   cd "${srcdir}"/gvim-build
   make -j1 VIMRCLOC=/etc DESTDIR="${pkgdir}" install
 
