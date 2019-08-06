@@ -11,5 +11,7 @@ repo_depends:
 
 pre_build: vcs_update
 
+post_build: git_pkgbuld_commit
+
 update_on:
   - vcs: git+https://gitlab.gnome.org/GNOME/gegl.git
