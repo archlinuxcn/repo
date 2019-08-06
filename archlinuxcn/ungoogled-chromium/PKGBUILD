@@ -3,9 +3,9 @@
 # Derived from official Chromium and Inox PKGBUILDS and ungoogled-chromium buildkit
 
 pkgname=ungoogled-chromium
-pkgver=75.0.3770.100
+pkgver=76.0.3809.87
 _rev=1
-_archver=af242f55185ff0ff530d9be502099af0b9f6349b
+_archver=a32f86d7e4969e5f1ed63136e6568de79d1d2a46
 pkgrel=1
 _launcher_ver=6
 pkgdesc="A lightweight approach to removing Google web service dependency"
@@ -29,13 +29,11 @@ conflicts=('chromium')
 source=(https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$pkgver.tar.xz
         chromium-launcher-$_launcher_ver.tar.gz::https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver.tar.gz
 https://github.com/Eloston/ungoogled-chromium/archive/$pkgver-$_rev.tar.gz
-        https://github.com/ungoogled-software/ungoogled-chromium-archlinux/archive/${_archver}.tar.gz
-        gcc-9-fix.patch)
-sha256sums=('9e1360101b6d9f9635e540db77626e3e15b452f413d8750518244ac37b73fca0'
+        https://github.com/ungoogled-software/ungoogled-chromium-archlinux/archive/${_archver}.tar.gz)
+sha256sums=('215ca6acee7b4fd3c95fe796260af4dc5454dbba3b701aa43afeb98a06dc4194'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
-            '6a0dbafd12f369e4a20e08565c80d8348603b49f7dcc6ada11b2ca6ae3acb7c1'
-            '25116b9affc7ffb93c11dc2e3f15e50d74da405b7b79d868ee65b482daa66777'
-            'dbebf3f50660c30e36ffdf05d9fc3abb338beed5510e051eaee6a2c3fe23a0fa')
+            'e448af101cc559cadf7d22dd1a198ab788f96fd46f5749b25c51ff607e871fa6'
+            'b1d19efd9e234abab9404e66484d99736be778f8507cdb311bff68f6f4255324')
 
 # Possible replacements are listed in build/linux/unbundle/replace_gn_files.py
 # Keys are the names in the above script; values are the dependencies in Arch
@@ -73,8 +71,6 @@ prepare() {
 
   cd "$srcdir/chromium-$pkgver"
 
-  msg2 'Fixing compile time bug on gcc9'
-  patch -p1 --ignore-whitespace -i ../gcc-9-fix.patch --no-backup-if-mismatch
   msg2 'Pruning binaries'
   python "$_utils/prune_binaries.py" ./ "$_ungoogled_repo/pruning.list"
   msg2 'Applying patches'
