@@ -1,0 +1,7 @@
+maintainers:
+- github: lilydjwg
+update_on:
+- archpkg: bbswitch
+  from_pattern: ^([^-]+).*
+  to_pattern: \1
+- cmd: pacman --dbpath ~/.lilac/pacmandb -Si linux-lily | awk '$1 == "Version" { print $3 }'

@@ -1,0 +1,33 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+# Contributor: Sven-Hendrik Haase <sh@lutzhaase.com>
+# Contributor: M0Rf30
+# Contributor: Samsagax <samsagax@gmail.com>
+
+pkgname=bbswitch-lily
+pkgver=0.8
+pkgrel=242
+pkgdesc="Kernel module allowing to switch dedicated graphics card on Optimus laptops (for linux-lily kernel)"
+arch=('x86_64')
+url="http://github.com/Bumblebee-Project/bbswitch"
+license=('GPL')
+depends=('linux-lily')
+makedepends=('linux-lily-headers')
+_extramodules=extramodules-lily
+source=("${pkgbase}-${pkgver}.tar.gz::https://github.com/Bumblebee-Project/bbswitch/archive/v${pkgver}.tar.gz")
+md5sums=('5b116b31ace3604ddf9d1fc1f4bc5807')
+
+build() {
+  cd bbswitch-${pkgver}
+  _kernver="$(cat /usr/lib/modules/${_extramodules}/version)"
+  make KDIR=/lib/modules/${_kernver}/build
+}
+
+package() {
+  provides=('bbswitch')
+  conflicts=('bbswitch-dkms')
+
+  cd bbswitch-${pkgver}
+  install -Dt "${pkgdir}/usr/lib/modules/${_extramodules}" -m644 *.ko
+  find "${pkgdir}" -name '*.ko' -exec xz {} +
+}
+
