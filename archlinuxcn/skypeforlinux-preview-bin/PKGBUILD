@@ -4,7 +4,7 @@
 _pkgname=skypeforlinux
 pkgname=$_pkgname-preview-bin
 pkgver=8.51.76.61
-pkgrel=1
+pkgrel=2
 pkgdesc="Skype for Linux - Preview/Insider Version"
 arch=("x86_64")
 url="http://www.skype.com"
@@ -26,6 +26,12 @@ package() {
   mv "$pkgdir/usr/share/$_pkgname/LICENSES.chromium.html" \
     "$pkgdir/usr/share/licenses/$pkgname/"
   rm -rf "$pkgdir/opt"
+
+  _f="/usr/share/skypeforlinux/chrome-sandbox"
+  if [ ! -u "$pkgdir/$_f" ]; then
+    echo "Adding setuid permission on $_f"
+    chmod 4755 "$pkgdir/$_f"
+  fi
 
   # Replace all 16px tray icons with 32px.
   _p="/usr/share/skypeforlinux/resources"
