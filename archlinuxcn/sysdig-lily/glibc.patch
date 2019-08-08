@@ -1,0 +1,12 @@
+diff --git a/userspace/libscap/scap_fds.c b/userspace/libscap/scap_fds.c
+index 452353a..c1e38b1 100644
+--- a/userspace/libscap/scap_fds.c
++++ b/userspace/libscap/scap_fds.c
+@@ -25,6 +25,7 @@ limitations under the License.
+ #include "scap_savefile.h"
+ #include <sys/stat.h>
+ #include <sys/types.h>
++#include <sys/sysmacros.h>
+ #include <fcntl.h>
+ #include "uthash.h"
+ #ifdef _WIN32
