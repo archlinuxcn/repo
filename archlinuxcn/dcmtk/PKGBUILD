@@ -5,7 +5,7 @@
 pkgname=dcmtk
 _pkgname=dcmtk-DCMTK
 pkgver=3.6.4
-pkgrel=3
+pkgrel=4
 pkgdesc="A collection of libraries and applications implementing large parts the DICOM standard"
 arch=("x86_64")
 url="http://dicom.offis.de/dcmtk"
@@ -22,19 +22,28 @@ build() {
   cmake .. \
     -DCMAKE_BUILD_TYPE:STRING=Release \
     -DCMAKE_INSTALL_LIBDIR:PATH=lib \
-    -DCMAKE_SKIP_RPATH:BOOL=ON \
+    -DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON \
     -DBUILD_SHARED_LIBS:BOOL=ON \
     -DDCMTK_ENABLE_CXX11:BOOL=ON \
     -DDCMTK_ENABLE_PRIVATE_TAGS:BOOL=ON \
     -DDCMTK_ENABLE_STL:BOOL=ON \
     -DDCMTK_FORCE_FPIC_ON_UNIX:BOOL=ON \
+    -DDCMTK_WITH_DOXYGEN:BOOL=ON \
+    -DDCMTK_WITH_ICONV:BOOL=ON \
+    -DDCMTK_WITH_ICU:BOOL=ON \
     -DDCMTK_WITH_OPENSSL:BOOL=ON \
     -DDCMTK_WITH_PNG:BOOL=ON \
+    -DDCMTK_WITH_SNDFILE:BOOL=ON \
     -DDCMTK_WITH_TIFF:BOOL=ON \
     -DDCMTK_WITH_XML:BOOL=ON \
     -DDCMTK_WITH_ZLIB:BOOL=ON \
     -DCMAKE_INSTALL_PREFIX=/usr
   make
+}
+
+check() {
+  cd "${srcdir}/${_pkgname}-${pkgver}/build"
+  ctest --verbose
 }
 
 package() {
