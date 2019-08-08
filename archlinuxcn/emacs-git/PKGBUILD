@@ -34,12 +34,13 @@ NOTKIT=           # Use no toolkit widgets. Like B&W Twm (001d sk00l).
                   # Xft, if you choose no toolkit or Lucid.
                   #
 LUCID=            # Use the lucid, a.k.a athena, toolkit. Like XEmacs, sorta.
-GTK2=             # GTK2.
+GTK2=             # GTK2 support. Why would you?
 GPM=              # Enable gpm support.
 M17N=             # Enable m17n international table input support.
-                  # You are far better off using UTF-8 and an input
-                  # method under X11/Wayland. But this gives independence
-                  # if you need it.
+                  # You are far better off using harfbuzz+freetype2
+                  # But this gives independence if you need it.
+                  # In fact, right now harfbuzz is hardwired, I have to
+                  # be convinced it should be refactored.
 CAIRO="YES"       # GOOD NEWS! No longer experimental and fully supported.
                   # This is now, along with harfbuzz, the prefered font
                   # and text shaping engine.
@@ -47,17 +48,19 @@ CAIRO="YES"       # GOOD NEWS! No longer experimental and fully supported.
 XWIDGETS=         # Use GTK+ widgets pulled from webkit2gtk. Usable.
 DOCS_HTML=        # Generate and install html documentation.
 DOCS_PDF=         # Generate and install pdf documentation.
-MAGICK=           # Imagemagick 6 libraries support. Imagemagick,
-                  # like flash, is bug ridden and won't die; yet useful.
-NOGZ=             # Don't compress el files.
+MAGICK=           # ImageMagick 7 support. Deprecated (read the logs).
+                  # ImageMagick, like flash, is bug ridden pest that won't die; 
+                  # yet it is useful if you know what you are doing.
+                  # -->If you just *believe* you need it, you don't.<---
+NOGZ=             # Don't compress .el files.
 ################################################################################
 
 ################################################################################
 pkgname="emacs-git"
-pkgver=27.0.50.137994
+pkgver=27.0.50.138000
 pkgrel=1
 pkgdesc="GNU Emacs. Development."
-arch=('x86_64') # Arch Linux only. Users of derivatives are on their own.
+arch=('x86_64') # Arch Linux only. Derivative users are on their own.
 url="http://www.gnu.org/software/emacs/"
 license=('GPL3')
 depends=( 'alsa-lib' 'gnutls' 'libxml2' 'jansson' 'libotf' 'harfbuzz' )
@@ -65,6 +68,10 @@ makedepends=( 'git' )
 ################################################################################
 
 ################################################################################
+
+#
+# FYI, LTO fails with gcc.
+#
 if [[ $LTO = "YES" ]]; then
   CLANG="YES" ;
 fi
@@ -78,7 +85,8 @@ if [[ $CLANG = "YES" ]]; then
   export CXX="/usr/bin/clang++" ;
   export CPP="/usr/bin/clang -E" ;
   export LD="/usr/bin/lld" ;
-  export LDFLAGS+=' -fuse-ld=lld' ;
+  export CCFLAGS+=' -fuse-ld=lld' ;
+  export CXXFLAGS+=' -fuse-ld=lld' ;
   makedepends+=( 'clang' 'lld') ;
 fi
 
@@ -101,7 +109,7 @@ if [[ $M17N = "YES" ]]; then
 fi
 
 if [[ $MAGICK = "YES" ]]; then
-  depends+=( 'libmagick6'  'libjpeg-turbo' 'giflib' );
+  depends+=( 'imagemagick'  'libjpeg-turbo' 'giflib' );
 elif [[ ! $NOX = "YES" ]]; then
   depends+=( 'libjpeg-turbo' 'giflib' );
 else
@@ -214,7 +222,6 @@ fi
 
 if [[ $MAGICK = "YES" ]]; then
   _conf+=( '--with-imagemagick');
-  export PKG_CONFIG_PATH=/usr/lib/imagemagick6/pkgconfig
 else
   _conf+=();
 fi
@@ -238,7 +245,8 @@ fi
   #
   if [[ ! $CLANG = "YES" ]]; then
     export LD=/usr/bin/ld.gold
-    export LDFLAGS+=" -fuse-ld=gold";
+    export CFLAGS+=" -fuse-ld=gold";
+    export CXXFLAGS+=" -fuse-ld=gold";
   fi
 
   ./configure "${_conf[@]}"
@@ -253,7 +261,7 @@ fi
   #
   make
 
-  # You may need to run this if 'loaddefs.el' files corrupt.
+  # You may need to run this if 'loaddefs.el' files become corrupt.
   #cd "$srcdir/emacs-git/lisp"
   #make autoloads
   #cd ../
