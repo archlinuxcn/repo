@@ -9,7 +9,7 @@ arch=('x86_64')
 url="https://code.launchpad.net/dbus-cpp"
 license=('LGPL3')
 depends=('process-cpp' 'dbus' 'libxml2')
-makedepends=('cmake' 'gmock' 'properties-cpp' 'boost')
+makedepends=('cmake' 'gcovr' 'gmock' 'properties-cpp' 'boost')
 source=("https://launchpad.net/ubuntu/+archive/primary/+files/dbus-cpp_${_pkgver}.orig.tar.gz"
 	"boost-asio-1-66.patch")
 md5sums=('61e9568f3c799214c5bc8b5e3a498496'
@@ -19,6 +19,7 @@ prepare() {
   cd "$srcdir"
 
   # Don't build tests
+  sed -i 's/-Werror//g' CMakeLists.txt
   truncate -s 0 tests/CMakeLists.txt
 
   # Fix boost asio 1.66 API changes
