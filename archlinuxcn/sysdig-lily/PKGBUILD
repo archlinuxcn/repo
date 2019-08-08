@@ -5,13 +5,13 @@
 
 pkgname=sysdig-lily
 pkgver=0.26.2
-pkgrel=1
+pkgrel=2
 pkgdesc="Open source system-level exploration and troubleshooting tool"
 arch=('x86_64')
 url="https://www.sysdig.com/"
 license=('GPL2' 'Apache' 'MIT')
 depends=('jsoncpp' 'luajit' 'curl' 'jq' 'libb64' 'intel-tbb' 'grpc' 'c-ares' 'linux-lily')
-makedepends=('cmake' 'pandoc' 'linux-lily-headers')
+makedepends=('cmake' 'pandoc' 'linux-lily-headers' 'llvm' 'clang')
 _extramodules=extramodules-lily
 source=("https://github.com/draios/sysdig/archive/$pkgver/sysdig-$pkgver.tar.gz"
         "bashcomp-location.patch"
@@ -47,6 +47,10 @@ build() {
         -DENABLE_DKMS=OFF \
         -DBUILD_LIBSCAP_EXAMPLES=OFF
   make
+
+  ln -srf driver/src/driver_config.h ../driver
+  cd ../driver/bpf
+  make
 }
 
 package() {
@@ -62,5 +66,9 @@ package() {
   find "${pkgdir}" -name '*.ko' -exec xz {} +
 
   rm -r "$pkgdir"/usr/share/zsh/vendor-completions/
+
   rm -r "$pkgdir"/usr/src/
+  mkdir -p "$pkgdir"/usr/src/sysdig-${pkgver}/bpf/
+  install -Dm644 "$srcdir"/sysdig-$pkgver/driver/bpf/probe.o "$pkgdir"/usr/src/sysdig-${pkgver}/bpf/
+  sed -i '/probe\.o/s/\<mv\>/cp --reflink=auto/' "$pkgdir"/usr/bin/sysdig-probe-loader
 }
