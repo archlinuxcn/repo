@@ -1,0 +1,37 @@
+# Maintainer: Metal A-wing <1 at 233 dot email>
+
+pkgname=deno
+pkgver=0.13.0
+pkgrel=1
+pkgdesc="A secure JavaScript/TypeScript runtime built with V8, Rust, and Tokio"
+arch=('i686' 'x86_64')
+url="https://github.com/denoland/deno"
+license=('MIT')
+makedepends=('git' 'python2' 'cargo' 'nodejs')
+source=("${pkgname}-${pkgver}::git+https://github.com/denoland/deno#tag=v${pkgver}")
+sha512sums=('SKIP')
+
+prepare() {
+  cd ${pkgname}-${pkgver}
+    git submodule update --init --recursive
+    mkdir -p "${srcdir}"/python2-path
+    ln -sf /usr/bin/python2 "${srcdir}/python2-path/python"
+    PATH="${srcdir}/python2-path:${PATH}" ./tools/setup.py
+}
+
+build() {
+  cd ${pkgname}-${pkgver}
+    PATH="${srcdir}/python2-path:${PATH}" DENO_BUILD_MODE=release ./tools/build.py deno
+}
+
+check() {
+  cd ${pkgname}-${pkgver}
+    ./target/release/deno run tests/002_hello.ts
+}
+
+package() {
+  cd ${pkgname}-${pkgver}
+    install -Dm755 target/release/deno "${pkgdir}"/usr/bin/deno
+    install -Dm644 LICENSE "${pkgdir}"/usr/share/licenses/${pkgname}/LICENSE
+}
+
