@@ -1,0 +1,48 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+# Contribuitor: Sébastien Luttringer
+# Contributor: Ionut Biru <ibiru@archlinux.org>
+
+pkgbase=virtualbox-modules-lily
+pkgname=('virtualbox-host-modules-lily')
+pkgver=6.0.10
+pkgrel=6
+arch=('x86_64')
+url='https://virtualbox.org'
+license=('GPL')
+depends=('linux-lily')
+makedepends=('linux-lily-headers'
+             "virtualbox-host-dkms>=$pkgver")
+
+_extramodules=extramodules-lily
+
+package_virtualbox-host-modules-lily(){
+  _kernver="$(cat /usr/lib/modules/$_extramodules/version)"
+  pkgdesc='Virtualbox host kernel modules for linux-lily Kernel'
+  conflicts=('virtualbox-host-dkms')
+  provides=('VIRTUALBOX-HOST-MODULES')
+
+  cd "/var/lib/dkms/vboxhost/${pkgver}_OSE/$_kernver/$CARCH/module"
+  install -Dt "$pkgdir/usr/lib/modules/$_extramodules" -m0644 *
+
+  # compress each module individually
+  find "$pkgdir" -name '*.ko' -exec xz -T1 {} +
+
+  # systemd module loading
+  printf '%s\n' vboxdrv vboxpci vboxnetadp vboxnetflt |
+    install -D -m0644 /dev/stdin "$pkgdir/usr/lib/modules-load.d/$pkgname.conf"
+}
+
+package_virtualbox-guest-modules-lily(){
+  _kernver="$(cat /usr/lib/modules/$_extramodules/version)"
+  pkgdesc='Virtualbox guest kernel modules for linux-lily Kernel'
+  conflicts=('virtualbox-guest-dkms')
+  provides=('VIRTUALBOX-GUEST-MODULES')
+
+  cd "/var/lib/dkms/vboxsf/${pkgver}_OSE/$_kernver/$CARCH/module"
+  install -Dt "$pkgdir/usr/lib/modules/$_extramodules" -m0644 *
+
+  # compress each module individually
+  find "$pkgdir" -name '*.ko' -exec xz -T1 {} +
+}
+
+# vim:set sw=2 et:

@@ -1,0 +1,8 @@
+maintainers:
+- github: lilydjwg
+build_prefix: archlinuxcn-x86_64
+update_on:
+- archpkg: virtualbox-host-modules-arch
+  from_pattern: ^([^-]+).*
+  to_pattern: \1
+- cmd: LANG=C pacman --dbpath ~/.lilac/pacmandb -Si linux-lily | awk '$1 == "Version" { print $3 }'
