@@ -1,0 +1,28 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+# Contribuitor: Christian Hesse <mail@eworm.de>
+
+pkgname=wireguard-lily
+pkgver=0.0.20190702
+pkgrel=9
+pkgdesc='Wireguard module for linux-lily Kernel'
+url='https://www.wireguard.com/'
+arch=('x86_64')
+license=('GPL')
+depends=('linux-lily')
+makedepends=('linux-lily-headers' "wireguard-dkms>=$pkgver")
+conflicts=('wireguard-dkms')
+provides=('WIREGUARD-MODULE')
+
+_extramodules='extramodules-lily'
+
+package() {
+  _kernver="$(cat /usr/lib/modules/$_extramodules/version)"
+
+  cd "/var/lib/dkms/wireguard/${pkgver}/$_kernver/$CARCH/module"
+  install -Dt "$pkgdir/usr/lib/modules/$_extramodules" -m0644 *
+
+  # compress each module individually
+  find "$pkgdir" -name '*.ko' -exec xz -T1 {} +
+}
+
+# vim:set sw=2 et:
