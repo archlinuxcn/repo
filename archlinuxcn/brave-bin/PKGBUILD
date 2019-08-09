@@ -9,7 +9,7 @@
 
 pkgname=brave-bin
 pkgver=0.67.124
-pkgrel=1
+pkgrel=2
 pkgdesc="Web browser that blocks ads and trackers by default (binary release)."
 arch=("x86_64")
 url="https://brave.com/download"
@@ -18,12 +18,12 @@ depends=("gtk3" "nss" "alsa-lib" "libxss" "ttf-font")
 optdepends=("cups: Printer support"
             "pepper-flash: Adobe Flash support"
             "libgnome-keyring: Enable GNOME keyring support")
-provides=("${pkgname-bin}" "brave-browser")
-conflicts=("${pkgname-bin}")
+provides=("${pkgname%}" "brave-browser")
+conflicts=("${pkgname%}")
 source=("$pkgname-$pkgver.zip::https://github.com/brave/brave-browser/releases/download/v${pkgver}/brave-v${pkgver}-linux-x64.zip"
         "MPL2::https://raw.githubusercontent.com/brave/brave-browser/master/LICENSE"
         "$pkgname.sh"
-        "$pkgname.desktop"
+        "brave-browser.desktop"
         "logo.png")
 options=(!strip)
 sha512sums=("4304b38a3a244764c9e3a10bcaf92c84ada748acb86ee1a140be85ebbd1989a3a96765364e77dc446b29b4e43864a6a7083b400f0e180a606b48fdd260e0b3b7"
@@ -46,7 +46,7 @@ package() {
     cp -a --reflink=auto $_bsdtardir "$pkgdir/usr/lib/$pkgname"
 
     install -Dm0755 "$pkgname.sh" "$pkgdir/usr/bin/brave"
-    install -Dm0644 -t "$pkgdir/usr/share/applications" "$pkgname.desktop"
+    install -Dm0644 -t "$pkgdir/usr/share/applications" "brave-browser.desktop"
     install -Dm0644 "logo.png" "$pkgdir/usr/share/pixmaps/brave.png"
     install -Dm0664 -t "$pkgdir/usr/share/licenses/$pkgname" "MPL2"
     mv "$pkgdir/usr/lib/$pkgname/"{LICENSE,LICENSES.chromium.html} "$pkgdir/usr/share/licenses/$pkgname"
