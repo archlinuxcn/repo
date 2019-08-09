@@ -1,0 +1,48 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+# Contributor: peippo <christoph.fink@gmail.com>
+
+pkgname=python-av
+_pkgname=PyAV
+pkgdesc="Pythonic bindings for FFmpeg's libraries"
+url='https://github.com/mikeboers/PyAV'
+
+pkgver=6.2.0
+pkgrel=1
+
+arch=("x86_64")
+license=("BSD")
+
+makedepends=(
+  'cython'
+  'python-setuptools'
+)
+checkdepends=(
+  'python-pytest'
+)
+depends=(
+  'ffmpeg'
+  'python-numpy'
+  'python-pillow'
+)
+
+source=("https://github.com/mikeboers/PyAV/archive/v${pkgver}.tar.gz")
+sha512sums=('986a2fdf419457b834df3d64993ea201d1f648eedb08b0333d4bf3d424bc71aa72fd9aedf1c3a51829776ec8d7821552b965885027972f3b9f1bbcae99356ec1')
+
+build() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  python setup.py build
+}
+
+check() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  PYTHONPATH="${PWD}/build/lib.linux-${CARCH}-3.7" python setup.py test
+}
+
+package() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+
+  install -Dm644 LICENSE.txt "${pkgdir}/usr/share/licenses/python-av/LICENSE"
+}
+# vim:set ts=2 sw=2 et:
+
