@@ -1,11 +1,11 @@
 # Maintainer: Daniel Bermond < gmail-com: danielbermond >
 
-_downloadid='c63b4b939005460b880d5cf8e7885e43'
-_referid='8b5333fa8f67452196c9f867a9b94023'
+_downloadid='9bfd3eb624fc47b38a985893fcc1c8ac'
+_referid='271210a0edb54303a887bd31cb8d17b0'
 _srcurl="https://www.blackmagicdesign.com/api/register/us/download/${_downloadid}"
 
 pkgname=blackmagic-decklink-sdk
-pkgver=11.2
+pkgver=11.3
 pkgrel=1
 pkgdesc='Blackmagic DeckLink SDK'
 arch=('any')
@@ -15,12 +15,12 @@ provides=('decklink-sdk')
 conflicts=('decklink-sdk')
 source=("Blackmagic_DeckLink_SDK_${pkgver}.zip"::"$_srcurl"
         'LICENSE')
-sha256sums=('4919b09740cb9cfd64751d4006f826e72fed929b16b52eab67c9cdbad1e9dbb9'
+sha256sums=('c465b5de84d7f0caca51e7ab54581c1c82c9e937b6debae6b157e23501046730'
             'cc90e53ac2ef2442d2d0adfe9214119baa31ec080e75c3b087365efdbccc23df')
 
 _useragent="User-Agent: Mozilla/5.0 (X11; Linux ${CARCH}) \
                         AppleWebKit/537.36 (KHTML, like Gecko) \
-                        Chrome/74.0.3729.169 \
+                        Chrome/76.0.3809.100 \
                         Safari/537.36"
 
 _reqjson="{ \
