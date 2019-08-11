@@ -2,8 +2,8 @@
 
 pkgname=grub-theme-slaze-git
 _pkgname="${pkgname%-*}"
-pkgver=20190628
-pkgrel=1
+pkgver=1.0
+pkgrel=2
 pkgdesc="Slaze grub theme"
 arch=(any)
 url="https://github.com/vinceliuice/grub2-themes"
@@ -23,11 +23,11 @@ pkgver() {
 package() {
     name="${pkgdesc%% *}"
     cd "$srcdir/$_pkgname"
-    install -d "$pkgdir/boot/grub/themes/$name"
-    install -d "$pkgdir/boot/grub/themes/$name/icons"
-    install -Dm 755 common/* "$pkgdir/boot/grub/themes/$name"
-    install -Dm 755 "backgrounds/background-${_pkgname##*-}.jpg" "$pkgdir/boot/grub/themes/$name/background.jpg"
-    install -Dm 755 assets/assets-white/icons/* "$pkgdir/boot/grub/themes/$name/icons"
-    install -Dm 755 assets/assets-white/select/*.png "$pkgdir/boot/grub/themes/$name"
+    install -d "$pkgdir/usr/share/grub/themes/$name"
+    install -d "$pkgdir/usr/share/grub/themes/$name/icons"
+    install -Dm 644 common/* "$pkgdir/usr/share/grub/themes/$name"
+    install -Dm 644 "backgrounds/background-${_pkgname##*-}.jpg" "$pkgdir/usr/share/grub/themes/$name/background.jpg"
+    install -Dm 644 assets/assets-white/icons/* "$pkgdir/usr/share/grub/themes/$name/icons"
+    install -Dm 644 assets/assets-white/select/*.png "$pkgdir/usr/share/grub/themes/$name"
     install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$_pkgname/LICENSE"
 }
