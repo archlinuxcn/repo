@@ -3,7 +3,7 @@
 
 _pkgname=skypeforlinux
 pkgname=$_pkgname-stable-bin
-pkgver=8.50.0.38
+pkgver=8.51.0.72
 pkgrel=1
 pkgdesc="Skype for Linux - Stable/Release Version"
 arch=("x86_64")
@@ -17,7 +17,7 @@ provides=("$_pkgname" "skype")
 source=(
 "https://repo.skype.com/deb/pool/main/s/$_pkgname/${_pkgname}_${pkgver}_amd64.deb"
 )
-sha256sums=('c64e27057a91cc006476d174f101a758eb917d4146078e0218f73f4c2e530abc')
+sha256sums=('63baf62b22aa6e56d55bc303c94b2d532df82aaf9d210eef7ec03b9a639763e7')
 
 package() {
   tar -xJC "$pkgdir" -f data.tar.xz
@@ -25,6 +25,12 @@ package() {
   mv "$pkgdir/usr/share/$_pkgname/LICENSES.chromium.html" \
     "$pkgdir/usr/share/licenses/$pkgname/"
   rm -rf "$pkgdir/opt"
+
+  _f="/usr/share/skypeforlinux/chrome-sandbox"
+  if [ ! -u "$pkgdir/$_f" ]; then
+    echo "Adding setuid permission on $_f"
+    chmod 4755 "$pkgdir/$_f"
+  fi
 
   # Replace all 16px tray icons with 32px.
   _p="/usr/share/skypeforlinux/resources"
