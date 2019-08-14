@@ -9,7 +9,7 @@ arch=('x86_64')
 url="https://github.com/NVIDIA/apex"
 license=('BSD')
 depends=(python-pytorch-cuda)
-makedepends=(git python-setuptools)
+makedepends=(git python-setuptools python-pip)
 checkdepends=(python-pytest)
 provides=(python-apex=${pkgver})
 conflicts=(python-apex)
