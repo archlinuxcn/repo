@@ -1,78 +1,59 @@
 #Maintainer: weearc <q19981121@163.com>
-#Maintainer: laomocode <3344907598@qq.com>
 pkgname=motrix
-_pkgname=Motrix
-pkgver=v1.4.1
-_pkgver=1.4.1
-pkgrel=2
-epoch=
+pkgver=1.4.1
+pkgrel=3
 pkgdesc="elegent downloading tool frontend for aria2c,using vue(release version)"
-arch=("x86_64")
+arch=('x86_64')
 url="https://github.com/agalwood/Motrix"
 license=('MIT')
-groups=()
-depends=('bash'
-	 'tar'
-	 'fakeroot'
-	 'glibc'
-	 'glib2'
-	 'nss'
-	 'nspr'
-	 'gtk3'
-	 'pango'
-	 'atk'
-	 'nettle'
-	 'libxcb'
-	)
-makedepends=('curl'
-	     'yarn'
-	     'npm')
-checkdepends=()
-optdepends=()
-provides=()
+depends=('electron4' 'aria2')
+makedepends=('npm')
 conflicts=('motrix-git')
-replaces=()
-backup=()
-options=()
-install=
-changelog=
-source=("Motrix.desktop"
-	"Motrix.tar.gz"::"https://github.com/agalwood/Motrix/archive/v$_pkgver.tar.gz")
-noextract=()
-sha256sums=('8b53cda5d868a7a0fe2b2efdb4c8ee918fadc74c1083e7a20b5c2dfa9550b806'
-	'cd10cd5c704f0d780ff501e2861a316b95c44d11b653045574ae07b9a3ccaa8b')
-validpgpkeys=()
+
+source=("https://github.com/agalwood/Motrix/archive/v$pkgver.tar.gz")
+
+sha256sums=('cd10cd5c704f0d780ff501e2861a316b95c44d11b653045574ae07b9a3ccaa8b')
 
 prepare() {
-	tar -xvf $_pkgname.tar.gz
-	rm $_pkgname.tar.gz
-	mv $_pkgname-$_pkgver $_pkgname
-	yarn config set registry 'https://registry.npm.taobao.org'
-    npm config set registry 'https://registry.npm.taobao.org'
-    export ELECTRON_MIRROR='https://npm.taobao.org/mirrors/electron/'
-    export SASS_BINARY_SITE='https://npm.taobao.org/mirrors/node-sass'
-	sed -i '/"dmg"/,/"linux"/{//!d}' $_pkgname/package.json
-	sed -i '/"dmg"/d' $_pkgname/package.json
-	sed -i '/"deb"/d' $_pkgname/package.json
-	sed -i '/"snap"/d' $_pkgname/package.json
-	sed -i '/"pacman"/d' $_pkgname/package.json
-	sed -i '/"rpm"/d' $_pkgname/package.json
-	sed -i 's/"AppImage"/"dir"/g' $_pkgname/package.json
-
+    sed -i 's/"postinstall"/"ignore"/' "$srcdir/Motrix-$pkgver/package.json"
 }
 
 build() {
-	cd $_pkgname/
-	yarn
- 	yarn run build
+    cd "$srcdir/Motrix-$pkgver"
+    npm_config_cache="$srcdir/npm_cache" npm install
+    npm run pack
+    npm prune --production
 }
+
 package() {
-	install -d ${pkgdir}/opt
-	install -d ${pkgdir}/usr/bin
-	install -d ${pkgdir}/usr/share/icons
-	install -d ${pkgdir}/usr/share/applications
-	mv ${srcdir}/$_pkgname/release/linux-unpacked/ ${pkgdir}/opt/motrix
-	install -Dm644 ${srcdir}/$_pkgname/build/256x256.png ${pkgdir}/usr/share/icons/$pkgname.png
-	install -Dm 644 ${srcdir}/Motrix.desktop ${pkgdir}/usr/share/applications
-	rm -rf ${srcdir}
+    # makedir
+    mkdir -p "$pkgdir/usr/bin"
+    mkdir -p "$pkgdir/usr/lib/motrix"
+    mkdir -p "$pkgdir/usr/share/applications"
+    # install aria2
+    install -Dm644 "$srcdir/Motrix-$pkgver/extra/linux/engine/aria2.conf" "$pkgdir/usr/lib/motrix/engine/aria2.conf"
+    ln -sf /usr/bin/aria2c "$pkgdir/usr/lib/motrix/engine/aria2c"
+    # install js
+    cp -r "$srcdir/Motrix-$pkgver/dist" "$pkgdir/usr/lib/motrix/app"
+    cp -r "$srcdir/Motrix-$pkgver/node_modules" "$pkgdir/usr/lib/motrix/app/node_modules"
+    echo '{"name":"Motrix","version":"v'$pkgver'","main":"./electron/main.js"}' > "$pkgdir/usr/lib/motrix/app/package.json"
+    # icon
+    install -Dm644 "$srcdir/Motrix-$pkgver/static/512x512.png" "$pkgdir/usr/share/icons/hicolor/512x512/apps/motrix.png"
+    # launch script
+    echo "#!/bin/bash
+export ELECTRON_IS_DEV=0
+exec /usr/bin/electron /usr/lib/motrix/app
+    " > "$pkgdir/usr/bin/motrix"
+    chmod +x "$pkgdir/usr/bin/motrix"
+    # desktop file
+    echo "[Desktop Entry]
+Name=Motrix
+Comment=A full-featured download manager.
+Exec=/usr/bin/motrix
+Icon=motrix
+Type=Application
+Categories=Network;FileTransfer;
+MimeType=application/x-bittorrent;x-scheme-handler/mo;x-scheme-handler/motrix;x-scheme-handler/magnet;x-scheme-handler/thunder;
+Categories=Network;
+    " > "$pkgdir/usr/share/applications/motrix.desktop"
 }
