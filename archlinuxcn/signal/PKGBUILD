@@ -7,7 +7,7 @@
 # Contributor: torvic9 <vic999 at mailbox.org>
 
 pkgname=signal
-pkgver=1.26.1
+pkgver=1.26.2
 pkgrel=1
 license=('GPL3')
 pkgdesc='Private messenger for the desktop'
