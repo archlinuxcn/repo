@@ -1,0 +1,48 @@
+# Maintainer: Lukas Sabota <LTsmooth42 _at_ gmail _dot_ com>
+
+pkgname=fceux-git
+pkgver=3640.63421d41
+pkgrel=1
+pkgdesc="Fast and ultra-compatible NES/Famicom emulator with SDL, OpenGL and SVGALIB support"
+arch=('i686' 'x86_64')
+url="http://fceux.com/"
+license=('GPL')
+depends=('sdl' 'lua51' 'gtk2' 'gd' 'libgl')
+makedepends=('git' 'scons' 'libgl' 'glu')
+optdepends=('xchm: for viewing the help manual')
+provides=('fceux')
+conflicts=('fceux')
+source=('scons-python3.patch' 'git://github.com/TASVideos/fceux.git')
+
+pkgver() {
+  cd fceux
+  printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+
+build() {
+  cd fceux
+  patch -p1 -i ../scons-python3.patch
+
+  scons RELEASE=1
+}
+
+package() {
+  cd fceux
+
+  scons install -i --prefix="$pkgdir/usr"
+
+  install -d "$pkgdir/usr/share/doc/fceux"
+  cp -r documentation/* "$pkgdir/usr/share/doc/fceux/"
+  install -Dm644 changelog.txt "$pkgdir/usr/share/doc/fceux/"
+
+  # desktop shortcut
+  install -Dm644 "fceux.desktop" \
+    "$pkgdir/usr/share/applications/fceux.desktop"
+  install -Dm644 "fceux.png" \
+    "$pkgdir/usr/share/pixmaps/fceux.png"
+
+  rm -f "$pkgdir/usr/share/fceux/"*.dll
+}
+sha256sums=('294472255fe64e62af0b49a5fb6e5960afab2cf17d9c561a9326cdf831c6b9f6'
+            'SKIP')
