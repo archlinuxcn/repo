@@ -74,7 +74,7 @@ prepare() {
 build() {
   cd build
 
-  cmake ../rpcs3 \
+  CXXFLAGS+=' -march=native ' cmake ../rpcs3 \
     -DCMAKE_BUILD_TYPE='Release' \
     -DCMAKE_INSTALL_PREFIX='/usr' \
     -DCMAKE_SKIP_RPATH='ON' \
