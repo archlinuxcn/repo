@@ -1,7 +1,7 @@
 # Maintainer: Ariel AxionL <axionl@aosc.io>
 pkgname=baidupcs-go-bin
-pkgver=3.5.6
-pkgrel=5
+pkgver=3.6
+pkgrel=1
 pkgdesc="The terminal utility for Baidu Network Disk (Golang Version)."
 arch=('x86_64')
 depends=()
@@ -13,7 +13,7 @@ source=("https://raw.githubusercontent.com/iikira/BaiduPCS-Go/master/LICENSE")
 source_x86_64=("https://github.com/iikira/BaiduPCS-Go/releases/download/v$pkgver/BaiduPCS-Go-v$pkgver-linux-amd64.zip")
 
 sha256sums=('ddadea2805326e3cb072a8b6769885fc1399475922e4c7d60f5e9f8e28c63e3d')
-sha256sums_x86_64=('d55a391470789944f019bf757fd02a08a7d63ad88662528209256076c8264fdd')
+sha256sums_x86_64=('09a4bcc8090cd12a053b9efc18761dfaa6b232ebeda44c2747b179057ddf29fb')
 package() {
     dir="$srcdir/BaiduPCS-Go-v$pkgver-linux-amd64"
     install -Dm755 $dir/BaiduPCS-Go ${pkgdir}/usr/bin/baidupcs
