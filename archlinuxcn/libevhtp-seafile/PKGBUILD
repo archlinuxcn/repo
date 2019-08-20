@@ -6,7 +6,7 @@
 _pkgname=libevhtp
 pkgname="${_pkgname}"-seafile
 pkgver=1.2.0
-pkgrel=3
+pkgrel=4
 epoch=2
 pkgdesc="A more flexible replacement for libevent's httpd API. [Built for seafile]"
 arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
