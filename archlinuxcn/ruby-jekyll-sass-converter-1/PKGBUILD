@@ -1,12 +1,12 @@
-# Maintainer: Bjoern Franke <bjo+aur@schafweide.org>
+# Maintainer: Bert Peters <bert@bertptrs.nl>
+# Contributor: Bjoern Franke <bjo+aur@schafweide.org>
 # Contributor: Levente Polyak <anthraxx[at]archlinux[dot]org>
 
 _gemname=jekyll-sass-converter
 pkgname=ruby-${_gemname}-1
 pkgver=1.5.2
-pkgrel=3
+pkgrel=4
 pkgdesc='Sass converter for Jekyll (1.x)'
-conflicts=('ruby-jekyll-sass-converter')
 url='https://github.com/jekyll/jekyll-sass-converter'
 arch=('any')
 license=('MIT')
