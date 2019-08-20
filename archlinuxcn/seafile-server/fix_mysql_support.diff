@@ -21,3 +21,25 @@ index 596687c..39ed520 100644
              os.path.join(self.install_path, 'seahub'),
              os.path.join(self.install_path, 'runtime'),
          ]
+diff --git a/scripts/setup-seafile-mysql.py b/scripts/setup-seafile-mysql.py
+index c5a7f1f..5cdb858 100644
+--- a/scripts/setup-seafile-mysql.py
++++ b/scripts/setup-seafile-mysql.py
+@@ -896,7 +896,7 @@ class CcnetConfigurator(AbstractConfigurator):
+ 
+         cursor = conn.cursor()
+ 
+-        sql_file = os.path.join(env_mgr.install_path, 'sql', 'mysql', 'ccnet.sql')
++        sql_file = '/usr/share/seafile-server/scripts/sql/mysql/ccnet.sql'
+         with open(sql_file, 'r') as fp:
+             content = fp.read()
+ 
+@@ -1033,7 +1033,7 @@ class SeafileConfigurator(AbstractConfigurator):
+ 
+         cursor = conn.cursor()
+ 
+-        sql_file = os.path.join(env_mgr.install_path, 'sql', 'mysql', 'seafile.sql')
++        sql_file = '/usr/share/seafile-server/scripts/sql/mysql/seafile.sql'
+         with open(sql_file, 'r') as fp:
+             content = fp.read()
+ 

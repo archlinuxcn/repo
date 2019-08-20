@@ -1,0 +1,24 @@
+diff --git a/controller/seafile-controller.c b/controller/seafile-controller.c
+index 487d1aa..120a936 100644
+--- a/controller/seafile-controller.c
++++ b/controller/seafile-controller.c
+@@ -645,7 +645,7 @@ stop_ccnet_server ()
+ static void
+ init_pidfile_path (SeafileController *ctl)
+ {
+-    char *pid_dir = g_build_filename (topdir, "pids", NULL);
++    char *pid_dir = g_build_filename (ctl->seafile_dir, "pids", NULL);
+     if (!g_file_test(pid_dir, G_FILE_TEST_EXISTS)) {
+         if (g_mkdir(pid_dir, 0777) < 0) {
+             seaf_warning("failed to create pid dir %s: %s", pid_dir, strerror(errno));
+@@ -710,8 +710,8 @@ seaf_controller_init (SeafileController *ctl,
+         return -1;
+     }
+ 
+-    char *seafevents_config_file = g_build_filename (topdir,
+-                                                     "conf/seafevents.conf",
++    char *seafevents_config_file = g_build_filename (ctl->central_config_dir,
++                                                     "seafevents.conf",
+                                                      NULL);
+ 
+     if (!g_file_test (seafevents_config_file, G_FILE_TEST_EXISTS)) {
