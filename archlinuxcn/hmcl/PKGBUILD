@@ -3,7 +3,7 @@
 
 pkgname=hmcl
 _pkgname=HMCL
-pkgver=3.2.130
+pkgver=3.2.132
 _pkgver=3.2
 pkgrel=2
 pkgdesc="Hello Minecraft! Launcher, a powerful Minecraft launcher."
@@ -19,7 +19,7 @@ source=(
 )
 sha256sums=('c6310315a7bc5f0512d1d307bdf1c4fffa3c55707f019274b32f9b2d132688d1'
             '5780cf70f1afec0eb3cd8fc43297d361903c7204e274a28c5edf9b8ac3eea83e'
-            'SKIP')
+            'e823028f17e7cbb36a7b43b37358b576d73e422761461909aad1e7ada3c79608')
 build() {
     cd "${_pkgname}-${pkgver}"
     export JAVA_HOME="/usr/lib/jvm/default/"
