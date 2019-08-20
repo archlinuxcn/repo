@@ -4,7 +4,7 @@
 _pkgname=skypeforlinux
 pkgname=$_pkgname-preview-bin
 pkgver=8.51.76.87
-pkgrel=1
+pkgrel=2
 pkgdesc="Skype for Linux - Preview/Insider Version"
 arch=("x86_64")
 url="http://www.skype.com"
@@ -27,19 +27,13 @@ package() {
     "$pkgdir/usr/share/licenses/$pkgname/"
   rm -rf "$pkgdir/opt"
 
-  _f="/usr/share/skypeforlinux/chrome-sandbox"
-  if [ ! -u "$pkgdir/$_f" ]; then
-    echo "Adding setuid permission on $_f"
-    chmod 4755 "$pkgdir/$_f"
-  fi
-
   # Replace all 16px tray icons with 32px.
   _p="/usr/share/skypeforlinux/resources"
   cd "$pkgdir/$_p"
   asar extract app.asar _tmp
   cd _tmp/images/tray
-  find . -iname '*@2x.png' | while read f; do
-    cp $f ${f//@2x/}
+  find . -iname '*@2x.png' | while read -r f; do
+    cp "$f" "${f//@2x/}"
   done
   cd "$pkgdir/$_p"
   asar pack _tmp app.asar
