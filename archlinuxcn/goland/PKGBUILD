@@ -2,7 +2,7 @@
 
 pkgbase=goland
 pkgname=(goland goland-jre)
-pkgver=2019.2
+pkgver=2019.2.1
 pkgrel=1
 pkgdesc='Capable and Ergonomic Go IDE'
 arch=('x86_64' 'i686')
@@ -12,8 +12,8 @@ makedepends=('rsync')
 options=('!strip')
 source=(https://download.jetbrains.com/go/${pkgbase}-${pkgver}.tar.gz
         jetbrains-goland.desktop)
-sha512sums=('47e64bc3a8a231149591350a1f37d2f9b60b07c50c4c08462cf87428a6ce874f0a722bfa2065841ccb7f7c358e94bc6d5201bd8a4c3d2aa977179e9651e69b57'
-            '391167246a98cc82305ffa7d475960b3f58f78d36dee5cda3f318351e5ddf07d3457688713c1fcc2c20f548aeed387e5a9f16c97423bd37bb43bc502082f61eb')
+sha512sums=('894656494299561226a3b8efd133220bd1f5cafd21a118cc16842d1eb23f54f1b7273fab4782306955d5d02220b6a0653e96372ec5c8189060695525d4a5c00a'
+            '930a0f1269b7f49f7a08fd5fbfff178628114dee01f4e4e8426c643d7c442b77f178b5188325caf0ace5503c5f873a419cd3f7128b63d7c3c9baf8065b0065aa')
 
 package_goland() {
   optdepends=('goland-jre: JetBrains custom Java Runtime (Recommended)'
