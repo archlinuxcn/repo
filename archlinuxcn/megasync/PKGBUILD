@@ -1,4 +1,4 @@
-# Maintainer: Rafał Kozdrój <kozeid2@gmail.com>
+# Maintainer: Rafał Kozdrój <kozeid2+aur@gmail.com>
 # Contributor: kikadf <kikadf.01@gmail.com>
 # Contributor: Daniel Henry <d at hackr dot pl>
 # Contributor: Miguel Revilla <yo at  miguelrevilla dot com>
@@ -6,7 +6,7 @@
 # Contributor: Hexchain Tong <i at hexchain dot org>
 
 pkgname=megasync
-pkgver=4.2.0
+pkgver=4.2.3
 pkgrel=1
 pkgdesc="Easy automated syncing between your computers and your MEGA cloud drive"
 arch=('i686' 'x86_64')
@@ -16,9 +16,9 @@ depends=('c-ares' 'crypto++' 'libsodium' 'hicolor-icon-theme' 'libuv'
          'qt5-svg' 'libmediainfo' 'libraw' 'qt5-base' 'ffmpeg')
 makedepends=('qt5-tools' 'swig' 'doxygen' 'lsb-release' 'git')
 optdepends=('sni-qt: fix systray issue on KDE and LXQt')
-_extname="ArchLinux"
-_sdk_commit="8fa7940db5d4cd6d36f52f340961018a846a8544"
-source=("git+https://github.com/meganz/MEGAsync.git#tag=v${pkgver}_${_extname}"
+_extname=".0_Linux"
+_sdk_commit="21e6f1dd7caf065e020d6722887e4ccbdb7c9ae1"
+source=("git+https://github.com/meganz/MEGAsync.git#tag=v${pkgver}${_extname}"
         "meganz-sdk::git+https://github.com/meganz/sdk.git#commit=${_sdk_commit}")
 sha256sums=('SKIP'
             'SKIP')
