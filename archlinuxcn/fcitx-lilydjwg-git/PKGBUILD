@@ -6,7 +6,7 @@ _pkgname=fcitx
 pkgname=$_pkgname-lilydjwg-git
 pkgver=4.2.9.7.20190817
 _realver=4.2.9.7
-pkgrel=1
+pkgrel=2
 epoch=2
 pkgdesc="A Flexible Input Method Framework. With Lua support"
 arch=("i686" "x86_64")
@@ -14,12 +14,12 @@ license=('GPL')
 url="https://fcitx-im.org/wiki/Fcitx"
 depends=('pango' 'libxinerama' 'shared-mime-info' 'hicolor-icon-theme'
   'desktop-file-utils' 'icu' 'libxkbfile' 'iso-codes' 'libxml2'
-  "gtk2>=2.24.20" 'gtk3' 'dbus')
+  'gtk3' 'dbus')
 makedepends=('git' 'gettext' 'cmake' 'gobject-introspection' 'coreutils'
-  'sh' 'lua' 'python2' 'extra-cmake-modules') # python2 is for gobject-introspection
-conflicts=('fcitx' 'fcitx-gtk2' 'fcitx-gtk3' 'fcitx-keyboard')
+  'sh' 'lua' 'python2' 'extra-cmake-modules' "gtk2>=2.24.20" 'qt4') # python2 is for gobject-introspection
+conflicts=('fcitx' 'fcitx-gtk2' 'fcitx-gtk3' 'fcitx-keyboard' 'fcitx-qt4')
 provides=("fcitx=${_realver}" "fcitx-gtk2=${_realver}" "fcitx-gtk3=${_realver}"
-  'fcitx-keyboard=0.1.3' "fcitx-git=${pkgver}")
+  'fcitx-keyboard=0.1.3' "fcitx-git=${pkgver}" "fcitx-qt4=${_realver}")
 optdepends=(
   'enchant: for word predication using enchant'
   'presage: for word predication using presage'
@@ -51,7 +51,6 @@ build() {
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DENABLE_GTK2_IM_MODULE=On \
     -DENABLE_GTK3_IM_MODULE=On \
-    -DENABLE_QT=Off \
     -DENABLE_LUA=On \
     -DFORCE_OPENCC=On \
     -DFORCE_ENCHANT=On \
