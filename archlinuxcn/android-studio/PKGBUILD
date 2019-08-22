@@ -8,9 +8,9 @@
 # Maintainer: Kordian Bruck <k@bruck.me>
 
 pkgname=android-studio
-pkgver=3.4.2.0
+pkgver=3.5.0.21
 pkgrel=1
-_build=183.5692245
+_build=191.5791312
 pkgdesc="The official Android IDE (Stable branch)"
 arch=('i686' 'x86_64')
 url="https://developer.android.com/"
@@ -22,7 +22,7 @@ optdepends=('gtk2: GTK+ look and feel'
 options=('!strip')
 source=("https://dl.google.com/dl/android/studio/ide-zips/$pkgver/android-studio-ide-$_build-linux.tar.gz"
         "$pkgname.desktop")
-sha256sums=('35eb8c74837d1aab59229101fc91568a607ac04854a40209f7a0ba7ac0601924'
+sha256sums=('5794fd6edca6e4daa31f5ed710670d0b425534549a6c4aa2e3e9753ae116736f'
             '73cd2dde1d0f99aaba5baad1e2b91c834edd5db3c817f6fb78868d102360d3c4')
 
 if [ "$CARCH" = "i686" ]; then
@@ -34,7 +34,7 @@ package() {
 
   # Install the application
   install -d $pkgdir/{opt/$pkgname,usr/bin}
-  cp -a bin gradle lib jre plugins build.txt product-info.json $pkgdir/opt/$pkgname
+  cp -a bin lib jre plugins build.txt product-info.json $pkgdir/opt/$pkgname
   ln -s /opt/android-studio/bin/studio.sh $pkgdir/usr/bin/$pkgname
 
   # Add the icon and desktop file
