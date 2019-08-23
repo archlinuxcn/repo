@@ -3,4 +3,5 @@ maintainers:
 build_prefix: archlinuxcn-x86_64
 update_on:
 - archpkg: sysdig
-- cmd: LANG=C pacman --dbpath ~/.lilac/pacmandb -Si linux-lily | awk '$1 == "Version" { print $3 }'
+  strip-release: true
+- cmd: LANG=C pacman --dbpath ~/.lilac/pacmandb -Si linux-lily | awk '$1 == "Version" { print $3 }' | cut -d- -f1
