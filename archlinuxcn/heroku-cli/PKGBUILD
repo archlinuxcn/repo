@@ -1,9 +1,9 @@
 # Maintainer: Rhys Kenwell <redrield+aur@gmail.com>
 
 pkgname=heroku-cli
-pkgver=7.27.1
+pkgver=7.29.0
 _builddir=cli-${pkgver}
-pkgrel=2
+pkgrel=1
 pkgdesc="a tool for creating and managing Heroku apps from the command line"
 arch=('x86_64')
 url="https://devcenter.heroku.com/articles/heroku-cli"
@@ -13,7 +13,7 @@ makedepends=('npm')
 optdepends=('git: Deploying to Heroku')
 conflicts=('heroku-client-standalone' 'heroku-toolbelt' 'ruby-heroku')
 source=("https://registry.npmjs.org/heroku/-/heroku-$pkgver.tgz")
-sha256sums=('a2ab3c3a000a1cc89742542ff8241e720dd8db3b20a67078ddbe46b094073aed')
+sha256sums=('ecbe42e69375070ca029bef55e2a8b6d7275c321d6c881e1d3a8ccd0a87ccbf4')
 
 noextract=("heroku-$pkgver.tgz")
 options=('!strip')
