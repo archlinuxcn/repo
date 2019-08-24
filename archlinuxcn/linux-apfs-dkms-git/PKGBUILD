@@ -1,39 +1,34 @@
 # Maintainer: Chih-Hsuan Yen <yan12125@archlinux.org>
+# Contributor: ManU
 # Forked from aur/linux-can-dkms
 # Contributor: Kyle Manna <kyle(at)kylemanna(dot)com>
 
 pkgname=linux-apfs-dkms-git
-pkgver=r798870.ed0be7b7faf5
+epoch=1
+pkgver=r4.6269eed
 pkgrel=1
 pkgdesc="Experimental APFS kernel module (DKMS)"
 arch=('any')
-url="https://github.com/eafer/linux-apfs"
+url="https://github.com/eafer/linux-apfs-oot"
 license=('GPL2')
 depends=('dkms')
 makedepends=('git')
-source=("git+https://github.com/eafer/linux-apfs#branch=for-merge"
-        'dkms.conf'
-        'Makefile')
+source=("git+https://github.com/eafer/linux-apfs-oot"
+        'dkms.patch::https://github.com/yan12125/linux-apfs-oot/commit/7f46eb50991b9ea5c674b5442e87ef53e73890d5.patch')
 sha256sums=('SKIP'
-            '969ef32aab0f30471305e5d900cd28fc5ae91f976b6d55a5ad84c6034bb8c307'
-            '2da469e30f0da44ed337d947c56718fb8df6c77243fd9f39a299155a8f48d286')
+            '822ce631d3b7816ef02243ebc31db09459b8279fab307b92c780615b23e7f170')
 
 pkgver() {
-  cd linux-apfs
+  cd linux-apfs-oot
   printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
+prepare() {
+  cd linux-apfs-oot
+  patch -Np1 -i ../dkms.patch
+}
+
 package() {
-  # Copy Makefile and dkms.conf
-  install -Dm644 Makefile "${pkgdir}"/usr/src/${pkgname}-${pkgver}/Makefile
-  install -Dm644 dkms.conf "${pkgdir}"/usr/src/${pkgname}-${pkgver}/dkms.conf
-
-  # Set name and version
-  sed -e "s/@PKGNAME@/${pkgname}/" \
-      -e "s/@PKGVER@/${pkgver}/" \
-      -i "${pkgdir}"/usr/src/${pkgname}-${pkgver}/dkms.conf
-
-  # Copy sources
-  install -Ddm755 "${pkgdir}/usr/src/${pkgname}-${pkgver}/fs/"
-  cp -dr --no-preserve=ownership linux-apfs/fs/apfs "${pkgdir}/usr/src/${pkgname}-${pkgver}/fs/apfs"
+  install -Ddm755 "${pkgdir}/usr/src/${pkgname}-${pkgver}/"
+  cp -dr --no-preserve=ownership linux-apfs-oot/* "${pkgdir}/usr/src/${pkgname}-${pkgver}/"
 }
