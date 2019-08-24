@@ -4,7 +4,7 @@
 _pkgname=baidunetdisk
 pkgname=baidunetdisk-bin
 pkgver=2.0.2
-pkgrel=1
+pkgrel=2
 pkgdesc="Baidu Net Disk is a cloud storage client (Linux Version)."
 arch=('x86_64')
 depends=('libxss' 'gtk3' 'nss')
@@ -22,7 +22,7 @@ source=("LICENSE.html::https://pan.baidu.com/disk/duty/index.html"
 
 source_x86_64=("${pkgname}-${pkgver}.deb::https://issuecdn.baidupcs.com/issue/netdisk/LinuxGuanjia/${pkgver}/${_pkgname}_linux_${pkgver}.deb")
 
-sha256sums=('17cb003654df74201befd7daa9c0ad79d4bde67fa00a5db01a3aa3f813a8ea65'
+sha256sums=('80f8835a1d742ac9aa05701dfc2566b1db07b626d70e0e463688c9b5e4736e1d'
             'd72eb6fa07abc0e7c2298fcecbe4a4e6849c63a6a31c39706e0dfea870e85aff'
             'c0035e038344a154421301b7855c274049ad432a5b06b52efc74831daa73e02e')
 sha256sums_x86_64=('24b825423d46724d9695677809821673af0a30731edb8393e578164710acc141')
