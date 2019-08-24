@@ -5,12 +5,12 @@
 
 pkgname=sysdig-lily
 pkgver=0.26.2
-pkgrel=3
+pkgrel=4
 pkgdesc="Open source system-level exploration and troubleshooting tool"
 arch=('x86_64')
 url="https://www.sysdig.com/"
 license=('GPL2' 'Apache' 'MIT')
-depends=('jsoncpp' 'luajit' 'curl' 'jq' 'libb64' 'intel-tbb' 'grpc' 'c-ares' 'linux-lily')
+depends=('jsoncpp' 'luajit' 'curl' 'jq' 'libb64' 'intel-tbb' 'grpc' 'c-ares' "linux-lily=4.19.67.arch1-1")
 makedepends=('cmake' 'pandoc' 'linux-lily-headers' 'llvm' 'clang')
 _extramodules=extramodules-lily
 source=("https://github.com/draios/sysdig/archive/$pkgver/sysdig-$pkgver.tar.gz"
