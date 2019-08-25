@@ -1,7 +1,7 @@
 # Maintainer: Maxime Gauduin <alucryd@archlinux.org>
 
 pkgname=rpcs3-avx2-git
-pkgver=0.0.6.r692.d48d424b1
+pkgver=0.0.6.r795.b70908c8f
 pkgrel=1
 pkgdesc='A Sony PlayStation 3 emulator (Require AVX2)'
 arch=('x86_64')
@@ -74,7 +74,7 @@ prepare() {
 build() {
   cd build
 
-  cmake ../rpcs3 \
+  CXXFLAGS+=' -march=native ' cmake ../rpcs3 \
     -DCMAKE_BUILD_TYPE='Release' \
     -DCMAKE_INSTALL_PREFIX='/usr' \
     -DCMAKE_SKIP_RPATH='ON' \

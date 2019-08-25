@@ -1,8 +1,8 @@
 # Maintainer: Metal A-wing <1 at 233 dot email>
 
 pkgname=deno
-pkgver=0.15.0
-pkgrel=2
+pkgver=0.16.0
+pkgrel=1
 pkgdesc="A secure JavaScript/TypeScript runtime built with V8, Rust, and Tokio"
 arch=('i686' 'x86_64')
 url="https://github.com/denoland/deno"

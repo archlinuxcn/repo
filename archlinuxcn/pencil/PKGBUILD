@@ -1,7 +1,7 @@
 # Maintainer: Pavan Rikhi <pavan.rikhi@gmail.com>
 pkgname=pencil
 pkgver=3.0.4
-pkgrel=2
+pkgrel=3
 pkgdesc="Sketching and GUI prototyping/wireframing tool"
 arch=('any')
 license=('GPL2')
@@ -24,6 +24,13 @@ package() {
         TMP_HOME="$(pwd)/tmp-home"
         mkdir -p "$TMP_HOME/.config"
     fi
+
+    # Temporary fix for segfaults until next Pencil release(3.0.5+)
+    HOME="$TMP_HOME" npm i -s electron@"==1.8"
+    cd app/
+    HOME="$TMP_HOME" npm i -s unzipper
+    sed -i 's/unzip2/unzipper/' app.js
+    cd ..
 
     HOME="$TMP_HOME" npm install --unsafe-perm
     HOME="$TMP_HOME" node_modules/.bin/build --linux dir

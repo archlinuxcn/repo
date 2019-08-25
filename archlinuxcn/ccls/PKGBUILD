@@ -1,8 +1,8 @@
 # Maintainer: Fangrui Song <i at maskray.me>
 
 pkgname=ccls
-pkgver=0.20190314
-pkgrel=2
+pkgver=0.20190823
+pkgrel=1
 pkgdesc='C/C++/ObjC language server supporting cross references, hierarchies, completion and semantic highlighting'
 arch=('x86_64')
 url='https://github.com/MaskRay/ccls'
@@ -11,7 +11,7 @@ depends=('clang' 'llvm-libs' 'rapidjson')
 makedepends=("cmake" "git" "llvm")
 conflicts=('ccls-git')
 source=("https://github.com/MaskRay/$pkgname/archive/$pkgver.tar.gz")
-sha256sums=('SKIP')
+sha256sums=('0176a10b2fa567862e5a93ac16a5bb92940f7bab7c3759b35be1a256cd2f1a66')
 
 prepare() {
   cd $pkgname-$pkgver

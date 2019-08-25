@@ -1,45 +1,33 @@
+# Maintainer: László Várady <laszlo.varady93@gmail.com>
+
 pkgname=rocksdb
-pkgver=5.17.2
+pkgver=6.2.2
 pkgrel=1
 pkgdesc='Embedded key-value store for fast storage'
-arch=(i686 x86_64 armv7h)
-url='http://rocksdb.org'
-license=(Apache leveldb)
-depends=(
-	'bzip2'
-	'gcc-libs'
-	'lz4'
-	'snappy'
-	'zlib'
-	)
-makedepends=('gcc' 'make')
-checkdepends=(python2)
-source=(https://github.com/facebook/rocksdb/archive/v$pkgver.zip)
-sha256sums=('269c266c1fc12d1e73682ed1a05296588e8482d188e6d56408a29de447ce87d7')
-
-prepare() {
-  cd rocksdb-$pkgver
-  sed -e 's/\bpython\b/python2/' -i Makefile
-  if [ "$CARCH"  == "armv6h" ]; then
-    sed -e 's/-momit-leaf-frame-pointer//' -i Makefile
-  fi
-}
+arch=('x86_64')
+url="https://rocksdb.org/"
+license=('GPL2' 'Apache')
+depends=('bzip2' 'gcc-libs' 'gflags' 'jemalloc' 'lz4' 'snappy' 'zlib' 'zstd')
+makedepends=('cmake')
+#checkdepends=('python2')
+conflicts=('rocksdb-lite' 'rocksdb-release')
+source=("https://github.com/facebook/rocksdb/archive/v$pkgver.tar.gz")
+sha256sums=('3e7365cb2a35982e95e5e5dd0b3352dc78573193dafca02788572318c38483fb')
 
 build() {
-  cd rocksdb-$pkgver
-  make shared_lib -j4
+  cd "$pkgname-$pkgver"
+  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib \
+        -DWITH_BZ2=ON -DWITH_LZ4=ON -DWITH_SNAPPY=ON -DWITH_ZLIB=ON -DWITH_ZSTD=ON \
+        -DUSE_RTTI=ON -DWITH_JEMALLOC=ON -DWITH_TESTS=OFF -DFAIL_ON_WARNINGS=OFF -S . -B build
+  cmake --build build
 }
 
-#check() {
-#  cd rocksdb-rocksdb-$pkgver
-#  make check
-#}
+check() {
+  cd "$pkgname-$pkgver"
+  # cmake --build build --target test
+}
 
 package() {
-  cd rocksdb-$pkgver
-  install -d "$pkgdir"/usr/include
-  cp -r include/rocksdb "$pkgdir"/usr/include
-  install -m755 -D librocksdb.so "$pkgdir"/usr/lib/librocksdb.so
-  install -D -m644 LICENSE.Apache "$pkgdir/usr/share/licenses/$pkgname/LICENSE.Apache"
-  install -D -m644 LICENSE.leveldb "$pkgdir/usr/share/licenses/$pkgname/LICENSE.leveldb"
+  cd "$pkgname-$pkgver"
+  cmake --build build --target install -- DESTDIR="$pkgdir/"
 }

@@ -1,13 +1,14 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
 # Contributor: Timo Schmiade <the_isz@gmx.de>
 pkgname=gitstats-git
 pkgver=294.55c5c28
 pkgrel=1
 pkgdesc="A statistics generator for git repositories."
 arch=("any")
-url="http://gitstats.sourceforge.net"
+url="https://github.com/ari3s/gitstats/tree/futurized_gitstats"
 license=('GPL3')
-depends=('git' 'python2' 'gnuplot')
-source=("git+https://github.com/hoxu/gitstats.git")
+depends=('git' 'python' 'gnuplot')
+source=("git+https://github.com/ari3s/gitstats.git#branch=futurized_gitstats")
 md5sums=("SKIP")
 
 pkgver() {

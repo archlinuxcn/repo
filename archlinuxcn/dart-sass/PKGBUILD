@@ -1,0 +1,33 @@
+# Maintainer: Thayne McCombs <astrothayne@gmail.com>
+# Contributor: Ariel AxionL <i at axionl dot me>
+
+pkgname=dart-sass
+pkgver=1.22.10
+pkgrel=3
+pkgdesc="Sass makes CSS fun again (canonical implementation)"
+arch=('any')
+url="https://github.com/sass/dart-sass"
+license=('MIT')
+depends=('dart' 'bash')
+provides=('sass')
+conflicts=('ruby-sass')
+source=("${pkgname}-${pkgver}::https://github.com/sass/$pkgname/archive/$pkgver.tar.gz" "sass.sh")
+sha256sums=('d24cde281e73c01a2d6104ce64df3e1ecd8595ef0f0b9f9927baaa69c97b2bfd'
+            '7b98e639590b3245120693a8a0fcb160de7e91224550073bf1911d131c5ff273')
+
+build() {
+  cd "${pkgname}-${pkgver}"
+  pub get
+  # Create snapshot
+  # This doesn't use the grinder script so it is compatible with dart 2
+  dart --snapshot=sass.snapshot --snapshot-kind=app-jit bin/sass.dart tool/app-snapshot-input.scss > /dev/null
+}
+
+package() {
+  install -Dm755 sass.sh "${pkgdir}/usr/bin/sass"
+  cd "${pkgname}-${pkgver}"
+  install -Dm644 sass.snapshot "${pkgdir}/usr/lib/sass/app.snapshot"
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+
+# vim:set ts=4 sw=4 et:

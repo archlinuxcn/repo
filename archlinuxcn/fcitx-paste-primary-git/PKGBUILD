@@ -2,7 +2,7 @@
 
 pkgname=fcitx-paste-primary-git
 _gitname=fcitx-paste-primary
-pkgver=0.10.3380efb
+pkgver=0.11.ca5e4ca
 pkgrel=1
 pkgdesc="Paste-primary module for fcitx, paste primary selection with keyboard shortcut."
 arch=('i686' 'x86_64')

@@ -1,7 +1,7 @@
 # Maintainer: Rhys Kenwell <redrield+aur@gmail.com>
 
 pkgname=heroku-cli
-pkgver=7.26.2
+pkgver=7.29.0
 _builddir=cli-${pkgver}
 pkgrel=1
 pkgdesc="a tool for creating and managing Heroku apps from the command line"
@@ -13,7 +13,7 @@ makedepends=('npm')
 optdepends=('git: Deploying to Heroku')
 conflicts=('heroku-client-standalone' 'heroku-toolbelt' 'ruby-heroku')
 source=("https://registry.npmjs.org/heroku/-/heroku-$pkgver.tgz")
-sha256sums=('27c8b9d783363e68bf8e9697c1aee9dd3a094f7c9c38a1512b7990a306c9ae8d')
+sha256sums=('ecbe42e69375070ca029bef55e2a8b6d7275c321d6c881e1d3a8ccd0a87ccbf4')
 
 noextract=("heroku-$pkgver.tgz")
 options=('!strip')
@@ -26,3 +26,4 @@ package() {
   # npm makes some directories world writable
   find "$pkgdir/usr" -type d -exec chmod 755 '{}' +
 }
+

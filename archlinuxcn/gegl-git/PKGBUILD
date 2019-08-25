@@ -5,14 +5,14 @@
 
 pkgname=gegl-git
 _pkgname=gegl
-pkgver=0.4.16.258
+pkgver=0.4.16.280
 pkgrel=1
 pkgdesc="Graph based image processing framework"
 arch=('i686' 'x86_64')
 url="http://www.gegl.org"
 license=('GPL3' 'LGPL3')
 depends=('babl-git' 'libspiro' 'poppler-glib' 'json-glib' 'libgexiv2' 'libraw' 'openexr' 'librsvg' 'libtiff' 'luajit' 'jasper' 'lensfun' 'suitesparse' 'sdl')
-makedepends=('intltool' 'ruby' 'mesa' 'glu' 'ffmpeg' 'exiv2' 'enscript' 'asciidoc' 'vala' 'gobject-introspection' 'git')
+makedepends=('intltool' 'ruby' 'mesa' 'glu' 'ffmpeg' 'exiv2' 'enscript' 'asciidoc' 'vala' 'gobject-introspection' 'meson' 'git')
 optdepends=('ffmpeg: ffmpeg plugin')
 provides=("gegl=${pkgver}")
 conflicts=('gegl>=0.3.0')
@@ -26,30 +26,21 @@ pkgver() {
 }
 
 build() {
-  #mkdir path
-  #ln -s /usr/bin/python2 path/python
-
-  #export PATH="$srcdir/path:$PATH" PYTHON=/usr/bin/python2
-  cd ${_pkgname}
-  NOCONFIGURE=1 ./autogen.sh
-  ./configure  --prefix=/usr  --with-sdl --with-librsvg \
-    --with-libavformat --with-jasper \
-    --enable-workshop
-
-  # https://bugzilla.gnome.org/show_bug.cgi?id=655517
-  sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
-
-  make
+  meson "${srcdir}/${_pkgname}"\
+          "${srcdir}/build" \
+        --prefix=/usr \
+        -Dbuildtype=release \
+        -Ddocs=true \
+        -Dworkshop=true
+  ninja -C "${srcdir}/build"
 }
 
 check() {
-  #export PATH="$srcdir/path:$PATH" PYTHON=/usr/bin/python2
   cd ${_pkgname}
-  make -k check || :
+  meson test -C "${srcdir}/build"
 }
 
 package() {
-  #export PATH="$srcdir/path:$PATH" PYTHON=/usr/bin/python2
   cd ${_pkgname}
-  make DESTDIR="${pkgdir}" install
+  DESTDIR="${pkgdir}" ninja -C "${srcdir}/build" install
 }
