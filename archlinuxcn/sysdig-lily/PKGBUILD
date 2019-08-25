@@ -4,8 +4,8 @@
 # Contribuitor: Christian Babeux <christian.babeux@0x80.ca>
 
 pkgname=sysdig-lily
-pkgver=0.26.2
-pkgrel=4
+pkgver=0.26.4
+pkgrel=1
 pkgdesc="Open source system-level exploration and troubleshooting tool"
 arch=('x86_64')
 url="https://www.sysdig.com/"
@@ -16,7 +16,7 @@ _extramodules=extramodules-lily
 source=("https://github.com/draios/sysdig/archive/$pkgver/sysdig-$pkgver.tar.gz"
         "bashcomp-location.patch"
         "glibc.patch")
-sha256sums=('6f4f5b7b187c3774b6c374c1728b3f905ac18a945bde15151dcfb24c79abb441'
+sha256sums=('7c15ee25abf6cca850eaf6f4e42e25a1d9ad2b775ae794028f94afbd1ce9d271'
             'aaee8a0ff414a24c5d5a479229324be1667bc5eb70702838f5d617fd986f947b'
             '9d9ee715500cb5c3709cf6a77e95421edaaae5f15dbb1c7c8ad2147cc9637939')
 conflicts=(sysdig)
