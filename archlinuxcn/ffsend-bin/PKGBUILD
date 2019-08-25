@@ -6,15 +6,15 @@
 # - Mirror: https://github.com/timvisee/ffsend/blob/master/pkg/aur/ffsend-bin/PKGBUILD
 
 pkgname=ffsend-bin
-pkgver=0.2.49
+pkgver=0.2.50
 pkgrel=1
 pkgdesc="Easily and securely share files from the command line. A Firefox Send client."
 url="https://gitlab.com/timvisee/ffsend"
 license=('GPL3')
-source=("ffsend-v$pkgver::https://github.com/timvisee/ffsend/releases/download/v0.2.49/ffsend-v0.2.49-linux-x64-static"
-        "ffsend-v$pkgver.bash::https://gitlab.com/timvisee/ffsend/raw/v0.2.49/contrib/completions/ffsend.bash"
-        "ffsend-v$pkgver.fish::https://gitlab.com/timvisee/ffsend/raw/v0.2.49/contrib/completions/ffsend.fish") # automatically set in CI, see: /.gitlab-ci.yml
-sha256sums=('9ea9aeb48685971c5322e46cd60adfb69e99c5422654a5394ae18e6354405b90' 'bd0f63d4acaed87da9bc80725ec2242c273463cf64ac56c858c46164a6a8a3ab' '15d9a3e79265615a73af4de0e20dd662ad96470aac7fc5dfeff7d26d90bdc667')
+source=("ffsend-v$pkgver::https://github.com/timvisee/ffsend/releases/download/v0.2.50/ffsend-v0.2.50-linux-x64-static"
+        "ffsend-v$pkgver.bash::https://gitlab.com/timvisee/ffsend/raw/v0.2.50/contrib/completions/ffsend.bash"
+        "ffsend-v$pkgver.fish::https://gitlab.com/timvisee/ffsend/raw/v0.2.50/contrib/completions/ffsend.fish") # automatically set in CI, see: /.gitlab-ci.yml
+sha256sums=('cc9604991a6502d57d96a0e5616cff83f2ee3f92397720e2b9e88be6a8f1d0c5' 'bd0f63d4acaed87da9bc80725ec2242c273463cf64ac56c858c46164a6a8a3ab' '15d9a3e79265615a73af4de0e20dd662ad96470aac7fc5dfeff7d26d90bdc667')
 arch=('x86_64')
 provides=('ffsend')
 conflicts=('ffsend')
