@@ -3,39 +3,48 @@
 # Contributor: Dave Reisner <d@falconindy.com>
 
 pkgname=libgit2-julia
-pkgver=0.27.8
+pkgver=0.28.3
 pkgrel=1
 epoch=1
 pkgdesc='A linkable library for Git'
 arch=(i686 x86_64 armv7h aarch64)
 url='https://libgit2.github.com/'
-depends=(zlib openssl libssh2 curl http-parser)
+depends=('glibc' 'http-parser' 'libssh2' 'openssl' 'zlib')
 makedepends=(cmake python)
-provides=("libgit2=$epoch:$pkgver")
+provides=('libgit2.so' "libgit2=$epoch:$pkgver")
 conflicts=(libgit2)
 license=('GPL2')
-source=("$pkgname-$pkgver.tar.gz::https://github.com/libgit2/libgit2/archive/v${pkgver}.tar.gz"
+source=("libgit2-$pkgver.tar.gz::https://github.com/libgit2/libgit2/archive/v${pkgver}.tar.gz"
+        "libgit2-0.28.2-online-tests.patch::https://github.com/libgit2/libgit2/pull/5094.patch"
         libgit2-agent-nonfatal.patch)
-sha256sums=('8313873d49dc01e8b880ec334d7430ae67496a89aaa8c6e7bbd3affb47a00c76'
+sha256sums=('ee5344730fe11ce7c86646e19c2d257757be293f5a567548d398fb3af8b8e53b'
+            '0d1d5ceaae10a9dc17894b8f13e957b463e5f5ccde13dc57f19dbc80f5d89de8'
             'a60e169812b802e3fcb4ee7501786346eb87db9ffa3c8ae3311de47ce5a15f10')
 options=(!strip)
 
 prepare() {
   cd "libgit2-$pkgver"
+  mkdir -p build
 
   patch -p1 < ../libgit2-agent-nonfatal.patch
+  # fix online tests: https://github.com/libgit2/libgit2/pull/5094
+  patch -Np1 -i "../libgit2-0.28.2-online-tests.patch"
 }
-
 build() {
-  cd "libgit2-$pkgver"
+  cd "libgit2-$pkgver/build"
   export LANG=en_US.UTF-8
   export CFLAGS+=' -g'
   export CXXFLAGS+=' -g'
-  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DTHREADSAFE=ON
+  cmake -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DTHREADSAFE=ON \
+        ..
   make
 }
 
 package() {
-  cd "libgit2-$pkgver"
+  cd "libgit2-$pkgver/build"
   make DESTDIR="$pkgdir" install
+  install -vDm 644 ../{AUTHORS,README.md} \
+          -t "${pkgdir}/usr/share/doc/${pkgname}"
 }
