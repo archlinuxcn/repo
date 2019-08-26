@@ -1,5 +1,5 @@
 # Maintainer: Yichao Yu <yyc1992@gmail.com>
-# Contributor: Florian Pritz <bluewind@xinu.at>
+# Contributor: Florian Pritz
 # Contributor: Jonas Heinrich <onny@project-insanity.org>
 # Contributor: Jordi De Groof <jordi (dot) degroof (at) gmail (dot) com>
 # Contributor: mickele
@@ -8,42 +8,29 @@
 # Contributor: gborzi
 
 pkgname=freecad-oce
-_pkgver=0.17
-_count=13544
-_commit=e1db7bff8ff36439373eb9a426567d8afe289c4d
+_pkgver=0.18
+_count=16131
+_commit=3129ae4296e40ed20e7b3d460b86e6969acbe1c3
 pkgver=$_pkgver.$_count
 pkgrel=9
 pkgdesc='A general purpose 3D CAD modeler'
 arch=('x86_64')
 url='https://www.freecadweb.org/'
 license=('LGPL')
-depends=('curl' 'oce' 'xerces-c' 'libspnav' 'glu' 'netcdf'
+depends=('boost-libs' 'curl' 'oce' 'xerces-c' 'libspnav' 'glu' 'netcdf'
          'shared-mime-info' 'hicolor-icon-theme' 'jsoncpp' 'qt5-base' 'qt5-declarative' 'qt5-svg' 'qt5-tools'
-         'qt5-webkit' 'med' 'python2-pivy' 'python2-pyside2' 'python2-matplotlib' 'pyside2-tools')
+         'qt5-x11extras' 'qt5-webkit' 'med' 'python-pivy' 'python-pyside2' 'python-matplotlib' 'pyside2-tools')
 makedepends=('boost' 'eigen' 'gcc-fortran' 'swig' 'xerces-c' 'desktop-file-utils' 'git'
-             'cmake' 'coin>=3.1.3-9' 'python2-shiboken2' 'pyside2' 'shiboken2' vtk)
-optdepends=('python2-matplotlib' 'python2-pyqt5' 'graphviz' 'openscad')
+             'cmake' 'coin>=4.0.0a' 'python-shiboken2' 'pyside2' 'shiboken2' vtk)
+optdepends=('python-matplotlib' 'graphviz' 'openscad')
 options=(!libtool !staticlibs debug strip)
-optdepends=('python2-matplotlib' 'python2-pyqt5' 'graphviz' 'openscad')
+provides=("freecad=$pkgver")
+conflicts=(freecad)
 source=("git+https://github.com/FreeCAD/FreeCAD.git#commit=$_commit"
-        "freecad.desktop" "freecad.xml"
-        'gcc8.patch' 'smesh-pthread.patch' 'qt5.11.patch' 'boost1.69.patch')
+        "freecad.desktop" "freecad.xml")
 sha256sums=('SKIP'
             '617968d7bbd1da71bdedaed1b66c5d6eaf24e0fb34678b93f5d925d370c66296'
-            '248918de7d3c2145b5cc4fbbc9e224d22f4a6ca7ead2680e8c3a32e91772482a'
-            '618bb85c4f3a4eb0e329d1fc30391b777c9b0cffe97aa1e96d45f58b18424311'
-            '170c90ee6ef64cf3c8e6a35ca94bb1187d346707f7e0779022e614563c6b74f6'
-            'a639c9d51f8443e4d2270fe60d5ac3ac62c7c64c532620108514840f8e8704bc'
-            '53d5ec0b5337010671ed291dd007dd0f73db61b7313c1edbca105e5bc4921021')
-
-prepare() {
-  cd "${srcdir}/FreeCAD"
-
-  patch -Np1 -i ../gcc8.patch
-  patch -Np1 -i ../smesh-pthread.patch
-  patch -Np1 -i ../qt5.11.patch
-  patch -Np1 -i ../boost1.69.patch
-}
+            '1d98fa4e62f352966eb357c93f54b1f0bf562931e8323bf70a83b5e221a5fb14')
 
 build() {
   cd "${srcdir}/FreeCAD"
@@ -51,36 +38,34 @@ build() {
   cd build
 
   cmake .. -Wno-dev \
-    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-    -DCMAKE_INSTALL_PREFIX=/usr/lib/freecad \
-    -DCMAKE_INSTALL_LIBDIR=/usr/lib/freecad \
-    -DCMAKE_INSTALL_DOCDIR=/usr/share/freecad/doc \
-    -DCMAKE_INSTALL_DATADIR=/usr/share/freecad \
-    -DCMAKE_INSTALL_INCLUDEDIR=/usr/include \
-    -DOCC_INCLUDE_DIR=/usr/include/oce/ \
-    -DFREECAD_USE_OCC_VARIANT="Official Version" \
-    -DFREECAD_USE_EXTERNAL_PIVY=ON \
-    -DBUILD_QT5=ON \
-    -DBUILD_QT5_WEBKIT=OFF \
-    -DPYTHON_EXECUTABLE=/usr/bin/python2 \
-    -DBUILD_START=OFF \
-    -DBUILD_WEB=OFF \
-    -DOCE_DIR=/usr/lib/oce-0.18-dev/
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+        -DCMAKE_INSTALL_PREFIX=/usr/lib/freecad \
+        -DCMAKE_INSTALL_LIBDIR=/usr/lib/freecad \
+        -DCMAKE_INSTALL_DOCDIR=/usr/share/freecad/doc \
+        -DCMAKE_INSTALL_DATADIR=/usr/share/freecad \
+        -DCMAKE_INSTALL_INCLUDEDIR=/usr/include \
+        -DOCC_INCLUDE_DIR=/usr/include/oce/ \
+        -DOCE_DIR=/usr/lib/oce-0.18-dev/ \
+        -DFREECAD_USE_OCC_VARIANT="Official Version" \
+        -DFREECAD_USE_EXTERNAL_PIVY=ON \
+        -DFREECAD_USE_QT_FILEDIALOG=ON \
+        -DBUILD_QT5=ON \
+        -DPYTHON_EXECUTABLE=/usr/bin/python
   make
 }
 
 package_freecad-oce() {
   cd FreeCAD/build
-  provides=('freecad')
-  conflicts=('freecad')
 
   # Install main program
   make DESTDIR="${pkgdir}" install
 
   # Symlink to /usr/bin
-  mkdir -p "${pkgdir}/usr/bin"
-  ln -sf "../lib/freecad/bin/FreeCAD" "${pkgdir}/usr/bin/freecad"
-  ln -sf "../lib/freecad/bin/FreeCADCmd" "${pkgdir}/usr/bin/freecadcmd"
+  install -dm755 "${pkgdir}/usr/bin"
+  ln -srf "${pkgdir}/usr/lib/freecad/bin/FreeCAD" "${pkgdir}/usr/bin/freecad"
+  ln -srf "${pkgdir}/usr/lib/freecad/bin/FreeCAD" "${pkgdir}/usr/bin/FreeCAD"
+  ln -srf "${pkgdir}/usr/lib/freecad/bin/FreeCADCmd" "${pkgdir}/usr/bin/freecadcmd"
+  ln -srf "${pkgdir}/usr/lib/freecad/bin/FreeCADCmd" "${pkgdir}/usr/bin/FreeCADCmd"
 
   # Install pixmaps and desktop shortcut
   desktop-file-install \
