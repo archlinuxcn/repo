@@ -1,9 +1,10 @@
-# Maintainer: Luke Yue <lukedyue@gmail.com>
+# Maintainer: Ariel AxionL <i@axionl.me>
+# Contributor: Luke Yue <lukedyue@gmail.com>
 
 pkgname=clash
 pkgver=0.15.0
-pkgrel=1
-pkgdesc="A rule based proxy in Go."
+pkgrel=2
+pkgdesc="A rule based proxy in Go"
 arch=('x86_64')
 url="https://github.com/Dreamacro/clash"
 license=('MIT')
@@ -14,7 +15,7 @@ depends=('glibc')
 
 source=("clash@.service"
         "clash_user.service"
-        "https://codeload.github.com/Dreamacro/clash/tar.gz/v${pkgver}"
+        "${pkgname}-${pkgver}.tar.gz::https://github.com/Dreamacro/clash/archive/v${pkgver}.tar.gz"
         "https://raw.githubusercontent.com/Dreamacro/clash/master/LICENSE")
 
 sha512sums=('e9e215e0a06d0d1072467342dd72e777725b94634714c5bd5fdee31f48897d9b8ab7e83830d836533d6862fa6ebfda56dbf138edd873140de61d8ccdf2a54572'
@@ -22,18 +23,10 @@ sha512sums=('e9e215e0a06d0d1072467342dd72e777725b94634714c5bd5fdee31f48897d9b8ab
             '217dd66820dbbce235672c89cf8ea6b37b5034f44f20c812bc8e6137889e14e05f344631e10f07acd2eb74a5223d16ce2b467c1790f31619640de16a39bea37f'
             '46478b083104014b881ad546b89cfb16f040588f38e8c04ca664078061ba0e0653a394365d128410a9646f9159c9d9c7644a3ea42b22e4a4f240dfd6bea666c5')
 
-prepare() {
-    cd ${pkgname}-${pkgver}
-    mkdir -p .gopath/src/github.com/Dreamacro/
-    ln -sf ${PWD} .gopath/src/github.com/Dreamacro/clash
-    export GOPATH="${PWD}/.gopath"
-
-    go mod download
-}
-
 build() {
-    cd "${srcdir}/${pkgname}-${pkgver}"
-    go build -o clash
+    cd "${pkgname}-${pkgver}"
+    _build_time="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+    CGO_ENABLED=0 go build -ldflags "-X github.com/Dreamacro/clash/constant.Version=${pkgver} -X github.com/Dreamacro/clash/constant.BuildTime=${_build_time} -w -s"
 }
 
 package() {
@@ -43,4 +36,3 @@ package() {
     install -Dm644 "${srcdir}/clash@.service" "${pkgdir}/usr/lib/systemd/system/clash@.service"
     install -Dm644 "${srcdir}/clash_user.service" "${pkgdir}/usr/lib/systemd/user/clash.service"
 }
-
