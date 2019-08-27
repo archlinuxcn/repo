@@ -1,7 +1,7 @@
 # Maintainer: Oliver Jaksch <arch-aur@com-in.de>
 
 pkgname=anydesk
-pkgver=5.1.1
+pkgver=5.1.2
 pkgrel=1
 pkgdesc="'AnyDesk Free' is an All-In-One Software for Remote Support"
 arch=('i686' 'x86_64')
@@ -11,11 +11,11 @@ depends=('fakeroot' 'python-shiboken2' 'gtkglext' 'libglvnd' 'gtk2' 'libx11' 'gl
 optdepends=('libpulse')
 conflicts=('anydesk-test')
 
-source_i686=(http://download.anydesk.com/linux/${pkgname}_${pkgver}-1_i386.deb)
-source_x86_64=(http://download.anydesk.com/linux/${pkgname}_${pkgver}-1_amd64.deb)
+source_i686=(https://download.anydesk.com/linux/${pkgname}_${pkgver}-1_i386.deb)
+source_x86_64=(https://download.anydesk.com/linux/${pkgname}_${pkgver}-1_amd64.deb)
 
-sha256sums_i686=('527a94cfc4b0d80316591124182a9b353d6f3bb558cc2e92d915994a1b395694')
-sha256sums_x86_64=('7b90303a65c33f1aa9744626662da9f00c373df1b617603aa1a070a3252c540a')
+sha256sums_i686=('cc659d4b4f9a7bea33030aed973ac761f6b999440656e36fe773dc00bfaa217f')
+sha256sums_x86_64=('737e4d29070af2c0c965a613212772fa3c57d3224fee06bb36a5be815b6c2ed4')
 
 package() {
     cd "${pkgdir}"
