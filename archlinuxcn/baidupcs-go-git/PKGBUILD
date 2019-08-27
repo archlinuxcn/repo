@@ -1,7 +1,7 @@
 # Maintainer: axionl <axionl@aosc.io>
 pkgname=baidupcs-go-git
 pkgver=3.6.r2.gdf195c7
-pkgrel=1
+pkgrel=2
 pkgdesc="The terminal utility for Baidu Network Disk (Golang Version)."
 arch=('x86_64')
 depends=('glibc')
@@ -25,7 +25,7 @@ pkgver() {
 
 build() {
     cd "${pkgname}"
-    go build -v -work -x
+    CGO_ENABLED=0 go build -x -v -ldflags "-extldflags ${LDFLAGS} -X main.Version=${pkgver} -s -w"
 }
 
 package() {
