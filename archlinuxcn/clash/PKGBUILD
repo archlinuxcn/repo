@@ -3,7 +3,7 @@
 
 pkgname=clash
 pkgver=0.15.0
-pkgrel=3
+pkgrel=4
 pkgdesc="A rule based proxy in Go"
 arch=('x86_64')
 url="https://github.com/Dreamacro/clash"
@@ -26,7 +26,7 @@ sha512sums=('e9e215e0a06d0d1072467342dd72e777725b94634714c5bd5fdee31f48897d9b8ab
 build() {
     cd "${pkgname}-${pkgver}"
     _build_time="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-    CGO_ENABLED=0 go build -ldflags "-X github.com/Dreamacro/clash/constant.Version=${pkgver} -X github.com/Dreamacro/clash/constant.BuildTime=${_build_time} -w -s"
+    CGO_ENABLED=0 go build -ldflags "-extldflags ${LDFLAGS} -X github.com/Dreamacro/clash/constant.Version=${pkgver} -X github.com/Dreamacro/clash/constant.BuildTime=${_build_time} -w -s" -mod=readonly
 }
 
 package() {
