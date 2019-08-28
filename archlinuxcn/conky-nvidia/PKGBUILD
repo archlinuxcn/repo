@@ -7,7 +7,7 @@
 pkgname=conky-nvidia
 _pkgname=conky
 pkgver=1.11.5
-pkgrel=1
+pkgrel=2
 pkgdesc='Lightweight system monitor for X'
 provides=('conky')
 conflicts=('conky')
@@ -16,12 +16,16 @@ license=('BSD' 'GPL')
 arch=('i686' 'x86_64')
 makedepends=('cmake' 'docbook2x' 'docbook-xml' 'man-db' 'perl-xml-libxml' 'perl-xml-sax-expat' 'docbook-xsl' 'git')
 depends=('glib2' 'curl' 'lua' 'wireless_tools' 'libxml2' 'libxft' 'libxdamage' 'libxinerama' 'imlib2' 'libxnvctrl' 'libpulse')
-source=("https://github.com/brndnmtthws/conky/archive/v${pkgver}.tar.gz")
+source=("https://github.com/brndnmtthws/conky/archive/v${pkgver}.tar.gz"
+		"fix_negative_mem.patch")
 
-md5sums=('5eb277341701e9e8128e315998796e86')
+md5sums=('5eb277341701e9e8128e315998796e86'
+         '6c09a2497117852c97aa7df212b377f0')
 
 build() {
 	cd "${srcdir}/${_pkgname}-${pkgver}"
+
+	patch -p1 -i ../fix_negative_mem.patch
 
 	cmake \
 		-D CMAKE_BUILD_TYPE=Release \
