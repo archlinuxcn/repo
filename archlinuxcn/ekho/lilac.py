@@ -20,5 +20,8 @@
 
 from lilaclib import *
 
+def pre_build():
+    pass
+
 if __name__ == '__main__':
     single_main(build_prefix)
