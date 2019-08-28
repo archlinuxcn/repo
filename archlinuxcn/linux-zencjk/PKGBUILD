@@ -5,8 +5,7 @@
 
 #pkgbase=linux-zen           # Build stock -zen kernel
 pkgbase=linux-zencjk       # Build kernel with a different name
-_srcver=5.0.13-zen1
-_cjkver=5.0
+_srcver=5.2.9-zen1
 pkgver=${_srcver//-/.}
 pkgrel=1
 arch=(x86_64)
@@ -21,7 +20,7 @@ source=(
   60-linux.hook  # pacman hook for depmod
   90-linux.hook  # pacman hook for initramfs regeneration
   linux.preset   # standard config files for mkinitcpio ramdisk
-  "linux-cjktty-$_cjkver.patch::https://github.com/zen-kernel/zen-kernel/compare/$_cjkver/master...Gentoo-zh:$_cjkver-utf8.patch"  # CJK Patch
+  "aosc-univt.patch::https://raw.githubusercontent.com/AOSC-Dev/aosc-os-abbs/testing/extra-kernel/linux-kernel/autobuild/patches/8000-aosc-feature-univt.patch"  # CJK Patch
 )
 validpgpkeys=(
   'ABAF11C65A2970B130ABE3C479BE3E4300411886'  # Linus Torvalds
@@ -33,7 +32,7 @@ sha256sums=('SKIP'
             'ae2e95db94ef7176207c690224169594d49445e04249d2499e9d2fbc117a0b21'
             'c043f3033bb781e2688794a59f6d1f7ed49ef9b13eb77ff9a425df33a244a636'
             'ad6344badc91ad0630caacde83f7f9b97276f80d26a20619a87952be65492c65'
-            '152c747e1244ceab6f535f7d30291fc9b1d12a77162dfe6263c05c1a8a00a9d3')
+            '2b499db6a7ba4926619dfc854dbd947f3e9720b39b7c2f6902b7a7b70eb856f2')
 
 _kernelname=${pkgbase#linux}
 : ${_kernelname:=-ARCH}
