@@ -3,7 +3,7 @@
 # Contributor: robb_force <robb_force@holybuffalo.net>
 
 pkgname=raine-git
-pkgver=1384.3823ab5
+pkgver=1405.e3a3baf
 _pkgver=0.64.13
 pkgrel=1
 pkgdesc="A multiple arcade emulator focused on 680x0 machines like NeoCD and Neo Geo"
@@ -12,7 +12,7 @@ license=('custom')
 arch=('i686' 'x86_64')
 replaces=('neoraine')
 depends_i686=('sdl_ttf' 'sdl_image' 'sdl_sound' 'muparser' 'glu' 'sdl' 'libpng')
-depends_x86_64=('lib32-sdl_ttf' 'lib32-sdl_image' 'lib32-sdl_sound' 'lib32-muparser' 'lib32-glu' 'lib32-libpng' 'lib32-sdl')
+depends_x86_64=('lib32-sdl_ttf' 'lib32-curl' 'lib32-sdl_image' 'lib32-sdl_sound' 'lib32-muparser' 'lib32-glu' 'lib32-libpng' 'lib32-sdl')
 makedepends=('nasm' 'mesa' 'git')
 makedepends_x86_64=('gcc-multilib')
 optdepends=('raine-artwork: additional background graphics for some games'

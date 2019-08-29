@@ -6,7 +6,7 @@
 pkgname=gimp-git
 _pkgname=${pkgname%-git}
 epoch=1
-pkgver=44190.r583d965773.
+pkgver=44344.r33601f7a87.
 pkgrel=1
 pkgdesc="GNU Image Manipulation Program"
 arch=('i686' 'x86_64')
@@ -15,7 +15,7 @@ license=('GPL' 'LGPL')
 depends=('pygtk' 'lcms2>=2.2' 'libwmf>=0.2.8' 'icu' 'aalib' 'enchant'
          'libgexiv2' 'librsvg>=2.16.1' 'desktop-file-utils'
          'libexif>=0.6.15' 'libart-lgpl>=2.3.19' 'dbus-glib' 'gtk-doc'
-         'poppler-glib' 'poppler-data' 'openexr>=1.6.1' 'mypaint-brushes>=1.3.0'
+         'poppler-glib' 'poppler-data' 'openexr>=1.6.1' 'mypaint-brushes1>=1.3.0'
          'babl-git' 'gegl-git' 'cairo>=1.14' 'appstream-glib>=0.7.7' 'gjs')
 makedepends=('git' 'intltool' 'gutenprint>=5.0.0' 'intltool>=0.40.1'
              'alsa-lib>=1.0.0' 'libxslt' 'glib-networking'
@@ -34,8 +34,8 @@ optdepends=('gutenprint: for sophisticated printing only as gimp has built-in cu
             'iso-codes: Language support'
             'aalib: ASCII art support'
             'zlib: Compression routines')
-provides=('gimp')
-conflicts=('gimp')
+#provides=('gimp')
+#conflicts=('gimp')
 source=('git+https://gitlab.gnome.org/GNOME/gimp.git'
         'linux.gpl')
 sha512sums=('SKIP'
@@ -91,8 +91,17 @@ package() {
   make DESTDIR="$pkgdir" install
 
   install -Dm 644 "$srcdir"/linux.gpl "$pkgdir"/usr/share/gimp/2.0/palettes/Linux.gpl
+  
+  #fix gimp.desktop
+  mv ${pkgdir}/usr/share/applications/gimp.desktop ${pkgdir}/usr/share/applications/gimp-2.99.desktop
+  sed -i 's/Icon=gimp/&-2.99/' ${pkgdir}/usr/share/applications/gimp-2.99.desktop
 
-  ln -s gimptool-2.0 "$pkgdir"/usr/bin/gimptool
-  ln -sf gimptool-2.0.1.gz "$pkgdir"/usr/share/man/man1/gimptool.1.gz
+  #fix icons
+  for icon in $(find ${pkgdir}/usr/share/icons -type f); do
+    mv ${icon} ${icon%.png}-2.99.png
+  done
+
+  #fix metainfo
+  rm -rf ${pkgdir}/usr/share/metainfo
 }
 
