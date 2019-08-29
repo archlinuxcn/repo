@@ -4,7 +4,7 @@
 # Contributor: damir <damir.archlinux.org>
 
 pkgname=lib32-muparser
-pkgver=2.2.5
+pkgver=2.2.6.1
 pkgrel=1
 pkgdesc="Fast math parser library (32 bit)"
 arch=('x86_64')
@@ -13,7 +13,7 @@ license=('MIT')
 depends=('muparser' 'lib32-gcc-libs')
 makedepends=('gcc-multilib')
 source=(muparser-$pkgver.tar.gz::"https://github.com/beltoforion/muparser/archive/v$pkgver.tar.gz")
-sha256sums=('0666ef55da72c3e356ca85b6a0084d56b05dd740c3c21d26d372085aa2c6e708')
+sha256sums=('d2562853d972b6ddb07af47ce8a1cdeeb8bb3fa9e8da308746de391db67897b3')
 
 build() {
   cd muparser-$pkgver
