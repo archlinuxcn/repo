@@ -8,7 +8,7 @@
 # Contributor: r4sas
 
 pkgname=i2pd
-pkgver=2.27.0
+pkgver=2.28.0
 pkgrel=1
 pkgdesc="Simplified C++ implementation of I2P client"
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
@@ -88,4 +88,4 @@ package(){
     chmod -R o= $pkgdir/${_home_dest}
 }
 
-md5sums=('ebf5acc5b0ee17b0387aa6a0714be997')
+md5sums=('57a9075cf4aba254d1213c8a0b95847f')
