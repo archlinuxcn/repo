@@ -1,0 +1,25 @@
+From bbec2c8e4c8f306cf9fa2c5a140aabc9aa2b167a Mon Sep 17 00:00:00 2001
+From: Seb/The Removers <SebRmv@jagware.org>
+Date: Fri, 4 Nov 2016 10:35:31 +0100
+Subject: [PATCH] Fix Makefile: -qt=5 is not a valid option of recent qmake.
+
+---
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index 29f5f49..b4b8512 100644
+--- a/Makefile
++++ b/Makefile
+@@ -65,7 +65,7 @@ virtualjaguar: sources libs makefile-qt
+ 
+ makefile-qt: virtualjaguar.pro
+ 	@echo -e "\033[01;33m***\033[00;32m Creating Qt makefile...\033[00m"
+-	$(Q)$(CROSS)qmake -qt=5 $(QMAKE_EXTRA) virtualjaguar.pro -o makefile-qt
++	$(Q)$(CROSS)qmake-qt5 $(QMAKE_EXTRA) virtualjaguar.pro -o makefile-qt
+ 
+ libs: obj/libm68k.a obj/libjaguarcore.a
+ 	@echo -e "\033[01;33m***\033[00;32m Libraries successfully made.\033[00m"
+-- 
+2.10.2
+
