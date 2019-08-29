@@ -15,6 +15,7 @@ provides=('proxmark3' 'proxmark3-iceman')
 conflicts=('proxmark3' 'proxmark3-iceman')
 source=("$pkgbase::git+https://github.com/RfidResearchGroup/proxmark3.git")
 sha512sums=('SKIP')
+install=proxmark3-iceman-git.install
 
 pkgver() {
   cd $pkgbase
