@@ -1,7 +1,7 @@
 # Maintainer: Graeme Gott <graeme@gottcode.org>
 
 pkgname=gottet
-pkgver=1.1.7
+pkgver=1.1.8
 pkgrel=1
 pkgdesc='A tetris clone using the Qt GUI toolkit'
 arch=('i686' 'x86_64')
@@ -10,7 +10,7 @@ license=('GPL3')
 depends=('qt5-base')
 makedepends=('qt5-tools')
 source=("https://gottcode.org/$pkgname/$pkgname-$pkgver-src.tar.bz2")
-sha256sums=('7cc6c49cb191a264dccf18659b885ead921f01ad496dac9774c7ec49428c8a7d')
+sha256sums=('440e9570e2909e3029cced304774a15d83b4019925ac9a4cfb44c1f8a77592d8')
 
 build() {
   cd "$pkgname-$pkgver"
