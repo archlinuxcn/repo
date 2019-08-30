@@ -54,7 +54,7 @@ package() {
   mv "tools/simmodule/SIM011.BIN" "firmware/"
   mv "bootrom/obj/bootrom.elf" "firmware/"
   for file in $(ls firmware); do
-    install -Dm 755 "firmware/$file" "${pkgdir}/$PM3_SHARE_PATH/firmware/$file"
+    install -Dm 644 "firmware/$file" "${pkgdir}/$PM3_SHARE_PATH/firmware/$file"
   done
 
   # Install executables
