@@ -3,8 +3,8 @@
 
 pkgname=bear
 _pkgname=Bear
-pkgver=2.4.1
-pkgrel=2
+pkgver=2.4.2
+pkgrel=1
 pkgdesc="tool to generate compilation database for clang tooling"
 arch=('i686' 'x86_64')
 url="https://github.com/rizsotto/Bear"
@@ -15,7 +15,7 @@ options=('!ccache')
 conflicts=('bear')
 provides=('bear')
 source=($_pkgname-$pkgver.tar.gz::https://github.com/rizsotto/$_pkgname/archive/$pkgver.tar.gz)
-md5sums=('6d48dcb55fc031a444fafff0ab5c3339')
+md5sums=('1a9a8045ab707ba32a4c8094addbc3c0')
 
 prepare() {
 	cd "$srcdir/$_pkgname-$pkgver"
