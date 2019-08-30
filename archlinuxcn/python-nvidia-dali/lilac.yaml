@@ -1,0 +1,13 @@
+maintainers:
+  - github: hubutui
+
+build_prefix: extra-x86_64
+
+repo_depends:
+  - mxnet
+
+update_on:
+  - github: NVIDIA/DALI
+    use_max_tag: true
+    include_regex: ^v[^-]+
+  - alias: python
