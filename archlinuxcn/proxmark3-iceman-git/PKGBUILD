@@ -1,14 +1,13 @@
 # Maintainer: edward-p <edward At edward-p Dot xyz>
 
-
 pkgname=proxmark3-iceman-git
-pkgver=6912.4433f898
+pkgver=6913.e1e5687e
 pkgrel=1
 pkgdesc=pkgdesc='RRG / Iceman repo - Proxmark3 RDV4.0 and other Proxmark3 platforms.'
 arch=('x86_64')
 url='https://github.com/RfidResearchGroup/proxmark3'
 license=('GPL2')
-depends=('libusb' 'perl' 'qt5-base')
+depends=('libusb' 'perl')
 makedepends=('git' 'arm-none-eabi-gcc' 'arm-none-eabi-newlib')
 provides=('proxmark3' 'proxmark3-iceman')
 conflicts=('proxmark3' 'proxmark3-iceman')
