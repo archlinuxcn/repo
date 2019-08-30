@@ -3,7 +3,7 @@
 _install_name=proxmark3
 pkgbase=proxmark3-iceman-git
 pkgname=($pkgbase'-generic' $pkgbase'-rdv4')
-pkgver=6885.3408d75a
+pkgver=6896.40709f45
 pkgrel=1
 pkgdesc='A powerful general purpose RFID tool, the size of a deck of cards, designed to snoop, listen and emulate everything from Low Frequency (125kHz) to High Frequency (13.56MHz) tags. (iceman fork)'
 arch=('x86_64')
