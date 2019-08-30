@@ -1,4 +1,7 @@
 post_install() {
     echo ":: Add yourself to the uucp group to access the serial ports:"
     echo "   sudo usermod -a -G uucp <user>"
+    echo ":: Firmwares are installed at /usr/share/proxmark3/firmware"
+    echo "   \"fullimage-rdv4.elf\" build with \"make PLATFORM=PM3RDV4 PLATFORM_EXTRAS=BTADDON\" (edit the PKGBUILD if you need)"
+    echo "   \"fullimage-generic.elf\" build with \"make PLATFORM=PM3OTHER (edit the PKGBUILD if you need)\""
 }
