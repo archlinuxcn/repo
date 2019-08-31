@@ -7,7 +7,7 @@
 pkgname=conky-nvidia
 _pkgname=conky
 pkgver=1.11.5
-pkgrel=2
+pkgrel=3
 pkgdesc='Lightweight system monitor for X'
 provides=('conky')
 conflicts=('conky')
@@ -31,6 +31,7 @@ build() {
 		-D CMAKE_BUILD_TYPE=Release \
 		-D MAINTAINER_MODE=ON \
 		-D BUILD_CURL=ON \
+		-D BUILD_DOCS=ON \
 		-D BUILD_IMLIB2=ON \
 		-D BUILD_JOURNAL=ON \
 		-D BUILD_NVIDIA=ON \
