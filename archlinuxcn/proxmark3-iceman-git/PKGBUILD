@@ -1,7 +1,7 @@
 # Maintainer: edward-p <edward At edward-p Dot xyz>
 
 pkgname=proxmark3-iceman-git
-pkgver=6928.555c0743
+pkgver=6932.3c515e8e
 pkgrel=1
 pkgdesc=pkgdesc='RRG / Iceman repo - Proxmark3 RDV4.0 and other Proxmark3 platforms.'
 arch=('x86_64')
@@ -13,7 +13,7 @@ provides=('proxmark3' 'proxmark3-iceman')
 conflicts=('proxmark3' 'proxmark3-iceman')
 options=('!makeflags')
 replaces=($pkgname'-generic' $pkgname'-rdv4')
-source=("$pkgname::git+https://github.com/edward-p/proxmark3.git")
+source=("$pkgname::git+https://github.com/RfidResearchGroup/proxmark3.git")
 sha512sums=('SKIP')
 install=proxmark3-iceman-git.install
 
@@ -25,13 +25,48 @@ pkgver() {
 build() {
   cd "${srcdir}/${pkgname}"
 
-  mkdir build  
+  mkdir "build"
   
-  # Build firmware and recovery for pm3rdv4
-  make -j DESTDIR="build" PREFIX="/usr" PLATFORM="PM3RDV4" PLATFORM_EXTRAS="BTADDON" FWTAG="rdv4" fullimage/install recovery/install
+  STANDALONE_MODES=('LF_SAMYRUN' 'LF_ICERUN' 'LF_PROXBRUTE' 'LF_HIDBRUTE' 'HF_YOUNG' 'HF_MATTYRUN')
+  RDV4_STANDALONE_MODES=('HF_COLIN' 'HF_BOG')
+ 
+  # Build recovery (without PLATFORM_EXTRAS and STANDALONE)
+  make -j DESTDIR="build" PREFIX="/usr" \
+    PLATFORM="PM3RDV4" STANDALONE= FWTAG="rdv4" recovery/install
+  make -j DESTDIR="build" PREFIX="/usr" \
+    PLATFORM="PM3OTHER" STANDALONE= FWTAG="other" recovery/install
 
-  # Build firmware and recovery for generic pm3 and other targets
-  make -j DESTDIR="build" PREFIX="/usr" PLATFORM="PM3OTHER" FWTAG="other" install
+  # Build various firmwares
+  for standalone in ${STANDALONE_MODES[@]}; do
+
+      make -j DESTDIR="build" PREFIX="/usr" \
+        PLATFORM="PM3RDV4" PLATFORM_EXTRAS="BTADDON" STANDALONE="${standalone}" \
+        FWTAG="rdv4-"$(echo ${standalone} | tr '[:upper:]' '[:lower:]') fullimage/install
+
+      make -j DESTDIR="build" PREFIX="/usr" \
+        PLATFORM="PM3OTHER" STANDALONE="${standalone}" \
+        FWTAG="other-"$(echo ${standalone} | tr '[:upper:]' '[:lower:]') fullimage/install
+
+  done
+
+  for standalone in ${RDV4_STANDALONE_MODES[@]}; do
+
+      make -j DESTDIR="build" PREFIX="/usr" \
+        PLATFORM="PM3RDV4" PLATFORM_EXTRAS="BTADDON" STANDALONE="${standalone}" \
+        FWTAG="rdv4-"$(echo ${standalone} | tr '[:upper:]' '[:lower:]') fullimage/install
+
+  done
+
+  make clean
+  # Build other targets
+  make -j1 DESTDIR="build" PREFIX="/usr" \
+    PLATFORM="PM3RDV4" PLATFORM_EXTRAS="BTADDON" STANDALONE="${standalone}" \
+    FWTAG="rdv4-"$(echo ${standalone} | tr '[:upper:]' '[:lower:]') install
+
+  # Don't need this recovery
+  make -j DESTDIR="build" PREFIX="/usr" \
+    PLATFORM="PM3RDV4" PLATFORM_EXTRAS="BTADDON" STANDALONE="${standalone}" \
+    FWTAG="rdv4-"$(echo ${standalone} | tr '[:upper:]' '[:lower:]') recovery/uninstall
 
 }
 
