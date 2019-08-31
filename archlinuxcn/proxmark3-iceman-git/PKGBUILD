@@ -32,9 +32,9 @@ build() {
  
   # Build recovery (without PLATFORM_EXTRAS and STANDALONE)
   make -j DESTDIR="build" PREFIX="/usr" \
-    PLATFORM="PM3RDV4" STANDALONE= FWTAG="rdv4" recovery/install
+    PLATFORM="PM3RDV4" STANDALONE= FWTAG="rdv4-nostandalone" recovery/install
   make -j DESTDIR="build" PREFIX="/usr" \
-    PLATFORM="PM3OTHER" STANDALONE= FWTAG="other" recovery/install
+    PLATFORM="PM3OTHER" STANDALONE= FWTAG="other-nostandalone" recovery/install
 
   # Build various firmwares
   for standalone in ${STANDALONE_MODES[@]}; do
