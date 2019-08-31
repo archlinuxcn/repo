@@ -1,0 +1,38 @@
+post_install() {
+    cat << EOF
+
+Webcamoid requires at least one of the packages from each of the
+following groups to be installed for fully functioning.
+
+Capture backend:
+
+    - v4l-utils (RECOMMENDED)
+    - libuvc
+
+Codec frameworks:
+
+    - ffmpeg (RECOMMENDED)
+    - gst-plugins-*
+
+Audio playback:
+
+    - libpulse (RECOMMENDED)
+    - alsa-lib
+    - jack
+    - qt5-multimedia
+
+Virtual camera driver:
+
+    - akvcam-dkms-git (RECOMMENDED)
+    - v4l2loopback-dkms
+
+Virtual camera management:
+
+    - polkit (RECOMMENDED)
+    - kde-cli-tools
+    - gksu
+    - gtksu-git
+    - kdesudo
+
+EOF
+}
