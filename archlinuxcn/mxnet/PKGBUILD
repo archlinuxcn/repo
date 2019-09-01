@@ -4,7 +4,7 @@
 pkgbase=mxnet
 pkgname=('mxnet' 'mxnet-mkl' 'mxnet-cuda' 'mxnet-cuda-mkl')
 pkgver=1.5.0
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc="A flexible and efficient library for deep learning"
 arch=('x86_64')
@@ -18,7 +18,7 @@ depends=(
   'intel-tbb'
   'lapack'
   'openblas'
-  'opencv'
+#  'opencv'
   'protobuf'
   'python-graphviz'
   'python-numpy'
@@ -80,7 +80,7 @@ build() {
     -DUSE_GPERFTOOLS:BOOL=OFF
     -DUSE_JEMALLOC:BOOL=OFF
     -DUSE_LAPACK:BOOL=ON
-    -DUSE_OPENCV:BOOL=ON
+#    -DUSE_OPENCV:BOOL=ON
     -DUSE_S3:BOOL=ON
 )
 
