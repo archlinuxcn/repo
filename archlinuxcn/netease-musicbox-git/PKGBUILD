@@ -3,8 +3,8 @@
 
 pkgname=netease-musicbox-git
 _gitname=musicbox
-pkgver=r591.9d58201
-pkgrel=4
+pkgver=r592.d09e2f0
+pkgrel=1
 pkgdesc="A sexy command line interface musicbox for NetEase based on Python"
 arch=(any)
 url="https://github.com/darknessomi/musicbox"
