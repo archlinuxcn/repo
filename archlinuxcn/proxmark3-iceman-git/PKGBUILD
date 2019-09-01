@@ -36,6 +36,9 @@ build() {
   make -j DESTDIR="build" PREFIX="/usr" \
     PLATFORM="PM3OTHER" STANDALONE= FWTAG="other-nostandalone" recovery/install
 
+  # These firmware is not needed.
+  rm build/usr/share/proxmark3/firmware/{fullimage-rdv4-nostandalone.elf,fullimage-other-nostandalone.elf}
+
   # Build various firmwares
   for standalone in ${STANDALONE_MODES[@]}; do
 
@@ -57,16 +60,11 @@ build() {
 
   done
 
-  make clean
   # Build other targets
-  make -j1 DESTDIR="build" PREFIX="/usr" \
-    PLATFORM="PM3RDV4" PLATFORM_EXTRAS="BTADDON" STANDALONE="${standalone}" \
-    FWTAG="rdv4-"$(echo ${standalone} | tr '[:upper:]' '[:lower:]') install
+  make -j1 DESTDIR="build" PREFIX="/usr" install
 
-  # Don't need this recovery
-  make -j DESTDIR="build" PREFIX="/usr" \
-    PLATFORM="PM3RDV4" PLATFORM_EXTRAS="BTADDON" STANDALONE="${standalone}" \
-    FWTAG="rdv4-"$(echo ${standalone} | tr '[:upper:]' '[:lower:]') recovery/uninstall
+  # These recovery & firmware are not needed.
+  rm build/usr/share/proxmark3/firmware/{fullimage.elf,proxmark3_recovery.bin}
 
 }
 
