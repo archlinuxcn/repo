@@ -1,0 +1,104 @@
+# Maintainer: Heavysink <winstonwu91@gmail.com>
+# Maintainer: Maxime Gauduin <alucryd@archlinux.org>
+# Contributor: Themaister <maister@archlinux.us>
+# Contributor: lifning <definelightning@gmail.com>
+
+pkgname=retroarch-git
+pkgver=50804.e4fb5587f7
+pkgrel=1
+pkgdesc='Reference frontend for the libretro API (GIT VERSION SINCE 1.7.8 BROKEN IN OFFICIAL)'
+arch=(x86_64)
+url=http://www.libretro.com/
+license=(GPL)
+groups=(libretro)
+depends=(
+  alsa-lib
+  libass.so
+  libavcodec.so
+  libavformat.so
+  libavutil.so
+  libdrm
+  libfreetype.so
+  libgl
+  libpulse
+  libswresample.so
+  libswscale.so
+  libudev.so
+  libusb-1.0.so
+  mesa
+  openal
+  qt5-base
+  sdl2
+  v4l-utils
+  zlib
+)
+makedepends=(
+  git
+  libx11
+  libxcb
+  libxext
+  libxinerama
+  libxkbcommon
+  libxrandr
+  libxv
+  libxxf86vm
+  vulkan-icd-loader
+  wayland
+  wayland-protocols
+)
+optdepends=(
+  'libretro-overlays: Collection of overlays'
+  'libretro-shaders: Collection of shaders'
+  'libxinerama: X11 support'
+  'libxrandr: X11 support'
+  'python: retroarch-cg2glsl'
+  'retroarch-assets-xmb: XMB menu assets'
+  'wayland: Wayland support'
+)
+backup=(etc/retroarch.cfg)
+source=(
+  git+https://github.com/libretro/RetroArch.git
+  retroarch-config.patch
+)
+provides=(retroarch)
+conflicts=(retroarch)
+sha256sums=(
+  SKIP
+  7857cff30c45721b66666828ca9edbb2923817c6c64591be3f58fe019277103e
+)
+
+pkgver() {
+  cd RetroArch
+  printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd RetroArch
+
+  patch -Np1 -i ../retroarch-config.patch
+}
+
+build() {
+  cd RetroArch
+
+  ./configure \
+    --prefix='/usr' \
+    --disable-cg \
+    --disable-jack \
+    --disable-oss \
+    --disable-sdl
+  make
+  make -C libretro-common/audio/dsp_filters
+  make -C gfx/video_filters
+}
+
+package() {
+  cd RetroArch
+
+  make DESTDIR="${pkgdir}" install
+
+  install -Dm 644 libretro-common/audio/dsp_filters/*.{dsp,so} -t "${pkgdir}"/usr/lib/retroarch/filters/audio/
+  install -Dm 644 gfx/video_filters/*.{filt,so} -t "${pkgdir}"/usr/lib/retroarch/filters/video/
+}
+
+# vim: ts=2 sw=2 et:
