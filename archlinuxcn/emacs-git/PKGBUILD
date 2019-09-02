@@ -20,12 +20,14 @@
 # =================================================
 #
 ################################################################################
-CHECK=            # Run tests. May fail, this is developement after all.
+CHECK="YES"       # Run tests. May fail, this is developement after all.
 CLANG=            # Use clang.
-LTO=              # Enable link-time optimization. Not that experimental anymore.
-                  # Broken with GCC, works (?) with clang, so clang is hardwired.
+LTO="YES"         # Enable link-time optimization. Not that experimental anymore.
+                  # Seems fixed in GCC, so I've reenabled binutils support, please
+		  # report any bug, to make it use clang by default again.
 CLI=              # CLI only binary.
 NOTKIT=           # Use no toolkit widgets. Like B&W Twm (001d sk00l).
+LUCID=            # Use the lucid, a.k.a athena, toolkit. Like XEmacs, sorta.
                   #
                   # Read https://wiki.archlinux.org/index.php/X_resources
                   # https://en.wikipedia.org/wiki/X_resources
@@ -33,9 +35,7 @@ NOTKIT=           # Use no toolkit widgets. Like B&W Twm (001d sk00l).
                   # for some tips on using outline fonts with
                   # Xft, if you choose no toolkit or Lucid.
                   #
-LUCID=            # Use the lucid, a.k.a athena, toolkit. Like XEmacs, sorta.
 GTK2=             # GTK2 support. Why would you?
-GPM=              # Enable gpm support.
 M17N=             # Enable m17n international table input support.
                   # You are far better off using harfbuzz+freetype2
                   # But this gives independence if you need it.
@@ -49,35 +49,38 @@ XWIDGETS=         # Use GTK+ widgets pulled from webkit2gtk. Usable.
 DOCS_HTML=        # Generate and install html documentation.
 DOCS_PDF=         # Generate and install pdf documentation.
 MAGICK=           # ImageMagick 7 support. Deprecated (read the logs).
-                  # ImageMagick, like flash, is bug ridden pest that won't die; 
-                  # yet it is useful if you know what you are doing.
-                  # -->If you just *believe* you need it, you don't.<---
-NOGZ=             # Don't compress .el files.
+                  # ImageMagick, like flash, is a bug ridden pest that 
+		  # won't die;  yet it is useful if you know what you 
+		  #are doing.
+                  # -->>If you just *believe* you need it, you don't.<<--
+NOGZ="YES"        # Don't compress .el files.
 ################################################################################
 
 ################################################################################
 pkgname="emacs-git"
-pkgver=27.0.50.138295
+pkgver=27.0.50.138296
 pkgrel=1
 pkgdesc="GNU Emacs. Development."
 arch=('x86_64') # Arch Linux only. Derivative users are on their own.
 url="http://www.gnu.org/software/emacs/"
 license=('GPL3')
-depends=( 'alsa-lib' 'gnutls' 'libxml2' 'jansson' 'libotf' 'harfbuzz' )
+depends=( 'alsa-lib' 'gnutls' 'libxml2' 'jansson' 'libotf' 'harfbuzz' 'gpm' )
 makedepends=( 'git' )
+provides=('emacs' 'emacs-seq')
+conflicts=('emacs' 'emacs-seq')
+source=("emacs-git::git+https://github.com/emacs-mirror/emacs.git")
+# If Github access is blocked for reasons, use Savannah's servers instead.
+# Edit the config file of your local repo copy as well.
+#source=("emacs-git::git://git.sv.gnu.org/emacs.git")
+#source=("emacs-git::git+https://git.savannah.gnu.org/emacs.git")
+md5sums=('SKIP')
 ################################################################################
 
 ################################################################################
 
-#
-# FYI, LTO fails with gcc.
-#
 if [[ $LTO = "YES" ]]; then
-  CLANG="YES" ;
-fi
-
-if [[ $CLI = "YES" ]]; then
-  GPM="YES" ;
+  CFLAGS+=" -flto=jobserver -fuse-linker-plugin"
+  CXXFLAGS+=" -flto=jobserver -fuse-linker-plugin"
 fi
 
 if [[ $CLANG = "YES" ]]; then
@@ -98,10 +101,6 @@ elif [[ $GTK2 = "YES" ]]; then
   depends+=( 'gtk2' );
 else
   depends+=( 'gtk3' );
-fi
-
-if [[ $GPM = "YES" ]]; then
-  depends+=( 'gpm');
 fi
 
 if [[ $M17N = "YES" ]]; then
@@ -139,23 +138,14 @@ fi
 ################################################################################
 
 ################################################################################
-provides=('emacs' 'emacs-seq')
-conflicts=('emacs' 'emacs-seq')
-source=("emacs-git::git+https://github.com/emacs-mirror/emacs.git")
-# If Github access is blocked for reasons, use Savannah's servers instead.
-# Edit the config file of your local repo copy as well.
-#source=("emacs-git::git://git.sv.gnu.org/emacs.git")
-#source=("emacs-git::git+https://git.savannah.gnu.org/emacs.git")
-md5sums=('SKIP')
+pkgver() {
+  cd "$srcdir/emacs-git"
 
-  pkgver() {
-    cd "$srcdir/emacs-git"
-
-    printf "%s.%s" \
-      "$(grep AC_INIT configure.ac | \
-      sed -e 's/^.\+\ \([0-9]\+\.[0-9]\+\.[0-9]\+\?\).\+$/\1/')" \
-      "$(git rev-list --count HEAD)"
-  }
+  printf "%s.%s" \
+    "$(grep AC_INIT configure.ac | \
+    sed -e 's/^.\+\ \([0-9]\+\.[0-9]\+\.[0-9]\+\?\).\+$/\1/')" \
+    "$(git rev-list --count HEAD)"
+}
 
 # There is no need to run autogen.sh after first checkout.
 # Doing so, breaks incremental compilation.
@@ -163,6 +153,13 @@ prepare() {
   cd "$srcdir/emacs-git"
   [[ -x configure ]] || ( ./autogen.sh git && ./autogen.sh autoconf )
 }
+
+if [[ $CHECK = "YES" ]]; then
+check() {
+  cd "$srcdir/emacs-git"
+  make check
+}
+fi
 
 build() {
   cd "$srcdir/emacs-git"
@@ -210,10 +207,6 @@ elif [[ $GTK2 = "YES" ]]; then
   _conf+=( '--with-x-toolkit=gtk2' '--without-gsettings' '--without-xaw3d' );
 else
   _conf+=( '--with-x-toolkit=gtk3' '--without-xaw3d' );
-fi
-
-if [[ ! $GPM = "YES" ]]; then
-  _conf+=( '--without-gpm' );
 fi
 
 if [[ ! $M17N = "YES" ]]; then
@@ -272,9 +265,6 @@ fi
   fi
   if [[ $DOCS_PDF = "YES" ]]; then
     make pdf;
-  fi
-  if [[ $CHECK = "YES" ]]; then
-    make check;
   fi
 
 }
