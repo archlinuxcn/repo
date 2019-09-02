@@ -1,13 +1,13 @@
 # Maintainer: edward-p <edward At edward-p Dot xyz>
 
 pkgname=proxmark3-iceman-git
-pkgver=6949.27a0402a
+pkgver=6950.1cc027d4
 pkgrel=1
 pkgdesc=pkgdesc='RRG / Iceman repo - Proxmark3 RDV4.0 and other Proxmark3 platforms.'
 arch=('x86_64')
 url='https://github.com/RfidResearchGroup/proxmark3'
 license=('GPL2')
-depends=('libusb' 'perl')
+depends=('perl' 'python')
 makedepends=('git' 'arm-none-eabi-gcc' 'arm-none-eabi-newlib')
 provides=('proxmark3' 'proxmark3-iceman')
 conflicts=('proxmark3' 'proxmark3-iceman')
@@ -61,8 +61,8 @@ build() {
   done
 
   # Build other targets
+  make -j DESTDIR="build" PREFIX="/usr"
   make -j1 DESTDIR="build" PREFIX="/usr" install
-
   # These recovery & firmware are not needed.
   rm build/usr/share/proxmark3/firmware/{fullimage.elf,proxmark3_recovery.bin}
 
