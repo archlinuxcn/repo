@@ -7,7 +7,7 @@
 pkgname=wps-office
 pkgver=11.1.0.8722
 #_pkgver=8372
-pkgrel=4
+pkgrel=5
 #_pkgrel=1
 pkgdesc="Kingsoft Office (WPS Office) is an office productivity suite"
 arch=('x86_64')
@@ -55,6 +55,8 @@ prepare() {
 }
 
 package() {
+    export LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
+
 #   cd wps-office_${pkgver}_$_archext
     cd "${srcdir}/opt/kingsoft/wps-office/"
 
