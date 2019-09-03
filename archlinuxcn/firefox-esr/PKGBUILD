@@ -4,7 +4,7 @@
 # Contributor: Jakub Schmidtke <sjakub@gmail.com>
 
 pkgname=firefox-esr
-pkgver=68.0.1
+pkgver=68.1.0
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org, Extended Support Release"
 arch=(x86_64)
@@ -25,7 +25,7 @@ conflicts=(firefox)
 options=(!emptydirs !makeflags)
 source=(https://ftp.mozilla.org/pub/firefox/releases/${pkgver}esr/source/firefox-${pkgver}esr.source.tar.xz
         firefox.desktop firefox-symbolic.svg 0001-Use-remoting-name-for-GDK-application-names.patch)
-sha256sums=('cffe1619519bec53f2af30ffa140f30b6beb0bee6e9e0df47fd4da6e2465c698'
+sha256sums=('f56f5fa5a4744be0b9acf259cb991254d708a50b9a0a12d1d846ffa5a6c409ac'
             '78a920ffdd44e1d51445e7255da4863604be96a4b3cd7a7cb13ecc2efae6cb39'
             'a2474b32b9b2d7e0fb53a4c89715507ad1c194bef77713d798fa39d507def9e9'
             'ab07ab26617ff76fce68e07c66b8aa9b96c2d3e5b5517e51a3c3eac2edd88894')
