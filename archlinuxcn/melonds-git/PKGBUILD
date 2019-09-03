@@ -1,0 +1,44 @@
+# Maintainer: Zion Nimchuk <zionnimchuk@gmail.com>
+
+pkgname=melonds-git
+_gitname=melonDS
+pkgver=951.a4f9187
+pkgdesc='DS emulator, sorta. also 1st quality melon.'
+pkgrel=1
+arch=('i686' 'x86_64')
+url="http://melonds.kuribo64.net/"
+license=('GPLv3')
+makedepends=('git' 'cmake')
+depends=('gtk3' 'pkg-config' 'sdl2')
+source=("${_gitname}::git+https://github.com/Arisotura/${_gitname}.git")
+provides=('melonds')
+conflicts=('melonds')
+
+md5sums=('SKIP')
+
+pkgver()
+{
+  cd "${_gitname}"
+  printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build()
+{
+  if [[ -d build ]]; then
+    rm -rf build
+  fi
+  mkdir build
+  cd build
+  cmake ../${_gitname} \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX='/usr'
+  make VERBOSE=ON
+}
+
+package()
+{
+  cd build
+  make DESTDIR="${pkgdir}" install
+}
+
+# vim: ts=2 sw=2 et:
