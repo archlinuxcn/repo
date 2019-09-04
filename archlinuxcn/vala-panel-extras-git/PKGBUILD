@@ -1,0 +1,132 @@
+# Maintainer: rilian-la-te <ria.freelander@gmail.com>
+
+_pkgbase=vala-panel-extras
+pkgbase=vala-panel-extras-git
+pkgname=('vala-panel-extras-battery-git' 'vala-panel-extras-volume-git' 'vala-panel-extras-xkb-git' 'vala-panel-extras-gtop-git' 'vala-panel-extras-weather-git' 'vala-panel-extras-common-git' 'vala-panel-extras-xkb-flags-git')
+_cmakename=cmake-vala
+pkgver=0.1.9.r36.g1705aa3
+pkgrel=1
+pkgdesc="Simple StatusNotifierItems for Indicator plugins"
+url="https://gitlab.com/vala-panel-project/vala-panel-extras"
+arch=('i686' 'x86_64')
+license=('GPL3')
+makedepends=('cmake' 'vala' 'gtk3>=3.12.0' 'libxkbcommon-x11>=0.5.0' 'libxcb>=1.10' 'alsa-lib>=1.0.26' 'libcanberra' 'libgweather>=3.12.0' 'libx11' 'libgtop' 'git')
+source=("git+https://gitlab.com/vala-panel-project/${_pkgbase}.git"
+        "git+https://gitlab.com/vala-panel-project/${_cmakename}.git")
+sha256sums=('SKIP'
+            'SKIP')
+
+pkgver() {
+  cd "${srcdir}/${_pkgbase}"
+  ( set -o pipefail
+    git describe --long --tags 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  )
+}
+
+prepare() {
+  cd "${srcdir}/${_cmakename}"
+  cp -r . "${srcdir}/${_pkgbase}/cmake"
+}
+
+build() {
+  cd "${srcdir}/${_pkgbase}"
+  cmake ./ -DCMAKE_INSTALL_PREFIX=/usr -DENABLE_WEATHER=ON -DENABLE_ALSA=ON -DENABLE_XKB=ON -DENABLE_BATTERY=ON -DGSETTINGS_COMPILE=OFF
+  make
+}
+
+package_vala-panel-extras-volume-git() {
+  pkgdesc="Simple volume indicator"
+  depends=('gtk3' 'alsa-lib>=1.0.26' 'libcanberra' 'vala-panel-extras-common-git')
+  optdepends=('xfce4-sntray-plugin: for showing in Xfce'
+            'vala-panel-sntray: for showing in vala-panel'
+            'xfce4-snw-plugin: for showing in Xfce, alternate way'
+            'enlightenment: for showing in E19'
+            'indicator-application: for showing in Indicator Environment, like Pantheon or Unity'
+            'plasma-desktop: for showing in KDE Frameworks'
+            'kdebase-plasma: for showing in KDE4')
+  
+  cd "${srcdir}/${_pkgbase}"
+  make -C "applets/volume" DESTDIR="${pkgdir}" install
+  install -D -m644 data/gschemas/org.valapanel.volume.gschema.xml "$pkgdir/usr/share/glib-2.0/schemas/org.valapanel.volume.gschema.xml"
+}
+package_vala-panel-extras-xkb-git() {
+  pkgdesc="Simple keyboard layout indicator/switcher"
+  depends=('gtk3' 'libxkbcommon-x11>=0.5' 'libxcb>=1.10' 'libx11' 'vala-panel-extras-common-git')
+  optdepends=('xfce4-sntray-plugin: for showing in Xfce'
+            'vala-panel-sntray: for showing in vala-panel'
+            'xfce4-snw-plugin: for showing in Xfce, alternate way'
+            'enlightenment: for showing in E19'
+            'indicator-application: for showing in Indicator Environment, like Pantheon or Unity'
+            'plasma-desktop: for showing in KDE Frameworks'
+            'kdebase-plasma: for showing in KDE4'
+            'vala-panel-extras-xkb-flags: builtin flags')
+
+  cd "${srcdir}/${_pkgbase}"
+  make -C "applets/xkb" DESTDIR="${pkgdir}" install
+  install -D -m644 data/gschemas/org.valapanel.xkb.gschema.xml "$pkgdir/usr/share/glib-2.0/schemas/org.valapanel.xkb.gschema.xml"
+  rm -fr "$pkgdir/usr/share/vala-panel-extras/"
+}
+package_vala-panel-extras-gtop-git() {
+  pkgdesc="Simple network speed indicator"
+  depends=('gtk3' 'libgtop' 'vala-panel-extras-common-git')
+  optdepends=('xfce4-sntray-plugin: for showing in Xfce'
+            'vala-panel-sntray: for showing in vala-panel'
+            'xfce4-snw-plugin: for showing in Xfce, alternate way'
+            'enlightenment: for showing in E19'
+            'indicator-application: for showing in Indicator Environment, like Pantheon or Unity'
+            'plasma-desktop: for showing in KDE Frameworks'
+            'kdebase-plasma: for showing in KDE4')
+
+  cd "${srcdir}/${_pkgbase}"
+  make -C "applets/gtop" DESTDIR="${pkgdir}" install
+  install -D -m644 data/gschemas/org.valapanel.gtop.gschema.xml "$pkgdir/usr/share/glib-2.0/schemas/org.valapanel.gtop.gschema.xml"
+}
+package_vala-panel-extras-weather-git() {
+  pkgdesc="Simple weather indicator"
+  depends=('gtk3' 'libgweather>=3.12.0' 'vala-panel-extras-common-git')
+  optdepends=('xfce4-sntray-plugin: for showing in Xfce'
+            'vala-panel-sntray: for showing in vala-panel'
+            'xfce4-snw-plugin: for showing in Xfce, alternate way'
+            'enlightenment: for showing in E19'
+            'indicator-application: for showing in Indicator Environment, like Pantheon or Unity'
+            'plasma-desktop: for showing in KDE Frameworks'
+            'kdebase-plasma: for showing in KDE4')
+  
+  cd "${srcdir}/${_pkgbase}"
+  make -C "applets/weather" DESTDIR="${pkgdir}" install
+  install -D -m644 data/gschemas/org.valapanel.weather.gschema.xml "$pkgdir/usr/share/glib-2.0/schemas/org.valapanel.weather.gschema.xml"
+}
+package_vala-panel-extras-xkb-flags-git() {
+  arch=('any')
+  pkgdesc="Flags for XKB plugin"
+  optdepends=('vala-panel-extras-xkb-git')
+  
+  cd "${srcdir}/${_pkgbase}"
+  make -C "applets/xkb" DESTDIR="${pkgdir}" install
+  rm -fr "$pkgdir/usr/bin/"
+  rm -fr "$pkgdir/usr/share/applications"
+}
+package_vala-panel-extras-battery-git() {
+  pkgdesc="Simple battery indicator"
+  depends=('gtk3' 'upower>=0.99' 'vala-panel-extras-common-git')
+  optdepends=('xfce4-sntray-plugin: for showing in Xfce'
+            'vala-panel-sntray: for showing in vala-panel'
+            'xfce4-snw-plugin: for showing in Xfce, alternate way'
+            'enlightenment: for showing in E19'
+            'indicator-application: for showing in Indicator Environment, like Pantheon or Unity'
+            'plasma-desktop: for showing in KDE Frameworks'
+            'kdebase-plasma: for showing in KDE4')
+  
+  cd "${srcdir}/${_pkgbase}"
+  make -C "applets/batt" DESTDIR="${pkgdir}" install
+  install -D -m644 data/gschemas/org.valapanel.battery.gschema.xml "$pkgdir/usr/share/glib-2.0/schemas/org.valapanel.battery.gschema.xml"
+}
+
+package_vala-panel-extras-common-git() {
+  arch=('any')
+  pkgdesc="Common files for vala-panel-extras"
+  
+  cd "${srcdir}/${_pkgbase}"
+  make -C "po" DESTDIR="${pkgdir}" install
+}
