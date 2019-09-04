@@ -3,13 +3,13 @@
 # Contributor: Kuba Serafinowski <zizzfizzix(at)gmail(dot)com>
 
 pkgname=kdeconnect-git
-pkgver=r2533.5e827917
+pkgver=r2575.2544d9b3
 pkgrel=1
 pkgdesc='Adds communication between KDE and your smartphone'
 arch=(i686 x86_64)
 url='https://community.kde.org/KDEConnect'
 license=(GPL2)
-depends=('hicolor-icon-theme' 'kde-cli-tools' 'kio' 'kwayland' 'libfakekey' 'pulseaudio-qt' 'qca-qt5')
+depends=('hicolor-icon-theme' 'kde-cli-tools' 'kio' 'kwayland' 'libfakekey' 'pulseaudio-qt' 'qca-qt5' 'kirigami2' 'kpeople')
 makedepends=(extra-cmake-modules git python)
 optdepends=('sshfs: remote filesystem browser')
 provides=(kdeconnect)
