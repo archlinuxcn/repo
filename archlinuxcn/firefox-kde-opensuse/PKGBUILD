@@ -5,6 +5,8 @@
 # enable this if you run out of memory during linking
 #_lowmem=true
 
+# build with PGO
+_pgo=true
 
 # globalmenu
 # to support globalmenu a patch from ubuntu is applied
@@ -12,9 +14,13 @@
 # http://bazaar.launchpad.net/~mozillateam/firefox/firefox-trunk.head
 # /view/head:/debian/patches/unity-menubar.patch
 
-pkgname=firefox-kde-opensuse
+# patches from gentoo:
+# https://dev.gentoo.org/~anarchy/mozilla/patchsets/firefox-68.0-patches-07.tar.xz
+
+_pkgname=firefox
+pkgname=$_pkgname-kde-opensuse
 pkgver=68.0.2
-pkgrel=2
+pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -71,6 +77,8 @@ source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
         pgo.patch
         # use sytem av1
         7002_system_av1_support.patch
+        # https://bugzilla.mozilla.org/show_bug.cgi?id=1530052
+        0001-Use-remoting-name-for-GDK-application-names.patch
 )
 
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
@@ -116,28 +124,30 @@ prepare() {
   patch -Np1 -i "$srcdir"/2001_system_graphite2_support.patch
   patch -Np1 -i "$srcdir"/7002_system_av1_support.patch
 
-  # disable elf-hack for both versions
-  echo "ac_add_options --disable-elf-hack" >> .mozconfig
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=1530052
+  patch -Np1 -i "$srcdir"/0001-Use-remoting-name-for-GDK-application-names.patch
+  
+  if [[ $_pgo ]] ; then
+    # https://bugzilla.mozilla.org/show_bug.cgi?id=1516803
+    patch -Np1 -i  "$srcdir"/mozilla-1516803.patch
+    # https://bugzilla.mozilla.org/show_bug.cgi?id=1516081
+    patch -Np1 -i  "$srcdir"/mozilla-1516081.patch
 
+    # add missing rule for pgo builds
+    patch -Np1 -i "$srcdir"/add_missing_pgo_rule.patch
 
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1516803
-  patch -Np1 -i  "$srcdir"/mozilla-1516803.patch
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1516081
-  patch -Np1 -i  "$srcdir"/mozilla-1516081.patch
+    patch -Np1 -i "$srcdir"/pgo.patch
 
-  # add missing rule for pgo builds
-  patch -Np1 -i "$srcdir"/add_missing_pgo_rule.patch
+    # add missing file Makefile for pgo builds
+    patch -Np1 -i "$srcdir"/pgo_fix_missing_kdejs.patch
 
-  patch -Np1 -i "$srcdir"/pgo.patch
-
-  # add missing file Makefile for pgo builds
-  patch -Np1 -i "$srcdir"/pgo_fix_missing_kdejs.patch
-
-  echo "ac_add_options --enable-lto" >> .mozconfig
-  echo "ac_add_options --enable-rust-simd" >> .mozconfig
+    echo "ac_add_options --enable-lto" >> .mozconfig
+    echo "ac_add_options --disable-elf-hack" >> .mozconfig
+  fi
 }
 
 build() {
+  #export CXXFLAGS="${CFLAGS}"
   cd mozilla-unified
   export MOZ_SOURCE_REPO="$_repo"
   export MOZBUILD_STATE_PATH="$srcdir/mozbuild"
@@ -172,6 +182,7 @@ build() {
 
 package() {
   cd mozilla-unified
+
   [[ "$CARCH" == "i686" ]] && cp "$srcdir/kde.js" obj-i686-pc-linux-gnu/dist/bin/defaults/pref
   [[ "$CARCH" == "x86_64" ]] && cp "$srcdir/kde.js" obj-x86_64-pc-linux-gnu/dist/bin/defaults/pref
 
@@ -209,10 +220,9 @@ END
   #https://bugzilla.mozilla.org/show_bug.cgi?id=658850
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
 }
-
 md5sums=('SKIP'
          'f758e064e1463b90878790124f398197'
-         '14e0f6237a79b85e60256f4808163160'
+         'a26a061efb4def6572d5b319d657f1d6'
          '5cee310a9040ccc5abcf29742b84aeb8'
          '05bb69d25fb3572c618e3adf1ee7b670'
          'd7ce23a18da21c05cd756766e177834f'
@@ -227,4 +237,5 @@ md5sums=('SKIP'
          'becf6bf9ceb6008401832c855ccadff9'
          '79d27c8896913c7d87b148240995ab69'
          'f867ae41a722630cc5567e2dcc51676d'
-         'df439e02304d302009c320a540f01dbe')
+         'df439e02304d302009c320a540f01dbe'
+         '0ffabb81dd8a5fe98bb8afe47d6541d3')
