@@ -6,13 +6,16 @@
 # Contributor: Sebastian Jug <seb AT stianj DOT ug>
 
 #
-# Before running makepkg, you must do this:
+# Before running makepkg, you must do this (as normal user):
 #
-# gpg --keyserver hkp://pgp.mit.edu:11371 --recv-keys 0x4E2C6E8793298290
+#     gpg --auto-key-locate nodefault,wkd --locate-keys torbrowser@torproject.org
 #
+# If you want to update tor-browser from AUR without AUR helpers you can run in a terminal:
+#
+#     tor-browser -u
 
 pkgname='tor-browser'
-pkgver='8.5.4'
+pkgver='8.5.5'
 pkgrel='1'
 pkgdesc='Tor Browser Bundle: anonymous browsing using Firefox and Tor (international PKGBUILD)'
 url='https://www.torproject.org/projects/torbrowser.html'
@@ -20,7 +23,7 @@ arch=('i686' 'x86_64')
 _idstr32='linux32'
 _idstr64='linux64'
 license=('GPL')
-depends=('gtk2' 'mozilla-common' 'libxt' 'startup-notification' 'mime-types'
+depends=('mozilla-common' 'libxt' 'startup-notification' 'mime-types'
 	'dbus-glib' 'alsa-lib' 'desktop-file-utils' 'hicolor-icon-theme'
 	'libvpx' 'icu' 'libevent' 'nss' 'hunspell' 'sqlite')
 optdepends=('zenity: simple dialog boxes'
@@ -74,9 +77,9 @@ source=("${pkgname}.desktop"
 sha256sums=('9ee0a4672e2d0835ffb94bcf26e17b56432030496a9cdf019b70c96083c24340'
             'bb6b0f27c33d21e0ef6df961e25418327c5e8b01c003bbe18c0a8dae3e16d77d'
             '3a491ad1a476f2fb343f274eab4e8df925637438e6dac3591f092b3ef3294da3')
-sha256sums_i686=('SKIP'
+sha256sums_i686=('49b84482a6c27971aa9b2421a5e2967c3382b4566610ab8a25d9bd1767e1bbdb'
                  'SKIP')
-sha256sums_x86_64=('SKIP'
+sha256sums_x86_64=('5f334f14161952476adde3fbd843f93f647d47a0d7e30eb5d1635fb7569a2503'
                    'SKIP')
 
 noextract=("${pkgname}-${_idstr64}-${pkgver}_${_language}.tar.xz"
