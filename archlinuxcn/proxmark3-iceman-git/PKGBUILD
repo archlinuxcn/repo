@@ -1,7 +1,7 @@
 # Maintainer: edward-p <edward At edward-p Dot xyz>
 
 pkgname=proxmark3-iceman-git
-pkgver=6965.affecd63
+pkgver=6979.ecb535cc
 pkgrel=1
 pkgdesc='RRG / Iceman repo - Proxmark3 RDV4.0 and other Proxmark3 platforms.'
 arch=('x86_64')
@@ -11,7 +11,6 @@ depends=('perl' 'python')
 makedepends=('git' 'arm-none-eabi-gcc' 'arm-none-eabi-newlib')
 provides=('proxmark3' 'proxmark3-iceman')
 conflicts=('proxmark3' 'proxmark3-iceman')
-options=('!makeflags')
 replaces=($pkgname'-generic' $pkgname'-rdv4')
 source=("$pkgname::git+https://github.com/RfidResearchGroup/proxmark3.git")
 sha512sums=('SKIP')
@@ -22,10 +21,16 @@ pkgver() {
   echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
 }
 
+prepare() {
+  export DESTDIR="build"
+  export PREFIX="/usr"
+  export UDEV_PREFIX="/usr/lib/udev/rules.d"
+}
+
 build() {
   cd "${srcdir}/${pkgname}"
 
-  mkdir "build"
+  mkdir "$DESTDIR"
   
   STANDALONE_MODES=(
           'LF_SAMYRUN'
@@ -37,22 +42,22 @@ build() {
   RDV4_STANDALONE_MODES=('HF_COLIN' 'HF_BOG')
  
   # Build recovery (without PLATFORM_EXTRAS and STANDALONE)
-  make -j DESTDIR="build" PREFIX="/usr" \
+  make \
     PLATFORM="PM3RDV4" STANDALONE= FWTAG="rdv4-nostandalone" recovery/install
-  make -j DESTDIR="build" PREFIX="/usr" \
+  make \
     PLATFORM="PM3OTHER" STANDALONE= FWTAG="other-nostandalone" recovery/install
 
   # These firmware is not needed.
-  rm build/usr/share/proxmark3/firmware/{fullimage-rdv4-nostandalone.elf,fullimage-other-nostandalone.elf}
+  # rm build/usr/share/proxmark3/firmware/{fullimage-rdv4-nostandalone.elf,fullimage-other-nostandalone.elf}
 
   # Build various firmwares
   for standalone in ${STANDALONE_MODES[@]}; do
 
-      make -j DESTDIR="build" PREFIX="/usr" \
+      make \
         PLATFORM="PM3RDV4" PLATFORM_EXTRAS="BTADDON" STANDALONE="${standalone}" \
         FWTAG="rdv4-"$(echo ${standalone} | tr '[:upper:]' '[:lower:]') fullimage/install
 
-      make -j DESTDIR="build" PREFIX="/usr" \
+      make \
         PLATFORM="PM3OTHER" STANDALONE="${standalone}" \
         FWTAG="other-"$(echo ${standalone} | tr '[:upper:]' '[:lower:]') fullimage/install
 
@@ -60,15 +65,15 @@ build() {
 
   for standalone in ${RDV4_STANDALONE_MODES[@]}; do
 
-      make -j DESTDIR="build" PREFIX="/usr" \
+      make \
         PLATFORM="PM3RDV4" PLATFORM_EXTRAS="BTADDON" STANDALONE="${standalone}" \
         FWTAG="rdv4-"$(echo ${standalone} | tr '[:upper:]' '[:lower:]') fullimage/install
 
   done
 
   # Build other targets
-  make -j DESTDIR="build" PREFIX="/usr"
-  make -j1 DESTDIR="build" PREFIX="/usr" install
+  make
+  make install
   # These recovery & firmware are not needed.
   rm build/usr/share/proxmark3/firmware/{fullimage.elf,proxmark3_recovery.bin}
 
@@ -76,5 +81,5 @@ build() {
 
 package() {
   cd "${srcdir}/${pkgname}"
-  mv build/* "${pkgdir}/"
+  mv "$DESTDIR"/* "${pkgdir}/"
 }
