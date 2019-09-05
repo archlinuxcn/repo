@@ -1,19 +1,15 @@
 diff --color -U 5 -r -Z -B ./org/gtk/gtkscrolledwindow.c ./mod/gtk/gtkscrolledwindow.c
 --- ./org/gtk/gtkscrolledwindow.c	2017-10-02 18:00:49.000000000 +0200
 +++ ./mod/gtk/gtkscrolledwindow.c	2017-10-30 21:18:17.203646016 +0100
-@@ -4408,11 +4408,11 @@
-   GtkScrolledWindowPrivate *priv = scrolled_window->priv;
-   gboolean use_indicators;
+@@ -4448,7 +4448,7 @@
  
-   use_indicators = priv->overlay_scrolling;
+   use_indicators = overlay_scrolling && priv->overlay_scrolling;
  
 -  if (g_strcmp0 (g_getenv ("GTK_OVERLAY_SCROLLING"), "0") == 0)
 +  if (g_strcmp0 (g_getenv ("GTK_OVERLAY_SCROLLING"), "1") != 0)
      use_indicators = FALSE;
  
    if (priv->use_indicators != use_indicators)
-     {
-       priv->use_indicators = use_indicators;
 diff --color -U 5 -r -Z -B ./org/gtk/gtksettings.c ./mod/gtk/gtksettings.c
 --- ./org/gtk/gtksettings.c	2017-10-26 06:32:02.000000000 +0200
 +++ ./mod/gtk/gtksettings.c	2017-10-30 21:18:17.206979350 +0100
