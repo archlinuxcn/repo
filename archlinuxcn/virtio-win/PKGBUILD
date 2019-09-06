@@ -1,7 +1,7 @@
 # Maintainer: Javier Tiá <javier dot tia at gmail dot com>
 
 pkgname=virtio-win
-_ver=0.1.171
+_ver=0.1.172
 # package version
 pkgver=${_ver}.1
 # upstream version
@@ -22,9 +22,9 @@ source=("${pkgname}-${_pkgver}.iso::${_url}/${pkgname}-${_pkgver}/${pkgname}.iso
 noextract=("${pkgname}-${_pkgver}.iso"
            "${pkgname}-${_pkgver}_amd64.vfd"
            "${pkgname}-${_pkgver}_x86.vfd")
-sha256sums=('7bf7f53e30c69a360f89abb3d2cc19cc978f533766b1b2270c2d8344edf9b3ef'
-            'b5ee916879b13171decfb3a32fa3f9064235b37b653775b176fbb0d589ac811c'
-            '411426398022c725043add259ab3e36d565c3d193c9884f7d8ddbe2014cdc258')
+sha256sums=('867b7c5542d9b25b69eea0e0401d4d9a077f8f6e8cae271212fdbb1f978179ac'
+            '57866964b4a8a9ed5729828537261ae894a09bdbd06d8a57163a14fc315f1de0'
+            '54969a0ae3d266c2b8c5d4239d4edd96c720fbe3c69fa478d49a8fb3e53e2ded')
 
 package() {
   install -Dm 644 ${pkgname}-${_pkgver}.iso \
