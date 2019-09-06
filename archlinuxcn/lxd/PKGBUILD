@@ -3,11 +3,12 @@
 # which in turn is based based on old version of this very package
 # Contributor: Asterios Dimitriou <asterios@pci.gr>
 # Contributor: Benjamin Asbach <archlinux-aur.lxd@impl.it>
+# Contributer: nightuser <nightuser.android at gmail.com>
 
 pkgname=lxd
 _pkgname=lxd
-pkgver=3.16
-pkgrel=2
+pkgver=3.17
+pkgrel=1
 pkgdesc="REST API, command line tool and OpenStack integration plugin for LXC."
 arch=('x86_64')
 url="https://github.com/lxc/lxd"
@@ -21,9 +22,14 @@ optdepends=(
     'thin-provisioning-tools: for thin provisioning support'
     'btrfs-progs: for btrfs storage driver support'
     'ceph: for ceph storage driver support'
+    'lxcfs: for lxcfs support'
 )
 options=('!strip' '!emptydirs')
+
+_lxd=github.com/lxc/lxd
+
 source=(
+    "https://${_lxd}/releases/download/${pkgname}-${pkgver}/${pkgname}-${pkgver}.tar.gz"
     "lxd.service"
     "lxd.socket"
     "dnsmasq-lxd.conf"
@@ -32,9 +38,9 @@ source=(
     "dbus-dnsmasq-lxd.conf"
     "networkmanager-dnsmasq-lxd.conf"
 )
-_lxd=github.com/lxc/lxd
 
-md5sums=('6462095d5892d15c4f14310aa263a2a9'
+md5sums=('fb2bd541ece52f06a22e6486b5a2dc4b'
+         '6462095d5892d15c4f14310aa263a2a9'
          '1fb28d8dfe82af71d0675c8e9a0a7293'
          'b1fd16933c1b24aaa9ccc8f5a0e6478c'
          '15ae1bc51684d611bded2839ca55a37b'
@@ -42,23 +48,9 @@ md5sums=('6462095d5892d15c4f14310aa263a2a9'
          'c86b8c441ab014340186acc7799096f2'
          '427926fddb1537f7a65d0a7274106df5')
 
-prepare() {
-  export GOPATH="${srcdir}/go"
-  mkdir -p "${GOPATH}"
-  if [ ! -f "${GOPATH}/src/${_lxd}/Makefile" ]; then
-    # download the go package along with all of its go dependencies
-    go get -d -v "${_lxd}/lxd"
-  else
-    # or update the existing packages
-    cd "${GOPATH}/src/${_lxd}"
-    make update
-  fi
-}
-
-build() { 
-  export GOPATH="${srcdir}/go"
+build() {
+  export GOPATH="${srcdir}/${pkgname}-${pkgver}/_dist"
   cd "${GOPATH}/src/${_lxd}"
-  git checkout lxd-${pkgver}
   make deps
   export CGO_CFLAGS="-I${GOPATH}/deps/sqlite/ -I${GOPATH}/deps/libco/ -I${GOPATH}/deps/raft/include/ -I${GOPATH}/deps/dqlite/include/"
   export CGO_LDFLAGS="-L${GOPATH}/deps/sqlite/.libs/ -L${GOPATH}/deps/libco/ -L${GOPATH}/deps/raft/.libs -L${GOPATH}/deps/dqlite/.libs/"
@@ -67,8 +59,9 @@ build() {
 }
 
 package() {
-  go_bin_dir="${srcdir}/go/bin"
-  go_deps_dir="${srcdir}/go/deps"
+  go_path="${srcdir}/${pkgname}-${pkgver}/_dist"
+  go_bin_dir="${go_path}/bin"
+  go_deps_dir="${go_path}/deps"
   install=lxd.install
   mkdir -p "${pkgdir}/usr/bin"
   mkdir -p "${pkgdir}/usr/lib/lxd"
@@ -78,14 +71,14 @@ package() {
   patchelf --set-rpath "/usr/lib/lxd" "${pkgdir}/usr/bin/lxd"
   cp --no-dereference --preserve=timestamps \
     "${go_deps_dir}/sqlite/.libs/"libsqlite3.so* \
-    "${go_deps_dir}/libco/libco.so.0.1.0" \
+    "${go_deps_dir}/libco/"libco.so* \
     "${go_deps_dir}/raft/.libs/"libraft.so* \
     "${go_deps_dir}/dqlite/.libs/"libdqlite.so* \
     "${pkgdir}/usr/lib/lxd"
   patchelf --set-rpath "/usr/lib/lxd" "${pkgdir}/usr/lib/lxd/libdqlite.so"
 
   # Package license
-  install -Dm644 "${srcdir}/go/src/${_lxd}/COPYING"  "${pkgdir}/usr/share/licenses/${_pkgname}/LICENCE"
+  install -Dm644 "${go_path}/src/${_lxd}/COPYING"  "${pkgdir}/usr/share/licenses/${_pkgname}/LICENCE"
 
   # systemd files
   install -D -m644 "${srcdir}/lxd.service" \
@@ -94,11 +87,11 @@ package() {
     "${pkgdir}/usr/lib/systemd/system/lxd.socket"
 
   # documentation
-  install -D -m644 "${srcdir}/go/src/${_lxd}/doc/"* \
+  install -D -m644 "${go_path}/src/${_lxd}/doc/"* \
     "${pkgdir}/usr/share/doc/lxd/"
 
   # Bash completions
-  install -p -m644 "${srcdir}/go/src/${_lxd}/scripts/bash/lxd-client" \
+  install -p -m644 "${go_path}/src/${_lxd}/scripts/bash/lxd-client" \
     "${pkgdir}/usr/share/bash-completion/completions/lxd"
 
   # Example configuration files
