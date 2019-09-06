@@ -28,6 +28,7 @@ from lilaclib import *
 def pre_build():
     aur_pre_build()
     add_depends(['kpeople', 'kirigami2', 'pulseaudio-qt'])
+    add_makedepends(['krunner'])
 
 #if __name__ == '__main__':
 #    single_main(build_prefix)
