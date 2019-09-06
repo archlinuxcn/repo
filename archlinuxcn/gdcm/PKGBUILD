@@ -4,8 +4,8 @@
 
 pkgname=gdcm
 _pkgname=GDCM
-pkgver=3.0.1
-pkgrel=2
+pkgver=3.0.2
+pkgrel=1
 pkgdesc='A C++ library for DICOM medical files'
 arch=('x86_64')
 url='http://gdcm.sourceforge.net'
@@ -36,7 +36,7 @@ makedepends=(
 source=(
   "https://github.com/malaterre/GDCM/archive/v${pkgver}.tar.gz"
 )
-sha512sums=('1483c65ce93fd9d7240913388899cb78e7da2954880b549a511f51b45a6fc3616e9eca292097749a3945fa4406a069e03d6e798ccf6c1fd8d6c96b1fb70e258f')
+sha512sums=('5a777ff524f5aa8fd623405632451c7affebedf595b15d5134ccc1ffffa89ece6782f2d2c8d8838e0a460b5e85fb0bf223ba89ba2aef5ec4ed1723bec883fe2a')
 
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
