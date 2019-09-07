@@ -7,12 +7,12 @@
 # Contributor: torvic9 <vic999 at mailbox.org>
 
 pkgname=signal
-pkgver=1.27.1
+pkgver=1.27.2
 pkgrel=1
 license=('GPL3')
 pkgdesc='Private messenger for the desktop'
 depends=('electron' 'openssl-1.0')
-makedepends=('python' 'python2' 'npm' 'yarn' 'git' 'nodejs')
+makedepends=('python' 'python2' 'npm' 'yarn' 'git' 'nodejs>=12')
 conflicts=('signal-desktop-beta-bin' 'signal-desktop-bin')
 arch=('i686' 'x86_64')
 url='https://github.com/signalapp/Signal-Desktop'
