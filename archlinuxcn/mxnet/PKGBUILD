@@ -18,7 +18,7 @@ depends=(
   'intel-tbb'
   'lapack'
   'openblas'
-  'opencv-gcc8'
+  'opencv'
   'protobuf'
   'python-graphviz'
   'python-numpy'
@@ -60,8 +60,9 @@ prepare() {
   cp -r "${pkgbase}" "${pkgbase}-cuda-mkl"
 
   # use gcc version compatible with CUDA
-  export CC=/opt/cuda/bin/gcc
-  export CXX=/opt/cuda/bin/g++
+#  export CC=/opt/cuda/bin/gcc
+#  export CXX=/opt/cuda/bin/g++
+  export CUDA_HOST_COMPILER=/opt/cuda/bin/g++
 }
 
 build() {
