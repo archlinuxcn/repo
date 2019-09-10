@@ -5,7 +5,7 @@ pkgname=shattered-pixel-dungeon
 _pkgname=$pkgname-gdx
 pkgver=0.7.4
 _srcdir=$_pkgname-$pkgver
-pkgrel=1
+pkgrel=2
 pkgdesc='Shattered fork of the popular rogue-like game'
 url='http://shatteredpixel.tumblr.com'
 license=('GPL3')
@@ -14,7 +14,7 @@ makedepends=('git' 'gradle' 'java-environment' 'jdk8-openjdk')
 conflicts=('shattered-pixel-dungeon-git')
 arch=('any')
 source=(
-  "https://github.com/00-Evan/shattered-pixel-dungeon-gdx/archive/v$pkgver.tar.gz"
+  "https://github.com/00-Evan/shattered-pixel-dungeon-gdx/archive/v${pkgver%.*}${pkgver##*.}.tar.gz"
   "$pkgname.sh"
   "$pkgname.desktop"
 )

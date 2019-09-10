@@ -10,7 +10,11 @@ from lilaclib import *
 #build_prefix = 'extra-x86_64'
 
 def pre_build():
-  update_pkgver_and_pkgrel(_G.newver.replace('v', ''))
+  newver = _G.newver.replace('v', '')
+  vers = newver.rsplit('.', 1)
+  newver = vers[0] + "." + ".".join(list(vers[1]))
+
+  update_pkgver_and_pkgrel(newver)
 
 def post_build():
   git_add_files('PKGBUILD')
