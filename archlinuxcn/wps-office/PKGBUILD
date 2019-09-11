@@ -5,9 +5,9 @@
 # Contributor: Ariel AxionL <axionl at aosc dot io>
 
 pkgname=wps-office
-pkgver=11.1.0.8722
+pkgver=11.1.0.8865
 #_pkgver=8372
-pkgrel=5
+pkgrel=1
 #_pkgrel=1
 pkgdesc="Kingsoft Office (WPS Office) is an office productivity suite"
 arch=('x86_64')
@@ -30,7 +30,7 @@ source=("http://kdl.cc.ksosoft.com/wps-community/download/${pkgver##*.}/wps-offi
 #       'add_no_kdialog_variable.patch')
 #sha1sums_i686=('60b1c9e33ee6fc1edcefe40dc9ec529d4a668825'
 #               'dd8b5283ee17a88a3eb0531976abccd6e5e08c48')
-sha1sums=('7a420957166d2bf6430a67b186f16361dd7b5c7b')
+sha1sums=('ee5e2ea5f7480bb7d6e116dd7690990a861c8a37')
 #         '49ccf3e3d9c7c9c80294127ce063c56d2b57d7c4')
 
 prepare() {
@@ -55,8 +55,6 @@ prepare() {
 }
 
 package() {
-    export LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
-
 #   cd wps-office_${pkgver}_$_archext
     cd "${srcdir}/opt/kingsoft/wps-office/"
 
