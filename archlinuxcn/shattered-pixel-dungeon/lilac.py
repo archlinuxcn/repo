@@ -12,7 +12,10 @@ from lilaclib import *
 def pre_build():
   newver = _G.newver.replace('v', '')
   vers = newver.rsplit('.', 1)
-  newver = vers[0] + "." + ".".join(list(vers[1]))
+  if len(vers[1]) >= 2:
+    newver = vers[0] + "." + ".".join(list(vers[1]))
+  else:
+    newver = newver + ".REL"
 
   update_pkgver_and_pkgrel(newver)
 
