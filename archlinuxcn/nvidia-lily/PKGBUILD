@@ -1,0 +1,50 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+# Contributor: Sven-Hendrik Haase <sh@lutzhaase.com>
+# Contributor: Felix Yan <felixonmars@archlinux.org>
+# Contributor: Thomas Baechler <thomas@archlinux.org>
+
+pkgname=nvidia-lily
+pkgver=435.21
+_extramodules=extramodules-lily
+pkgrel=2
+pkgdesc="NVIDIA drivers for linux-lily"
+arch=('x86_64')
+url="http://www.nvidia.com/"
+depends=('linux-lily=4.19.67.arch1-1' "nvidia-utils=${pkgver}" 'libglvnd')
+makedepends=("nvidia-utils=${pkgver}" 'libglvnd' 'linux-lily' 'linux-lily-headers')
+license=('custom')
+options=('!strip')
+provides=("nvidia=$pkgver")
+conflicts=('nvidia-dkms')
+_pkg="NVIDIA-Linux-x86_64-${pkgver}"
+source=("http://us.download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/${_pkg}.run"
+        fs62142.patch)
+sha512sums=('e83b6dff80434971c0b254815945d485a45c978b8a19994244f50a463658863948b2eac8bc62d667bb10c23f41cf1c3521c409d23ac2ab6a0c0cd094a6e20270'
+            'df949debf9fed92b3c58322c02685fb344bbfff2920557e7d55ed3f70559f48cd6199bc85e2af170b7e56797f3e9881a53eab8c411f21e75f5abec26eaa47752')
+
+prepare() {
+    sh "${_pkg}.run" --extract-only
+    cd "${_pkg}"
+
+    # Fix https://bugs.archlinux.org/task/62142
+    patch -Np1 -i ../fs62142.patch
+}
+
+build() {
+    _kernver="$(cat /usr/lib/modules/${_extramodules}/version)"
+    cd "${_pkg}"/kernel
+    make SYSSRC=/usr/lib/modules/"${_kernver}/build" module
+}
+
+package() {
+
+    install -Dt "${pkgdir}/usr/lib/modules/${_extramodules}" -m644 \
+      "${srcdir}/${_pkg}/kernel"/nvidia{,-modeset,-drm,-uvm}.ko
+
+    find "${pkgdir}" -name '*.ko' -exec xz {} +
+
+    echo "blacklist nouveau" |
+        install -Dm644 /dev/stdin "${pkgdir}/usr/lib/modprobe.d/${pkgname}.conf"
+
+    install -Dt "${pkgdir}/usr/share/licenses/${pkgname}" -m644 "${srcdir}/${_pkg}/LICENSE"
+}
