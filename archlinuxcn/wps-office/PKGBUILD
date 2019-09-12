@@ -7,7 +7,7 @@
 pkgname=wps-office
 pkgver=11.1.0.8865
 #_pkgver=8372
-pkgrel=1
+pkgrel=2
 #_pkgrel=1
 pkgdesc="Kingsoft Office (WPS Office) is an office productivity suite"
 arch=('x86_64')
@@ -82,8 +82,7 @@ package() {
     cp -r mime/* "${pkgdir}/usr/share/mime"
 #   cp -r "$srcdir/usr/share" "${pkgdir}/usr/"
 
-#   install -d "${pkgdir}/usr/share/fonts/wps-office"
-#   cp -r fonts/* "${pkgdir}/usr/share/fonts/wps-office"
+    install -Dm644 -t "${pkgdir}/usr/share/fonts/wps-office" fonts/wps-office/*
 
     install -Dm644 -t "${pkgdir}/etc/xdg/menus/applications-merged" "${srcdir}/etc/xdg/menus/applications-merged/wps-office.menu"
 }
