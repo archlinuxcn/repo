@@ -18,8 +18,8 @@ fi
 
 case $CARCH in
   x86_64|i686|aarch64|armv7h)
-    makedepends_llvm=("llvm-julia>=5.0" "llvm-julia<6.0")
-    depends_llvm=("llvm-libs-julia>=5.0" "llvm-libs-julia<6.0")
+    makedepends_llvm=("llvm-julia>=8.0" "llvm-julia<9.0")
+    depends_llvm=("llvm-libs-julia>=8.0" "llvm-libs-julia<9.0")
     ;;
   # armv7h)
   #   makedepends_llvm=("llvm-svn")
@@ -31,15 +31,15 @@ case $CARCH in
 esac
 
 epoch=1
-pkgver=0.7.0.DEV.4006.g77055b31ce
-pkgrel=2
+pkgver=1.4.0.DEV.118.g4887c496f5
+pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('any' 'i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
 license=('GPL')
 makedepends=(gcc-fortran arpack fftw git gmp libgit2-julia libunwind-git
              "${makedepends_llvm[@]}" mpfr pcre2 suitesparse
-             openspecfun openblas libutf8proc-git patchelf openblas-lapack
+             openspecfun openblas-lapack libutf8proc-git patchelf
              openlibm mbedtls libssh2)
 options=('debug' '!strip' '!buildflags')
 source=('git://github.com/JuliaLang/julia'
@@ -117,6 +117,7 @@ julia_opts=(prefix=/usr sysconfdir=/etc
             USE_SYSTEM_CURL=1
             USE_SYSTEM_PATCHELF=1
             USE_LLVM_SHLIB=1
+            USE_BINARYBUILDER=0
             LLVM_USE_CMAKE=0 # Workaround LLVM linking with system LLVM
             LIBBLASNAME=libopenblas
             LIBBLAS=-lopenblas
@@ -158,10 +159,10 @@ EOF
   git reset --hard HEAD
   git clean -fdx
 
-  patch -Np1 < ../0001-Add-install-nodoc-make-target-to-skip-building-and-i.patch
-  patch -Np1 < ../0001-Revert-turn-on-deprecation-warnings-for-type-and-imm.patch
-  patch -Np1 < ../0002-Revert-deprecation-warning-for-old-parametric-method.patch
-  patch -Np1 < ../0001-Optimize-GC-frame-push-pop-insertion.patch
+  # patch -Np1 < ../0001-Add-install-nodoc-make-target-to-skip-building-and-i.patch
+  # patch -Np1 < ../0001-Revert-turn-on-deprecation-warnings-for-type-and-imm.patch
+  # patch -Np1 < ../0002-Revert-deprecation-warning-for-old-parametric-method.patch
+  # patch -Np1 < ../0001-Optimize-GC-frame-push-pop-insertion.patch
 
   sed -i -e 's/-fno-omit-frame-pointer/-fomit-frame-pointer/g' src/Makefile ui/Makefile
 }
@@ -200,7 +201,7 @@ package-julia-in() {
   arch=('i686' 'x86_64' 'armv7h' 'aarch64')
   depends=(arpack fftw gmp libgit2-julia libunwind-git "${depends_llvm[@]}"
            mpfr pcre2 hicolor-icon-theme xdg-utils suitesparse
-           openspecfun openblas libutf8proc-git openblas-lapack
+           openspecfun openblas-lapack libutf8proc-git
            mbedtls libssh2)
   conflicts=('julia' "${_builtin_pkgs[@]}")
   replaces=("${_builtin_pkgs[@]}")
