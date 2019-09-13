@@ -1,0 +1,14 @@
+diff --git a/src/HexEditor.cpp b/src/HexEditor.cpp
+index 8a69ba7..ca15563 100644
+--- a/src/HexEditor.cpp
++++ b/src/HexEditor.cpp
+@@ -42,9 +42,6 @@ HexEditor::HexEditor(	wxWindow* parent,
+ 	tagpanel(tagpanel_),
+ 	dasmpanel(dasmpanel_) {
+ 	ComparatorHexEditor=NULL;
+-	// Here, code praying to the GOD for protecting our open file from wxHexEditor's bugs and other things.
+-	// This is really crucial step! Be adviced to not remove it, even if you don't believer.
+-	printf("Rahman ve Rahim olan Allah'ın adıyla.\n");
+ 	myfile = NULL;
+ #ifndef DO_NOT_USE_THREAD_FOR_SCROLL
+ 	myscrollthread = NULL;

@@ -1,18 +1,18 @@
 # Maintainer: Lukas Sabota <LTsmooth42 _at_ gmail _dot_ com>
 
 pkgname=fceux-git
-pkgver=3640.63421d41
+pkgver=3642.00beb14f
 pkgrel=1
 pkgdesc="Fast and ultra-compatible NES/Famicom emulator with SDL, OpenGL and SVGALIB support"
 arch=('i686' 'x86_64')
 url="http://fceux.com/"
 license=('GPL')
-depends=('sdl' 'lua51' 'gtk2' 'gd' 'libgl')
+depends=('sdl' 'gtk2' 'gd' 'libgl')
 makedepends=('git' 'scons' 'libgl' 'glu')
 optdepends=('xchm: for viewing the help manual')
 provides=('fceux')
 conflicts=('fceux')
-source=('scons-python3.patch' 'git://github.com/TASVideos/fceux.git')
+source=('git://github.com/TASVideos/fceux.git')
 
 pkgver() {
   cd fceux
@@ -22,7 +22,7 @@ pkgver() {
 
 build() {
   cd fceux
-  patch -p1 -i ../scons-python3.patch
+#  patch -p1 -i ../scons-python3.patch
 
   scons RELEASE=1
 }
@@ -44,5 +44,4 @@ package() {
 
   rm -f "$pkgdir/usr/share/fceux/"*.dll
 }
-sha256sums=('294472255fe64e62af0b49a5fb6e5960afab2cf17d9c561a9326cdf831c6b9f6'
-            'SKIP')
+sha256sums=('SKIP')
