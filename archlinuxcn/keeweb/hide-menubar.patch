@@ -1,0 +1,12 @@
+diff --git a/desktop/app.js b/desktop/app.js
+index 75737e1..c75f793 100644
+--- a/desktop/app.js
++++ b/desktop/app.js
+@@ -137,6 +137,7 @@ function readAppSettings() {
+ function createMainWindow() {
+     const appSettings = readAppSettings();
+     const windowOptions = {
++        autoHideMenuBar: true,
+         show: false,
+         width: 1000, height: 700, minWidth: 700, minHeight: 400,
+         titleBarStyle: appSettings ? appSettings.titlebarStyle : undefined,
