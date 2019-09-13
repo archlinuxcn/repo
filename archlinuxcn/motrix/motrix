@@ -1,0 +1,8 @@
+#!/bin/bash
+SESSION="$HOME/.cache/aria2.session"
+if [[ ! -f $SESSION ]]
+then
+        touch $SESSION;
+        chmod 666 $SESSION;
+fi
+exec /opt/motrix/motrix
