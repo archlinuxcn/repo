@@ -6,17 +6,18 @@
 _pkgbase=nautilus
 pkgbase=nautilus-typeahead
 pkgname=(nautilus-typeahead libnautilus-extension-typeahead)
-pkgver=3.32.3
+pkgver=3.34.0
 pkgrel=1
 pkgdesc="Default file manager for GNOME - Patched to bring back the 'typeahead find' feature"
 url="https://wiki.gnome.org/Apps/Nautilus"
-arch=(i686 x86_64)
+arch=(x86_64)
 license=(GPL)
-depends=(libgexiv2 gnome-desktop gvfs dconf tracker gnome-autoar gst-plugins-base-libs tracker-miners)
+depends=(libgexiv2 gnome-desktop gvfs dconf tracker gnome-autoar
+         gst-plugins-base-libs tracker-miners)
 makedepends=(gobject-introspection packagekit git gtk-doc meson appstream-glib 'meson>=0.44.1' ninja)
 optdepends=('nautilus-sendto: right click to send files')
 options=(!emptydirs)
-_commit=6b062dc691d8853284bddeaa6b74fe020350f4e9  # tags/3.32.3^0
+_commit=6a55af66aff937e6e654759f1d6f84b0e07aaa2f  # tags/3.34.0^0
 source=("git+https://gitlab.gnome.org/GNOME/nautilus.git#commit=$_commit"
         nautilus-restore-typeahead.patch)
 sha256sums=('SKIP'
@@ -41,14 +42,19 @@ build() {
   ninja -C build
 }
 
+#check() {
+#  meson test -C build --print-errorlogs
+#}
+
 package_nautilus-typeahead() {
   depends+=(libnautilus-extension-typeahead)
   conflicts=(nautilus)
   provides=(nautilus)
 
-  DESTDIR="$pkgdir" ninja -C build install
+  DESTDIR="$pkgdir" meson install -C build
 
 ### Split libnautilus-extension
+
   mkdir -p libne/{lib,share}
   mv "$pkgdir"/usr/include libne
   mv "$pkgdir"/usr/lib/{girepository-1.0,libnautilus-extension*,pkgconfig} libne/lib
@@ -60,6 +66,5 @@ package_libnautilus-extension-typeahead() {
   conflicts=(libnautilus-extension)
   provides=(libnautilus-extension)
   depends=(gtk3)
-
   mv libne "$pkgdir/usr"
 }
