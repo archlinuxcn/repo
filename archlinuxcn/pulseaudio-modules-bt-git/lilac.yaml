@@ -13,4 +13,6 @@ post_build: aur_post_build
 update_on:
   - github: EHfive/pulseaudio-modules-bt
   - aur: pulseaudio-modules-bt-git
-  - alias: pulseaudio
+  - archpkg: pulseaudio
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
