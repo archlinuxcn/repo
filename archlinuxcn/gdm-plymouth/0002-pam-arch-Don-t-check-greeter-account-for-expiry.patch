@@ -1,0 +1,29 @@
+From a9c2cb0ae478caf40cc24001fbf6cfbbcc19196e Mon Sep 17 00:00:00 2001
+From: "Jan Alexander Steffens (heftig)" <jan.steffens@gmail.com>
+Date: Tue, 10 Sep 2019 20:37:08 +0000
+Subject: [PATCH 2/3] pam-arch: Don't check greeter account for expiry
+
+systemd-sysusers now creates expired accounts, which broke the greeter
+on new installations.
+
+Doesn't actually fully fix the problem as the user@.service still fails
+to launch.
+---
+ data/pam-arch/gdm-launch-environment.pam | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/data/pam-arch/gdm-launch-environment.pam b/data/pam-arch/gdm-launch-environment.pam
+index 618a7d3a..89521472 100644
+--- a/data/pam-arch/gdm-launch-environment.pam
++++ b/data/pam-arch/gdm-launch-environment.pam
+@@ -1,7 +1,7 @@
+ auth     required  pam_env.so
+ auth     optional  pam_permit.so
+ 
+-account  include   system-local-login
++account  optional  pam_permit.so
+ 
+ password required  pam_deny.so
+ 
+-- 
+2.23.0

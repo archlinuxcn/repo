@@ -1,0 +1,17 @@
+post_install() {
+  # Can't use sysusers as the greeter session cannot launch with an expired 'gdm' account
+  # https://bugs.archlinux.org/task/63706
+  if ! getent passwd gdm >/dev/null; then
+    groupadd -r -g 120 gdm
+    useradd -r -c "Gnome Display Manager" -u 120 -g gdm -d /var/lib/gdm -s /sbin/nologin gdm
+    passwd -ql gdm
+  fi
+}
+
+post_upgrade() {
+  if (( $(vercmp $2 3.34.0-2) < 0 )); then
+    usermod --expiredate= gdm >/dev/null
+  fi
+}
+
+# vim:set ft=sh sw=2 et:

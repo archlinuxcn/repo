@@ -1,0 +1,30 @@
+From 3b6ca2e211b9874e61e9a6950c52b52f2a79dca3 Mon Sep 17 00:00:00 2001
+From: "Jan Alexander Steffens (heftig)" <jan.steffens@gmail.com>
+Date: Tue, 10 Sep 2019 20:41:10 +0000
+Subject: [PATCH 3/3] pam-arch: Restrict greeter service to the gdm user
+
+Copied from pam-exherbo.
+---
+ data/pam-arch/gdm-launch-environment.pam | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/data/pam-arch/gdm-launch-environment.pam b/data/pam-arch/gdm-launch-environment.pam
+index 89521472..d59c9cb9 100644
+--- a/data/pam-arch/gdm-launch-environment.pam
++++ b/data/pam-arch/gdm-launch-environment.pam
+@@ -1,10 +1,13 @@
+ auth     required  pam_env.so
++auth     required  pam_succeed_if.so audit quiet_success user = gdm
+ auth     optional  pam_permit.so
+ 
++account  required  pam_succeed_if.so audit quiet_success user = gdm
+ account  optional  pam_permit.so
+ 
+ password required  pam_deny.so
+ 
+ session  optional  pam_keyinit.so force revoke
++session  required  pam_succeed_if.so audit quiet_success user = gdm
+ session  required  pam_systemd.so
+ session  optional  pam_permit.so
+-- 
+2.23.0
