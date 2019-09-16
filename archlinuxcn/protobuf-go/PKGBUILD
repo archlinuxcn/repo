@@ -1,6 +1,6 @@
 # Maintainer: FzerorubigD <Fzerorubigd {AT} GMail {DOT} com>
 pkgname=protobuf-go
-pkgver=652.d3c38a4
+pkgver=657.822fe569
 pkgrel=1
 pkgdesc="Go support for Google's protocol buffers"
 arch=('i686' 'x86_64' 'armv5tel' 'armv6l' 'armv71')
