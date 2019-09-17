@@ -4,7 +4,7 @@
 
 pkgname=parsoid-git
 _pkgname=parsoid
-pkgver=0.10.0.20190911
+pkgver=0.10.0.20190916
 pkgrel=1
 pkgdesc="A bidirectional wikitext parser and runtime"
 arch=('any')
@@ -20,7 +20,7 @@ replaces=('parsoid')
 provides=('parsoid')
 backup=(usr/share/webapps/parsoid/localsettings.js
 	usr/share/webapps/parsoid/config.yaml)
-source=("git+https://gerrit.wikimedia.org/r/mediawiki/services/parsoid/"
+source=("git+https://phabricator.wikimedia.org/diffusion/GPAR/parsoid.git"
         "parsoid.service"
         "parsoid.install"
         "parsoid.sysusers"
