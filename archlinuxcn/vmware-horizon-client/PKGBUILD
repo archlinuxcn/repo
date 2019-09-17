@@ -13,10 +13,10 @@ _bundled_with_client=('vmware-horizon-pcoip'
 	# Currently unused bundled packages:
 	#  vmware-horizon-media-provider
 	#  vmware-horizon-serialportclient
-pkgver=5.1.0
-_build=13956721
-_cart='CART20FQ2'
-pkgrel=2
+pkgver=5.2.0
+_build=14604769
+_cart='CART20FQ3'
+pkgrel=1
 pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop'
 arch=('x86_64')
 url='https://www.vmware.com/go/viewclients'
@@ -27,7 +27,7 @@ source=("${pkgbase}-${pkgver}-${_build}-x86_64.bundle::https://download3.vmware.
         'vmware-horizon-usb'
         'vmware-horizon-usb.service'
         'vmware-horizon-virtual-printing.service')
-sha256sums=('96baf824f82c910ec70d25bac0b99b3785d5075fa659b1729eeb24ac9446ccec'
+sha256sums=('1bb7d0da09a92a96d5b5edee0c7f11f26bd9d6a9c4d84951fc8ed282fb5a5645'
             'd8794c22229afdeb698dae5908b7b2b3880e075b19be38e0b296bb28f4555163'
             '008b60ebf45f7d1e033c8ad8ce1688d5e1c59fc0668493067fb89b563b1dc00f'
             'a897c1b9e8928fc222880ebbfc7bb6aff940bff4acf4e4e0cd4002fff81c7226'
@@ -99,7 +99,7 @@ package_vmware-horizon-client() {
 	conflicts=('vmware-view-open-client' 'vmware-view-open-client-beta' 'vmware-view-client'
 		'vmware-horizon-pcoip')
 	replaces=('vmware-horizon-pcoip')
-	depends=('gnome-icon-theme' 'gtk2' 'libpng12' 'libudev0-shim' 'libxml2' 'libxss'
+	depends=('gnome-icon-theme' 'gtk3' 'libpng12' 'libudev0-shim' 'libxml2' 'libxss'
 		'libxtst' 'openssl' 'binutils' 'glib2' 'expat' 'vmware-keymaps')
 	optdepends=('alsa-lib: audio support via alsa'
 		'freerdp: RDP remote desktop connections'
@@ -133,7 +133,7 @@ package_vmware-horizon-client() {
 	cd "${srcdir}/extract/vmware-horizon-seamless-window/"
 
 	mkdir -p "${pkgdir}/usr/"
-	install -D -m0755 vmware-view-crtbora "${pkgdir}/usr/lib/vmware/view/bin/vmware-view-crtbora"
+	install -D -m0755 vmware-view "${pkgdir}/usr/lib/vmware/view/bin/vmware-view"
 	cp -a lib/ "${pkgdir}/usr/"
 }
 
