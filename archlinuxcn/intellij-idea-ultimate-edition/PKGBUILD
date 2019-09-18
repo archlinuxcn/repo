@@ -4,7 +4,7 @@ pkgbase=intellij-idea-ultimate-edition
 pkgname=(intellij-idea-ultimate-edition intellij-idea-ultimate-edition-jre)
 pkgver=2019.2.2
 _buildver=192.6603.28
-pkgrel=1
+pkgrel=2
 arch=('any')
 pkgdesc="An intelligent IDE for Java, Groovy and other programming languages with advanced refactoring features intensely focused on developer productivity."
 url="https://www.jetbrains.com/idea/"
@@ -17,6 +17,7 @@ sha256sums=('5b16caa8a495f381b8d72b8c819c701d9cd39ae98efcaf05203d7e40a20fffae'
 
 prepare() {
   # Extract the JRE from the main pacakge
+  rm -rf "$srcdir"/jbr
   mv idea-IU-$_buildver/jbr "$srcdir"/jbr
 }
 
