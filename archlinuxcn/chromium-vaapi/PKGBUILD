@@ -10,7 +10,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=chromium-vaapi
-pkgver=76.0.3809.132
+pkgver=77.0.3865.75
 pkgrel=1
 _launcher_ver=6
 pkgdesc="Chromium with VA-API support to enable hardware acceleration"
@@ -35,6 +35,12 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-drirc-disable-10bpc-color-configs.conf
         vaapi-fix.patch
         chromium-widevine.patch
+        include-memory-in-one_euro_filter.h.patch
+        link-against-harfbuzz-subset.patch
+        fix-wrong-string-initialization-in-LinkedHashSet.patch
+        include-limits-in-web_time_range.cc.patch
+        chromium-system-icu.patch
+        chromium-system-zlib.patch
         chromium-skia-harmony.patch)
 sha256sums=('d54e4640b5e399d170dffbc5bcff65157eb1b29314b94b5d808f727d9ce45241'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
@@ -90,6 +96,22 @@ prepare() {
     third_party/blink/renderer/core/xml/*.cc \
     third_party/blink/renderer/core/xml/parser/xml_document_parser.cc \
     third_party/libxml/chromium/libxml_utils.cc
+
+  # https://crbug.com/819294
+  patch -Np1 -i ../include-memory-in-one_euro_filter.h.patch
+
+  # https://groups.google.com/a/chromium.org/d/msg/chromium-packagers/UyJsVJ5QqWo/jSv5z7-rEQAJ
+  patch -Np1 -i ../link-against-harfbuzz-subset.patch
+
+  # https://crbug.com/980025
+  patch -Np1 -i ../fix-wrong-string-initialization-in-LinkedHashSet.patch
+
+  # https://crbug.com/992832
+  patch -Np1 -i ../include-limits-in-web_time_range.cc.patch
+
+  # Fixes from Gentoo
+  patch -Np1 -i ../chromium-system-icu.patch
+  patch -Np1 -i ../chromium-system-zlib.patch
 
   # Fix VA-API on Intel and Nvidia
   patch -Np1 -i ../vaapi-fix.patch
@@ -213,7 +235,7 @@ package() {
     cp out/Release/icudtl.dat "$pkgdir/usr/lib/chromium/"
   fi
 
-  for size in 22 24 48 64 128 256; do
+  for size in 24 48 64 128 256; do
     install -Dm644 "chrome/app/theme/chromium/product_logo_$size.png" \
       "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps/chromium.png"
   done
