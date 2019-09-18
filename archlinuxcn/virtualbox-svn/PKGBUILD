@@ -10,7 +10,7 @@ pkgname=('virtualbox-svn'
          'virtualbox-guest-utils-svn'
          'virtualbox-guest-utils-nox-svn'
          'virtualbox-ext-vnc-svn')
-pkgver=80012
+pkgver=80830
 pkgrel=1
 _vboxsf_commit='87b9015c57dd7f226c768131bf8b4c0249de9835'
 arch=('x86_64')
@@ -71,13 +71,13 @@ source=("VirtualBox::svn+http://www.virtualbox.org/svn/vbox/trunk"
         'vboxservice-nox.service'
         'vboxweb.service'
         'vboxreload'
-        '002-dri-driver-path.patch'
         '005-gsoap-build.patch'
         '006-rdesktop-vrdp-keymap-path.patch'
         '008-no-vboxvideo.patch'
         '011-python-3-7.patch'
         '012-vbglR3GuestCtrlDetectPeekGetCancelSupport.patch'
         '013-Makefile.patch'
+        '014-iasl.patch'
         # The following patch and mount.vboxsf wrapper should be removed
         # once support for mainline-style options string gets upstreamed
         '101-vboxsf-automount.patch'
@@ -96,13 +96,13 @@ sha256sums=('SKIP'
             '01dbb921bd57a852919cc78be5b73580a564f28ebab2fe8d6c9b8301265cbfce'
             'e6e875ef186578b53106d7f6af48e426cdaf1b4e86834f01696b8ef1c685787f'
             '2a9d7748dc58f9d091f791da06b733a696943114f7c0d580fa00a0752eb1d2ac'
-            'f67674931c30187f867233e3a4ae662f93c9110fbd0bfce50dd9f391f4533bc0'
             '7d2da8fe10a90f76bbfc80ad1f55df4414f118cd10e10abfb76070326abebd46'
             '13c6ca9be0f91582445fd2a14a8c58a0625a15d9cb98cb6e8c2736d77ea976ab'
             '8b7f241107863f82a5b0ae336aead0b3366a40103ff72dbebf33f54b512a0cbc'
             '55224cb74b54b331d691f171efc0d4c058a14f738551f1d8f559146c2908635d'
             '06485dce54a5f21b85f4360db884d98c1ab091d3f2535881ec9fcd82feb06b7e'
             'da7e58ed37dc23c6202aab3017864579a99e78417f3421ddcc98a198198fe2c9'
+            '5ad14bd587031ac3dcadaeca2cc4d7b48a59ff09b03884b4fc2be5b1432a8237'
             'a784f3cc24652a16385cc63abac6c5178932ca5f3861be7650631b7dafa753a4'
             'f3ed6741f8977f40900c8aa372fa082df1f8723d497d4fff445153c543bc8947')
 
@@ -361,8 +361,8 @@ package_virtualbox-guest-utils-svn() {
     install -m0644 -D "$srcdir"/VirtualBox/src/VBox/Additions/x11/Installer/vboxclient.desktop \
         "$pkgdir"/etc/xdg/autostart/vboxclient.desktop
     install -d "$pkgdir/usr/lib/xorg/modules/dri"
-    install -m0755 VBoxOGL*.so "$pkgdir/usr/lib"
-    ln -s /usr/lib/VBoxOGL.so "$pkgdir/usr/lib/xorg/modules/dri/vboxvideo_dri.so"
+    #install -m0755 VBoxOGL*.so "$pkgdir/usr/lib"
+    #ln -s /usr/lib/VBoxOGL.so "$pkgdir/usr/lib/xorg/modules/dri/vboxvideo_dri.so"
     install -m0755 -D pam_vbox.so "$pkgdir/usr/lib/security/pam_vbox.so"
     popd
     # systemd stuff
