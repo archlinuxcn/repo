@@ -1,13 +1,16 @@
 pkgname=go-lint-git
-pkgver=20190301.176_5614ed5
+pkgver=20190909.179_414d861
 pkgrel=1
 pkgdesc="golang lint"
 arch=('i686' 'x86_64')
-license=('GPL')
+license=('BSD 3-Clause')
+url="https://github.com/golang/lint"
+
 depends=(
 )
+
 makedepends=(
-	'go'
+	'go>=1.12'
 	'git'
 )
 
@@ -34,12 +37,10 @@ pkgver() {
 }
 
 build() {
-	GOPATH=$srcdir
 	GOBIN=$srcdir/bin/
-	mkdir -p $srcdir/src/golang.org/x/
-	ln -sf $srcdir/lint $srcdir/src/golang.org/x/lint
-	cd $srcdir/src/golang.org/x/lint/golint
-	go get -v
+	mkdir -p $GOBIN
+	cd $srcdir/lint/golint
+	go install -v .
 }
 
 package() {
