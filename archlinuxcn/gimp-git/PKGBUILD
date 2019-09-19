@@ -90,7 +90,7 @@ package() {
 
   make DESTDIR="$pkgdir" install
 
-  install -Dm 644 "$srcdir"/linux.gpl "$pkgdir"/usr/share/gimp/2.0/palettes/Linux.gpl
+  install -Dm 644 "$srcdir"/linux.gpl "$pkgdir"/usr/share/gimp/2.99/palettes/Linux.gpl
   
   #fix gimp.desktop
   mv ${pkgdir}/usr/share/applications/gimp.desktop ${pkgdir}/usr/share/applications/gimp-2.99.desktop
