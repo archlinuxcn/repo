@@ -7,7 +7,7 @@
 
 pkgname=megasync
 pkgver=4.2.5
-pkgrel=1
+pkgrel=2
 pkgdesc="Easy automated syncing between your computers and your MEGA cloud drive"
 arch=('i686' 'x86_64')
 url="https://github.com/meganz/MEGAsync"
@@ -16,7 +16,7 @@ depends=('c-ares' 'crypto++' 'libsodium' 'hicolor-icon-theme' 'libuv'
          'qt5-svg' 'libmediainfo' 'libraw' 'qt5-base' 'ffmpeg')
 makedepends=('qt5-tools' 'swig' 'doxygen' 'lsb-release' 'git')
 optdepends=('sni-qt: fix systray issue on KDE and LXQt')
-_extname=".0_Win"
+_extname=".0_Linux"
 source=("git+https://github.com/meganz/MEGAsync.git#tag=v${pkgver}${_extname}"
         "meganz-sdk::git+https://github.com/meganz/sdk.git")
 sha256sums=('SKIP'
