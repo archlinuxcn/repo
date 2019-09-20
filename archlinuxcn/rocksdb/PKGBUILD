@@ -1,7 +1,7 @@
 # Maintainer: László Várady <laszlo.varady93@gmail.com>
 
 pkgname=rocksdb
-pkgver=6.2.2
+pkgver=6.2.4
 pkgrel=1
 pkgdesc='Embedded key-value store for fast storage'
 arch=('x86_64')
@@ -12,7 +12,7 @@ makedepends=('cmake')
 #checkdepends=('python2')
 conflicts=('rocksdb-lite' 'rocksdb-release')
 source=("https://github.com/facebook/rocksdb/archive/v$pkgver.tar.gz")
-sha256sums=('3e7365cb2a35982e95e5e5dd0b3352dc78573193dafca02788572318c38483fb')
+sha256sums=('7f34d1b55501f5273d11cd064bd34aef87c51ff114452968b86457f06cdb8ced')
 
 build() {
   cd "$pkgname-$pkgver"
