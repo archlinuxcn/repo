@@ -1423,3 +1423,15 @@ Sat Sep 14 23:17:44 2019 +0200
     Notable changes:
      2019-09-14 0213895 actionless fix(build, install_info_fetcher, pacman): --print-info, --deptest and --remove conflicts with --overwrite flag of --sync
      2019-09-13 210e3d1 actionless fix(pikspect: run): explicitly close slave pty-s (ref: #387)
+
+
+Sat Sep 21 01:04:57 2019 +0200
+-------------------------------------------------
+1.5             Release 1.5
+    
+    Notable changes:
+     2019-09-20 fa552a3 actionless feat: search, select and install packages (closes #351)
+     2019-09-20 0c03ce5 actionless fix(args, main: cli_entry_point): improve proxying pacman -F and -l flags
+     2019-09-18 819b813 actionless fix(core: isolate_root_cmd): use absolute path for WorkingDirectory (fixes #390)
+     2019-09-17 2c67908 actionless fix,refactor(build): simplify handling of last_installed_hash and also handle if the file is corrupted (ref: #392)
+     2019-09-15 3292696 actionless fix(main: cli_entry_points: dynamic_users): don't override --pikaur-config if it was already set by user (fixes #391)
