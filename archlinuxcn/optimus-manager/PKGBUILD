@@ -1,7 +1,7 @@
 # Maintainer: Robin Lange <robin dot langenc at gmail dot com>
 # Contributor: Robin Lange <robin dot langenc at gmail dot com>
 pkgname=optimus-manager
-pkgver=1.1
+pkgver=1.2
 pkgrel=1
 pkgdesc="Management utility to handle GPU switching for Optimus laptops"
 arch=('any')
@@ -11,12 +11,15 @@ conflicts=("optimus-manager-git")
 provides=("optimus-manager=$pkgver")
 depends=('python3' 'python-setuptools' 'python-dbus' 'mesa-demos' 'xorg-xrandr')
 optdepends=('bbswitch: alternative power switching method'
+            'acpi_call: alternative power switching method'
             'xf86-video-intel: provides the Xorg intel driver')
 makedepends=('python-setuptools' 'git')
 backup=('etc/optimus-manager/xorg-intel.conf'
         'etc/optimus-manager/xorg-nvidia.conf'
         'etc/optimus-manager/xsetup-intel.sh'
         'etc/optimus-manager/xsetup-nvidia.sh'
+        'etc/optimus-manager/nvidia-enable.sh'
+        'etc/optimus-manager/nvidia-disable.sh'
         'var/lib/optimus-manager/startup_mode'
         'var/lib/optimus-manager/requested_mode')
 source=("git+https://github.com/Askannz/optimus-manager.git#tag=v$pkgver")
@@ -58,6 +61,9 @@ package() {
   
   install -Dm755 config/xsetup-intel.sh "$pkgdir/etc/optimus-manager/xsetup-intel.sh"
   install -Dm755 config/xsetup-nvidia.sh "$pkgdir/etc/optimus-manager/xsetup-nvidia.sh"
+
+  install -Dm755 config/nvidia-enable.sh "$pkgdir/etc/optimus-manager/nvidia-enable.sh"
+  install -Dm755 config/nvidia-disable.sh "$pkgdir/etc/optimus-manager/nvidia-disable.sh"
  
   python3 setup.py install --root="$pkgdir/" --optimize=1 --skip-build
  
