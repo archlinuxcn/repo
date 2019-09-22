@@ -2,19 +2,20 @@
 # Contributor: Felix Yan <felixonmars@archlinux.org>
 # Contributor: Shanto <shanto@hotmail.com>
 # Contributor: TDY <tdy@gmx.com>
-# Maintainer: zoe <chp321 [at] gmail [dot] com>
+# Contributor: zoe <chp321 [at] gmail [dot] com>
+# Maintainer: PhotonX <photon89 [at] gmail [dot] com>
 
 pkgname=perl-goo-canvas
 pkgver=0.06
 pkgrel=12
 pkgdesc="Perl bindings for GooCanvas"
 arch=('i686' 'x86_64')
-url="http://search.cpan.org/dist/Goo-Canvas/"
+url="https://metacpan.org/pod/Goo::Canvas"
 license=('GPL' 'PerlArtistic')
 depends=('perl' 'cairo-perl' 'glib-perl' 'goocanvas1' 'gtk2-perl')
 makedepends=('perl-extutils-depends' 'perl-extutils-pkgconfig')
 options=('!emptydirs')
-source=("http://search.cpan.org/CPAN/authors/id/Y/YE/YEWENBIN/Goo-Canvas-$pkgver.tar.gz")
+source=("https://cpan.metacpan.org/authors/id/Y/YE/YEWENBIN/Goo-Canvas-$pkgver.tar.gz")
 md5sums=('7dfe0be8c17bfd641d18384d4fd8fb23')
 
 build() {
