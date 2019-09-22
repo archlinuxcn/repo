@@ -2,7 +2,7 @@
 
 pkgname=google-drive-ocamlfuse
 _pkgname=google-drive-ocamlfuse
-pkgver=0.7.11
+pkgver=0.7.13
 pkgrel=1
 pkgdesc="FUSE-based file system backed by Google Drive, written in OCaml (installed from opam)"
 arch=('x86_64')
@@ -16,13 +16,9 @@ source=()
 sha256sums=()
 options=()
 
-prepare() {
-    cd ${srcdir}
-    opam init -a --disable-sandboxing && opam update
-}
-
 pkgver() {
     cd "${srcdir}"
+    opam init -a --disable-sandboxing 1>&2 && opam update 1>&2
     opam list ${_pkgname} --columns=version | awk '/^[^#]/{print}' | sort -V | tail -n 1
 }
 
