@@ -10,7 +10,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=chromium-vaapi
-pkgver=77.0.3865.75
+pkgver=77.0.3865.90
 pkgrel=1
 _launcher_ver=6
 pkgdesc="Chromium with VA-API support to enable hardware acceleration"
@@ -34,18 +34,24 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-launcher-$_launcher_ver.tar.gz::https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver.tar.gz
         chromium-drirc-disable-10bpc-color-configs.conf
         vaapi-fix.patch
-        chromium-widevine.patch
         include-memory-in-one_euro_filter.h.patch
         link-against-harfbuzz-subset.patch
         fix-wrong-string-initialization-in-LinkedHashSet.patch
         include-limits-in-web_time_range.cc.patch
         chromium-system-icu.patch
         chromium-system-zlib.patch
+        chromium-widevine.patch
         chromium-skia-harmony.patch)
-sha256sums=('d54e4640b5e399d170dffbc5bcff65157eb1b29314b94b5d808f727d9ce45241'
+sha256sums=('004cfdb1df74847bea8659bcaf8e039d51fe1101d42b6cf1c6cc346073fdefc3'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
             'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb'
             '333b1e0997ad8831906f66550efc73f51b8650ec3436a247d920b5d12e2169de'
+            '33a5bcd1df2cc7aa7467fa882790ef143a4497d2b704c9e1ea86c8ede90c2d90'
+            'ab986e4b723dfcedab1bc8dcada07526facae28a8a7ff3345f658532c1d99987'
+            '840f555020751ec284dca35b9317a9dd7dc69fcb910ea1cae2dd7cc9b237dfb7'
+            'd3dfe3c86901a11636972a774ed6c941ac76e38c9e4a384f458043a0a03291a9'
+            'e73cc2ee8d3ea35aab18c478d76fdfc68ca4463e1e10306fa1e738c03b3f26b5'
+            '0f7ba6882844542a7226b419dfefc5b6a16b5b7882698bd773b5ee9148aa6e87'
             'd081f2ef8793544685aad35dea75a7e6264a2cb987ff3541e6377f4a3650a28b'
             '771292942c0901092a402cc60ee883877a99fb804cb54d568c8c6c94565a48e1')
 
@@ -97,6 +103,9 @@ prepare() {
     third_party/blink/renderer/core/xml/parser/xml_document_parser.cc \
     third_party/libxml/chromium/libxml_utils.cc
 
+  # Fix VA-API on Intel and Nvidia
+  patch -Np1 -i ../vaapi-fix.patch
+
   # https://crbug.com/819294
   patch -Np1 -i ../include-memory-in-one_euro_filter.h.patch
 
@@ -112,9 +121,6 @@ prepare() {
   # Fixes from Gentoo
   patch -Np1 -i ../chromium-system-icu.patch
   patch -Np1 -i ../chromium-system-zlib.patch
-
-  # Fix VA-API on Intel and Nvidia
-  patch -Np1 -i ../vaapi-fix.patch
 
   # Load Widevine CDM if available
   patch -Np1 -i ../chromium-widevine.patch
