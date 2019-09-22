@@ -1,8 +1,18 @@
+# HG changeset patch
+# User Thomas Deutschmann <whissi@gentoo.org>
+
+# Parent  66f9c84511dda432587261f6b9ebf07c4771aad8
 Add ability to use system-av1 (media-libs/libaom and media-libs/dav1d) instead of bundled.
 
+diff --git a/config/external/moz.build b/config/external/moz.build
 --- a/config/external/moz.build
 +++ b/config/external/moz.build
-@@ -37,8 +37,9 @@ if not CONFIG['MOZ_SYSTEM_LIBVPX']:
+@@ -32,18 +32,19 @@ if CONFIG['MOZ_TREMOR']:
+ 
+ if CONFIG['MOZ_WEBM_ENCODER']:
+     external_dirs += ['media/libmkv']
+ 
+ if not CONFIG['MOZ_SYSTEM_LIBVPX']:
      external_dirs += ['media/libvpx']
  
  if CONFIG['MOZ_AV1']:
@@ -14,9 +24,20 @@ Add ability to use system-av1 (media-libs/libaom and media-libs/dav1d) instead o
  
  if not CONFIG['MOZ_SYSTEM_PNG']:
      external_dirs += ['media/libpng']
+ 
+ if not CONFIG['MOZ_SYSTEM_WEBP']:
+     external_dirs += ['media/libwebp']
+ 
+ if CONFIG['CPU_ARCH'] == 'arm':
+diff --git a/config/system-headers.mozbuild b/config/system-headers.mozbuild
 --- a/config/system-headers.mozbuild
 +++ b/config/system-headers.mozbuild
-@@ -1316,6 +1316,14 @@ if CONFIG['MOZ_ENABLE_CONTENTMANAGER']:
+@@ -1311,16 +1311,24 @@ if CONFIG['MOZ_ENABLE_CONTENTMANAGER']:
+     system_headers += [
+         'QtSparql/qsparqlconnection.h',
+         'QtSparql/qsparqlquery.h',
+         'QtSparql/qsparqlresult.h',
+         'SelectMultipleContentItemsPage.h',
          'SelectSingleContentItemPage.h',
      ]
  
@@ -31,9 +52,20 @@ Add ability to use system-av1 (media-libs/libaom and media-libs/dav1d) instead o
  if CONFIG['MOZ_SYSTEM_LIBVPX']:
      system_headers += [
          'vpx_mem/vpx_mem.h',
+         'vpx/svc_context.h',
+         'vpx/vp8cx.h',
+         'vpx/vp8dx.h',
+         'vpx/vpx_codec.h',
+         'vpx/vpx_decoder.h',
+diff --git a/dom/media/platforms/moz.build b/dom/media/platforms/moz.build
 --- a/dom/media/platforms/moz.build
 +++ b/dom/media/platforms/moz.build
-@@ -78,6 +78,11 @@ if CONFIG['MOZ_AV1']:
+@@ -75,16 +75,21 @@ if CONFIG['MOZ_AV1']:
+     EXPORTS += [
+         'agnostic/AOMDecoder.h',
+         'agnostic/DAV1DDecoder.h',
+     ]
+     UNIFIED_SOURCES += [
          'agnostic/AOMDecoder.cpp',
          'agnostic/DAV1DDecoder.cpp',
      ]
@@ -45,12 +77,24 @@ Add ability to use system-av1 (media-libs/libaom and media-libs/dav1d) instead o
  
  if CONFIG['MOZ_OMX']:
      EXPORTS += [
+         'omx/OmxCoreLibLinker.h',
+     ]
+     UNIFIED_SOURCES += [
+         'omx/OmxCoreLibLinker.cpp',
+     ]
+diff --git a/toolkit/moz.configure b/toolkit/moz.configure
 --- a/toolkit/moz.configure
 +++ b/toolkit/moz.configure
-@@ -464,6 +464,24 @@ def av1(value, target, c_compiler):
- set_config('MOZ_AV1', av1)
- set_define('MOZ_AV1', av1)
+@@ -460,32 +460,49 @@ imply_option('--enable-fmp4', ffmpeg, '-
+ option('--disable-av1',
+         help='Disable av1 video support')
  
+ @depends('--enable-av1')
+ def av1(value):
+     if value:
+         return True
+ 
+-@depends(target, nasm_version, when=av1 & compile_environment)
 +option('--with-system-av1',
 +       help="Use system av1 (located with pkgconfig)")
 +
@@ -67,8 +111,28 @@ Add ability to use system-av1 (media-libs/libaom and media-libs/dav1d) instead o
 +        has_av1_libs = True
 +    return has_av1_libs
 +
++@depends(target, nasm_version, when=av1 & depends(system_av1)(lambda v: not v) & compile_environment)
+ def dav1d_asm(target, nasm_version):
+     if target.os != 'Android':
+         if target.cpu == 'aarch64':
+             return True
+         elif target.cpu in ('x86', 'x86_64'):
+             if nasm_version < '2.13':
+                 die('nasm 2.13 or greater is required for AV1 support. '
+                     'Either install nasm or add --disable-av1 to your configure options.')
+             return True
+ 
+ 
+ set_config('MOZ_DAV1D_ASM', dav1d_asm)
+ set_define('MOZ_DAV1D_ASM', dav1d_asm)
+ set_config('MOZ_AV1', av1)
+ set_define('MOZ_AV1', av1)
 +set_config('MOZ_SYSTEM_AV1', depends_if(system_av1)(lambda _: True))
-+
+ 
  # Built-in fragmented MP4 support.
  # ==============================================================
  option('--disable-fmp4', env='MOZ_FMP4',
+        help='Disable support for in built Fragmented MP4 parsing')
+ 
+ @depends('--disable-fmp4', target, wmf, applemedia)
+ def fmp4(value, target, wmf, applemedia):

@@ -19,7 +19,7 @@ _pgo=true
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=68.0.2
+pkgver=69.0
 pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
@@ -51,7 +51,7 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
             'pulseaudio: Audio support')
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
-_patchrev=840132a4a9b3
+_patchrev=972f68ac6b1a
 options=('!emptydirs' 'debug')
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 _repo=https://hg.mozilla.org/mozilla-unified
@@ -71,9 +71,6 @@ source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
         pgo_fix_missing_kdejs.patch
         2000_system_harfbuzz_support.patch
         2001_system_graphite2_support.patch
-        # pgo fixes
-        mozilla-1516803.patch
-        mozilla-1516081.patch
         pgo.patch
         # use sytem av1
         7002_system_av1_support.patch
@@ -128,11 +125,6 @@ prepare() {
   patch -Np1 -i "$srcdir"/0001-Use-remoting-name-for-GDK-application-names.patch
   
   if [[ $_pgo ]] ; then
-    # https://bugzilla.mozilla.org/show_bug.cgi?id=1516803
-    patch -Np1 -i  "$srcdir"/mozilla-1516803.patch
-    # https://bugzilla.mozilla.org/show_bug.cgi?id=1516081
-    patch -Np1 -i  "$srcdir"/mozilla-1516081.patch
-
     # add missing rule for pgo builds
     patch -Np1 -i "$srcdir"/add_missing_pgo_rule.patch
 
@@ -226,16 +218,14 @@ md5sums=('SKIP'
          '5cee310a9040ccc5abcf29742b84aeb8'
          '05bb69d25fb3572c618e3adf1ee7b670'
          'd7ce23a18da21c05cd756766e177834f'
-         '6ce1848c9987aa10e954c5f9ac2c7e18'
-         'cbec3c8957600bb83c7bfffa6fd42d70'
+         '80d64ae704c9babaa9c725bfd7e2895d'
+         '591c8d36479516332d7503995bb25743'
          'e083ae314eaa9355aa2d4aa75a7fc277'
-         '16447c9996d36ab3b61d64de9843c681'
+         '31ad6614435329ff23e44a8567cb1cea'
          'fe24f5ea463013bb7f1c12d12dce41b2'
          '3fa8bd22d97248de529780f5797178af'
-         'bb549715cf74bcd5cbb0a1e435b1651e'
-         '05041908a051d5de7c015747d4cb0f4f'
-         'becf6bf9ceb6008401832c855ccadff9'
-         '79d27c8896913c7d87b148240995ab69'
+         'c6fccc1410d6d9b742e77cf96727fdee'
+         '53334de4a374ba4be65e23138d447e9c'
          'f867ae41a722630cc5567e2dcc51676d'
-         'df439e02304d302009c320a540f01dbe'
+         'b669f4156af8851f13fe671e804139c5'
          '0ffabb81dd8a5fe98bb8afe47d6541d3')

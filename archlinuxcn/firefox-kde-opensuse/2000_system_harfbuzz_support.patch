@@ -57,7 +57,7 @@ diff --git a/dom/base/moz.build b/dom/base/moz.build
 diff --git a/gfx/moz.build b/gfx/moz.build
 --- a/gfx/moz.build
 +++ b/gfx/moz.build
-@@ -7,16 +7,19 @@
+@@ -7,26 +7,28 @@
  with Files('**'):
      BUG_COMPONENT = ('Core', 'Graphics')
  with Files('wr/**'):
@@ -77,10 +77,20 @@ diff --git a/gfx/moz.build b/gfx/moz.build
      'qcms',
      'gl',
      'layers',
+     'graphite2/src',
+-    'harfbuzz/src',
+     'ots/src',
+     'thebes',
+     'ipc',
+     'vr',
+     'config',
+     'webrender_bindings',
+ ]
+ 
 diff --git a/gfx/skia/generate_mozbuild.py b/gfx/skia/generate_mozbuild.py
 --- a/gfx/skia/generate_mozbuild.py
 +++ b/gfx/skia/generate_mozbuild.py
-@@ -111,16 +111,19 @@ if CONFIG['CC_TYPE'] == 'gcc':
+@@ -112,16 +112,19 @@ if CONFIG['CC_TYPE'] == 'gcc':
  if CONFIG['CC_TYPE'] in ('clang', 'clang-cl'):
      CXXFLAGS += [
          '-Wno-implicit-fallthrough',
@@ -126,10 +136,10 @@ diff --git a/gfx/skia/moz.build b/gfx/skia/moz.build
 diff --git a/gfx/thebes/moz.build b/gfx/thebes/moz.build
 --- a/gfx/thebes/moz.build
 +++ b/gfx/thebes/moz.build
-@@ -274,11 +274,14 @@ if CONFIG['MOZ_WIDGET_TOOLKIT'] in ('and
+@@ -281,11 +281,14 @@ if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'gtk3
  
- if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'gtk3':
-     CXXFLAGS += CONFIG['MOZ_PANGO_CFLAGS']
+ if CONFIG['MOZ_WAYLAND']:
+     CXXFLAGS += CONFIG['MOZ_WAYLAND_CFLAGS']
  
  LOCAL_INCLUDES += CONFIG['SKIA_INCLUDES']
  
@@ -179,7 +189,7 @@ diff --git a/netwerk/dns/moz.build b/netwerk/dns/moz.build
 diff --git a/toolkit/library/moz.build b/toolkit/library/moz.build
 --- a/toolkit/library/moz.build
 +++ b/toolkit/library/moz.build
-@@ -207,16 +207,19 @@ if CONFIG['MOZ_ANDROID_GOOGLE_VR']:
+@@ -211,16 +211,19 @@ if CONFIG['MOZ_ANDROID_GOOGLE_VR']:
      OS_LIBS += [
          '-L%s' % CONFIG['MOZ_ANDROID_GOOGLE_VR_LIBS'],
          '-lgvr',

@@ -77,7 +77,7 @@ diff --git a/gfx/graphite2/moz-gr-update.sh b/gfx/graphite2/moz-gr-update.sh
 diff --git a/gfx/moz.build b/gfx/moz.build
 --- a/gfx/moz.build
 +++ b/gfx/moz.build
-@@ -7,16 +7,19 @@
+@@ -7,28 +7,30 @@
  with Files('**'):
      BUG_COMPONENT = ('Core', 'Graphics')
  with Files('wr/**'):
@@ -97,15 +97,27 @@ diff --git a/gfx/moz.build b/gfx/moz.build
      'ycbcr',
      'angle',
      'src',
+     'qcms',
+     'gl',
+     'layers',
+-    'graphite2/src',
+     'ots/src',
+     'thebes',
+     'ipc',
+     'vr',
+     'config',
+     'webrender_bindings',
+ ]
+ 
 diff --git a/gfx/thebes/moz.build b/gfx/thebes/moz.build
 --- a/gfx/thebes/moz.build
 +++ b/gfx/thebes/moz.build
-@@ -272,16 +272,19 @@ CFLAGS += CONFIG['TK_CFLAGS']
- if CONFIG['MOZ_WIDGET_TOOLKIT'] in ('android'):
-     CXXFLAGS += CONFIG['CAIRO_FT_CFLAGS']
- 
+@@ -279,16 +279,19 @@ if CONFIG['MOZ_WIDGET_TOOLKIT'] in ('and
  if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'gtk3':
      CXXFLAGS += CONFIG['MOZ_PANGO_CFLAGS']
+ 
+ if CONFIG['MOZ_WAYLAND']:
+     CXXFLAGS += CONFIG['MOZ_WAYLAND_CFLAGS']
  
  LOCAL_INCLUDES += CONFIG['SKIA_INCLUDES']
  
@@ -124,7 +136,7 @@ diff --git a/gfx/thebes/moz.build b/gfx/thebes/moz.build
 diff --git a/old-configure.in b/old-configure.in
 --- a/old-configure.in
 +++ b/old-configure.in
-@@ -2690,16 +2690,37 @@ if test "$USE_FC_FREETYPE"; then
+@@ -2680,16 +2680,37 @@ if test "$USE_FC_FREETYPE"; then
          CPPFLAGS="$CPPFLAGS $FT2_CFLAGS $XCFLAGS"
          MOZ_CHECK_HEADERS([fontconfig/fcfreetype.h], ,
              [AC_MSG_ERROR(Can't find header fontconfig/fcfreetype.h.)], [#include <fontconfig/fontconfig.h>])
@@ -165,7 +177,7 @@ diff --git a/old-configure.in b/old-configure.in
 diff --git a/toolkit/library/moz.build b/toolkit/library/moz.build
 --- a/toolkit/library/moz.build
 +++ b/toolkit/library/moz.build
-@@ -207,16 +207,19 @@ if CONFIG['MOZ_ANDROID_GOOGLE_VR']:
+@@ -211,16 +211,19 @@ if CONFIG['MOZ_ANDROID_GOOGLE_VR']:
      OS_LIBS += [
          '-L%s' % CONFIG['MOZ_ANDROID_GOOGLE_VR_LIBS'],
          '-lgvr',

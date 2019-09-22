@@ -14,7 +14,7 @@
              <menu id="file-menu" label="&fileMenu.label;"
 --- a/browser/base/content/browser.js
 +++ b/browser/base/content/browser.js
-@@ -5977,11 +5977,17 @@ function onViewToolbarsPopupShowing(aEve
+@@ -6809,11 +6809,17 @@ function onViewToolbarsPopupShowing(aEve
  
    let toolbarNodes = gNavToolbox.querySelectorAll("toolbar");
  
@@ -30,8 +30,8 @@
 +    }
 +
      let menuItem = document.createXULElement("menuitem");
-     let hidingAttribute = toolbar.getAttribute("type") == "menubar" ?
-                           "autohide" : "collapsed";
+     let hidingAttribute =
+       toolbar.getAttribute("type") == "menubar" ? "autohide" : "collapsed";
 --- a/browser/components/places/content/places.xul
 +++ b/browser/components/places/content/places.xul
 @@ -166,7 +166,7 @@
@@ -70,7 +70,7 @@
  nsINode* XULPopupElement::GetTriggerNode() const {
 --- a/dom/xul/moz.build
 +++ b/dom/xul/moz.build
-@@ -78,6 +78,11 @@ LOCAL_INCLUDES += [
+@@ -77,6 +77,11 @@ LOCAL_INCLUDES += [
  
  include('/ipc/chromium/chromium-config.mozbuild')
  
@@ -97,7 +97,7 @@
      'components.conf',
 --- a/modules/libpref/init/all.js
 +++ b/modules/libpref/init/all.js
-@@ -246,6 +246,9 @@ pref("dom.window.event.enabled", true);
+@@ -196,6 +196,9 @@ pref("dom.script_loader.binast_encoding.
  pref("browser.sessionhistory.max_total_viewers", -1);
  
  pref("ui.use_native_colors", true);
@@ -109,7 +109,7 @@
  pref("ui.android.mouse_as_touch", 1);
 --- a/toolkit/content/xul.css
 +++ b/toolkit/content/xul.css
-@@ -215,6 +215,18 @@ toolbar[type="menubar"] {
+@@ -212,6 +212,18 @@ toolbar[type="menubar"] {
  }
  %endif
  
@@ -146,7 +146,7 @@
      'nsWindow.cpp', # conflicts with X11 headers
  ]
  
-@@ -127,6 +136,7 @@ FINAL_LIBRARY = 'xul'
+@@ -129,6 +138,7 @@ FINAL_LIBRARY = 'xul'
  LOCAL_INCLUDES += [
      '/layout/base',
      '/layout/generic',
@@ -324,7 +324,7 @@
 +#endif /* __nsDbusmenu_h__ */
 --- /dev/null
 +++ b/widget/gtk/nsMenu.cpp
-@@ -0,0 +1,843 @@
+@@ -0,0 +1,844 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
 + */
@@ -458,8 +458,8 @@
 +        return;
 +    }
 +
-+    const nsStyleDisplay* display = style->StyleDisplay();
-+    if (!display->mBinding) {
++    const auto& binding = style->StyleDisplay()->mBinding;
++    if (binding.IsNone()) {
 +        return;
 +    }
 +
@@ -468,16 +468,17 @@
 +        return;
 +    }
 +
-+    RefPtr<nsXBLBinding> binding;
++    RefPtr<nsXBLBinding> pendingBinding;
++    const auto& url = binding.AsUrl();
 +    nsresult rv = xbl->LoadBindings(aContent->AsElement(),
-+                                    display->mBinding->GetURI(),
-+                                    display->mBinding->ExtraData()->Principal(),
-+                                    getter_AddRefs(binding));
-+    if ((NS_FAILED(rv) && rv != NS_ERROR_XBL_BLOCKED) || !binding) {
++                                    url.GetURI(),
++                                    url.ExtraData().Principal(),
++                                    getter_AddRefs(pendingBinding));
++    if ((NS_FAILED(rv) && rv != NS_ERROR_XBL_BLOCKED) || !pendingBinding) {
 +        return;
 +    }
 +
-+    doc->BindingManager()->AddToAttachedQueue(binding);
++    doc->BindingManager()->AddToAttachedQueue(pendingBinding);
 +}
 +
 +void
@@ -5141,7 +5142,7 @@
  #include "mozilla/Preferences.h"
  #include "nsIPrefService.h"
  #include "nsIServiceManager.h"
-@@ -5028,6 +5029,10 @@ void nsWindow::HideWindowChrome(bool aSh
+@@ -5123,6 +5124,10 @@ void nsWindow::HideWindowChrome(bool aSh
    SetWindowDecoration(aShouldHide ? eBorderStyle_none : mBorderStyle);
  }
  
@@ -5172,7 +5173,7 @@
    /**
     * GetLastUserInputTime returns a timestamp for the most recent user input
     * event.  This is intended for pointer grab requests (including drags).
-@@ -632,6 +636,8 @@ class nsWindow final : public nsBaseWidg
+@@ -635,6 +639,8 @@ class nsWindow final : public nsBaseWidg
  
    mozilla::UniquePtr<mozilla::CurrentX11TimeGetter> mCurrentTimeGetter;
    static CSDSupportLevel sCSDSupportLevel;
@@ -5183,7 +5184,7 @@
  #endif /* __nsWindow_h__ */
 --- a/widget/moz.build
 +++ b/widget/moz.build
-@@ -68,9 +68,9 @@ elif toolkit == 'cocoa':
+@@ -69,9 +69,9 @@ elif toolkit == 'cocoa':
          'nsITouchBarInput.idl',
          'nsITouchBarUpdater.idl',
      ]
@@ -5229,7 +5230,7 @@
  import sys
  
  # Static atom definitions, used to generate nsGkAtomList.h.
-@@ -2476,7 +2477,7 @@ STATIC_ATOMS = [
+@@ -2478,7 +2479,7 @@ STATIC_ATOMS = [
      InheritingAnonBoxAtom("AnonBox_mozSVGForeignContent", ":-moz-svg-foreign-content"),
      InheritingAnonBoxAtom("AnonBox_mozSVGText", ":-moz-svg-text"),
      # END ATOMS
@@ -5241,8 +5242,8 @@
 --- a/widget/gtk/components.conf
 +++ b/widget/gtk/components.conf
 @@ -75,6 +75,14 @@ Classes = [
-         'type': 'nsTransferable',
-         'headers': ['/widget/nsTransferable.h'],
+         'headers': ['/widget/gtk/nsApplicationChooser.h'],
+         'processes': ProcessSelector.MAIN_PROCESS_ONLY,
      },
 +    {
 +        'cid': '{0B3FE5AA-BC72-4303-85AE-76365DF1251D}',
