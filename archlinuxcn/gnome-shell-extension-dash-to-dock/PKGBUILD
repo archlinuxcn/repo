@@ -5,25 +5,26 @@
 # Contributor: Christopher Krooß <didi2002 at web.de>
 
 pkgname=gnome-shell-extension-dash-to-dock
-_pkgname=dash-to-dock-ubuntu-dock-
-pkgver=66
-pkgrel=2
+_pkgname=dash-to-dock
+pkgver=66+141+g908a050
+pkgrel=1
 pkgdesc="Move the dash out of the overview transforming it in a dock"
 arch=('any')
 url="https://micheleg.github.io/dash-to-dock/"
 license=('GPL')
 depends=('gnome-shell')
-makedepends=('intltool' 'gettext')
-source=("https://github.com/micheleg/dash-to-dock/archive/ubuntu-dock-${pkgver}ubuntu19.10.2.tar.gz")
-sha256sums=('e5d8f50b26422e26c71d5a906b6e72a553e09bcee21bad8e6796055b294bcfa5')
+makedepends=('intltool' 'gettext' 'git')
+_commit=908a05022a1ce2565d56af4c762fe95c5fb6b39c  # master
+source=("git+https://github.com/micheleg/dash-to-dock.git#commit=$_commit")
+sha256sums=('SKIP')
 
 build() {
-  cd "${srcdir}"/${_pkgname}${pkgver}ubuntu19.10.2
+  cd "${srcdir}"/${_pkgname}
   make
 }
 
 package() {
-  cd "${srcdir}"/${_pkgname}${pkgver}ubuntu19.10.2
+  cd "${srcdir}"/${_pkgname}
   make DESTDIR="${pkgdir}" VERSION="${pkgver}" install
 }
 
