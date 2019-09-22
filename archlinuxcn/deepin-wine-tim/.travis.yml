@@ -1,0 +1,39 @@
+sudo: required
+
+services:
+- docker
+
+arch:
+  repos:
+  - archlinuxfr=http://repo.archlinux.fr/$arch
+  packages:
+  - p7zip
+  - wine
+  - wine-mono
+  - wine_gecko
+  - xorg-xwininfo
+  - wqy-microhei
+  - lib32-alsa-lib
+  - lib32-alsa-plugins
+  - lib32-libpulse
+  - lib32-openal
+  - lib32-mpg123
+  - lib32-gnutls
+  script:
+  - "makepkg"
+
+script:
+- "curl -s https://raw.githubusercontent.com/mikkeloscar/arch-travis/master/arch-travis.sh | bash"
+
+deploy:
+  provider: releases
+  skip_cleanup: true
+  overwrite: true
+  api_key: $GH_TOKEN
+  file_glob: true
+  file:
+    - "deepin-wine-tim-*-x86_64.pkg.tar.xz"
+  on:
+    tags: true
+    all_branches: true
+    repo: countstarlight/deepin-wine-tim-arch

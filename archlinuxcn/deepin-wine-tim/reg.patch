@@ -1,0 +1,75 @@
+diff -ruN reg_tmp/system.reg reg_tmp_fixed/system.reg
+--- reg_tmp/system.reg	2018-07-10 09:05:51.000000000 +0800
++++ reg_tmp_fixed/system.reg	2019-03-23 23:47:11.000000000 +0800
+@@ -33235,7 +33235,7 @@
+ #time=1d375560815cedc
+ "DisplayIcon"="C:\\Program Files\\Tencent\\TIM\\TIMUninst.ico"
+ "DisplayName"="TIM"
+-"DisplayVersion"="2.0.0.22317"
++"DisplayVersion"="2.3.2.21158"
+ "EstimatedSize"=dword:0002f7d0
+ "HelpLink"="http://www.tencent.com"
+ "HelpTelephone"="(86) 755 86060836"
+@@ -33259,15 +33259,16 @@
+ [Software\\Microsoft\\Windows\\CurrentVersion\\Winlogon] 1488419467
+ #time=1d292f775c45ac6
+ 
+-[Software\\Microsoft\\Windows NT\\CurrentVersion] 1508383851
+-#time=1d3488aa9ba4da6
+-"CSDVersion"="Service Pack 3"
+-"CurrentBuildNumber"="2600"
++[Software\\Microsoft\\Windows NT\\CurrentVersion] 1553355758
++#time=1d4e18f0af44402
++"CSDVersion"=""
++"CurrentBuild"="17134"
++"CurrentBuildNumber"="17134"
+ "CurrentType"="Uniprocessor Free"
+-"CurrentVersion"="5.1"
++"CurrentVersion"="10.0"
+ "InstallDate"=dword:4be5019a
+ "ProductId"="12345-oem-0000001-54321"
+-"ProductName"="Microsoft Windows XP"
++"ProductName"="Microsoft Windows 10"
+ "RegisteredOrganization"=""
+ "RegisteredOwner"=""
+ "SystemRoot"="C:\\windows"
+@@ -34752,7 +34753,7 @@
+ 
+ [Software\\Tencent\\PlatForm_Type_List\\1] 1511754918
+ #time=1d367338a03faee
+-"TypeName"="TIM2.0.0"
++"TypeName"="TIM2.3.2"
+ "TypePath"="c:\\Program Files\\Tencent\\TIM\\Bin\\TIM.exe"
+ 
+ [Software\\Tencent\\QQ2009\\Component] 1488419637
+diff -ruN reg_tmp/user.reg reg_tmp_fixed/user.reg
+--- reg_tmp/user.reg	2018-07-10 09:05:51.000000000 +0800
++++ reg_tmp_fixed/user.reg	2019-03-22 23:54:30.000000000 +0800
+@@ -893,7 +893,7 @@
+ 
+ [Software\\Tencent\\PlatForm_Type_List\\1] 1511754918
+ #time=1d367338a03f580
+-"TypeName"="TIM2.0.0"
++"TypeName"="TIM2.3.2"
+ "TypePath"="c:\\Program Files\\Tencent\\TIM\\Bin\\TIM.exe"
+ 
+ [Software\\Tencent\\QABS99] 1508380804
+@@ -1016,11 +1016,18 @@
+ "RelayExclude"="ntdll.RtlEnterCriticalSection;ntdll.RtlLeaveCriticalSection;kernel32.48;kernel32.49;kernel32.94;kernel32.95;kernel32.96;kernel32.97;kernel32.98;kernel32.TlsGetValue;kernel32.TlsSetValue;kernel32.FlsGetValue;kernel32.FlsSetValue;kernel32.SetLastError"
+ "RelayFromExclude"="winex11.drv;winemac.drv;user32;gdi32;advapi32;kernel32"
+ 
++[Software\\Wine\\Direct3D] 1549423053
++#time=1d4bdca8095f360
++"DirectDrawRenderer"="opengl"
++"MaxVersionGL"=dword:00003002
++"UseGLSL"="enabled"
++
+ [Software\\Wine\\DllOverrides] 1486619428
+ #time=1d282986ac5b38c
+ "androidassist"=""
+ "mlang"="native,builtin"
+ "msls31"="native,builtin"
++"ntoskrnl.exe"=""
+ "qdantidrv.sys"=""
+ "qqsetupex.exe"=""
+ "riched20"="native,builtin"
