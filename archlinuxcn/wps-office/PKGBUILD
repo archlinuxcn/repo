@@ -7,7 +7,7 @@
 pkgname=wps-office
 pkgver=11.1.0.8865
 #_pkgver=8372
-pkgrel=2
+pkgrel=3
 #_pkgrel=1
 pkgdesc="Kingsoft Office (WPS Office) is an office productivity suite"
 arch=('x86_64')
@@ -19,6 +19,7 @@ optdepends=('cups: for printing support'
             'pango: for complex (right-to-left) text support'
             'curl: An URL retrieval utility and library'
             'ttf-wps-fonts: Symbol fonts required by wps-office'
+            'ttf-ms-fonts: Microsft Fonts recommended for wps-office'
             'wps-office-fonts: FZ TTF fonts provided by wps community')
 conflicts=('kingsoft-office')
 options=('!emptydirs')
