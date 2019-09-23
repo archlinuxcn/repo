@@ -4,7 +4,7 @@ from lilaclib import *
 import datetime
 
 build_prefix = 'extra-x86_64'
-update_on = [{'aur':'gnome-shell-extension-topicons-plus-git', 'use_last_modified':True}, {'github':'huttli/TopIcons-plus'}]
+update_on = [{'aur':'gnome-shell-extension-topicons-plus-git', 'use_last_modified':True}, {'github':'phocean/TopIcons-plus'}]
 
 def pre_build():
     if str(datetime.datetime.now())[:8] < '20181006':
