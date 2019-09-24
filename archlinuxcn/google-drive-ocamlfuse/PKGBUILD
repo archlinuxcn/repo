@@ -3,7 +3,7 @@
 pkgname=google-drive-ocamlfuse
 _pkgname=google-drive-ocamlfuse
 pkgver=0.7.13
-pkgrel=1
+pkgrel=2
 pkgdesc="FUSE-based file system backed by Google Drive, written in OCaml (installed from opam)"
 arch=('x86_64')
 url='https://astrada.github.io/google-drive-ocamlfuse/'
@@ -18,7 +18,7 @@ options=()
 
 pkgver() {
     cd "${srcdir}"
-    opam init -a --disable-sandboxing 1>&2 && opam update 1>&2
+    opam init -a --disable-sandboxing 1>/dev/null 2>/dev/null && opam update 1>/dev/null 2>/dev/null
     opam list ${_pkgname} --columns=version | awk '/^[^#]/{print}' | sort -V | tail -n 1
 }
 
