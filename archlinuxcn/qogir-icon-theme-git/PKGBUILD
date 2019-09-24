@@ -1,0 +1,27 @@
+# Maintainer: Aitor Alonso <contact: https://aalonso.eu>
+
+pkgname=qogir-icon-theme-git
+pkgver=2019_04_06.25.g4e1b6c69
+pkgrel=1
+pkgdesc='A colorful design icon theme for linux desktops'
+arch=('any')
+url='https://github.com/vinceliuice/Qogir-icon-theme'
+license=('GPL3')
+depends=('gtk-update-icon-cache')
+makedepends=('git')
+optdepends=()
+provides=('qogir-icon-theme')
+conflicts=('qogir-icon-theme')
+source=('git+https://github.com/vinceliuice/Qogir-icon-theme')
+sha256sums=('SKIP')
+
+pkgver() {
+  cd Qogir-icon-theme
+  git describe --tags | sed 's/-/./g'
+}
+
+package() {
+  cd Qogir-icon-theme
+  mkdir -p "${pkgdir}/usr/share/icons"
+  ./install.sh -d "${pkgdir}/usr/share/icons"
+}
