@@ -83,10 +83,10 @@ game_command() {
 is_player_online() {
 	response="$(sleep_time=0.6 return_stdout=true game_command list)"
 	# Delete leading line and free response string from fancy characters
-	response="$(echo "${response}" | sed -r -e '$!d' -e 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})*)?[JKmsuG]//g')"
+	response="$(echo "${response}" | sed -r -e 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})*)?[JKmsuG]//g')"
 	# The list command prints a line containing the usernames after the last occurrence of ": "
 	# and since playernames may not contain this string the clean player-list can easily be retrieved.
-	# Otherwiese check the first digit after the last occurrence of "There are". If it is 0 then there
+	# Otherwise check the first digit after the last occurrence of "There are". If it is 0 then there
 	# are no players on the server. Should this test fail as well. Assume that a player is online.
 	if [[ $(echo "${response}" | grep ":" | sed -e 's/.*\: //' | tr -d '\n' | wc -c) -le 1 ]]; then
 		# No player is online
@@ -473,7 +473,7 @@ case "${1:-}" in
 	;;
 
 	idle_server_daemon)
-	# This shell be a hidden function which should only be invoced internally
+	# This shall be a hidden function which should only be invoced internally
 	idle_server_daemon
 	;;
 
