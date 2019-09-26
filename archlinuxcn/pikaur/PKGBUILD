@@ -3,7 +3,7 @@
 
 pkgname=pikaur
 pkgver=1.5.2
-pkgrel=1
+pkgrel=2
 pkgdesc="AUR helper which asks all questions before installing/building. Inspired by pacaur, yaourt and yay."
 arch=('any')
 url="https://github.com/actionless/pikaur"
@@ -21,6 +21,7 @@ optdepends=(
 	'python-pysocks: for socks5 proxy support'
 )
 conflicts=('pikaur-git')
+provides=('pikaur')
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}" || exit 2
@@ -30,7 +31,7 @@ build() {
 
 package() {
 	cd "${srcdir}/${pkgname}-${pkgver}" || exit 2
-	python3 setup.py install --prefix=/usr --root="$pkgdir/" --optimize=1
+	/usr/bin/python3 setup.py install --prefix=/usr --root="$pkgdir/" --optimize=1
 	for langmo in $(cd ./locale && ls ./*.mo); do
 		lang=$(sed -e 's/.mo$//' <<< "${langmo}")
 		install -Dm644 "locale/${langmo}" "$pkgdir/usr/share/locale/${lang}/LC_MESSAGES/pikaur.mo"
