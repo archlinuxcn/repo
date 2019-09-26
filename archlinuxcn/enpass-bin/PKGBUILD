@@ -1,6 +1,6 @@
 pkgname='enpass-bin'
 _pkgname='enpass'
-pkgver=6.1.1.451
+pkgver=6.2.0.537
 pkgrel=1
 pkgdesc='A multiplatform password manager'
 arch=('x86_64')
@@ -10,7 +10,7 @@ depends=('libxss' 'lsof')
 provides=("${_pkgname}")
 install='enpass-bin.install'
 source=("https://apt.enpass.io/pool/main/e/enpass/${_pkgname}_${pkgver}_amd64.deb")
-sha256sums=('4eb4f54fe2ab9bc3d366d869ac4ccbeda49303832ad5da6d5bffd09b2c677871')
+sha256sums=('0c0219b5752983e839199fae5aad0c9bd7559ce1c892653c07e052935477c45b')
 
 # Disable strip as otherwise the browser extension will not work
 options=('!strip')
