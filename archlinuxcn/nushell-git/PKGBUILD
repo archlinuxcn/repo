@@ -1,0 +1,38 @@
+# Maintainer: Bumsik Kim <k.bumsik@gmail.com>
+# Contributors: Ariel AxionL <i at axionl dot me>
+# Scripts inspired by nushell-git and nushell packages
+
+pkgname=nushell-git
+pkgver=0.3.0.r1178.g7113c70
+pkgrel=1
+pkgdesc="A modern shell written in Rust"
+arch=('x86_64')
+url="https://www.nushell.sh"
+depends=('openssl' 'zlib' 'curl' 'libxcb')
+makedepends=('cargo' 'git' 'libx11' 'python')
+provides=('nu' 'nushell')
+conflicts=('nushell')
+license=('MIT')
+source=("$pkgname::git+https://github.com/nushell/nushell.git"
+		"LICENSE::https://raw.githubusercontent.com/nushell/nushell/master/LICENSE")
+sha256sums=('SKIP'
+            '05cb10fc5daf203df1af2d2e83da56704f9d8ce1cf184ca61ea3a2c12e28f7fb')
+
+pkgver() {
+	cd "${pkgname}"
+	printf "%s.r%s.g%s" $(grep '^version =' Cargo.toml|head -n1|cut -d\" -f2) $(git rev-list --count HEAD) $(git rev-parse --short HEAD)
+}
+
+build() {
+	cd "${pkgname}"
+	cargo build --release --all-features -Z install-upgrade
+}
+
+package() {
+	cd "${srcdir}"
+	install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+
+	cd "${pkgname}"
+	install -Dm755 "target/release/nu" "${pkgdir}/usr/bin/nu"
+	ln -sf "/usr/bin/nu" "${pkgdir}/usr/bin/nushell"
+}
