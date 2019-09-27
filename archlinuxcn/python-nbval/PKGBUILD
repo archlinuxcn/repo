@@ -2,8 +2,8 @@
 
 pkgname=python-nbval
 _pkgname=nbval
-pkgver=0.9.2
-pkgrel=2
+pkgver=0.9.3
+pkgrel=1
 pkgdesc='A py.test plugin to validate Jupyter notebooks'
 arch=(any)
 url='https://github.com/computationalmodelling/nbval'
@@ -13,7 +13,7 @@ depends=(python python-pytest python-six python-jupyter_client
 makedepends=(python-setuptools)
 checkdepends=(python-doit python-matplotlib python-sympy python-pytest-cov)
 source=("https://github.com/computationalmodelling/nbval/archive/$pkgver/$pkgname-$pkgver.tar.gz")
-sha256sums=('35bfaa449037a685aa0f0bb1fa252db77aa309bc3dcd0a288e9402d5505d8e61')
+sha256sums=('edf1ad505db19313140c055a64ea96c3f87bee18f7c54162a4889deb4e463919')
 
 build() {
   cd $_pkgname-$pkgver
