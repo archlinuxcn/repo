@@ -7,10 +7,10 @@
 
 pkgname=flann
 pkgver=1.9.1
-pkgrel=4
+pkgrel=5
 pkgdesc="FLANN is a library for performing fast approximate nearest neighbor searches in high dimensional spaces"
 arch=('i686' 'x86_64')
-url='https://www.cs.ubc.ca/research/flann'
+url='https://github.com/mariusmuja/flann'
 license=('BSD')
 depends=('lz4' 'hdf5')
 makedepends=('cmake' 'python2' 'texlive-core')
