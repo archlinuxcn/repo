@@ -48,7 +48,7 @@ _opt_features=(
 
 pkgname=mpv-git
 _gitname=mpv
-pkgver=0.29.0_734_g69e4a5772a
+pkgver=0.29.0_747_gc7d0a8f58e
 pkgrel=1
 _waf_version=2.0.9
 pkgdesc='Video player based on MPlayer/mplayer2 (git version)'
@@ -147,7 +147,6 @@ build() {
 
   ./waf configure --prefix=/usr \
         --confdir=/etc/mpv \
-        --enable-zsh-comp \
         --enable-libmpv-shared \
         "${_opt_extra_flags[@]}"
 
