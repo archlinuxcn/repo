@@ -3,7 +3,7 @@
 
 pkgname=("python-dill" "python2-dill")
 pkgbase=python-dill
-pkgver=0.3.0
+pkgver=0.3.1.1
 pkgrel=1
 pkgdesc='Serialize all of python (almost)'
 arch=('any')
@@ -11,7 +11,7 @@ url='http://pypi.python.org/pypi/dill/'
 makedepends=('python-setuptools' 'python2-setuptools')
 license=('BSD')
 source=("https://github.com/uqfoundation/dill/archive/dill-$pkgver.tar.gz" "python2-dill.install")
-md5sums=('bf5c2ca7c8441fc6c8908fd316b7de2b'
+md5sums=('99d6853c8bfaa2f16165f200eb59ed70'
          '2ac075f39bab33c203e7b25adb3e07b3')
 
 build() {
