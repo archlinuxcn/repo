@@ -1,0 +1,15 @@
+--- src/Utility/AsyncTask.vala.orig	2019-08-11 09:51:26.000000000 -0400
++++ src/Utility/AsyncTask.vala	2019-09-28 18:51:54.005772803 -0400
+@@ -71,11 +71,11 @@ public abstract class AsyncTask : GLib.O
+ 	// signals
+ 	public signal void stdout_line_read(string line);
+ 	public signal void stderr_line_read(string line);
+ 	public signal void task_complete();
+ 
+-	public AsyncTask(){
++	protected AsyncTask(){
+ 		working_dir = TEMP_DIR + "/" + timestamp_for_path();
+ 		script_file = path_combine(working_dir, "script.sh");
+ 		log_file = path_combine(working_dir, "task.log");
+ 
+ 		//regex = new Gee.HashMap<string,Regex>(); // needs to be initialized again in instance constructor

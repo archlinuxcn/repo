@@ -46,8 +46,14 @@ install="${pkgname}-install.sh"
 _github='teejee2008'
 _verwatch=("https://github.com/${_github}/${pkgname}/releases.atom" '\s\+<title>Timeshift v\([0-9\.]\+\)</title>.*' 'f')
 _srcdir="${pkgname}-${pkgver}"
-source=("${pkgname}_v${pkgver}.tgz::https://github.com/${_github}/${pkgname}/archive/v${pkgver}.tar.gz")
-sha256sums=('ab56331f97c1616b889e69adccedeca06f0150e964eea631b52c9bd399f77604')
+source=(
+  "${pkgname}_v${pkgver}.tgz::https://github.com/${_github}/${pkgname}/archive/v${pkgver}.tar.gz"
+  'pr476.patch'
+)
+md5sums=('ca8f06acac4225a6f1f48fba0c1eac72'
+         '84164d8ff50bd28cc8d534272d363ef4')
+sha256sums=('ab56331f97c1616b889e69adccedeca06f0150e964eea631b52c9bd399f77604'
+            '6a4889a8923c0752e024eea2a30416185ebfe236231cf387a5576810b6ad6de0')
 #sha256sums[0]='SKIP'
 
 prepare() {
@@ -55,6 +61,10 @@ prepare() {
   cd "${_srcdir}"
   # ndowens04 2019-01-30 02:45
   #sed -e 's:--thread:& Core/AppExcludeEntry.vala:' -i 'src/makefile'
+
+  #cp -p src/Utility/AsyncTask.vala{,.orig}
+  #diff -pNau5 src/Utility/AsyncTask.vala{.orig,} > 'pr476.patch'
+  patch -Nbup0 -i "${srcdir}/pr476.patch"
   set +u
 }
 
