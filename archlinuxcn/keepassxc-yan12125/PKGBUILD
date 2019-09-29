@@ -12,8 +12,8 @@
 
 _pkgname=keepassxc
 pkgname=$_pkgname-yan12125
-pkgver=2.4.3.r32.g38524507
-_commit=38524507d5e2c5d5b607a3747b37cc3a9126f70c
+pkgver=2.4.3.r99.g772a8af9
+_commit=772a8af964fa15ce32575383ca2b408f37d3a1ed
 pkgrel=1
 pkgdesc="A reboot of an open source password safe which helps you to manage your passwords in an easy and secure way"
 arch=(x86_64)
@@ -25,17 +25,10 @@ makedepends=(cmake qt5-tools git)
 checkdepends=(xorg-server-xvfb openbox)
 conflicts=("$_pkgname")
 provides=("$_pkgname=$pkgver")
-source=("git+https://github.com/keepassxreboot/keepassxc.git?signed#commit=$_commit"
-        'multiple-urls-v1.patch'
+source=("git+https://github.com/keepassxreboot/keepassxc.git#commit=$_commit"
         'run_test.sh')
 sha256sums=('SKIP'
-            '17a6c2fde82544fb17eb4ec527b8912e57555e8d1ea9cefcdf0ce8d463640b5d'
             '503272fd54f31a7c34c6c60bb5b9bc11169b34084de4e1417d766cc5a6f88029')
-validpgpkeys=(
-  'BF5A669F2272CF4324C1FDA8CFB4C2166397D0D2'  # KeePassXC Release <release@keepassxc.org>
-  '3489040C1F0C3EEAB8D556A5440FC65F2E0C6E01'  # Jonathan White <support@dmapps.us>
-  'B3724F5B2C98B5B0AEDDBD582AC0283D4CFC9A10'  # Janek Bevendorff <janek@jbev.net> (https://github.com/phoerious)
-)
 
 pkgver() {
   cd $_pkgname
@@ -47,8 +40,6 @@ pkgver() {
 prepare() {
   cd $_pkgname
   mkdir -p build
-
-  patch -Np1 -i ../multiple-urls-v1.patch
 }
 
 build() {
@@ -56,7 +47,6 @@ build() {
 
   cmake \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_INSTALL_LIBDIR=/usr/lib \
     -DWITH_DEV_BUILD=ON \
     -DWITH_GUI_TESTS=ON \
     -DWITH_XC_ALL=ON \
