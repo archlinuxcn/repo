@@ -6,7 +6,7 @@ pkgver=13
 _build=33
 _hash=5b8a42f3905b406298b72d750b6919f6
 _majver="${pkgver%%.*}"
-pkgrel=1
+pkgrel=2
 pkgdesc='Oracle Java Runtime Environment'
 arch=('x86_64')
 url='https://www.oracle.com/java/'
@@ -32,7 +32,7 @@ backup=("etc/java${_majver}-${pkgname}/management/jmxremote.access"
         "etc/java${_majver}-${pkgname}/sound.properties")
 install="${pkgname}.install"
 source=("https://download.oracle.com/otn-pub/java/jdk/${pkgver}+${_build}/${_hash}/jdk-${pkgver}_linux-x64_bin.tar.gz")
-sha256sums=('68515c29d52b7c854316fa6b25c332e91320d4c0ccd1fc8888aa312159aefef9')
+sha256sums=('095fe9ee73bfa8d594b6bf63ae8c750144670a676ba4331ffd2d06b5ae4d5af1')
 
 DLAGENTS=('https::/usr/bin/curl -fLC - --retry 3 --retry-delay 3 -b oraclelicense=a -o %o %u')
 
