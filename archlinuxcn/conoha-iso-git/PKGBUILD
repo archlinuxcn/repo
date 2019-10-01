@@ -2,7 +2,7 @@
 _pkgname=conoha-iso
 pkgname=${_pkgname}-git
 pkgver=0.4.3.r77.gb418bc8
-pkgrel=1
+pkgrel=1.1
 pkgdesc="ISO image management tool for ConoHa"
 arch=(x86_64)
 url="https://github.com/hironobu-s/conoha-iso"
