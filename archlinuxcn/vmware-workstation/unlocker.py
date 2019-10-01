@@ -44,6 +44,7 @@ Offset  Length  Struct Type Description
 from __future__ import print_function
 import codecs
 import os
+import re
 import struct
 import sys
 
@@ -55,7 +56,10 @@ if sys.version_info < (2, 7):
 if sys.platform == 'win32' \
         or sys.platform == 'cli':
     # noinspection PyUnresolvedReferences
-    from _winreg import *
+    if sys.version_info > (3, 0):
+        from winreg import *
+    else:
+        from _winreg import *
 
 
 def bytetohex(data):
@@ -301,9 +305,10 @@ def patchbase(name):
     f = open(name, 'r+b')
 
     # Entry to search for in GOS table
-    # Should work for 12 & 14 of Workstation...
-    darwin = b'\x10\x00\x00\x00\x10\x00\x00\x00\x02\x00\x00\x00\x00\x00\x00\x00' \
-             '\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+    # Should work for Workstation 12-15...
+    darwin = re.compile(
+             b'\x10\x00\x00\x00[\x10|\x20]\x00\x00\x00[\x01|\x02]\x00\x00\x00\x00\x00\x00\x00'
+             b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')
 
     # Read file into string variable
     base = f.read()
@@ -311,11 +316,8 @@ def patchbase(name):
     # Loop through each entry and set top bit
     # 0xBE --> 0xBF (WKS 12)
     # 0x3E --> 0x3F (WKS 14)
-    offset = 0
-    while offset < len(base):
-        offset = base.find(darwin, offset)
-        if offset == -1:
-            break
+    for m in darwin.finditer(base):
+        offset = m.start()
         f.seek(offset + 32)
         flag = ord(f.read(1))
         flag = set_bit(flag, 0)
@@ -323,7 +325,6 @@ def patchbase(name):
         f.seek(offset + 32)
         f.write(flag)
         print('GOS Patched flag @: ' + hex(offset))
-        offset += 40
 
     # Tidy up
     f.flush()
