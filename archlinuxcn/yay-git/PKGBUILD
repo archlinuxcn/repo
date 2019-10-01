@@ -23,10 +23,12 @@ pkgver() {
 
 build() {
   cd "$srcdir/$_pkgname"
-  make VERSION=$pkgver DESTDIR="$pkgdir" PREFIX=/usr
+  EXTRA_GOFLAGS="-gcflags all=-trimpath=${PWD} -asmflags all=-trimpath=${PWD}" \
+  LDFLAGS="-linkmode external -extldflags \"${LDFLAGS}\""
+  make VERSION=$pkgver DESTDIR="$pkgdir" build
 }
 
 package() {
-  cd "$srcdir/$_pkgname"
+  cd "${srcdir}/${_pkgname}"
   make VERSION=$pkgver DESTDIR="$pkgdir" PREFIX=/usr install
 }
