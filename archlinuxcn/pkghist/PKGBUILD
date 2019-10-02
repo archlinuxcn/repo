@@ -1,6 +1,6 @@
 # Maintainer: herzrasen <dennis.mellert@gmail.com>
 pkgname=pkghist
-pkgver=0.2.0
+pkgver=0.3.0
 pkgrel=1
 pkgdesc="Query your pacman logs"
 arch=('x86_64')
@@ -11,7 +11,7 @@ makedepends=(
   'rust'
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/herzrasen/pkghist/archive/v${pkgver}.tar.gz")
-sha1sums=('07e3e882a8102170c3ce5595355665d13425967e')
+sha1sums=('855aa995db12e49197fb981e1d58da6d0c8b7439')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
