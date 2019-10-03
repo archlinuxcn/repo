@@ -17,6 +17,7 @@ source=(
   '60-linux.hook'
   '90-linux.hook'
   'linux.preset'
+  "git+$_repourl"
 )
 
 validpgpkeys=(
@@ -28,6 +29,7 @@ sha256sums=(
   '65ae261b314e266de809b212e4d5fd4d9e84b206771a3d59b7638b1b52744789'
   'cbee6b874133a4c335e6844a20eaec419da93dba70861864ff84b944a0d5524c'
   'ad6344badc91ad0630caacde83f7f9b97276f80d26a20619a87952be65492c65'
+  'SKIP'
 )
 
 _kernelname=${pkgbase#linux}
@@ -42,10 +44,6 @@ pkgver() {
 }
 
 prepare() {
-  # remove previous checkout
-  rm -rf ${_srcname}
-  git clone --depth=1 ${_repourl}
-
   # change to source dir
   cd ${_srcname}
   
