@@ -27,7 +27,6 @@ _opt_features=(
   x11
   wayland
 
-  vulkan
   shaderc # preferred SPIR-V compiler; available from AUR
 
   uchardet
@@ -48,7 +47,7 @@ _opt_features=(
 
 pkgname=mpv-git
 _gitname=mpv
-pkgver=0.29.0_786_gf203a881e5
+pkgver=0.29.0_802_gdefc8f359c
 pkgrel=1
 _waf_version=2.0.9
 pkgdesc='Video player based on MPlayer/mplayer2 (git version)'
@@ -58,7 +57,7 @@ url='https://mpv.io'
 _undetected_depends=('hicolor-icon-theme')
 depends=('ffmpeg' "${_undetected_depends[@]}")
 optdepends=('youtube-dl: for --ytdl')
-makedepends=('git' 'python-docutils' 'pacman-contrib')
+makedepends=('git' 'python-docutils' 'pacman-contrib' 'vulkan-headers')
 provides=('mpv')
 conflicts=('mpv')
 options=('!emptydirs')
@@ -69,17 +68,6 @@ source=('git+https://github.com/mpv-player/mpv'
 sha256sums=('SKIP'
             '1ba780ede4a28b68ae5b7ab839958ff91ed01d3c6c1d24cce8a5dd24492f8d2b'
             '2a8e0816f023995e557f79ea8940d322bec18f286917c8f9a6fa2dc3875dfa48')
-
-# vulkan-icd-loader contains vulkan.pc, which makes mpv think it can build
-# against Vulkan. However, the headers required to actually do so are in another
-# package, vulkan-headers, for whatever reason. Building with only the former
-# installed will fail. So if we see the .pc installed, make sure the headers are
-# too.
-#
-# See also: https://bugs.archlinux.org/task/56238
-if pkg-config --exists vulkan; then
-  makedepends+=('vulkan-headers')
-fi
 
 _opt_extra_flags=()
 
@@ -114,10 +102,6 @@ for feature in "${_opt_features[@]}"; do
       ;;
     wayland)
       depends+=('wayland' 'libxkbcommon')
-      ;;
-    vulkan)
-      makedepends+=('vulkan-headers')
-      depends+=('libplacebo')
       ;;
     shaderc|uchardet|rubberband)
       depends+=("$feature")
