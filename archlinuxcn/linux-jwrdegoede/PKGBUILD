@@ -5,19 +5,18 @@
 
 pkgbase=linux-jwrdegoede
 _srcname=linux-sunxi
-_repourl=https://github.com/jwrdegoede/${_srcname}.git
-pkgver=5.3.0.201909031734.07d527530
-pkgrel=1
+pkgver=git
+pkgrel=3
 arch=('x86_64')
 url='https://www.kernel.org/'
 license=('GPL2')
 makedepends=('git' 'xmlto' 'kmod' 'inetutils' 'bc' 'libelf')
 options=('!strip')
 source=(
+  'git+https://github.com/jwrdegoede/linux-sunxi.git'
   '60-linux.hook'
   '90-linux.hook'
   'linux.preset'
-  "git+$_repourl"
 )
 
 validpgpkeys=(
@@ -26,16 +25,17 @@ validpgpkeys=(
 )
 
 sha256sums=(
+  'SKIP'
   '65ae261b314e266de809b212e4d5fd4d9e84b206771a3d59b7638b1b52744789'
   'cbee6b874133a4c335e6844a20eaec419da93dba70861864ff84b944a0d5524c'
   'ad6344badc91ad0630caacde83f7f9b97276f80d26a20619a87952be65492c65'
-  'SKIP'
 )
 
 _kernelname=${pkgbase#linux}
 
 pkgver() {
   cd ${_srcname}
+
   # produce version string
   local ver=($(head -n4 Makefile | awk '/=/ {print $3}'))
   local commit=$(git rev-parse --short HEAD)
@@ -44,14 +44,11 @@ pkgver() {
 }
 
 prepare() {
-  # change to source dir
   cd ${_srcname}
   
-  # change localversion
+  # patch hans config
   sed -i 's/CONFIG_LOCALVERSION=.*/CONFIG_LOCALVERSION="-jwrdegoede"/' .config
-  
-  # disable tux logo
-  sed -i 's/CONFIG_LOGO=.*/# CONFIG_LOGO is not set/' .config
+  sed -i 's/CONFIG_LOGO=.*/CONFIG_LOGO=n/' .config
   sed -i 's/CONFIG_LOGO_LINUX_CLUT224=.*/# CONFIG_LOGO_LINUX_CLUT224 is not set/' .config
 
   # don't run depmod on 'make install'. We'll do this ourselves in packaging
@@ -70,7 +67,7 @@ prepare() {
 build() {
   cd ${_srcname}
 
-  make ${MAKEFLAGS} bzImage modules
+  make ${MAKEFLAGS} LOCALVERSION= bzImage modules
 }
 
 _package() {
@@ -84,12 +81,12 @@ _package() {
   cd ${_srcname}
 
   # get kernel version
-  _kernver="$(make kernelrelease)"
+  _kernver="$(make LOCALVERSION= kernelrelease)"
   _basekernel=${_kernver%%-*}
   _basekernel=${_basekernel%.*}
 
   mkdir -p "${pkgdir}"/{boot,usr/lib/modules}
-  make INSTALL_MOD_PATH="${pkgdir}/usr" modules_install
+  make LOCALVERSION= INSTALL_MOD_PATH="${pkgdir}/usr" modules_install
   cp arch/x86/boot/bzImage "${pkgdir}/boot/vmlinuz-${pkgbase}"
 
   # make room for external modules
