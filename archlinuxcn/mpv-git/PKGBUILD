@@ -10,7 +10,6 @@ _opt_features=(
   dvd
   cd
   smb
-  libarchive
 
   # Lua is automatically detected, so you don't need to enable these if you
   # already have it installed. If you have both lua52 and luajit installed, mpv
@@ -26,8 +25,6 @@ _opt_features=(
 
   x11
   wayland
-
-  shaderc # preferred SPIR-V compiler; available from AUR
 
   uchardet
   rubberband
@@ -48,7 +45,7 @@ _opt_features=(
 pkgname=mpv-git
 _gitname=mpv
 pkgver=0.29.0_804_gfd7aff7a9d
-pkgrel=1
+pkgrel=1.001
 _waf_version=2.0.9
 pkgdesc='Video player based on MPlayer/mplayer2 (git version)'
 arch=('i686' 'x86_64' 'armv6h' 'armv7h')
@@ -85,10 +82,6 @@ for feature in "${_opt_features[@]}"; do
       depends+=('smbclient')
       _opt_extra_flags+=('--enable-libsmbclient')
       ;;
-    libarchive)
-      depends+=('libarchive')
-      _opt_extra_flags+=('--enable-libarchive')
-      ;;
     lua)
       depends+=('lua52')
       _opt_extra_flags+=('--lua=52arch')
@@ -103,7 +96,7 @@ for feature in "${_opt_features[@]}"; do
     wayland)
       depends+=('wayland' 'libxkbcommon')
       ;;
-    shaderc|uchardet|rubberband)
+    uchardet|rubberband)
       depends+=("$feature")
       ;;
     dvbin)
