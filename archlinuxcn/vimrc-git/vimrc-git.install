@@ -1,0 +1,19 @@
+post_install () {
+  echo "Install for your user:"
+  echo "  /usr/share/vimrc/install_awesome_parameterized.sh /usr/share/vimrc \$(whoami)"
+  echo "Install for multiple users:"
+  echo "  /usr/share/vimrc/install_awesome_parameterized.sh /usr/share/vimrc user0 user1 user2"
+  echo "Install for all users with home directory:"      
+  echo "  /usr/share/vimrc/install_awesome_parameterized.sh /usr/share/vimrc --all"
+  echo "To turn on persistent undo:"
+  echo "  mkdir -p ~/.vim_runtime/temp_dirs/undodir"
+  echo "To add your own configs for your own user:"
+  echo "  Append ~/.vimrc"
+  echo "To add your own configs for all users:"
+  echo "  Append /usr/share/vimrc/my_configs.vim"
+        
+}
+
+post_remove () {
+  echo "Please remove ~/.vimrc to avoid errors."
+}
