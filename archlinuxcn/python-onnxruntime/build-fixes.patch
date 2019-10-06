@@ -83,15 +83,3 @@ index ace16b1b..c76ebde4 100644
  )
  
  add_dependencies(onnxruntime_pybind11_state ${onnxruntime_pybind11_state_dependencies})
-diff --git a/onnxruntime/core/util/protobuf_parsing_utils.cc b/onnxruntime/core/util/protobuf_parsing_utils.cc
-index 4e46d0ef..8638f353 100644
---- a/onnxruntime/core/util/protobuf_parsing_utils.cc
-+++ b/onnxruntime/core/util/protobuf_parsing_utils.cc
-@@ -49,7 +49,6 @@
- #include <google/protobuf/stubs/common.h>
- #include <google/protobuf/stubs/logging.h>
- #include <google/protobuf/stubs/stl_util.h>
--#include <google/protobuf/stubs/io_win32.h>
- #include "protobuf_parsing_utils.h"
- #include <string.h>
- 

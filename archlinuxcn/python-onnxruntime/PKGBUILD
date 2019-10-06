@@ -2,16 +2,14 @@
 
 pkgbase=python-onnxruntime
 pkgname=(python-onnxruntime python-onnxruntime-cuda)
-pkgver=0.5.0
+pkgver=0.5.1
 pkgdesc='Cross-platform, high performance scoring engine for ML models'
 pkgrel=1
 arch=(x86_64)
 url='https://github.com/microsoft/onnxruntime'
 license=(MIT)
 depends=(protobuf re2 python-numpy)
-# protobuf 3.7.0 has an issue, which breaks building of onnxruntime
-# https://github.com/protocolbuffers/protobuf/issues/5869
-makedepends=(git cmake cuda cudnn gtest gmock pybind11 python-setuptools 'protobuf>=3.7.1' )
+makedepends=(git cmake cuda cudnn gtest gmock pybind11 python-setuptools)
 # not de-vendored libraries
 # eigen: API changes a lot since extra/eigen 3.3.7 to the commit onnxruntime uses
 # onnx: onnxruntime requires headers, which are not installed in python-onnx
@@ -30,10 +28,14 @@ sha512sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
-            'c598f14c413c35e923e76770214f464922431255b8b0a5e2ff7851b3447f8af7ee2d0f1349aa63d251097902bd6a506626dabc3a8e7f2a63144a1be5478e5470')
+            '14371770514544fbb25016fb6b986501911ca5683584c45855325fa7447dbf8f10735c8d57239996c5ee3dc7cce2a3238150c04564529769c9dcb7edb47e799e')
 
 prepare() {
   cd onnxruntime
+
+  # More protobuf debundling; inspired by https://github.com/microsoft/onnxruntime/pull/1928
+  rm -v onnxruntime/core/util/protobuf_parsing_utils.{h,cc}
+  echo "#include <google/protobuf/io/zero_copy_stream_impl.h>" >> onnxruntime/core/util/protobuf_parsing_utils.h
   patch -Np1 -i ../build-fixes.patch
 
   git submodule init
