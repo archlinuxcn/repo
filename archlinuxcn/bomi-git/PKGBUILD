@@ -6,17 +6,16 @@
 _pkgbase=bomi
 
 pkgname=$_pkgbase-git
-pkgver=0.9.11.r39.g5f0cc0a7
-pkgrel=4
+pkgver=0.9.11.r56.gc46ecf11
+pkgrel=1
 pkgdesc="Powerful and easy-to-use GUI multimedia player based on mpv (git version)"
 arch=('i686' 'x86_64')
 url="http://bomi-player.github.io"
 license=('GPL')
-#install=$_pkgbase.install
 depends=('qt5-base' 'qt5-declarative' 'qt5-x11extras' 'qt5-quickcontrols' 'qt5-svg'
          'libdvdread' 'libdvdnav' 'libcdio-paranoia' 'libcdio' 'smbclient'
          'alsa-lib' 'libpulse' 'jack' 'libchardet' 'libbluray'
-         'libva' 'libvdpau' 'libgl' 'fribidi' 'libass' 'ffmpeg')
+         'libva' 'libvdpau' 'libgl' 'fribidi' 'libass' 'ffmpeg' 'xdg-utils')
 makedepends=('git' 'mesa' 'gcc' 'pkg-config' 'python' 'qt5-tools')
 optdepends=('libva-intel-driver: hardware acceleration support for Intel GPU'
             'mesa-vdpau: hardware acceleration support for AMD/NVIDIA opensource driver'
@@ -25,14 +24,8 @@ optdepends=('libva-intel-driver: hardware acceleration support for Intel GPU'
             'libbdplus: BD+ decryption for Blu-ray support')
 provides=('bomi')
 conflicts=('cmplayer' 'bomi')
-source=(git+https://github.com/d-s-x/${_pkgbase}.git
-        add_sup_subext.patch
-        upgrade_waf.patch
-        qml_fix.patch)
-md5sums=('SKIP'
-         'dacb0df199eea0f6e3d5c037c8c5429d'
-         'fbcd3b66086bb2f7c94c07c63c335fb3'
-         '154bd1a299aeb4ede9317c1ae8ac4a13')
+source=(git+https://github.com/demokritos/${_pkgbase}.git)
+md5sums=('SKIP')
 #options=(debug !strip)
 
 pkgver() {
@@ -42,17 +35,6 @@ pkgver() {
 
 prepare() {
     cd "$srcdir/$_pkgbase"
-
-    patch -Np1 -i $srcdir/add_sup_subext.patch
-    patch -Np1 -i $srcdir/qml_fix.patch
-
-    # While compiling mpv, an error occurs in waf python code.
-    # Upgrading waf version fixes it.
-    patch -Np1 -i $srcdir/upgrade_waf.patch
-    pushd src/mpv
-    rm waf
-    ./bootstrap.py
-    popd
 
     ./configure --prefix=/usr
 }
