@@ -7,7 +7,7 @@
 
 pkgname=wine-osu
 pkgver=3.12
-pkgrel=1
+pkgrel=2
 
 _pkgbasever=${pkgver/rc/-rc}
 
@@ -45,7 +45,6 @@ depends=(
   glu              lib32-glu
   libsm            lib32-libsm
   gcc-libs         lib32-gcc-libs
-  libpcap          lib32-libpcap
   gnutls           lib32-gnutls
   libpulse         lib32-libpulse
   desktop-file-utils
@@ -140,6 +139,7 @@ build() {
     --libdir=/opt/wine-osu/lib \
     --with-x \
     --with-gstreamer \
+    --without-pcap \
     --enable-win64 \
     --with-xattr
 
@@ -154,6 +154,7 @@ build() {
     --with-x \
     --with-gstreamer \
     --with-xattr \
+    --without-pcap \
     --libdir=/opt/wine-osu/lib32 \
     --with-wine64="$srcdir/$pkgname-64-build"
 
