@@ -9,7 +9,7 @@
 # Contributor: Alexander De Sousa <archaur.xandy21@spamgourmet.com>
 
 pkgname=ttf-google-fonts-git
-pkgver=r1377.1ebe5dcf
+pkgver=r1704.59afb78a
 pkgrel=1
 epoch=1
 pkgdesc="TrueType fonts from the Google Fonts project (git version)"
@@ -90,6 +90,18 @@ pkgver() {
   printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
+prepare() {
+  cd fonts
+
+  # NOTE: Remove VTT commit for Rubik as it caused some issues with display.
+  # See: https://github.com/google/fonts/issues/1137
+  git revert -n dfd435109b718b1c5a8da7bd0872c751e2ae1820
+
+  # NOTE: Adobe Blank is not meant to be installed.
+  # See: https://github.com/google/fonts/issues/2106#issuecomment-520067314
+  rm --recursive "${srcdir}/fonts/ofl/adobeblank"
+}
+
 package() {
   # NOTE: These are the font families that already exist in the [extra] and [community] repos.
   declare -A omitted_font_families=([cantarell]=1 [noto-sans-tamil]=1 [noto-serif]=1
@@ -98,6 +110,7 @@ package() {
                                     [cousine]=1 [roboto]=1 [roboto-condensed]=1
                                     [inconsolata]=1 [merriweather]=1 [merriweather-sans]=1
                                     [open-sans]=1 [oswald]=1 [quintessential]=1)
+
 
   while IFS= read -rd '' file; do
     font_family=$(fc-query -f '%{family[0]|downcase|translate( ,-)}\n' "$file" | sed -n '1p')
@@ -114,7 +127,6 @@ package() {
     if [[ -f "$src_license_path" && ! -f "$pkg_font_license" ]]; then
       install -Dm644 "$src_license_path" "$pkg_font_license"
     fi
-
   done < <(find "$srcdir" -type f -iname \*.ttf -print0)
 
   # NOTE: Since the zcool xiaowei chinese font has special characters. We need to change
