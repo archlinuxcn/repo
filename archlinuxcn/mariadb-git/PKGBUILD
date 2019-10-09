@@ -15,13 +15,11 @@ makedepends=('git' 'boost' 'bzip2' 'cmake' 'jemalloc' 'libaio' 'libxml2' 'lz4' '
 source=("$_pkgbase::git://github.com/MariaDB/server.git"
         '0001-arch-specific.patch'
         '0002-systemd-sysusers-tmpfiles.patch'
-        '0005-fix-galera_recovery-with-fs.protected_regular-enabled.patch'
-        '0007-systemd-service-add-instance-name-in-description.patch')
+        '0005-fix-galera_recovery-with-fs.protected_regular-enabled.patch')
 sha256sums=('SKIP'
             'ce72ea1563ad773e00e8b1c299babea176abae1102827c2f743921e9de615041'
             '3e83467af80fbd53400a201a34fc858b88509ea8e88b10709947eb66545f9457'
-            'c8c801f80924ccb97b499552fe1c532b3ebf8f86cdfc0d23715d4adb1a8810f0'
-            'd4575c349fdc6268135cd3483e70e04b149ec8004583bac7f79f190a084cbfc8')
+            'c8c801f80924ccb97b499552fe1c532b3ebf8f86cdfc0d23715d4adb1a8810f0')
 pkgver() {
   cd "$_pkgbase"
   git describe --long --tags | sed 's/^mariadb.//;s/\([^-]*-g\)/r\1/;s/-/./g'
@@ -54,6 +52,7 @@ prepare() {
 build() {
   local _cmake_options=(
     # build options
+    -DCOMPILATION_COMMENT="Arch Linux"
     -DCMAKE_BUILD_TYPE=RelWithDebInfo
     -Wno-dev
 
