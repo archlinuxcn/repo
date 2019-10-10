@@ -1,7 +1,7 @@
 _pkgname=asyncpg
 pkgname=python-asyncpg
-pkgver=0.18.3
-pkgrel=2
+pkgver=0.19.0
+pkgrel=1
 pkgdesc="An asyncio PosgtreSQL driver"
 arch=('any')
 url="https://github.com/MagicStack/asyncpg"
@@ -9,7 +9,7 @@ license=('Apache')
 depends=('python' 'python-setuptools')
 _name=${pkgname#python-}
 source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_pkgname}-${pkgver}.tar.gz")
-md5sums=('a660b4f5b7f774341d98aae362294c97')
+md5sums=('2add7c7ee742008425a090532d2b4ac8')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
