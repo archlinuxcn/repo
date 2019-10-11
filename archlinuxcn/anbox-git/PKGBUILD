@@ -1,9 +1,8 @@
 # Maintainer: Iwan Timmer <irtimmer@gmail.com>
-
 pkgname=('anbox-git' 'anbox-modules-dkms-git')
 _pkgname=anbox
 pkgver=1112.32cd10e
-pkgrel=2
+pkgrel=1
 epoch=1
 arch=('x86_64')
 url="http://anbox.io/"
@@ -18,7 +17,7 @@ source=("git+https://github.com/anbox/anbox.git"
 	'anbox.desktop'
 	'anbox-bridge.network'
 	'anbox-bridge.netdev'
-    '00-logger.cpp.patch')
+  '00-boost.patch')
 sha256sums=('SKIP'
             'SKIP'
             '5be94b63dc30d141f15ca7d1be6e3e81f26ef33f844614975537562f5d08236c'
@@ -44,8 +43,7 @@ prepare() {
   # Don't build tests
   truncate -s 0 cmake/FindGMock.cmake
   truncate -s 0 tests/CMakeLists.txt
-
-  patch -p1 < ../00-logger.cpp.patch
+  patch --forward --strip=1 --input="${srcdir}/00-boost.patch"
 }
 
 build() {
