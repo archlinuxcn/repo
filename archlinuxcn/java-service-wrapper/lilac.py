@@ -15,7 +15,7 @@ def pre_build():
     aur_pre_build()
     for line in edit_file('PKGBUILD'):
         if "java-environment>=" in line:
-            line = line.replace("java-environment>=7","jdk8-openjdk")
+            line = line.replace("java-environment>=8","jdk8-openjdk")
         print(line)
 
 
