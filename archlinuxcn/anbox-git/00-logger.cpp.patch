@@ -1,0 +1,14 @@
+diff --git a/src/anbox/logger.cpp b/src/anbox/logger.cpp
+index 93b7e10..a5397fe 100644
+--- a/src/anbox/logger.cpp
++++ b/src/anbox/logger.cpp
+@@ -17,7 +17,9 @@
+ 
+ #include <thread>
+ 
++#ifndef BOOST_LOG_DYN_LINK
+ #define BOOST_LOG_DYN_LINK
++#endif
+ #include <boost/date_time.hpp>
+ #include <boost/filesystem.hpp>
+ #include <boost/log/expressions.hpp>
