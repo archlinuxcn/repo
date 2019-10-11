@@ -4,22 +4,22 @@
 
 pkgbase=libc++
 pkgname=(${pkgbase}{,abi,experimental})
-pkgver=8.0.1
+pkgver=9.0.0
 pkgrel=1
 url="https://libcxx.llvm.org/"
-license=('MIT' 'custom:University of Illinois/NCSA Open Source License')
+license=('custom:Apache 2.0 with LLVM Exception')
 arch=('i686' 'x86_64')
 depends=('gcc-libs')
-makedepends=('clang' 'cmake' 'ninja' 'python' 'libunwind')
-source=("https://github.com/llvm/llvm-project/releases/download/llvmorg-$pkgver/llvm-$pkgver.src.tar.xz"{,.sig}
-        "https://github.com/llvm/llvm-project/releases/download/llvmorg-$pkgver/libcxx-$pkgver.src.tar.xz"{,.sig}
-        "https://github.com/llvm/llvm-project/releases/download/llvmorg-$pkgver/libcxxabi-$pkgver.src.tar.xz"{,.sig})
+makedepends=('clang' 'cmake' 'llvm' 'libunwind' 'ninja' 'python')
+source=("https://releases.llvm.org/$pkgver/llvm-$pkgver.src.tar.xz"{,.sig}
+        "https://releases.llvm.org/$pkgver/libcxx-$pkgver.src.tar.xz"{,.sig}
+        "https://releases.llvm.org/$pkgver/libcxxabi-$pkgver.src.tar.xz"{,.sig})
 noextract=("${source[@]##*/}")
-sha512sums=('82e120be5cabdfd5111aebbea68a663fe229c8861d73802d6ab09a3bf48f60de333e07e61f8fb61beaa14ac2bea24fcd74fa6f761acaf62469f536b79fcb1e16'
+sha512sums=('1bb3341e1d231559b948f1505b33c2e2e03989f9b8bbfef0e0cdaff5ac43f85574c9ec5ac53399b914f497d6899425d861411024e8d7e1d1a338c1c6951ac658'
             'SKIP'
-            '75749d08b2b343c6f5f9aefb04be63e42f6d12efc51101d3647ed6f70c7a6d050afb3ab2f3636eae78cb523f5844de67b960a7a3145ed89ab0c7015deb14921e'
+            'cbaca724c4f3e3a270dfd53aac50cbb920190fe55486b164d52e73845819dd22afb10c23f5875da59d433fd5b96a0f153208746117309ac1267a38fa56f4818e'
             'SKIP'
-            '577cfcb04ebb29ee84d35ed31aa8fecb28fc74b07ef7ff298f0fe2d440f823def73e092359c41d8d8600e6df18f55224ed89674d403c5ae56a7d7973487b8734'
+            '261f32f61814728ce61c830c80192a55e1ba03c50f49712e208052444ac3acc6d7efcbd7b76a505292f9233aad23b00180aca4e72326ae1244385b39f226e625'
             'SKIP')
 validpgpkeys=('474E22316ABF4785A88C6E8EA2C794A986419D8A') # Tom Stellard <tstellar@redhat.com> (.1 releases)
 validpgpkeys+=('B6C8F98282B944E3B0D5C2530FC3042E345AD05D') # Hans Wennborg <hans@chromium.org> (.0 releases)
@@ -41,9 +41,8 @@ build() {
     -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ \
     -DLIBCXX_INSTALL_EXPERIMENTAL_LIBRARY=NO \
-    -DLIBCXX_INSTALL_FILESYSTEM_LIBRARY=NO \
     "$srcdir"/llvm
-  ninja cxx cxx_experimental cxx_filesystem
+  ninja cxx cxx_experimental
 }
 
 check() {
@@ -78,7 +77,7 @@ package_libc++experimental() {
   depends=("libc++=$pkgver-$pkgrel")
   pkgdesc='LLVM C++ experimental library.'
   
-  install -Dm0644 -t "$pkgdir"/usr/lib/ build/lib/libc++experimental.a build/lib/libc++fs.a
+  install -Dm0644 -t "$pkgdir"/usr/lib/ build/lib/libc++experimental.a
   install -Dm0644 llvm/projects/libcxx/CREDITS.TXT "$pkgdir"/usr/share/licenses/"$pkgname"/CREDITS
   install -Dm0644 llvm/projects/libcxx/LICENSE.TXT "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE
 }
