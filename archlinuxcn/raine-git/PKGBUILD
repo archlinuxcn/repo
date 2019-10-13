@@ -3,7 +3,7 @@
 # Contributor: robb_force <robb_force@holybuffalo.net>
 
 pkgname=raine-git
-pkgver=1426.8d40a28
+pkgver=1434.7c95b57
 _pkgver=0.64.13
 pkgrel=1
 pkgdesc="A multiple arcade emulator focused on 680x0 machines like NeoCD and Neo Geo"
@@ -34,10 +34,13 @@ pkgver() {
 }
 
 prepare() {
+  cd "$srcdir/raine"
+  git submodule init
+  git submodule update
   cd "$srcdir"
   mkdir -p raine-bin
   bsdtar xf data.tar.xz -C raine-bin
-
+  
   cd raine
   # copy bitmaps and fonts from raine's deb package
   cp -rup "$srcdir"/raine-bin/usr/share/games/raine/bitmaps .

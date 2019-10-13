@@ -3,7 +3,7 @@
 
 pkgname=rstudio-desktop-git
 _gitname=rstudio
-pkgver=26429.3680e8c7f2
+pkgver=26489.748a3ed8f7
 _gwtver=2.8.2
 _ginver=2.1.2
 pkgrel=1
@@ -58,9 +58,9 @@ build() {
     cd "${srcdir}/${_gitname}/build"
     export PATH=/usr/lib/jvm/java-8-openjdk/jre/bin/:${PATH}
     cmake -DRSTUDIO_TARGET=Desktop \
-          -DBoost_DIR=/usr/lib \
-          -DBoost_INCLUDE_DIR=/usr/include \
+          -DBoost_NO_BOOST_CMAKE=ON \
           -DCMAKE_BUILD_TYPE=Release \
+          -DRSTUDIO_USE_SYSTEM_BOOST=yes \
           -DCMAKE_INSTALL_PREFIX=/usr/lib/rstudio \
           -DQT_QMAKE_EXECUTABLE=/usr/bin/qmake \
           -DRSTUDIO_BUNDLE_QT=FALSE ..

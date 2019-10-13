@@ -2,7 +2,7 @@
 # Co-Maintainer: Markus Weimar <mail@markusweimar.de>
 
 pkgname=ttf-sarasa-gothic
-pkgver=0.9.0
+pkgver=0.9.1
 pkgrel=1
 pkgdesc="A Chinese & Japanese programming font based on Iosevka and Source Han Sans (TTC)"
 arch=('any')
@@ -11,7 +11,7 @@ license=('custom:SIL Open Font License v1.1')
 depends=('fontconfig' 'xorg-font-utils')
 source=("https://github.com/be5invis/Sarasa-Gothic/releases/download/v$pkgver/sarasa-gothic-ttc-$pkgver.7z"
         'https://raw.githubusercontent.com/be5invis/Sarasa-Gothic/master/LICENSE')
-sha256sums=('285f1621b43fc68624987f60faf8dfb2cc2a582cde6c31fd8ebd5269915ef2d9'
+sha256sums=('d8d0b566b2ca7ff0964e00a2fca7737cc73f041c3e3d3badbc62a10e07e2a83b'
             '15d8d7964167f8ec518783801c809991807804cfde691242471e24ce66de6934')
 
 package() {

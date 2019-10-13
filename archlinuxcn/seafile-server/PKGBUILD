@@ -4,7 +4,7 @@
 # Contributor: Aaron Lindsay <aaron@aclindsay.com>
 
 pkgname=seafile-server
-pkgver=7.0.4
+pkgver=7.0.5
 pkgrel=1
 pkgdesc='Seafile server core'
 arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
@@ -26,7 +26,7 @@ source=(
     'seafile-server@.service'
 )
 sha256sums=(
-    'a17c8b5bdfc82ac893160ff6255b16882f748e3b3dbf6f72dee17d40b895f783'
+    '360cb9c95e4e1005a24d2b433825b6d02b6aab9bb60c26146a68f5dd65b4e6f9'
     '8069df2e84e5142a030c4598e410eeece1aaed2fdce3b8abe82b4752d257ffb9'
     '51a7f13b8c3dfcb3f510c68c9791bf6ace1a0b332ba26fdf55c850409bf387fa'
     '4596350a73025b63ad8189488bff896c09a4b1e2855e25ee5bbc111d25b7cfe7'
@@ -43,7 +43,7 @@ prepare() {
     for diff in "$srcdir"/*.diff; do patch -p1 -i "$diff"; done
 
     # Fix python path
-    shebang='#!/usr/bin/env python'; pyenv='PYTHON=python[.0-9]+' 
+    shebang='#!/usr/bin/env python'; pyenv='PYTHON=python[.0-9]+'
     grep -s -l -r    "$shebang" | xargs sed -i -E "1 s|$shebang|${shebang}2|"
     grep -s -l -r -E "$pyenv"   | xargs sed -i -E "s|$pyenv|PYTHON=python2|g"
 }
