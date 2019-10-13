@@ -12,7 +12,7 @@ _pkgver=0.18
 _count=16131
 _commit=3129ae4296e40ed20e7b3d460b86e6969acbe1c3
 pkgver=$_pkgver.$_count
-pkgrel=10
+pkgrel=11
 pkgdesc='A general purpose 3D CAD modeler'
 arch=('x86_64')
 url='https://www.freecadweb.org/'
@@ -40,7 +40,7 @@ build() {
   cmake .. -Wno-dev \
         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
         -DCMAKE_INSTALL_PREFIX=/usr/lib/freecad \
-        -DCMAKE_INSTALL_LIBDIR=/usr/lib/freecad \
+        -DCMAKE_INSTALL_LIBDIR=/usr/lib/freecad/lib \
         -DCMAKE_INSTALL_DOCDIR=/usr/share/freecad/doc \
         -DCMAKE_INSTALL_DATADIR=/usr/share/freecad \
         -DCMAKE_INSTALL_INCLUDEDIR=/usr/include \
