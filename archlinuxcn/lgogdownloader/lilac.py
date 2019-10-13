@@ -1,2 +1,5 @@
-#!/usr/bin/env python3
-#Empty lilac.py to test lilac.yaml
+from lilaclib import *
+
+def pre_build():
+    aur_prebuild()
+    update_pkgver_and_pkgrel(_G.newver.split('-')[0])
