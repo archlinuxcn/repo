@@ -1,0 +1,25 @@
+post_install()
+{
+  echo ""
+  echo "***********************************************************************************"
+  echo " In order for SheepShaver to run, you must execute:"
+  echo " sudo sysctl vm.mmap_min_addr=0"
+  echo ""
+  echo " ...or reboot, and /etc/sysctl.d/99-sheepshaver.conf will take care of it for you."
+  echo "***********************************************************************************"
+  echo ""
+  echo ""
+  echo "******************************************************************************************"
+  echo " If you want networking support in SheepShaver, you'll need to build the kernel module."
+  echo " 1)  Make sure linux-headers is installed with pacman"
+  echo " 2)  cd src/cebix-macemu-2e302d6/SheepShaver/src/Unix/Linux/NetDriver"
+  echo " 3)  Type:  make"
+  echo " 4)  Type:  sudo make dev"
+  echo " 5)  Type:  sudo chown <your_username> /dev/sheep_net"
+  echo " 6)  Type:  sudo make install"
+  echo " 7)  Type:  sudo modprobe sheep_net"
+  echo "******************************************************************************************"
+  echo ""
+
+}
+ 
