@@ -3,7 +3,7 @@
 _name=SimpleITK
 _py=cp37
 pkgname=python-simpleitk
-pkgver=1.2.2
+pkgver=1.2.3
 pkgrel=1
 pkgdesc='A simplified interface to the Insight Toolkit (ITK) for image registration and segmentation'
 arch=('x86_64')
@@ -13,7 +13,7 @@ depends=('python')
 makedepends=('python-pip')
 options=('!strip')
 source=("https://files.pythonhosted.org/packages/${_py}/${_name::1}/${_name}/${_name/-/_}-${pkgver}-${_py}-${_py}m-manylinux1_x86_64.whl")
-sha512sums=('1b180228c0631c2e9dd1f9532012c06f5d02958ec21c8397d895e6a6a86669bec62f9cff46af3ab22375ade51bc11a8916f3f112bf2d2b8a64e42da3eb1709e9')
+sha512sums=('e2072469260b456a685a6492dad74dc85252213f65837a64c2e7d98f0617381e7b597b94b953490fcc765e912bc94d074555cc78e796a38d0ad0ad64613929d9')
 
 package() {
 	PIP_CONFIG_FILE=/dev/null pip install --isolated --root="${pkgdir}" --ignore-installed --no-deps *.whl
