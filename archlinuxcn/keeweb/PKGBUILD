@@ -1,7 +1,7 @@
 # Maintainer: surefire@cryptomile.net
 
 pkgname=keeweb
-pkgver=1.11.7
+pkgver=1.11.9
 pkgrel=1
 pkgdesc="Desktop password manager compatible with KeePass databases"
 arch=('any')
@@ -40,6 +40,7 @@ prepare() {
 
 	sed -i \
 		-e "/const electronVersion/       s/pkg.dependencies.electron/'$(</usr/lib/electron/version)'/" \
+		-e '/codeSignConfig/ d' \
 	Gruntfile.js
 
 	sed -i \
