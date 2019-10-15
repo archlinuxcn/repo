@@ -1453,3 +1453,20 @@ Wed Sep 25 02:24:54 2019 +0200
      2019-09-22 4f22072 actionless feat(config; search_cli; print_dept;): add ui.ReverseSearchSorting config option (fixes #380)
      2019-09-22 217ff6c actionless feat(config; print_dept: pformat upgradeable): add sync.ShowDowloadSize config option (fixes #311)
      2019-09-21 babea45 actionless style(locale: dynamic pkg selection): make prompt look more like pacman's
+
+
+Tue Oct 15 02:32:45 2019 +0200
+-------------------------------------------------
+1.5.3           Release 1.5.3
+    
+    Notable changes:
+     2019-10-15 e412a4a actionless chore: prepare for PyPI release (fixes #406)
+     2019-10-13 3ae4863 actionless fix(install_info_fetcher: _get_repo_pkgs_info): ignore --search pacman flag when getting print-format output, fixes #407
+     2019-10-05 3effbeb mattia.b89 chore(locale): Create it.po (#396)
+     2019-10-05 905d389 actionless fix(main: cli_dynamic_select): answers start from 1 (fixes #404)
+     2019-10-04 412c0c0 actionless feat(search_cli): filter existing results if AUR returned 'Too many package results' (ref: #298)
+     2019-10-03 6cd7406 actionless refactor(print_dept: print_ignored_package): accept install_info objects to speed-up printing ignored packages
+     2019-10-03 f5d292b actionless fix(build,makepkg_config): when using dynamic users PKGDEST if it's set to temp dir move pkg to DynamicUsers and next to PKGDEST (#394)
+     2019-10-02 238f864 actionless fix(makepkg_config): when using dynamic users ignore PKGDEST if it's set to temp dir (#394)
+     2019-09-29 7ec4306 Bundy01 chore(locale): es.po; fr.po (#401)
+     2019-09-26 8969fe4 Osman Karagöz chore(locale): update TR translation
