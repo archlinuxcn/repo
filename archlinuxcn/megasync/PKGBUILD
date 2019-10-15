@@ -7,7 +7,7 @@
 
 pkgname=megasync
 pkgver=4.2.5
-pkgrel=2
+pkgrel=3
 pkgdesc="Easy automated syncing between your computers and your MEGA cloud drive"
 arch=('i686' 'x86_64')
 url="https://github.com/meganz/MEGAsync"
@@ -18,15 +18,19 @@ makedepends=('qt5-tools' 'swig' 'doxygen' 'lsb-release' 'git')
 optdepends=('sni-qt: fix systray issue on KDE and LXQt')
 _extname=".0_Linux"
 source=("git+https://github.com/meganz/MEGAsync.git#tag=v${pkgver}${_extname}"
-        "meganz-sdk::git+https://github.com/meganz/sdk.git")
+        "meganz-sdk::git+https://github.com/meganz/sdk.git"
+        "remove-static-tgkill.patch")
 sha256sums=('SKIP'
-            'SKIP')
+            'SKIP'
+            '1d100f2517f4dc2b3af38eaa4f52ffbe9fb348833384ae0befa3ec3caaac1786')
 
 prepare() {
     cd "MEGAsync"
     git submodule init
     git config submodule.src/MEGASync/mega.url "../meganz-sdk"
     git submodule update
+    
+    patch -Np1 -i "../remove-static-tgkill.patch"
 }
 
 build() {
