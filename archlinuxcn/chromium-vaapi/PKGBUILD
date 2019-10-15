@@ -11,7 +11,7 @@
 
 pkgname=chromium-vaapi
 pkgver=77.0.3865.120
-pkgrel=1
+pkgrel=2
 _launcher_ver=6
 pkgdesc="Chromium with VA-API support to enable hardware acceleration"
 arch=('x86_64')
@@ -45,7 +45,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
 sha256sums=('d792f9b09b1dcfd64e68f47a611c540dd1383dd9abd78ca1e06b2a7e2ff06af8'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
             'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb'
-            '333b1e0997ad8831906f66550efc73f51b8650ec3436a247d920b5d12e2169de'
+            '7496762a1953b15a48d3e5503fb76d9835940afd850a45b7de976de9f51479f9'
             '33a5bcd1df2cc7aa7467fa882790ef143a4497d2b704c9e1ea86c8ede90c2d90'
             'ab986e4b723dfcedab1bc8dcada07526facae28a8a7ff3345f658532c1d99987'
             '840f555020751ec284dca35b9317a9dd7dc69fcb910ea1cae2dd7cc9b237dfb7'
