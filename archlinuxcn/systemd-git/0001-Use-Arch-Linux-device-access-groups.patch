@@ -15,10 +15,10 @@ Content-Transfer-Encoding: 8bit
  sysusers.d/basic.conf.in       |  6 +++---
  2 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/rules/50-udev-default.rules.in b/rules/50-udev-default.rules.in
+diff --git a/rules.d/50-udev-default.rules.in b/rules.d/50-udev-default.rules.in
 index 191f56f42..f81c4d0fc 100644
---- a/rules/50-udev-default.rules.in
-+++ b/rules/50-udev-default.rules.in
+--- a/rules.d/50-udev-default.rules.in
++++ b/rules.d/50-udev-default.rules.in
 @@ -22,7 +22,7 @@ SUBSYSTEM=="tty", KERNEL=="sclp_line[0-9]*", GROUP="tty", MODE="0620"
  SUBSYSTEM=="tty", KERNEL=="ttysclp[0-9]*", GROUP="tty", MODE="0620"
  SUBSYSTEM=="tty", KERNEL=="3270/tty[0-9]*", GROUP="tty", MODE="0620"
