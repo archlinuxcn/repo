@@ -10,8 +10,8 @@
 # https://github.com/michaellass/AUR
 
 pkgname=yed
-pkgver=3.19
-pkgrel=2
+pkgver=3.19.1
+pkgrel=1
 epoch=1
 pkgdesc='Very powerful graph editor written in java'
 arch=('any')
@@ -21,7 +21,7 @@ depends=('java-runtime')
 source=("https://www.yworks.com/resources/yed/demo/yEd-${pkgver}.zip"
         'yed.desktop'
         'yed')
-sha256sums=('1595816007ced156d21576691fe5247135d85d674231a708a49553de685c65e3'
+sha256sums=('19ccb355bd22702e4e1d2dbb976e21acb2d8baeca4c9d4a3574e5876f8fd3308'
             '245182a52896bdff3f2c995a066623619d600665630e789910c92d36725a0aca'
             '731b54c6e731704efe9847d78e2df474d59042452ace29d2786d76891295249e')
 
@@ -37,7 +37,7 @@ package() {
   install -Dm644 ${srcdir}/yed-${pkgver}/license.html ${pkgdir}/usr/share/licenses/yed/license.html
 
   # Install icon
-  install -Dm644 ${srcdir}/yed-${pkgver}/icons/yicon32.png ${pkgdir}/usr/share/pixmaps/yed.png
+  install -Dm644 ${srcdir}/yed-${pkgver}/icons/yed32.png ${pkgdir}/usr/share/pixmaps/yed.png
 
   # Install .desktop file
   install -Dm644 ${srcdir}/yed.desktop ${pkgdir}/usr/share/applications/yed.desktop
