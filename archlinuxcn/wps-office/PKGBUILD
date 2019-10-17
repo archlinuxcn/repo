@@ -7,13 +7,13 @@
 pkgname=wps-office
 pkgver=11.1.0.8865
 #_pkgver=8372
-pkgrel=3
+pkgrel=4
 #_pkgrel=1
 pkgdesc="Kingsoft Office (WPS Office) is an office productivity suite"
 arch=('x86_64')
 license=('custom')
 url="http://wps-community.org/"
-depends=('fontconfig' 'xorg-mkfontdir' 'libxrender' 'gtk2' 'desktop-file-utils' 'shared-mime-info' 'xdg-utils' 'glu' 'openssl-1.0' 'sdl2' 'libpulse' 'hicolor-icon-theme' 'libxss')
+depends=('fontconfig' 'xorg-mkfontdir' 'libxrender' 'gtk2' 'desktop-file-utils' 'shared-mime-info' 'xdg-utils' 'glu' 'openssl-1.0' 'sdl2' 'libpulse' 'hicolor-icon-theme' 'libxss' 'sqlite')
 optdepends=('cups: for printing support'
             'libjpeg-turbo: JPEG image codec support'
             'pango: for complex (right-to-left) text support'
@@ -72,6 +72,7 @@ package() {
 
     install -d "${pkgdir}/usr/share/applications"
     cp -r applications/* "${pkgdir}/usr/share/applications"
+    rm "${pkgdir}/usr/share/applications/appurl.desktop"
 
     install -d "${pkgdir}/usr/share/desktop-directories"
     cp -r desktop-directories/* "${pkgdir}/usr/share/desktop-directories"
