@@ -24,4 +24,4 @@ fi
 # GH Issue: https://github.com/brave/brave-browser/issues/4142
 # NOTE: Replace with an exec call once we don't have to work around
 # this bug by having the browser be a subprocess of this script
-/usr/lib/brave-bin/brave $@ $SANDBOX_FLAG $PEPPER_FLASH_FLAG $USER_FLAGS || true
+/usr/lib/brave-bin/brave "$@" $SANDBOX_FLAG $PEPPER_FLASH_FLAG $USER_FLAGS || true
