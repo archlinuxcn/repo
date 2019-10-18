@@ -2,17 +2,21 @@
 # Co-Maintainer: Markus Weimar <mail@markusweimar.de>
 
 pkgname=ttf-sarasa-gothic
-pkgver=0.9.1
-pkgrel=1
-pkgdesc="A Chinese & Japanese programming font based on Iosevka and Source Han Sans (TTC)"
+pkgver=0.10.0
+pkgrel=2
+pkgdesc="A CJK programming font based on Iosevka and Source Han Sans. (TTC)"
 arch=('any')
 url="https://github.com/be5invis/Sarasa-Gothic"
 license=('custom:SIL Open Font License v1.1')
 depends=('fontconfig' 'xorg-font-utils')
-source=("https://github.com/be5invis/Sarasa-Gothic/releases/download/v$pkgver/sarasa-gothic-ttc-$pkgver.7z"
-        'https://raw.githubusercontent.com/be5invis/Sarasa-Gothic/master/LICENSE')
-sha256sums=('d8d0b566b2ca7ff0964e00a2fca7737cc73f041c3e3d3badbc62a10e07e2a83b'
-            '15d8d7964167f8ec518783801c809991807804cfde691242471e24ce66de6934')
+makedepends=('curl')
+source=("https://github.com/be5invis/Sarasa-Gothic/releases/download/v$pkgver/sarasa-gothic-ttc-$pkgver.7z")
+sha256sums=('2a8cad733d706b4f1677f91a1d9e97434c00583b662823692358edc90762eabc')
+
+prepare() {
+	cd "$srcdir"
+	curl -O 'https://raw.githubusercontent.com/be5invis/Sarasa-Gothic/master/LICENSE'
+}
 
 package() {
     install -d "$pkgdir/usr/share/fonts/${pkgname:4}"
