@@ -3,7 +3,7 @@
 _pkgname=onedrive
 pkgname=$_pkgname-abraunegg
 pkgver=2.3.10
-pkgrel=1
+pkgrel=2
 epoch=
 pkgdesc="Free OneDrive client written in D - abraunegg's fork. Follows the releases on https://github.com/abraunegg/onedrive/releases"
 arch=('i686' 'x86_64')
@@ -17,7 +17,7 @@ makedepends=('dmd')
 
 build() {
 	cd "$_pkgname-$pkgver"
-        ./configure --prefix=/usr --enable-notifications --enable-completions
+        ./configure --sysconfdir=/etc --prefix=/usr --enable-notifications --enable-completions
         make
 }
 
