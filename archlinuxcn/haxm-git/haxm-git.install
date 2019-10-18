@@ -1,0 +1,7 @@
+post_install() {
+	/usr/lib/haxm/install.sh
+}
+
+pre_remove() {
+	/usr/lib/haxm/uninstall.sh
+}
