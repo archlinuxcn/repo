@@ -1,8 +1,8 @@
 # Maintainer: Edward Pacman <edward@edward-p.xyz>
 
 pkgname=netfilter-fullconenat-dkms-git
-pkgver=r70.d4daedd
-pkgrel=3
+pkgver=r73.0cf3b48
+pkgrel=1
 pkgdesc="A kernel module that turns MASQUERADE into full cone SNAT"
 arch=('any')
 url="https://github.com/Chion82/netfilter-full-cone-nat"
