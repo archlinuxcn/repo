@@ -91,7 +91,7 @@ EOF
   if [[ $1 == "zh-CN" ]]; then
     # Change homepage for zh_CN to avoid ADs and tracks
     cat <<EOF | install -Dm644 /dev/stdin "${pkgdir}"/${OPT_PATH}/distribution/policies.json
-{"policies": {"DisableAppUpdate": true, "Homepage": {"URL": "https://www.archlinux.org/"}}}
+{"policies": {"DisableAppUpdate": true, "Homepage": {"URL": "about:home"}}}
 EOF
   else
     cat <<EOF | install -Dm644 /dev/stdin "${pkgdir}"/${OPT_PATH}/distribution/policies.json
