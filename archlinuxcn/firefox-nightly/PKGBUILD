@@ -8,7 +8,7 @@ pkgbase=firefox-nightly
 pkgname=()
 _version=71.0a1
 pkgver=71.0a1.20191020.23
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 license=('MPL' 'GPL' 'LGPL')
 depends=('dbus-glib' 'gtk3' 'libxt' 'nss' 'mime-types')
@@ -88,7 +88,14 @@ pref("spellchecker.dictionary_path", "/usr/share/hunspell");
 EOF
 
   # Disable auto-updates
-  cat <<EOF | install -Dm644 /dev/stdin "${pkgdir}"/${OPT_PATH}/distribution/policies.json
+  if [[ $1 == "zh-CN" ]]; then
+    # Change homepage for zh_CN to avoid ADs and tracks
+    cat <<EOF | install -Dm644 /dev/stdin "${pkgdir}"/${OPT_PATH}/distribution/policies.json
+{"policies": {"DisableAppUpdate": true, "Homepage": {"URL": "https://www.archlinux.org/"}}}
+EOF
+  else
+    cat <<EOF | install -Dm644 /dev/stdin "${pkgdir}"/${OPT_PATH}/distribution/policies.json
 {"policies": {"DisableAppUpdate": true}}
 EOF
+  fi
 }
