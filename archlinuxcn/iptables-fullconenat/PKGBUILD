@@ -4,7 +4,7 @@ _pkgbase=iptables
 pkgbase=iptables-fullconenat
 pkgname=(iptables-fullconenat iptables-fullconenat-nft)
 pkgver=1.8.3
-pkgrel=2
+pkgrel=3
 epoch=1
 pkgdesc='Linux kernel packet control tool with FULLCONENAT support.'
 arch=(x86_64)
@@ -35,7 +35,7 @@ sha1sums=('6df99e90cb4d59032ab2050ebb426fe065249bd3'
           '9cec592787e32451f58fa608ea057870e07aa704'
           'd10af7780d1634778d898c709e2d950aa1561856'
           '15c1684f3e671f4d0ede639a7c9c08e1a841511c'
-          'b5dd6f51b9257150290a140453e09d38fb63c391')
+          '6defc372f039b484948c9bb6d88737967818b2dd')
 validpgpkeys=('C09DB2063F1D7034BA6152ADAB4655A126D292E4') # Netfilter Core Team
 
 prepare() {
