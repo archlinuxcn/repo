@@ -2,17 +2,17 @@
 # Maintainer:  skydrome <skydrome@protonmail.com>
 
 # Uncomment if you do not want to build all language translations
-#export LG2=en
+export LG2=en
 
 pkgname=i2p
-pkgver=0.9.41
+pkgver=0.9.43
 pkgrel=1
 pkgdesc="A distributed anonymous network"
 url="https://geti2p.net"
 license=('GPL2')
 arch=('any')
-depends=('java-runtime>=7' 'java-service-wrapper')
-makedepends=('java-environment>=7' 'apache-ant')
+depends=('java-runtime>=8' 'java-service-wrapper')
+makedepends=('java-environment>=8' 'apache-ant')
 [[ "$LG2" != 'en' ]] && makedepends+=('gettext')
 #optdepends=('gtk2: for rrd graphs')
 conflicts=('i2p-bin' 'i2p-dev')
@@ -20,39 +20,38 @@ backup=('opt/i2p/wrapper.config')
 install='i2p.install'
 options=(!strip)
 
+# https://geti2p.net/en/get-involved/develop/release-signing-key
+# https://geti2p.net/_static/zzz.key.asc
+validpgpkeys=('2D3D2D03910C6504C1210C65EE60C0C8EE7256A8')
+
 #_url="https://download.i2p2.de/releases/${pkgver}"
 _url="https://launchpad.net/i2p/trunk/${pkgver}/+download"
 
 source=("${_url}/i2psource_${pkgver}.tar.bz2"{,.sig}
         'i2prouter.service' 'i2prouter.sh' 'wrapper.config' 'router.config')
 
-#curl -s "https://geti2p.net/en/download" \
-#    |grep -A1 "<div class=\"hash\">" \
-#    |sed -e "s:.*<code>::" -e "s:</code>::" -e '17,17!d'
-
-sha256sums=('f988877940b2cff1a90534c47b78343de49cd6290817edb57c0142eecf1d164e'
+sha256sums=('beb2a3c62efce826cd5aa3e296b483143ad2c581ddb038677f960f7d110df81c'
             'SKIP'
             '9bb899ece87099716da29bac8b7da02916fc325699b68989e73c1fe333a6342f'
             'ea8f97e66461d591b1819eab39bbc40056b89ae12f7729b3dd9fd2ce088e5e53'
-            '315d8128969b372bb553dc2170c3e0709f52e01be77c1db1f071d83569126a70'
+            '5d134ee5bc614b54ec48de7c5214f6dbe08abcfab7d286c5b1c7616e39b478ed'
             '7a4688db826c3dddb762976cd8c9a5d465255c3577069243d8e5af941a4126e2')
-
-# https://geti2p.net/en/get-involved/develop/release-signing-key
-validpgpkeys=('2D3D2D03910C6504C1210C65EE60C0C8EE7256A8')
 
 build() {
     cd "$pkgname-$pkgver"
 
-    source /etc/ant.conf
-    export ANT_OPTS="-Dfile.encoding=UTF-8"
-    ant preppkg-linux-only
+    ant -Dfile.encoding=UTF-8 \
+        -Djavac.compilerargs=-Xlint:-options \
+        -Dbuild.reproducible=true \
+        -Djavac.version=8 \
+        preppkg-linux-only
 }
 
 package() {
     cd "$pkgdir"
 
     install -dm755 "usr/bin"
-    install -dm755 "opt/i2p"
+    install -dm755 "opt/i2p/.tmp"
 
     cp -r "$srcdir/$pkgname-$pkgver"/pkg-temp/* "opt/i2p"
 
@@ -79,6 +78,7 @@ package() {
     sed -i opt/i2p/eepget \
         -e 's:%INSTALL_PATH:/opt/i2p:g'
     sed -i opt/i2p/clients.config \
+        -e "s:clientApp.3.startOnLoad=.*:clientApp.3.startOnLoad=false:" \
         -e "s:clientApp.4.startOnLoad=.*:clientApp.4.startOnLoad=false:"
     rm -r opt/i2p/{osid,postinstall.sh,runplain.sh,INSTALL-headless.txt,LICENSE.txt,licenses,man,lib/wrapper*}
 }

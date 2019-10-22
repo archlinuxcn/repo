@@ -18,3 +18,7 @@ post_upgrade() {
     }
     fi
 }
+
+post_remove() {
+    rm -f /opt/i2p/lib*.so*
+}
