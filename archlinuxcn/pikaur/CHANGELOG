@@ -1470,3 +1470,15 @@ Tue Oct 15 02:32:45 2019 +0200
      2019-10-02 238f864 actionless fix(makepkg_config): when using dynamic users ignore PKGDEST if it's set to temp dir (#394)
      2019-09-29 7ec4306 Bundy01 chore(locale): es.po; fr.po (#401)
      2019-09-26 8969fe4 Osman Karagöz chore(locale): update TR translation
+
+
+Mon Oct 21 20:14:31 2019 +0200
+-------------------------------------------------
+1.5.4           Release 1.5.4
+    
+    Changes:
+     2019-10-21 bff744c actionless fix(install_cli: get_all_pkgs_info): check only AUR packages if they're `-devel` or not
+     2019-10-21 959007b actionless fix(pikspect: nested terminal): set tc break only if stdin is tty (fixes #411)
+     2019-10-20 4ad6979 actionless feat(args): read stdin if `-` specified and stdin is not tty (fixes #411)
+     2019-10-18 29efb8a actionless fix: make `python -m pikaur <args>` work
+     2019-10-17 8e19240 actionless chore(core: sudo_loop; pikspect): return back to using `sudo pacman -T` instead of `sudo -v` (fixes #408)
