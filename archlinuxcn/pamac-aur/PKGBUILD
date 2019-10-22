@@ -3,12 +3,12 @@
 # https://gitlab.manjaro.org/packages/extra/pamac
 pkgname=pamac-aur
 pkgver=9.0.1
-pkgrel=1
+pkgrel=2
 _pkgfixver=$pkgver
 
-_pkgvercommit=v$pkgver
-#_pkgvercommit='881953f28aade1676b88a6423a89e46214464127'
-sha256sums=('53434271c9eae48d9fc770fddbf63f4a8de4487ba7c2906817da2ecc22023230')
+#_pkgvercommit=v$pkgver
+_pkgvercommit='b413a3e7c11ef00eb24cc7da421a3d40b8bb09b3'
+sha256sums=('b29e0ee2630a324117e628843f3adb9f799876b9ee6ad19ac8eec4cd5b1c1573')
 
 pkgdesc="A Gtk3 frontend for libalpm"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
@@ -41,7 +41,7 @@ build() {
   cd "$srcdir/pamac-$_pkgvercommit"
   mkdir -p builddir
   cd builddir
-  meson --prefix=/usr --sysconfdir=/etc
+  meson --buildtype=release --prefix=/usr --sysconfdir=/etc
 
   # build
   ninja
