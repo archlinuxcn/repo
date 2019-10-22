@@ -2,7 +2,7 @@
 # Contributor: Oliver Rümpelein <arch@pheerai.de>
 
 pkgname=mergerfs
-pkgver=2.28.2
+pkgver=2.28.3
 pkgrel=1
 pkgdesc="FUSE based union filesystem"
 arch=('x86_64')
@@ -11,7 +11,7 @@ license=('custom:ISC')
 makedepends=('git')    # 'pandoc'
 source=("https://github.com/trapexit/mergerfs/archive/$pkgver.tar.gz")
 #source=("https://github.com/trapexit/mergerfs/releases/download/$pkgver/mergerfs-$pkgver.tar.gz")
-md5sums=('c8d749e21f810dc3aff8cdd6ee4222ba')
+md5sums=('c4c92cb9aa6c0ceab84c886eb57b2afc')
 
 prepare() {
   cd $pkgname-$pkgver
