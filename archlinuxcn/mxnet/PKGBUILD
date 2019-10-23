@@ -3,7 +3,7 @@
 
 pkgbase=mxnet
 pkgname=('mxnet' 'mxnet-mkl' 'mxnet-cuda' 'mxnet-cuda-mkl')
-pkgver=1.5.0
+pkgver=1.5.1
 pkgrel=1
 epoch=1
 pkgdesc="A flexible and efficient library for deep learning"
@@ -18,7 +18,7 @@ depends=(
   'intel-tbb'
   'lapack'
   'openblas'
-  'opencv'
+#  'opencv'
   'protobuf'
   'python-graphviz'
   'python-numpy'
@@ -60,9 +60,8 @@ prepare() {
   cp -r "${pkgbase}" "${pkgbase}-cuda-mkl"
 
   # use gcc version compatible with CUDA
-#  export CC=/opt/cuda/bin/gcc
-#  export CXX=/opt/cuda/bin/g++
-  export CUDA_HOST_COMPILER=/opt/cuda/bin/g++
+  export CC=/opt/cuda/bin/gcc
+  export CXX=/opt/cuda/bin/g++
 }
 
 build() {
@@ -81,7 +80,7 @@ build() {
     -DUSE_GPERFTOOLS:BOOL=OFF
     -DUSE_JEMALLOC:BOOL=OFF
     -DUSE_LAPACK:BOOL=ON
-    -DUSE_OPENCV:BOOL=ON
+    -DUSE_OPENCV:BOOL=OFF
     -DUSE_S3:BOOL=ON
 )
 
