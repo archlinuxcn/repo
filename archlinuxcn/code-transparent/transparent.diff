@@ -1,0 +1,78 @@
+
+diff -ru a/src/main.js b/src/main.js
+--- a/src/main.js	2019-10-21 15:16:40.287933959 +0800
++++ b/src/main.js	2019-10-21 14:24:16.491539975 +0800
+@@ -142,6 +142,9 @@
+ 	// Force pre-Chrome-60 color profile handling (for https://github.com/Microsoft/vscode/issues/51791)
+ 	app.commandLine.appendSwitch('disable-color-correct-rendering');
+ 
++	// enable transparent
++	app.commandLine.appendSwitch('enable-transparent-visuals');
++
+ 	// Support JS Flags
+ 	const jsFlags = getJSFlags(cliArgs);
+ 	if (jsFlags) {
+diff -ru a/src/vs/code/electron-main/window.ts b/src/vs/code/electron-main/window.ts
+--- a/src/vs/code/electron-main/window.ts	2019-10-21 15:16:40.304601230 +0800
++++ b/src/vs/code/electron-main/window.ts	2019-10-21 15:14:08.935088758 +0800
+@@ -121,7 +121,8 @@
+ 			height: this.windowState.height,
+ 			x: this.windowState.x,
+ 			y: this.windowState.y,
+-			backgroundColor: this.themeMainService.getBackgroundColor(),
++			transparent: true,
++			backgroundColor: '#00000000' || this.themeMainService.getBackgroundColor(),
+ 			minWidth: CodeWindow.MIN_WIDTH,
+ 			minHeight: CodeWindow.MIN_HEIGHT,
+ 			show: !isFullscreenOrMaximized,
+diff -ru a/src/vs/workbench/common/theme.ts b/src/vs/workbench/common/theme.ts
+--- a/src/vs/workbench/common/theme.ts	2019-10-21 23:14:46.424664135 +0800
++++ b/src/vs/workbench/common/theme.ts	2019-10-21 23:15:24.641792763 +0800
+@@ -7,20 +7,25 @@
+ import { registerColor, editorBackground, contrastBorder, transparent, editorWidgetBackground, textLinkForeground, lighten, darken, focusBorder, activeContrastBorder, editorWidgetForeground } from 'vs/platform/theme/common/colorRegistry';
+ import { Disposable } from 'vs/base/common/lifecycle';
+ import { IThemeService, ITheme } from 'vs/platform/theme/common/themeService';
+-import { Color } from 'vs/base/common/color';
++import { Color, RGBA } from 'vs/base/common/color';
+
+-// < --- Workbench (not customizable) --- >
++// < --- Workbench --- >
+
+-export function WORKBENCH_BACKGROUND(theme: ITheme): Color {
+-	switch (theme.type) {
+-		case 'dark':
+-			return Color.fromHex('#252526');
+-		case 'light':
+-			return Color.fromHex('#F3F3F3');
+-		default:
+-			return Color.fromHex('#000000');
+-	}
+-}
++export const WORKBENCH_BACKGROUND = (theme: ITheme) =>
++	theme.getColor(
++		registerColor(
++			'workbench.background',
++			{
++				dark: '#252526',
++				light: '#F3F3F3',
++				hc: '#000000'
++			},
++			nls.localize(
++				'workbenchBackground',
++				'Top-level background color. Not seen unless other elements have a transparent color.'
++			)
++		)
++	) || new Color(new RGBA(0, 0, 0, 0));
+
+ // < --- Tabs --- >
+
+--- a/src/vs/workbench/contrib/terminal/browser/terminalInstance.ts	2019-10-22 10:40:29.212561275 +0800
++++ b/src/vs/workbench/contrib/terminal/browser/terminalInstance.ts	2019-10-22 10:41:08.469016308 +0800
+@@ -469,6 +469,7 @@
+ 			macOptionIsMeta: config.macOptionIsMeta,
+ 			macOptionClickForcesSelection: config.macOptionClickForcesSelection,
+ 			rightClickSelectsWord: config.rightClickBehavior === 'selectWord',
++			allowTransparency: true,
+ 			// TODO: Guess whether to use canvas or dom better
+ 			rendererType: config.rendererType === 'auto' ? 'canvas' : config.rendererType
+ 		});
