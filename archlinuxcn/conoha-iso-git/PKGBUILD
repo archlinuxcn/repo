@@ -1,8 +1,8 @@
 # Maintainer: Jiachen YANG <farseerfc@gmail.com>
 _pkgname=conoha-iso
 pkgname=${_pkgname}-git
-pkgver=0.4.3.r77.gb418bc8
-pkgrel=1.1
+pkgver=0.4.3.r78.g94c2ee6
+pkgrel=1
 pkgdesc="ISO image management tool for ConoHa"
 arch=(x86_64)
 url="https://github.com/hironobu-s/conoha-iso"
