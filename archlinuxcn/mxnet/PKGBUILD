@@ -4,7 +4,7 @@
 pkgbase=mxnet
 pkgname=('mxnet' 'mxnet-mkl' 'mxnet-cuda' 'mxnet-cuda-mkl')
 pkgver=1.5.1
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc="A flexible and efficient library for deep learning"
 arch=('x86_64')
@@ -157,7 +157,9 @@ _package() {
   cd "${srcdir}/${pkgname}/build"
   # install mxnet core component
   make DESTDIR="${pkgdir}" install
-  install -Dm755 "${srcdir}/${pkgname}/build/im2rec" "${pkgdir}/usr/bin/im2rec"
+  if [ -f "${srcdir}/${pkgname}/build/im2rec" ]; then
+    install -Dm755 "${srcdir}/${pkgname}/build/im2rec" "${pkgdir}/usr/bin/im2rec"
+  fi
   # install python binding
   cd "${srcdir}/${pkgname}/python"
   python setup.py install --root="${pkgdir}" --optimize=1 --with-cython --skip-build
