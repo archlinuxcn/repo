@@ -3,7 +3,7 @@
 # All my PKGBUILDs are managed at https://github.com/eli-schwartz/pkgbuilds
 
 pkgname=pacman-static
-pkgver=5.1.3
+pkgver=5.2.0
 _cares_ver=1.15.0
 _nghttp2_ver=1.39.2
 _curlver=7.66.0
@@ -16,7 +16,7 @@ _libarchive_ver=3.4.0
 _gpgerrorver=1.36
 _libassuanver=2.5.3
 _gpgmever=1.13.1
-pkgrel=6
+pkgrel=1
 pkgdesc="Statically-compiled pacman (to fix or install systems without libc)"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://www.archlinux.org/pacman/"
@@ -64,7 +64,7 @@ source+=("https://www.gnupg.org/ftp/gcrypt/gpgme/gpgme-${_gpgmever}.tar.bz2"{,.s
 source+=("https://github.com/libarchive/libarchive/releases/download/v${_libarchive_ver}/libarchive-${_libarchive_ver}.tar.gz"{,.asc})
 validpgpkeys+=('CB55788360B992FA0885C878F040F7196BA99AF4') # Martin Matuska <martin@matuska.org>
 
-sha512sums=('b556b6d01d651a675ce1e153ede776e682ca0eb671cd2be00d7b7c602504dd119291f38ef5c318e675b4ce865db7e1c57e0ebc157510f0fc72e656feb8947e54'
+sha512sums=('76d190631a298f4ee08ca6a5fef26603004145f77440cb6861e2691e01ad4a9bbbb1ea2e5179b6e0bd46f0de67bd7738b427863445694f01f5484e0efcb46fc4'
             'SKIP'
             'd8c971543e3e87736dfafebca55e9ecd0644e304c9731edaccba34170205824476595861a439077289b438ad489dd6008dedf2c6b2c111920300329be1b1bf34'
             'a1de6c5e7e1a6a13c926aae690e83d5caa51e7313d63da1cf2af6bc757c41d585aad5466bc3ba7b7f7793cb1748fa589f40972b196728851c8b059cfc8c3be50'
@@ -90,7 +90,7 @@ sha512sums=('b556b6d01d651a675ce1e153ede776e682ca0eb671cd2be00d7b7c602504dd11929
             'SKIP'
             '2f9e2a551a6bcab56fb1a030b5d656df7299a3d151465aa02f0420d344d2fada49dee4755b3abff9095f62519e14dc9af8afa1695ecc6d5fdb4f0b28e6ede852'
             'SKIP')
-b2sums=('f933a37f201ef842b0e4bb041961db6def67c7e811299966b6e2054ae640180a5a10ba904aa4c4356e351a5cefb228d8853e79c5707ddf08dfa271b054d3b169'
+b2sums=('c8a15b1825ed8ab61a8426b1d6788f7a1fbc94dc96809c7a80357ac0c7d9980ef7bef505f171342246360d3a19fce20e0f8f029d9be00f21941cc4f091b83dd6'
         'SKIP'
         '4569774c33f17d51ac889c385697fcead82106db421399ceb22ad2aafabe64a576445d9272adcf37e2fec47cdd6ac1dc6423efd49012ca7be0aa2087609a0397'
         'c4028bb2840af23274b79c73600bfcf73a348c7ab63ae3c215829e0fe2cf149f4ad38a3ec657c3997bad818ced3cacaed0579dd0dd2ef42eaffd074bdc4f22ed'
