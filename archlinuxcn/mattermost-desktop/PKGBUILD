@@ -4,7 +4,7 @@
 # Contributor: Bruno Pagani <archange at archlinux dot org>
 
 pkgname=mattermost-desktop
-pkgver=4.3.0
+pkgver=4.3.1
 pkgrel=1
 pkgdesc="Mattermost Desktop application for Linux"
 arch=('i686' 'x86_64')
@@ -18,7 +18,7 @@ source=(
     "${pkgname/-/.}"
 )
 sha512sums=(
-    '2a5b1423fe0b1bcdcbd69bbb0591b682f049aa875d86b0a513746caea4c32198a624cd3c7707036c0969381e3c8821326ce218bc5ad2b67553423fa25f627fce'
+    '8e0a0c904db387dad872aca5430e38927d99445cb53f0afe5ccf0fb783ae53684bc40a338ccac3a78cc0bf578488cddf4580dbc76f131864bfc648667da97c05'
     '7cce5fad5a923fbde106d0e67ce42d599a2d21358eca3c339d5c9e0a19a0ac057bbf2db23f5ee3628d625afcd4b128b9b9041ace4f1892a0e1d2bbd0a9c677b9'
     'b8f24df883b71df4177155246fd5858ad785f75be4f7dfc674380674b48a45342b1f5ee217a20708f74ed8d2119d837bae4a3fd48d1b62d60d55644e36411266'
 )
