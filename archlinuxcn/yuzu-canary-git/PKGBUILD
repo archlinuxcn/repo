@@ -1,27 +1,17 @@
-# Maintainer: Zion Nimchuk <zionnimchuk@gmail.com>
+# Maintainer: Brendan Szymanski <bscubed@pm.me>
 
-_pkgname='yuzu'
-pkgname="$_pkgname-git"
-pkgver=r12401.e77d2b210
+_pkgname=yuzu
+pkgname=$_pkgname-canary-git
+pkgver=r12959.95c98f963
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger"
 arch=('i686' 'x86_64')
-url="https://github.com/yuzu-emu/yuzu/"
+url="https://github.com/yuzu-emu/yuzu-mainline"
 license=('GPL2')
-provides=('yuzu' 'yuzu-cmd')
-conflicts=('yuzu-canary-git')
-depends=('shared-mime-info'
-         'desktop-file-utils'
-         'sdl2'
-         'qt5-base'
-         'qt5-multimedia'
-         'qt5-tools'
-         'libxkbcommon-x11')
-makedepends=('git'
-             'cmake'
-             'python2')
+depends=('shared-mime-info' 'desktop-file-utils' 'sdl2' 'qt5-base' 'qt5-multimedia' 'qt5-tools' 'libxkbcommon-x11')
+makedepends=('git' 'cmake' 'python2')
 optdepends=('qt5-wayland: for Wayland support')
-source=("$_pkgname::git+https://github.com/yuzu-emu/yuzu")
+source=("$_pkgname::git+https://github.com/yuzu-emu/yuzu-mainline")
 md5sums=('SKIP')
 
 pkgver() {
@@ -42,14 +32,13 @@ build() {
 	cd "$srcdir/$_pkgname"
 	export CI=true
 	export TRAVIS=true
-	export TRAVIS_REPO_SLUG=yuzu-emu/yuzu
+	export TRAVIS_REPO_SLUG=yuzu-emu/yuzu-mainline
 	export TRAVIS_TAG=$(git describe --tags)
 	
 	# Hopefully temporary fix for a compilation error involving fmt
 	CXXFLAGS+=" -DFMT_USE_USER_DEFINED_LITERALS=0"
 	
-	mkdir -p build
-	cd build
+	mkdir -p build && cd build
 	cmake .. \
 	  -DCMAKE_INSTALL_PREFIX=/usr \
 	  -DCMAKE_BUILD_TYPE=Release \
@@ -60,13 +49,17 @@ build() {
 	make
 }
 
-check() {
-	cd "$srcdir/$_pkgname/build"
-	make test
-}
+# Tests removed temporarily as they haven't been updated and throw a false error
+#check() {
+#	cd "$srcdir/$_pkgname/build"
+#	make test
+#}
 
 package() {
 	cd "$srcdir/$_pkgname/build"
-	
 	make DESTDIR="$pkgdir/" install
+	
+	# Temporary fix until yuzu fixes the zlib and libzip patch
+	cd "$pkgdir/usr"
+	rm -rf include lib lib64 share/man share/pkgconfig
 }
