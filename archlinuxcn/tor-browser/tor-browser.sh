@@ -22,6 +22,8 @@
 set -e
 
 
+# CONSTANTS AND VARIABLES
+
 # filled by PKGBUILD
 _TB_PKGNAME_='__REPL_NAME__'
 _TB_VERSION_='__REPL_VERSION__'
@@ -31,11 +33,10 @@ _TB_ARCH_='__REPL_ARCH__'
 
 # other constants and variables
 _TB_HOME_DIR_=~/".${_TB_PKGNAME_}"
-_TB_VER_FILE_="${_TB_HOME_DIR_}/VERSION"
-_TB_LOG_FILE_="${_TB_HOME_DIR_}/LOG"
-_TB_APP_DIR_="${_TB_HOME_DIR_}/app"
 _TB_REFRESH_=0
 
+
+# FUNCTIONS
 
 # syntax: _notify_ "${TITLE}" "${MESSAGE}"
 _notify_() {
@@ -150,6 +151,8 @@ EOF
 }
 
 
+# SCRIPT BODY
+
 args=()
 for arg; do
 	case "${arg}" in
@@ -161,6 +164,10 @@ for arg; do
 		*) args+=("$arg") ;;
 	esac
 done
+
+_TB_VER_FILE_="${_TB_HOME_DIR_}/VERSION"
+_TB_LOG_FILE_="${_TB_HOME_DIR_}/LOG"
+_TB_APP_DIR_="${_TB_HOME_DIR_}/app"
 
 # create directory, if it is missing (e.g. first run)
 [[ ! -d "${_TB_APP_DIR_}" ]] && mkdir -p "${_TB_APP_DIR_}"
