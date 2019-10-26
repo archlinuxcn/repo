@@ -4,26 +4,17 @@
 # Contributor: Jove Yu <yushijun110 [at] gmail.com>
 # Contributor: Ariel AxionL <axionl at aosc dot io>
 
-pkgname=wps-office
+pkgbase=wps-office
+pkgname=('wps-office' 'wps-office-mime')
 pkgver=11.1.0.8865
 #_pkgver=8372
-pkgrel=4
+pkgrel=5
 #_pkgrel=1
 pkgdesc="Kingsoft Office (WPS Office) is an office productivity suite"
 arch=('x86_64')
 license=('custom')
 url="http://wps-community.org/"
-depends=('fontconfig' 'xorg-mkfontdir' 'libxrender' 'gtk2' 'desktop-file-utils' 'shared-mime-info' 'xdg-utils' 'glu' 'openssl-1.0' 'sdl2' 'libpulse' 'hicolor-icon-theme' 'libxss' 'sqlite')
-optdepends=('cups: for printing support'
-            'libjpeg-turbo: JPEG image codec support'
-            'pango: for complex (right-to-left) text support'
-            'curl: An URL retrieval utility and library'
-            'ttf-wps-fonts: Symbol fonts required by wps-office'
-            'ttf-ms-fonts: Microsft Fonts recommended for wps-office'
-            'wps-office-fonts: FZ TTF fonts provided by wps community')
-conflicts=('kingsoft-office')
 options=('!emptydirs')
-install=${pkgname}.install
 #[[ "$CARCH" = "i686" ]] && _archext=x86 || _archext=x86_64
 #source_i686=("http://kdl.cc.ksosoft.com/wps-community/download/${pkgver##*.}/wps-office_${pkgver}_i386.deb"
 #            'add_no_kdialog_variable.patch')
@@ -55,7 +46,18 @@ prepare() {
 #   patch -Np1 -i "${srcdir}/add_no_kdialog_variable.patch"
 }
 
-package() {
+package_wps-office() {
+    depends=('fontconfig' 'xorg-mkfontdir' 'libxrender' 'gtk2' 'desktop-file-utils' 'shared-mime-info' 'xdg-utils' 'glu' 'openssl-1.0' 'sdl2' 'libpulse' 'hicolor-icon-theme' 'libxss' 'sqlite')
+    optdepends=('cups: for printing support'
+                'libjpeg-turbo: JPEG image codec support'
+                'pango: for complex (right-to-left) text support'
+                'curl: An URL retrieval utility and library'
+                'ttf-wps-fonts: Symbol fonts required by wps-office'
+                'ttf-ms-fonts: Microsft Fonts recommended for wps-office'
+                'wps-office-fonts: FZ TTF fonts provided by wps community'
+                'wps-office-mime: Use mime files provided by Kingsoft')
+    install=${pkgname}.install
+    conflicts=('kingsoft-office')
 #   cd wps-office_${pkgver}_$_archext
     cd "${srcdir}/opt/kingsoft/wps-office/"
 
@@ -80,11 +82,21 @@ package() {
     install -d "${pkgdir}/usr/share/icons"
     cp -r icons/* "${pkgdir}/usr/share/icons"
 
-    install -d "${pkgdir}/usr/share/mime"
-    cp -r mime/* "${pkgdir}/usr/share/mime"
 #   cp -r "$srcdir/usr/share" "${pkgdir}/usr/"
 
     install -Dm644 -t "${pkgdir}/usr/share/fonts/wps-office" fonts/wps-office/*
 
     install -Dm644 -t "${pkgdir}/etc/xdg/menus/applications-merged" "${srcdir}/etc/xdg/menus/applications-merged/wps-office.menu"
+}
+
+package_wps-office-mime() {
+    pkgdesc="Mime files provided by Kingsoft Office (WPS Office)"
+    depends=('shared-mime-info')
+    cd "${srcdir}/usr/share"
+
+    install -d "${pkgdir}/usr/share/mime"
+    cp -r mime/* "${pkgdir}/usr/share/mime"
+
+    cd "${srcdir}/opt/kingsoft/wps-office/"
+    install -Dm644 -t "${pkgdir}/usr/share/licenses/${pkgname}" office6/mui/default/*.txt
 }
