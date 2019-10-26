@@ -1,9 +1,9 @@
-# Maintainer: Adrià Cereto i Massagué <ssorgatem at gmail.com>
+# Maintainer: Adrià Cereto i Massagué <ssorgatem@gmail.com>
 # Co-Maintainer: Jonas Van der Aa <ketsukonn@gmail.com>
 
 pkgbase=dxvk-bin
 pkgname=('dxvk-bin')
-pkgver=1.4.2
+pkgver=1.4.3
 pkgrel=1
 pkgdesc="A Vulkan-based compatibility layer for Direct3D 10/11 which allows running 3D applications on Linux using Wine (Windows DLL binary files)"
 arch=('x86_64' 'i686')
@@ -12,7 +12,7 @@ license=('zlib/libpng')
 options=(!strip)
 source=("https://github.com/doitsujin/dxvk/releases/download/v$pkgver/dxvk-$pkgver.tar.gz"
 )
-sha256sums=("5adfd71ee0299798af4402f09f113f88929af429b6889af334cff5b84b84dbe6")
+sha256sums=("e4b9e7fc8faf2dd1ddf5206e14939a822034a85778d54a6950767d68909726f7")
 
 package_dxvk-bin () {
         arch=('x86_64')
