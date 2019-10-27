@@ -1,8 +1,8 @@
 # Maintainer: Vasia Novikov <n1dr+cmarchlinux@yaaandex.com> (replace "aaa" with "a")
 pkgname=rua
-pkgver=0.14.16
+pkgver=0.14.17
 pkgrel=1
-pkgdesc='AUR helper in Rust providing control, review and jailed/offline build options'
+pkgdesc='AUR helper in Rust providing controlled and jailed build'
 url='https://github.com/vn971/rua'
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/vn971/rua/archive/${pkgver}.tar.gz")
 arch=('x86_64' 'i686')
@@ -18,7 +18,7 @@ optdepends=(
 
 #options+=(!strip)  # uncomment if you want readable stack traces
 
-sha256sums=(d4166462a7172faabe0ab0b6652d0b3738ab8e1abd58a8bc5a5bb51fd54d37e9)
+sha256sums=(10c525f4fe54dcf4400e0ba392bc79e17cd01aa3a7e24a85710d41282daf3d99)
 
 build () {
   cd "$srcdir/$pkgname-$pkgver"
