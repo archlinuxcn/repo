@@ -1,7 +1,7 @@
 # Maintainer: edward-p <edward At edward-p Dot xyz>
 
 pkgname=proxmark3-iceman-git
-pkgver=7533.6c048c50
+pkgver=7536.2a0bc9c0
 pkgrel=1
 pkgdesc='RRG / Iceman repo - Proxmark3 RDV4.0 and other Proxmark3 platforms.'
 arch=('x86_64')
@@ -9,6 +9,7 @@ url='https://github.com/RfidResearchGroup/proxmark3'
 license=('GPL2')
 depends=('perl' 'python')
 makedepends=('git' 'arm-none-eabi-gcc' 'arm-none-eabi-newlib')
+options=(!buildflags)
 provides=('proxmark3' 'proxmark3-iceman')
 conflicts=('proxmark3' 'proxmark3-iceman')
 replaces=($pkgname'-generic' $pkgname'-rdv4')
@@ -55,11 +56,11 @@ build() {
 
       make \
         PLATFORM="PM3RDV4" PLATFORM_EXTRAS="BTADDON" STANDALONE="${standalone}" \
-        FWTAG="rdv4-"$(echo ${standalone} | tr '[:upper:]' '[:lower:]') fullimage/install
+        FWTAG="rdv4-"$(echo ${standalone} | tr '[:upper:]' '[:lower:]') armsrc/install
 
       make \
         PLATFORM="PM3OTHER" STANDALONE="${standalone}" \
-        FWTAG="other-"$(echo ${standalone} | tr '[:upper:]' '[:lower:]') fullimage/install
+        FWTAG="other-"$(echo ${standalone} | tr '[:upper:]' '[:lower:]') armsrc/install
 
   done
 
@@ -67,16 +68,12 @@ build() {
 
       make \
         PLATFORM="PM3RDV4" PLATFORM_EXTRAS="BTADDON" STANDALONE="${standalone}" \
-        FWTAG="rdv4-"$(echo ${standalone} | tr '[:upper:]' '[:lower:]') fullimage/install
+        FWTAG="rdv4-"$(echo ${standalone} | tr '[:upper:]' '[:lower:]') armsrc/install
 
   done
 
-  # Build other targets
-  make
-  make install
-  # These recovery & firmware are not needed.
-  rm build/usr/share/proxmark3/firmware/{fullimage.elf,proxmark3_recovery.bin}
-
+  # Build & install other targets
+  make {client,mfkey,nonce2key,common}/install
 }
 
 package() {
