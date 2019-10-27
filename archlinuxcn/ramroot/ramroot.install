@@ -1,18 +1,12 @@
 #!/bin/bash
 
 post_install() {
-    /usr/bin/ramroot -CE
-}
-
-pre_upgrade() {
-    if [[ "$2" =~ ^1 ]]; then
-        /usr/bin/ramroot remove
-    fi
+    /usr/bin/ramroot -CEY
 }
 
 post_upgrade() {
-    if [[ "$2" =~ ^1 ]]; then
-        /usr/bin/ramroot -CE
+    if [[ "$2" =~ ^1.* ]]; then
+        /usr/bin/ramroot -CEY
     fi
 }
 

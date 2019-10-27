@@ -1,11 +1,11 @@
 # Maintainer: Chris Magyar <c.magyar.ec@gmail.com>
 
 pkgname=ramroot
-pkgver=2.0.0
+pkgver=2.0.1
 pkgrel=1
 _gitrepo=ramroot
 _gituser=arcmags
-_gitver=2.0.0
+_gitver=2.0.1
 pkgdesc="Load root file system to zram during boot"
 arch=('x86_64')
 url="https://github.com/$_gituser/$_gitrepo"
@@ -15,8 +15,8 @@ depends=('mkinitcpio')
 install=ramroot.install
 source=("$pkgname-$pkgver.tar.gz::$url/archive/$_gitver.tar.gz"
     ramroot.install)
-md5sums=('49d63b6a3dae57c72c4e926ec5020e1e'
-    'ec5f961a2a87938e895f7beb61ab6c05')
+md5sums=('2204111b9f337f191d9d9d12282efff4'
+    'cd9b4ef8c10a6eafead22453f8cf4ec0')
 
 package() {
 	cd "$pkgname-$pkgver"
@@ -26,6 +26,8 @@ package() {
         "$pkgdir/usr/lib/initcpio/install/ramroot"
     install -D -m644 usr/lib/ramroot/ramroot.conf \
         "$pkgdir/usr/lib/ramroot/ramroot.conf"
+    install -D -m644 usr/lib/ramroot/ramroot.conf \
+        "$pkgdir/etc/ramroot.conf"
     install -D -m644 usr/lib/ramroot/ramroot/etc/issue \
         "$pkgdir/etc/ramroot/etc/issue"
     install -D -m644 usr/share/man/man8/ramroot.8 \
