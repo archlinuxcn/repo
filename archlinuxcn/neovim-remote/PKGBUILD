@@ -1,6 +1,6 @@
 # Maintainer: Hexchain Tong <i at hexchain dot org>
 pkgname=neovim-remote
-pkgver=2.2.1
+pkgver=2.2.2
 pkgrel=1
 pkgdesc="Support --remote and friends for Neovim"
 arch=(any)
@@ -9,7 +9,7 @@ license=('MIT')
 depends=('python-pynvim' 'python-psutil')
 makedepends=('git' 'python-setuptools')
 source=("https://github.com/mhinz/neovim-remote/archive/v$pkgver.tar.gz")
-sha256sums=('a195ca0d5274c632590010929627e34f193a4163014ba89be8cad358917bb468')
+sha256sums=('3e7442f227812ad81bc9bbbced7fc6bd92a4e74670d4c44b4dca3ed0cb85d631')
 
 package() {
   cd "$srcdir/$pkgname-$pkgver"
