@@ -1,7 +1,6 @@
-# Maintainer: FadeMind <fademind@gmail.com>
+# Maintainer: Rastislav Barlik <barlik.arch at gmx dot com>
+# Contributor: FadeMind <fademind@gmail.com>
 # Contributor: Thomas Mudrunka <harvie@@email..cz>
-# Contributor: Thomas Mudrunka <harvie@@email..cz>
-# You can also contact me on http://blog.harvie.cz/
 
 pkgname=figlet-fonts
 pkgver=1.0 #23.03.2014
@@ -22,7 +21,7 @@ sha256sums=('10184c883faa63e91c8c7d99f100fe2f76195221ff8863d29c1beef88f666e69'
             'e6493f51c96f8671c29ab879a533c50b31ade681acfb59e50bae6b765e70c65a'
             'd3678a98b3b058ae4ded8525f51a1c53b3c6e6833793cf7cf98fcd9550ed7e70'
             '0021d92bfea79921402425feb014289520e604b7f9f1a3838df994facde0f9ec')
-         
+
 package() {
 	msg 'Copying figlet fonts...'
 	install -dm755 ${pkgdir}/usr/share/figlet/fonts/
