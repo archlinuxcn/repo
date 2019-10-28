@@ -1,31 +1,19 @@
---- a/node_modules/@journeyapps/sqlcipher/deps/sqlite3.gyp	2019-01-22 21:59:46.974203280 +0100
-+++ b/node_modules/@journeyapps/sqlcipher/deps/sqlite3.gyp	2019-01-22 23:05:52.257819994 +0100
-@@ -64,16 +64,14 @@
-         },
+--- node_modules/@journeyapps/sqlcipher/deps/sqlite3.gyp	2019-10-27 01:53:29.860275405 -0400
++++ node_modules/@journeyapps/sqlcipher/deps/sqlite3.gyp	2019-10-27 01:51:32.001730882 -0400
+@@ -73,7 +73,7 @@
          'link_settings': {
            'libraries': [
--            # This statically links libcrypto, whereas -lcrypto would dynamically link it
--            '<(SHARED_INTERMEDIATE_DIR)/sqlcipher-amalgamation-<@(sqlite_version)/OpenSSL-macOS/libcrypto.a'
-+            '-lcrypto'
-           ]
-         }
-       },
-       { # Linux
-         'link_settings': {
-           'libraries': [
--            # This statically links libcrypto, whereas -lcrypto would dynamically link it
+             # This statically links libcrypto, whereas -lcrypto would dynamically link it
 -            '<(SHARED_INTERMEDIATE_DIR)/sqlcipher-amalgamation-<@(sqlite_version)/OpenSSL-Linux/libcrypto.a'
 +            '-lcrypto'
            ]
          }
        }]
-@@ -140,8 +138,7 @@
+@@ -141,7 +141,6 @@
          { # linux
            'include_dirs': [
              '<(SHARED_INTERMEDIATE_DIR)/sqlcipher-amalgamation-<@(sqlite_version)/',
 -            '<(SHARED_INTERMEDIATE_DIR)/sqlcipher-amalgamation-<@(sqlite_version)/openssl-include/'
--          ]
-+            ]
+           ]
          }]
        ],
- 
