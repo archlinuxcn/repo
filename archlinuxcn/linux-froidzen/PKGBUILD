@@ -7,7 +7,7 @@
 pkgbase=linux-froidzen       # Build kernel with a different name
 _srcver=5.3.7-zen1
 pkgver=${_srcver//-/.}
-pkgrel=2
+pkgrel=3
 arch=(x86_64)
 url="https://github.com/zen-kernel/zen-kernel/commits/v$_srcver"
 license=(GPL2)
