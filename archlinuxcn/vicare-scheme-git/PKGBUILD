@@ -8,7 +8,7 @@ arch=('i686' 'x86_64')
 url="http://marcomaggi.github.io/vicare.html"
 license=('GPL3')
 depends=('gmp')
-makedepends=('git')
+makedepends=('git' 'moreutils')
 provides=('vicare-scheme')
 conflicts=('vicare-scheme')
 source=("vicare-scheme::git+https://github.com/marcomaggi/vicare.git")
@@ -23,6 +23,11 @@ pkgver() {
 
 build() {
   cd "$srcdir"/"$_gitname"
+
+  cd doc
+  find -type f | xargs -I@ bash -c "echo iconv -f ISO-8859-1 @;cat @ | iconv -f ISO-8859-1 -t UTF-8 | sponge @"
+  cd ..
+
   sh ./autogen.sh
   [ -d build ] && rm -rf build
   mkdir build
