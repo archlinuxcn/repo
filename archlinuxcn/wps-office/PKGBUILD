@@ -8,7 +8,7 @@ pkgbase=wps-office
 pkgname=('wps-office' 'wps-office-mime')
 pkgver=11.1.0.8865
 #_pkgver=8372
-pkgrel=5
+pkgrel=6
 #_pkgrel=1
 pkgdesc="Kingsoft Office (WPS Office) is an office productivity suite"
 arch=('x86_64')
@@ -18,12 +18,12 @@ options=('!emptydirs')
 #[[ "$CARCH" = "i686" ]] && _archext=x86 || _archext=x86_64
 #source_i686=("http://kdl.cc.ksosoft.com/wps-community/download/${pkgver##*.}/wps-office_${pkgver}_i386.deb"
 #            'add_no_kdialog_variable.patch')
-source=("http://kdl.cc.ksosoft.com/wps-community/download/${pkgver##*.}/wps-office_${pkgver}_amd64.deb")
-#       'add_no_kdialog_variable.patch')
+source=("http://kdl.cc.ksosoft.com/wps-community/download/${pkgver##*.}/wps-office_${pkgver}_amd64.deb"
+        'fix_desktop_exec.patch')
 #sha1sums_i686=('60b1c9e33ee6fc1edcefe40dc9ec529d4a668825'
 #               'dd8b5283ee17a88a3eb0531976abccd6e5e08c48')
-sha1sums=('ee5e2ea5f7480bb7d6e116dd7690990a861c8a37')
-#         '49ccf3e3d9c7c9c80294127ce063c56d2b57d7c4')
+sha1sums=('ee5e2ea5f7480bb7d6e116dd7690990a861c8a37'
+          '2d5c33b279ebc2ce8939a72d2ca0c18a5a5b1173')
 
 prepare() {
     bsdtar -xpf data.tar.xz
@@ -42,8 +42,8 @@ prepare() {
         fi
     done
 
-#   cd "${srcdir}"
-#   patch -Np1 -i "${srcdir}/add_no_kdialog_variable.patch"
+    cd "${srcdir}"
+    patch -Np1 -i "${srcdir}/fix_desktop_exec.patch"
 }
 
 package_wps-office() {
