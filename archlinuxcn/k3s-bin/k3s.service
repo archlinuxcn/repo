@@ -5,6 +5,9 @@ After=network-online.target
 
 [Service]
 Type=notify
+EnvironmentFile=/etc/systemd/system/k3s.service.env
+ExecStartPre=-/sbin/modprobe br_netfilter
+ExecStartPre=-/sbin/modprobe overlay
 ExecStart=/usr/bin/k3s server
 KillMode=process
 Delegate=yes
@@ -14,6 +17,7 @@ LimitCORE=infinity
 TasksMax=infinity
 TimeoutStartSec=0
 Restart=always
+RestartSec=5s
 
 [Install]
 WantedBy=multi-user.target
