@@ -3,7 +3,7 @@
 # Contributor : dront78 <dront78@gmail.com>
 pkgname=systemtap
 pkgver=4.1
-pkgrel=2
+pkgrel=3
 pkgdesc="provides infrastructure to simplify the gathering of information about the running system."
 url="http://sourceware.org/systemtap/"
 arch=('x86_64')
@@ -41,6 +41,10 @@ package() {
   make DESTDIR="${pkgdir}" install
   rm -rf "${pkgdir}/var"
   rm -rf "${pkgdir}/etc"
+
+  # glibc 2.30-2 already provides these two files
+  rm -f "$pkgdir"/usr/include/sys/sdt-config.h
+  rm -f "$pkgdir"/usr/include/sys/sdt.h
 
   # group id 156 is stapusr
   chgrp 156 "${pkgdir}"/usr/bin/stapbpf
