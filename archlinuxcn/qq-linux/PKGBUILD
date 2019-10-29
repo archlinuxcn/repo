@@ -22,7 +22,7 @@ package() {
     cp -pr "$srcdir/usr/share/tencent-qq" "$pkgdir/opt/"
 
     mkdir -p "$pkgdir/usr/bin"
-    ln -s /opt/tencent-qq/qq "$pkgdir/usr/bin/qq"
+    ln -s ../../opt/tencent-qq/qq "$pkgdir/usr/bin/qq"
     
     install -Dm644 "$srcdir/usr/share/tencent-qq/qq.png" "$pkgdir/usr/share/icons/hicolor/48x48/apps/qq.png"
     install -Dm644 "$srcdir/qq.desktop" "$pkgdir/usr/share/applications/qq.desktop"
