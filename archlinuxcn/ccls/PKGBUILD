@@ -2,7 +2,7 @@
 
 pkgname=ccls
 pkgver=0.20190823.4
-pkgrel=1
+pkgrel=2
 pkgdesc='C/C++/ObjC language server supporting cross references, hierarchies, completion and semantic highlighting'
 arch=('x86_64')
 url='https://github.com/MaskRay/ccls'
