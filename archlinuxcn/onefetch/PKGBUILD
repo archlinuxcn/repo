@@ -2,24 +2,25 @@
 # Contributor: Ariel AxionL <i (at) axionl (dot) me>
 
 pkgname=onefetch
-pkgver=1.6.5
-pkgrel=1
+pkgver=1.7.0
+pkgrel=2
 depends=('zlib' 'gcc-libs')
 makedepends=('rust' 'cargo')
 url="https://github.com/o2sh/onefetch"
 pkgdesc="Displays information about your project directly on your terminal"
 license=('MIT')
-source=("$url/archive/v$pkgver.tar.gz")
+source=("${pkgname}-${pkgver}.tar.gz::$url/archive/$pkgver.tar.gz")
 arch=('x86_64')
-sha256sums=('50f069db2fa713024a19bf708add7812f3420b0c107eb68cd9907d76e375a06d')
+sha256sums=('9476f7d7ffcc6af8598bcaedd8ef7cf1a60479545271f0501f3f1bfe15cb36fd')
 
 build() {
-    cd "$srcdir/$pkgname-$pkgver"
+    cd "${srcdir}/${pkgname}-${pkgver}"
     cargo build --release
 }
 
 package() {
-    install -d "$pkgdir/usr/bin" "$pkgdir/usr/share/licenses/$pkgname"
-    install -Dm755 "$srcdir/$pkgname-$pkgver/target/release/$pkgname" "$pkgdir/usr/bin/"
-    install -Dm644 "$srcdir/$pkgname-$pkgver/LICENSE.md" "$pkgdir/usr/share/licenses/$pkgname/"
+    install -Dm755 "${srcdir}/${pkgname}-${pkgver}/target/release/${pkgname}" "${pkgdir}/usr/bin/"
+    install -Dm644 "${srcdir}/${pkgname}-${pkgver}/LICENSE.md" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE.md"
 }
+
+# vim:set ts=4 sw=4 et:
