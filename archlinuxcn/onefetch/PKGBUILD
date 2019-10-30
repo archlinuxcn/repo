@@ -3,7 +3,7 @@
 
 pkgname=onefetch
 pkgver=1.7.0
-pkgrel=2
+pkgrel=3
 depends=('zlib' 'gcc-libs')
 makedepends=('rust' 'cargo')
 url="https://github.com/o2sh/onefetch"
@@ -19,8 +19,9 @@ build() {
 }
 
 package() {
-    install -Dm755 "${srcdir}/${pkgname}-${pkgver}/target/release/${pkgname}" "${pkgdir}/usr/bin/"
-    install -Dm644 "${srcdir}/${pkgname}-${pkgver}/LICENSE.md" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE.md"
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    install -Dm755 "target/release/onefetch" "${pkgdir}/usr/bin/onefetch"
+    install -Dm644 "LICENSE.md" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE.md"
 }
 
 # vim:set ts=4 sw=4 et:
