@@ -29,7 +29,7 @@ pkgver() {
 
 package() {
   # Install modules-load.conf
-  install -Dm644 netfilter-fullconenat-dkms.conf /usr/lib/modules-load.d/netfilter-fullconenat-dkms.conf
+  install -Dm644 netfilter-fullconenat-dkms.conf "${pkgdir}/usr/lib/modules-load.d/netfilter-fullconenat-dkms.conf"
   # Install Kbuild
   install -Dm644 Kbuild "${pkgdir}/usr/src/${pkgname}-${pkgver}/Kbuild"
   # Install dkms.conf
