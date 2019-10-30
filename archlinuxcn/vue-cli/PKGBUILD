@@ -1,8 +1,8 @@
-# Maintainer: Nick Boughton (nicholasboughton@gmail.com)
+# Maintainer: Nick Boughton <nicholasboughton@gmail.com>
 # Contributor: Jean Lucas <jean@4ray.co>
 
 pkgname=vue-cli
-pkgver=3.11.0
+pkgver=4.0.5
 pkgrel=1
 pkgdesc='Standard tooling for Vue.js development'
 arch=(i686 x86_64)
@@ -10,6 +10,7 @@ url=https://cli.vuejs.org
 license=(MIT)
 depends=(nodejs)
 makedepends=(npm)
+optdepends=()
 conflicts=(nodejs-vue-cli)
 options=(!strip)
 
