@@ -26,20 +26,20 @@ index 96c89fef..0e37e487 100644
  
  
 @@ -282,8 +274,6 @@ set(ONNXRUNTIME_INCLUDE_DIR ${REPO_ROOT}/include/onnxruntime)
+ set(ONNXRUNTIME_INCLUDE_DIR ${REPO_ROOT}/include/onnxruntime)
  
  add_subdirectory(external/date EXCLUDE_FROM_ALL)
- add_subdirectory(external/gsl EXCLUDE_FROM_ALL)
 -add_subdirectory(external/re2 EXCLUDE_FROM_ALL)
 -set_target_properties(re2 PROPERTIES FOLDER "External/re2")
- add_library(gsl ALIAS GSL)
  
  # bounds checking behavior.
+ # throw instead of calling terminate if there's a bounds checking violation.
 @@ -306,7 +296,7 @@ function(onnxruntime_add_include_to_target dst_target)
      endforeach()
  endfunction()
  
--set(onnxruntime_EXTERNAL_DEPENDENCIES gsl onnx_proto re2)
-+set(onnxruntime_EXTERNAL_DEPENDENCIES gsl onnx_proto)
+-set(onnxruntime_EXTERNAL_DEPENDENCIES onnx_proto re2)
++set(onnxruntime_EXTERNAL_DEPENDENCIES onnx_proto)
  
  # TVM
  if (onnxruntime_USE_TVM)

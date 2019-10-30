@@ -3,13 +3,12 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-# protobuf might change SOVERSION in a patch release :/
-# e.g., 3.6.1 changes from libprotobuf.so.16 to libprotobuf.so.17
-# [1] https://www.archlinux.org/todo/protobuf-361-rebuild/
-# [2] https://abi-laboratory.pro/index.php?view=timeline&l=protobuf
+repo_depends:
+  - cub
+
 update_on:
   - github: microsoft/onnxruntime
     use_latest_release: true
     prefix: v
-  - archpkg: protobuf
-    strip-release: true
+  - alias: protobuf
+  - alias: python
