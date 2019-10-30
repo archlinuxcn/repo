@@ -1,0 +1,12 @@
+[Unit]
+Description=Disables BIOS control of fans at boot.
+Before=i8kmon.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/dell-bios-fan-control 0
+RemainAfterExit=true
+ExecStop=/usr/bin/dell-bios-fan-control 1
+
+[Install]
+WantedBy=multi-user.target
