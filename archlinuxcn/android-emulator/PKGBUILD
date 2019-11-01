@@ -2,7 +2,7 @@
 
 pkgname=android-emulator
 pkgver=29.2.1
-pkgrel=2
+pkgrel=3
 pkgdesc='Google Android Emulator'
 arch=('x86_64')
 url='https://developer.android.com/studio/releases/emulator.html'
@@ -26,7 +26,7 @@ package() {
 
   install -d "${pkgdir}/opt/android-sdk/"
   cp -a emulator "${pkgdir}/opt/android-sdk/"
-  install -Dm755 'package.xml' "${pkgdir}/opt/android-sdk/package.xml"
+  install -Dm755 'package.xml' "${pkgdir}/opt/android-sdk/emulator/package.xml"
 
   # Fix broken permissions
   chmod -R o=g "${pkgdir}/opt/android-sdk/emulator"
