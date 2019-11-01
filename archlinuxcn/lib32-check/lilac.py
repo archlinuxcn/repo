@@ -13,3 +13,7 @@ from lilaclib import *
 
 #if __name__ == '__main__':
 #  single_main()
+
+def pre_build():
+    vcs_update()
+    update_pkgver_and_pkgrel(_G.newver)
