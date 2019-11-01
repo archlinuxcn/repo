@@ -2,7 +2,7 @@
 
 pkgname=android-emulator
 pkgver=29.2.1
-pkgrel=1
+pkgrel=2
 pkgdesc='Google Android Emulator'
 arch=('x86_64')
 url='https://developer.android.com/studio/releases/emulator.html'
@@ -12,10 +12,12 @@ depends=('libpulse' 'libx11' 'libxcb' 'libxdamage' 'libxext'
 install="${pkgname}.install"
 source=('https://dl.google.com/android/repository/emulator-linux-5889189.zip'
         "${pkgname}.sh"
-        "${pkgname}.csh")
+        "${pkgname}.csh"
+        'package.xml')
 sha1sums=('ebbaff0512ef72ba69d83fbc700c58f25e9edc9d'
           '4537a7ce30bedf87cedafc2020822219ad58310d'
-          '2fb371b5774b67143f0610dfbec4963a4e2f11cc')
+          '2fb371b5774b67143f0610dfbec4963a4e2f11cc'
+          '4de29281b6940124754ed627504d2d3c73f14561')
 
 package() {
 
@@ -24,6 +26,7 @@ package() {
 
   install -d "${pkgdir}/opt/android-sdk/"
   cp -a emulator "${pkgdir}/opt/android-sdk/"
+  install -Dm755 'package.xml' "${pkgdir}/opt/android-sdk/package.xml"
 
   # Fix broken permissions
   chmod -R o=g "${pkgdir}/opt/android-sdk/emulator"
