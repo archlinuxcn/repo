@@ -8,7 +8,7 @@
 # https://aur.archlinux.org/packages/brave-bin/
 
 pkgname=brave-bin
-pkgver=0.70.121
+pkgver=0.70.122
 pkgrel=1
 epoch=1
 pkgdesc="Web browser that blocks ads and trackers by default (binary release)."
@@ -27,7 +27,7 @@ source=("$pkgname-$pkgver.zip::https://github.com/brave/brave-browser/releases/d
         "brave-browser.desktop"
         "logo.png")
 options=(!strip)
-sha512sums=("dffbabe9cdfde97b94d08f117b810ea4088032c84b19f8676c42f3c386ceb19b28f105e1cefb81674270e6485ee913514089852582c3ae41279eb3159ab05593"
+sha512sums=("7616643b2a73c314175acdedbdf539fa32ab16b517acedf459b11cfc929f1cb416642d034827161aea1570ea8f31c59eee66fc63a658329f21e33fba11a222ca"
             "b8823586fead21247c8208bd842fb5cd32d4cb3ca2a02339ce2baf2c9cb938dfcb8eb7b24c95225ae625cd0ee59fbbd8293393f3ed1a4b45d13ba3f9f62a791f"
             "2e80e926bba79830cb0e6780d028edfc7a80b5fe81880224c1e2c31329353081f9970ba8755f9003b106a3247b26861f80a3e3ac8731e0bf3c5d515eecca60eb"
             "c21aecaafec43bc1ce1ea3439667efb4c7ea5e54bfa87346a9ae9650de1e90c80174b1610a9216f936f693593816c9585c6be1875b3bd318d067079c06251e92"
