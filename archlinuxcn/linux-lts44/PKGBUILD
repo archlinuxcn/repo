@@ -4,7 +4,7 @@
 
 set -u
 pkgbase="linux-lts44"
-pkgver="4.4.197"
+pkgver="4.4.198"
 _srcname="linux-${pkgver%.*}"
 pkgrel='1'
 arch=('x86_64')
@@ -27,7 +27,7 @@ validpgpkeys=(
   '647F28654894E3BD457199BE38DBBDC86092693E' # Greg Kroah-Hartman (Linux kernel stable release signing key) <greg@kroah.com>
 )
 md5sums=('9a78fa2eb6c68ca5a40ed5af08142599'
-         'c3b91ad0d8efdf54d728e0c4a882474f'
+         '55c002f8dd39f3bd0f63c4e02b832c97'
          '5170b503707178a0a4d061e40b717859'
          'ce6c81ad1ad1f8b333fd6077d47abdaf'
          'a85bfae59eb537b973c388ffadb281ff'
@@ -35,7 +35,7 @@ md5sums=('9a78fa2eb6c68ca5a40ed5af08142599'
          'df7fceae6ee5d7e7be7b60ecd7f6bb35'
          'e1093d9bc718f362344ab56b85d4fb76')
 sha256sums=('401d7c8fef594999a460d10c72c5a94e9c2e1022f16795ec51746b0d165418b2'
-            '7e41694cda93547f429434d1aca0ce28c188c907490b9d724bbea53a1aff6742'
+            '15b6ba247556b2a89e57b366caa031609dc97d05eb7e0250046f0e91f2677e8d'
             '9ff1b1974b863f59aaecfda7b770a4f9681e2abfadbce7668bd4f8e411468a8b'
             'ae2e95db94ef7176207c690224169594d49445e04249d2499e9d2fbc117a0b21'
             '75f99f5239e03238f88d1a834c50043ec32b1dc568f2cc291b07d04718483919'
