@@ -4,14 +4,14 @@ pkgname=ds9
 pkgver=8.0.1
 # need the grab a legacy openssl source and build ds9 against it
 _sslver=1.0.2r
-pkgrel=1
+pkgrel=2
 pkgdesc="SAOImage DS9: Astronomical Data Visualization Application"
 url="http://hea-www.harvard.edu/RD/ds9/"
 arch=('x86_64')
 license=('GPL2')
 provides=(ds9)
 conflicts=(ds9-bin)
-depends=(libxml2 libx11 desktop-file-utils)
+depends=('desktop-file-utils' 'libx11' 'libxml2')
 options=(!strip)
 makedepends=(libx11 libxml2 libxslt libpng tcl zip)
 conflicts=()
