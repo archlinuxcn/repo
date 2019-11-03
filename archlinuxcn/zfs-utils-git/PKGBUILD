@@ -6,9 +6,9 @@
 # http://github.com/archzfs/archzfs
 #
 pkgname="zfs-utils-git"
-_commit='d46f0deb035bd26840dc6284fc6e1bb392097c92'
+_commit='ae38e00968a1920eb3c1051df888b24301e2f82b'
 
-pkgver=2019.10.28.r5493.gd46f0deb0
+pkgver=2019.11.01.r5509.gae38e0096
 pkgrel=1
 pkgdesc="Kernel module support files for the Zettabyte File System."
 makedepends=("python" "python-setuptools" "python-cffi" "git")
@@ -29,7 +29,7 @@ provides=("zfs-utils" "spl-utils")
 install=zfs-utils.install
 conflicts=("zfs-utils" "spl-utils")
 replaces=("spl-utils-common-git" "zfs-utils-common-git")
-backup=('etc/zfs/zed.d/zed.rc' 'etc/default/zfs' 'etc/modules-load.d/zfs.conf')
+backup=('etc/zfs/zed.d/zed.rc' 'etc/default/zfs' 'etc/modules-load.d/zfs.conf' 'etc/sudoers.d/zfs')
 
 build() {
     cd "${srcdir}/zfs"
@@ -56,6 +56,7 @@ package() {
     printf "%s\n" "zfs" > "${pkgdir}/etc/modules-load.d/zfs.conf"
     # fix permissions
     chmod 750 ${pkgdir}/etc/sudoers.d
+    chmod 440 ${pkgdir}/etc/sudoers.d/zfs
     # Install the support files
     install -D -m644 "${srcdir}"/zfs-utils.initcpio.hook "${pkgdir}"/usr/lib/initcpio/hooks/zfs
     install -D -m644 "${srcdir}"/zfs-utils.initcpio.install "${pkgdir}"/usr/lib/initcpio/install/zfs
