@@ -16,6 +16,7 @@ const removePkg = [
 	/^grunt-contrib-watch$/,
 	/^grunt-electron$/,
 	/^grunt-eslint$/,
+	/^puppeteer$/,
 	/^stats-webpack-plugin$/,
 	/^sumchecker$/,
 	/^webpack-dev-server/,
