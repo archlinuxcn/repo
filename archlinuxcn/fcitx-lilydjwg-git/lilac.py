@@ -23,7 +23,7 @@ def pre_build():
     os.mkdir(repo_dir)
     run_cmd(["git", "clone", "-b", "lilydjwg", "git@github.com:lilydjwg/fcitx.git", repo_dir], use_pty=True)
     with at_dir(repo_dir):
-      run_cmd(["git", "remote", "add", "upstream", "https://gitlab.com/fcitx/fcitx.git"])
+      run_cmd(["git", "remote", "add", "upstream", "https://github.com/fcitx/fcitx.git"])
 
   with at_dir(repo_dir):
     run_cmd(["git", "reset", "--hard"])
