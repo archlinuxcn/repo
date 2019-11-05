@@ -2,7 +2,7 @@
 
 pkgname=qupath-bin
 _pkgname=QuPath
-pkgver=0.2.0_m4
+pkgver=0.2.0_m5
 pkgrel=1
 pkgdesc="An open, powerful, flexible, extensible software platform for whole slide image analysis."
 arch=('x86_64')
@@ -10,7 +10,6 @@ url="https://qupath.github.io"
 license=('GPL')
 depends=(
   'freetype2'
-  'glib2'
   'java-runtime'  
   'libjpeg-turbo'
   'libnet'
@@ -24,7 +23,7 @@ conflicts=('qupath')
 source=(
     "${pkgname}-${pkgver}.tar.xz::https://github.com/qupath/qupath/releases/download/v${pkgver//_/-}/${_pkgname}-${pkgver//_/-}-Linux.tar.xz"
 )
-sha512sums=('629d7bb2ef1d4ddf00e95905b2ffa42399eecf7f891f8c85053fd84972f77720f6fafe891120c021b3f6ddd52ae8b56d5568dca21ab958edf019c03a3c7fb130')
+sha512sums=('fe5b68e4aecfbdb17022ccfffea2a4bb3eddb65faae292b281afbfa2289c9073f790a3414be7dc95580cab476e4a1b4fe99456050601cab1f2c5e9d5fbd9f362')
 
 prepare() {
   msg2 "Creating desktop file"
@@ -37,7 +36,7 @@ prepare() {
 package() {
   install -d "${pkgdir}/opt" "${pkgdir}/usr/bin" "${pkgdir}/usr/share/pixmaps"
   mv "${srcdir}/${_pkgname}-${pkgver//_/-}" "${pkgdir}/opt/${_pkgname}"
-  mv "${pkgdir}/opt/${_pkgname}/bin/${_pkgname}-${pkgver//_/-}.png" "${pkgdir}/usr/share/pixmaps/${_pkgname}.png"
+  find "${pkgdir}/opt/${_pkgname}" -type f -name "*.png" -exec cp -vf {} "${pkgdir}/usr/share/pixmaps/${_pkgname}.png" \;
   ln -s /opt/${_pkgname}/bin/${_pkgname}-${pkgver//_/-} "${pkgdir}/usr/bin/qupath"
   install -Dm644 "${srcdir}/${_pkgname}.desktop" "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
 }
