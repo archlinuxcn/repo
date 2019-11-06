@@ -2,16 +2,16 @@
 # Contributor: Ariel AxionL <i (at) axionl (dot) me>
 
 pkgname=onefetch
-pkgver=1.7.0
-pkgrel=6
+pkgver=2.0.0
+pkgrel=1
 depends=('zlib' 'gcc-libs')
 makedepends=('rust' 'cargo')
 url="https://github.com/o2sh/onefetch"
 pkgdesc="Displays information about your project directly on your terminal"
 license=('MIT')
-source=("${pkgname}-${pkgver}.tar.gz::$url/archive/$pkgver.tar.gz")
+source=("${pkgname}-${pkgver}.tar.gz::$url/archive/v$pkgver.tar.gz")
 arch=('x86_64')
-sha256sums=('9476f7d7ffcc6af8598bcaedd8ef7cf1a60479545271f0501f3f1bfe15cb36fd')
+sha256sums=('73a002e1e9fded7b98bd9113801366148222bf7cee4a81ad5f30d2024bc18391')
 
 build() {
     cd "${srcdir}/${pkgname}-${pkgver}"
