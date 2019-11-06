@@ -4,13 +4,13 @@
 
 pkgname=seafile
 pkgver=7.0.3
-pkgrel=1
+pkgrel=2
 pkgdesc="Seafile is an online file storage and collaboration tool"
 arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
 url="https://github.com/haiwen/${pkgname}"
 license=('GPL2')
 depends=("ccnet-server" "libsearpc" "libevent"
-         "fuse" "python2" "sqlite")
+         "fuse" "python2" "python2-future" "sqlite")
 makedepends=("vala" "intltool")
 conflicts=("seafile-server")
 source=("seafile-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
