@@ -6,8 +6,8 @@
 
 pkgname=python-torchvision
 _pkgname=vision
-pkgver=0.4.1
-pkgrel=2
+pkgver=0.4.2
+pkgrel=1
 pkgdesc='Datasets, transforms, and models specific to computer vision'
 arch=('x86_64')
 url='https://github.com/pytorch/vision'
@@ -31,7 +31,7 @@ checkdepends=(
   'python-scipy'
 )
 source=("https://github.com/pytorch/vision/archive/v${pkgver}.tar.gz")
-sha512sums=('644087f2f2bfa2436b8485608ce5d9dd002d73352c8d2b333b434f3c835dcbe85fd927667ce641162dad51c5a011faf9aeaddc7a950af2a0b6912b64475cb5a8')
+sha512sums=('3327364bd1c10f4f0fdf9f8c1bed3848cbd887ee335634a0da6eb7a2611037408eee6261cd178d12225be5f2c809a05ff9fb87420b8accd447a799ca83def3ad')
 
 build() {
   cd "${_pkgname}-${pkgver}"
