@@ -7,13 +7,12 @@
 pkgname=python-torchvision
 _pkgname=vision
 pkgver=0.4.2
-pkgrel=1
+pkgrel=2
 pkgdesc='Datasets, transforms, and models specific to computer vision'
 arch=('x86_64')
 url='https://github.com/pytorch/vision'
 license=('BSD')
 depends=(
-  'python-av'
   'python-numpy'
   'python-pillow'
   'python-pytorch'
@@ -21,7 +20,14 @@ depends=(
   'python-six'
   'python-tqdm'
 )
+optdepends=(
+  'ffmpeg: video reader backend (the recommended one with better performance)'
+  'python-av: video reader backend (the default one)'
+)
 makedepends=(
+  'cuda'
+  'ffmpeg'
+  'python-av'
   'python-setuptools'
   'qt5-base'
 )
