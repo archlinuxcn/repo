@@ -1,9 +1,6 @@
-# $Id: PKGBUILD 316317 2018-04-14 20:11:35Z arojas $
-# Maintainer: Antonio Rojas <arojas@archlinux.org>
-
 pkgname=systemd-kcm
 pkgver=1.2.1
-pkgrel=4
+pkgrel=5
 pkgdesc="Systemd control module for KDE"
 arch=(x86_64)
 url='https://github.com/rthomsen/kcmsystemd'
@@ -38,4 +35,6 @@ build() {
 package() {
   cd build
   make DESTDIR="$pkgdir" install
+  # fix for kde5
+  rm "${pkgdir}/usr/share/kservices5/settings-system-administration.desktop"
 }
