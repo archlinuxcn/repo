@@ -1,8 +1,8 @@
 # Maintainer: surefire@cryptomile.net
 
 pkgname=keeweb
-pkgver=1.12.2
-pkgrel=2
+pkgver=1.12.3
+pkgrel=1
 pkgdesc="Desktop password manager compatible with KeePass databases"
 arch=('any')
 url="https://keeweb.info"
@@ -20,20 +20,16 @@ optdepends=('xdotool: for auto-type')
 conflicts=('keeweb-desktop')
 source=(
 	"${pkgname}::git+https://github.com/keeweb/keeweb.git#tag=v${pkgver}"
-	'hide-menubar.patch'
 	'keeweb.sh'
 	'package.json.patch.js'
 )
 
 sha1sums=('SKIP'
-          'a55c2ed276c6073b7954452cdc88209633d51ace'
           'c925527f25e732d58438ee16b1c93b33be7bf9c4'
           '19c9db9079a08e82b5418609596201b358ac815d')
 
 prepare() {
 	cd "${pkgname}"
-
-	patch -Np1 -i ../hide-menubar.patch
 
 	# remove extra dependencies
 	node ../package.json.patch.js
