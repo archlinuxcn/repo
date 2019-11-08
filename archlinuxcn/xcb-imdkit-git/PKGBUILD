@@ -5,16 +5,16 @@
 _pkgname=xcb-imdkit
 pkgname=${_pkgname}-git
 pkgver=r62.a607b19
-pkgrel=3
+pkgrel=5
 pkgdesc="Input method development support for xcb"
 arch=('i686' 'x86_64')
-url="https://gitlab.com/fcitx/xcb-imdkit"
+url="https://github.com/fcitx/xcb-imdkit"
 license=('GPL')
 depends=('xcb-util' 'xcb-util-keysyms')
 makedepends=('extra-cmake-modules' 'git')
 provides=(${_pkgname})
 conflicts=(${_pkgname})
-source=("git+https://gitlab.com/fcitx/xcb-imdkit.git")
+source=("git+https://github.com/fcitx/xcb-imdkit.git")
 sha512sums=('SKIP')
 
 pkgver() {

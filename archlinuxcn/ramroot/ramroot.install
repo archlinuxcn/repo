@@ -1,6 +1,15 @@
 #!/bin/bash
 
-# ensure ramroot is fully removed before uninstalling:
+post_install() {
+    /usr/bin/ramroot -CEY
+}
+
+post_upgrade() {
+    if [[ "$2" =~ ^1.* ]]; then
+        /usr/bin/ramroot -CEY
+    fi
+}
+
 pre_remove() {
-    /usr/bin/ramroot remove
+    /usr/bin/ramroot -D
 }

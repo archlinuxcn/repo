@@ -2,7 +2,7 @@
 
 pkgname=archrepo2-git
 epoch=1
-pkgver=v0.5.r13.gfe1e4b1
+pkgver=v0.5.r16.gc074e3b
 pkgrel=1
 pkgdesc="Arch Linux repository manager"
 arch=('any')
@@ -12,6 +12,7 @@ depends=('python' 'python-setuptools' 'python-tornado' 'python-pyinotify' 'pacma
 makedepends=('git')
 source=('git://github.com/lilydjwg/archrepo2.git')
 md5sums=('SKIP')
+backup=(etc/archrepo2.ini)
 
 _gitroot=archrepo2
 

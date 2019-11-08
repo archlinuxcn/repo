@@ -1,0 +1,63 @@
+#!/bin/sh
+
+# MEMO: https://wiki.archlinux.org/index.php/PKGBUILD#install
+post_install() {
+  echo '
+Troubleshooting
+------------------------
+
+If Code is not shown transparent:
+
+  1. Ensure color setting of Code is configured
+     with transparent colors. (See "Config" section below)
+  2. Ensure your compositor has transparency enabled.
+  3. Open a second Code window. (Sometimes works)
+
+
+
+Config
+------------------------
+
+Although Code is transparency-enabled, 
+Code needs to be configured with transparent
+colors to see the transparency effect.
+
+You can configure each color by yourself,
+or start with an already transparent color config.
+
+Consider copying below color config to your Code settings.json:
+
+  "workbench.colorCustomizations": {
+    // non-standard, transparency patched version only
+    "workbench.background": "#00000080",
+
+    // VSC colors
+    // ref: https://code.visualstudio.com/api/references/theme-color
+    "activityBar.background": "#46575e5e",
+    "button.background": "#00000040",
+    "button.hoverBackground": "#00000080",
+
+    "editor.background": "#00000029",
+    "editor.lineHighlightBackground": "#FFFFFF15",
+    "editorGroupHeader.tabsBackground": "#00000050",
+    "tab.activeBackground": "#00000080",
+    "tab.inactiveBackground": "#00000020",
+    "tab.border": "#00000000",
+
+    "list.activeSelectionBackground": "#00000040",
+    "list.hoverBackground": "#00000040",
+    "list.inactiveSelectionBackground": "#00000040",
+
+    "panel.background": "#00000080",
+    "panel.border": "#00000000",
+
+    "sideBar.background": "#00000080",
+    "sideBarSectionHeader.background": "#00000000",
+
+    "statusBar.background": "#00000080",
+    "statusBar.noFolderBackground": "#00000080",
+    "terminal.background": "#0000",
+    "titleBar.activeBackground": "#00000030"
+  },
+'
+}

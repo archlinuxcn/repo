@@ -58,6 +58,9 @@ package_rust-nightly() {
   rm -r "$pkgdir/usr/share/doc"
   cd "$pkgdir"/usr/lib
   for so in *.so; do
+    if [[ $so = librustc_* ]]; then
+      continue
+    fi
     rm $so
     ln -s rustlib/"$CARCH"-unknown-linux-gnu/lib/$so .
   done

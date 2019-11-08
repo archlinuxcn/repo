@@ -10,6 +10,8 @@ g = SimpleNamespace()
 #build_prefix = 'extra-x86_64'
 
 def pre_build():
+  _, old_pkgrel = get_pkgver_and_pkgrel()
+
   g.files = download_official_pkgbuild('rsync')
 
   for line in edit_file('PKGBUILD'):
@@ -34,6 +36,10 @@ prepare() {
     if '$pkgname' in line:
       line = line.replace('$pkgname', 'rsync')
     print(line)
+
+  _, new_pkgrel = get_pkgver_and_pkgrel()
+  if float(old_pkgrel) > float(new_pkgrel):
+    update_pkgrel(new_pkgrel)
 
 def post_build():
   git_add_files(g.files)

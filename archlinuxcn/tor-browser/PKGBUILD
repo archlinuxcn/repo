@@ -4,6 +4,7 @@
 # Contributor: Yardena Cohen <yardenack AT gmail DOT com>
 # Contributor: Max Roder <maxroder AT web DOT de>
 # Contributor: Sebastian Jug <seb AT stianj DOT ug>
+# Contributor: BrLi
 
 #
 # Before running makepkg, you must do this (as normal user):
@@ -14,14 +15,13 @@
 #
 #     tor-browser -u
 
+
 pkgname='tor-browser'
-pkgver='8.5.5'
+pkgver='9.0.1'
 pkgrel='1'
 pkgdesc='Tor Browser Bundle: anonymous browsing using Firefox and Tor (international PKGBUILD)'
 url='https://www.torproject.org/projects/torbrowser.html'
 arch=('i686' 'x86_64')
-_idstr32='linux32'
-_idstr64='linux64'
 license=('GPL')
 depends=('mozilla-common' 'libxt' 'startup-notification' 'mime-types'
 	'dbus-glib' 'alsa-lib' 'desktop-file-utils' 'hicolor-icon-theme'
@@ -34,7 +34,10 @@ optdepends=('zenity: simple dialog boxes'
 	'libnotify: Gnome dialog boxes')
 install="${pkgname}.install"
 
-_archstr=$([[ "${CARCH}" == 'x86_64' ]] && echo -n "${_idstr64}" || echo -n "${_idstr32}")
+_tag_i686='linux32'
+_tag_x86_64='linux64'
+_urlbase="https://dist.torproject.org/torbrowser/${pkgver}"
+_archstr=$([[ "${CARCH}" == 'x86_64' ]] && echo -n "${_tag_x86_64}" || echo -n "${_tag_i686}")
 
 _localetor() {
 
@@ -50,13 +53,12 @@ _localetor() {
 		return 0
 	fi
 
-	local _urlbase="https://dist.torproject.org/torbrowser/${pkgver}/${pkgname}-${_archstr}-${pkgver}"
 	local _fulllocale="$(locale | grep LANG | cut -d= -f2 | cut -d. -f1 | sed s/_/\-/)"
 	local _shortlocale="$(locale | grep LANG | cut -d= -f2 | cut -d_ -f1)"
 
-	if curl --output /dev/null --silent --head --fail "${_urlbase}_${_fulllocale}.tar.xz"; then
+	if curl --output /dev/null --silent --head --fail "${_urlbase}/${pkgname}-${_archstr}-${pkgver}_${_fulllocale}.tar.xz"; then
 		echo -n "${_fulllocale}"
-	elif curl --output /dev/null --silent --head --fail "${_urlbase}_${_shortlocale}.tar.xz"; then
+	elif curl --output /dev/null --silent --head --fail "${_urlbase}/${pkgname}-${_archstr}-${pkgver}_${_shortlocale}.tar.xz"; then
 		echo -n "${_shortlocale}"
 	else
 		echo -n 'en-US'
@@ -64,26 +66,37 @@ _localetor() {
 
 }
 
-validpgpkeys=('EF6E286DDA85EA2A4BA7DE684E2C6E8793298290')
-
 _language="$(_localetor)"
 
-source_i686=("https://dist.torproject.org/torbrowser/${pkgver}/${pkgname}-${_idstr32}-${pkgver}_${_language}.tar.xz"{,.asc})
-source_x86_64=("https://dist.torproject.org/torbrowser/${pkgver}/${pkgname}-${_idstr64}-${pkgver}_${_language}.tar.xz"{,.asc})
+validpgpkeys=('EF6E286DDA85EA2A4BA7DE684E2C6E8793298290')
+
+# Syntax: _dist_checksum 'linux32'/'linux64'
+_dist_checksum() {
+
+	curl --silent --fail "${_urlbase}/sha256sums-signed-build.txt" | grep "${1}-${pkgver}_${_language}.tar.xz" | cut -d ' ' -f1
+
+}
+
+source_i686=("${_urlbase}/${pkgname}-${_tag_i686}-${pkgver}_${_language}.tar.xz"{,.asc})
+source_x86_64=("${_urlbase}/${pkgname}-${_tag_x86_64}-${pkgver}_${_language}.tar.xz"{,.asc})
 source=("${pkgname}.desktop"
 	"${pkgname}.png"
 	"${pkgname}.sh")
 
+### IMPORTANT #################################################################
+# No need for `makepkg -g`: the following sha256sums¸don't need to be updated #
+# with each release, everything is done automatically! Leave them like this!  #
+###############################################################################
 sha256sums=('9ee0a4672e2d0835ffb94bcf26e17b56432030496a9cdf019b70c96083c24340'
             'bb6b0f27c33d21e0ef6df961e25418327c5e8b01c003bbe18c0a8dae3e16d77d'
-            '3a491ad1a476f2fb343f274eab4e8df925637438e6dac3591f092b3ef3294da3')
-sha256sums_i686=('49b84482a6c27971aa9b2421a5e2967c3382b4566610ab8a25d9bd1767e1bbdb'
+            '89118837e6db1d7b089e0067a6430e9a1a8602a64e00b7ea94382abfb0d3e502')
+sha256sums_i686=($(_dist_checksum "${_tag_i686}")
                  'SKIP')
-sha256sums_x86_64=('5f334f14161952476adde3fbd843f93f647d47a0d7e30eb5d1635fb7569a2503'
+sha256sums_x86_64=($(_dist_checksum "${_tag_x86_64}")
                    'SKIP')
 
-noextract=("${pkgname}-${_idstr64}-${pkgver}_${_language}.tar.xz"
-	"${pkgname}-${_idstr32}-${pkgver}_${_language}.tar.xz")
+noextract=("${pkgname}-${_tag_i686}-${pkgver}_${_language}.tar.xz"
+           "${pkgname}-${_tag_x86_64}-${pkgver}_${_language}.tar.xz")
 
 prepare() {
 
@@ -122,17 +135,17 @@ package() {
 	sed -i "s/__REPL_LANGUAGE__/${_language}/g" "${pkgname}.desktop"
 
 	sed -i "s/__REPL_NAME__/${pkgname}/g"		"${pkgname}.sh"
-	sed -i "s/__REPL_VERSION__/${pkgver}/g"		"${pkgname}.sh"
-	sed -i "s/__REPL_RELEASE__/${pkgrel}/g"		"${pkgname}.sh"
+	sed -i "s/__REPL_VERSION__/${pkgver}/g"	"${pkgname}.sh"
+	sed -i "s/__REPL_RELEASE__/${pkgrel}/g"	"${pkgname}.sh"
 	sed -i "s/__REPL_LANGUAGE__/${_language}/g"	"${pkgname}.sh"
 	sed -i "s/__REPL_ARCH__/${_archstr}/g"		"${pkgname}.sh"
 
-	install -Dm 644 "${pkgname}.desktop"	"${pkgdir}/usr/share/applications/${pkgname}.desktop"
-	install -Dm 644 "${pkgname}.png"	"${pkgdir}/usr/share/pixmaps/${pkgname}.png"
+	install -Dm 644 "${pkgname}.desktop"		"${pkgdir}/usr/share/applications/${pkgname}.desktop"
+	install -Dm 644 "${pkgname}.png"		"${pkgdir}/usr/share/pixmaps/${pkgname}.png"
 	install -Dm 755 "${pkgname}.sh"		"${pkgdir}/usr/bin/${pkgname}"
 
 	install -Dm 644 "${pkgname}-${_archstr}-${pkgver}_${_language}.tar.xz" "${pkgdir}/opt/${pkgname}/${pkgname}-${_archstr}-${pkgver}_${_language}.tar.xz"
 
 }
 
-# vim: set noet :
+

@@ -10,7 +10,7 @@ pkgname=('virtualbox-svn'
          'virtualbox-guest-utils-svn'
          'virtualbox-guest-utils-nox-svn'
          'virtualbox-ext-vnc-svn')
-pkgver=80830
+pkgver=81608
 pkgrel=1
 _vboxsf_commit='87b9015c57dd7f226c768131bf8b4c0249de9835'
 arch=('x86_64')
@@ -193,6 +193,8 @@ package_virtualbox-svn() {
     install -m0755 VirtualBox VBoxManage VBoxSVC VBoxExtPackHelperApp VBoxXPCOMIPCD VBoxTestOGL VBoxBalloonCtrl vboxwebsrv webtest -t "$pkgdir/usr/lib/virtualbox"
 
     # components
+    # [heavysink] Temporary remove non-existent symlink VBoxREM.so
+    rm components/VBoxREM.so
     install -dm0755 "$pkgdir/usr/lib/virtualbox/components"
     install -m0755 components/* -t "$pkgdir/usr/lib/virtualbox/components"
 

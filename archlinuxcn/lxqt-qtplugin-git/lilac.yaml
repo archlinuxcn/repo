@@ -8,10 +8,10 @@ repo_depends:
   - libqtxdg-git
   - libfm-qt-git
 
-pre_build: aur_pre_build
-
 post_build: aur_post_build
 
 update_on:
   - vcs
   - aur
+  - archpkg: qt5-base
+    strip-release: true

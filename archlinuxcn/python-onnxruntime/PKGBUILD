@@ -2,16 +2,14 @@
 
 pkgbase=python-onnxruntime
 pkgname=(python-onnxruntime python-onnxruntime-cuda)
-pkgver=0.5.0
+pkgver=1.0.0
 pkgdesc='Cross-platform, high performance scoring engine for ML models'
-pkgrel=1
+pkgrel=2
 arch=(x86_64)
 url='https://github.com/microsoft/onnxruntime'
 license=(MIT)
 depends=(protobuf re2 python-numpy)
-# protobuf 3.7.0 has an issue, which breaks building of onnxruntime
-# https://github.com/protocolbuffers/protobuf/issues/5869
-makedepends=(git cmake cuda cudnn gtest gmock pybind11 python-setuptools 'protobuf>=3.7.1' )
+makedepends=(git cmake cuda cudnn gtest gmock pybind11 python-setuptools cub)
 # not de-vendored libraries
 # eigen: API changes a lot since extra/eigen 3.3.7 to the commit onnxruntime uses
 # onnx: onnxruntime requires headers, which are not installed in python-onnx
@@ -19,7 +17,6 @@ source=("git+https://github.com/microsoft/onnxruntime#tag=v$pkgver"
         "git+https://github.com/HowardHinnant/date.git"
         "eigen::git+https://github.com/eigenteam/eigen-git-mirror.git"
         "git+https://github.com/google/gemmlowp.git"
-        "gsl::git+https://github.com/Microsoft/GSL.git"
         "git+https://github.com/google/nsync.git"
         "git+https://github.com/onnx/onnx.git"
         build-fixes.patch)
@@ -29,15 +26,18 @@ sha512sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
-            'SKIP'
-            'c598f14c413c35e923e76770214f464922431255b8b0a5e2ff7851b3447f8af7ee2d0f1349aa63d251097902bd6a506626dabc3a8e7f2a63144a1be5478e5470')
+            'da8e27ff0011fb207ee8a6f8675160eb85cb8711f01050fa7454234242af141951cb5bba52fa50b98cf8567b8faa973565dfef37f4daa2219a42cf26e03c86b5')
 
 prepare() {
   cd onnxruntime
+
+  # More protobuf debundling; inspired by https://github.com/microsoft/onnxruntime/pull/1928
+  rm -v onnxruntime/core/util/protobuf_parsing_utils.{h,cc}
+  echo "#include <google/protobuf/io/zero_copy_stream_impl.h>" >> onnxruntime/core/util/protobuf_parsing_utils.h
   patch -Np1 -i ../build-fixes.patch
 
   git submodule init
-  for mod in date eigen gemmlowp gsl nsync onnx ; do
+  for mod in date eigen gemmlowp nsync onnx ; do
     git config submodule.cmake/external/$mod.url "$srcdir"/$mod
     git submodule update cmake/external/$mod
   done

@@ -1,7 +1,7 @@
 # Maintainer: lilydjwg <lilydjwg@gmail.com>
 pkgname=fbcat
 pkgver=0.5.1
-pkgrel=1
+pkgrel=3
 pkgdesc="A framebuffer screenshot grabber"
 arch=(i686 x86_64)
 url="https://github.com/jwilk/fbcat"

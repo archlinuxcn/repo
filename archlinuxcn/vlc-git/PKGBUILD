@@ -9,7 +9,7 @@
 # Contributor: MacWolf <macwolf at archlinux dot de>
 
 pkgname=vlc-git
-pkgver=4.0.0.r9565.g47b1670197
+pkgver=4.0.0.r10010.g55a3b5583c
 pkgrel=1
 pkgdesc="A multi-platform MPEG, VCD/DVD, and DivX player (GIT Version)"
 url='https://www.videolan.org/vlc/'
@@ -18,24 +18,23 @@ license=('LGPL2.1' 'GPL2')
 depends=('a52dec' 'libdvbpsi' 'libxpm' 'libdca' 'libproxy' 'lua'
          'libmatroska' 'taglib' 'libmpcdec' 'ffmpeg' 'faad2' 'libupnp' 'libmad'
          'libmpeg2' 'xcb-util-keysyms' 'libtar' 'libxinerama' 'libsecret'
-         'libarchive' 'qt5-quickcontrols2' 'qt5-base' 'qt5-x11extras' 'qt5-svg' 'freetype2'
+         'libarchive' 'qt5-base' 'qt5-x11extras' 'qt5-svg' 'freetype2'
          'fribidi' 'harfbuzz' 'fontconfig' 'libxml2' 'gnutls' 'libplacebo'
-         'wayland-protocols' 'libidn' 'aribb24' 'fluidsynth' 'shine' 'libmfx' 'qt5-graphicaleffects')
+         'wayland-protocols' 'libidn' 'aribb24' 'qt5-quickcontrols2' 'qt5-graphicaleffects')
 makedepends=('gst-plugins-base-libs' 'live-media' 'libnotify' 'libbluray'
              'flac' 'libdc1394' 'libavc1394' 'libcaca' 'gtk3'
              'librsvg' 'libgme' 'twolame' 'aalib' 'avahi' 'systemd-libs'
-             'libmtp' 'libupnp' 'libmicrodns' 'libdvdcss-git' 'smbclient'
+             'libmtp' 'libupnp' 'libmicrodns' 'libdvdcss' 'smbclient'
              'vcdimager' 'libssh2' 'mesa' 'protobuf' 'libnfs' 'mpg123'
-             'libdvdread-git' 'libdvdnav-git' 'libogg' 'libshout' 'libmodplug' 'libvpx'
+             'libdvdread' 'libdvdnav' 'libogg' 'libshout' 'libmodplug' 'libvpx'
              'libvorbis' 'speex' 'opus' 'libtheora' 'libpng' 'libjpeg-turbo'
              'libx265.so' 'libx264.so' 'zvbi' 'libass' 'libkate' 'libtiger'
              'sdl_image' 'libpulse' 'alsa-lib' 'jack' 'libsamplerate' 'libsoxr'
              'lirc' 'libgoom2' 'projectm' 'chromaprint' 'git' 'aom' 'srt'
-             'vulkan-headers' 'dav1d' 'libvncserver' 'aribb25-git' 
-             'blackmagic-decklink-sdk' 'ssr')
+             'vulkan-headers' 'dav1d')
 optdepends=('avahi: service discovery using bonjour protocol'
             'gst-plugins-base-libs: for libgst plugins'
-            'libdvdcss-git: decoding encrypted DVDs'
+            'libdvdcss: decoding encrypted DVDs'
             'libavc1394: devices using the 1394ta AV/C'
             'libdc1394: IEEE 1394 access plugin'
             'kwallet: kwallet keystore'
@@ -59,8 +58,8 @@ optdepends=('avahi: service discovery using bonjour protocol'
             'libmicrodns: mDNS services discovery (chromecast etc)'
             'lua-socket: http interface'
             'live-media: RTSP input'
-            'libdvdread-git: DVD input module'
-            'libdvdnav-git: DVD with navigation input module'
+            'libdvdread: DVD input module'
+            'libdvdnav: DVD with navigation input module'
             'libogg: Ogg and OggSpots codec'
             'libshout: shoutcast/icecast output plugin'
             'libmodplug: MOD output plugin'
@@ -95,11 +94,7 @@ optdepends=('avahi: service discovery using bonjour protocol'
             'gtk3: notification plugin'
             'aom: AOM AV1 codec'
             'srt: SRT input/output plugin'
-            'dav1d: dav1d AV1 decoder'
-            'libvncserver: VNC plugin'
-            'aribb25-git'
-            'decklink'
-            'ssr')
+            'dav1d: dav1d AV1 decoder')
 
 _name=vlc
 conflicts=("${_name}" 'vlc-dev' 'vlc-plugin' 'vlc-stable-git')
@@ -234,7 +229,7 @@ build() {
               --enable-aribsub \
               --enable-aom \
               --enable-srt \
-              --enable-decklink
+              --enable-dav1d
   make
 }
 

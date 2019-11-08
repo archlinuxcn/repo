@@ -4,8 +4,8 @@
 
 pkgname=dcmtk
 _pkgname=dcmtk-DCMTK
-pkgver=3.6.4
-pkgrel=5
+pkgver=3.6.5
+pkgrel=1
 pkgdesc="A collection of libraries and applications implementing large parts the DICOM standard"
 arch=("x86_64")
 url="http://dicom.offis.de/dcmtk"
@@ -13,7 +13,7 @@ license=("custom")
 depends=("libpng" "libtiff" "libxml2" "libwrap")
 makedepends=("cmake")
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/DCMTK/dcmtk/archive/DCMTK-${pkgver}.tar.gz")
-sha512sums=('f9811b8b94c3557a6649e498c5497e4b38a20c65d77cea99bb7eb2a955c7b3663767c66d81c3445949d58ac2d406397e08e9ef6ef73297f8235dc804a4b2c17c')
+sha512sums=('506c9dbb88f20e7e4c859208e944712f174ceb1053d2657dbb7ed0aceebd38026acb79838e7c9b60b140a03dc69a1bfa4aa31744dbdcbf054f84847fc06fb8cb')
 
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"

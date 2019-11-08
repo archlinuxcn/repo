@@ -1,0 +1,38 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+
+pkgname=wine-wechat
+pkgver=2.7.1.82
+pkgrel=11
+pkgdesc='Run WeChat Windows version with Wine (Chinese version)'
+url='https://weixin.qq.com/'
+arch=('i686' 'x86_64')
+license=('custom')
+depends=('libarchive' 'zstd' 'python' 'winetricks'
+        'wine' 'lib32-libldap' 'wine_gecko')
+
+source=("${pkgname}.tar.zst"
+        "${pkgname}.desktop"
+        "${pkgname}-cfg.desktop"
+        "${pkgname}-dir.desktop"
+        "wechat.png"
+        "wechat")
+noextract=("${pkgname}.tar.zst")
+install=wechat.install
+
+package() {
+  for name in "" "-cfg" "-dir"; do
+    install -Dm 644 "${pkgname}${name}.desktop" "${pkgdir}/usr/share/applications/${pkgname}${name}.desktop"
+  done
+  install -Dm 644 "wechat.png" "${pkgdir}/usr/share/pixmaps/wechat.png"
+  install -Dm 755 "wechat" "${pkgdir}/usr/bin/wechat"
+
+  install -Dm 644 "wine-wechat.tar.zst" "${pkgdir}/opt/${pkgname}/wine-wechat.tar.zst"
+}
+
+
+sha1sums=('c6699f5e3d367cac59b35c8ba7a5d76668770f95'
+          '9b2a6acb0234035fa2321e67cf3d29ec3a0551c0'
+          'a1076fc2f1e7d35bbf6075f2a00853f5cb09a7c0'
+          'ff3af03f4e43f604c83dde15d96610f4cd54f1e0'
+          'a6a9c232ab8f1188b7b583a9b81e98371af95ae9'
+          '2d3b15fd191e6e60ed22789d306b00aec206d27a')

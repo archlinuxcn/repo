@@ -4,7 +4,7 @@
 # Contributor: lybin
 
 pkgname=chromedriver
-pkgver=77.0.3865.40
+pkgver=78.0.3904.70
 pkgrel=1
 pkgdesc="Standalone server which implements WebDriver's wire protocol (for google-chrome)"
 arch=('x86_64')
@@ -13,7 +13,7 @@ license=('Apache')
 conflicts=('chromium')
 depends=('libpng' 'gconf')
 optdepends=('google-chrome')
-md5sums=('b4431816072192a2d36a10fa8cfde344')
+md5sums=('37f077132433b20db3f0f5636e89f142')
 
 source=("${pkgname}_${pkgver}_linux64.zip::http://chromedriver.storage.googleapis.com/${pkgver}/${pkgname}_linux64.zip")
 

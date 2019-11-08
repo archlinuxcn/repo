@@ -6,7 +6,7 @@
 
 pkgname=ttf-symbola
 pkgver=12.00
-pkgrel=1
+pkgrel=2
 pkgdesc="Font for unicode symbols (part of Unicode Fonts for Ancient Scripts)."
 arch=('any')
 conflicts=('ttf-symbola-ib')
@@ -14,7 +14,6 @@ provides=('ttf-symbola')
 url="http://users.teilar.gr/~g1951d/"
 license=('custom')
 depends=('fontconfig' 'xorg-font-utils')
-makedepends=('unzip')
 source=("${pkgname}-${pkgver}.zip::http://users.teilar.gr/~g1951d/Symbola.zip"
         "LICENSE")
 sha512sums=('96057c9dbf8a1ab48323d49f727dc00eb8ab66a60e4037b622280d6b84a2c692129e174994a36683ba78bee43e2a2096c4d87ac5c350be78f4d8d6cd7218a528'

@@ -11,9 +11,13 @@ install:
 	makepkg --printsrcinfo > .SRCINFO
 	makepkg -sri
 
+system:
+	ELECTRON=electron makepkg -sr
+
 # This will update PKGBUILD with the latest version and build the package
 update:
 	sed 's/^pkgver=.*$$/pkgver=$(shell $(MAKE) versions | tail -n 1)/' -i PKGBUILD
+	sed 's/^pkgrel=.*$$/pkgrel=1/' -i PKGBUILD
 	$(MAKE)
 
 # This will list the versions available in the Ubuntu repository

@@ -4,10 +4,10 @@
 
 pkgname=fcitx5-rime-git
 pkgver=r105.02afc31
-pkgrel=2
+pkgrel=4
 pkgdesc="RIME input method for fcitx5"
 arch=('i686' 'x86_64')
-url="https://gitlab.com/fcitx/fcitx5-rime"
+url="https://github.com/fcitx/fcitx5-rime"
 license=('LGPL')
 depends=('boost-libs' 'curl' 'fcitx5-git' 'librime' 'opencc' 'brise')
 makedepends=('boost' 'extra-cmake-modules' 'git')

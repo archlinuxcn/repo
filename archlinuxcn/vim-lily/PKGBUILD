@@ -2,13 +2,13 @@
 
 pkgbase=vim-lily
 pkgname=(gvim-lily vim-runtime-lily vim-lily)
-pkgver=8.1.2135
+pkgver=8.1.2269
 _versiondir="vim$(echo $pkgver | awk -F. '{print $1$2}')"
 pkgrel=1
 arch=('i686' 'x86_64')
 license=('custom:vim')
 url="http://www.vim.org"
-makedepends=('gpm' 'gtk3' 'perl' 'python2' 'python' 'ruby' 'gettext'
+makedepends=('gpm' 'gtk3' 'perl' 'python' 'ruby' 'gettext'
              'pkg-config' 'sed' 'luajit' 'git' 'tar' 'desktop-file-utils' 'libxt')
 source=('tmpfiles.conf'
         'vimdoc.hook'
@@ -20,7 +20,7 @@ options=('debug' 'strip')
 
 pkgver() {
   cd vim-repo
-  echo 8.1.$(sed -n '/ included_patches\[\]/,+3p' src/version.c | sed '/[^,]$/d;s/\s*\|,//g')
+  echo $(awk '/^#define VIM_VERSION_SHORT/ {print $3}' src/version.h | tr -d '"').$(sed -n '/ included_patches\[\]/,+3p' src/version.c | sed '/[^,]$/d;s/\s*\|,//g')
 }
 
 build() {
@@ -52,7 +52,6 @@ build() {
       --enable-multibyte \
       --enable-perlinterp=dynamic \
       --enable-python3interp \
-      --enable-pythoninterp \
       --enable-rubyinterp=dynamic \
       --enable-terminal \
       --with-features=huge \
@@ -77,7 +76,7 @@ build() {
 package_vim-lily() {
   pkgdesc='Vi Improved, a highly configurable, improved version of the vi text editor with additional scripting support'
   depends=('gpm' 'vim-runtime-lily' 'acl')
-  optdepends=('luajit' 'ruby' 'python' 'python2' 'perl')
+  optdepends=('luajit' 'ruby' 'python' 'perl')
   conflicts=('vim' 'gvim' 'vim-python3' 'gvim-python3' 'vim-minimal')
   provides=("vim=${pkgver}-${pkgrel}" "vim-python3=${pkgver}-${pkgrel}")
 
@@ -108,7 +107,7 @@ package_vim-lily() {
 package_gvim-lily() {
   pkgdesc='Vi Improved, a highly configurable, improved version of the vi text editor (with advanced features, such as a GUI) with additional scripting support'
   depends=('gpm' 'gtk3' 'vim-runtime-lily' 'desktop-file-utils' 'libxt')
-  optdepends=('luajit' 'ruby' 'python' 'python2' 'perl')
+  optdepends=('luajit' 'ruby' 'python' 'perl')
   conflicts=('vim' 'gvim' 'vim-python3' 'gvim-python3' 'vim-minimal')
   provides=("vim=${pkgver}-${pkgrel}" "gvim=${pkgver}-${pkgrel}" "gvim-python3=${pkgver}-${pkgrel}")
 

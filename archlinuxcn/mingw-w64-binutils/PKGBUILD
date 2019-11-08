@@ -1,10 +1,5 @@
-# Contributor: Sergej Pupykin <pupykin.s+arch@gmail.com>
-# Contributor: rubenvb vanboxem <dottie> ruben <attie> gmail <dottie> com
-
-_targets="i686-w64-mingw32 x86_64-w64-mingw32"
-
 pkgname=mingw-w64-binutils
-pkgver=2.32
+pkgver=2.33.1
 pkgrel=1
 pkgdesc="Cross binutils for the MinGW-w64 cross-compiler"
 arch=('x86_64')
@@ -15,8 +10,9 @@ depends=('zlib')
 options=('!libtool' '!emptydirs')
 validpgpkeys=('3A24BC1E8FB409FA9F14371813FCEF89DD9E3C4F')  # Nick Clifton (Chief Binutils Maintainer) <nickc@redhat.com>
 source=("https://ftp.gnu.org/gnu/binutils/binutils-${pkgver}.tar.gz"{,.sig})
-sha256sums=('9b0d97b3d30df184d302bced12f976aa1e5fbf4b0be696cdebc6cca30411a46e'
+sha256sums=('98aba5f673280451a09df3a8d8eddb3aa0c505ac183f1e2f9d00c67aa04c6f7d'
             'SKIP')
+_targets="i686-w64-mingw32 x86_64-w64-mingw32"
 
 prepare() {
   cd "$srcdir"/binutils-${pkgver}

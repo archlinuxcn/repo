@@ -2,7 +2,7 @@
 # Contributor: Ivelin Velkov <ivelin dot velkov at gmail dot com>
 
 pkgname=teams-for-linux
-pkgver=0.7.0
+pkgver=1.0.0
 pkgrel=1
 pkgdesc="Unofficial Microsoft Teams client for Linux using Electron."
 arch=("aarch64" "armv7h" "i686" "x86_64")
@@ -13,18 +13,11 @@ makedepends=("node-gyp" "python2" "yarn")
 source=(
   "${pkgname}-${pkgver}.tar.gz::https://github.com/IsmaelMartinez/${pkgname}/archive/v${pkgver}.tar.gz"
   "${pkgname}.desktop"
-  "index.patch"
 )
 sha256sums=(
-  "bf5d621308d957ad30e23995f13a0de51e10859dd94bfcf4ea540c00bca2ebbe"
+  "ec98a62d6de9cbbf7d5b2fa8e72b8f8fcf1629b2c616f888273dca7481168cc5"
   "f33ab4997c329567bbe172fe77ee6cbced5c5d4354e12ef52a89dd702422fded"
-  "e0f567168c43d9a030ede2f7b9a617014faf9ea7cd9e0ead9b082e9855e77e70"
 )
-
-prepare() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  patch -Np1 -i "${srcdir}/index.patch"
-}
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"

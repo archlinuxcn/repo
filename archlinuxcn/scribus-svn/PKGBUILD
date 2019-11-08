@@ -3,47 +3,39 @@
 # Maintainer: Stefan Husmann <stefan-husmann@t-online.de>
 
 pkgname=scribus-svn
-pkgver=23254
+pkgver=23344
 pkgrel=1
 pkgdesc="A desktop publishing program - Version from SVN"
 arch=('i686' 'x86_64')
 license=('GPL' 'LGPL')
 url="http://www.scribus.net"
-depends=('hunspell' 'podofo' 'python2' 'libcups' 'graphicsmagick'
-	 'poppler' 'libcdr' 'libvisio' 'libpagemaker' 'harfbuzz-icu'
-	 'qt5-declarative' 'libmspub' 'openscenegraph'
-	 'hicolor-icon-theme' 'libvncserver' 'libzmf' 'boost' 'libfreehand' 'libqxp')
-makedepends=('subversion' 'cmake' 'qt5-tools')
+depends=('hunspell' 'podofo' 'libcups' 'graphicsmagick' 'poppler'
+	 'libcdr' 'libvisio' 'libpagemaker' 'harfbuzz-icu' 'python'
+	 'qt5-declarative' 'libmspub' 'openscenegraph' 'libqxp'
+	 'desktop-file-utils' 'libzmf' 'libfreehand' 'boost-libs')
+makedepends=('subversion' 'cmake' 'qt5-tools' 'boost')
 optdepends=('lib2geom: for mesh distortion')
 conflicts=('scribus')
 provides=('scribus')
-source=('scribus::svn://scribus.net/trunk' python2.patch)
-md5sums=('SKIP'
-         '98b93cecd7b87a3b1425d2e483cd0a05')
-options=('!makeflags')
+source=('scribus::svn://scribus.net/trunk')
+sha256sums=('SKIP')
 _svnmod='scribus'
 
 pkgver() {
-  cd "$srcdir"/${_svnmod}
+  cd ${_svnmod}
   local ver="$(svnversion)"
   printf "%s" "${ver//[[:alpha:]]}"
 }
 
-prepare() {
-  cd "$srcdir"/$_svnmod/
-  patch -Np1 < $srcdir/python2.patch || true
-}
-
 build() {
-  cd "$srcdir"/$_svnmod/Scribus
+  cd $_svnmod/Scribus
   cmake . -DCMAKE_INSTALL_PREFIX:PATH=/usr \
 	-DCMAKE_SKIP_RPATH:BOOL=YES \
-	-DWANT_GRAPHICSMAGICK=1 \
-	-DCMAKE_LIBRARY_PATH=/usr/lib \
-	-DCMAKE_INCLUDE_PATH=/usr/include/python2.7 \
-	-DCMAKE_EXE_LINKER_FLAGS="-lQt5Quick -lQt5PrintSupport" \
-	-DCMAKE_APPDATA_DIR=/usr/share/appdata \
-	-DQT_PREFIX="/usr" -DWANT_SVNVERSION=1
+	-DWANT_GRAPHICSMAGICK:BOOL=YES \
+	-DCMAKE_LIBRARY_PATH:PATH=/usr/lib \
+	-DCMAKE_INCLUDE_PATH:PATH=/usr/include/python3.7 \
+	-DCMAKE_EXE_LINKER_FLAGS:STRING="-lQt5Quick -lQt5PrintSupport" \
+	-DQT_PREFIX:PATH="/usr" -DWANT_SVNVERSION:BOOL=YES
   make
 }
 

@@ -1,7 +1,7 @@
 # Maintainer: zlowly <zlowly AT  gmail DOT com>
 pkgname=ipad_charge
 pkgver=1.1
-pkgrel=4
+pkgrel=5
 pkgdesc="iPad USB charging control utility"
 arch=("i686" "x86_64")
 url="http://www.rainbow-software.org/linux/"
@@ -10,7 +10,7 @@ source=("http://www.rainbow-software.org/linux_files/${pkgname}_${pkgver}.tar.gz
 "95-ipad_charge.rules.patch"
 "ipad_charge.c.patch"
 )
-depends=('udev' 'libusb')
+depends=('libusb' 'udev')
 makedepends=('gcc')
 md5sums=('09b8c600efd747a36c9cc320516326cf'
          'bfc9325716cc8fcedc04f13fcf7c8693'

@@ -1,8 +1,8 @@
 # Maintainer: XavierCLL <xavier.corredor.llano (a) gmail.com>
 
 pkgname=pycharm-professional
-pkgver=2019.2.3
-_pkgver=2019.2.3
+pkgver=2019.2.4
+_pkgver=2019.2.4
 pkgrel=1
 pkgdesc="Powerful Python and Django IDE. Professional Edition."
 arch=('x86_64')
@@ -22,7 +22,7 @@ source=("https://download.jetbrains.com/python/$pkgname-$_pkgver.tar.gz"
         "charm.desktop"
         "charm")
 # https://download.jetbrains.com/python/pycharm-professional-${_pkgver}.tar.gz.sha256
-sha256sums=('f6acada6cf0308ea21be3d1656b9a42f2584259c566c7d0f97c7267311a523a6'
+sha256sums=('87bffe2e2fbcc5447e0aecb598f7355b1193681e3dc33081e5dcaaeb370b4b91'
             'aaf7113e8c56e4d977eca204d57350d9493eda2710abefd2488a2b5d47c53344'
             '818ed42f4200ae13315587abf6f247f93e68c658a94794f73924c985cdc145d0'
             '21e77b6b18e14636f9827e1f8d45bbc8dba8fb14ea5f4cde285c1ef4bb01c85e'

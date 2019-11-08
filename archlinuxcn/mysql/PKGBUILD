@@ -7,12 +7,12 @@
 pkgname=('mysql' 'libmysqlclient' 'mysql-clients')
 pkgbase=mysql
 pkgver=8.0.17
-pkgrel=2
+pkgrel=3
 pkgdesc="Fast SQL database server, community edition"
 arch=('x86_64')
 makedepends=('openssl' 'zlib' 'cmake' 'systemd-tools' 'libaio' 'jemalloc'
              'rpcsvc-proto' 'libtirpc' 'icu' 'libedit' 'libevent' 're2'
-             'rapidjson' 'protobuf')
+             'rapidjson')
 license=('GPL')
 url="https://www.mysql.com/products/community/"
 source=("https://cdn.mysql.com/Downloads/MySQL-8.0/${pkgbase}-boost-${pkgver}.tar.gz"
@@ -62,6 +62,7 @@ build() {
     -DWITH_SYSTEMD=yes \
     -DWITH_UNIT_TESTS=OFF \
     -DPLUGIN_EXAMPLE=NO \
+    -DWITH_PROTOBUF=bundled \
     -DWITHOUT_EXAMPLE_STORAGE_ENGINE=ON \
     -DPLUGIN_FEDERATED=NO \
     -DWITHOUT_FEDERATED_STORAGE_ENGINE=ON \
@@ -139,7 +140,7 @@ package_mysql(){
           "etc/conf.d/${pkgname}.conf")
   install="${pkgbase}.install"
   depends=('mysql-clients' 'libsasl' 'zlib' 'jemalloc' 'libaio' 'libtirpc' 'icu'
-           'lz4' 'libevent' 'protobuf' 'systemd-libs')
+           'lz4' 'libevent' 'systemd-libs')
   conflicts=('mariadb')
   provides=("mariadb=${pkgver}" "mysql=${pkgver}")
   optdepends=('perl-dbd-mysql: for mysqlhotcopy, mysql_convert_table_format and mysql_setpermission')

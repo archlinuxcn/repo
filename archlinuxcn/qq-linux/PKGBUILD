@@ -1,0 +1,29 @@
+# Maintainer: Jack Wu (OriginCode) <self@origincode.me>
+
+pkgname=qq-linux
+pkgver=2.0.0_b1_1024
+pkgrel=4
+arch=('x86_64')
+pkgdesc="Tencent QQ for Linux"
+url="https://im.qq.com/linuxqq"
+depends=('gtk2' 'glibc' 'gcc-libs' 'nss')
+license=('custom')
+source=(
+    "$pkgname-${pkgver}_orig_x86_64.pkg.tar.xz::https://qd.myapp.com/myapp/qqteam/linuxQQ/linuxqq_2.0.0-b1-1024_x86_64.pkg.tar.xz"
+    "qq.desktop"
+)
+sha512sums=('b430ee22c7d32f61982482e24ed47ad249c95ec5ba750b8d7537f880e3780a8513b101061511949245139fe122a582bdce87b784301de85e14593a8b4ad58866'
+            'a848ecb95c69250a13bf33e3fbad0bcef2cd30973dd0bb0cea9ad4d742d607f63b76791ccbbedc4dd412bd0c39c6ec515c40dea9a8471a4635dfaa3528bfe3d2')
+provides=('linuxqq')
+conflicts=('linuxqq')
+
+package() {
+    mkdir -p "$pkgdir/opt"
+    cp -pr "$srcdir/usr/share/tencent-qq" "$pkgdir/opt/"
+
+    mkdir -p "$pkgdir/usr/bin"
+    ln -s ../../opt/tencent-qq/qq "$pkgdir/usr/bin/qq"
+    
+    install -Dm644 "$srcdir/usr/share/tencent-qq/qq.png" "$pkgdir/usr/share/icons/hicolor/48x48/apps/qq.png"
+    install -Dm644 "$srcdir/qq.desktop" "$pkgdir/usr/share/applications/qq.desktop"
+}

@@ -5,9 +5,10 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-pre_build: vcs_update
-
 post_build: git_pkgbuild_commit
 
 update_on:
   - github: Jguer/yay
+  - archpkg: pacman
+    from_pattern: ^(\d+)\..*
+    to_pattern: \1

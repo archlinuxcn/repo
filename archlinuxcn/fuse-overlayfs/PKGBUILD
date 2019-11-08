@@ -1,14 +1,14 @@
 # Maintainer: Adrian Perez de Castro <aperez@igalia.com>
 pkgdesc='FUSE implementation of overlayfs'
 pkgname=fuse-overlayfs
-pkgver=0.6.4
+pkgver=0.7
 pkgrel=1
 arch=(x86_64)
 url='https://github.com/containers/fuse-overlayfs'
 license=(GPL3)
 depends=(fuse3)
 source=("${url}/archive/v${pkgver}.tar.gz")
-sha512sums=('0b014bdcc7d90167f1a0f64f0ace1c3e028e423a5226ea01cbcf0de602fab2cf48aad3ce636aa003145026c2d096ae51261838dbf0e58ff47092627e97d19195')
+sha512sums=('ccca7d081c71529537f644a477c034a15e142c371c89a1595a77c2f96b1bfb5aa996a4bf108a589eab02f012666fbfd2946bc196734ee6f0a08f0301def886bd')
 
 build ()
 {

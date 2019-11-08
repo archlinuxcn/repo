@@ -6,14 +6,13 @@
 
 pkgname=python-torchvision
 _pkgname=vision
-pkgver=0.4.0
-pkgrel=4
+pkgver=0.4.2
+pkgrel=2
 pkgdesc='Datasets, transforms, and models specific to computer vision'
 arch=('x86_64')
 url='https://github.com/pytorch/vision'
 license=('BSD')
 depends=(
-  'python-av'
   'python-numpy'
   'python-pillow'
   'python-pytorch'
@@ -21,14 +20,24 @@ depends=(
   'python-six'
   'python-tqdm'
 )
-makedepends=('python-setuptools')
+optdepends=(
+  'ffmpeg: video reader backend (the recommended one with better performance)'
+  'python-av: video reader backend (the default one)'
+)
+makedepends=(
+  'cuda'
+  'ffmpeg'
+  'python-av'
+  'python-setuptools'
+  'qt5-base'
+)
 checkdepends=(
   'python-mock'
   'python-pytest'
   'python-scipy'
 )
 source=("https://github.com/pytorch/vision/archive/v${pkgver}.tar.gz")
-sha512sums=('e0443ec443b7fab0b67a674b4706a2d1145723c32ea81a44c1395a77877fb44787c86e0d271fbd295e4e577d6616ef8d0a2e3549015d5c5ae95182d5fd12c920')
+sha512sums=('3327364bd1c10f4f0fdf9f8c1bed3848cbd887ee335634a0da6eb7a2611037408eee6261cd178d12225be5f2c809a05ff9fb87420b8accd447a799ca83def3ad')
 
 build() {
   cd "${_pkgname}-${pkgver}"

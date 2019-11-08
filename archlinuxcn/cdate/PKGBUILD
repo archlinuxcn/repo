@@ -3,13 +3,13 @@
 
 pkgname=cdate
 pkgver=1.0.5
-pkgrel=1
+pkgrel=2
 pkgdesc="Show Chinese lunisolar calender date"
 arch=('i686' 'x86_64')
 url="http://www.vinoca.org/"
 license=('BSD')
 depends=()
-source=(https://dn-vincasrcfiles.qbox.me/$pkgname-$pkgver.tar.gz)
+source=("https://files.vinoca.org/$pkgname-$pkgver.tar.gz")
 sha1sums=('8d799b29e9be809fb222f0e6e523a9f43a568ff4')
 
 build() {

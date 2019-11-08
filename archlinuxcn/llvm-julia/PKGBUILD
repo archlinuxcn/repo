@@ -2,45 +2,37 @@
 # Contributor: Jan "heftig" Steffens <jan.steffens@gmail.com>
 
 pkgname=('llvm-julia' 'llvm-libs-julia' 'llvm-ocaml-julia')
-pkgver=8.0.1
-pkgrel=3
-_ocaml_ver=4.08.1
+pkgver=9.0.0
+pkgrel=1
+_ocaml_ver=4.09.0
 arch=(i686 x86_64 armv7h aarch64)
 url="https://llvm.org/"
-license=('custom:University of Illinois/NCSA Open Source License')
+license=('custom:Apache 2.0 with LLVM Exception')
 makedepends=('cmake' 'ninja' 'libffi' 'libedit' 'ncurses' 'libxml2'
              "ocaml=$_ocaml_ver" 'ocaml-ctypes' 'ocaml-findlib'
              'python-sphinx' 'python-recommonmark')
 options=('staticlibs' '!strip')
-source=(https://github.com/llvm/llvm-project/releases/download/llvmorg-$pkgver/llvm-$pkgver.src.tar.xz
+source=(https://releases.llvm.org/$pkgver/llvm-$pkgver.src.tar.xz
         llvm-D27629-AArch64-large_model.patch
         llvm-D34078-vectorize-fdiv.patch
         llvm-6.0-NVPTX-addrspaces.patch
         llvm-7.0-D44650.patch
         llvm-6.0-DISABLE_ABI_CHECKS.patch
         llvm7-D50010-VNCoercion-ni.patch
-        llvm-8.0-D50167-scev-umin.patch
-        llvm7-windows-race.patch
-        llvm-D57118-powerpc.patch
         llvm8-WASM-addrspaces.patch
         llvm-exegesis-mingw.patch
         llvm-test-plugin-mingw.patch
-        llvm-8.0-D66401-mingw-reloc.patch
         llvm-config.h)
-sha256sums=('44787a6d02f7140f145e2250d56c9f849334e11f9ae379827510ed72f12b75e7'
+sha256sums=('d6a0565cf21f22e9b4353b2eb92622e8365000a9e90a16b09b56f8157eabfe84'
             '9f4851adbd9353c4d362ea604d07bcf8c565e1b06ea312986f5ad98d69853ae3'
             '0218121facb405a70f85b3b09a13d9d335d568da8fdd97740ff62bdd07c357a7'
             '0c333d25d9e48d3270d0c0bb7a8c239649283cf55bec4f1004326b99eb17b1e1'
             '390ec9982d778383566fc87e56acd94027c99670d19434b5914ec738eb9ca5c0'
             'cf5f331af7cff3fc05a9918d6e533f88c5f78568d45d4fd564fea8151a578e04'
             '8657ff0877ce13389da1de7c97cc7d85ed96f848f868044a50dd0ca094794ca3'
-            '24cd3f59c94d8cc3836ace71740b2321ae123de828b86c619c4dfaec51173c3d'
-            'b5ee35a946dc297885d7e8a0aaac1025a87ee09abd70e490314a919aac26e3e6'
-            '5ca5700ffb5bdaa38bdff5371f520cb0436f4c098fa29dc32ec2aca4812ebf6f'
             'd81c8f8e119758a8c5f551a64e0d1e4b37f60559745a2a6ad3ec4098e453e684'
             '778fb63f1025de7d4c7ecc4647026d9781971c3e9975817b703bab238364015e'
             'd2bee469b78630a513ae543a9b619aa686db2188a7c68086356e4165191ae78b'
-            '9a0e4c25dd54d7202d357aaad2fa692e80d3ecb0ed9d661d4b2759fb75b96397'
             '597dc5968c695bbdbb0eac9e8eb5117fcd2773bc91edf5ec103ecffffab8bc48')
 
 _FLTO=''
@@ -72,20 +64,16 @@ EOF
   cd "$srcdir/llvm-$pkgver.src"
   mkdir -p build
 
-  # TODO
   apply_julia_patch llvm-D27629-AArch64-large_model
   apply_julia_patch llvm-D34078-vectorize-fdiv
   apply_julia_patch llvm-6.0-NVPTX-addrspaces
   apply_julia_patch llvm-7.0-D44650
   apply_julia_patch llvm-6.0-DISABLE_ABI_CHECKS
-  apply_julia_patch llvm7-D50010-VNCoercion-ni
-  apply_julia_patch llvm-8.0-D50167-scev-umin
-  apply_julia_patch llvm7-windows-race
-  apply_julia_patch llvm-D57118-powerpc
+  # TODO
+  # apply_julia_patch llvm7-D50010-VNCoercion-ni
   apply_julia_patch llvm8-WASM-addrspaces
   apply_julia_patch llvm-exegesis-mingw
   apply_julia_patch llvm-test-plugin-mingw
-  apply_julia_patch llvm-8.0-D66401-mingw-reloc
 
   # Arch patches
   # msg "Applying Arch patches"
@@ -108,6 +96,7 @@ build() {
         -DLLVM_INSTALL_UTILS=ON \
         -DLLVM_ENABLE_RTTI=ON \
         -DLLVM_ENABLE_FFI=ON \
+        -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=AVR \
         -DLLVM_BUILD_TESTS=ON \
         -DLLVM_BUILD_DOCS=ON \
         -DLLVM_ENABLE_SPHINX=ON \

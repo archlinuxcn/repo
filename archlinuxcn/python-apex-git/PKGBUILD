@@ -1,7 +1,7 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
 pkgname=python-apex-git
-pkgver=0.1.r593.0889859
+pkgver=0.1.r598.37cdaf4
 _pkgver=0.1
 pkgrel=1
 pkgdesc="A PyTorch Extension for easy mixed precision and distributed training"
@@ -9,7 +9,12 @@ arch=('x86_64')
 url="https://github.com/NVIDIA/apex"
 license=('BSD')
 depends=(python-pytorch-cuda)
-makedepends=(git python-setuptools python-pip)
+makedepends=(
+  'git'
+  'python-setuptools'
+  'python-pip'
+  'qt5-base'
+)
 checkdepends=(python-pytest)
 provides=(python-apex=${pkgver})
 conflicts=(python-apex)

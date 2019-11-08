@@ -3,7 +3,7 @@
 # Derived from official Chromium and Inox PKGBUILDS and ungoogled-chromium buildkit
 
 pkgname=ungoogled-chromium
-pkgver=77.0.3865.90
+pkgver=77.0.3865.120
 _rev=1
 _archver=19c53c4ce8a6b674500cf94dacafde41ba98cbf0
 pkgrel=1
@@ -30,9 +30,9 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-launcher-$_launcher_ver.tar.gz::https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver.tar.gz
 https://github.com/Eloston/ungoogled-chromium/archive/$pkgver-$_rev.tar.gz
         https://github.com/ungoogled-software/ungoogled-chromium-archlinux/archive/${_archver}.tar.gz)
-sha256sums=('004cfdb1df74847bea8659bcaf8e039d51fe1101d42b6cf1c6cc346073fdefc3'
+sha256sums=('d792f9b09b1dcfd64e68f47a611c540dd1383dd9abd78ca1e06b2a7e2ff06af8'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
-            '268114f594d101d6d3b15e5eacfb60229681d66b86fcff085e0dcffe689d8124'
+            '456eabbc889c7135ca0eecb2bf57a10915f424ebf8a65016636b5b47b2a13e37'
             'c70c5d3e92d64fc40e2f81e53fcf62099159ad8972d65853afb3f27e966a544d')
 
 # Possible replacements are listed in build/linux/unbundle/replace_gn_files.py

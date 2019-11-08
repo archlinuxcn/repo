@@ -7,10 +7,9 @@ build_prefix: extra-x86_64
 repo_depends:
   - properties-cpp
 
-pre_build: vcs_update
-
 post_build: git_pkgbuild_commit
 
 update_on:
   - github: anbox/anbox
   - alias: boost
+  - alias: protobuf
