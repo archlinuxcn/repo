@@ -1,0 +1,50 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+_pkgname=imgaug
+pkgname=python-imgaug
+pkgver=0.3.0
+pkgrel=1
+pkgdesc='Image augmentation for machine learning experiments'
+arch=(any)
+url=https://github.com/aleju/imgaug
+license=(MIT)
+depends=(
+  'opencv'
+  'python-matplotlib'
+  'python-numpy'
+  'python-pillow'
+  'python-shapely'
+  'python-scikit-image'
+  'python-scipy'
+  'python-six'
+)
+makedepends=(python-setuptools)
+checkdepends=(
+  'flake8'
+  'hdf5'
+  'python-future'
+  'python-matplotlib'
+  'python-nose'
+  'python-pytorch'
+  'python-torchvision'
+  'qt5-base'
+)
+source=("${_pkgname}-${pkgver}.tar.gz"::"https://github.com/aleju/imgaug/archive/${pkgver}.tar.gz")
+sha512sums=('f4494eb44fc9a0b9c8685d9acf7b2df37d10fa47f8e1ad8064fd8f0469b01a649dc2e1f6fc9752f05df5b33db07594fb2840a4a474d826a9c36b583e1f7210c9')
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py build
+}
+
+check() {
+  cd "${_pkgname}-${pkgver}"
+  nosetests -v
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:
