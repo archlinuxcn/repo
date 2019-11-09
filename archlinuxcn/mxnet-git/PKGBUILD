@@ -175,30 +175,28 @@ _package() {
 
 package_mxnet-git() {
   depends+=(opencv)
+
   _package
 }
 
 package_mxnet-cuda-git() {
   pkgdesc="${pkgdesc} (with CUDA)"
   depends+=(cuda cudnn nccl)
-  conflicts=(mxnet)
-  provides=(mxnet)
+
   _package
 }
 
 package_mxnet-mkl-git() {
   pkgdesc="${pkgdesc} (with MKL-DNN)"
   depends+=(opencv)
-  conflicts=(mxnet)
-  provides=(mxnet)
+
   _package
 }
 
 package_mxnet-cuda-mkl-git() {
   pkgdesc="${pkgdesc} (with CUDA and MKL-DNN)"
   depends+=(cuda cudnn nccl)
-  conflicts=(mxnet)
-  provides=(mxnet)
+
   _package
 }
 # vim:set ts=2 sw=2 et:
