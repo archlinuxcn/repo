@@ -1,6 +1,6 @@
 # Maintainer: Claudio d'Angelis <claudiodangelis at gmail dot com>
 pkgname=postman-bin
-pkgver=7.10.0
+pkgver=7.11.0
 pkgrel=1
 pkgdesc="Build, test, and document your APIs faster"
 arch=('x86_64')
@@ -10,10 +10,8 @@ source=(
 	"Postman-linux-x64-${pkgver}.tar.gz::https://dl.pstmn.io/download/version/${pkgver}/linux64"
     "postman.desktop"
 )
-md5sums=(
-    '9af27153dc86301e12958d7e15088fea'
-    'f40404e81c416a180b4c596059fc84dd'
-)
+md5sums=('0bb491e23625175c19414ac12e72666c'
+         'f40404e81c416a180b4c596059fc84dd')
 depends=(gconf libxss gtk2 libxtst nss alsa-lib)
 package() {
 	install -dm755 "${pkgdir}/opt/"
