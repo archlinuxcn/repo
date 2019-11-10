@@ -3,7 +3,7 @@
 pkgname=python-pytorch-lightning
 _name=${pkgname#python-}
 _pkgname=pytorch-lightning
-pkgver=0.5.3.1
+pkgver=0.5.3.2
 pkgrel=1
 pkgdesc="Rapid research framework for PyTorch. The researcher's version of Keras"
 arch=('any')
@@ -23,7 +23,7 @@ optdepends=(
 )
 makedepends=('python-setuptools')
 source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
-sha512sums=('fd7548d9fb2b45b5908f77f05d67173863c9c72c912ffefee2f8d14f42d240b9e3c2d1d60cc1a5211aef8592bc25ffc8aab3f52cfa597e0f551d166b94a425f2')
+sha512sums=('83fa0acbddfdb2ebe5672471d48113729dae3bd5617a4b50b67eb0d6e0304b1122e67f0db22152c4527d5d02c6d680565be6ca0c138e29e1097143da0e638eaf')
 
 build() {
   cd "${_pkgname}-${pkgver}"
