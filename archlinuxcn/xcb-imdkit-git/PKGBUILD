@@ -4,8 +4,8 @@
 
 _pkgname=xcb-imdkit
 pkgname=${_pkgname}-git
-pkgver=r62.a607b19
-pkgrel=5
+pkgver=r63.bb2f10c
+pkgrel=1
 pkgdesc="Input method development support for xcb"
 arch=('i686' 'x86_64')
 url="https://github.com/fcitx/xcb-imdkit"
