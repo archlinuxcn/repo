@@ -7,33 +7,62 @@
 
 _target="arm-linux-gnueabihf"
 pkgname=${_target}-glibc
-pkgver=2.28
+pkgver=2.29
 pkgrel=1
 pkgdesc="GNU C Library (${_target})"
 arch=('any')
-url="http://www.gnu.org/software/libc/"
+url="https://www.gnu.org/software/libc/"
 license=(GPL LGPL)
-depends=("${_target}-linux-api-headers>=4.12.7-1")
-makedepends=("${_target}-gcc-stage2>=7.2.0-3" gperf)
+depends=("${_target}-linux-api-headers>=4.17.11-1")
+makedepends=("${_target}-gcc-stage2>=8.2.1" gperf)
 provides=("${_target}-glibc-headers=${pkgver}" "${_target}-eglibc")
 conflicts=("${_target}-glibc-headers" "${_target}-eglibc")
 replaces=("${_target}-glibc-headers")
 options=(!buildflags !strip staticlibs)
-_commit=23158b08a0908f381459f273a984c6fd328363cb
-source=(http://ftp.gnu.org/gnu/libc/glibc-${pkgver}.tar.xz
-        bz20338.patch)
-md5sums=('c81d2388896379997bc359d4f2084239'
-         'dc0d3ad59aeaaf591b085a77de6e03e9')
+_commit=34fb5f61d3c3f4b8fc616ea259fa19168b58ecd4
+#source=(git+https://sourceware.org/git/glibc.git#commit=$_commit
+source=(https://ftp.gnu.org/gnu/glibc/glibc-$pkgver.tar.xz
+        glibc-${_commit}.patch
+        bz20338.patch
+        0001-Revert-elf-Correct-absolute-SHN_ABS-symbol-run-time-.patch
+        file-truncated-while-reading-soname-after-patchelf.patch)
+md5sums=('e6c279d5b2f0736f740216f152acf974'
+         '35a4ca5cdf86d706e054e02bb31d1616'
+         'dc0d3ad59aeaaf591b085a77de6e03e9'
+         'af5d3c5227ac639effe39667a43879a1'
+         '0820504d2e83ee15f74a656771361872')
 
 prepare() {
   rm -rf glibc-build
   mkdir glibc-build
-  cd glibc-$pkgver
 
-  patch -p1 -i "$srcdir/bz20338.patch"
+  [[ -d glibc-$pkgver ]] && ln -s glibc-$pkgver glibc
+  cd glibc
+
+  local i; for i in ${source[@]}; do
+    case ${i%::*} in
+      *.patch)
+        msg2 "Applying ${i}"
+        patch -p1 -i "$srcdir/${i}"
+        ;;
+    esac
+  done
 }
 
 build() {
+  local _configure_flags=(
+      --prefix=/
+      --with-headers=/usr/${_target}/include
+      --enable-add-ons
+      --enable-bind-now
+      --enable-lock-elision
+      --disable-multi-arch
+      --enable-stack-protector=strong
+      --enable-stackguard-randomization
+      --disable-profile
+      --disable-werror
+  )
+
   cd glibc-build
 
   echo "slibdir=/lib" >> configparms
@@ -44,6 +73,11 @@ build() {
   # remove fortify for building libraries
   CPPFLAGS=${CPPFLAGS/-D_FORTIFY_SOURCE=2/}
 
+  #
+  CFLAGS=${CFLAGS/-fno-plt/}
+  CXXFLAGS=${CXXFLAGS/-fno-plt/}
+  LDFLAGS=${LDFLAGS/,-z,now/}
+
   export BUILD_CC=gcc
   export CC=${_target}-gcc
   export CXX=${_target}-g++
@@ -51,20 +85,9 @@ build() {
   export RANLIB=${_target}-ranlib
 
   "$srcdir/glibc-$pkgver/configure" \
-      --prefix=/ \
       --libdir=/lib \
       --libexecdir=/lib \
-      --with-headers=/usr/${_target}/include \
-      --enable-add-ons \
-      --enable-bind-now \
-      --enable-lock-elision \
-      --disable-multi-arch \
-      --enable-obsolete-nsl \
-      --enable-obsolete-rpc \
-      --enable-stack-protector=strong \
-      --enable-stackguard-randomization \
-      --disable-profile \
-      --disable-werror \
+      ${_configure_flags[@]} \
       --target=${_target} \
       --host=${_target} \
       --build=${CHOST}
