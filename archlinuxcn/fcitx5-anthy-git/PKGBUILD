@@ -1,7 +1,7 @@
 # Maintainer: OriginCode <origincoder@yahoo.com>
 
 pkgname=fcitx5-anthy-git
-pkgver=r142.63ffd2a
+pkgver=r143.59c61bb
 pkgrel=1
 pkgdesc="Anthy input method for fcitx5"
 arch=('x86_64')
