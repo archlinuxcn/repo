@@ -14,7 +14,7 @@ _meta_list=(
   'railties'
   )
 
-pkgver=5.2.2
+pkgver=5.2.3
 
 for _name in ${_meta_list[@]}
 do
@@ -24,24 +24,24 @@ do
   noextract=(${noextract[@]} $_name-$pkgver.gem)
 done
 
-pkgrel=7
+pkgrel=1
 pkgdesc='Full-stack web application framework.'
 arch=('any')
 url="http://rubyonrails.org"
 license=('MIT')
 depends=('ruby')
 
-md5sums=('71175f797c9767de404e91b29ad61582'
-         'd5bbfc41bed79886fedfb3a8075962f5'
-         '9199d2dfb2621052c52ab46e92a50121'
-         'a8925a83bc454bc43d12e5751b5692b7'
-         '1e0d8bc1b04342870cb6024493293f30'
-         'b038b9ff57f9b29891104bd95c880d95'
-         'aa0fa159783e549aacd258145e822db1'
-         '7b5b39af64c2b1b2a812661791e3503a'
-         'f602245ca45af1ce58b37a0b5bb4666a'
-         'bb1f5a2934ff06b31c3eef563db790bc'
-         '5e457d760ef3006645e605ebd30cbc14')
+sha512sums=('18387ec05fa1ab29c361518ec9c8fa0b55a65ed1da6391bed291ef82048b3e81230e1cae4b7f805ed7c56cc336d1bea8feec5aaa703eea4bc6c18912e75f78de'
+            '4baf0216c3693edc35aa6563139039d3fa612fbd19a9008ff878c205c5e1cbf42fb3420133b7cfbfa97d1c4feb4f8eed017ab19ab44f9ac86afbd09734a4db87'
+            '2670431641ecc1533dcf970ed3df5c67ef711c422e23d53f0390e1b1a815df3abda397fb8dd2024692164cd51e109e2bc3fbb0b7f99c71fac2c8b6a81a1bb2f0'
+            'ba320139f94bf921a180235ca2754ee3960de2ef5baf8318e67f7bf20846c332728f7892a5dd336b8576d1e7476d5bf88938188512f4bdab8f37c9f69bc2c8ca'
+            '44f2593683d7b0c55f8e55571ba62e185931741e33f1ee18fc30c574ce4b94f6e46dcca772b6287e6f26061bfb70c07440dabe86ddb344aea95245818cd66ffa'
+            '54b2e0d0f00fbe7c6fdf2a867adaa7aa4d9be509f805ef712d08a36b0560639aa07fb342d14247e613774308000d089d66274575892007dd844d8757cd07cd31'
+            'e10d0286b1de2b3139ebe1a63c3c758eab5baa6affe0d8e170eeda725090e7ec2f1ee1b0d82a9552afe119a88af6d2a48920c2c5c5303503bd4c2edaaedb0519'
+            '838d2fa5ec29022683b94173015e7db672a147305a6dd7745120a66ff4626af9ce3d746a73ac0b918d32af9e069831aa43358e99edd996fa23ebc2517a338b65'
+            '119b0fefb16597625a85da34638fe55d3231a531c748ec9071fae9e6c97f4e4aa6f1a6ffd18fee1d361d3271451c16e4281d380760b0d529b200eebdb9640761'
+            '8e0ab698f1b850c380ffc464fd48c942f4a46b9ca66055166949fa069740a4ff50f320d87f1040064a896c5ba1b8c00f0730592efec90d92a20c500d66b99589'
+            'b0896ad609b1b662f2750c70292f26c86d65c025a52ce33372cb51de6069cfb960457c621d8c27aec968f1f7a73cd5609af32fccb82c92f5425cae14f776a3f2')
 
 packaging() {
   local _gemdir="$(ruby -e'puts Gem.default_dir')"
@@ -109,7 +109,7 @@ package_ruby-activestorage() {
 
 package_ruby-activesupport() {
   pkgdesc='A toolkit of support libraries and Ruby core extensions extracted from the Rails framework.'
-  depends=('ruby' 'ruby-concurrent-ruby' 'ruby-i18n' 'ruby-minitest' 'ruby-tzinfo')
+  depends=('ruby' 'ruby-concurrent' 'ruby-i18n' 'ruby-minitest' 'ruby-tzinfo')
 
   packaging `echo ${FUNCNAME} | cut -d - -f 2`
 }
