@@ -2,7 +2,7 @@
 
 cudaarch=All
 _pkgname=mxnet
-pkgname=('mxnet-git' 'mxnet-mkl-git' 'mxnet-cuda-git' 'mxnet-cuda-mkl-git')
+pkgname=('mxnet-cuda-git' 'mxnet-cuda-mkl-git')
 _pkgver=1.5.1
 pkgver=1.5.1.r10323.a37dcd46cb
 pkgrel=1
@@ -32,7 +32,6 @@ makedepends=(
   'git'
   'gtk3'
   'nccl'
-  'opencv'
   'patchelf'
   'qt5-base'
 )
@@ -58,8 +57,9 @@ prepare() {
   mkdir "${srcdir}/${_pkgname}/build"
   cp -r "${srcdir}/${_pkgname}" "${srcdir}/mxnet-cuda-git"
   cp -r "${srcdir}/${_pkgname}" "${srcdir}/mxnet-cuda-mkl-git"
-  cp -r "${srcdir}/${_pkgname}" "${srcdir}/mxnet-git"
-  cp -r "${srcdir}/${_pkgname}" "${srcdir}/mxnet-mkl-git"
+  # use gcc version compatible with CUDA
+  export CC=/opt/cuda/bin/gcc
+  export CXX=/opt/cuda/bin/g++
 }
 
 build() {
@@ -67,10 +67,10 @@ build() {
     -DBUILD_CPP_EXAMPLES:BOOL=OFF
     -DBUILD_TESTING:BOOL=OFF
     -DCMAKE_BUILD_TYPE:String=Release
-    -DCMAKE_EXE_LINKER_FLAGS="$(pkg-config --libs cblas)"
+    -DCMAKE_EXE_LINKER_FLAGS="$(pkg-config --libs cblas) --no-relax"
     -DCMAKE_INSTALL_LIBDIR:PATH=lib
     -DCMAKE_INSTALL_PREFIX:PATH=/usr
-    -DCMAKE_SHARED_LINKER_FLAGS="$(pkg-config --libs cblas)"
+    -DCMAKE_SHARED_LINKER_FLAGS="$(pkg-config --libs cblas) --no-relax"
     -DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON
     -DINSTALL_DOCUMENTATION:BOOL=OFF
     -DUSE_BLAS=open
@@ -84,37 +84,6 @@ build() {
     -DUSE_S3:BOOL=ON
 )
 
-  # building without MKL-DNN and without CUDA
-  cd "${srcdir}/mxnet-git/build"
-  cmake \
-    ${cmake_opts[@]} \
-    -DUSE_CUDA:BOOL=OFF \
-    -DUSE_CUDNN:BOOL=OFF \
-    -DUSE_MKLDNN:BOOL=OFF \
-    -DUSE_NCCL:BOOL=OFF \
-    -DUSE_OPENCV:BOOL=ON \
-    ..
-  make
-  cd ../python
-  python setup.py build --with-cython
-
-  # building with MKL-DNN and without CUDA
-  cd "${srcdir}/mxnet-mkl-git/build"
-  cmake \
-    ${cmake_opts[@]} \
-    -DUSE_CUDA:BOOL=OFF \
-    -DUSE_CUDNN:BOOL=OFF \
-    -DUSE_MKLDNN:BOOL=ON \
-    -DUSE_NCCL:BOOL=OFF \
-    -DUSE_OPENCV:BOOL=ON \
-    ..
-  make
-  cd ../python
-  python setup.py build --with-cython
-
-  # use gcc version compatible with CUDA
-  export CC=/opt/cuda/bin/gcc
-  export CXX=/opt/cuda/bin/g++
   # building with CUDA and without MKL-DNN
   cd "${srcdir}/mxnet-cuda-git/build"
   cmake \
@@ -173,22 +142,9 @@ _package() {
   find "${pkgdir}" -type d -empty -delete
 }
 
-package_mxnet-git() {
-  depends+=(opencv)
-
-  _package
-}
-
 package_mxnet-cuda-git() {
   pkgdesc="${pkgdesc} (with CUDA)"
   depends+=(cuda cudnn nccl)
-
-  _package
-}
-
-package_mxnet-mkl-git() {
-  pkgdesc="${pkgdesc} (with MKL-DNN)"
-  depends+=(opencv)
 
   _package
 }
