@@ -34,7 +34,7 @@ diff --git a/config/system-headers.mozbuild b/config/system-headers.mozbuild
 diff --git a/dom/base/moz.build b/dom/base/moz.build
 --- a/dom/base/moz.build
 +++ b/dom/base/moz.build
-@@ -523,16 +523,19 @@ include('/ipc/chromium/chromium-config.m
+@@ -534,16 +534,19 @@ include('/ipc/chromium/chromium-config.m
  FINAL_LIBRARY = 'xul'
  
  if CONFIG['MOZ_BUILD_APP'] in ['browser', 'mobile/android', 'xulrunner']:
@@ -47,19 +47,19 @@ diff --git a/dom/base/moz.build b/dom/base/moz.build
 +    CXXFLAGS += CONFIG['MOZ_HARFBUZZ_CFLAGS']
 +
  GENERATED_FILES += [
-     'PropertyUseCounterMap.inc',
      'UseCounterList.h',
  ]
  
- countermap = GENERATED_FILES['PropertyUseCounterMap.inc']
- countermap.script = 'gen-usecounters.py:property_map'
- countermap.inputs = ['UseCounters.conf']
+ counterlist = GENERATED_FILES['UseCounterList.h']
+ counterlist.script = 'gen-usecounters.py:use_counter_list'
+ counterlist.inputs = ['UseCounters.conf']
+ 
 diff --git a/gfx/moz.build b/gfx/moz.build
 --- a/gfx/moz.build
 +++ b/gfx/moz.build
-@@ -7,26 +7,28 @@
- with Files('**'):
+@@ -8,26 +8,28 @@ with Files('**'):
      BUG_COMPONENT = ('Core', 'Graphics')
+     SCHEDULES.inclusive += ['android-hw-gfx']
  with Files('wr/**'):
      BUG_COMPONENT = ('Core', 'Graphics: WebRender')
  
@@ -102,11 +102,11 @@ diff --git a/gfx/skia/generate_mozbuild.py b/gfx/skia/generate_mozbuild.py
 +if CONFIG['MOZ_SYSTEM_HARFBUZZ']:
 +    CXXFLAGS += CONFIG['MOZ_HARFBUZZ_CFLAGS']
 +
- if CONFIG['MOZ_WIDGET_TOOLKIT'] in ('gtk3', 'android'):
+ if CONFIG['MOZ_WIDGET_TOOLKIT'] in ('gtk', 'android'):
      CXXFLAGS += CONFIG['MOZ_CAIRO_CFLAGS']
      CXXFLAGS += CONFIG['CAIRO_FT_CFLAGS']
  
- if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'gtk3':
+ if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'gtk':
      CXXFLAGS += CONFIG['MOZ_PANGO_CFLAGS']
  
  if CONFIG['MOZ_ENABLE_SKIA_PDF_SFNTLY']:
@@ -125,18 +125,18 @@ diff --git a/gfx/skia/moz.build b/gfx/skia/moz.build
 +if CONFIG['MOZ_SYSTEM_HARFBUZZ']:
 +    CXXFLAGS += CONFIG['MOZ_HARFBUZZ_CFLAGS']
 +
- if CONFIG['MOZ_WIDGET_TOOLKIT'] in ('gtk3', 'android'):
+ if CONFIG['MOZ_WIDGET_TOOLKIT'] in ('gtk', 'android'):
      CXXFLAGS += CONFIG['MOZ_CAIRO_CFLAGS']
      CXXFLAGS += CONFIG['CAIRO_FT_CFLAGS']
  
- if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'gtk3':
+ if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'gtk':
      CXXFLAGS += CONFIG['MOZ_PANGO_CFLAGS']
  
  if CONFIG['MOZ_ENABLE_SKIA_PDF_SFNTLY']:
 diff --git a/gfx/thebes/moz.build b/gfx/thebes/moz.build
 --- a/gfx/thebes/moz.build
 +++ b/gfx/thebes/moz.build
-@@ -281,11 +281,14 @@ if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'gtk3
+@@ -281,11 +281,14 @@ if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'gtk'
  
  if CONFIG['MOZ_WAYLAND']:
      CXXFLAGS += CONFIG['MOZ_WAYLAND_CFLAGS']
@@ -170,7 +170,7 @@ diff --git a/intl/unicharutil/util/moz.build b/intl/unicharutil/util/moz.build
 diff --git a/netwerk/dns/moz.build b/netwerk/dns/moz.build
 --- a/netwerk/dns/moz.build
 +++ b/netwerk/dns/moz.build
-@@ -74,12 +74,15 @@ etld_data = GENERATED_FILES['etld_data.i
+@@ -81,12 +81,15 @@ etld_data = GENERATED_FILES['etld_data.i
  etld_data.script = 'prepare_tlds.py'
  etld_data.inputs = ['effective_tld_names.dat']
  
@@ -189,7 +189,7 @@ diff --git a/netwerk/dns/moz.build b/netwerk/dns/moz.build
 diff --git a/toolkit/library/moz.build b/toolkit/library/moz.build
 --- a/toolkit/library/moz.build
 +++ b/toolkit/library/moz.build
-@@ -211,16 +211,19 @@ if CONFIG['MOZ_ANDROID_GOOGLE_VR']:
+@@ -240,16 +240,19 @@ if CONFIG['MOZ_ANDROID_GOOGLE_VR']:
      OS_LIBS += [
          '-L%s' % CONFIG['MOZ_ANDROID_GOOGLE_VR_LIBS'],
          '-lgvr',
@@ -212,7 +212,7 @@ diff --git a/toolkit/library/moz.build b/toolkit/library/moz.build
 diff --git a/toolkit/moz.configure b/toolkit/moz.configure
 --- a/toolkit/moz.configure
 +++ b/toolkit/moz.configure
-@@ -377,16 +377,26 @@ def freetype2_combined_info(fontconfig_i
+@@ -390,16 +390,26 @@ def freetype2_combined_info(fontconfig_i
      return namespace(
          cflags=freetype2_info.cflags + fontconfig_info.cflags,
          libs=freetype2_info.libs + fontconfig_info.libs,

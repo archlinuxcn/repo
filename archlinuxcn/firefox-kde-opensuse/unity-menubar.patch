@@ -11,10 +11,10 @@
 +#endif
                                    this.setAttribute('openedwithkey',
                                                      event.target.parentNode.openedWithKey);">
-             <menu id="file-menu" label="&fileMenu.label;"
+             <menu id="file-menu" data-l10n-id="menu-file">
 --- a/browser/base/content/browser.js
 +++ b/browser/base/content/browser.js
-@@ -6809,11 +6809,17 @@ function onViewToolbarsPopupShowing(aEve
+@@ -6801,11 +6801,17 @@ function onViewToolbarsPopupShowing(aEve
  
    let toolbarNodes = gNavToolbox.querySelectorAll("toolbar");
  
@@ -74,7 +74,7 @@
  
  include('/ipc/chromium/chromium-config.mozbuild')
  
-+if 'gtk' in CONFIG['MOZ_WIDGET_TOOLKIT']:
++if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'gtk':
 +    LOCAL_INCLUDES += [
 +        '/widget/gtk',
 +    ]
@@ -88,7 +88,7 @@
          '/dom/system',
          '/dom/system/android',
      ]
-+elif 'gtk' in CONFIG['MOZ_WIDGET_TOOLKIT']:
++elif CONFIG['MOZ_WIDGET_TOOLKIT'] == 'gtk':
 +    LOCAL_INCLUDES += [
 +        '/widget/gtk',
 +    ]
@@ -97,10 +97,10 @@
      'components.conf',
 --- a/modules/libpref/init/all.js
 +++ b/modules/libpref/init/all.js
-@@ -196,6 +196,9 @@ pref("dom.script_loader.binast_encoding.
+@@ -327,6 +327,9 @@ pref("dom.inputevent.datatransfer.enable
+ // of content viewers to cache based on the amount of available memory.
  pref("browser.sessionhistory.max_total_viewers", -1);
  
- pref("ui.use_native_colors", true);
 +#ifdef MOZ_WIDGET_GTK
 +pref("ui.use_unity_menubar", true);
 +#endif
@@ -3061,7 +3061,7 @@
 +#endif /* __nsMenuItem_h__ */
 --- /dev/null
 +++ b/widget/gtk/nsMenuObject.cpp
-@@ -0,0 +1,663 @@
+@@ -0,0 +1,664 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
 + */
@@ -3261,7 +3261,8 @@
 +        imageRequest = list->GetListStyleImage();
 +        if (imageRequest) {
 +            imageRequest->GetURI(getter_AddRefs(uri));
-+            imageRect = list->mImageRegion.ToNearestPixels(
++            auto& rect = list->mImageRegion.AsRect();
++            imageRect = rect.ToLayoutRect().ToNearestPixels(
 +                            pc->AppUnitsPerDevPixel());
 +        }
 +    }
@@ -3304,7 +3305,7 @@
 +            return;
 +        }
 +
-+        loader->LoadImage(uri, nullptr, nullptr, mozilla::net::RP_Unset,
++        loader->LoadImage(uri, nullptr, nullptr,
 +                          nullptr, 0, loadGroup, this, nullptr, nullptr,
 +                          nsIRequest::LOAD_NORMAL, nullptr,
 +                          nsIContentPolicy::TYPE_IMAGE, EmptyString(),
@@ -5134,7 +5135,7 @@
 +#endif /* __nsNativeMenuService_h__ */
 --- a/widget/gtk/nsWindow.cpp
 +++ b/widget/gtk/nsWindow.cpp
-@@ -71,6 +71,7 @@
+@@ -73,6 +73,7 @@
  
  #include "mozilla/Assertions.h"
  #include "mozilla/Likely.h"
@@ -5142,7 +5143,7 @@
  #include "mozilla/Preferences.h"
  #include "nsIPrefService.h"
  #include "nsIServiceManager.h"
-@@ -5123,6 +5124,10 @@ void nsWindow::HideWindowChrome(bool aSh
+@@ -5192,6 +5193,10 @@ void nsWindow::HideWindowChrome(bool aSh
    SetWindowDecoration(aShouldHide ? eBorderStyle_none : mBorderStyle);
  }
  
@@ -5173,7 +5174,7 @@
    /**
     * GetLastUserInputTime returns a timestamp for the most recent user input
     * event.  This is intended for pointer grab requests (including drags).
-@@ -635,6 +639,8 @@ class nsWindow final : public nsBaseWidg
+@@ -638,6 +642,8 @@ class nsWindow final : public nsBaseWidg
  
    mozilla::UniquePtr<mozilla::CurrentX11TimeGetter> mCurrentTimeGetter;
    static CSDSupportLevel sCSDSupportLevel;
@@ -5192,7 +5193,7 @@
 -        'nsINativeMenuService.h',
 -    ]
 +
-+if toolkit in ('cocoa', 'gtk3'):
++if toolkit in ('cocoa', 'gtk'):
 +    EXPORTS += ['nsINativeMenuService.h']
  
  TEST_DIRS += ['tests']
@@ -5230,7 +5231,7 @@
  import sys
  
  # Static atom definitions, used to generate nsGkAtomList.h.
-@@ -2478,7 +2479,7 @@ STATIC_ATOMS = [
+@@ -2481,7 +2482,7 @@ STATIC_ATOMS = [
      InheritingAnonBoxAtom("AnonBox_mozSVGForeignContent", ":-moz-svg-foreign-content"),
      InheritingAnonBoxAtom("AnonBox_mozSVGText", ":-moz-svg-text"),
      # END ATOMS
@@ -5241,7 +5242,7 @@
  def verify():
 --- a/widget/gtk/components.conf
 +++ b/widget/gtk/components.conf
-@@ -75,6 +75,14 @@ Classes = [
+@@ -82,6 +82,14 @@ Classes = [
          'headers': ['/widget/gtk/nsApplicationChooser.h'],
          'processes': ProcessSelector.MAIN_PROCESS_ONLY,
      },

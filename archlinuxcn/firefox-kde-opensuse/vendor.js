@@ -10,3 +10,5 @@ pref("browser.shell.checkDefaultBrowser", false);
 pref("extensions.autoDisableScopes", 11);
 pref("extensions.shownSelectionUI", true);
 
+// Disable DoH by default
+pref("network.trr.mode", 5); 

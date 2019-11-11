@@ -19,8 +19,8 @@ _pgo=true
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=69.0.3
-pkgrel=2
+pkgver=70.0.1
+pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -48,11 +48,10 @@ makedepends=('unzip' 'zip' 'diffutils' 'python2-setuptools' 'yasm' 'mesa' 'imake
 
 optdepends=('networkmanager: Location detection via available WiFi networks'
             'speech-dispatcher: Text-to-Speech'
-            'libdbusmenu-gtk3: Global menu support'
             'pulseaudio: Audio support')
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
-_patchrev=972f68ac6b1a
+_patchrev=8a4f5aea2475
 options=('!emptydirs' 'debug')
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 _repo=https://hg.mozilla.org/mozilla-unified
@@ -145,6 +144,7 @@ build() {
   export MOZ_SOURCE_REPO="$_repo"
   export MOZBUILD_STATE_PATH="$srcdir/mozbuild"
   export MOZ_APP_REMOTINGNAME=$pkgname
+  export CARGO_HOME="$srcdir"/.cargo
 
   export CC=gcc
   export CXX=g++
@@ -209,6 +209,12 @@ END
 
   install -Dm644 "$srcdir/firefox.desktop" "$pkgdir/usr/share/applications/firefox.desktop"
 
+  # Use system certificates
+  local nssckbi="$pkgdir/usr/lib/$pkgname/libnssckbi.so"
+  if [[ -e $nssckbi ]]; then
+    ln -srfv "$pkgdir/usr/lib/libnssckbi.so" "$nssckbi"
+  fi
+
   #workaround for now
   #https://bugzilla.mozilla.org/show_bug.cgi?id=658850
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
@@ -216,17 +222,17 @@ END
 md5sums=('SKIP'
          'f758e064e1463b90878790124f398197'
          'a26a061efb4def6572d5b319d657f1d6'
-         '5cee310a9040ccc5abcf29742b84aeb8'
+         '4c23d9c0a691d70919beb1dafbbecbd3'
          '05bb69d25fb3572c618e3adf1ee7b670'
-         'd7ce23a18da21c05cd756766e177834f'
-         '80d64ae704c9babaa9c725bfd7e2895d'
-         '591c8d36479516332d7503995bb25743'
+         '63ed8892dbc06dc62a381e8c91c132df'
+         '0756f1b090f9c3371df957257907b0c7'
+         'bc1f7445de31cd5ff20f00d0f9bc8e57'
          'e083ae314eaa9355aa2d4aa75a7fc277'
-         '31ad6614435329ff23e44a8567cb1cea'
+         'b6b2fd9958366917e3b4014dde36354b'
          'fe24f5ea463013bb7f1c12d12dce41b2'
          '3fa8bd22d97248de529780f5797178af'
-         'c6fccc1410d6d9b742e77cf96727fdee'
-         '53334de4a374ba4be65e23138d447e9c'
+         '1a7381dd7780409c04351424a8711d29'
+         '8d0c0ebc805e4e52a3cb2c0dc64ea2de'
          'f867ae41a722630cc5567e2dcc51676d'
-         'b669f4156af8851f13fe671e804139c5'
+         'd87270bfe02ea30e2fde3fcae5daf18d'
          '0ffabb81dd8a5fe98bb8afe47d6541d3')
