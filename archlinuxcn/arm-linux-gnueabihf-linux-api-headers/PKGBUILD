@@ -7,37 +7,29 @@
 _target_arch=arm
 _target=${_target_arch}-linux-gnueabihf
 pkgname=${_target}-linux-api-headers
-pkgver=4.12.7
-_basever=${pkgver%.*}
+pkgver=5.1
 pkgrel=1
 pkgdesc="Kernel headers sanitized for use in userspace (${_target})"
 arch=(any)
 url='http://www.gnu.org/software/libc'
 license=(GPL2)
-source=(https://www.kernel.org/pub/linux/kernel/v4.x/linux-${_basever}.tar.xz
-        https://www.kernel.org/pub/linux/kernel/v4.x/patch-${pkgver}.xz)
-md5sums=('fc454157e2d024d401a60905d6481c6b'
-         '3ce799c369531ec13a202bc7da6eb847')
-
-prepare() {
-  cd linux-${_basever}
-  [[ $pkgver != $_basever ]] && patch -p1 -i "$srcdir/patch-$pkgver"
-}
+source=(https://www.kernel.org/pub/linux/kernel/v${pkgver:0:1}.x/linux-${pkgver}.tar.xz)
+md5sums=('15fbdff95ff98483069ac6e215b9f4f9')
 
 build() {
-  cd linux-${_basever}
+  cd linux-$pkgver
 
   make ARCH=$_target_arch mrproper
   make ARCH=$_target_arch headers_check
 }
 
 package() {
-  cd linux-${_basever}
+  cd linux-$pkgver
   make INSTALL_HDR_PATH="$pkgdir/usr/$_target" ARCH=$_target_arch headers_install
 
   # use headers from libdrm
   rm -rf "$pkgdir/usr/$_target/include/drm"
 
   # clean-up unnecessary files generated during install
-  find "${pkgdir}" \( -name .install -o -name ..install.cmd \) -delete
+  find ${pkgdir} \( -name .install -o -name ..install.cmd \) -delete
 }
