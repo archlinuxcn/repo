@@ -6,12 +6,12 @@
 _gemname=sprockets
 pkgname=ruby-$_gemname
 pkgver=3.7.2
-pkgrel=1
+pkgrel=2
 pkgdesc='Rack-based asset packaging system'
 arch=(any)
 url='http://getsprockets.org/'
 license=(MIT)
-depends=(ruby ruby-concurrent-ruby ruby-rack)
+depends=(ruby ruby-concurrent ruby-rack)
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
