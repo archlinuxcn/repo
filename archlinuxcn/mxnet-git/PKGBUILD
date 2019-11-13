@@ -2,7 +2,7 @@
 
 cudaarch=Common
 _pkgname=mxnet
-pkgname=('mxnet-cuda-git' 'mxnet-cuda-mkl-git')
+pkgname=('mxnet-git' 'mxnet-mkl-git' 'mxnet-cuda-git' 'mxnet-cuda-mkl-git')
 _pkgver=1.5.1
 pkgver=1.5.1.r10334.e3f5dade60
 pkgrel=1
@@ -32,6 +32,7 @@ makedepends=(
   'git'
   'gtk3'
   'nccl'
+  'opencv'
   'patchelf'
   'qt5-base'
 )
@@ -55,6 +56,8 @@ prepare() {
   sed -i 's/OPENMP_FOUND/OpenMP_FOUND/g' "${srcdir}/${_pkgname}/CMakeLists.txt"
   rm -rf "${srcdir}/${_pkgname}/build"
   mkdir "${srcdir}/${_pkgname}/build"
+  cp -r "${srcdir}/${_pkgname}" "${srcdir}/mxnet-git"
+  cp -r "${srcdir}/${_pkgname}" "${srcdir}/mxnet-mkl-git"
   cp -r "${srcdir}/${_pkgname}" "${srcdir}/mxnet-cuda-git"
   cp -r "${srcdir}/${_pkgname}" "${srcdir}/mxnet-cuda-mkl-git"
   # use gcc version compatible with CUDA
@@ -83,6 +86,34 @@ build() {
     -DUSE_OPENMP:BOOL=ON
     -DUSE_S3:BOOL=ON
 )
+
+  # building without CUDA and without MKL-DNN
+  cd "${srcdir}/mxnet-git/build"
+  cmake \
+    ${cmake_opts[@]} \
+    -DUSE_CUDA:BOOL=OFF \
+    -DUSE_CUDNN:BOOL=OFF \
+    -DUSE_MKLDNN:BOOL=OFF \
+    -DUSE_NCCL:BOOL=OFF \
+    -DUSE_OPENCV:BOOL=ON \
+    ..
+  make
+  cd ../python
+  python setup.py build --with-cython
+
+  # building without CUDA and with MKL-DNN
+  cd "${srcdir}/mxnet-mkl-git/build"
+  cmake \
+    ${cmake_opts[@]} \
+    -DUSE_CUDA:BOOL=OFF \
+    -DUSE_CUDNN:BOOL=OFF \
+    -DUSE_MKLDNN:BOOL=ON \
+    -DUSE_NCCL:BOOL=OFF \
+    -DUSE_OPENCV:BOOL=ON \
+    ..
+  make
+  cd ../python
+  python setup.py build --with-cython
 
   # building with CUDA and without MKL-DNN
   cd "${srcdir}/mxnet-cuda-git/build"
@@ -140,6 +171,19 @@ _package() {
   rm -rfv "${pkgdir}/usr/lib/cmake" "${pkgdir}/usr/share/doc"
   find "${pkgdir}/usr/include" -type f -name 'mkldnn*' -delete
   find "${pkgdir}" -type d -empty -delete
+}
+
+package_mxnet-git() {
+  depends+=(opencv)
+
+  _package
+}
+
+package_mxnet-mkl-git() {
+  pkgdesc="${pkgdesc} (with MKL-DNN)"
+  depends+=(opencv)
+
+  _package
 }
 
 package_mxnet-cuda-git() {
