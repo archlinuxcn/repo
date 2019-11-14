@@ -4,12 +4,12 @@
 # Contributor: Thomas Baechler <thomas@archlinux.org>
 
 pkgname=nvidia-lily
-pkgver=435.21
-pkgrel=3
+pkgver=440.31
+pkgrel=1
 pkgdesc="NVIDIA drivers for linux-lily"
 arch=('x86_64')
 url="https://www.nvidia.com/"
-depends=("linux-lily=4.19.67.arch1-1" "nvidia-utils=${pkgver}" 'libglvnd')
+depends=("linux-lily=4.19.84-1" "nvidia-utils=${pkgver}" 'libglvnd')
 makedepends=("nvidia-utils=${pkgver}" 'libglvnd' 'linux-lily' 'linux-lily-headers')
 license=('custom')
 options=('!strip')
