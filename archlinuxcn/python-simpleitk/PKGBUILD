@@ -1,7 +1,7 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
 _name=SimpleITK
-_py=cp37
+_py=cp38
 pkgname=python-simpleitk
 pkgver=1.2.4
 pkgrel=1
@@ -12,11 +12,11 @@ license=('Apache')
 depends=('python')
 makedepends=('python-pip')
 options=('!strip')
-source=("https://files.pythonhosted.org/packages/${_py}/${_name::1}/${_name}/${_name/-/_}-${pkgver}-${_py}-${_py}m-manylinux1_x86_64.whl")
-sha512sums=('825108879d9863d3a523854359f9ba514b01920ebefaee9d82d969c9d109494dbe3d1ab089e1e7293997177e2e16e42bf5fd0b55f60fe57f1fe3c79f0e5d4dc0')
+source=("https://files.pythonhosted.org/packages/${_py}/${_name::1}/${_name}/${_name/-/_}-${pkgver}-${_py}-${_py}-manylinux1_x86_64.whl")
+sha512sums=('680f5cb4b62185476d7a49aae4e449c8d815c400c5054b7a4069c1cc73a29c0a8dfca2c3b27077baf74d8c65723a97c3f0d5a943a16e526a66e56cde725d2f59')
 
 package() {
 	PIP_CONFIG_FILE=/dev/null pip install --isolated --root="${pkgdir}" --ignore-installed --no-deps *.whl
-	python -O -m compileall "${pkgdir}/usr/lib/python3.7/site-packages/SimpleITK"
+	python -O -m compileall "${pkgdir}/usr/lib/python3.8/site-packages/SimpleITK"
 }
 
