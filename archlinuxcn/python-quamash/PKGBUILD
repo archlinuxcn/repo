@@ -2,7 +2,7 @@
 pkgname=python-quamash
 _pkgname=Quamash
 pkgver=0.6.1
-pkgrel=6
+pkgrel=7
 pkgdesc="Implementation of the asyncio (PEP 3156) event-loop with Qt"
 arch=('any')
 url="https://github.com/harvimt/quamash"
