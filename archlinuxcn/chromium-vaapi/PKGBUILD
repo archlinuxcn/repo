@@ -11,7 +11,7 @@
 
 pkgname=chromium-vaapi
 pkgver=78.0.3904.97
-pkgrel=1
+pkgrel=2
 _launcher_ver=6
 pkgdesc="Chromium with VA-API support to enable hardware acceleration"
 arch=('x86_64')
@@ -37,6 +37,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         add-missing-include-for-unique_ptr.patch
         dns_util-make-DohUpgradeEntry-non-const.patch
         fix-shutdown-crash-in-ProfileManager.patch
+        icu65.patch
         chromium-system-icu.patch
         chromium-system-zlib.patch
         fix-spammy-unique-font-matching-log.patch
@@ -49,6 +50,7 @@ sha256sums=('d1f49ab9f4f973536166f587114553c21a29977bdc350dd407a89d34e22a9d07'
             '49052e8aa630c4aa57bf46823edc32b7b309493275163c3bb3f9fd390c73356e'
             '69694ab12a5ced389916c0c5e8c7bdc191544f576b134ddfb2fe9d4ed9ec4494'
             '4f81612c28957987f7344d8ce2b95a4a63136a8319c9751819436b11c62df057'
+            '1de9bdbfed482295dda45c7d4e323cee55a34e42f66b892da1c1a778682b7a41'
             'e73cc2ee8d3ea35aab18c478d76fdfc68ca4463e1e10306fa1e738c03b3f26b5'
             'eb67eda4945a89c3b90473fa8dc20637511ca4dcb58879a8ed6bf403700ca9c8'
             '6fbffe59b886195b92c9a55137cef83021c16593f49714acb20023633e3ebb19'
@@ -114,6 +116,9 @@ prepare() {
 
   # https://crbug.com/1005244
   patch -Np1 -i ../fix-shutdown-crash-in-ProfileManager.patch
+
+  # https://crbug.com/1014272
+  patch -Np1 -i ../icu65.patch
 
   # Fixes from Gentoo
   patch -Np1 -i ../chromium-system-icu.patch
