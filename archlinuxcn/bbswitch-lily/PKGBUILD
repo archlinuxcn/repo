@@ -12,14 +12,12 @@ url="http://github.com/Bumblebee-Project/bbswitch"
 license=('GPL')
 depends=("linux-lily=4.19.67.arch1-1")
 makedepends=('linux-lily-headers')
-_extramodules=extramodules-lily
 source=("bbswitch-${pkgver}.tar.gz::https://github.com/Bumblebee-Project/bbswitch/archive/v${pkgver}.tar.gz")
 md5sums=('5b116b31ace3604ddf9d1fc1f4bc5807')
 
 build() {
   cd bbswitch-${pkgver}
-  _kernver="$(cat /usr/lib/modules/${_extramodules}/version)"
-  make KDIR=/lib/modules/${_kernver}/build
+  make KDIR=/usr/src/linux-lily
 }
 
 package() {
@@ -27,7 +25,8 @@ package() {
   conflicts=('bbswitch-dkms')
 
   cd bbswitch-${pkgver}
-  install -Dt "${pkgdir}/usr/lib/modules/${_extramodules}" -m644 *.ko
+  _extradir="/usr/lib/modules/$(</usr/src/linux-lily/version)/extramodules"
+  install -Dt "${pkgdir}${_extradir}" -m644 *.ko
   find "${pkgdir}" -name '*.ko' -exec xz {} +
 }
 
