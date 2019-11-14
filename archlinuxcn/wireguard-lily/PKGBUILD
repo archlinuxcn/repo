@@ -13,21 +13,21 @@ makedepends=('linux-lily-headers' "wireguard-dkms>=$pkgver")
 conflicts=('wireguard-dkms')
 provides=('WIREGUARD-MODULE')
 
-_extramodules='extramodules-lily'
+build() {
+    _kernver=$(</usr/src/linux-lily/version)
+
+    dkms build --dkmstree "$srcdir" -m wireguard/$pkgver -k $_kernver
+}
 
 package() {
-  _kernver="$(cat /usr/lib/modules/$_extramodules/version)"
 
-  cd "/var/lib/dkms/wireguard/${pkgver}/$_kernver/$CARCH/module"
-  install -Dt "$pkgdir/usr/lib/modules/$_extramodules" -m0644 *
+  _kernver="$(</usr/src/linux-lily/version)"
+
+  install -Dt "$pkgdir/usr/lib/modules/$_kernver/extramodules" -m0644 \
+    wireguard/${pkgver}/$_kernver/$CARCH/module/*
 
   # compress each module individually
   find "$pkgdir" -name '*.ko' -exec xz -T1 {} +
 }
 
 # vim:set sw=2 et:
-
-
-
-
-
