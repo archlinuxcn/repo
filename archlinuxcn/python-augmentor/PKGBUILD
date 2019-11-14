@@ -3,7 +3,7 @@
 _pkgname=Augmentor
 pkgname=python-augmentor
 pkgver=0.2.6
-pkgrel=1
+pkgrel=2
 pkgdesc='Image augmentation library in Python for machine learning'
 arch=(any)
 url=https://github.com/mdbloice/Augmentor
