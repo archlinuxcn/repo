@@ -2,7 +2,7 @@
 
 pkgname=python-torchfile
 pkgver=0.1.0
-pkgrel=2
+pkgrel=3
 pkgdesc='Deserialize torch-serialized objects from Python'
 arch=(any)
 url=https://github.com/bshillingford/python-torchfile
