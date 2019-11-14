@@ -18,7 +18,7 @@ _gitroot=archrepo2
 
 pkgver() {
   cd "$srcdir/$_gitroot"
-  git describe | sed -E 's/([^-]*-g)/r\1/;s/-/./g'
+  git describe | sed -E 's/([^-]*-g)/r\1/;s/-/./g;s/v//'
 }
 
 build() {
