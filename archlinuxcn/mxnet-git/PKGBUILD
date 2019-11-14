@@ -169,8 +169,8 @@ package_mxnet-git() {
   install -Dm644 "${srcdir}/${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 
   rm -rfv "${pkgdir}/usr/mxnet"
-  ln -sf '/usr/lib/libmxnet.so' "${pkgdir}/usr/lib/python3.7/site-packages/mxnet/libmxnet.so"
-  ln -s "/usr/include" "${pkgdir}/usr/lib/python3.7/site-packages/mxnet/include"
+  ln -sf '/usr/lib/libmxnet.so' "${pkgdir}/usr/lib/python3.8/site-packages/mxnet/libmxnet.so"
+  ln -s "/usr/include" "${pkgdir}/usr/lib/python3.8/site-packages/mxnet/include"
   install -d "${pkgdir}/usr/lib/mxnet/mkldnn"
   find "${pkgdir}/usr/lib" -name 'libmkldnn*' -exec mv {} "${pkgdir}/usr/lib/mxnet/mkldnn" \;
   # patch rpath
@@ -201,8 +201,8 @@ package_mxnet-mkl-git() {
   install -Dm644 "${srcdir}/${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 
   rm -rfv "${pkgdir}/usr/mxnet"
-  ln -sf '/usr/lib/libmxnet.so' "${pkgdir}/usr/lib/python3.7/site-packages/mxnet/libmxnet.so"
-  ln -s "/usr/include" "${pkgdir}/usr/lib/python3.7/site-packages/mxnet/include"
+  ln -sf '/usr/lib/libmxnet.so' "${pkgdir}/usr/lib/python3.8/site-packages/mxnet/libmxnet.so"
+  ln -s "/usr/include" "${pkgdir}/usr/lib/python3.8/site-packages/mxnet/include"
   install -d "${pkgdir}/usr/lib/mxnet/mkldnn"
   find "${pkgdir}/usr/lib" -name 'libmkldnn*' -exec mv {} "${pkgdir}/usr/lib/mxnet/mkldnn" \;
   # patch rpath
@@ -233,8 +233,8 @@ package_mxnet-cuda-git() {
   install -Dm644 "${srcdir}/${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 
   rm -rfv "${pkgdir}/usr/mxnet"
-  ln -sf '/usr/lib/libmxnet.so' "${pkgdir}/usr/lib/python3.7/site-packages/mxnet/libmxnet.so"
-  ln -s "/usr/include" "${pkgdir}/usr/lib/python3.7/site-packages/mxnet/include"
+  ln -sf '/usr/lib/libmxnet.so' "${pkgdir}/usr/lib/python3.8/site-packages/mxnet/libmxnet.so"
+  ln -s "/usr/include" "${pkgdir}/usr/lib/python3.8/site-packages/mxnet/include"
   install -d "${pkgdir}/usr/lib/mxnet/mkldnn"
   find "${pkgdir}/usr/lib" -name 'libmkldnn*' -exec mv {} "${pkgdir}/usr/lib/mxnet/mkldnn" \;
   # patch rpath
@@ -265,8 +265,8 @@ package_mxnet-cuda-mkl-git() {
   install -Dm644 "${srcdir}/${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 
   rm -rfv "${pkgdir}/usr/mxnet"
-  ln -sf '/usr/lib/libmxnet.so' "${pkgdir}/usr/lib/python3.7/site-packages/mxnet/libmxnet.so"
-  ln -s "/usr/include" "${pkgdir}/usr/lib/python3.7/site-packages/mxnet/include"
+  ln -sf '/usr/lib/libmxnet.so' "${pkgdir}/usr/lib/python3.8/site-packages/mxnet/libmxnet.so"
+  ln -s "/usr/include" "${pkgdir}/usr/lib/python3.8/site-packages/mxnet/include"
   install -d "${pkgdir}/usr/lib/mxnet/mkldnn"
   find "${pkgdir}/usr/lib" -name 'libmkldnn*' -exec mv {} "${pkgdir}/usr/lib/mxnet/mkldnn" \;
   # patch rpath
