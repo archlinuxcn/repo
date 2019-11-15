@@ -5,8 +5,8 @@ pkgname=('python-openslide' 'python2-openslide')
 pkgver=1.1.1
 pkgrel=2
 pkgdesc="A simple interface to read whole-slide images in Python"
-arch=('any')
-url="http://openslide.org"
+arch=('x86_64')
+url="https://openslide.org"
 license=('LGPL')
 makedepends=('python-setuptools'
              'python2-setuptools')

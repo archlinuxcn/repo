@@ -5,14 +5,13 @@
 
 pkgname=sysdig-lily
 pkgver=0.26.4
-pkgrel=3
+pkgrel=5
 pkgdesc="Open source system-level exploration and troubleshooting tool"
 arch=('x86_64')
 url="https://www.sysdig.com/"
 license=('GPL2' 'Apache' 'MIT')
-depends=('jsoncpp' 'luajit' 'curl' 'jq' 'libb64' 'intel-tbb' 'grpc' 'c-ares' "linux-lily=4.19.67.arch1-1")
+depends=('jsoncpp' 'luajit' 'curl' 'jq' 'libb64' 'intel-tbb' 'grpc' 'c-ares' "linux-lily=4.19.84-1")
 makedepends=('cmake' 'pandoc' 'linux-lily-headers' 'llvm' 'clang')
-_extramodules=extramodules-lily
 source=("https://github.com/draios/sysdig/archive/$pkgver/sysdig-$pkgver.tar.gz"
         "bashcomp-location.patch"
         "glibc.patch")
@@ -33,8 +32,7 @@ build() {
   rm -rf build
   mkdir build
   cd build
-  _kernver="$(cat /usr/lib/modules/${_extramodules}/version)"
-  export KERNELDIR=/lib/modules/${_kernver}/build
+  export KERNELDIR=/usr/src/linux-lily
   cmake .. \
         -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON \
         -DCMAKE_EXE_LINKER_FLAGS="-ltbb -lcurl" \
@@ -62,7 +60,8 @@ package() {
   cd build
   make install DESTDIR="$pkgdir"
 
-  install -Dt "${pkgdir}/usr/lib/modules/${_extramodules}" -m644 driver/src/*.ko
+  _extradir="/usr/lib/modules/$(</usr/src/linux-lily/version)/extramodules"
+  install -Dt "${pkgdir}${_extradir}" -m644 driver/src/*.ko
   find "${pkgdir}" -name '*.ko' -exec xz {} +
 
   rm -r "$pkgdir"/usr/share/zsh/vendor-completions/

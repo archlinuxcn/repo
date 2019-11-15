@@ -27,8 +27,8 @@ package() {
   cd "${_pkgname}-${pkgver}"
   python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
   # install missing json files
-  find "${srcdir}/${_pkgname}-${pkgver}/gluoncv/model_zoo/pruned_resnet" -type f -name "*.json" -exec install -Dm644 {} -t "${pkgdir}/usr/lib/python3.7/site-packages/gluoncv/model_zoo/pruned_resnet" \;
-  find "${srcdir}/${_pkgname}-${pkgver}/gluoncv/model_zoo/quantized" -type f -name "*.json" -exec install -Dm644 {} "${pkgdir}/usr/lib/python3.7/site-packages/gluoncv/model_zoo/quantized" \;
+  find "${srcdir}/${_pkgname}-${pkgver}/gluoncv/model_zoo/pruned_resnet" -type f -name "*.json" -exec install -Dm644 {} -t "${pkgdir}/usr/lib/python3.8/site-packages/gluoncv/model_zoo/pruned_resnet" \;
+  find "${srcdir}/${_pkgname}-${pkgver}/gluoncv/model_zoo/quantized" -type f -name "*.json" -exec install -Dm644 {} "${pkgdir}/usr/lib/python3.8/site-packages/gluoncv/model_zoo/quantized" \;
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:

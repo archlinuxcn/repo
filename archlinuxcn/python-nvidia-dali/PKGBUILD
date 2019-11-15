@@ -3,7 +3,7 @@
 pkgname=python-nvidia-dali
 _pkgname=dali
 pkgver=0.15.0
-pkgrel=3
+pkgrel=4
 pkgdesc='A library containing both highly optimized building blocks and an execution engine for data pre-processing in deep learning applications'
 arch=('x86_64')
 url='https://github.com/NVIDIA/DALI'
@@ -61,7 +61,7 @@ package() {
   cd 'dali/python'
   python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
   # create softlink for libdali.so
-  ln -s '/usr/lib/python3.7/site-packages/nvidia/dali/libdali.so' "${pkgdir}/usr/lib/libdali.so"
+  ln -s '/usr/lib/python3.8/site-packages/nvidia/dali/libdali.so' "${pkgdir}/usr/lib/libdali.so"
 }
 # vim:set ts=2 sw=2 et:
 

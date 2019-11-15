@@ -7,7 +7,7 @@ pkgdesc="Pythonic bindings for FFmpeg's libraries"
 url='https://github.com/mikeboers/PyAV'
 
 pkgver=6.2.0
-pkgrel=2
+pkgrel=3
 
 arch=("x86_64")
 license=("BSD")
@@ -35,7 +35,7 @@ build() {
 
 check() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
-  PYTHONPATH="${PWD}/build/lib.linux-${CARCH}-3.7" python setup.py test
+  PYTHONPATH="${PWD}/build/lib.linux-${CARCH}-3.8" python setup.py test
 }
 
 package() {

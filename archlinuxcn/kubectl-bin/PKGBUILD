@@ -4,7 +4,7 @@
 
 pkgname=kubectl-bin
 pkgdesc="Kubernetes.io client binary"
-pkgver=1.16.2
+pkgver=1.16.3
 pkgrel=1
 arch=('i686' 'x86_64' 'aarch64')
 url="http://kubernetes.io"
@@ -15,9 +15,9 @@ _kubectl_file=kubectl-$pkgver
 source_i686=($_kubectl_file::https://storage.googleapis.com/kubernetes-release/release/v$pkgver/bin/linux/386/kubectl)
 source_x86_64=($_kubectl_file::https://storage.googleapis.com/kubernetes-release/release/v$pkgver/bin/linux/amd64/kubectl)
 source_aarch64=($_kubectl_file::https://storage.googleapis.com/kubernetes-release/release/v$pkgver/bin/linux/arm64/kubectl)
-sha256sums_i686=('0d90b908c2f4a744f2677a3d9a9ff217c14df94510c38a2e63b730da9ffcb60e')
-sha256sums_x86_64=('3ff48e12f9c768ad548e4221d805281ea28dfcda5c18b3cd1797fe37aee3012e')
-sha256sums_aarch64=('d44669ee4d137ccb3375293eedb3b585ac36d69d3e875cd3d8158292454bfac1')
+sha256sums_i686=('64aaeb8c49bb544a7297ed3221015c62c3b43a6089b901d51b4a070517bb2723')
+sha256sums_x86_64=('cded1b46405741575f31024b757fd967645e815bb0ab1c5f5fcd029f25cc0f2d')
+sha256sums_aarch64=('ba7e98f837ba892eced9cae962c3648fe507c7fb4e9d7b1b969da8326bbc5dd9')
 
 package() {
   install -Dm 755 "$srcdir/$_kubectl_file" "$pkgdir/usr/bin/kubectl"

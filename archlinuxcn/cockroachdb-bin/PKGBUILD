@@ -4,8 +4,8 @@
 pkgname=cockroachdb-bin
 conflicts=('cockroachdb')
 provides=('cockroachdb')
-pkgver=19.1.5
-pkgrel=1
+pkgver=19.2.0
+pkgrel=2
 pkgdesc="An open source, survivable, strongly consistent, scale-out SQL database"
 arch=('x86_64')
 url="https://www.cockroachlabs.com/"
@@ -24,8 +24,8 @@ source=("https://binaries.cockroachdb.com/cockroach-v${pkgver}.linux-amd64.tgz"
         cockroach.default
         cockroach.sysusers
         cockroach.tmpfiles)
-sha256sums=('20f5ed70849d42f3d575fe8580205b3133f903c5059df9aa26e5a7c09e7c324f'
-            '68040689c4342e0018adec3eb0fb1f2ae68aaeef918e7b4493518523381b7129'
+sha256sums=('f775545229b3f967cf8c07d5c3e86f039f7647eb96f7d09766179e4202744971'
+            '8a2fba9d26592ff3538f44c96d1b894ef44649058b4d04f3fda49518a9c4ae11'
             'b3ef077aa9a0d4b697722de993fa83959f10910ae600de90bcdcdd49fafce371'
             '2d36597f7117c38b006835ae7f537487207d8ec407aa9d9980794b2030cbc067'
             'af1c246b8eb8b2d2ee3f1471247569d7f35cefff40e9b967d563622bb04c1e69'
@@ -33,10 +33,10 @@ sha256sums=('20f5ed70849d42f3d575fe8580205b3133f903c5059df9aa26e5a7c09e7c324f'
             'b568f1f37a5a1d37a3e981e7c8b7fc4856ca33b2ca0a45bc8e847aaaf7afe485'
             '2cd6aceddb7240c6ef395f7d92e26de4da63f7700504f6ce47e2aab4e39a4122'
             'b34067e89373e1a47367b454862f43061ad1680542b39b6d95ed29c354473e15'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP')
+            '6c336d30983d6295995823a134e3cc85a06ef9418339b53cf6f375df816bea51'
+            '55f380f5cb201c6afeafbf1a6fb5a6400dbffa0edc134d30960d1d04e3d19ef2'
+            '8be2f52529135d8d173bba130e000a187bbadc869ac2c603a4714af435840821'
+            'c74cf876197312b91970bdd7832081750d2ab4d47e553bb46f38d57cba52641e')
 
 build() {
     # generate shell completion

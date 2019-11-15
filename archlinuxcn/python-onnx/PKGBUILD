@@ -46,7 +46,7 @@ build() {
 
 check() {
   cd "${srcdir}/${pkgname}"
-  PYTHONPATH=$(pwd)/build/lib.linux-$CARCH-3.7 pytest -v
+  PYTHONPATH=$(pwd)/build/lib.linux-${CARCH}-3.8 pytest -v
 }
 
 package() {

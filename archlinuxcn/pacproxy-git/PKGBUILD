@@ -1,0 +1,38 @@
+# Maintainer: Ben Yip <yebenmy@protonmail.com>
+_author=williambailey
+pkgname=pacproxy-git
+_pkgname=pacproxy
+pkgver=v2.0.0.r1.9bee3f4
+pkgrel=1
+pkgdesc="A no-frills local HTTP proxy server powered by a proxy auto-config (PAC) file"
+url=https://github.com/williambailey/pacproxy
+arch=('x86_64')
+license=('Apache')
+makedepends=('go')
+conflicts=('pacproxy')
+provides=('pacproxy')
+depends=('glibc')
+source=('git://github.com/williambailey/pacproxy.git#branch=master')
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "$srcdir/$_pkgname"
+  git describe --tags --long | sed 's/\([^-]*-\)g/r\1/;s/-/./g'
+}
+
+prepare() {
+  cd "$srcdir"
+  mkdir -p gopath/src/github.com/${_author}
+  ln -rTsf $_pkgname gopath/src/github.com/${_author}/$_pkgname
+}
+
+build() {
+  export GOPATH="$srcdir"/gopath
+  cd $srcdir/gopath/src/github.com/${_author}/$_pkgname
+  go build -o $_pkgname
+}
+
+package() {
+  cd "$srcdir/$_pkgname"
+  install -D $_pkgname "$pkgdir/usr/bin/pacproxy"
+}

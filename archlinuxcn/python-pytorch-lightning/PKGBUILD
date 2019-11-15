@@ -4,7 +4,7 @@ pkgname=python-pytorch-lightning
 _name=${pkgname#python-}
 _pkgname=pytorch-lightning
 pkgver=0.5.3.2
-pkgrel=1
+pkgrel=2
 pkgdesc="Rapid research framework for PyTorch. The researcher's version of Keras"
 arch=('any')
 url='https://github.com/williamFalcon/pytorch-lightning'
@@ -34,7 +34,5 @@ package() {
   cd "${_pkgname}-${pkgver}"
   python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
-# remove conflict tests folder
-  rm -rfv "${pkgdir}/usr/lib/python3.7/site-packages/tests"
 }
 # vim:set ts=2 sw=2 et:

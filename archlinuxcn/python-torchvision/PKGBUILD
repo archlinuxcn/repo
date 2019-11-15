@@ -7,7 +7,7 @@
 pkgname=python-torchvision
 _pkgname=vision
 pkgver=0.4.2
-pkgrel=3
+pkgrel=4
 pkgdesc='Datasets, transforms, and models specific to computer vision'
 arch=('x86_64')
 url='https://github.com/pytorch/vision'
@@ -46,7 +46,7 @@ build() {
 
 check() {
   cd "${_pkgname}-${pkgver}"
-  PYTHONPATH="${PWD}/build/lib.linux-${CARCH}-3.7" pytest -v
+  PYTHONPATH="${PWD}/build/lib.linux-${CARCH}-3.8" pytest -v
 }
 
 package() {
