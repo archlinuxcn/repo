@@ -78,9 +78,8 @@ package() {
 
   # fix python binding installation
   install -d "${pkgdir}/usr/lib/python3.8/site-packages"
-  mv "${pkgdir}/usr/lib/_gdcmswig.so" "${pkgdir}/usr/lib/python3.8/site-packages"
-  mv "${pkgdir}/usr/lib/gdcmswig.py" "${pkgdir}/usr/lib/python3.8/site-packages"
-  mv "${pkgdir}/usr/lib/gdcm.py" "${pkgdir}/usr/lib/python3.8/site-packages"
+  mv -v "${pkgdir}/usr/lib/_gdcmswig.so" "${pkgdir}/usr/lib/python3.8/site-packages"
+  find "${pkgdir}/usr/lib" -type f -name 'py$' -exec mv -v {} "${pkgdir}/usr/lib/python3.8/site-packages" \;
 }
 # vim:set ts=2 sw=2 et:
 
