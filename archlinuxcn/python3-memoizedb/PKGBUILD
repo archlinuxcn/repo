@@ -1,7 +1,7 @@
 #Maintainer: Xyne <ac xunilhcra enyx, backwards>
 pkgname=python3-memoizedb
 pkgver=2017.3.30
-pkgrel=3
+pkgrel=4
 pkgdesc='Generic data retrieval memoizer that uses an sqlite database to cache data.'
 arch=(any)
 license=(GPL)
