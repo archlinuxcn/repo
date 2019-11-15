@@ -4,7 +4,7 @@
 pkgbase=mxnet
 pkgname=('mxnet' 'mxnet-mkl' 'mxnet-cuda' 'mxnet-cuda-mkl')
 pkgver=1.5.1
-pkgrel=6
+pkgrel=7
 epoch=1
 pkgdesc="A flexible and efficient library for deep learning"
 arch=('x86_64')
@@ -145,11 +145,11 @@ check() {
     # increase timeout
     ctest --verbose --timeout 3000
     # create soft line for libmxnet.so
-    ln -sf "${srcdir}/${i}/build/libmxnet.so" "${srcdir}/${i}/python/build/lib.linux-${CARCH}-3.7/mxnet/libmxnet.so"
+    ln -sf "${srcdir}/${i}/build/libmxnet.so" "${srcdir}/${i}/python/build/lib.linux-${CARCH}-3.8/mxnet/libmxnet.so"
     cd "${srcdir}/${i}"
-    PYTHONPATH="${srcdir}/${i}/python/build/lib.linux-${CARCH}-3.7" nosetests -v tests/python/common
-    PYTHONPATH="${srcdir}/${i}/python/build/lib.linux-${CARCH}-3.7" nosetests -v tests/python/unittest
-    PYTHONPATH="${srcdir}/${i}/python/build/lib.linux-${CARCH}-3.7" nosetests -v tests/python/train
+    PYTHONPATH="${srcdir}/${i}/python/build/lib.linux-${CARCH}-3.8" nosetests -v tests/python/common
+    PYTHONPATH="${srcdir}/${i}/python/build/lib.linux-${CARCH}-3.8" nosetests -v tests/python/unittest
+    PYTHONPATH="${srcdir}/${i}/python/build/lib.linux-${CARCH}-3.8" nosetests -v tests/python/train
   done
 }
 
@@ -165,8 +165,8 @@ _package() {
   python setup.py install --root="${pkgdir}" --optimize=1 --with-cython --skip-build
   install -Dm644 "${srcdir}/${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
   rm -rfv "${pkgdir}/usr/mxnet"
-  ln -sf '/usr/lib/libmxnet.so' "${pkgdir}/usr/lib/python3.7/site-packages/mxnet/libmxnet.so"
-  ln -s "/usr/include" "${pkgdir}/usr/lib/python3.7/site-packages/mxnet/include"
+  ln -sf '/usr/lib/libmxnet.so' "${pkgdir}/usr/lib/python3.8/site-packages/mxnet/libmxnet.so"
+  ln -s "/usr/include" "${pkgdir}/usr/lib/python3.8/site-packages/mxnet/include"
   # install missing lib files from mklml
   # currently mkldnn needs mklml libs
   # install them to /usr/lib/mxnet/mkldnn to avoid conficts with mkl & mkldnn
