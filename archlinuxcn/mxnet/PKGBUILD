@@ -1,6 +1,7 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 # Contributor: Jingbei Li <i@jingbei.li>
 
+cudaarch=Common
 pkgbase=mxnet
 pkgname=('mxnet' 'mxnet-mkl' 'mxnet-cuda' 'mxnet-cuda-mkl')
 pkgver=1.5.1
@@ -18,7 +19,6 @@ depends=(
   'intel-tbb'
   'lapack'
   'openblas'
-#  'opencv'
   'protobuf'
   'python-graphviz'
   'python-numpy'
@@ -33,15 +33,11 @@ makedepends=(
   'git'
   'gtk3'
   'nccl'
+  'opencv'
   'patchelf'
+  'qt5-base'
 )
-checkdepends=(
-  'ipython'
-  'python-mock'
-  'python-nose'
-  'python-nose-timer'
-  'python-scipy'
-)
+
 source=("${pkgbase}::git+https://github.com/apache/incubator-mxnet.git#tag=${pkgver}")
 sha512sums=('SKIP')
 
@@ -58,31 +54,32 @@ prepare() {
   cp -r "${pkgbase}" "${pkgbase}-mkl"
   cp -r "${pkgbase}" "${pkgbase}-cuda"
   cp -r "${pkgbase}" "${pkgbase}-cuda-mkl"
-
-  # use gcc version compatible with CUDA
-  export CC=/opt/cuda/bin/gcc
-  export CXX=/opt/cuda/bin/g++
 }
 
 build() {
   cmake_opts=(
-    -DBUILD_CPP_EXAMPLES:BOOL=ON
-    -DBUILD_TESTING:BOOL=ON
+    -DBUILD_CPP_EXAMPLES:BOOL=OFF
+    -DBUILD_TESTING:BOOL=OFF
     -DCMAKE_BUILD_TYPE:String=Release
     -DCMAKE_EXE_LINKER_FLAGS="$(pkg-config --libs cblas)"
     -DCMAKE_INSTALL_LIBDIR:PATH=lib
     -DCMAKE_INSTALL_PREFIX:PATH=/usr
     -DCMAKE_SHARED_LINKER_FLAGS="$(pkg-config --libs cblas)"
     -DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON
+    -DINSTALL_DOCUMENTATION:BOOL=OFF
     -DUSE_BLAS=open
     -DUSE_CPP_PACKAGE:BOOL=ON
     -DUSE_DIST_KVSTORE:BOOL=ON
     -DUSE_GPERFTOOLS:BOOL=OFF
     -DUSE_JEMALLOC:BOOL=OFF
     -DUSE_LAPACK:BOOL=ON
-    -DUSE_OPENCV:BOOL=OFF
+    -DUSE_MKL_IF_AVAILABLE:BOOL=OFF
+    -DUSE_OPENMP:BOOL=ON
     -DUSE_S3:BOOL=ON
 )
+
+  export CC=gcc
+  export CXX=g++
 
   # building without CUDA and without MKL-DNN
   cd "${srcdir}/${pkgbase}/build"
@@ -92,6 +89,7 @@ build() {
     -DUSE_CUDNN:BOOL=OFF \
     -DUSE_MKLDNN:BOOL=OFF \
     -DUSE_NCCL:BOOL=OFF \
+    -DUSE_OPENCV:BOOL=ON \
     ..
   make
   cd ../python
@@ -105,19 +103,25 @@ build() {
     -DUSE_CUDNN:BOOL=OFF \
     -DUSE_MKLDNN:BOOL=ON \
     -DUSE_NCCL:BOOL=OFF \
+    -DUSE_OPENCV:BOOL=ON \
     ..
   make
   cd ../python
   python setup.py build --with-cython
 
+  export CC=/opt/cuda/bin/gcc
+  export CXX=/opt/cuda/bin/g++
+
   # building with CUDA and without MKL-DNN
   cd "${srcdir}/${pkgbase}-cuda/build"
   cmake \
     ${cmake_opts[@]} \
+    -DCUDA_ARCH_LIST=${cudaarch} \
     -DUSE_CUDA:BOOL=ON \
     -DUSE_CUDNN:BOOL=ON \
     -DUSE_MKLDNN:BOOL=OFF \
     -DUSE_NCCL:BOOL=ON \
+    -DUSE_OPENCV:BOOL=OFF \
     ..
   make
   cd ../python
@@ -127,33 +131,23 @@ build() {
   cd "${srcdir}/${pkgbase}-cuda-mkl/build"
   cmake \
     ${cmake_opts[@]} \
+    -DCUDA_ARCH_LIST=${cudaarch} \
     -DUSE_CUDA:BOOL=ON \
     -DUSE_CUDNN:BOOL=ON \
     -DUSE_MKLDNN:BOOL=ON \
     -DUSE_NCCL:BOOL=ON \
+    -DUSE_OPENCV:BOOL=OFF \
     ..
   make
   cd ../python
   python setup.py build --with-cython
 }
 
-check() {
-  # check will fail without a GPU, skip check for mxnet-cuda and mxnet-mkl-cuda
-  #for i in mxnet mxnet-mkl mxnet-cuda mxnet-cuda-mkl; do
-  for i in mxnet mxnet-mkl; do
-    cd "${srcdir}/${i}/build"
-    # increase timeout
-    ctest --verbose --timeout 3000
-    # create soft line for libmxnet.so
-    ln -sf "${srcdir}/${i}/build/libmxnet.so" "${srcdir}/${i}/python/build/lib.linux-${CARCH}-3.8/mxnet/libmxnet.so"
-    cd "${srcdir}/${i}"
-    PYTHONPATH="${srcdir}/${i}/python/build/lib.linux-${CARCH}-3.8" nosetests -v tests/python/common
-    PYTHONPATH="${srcdir}/${i}/python/build/lib.linux-${CARCH}-3.8" nosetests -v tests/python/unittest
-    PYTHONPATH="${srcdir}/${i}/python/build/lib.linux-${CARCH}-3.8" nosetests -v tests/python/train
-  done
-}
+package_mxnet() {
+  depends+=(opencv)
 
-_package() {
+  export CC=gcc
+  export CXX=g++
   cd "${srcdir}/${pkgname}/build"
   # install mxnet core component
   make DESTDIR="${pkgdir}" install
@@ -181,8 +175,39 @@ _package() {
   find "${pkgdir}/usr/include" -type f -name 'mkldnn*' -delete
 }
 
-package_mxnet() {
-  _package
+package_mxnet-mkl() {
+  pkgdesc="${pkgdesc} (with MKL-DNN)"
+  depends+=(opencv)
+  conflicts=(mxnet)
+  provides=(mxnet)
+
+  export CC=gcc
+  export CXX=g++
+  cd "${srcdir}/${pkgname}/build"
+  # install mxnet core component
+  make DESTDIR="${pkgdir}" install
+  if [ -f "${srcdir}/${pkgname}/build/im2rec" ]; then
+    install -Dm755 "${srcdir}/${pkgname}/build/im2rec" "${pkgdir}/usr/bin/im2rec"
+  fi
+  # install python binding
+  cd "${srcdir}/${pkgname}/python"
+  python setup.py install --root="${pkgdir}" --optimize=1 --with-cython --skip-build
+  install -Dm644 "${srcdir}/${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  rm -rfv "${pkgdir}/usr/mxnet"
+  ln -sf '/usr/lib/libmxnet.so' "${pkgdir}/usr/lib/python3.7/site-packages/mxnet/libmxnet.so"
+  ln -s "/usr/include" "${pkgdir}/usr/lib/python3.7/site-packages/mxnet/include"
+  # install missing lib files from mklml
+  # currently mkldnn needs mklml libs
+  # install them to /usr/lib/mxnet/mkldnn to avoid conficts with mkl & mkldnn
+  if [ -d "${srcdir}/${pkgname}/build/mklml" ]; then
+    find "${srcdir}/${pkgname}/build/mklml" -name '*.so' -exec install -Dm755 {} -t "${pkgdir}/usr/lib/mxnet/mkldnn" \;
+  fi
+  find "${pkgdir}/usr/lib" -name 'libmkldnn*' -exec mv {} "${pkgdir}/usr/lib/mxnet/mkldnn" \;
+  # patch rpath
+  find "${pkgdir}" -type f -perm 755 -exec patchelf --set-rpath '/usr/lib/mxnet/mkldnn' {} \;
+  # remove unwantted files
+  rm -rfv "${pkgdir}/usr/lib/cmake" "${pkgdir}/usr/share/doc"
+  find "${pkgdir}/usr/include" -type f -name 'mkldnn*' -delete
 }
 
 package_mxnet-cuda() {
@@ -190,23 +215,69 @@ package_mxnet-cuda() {
   depends+=(cuda cudnn nccl)
   conflicts=(mxnet)
   provides=(mxnet)
-  _package
-}
 
-package_mxnet-mkl() {
-  pkgdesc="${pkgdesc} (with MKL-DNN)"
-  depends+=(lapacke)
-  conflicts=(mxnet)
-  provides=(mxnet)
-  _package
+  export CC=/opt/cuda/bin/gcc
+  export CXX=/opt/cuda/bin/g++
+  cd "${srcdir}/${pkgname}/build"
+  # install mxnet core component
+  make DESTDIR="${pkgdir}" install
+  if [ -f "${srcdir}/${pkgname}/build/im2rec" ]; then
+    install -Dm755 "${srcdir}/${pkgname}/build/im2rec" "${pkgdir}/usr/bin/im2rec"
+  fi
+  # install python binding
+  cd "${srcdir}/${pkgname}/python"
+  python setup.py install --root="${pkgdir}" --optimize=1 --with-cython --skip-build
+  install -Dm644 "${srcdir}/${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  rm -rfv "${pkgdir}/usr/mxnet"
+  ln -sf '/usr/lib/libmxnet.so' "${pkgdir}/usr/lib/python3.7/site-packages/mxnet/libmxnet.so"
+  ln -s "/usr/include" "${pkgdir}/usr/lib/python3.7/site-packages/mxnet/include"
+  # install missing lib files from mklml
+  # currently mkldnn needs mklml libs
+  # install them to /usr/lib/mxnet/mkldnn to avoid conficts with mkl & mkldnn
+  if [ -d "${srcdir}/${pkgname}/build/mklml" ]; then
+    find "${srcdir}/${pkgname}/build/mklml" -name '*.so' -exec install -Dm755 {} -t "${pkgdir}/usr/lib/mxnet/mkldnn" \;
+  fi
+  find "${pkgdir}/usr/lib" -name 'libmkldnn*' -exec mv {} "${pkgdir}/usr/lib/mxnet/mkldnn" \;
+  # patch rpath
+  find "${pkgdir}" -type f -perm 755 -exec patchelf --set-rpath '/usr/lib/mxnet/mkldnn' {} \;
+  # remove unwantted files
+  rm -rfv "${pkgdir}/usr/lib/cmake" "${pkgdir}/usr/share/doc"
+  find "${pkgdir}/usr/include" -type f -name 'mkldnn*' -delete
 }
 
 package_mxnet-cuda-mkl() {
   pkgdesc="${pkgdesc} (with CUDA and MKL-DNN)"
-  depends+=(cuda cudnn lapacke nccl)
+  depends+=(cuda cudnn nccl)
   conflicts=(mxnet)
   provides=(mxnet)
-  _package
+
+  export CC=/opt/cuda/bin/gcc
+  export CXX=/opt/cuda/bin/g++
+  cd "${srcdir}/${pkgname}/build"
+  # install mxnet core component
+  make DESTDIR="${pkgdir}" install
+  if [ -f "${srcdir}/${pkgname}/build/im2rec" ]; then
+    install -Dm755 "${srcdir}/${pkgname}/build/im2rec" "${pkgdir}/usr/bin/im2rec"
+  fi
+  # install python binding
+  cd "${srcdir}/${pkgname}/python"
+  python setup.py install --root="${pkgdir}" --optimize=1 --with-cython --skip-build
+  install -Dm644 "${srcdir}/${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  rm -rfv "${pkgdir}/usr/mxnet"
+  ln -sf '/usr/lib/libmxnet.so' "${pkgdir}/usr/lib/python3.7/site-packages/mxnet/libmxnet.so"
+  ln -s "/usr/include" "${pkgdir}/usr/lib/python3.7/site-packages/mxnet/include"
+  # install missing lib files from mklml
+  # currently mkldnn needs mklml libs
+  # install them to /usr/lib/mxnet/mkldnn to avoid conficts with mkl & mkldnn
+  if [ -d "${srcdir}/${pkgname}/build/mklml" ]; then
+    find "${srcdir}/${pkgname}/build/mklml" -name '*.so' -exec install -Dm755 {} -t "${pkgdir}/usr/lib/mxnet/mkldnn" \;
+  fi
+  find "${pkgdir}/usr/lib" -name 'libmkldnn*' -exec mv {} "${pkgdir}/usr/lib/mxnet/mkldnn" \;
+  # patch rpath
+  find "${pkgdir}" -type f -perm 755 -exec patchelf --set-rpath '/usr/lib/mxnet/mkldnn' {} \;
+  # remove unwantted files
+  rm -rfv "${pkgdir}/usr/lib/cmake" "${pkgdir}/usr/share/doc"
+  find "${pkgdir}/usr/include" -type f -name 'mkldnn*' -delete
 }
 # vim:set ts=2 sw=2 et:
 
