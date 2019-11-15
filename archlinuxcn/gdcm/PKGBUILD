@@ -5,7 +5,7 @@
 pkgname=gdcm
 _pkgname=GDCM
 pkgver=3.0.4
-pkgrel=3
+pkgrel=4
 pkgdesc='A C++ library for DICOM medical files'
 arch=('x86_64')
 url='http://gdcm.sourceforge.net'
@@ -79,7 +79,10 @@ package() {
   # fix python binding installation
   install -d "${pkgdir}/usr/lib/python3.8/site-packages"
   mv -v "${pkgdir}/usr/lib/_gdcmswig.so" "${pkgdir}/usr/lib/python3.8/site-packages"
-  find "${pkgdir}/usr/lib" -type f -name 'py$' -exec mv -v {} "${pkgdir}/usr/lib/python3.8/site-packages" \;
+  mv -v "${pkgdir}/usr/lib/gdcm.py" "${pkgdir}/usr/lib/python3.8/site-packages"
+  mv -v "${pkgdir}/usr/lib/vtkgdcm.py" "${pkgdir}/usr/lib/python3.8/site-packages"
+  mv -v "${pkgdir}/usr/lib/gdcmswig.py" "${pkgdir}/usr/lib/python3.8/site-packages"
+  mv -v "${pkgdir}/usr/lib/vtkgdcmPython.so" "${pkgdir}/usr/lib/python3.8/site-packages"
 }
 # vim:set ts=2 sw=2 et:
 
