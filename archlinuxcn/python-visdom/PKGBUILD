@@ -3,7 +3,7 @@
 pkgname=python-visdom
 _name=${pkgname#python-}
 pkgver=0.1.8.9
-pkgrel=1
+pkgrel=2
 pkgdesc='A flexible tool for creating, organizing, and sharing visualizations of live, rich data. Supports Torch and Numpy.'
 arch=(any)
 url=https://github.com/facebookresearch/visdom
