@@ -3,7 +3,7 @@
 
 pkgname=logcat-color3
 pkgver=0.9.0
-pkgrel=2
+pkgrel=3
 pkgdesc='A colorful and highly configurable alternative to the standard "adb logcat" command from the Android SDK'
 arch=(any)
 url='https://github.com/yan12125/logcat-color3'
