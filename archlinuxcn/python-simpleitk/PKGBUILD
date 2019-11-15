@@ -4,7 +4,7 @@ _name=SimpleITK
 _py=cp38
 pkgname=python-simpleitk
 pkgver=1.2.4
-pkgrel=1
+pkgrel=2
 pkgdesc='A simplified interface to the Insight Toolkit (ITK) for image registration and segmentation'
 arch=('x86_64')
 url='http://www.simpleitk.org'
@@ -18,5 +18,8 @@ sha512sums=('680f5cb4b62185476d7a49aae4e449c8d815c400c5054b7a4069c1cc73a29c0a8df
 package() {
 	PIP_CONFIG_FILE=/dev/null pip install --isolated --root="${pkgdir}" --ignore-installed --no-deps *.whl
 	python -O -m compileall "${pkgdir}/usr/lib/python3.8/site-packages/SimpleITK"
+	# remove uneeded files
+	rm -vf "${pkgdir}/usr/LICENSE" "${pkgdir}/usr/NOTICE" "${pkgdir}/usr/Readme.md"
 }
+# vim:set ts=2 sw=2 et:
 
