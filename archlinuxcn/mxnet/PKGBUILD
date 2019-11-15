@@ -194,8 +194,8 @@ package_mxnet-mkl() {
   python setup.py install --root="${pkgdir}" --optimize=1 --with-cython --skip-build
   install -Dm644 "${srcdir}/${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
   rm -rfv "${pkgdir}/usr/mxnet"
-  ln -sf '/usr/lib/libmxnet.so' "${pkgdir}/usr/lib/python3.7/site-packages/mxnet/libmxnet.so"
-  ln -s "/usr/include" "${pkgdir}/usr/lib/python3.7/site-packages/mxnet/include"
+  ln -sf '/usr/lib/libmxnet.so' "${pkgdir}/usr/lib/python3.8/site-packages/mxnet/libmxnet.so"
+  ln -s "/usr/include" "${pkgdir}/usr/lib/python3.8/site-packages/mxnet/include"
   # install missing lib files from mklml
   # currently mkldnn needs mklml libs
   # install them to /usr/lib/mxnet/mkldnn to avoid conficts with mkl & mkldnn
@@ -229,8 +229,8 @@ package_mxnet-cuda() {
   python setup.py install --root="${pkgdir}" --optimize=1 --with-cython --skip-build
   install -Dm644 "${srcdir}/${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
   rm -rfv "${pkgdir}/usr/mxnet"
-  ln -sf '/usr/lib/libmxnet.so' "${pkgdir}/usr/lib/python3.7/site-packages/mxnet/libmxnet.so"
-  ln -s "/usr/include" "${pkgdir}/usr/lib/python3.7/site-packages/mxnet/include"
+  ln -sf '/usr/lib/libmxnet.so' "${pkgdir}/usr/lib/python3.8/site-packages/mxnet/libmxnet.so"
+  ln -s "/usr/include" "${pkgdir}/usr/lib/python3.8/site-packages/mxnet/include"
   # install missing lib files from mklml
   # currently mkldnn needs mklml libs
   # install them to /usr/lib/mxnet/mkldnn to avoid conficts with mkl & mkldnn
@@ -264,8 +264,8 @@ package_mxnet-cuda-mkl() {
   python setup.py install --root="${pkgdir}" --optimize=1 --with-cython --skip-build
   install -Dm644 "${srcdir}/${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
   rm -rfv "${pkgdir}/usr/mxnet"
-  ln -sf '/usr/lib/libmxnet.so' "${pkgdir}/usr/lib/python3.7/site-packages/mxnet/libmxnet.so"
-  ln -s "/usr/include" "${pkgdir}/usr/lib/python3.7/site-packages/mxnet/include"
+  ln -sf '/usr/lib/libmxnet.so' "${pkgdir}/usr/lib/python3.8/site-packages/mxnet/libmxnet.so"
+  ln -s "/usr/include" "${pkgdir}/usr/lib/python3.8/site-packages/mxnet/include"
   # install missing lib files from mklml
   # currently mkldnn needs mklml libs
   # install them to /usr/lib/mxnet/mkldnn to avoid conficts with mkl & mkldnn
