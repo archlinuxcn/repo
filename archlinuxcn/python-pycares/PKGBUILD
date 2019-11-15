@@ -1,11 +1,11 @@
 _pkgname=pycares
 pkgname=python-pycares
 pkgver=3.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Python interface for c-ares"
 arch=('x86_64' 'i686')
 url="http://github.com/saghul/pycares"
-license=('(FIXME)')
+license=(MIT)
 depends=('python' 'c-ares' 'python-setuptools')
 _name=${pkgname#python-}
 source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_pkgname}-${pkgver}.tar.gz")
