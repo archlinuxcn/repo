@@ -30,12 +30,11 @@ makedepends=(
   'cuda'
   'cudnn'
   'cython'
+  'gettext'
   'git'
   'gtk3'
   'nccl'
-  'opencv'
   'patchelf'
-  'qt5-base'
 )
 
 source=("${pkgbase}::git+https://github.com/apache/incubator-mxnet.git#tag=${pkgver}")
@@ -73,13 +72,14 @@ build() {
     -DUSE_GPERFTOOLS:BOOL=OFF
     -DUSE_JEMALLOC:BOOL=OFF
     -DUSE_LAPACK:BOOL=ON
+    -DUSE_MKLML_MKL:BOOL=OFF
     -DUSE_MKL_IF_AVAILABLE:BOOL=OFF
     -DUSE_OPENMP:BOOL=ON
     -DUSE_S3:BOOL=ON
 )
 
-  export CC=gcc
-  export CXX=g++
+  export CC=/opt/cuda/bin/gcc
+  export CXX=/opt/cuda/bin/g++
 
   # building without CUDA and without MKL-DNN
   cd "${srcdir}/${pkgbase}/build"
@@ -89,7 +89,7 @@ build() {
     -DUSE_CUDNN:BOOL=OFF \
     -DUSE_MKLDNN:BOOL=OFF \
     -DUSE_NCCL:BOOL=OFF \
-    -DUSE_OPENCV:BOOL=ON \
+    -DUSE_OPENCV:BOOL=OFF \
     ..
   make
   cd ../python
@@ -103,14 +103,11 @@ build() {
     -DUSE_CUDNN:BOOL=OFF \
     -DUSE_MKLDNN:BOOL=ON \
     -DUSE_NCCL:BOOL=OFF \
-    -DUSE_OPENCV:BOOL=ON \
+    -DUSE_OPENCV:BOOL=OFF \
     ..
   make
   cd ../python
   python setup.py build --with-cython
-
-  export CC=/opt/cuda/bin/gcc
-  export CXX=/opt/cuda/bin/g++
 
   # building with CUDA and without MKL-DNN
   cd "${srcdir}/${pkgbase}-cuda/build"
@@ -144,10 +141,7 @@ build() {
 }
 
 package_mxnet() {
-  depends+=(opencv)
 
-  export CC=gcc
-  export CXX=g++
   cd "${srcdir}/${pkgname}/build"
   # install mxnet core component
   make DESTDIR="${pkgdir}" install
@@ -177,12 +171,9 @@ package_mxnet() {
 
 package_mxnet-mkl() {
   pkgdesc="${pkgdesc} (with MKL-DNN)"
-  depends+=(opencv)
   conflicts=(mxnet)
   provides=(mxnet)
 
-  export CC=gcc
-  export CXX=g++
   cd "${srcdir}/${pkgname}/build"
   # install mxnet core component
   make DESTDIR="${pkgdir}" install
@@ -216,8 +207,6 @@ package_mxnet-cuda() {
   conflicts=(mxnet)
   provides=(mxnet)
 
-  export CC=/opt/cuda/bin/gcc
-  export CXX=/opt/cuda/bin/g++
   cd "${srcdir}/${pkgname}/build"
   # install mxnet core component
   make DESTDIR="${pkgdir}" install
@@ -251,8 +240,6 @@ package_mxnet-cuda-mkl() {
   conflicts=(mxnet)
   provides=(mxnet)
 
-  export CC=/opt/cuda/bin/gcc
-  export CXX=/opt/cuda/bin/g++
   cd "${srcdir}/${pkgname}/build"
   # install mxnet core component
   make DESTDIR="${pkgdir}" install
