@@ -10,7 +10,7 @@ pkgname=('virtualbox-svn'
          'virtualbox-guest-utils-svn'
          'virtualbox-guest-utils-nox-svn'
          'virtualbox-ext-vnc-svn')
-pkgver=81608
+pkgver=81743
 pkgrel=1
 _vboxsf_commit='87b9015c57dd7f226c768131bf8b4c0249de9835'
 arch=('x86_64')
@@ -74,7 +74,6 @@ source=("VirtualBox::svn+http://www.virtualbox.org/svn/vbox/trunk"
         '005-gsoap-build.patch'
         '006-rdesktop-vrdp-keymap-path.patch'
         '008-no-vboxvideo.patch'
-        '011-python-3-7.patch'
         '012-vbglR3GuestCtrlDetectPeekGetCancelSupport.patch'
         '013-Makefile.patch'
         '014-iasl.patch'
@@ -99,7 +98,6 @@ sha256sums=('SKIP'
             '7d2da8fe10a90f76bbfc80ad1f55df4414f118cd10e10abfb76070326abebd46'
             '13c6ca9be0f91582445fd2a14a8c58a0625a15d9cb98cb6e8c2736d77ea976ab'
             '8b7f241107863f82a5b0ae336aead0b3366a40103ff72dbebf33f54b512a0cbc'
-            '55224cb74b54b331d691f171efc0d4c058a14f738551f1d8f559146c2908635d'
             '06485dce54a5f21b85f4360db884d98c1ab091d3f2535881ec9fcd82feb06b7e'
             'da7e58ed37dc23c6202aab3017864579a99e78417f3421ddcc98a198198fe2c9'
             '5ad14bd587031ac3dcadaeca2cc4d7b48a59ff09b03884b4fc2be5b1432a8237'
