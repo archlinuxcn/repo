@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from lilaclib import *
 
-update_on = [{'aur':None}]
+update_on = [{'aur':None}, {'alias': 'python'}, {'alias':'python'}]
 build_prefix = 'extra-x86_64'
 repo_depends = ['python3-xcpf', 'python3-xcgf']
 pre_build = aur_pre_build
