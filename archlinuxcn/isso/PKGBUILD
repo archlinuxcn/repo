@@ -4,7 +4,7 @@
 # Contributor: Reventlov <contact+aur@volcanis.me>
 pkgname=isso
 pkgver=0.12.2
-pkgrel=4
+pkgrel=5
 pkgdesc="A commenting python server similar to Disqus"
 arch=('any')
 url="http://posativ.org/isso/"
