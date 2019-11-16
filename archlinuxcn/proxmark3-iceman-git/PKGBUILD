@@ -73,7 +73,7 @@ build() {
   done
 
   # Build & install other targets
-  make {client,mfkey,nonce2key,common}/install
+  make {bootrom,client,mfkey,nonce2key,common}/install
 }
 
 package() {
