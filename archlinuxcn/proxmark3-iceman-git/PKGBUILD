@@ -2,7 +2,7 @@
 
 pkgname=proxmark3-iceman-git
 pkgver=7610.e0d4e69c
-pkgrel=1
+pkgrel=2
 pkgdesc='RRG / Iceman repo - Proxmark3 RDV4.0 and other Proxmark3 platforms.'
 arch=('x86_64')
 url='https://github.com/RfidResearchGroup/proxmark3'
@@ -72,8 +72,13 @@ build() {
 
   done
 
-  # Build & install other targets
-  make {bootrom,client,mfkey,nonce2key,common}/install
+  make bootrom/install
+  # Build & install other targets with FLAGS
+  make \
+   CFLAGS="-march=x86-64 -mtune=generic -O2 -pipe -fno-plt" \
+   CXXFLAGS="-march=x86-64 -mtune=generic -O2 -pipe -fno-plt" \
+   LDFLAGS="-Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now" \
+   {client,mfkey,nonce2key,common}/install
 }
 
 package() {
