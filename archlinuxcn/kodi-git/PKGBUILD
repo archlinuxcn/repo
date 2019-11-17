@@ -150,7 +150,7 @@ build() {
     -DFSTRCMP_URL="$srcdir/fstrcmp-$_fstrcmp_version.tar.gz" \
     -DFLATBUFFERS_URL="$srcdir/flatbuffers-$_flatbuffers_version.tar.gz" \
     ../xbmc
-  make -j2
+  make
   make preinstall
 
   msg2 "building kodi-wayland"
