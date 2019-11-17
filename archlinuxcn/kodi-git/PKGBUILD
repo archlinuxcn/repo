@@ -150,7 +150,7 @@ build() {
     -DFSTRCMP_URL="$srcdir/fstrcmp-$_fstrcmp_version.tar.gz" \
     -DFLATBUFFERS_URL="$srcdir/flatbuffers-$_flatbuffers_version.tar.gz" \
     ../xbmc
-  make
+  make -j6
   make preinstall
 
   msg2 "building kodi-wayland"
@@ -174,7 +174,7 @@ build() {
     -DCORE_PLATFORM_NAME=wayland \
     -DWAYLAND_RENDER_SYSTEM=gl \
     ../xbmc
-  make -j2
+  make -j6
   make preinstall
 
   msg2 "building kodi-gbm"
@@ -198,7 +198,7 @@ build() {
     -DCORE_PLATFORM_NAME=gbm \
     -DGBM_RENDER_SYSTEM=gles \
     ../xbmc
-  make -j2
+  make -j6
   make preinstall
 }
 
