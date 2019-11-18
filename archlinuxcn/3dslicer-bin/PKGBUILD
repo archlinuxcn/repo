@@ -3,7 +3,7 @@
 pkgname=3dslicer-bin
 _pkgname=3dslicer
 pkgver=4.10.2
-pkgrel=1
+pkgrel=2
 pkgdesc="A multi-platform, free open source software package for visualization and medical image computing"
 arch=('x86_64')
 url="https://www.slicer.org"
@@ -14,10 +14,10 @@ provides=('3dslicer')
 conflicts=('3dslicer')
 source=(
     "${pkgname}-${pkgver}.tar.gz::https://download.slicer.org/bitstream/1023242"
-    "${_pkgname}.svg::https://www.slicer.org/w/images/9/9f/3DSlicerLogo-HorizontalF.svg"
+    "${_pkgname}.svg::https://github.com/Slicer/Slicer/raw/master/Resources/3DSlicerLogo-app-icon.svg"
 )
 sha512sums=('36f1b175f987e7d1e288f08d55c6942e494f1234bfdfb4ffae8517bb1711418c6ae3d5efd3f57dc31a7f65c451c8324d8c09d4de697b6b81d0a85ec48299c686'
-            '67986a7bd90c95c4a91ddaecd86ceb3b54729f62c7e19ba3559f6180659902275a2f5a794cada3e9412664fb97cc6d57a02055826c4c135f2005d2c92d0ef878')
+            'c23104efcbec3d49b5c26ad5514ed74316423db4aa9e6c7894f02f7ddbe509b577de358dfdd2f7c492963f312b7c146f03d5e41a89ab1298811894dc18746225')
 
 prepare() {
   msg2 "Creating desktop file"
