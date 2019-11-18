@@ -1,33 +1,24 @@
-# Maintainer: Butui Hu <hot123tea123@gmail.com>
-
-pkgname=python-threadpoolctl
 _name=threadpoolctl
+pkgname=python-threadpoolctl
 pkgver=1.1.0
-pkgrel=1
-pkgdesc='Python helpers to limit the number of threads used in native libraries that handle their own internal threadpool (BLAS and OpenMP implementations)'
-arch=('any')
-url='https://github.com/joblib/threadpoolctl'
-license=('BSD')
-makedepends=(
-  'python-pip'
-)
-checkdepends=(
-  'python-pytest'
-)
-source=(
-  'https://github.com/joblib/threadpoolctl/raw/master/LICENSE'
-  "https://files.pythonhosted.org/packages/py3/${_name::1}/${_name}/${_name/-/_}-${pkgver}-py3-none-any.whl"
-)
-md5sums=('8f2439cfddfbeebdb5cac3ae4ae80eaf'
-         '290b79daaeb1832d73263450eb2479a1')
+pkgrel=2
+pkgdesc="threadpoolctl"
+arch=(any)
+url="https://github.com/joblib/threadpoolctl"
+license=()
+depends=('python' 'python-setuptools')
 
-get_pyver () {
-  python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
+sha256sums=('86f330c5ead7fd2d2143e76c4a4cc032d5a2f9cd4c4857fa06847cae2211ab82')
+
+build() {
+  cd "$srcdir/$_name-$pkgver"
+  python3 setup.py build
 }
 
 package() {
-  PIP_CONFIG_FILE=/dev/null pip install --isolated --root="${pkgdir}" --ignore-installed --no-deps *.whl
-  python -O -m compileall "${pkgdir}/usr/lib/python$(get_pyver)/site-packages/${_name}"
-  install -Dm644 "${srcdir}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+  cd "$srcdir/$_name-$pkgver"
+  python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 }
-# vim:set ts=2 sw=2 et:
+
+
