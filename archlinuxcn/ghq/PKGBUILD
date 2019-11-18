@@ -1,25 +1,21 @@
-# Maintainer: Ben Yip <yebenmy@protonmail.com>
+# Maintainer: NOGISAKA Sadata <ngsksdt@gmail.com>
+# Contributor: Kohei Suzuki <eagletmt@gmail.com>
+
 pkgname=ghq
-pkgver=0.8.0
-pkgrel=2
+pkgver=0.12.8
+pkgrel=1
 pkgdesc="Remote repository management made easy"
 arch=('i686' 'x86_64')
 url="https://github.com/motemen/ghq"
 license=('MIT')
 makedepends=('go' 'git')
-provides=('ghq')
 optdepends=('zsh: ghq function for zsh')
-
-source=("ghq-${pkgver}.tar.gz::https://github.com/motemen/ghq/archive/v${pkgver}.tar.gz"
-        "url.go.patch"
-        "url_test.go.patch")
+source=("ghq-${pkgver}.tar.gz::https://github.com/motemen/ghq/archive/v${pkgver}.tar.gz")
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
   export GOPATH="$srcdir/build"
   go get -t -d -v
-  patch < ../url.go.patch
-  patch < ../url_test.go.patch
   go build .
 }
 
@@ -31,13 +27,12 @@ check() {
 
 package() {
   cd "$srcdir/$pkgname-$pkgver"
-  install -Dm 755 ghq-$pkgver "$pkgdir/usr/bin/ghq"
+  install -Dm 755 ghq "$pkgdir/usr/bin/ghq"
   install -Dm 644 zsh/_ghq "$pkgdir/usr/share/zsh/site-functions/_ghq"
   install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/ghq/LICENSE"
 }
-sh512sums=('e3df98794a423000676987812ded7dab30367dfbc82a2b7a8d2ebbea12fa81b2'
-            '1cea43d09f4b9199ab0d04cb51f9cc1a3cfa351d12676a9aff38b1768a5d7d2a'
-            'a1213418e95d722d2d1dc78539c4beb432bce22439df99e402eb7ce09ff3b671')
-md5sums=('cd486f7b8e464ca89c0aff4f421ecaf1'
-         'f60e476bd339fd994915c95923207fbd'
-         'b5d0219abc687f0c09f973b2e97bd5c8')
+
+# vim: set et sw=2 sts=2:
+
+sha512sums=('4672a14e98228626394a6514672ffaf5b35bf6e2a7dc7ab94e20d2b1abce97bf1de49d6631787cffeb4c716360dcf044f7f61e366a3d95174b407c252c52fa38')
+
