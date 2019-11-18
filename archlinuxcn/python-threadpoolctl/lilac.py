@@ -3,7 +3,7 @@
 from lilaclib import *
 
 def pre_build():
-  pypi_pre_build()
+  pypi_pre_build(license='BSD', license_file='LICENSE')
 
 def post_build():
   pypi_post_build()
