@@ -1,24 +1,24 @@
-_pkgname=PyMySQL
+_name=PyMySQL
 pkgname=python-pymysql
 pkgver=0.9.3
-pkgrel=3
+pkgrel=4
 pkgdesc="Pure Python MySQL Driver"
-arch=('any')
+arch=(any)
 url="https://github.com/PyMySQL/PyMySQL/"
-license=('"MIT"')
+license=("MIT")
 depends=('python' 'python-setuptools')
-_name=${pkgname#python-}
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_pkgname}-${pkgver}.tar.gz")
-md5sums=('e5d9183cc0a775ac29f9e0365cca6556')
+
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
+sha256sums=('d8c059dcd81dedb85a9f034d5e22dcb4442c0b201908bede99e306d65ea7c8e7')
 
 build() {
-  cd "$srcdir/$_pkgname-$pkgver"
-  LANG=en_US.UTF-8 python3 setup.py build
+  cd "$srcdir/$_name-$pkgver"
+  python3 setup.py build
 }
 
 package() {
-  cd "$srcdir/$_pkgname-$pkgver"
-  LANG=en_US.UTF-8 python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+  cd "$srcdir/$_name-$pkgver"
+  python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 }
 
-# vim:set sw=2 et:
+
