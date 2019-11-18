@@ -3,15 +3,20 @@
 # Contributor: ceri
 
 _pkgbase='citra'
-pkgbase="$_pkgbase-git"
-pkgname=("$_pkgbase-git" "$_pkgbase-qt-git")
+pkgname="$_pkgbase-git"
 pkgver=r8128.5fa71d425
-pkgrel=1
-pkgdesc="An experimental open-source Nintendo 3DS emulator/debugger"
+pkgrel=2
+pkgdesc="An experimental open-source Nintendo 3DS emulator/debugger (Master branch)"
 arch=('i686' 'x86_64')
 url="https://github.com/citra-emu/citra/"
 license=('GPL2')
-makedepends=('git' 'cmake' 'sdl2' 'qt5-base' 'shared-mime-info' 'desktop-file-utils' 'qt5-multimedia' 'ffmpeg' 'ninja' 'qt5-tools' 'clang' 'llvm')
+depends=('shared-mime-info' 'desktop-file-utils' 'sdl2' 'qt5-base' 'qt5-multimedia' 'libxkbcommon-x11')
+makedepends=('git' 'rapidjson' 'cmake' 'python' 'clang' 'llvm' 'boost' 'qt5-tools' 'libfdk-aac' 'ffmpeg')
+optdepends=("ffmpeg: needed for HLE AAC Decoding on Linux"
+    "libfdk-aac: needed for HLE AAC Decoding on Linux")
+replaces=('citra-qt-git')
+provides=('citra' 'citra-qt' 'citra-qt-git')
+conflicts=('citra' 'citra-qt' 'citra-qt-git' 'citra-canary-git' 'citra-nightly-git')
 source=("$_pkgbase::git+https://github.com/citra-emu/citra")
 md5sums=('SKIP')
 
@@ -38,32 +43,16 @@ build() {
 	  -DENABLE_COMPATIBILITY_LIST_DOWNLOAD=ON \
 	  -DUSE_DISCORD_PRESENCE=ON \
 	  -DENABLE_FFMPEG=ON \
-	  -DCMAKE_BUILD_TYPE=Release \
-    -DDYNARMIC_USE_LLVM=TRUE \
-    -DENABLE_NC=TRUE \
-    -DFMT_INSTALL=TRUE \
-    -DTEAKRA_BUILD_TOOLS=TRUE \
-	  -GNinja
-	ninja
+	  -DCMAKE_BUILD_TYPE=Release
+	make
 }
 
 check() {
 	cd "$srcdir/$_pkgbase/build"
-	ctest -C Release
+	make test
 }
 
-package_citra-git() {
-	depends=('sdl2' 'ffmpeg' 'llvm-libs')
-
-	install -Dm755 "$srcdir/$_pkgbase/build/bin/citra" "$pkgdir/usr/bin/citra"
-}
-
-package_citra-qt-git() {
-	depends=('qt5-multimedia' 'sdl2' 'shared-mime-info' 'desktop-file-utils' 'ffmpeg' 'llvm-libs')
-	optdepends=('libxkbcommon-x11: for X11 support'
-		    'qt5-wayland: for Wayland support')
-
+package() {
 	cd "$srcdir/$_pkgbase/build"
-	DESTDIR="$pkgdir/" ninja install
-	rm "$pkgdir/usr/bin/citra"
+	DESTDIR="$pkgdir/" make install
 }
