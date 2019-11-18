@@ -3,6 +3,8 @@ maintainers:
 
 update_on:
   - github: retext-project/retext
+  - alias: python
 
 pre_build: vcs_update
+post_build: git_pkgbuild_commit
 
