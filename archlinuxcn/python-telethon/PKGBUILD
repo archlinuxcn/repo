@@ -1,25 +1,26 @@
-_pkgname=Telethon
+_name=Telethon
 pkgname=python-telethon
 pkgver=1.10.8
-pkgrel=8
+pkgrel=9
 pkgdesc="Full-featured Telegram client library for Python 3"
-arch=('any')
+arch=(any)
 url="https://github.com/LonamiWebs/Telethon"
-license=('MIT')
-depends=('python' 'python-pyaes' 'python-rsa')
-_name=${pkgname#python-}
+license=(MIT)
+depends=('python-pyaes' 'python-rsa')
 makedepends=('python-setuptools')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_pkgname}-${pkgver}.tar.gz")
-md5sums=('96a0436661c40c1e152df5d5554be7b1')
+
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
+sha256sums=('af88697e2e2faf724dd8c42ff50842bfaa6631f55ea3f8fc35ceb1dda6c11fec')
 
 build() {
-  cd "$srcdir/$_pkgname-$pkgver"
-  LANG=en_US.UTF-8 python3 setup.py build
+  cd "$srcdir/$_name-$pkgver"
+  python3 setup.py build
 }
 
 package() {
-  cd "$srcdir/$_pkgname-$pkgver"
-  LANG=en_US.UTF-8 python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+  cd "$srcdir/$_name-$pkgver"
+  python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
-# vim:set sw=2 et:
+
