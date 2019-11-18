@@ -1,11 +1,11 @@
 _name=threadpoolctl
 pkgname=python-threadpoolctl
 pkgver=1.1.0
-pkgrel=3
+pkgrel=4
 pkgdesc="threadpoolctl"
 arch=(any)
 url="https://github.com/joblib/threadpoolctl"
-license=()
+license=(BSD)
 depends=('python' 'python-setuptools')
 
 source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
@@ -19,6 +19,7 @@ build() {
 package() {
   cd "$srcdir/$_name-$pkgver"
   python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
 
