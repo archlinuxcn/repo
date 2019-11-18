@@ -1,24 +1,24 @@
-_pkgname=pydle
+_name=pydle
 pkgname=python-pydle
-pkgver=0.9.2
-pkgrel=3
+pkgver=0.9.3
+pkgrel=1
 pkgdesc="A compact, flexible and standards-abiding IRC library for Python 3."
-arch=('any')
+arch=(any)
 url="https://github.com/Shizmob/pydle"
-license=('BSD')
-depends=('python' 'python-tornado' 'python-setuptools')
-_name=${pkgname#python-}
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_pkgname}-${pkgver}.tar.gz")
-md5sums=('253dcdd4e7e424e01bb5b719ea87a97a')
+license=(BSD)
+depends=('python-tornado' 'python-setuptools')
+makedepends=('python-pip')
+
+source=("https://files.pythonhosted.org/packages/py3/${_name::1}/$_name/pydle-0.9.3-py3-none-any.whl")
+sha256sums=('b2d40b76f3f98c49f4ca0753af9cf672d758843455359d27875f70e18facf4c9')
 
 build() {
-  cd "$srcdir/$_pkgname-$pkgver"
-  LANG=en_US.UTF-8 python3 setup.py build
+  true
 }
 
 package() {
-  cd "$srcdir/$_pkgname-$pkgver"
-  LANG=en_US.UTF-8 python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+  cd "$srcdir"
+  pip install 'pydle-0.9.3-py3-none-any.whl' --root="$pkgdir" --no-deps --install-option="--optimize=1"
 }
 
-# vim:set sw=2 et:
+
