@@ -3,7 +3,7 @@
 pkgname=python-fastprogress
 _pkgname=fastprogress
 pkgver=0.1.21
-pkgrel=1
+pkgrel=2
 pkgdesc='Simple and flexible progress bar for Jupyter Notebook and console'
 arch=('any')
 url='https://github.com/dstathis/fastprocess'
