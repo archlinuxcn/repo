@@ -2,18 +2,32 @@
 
 pkgname=python-torchgan-git
 pkgver=0.0.3.r2.g10b0837
-pkgrel=3
+pkgrel=4
 pkgdesc="Research Framework for easy and efficient training of GANs based on PyTorch"
 arch=(any)
 url="https://github.com/torchgan/torchgan"
 license=('MIT')
-depends=(python-numpy python-pillow python-pytorch python-torchvision)
-makedepends=(git python-setuptools)
-checkdepends=(python-pytest)
+depends=(
+  'python-numpy'
+  'python-pillow'
+  'python-pytorch'
+  'python-torchvision'
+)
+makedepends=(
+  'git'
+  'python-setuptools'
+)
+checkdepends=(
+  'python-pytest'
+)
 provides=(python-torchgan=${pkgver})
 conflicts=(python-torchgan)
 source=("${pkgname}::git+https://github.com/torchgan/torchgan.git")
-md5sums=('SKIP')
+sha512sums=('SKIP')
+
+get_pyver () {
+  python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
+}
 
 pkgver() {
   cd "${pkgname}"
@@ -34,5 +48,7 @@ package() {
 	cd "${srcdir}/${pkgname}"
 	python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
  	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+  # delete tests folder as they're installed in wrong place
+  rm -rfv "${pkgdir}/usr/lib/python$(get_pyver)/site-packages/tests"
 }
 # vim:set ts=2 sw=2 et:
