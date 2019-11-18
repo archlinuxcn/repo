@@ -3,7 +3,7 @@
 pkgname=3dslicer-bin
 _pkgname=3dslicer
 pkgver=4.10.2
-pkgrel=2
+pkgrel=3
 pkgdesc="A multi-platform, free open source software package for visualization and medical image computing"
 arch=('x86_64')
 url="https://www.slicer.org"
