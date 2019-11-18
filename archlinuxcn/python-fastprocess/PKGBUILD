@@ -3,7 +3,7 @@
 pkgname=python-fastprocess
 _pkgname=fastprocess
 pkgver=1.0.1
-pkgrel=1
+pkgrel=2
 pkgdesc='A fast subprocess library'
 arch=('any')
 url='https://github.com/dstathis/fastprocess'
