@@ -3,7 +3,7 @@
 _pkgname=batchgenerators
 pkgname=python-batchgenerators
 pkgver=0.19.5
-pkgrel=1
+pkgrel=2
 pkgdesc='A framework for data augmentation for 2D and 3D image classification and segmentation'
 arch=('any')
 url='https://github.com/MIC-DKFZ/batchgenerators'
