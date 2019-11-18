@@ -3,8 +3,8 @@
 pkgname=pycharm-professional
 pkgver=2019.2.4
 _pkgver=2019.2.4
-pkgrel=1
-pkgdesc="Powerful Python and Django IDE. Professional Edition."
+pkgrel=2
+pkgdesc="Powerful Python and Django IDE. Professional Edition"
 arch=('x86_64')
 url='https://www.jetbrains.com/pycharm/'
 conflicts=('pycharm' 'pycharm-community-edition')
@@ -51,8 +51,8 @@ build() {
   cd pycharm-$_pkgver
 
   # compile PyDev debugger used by PyCharm to speedup debugging
-  python2 helpers/pydev/setup_cython.py build_ext --build-temp build --build-lib .
-  python3 helpers/pydev/setup_cython.py build_ext --build-temp build --build-lib .
+  #python2 helpers/pydev/setup_cython.py build_ext --build-temp build --build-lib .
+  #python3 helpers/pydev/setup_cython.py build_ext --build-temp build --build-lib .
   
   rm -rf bin/fsnotifier{,-arm} lib/libpty/linux/x86
 }
