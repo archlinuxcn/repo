@@ -7,8 +7,7 @@ arch=('any')
 url="https://github.com/dbcli/cli_helpers"
 license=('BSD')
 depends=('python' 'python' 'python-terminaltables' 'python-tabulate' 'python-setuptools')
-_name=${pkgname#python-}
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_pkgname}-${pkgver}.tar.gz")
+source=("https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
 md5sums=('73719f707113aa3f6802253c7e73f948')
 
 build() {
