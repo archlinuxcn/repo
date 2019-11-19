@@ -1,7 +1,7 @@
 #Maintainer: Xyne <ac xunilhcra enyx, backwards>
 pkgname=python3-xcgf
 pkgver=2017.3
-pkgrel=4
+pkgrel=5
 pkgdesc='Xyne'"'"'s common generic functions, for internal use.'
 arch=(any)
 license=(GPL)
