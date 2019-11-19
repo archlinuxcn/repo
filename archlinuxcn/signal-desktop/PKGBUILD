@@ -2,30 +2,41 @@
 
 pkgname=signal-desktop
 _pkgname=Signal-Desktop
-pkgver=1.27.4
-pkgrel=4
+pkgver=1.28.0
+pkgrel=2
 pkgdesc='Electron application that links with Signal on mobile'
 arch=(x86_64)
 url=https://signal.org
 license=(GPL3)
-depends=('electron>=6.1.1')
-makedepends=(yarn git python2 'nodejs>=12' npm python)
+depends=(electron)
+makedepends=(
+  yarn
+  git
+  python2
+  nodejs
+  npm
+  python
+)
 provides=(signal)
 replaces=(signal)
 source=(
-  $pkgname-$pkgver.tar.gz::https://github.com/signalapp/Signal-Desktop/archive/v$pkgver.tar.gz
+  $pkgname-$pkgver.tar.gz::https://github.com/signalapp/$_pkgname/archive/v$pkgver.tar.gz
   $pkgname.desktop
   openssl-linking.patch
 )
-sha512sums=('92a934d7680f33803bd7be21f4604719b211036931a6e00565e21a7008d0b35da7dda5c6527458a9498f82a9c9a96a94b868274d1d7e73e09ccb09fe1aea295a'
-            'bcbf8ffc6f6f7e99e59b5ab1517ba231f1d3b2b16a0e27541580f028ebee5027685a8c397212c43008844be352d3b6acf2269e631bc2c6ba05c2eb95f56fef36'
+sha512sums=('b0691467bc4e2b6984cc05f71bbbf0a9d3999b4e43b1ac355710e3a72b4b9445f09de4e02e7d53df03b2766bc00a0e0741f73a12fd21d00849d366519c6ee3b2'
+            'c5ec0bf524e527ecf94207ef6aa1f2671346e115ec15de6d063cde0960151813752a1814e003705fc1a99d4e2eae1b3ca4d03432a50790957186e240527cc361'
             '2c10d4cc6c0b9ca650e786c1e677f22619a78c93465f27fc4cf4831f1cfe771f3b9885a416e381a9e14c3aea5d88cb3545264046188db72d54b8567266811e51')
 
 prepare() {
   cd $_pkgname-$pkgver
 
-  # Bump Electron version for newer ABI compatibility
-  sed 's#\("electron": "\).*"#\16.1.2"#' -i package.json
+  # Fix SpellChecker build with imminent Node 13
+  # See https://github.com/atom/node-spellchecker/issues/127
+  sed -r 's#("spellchecker": ").*"#\1https://github.com/atom/node-spellchecker/archive/613ff91dd2d9a5ee0e86be8a3682beecc4e94887.tar.gz"#' -i package.json
+
+  # Set system Electron version for ABI compatibility
+  sed -r 's#("electron": ").*"#\1'$(cat /usr/lib/electron/version)'"#' -i package.json
 
   # Allow higher Node versions
   sed 's#"node": "#&>=#' -i package.json
@@ -34,7 +45,7 @@ prepare() {
 
   # Have SQLCipher dynamically link from OpenSSL
   # See https://github.com/signalapp/Signal-Desktop/issues/2634
-  patch -Np0 -i ../openssl-linking.patch
+  patch -Np0 < ../openssl-linking.patch
 }
 
 build() {
