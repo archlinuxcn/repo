@@ -15,8 +15,10 @@ source=("ghq-${pkgver}.tar.gz::https://github.com/motemen/ghq/archive/v${pkgver}
 build() {
   cd "$srcdir/$pkgname-$pkgver"
   export GOPATH="$srcdir/build"
+  export CGO_LDFLAGS="${LDFLAGS}"
+  export GOFLAGS="-trimpath"
   go get -t -d -v
-  go build .
+  go build -buildmode=pie .
 }
 
 check() {
