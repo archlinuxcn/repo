@@ -6,6 +6,7 @@
 # Contributor: Jonhoo <jon at thesquareplanet.com>
 # Contributor: torvic9 <vic999 at mailbox.org>
 
+<<<<<<< HEAD:archlinuxcn/signal/PKGBUILD
 pkgname=signal
 pkgver=1.27.4
 pkgrel=5
@@ -26,6 +27,35 @@ sha512sums=('SKIP'
             'a264bfc7a4a7aac747daa588a2acbf1eddfd201bc795f0fbc18460a9b25f4460f364124e227a527fec22631cd84bc9e190f9f4978069e9c119eb556b9ff2d327'
             'ced228d19303abe951c55f7874004cb9e4cd062dbda48c7ea80b0a6fb9adf5716a37164c01c9921a91f00653b0737fed80e3c5e684b0f3bcec375c265d6d8e5c'
             '05efc65a78b2006f3ffdd728dd5a96923ee9c909a3707833f8d55935c18e507051aabdbefff270bb2c58d7f151147966b550c9bbc2a115dae177f51955720482')
+=======
+pkgname=signal-desktop
+_pkgname=Signal-Desktop
+pkgver=1.28.0
+pkgrel=3
+pkgdesc='Electron application that links with Signal on mobile'
+arch=(x86_64)
+url=https://signal.org
+license=(GPL3)
+depends=(electron)
+makedepends=(
+  yarn
+  git
+  python2
+  nodejs
+  npm
+  python
+)
+provides=(signal)
+replaces=(signal)
+source=(
+  $pkgname-$pkgver.tar.gz::https://github.com/signalapp/$_pkgname/archive/v$pkgver.tar.gz
+  $pkgname.desktop
+  openssl-linking.patch
+)
+sha512sums=('b0691467bc4e2b6984cc05f71bbbf0a9d3999b4e43b1ac355710e3a72b4b9445f09de4e02e7d53df03b2766bc00a0e0741f73a12fd21d00849d366519c6ee3b2'
+            'c5ec0bf524e527ecf94207ef6aa1f2671346e115ec15de6d063cde0960151813752a1814e003705fc1a99d4e2eae1b3ca4d03432a50790957186e240527cc361'
+            '2c10d4cc6c0b9ca650e786c1e677f22619a78c93465f27fc4cf4831f1cfe771f3b9885a416e381a9e14c3aea5d88cb3545264046188db72d54b8567266811e51')
+>>>>>>> axionl-testing:archlinuxcn/signal-desktop/PKGBUILD
 
 prepare() {
   cd "${pkgname}-git-repo"
@@ -34,14 +64,32 @@ prepare() {
   _installed_electron_version=$(pacman -Q electron | cut -d' ' -f2 | cut -d'-' -f1)
   sed -E -i 's/"electron": "[0-9.]+"/"electron": "'$_installed_electron_version'"/' package.json
 
+<<<<<<< HEAD:archlinuxcn/signal/PKGBUILD
   # Allow higher node versions
   sed -i 's/"node": "/&>=/' package.json
+=======
+  # Fix SpellChecker build with imminent Node 13
+  # See https://github.com/atom/node-spellchecker/issues/127
+  sed -r 's#("spellchecker": ").*"#\1https://github.com/atom/node-spellchecker/archive/613ff91dd2d9a5ee0e86be8a3682beecc4e94887.tar.gz"#' -i package.json
+
+  # Set system Electron version for ABI compatibility
+  sed -r 's#("electron": ").*"#\1'$(cat /usr/lib/electron/version)'"#' -i package.json
+
+  # Allow higher Node versions
+  sed 's#"node": "#&>=#' -i package.json
+>>>>>>> axionl-testing:archlinuxcn/signal-desktop/PKGBUILD
 
   # Download modules
   yarn install
 
+<<<<<<< HEAD:archlinuxcn/signal/PKGBUILD
   # Use dynamic linking
   patch -Np1 -i "../openssl-linking.patch"
+=======
+  # Have SQLCipher dynamically link from OpenSSL
+  # See https://github.com/signalapp/Signal-Desktop/issues/2634
+  patch -Np0 < ../openssl-linking.patch
+>>>>>>> axionl-testing:archlinuxcn/signal-desktop/PKGBUILD
 }
 
 build() {
