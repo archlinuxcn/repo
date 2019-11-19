@@ -1,24 +1,24 @@
-_pkgname=cli_helpers
+_name=cli_helpers
 pkgname=python-cli_helpers
 pkgver=1.2.1
-pkgrel=2
+pkgrel=3
 pkgdesc="Helpers for building command-line apps"
-arch=('any')
+arch=(any)
 url="https://github.com/dbcli/cli_helpers"
-license=('BSD')
-depends=('python' 'python' 'python-terminaltables' 'python-tabulate' 'python-setuptools')
-_name=${pkgname#python-}
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_pkgname}-${pkgver}.tar.gz")
-md5sums=('73719f707113aa3f6802253c7e73f948')
+license=(BSD)
+depends=('python' 'python-terminaltables' 'python-tabulate' 'python-setuptools')
+
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
+sha256sums=('98db22eaa86827d99ee6af9f5f3923142d04df256425204530842b032849a165')
 
 build() {
-  cd "$srcdir/$_pkgname-$pkgver"
-  LANG=en_US.UTF-8 python3 setup.py build
+  cd "$srcdir/$_name-$pkgver"
+  python3 setup.py build
 }
 
 package() {
-  cd "$srcdir/$_pkgname-$pkgver"
-  LANG=en_US.UTF-8 python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+  cd "$srcdir/$_name-$pkgver"
+  python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 }
 
-# vim:set sw=2 et:
+
