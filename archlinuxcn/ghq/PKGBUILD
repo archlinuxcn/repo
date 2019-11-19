@@ -8,6 +8,7 @@ pkgdesc="Remote repository management made easy"
 arch=('i686' 'x86_64')
 url="https://github.com/motemen/ghq"
 license=('MIT')
+depends=('glibc')
 makedepends=('go' 'git')
 optdepends=('zsh: ghq function for zsh')
 source=("ghq-${pkgver}.tar.gz::https://github.com/motemen/ghq/archive/v${pkgver}.tar.gz")
