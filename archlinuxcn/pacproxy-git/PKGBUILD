@@ -8,7 +8,7 @@ pkgdesc="A no-frills local HTTP proxy server powered by a proxy auto-config (PAC
 url=https://github.com/williambailey/pacproxy
 arch=('x86_64')
 license=('Apache')
-makedepends=('go')
+makedepends=('go' 'git')
 conflicts=('pacproxy')
 provides=('pacproxy')
 depends=('glibc')
@@ -28,8 +28,10 @@ prepare() {
 
 build() {
   export GOPATH="$srcdir"/gopath
+  export CGO_LDFLAGS="${LDFLAGS}"
+  export GOFLAGS="-trimpath"
   cd $srcdir/gopath/src/github.com/${_author}/$_pkgname
-  go build -o $_pkgname
+  go build -buildmode=pie -o $_pkgname
 }
 
 package() {
