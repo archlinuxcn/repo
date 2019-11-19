@@ -3,7 +3,7 @@
 _pkgname=devtools
 pkgname=devtools-archlinuxcn
 pkgver=20191016
-pkgrel=1
+pkgrel=2
 pkgdesc='Tools for Arch Linux package maintainers, archlinuxcn fork'
 arch=('any')
 license=('GPL')
@@ -33,6 +33,9 @@ sha256sums=('adc61b7761fb831f929a182e5e353c9f42c8666b6941c4ad7ce631fffd869994'
 prepare() {
   cd ${_pkgname}-${pkgver}
   patch -RNp1 -i ../no-yes-y.patch
+
+  ## silent while show errors for curl
+  sed "s|bin/curl -g|bin/curl -sS -g|g" -i makepkg-x86_64.conf
 }
 
 build() {
