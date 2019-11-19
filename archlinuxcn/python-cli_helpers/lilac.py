@@ -15,6 +15,8 @@ def pre_build():
             print("_pkgname=%s" % "cli_helpers")
         elif line.startswith("pkgname="):
             print("pkgname=%s" % "python-cli_helpers")
+        elif line.startswith("_name="):
+            print("_name=%s" % "cli_helpers")
         else:
             print(line)
 
