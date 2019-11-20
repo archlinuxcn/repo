@@ -3,10 +3,11 @@
 from lilaclib import *
 
 def pre_build():
-  pypi_pre_build(license='BSD', license_file='LICENSE')
+  update_pkgver_and_pkgrel(_G.newver.lstrip('v'))
 
 def post_build():
-  pypi_post_build()
+  git_add_files('PKGBUILD')
+  git_commit()
   update_aur_repo()
 # vim:set ts=2 sw=2 et:
 
