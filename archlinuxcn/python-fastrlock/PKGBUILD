@@ -1,0 +1,41 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+# Contributor: Leo Mao <leomaoyw at gmail dot com>
+
+pkgname=python-fastrlock
+_pkgname=fastrlock
+pkgver=0.4
+pkgrel=1
+pkgdesc='A fast RLock implementation for CPython'
+url='https://github.com/scoder/fastrlock'
+arch=('x86_64')
+license=('MIT')
+makedepends=(
+  'cython'
+  'python-setuptools'
+)
+checkdepends=(
+  'python-pytest'
+)
+source=("https://github.com/scoder/${_pkgname}/archive/${pkgver}.tar.gz")
+sha512sums=('4317372a908bcbd3226b232085fcd71ccc61fe19017dfd5881f45d5fc2692940e6c688a275447345a7ed69a00d6fa58a56f33be282b8fd49ac90064b787653e3')
+
+get_pyver() {
+  python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
+}
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  python setup.py build
+}
+
+check() {
+  cd "${_pkgname}-${pkgver}"
+  PYTHONPATH="${PWD}/build/lib.linux-${CARCH}-$(get_pyver)" pytest -v
+}
+
+package() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+# vim:set ts=2 sw=2 et:
