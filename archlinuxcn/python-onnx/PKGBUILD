@@ -34,7 +34,7 @@ optdepends=(
 source=("${pkgname}::git+https://github.com/onnx/onnx.git#tag=v${pkgver}")
 sha512sums=('SKIP')
 
-get_pyver () {
+get_pyver() {
   python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
 }
 
@@ -50,7 +50,7 @@ build() {
 
 check() {
   cd "${srcdir}/${pkgname}"
-  PYTHONPATH="$(pwd)/build/lib.linux-${CARCH}-$(get_pyver)" pytest -v
+  PYTHONPATH="${PWD}/build/lib.linux-${CARCH}-$(get_pyver)" pytest -v
 }
 
 package() {
