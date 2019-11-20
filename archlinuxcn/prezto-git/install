@@ -1,0 +1,67 @@
+#!/bin/bash
+
+post_install() {
+
+	create_cache_dirs
+
+	echo
+	echo "Prezto is enabled for all users by default."
+	echo "To change that, edit /etc/zsh/zshrc file."
+	echo "Global settings reside in the /etc/zsh/ directory."
+	echo "To personalize Zsh and Prezto, edit your local ~/.zshrc and ~/.zpreztorc files."
+	echo "A user can also have a custom, overriding Prezto installation in ~/.zprezto/"
+	echo "For more information on overrides and local files, see https://github.com/sorin-ionescu/prezto/tree/master/runcoms"
+	echo
+}
+
+post_upgrade() {
+	create_cache_dirs
+}
+
+post_remove() {
+	remove_cache_dirs
+}
+
+cachedir=/var/cache/prezto
+moduledir=/usr/lib/prezto/modules
+
+# These modules (as of 20130820) want to have the cache within their own directory
+modules_with_cache=(
+	'node'
+	'fasd'
+	'perl'
+)
+
+create_cache_dirs() {
+
+	# Set up a global cache that's accessible by users.
+	# A user may be able to override this by loading and configuring/customizing the modules in her own .zshrc
+	mkdir -p $cachedir
+
+	for module in "${modules_with_cache[@]}"
+	do
+		if [ ! -f $cachedir/$module/cache.zsh ]; then
+			mkdir $cachedir/$module
+			touch $cachedir/$module/cache.zsh
+			chgrp users $cachedir/$module/cache.zsh
+			chmod g+w $cachedir/$module/cache.zsh
+		fi 
+
+		if [ ! -a $moduledir/$module/cache.zsh ]; then
+			ln -sf $cachedir/$module/cache.zsh $moduledir/$module/cache.zsh
+		fi
+	done
+}
+
+remove_cache_dirs() {
+
+	# Remove symlinks that point to cache files
+	for module in "${modules_with_cache[@]}"
+	do
+		rm -rf $moduledir/$module/cache.zsh
+	done
+
+	# Remove the global cache
+	rm -rf $cachedir
+}
+
