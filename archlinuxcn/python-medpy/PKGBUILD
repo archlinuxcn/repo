@@ -4,25 +4,39 @@ pkgname=python-medpy
 _pkgname=medpy
 pkgver=0.4.0
 pkgrel=3
-pkgdesc="Medical image processing in Python"
-arch=("x86_64")
-url="https://github.com/loli/medpy"
-license=(GPL)
-depends=(boost-libs python-numpy python-scipy python-simpleitk)
-makedepends=(boost python-setuptools)
-checkdepends=(python-nose)
-source=("${pkgname}-${pkgver}.tar.gz"::"https://github.com/loli/medpy/archive/${pkgver}.tar.gz")
+pkgdesc='Medical image processing in Python'
+arch=('x86_64')
+url='https://github.com/loli/medpy'
+license=('GPL')
+depends=(
+  'boost-libs'
+  'python-numpy'
+  'python-scipy'
+  'python-simpleitk'
+)
+makedepends=(
+  'boost'
+  'python-setuptools'
+)
+checkdepends=(
+  'python-nose'
+)
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/loli/medpy/archive/${pkgver}.tar.gz")
 sha512sums=('539570d99fc786b5c27f76046999b9d87e343f32c7442b34bc49c56831d2e93efe13a72f1f3577f96e8026ad4d4380994ede7882c9219d6ef8f5673bdb2ab91e')
+
+get_pyver() {
+  python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
+}
 
 build() {
   cd "${_pkgname}-${pkgver}"
   python setup.py build
 }
 
-#check() {
-#  cd "${_pkgname}-${pkgver}"
-#  PYTHONPATH="${PWD}/build/lib.linux-${CARCH}-3.7" nosetests -v
-#}
+check() {
+  cd "${_pkgname}-${pkgver}"
+  PYTHONPATH="${PWD}/build/lib.linux-${CARCH}-$(get_pyver)" nosetests -v
+}
 
 package() {
   cd "${_pkgname}-${pkgver}"
