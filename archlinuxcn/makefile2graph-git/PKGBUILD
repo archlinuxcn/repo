@@ -1,0 +1,37 @@
+# Maintainer: Jiachen Yang <farseerfc@gmail.com>
+
+_pkgname=makefile2graph
+pkgname=${_pkgname}-git
+pkgver=1.5.0.r16.g656a5a9
+_commit=ef49516b967e1b3a1af777725554e5081ee0c688
+pkgrel=1
+pkgdesc='Creates a graph of dependencies from GNU-Make; Output is a graphiz-dot file or a Gexf-XML file.'
+arch=('x86_64')
+url='https://github.com/lindenb/makefile2graph'
+license=('custom:MIT')
+depends=('make')
+makedepends=('git')
+provides=("$_pkgname")
+
+source=("git+https://github.com/lindenb/$_pkgname.git")
+md5sums=('SKIP')
+
+pkgver() {
+  cd $_pkgname
+  git describe --long | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+
+build() {
+  cd $_pkgname
+  make
+}
+
+package() {
+  cd $_pkgname
+  install -Dm755 make2graph "$pkgdir/usr/bin/make2graph"
+  install -Dm755 makefile2graph "$pkgdir/usr/bin/makefile2graph"
+  install -Dm644 makefile2graph.1 "$pkgdir/usr/share/man/man1/makefile2graph.1"
+  install -Dm644 make2graph.1 "$pkgdir/usr/share/man/man1/make2graph.1"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
