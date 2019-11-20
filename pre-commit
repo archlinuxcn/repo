@@ -52,10 +52,6 @@ YAML_SCHEMA = None
 CHECK_ALL = False
 IGNORE_SRCINFO = False
 
-# Use --check-managed-false to turn this on
-# see https://github.com/archlinuxcn/repo/issues/1325
-CHECK_MANAGED_FALSE = '--check-managed-false' in sys.argv
-
 
 def readutf8(st):
     return st.read().decode('utf-8').strip()
@@ -293,7 +289,6 @@ def list_packages():
 
 
 class RepoTreeTest(TestCase):
-    global CHECK_MANAGED_FALSE
 
     @skip("PKGBUILDs may be added later by lilac")
     def test_pkgbuild_exists(self):
@@ -333,7 +328,6 @@ class RepoTreeTest(TestCase):
                                   'invalid "\033[1;31mlilac.yaml\033[m"'
                                   ''.format(package))
 
-    @skipIf(not CHECK_MANAGED_FALSE, 'skip this until https://github.com/archlinuxcn/repo/issues/1325 is finished')
     def test_lilac_py_has_update_on_or_managed_false(self):
         for package in list_packages():
             #if not any([git_isfile(pkgpath(package), 'lilac.py'),
