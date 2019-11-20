@@ -67,10 +67,10 @@ build() {
     -DBUILD_CPP_EXAMPLES:BOOL=OFF
     -DBUILD_TESTING:BOOL=OFF
     -DCMAKE_BUILD_TYPE:String=Release
-    -DCMAKE_EXE_LINKER_FLAGS="$(pkg-config --libs cblas) --no-relax"
+    -DCMAKE_EXE_LINKER_FLAGS="$(pkg-config --libs cblas)"
     -DCMAKE_INSTALL_LIBDIR:PATH=lib
     -DCMAKE_INSTALL_PREFIX:PATH=/usr
-    -DCMAKE_SHARED_LINKER_FLAGS="$(pkg-config --libs cblas) --no-relax"
+    -DCMAKE_SHARED_LINKER_FLAGS="$(pkg-config --libs cblas)"
     -DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON
     -DINSTALL_DOCUMENTATION:BOOL=OFF
     -DUSE_BLAS=open
