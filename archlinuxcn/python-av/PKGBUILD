@@ -5,13 +5,10 @@ pkgname=python-av
 _pkgname=PyAV
 pkgdesc="Pythonic bindings for FFmpeg's libraries"
 url='https://github.com/mikeboers/PyAV'
-
 pkgver=6.2.0
 pkgrel=3
-
 arch=("x86_64")
 license=("BSD")
-
 makedepends=(
   'cython'
   'python-setuptools'
@@ -24,9 +21,12 @@ depends=(
   'python-numpy'
   'python-pillow'
 )
-
 source=("https://github.com/mikeboers/PyAV/archive/v${pkgver}.tar.gz")
 sha512sums=('986a2fdf419457b834df3d64993ea201d1f648eedb08b0333d4bf3d424bc71aa72fd9aedf1c3a51829776ec8d7821552b965885027972f3b9f1bbcae99356ec1')
+
+get_pyver() {
+  python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
+}
 
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
@@ -35,7 +35,7 @@ build() {
 
 check() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
-  PYTHONPATH="${PWD}/build/lib.linux-${CARCH}-3.8" python setup.py test
+  PYTHONPATH="${PWD}/build/lib.linux-${CARCH}-$(get_pyver)" python setup.py test
 }
 
 package() {
