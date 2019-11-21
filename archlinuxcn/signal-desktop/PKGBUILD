@@ -9,7 +9,7 @@
 pkgname=signal-desktop
 _pkgname=Signal-Desktop
 pkgver=1.28.0
-pkgrel=4
+pkgrel=5
 pkgdesc='Electron application that links with Signal on mobile'
 arch=(x86_64)
 url=https://signal.org
@@ -32,10 +32,10 @@ source=(
 )
 sha512sums=('b0691467bc4e2b6984cc05f71bbbf0a9d3999b4e43b1ac355710e3a72b4b9445f09de4e02e7d53df03b2766bc00a0e0741f73a12fd21d00849d366519c6ee3b2'
             'a264bfc7a4a7aac747daa588a2acbf1eddfd201bc795f0fbc18460a9b25f4460f364124e227a527fec22631cd84bc9e190f9f4978069e9c119eb556b9ff2d327'
-            '05efc65a78b2006f3ffdd728dd5a96923ee9c909a3707833f8d55935c18e507051aabdbefff270bb2c58d7f151147966b550c9bbc2a115dae177f51955720482')
+            '2c10d4cc6c0b9ca650e786c1e677f22619a78c93465f27fc4cf4831f1cfe771f3b9885a416e381a9e14c3aea5d88cb3545264046188db72d54b8567266811e51')
 
 prepare() {
-  cd "${pkgname}-git-repo"
+  cd "${_pkgname}-${pkgver}"
   
   # Set system electron version
   _installed_electron_version=$(pacman -Q electron | cut -d' ' -f2 | cut -d'-' -f1)
@@ -60,7 +60,7 @@ prepare() {
 }
 
 build() {
-  cd "${pkgname}-git-repo"
+  cd "${src}/${_pkgname}-${pkgver}"
 
   # Build Signal
   yarn generate
@@ -68,7 +68,7 @@ build() {
 }
 
 package() {
-  cd "${pkgname}-git-repo"
+  cd ""${src}/${_pkgname}-${pkgver}""
 
   install -dm 755 "${pkgdir}/usr/lib/${pkgname}"
   cp -r release/linux-unpacked/resources "${pkgdir}/usr/lib/${pkgname}/"
