@@ -1,0 +1,39 @@
+# Maintainer: kaptoxic@yahoo.com
+# Contributor: kaptoxic@yahoo.com
+
+pkgname=proofgeneral-git
+pkgver=r8983.15ccaec2
+pkgrel=1
+pkgdesc="Generic interface for proof assistants"
+arch=('i686' 'x86_64')
+license=('GPL')
+url='http://proofgeneral.inf.ed.ac.uk/'
+depends=('emacs>=24.3')
+makedepends=('git')
+provides=("${pkgname%-git}")
+conflicts=("${pkgname%-git}")
+install="${pkgname}.install"
+source=('repo::git+https://github.com/ProofGeneral/PG.git')
+
+pkgver() {
+  cd "$srcdir/repo"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+md5sums=('SKIP')
+sha256sums=('SKIP')
+sha512sums=('SKIP')
+
+build() {
+  cd "$srcdir/repo"
+
+  make clean
+  chmod +x isar/isartags
+  make
+}
+
+package() {
+  cd "$srcdir/repo"
+
+  make PREFIX=${pkgdir}/usr install -j1
+}
