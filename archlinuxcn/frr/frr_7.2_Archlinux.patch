@@ -1,0 +1,452 @@
+diff -Naupr frr-frr-7.2_orig/ospf6d/ospf6_abr.c frr-frr-7.2/ospf6d/ospf6_abr.c
+--- frr-frr-7.2_orig/ospf6d/ospf6_abr.c	2019-10-15 21:44:47.000000000 +0700
++++ frr-frr-7.2/ospf6d/ospf6_abr.c	2019-10-31 14:08:43.189593701 +0700
+@@ -1209,8 +1209,8 @@ void ospf6_abr_examin_summary(struct osp
+ 		/* For Inter-Prefix route: Update RIB/FIB,
+ 		 * For Inter-Router trigger summary update
+ 		 */
+-		if (table->hook_add)
+-			(*table->hook_add)(old_route);
++		//if (table->hook_add)
++		//	(*table->hook_add)(old_route);
+ 
+ 		/* Delete new route */
+ 		ospf6_route_delete(route);
+diff -Naupr frr-frr-7.2_orig/redhat/babeld.service frr-frr-7.2/redhat/babeld.service
+--- frr-frr-7.2_orig/redhat/babeld.service	1970-01-01 07:00:00.000000000 +0700
++++ frr-frr-7.2/redhat/babeld.service	2019-10-31 14:06:59.201098655 +0700
+@@ -0,0 +1,15 @@
++[Unit]
++Description=Babel routing daemon
++Documentation=man:babeld(8) man:zebra(8)
++BindTo=zebra.service
++After=network.target zebra.service
++
++[Service]
++Type=forking
++PIDFile=/run/frr/babeld.pid
++ExecStart=/usr/bin/babeld -d
++ExecReload=/bin/kill -HUP $MAINPID
++Restart=on-abort
++
++[Install]
++WantedBy=multi-user.target
+diff -Naupr frr-frr-7.2_orig/redhat/bfdd.service frr-frr-7.2/redhat/bfdd.service
+--- frr-frr-7.2_orig/redhat/bfdd.service	1970-01-01 07:00:00.000000000 +0700
++++ frr-frr-7.2/redhat/bfdd.service	2019-10-31 14:06:59.201098655 +0700
+@@ -0,0 +1,15 @@
++[Unit]
++Description=Communication failure detection daemon
++Documentation=man:bfdd(8) man:zebra(8)
++BindTo=zebra.service
++After=network.target zebra.service
++
++[Service]
++Type=forking
++PIDFile=/run/frr/bfdd.pid
++ExecStart=/usr/bin/bfdd -d
++ExecReload=/bin/kill -HUP $MAINPID
++Restart=on-abort
++
++[Install]
++WantedBy=multi-user.target
+diff -Naupr frr-frr-7.2_orig/redhat/bgpd.service frr-frr-7.2/redhat/bgpd.service
+--- frr-frr-7.2_orig/redhat/bgpd.service	1970-01-01 07:00:00.000000000 +0700
++++ frr-frr-7.2/redhat/bgpd.service	2019-10-31 14:06:59.201098655 +0700
+@@ -0,0 +1,15 @@
++[Unit]
++Description=BGP routing daemon
++Documentation=man:bgpd(8) man:zebra(8)
++BindTo=zebra.service
++After=network.target zebra.service
++
++[Service]
++Type=forking
++PIDFile=/run/frr/bgpd.pid
++ExecStart=/usr/bin/bgpd -d
++ExecReload=/bin/kill -HUP $MAINPID
++Restart=on-abort
++
++[Install]
++WantedBy=multi-user.target
+diff -Naupr frr-frr-7.2_orig/redhat/eigrpd.service frr-frr-7.2/redhat/eigrpd.service
+--- frr-frr-7.2_orig/redhat/eigrpd.service	1970-01-01 07:00:00.000000000 +0700
++++ frr-frr-7.2/redhat/eigrpd.service	2019-10-31 14:06:59.201098655 +0700
+@@ -0,0 +1,15 @@
++[Unit]
++Description=EIGRP routing daemon
++Documentation=man:eigrpd(8) man:zebra(8)
++BindTo=zebra.service
++After=network.target zebra.service
++
++[Service]
++Type=forking
++PIDFile=/run/frr/eigrpd.pid
++ExecStart=/usr/bin/eigrpd -d
++ExecReload=/bin/kill -HUP $MAINPID
++Restart=on-abort
++
++[Install]
++WantedBy=multi-user.target
+diff -Naupr frr-frr-7.2_orig/redhat/isisd.service frr-frr-7.2/redhat/isisd.service
+--- frr-frr-7.2_orig/redhat/isisd.service	1970-01-01 07:00:00.000000000 +0700
++++ frr-frr-7.2/redhat/isisd.service	2019-10-31 14:06:59.201098655 +0700
+@@ -0,0 +1,15 @@
++[Unit]
++Description=IS-IS routing daemon
++Documentation=man:isis(8) man:zebra(8)
++BindTo=zebra.service
++After=network.target zebra.service
++
++[Service]
++Type=forking
++PIDFile=/run/frr/isisd.pid
++ExecStart=/usr/bin/isisd -d
++ExecReload=/bin/kill -HUP $MAINPID
++Restart=on-abort
++
++[Install]
++WantedBy=multi-user.target
+diff -Naupr frr-frr-7.2_orig/redhat/ldpd.service frr-frr-7.2/redhat/ldpd.service
+--- frr-frr-7.2_orig/redhat/ldpd.service	1970-01-01 07:00:00.000000000 +0700
++++ frr-frr-7.2/redhat/ldpd.service	2019-10-31 14:06:59.201098655 +0700
+@@ -0,0 +1,15 @@
++[Unit]
++Description=LDP engine
++Documentation=man:ldpd(8) man:zebra(8)
++BindTo=zebra.service
++After=network.target zebra.service
++
++[Service]
++Type=forking
++PIDFile=/run/frr/ldpd.pid
++ExecStart=/usr/bin/ldpd -d
++ExecReload=/bin/kill -HUP $MAINPID
++Restart=on-abort
++
++[Install]
++WantedBy=multi-user.target
+diff -Naupr frr-frr-7.2_orig/redhat/nhrpd.service frr-frr-7.2/redhat/nhrpd.service
+--- frr-frr-7.2_orig/redhat/nhrpd.service	1970-01-01 07:00:00.000000000 +0700
++++ frr-frr-7.2/redhat/nhrpd.service	2019-10-31 14:06:59.201098655 +0700
+@@ -0,0 +1,15 @@
++[Unit]
++Description=NHRP daemon
++Documentation=man:nhrpd(8) man:zebra(8)
++BindTo=zebra.service
++After=network.target zebra.service
++
++[Service]
++Type=forking
++PIDFile=/run/frr/nhrpd.pid
++ExecStart=/usr/bin/nhrpd -d
++ExecReload=/bin/kill -HUP $MAINPID
++Restart=on-abort
++
++[Install]
++WantedBy=multi-user.target
+diff -Naupr frr-frr-7.2_orig/redhat/ospf6d.service frr-frr-7.2/redhat/ospf6d.service
+--- frr-frr-7.2_orig/redhat/ospf6d.service	1970-01-01 07:00:00.000000000 +0700
++++ frr-frr-7.2/redhat/ospf6d.service	2019-10-31 14:06:59.201098655 +0700
+@@ -0,0 +1,15 @@
++[Unit]
++Description=OSPF routing daemon for IPv6
++Documentation=man:ospfd(8) man:zebra(8)
++BindTo=zebra.service
++After=network.target zebra.service
++
++[Service]
++Type=forking
++PIDFile=/run/frr/ospf6d.pid
++ExecStart=/usr/bin/ospf6d -d
++ExecReload=/bin/kill -HUP $MAINPID
++Restart=on-abort
++
++[Install]
++WantedBy=multi-user.target
+diff -Naupr frr-frr-7.2_orig/redhat/ospfd-instance@.service frr-frr-7.2/redhat/ospfd-instance@.service
+--- frr-frr-7.2_orig/redhat/ospfd-instance@.service	1970-01-01 07:00:00.000000000 +0700
++++ frr-frr-7.2/redhat/ospfd-instance@.service	2019-10-31 14:06:59.201098655 +0700
+@@ -0,0 +1,15 @@
++[Unit]
++Description=OSPF routing daemon instance %i
++Documentation=man:ospfd(8) man:zebra(8)
++BindTo=zebra.service
++After=network.target zebra.service ospfd.service
++
++[Service]
++Type=forking
++PIDFile=/run/frr/ospfd-%i.pid
++ExecStart=/usr/bin/ospfd -n %i -d
++ExecReload=/bin/kill -HUP $MAINPID
++Restart=on-abort
++
++[Install]
++WantedBy=multi-user.target
+diff -Naupr frr-frr-7.2_orig/redhat/ospfd.service frr-frr-7.2/redhat/ospfd.service
+--- frr-frr-7.2_orig/redhat/ospfd.service	1970-01-01 07:00:00.000000000 +0700
++++ frr-frr-7.2/redhat/ospfd.service	2019-10-31 14:06:59.201098655 +0700
+@@ -0,0 +1,15 @@
++[Unit]
++Description=OSPF routing daemon
++Documentation=man:ospfd(8) man:zebra(8)
++BindTo=zebra.service
++After=network.target zebra.service
++
++[Service]
++Type=forking
++PIDFile=/run/frr/ospfd.pid
++ExecStart=/usr/bin/ospfd -d
++ExecReload=/bin/kill -HUP $MAINPID
++Restart=on-abort
++
++[Install]
++WantedBy=multi-user.target
+diff -Naupr frr-frr-7.2_orig/redhat/pbrd.service frr-frr-7.2/redhat/pbrd.service
+--- frr-frr-7.2_orig/redhat/pbrd.service	1970-01-01 07:00:00.000000000 +0700
++++ frr-frr-7.2/redhat/pbrd.service	2019-10-31 14:06:59.201098655 +0700
+@@ -0,0 +1,15 @@
++[Unit]
++Description=PBR routing daemon
++Documentation=man:pbrd(8) man:zebra(8)
++BindTo=zebra.service
++After=network.target zebra.service
++
++[Service]
++Type=forking
++PIDFile=/run/frr/pbrd.pid
++ExecStart=/usr/bin/pbrd -d
++ExecReload=/bin/kill -HUP $MAINPID
++Restart=on-abort
++
++[Install]
++WantedBy=multi-user.target
+diff -Naupr frr-frr-7.2_orig/redhat/pimd.service frr-frr-7.2/redhat/pimd.service
+--- frr-frr-7.2_orig/redhat/pimd.service	1970-01-01 07:00:00.000000000 +0700
++++ frr-frr-7.2/redhat/pimd.service	2019-10-31 14:06:59.201098655 +0700
+@@ -0,0 +1,14 @@
++[Unit]
++Description=PIM multicast routing engine
++Documentation=man:pimd(8) man:zebra(8)
++BindTo=zebra.service
++After=network.target zebra.service
++
++[Service]
++Type=forking
++PIDFile=/run/frr/pimd.pid
++ExecStart=/usr/bin/pimd -d
++Restart=on-abort
++
++[Install]
++WantedBy=multi-user.target
+diff -Naupr frr-frr-7.2_orig/redhat/ripd.service frr-frr-7.2/redhat/ripd.service
+--- frr-frr-7.2_orig/redhat/ripd.service	1970-01-01 07:00:00.000000000 +0700
++++ frr-frr-7.2/redhat/ripd.service	2019-10-31 14:06:59.201098655 +0700
+@@ -0,0 +1,15 @@
++[Unit]
++Description=RIP routing daemon
++Documentation=man:ripd(8) man:zebra(8)
++BindTo=zebra.service
++After=network.target zebra.service
++
++[Service]
++Type=forking
++PIDFile=/run/frr/ripd.pid
++ExecStart=/usr/bin/ripd -d
++ExecReload=/bin/kill -HUP $MAINPID
++Restart=on-abort
++
++[Install]
++WantedBy=multi-user.target
+diff -Naupr frr-frr-7.2_orig/redhat/ripngd.service frr-frr-7.2/redhat/ripngd.service
+--- frr-frr-7.2_orig/redhat/ripngd.service	1970-01-01 07:00:00.000000000 +0700
++++ frr-frr-7.2/redhat/ripngd.service	2019-10-31 14:06:59.201098655 +0700
+@@ -0,0 +1,15 @@
++[Unit]
++Description=RIP routing daemon for IPv6
++Documentation=man:ripngd(8) man:zebra(8)
++BindTo=zebra.service
++After=network.target zebra.service
++
++[Service]
++Type=forking
++PIDFile=/run/frr/ripngd.pid
++ExecStart=/usr/bin/ripngd -d
++ExecReload=/bin/kill -HUP $MAINPID
++Restart=on-abort
++
++[Install]
++WantedBy=multi-user.target
+diff -Naupr frr-frr-7.2_orig/redhat/staticd.service frr-frr-7.2/redhat/staticd.service
+--- frr-frr-7.2_orig/redhat/staticd.service	1970-01-01 07:00:00.000000000 +0700
++++ frr-frr-7.2/redhat/staticd.service	2019-10-31 14:06:59.201098655 +0700
+@@ -0,0 +1,15 @@
++[Unit]
++Description=Zebra daemon responsible for management of static routes
++Documentation=man:staticd(8) man:zebra(8)
++BindTo=zebra.service
++After=network.target zebra.service
++
++[Service]
++Type=forking
++PIDFile=/run/frr/staticd.pid
++ExecStart=/usr/bin/staticd -d
++ExecReload=/bin/kill -HUP $MAINPID
++Restart=on-abort
++
++[Install]
++WantedBy=multi-user.target
+diff -Naupr frr-frr-7.2_orig/redhat/zebra.service frr-frr-7.2/redhat/zebra.service
+--- frr-frr-7.2_orig/redhat/zebra.service	1970-01-01 07:00:00.000000000 +0700
++++ frr-frr-7.2/redhat/zebra.service	2019-10-31 14:06:59.201098655 +0700
+@@ -0,0 +1,15 @@
++[Unit]
++Description=GNU Zebra routing manager
++Documentation=man:zebra(8)
++After=network.target
++
++[Service]
++Type=forking
++PIDFile=/run/frr/zebra.pid
++ExecStartPre=/usr/bin/ip route flush proto zebra
++ExecStart=/usr/bin/zebra -d
++ExecReload=/bin/kill -HUP $MAINPID
++Restart=on-abort
++
++[Install]
++WantedBy=multi-user.target
+diff -Naupr frr-frr-7.2_orig/tools/etc/frr/daemons frr-frr-7.2/tools/etc/frr/daemons
+--- frr-frr-7.2_orig/tools/etc/frr/daemons	2019-10-15 21:44:47.000000000 +0700
++++ frr-frr-7.2/tools/etc/frr/daemons	2019-10-31 14:25:39.747396103 +0700
+@@ -30,6 +30,8 @@ pbrd=no
+ bfdd=no
+ fabricd=no
+ vrrpd=no
++zebra=yes
++#ospfd_instances="1,2,3"
+ 
+ #
+ # If this option is set the /etc/init.d/frr script automatically loads
+@@ -37,25 +39,24 @@ vrrpd=no
+ # Check /etc/pam.d/frr if you intend to use "vtysh"!
+ #
+ vtysh_enable=yes
+-zebra_options="  -A 127.0.0.1 -s 90000000"
+-bgpd_options="   -A 127.0.0.1"
+-ospfd_options="  -A 127.0.0.1"
+-ospf6d_options=" -A ::1"
+-ripd_options="   -A 127.0.0.1"
+-ripngd_options=" -A ::1"
+-isisd_options="  -A 127.0.0.1"
+-pimd_options="   -A 127.0.0.1"
+-ldpd_options="   -A 127.0.0.1"
+-nhrpd_options="  -A 127.0.0.1"
+-eigrpd_options=" -A 127.0.0.1"
+-babeld_options=" -A 127.0.0.1"
+-sharpd_options=" -A 127.0.0.1"
+-pbrd_options="   -A 127.0.0.1"
+-staticd_options="-A 127.0.0.1"
+-bfdd_options="   -A 127.0.0.1"
+-fabricd_options="-A 127.0.0.1"
+-vrrpd_options="  -A 127.0.0.1"
+-
++zebra_options="  -A 127.0.0.1 -s 90000000 -d -f /etc/frr/zebra.conf"
++bgpd_options="   -A 127.0.0.1 -d -f /etc/frr/bgpd.conf"
++ospfd_options="  -A 127.0.0.1 -d -f /etc/frr/ospfd.conf"
++ospf6d_options=" -A ::1 -d -f /etc/frr/ospf6d.conf"
++ripd_options="   -A 127.0.0.1 -d -f /etc/frr/ripd.conf"
++ripngd_options=" -A ::1 -d -f /etc/frr/ripngd.conf"
++isisd_options="  -A 127.0.0.1 -d -f /etc/frr/isisd.conf"
++pimd_options="   -A 127.0.0.1 -d -f /etc/frr/pimd.conf"
++ldpd_options="   -A 127.0.0.1 -d -f /etc/frr/ldpd.conf"
++nhrpd_options="  -A 127.0.0.1 -d -f /etc/frr/nhrdp.conf"
++eigrpd_options=" -A 127.0.0.1 -d -f /etc/frr/eigrpd.conf"
++babeld_options=" -A 127.0.0.1 -d -f /etc/frr/babeld.conf"
++sharpd_options=" -A 127.0.0.1 -d -f /etc/frr/sharpd.conf"
++pbrd_options="   -A 127.0.0.1 -d -f /etc/frr/pbrd.conf"
++staticd_options="-A 127.0.0.1 -d -f /etc/frr/staticd.conf"
++bfdd_options="   -A 127.0.0.1 -d -f /etc/frr/bfdd.conf"
++fabricd_options="-A 127.0.0.1 -d -f /etc/frr/fabricd.conf"
++vrrpd_options="  -A 127.0.0.1 -d -f /etc/frr/vrrpd.conf"
+ #
+ # This is the maximum number of FD's that will be available.
+ # Upon startup this is read by the control files and ulimit
+@@ -65,7 +66,8 @@ vrrpd_options="  -A 127.0.0.1"
+ #MAX_FDS=1024
+ 
+ # The list of daemons to watch is automatically generated by the init script.
+-#watchfrr_options=""
++watchfrr_enable=yes
++watchfrr_options="-d -r '/usr/bin/frr restart %s' -s '/usr/bin/frr start %s' -k '/usr/bin/frr stop %s'"
+ 
+ # for debugging purposes, you can specify a "wrap" command to start instead
+ # of starting the daemon directly, e.g. to use valgrind on ospfd:
+diff -Naupr frr-frr-7.2_orig/tools/frrcommon.sh.in frr-frr-7.2/tools/frrcommon.sh.in
+--- frr-frr-7.2_orig/tools/frrcommon.sh.in	2019-10-15 21:44:47.000000000 +0700
++++ frr-frr-7.2/tools/frrcommon.sh.in	2019-10-31 14:09:10.276736253 +0700
+@@ -270,7 +270,7 @@ load_old_config() {
+ 	[ -s "$oldcfg" ] || return 0
+ 	grep -v '^[[:blank:]]*\(#\|$\)' "$oldcfg" > /dev/null || return 0
+ 
+-	log_warning_msg "Reading deprecated $oldcfg.  Please move its settings to $C_PATH/daemons and remove it."
++	log_warning_msg "Reading deprecated $oldcfg.  Please move its settings to $C_PATH/daemons.conf and remove it."
+ 
+ 	# save off settings from daemons for the OR below
+ 	for dmn in $DAEMONS; do eval "_new_$dmn=\${$dmn:-no}"; done
+@@ -281,8 +281,8 @@ load_old_config() {
+ 	for dmn in $DAEMONS; do eval "test \$_new_$dmn != no && $dmn=\$_new_$dmn; unset _new_$dmn"; done
+ }
+ 
+-[ -r "$C_PATH/daemons" ] || {
+-	log_failure_msg "cannot run $@: $C_PATH/daemons does not exist"
++[ -r "$C_PATH/daemons.conf" ] || {
++	log_failure_msg "cannot run $@: $C_PATH/daemons.conf does not exist"
+ 	exit 1
+ }
+ . "$C_PATH/daemons"
+diff -Naupr frr-frr-7.2_orig/tools/frr.in frr-frr-7.2/tools/frr.in
+--- frr-frr-7.2_orig/tools/frr.in	2019-10-15 21:44:47.000000000 +0700
++++ frr-frr-7.2/tools/frr.in	2019-10-31 14:34:03.145967025 +0700
+@@ -26,7 +26,7 @@ FRR_VTY_GROUP="@enable_vty_group@" # frr
+ # See /usr/share/doc/frr/README.Debian.gz for further information.
+ # Keep zebra first and do not list watchfrr!
+ DAEMONS="zebra bgpd ripd ripngd ospfd ospf6d isisd babeld pimd ldpd nhrpd eigrpd sharpd pbrd staticd bfdd fabricd vrrpd"
+-MAX_INSTANCES=5
++MAX_INSTANCES=1024
+ RELOAD_SCRIPT="$D_PATH/frr-reload.py"
+ 
+ if [ -e /lib/lsb/init-functions ]; then
+@@ -500,10 +500,9 @@ check_status()
+ #########################################################
+ 
+ # Config broken but script must exit silently.
+-[ ! -r "$C_PATH/daemons" ] && exit 0
++[ ! -r "$C_PATH/daemons.conf" ] && exit 0
+ 
+ # Load configuration
+-. "$C_PATH/daemons"
+ if [ -e "$C_PATH/daemons.conf" ]; then
+ 	. "$C_PATH/daemons.conf"
+ fi
+@@ -511,7 +510,7 @@ fi
+ # Read configuration variable file if it is present
+ [ -r /etc/default/frr ] && . /etc/default/frr
+ 
+-MAX_INSTANCES=${MAX_INSTANCES:=5}
++MAX_INSTANCES=${MAX_INSTANCES:=1024}
+ 
+ # Set priority of un-startable daemons to 'no' and substitute 'yes' to '0'
+ convert_daemon_prios
+diff -Naupr frr-frr-7.2_orig/tools/frr-reload frr-frr-7.2/tools/frr-reload
+--- frr-frr-7.2_orig/tools/frr-reload	2019-10-15 21:44:47.000000000 +0700
++++ frr-frr-7.2/tools/frr-reload	2019-10-31 14:09:10.276736253 +0700
+@@ -1,7 +1,7 @@
+ #!/bin/sh
+ 
+-if test -e /usr/lib/frr/frr-reload.py; then
+-   exec /usr/lib/frr/frr-reload.py --reload /etc/frr/frr.conf
++if test -e /usr/bin/frr-reload.py; then
++   exec /usr/bin/frr-reload.py --reload /etc/frr/frr.conf
+ fi
+ >&2 echo "Please install frr-pythontools package. Required for reload"
+ exit 1

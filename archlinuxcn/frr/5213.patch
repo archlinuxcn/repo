@@ -1,0 +1,30 @@
+From 15e84e5abbf32ab6ad470ee3dbdcfa27c87e455f Mon Sep 17 00:00:00 2001
+From: Mark Stapp <mjs@voltanet.io>
+Date: Wed, 23 Oct 2019 09:08:21 -0400
+Subject: [PATCH] lib: Remove include of deprecated sysctl.h
+
+Stop including deprecated header file; appears to be unused and
+it has been deprecated in recent linux.
+
+Signed-off-by: Mark Stapp <mjs@voltanet.io>
+---
+ lib/zebra.h | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/lib/zebra.h b/lib/zebra.h
+index b17ef700b4..de9a347e1f 100644
+--- a/lib/zebra.h
++++ b/lib/zebra.h
+@@ -52,10 +52,9 @@ typedef unsigned char uint8_t;
+ #include <sys/types.h>
+ #include <sys/param.h>
+ #ifdef HAVE_SYS_SYSCTL_H
+-#ifdef GNU_LINUX
+-#include <linux/types.h>
+-#endif
++#ifndef GNU_LINUX
+ #include <sys/sysctl.h>
++#endif
+ #endif /* HAVE_SYS_SYSCTL_H */
+ #include <sys/ioctl.h>
+ #ifdef HAVE_SYS_CONF_H
