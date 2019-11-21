@@ -1,0 +1,23 @@
+[Unit]
+Description=Caddy HTTP/2 web server
+Documentation=https://caddyserver.com/docs
+After=network-online.target
+
+[Service]
+User=http
+Group=http
+Environment=CADDYPATH=/var/lib/caddy
+EnvironmentFile=-/etc/caddy/envfile
+ExecStart=/usr/bin/caddy -log stdout -agree -conf /etc/caddy/caddy.conf -root /tmp
+ExecReload=/usr/bin/kill -USR1 $MAINPID
+LimitNOFILE=1048576
+LimitNPROC=64
+PrivateTmp=true
+PrivateDevices=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/caddy /var/log/caddy
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+
+[Install]
+WantedBy=multi-user.target

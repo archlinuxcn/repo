@@ -1,0 +1,10 @@
+[Unit]
+Description=Greenclip agent
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/greenclip daemon
+Restart=always
+
+[Install]
+WantedBy=default.target

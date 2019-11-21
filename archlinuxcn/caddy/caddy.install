@@ -1,0 +1,18 @@
+post_install() {
+	systemctl --quiet daemon-reload
+	systemctl --quiet preset caddy.service
+}
+
+post_upgrade() {
+	systemctl --quiet daemon-reload
+	systemd-tmpfiles --create caddy.conf
+	systemctl --quiet try-restart caddy.service
+}
+
+pre_remove() {
+	systemctl --quiet --no-reload disable --now caddy.service
+}
+
+post_remove() {
+	systemctl --quiet daemon-reload
+}
