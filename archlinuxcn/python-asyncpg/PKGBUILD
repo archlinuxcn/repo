@@ -1,24 +1,24 @@
-_pkgname=asyncpg
+_name=asyncpg
 pkgname=python-asyncpg
-pkgver=0.19.0
-pkgrel=2
-pkgdesc="An asyncio PosgtreSQL driver"
-arch=('any')
+pkgver=0.20.0
+pkgrel=1
+pkgdesc="An asyncio PostgreSQL driver"
+arch=(any)
 url="https://github.com/MagicStack/asyncpg"
-license=('Apache')
+license=(Apache License, Version 2.0)
 depends=('python' 'python-setuptools')
-_name=${pkgname#python-}
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_pkgname}-${pkgver}.tar.gz")
-md5sums=('2add7c7ee742008425a090532d2b4ac8')
+
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
+sha256sums=('aa02dce5d5b801cff7dd2d99b767f5db312858f527ec1764777aad1fdefb5a7a')
 
 build() {
-  cd "$srcdir/$_pkgname-$pkgver"
-  LANG=en_US.UTF-8 python3 setup.py build
+  cd "$srcdir/$_name-$pkgver"
+  python3 setup.py build
 }
 
 package() {
-  cd "$srcdir/$_pkgname-$pkgver"
-  LANG=en_US.UTF-8 python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+  cd "$srcdir/$_name-$pkgver"
+  python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 }
 
-# vim:set sw=2 et:
+
