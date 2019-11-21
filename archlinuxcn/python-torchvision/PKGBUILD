@@ -39,6 +39,10 @@ checkdepends=(
 source=("https://github.com/pytorch/vision/archive/v${pkgver}.tar.gz")
 sha512sums=('3327364bd1c10f4f0fdf9f8c1bed3848cbd887ee335634a0da6eb7a2611037408eee6261cd178d12225be5f2c809a05ff9fb87420b8accd447a799ca83def3ad')
 
+get_pyver() {
+  python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
+}
+
 build() {
   cd "${_pkgname}-${pkgver}"
   python setup.py build
@@ -46,7 +50,7 @@ build() {
 
 check() {
   cd "${_pkgname}-${pkgver}"
-  PYTHONPATH="${PWD}/build/lib.linux-${CARCH}-3.8" pytest -v
+  PYTHONPATH="${PWD}/build/lib.linux-${CARCH}-$(get_pyver)" pytest -v
 }
 
 package() {
