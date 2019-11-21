@@ -3,8 +3,8 @@
 
 pkgname=gradio
 _pkgname=Gradio
-pkgver=7.2
-pkgrel=2
+pkgver=7.3
+pkgrel=1
 pkgdesc='A GTK3 app for finding and listening to internet radio stations'
 arch=('i686' 'x86_64')
 license=('GPL3')
@@ -16,7 +16,7 @@ optdepends=('gst-libav: H.264 video streaming')
 makedepends=('gnome-common' 'meson' 'gettext' 'appstream-glib' 'vala' 'yelp-tools')
 options=('!emptydirs')
 source=("${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('5a85d7d4afb1424e46c935114b268e4a65de2629d60f48eccd75d67ff4b113d2')
+sha256sums=('5c5afed83fceb9a9f8bc7414b8a200128b3317ccf1ed50a0e7321ca15cf19412')
 conflicts=('gradio-git' 'gradio-bin')
 provides=("gradio=${pkgver}")
 
