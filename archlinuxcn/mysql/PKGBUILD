@@ -6,8 +6,8 @@
 
 pkgname=('mysql' 'libmysqlclient' 'mysql-clients')
 pkgbase=mysql
-pkgver=8.0.17
-pkgrel=3
+pkgver=8.0.18
+pkgrel=1
 pkgdesc="Fast SQL database server, community edition"
 arch=('x86_64')
 makedepends=('openssl' 'zlib' 'cmake' 'systemd-tools' 'libaio' 'jemalloc'
@@ -21,7 +21,7 @@ source=("https://cdn.mysql.com/Downloads/MySQL-8.0/${pkgbase}-boost-${pkgver}.ta
         "mysql.sysconfig"
         "mysqld_service.patch"
         "systemd-sysusers-tmpfiles.patch")
-sha256sums=('d44231316ce30a1d1189125ceed86d3388409778e17d0e3b9a060f532463e29a'
+sha256sums=('0eccd9d79c04ba0ca661136bb29085e3833d9c48ed022d0b9aba12236994186b'
             '6bc24ae510f6b6bbad6b3edda2d0028b29292937b482274a4c2fae335f4de328'
             'e1c23fa0971a13d998f2790379b68c475438d05b6d6f2691b99051dbf497567f'
             '203dcd22fea668477ac7123dbd9909fae72d3d07f8855417a669a9c94db072ae'
@@ -60,9 +60,9 @@ build() {
     -DWITH_JEMALLOC=ON \
     -DWITH_READLINE=ON \
     -DWITH_SYSTEMD=yes \
+    -DWITH_PROTOBUF=bundled \
     -DWITH_UNIT_TESTS=OFF \
     -DPLUGIN_EXAMPLE=NO \
-    -DWITH_PROTOBUF=bundled \
     -DWITHOUT_EXAMPLE_STORAGE_ENGINE=ON \
     -DPLUGIN_FEDERATED=NO \
     -DWITHOUT_FEDERATED_STORAGE_ENGINE=ON \
@@ -86,7 +86,7 @@ check() {
 
 package_libmysqlclient(){
   pkgdesc="MySQL client libraries"
-  depends=('libsasl' 'zlib')
+  depends=('libsasl' 'zlib' 'zstd')
   conflicts=('libmariadbclient' 'mariadb-libs')
   provides=("libmariadbclient=${pkgver}" "libmysqlclient=${pkgver}" "mariadb-libs=${pkgver}")
 
@@ -157,7 +157,7 @@ package_mysql(){
   rm "${pkgdir}/usr/bin/mysql_config"
   rm "${pkgdir}/usr/lib/libmysqlclient.so"
   rm "${pkgdir}/usr/lib/libmysqlclient.so.21"
-  rm "${pkgdir}/usr/lib/libmysqlclient.so.21.1.17"
+  rm "${pkgdir}/usr/lib/libmysqlclient.so.21.1.18"
   rm "${pkgdir}/usr/lib/libmysqlservices.a"
   rm "${pkgdir}/usr/lib/mysql/plugin/authentication_ldap_sasl_client.so"
   rm -r "${pkgdir}/usr/include/"
