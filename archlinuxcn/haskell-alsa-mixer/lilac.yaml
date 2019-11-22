@@ -1,0 +1,17 @@
+maintainers:
+    - github: poscat0x04
+
+update_on:
+    - aur: haskell-alsa-mixer
+    - aur: haskell-alsa-core
+    - archpkg: ghc-libs
+    - archpkg: ghc
+    - archpkg: c2hs
+
+repo_depends:
+    - haskell-alsa-core
+
+pre_build: aur_pre_build
+
+post_build: aur_post_build
+
