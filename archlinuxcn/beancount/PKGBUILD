@@ -3,7 +3,7 @@
 pkgname=beancount
 pkgdesc='Double-Entry Accounting from Text Files'
 pkgver=2.2.3
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 url="http://furius.ca/beancount/"
 license=('GPL')
