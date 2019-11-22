@@ -3,7 +3,7 @@
 
 pkgname=pip-tools
 pkgver=4.2.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A set of tools to keep your pinned Python dependencies fresh."
 arch=('any')
 url="https://github.com/jazzband/pip-tools/"
