@@ -9,15 +9,15 @@
 
 pkgname=freecad-oce
 _pkgver=0.18
-_count=16131
-_commit=3129ae4296e40ed20e7b3d460b86e6969acbe1c3
+_count=16148
+_commit=9c2cf7283bc71107202e63b9d8cd0b7eb8c0e531
 pkgver=$_pkgver.$_count
-pkgrel=11
+pkgrel=12
 pkgdesc='A general purpose 3D CAD modeler'
 arch=('x86_64')
 url='https://www.freecadweb.org/'
 license=('LGPL')
-depends=('boost-libs' 'curl' 'oce' 'xerces-c' 'libspnav' 'glu' 'netcdf'
+depends=('boost-libs' 'curl' 'oce' 'xerces-c' 'libspnav' 'glu' 'netcdf' 'openmpi'
          'shared-mime-info' 'hicolor-icon-theme' 'jsoncpp' 'qt5-base' 'qt5-declarative' 'qt5-svg' 'qt5-tools'
          'qt5-x11extras' 'qt5-webkit' 'med' 'python-pivy' 'python-pyside2' 'python-matplotlib' 'pyside2-tools')
 makedepends=('boost' 'eigen' 'gcc-fortran' 'swig' 'xerces-c' 'desktop-file-utils' 'git'
@@ -31,6 +31,25 @@ source=("git+https://github.com/FreeCAD/FreeCAD.git#commit=$_commit"
 sha256sums=('SKIP'
             '617968d7bbd1da71bdedaed1b66c5d6eaf24e0fb34678b93f5d925d370c66296'
             '1d98fa4e62f352966eb357c93f54b1f0bf562931e8323bf70a83b5e221a5fb14')
+
+_backports=(
+  6eacb17b3e03d20039b85c9daebab9e44386d6bf # Update swigpyrun.in for Python 3.8
+  851e3d9847c5043a604a544b502c51e8c628e96c # add missing std:: namespace to build on Debian 10
+  bf5923c0f360f43703bf0c2d8b1e52ac246a9c11 # add missing std:: namespace to build on Debian 10
+  2a92051192782930f53f8e3dab011dd8382ca8c3 # add missing std:: namespace to build on Debian 10
+  50957037764de76bdc0244e5d49f8c5bdcbc4e45 # add missing std:: namespace to build on Debian 10
+)
+
+prepare() {
+  cd "${srcdir}/FreeCAD"
+
+  if ((${#_backports[@]})); then
+    git cherry-pick --quit
+    git cherry-pick -n -x -Xours -Xignore-space-change "${_backports[@]}" \
+      || true # Kind of a hack, but the last commit does not apply cleanly
+    git rm src/Mod/TechDraw/App/Cosmetic.cpp # Fix file not present in 0.18
+  fi
+}
 
 build() {
   cd "${srcdir}/FreeCAD"
@@ -54,7 +73,7 @@ build() {
   make
 }
 
-package_freecad-oce() {
+package() {
   cd FreeCAD/build
 
   # Install main program
@@ -79,8 +98,7 @@ package_freecad-oce() {
           "${pkgdir}/usr/share/icons/hicolor/scalable/apps/freecad.svg"
 
   # Mime info
-  install -D -m644 "${srcdir}/freecad.xml" \
-          "${pkgdir}/usr/share/mime/packages/freecad.xml"
+  install -D -m644 "${srcdir}/freecad.xml" "${pkgdir}/usr/share/mime/packages/freecad.xml"
 
   boostver=$(objdump -p /usr/lib/libboost_system.so | \
                grep SONAME | sed -e 's/.*boost_system\.so\.//')
@@ -91,4 +109,8 @@ package_freecad-oce() {
   ((next_min=min_ver + 1))
   depends+=("boost-libs>=${maj_ver}.${min_ver}.${patch_ver}"
             "boost-libs<${maj_ver}.${next_min}.0")
+
+  pymin_ver=$(python -c 'import sys; print(sys.version_info.minor)')
+  ((pynext_min=pymin_ver + 1))
+  depends+=("python>=3.${pymin_ver}.0" "python<3.${pynext_min}.0")
 }
