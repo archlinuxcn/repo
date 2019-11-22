@@ -1,13 +1,13 @@
---- a/Lib/test/test_posix.py	2019-11-08 18:26:13.704894779 +0800
-+++ b/Lib/test/test_posix.py	2019-11-08 18:26:34.575039504 +0800
-@@ -1474,8 +1474,8 @@
-     def test_pidfd_open(self):
-         with self.assertRaises(OSError) as cm:
-             os.pidfd_open(-1)
--        if cm.exception.errno == errno.ENOSYS:
--            self.skipTest("system does not support pidfd_open")
-+        if cm.exception.errno in (errno.ENOSYS, errno.EPERM):
-+            self.skipTest("system does not support or allow pidfd_open")
-         self.assertEqual(cm.exception.errno, errno.EINVAL)
-         os.close(os.pidfd_open(os.getpid(), 0))
- 
+diff --git a/Lib/test/test_signal.py b/Lib/test/test_signal.py
+index 119e9e079a..5bee8a8e91 100644
+--- a/Lib/test/test_signal.py
++++ b/Lib/test/test_signal.py
+@@ -1284,6 +1284,8 @@ class PidfdSignalTest(unittest.TestCase):
+             signal.pidfd_send_signal(0, signal.SIGINT)
+         if cm.exception.errno == errno.ENOSYS:
+             self.skipTest("kernel does not support pidfds")
++        if isinstance(cm.exception, PermissionError):
++            self.skipTest(f"pidfd_send_signal syscall blocked: {cm.exception!r}")
+         self.assertEqual(cm.exception.errno, errno.EBADF)
+         my_pidfd = os.open(f'/proc/{os.getpid()}', os.O_DIRECTORY)
+         self.addCleanup(os.close, my_pidfd)

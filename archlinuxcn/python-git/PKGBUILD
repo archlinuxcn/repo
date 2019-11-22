@@ -8,7 +8,7 @@
 # Contributor: Jason Chu <jason@archlinux.org>
 
 pkgname=python-git
-pkgver=3.9.0a0.r105777.3ccdd9b180
+pkgver=3.9.0a0.r105870.65444cf7fe
 pkgrel=1
 _pybasever=3.9
 pkgdesc="Next generation of the python high-level scripting language"
@@ -25,7 +25,7 @@ optdepends=('sqlite'
 source=("git+https://github.com/python/cpython#branch=master"
         $pkgname-issue38692.diff)
 sha512sums=('SKIP'
-            '0755b1da26bec440409b6c3246b7fcaa5d252a9ce973062ad392ce3c1b4b2826a338b86991e01dd37456e0285387f05b121397489a944682d4f13aa82645b0dc')
+            'bb18f476e74d969a16aa4077f01963f551b067d5dbeae80159d663dcf4f8e043f446c4c888388fbe3436d31d29401f6cbcfc74ace9257879e32b0d7731245a47')
 
 pkgver() {
   cd cpython
@@ -38,7 +38,7 @@ pkgver() {
 prepare() {
   cd cpython
 
-  # https://bugs.python.org/issue38692#msg356235
+  # https://bugs.python.org/issue38692
   patch -Np1 -i ../$pkgname-issue38692.diff
 
   # FS#23997
