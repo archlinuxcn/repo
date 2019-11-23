@@ -4,20 +4,18 @@ cudaarch=Common
 _pkgname=mxnet
 pkgname=('mxnet-git' 'mxnet-mkl-git' 'mxnet-cuda-git' 'mxnet-cuda-mkl-git')
 _pkgver=1.5.1
-pkgver=1.5.1.r10355.135c42ca71
+pkgver=1.5.1.r10369.e3a7141c95
 pkgrel=1
 pkgdesc="A flexible and efficient library for deep learning"
 arch=('x86_64')
 url="http://mxnet.io/"
 license=('Apache')
 depends=(
-  'curl'
   'cblas'
   'double-conversion'
   'hdf5'
   'intel-tbb'
   'lapack'
-  'openblas'
   'protobuf'
   'python-graphviz'
   'python-numpy'
@@ -33,13 +31,16 @@ makedepends=(
   'gtk3'
   'nccl'
   'opencv'
-  'patchelf'
   'qt5-base'
 )
 provides=(mxnet=${pkgver})
 conflicts=(mxnet)
 source=("${_pkgname}::git+https://github.com/apache/incubator-mxnet.git")
 sha512sums=('SKIP')
+
+get_pyver() {
+  python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
+}
 
 pkgver() {
   cd "${srcdir}/${_pkgname}"
@@ -50,16 +51,27 @@ pkgver() {
 prepare() {
   cd "${srcdir}/${_pkgname}"
   git submodule update --init --recursive
+
   # do not use 3rd party openmp
   rm -rfv "${srcdir}/${_pkgname}/3rdparty/openmp"
   # the latest cmake set OpenMP_FOUND instead of OPENMP_FOUND
   sed -i 's/OPENMP_FOUND/OpenMP_FOUND/g' "${srcdir}/${_pkgname}/CMakeLists.txt"
+
+  # find blas automatically
+  sed -i 's/find_package(OpenBLAS REQUIRED)/find_package(BLAS REQUIRED)/' "${srcdir}/${_pkgname}/cmake/ChooseBlas.cmake" "${srcdir}/${_pkgname}/3rdparty/mshadow/cmake/mshadow.cmake"
+  sed -i 's/OpenBLAS_LIB/BLAS_LIBRARIES/' "${srcdir}/${_pkgname}/cmake/ChooseBlas.cmake" "${srcdir}/${_pkgname}/cmake/ChooseBlas.cmake" "${srcdir}/${_pkgname}/3rdparty/mshadow/cmake/mshadow.cmake"
+  sed -i '/OpenBLAS_INCLUDE_DIR/d' "${srcdir}/${_pkgname}/cmake/ChooseBlas.cmake" "${srcdir}/${_pkgname}/3rdparty/mshadow/cmake/mshadow.cmake"
+
+  # set CUDA_ARCH_LIST to only Pascal, Volta, Turing
+  sed -i '/APPEND CUDA_COMMON_GPU_ARCHITECTURES/d' "${srcdir}/${_pkgname}/cmake/FirstClassLangCuda.cmake"
+  sed -i '/set(CUDA_COMMON_GPU_ARCHITECTURES/c\set(CUDA_COMMON_GPU_ARCHITECTURES "6.0" "6.1" "6.1+PTX" "7.0" "7.5")' "${srcdir}/${_pkgname}/cmake/FirstClassLangCuda.cmake"
+
   rm -rf "${srcdir}/${_pkgname}/build"
   mkdir "${srcdir}/${_pkgname}/build"
-  cp -r "${srcdir}/${_pkgname}" "${srcdir}/mxnet-git"
-  cp -r "${srcdir}/${_pkgname}" "${srcdir}/mxnet-mkl-git"
-  cp -r "${srcdir}/${_pkgname}" "${srcdir}/mxnet-cuda-git"
-  cp -r "${srcdir}/${_pkgname}" "${srcdir}/mxnet-cuda-mkl-git"
+  cp -a "${srcdir}/${_pkgname}" "${srcdir}/mxnet-git"
+  cp -a "${srcdir}/${_pkgname}" "${srcdir}/mxnet-mkl-git"
+  cp -a "${srcdir}/${_pkgname}" "${srcdir}/mxnet-cuda-git"
+  cp -a "${srcdir}/${_pkgname}" "${srcdir}/mxnet-cuda-mkl-git"
 }
 
 build() {
@@ -150,12 +162,9 @@ build() {
   python setup.py build --with-cython
 }
 
-package_mxnet-git() {
-  depends+=(opencv)
-
-  export CC=gcc
-  export CXX=g++
+_package() {
   cd "${srcdir}/${pkgname}/build"
+
   # install mxnet core component
   make DESTDIR="${pkgdir}" install
 
@@ -168,17 +177,25 @@ package_mxnet-git() {
   python setup.py install --root="${pkgdir}" --optimize=1 --with-cython --skip-build
   install -Dm644 "${srcdir}/${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 
-  rm -rfv "${pkgdir}/usr/mxnet"
-  ln -sf '/usr/lib/libmxnet.so' "${pkgdir}/usr/lib/python3.8/site-packages/mxnet/libmxnet.so"
-  ln -s "/usr/include" "${pkgdir}/usr/lib/python3.8/site-packages/mxnet/include"
-  install -d "${pkgdir}/usr/lib/mxnet/mkldnn"
-  find "${pkgdir}/usr/lib" -name 'libmkldnn*' -exec mv {} "${pkgdir}/usr/lib/mxnet/mkldnn" \;
-  # patch rpath
-  find "${pkgdir}" -type f -perm 755 -exec patchelf --set-rpath '/usr/lib/mxnet/mkldnn' {} \;
+  # create neccesarry soft links
+  ln -sf '/usr/lib/libmxnet.so' "${pkgdir}/usr/lib/python$(get_pyver)/site-packages/mxnet/libmxnet.so"
+  ln -s "/usr/include" "${pkgdir}/usr/lib/python$(get_pyver)/site-packages/mxnet/include"
+
   # remove unwantted files
+  rm -rfv "${pkgdir}/usr/mxnet"
   rm -rfv "${pkgdir}/usr/lib/cmake" "${pkgdir}/usr/share/doc"
-  find "${pkgdir}/usr/include" -type f -name 'mkldnn*' -delete
+  find "${pkgdir}" -type f -name '*mkldnn*' -delete
+  find "${pkgdir}" -type f -name '*.a' -delete
   find "${pkgdir}" -type d -empty -delete
+}
+
+
+package_mxnet-git() {
+  depends+=(opencv)
+
+  export CC=gcc
+  export CXX=g++
+  _package
 }
 
 package_mxnet-mkl-git() {
@@ -187,30 +204,7 @@ package_mxnet-mkl-git() {
 
   export CC=gcc
   export CXX=g++
-  cd "${srcdir}/${pkgname}/build"
-  # install mxnet core component
-  make DESTDIR="${pkgdir}" install
-
-  if [ -f "${srcdir}/${pkgname}/build/im2rec" ]; then
-    install -Dm755 "${srcdir}/${pkgname}/build/im2rec" "${pkgdir}/usr/bin/im2rec"
-  fi
-
-  # install python binding
-  cd "${srcdir}/${pkgname}/python"
-  python setup.py install --root="${pkgdir}" --optimize=1 --with-cython --skip-build
-  install -Dm644 "${srcdir}/${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
-
-  rm -rfv "${pkgdir}/usr/mxnet"
-  ln -sf '/usr/lib/libmxnet.so' "${pkgdir}/usr/lib/python3.8/site-packages/mxnet/libmxnet.so"
-  ln -s "/usr/include" "${pkgdir}/usr/lib/python3.8/site-packages/mxnet/include"
-  install -d "${pkgdir}/usr/lib/mxnet/mkldnn"
-  find "${pkgdir}/usr/lib" -name 'libmkldnn*' -exec mv {} "${pkgdir}/usr/lib/mxnet/mkldnn" \;
-  # patch rpath
-  find "${pkgdir}" -type f -perm 755 -exec patchelf --set-rpath '/usr/lib/mxnet/mkldnn' {} \;
-  # remove unwantted files
-  rm -rfv "${pkgdir}/usr/lib/cmake" "${pkgdir}/usr/share/doc"
-  find "${pkgdir}/usr/include" -type f -name 'mkldnn*' -delete
-  find "${pkgdir}" -type d -empty -delete
+  _package
 }
 
 package_mxnet-cuda-git() {
@@ -219,62 +213,18 @@ package_mxnet-cuda-git() {
 
   export CC=/opt/cuda/bin/gcc
   export CXX=/opt/cuda/bin/g++
-  cd "${srcdir}/${pkgname}/build"
-  # install mxnet core component
-  make DESTDIR="${pkgdir}" install
-
-  if [ -f "${srcdir}/${pkgname}/build/im2rec" ]; then
-    install -Dm755 "${srcdir}/${pkgname}/build/im2rec" "${pkgdir}/usr/bin/im2rec"
-  fi
-
-  # install python binding
-  cd "${srcdir}/${pkgname}/python"
-  python setup.py install --root="${pkgdir}" --optimize=1 --with-cython --skip-build
-  install -Dm644 "${srcdir}/${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
-
-  rm -rfv "${pkgdir}/usr/mxnet"
-  ln -sf '/usr/lib/libmxnet.so' "${pkgdir}/usr/lib/python3.8/site-packages/mxnet/libmxnet.so"
-  ln -s "/usr/include" "${pkgdir}/usr/lib/python3.8/site-packages/mxnet/include"
-  install -d "${pkgdir}/usr/lib/mxnet/mkldnn"
-  find "${pkgdir}/usr/lib" -name 'libmkldnn*' -exec mv {} "${pkgdir}/usr/lib/mxnet/mkldnn" \;
-  # patch rpath
-  find "${pkgdir}" -type f -perm 755 -exec patchelf --set-rpath '/usr/lib/mxnet/mkldnn' {} \;
-  # remove unwantted files
-  rm -rfv "${pkgdir}/usr/lib/cmake" "${pkgdir}/usr/share/doc"
-  find "${pkgdir}/usr/include" -type f -name 'mkldnn*' -delete
-  find "${pkgdir}" -type d -empty -delete
+  _package
 }
 
 package_mxnet-cuda-mkl-git() {
   pkgdesc="${pkgdesc} (with CUDA and MKL-DNN)"
   depends+=(cuda cudnn nccl)
+  provides+=(mxnet-cuda=${pkgver} mxnet-mkl=${pkgver})
+  conflicts+=(mxnet-cuda=${pkgver} mxnet-mkl=${pkgver})
 
   export CC=/opt/cuda/bin/gcc
   export CXX=/opt/cuda/bin/g++
-  cd "${srcdir}/${pkgname}/build"
-  # install mxnet core component
-  make DESTDIR="${pkgdir}" install
-
-  if [ -f "${srcdir}/${pkgname}/build/im2rec" ]; then
-    install -Dm755 "${srcdir}/${pkgname}/build/im2rec" "${pkgdir}/usr/bin/im2rec"
-  fi
-
-  # install python binding
-  cd "${srcdir}/${pkgname}/python"
-  python setup.py install --root="${pkgdir}" --optimize=1 --with-cython --skip-build
-  install -Dm644 "${srcdir}/${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
-
-  rm -rfv "${pkgdir}/usr/mxnet"
-  ln -sf '/usr/lib/libmxnet.so' "${pkgdir}/usr/lib/python3.8/site-packages/mxnet/libmxnet.so"
-  ln -s "/usr/include" "${pkgdir}/usr/lib/python3.8/site-packages/mxnet/include"
-  install -d "${pkgdir}/usr/lib/mxnet/mkldnn"
-  find "${pkgdir}/usr/lib" -name 'libmkldnn*' -exec mv {} "${pkgdir}/usr/lib/mxnet/mkldnn" \;
-  # patch rpath
-  find "${pkgdir}" -type f -perm 755 -exec patchelf --set-rpath '/usr/lib/mxnet/mkldnn' {} \;
-  # remove unwantted files
-  rm -rfv "${pkgdir}/usr/lib/cmake" "${pkgdir}/usr/share/doc"
-  find "${pkgdir}/usr/include" -type f -name 'mkldnn*' -delete
-  find "${pkgdir}" -type d -empty -delete
+  _package
 }
 # vim:set ts=2 sw=2 et:
 

@@ -9,6 +9,8 @@ repo_depends:
 time_limit_hours: 4
 
 update_on:
-  - cmd: python3 -c "import time; print(int(time.time()) // (5 * 24 * 60 * 60))"
+  - cmd: python -c "import time; print(int(time.time()) // (5 * 24 * 60 * 60))"
+  - alias: python
+  - alias: protobuf
 # vim:set ts=2 sw=2 et:
 
