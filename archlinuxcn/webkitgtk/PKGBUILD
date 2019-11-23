@@ -5,7 +5,7 @@
 
 pkgname=webkitgtk
 pkgver=2.4.11
-pkgrel=17
+pkgrel=18
 epoch=3
 pkgdesc="Legacy Web content engine for GTK+ 3"
 arch=("armv7h" "i686" "x86_64")
@@ -63,7 +63,7 @@ build() (
   CFLAGS+=" -fno-delete-null-pointer-checks"
 
   CFLAGS+=" -Wno-expansion-to-defined -Wno-class-memaccess"
-  CXXFLAGS+=" -Wno-expansion-to-defined -Wno-class-memaccess"
+  CXXFLAGS+=" -Wno-expansion-to-defined -Wno-class-memaccess -DUPRV_BLOCK_MACRO_BEGIN=\"\" -DUPRV_BLOCK_MACRO_END=\"\""
 
   "${srcdir}/${pkgname}-${pkgver}/configure" \
     --prefix=/usr \
