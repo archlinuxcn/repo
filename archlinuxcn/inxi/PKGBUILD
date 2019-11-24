@@ -1,15 +1,13 @@
-# Maintainer: Fabio 'Lolix' Loli <lolix@disroot.org> -> https://github.com/FabioLolix
-# Contributor: Stefano Capitani <stefanoatmanjarodotorg>
-# Contributor: Florian Pritz <f-p@gmx.at>
+# Maintainer: Stefano Capitani <stefanoatmanjarodotorg>
 
 pkgname=inxi
-pkgver=3.0.36
+pkgver=3.0.37
 pkgrel=1
 pkgdesc="Full featured CLI system information tool"
-arch=(any)
+arch=('any')
 url="https://github.com/smxi/inxi"
-license=(GPL3)
-depends=(coreutils pciutils perl procps-ng)
+license=('GPL')
+depends=('coreutils' 'pciutils' 'perl' 'procps-ng')
 optdepends=(
   "bind-tools: -i wlan IP"
   "dmidecode: inxi -M if no sys machine data"
@@ -21,9 +19,7 @@ optdepends=(
   "mesa-demos: inxi -G glx info"
   "net-tools: inxi -i ip lan-deprecated"
   "perl-io-socket-ssl: -U; -w,-W; -i (if dig not installed)"
-  "perl-cpanel-json-xs: --output json - required for export"
   "perl-json-xs: --output json - required for export (legacy)"
-  "perl-xml-dumper: --output xml - Crude and raw"
   "systemd-sysvcompat: inxi -I runlevel"
   "sudo: inxi -Dx hddtemp-user;-o file-user"
   "tree: --debugger 20,21 /sys tree"
@@ -33,12 +29,13 @@ optdepends=(
   "xorg-xprop: inxi -S desktop data"
   "xorg-xrandr: inxi -G single screen resolution"
 )
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/smxi/inxi/archive/${pkgver}-1.tar.gz")
-sha256sums=('2826ee041f4ce2be91063be1ba92c47f6a2b7f1ee97ed236af4c71494d6a1bd0')
+options=('zipman')
+source=("${pkgname}-${pkgver}.tar.gz::$url/archive/${pkgver}-1.tar.gz")
+sha256sums=('bc16d8b975a8ed064949bc8209e0c01c204c01c9046076f62709366e672bea40')
 
 package() {
-  cd "${pkgname}-${pkgver}-1"
-  install -D -m755 $pkgname "${pkgdir}/usr/bin/$pkgname"
-  install -D -m755 $pkgname.1 "${pkgdir}/usr/share/man/man1/$pkgname.1"
+    cd "$srcdir/$pkgname-$pkgver-1"
+    install -D -m755 $pkgname "$pkgdir/usr/bin/$pkgname"
+    install -D -m755 $pkgname.1 "$pkgdir/usr/share/man/man1/$pkgname.1"
 }
 
