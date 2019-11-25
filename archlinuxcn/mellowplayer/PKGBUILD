@@ -2,19 +2,19 @@
 # Maintainer: ZeroDot1 <zerodot1@bk.ru>
 pkgname=mellowplayer
 _pkgname=MellowPlayer
-pkgver=3.5.5
+pkgver=3.5.6
 pkgrel=1
 pkgdesc="Open source and cross-platform desktop application that runs web-based music streaming 
          services in its own window and provides integration with your desktop."
 url='https://gitlab.com/ColinDuquesnoy/MellowPlayer'
 license=('GPL')
-arch=('x86_64')
+arch=('x86_64' 'aarch64')
 depends=('qt5-base' 'qt5-webengine' 'qt5-svg' 'qt5-quickcontrols2' 'qt5-quickcontrols' 'qt5-translations' 'qt5-graphicaleffects' 'xdg-utils' 'libnotify' 'libevent')
-makedepends=('qt5-tools' 'cmake' 'mesa' 'ninja')
+makedepends=('qt5-tools' 'cmake' 'mesa' 'ninja' 'pkgconf')
 optdepends=( 'chromium-widevine: DRM needed for Spotify and Amazon Music' 'pepper-flash: needed for Tidal')
 source=("https://gitlab.com/ColinDuquesnoy/MellowPlayer/-/archive/${pkgver}/MellowPlayer-${pkgver}.tar.gz" 
         "widevine-path.patch")
-md5sums=('58b98eb32a5c9aa6c5009ccec15fbb63'
+md5sums=('0ea76ba0cb79a16071f918ced0d8c1db'
          '67f8c5c6af4b770a4017a5ca9f137b90')
 
 prepare() {
