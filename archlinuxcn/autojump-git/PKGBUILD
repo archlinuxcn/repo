@@ -5,7 +5,7 @@
 
 pkgname=autojump-git
 pkgver=22.5.3.r0.g06e082c
-pkgrel=1
+pkgrel=2
 pkgdesc="A faster way to navigate your filesystem from the command line"
 arch=(any)
 url="http://github.com/wting/autojump"
@@ -14,8 +14,6 @@ depends=('python')
 makedepends=('git')
 conflicts=('autojump')
 provides=('autojump')
-replaces=()
-backup=()
 source=('git+https://github.com/wting/autojump.git')
 md5sums=('SKIP')
 
@@ -41,9 +39,21 @@ package() {
             "${pkgdir}"/etc/profile.d/$i
     done
 
-    #https://github.com/joelthelion/autojump/pull/339
+    # FS#60929
+    install -d "${pkgdir}/usr/lib/$_python/site-packages"
+    mv ${pkgdir}/usr/bin/*.py "${pkgdir}/usr/lib/$_python/site-packages"
+    python -m compileall -d /usr/lib "${pkgdir}/usr/lib"
+    python -O -m compileall -d /usr/lib "${pkgdir}/usr/lib"
+
+    # FS#49601
+    install -d "${pkgdir}"/usr/share/fish/completions
+    mv "${pkgdir}"/etc/profile.d/$_gitname.fish "${pkgdir}"/usr/share/fish/completions
+
+    # https://github.com/joelthelion/autojump/pull/339
     sed -i "s!/usr/local/!/usr/!g" "${pkgdir}"/etc/profile.d/$_gitname.sh
-    #FS#43762
+    sed -i "s!/build/${pkgname}/pkg/${pkgname}/!/!g" "${pkgdir}"/etc/profile.d/$_gitname.sh
+
+    # FS#43762
     sed -i '27,31d' "${pkgdir}"/etc/profile.d/$_gitname.sh
 }
 
