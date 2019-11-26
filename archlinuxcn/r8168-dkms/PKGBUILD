@@ -1,6 +1,6 @@
 _pkgbase=r8168
 pkgname=${_pkgbase}-dkms
-pkgver=8.047.04
+pkgver=8.047.05
 pkgrel=1
 pkgdesc="A kernel module for Realtek 8168 network cards"
 url="http://www.realtek.com.tw"
@@ -34,5 +34,5 @@ package() {
 	rm src/Makefile_linux24x
 	cp -dr --no-preserve='ownership' src "${pkgdir}/usr/src/${_pkgbase}-${pkgver}/src"
 }
-sha256sums=('4a201c7691b66e47f19172367c70a14b8b38d600f0739719c57dba9c0cf3f17a'
+sha256sums=('1344bf3d8a1d01a1be8805b48940be1b946b5e694ca75bd14ed1c76fd4c3d67b'
             '260d8142e944f3144cbc704534e662d427318d8b32dc7a2852a855be72e8d763')
