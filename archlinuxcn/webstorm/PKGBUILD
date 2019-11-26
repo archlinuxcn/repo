@@ -4,18 +4,20 @@
 
 pkgbase=webstorm
 pkgname=(webstorm webstorm-jre)
-pkgver=2019.2.4b192.7142.35
+pkgver=2019.3b193.5233.80
 pkgrel=1
 pkgdesc='JavaScript IDE and HTML editor.'
 arch=('x86_64' 'i686')
 url='https://www.jetbrains.com/webstorm/'
-license=('Commercial')
+license=('commercial')
 depends=('glib2')
 options=('!strip')
-source=(https://download.jetbrains.com/webstorm/WebStorm-${pkgver%b*}.tar.gz
-        jetbrains-webstorm.desktop)
-sha512sums=('acbafd2173122928fc433df4e4bf66ec9c67d79b9acd8fae22b5a446c90e06a14182ff93e0ecfc51419e59a9650bb64dd3de1a13d151c476becd977ddd30fa5e'
-            '3635b8b6787aae583742e95de7d26d0f80b857f48143898e5963f219d1d4ec8b4cb8e37ce3f058324bb5a253b883c2610be848e883576896c67030e9a36be7e6')
+source=("https://download.jetbrains.com/webstorm/WebStorm-${pkgver%b*}.tar.gz"
+        jetbrains-webstorm.desktop
+        LICENSE)
+sha512sums=('24718c07212230e5d3e5b1ebce85bc5a1fb73ef708f60888bc1a74233a345ff99a075dc222958475607b25a05cc544eb45f415db54bcef5d73922c74ec90cd14'
+            '3635b8b6787aae583742e95de7d26d0f80b857f48143898e5963f219d1d4ec8b4cb8e37ce3f058324bb5a253b883c2610be848e883576896c67030e9a36be7e6'
+            'e2aaaa75571f368f85bcc4baef27cc502781ce382bf04737763b07244716918fc2f0eb0b78b02631e242c9a5c246b27d720bb28556fc64bbde213403b7bf57f6')
 
 pkgver() {
   echo "${pkgver%b*}b$(find ${srcdir} -maxdepth 1 -type d -printf "%P" | cut -d "-" -f2)"
@@ -37,10 +39,11 @@ package_webstorm() {
   ln -s /opt/${pkgbase}/bin/${pkgbase}.sh "${pkgdir}"/usr/bin/${pkgbase}
   install -m644 "${srcdir}"/jetbrains-${pkgbase}.desktop "${pkgdir}"/usr/share/applications/
   install -m644 "${pkgdir}"/opt/${pkgbase}/bin/${pkgbase}.svg "${pkgdir}"/usr/share/pixmaps/${pkgbase}.svg
+  install -Dm644 LICENSE "${pkgdir}"/usr/share/licenses/${pkgname}/LICENSE.txt
 }
 
 package_webstorm-jre() {
-  pkgdesc='JBR (JetBrains Runtime) for WebStorm - a patched JDK'
+  pkgdesc='JBR (JetBrains Runtime) for WebStorm - a patched JRE'
   url='https://confluence.jetbrains.com/display/JBR/JetBrains+Runtime'
 
   install -dm755 "${pkgdir}"/opt/${pkgbase}
