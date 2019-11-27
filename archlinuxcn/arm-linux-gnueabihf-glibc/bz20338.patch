@@ -74,12 +74,12 @@ index b70f6fa..02cd33a 100644
        /* Skip leading blanks.  */
        while (isspace (*p))
  	++p;
--    } while (*p == '\0' || *p == '#' ||	/* Ignore empty and comment lines.  */
-+    } while (*p == '\0' || *p == '#'	/* Ignore empty and comment lines.  */
+-    } while (*p == '\0' || *p == '#' /* Ignore empty and comment lines.  */
++    } while (*p == '\0' || *p == '#' /* Ignore empty and comment lines.  */
  	     /* Parse the line.  If it is invalid, loop to
  		get the next line of the file to parse.  */
--	     ! parse_line (buffer, (void *) resbuf, (void *) buffer, buflen,
--			   &errno));
+-	     || ! parse_line (buffer, (void *) resbuf, (void *) buffer, buflen,
+-			      &errno));
 +	     || ! (parse_result = parse_line (p, resbuf,
 +					      (void *) buffer, buflen,
 +					      &errno)));

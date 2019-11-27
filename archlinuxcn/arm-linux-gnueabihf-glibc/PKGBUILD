@@ -7,7 +7,7 @@
 
 _target="arm-linux-gnueabihf"
 pkgname=${_target}-glibc
-pkgver=2.29
+pkgver=2.30
 pkgrel=1
 pkgdesc="GNU C Library (${_target})"
 arch=('any')
@@ -19,17 +19,17 @@ provides=("${_target}-glibc-headers=${pkgver}" "${_target}-eglibc")
 conflicts=("${_target}-glibc-headers" "${_target}-eglibc")
 replaces=("${_target}-glibc-headers")
 options=(!buildflags !strip staticlibs)
-_commit=34fb5f61d3c3f4b8fc616ea259fa19168b58ecd4
-#source=(git+https://sourceware.org/git/glibc.git#commit=$_commit
-source=(https://ftp.gnu.org/gnu/glibc/glibc-$pkgver.tar.xz
-        glibc-${_commit}.patch
+_commit=a6aaabd036d735a1b412f441bf6c706832655598
+#source=(https://ftp.gnu.org/gnu/glibc/glibc-$pkgver.tar.xz
+source=(git+https://sourceware.org/git/glibc.git#commit=$_commit
+        sdt.h
+        sdt-config.h
         bz20338.patch
-        0001-Revert-elf-Correct-absolute-SHN_ABS-symbol-run-time-.patch
         file-truncated-while-reading-soname-after-patchelf.patch)
-md5sums=('e6c279d5b2f0736f740216f152acf974'
-         '35a4ca5cdf86d706e054e02bb31d1616'
-         'dc0d3ad59aeaaf591b085a77de6e03e9'
-         'af5d3c5227ac639effe39667a43879a1'
+md5sums=('SKIP'
+         '91fec3b7e75510ae2ac42533aa2e695e'
+         '680df504c683640b02ed4a805797c0b2'
+         '430673eccc78e52c249aa4b0f1786450'
          '0820504d2e83ee15f74a656771361872')
 
 prepare() {
@@ -84,7 +84,7 @@ build() {
   export AR=${_target}-ar
   export RANLIB=${_target}-ranlib
 
-  "$srcdir/glibc-$pkgver/configure" \
+  "$srcdir/glibc/configure" \
       --libdir=/lib \
       --libexecdir=/lib \
       ${_configure_flags[@]} \
@@ -103,6 +103,11 @@ package() {
 
   mkdir -p "$pkgdir/usr/$_target/usr"
   ln -s ../{include,lib} "$pkgdir/usr/$_target/usr"
+
+  # Provide tracing probes to libstdc++ for exceptions, possibly for other
+  # libraries too. Useful for gdb's catch command.
+  install -Dm644 "$srcdir/sdt.h" "$pkgdir/usr/$_target/include/sys/sdt.h"
+  install -Dm644 "$srcdir/sdt-config.h" "$pkgdir/usr/$_target/include/sys/sdt-config.h"
 
   # Remove unneeded for compilation files
   rm -rf "$pkgdir/usr/$_target/"{bin,sbin,etc,share,var}
