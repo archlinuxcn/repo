@@ -1,5 +1,6 @@
-# Maintainer: Adrian Perez <aperez@igalia.com>
-# Co-Maintainer: Chih-Hsuan Yen <yan12125@gmail.com>
+# Maintainer: Luis Aranguren <pizzaman@hotmail.com>
+# Contributor: Adrian Perez <aperez@igalia.com>
+# Contributor: Chih-Hsuan Yen <yan12125@gmail.com>
 # Contributor: rway <rway07@gmail.com>
 # Contributor: wabi <aschrafl@jetnet.ch>
 # Contributor: Alexander RÃ¸dseth <rodseth@gmail.com>
@@ -8,7 +9,7 @@
 # Contributor: hack.augusto <hack.augusto@gmail.com>
 
 pkgname=depot-tools-git
-pkgver=r6576.83aafc979
+pkgver=r6580.341d41ba5
 pkgrel=1
 pkgdesc='Build tools for working with Chromium development, include gclient'
 arch=('any')
@@ -41,6 +42,7 @@ _scripts_to_fix_exec=(
 	clang-format
 	clang_format_merge_driver
 	compile_single_file
+	luci-auth
 	download_from_google_storage
 	fetch
 	gclient
