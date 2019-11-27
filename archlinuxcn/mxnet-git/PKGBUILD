@@ -1,10 +1,10 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
-cudaarch=Common
+_cudaarch=Common
 _pkgname=mxnet
 pkgname=('mxnet-git' 'mxnet-mkl-git' 'mxnet-cuda-git' 'mxnet-cuda-mkl-git')
 _pkgver=1.5.1
-pkgver=1.5.1.r10374.11edb70fc9
+pkgver=1.5.1.r10380.6c7ce2472
 pkgrel=1
 pkgdesc="A flexible and efficient library for deep learning"
 arch=('x86_64')
@@ -12,6 +12,7 @@ url="http://mxnet.io/"
 license=('Apache')
 depends=(
   'cblas'
+  'curl'
   'double-conversion'
   'hdf5'
   'intel-tbb'
@@ -62,9 +63,9 @@ prepare() {
   sed -i 's/OpenBLAS_LIB/BLAS_LIBRARIES/' "${srcdir}/${_pkgname}/cmake/ChooseBlas.cmake" "${srcdir}/${_pkgname}/cmake/ChooseBlas.cmake" "${srcdir}/${_pkgname}/3rdparty/mshadow/cmake/mshadow.cmake"
   sed -i '/OpenBLAS_INCLUDE_DIR/d' "${srcdir}/${_pkgname}/cmake/ChooseBlas.cmake" "${srcdir}/${_pkgname}/3rdparty/mshadow/cmake/mshadow.cmake"
 
-  # set CUDA_ARCH_LIST to only Pascal, Volta, Turing
+  # compute capability >= 3.7
   sed -i '/APPEND CUDA_COMMON_GPU_ARCHITECTURES/d' "${srcdir}/${_pkgname}/cmake/FirstClassLangCuda.cmake"
-  sed -i '/set(CUDA_COMMON_GPU_ARCHITECTURES/c\set(CUDA_COMMON_GPU_ARCHITECTURES "6.0" "6.1" "6.1+PTX" "7.0" "7.5")' "${srcdir}/${_pkgname}/cmake/FirstClassLangCuda.cmake"
+  sed -i '/set(CUDA_COMMON_GPU_ARCHITECTURES/c\set(CUDA_COMMON_GPU_ARCHITECTURES "3.7" "5.0" "5.2" "5.2+PTX" "6.0" "6.1" "6.1+PTX" "7.0" "7.5")' "${srcdir}/${_pkgname}/cmake/FirstClassLangCuda.cmake"
 
   rm -rf "${srcdir}/${_pkgname}/build"
   mkdir "${srcdir}/${_pkgname}/build"
@@ -78,7 +79,6 @@ build() {
   cmake_opts=(
     -DBUILD_CPP_EXAMPLES:BOOL=OFF
     -DBUILD_TESTING:BOOL=OFF
-    -DCMAKE_BUILD_TYPE:String=Release
     -DCMAKE_EXE_LINKER_FLAGS="$(pkg-config --libs cblas)"
     -DCMAKE_INSTALL_LIBDIR:PATH=lib
     -DCMAKE_INSTALL_PREFIX:PATH=/usr
@@ -135,7 +135,7 @@ build() {
   cd "${srcdir}/mxnet-cuda-git/build"
   cmake \
     ${cmake_opts[@]} \
-    -DCUDA_ARCH_LIST=${cudaarch} \
+    -DCUDA_ARCH_LIST=${_cudaarch} \
     -DUSE_CUDA:BOOL=ON \
     -DUSE_CUDNN:BOOL=ON \
     -DUSE_MKLDNN:BOOL=OFF \
@@ -150,7 +150,7 @@ build() {
   cd "${srcdir}/mxnet-cuda-mkl-git/build"
   cmake \
     ${cmake_opts[@]} \
-    -DCUDA_ARCH_LIST=${cudaarch} \
+    -DCUDA_ARCH_LIST=${_cudaarch} \
     -DUSE_CUDA:BOOL=ON \
     -DUSE_CUDNN:BOOL=ON \
     -DUSE_MKLDNN:BOOL=ON \
@@ -184,8 +184,8 @@ _package() {
   # remove unwantted files
   rm -rfv "${pkgdir}/usr/mxnet"
   rm -rfv "${pkgdir}/usr/lib/cmake" "${pkgdir}/usr/share/doc"
-  find "${pkgdir}" -type f -name '*mkldnn*' -delete
-  find "${pkgdir}" -type f -name '*.a' -delete
+  find "${pkgdir}" -type f -name '*dnn*' -delete
+  find "${pkgdir}" -name '*.a' -delete
   find "${pkgdir}" -type d -empty -delete
 }
 
