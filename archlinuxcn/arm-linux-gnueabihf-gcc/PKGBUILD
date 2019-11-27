@@ -15,7 +15,7 @@ pkgdesc="The GNU Compiler Collection (${_target})"
 arch=(i686 x86_64)
 license=(GPL LGPL FDL custom)
 url='https://gcc.gnu.org'
-depends=("${_target}-binutils>=2.32-2" "${_target}-glibc>=2.29-3" libmpc elfutils zlib)
+depends=("${_target}-binutils>=2.32" "${_target}-glibc>=2.29" libmpc elfutils zlib)
 checkdepends=(dejagnu inetutils)
 options=(!emptydirs !distcc !strip)
 source=(https://ftp.gnu.org/gnu/gcc/gcc-$pkgver/gcc-$pkgver.tar.xz
