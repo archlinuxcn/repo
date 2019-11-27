@@ -14,7 +14,7 @@ arch=('any')
 url="https://www.gnu.org/software/libc/"
 license=(GPL LGPL)
 depends=("${_target}-linux-api-headers>=4.17.11-1")
-makedepends=("${_target}-gcc-stage2>=8.2.1" gperf git)
+makedepends=("${_target}-gcc-stage2>=8.2.1" gperf git python)
 provides=("${_target}-glibc-headers=${pkgver}" "${_target}-eglibc")
 conflicts=("${_target}-glibc-headers" "${_target}-eglibc")
 replaces=("${_target}-glibc-headers")
