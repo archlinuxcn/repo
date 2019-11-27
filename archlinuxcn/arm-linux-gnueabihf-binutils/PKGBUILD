@@ -6,42 +6,27 @@
 # Maintainer: Tavian Barnes <tavianator@tavianator.com>
 
 _target="arm-linux-gnueabihf"
-pkgbase=${_target}-binutils
-pkgname=(${_target}-binutils-ldscripts ${_target}-binutils)
-pkgver=2.30
-pkgrel=4
+pkgname=${_target}-binutils
+pkgver=2.32
+pkgrel=2
 pkgdesc="A set of programs to assemble and manipulate binary and object files (${_target})"
 arch=(i686 x86_64)
-url="http://www.gnu.org/software/binutils/"
+url='https://www.gnu.org/software/binutils/'
 license=(GPL)
-depends=('glibc>=2.24' 'zlib')
+depends=(glibc zlib)
 options=(staticlibs !distcc !ccache)
-source=(http://ftp.gnu.org/gnu/binutils/binutils-$pkgver.tar.xz
-        0001-PR22741-objcopy-segfault-on-fuzzed-COFF-object.patch
-        0002-PR22829-objcopy-strip-removes-PT_GNU_RELRO-from-lld-.patch
-        0003-PR22836-r-s-doesnt-work-with-g3-using-GCC-7.patch)
-md5sums=('ffc476dd46c96f932875d1b2e27e929f'
-         '469164f3c93a0e92a697537b60c9806c'
-         '0c679b37e90fb23de60a4d28329b956a'
-         '53b5682e09c0a27e9994c3efdfe01d29')
+source=(https://ftp.gnu.org/gnu/binutils/binutils-$pkgver.tar.xz)
+md5sums=('0d174cdaf85721c5723bf52355be41e6')
 
 prepare() {
+  rm -rf binutils-build
+  mkdir -p binutils-build
+
+  # cd binutils-gdb
   cd binutils-$pkgver
 
   # hack! - libiberty configure tests for header files using "$CPP $CPPFLAGS"
   sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" libiberty/configure
-
-  # https://sourceware.org/bugzilla/show_bug.cgi?id=22741
-  patch -p1 -i "$srcdir/0001-PR22741-objcopy-segfault-on-fuzzed-COFF-object.patch"
-
-  # https://sourceware.org/bugzilla/show_bug.cgi?id=22829
-  patch -p1 -i "$srcdir/0002-PR22829-objcopy-strip-removes-PT_GNU_RELRO-from-lld-.patch"
-
-  # https://sourceware.org/bugzilla/show_bug.cgi?id=22836
-  patch -p1 -i "$srcdir/0003-PR22836-r-s-doesnt-work-with-g3-using-GCC-7.patch"
-
-  rm -rf ../binutils-build
-  mkdir ../binutils-build
 }
 
 build() {
@@ -73,28 +58,14 @@ build() {
   # check the host environment and makes sure all the necessary tools are available
   make configure-host
   make tooldir=/usr
+}
 
-  local pkgdir="${srcdir}/pkg"
-  rm -rf "$pkgdir"
+package() {
+  cd binutils-build
+  make DESTDIR="$pkgdir" install
 
-  make prefix="$pkgdir/usr" tooldir="$pkgdir/usr" install
-
-  rm -f "$pkgdir"/usr/bin/{ar,as,ld,nm,objdump,ranlib,strip,objcopy,readelf}
+  # Remove unwanted files
+  rm -f "$pkgdir/usr/bin/"{ar,as,ld,nm,objdump,ranlib,readelf,strip,objcopy}
   rm -f "$pkgdir"/usr/lib/libiberty.a
   rm -rf "$pkgdir"/usr/{share,man}
-}
-
-package_arm-linux-gnueabihf-binutils-ldscripts() {
-  provides=(arm-linux-gnueabi-binutils-ldscripts)
-  conflicts=(arm-linux-gnueabi-binutils-ldscripts)
-
-  mkdir -p "$pkgdir/usr/lib/"
-  cp -a pkg/usr/lib/ldscripts "$pkgdir/usr/lib/"
-}
-
-package_arm-linux-gnueabihf-binutils() {
-  depends+=(arm-linux-gnueabi-binutils-ldscripts)
-
-  cp -a pkg/usr "$pkgdir/"
-  rm -rf "$pkgdir/usr/lib/ldscripts"
 }
