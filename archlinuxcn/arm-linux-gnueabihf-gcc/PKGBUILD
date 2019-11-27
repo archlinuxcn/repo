@@ -1,0 +1,251 @@
+# Contributor: Alexander 'hatred' Drozdov <adrozdoff@gmail.com>
+# Contributor: toha257 <toha257@gmail.com>
+# Contributor: Allan McRae <allan@archlinux.org>
+# Contributor: Kevin Mihelich <kevin@archlinuxarm.org>
+# Maintainer: Tavian Barnes <tavianator@tavianator.com>
+
+_target="arm-linux-gnueabihf"
+pkgbase="${_target}-gcc"
+_pkgname=(gcc gcc-libs gcc-fortran gcc-objc)
+pkgver=9.1.0
+_majorver=${pkgver:0:1}
+_islver=0.21
+pkgrel=2
+pkgdesc="The GNU Compiler Collection (${_target})"
+arch=(i686 x86_64)
+license=(GPL LGPL FDL custom)
+url='https://gcc.gnu.org'
+depends=("${_target}-binutils>=2.32-2" "${_target}-glibc>=2.29-3" libmpc elfutils zlib)
+checkdepends=(dejagnu inetutils)
+options=(!emptydirs !distcc !strip)
+source=(https://ftp.gnu.org/gnu/gcc/gcc-$pkgver/gcc-$pkgver.tar.xz
+        http://isl.gforge.inria.fr/isl-${_islver}.tar.bz2
+        bz90397.patch
+        bz90949.patch)
+sha256sums=('79a66834e96a6050d8fe78db2c3b32fb285b230b855d0a66288235bc04b327a0'
+            'd18ca11f8ad1a39ab6d03d3dcb3365ab416720fcb65b42d69f34f51bf0a0e859'
+            'cc20d05bcc6cb35bf0944b391f0b0380af375f2a8a03ce1cd67835884bc41fac'
+            'c860819e730faf1621e1286ebe3a0179df6e25182b81a9ca0a3db02633982a14')
+
+_svnrev=264010
+_svnurl=svn://gcc.gnu.org/svn/gcc/branches/gcc-${_majorver}-branch
+_libdir="usr/lib/gcc/${_target}/${pkgver%%+*}"
+
+prepare() {
+  [[ ! -d gcc ]] && ln -s gcc-${pkgver/+/-} gcc
+  cd gcc
+
+  # link isl for in-tree build
+  ln -sf ../isl-${_islver} isl
+
+  # Do not run fixincludes
+  sed -i 's@\./fixinc\.sh@-c true@' gcc/Makefile.in
+
+  # hack! - some configure tests for header files using "$CPP $CPPFLAGS"
+  sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" {libiberty,gcc}/configure
+
+  mkdir -p "$srcdir/gcc-build"
+
+  rm -rf "${srcdir}/bin"
+  mkdir -p "${srcdir}/bin"
+  for c in cc c++ gcc g++; do
+    cat > "${srcdir}/bin/arm-linux-gnueabihf-${c}" <<EOF
+#!/bin/bash
+exec /usr/bin/arm-linux-gnueabihf-${c} -Wl,-rpath-link,/usr/arm-linux-gnueabihf/lib "\$@"
+EOF
+    chmod +x "${srcdir}/bin/arm-linux-gnueabihf-${c}"
+  done
+  # Try to make gccgo compilation happy
+  cat > "${srcdir}/bin/arm-linux-gnueabihf-ld" <<EOF
+#!/bin/bash
+exec /usr/bin/arm-linux-gnueabihf-ld -rpath-link /usr/arm-linux-gnueabihf/lib "\$@"
+EOF
+  chmod +x "${srcdir}/bin/arm-linux-gnueabihf-ld"
+}
+
+setup_env() {
+  export PATH="${srcdir}/bin:${PATH}"
+  export CFLAGS="-O2"
+  export CXXFLAGS="-O2"
+  export CPP=/usr/bin/cpp
+  export CXXCPP=/usr/bin/cpp
+}
+
+build() {
+  setup_env
+
+  cd gcc-build
+
+  # using -pipe causes spurious test-suite failures
+  # http://gcc.gnu.org/bugzilla/show_bug.cgi?id=48565
+  CFLAGS=${CFLAGS/-pipe/}
+  CXXFLAGS=${CXXFLAGS/-pipe/}
+
+  ../gcc/configure \
+    --prefix=/usr \
+    --program-prefix=${_target}- \
+    --with-local-prefix=/usr/${_target} \
+    --with-sysroot=/usr/${_target} \
+    --with-build-sysroot=/usr/${_target} \
+    --with-as=/usr/bin/${_target}-as \
+    --with-ld=/usr/bin/${_target}-ld \
+    --libdir=/usr/lib --libexecdir=/usr/lib \
+    --disable-nls \
+    --enable-languages=c,c++,fortran,lto,objc,obj-c++ \
+    --enable-shared \
+    --enable-threads=posix \
+    --with-system-zlib \
+    --with-isl \
+    --enable-__cxa_atexit \
+    --disable-libunwind-exceptions \
+    --enable-clocale=gnu \
+    --disable-libstdcxx-pch \
+    --disable-libssp \
+    --enable-gnu-unique-object \
+    --enable-linker-build-id \
+    --enable-lto \
+    --enable-plugin \
+    --enable-install-libiberty \
+    --with-linker-hash-style=gnu \
+    --enable-gnu-indirect-function \
+    --disable-multilib \
+    --disable-werror \
+    --enable-checking=release \
+    --enable-default-pie \
+    --enable-default-ssp \
+    --target=${_target} \
+    --host=${CHOST} \
+    --build=${CHOST} \
+    --enable-interwork \
+    --enable-addons \
+    --with-arch=armv6 \
+    --with-float=hard \
+    --with-fpu=vfp
+
+  make
+}
+
+package_gcc-libs() {
+  setup_env
+  pkgdesc="Runtime libraries shipped by GCC (${_target})"
+  depends=("${_target}-glibc")
+
+  cd gcc-build
+
+  make -C ${_target}/libgcc DESTDIR="${pkgdir}" install-shared
+  rm "${pkgdir}/${_libdir}/libgcc_eh.a"
+
+  for lib in libatomic \
+               libgfortran \
+               libgomp \
+               libitm \
+               libquadmath \
+               libsanitizer/{a,l,ub}san \
+               libstdc++-v3/src; do
+    make -C $_target/$lib DESTDIR="${pkgdir}" install-toolexeclibLTLIBRARIES
+  done
+
+  make -C $_target/libobjc DESTDIR="${pkgdir}" install-libs
+}
+
+package_gcc() {
+  setup_env
+  pkgdesc="The GNU Compiler Collection - C and C++ frontends (${_target})"
+  depends=("${_target}-gcc-libs=$pkgver-$pkgrel"
+           "${_target}-binutils>=2.25" 'libmpc')
+  conflicts=("${_target}-gcc-stage1" "${_target}-gcc-stage2")
+  replaces=("${_target}-gcc-stage1" "${_target}-gcc-stage2")
+  provides=("${_target}-gcc-stage1=${pkgver}" "${_target}-gcc-stage2=${pkgver}")
+
+  cd gcc-build
+
+  make -C gcc DESTDIR="${pkgdir}" install-driver install-cpp install-gcc-ar \
+       c++.install-common install-headers install-plugin install-lto-wrapper
+
+  # install -m755 -t "$pkgdir/usr/bin/" gcc/gcov{,-tool}
+  install -m755 -t "$pkgdir/${_libdir}/" gcc/{cc1,cc1plus,collect2,lto1}
+
+  make -C $_target/libgcc DESTDIR="${pkgdir}" install
+  rm "${pkgdir}"/usr/${_target}/lib/libgcc_s.so*
+
+  make -C $_target/libstdc++-v3/src DESTDIR="${pkgdir}" install
+  make -C $_target/libstdc++-v3/include DESTDIR="${pkgdir}" install
+  make -C $_target/libstdc++-v3/libsupc++ DESTDIR="${pkgdir}" install
+
+  rm "${pkgdir}"/usr/${_target}/lib/libstdc++.*
+
+  make DESTDIR="${pkgdir}" install-fixincludes
+  make -C gcc DESTDIR="${pkgdir}" install-mkheaders
+
+  make -C lto-plugin DESTDIR="${pkgdir}" install
+  # install -dm755 "${pkgdir}"/usr/lib/bfd-plugins/
+  # ln -s /usr/lib/gcc/$_target/${pkgver}/liblto_plugin.so \
+    #    "${pkgdir}"/usr/lib/bfd-plugins/
+
+  make -C $_target/libgomp DESTDIR="${pkgdir}" \
+       install-nodist_toolexeclibHEADERS install-nodist_libsubincludeHEADERS
+  make -C $_target/libitm DESTDIR="${pkgdir}" install-nodist_toolexeclibHEADERS
+  make -C $_target/libquadmath DESTDIR="${pkgdir}" \
+       install-nodist_libsubincludeHEADERS
+  make -C $_target/libsanitizer DESTDIR="${pkgdir}" \
+       install-nodist_toolexeclibHEADERS
+  make -C $_target/libsanitizer/asan DESTDIR="${pkgdir}" \
+       install-nodist_toolexeclibHEADERS
+
+  make -C libiberty DESTDIR="${pkgdir}" install
+  mkdir -p "${pkgdir}"/usr/${_target}/include
+  mv "${pkgdir}"/usr/include/libiberty "${pkgdir}"/usr/${_target}/include
+  # install PIC version of libiberty
+  install -m644 "${srcdir}"/gcc-build/libiberty/pic/libiberty.a \
+          "${pkgdir}"/usr/${_target}/lib
+
+  make -C libcpp DESTDIR="${pkgdir}" install
+  rm "$pkgdir"/usr/lib/libiberty.a
+}
+
+package_gcc-fortran() {
+  setup_env
+  pkgdesc="Fortran front-end for GCC (${_target})"
+  depends=("${_target}-gcc=$pkgver-$pkgrel")
+
+  cd gcc-build
+  make -C $_target/libgfortran DESTDIR="$pkgdir" \
+       install-cafexeclibLTLIBRARIES \
+       install-{toolexeclibDATA,nodist_fincludeHEADERS}
+  make -C $_target/libgomp DESTDIR="$pkgdir" install-nodist_fincludeHEADERS
+  make -C gcc DESTDIR="$pkgdir" fortran.install-common
+
+  install -Dm755 gcc/f951 $pkgdir/${_libdir}/f951
+}
+
+package_gcc-objc() {
+  setup_env
+  pkgdesc="Objective-C front-end for GCC (${_target})"
+  depends=("${_target}-gcc=$pkgver-$pkgrel")
+
+  cd gcc-build
+  make DESTDIR="$pkgdir" -C $_target/libobjc install-headers
+  install -dm755 "$pkgdir"/${_libdir}
+  install -m755 gcc/cc1obj{,plus} "$pkgdir"/${_libdir}/
+}
+
+package_gcc-go() {
+  setup_env
+  pkgdesc="Go front-end for GCC (${_target})"
+  depends=("${_target}-gcc=$pkgver-$pkgrel")
+
+  cd gcc-build
+  make -C $_target/libgo DESTDIR="$pkgdir" install-exec-am
+  make -C gcc DESTDIR=$pkgdir go.install-common
+  install -Dm755 gcc/go1 $pkgdir/${_libdir}/go1
+
+  make DESTDIR=${pkgdir} install-gotools
+}
+
+pkgname=()
+for pkg in "${_pkgname[@]}"; do
+  pkgname=("${pkgname[@]}" "${_target}-${pkg}")
+  eval "package_${_target}-${pkg}() {
+    package_${pkg}
+}"
+done
