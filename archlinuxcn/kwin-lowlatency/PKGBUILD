@@ -15,7 +15,6 @@ makedepends=(git extra-cmake-modules qt5-tools kdoctools)
 optdepends=('qt5-virtualkeyboard: virtual keyboard support for kwin-wayland')
 provides=(kwin)
 conflicts=(kwin)
-groups=(plasma)
 source=("git+https://github.com/tildearrow/kwin-lowlatency.git")
 sha256sums=(SKIP)
 install=$pkgname.install
