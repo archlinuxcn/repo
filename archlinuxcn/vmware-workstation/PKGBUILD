@@ -191,7 +191,7 @@ prepare() {
   done
   rm -rf __MACOSX payload manifest.plist preflight postflight
 
-  sed -i -e "s|/usr/lib/vmware/|${pkgdir/%vmware-workstation/vmware-workstation-macos}/usr/lib/vmware/|" "$srcdir/unlocker-${_unclocker_commit}.py"
+  sed -i -e "s|/usr/lib/vmware/|${pkgdir/%vmware-workstation/vmware-workstation-macos}/usr/lib/vmware/|" "$srcdir/unlocker-${_unlocker_commit}.py"
 }
 
 _realpackage() {
