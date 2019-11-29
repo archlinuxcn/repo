@@ -24,10 +24,10 @@ pkgbase=vmware-workstation
 pkgname=('vmware-workstation'
         'vmware-workstation-macos'
         'vmware-keymaps')
-pkgver=15.5.0
-_buildver=14665864
+pkgver=15.5.1
+_buildver=15018445
 _pkgver=${pkgver}_${_buildver}
-pkgrel=1
+pkgrel=2
 pkgdesc='The industry standard for running multiple operating systems as virtual machines on a single Linux PC.'
 arch=(x86_64)
 url='https://www.vmware.com/products/workstation-for-linux.html'
@@ -35,7 +35,6 @@ license=(custom)
 install="vmware-workstation.install"
 depends=(
   dkms
-  ncurses5-compat-libs
   fuse2
   gtkmm3
   libcanberra
@@ -45,8 +44,6 @@ depends=(
   # needed to use Arch GTK3 library (for theme integration)
   gtk3
   gcr
-  # needed to replace internal libs:
-  #zlib
 )
 optdepends=(
   'linux-headers: build modules against Arch kernel'
@@ -96,7 +93,7 @@ source=(
   'vmnet.patch'
 )
 sha256sums=(
-  'b557b4dcebefb51466da5b33dc51549537b0d381864b6155c3a48a66801a8597'
+  '490f8fe8d874c27601c155c1b2c0055ad0d4f14feb32fa9f18643659a147d3c6'
 
   '12e7b16abf8d7e858532edabb8868919c678063c566a6535855b194aac72d55e'
   'da1698bf4e73ae466c1c7fc93891eba4b9c4581856649635e6532275dbfea141'
@@ -121,7 +118,7 @@ sha256sums=(
   '05e26d8b21d190ebabb7f693998114d9d5991d9dfb71acb4d990293a65b6b487'
   '6ce902b1dab8fc69be253abd8e79017011985eca850ff7acc7282f9ab668e35d'
   '1060b5d45caeda5119b220fab4e1ece398af34d75131139a5dc6f74ee06672c3'
-  '7c3b6a7871b19e31fafdcc2631751dd9569196740d8e7c2026653d155c0c8da0'
+  '22d1f23c272dd2f7d4644dfffe051503cf62311886f67d57de3b7502615ceec1'
 )
 options=(!strip emptydirs)
 
@@ -130,21 +127,27 @@ _isoimages=(linux linuxPreGlibc25 netware solaris windows winPre2k winPreVista)
 _isovirtualprinterimages=(Linux Windows)
 
 
-_vmware_fusion_ver=11.5.0_14634996
+_vmware_fusion_ver=11.5.1_15018442
 # List of VMware Fusion versions: https://softwareupdate.vmware.com/cds/vmw-desktop/fusion/
 
+_unlocker_commit=2fd359ec996419dc6c43253e3c728e1f2734c2ee
+_efi_unlocker_ver=1.0.0
+
 makedepends+=(
-  python2
+  python
   unzip
+  uefitool-git
 )
 
 source+=(
   "VMware-Fusion-${_vmware_fusion_ver/_/-}.zip.tar::https://softwareupdate.vmware.com/cds/vmw-desktop/fusion/${_vmware_fusion_ver/_//}/core/com.vmware.fusion.zip.tar"
-  'unlocker.py'
+  "unlocker-${_unlocker_commit}.py::https://raw.githubusercontent.com/DrDonk/unlocker/${_unlocker_commit}/unlocker.py"
+  "efi-unlocker-patch-${_efi_unlocker_ver}.txt::https://raw.githubusercontent.com/DrDonk/efi-unlocker/${_efi_unlocker_ver}/patches.txt"
 )
 sha256sums+=(
-  'ed819604cb9c0f204e377f16b8678103467d2cf4a50129932e2b1a9a000ad8cf'
-  'ecf6d9186f109ec420287bd327e1f1f407de8e4b9e3faa23828bcf903f6246c6'
+  'c36048a42c03988068aab7474b6c48ebc5054b8c6324cb93f009aec45aa899f0'
+  '89e3f41eade574c263b9afa0ba721d2179cd168f502e68b91ec3b6df4c5fee0e'
+  '392c1effcdec516000e9f8ffc97f2586524d8953d3e7d6f2c5f93f2acd809d91'
 )
 
 _fusion_isoimages=(darwin darwinPre15)
@@ -188,7 +191,7 @@ prepare() {
   done
   rm -rf __MACOSX payload manifest.plist preflight postflight
 
-  sed -i -e "s|/usr/lib/vmware/|${pkgdir/%vmware-workstation/vmware-workstation-macos}/usr/lib/vmware/|" "$srcdir/unlocker.py"
+  sed -i -e "s|/usr/lib/vmware/|${pkgdir/%vmware-workstation/vmware-workstation-macos}/usr/lib/vmware/|" "$srcdir/unlocker-${_unclocker_commit}.py"
 }
 
 _realpackage() {
@@ -282,12 +285,13 @@ _realpackage() {
     install -Dm 644 "vmware-virtual-printer/VirtualPrinter-$isoimage.iso" "$pkgdir/usr/lib/vmware/isoimages/VirtualPrinter-$isoimage.iso"
   done
 
-  install -Dm 644 "vmware-workstation/doc/EULA" "$pkgdir/usr/share/licenses/$pkgname/VMware Workstation - EULA.txt"
-  install -Dm 644 "$pkgdir/usr/lib/vmware-ovftool/vmware.eula" "$pkgdir/usr/share/licenses/$pkgname/VMware OVF Tool - EULA.txt"
+  install -Dm 644 "vmware-workstation/doc/EULA" "$pkgdir/usr/share/doc/vmware-workstation/EULA"
+  ln -s "/usr/share/doc/vmware-workstation/EULA" "$pkgdir/usr/share/licenses/$pkgname/VMware Workstation - EULA.txt"
+  ln -s "/usr/lib/vmware-ovftool/vmware.eula" "$pkgdir/usr/share/licenses/$pkgname/VMware OVF Tool - EULA.txt"
   install -Dm 644 "vmware-workstation/doc"/open_source_licenses.txt "$pkgdir/usr/share/licenses/$pkgname/VMware Workstation open source license.txt"
   install -Dm 644 "vmware-workstation/doc"/ovftool_open_source_licenses.txt "$pkgdir/usr/share/licenses/$pkgname/VMware OVF Tool open source license.txt"
   install -Dm 644 "vmware-vix-core"/open_source_licenses.txt "$pkgdir/usr/share/licenses/$pkgname/VMware VIX open source license.txt"
-  rm "$pkgdir/usr/lib/vmware-ovftool"/{vmware.eula,vmware-eula.rtf,open_source_licenses.txt,manifest.xml}
+  rm "$pkgdir/usr/lib/vmware-ovftool"/{vmware-eula.rtf,open_source_licenses.txt,manifest.xml}
 
   install -d -m 755 "$pkgdir/usr/lib/vmware-installer/$vmware_installer_version"/{lib/lib,artwork}
   install -Dm 755 "$srcdir/configure-initscript.sh" "$pkgdir/usr/lib/vmware-installer/$vmware_installer_version/bin/configure-initscript.sh"
@@ -364,8 +368,7 @@ _realpackage() {
     vmware-vmblock-fuse \
     vmware-vprobe \
     vmware-wssc-adminTool \
-    vmware-zenity \
-    #vmware-unity-helper
+    vmware-zenity
   do
     ln -s /usr/lib/vmware/bin/appLoader "$pkgdir/usr/lib/vmware/bin/$link"
   done
@@ -433,12 +436,19 @@ _realpackage() {
   rm -r "$pkgdir/usr/lib/vmware/modules/source"
 
 if [ -n "$_enable_macOS_guests" ]; then
-  msg "Patching VMware for macOS guest support"
-  python2 "$srcdir/unlocker.py" > /dev/null
+  msg "Patching VMware to enable macOS guest support"
+  python "$srcdir/unlocker-${_unlocker_commit}.py" > /dev/null
 
   for isoimage in ${_fusion_isoimages[@]}
   do
     install -Dm 644 "$srcdir/fusion-isoimages/$isoimage.iso" "$pkgdir/usr/lib/vmware/isoimages/$isoimage.iso"
+  done
+
+  msg "Patching EFI firmwares to disable macOS server checking"
+  _efi_arch=(32 64)
+  for arch in ${_efi_arch[@]}
+  do
+    uefipatch "$pkgdir/usr/lib/vmware/roms/EFI${arch}.ROM" "$srcdir/efi-unlocker-patch-${_efi_unlocker_ver}.txt" -o "$pkgdir/usr/lib/vmware/roms/EFI${arch}.ROM" > /dev/null
   done
 fi
 
