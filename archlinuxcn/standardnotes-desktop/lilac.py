@@ -17,6 +17,8 @@ def pre_build():
         if line.strip().startswith('makedepends='):
             print('makedepends+=("git" "python2" "node-gyp")') # Should depend on git
 
+    vcs_update()
+
 
 #post_build = aur_post_build
 
