@@ -1,0 +1,13 @@
+diff --git a/src/myframe.h b/src/myframe.h
+index 6673c0e..89591fc 100755
+--- a/src/myframe.h
++++ b/src/myframe.h
+@@ -79,7 +79,7 @@ struct MyFrame : wxFrame
+ 
+         sys->frame = this;
+ 
+-        exepath_ = wxFileName(exename).GetPath();
++        exepath_ = "/usr/share/treesheets";
+         #ifdef __WXMAC__
+         int cut = exepath_.Find("/MacOS");
+         if (cut > 0)
