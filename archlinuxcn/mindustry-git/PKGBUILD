@@ -1,7 +1,7 @@
 # Maintainer: copygirl <copygirl@mcft.net>
 _pkgname=mindustry
 pkgname=$_pkgname-git
-pkgver=r5344.ff2d9c34f
+pkgver=r5396.f784e893d
 pkgrel=1
 pkgdesc="A sandbox tower defense game written in Java"
 arch=("any")
@@ -15,10 +15,10 @@ source=("$_pkgname::git://github.com/Anuken/Mindustry.git"
         "mindustry.desktop"
         "mindustry.png"
         "mindustry.sh")
-md5sums=("SKIP"
-         "5cbcd7783b438452f494b34799dbea65"
-         "87e1a2c19d319f1eaef6c1a2920672d2"
-         "3c3fd3a7851992656c45feaf1ccdc4ca")
+md5sums=('SKIP'
+         '5cbcd7783b438452f494b34799dbea65'
+         '87e1a2c19d319f1eaef6c1a2920672d2'
+         '3c3fd3a7851992656c45feaf1ccdc4ca')
 
 pkgver() {
 	cd "$_pkgname"
