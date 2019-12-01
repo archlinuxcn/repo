@@ -2,25 +2,25 @@
 # Contributor: OK100 <ok100 at lavabit dot com>
 # Contributor: Valère Monseur <valere dot monseur at ymail dot com>
 
-pkgname=compton-git
-_gitname=compton
-epoch=2
-pkgver=1237_Next.109.gd9aa32b_2019.10.22
-pkgrel=1
-pkgdesc="X Compositor (a fork of xcompmgr-dana) (git-version)"
+pkgname=picom-git
+_gitname=picom
+pkgver=1242_Next.114.g43b2173_2019.10.23
+pkgrel=3
+pkgdesc="X compositor (fork of compton) (git-version)"
 arch=(i686 x86_64)
-url="https://github.com/yshui/compton"
+url="https://github.com/yshui/${_gitname}"
 license=('MIT' 'MPL2')
 depends=('libgl' 'libev' 'pcre' 'libx11' 'xcb-util-renderutil' 'libxcb' 'xcb-util-image' 'libxext'
          'pixman' 'libconfig' 'libdbus' 'hicolor-icon-theme' 'libxdg-basedir')
 makedepends=('git' 'mesa' 'meson' 'asciidoc' 'uthash')
-optdepends=('dbus:          To control compton via D-Bus'
-            'xorg-xwininfo: For compton-trans'
-            'xorg-xprop:    For compton-trans'
-            'python:        For compton-convgen.py')
-provides=('compton')
-conflicts=('compton')
-source=(git+"https://github.com/yshui/compton.git#branch=next")
+optdepends=('dbus:          To control picom via D-Bus'
+            'xorg-xwininfo: For picom-trans'
+            'xorg-xprop:    For picom-trans'
+            'python:        For picom-convgen.py')
+provides=('compton' 'compton-git' 'picom')
+conflicts=('compton' 'compton-git' 'picom')
+replaces=('compton-git')
+source=(git+"https://github.com/yshui/${_gitname}.git#branch=next")
 md5sums=("SKIP")
 
 pkgver() {
@@ -33,7 +33,7 @@ pkgver() {
 
 build() {
   cd "${srcdir}/${_gitname}"
-  meson --buildtype=release . build --prefix=/usr -Dwith_docs=true
+  meson --buildtype=release . build --prefix=/usr -Dbuild_docs=true
   ninja -C build
 }
 
@@ -43,8 +43,8 @@ package() {
   DESTDIR="${pkgdir}" ninja -C build install
 
   # install license
-  install -D -m644 "LICENSES/MIT" "${pkgdir}/usr/share/licenses/${_gitname}/LICENSE-MIT"
+  install -D -m644 "LICENSES/MIT" "${pkgdir}/usr/share/licenses/${pkgname/-git$/}/LICENSE-MIT"
 
   # example conf
-  install -D -m644 "compton.sample.conf" "${pkgdir}/etc/xdg/compton.conf.example"
+  install -D -m644 "picom.sample.conf" "${pkgdir}/etc/xdg/picom.conf.example"
 }
