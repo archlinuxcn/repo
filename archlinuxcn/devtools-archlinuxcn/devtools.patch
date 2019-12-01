@@ -1,0 +1,12 @@
+diff -Naur a/mkarchroot.in b/mkarchroot.in
+--- a/mkarchroot.in	2019-11-19 16:26:19.000000000 +0800
++++ b/mkarchroot.in	2019-12-01 18:04:51.762383615 +0800
+@@ -85,7 +85,7 @@
+ 	cp "$file" "$working_dir$file"
+ done
+ 
+-pacstrap -Mcd ${pac_conf:+-C "$pac_conf"} "$working_dir" \
++unshare -m pacstrap -Mcd ${pac_conf:+-C "$pac_conf"} "$working_dir" \
+ 	"${cache_dirs[@]/#/--cachedir=}" "$@" || die 'Failed to install all packages'
+ 
+ printf '%s.UTF-8 UTF-8\n' en_US de_DE > "$working_dir/etc/locale.gen"

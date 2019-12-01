@@ -3,7 +3,7 @@
 _pkgname=devtools
 pkgname=devtools-archlinuxcn
 pkgver=20191016
-pkgrel=2
+pkgrel=3
 pkgdesc='Tools for Arch Linux package maintainers, archlinuxcn fork'
 arch=('any')
 license=('GPL')
@@ -15,7 +15,8 @@ optdepends=('btrfs-progs: btrfs support')
 provides=("devtools=$pkgver-$pkgrel")
 conflicts=("devtools")
 source=(https://sources.archlinux.org/other/${_pkgname}/${_pkgname}-${pkgver}.tar.gz{,.sig}
-        "no-yes-y.patch::https://git.archlinux.org/devtools.git/patch/?id=b7893a2ca8e09062197129881bce3fd6700a573a")
+        "no-yes-y.patch::https://git.archlinux.org/devtools.git/patch/?id=b7893a2ca8e09062197129881bce3fd6700a573a"
+        "devtools.patch")
 
 validpgpkeys=('487EACC08557AD082088DABA1EB2638FF56C0C53'
               '4AA4767BBC9C4B1D18AE28B77F2D434B9741E8AC'
@@ -28,11 +29,13 @@ validpgpkeys=('487EACC08557AD082088DABA1EB2638FF56C0C53'
               'E240B57E2C4630BA768E2F26FC1B547C8D8172C8')
 sha256sums=('adc61b7761fb831f929a182e5e353c9f42c8666b6941c4ad7ce631fffd869994'
             'SKIP'
-            '483fc988fa3c81fa95da99273ccfdc6d4db2f5ceb093a2f7e3789870d18beb82')
+            '483fc988fa3c81fa95da99273ccfdc6d4db2f5ceb093a2f7e3789870d18beb82'
+            'f5a6fa3bd35738e0865e38ced23325049e1c2faf9195d1347e5721d1518082a3')
 
 prepare() {
   cd ${_pkgname}-${pkgver}
   patch -RNp1 -i ../no-yes-y.patch
+  patch -Np1 -i ../devtools.patch
 
   ## silent while show errors for curl
   sed "s|bin/curl -g|bin/curl -sS -g|g" -i makepkg-x86_64.conf
