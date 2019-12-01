@@ -11,7 +11,7 @@
 _pkgbasename=freetype2
 pkgname=lib32-$_pkgbasename-infinality-ultimate
 pkgver=2.9.1
-pkgrel=2
+pkgrel=3
 _patchrel=2018.06.21
 pkgdesc="TrueType font rendering library with Infinality patches and custom settings by bohoomil (32-bit, infinality-bundle)."
 arch=(x86_64)
@@ -140,3 +140,4 @@ package() {
   make DESTDIR="${pkgdir}" install
   rm -rf "${pkgdir}"/usr/{include,share,bin}
 }
+
