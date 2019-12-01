@@ -3,7 +3,7 @@
 pkgname=poi
 _pkgname=poi
 pkgver=10.4.0.beta.0.0.gbdadf038
-pkgrel=1
+pkgrel=2
 pkgdesc="Scalable KanColle browser and tool"
 arch=('any')
 url="https://github.com/poooi/poi/"
