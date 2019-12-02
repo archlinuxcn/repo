@@ -1,18 +1,32 @@
+# It's not recommended to modify this file because it will be
+# overwritten during package upgrades.  If you want to make changes, the
+# best way is to create a file "/etc/systemd/system/i2prouter.service.d/foo.conf"
+# and make your changes there. This file will be parsed after the file
+# i2p.service itself is parsed.
+
 [Unit]
 Description=Invisible Internet Project
-After=network.target
+After=network.target time-sync.target
 
 [Service]
 Type=forking
 User=i2p
 PIDFile=/run/i2p/i2p.pid
-Environment=WRAPPER_CONF=/opt/i2p/wrapper.config
-ExecStart=/usr/bin/java-service-wrapper ${WRAPPER_CONF} \
-    wrapper.name=i2prouter wrapper.syslog.ident=i2prouter \
-    wrapper.daemonize=TRUE
-SendSIGKILL=no
+
+NoNewPrivileges=yes
+PrivateTmp=yes
+PrivateDevices=yes
+DeviceAllow=/dev/null rw
+DeviceAllow=/dev/urandom r
+LimitNOFILE=4096
+
+ExecStart=/usr/bin/java-service-wrapper /opt/i2p/wrapper.config \
+    wrapper.name=i2prouter \
+    wrapper.syslog.ident=i2prouter \
+    wrapper.daemonize=TRUE TZ=UTC
 ExecReload=/bin/kill -USR1 $MAINPID
 ExecStop=/bin/kill -TERM $MAINPID
+SendSIGKILL=no
 SuccessExitStatus=0 2 3
 
 [Install]
