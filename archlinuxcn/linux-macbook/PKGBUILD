@@ -4,9 +4,8 @@
 # Original Maintainer: Tobias Powalowski <tpowa@archlinux.org>
 # Original Contributor: Thomas Baechler <thomas@archlinux.org>
 
-#pkgbase=linux               # Build stock -ARCH kernel
-pkgbase=linux-macbook        # Build kernel with a different name
-_srcver=5.3.4-arch1
+pkgbase=linux-macbook
+_srcver=5.4.1-arch1
 pkgver=${_srcver//-/.}
 pkgrel=2
 arch=(x86_64)
@@ -30,7 +29,7 @@ validpgpkeys=(
   '8218F88849AAC522E94CF470A5E9288C4FA415FA'  # Jan Alexander Steffens (heftig)
 )
 sha256sums=('SKIP'
-            '7d09d1d79a4ecb82502b4483cf989ede3f643e05613de45e12563dfe85d80423'
+            'b7f23bbc09b6c571b76f851f0389386a6f3a64f3d7b1b8509c8550228b0f4537'
             'ae2e95db94ef7176207c690224169594d49445e04249d2499e9d2fbc117a0b21'
             'c043f3033bb781e2688794a59f6d1f7ed49ef9b13eb77ff9a425df33a244a636'
             'ad6344badc91ad0630caacde83f7f9b97276f80d26a20619a87952be65492c65'
