@@ -4,8 +4,8 @@
 # Contributor: Jakub Schmidtke <sjakub@gmail.com>
 
 pkgname=firefox-esr
-pkgver=68.2.0
-pkgrel=3
+pkgver=68.3.0
+pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org, Extended Support Release"
 arch=(x86_64)
 license=(MPL GPL LGPL)
@@ -26,7 +26,7 @@ options=(!emptydirs !makeflags)
 source=(https://ftp.mozilla.org/pub/firefox/releases/${pkgver}esr/source/firefox-${pkgver}esr.source.tar.xz
         firefox.desktop firefox-symbolic.svg 0001-Use-remoting-name-for-GDK-application-names.patch
         "patch-bindgen-rust1390.patch::https://svnweb.freebsd.org/ports/head/www/firefox-esr/files/patch-bindgen-rust1390?revision=516995&view=co&pathrev=516995")
-sha256sums=('85f1c2eaf68ebedcbc0b78a342f6d16ef0865dedd426a1bba94b75c85f716f38'
+sha256sums=('e131149a70e7ae867d9b0ea081e8c081d056500ee51bb9270df247e977badc69'
             'ba8a1610fe3ccc65cb58f2651df0ae9df632ecc17b3af8d13670950e9e2d27d8'
             'a2474b32b9b2d7e0fb53a4c89715507ad1c194bef77713d798fa39d507def9e9'
             'ab07ab26617ff76fce68e07c66b8aa9b96c2d3e5b5517e51a3c3eac2edd88894'
