@@ -1,0 +1,11 @@
+post_install () {
+  echo ""
+  echo "==> read the manual via M-x info-display-manual RET haskell-mode RET"
+  echo "==> for information about how to configure your ~/.emacs"
+  echo ""
+}
+
+post_upgrade () {
+  post_install $1
+}
+
