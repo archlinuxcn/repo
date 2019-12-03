@@ -1,10 +1,10 @@
 # Maintainer: XavierCLL <xavier.corredor.llano (a) gmail.com>
 
 pkgname=pycharm-professional
-pkgver=2019.2.5
-_pkgver=2019.2.5
+pkgver=2019.3.0
+_pkgver=2019.3
 pkgrel=1
-pkgdesc="Powerful Python and Django IDE. Professional Edition"
+pkgdesc="Python IDE for Professional Developers. Professional Edition"
 arch=('x86_64')
 url='https://www.jetbrains.com/pycharm/'
 conflicts=('pycharm' 'pycharm-community-edition')
@@ -22,7 +22,7 @@ source=("https://download.jetbrains.com/python/$pkgname-$_pkgver.tar.gz"
         "charm.desktop"
         "charm")
 # https://download.jetbrains.com/python/pycharm-professional-${_pkgver}.tar.gz.sha256
-sha256sums=('b8357f39be0ed96279c5647a83a9ba4a76314f75141d64ae1a60f082e8ef3d3f'
+sha256sums=('38c5b82ad56646b8d31c50c7b06b9c0905a9571cc95a0a51af410d7c72ea3b0d'
             'aaf7113e8c56e4d977eca204d57350d9493eda2710abefd2488a2b5d47c53344'
             '818ed42f4200ae13315587abf6f247f93e68c658a94794f73924c985cdc145d0'
             '21e77b6b18e14636f9827e1f8d45bbc8dba8fb14ea5f4cde285c1ef4bb01c85e'
@@ -51,8 +51,8 @@ build() {
   cd pycharm-$_pkgver
 
   # compile PyDev debugger used by PyCharm to speedup debugging
-  #python2 helpers/pydev/setup_cython.py build_ext --build-temp build --build-lib .
-  #python3 helpers/pydev/setup_cython.py build_ext --build-temp build --build-lib .
+  python2 plugins/python/helpers/pydev/setup_cython.py build_ext --build-temp build --build-lib .
+  python3 plugins/python/helpers/pydev/setup_cython.py build_ext --build-temp build --build-lib .
   
   rm -rf bin/fsnotifier{,-arm} lib/libpty/linux/x86
 }
