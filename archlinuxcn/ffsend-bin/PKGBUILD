@@ -6,17 +6,17 @@
 # - Mirror: https://github.com/timvisee/ffsend/blob/master/pkg/aur/ffsend-bin/PKGBUILD
 
 pkgname=ffsend-bin
-pkgver=0.2.55
+pkgver=0.2.56
 pkgrel=1
 pkgdesc="Easily and securely share files from the command line. A Firefox Send client."
 url="https://gitlab.com/timvisee/ffsend"
 license=('GPL3')
-source=("ffsend-v$pkgver::https://github.com/timvisee/ffsend/releases/download/v0.2.55/ffsend-v0.2.55-linux-x64-static"
-        "ffsend-v$pkgver.bash::https://gitlab.com/timvisee/ffsend/raw/v0.2.55/contrib/completions/ffsend.bash"
-        "ffsend-v$pkgver.zsh::https://gitlab.com/timvisee/ffsend/raw/v0.2.55/contrib/completions/_ffsend"
-        "ffsend-v$pkgver.fish::https://gitlab.com/timvisee/ffsend/raw/v0.2.55/contrib/completions/ffsend.fish"
-        "LICENSE-v$pkgver::https://gitlab.com/timvisee/ffsend/raw/v0.2.55/LICENSE") # automatically set in CI, see: /.gitlab-ci.yml
-sha256sums=('43b29791426014421563adffddc992e31046409e4dd53796cd9f0434a2a75223' '5d07864cc50626f663d4e0c87edc3e45605f66857633ab373a5f4b2a8d81d433' '75a5d1ef0baf7d5711137655aad145140021c8c64584baab95e9faaab765218a' 'd68f1327b93a4b030ce6d3d0bc11a8d04dd8a3ff7cabe159d1bdaa5df86fffa9' '8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903')
+source=("ffsend-v$pkgver::https://github.com/timvisee/ffsend/releases/download/v0.2.56/ffsend-v0.2.56-linux-x64-static"
+        "ffsend-v$pkgver.bash::https://gitlab.com/timvisee/ffsend/raw/v0.2.56/contrib/completions/ffsend.bash"
+        "ffsend-v$pkgver.zsh::https://gitlab.com/timvisee/ffsend/raw/v0.2.56/contrib/completions/_ffsend"
+        "ffsend-v$pkgver.fish::https://gitlab.com/timvisee/ffsend/raw/v0.2.56/contrib/completions/ffsend.fish"
+        "LICENSE-v$pkgver::https://gitlab.com/timvisee/ffsend/raw/v0.2.56/LICENSE") # automatically set in CI, see: /.gitlab-ci.yml
+sha256sums=('79ab799879681ff6a90b0c68b95a720a253e08f60c60d3b390c801654fa23245' '5d07864cc50626f663d4e0c87edc3e45605f66857633ab373a5f4b2a8d81d433' '75a5d1ef0baf7d5711137655aad145140021c8c64584baab95e9faaab765218a' 'd68f1327b93a4b030ce6d3d0bc11a8d04dd8a3ff7cabe159d1bdaa5df86fffa9' '8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903')
 arch=('x86_64')
 provides=('ffsend')
 conflicts=('ffsend')
