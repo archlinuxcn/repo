@@ -7,3 +7,6 @@ build_prefix: extra-x86_64
 update_on:
   - github: swoole/swoole-src
     use_max_tag: true
+  - archpkg: php
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
