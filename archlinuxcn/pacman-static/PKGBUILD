@@ -6,17 +6,17 @@ pkgname=pacman-static
 pkgver=5.2.1
 _cares_ver=1.15.0
 _nghttp2_ver=1.39.2
-_curlver=7.66.0
+_curlver=7.67.0
 _sslver=1.1.1d
 _zlibver=1.2.11
 _xzver=5.2.4
 _bzipver=1.0.8
-_zstdver=1.4.3
+_zstdver=1.4.4
 _libarchive_ver=3.4.0
 _gpgerrorver=1.36
 _libassuanver=2.5.3
 _gpgmever=1.13.1
-pkgrel=2
+pkgrel=3
 pkgdesc="Statically-compiled pacman (to fix or install systems without libc)"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://www.archlinux.org/pacman/"
@@ -34,7 +34,8 @@ source+=("https://github.com/nghttp2/nghttp2/releases/download/v$_nghttp2_ver/ng
 source+=("https://c-ares.haxx.se/download/c-ares-${_cares_ver}.tar.gz"{,.asc})
 validpgpkeys+=('27EDEAF22F3ABCEB50DB9A125CC908FDB71E12C2') # Daniel Stenberg <daniel@haxx.se>
 # curl
-source+=("https://curl.haxx.se/download/curl-${_curlver}.tar.gz"{,.asc})
+source+=("https://curl.haxx.se/download/curl-${_curlver}.tar.gz"{,.asc}
+         "https://github.com/curl/curl/commit/13182b33f727cf5a56a5a13419904369f7f3baad.patch")
 # openssl
 source+=("https://www.openssl.org/source/openssl-${_sslver}.tar.gz"{,.asc}
          "ca-dir.patch")
@@ -69,8 +70,9 @@ sha512sums=('7814420b8d71090313f1bc7d9a513138bda74c5cbcb43d9741acc27ea7b4d180a38
             'd8c971543e3e87736dfafebca55e9ecd0644e304c9731edaccba34170205824476595861a439077289b438ad489dd6008dedf2c6b2c111920300329be1b1bf34'
             'a1de6c5e7e1a6a13c926aae690e83d5caa51e7313d63da1cf2af6bc757c41d585aad5466bc3ba7b7f7793cb1748fa589f40972b196728851c8b059cfc8c3be50'
             'SKIP'
-            '2a7d5e8b11eeb78c7a22bbaec0c10977d2c3e8cdabeb768e9d7cabd59e72e30a6d638b27f3815d6384954e96cc133c9670ce8a2a7c8aa03dde0ccf838aa93dae'
+            '73365f964df733b5e79d690ba7260a279986a9637ba0026b37cca2eca7ba8e37967251751bdf26de730f6f432713da8b7e0a315e84f1e9dad0e0bfd3d7882f92'
             'SKIP'
+            '3f4f439332a0370dffbc3a11d5a63b21cef35c1a64b818c0fdfd148a30e1e1b7b73921c6ab147e8eedb33ee15e790d9638777d97bd08747ac497bffa9aa3fced'
             '2bc9f528c27fe644308eb7603c992bac8740e9f0c3601a130af30c9ffebbf7e0f5c28b76a00bbb478bad40fbe89b4223a58d604001e1713da71ff4b7fe6a08a7'
             'SKIP'
             '3857c298663728a465b5f95a3ef44547efbfb420d755e9dde7f20aa3905171b400e1c126d8db5c2b916c733bbd0724d8753cad16c9baf7b12dcd225a3ee04a97'
@@ -80,7 +82,7 @@ sha512sums=('7814420b8d71090313f1bc7d9a513138bda74c5cbcb43d9741acc27ea7b4d180a38
             'SKIP'
             '083f5e675d73f3233c7930ebe20425a533feedeaaa9d8cc86831312a6581cefbe6ed0d08d2fa89be81082f2a5abdabca8b3c080bf97218a1bd59dc118a30b9f3'
             'SKIP'
-            'ccda90c7437635f92d0db39dfba3604e256f1f08284c35c042763a54b0ead45dca8e7fa3e5cf8032292d1dd9eefc1369e23f78a80d9335d69170563090677d5f'
+            '8209837e8eb14e474dfe21d5511085f46cef93b03ab77613fd41e7b8be652418231c38852669c8e0b55b78ad41ea2cb8008d0da122a83f8f27e32b5c86f045cf'
             '6e5f853f77dc04f0091d94b224cab8e669042450f271b78d0ea0219658d059c9cab1ab0eaa020a4227f451520b417fc340b85971a6f5e144fa69be57e15df346'
             'SKIP'
             '3c40b189c428c93d10685934cfaa2e35f71330da5ec271b7e5382b2b66090ccb4139efd743071cc0ea62a68bdc34d165d4a73bd0ef49fc357147f0b5166870b8'
@@ -95,8 +97,9 @@ b2sums=('be5a11624eecfe6c5a54088ce8872a1f2e24f2ac3f5a32a848a115b873b8ac3ee2a3aae
         '4569774c33f17d51ac889c385697fcead82106db421399ceb22ad2aafabe64a576445d9272adcf37e2fec47cdd6ac1dc6423efd49012ca7be0aa2087609a0397'
         'c4028bb2840af23274b79c73600bfcf73a348c7ab63ae3c215829e0fe2cf149f4ad38a3ec657c3997bad818ced3cacaed0579dd0dd2ef42eaffd074bdc4f22ed'
         'SKIP'
-        'be3c8060804ee159e38ac066bf6f66eb1ae7bc69b5a80ef6eb75ee0325f0a4098ad8e624e6a510cad7a8327701efc6b8b8088856b316087980fb82cc35e1c210'
+        '3a2a2f0d3325adb644cff89d97c079901a4daddc9e191f8a6a6ddcec3f9a5c58fe8ab2070ce66584a13df9954048217e2a3bac65dc643df26c0aa9c63fea5988'
         'SKIP'
+        'dc3d356c0a669fc818fd71bbe4a9c2692acb7180be6c33291b956a783a628b9d329317c13dfa170859883455a9be9ad8c8c273f4638b9177cfcaddf630b7e70a'
         'd3155f07b487ebd8dd4fe25396c874f9af18b5cfd7e622298d29c4f2c8ce14ad4534609d321314a4bcd0d44414e1306190340daaacd3c8fca061c04498446244'
         'SKIP'
         'e2ff99e8236487f43171c771d0ee89137b73f3d0b2756bcb0d6525c810ffa9f5a3763c3744327fb47cef21eabfc50fff96632f4bbe2cd244206a99daffa0c25a'
@@ -106,7 +109,7 @@ b2sums=('be5a11624eecfe6c5a54088ce8872a1f2e24f2ac3f5a32a848a115b873b8ac3ee2a3aae
         'SKIP'
         '22ab3acd84f4db8c3d6f59340c252faedfd4447cea00dafbd652e65b6cf8a20adf6835c22e58563004cfafdb15348c924996230b4b23cae42da5e25eeac4bdad'
         'SKIP'
-        'da4c4b4f6afc36a23a13a9582874891ad206b01dc805f9e79879cb833b47c0bb18ec1b3bb5c0b99f4e8707d21659ca0b7446a84d15f513a3fcab206bc7f49539'
+        'e21841a53b6c60703e5500cfc2a02923c4c3e57975aa57e1060310171e0d83d7c8eda1bd0510d5736db5c310d76847d2105ac5f614867fc3a9dc3086a035dfd7'
         '81684f6e47192c50cfa408977d53dc3812befca28733b531d51dffa0a6799a47366a50f64755557a7b3111a179ac4aba9e6a527418461cdbcccea80ae6bed4fa'
         'SKIP'
         '06d379b0d2cdf2ddc315a741291419a4f3cb809454fedf70bbfccc7626b86824665c3361a9a2f7923e1c71e779bc2e2ed181174edaa2d1658a395da0c5bb2d72'
@@ -132,6 +135,8 @@ if [[ $CARCH = i686 ]]; then
 fi
 
 prepare() {
+    cd "${srcdir}"/curl-${_curlver}
+    patch -p1 -i ../13182b33f727cf5a56a5a13419904369f7f3baad.patch
     cd "${srcdir}"/libarchive-${_libarchive_ver}
     autoreconf -fi
 
