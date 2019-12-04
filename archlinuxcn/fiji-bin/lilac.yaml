@@ -4,6 +4,8 @@ maintainers:
 build_prefix: extra-x86_64
 
 update_on:
-  - github: fiji/fiji
-    use_max_tag: true
+  - url: https://downloads.imagej.net/fiji/archive/
+    regex: \d{8}-\d+
+
+# vim:set ts=2 sw=2 et:
 
