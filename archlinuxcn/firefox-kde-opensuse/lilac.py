@@ -6,15 +6,8 @@ build_prefix = 'extra-x86_64'
 time_limit_hours = 4
 
 def pre_build():
-    oldver, oldpkgrel = _G.oldver.split('-')
-    newver, newpkgrel = _G.newver.split('-')
-    if vercmp(newver, oldver) >= 0:
-        update_pkgver_and_pkgrel(newver, updpkgsums=True)
-    else:
-        update_pkgver_and_pkgrel(oldver, updpkgsums=True)
-
-
-post_build = git_pkgbuild_commit
+    aur_pre_build()
+    add_into_array('options', "'debug'")
 
 if __name__ == '__main__':
     single_main(build_prefix)
