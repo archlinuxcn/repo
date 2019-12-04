@@ -2,7 +2,7 @@
 # Maintainer: Juanma Hernandez <juanmah@gmail.com>
 
 pkgname=zotero
-pkgver=5.0.78
+pkgver=5.0.79
 pkgrel=1
 pkgdesc="Zotero Standalone. Is a free, easy-to-use tool to help you collect, organize, cite, and share your research sources."
 arch=('x86_64')
@@ -11,13 +11,13 @@ license=('GPL3')
 depends=('dbus-glib' 'gtk2' 'gtk3' 'nss' 'libxt')
 
 sha256sums=('2e700ebe97d332a894be80d232b037b0117d84b38c5fa99dffc727cb10918228')
-sha256sums_x86_64=('63870d10edf923fe20621d569dfd3a6ef9fc122cc05de0160516b3b540e0b13c')
+sha256sums_x86_64=('2ba100d803339cbf281b5aa03bd2094f4447d5ab49dc608c1b9c4ac149cd29d0')
 
 install='zotero.install'
 
 source=("zotero.desktop")
 source_x86_64=("Zotero-${pkgver}_linux_$CARCH.tar.bz2::https://www.zotero.org/download/client/dl?channel=release&platform=linux-$CARCH&version=${pkgver}")
-        
+
 package() {
   install -dDm755 "$pkgdir"/usr/{bin,lib/zotero}
   mv "$srcdir"/Zotero_linux-$CARCH/* "$pkgdir"/usr/lib/zotero
