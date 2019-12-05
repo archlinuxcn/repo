@@ -372,6 +372,27 @@ class RepoTreeTest(TestCase):
                     check_var_srcinfo('replaces', package, PACKAGES, line)
                     check_var_srcinfo('groups', package, GROUPS, line)
 
+    def test_repo_depends_valid(self):
+        pkgs = list(list_packages())
+        for package in pkgs:
+            with self.subTest(package=package):
+                self.assertFalse(
+                    lilac_py_has_field(package, 'repo_depends', self),
+                    msg=('package "\033[1;31m{0}\033[m" has repo_depends '
+                         'in lilac.py').format(package))
+                lilac_yaml_path = os.path.join(pkgpath(package), 'lilac.yaml')
+                with git_open(lilac_yaml_path) as lilac_yaml_file:
+                    lilac_yaml = yaml.load(lilac_yaml_file.read(), Loader=yaml.SafeLoader)
+                    for dep in lilac_yaml.get('repo_depends', []):
+                        if isinstance(dep, dict):
+                            dep_package = list(dep.keys())[0]
+                        else:
+                            dep_package = dep
+                        self.assertTrue(
+                            dep_package in pkgs,
+                            msg=('package "\033[1;31m{0}\033[m" depends on '
+                                 '"\033[1;31m{1}\033[m", which does not exist '
+                                 'or is unmanaged').format(package, dep_package))
 
 
 def run_test(testcase, msg):
