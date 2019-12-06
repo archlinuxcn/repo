@@ -2,7 +2,7 @@
 
 pkgname=emacs-websocket
 pkgver=1.12
-pkgrel=4
+pkgrel=6
 pkgdesc="A websocket implementation in elisp, for emacs."
 arch=('any')
 url="https://github.com/ahyatt/emacs-websocket"
