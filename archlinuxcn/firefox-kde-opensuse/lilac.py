@@ -3,7 +3,7 @@ from lilaclib import *
 from pyalpm import vercmp
 
 build_prefix = 'extra-x86_64'
-time_limit_hours = 5
+time_limit_hours = 3
 
 def pre_build():
     aur_pre_build()
