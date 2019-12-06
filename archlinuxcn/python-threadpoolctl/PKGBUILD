@@ -8,7 +8,7 @@ pkgdesc='Python helpers to limit the number of threads used in native libraries 
 arch=(any)
 url='https://github.com/joblib/threadpoolctl'
 license=('BSD')
-make_depends=(
+makedepends=(
   'python-setuptools'
 )
 source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
