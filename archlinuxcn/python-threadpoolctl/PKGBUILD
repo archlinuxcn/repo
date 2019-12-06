@@ -2,8 +2,8 @@
 
 _name=threadpoolctl
 pkgname=python-threadpoolctl
-pkgver=1.1.0
-pkgrel=4
+pkgver=2.0.0
+pkgrel=1
 pkgdesc='Python helpers to limit the number of threads used in native libraries that handle their own internal threadpool (BLAS and OpenMP implementations)'
 arch=(any)
 url='https://github.com/joblib/threadpoolctl'
@@ -12,7 +12,7 @@ makedepends=(
   'python-setuptools'
 )
 source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
-sha256sums=('86f330c5ead7fd2d2143e76c4a4cc032d5a2f9cd4c4857fa06847cae2211ab82')
+sha256sums=('48b3e3e9ee079d6b5295c65cbe255b36a3026afc6dde3fb49c085cd0c004bbcf')
 
 build() {
   cd "${srcdir}/${_name}-${pkgver}"
