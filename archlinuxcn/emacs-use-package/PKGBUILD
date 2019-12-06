@@ -2,7 +2,7 @@
 
 pkgname=emacs-use-package
 pkgver=2.4
-pkgrel=8
+pkgrel=10
 pkgdesc="A use-package declaration for simplifying your .emacs"
 url="https://github.com/jwiegley/use-package"
 arch=('any')
