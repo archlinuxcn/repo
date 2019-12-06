@@ -2,7 +2,7 @@
 
 pkgname=emacs-markdown-preview-mode
 pkgver=0.9.2
-pkgrel=9
+pkgrel=11
 pkgdesc="Minor mode to preview markdown output as you save"
 arch=('any')
 url="https://github.com/ancane/markdown-preview-mode"
