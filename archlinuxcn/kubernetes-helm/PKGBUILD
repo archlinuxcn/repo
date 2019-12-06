@@ -3,8 +3,8 @@
 # Contributor: Wayne Cheng <waynethecheng@gmail.com>
 
 pkgname=kubernetes-helm
-pkgver=3.0.0
-pkgrel=3
+pkgver=3.0.1
+pkgrel=1
 pkgdesc="A tool to manage Kubernetes charts"
 arch=('i686' 'x86_64' 'arm' 'aarch64')
 url="https://github.com/helm/helm"
@@ -14,6 +14,7 @@ optdepends=(
   'kubectl: check cluster status'
   'kubectl-bin: check cluster status - binary package'
 )
+provides=(kubernetes-helm)
 conflicts=(
   'kubernetes-helm-bin'
   'kubernetes-helm'
