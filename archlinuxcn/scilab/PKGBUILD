@@ -58,7 +58,7 @@ prepare(){
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
 
-  ./configure \
+  ./configure --with-jdk=/usr/lib/jvm/java-8-openjdk/ \
     --prefix=/usr \
     --with-gcc \
     --with-gfortran \
