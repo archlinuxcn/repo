@@ -2,7 +2,7 @@
 
 pkgname=emacs-web-server
 pkgver=0.1.0
-pkgrel=8
+pkgrel=10
 pkgdesc="web server running Emacs Lisp handlers."
 arch=('any')
 url="https://github.com/eschulte/emacs-web-server"
