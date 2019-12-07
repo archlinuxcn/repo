@@ -1,0 +1,12 @@
+diff -u -r r8168-8.047.05/src/r8168_n.c r8168-8.047.05-5.4/src/r8168_n.c
+--- r8168-8.047.05/src/r8168_n.c	2019-11-25 18:01:38.000000000 +0000
++++ r8168-8.047.05-5.4/src/r8168_n.c	2019-11-25 23:36:15.427988367 +0000
+@@ -56,7 +56,7 @@
+ #include <linux/rtnetlink.h>
+ #include <linux/completion.h>
+ 
+-#if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,26)
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,26) && LINUX_VERSION_CODE < KERNEL_VERSION(5,4,0)
+ #include <linux/pci-aspm.h>
+ #endif
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(2,4,37)
