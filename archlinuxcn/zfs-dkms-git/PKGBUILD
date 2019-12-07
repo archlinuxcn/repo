@@ -6,10 +6,10 @@
 # http://github.com/archzfs/archzfs
 #
 pkgname="zfs-dkms-git"
-_commit='e69bb31b71f60b338fa5510dc48de298f394ad73'
+_commit='0dcef9b966590ac2b7b30c2188996943198cd45c'
 pkgdesc="Kernel modules for the Zettabyte File System."
 
-pkgver=2019.12.02.r5555.ge69bb31b7
+pkgver=2019.12.06.r5575.g0dcef9b96
 pkgrel=1
 makedepends=("git")
 arch=("x86_64")
