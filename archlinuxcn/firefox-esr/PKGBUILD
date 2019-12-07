@@ -5,7 +5,7 @@
 
 pkgname=firefox-esr
 pkgver=68.3.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Standalone web browser from mozilla.org, Extended Support Release"
 arch=(x86_64)
 license=(MPL GPL LGPL)
@@ -66,6 +66,7 @@ ac_add_options --enable-linker=gold
 ac_add_options --enable-hardening
 ac_add_options --enable-optimize
 ac_add_options --enable-rust-simd
+ac_add_options --disable-elf-hack
 export CC=clang
 export CXX=clang++
 export AR=llvm-ar
