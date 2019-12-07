@@ -3,7 +3,7 @@
 
 pkgname=emacs-projectile
 pkgver=2.0.0
-pkgrel=9
+pkgrel=11
 pkgdesc="Project Interaction Library for Emacs"
 arch=(any)
 url="https://github.com/bbatsov/projectile"
