@@ -7,4 +7,4 @@ maintainers:
 build_prefix: extra-x86_64
 
 update_on:
-  - cmd: curl https://quagma.sakura.ne.jp/manuke/x88src.html | perl -pe 'if(($_)=/([0-9]+([_][0-9]+)+)/){$_.="\n"}' | head -n 1 | sed 's/88_//;s/_/./g
+  - aur: x88000
