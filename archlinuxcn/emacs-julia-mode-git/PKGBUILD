@@ -2,7 +2,7 @@
 
 pkgname=emacs-julia-mode-git
 epoch=1
-pkgver=0.309.g4f024cb
+pkgver=0.312.gd21b83d
 pkgrel=1
 pkgdesc="Emacs major mode for the Julia programming language"
 arch=('any')
@@ -33,7 +33,7 @@ build() {
   emacs --batch --eval \
         '(progn
           (push "." load-path)
-          (byte-compile-file "julia-latexsubs.el"))'
+          (byte-compile-file "julia-mode-latexsubs.el"))'
 }
 
 package() {
@@ -42,8 +42,8 @@ package() {
   mkdir -p "$pkgdir/usr/share/emacs/site-lisp"
   install -m644 julia-mode.el "$pkgdir/usr/share/emacs/site-lisp"
   install -m644 julia-mode.elc "$pkgdir/usr/share/emacs/site-lisp"
-  install -m644 julia-latexsubs.el "$pkgdir/usr/share/emacs/site-lisp"
-  install -m644 julia-latexsubs.elc "$pkgdir/usr/share/emacs/site-lisp"
+  install -m644 julia-mode-latexsubs.el "$pkgdir/usr/share/emacs/site-lisp"
+  install -m644 julia-mode-latexsubs.elc "$pkgdir/usr/share/emacs/site-lisp"
 
   install -dm755 "${pkgdir}/usr/share/licenses/$pkgname/"
   install LICENSE.md "${pkgdir}/usr/share/licenses/$pkgname/"
