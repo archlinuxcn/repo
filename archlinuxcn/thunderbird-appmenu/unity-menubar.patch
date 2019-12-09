@@ -10,13 +10,13 @@
                                      !('@mozilla.org/widget/nativemenuservice;1' in Cc))
 +#endif
                                    this.setAttribute('openedwithkey',
-                                                     event.target.parentNode.openedWithKey);"
-                 style="border:0px;padding:0px;margin:0px;-moz-appearance:none">
+                                                     event.target.parentNode.openedWithKey);">
+             <menu id="file-menu" label="&fileMenu.label;"
 --- a/browser/base/content/browser.js
 +++ b/browser/base/content/browser.js
-@@ -5557,11 +5557,17 @@ function onViewToolbarsPopupShowing(aEve
+@@ -7008,11 +7008,17 @@ function onViewToolbarsPopupShowing(aEve
  
-   let toolbarNodes = gNavToolbox.childNodes;
+   let toolbarNodes = gNavToolbox.querySelectorAll("toolbar");
  
 +  let shellShowingMenubar = document.documentElement.getAttribute("shellshowingmenubar") == "true";
 +
@@ -29,12 +29,12 @@
 +      continue;
 +    }
 +
-     let menuItem = document.createElement("menuitem");
-     let hidingAttribute = toolbar.getAttribute("type") == "menubar" ?
-                           "autohide" : "collapsed";
+     let menuItem = document.createXULElement("menuitem");
+     let hidingAttribute =
+       toolbar.getAttribute("type") == "menubar" ? "autohide" : "collapsed";
 --- a/browser/components/places/content/places.xul
 +++ b/browser/components/places/content/places.xul
-@@ -161,7 +161,7 @@
+@@ -166,7 +166,7 @@
          <toolbarbutton type="menu" class="tabbable"
                onpopupshowing="document.getElementById('placeContent').focus()"
  #else
@@ -43,9 +43,48 @@
          <menu accesskey="&organize.accesskey;" class="menu-iconic"
  #endif
                id="organizeButton" label="&organize.label;"
+--- a/dom/xul/XULPopupElement.cpp
++++ b/dom/xul/XULPopupElement.cpp
+@@ -156,6 +156,10 @@ void XULPopupElement::GetState(nsString&
+   // set this here in case there's no frame for the popup
+   aState.AssignLiteral("closed");
+ 
++#ifdef MOZ_WIDGET_GTK
++  nsAutoString nativeState;
++#endif
++
+   nsMenuPopupFrame* menuPopupFrame = do_QueryFrame(GetPrimaryFrame());
+   if (menuPopupFrame) {
+     switch (menuPopupFrame->PopupState()) {
+@@ -179,6 +183,11 @@ void XULPopupElement::GetState(nsString&
+         break;
+     }
+   }
++#ifdef MOZ_WIDGET_GTK
++  else if (GetAttr(kNameSpaceID_None, nsGkAtoms::_moz_nativemenupopupstate, nativeState)) {
++    aState = nativeState;
++  }
++#endif
+ }
+ 
+ nsINode* XULPopupElement::GetTriggerNode() const {
+--- a/dom/xul/moz.build
++++ b/dom/xul/moz.build
+@@ -78,6 +78,11 @@ LOCAL_INCLUDES += [
+ 
+ include('/ipc/chromium/chromium-config.mozbuild')
+ 
++if 'gtk' in CONFIG['MOZ_WIDGET_TOOLKIT']:
++    LOCAL_INCLUDES += [
++        '/widget/gtk',
++    ]
++
+ FINAL_LIBRARY = 'xul'
+ 
+ if CONFIG['CC_TYPE'] in ('clang', 'gcc'):
 --- a/layout/build/moz.build
 +++ b/layout/build/moz.build
-@@ -71,6 +71,10 @@ elif CONFIG['MOZ_WIDGET_TOOLKIT'] == 'an
+@@ -70,6 +70,10 @@ elif CONFIG['MOZ_WIDGET_TOOLKIT'] == 'an
          '/dom/system',
          '/dom/system/android',
      ]
@@ -54,34 +93,11 @@
 +        '/widget/gtk',
 +    ]
  
- if CONFIG['MOZ_WEBSPEECH']:
-     LOCAL_INCLUDES += [
---- a/layout/build/nsLayoutStatics.cpp
-+++ b/layout/build/nsLayoutStatics.cpp
-@@ -126,6 +126,10 @@
- #include "nsHostObjectProtocolHandler.h"
- #include "nsThreadManager.h"
- 
-+#ifdef MOZ_WIDGET_GTK
-+#include "nsNativeMenuAtoms.h"
-+#endif
-+
- using namespace mozilla;
- using namespace mozilla::net;
- using namespace mozilla::dom;
-@@ -154,6 +158,9 @@ nsresult nsLayoutStatics::Initialize() {
-   nsGkAtoms::AddRefAtoms();
-   nsHTMLTags::RegisterAtoms();
-   nsRDFAtoms::RegisterAtoms();
-+#ifdef MOZ_WIDGET_GTK
-+  nsNativeMenuAtoms::RegisterAtoms();
-+#endif
- 
-   NS_SetStaticAtomsDone();
- 
+ XPCOM_MANIFESTS += [
+     'components.conf',
 --- a/modules/libpref/init/all.js
 +++ b/modules/libpref/init/all.js
-@@ -265,6 +265,9 @@ pref("dom.script_loader.bytecode_cache.s
+@@ -246,6 +246,9 @@ pref("dom.window.event.enabled", true);
  pref("browser.sessionhistory.max_total_viewers", -1);
  
  pref("ui.use_native_colors", true);
@@ -89,30 +105,11 @@
 +pref("ui.use_unity_menubar", true);
 +#endif
  pref("ui.click_hold_context_menus", false);
- 
- // Pop up context menu on mouseup instead of mousedown, if that's the OS default.
---- a/toolkit/content/widgets/popup.xml
-+++ b/toolkit/content/widgets/popup.xml
-@@ -27,8 +27,14 @@
-         </getter>
-       </property>
- 
--      <property name="state" readonly="true"
--                onget="return this.popupBoxObject.popupState"/>
-+      <property name="state" readonly="true">
-+        <getter><![CDATA[
-+          if (this.hasAttribute('_moz-nativemenupopupstate'))
-+            return this.getAttribute('_moz-nativemenupopupstate');
-+          else
-+            return this.popupBoxObject.popupState;
-+        ]]></getter>
-+      </property>
- 
-       <property name="triggerNode" readonly="true"
-                 onget="return this.popupBoxObject.triggerNode"/>
+ // 0 = false, 1 = true, 2 = autodetect.
+ pref("ui.android.mouse_as_touch", 1);
 --- a/toolkit/content/xul.css
 +++ b/toolkit/content/xul.css
-@@ -312,6 +312,18 @@ toolbar[type="menubar"][autohide="true"]
+@@ -215,6 +215,18 @@ toolbar[type="menubar"] {
  }
  %endif
  
@@ -133,37 +130,25 @@
  }
 --- a/widget/gtk/moz.build
 +++ b/widget/gtk/moz.build
-@@ -39,10 +39,18 @@ UNIFIED_SOURCES += [
-     'nsAppShell.cpp',
-     'nsBidiKeyboard.cpp',
-     'nsColorPicker.cpp',
+@@ -53,6 +53,15 @@ UNIFIED_SOURCES += [
+ ]
+ 
+ SOURCES += [
 +    'nsDbusmenu.cpp',
-     'nsFilePicker.cpp',
-     'nsGtkKeyUtils.cpp',
-     'nsImageToPixbuf.cpp',
-     'nsLookAndFeel.cpp',
++    'nsMenu.cpp', # conflicts with X11 headers
 +    'nsMenuBar.cpp',
 +    'nsMenuContainer.cpp',
 +    'nsMenuItem.cpp',
 +    'nsMenuObject.cpp',
 +    'nsMenuSeparator.cpp',
-+    'nsNativeMenuAtoms.cpp',
 +    'nsNativeMenuDocListener.cpp',
-     'nsNativeThemeGTK.cpp',
-     'nsSound.cpp',
-     'nsToolkit.cpp',
-@@ -54,6 +62,8 @@ UNIFIED_SOURCES += [
- ]
- 
- SOURCES += [
-+    'nsMenu.cpp', # conflicts with X11 headers
 +    'nsNativeMenuService.cpp',
      'nsWindow.cpp', # conflicts with X11 headers
  ]
  
-@@ -124,6 +134,7 @@ FINAL_LIBRARY = 'xul'
- 
+@@ -127,6 +136,7 @@ FINAL_LIBRARY = 'xul'
  LOCAL_INCLUDES += [
+     '/layout/base',
      '/layout/generic',
 +    '/layout/style',
      '/layout/xul',
@@ -171,7 +156,7 @@
      '/widget',
 --- /dev/null
 +++ b/widget/gtk/nsDbusmenu.cpp
-@@ -0,0 +1,63 @@
+@@ -0,0 +1,61 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
 + */
@@ -226,10 +211,8 @@
 +    }
 +
 +    LOAD_LIBRARY(DbusmenuGlib, "libdbusmenu-glib.so.4")
-+#if (MOZ_WIDGET_GTK == 3)
++#ifdef MOZ_WIDGET_GTK
 +    LOAD_LIBRARY(DbusmenuGtk, "libdbusmenu-gtk3.so.4")
-+#else
-+    LOAD_LIBRARY(DbusmenuGtk, "libdbusmenu-gtk.so.4")
 +#endif
 +#undef LOAD_LIBRARY
 +
@@ -341,7 +324,7 @@
 +#endif /* __nsDbusmenu_h__ */
 --- /dev/null
 +++ b/widget/gtk/nsMenu.cpp
-@@ -0,0 +1,854 @@
+@@ -0,0 +1,843 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
 + */
@@ -351,17 +334,16 @@
 +
 +#define _IMPL_NS_LAYOUT
 +
++#include "mozilla/dom/Document.h"
 +#include "mozilla/dom/Element.h"
 +#include "mozilla/Assertions.h"
++#include "mozilla/ComputedStyleInlines.h"
 +#include "mozilla/EventDispatcher.h"
-+#include "mozilla/GeckoStyleContext.h"
 +#include "mozilla/GuardObjects.h"
 +#include "mozilla/MouseEvents.h"
 +#include "mozilla/Move.h"
-+#include "mozilla/ServoStyleContext.h"
-+#include "mozilla/ServoTypes.h"
-+#include "mozilla/StyleSetHandle.h"
-+#include "mozilla/StyleSetHandleInlines.h"
++#include "mozilla/PresShell.h"
++#include "mozilla/PresShellInlines.h"
 +#include "nsAutoPtr.h"
 +#include "nsBindingManager.h"
 +#include "nsComponentManagerUtils.h"
@@ -371,19 +353,14 @@
 +#include "nsGtkUtils.h"
 +#include "nsAtom.h"
 +#include "nsIContent.h"
-+#include "nsIDocument.h"
-+#include "nsIPresShell.h"
 +#include "nsIRunnable.h"
 +#include "nsITimer.h"
 +#include "nsString.h"
-+#include "nsStyleContext.h"
-+#include "nsStyleContextInlines.h"
 +#include "nsStyleStruct.h"
 +#include "nsThreadUtils.h"
 +#include "nsXBLBinding.h"
 +#include "nsXBLService.h"
 +
-+#include "nsNativeMenuAtoms.h"
 +#include "nsNativeMenuDocListener.h"
 +
 +#include <glib-object.h>
@@ -468,22 +445,20 @@
 +static void
 +AttachXBLBindings(nsIContent *aContent)
 +{
-+    nsIDocument *doc = aContent->OwnerDoc();
-+    nsIPresShell *shell = doc->GetShell();
++    dom::Document *doc = aContent->OwnerDoc();
++    PresShell *shell = doc->GetPresShell();
 +    if (!shell) {
 +        return;
 +    }
 +
-+    RefPtr<nsStyleContext> sc =
-+        shell->StyleSet()->ResolveStyleFor(aContent->AsElement(),
-+                                           nullptr,
-+                                           LazyComputeBehavior::Allow);
++    RefPtr<ComputedStyle> style =
++        shell->StyleSet()->ResolveStyleLazily(*aContent->AsElement());
 +
-+    if (!sc) {
++    if (!style) {
 +        return;
 +    }
 +
-+    const nsStyleDisplay* display = sc->StyleDisplay();
++    const nsStyleDisplay* display = style->StyleDisplay();
 +    if (!display->mBinding) {
 +        return;
 +    }
@@ -494,11 +469,10 @@
 +    }
 +
 +    RefPtr<nsXBLBinding> binding;
-+    bool dummy;
 +    nsresult rv = xbl->LoadBindings(aContent->AsElement(),
 +                                    display->mBinding->GetURI(),
-+                                    display->mBinding->mExtraData->GetPrincipal(),
-+                                    getter_AddRefs(binding), &dummy);
++                                    display->mBinding->ExtraData()->Principal(),
++                                    getter_AddRefs(binding));
 +    if ((NS_FAILED(rv) && rv != NS_ERROR_XBL_BLOCKED) || !binding) {
 +        return;
 +    }
@@ -532,11 +506,11 @@
 +
 +    if (state.IsEmpty()) {
 +        mPopupContent->AsElement()->UnsetAttr(
-+            kNameSpaceID_None, nsNativeMenuAtoms::_moz_nativemenupopupstate,
++            kNameSpaceID_None, nsGkAtoms::_moz_nativemenupopupstate,
 +            false);
 +    } else {
 +        mPopupContent->AsElement()->SetAttr(
-+            kNameSpaceID_None, nsNativeMenuAtoms::_moz_nativemenupopupstate,
++            kNameSpaceID_None, nsGkAtoms::_moz_nativemenupopupstate,
 +            state, false);
 +    }
 +}
@@ -680,7 +654,7 @@
 +            continue;
 +        }
 +
-+        AppendChild(Move(child));
++        AppendChild(std::move(child));
 +    }
 +}
 +
@@ -693,9 +667,7 @@
 +    for (uint32_t i = 0; i < ContentNode()->GetChildCount(); ++i) {
 +        nsIContent *child = ContentNode()->GetChildAt_Deprecated(i);
 +
-+        int32_t dummy;
-+        nsAtom* tag = child->OwnerDoc()->BindingManager()->ResolveTag(child, &dummy);
-+        if (tag == nsGkAtoms::menupopup) {
++        if (child->NodeInfo()->NameAtom() == nsGkAtoms::menupopup) {
 +            mPopupContent = child;
 +            break;
 +        }
@@ -755,7 +727,7 @@
 +        EnsureNoPlaceholderItem();
 +    }
 +
-+    nsMenuContainer::InsertChildAfter(Move(aChild), aPrevSibling,
++    nsMenuContainer::InsertChildAfter(std::move(aChild), aPrevSibling,
 +                                      !IsInBatchedUpdate());
 +    StructureMutated();
 +}
@@ -767,11 +739,11 @@
 +        EnsureNoPlaceholderItem();
 +    }
 +
-+    nsMenuContainer::AppendChild(Move(aChild), !IsInBatchedUpdate());
++    nsMenuContainer::AppendChild(std::move(aChild), !IsInBatchedUpdate());
 +    StructureMutated();
 +}
 +
-+bool 
++bool
 +nsMenu::IsInBatchedUpdate() const
 +{
 +    return mBatchedUpdateState != eBatchedUpdateState_Inactive;
@@ -809,7 +781,7 @@
 +        UniquePtr<nsMenuObject> child = CreateChild(aChild);
 +
 +        if (child) {
-+            InsertChildAfter(Move(child), aPrevSibling);
++            InsertChildAfter(std::move(child), aPrevSibling);
 +        }
 +    } else {
 +        Build();
@@ -848,7 +820,7 @@
 +}
 +
 +void
-+nsMenu::Update(nsStyleContext *aStyleContext)
++nsMenu::Update(ComputedStyle *aComputedStyle)
 +{
 +    if (mNeedsUpdate) {
 +        mNeedsUpdate = false;
@@ -857,8 +829,8 @@
 +        UpdateSensitivity();
 +    }
 +
-+    UpdateVisibility(aStyleContext);
-+    UpdateIcon(aStyleContext);
++    UpdateVisibility(aComputedStyle);
++    UpdateIcon(aComputedStyle);
 +}
 +
 +nsMenuObject::PropertyFlags
@@ -894,17 +866,17 @@
 +
 +    if (aAttribute == nsGkAtoms::disabled) {
 +        UpdateSensitivity();
-+    } else if (aAttribute == nsGkAtoms::label || 
++    } else if (aAttribute == nsGkAtoms::label ||
 +               aAttribute == nsGkAtoms::accesskey ||
 +               aAttribute == nsGkAtoms::crop) {
 +        UpdateLabel();
 +    } else if (aAttribute == nsGkAtoms::hidden ||
 +        aAttribute == nsGkAtoms::collapsed) {
-+        RefPtr<nsStyleContext> sc = GetStyleContext();
-+        UpdateVisibility(sc);
++        RefPtr<ComputedStyle> style = GetComputedStyle();
++        UpdateVisibility(style);
 +    } else if (aAttribute == nsGkAtoms::image) {
-+        RefPtr<nsStyleContext> sc = GetStyleContext();
-+        UpdateIcon(sc);
++        RefPtr<ComputedStyle> style = GetComputedStyle();
++        UpdateIcon(style);
 +    }
 +}
 +
@@ -1198,7 +1170,7 @@
 +
 --- /dev/null
 +++ b/widget/gtk/nsMenu.h
-@@ -0,0 +1,124 @@
+@@ -0,0 +1,123 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
 + */
@@ -1222,7 +1194,6 @@
 +class nsAtom;
 +class nsIContent;
 +class nsITimer;
-+class nsStyleContext;
 +
 +#define NSMENU_NUMBER_OF_POPUPSTATE_BITS 2U
 +#define NSMENU_NUMBER_OF_FLAGS           4U
@@ -1292,7 +1263,7 @@
 +                              nsIContent *aChild);
 +
 +    void InitializeNativeData() override;
-+    void Update(nsStyleContext *aStyleContext) override;
++    void Update(mozilla::ComputedStyle *aComputedStyle) override;
 +    nsMenuObject::PropertyFlags SupportedProperties() const override;
 +
 +    void OnAttributeChanged(nsIContent *aContent, nsAtom *aAttribute) override;
@@ -1325,7 +1296,7 @@
 +#endif /* __nsMenu_h__ */
 --- /dev/null
 +++ b/widget/gtk/nsMenuBar.cpp
-@@ -0,0 +1,558 @@
+@@ -0,0 +1,550 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
 + */
@@ -1335,6 +1306,7 @@
 +
 +#include "mozilla/Assertions.h"
 +#include "mozilla/DebugOnly.h"
++#include "mozilla/dom/Document.h"
 +#include "mozilla/dom/Element.h"
 +#include "mozilla/dom/Event.h"
 +#include "mozilla/dom/KeyboardEvent.h"
@@ -1343,17 +1315,13 @@
 +#include "mozilla/Preferences.h"
 +#include "nsAutoPtr.h"
 +#include "nsContentUtils.h"
-+#include "nsIDocument.h"
-+#include "nsIDOMEvent.h"
 +#include "nsIDOMEventListener.h"
-+#include "nsIDOMEventTarget.h"
 +#include "nsIRunnable.h"
 +#include "nsIWidget.h"
 +#include "nsTArray.h"
 +#include "nsUnicharUtils.h"
 +
 +#include "nsMenu.h"
-+#include "nsNativeMenuAtoms.h"
 +#include "nsNativeMenuService.h"
 +
 +#include <gdk/gdk.h>
@@ -1442,14 +1410,10 @@
 +NS_IMPL_ISUPPORTS(nsMenuBar::DocEventListener, nsIDOMEventListener)
 +
 +NS_IMETHODIMP
-+nsMenuBar::DocEventListener::HandleEvent(nsIDOMEvent *aEvent)
++nsMenuBar::DocEventListener::HandleEvent(dom::Event *aEvent)
 +{
 +    nsAutoString type;
-+    nsresult rv = aEvent->GetType(type);
-+    if (NS_FAILED(rv)) {
-+        NS_WARNING("Failed to determine event type");
-+        return rv;
-+    }
++    aEvent->GetType(type);
 +
 +    if (type.Equals(NS_LITERAL_STRING("focus"))) {
 +        mOwner->Focus();
@@ -1457,8 +1421,7 @@
 +        mOwner->Blur();
 +    }
 +
-+    RefPtr<dom::KeyboardEvent> keyEvent =
-+        aEvent->InternalDOMEvent()->AsKeyboardEvent();
++    RefPtr<dom::KeyboardEvent> keyEvent = aEvent->AsKeyboardEvent();
 +    if (!keyEvent) {
 +        return NS_OK;
 +    }
@@ -1531,13 +1494,13 @@
 +    mDocument = do_QueryInterface(ContentNode()->OwnerDoc());
 +
 +    mAccessKey = Preferences::GetInt("ui.key.menuAccessKey");
-+    if (mAccessKey == dom::KeyboardEventBinding::DOM_VK_SHIFT) {
++    if (mAccessKey == dom::KeyboardEvent_Binding::DOM_VK_SHIFT) {
 +        mAccessKeyMask = eModifierShift;
-+    } else if (mAccessKey == dom::KeyboardEventBinding::DOM_VK_CONTROL) {
++    } else if (mAccessKey == dom::KeyboardEvent_Binding::DOM_VK_CONTROL) {
 +        mAccessKeyMask = eModifierCtrl;
-+    } else if (mAccessKey == dom::KeyboardEventBinding::DOM_VK_ALT) {
++    } else if (mAccessKey == dom::KeyboardEvent_Binding::DOM_VK_ALT) {
 +        mAccessKeyMask = eModifierAlt;
-+    } else if (mAccessKey == dom::KeyboardEventBinding::DOM_VK_META) {
++    } else if (mAccessKey == dom::KeyboardEvent_Binding::DOM_VK_META) {
 +        mAccessKeyMask = eModifierMeta;
 +    } else {
 +        mAccessKeyMask = eModifierAlt;
@@ -1559,7 +1522,7 @@
 +            continue;
 +        }
 +
-+        AppendChild(Move(child));
++        AppendChild(std::move(child));
 +    }
 +}
 +
@@ -1587,7 +1550,7 @@
 +nsMenuBar::SetShellShowingMenuBar(bool aShowing)
 +{
 +    ContentNode()->OwnerDoc()->GetRootElement()->SetAttr(
-+        kNameSpaceID_None, nsNativeMenuAtoms::shellshowingmenubar,
++        kNameSpaceID_None, nsGkAtoms::shellshowingmenubar,
 +        aShowing ? NS_LITERAL_STRING("true") : NS_LITERAL_STRING("false"),
 +        true);
 +}
@@ -1596,7 +1559,7 @@
 +nsMenuBar::Focus()
 +{
 +    ContentNode()->AsElement()->SetAttr(kNameSpaceID_None,
-+                                        nsNativeMenuAtoms::openedwithkey,
++                                        nsGkAtoms::openedwithkey,
 +                                        NS_LITERAL_STRING("false"), true);
 +}
 +
@@ -1674,7 +1637,7 @@
 +    }
 +
 +    ContentNode()->AsElement()->SetAttr(kNameSpaceID_None,
-+                                        nsNativeMenuAtoms::openedwithkey,
++                                        nsGkAtoms::openedwithkey,
 +                                        NS_LITERAL_STRING("true"), true);
 +    static_cast<nsMenu *>(found)->OpenMenu();
 +
@@ -1726,7 +1689,7 @@
 +        return;
 +    }
 +
-+    InsertChildAfter(Move(child), aPrevSibling);
++    InsertChildAfter(std::move(child), aPrevSibling);
 +}
 +
 +void
@@ -1800,7 +1763,7 @@
 +        return nullptr;
 +    }
 +
-+    return Move(menubar);
++    return menubar;
 +}
 +
 +nsMenuObject::EType
@@ -1860,7 +1823,7 @@
 +
 +    // Clear this. Not sure if we really need to though
 +    ContentNode()->AsElement()->SetAttr(kNameSpaceID_None,
-+                                        nsNativeMenuAtoms::openedwithkey,
++                                        nsGkAtoms::openedwithkey,
 +                                        NS_LITERAL_STRING("false"), true);
 +
 +    DocListener()->Start();
@@ -1909,12 +1872,12 @@
 +#include <gtk/gtk.h>
 +
 +class nsIContent;
-+class nsIDOMEvent;
 +class nsIWidget;
 +class nsMenuBarDocEventListener;
 +
 +namespace mozilla {
 +namespace dom {
++class Document;
 +class KeyboardEvent;
 +}
 +}
@@ -1989,7 +1952,7 @@
 +
 +    GtkWidget *mTopLevel;
 +    DbusmenuServer *mServer;
-+    nsCOMPtr<nsIDOMEventTarget> mDocument;
++    nsCOMPtr<mozilla::dom::Document> mDocument;
 +    RefPtr<DocEventListener> mEventListener;
 +
 +    uint32_t mAccessKey;
@@ -2077,7 +2040,7 @@
 +    }
 +
 +    UniquePtr<nsMenuObject> res = ctor(this, aContent);
-+    return Move(res);
++    return res;
 +}
 +
 +size_t
@@ -2140,7 +2103,7 @@
 +                                                 index));
 +    }
 +
-+    MOZ_ALWAYS_TRUE(mChildren.InsertElementAt(index, Move(aChild)));
++    MOZ_ALWAYS_TRUE(mChildren.InsertElementAt(index, std::move(aChild)));
 +}
 +
 +void
@@ -2154,7 +2117,7 @@
 +                                           aChild->GetNativeData()));
 +    }
 +
-+    MOZ_ALWAYS_TRUE(mChildren.AppendElement(Move(aChild)));
++    MOZ_ALWAYS_TRUE(mChildren.AppendElement(std::move(aChild)));
 +}
 +
 +bool
@@ -2247,7 +2210,7 @@
 +#endif /* __nsMenuContainer_h__ */
 --- /dev/null
 +++ b/widget/gtk/nsMenuItem.cpp
-@@ -0,0 +1,763 @@
+@@ -0,0 +1,764 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
 + */
@@ -2257,8 +2220,10 @@
 +
 +#include "mozilla/ArrayUtils.h"
 +#include "mozilla/Assertions.h"
++#include "mozilla/dom/Document.h"
 +#include "mozilla/dom/Element.h"
 +#include "mozilla/dom/KeyboardEventBinding.h"
++#include "mozilla/dom/XULCommandEvent.h"
 +#include "mozilla/Move.h"
 +#include "mozilla/Preferences.h"
 +#include "mozilla/TextEvents.h"
@@ -2266,17 +2231,13 @@
 +#include "nsContentUtils.h"
 +#include "nsCRT.h"
 +#include "nsGkAtoms.h"
++#include "nsGlobalWindowInner.h"
 +#include "nsGtkUtils.h"
 +#include "nsIContent.h"
-+#include "nsIDocument.h"
-+#include "nsIDOMEvent.h"
-+#include "nsIDOMEventTarget.h"
-+#include "nsIDOMXULCommandEvent.h"
 +#include "nsIRunnable.h"
 +#include "nsQueryObject.h"
 +#include "nsReadableUtils.h"
 +#include "nsString.h"
-+#include "nsStyleContext.h"
 +#include "nsThreadUtils.h"
 +
 +#include "nsMenu.h"
@@ -2286,9 +2247,7 @@
 +
 +#include <gdk/gdk.h>
 +#include <gdk/gdkkeysyms.h>
-+#if (MOZ_WIDGET_GTK == 3)
 +#include <gdk/gdkkeysyms-compat.h>
-+#endif
 +#include <gdk/gdkx.h>
 +#include <gtk/gtk.h>
 +
@@ -2433,7 +2392,7 @@
 +    { NS_VK_F23,        GDK_F23 },
 +    { NS_VK_F24,        GDK_F24 },
 +
-+    // context menu key, keysym 0xff67, typically keycode 117 on 105-key (Microsoft) 
++    // context menu key, keysym 0xff67, typically keycode 117 on 105-key (Microsoft)
 +    // x86 keyboards, located between right 'Windows' key and right Ctrl key
 +    { NS_VK_CONTEXT_MENU, GDK_Menu },
 +    { NS_VK_SLEEP,      GDK_Sleep },
@@ -2605,23 +2564,32 @@
 +                                            true);
 +    }
 +
-+    nsIDocument *doc = ContentNode()->OwnerDoc();
-+    nsCOMPtr<nsIDOMEventTarget> target = do_QueryInterface(ContentNode());
-+    if (target) {
-+        ErrorResult rv;
-+        RefPtr<dom::Event> event =
-+            doc->CreateEvent(NS_LITERAL_STRING("xulcommandevent"),
-+                             dom::CallerType::System, rv);
-+        nsCOMPtr<nsIDOMXULCommandEvent> command = do_QueryObject(event);
++    dom::Document *doc = ContentNode()->OwnerDoc();
++    ErrorResult rv;
++    RefPtr<dom::Event> event =
++        doc->CreateEvent(NS_LITERAL_STRING("xulcommandevent"),
++                         dom::CallerType::System, rv);
++    if (!rv.Failed()) {
++        RefPtr<dom::XULCommandEvent> command = event->AsXULCommandEvent();
 +        if (command) {
-+            command->InitCommandEvent(NS_LITERAL_STRING("command"),
-+                                      true, true, doc->GetInnerWindow(), 0,
-+                                      false, false, false, false, nullptr, 0);
-+
-+            event->SetTrusted(true);
-+            bool dummy;
-+            target->DispatchEvent(event, &dummy);
++            command->InitCommandEvent(NS_LITERAL_STRING("command"), true, true,
++                                      nsGlobalWindowInner::Cast(doc->GetInnerWindow()),
++                                      0, false, false, false, false, nullptr, 0, rv);
++            if (!rv.Failed()) {
++                event->SetTrusted(true);
++                ContentNode()->DispatchEvent(*event, rv);
++                if (rv.Failed()) {
++                    NS_WARNING("Failed to dispatch event");
++                    rv.SuppressException();
++                }
++            } else {
++                NS_WARNING("Failed to initialize command event");
++                rv.SuppressException();
++            }
 +        }
++    } else {
++        NS_WARNING("CreateEvent failed");
++        rv.SuppressException();
 +    }
 +
 +    // This kinda sucks, but Unity doesn't send a closed event
@@ -2657,7 +2625,7 @@
 +    dbusmenu_menuitem_property_set_int(GetNativeData(),
 +                                       DBUSMENU_MENUITEM_PROP_TOGGLE_STATE,
 +                                       mIsChecked ?
-+                                         DBUSMENU_MENUITEM_TOGGLE_STATE_CHECKED : 
++                                         DBUSMENU_MENUITEM_TOGGLE_STATE_CHECKED :
 +                                         DBUSMENU_MENUITEM_TOGGLE_STATE_UNCHECKED);
 +}
 +
@@ -2665,7 +2633,7 @@
 +nsMenuItem::UpdateTypeAndState()
 +{
 +    static mozilla::dom::Element::AttrValuesArray attrs[] =
-+        { &nsGkAtoms::checkbox, &nsGkAtoms::radio, nullptr };
++        { nsGkAtoms::checkbox, nsGkAtoms::radio, nullptr };
 +    int32_t type = ContentNode()->AsElement()->FindAttrValueIn(kNameSpaceID_None,
 +                                                               nsGkAtoms::type,
 +                                                               attrs, eCaseMatters);
@@ -2696,7 +2664,7 @@
 +void
 +nsMenuItem::UpdateAccel()
 +{
-+    nsIDocument *doc = ContentNode()->GetUncomposedDoc();
++    dom::Document *doc = ContentNode()->GetUncomposedDoc();
 +    if (doc) {
 +        nsCOMPtr<nsIContent> oldKeyContent;
 +        oldKeyContent.swap(mKeyContent);
@@ -2744,9 +2712,9 @@
 +                modifier |= GDK_CONTROL_MASK;
 +            } else if (nsCRT::strcmp(token, "accel") == 0) {
 +                int32_t accel = Preferences::GetInt("ui.key.accelKey");
-+                if (accel == dom::KeyboardEventBinding::DOM_VK_META) {
++                if (accel == dom::KeyboardEvent_Binding::DOM_VK_META) {
 +                    modifier |= GDK_META_MASK;
-+                } else if (accel == dom::KeyboardEventBinding::DOM_VK_ALT) {
++                } else if (accel == dom::KeyboardEvent_Binding::DOM_VK_ALT) {
 +                    modifier |= GDK_MOD1_MASK;
 +                } else {
 +                    modifier |= GDK_CONTROL_MASK;
@@ -2826,15 +2794,11 @@
 +    for (uint32_t i = 0; i < count; ++i) {
 +        nsIContent *sibling = parent->GetChildAt_Deprecated(i);
 +
-+        if (!sibling->IsElement()) {
-+            continue;
-+        }
-+
 +        nsAutoString otherName;
 +        sibling->AsElement()->GetAttr(kNameSpaceID_None, nsGkAtoms::name,
 +                                      otherName);
 +
-+        if (sibling != ContentNode() && otherName == name && 
++        if (sibling != ContentNode() && otherName == name &&
 +            sibling->AsElement()->AttrValueIs(kNameSpaceID_None,
 +                                              nsGkAtoms::type,
 +                                              nsGkAtoms::radio,
@@ -2857,7 +2821,7 @@
 +void
 +nsMenuItem::UpdateContentAttributes()
 +{
-+    nsIDocument *doc = ContentNode()->GetUncomposedDoc();
++    dom::Document *doc = ContentNode()->GetUncomposedDoc();
 +    if (!doc) {
 +        return;
 +    }
@@ -2893,7 +2857,7 @@
 +}
 +
 +void
-+nsMenuItem::Update(nsStyleContext *aStyleContext)
++nsMenuItem::Update(ComputedStyle *aComputedStyle)
 +{
 +    if (mNeedsUpdate) {
 +        mNeedsUpdate = false;
@@ -2904,8 +2868,8 @@
 +        UpdateSensitivity();
 +    }
 +
-+    UpdateVisibility(aStyleContext);
-+    UpdateIcon(aStyleContext);
++    UpdateVisibility(aComputedStyle);
++    UpdateIcon(aComputedStyle);
 +}
 +
 +bool
@@ -2968,11 +2932,11 @@
 +            UpdateState();
 +        } else if (aAttribute == nsGkAtoms::hidden ||
 +                   aAttribute == nsGkAtoms::collapsed) {
-+            RefPtr<nsStyleContext> sc = GetStyleContext();
-+            UpdateVisibility(sc);
++            RefPtr<ComputedStyle> style = GetComputedStyle();
++            UpdateVisibility(style);
 +        } else if (aAttribute == nsGkAtoms::image) {
-+            RefPtr<nsStyleContext> sc = GetStyleContext();
-+            UpdateIcon(sc);
++            RefPtr<ComputedStyle> style = GetComputedStyle();
++            UpdateIcon(style);
 +        }
 +    } else if (aContent == mKeyContent &&
 +               (aAttribute == nsGkAtoms::key ||
@@ -3013,7 +2977,7 @@
 +}
 --- /dev/null
 +++ b/widget/gtk/nsMenuItem.h
-@@ -0,0 +1,81 @@
+@@ -0,0 +1,80 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
 + */
@@ -3034,7 +2998,6 @@
 +
 +class nsAtom;
 +class nsIContent;
-+class nsStyleContext;
 +class nsMenuBar;
 +class nsMenuContainer;
 +
@@ -3079,7 +3042,7 @@
 +
 +    void InitializeNativeData() override;
 +    void UpdateContentAttributes() override;
-+    void Update(nsStyleContext *aStyleContext) override;
++    void Update(mozilla::ComputedStyle *aComputedStyle) override;
 +    bool IsCompatibleWithNativeData(DbusmenuMenuitem *aNativeData) const override;
 +    nsMenuObject::PropertyFlags SupportedProperties() const override;
 +
@@ -3097,7 +3060,7 @@
 +#endif /* __nsMenuItem_h__ */
 --- /dev/null
 +++ b/widget/gtk/nsMenuObject.cpp
-@@ -0,0 +1,664 @@
+@@ -0,0 +1,663 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
 + */
@@ -3112,18 +3075,19 @@
 +#include "imgRequestProxy.h"
 +#include "mozilla/ArrayUtils.h"
 +#include "mozilla/Assertions.h"
++#include "mozilla/dom/Document.h"
 +#include "mozilla/dom/Element.h"
 +#include "mozilla/Preferences.h"
++#include "mozilla/PresShell.h"
++#include "mozilla/PresShellInlines.h"
 +#include "nsAttrValue.h"
 +#include "nsComputedDOMStyle.h"
 +#include "nsContentUtils.h"
 +#include "nsGkAtoms.h"
 +#include "nsIContent.h"
 +#include "nsIContentPolicy.h"
-+#include "nsIDocument.h"
 +#include "nsILoadGroup.h"
 +#include "nsImageToPixbuf.h"
-+#include "nsIPresShell.h"
 +#include "nsIURI.h"
 +#include "nsNetUtil.h"
 +#include "nsPresContext.h"
@@ -3131,12 +3095,10 @@
 +#include "nsServiceManagerUtils.h"
 +#include "nsString.h"
 +#include "nsStyleConsts.h"
-+#include "nsStyleContext.h"
 +#include "nsStyleStruct.h"
 +#include "nsUnicharUtils.h"
 +
 +#include "nsMenuContainer.h"
-+#include "nsNativeMenuAtoms.h"
 +#include "nsNativeMenuDocListener.h"
 +
 +#include <gdk/gdk.h>
@@ -3173,7 +3135,7 @@
 +
 +    nsMenuObjectIconLoader(nsMenuObject *aOwner) : mOwner(aOwner) { };
 +
-+    void LoadIcon(nsStyleContext *aStyleContext);
++    void LoadIcon(ComputedStyle *aComputedStyle);
 +    void Destroy();
 +
 +private:
@@ -3270,9 +3232,9 @@
 +}
 +
 +void
-+nsMenuObjectIconLoader::LoadIcon(nsStyleContext *aStyleContext)
++nsMenuObjectIconLoader::LoadIcon(ComputedStyle *aComputedStyle)
 +{
-+    nsIDocument *doc = mOwner->ContentNode()->OwnerDoc();
++    dom::Document *doc = mOwner->ContentNode()->OwnerDoc();
 +
 +    nsCOMPtr<nsIURI> uri;
 +    nsIntRect imageRect;
@@ -3284,17 +3246,17 @@
 +                                                    uriString)) {
 +        NS_NewURI(getter_AddRefs(uri), uriString);
 +    } else {
-+        nsIPresShell *shell = doc->GetShell();
++        PresShell *shell = doc->GetPresShell();
 +        if (!shell) {
 +            return;
 +        }
 +
 +        nsPresContext *pc = shell->GetPresContext();
-+        if (!pc || !aStyleContext) {
++        if (!pc || !aComputedStyle) {
 +            return;
 +        }
 +
-+        const nsStyleList *list = aStyleContext->StyleList();
++        const nsStyleList *list = aComputedStyle->StyleList();
 +        imageRequest = list->GetListStyleImage();
 +        if (imageRequest) {
 +            imageRequest->GetURI(getter_AddRefs(uri));
@@ -3316,7 +3278,7 @@
 +    }
 +
 +    bool same;
-+    if (mURI && NS_SUCCEEDED(mURI->Equals(uri, &same)) && same && 
++    if (mURI && NS_SUCCEEDED(mURI->Equals(uri, &same)) && same &&
 +        (!imageRequest || imageRect == mImageRect)) {
 +        return;
 +    }
@@ -3501,9 +3463,9 @@
 +    length = label.Length();
 +
 +    static mozilla::dom::Element::AttrValuesArray strings[] = {
-+        &nsGkAtoms::left, &nsGkAtoms::start,
-+        &nsGkAtoms::center, &nsGkAtoms::right,
-+        &nsGkAtoms::end, nullptr
++        nsGkAtoms::left, nsGkAtoms::start,
++        nsGkAtoms::center, nsGkAtoms::right,
++        nsGkAtoms::end, nullptr
 +    };
 +
 +    int32_t type = mContent->AsElement()->FindAttrValueIn(kNameSpaceID_None,
@@ -3535,13 +3497,13 @@
 +}
 +
 +void
-+nsMenuObject::UpdateVisibility(nsStyleContext *aStyleContext)
++nsMenuObject::UpdateVisibility(ComputedStyle *aComputedStyle)
 +{
 +    bool vis = true;
 +
-+    if (aStyleContext &&
-+        (aStyleContext->StyleDisplay()->mDisplay == StyleDisplay::None ||
-+         aStyleContext->StyleVisibility()->mVisible ==
++    if (aComputedStyle &&
++        (aComputedStyle->StyleDisplay()->mDisplay == StyleDisplay::None ||
++         aComputedStyle->StyleVisibility()->mVisible ==
 +            NS_STYLE_VISIBILITY_COLLAPSE)) {
 +        vis = false;
 +    }
@@ -3566,14 +3528,14 @@
 +}
 +
 +void
-+nsMenuObject::UpdateIcon(nsStyleContext *aStyleContext)
++nsMenuObject::UpdateIcon(ComputedStyle *aComputedStyle)
 +{
 +    if (ShouldShowIcon()) {
 +        if (!mIconLoader) {
 +            mIconLoader = new nsMenuObjectIconLoader(this);
 +        }
 +
-+        mIconLoader->LoadIcon(aStyleContext);
++        mIconLoader->LoadIcon(aComputedStyle);
 +    } else {
 +        if (mIconLoader) {
 +            mIconLoader->Destroy();
@@ -3584,14 +3546,14 @@
 +    }
 +}
 +
-+already_AddRefed<nsStyleContext>
-+nsMenuObject::GetStyleContext()
++already_AddRefed<ComputedStyle>
++nsMenuObject::GetComputedStyle()
 +{
-+    RefPtr<nsStyleContext> sc =
-+        nsComputedDOMStyle::GetStyleContextNoFlush(
++    RefPtr<ComputedStyle> style =
++        nsComputedDOMStyle::GetComputedStyleNoFlush(
 +            mContent->AsElement(), nullptr);
 +
-+    return sc.forget();
++    return style.forget();
 +}
 +
 +void
@@ -3617,7 +3579,7 @@
 +}
 +
 +void
-+nsMenuObject::Update(nsStyleContext *aStyleContext)
++nsMenuObject::Update(ComputedStyle *aComputedStyle)
 +{
 +}
 +
@@ -3635,7 +3597,7 @@
 +    }
 +
 +    for (uint32_t i = 0; i < classes->GetAtomCount(); ++i) {
-+        if (classes->AtomAt(i) == nsNativeMenuAtoms::menuitem_with_favicon) {
++        if (classes->AtomAt(i) == nsGkAtoms::menuitem_with_favicon) {
 +            return true;
 +        }
 +    }
@@ -3721,8 +3683,8 @@
 +
 +    UpdateContentAttributes();
 +
-+    RefPtr<nsStyleContext> sc = GetStyleContext();
-+    Update(sc);
++    RefPtr<ComputedStyle> style = GetComputedStyle();
++    Update(style);
 +}
 +
 +/* static */ void
@@ -3776,13 +3738,13 @@
 +#define __nsMenuObject_h__
 +
 +#include "mozilla/Attributes.h"
++#include "mozilla/ComputedStyleInlines.h"
 +#include "nsCOMPtr.h"
 +
 +#include "nsDbusmenu.h"
 +#include "nsNativeMenuDocListener.h"
 +
 +class nsIContent;
-+class nsStyleContext;
 +class nsMenuContainer;
 +class nsMenuObjectIconLoader;
 +
@@ -3853,12 +3815,12 @@
 +    };
 +
 +    void UpdateLabel();
-+    void UpdateVisibility(nsStyleContext *aStyleContext);
++    void UpdateVisibility(mozilla::ComputedStyle *aComputedStyle);
 +    void UpdateSensitivity();
-+    void UpdateIcon(nsStyleContext *aStyleContext);
++    void UpdateIcon(mozilla::ComputedStyle *aComputedStyle);
 +
-+    already_AddRefed<nsStyleContext> GetStyleContext();
-+  
++    already_AddRefed<mozilla::ComputedStyle> GetComputedStyle();
++
 +private:
 +    friend class nsMenuObjectIconLoader;
 +
@@ -3884,7 +3846,7 @@
 +    // Update properties that should be refreshed when the container opens.
 +    // This should be implemented by subclasses that have properties which
 +    // need refreshing
-+    virtual void Update(nsStyleContext *aStyleContext);
++    virtual void Update(mozilla::ComputedStyle *aComputedStyle);
 +
 +    bool ShouldShowIcon() const;
 +    void ClearIcon();
@@ -3936,7 +3898,7 @@
 +#endif /* __nsMenuObject_h__ */
 --- /dev/null
 +++ b/widget/gtk/nsMenuSeparator.cpp
-@@ -0,0 +1,85 @@
+@@ -0,0 +1,84 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
 + */
@@ -3949,7 +3911,6 @@
 +#include "nsAutoPtr.h"
 +#include "nsCRT.h"
 +#include "nsGkAtoms.h"
-+#include "nsStyleContext.h"
 +
 +#include "nsDbusmenu.h"
 +
@@ -3967,9 +3928,9 @@
 +}
 +
 +void
-+nsMenuSeparator::Update(nsStyleContext *aContext)
++nsMenuSeparator::Update(ComputedStyle *aComputedStyle)
 +{
-+    UpdateVisibility(aContext);
++    UpdateVisibility(aComputedStyle);
 +}
 +
 +bool
@@ -4000,8 +3961,8 @@
 +
 +    if (aAttribute == nsGkAtoms::hidden ||
 +        aAttribute == nsGkAtoms::collapsed) {
-+        RefPtr<nsStyleContext> sc = GetStyleContext();
-+        UpdateVisibility(sc);
++        RefPtr<ComputedStyle> style = GetComputedStyle();
++        UpdateVisibility(style);
 +    }
 +}
 +
@@ -4054,7 +4015,7 @@
 +
 +private:
 +    void InitializeNativeData() override;
-+    void Update(nsStyleContext *aStyleContext) override;
++    void Update(mozilla::ComputedStyle *aComputedStyle) override;
 +    bool IsCompatibleWithNativeData(DbusmenuMenuitem *aNativeData) const override;
 +    nsMenuObject::PropertyFlags SupportedProperties() const override;
 +
@@ -4062,93 +4023,6 @@
 +};
 +
 +#endif /* __nsMenuSeparator_h__ */
---- /dev/null
-+++ b/widget/gtk/nsNativeMenuAtomList.h
-@@ -0,0 +1,12 @@
-+/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
-+/* vim:expandtab:shiftwidth=4:tabstop=4:
-+ */
-+/* This Source Code Form is subject to the terms of the Mozilla Public
-+ * License, v. 2.0. If a copy of the MPL was not distributed with this
-+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-+
-+WIDGET_ATOM2(menuitem_with_favicon, "menuitem-with-favicon")
-+WIDGET_ATOM2(_moz_menubarkeeplocal, "_moz-menubarkeeplocal")
-+WIDGET_ATOM2(_moz_nativemenupopupstate, "_moz-nativemenupopupstate")
-+WIDGET_ATOM(openedwithkey)
-+WIDGET_ATOM(shellshowingmenubar)
---- /dev/null
-+++ b/widget/gtk/nsNativeMenuAtoms.cpp
-@@ -0,0 +1,39 @@
-+/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
-+/* vim:expandtab:shiftwidth=4:tabstop=4:
-+ */
-+/* This Source Code Form is subject to the terms of the Mozilla Public
-+ * License, v. 2.0. If a copy of the MPL was not distributed with this
-+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-+
-+#include "nsAtom.h"
-+#include "nsStaticAtom.h"
-+
-+#include "nsNativeMenuAtoms.h"
-+
-+using namespace mozilla;
-+
-+#define WIDGET_ATOM(name_) NS_STATIC_ATOM_DEFN(nsNativeMenuAtoms, name_)
-+#define WIDGET_ATOM2(name_, value_) NS_STATIC_ATOM_DEFN(nsNativeMenuAtoms, name_)
-+#include "nsNativeMenuAtomList.h"
-+#undef WIDGET_ATOM
-+#undef WIDGET_ATOM2
-+
-+#define WIDGET_ATOM(name_) NS_STATIC_ATOM_BUFFER(name_, #name_)
-+#define WIDGET_ATOM2(name_, value_) NS_STATIC_ATOM_BUFFER(name_, value_)
-+#include "nsNativeMenuAtomList.h"
-+#undef WIDGET_ATOM
-+#undef WIDGET_ATOM2
-+
-+static const nsStaticAtomSetup sAtomSetup[] = {
-+  #define WIDGET_ATOM(name_) NS_STATIC_ATOM_SETUP(nsNativeMenuAtoms, name_)
-+  #define WIDGET_ATOM2(name_, value_) NS_STATIC_ATOM_SETUP(nsNativeMenuAtoms, name_)
-+  #include "nsNativeMenuAtomList.h"
-+  #undef WIDGET_ATOM
-+  #undef WIDGET_ATOM2
-+};
-+
-+/* static */ void
-+nsNativeMenuAtoms::RegisterAtoms()
-+{
-+    NS_RegisterStaticAtoms(sAtomSetup);
-+}
---- /dev/null
-+++ b/widget/gtk/nsNativeMenuAtoms.h
-@@ -0,0 +1,27 @@
-+/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
-+/* vim:expandtab:shiftwidth=4:tabstop=4:
-+ */
-+/* This Source Code Form is subject to the terms of the Mozilla Public
-+ * License, v. 2.0. If a copy of the MPL was not distributed with this
-+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-+
-+#ifndef __nsNativeMenuAtoms_h__
-+#define __nsNativeMenuAtoms_h__
-+
-+class nsAtom;
-+
-+class nsNativeMenuAtoms
-+{
-+public:
-+    nsNativeMenuAtoms() = delete;
-+
-+    static void RegisterAtoms();
-+
-+#define WIDGET_ATOM(name_) NS_STATIC_ATOM_DECL(name_)
-+#define WIDGET_ATOM2(name_, value_) NS_STATIC_ATOM_DECL(name_)
-+#include "nsNativeMenuAtomList.h"
-+#undef WIDGET_ATOM
-+#undef WIDGET_ATOM2
-+};
-+
-+#endif /* __nsNativeMenuAtoms_h__ */
 --- /dev/null
 +++ b/widget/gtk/nsNativeMenuDocListener.cpp
 @@ -0,0 +1,350 @@
@@ -4161,11 +4035,11 @@
 +
 +#include "mozilla/Assertions.h"
 +#include "mozilla/DebugOnly.h"
++#include "mozilla/dom/Document.h"
 +#include "mozilla/dom/Element.h"
 +#include "nsContentUtils.h"
 +#include "nsAtom.h"
 +#include "nsIContent.h"
-+#include "nsIDocument.h"
 +
 +#include "nsMenuContainer.h"
 +
@@ -4293,7 +4167,7 @@
 +    m->mChild = aChild;
 +
 +    ScheduleFlush(this);
-+}                                                           
++}
 +
 +void
 +nsNativeMenuDocListener::NodeWillBeDestroyed(const nsINode *aNode)
@@ -4385,7 +4259,7 @@
 +                DoContentRemoved(m->mTarget, m->mChild);
 +                break;
 +            default:
-+                NS_NOTREACHED("Invalid type");
++                MOZ_ASSERT_UNREACHABLE("Invalid type");
 +        }
 +
 +        mPendingMutations.RemoveElementAt(0);
@@ -4430,7 +4304,7 @@
 +            gPendingListeners->RemoveElementAt(0);
 +        }
 +    }
-+ 
++
 +    MOZ_ASSERT(sUpdateBlockersCount > 0, "Negative update blockers count!");
 +    sUpdateBlockersCount--;
 +}
@@ -4504,7 +4378,7 @@
 +}
 --- /dev/null
 +++ b/widget/gtk/nsNativeMenuDocListener.h
-@@ -0,0 +1,152 @@
+@@ -0,0 +1,157 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
 + */
@@ -4525,8 +4399,13 @@
 +
 +class nsAtom;
 +class nsIContent;
-+class nsIDocument;
 +class nsNativeMenuChangeObserver;
++
++namespace mozilla {
++namespace dom {
++class Document;
++}
++}
 +
 +/*
 + * This class keeps a mapping of content nodes to observers and forwards DOM
@@ -4621,7 +4500,7 @@
 +    static void RemoveUpdateBlocker();
 +
 +    nsCOMPtr<nsIContent> mRootNode;
-+    nsIDocument *mDocument;
++    mozilla::dom::Document *mDocument;
 +    nsIContent *mLastSource;
 +    nsNativeMenuChangeObserver *mLastTarget;
 +    nsTArray<nsAutoPtr<MutationRecord> > mPendingMutations;
@@ -4659,7 +4538,7 @@
 +#endif /* __nsNativeMenuDocListener_h__ */
 --- /dev/null
 +++ b/widget/gtk/nsNativeMenuService.cpp
-@@ -0,0 +1,508 @@
+@@ -0,0 +1,505 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
 + */
@@ -4683,7 +4562,6 @@
 +
 +#include "nsDbusmenu.h"
 +#include "nsMenuBar.h"
-+#include "nsNativeMenuAtoms.h"
 +#include "nsNativeMenuDocListener.h"
 +
 +#include <glib-object.h>
@@ -4698,8 +4576,6 @@
 +
 +extern PangoLayout* gPangoLayout;
 +extern nsNativeMenuDocListenerTArray* gPendingListeners;
-+
-+static const nsTArray<nsMenuBar *>::index_type NoIndex = nsTArray<nsMenuBar *>::NoIndex;
 +
 +#if not GLIB_CHECK_VERSION(2,26,0)
 +enum GBusType {
@@ -5097,10 +4973,10 @@
 +    NS_ENSURE_ARG(aParent);
 +    NS_ENSURE_ARG(aMenuBarNode);
 +
-+    if (aMenuBarNode->AsElement()->AttrValueIs(kNameSpaceID_None,
-+                                               nsNativeMenuAtoms::_moz_menubarkeeplocal,
-+                                               nsGkAtoms::_true,
-+                                               eCaseMatters)) {
++    if (aMenuBarNode->AttrValueIs(kNameSpaceID_None,
++                                  nsGkAtoms::_moz_menubarkeeplocal,
++                                  nsGkAtoms::_true,
++                                  eCaseMatters)) {
 +        return NS_OK;
 +    }
 +
@@ -5121,7 +4997,7 @@
 +    mMenuBars.AppendElement(menubar.get());
 +    RegisterNativeMenuBar(menubar.get());
 +
-+    static_cast<nsWindow *>(aParent)->SetMenuBar(Move(menubar));
++    static_cast<nsWindow *>(aParent)->SetMenuBar(std::move(menubar));
 +
 +    return NS_OK;
 +}
@@ -5255,75 +5131,30 @@
 +};
 +
 +#endif /* __nsNativeMenuService_h__ */
---- a/widget/gtk/nsWidgetFactory.cpp
-+++ b/widget/gtk/nsWidgetFactory.cpp
-@@ -48,6 +48,8 @@
- #include "GfxInfoX11.h"
- #endif
- 
-+#include "nsNativeMenuService.h"
-+
- #include "nsNativeThemeGTK.h"
- #include "HeadlessThemeGTK.h"
- 
-@@ -114,6 +116,9 @@ NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(GfxI
- }  // namespace mozilla
- #endif
- 
-+NS_GENERIC_FACTORY_SINGLETON_CONSTRUCTOR(nsNativeMenuService,
-+                                         nsNativeMenuService::GetInstanceForServiceManager)
-+
- #ifdef NS_PRINTING
- NS_GENERIC_FACTORY_CONSTRUCTOR(nsDeviceContextSpecGTK)
- NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(nsPrintSettingsServiceGTK, Init)
-@@ -218,6 +223,7 @@ NS_DEFINE_NAMED_CID(NS_IMAGE_TO_PIXBUF_C
- NS_DEFINE_NAMED_CID(NS_IDLE_SERVICE_CID);
- NS_DEFINE_NAMED_CID(NS_GFXINFO_CID);
- #endif
-+NS_DEFINE_NAMED_CID(NS_NATIVEMENUSERVICE_CID);
- 
- static const mozilla::Module::CIDEntry kWidgetCIDs[] = {
-     {&kNS_WINDOW_CID, false, nullptr, nsWindowConstructor},
-@@ -264,6 +270,7 @@ static const mozilla::Module::CIDEntry k
-     {&kNS_IDLE_SERVICE_CID, false, nullptr, nsIdleServiceGTKConstructor},
-     {&kNS_GFXINFO_CID, false, nullptr, mozilla::widget::GfxInfoConstructor},
- #endif
-+    {&kNS_NATIVEMENUSERVICE_CID, true, nullptr, nsNativeMenuServiceConstructor},
-     {nullptr}};
- 
- static const mozilla::Module::ContractIDEntry kWidgetContracts[] = {
-@@ -306,6 +313,7 @@ static const mozilla::Module::ContractID
-     {"@mozilla.org/widget/idleservice;1", &kNS_IDLE_SERVICE_CID},
-     {"@mozilla.org/gfx/info;1", &kNS_GFXINFO_CID},
- #endif
-+    {"@mozilla.org/widget/nativemenuservice;1", &kNS_NATIVEMENUSERVICE_CID},
-     {nullptr}};
- 
- static void nsWidgetGtk2ModuleDtor() {
 --- a/widget/gtk/nsWindow.cpp
 +++ b/widget/gtk/nsWindow.cpp
-@@ -67,6 +67,7 @@
+@@ -71,6 +71,7 @@
  
  #include "mozilla/Assertions.h"
  #include "mozilla/Likely.h"
 +#include "mozilla/Move.h"
  #include "mozilla/Preferences.h"
  #include "nsIPrefService.h"
- #include "nsIGConfService.h"
-@@ -4653,6 +4654,10 @@ void nsWindow::HideWindowChrome(bool aSh
+ #include "nsIServiceManager.h"
+@@ -5067,6 +5068,10 @@ void nsWindow::HideWindowChrome(bool aSh
    SetWindowDecoration(aShouldHide ? eBorderStyle_none : mBorderStyle);
  }
  
 +void nsWindow::SetMenuBar(UniquePtr<nsMenuBar> aMenuBar) {
-+  mMenuBar = mozilla::Move(aMenuBar);
++  mMenuBar = std::move(aMenuBar);
 +}
 +
  bool nsWindow::CheckForRollup(gdouble aMouseX, gdouble aMouseY, bool aIsWheel,
                                bool aAlwaysRollup) {
-   nsIRollupListener *rollupListener = GetActiveRollupListener();
+   nsIRollupListener* rollupListener = GetActiveRollupListener();
 --- a/widget/gtk/nsWindow.h
 +++ b/widget/gtk/nsWindow.h
-@@ -40,6 +40,8 @@
+@@ -38,6 +38,8 @@
  
  #include "IMContextWrapper.h"
  
@@ -5332,7 +5163,7 @@
  #undef LOG
  #ifdef MOZ_LOGGING
  
-@@ -157,6 +159,8 @@ class nsWindow final : public nsBaseWidg
+@@ -171,6 +173,8 @@ class nsWindow final : public nsBaseWidg
                                    nsIScreen* aTargetScreen = nullptr) override;
    virtual void HideWindowChrome(bool aShouldHide) override;
  
@@ -5341,7 +5172,7 @@
    /**
     * GetLastUserInputTime returns a timestamp for the most recent user input
     * event.  This is intended for pointer grab requests (including drags).
-@@ -583,6 +587,8 @@ class nsWindow final : public nsBaseWidg
+@@ -633,6 +637,8 @@ class nsWindow final : public nsBaseWidg
  
    mozilla::UniquePtr<mozilla::CurrentX11TimeGetter> mCurrentTimeGetter;
    static CSDSupportLevel sCSDSupportLevel;
@@ -5352,15 +5183,15 @@
  #endif /* __nsWindow_h__ */
 --- a/widget/moz.build
 +++ b/widget/moz.build
-@@ -64,9 +64,9 @@ elif toolkit == 'cocoa':
-         'nsISystemStatusBar.idl',
-         'nsITaskbarProgress.idl',
+@@ -68,9 +68,9 @@ elif toolkit == 'cocoa':
+         'nsITouchBarInput.idl',
+         'nsITouchBarUpdater.idl',
      ]
 -    EXPORTS += [
 -        'nsINativeMenuService.h',
 -    ]
 +
-+if toolkit in ('cocoa', 'gtk2', 'gtk3'):
++if toolkit in ('cocoa', 'gtk3'):
 +    EXPORTS += ['nsINativeMenuService.h']
  
  TEST_DIRS += ['tests']
@@ -5373,6 +5204,54 @@
  
 -#ifdef XP_MACOSX
 +#if defined(XP_MACOSX) || defined(MOZ_WIDGET_GTK)
- #include "nsINativeMenuService.h"
- #define USE_NATIVE_MENUS
+ #  include "nsINativeMenuService.h"
+ #  define USE_NATIVE_MENUS
  #endif
+--- /dev/null
++++ b/xpcom/ds/NativeMenuAtoms.py
+@@ -0,0 +1,9 @@
++from Atom import Atom
++
++NATIVE_MENU_ATOMS = [
++    Atom("menuitem_with_favicon", "menuitem-with-favicon"),
++    Atom("_moz_menubarkeeplocal", "_moz-menubarkeeplocal"),
++    Atom("_moz_nativemenupopupstate", "_moz-nativemenupopupstate"),
++    Atom("openedwithkey", "openedwithkey"),
++    Atom("shellshowingmenubar", "shellshowingmenubar"),
++]
+--- a/xpcom/ds/StaticAtoms.py
++++ b/xpcom/ds/StaticAtoms.py
+@@ -7,6 +7,7 @@
+ from Atom import Atom, InheritingAnonBoxAtom, NonInheritingAnonBoxAtom
+ from Atom import PseudoElementAtom
+ from HTMLAtoms import HTML_PARSER_ATOMS
++from NativeMenuAtoms import NATIVE_MENU_ATOMS
+ import sys
+ 
+ # Static atom definitions, used to generate nsGkAtomList.h.
+@@ -2477,7 +2478,7 @@ STATIC_ATOMS = [
+     InheritingAnonBoxAtom("AnonBox_mozSVGForeignContent", ":-moz-svg-foreign-content"),
+     InheritingAnonBoxAtom("AnonBox_mozSVGText", ":-moz-svg-text"),
+     # END ATOMS
+-] + HTML_PARSER_ATOMS
++] + HTML_PARSER_ATOMS + NATIVE_MENU_ATOMS
+ 
+ 
+ def verify():
+--- a/widget/gtk/components.conf
++++ b/widget/gtk/components.conf
+@@ -82,6 +82,14 @@ Classes = [
+         'headers': ['/widget/gtk/nsApplicationChooser.h'],
+         'processes': ProcessSelector.MAIN_PROCESS_ONLY,
+     },
++    {
++        'cid': '{0B3FE5AA-BC72-4303-85AE-76365DF1251D}',
++        'contract_ids': ['@mozilla.org/widget/nativemenuservice;1'],
++        'singleton': True,
++        'type': 'nsNativeMenuService',
++        'constructor': 'nsNativeMenuService::GetInstanceForServiceManager',
++        'headers': ['/widget/gtk/nsNativeMenuService.h'],
++    },
+ ]
+ 
+ if defined('MOZ_X11'):
