@@ -3,7 +3,7 @@
 pkgname=motrix-git
 _pkgname=motrix
 _pkgver=1.4.1
-pkgver=1.4.1
+pkgver=1.4.1.r534.2744db2
 pkgrel=1
 pkgdesc='A full-featured download manager'
 arch=('any')
@@ -33,6 +33,8 @@ pkgver() {
 
 prepare() {
   sed -i 's/"postinstall"/"ignore"/' "${srcdir}/${_pkgname}/package.json"
+  sed -i "s/4.2.4/7.1.4/g" "${srcdir}/${_pkgname}/package.json"
+  rm -vf "${srcdir}/${_pkgname}/package-lock.json"
   echo "Creating desktop file..."
   gendesk -f -n --pkgname ${_pkgname} \
   --pkgdesc "${pkgdesc}" \
@@ -57,10 +59,11 @@ package() {
   echo '{"name": "'${_pkgname}'", "version": "v'${_pkgver}'", "main": "./electron/main.js"}' > "${pkgdir}/usr/lib/${_pkgname}/app/package.json"
   install -Dm644 "${srcdir}/${_pkgname}/static/512x512.png" "${pkgdir}/usr/share/pixmaps/${_pkgname}.png"
   # launch script
-  echo "#!/bin/bash
+  cat << EOF > "${pkgdir}/usr/bin/${_pkgname}"
+#!/bin/bash
 export ELECTRON_IS_DEV=0
 exec /usr/bin/electron /usr/lib/${_pkgname}/app
-  " > "${pkgdir}/usr/bin/${_pkgname}"
+EOF
   chmod +x "${pkgdir}/usr/bin/${_pkgname}"
   install -Dm644 "${srcdir}/${_pkgname}.desktop" "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
   install -Dm644 "${srcdir}/${_pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
