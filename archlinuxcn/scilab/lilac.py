@@ -101,12 +101,15 @@ def apply_patch(filename, patch):
 
 def pre_build():
     aur_pre_build()
-    with open('libxml_extern_C.patch', 'w') as f:
+    with open('libxml_extern_C.patch', 'wb') as f:
         f.write(libxml_extern_C_patch)
     apply_patch('PKGBUILD', pkgbuild_patch)
 
 def post_build():
     aur_post_build()
-    with open('libxml_extern_C.patch', 'w') as f:
+    with open('libxml_extern_C.patch', 'wb') as f:
         f.write(libxml_extern_C_patch)
     git_add(['PKGBUILD', 'libxml_extern_C.patch'])
+
+if __name__ == '__main__':
+   single_main()
