@@ -52,6 +52,23 @@ index 51f5208..7df26d3 100644
 -}
  
  #include "XMLObject.hxx"
+ 
+diff --git a/modules/scicos/includes/XMIResource.hxx b/modules/scicos/includes/XMIResource.hxx
+index 5c115b9..00891b7 100644
+--- a/modules/scicos/includes/XMIResource.hxx
++++ b/modules/scicos/includes/XMIResource.hxx
+@@ -22,10 +22,8 @@
+ #include <string>
+ #include <vector>
+ 
+-extern "C" {
+ #include <libxml/xmlwriter.h>
+ #include <libxml/xmlreader.h>
+-}
+ 
+ namespace org_scilab_modules_scicos
+ {
+
 """
 
 pkgbuild_patch = b"""
