@@ -1,0 +1,52 @@
+diff --git a/modules/functions_manager/src/cpp/dynamic_modules.cpp b/modules/functions_manager/src/cpp/dynamic_modules.cpp
+index 4c2859b..ca44abc 100644
+--- a/modules/functions_manager/src/cpp/dynamic_modules.cpp
++++ b/modules/functions_manager/src/cpp/dynamic_modules.cpp
+@@ -22,13 +22,13 @@ extern "C"
+ {
+ #include "loadOnUseClassPath.h"
+ #include "Scierror.h"
++}
+ 
+     //XML API
+ #include <libxml/xpath.h>
+ #include <libxml/xmlreader.h>
+ #include "sci_malloc.h"
+ #include "configvariable_interface.h"
+-}
+ 
+ vectGateway loadGatewaysName(const std::wstring& _wstModuleName)
+ {
+diff --git a/modules/io/src/cpp/loadlib.cpp b/modules/io/src/cpp/loadlib.cpp
+index 25ca60b..2887bf6 100644
+--- a/modules/io/src/cpp/loadlib.cpp
++++ b/modules/io/src/cpp/loadlib.cpp
+@@ -26,9 +26,9 @@ extern "C"
+ #include "fullpath.h"
+ #include "PATH_MAX.h"
+ #include "pathconvert.h"
++}
+ #include <libxml/xpath.h>
+ #include <libxml/xmlreader.h>
+-}
+ 
+ #define DEFAULT_ENCODING "UTF-8"
+ 
+diff --git a/modules/xml/src/cpp/XMLDocument.hxx b/modules/xml/src/cpp/XMLDocument.hxx
+index 51f5208..7df26d3 100644
+--- a/modules/xml/src/cpp/XMLDocument.hxx
++++ b/modules/xml/src/cpp/XMLDocument.hxx
+@@ -23,13 +23,10 @@
+ 
+ #include "dynlib_xml_scilab.h"
+ 
+-extern "C"
+-{
+ #include "xml.h"
+ #ifndef XML_XPATH_CHECKNS
+ #define XML_XPATH_CHECKNS
+ #endif
+-}
+ 
+ #include "XMLObject.hxx"
+ 
