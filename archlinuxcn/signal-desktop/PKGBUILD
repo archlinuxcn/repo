@@ -8,38 +8,35 @@
 
 pkgname=signal-desktop
 _pkgname=Signal-Desktop
-pkgver=1.28.0
-pkgrel=6
+pkgver=1.29.0
+pkgrel=1
 pkgdesc='Electron application that links with Signal on mobile'
 arch=(x86_64)
 url=https://signal.org
 license=(GPL3)
 depends=(electron)
-makedepends=(
-  yarn
-  git
-  python2
-  nodejs
-  npm
-  python
-)
+makedepends=(yarn git python2 python npm 'nodejs>=12.4.0')
 provides=(signal)
 replaces=(signal)
+
 source=(
-  $pkgname-$pkgver.tar.gz::https://github.com/signalapp/$_pkgname/archive/v$pkgver.tar.gz
-  $pkgname.desktop
+  ${pkgname}-${pkgver}.tar.gz::https://github.com/signalapp/${_pkgname}/archive/v${pkgver}.tar.gz
+  ${pkgname}.desktop
+  ${pkgname}.sh
   openssl-linking.patch
 )
-sha512sums=('b0691467bc4e2b6984cc05f71bbbf0a9d3999b4e43b1ac355710e3a72b4b9445f09de4e02e7d53df03b2766bc00a0e0741f73a12fd21d00849d366519c6ee3b2'
+
+sha512sums=('2a0923762574906e78029b0a7db0fe86559f64f42e985aac9d2cc6e1a8a65ab8cbeb0f400f5c5b7ba9e508e0fa160386961507fe30ab7f9c472c4f7019ddaa0e'
             'a264bfc7a4a7aac747daa588a2acbf1eddfd201bc795f0fbc18460a9b25f4460f364124e227a527fec22631cd84bc9e190f9f4978069e9c119eb556b9ff2d327'
+            '75e62142685478f680f20411b6c5e4c71d207ea9f6bd557ab683b882d4e05c3033f1a6873310842cd950097688947dae68363a18caf87c17d67e105f282b35e9'
             '2c10d4cc6c0b9ca650e786c1e677f22619a78c93465f27fc4cf4831f1cfe771f3b9885a416e381a9e14c3aea5d88cb3545264046188db72d54b8567266811e51')
 
 prepare() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
-  
+
   # Set system electron version
   _installed_electron_version=$(pacman -Q electron | cut -d' ' -f2 | cut -d'-' -f1)
-  sed -E -i 's/"electron": "[0-9.]+"/"electron": "'$_installed_electron_version'"/' package.json
+  sed -E -i 's/"electron": "[0-9.]+"/"electron": "'${_installed_electron_version}'"/' package.json
 
   # Fix SpellChecker build with imminent Node 13
   # See https://github.com/atom/node-spellchecker/issues/127
@@ -77,8 +74,8 @@ package() {
     install -Dm 644 build/icons/png/${i}* "${pkgdir}/usr/share/icons/hicolor/${i}x${i}/apps/${pkgname}.png"
   done
 
-  install -Dm 755 "${srcdir}/${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}-desktop"
-
+  install -Dm 755 "${srcdir}/${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}"
   install -Dm 644 "${srcdir}"/${pkgname}.desktop "${pkgdir}"/usr/share/applications/${pkgname}.desktop
-  install -Dm 644 "${srcdir}"/${pkgname}-tray.desktop "${pkgdir}"/usr/share/applications/${pkgname}-tray.desktop
 }
+
+# vim:set ts=2 sw=2 et:
