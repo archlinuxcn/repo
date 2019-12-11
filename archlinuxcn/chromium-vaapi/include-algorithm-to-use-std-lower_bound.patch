@@ -1,0 +1,49 @@
+From f7c177d35242311ea7a2cf49a0980c61664f27ba Mon Sep 17 00:00:00 2001
+From: Jose Dapena Paz <jose.dapena@lge.com>
+Date: Fri, 25 Oct 2019 15:07:09 +0000
+Subject: [PATCH] IWYU: include algorithm to use std::lower_bound in
+ ui/gfx/font.cc
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Fix GCC build because of missing include:
+../../ui/gfx/font.cc: In function ‘gfx::Font::Weight gfx::FontWeightFromInt(int)’:
+../../ui/gfx/font.cc:114:8: error: no matching function for call to ‘lower_bound(const gfx::Font::Weight*, const gfx::Font::Weight*, int&, gfx::FontWeightFromInt(int)::<lambda(const gfx::Font::Weight&, const int&)>)’
+       });
+        ^
+In file included from /usr/include/c++/8/bits/char_traits.h:39,
+                 from /usr/include/c++/8/string:40,
+                 from ../../ui/gfx/font.h:8,
+                 from ../../ui/gfx/font.cc:5:
+/usr/include/c++/8/bits/stl_algobase.h:984:5: note: candidate: ‘template<class _ForwardIterator, class _Tp> _ForwardIterator std::lower_bound(_ForwardIterator, _ForwardIterator, const _Tp&)’
+     lower_bound(_ForwardIterator __first, _ForwardIterator __last,
+     ^~~~~~~~~~~
+/usr/include/c++/8/bits/stl_algobase.h:984:5: note:   template argument deduction/substitution failed:
+../../ui/gfx/font.cc:114:8: note:   candidate expects 3 arguments, 4 provided
+       });
+        ^
+
+Bug: 819294
+Change-Id: Ic59dcf3a06bdd54d1d426c08a61624873a0ff30c
+Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/1879909
+Commit-Queue: Alexei Svitkine <asvitkine@chromium.org>
+Reviewed-by: Alexei Svitkine <asvitkine@chromium.org>
+Cr-Commit-Position: refs/heads/master@{#709472}
+---
+ ui/gfx/font.cc | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/ui/gfx/font.cc b/ui/gfx/font.cc
+index 21367fd7297..92b159e13d1 100644
+--- a/ui/gfx/font.cc
++++ b/ui/gfx/font.cc
+@@ -4,6 +4,8 @@
+ 
+ #include "ui/gfx/font.h"
+ 
++#include <algorithm>
++
+ #include "base/strings/utf_string_conversions.h"
+ #include "build/build_config.h"
+ #include "ui/gfx/platform_font.h"
