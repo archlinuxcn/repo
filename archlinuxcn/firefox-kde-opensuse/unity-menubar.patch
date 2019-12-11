@@ -14,7 +14,7 @@
              <menu id="file-menu" data-l10n-id="menu-file">
 --- a/browser/base/content/browser.js
 +++ b/browser/base/content/browser.js
-@@ -6801,11 +6801,17 @@ function onViewToolbarsPopupShowing(aEve
+@@ -6796,11 +6796,17 @@ function onViewToolbarsPopupShowing(aEve
  
    let toolbarNodes = gNavToolbox.querySelectorAll("toolbar");
  
@@ -5143,7 +5143,7 @@
  #include "mozilla/Preferences.h"
  #include "nsIPrefService.h"
  #include "nsIServiceManager.h"
-@@ -5192,6 +5193,10 @@ void nsWindow::HideWindowChrome(bool aSh
+@@ -5174,6 +5175,10 @@ void nsWindow::HideWindowChrome(bool aSh
    SetWindowDecoration(aShouldHide ? eBorderStyle_none : mBorderStyle);
  }
  
@@ -5174,7 +5174,7 @@
    /**
     * GetLastUserInputTime returns a timestamp for the most recent user input
     * event.  This is intended for pointer grab requests (including drags).
-@@ -638,6 +642,8 @@ class nsWindow final : public nsBaseWidg
+@@ -637,6 +641,8 @@ class nsWindow final : public nsBaseWidg
  
    mozilla::UniquePtr<mozilla::CurrentX11TimeGetter> mCurrentTimeGetter;
    static CSDSupportLevel sCSDSupportLevel;

@@ -15,12 +15,12 @@ _pgo=true
 # /view/head:/debian/patches/unity-menubar.patch
 
 # patches from gentoo:
-# https://dev.gentoo.org/~anarchy/mozilla/patchsets/firefox-68.0-patches-07.tar.xz
+# https://dev.gentoo.org/~anarchy/mozilla/patchsets/firefox-71.0-patches-04.tar.xz
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=70.0.1
-pkgrel=3.2
+pkgver=71.0
+pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -51,7 +51,7 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
             'pulseaudio: Audio support')
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
-_patchrev=8a4f5aea2475
+_patchrev=572ec48f3fe8
 options=('!emptydirs')
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 _repo=https://hg.mozilla.org/mozilla-unified
@@ -76,10 +76,11 @@ source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
         7002_system_av1_support.patch
         # https://bugzilla.mozilla.org/show_bug.cgi?id=1530052
         0001-Use-remoting-name-for-GDK-application-names.patch
-        # Update Bindgen to fix building with rust 1.39
-        0001-Update-bindgen.patch.xz
         # Fix building with python 3.8
-        0002-Bug-1212502-Switch-mozinfo-to-using-the-distro-packa.patch.xz
+        0001-Bug-1212502-Switch-mozinfo-to-using-the-distro-packa.patch.xz
+        # Workaround objects no being allocated with the correct alignment
+        # inside dom/indexedDB/ActorsParent.cpp
+        workaround_dom_indexdb_actorsparent_allignment.patch
 )
 
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
@@ -128,13 +129,14 @@ prepare() {
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1530052
   patch -Np1 -i "$srcdir"/0001-Use-remoting-name-for-GDK-application-names.patch
 
-  # Update Bindgen to fix building with rust 1.39
-  xzcat "$srcdir"/0001-Update-bindgen.patch.xz | patch -Np1
-
   # Fix building with python 3.8
   xzcat "$srcdir"/\
-0002-Bug-1212502-Switch-mozinfo-to-using-the-distro-packa.patch.xz  | \
+0001-Bug-1212502-Switch-mozinfo-to-using-the-distro-packa.patch.xz  | \
     patch -Np1
+
+  # Workaround objects no being allocated with the correct alignment
+  # inside dom/indexedDB/ActorsParent.cpp
+  patch -Np1 -i "$srcdir"/workaround_dom_indexdb_actorsparent_allignment.patch
   
   if [[ $_pgo ]] ; then
     # add missing rule for pgo builds
@@ -236,17 +238,17 @@ md5sums=('SKIP'
          'a26a061efb4def6572d5b319d657f1d6'
          '4c23d9c0a691d70919beb1dafbbecbd3'
          '05bb69d25fb3572c618e3adf1ee7b670'
-         '63ed8892dbc06dc62a381e8c91c132df'
+         'ad055db454c9263623fdbc857e8290fe'
          '0756f1b090f9c3371df957257907b0c7'
          'bc1f7445de31cd5ff20f00d0f9bc8e57'
          'e083ae314eaa9355aa2d4aa75a7fc277'
-         'b6b2fd9958366917e3b4014dde36354b'
+         '35fd9214a0af395543346f4dd074f92b'
          'fe24f5ea463013bb7f1c12d12dce41b2'
          '3fa8bd22d97248de529780f5797178af'
-         '1a7381dd7780409c04351424a8711d29'
+         '28c2eff56d3d95da6e9ba444fc60e90b'
          '8d0c0ebc805e4e52a3cb2c0dc64ea2de'
          'f867ae41a722630cc5567e2dcc51676d'
          'd87270bfe02ea30e2fde3fcae5daf18d'
          '0ffabb81dd8a5fe98bb8afe47d6541d3'
-         '0c91cd2a5abc6474dd24912bea80bf23'
-         '35b553936e674cd8538fd97d6414b046')
+         '3016656551d00f4f22dc2eaccc71ee14'
+         'f4a8a7f7480c74556ffb8fea3c5fe51a')
