@@ -189,7 +189,7 @@ server_start() {
 				sleep 0.1
 			done
 		else
-			echo -en "Starting idle server daeomon..."
+			echo -en "Starting idle server daemon..."
 			${SUDO_CMD} screen -dmS "${IDLE_SESSION_NAME}" /bin/bash -c "${myname} idle_server_daemon"
 			echo -e "\e[39;1m done\e[0m"
 		fi
