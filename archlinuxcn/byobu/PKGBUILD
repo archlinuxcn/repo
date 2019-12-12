@@ -1,11 +1,12 @@
 # Maintainer: Daniel Landau <aur@landau.fi>
+# Contributor: Justin Coffman <jcoffman at dowhilefoo dot com>
 # Contributor: Sibren Vasse <arch at sibrenvasse dot nl> 
-# Contributor:  oozyslug <oozyslug at gmail dot com>
-# Submitter: oozyslug <oozyslug at gmail dot com>
+# Contributor: oozyslug <oozyslug at gmail dot com>
+# Submitter: Justin Coffman <jcoffman at dowhilefoo dot com>
 
 pkgname=byobu
-pkgver=5.129
-pkgrel=2
+pkgver=5.130
+pkgrel=1
 pkgdesc="Enhanced profile and useful notifications for tmux/screen"
 arch=("any")
 url="https://launchpad.net/byobu"
@@ -17,7 +18,7 @@ optdepends=("screen: alternative back-end for byobu (default: tmux)")
 source=("${url}/trunk/${pkgver}/+download/${pkgname}_${pkgver}.orig.tar.gz"
 "gnome3_desktop_application_not_starting.patch"
 )
-md5sums=('7ec69e1c169e3bc8494423176733c8de'
+md5sums=('cb2a78c9a56ccf8bca4a15274f369cbd'
          '23db3b90ae454c00384fcd3af8ad3020')
 
 prepare() {
