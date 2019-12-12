@@ -71,11 +71,20 @@ index 5c115b9..00891b7 100644
 
 """
 
-pkgbuild_patch = b"""
-diff --git a/archlinuxcn/scilab/PKGBUILD b/archlinuxcn/scilab/PKGBUILD
-index 5759fa8dd5..46623ec7c9 100644
---- a/archlinuxcn/scilab/PKGBUILD
-+++ b/archlinuxcn/scilab/PKGBUILD
+pkgbuild_patch=b"""
+diff --git a/tmp/scilab/PKGBUILD b/PKGBUILD
+index 73359f527e..2473c0da55 100644
+--- a/tmp/scilab/PKGBUILD
++++ b/PKGBUILD
+@@ -4,7 +4,7 @@
+ 
+ pkgname=scilab
+ pkgver=6.0.2
+-pkgrel=1
++pkgrel=2.1
+ pkgdesc='A scientific software package for numerical computations.'
+ arch=('i686' 'x86_64')
+ url='https://www.scilab.org'
 @@ -20,7 +20,7 @@ depends=('suitesparse>=4.4.1' 'arpack' 'fftw' 'eigen'
           'java-skinlf' 'java-testng' 'xalan-java' 'docbook-xsl'
           'jogl>=2.3.2' 'apache-lucene>=7'
@@ -97,11 +106,11 @@ index 5759fa8dd5..46623ec7c9 100644
              '38aa094951338fa1d267dc6f397552e175213b0f8ba7b35727c178607861f6dd'
              'a39277cb8cfc3d7929c73ce6d707dc24e3df4b8d8f2d587f075efebda79ff4db'
              '6712c6db2f3ba365d150e1feb1c71bf691f8aa3b45d5a872b05a42f0daf23392'
-+            '172d86d6fdbe481feb801671fb2b763b21fb9443ecb56597a2e4e49d539f39dd'
++            'a424c453041c5f7e225763e1be2149a30f3d6b8c0718a6c112d6555db3a8cbaa'
              '31e757bdb2086e08e2477118fceddcdd50f3c2fcad5c86cf5de8ec06009f34ed')
  
  prepare(){
-@@ -53,6 +55,8 @@ prepare(){
+@@ -53,12 +55,14 @@ prepare(){
    # OCaml
    patch -p0 < "${srcdir}"/${pkgname}-0004-Fix-build-with-ocaml-4.0.4.patch
    patch -p0 < "${srcdir}"/${pkgname}-num.patch
@@ -110,6 +119,13 @@ index 5759fa8dd5..46623ec7c9 100644
  }
  
  build() {
+   cd "${srcdir}/${pkgname}-${pkgver}"
+ 
+-  ./configure \
++  ./configure --with-jdk=/usr/lib/jvm/java-8-openjdk/ \
+     --prefix=/usr \
+     --with-gcc \
+     --with-gfortran \
 """
 
 def apply_patch(filename, patch):
