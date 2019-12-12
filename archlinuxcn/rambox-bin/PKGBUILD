@@ -2,8 +2,8 @@
 
 pkgname=rambox-bin
 _pkgname=rambox
-pkgver=0.7.2
-pkgrel=2
+pkgver=0.7.3
+pkgrel=1
 pkgdesc='Free and Open Source messaging and emailing app that combines common web applications into one.'
 arch=('i686' 'x86_64')
 depends=('alsa-lib' 'bash' 'desktop-file-utils' 'gconf' 'gtk2' 'libnotify' 'libxtst' 'libxss' 'nss')
@@ -18,8 +18,8 @@ source_x86_64=("https://github.com/ramboxapp/community-edition/releases/download
 sha256sums=('ee2573d62b580e8ee584335534976396761b5da53a009bccb881b9cf6cb2041d'
             '61ad70a929c402e24c79b8868208310f9b3c4d7801db2b791af38293231ee524'
             '0bf4d0c849ad6151f77b346fea0424fab910f434378f9890b16fd15a32a10064')
-sha256sums_i686=('2191f261b382be201ba066a9e60b0bfa54188fa870c14ae7cb8780daac33cfc9')
-sha256sums_x86_64=('9ab6a9c14757ec551436cf1d36ba41657578fab1ecd7204aebed0840a3781cc2')
+sha256sums_i686=('f5ae052d6821a85e951c3e02abfd2cb4ef057fbca75f712367b81b12a0331d1d')
+sha256sums_x86_64=('db0bd6ca8ba4459b4e50834311c70827ce5e5227f8d70eccef5e464ee2fd1da0')
 
 # path after extraction
 _path="Rambox-${pkgver}-linux"
