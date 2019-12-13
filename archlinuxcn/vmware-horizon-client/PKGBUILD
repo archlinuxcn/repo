@@ -13,9 +13,9 @@ _bundled_with_client=('vmware-horizon-pcoip'
 	# Currently unused bundled packages:
 	#  vmware-horizon-media-provider
 	#  vmware-horizon-serialportclient
-pkgver=5.2.0
-_build=14604769
-_cart='CART20FQ3'
+pkgver=5.3.0
+_build=15208949
+_cart='CART20FQ4'
 pkgrel=1
 pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop'
 arch=('x86_64')
@@ -27,7 +27,7 @@ source=("${pkgbase}-${pkgver}-${_build}-x86_64.bundle::https://download3.vmware.
         'vmware-horizon-usb'
         'vmware-horizon-usb.service'
         'vmware-horizon-virtual-printing.service')
-sha256sums=('1bb7d0da09a92a96d5b5edee0c7f11f26bd9d6a9c4d84951fc8ed282fb5a5645'
+sha256sums=('4f2a8d5f420d467233c28f59fd9c20f2e39abcac4983d9248d5c1515c53d3253'
             'd8794c22229afdeb698dae5908b7b2b3880e075b19be38e0b296bb28f4555163'
             '008b60ebf45f7d1e033c8ad8ce1688d5e1c59fc0668493067fb89b563b1dc00f'
             'a897c1b9e8928fc222880ebbfc7bb6aff940bff4acf4e4e0cd4002fff81c7226'
