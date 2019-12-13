@@ -9,7 +9,7 @@
 
 pkgname=pcl
 pkgver=1.9.1
-pkgrel=3
+pkgrel=4
 pkgdesc="A comprehensive open source library for n-D Point Clouds and 3D geometry processing"
 arch=('x86_64' 'i686')
 url='http://www.pointclouds.org'
@@ -44,7 +44,7 @@ build() {
     -DCUDA_HOST_COMPILER=/usr/bin/gcc
 
 #  cd "${srcdir}/pcl-pcl-${pkgver}/build"
-  make -j2
+  make
 }
 
 package() {
