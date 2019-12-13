@@ -1,0 +1,51 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+pkgname=python-nibabel
+_pkgname=nibabel
+pkgver=2.5.1
+pkgrel=1
+pkgdesc='Package to access a cacophony of neuro-imaging file formats'
+arch=('any')
+url='http://nipy.org/nibabel'
+license=('MIT')
+depends=(
+  'python-numpy'
+  'python-pillow'
+  'python-pydicom'
+  'python-scipy'
+  'python-six'
+)
+checkdepends=(
+  'python-mock'
+  'python-nose'
+)
+makedepends=(
+  'git'
+  'python-setuptools'
+  'python-sphinx'
+)
+source=("${_pkgname}::git+https://github.com/nipy/nibabel.git#tag=${pkgver}")
+sha512sums=('SKIP')
+
+prepare() {
+  cd "${srcdir}/${_pkgname}"
+  git submodule update --init --recursive
+}
+
+build() {
+  cd "${srcdir}/${_pkgname}"
+  python setup.py build
+}
+
+check() {
+  cd "${srcdir}/${_pkgname}"
+  export NIPY_EXTRA_TESTS=slow
+  nosetests nibabel
+}
+
+package() {
+  cd "${srcdir}/${_pkgname}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  install -Dm644 COPYING -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:
