@@ -4,7 +4,7 @@
 
 pkgname=picom-git
 _gitname=picom
-pkgver=1283_Next.2.g37532e5_2019.12.10
+pkgver=1287_Next.6.ge1d9e95_2019.12.13
 pkgrel=1
 pkgdesc="X compositor (fork of compton) (git-version)"
 arch=(i686 x86_64)
@@ -33,7 +33,7 @@ pkgver() {
 
 build() {
   cd "${srcdir}/${_gitname}"
-  meson --buildtype=release . build --prefix=/usr -Dbuild_docs=true
+  meson --buildtype=release . build --prefix=/usr -Dwith_docs=true
   ninja -C build
 }
 
