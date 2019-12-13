@@ -1,0 +1,49 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+pkgname=python-nilearn
+_pkgname=nilearn
+pkgver=0.6.0
+pkgrel=1
+pkgdesc='Machine learning for NeuroImaging in Python'
+arch=('any')
+url='https://github.com/nilearn/nilearn'
+license=('BSD')
+depends=(
+  'python-joblib'
+  'python-matplotlib'
+  'python-nibabel'
+  'python-numpy'
+  'python-pandas'
+  'python-pillow'
+  'python-pydicom'
+  'python-scikit-learn'
+  'python-scipy'
+)
+checkdepends=(
+  'python-coverage'
+  'python-nose'
+  'python-pytest'
+)
+makedepends=(
+  'cython'
+  'python-setuptools'
+)
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/nilearn/nilearn/archive/${pkgver}.tar.gz")
+sha512sums=('19c419d96e4222dee2d1d56a69cfe2e1')
+
+build() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  python setup.py build
+}
+
+check() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  pytest -v
+}
+
+package() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:
