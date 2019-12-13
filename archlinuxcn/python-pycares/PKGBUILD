@@ -1,24 +1,24 @@
-_pkgname=pycares
+_name=pycares
 pkgname=python-pycares
-pkgver=3.0.0
-pkgrel=2
+pkgver=3.1.0
+pkgrel=1
 pkgdesc="Python interface for c-ares"
 arch=('x86_64' 'i686')
 url="http://github.com/saghul/pycares"
 license=(MIT)
-depends=('python' 'c-ares' 'python-setuptools')
-_name=${pkgname#python-}
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_pkgname}-${pkgver}.tar.gz")
-md5sums=('8a53781dd26db01ffe0b3358877bebbd')
+depends=('c-ares' 'python-setuptools')
+makedepends=('python-pip')
+
+source=("https://files.pythonhosted.org/packages/cp38/${_name::1}/$_name/pycares-3.1.0-cp38-cp38-manylinux2010_x86_64.whl")
+sha256sums=('72652bcb5f738817753d586dd9fa66a0746f5cd4ff9037ab628cb9dc49a8ef6b')
 
 build() {
-  cd "$srcdir/$_pkgname-$pkgver"
-  LANG=en_US.UTF-8 python3 setup.py build
+  true
 }
 
 package() {
-  cd "$srcdir/$_pkgname-$pkgver"
-  LANG=en_US.UTF-8 python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+  cd "$srcdir"
+  pip install 'pycares-3.1.0-cp38-cp38-manylinux2010_x86_64.whl' --root="$pkgdir" --no-deps --install-option="--optimize=1"
 }
 
-# vim:set sw=2 et:
+
