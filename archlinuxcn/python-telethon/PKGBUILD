@@ -1,7 +1,7 @@
 _name=Telethon
 pkgname=python-telethon
 pkgver=1.10.9
-pkgrel=1
+pkgrel=2
 pkgdesc="Full-featured Telegram client library for Python 3"
 arch=(any)
 url="https://github.com/LonamiWebs/Telethon"
