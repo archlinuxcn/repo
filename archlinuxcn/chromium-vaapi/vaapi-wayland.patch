@@ -1,0 +1,18 @@
+--- a/media/gpu/vaapi/vaapi_wrapper.cc
++++ b/media/gpu/vaapi/vaapi_wrapper.cc
+@@ -54,6 +54,7 @@
+ #include "ui/gfx/native_pixmap_handle.h"
+ #include "ui/gl/gl_bindings.h"
+ #include "ui/gl/gl_implementation.h"
++#include "ui/gl/init/gl_factory.h"
+
+ #if defined(USE_X11)
+ #include <va/va_x11.h>
+@@ -360,6 +364,7 @@
+   if (refcount_++ > 0)
+     return true;
+
++  gl::init::InitializeGLOneOff();
+   const bool success = InitializeOnce();
+   UMA_HISTOGRAM_BOOLEAN("Media.VaapiWrapper.VADisplayStateInitializeSuccess",
+                         success);
