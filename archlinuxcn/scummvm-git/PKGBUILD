@@ -3,13 +3,14 @@
 
 pkgname=scummvm-git
 _pkgname=scummvm
-pkgver=r92839.ec12c5acbd
+pkgver=r92995.32b67f69ca
 pkgrel=1
 pkgdesc="A 'virtual machine' for several classic graphical point-and-click adventure games."
 arch=('i686' 'x86_64')
 url="http://www.scummvm.org"
 license=('GPL')
-depends=('sdl' 'libmad' 'fluidsynth' 'libgl' 'libtheora' 'faad2')
+depends=('libpng' 'libtheora' 'sdl2' 'sdl2_net' 'fluidsynth' 'flac' 'faad2' 'libvorbis' 'libmad' 'freetype2'
+         'libgl' 'glu' 'libjpeg-turbo' 'libmpeg2' 'curl' 'a52dec')
 makedepends=('git')
 conflicts=('scummvm')
 provides=('scummvm')
@@ -25,7 +26,8 @@ pkgver() {
 build() {
   cd "$srcdir/$_pkgname"
  
-  ./configure --backend=sdl \
+  ./configure --enable-c++11 \
+              --enable-release \
               --with-flac-prefix=/usr \
               --prefix=/usr \
               --enable-all-engines
