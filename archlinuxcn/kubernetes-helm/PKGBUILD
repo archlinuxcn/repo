@@ -4,7 +4,7 @@
 
 pkgname=kubernetes-helm
 pkgver=3.0.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A tool to manage Kubernetes charts"
 arch=('i686' 'x86_64' 'arm' 'aarch64')
 url="https://github.com/helm/helm"
@@ -18,7 +18,6 @@ provides=(kubernetes-helm)
 conflicts=(
   'kubernetes-helm-bin'
   'kubernetes-helm'
-  'kubernetes-helm3'
   'kubernetes-helm-git'
 )
 license=('Apache')
