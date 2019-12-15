@@ -2,7 +2,7 @@
 _pkgname=feeluown
 pkgname=feeluown
 pkgver=3.2a0
-pkgrel=2
+pkgrel=3
 pkgdesc="FeelUOwn Music Player"
 arch=('any')
 url="https://github.com/cosven/FeelUOwn"
