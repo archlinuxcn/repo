@@ -11,7 +11,7 @@
 
 pkgname=chromium-vaapi
 pkgver=79.0.3945.79
-pkgrel=3
+pkgrel=4
 _launcher_ver=6
 pkgdesc="Chromium with VA-API support to enable hardware acceleration"
 arch=('x86_64')
@@ -34,7 +34,6 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-launcher-$_launcher_ver.tar.gz::https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver.tar.gz
         chromium-drirc-disable-10bpc-color-configs.conf
         vaapi-fix.patch
-        vaapi-wayland.patch
         launch_manager.h-uses-std-vector.patch
         include-algorithm-to-use-std-lower_bound.patch
         icu65.patch
@@ -48,7 +47,6 @@ sha256sums=('e1a7362d396b0f72e6ad8c1d53cae67db201e0eeaa2a96dbe9214d080925bcf3'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
             'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb'
             '0ec6ee49113cc8cc5036fa008519b94137df6987bf1f9fbffb2d42d298af868a'
-            '6be6d4d57ce0598a5a7ef552e6cd8a377256c69f16c4922c12d9a66fdb94e58c'
             'bd0fae907c451252e91c4cbf1ad301716bc9f8a4644ecc60e9590a64197477d3'
             '1f906676563e866e2b59719679e76e0b2f7f082f48ef0593e86da0351a586c73'
             '1de9bdbfed482295dda45c7d4e323cee55a34e42f66b892da1c1a778682b7a41'
@@ -109,9 +107,6 @@ prepare() {
 
   # Fix VA-API on Intel and Nvidia
   patch -Np1 -i ../vaapi-fix.patch
-
-  # Fix VA-API on Wayland with i965 driver using EGL backend
-  patch -Np1 -i ../vaapi-wayland.patch
 
   # https://crbug.com/819294
   patch -Np1 -i ../launch_manager.h-uses-std-vector.patch
