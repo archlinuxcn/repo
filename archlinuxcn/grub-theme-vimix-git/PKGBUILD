@@ -2,7 +2,7 @@
 
 pkgname=grub-theme-vimix-git
 _pkgname="${pkgname%-*}"
-pkgver=20191206
+pkgver=20191216
 pkgrel=1
 pkgdesc="Vimix grub theme"
 arch=(any)
@@ -27,6 +27,7 @@ package() {
     install -d "$pkgdir/usr/share/grub/themes/$name"
     install -d "$pkgdir/usr/share/grub/themes/$name/icons"
     install -Dm 644 common/* "$pkgdir/usr/share/grub/themes/$name"
+    install -Dm 644 "config/theme-$resolution.txt" "$pkgdir/usr/share/grub/themes/$name/theme.txt"
     install -Dm 644 "backgrounds/$resolution/background-${_pkgname##*-}.jpg" "$pkgdir/usr/share/grub/themes/$name/background.jpg"
     install -Dm 644 "assets/assets-white/icons-$resolution"/* "$pkgdir/usr/share/grub/themes/$name/icons"
     install -Dm 644 "assets/assets-white/select-$resolution"/* "$pkgdir/usr/share/grub/themes/$name"

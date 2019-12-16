@@ -2,7 +2,7 @@
 
 pkgname=grub-theme-tela-git
 _pkgname="${pkgname%-*}"
-pkgver=20191109
+pkgver=20191216
 pkgrel=1
 pkgdesc="Tela grub theme"
 arch=(any)
@@ -27,8 +27,9 @@ package() {
     install -d "$pkgdir/usr/share/grub/themes/$name"
     install -d "$pkgdir/usr/share/grub/themes/$name/icons"
     install -Dm 644 common/* "$pkgdir/usr/share/grub/themes/$name"
+    install -Dm 644 "config/theme-$resolution.txt" "$pkgdir/usr/share/grub/themes/$name/theme.txt"
     install -Dm 644 "backgrounds/$resolution/background-${_pkgname##*-}.jpg" "$pkgdir/usr/share/grub/themes/$name/background.jpg"
-    install -Dm 644 "assets/assets-tela/icons-$resolution"/* "$pkgdir/usr/share/grub/themes/$name/icons"
-    install -Dm 644 "assets/assets-tela/select-$resolution"/* "$pkgdir/usr/share/grub/themes/$name"
+    install -Dm 644 "assets/assets-color/icons-$resolution"/* "$pkgdir/usr/share/grub/themes/$name/icons"
+    install -Dm 644 "assets/assets-color/select-$resolution"/* "$pkgdir/usr/share/grub/themes/$name"
     install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$_pkgname/LICENSE"
 }
