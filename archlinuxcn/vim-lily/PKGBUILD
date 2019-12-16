@@ -20,7 +20,7 @@ options=('debug' 'strip')
 
 pkgver() {
   cd vim-repo
-  echo $(awk '/^#define VIM_VERSION_SHORT/ {print $3}' src/version.h | tr -d '"').$(sed -n '/ included_patches\[\]/,+3p' src/version.c | sed '/[^,]$/d;s/\s*\|,//g')
+  echo $(awk '/^#define VIM_VERSION_(MAJOR|MINOR)\>/ {print $3}' src/version.h | tr '\n' '.')$(sed -n '/ included_patches\[\]/,+3p' src/version.c | sed '/[^,]$/d;s/\s*\|,//g')
 }
 
 build() {
