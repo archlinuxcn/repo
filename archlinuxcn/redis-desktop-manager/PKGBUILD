@@ -4,7 +4,7 @@
 
 pkgname=redis-desktop-manager
 pkgver=2019.5
-pkgrel=1
+pkgrel=2
 pkgdesc='Open source cross-platform Redis Desktop Manager based on Qt 5'
 arch=('x86_64')
 url="https://redisdesktop.com/"
@@ -49,6 +49,7 @@ prepare() {
 build() {
   rm -rf $srcdir/rdm/bin
   cd $srcdir/rdm/src
+  lrelease resources/translations/*.ts
   qmake && make
 }
 
