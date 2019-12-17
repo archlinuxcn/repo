@@ -2,9 +2,9 @@
 
 _pkgname=fiji
 pkgname=fiji-bin
-pkgver=20191119.2057
+pkgver=20191216.2110
 _pkgver=
-pkgrel=2
+pkgrel=1
 epoch=2
 pkgdesc="ImageJ distribution with a lot of plugins for scientific (especially biology related) image processing."
 arch=('x86_64')
