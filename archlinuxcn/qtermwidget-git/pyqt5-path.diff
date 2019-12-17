@@ -1,0 +1,21 @@
+diff --git a/pyqt/cmake/FindPyQt5.py b/pyqt/cmake/FindPyQt5.py
+index 318b9a3..d609094 100644
+--- a/pyqt/cmake/FindPyQt5.py
++++ b/pyqt/cmake/FindPyQt5.py
+@@ -5,6 +5,7 @@
+ import PyQt5.Qt
+ import sys
+ import os.path
++import site
+ 
+ print("pyqt_version:%06.0x" % PyQt5.Qt.PYQT_VERSION)
+ print("pyqt_version_str:%s" % PyQt5.Qt.PYQT_VERSION_STR)
+@@ -22,7 +23,7 @@ for item in PyQt5.Qt.PYQT_CONFIGURATION["sip_flags"].split(' '):
+ print("pyqt_version_tag:%s" % pyqt_version_tag)
+ 
+ # FIXME This next line is just a little bit too crude.
+-pyqt_sip_dir = os.path.join(sys.prefix, "share", "sip", "PyQt5")
++pyqt_sip_dir = os.path.join(site.getsitepackages()[0], "PyQt5", "bindings")
+ print("pyqt_sip_dir:%s" % pyqt_sip_dir)
+ 
+ print("pyqt_sip_flags:%s" % PyQt5.Qt.PYQT_CONFIGURATION["sip_flags"])
