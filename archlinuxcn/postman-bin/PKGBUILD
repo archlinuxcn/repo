@@ -1,7 +1,7 @@
 # Maintainer: Jay Ta'ala <jay@jaytaala.com>
 # Contributor: Claudio d'Angelis <claudiodangelis at gmail dot com>
 pkgname=postman-bin
-pkgver=7.13.0
+pkgver=7.14.0
 pkgrel=1
 pkgdesc="Build, test, and document your APIs faster"
 arch=('x86_64')
@@ -11,7 +11,7 @@ source=(
 	"Postman-linux-x64-${pkgver}.tar.gz::https://dl.pstmn.io/download/version/${pkgver}/linux64"
     "postman.desktop"
 )
-md5sums=('2e7a666816ef266324274366051dc5e5'
+md5sums=('dc00dbe1117ba65158eaf0ec3e80b776'
          'f40404e81c416a180b4c596059fc84dd')
 depends=(libxss nss gtk3)
 package() {
