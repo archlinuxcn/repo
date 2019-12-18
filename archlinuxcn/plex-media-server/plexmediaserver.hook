@@ -1,0 +1,11 @@
+# Copy, move or symlink this file in /etc/pacman.d/hooks to force a restart when plex is updated.
+
+[Trigger]
+Operation = Upgrade
+Type = Package
+Target = plex-media-server-plexpass
+Target = plex-media-server
+
+[Action]
+When = PostTransaction
+Exec = /usr/bin/systemctl restart plexmediaserver.service
