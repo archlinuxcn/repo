@@ -1,13 +1,14 @@
 # Maintainer: Fredy García <frealgagu at gmail dot com>
 
 pkgname=whatsapp-nativefier
-pkgver=0.3.4940
+pkgver=0.3.9309
 pkgrel=1
 pkgdesc="WhatsApp desktop built with nativefier (electron)"
 arch=("armv7l" "i686" "x86_64")
 url="https://web.${pkgname%-nativefier}.com"
 license=("custom")
 depends=("gtk3" "libxss" "nss")
+optdepends=("libindicator-gtk3")
 makedepends=("imagemagick" "nodejs-nativefier")
 source=(
   "${pkgname}.png"
