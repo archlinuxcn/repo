@@ -55,14 +55,9 @@ arch=('x86_64')
 url="http://www.kernel.org/"
 license=('GPL2')
 options=('!strip')
-makedepends=('kmod' 'inetutils' 'bc' 'libelf' 'git' 'python-sphinx' 'python-sphinx_rtd_theme'
+makedepends=('kmod' 'bc' 'libelf' 'xmlto' 'git' 'python-sphinx' 'python-sphinx_rtd_theme'
              'graphviz' 'imagemagick')
-_lucjanver=5.3
-#_lucjanpath="https://raw.githubusercontent.com/sirlucjan/kernel-patches/master/${_lucjanver}"
-_lucjanpath="https://gitlab.com/sirlucjan/kernel-patches/raw/master/${_lucjanver}"
-
 source=("git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git"
-        "${_lucjanpath}/arch-patches-v2/0001-ZEN-Add-sysctl-and-CONFIG-to-disallow-unprivileged-C.patch"
          # the main kernel config files
         'config::https://git.archlinux.org/svntogit/packages.git/plain/trunk/config?h=packages/linux')
 
@@ -102,83 +97,12 @@ prepare() {
     ### Prepared version
         make -s kernelrelease > version
         msg2 "Prepared %s version %s" "$pkgbase" "$(<version)"
-
-    ### Optionally use running kernel's config
-	# code originally by nous; http://aur.archlinux.org/packages.php?ID=40191
-	if [ -n "$_use_current" ]; then
-		if [[ -s /proc/config.gz ]]; then
-			msg2 "Extracting config from /proc/config.gz..."
-			# modprobe configs
-			zcat /proc/config.gz > ./.config
-		else
-			warning "Your kernel was not compiled with IKCONFIG_PROC!"
-			warning "You cannot read the current config!"
-			warning "Aborting!"
-			exit
-		fi
-	fi    
-
-    ### Optionally set tickrate to 1000
-	if [ -n "$_1k_HZ_ticks" ]; then
-		msg2 "Setting tick rate to 1k..."
-		sed -i -e 's/^CONFIG_HZ_300=y/# CONFIG_HZ_300 is not set/' \
-                    -i -e 's/^# CONFIG_HZ_1000 is not set/CONFIG_HZ_1000=y/' \
-                    -i -e 's/^CONFIG_HZ=300/CONFIG_HZ=1000/' ./.config
-	fi
-	
-    ### Optionally disable NUMA for 64-bit kernels only
-        # (x86 kernels do not support NUMA)
-        if [ -n "$_NUMAdisable" ]; then
-            msg2 "Disabling NUMA from kernel config..."
-            sed -i -e 's/CONFIG_NUMA=y/# CONFIG_NUMA is not set/' \
-                -i -e '/CONFIG_AMD_NUMA=y/d' \
-                -i -e '/CONFIG_X86_64_ACPI_NUMA=y/d' \
-                -i -e '/CONFIG_NODES_SPAN_OTHER_NODES=y/d' \
-                -i -e '/# CONFIG_NUMA_EMU is not set/d' \
-                -i -e '/CONFIG_NODES_SHIFT=6/d' \
-                -i -e '/CONFIG_NEED_MULTIPLE_NODES=y/d' \
-                -i -e '/# CONFIG_MOVABLE_NODE is not set/d' \
-                -i -e '/CONFIG_USE_PERCPU_NUMA_NODE_ID=y/d' \
-                -i -e '/CONFIG_ACPI_NUMA=y/d' ./.config
-        fi
-
-    ### Optionally load needed modules for the make localmodconfig
-        # See https://aur.archlinux.org/packages/modprobed-db
-        if [ -n "$_localmodcfg" ]; then
-            if [ -f $HOME/.config/modprobed.db ]; then
-            msg2 "Running Steven Rostedt's make localmodconfig now"
-            make LSMOD=$HOME/.config/modprobed.db localmodconfig
-        else
-            msg2 "No modprobed.db data found"
-            exit 1
-            fi
-        fi
-
-    ### Running make nconfig
-	
-	[[ -z "$_makenconfig" ]] ||  make nconfig
-	
-    ### Running make menuconfig
-	
-	[[ -z "$_makemenuconfig" ]] || make menuconfig
-	
-    ### Running make xconfig
-	
-	[[ -z "$_makexconfig" ]] || make xconfig
-	
-    ### Running make gconfig
-	
-	[[ -z "$_makegconfig" ]] || make gconfig
-
-    ### Save configuration for later reuse
-	cat .config > "${startdir}/config.last"
 }
 
 build() {
   cd $_srcname
 
-  make bzImage modules
-  make htmldocs
+  make bzImage modules htmldocs
 }
 
 _package() {
@@ -212,7 +136,6 @@ _package() {
 
 _package-headers() {
    pkgdesc="Headers and scripts for building modules for the $pkgdesc kernel"
-   depends=('linux-next-git')
 
   cd $_srcname
   local builddir="$pkgdir/usr/lib/modules/$(<version)/build"
