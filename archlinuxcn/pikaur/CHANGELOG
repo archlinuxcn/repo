@@ -1482,3 +1482,23 @@ Mon Oct 21 20:14:31 2019 +0200
      2019-10-20 4ad6979 actionless feat(args): read stdin if `-` specified and stdin is not tty (fixes #411)
      2019-10-18 29efb8a actionless fix: make `python -m pikaur <args>` work
      2019-10-17 8e19240 actionless chore(core: sudo_loop; pikspect): return back to using `sudo pacman -T` instead of `sudo -v` (fixes #408)
+
+
+Thu Dec 19 17:30:31 2019 +0100
+-------------------------------------------------
+1.5.5           Release 1.5.5
+    
+    Notable changes:
+     2019-12-19 d0972de actionless feat(print dept: pformat upgradeable): print if aur package is marked as 'out of date'
+     2019-12-05 8884e66 actionless fix(main: cli entry point): -Sca don't require sudo (fixes #430)
+     2019-12-05 0e3707d Yauhen Kirylau feat(install cli, build): --devel should follow -u/-uu behavior on downgrade policy (fixes #358)
+     2019-12-05 e13c0ec actionless fix(install cli: install prompt): correctly handle next command after `v`
+     2019-12-03 a828bed actionless feat(install info fetcher: get aur pkgs info): don't log what non-found package is ignored
+     2019-11-28 c264873 Florian Knodt Keep proxy in environment when using systemd-run (#348)
+     2019-11-27 1866d7e actionless feat: --keepbuilddeps flag and config option (fixes #370)
+     2019-11-26 6f96fc3 Jason doc: Amend various typos (#426)
+     2019-11-08 a5040fc Heimen Stoffels Updated Dutch translation (#417)
+     2019-10-27 e53cbb5 Bundy01 fix(locale): fr,es (#414)
+     2019-10-26 27d47fd Bundy01 chore(locale): update fr, es (#413)
+     2019-10-22 f3cafc9 Felix Yan doc: fix typos in README (#412)
+     2019-10-21 605049e actionless fix(core: sudo_loop): revert back to `sudo -v` as it's fixed upstream (re: #408)
