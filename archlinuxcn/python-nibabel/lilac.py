@@ -2,8 +2,6 @@
 
 from lilaclib import *
 
-makepkg_args = ['--nocheck']
-
 def pre_build():
   update_pkgver_and_pkgrel(_G.newver.lstrip('v'))
 

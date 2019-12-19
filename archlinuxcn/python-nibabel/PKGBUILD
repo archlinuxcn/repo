@@ -41,7 +41,7 @@ build() {
 check() {
   cd "${srcdir}/${_pkgname}"
   export NIPY_EXTRA_TESTS=slow
-  nosetests nibabel
+  nosetests -e test_fallback_version nibabel
 }
 
 package() {
