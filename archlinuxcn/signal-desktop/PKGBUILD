@@ -9,7 +9,7 @@
 pkgname=signal-desktop
 _pkgname=Signal-Desktop
 pkgver=1.29.0
-pkgrel=3
+pkgrel=4
 pkgdesc='Electron application that links with Signal on mobile'
 arch=(x86_64)
 url=https://signal.org
@@ -49,9 +49,9 @@ prepare() {
   # Have SQLCipher dynamically link from OpenSSL
   # See https://github.com/signalapp/Signal-Desktop/issues/2634
   patch -Np0 < "../openssl-linking.patch"
-  }
+}
 
-  build() {
+build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
 
   # Gruntfile expects Git commit information which we don't have in a tarball download
