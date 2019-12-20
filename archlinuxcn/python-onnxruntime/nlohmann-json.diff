@@ -1,0 +1,11 @@
+--- a/onnxruntime/core/session/inference_session_utils.h	2019-12-20 15:13:30.265861841 +0800
++++ b/onnxruntime/core/session/inference_session_utils.h	2019-12-20 15:13:22.132528563 +0800
+@@ -6,7 +6,7 @@
+ #include "core/session/inference_session.h"
+ #include "core/framework/session_options.h"
+ #include "core/common/common.h"
+-#include "single_include/nlohmann/json.hpp"
++#include <nlohmann/json.hpp>
+ 
+ using json = nlohmann::json;
+ 

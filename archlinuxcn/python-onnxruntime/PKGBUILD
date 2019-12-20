@@ -2,14 +2,14 @@
 
 pkgbase=python-onnxruntime
 pkgname=(python-onnxruntime python-onnxruntime-cuda)
-pkgver=1.0.0
+pkgver=1.1.0
 pkgdesc='Cross-platform, high performance scoring engine for ML models'
-pkgrel=5
+pkgrel=1
 arch=(x86_64)
 url='https://github.com/microsoft/onnxruntime'
 license=(MIT)
 depends=(protobuf re2 python-numpy)
-makedepends=(git cmake cuda cudnn gtest gmock pybind11 python-setuptools cub)
+makedepends=(git cmake cuda cudnn gtest gmock pybind11 python-setuptools cub nlohmann-json)
 # not de-vendored libraries
 # eigen: API changes a lot since extra/eigen 3.3.7 to the commit onnxruntime uses
 # onnx: onnxruntime requires headers, which are not installed in python-onnx
@@ -19,14 +19,16 @@ source=("git+https://github.com/microsoft/onnxruntime#tag=v$pkgver"
         "git+https://github.com/google/gemmlowp.git"
         "git+https://github.com/google/nsync.git"
         "git+https://github.com/onnx/onnx.git"
-        build-fixes.patch)
+        build-fixes.patch
+        nlohmann-json.diff)
 sha512sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
-            'da8e27ff0011fb207ee8a6f8675160eb85cb8711f01050fa7454234242af141951cb5bba52fa50b98cf8567b8faa973565dfef37f4daa2219a42cf26e03c86b5')
+            'da8e27ff0011fb207ee8a6f8675160eb85cb8711f01050fa7454234242af141951cb5bba52fa50b98cf8567b8faa973565dfef37f4daa2219a42cf26e03c86b5'
+            '1c70cf6ae50e1aba97e4eec3da40b076c4cf1e6a48a92d189045fe700d71bfbcbef937183f917e6c37f4271ce39fef68d9d01e9630f3f928a0bb35df248f63a4')
 
 prepare() {
   cd onnxruntime
@@ -35,6 +37,7 @@ prepare() {
   rm -v onnxruntime/core/util/protobuf_parsing_utils.{h,cc}
   echo "#include <google/protobuf/io/zero_copy_stream_impl.h>" >> onnxruntime/core/util/protobuf_parsing_utils.h
   patch -Np1 -i ../build-fixes.patch
+  patch -Np1 -i ../nlohmann-json.diff
 
   git submodule init
   for mod in date eigen gemmlowp nsync onnx ; do
