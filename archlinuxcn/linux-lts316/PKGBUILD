@@ -6,7 +6,7 @@
 set -u
 pkgbase="linux-lts316"
 _srcname="linux-3.16"
-pkgver="3.16.78"
+pkgver="3.16.80"
 pkgrel='1'
 arch=('i686' 'x86_64')
 url="https://www.kernel.org/"
@@ -28,10 +28,20 @@ source=(
   '0001-binutils.2.31.max-page-size.patch' # http://lists.gnu.org/archive/html/bug-binutils/2018-03/msg00193.html
   'update.sh'
 )
+md5sums=('5c569ed649a0c9711879f333e90c5386'
+         '0d58584156a25f641304ed3f6c1f48ed'
+         '5c85a1cef25029a8eb87d0edeec0cb04'
+         'f45197ec50bb5f7a85991f6e99ad49c6'
+         '90cd68710e3064d9b65f5549570f7821'
+         'eb14dcfd80c00852ef81ded6e826826a'
+         'df7fceae6ee5d7e7be7b60ecd7f6bb35'
+         'faaee4c0db3a87bb45aa4e964727f308'
+         '07dc499a909a3bb63fc3fdc0d0652e64'
+         'e6a1be64b190d846648d671c012d6dd3')
 sha256sums=('4813ad7927a7d92e5339a873ab16201b242b2748934f12cb5df9ba2cfe1d77a0'
-            '391f47c81e9ba1fc29c52117b5b80ef0524f93dd34a58db490046a6b836604f3'
+            'dd5812009daf8630517e2323640dc796323b27d719521c60532fd7a3cdfbdac7'
             '3bce3e9adce8ae3f826eebab75e9784ca92a914e526ae352de61c1da93aab8d3'
-            'b57591a8b9fed0f63d2ac9c8bdb288e888c6d4ec7bee9ffd3ad3e7bd6ac08b55'
+            '328539797005cb43362b75ca9965791a1ed34525101c286e4fb49694faa40e4c'
             '834bd254b56ab71d73f59b3221f056c72f559553c04718e350ab2a3e2991afe0'
             'f0d90e756f14533ee67afda280500511a62465b4f76adcc5effa95a40045179c'
             '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99'
