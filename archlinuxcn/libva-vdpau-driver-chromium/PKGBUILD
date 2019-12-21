@@ -3,7 +3,7 @@
 
 pkgname=libva-vdpau-driver-chromium
 pkgver=0.7.4
-pkgrel=5
+pkgrel=6
 pkgdesc="VDPAU backend for VA API. (special version for chromium)"
 arch=('x86_64')
 url='http://freedesktop.org/wiki/Software/vaapi'
@@ -12,7 +12,9 @@ depends=('libva'
          'libvdpau'
          'libgl'
          )
-makedepends=('mesa')
+makedepends=('mesa'
+             'xorgproto'
+             )
 replaces=('vdpau-video')
 provides=('libva-vdpau-driver')
 conflicts=('libva-vdpau-driver')
