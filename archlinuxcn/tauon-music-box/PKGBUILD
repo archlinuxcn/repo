@@ -1,6 +1,6 @@
 # Maintainer: Taiko2k <captain dot gxj at gmail dot com>
 pkgname='tauon-music-box'
-pkgver=5.1.2
+pkgver=5.1.4
 pkgrel=1
 pkgdesc='A streamlined music player that uses BASS'
 arch=('x86_64')
@@ -23,7 +23,7 @@ optdepends=('ffmpeg: File transcoding'
 
 source=("${url}/releases/download/v${pkgver}/Tauon.Music.Box.v${pkgver}.Linux.zip")
 
-sha256sums=('df36e28c0c282dc8e634719dbdfba82e743bd527294e3a3b0ccc76919b2fa287')
+sha256sums=('b26026077845bc0d355a9eefe8a0bdb79f566b15eaaa1bc45b0abfc461ca5319')
 
 package() {
   install -dm755 "$pkgdir/opt/"
