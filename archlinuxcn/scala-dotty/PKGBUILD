@@ -2,17 +2,18 @@
 # Contributor: Jendrik Wenke <jendrikwenke+aur at gmail dot com>
 
 pkgname=scala-dotty
-_reltag=0.20.0-RC1
+_reltag=0.21.0-RC1
 pkgver=${_reltag//-/}
-pkgrel=1
+pkgrel=2
 pkgdesc='Research compiler that will become Scala 3'
 arch=('any')
 url='http://dotty.epfl.ch'
 license=('BSD')
 depends=('java-environment>=8' 'java-environment<=11')
 source=("https://github.com/lampepfl/dotty/releases/download/${_reltag}/dotty-${_reltag}.tar.gz")
-sha1sums=('52f2014cd57b539a821b73abc6a1a1011c1ce35d')
-sha256sums=('86a6d62614e250dacd9b46d32e2b5765a45956502a73f64c28062e26461d1a23')
+sha1sums=('86dcaf5b4bd887b28b27990f3a0ea9ff2c521934')
+sha256sums=('dbe903fab62ca39e1308fbec95f01d1a2620898a2d93ad27f3e1de86240cc081')
+sha512sums=('163172b0b1996a067edb0003e5d3074c0965d6c097e247c9590a1bf0e741903af4a1199bff39ca49458c841810ffaa490997bf0f4544176b788f998195ae19b8')
 
 package() {
        install -d "${pkgdir}/usr/bin" "${pkgdir}/usr/share/scala-dotty/bin"
