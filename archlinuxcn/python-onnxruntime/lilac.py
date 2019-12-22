@@ -11,5 +11,4 @@ def pre_build():
 
 def post_build():
     git_pkgbuild_commit()
-    if _G.newver != _G.oldver:
-        update_aur_repo()
+    update_aur_repo()
