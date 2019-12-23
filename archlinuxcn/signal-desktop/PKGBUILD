@@ -1,58 +1,55 @@
-# Maintainer: David Birks <david@tellus.space>
-# Maintainer: Jake <aur@ja-ke.tech>
-# Contributor: Jonas Heinrich <onny@project-insanity.org>
-# Contributor: Alda <alda@leetchee.fr>
-# Contributor: mrxx <mrxx at cyberhome dot at>
-# Contributor: Jonhoo <jon at thesquareplanet.com>
-# Contributor: torvic9 <vic999 at mailbox.org>
+# Maintainer: Jean Lucas <jean@4ray.co>
 
 pkgname=signal-desktop
 _pkgname=Signal-Desktop
-pkgver=1.29.0
-pkgrel=5
+pkgver=1.29.3
+pkgrel=1
 pkgdesc='Electron application that links with Signal on mobile'
 arch=(x86_64)
 url=https://signal.org
 license=(GPL3)
 depends=(electron)
-makedepends=(yarn git python2 python npm 'nodejs>=12.4.0')
+makedepends=(
+  yarn
+  git
+  python2
+  'nodejs>=12.4.0'
+  npm
+  python
+)
 provides=(signal)
 replaces=(signal)
-
 source=(
-  ${pkgname}-${pkgver}.tar.gz::https://github.com/signalapp/${_pkgname}/archive/v${pkgver}.tar.gz
-  ${pkgname}.desktop
-  ${pkgname}.sh
+  $pkgname-$pkgver.tar.gz::https://github.com/signalapp/$_pkgname/archive/v$pkgver.tar.gz
+  $pkgname.desktop
   openssl-linking.patch
 )
-
-sha512sums=('2a0923762574906e78029b0a7db0fe86559f64f42e985aac9d2cc6e1a8a65ab8cbeb0f400f5c5b7ba9e508e0fa160386961507fe30ab7f9c472c4f7019ddaa0e'
-            'a264bfc7a4a7aac747daa588a2acbf1eddfd201bc795f0fbc18460a9b25f4460f364124e227a527fec22631cd84bc9e190f9f4978069e9c119eb556b9ff2d327'
-            '0c58e02b748656ac05f97f7021c1355d31689d384490801c753db013a8693de3acf032d29ca5c1e362957f1f405366b6fd6e8d5ce98a45d0dec3d2ba734ca6cc'
+sha512sums=('99c7733f563b0a81061e6c12368d389ca4907c167c31a6b5c96d321d7c4e5f78a5abb83f8d64805d60b43dae4142e34d7d959e1904a604e5e8c7ba1c87326c2e'
+            'c5ec0bf524e527ecf94207ef6aa1f2671346e115ec15de6d063cde0960151813752a1814e003705fc1a99d4e2eae1b3ca4d03432a50790957186e240527cc361'
             '2c10d4cc6c0b9ca650e786c1e677f22619a78c93465f27fc4cf4831f1cfe771f3b9885a416e381a9e14c3aea5d88cb3545264046188db72d54b8567266811e51')
 
 prepare() {
-  cd "${srcdir}/${_pkgname}-${pkgver}"
+  cd $_pkgname-$pkgver
 
   # Fix SpellChecker build with imminent Node 13
   # See https://github.com/atom/node-spellchecker/issues/127
-  sed -r 's#("spellchecker": ").*"#\1https://github.com/atom/node-spellchecker/archive/613ff91dd2d9a5ee0e86be8a3682beecc4e94887.tar.gz"#' -i "package.json"
+  sed -r 's#("spellchecker": ").*"#\1https://github.com/atom/node-spellchecker/archive/613ff91dd2d9a5ee0e86be8a3682beecc4e94887.tar.gz"#' -i package.json
 
   # Set system Electron version for ABI compatibility
-  sed -r 's#("electron": ").*"#\1'$(cat /usr/lib/electron/version)'"#' -i "package.json"
+  sed -r 's#("electron": ").*"#\1'$(cat /usr/lib/electron/version)'"#' -i package.json
 
   # Allow higher Node versions
-  sed 's#"node": "#&>=#' -i "package.json"
+  sed 's#"node": "#&>=#' -i package.json
 
   yarn install
 
   # Have SQLCipher dynamically link from OpenSSL
   # See https://github.com/signalapp/Signal-Desktop/issues/2634
-  patch -Np0 < "../openssl-linking.patch"
+  patch -Np0 < ../openssl-linking.patch
 }
 
 build() {
-  cd "${srcdir}/${_pkgname}-${pkgver}"
+  cd $_pkgname-$pkgver
 
   # Gruntfile expects Git commit information which we don't have in a tarball download
   # See https://github.com/signalapp/Signal-Desktop/issues/2376
@@ -62,17 +59,20 @@ build() {
 }
 
 package() {
-  cd "${srcdir}/${_pkgname}-${pkgver}"
+  cd $_pkgname-$pkgver
 
-  install -d "${pkgdir}/usr/lib"
-  cp -a "release/linux-unpacked/resources" "${pkgdir}/usr/lib/${pkgname}"
+  install -d "$pkgdir"/usr/{lib,bin}
+  cp -a release/linux-unpacked/resources "$pkgdir"/usr/lib/$pkgname
+  cat << EOF > "$pkgdir"/usr/bin/$pkgname
+#!/bin/sh
 
+NODE_ENV=production electron /usr/lib/$pkgname/app.asar "\$@"
+EOF
+  chmod +x "$pkgdir"/usr/bin/$pkgname
+
+  install -Dm 644 ../$pkgname.desktop -t "$pkgdir"/usr/share/applications
   for i in 16 24 32 48 64 128 256 512 1024; do
-    install -Dm 644 build/icons/png/${i}* "${pkgdir}/usr/share/icons/hicolor/${i}x${i}/apps/${pkgname}.png"
+    install -Dm 644 build/icons/png/${i}x${i}.png \
+      "$pkgdir"/usr/share/icons/hicolor/${i}x${i}/apps/$pkgname.png
   done
-
-  install -Dm 755 "${srcdir}/${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}"
-  install -Dm 644 "${srcdir}"/${pkgname}.desktop "${pkgdir}"/usr/share/applications/${pkgname}.desktop
 }
-
-# vim:set ts=2 sw=2 et:
