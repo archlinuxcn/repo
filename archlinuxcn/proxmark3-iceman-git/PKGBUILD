@@ -1,13 +1,13 @@
 # Maintainer: edward-p <edward At edward-p Dot xyz>
 
 pkgname=proxmark3-iceman-git
-pkgver=7722.203a70d5
+pkgver=7732.66426cee
 pkgrel=1
 pkgdesc='RRG / Iceman repo - Proxmark3 RDV4.0 and other Proxmark3 platforms.'
 arch=('x86_64')
 url='https://github.com/RfidResearchGroup/proxmark3'
 license=('GPL2')
-depends=('perl' 'python')
+depends=('perl' 'python' 'libsndfile')
 makedepends=('git' 'arm-none-eabi-gcc' 'arm-none-eabi-newlib')
 options=(!buildflags)
 provides=('proxmark3' 'proxmark3-iceman')
