@@ -2,8 +2,8 @@
 # Contributor: Sven-Hendrik Haase <sh@lutzhaase.com>
 
 pkgname=pgcli
-pkgver=2.1.1
-pkgrel=4
+pkgver=2.2.0
+pkgrel=1
 pkgdesc="a command line interface for Postgres with auto-completion and syntax highlighting"
 url="http://pgcli.com/"
 arch=(any)
@@ -13,10 +13,11 @@ makedepends=('python-distribute')
 source=($pkgname-$pkgver.zip::https://github.com/dbcli/pgcli/archive/v$pkgver.zip)
 provides=('pgcli')
 conflicts=('pgcli-git')
-md5sums=('ab4e235244f6d28f4bb8a5cef09ddb99')
+md5sums=('54be939f8664d5ba8687be2f3b698e9b')
 
 package() {
     cd "$srcdir/pgcli-${pkgver}"
+    sed -i -e "s/prompt_toolkit>=2.0.6,<3.0.0/prompt_toolkit>=2.0.6/g" setup.py
     python setup.py install --root="$pkgdir/" --optimize=1
     mkdir -p "$pkgdir/usr/share/licenses/$pkgname"
     cp LICENSE.txt "$_/LICENSE"
