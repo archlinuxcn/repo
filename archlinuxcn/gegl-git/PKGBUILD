@@ -35,11 +35,6 @@ build() {
   ninja -C "${srcdir}/build"
 }
 
-check() {
-  cd ${_pkgname}
-  meson test -C "${srcdir}/build"
-}
-
 package() {
   cd ${_pkgname}
   DESTDIR="${pkgdir}" ninja -C "${srcdir}/build" install
