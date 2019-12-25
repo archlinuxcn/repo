@@ -1,7 +1,7 @@
 # Maintainer: Zhang Hai <dreaming.in.code.zh@gmail.com>
 
 pkgname=android-emulator
-pkgver=29.3.0
+pkgver=29.3.2
 pkgrel=1
 pkgdesc='Google Android Emulator'
 arch=('x86_64')
@@ -10,14 +10,14 @@ license=('custom')
 depends=('libpulse' 'libx11' 'libxcb' 'libxdamage' 'libxext'
          'libxfixes' 'ncurses5-compat-libs' 'zlib')
 install="${pkgname}.install"
-source=('https://dl.google.com/android/repository/emulator-linux-6061023.zip'
+source=('https://dl.google.com/android/repository/emulator-linux-6083285.zip'
         "${pkgname}.sh"
         "${pkgname}.csh"
         'package.xml')
-sha1sums=('695266452db37235ed53a9a665e63b71562f2989'
+sha1sums=('47d957c0744c2b55c9adf8532a237f2c90ed3059'
           '4537a7ce30bedf87cedafc2020822219ad58310d'
           '2fb371b5774b67143f0610dfbec4963a4e2f11cc'
-          '9ffb9de63000ae34a7a7e0f6f3065f59e0bf2e16')
+          '91e512374e81f81272635a733d871b3cb209c541')
 
 package() {
 
