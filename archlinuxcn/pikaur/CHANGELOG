@@ -1510,3 +1510,14 @@ Sat Dec 21 11:43:57 2019 +0100
     
      2019-12-21 94c9abb actionless Revert "fix(core: sudo_loop): revert back to `sudo -v` as it's fixed upstream (re: #408)"
      2019-12-20 909eb69 actionless chore(news): change colors for easier discoverability of the news (fixes #419)
+
+
+Wed Dec 25 05:57:40 2019 +0100
+-------------------------------------------------
+1.5.7           Release 1.5.7
+    
+    Notable changes:
+     2019-12-24 27fb1de actionless refactor,fix(news): clean-up the code and also handle ValueError (corrupted date file) (fixes #435)
+     2019-12-23 1f20d6c actionless fix(install_cli): don't check package for upgradeability if it's not already installed
+     2019-12-22 54f5dec actionless fix(core: dynamic_users): apply workaround for broken 'SuccessExitStatus= SuccessExitStatus=0' in systemd (fixes #434)
+     2019-12-22 cc607d6 actionless fix(core: dynamic_users): use --pty so makepkg will be able to handle Ctrl+C (ref #434)
