@@ -2,7 +2,7 @@
 
 pkgname=python-btrfs-heatmap
 pkgver=8
-pkgrel=1
+pkgrel=2
 pkgdesc="Python Btrfs HeatMap"
 arch=('any')
 url="https://github.com/knorrie/btrfs-heatmap"
@@ -15,3 +15,4 @@ package() {
     cd "$srcdir/${pkgname}/"
     install -Dm755 ./heatmap.py "$pkgdir/usr/bin/btrfs-heatmap"
 }
+makedepends=('git')
