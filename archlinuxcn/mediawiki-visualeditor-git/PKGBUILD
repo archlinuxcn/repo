@@ -1,0 +1,33 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+
+pkgname=mediawiki-visualeditor-git
+pkgver=20191215.REL1_33
+pkgrel=1
+_basever=1.33
+pkgdesc="MediaWiki VisualEditor extension"
+arch=('any')
+url="https://www.mediawiki.org/wiki/Extension:VisualEditor"
+license=("MIT")
+depends=('php' "mediawiki>=$_mwrel" 'parsoid')
+source=(git+https://github.com/wikimedia/mediawiki-extensions-VisualEditor#branch=REL${_basever/./_}
+        git+https://gerrit.wikimedia.org/r/VisualEditor/VisualEditor.git)
+_gitname=mediawiki-extensions-VisualEditor
+sha256sums=('SKIP' 'SKIP')
+
+pkgver() {
+  cd "$srcdir/$_gitname"
+  echo $(git log -1 --pretty='%cd' --date=short | tr -d '-').REL${_basever/./_}
+}
+
+prepare() {
+  cd "$srcdir/$_gitname"
+  git submodule init
+  git config submodule.lib/ve.url "$srcdir/VisualEditor"
+  git submodule update
+}
+
+package() {
+  cd "$srcdir/$_gitname"
+  install -dm0755 "$pkgdir"/usr/share/webapps/mediawiki/extensions/VisualEditor
+  tar --exclude-vcs --exclude=.gitmodules -c . | tar x -C "$pkgdir"/usr/share/webapps/mediawiki/extensions/VisualEditor
+}
