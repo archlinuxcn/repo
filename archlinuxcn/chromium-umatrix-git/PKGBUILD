@@ -5,7 +5,7 @@
 
 gitname=uMatrix
 pkgname=chromium-umatrix-git
-pkgver=1.4.1b2.3.g5c06fed
+pkgver=1.4.1b3
 pkgrel=1
 pkgdesc="Point and click matrix to filter net requests according to source, destination and type"
 arch=('any')
