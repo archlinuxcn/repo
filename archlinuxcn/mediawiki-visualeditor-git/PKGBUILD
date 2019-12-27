@@ -8,6 +8,7 @@ pkgdesc="MediaWiki VisualEditor extension"
 arch=('any')
 url="https://www.mediawiki.org/wiki/Extension:VisualEditor"
 license=("MIT")
+makedepends=('git')
 depends=('php' "mediawiki>=$_mwrel" 'parsoid')
 source=(git+https://github.com/wikimedia/mediawiki-extensions-VisualEditor#branch=REL${_basever/./_}
         git+https://gerrit.wikimedia.org/r/VisualEditor/VisualEditor.git)
