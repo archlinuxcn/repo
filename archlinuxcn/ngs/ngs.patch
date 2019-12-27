@@ -1,0 +1,65 @@
+diff -aur ngs-1.2.5.pristine/ngs-java/Makefile.java ngs-1.2.5.new/ngs-java/Makefile.java
+--- ngs-1.2.5.pristine/ngs-java/Makefile.java	2016-07-15 18:45:56.228525816 +0000
++++ ngs-1.2.5.new/ngs-java/Makefile.java	2016-07-15 18:46:43.595193491 +0000
+@@ -59,12 +59,13 @@
+ JAR_TARGET = $(INST_JARDIR)/ngs-java.jar
+ DOC_TARGET = $(INST_SHAREDIR)/doc/
+ 
+-ifeq (linux, $(OS))
+-    ifeq (0, $(shell id -u))
+-        LINUX_ROOT = true
+-        DOC_TARGET = $(ROOT)/usr/local/share/doc/ngs/
+-    endif
+-endif
++#ifeq (linux, $(OS))
++#    ifeq (0, $(shell id -u))
++#        LINUX_ROOT = true
++#        DOC_TARGET = $(ROOT)/usr/local/share/doc/ngs/
++#    endif
++#endif
++LINUX_ROOT = false
+ 
+ install: $(TARGETS) $(INST_JARDIR) $(INST_JARDIR)/ngs-java.jar.$(VERSION) copydocs copyexamples 
+ ifeq (true, $(LINUX_ROOT))
+diff -aur ngs-1.2.5.pristine/ngs-python/Makefile.python ngs-1.2.5.new/ngs-python/Makefile.python
+--- ngs-1.2.5.pristine/ngs-python/Makefile.python	2016-07-15 18:45:56.235192482 +0000
++++ ngs-1.2.5.new/ngs-python/Makefile.python	2016-07-15 18:47:44.511861457 +0000
+@@ -56,7 +56,7 @@
+ install: $(TARGETS) $(INST_PYTHONDIR) copyexamples
+ ifeq (0, $(shell id -u))
+ 	@ echo "Installing ngs-python package..."
+-	@ python setup.py -q install
++	@ python setup.py -q install --root="$pkgdir/"
+  
+ else
+ 	@ echo "Installing ngs-python package..."
+@@ -78,7 +78,7 @@
+ install: $(TARGETS) $(INST_PYTHONDIR) copyexamples
+ ifeq (0, $(shell id -u))
+ 	@ echo "Installing ngs package..."
+-	@ python setup.py -q install
++	@ python setup.py -q install --root="$pkgdir/"
+    
+ else
+ 	@ echo "Installing ngs package..."
+diff -aur ngs-1.2.5.pristine/ngs-sdk/Makefile.install ngs-1.2.5.new/ngs-sdk/Makefile.install
+--- ngs-1.2.5.pristine/ngs-sdk/Makefile.install	2016-07-15 18:45:56.248525816 +0000
++++ ngs-1.2.5.new/ngs-sdk/Makefile.install	2016-07-15 18:48:18.855195523 +0000
+@@ -63,11 +63,12 @@
+ INCLUDE_SYMLINK = $(ROOT)/usr/include/ngs
+ PROFILE_FILE = $(ROOT)/etc/profile.d/ngs-sdk
+ 
+-ifeq (linux, $(OS))
+-    ifeq (0, $(shell id -u))
+-        LINUX_ROOT = true
+-    endif
+-endif
++#ifeq (linux, $(OS))
++#    ifeq (0, $(shell id -u))
++#        LINUX_ROOT = true
++#    endif
++#endif
++LINUX_ROOT = false
+ 
+ install: copylibs copyincludes copyexamples
+ ifeq (true, $(LINUX_ROOT))
