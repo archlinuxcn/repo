@@ -8,7 +8,7 @@ pkgrel=3
 pkgdesc="Testing Release -- A cloud server to store your files centrally on a hardware controlled by you"
 arch=('any')
 url="https://nextcloud.com"
-provides=('nextcloud')
+provides=("nextcloud=$pkgver")
 conflicts=('nextcloud' 'owncloud')
 license=('AGPL')
 depends=('php-gd')
