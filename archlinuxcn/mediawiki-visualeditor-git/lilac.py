@@ -10,7 +10,7 @@ def pre_build():
 
   for line in edit_file('lilac.yaml'):
     if 'branch: REL' in line:
-      line = f'{line.split(":")[0]} REL{mwver.replace(".", "_")}'
+      line = f'{line.split(":")[0]}: REL{mwver.replace(".", "_")}'
     print(line)
 
   vcs_update()
