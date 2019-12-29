@@ -1,0 +1,9 @@
+[Unit]
+Description=Nextcloud; run cron.php periodically
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=5min
+
+[Install]
+WantedBy=timers.target

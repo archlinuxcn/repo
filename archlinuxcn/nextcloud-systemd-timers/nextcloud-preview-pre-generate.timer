@@ -1,0 +1,9 @@
+[Unit]
+Description=Nextcloud; generate previews for new files only periodically
+
+[Timer]
+OnBootSec=10min
+OnUnitActiveSec=15min
+
+[Install]
+WantedBy=timers.target

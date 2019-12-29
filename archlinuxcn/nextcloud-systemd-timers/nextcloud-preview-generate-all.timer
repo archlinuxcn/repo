@@ -1,0 +1,10 @@
+[Unit]
+Description=Nextcloud; generate previews for all files weekly
+
+[Timer]
+OnBootSec=20min
+OnCalendar=weekly
+Persistent=True
+
+[Install]
+WantedBy=timers.target
