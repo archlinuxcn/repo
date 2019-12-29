@@ -1,0 +1,39 @@
+# Maintainer: Chih-Hsuan Yen <yan12125@gmail.com>
+
+pkgname=pid_children-git
+pkgver=r10.749d59c
+pkgrel=1
+pkgdesc='A simple program outputs descendant process ids for each pid given on the command line'
+arch=(x86_64)
+depends=(gcc-libs)
+makedepends=(git rust)
+conflicts=(pid_children)
+provides=("pid_children=$pkgver")
+url='https://github.com/lilydjwg/pid_children'
+license=(BSD)
+source=(git+https://github.com/lilydjwg/pid_children.git
+        sysusers.conf tmpfiles.conf)
+sha256sums=('SKIP'
+            'e6b1c3f74d24fd83bf1c806680c3b990c2c74a11a8e4d7d632a2240e87ef1c2c'
+            'b7ba7779754e601a15df07caa0ea43e669d05d20f42bd98e997a089d4b5a7d83')
+
+pkgver() {
+  cd pid_children
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+  cd pid_children
+  cargo build --release --locked
+}
+
+package() {
+  cd pid_children
+  # kill_children should be owned by root:pkg, but the pkg group does not exist
+  # yet at this point. The owner/group is later set by systemd-tmpfiles
+  install -Dm4754 target/release/kill_children -t "$pkgdir"/usr/bin
+  install -Dm755 target/release/pid_children -t "$pkgdir"/usr/bin
+  install -Dm644 ../sysusers.conf "$pkgdir"/usr/lib/sysusers.d/pid_children.conf
+  install -Dm644 ../tmpfiles.conf "$pkgdir"/usr/lib/tmpfiles.d/pid_children.conf
+  install -Dm644 LICENSE -t "$pkgdir"/usr/share/licenses/$pkgname
+}
