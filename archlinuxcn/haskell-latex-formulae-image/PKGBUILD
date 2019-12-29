@@ -1,0 +1,46 @@
+pkgname=haskell-latex-formulae-image
+_hkgname=latex-formulae-image
+pkgver=0.1.1.4
+pkgrel=4
+pkgdesc="A library for rendering LaTeX formulae as images using an actual LaTeX installation"
+url="https://hackage.haskell.org/package/latex-formulae-hakyll"
+license=('BSD')
+arch=('x86_64' 'i686' 'aarch64')
+depends=('ghc-libs'
+         'haskell-errors'
+         'haskell-transformers-compat'
+         'haskell-transformers-base'
+         'haskell-juicypixels'
+	 'haskell-temporary'
+         'imagemagick')
+makedepends=('ghc')
+source=(${pkgname}-${pkgver}.tar.gz::"https://hackage.haskell.org/packages/archive/${_hkgname}/${pkgver}/${_hkgname}-${pkgver}.tar.gz"
+        cabal.patch)
+sha256sums=('60b706f55f6cbfc8ef73eecf089a1d59ff939ac8a2c8f208af8f96211a067968'
+            '1a791e369c47f6f438c9db40151ab65a69e22af801c07f8645f82b86f0b6642b')
+
+prepare() {
+    cd ${_hkgname}-${pkgver}
+    patch --forward --strip=1 --input="${srcdir}/cabal.patch"
+}
+
+build() {
+    cd ${_hkgname}-${pkgver}
+    runghc Setup.hs configure -O --enable-shared --enable-executable-dynamic --disable-library-vanilla \
+    --prefix=/usr --docdir="/usr/share/doc/${pkgname}" \
+    --dynlibdir=/usr/lib --libsubdir=\$compiler/site-local/\$pkgid
+    runghc Setup.hs build
+    runghc Setup.hs register --gen-script
+    runghc Setup.hs unregister --gen-script
+    sed -i -r -e "s|ghc-pkg.*update[^ ]* |&'--force' |" register.sh
+    sed -i -r -e "s|ghc-pkg.*unregister[^ ]* |&'--force' |" unregister.sh
+}
+
+package() {
+    cd ${_hkgname}-${pkgver}
+    runghc Setup.hs copy --destdir="${pkgdir}"
+    mkdir -p ${pkgdir}/usr/share/licenses/${pkgname}
+    mv "${pkgdir}/usr/share/doc/${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}"
+    install -D -m744 register.sh   "${pkgdir}/usr/share/haskell/register/${pkgname}.sh"
+    install -D -m744 unregister.sh "${pkgdir}/usr/share/haskell/unregister/${pkgname}.sh"
+}
