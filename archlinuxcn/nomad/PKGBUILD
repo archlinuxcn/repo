@@ -2,9 +2,9 @@
 
 pkgname=nomad
 pkgver=0.10.2
-pkgrel=1
+pkgrel=2
 pkgdesc="A Distributed, Highly Available, Datacenter-Aware Scheduler"
-arch=('x86_64')
+arch=('x86_64' 'aarch64' 'armv7h' 'armv7l')
 url="https://nomadproject.io/"
 license=('MPL2')
 #depends=('ethtool' 'lxc')
@@ -32,12 +32,6 @@ prepare() {
 	export GOPATH="$srcdir"
 	export PATH="$GOPATH/bin:$PATH"
 
-	if [ $CARCH == "x86_64" ]; then
-		export GOARCH=amd64
-	else
-		export GOARCH=386
-	fi
-
 	go get golang.org/x/sys/cpu
 
 	make deps lint-deps
@@ -48,12 +42,6 @@ build() {
 	cd src/github.com/hashicorp/nomad
 	export GOPATH="$srcdir"
 	export PATH="$GOPATH/bin:$PATH"
-
-	if [ $CARCH == "x86_64" ]; then
-		export GOARCH=amd64
-	else
-		export GOARCH=386
-	fi
 
 	CGO_ENABLED=1 \
 		go build -ldflags '-X main.GitCommit=""' \
