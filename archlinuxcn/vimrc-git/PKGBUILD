@@ -1,7 +1,7 @@
 # Maintainer:  edward-p <edward AT edward-p DOT xyz>
 
 pkgname=vimrc-git
-pkgver=r377.cb578907
+pkgver=r378.b56966e1
 pkgrel=1
 pkgdesc="The ultimate Vim configuration: vimrc"
 arch=('any')
