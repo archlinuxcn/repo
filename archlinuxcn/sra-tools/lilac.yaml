@@ -1,13 +1,12 @@
 maintainers:
   - github: farseerfc
 
-pre_build: aur_pre_build
-post_build: aur_post_build
-
 repo_depends:
   - ngs
   - ncbi-vdb
 
 update_on:
+  - github: ncbi/sra-tools
+    use_latest_release: true
   - aur: sra-tools
 
