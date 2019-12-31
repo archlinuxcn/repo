@@ -1,0 +1,31 @@
+diff --git a/latex-formulae-pandoc.cabal b/latex-formulae-pandoc.cabal
+index 743c06e..d16c25d 100644
+--- a/latex-formulae-pandoc.cabal
++++ b/latex-formulae-pandoc.cabal
+@@ -22,13 +22,14 @@ source-repository head
+ library
+   exposed-modules:     Image.LaTeX.Render.Pandoc
+   build-depends:       base >=4.7 && <5
+-                     , pandoc-types >= 1.12 && < 1.18 
++                     , pandoc-types >= 1.12 
+                      , latex-formulae-image >= 0.1 && < 0.2
+                      , JuicyPixels >= 3.2 && < 3.4
+                      , directory >= 1.2 && < 1.4
+                      , filepath >= 1.3 && < 1.5
+                      , base64-bytestring >= 1.0 && < 1.1
+                      , bytestring >= 0.10 && <0.11
++                     , text
+   hs-source-dirs:      src
+   ghc-options:         -Wall
+   default-language:    Haskell2010
+@@ -38,8 +39,9 @@ executable latex-formulae-filter
+   main-is:             Main.hs
+   ghc-options:         -Wall
+   build-depends:       base >=4.7 && <5, latex-formulae-pandoc
+-                     , pandoc-types >= 1.12 && < 1.18
++                     , pandoc-types >= 1.12
+                      , latex-formulae-image >= 0.1 && < 0.2
++                     , text
+   default-language:    Haskell2010
+    
+ 

@@ -1,0 +1,101 @@
+diff --git a/src/Image/LaTeX/Render/Pandoc.hs b/src/Image/LaTeX/Render/Pandoc.hs
+index 33473fe..f63ec33 100644
+--- a/src/Image/LaTeX/Render/Pandoc.hs
++++ b/src/Image/LaTeX/Render/Pandoc.hs
+@@ -1,4 +1,5 @@
+-{-# LANGUAGE LambdaCase #-}
++{-# LANGUAGE LambdaCase        #-}
++{-# LANGUAGE OverloadedStrings #-}
+ module Image.LaTeX.Render.Pandoc
+        ( -- * Data URIs
+          convertFormulaDataURI
+@@ -25,16 +26,17 @@ module Image.LaTeX.Render.Pandoc
+        , convertAllFormulaeFilesWith
+        ) where
+ 
+-import Text.Pandoc.Definition
+-import Text.Pandoc.Walk
+-import Image.LaTeX.Render
+-import Codec.Picture
+-import Control.Applicative
+-import Data.IORef
+-import System.FilePath
++import           Codec.Picture
++import           Control.Applicative
++import           Data.IORef
++import           Data.Text
++import           Image.LaTeX.Render
++import           System.FilePath
++import           Text.Pandoc.Definition
++import           Text.Pandoc.Walk
+ 
+ import qualified Data.ByteString.Base64.Lazy as B64
+-import qualified Data.ByteString.Lazy.Char8 as BS
++import qualified Data.ByteString.Lazy.Char8  as BS
+ 
+ dims :: Image a -> (Int,Int)
+ dims = liftA2 (,) imageWidth imageHeight
+@@ -51,7 +53,7 @@ dimensions (ImageYA16 i)   = dims i
+ dimensions _               = error "Unsupported image format somehow!"
+ 
+ 
+--- | All options pertaining to the actual display of formulae. 
++-- | All options pertaining to the actual display of formulae.
+ data PandocFormulaOptions = PandocFormulaOptions
+         { shrinkBy       :: ShrinkSize
+           -- ^ Denominator for all dimensions. Useful for displaying high DPI images in small sizes, for retina displays. Otherwise set to 1.
+@@ -96,16 +98,16 @@ convertFormulaDataURIWith
+      -- ^ Function that renders a formula, such as @imageForFormula defaultEnv@
+   -> PandocFormulaOptions -- ^ Formula display settings
+   -> Inline -> IO Inline
+-convertFormulaDataURIWith f o (Math t s) = f (formulaOptions o t) s >>= \case
++convertFormulaDataURIWith f o (Math t s) = f (formulaOptions o t) (unpack s) >>= \case
+    Left e -> return $ errorDisplay o e
+    Right (b,i) -> let
+        Right bs = encodeDynamicPng i
+        dataUri = "data:image/png;base64," ++ BS.unpack (B64.encode bs)
+        (ow,oh) = dimensions i
+        (w,h) = (ow `div` shrinkBy o, oh `div` shrinkBy o)
+-     in return $ RawInline (Format "html") $
++     in return $ RawInline (Format "html") $ pack $
+         "<img width="  ++ show w ++
+-            " alt=\"" ++ processAltString s ++ "\"" ++
++            " alt=\"" ++ (processAltString $ unpack s) ++ "\"" ++
+             " height=" ++ show h ++
+             " src=\""  ++ dataUri ++ "\"" ++
+             " class="  ++ (case t of InlineMath -> "inline-math"; _ -> "display-math") ++
+@@ -151,7 +153,7 @@ convertFormulaFilesWith
+   -> FilePath                     -- ^ Name of image directory where images will be stored
+   -> PandocFormulaOptions         -- ^ Formula display settings
+   -> Inline -> IO Inline
+-convertFormulaFilesWith f ns bn o (Math t s) = f (formulaOptions o t) s >>= \case
++convertFormulaFilesWith f ns bn o (Math t s) = f (formulaOptions o t) (unpack s) >>= \case
+    Left e -> return $ errorDisplay o e
+    Right (b,i) -> do
+      fn <- readIORef ns
+@@ -160,7 +162,7 @@ convertFormulaFilesWith f ns bn o (Math t s) = f (formulaOptions o t) s >>= \cas
+          (ow,oh) = dimensions i
+          (w,h) = (ow `div` shrinkBy o, oh `div` shrinkBy o)
+      _ <- writeDynamicPng uri i
+-     return $ RawInline (Format "html") $
++     return $ RawInline (Format "html") $ pack $
+         "<img width="  ++ show w ++
+             " height=" ++ show h ++
+             " src=\""  ++ uri ++ "\"" ++
+@@ -207,11 +209,11 @@ hideError = const $ Str blank
+ displayError :: RenderError -> Inline
+ displayError ImageIsEmpty           = pandocError [Str "The rendered image was empty"]
+ displayError CannotDetectBaseline   = pandocError [Str "Cannot detect baseline in rendered image"]
+-displayError (LaTeXFailure str)     = pandocError [Str "LaTeX failed:", LineBreak, Code nullAttr str]
+-displayError (DVIPSFailure str)     = pandocError [Str "DVIPS failed:", LineBreak, Code nullAttr str]
+-displayError (IMConvertFailure str) = pandocError [Str "convert failed:", LineBreak, Code nullAttr str]
+-displayError (ImageReadError str)   = pandocError [Str "Error reading image:", LineBreak, Code nullAttr str]
+-displayError (IOException e)        = pandocError [Str "IO Exception:", LineBreak, Code nullAttr $ show e]
++displayError (LaTeXFailure str)     = pandocError [Str "LaTeX failed:", LineBreak, Code nullAttr $ pack str]
++displayError (DVIPSFailure str)     = pandocError [Str "DVIPS failed:", LineBreak, Code nullAttr $ pack str]
++displayError (IMConvertFailure str) = pandocError [Str "convert failed:", LineBreak, Code nullAttr $ pack str]
++displayError (ImageReadError str)   = pandocError [Str "Error reading image:", LineBreak, Code nullAttr $ pack str]
++displayError (IOException e)        = pandocError [Str "IO Exception:", LineBreak, Code nullAttr $ pack $ show e]
+ 
+ pandocError :: [Inline] -> Inline
+ pandocError = Strong . (Emph [Str "Error:"] :)
