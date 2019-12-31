@@ -2,14 +2,14 @@
 _remotename=kpeoplevcard
 _pkgname=kpeople-vcard
 pkgname=$_pkgname-git
-pkgver=r36.d912814
+pkgver=r38.32d50a9
 pkgrel=1
 pkgdesc="KPeople VCard Support"
 arch=(x86_64)
 url="https://phabricator.kde.org/source/$_remotename/"
 license=("GPL")
 depends=(kpeople kcontacts)
-makedepends=(extra-cmake-modules)
+makedepends=('extra-cmake-modules' 'git')
 provides=($_pkgname)
 conflicts=($_pkgname)
 source=("git+git://anongit.kde.org/$_remotename")
