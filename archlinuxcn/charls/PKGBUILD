@@ -1,8 +1,8 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
 pkgname=charls
-pkgver=2.0.0
-pkgrel=5
+pkgver=2.1.0
+pkgrel=1
 pkgdesc='A C++ JPEG-LS library implementation'
 arch=('x86_64')
 url='https://github.com/team-charls/charls'
@@ -10,7 +10,7 @@ license=('BSD')
 depends=('gcc-libs')
 makedepends=('cmake')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/team-charls/charls/archive/${pkgver}.tar.gz")
-sha512sums=('0a2862fad6d65b941c81f5f838db1fdc6a4625887281ddbf27e21be9084f607d27c8a27d246d6252e08358b2ed4aa0c2b7407048ca559fb40e94313ca72487dd')
+sha512sums=('456539243d984ebe6afe1bbb7c9422e642cf0346d25d220126ad8a6d04e945c6c340ab3c2b73a7db4ec390ed6a52236e5c6e9ad6d14e8b78b701937810fb327d')
 
 build() {
   cd "${pkgname}-${pkgver}"
@@ -21,15 +21,10 @@ build() {
   make
 }
 
-check() {
-  cd "${pkgname}-${pkgver}"
-  ./charlstest -unittest -dontwait
-}
-
 package() {
   cd "${pkgname}-${pkgver}"
   make DESTDIR="${pkgdir}" install
-  install -D -m644 ${srcdir}/${pkgname}-${pkgver}/License.txt ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+  install -D -m644 "${srcdir}/${pkgname}-${pkgver}/LICENSE.md" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
 # vim:set ts=2 sw=2 et:
 
