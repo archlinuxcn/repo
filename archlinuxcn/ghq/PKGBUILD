@@ -2,7 +2,7 @@
 # Contributor: Kohei Suzuki <eagletmt@gmail.com>
 
 pkgname=ghq
-pkgver=0.17.0
+pkgver=0.99.0
 pkgrel=1
 pkgdesc="Remote repository management made easy"
 arch=('i686' 'x86_64')
@@ -12,6 +12,8 @@ depends=('glibc')
 makedepends=('go' 'git')
 optdepends=('zsh: ghq function for zsh')
 source=("ghq-${pkgver}.tar.gz::https://github.com/motemen/ghq/archive/v${pkgver}.tar.gz")
+
+sha512sums=('bff66e34b9e5e7f0ff1c94ba18041a66eb76d060220d9f5e3425373a554d990f6e59fca37a8f0f59d8fd3f183066b3e4add45aa5e2e1919360c090d70ee94e1a')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
@@ -31,11 +33,9 @@ check() {
 package() {
   cd "$srcdir/$pkgname-$pkgver"
   install -Dm 755 ghq "$pkgdir/usr/bin/ghq"
-  install -Dm 644 zsh/_ghq "$pkgdir/usr/share/zsh/site-functions/_ghq"
+  install -Dm 644 misc/zsh/_ghq "$pkgdir/usr/share/zsh/site-functions/_ghq"
   install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/ghq/LICENSE"
 }
 
+
 # vim: set et sw=2 sts=2:
-
-sha512sums=('56a850c27514b7b522dd50d9810e8e5410d81458cdcc828c48435ef4dda2ffee1328c6924af55fee11e7ecc82274f95b70bb8bcae45b4cb899b98b48a6c5ae5e')
-
