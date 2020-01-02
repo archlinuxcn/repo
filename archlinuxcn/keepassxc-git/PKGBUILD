@@ -10,7 +10,7 @@
 pkgname=keepassxc-git
 _gitname=keepassxc
 pkgver=2.5.1.r43.g2fab4d57
-pkgrel=1
+pkgrel=2
 pkgdesc="Cross-platform community-driven port of KeePass Password Safe"
 arch=('i686' 'x86_64')
 url="https://github.com/keepassxreboot/keepassxc"
@@ -21,6 +21,7 @@ depends=('qt5-base' 'qt5-x11extras' 'qt5-translations' 'qt5-imageformats'
          'libsodium' 'libgcrypt' 'argon2' 'zlib')
 install=keepassxc.install
 makedepends=('git' 'intltool' 'cmake' 'qt5-tools')
+provides=(org.freedesktop.secrets)
 conflicts=('keepassxc')
 replaces=('keepassx-http' 'keepassx-reboot-git')
 options=(!emptydirs)
