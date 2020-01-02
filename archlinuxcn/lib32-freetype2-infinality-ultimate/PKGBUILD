@@ -7,13 +7,14 @@
 # Contributor: Jan de Groot <jgc@archlinux.org>
 # Contributor: JIN Xiao-Yong <jinxiaoyong@gmail.com>
 # Contributor: bohoomil <@zoho.com>
+# Infinality Remix patches: Philip Deljanov <philip dot deljanov at gmail dot com>
 
 _pkgbasename=freetype2
 pkgname=lib32-$_pkgbasename-infinality-ultimate
-pkgver=2.9.1
-pkgrel=3
-_patchrel=2018.06.21
-pkgdesc="TrueType font rendering library with Infinality patches and custom settings by bohoomil (32-bit, infinality-bundle)."
+pkgver=2.10.1
+pkgrel=1
+_patchrel=2019.08.21
+pkgdesc="TrueType font rendering library with Infinality patches and custom settings by bohoomil with Infinality Remix patches (32-bit)."
 arch=(x86_64)
 license=('GPL' 'MIT')
 url="http://freetype.sourceforge.net"
@@ -24,59 +25,68 @@ conflicts=('lib32-freetype2' 'lib32-freetype2-infinality' 'lib32-freetype2-git-i
            'lib32-freetype2-ubuntu')
 provides=('lib32-freetype2' 'lib32-freetype2-infinality')
 options=('!libtool')
-source=("https://download-mirror.savannah.gnu.org/releases/freetype/freetype-${pkgver}.tar.gz"{,.sig}
-        "https://download-mirror.savannah.gnu.org/releases/freetype/freetype-doc-${pkgver}.tar.gz"{,.sig}
-        "https://download-mirror.savannah.gnu.org/releases/freetype/ft2demos-${pkgver}.tar.gz"{,.sig}
-#        "https://raw.githubusercontent.com/UnitedRPMs/freetype-freeworld/master/0001-Enable-table-validation-modules.patch"
-#        "0002-Enable-infinality-subpixel-hinting.patch::https://git.archlinux.org/svntogit/packages.git/plain/trunk/0002-Enable-infinality-subpixel-hinting.patch?h=packages/${pkgbase%-infinality}"
-#        "0003-Enable-long-PCF-family-names.patch::https://git.archlinux.org/svntogit/packages.git/plain/trunk/0003-Enable-long-PCF-family-names.patch?h=packages/${pkgbase%-infinality}"
-#        "https://aur.archlinux.org/cgit/aur.git/plain/0001-psaux-Correctly-handle-Flex-features-52846.patch?h=lib32-freetype2-v35"
-#        "https://raw.githubusercontent.com/muennich/pkgs/master/abs/freetype2/0005-freetype-2.5.2-more-demos.patch"
-#        "freetype2.sh::https://git.archlinux.org/svntogit/packages.git/plain/trunk/${pkgbase%-infinality}.sh?h=packages/${pkgbase%-infinality}")
-#        "0001-Enable-table-validation-modules.patch::https://git.archlinux.org/svntogit/packages.git/plain/trunk/0001-Enable-table-validation-modules.patch?h=packages/${pkgbase%-infinality}"
-#        "0002-Enable-infinality-subpixel-hinting.patch::https://git.archlinux.org/svntogit/packages.git/plain/trunk/0002-Enable-infinality-subpixel-hinting.patch?h=packages/${pkgbase%-infinality}"
-#	"https://raw.githubusercontent.com/UnitedRPMs/freetype-freeworld/master/0003-Enable-long-PCF-family-names.patch"
-#        "0001-psaux-Correctly-handle-Flex-features-52846.patch::https://git.archlinux.org/svntogit/packages.git/packages/freetype2-infinality/plain/trunk/0001-psaux-Correctly-handle-Flex-features-52846.patch"
-#        "0005-freetype2-2.5.2-more-demos.patch::https://git.archlinux.org/svntogit/packages.git/plain/trunk/0005-freetype2-infinality-2.5.2-more-demos.patch?h=packages/freetype2-infinality"
-#        "freetype2.sh::https://git.archlinux.org/svntogit/packages.git/plain/trunk/freetype2-infinality.sh?h=packages/freetype2-infinality"
-#        "https://git.archlinux.org/svntogit/packages.git/plain/trunk/freetype2.sh?h=packages/freetype2"
-#        "0002-infinality-${pkgver}-${_patchrel}.patch"
-#        "https://git.archlinux.org/svntogit/packages.git/plain/trunk/0002-Enable-infinality-subpixel-hinting.patch?h=packages/freetype2"
-#        "https://raw.githubusercontent.com/pdeljanov/infinality-remix/master/freetype2-infinality-remix/0002-infinality-2.9.1-2018.05.01.patch"
-	"https://aur.archlinux.org/cgit/aur.git/plain/0001-infinality-2.9.1-2018.06.21.patch?h=freetype2-infinality-ultimate")
+source=(#"https://download-mirror.savannah.gnu.org/releases/freetype/freetype-${pkgver}.tar.gz"{,.sig}
+        #"https://download-mirror.savannah.gnu.org/releases/freetype/freetype-doc-${pkgver}.tar.gz"{,.sig}
+        #"https://download-mirror.savannah.gnu.org/releases/freetype/ft2demos-${pkgver}.tar.gz"{,.sig}
+        https://download.savannah.gnu.org/releases/freetype/freetype-${pkgver}.tar.xz
+        https://download.savannah.gnu.org/releases/freetype/freetype-doc-${pkgver}.tar.xz
+        https://download-mirror.savannah.gnu.org/releases/freetype/ft2demos-${pkgver}.tar.xz
+        0001-Enable-table-validation-modules.patch
+        0002-infinality-${pkgver}-${_patchrel}.patch
+        0004-Enable-long-PCF-family-names.patch
+        0005-freetype-2.5.2-more-demos.patch
+        0006-infinality-remix-tweaks.patch
+        freetype2.sh
+        infinality-settings.sh
+	xft-settings.sh)
 
-sha256sums=('ec391504e55498adceb30baceebd147a6e963f636eb617424bcfc47a169898ce'
-            'SKIP'
-            'f57c1297f5ad2ad4764f491317fa0f548bd307c4513185d4a0602412e83b1dc9'
-            'SKIP'
-            '3d440aad3481285c7455f1593577e375c9d5792c800bbaba68d46fd75130fab9'
-            'SKIP'
-            '40a193e84b12445063c37a82aaed94207a5765cb1fbf594cb948d84c25c36fa3')
+#sha256sums=('fccc62928c65192fff6c98847233b28eb7ce05f12d2fea3f6cc90e8b4e5fbe06'
+#            '5fdc0fd118a0a82ff36054988b82ea2fc0da2302962b51d14ca2880ee4959fb2'
+#            '0466f9c2cd609349b0bd1f1b7b85b1bffc52f72eb492a7195552d86e666d06ba'
+#            'ac11a24b62a6c044cc245ea9fa2a0cbd9e2e62f2371873dd33084c28a76e7176'
+#            'b2d511399924452297e4f2c039f3b85d22a5e17d115e5d865c27704887d6c519'
+#            '54800d4da18611cf9232aad8b63d74a83153a51bb56dd39191678c738ffc8b53'
+#            '36484db4b926ed026e7f32570573493b5a9793a129f08d54383a26d65a6af89b'
+#            '94493ed2865fd32e5ef8ef3493fcb2ccaaf8be4c9e0eaa7b417fcbc47fe4314d'
+#            'f7f8e09c44f7552c883846e9a6a1efc50377c4932234e74adc4a8ff750606467'
+#            '1a5c12aa96e2ee66f7316b8ccb7012520b231a2d8ee21cfe4064aa28db35a57c'
+#	'4842d1461c240cd0f60a7247ee038271fdb1067107bea9024be6bdbb218d1bd4')
+
+sha256sums=('16dbfa488a21fe827dc27eaf708f42f7aa3bb997d745d31a19781628c36ba26f'
+            '2fc160eda64cb6ee9f357c3fd6ef5f1f2b6039f10da650c726b0db49f863341f'
+            'b1857376bd3eaad4fdb4bc7894cb557310186856099494f32e8998ddc32b41e8'
+            'ac11a24b62a6c044cc245ea9fa2a0cbd9e2e62f2371873dd33084c28a76e7176'
+            'afdc909def9d7e839f227a83a4e3b58d4060a28861739f9e1ab5540e60929cc8'
+            '54800d4da18611cf9232aad8b63d74a83153a51bb56dd39191678c738ffc8b53'
+            '36484db4b926ed026e7f32570573493b5a9793a129f08d54383a26d65a6af89b'
+            '94493ed2865fd32e5ef8ef3493fcb2ccaaf8be4c9e0eaa7b417fcbc47fe4314d'
+            'f7f8e09c44f7552c883846e9a6a1efc50377c4932234e74adc4a8ff750606467'
+            '1a5c12aa96e2ee66f7316b8ccb7012520b231a2d8ee21cfe4064aa28db35a57c'
+            '4842d1461c240cd0f60a7247ee038271fdb1067107bea9024be6bdbb218d1bd4')
+
 
 validpgpkeys=("58E0C111E39F5408C5D3EC76C1A60EACE707FDA5")
 
 prepare() {
   # Rename source dir to allow building the demos
-  mv "${srcdir}/freetype-${pkgver}" "${srcdir}/${pkgname}"
-  mv "${srcdir}/ft2demos-${pkgver}" "${srcdir}/${pkgbase%-infinality}-demos"
+  #mv "${srcdir}/freetype-${pkgver}" "${srcdir}/${pkgname}"
+  #mv "${srcdir}/ft2demos-${pkgver}" "${srcdir}/${pkgbase%-infinality}-demos"
+  mv freetype-${pkgver} freetype2
+  mv ft2demos-${pkgver} freetype2-demos
 
-  cd "${srcdir}/${pkgbase%-infinality}"
-  #patch -Np1 -i "${srcdir}/0001-Enable-table-validation-modules.patch"
-  #patch -Np1 -i "${srcdir}/0002-Enable-infinality-subpixel-hinting.patch"
-  #patch -Np1 -i "${srcdir}/0003-Enable-long-PCF-family-names.patch"
-  patch -Np1 -i "${srcdir}/0001-infinality-2.9.1-2018.06.21.patch?h=freetype2-infinality-ultimate"
-  #patch -Np1 -i "${srcdir}/0002-Enable-infinality-subpixel-hinting.patch"
+  #cd "${srcdir}/${pkgbase%-infinality}"
+  cd freetype2
+  patch -Np1 -i ../0001-Enable-table-validation-modules.patch
+  patch -Np1 --verbose -i ../0002-infinality-${pkgver}-${_patchrel}.patch
+  patch -Np1 -i ../0004-Enable-long-PCF-family-names.patch
+  patch -Np1 --verbose -i ../0006-infinality-remix-tweaks.patch
 
-  # Freetype 2.9 regression: bad rendering for some Type 1 fonts
-  # https://savannah.nongnu.org/bugs/?52846
-  #patch -Np1 -i "${srcdir}/0001-psaux-Correctly-handle-Flex-features-52846.patch"
-
-  cd "${srcdir}/${pkgbase%-infinality}-demos"
-  # Enable more demos
-  #patch -Np1 -i "${srcdir}/0005-${pkgbase%2-infinality}-2.5.2-more-demos.patch"
+  # Patching FreeType Demos
+  #cd ../freetype2-demos
+  #patch -Np1 -i ../0005-freetype-2.5.2-more-demos.patch
 
   # Suppress RPATH
-  sed -i "/X11_LIB:%=-R%/d" "graph/x11/rules.mk"
+  #sed -i "/X11_LIB:%=-R%/d" "graph/x11/rules.mk"
 }
 
 build() {
@@ -84,19 +94,22 @@ build() {
   export CXX="g++ -m32"
   export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
 
-  cd "${srcdir}/${pkgbase%-infinality}"
+  #cd "${srcdir}/${pkgbase%-infinality}"
+  cd freetype2
   ./configure --prefix=/usr --disable-static  --with-harfbuzz --with-png --libdir=/usr/lib32
   make
 
   # Build demos
-  cd "${srcdir}/${pkgbase%-infinality}-demos"
-  make
+  #cd "${srcdir}/${pkgbase%-infinality}-demos"
+  #cd freetype2-demos
+  #make
 }
 
-#check() {
-#  cd "${srcdir}/${pkgbase%-infinality}"
-#  make -k check
-#}
+check() {
+  #cd "${srcdir}/${pkgbase%-infinality}"
+  cd freetype2
+  make -k check
+}
 
 #package_freetype2-infinality-ultimate() {
 #  provides=("${pkgname%-infinality}" "lib${pkgname%2-infinality}.so")
@@ -136,7 +149,8 @@ build() {
 #}
 
 package() {
-  cd "${srcdir}/${pkgbase%-infinality}"
+  #cd "${srcdir}/${pkgbase%-infinality}"
+  cd freetype2
   make DESTDIR="${pkgdir}" install
   rm -rf "${pkgdir}"/usr/{include,share,bin}
 }
