@@ -1,18 +1,18 @@
 diff --git a/build/gen.py b/build/gen.py
-index ee4f8e14..89714678 100755
+index d2305c8f..811c2e95 100755
 --- a/build/gen.py
 +++ b/build/gen.py
-@@ -332,8 +332,11 @@ def WriteGNNinja(path, platform, host, options):
-       ldflags.extend(['-maix64', '-pthread'])
+@@ -324,8 +324,11 @@ def WriteGNNinja(path, platform, host, options):
+         ldflags.append('-Wl,--icf=all')
  
-     if options.use_lto:
--      cflags.extend(['-flto', '-fwhole-program-vtables'])
--      ldflags.extend(['-flto', '-fwhole-program-vtables'])
-+      cflags.append('-flto')
-+      ldflags.append('-flto')
-+      if "clang" in cc:
-+        cflags.append('-fwhole-program-vtables')
-+        ldflags.append('-fwhole-program-vtables')
+       if options.use_lto:
+-        cflags.extend(['-flto', '-fwhole-program-vtables'])
+-        ldflags.extend(['-flto', '-fwhole-program-vtables'])
++        cflags.append('-flto')
++        ldflags.append('-flto')
++        if "clang" in cxx:
++          cflags.append('-fwhole-program-vtables')
++          ldflags.append('-fwhole-program-vtables')
  
-   elif platform.is_msvc():
-     if not options.debug:
+     cflags.extend([
+         '-D_FILE_OFFSET_BITS=64',
