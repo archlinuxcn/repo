@@ -1521,3 +1521,14 @@ Wed Dec 25 05:57:40 2019 +0100
      2019-12-23 1f20d6c actionless fix(install_cli): don't check package for upgradeability if it's not already installed
      2019-12-22 54f5dec actionless fix(core: dynamic_users): apply workaround for broken 'SuccessExitStatus= SuccessExitStatus=0' in systemd (fixes #434)
      2019-12-22 cc607d6 actionless fix(core: dynamic_users): use --pty so makepkg will be able to handle Ctrl+C (ref #434)
+
+
+Wed Jan 1 23:52:45 2020 +0100
+-------------------------------------------------
+1.5.8           Release 1.5.8
+    
+    Notable changes:
+     2019-12-29 15815b4 actionless feat(install_cli, build): show new dependencies in install prompt after the user has edited PKGBUILD (fixes #372)
+     2019-12-29 d570038 actionless fix(install_cli): detecting extra (unlisted in aur rpc) deps in split packages
+     2019-12-28 f8375c5 actionless feat(install_cli, install info fetcher): show install prompt if list of deps changed after editing PKGBUILD (ref: #427)
+     2019-12-28 ee8f879 actionless feat(updates: aur; args; config): option to ignore outofdate aur upgrades
