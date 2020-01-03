@@ -11,7 +11,6 @@ arch=('x86_64')
 url='http://gdcm.sourceforge.net'
 license=('BSD')
 depends=(
-  'charls'
   'libxml2'
   'poppler'
   'python'
@@ -34,7 +33,7 @@ makedepends=(
   'texlive-latexextra'
 )
 source=(
-  "https://github.com/malaterre/GDCM/archive/v${pkgver}.tar.gz"
+  "${pkgname}-${pkgver}.tar.gz::https://github.com/malaterre/GDCM/archive/v${pkgver}.tar.gz"
 )
 sha512sums=('ee65e12b431a61ac6d9564e4c87c9a2cc8d28fe2c6bac5a9db10eeab29851593fa02d5b16d618ca4887fefbb43e23aac24efd013125df2890abaddc892108fde')
 
@@ -47,7 +46,6 @@ build() {
   mkdir -p build
   cd build
   cmake \
-    -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON \
     -DGDCM_BUILD_APPLICATIONS:BOOL=ON \
@@ -55,9 +53,9 @@ build() {
     -DGDCM_BUILD_EXAMPLES:BOOL=OFF \
     -DGDCM_BUILD_SHARED_LIBS:BOOL=ON \
     -DGDCM_BUILD_TESTING:BOOL=OFF \
-    -DGDCM_DOCUMENTATION:BOOL=ON \
+    -DGDCM_DOCUMENTATION:BOOL=OFF \
     -DGDCM_LEGACY_REMOVE:BOOL=ON \
-    -DGDCM_USE_SYSTEM_CHARLS:BOOL=ON \
+    -DGDCM_USE_SYSTEM_CHARLS:BOOL=OFF \
     -DGDCM_USE_SYSTEM_EXPAT:BOOL=ON \
     -DGDCM_USE_SYSTEM_LIBXML2:BOOL=ON \
     -DGDCM_USE_SYSTEM_OPENJPEG:BOOL=ON \
@@ -81,11 +79,11 @@ package() {
 
   # fix python binding installation
   install -d "${pkgdir}/usr/lib/python$(get_pyver)/site-packages"
-  mv -v "${pkgdir}/usr/lib/_gdcmswig.so" "${pkgdir}/usr/lib/python$(get_pyver)/site-packages"
+  ln -s "/usr/lib/_gdcmswig.so" "${pkgdir}/usr/lib/python$(get_pyver)/site-packages"
   mv -v "${pkgdir}/usr/lib/gdcm.py" "${pkgdir}/usr/lib/python$(get_pyver)/site-packages"
   mv -v "${pkgdir}/usr/lib/vtkgdcm.py" "${pkgdir}/usr/lib/python$(get_pyver)/site-packages"
   mv -v "${pkgdir}/usr/lib/gdcmswig.py" "${pkgdir}/usr/lib/python$(get_pyver)/site-packages"
-  mv -v "${pkgdir}/usr/lib/vtkgdcmPython.so" "${pkgdir}/usr/lib/python$(get_pyver)/site-packages"
+  ln -s "/usr/lib/vtkgdcmPython.so" "${pkgdir}/usr/lib/python$(get_pyver)/site-packages"
 }
 # vim:set ts=2 sw=2 et:
 
