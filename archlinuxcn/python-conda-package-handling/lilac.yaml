@@ -1,0 +1,11 @@
+maintainers:
+  - github: specter119
+build_prefix: extra-x86_64
+update_on:
+  - github: conda/conda-package-handling
+    use_latest_release: true
+  - aur: python-conda-package-handling
+  - alias: python
+  - archpkg: libarchive
+pre_build: aur_pre_build
+post_build: aur_post_build
