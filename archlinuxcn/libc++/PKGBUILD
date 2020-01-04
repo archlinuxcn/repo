@@ -4,23 +4,22 @@
 
 pkgbase=libc++
 pkgname=(${pkgbase}{,abi,experimental})
-pkgver=9.0.0
+pkgver=9.0.1
 pkgrel=1
 url="https://libcxx.llvm.org/"
 license=('custom:Apache 2.0 with LLVM Exception')
 arch=('i686' 'x86_64')
 depends=('gcc-libs')
 makedepends=('clang' 'cmake' 'llvm' 'libunwind' 'ninja' 'python')
-source=("https://releases.llvm.org/$pkgver/llvm-$pkgver.src.tar.xz"{,.sig}
-        "https://releases.llvm.org/$pkgver/libcxx-$pkgver.src.tar.xz"{,.sig}
-        "https://releases.llvm.org/$pkgver/libcxxabi-$pkgver.src.tar.xz"{,.sig})
+source=("https://github.com/llvm/llvm-project/releases/download/llvmorg-$pkgver/llvm-$pkgver.src.tar.xz"{,.sig}
+        "https://github.com/llvm/llvm-project/releases/download/llvmorg-$pkgver/libcxx-$pkgver.src.tar.xz"{,.sig}
+        "https://github.com/llvm/llvm-project/releases/download/llvmorg-$pkgver/libcxxabi-$pkgver.src.tar.xz")
 noextract=("${source[@]##*/}")
-sha512sums=('1bb3341e1d231559b948f1505b33c2e2e03989f9b8bbfef0e0cdaff5ac43f85574c9ec5ac53399b914f497d6899425d861411024e8d7e1d1a338c1c6951ac658'
+sha512sums=('bfb6960a4dd1e18f4005f324f478a781c69e8ec7c20569d9b243fcb9372dc7733b254f26c683373537990cc9c109c78eaf0f65449629ee17caca1bce9b9ccccd'
             'SKIP'
-            'cbaca724c4f3e3a270dfd53aac50cbb920190fe55486b164d52e73845819dd22afb10c23f5875da59d433fd5b96a0f153208746117309ac1267a38fa56f4818e'
+            'aabbc98c5bd6935d3dabfb309dfc171fbc16441396628d22d8dcdb89a5015f8fdedef4237134b841314d572205f7d5cfe44c1c8900db0f0156810f7810376bb2'
             'SKIP'
-            '261f32f61814728ce61c830c80192a55e1ba03c50f49712e208052444ac3acc6d7efcbd7b76a505292f9233aad23b00180aca4e72326ae1244385b39f226e625'
-            'SKIP')
+            'b5dbe4379a13046e7b9003e6913b0435271476feef0acbfd4e8207fca6d4a580182628866bd2032ce84a55d524fee8620841f17214bc79c8f46a3fde2f57627a')
 validpgpkeys=('474E22316ABF4785A88C6E8EA2C794A986419D8A') # Tom Stellard <tstellar@redhat.com> (.1 releases)
 validpgpkeys+=('B6C8F98282B944E3B0D5C2530FC3042E345AD05D') # Hans Wennborg <hans@chromium.org> (.0 releases)
  
@@ -45,10 +44,12 @@ build() {
   ninja cxx cxx_experimental
 }
 
-check() {
-  cd build
-  ninja check-cxx check-cxxabi
-}
+# Deprecated function finally removed in Python 3.8 results in failure.
+# https://github.com/llvm/llvm-project/issues/62
+#check() {
+#  cd build
+#  ninja check-cxx check-cxxabi
+#}
 
 package_libc++() {
   pkgdesc='LLVM C++ standard library.'
