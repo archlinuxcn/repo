@@ -8,7 +8,7 @@
 # Contributor: Jason Chu <jason@archlinux.org>
 
 pkgname=python-git
-pkgver=3.9.0a0.r106035.91874bb0716
+pkgver=3.9.0a0.r106069.e02ab59fdf
 pkgrel=1
 _pybasever=3.9
 pkgdesc="Next generation of the python high-level scripting language"
@@ -22,10 +22,8 @@ optdepends=('sqlite'
             'mpdecimal: for decimal'
             'xz: for lzma'
             'tk: for tkinter')
-source=("git+https://github.com/python/cpython#branch=master"
-        $pkgname-issue38692.diff)
-sha512sums=('SKIP'
-            'bb18f476e74d969a16aa4077f01963f551b067d5dbeae80159d663dcf4f8e043f446c4c888388fbe3436d31d29401f6cbcfc74ace9257879e32b0d7731245a47')
+source=("git+https://github.com/python/cpython#branch=master")
+sha512sums=('SKIP')
 
 pkgver() {
   cd cpython
@@ -37,9 +35,6 @@ pkgver() {
 
 prepare() {
   cd cpython
-
-  # https://bugs.python.org/issue38692
-  patch -Np1 -i ../$pkgname-issue38692.diff
 
   # FS#23997
   sed -i -e "s|^#.* /usr/local/bin/python|#!/usr/bin/python|" Lib/cgi.py
@@ -90,9 +85,10 @@ check() {
   export servernum=99
   while ! xvfb-run -a -n "$servernum" /bin/true 2>/dev/null; do servernum=$((servernum+1)); done
 
+  # test_socket hangs from time to time
   LD_LIBRARY_PATH="${srcdir}/cpython":${LD_LIBRARY_PATH} \
   LC_CTYPE=en_US.UTF-8 xvfb-run -s "-screen 0 1280x720x24 -ac +extension GLX" -a -n "$servernum" \
-    "${srcdir}/cpython/python" -m test.regrtest -w -uall -x test_ttk_guionly -x test_tk -j -1
+    "${srcdir}/cpython/python" -m test.regrtest -w -uall -x test_ttk_guionly -x test_tk -x test_socket -j -1
 }
 
 package() {
