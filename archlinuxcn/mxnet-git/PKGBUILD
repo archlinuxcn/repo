@@ -1,10 +1,11 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
-_cudaarch=Common
+#_cudaarch="3.7;5.0;5.2;5.2+PTX;5.3;5.3+PTX;6.0;6.0+PTX;6.1;6.1+PTX;6.2;6.2+PTX;7.0;7.0+PTX;7.2;7.2+PTX;7.5;7.5+PTX"
+_cudaarch="3.7;5.0;5.2;5.3;6.0;6.1;6.2;7.0;7.2;7.5"
 _pkgname=mxnet
 pkgname=('mxnet-git' 'mxnet-mkl-git' 'mxnet-cuda-git' 'mxnet-cuda-mkl-git')
 _pkgver=1.5.1
-pkgver=1.5.1.r10493.ffeebe46ab
+pkgver=1.5.1.r10510.8e946c902
 pkgrel=1
 pkgdesc="A flexible and efficient library for deep learning"
 arch=('x86_64')
@@ -59,13 +60,9 @@ prepare() {
   sed -i 's/OPENMP_FOUND/OpenMP_FOUND/g' "${srcdir}/${_pkgname}/CMakeLists.txt"
 
   # find blas automatically
-  sed -i 's/find_package(OpenBLAS REQUIRED)/find_package(BLAS REQUIRED)/' "${srcdir}/${_pkgname}/cmake/ChooseBlas.cmake" "${srcdir}/${_pkgname}/3rdparty/mshadow/cmake/mshadow.cmake"
-  sed -i 's/OpenBLAS_LIB/BLAS_LIBRARIES/' "${srcdir}/${_pkgname}/cmake/ChooseBlas.cmake" "${srcdir}/${_pkgname}/cmake/ChooseBlas.cmake" "${srcdir}/${_pkgname}/3rdparty/mshadow/cmake/mshadow.cmake"
-  sed -i '/OpenBLAS_INCLUDE_DIR/d' "${srcdir}/${_pkgname}/cmake/ChooseBlas.cmake" "${srcdir}/${_pkgname}/3rdparty/mshadow/cmake/mshadow.cmake"
-
-  # compute capability >= 3.7
-  sed -i '/APPEND CUDA_COMMON_GPU_ARCHITECTURES/d' "${srcdir}/${_pkgname}/cmake/FirstClassLangCuda.cmake"
-  sed -i '/set(CUDA_COMMON_GPU_ARCHITECTURES/c\set(CUDA_COMMON_GPU_ARCHITECTURES "3.7" "5.0" "5.2" "5.2+PTX" "6.0" "6.1" "6.1+PTX" "7.0" "7.5")' "${srcdir}/${_pkgname}/cmake/FirstClassLangCuda.cmake"
+  sed -i 's/find_package(OpenBLAS REQUIRED)/find_package(BLAS REQUIRED)/' "${srcdir}/${_pkgname}/cmake/ChooseBlas.cmake"
+  sed -i 's/OpenBLAS_LIB/BLAS_LIBRARIES/' "${srcdir}/${_pkgname}/cmake/ChooseBlas.cmake"
+  sed -i '/OpenBLAS_INCLUDE_DIR/d' "${srcdir}/${_pkgname}/cmake/ChooseBlas.cmake"
 
   rm -rf "${srcdir}/${_pkgname}/build"
   mkdir "${srcdir}/${_pkgname}/build"
@@ -135,7 +132,7 @@ build() {
   cd "${srcdir}/mxnet-cuda-git/build"
   cmake \
     ${cmake_opts[@]} \
-    -DCUDA_ARCH_LIST=${_cudaarch} \
+    -DMXNET_CUDA_ARCH=${_cudaarch} \
     -DUSE_CUDA:BOOL=ON \
     -DUSE_CUDNN:BOOL=ON \
     -DUSE_MKLDNN:BOOL=OFF \
@@ -150,7 +147,7 @@ build() {
   cd "${srcdir}/mxnet-cuda-mkl-git/build"
   cmake \
     ${cmake_opts[@]} \
-    -DCUDA_ARCH_LIST=${_cudaarch} \
+    -DMXNET_CUDA_ARCH=${_cudaarch} \
     -DUSE_CUDA:BOOL=ON \
     -DUSE_CUDNN:BOOL=ON \
     -DUSE_MKLDNN:BOOL=ON \
