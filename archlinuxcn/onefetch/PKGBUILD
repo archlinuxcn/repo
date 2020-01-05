@@ -2,7 +2,7 @@
 # Contributor: Ariel AxionL <i (at) axionl (dot) me>
 
 pkgname=onefetch
-pkgver=2.1.0
+pkgver=2.2.0
 pkgrel=1
 depends=('zlib' 'gcc-libs')
 makedepends=('rust' 'cargo')
@@ -11,7 +11,7 @@ pkgdesc="Displays information about your project directly on your terminal"
 license=('MIT')
 source=("${pkgname}-${pkgver}.tar.gz::$url/archive/v$pkgver.tar.gz")
 arch=('x86_64')
-sha256sums=('86640860438399ae1cee00e72fe381e87edd841ff0a4eb1e4c0f39a772b9c04a')
+sha256sums=('99e00a760670ac3e8653762fe690f37ce8214470d2887c37aeb778c2c1344734')
 
 build() {
     cd "${srcdir}/${pkgname}-${pkgver}"
