@@ -1,26 +1,31 @@
-# Maintainer: Vojtech Kral <vojtech_kral^hk>
+# Maintainer: Rihards Skuja <rhssk at posteo dot eu>
+# Contributor: Vojtech Kral <vojtech_kral^hk>
 # Contributor: Antonio Rojas <arojas@archlinux.org>
 # Contributor: Kuba Serafinowski <zizzfizzix(at)gmail(dot)com>
 
-pkgname=kdeconnect-git
-pkgver=r2693.4a6a98d8
+_remotename=kdeconnect-kde
+_pkgname=kdeconnect
+pkgname=$_pkgname-git
+pkgver=1.4.r27.a6f9d90b
 pkgrel=1
 pkgdesc='Adds communication between KDE and your smartphone'
-arch=(i686 x86_64)
+arch=(x86_64)
 url='https://community.kde.org/KDEConnect'
 license=(GPL2)
-depends=('hicolor-icon-theme' 'kde-cli-tools' 'kio' 'kirigami2' 'kpeople' 'kwayland' 'libfakekey' 'pulseaudio-qt' 'qca-qt5')   # telepathy-qt5 - requires 0.9.7
-makedepends=('extra-cmake-modules' 'git' 'krunner' 'python')
-optdepends=('sshfs: remote filesystem browser')
-provides=(kdeconnect)
-conflicts=(kdeconnect-frameworks kdeconnect)
-source=("git://anongit.kde.org/kdeconnect-kde.git")
-install=$pkgname.install
+depends=(hicolor-icon-theme kcmutils kwayland libfakekey qca kpeople
+         kpeople-vcard-git kirigami2 pulseaudio-qt)
+makedepends=(git extra-cmake-modules kdoctools qt5-declarative)
+optdepends=('sshfs: remote filesystem browser'
+            'kde-cli-tools: configuration UI'
+            'python-nautilus: Nautilus integration')
+provides=($_pkgname)
+conflicts=($_pkgname)
+source=("git+https://invent.kde.org/kde/$_remotename.git")
 sha256sums=('SKIP')
 
 pkgver() {
-  cd kdeconnect-kde
-  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  cd $_remotename
+  printf "%s" "$(git describe --long | sed 's/^v//;s/\([^-]*-\)g/r\1/;s/-/./g')"
 }
 
 prepare() {
@@ -29,12 +34,9 @@ prepare() {
 
 build() {
   cd build
-  cmake ../kdeconnect-kde \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DLIB_INSTALL_DIR=lib \
-    -DLIBEXEC_INSTALL_DIR=lib \
-    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON
+  cmake ../$_remotename \
+    -DCMAKE_INSTALL_LIBEXECDIR=lib \
+    -DBUILD_TESTING=OFF
   make
 }
 
