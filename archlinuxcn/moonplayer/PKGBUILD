@@ -3,36 +3,33 @@
 # contributer: rob.til.freedman@googlemail.com
 
 pkgname=moonplayer
-pkgver=2.9
+pkgver=3.0
 pkgrel=1
 pkgdesc="A qt font-end for mplayer with the abilities of watching and downloading videos from chinese network"
 arch=('i686' 'x86_64')
 url="https://github.com/coslyk/moonplayer"
 license=('GPL')
-depends=('python' 'qt5-x11extras' 'qt5-websockets' 'qt5-webengine' 'mpv' 'qtermwidget')
-makedepends=('git')
+depends=('python' 'qt5-x11extras' 'qt5-base' 'qt5-declarative' 'qt5-quickcontrols' 'qt5-quickcontrols2' 'mpv')
+makedepends=('cmake' 'git' 'qt5-tools')
 source=(
-	$pkgname-$pkgver.tar.gz::https://github.com/coslyk/moonplayer/archive/$pkgver.tar.gz
+	$pkgname-$pkgver.tar.gz::https://github.com/coslyk/moonplayer/archive/v$pkgver.tar.gz
 	)
-provides=('moonplayer')
-conflicts=('moonplayer')
-sha1sums=('8a0d9fc00cd7a2414d213faf83b056e92dfdf10d')
+sha1sums=('5748214011d7079aa6031b53d0ea31e391d37fe4')
 
 build() {
-	cd $srcdir/$pkgname-$pkgver/src
-#
-	find . -name '*.py' -exec sed -i \
-	's|#![ ]*/usr/bin/python$|&2|;s|#![ ]*/usr/bin/env python$|&2|' {} +
+	cd $srcdir/$pkgname-$pkgver
+  mkdir build
+  cd build
 
-	qmake-qt5 PREFIX=/usr moonplayer.pro
+  cmake .. -DCMAKE_INSTALL_PREFIX=/usr
 
 	make
 }
 
 package() {
-	cd $srcdir/$pkgname-$pkgver/src
+	cd $srcdir/$pkgname-$pkgver/build
 
-	make INSTALL_ROOT=$pkgdir install
+	make DESTDIR="${pkgdir}" install
 
 	#clean pyc
 	#rm $pkgdir/usr/share/moonplayer/plugins/*.pyc
