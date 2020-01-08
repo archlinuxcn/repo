@@ -2,38 +2,40 @@
 # Contributor: Emmanuel Gil Peyrot <linkmauve@linkmauve.fr>
 # Contributor: aldelaro5 <aldelaro5@gmail.com>
 
-_pkgbase='decaf-emu'
-pkgname="$_pkgbase-git"
-pkgver=4996.b26df065
+_pkgname='decaf-emu'
+pkgname="${_pkgname}-git"
+pkgver=5048.283d223f
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo Wii U emulator"
 arch=('x86_64')
 url="https://github.com/decaf-emu/decaf-emu"
 license=('GPL')
-depends=('curl' 'zlib' 'sdl2' 'vulkan-icd-loader' 'ffmpeg' 'qt5-base' 'qt5-svg')
-makedepends=('git' 'cmake' 'vulkan-headers' 'glslang')
-source=("$_pkgbase::git+https://github.com/decaf-emu/decaf-emu")
+depends=('curl' 'ffmpeg' 'openssl' 'qt5-base' 'qt5-svg' 'sdl2' 'vulkan-icd-loader' 'zlib')
+makedepends=('cmake' 'c-ares' 'glslang' 'git' 'python' 'vulkan-validation-layers')
+optdepends=('qt5-wayland: for Wayland support')
+source=("git+https://github.com/decaf-emu/decaf-emu")
 md5sums=('SKIP')
 
 pkgver() {
-  cd "$srcdir/$_pkgbase"
+  cd "$srcdir/$_pkgname"
   echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
 }
 
 prepare() {
-  cd "$srcdir/$_pkgbase"
+  cd "$srcdir/$_pkgname"
   mkdir -p build
-  git submodule update --init
+  git submodule init
+  git submodule update --init --recursive
 }
 
 build() {
-  cd "$srcdir/$_pkgbase"
+  cd "$srcdir/$_pkgname"
   cd build
-  CXXFLAGS+=" -DFMT_USE_USER_DEFINED_LITERALS=0" cmake .. -DFMT_INSTALL=OFF -DDECAF_QT=ON -DCMAKE_INSTALL_PREFIX=/usr
-  make VERBOSE=1
+  cmake .. -DCMAKE_BUILD_TYPE=Release -DFMT_INSTALL=OFF -DDECAF_QT=ON -DCMAKE_INSTALL_PREFIX=/usr
+  make
 }
 
 package() {
-  cd "$srcdir/$_pkgbase/build"
+  cd "$srcdir/$_pkgname/build"
   make DESTDIR="$pkgdir" install
 }
