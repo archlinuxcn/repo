@@ -1,0 +1,42 @@
+# Maintainer: Jan de Groot <jgc@archlinux.org>
+
+pkgname=pango
+pkgver=1.43.0
+pkgrel=2
+epoch=1
+pkgdesc="A library for layout and rendering of text"
+url="https://www.pango.org/"
+arch=(x86_64)
+license=(LGPL)
+depends=(libthai cairo libxft harfbuzz fribidi)
+makedepends=(gobject-introspection help2man gtk-doc git meson)
+checkdepends=(ttf-dejavu cantarell-fonts)
+_commit=26f1135f374f3ad5eb963dcdf016542fbbda361b  # tags/1.43.0^0
+source=("git+https://gitlab.gnome.org/GNOME/pango.git#commit=$_commit")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd pango
+  git describe --tags | sed 's/-/+/g'
+}
+
+prepare() {
+  cd pango
+
+  # Fix .pc
+  git cherry-pick -n d0cb6be7431d1a3c711bd45bcf05b34601604037
+}
+
+build() {
+  arch-meson pango build -D enable_docs=true
+  ninja -C build
+}
+
+check() {
+  meson test -C build
+}
+
+package() {
+  DESTDIR="$pkgdir" meson install -C build
+  rm -r "$pkgdir"/usr/{lib,share}/installed-tests
+}
