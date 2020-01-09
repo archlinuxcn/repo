@@ -4,8 +4,8 @@
 # Contributor: Jakub Schmidtke <sjakub@gmail.com>
 
 pkgname=firefox-esr
-pkgver=68.3.0
-pkgrel=2
+pkgver=68.4.1
+pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org, Extended Support Release"
 arch=(x86_64)
 license=(MPL GPL LGPL)
@@ -24,13 +24,11 @@ provides=(firefox)
 conflicts=(firefox)
 options=(!emptydirs !makeflags)
 source=(https://ftp.mozilla.org/pub/firefox/releases/${pkgver}esr/source/firefox-${pkgver}esr.source.tar.xz
-        firefox.desktop firefox-symbolic.svg 0001-Use-remoting-name-for-GDK-application-names.patch
-        "patch-bindgen-rust1390.patch::https://svnweb.freebsd.org/ports/head/www/firefox-esr/files/patch-bindgen-rust1390?revision=516995&view=co&pathrev=516995")
-sha256sums=('e131149a70e7ae867d9b0ea081e8c081d056500ee51bb9270df247e977badc69'
+        firefox.desktop firefox-symbolic.svg 0001-Use-remoting-name-for-GDK-application-names.patch)
+sha256sums=('a00a7712d0f919162ce8181a9a3fc3e9ef37adf1caff0945a863b4c0c1d9f360'
             'ba8a1610fe3ccc65cb58f2651df0ae9df632ecc17b3af8d13670950e9e2d27d8'
             'a2474b32b9b2d7e0fb53a4c89715507ad1c194bef77713d798fa39d507def9e9'
-            'ab07ab26617ff76fce68e07c66b8aa9b96c2d3e5b5517e51a3c3eac2edd88894'
-            'd0c7cc63ce49128e6a53dde7f4116293a51e2144fc329df93dda44b228a8effb')
+            'ab07ab26617ff76fce68e07c66b8aa9b96c2d3e5b5517e51a3c3eac2edd88894')
 validpgpkeys=('2B90598A745E992F315E22C58AB132963A06537A')
 
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
@@ -47,9 +45,6 @@ _mozilla_api_key=16674381-f021-49de-8622-3021c5942aff
 
 prepare() {
   cd firefox-${pkgver}
-
-  # https://svnweb.freebsd.org/ports/head/www/firefox-esr/files/patch-bindgen-rust1390?revision=516995&view=markup&pathrev=516995
-  patch -Np0 -i ../patch-bindgen-rust1390.patch
 
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1530052
   patch -Np1 -i ../0001-Use-remoting-name-for-GDK-application-names.patch
