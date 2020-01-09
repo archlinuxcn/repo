@@ -3,7 +3,7 @@
 
 _gemname="i18n"
 pkgname="ruby-${_gemname}"
-pkgver=1.8.0
+pkgver=1.8.1
 pkgrel=1
 pkgdesc="New wave internationalisation support for Ruby"
 arch=("any")
@@ -13,7 +13,7 @@ makedepends=("ruby-rdoc")
 options=(!emptydirs)
 url="http://rubygems.org/gems/${_gemname}"
 source=("https://rubygems.org/downloads/${_gemname}-${pkgver}.gem")
-sha256sums=('64c6937bc0ebeb9f7be633040505f9050f5ee8d2bf395260ebdfde7baa9b726a')
+sha256sums=('03ff4761f885196eeeddbeb23314e3faf41b76352b7b5ec2b1aa287b81b5a14a')
 noextract=("${_gemname}-${pkgver}.gem")
 
 package() {
