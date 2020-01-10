@@ -8,7 +8,7 @@ pkgbase=wps-office
 pkgname=('wps-office' 'wps-office-mime')
 pkgver=11.1.0.9080
 #_pkgver=8372
-pkgrel=1
+pkgrel=2
 #_pkgrel=1
 pkgdesc="Kingsoft Office (WPS Office) is an office productivity suite"
 arch=('x86_64')
@@ -54,7 +54,8 @@ package_wps-office() {
                 'ttf-wps-fonts: Symbol fonts required by wps-office'
                 'ttf-ms-fonts: Microsft Fonts recommended for wps-office'
                 'wps-office-fonts: FZ TTF fonts provided by wps community'
-                'wps-office-mime: Use mime files provided by Kingsoft')
+                'wps-office-mime: Use mime files provided by Kingsoft'
+                'wps-office-mui-zh-cn: zh_CN support for WPS Office')
     install=${pkgname}.install
     conflicts=('kingsoft-office')
 #   cd wps-office_${pkgver}_$_archext
