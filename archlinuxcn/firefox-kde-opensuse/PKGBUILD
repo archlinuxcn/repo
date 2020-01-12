@@ -19,8 +19,8 @@ _pgo=true
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=71.0
-pkgrel=1.1
+pkgver=72.0.1
+pkgrel=1
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -51,7 +51,7 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
             'pulseaudio: Audio support')
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
-_patchrev=572ec48f3fe8
+_patchrev=4c5d44d40a03
 options=('!emptydirs')
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 _repo=https://hg.mozilla.org/mozilla-unified
@@ -69,6 +69,7 @@ source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
 	unity-menubar.patch
 	add_missing_pgo_rule.patch
         pgo_fix_missing_kdejs.patch
+        Bug_1584000___Migrate_glyph_to_character_association_code.patch
         2000_system_harfbuzz_support.patch
         2001_system_graphite2_support.patch
         pgo.patch
@@ -76,8 +77,6 @@ source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
         7002_system_av1_support.patch
         # https://bugzilla.mozilla.org/show_bug.cgi?id=1530052
         0001-Use-remoting-name-for-GDK-application-names.patch
-        # Fix building with python 3.8
-        0001-Bug-1212502-Switch-mozinfo-to-using-the-distro-packa.patch.xz
         # Workaround objects no being allocated with the correct alignment
         # inside dom/indexedDB/ActorsParent.cpp
         workaround_dom_indexdb_actorsparent_allignment.patch
@@ -121,6 +120,10 @@ prepare() {
   
   # add globalmenu support
   patch -Np1 -i "$srcdir/unity-menubar.patch"
+
+  # Revert https://bugzilla.mozilla.org/show_bug.cgi?id=1584000
+  # To fix system graphite2
+  patch -R -p1 -i "$srcdir"/Bug_1584000___Migrate_glyph_to_character_association_code.patch
   
   patch -Np1 -i "$srcdir"/2000_system_harfbuzz_support.patch
   patch -Np1 -i "$srcdir"/2001_system_graphite2_support.patch
@@ -128,11 +131,6 @@ prepare() {
 
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1530052
   patch -Np1 -i "$srcdir"/0001-Use-remoting-name-for-GDK-application-names.patch
-
-  # Fix building with python 3.8
-  xzcat "$srcdir"/\
-0001-Bug-1212502-Switch-mozinfo-to-using-the-distro-packa.patch.xz  | \
-    patch -Np1
 
   # Workaround objects no being allocated with the correct alignment
   # inside dom/indexedDB/ActorsParent.cpp
@@ -240,15 +238,15 @@ md5sums=('SKIP'
          '05bb69d25fb3572c618e3adf1ee7b670'
          'ad055db454c9263623fdbc857e8290fe'
          '0756f1b090f9c3371df957257907b0c7'
-         'bc1f7445de31cd5ff20f00d0f9bc8e57'
+         '3bc553e23a3578991c7e205bfff1bb14'
          'e083ae314eaa9355aa2d4aa75a7fc277'
-         '35fd9214a0af395543346f4dd074f92b'
+         '4ced0c5110d6471b79aaa6e4215a183c'
          'fe24f5ea463013bb7f1c12d12dce41b2'
          '3fa8bd22d97248de529780f5797178af'
+         '0ca36620e6004703a3d0354ac5625576'
          '28c2eff56d3d95da6e9ba444fc60e90b'
          '8d0c0ebc805e4e52a3cb2c0dc64ea2de'
          'f867ae41a722630cc5567e2dcc51676d'
          'd87270bfe02ea30e2fde3fcae5daf18d'
          '0ffabb81dd8a5fe98bb8afe47d6541d3'
-         '3016656551d00f4f22dc2eaccc71ee14'
-         'f4a8a7f7480c74556ffb8fea3c5fe51a')
+         'a8b9025375443d1f41ae94360f495798')
