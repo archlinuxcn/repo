@@ -1549,3 +1549,12 @@ Fri Jan 10 15:16:16 2020 +0100
     
     Notables changes:
      2020-01-10 7b1303c actionless fix(install_cli, install info): handle the case when only some of AUR packages got edited with changing install info (ref #440)
+
+
+Sat Jan 11 22:36:16 2020 +0100
+-------------------------------------------------
+1.5.9           Release 1.5.9
+    
+    Notable changes:
+     2020-01-11 7afe82d Mikhail Khvoinitsky pikspect: do not throttle output writes; read at most 4096 bytes from output instead of at most one byte; fixes #326
+     2020-01-11 12d2820 actionless fix(install_cli): also discard old install_info when it changed without user editing it
