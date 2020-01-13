@@ -7,7 +7,7 @@ _SPELL_EN_DICT_SHA256='c44a5d7847925eea9e4d2d04748d442cd28dd9299a0b572ef7d91eac4
 
 _pkgname=fcitx5
 pkgname=${_pkgname}-git
-pkgver=r433.0c798d8
+pkgver=r435.8d889da
 pkgrel=1
 pkgdesc="Next generation of fcitx"
 arch=('i686' 'x86_64')
