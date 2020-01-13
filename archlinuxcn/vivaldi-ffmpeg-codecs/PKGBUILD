@@ -2,7 +2,7 @@
 # Maintainer: BlackEagle < ike DOT devolder AT gmail DOT com >
 
 pkgname=vivaldi-ffmpeg-codecs
-pkgver=79.0.3945.93
+pkgver=79.0.3945.117
 _vivaldi_major_version=2.10
 pkgrel=1
 pkgdesc="additional support for proprietary codecs for vivaldi"
@@ -18,7 +18,7 @@ options=('!strip')
 source=(
   "https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$pkgver.tar.xz"
 )
-sha512sums=('b94f9890ae82e43d1b0d2abd99e3cde80a4481731ecd64ee23cd5d2d100cf667c4747f2d30e163a102363f130b097c612032189166515793f4e556792f2ce8c6')
+sha512sums=('bba4f52eec8011f92e3098d29269d978b6e2571593b66c93bf6767bab00f7984e733e6df5fde883b9f643e86b1ad527c3ec7d43ba381b48935512ad82e931e26')
 
 prepare() {
   cd "$srcdir/chromium-$pkgver"
