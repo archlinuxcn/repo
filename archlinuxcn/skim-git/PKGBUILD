@@ -1,7 +1,7 @@
 # Maintainer: lilydjwg <lilydjwg@gmail.com>
 # Contributor: Ariel AxionL <axionl@aosc.io>
 pkgname=skim-git
-pkgver=r678.be754b3
+pkgver=r682.28289c9
 pkgrel=1
 pkgdesc="Fuzzy Finder in rust!"
 arch=('x86_64')
