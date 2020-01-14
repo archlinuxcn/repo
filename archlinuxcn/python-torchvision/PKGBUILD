@@ -15,7 +15,7 @@ license=('BSD')
 depends=(
   'python-numpy'
   'python-pillow'
-  'python-pytorch'
+  'python-pytorch-cuda'
   'python-scipy'
   'python-six'
   'python-tqdm'
@@ -36,7 +36,7 @@ checkdepends=(
   'python-pytest'
   'python-scipy'
 )
-source=("https://github.com/pytorch/vision/archive/v${pkgver}.tar.gz")
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/pytorch/vision/archive/v${pkgver}.tar.gz")
 sha512sums=('3327364bd1c10f4f0fdf9f8c1bed3848cbd887ee335634a0da6eb7a2611037408eee6261cd178d12225be5f2c809a05ff9fb87420b8accd447a799ca83def3ad')
 
 get_pyver() {
@@ -44,6 +44,8 @@ get_pyver() {
 }
 
 build() {
+  export FORCE_CUDA=1
+  export TORCH_CUDA_ARCH_LIST="3.5;3.7;5.0;5.2;5.3;6.0;6.0+PTX;6.1;6.1+PTX;6.2;6.2+PTX;7.0;7.0+PTX;7.2;7.2+PTX;7.5;7.5+PTX"
   cd "${_pkgname}-${pkgver}"
   python setup.py build
 }
