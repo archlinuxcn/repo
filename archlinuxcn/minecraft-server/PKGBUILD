@@ -5,7 +5,7 @@
 pkgname=minecraft-server
 pkgver=1.15.1
 _nonce=4d1826eebac84847c71a77f9349cc22afd0cf0a1
-pkgrel=1
+pkgrel=2
 pkgdesc="Minecraft server unit files, script, and jar"
 arch=('any')
 url="https://minecraft.net/"
@@ -25,11 +25,11 @@ source=("minecraft_server.${pkgver}.jar"::"https://launcher.mojang.com/v1/object
 	"minecraftd.sh")
 noextract=("minecraft_server.${pkgver}.jar")
 sha512sums=('4458daa6cd87b04ddbf0819dfc0538d24b8d08c529a94f1abff9b894d24ffb4eb3d0b23b8bfb088b2b6f43fb6f71d17700d9f80dab2ed56dc51c5bef329ba6bb'
-            'c8f96bafb0ba3fd8946ac791b09e75cae54dc1a8e02822f91ca70a77a8ba45b253a83c4db30f9cfbf0658a2608b38e6de3d00f1d832ef676f329a78e69eab3e7'
+            '32d11156b63f780fe530ca408e8f2c36c7cb761427992526a70819e24ebc042813f9001b1d822847ffe22e6aec34420f215c8bf21ca73905747537ef4ab7e905'
             '19ee3646bfbace353b65c0373594edb654de11c9671f29cebad3b31109f29f94ade1d529d9f409b0989c376bef9b451585b22a1e0ac4295fcc92d9565f808418'
             '5203f6331f740ecfcea2a2cc653603ae97419baa89e08512f9d8feb63e4a52978442a69b313eccd9037b676a62ab528e2b533c0fb95a9c7177318279fe0cde79'
-            '73132ec613e05c8ed7ebe4eda2395f1ea0733ffe94ba7e203e06246d5852139bbfb7a9073b2b01891282339a2f85676699cd889cde79d6317066e27fd65b1d67'
-            'fc932d62dc86be6af1c335b1cb712f3a4f99515393fcb1e3de1fd464583d0c63a5b13233a0b1f7b6cfae0f7be6b337a10009925bfe9b016e92076f1768cdf271')
+            'b7e84172bdb791e3a065b2593e63f3f4a017481d4321d28cdc528f88447f9c591a9ac58ccec828e76cb4ec3eacfa0acd8e3645f82e6065f80e4fec06cead67d9'
+            'a1022e06a3d8567b31c9670b817a4751ad9f14242ce7ee69f184a459c667ec2334dcd259410de38fc75a0f9a65c0a033d737cf0b73abcf37f5de073db9560035')
 
 _game="minecraft"
 _server_root="/srv/minecraft"

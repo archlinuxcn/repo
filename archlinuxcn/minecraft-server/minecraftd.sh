@@ -12,6 +12,7 @@ declare -r game="minecraft"
 [[ -n "${SERVER_ROOT}" ]]  && declare -r SERVER_ROOT=${SERVER_ROOT}   || SERVER_ROOT="/srv/${game}"
 [[ -n "${BACKUP_DEST}" ]]  && declare -r BACKUP_DEST=${BACKUP_DEST}   || BACKUP_DEST="/srv/${game}/backup"
 [[ -n "${BACKUP_PATHS}" ]] && declare -r BACKUP_PATHS=${BACKUP_PATHS} || BACKUP_PATHS="world"
+[[ -n "${BACKUP_FLAGS}" ]] && declare -r BACKUP_FLAGS=${BACKUP_FLAGS} || BACKUP_FLAGS="-z"
 [[ -n "${KEEP_BACKUPS}" ]] && declare -r KEEP_BACKUPS=${KEEP_BACKUPS} || KEEP_BACKUPS="10"
 [[ -n "${GAME_USER}" ]]    && declare -r GAME_USER=${GAME_USER}       || GAME_USER="minecraft"
 [[ -n "${MAIN_EXECUTABLE}" ]] && declare -r MAIN_EXECUTABLE=${MAIN_EXECUTABLE} || MAIN_EXECUTABLE="minecraft_server.jar"
@@ -301,26 +302,26 @@ backup_files() {
 	fi
 
 	echo "Starting backup..."
-	FILE="$(date +%Y_%m_%d_%H.%M.%S).tar.gz"
+	fname="$(date +%Y_%m_%d_%H.%M.%S).tar.gz"
 	${SUDO_CMD} mkdir -p "${BACKUP_DEST}"
 	if ${SUDO_CMD} screen -S "${SESSION_NAME}" -Q select . > /dev/null; then
 		game_command save-off
 		game_command save-all
 		sync && wait
-		${SUDO_CMD} tar -C "${SERVER_ROOT}" -czf "${BACKUP_DEST}/${FILE}" --totals ${BACKUP_PATHS} 2>&1 | grep -v "tar: Removing leading "
+		${SUDO_CMD} tar -C "${SERVER_ROOT}" -cf "${BACKUP_DEST}/${fname}" ${BACKUP_PATHS} --totals ${BACKUP_FLAGS} 2>&1 | grep -v "tar: Removing leading "
 		game_command save-on
 	else
-		${SUDO_CMD} tar -C "${SERVER_ROOT}" -czf "${BACKUP_DEST}/${FILE}" --totals ${BACKUP_PATHS} 2>&1 | grep -v "tar: Removing leading "
+		${SUDO_CMD} tar -C "${SERVER_ROOT}" -cf "${BACKUP_DEST}/${fname}" ${BACKUP_PATHS} --totals ${BACKUP_FLAGS} 2>&1 | grep -v "tar: Removing leading "
 	fi
 	echo -e "\e[39;1mbackup completed\e[0m\n"
 
 	echo -n "Only keeping the last ${KEEP_BACKUPS} backups and removing the other ones..."
-	BACKUP_COUNT=$(for f in "${BACKUP_DEST}"/[0-9_.]*; do echo "${f}"; done | wc -l)
-	if [[ $(( BACKUP_COUNT - KEEP_BACKUPS )) -gt 0 ]]; then
-		for old_backup in $(for f in "${BACKUP_DEST}"/[0-9_.]*; do echo "${f}"; done | head -n"$(( BACKUP_COUNT - KEEP_BACKUPS ))"); do
+	backup_count=$(for f in "${BACKUP_DEST}"/[0-9_.]*; do echo "${f}"; done | wc -l)
+	if [[ $(( backup_count - KEEP_BACKUPS )) -gt 0 ]]; then
+		for old_backup in $(for f in "${BACKUP_DEST}"/[0-9_.]*; do echo "${f}"; done | head -n"$(( backup_count - KEEP_BACKUPS ))"); do
 			${SUDO_CMD} rm "${old_backup}";
 		done
-		echo -e "\e[39;1m done\e[0m ($(( BACKUP_COUNT - KEEP_BACKUPS)) backup(s) pruned)"
+		echo -e "\e[39;1m done\e[0m ($(( backup_count - KEEP_BACKUPS)) backup(s) pruned)"
 	else
 		echo -e "\e[39;1m done\e[0m (no backups pruned)"
 	fi
@@ -357,10 +358,10 @@ backup_restore() {
 		if [[ $user_choice =~ ^-?[0-9]+$ ]]; then
 			n=1
 			for f in "${BACKUP_DEST}"/[0-9_.]*; do
-				[[ ${n} -eq $user_choice ]] && FILE="$f"
+				[[ ${n} -eq $user_choice ]] && fname="$f"
 				n=$(( n + 1 ))
 			done
-			if [[ -z $FILE ]]; then
+			if [[ -z $fname ]]; then
 				>&2 echo -e "\e[39;1mFailed\e[0m to interpret your input. Please enter the digit of the presented options."
 				exit 5
 			fi
@@ -371,10 +372,10 @@ backup_restore() {
 	elif [[ $# -eq 1 ]]; then
 		# Check for the existance of the specified file
 		if [[ -f "$1" ]]; then
-			FILE="$1"
+			fname="$1"
 		else
 			if [[ -f "${BACKUP_DEST}"/"$1" ]]; then
-				FILE="${BACKUP_DEST}"/"$1"
+				fname="${BACKUP_DEST}"/"$1"
 			else
 				>&2 echo -e "Sorry, but '$1', is \e[39;1mnot a valid file\e[0m, neither in your current directory nor in the backup folder."
 				exit 4
@@ -387,7 +388,7 @@ backup_restore() {
 	fi
 
 	echo "Restoring backup..."
-	if ${SUDO_CMD} tar -xf "${FILE}" -C "${SERVER_ROOT}" 2>&1; then
+	if ${SUDO_CMD} tar -xf "${fname}" -C "${SERVER_ROOT}" 2>&1; then
 		echo -e "\e[39;1mRestoration completed\e[0m"
 	else
 		echo -e "\e[39;1mFailed to restore backup.\e[0m"
