@@ -3,7 +3,8 @@
 # Contributor: Sergej Pupykin <pupykin.s+arch@gmail.com>
 
 pkgname=nextcloud-app-calendar-git
-pkgver=2.0.0.rc1.r1.ge8852054
+epoch=1
+pkgver=2.0.0.r1.g6a8575a0
 pkgrel=1
 pkgdesc="Calendar app for nextcloud"
 arch=('any')
@@ -19,7 +20,7 @@ sha512sums=('SKIP')
 
 pkgver() {
   cd "calendar"
-  git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g' | cut -d "v" -f2
+  git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-beta/beta/g;s/-rc/rc/g;s/-/./g' | cut -d "v" -f2
 }
 
 build() {
@@ -31,4 +32,8 @@ build() {
 package() {
   install -d "$pkgdir"/usr/share/webapps/nextcloud/apps
   tar -xvf "${srcdir}/calendar/build/artifacts/appstore/calendar.tar.gz" -C "${pkgdir}/usr/share/webapps/nextcloud/apps/"
+  # npm polishments
+  chown -R root:root "$pkgdir"
+  find "${pkgdir}"/usr -type d -exec chmod 755 {} +
+  find "${pkgdir}"/usr -type f -exec chmod 644 {} +
 }
