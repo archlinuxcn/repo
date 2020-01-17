@@ -1,9 +1,11 @@
---- vidalia-0.2.21/src/vidalia/config/TorSettings.h.old	2016-05-10 00:45:43.876515311 +0300
-+++ vidalia-0.2.21/src/vidalia/config/TorSettings.h	2016-05-10 00:46:09.163181433 +0300
-@@ -78,5 +78,5 @@
+--- TorSettings.OLD.h	2012-02-28 00:25:30.000000000 +0100
++++ TorSettings.h	2020-01-13 21:17:13.122536718 +0100
+@@ -77,7 +77,7 @@ public:
+   bool autoControlPort() const;
  
    /** Sets whether Vidalia should get the ControlPort from Tor */
 -  void setAutoControlPort(const bool auto);
 +  void setAutoControlPort(const bool autoControl);
  
    /** Set the control method */
+   void setControlMethod(ControlMethod::Method method);
