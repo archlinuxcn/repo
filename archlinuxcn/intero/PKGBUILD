@@ -1,0 +1,36 @@
+pkgname=intero
+pkgver=0.1.40
+pkgrel=3
+pkgdesc="Complete interactive development program for Haskell"
+url="https://hackage.haskell.org/package/intero"
+license=('BSD')
+arch=('x86_64' 'i686' 'aarch64')
+depends=('ghc-libs' 'haskell-ghc-paths'
+         'haskell-random'
+         'haskell-network'
+         'haskell-syb')
+makedepends=('ghc' 'emacs-company-mode' 'emacs-haskell-mode'
+             'flycheck')
+source=(${pkgname}-${pkgver}.tar.gz::"https://hackage.haskell.org/package/${pkgname}-${pkgver}/${pkgname}-${pkgver}.tar.gz")
+sha256sums=('e3dbff092298bc612290696c3f4f017fbcd55fd5b734c7660f7f3d85a55ce526')
+
+
+build() {
+    cd ${pkgname}-${pkgver}
+
+    runghc Setup.hs configure -O --enable-shared --enable-executable-dynamic --disable-library-vanilla \
+    --prefix=/usr --docdir="/usr/share/doc/${pkgname}" \
+    --dynlibdir=/usr/lib --libsubdir=\$compiler/site-local/\$pkgid
+    runghc Setup.hs build
+    cd elisp
+    emacs --no-splash -batch -L . -f batch-byte-compile *.el
+}
+
+package() {
+    cd ${pkgname}-${pkgver}
+    runghc Setup.hs copy --destdir="${pkgdir}"
+    mkdir -p ${pkgdir}/usr/share/licenses/${pkgname}
+    mv "${pkgdir}/usr/share/doc/${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}"
+    mkdir -p ${pkgdir}/usr/share/emacs/site-lisp/${pkgname}
+    cp elisp/*.{el,elc} ${pkgdir}/usr/share/emacs/site-lisp/${pkgname}
+}
