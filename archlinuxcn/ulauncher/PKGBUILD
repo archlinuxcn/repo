@@ -3,18 +3,18 @@
 # To install, run `makepkg -is`
 
 pkgname=ulauncher
-pkgver=5.6.0
+pkgver=5.6.1
 pkgrel=1
 pkgdesc='Application launcher for Linux'
 arch=('any')
 url="https://ulauncher.io"
 license=('GPL3')
 depends=('gobject-introspection-runtime' 'libappindicator-gtk3' 'libkeybinder3' 'webkit2gtk'
-         "python-"{dbus,gobject,pyinotify,levenshtein,xdg,websocket-client})
+         "python-"{dbus,gobject,cairo,pyinotify,levenshtein,xdg,websocket-client})
 makedepends=('python-distutils-extra')
 provides=("${pkgname%-*}")
 conflicts=("${pkgname%-*}")
-source=("https://github.com/Ulauncher/Ulauncher/releases/download/5.6.0/ulauncher_5.6.0.tar.gz")
+source=("https://github.com/Ulauncher/Ulauncher/releases/download/5.6.1/ulauncher_5.6.1.tar.gz")
 sha256sums=('SKIP')
 
 build() {
