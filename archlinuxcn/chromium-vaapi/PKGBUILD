@@ -11,7 +11,7 @@
 
 pkgname=chromium-vaapi
 pkgver=79.0.3945.130
-pkgrel=1
+pkgrel=2
 _launcher_ver=6
 pkgdesc="Chromium with VA-API support to enable hardware acceleration"
 arch=('x86_64')
@@ -37,6 +37,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         launch_manager.h-uses-std-vector.patch
         include-algorithm-to-use-std-lower_bound.patch
         icu65.patch
+        sync-enable-USSPasswords-by-default.patch
         chromium-system-icu.patch
         chromium-system-zlib.patch
         chromium-system-hb.patch
@@ -50,6 +51,7 @@ sha256sums=('56193431ab9d1193773b133d86b419bfae8d8b9196eea253660895e0e8f87ba0'
             'bd0fae907c451252e91c4cbf1ad301716bc9f8a4644ecc60e9590a64197477d3'
             '1f906676563e866e2b59719679e76e0b2f7f082f48ef0593e86da0351a586c73'
             '1de9bdbfed482295dda45c7d4e323cee55a34e42f66b892da1c1a778682b7a41'
+            '08ef82476780e0864b5bf7f20eb19db320e73b9a5d4f595351e12e97dda8746f'
             'e73cc2ee8d3ea35aab18c478d76fdfc68ca4463e1e10306fa1e738c03b3f26b5'
             'eb67eda4945a89c3b90473fa8dc20637511ca4dcb58879a8ed6bf403700ca9c8'
             'c0ad3fa426cb8fc1a237ddc6309a6b2dd4055bbe41dd07f50071ee61f969b81a'
@@ -114,6 +116,9 @@ prepare() {
 
   # https://crbug.com/1014272
   patch -Np1 -i ../icu65.patch
+
+  # https://crbug.com/1027929
+  patch -Np1 -i ../sync-enable-USSPasswords-by-default.patch
 
   # Fixes from Gentoo
   patch -Np1 -i ../chromium-system-icu.patch
