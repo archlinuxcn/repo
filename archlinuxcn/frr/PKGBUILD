@@ -4,9 +4,9 @@
 
 pkgname='frr'
 pkgver='7.2.1'
-pkgrel='1'
+pkgrel='2'
 pkgdesc='FRRouting (quagga fork) supports BGP4, OSPFv2, OSPFv3, ISIS, RIP, RIPng, PIM, LDP, BFD, VRRP, NHRP and EIGRP.'
-arch=('any')
+arch=('x86_64')
 url="https://frrouting.org/"
 license=('GPL2')
 depends=('libcap' 'libnl' 'readline' 'ncurses' 'perl' 'pam' 'json-c' 'net-snmp'
@@ -27,7 +27,7 @@ source=("https://github.com/FRRouting/${pkgname}/archive/${pkgname}-${pkgver}.ta
 sha256sums=('40fea6ff007453e27761a0372cde51fd8279f89984dff009092eebe2a7b29be3'
             '9371cc0522d13621c623b5da77719052bdebdceb7ffdbdc06fc32a2f07118e7e'
             '6f8dd86ef9c600763faead3052908531e8dc8ef67058e6f7f8da01bf0fe4eb89'
-            'fbbd0b6d40dffbdb850ecabf91ab6bd22da07aa2c7c6406af5e3816988905e02'
+            '36ac07e04b54bb2c4228bf4b380c133c134962ff5f39bc84c03972bc93b1261d'
             'e6e2592a8b0b18f7f173186fb4ebf23e642b3d912179f0bb36251962ca64cd7a')
 
 prepare() {
@@ -74,9 +74,6 @@ package() {
   pushd "redhat"
   sed -ri 's|/var/run/frr|/run/frr|g' "${pkgname}.logrotate"
   install -Dm0644 "${pkgname}.logrotate" "${pkgdir}/etc/logrotate.d/${pkgname}"
-  for d in babeld bgpd bfdd eigrpd isisd ldpd nhrpd ospf6d ospfd ospfd-instance@ pbrd pimd ripd ripngd staticd zebra; do
-    install -Dm0644 ${d}.service "${pkgdir}/usr/lib/systemd/system/${d}.service"
-  done
   install -Dm0644 "${pkgname}.pam" "${pkgdir}/etc/pam.d/${pkgname}"
   install -Dm0644 "${srcdir}/${pkgname}.tmpfiles" "${pkgdir}/usr/lib/tmpfiles.d/${pkgname}.conf"
   install -Dm0644 "${srcdir}/${pkgname}.sysusers" "${pkgdir}/usr/lib/sysusers.d/${pkgname}.conf"
