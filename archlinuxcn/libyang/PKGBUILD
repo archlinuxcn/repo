@@ -1,34 +1,43 @@
-pkgname=libyang
-_pkgver=1.0-r4
-pkgver=${_pkgver/-/}
-pkgrel=2
+# Maintainer: Konstantin Shalygin <k0ste@k0ste.ru>
+# Contributor: Konstantin Shalygin <k0ste@k0ste.ru>
+
+pkgname='libyang'
+pkgver='1.0.109'
+pkgrel='1'
 pkgdesc='A YANG data modelling language parser and toolkit written (and providing API) in C.'
-url="https://github.com/CESNET/$pkgname"
+url="https://github.com/CESNET/${pkgname}"
 arch=('x86_64')
 license=('BSD')
 depends=('pcre')
 makedepends=('cmake')
+checkdepends=('cmocka')
 conflicts=('libyang-git' 'libyang-devel-git')
-_pkgsrc=$pkgname-$_pkgver
-source=("$_pkgsrc.tar.gz::https://github.com/CESNET/$pkgname/archive/v$_pkgver.tar.gz")
-sha256sums=('411f0c675b0858f8deabc0545e33fbd791ff7c7a5b7d2c27e347e3973d5b8ae4')
+source=("${url}/archive/v${pkgver}.tar.gz")
+sha256sums=('1686a381a8cce775102e60c8eb93f7ba64c6d4ae10591fc05d9f969a07815f60')
 
 prepare() {
-    mkdir -p $srcdir/build-$_pkgver
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  mkdir build
 }
 
 build() {
-    cd $srcdir/build-$_pkgver
-    cmake -DCMAKE_INSTALL_PREFIX=/usr \
-        -DCMAKE_INSTALL_LIBDIR=lib \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DENABLE_LYD_PRIV=ON \
-        $srcdir/$_pkgsrc
-    make
+  cd "${srcdir}/${pkgname}-${pkgver}/build"
+  cmake .. \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=lib \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DENABLE_LYD_PRIV=ON \
+    -DENABLE_BUILD_TESTS=ON
+  make
+}
+
+check() {
+  cd "${srcdir}/${pkgname}-${pkgver}/build"
+  make test
 }
 
 package() {
-    cd $srcdir/build-$_pkgver
-    make DESTDIR="$pkgdir" install
-    install -Dm644 $srcdir/$_pkgsrc/LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  cd "${srcdir}/${pkgname}-${pkgver}/build"
+  make DESTDIR="${pkgdir}" install
+  install -Dm644 "${srcdir}/${pkgname}-${pkgver}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
