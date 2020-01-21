@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# ./check4u -- check for updates of a software package
+
+fstar_latest() {
+    local GITHUB_RELEASES='https://github.com/FStarLang/FStar/releases.atom'
+
+    LATEST=`sed -e "s/xmlns/ignore/" <(curl --silent $GITHUB_RELEASES) |
+        xmllint --xpath "/feed/entry[1]/title/text()" - | cut -d' ' -f1`
+}
+fstar_current() {
+    source PKGBUILD &&
+        CURRENT="v$pkgver"
+}
+
+fstar_latest && fstar_current
+
+if [[ "$LATEST" != "$CURRENT" ]]; then
+    echo -e "Latest release   : $LATEST"
+    echo -e "Currently on AUR : $CURRENT"
+    exit 1
+fi
