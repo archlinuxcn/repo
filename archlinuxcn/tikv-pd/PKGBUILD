@@ -1,6 +1,7 @@
 # Maintainer: Xuanwo <xuanwo@archlinuxcn.org>
+# Maintainer: Allen Zhong <zhongbenli@pingcap.com>
 pkgname=tikv-pd
-pkgver=3.0.0
+pkgver=3.0.9
 pkgrel=1
 pkgdesc='Manage and schedule the TiKV cluster.'
 makedepends=('go' 'make' 'git')
@@ -14,7 +15,7 @@ source=(pd-${pkgver}.tar.gz::https://github.com/pingcap/pd/archive/v${pkgver}.ta
         pd-sysusers.conf
         pd-tmpfiles.conf
         pd.toml)
-sha256sums=('090f3876a45165441d11fa54958beed89f88b3818ef0144ff374685801e9bff0'
+sha256sums=('fbe73c34c37d23bd07e44162ac766758debc25fedde7514c9545d53c848bbd69'
             'b03d12f2f8d6eb2e9d654d6258ca39000225cdf1418840f7e35081631bc4d924'
             '5edd250ba9e70a4f8d27581ed658f0fbfeca58ca62429dec12bb5fffc0919b67'
             '15633aaa2d7726375112a1b5af88105878f09c176a542cde6d0e5f0c4eee4495'
@@ -34,9 +35,10 @@ build() {
   export PATH=$GOPATH/bin:$PATH
   export CGO_ENABLED=0
 
-  _LDFLAGS="-X $_gopkgname/server.PDReleaseVersion=$pkgver -X $_gopkgname/server.PDGitBranch=master -X $_gopkgname/server.PDGitHash=v$pkgver"
-
   cd $GOPATH/src/$_gopkgname
+
+  sed -i '/shell git /d' Makefile
+  _LDFLAGS="-X $_gopkgname/server.PDReleaseVersion=$pkgver -X $_gopkgname/server.PDGitBranch=release -X $_gopkgname/server.PDGitHash=v$pkgver"
 
   LDFLAGS=$_LDFLAGS make build
 }
