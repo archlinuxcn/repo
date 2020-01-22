@@ -1,6 +1,7 @@
 # Maintainer: Xuanwo <xuanwo@archlinuxcn.org>
+# Maintainer: Allen Zhong <zhongbenli@pingcap.com>
 pkgname=tidb
-pkgver=3.0.0
+pkgver=3.0.9
 pkgrel=1
 pkgdesc='A distributed HTAP database compatible with the MySQL protocol'
 makedepends=('go' 'make' 'git')
@@ -15,7 +16,7 @@ source=(tidb-${pkgver}.tar.gz::https://github.com/pingcap/tidb/archive/v${pkgver
         tidb-sysusers.conf
         tidb-tmpfiles.conf
         tidb.toml)
-sha256sums=('c92424569419538671c80b3cbd13e287af598c5ac263d267f98842814df2982b'
+sha256sums=('ff396d3170c701b15213fbc57e0dde9065a18a70df32ff1c30a89cdc9c619831'
             '22318c19bb89ff5a0852df5186cc1496214cd49f2264192413a326d1e8c93dc9'
             '2b147d80985e714d5f861baf76591104c07058b9b6fa573bf0676d675cf8fc20'
             '30ce83fbec8f102c30e438282bb5b18c026d08480f2386d68f1116c12481bf66'
@@ -34,12 +35,11 @@ build() {
   export GOPATH="$srcdir/build"
   export PATH=$GOPATH/bin:$PATH
 
-  _LDFLAGS="-X github.com/pingcap/parser/mysql.TiDBReleaseVersion=$pkgver -X $_gopkgname/util/printer.TiDBGitHash=v$pkgver -X $_gopkgname/util/printer.TiDBGitBranch=master"
-
   cd $GOPATH/src/$_gopkgname
 
   # Remove all git operations.
-  sed -i '/(shell git/d' Makefile
+  sed -i '/(shell git /d' Makefile
+  _LDFLAGS="-X github.com/pingcap/parser/mysql.TiDBReleaseVersion=$pkgver -X $_gopkgname/util/printer.TiDBGitHash=v$pkgver -X $_gopkgname/util/printer.TiDBGitBranch=release"
 
   LDFLAGS=$_LDFLAGS make server
 }
