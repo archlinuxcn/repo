@@ -7,34 +7,39 @@
 
 pkgbase=coin
 pkgname=(coin coin-docs)
-_count=11927
-_rev=e74da184f75b
-pkgver=4.0.0a+$_count+m$_rev
+pkgver=4.0.0
 pkgrel=1
 pkgdesc='A high-level 3D graphics toolkit on top of OpenGL'
-url='https://bitbucket.org/Coin3D/coin'
+url='https://github.com/coin3d/coin'
 license=('GPL')
 arch=('i686' 'x86_64')
 depends=('libgl')
-makedepends=('mercurial' 'cmake' 'doxygen' 'glu')
+makedepends=('cmake' 'doxygen' 'glu' 'boost')
 optdepends=('openal: sound/dynamic linking support'
             'fontconfig: dynamic linking support'
             'zlib: dynamic linking support'
             'freetype2: dynamic linking support')
-source=("coin::hg+https://bitbucket.org/Coin3D/coin#revision=$_rev"
-        "generalmsvcgeneration::hg+https://bitbucket.org/Coin3D/generalmsvcgeneration"
-        "boost-header-libs-full::hg+https://bitbucket.org/Coin3D/boost-header-libs-full")
-sha256sums=('SKIP' 'SKIP' 'SKIP')
+source=("https://github.com/coin3d/coin/archive/Coin-$pkgver.tar.gz"
+        "coin-remove-cpack.patch::https://github.com/coin3d/coin/commit/be8e3d5.patch")
+sha256sums=('b00d2a8e9d962397cf9bf0d9baa81bcecfbd16eef675a98c792f5cf49eb6e805'
+            'c77a6bbcaef4d65b45eac7711d3be713d4d23699d63a38f57030febb4b16e24d')
+
+prepare() {
+    cd coin-Coin-$pkgver
+
+    patch -Np1 -i ../coin-remove-cpack.patch
+}
 
 build() {
     mkdir -p build
     cd build
 
-    cmake ../coin \
+    cmake ../coin-Coin-$pkgver \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_INSTALL_LIBDIR=lib \
         -DCOIN_THREADSAFE=ON \
-        -DCOIN_BUILD_DOCUMENTATION_CHM=ON \
+        -DCOIN_BUILD_DOCUMENTATION=ON \
+        -DCOIN_BUILD_DOCUMENTATION_CHM=OFF \
         -DCOIN_BUILD_DOCUMENTATION_MAN=ON \
         -DUSE_EXTERNAL_EXPAT=ON
 
