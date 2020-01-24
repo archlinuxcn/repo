@@ -3,7 +3,7 @@
 # Contributor: Leroy.H.Y <me at lhy0403 dot top>
 # Contributor: Neboer <rubinposter@gmail.com>
 pkgname=qv2ray
-pkgver=2.0.0+grpcfree
+pkgver=2.0.0
 pkgrel=1
 pkgdesc="Cross-platform V2ray Client written in Qt (Stable Release)"
 arch=('x86_64')
