@@ -31,9 +31,10 @@ sha512sums=(
     'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP'
 )
 
-#pkgver() {
-#    printf "%s.%s+grpcfree" $(grep 'VERSION = ' ${srcdir}/Qv2ray/Qv2ray.pro | cut -d ' ' -f 3 | cut -d '.' -f 1,2,3) $(cat ${srcdir}/Qv2ray/Build.Counter)
-#}
+pkgver() {
+    cd "${srcdir}/Qv2ray"
+    printf "%s" $(git describe --long --tags | sed 's/v//;s/-\S*//g')
+}
 
 prepare() {
     cd "${srcdir}/Qv2ray"
