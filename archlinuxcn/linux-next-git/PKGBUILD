@@ -47,7 +47,7 @@ _1k_HZ_ticks=
 ### Do not edit below this line unless you know what you're doing
 
 pkgbase=linux-next-git
-pkgver=20200121.r0.gbc80e6ad8ee1
+pkgver=20200123.r0.g41539ebf9bac
 _srcname=linux-next
 pkgrel=1
 pkgdesc='Linux NEXT'
@@ -79,6 +79,7 @@ prepare() {
     cd $_srcname
     
     rm Documentation/driver-api/thermal/cpu-idle-cooling.rst
+    rm Documentation/driver-api/dmaengine/client.rst
     ### Setting version
         msg2 "Setting version..."
         scripts/setlocalversion --save-scmversion
