@@ -13,35 +13,34 @@ depends=('hicolor-icon-theme' 'qt5-charts>5.11.0')
 optdepends=('v2ray' 'v2ray-domain-list-community' 'v2ray-geoip')
 makedepends=('git' 'make' 'qt5-tools' 'which' 'gcc' 'qt5-declarative' 'go')
 provides=('qv2ray')
-conflicts=('qv2ray')
-source=("Qv2ray::git+${url}#tag=v${pkgver}")
+source=("Qv2ray-${pkgver}::git+${url}#tag=v${pkgver}")
 sha512sums=('SKIP')
 
 pkgver() {
-    cd "${srcdir}/Qv2ray"
+    cd "${srcdir}/Qv2ray-${pkgver}"
     printf "%s" $(git describe --long --tags | sed 's/v//;s/-\S*//g')
 }
 
 prepare() {
-    cd "${srcdir}/Qv2ray"
+    cd "${srcdir}/Qv2ray-${pkgver}"
     git submodule init
     git config submodule."libs/gRPC-win32".active false
     git submodule update
 }
 
 build() {
-    cd "${srcdir}/Qv2ray/libs/libqvb"
+    cd "${srcdir}/Qv2ray-${pkgver}/libs/libqvb"
     chmod +x ./build.sh && ./build.sh
-    ln -sf "${srcdir}/Qv2ray/libs/libqvb/build/libqvb.a" "${srcdir}/Qv2ray/libs/libqvb-linux64.a"
+    ln -sf "${srcdir}/Qv2ray-${pkgver}/libs/libqvb/build/libqvb.a" "${srcdir}/Qv2ray-${pkgver}/libs/libqvb-linux64.a"
 
-    cd "${srcdir}/Qv2ray"
+    cd "${srcdir}/Qv2ray-${pkgver}"
     mkdir -p build && cd build
     qmake 'CONFIG += with_new_backend' 'DEFINES += QV2RAY_DEFAULT_VCORE_PATH=\\\"/usr/bin/v2ray\\\"' 'DEFINES += QV2RAY_DEFAULT_VASSETS_PATH=\\\"/usr/lib/v2ray\\\"' PREFIX=/usr ../
     make
 }
 
 package() {
-    cd "${srcdir}/Qv2ray"
+    cd "${srcdir}/Qv2ray-${pkgver}"
     install -Dm755 build/qv2ray "${pkgdir}/usr/bin/qv2ray"
     install -Dm644 assets/qv2ray.desktop "${pkgdir}/usr/share/applications/qv2ray.desktop"
     install -Dm644 assets/icons/qv2ray.png "${pkgdir}/usr/share/icons/hicolor/256x256/apps/qv2ray.png"
