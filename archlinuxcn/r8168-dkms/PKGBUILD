@@ -3,8 +3,8 @@
 # Contributor: angelsl
 _pkgbase=r8168
 pkgname=${_pkgbase}-dkms
-pkgver=8.047.05
-pkgrel=2
+pkgver=8.048.00
+pkgrel=1
 pkgdesc="A kernel module for Realtek 8168 network cards"
 url="https://github.com/mtorromeo/r8168"
 license=("GPL")
@@ -15,15 +15,8 @@ optdepends=('linux-headers: Needed for build the module for Arch kernel'
 	'linux-lts-headers: Needed for build the module for LTS Arch kernel'
 	'linux-zen-headers: Needed for build the module for ZEN Arch kernel')
 source=(https://github.com/mtorromeo/r8168/archive/$pkgver/$pkgname-$pkgver.tar.gz
-        dkms.conf
-        kernel-5.4.patch)
+        dkms.conf)
 install=r8168-dkms.install
-
-prepare() {
-	cd "r8168-$pkgver"
-	patch -Np1 -i "${srcdir}/kernel-5.4.patch"
-}
- 
 
 package() {
 	echo "blacklist r8169" | \
@@ -38,6 +31,5 @@ package() {
 	rm src/Makefile_linux24x
 	cp -dr --no-preserve='ownership' src "${pkgdir}/usr/src/${_pkgbase}-${pkgver}/src"
 }
-sha256sums=('1344bf3d8a1d01a1be8805b48940be1b946b5e694ca75bd14ed1c76fd4c3d67b'
-            'e33abcbc8fbe3129459ebc60be3b2f8ed55ddc53755f4956d6feb16c61c43250'
-            'be79c151c6323bb4d340e31e44fae25a36a93d317812fe5d75c54649ed2508b0')
+sha256sums=('0aacba20d985ba5e67e21bdad89a099e102f7bef3027adb647ffbb80b01ac8d0'
+            'e33abcbc8fbe3129459ebc60be3b2f8ed55ddc53755f4956d6feb16c61c43250')
