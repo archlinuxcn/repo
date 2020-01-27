@@ -1,36 +1,40 @@
-# Maintainer : Özgür Sarıer <echo b3pndXJzYXJpZXIxMDExNjAxMTE1QGdtYWlsLmNvbQo= | base64 -d>
+# Maintainer: Tod Jackson <tod.jackson@gmail.com>
+# Contributor: Özgür Sarıer <echo b3pndXJzYXJpZXIxMDExNjAxMTE1QGdtYWlsLmNvbQo= | base64 -d>
 # Contributor: user6553591 <Message on Reddit>
 # Contributor: P. Badredin <p dot badredin at gmail dot com>
 # Contributor: Justin Blanchard <UncombedCoconut at gmail dot com>
 # Contributor: Auguste Pop < auguste [at] gmail [dot] com >
 
 pkgname=stockfish
-pkgver=10
+pkgver=11
 pkgrel=1
 epoch=1
 pkgdesc="A strong chess engine written by Tord Romstad, Marco Costalba, Joona Kiiski"
-arch=('i686' 'x86_64')
+arch=('i686' 'x86_64' 'armv7')
 url="https://stockfishchess.org/"
 license=('GPL3')
 depends=('glibc')
-source=("https://${pkgname}.s3.amazonaws.com/${pkgname}-${pkgver}-src.zip")
-sha512sums=('959c4f3c497ba3108884dabc38de824f11781ae57b4ab5fdf25daf9a7fc0326e663adb1c081b8c8d57a7bf5f2e941369502a50a0c93135a001c6bd1af360d0f8')
+source=("https://stockfishchess.org/files/$pkgname-$pkgver-linux.zip")
+sha512sums=('f1505814d143e319a748ff7a0abe58ca37481aefdfaaab762b3efeff216294201e085b015b614e44369c7a55de1bbf6e18a0183230c02bdd2fd4945719aeca3d')
 
 build() {
-    cd "$srcdir/src"
-
+    cd "$pkgname-$pkgver-linux/src"
     if [[ "$CARCH" == "i686" ]]; then
-	_arch=x86-32
+        _arch=x86-32
     elif grep popcnt /proc/cpuinfo 2>&1; then
-	_arch=x86-64-modern
+        _arch=x86-64-modern
+    elif grep bmi2 /proc/cpuinfo 2>&1; then
+        _arch=x86-64-bmi2
+    elif [[ "$CARCH" == "armv7h" ]]; then
+    _arch=armv7
     else
 	_arch=x86-64
     fi
     
-    make profile-build ARCH=$_arch
+    make build ARCH="$_arch" COMP=gcc
 }
 
 package() {
-    cd "$srcdir/src"
+    cd "$pkgname-$pkgver-linux/src"
     make PREFIX="$pkgdir/usr" install
 }
