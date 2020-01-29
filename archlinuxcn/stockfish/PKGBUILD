@@ -7,7 +7,7 @@
 
 pkgname=stockfish
 pkgver=11
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc="A strong chess engine written by Tord Romstad, Marco Costalba, Joona Kiiski"
 arch=('i686' 'x86_64' 'armv7')
@@ -21,10 +21,10 @@ build() {
     cd "$pkgname-$pkgver-linux/src"
     if [[ "$CARCH" == "i686" ]]; then
         _arch=x86-32
-    elif grep popcnt /proc/cpuinfo 2>&1; then
-        _arch=x86-64-modern
     elif grep bmi2 /proc/cpuinfo 2>&1; then
         _arch=x86-64-bmi2
+    elif grep popcnt /proc/cpuinfo 2>&1; then
+        _arch=x86-64-modern
     elif [[ "$CARCH" == "armv7h" ]]; then
     _arch=armv7
     else
