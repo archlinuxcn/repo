@@ -6,10 +6,11 @@
 # Contributor: Victor Hugo Souza <vhbsouza@gmail.com>
 # Contributor: William Penton <william@penton.us>
 # Contributor: Jeff Moody <jeff@fifthecho.com>
+# Contributor: KokaKiwi <kokakiwi+aur@kokakiwi.net>
 
 pkgname=gitkraken
 pkgrel=1
-pkgver=6.5.0
+pkgver=6.5.1
 pkgdesc="The intuitive, fast, and beautiful cross-platform Git client."
 url="https://www.gitkraken.com/"
 provides=('gitkraken')
@@ -27,7 +28,7 @@ source=(
     "eula.html"
     "gitkraken.sh"
 )
-sha256sums=('778e0712e0b29a16867e2d232fd5a6d7b29f6ba07c64105963d1479eab2c2172'
+sha256sums=('d7ad5ef5f42617ea71a1059fe6ee59e01a4559f00880144ee335723a8232f6a3'
             '81b32ad2fae47fcdf8adb4fdb5c734430ed993f712e75bd62297ae8540fdf889'
             'a2b3551f83bcbe56da961615f066bb736cd15d98e41c93b3b4add0d56606d902'
             '9566342308bf35b56e626fa1b0d716eb16991712cc43b617c4f0d95e005311d1'
