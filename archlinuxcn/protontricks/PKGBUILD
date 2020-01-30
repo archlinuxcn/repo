@@ -1,7 +1,7 @@
 # Maintainer: Jason Stryker <public at jasonstryker dot com>
 
 pkgname=protontricks
-pkgver=1.3.1
+pkgver=1.4
 pkgrel=1
 pkgdesc="A simple wrapper that does winetricks things for Proton enabled games."
 arch=('any')
@@ -9,20 +9,20 @@ url="https://github.com/Matoking/protontricks"
 license=('GPL3')
 depends=('python' 'python-vdf>=2.4' 'winetricks')
 optdepends=('zenity: GUI for GNOME desktop')
-makedepends=('git' 'python-setuptools')
+makedepends=('git' 'python-setuptools-scm')
 provides=("protontricks")
 conflicts=('protontricks-git')
-source=("${url}/archive/${pkgver}.tar.gz")
-sha512sums=('1c00668c4132b5a1caef088dfd282ddfa59b6ec5485a273e83d513d93258964894e05b0cdefdbad5ffde9e78498f0f24236382772695f6b9d9caf0f243889bf4')
+source=("git+${url}.git#tag=${pkgver}")
+sha512sums=('SKIP')
 
 build() {
-  cd "${srcdir}/protontricks-${pkgver}"
+  cd "${srcdir}/${pkgname}"
 
   python3 setup.py build
 }
 
 package() {
-  cd "${srcdir}/protontricks-${pkgver}"
+  cd "${srcdir}/${pkgname}"
 
   python3 setup.py install --root="$pkgdir" --optimize=1 || return 1
 
