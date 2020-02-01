@@ -6,11 +6,11 @@ _ver=0.1.173
 _pkgver=${_ver}-5
 # package version
 pkgver=${_ver}.5
-pkgrel=1
+pkgrel=2
 pkgdesc='virtio drivers for Windows (2000, XP, Vista, 7, 8, 10) guests and floppy images for Windows XP'
 arch=('any')
 url='https://docs.fedoraproject.org/en-US/quick-docs/creating-windows-virtual-machines-using-virtio-drivers/index.html'
-license=('GPL2')
+license=('BSD-3-Clause')
 optdepends=('qemu')
 # https://fedorapeople.org/groups/virt/virtio-win/CHANGELOG
 changelog="${pkgname}.changelog"
