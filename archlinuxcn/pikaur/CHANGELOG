@@ -1580,3 +1580,12 @@ Sun Feb 2 17:24:11 2020 +0100
      2020-01-31 2e484dd actionless fix(config: config-item): define __eq__ (fixes #447)
      2020-01-31 465177b actionless chore(cli-clean-pkgs): use bold line for question similar to pacman's -Sc
      2020-01-20 95fd008 actionless feat(install cli): show recovery prompt if deps for an AUR pkg are missing (fixes #282)
+
+
+Mon Feb 3 18:02:51 2020 +0100
+-------------------------------------------------
+1.6.1           Hotfix release 1.6.1
+    
+    Changes:
+     2020-02-03 bf8f1e8 actionless fix(install_cli): don't skip file review if --devel or --needed modes
+     2020-02-03 021fae1 actionless fix(install cli): when discarding package also add it manually_excluded, to prevent showing twice update itself and user-modified pkgbuild (fixes #446)
