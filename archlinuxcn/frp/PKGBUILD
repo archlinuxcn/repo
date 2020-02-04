@@ -3,7 +3,7 @@
 
 pkgbase='frp'
 pkgname=('frpc' 'frps')
-pkgver=0.31.1
+pkgver=0.31.2
 pkgrel=1
 pkgdesc="A fast reverse proxy to help you expose a local server behind a NAT or firewall to the internet."
 arch=('x86_64' 'i686' 'arm' 'armv6h' 'armv7h' 'aarch64')
@@ -14,7 +14,7 @@ makedepends=('go')
 
 source=("${pkgbase}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
 
-sha256sums=('b1fa893c09e61db084bf6ddc0abcaf105c2828a887ee0fc376bef1a66da9b095')
+sha256sums=('790a18f5651cc645a3d73fc147c719f5b212fc21db0c51c620011ee836b7a28f')
 
 prepare() {
   cd "${pkgbase}-${pkgver}"
