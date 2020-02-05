@@ -4,7 +4,4 @@ maintainers:
 build_prefix: extra-x86_64
 
 update_on:
-  - github: yairm210/Unciv
-    use_max_tag: true
-    from_pattern: '(.*)-patch([0-9])'
-    to_pattern: '\1.\2'
+  - cmd: unciv/nvcheck.py
