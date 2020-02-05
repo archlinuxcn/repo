@@ -6,9 +6,9 @@
 # http://github.com/archzfs/archzfs
 #
 pkgname="zfs-utils-git"
-_commit='591505dc2737bcd77c587e369e1d91b0fd97325c'
+_commit='741db5a3466236620612772319c3401171d3f2b6'
 
-pkgver=2020.01.31.r5690.g591505dc2
+pkgver=2020.02.04.r5696.g741db5a34
 pkgrel=1
 pkgdesc="Kernel module support files for the Zettabyte File System."
 makedepends=("python" "python-setuptools" "python-cffi" "git")
