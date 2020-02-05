@@ -2,15 +2,15 @@
 # Contributor: Alex Whitt <alex.joseph.whitt@gmail.com>
 
 pkgname=emacs-projectile
-pkgver=2.0.0
-pkgrel=11
+pkgver=2.1.0
+pkgrel=1
 pkgdesc="Project Interaction Library for Emacs"
 arch=(any)
 url="https://github.com/bbatsov/projectile"
 license=('GPL3')
 depends=('emacs' 'emacs-pkg-info')
 source=("https://github.com/bbatsov/projectile/archive/v${pkgver}.tar.gz")
-sha256sums=('4996f72ee8520983bee9b79c9a69ccca9bdd989fce07d66b854eb1bedc86fa3a')
+sha256sums=('c74fc6f062ea16af9ffcec67f8ce379e56819f1a359ac86b670cf7cfe2415f7a')
 
 build() {
   cd "${srcdir}/projectile-${pkgver}"
