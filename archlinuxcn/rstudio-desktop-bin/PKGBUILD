@@ -1,49 +1,44 @@
 # Maintainer: Meow < leon.tty1 at gmail dot com >
 
-# Get download links and md5sums for latest version of RStudio desktop
-## R code #############
-#
-#  require(XML)
-#  page = htmlTreeParse("http://www.rstudio.com/products/rstudio/download/",useInternalNodes = T)
-#  links = sapply(getNodeSet(page,'//table[@class="downloads"]/thead/tr/th[text()="Installers"]/../../..//a[contains(@href,".deb")]'),xmlGetAttr,'href')
-#  md5sums = sapply(getNodeSet(page,'//table[@class="downloads"]/thead/tr/th[text()="Installers"]/../../..//a[contains(@href,".deb")]/../..//code'),xmlValue)
-#  print(cbind(links,md5sums))
-#
-#######################
-
 # NOTE: If you are experiencing segmentation fault, delete the ".rstudio-desktop" folder from your home directory then restart the program should fix the issue.
 
 pkgname=rstudio-desktop-bin
-pkgver=1.2.5001
-pkgrel=1
+pkgver=1.2.5033
+pkgrel=3
 pkgdesc="An integrated development environment (IDE) for R (binary from RStudio official repository)"
 arch=('x86_64')
 license=('GPL')
 url="http://www.rstudio.org/"
-depends=('r' 'hicolor-icon-theme' 'shared-mime-info' 'orc' 'openssl-1.0')
-#makedepends=('patchelf')
-optdepends=('pandoc: markdown support'
-            'pandoc-citeproc: markdown support')
+#depends=('r' 'hicolor-icon-theme' 'shared-mime-info' 'orc' 'openssl-1.0')
+depends=('r' 'hicolor-icon-theme' 'shared-mime-info' 'openssl' 'libxkbcommon-x11' 'libedit')
+makedepends=('upx')
+optdepends=(
+'clang: C/C++ and Rcpp support'
+#'pandoc: markdown support'
+#'pandoc-citeproc: markdown support'
+)
 conflicts=('rstudio-desktop' 'rstudio-desktop-git' 'rstudio-desktop-preview-bin')
 provides=("rstudio-desktop=${pkgver}")
 options=(!strip)
 
 md5sums_x86_64=(
-4ff58a08c305207729feb65eb145a5a2
-84e61f5eda991b978fa168d6762f7990
-391ba54997d6faddbfe41a185a823ee4)
+bbd78f351f64f8b8c36672fd0f5d6394
+#84e61f5eda991b978fa168d6762f7990
+#391ba54997d6faddbfe41a185a823ee4
+)
 
-source_x86_64=("https://download1.rstudio.org/desktop/xenial/amd64/rstudio-${pkgver}-amd64.deb"
-"http://archive.ubuntu.com/ubuntu/pool/main/g/gstreamer0.10/libgstreamer0.10-0_0.10.36-1.2ubuntu3_amd64.deb"
-"http://security.ubuntu.com/ubuntu/pool/main/g/gst-plugins-base0.10/libgstreamer-plugins-base0.10-0_0.10.36-1.1ubuntu2.1_amd64.deb")
+source_x86_64=("https://download1.rstudio.org/desktop/bionic/amd64/rstudio-${pkgver}-amd64.deb"
+#"http://archive.ubuntu.com/ubuntu/pool/main/g/gstreamer0.10/libgstreamer0.10-0_0.10.36-1.2ubuntu3_amd64.deb"
+#"http://security.ubuntu.com/ubuntu/pool/main/g/gst-plugins-base0.10/libgstreamer-plugins-base0.10-0_0.10.36-1.1ubuntu2.1_amd64.deb"
+)
 
-noextract=('libgstreamer0.10-0_0.10.36-1.2ubuntu3_amd64.deb' 'libgstreamer-plugins-base0.10-0_0.10.36-1.1ubuntu2.1_amd64.deb')
+#noextract=('libgstreamer0.10-0_0.10.36-1.2ubuntu3_amd64.deb' 'libgstreamer-plugins-base0.10-0_0.10.36-1.1ubuntu2.1_amd64.deb')
 
 install="$pkgname".install
 
 package() {
 
-	shopt -s extglob
+  shopt -s extglob
 
   msg "Converting debian package..."
 
@@ -51,26 +46,26 @@ package() {
   tar Jxpf data.tar.xz -C "$pkgdir"
   install -dm755 "$pkgdir/usr/bin"
 
-  ARCH=${CARCH/686/386/}
+  #ARCH=${CARCH/686/386/}
   ARCH=${ARCH/x86_64/amd64}
 
-  ar x libgstreamer0.10-0_0.10.36-1.2ubuntu3_${ARCH}.deb
-  tar Jxf data.tar.xz \
-      --wildcards \
-      -C "${pkgdir}/usr/lib/rstudio/lib" \
-      ./usr/lib/${CARCH/686/386}-linux-gnu/libgstreamer-0.10.so.\* \
-      ./usr/lib/${CARCH/686/386}-linux-gnu/libgstbase-0.10.so.\* \
-      --strip-components=4
+  #ar x libgstreamer0.10-0_0.10.36-1.2ubuntu3_${ARCH}.deb
+  #tar Jxf data.tar.xz \
+   #   --wildcards \
+    #  -C "${pkgdir}/usr/lib/rstudio/lib" \
+     # ./usr/lib/${CARCH/686/386}-linux-gnu/libgstreamer-0.10.so.\* \
+     # ./usr/lib/${CARCH/686/386}-linux-gnu/libgstbase-0.10.so.\* \
+     # --strip-components=4
 
-  ar x libgstreamer-plugins-base0.10-0_0.10.36-1.1ubuntu2.1_${ARCH}.deb
-  tar Jxf data.tar.xz \
-      --wildcards \
-      -C "${pkgdir}/usr/lib/rstudio/lib" \
-      ./usr/lib/${CARCH/686/386/}-linux-gnu/libgstapp-0.10.so.\* \
-      ./usr/lib/${CARCH/686/386/}-linux-gnu/libgstinterfaces-0.10.so.\* \
-      ./usr/lib/${CARCH/686/386/}-linux-gnu/libgstpbutils-0.10.so.\* \
-      ./usr/lib/${CARCH/686/386/}-linux-gnu/libgstvideo-0.10.so.\* \
-      --strip-components=4
+ # ar x libgstreamer-plugins-base0.10-0_0.10.36-1.1ubuntu2.1_${ARCH}.deb
+ # tar Jxf data.tar.xz \
+  #    --wildcards \
+  #    -C "${pkgdir}/usr/lib/rstudio/lib" \
+   #   ./usr/lib/${CARCH/686/386/}-linux-gnu/libgstapp-0.10.so.\* \
+   #   ./usr/lib/${CARCH/686/386/}-linux-gnu/libgstinterfaces-0.10.so.\* \
+   #   ./usr/lib/${CARCH/686/386/}-linux-gnu/libgstpbutils-0.10.so.\* \
+   #   ./usr/lib/${CARCH/686/386/}-linux-gnu/libgstvideo-0.10.so.\* \
+   #   --strip-components=4
 
   #cd "$pkgdir/usr/lib/rstudio/bin"
   #ln -sf /usr/lib/libncursesw.so.6 libtinfo.so.5
@@ -80,8 +75,10 @@ package() {
 #  patchelf --set-rpath '$ORIGIN/..' libclang.so
 
   cd "$pkgdir/usr/lib/rstudio/bin/pandoc"
-  ln -sf /usr/bin/pandoc ./
-  ln -sf /usr/bin/pandoc-citeproc ./
+  #ln -sf /usr/bin/pandoc ./
+ # ln -sf /usr/bin/pandoc-citeproc ./
+ upx -q pandoc-citeproc
+ upx -q pandoc
 
 #  cd "$pkgdir/usr/lib/rstudio/bin/plugins"
 #  ls */*.so | xargs -n1 patchelf --set-rpath '$ORIGIN/../..'
