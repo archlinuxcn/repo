@@ -10,8 +10,8 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=chromium-vaapi
-pkgver=79.0.3945.130
-pkgrel=2
+pkgver=80.0.3987.87
+pkgrel=1
 _launcher_ver=6
 pkgdesc="Chromium with VA-API support to enable hardware acceleration"
 arch=('x86_64')
@@ -34,28 +34,28 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-launcher-$_launcher_ver.tar.gz::https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver.tar.gz
         chromium-drirc-disable-10bpc-color-configs.conf
         vaapi-fix.patch
-        launch_manager.h-uses-std-vector.patch
-        include-algorithm-to-use-std-lower_bound.patch
-        icu65.patch
+        cros-search-service-Include-cmath-for-std-pow.patch
+        move-RemoteTreeNode-declaration.patch
         sync-enable-USSPasswords-by-default.patch
-        chromium-system-icu.patch
-        chromium-system-zlib.patch
-        chromium-system-hb.patch
-        fix-spammy-unique-font-matching-log.patch
+        fix-shim-header-generation-when-unbundling-ICU.patch
+        fix-building-with-system-zlib.patch
+        remove-verbose-logging-in-local-unique-font-matching.patch
+        fix-building-with-unbundled-libxml.patch
+        fix-browser-frame-view-not-getting-a-relayout.patch
         chromium-widevine.patch
         chromium-skia-harmony.patch)
-sha256sums=('56193431ab9d1193773b133d86b419bfae8d8b9196eea253660895e0e8f87ba0'
+sha256sums=('f51f6fca5d9abbef855aa6b5bf427410c6e96ae58b64a7d45f843868cfb0ac8e'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
             'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb'
             '0ec6ee49113cc8cc5036fa008519b94137df6987bf1f9fbffb2d42d298af868a'
-            'bd0fae907c451252e91c4cbf1ad301716bc9f8a4644ecc60e9590a64197477d3'
-            '1f906676563e866e2b59719679e76e0b2f7f082f48ef0593e86da0351a586c73'
-            '1de9bdbfed482295dda45c7d4e323cee55a34e42f66b892da1c1a778682b7a41'
+            '0a8d1af2a3734b5f99ea8462940e332db4acee7130fe436ad3e4b7ad133e5ae5'
+            '21f631851cdcb347f40793485b168cb5d0da65ae26ae39ba58d624c66197d0a5'
             '08ef82476780e0864b5bf7f20eb19db320e73b9a5d4f595351e12e97dda8746f'
-            'e73cc2ee8d3ea35aab18c478d76fdfc68ca4463e1e10306fa1e738c03b3f26b5'
-            'eb67eda4945a89c3b90473fa8dc20637511ca4dcb58879a8ed6bf403700ca9c8'
-            'c0ad3fa426cb8fc1a237ddc6309a6b2dd4055bbe41dd07f50071ee61f969b81a'
-            '6fbffe59b886195b92c9a55137cef83021c16593f49714acb20023633e3ebb19'
+            'e477aa48a11ca4d53927f66a9593567fcd053325fb38af30ac3508465f1dd1f6'
+            '18276e65c68a0c328601b12fefb7e8bfc632346f34b87e64944c9de8c95c5cfa'
+            '5bc775c0ece84d67855f51b30eadcf96fa8163b416d2036e9f9ba19072f54dfe'
+            'e530d1b39504c2ab247e16f1602359c484e9e8be4ef6d4824d68b14d29a7f60b'
+            '5db225565336a3d9b9e9f341281680433c0b7bb343dff2698b2acffd86585cbe'
             '709e2fddba3c1f2ed4deb3a239fc0479bfa50c46e054e7f32db4fb1365fed070'
             '771292942c0901092a402cc60ee883877a99fb804cb54d568c8c6c94565a48e1')
 
@@ -105,28 +105,32 @@ prepare() {
   sed -i -e 's/\<xmlMalloc\>/malloc/' -e 's/\<xmlFree\>/free/' \
     third_party/blink/renderer/core/xml/*.cc \
     third_party/blink/renderer/core/xml/parser/xml_document_parser.cc \
-    third_party/libxml/chromium/libxml_utils.cc
+    third_party/libxml/chromium/*.cc
 
   # Fix VA-API on Intel and Nvidia
   patch -Np1 -i ../vaapi-fix.patch
 
-  # https://crbug.com/819294
-  patch -Np1 -i ../launch_manager.h-uses-std-vector.patch
-  patch -Np1 -i ../include-algorithm-to-use-std-lower_bound.patch
-
-  # https://crbug.com/1014272
-  patch -Np1 -i ../icu65.patch
+  # https://crbug.com/957519
+  patch -Np1 -i ../cros-search-service-Include-cmath-for-std-pow.patch
+  patch -Np1 -i ../move-RemoteTreeNode-declaration.patch
 
   # https://crbug.com/1027929
   patch -Np1 -i ../sync-enable-USSPasswords-by-default.patch
 
-  # Fixes from Gentoo
-  patch -Np1 -i ../chromium-system-icu.patch
-  patch -Np1 -i ../chromium-system-zlib.patch
-  patch -Np1 -i ../chromium-system-hb.patch
+  # https://crbug.com/989153
+  patch -Np1 -i ../fix-shim-header-generation-when-unbundling-ICU.patch
+
+  # https://crbug.com/977964
+  patch -Np1 -i ../fix-building-with-system-zlib.patch
 
   # https://crbug.com/1005508
-  patch -Np1 -i ../fix-spammy-unique-font-matching-log.patch
+  patch -Np1 -i ../remove-verbose-logging-in-local-unique-font-matching.patch
+
+  # https://crbug.com/1043042
+  patch -Np1 -i ../fix-building-with-unbundled-libxml.patch
+
+  # https://crbug.com/1046122
+  patch -Np1 -i ../fix-browser-frame-view-not-getting-a-relayout.patch
 
   # Load bundled Widevine CDM if available (see chromium-widevine in the AUR)
   # M79 is supposed to download it as a component but it doesn't seem to work
