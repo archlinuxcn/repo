@@ -12,7 +12,7 @@ index a18d957..66077b3 100755
  script_name=$0
  function usage () {
 diff --git a/tools/seafile-admin b/tools/seafile-admin
-index b5e199e..ee3be0a 100755
+index b5e199e..6f40394 100755
 --- a/tools/seafile-admin
 +++ b/tools/seafile-admin
 @@ -5,16 +5,6 @@
@@ -122,7 +122,7 @@ index b5e199e..ee3be0a 100755
  def gen_seahub_secret_key():
      data = str(uuid.uuid4()) + str(uuid.uuid4())
      return data[:40]
-@@ -457,6 +488,35 @@ def move_avatar():
+@@ -457,6 +488,36 @@ def move_avatar():
      # make the the original avatars dir a symlink pointing to the outside dir
      os.symlink(outside_avatar_dir, seahub_avatar_dir)
  
@@ -152,13 +152,14 @@ index b5e199e..ee3be0a 100755
 +        error('Failed to sync seahub database')
 +
 +def create_library_template():
-+    template_dir = os.path.join(cwd, 'seafile-data', 'library-template');
-+    if not os.path.exists(template_dir):
-+        must_mkdir(template_dir)
++    template_dir = os.path.join(cwd, 'seafile-data', 'library-template')
++    if os.path.exists(template_dir):
++        return
++    shutil.copytree(os.path.join(cwd, 'seafile-server', 'docs'), template_dir)
  
  def init_seahub():
      seahub_dir = conf[CONF_SEAHUB_DIR]
-@@ -464,29 +524,26 @@ def init_seahub():
+@@ -464,29 +525,26 @@ def init_seahub():
      # create seahub_settings.py
      create_seahub_settings_py()
  
@@ -194,7 +195,7 @@ index b5e199e..ee3be0a 100755
      del django
  
  
-@@ -516,11 +573,11 @@ def check_python_dependencies(silent=False):
+@@ -516,11 +574,11 @@ def check_python_dependencies(silent=False):
          'six',
          'pytz',
          'rest_framework',
@@ -208,7 +209,7 @@ index b5e199e..ee3be0a 100755
          'openpyxl',
      ] # yapf: disable
      for pkg in pkgs:
-@@ -727,8 +784,7 @@ def check_layout(args):
+@@ -727,8 +785,7 @@ def check_layout(args):
      if not os.path.exists(seafile_conf):
          error_not_found(seafile_conf)
  
@@ -218,7 +219,7 @@ index b5e199e..ee3be0a 100755
      if not os.path.exists(seahub_conf):
          error_not_found(seahub_conf)
  
-@@ -741,9 +797,9 @@ def check_layout(args):
+@@ -741,9 +798,9 @@ def check_layout(args):
      conf[CONF_SEAFILE_DIR] = seafile_data_dir
      conf[CONF_SEAHUB_DIR] = seahub_dir
      conf[CONF_SEAHUB_CONF] = seahub_conf
@@ -231,7 +232,7 @@ index b5e199e..ee3be0a 100755
  
  
  def check_config(args):
-@@ -812,11 +868,18 @@ def setup_seafile(args):
+@@ -812,11 +869,18 @@ def setup_seafile(args):
  def check_necessary_files():
      files = [
          os.path.join(cwd, 'conf', 'ccnet.conf'),
@@ -251,7 +252,7 @@ index b5e199e..ee3be0a 100755
      for fpath in files:
          if not os.path.exists(fpath):
              error('%s not found' % fpath)
-@@ -859,8 +922,7 @@ def start_seafile(args):
+@@ -859,8 +923,7 @@ def start_seafile(args):
  def stop_seafile(dummy):
      info('Stopping seafile server')
      pkill('seafile-controller')
