@@ -12,7 +12,7 @@ index a18d957..66077b3 100755
  script_name=$0
  function usage () {
 diff --git a/tools/seafile-admin b/tools/seafile-admin
-index b5e199e..287deb6 100755
+index b5e199e..167a7c2 100755
 --- a/tools/seafile-admin
 +++ b/tools/seafile-admin
 @@ -5,16 +5,6 @@
@@ -36,19 +36,23 @@ index b5e199e..287deb6 100755
  ####################
  cwd = os.getcwd()
  SCRIPT_NAME = os.path.basename(sys.argv[0])
-+# User the bundled older Django
++# Use the bundled older Django 1.11 instead of potential global one.
 +sys.path.insert(0, os.path.join(cwd, 'seafile-server', 'seahub', 'thirdpart'))
  
  PYTHON = sys.executable
  
-@@ -398,25 +390,34 @@ def get_seafile_data_dir():
+@@ -398,25 +390,38 @@ def get_seafile_data_dir():
  
  
  def create_gunicorn_conf():
 -    runtime_dir = os.path.join(cwd, 'seafile-server', 'runtime')
 -    confpath = os.path.join(runtime_dir, 'seahub.conf')
 +    conf_dir = os.path.join(cwd, 'conf')
++    pids_dir = os.path.join(cwd, 'pids')
 +    confpath = os.path.join(conf_dir, 'gunicorn.conf.py')
++
++    if not os.path.exists(pids_dir):
++        must_mkdir(pids_dir)
  
      if os.path.exists(confpath):
          return
@@ -85,7 +89,7 @@ index b5e199e..287deb6 100755
  '''
  
      try:
-@@ -426,6 +427,32 @@ accesslog = os.path.join(runtime_dir, 'access.log')
+@@ -426,6 +431,32 @@ accesslog = os.path.join(runtime_dir, 'access.log')
          error('Failed to write seahub config')
  
  
@@ -102,10 +106,10 @@ index b5e199e..287deb6 100755
 +    content = '''\
 +[WEBDAV]
 +enabled = false
-+port = 8080
++port = 8083
 +fastcgi = false
-+host = 0.0.0.0
-+share_name = /
++host = 127.0.0.1
++share_name = /seafdav
 +'''
 +
 +    try:
@@ -118,7 +122,7 @@ index b5e199e..287deb6 100755
  def gen_seahub_secret_key():
      data = str(uuid.uuid4()) + str(uuid.uuid4())
      return data[:40]
-@@ -457,6 +484,30 @@ def move_avatar():
+@@ -457,6 +488,35 @@ def move_avatar():
      # make the the original avatars dir a symlink pointing to the outside dir
      os.symlink(outside_avatar_dir, seahub_avatar_dir)
  
@@ -146,10 +150,15 @@ index b5e199e..287deb6 100755
 +    if run_argv(['sqlite3', os.path.join(cwd, 'seahub.db'),
 +                 '.read ' + os.path.join(cwd, 'seafile-server', 'seahub', 'sql', 'sqlite3.sql')]) != 0:
 +        error('Failed to sync seahub database')
++
++def create_library_template():
++    template_dir = os.path.join(cwd, 'seafile-data', 'library-template');
++    if not os.path.exists(template_dir):
++        must_mkdir(template_dir)
  
  def init_seahub():
      seahub_dir = conf[CONF_SEAHUB_DIR]
-@@ -464,29 +515,25 @@ def init_seahub():
+@@ -464,29 +524,26 @@ def init_seahub():
      # create seahub_settings.py
      create_seahub_settings_py()
  
@@ -171,6 +180,7 @@ index b5e199e..287deb6 100755
      move_avatar()
      create_gunicorn_conf()
 +    create_seafdav_conf()
++    create_library_template()
  
  
  def check_django_version():
@@ -184,7 +194,7 @@ index b5e199e..287deb6 100755
      del django
  
  
-@@ -516,11 +563,11 @@ def check_python_dependencies(silent=False):
+@@ -516,11 +573,11 @@ def check_python_dependencies(silent=False):
          'six',
          'pytz',
          'rest_framework',
@@ -198,7 +208,7 @@ index b5e199e..287deb6 100755
          'openpyxl',
      ] # yapf: disable
      for pkg in pkgs:
-@@ -727,8 +774,7 @@ def check_layout(args):
+@@ -727,8 +784,7 @@ def check_layout(args):
      if not os.path.exists(seafile_conf):
          error_not_found(seafile_conf)
  
@@ -208,7 +218,7 @@ index b5e199e..287deb6 100755
      if not os.path.exists(seahub_conf):
          error_not_found(seahub_conf)
  
-@@ -741,9 +787,9 @@ def check_layout(args):
+@@ -741,9 +797,9 @@ def check_layout(args):
      conf[CONF_SEAFILE_DIR] = seafile_data_dir
      conf[CONF_SEAHUB_DIR] = seahub_dir
      conf[CONF_SEAHUB_CONF] = seahub_conf
@@ -221,7 +231,7 @@ index b5e199e..287deb6 100755
  
  
  def check_config(args):
-@@ -812,11 +858,18 @@ def setup_seafile(args):
+@@ -812,11 +868,18 @@ def setup_seafile(args):
  def check_necessary_files():
      files = [
          os.path.join(cwd, 'conf', 'ccnet.conf'),
@@ -241,7 +251,7 @@ index b5e199e..287deb6 100755
      for fpath in files:
          if not os.path.exists(fpath):
              error('%s not found' % fpath)
-@@ -859,8 +912,7 @@ def start_seafile(args):
+@@ -859,8 +922,7 @@ def start_seafile(args):
  def stop_seafile(dummy):
      info('Stopping seafile server')
      pkill('seafile-controller')
