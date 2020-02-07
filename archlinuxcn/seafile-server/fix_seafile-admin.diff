@@ -12,7 +12,7 @@ index a18d957..66077b3 100755
  script_name=$0
  function usage () {
 diff --git a/tools/seafile-admin b/tools/seafile-admin
-index b5e199e..7a42e11 100755
+index b5e199e..287deb6 100755
 --- a/tools/seafile-admin
 +++ b/tools/seafile-admin
 @@ -5,16 +5,6 @@
@@ -131,7 +131,7 @@ index b5e199e..7a42e11 100755
 +
 +    def run_sqlite3(db, sqlname):
 +        return run_argv(['sqlite3', db,
-+            '.read ' + os.path.join(cwd, 'seafile-server', 'sql', 'sqlilte', sqlname + '.sql')])
++            '.read ' + os.path.join(cwd, 'seafile-server', 'sql', 'sqlite', sqlname + '.sql')])
 +
 +    if run_sqlite3(os.path.join(ccnet_dir, 'GroupMgr', 'groupmgr.db'), 'groupmgr') != 0:
 +        error('Failed to sync ccnet groupmgr database')
@@ -144,35 +144,33 @@ index b5e199e..7a42e11 100755
 +    if run_sqlite3(os.path.join(cwd, 'seafile-data', 'seafile.db'), 'seafile') != 0:
 +        error('Failed to sync seafille database')
 +    if run_argv(['sqlite3', os.path.join(cwd, 'seahub.db'),
-+                 '.read ' + os.path.join(cwd, 'seafile-server', 'seahub', 'sql', 'sqlilte3.sql')]) != 0:
++                 '.read ' + os.path.join(cwd, 'seafile-server', 'seahub', 'sql', 'sqlite3.sql')]) != 0:
 +        error('Failed to sync seahub database')
  
  def init_seahub():
      seahub_dir = conf[CONF_SEAHUB_DIR]
-@@ -464,8 +515,8 @@ def init_seahub():
+@@ -464,29 +515,25 @@ def init_seahub():
      # create seahub_settings.py
      create_seahub_settings_py()
  
 -    argv = [PYTHON, 'manage.py', 'syncdb']
 -    # Set proper PYTHONPATH before run django syncdb command
-+    argv = [PYTHON, 'manage.py', 'migrate']
-+    # Set proper PYTHONPATH before run django migrate command
-     env = get_seahub_env()
- 
+-    env = get_seahub_env()
+-
      print
-@@ -474,19 +525,21 @@ def init_seahub():
+     print
+     info('Now initializing seahub database, please wait...')
      print
  
-     if run_argv(argv, cwd=seahub_dir, env=env) != 0:
+-    if run_argv(argv, cwd=seahub_dir, env=env) != 0:
 -        error('Seahub syncdb failed')
-+        error('Seahub migrate failed')
++    create_ccnet_db()
  
      info('done')
  
      move_avatar()
      create_gunicorn_conf()
 +    create_seafdav_conf()
-+    create_ccnet_db()
  
  
  def check_django_version():
@@ -186,7 +184,7 @@ index b5e199e..7a42e11 100755
      del django
  
  
-@@ -516,11 +569,11 @@ def check_python_dependencies(silent=False):
+@@ -516,11 +563,11 @@ def check_python_dependencies(silent=False):
          'six',
          'pytz',
          'rest_framework',
@@ -200,7 +198,7 @@ index b5e199e..7a42e11 100755
          'openpyxl',
      ] # yapf: disable
      for pkg in pkgs:
-@@ -727,8 +780,7 @@ def check_layout(args):
+@@ -727,8 +774,7 @@ def check_layout(args):
      if not os.path.exists(seafile_conf):
          error_not_found(seafile_conf)
  
@@ -210,7 +208,7 @@ index b5e199e..7a42e11 100755
      if not os.path.exists(seahub_conf):
          error_not_found(seahub_conf)
  
-@@ -741,9 +793,9 @@ def check_layout(args):
+@@ -741,9 +787,9 @@ def check_layout(args):
      conf[CONF_SEAFILE_DIR] = seafile_data_dir
      conf[CONF_SEAHUB_DIR] = seahub_dir
      conf[CONF_SEAHUB_CONF] = seahub_conf
@@ -223,7 +221,7 @@ index b5e199e..7a42e11 100755
  
  
  def check_config(args):
-@@ -812,11 +864,18 @@ def setup_seafile(args):
+@@ -812,11 +858,18 @@ def setup_seafile(args):
  def check_necessary_files():
      files = [
          os.path.join(cwd, 'conf', 'ccnet.conf'),
@@ -243,7 +241,7 @@ index b5e199e..7a42e11 100755
      for fpath in files:
          if not os.path.exists(fpath):
              error('%s not found' % fpath)
-@@ -859,8 +918,7 @@ def start_seafile(args):
+@@ -859,8 +912,7 @@ def start_seafile(args):
  def stop_seafile(dummy):
      info('Stopping seafile server')
      pkill('seafile-controller')
