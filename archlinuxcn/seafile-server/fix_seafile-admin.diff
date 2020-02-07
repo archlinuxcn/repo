@@ -12,7 +12,7 @@ index a18d957..66077b3 100755
  script_name=$0
  function usage () {
 diff --git a/tools/seafile-admin b/tools/seafile-admin
-index b5e199e..6f40394 100755
+index b5e199e..2398f13 100755
 --- a/tools/seafile-admin
 +++ b/tools/seafile-admin
 @@ -5,16 +5,6 @@
@@ -155,7 +155,7 @@ index b5e199e..6f40394 100755
 +    template_dir = os.path.join(cwd, 'seafile-data', 'library-template')
 +    if os.path.exists(template_dir):
 +        return
-+    shutil.copytree(os.path.join(cwd, 'seafile-server', 'docs'), template_dir)
++    shutil.copytree(os.path.join(cwd, 'seafile-server', 'seafile', 'docs'), template_dir)
  
  def init_seahub():
      seahub_dir = conf[CONF_SEAHUB_DIR]
