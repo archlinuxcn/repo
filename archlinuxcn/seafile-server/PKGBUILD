@@ -42,6 +42,8 @@ prepare() {
     patch -Np1 --no-backup-if-mismatch < ../fix_seafile-admin.diff
     patch -Np1 --no-backup-if-mismatch < ../fix_mysql_support.diff
     2to3 -nw --no-diffs tools/seafile-admin
+
+    sed -i -e 's:\${INSTALLPATH}/seafile/bin/:/usr/bin/:' scripts/*.sh
 }
 
 build() {
@@ -60,13 +62,9 @@ package() {
     make DESTDIR="$pkgdir" install
 
     # Prepare directories layout for deploying
-    mkdir -p "$pkgdir/usr/share/$pkgname/runtime"
-    cp -r -p "./scripts" "$pkgdir/usr/share/$pkgname/scripts"
-
-    mv "$pkgdir/usr/share/$pkgname/scripts/seahub.conf" \
-       "$pkgdir/usr/share/$pkgname/runtime/"
-    mv "$pkgdir/usr/share/$pkgname/scripts/upgrade" \
-       "$pkgdir/usr/share/$pkgname/"
+    # These makes setup-seafile*.sh happy, whether we use them or not
+    mkdir -p "$pkgdir/usr/share/$pkgname/"{runtime,seafile}
+    cp -r -p "./scripts"/* "$pkgdir/usr/share/$pkgname/"
 
     install -Dm644 \
         "$srcdir/seafile-server@.service" \

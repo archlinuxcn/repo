@@ -1,5 +1,18 @@
+diff --git a/scripts/seahub.sh b/scripts/seahub.sh
+index a18d957..66077b3 100755
+--- a/scripts/seahub.sh
++++ b/scripts/seahub.sh
+@@ -24,7 +24,7 @@ gunicorn_conf=${TOPDIR}/conf/gunicorn.conf.py
+ pidfile=${TOPDIR}/pids/seahub.pid
+ errorlog=${TOPDIR}/logs/gunicorn_error.log
+ accesslog=${TOPDIR}/logs/gunicorn_access.log
+-gunicorn_exe=${INSTALLPATH}/seahub/thirdpart/bin/gunicorn
++gunicorn_exe=/usr/bin/gunicorn
+ 
+ script_name=$0
+ function usage () {
 diff --git a/tools/seafile-admin b/tools/seafile-admin
-index b5e199e..982da69 100755
+index b5e199e..f540791 100755
 --- a/tools/seafile-admin
 +++ b/tools/seafile-admin
 @@ -5,16 +5,6 @@
@@ -28,7 +41,115 @@ index b5e199e..982da69 100755
  
  PYTHON = sys.executable
  
-@@ -464,8 +455,8 @@ def init_seahub():
+@@ -398,25 +390,34 @@ def get_seafile_data_dir():
+ 
+ 
+ def create_gunicorn_conf():
+-    runtime_dir = os.path.join(cwd, 'seafile-server', 'runtime')
+-    confpath = os.path.join(runtime_dir, 'seahub.conf')
++    conf_dir = os.path.join(cwd, 'conf')
++    confpath = os.path.join(conf_dir, 'gunicorn.conf.py')
+ 
+     if os.path.exists(confpath):
+         return
+ 
+-    if not os.path.exists(runtime_dir):
+-        must_mkdir(runtime_dir)
++    if not os.path.exists(conf_dir):
++        must_mkdir(conf_dir)
+ 
+     content = '''\
+ import os
++
+ daemon = True
+-workers = 3
++workers = 5
++
++# default localhost:8000
++bind = "127.0.0.1:8000"
+ 
+ # Logging
+-runtime_dir = os.path.dirname(__file__)
+-pidfile = os.path.join(runtime_dir, 'seahub.pid')
+-errorlog = os.path.join(runtime_dir, 'error.log')
+-accesslog = os.path.join(runtime_dir, 'access.log')
++server_dir = os.path.join(os.path.dirname(__file__), '..')
++pidfile = os.path.join(server_dir, 'pids', 'seahub.pid')
++errorlog = os.path.join(server_dir, 'logs', 'error.log')
++accesslog = os.path.join(server_dir, 'logs', 'access.log')
++
++# for file upload, we need a longer timeout value (default is only 30s, too short)
++timeout = 1200
++
++limit_request_line = 8190
+ '''
+ 
+     try:
+@@ -426,6 +427,32 @@ accesslog = os.path.join(runtime_dir, 'access.log')
+         error('Failed to write seahub config')
+ 
+ 
++def create_seafdav_conf():
++    conf_dir = os.path.join(cwd, 'conf')
++    confpath = os.path.join(conf_dir, 'seafdav.conf')
++
++    if os.path.exists(confpath):
++        return
++
++    if not os.path.exists(conf_dir):
++        must_mkdir(conf_dir)
++
++    content = '''\
++[WEBDAV]
++enabled = false
++port = 8080
++fastcgi = false
++host = 0.0.0.0
++share_name = /
++'''
++
++    try:
++        with open(confpath, 'w') as fp:
++            fp.write(content)
++    except:
++        error('Failed to write WebDAV config')
++
++
+ def gen_seahub_secret_key():
+     data = str(uuid.uuid4()) + str(uuid.uuid4())
+     return data[:40]
+@@ -457,6 +484,30 @@ def move_avatar():
+     # make the the original avatars dir a symlink pointing to the outside dir
+     os.symlink(outside_avatar_dir, seahub_avatar_dir)
+ 
++def create_ccnet_db():
++    ccnet_dir = os.path.join(cwd, 'ccnet');
++    for d in ['GroupMgr', 'misc', 'OrgMgr', 'PeerMgr']:
++        d = os.path.join(ccnet_dir, d)
++        if not os.path.exists(d):
++            must_mkdir(d)
++
++    def run_sqlite3(db, sqlname):
++        return run_argv(['sqlite3', db,
++            os.path.join(cwd, 'seafile-server', 'sql', 'sqlilte', sqlname + '.sql')])
++
++    if run_sqlite3(os.path.join(ccnet_dir, 'GroupMgr', 'groupmgr.db'), 'groupmgr') != 0:
++        error('Failed to sync ccnet groupmgr database')
++    if run_sqlite3(os.path.join(ccnet_dir, 'misc', 'config.db'), 'config') != 0:
++        error('Failed to sync ccnet config database')
++    if run_sqlite3(os.path.join(ccnet_dir, 'OrgMgr', 'orgmgr.db'), 'org') != 0:
++        error('Failed to sync ccnet org database')
++    if run_sqlite3(os.path.join(ccnet_dir, 'PeerMgr', 'usermgr.db'), 'user') != 0:
++        error('Failed to sync ccnet user database')
++    if run_sqlite3(os.path.join(cwd, 'seafile-data', 'seafile.db'), 'seafile') != 0:
++        error('Failed to sync seafille database')
++    if run_argv(['sqlite3', os.path.join(cwd, 'seahub.db'),
++                 os.path.join(cwd, 'seafile-server', 'seahub', 'sql', 'sqlilte3.sql')]) != 0:
++        error('Failed to sync seahub database')
+ 
+ def init_seahub():
+     seahub_dir = conf[CONF_SEAHUB_DIR]
+@@ -464,8 +515,8 @@ def init_seahub():
      # create seahub_settings.py
      create_seahub_settings_py()
  
@@ -39,7 +160,7 @@ index b5e199e..982da69 100755
      env = get_seahub_env()
  
      print
-@@ -474,7 +465,7 @@ def init_seahub():
+@@ -474,19 +525,21 @@ def init_seahub():
      print
  
      if run_argv(argv, cwd=seahub_dir, env=env) != 0:
@@ -48,7 +169,10 @@ index b5e199e..982da69 100755
  
      info('done')
  
-@@ -483,10 +474,10 @@ def init_seahub():
+     move_avatar()
+     create_gunicorn_conf()
++    create_seafdav_conf()
++    create_ccnet_db()
  
  
  def check_django_version():
@@ -62,7 +186,7 @@ index b5e199e..982da69 100755
      del django
  
  
-@@ -516,11 +507,11 @@ def check_python_dependencies(silent=False):
+@@ -516,11 +569,11 @@ def check_python_dependencies(silent=False):
          'six',
          'pytz',
          'rest_framework',
@@ -76,7 +200,36 @@ index b5e199e..982da69 100755
          'openpyxl',
      ] # yapf: disable
      for pkg in pkgs:
-@@ -817,6 +808,13 @@ def check_necessary_files():
+@@ -727,8 +780,7 @@ def check_layout(args):
+     if not os.path.exists(seafile_conf):
+         error_not_found(seafile_conf)
+ 
+-    runtime_dir = os.path.join(cwd, 'seafile-server', 'runtime')
+-    seahub_conf = os.path.join(runtime_dir, 'seahub.conf')
++    seahub_conf = os.path.join(central_config_dir, 'gunicorn.conf.py')
+     if not os.path.exists(seahub_conf):
+         error_not_found(seahub_conf)
+ 
+@@ -741,9 +793,9 @@ def check_layout(args):
+     conf[CONF_SEAFILE_DIR] = seafile_data_dir
+     conf[CONF_SEAHUB_DIR] = seahub_dir
+     conf[CONF_SEAHUB_CONF] = seahub_conf
+-    conf[CONF_SEAHUB_PIDFILE] = os.path.join(runtime_dir, 'seahub.pid')
+-    conf[CONF_SEAHUB_OUTLOG] = os.path.join(runtime_dir, 'access.log')
+-    conf[CONF_SEAHUB_ERRLOG] = os.path.join(runtime_dir, 'error.log')
++    conf[CONF_SEAHUB_PIDFILE] = os.path.join(cwd, 'pids', 'seahub.pid')
++    conf[CONF_SEAHUB_OUTLOG] = os.path.join(cwd, 'logs', 'access.log')
++    conf[CONF_SEAHUB_ERRLOG] = os.path.join(cwd, 'logs', 'error.log')
+ 
+ 
+ def check_config(args):
+@@ -812,11 +864,18 @@ def setup_seafile(args):
+ def check_necessary_files():
+     files = [
+         os.path.join(cwd, 'conf', 'ccnet.conf'),
+-        os.path.join(cwd, 'seafile-server', 'runtime', 'seahub.conf'),
++        os.path.join(cwd, 'conf', 'gunicorn.conf.py'),
+         os.path.join(cwd, 'seahub.db'),
          os.path.join(cwd, 'conf', 'seahub_settings.py'),
      ]
  
@@ -90,3 +243,13 @@ index b5e199e..982da69 100755
      for fpath in files:
          if not os.path.exists(fpath):
              error('%s not found' % fpath)
+@@ -859,8 +918,7 @@ def start_seafile(args):
+ def stop_seafile(dummy):
+     info('Stopping seafile server')
+     pkill('seafile-controller')
+-    runtime_dir = os.path.join(cwd, 'seafile-server', 'runtime')
+-    pidfile = os.path.join(runtime_dir, 'seahub.pid')
++    pidfile = os.path.join(cwd, 'pids', 'seahub.pid')
+     try:
+         with open(pidfile, 'r') as fp:
+             pid = fp.read().strip('\n ')
