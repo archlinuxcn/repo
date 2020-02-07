@@ -12,7 +12,7 @@ index a18d957..66077b3 100755
  script_name=$0
  function usage () {
 diff --git a/tools/seafile-admin b/tools/seafile-admin
-index b5e199e..f540791 100755
+index b5e199e..7a42e11 100755
 --- a/tools/seafile-admin
 +++ b/tools/seafile-admin
 @@ -5,16 +5,6 @@
@@ -131,7 +131,7 @@ index b5e199e..f540791 100755
 +
 +    def run_sqlite3(db, sqlname):
 +        return run_argv(['sqlite3', db,
-+            os.path.join(cwd, 'seafile-server', 'sql', 'sqlilte', sqlname + '.sql')])
++            '.read ' + os.path.join(cwd, 'seafile-server', 'sql', 'sqlilte', sqlname + '.sql')])
 +
 +    if run_sqlite3(os.path.join(ccnet_dir, 'GroupMgr', 'groupmgr.db'), 'groupmgr') != 0:
 +        error('Failed to sync ccnet groupmgr database')
@@ -144,7 +144,7 @@ index b5e199e..f540791 100755
 +    if run_sqlite3(os.path.join(cwd, 'seafile-data', 'seafile.db'), 'seafile') != 0:
 +        error('Failed to sync seafille database')
 +    if run_argv(['sqlite3', os.path.join(cwd, 'seahub.db'),
-+                 os.path.join(cwd, 'seafile-server', 'seahub', 'sql', 'sqlilte3.sql')]) != 0:
++                 '.read ' + os.path.join(cwd, 'seafile-server', 'seahub', 'sql', 'sqlilte3.sql')]) != 0:
 +        error('Failed to sync seahub database')
  
  def init_seahub():
