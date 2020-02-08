@@ -58,7 +58,8 @@ package() {
         'python-pillow'
     )
     optdepends=(
-        'ffmpeg: For video thumbnails'
+      'ffmpeg: For video thumbnails'
+      'python-seafdav: For WebDAV support'
     )
     cd "$srcdir/seahub-$pkgver-server/"
     install -dm755 "$pkgdir/usr/share/seafile-server/seahub"
