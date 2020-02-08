@@ -12,7 +12,7 @@ index a18d957..66077b3 100755
  script_name=$0
  function usage () {
 diff --git a/tools/seafile-admin b/tools/seafile-admin
-index b5e199e..4145c6f 100755
+index b5e199e..35c2b5f 100755
 --- a/tools/seafile-admin
 +++ b/tools/seafile-admin
 @@ -5,16 +5,6 @@
@@ -221,7 +221,26 @@ index b5e199e..4145c6f 100755
          error('Failed to start seafile')
  
      # check again after several seconds
-@@ -727,8 +786,7 @@ def check_layout(args):
+@@ -643,8 +702,7 @@ def start_seahub_gunicorn():
+         'seahub.wsgi:application',
+         '-c',
+         conf[CONF_SEAHUB_CONF],
+-        '-b',
+-        '0.0.0.0:%s' % conf[CONF_SEAHUB_PORT],
++        '--preload',
+     ]
+ 
+     info('Starting seahub...')
+@@ -652,7 +710,7 @@ def start_seahub_gunicorn():
+     if run_argv(argv, cwd=conf[CONF_SEAHUB_DIR], env=env) != 0:
+         error('Failed to start seahub')
+ 
+-    info('Seahub running on port %s' % conf[CONF_SEAHUB_PORT])
++    info('Seahub running')
+ 
+ 
+ def start_seahub_fastcgi():
+@@ -727,8 +785,7 @@ def check_layout(args):
      if not os.path.exists(seafile_conf):
          error_not_found(seafile_conf)
  
@@ -231,7 +250,7 @@ index b5e199e..4145c6f 100755
      if not os.path.exists(seahub_conf):
          error_not_found(seahub_conf)
  
-@@ -741,9 +799,9 @@ def check_layout(args):
+@@ -741,9 +798,9 @@ def check_layout(args):
      conf[CONF_SEAFILE_DIR] = seafile_data_dir
      conf[CONF_SEAHUB_DIR] = seahub_dir
      conf[CONF_SEAHUB_CONF] = seahub_conf
@@ -244,7 +263,7 @@ index b5e199e..4145c6f 100755
  
  
  def check_config(args):
-@@ -812,11 +870,18 @@ def setup_seafile(args):
+@@ -812,11 +869,18 @@ def setup_seafile(args):
  def check_necessary_files():
      files = [
          os.path.join(cwd, 'conf', 'ccnet.conf'),
@@ -264,7 +283,7 @@ index b5e199e..4145c6f 100755
      for fpath in files:
          if not os.path.exists(fpath):
              error('%s not found' % fpath)
-@@ -859,8 +924,7 @@ def start_seafile(args):
+@@ -859,8 +923,7 @@ def start_seafile(args):
  def stop_seafile(dummy):
      info('Stopping seafile server')
      pkill('seafile-controller')
