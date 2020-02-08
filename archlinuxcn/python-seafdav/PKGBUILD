@@ -2,7 +2,7 @@
 
 pkgname=python-seafdav
 pkgver=7.1.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Seafile webdav server"
 arch=('any')
 url="https://github.com/haiwen/seafdav"
@@ -13,7 +13,8 @@ depends=(python
          python-six
          python-jinja
          python-yaml
-         python-jsmin)
+         python-jsmin
+         python-sqlalchemy)
 makedepends=('python-setuptools')
 source=("https://github.com/haiwen/seafdav/archive/v${pkgver}-server.tar.gz")
 sha256sums=('120a6e53b7061a85108fc8a7e297ab8e15a6d286c454e72c4be6bd7a56884cb7')
