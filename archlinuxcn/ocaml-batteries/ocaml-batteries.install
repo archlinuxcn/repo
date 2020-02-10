@@ -1,0 +1,11 @@
+post_install() {
+  cat << 'EOM'
+  
+  ==> PLEASE NOTE:
+  ==> To make the toplevel works you should copy
+  ==> /usr/share/doc/ocaml-batteries/ocamlinit
+  ==> to your ~/.ocamlinit configuration file
+
+EOM
+}
+
