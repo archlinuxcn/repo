@@ -1,8 +1,0 @@
-post_install() {
-    getent group lxd || groupadd lxd
-    echo "LXD allows everyone in the lxd group to talk to LXD."
-    echo ""
-    echo "LXD needs sub{u,g}ids for root, so that it can create unprivileged containers."
-    echo "Execute the following to set the sub{u,g}ids:"
-    echo "'echo \"root:1000000:65536\" | sudo tee -a /etc/subuid /etc/subgid'"
-}
