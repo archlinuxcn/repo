@@ -1,0 +1,35 @@
+# Maintainer: Brett Dutro <brett.dutro@gmail.com>
+
+pkgname=jbuilder-git
+pkgver=r6140.f2e29f8c7
+pkgrel=2
+pkgdesc="Compatibility Result module (git master)"
+arch=('i686' 'x86_64' 'armv7h')
+url="https://github.com/janestreet/jbuilder"
+license=('BSD')
+depends=('ocaml')
+makedepends=('git' 'opam')
+provides=('jbuilder')
+options=('!strip')
+source=("jbuilder::git+https://github.com/janestreet/jbuilder.git")
+sha256sums=('SKIP')
+
+pkgver() {
+        cd "${srcdir}/${pkgname%-git}"
+        printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+  cd "${srcdir}/${pkgname%-git}"
+
+  make release
+}
+
+
+package() {
+  cd "${srcdir}/${pkgname%-git}"
+
+  mkdir -p $pkgdir/usr/lib/ocaml
+
+  make INSTALL_ARGS="--prefix $pkgdir/usr/ --libdir $pkgdir/usr/lib/ocaml" install
+}
