@@ -7,7 +7,7 @@ def pre_build():
     if not line.startswith("_enabled_ghc_versions"):
         print(line)
     else:
-        print("_enabled_ghc_versions=('8.6.5')") 
+        print("_enabled_ghc_versions=('8.6.5' '8.8.1' '8.8.2')") 
 
 post_build = aur_post_build
 
