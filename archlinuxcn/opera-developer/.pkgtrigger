@@ -2,7 +2,7 @@ dependencypackages=(
     'opera-developer-ffmpeg-codecs'
 )
 
-chrome_version=$(bsdtar -xOf "$pkgrepo/pool/$pkgbase-$pkgver-$pkgrel-x86_64.pkg.tar.xz" | strings | sed -nr 's/^Chrome\/([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)/\1/p')
+chrome_version=$(bsdtar -xOf "$pkgrepo/pool/$pkgbase-$pkgver-$pkgrel-x86_64.pkg.tar.zst" | strings | sed -nr 's/^Chrome\/([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)/\1/p')
 
 pkgupdate=$(cat <<EOF
 update_pkgver="$chrome_version"

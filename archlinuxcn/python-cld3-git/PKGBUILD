@@ -3,8 +3,8 @@
 _pkgname=cld3
 _reponame=$_pkgname
 pkgname=python-${_pkgname}-git
-pkgver=0.2.3.20190830
-pkgrel=3
+pkgver=0.2.3.20200116
+pkgrel=1
 pkgdesc='Python bindings for cld3 (Compact Language Detector v3)'
 arch=('i686' 'x86_64')
 url='https://github.com/iamthebot/cld3'

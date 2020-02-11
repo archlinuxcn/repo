@@ -3,7 +3,7 @@
 # Contributor: Wayne Cheng <waynethecheng@gmail.com>
 
 pkgname=kubernetes-helm
-pkgver=3.0.2
+pkgver=3.0.3
 pkgrel=1
 pkgdesc="A tool to manage Kubernetes charts"
 arch=('i686' 'x86_64' 'arm' 'aarch64')

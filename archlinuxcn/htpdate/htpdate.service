@@ -1,0 +1,11 @@
+[Unit]
+Description=Htpdate daemon
+
+[Service]
+Type=forking
+PIDFile=/run/htpdate.pid
+ExecStart=/usr/bin/htpdate -D -a -s -i /run/htpdate.pid www.linux.org www.freebsd.org ntp.neu.edu.cn www.kernel.org
+
+[Install]
+WantedBy=multi-user.target
+

@@ -1,0 +1,128 @@
+From b6484282f85bf7f11451b2441599c241d302ad9d Mon Sep 17 00:00:00 2001
+From: Raul Tambre <raul@tambre.ee>
+Date: Sat, 4 May 2019 15:48:17 -0400
+Subject: [PATCH] Fix incorrect use of 'is' operator for comparison in
+ python/lib/gdb/command/prompt.py
+
+The 'is' operator is not meant to be used for comparisons. It currently working
+is an implementation detail of CPython.  CPython 3.8 has added a SyntaxWarning
+for this.
+
+diff --git a/gdb/python/lib/gdb/command/prompt.py b/gdb/python/lib/gdb/command/prompt.py
+index 3d662a7..04b9e49 100644
+--- a/gdb/python/lib/gdb/command/prompt.py
++++ b/gdb/python/lib/gdb/command/prompt.py
+@@ -45,7 +45,7 @@ The currently defined substitutions are:
+         self.hook_set = False
+ 
+     def get_show_string (self, pvalue):
+-        if self.value is not '':
++        if self.value:
+            return "The extended prompt is: " + self.value
+         else:
+            return "The extended prompt is not set."
+@@ -57,7 +57,7 @@ The currently defined substitutions are:
+         return ""
+ 
+     def before_prompt_hook(self, current):
+-        if self.value is not '':
++        if self.value:
+             return gdb.prompt.substitute_prompt(self.value)
+         else:
+             return None
+
+From d9c4ba536c522b8dc2194d4100270a159be7894a Mon Sep 17 00:00:00 2001
+From: Sergio Durigan Junior <sergiodj@redhat.com>
+Date: Sun, 25 Aug 2019 12:10:35 -0400
+Subject: [PATCH] Use raw strings on gdb.python/py-xmethods.exp (and fix Python
+ 3.8's "SyntaxWarning: invalid escape sequence")
+
+The way unrecognized escape sequences are handled has changed in
+Python 3.8: users now see a SyntaxWarning message, which will
+eventually become a SyntaxError in future versions of Python:
+
+  (gdb) source /blabla/gdb.python/py-xmethods/py-xmethods.py
+  /blabla/gdb.python/py-xmethods/py-xmethods.py:204: SyntaxWarning: invalid escape seque
+  nce \+
+    'operator\+',
+  /blabla/gdb.python/py-xmethods/py-xmethods.py:211: SyntaxWarning: invalid escape seque
+  nce \+
+    'operator\+\+',
+
+One of our testcases, gdb.python/py-xmethods.exp, contains strings in
+the form of "operator\+".  This is not recognized by Python, but is
+still needed by the testsuite to work properly.  The solution is
+simple: we just have to make sure these strings are marked as
+raw (i.e, r"").  This is what this patch does.  I took the opportunity
+to also convert other strings to raw, which, in two cases, allowed the
+removal of an extra backslash.
+
+I tested this using Python 3.7 and Python 3.8, and everything works
+fine.
+
+I think I could push this as obvious, but decided to send it to
+gdb-patches just in case.
+
+gdb/testsuite/ChangeLog:
+2019-08-26  Sergio Durigan Junior  <sergiodj@redhat.com>
+
+	* gdb.python/py-xmethods.exp: Use raw strings when passing
+	arguments to SimpleXMethodMatcher.
+
+diff --git a/gdb/testsuite/gdb.python/py-xmethods.py b/gdb/testsuite/gdb.python/py-xmethods.py
+index 587842d7360..cea48b80d8c 100644
+--- a/gdb/testsuite/gdb.python/py-xmethods.py
++++ b/gdb/testsuite/gdb.python/py-xmethods.py
+@@ -199,34 +199,34 @@ def match(self, class_type, method_name):
+ 
+ 
+ global_dm_list = [
+-    SimpleXMethodMatcher('A_plus_A',
+-                         '^dop::A$',
+-                         'operator\+',
++    SimpleXMethodMatcher(r'A_plus_A',
++                         r'^dop::A$',
++                         r'operator\+',
+                          A_plus_A,
+                          # This is a replacement, hence match the arg type
+                          # exactly!
+                          type_A.const().reference()),
+-    SimpleXMethodMatcher('plus_plus_A',
+-                         '^dop::A$',
+-                         'operator\+\+',
++    SimpleXMethodMatcher(r'plus_plus_A',
++                         r'^dop::A$',
++                         r'operator\+\+',
+                          plus_plus_A),
+-    SimpleXMethodMatcher('A_geta',
+-                         '^dop::A$',
+-                         '^geta$',
++    SimpleXMethodMatcher(r'A_geta',
++                         r'^dop::A$',
++                         r'^geta$',
+                          A_geta),
+-    SimpleXMethodMatcher('A_getarrayind',
+-                         '^dop::A$',
+-                         '^getarrayind$',
++    SimpleXMethodMatcher(r'A_getarrayind',
++                         r'^dop::A$',
++                         r'^getarrayind$',
+                          A_getarrayind,
+                          type_int),
+-    SimpleXMethodMatcher('A_indexoper',
+-                         '^dop::A$',
+-                         'operator\\[\\]',
++    SimpleXMethodMatcher(r'A_indexoper',
++                         r'^dop::A$',
++                         r'operator\[\]',
+                          A_indexoper,
+                          type_int),
+-    SimpleXMethodMatcher('B_indexoper',
+-                         '^dop::B$',
+-                         'operator\\[\\]',
++    SimpleXMethodMatcher(r'B_indexoper',
++                         r'^dop::B$',
++                         r'operator\[\]',
+                          B_indexoper,
+                          type_int)
+ ]

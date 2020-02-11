@@ -1,0 +1,34 @@
+#!/bin/bash
+
+function whisperer(){
+    echo "-----------------------------------------------------------------------"
+    echo "For more info and more troubleshooting visit:"
+    echo "Chinese:  http://linux.wps.cn/"
+    echo "English:  http://wps-community.org/"
+    echo "-----------------------------------------------------------------------"
+    echo ""
+    echo "-----------------------------------------------------------------------"
+    echo "Kingsoft Office (WPS Office), is an office productivity suite."
+    echo ""
+    echo "Kingsoft Office (also named WPS Office) including Writer, Presentation"
+    echo "and Spreadsheets, is a powerful office suite, which is able to process"
+    echo "word file, produce wonderful slides, and analyze data as well. It is"
+    echo "deeply compatible with all of the latest Microsoft Office file formats. "
+    echo "It can easily open and read the documents created with Microsoft Office."
+    echo ""
+    echo "This is the Linux version, and it's now an ALPHA package."
+    echo "-----------------------------------------------------------------------"
+    echo ""
+    echo "-----------------------------------------------------------------------"
+    echo ""
+    echo "ATTENTION: When you shut down wps, the wpsoffice process may still exist."
+    echo "You can do 'sudo chmod -x /usr/lib/office6/wpsoffice' to fix it. But"
+    echo "this might bring you problem with signing in."
+    echo ""
+    echo "-----------------------------------------------------------------------"
+}
+
+post_install()
+{
+    whisperer
+}

@@ -1532,3 +1532,77 @@ Wed Jan 1 23:52:45 2020 +0100
      2019-12-29 d570038 actionless fix(install_cli): detecting extra (unlisted in aur rpc) deps in split packages
      2019-12-28 f8375c5 actionless feat(install_cli, install info fetcher): show install prompt if list of deps changed after editing PKGBUILD (ref: #427)
      2019-12-28 ee8f879 actionless feat(updates: aur; args; config): option to ignore outofdate aur upgrades
+
+
+Thu Jan 9 01:24:42 2020 +0100
+-------------------------------------------------
+1.5.8.1         Hotfix release 1.5.8.1
+    
+    Notable changes:
+     2020-01-08 fd88c62 actionless fix(aur: AURPkgInfo: from_srcinfo): fix *depends fields
+     2020-01-08 a36531e actionless fix(print-upgradeable-cli): don't print ignored packages
+
+
+Fri Jan 10 15:16:16 2020 +0100
+-------------------------------------------------
+1.5.8.2         Hotfix release 1.5.8.2
+    
+    Notables changes:
+     2020-01-10 7b1303c actionless fix(install_cli, install info): handle the case when only some of AUR packages got edited with changing install info (ref #440)
+
+
+Sat Jan 11 22:36:16 2020 +0100
+-------------------------------------------------
+1.5.9           Release 1.5.9
+    
+    Notable changes:
+     2020-01-11 7afe82d Mikhail Khvoinitsky pikspect: do not throttle output writes; read at most 4096 bytes from output instead of at most one byte; fixes #326
+     2020-01-11 12d2820 actionless fix(install_cli): also discard old install_info when it changed without user editing it
+
+
+Fri Jan 17 23:14:44 2020 +0100
+-------------------------------------------------
+1.5.9.1         Hotfix release 1.5.9.1
+    
+    Notable changes:
+     2020-01-17 54faf55 actionless fix(build): editing PKGBUILD not available in AUR
+     2020-01-16 ec3d06f Bundy01 Locale update: es, fr (#444)
+
+
+Sun Feb 2 17:24:11 2020 +0100
+-------------------------------------------------
+1.6             Release 1.6
+    
+    Notable changes:
+     2020-02-01 4ebb5be actionless feat(install cli): separate messages for new and removed deps
+     2020-02-01 43c4610 actionless fix(install cli): handle case when dependency which need to be removed also have some unlisted in AUR RPC deps
+     2020-02-01 2ac8044 actionless feat(dynamic pkg selection): choose multiple packages at once (fixes #397)
+     2020-01-31 2e484dd actionless fix(config: config-item): define __eq__ (fixes #447)
+     2020-01-31 465177b actionless chore(cli-clean-pkgs): use bold line for question similar to pacman's -Sc
+     2020-01-20 95fd008 actionless feat(install cli): show recovery prompt if deps for an AUR pkg are missing (fixes #282)
+
+
+Mon Feb 3 18:02:51 2020 +0100
+-------------------------------------------------
+1.6.1           Hotfix release 1.6.1
+    
+    Changes:
+     2020-02-03 bf8f1e8 actionless fix(install_cli): don't skip file review if --devel or --needed modes
+     2020-02-03 021fae1 actionless fix(install cli): when discarding package also add it manually_excluded, to prevent showing twice update itself and user-modified pkgbuild (fixes #446)
+
+
+Sat Feb 8 15:05:05 2020 +0100
+-------------------------------------------------
+1.6.2           Hotfix release 1.6.2
+    
+    Notable changes:
+     2020-02-08 8e0ee37 actionless fix(install_cli): run mksrcinfo only after all files have been reviewed
+
+
+Sat Feb 8 16:32:36 2020 +0100
+-------------------------------------------------
+1.6.3           Hotfix release 1.6.3
+    
+    Notables changes:
+     2020-02-08 80d9409 actionless Revert "fix(install_cli): run mksrcinfo only after all files have been reviewed"
+     2020-02-08 47f2eb1 actionless fix(build): run mksrcinfo only after all files have been reviewed

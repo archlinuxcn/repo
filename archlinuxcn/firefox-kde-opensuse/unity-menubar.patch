@@ -14,7 +14,7 @@
              <menu id="file-menu" data-l10n-id="menu-file">
 --- a/browser/base/content/browser.js
 +++ b/browser/base/content/browser.js
-@@ -6796,11 +6796,17 @@ function onViewToolbarsPopupShowing(aEve
+@@ -6463,11 +6463,17 @@ function onViewToolbarsPopupShowing(aEve
  
    let toolbarNodes = gNavToolbox.querySelectorAll("toolbar");
  
@@ -70,7 +70,7 @@
  nsINode* XULPopupElement::GetTriggerNode() const {
 --- a/dom/xul/moz.build
 +++ b/dom/xul/moz.build
-@@ -77,6 +77,11 @@ LOCAL_INCLUDES += [
+@@ -82,6 +82,11 @@ LOCAL_INCLUDES += [
  
  include('/ipc/chromium/chromium-config.mozbuild')
  
@@ -84,7 +84,7 @@
  if CONFIG['CC_TYPE'] in ('clang', 'gcc'):
 --- a/layout/build/moz.build
 +++ b/layout/build/moz.build
-@@ -70,6 +70,10 @@ elif CONFIG['MOZ_WIDGET_TOOLKIT'] == 'an
+@@ -69,6 +69,10 @@ elif CONFIG['MOZ_WIDGET_TOOLKIT'] == 'an
          '/dom/system',
          '/dom/system/android',
      ]
@@ -97,7 +97,7 @@
      'components.conf',
 --- a/modules/libpref/init/all.js
 +++ b/modules/libpref/init/all.js
-@@ -327,6 +327,9 @@ pref("dom.inputevent.datatransfer.enable
+@@ -311,6 +311,9 @@ pref("dom.mouseevent.click.hack.use_lega
  // of content viewers to cache based on the amount of available memory.
  pref("browser.sessionhistory.max_total_viewers", -1);
  
@@ -109,19 +109,14 @@
  pref("ui.android.mouse_as_touch", 1);
 --- a/toolkit/content/xul.css
 +++ b/toolkit/content/xul.css
-@@ -212,6 +212,18 @@ toolbar[type="menubar"] {
+@@ -201,6 +201,13 @@ toolbar[type="menubar"] {
  }
  %endif
  
 +%ifdef MOZ_WIDGET_GTK
-+window[shellshowingmenubar="true"] menubar {
-+  display: none !important;
-+}
-+
-+window[shellshowingmenubar="true"]
++*|*:root[shellshowingmenubar="true"]
 +toolbar[type="menubar"]:not([customizing="true"]) {
-+  min-height: 0 !important;
-+  border: 0 !important;
++  display: none !important;
 +}
 +%endif
 +
@@ -144,9 +139,9 @@
 +    'nsNativeMenuDocListener.cpp',
 +    'nsNativeMenuService.cpp',
      'nsWindow.cpp', # conflicts with X11 headers
+     'WaylandVsyncSource.cpp', # conflicts with X11 headers
  ]
- 
-@@ -129,6 +138,7 @@ FINAL_LIBRARY = 'xul'
+@@ -130,6 +139,7 @@ FINAL_LIBRARY = 'xul'
  LOCAL_INCLUDES += [
      '/layout/base',
      '/layout/generic',
@@ -324,7 +319,7 @@
 +#endif /* __nsDbusmenu_h__ */
 --- /dev/null
 +++ b/widget/gtk/nsMenu.cpp
-@@ -0,0 +1,844 @@
+@@ -0,0 +1,798 @@
 +/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 +/* vim:expandtab:shiftwidth=4:tabstop=4:
 + */
@@ -345,7 +340,6 @@
 +#include "mozilla/PresShell.h"
 +#include "mozilla/PresShellInlines.h"
 +#include "nsAutoPtr.h"
-+#include "nsBindingManager.h"
 +#include "nsComponentManagerUtils.h"
 +#include "nsContentUtils.h"
 +#include "nsCSSValue.h"
@@ -358,8 +352,6 @@
 +#include "nsString.h"
 +#include "nsStyleStruct.h"
 +#include "nsThreadUtils.h"
-+#include "nsXBLBinding.h"
-+#include "nsXBLService.h"
 +
 +#include "nsNativeMenuDocListener.h"
 +
@@ -440,45 +432,6 @@
 +
 +    WidgetMouseEvent event(true, aMsg, nullptr, WidgetMouseEvent::eReal);
 +    EventDispatcher::Dispatch(aTarget, nullptr, &event);
-+}
-+
-+static void
-+AttachXBLBindings(nsIContent *aContent)
-+{
-+    dom::Document *doc = aContent->OwnerDoc();
-+    PresShell *shell = doc->GetPresShell();
-+    if (!shell) {
-+        return;
-+    }
-+
-+    RefPtr<ComputedStyle> style =
-+        shell->StyleSet()->ResolveStyleLazily(*aContent->AsElement());
-+
-+    if (!style) {
-+        return;
-+    }
-+
-+    const auto& binding = style->StyleDisplay()->mBinding;
-+    if (binding.IsNone()) {
-+        return;
-+    }
-+
-+    nsXBLService* xbl = nsXBLService::GetInstance();
-+    if (!xbl) {
-+        return;
-+    }
-+
-+    RefPtr<nsXBLBinding> pendingBinding;
-+    const auto& url = binding.AsUrl();
-+    nsresult rv = xbl->LoadBindings(aContent->AsElement(),
-+                                    url.GetURI(),
-+                                    url.ExtraData().Principal(),
-+                                    getter_AddRefs(pendingBinding));
-+    if ((NS_FAILED(rv) && rv != NS_ERROR_XBL_BLOCKED) || !pendingBinding) {
-+        return;
-+    }
-+
-+    doc->BindingManager()->AddToAttachedQueue(pendingBinding);
 +}
 +
 +void
@@ -690,8 +643,6 @@
 +        return;
 +    }
 +
-+    AttachXBLBindings(mPopupContent);
-+
 +    DocListener()->RegisterForContentChanges(mPopupContent, this);
 +}
 +
@@ -816,8 +767,6 @@
 +    mNeedsUpdate = true;
 +
 +    MaybeAddPlaceholderItem();
-+
-+    AttachXBLBindings(ContentNode());
 +}
 +
 +void
@@ -5135,7 +5084,7 @@
 +#endif /* __nsNativeMenuService_h__ */
 --- a/widget/gtk/nsWindow.cpp
 +++ b/widget/gtk/nsWindow.cpp
-@@ -73,6 +73,7 @@
+@@ -74,6 +74,7 @@
  
  #include "mozilla/Assertions.h"
  #include "mozilla/Likely.h"
@@ -5143,7 +5092,7 @@
  #include "mozilla/Preferences.h"
  #include "nsIPrefService.h"
  #include "nsIServiceManager.h"
-@@ -5174,6 +5175,10 @@ void nsWindow::HideWindowChrome(bool aSh
+@@ -5486,6 +5487,10 @@ void nsWindow::HideWindowChrome(bool aSh
    SetWindowDecoration(aShouldHide ? eBorderStyle_none : mBorderStyle);
  }
  
@@ -5156,7 +5105,7 @@
    nsIRollupListener* rollupListener = GetActiveRollupListener();
 --- a/widget/gtk/nsWindow.h
 +++ b/widget/gtk/nsWindow.h
-@@ -38,6 +38,8 @@
+@@ -40,6 +40,8 @@
  
  #include "IMContextWrapper.h"
  
@@ -5165,7 +5114,7 @@
  #undef LOG
  #ifdef MOZ_LOGGING
  
-@@ -171,6 +173,8 @@ class nsWindow final : public nsBaseWidg
+@@ -175,6 +177,8 @@ class nsWindow final : public nsBaseWidg
                                    nsIScreen* aTargetScreen = nullptr) override;
    virtual void HideWindowChrome(bool aShouldHide) override;
  
@@ -5174,7 +5123,7 @@
    /**
     * GetLastUserInputTime returns a timestamp for the most recent user input
     * event.  This is intended for pointer grab requests (including drags).
-@@ -637,6 +641,8 @@ class nsWindow final : public nsBaseWidg
+@@ -671,6 +675,8 @@ class nsWindow final : public nsBaseWidg
  
    mozilla::UniquePtr<mozilla::CurrentX11TimeGetter> mCurrentTimeGetter;
    static CSDSupportLevel sCSDSupportLevel;
@@ -5198,17 +5147,6 @@
  
  TEST_DIRS += ['tests']
  
---- a/xpfe/appshell/nsWebShellWindow.cpp
-+++ b/xpfe/appshell/nsWebShellWindow.cpp
-@@ -70,7 +70,7 @@
- 
- #include "gfxPlatform.h"
- 
--#ifdef XP_MACOSX
-+#if defined(XP_MACOSX) || defined(MOZ_WIDGET_GTK)
- #  include "nsINativeMenuService.h"
- #  define USE_NATIVE_MENUS
- #endif
 --- /dev/null
 +++ b/xpcom/ds/NativeMenuAtoms.py
 @@ -0,0 +1,9 @@
@@ -5231,7 +5169,7 @@
  import sys
  
  # Static atom definitions, used to generate nsGkAtomList.h.
-@@ -2481,7 +2482,7 @@ STATIC_ATOMS = [
+@@ -2532,7 +2533,7 @@ STATIC_ATOMS = [
      InheritingAnonBoxAtom("AnonBox_mozSVGForeignContent", ":-moz-svg-foreign-content"),
      InheritingAnonBoxAtom("AnonBox_mozSVGText", ":-moz-svg-text"),
      # END ATOMS
@@ -5257,3 +5195,14 @@
  ]
  
  if defined('MOZ_X11'):
+--- a/xpfe/appshell/AppWindow.cpp
++++ b/xpfe/appshell/AppWindow.cpp
+@@ -69,7 +69,7 @@
+ #  include "mozilla/XULStore.h"
+ #endif
+ 
+-#ifdef XP_MACOSX
++#if defined(XP_MACOSX) || defined(MOZ_WIDGET_GTK)
+ #  include "nsINativeMenuService.h"
+ #  define USE_NATIVE_MENUS
+ #endif

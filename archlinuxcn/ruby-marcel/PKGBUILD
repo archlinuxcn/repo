@@ -4,7 +4,7 @@
 _gemname=marcel
 pkgname=ruby-$_gemname
 pkgver=0.3.3
-pkgrel=4
+pkgrel=5
 pkgdesc='Simple mime type detection using magic numbers, filenames, and extensions'
 arch=('any')
 url="https://github.com/basecamp/marcel"

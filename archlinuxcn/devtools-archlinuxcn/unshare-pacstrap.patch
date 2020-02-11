@@ -1,0 +1,13 @@
+diff --git a/mkarchroot.in b/mkarchroot.in
+index 37f6802..9055d8c 100644
+--- a/mkarchroot.in
++++ b/mkarchroot.in
+@@ -90,7 +90,7 @@ for file in "${files[@]}"; do
+ 	cp "$file" "$working_dir$file"
+ done
+ 
+-pacstrap -${umode}Mcd ${pac_conf:+-C "$pac_conf"} "$working_dir" \
++unshare -m pacstrap -${umode}Mcd ${pac_conf:+-C "$pac_conf"} "$working_dir" \
+ 	"${cache_dirs[@]/#/--cachedir=}" "$@" || die 'Failed to install all packages'
+ 
+ printf '%s.UTF-8 UTF-8\n' en_US de_DE > "$working_dir/etc/locale.gen"

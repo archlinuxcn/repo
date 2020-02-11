@@ -1,0 +1,23 @@
+function metals_jdk_info {
+    cat <<EOF
+
+The JDK which will be used to run metals will be the newest one which
+is supported by metals and installed on your system.
+
+If you would like to use a different JDK set the METALS_JDK_PATH to
+the /bin directory for the JDK install.
+
+For example, if you wanted to use JDK 13 (not currently supported by
+metals) then you would set
+METALS_JDK_PATH="/usr/lib/jvm/java-13-openjdk/bin" in the environment.
+
+EOF
+}
+
+post_install() {
+    metals_jdk_info
+}
+
+post_upgrade() {
+    metals_jdk_info
+}

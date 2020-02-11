@@ -3,16 +3,16 @@
 
 pkgname=shattered-pixel-dungeon
 _pkgname=$pkgname-gdx
-pkgver=0.7.5.REL
+pkgver=0.7.5.f
 _pkgver=${pkgver%.*}${pkgver##*.}
 _pkgver=${_pkgver/REL/}
 _srcdir=$_pkgname-$_pkgver
-pkgrel=1
+pkgrel=3
 pkgdesc='Shattered fork of the popular rogue-like game'
-url='http://shatteredpixel.tumblr.com'
+url='https://shatteredpixel.com/'
 license=('GPL3')
-depends=('java-runtime' 'bash' 'xorg-xrandr')
-makedepends=('git' 'gradle' 'java-environment' 'jdk8-openjdk')
+depends=('jre8-openjdk' 'bash' 'xorg-xrandr')
+makedepends=('gradle' 'jdk8-openjdk')
 conflicts=('shattered-pixel-dungeon-git')
 arch=('any')
 source=(
@@ -20,8 +20,8 @@ source=(
   "$pkgname.sh"
   "$pkgname.desktop"
 )
-sha512sums=('e7d168a036a398845960954b6527eb92debd9a6c29e3c25be7a32d3957d0eba587598e8625adb688810b489dc7099bbe836d2b349cbfef7134abec5b77630363'
-            '88814d1f33eea6bd5656d3ca731ed5a6cfce10ecdae24012252c5b32c4b194ec75fb0e22cac70897802679086c6a32e210d52933ec45ca94ff350ac4ad7c266e'
+sha512sums=('fa3d4372ed7fdd4ff1799798fbfd2d02caf6d876e992c1759d61e324e72566801e0d348f384f611bfae04804435fbaf498c1155e4ffd3f8f69eb7f35a57e7bdd'
+            '586ac3e1357495434e318dbda539792565a423ca59768b4e1aee8c81764ad6daea75365b4714fdac76a098b0ffc42da91cf5f2a5ab83fa0dc1beb7abf99f2607'
             '204a7bcedbbc14bdad6586e4b759b326191a7fd2c344dadc7032495d4caa5fe32edac4118d7294229a6fe24f6684416fff37e260bbc9dde9e50846a03ba77db8')
 
 prepare() {

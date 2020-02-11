@@ -7,8 +7,11 @@
 # Contributor: Allan McRae <allan@archlinux.org>
 # Contributor: Jason Chu <jason@archlinux.org>
 
-pkgname=python-git
-pkgver=3.9.0a0.r106069.e02ab59fdf
+shopt -s extglob
+
+pkgbase=python-git
+pkgname=(python-git python-tests-git)
+pkgver=3.9.0a0.r106346.de6f38db485
 pkgrel=1
 _pybasever=3.9
 pkgdesc="Next generation of the python high-level scripting language"
@@ -18,10 +21,6 @@ url="https://www.python.org/"
 depends=('expat' 'bzip2' 'gdbm' 'openssl' 'libffi' 'zlib' 'libnsl')
 makedepends=('tk' 'sqlite' 'valgrind' 'bluez-libs' 'mpdecimal' 'xz' 'git' 'llvm' 'gdb' 'xorg-server-xvfb')
 checkdepends=('ttf-font')
-optdepends=('sqlite'
-            'mpdecimal: for decimal'
-            'xz: for lzma'
-            'tk: for tkinter')
 source=("git+https://github.com/python/cpython#branch=master")
 sha512sums=('SKIP')
 
@@ -53,11 +52,13 @@ build() {
   cd cpython
 
   # PGO should be done with -O3
-  CFLAGS="${CFLAGS/-O2/-O3}"
+  # Also included the -fno-semantic-interposition optimization:
+  # https://fedoraproject.org/wiki/Changes/PythonNoSemanticInterpositionSpeedup
+  CFLAGS="${CFLAGS/-O2/-O3} -fno-semantic-interposition"
+  LDFLAGS="$LDFLAGS -fno-semantic-interposition"
 
   ./configure --prefix=/usr \
               --enable-shared \
-              --with-threads \
               --with-computed-gotos \
               --enable-optimizations \
               --with-lto \
@@ -91,7 +92,12 @@ check() {
     "${srcdir}/cpython/python" -m test.regrtest -w -uall -x test_ttk_guionly -x test_tk -x test_socket -j -1
 }
 
-package() {
+package_python-git() {
+  optdepends=('sqlite'
+              'mpdecimal: for decimal'
+              'xz: for lzma'
+              'tk: for tkinter')
+
   cd cpython
 
   # Hack to avoid building again
@@ -101,6 +107,9 @@ package() {
   CFLAGS="${CFLAGS/-O2/-O3}"
 
   make DESTDIR="${pkgdir}" EXTRA_CFLAGS="$CFLAGS" ENSUREPIP=install altinstall maninstall
+
+  # Split tests
+  rm -r "$pkgdir"/usr/lib/python*/{test,ctypes/test,distutils/tests,idlelib/idle_test,lib2to3/tests,sqlite3/test,tkinter/test,unittest/test}
 
   # Work around a conflict with the 'python' package.
   rm "${pkgdir}/usr/lib/libpython3.so"
@@ -113,4 +122,29 @@ package() {
 
   # License
   install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+
+package_python-tests-git() {
+  pkgdesc="Regression tests packages for Python"
+  depends=('python-git')
+
+  cd cpython
+
+  make DESTDIR="${pkgdir}" EXTRA_CFLAGS="$CFLAGS" libinstall
+  cd "$pkgdir"/usr/lib/python*/
+  rm -r !(test|ctypes|distutils|idlelib|lib2to3|sqlite3|tkinter|unittest)
+  cd "$pkgdir"/usr/lib/python*/ctypes
+  rm -r !(test)
+  cd "$pkgdir"/usr/lib/python*/distutils
+  rm -r !(tests)
+  cd "$pkgdir"/usr/lib/python*/idlelib
+  rm -r !(idle_test)
+  cd "$pkgdir"/usr/lib/python*/lib2to3
+  rm -r !(tests)
+  cd "$pkgdir"/usr/lib/python*/sqlite3
+  rm -r !(test)
+  cd "$pkgdir"/usr/lib/python*/tkinter
+  rm -r !(test)
+  cd "$pkgdir"/usr/lib/python*/unittest
+  rm -r !(test)
 }

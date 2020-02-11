@@ -1,0 +1,33 @@
+From 8500a125e9fba8bb84d185542155747ee7157ff8 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dominik=20R=C3=B6ttsches?= <drott@chromium.org>
+Date: Tue, 28 Jan 2020 13:48:07 +0000
+Subject: [PATCH] Remove verbose logging in local unique font matching on Linux
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Fixed: 1005508
+Change-Id: I97f5340c6d1881798ba51effc4a9e5c07de12e52
+Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/2023552
+Commit-Queue: Dominik Röttsches <drott@chromium.org>
+Commit-Queue: Kentaro Hara <haraken@chromium.org>
+Auto-Submit: Dominik Röttsches <drott@chromium.org>
+Reviewed-by: Kentaro Hara <haraken@chromium.org>
+Cr-Commit-Position: refs/heads/master@{#735854}
+---
+ content/child/child_process_sandbox_support_impl_linux.cc | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/content/child/child_process_sandbox_support_impl_linux.cc b/content/child/child_process_sandbox_support_impl_linux.cc
+index 693ead7f7a5..c97c8fa197b 100644
+--- a/content/child/child_process_sandbox_support_impl_linux.cc
++++ b/content/child/child_process_sandbox_support_impl_linux.cc
+@@ -76,8 +76,6 @@ bool WebSandboxSupportLinux::MatchFontByPostscriptNameOrFullFontName(
+   std::string family_name;
+   if (!font_loader_->MatchFontByPostscriptNameOrFullFontName(font_unique_name,
+                                                              &font_identity)) {
+-    LOG(ERROR) << "FontService unique font name matching request did not "
+-                  "receive a response.";
+     return false;
+   }
+ 

@@ -6,7 +6,7 @@
 set -u
 pkgbase="linux-lts316"
 _srcname="linux-3.16"
-pkgver="3.16.80"
+pkgver="3.16.81"
 pkgrel='1'
 arch=('i686' 'x86_64')
 url="https://www.kernel.org/"
@@ -29,7 +29,7 @@ source=(
   'update.sh'
 )
 md5sums=('5c569ed649a0c9711879f333e90c5386'
-         '0d58584156a25f641304ed3f6c1f48ed'
+         '40d08732754c661356ca5a8e86005a58'
          '5c85a1cef25029a8eb87d0edeec0cb04'
          'f45197ec50bb5f7a85991f6e99ad49c6'
          '90cd68710e3064d9b65f5549570f7821'
@@ -39,7 +39,7 @@ md5sums=('5c569ed649a0c9711879f333e90c5386'
          '07dc499a909a3bb63fc3fdc0d0652e64'
          'e6a1be64b190d846648d671c012d6dd3')
 sha256sums=('4813ad7927a7d92e5339a873ab16201b242b2748934f12cb5df9ba2cfe1d77a0'
-            'dd5812009daf8630517e2323640dc796323b27d719521c60532fd7a3cdfbdac7'
+            '9eee44021dc9e229c2d1b1601cec0d6e623e00147fd27b0fd0cf624fcdcee24d'
             '3bce3e9adce8ae3f826eebab75e9784ca92a914e526ae352de61c1da93aab8d3'
             '328539797005cb43362b75ca9965791a1ed34525101c286e4fb49694faa40e4c'
             '834bd254b56ab71d73f59b3221f056c72f559553c04718e350ab2a3e2991afe0'

@@ -4,7 +4,7 @@
 
 pkgname=picom-git
 _gitname=picom
-pkgver=1287_Next.6.ge1d9e95_2019.12.13
+pkgver=1299_Next.18.g499b49e_2020.02.08
 pkgrel=1
 pkgdesc="X compositor (fork of compton) (git-version)"
 arch=(i686 x86_64)
@@ -12,7 +12,7 @@ url="https://github.com/yshui/${_gitname}"
 license=('MIT' 'MPL2')
 depends=('libgl' 'libev' 'pcre' 'libx11' 'xcb-util-renderutil' 'libxcb' 'xcb-util-image' 'libxext'
          'pixman' 'libconfig' 'libdbus' 'hicolor-icon-theme' 'libxdg-basedir')
-makedepends=('git' 'mesa' 'meson' 'asciidoc' 'uthash')
+makedepends=('git' 'mesa' 'meson' 'asciidoc' 'uthash' 'xorgproto')
 optdepends=('dbus:          To control picom via D-Bus'
             'xorg-xwininfo: For picom-trans'
             'xorg-xprop:    For picom-trans'
@@ -43,7 +43,7 @@ package() {
   DESTDIR="${pkgdir}" ninja -C build install
 
   # install license
-  install -D -m644 "LICENSES/MIT" "${pkgdir}/usr/share/licenses/${pkgname/-git$/}/LICENSE-MIT"
+  install -D -m644 "LICENSES/MIT" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE-MIT"
 
   # example conf
   install -D -m644 "picom.sample.conf" "${pkgdir}/etc/xdg/picom.conf.example"

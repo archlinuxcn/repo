@@ -1,8 +1,9 @@
 # Maintainer: jtmb <packaging at technologicalwizardry dot com>
+# Co-Maintainer: Dct Mei <dctxmei@gmail.com>
 
 pkgname=hath
 pkgver=1.6.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Open-source Peer-2-Peer gallery distribution system"
 arch=(any)
 url="https://ehwiki.org/wiki/Hentai@Home"
@@ -18,9 +19,8 @@ sha256sums=('3c807dadb3303a407101c428c65a68f55b3463fc3da29133ffe43b73591eaab8'
             '8afd6ff66bfa986c7787e39aaad5d35a5ce1e2b722edb95bc86f76965d8d9fd0')
 
 build() {
-    make hath
+    make
     make jar
-    make all
 }
 
 package() {

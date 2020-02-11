@@ -9,8 +9,8 @@
 
 pkgname=freecad-oce
 _pkgver=0.18
-_count=16148
-_commit=9c2cf7283bc71107202e63b9d8cd0b7eb8c0e531
+_count=16155
+_commit=9ae129705652eec6be426211e5eaaa16c847b7c5
 pkgver=$_pkgver.$_count
 pkgrel=12
 pkgdesc='A general purpose 3D CAD modeler'
@@ -33,6 +33,8 @@ sha256sums=('SKIP'
             '1d98fa4e62f352966eb357c93f54b1f0bf562931e8323bf70a83b5e221a5fb14')
 
 _backports=(
+  17ed2b196a58afbbc3cc1bb99f6eb76060171ad2 # [Cmake] Update FindPySide2Tools for PySide2 5.14 - issue #4229
+  1666b28836baa79b26b707afb1e97c2a0855eb1f # Change IF(...LESS...) into IF(...VERSION_LESS...)
   6eacb17b3e03d20039b85c9daebab9e44386d6bf # Update swigpyrun.in for Python 3.8
   851e3d9847c5043a604a544b502c51e8c628e96c # add missing std:: namespace to build on Debian 10
   bf5923c0f360f43703bf0c2d8b1e52ac246a9c11 # add missing std:: namespace to build on Debian 10
