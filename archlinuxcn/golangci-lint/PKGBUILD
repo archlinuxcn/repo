@@ -1,15 +1,15 @@
 # Maintainer: Matthias Lisin <ml@visu.li>
 pkgname=golangci-lint
 pkgdesc="Linters Runner for Go. 5x faster than gometalinter."
-pkgver=1.23.3
-_commit=2241adf # short commit hash of release
+pkgver=1.23.6
+_commit=b9eef79 # short commit hash of release
 pkgrel=1
 arch=('x86_64' 'i686' 'aarch64' 'armv7h' 'armv6h')
 url='https://github.com/golangci/golangci-lint'
 license=('GPL3')
 makedepends=('git' 'go')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/golangci/golangci-lint/archive/v${pkgver}.tar.gz")
-sha512sums=('35f41b2de9f424b8ecf6ab2e21d1396f5002679edf8ade65d5c1f2b7d0cabcbeeddd1494557fc280ec94b5072a5f5ec6cdb95f0caed84c8278f9ba48703484cb')
+sha512sums=('95f7bb3477875a1a90ca8bd3be6dcc374d8c6e51c659165036e4ea13936c771491d25ddd93bb3ce10c49a6b3542aa4a167c8dda36933c78a148313d5cd3a5899')
 
 build() {
     cd "${pkgname}-${pkgver}"
@@ -26,5 +26,8 @@ build() {
 
 package() {
     cd "${pkgname}-${pkgver}"
+    install -dm755 "$pkgdir"/usr/share/{bash-completion/completions,zsh/site-functions}
     install -Dm755 "$pkgname" "$pkgdir"/usr/bin/"$pkgname"
+    "$pkgdir"/usr/bin/"$pkgname" completion bash > "$pkgdir"/usr/share/bash-completion/completions/golangci-lint
+    "$pkgdir"/usr/bin/"$pkgname" completion zsh > "$pkgdir"/usr/share/zsh/site-functions/_golangci-lint
 }
