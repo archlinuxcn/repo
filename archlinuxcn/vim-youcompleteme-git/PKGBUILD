@@ -38,7 +38,7 @@ _neovim="$NEOVIM_YOUCOMPLETEME"
 #                                    Default PKGBUILD Configuration                                       #
 #=========================================================================================================#
 pkgname=vim-youcompleteme-git
-pkgver=r2610.6e2afb63
+pkgver=r2611.6e2afb63
 pkgver() {
 	cd "YouCompleteMe" || exit
 	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
@@ -237,14 +237,14 @@ package() {
 
 	cp -r "$srcdir/YouCompleteMe/"{autoload,doc,plugin,python} \
 		"$pkgdir/$vimfiles_dir"
-	cp -r "$srcdir/YouCompleteMe/third_party/"{pythonfutures,requests-futures,python-future} \
+	cp -r "$srcdir/YouCompleteMe/third_party/requests-futures" \
 		"$pkgdir/$vimfiles_dir/third_party"
 	cp -r "$srcdir/YouCompleteMe/third_party/requests_deps/"{certifi,chardet,idna,requests,urllib3} \
 		"$pkgdir/$vimfiles_dir/third_party/requests_deps"
 
 	cp -r "$srcdir/YouCompleteMe/third_party/ycmd/"{ycmd,ycm_core.so,CORE_VERSION} \
 		"$pkgdir/$vimfiles_dir/third_party/ycmd"
-	cp -r "$srcdir/YouCompleteMe/third_party/ycmd/third_party/"{bottle,clang,cregex,python-future,waitress} \
+	cp -r "$srcdir/YouCompleteMe/third_party/ycmd/third_party/"{bottle,clang,cregex,waitress} \
 		"$pkgdir/$vimfiles_dir/third_party/ycmd/third_party"
 	cp -r "$srcdir/YouCompleteMe/third_party/ycmd/third_party/requests_deps/"{certifi,chardet,idna,requests,urllib3} \
 		"$pkgdir/$vimfiles_dir/third_party/ycmd/third_party/requests_deps"
