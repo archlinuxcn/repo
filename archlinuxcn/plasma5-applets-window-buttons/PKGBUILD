@@ -1,19 +1,26 @@
 # Maintainer: Antonio Rojas <arojas@archlinux.org>
 
 pkgname=plasma5-applets-window-buttons
+_pkgname=applet-window-buttons
 pkgver=0.8.0
-pkgrel=2
+pkgrel=4
 pkgdesc="Plasma 5 applet in order to show window buttons in your panels"
 arch=(x86_64)
 url="https://github.com/psifidotos/applet-window-buttons"
 license=(GPL)
 depends=(plasma-workspace)
 makedepends=(extra-cmake-modules)
-source=($pkgname-$pkgver.tar.gz::"https://github.com/psifidotos/applet-window-buttons/archive/$pkgver.tar.gz")
-sha256sums=('7f70b09a4009b7530350121e60ba0266b58d965e55b5ee0c46727dabc9aeb93b')
+source=($_pkgname-$pkgver.tar.gz::"https://github.com/psifidotos/applet-window-buttons/archive/$pkgver.tar.gz"
+        "0000-Fix_for_KDE_Plasma_5.18.patch")
+
+sha256sums=('7f70b09a4009b7530350121e60ba0266b58d965e55b5ee0c46727dabc9aeb93b'
+            '2518877689948a94775075571b2620345c5114b99ffcd37ff6f3c717bca45caa')
 
 prepare() {
   mkdir -p build
+
+  cd "$_pkgname-$pkgver"
+  patch --forward --strip=1 --input="${srcdir}/0000-Fix_for_KDE_Plasma_5.18.patch"
 }
 
 build() {
