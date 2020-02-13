@@ -4,7 +4,7 @@
 # Contributor: Andrea Scarpino <andrea@archlinux.org>
 
 pkgname=kwin-lowlatency
-pkgver=5.17.5
+pkgver=5.18.0
 pkgrel=1
 pkgdesc='the compositor, with added stutter/latency reductions'
 arch=(x86_64)
@@ -21,7 +21,7 @@ install=$pkgname.install
 
 prepare() {
   cd "$pkgname"
-  git checkout v5.17.5
+  git checkout v$pkgver
   cd ..
   mkdir -p build
 }
