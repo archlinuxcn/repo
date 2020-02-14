@@ -1,0 +1,91 @@
+# Maintainer: Peter Cai <peter at typeblog dot net>
+# Contributor:  Christoph Mohr <christoph.mohr@gmail.com>
+# Contributor:  Giovanni 'ItachiSan' Santini <giovannisantini93@yahoo.it>
+# Contributor: Filipe Laíns (FFY00) <lains@archlinux.org>
+# Contributor: Pieter Goetschalckx <3.14.e.ter <at> gmail <dot> com>
+
+pkgname=ferdi-git
+pkgver=5.3.4beta.1r1529g7a66465c
+pkgrel=1
+pkgdesc='Ferdi is a messaging browser that allows you to combine your favorite messaging services into one application.'
+arch=(x86_64 i686)
+url='https://getferdi.com/'
+license=(Apache)
+conflicts=('ferdi' 'ferdi-bin')
+depends=(electron)
+makedepends=(expac git npm python2)
+source=('git://github.com/getferdi/ferdi.git#branch=develop'
+        'git://github.com/getferdi/recipes.git'
+        'git://github.com/getferdi/internal-server.git'
+        'ferdi.desktop'
+        'ferdi.sh')
+sha512sums=('SKIP'
+            'SKIP'
+            'SKIP'
+            '501ff4d6c653823bf3321500bf7b1a4e3fa412e30c9884f6860656f816ca90c3f37610435d591c4b9444b491e7f8fe0c0dcad33be97c345ffccf46fd30e1eb65'
+            '6313c50e4226a144303c5a0055f08312009ea14e45de227c163aaeb528a49c796704bbd3b8cfa2cce49840e54dbd5e25cf8a241e619f2bf9b1a4ff79b80b78eb')
+
+pkgver() {
+  cd ferdi
+  # cutting off 'v' prefix that presents in the git tag
+  git describe --long | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-//g'
+}
+
+prepare() {
+  # Prepare Python 2 for later
+  mkdir python2_path
+  ln -s `which python2` python2_path/python
+
+  # Small patching
+  cd ferdi
+  git submodule init
+  git config submodule.recipes.url $srcdir/recipes
+  git config submodule.src/internal-server.url $srcdir/internal-server
+  
+  git submodule update --init --recursive
+
+  # Prevent ferdi from being launched in dev mode
+  sed -i "s|export const isDevMode = .*|export const isDevMode = false;|g" \
+    src/environment.js
+  sed -i "s|import isDevMode from 'electron-is-dev'|export const isDevMode = false|g" \
+    src/index.js
+
+  # Remove `noAsar`
+  sed -i "s|process.noAsar = true|process.noAsar = false|g" \
+    src/internal-server/start.js
+
+  # Adjust node-sass version to avoid build issues
+  npm install "node-sass@4.13.0"
+}
+
+build() {
+  cd ferdi
+
+  # Better configuration for npm cache and calling installed binaries
+  export npm_config_cache="$srcdir"/npm_cache
+  export PATH="$srcdir/ferdi/node_modules/.bin:$srcdir/python2_path:$PATH"
+
+  npm install lerna
+  lerna bootstrap
+
+  gulp build
+  electron-builder --linux dir
+}
+
+package() {
+  cd ferdi
+  # Install the .asar files
+  install -Dm 755 out/linux-unpacked/resources/app.asar "$pkgdir"/usr/lib/ferdi/resources/app.asar
+  install -dm755 "$pkgdir"/usr/lib/ferdi/resources/app.asar.unpacked/recipes/
+  cp -dr --no-preserve=ownership "$srcdir"/recipes "$pkgdir"/usr/lib/ferdi/resources/app.asar.unpacked/
+  chmod -R 755 "$pkgdir"/usr/lib/ferdi/resources/app.asar.unpacked/
+
+  # Install icon
+  install -Dm 644 "$srcdir"/ferdi.desktop "$pkgdir"/usr/share/applications/ferdi.desktop
+  install -Dm 644 build-helpers/images/icon.png "$pkgdir"/usr/share/icons/ferdi.png
+
+  # Install run script
+  install -Dm 755 "$srcdir"/ferdi.sh "$pkgdir"/usr/bin/ferdi
+}
+
+
