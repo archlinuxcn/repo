@@ -5,14 +5,14 @@
 # Contributor: Pieter Goetschalckx <3.14.e.ter <at> gmail <dot> com>
 
 pkgname=ferdi-git
-pkgver=5.3.4beta.1r1529g7a66465c
+pkgver=5.3.4beta.1.r1533.gf07b3f70
 pkgrel=1
 pkgdesc='Ferdi is a messaging browser that allows you to combine your favorite messaging services into one application.'
 arch=(x86_64 i686)
 url='https://getferdi.com/'
 license=(Apache)
 conflicts=('ferdi' 'ferdi-bin')
-depends=(electron)
+depends=(electron libxkbfile)
 makedepends=(expac git npm python2)
 source=('git://github.com/getferdi/ferdi.git#branch=develop'
         'git://github.com/getferdi/recipes.git'
@@ -35,6 +35,7 @@ prepare() {
   # Prepare Python 2 for later
   mkdir python2_path
   ln -s `which python2` python2_path/python
+  export PATH="$srcdir/ferdi/node_modules/.bin:$srcdir/python2_path:$PATH"
 
   # Small patching
   cd ferdi
