@@ -10,7 +10,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=chromium-vaapi
-pkgver=80.0.3987.87
+pkgver=80.0.3987.100
 pkgrel=1
 _launcher_ver=6
 pkgdesc="Chromium with VA-API support to enable hardware acceleration"
@@ -41,10 +41,11 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         fix-building-with-system-zlib.patch
         remove-verbose-logging-in-local-unique-font-matching.patch
         fix-building-with-unbundled-libxml.patch
-        fix-browser-frame-view-not-getting-a-relayout.patch
+        rename-Relayout-in-DesktopWindowTreeHostPlatform.patch
+        rebuild-Linux-frame-button-cache-when-activation.patch
         chromium-widevine.patch
         chromium-skia-harmony.patch)
-sha256sums=('f51f6fca5d9abbef855aa6b5bf427410c6e96ae58b64a7d45f843868cfb0ac8e'
+sha256sums=('e9464c4045a9afca90ddb9a085c32b302944073ef920365af1d7244902a7200b'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
             'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb'
             '0ec6ee49113cc8cc5036fa008519b94137df6987bf1f9fbffb2d42d298af868a'
@@ -55,7 +56,8 @@ sha256sums=('f51f6fca5d9abbef855aa6b5bf427410c6e96ae58b64a7d45f843868cfb0ac8e'
             '18276e65c68a0c328601b12fefb7e8bfc632346f34b87e64944c9de8c95c5cfa'
             '5bc775c0ece84d67855f51b30eadcf96fa8163b416d2036e9f9ba19072f54dfe'
             'e530d1b39504c2ab247e16f1602359c484e9e8be4ef6d4824d68b14d29a7f60b'
-            '5db225565336a3d9b9e9f341281680433c0b7bb343dff2698b2acffd86585cbe'
+            'ae3bf107834bd8eda9a3ec7899fe35fde62e6111062e5def7d24bf49b53db3db'
+            '46f7fc9768730c460b27681ccf3dc2685c7e1fd22d70d3a82d9e57e3389bb014'
             '709e2fddba3c1f2ed4deb3a239fc0479bfa50c46e054e7f32db4fb1365fed070'
             '771292942c0901092a402cc60ee883877a99fb804cb54d568c8c6c94565a48e1')
 
@@ -129,8 +131,9 @@ prepare() {
   # https://crbug.com/1043042
   patch -Np1 -i ../fix-building-with-unbundled-libxml.patch
 
-  # https://crbug.com/1046122
-  patch -Np1 -i ../fix-browser-frame-view-not-getting-a-relayout.patch
+  # https://crbug.com/1049258
+  patch -Np1 -i ../rename-Relayout-in-DesktopWindowTreeHostPlatform.patch
+  patch -Np1 -i ../rebuild-Linux-frame-button-cache-when-activation.patch
 
   # Load bundled Widevine CDM if available (see chromium-widevine in the AUR)
   # M79 is supposed to download it as a component but it doesn't seem to work
