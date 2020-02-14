@@ -28,7 +28,7 @@ sha512sums=('SKIP'
 pkgver() {
   cd ferdi
   # cutting off 'v' prefix that presents in the git tag
-  git describe --long | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-//g'
+  git describe --long | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-beta/beta/g;s/-/./g'
 }
 
 prepare() {
