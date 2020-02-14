@@ -88,3 +88,24 @@ index 8d43b6db428..d7fa6bf5b14 100644
  
  
  [Service]
+From 974bd397ff3492c57799e11a02cc3c07081bb1fc Mon Sep 17 00:00:00 2001
+From: Christian Hesse <mail@eworm.de>
+Date: Tue, 2 Jan 2018 14:36:49 +0100
+Subject: Make systemd-tmpfiles create MYSQL_DATADIR
+
+This is a no-op if the directory exists, but makes sure it is created by
+systemd-tmpfiles with proper permissions otherwise.
+
+This solves packaging issues when the user MYSQLD_USER is created by
+systemd-sysusers and uid is not known in advance.
+---
+ support-files/tmpfiles.conf.in | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/support-files/tmpfiles.conf.in b/support-files/tmpfiles.conf.in
+index 03d66abc0c7..3c89cb258c9 100644
+--- a/support-files/tmpfiles.conf.in
++++ b/support-files/tmpfiles.conf.in
+@@ -1 +1,2 @@
+ d @MYSQL_UNIX_DIR@ 0755 @MYSQLD_USER@ @MYSQLD_USER@ -
++d @MYSQL_DATADIR@ 0700 @MYSQLD_USER@ @MYSQLD_USER@ -

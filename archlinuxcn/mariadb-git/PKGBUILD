@@ -5,7 +5,7 @@ pkgbase=mariadb-git
 _pkgbase=mariadb
 pkgname=('mariadb-libs-git' 'mariadb-clients-git' 'mariadb-git' 'mytop-git')
 pkgdesc='Fast SQL database server, derived from MySQL'
-pkgver=10.4.12.r18.gc1eaa385ffb
+pkgver=10.4.12.r695.gac51bcfd8d3
 pkgrel=1
 arch=('x86_64')
 license=('GPL')
@@ -13,13 +13,9 @@ url='https://mariadb.org/'
 makedepends=('git' 'boost' 'bzip2' 'cmake' 'jemalloc' 'libaio' 'libxml2' 'lz4' 'lzo'
              'openssl' 'systemd' 'zlib' 'zstd')
 source=("$_pkgbase::git://github.com/MariaDB/server.git"
-        '0001-arch-specific.patch'
-        '0002-systemd-sysusers-tmpfiles.patch'
-        '0005-fix-galera_recovery-with-fs.protected_regular-enabled.patch')
+        '0001-arch-specific.patch')
 sha256sums=('SKIP'
-            'ce72ea1563ad773e00e8b1c299babea176abae1102827c2f743921e9de615041'
-            '3e83467af80fbd53400a201a34fc858b88509ea8e88b10709947eb66545f9457'
-            'c8c801f80924ccb97b499552fe1c532b3ebf8f86cdfc0d23715d4adb1a8810f0')
+            'e14e1ce5f0d7117dfa7870e92e1224d4ca5e6b3fc395ab6da78aa777e3e403ab')
 pkgver() {
   cd "$_pkgbase"
   git describe --long --tags | sed 's/^mariadb.//;s/\([^-]*-g\)/r\1/;s/-/./g'
@@ -32,17 +28,8 @@ prepare() {
   #  * enable PrivateTmp for a little bit more security
   #  * force preloading jemalloc for memory management
   #  * remove aliases in systemd unit files
+  #  * make systemd-tmpfiles create MYSQL_DATADIR
   patch -Np1 < ../0001-arch-specific.patch
-
-  # MDEV-17028 Fix glitches with systemd sysusers and tmpfiles:
-  #  * Use descriptive file names for sysusers and tmpfiles configuration
-  #  * Make systemd-tmpfiles create MYSQL_DATADIR
-  # https://github.com/MariaDB/server/pull/530
-  patch -Np1 < ../0002-systemd-sysusers-tmpfiles.patch
-
-  # fix galera_recovery with fs.protected_regular enabled
-  # https://github.com/MariaDB/server/pull/1137
-  patch -Np1 < ../0005-fix-galera_recovery-with-fs.protected_regular-enabled.patch
 }
 
 build() {
