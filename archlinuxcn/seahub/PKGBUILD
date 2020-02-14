@@ -5,20 +5,24 @@
 
 pkgname=seahub
 pkgver=7.1.1
-pkgrel=1
+pkgrel=2
 pkgdesc='The web frontend for seafile server'
 arch=('any')
 url='https://github.com/haiwen/seahub'
 license=('Apache')
 makedepends=('python-setuptools')
 source=("$pkgname-$pkgver-server.tar.gz::$url/archive/v$pkgver-server.tar.gz"
-        "https://www.djangoproject.com/m/releases/1.11/Django-1.11.25.tar.gz")
+        "https://www.djangoproject.com/m/releases/1.11/Django-1.11.25.tar.gz"
+        fix_shared_link.patch)
 sha256sums=('31dbcfa3ff176925f3de69d9b920fa8407150587be97b3fc568d52042dc44e23'
-            '5314e8586285d532b7aa5c6d763b0248d9a977a37efec86d30f0212b82e8ef66')
+            '5314e8586285d532b7aa5c6d763b0248d9a977a37efec86d30f0212b82e8ef66'
+            'f2af699359155b0a303044e6027828950fb3eaf11795b9143896b0a5a4431b31')
 options=('!strip')
 
 prepare() {
     cd "$srcdir/$pkgname-$pkgver-server"
+    patch -Np1 --no-backup-if-mismatch < ../fix_shared_link.patch
+
     # Remove useless files and directories
     rm -rf \
         './'{CONTRIBUTORS,HACKING,Makefile} \
