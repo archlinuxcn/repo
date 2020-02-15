@@ -6,7 +6,7 @@
 
 pkgname=ferdi-git
 pkgver=5.3.4beta.1.r1533.gf07b3f70
-pkgrel=1
+pkgrel=2
 pkgdesc='Ferdi is a messaging browser that allows you to combine your favorite messaging services into one application.'
 arch=(x86_64 i686)
 url='https://getferdi.com/'
@@ -54,6 +54,9 @@ prepare() {
   # Remove `noAsar`
   sed -i "s|process.noAsar = true|process.noAsar = false|g" \
     src/internal-server/start.js
+
+  # Set system Electron version for ABI compatibility
+  sed -r 's#("electron": ").*"#\1'$(cat /usr/lib/electron/version)'"#' -i package.json
 
   # Adjust node-sass version to avoid build issues
   npm install "node-sass@4.13.0"

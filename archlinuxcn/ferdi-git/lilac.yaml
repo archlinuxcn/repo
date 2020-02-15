@@ -7,3 +7,6 @@ pre_build: vcs_update
 
 update_on:
   - github: getferdi/ferdi
+  - archpkg: electron
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
