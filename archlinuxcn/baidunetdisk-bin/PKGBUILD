@@ -4,7 +4,7 @@
 _pkgname=baidunetdisk
 pkgname=baidunetdisk-bin
 pkgver=3.0.1.2
-pkgrel=5
+pkgrel=6
 _mainver=`echo $pkgver | cut -f -3 -d '.'`
 pkgdesc="Baidu Net Disk is a cloud storage client (Linux Version)."
 arch=('x86_64')
