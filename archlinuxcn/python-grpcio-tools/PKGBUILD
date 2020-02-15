@@ -3,7 +3,7 @@
 # Bugreports can be filed at https://github.com/alexf91/AUR-PKGBUILDs
 
 pkgname='python-grpcio-tools'
-pkgver=1.27.1
+pkgver=1.27.2
 pkgrel=1
 pkgdesc="Python protobuf generator for GRPC"
 arch=('x86_64' 'i686')
@@ -16,7 +16,7 @@ noextract=()
 depends=('python' 'python-grpcio' 'python-protobuf')
 makedepends=('python-setuptools')
 source=("https://files.pythonhosted.org/packages/source/g/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
-sha512sums=('b4e681ea2e635df74d2087f992b84a8069eab70ee9538d0e0463d391d307db5440197662d64d331fdac18ece324976a0e228a53082b4582d46a137b3e806aaa3')
+sha512sums=('1e4f6f1daaf8bd6ca08419e8810e28c5d959634b47202f1932e530590ddb33c3e49c73edfd67e95dace7c4e8735372d3b0ffaa3686cb4a539d6205fa5d4ab24d')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
