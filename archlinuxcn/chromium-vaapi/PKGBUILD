@@ -11,7 +11,7 @@
 
 pkgname=chromium-vaapi
 pkgver=80.0.3987.106
-pkgrel=1
+pkgrel=2
 _launcher_ver=6
 pkgdesc="Chromium with VA-API support to enable hardware acceleration"
 arch=('x86_64')
@@ -34,6 +34,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-launcher-$_launcher_ver.tar.gz::https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver.tar.gz
         chromium-drirc-disable-10bpc-color-configs.conf
         vaapi-fix.patch
+        vaapi-fix-wayland-init.patch
         cros-search-service-Include-cmath-for-std-pow.patch
         move-RemoteTreeNode-declaration.patch
         sync-enable-USSPasswords-by-default.patch
@@ -49,6 +50,7 @@ sha256sums=('2ead924b4414a8a5f085fa0e0df56563ef41bd4290cc403c05d5beec238cbe82'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
             'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb'
             '0ec6ee49113cc8cc5036fa008519b94137df6987bf1f9fbffb2d42d298af868a'
+            'a4c022263b474ae14abd899b8e453f7d9ed9c0715b0b248b8a423aa2777095c4'
             '0a8d1af2a3734b5f99ea8462940e332db4acee7130fe436ad3e4b7ad133e5ae5'
             '21f631851cdcb347f40793485b168cb5d0da65ae26ae39ba58d624c66197d0a5'
             '08ef82476780e0864b5bf7f20eb19db320e73b9a5d4f595351e12e97dda8746f'
@@ -111,6 +113,7 @@ prepare() {
 
   # Fix VA-API on Intel and Nvidia
   patch -Np1 -i ../vaapi-fix.patch
+  patch -Np1 -i ../vaapi-fix-wayland-init.patch
 
   # https://crbug.com/957519
   patch -Np1 -i ../cros-search-service-Include-cmath-for-std-pow.patch
