@@ -2,11 +2,11 @@
 # Contributor: svalo <me@valo.space>
 
 pkgname=dino-git
-pkgver=r645.e17c797
+pkgver=v0.1.0.r2.g29bcba2
 pkgrel=1
 pkgdesc="Simple and modern Jabber/XMPP client written in vala"
 arch=('i686' 'x86_64' 'aarch64')
-url="https://github.com/dino/dino"
+url="https://dino.im/"
 license=('GPL3')
 depends=('glib2>=2.38' 'glib-networking' 'gtk3>=3.22' 'gpgme' 'libgee>=0.10' 'libgcrypt' 'libsoup' 'sqlite' 'qrencode' 'libsignal-protocol-c' )
 makedepends=('git' 'cmake' 'vala>=0.34' 'ninja')
@@ -30,7 +30,7 @@ sha512sums=('SKIP')
 
 pkgver() {
     cd "${srcdir}/${pkgname%-git}"
-    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+    git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build() {
