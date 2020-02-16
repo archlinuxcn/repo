@@ -2,8 +2,8 @@
 
 _pkgname=imgaug
 pkgname=python-imgaug
-pkgver=0.3.0
-pkgrel=3
+pkgver=0.4.0
+pkgrel=11
 pkgdesc='Image augmentation for machine learning experiments'
 arch=(any)
 url=https://github.com/aleju/imgaug
@@ -30,7 +30,7 @@ checkdepends=(
   'qt5-base'
 )
 source=("${_pkgname}-${pkgver}.tar.gz"::"https://github.com/aleju/imgaug/archive/${pkgver}.tar.gz")
-sha512sums=('f4494eb44fc9a0b9c8685d9acf7b2df37d10fa47f8e1ad8064fd8f0469b01a649dc2e1f6fc9752f05df5b33db07594fb2840a4a474d826a9c36b583e1f7210c9')
+sha512sums=('abec5ece42d38b455312154c04641d1c1373a6ed16b879050dcc754c9feb8704c9cea124cc1e990c787fcc7cdbf5894fe37339c4d84f65efd7cfbd23cba7a1e7')
 
 build() {
   cd "${_pkgname}-${pkgver}"
