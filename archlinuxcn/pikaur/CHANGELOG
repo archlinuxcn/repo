@@ -1606,3 +1606,15 @@ Sat Feb 8 16:32:36 2020 +0100
     Notables changes:
      2020-02-08 80d9409 actionless Revert "fix(install_cli): run mksrcinfo only after all files have been reviewed"
      2020-02-08 47f2eb1 actionless fix(build): run mksrcinfo only after all files have been reviewed
+
+
+Sun Feb 16 20:13:00 2020 +0100
+-------------------------------------------------
+1.6.4           Release 1.6.4
+    
+    Notable changes:
+     2020-02-16 fdad6df actionless fix(install cli, build): regression after latest fix for reviewed status (problem with detecting changes with --devel packages' builds)
+     2020-02-15 42fe418 actionless fix(install_info_fetcher: discard): discard only pkg and its deps, but not the pkgs which depend on it (re: #452)
+     2020-02-15 d701695 actionless fix(args): make --print-commands work again (but still keep --verbose work as well)
+     2020-02-15 77619d3 actionless feat(pprint, args, install_info): handle pacman's --debug and add its own --pikaur-debug, add print_debug(), minimal debugging output in install info fetcher
+     2020-02-13 671f15f actionless feat(search_cli): workaround/handle 'Query arg too small.' from AUR RPC
