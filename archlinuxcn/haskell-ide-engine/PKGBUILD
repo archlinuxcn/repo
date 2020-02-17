@@ -14,7 +14,7 @@ sha384sums=('066cbac86f8a2bdcb68463188effa1a5f1d6804afa251caa351673a541eced306ed
 # activated by default are the ones also used in a stackage snapshot. Removing
 # versions you do not use will greatly reduce the compilation time of this
 # package
-_enabled_ghc_versions=('8.6.5')
+_enabled_ghc_versions=('8.6.5' '8.8.2')
 
 build() {
     cd "${srcdir}/${pkgname}-${pkgver}"
