@@ -3,10 +3,10 @@
 # Derived from official Chromium and Inox PKGBUILDS and ungoogled-chromium buildkit
 
 pkgname=ungoogled-chromium
-pkgver=79.0.3945.130
+pkgver=80.0.3987.106
 _rev=1
-_archver=a79e70b9f50152e39346f89f3ca136dbdeb15b4e
-pkgrel=1
+_archver=b39bf35e8765a7af01d97a53854ff0628b2fba07
+pkgrel=${_rev}
 _launcher_ver=6
 pkgdesc="A lightweight approach to removing Google web service dependency"
 arch=('x86_64')
@@ -15,7 +15,7 @@ license=('BSD')
 depends=('gtk3' 'nss' 'alsa-lib' 'xdg-utils' 'libxss' 'libcups' 'libgcrypt'
          'ttf-font' 'systemd' 'dbus' 'libpulse' 'pciutils' 'json-glib' 'libva'
          'desktop-file-utils' 'hicolor-icon-theme' 'jsoncpp' 'openjpeg2')
-makedepends=('python' 'python2' 'gperf' 'yasm' 'mesa' 'ninja' 'git'
+makedepends=('python' 'python2' 'gperf' 'yasm' 'mesa' 'ninja' 'nodejs' 'git'
              'clang' 'lld' 'gn' 'llvm' 'quilt')
 optdepends=('pepper-flash: support for Flash content'
             'kdialog: needed for file dialogs in KDE'
@@ -28,12 +28,12 @@ provides=('chromium')
 conflicts=('chromium')
 source=(https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$pkgver.tar.xz
         chromium-launcher-$_launcher_ver.tar.gz::https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver.tar.gz
-https://github.com/Eloston/ungoogled-chromium/archive/$pkgver-$_rev.tar.gz
+        https://github.com/Eloston/ungoogled-chromium/archive/$pkgver-$pkgrel.tar.gz
         https://github.com/ungoogled-software/ungoogled-chromium-archlinux/archive/${_archver}.tar.gz)
-sha256sums=('56193431ab9d1193773b133d86b419bfae8d8b9196eea253660895e0e8f87ba0'
+sha256sums=('2ead924b4414a8a5f085fa0e0df56563ef41bd4290cc403c05d5beec238cbe82'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
-            'cf680d5a1462c1c0896421b134044f08e0dd73e3d3556ebcaa19cbedfdf983b1'
-            '2e707870c469823844344affada4c72ab80cb5bb01f90f8f8f2bbc3c19f61885')
+            '1d1fb27585902648725c938fdc851c80d0061620b9a91e4aeb0699786ec63fa7'
+            '82f3f5ac30fc7d525547a25bc429bbcff2378ce1228c8125851ad3b5675fabff')
 
 # Possible replacements are listed in build/linux/unbundle/replace_gn_files.py
 # Keys are the names in the above script; values are the dependencies in Arch
@@ -48,7 +48,7 @@ declare -gA _system_libs=(
   [libevent]=libevent
   [libjpeg]=libjpeg
   #[libpng]=libpng            # https://crbug.com/752403#c10
-  #[libvpx]=libvpx            # https://github.com/webmproject/libvpx/commit/5a0242ba5c
+  [libvpx]=libvpx
   [libwebp]=libwebp
   [libxml]=libxml2
   [libxslt]=libxslt
@@ -66,7 +66,7 @@ depends+=(${_system_libs[@]})
 
 prepare() {
   _ungoogled_archlinux_repo="$srcdir/$pkgname-archlinux-${_archver}"
-  _ungoogled_repo="$srcdir/$pkgname-$pkgver-$_rev"
+  _ungoogled_repo="$srcdir/$pkgname-$pkgver-$pkgrel"
   _utils="${_ungoogled_repo}/utils"
 
   cd "$srcdir/chromium-$pkgver"
@@ -80,6 +80,9 @@ prepare() {
 
   # Force script incompatible with Python 3 to use /usr/bin/python2
   sed -i '1s|python$|&2|' third_party/dom_distiller_js/protoc_plugins/*.py
+
+  mkdir -p third_party/node/linux/node-linux-x64/bin
+  ln -s /usr/bin/node third_party/node/linux/node-linux-x64/bin/
 
   # Remove bundled libraries for which we will use the system copies; this
   # *should* do what the remove_bundled_libraries.py script does, with the
@@ -103,7 +106,7 @@ prepare() {
 
 build() {
   _ungoogled_archlinux_repo="$srcdir/$pkgname-archlinux-${_archver}"
-  _ungoogled_repo="$srcdir/$pkgname-$pkgver-$_rev"
+  _ungoogled_repo="$srcdir/$pkgname-$pkgver-$pkgrel"
 
   make -C chromium-launcher-$_launcher_ver
 
@@ -125,6 +128,8 @@ build() {
   cp "$_ungoogled_repo/flags.gn" "out/Default/args.gn"
   printf '\n' >> "out/Default/args.gn"
   cat "$_ungoogled_archlinux_repo/flags.archlinux.gn" >> "out/Default/args.gn"
+  sed -i '/use_system_libopenjpeg2=true/d' "out/Default/args.gn"
+
 
   # Facilitate deterministic builds (taken from build/config/compiler/BUILD.gn)
   CFLAGS+='   -Wno-builtin-macro-redefined'
