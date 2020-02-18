@@ -1,7 +1,7 @@
 pkgname=haskell-clay
 _hkgname=clay
 pkgver=0.13.3
-pkgrel=3
+pkgrel=5
 pkgdesc="CSS preprocessor as embedded Haskell."
 url="https://hackage.haskell.org/package/clay"
 license=('BSD')
