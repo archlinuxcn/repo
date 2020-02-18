@@ -8,7 +8,7 @@
 
 pkgname=exaile
 pkgver=4.0.2
-pkgrel=1
+pkgrel=2
 pkgdesc="A full-featured Amarok-style media player for GTK+"
 arch=('any')
 url="https://www.exaile.org/"
@@ -23,7 +23,7 @@ depends=('python2>=2.7'
 	'pygobject-devel>=3.13.2'
 	'python2-cairo')
 makedepends=('help2man')
-checkdepends=('python2-mox3' 'python2-pytest')
+#checkdepends=('python-mox3' 'python-pytest')
 optdepends=('udisks2: device detection'
 	'cddb-py: CD info'
 	'spydaap: DAAP plugins (daapserver and daapclient)'
@@ -42,10 +42,11 @@ build() {
 	make PREFIX="/usr"
 }
 
-check() {
-	cd "$srcdir/$pkgname-$pkgver"
-	make PYTEST="py.test2" test
-}
+# Tests are broken (python2-mox3 package has been removed)
+#check() {
+#	cd "$srcdir/$pkgname-$pkgver"
+#	make test
+#}
 
 package() {
 	cd "$srcdir/$pkgname-$pkgver"
