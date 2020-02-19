@@ -3,7 +3,7 @@
 pkgname=php-swoole
 _extname=swoole
 _reponame=swoole-src
-pkgver=4.4.15
+pkgver=4.4.16
 pkgrel=1
 pkgdesc="Event-driven asynchronous and concurrent networking engine with high performance for PHP."
 url="https://github.com/swoole/swoole-src"
@@ -13,7 +13,7 @@ depends=('nghttp2' 'php')
 provides=('php-swoole')
 backup=("etc/php/conf.d/$_extname.ini")
 source=("$pkgname-$pkgver.src.tar.gz::https://github.com/swoole/$_reponame/archive/v$pkgver.tar.gz")
-sha256sums=('777a47504031ca5a8b2e8f93c0a4cf911cf03a292de5a31315b28338b84322e0')
+sha256sums=('9272490406a9a65d53154613cea24ea25fea7f988a6749de3e09b8ae3587c47b')
 install=php-swoole.install
 
 build() {
