@@ -3,10 +3,10 @@
 pkgname=rambox-bin
 _pkgname=rambox
 pkgver=0.7.3
-pkgrel=1
+pkgrel=2
 pkgdesc='Free and Open Source messaging and emailing app that combines common web applications into one.'
 arch=('i686' 'x86_64')
-depends=('alsa-lib' 'bash' 'desktop-file-utils' 'gconf' 'gtk2' 'libnotify' 'libxtst' 'libxss' 'nss')
+depends=('desktop-file-utils' 'bash' 'gtk3' 'libnotify' 'libxtst' 'libxss' 'libxkbcommon' 'libsecret' 'nss' 'libutil-linux')
 provides=('rambox')
 conflicts=('rambox')
 url='http://rambox.pro/'
