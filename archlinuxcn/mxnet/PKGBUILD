@@ -6,7 +6,7 @@ _pkgname=mxnet
 pkgname=('mxnet' 'mxnet-mkl' 'mxnet-cuda' 'mxnet-cuda-mkl')
 _pkgver=1.6.0
 pkgver=1.6.0
-pkgrel=2
+pkgrel=3
 epoch=1
 pkgdesc='A flexible and efficient library for deep learning'
 arch=('x86_64')
@@ -176,6 +176,7 @@ _package() {
   rm -rfv "${pkgdir}/usr/mxnet"
   rm -rfv "${pkgdir}/usr/lib/cmake" "${pkgdir}/usr/share/doc"
   find "${pkgdir}" -type f -name '*dnn*' -delete
+  find "${pkgdir}" -type l -name '*dnn*' -delete
   find "${pkgdir}" -name '*.a' -delete
   find "${pkgdir}" -type d -empty -delete
 }
