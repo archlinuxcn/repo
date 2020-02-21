@@ -16,22 +16,24 @@ _bundled_with_client=('vmware-horizon-pcoip'
 pkgver=5.3.0
 _build=15208949
 _cart='CART20FQ4'
-pkgrel=1
+pkgrel=3
 pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop'
 arch=('x86_64')
 url='https://www.vmware.com/go/viewclients'
 license=('custom')
-makedepends=('libxslt' 'patchelf')
+makedepends=('libxslt' 'patchelf' 'librsvg')
 source=("${pkgbase}-${pkgver}-${_build}-x86_64.bundle::https://download3.vmware.com/software/view/viewclients/${_cart}/VMware-Horizon-Client-${pkgver}-${_build}.x64.bundle"
         'http://sources.gentoo.org/cgi-bin/viewvc.cgi/gentoo-x86/eclass/vmware-bundle.eclass'
         'vmware-horizon-usb'
         'vmware-horizon-usb.service'
-        'vmware-horizon-virtual-printing.service')
+        'vmware-horizon-virtual-printing.service'
+        'vmware-horizon.svg')
 sha256sums=('4f2a8d5f420d467233c28f59fd9c20f2e39abcac4983d9248d5c1515c53d3253'
             'd8794c22229afdeb698dae5908b7b2b3880e075b19be38e0b296bb28f4555163'
             '008b60ebf45f7d1e033c8ad8ce1688d5e1c59fc0668493067fb89b563b1dc00f'
             'a897c1b9e8928fc222880ebbfc7bb6aff940bff4acf4e4e0cd4002fff81c7226'
-            'e47e770a1e19ed321de7c2765b2d682f59ac466aef92b2e4ea5e65cacf56de36')
+            'e47e770a1e19ed321de7c2765b2d682f59ac466aef92b2e4ea5e65cacf56de36'
+            'cea92d3ed97b717c631fed5664c06fc71a6deac21ba32da78970c582ed48c747')
 
 # We need these functions for the Gentoo eclass...
 ebegin() {
@@ -91,8 +93,10 @@ build() {
 	# remove keymap files, depend on vmware-keymaps instead
 	rm -rf "${srcdir}"/extract/vmware-horizon-pcoip/pcoip/lib/vmware/xkeymap/
 
-	sed -i -e '/Name=/a Comment=Connect to VMware Horizon View virtual machines' -e '/Icon=/s/.png$//' \
+	# remove png icon, we install svg and rendered pngs
+	sed -i -e '/Name=/a Comment=Connect to VMware Horizon View virtual machines' -e '/^Icon=/c Icon=vmware-horizon' \
 		"${srcdir}"/extract/vmware-horizon-client/share/applications/vmware-view.desktop
+	rm -r "${srcdir}"/extract/vmware-horizon-client/share/{icons,pixmaps}/
 }
 
 package_vmware-horizon-client() {
@@ -135,6 +139,12 @@ package_vmware-horizon-client() {
 	mkdir -p "${pkgdir}/usr/"
 	install -D -m0755 vmware-view "${pkgdir}/usr/lib/vmware/view/bin/vmware-view"
 	cp -a lib/ "${pkgdir}/usr/"
+
+	install -D -m0644 "${srcdir}/vmware-horizon.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/vmware-horizon.svg"
+	for SIZE in 16 24 32 48 64 96 128; do
+		install -d "${pkgdir}/usr/share/icons/hicolor/${SIZE}x${SIZE}/apps/"
+		rsvg-convert -w "${SIZE}" -h "${SIZE}" "${srcdir}/vmware-horizon.svg" > "${pkgdir}/usr/share/icons/hicolor/${SIZE}x${SIZE}/apps/vmware-horizon.png"
+	done
 }
 
 package_vmware-horizon-rtav() {
