@@ -4,10 +4,10 @@
 _cudaarch="6.0;6.1;6.2;7.0;7.2;7.5"
 _pkgname=mxnet
 pkgname=('mxnet-git' 'mxnet-mkl-git' 'mxnet-cuda-git' 'mxnet-cuda-mkl-git')
-_pkgver=1.5.1
+_pkgver=1.6.0
 pkgver=1.5.1.r10704.0f3c5da37b
 pkgrel=1
-pkgdesc="A flexible and efficient library for deep learning"
+pkgdesc='A flexible and efficient library for deep learning'
 arch=('x86_64')
 url="http://mxnet.io/"
 license=('Apache')
@@ -198,6 +198,8 @@ package_mxnet-git() {
 package_mxnet-mkl-git() {
   pkgdesc="${pkgdesc} (with MKL-DNN)"
   depends+=(opencv)
+  provides+=(mxnet-mkl=${pkgver})
+  conflicts+=(mxnet-mkl=${pkgver})
 
   export CC=gcc
   export CXX=g++
@@ -207,6 +209,8 @@ package_mxnet-mkl-git() {
 package_mxnet-cuda-git() {
   pkgdesc="${pkgdesc} (with CUDA)"
   depends+=(cuda cudnn nccl)
+  provides+=(mxnet-cuda=${pkgver})
+  conflicts+=(mxnet-cuda=${pkgver})
 
   export CC=/opt/cuda/bin/gcc
   export CXX=/opt/cuda/bin/g++
