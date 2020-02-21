@@ -1,22 +1,32 @@
 # Maintainer: Dr-Incognito <v2ray.dev at gmail dot com>
 pkgname=v2ray-desktop
-pkgver=1.5.0
+pkgver=1.5.1
 pkgrel=1
 pkgdesc="A Cross-platform GUI Client for V2Ray written in Qt 5 and QML 2 (Stable Release)"
 arch=("x86_64")
 url="https://github.com/Dr-Incognito/V2Ray-Desktop"
 license=("GPL3")
 depends=("v2ray" "qt5-base>=5.14.0" "qt5-quickcontrols>=5.14.0" "qt5-quickcontrols2>=5.14.0")
-makedepends=("git" "make" "qt5-tools>=5.14.0" which gcc "qt5-declarative>=5.14.0")
+makedepends=("git>=2.11" "qt5-tools>=5.14.0" "qt5-declarative>=5.14.0" curl which gcc make jq sed)
 provides=(v2ray-desktop)
 source=("V2Ray-Desktop::git+${url}#tag=${pkgver}")
 sha512sums=("SKIP")
 
 prepare() {
     cd "${srcdir}/V2Ray-Desktop"
+
+    echo "Detecting your country ... Please wait ..."
+    country=$(curl -s https://ipvigilante.com/$(curl -s icanhazip.com) | jq -r '.data.country_name')
+    echo "Your country: $country"
+
+    if [ "$country" = "China" ]; then
+        echo "Use qzxing@gitee.com for Chinese users ..."
+        sed -i "s/github.com\/ftylitak/gitee.com\/Dr-Incognito/" .gitmodules
+    fi
+
     echo "Initialize submodules. This may take a long time ..."
     git submodule init
-    git submodule update
+    git submodule update --progress
 }
 
 build() {
