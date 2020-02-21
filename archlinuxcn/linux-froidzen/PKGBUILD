@@ -1,7 +1,7 @@
 # Maintainer: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 
 pkgbase=linux-froidzen
-pkgver=5.5.4.zen1
+pkgver=5.5.5.zen1
 pkgrel=1
 pkgdesc='Linux ZEN with Patches'
 _srctag=v${pkgver%.*}-${pkgver##*.}
@@ -26,7 +26,7 @@ validpgpkeys=(
   '8218F88849AAC522E94CF470A5E9288C4FA415FA'  # Jan Alexander Steffens (heftig)
 )
 sha256sums=('SKIP'
-            'dda899939d43bbea8d1cbb57844f2f36c4e890d2169427c8927ee8070c70558c'
+            'bc84239af15864fce4021b200e1a9e36a71a7a8861b175243e935fad8bb80349'
             '2b499db6a7ba4926619dfc854dbd947f3e9720b39b7c2f6902b7a7b70eb856f2')
 
 export KBUILD_BUILD_HOST=archlinux
