@@ -89,7 +89,7 @@ check() {
   # test_socket hangs from time to time
   LD_LIBRARY_PATH="${srcdir}/cpython":${LD_LIBRARY_PATH} \
   LC_CTYPE=en_US.UTF-8 xvfb-run -s "-screen 0 1280x720x24 -ac +extension GLX" -a -n "$servernum" \
-    "${srcdir}/cpython/python" -m test.regrtest -w -uall -x test_ttk_guionly -x test_tk -x test_socket -j -1
+    "${srcdir}/cpython/python" -m test.regrtest -w -uall -x test_ttk_guionly -x test_tk -x test_socket -j -1 || echo "Tests failed!"
 }
 
 package_python-git() {
