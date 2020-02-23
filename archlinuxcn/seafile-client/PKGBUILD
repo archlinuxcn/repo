@@ -4,7 +4,7 @@
 # Contributor: Edvinas Valatka <edacval@gmail.com>
 
 pkgname=seafile-client
-pkgver=7.0.5
+pkgver=7.0.6
 pkgrel=1
 pkgdesc='GUI client for synchronizing your local files with seafile server'
 arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
@@ -21,26 +21,26 @@ depends=(
 makedepends=("cmake")
 conflicts=('seafile-client-qt5')
 provides=('seafile-client-qt5')
-source=("$pkgname-v$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-sha256sums=('7e86cb3e055f5cf5a51c287a5d494cad5dcd9d7d6c355dbfe1f512eccaa97e9e')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
+sha256sums=('95bba5a904c47e189e57b44f646b5be34965902f7fdebb84a8beeb78d3df922f')
 
 prepare() {
-  cd "$srcdir"
-  rm -rf build
-  mkdir -p build
+    cd "$srcdir"
+    rm -rf build
+    mkdir -p build
 }
 
 build() {
-  cd "$srcdir/build"
-  cmake \
-    -DBUILD_SHIBBOLETH_SUPPORT=ON \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX='/usr' \
-    "$srcdir/$pkgname-$pkgver"
-  make
+    cd "$srcdir/build"
+    cmake \
+        -DBUILD_SHIBBOLETH_SUPPORT=ON \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX='/usr' \
+        "$srcdir/$pkgname-$pkgver"
+    make
 }
 
 package () {
-  cd "$srcdir/build"
-  make DESTDIR="$pkgdir" install
+    cd "$srcdir/build"
+    make DESTDIR="$pkgdir" install
 }
