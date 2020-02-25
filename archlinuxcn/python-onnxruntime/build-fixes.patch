@@ -1,70 +1,58 @@
 diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
-index 96c89fef..0e37e487 100644
+index 3cee60f3..3328fc06 100644
 --- a/cmake/CMakeLists.txt
 +++ b/cmake/CMakeLists.txt
-@@ -229,18 +229,10 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/external)
- #2. if ONNX_CUSTOM_PROTOC_EXECUTABLE is not set, Compile everything(including protoc) from source code.
+@@ -314,7 +314,7 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/external)
  
- 
--# use protobuf as a submodule
--add_subdirectory(${PROJECT_SOURCE_DIR}/external/protobuf/cmake EXCLUDE_FROM_ALL)
--set_target_properties(libprotobuf PROPERTIES FOLDER "External/Protobuf")
--set_target_properties(libprotobuf-lite PROPERTIES FOLDER "External/Protobuf")
--set_target_properties(libprotoc PROPERTIES FOLDER "External/Protobuf")
--set_target_properties(protoc PROPERTIES FOLDER "External/Protobuf")
--if (onnxruntime_USE_FULL_PROTOBUF)
--  add_library(protobuf::libprotobuf ALIAS libprotobuf)
--else()
--  add_library(protobuf::libprotobuf ALIAS libprotobuf-lite)
--endif()
--add_executable(protobuf::protoc ALIAS protoc)
-+find_package(PkgConfig)
-+pkg_check_modules(PROTOBUF REQUIRED IMPORTED_TARGET GLOBAL protobuf)
-+add_library(libprotobuf ALIAS PkgConfig::PROTOBUF)
-+add_library(protobuf::libprotobuf ALIAS PkgConfig::PROTOBUF)
- include(protobuf_function.cmake)
- 
- 
-@@ -282,8 +274,6 @@ set(ONNXRUNTIME_INCLUDE_DIR ${REPO_ROOT}/include/onnxruntime)
- set(ONNXRUNTIME_INCLUDE_DIR ${REPO_ROOT}/include/onnxruntime)
- 
- add_subdirectory(external/date EXCLUDE_FROM_ALL)
--add_subdirectory(external/re2 EXCLUDE_FROM_ALL)
--set_target_properties(re2 PROPERTIES FOLDER "External/re2")
- 
- # bounds checking behavior.
- # throw instead of calling terminate if there's a bounds checking violation.
-@@ -306,7 +296,7 @@ function(onnxruntime_add_include_to_target dst_target)
-     endforeach()
- endfunction()
- 
--set(onnxruntime_EXTERNAL_DEPENDENCIES onnx_proto re2)
-+set(onnxruntime_EXTERNAL_DEPENDENCIES onnx_proto)
- 
- # TVM
- if (onnxruntime_USE_TVM)
-@@ -620,15 +605,10 @@ if (onnxruntime_BUILD_UNIT_TESTS)
-   # turned ON by the previous step when building a shared lib
-   set(CMAKE_SKIP_BUILD_RPATH OFF)
-   # gtest and gmock
--  add_subdirectory(${PROJECT_SOURCE_DIR}/external/googletest EXCLUDE_FROM_ALL)
--  set_target_properties(gmock PROPERTIES FOLDER "External/GTest")
--  set_target_properties(gmock_main PROPERTIES FOLDER "External/GTest")
--  set_target_properties(gtest PROPERTIES FOLDER "External/GTest")
--  set_target_properties(gtest_main PROPERTIES FOLDER "External/GTest")
--  if(UNIX)
--    target_compile_options(gmock PRIVATE "-w")
--    target_compile_options(gtest PRIVATE "-w")
--  endif()
-+  pkg_check_modules(GTEST REQUIRED IMPORTED_TARGET GLOBAL gtest)
-+  pkg_check_modules(GMOCK REQUIRED IMPORTED_TARGET GLOBAL gmock)
-+  add_library(gtest ALIAS PkgConfig::GTEST)
-+  add_library(gmock ALIAS PkgConfig::GMOCK)
-   include(onnxruntime_unittests.cmake)
+ if(onnxruntime_PREFER_SYSTEM_LIB)
+   set(protobuf_MODULE_COMPATIBLE ON)
+-  find_package(protobuf)
++  find_package(Protobuf)
  endif()
  
+ 
+@@ -327,7 +327,7 @@ if(Protobuf_FOUND OR Protobuf_FOUND)
+     if(NOT Protobuf_USE_STATIC_LIBS)
+       #Indeed here should be a warning, not a fatal error. ONNX Runtime itself can work in such a 
+       #setting but it may cause compatibility issue when ONNX Runtime is integrated with the other ONNX ecosystem softwares.
+-      message(FATAL_ERROR "Please enable Protobuf_USE_STATIC_LIBS")
++      message(WARNING "Please enable Protobuf_USE_STATIC_LIBS")
+     endif()
+   else()
+     set(PROTOBUF_LIB protobuf::libprotobuf-lite)
+@@ -395,7 +395,7 @@ get_filename_component(REPO_ROOT "${REPO_ROOT}" ABSOLUTE)
+ set(ONNXRUNTIME_INCLUDE_DIR ${REPO_ROOT}/include/onnxruntime)
+ 
+ 
+-add_subdirectory(external/date EXCLUDE_FROM_ALL)
++find_package(date REQUIRED)
+ 
+ if(onnxruntime_PREFER_SYSTEM_LIB)
+   find_package(re2)  
+diff --git a/cmake/external/Findre2.cmake b/cmake/external/Findre2.cmake
+new file mode 100644
+index 00000000..4c91696c
+--- /dev/null
++++ b/cmake/external/Findre2.cmake
+@@ -0,0 +1,3 @@
++find_package(PkgConfig)
++pkg_check_modules(re2 REQUIRED IMPORTED_TARGET GLOBAL re2)
++add_library(re2::re2 ALIAS PkgConfig::re2)
+diff --git a/cmake/onnxruntime_common.cmake b/cmake/onnxruntime_common.cmake
+index d33e9e14..5770e818 100644
+--- a/cmake/onnxruntime_common.cmake
++++ b/cmake/onnxruntime_common.cmake
+@@ -86,7 +86,7 @@ if (onnxruntime_USE_MIMALLOC_STL_ALLOCATOR OR onnxruntime_USE_MIMALLOC_ARENA_ALL
+     endif()
+ endif()
+ 
+-onnxruntime_add_include_to_target(onnxruntime_common date_interface safeint_interface)
++onnxruntime_add_include_to_target(onnxruntime_common date::date safeint_interface)
+ target_include_directories(onnxruntime_common PRIVATE ${CMAKE_CURRENT_BINARY_DIR} ${ONNXRUNTIME_ROOT}
+         PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/external/nsync/public")
+ 
 diff --git a/cmake/onnxruntime_python.cmake b/cmake/onnxruntime_python.cmake
-index ace16b1b..c76ebde4 100644
+index 7dce1309..7102975b 100644
 --- a/cmake/onnxruntime_python.cmake
 +++ b/cmake/onnxruntime_python.cmake
 @@ -1,7 +1,6 @@
@@ -75,11 +63,63 @@ index ace16b1b..c76ebde4 100644
  FIND_PACKAGE(NumPy)
  
  if(NOT PYTHON_INCLUDE_DIR)
-@@ -83,7 +82,6 @@ set(onnxruntime_pybind11_state_libs
+@@ -99,7 +98,6 @@ endif()
  
  set(onnxruntime_pybind11_state_dependencies
      ${onnxruntime_EXTERNAL_DEPENDENCIES}
--    pybind11
+-    ${pybind11_dep}
  )
- 
+ set_property(TARGET onnxruntime_pybind11_state APPEND_STRING PROPERTY LINK_FLAGS ${ONNXRUNTIME_SO_LINK_FLAG} ${onnxruntime_DELAYLOAD_FLAGS})
  add_dependencies(onnxruntime_pybind11_state ${onnxruntime_pybind11_state_dependencies})
+diff --git a/cmake/onnxruntime_unittests.cmake b/cmake/onnxruntime_unittests.cmake
+index d1bd347c..0c4b81e4 100644
+--- a/cmake/onnxruntime_unittests.cmake
++++ b/cmake/onnxruntime_unittests.cmake
+@@ -40,7 +40,7 @@ function(AddTest)
+   else()
+     target_link_libraries(${_UT_TARGET} PRIVATE ${_UT_LIBS} GTest::gtest GTest::gmock ${onnxruntime_EXTERNAL_LIBRARIES})
+   endif()
+-  onnxruntime_add_include_to_target(${_UT_TARGET} date_interface safeint_interface)
++  onnxruntime_add_include_to_target(${_UT_TARGET} date::date safeint_interface)
+   target_include_directories(${_UT_TARGET} PRIVATE ${TEST_INC_DIR})
+   if (onnxruntime_USE_CUDA)
+     target_include_directories(${_UT_TARGET} PRIVATE ${CUDA_INCLUDE_DIRS} ${onnxruntime_CUDNN_HOME}/include)
+diff --git a/onnxruntime/core/session/inference_session_utils.h b/onnxruntime/core/session/inference_session_utils.h
+index 57159083..9fa7dce0 100644
+--- a/onnxruntime/core/session/inference_session_utils.h
++++ b/onnxruntime/core/session/inference_session_utils.h
+@@ -6,7 +6,7 @@
+ #include "core/session/inference_session.h"
+ #include "core/framework/session_options.h"
+ #include "core/common/common.h"
+-#include "single_include/nlohmann/json.hpp"
++#include <nlohmann/json.hpp>
+ 
+ using json = nlohmann::json;
+ 
+diff --git a/onnxruntime/test/providers/cpu/ml/linearregressor_test.cc b/onnxruntime/test/providers/cpu/ml/linearregressor_test.cc
+index c6eb3f5f..2b6dff61 100644
+--- a/onnxruntime/test/providers/cpu/ml/linearregressor_test.cc
++++ b/onnxruntime/test/providers/cpu/ml/linearregressor_test.cc
+@@ -73,7 +73,7 @@ TEST_P(LinearRegressorTest, LinearRegressorUniTarget) {
+ }
+ 
+ // For PROBIT, all the output values are NaN.
+-INSTANTIATE_TEST_SUITE_P(
++INSTANTIATE_TEST_CASE_P(
+     LinearRegressorTest, LinearRegressorTest,
+     testing::Values(LinearRegressorParam("NONE", {32.0f, 14.0f, -166.0f}, 1),
+                     LinearRegressorParam("SOFTMAX", {32.0f, 14.0f, -166.0f}, 1),
+diff --git a/onnxruntime/test/shared_lib/test_inference.cc b/onnxruntime/test/shared_lib/test_inference.cc
+index 4b5b6731..08726f8b 100644
+--- a/onnxruntime/test/shared_lib/test_inference.cc
++++ b/onnxruntime/test/shared_lib/test_inference.cc
+@@ -184,7 +184,7 @@ TEST(CApiTest, dim_param) {
+   ASSERT_EQ(strcmp(dim_param, ""), 0);
+ }
+ 
+-INSTANTIATE_TEST_SUITE_P(CApiTestWithProviders,
++INSTANTIATE_TEST_CASE_P(CApiTestWithProviders,
+                         CApiTestWithProvider,
+                         ::testing::Values(0, 1, 2, 3, 4));
+ 
