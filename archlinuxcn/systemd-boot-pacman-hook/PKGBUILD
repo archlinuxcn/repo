@@ -2,7 +2,7 @@
 
 pkgname=systemd-boot-pacman-hook
 pkgver=2
-pkgrel=1
+pkgrel=2
 pkgdesc="Pacman hook to upgrade systemd-boot after systemd upgrade."
 arch=("any")
 license=("GPL")
