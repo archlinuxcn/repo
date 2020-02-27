@@ -1,0 +1,59 @@
+From 3f64564dd7c62a2f3d9557c1bdb8475fd953abea Mon Sep 17 00:00:00 2001
+From: Matt McCutchen <matt@mattmccutchen.net>
+Date: Fri, 10 Feb 2017 08:00:52 -0500
+Subject: [PATCH] Instantiate MESSAGEMAN first. (#1384)
+
+This fixes a well-formed warning, but does it break anything?
+
+It's not clear off hand. Having this up for discussion.
+
+(Matt McCutchen <matt@mattmccutchen.net>: Cherry picked from commit
+a565a27da8c5278846c06585cb6e218ff8f0f1b7 with a conflict resolution.
+This commit fixes a crash on startup in MessageManager::Broadcast when I
+build StepMania with -DCMAKE_BUILD_TYPE=Release and g++ 6.3.1 on Fedora
+25.  Apparently g++ is optimizing out the "this != NULL" on the grounds
+that calling a method on a null pointer has undefined behavior, so the
+"m_Logging" is a null dereference.)
+---
+ src/MessageManager.cpp | 3 +--
+ src/StepMania.cpp      | 5 +++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/src/MessageManager.cpp b/src/MessageManager.cpp
+index 671871fba2..c487973d27 100644
+--- a/src/MessageManager.cpp
++++ b/src/MessageManager.cpp
+@@ -207,8 +207,7 @@ void MessageManager::Unsubscribe( IMessageSubscriber* pSubscriber, MessageID m )
+ 
+ void MessageManager::Broadcast( Message &msg ) const
+ {
+-	// GAMESTATE is created before MESSAGEMAN, and has several BroadcastOnChangePtr members, so they all broadcast when they're initialized.
+-	if(this != NULL && m_Logging)
++	if(m_Logging)
+ 	{
+ 		LOG->Trace("MESSAGEMAN:Broadcast: %s", msg.GetName().c_str());
+ 	}
+diff --git a/src/StepMania.cpp b/src/StepMania.cpp
+index 14f3824e2f..808c808a7e 100644
+--- a/src/StepMania.cpp
++++ b/src/StepMania.cpp
+@@ -1041,8 +1041,10 @@ int sm_main(int argc, char* argv[])
+ 	// This needs PREFSMAN.
+ 	Dialog::Init();
+ 
+-	// Create game objects
++	// Set up the messaging system early to have well defined code.
++	MESSAGEMAN	= new MessageManager;
+ 
++	// Create game objects
+ 	GAMESTATE	= new GameState;
+ 
+ 	// This requires PREFSMAN, for PREFSMAN->m_bShowLoadingWindow.
+@@ -1162,7 +1164,6 @@ int sm_main(int argc, char* argv[])
+ 	SONGMAN->UpdatePopular();
+ 	SONGMAN->UpdatePreferredSort();
+ 	NSMAN 		= new NetworkSyncManager( pLoadingWindow );
+-	MESSAGEMAN	= new MessageManager;
+ 	STATSMAN	= new StatsManager;
+ 
+ 	// Initialize which courses are ranking courses here.
