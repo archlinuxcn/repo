@@ -1,7 +1,7 @@
 # Maintainer: Sven-Hendrik Haase <svenstaro@gmail.com>
 
 pkgname=wasmer
-pkgver=0.8.0
+pkgver=0.14.1
 pkgrel=1
 pkgdesc="Universal Binaries Powered by WebAssembly"
 arch=('x86_64')
@@ -29,8 +29,8 @@ check() {
 package() {
   cd "$srcdir/$pkgname"
 
-  cargo install --root "$pkgdir"/usr --path .
-  rm "$pkgdir"/usr/.crates.toml
+  install -Dm755 target/release/wasmer "$pkgdir"/usr/bin/wasmer
+  install -Dm755 target/release/kwasmd "$pkgdir"/usr/bin/kwasmd
   install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
 }
 
