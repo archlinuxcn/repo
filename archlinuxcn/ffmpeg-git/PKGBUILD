@@ -4,20 +4,64 @@
 # Contributor: DrZaius <lou at fakeoutdoorsman.com>
 
 pkgname=ffmpeg-git
-pkgver=4.3.r96869.gb6879b61df
+pkgver=4.3.r96877.g8f3df1dd4d
 pkgrel=1
 pkgdesc='Complete solution to record, convert and stream audio and video (git version)'
 arch=('x86_64')
 url='https://www.ffmpeg.org/'
 license=('GPL3')
-depends=('alsa-lib' 'aom' 'bzip2' 'fontconfig' 'fribidi' 'glibc' 'gmp' 'gnutls' 'gsm'
-         'jack' 'lame' 'libavc1394' 'libdrm' 'libiec61883' 'libmfx' 'libmodplug'
-         'libomxil-bellagio' 'libpulse' 'libraw1394' 'libsoxr' 'libssh' 'libtheora'
-         'libvdpau' 'libwebp' 'libx11' 'libxcb' 'libxext' 'libxml2' 'libxv'
-         'opencore-amr' 'openjpeg2' 'opus' 'sdl2' 'speex' 'v4l-utils' 'xz' 'zlib'
-         'libass.so' 'libbluray.so' 'libfreetype.so' 'libva-drm.so' 'libva.so'
-         'libva-x11.so' 'libvidstab.so' 'libvorbisenc.so' 'libvorbis.so' 'libvpx.so'
-         'libx264.so' 'libx265.so' 'libxvidcore.so')
+depends=(
+    'alsa-lib'
+    'aom'
+    'bzip2'
+    'fontconfig'
+    'fribidi'
+    'gmp'
+    'gnutls'
+    'gsm'
+    'jack'
+    'lame'
+    'libass.so'
+    'libavc1394'
+    'libbluray.so'
+    'libdav1d.so'
+    'libdrm'
+    'libfreetype.so'
+    'libiec61883'
+    'libmfx'
+    'libmodplug'
+    'libomxil-bellagio'
+    'libpulse'
+    'libraw1394'
+    'libsoxr'
+    'libssh'
+    'libtheora'
+    'libva.so'
+    'libva-drm.so'
+    'libva-x11.so'
+    'libvdpau'
+    'libvidstab.so'
+    'libvorbisenc.so'
+    'libvorbis.so'
+    'libvpx.so'
+    'libwebp'
+    'libx11'
+    'libx264.so'
+    'libx265.so'
+    'libxcb'
+    'libxext'
+    'libxml2'
+    'libxv'
+    'libxvidcore.so'
+    'opencore-amr'
+    'openjpeg2'
+    'opus'
+    'sdl2'
+    'speex'
+    'v4l-utils'
+    'xz'
+    'zlib'
+)
 makedepends=('git' 'ffnvcodec-headers' 'ladspa' 'nasm')
 optdepends=('intel-media-sdk: for Intel Quick Sync Video'
             'ladspa: for LADSPA filters')
@@ -60,6 +104,7 @@ build() {
         --enable-libaom \
         --enable-libass \
         --enable-libbluray \
+        --enable-libdav1d \
         --enable-libdrm \
         --enable-libfreetype \
         --enable-libfribidi \
