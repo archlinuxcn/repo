@@ -1,7 +1,7 @@
 # Maintainer: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 
 pkgbase=linux-froidzen
-pkgver=5.5.6.zen1
+pkgver=5.5.7.zen1
 pkgrel=1
 pkgdesc='Linux ZEN with Patches'
 _srctag=v${pkgver%.*}-${pkgver##*.}
@@ -19,6 +19,7 @@ source=(
   "$_srcname::git+https://github.com/zen-kernel/zen-kernel?signed#tag=$_srctag"
   config         # the main kernel config file
   "aosc-univt.patch::https://raw.githubusercontent.com/AOSC-Dev/aosc-os-abbs/testing/extra-kernel/linux-kernel/autobuild/patches/8000-aosc-feature-univt.patch" # CJK Patch
+  "https://raw.githubusercontent.com/dolohow/uksm/master/v5.x/uksm-5.5.patch" # UKSM Patch
 )
 validpgpkeys=(
   'ABAF11C65A2970B130ABE3C479BE3E4300411886'  # Linus Torvalds
@@ -26,8 +27,9 @@ validpgpkeys=(
   '8218F88849AAC522E94CF470A5E9288C4FA415FA'  # Jan Alexander Steffens (heftig)
 )
 sha256sums=('SKIP'
-            'f167f5e972c09c1bb0e4eca468d2600d8c3e09acc77d94e439db5923d9e1caa6'
-            '2b499db6a7ba4926619dfc854dbd947f3e9720b39b7c2f6902b7a7b70eb856f2')
+            'c89865abd277bb733276e95381d33992d35925891af5ad61cbfdf1feec8eae89'
+            '2b499db6a7ba4926619dfc854dbd947f3e9720b39b7c2f6902b7a7b70eb856f2'
+            'a948ee238ee89c609df9a0700eac9ac4f64bd9523c0f9ebb13263b3c979d2da1')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
