@@ -1,7 +1,7 @@
 # Maintainer: Shengyu Zhang <la@archlinuxcn.org>
 
 pkgname=srain-git
-pkgver=1.0.0.8.ga6cb289
+pkgver=1.0.0.14.g1ba046f
 pkgrel=1
 pkgdesc="Modern IRC client written in GTK, git version"
 arch=('i686' 'x86_64')
