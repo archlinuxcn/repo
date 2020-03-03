@@ -1,0 +1,13 @@
+[Unit]
+Description=PaperMC Server
+After=local-fs.target network.target multi-user.target
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/papermc start
+ExecStop=/usr/bin/papermc stop
+User=papermc
+Group=papermc
+
+[Install]
+WantedBy=multi-user.target
