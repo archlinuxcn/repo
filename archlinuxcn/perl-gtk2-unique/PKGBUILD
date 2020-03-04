@@ -7,7 +7,7 @@
 pkgname=perl-gtk2-unique
 _cpanname=Gtk2-Unique
 pkgver=0.05
-pkgrel=24
+pkgrel=25
 pkgdesc="Perl bindings for the C library libunique"
 arch=('i686' 'x86_64')
 url="https://metacpan.org/release/${_cpanname}"
@@ -22,6 +22,9 @@ source=("https://cpan.metacpan.org/authors/id/P/PO/POTYL/${_cpanname}-${pkgver}.
 md5sums=('0beb552933b765a017588563a71af123'
          'f8e15e1b93e2629e1745f8e4de8524ff'
          'b509a893e15c614dc668348c89e83c2d')
+sha512sums=('9ed700de45e6d7e5410ff4b4313869be9127b7933faf862f4f34f4330165dbda4b1d983efddedcd71487d0cdbf10982a7b76af7cf60339ae3359f57271177492'
+            '9893a480f60a28eb50c053fbd840eec514cddb3bca322fe5ebdbc74b9382514cb5dc2d1c2a3fa740d42f2129b683adb9d99090ab5c99ae42c6eff3fb3da379ff'
+            '594097e881c30178c3084a026d9a3a0cd2eb86e5bdd89faf19e29ee5c911a184af1f33b3b1b0b1ae693b354b6ffd754c7b43c3783b19f3ec6c545b90e3dcfe0e')
 
 build() {
   cd  $_cpanname-$pkgver
