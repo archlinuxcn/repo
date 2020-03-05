@@ -2,7 +2,7 @@
 # Maintainer: Allen Zhong <zhongbenli@pingcap.com>
 pkgname=tikv-pd
 pkgver=3.0.11
-pkgrel=1
+pkgrel=2
 pkgdesc='Manage and schedule the TiKV cluster.'
 makedepends=('go' 'make' 'git')
 arch=('x86_64')
@@ -41,7 +41,7 @@ build() {
   cd $GOPATH/src/$_gopkgname
 
   sed -i '/shell git /d' Makefile
-  _LDFLAGS="-X $_gopkgname/server.PDReleaseVersion=$pkgver -X $_gopkgname/server.PDGitBranch=release -X $_gopkgname/server.PDGitHash=v$pkgver"
+  _LDFLAGS="-X $_gopkgname/v3/server.PDReleaseVersion=$pkgver -X $_gopkgname/v3/server.PDGitBranch=release -X $_gopkgname/v3/server.PDGitHash=v$pkgver"
 
   LDFLAGS=$_LDFLAGS make build
 }
