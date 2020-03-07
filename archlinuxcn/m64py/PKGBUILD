@@ -4,7 +4,7 @@
 
 pkgname=m64py
 pkgver=0.2.4
-pkgrel=4
+pkgrel=5
 pkgdesc="A Qt5 front-end (GUI) for Mupen64Plus, a cross-platform plugin-based Nintendo 64 emulator"
 arch=("any")
 url="https://github.com/mupen64plus/mupen64plus-ui-python"
