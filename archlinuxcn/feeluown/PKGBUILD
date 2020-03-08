@@ -2,12 +2,12 @@
 _pkgname=feeluown
 pkgname=feeluown
 pkgver=3.4a0
-pkgrel=1
+pkgrel=2
 pkgdesc="FeelUOwn Music Player"
 arch=('any')
 url="https://github.com/cosven/FeelUOwn"
 license=('GPL3')
-depends=('python-quamash' 'python-pyqt5' 'mpv' 'python-beautifulsoup4' 'python-marshmallow' 'python-pycryptodome' 'python-requests' 'python-mutagen' 'python-fuzzywuzzy' 'python-opengl' 'python-janus')
+depends=('python-qasync' 'python-pyqt5' 'mpv' 'python-beautifulsoup4' 'python-marshmallow' 'python-pycryptodome' 'python-requests' 'python-mutagen' 'python-fuzzywuzzy' 'python-opengl' 'python-janus')
 makedepends=('python-setuptools' 'python-pip')
 _name=${pkgname#python-}
 source=(
