@@ -3,6 +3,9 @@ Arch Linux Chinese Community Repository
 
 Packaging consistency check: [![Build Status](https://travis-ci.org/archlinuxcn/repo.svg?branch=master)](https://travis-ci.org/archlinuxcn/repo)
 
+For detailed information in Chinese, [visit here](https://www.archlinuxcn.org/archlinux-cn-repo-and-mirror/).
+中文介绍[请看这里](https://www.archlinuxcn.org/archlinux-cn-repo-and-mirror/)。
+
 ### Usage
 
 Add repo:
@@ -21,9 +24,9 @@ Import PGP Keys:
 sudo pacman -Syy && sudo pacman -S archlinuxcn-keyring
 ```
 
-### PKGLIST
+### Issues
 
-* Flag package OUT-OF-DATE by submiting new issue, and shall be closed after package updated.
-  * If the new release is within less than a day, and you can see a file named `lilac.py` alongside the PKGBUILD for the package here, please be patient and wait for up to one day.
-
-* Please contact us via emails or issues.
+* Flag package OUT-OF-DATE by submiting new issues (please follow the template).
+  * If the new release is within less than a day, please be patient and wait for up to one day; our bot is likely going to build a new one soon.
+* If there is something wrong with provided packages, please submit issues of desired type.
+* Please contact us via issues or email.
