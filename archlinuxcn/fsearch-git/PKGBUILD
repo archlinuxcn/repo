@@ -1,7 +1,7 @@
 # Maintainer: Christian Boxdörfer <christian.boxdoerfer@posteo.de>
 pkgname=fsearch-git
 _gitname=fsearch
-pkgver=0.1beta4.r19.gbec77b8
+pkgver=0.1beta4.r21.gdd7d36b
 pkgrel=1
 pkgdesc="A fast file search utility. Git Version."
 arch=('i686' 'x86_64')
@@ -19,15 +19,15 @@ pkgver() {
 }
 
 build() {
-  cd $_gitname/
+    cd $_gitname/
 
-  ./autogen.sh
-  ./configure --prefix=/usr
-  make
+    ./autogen.sh
+    ./configure --prefix=/usr
+    make
 }
 
 package() {
-  cd $_gitname/
+    cd $_gitname/
 
-  make PREFIX=/usr DESTDIR="$pkgdir/" install
+    make DESTDIR="$pkgdir/" install
 }
