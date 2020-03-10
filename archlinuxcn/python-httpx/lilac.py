@@ -13,7 +13,7 @@ def pre_build():
   sed -i '/certifi/d' setup.py
   sed -e '/import certifi/d' \\
       -e 's|certifi.where()|"/etc/ssl/certs/ca-certificates.crt"|' \\
-      -i httpx/config.py''',
+      -i httpx/_config.py''',
   )
 
 def post_build():
