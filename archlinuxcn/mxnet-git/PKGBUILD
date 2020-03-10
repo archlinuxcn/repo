@@ -5,7 +5,7 @@ _cudaarch="6.0;6.1;6.2;7.0;7.2;7.5"
 _pkgname=mxnet
 pkgname=('mxnet-git' 'mxnet-cuda-git')
 _pkgver=1.6.0
-pkgver=1.6.0.r10763.2abd2255cf
+pkgver=1.6.0.r10785.2cf8e0f7de
 pkgrel=1
 pkgdesc='A flexible and efficient library for deep learning'
 arch=('x86_64')
@@ -72,6 +72,7 @@ build() {
     -DCMAKE_INSTALL_PREFIX:PATH=/usr
     -DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON
     -DINSTALL_DOCUMENTATION:BOOL=OFF
+    -DMKL_USE_SINGLE_DYNAMIC_LIBRARY:BOOL=ON
     -DUSE_BLAS=mkl
     -DUSE_CPP_PACKAGE:BOOL=ON
     -DUSE_DIST_KVSTORE:BOOL=ON
