@@ -2,13 +2,13 @@
 # Maintainer: Zeph <zeph33@gmail.com>
 # https://gitlab.manjaro.org/packages/extra/pamac
 pkgname=pamac-aur
-pkgver=9.3.0
-pkgrel=2
+pkgver=9.3.93
+pkgrel=1
 _pkgfixver=$pkgver
 
 _pkgvercommit=v$pkgver
-_pkgvercommit='470b8cabf3733051e10cf81bf036c58c2a5e9777'
-sha256sums=('d06112b2ee0764aba8ce6e64b85bc7c58e402b52a5a6152145f619129359cc24')
+_pkgvercommit='c39d6ca3d7f37b6e7415d1cef9a47ec9c6739014'
+sha256sums=('4e57ee7724d95d415a801a78e0d8dcedfbad32ef3a0d78c6dff9f3a10ac84cfb')
 
 pkgdesc="A Gtk3 frontend for libalpm"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
@@ -21,7 +21,7 @@ depends=('glib2>=2.42' 'json-glib' 'libsoup' 'dbus-glib' 'polkit' 'vte3>=0.38' '
   optdepends=('polkit-gnome: needed for authentification in Cinnamon, Gnome'
               'lxsession: needed for authentification in Xfce, LXDE etc.'
               'pamac-tray-appindicator: tray icon for KDE')
-makedepends=('gettext' 'itstool' 'vala>=0.36.6' 'meson' 'ninja' 'gobject-introspection' 'xorgproto')
+makedepends=('gettext' 'itstool' 'vala>=0.45' 'meson' 'ninja' 'gobject-introspection' 'xorgproto')
 backup=('etc/pamac.conf')
 conflicts=('pamac')
 provides=('pamac')
