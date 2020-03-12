@@ -1,6 +1,6 @@
 _name=hstspreload
 pkgname=python-hstspreload
-pkgver=2020.3.4
+pkgver=2020.3.12
 pkgrel=1
 pkgdesc="Chromium HSTS Preload list as a Python package and updated daily"
 arch=(any)
@@ -9,7 +9,7 @@ license=(BSD-3)
 depends=('python')
 makedepends=('python-setuptools')
 source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
-sha256sums=('5f120aa14869019e547166d5d3efa7f40dc5569bf830b130e5ba8bdef5bc9d5a')
+sha256sums=('0f02fd8f4fd40eb8dd406742c2a2531685dbdb6f7e96f3eb88c80b856de658fe')
 
 build() {
   cd "$srcdir/$_name-$pkgver"
