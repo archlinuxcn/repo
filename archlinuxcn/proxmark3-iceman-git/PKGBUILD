@@ -22,13 +22,11 @@ pkgver() {
   echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
 }
 
-prepare() {
+build() {
   export DESTDIR="build"
   export PREFIX="/usr"
   export UDEV_PREFIX="/usr/lib/udev/rules.d"
-}
-
-build() {
+  
   cd "${srcdir}/${pkgname}"
 
   mkdir "$DESTDIR"
@@ -77,6 +75,7 @@ build() {
 }
 
 package() {
+  export DESTDIR="build"
   cd "${srcdir}/${pkgname}"
   mv "$DESTDIR"/* "${pkgdir}/"
 }
