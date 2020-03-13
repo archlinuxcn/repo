@@ -5,7 +5,7 @@
 pkgname=dcmtk
 _pkgname=dcmtk-DCMTK
 pkgver=3.6.5
-pkgrel=1
+pkgrel=2
 pkgdesc="A collection of libraries and applications implementing large parts the DICOM standard"
 arch=("x86_64")
 url="http://dicom.offis.de/dcmtk"
@@ -56,6 +56,8 @@ package() {
 
   # Remove empty files (0 length)
   find "${pkgdir}" -type f -empty -exec rm -v {} \;
+  # delete conflict file with charls
+  rm -vf "${pkgdir}/usr/lib/libcharls.so"
 }
 # vim:set ts=2 sw=2 et:
 
