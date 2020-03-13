@@ -9,7 +9,7 @@
 # Contributor: Alexander De Sousa <archaur.xandy21@spamgourmet.com>
 
 pkgname=ttf-google-fonts-git
-pkgver=r1704.59afb78a
+pkgver=r1875.860390da
 pkgrel=1
 epoch=1
 pkgdesc="TrueType fonts from the Google Fonts project (git version)"
@@ -17,11 +17,7 @@ arch=('any')
 url="https://github.com/google/fonts"
 license=('custom:SIL Open Font License' 'custom:Ubuntu Font License v1.0')
 
-depends=('fontconfig'
-         'xorg-mkfontdir'
-         'xorg-mkfontscale'
-         'xorg-fonts-encodings'
-         'noto-fonts'
+depends=('noto-fonts'
          'noto-fonts-extra'
          'ttf-fira-sans'
          'ttf-fira-mono'
@@ -43,8 +39,11 @@ conflicts=('adobe-source-code-pro-fonts'
            'lohit-fonts'
            'ttf-andika'
            'ttf-anonymous-pro'
+           'ttf-arabeyes-fonts'
+           'ttf-caladea'
            'ttf-cardo'
            'ttf-comfortaa'
+           'ttf-google-fonts-typewolf'
            'ttf-lato'
            'ttf-lora-cyrillic'
            'ttf-lekton'
@@ -54,18 +53,16 @@ conflicts=('adobe-source-code-pro-fonts'
            'ttf-oxygen-git'
            'ttf-pt-fonts'
            'ttf-roboto-mono'
-           'ttf-sil-fonts'
            'ttf-source-code-pro-ibx'
            'ttf-source-sans-pro-ibx'
-           'ttf-vollkorn-ibx'
-           'ttf-arabeyes-fonts'
-           'ttf-google-fonts-typewolf')
+           'ttf-vollkorn-ibx')
 provides=('adobe-source-code-pro-fonts'
           'adobe-source-sans-pro-fonts'
           'jsmath-fonts'
           'lohit-fonts'
           'ttf-andika'
           'ttf-anonymous-pro'
+          'ttf-caladea'
           'ttf-cardo'
           'ttf-comfortaa'
           'ttf-lato'
@@ -77,7 +74,6 @@ provides=('adobe-source-code-pro-fonts'
           'ttf-oxygen-git'
           'ttf-pt-fonts'
           'ttf-roboto-mono'
-          'ttf-sil-fonts'
           'ttf-source-code-pro-ibx'
           'ttf-source-sans-pro-ibx'
           'ttf-vollkorn-ibx')
