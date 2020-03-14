@@ -16,7 +16,7 @@ _bundled_with_client=('vmware-horizon-pcoip'
 pkgver=5.3.0
 _build=15208949
 _cart='CART20FQ4'
-pkgrel=3
+pkgrel=4
 pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop'
 arch=('x86_64')
 url='https://www.vmware.com/go/viewclients'
@@ -222,7 +222,9 @@ package_vmware-horizon-tsdr() {
 
 package_vmware-horizon-mmr() {
 	pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop - multimedia redirection'
-	depends=('vmware-horizon-client' 'gstreamer0.10-base' 'libpulse' 'libxml2' 'glib2')
+	depends=('vmware-horizon-client' 'gst-plugins-base' 'libpulse' 'libxml2' 'glib2')
+	optdepends=('gstreamer-vaapi: MMR with Intel VAAPI'
+	            'gst-plugins-bad: MMR with NVIDIA VDPAU')
 
 	cd "${srcdir}/extract/vmware-horizon-mmr/"
 
