@@ -2,7 +2,7 @@
 
 pkgbase=linux-zencjk
 pkgver=5.5.9.zen1
-pkgrel=1
+pkgrel=2
 pkgdesc='Linux ZEN with CJK Patch'
 _srctag=v${pkgver%.*}-${pkgver##*.}
 url="https://github.com/zen-kernel/zen-kernel/commits/$_srctag"
