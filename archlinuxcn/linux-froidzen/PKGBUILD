@@ -1,8 +1,8 @@
 # Maintainer: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 
 pkgbase=linux-froidzen
-pkgver=5.5.8.zen1
-pkgrel=1
+pkgver=5.5.9.zen1
+pkgrel=2
 pkgdesc='Linux ZEN with Patches'
 _srctag=v${pkgver%.*}-${pkgver##*.}
 url="https://github.com/zen-kernel/zen-kernel/commits/$_srctag"
