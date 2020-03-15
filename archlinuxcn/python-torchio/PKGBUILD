@@ -3,7 +3,7 @@
 pkgname=python-torchio
 _pkgname=torchio
 pkgver=0.13.14
-pkgrel=1
+pkgrel=2
 pkgdesc='Tools for medical image processing in deep learning and PyTorch'
 arch=(any)
 url='https://github.com/fepegar/torchio'
