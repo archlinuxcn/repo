@@ -16,13 +16,13 @@ source=("https://github.com/HelloZeroNet/ZeroNet-linux/archive/dist-linux64/Zero
         "zeronet.service")
 sha256sums=('4173c2ee78d53cf83211f3ef81811083ef90c44aa048a5faad4009d9bb99686a'
             'ea735e82dbb10a2c1fda7abfeb2f38c2429044d8254f9e2396c50cecb6f778f8'
-            '46fcbaddf5346ba384539efd6873c26bef4e767e328c6543f9fd511022aea9e7')
+            '1952e99997cb081f05657563e147143e6c7408195d5fe984b726e3bb9a8675df')
 install="zeronet.install"
 backup=("etc/zeronet.conf")
 options=(!strip) # ignore test binaries in the depsendency libs that fail strip
 
 # Upstream uses camel case
-_pkgarchive="ZeroNet-$pkgver"
+_pkgarchive="ZeroNet-linux-dist-linux64"
 
 package() {
    mkdir -p "$pkgdir/opt/zeronet"
@@ -33,5 +33,5 @@ package() {
    install -D -m644 "$srcdir/zeronet.conf" "$pkgdir/etc/zeronet.conf"
    install -D -m644 "$srcdir/zeronet.service" "$pkgdir/usr/lib/systemd/system/zeronet.service"
 
-   install -D -m644 "$srcdir/$_pkgarchive/LICENSE" "$pkgdir/usr/share/licenses/$_pkgarchive/LICENSE"
+   install -D -m644 "$srcdir/$_pkgarchive/core/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
