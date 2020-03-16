@@ -21,7 +21,7 @@ provides=(ripgrep=$pkgver ripgrep-git=$pkgver)
 pkgver () {
   cd ripgrep
   # git describe | sed -E 's/([^-]*-g)/r\1/;s/-/./g'
-  echo $(grep -oPm1 '(?<=^version = ")[^"]+' Cargo.toml).$(git log -1 --pretty='%cd' --date=short | tr -d '-')
+  echo $(grep -oPm1 '(?<=^version = ")[^"]+' Cargo.toml).$(TZ=UTC git log -1 --pretty='%cd' --date=short-local | tr -d '-')
 }
 
 build () {

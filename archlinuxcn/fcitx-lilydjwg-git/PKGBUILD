@@ -33,7 +33,7 @@ md5sums=(SKIP)
 
 pkgver() {
   cd "$srcdir/$_gitname"
-  echo $_realver.$(git log -1 --format='%ad' --date=short|tr -d '-')
+  echo $_realver.$(TZ=UTC git log -1 --format='%ad' --date=short-local | tr -d '-')
 }
 
 build() {
