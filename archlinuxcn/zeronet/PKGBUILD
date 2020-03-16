@@ -2,19 +2,19 @@
 
 pkgname='zeronet'
 pkgver=0.7.1
-pkgrel=1
+pkgrel=2
 arch=('any')
 url="https://zeronet.io/"
-depends=('python2'
-         'python2-gevent'
-         'python2-msgpack')
+depends=('python'
+         'python-gevent'
+         'python-msgpack')
 optdepends=('tor: anonymity')
 license=('GPL2')
 pkgdesc="Decentralized websites using Bitcoin crypto and the BitTorrent network."
-source=("https://github.com/HelloZeroNet/ZeroNet/archive/v$pkgver.tar.gz"
+source=("https://github.com/HelloZeroNet/ZeroNet-linux/archive/dist-linux64/ZeroNet-py3-linux64.tar.gz"
         "zeronet.conf"
         "zeronet.service")
-sha256sums=('78a27e1687d8e3699a854b77b516c95b30a8ba667f7ebbef0aabf7ec6ec7272d'
+sha256sums=('4173c2ee78d53cf83211f3ef81811083ef90c44aa048a5faad4009d9bb99686a'
             'ea735e82dbb10a2c1fda7abfeb2f38c2429044d8254f9e2396c50cecb6f778f8'
             '46fcbaddf5346ba384539efd6873c26bef4e767e328c6543f9fd511022aea9e7')
 install="zeronet.install"
