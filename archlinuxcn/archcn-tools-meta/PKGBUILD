@@ -2,7 +2,7 @@
 # Maintainer: Jiachen Yang <farseerfc@gmail.com>
 
 pkgname=archcn-tools-meta
-pkgver=18.11.7
+pkgver=20.3.16
 pkgrel=1
 arch=('any')
 url='https://www.archlinuxcn.org/'
@@ -16,8 +16,8 @@ depends=(openssh
          python-jsonschema
          devtools-cn-git
          pkgfile
-         pkgtools
-         lilacinfo)
+         pkgtools)
 optdepends=('gnupg: for local package signing'
             'archlinuxcn-keyring: packager keyring'
+            'devtools-archlinuxcn: archlinuxcn modified devtools'
             'git: for working with archlinuxcn/repo')
