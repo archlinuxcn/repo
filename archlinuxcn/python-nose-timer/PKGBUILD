@@ -4,7 +4,7 @@
 
 pkgname=python-nose-timer
 _pkgname=nose-timer
-pkgver=0.7.6
+pkgver=1.0.0
 pkgrel=1
 pkgdesc='Timer plugin for nosetests'
 arch=(any)
@@ -18,7 +18,7 @@ checkdepends=(
   'python-termcolor'
 )
 source=("https://github.com/mahmoudimus/nose-timer/archive/v${pkgver}.tar.gz")
-sha512sums=('14924de8d1aeaf756706977388e6625f91a3c6261647a41ebffa6f2df24cc0d301f82dcf94604449b72530dd37d5ab1d0544ce2b58230f165c584664be7396a1')
+sha512sums=('1afca31d422fc0306721cdcf4e6f23a88dffdbd85e3ec83d6a72c59c584f3919f17f0042129993d857bbf6f4105f58e989a7ee71835a7debf2844d674e587344')
 
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
