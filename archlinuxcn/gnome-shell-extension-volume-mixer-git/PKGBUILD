@@ -4,12 +4,13 @@
 # You may find it convenient to file issues and pull requests there.
 
 pkgname=gnome-shell-extension-volume-mixer-git
-pkgver=0.17.2.r3.gf4e3364
+pkgver=0.17.4.r0.g058e9f0
 pkgrel=1
 pkgdesc="Applet allowing separate configuration of pulseaudio mixers"
 arch=(any)
 url="https://github.com/aleho/gnome-shell-volume-mixer"
 license=(GPLv2)
+depends=(python)
 
 makedepends+=('git')
 source+=("${_gitname:=${pkgname%-git}}::${_giturl:-git+$url}")
@@ -23,8 +24,6 @@ conflicts+=("$_gitname")
 pkgver() {
   cd ${_gitname:-$pkgname}
   git describe --long --tags 2>/dev/null | sed 's/[^[:digit:]]*\(.\+\)-\([[:digit:]]\+\)-g\([[:xdigit:]]\{7\}\)/\1.r\2.g\3/;t;q1'
-  [ ${PIPESTATUS[0]} -ne 0 ] && \
-printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 package() {
   for function in $(declare -F | grep -Po 'package_[[:digit:]]+[[:alpha:]_]*$')
@@ -46,8 +45,8 @@ package_02_install() {
     -exec install -Dm644 -t "$destdir" '{}' +
 }
 
-package_09_pautils() {
-  cp -r --no-preserve=ownership pautils "$destdir"
+package_09_subdirs() {
+  cp -r --no-preserve=ownership lib pautils "$destdir"
 }
 
 package_10_locale() {
