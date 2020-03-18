@@ -3,7 +3,7 @@
 
 _pkgname=skypeforlinux
 pkgname=$_pkgname-stable-bin
-pkgver=8.57.0.116
+pkgver=8.58.0.93
 pkgrel=1
 pkgdesc="Skype for Linux - Stable/Release Version"
 arch=("x86_64")
@@ -18,10 +18,10 @@ install=install.sh
 source=(
 "https://repo.skype.com/deb/pool/main/s/$_pkgname/${_pkgname}_${pkgver}_amd64.deb"
 )
-sha256sums=('b430a5bee30d7ad6312e6c679293a77decfc9efa513ab075319cc4f1c7796aa3')
+sha256sums=('836e25800320d96e8d35d05e60b98a6dd4da077f02880c9e34097d50686c0adb')
 
 package() {
-  tar -xJC "$pkgdir" -f data.tar.xz
+  tar --no-same-owner -xJC "$pkgdir" -f data.tar.xz
   install -d "$pkgdir/usr/share/licenses/$pkgname"
   mv "$pkgdir/usr/share/$_pkgname/LICENSES.chromium.html" \
     "$pkgdir/usr/share/licenses/$pkgname/"
