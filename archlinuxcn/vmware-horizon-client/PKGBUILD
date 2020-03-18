@@ -16,7 +16,7 @@ _bundled_with_client=('vmware-horizon-pcoip'
 pkgver=5.4.0
 _build=15805449
 _cart='CART21FQ1'
-pkgrel=1
+pkgrel=2
 pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop'
 arch=('x86_64')
 url='https://www.vmware.com/go/viewclients'
@@ -183,23 +183,15 @@ package_vmware-horizon-usb() {
 
 package_vmware-horizon-virtual-printing() {
 	pkgdesc='VMware Horizon Client connect to VMware Horizon virtual desktop - virtual printing'
-	depends=('vmware-horizon-client' 'openssl098' 'libcups' 'zlib')
+	depends=('vmware-horizon-client' 'libcups' 'zlib')
 	install=vmware-horizon-virtual-printing.install
 
 	cd "${srcdir}/extract/vmware-horizon-virtual-printing/"
 
 	mkdir -p "${pkgdir}/usr/bin/"
 
-	case ${CARCH} in
-		x86_64)
-			cp -a bin/x86_64-linux-NOSSL/thnu* "${pkgdir}/usr/bin/"
-			install -D -m0755 bin/x86_64-linux-NOSSL/.thnumod "${pkgdir}/etc/thnuclnt/.thnumod"
-			;;
-		i686)
-			cp -a bin/i586-linux-NOSSL/thnu* "${pkgdir}/usr/bin/"
-			install -D -m0755 bin/i586-linux-NOSSL/.thnumod "${pkgdir}/etc/thnuclnt/.thnumod"
-			;;
-	esac
+	cp -a bin/x86_64-linux-NOSSL/thnu* "${pkgdir}/usr/bin/"
+	install -D -m0755 bin/x86_64-linux-NOSSL/.thnumod "${pkgdir}/etc/thnuclnt/.thnumod"
 
 	install -D -m0755 lib/tprdp.so "${pkgdir}/usr/lib/vmware/rdpvcbridge/tprdp.so"
 
