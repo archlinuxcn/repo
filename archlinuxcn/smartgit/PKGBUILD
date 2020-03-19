@@ -2,7 +2,7 @@
 # Contributor: Muflone http://www.muflone.com/contacts/english/
 
 pkgname=smartgit
-pkgver=19.1.7
+pkgver=20.1.0
 pkgrel=1
 pkgdesc='Git client with Hg and SVN support.'
 arch=('any')
@@ -18,7 +18,7 @@ _pkgver=${pkgver//\./_}
 _pkgfolder=${pkgname}
 source=("https://www.syntevo.com/downloads/${pkgname}/${pkgname}-linux-${_pkgver}.tar.gz"
         "${pkgname}.desktop")
-sha1sums=('b099d0d5121b3c22db8648479b34c8b17dcbe2bb'
+sha1sums=('7d76400c7a24913ea35051189a2a32e42fc868be'
           'bafa47c0b43ad89aaa3b34a078771b3cd12bd1f3')
 
 package() {
