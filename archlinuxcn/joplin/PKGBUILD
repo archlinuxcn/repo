@@ -5,8 +5,8 @@
 # https://github.com/masterkorp/joplin-pkgbuild
 
 pkgname=joplin
-pkgver=1.0.179
-pkgrel=1
+pkgver=1.0.193
+pkgrel=2
 pkgdesc="A note taking and to-do application with synchronization capabilities"
 arch=('x86_64' 'i686')
 depends=('gtk3' 'libexif' 'libgsf' 'libjpeg-turbo' 'libwebp' 'libxss' 'nodejs'
@@ -16,11 +16,12 @@ optdepends=('libappindicator-gtk3: for tray icon')
 url="https://joplinapp.org/"
 license=('MIT')
 source=("${pkgname}.desktop" "${pkgname}-desktop.sh" "${pkgname}.sh"
-        "${pkgname}-${pkgver}.zip::https://github.com/laurent22/joplin/archive/v${pkgver}.zip")
-sha256sums=('ce4435654ee1f6d51d361945f32dd9bf07308f423c3f3c3db147744f203fbc2b'
+        "${pkgname}-${pkgver}.tar.gz::https://github.com/laurent22/joplin/archive/v${pkgver}.tar.gz")
+sha256sums=('baef56df1d65308103dfc6882fde1eec3420a2107fd1cbe1b48b35f22128f363'
             '41bfdc95a6ee285eb644d05eb3bded72a83950d4720c3c8058ddd3c605cd625d'
             '5245da6f5f647d49fbe044b747994c9f5a8e98b3c2cd02757dd189426a677276'
-            '15c1ff7f42e4639d98c52780830d070d6aa60eea5f04fa6a7568aceca6628e9a')
+            '7852ccc25c6345c80222853878f0441cb3522741a0a2c5d641485f2fc9509d87')
+
 
 build() {
   # Remove husky (git hooks) from dependencies
@@ -31,38 +32,19 @@ build() {
   # INFO: https://github.com/alfredopalhares/joplin-pkgbuild/issues/25
   export LANG=en_US.utf8
 
-  # Install dependencies for the Tools used on another projects
-  cd "${srcdir}/${pkgname}-${pkgver}/Tools"
+  # npm complains for missing execa package - force to install it
+  npm install --cache "${srcdir}/npm-cache" execa
   npm install --cache "${srcdir}/npm-cache"
 
-  # Run copyLib and build the typescript
-  # INFO: https://github.com/alfredopalhares/joplin-pkgbuild/issues/40
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  npm install --cache "${srcdir}/npm-cache"
-  npm run copyLib
-  npm run tsc
-
-  # Build Cli CLient
+  # CliClient
   cd "${srcdir}/${pkgname}-${pkgver}/CliClient"
-  rsync -a --exclude "node_modules/" "${srcdir}/${pkgname}-${pkgver}/CliClient/app/" \
-    "${srcdir}/${pkgname}-${pkgver}/CliClient/build"
-  rsync -a --delete "${srcdir}/${pkgname}-${pkgver}/ReactNativeClient/locales" \
-    "${srcdir}/${pkgname}-${pkgver}/CliClient/build/"
-  rsync -a --delete "${srcdir}/${pkgname}-${pkgver}/ReactNativeClient/lib/" \
-    "${srcdir}/${pkgname}-${pkgver}/CliClient/build/lib"
-
-  cd "${srcdir}/${pkgname}-${pkgver}/CliClient/build/"
-  # NOTE: Manually forcing sqlite 4.0.7 for node v12, remove later on
   npm install --cache "${srcdir}/npm-cache"
 
   # Electron App
-  cd "${srcdir}/${pkgname}-${pkgver}/ElectronClient/app"
+  cd "${srcdir}/${pkgname}-${pkgver}/ElectronClient"
   npm install --cache "${srcdir}/npm-cache"
+  npm run dist
 
-  rsync -a --delete "${srcdir}/${pkgname}-${pkgver}/ReactNativeClient/lib/" \
-    "${srcdir}/${pkgname}-${pkgver}/ElectronClient/app/lib/"
-  npm run compile
-  npm run pack
 }
 
 package() {
@@ -70,7 +52,7 @@ package() {
   install -d ${pkgdir}/usr/share/{${pkgname},${pkgname}-cli}
   cp -R CliClient/build/* "${pkgdir}/usr/share/${pkgname}-cli"
   cp -R CliClient/node_modules "${pkgdir}/usr/share/${pkgname}-cli"
-  cp -R ElectronClient/app/dist/linux-unpacked/* "${pkgdir}/usr/share/${pkgname}"
+  cp -R ElectronClient/dist/linux-unpacked/* "${pkgdir}/usr/share/${pkgname}"
 
   install -Dm755 ${srcdir}/${pkgname}-desktop.sh "${pkgdir}/usr/bin/${pkgname}-desktop"
   install -m755 ${srcdir}/${pkgname}.sh "${pkgdir}/usr/bin/${pkgname}"
