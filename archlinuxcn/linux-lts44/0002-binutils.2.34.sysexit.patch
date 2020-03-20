@@ -1,0 +1,18 @@
+diff -up linux-4.4/arch/x86/Makefile.orig linux-4.4/arch/x86/Makefile
+--- linux-4.4/arch/x86/Makefile.orig	2020-03-19 03:08:53.569999999 -0600
++++ linux-4.4/arch/x86/Makefile	2020-03-19 03:38:57.889999999 -0600
+@@ -218,6 +218,14 @@ KBUILD_CFLAGS += -fno-asynchronous-unwin
+ KBUILD_CFLAGS += $(mflags-y)
+ KBUILD_AFLAGS += $(mflags-y)
+ 
++#
++# Binutils 2.34 cannot handle sysexit, this corrects for now.
++#
++ifdef CONFIG_X86_64
++KBUILD_AFLAGS += -Wa,-mintel64
++KBUILD_CFLAGS += -Wa,-mintel64
++endif
++
+ # Avoid indirect branches in kernel to deal with Spectre
+ ifdef CONFIG_RETPOLINE
+     RETPOLINE_CFLAGS += $(call cc-option,-mindirect-branch=thunk-extern -mindirect-branch-register)
