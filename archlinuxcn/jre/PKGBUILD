@@ -1,10 +1,10 @@
-# Maintainer : Daniel Bermond < gmail-com: danielbermond >
+# Maintainer : Daniel Bermond <dbermond@archlinux.org>
 # Contributor: Det <nimetonmaili g-mail>
 
 pkgname=jre
-pkgver=13.0.2
-_build=8
-_hash=d4173c853231432d94f001e99d882ca7
+pkgver=14
+_build=36
+_hash=076bab302c7b4508975440c56f6cc26a
 _majver="${pkgver%%.*}"
 pkgrel=1
 pkgdesc='Oracle Java Runtime Environment'
@@ -32,7 +32,7 @@ backup=("etc/java${_majver}-${pkgname}/management/jmxremote.access"
         "etc/java${_majver}-${pkgname}/sound.properties")
 install="${pkgname}.install"
 source=("https://download.oracle.com/otn-pub/java/jdk/${pkgver}+${_build}/${_hash}/jdk-${pkgver}_linux-x64_bin.tar.gz")
-sha256sums=('e2214a723d611b4a781641061a24ca6024f2c57dbd9f75ca9d857cad87d9475f')
+sha256sums=('4639bbaecc9cc606f1a4b99fda1efcaefcbf57a7025b3828b095093a6c866afd')
 
 DLAGENTS=('https::/usr/bin/curl -fLC - --retry 3 --retry-delay 3 -b oraclelicense=a -o %o %u')
 
@@ -50,8 +50,8 @@ package() {
     ln -s "../../../../etc/java${_majver}-${pkgname}" "${pkgdir}/${_jvmdir}/conf"
     
     # bin
-    install -D -m755 bin/{java,jjs,jrunscript,keytool,pack200} -t "${pkgdir}/${_jvmdir}/bin"
-    install -D -m755 bin/{rmid,rmiregistry,unpack200}          -t "${pkgdir}/${_jvmdir}/bin"
+    install -D -m755 bin/{java,jjs,jpackage,jrunscript} -t "${pkgdir}/${_jvmdir}/bin"
+    install -D -m755 bin/{keytool,rmid,rmiregistry}     -t "${pkgdir}/${_jvmdir}/bin"
     
     # libs
     cp -a lib "${pkgdir}/${_jvmdir}"
@@ -60,7 +60,7 @@ package() {
     
     # man pages
     local _file
-    for _file in man/man1/{java,jjs,jrunscript,keytool,pack200,rmid,rmiregistry,unpack200}.1
+    for _file in man/man1/{java,jjs,jpackage,jrunscript,keytool,rmid,rmiregistry}.1
     do
         install -D -m644 "$_file" "${pkgdir}/usr/share/${_file%.1}-jdk${_majver}.1"
     done
