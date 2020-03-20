@@ -3,7 +3,7 @@
 
 _pkgname=skypeforlinux
 pkgname=$_pkgname-preview-bin
-pkgver=8.58.76.92
+pkgver=8.59.76.11
 pkgrel=1
 pkgdesc="Skype for Linux - Preview/Insider Version"
 arch=("x86_64")
@@ -19,10 +19,10 @@ install=install.sh
 source=(
 "https://repo.skype.com/deb/pool/main/s/$_pkgname/${_pkgname}_${pkgver}_amd64.deb"
 )
-sha256sums=('23b994dbb84ab79316062a6b4438a39281d5e4c1fa730c1e8da574d8c31facf8')
+sha256sums=('ea81a8de84649aaa905c519fde1fdd1e4c96b3317c43386bdb52898ef30e681f')
 
 package() {
-  tar -xJC "$pkgdir" -f data.tar.xz
+  tar --no-same-owner -xJC "$pkgdir" -f data.tar.xz
   install -d "$pkgdir/usr/share/licenses/$pkgname"
   mv "$pkgdir/usr/share/$_pkgname/LICENSES.chromium.html" \
     "$pkgdir/usr/share/licenses/$pkgname/"
