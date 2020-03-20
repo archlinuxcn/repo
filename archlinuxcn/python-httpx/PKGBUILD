@@ -1,6 +1,6 @@
 _name=httpx
 pkgname=python-httpx
-pkgver=0.12.0
+pkgver=0.12.1
 pkgrel=1
 pkgdesc="The next generation HTTP client."
 arch=(any)
@@ -10,7 +10,7 @@ depends=('python-urllib3' 'python-h11' 'python-h2' 'python-chardet' 'python-hsts
 makedepends=('python-setuptools')
 optdepends=('python-brotlipy: decoding for "brotli" compressed responses')
 source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
-sha256sums=('a3e82b1fec1e672e500c650b5d54a7353f7d20497f1fbfc6faae5f66aecd91d1')
+sha256sums=('405b4749f597b1f45cae5bffc17b23dc251cce30a0c4c8126f1007b9e728a615')
 
 prepare() {
   cd "$srcdir/$_name-$pkgver"
