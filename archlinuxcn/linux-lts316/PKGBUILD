@@ -6,7 +6,7 @@
 set -u
 pkgbase="linux-lts316"
 _srcname="linux-3.16"
-pkgver="3.16.81"
+pkgver="3.16.82"
 pkgrel='1'
 arch=('i686' 'x86_64')
 url="https://www.kernel.org/"
@@ -24,29 +24,33 @@ source=(
   # standard config files for mkinitcpio ramdisk
   'linux.preset'
   'change-default-console-loglevel.patch'
-  '0000-unknown-rela-relocation-4-binutils.2.31.kernel.3.16.patch' # https://www.reddit.com/r/linuxquestions/comments/903xwq/unable_to_compile_working_kernel_modules_anymore/
+  #'0000-unknown-rela-relocation-4-binutils.2.31.kernel.3.16.patch' # https://www.reddit.com/r/linuxquestions/comments/903xwq/unable_to_compile_working_kernel_modules_anymore/
   '0001-binutils.2.31.max-page-size.patch' # http://lists.gnu.org/archive/html/bug-binutils/2018-03/msg00193.html
+  '0002-binutils.2.34.sysexit.patch' # https://gist.github.com/bbidulock/263c5c3aee34e3a1b09dca0b937c210b
+  '0003-systemd.245.kernel.316.ambient.capabilities.patch' # https://github.com/hardkernel/linux/commit/2ddfe869e9964afe1175919557e6b4f18b78941a
   'update.sh'
 )
 md5sums=('5c569ed649a0c9711879f333e90c5386'
-         '40d08732754c661356ca5a8e86005a58'
+         '8da6a4c655cecd0f2657436334a60d9c'
          '5c85a1cef25029a8eb87d0edeec0cb04'
          'f45197ec50bb5f7a85991f6e99ad49c6'
          '90cd68710e3064d9b65f5549570f7821'
          'eb14dcfd80c00852ef81ded6e826826a'
          'df7fceae6ee5d7e7be7b60ecd7f6bb35'
-         'faaee4c0db3a87bb45aa4e964727f308'
          '07dc499a909a3bb63fc3fdc0d0652e64'
+         '43d62abf4cd27fa1863759ac87b62ac5'
+         '4f2248545c0a3997a1d301195b7dcfe7'
          'e6a1be64b190d846648d671c012d6dd3')
 sha256sums=('4813ad7927a7d92e5339a873ab16201b242b2748934f12cb5df9ba2cfe1d77a0'
-            '9eee44021dc9e229c2d1b1601cec0d6e623e00147fd27b0fd0cf624fcdcee24d'
+            '82bd3706afe2beff9ff9a00fae0dd7f92e6f8f300ba0bbe8cc778c2bced20a11'
             '3bce3e9adce8ae3f826eebab75e9784ca92a914e526ae352de61c1da93aab8d3'
             '328539797005cb43362b75ca9965791a1ed34525101c286e4fb49694faa40e4c'
             '834bd254b56ab71d73f59b3221f056c72f559553c04718e350ab2a3e2991afe0'
             'f0d90e756f14533ee67afda280500511a62465b4f76adcc5effa95a40045179c'
             '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99'
-            'b0f101562baca5f8aed72ba90638763ef2be8f4618c111a50334970dd03dfb4b'
             'f71e0de924013fe60c3cbed45f322e6a09942db978daeddd18adb8582373b5ed'
+            '2c80046fa78bfa6e26ae6d8ac312142d9d67b394914fee423578583fe7ab15db'
+            'abbb27b46cf00bf6d4859c4d8dfcf1d6f32e385d3dbf04790abda8b4dae6540a'
             '4dad3093e0c2bd7dafd30a0344b4df6432c3a7d1422edc4e0d1e6201aa513648')
 
 _kernelname=${pkgbase#linux}
@@ -78,10 +82,17 @@ prepare() {
 
   # diff -pNaru5 'linux-3.16'{.61.orig,} > 'new_0000-unknown-rela-relocation-4-binutils.2.31.kernel.3.16.patch'
   #(cd ..; cp -pr "${_srcname}"{,.61.orig})
-  patch -Nup1 -i "${srcdir}/0000-unknown-rela-relocation-4-binutils.2.31.kernel.3.16.patch"
-  # false
+  #patch -Nup1 -i "${srcdir}/0000-unknown-rela-relocation-4-binutils.2.31.kernel.3.16.patch"
 
   patch -Nup1 -i "${srcdir}/0001-binutils.2.31.max-page-size.patch"
+
+  # Fix for binutils 2.34
+  patch -Nup1 -i "${srcdir}/0002-binutils.2.34.sysexit.patch"
+
+  # Fix for systemd 245
+  # https://forum.odroid.com/viewtopic.php?f=141&t=38171
+  # by stas-t Re: C2 won't boot up after upgrading systemd to 245-1 on Arch
+  patch -Nup1 -i "${srcdir}/0003-systemd.245.kernel.316.ambient.capabilities.patch"
 
   declare -A _config=([i686]='config' [x86_64]='config.x86_64')
   cat "${srcdir}/${_config[${CARCH}]}" > './.config'
