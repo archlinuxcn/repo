@@ -3,7 +3,7 @@
 # Contributor: DuckSoft <realducksoft@gmail.com>
 pkgname=qv2ray-dev-git
 pkgver=2.3.1.4957+grpc
-pkgrel=1
+pkgrel=2
 pkgdesc="Cross-platform V2ray Client written in Qt (Development Release)"
 arch=('x86_64')
 url='https://github.com/Qv2ray/Qv2ray'
