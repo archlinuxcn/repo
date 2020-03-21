@@ -4,7 +4,7 @@
 # Contributor: rabyte <rabyte__gmail>
 
 pkgname=tintin
-pkgver=2.02.01
+pkgver=2.02.02
 pkgrel=1
 pkgdesc="A console-based MUD client"
 arch=('i686' 'x86_64')
@@ -13,7 +13,7 @@ license=('GPL3')
 depends=('zlib' 'pcre' 'gnutls')
 options=('strip')
 source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz)
-sha512sums=('8d3d90ba27458a3ea10eaabde1a6cce6de74b6bb9960bbb7c95740d896e530f0d995b01b62b888a3692e841ad27b9eb2e8c25e12a79dcb7ac14fec9fb449c2b3')
+sha512sums=('8afe2cd23d2710c437d4da45b7ce755b0c3f57c1d139be27cb9f1559df57a9b5a10a3ca1f37540e522ca131271eaada24308298c345de0be36a93e98e6b1d438')
 
 build() {
   cd $srcdir/tt/src
