@@ -3,8 +3,8 @@
 # Contributor: csslayer <wengxt AT gmail com>
 
 pkgname=fcitx5-rime-git
-pkgver=r116.bd08374
-pkgrel=4
+pkgver=r117.0039092
+pkgrel=1
 pkgdesc="RIME input method for fcitx5"
 arch=('i686' 'x86_64')
 url="https://github.com/fcitx/fcitx5-rime"
