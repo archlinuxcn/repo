@@ -2,7 +2,7 @@
 # Maintainer: Heavysink <winstonwu91 at gmail>
 pkgname=openmsx-git
 _pkgname=openMSX
-pkgver=14145.28e4dba70
+pkgver=14146.c8cb6020a
 pkgrel=1
 pkgdesc="The MSX emulator that aims for perfection."
 arch=('i686' 'x86_64')
