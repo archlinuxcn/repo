@@ -4,9 +4,10 @@
 
 pkgname=hplip-plugin
 pkgver=3.20.3
-pkgrel=1
+pkgrel=2
+epoch=1
 pkgdesc="Binary plugin for HPs hplip printer driver library"
-arch=('i686' 'x86_64')
+arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://hplipopensource.com/node/309"
 license=('custom:proprietary')
 depends=("hplip>=$pkgver") 
@@ -26,6 +27,10 @@ package(){
         _arch='x86_32'
     elif [ $CARCH = "x86_64" ]; then
         _arch='x86_64'
+    elif [ $CARCH = "armv7h" ]; then
+        _arch='arm32'
+    elif [ $CARCH = "aarch64" ]; then
+        _arch='arm64'
     fi
 
     # Create folders
