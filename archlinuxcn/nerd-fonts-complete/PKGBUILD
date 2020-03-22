@@ -6,7 +6,7 @@
 _gitname='nerd-fonts'
 pkgname='nerd-fonts-complete'
 pkgver=2.1.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Iconic font aggregator, collection, & patcher. 3,600+ icons, 50+ patched fonts.'
 arch=('any')
 url='https://github.com/ryanoasis/nerd-fonts'
@@ -40,15 +40,20 @@ package() {
   cd "$srcdir/$_gitname-$pkgver"
 
   # Prepare destination directories
-  otfdir="${pkgdir}/usr/share/fonts/${_gitname}/OTF"
-  tffdir="${pkgdir}/usr/share/fonts/${_gitname}/TFF"
+  libdir="${pkgdir}/usr/lib/${pkgname}"
+  otfdir="${pkgdir}/usr/share/fonts/${pkgname}/OTF"
+  ttfdir="${pkgdir}/usr/share/fonts/${pkgname}/TTF"
 
+  install -dm755 "${libdir}"
   install -dm755 "${otfdir}"
-  install -dm755 "${tffdir}"
+  install -dm755 "${ttfdir}"
 
   # Install fonts
   install -m644 release/NerdFonts/*.otf "${otfdir}"
-  install -m644 release/NerdFonts/*.ttf "${tffdir}"
+  install -m644 release/NerdFonts/*.ttf "${ttfdir}"
+
+  # Install scripts
+  install -m644 bin/scripts/lib/*.sh "${libdir}"
 
   # Install license
   install -dm755 "${pkgdir}/usr/share/licenses/${pkgname}"
