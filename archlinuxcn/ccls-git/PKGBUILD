@@ -2,14 +2,14 @@
 
 pkgname=ccls-git
 _pkgname=ccls
-pkgver=20200312
+pkgver=20200322
 pkgrel=1
 pkgdesc='C/C++ language server supporting cross references, hierarchies, completion and semantic highlighting'
 arch=('x86_64')
 url='https://github.com/MaskRay/ccls'
 license=('Apache')
-depends=('clang' 'llvm-libs' 'rapidjson')
-makedepends=("cmake" "git" "llvm")
+depends=('clang' 'llvm-libs')
+makedepends=("cmake" "git" "llvm" "rapidjson")
 source=('git+https://github.com/MaskRay/ccls.git')
 md5sums=('SKIP')
 
