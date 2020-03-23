@@ -5,8 +5,8 @@
 # https://github.com/masterkorp/joplin-pkgbuild
 
 pkgname=joplin
-pkgver=1.0.193
-pkgrel=2
+pkgver=1.0.195
+pkgrel=1
 pkgdesc="A note taking and to-do application with synchronization capabilities"
 arch=('x86_64' 'i686')
 depends=('gtk3' 'libexif' 'libgsf' 'libjpeg-turbo' 'libwebp' 'libxss' 'nodejs'
@@ -17,10 +17,10 @@ url="https://joplinapp.org/"
 license=('MIT')
 source=("${pkgname}.desktop" "${pkgname}-desktop.sh" "${pkgname}.sh"
         "${pkgname}-${pkgver}.tar.gz::https://github.com/laurent22/joplin/archive/v${pkgver}.tar.gz")
-sha256sums=('baef56df1d65308103dfc6882fde1eec3420a2107fd1cbe1b48b35f22128f363'
+sha256sums=('9cc1b664cac5fa024c22faf75f26010a96d1567d852f28145938cc58a70fdeaa'
             '41bfdc95a6ee285eb644d05eb3bded72a83950d4720c3c8058ddd3c605cd625d'
             '5245da6f5f647d49fbe044b747994c9f5a8e98b3c2cd02757dd189426a677276'
-            '7852ccc25c6345c80222853878f0441cb3522741a0a2c5d641485f2fc9509d87')
+            '0e2c34d43a8ed6a990c2420b41fc106df73643f4578683bd6218ee13f938105a')
 
 
 build() {
