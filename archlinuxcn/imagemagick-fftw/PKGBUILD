@@ -4,7 +4,7 @@
 pkgbase=imagemagick-fftw
 pkgname=(imagemagick-fftw)
 pkgver=7.0.10.2
-pkgrel=1
+pkgrel=2
 pkgdesc="An image viewing/manipulation program"
 url="https://www.imagemagick.org/"
 arch=(x86_64)
@@ -106,5 +106,8 @@ package_imagemagick-fftw() {
 
 # Harden security policy https://bugs.archlinux.org/task/62785
   sed -e '/<\/policymap>/i \ \ <policy domain="delegate" rights="none" pattern="gs" \/>' -i "$pkgdir"/etc/ImageMagick-7/policy.xml
+
+# Use correct options for inkscape<1.0
+  sed -e 's|--export-file|--export-png|' -i "$pkgdir"/etc/ImageMagick-7/delegates.xml
 }
 
