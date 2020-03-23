@@ -2,7 +2,7 @@
 
 pkgname=elvish
 pkgver=0.13.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A friendly and expressive Unix shell."
 arch=('i686' 'x86_64')
 url="https://github.com/elves/elvish"
@@ -17,19 +17,24 @@ install=elvish.install
 prepare() {
     mkdir -p "$srcdir/build"
     export GOPATH="$srcdir/build"
-
+    export CGO_LDFLAGS="$LDFLAGS"
+    export GOFLAGS="-buildmode=pie -trimpath -mod=vendor -modcacherw"
     cd "$srcdir/elvish"
-    go mod download
+    go mod vendor
 }
 
 build() {
     export GOPATH="$srcdir/build"
+    export CGO_LDFLAGS="$LDFLAGS"
+    export GOFLAGS="-buildmode=pie -trimpath -mod=vendor -modcacherw"
     cd "$srcdir/elvish"
-    go build -v -trimpath -buildmode=pie -ldflags="-extldflags $LDFLAGS -X github.com/elves/elvish/pkg/buildinfo.Version=$pkgver" .
+    go build -v -ldflags="-X github.com/elves/elvish/pkg/buildinfo.Version=$pkgver" .
 }
 
 check() {
     export GOPATH="$srcdir/build"
+    export CGO_LDFLAGS="$LDFLAGS"
+    export GOFLAGS="-buildmode=pie -trimpath -mod=vendor -modcacherw"
     cd "$srcdir/elvish"
     make test
 }
