@@ -2,7 +2,7 @@
 # Maintainer: Allen Zhong <zhongbenli@pingcap.com>
 pkgname=tidb
 pkgver=3.0.12
-pkgrel=1
+pkgrel=2
 pkgdesc='A distributed HTAP database compatible with the MySQL protocol'
 makedepends=('go' 'make')
 arch=('x86_64')
