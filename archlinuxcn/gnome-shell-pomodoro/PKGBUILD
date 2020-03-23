@@ -1,33 +1,34 @@
 # Maintainer:  Marcin Wieczorek <marcin@marcin.co>
-# Contributor: Pranav Jerry <libreinator@disroot.org>
+# Co-maintainer: Pranav Jerry <libreinator@disroot.org>
 # Contributor: Andrejs Mivreņiks <gim at fastmail dot fm>
 # Contributor: Janne Haapsaari <haaja@iki.fi>
 # Contributor: maus25 <mirko378@gmail.com>
 
 pkgname=gnome-shell-pomodoro
-pkgver=0.16.1
+pkgver=0.17.0
 pkgrel=1
 pkgdesc='A time management utility for GNOME based on the pomodoro technique'
 arch=('i686' 'x86_64')
 url='https://github.com/codito/gnome-pomodoro'
 license=('GPL3')
 depends=('gnome-desktop' 'gstreamer' 'gobject-introspection' 'libpeas' 'appstream-glib' 'gom')
-makedepends=('git' 'intltool' 'vala' 'gnome-common' 'docbook2x' 'perl-xml-sax-expat' 'xorgproto')
+makedepends=('intltool' 'vala' 'gnome-common' 'docbook2x' 'perl-xml-sax-expat' 'xorgproto')
 changelog='NEWS'
-source=("gnome-pomodoro::git+https://github.com/codito/gnome-pomodoro.git#branch=gnome-3.36")
-sha256sums=('SKIP')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/codito/gnome-pomodoro/archive/$pkgver.tar.gz")
+sha256sums=('33c2c70adcca8ab539dbd4e0cb184a4462a69229548ae2c6b39428629d602fd2')
 
 prepare() {
-  cd "$srcdir/gnome-pomodoro"
+  cd "$srcdir/gnome-pomodoro-$pkgver"
   ./autogen.sh --prefix=/usr --datadir=/usr/share
 }
 
 build() {
-  cd "$srcdir/gnome-pomodoro"
+  cd "$srcdir/gnome-pomodoro-$pkgver"
   make
 }
 
 package() {
-  cd "$srcdir/gnome-pomodoro"
+  cd "$srcdir/gnome-pomodoro-$pkgver"
   make DESTDIR="$pkgdir" install
 }
+
