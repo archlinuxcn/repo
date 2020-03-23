@@ -5,21 +5,26 @@
 # Contributor: Jesse Jaara <gmail.com: jesse.jaara>
 
 pkgname=ttf-symbola
-pkgver=12.00
-pkgrel=2
+pkgver=13.00
+pkgrel=1
 pkgdesc="Font for unicode symbols (part of Unicode Fonts for Ancient Scripts)."
 arch=('any')
 conflicts=('ttf-symbola-ib')
 provides=('ttf-symbola')
-url="http://users.teilar.gr/~g1951d/"
+url="https://dn-works.com/ufas/"
 license=('custom')
-depends=('fontconfig' 'xorg-font-utils')
-source=("${pkgname}-${pkgver}.zip::http://users.teilar.gr/~g1951d/Symbola.zip"
-        "LICENSE")
-sha512sums=('96057c9dbf8a1ab48323d49f727dc00eb8ab66a60e4037b622280d6b84a2c692129e174994a36683ba78bee43e2a2096c4d87ac5c350be78f4d8d6cd7218a528'
-            '9afe91785611955511248fd31a86c7e370b23b1b2c37f9345c8f274b3e0e1dbf9c0da8f9edac62d27d318e56485b80966aa7622f167f4da5d5925a7935bfa3da')
+makedepends=('fontforge' 'poppler')
+source=("${pkgname}-${pkgver}.zip::https://dn-works.com/wp-content/uploads/2020/UFAS-Fonts/Symbola.zip"
+        "LICENSE.pdf::https://dn-works.com/wp-content/uploads/2020/UFAS-Docs/License.pdf")
+sha512sums=('57f1c72d9fe03da68fee476f6c3d202805ba5eacfb4690ca5e3b10d4d335cbefaebd501f77af28abc2a71cd34a926a79d633689ff8cb54e972d09b5292f5c8b1'
+            '6b6f7688a5571375b59135e2a60c61d0ad7fd2d19f0f226a38b8b39696c6f01047758937e9431f8d64f4758fe207eac83ba4df847efccb24b119be4aff69dbf3')
+
+build() {
+  fontforge -c 'open(argv[1]).generate(argv[2])' Symbola.otf Symbola.ttf
+  pdftotext LICENSE.pdf LICENSE
+}
 
 package() {
-  install -Dm644 Symbola.ttf "$pkgdir/usr/share/fonts/TTF/Symbola.ttf"
-  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 -t "$pkgdir/usr/share/fonts/TTF/" Symbola.ttf
+  install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname/" LICENSE
 }
