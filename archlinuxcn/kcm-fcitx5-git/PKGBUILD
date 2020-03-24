@@ -4,8 +4,8 @@
 
 _pkgname=kcm-fcitx5
 pkgname=$_pkgname-git
-pkgver=r253.d33ce56
-pkgrel=3
+pkgver=r254.2ee6f78
+pkgrel=1
 pkgdesc="KDE Config Module for Fcitx5"
 arch=('i686' 'x86_64')
 url="https://github.com/fcitx/kcm-fcitx5"
