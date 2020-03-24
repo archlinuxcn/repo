@@ -42,11 +42,16 @@ makedepends=(
   'openmpi'
   'pugixml'
   'python'
-  'qt5-tools'
   'qt5-webkit'
   'qt5-x11extras'
   'utf8cpp'
   'wget'
+)
+optdepends=(
+  'hdf5'
+  'openmpi'
+  'qt5-webkit'
+  'qt5-x11extras'
 )
 provides=("vtk")
 conflicts=("vtk")
@@ -97,8 +102,8 @@ build() {
 package() {
   cd "${srcdir}/vtk/build"
   make DESTDIR="${pkgdir}" install
-  install -D -m644 "${srcdir}/vtk/Copyright.txt" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
-  python -O -m compileall "${pkgdir}/usr/lib/python$(get_pyver)/site-packages/"
+  install -D -m644 "${srcdir}/vtk/Copyright.txt" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  python -O -m compileall "${pkgdir}/usr/lib/python$(get_pyver)/site-packages"
 }
 # vim:set ts=2 sw=2 et:
 
