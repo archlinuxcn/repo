@@ -1,0 +1,104 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+pkgname=vtk-git
+_pkgver=9.0.0rc1
+pkgver=9.0.0rc1.r73670.118d20aaca
+pkgrel=1
+pkgdesc='A software system for 3D computer graphics, image processing, and visualization'
+arch=('x86_64')
+url='http://www.vtk.org'
+license=('BSD')
+depends=(
+  'double-conversion'
+  'ffmpeg'
+  'freetype2'
+  'glew'
+  'jsoncpp'
+  'libjpeg'
+  'libtheora'
+  'libtiff'
+  'netcdf'
+  'openslide'
+  'ospray'
+  'pdal'
+  'postgresql'
+  'proj'
+  'pugixml'
+  'qt5-base'
+  'python'
+  'sqlite'
+  'unixodbc'
+)
+makedepends=(
+  'boost'
+  'cmake'
+  'eigen'
+  'git'
+  'hdf5'
+  'libogg'
+  'libxml2'
+  'libxt'
+  'ocl-icd'
+  'openmpi'
+  'pugixml'
+  'python'
+  'qt5-tools'
+  'qt5-webkit'
+  'qt5-x11extras'
+  'utf8cpp'
+  'wget'
+)
+provides=("vtk")
+conflicts=("vtk")
+source=("git+https://gitlab.kitware.com/vtk/vtk.git")
+sha256sums=("SKIP")
+
+get_pyver() {
+  python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
+}
+
+prepare() {
+  cd "${srcdir}/vtk"
+  git submodule update --init --recursive
+}
+
+pkgver() {
+  cd "${srcdir}/vtk"
+  printf "%s.r%s.%s" ${_pkgver} "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+  cd "${srcdir}/vtk"
+  mkdir -p build && cd build
+  cmake .. \
+    -DBUILD_SHARED_LIBS=ON \
+    -DBUILD_TESTING=OFF \
+    -DCMAKE_INSTALL_LIBDIR=lib \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_SHARED_LINKER_FLAGS="$(pkg-config --libs netcdf)" \
+    -DCMAKE_SKIP_INSTALL_RPATH=ON \
+    -DVTK_BUILD_ALL_MODULES=ON \
+    -DVTK_BUILD_TESTING=OFF \
+    -DVTK_LEGACY_REMOVE=ON \
+    -DVTK_MODULE_ENABLE_VTK_FiltersOpenTURNS=NO \
+    -DVTK_MODULE_ENABLE_VTK_IOADIOS2=NO \
+    -DVTK_MODULE_ENABLE_VTK_IOLAS=NO \
+    -DVTK_MODULE_ENABLE_VTK_RenderingOpenVR=NO \
+    -DVTK_MODULE_USE_EXTERNAL_VTK_gl2ps=OFF \
+    -DVTK_MODULE_USE_EXTERNAL_VTK_libharu=OFF \
+    -DVTK_PYTHON_VERSION="3" \
+    -DVTK_USE_EXTERNAL=ON \
+    -DVTK_USE_FFMPEG_ENCODER=ON \
+    -DVTK_USE_LARGE_DATA=ON \
+    -DVTK_WRAP_PYTHON=ON
+  make
+}
+
+package() {
+  cd "${srcdir}/vtk/build"
+  make DESTDIR="${pkgdir}" install
+  install -D -m644 "${srcdir}/vtk/Copyright.txt" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+  python -O -m compileall "${pkgdir}/usr/lib/python$(get_pyver)/site-packages/"
+}
+# vim:set ts=2 sw=2 et:
+
