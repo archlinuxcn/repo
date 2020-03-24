@@ -8,7 +8,7 @@
 _pkgname=pcsclite
 pkgname=lib32-$_pkgname
 pkgver=1.8.26
-pkgrel=1
+pkgrel=2
 pkgdesc="PC/SC Architecture smartcard middleware library (for proprietary 32-bit drivers)"
 arch=('x86_64')
 url='https://pcsclite.apdu.fr/'
