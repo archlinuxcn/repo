@@ -3,12 +3,13 @@
 
 pkgname=mergerfs
 pkgver=2.29.0
-pkgrel=1
+pkgrel=2
 pkgdesc="FUSE based union filesystem"
 arch=('x86_64')
 url="https://github.com/trapexit/mergerfs"
 license=('custom:ISC')
 makedepends=('git')    # 'pandoc'
+optdepends=('fuse2: for mounting via fstab')
 source=("https://github.com/trapexit/mergerfs/archive/$pkgver.tar.gz")
 #source=("https://github.com/trapexit/mergerfs/releases/download/$pkgver/mergerfs-$pkgver.tar.gz")
 md5sums=('1f2561643341ea97f3b86293c21fd893')
