@@ -6,19 +6,18 @@
 pkgname=kubernetes-helm
 pkgver=3.1.2
 _commit=d878d4d45863e42fd5cff6743294a11d28a9abce
-pkgrel=1
+pkgrel=2
 pkgdesc="A tool to manage Kubernetes charts"
 arch=('i686' 'x86_64' 'arm' 'aarch64')
 url="https://github.com/helm/helm"
 depends=('glibc')
 makedepends=('go' 'git')
-conflicts=('helm')
 license=('Apache')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/helm/helm/archive/v${pkgver}.tar.gz")
 sha256sums=('06c7a43be1841b07c4737999d90c1d194b80b55c6d80829349121e8e95f4a1e1')
 
 build() {
-  cd "$srcdir/helm-${pkgver}"
+  cd helm-${pkgver}
   go build -o bin/helm \
     -buildmode=pie \
     -trimpath \
