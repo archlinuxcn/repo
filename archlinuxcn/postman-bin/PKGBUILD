@@ -1,7 +1,7 @@
 # Maintainer: Jay Ta'ala <jay@jaytaala.com>
 # Contributor: Claudio d'Angelis <claudiodangelis at gmail dot com>
 pkgname=postman-bin
-pkgver=7.21.0
+pkgver=7.21.1
 pkgrel=1
 pkgdesc="Build, test, and document your APIs faster"
 arch=('x86_64')
@@ -12,7 +12,7 @@ source=(
     "postman.desktop"
 )
 depends=(libxss nss gtk3)
-sha256sums=('d63336b30707b6ff6c04572f66c3d97a6eb2378521c0fd15341d8c06e485a4af'
+sha256sums=('9198c63958daaa12d2ba25af46151367a553c9d1265dfa691118415a9660a41a'
             '74b2d8570658e207e31f729e7f4768952252383aee7c695218d077bd0ef13245')
 package() {
 	install -dm755 "${pkgdir}/opt/"
