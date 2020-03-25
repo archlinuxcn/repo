@@ -3,10 +3,10 @@
 # Derived from official Chromium and Inox PKGBUILDS and ungoogled-chromium buildkit
 
 pkgname=ungoogled-chromium
-pkgver=80.0.3987.106
+pkgver=80.0.3987.149
 _rev=1
 _archver=b39bf35e8765a7af01d97a53854ff0628b2fba07
-pkgrel=2
+pkgrel=1
 _launcher_ver=6
 pkgdesc="A lightweight approach to removing Google web service dependency"
 arch=('x86_64')
@@ -30,9 +30,9 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-launcher-$_launcher_ver.tar.gz::https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver.tar.gz
 https://github.com/Eloston/ungoogled-chromium/archive/$pkgver-$_rev.tar.gz
         https://github.com/ungoogled-software/ungoogled-chromium-archlinux/archive/${_archver}.tar.gz)
-sha256sums=('2ead924b4414a8a5f085fa0e0df56563ef41bd4290cc403c05d5beec238cbe82'
+sha256sums=('50bedde7932921e375b521ceab8989be134a8d937751847e9d9287f7e0a02c1e'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
-            '1d1fb27585902648725c938fdc851c80d0061620b9a91e4aeb0699786ec63fa7'
+            '309522e2c6bb615bc8dd20b96939d9f5c18830d173e26818bcdff10f2d420218'
             '82f3f5ac30fc7d525547a25bc429bbcff2378ce1228c8125851ad3b5675fabff')
 
 # Possible replacements are listed in build/linux/unbundle/replace_gn_files.py
