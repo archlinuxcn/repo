@@ -2,7 +2,7 @@
 
 pkgbase=goland
 pkgname=(goland goland-jre)
-pkgver=2019.3.3
+pkgver=2019.3.4
 pkgrel=1
 arch=('x86_64' 'i686')
 url='https://www.jetbrains.com/go/'
@@ -12,8 +12,8 @@ options=('!strip')
 source=("https://download.jetbrains.com/go/${pkgbase}-${pkgver}.tar.gz"
         jetbrains-goland.desktop
         LICENSE)
-sha512sums=('e2a8120cbec9d49cbf8b565dfbf12e0da943a9f0b76bff68ffd98c504612698f5bac9c66cf1de91081ed79ea86892630ac7f270312d1c6da0cb2b8683d085a00'
-            '930a0f1269b7f49f7a08fd5fbfff178628114dee01f4e4e8426c643d7c442b77f178b5188325caf0ace5503c5f873a419cd3f7128b63d7c3c9baf8065b0065aa'
+sha512sums=('4874502bf6a031221419a015993a78d7139afafda7c92d6567e0fc81eb7b15f6766b1b934567a9b7c1f1395c7529bc838d7df3c42dcd5045e1086e8176e5e578'
+            'bafd07eebf41fd815d182473041ff1cf6e069a4c66755cb5eeea27d8f5222e7c79a85765d14d7f78e57d29bdf91ba844069946388c80689189ac7f60c9c1cb81'
             'e2aaaa75571f368f85bcc4baef27cc502781ce382bf04737763b07244716918fc2f0eb0b78b02631e242c9a5c246b27d720bb28556fc64bbde213403b7bf57f6')
 
 package_goland() {
