@@ -12,7 +12,7 @@ from lilaclib import *
 repo_depends=['libpcl', 'freeradius-client']
 
 def pre_build():
-    update_pkgver_and_pkgrel(_G.newver.replace('ocserv_', '').replace('_','.'))
+    update_pkgver_and_pkgrel(_G.newver)
 
 def post_build():
     git_pkgbuild_commit()
