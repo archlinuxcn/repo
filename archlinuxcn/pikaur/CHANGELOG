@@ -1660,3 +1660,15 @@ Tue Mar 17 22:41:17 2020 +0100
      2020-03-17 aa54551 actionless fix(install_cli: conflicts): check also conflicting aur deps
      2020-03-17 4d70a69 actionless fix(install_cli): remove failed pkgbuild from the list
      2020-03-15 136d03a actionless fix(urllib): return empty string if url request is not required (fixes #461)
+
+
+Wed Mar 25 21:18:06 2020 +0100
+-------------------------------------------------
+1.6.9           Release 1.6.9
+    
+    Notables changes:
+     2020-03-25 bfeccf6 actionless fix(config: DATA_ROOT): correctly handle change of XDG_DATA_HOME (fixes #465)
+     2020-03-24 8c2f0b8 actionless fix(print_dept: color_generator): determenistic colors for known official arch repos
+     2020-03-22 ff40ebf actionless refactor(print_dept: pp_repo_name): generate unique color sequence instead of just relying on string length
+     2020-03-22 2558db0 actionless fix(print_dept: pp_upgradeable): format repo name the same as in search cli (fixes #464)
+     2020-03-22 1abee42 actionless fix(core: isolate_root_cmd): find a way to correctly handle SIGINT(Ctrl+C), fixes #463
