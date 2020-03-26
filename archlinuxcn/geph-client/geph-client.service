@@ -6,7 +6,7 @@ Wants=network-online.target
 [Service]
 Type=simple
 User=nobody
-CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_BIND_SERVICE
 ExecStart=/usr/bin/geph-client -config /etc/geph2/geph-client.ini
 
 [Install]
