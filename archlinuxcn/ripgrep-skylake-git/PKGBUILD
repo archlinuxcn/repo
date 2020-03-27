@@ -2,7 +2,7 @@
 # Maintainer: Sven-Hendrik Haase <sh@lutzhaase.com>
 # Contributor: Andrew Gallant <jamslam@gmail.com>
 pkgname=ripgrep-skylake-git
-pkgver=11.0.2.20200221
+pkgver=12.0.0.20200323
 pkgrel=1
 pkgdesc="A search tool that combines the usability of ag with the raw speed of grep. Git version, optimized for skylake CPUs"
 arch=('x86_64')
@@ -21,7 +21,7 @@ provides=(ripgrep=$pkgver ripgrep-git=$pkgver)
 pkgver () {
   cd ripgrep
   # git describe | sed -E 's/([^-]*-g)/r\1/;s/-/./g'
-  echo $(grep -oPm1 '(?<=^version = ")[^"]+' Cargo.toml).$(git log -1 --pretty='%cd' --date=short | tr -d '-')
+  echo $(grep -oPm1 '(?<=^version = ")[^"]+' Cargo.toml).$(TZ=UTC git log -1 --pretty='%cd' --date=short-local | tr -d '-')
 }
 
 build () {
@@ -38,7 +38,6 @@ package () {
 
   install -Dm644 "target/release/build/ripgrep-"*/out/rg.bash "$pkgdir/usr/share/bash-completion/completions/rg"
   install -Dm644 "complete/_rg" "$pkgdir/usr/share/zsh/site-functions/_rg"
-  install -Dm644 "target/release/build/ripgrep-"*/out/rg.fish "$pkgdir/usr/share/fish/completions/rg.fish"
 
   install -Dm644 "target/release/build/ripgrep-"*/out/rg.1 "$pkgdir/usr/share/man/man1/rg.1"
   install -Dm644 "README.md" "$pkgdir/usr/share/doc/${pkgname}/README.md"

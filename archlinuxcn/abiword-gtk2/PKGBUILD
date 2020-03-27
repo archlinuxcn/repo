@@ -3,18 +3,18 @@
 # Contributor: Richard Jackson <rj@iinet.net.au>
 pkgname=abiword-gtk2
 _pkgname=abiword
-pkgver=3.0.2
-pkgrel=3
+pkgver=3.0.4
+pkgrel=1
 pkgdesc='Fully-featured word processor, GTk2, No plugins, Lite version'
 arch=('i686' 'x86_64')
 license=('GPL')
 depends=('fribidi' 'wv' 'librsvg' 'enchant' 'desktop-file-utils' 'gtk2' 'libxslt')
-makedepends=('pkgconfig' 'boost')
+makedepends=('boost')
 conflicts=('abiword' 'abiword-plugins')
 url='http://www.abisource.com'
 source=("$_pkgname-$pkgver.tar.gz::http://abisource.com/downloads/$_pkgname/$pkgver/source/$_pkgname-$pkgver.tar.gz"
         enchant-2.patch)
-sha256sums=('afbfd458fd02989d8b0c6362ba8a4c14686d89666f54cfdb5501bd2090cf3522'
+sha256sums=('e93096cb192e5bc19d62e180fc5eda643206465315a710113ae5036bc2a1a5d7'
             'f510f4df2cf597f5493f52ce855b4209628d7622b03532c2ef221f8b7032a349')
 
 prepare() {

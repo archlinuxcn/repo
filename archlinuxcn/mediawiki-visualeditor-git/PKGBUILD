@@ -17,7 +17,7 @@ sha256sums=('SKIP' 'SKIP')
 
 pkgver() {
   cd "$srcdir/$_gitname"
-  echo $(git log -1 --pretty='%cd' --date=format:%Y%m%d.%H%M%S).REL${_basever/./_}
+  echo $(TZ=UTC git log -1 --pretty='%cd' --date=format-local:%Y%m%d.%H%M%S).REL${_basever/./_}
 }
 
 prepare() {

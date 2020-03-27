@@ -3,8 +3,8 @@
 _pkgbase=iptables
 pkgbase=iptables-fullconenat
 pkgname=(iptables-fullconenat iptables-fullconenat-nft)
-pkgver=1.8.3
-pkgrel=3
+pkgver=1.8.4
+pkgrel=1
 epoch=1
 pkgdesc='Linux kernel packet control tool with FULLCONENAT support.'
 arch=(x86_64)
@@ -20,7 +20,7 @@ source=(https://www.netfilter.org/projects/iptables/files/$_pkgbase-$pkgver.tar.
         empty.rules simple_firewall.rules empty-{filter,mangle,nat,raw,security}.rules
         {arp,eb,ip,ip6}tables.service iptables-{legacy,nft}-flush
         "libipt_FULLCONENAT.c::https://raw.githubusercontent.com/Chion82/netfilter-full-cone-nat/master/libipt_FULLCONENAT.c")
-sha1sums=('6df99e90cb4d59032ab2050ebb426fe065249bd3'
+sha1sums=('cd5fe776fb2b0479b3234758fc333777caa1239b'
           'SKIP'
           '83b3363878e3660ce23b2ad325b53cbd6c796ecf'
           'f085a71f467e4d7cb2cf094d9369b0bcc4bab6ec'

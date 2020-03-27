@@ -1,95 +1,109 @@
-# Maintainer: Peter Cai <peter at typeblog dot net>
-# Contributor:  Christoph Mohr <christoph.mohr@gmail.com>
-# Contributor:  Giovanni 'ItachiSan' Santini <giovannisantini93@yahoo.it>
+# Maintainer: Daniel Peukert <dan.peukert@gmail.com>
+# Contributor: Christoph Mohr <christoph.mohr@gmail.com>
+# Contributor: Giovanni 'ItachiSan' Santini <giovannisantini93@yahoo.it>
 # Contributor: Filipe Laíns (FFY00) <lains@archlinux.org>
 # Contributor: Pieter Goetschalckx <3.14.e.ter <at> gmail <dot> com>
+_pkgname='ferdi'
+pkgname="$_pkgname-git"
+pkgver=5.4.4.beta.3.r0.g0e601dbd
+pkgrel=1
+pkgdesc='A messaging browser that allows you to combine your favorite messaging services into one application - git version'
+arch=('x86_64' 'i686' 'armv7h' 'aarch64')
+url="https://get$_pkgname.com"
+license=('Apache')
+depends=('electron6' 'libxkbfile')
+makedepends=('git' 'npm' 'python')
+provides=("$_pkgname")
+conflicts=("$_pkgname")
+source=(
+	"$pkgname::git+https://github.com/get$_pkgname/$_pkgname"
+	"$pkgname-recipes::git+https://github.com/get$_pkgname/recipes"
+	"$pkgname-internal-server::git+https://github.com/get$_pkgname/internal-server"
+	"$_pkgname.desktop"
+	"$_pkgname.sh"
+	'fix-autostart-path.diff'
+)
+sha256sums=('SKIP'
+            'SKIP'
+            'SKIP'
+            '5013233fc508f16b6782efa72da2ac242996f8555b3135aa0d2d98029c2bbc53'
+            '215f0e3587b6b5dca97bdd2ab238e39b763b57df61a44fd6b1baef6e23745caa'
+            '91cc72f00db20e1bded69d08578e6ae9fdc89a4582ee8f6d29697b0233d7d095')
 
-pkgname=ferdi-git
-pkgver=5.3.4beta.1.r1533.gf07b3f70
-pkgrel=2
-pkgdesc='Ferdi is a messaging browser that allows you to combine your favorite messaging services into one application.'
-arch=(x86_64 i686)
-url='https://getferdi.com/'
-license=(Apache)
-conflicts=('ferdi' 'ferdi-bin')
-depends=(electron libxkbfile)
-makedepends=(expac git npm python2)
-source=('git://github.com/getferdi/ferdi.git#branch=develop'
-        'git://github.com/getferdi/recipes.git'
-        'git://github.com/getferdi/internal-server.git'
-        'ferdi.desktop'
-        'ferdi.sh')
-sha512sums=('SKIP'
-            'SKIP'
-            'SKIP'
-            '501ff4d6c653823bf3321500bf7b1a4e3fa412e30c9884f6860656f816ca90c3f37610435d591c4b9444b491e7f8fe0c0dcad33be97c345ffccf46fd30e1eb65'
-            '6313c50e4226a144303c5a0055f08312009ea14e45de227c163aaeb528a49c796704bbd3b8cfa2cce49840e54dbd5e25cf8a241e619f2bf9b1a4ff79b80b78eb')
+_sourcedirectory="$pkgname"
 
 pkgver() {
-  cd ferdi
-  # cutting off 'v' prefix that presents in the git tag
-  git describe --long | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-beta/beta/g;s/-/./g'
+	cd "$srcdir/$_sourcedirectory/"
+	git describe --long --tags | sed -e 's/^v//' -e 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 prepare() {
-  # Prepare Python 2 for later
-  mkdir python2_path
-  ln -s `which python2` python2_path/python
-  export PATH="$srcdir/ferdi/node_modules/.bin:$srcdir/python2_path:$PATH"
+	cd "$srcdir/$_sourcedirectory/"
 
-  # Small patching
-  cd ferdi
-  git submodule init
-  git config submodule.recipes.url $srcdir/recipes
-  git config submodule.src/internal-server.url $srcdir/internal-server
-  
-  git submodule update --init --recursive
+	# Provide git submodules
+	git submodule init
+	git config submodule.recipes.url "$srcdir/$pkgname-recipes"
+	git config submodule.src/internal-server.url "$srcdir/$pkgname-internal-server"
+	git submodule update --init --recursive
 
-  # Prevent ferdi from being launched in dev mode
-  sed -i "s|export const isDevMode = .*|export const isDevMode = false;|g" \
-    src/environment.js
-  sed -i "s|import isDevMode from 'electron-is-dev'|export const isDevMode = false|g" \
-    src/index.js
+	# Set system Electron version for ABI compatibility
+	sed -E -i 's|("electron": ").*"|\1'"$(cat '/usr/lib/electron6/version')"'"|' 'package.json'
 
-  # Remove `noAsar`
-  sed -i "s|process.noAsar = true|process.noAsar = false|g" \
-    src/internal-server/start.js
+	# Prevent Ferdi from being launched in dev mode
+	sed -i "s|import isDevMode from 'electron-is-dev'|const isDevMode = false|g" 'src/index.js' 'src/config.js'
+	sed -i "s|import isDev from 'electron-is-dev'|const isDev = false|g" 'src/environment.js'
 
-  # Set system Electron version for ABI compatibility
-  sed -r 's#("electron": ").*"#\1'$(cat /usr/lib/electron/version)'"#' -i package.json
+	# Specify path for autostart file
+	patch --forward -p1 < '../fix-autostart-path.diff'
 
-  # Adjust node-sass version to avoid build issues
-  npm install "node-sass@4.13.0"
+	# Prepare dependencies
+	export HOME="$srcdir/$pkgname-home"
+	export XDG_CACHE_HOME="$srcdir/$pkgname-cache"
+	export npm_config_devdir="$srcdir/$pkgname-npm-dev"
+	export npm_config_cache="$srcdir/$pkgname-npm-cache"
+
+	npx lerna bootstrap
 }
 
 build() {
-  cd ferdi
+	cd "$srcdir/$_sourcedirectory/"
 
-  # Better configuration for npm cache and calling installed binaries
-  export npm_config_cache="$srcdir"/npm_cache
-  export PATH="$srcdir/ferdi/node_modules/.bin:$srcdir/python2_path:$PATH"
+	case "$CARCH" in
+		i686)
+			local _electronbuilderarch='ia32'
+		;;
+		armv7h)
+			local _electronbuilderarch='armv7l'
+		;;
+		aarch64)
+			local _electronbuilderarch='arm64'
+		;;
+		*)
+			local _electronbuilderarch='x64'
+		;;
+	esac
 
-  npm install lerna
-  lerna bootstrap
+	export NODE_ENV='production'
+	export HOME="$srcdir/$pkgname-home"
+	export XDG_CACHE_HOME="$srcdir/$pkgname-cache"
+	export npm_config_devdir="$srcdir/$pkgname-npm-dev"
+	export npm_config_cache="$srcdir/$pkgname-npm-cache"
 
-  gulp build
-  electron-builder --linux dir
+	npx gulp build
+	npx electron-builder --linux dir "--$_electronbuilderarch" -c.electronDist='/usr/lib/electron6' -c.electronVersion="$(cat '/usr/lib/electron6/version')"
 }
 
 package() {
-  cd ferdi
-  # Install the .asar files
-  install -Dm 755 out/linux-unpacked/resources/app.asar "$pkgdir"/usr/lib/ferdi/resources/app.asar
-  install -dm755 "$pkgdir"/usr/lib/ferdi/resources/app.asar.unpacked/recipes/
-  cp -dr --no-preserve=ownership "$srcdir"/recipes "$pkgdir"/usr/lib/ferdi/resources/app.asar.unpacked/
-  chmod -R 755 "$pkgdir"/usr/lib/ferdi/resources/app.asar.unpacked/
+	cd "$srcdir/$_sourcedirectory/"
 
-  # Install icon
-  install -Dm 644 "$srcdir"/ferdi.desktop "$pkgdir"/usr/share/applications/ferdi.desktop
-  install -Dm 644 build-helpers/images/icon.png "$pkgdir"/usr/share/icons/ferdi.png
+	install -Dm644 'out/linux-unpacked/resources/app.asar' "$pkgdir/usr/lib/$_pkgname/app.asar"
+	install -dm755 "$pkgdir/usr/lib/$_pkgname/app.asar.unpacked/"
+	cp -r --no-preserve=ownership --preserve=mode 'out/linux-unpacked/resources/app.asar.unpacked/recipes/' "$pkgdir/usr/lib/$_pkgname/app.asar.unpacked/recipes/"
 
-  # Install run script
-  install -Dm 755 "$srcdir"/ferdi.sh "$pkgdir"/usr/bin/ferdi
+	install -Dm755 "../$_pkgname.sh" "$pkgdir/usr/bin/$_pkgname"
+
+	install -Dm644 "../$_pkgname.desktop" "$pkgdir/usr/share/applications/$_pkgname.desktop"
+	for _size in 16 24 32 48 64 96 128 256 512 1024; do
+		install -Dm644 "build-helpers/images/icons/${_size}x${_size}.png" "$pkgdir/usr/share/icons/hicolor/${_size}x${_size}/apps/$_pkgname.png"
+	done
 }
-
-

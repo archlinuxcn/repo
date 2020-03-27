@@ -3,7 +3,7 @@
 _pkgname=gluon-cv
 pkgname=python-gluoncv
 pkgver=0.6.0
-pkgrel=1
+pkgrel=3
 pkgdesc='A Deep Learning Toolkit for Computer Vision'
 arch=('any')
 url='https://gluon-cv.mxnet.io'
@@ -12,7 +12,10 @@ depends=(
   'mxnet'
   'python-matplotlib'
   'python-numpy'
+  'python-portalocker'
+  'python-requests'
   'python-scipy'
+  'python-tqdm'
 )
 makedepends=(python-setuptools)
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/dmlc/gluon-cv/archive/v${pkgver}.tar.gz")

@@ -2,14 +2,14 @@
 # Maintainer: Stefan Husmann <stefan-husmann@t-online.de>
 
 pkgname=next-browser
-pkgver=1.4.0
-pkgrel=3
+pkgver=1.5.0
+pkgrel=2
 pkgdesc="Keyboard-oriented, Common Lisp extensible web-browser"
 arch=('i686' 'x86_64')
 url="https://next.atlas.engineer"
 license=('custom:BSD')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/atlas-engineer/next/archive/$pkgver.tar.gz")
-sha512sums=('a94b81c1b417818a06ddc592aa44620704a91b4ed411c92f19a768c4f7d4f9f74d29b9ad7a320d7a27ebaf880fa356c76626c1e2a9bac2c17bfeb6838cd1f937')
+sha512sums=('743a3ad55b8e30d30e1676a7303a6ecd0df87cf28ca1a10cd5a73ecb04bfd5432aadb9d48029c99c7dde6e0dc2f1b94a9a50dc16e17efce829b9b4d3685846c9')
 # If someday Next works with other Lisps, replace 'sbcl' with 'common-lisp'.
 makedepends=('sbcl' 'cl-asdf')
 depends=('webkit2gtk' 'sqlite' 'glib-networking' 'gsettings-desktop-schemas' 'libfixposix')

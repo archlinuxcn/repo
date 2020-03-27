@@ -12,7 +12,7 @@ pkgname=(
   ppsspp-qt-git
 )
 pkgver=1.9.3.r274.84c1fc86a
-pkgrel=1
+pkgrel=1.1
 pkgdesc='A PSP emulator written in C++'
 arch=(x86_64)
 url=http://www.ppsspp.org/
@@ -24,6 +24,7 @@ depends=(
   libgl
   sdl2
   zlib
+  qt5-multimedia
 )
 makedepends=(
   cmake

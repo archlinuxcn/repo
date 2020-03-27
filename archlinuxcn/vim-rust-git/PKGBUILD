@@ -1,7 +1,7 @@
 # Maintainer: lilydjwg <lilydjwg@gmail.com>
 
 pkgname=vim-rust-git
-pkgver=20200203
+pkgver=20200327
 pkgrel=1
 pkgdesc="Rust language support for Vim"
 arch=('any')
@@ -18,7 +18,7 @@ optdepends=('rust: for RustRun and similar commands'
 
 pkgver() {
   cd ${pkgname%-git}
-  git log -1 --format="%cd" --date=short | sed "s|-||g"
+  TZ=UTC git log -1 --format="%cd" --date=short-local | sed "s|-||g"
 }
 
 package() {

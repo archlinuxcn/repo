@@ -1,7 +1,7 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
 pkgname=python-torchgan-git
-pkgver=0.0.4.r1.g0bd241a
+pkgver=0.0.4.r3.g1e3816e
 pkgrel=1
 pkgdesc="Research Framework for easy and efficient training of GANs based on PyTorch"
 arch=(any)

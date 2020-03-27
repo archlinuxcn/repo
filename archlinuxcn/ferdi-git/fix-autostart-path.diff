@@ -1,0 +1,12 @@
+diff --git a/src/stores/AppStore.js b/src/stores/AppStore.js
+index 36e6efd4..c6e4a32c 100644
+--- a/src/stores/AppStore.js
++++ b/src/stores/AppStore.js
+@@ -35,6 +35,7 @@ const mainWindow = remote.getCurrentWindow();
+ const defaultLocale = DEFAULT_APP_SETTINGS.locale;
+ const autoLauncher = new AutoLaunch({
+   name: 'Ferdi',
++  path: '/usr/bin/ferdi',
+ });
+ 
+ const CATALINA_NOTIFICATION_HACK_KEY = '_temp_askedForCatalinaNotificationPermissions';

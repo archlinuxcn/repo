@@ -1,0 +1,27 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+# Maintainer: Ashley Bone <ashley DOT bone AT pm DOT me>
+
+pkgbase=python-portalocker
+pkgname=python-portalocker
+_pkgname=portalocker
+pkgver=1.6.0
+pkgrel=1
+pkgdesc='An extended version of portalocker to lock files in Python using the with statement'
+arch=('any')
+url='https://github.com/WoLpH/portalocker'
+license=('PSF')
+makedepends=('python-setuptools')
+source=("${_pkgname}-${pkgver}.tar.gz::https://pypi.python.org/packages/source/p/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
+sha256sums=('4013e6d17123560178a5ba28cb6fdf13fd3079dee18571ff824e05b7abc97b94')
+
+build() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  python setup.py build
+}
+
+package() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+# vim:set ts=2 sw=2 et:

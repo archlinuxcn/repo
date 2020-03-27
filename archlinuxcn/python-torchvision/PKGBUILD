@@ -7,7 +7,7 @@
 pkgname=('python-torchvision' 'python-torchvision-cuda')
 _pkgname=vision
 pkgver=0.5.0
-pkgrel=2
+pkgrel=4
 pkgdesc='Datasets, transforms, and models specific to computer vision'
 arch=('x86_64')
 url='https://github.com/pytorch/vision'
@@ -15,7 +15,6 @@ license=('BSD')
 depends=(
   'python-numpy'
   'python-pillow'
-  'python-pytorch-cuda'
   'python-scipy'
   'python-six'
   'python-tqdm'
@@ -28,6 +27,7 @@ makedepends=(
   'cuda'
   'ffmpeg'
   'python-av'
+  'python-pytorch-cuda'
   'python-setuptools'
   'qt5-base'
 )
@@ -66,6 +66,8 @@ check() {
 }
 
 package_python-torchvision() {
+  depends+=(python-pytorch)
+
   cd "${srcdir}/${_pkgname}-${pkgver}"
   python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
@@ -73,7 +75,7 @@ package_python-torchvision() {
 
 package_python-torchvision-cuda() {
   pkgdesc='Datasets, transforms, and models specific to computer vision (with GPU support)'
-  depends+=(cuda)
+  depends+=(python-pytorch-cuda)
   provides+=(python-torchvision=${pkgver})
   conflicts+=(python-torchvision=${pkgver})
   

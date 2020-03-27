@@ -3,18 +3,18 @@
 # Contributor: Ivan Shapovalov <intelfx@intelfx.name>
 
 pkgname=hplip-plugin
-pkgver=3.19.12
-pkgrel=1
+pkgver=3.20.3
+pkgrel=2
 epoch=1
 pkgdesc="Binary plugin for HPs hplip printer driver library"
-arch=('i686' 'x86_64')
+arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://hplipopensource.com/node/309"
 license=('custom:proprietary')
 depends=("hplip>=$pkgver") 
 backup=(var/lib/hp/hplip.state)
 #source=("http://www.openprinting.org/download/printdriver/auxfiles/HP/plugins/hplip-$pkgver-plugin.run")
 source=("https://developers.hp.com/sites/default/files/hplip-$pkgver-plugin.run")
-md5sums=('befc957363b49f6adcef909f89acee70')
+md5sums=('d2c5f59baae256095c572fb7c1c5846b')
 
 prepare() {
     sh "hplip-$pkgver-plugin.run" --target "$srcdir/hplip-$pkgver-plugin" --noexec
@@ -27,6 +27,10 @@ package(){
         _arch='x86_32'
     elif [ $CARCH = "x86_64" ]; then
         _arch='x86_64'
+    elif [ $CARCH = "armv7h" ]; then
+        _arch='arm32'
+    elif [ $CARCH = "aarch64" ]; then
+        _arch='arm64'
     fi
 
     # Create folders

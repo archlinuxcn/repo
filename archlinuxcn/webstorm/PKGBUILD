@@ -1,10 +1,10 @@
-# Maintainer: Frederik Schwan <frederik dot schwan at linux dot com>
+# Maintainer: Frederik Schwan <freswa at archlinux dot org>
 # Contributor: Pablo Vilas <pablovilas89 at gmail dot com>
 # Contributor: Testuser_01 <arch@nico-siebler.de>
 
 pkgbase=webstorm
 pkgname=(webstorm webstorm-jre)
-pkgver=2019.3.3b193.6494.34
+pkgver=2019.3.4b193.6911.28
 pkgrel=1
 pkgdesc='JavaScript IDE and HTML editor.'
 arch=('x86_64' 'i686')
@@ -15,8 +15,8 @@ options=('!strip')
 source=("https://download.jetbrains.com/webstorm/WebStorm-${pkgver%b*}.tar.gz"
         jetbrains-webstorm.desktop
         LICENSE)
-sha512sums=('6260412e506564cf0544e4a70d45680925c2391c16b2f737d971ee31023ad1d1ee1dbdc8556306fa703772cd2af1e2e422a750eee44f6a690f0d34d6f301e071'
-            '3635b8b6787aae583742e95de7d26d0f80b857f48143898e5963f219d1d4ec8b4cb8e37ce3f058324bb5a253b883c2610be848e883576896c67030e9a36be7e6'
+sha512sums=('e647e91f29ddbc4fb3c9bbe95bc8dfd6bb57e8a1a7bf49180bce4ea132a69ae9b5126b6b35dff63ab40729cca33bc1094931a399190e1ece1e307b6fdf971c17'
+            'ad9d89808cf721259edda77e849ac3d03359b748e97f86ebc1b227c59e2c1d623455f611fb0322ebc16d1860e9573a143328302caaa02950eefe6fefd34db7c7'
             'e2aaaa75571f368f85bcc4baef27cc502781ce382bf04737763b07244716918fc2f0eb0b78b02631e242c9a5c246b27d720bb28556fc64bbde213403b7bf57f6')
 
 pkgver() {

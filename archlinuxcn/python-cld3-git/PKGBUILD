@@ -16,7 +16,7 @@ md5sums=('SKIP')
 
 pkgver() {
   cd "$srcdir/$_reponame"
-  echo $(awk -F'"' '/version=/ { print $2 }' setup.py).$(git log -1 --pretty='%cd' --date=short | tr -d '-')
+  echo $(awk -F'"' '/version=/ { print $2 }' setup.py).$(TZ=UTC git log -1 --pretty='%cd' --date=short-local | tr -d '-')
 }
 
 build() {

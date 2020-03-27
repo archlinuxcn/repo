@@ -3,7 +3,7 @@
 pkgname=python-pydicom
 _pkgname=pydicom
 pkgver=1.4.2
-pkgrel=1
+pkgrel=3
 pkgdesc='Read, modify and write DICOM files with python code'
 arch=(any)
 url='https://github.com/pydicom/pydicom'
@@ -20,9 +20,8 @@ checkdepends=(
   'python-pytest'
   'python-pytest-cov'
 )
-#source=("${pkgname}-${pkgver}.tar.gz::https://github.com/pydicom/pydicom/archive/v${pkgver}.tar.gz")
-source=("${_pkgname}-${pkgver}::git+https://github.com/pydicom/pydicom.git#commit=e6419c1")
-sha512sums=('SKIP')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/pydicom/pydicom/archive/v${pkgver}.tar.gz")
+md5sums=('dc5c3e61f6dd6db4b92f34c8026b6e8a')
 
 build() {
   cd "${_pkgname}-${pkgver}"

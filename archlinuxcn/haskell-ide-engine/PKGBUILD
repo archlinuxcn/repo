@@ -1,14 +1,14 @@
 # Maintainer: Philippe Hürlimann <p@hurlimann.org>
 pkgname=haskell-ide-engine
-pkgver=1.1
-pkgrel=4
+pkgver=1.2
+pkgrel=1
 pkgdesc="The engine for haskell ide-integration. Not an IDE"
 arch=('x86_64')
 url="https://github.com/haskell/haskell-ide-engine"
 license=('custom:BSD3')
 makedepends=('stack')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/haskell/${pkgname}/archive/${pkgver}.tar.gz")
-sha384sums=('066cbac86f8a2bdcb68463188effa1a5f1d6804afa251caa351673a541eced306ed028fe8a5ba8c30e953a6fbb02fa4e')
+sha384sums=('6c4a117f79c010747e622f1da8f70c7dd535fe4499c9eba718c2d299c9be035026bad824471a5a45a53a190d26fa67a3')
 
 # Supported are '8.4.2' '8.4.3' '8.4.4' '8.6.4' '8.6.5' '8.8.1' '8.8.2'
 # activated by default are the ones also used in a stackage snapshot. Removing
