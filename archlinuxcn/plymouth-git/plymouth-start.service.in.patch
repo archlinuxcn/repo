@@ -1,0 +1,9 @@
+--- plymouth.src/systemd-units/Downloads/plymouth-start.service.in
++++ plymouth.patch/systemd-units/plymouth-start.service.in
+@@ -12,3 +12,6 @@
+ RemainAfterExit=yes 
+ KillMode=none 
+ SendSIGKILL=no
++
++[Install]
++WantedBy=sysinit.target
