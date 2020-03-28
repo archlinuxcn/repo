@@ -7,10 +7,10 @@
 
 pkgname=stockfish
 pkgver=11
-pkgrel=2
+pkgrel=3
 epoch=1
 pkgdesc="A strong chess engine written by Tord Romstad, Marco Costalba, Joona Kiiski"
-arch=('i686' 'x86_64' 'armv7')
+arch=('i686' 'x86_64' 'armv7' 'armv7h')
 url="https://stockfishchess.org/"
 license=('GPL3')
 depends=('glibc')
