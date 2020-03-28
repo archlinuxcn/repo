@@ -3,9 +3,10 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-pre_build: aur_pre_build
+pre_build: pypi_pre_build
 
-post_build: aur_post_build
+post_build: pypi_post_build
 
 update_on:
-  - aur: python-jsmin
+  - pypi: jsmin
+  - alias: python
