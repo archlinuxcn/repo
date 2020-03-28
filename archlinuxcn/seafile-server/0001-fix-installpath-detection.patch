@@ -1,16 +1,25 @@
-From de6d110d9cd67222c2d3fecc0b1d16a4554d3de9 Mon Sep 17 00:00:00 2001
+From 2686beb018be1564416edbb7629263bcd2391d69 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sat, 28 Mar 2020 13:03:59 -0400
 Subject: [PATCH] fix installpath detection
 
 ---
- controller/seafile-controller.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ controller/seafile-controller.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
 diff --git a/controller/seafile-controller.c b/controller/seafile-controller.c
-index 3dde027..bdebb1b 100644
+index 3dde027..a006ce2 100644
 --- a/controller/seafile-controller.c
 +++ b/controller/seafile-controller.c
+@@ -244,7 +244,7 @@ get_python_executable() {
+ }
+ 
+ static void
+-init_seafile_path ()
++init_seafile_path (char *central_config_dir)
+ {
+     GError *error = NULL;
+     char *binary = g_file_read_link (PROC_SELF_PATH, &error);
 @@ -256,10 +256,8 @@ init_seafile_path ()
  
      bin_dir = g_path_get_dirname (binary);
@@ -19,11 +28,20 @@ index 3dde027..bdebb1b 100644
 -    installpath = g_path_get_dirname (tmp);
 -
 -    topdir = g_path_get_dirname (installpath);
-+    topdir = g_path_get_dirname (ctl->central_config_dir);
++    topdir = g_path_get_dirname (central_config_dir);
 +    installpath = g_build_filename (topdir, "seafile-server", NULL);
  
      g_free (binary);
      g_free (tmp);
+@@ -501,7 +499,7 @@ seaf_controller_init (SeafileController *ctl,
+                       char *seafile_dir,
+                       char *logdir)
+ {
+-    init_seafile_path ();
++    init_seafile_path (central_config_dir);
+     if (!g_file_test (config_dir, G_FILE_TEST_IS_DIR)) {
+         seaf_warning ("invalid config_dir: %s\n", config_dir);
+         return -1;
 -- 
 2.25.1
 
