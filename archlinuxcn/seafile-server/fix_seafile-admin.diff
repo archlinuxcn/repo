@@ -1,8 +1,18 @@
+From 8074229935fa8421de39c0899848d398d6b5f092 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sat, 28 Mar 2020 13:37:46 -0400
+Subject: [PATCH] Fix seafile-admin
+
+---
+ scripts/seahub.sh   |   2 +-
+ tools/seafile-admin | 155 ++++++++++++++++++++++++++++++++------------
+ 2 files changed, 114 insertions(+), 43 deletions(-)
+
 diff --git a/scripts/seahub.sh b/scripts/seahub.sh
-index a18d957..66077b3 100755
+index 1dafd85..e0cad03 100755
 --- a/scripts/seahub.sh
 +++ b/scripts/seahub.sh
-@@ -24,7 +24,7 @@ gunicorn_conf=${TOPDIR}/conf/gunicorn.conf.py
+@@ -25,7 +25,7 @@ gunicorn_conf=${TOPDIR}/conf/gunicorn.conf.py
  pidfile=${TOPDIR}/pids/seahub.pid
  errorlog=${TOPDIR}/logs/gunicorn_error.log
  accesslog=${TOPDIR}/logs/gunicorn_access.log
@@ -12,7 +22,7 @@ index a18d957..66077b3 100755
  script_name=$0
  function usage () {
 diff --git a/tools/seafile-admin b/tools/seafile-admin
-index b5e199e..35c2b5f 100755
+index b5e199e..50b4ba4 100755
 --- a/tools/seafile-admin
 +++ b/tools/seafile-admin
 @@ -5,16 +5,6 @@
@@ -41,7 +51,23 @@ index b5e199e..35c2b5f 100755
  
  PYTHON = sys.executable
  
-@@ -398,25 +390,38 @@ def get_seafile_data_dir():
+@@ -68,6 +60,7 @@ CONF_SEAFILE_CONF_EXISTS = 'seafile_conf_exists'
+ CONF_ADMIN_EMAIL = 'admin_email'
+ CONF_ADMIN_PASSWORD = 'admin_password'
+ CONF_SEAFILE_CENTRAL_CONF_DIR = 'central_config_dir'
++CONF_SEAFILE_RPC_PIPE_PATH = 'rpc_pipe_path'
+ 
+ ####################
+ ### Common helper functions
+@@ -281,6 +274,7 @@ def get_seahub_env():
+     env['CCNET_CONF_DIR'] = conf[CONF_CCNET_DIR]
+     env['SEAFILE_CONF_DIR'] = conf[CONF_SEAFILE_DIR]
+     env['SEAFILE_CENTRAL_CONF_DIR'] = conf[CONF_SEAFILE_CENTRAL_CONF_DIR]
++    env['SEAFILE_RPC_PIPE_PATH'] = conf[CONF_SEAFILE_RPC_PIPE_PATH]
+     return env
+ 
+ 
+@@ -398,25 +392,38 @@ def get_seafile_data_dir():
  
  
  def create_gunicorn_conf():
@@ -89,7 +115,7 @@ index b5e199e..35c2b5f 100755
  '''
  
      try:
-@@ -426,6 +431,32 @@ accesslog = os.path.join(runtime_dir, 'access.log')
+@@ -426,6 +433,32 @@ accesslog = os.path.join(runtime_dir, 'access.log')
          error('Failed to write seahub config')
  
  
@@ -122,7 +148,7 @@ index b5e199e..35c2b5f 100755
  def gen_seahub_secret_key():
      data = str(uuid.uuid4()) + str(uuid.uuid4())
      return data[:40]
-@@ -457,6 +488,36 @@ def move_avatar():
+@@ -457,6 +490,36 @@ def move_avatar():
      # make the the original avatars dir a symlink pointing to the outside dir
      os.symlink(outside_avatar_dir, seahub_avatar_dir)
  
@@ -159,7 +185,7 @@ index b5e199e..35c2b5f 100755
  
  def init_seahub():
      seahub_dir = conf[CONF_SEAHUB_DIR]
-@@ -464,29 +525,26 @@ def init_seahub():
+@@ -464,29 +527,26 @@ def init_seahub():
      # create seahub_settings.py
      create_seahub_settings_py()
  
@@ -195,7 +221,7 @@ index b5e199e..35c2b5f 100755
      del django
  
  
-@@ -516,11 +574,11 @@ def check_python_dependencies(silent=False):
+@@ -516,11 +576,11 @@ def check_python_dependencies(silent=False):
          'six',
          'pytz',
          'rest_framework',
@@ -209,7 +235,7 @@ index b5e199e..35c2b5f 100755
          'openpyxl',
      ] # yapf: disable
      for pkg in pkgs:
-@@ -625,9 +683,10 @@ def start_controller():
+@@ -625,9 +685,10 @@ def start_controller():
          '-F',
          conf[CONF_SEAFILE_CENTRAL_CONF_DIR],
      ]
@@ -221,7 +247,7 @@ index b5e199e..35c2b5f 100755
          error('Failed to start seafile')
  
      # check again after several seconds
-@@ -643,8 +702,7 @@ def start_seahub_gunicorn():
+@@ -643,8 +704,7 @@ def start_seahub_gunicorn():
          'seahub.wsgi:application',
          '-c',
          conf[CONF_SEAHUB_CONF],
@@ -231,7 +257,7 @@ index b5e199e..35c2b5f 100755
      ]
  
      info('Starting seahub...')
-@@ -652,7 +710,7 @@ def start_seahub_gunicorn():
+@@ -652,7 +712,7 @@ def start_seahub_gunicorn():
      if run_argv(argv, cwd=conf[CONF_SEAHUB_DIR], env=env) != 0:
          error('Failed to start seahub')
  
@@ -240,7 +266,7 @@ index b5e199e..35c2b5f 100755
  
  
  def start_seahub_fastcgi():
-@@ -727,8 +785,7 @@ def check_layout(args):
+@@ -727,8 +787,7 @@ def check_layout(args):
      if not os.path.exists(seafile_conf):
          error_not_found(seafile_conf)
  
@@ -250,7 +276,17 @@ index b5e199e..35c2b5f 100755
      if not os.path.exists(seahub_conf):
          error_not_found(seahub_conf)
  
-@@ -741,9 +798,9 @@ def check_layout(args):
+@@ -736,14 +795,19 @@ def check_layout(args):
+     if not os.path.exists(seahub_conf):
+         error_not_found(seahub_dir)
+ 
++    rpc_pipe_path = os.path.join(cwd, 'seafile-server', 'runtime')
++    if not os.path.exists(rpc_pipe_path):
++        error_not_found(rpc_pipe_path)
++
+     conf[CONF_SEAFILE_CENTRAL_CONF_DIR] = central_config_dir
++    conf[CONF_SEAFILE_RPC_PIPE_PATH] = rpc_pipe_path
+     conf[CONF_CCNET_DIR] = ccnet_conf_dir
      conf[CONF_SEAFILE_DIR] = seafile_data_dir
      conf[CONF_SEAHUB_DIR] = seahub_dir
      conf[CONF_SEAHUB_CONF] = seahub_conf
@@ -263,7 +299,15 @@ index b5e199e..35c2b5f 100755
  
  
  def check_config(args):
-@@ -812,11 +869,18 @@ def setup_seafile(args):
+@@ -781,6 +845,7 @@ def setup_seafile(args):
+     welcome()
+     check_python_dependencies()
+     conf[CONF_SEAFILE_CENTRAL_CONF_DIR] = os.path.join(cwd, 'conf')
++    conf[CONF_SEAFILE_RPC_PIPE_PATH] = os.path.join(cwd, 'seafile-server', 'runtime')
+     config_ccnet_seafile()
+     init_ccnet_seafile()
+     init_seahub()
+@@ -812,11 +877,18 @@ def setup_seafile(args):
  def check_necessary_files():
      files = [
          os.path.join(cwd, 'conf', 'ccnet.conf'),
@@ -283,7 +327,7 @@ index b5e199e..35c2b5f 100755
      for fpath in files:
          if not os.path.exists(fpath):
              error('%s not found' % fpath)
-@@ -859,8 +923,7 @@ def start_seafile(args):
+@@ -859,8 +931,7 @@ def start_seafile(args):
  def stop_seafile(dummy):
      info('Stopping seafile server')
      pkill('seafile-controller')
@@ -293,3 +337,6 @@ index b5e199e..35c2b5f 100755
      try:
          with open(pidfile, 'r') as fp:
              pid = fp.read().strip('\n ')
+-- 
+2.25.1
+
