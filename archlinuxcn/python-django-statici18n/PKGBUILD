@@ -1,31 +1,26 @@
-# Maintainer: Joffrey <j-off@live.fr>
-
-pkgbase='python-django-statici18n'
-pkgname=('python-django-statici18n' 'python2-django-statici18n')
-pkgver='1.9.0'
+_name=django-statici18n
+pkgname=python-django-statici18n
+pkgver=1.9.0
 pkgrel=1
-pkgdesc='A Django app that provides helper for generating JavaScript catalog to static files'
-arch=('any')
-url='https://github.com/zyegfryed/django-statici18n'
+pkgdesc="A Django app that provides helper for generating Javascript catalog to static files."
+arch=(any)
+url="http://django-statici18n.readthedocs.org/"
 license=('BSD')
-makedepends=('python-setuptools' 'python2-setuptools')
-source=("https://github.com/zyegfryed/django-statici18n/archive/v$pkgver.tar.gz")
-sha256sums=('5dfad9c3c6c75fcf4f90941aeb4745517da8ec16e8da7eeecb42d05dbe26155c')
+depends=('python' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
+sha256sums=('913dd056c1abcbe129b1db806cb4cfb821c4077d7e857d6eb29043ea64f4d1d0')
 
-package_python-django-statici18n() {
-    depends=(
-        'python-django-appconf'
-    )
-    cd "$srcdir/django-statici18n-$pkgver"
-    install -Dm644 './LICENSE' "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-    python './setup.py' install --root="$pkgdir" --optimize=1
+build() {
+  cd "$srcdir/$_name-$pkgver"
+  python3 setup.py build
 }
 
-package_python2-django-statici18n() {
-    depends=(
-        'python2-django-appconf'
-    )
-    cd "$srcdir/django-statici18n-$pkgver"
-    install -Dm644 './LICENSE' "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-    python2 './setup.py' install --root="$pkgdir" --optimize=1
+package() {
+  cd "$srcdir/$_name-$pkgver"
+  python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+
+  # make sure we don't install annoying files
+  local _site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
+  rm -rf "$pkgdir/$_site_packages/tests/"
 }
+
