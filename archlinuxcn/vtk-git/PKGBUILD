@@ -2,7 +2,7 @@
 
 pkgname=vtk-git
 _pkgver=9.0.0rc1
-pkgver=9.0.0rc1.r73670.118d20aaca
+pkgver=9.0.0rc1.r73717.820646fd12
 pkgrel=1
 pkgdesc='A software system for 3D computer graphics, image processing, and visualization'
 arch=('x86_64')
@@ -33,6 +33,7 @@ makedepends=(
   'boost'
   'cmake'
   'eigen'
+  'gcc-fortran'
   'git'
   'hdf5'
   'libogg'
@@ -42,10 +43,12 @@ makedepends=(
   'openmpi'
   'pugixml'
   'python'
+  'python-mpi4py'
   'qt5-webkit'
   'qt5-x11extras'
   'utf8cpp'
   'wget'
+  'adios2'
 )
 optdepends=(
   'hdf5'
@@ -78,15 +81,14 @@ build() {
   cmake .. \
     -DBUILD_SHARED_LIBS=ON \
     -DBUILD_TESTING=OFF \
+    -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_LIBDIR=lib \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_SHARED_LINKER_FLAGS="$(pkg-config --libs netcdf)" \
     -DCMAKE_SKIP_INSTALL_RPATH=ON \
     -DVTK_BUILD_ALL_MODULES=ON \
     -DVTK_BUILD_TESTING=OFF \
     -DVTK_LEGACY_REMOVE=ON \
     -DVTK_MODULE_ENABLE_VTK_FiltersOpenTURNS=NO \
-    -DVTK_MODULE_ENABLE_VTK_IOADIOS2=NO \
     -DVTK_MODULE_ENABLE_VTK_IOLAS=NO \
     -DVTK_MODULE_ENABLE_VTK_RenderingOpenVR=NO \
     -DVTK_MODULE_USE_EXTERNAL_VTK_gl2ps=OFF \
@@ -95,6 +97,7 @@ build() {
     -DVTK_USE_EXTERNAL=ON \
     -DVTK_USE_FFMPEG_ENCODER=ON \
     -DVTK_USE_LARGE_DATA=ON \
+    -DVTK_USE_MPI=ON \
     -DVTK_WRAP_PYTHON=ON
   make
 }

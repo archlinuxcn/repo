@@ -4,7 +4,11 @@ maintainers:
 build_prefix: extra-x86_64
 
 repo_depends:
+  - adios2
+  - libfabric
   - openslide
+  - sz
+  - zfp
 
 update_on:
   - cmd: python -c "import time; print(int(time.time()) // (5 * 24 * 60 * 60))"
