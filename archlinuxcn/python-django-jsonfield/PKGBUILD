@@ -14,14 +14,14 @@ sha256sums=('028256a8dfeda3ddd41fb47303fb998fa11a2ae758df9a2ef677b662298e6cfa')
 
 package_python-django-jsonfield() {
     depends=('python')
-    cd "$srcdir/django-jsonfield-$pkgver"
+    cd "$srcdir/jsonfield-$pkgver"
     install -Dm644 './LICENSE' "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
     python './setup.py' install --root="$pkgdir" --optimize=1
 }
 
 package_python2-django-jsonfield() {
     depends=('python2')
-    cd "$srcdir/django-jsonfield-$pkgver"
+    cd "$srcdir/jsonfield-$pkgver"
     install -Dm644 './LICENSE' "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
     python2 './setup.py' install --root="$pkgdir" --optimize=1
 }
