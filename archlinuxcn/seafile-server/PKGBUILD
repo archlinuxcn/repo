@@ -5,7 +5,7 @@
 
 pkgname=seafile-server
 pkgver=7.1.3
-pkgrel=1
+pkgrel=2
 pkgdesc='Seafile server core'
 arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
 url='https://github.com/haiwen/seafile-server'
@@ -23,12 +23,14 @@ source=(
     'fix_seafile-controller_paths.diff'
     'fix_seafile-admin.diff'
     'fix_mysql_support.diff'
+    '0001-fix-installpath-detection.patch'
     'seafile-server@.service'
 )
 sha256sums=('79f7722a34c304adb78462194e64d6a610bd5ee40def37f4e4cdf5befed44fcd'
             '8069df2e84e5142a030c4598e410eeece1aaed2fdce3b8abe82b4752d257ffb9'
             '3881efb2faabf59a11caf5f8b58e5ef85c75b9710353a9c913013bbf476d2de2'
             '4596350a73025b63ad8189488bff896c09a4b1e2855e25ee5bbc111d25b7cfe7'
+            'bd0e164f25d5784af1f385d7722e1cc36a13c4360d6b6023c8aab8de99c350ad'
             'da31d1b61031cbacc42e1ab708c67c83dba933ff391b07677dabab7ab79729f4')
 
 prepare() {
@@ -41,6 +43,7 @@ prepare() {
     patch -Np1 --no-backup-if-mismatch < ../fix_seafile-controller_paths.diff
     patch -Np1 --no-backup-if-mismatch < ../fix_seafile-admin.diff
     patch -Np1 --no-backup-if-mismatch < ../fix_mysql_support.diff
+    patch -Np1 --no-backup-if-mismatch < ../0001-fix-installpath-detection.patch
     2to3 -nw --no-diffs tools/seafile-admin
 }
 
