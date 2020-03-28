@@ -22,7 +22,6 @@ options=('!strip')
 prepare() {
     cd "$srcdir/$pkgname-$pkgver-server"
     patch -Np1 --no-backup-if-mismatch < ../fix_shared_link.patch
-    patch -Np1 --no-backup-if-mismatch < ../fix_toolbar.patch
 
     # Remove useless files and directories
     rm -rf \
