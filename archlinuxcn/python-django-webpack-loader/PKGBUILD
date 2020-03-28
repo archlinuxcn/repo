@@ -1,35 +1,26 @@
-# Maintainer: Joffrey <j-off@live.fr>
-
-pkgbase='python-django-webpack-loader'
-pkgname=('python-django-webpack-loader' 'python2-django-webpack-loader')
-pkgver='0.7.0'
+_name=django-webpack-loader
+pkgname=python-django-webpack-loader
+pkgver=0.7.0
 pkgrel=1
-pkgdesc='Transparently use webpack with django'
-arch=('any')
-url='https://github.com/owais/django-webpack-loader'
-license=('MIT')
-makedepends=('python-setuptools' 'python2-setuptools')
-source=("https://github.com/owais/django-webpack-loader/archive/$pkgver.tar.gz")
-sha256sums=('fef6b13bbd61d682e12f3bd73bb7ac1c398dd0dea22ef2cf34309c6d1078b0d1')
+pkgdesc="Transparently use webpack with django"
+arch=(any)
+url="https://github.com/owais/django-webpack-loader"
+license=('')
+depends=('python' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
+sha256sums=('7a3c88201aa54481f9399465615cbe7b9aece8081496a6d0287b7cb8e232f447')
 
-package_python-django-webpack-loader() {
-    depends=(
-        'python-lxml'
-        'python-six'
-        'python-requests'
-    )
-    cd "$srcdir/django-webpack-loader-$pkgver"
-    install -Dm644 './LICENSE' "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-    python './setup.py' install --root="$pkgdir" --optimize=1
+build() {
+  cd "$srcdir/$_name-$pkgver"
+  python3 setup.py build
 }
 
-package_python2-django-webpack-loader() {
-    depends=(
-        'python2-lxml'
-        'python2-six'
-        'python2-requests'
-    )
-    cd "$srcdir/django-webpack-loader-$pkgver"
-    install -Dm644 './LICENSE' "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-    python2 './setup.py' install --root="$pkgdir" --optimize=1
+package() {
+  cd "$srcdir/$_name-$pkgver"
+  python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+
+  # make sure we don't install annoying files
+  local _site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
+  rm -rf "$pkgdir/$_site_packages/tests/"
 }
+
