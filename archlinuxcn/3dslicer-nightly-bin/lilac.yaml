@@ -6,6 +6,6 @@ build_prefix: extra-x86_64
 update_on:
   - url: https://download.slicer.org/
     regex: version (\d+.\d+.\d+)
-  - url: https://download.slicer.org/
-    regex: revision (\d+.\d+.\d+)
+  - cmd: python -c "import time; print(int(time.time()) // (5 * 24 * 60 * 60))"
+# vim:set ts=2 sw=2 et:
 

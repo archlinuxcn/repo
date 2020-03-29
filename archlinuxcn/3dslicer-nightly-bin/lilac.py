@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 from lilaclib import *
+import datetime
 
 
 def pre_build():
-    version, revision = _G.newvers
-    newver = version + '.r' + revision
+    newver = _G.newvers[0] + '.r' + datetime.datetime.today().strftime('%Y%m%d')
     update_pkgver_and_pkgrel(newver)
 
 
