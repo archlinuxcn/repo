@@ -7,7 +7,7 @@ Type=forking
 WorkingDirectory=/srv/seafile/%i
 ExecStart=/usr/bin/seafile-admin start
 ExecStop=/usr/bin/seafile-admin stop
-PIDFile=/srv/seafile/%i/seafile-data/pids/seaf-server.pid
+PIDFile=/srv/seafile/%i/pids/seaf-server.pid
 User=seafile
 
 [Install]

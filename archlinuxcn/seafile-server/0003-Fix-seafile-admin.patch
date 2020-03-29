@@ -1,28 +1,14 @@
-From 8074229935fa8421de39c0899848d398d6b5f092 Mon Sep 17 00:00:00 2001
+From 6e68276c5c1299539da765af3d26a29a8d7e8f42 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
-Date: Sat, 28 Mar 2020 13:37:46 -0400
-Subject: [PATCH] Fix seafile-admin
+Date: Sun, 29 Mar 2020 18:28:35 -0400
+Subject: [PATCH 3/3] Fix seafile-admin
 
 ---
- scripts/seahub.sh   |   2 +-
  tools/seafile-admin | 155 ++++++++++++++++++++++++++++++++------------
- 2 files changed, 114 insertions(+), 43 deletions(-)
+ 1 file changed, 113 insertions(+), 42 deletions(-)
 
-diff --git a/scripts/seahub.sh b/scripts/seahub.sh
-index 1dafd85..e0cad03 100755
---- a/scripts/seahub.sh
-+++ b/scripts/seahub.sh
-@@ -25,7 +25,7 @@ gunicorn_conf=${TOPDIR}/conf/gunicorn.conf.py
- pidfile=${TOPDIR}/pids/seahub.pid
- errorlog=${TOPDIR}/logs/gunicorn_error.log
- accesslog=${TOPDIR}/logs/gunicorn_access.log
--gunicorn_exe=${INSTALLPATH}/seahub/thirdpart/bin/gunicorn
-+gunicorn_exe=/usr/bin/gunicorn
- 
- script_name=$0
- function usage () {
 diff --git a/tools/seafile-admin b/tools/seafile-admin
-index b5e199e..50b4ba4 100755
+index b5e199e..164e98f 100755
 --- a/tools/seafile-admin
 +++ b/tools/seafile-admin
 @@ -5,16 +5,6 @@
@@ -74,7 +60,7 @@ index b5e199e..50b4ba4 100755
 -    runtime_dir = os.path.join(cwd, 'seafile-server', 'runtime')
 -    confpath = os.path.join(runtime_dir, 'seahub.conf')
 +    conf_dir = os.path.join(cwd, 'conf')
-+    pids_dir = os.path.join(cwd, 'seafile-data', 'pids')
++    pids_dir = os.path.join(cwd, 'pids')
 +    confpath = os.path.join(conf_dir, 'gunicorn.conf.py')
 +
 +    if not os.path.exists(pids_dir):
@@ -104,7 +90,7 @@ index b5e199e..50b4ba4 100755
 -errorlog = os.path.join(runtime_dir, 'error.log')
 -accesslog = os.path.join(runtime_dir, 'access.log')
 +server_dir = os.path.join(os.path.dirname(__file__), '..')
-+pidfile = os.path.join(server_dir, 'seafile-data', 'pids', 'seahub.pid')
++pidfile = os.path.join(server_dir, 'pids', 'seahub.pid')
 +errorlog = os.path.join(server_dir, 'logs', 'error.log')
 +accesslog = os.path.join(server_dir, 'logs', 'access.log')
 +
@@ -293,7 +279,7 @@ index b5e199e..50b4ba4 100755
 -    conf[CONF_SEAHUB_PIDFILE] = os.path.join(runtime_dir, 'seahub.pid')
 -    conf[CONF_SEAHUB_OUTLOG] = os.path.join(runtime_dir, 'access.log')
 -    conf[CONF_SEAHUB_ERRLOG] = os.path.join(runtime_dir, 'error.log')
-+    conf[CONF_SEAHUB_PIDFILE] = os.path.join(cwd, 'seafile-data', 'pids', 'seahub.pid')
++    conf[CONF_SEAHUB_PIDFILE] = os.path.join(cwd, 'pids', 'seahub.pid')
 +    conf[CONF_SEAHUB_OUTLOG] = os.path.join(cwd, 'logs', 'access.log')
 +    conf[CONF_SEAHUB_ERRLOG] = os.path.join(cwd, 'logs', 'error.log')
  
@@ -333,7 +319,7 @@ index b5e199e..50b4ba4 100755
      pkill('seafile-controller')
 -    runtime_dir = os.path.join(cwd, 'seafile-server', 'runtime')
 -    pidfile = os.path.join(runtime_dir, 'seahub.pid')
-+    pidfile = os.path.join(cwd, 'seafile-data', 'pids', 'seahub.pid')
++    pidfile = os.path.join(cwd, 'pids', 'seahub.pid')
      try:
          with open(pidfile, 'r') as fp:
              pid = fp.read().strip('\n ')
