@@ -1,12 +1,13 @@
 _name=jsmin
 pkgname=python-jsmin
 pkgver=2.2.2
-pkgrel=5
+pkgrel=6
 pkgdesc="JavaScript minifier."
 arch=(any)
 url="https://github.com/tikitu/jsmin/"
 license=('MIT License')
-depends=('python' 'python-setuptools')
+depends=('python')
+makedepends=('python-setuptools')
 source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
 sha256sums=('b6df99b2cd1c75d9d342e4335b535789b8da9107ec748212706ef7bbe5c2553b')
 
