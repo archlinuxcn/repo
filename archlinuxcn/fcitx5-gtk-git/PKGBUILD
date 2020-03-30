@@ -4,7 +4,7 @@
 
 _pkgname=fcitx5-gtk
 pkgname=${_pkgname}-git
-pkgver=r38.22d30ef
+pkgver=r39.bfb242b
 pkgrel=1
 pkgdesc="Gtk im module for fcitx5 and glib based dbus client library"
 arch=('i686' 'x86_64')
