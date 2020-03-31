@@ -3,12 +3,12 @@
 # https://gitlab.manjaro.org/packages/extra/pamac
 pkgname=pamac-aur
 pkgver=9.4.0
-pkgrel=1
+pkgrel=4
 _pkgfixver=$pkgver
 
 _pkgvercommit=v$pkgver
-#_pkgvercommit='1686977cd939dcdf8f0c707a2edc0c6a012a99d7'
-sha256sums=('903e549a425146723fd2ee2813fc960e08100fcfd0a2291cfde4b5c1d8449196')
+_pkgvercommit='712e0e22958f41c311afe1fc21ef478729fcbe59'
+sha256sums=('cca8e5665256870b122ae1398d92b0278d72eb9f4ac31a014cd8176035e0c733')
 
 pkgdesc="A Gtk3 frontend for libalpm"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
@@ -16,7 +16,7 @@ url="https://gitlab.manjaro.org/applications/pamac"
 license=('GPL3')
 depends=('glib2>=2.42' 'json-glib' 'libsoup' 'dbus-glib' 'polkit' 'vte3>=0.38' 'gtk3>=3.22'
          'libnotify' 'desktop-file-utils' 'pacman>=5.2' 'gnutls>=3.4' 'git'
-         'appstream-glib' 'archlinux-appstream-data')
+         'appstream-glib' 'archlinux-appstream-data' 'flatpak')
 
   optdepends=('polkit-gnome: needed for authentification in Cinnamon, Gnome'
               'lxsession: needed for authentification in Xfce, LXDE etc.'
@@ -41,7 +41,11 @@ build() {
   cd "$srcdir/pamac-$_pkgvercommit"
   mkdir -p builddir
   cd builddir
-  meson --buildtype=release --prefix=/usr --sysconfdir=/etc
+  meson --buildtype=release \
+        --prefix=/usr \
+        --sysconfdir=/etc \
+        -Denable-flatpak=true
+#        -Denable-snap=true
 
   # build
   ninja
@@ -49,7 +53,7 @@ build() {
 
 package() {
   cd "$srcdir/pamac-$_pkgvercommit/builddir"
-  
+
   DESTDIR="$pkgdir" ninja install
 }
 # vim:set ts=2 sw=2 et:

@@ -1,4 +1,6 @@
 post_install() {
+   # enable flatpak repo
+  flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
   # enable systemd timers
   ln -sf /usr/lib/systemd/system/pamac-cleancache.timer /etc/systemd/system/multi-user.target.wants
   #ln -sf /usr/lib/systemd/system/pamac-mirrorlist.timer /etc/systemd/system/multi-user.target.wants
@@ -8,6 +10,11 @@ post_install() {
   printf '    have an authentication agent already.\n'
   printf '    See https://wiki.archlinux.org/index.php/Polkit#Authentication_agents\n'
   printf '    for other desktop environments.\n'
+}
+
+post_upgrade() {
+   # enable flatpak repo
+  flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 }
 
 post_remove() {
