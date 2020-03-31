@@ -4,7 +4,7 @@
 _pkgname=thundersvm
 pkgname=('thundersvm' 'thundersvm-cpu')
 pkgver=0.3.4
-pkgrel=2
+pkgrel=3
 pkgdesc='A Fast SVM Library on GPUs and CPUs'
 url='https://github.com/Xtra-Computing/thundersvm'
 license=('Apache')
@@ -36,9 +36,12 @@ prepare() {
   cp -a "${srcdir}/${_pkgname}" "${srcdir}/${_pkgname}-cpu"
 
   export BUILD_TAG=""
+  export CUDAHOSTCXX=/opt/cuda/bin/g++
 }
 
 build() {
+  export CC=/opt/cuda/bin/gcc
+  export CXX=/opt/cuda/bin/g++
   cd "${srcdir}/${_pkgname}/build"
   cmake .. \
     -DBUILD_TESTS=ON \
@@ -51,6 +54,8 @@ build() {
   cd ../python
   python setup.py build
 
+  export CC=gcc
+  export CXX=g++
   cd "${srcdir}/${_pkgname}-cpu/build"
   cmake .. \
     -DBUILD_TESTS=ON \
@@ -89,6 +94,8 @@ package_thundersvm() {
   provides=(thundersvm)
   depends+=(cuda)
   
+  export CC=/opt/cuda/bin/gcc
+  export CXX=/opt/cuda/bin/g++
   _package
 }
 
@@ -97,6 +104,8 @@ package_thundersvm-cpu() {
   provides=(thundersvm=${pkgver})
   conflicts=(thundersvm)
   
+  export CC=gcc
+  export CXX=g++
   _package
 }
 # vim:set ts=2 sw=2 et:
