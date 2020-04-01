@@ -32,6 +32,7 @@ rm -r src/
 rm -r pkg/
 rm v*.zip
 rm v*.zip.part
+rm *tar.gz
 rm *tar.xz
 
 exit 0
