@@ -1,6 +1,8 @@
 post_install() {
    # enable flatpak repo
-  flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+  if [ -f /usr/bin/flatpak ]; then
+    flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+  fi   
   # enable systemd timers
   ln -sf /usr/lib/systemd/system/pamac-cleancache.timer /etc/systemd/system/multi-user.target.wants
   #ln -sf /usr/lib/systemd/system/pamac-mirrorlist.timer /etc/systemd/system/multi-user.target.wants
@@ -14,7 +16,9 @@ post_install() {
 
 post_upgrade() {
    # enable flatpak repo
-  flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+  if [ -f /usr/bin/flatpak ]; then
+    flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+  fi   
 }
 
 post_remove() {

@@ -3,7 +3,7 @@
 # https://gitlab.manjaro.org/packages/extra/pamac
 pkgname=pamac-aur
 pkgver=9.4.0
-pkgrel=4
+pkgrel=5
 _pkgfixver=$pkgver
 
 _pkgvercommit=v$pkgver
@@ -16,6 +16,7 @@ url="https://gitlab.manjaro.org/applications/pamac"
 license=('GPL3')
 depends=('glib2>=2.42' 'json-glib' 'libsoup' 'dbus-glib' 'polkit' 'vte3>=0.38' 'gtk3>=3.22'
          'libnotify' 'desktop-file-utils' 'pacman>=5.2' 'gnutls>=3.4' 'git'
+#         'flatpak'
          'appstream-glib' 'archlinux-appstream-data' 'flatpak')
 
   optdepends=('polkit-gnome: needed for authentification in Cinnamon, Gnome'
@@ -43,10 +44,7 @@ build() {
   cd builddir
   meson --buildtype=release \
         --prefix=/usr \
-        --sysconfdir=/etc \
-        -Denable-flatpak=true
-#        -Denable-snap=true
-
+        --sysconfdir=/etc  # -Denable-flatpak=true
   # build
   ninja
 }
