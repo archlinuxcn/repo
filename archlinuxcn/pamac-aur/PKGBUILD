@@ -3,7 +3,7 @@
 # https://gitlab.manjaro.org/packages/extra/pamac
 pkgname=pamac-aur
 pkgver=9.4.0
-pkgrel=5
+pkgrel=6
 _pkgfixver=$pkgver
 
 _pkgvercommit=v$pkgver
@@ -16,8 +16,7 @@ url="https://gitlab.manjaro.org/applications/pamac"
 license=('GPL3')
 depends=('glib2>=2.42' 'json-glib' 'libsoup' 'dbus-glib' 'polkit' 'vte3>=0.38' 'gtk3>=3.22'
          'libnotify' 'desktop-file-utils' 'pacman>=5.2' 'gnutls>=3.4' 'git'
-#         'flatpak'
-         'appstream-glib' 'archlinux-appstream-data' 'flatpak')
+         'appstream-glib' 'archlinux-appstream-data')
 
   optdepends=('polkit-gnome: needed for authentification in Cinnamon, Gnome'
               'lxsession: needed for authentification in Xfce, LXDE etc.'
@@ -25,7 +24,7 @@ depends=('glib2>=2.42' 'json-glib' 'libsoup' 'dbus-glib' 'polkit' 'vte3>=0.38' '
 makedepends=('gettext' 'itstool' 'vala>=0.45' 'meson' 'ninja' 'gobject-introspection' 'xorgproto')
 backup=('etc/pamac.conf')
 conflicts=('pamac')
-provides=('pamac')
+provides=("pamac=$pkgver-$pkgrel")
 options=(!emptydirs)
 install=pamac.install
 
@@ -36,6 +35,12 @@ prepare() {
 
   # adjust version string
   sed -i -e "s|\"$_pkgfixver\"|\"$pkgver-$pkgrel\"|g" src/version.vala
+#   sed -i -e "s|libpamac = | \
+# gmodule = dependency('gmodule-2.0')\n \
+# libpamac_dependencies += gmodule\n \
+# common_vala_args += '--define=ENABLE_FLATPAK'\n \
+# libpamac_sources += 'plugin_loader.vala'\n \
+# libpamac = |g" src/meson.build
 }
 
 build() {
@@ -44,7 +49,7 @@ build() {
   cd builddir
   meson --buildtype=release \
         --prefix=/usr \
-        --sysconfdir=/etc  # -Denable-flatpak=true
+        --sysconfdir=/etc \
   # build
   ninja
 }
