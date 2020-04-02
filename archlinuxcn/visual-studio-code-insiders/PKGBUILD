@@ -1,7 +1,7 @@
 # Maintainer: D. Can Celasun <can[at]dcc[dot]im>
 
 pkgname=visual-studio-code-insiders
-pkgver=1585556379
+pkgver=1585810366
 pkgrel=1
 pkgdesc="Editor for building and debugging modern web and cloud applications (insiders version)"
 arch=('x86_64' 'i686')
@@ -19,7 +19,7 @@ source_x86_64=(code_x64_${pkgver}.tar.gz::https://vscode-update.azurewebsites.ne
 source_i686=(code_ia32_${pkgver}.tar.gz::https://vscode-update.azurewebsites.net/latest/linux-ia32/insider
               ${pkgname}.desktop ${pkgname}-url-handler.desktop
               )
-sha256sums_x86_64=('4b2de89c44f2519a7dc836e9e1732ef041cbe47a31243344a0ae40e16f93d7c9'
+sha256sums_x86_64=('371575499eba4ff2b479fbea4318cf6f43d66503392c095caa32406629296c93'
                    'edfeb13aa50d35fbae748ff545b5bd126be916dbfeda682157e3d5ce81574db2'
                    'd06d9d057b507d1747a8ed8ae304beb5e20c7bf887c362c941d85b02c893069e')
 sha256sums_i686=('6bb6ae48e41cea0c0ae2584aaab58ccf3cd8a2e20e648f025326d71fc93c8357'
