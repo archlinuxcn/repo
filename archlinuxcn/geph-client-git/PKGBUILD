@@ -3,7 +3,7 @@
 pkgname=geph-client-git
 _pkgname=geph-client
 pkgver=r168.c66c8c5
-pkgrel=1
+pkgrel=3
 pkgdesc='A command-line Geph client'
 arch=('x86_64')
 url="https://github.com/geph-official/geph2"
@@ -16,7 +16,7 @@ conflicts=("$_pkgname")
 source=("git+$url.git"
         "geph-client.service")
 sha512sums=('SKIP'
-            'd23b669396f8bd6c99d78a478de233b211f4202812348dc2c78050ad2646870027a766a0bca51ead70b06947fb6dc49d646e462682e0d3fb685b3a00840d104a')
+            '925109cf7392f2bce01d59bc0bd6e2d7102670b5438fee5962c11b29646722c3bb905db439ba244310e8333465791e5eac979c3c2ead1536fe40d3dbb920333d')
 
 pkgver() {
     cd geph2
