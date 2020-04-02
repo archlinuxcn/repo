@@ -1,7 +1,7 @@
 # Maintainer: Bruce Zhang <zttt183525594@gmail.com>
 
 pkgname=winetricks-zh
-pkgver=20190912.1
+pkgver=20191224.1
 pkgrel=1
 pkgdesc='A windows applications setup wizard for Chinese wine users'
 url='https://github.com/hillwoodroc/winetricks-zh'
@@ -11,7 +11,7 @@ depends=('wine' 'cabextract' 'unzip' 'xorg-xmessage')
 optdepends=('zenity: GUI for GNOME desktop'
             'kdialog: GUI for KDE desktop')
 source=("https://github.com/hillwoodroc/winetricks-zh/archive/${pkgver}.tar.gz")
-sha256sums=('efdc6df8dc70085994962ea692728c01d15ca89a8befcb92670a51b3429e2220')
+sha256sums=('ad84712998bac04a0cc16a177a0fa3cdac90c46964e022bb88784e7331f920fa')
 
 package() {
     cd "$pkgname-$pkgver"
