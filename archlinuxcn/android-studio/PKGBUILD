@@ -8,9 +8,9 @@
 # Maintainer: Kordian Bruck <k@bruck.me>
 
 pkgname=android-studio
-pkgver=3.6.1.0
+pkgver=3.6.2.0
 pkgrel=1
-_build=192.6241897
+_build=192.6308749
 pkgdesc="The official Android IDE (Stable branch)"
 arch=('i686' 'x86_64')
 url="https://developer.android.com/"
@@ -21,9 +21,11 @@ optdepends=('gtk2: GTK+ look and feel'
             'libgl: emulator support')
 options=('!strip')
 source=("https://dl.google.com/dl/android/studio/ide-zips/$pkgver/android-studio-ide-$_build-linux.tar.gz"
-        "$pkgname.desktop")
-sha256sums=('e754dc9db31a5c222f230683e3898dcab122dfe7bdb1c4174474112150989fd7'
-            '73cd2dde1d0f99aaba5baad1e2b91c834edd5db3c817f6fb78868d102360d3c4')
+        "$pkgname.desktop"
+        "license.html")
+sha256sums=('79c3e7069228de5db1c9252e078fcbe9b7d56cc54c8ce6f87034685b298f2413'
+            '73cd2dde1d0f99aaba5baad1e2b91c834edd5db3c817f6fb78868d102360d3c4'
+            '9a7563f7fb88c9a83df6cee9731660dc73a039ab594747e9e774916275b2e23e')
 
 if [ "$CARCH" = "i686" ]; then
     depends+=('java-environment')
@@ -36,6 +38,10 @@ package() {
   install -d $pkgdir/{opt/$pkgname,usr/bin}
   cp -a bin lib jre plugins license LICENSE.txt build.txt product-info.json $pkgdir/opt/$pkgname
   ln -s /opt/android-studio/bin/studio.sh $pkgdir/usr/bin/$pkgname
+
+  # Copy licenses
+  install -Dm644 LICENSE.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE.txt"
+  install -Dm644 $srcdir/license.html "${pkgdir}/usr/share/licenses/${pkgname}/license.html"
 
   # Add the icon and desktop file
   install -Dm644 bin/studio.png $pkgdir/usr/share/pixmaps/$pkgname.png
