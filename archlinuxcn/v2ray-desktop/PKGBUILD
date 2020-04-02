@@ -1,4 +1,5 @@
 # Maintainer: Dr-Incognito <v2ray.dev at gmail dot com>
+
 pkgname=v2ray-desktop
 pkgver=2.0.1
 pkgrel=1
@@ -14,16 +15,6 @@ sha512sums=("SKIP")
 
 prepare() {
     cd "${srcdir}/V2Ray-Desktop"
-    
-    echo "Detecting your country ... Please wait ..."
-    country=$(curl -s https://ipinfo.io/ | jq -r '.country')
-    echo "Your country: $country"
-
-    if [ "$country" = "CN" ]; then
-        echo "Use qzxing@gitee.com for Chinese users ..."
-        sed -i "s/github.com\/ftylitak/gitee.com\/Dr-Incognito/" .gitmodules
-    fi
-    echo "Initialize submodules. This may take a long time ..."
     git submodule init
     git submodule update --progress
 }
