@@ -5,7 +5,7 @@ _cudaarch="6.0;6.1;7.0;7.5"
 _pkgname=mxnet
 pkgname=('mxnet-git' 'mxnet-cuda-git')
 _pkgver=2.0.0
-pkgver=2.0.0.r10823.56e79853ad
+pkgver=2.0.0.r10824.08528c5cb9
 pkgrel=1
 pkgdesc='A flexible and efficient library for deep learning'
 arch=('x86_64')
@@ -17,6 +17,7 @@ depends=(
   'hdf5'
   'intel-mkl'
   'intel-tbb'
+  'opencv'
   'protobuf'
   'python-graphviz'
   'python-numpy'
@@ -31,7 +32,6 @@ makedepends=(
   'git'
   'gtk3'
   'nccl'
-  'opencv'
   'qt5-base'
 )
 provides=(mxnet=${pkgver})
@@ -68,6 +68,7 @@ build() {
   cmake_opts=(
     -DBUILD_CPP_EXAMPLES:BOOL=OFF
     -DBUILD_TESTING:BOOL=OFF
+    -DCMAKE_CUDA_HOST_COMPILER=/usr/bin/g++
     -DCMAKE_INSTALL_LIBDIR:PATH=lib
     -DCMAKE_INSTALL_PREFIX:PATH=/usr
     -DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON
@@ -82,13 +83,12 @@ build() {
     -DUSE_LAPACK:BOOL=ON
     -DUSE_MKLDNN:BOOL=ON
     -DUSE_MKL_IF_AVAILABLE:BOOL=ON
+    -DUSE_OPENCV:BOOL=ON
     -DUSE_OPENMP:BOOL=ON
     -DUSE_S3:BOOL=ON
 )
 
   # use gcc version compatible with CUDA
-  export CC=/opt/cuda/bin/gcc
-  export CXX=/opt/cuda/bin/g++
 
   # building with CUDA
   cd "${srcdir}/mxnet-cuda-git/build"
@@ -98,14 +98,11 @@ build() {
     -DUSE_CUDA:BOOL=ON \
     -DUSE_CUDNN:BOOL=ON \
     -DUSE_NCCL:BOOL=ON \
-    -DUSE_OPENCV:BOOL=OFF \
     ..
   make
   cd ../python
   python setup.py build --with-cython
   
-  export CC=gcc
-  export CXX=g++
 
   # building without CUDA
   cd "${srcdir}/mxnet-git/build"
@@ -114,7 +111,6 @@ build() {
     -DUSE_CUDA:BOOL=OFF \
     -DUSE_CUDNN:BOOL=OFF \
     -DUSE_NCCL:BOOL=OFF \
-    -DUSE_OPENCV:BOOL=ON \
     ..
   make
   cd ../python
@@ -150,10 +146,6 @@ _package() {
 
 
 package_mxnet-git() {
-  depends+=(opencv)
-
-  export CC=gcc
-  export CXX=g++
   _package
 }
 
@@ -163,8 +155,6 @@ package_mxnet-cuda-git() {
   provides+=(mxnet-cuda=${pkgver})
   conflicts+=(mxnet-cuda=${pkgver})
 
-  export CC=/opt/cuda/bin/gcc
-  export CXX=/opt/cuda/bin/g++
   _package
 }
 
