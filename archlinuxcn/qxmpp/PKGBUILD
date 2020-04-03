@@ -4,7 +4,7 @@
 # Contributor: TimothÃ©e Ravier <tim@siosm.fr>
 
 pkgname='qxmpp'
-pkgver='1.2.0'
+pkgver='1.2.1'
 pkgrel=1
 pkgdesc='Cross-platform C++ XMPP client and server library'
 arch=('i686' 'x86_64')
@@ -19,7 +19,7 @@ optdepends=('doxygen: required to build the HTML documentation'
 	    'libtheora: required to enable theora video codec') 
 conflicts=('qxmpp-qt5')
 source=("${url}/archive/v${pkgver}.tar.gz")
-sha1sums=('78551a2d0e4532fc9fa54a175a0fc139e49ff433')
+sha1sums=('98c43eaf348f20a93ce5e12f9bff802f1d208563')
  
 build() {
 	cd "$srcdir/$pkgname-$pkgver/"
