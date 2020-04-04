@@ -6,62 +6,63 @@
 pkgbase='nerd-fonts'
 
 declare -A _fonts=(
-  ["$pkgbase-3270"]="3270"
-  ["$pkgbase-agave"]="Agave"
-  ["$pkgbase-anonymous-pro"]="AnonymousPro"
-  ["$pkgbase-arimo"]="Arimo"
-  ["$pkgbase-aurulent-sans-mono"]="AurulentSansMono"
-  ["$pkgbase-big-blue-terminal"]="BigBlueTerminal"
-  ["$pkgbase-bitstream-vera-sans-mono"]="BitstreamVeraSansMono"
-  ["$pkgbase-cascadia-code"]="CascadiaCode"
-  ["$pkgbase-code-new-roman"]="CodeNewRoman"
-  ["$pkgbase-cousine"]="Cousine"
-  ["$pkgbase-daddy-time-mono"]="DaddyTimeMono"
-  ["$pkgbase-deja-vu-sans-mono"]="DejaVuSansMono"
-  ["$pkgbase-droid-sans-mono"]="DroidSansMono"
-  ["$pkgbase-fantasque-sans-mono"]="FantasqueSansMono"
-  ["$pkgbase-fira-code"]="FiraCode"
-  ["$pkgbase-fira-mono"]="FiraMono"
-  ["$pkgbase-gohu"]="Gohu"
-  ["$pkgbase-go-mono"]="Go-Mono"
-  ["$pkgbase-hack"]="Hack"
-  ["$pkgbase-hasklig"]="Hasklig"
-  ["$pkgbase-heavy-data"]="HeavyData"
-  ["$pkgbase-hermit"]="Hermit"
-  ["$pkgbase-ia-writer"]="iA-Writer"
-  ["$pkgbase-ibm-plex-mono"]="IBMPlexMono"
-  ["$pkgbase-inconsolata"]="Inconsolata"
-  ["$pkgbase-inconsolata-go"]="InconsolataGo"
-  ["$pkgbase-inconsolata-lgc"]="InconsolataLGC"
-  ["$pkgbase-iosevka"]="Iosevka"
-  ["$pkgbase-jet-brains-mono"]="JetBrainsMono"
-  ["$pkgbase-lekton"]="Lekton"
-  ["$pkgbase-liberation-mono"]="LiberationMono"
-  ["$pkgbase-meslo"]="Meslo"
-  ["$pkgbase-monofur"]="Monofur"
-  ["$pkgbase-monoid"]="Monoid"
-  ["$pkgbase-mononoki"]="Mononoki"
-  ["$pkgbase-mplus"]="MPlus"
-  ["$pkgbase-noto"]="Noto"
-  ["$pkgbase-open-dyslexic"]="OpenDyslexic"
-  ["$pkgbase-overpass"]="Overpass"
-  ["$pkgbase-pro-font"]="ProFont"
-  ["$pkgbase-proggy-clean"]="ProggyClean"
-  ["$pkgbase-roboto-mono"]="RobotoMono"
-  ["$pkgbase-share-tech-mono"]="ShareTechMono"
-  ["$pkgbase-source-code-pro"]="SourceCodePro"
-  ["$pkgbase-space-mono"]="SpaceMono"
-  ["$pkgbase-terminus"]="Terminus"
-  ["$pkgbase-tinos"]="Tinos"
-  ["$pkgbase-ubuntu"]="Ubuntu"
-  ["$pkgbase-ubuntu-mono"]="UbuntuMono"
-  ["$pkgbase-victor-mono"]="VictorMono"
+  # [pkgname]=dir:origin:patched
+  ["$pkgbase-3270"]="3270:3270:3270"
+  ["$pkgbase-agave"]="Agave:Agave:Agave"
+  ["$pkgbase-anonymous-pro"]="AnonymousPro:Anonymous Pro:Anonymice"
+  ["$pkgbase-arimo"]="Arimo:Arimo:Arimo"
+  ["$pkgbase-aurulent-sans-mono"]="AurulentSansMono:Aurulent Sans Mono:AurulentSansMono"
+  ["$pkgbase-bigblue-terminal"]="BigBlueTerminal:BigBlue Terminal:BigBlue_Terminal"
+  ["$pkgbase-bitstream-vera-sans-mono"]="BitstreamVeraSansMono:Bitstream Vera Sans Mono:BitstreamVeraSansMono"
+  ["$pkgbase-cascadia-code"]="CascadiaCode:Caskaydia code:CascadiaCode"
+  ["$pkgbase-code-new-roman"]="CodeNewRoman:Code New Roman:CodeNewRoman"
+  ["$pkgbase-cousine"]="Cousine:Cousine:Cousine"
+  ["$pkgbase-daddytimemono"]="DaddyTimeMono:DaddyTimeMono:DaddyTimeMono"
+  ["$pkgbase-dejavu-sans-mono"]="DejaVuSansMono:DejaVu Sans Mono:DejaVuSansMono"
+  ["$pkgbase-droid-sans-mono"]="DroidSansMono:Droid Sans Mono:DroidSansMono"
+  ["$pkgbase-fantasque-sans-mono"]="FantasqueSansMono:Fantasque Sans Mono:FantasqueSansMono"
+  ["$pkgbase-fira-code"]="FiraCode:Fira Code:FiraCode"
+  ["$pkgbase-fira"]="FiraMono:Fira:FiraMono"
+  ["$pkgbase-gohu"]="Gohu:Gohu:GohuFont"
+  ["$pkgbase-go"]="Go-Mono:Go:GoMono"
+  ["$pkgbase-hack"]="Hack:Hack:Hack"
+  ["$pkgbase-hasklig"]="Hasklig:Hasklug:Hasklig"
+  ["$pkgbase-heavy-data"]="HeavyData:Heavy Data:HeavyData"
+  ["$pkgbase-hermit"]="Hermit:Hermit:Hurmit"
+  ["$pkgbase-ia-writer"]="iA-Writer:iA Writer:iMWriting"
+  ["$pkgbase-ibm-plex-mono"]="IBMPlexMono:IBM Plex Mono:BlexMono"
+  ["$pkgbase-inconsolata"]="Inconsolata:Inconsolata:Inconsolata"
+  ["$pkgbase-inconsolata-go"]="InconsolataGo:Inconsolata Go:InconsolataGo"
+  ["$pkgbase-inconsolata-lgc"]="InconsolataLGC:Inconsolata LGC:InconsolataLGC"
+  ["$pkgbase-iosevka"]="Iosevka:Iosevka:Iosevka"
+  ["$pkgbase-jetbrains-mono"]="JetBrainsMono:JetBrains Mono:JetBrainsMono"
+  ["$pkgbase-lekton"]="Lekton:Lekton:Lekton"
+  ["$pkgbase-liberation"]="LiberationMono:Liberation:Literation"
+  ["$pkgbase-meslo-lg"]="Meslo:Meslo LG:MesloLG"
+  ["$pkgbase-monofur"]="Monofur:Monofur:Monofur"
+  ["$pkgbase-monoid"]="Monoid:Monoid:Monoid"
+  ["$pkgbase-mononoki"]="Mononoki:Mononoki:Mononoki"
+  ["$pkgbase-mplus"]="MPlus:M+:mplus"
+  ["$pkgbase-noto"]="Noto:Noto:Noto"
+  ["$pkgbase-opendyslexic"]="OpenDyslexic:OpenDyslexic:OpenDyslexic"
+  ["$pkgbase-overpass"]="Overpass:Overpass:Overpass"
+  ["$pkgbase-profont"]="ProFont:ProFont:ProFont"
+  ["$pkgbase-proggycleantt"]="ProggyClean:ProggyCleanTT:ProggyCleanTT"
+  ["$pkgbase-robotomono"]="RobotoMono:RobotoMono:RobotoMono"
+  ["$pkgbase-share-tech-mono"]="ShareTechMono:Share Tech Mono:ShureTechMono"
+  ["$pkgbase-source-code-pro"]="SourceCodePro:Source Code Pro:SauceCodePro"
+  ["$pkgbase-space-mono"]="SpaceMono:Space Mono:SpaceMono"
+  ["$pkgbase-terminus"]="Terminus:Terminus:TerminessTTF"
+  ["$pkgbase-tinos"]="Tinos:Tinos:Tinos"
+  ["$pkgbase-ubuntu"]="Ubuntu:Ubuntu:Ubuntu"
+  ["$pkgbase-ubuntu-mono"]="UbuntuMono:Ubuntu Mono:UbuntuMono"
+  ["$pkgbase-victor-mono"]="VictorMono:Victor Mono:VictorMono"
 )
 
 pkgname=("$pkgbase-complete" ${!_fonts[@]})
 pkgver=2.1.0
 pkgrel=3
-pkgdesc='Iconic font aggregator, collection, & patcher. 3,600+ icons, 50+ patched fonts.'
+pkgdesc='Nerd Fonts: Iconic font aggregator, collection, & patcher. 3,600+ icons, 50+ patched fonts.'
 arch=('any')
 url='https://github.com/ryanoasis/nerd-fonts'
 license=('MIT')
@@ -114,18 +115,20 @@ package_nerd-fonts-complete() {
 }
 
 _package() {
-  local name="$1"
+  local info
+  # info=(dir origin patched)
+  readarray -td: -n3 info < <(printf "%s" "$1")
 
   conflicts+=("$pkgbase-complete")
-  pkgdesc="Patched font $name from the nerd-fonts library"
+  pkgdesc="${info[2]} Nerd Font: patched from ${info[1]} with Nerd Fonts Glyphs(Icons)"
 
   cd "$srcdir/$pkgbase-$pkgver"
 
-  find "patched-fonts/$name" -iname "*Nerd Font Complete*.otf" ! -name "*Windows Compatible*" \
+  find "patched-fonts/${info[0]}" -iname "*Nerd Font Complete*.otf" ! -name "*Windows Compatible*" \
     -exec install -Dm644 -t "$pkgdir/usr/share/fonts/$pkgbase" {} \;
   # we prefer otf, if no one found, use ttf.
   if [[ ! -s "$pkgdir/usr/share/fonts/$pkgbase" ]]; then
-    find "patched-fonts/$name" -iname "*Nerd Font Complete*.ttf" ! -name "*Windows Compatible*" \
+    find "patched-fonts/${info[0]}" -iname "*Nerd Font Complete*.ttf" ! -name "*Windows Compatible*" \
       -exec install -Dm644 -t "$pkgdir/usr/share/fonts/$pkgbase" {} \;
   fi
 
