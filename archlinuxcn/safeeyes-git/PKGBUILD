@@ -17,6 +17,8 @@ depends=('hicolor-icon-theme'
          'python-xlib')
 makedepends=('git')
 optdepends=('xprintidle: for smart pause plugin')
+provides=('safeeyes')
+conflicts=('safeeyes')
 source=("$pkgname::git+$url.git")
 sha256sums=('SKIP')
 
