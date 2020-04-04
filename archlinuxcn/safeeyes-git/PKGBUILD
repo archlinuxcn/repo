@@ -1,0 +1,41 @@
+# Maintainer: Hao Long <imlonghao@archlinuxcn.org>
+
+pkgname=safeeyes-git
+pkgver=2.0.9.r55.g3866d64
+pkgrel=1
+pkgdesc='A Free and Open Source tool for Linux users to reduce and prevent repetitive strain injury (RSI)'
+arch=('any')
+url='https://github.com/slgobinath/SafeEyes'
+license=('GPL3')
+depends=('hicolor-icon-theme'
+         'libappindicator-gtk3'
+         'python-babel'
+         'python-dbus'
+         'python-gobject'
+         'python-psutil'
+         'python-setuptools'
+         'python-xlib')
+makedepends=('git')
+optdepends=('xprintidle: for smart pause plugin')
+source=("$pkgname::git+$url.git")
+sha256sums=('SKIP')
+
+prepare() {
+  cd $pkgname
+  sed -i 's/site.USER_BASE or //' setup.py
+}
+
+pkgver() {
+  cd $pkgname
+  git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+  cd $pkgname
+  python setup.py build
+}
+
+package() {
+  cd $pkgname
+  python setup.py install --root=$pkgdir --optimize=1 --skip-build
+}
