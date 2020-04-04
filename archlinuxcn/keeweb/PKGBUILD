@@ -1,7 +1,7 @@
 # Maintainer: surefire@cryptomile.net
 
 pkgname=keeweb
-pkgver=1.12.3
+pkgver=1.13.0
 pkgrel=1
 pkgdesc="Desktop password manager compatible with KeePass databases"
 arch=('any')
@@ -36,7 +36,7 @@ prepare() {
 
 	sed -i \
 		-e "/const electronVersion/       s/pkg.dependencies.electron/'$(</usr/lib/electron/version)'/" \
-		-e '/codeSignConfig/ d' \
+		-e "/codeSignConfig.windows/ d" \
 	Gruntfile.js
 
 	sed -i \
@@ -66,7 +66,7 @@ build() {
 	npm install
 	npm install css-loader
 
-	npx grunt build-web-app build-desktop-app-content
+	npx grunt --no-sign build-web-app build-desktop-app-content
 
 	asar p tmp/desktop/app tmp/app.asar
 }
