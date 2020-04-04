@@ -15,7 +15,9 @@ depends=('libappindicator-gtk3'
          'python-setuptools'
          'python-xlib')
 makedepends=('git')
-optdepends=('xprintidle: for smart pause plugin')
+optdepends=('alsa-utils: for audible alert plugin'
+            'xorg-xprop: for skip fullscreen plugin'
+            'xprintidle: for smart pause plugin')
 provides=('safeeyes')
 conflicts=('safeeyes')
 source=("$pkgname::git+$url.git")
