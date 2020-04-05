@@ -6,7 +6,7 @@
 
 pkgname=plymouth
 pkgver=0.9.4
-pkgrel=4
+pkgrel=6
 pkgdesc="A graphical boot splash screen with kernel mode-setting support"
 url="http://www.freedesktop.org/wiki/Software/Plymouth/"
 arch=('x86_64')
@@ -31,6 +31,7 @@ source=("http://www.freedesktop.org/software/${pkgname}/releases/${pkgname}-${pk
 	'slim-plymouth.service'
 	'sddm-plymouth.service'
 	'plymouth-deactivate.service'
+	'plymouth-read-write.service'
 	'plymouth-start.service'
 	'plymouth-start.path'
 	'plymouth.initcpio_hook'
@@ -42,14 +43,15 @@ source=("http://www.freedesktop.org/software/${pkgname}/releases/${pkgname}-${pk
 md5sums=('4efa5551d230165981b105e7c6a50aa7'
          '65fa2763d5c9bb9f80973ea5e6e3db3e'
          'd67132b297ccfb1a877a2efd78076963'
-         '02861a13840dee3a5f2224b598274220'
+         '247b77b9b2a8e22b1e94a07462e8b23e'
          'ae6e97bb1104bb12cbca6738e3fb872d'
          '1430ae2ec501d600f8f6771454dc9bbe'
          '870ea3e63c6989e2badf79d1fbafa914'
          'a3cfc30df846b2d7057a29e7fbe8733a'
          'b95f6979dc2f373045b2ab88a36d6771'
          '006847d16b852c7a50ee2f241fd9647e'
-         '606cd558141551a1ce0d80150a045d83'
+         'cd81fba110ad5a81ad97397fe82fda52'
+         '24ad6b024f8e8bb9abe13df317eb9bcb'
          '672ad913e2383483bcb4599a0a6bee48'
          '32f04fdbd1eb94ade30d1e63fdcdd9b5'
          'c17e915b19a469198a37dd7376a846c7'
@@ -81,7 +83,6 @@ build() {
 		--enable-gtk=no \
 		--enable-tracing \
 		--disable-tests \
-		--enable-gdm-transition \
 		--with-logo=/usr/share/plymouth/arch-logo.png \
 		--with-release-file=/etc/os-release \
 		--with-background-color=0x000000 \
@@ -112,6 +113,7 @@ package() {
 
   install -Dm644 "$srcdir/plymouth-deactivate.service" 	"$pkgdir/usr/lib/systemd/system/plymouth-deactivate.service"
   install -Dm644 "$srcdir/plymouth-start.service" "$pkgdir/usr/lib/systemd/system/plymouth-start.service"
+  install -Dm644 "$srcdir/plymouth-read-write.service" "$pkgdir/usr/lib/systemd/system/plymouth-read-write.service"
   install -Dm644 "$srcdir/plymouth-start.path" 	"$pkgdir/usr/lib/systemd/system/plymouth-start.path"
   install -Dm644 "$pkgdir/usr/share/plymouth/plymouthd.defaults" "$pkgdir/etc/plymouth/plymouthd.conf"
 }
