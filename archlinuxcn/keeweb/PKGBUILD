@@ -1,7 +1,7 @@
 # Maintainer: surefire@cryptomile.net
 
 pkgname=keeweb
-pkgver=1.13.0
+pkgver=1.13.1
 pkgrel=1
 pkgdesc="Desktop password manager compatible with KeePass databases"
 arch=('any')
@@ -26,7 +26,7 @@ source=(
 
 sha1sums=('SKIP'
           'c925527f25e732d58438ee16b1c93b33be7bf9c4'
-          '19c9db9079a08e82b5418609596201b358ac815d')
+          'd64a29202b71f30b1c4eaef5c01cee574b55894a')
 
 prepare() {
 	cd "${pkgname}"
@@ -35,22 +35,17 @@ prepare() {
 	node ../package.json.patch.js
 
 	sed -i \
-		-e "/const electronVersion/       s/pkg.dependencies.electron/'$(</usr/lib/electron/version)'/" \
-		-e "/codeSignConfig.windows/ d" \
+		-e "/const electronVersion/  s/pkg.dependencies.electron/'$(</usr/lib/electron/version)'/" \
 	Gruntfile.js
 
 	sed -i \
-		-e "/'eslint',/                 d" \
-		-e "/'uglify',/                 d" \
+		-e "/'eslint',/  d" \
 	grunt.tasks.js
 
 	sed -i \
-		-e '/Exec=/ c \Exec=keeweb %u' \
-	package/deb/usr/share/applications/keeweb.desktop
-
-	sed -i \
-		-e 's/: "[^@]*@github:/: "github:/' \
-	package-lock.json
+		-e "/const BundleAnalyzerPlugin/              d" \
+		-e "/new BundleAnalyzerPlugin({$/, /^\s*})$/  d" \
+	build/webpack.config.js
 }
 
 build() {
@@ -66,7 +61,7 @@ build() {
 	npm install
 	npm install css-loader
 
-	npx grunt --no-sign build-web-app build-desktop-app-content
+	npx grunt build-web-app build-desktop-app-content
 
 	asar p tmp/desktop/app tmp/app.asar
 }
