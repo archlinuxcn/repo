@@ -1,7 +1,7 @@
 # Maintainer: lsf
 # Contributor: Adam Hose <adis@blad.is>
-pkgver=20191009.379_2b49871
-pkgrel=2
+pkgver=20200405.551_24ede1c
+pkgrel=1
 _pkgname=opensnitch
 pkgname=opensnitch-git
 arch=('i686' 'x86_64')
@@ -16,11 +16,9 @@ depends=('python-grpcio' 'python-grpcio-tools' 'python-pyinotify'
          'desktop-file-utils')
 provides=('opensnitch' 'opensnitch-ui')
 
-source=("git://github.com/gustavo-iniguez-goya/opensnitch.git"
-        'nosudo.patch')
+source=("git://github.com/gustavo-iniguez-goya/opensnitch.git")
 
-md5sums=('SKIP'
-         'eb5a6c83c3816220799e678e32572705')
+md5sums=('SKIP')
 
 pkgver() {
         cd "$srcdir/$_pkgname"
@@ -49,7 +47,6 @@ build() {
         cd "$GOPATH/src/opensnitch/daemon"
         dep ensure
         cd "$GOPATH/src/opensnitch"
-        patch -Np1 -i "${srcdir}/nosudo.patch"
         make
 }
 
