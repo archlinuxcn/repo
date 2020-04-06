@@ -124,7 +124,8 @@ build() {
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_SKIP_RPATH=ON \
     -DUSE_SYSTEM_LIBZIP=ON \
-    -DUSING_QT_UI=ON
+    -DUSING_QT_UI=ON \
+    -DQt5Multimedia_DIR=$(pkgconf Qt5Multimedia --variable=includedir)
   make
 }
 
