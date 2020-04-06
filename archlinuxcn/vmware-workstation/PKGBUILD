@@ -1,17 +1,11 @@
 # Maintainer: Jean-Marc Lenoir <archlinux "at" jihemel "dot" com>
 # Contributor: Maxwell Pray a.k.a. Synthead <synthead@gmail.com>
 
-############################################################################
-# Patch VMware Workstation to enable macOS guests support
-# Uncomment the line below to enable it
-
-#_enable_macOS_guests=y
+# To enable macOS guests support, uncomment the line below:
+_enable_macOS_guests=y
 
 # CAUTION: Running macOS on VMware Workstation on non Apple computer is forbidden by
 # Apple and VMware EULAs.
-# Source of the patch: https://github.com/DrDonk/unlocker
-# Forum: https://www.insanelymac.com/forum/topic/335757-macos-unlocker-v30-for-vmware-workstation/
-############################################################################
 
 # vmware-keymaps dependency is needed to avoid some conflicts when you install
 # this package with vmware-horizon-client. If you don't plan to install
@@ -24,10 +18,10 @@ pkgbase=vmware-workstation
 pkgname=('vmware-workstation'
         'vmware-workstation-macos'
         'vmware-keymaps')
-pkgver=15.5.1
-_buildver=15018445
+pkgver=15.5.2
+_buildver=15785246
 _pkgver=${pkgver}_${_buildver}
-pkgrel=2
+pkgrel=1
 pkgdesc='The industry standard for running multiple operating systems as virtual machines on a single Linux PC.'
 arch=(x86_64)
 url='https://www.vmware.com/products/workstation-for-linux.html'
@@ -93,7 +87,7 @@ source=(
   'vmnet.patch'
 )
 sha256sums=(
-  '490f8fe8d874c27601c155c1b2c0055ad0d4f14feb32fa9f18643659a147d3c6'
+  'd3a1358dad46ba0d52f25b5b721b6fa7a9f57b47eb82e972607e53e3c6733967'
 
   '12e7b16abf8d7e858532edabb8868919c678063c566a6535855b194aac72d55e'
   'da1698bf4e73ae466c1c7fc93891eba4b9c4581856649635e6532275dbfea141'
@@ -111,14 +105,14 @@ sha256sums=(
   'f9440479f3ae5ad0a39bba3150276627878bf83d6879444fb327c53a1dbb5a4d'
   '42594b60085d0bbef01ab07b9f8b0d18640001107ce61cc0ddf02d0ab415140f'
   'e4c2e97acf07c52de570dd4333d67acfb593db719937a563c6075ab773dcce33'
-  'e3812b78158672c7d96b6a58877681462f3fbdfe99a948b32c80c755c8682450'
+  '9b4fbe0ba83f761a2eb9ecd05d48428f8b0a5b3abd8404ccbd928408e682f02b'
   'c0a5aea785db06921fb350d36d5e0fd9a14f5eee0c835686ec6fea1af8c92245'
   'd7a9fbf39a0345ae2f14f7f389f30b1110f605d187e0c241e99bbb18993c250d'
 
   '05e26d8b21d190ebabb7f693998114d9d5991d9dfb71acb4d990293a65b6b487'
   '6ce902b1dab8fc69be253abd8e79017011985eca850ff7acc7282f9ab668e35d'
   '1060b5d45caeda5119b220fab4e1ece398af34d75131139a5dc6f74ee06672c3'
-  '22d1f23c272dd2f7d4644dfffe051503cf62311886f67d57de3b7502615ceec1'
+  '7c3b6a7871b19e31fafdcc2631751dd9569196740d8e7c2026653d155c0c8da0'
 )
 options=(!strip emptydirs)
 
@@ -126,11 +120,12 @@ options=(!strip emptydirs)
 _isoimages=(linux linuxPreGlibc25 netware solaris windows winPre2k winPreVista)
 _isovirtualprinterimages=(Linux Windows)
 
+if [ -n "$_enable_macOS_guests" ]; then
 
-_vmware_fusion_ver=11.5.1_15018442
+_vmware_fusion_ver=11.5.2_15794494
 # List of VMware Fusion versions: https://softwareupdate.vmware.com/cds/vmw-desktop/fusion/
 
-_unlocker_commit=2fd359ec996419dc6c43253e3c728e1f2734c2ee
+_unlocker_ver=3.0.3
 _efi_unlocker_ver=1.0.0
 
 makedepends+=(
@@ -141,16 +136,17 @@ makedepends+=(
 
 source+=(
   "VMware-Fusion-${_vmware_fusion_ver/_/-}.zip.tar::https://softwareupdate.vmware.com/cds/vmw-desktop/fusion/${_vmware_fusion_ver/_//}/core/com.vmware.fusion.zip.tar"
-  "unlocker-${_unlocker_commit}.py::https://raw.githubusercontent.com/DrDonk/unlocker/${_unlocker_commit}/unlocker.py"
-  "efi-unlocker-patch-${_efi_unlocker_ver}.txt::https://raw.githubusercontent.com/DrDonk/efi-unlocker/${_efi_unlocker_ver}/patches.txt"
+  "unlocker-${_unlocker_ver}.py::https://raw.githubusercontent.com/paolo-projects/unlocker/${_unlocker_ver}/unlocker.py"
+  "efi-unlocker-patch-${_efi_unlocker_ver}.txt"
 )
 sha256sums+=(
-  'c36048a42c03988068aab7474b6c48ebc5054b8c6324cb93f009aec45aa899f0'
-  '89e3f41eade574c263b9afa0ba721d2179cd168f502e68b91ec3b6df4c5fee0e'
+  '2d425804fa0c4ec21664497ad6769d8c9db5f165f16bcf5360f1e01e41dd6a37'
+  '1c27547dcf6fb2f436c96ee62ae8c7f5cfd14b40d8bbd35dc385e247c4fb7e0f'
   '392c1effcdec516000e9f8ffc97f2586524d8953d3e7d6f2c5f93f2acd809d91'
 )
 
 _fusion_isoimages=(darwin darwinPre15)
+fi
 
 
 _create_database_file() {
@@ -184,6 +180,7 @@ prepare() {
     "$(readlink -f "$srcdir/VMware-Workstation-Full-${_pkgver/_/-}.${CARCH}.bundle")" \
     --extract "$extracted_dir"
 
+if [ -n "$_enable_macOS_guests" ]; then
   unzip -q com.vmware.fusion.zip
   for isoimage in ${_fusion_isoimages[@]}
   do
@@ -191,7 +188,8 @@ prepare() {
   done
   rm -rf __MACOSX payload manifest.plist preflight postflight
 
-  sed -i -e "s|/usr/lib/vmware/|${pkgdir/%vmware-workstation/vmware-workstation-macos}/usr/lib/vmware/|" "$srcdir/unlocker-${_unlocker_commit}.py"
+  sed -i -e "s|/usr/lib/vmware/|${pkgdir/%vmware-workstation/vmware-workstation-macos}/usr/lib/vmware/|" "$srcdir/unlocker-${_unlocker_ver}.py"
+fi
 }
 
 _realpackage() {
@@ -304,7 +302,9 @@ _realpackage() {
   install -Dm 644 "$srcdir"/vmware-bootstrap "$pkgdir"/etc/vmware/bootstrap
   install -Dm 644 "$srcdir"/config "$pkgdir"/etc/vmware/config
 
+if [ -z "$_remove_vmware_keymaps_dependency" ]; then
   rm -r "$pkgdir/usr/lib/vmware/xkeymap" # these files are provided by vmware-keymaps package
+fi
 
   for hostd_file in config datastores environments proxy vmAutoStart; do
     install -Dm 644 "$srcdir/$hostd_file.xml" "$pkgdir/etc/vmware/hostd/$hostd_file.xml"
@@ -437,7 +437,7 @@ _realpackage() {
 
 if [ -n "$_enable_macOS_guests" ]; then
   msg "Patching VMware to enable macOS guest support"
-  python "$srcdir/unlocker-${_unlocker_commit}.py" > /dev/null
+  python "$srcdir/unlocker-${_unlocker_ver}.py" > /dev/null
 
   for isoimage in ${_fusion_isoimages[@]}
   do
@@ -467,11 +467,6 @@ fi
   sed -i '/^StartupNotify=.*/a StartupWMClass=vmplayer' "$pkgdir/usr/share/applications/vmware-player.desktop"
   sed -i '/^StartupNotify=.*/a StartupWMClass=vmware-netcfg' "$pkgdir/usr/share/applications/vmware-netcfg.desktop"
 
-  # to solve bugs with incompatibles library versions:
-  #ln -sf /usr/lib/libz.so.1 "$pkgdir/usr/lib/vmware/lib/libz.so.1/"
-  
-  # Preview license
-  #install -Dm 644 vmware-workstation/etc/vmware/license-ws-150-e1-201804 "$pkgdir/etc/vmware/license-ws-150-e1-201804"
 }
 
 package_vmware-workstation() {
