@@ -1,0 +1,28 @@
+# Maintainer: Dct Mei <dctxmei@gmail.com>
+
+pkgname=breeze-adapta-cursor-theme
+_pkgname=Breeze-Adapta-Cursor
+pkgver=r32.1d24541
+pkgrel=1
+pkgdesc="Popular Breeze Cursor modified for Adapta theme"
+arch=('any')
+url="https://github.com/mustafaozhan/Breeze-Adapta-Cursor"
+license=('LGPL3')
+source=("git+$url.git")
+makedepends=('git')
+sha512sums=('SKIP')
+
+pkgver() {
+    cd "${srcdir}/${_pkgname}"
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+package() {
+    cd "${srcdir}/${_pkgname}"
+    install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+    install -d "$pkgdir"/usr/share/icons/Breeze-Adapta-Cursor/
+    rm -r 'cursors/New Folder/'
+    cp -r cursors/ "$pkgdir"/usr/share/icons/Breeze-Adapta-Cursor/
+    install -m 644 cursor.theme "$pkgdir"/usr/share/icons/Breeze-Adapta-Cursor/
+    install -m 644 index.theme "$pkgdir"/usr/share/icons/Breeze-Adapta-Cursor/
+}
