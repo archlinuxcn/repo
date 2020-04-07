@@ -1,0 +1,30 @@
+# Colored makepkg-like functions
+msg_blue() {
+    printf "${blue}==>${bold} $1${all_off}\n"
+}
+
+note() {
+    printf "${blue}==>${yellow} NOTE:${bold} $1${all_off}\n"
+}
+
+all_off="$(tput sgr0)"
+bold="${all_off}$(tput bold)"
+blue="${bold}$(tput setaf 4)"
+yellow="${bold}$(tput setaf 3)"
+
+post_install() {
+    note "This wrapper works with brother-mfcl8900cdw-lpr separately available in the AUR"
+    note "If Brother MFC-L8900CDW doesn't show up in the list of models in CUPS,
+    click the Choose File button under the list and give it
+
+    /usr/share/cups/model/brother_mfcl8900cdw_printer_en.ppd
+
+    and if that also fails, try
+
+    /opt/brother/Printers/mfcl8900cdw/cupswrapper/brother_mfcl8900cdw_printer_en.ppd"
+}
+
+post_upgrade() {
+    post_install
+}
+
