@@ -5,7 +5,7 @@ _cudaarch="6.0;6.1;7.0;7.5"
 _pkgname=mxnet
 pkgname=('mxnet-git' 'mxnet-cuda-git')
 _pkgver=2.0.0
-pkgver=2.0.0.r10843.b7f7525cba
+pkgver=2.0.0.r10844.13841ddd2d
 pkgrel=1
 pkgdesc='A flexible and efficient library for deep learning'
 arch=('x86_64')
@@ -17,6 +17,7 @@ depends=(
   'hdf5'
   'intel-mkl'
   'intel-tbb'
+  'libjpeg-turbo'
   'opencv'
   'protobuf'
   'python-graphviz'
@@ -25,6 +26,7 @@ depends=(
   'zeromq'
 )
 makedepends=(
+  'chrpath'
   'cmake'
   'cuda'
   'cudnn'
@@ -73,6 +75,7 @@ build() {
     -DCMAKE_INSTALL_PREFIX:PATH=/usr
     -DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON
     -DINSTALL_DOCUMENTATION:BOOL=OFF
+    -DINSTALL_MKLDNN:BOOL=OFF
     -DMKL_USE_SINGLE_DYNAMIC_LIBRARY:BOOL=ON
     -DUSE_BLAS=mkl
     -DUSE_CPP_PACKAGE:BOOL=ON
@@ -81,14 +84,13 @@ build() {
     -DUSE_GPERFTOOLS:BOOL=OFF
     -DUSE_JEMALLOC:BOOL=OFF
     -DUSE_LAPACK:BOOL=ON
+    -DUSE_LIBJPEG_TURBO:BOOL=ON
     -DUSE_MKLDNN:BOOL=ON
     -DUSE_MKL_IF_AVAILABLE:BOOL=ON
     -DUSE_OPENCV:BOOL=ON
     -DUSE_OPENMP:BOOL=ON
     -DUSE_S3:BOOL=ON
 )
-
-  # use gcc version compatible with CUDA
 
   # building with CUDA
   cd "${srcdir}/mxnet-cuda-git/build"
@@ -125,6 +127,7 @@ _package() {
 
   if [ -f "${srcdir}/${pkgname}/build/im2rec" ]; then
     install -Dm755 "${srcdir}/${pkgname}/build/im2rec" "${pkgdir}/usr/bin/im2rec"
+    chrpath --delete "${pkgdir}/usr/bin/im2rec"
   fi
 
   # install python binding
@@ -134,14 +137,12 @@ _package() {
 
   # create neccesarry soft links
   ln -sf '/usr/lib/libmxnet.so' "${pkgdir}/usr/lib/python$(get_pyver)/site-packages/mxnet/libmxnet.so"
-  ln -s "/usr/include" "${pkgdir}/usr/lib/python$(get_pyver)/site-packages/mxnet/include"
 
   # remove unwantted files
   rm -rfv "${pkgdir}/usr/mxnet"
   rm -rfv "${pkgdir}/usr/lib/cmake" "${pkgdir}/usr/share/doc"
   find "${pkgdir}" -type f -name '*dnn*' -delete
   find "${pkgdir}" -name '*.a' -delete
-  find "${pkgdir}" -type d -empty -delete
 }
 
 
@@ -153,7 +154,7 @@ package_mxnet-cuda-git() {
   pkgdesc="${pkgdesc} (with CUDA)"
   depends+=(cuda cudnn nccl)
   provides+=(mxnet-cuda=${pkgver})
-  conflicts+=(mxnet-cuda=${pkgver})
+  conflicts+=(mxnet-cuda)
 
   _package
 }
