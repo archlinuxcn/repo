@@ -2,7 +2,7 @@
 
 _pkgname=devtools
 pkgname=devtools-archlinuxcn
-pkgver=20200213
+pkgver=20200407
 pkgrel=1
 pkgdesc='Tools for Arch Linux package maintainers, archlinuxcn fork'
 arch=('any')
@@ -15,6 +15,9 @@ optdepends=('btrfs-progs: btrfs support')
 provides=("devtools=$pkgver-$pkgrel")
 conflicts=("devtools")
 source=(https://sources.archlinux.org/other/${_pkgname}/${_pkgname}-${pkgver}.tar.gz{,.sig}
+        "01-nosetarch.patch::https://github.com/archlinux/devtools/commit/61f67fd05192a21c03a015712b0eae749ce81ccf.patch"
+        "02-nosetarch.patch::https://github.com/archlinux/devtools/commit/264b9a915ca25793d71de58a304a62ec20970e08.patch"
+        "03-install-option.patch::https://github.com/archlinux/devtools/commit/7096bbd170fff2976a7e178f76d9c65c892ce3f3.patch"
         "no-yes-y.patch::https://git.archlinux.org/devtools.git/patch/?id=b7893a2ca8e09062197129881bce3fd6700a573a"
         "unshare-pacstrap.patch")
 
@@ -27,13 +30,21 @@ validpgpkeys=('487EACC08557AD082088DABA1EB2638FF56C0C53'
               'F3691687D867B81B51CE07D9BBE43771487328A9'
               '6645B0A8C7005E78DB1D7864F99FFE0FEAE999BD'
               'E240B57E2C4630BA768E2F26FC1B547C8D8172C8')
-b2sums=('0002023c45a563bf42260712c9dff322fac49c9f2ba898f06979afb1ffb434b61c19c8a1949bce5285677e2c09af1fdd24aff36715e2af45b9f3cbc1a7128b4e'
+b2sums=('01ff4d17a9502df468d545e273e94ab7d7b6817efa6d7f2fe661b4a978a5051a03a8a04ea1e82902b30988413f32f65afdf49a234d82ab05fa510ffc52f62e02'
         'SKIP'
+        'ca49d414ba692da16dff23d8813ef856e414e56e63b30ac164c517fa215154dea1b89b504e86f82036232d1b17c1deda60e8fe9ed73eeb0fd48583bcbff0e1c4'
+        '705e4264db50a4e776ce469da50de954886ec134fa0cae13960aef8a8092d678a223b921ac59c8e5dfb5d3d02d6da54cd56c9c84a1fa169971039d7a532e2a97'
+        '9955cc3ed937a5941a99ac8c4a498fd218cca62c37db4616de78067b09faef1ae0197a3dac040349920dfb9fc57aa17d411da2c83693061facc395acf038aeff'
         '2da933aa8a0bce8acab22fcbdf857462a28bb313e4554b73cf4cb02dafb40ad124b71e5666cd88257dee8a1721a57e6659581026ab2ff21aa2c257df2397db0c'
         'ad659b04b7b7a9111ceace6629e971ef775e73a2b68a82dc13d3dd5b732f3e7a056b3328fab54fa6b16e520212e4b5a6d5d27e1b0b87d10495c89a17ff130fc5')
 
 prepare() {
   cd ${_pkgname}-${pkgver}
+  patch -Np1 -i "../01-nosetarch.patch"
+  patch -Np1 -i "../02-nosetarch.patch"
+  # above 2 should be merged in upstream's next release
+
+  patch -Np1 -i "../03-install-option.patch"
   patch -RNp1 -i ../no-yes-y.patch
   patch -Np1 -i ../unshare-pacstrap.patch
 
@@ -49,6 +60,10 @@ build() {
 package() {
   cd ${_pkgname}-${pkgver}
   make PREFIX=/usr DESTDIR="${pkgdir}" install
+
+  for _arch in aarch64 armv7h armv6h arm; do
+    ln -s archbuild "${pkgdir}/usr/bin/extra-${_arch}-build"
+  done
 }
 
 # vim: ts=2 sw=2 et:
