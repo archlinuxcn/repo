@@ -1,7 +1,7 @@
 # Maintainer: surefire@cryptomile.net
 
 pkgname=keeweb
-pkgver=1.13.1
+pkgver=1.13.2
 pkgrel=1
 pkgdesc="Desktop password manager compatible with KeePass databases"
 arch=('any')
