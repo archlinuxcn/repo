@@ -1,8 +1,8 @@
 # Maintainer: XavierCLL <xavier.corredor.llano (a) gmail.com>
 
 pkgname=pycharm-professional
-pkgver=2019.3.4
-_pkgver=2019.3.4
+pkgver=2020.1.0
+_pkgver=2020.1
 pkgrel=1
 pkgdesc="Python IDE for Professional Developers. Professional Edition"
 arch=('x86_64')
@@ -22,11 +22,11 @@ source=("https://download.jetbrains.com/python/$pkgname-$_pkgver.tar.gz"
         "charm.desktop"
         "charm")
 # https://download.jetbrains.com/python/pycharm-professional-${_pkgver}.tar.gz.sha256
-sha256sums=('5f5951f415c82a337b035433f2444bbd04491faa89e3a9f1154d7d6ce0fcbcc1'
+sha256sums=('8263bb3707de2eaf88b689cf19667dc24508da40418b7fb00ad1280d1d168deb'
             'aaf7113e8c56e4d977eca204d57350d9493eda2710abefd2488a2b5d47c53344'
             '818ed42f4200ae13315587abf6f247f93e68c658a94794f73924c985cdc145d0'
-            '21e77b6b18e14636f9827e1f8d45bbc8dba8fb14ea5f4cde285c1ef4bb01c85e'
-            'bd2faa933e409a7de53750c701020a301617f5220091f1a760a6d9f61d1c6556')
+            '773f169fac40fa5df69ccf90680238524f99c42aaa2b037e78e01cfc8c545280'
+            'db54c71d65ac938bb0e4c058481463b71d784ba113a872e419c66975cbc94a3f')
 makedepends=('python2-setuptools' 'python-setuptools')
 optdepends=('ipython2: For enhanced interactive Python shell v2 inside Pycharm'
             'ipython: For enhanced interactive Python shell v3 inside Pycharm'
@@ -77,6 +77,6 @@ package() {
   cp -dr --no-preserve=ownership pycharm-$_pkgver/license/* $pkgdir/usr/share/licenses/$pkgname/
   
   # install charm application - for edit a single file in Pycharm
-  install -Dm 755 charm $pkgdir/opt/pycharm-professional/bin/
+  install -Dm 755 charm $pkgdir/usr/bin/
   install -Dm 644 charm.desktop $pkgdir/usr/share/applications/
 }
