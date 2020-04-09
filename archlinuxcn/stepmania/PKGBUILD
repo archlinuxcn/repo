@@ -11,7 +11,7 @@
 
 pkgname=stepmania
 pkgver=5.0.12
-pkgrel=4
+pkgrel=5
 pkgdesc='A free dance and rhythm game (was previously sm-ssc)'
 url='http://www.stepmania.com/'
 license=('MIT')
@@ -23,7 +23,6 @@ install='stepmania.install'
 source=(stepmania.sh
         stepmania.install
         $pkgname-$pkgver.tar.gz::https://github.com/stepmania/stepmania/archive/v$pkgver.tar.gz
-	0001-GtkModule-Add-harfbuzz-dependency.patch
 	0002-MessagemanCrashPatch.patch)
 sha256sums=('addfbc088b9b700330ab633d1b2786fc723d00357e4ad738dd5f92ceab33e29e'
             '52badaf74204e3fe0ff626b08510a2a0cdf82fa58e7afd2f1a5149a5d26ace25'
