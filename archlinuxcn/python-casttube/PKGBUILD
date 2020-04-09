@@ -1,17 +1,17 @@
 # Maintainer: Sibren Vasse <arch@sibrenvasse.nl>
 
-_name='casttube'
+_name=casttube
 pkgname="python-$_name"
-pkgver='0.2.0'
-pkgrel=2
-pkgdesc="YouTube chromecast api"
-url="http://github.com/ur1katz/casttube"
+pkgver=0.2.1
+pkgrel=1
+pkgdesc='YouTube chromecast api'
+url='http://github.com/ur1katz/casttube'
 depends=('python' 'python-requests')
 makedepends=('python-setuptools')
 license=('MIT')
 arch=('any')
 source=("https://github.com/ur1katz/casttube/archive/${pkgver}.tar.gz")
-sha256sums=('5dffe63803914ccd0f311940dc49865c4cd0bd4461f901c27a0ef22b3338cd14')
+sha256sums=('351819818a10a107641675cab71c4154afb490762410b3138c18ef410cbf5c33')
 
 build() {
     cd "${srcdir}/${_name}-${pkgver}"
