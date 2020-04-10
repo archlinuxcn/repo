@@ -1,0 +1,60 @@
+# Maintainer: Tim Schumacher <timschumi@gmx.de>
+# Contributor: Emmanuel Gil Peyrot <linkmauve@linkmauve.fr>
+# Contributor: ceri
+
+_pkgbase='citra'
+pkgname="$_pkgbase-timmy-git"
+pkgver=8316.2c0bd0f2
+pkgrel=1
+pkgdesc="A modded experimental open-source Nintendo 3DS emulator/debugger which can run several N3DS games, such as Fire Emblem Warriors (Master branch)"
+arch=('i686' 'x86_64')
+url="https://github.com/citra-emu/citra/"
+license=('GPL2')
+depends=('shared-mime-info' 'desktop-file-utils' 'sdl2' 'qt5-base' 'qt5-multimedia' 'libxkbcommon-x11')
+makedepends=('git' 'rapidjson' 'cmake' 'python' 'clang' 'llvm' 'boost' 'qt5-tools' 'libfdk-aac' 'ffmpeg')
+optdepends=("ffmpeg: needed for HLE AAC Decoding on Linux"
+    "libfdk-aac: needed for HLE AAC Decoding on Linux")
+replaces=('citra-qt-git')
+provides=('citra' 'citra-qt' 'citra-qt-git')
+conflicts=('citra' 'citra-qt' 'citra-qt-git' 'citra-canary-git' 'citra-nightly-git')
+source=("$_pkgbase::git+https://github.com/Timmy5942/citra-1")
+md5sums=('SKIP')
+
+pkgver() {
+	cd "$srcdir/$_pkgbase"
+	echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+	cd "$srcdir/$_pkgbase"
+	mkdir -p build
+
+	git submodule init
+	git submodule update --init --recursive
+}
+
+build() {
+	cd "$srcdir/$_pkgbase/build"
+	CXXFLAGS+=" -DFMT_USE_USER_DEFINED_LITERALS=0" cmake .. \
+	  -DCMAKE_INSTALL_PREFIX=/usr \
+    	  -DCMAKE_INSTALL_LIBDIR=lib \
+	  -DENABLE_QT_TRANSLATION=ON \
+	  -DCITRA_ENABLE_COMPATIBILITY_REPORTING=ON \
+	  -DENABLE_COMPATIBILITY_LIST_DOWNLOAD=ON \
+	  -DUSE_DISCORD_PRESENCE=ON \
+	  -DENABLE_FFMPEG=ON \
+    	  -DENABLE_FFMPEG_AUDIO_DECODER=ON \
+	  -DCMAKE_BUILD_TYPE=Release
+	make
+}
+
+check() {
+	cd "$srcdir/$_pkgbase/build"
+	make test
+}
+
+package() {
+	cd "$srcdir/$_pkgbase/build"
+	DESTDIR="$pkgdir/" make install
+}
+
