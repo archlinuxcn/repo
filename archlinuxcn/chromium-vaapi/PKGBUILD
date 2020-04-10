@@ -10,7 +10,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=chromium-vaapi
-pkgver=80.0.3987.163
+pkgver=81.0.4044.92
 pkgrel=1
 _launcher_ver=6
 pkgdesc="Chromium with VA-API support to enable hardware acceleration"
@@ -33,31 +33,17 @@ install=chromium.install
 source=(https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$pkgver.tar.xz
         chromium-launcher-$_launcher_ver.tar.gz::https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver.tar.gz
         chromium-drirc-disable-10bpc-color-configs.conf
-        vaapi-fix.patch
-        vaapi-fix-wayland-init.patch
-        cros-search-service-Include-cmath-for-std-pow.patch
-        move-RemoteTreeNode-declaration.patch
-        sync-enable-USSPasswords-by-default.patch
-        fix-shim-header-generation-when-unbundling-ICU.patch
-        fix-building-with-system-zlib.patch
-        remove-verbose-logging-in-local-unique-font-matching.patch
-        fix-building-with-unbundled-libxml.patch
+        vdpau-support.patch
+        vaapi-build-fix.patch
         rename-Relayout-in-DesktopWindowTreeHostPlatform.patch
         rebuild-Linux-frame-button-cache-when-activation.patch
         chromium-widevine.patch
         chromium-skia-harmony.patch)
-sha256sums=('b6ddefa9434877a9b923631b7525f7f2f80118dd986ecdac87f2c9f11f237346'
+sha256sums=('a2cf3fd07a66330b189724cdcb4549ddac72705fba6adb33020bc6444efb1a44'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
             'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb'
             '0ec6ee49113cc8cc5036fa008519b94137df6987bf1f9fbffb2d42d298af868a'
-            'a4c022263b474ae14abd899b8e453f7d9ed9c0715b0b248b8a423aa2777095c4'
-            '0a8d1af2a3734b5f99ea8462940e332db4acee7130fe436ad3e4b7ad133e5ae5'
-            '21f631851cdcb347f40793485b168cb5d0da65ae26ae39ba58d624c66197d0a5'
-            '08ef82476780e0864b5bf7f20eb19db320e73b9a5d4f595351e12e97dda8746f'
-            'e477aa48a11ca4d53927f66a9593567fcd053325fb38af30ac3508465f1dd1f6'
-            '18276e65c68a0c328601b12fefb7e8bfc632346f34b87e64944c9de8c95c5cfa'
-            '5bc775c0ece84d67855f51b30eadcf96fa8163b416d2036e9f9ba19072f54dfe'
-            'e530d1b39504c2ab247e16f1602359c484e9e8be4ef6d4824d68b14d29a7f60b'
+            'fad5e678d62de0e45db1c2aa871628fdc981f78c26392c1dccc457082906a350'
             'ae3bf107834bd8eda9a3ec7899fe35fde62e6111062e5def7d24bf49b53db3db'
             '46f7fc9768730c460b27681ccf3dc2685c7e1fd22d70d3a82d9e57e3389bb014'
             '709e2fddba3c1f2ed4deb3a239fc0479bfa50c46e054e7f32db4fb1365fed070'
@@ -86,8 +72,7 @@ declare -gA _system_libs=(
   [zlib]=minizip
 )
 _unwanted_bundled_libs=(
-  ${!_system_libs[@]}
-  ${_system_libs[libjpeg]+libjpeg_turbo}
+  $(printf "%s\n" ${!_system_libs[@]} | sed 's/^libjpeg$/&_turbo/')
 )
 depends+=(${_system_libs[@]})
 
@@ -111,28 +96,11 @@ prepare() {
     third_party/blink/renderer/core/xml/parser/xml_document_parser.cc \
     third_party/libxml/chromium/*.cc
 
-  # Fix VA-API on Intel and Nvidia
-  patch -Np1 -i ../vaapi-fix.patch
-  patch -Np1 -i ../vaapi-fix-wayland-init.patch
+  # Fix VA-API on Nvidia
+  patch -Np1 -i ../vdpau-support.patch
 
-  # https://crbug.com/957519
-  patch -Np1 -i ../cros-search-service-Include-cmath-for-std-pow.patch
-  patch -Np1 -i ../move-RemoteTreeNode-declaration.patch
-
-  # https://crbug.com/1027929
-  patch -Np1 -i ../sync-enable-USSPasswords-by-default.patch
-
-  # https://crbug.com/989153
-  patch -Np1 -i ../fix-shim-header-generation-when-unbundling-ICU.patch
-
-  # https://crbug.com/977964
-  patch -Np1 -i ../fix-building-with-system-zlib.patch
-
-  # https://crbug.com/1005508
-  patch -Np1 -i ../remove-verbose-logging-in-local-unique-font-matching.patch
-
-  # https://crbug.com/1043042
-  patch -Np1 -i ../fix-building-with-unbundled-libxml.patch
+  # Fix VAAPI build on chromium 81+
+  patch -Np1 -i ../vaapi-build-fix.patch
 
   # https://crbug.com/1049258
   patch -Np1 -i ../rename-Relayout-in-DesktopWindowTreeHostPlatform.patch
