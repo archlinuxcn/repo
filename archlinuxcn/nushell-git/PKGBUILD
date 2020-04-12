@@ -3,7 +3,7 @@
 # Scripts inspired by nushell-git and nushell packages
 
 pkgname=nushell-git
-pkgver=0.5.0.r1544.g8855c54
+pkgver=0.12.1.r2112.gdd4935fb
 pkgrel=1
 pkgdesc="A modern shell written in Rust"
 arch=('x86_64')
@@ -16,7 +16,7 @@ license=('MIT')
 source=("$pkgname::git+https://github.com/nushell/nushell.git"
 		"LICENSE::https://raw.githubusercontent.com/nushell/nushell/master/LICENSE")
 sha256sums=('SKIP'
-            '05cb10fc5daf203df1af2d2e83da56704f9d8ce1cf184ca61ea3a2c12e28f7fb')
+            '57fdb6634a2372af0978dd178f8e157f227d96f3ca27ae9c73f1320f6c0c41d4')
 
 pkgver() {
 	cd "${pkgname}"
@@ -25,7 +25,7 @@ pkgver() {
 
 build() {
 	cd "${pkgname}"
-	cargo build --release --all-features -Z install-upgrade
+	cargo build --release --locked --features stable
 }
 
 package() {

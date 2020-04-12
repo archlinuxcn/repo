@@ -3,22 +3,22 @@
 # Contributor: Dave Reisner <d@falconindy.com>
 
 pkgname=libgit2-julia
-pkgver=0.28.3
+pkgver=1.0.0
 pkgrel=1
 epoch=1
 pkgdesc='A linkable library for Git'
 arch=(i686 x86_64 armv7h aarch64)
-url='https://libgit2.github.com/'
-depends=('glibc' 'http-parser' 'libssh2' 'openssl' 'zlib')
-makedepends=(cmake python)
+url="https://libgit2.github.com/"
+depends=('glibc' 'http-parser' 'openssl' 'pcre' 'zlib')
+makedepends=('cmake' 'libssh2' 'python')
 provides=('libgit2.so' "libgit2=$epoch:$pkgver")
 conflicts=(libgit2)
 license=('GPL2')
 source=("libgit2-$pkgver.tar.gz::https://github.com/libgit2/libgit2/archive/v${pkgver}.tar.gz"
-        "libgit2-0.28.2-online-tests.patch::https://github.com/libgit2/libgit2/pull/5094.patch"
+        "libgit2-0.99.0-remove_http-parse_incompatible_tests.patch"
         libgit2-agent-nonfatal.patch)
-sha256sums=('ee5344730fe11ce7c86646e19c2d257757be293f5a567548d398fb3af8b8e53b'
-            '0d1d5ceaae10a9dc17894b8f13e957b463e5f5ccde13dc57f19dbc80f5d89de8'
+sha256sums=('6a1fa16a7f6335ce8b2630fbdbb5e57c4027929ebc56fcd1ac55edb141b409b4'
+            '0a597176a551dfe8dda56a46362ff1ef614928206a162d78fdf2d3074c9273ca'
             'a60e169812b802e3fcb4ee7501786346eb87db9ffa3c8ae3311de47ce5a15f10')
 options=(!strip)
 
@@ -26,25 +26,29 @@ prepare() {
   cd "libgit2-$pkgver"
   mkdir -p build
 
+  patch -Np1 -i "../libgit2-0.99.0-remove_http-parse_incompatible_tests.patch"
   patch -p1 < ../libgit2-agent-nonfatal.patch
-  # fix online tests: https://github.com/libgit2/libgit2/pull/5094
-  patch -Np1 -i "../libgit2-0.28.2-online-tests.patch"
 }
+
+
 build() {
-  cd "libgit2-$pkgver/build"
+  cd "libgit2-$pkgver"
   export LANG=en_US.UTF-8
   export CFLAGS+=' -g'
   export CXXFLAGS+=' -g'
   cmake -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_BUILD_TYPE=Release \
+        -DUSE_HTTP_PARSER=system \
         -DTHREADSAFE=ON \
-        ..
-  make
+        -B build \
+        -S .
+  make -C build
 }
 
 package() {
-  cd "libgit2-$pkgver/build"
-  make DESTDIR="$pkgdir" install
-  install -vDm 644 ../{AUTHORS,README.md} \
-          -t "${pkgdir}/usr/share/doc/${pkgname}"
+  depends+=('libssh2.so')
+  cd "libgit2-$pkgver"
+  make -C build DESTDIR="$pkgdir" install
+  install -vDm 644 {AUTHORS,README.md} \
+    -t "${pkgdir}/usr/share/doc/${pkgname}"
 }

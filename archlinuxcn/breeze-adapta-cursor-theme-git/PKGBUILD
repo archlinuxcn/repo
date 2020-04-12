@@ -1,4 +1,4 @@
-# Maintainer: Tony Lambiris <tony@criticalstack.com>
+# Maintainer: Dct Mei <dctxmei@gmail.com>
 
 pkgname=breeze-adapta-cursor-theme-git
 _pkgname=Breeze-Adapta-Cursor
@@ -7,11 +7,9 @@ pkgrel=1
 pkgdesc="Popular Breeze Cursor modified for Adapta theme"
 arch=('any')
 url="https://github.com/mustafaozhan/Breeze-Adapta-Cursor"
-license=('GPL3')
-source=("git+https://github.com/mustafaozhan/Breeze-Adapta-Cursor")
+license=('LGPL3')
+source=("git+$url.git")
 makedepends=('git')
-provides=("${pkgname%-*}")
-conflicts=("${pkgname%-*}")
 sha512sums=('SKIP')
 
 pkgver() {
@@ -22,11 +20,9 @@ pkgver() {
 package() {
     cd "${srcdir}/${_pkgname}"
     install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/${pkgname%-*}/LICENSE"
-    install -d "$pkgdir"/usr/share/icons/Breeze-Adapta-Cursor
-    rm LICENSE README.md install.sh
-    rm -r cursors/New\ Folder
-    cp -r * "$pkgdir"/usr/share/icons/Breeze-Adapta-Cursor
-    chmod -R 644 "$pkgdir"/usr/share/icons/Breeze-Adapta-Cursor/*
-    chmod 755 "$pkgdir"/usr/share/icons/Breeze-Adapta-Cursor
-    chmod 755 "$pkgdir"/usr/share/icons/Breeze-Adapta-Cursor/cursors
+    install -d "$pkgdir"/usr/share/icons/Breeze-Adapta-Cursor/
+    rm -r 'cursors/New Folder/'
+    cp -r cursors/ "$pkgdir"/usr/share/icons/Breeze-Adapta-Cursor/
+    install -m 644 cursor.theme "$pkgdir"/usr/share/icons/Breeze-Adapta-Cursor/cursor.theme
+    install -m 644 index.theme "$pkgdir"/usr/share/icons/Breeze-Adapta-Cursor/index.theme
 }

@@ -1,18 +1,23 @@
 # Maintainer: Jerome Leclanche <jerome@leclan.ch>
-# Co-Maintainer: Chih-Hsuan Yen <yan12125@gmail.com>
+# Maintainer: Chih-Hsuan Yen <yan12125@archlinux.org>
 
 _pkgname=qtermwidget
 pkgname=$_pkgname-git
-pkgver=0.14.1.46.g575064f
+pkgver=0.14.1.63.ged8b7cb
 pkgrel=1
-pkgdesc="A terminal widget for Qt"
-arch=("i686" "x86_64")
+pkgdesc="A terminal widget for Qt, used by QTerminal"
+arch=("x86_64")
 url="https://github.com/lxqt/qtermwidget"
+# Yep, it's messy when you're talking about licenses
 license=("LGPL" "custom:BSD" "custom:Public Domain")
+depends=("qt5-base")
+makedepends=("git" "cmake" "lxqt-build-tools-git" "qt5-tools"
+             "python-pyqt5" "python-sip" "sip")
 provides=("$_pkgname=$pkgver")
 conflicts=("$_pkgname")
-depends=(qt5-base)
-makedepends=(git cmake lxqt-build-tools-git qt5-tools python-pyqt5 python-sip sip)
+optdepends=(
+  'python: PyQt5 bindings'
+)
 source=("git+https://github.com/lxqt/$_pkgname.git")
 sha256sums=('SKIP')
 
@@ -26,7 +31,6 @@ build() {
   cd build
   cmake "$srcdir/$_pkgname" \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_INSTALL_LIBDIR=lib \
     -DQTERMWIDGET_BUILD_PYTHON_BINDING=ON
   make
 }
@@ -34,4 +38,5 @@ build() {
 package() {
   cd build
   make DESTDIR="$pkgdir" install
+  install -Dm644 "$srcdir/$_pkgname/README.md" -t "$pkgdir"/usr/share/licenses/$pkgname
 }

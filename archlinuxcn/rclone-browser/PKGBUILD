@@ -1,0 +1,29 @@
+# Maintainer: Hao Long <imlonghao@archlinuxcn.org>
+
+pkgname=rclone-browser
+_pkgname=RcloneBrowser
+pkgver=1.8.0
+pkgrel=1
+pkgdesc='Simple cross platform GUI for rclone'
+arch=('x86_64' 'i686')
+url='https://github.com/kapitainsky/RcloneBrowser'
+license=('MIT')
+depends=('hicolor-icon-theme' 'qt5-base' 'rclone')
+makedepends=('cmake')
+provides=('rclone-browser')
+conflicts=('rclone-browser')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/$pkgver.tar.gz")
+sha256sums=('5f8242a011b85477749127b7e94e874035c431c2fa6df817e5603ed891604beb')
+
+build() {
+  cd $_pkgname-$pkgver
+  mkdir build && cd build
+  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$pkgdir/usr -DCMAKE_INSTALL_LIBDIR=$pkgdir/usr/lib ..
+  make -j$(nproc)
+}
+
+package() {
+  cd $_pkgname-$pkgver/build
+  make install
+  install -Dm644 ../LICENSE $pkgdir/usr/share/licenses/$pkgname/LICENSE
+}

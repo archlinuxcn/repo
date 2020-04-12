@@ -1,0 +1,8 @@
+post_install() {
+# this is executed by make install, but doesn't work since setcap can only be run as root
+  setcap CAP_SYS_NICE=+ep /usr/bin/kwin_wayland
+}
+
+post_upgrade() {
+  post_install
+}

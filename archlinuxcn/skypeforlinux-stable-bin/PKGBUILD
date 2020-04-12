@@ -3,14 +3,14 @@
 
 _pkgname=skypeforlinux
 pkgname=$_pkgname-stable-bin
-pkgver=8.54.0.85
+pkgver=8.58.0.93
 pkgrel=1
 pkgdesc="Skype for Linux - Stable/Release Version"
 arch=("x86_64")
 url="http://www.skype.com"
 license=("custom")
 depends=("gtk3" "libxss" "alsa-lib" "libxtst" "libsecret" "nss" "glibc>=2.28-4")
-optdepends=("gnome-keyring")
+optdepends=("org.freedesktop.secrets")
 makedepends=("asar")
 conflicts=("$_pkgname" "$_pkgname-bin" "$_pkgname-preview-bin" "$_pkgname-beta-bin" "skype")
 provides=("$_pkgname" "skype")
@@ -18,10 +18,10 @@ install=install.sh
 source=(
 "https://repo.skype.com/deb/pool/main/s/$_pkgname/${_pkgname}_${pkgver}_amd64.deb"
 )
-sha256sums=('7587d1d470e248e11c911bed7a95c79b1d516b5952646efc4696789c1e306226')
+sha256sums=('836e25800320d96e8d35d05e60b98a6dd4da077f02880c9e34097d50686c0adb')
 
 package() {
-  tar -xJC "$pkgdir" -f data.tar.xz
+  tar --no-same-owner -xJC "$pkgdir" -f data.tar.xz
   install -d "$pkgdir/usr/share/licenses/$pkgname"
   mv "$pkgdir/usr/share/$_pkgname/LICENSES.chromium.html" \
     "$pkgdir/usr/share/licenses/$pkgname/"

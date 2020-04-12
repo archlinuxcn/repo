@@ -5,7 +5,7 @@
 # Contributor: Matthias Meulien <orontee@gmail.com>
 
 pkgname=global
-pkgver=6.6.3
+pkgver=6.6.4
 pkgrel=1
 pkgdesc="A source code tag system"
 arch=("i686" "x86_64")
@@ -17,7 +17,7 @@ optdepends=("ctags" "emacs" "idutils" "python-pygments" "vim")
 makedepends=("python")
 options=(!emptydirs !libtool)
 source=("https://ftp.gnu.org/pub/gnu/${pkgname}/${pkgname}-${pkgver}.tar.gz")
-sha256sums=("cbee98ef6c1b064bc5b062d14a6d94dca67289e8374860817057db7688bc651c")
+sha256sums=("987e8cb956c53f8ebe4453b778a8fde2037b982613aba7f3e8e74bcd05312594")
 
 prepare() {
   cd "${srcdir}/${pkgname}-${pkgver}"

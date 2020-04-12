@@ -1,0 +1,31 @@
+From b7893a2ca8e09062197129881bce3fd6700a573a Mon Sep 17 00:00:00 2001
+From: Eli Schwartz <eschwartz@archlinux.org>
+Date: Sun, 26 May 2019 16:41:21 -0400
+Subject: makechrootpkg: when installing with -I, ensure package is installed
+
+noconfirm is wrong here, as we don't want to accept the default answer
+-- we want to install the new package, even if it conflicts and provides
+an existing one. After all, we explicitly asked for it.
+
+Signed-off-by: Eli Schwartz <eschwartz@archlinux.org>
+Signed-off-by: Levente Polyak <anthraxx@archlinux.org>
+---
+ makechrootpkg.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/makechrootpkg.in b/makechrootpkg.in
+index 4c301e6..f69c781 100644
+--- a/makechrootpkg.in
++++ b/makechrootpkg.in
+@@ -161,7 +161,7 @@ install_packages() {
+ 
+ 	cp -- "${install_pkgs[@]}" "$copydir/root/"
+ 	arch-nspawn "$copydir" "${bindmounts_ro[@]}" "${bindmounts_rw[@]}" \
+-		pacman -U --noconfirm -- "${pkgnames[@]/#//root/}"
++		bash -c 'yes y | pacman -U -- "$@"' -bash "${pkgnames[@]/#//root/}"
+ 	ret=$?
+ 	rm -- "${pkgnames[@]/#/$copydir/root/}"
+ 
+-- 
+cgit v1.2.1-1-g437b
+

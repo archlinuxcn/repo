@@ -20,7 +20,7 @@
 
 (( UID > 0 )) && { echo 'You must be root' >&2; exit 1; }
 
-modules=(vboxnetadp vboxnetflt vboxpci vboxdrv)
+modules=(vboxnetadp vboxnetflt vboxdrv)
 
 echo -n 'Unloading modules: '
 for _m in "${modules[@]}"; do

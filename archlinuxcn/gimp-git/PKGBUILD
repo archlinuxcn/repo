@@ -1,4 +1,6 @@
-# Maintainer: Filipe Laíns (FFY00) <filipe.lains@gmail.com>
+# Maintainer : bartus <arch-user-repoᘓbartus.33mail.com>
+# shellcheck disable=SC2034
+# Contributor: Filipe Laíns (FFY00) <filipe.lains@gmail.com>
 # Contributor: Iru Cai <mytbk920423@gmail.com>
 # Contributor: Alexander Hunziker <alex.hunziker@gmail.com>
 # Contributor: Alessio Biancalana <dottorblaster@gmail.com>
@@ -6,21 +8,40 @@
 pkgname=gimp-git
 _pkgname=${pkgname%-git}
 epoch=1
-pkgver=44942.r9772b7162c.
-pkgrel=1
-pkgdesc="GNU Image Manipulation Program"
+pkgver=45432.60b6c06638
+pkgrel=2
+pkgdesc="GNU Image Manipulation Program (non-conflicting git version)"
 arch=('i686' 'x86_64')
 url="https://www.gimp.org"
 license=('GPL' 'LGPL')
-depends=('pygtk' 'lcms2>=2.2' 'libwmf>=0.2.8' 'icu' 'aalib' 'enchant'
-         'libgexiv2' 'librsvg>=2.16.1' 'desktop-file-utils'
-         'libexif>=0.6.15' 'libart-lgpl>=2.3.19' 'dbus-glib' 'gtk-doc'
-         'poppler-glib' 'poppler-data' 'openexr>=1.6.1' 'mypaint-brushes1>=1.3.0'
-         'babl-git' 'gegl-git' 'cairo>=1.14' 'appstream-glib>=0.7.7' 'gjs')
-makedepends=('git' 'intltool' 'gutenprint>=5.0.0' 'intltool>=0.40.1'
+depends=(
+	'lcms2>=2.8'
+	'libwmf>=0.2.8'
+	'icu'
+	'enchant'
+	'libgexiv2>=0.10.6'
+	'librsvg>=2.40.6'
+	'desktop-file-utils'
+	'libexif>=0.6.15'
+	'libart-lgpl>=2.3.19'
+	'dbus-glib'
+	'gtk-doc>=1.0'
+	'poppler-glib>=0.69.0'
+	'poppler-data>=0.4.9'
+	'openexr>=1.6.1'
+	'mypaint-brushes1>=1.3.0'
+	'babl-git'
+	'gegl-git'
+	'cairo>=1.14.0'
+	'appstream-glib>=0.7.7'
+        'gobject-introspection>=1.32.0'
+	)
+makedepends=('git' 'intltool>=0.40.1'
              'alsa-lib>=1.0.0' 'libxslt' 'glib-networking'
-             'alsa-lib' 'curl' 'ghostscript' 'libxpm' 'webkit2gtk' 'python-gobject'
-             'libheif' 'libwebp' 'libmng' 'iso-codes' 'zlib' 'gobject-introspection')
+             'alsa-lib' 'curl' 'ghostscript' 'libxpm' 'webkit2gtk'
+             'libheif' 'libwebp' 'libmng' 'iso-codes' 'aalib' 'zlib'
+             'gjs' 'python-gobject' 'luajit' 'meson' 'xorg-server-xvfb'
+             )
 checkdepends=('xorg-server-xvfb')
 optdepends=('gutenprint: for sophisticated printing only as gimp has built-in cups print support'
             'alsa-lib: for MIDI event controller module'
@@ -33,64 +54,40 @@ optdepends=('gutenprint: for sophisticated printing only as gimp has built-in cu
             'libmng: MNG support'
             'iso-codes: Language support'
             'aalib: ASCII art support'
-            'zlib: Compression routines')
-#provides=('gimp')
-#conflicts=('gimp')
+            'zlib: Compression routines'
+            'gjs: JavaScript scripting support'
+            'luajit: LUA scripting support'
+            )
 source=('git+https://gitlab.gnome.org/GNOME/gimp.git'
         'linux.gpl')
 sha512sums=('SKIP'
             '6f33d57f242fa8ce04b65e06a712bd54677306a45b22cb853fbe348089cd4673bd4ed91073074fe067166fe8951c370f8bbbc386783e3ed5170d52e9062666fe')
 
 pkgver() {
-  cd $_pkgname
+  cd ${srcdir}/${_pkgname}
+  printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
 
-  printf "%s.r%s.%s" \
-  	$(cat configure.ac | grep '^m4_define(\[gimp_api_version\], \[.*\])' | sed -e 's|m4_define(\[gimp_api_version\], \[||' -e 's|\])||') \
-  	$(git rev-list --count HEAD) \
-  	$(git rev-parse --short HEAD)
+prepare() {
+  export CFLAGS CXXFLAGS LDFLAGS
+  mkdir "${srcdir}/build" -p
+  meson "${srcdir}/${_pkgname}"\
+        "${srcdir}/build"\
+        --prefix=/usr
 }
 
 build() {
-  cd $_pkgname
-
-  _mypaintver=$(echo /usr/lib/libmypaint-*.so | grep -o -E '\-[0-9]+(\.[0-9]+)*' | head -1)
-  sed -i "s|\\(libmypaint\\)\\( >= libmypaint_required_version\\)|\\1${_mypaintver}\\2|g" configure.ac
-
-  export PYTHON=/usr/bin/python3
-
-  ./autogen.sh
-
-  ./configure \
-  	--prefix=/usr \
-  	--sysconfdir=/etc \
-  	--libexecdir=/usr/bin \
-  	--enable-mp \
-  	--enable-gimp-console \
-  	--enable-gimp-remote \
-  	--enable-python \
-  	--enable-gtk-doc \
-  	--with-gif-compression=lzw \
-  	--with-libcurl \
-  	--with-openexr
-
-  sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
-
-  PYTHONPATH=/usr/share/glib-2.0:$PYTHONPATH make
+  export NINJA_STATUS="[%p | %f<%r<%u | %cbps ] "
+  ninja -C "${srcdir}/build"
 }
 
-#check() {
-#  cd $_pkgname
-#
-#  xvfb-run make check
-#  xvfb-run make distcheck
-#}
+check() {
+  ninja -C "${srcdir}/build" test
+}
 
 package() {
-  cd $_pkgname
-
-  make DESTDIR="$pkgdir" install
-
-  install -Dm 644 "$srcdir"/linux.gpl "$pkgdir"/usr/share/gimp/2.99/palettes/Linux.gpl
+  DESTDIR="${pkgdir}" ninja -C "${srcdir}/build" install
+  install -Dm 644 "${srcdir}/linux.gpl" "${pkgdir}/usr/share/gimp/2.99/palettes/Linux.gpl"
   
   #fix gimp.desktop
   mv ${pkgdir}/usr/share/applications/gimp.desktop ${pkgdir}/usr/share/applications/gimp-2.99.desktop
@@ -101,7 +98,12 @@ package() {
     mv ${icon} ${icon%.png}-2.99.png
   done
 
+  #fix man
+  rm ${pkgdir}/usr/share/man/man1/gimp{,tool,-console}.1
+  rm ${pkgdir}/usr/share/man/man5/gimprc.5
+
   #fix metainfo
   rm -rf ${pkgdir}/usr/share/metainfo
+  rm ${pkgdir}/usr/share/appdata/gimp-data-extras.metainfo.xml
 }
 

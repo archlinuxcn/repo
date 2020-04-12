@@ -1,7 +1,7 @@
 _pkgname=butterfly
 pkgname=butterfly
 pkgver=3.2.5
-pkgrel=3
+pkgrel=4
 pkgdesc="A sleek web based terminal emulator"
 arch=('any')
 url="https://github.com/paradoxxxzero/butterfly"

@@ -1,0 +1,29 @@
+# Maintainer: Klemens Schölhorn <klemens@schoelhorn.eu>
+
+pkgname=python-seafdav
+pkgver=7.1.3
+pkgrel=1
+pkgdesc="Seafile webdav server"
+arch=('any')
+url="https://github.com/haiwen/seafdav"
+license=('MIT')
+depends=(python
+         python-seafobj
+         python-defusedxml
+         python-six
+         python-jinja
+         python-yaml
+         python-jsmin
+         python-sqlalchemy)
+makedepends=('python-setuptools')
+source=("https://github.com/haiwen/seafdav/archive/v${pkgver}-server.tar.gz")
+sha256sums=('2b511bf95330c5b314ebe48182e64fce11db0bd36e83017ea3d580b17637cc8f')
+
+package() {
+    cd seafdav-$pkgver-server
+    python ./setup.py install --root="$pkgdir/" --optimize=1 \
+           --install-lib "usr/share/seafile-server/seahub/thirdpart" \
+           --install-scripts "usr/share/seafile-server/seahub/bin"
+
+    install -D -m644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

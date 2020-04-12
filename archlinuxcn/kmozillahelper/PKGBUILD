@@ -1,5 +1,5 @@
 pkgname=kmozillahelper
-pkgver=5.0.3
+pkgver=5.0.5
 pkgrel=1
 epoch=1
 pkgdesc="Mozilla KDE Integration."
@@ -9,7 +9,7 @@ license=('MIT')
 depends=("kio" "knotifications" "kwindowsystem" "ki18n")
 makedepends=("cmake" "extra-cmake-modules")
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/openSUSE/kmozillahelper/archive/v${pkgver}.tar.gz")
-md5sums=('3e39b5a6d38a88f77cb65e91e5bae8b5')
+md5sums=('408b8b87633a4706163bc7f97dc60f6b')
 
 build() {
 	mkdir -p "$srcdir/$pkgname-build"

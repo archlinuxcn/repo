@@ -1,25 +1,20 @@
+# Maintainer: Juan Simón <play4pro at protonmail dot com>
+# Contributor: alium
+# Contributor: angelsl
 _pkgbase=r8168
 pkgname=${_pkgbase}-dkms
-pkgver=8.047.04
-pkgrel=1
-pkgdesc="A kernel module for Realtek 8168 network cards"
-url="http://www.realtek.com.tw"
+pkgver=8.048.02
+pkgrel=3
+pkgdesc="A kernel module for Realtek 8168 network cards (DKMS version)"
+url="https://github.com/simonbcn/r8168-dkms"
 license=("GPL")
 arch=('i686' 'x86_64')
 depends=('glibc' 'dkms')
-conflicts=("${_pkgbase}")
-optdepends=('linux-headers: Needed for build the module for Arch kernel'
-	'linux-lts-headers: Needed for build the module for LTS Arch kernel'
-	'linux-zen-headers: Needed for build the module for ZEN Arch kernel')
-source=(https://github.com/mtorromeo/r8168/archive/$pkgver/$pkgname-$pkgver.tar.gz
+makedepends=('git')
+conflicts=("${pkgname}")
+source=("r8168-dkms::git+https://github.com/simonbcn/r8168-dkms.git"
         dkms.conf)
 install=r8168-dkms.install
-
-#prepare() {
-#	cd "r8168-$pkgver"
-#	patch -p1 -i "$srcdir/linux-4.15-2.patch"
-#}
- 
 
 package() {
 	echo "blacklist r8169" | \
@@ -27,12 +22,12 @@ package() {
 	install -Dm644 dkms.conf "${pkgdir}/usr/src/${_pkgbase}-${pkgver}/dkms.conf"
 
 	sed -e "s/@PKGNAME@/${_pkgbase}/g" \
-		-e "s/@PKGVER@/${_pkgbase}/g" \
+		-e "s/@PKGVER@/${pkgver}/g" \
 		-i "${pkgdir}/usr/src/${_pkgbase}-${pkgver}/dkms.conf"
 
-	cd "${_pkgbase}-$pkgver"
+	cd "${pkgname}"
 	rm src/Makefile_linux24x
 	cp -dr --no-preserve='ownership' src "${pkgdir}/usr/src/${_pkgbase}-${pkgver}/src"
 }
-sha256sums=('4a201c7691b66e47f19172367c70a14b8b38d600f0739719c57dba9c0cf3f17a'
-            '260d8142e944f3144cbc704534e662d427318d8b32dc7a2852a855be72e8d763')
+sha256sums=('SKIP'
+            'e33abcbc8fbe3129459ebc60be3b2f8ed55ddc53755f4956d6feb16c61c43250')

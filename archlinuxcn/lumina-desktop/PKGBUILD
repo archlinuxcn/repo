@@ -4,8 +4,9 @@
 # Contributor: marcin82
 # Based on original PKGBUILD created by:
 # Contributor: Chad "crossroads1112" Sharp <crossroads1112@riseup.net>
+# Contributor: Gabriel Moura <develop@srmoural.com.br>
 pkgname=lumina-desktop
-pkgver=1.5.0
+pkgver=1.6.0
 pkgrel=1
 pkgfullname="${pkgname%-*}-${pkgver}"
 pkgdesc="A Lightweight QT5 Desktop for FreeBSD"
@@ -27,7 +28,7 @@ conflicts=("lumina-de-git" "lumina-desktop-git" "insight-fm")
 provides=("${pkgname%-*}" "insight-fm")
 install="${pkgname%-*}.install"
 source=("https://github.com/trueos/lumina/archive/v${pkgver}.tar.gz")
-sha512sums=('37106d71a9ba7188c4ded0614d2d4424f732519e11288ae312dfcd9a0b5b26dd31dfa812e74a96c0e3e0fb99fae4dc00806fd7a24183746688c72d997054af7d')
+sha512sums=('e923961568ab9cc32206386066daef8cd1fd2db2d5c3e260e5c1da1dcda39a516576418f607cefbe5a1c47d8684591d0e595fb344e7d6aa2859fc3b326e73e30')
 
 build() {
     cd "${srcdir}/${pkgfullname}"

@@ -1,34 +1,37 @@
-# Maintainer: Jean Lucas <jean@4ray.co>
+# Maintainer: Chocobo1 <chocobo1 AT archlinux DOT net>
+# Former maintainer: Jean Lucas <jean@4ray.co>
 
 pkgname=sccache
-pkgver=0.2.12
-pkgrel=1
-pkgdesc='ccache with cloud storage'
-arch=(i686 x86_64)
-url=https://github.com/mozilla/sccache
-license=(Apache)
-depends=(openssl)
-makedepends=(cargo)
-checkdepends=(openssl-1.0)
-source=(sccache-$pkgver.tar.gz::$url/archive/$pkgver.tar.gz)
-sha512sums=('1f7495aa7c0749c4bfbd85a88a304a6ed18cc9bfcd341f0f1a668a743ae31d355bc8c5b3199b048d8bcab3ce8e9c8b844a609e4c3009d4e5497dd080aa881a45')
+pkgver=0.2.13
+pkgrel=4
+pkgdesc="Shared compilation cache"
+arch=('i686' 'x86_64')
+url="https://github.com/mozilla/sccache"
+license=('apache')
+depends=('openssl' 'zlib')
+makedepends=('rust')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/mozilla/sccache/archive/$pkgver.tar.gz")
+sha256sums=('81c973cf9a89e77f02a6b5710298531ba2e50d2555e8a931e505fbf570522e2a')
 
-build() {
-  cd sccache-$pkgver
-  cargo build --all-features --release
-}
 
 check() {
-  cd sccache-$pkgver
-  # Older native-tls crate depends on older openssl crate
-  OPENSSL_LIB_DIR=/usr/lib/openssl-1.0 \
-    OPENSSL_INCLUDE_DIR=/usr/include/openssl-1.0 \
-    cargo test
+  cd "$pkgname-$pkgver"
+
+  #cargo test \
+  #  --release \
+  #  --locked \
+  #  --all-features
 }
 
 package() {
-  cd sccache-$pkgver
-  install -D target/release/sccache -t "$pkgdir"/usr/bin
-  install -Dm 644 README.md -t "$pkgdir"/usr/share/doc/sccache
-  install -Dm 644 LICENSE -t "$pkgdir"/usr/share/licenses/sccache
+  cd "$pkgname-$pkgver"
+
+  cargo install \
+    --no-track \
+    --locked \
+    --root "$pkgdir/usr" \
+    --path "$srcdir/$pkgname-$pkgver" \
+    --all-features
+
+  install -Dm644 "README.md" -t "$pkgdir/usr/share/doc/sccache"
 }

@@ -1,0 +1,85 @@
+[PATCH] ldconfig: file truncated while reading soname after patchelf [BZ #23964]
+
+The way loadaddr is computed from the first LOAD segment in process_elf_file
+assumes .dynstr is also contained in that segment. That is not necessarily
+true, especially for libraries that have been touched by patchelf.
+
+With this patch, the address read from the dynamic segment is checked against
+all applicable segments instead of only the first one.
+
+       [BZ #23964]
+       * elf/readelflib.c: Fix resolving of loadaddr for .dynstr vaddr.
+---
+ elf/readelflib.c | 33 ++++++++++++++++-----------------
+ 1 file changed, 16 insertions(+), 17 deletions(-)
+
+diff --git a/elf/readelflib.c b/elf/readelflib.c
+index 5a1e2dc2df..bc1195c175 100644
+--- a/elf/readelflib.c
++++ b/elf/readelflib.c
+@@ -98,11 +98,6 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
+ 
+       switch (segment->p_type)
+ 	{
+-	case PT_LOAD:
+-	  if (loadaddr == (ElfW(Addr)) -1)
+-	    loadaddr = segment->p_vaddr - segment->p_offset;
+-	  break;
+-
+ 	case PT_DYNAMIC:
+ 	  if (dynamic_addr)
+ 	    error (0, 0, _("more than one dynamic segment\n"));
+@@ -176,11 +171,6 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
+ 	}
+ 
+     }
+-  if (loadaddr == (ElfW(Addr)) -1)
+-    {
+-      /* Very strange. */
+-      loadaddr = 0;
+-    }
+ 
+   /* Now we can read the dynamic sections.  */
+   if (dynamic_size == 0)
+@@ -190,22 +180,31 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
+   check_ptr (dynamic_segment);
+ 
+   /* Find the string table.  */
+-  dynamic_strings = NULL;
+   for (dyn_entry = dynamic_segment; dyn_entry->d_tag != DT_NULL;
+        ++dyn_entry)
+     {
+       check_ptr (dyn_entry);
+       if (dyn_entry->d_tag == DT_STRTAB)
+-	{
+-	  dynamic_strings = (char *) (file_contents + dyn_entry->d_un.d_val - loadaddr);
+-	  check_ptr (dynamic_strings);
+-	  break;
+-	}
++        break;
+     }
+ 
+-  if (dynamic_strings == NULL)
++  for (i = 0, segment = elf_pheader;i < elf_header->e_phnum; i++, segment++)
++  {
++    ElfW(Addr) vaddr = dyn_entry->d_un.d_ptr;
++    if (segment->p_type == PT_LOAD &&
++        vaddr >= segment->p_vaddr &&
++        vaddr < segment->p_vaddr + segment->p_filesz)
++    {
++      loadaddr = segment->p_vaddr - segment->p_offset;
++      break;
++    }
++  }
++  if (loadaddr == (ElfW(Addr)) -1)
+     return 1;
+ 
++  dynamic_strings = (char *) (file_contents + dyn_entry->d_un.d_val - loadaddr);
++  check_ptr (dynamic_strings);
++
+   /* Now read the DT_NEEDED and DT_SONAME entries.  */
+   for (dyn_entry = dynamic_segment; dyn_entry->d_tag != DT_NULL;
+        ++dyn_entry)
+-- 
+2.19.2
+

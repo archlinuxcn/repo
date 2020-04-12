@@ -1,11 +1,11 @@
 pkgname=xenia-git
-pkgver=5498.d4a5a578
+pkgver=5662.0f0ed0eb2
 pkgrel=1
 pkgdesc="Xenia is an experimental emulator for the Xbox 360."
 arch=('x86_64')
 url="http://xenia.jp"
 license=('BSD')
-depends=('gtk3' 'lz4' 'glew' 'libx11' 'libc++' 'vulkan-icd-loader')
+depends=('gtk3' 'lz4' 'glew' 'libx11' 'sdl2' 'libc++' 'vulkan-icd-loader')
 # TODO use installed premake5 instead of building it
 # premake: powerpc patch added
 makedepends=('python' 'clang' 'vulkan-headers' 'git' 'clang' 'libpthread-stubs')

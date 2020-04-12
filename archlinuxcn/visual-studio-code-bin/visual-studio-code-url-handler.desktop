@@ -2,11 +2,11 @@
 Name=Visual Studio Code - URL Handler
 Comment=Code Editing. Redefined.
 GenericName=Text Editor
-Exec=/opt/visual-studio-code/code --open-url %U
+Exec=/opt/visual-studio-code/code --no-sandbox --open-url %U
 Icon=visual-studio-code
 Type=Application
 NoDisplay=true
 StartupNotify=true
-Categories=Development;WebDevelopment;IDE;Utility;TextEditor;
-MimeType=x-scheme-handler/vscode
+Categories=Utility;TextEditor;Development;IDE;
+MimeType=x-scheme-handler/vscode;
 Keywords=vscode;

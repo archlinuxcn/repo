@@ -15,12 +15,12 @@ _pgo=true
 # /view/head:/debian/patches/unity-menubar.patch
 
 # patches from gentoo:
-# https://dev.gentoo.org/~anarchy/mozilla/patchsets/firefox-68.0-patches-07.tar.xz
+# https://dev.gentoo.org/~anarchy/mozilla/patchsets/firefox-71.0-patches-04.tar.xz
 
 _pkgname=firefox
 pkgname=$_pkgname-kde-opensuse
-pkgver=69.0.3
-pkgrel=2
+pkgver=72.0.2
+pkgrel=4
 pkgdesc="Standalone web browser from mozilla.org with OpenSUSE patch, integrate better with KDE"
 arch=('i686' 'x86_64')
 license=('MPL' 'GPL' 'LGPL')
@@ -48,12 +48,11 @@ makedepends=('unzip' 'zip' 'diffutils' 'python2-setuptools' 'yasm' 'mesa' 'imake
 
 optdepends=('networkmanager: Location detection via available WiFi networks'
             'speech-dispatcher: Text-to-Speech'
-            'libdbusmenu-gtk3: Global menu support'
             'pulseaudio: Audio support')
 provides=("firefox=${pkgver}")
 conflicts=('firefox')
-_patchrev=972f68ac6b1a
-options=('!emptydirs' 'debug')
+_patchrev=4c5d44d40a03
+options=('!emptydirs')
 _patchurl=http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev
 _repo=https://hg.mozilla.org/mozilla-unified
 source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
@@ -70,6 +69,7 @@ source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
 	unity-menubar.patch
 	add_missing_pgo_rule.patch
         pgo_fix_missing_kdejs.patch
+        Bug_1584000___Migrate_glyph_to_character_association_code.patch
         2000_system_harfbuzz_support.patch
         2001_system_graphite2_support.patch
         pgo.patch
@@ -77,6 +77,9 @@ source=("hg+$_repo#tag=FIREFOX_${pkgver//./_}_RELEASE"
         7002_system_av1_support.patch
         # https://bugzilla.mozilla.org/show_bug.cgi?id=1530052
         0001-Use-remoting-name-for-GDK-application-names.patch
+        # Workaround objects no being allocated with the correct alignment
+        # inside dom/indexedDB/ActorsParent.cpp
+        workaround_dom_indexdb_actorsparent_allignment.patch
 )
 
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
@@ -117,6 +120,10 @@ prepare() {
   
   # add globalmenu support
   patch -Np1 -i "$srcdir/unity-menubar.patch"
+
+  # Revert https://bugzilla.mozilla.org/show_bug.cgi?id=1584000
+  # To fix system graphite2
+  patch -R -p1 -i "$srcdir"/Bug_1584000___Migrate_glyph_to_character_association_code.patch
   
   patch -Np1 -i "$srcdir"/2000_system_harfbuzz_support.patch
   patch -Np1 -i "$srcdir"/2001_system_graphite2_support.patch
@@ -124,6 +131,10 @@ prepare() {
 
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1530052
   patch -Np1 -i "$srcdir"/0001-Use-remoting-name-for-GDK-application-names.patch
+
+  # Workaround objects no being allocated with the correct alignment
+  # inside dom/indexedDB/ActorsParent.cpp
+  patch -Np1 -i "$srcdir"/workaround_dom_indexdb_actorsparent_allignment.patch
   
   if [[ $_pgo ]] ; then
     # add missing rule for pgo builds
@@ -145,6 +156,7 @@ build() {
   export MOZ_SOURCE_REPO="$_repo"
   export MOZBUILD_STATE_PATH="$srcdir/mozbuild"
   export MOZ_APP_REMOTINGNAME=$pkgname
+  export CARGO_HOME="$srcdir"/.cargo
 
   export CC=gcc
   export CXX=g++
@@ -209,6 +221,12 @@ END
 
   install -Dm644 "$srcdir/firefox.desktop" "$pkgdir/usr/share/applications/firefox.desktop"
 
+  # Use system certificates
+  local nssckbi="$pkgdir/usr/lib/$pkgname/libnssckbi.so"
+  if [[ -e $nssckbi ]]; then
+    ln -srfv "$pkgdir/usr/lib/libnssckbi.so" "$nssckbi"
+  fi
+
   #workaround for now
   #https://bugzilla.mozilla.org/show_bug.cgi?id=658850
   ln -sf firefox "$pkgdir/usr/lib/firefox/firefox-bin"
@@ -216,17 +234,19 @@ END
 md5sums=('SKIP'
          'f758e064e1463b90878790124f398197'
          'a26a061efb4def6572d5b319d657f1d6'
-         '5cee310a9040ccc5abcf29742b84aeb8'
+         '4c23d9c0a691d70919beb1dafbbecbd3'
          '05bb69d25fb3572c618e3adf1ee7b670'
-         'd7ce23a18da21c05cd756766e177834f'
-         '80d64ae704c9babaa9c725bfd7e2895d'
-         '591c8d36479516332d7503995bb25743'
+         'ad055db454c9263623fdbc857e8290fe'
+         '0756f1b090f9c3371df957257907b0c7'
+         '3bc553e23a3578991c7e205bfff1bb14'
          'e083ae314eaa9355aa2d4aa75a7fc277'
-         '31ad6614435329ff23e44a8567cb1cea'
+         '4ced0c5110d6471b79aaa6e4215a183c'
          'fe24f5ea463013bb7f1c12d12dce41b2'
          '3fa8bd22d97248de529780f5797178af'
-         'c6fccc1410d6d9b742e77cf96727fdee'
-         '53334de4a374ba4be65e23138d447e9c'
+         '0ca36620e6004703a3d0354ac5625576'
+         '28c2eff56d3d95da6e9ba444fc60e90b'
+         '8d0c0ebc805e4e52a3cb2c0dc64ea2de'
          'f867ae41a722630cc5567e2dcc51676d'
-         'b669f4156af8851f13fe671e804139c5'
-         '0ffabb81dd8a5fe98bb8afe47d6541d3')
+         'd87270bfe02ea30e2fde3fcae5daf18d'
+         '0ffabb81dd8a5fe98bb8afe47d6541d3'
+         'a8b9025375443d1f41ae94360f495798')

@@ -1,19 +1,18 @@
 # Contributor: skydrome <skydrome@protonmail.com>
 # Maintainer:  skydrome <skydrome@protonmail.com>
 
-# Uncomment if you do not want to build all language translations
-export LG2=en
+# uncomment if you do not want to build all language translations
+#export LG2=en
 
 pkgname=i2p
-pkgver=0.9.43
-pkgrel=1
+pkgver=0.9.45
+pkgrel=2
 pkgdesc="A distributed anonymous network"
 url="https://geti2p.net"
 license=('GPL2')
 arch=('any')
 depends=('java-runtime>=8' 'java-service-wrapper')
-makedepends=('java-environment>=8' 'apache-ant')
-[[ "$LG2" != 'en' ]] && makedepends+=('gettext')
+makedepends=('java-environment>=8' 'ant')
 #optdepends=('gtk2: for rrd graphs')
 conflicts=('i2p-bin' 'i2p-dev')
 backup=('opt/i2p/wrapper.config')
@@ -28,17 +27,36 @@ validpgpkeys=('2D3D2D03910C6504C1210C65EE60C0C8EE7256A8')
 _url="https://launchpad.net/i2p/trunk/${pkgver}/+download"
 
 source=("${_url}/i2psource_${pkgver}.tar.bz2"{,.sig}
-        'i2prouter.service' 'i2prouter.sh' 'wrapper.config' 'router.config')
+        "modern-dark.zip::https://github.com/eyedeekay/modern-dark/archive/master.zip"
+        # use in .46 if it hasnt been updated by then
+        #"https://download.db-ip.com/free/dbip-country-lite-$(date +%Y-%m).mmdb.gz"
+        'i2prouter.service' 'i2p.tmpfiles' 'wrapper.config' 'router.config'
+        'i2prouter.bash' 'i2prouter.sh' 'chromium-i2p.sh'
+        upstream.patch::'https://github.com/i2p/i2p.i2p/commit/0bec84a.patch'
+)
 
-sha256sums=('beb2a3c62efce826cd5aa3e296b483143ad2c581ddb038677f960f7d110df81c'
+sha256sums=('e65c7dbbf464b6bc64afb228306fbfed0f1e67ffec74f96852b82acade53921c'
             'SKIP'
-            '9bb899ece87099716da29bac8b7da02916fc325699b68989e73c1fe333a6342f'
-            'ea8f97e66461d591b1819eab39bbc40056b89ae12f7729b3dd9fd2ce088e5e53'
+            'SKIP'
+            #'SKIP'
+            '644b771ec7f5db3efab3206bf1f896566cdb00d410a54608fda85bdb4c2ad876'
+            'fc30dd32f48fe1c93bf36c8297ca48203a1479e4e221ebe62c57cf3c3c0347d3'
             '5d134ee5bc614b54ec48de7c5214f6dbe08abcfab7d286c5b1c7616e39b478ed'
-            '7a4688db826c3dddb762976cd8c9a5d465255c3577069243d8e5af941a4126e2')
+            '90f202e5b66d5a5b425522b409e71fb892d34c534e32ce2d6fe5284015cacf94'
+            '7a19b9f90c8792460fd58e8b8aa435a065e34d29a942479850472510e9d3078a'
+            '8d39f080c7a2e49226db3a785f3e18583159ef2f95e1ab467fd9984c4e38c9f5'
+            '77e359cf880ccc09f504372ef85c8ad3ab7d1186106a4ae92c4ff4f37ae650e0'
+            '8456fea20259c8e3c8259078ff713725ac58fb6b83c37ce612f9e5737279082d')
+
+prepare() {
+    cd "$pkgname-$pkgver"
+    patch -Np1 -i ../upstream.patch
+    #cp -f ../dbip-country-lite-$(date +%Y-%m).mmdb.gz installer/resources/GeoLite2-Country.mmdb.gz
+}
 
 build() {
     cd "$pkgname-$pkgver"
+    export JAVA_HOME="${JAVA_HOME:-/usr/lib/jvm/default}"
 
     ant -Dfile.encoding=UTF-8 \
         -Djavac.compilerargs=-Xlint:-options \
@@ -51,34 +69,42 @@ package() {
     cd "$pkgdir"
 
     install -dm755 "usr/bin"
-    install -dm755 "opt/i2p/.tmp"
+    install -dm755 "opt/i2p"
 
     cp -r "$srcdir/$pkgname-$pkgver"/pkg-temp/* "opt/i2p"
 
+    install -Dm644 "$srcdir/i2prouter.service" "usr/lib/systemd/system/i2prouter.service"
+    install -Dm644 "$srcdir/i2p.tmpfiles"      "usr/lib/tmpfiles.d/i2p.conf"
+    echo 'u i2p - "I2P Router" /opt/i2p /bin/sh' |
+    install -Dm644 /dev/stdin                  "usr/lib/sysusers.d/i2p.conf"
+
     install -Dm644 "$srcdir/router.config"     "opt/i2p/router.config"
     install -Dm644 "$srcdir/wrapper.config"    "opt/i2p/wrapper.config"
-    install -Dm755 "$srcdir/i2prouter.sh"      "opt/i2p/i2prouter"
-    install -Dm644 "$srcdir/i2prouter.service" "usr/lib/systemd/system/i2prouter.service"
+    install -Dm754 "$srcdir/i2prouter.sh"      "opt/i2p/i2prouter"
+    install -Dm755 "$srcdir/chromium-i2p.sh"   "opt/i2p/scripts/chromium-i2p"
+
+    install -Dm644 "$srcdir/i2prouter.bash"    "usr/share/bash-completion/completions/i2prouter"
+    install -Dm644 "$srcdir/$pkgname-$pkgver/installer/resources/bash-completion/eepget" \
+                                               "usr/share/bash-completion/completions/eepget"
+
     install -Dm644 "opt/i2p/man/eepget.1"      "usr/share/man/man1/eepget.1"
     install -Dm644 "opt/i2p/LICENSE.txt"       "usr/share/licenses/i2p/LICENSE"
     mv opt/i2p/licenses/*                      "usr/share/licenses/i2p/"
 
     ln -s /opt/i2p/{eepget,i2prouter} "usr/bin/"
-    chmod +x opt/i2p/{eepget,i2prouter}
-
-    chmod  -x opt/i2p/*.config
-    chmod 755 opt/i2p
-    chown  -R 985:985 opt/i2p
-
-    echo 'u i2p 985 "I2P Router" /opt/i2p /bin/sh' |
-    install -Dm644 /dev/stdin "usr/lib/sysusers.d/i2p.conf"
-    echo 'd /run/i2p 0700 i2p i2p' |
-    install -Dm644 /dev/stdin "usr/lib/tmpfiles.d/i2p.conf"
+    chmod +x opt/i2p/eepget
 
     sed -i opt/i2p/eepget \
         -e 's:%INSTALL_PATH:/opt/i2p:g'
+
+    # dont automatically start the webserver(3) or open a webbrowser(4)
     sed -i opt/i2p/clients.config \
         -e "s:clientApp.3.startOnLoad=.*:clientApp.3.startOnLoad=false:" \
         -e "s:clientApp.4.startOnLoad=.*:clientApp.4.startOnLoad=false:"
+
     rm -r opt/i2p/{osid,postinstall.sh,runplain.sh,INSTALL-headless.txt,LICENSE.txt,licenses,man,lib/wrapper*}
+
+    cp -rf "$srcdir"/modern-dark-master/themes "opt/i2p/docs/"
+    cd opt/i2p/docs/themes/console/dark-modern/images
+    ln -sf ../../dark/images/i2plogo.png i2plogo.png
 }

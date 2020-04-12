@@ -3,7 +3,7 @@
 
 pkgbase=bcc-git
 pkgname=('bcc-git' 'bcc-tools-git' 'python-bcc-git')
-pkgver=0.11.0.r21.77fe4285
+pkgver=0.11.0.r204.7a385431
 pkgrel=1
 pkgdesc="BPF Compiler Collection - latest git code"
 arch=('x86_64')
@@ -71,6 +71,7 @@ package_bcc-tools-git() {
   cd "${srcdir}/${pkgbase}/build/man"
   make DESTDIR="${pkgdir}/" install
   mv "${pkgdir}"/usr/share/bcc/man "${pkgdir}"/usr/share/man
+  mv "${pkgdir}"/usr/share/man/man8/{,bcc-}trace.8.gz
 
   mkdir -p "${pkgdir}"/usr/share/doc
   mv "${pkgdir}"/usr/share/bcc/tools/doc "${pkgdir}"/usr/share/doc/bcc

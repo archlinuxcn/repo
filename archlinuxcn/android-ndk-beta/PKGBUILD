@@ -5,8 +5,8 @@
 
 pkgname=android-ndk-beta
 _pkgname=${pkgname/-beta*/}
-pkgver=r21_beta1
-pkgrel=2
+pkgver=r21_beta2
+pkgrel=1
 pkgdesc='Android C/C++ developer kit (beta)'
 arch=('x86_64')
 url='https://developer.android.com/ndk/'

@@ -11,7 +11,7 @@
 
 pkgname=yed
 pkgver=3.19.1.1
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc='Very powerful graph editor written in java'
 arch=('any')
@@ -20,10 +20,12 @@ license=('custom')
 depends=('java-runtime')
 source=("https://www.yworks.com/resources/yed/demo/yEd-${pkgver}.zip"
         'yed.desktop'
-        'yed')
+        'yed'
+        'graphml+xml-mime.xml')
 sha256sums=('3639da2650976bffcd43a8ea830727bae86478e95ceb4d68ad6363a42a8f1efb'
             '245182a52896bdff3f2c995a066623619d600665630e789910c92d36725a0aca'
-            '731b54c6e731704efe9847d78e2df474d59042452ace29d2786d76891295249e')
+            '731b54c6e731704efe9847d78e2df474d59042452ace29d2786d76891295249e'
+            'e751b69ed8a25faf46d4e4016ed8f1774abc88679067934a6081348e3d6fc332')
 
 install=yed.install
 
@@ -36,8 +38,13 @@ package() {
   # Install license
   install -Dm644 ${srcdir}/yed-${pkgver}/license.html ${pkgdir}/usr/share/licenses/yed/license.html
 
-  # Install icon
-  install -Dm644 ${srcdir}/yed-${pkgver}/icons/yed32.png ${pkgdir}/usr/share/pixmaps/yed.png
+  # Install icons
+  for n in $(ls ${srcdir}/yed-${pkgver}/icons/yed*.png | xargs -n1 basename | sed s/[^0-9]//g); do
+      install -Dm644 ${srcdir}/yed-${pkgver}/icons/yed${n}.png ${pkgdir}/usr/share/icons/hicolor/${n}x${n}/apps/yed.png
+  done
+
+  # Install mime definition
+  install -Dm644 ${srcdir}/graphml+xml-mime.xml ${pkgdir}/usr/share/mime/packages/graphml+xml-mime.xml
 
   # Install .desktop file
   install -Dm644 ${srcdir}/yed.desktop ${pkgdir}/usr/share/applications/yed.desktop

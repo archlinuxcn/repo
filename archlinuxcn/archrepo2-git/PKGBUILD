@@ -1,8 +1,8 @@
 # Maintainer: lilydjwg <lilydjwg@gmail.com>
 
 pkgname=archrepo2-git
-epoch=1
-pkgver=v0.5.r16.gc074e3b
+epoch=2
+pkgver=0.5.r18.gc003123
 pkgrel=1
 pkgdesc="Arch Linux repository manager"
 arch=('any')
@@ -18,7 +18,7 @@ _gitroot=archrepo2
 
 pkgver() {
   cd "$srcdir/$_gitroot"
-  git describe | sed -E 's/([^-]*-g)/r\1/;s/-/./g'
+  git describe | sed -E 's/([^-]*-g)/r\1/;s/-/./g;s/v//'
 }
 
 build() {

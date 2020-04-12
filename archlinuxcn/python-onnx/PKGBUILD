@@ -2,7 +2,7 @@
 
 pkgname=python-onnx
 pkgver=1.6.0
-pkgrel=4
+pkgrel=8
 pkgdesc='Open Neural Network Exchange'
 arch=('x86_64')
 url='https://onnx.ai'
@@ -34,9 +34,15 @@ optdepends=(
 source=("${pkgname}::git+https://github.com/onnx/onnx.git#tag=v${pkgver}")
 sha512sums=('SKIP')
 
+get_pyver() {
+  python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
+}
+
 prepare() {
   cd "${srcdir}/${pkgname}"
   git submodule update --init --recursive
+  # fix build with protobuf 3.11, see https://github.com/onnx/onnx/pull/2482/files
+  sed -i 's/${ONNX_DLLEXPORT_STR}${CMAKE_CURRENT_BINARY_DIR})/${CMAKE_CURRENT_BINARY_DIR})/' "${srcdir}/${pkgname}/CMakeLists.txt"
 }
 
 build() {
@@ -46,7 +52,7 @@ build() {
 
 check() {
   cd "${srcdir}/${pkgname}"
-  PYTHONPATH=$(pwd)/build/lib.linux-$CARCH-3.7 pytest -v
+  PYTHONPATH="${PWD}/build/lib.linux-${CARCH}-$(get_pyver)" pytest -v
 }
 
 package() {

@@ -1,3 +1,50 @@
+diff --git a/database.c b/database.c
+index 02c5c92..2dae855 100644
+--- a/database.c
++++ b/database.c
+@@ -1202,6 +1202,33 @@ RunJobs(void)
+  * all done.
+  */
+ 
++struct Status {
++  pid_t pid;
++  int st;
++};
++
++static int subreaper_wait(pid_t pid, int *wstatus) {
++  static struct Status statuses[64];
++  static int tail = 0;
++
++  pid_t child;
++  int status;
++
++  do {
++    child = waitpid(-1, &status, WNOHANG);
++    statuses[tail] = (struct Status) {.pid = child, .st = status};
++    tail = (tail+1) % 64;
++  } while (child > (pid_t) 0);
++
++  for(int i=0; i<64; i++){
++    if(statuses[i].pid == pid) {
++      *wstatus = statuses[i].st;
++      return pid;
++    }
++  }
++  return 0;
++}
++
+ int
+ CheckJobs(void)
+ {
+@@ -1216,7 +1243,7 @@ CheckJobs(void)
+ 			for (line = file->cf_LineBase; line; line = line->cl_Next) {
+ 				if (line->cl_Pid > 0) {
+ 					int status;
+-					int r = waitpid(line->cl_Pid, &status, WNOHANG);
++					int r = subreaper_wait(line->cl_Pid, &status);
+ 
+ 					/* waitpid returns -1 for error, 0 if cl_Pid still running, cl_Pid if it's dead */
+ 
 diff --git a/main.c b/main.c
 index 0eba280..666c785 100644
 --- a/main.c
@@ -18,17 +65,3 @@ index 0eba280..666c785 100644
  	printlogf(LOG_NOTICE,"%s " VERSION " dillon's cron daemon, started with loglevel %s\n", av[0], LevelAry[LogLevel]);
  	SynchronizeDir(CDir, NULL, 1);
  	SynchronizeDir(SCDir, "root", 1);
-diff --git a/subs.c b/subs.c
-index b6217e8..993cf52 100644
---- a/subs.c
-+++ b/subs.c
-@@ -130,7 +130,8 @@ void waitmailjob(int sig) {
- 	 */
- 	pid_t child;
- 	do {
--		child = waitpid(-DaemonPid, NULL, WNOHANG);
-+                /* subreaper should wait for processes not in its process group too */
-+		child = waitpid(-1, NULL, WNOHANG);
- 		/* call was interrupted, try again: won't happen because we use SA_RESTART */
- 		/* if (child == (pid_t)-1 && errno == EINTR) continue; */
- 	} while (child > (pid_t) 0);

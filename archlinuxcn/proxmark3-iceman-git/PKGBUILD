@@ -1,13 +1,13 @@
 # Maintainer: edward-p <edward At edward-p Dot xyz>
 
 pkgname=proxmark3-iceman-git
-pkgver=7599.33fe2b89
+pkgver=8630.de0768fa
 pkgrel=1
 pkgdesc='RRG / Iceman repo - Proxmark3 RDV4.0 and other Proxmark3 platforms.'
 arch=('x86_64')
 url='https://github.com/RfidResearchGroup/proxmark3'
 license=('GPL2')
-depends=('perl' 'python')
+depends=('perl' 'python' 'libsndfile')
 makedepends=('git' 'arm-none-eabi-gcc' 'arm-none-eabi-newlib')
 options=(!buildflags)
 provides=('proxmark3' 'proxmark3-iceman')
@@ -22,13 +22,11 @@ pkgver() {
   echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
 }
 
-prepare() {
+build() {
   export DESTDIR="build"
   export PREFIX="/usr"
   export UDEV_PREFIX="/usr/lib/udev/rules.d"
-}
-
-build() {
+  
   cd "${srcdir}/${pkgname}"
 
   mkdir "$DESTDIR"
@@ -73,10 +71,11 @@ build() {
   done
 
   # Build & install other targets
-  make {client,mfkey,nonce2key,common}/install
+  make {bootrom,client,mfkey,nonce2key,common}/install
 }
 
 package() {
+  export DESTDIR="build"
   cd "${srcdir}/${pkgname}"
   mv "$DESTDIR"/* "${pkgdir}/"
 }

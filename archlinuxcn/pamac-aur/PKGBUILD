@@ -1,55 +1,66 @@
 # Contributor: Zeph <zeph33@gmail.com>
 # Maintainer: Zeph <zeph33@gmail.com>
 # https://gitlab.manjaro.org/packages/extra/pamac
+ENABLE_FLATPAK=0
+ENABLE_SNAPD=0
+
 pkgname=pamac-aur
-pkgver=9.1.0
+pkgver=9.4.2
 pkgrel=1
 _pkgfixver=$pkgver
 
-#_pkgvercommit=v$pkgver
-_pkgvercommit='cd8551cdd40aef492589589c8c3b7fcadf0eaa42'
-sha256sums=('c05666fb0a3ca06097f3ec9ec33744a7a1d827000557193f42107c2678e5c9c7')
+_commit='227b4ec121eeee2ea5f8ca605f5cda9d6f7a8b59'
+sha256sums=('55dc8d6d38f011513915a717f437577c4a31576ee6570a08d835bb08a3a28ff7')
 
 pkgdesc="A Gtk3 frontend for libalpm"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://gitlab.manjaro.org/applications/pamac"
 license=('GPL3')
 depends=('glib2>=2.42' 'json-glib' 'libsoup' 'dbus-glib' 'polkit' 'vte3>=0.38' 'gtk3>=3.22'
-         'libnotify' 'desktop-file-utils' 'pacman>=5.2' 'gnutls>=3.4'
+         'libnotify' 'desktop-file-utils' 'pacman>=5.2' 'gnutls>=3.4' 'git'
          'appstream-glib' 'archlinux-appstream-data')
 
-  optdepends=('polkit-gnome: needed for authentification in Cinnamon, Gnome'
+optdepends=('polkit-gnome: needed for authentification in Cinnamon, Gnome'
               'lxsession: needed for authentification in Xfce, LXDE etc.'
               'pamac-tray-appindicator: tray icon for KDE')
-makedepends=('gettext' 'itstool' 'vala>=0.36.6' 'meson' 'ninja' 'git' 'gobject-introspection')
+makedepends=('gettext' 'itstool' 'vala>=0.45' 'meson' 'ninja' 'gobject-introspection' 'xorgproto')
 backup=('etc/pamac.conf')
 conflicts=('pamac')
-provides=('pamac')
+provides=("pamac=$pkgver-$pkgrel")
 options=(!emptydirs)
 install=pamac.install
+source=("pamac-$pkgver-$pkgrel.tar.gz::$url/-/archive/$_commit/pamac-$_commit.tar.gz")
+define_meson=''
+if [ "${ENABLE_FLATPAK}" = 1 ]; then
+  depends+=('flatpak')
+  define_meson+=' -Denable-flatpak=true'
+fi
 
-source=("pamac-$pkgver-$pkgrel.tar.gz::$url/-/archive/$_pkgvercommit/pamac-$_pkgvercommit.tar.gz")
+if [ "${ENABLE_SNAPD}" = 1 ]; then
+  depends+=('snapd' 'snapd-glib')
+  define_meson+=' -Denable-snap=true'
+fi
 
 prepare() {
-  cd "$srcdir/pamac-$_pkgvercommit"
-
+  cd "$srcdir/pamac-$_commit"
   # adjust version string
   sed -i -e "s|\"$_pkgfixver\"|\"$pkgver-$pkgrel\"|g" src/version.vala
 }
 
 build() {
-  cd "$srcdir/pamac-$_pkgvercommit"
+  cd "$srcdir/pamac-$_commit"
   mkdir -p builddir
   cd builddir
-  meson --buildtype=release --prefix=/usr --sysconfdir=/etc
-
+  meson --buildtype=release \
+        --prefix=/usr \
+        --sysconfdir=/etc $define_meson
   # build
   ninja
 }
 
 package() {
-  cd "$srcdir/pamac-$_pkgvercommit/builddir"
-  
+  cd "$srcdir/pamac-$_commit/builddir"
+
   DESTDIR="$pkgdir" ninja install
 }
 # vim:set ts=2 sw=2 et:

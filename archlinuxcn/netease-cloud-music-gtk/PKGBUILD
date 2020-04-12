@@ -1,6 +1,6 @@
 # Maintainer: Bruce Zhang
 pkgname=netease-cloud-music-gtk
-pkgver=0.7.0
+pkgver=1.1.0
 pkgrel=1
 pkgdesc="Linux 平台下基于 Rust + GTK 开发的网易云音乐播放器"
 arch=('i686' 'x86_64')
@@ -12,17 +12,17 @@ optdepends=(
 	'osdlyrics: Show lyrics'
 )
 source=("https://github.com/gmg137/$pkgname/archive/$pkgver.tar.gz")
-sha256sums=('1fd11c3ceb0287392117729d15072b3f5e3e2a8914b2bc484ea1945bc7f10daf')
+sha256sums=('ca8441ada348a7332bfea9936702f990f69e41ee57e016f9f63f6610424cb641')
 
 build() {
 	cd "$pkgname-$pkgver"
 	nightly_installed=$(rustup toolchain list | grep nightly | wc -l)
-	
+
 	if [ $nightly_installed == '0' ]; then
 		rustup toolchain install nightly
 	fi
 
-	cargo +nightly build --release
+	cargo +nightly build --release --features gtk_3_24
 
 	if [ $nightly_installed == '0' ]; then
 		rustup toolchain uninstall nightly
@@ -31,7 +31,7 @@ build() {
 
 package() {
 	cd "$pkgname-$pkgver"
-	
+
 	mkdir -p "$pkgdir/usr/bin"
 	mkdir -p "$pkgdir/usr/share/applications"
 	mkdir -p "$pkgdir/usr/share/icons/hicolor/scalable/apps"

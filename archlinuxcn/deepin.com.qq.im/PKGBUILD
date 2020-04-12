@@ -1,10 +1,11 @@
 # Maintainer: wszqkzqk <wszqkzqk@gmail.com>
 # Maintainer: Skywol <skywol@qq.com>
 pkgname=deepin.com.qq.im
-pkgver=8.9.19983deepin23
+_pkgver=9.1.8deepin0
+pkgver=9.1.8
 pkgrel=1
 epoch=
-pkgdesc="Deepin Wine QQ 8.9."
+pkgdesc="Deepin Wine QQ"
 arch=('i686' 'x86_64')
 url="http://im.qq.com/"
 license=('Proprietary')
@@ -20,13 +21,13 @@ backup=()
 options=()
 install=
 changelog=
-source=("https://mirrors.ustc.edu.cn/deepin/pool/non-free/d/${pkgname}/${pkgname}_${pkgver}_i386.deb")
-noextract=("${pkgname}_${pkgver}_i386.deb")
-md5sums=('5135313eb131feeb6fef613ba02804cf')
+source=("https://mirrors.ustc.edu.cn/deepin/pool/non-free/d/${pkgname}/${pkgname}_${_pkgver}_i386.deb")
+noextract=("${pkgname}_${_pkgver}_i386.deb")
+md5sums=('d35bd4abfd1ac4c5e71c7fbc5282ccbd')
 validpgpkeys=()
 
 prepare() {
-	ar -x ${pkgname}_${pkgver}_i386.deb
+	ar -x ${pkgname}_${_pkgver}_i386.deb
 	mkdir ${pkgname}-${pkgver}
 	tar -xf data.tar.xz --directory="${pkgname}-${pkgver}"	
 }

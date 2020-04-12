@@ -1,12 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #-----------------------------------------------------------------------------
 I2P_USER="i2p"
 WRAPPER_CMD="/usr/bin/java-service-wrapper"
 WRAPPER_CONF="/opt/i2p/wrapper.config"
-PIDDIR="/run/i2p"
-PIDFILE="$PIDDIR/i2p.pid"
-TIMEOUT=30
+PIDFILE="/run/i2p/i2p.pid"
+TIMEOUT=30  #seconds
 #-----------------------------------------------------------------------------
 
 fail() {
@@ -20,26 +19,20 @@ debug() {
 check_user() {
     if [[ "$(id -un)" != "$I2P_USER" ]]; then
         #debug "current user: $(id -un)  dropping to user: $I2P_USER"
-        if [[ ! -d "$PIDDIR" ]]; then
-            mkdir -p "$PIDDIR"
-            chown ${I2P_USER}:${I2P_USER} "$PIDDIR"
-        fi
-        SCRIPT_PATH="$(cd $(dirname $0) && pwd)/$(basename $0)"
+        SCRIPT_PATH="$(cd "$(dirname $0)" && pwd)/$(basename $0)"
         su - "$I2P_USER" -c "${SCRIPT_PATH} $@"
         exit $?
     fi
 }
 
 init_vars() {
+    [[ "$EUID" -eq 0 ]] &&
+        fail "Attempting to start as root! You should never see this message, please report it"
     [[ ! -r "$WRAPPER_CONF" ]] &&
         fail "Unable to read \$WRAPPER_CONF: ${WRAPPER_CONF}"
     [[ ! -x "$WRAPPER_CMD" ]] &&
         fail "Unable to find or execute \$WRAPPER_CMD: ${WRAPPER_CMD}"
-    [[ ! $(grep -E ^I2P_USER $0) && "$EUID" = "0" ]] &&
-        fail "Attempting to start as root! Please edit $(basename $0) and set the variable \$I2P_USER"
-    [[ "$(id -un "$I2P_USER")" != "$I2P_USER" ]] &&
-        fail "\$I2P_USER does not exist: $I2P_USER"
-    COMMAND_LINE="\"$WRAPPER_CMD\" \"$WRAPPER_CONF\" wrapper.syslog.ident=\"i2prouter\" wrapper.name=\"i2prouter\""
+    COMMAND_LINE="\"$WRAPPER_CMD\" \"$WRAPPER_CONF\" wrapper.syslog.ident=\"i2prouter\" wrapper.name=\"i2prouter\" TZ=UTC"
 }
 
 get_wrapper_pid() {
@@ -62,7 +55,7 @@ check_if_running() {
                     rm -f "$PIDFILE"
                 fi
             else
-                [[ "$pid" != "$(get_pid)" ]] &&
+                [[ "$pid" -ne "$(get_pid)" ]] &&
                     fail "\$PIDFILE $PIDFILE differs from what is actually running!"
             fi
         else
@@ -74,91 +67,97 @@ check_if_running() {
 _console() {
     if [[ ! "$pid" ]]; then
         trap '' INT QUIT
-        eval $COMMAND_LINE
-        [[ $? != 0 ]] && fail "Failed to launch the wrapper!"
+        eval "$COMMAND_LINE" || fail "Failed to launch the wrapper!"
     else
-        echo "I2P Service is already running"
+        echo "I2P Router is already running! (pid: $pid)"
     fi
 }
 
 _start() {
     if [[ ! "$pid" ]]; then
-        echo -n "Starting I2P Service"
+        echo -n "Starting I2P Router"
         COMMAND_LINE+=" wrapper.daemonize=TRUE"
-        eval $COMMAND_LINE
-        [[ $? != 0 ]] && fail "Failed to launch the wrapper!"
+        eval "$COMMAND_LINE" || fail "Failed to launch the wrapper!"
         i=0
-        while [[ ! "$pid" || $i < $TIMEOUT ]]; do
+        while [[ ! "$pid" || $i -lt $TIMEOUT ]]; do
             echo -n "."
             sleep 1
             check_if_running
             ((i++))
         done
         [[ $(get_pid) ]] &&
-            echo " done (pid $pid)" || fail "timeout: Failed to start wrapper!"
+            echo " done" || fail "timeout: Failed to start wrapper!"
     else
-        echo "I2P Service is already running"
+        echo "I2P Router is already running! (pid: $pid)"
     fi
 }
 
 _restart() {
     [[ "$pid" ]] &&
-        kill -USR1 $(get_wrapper_pid) || echo "I2P Service is not running"
+        kill -USR1 "$(get_wrapper_pid)" || echo "I2P Router is not running"
 }
 
 _stop() {
     if [[ "$pid" ]]; then
-        echo -n "Stopping I2P Service"
-        kill -TERM "$pid"
-        [[ $? != 0 ]] && fail "Unable to stop I2P Service: kill -TERM $pid"
+        echo -n "Hard shutdown initiated"
+        kill -TERM "$pid" || fail "Unable to stop I2P Router: kill -TERM $pid"
         i=0
-        while [[ "$pid" || $i > $TIMEOUT ]]; do
+        while [[ "$pid" || $i -gt $TIMEOUT ]]; do
             echo -n "."
             sleep 1
             [[ ! $(get_pid) ]] && unset pid
             ((i++))
         done
-        if [[ "$pid" ]]; then
-            fail "timeout: Failed to stop wrapper! (pid: $pid)"
-        else
-            echo " done"
-            [[ "$1" = 'start' ]] && _start
-        fi
+        [[ "$pid" ]] &&
+            fail "timeout: Failed to stop wrapper! (pid: $pid)" || echo " done"
     else
-        echo "I2P Service is not running."
+        echo "I2P Router is not running."
     fi
 }
 
 _graceful() {
     if [[ "$pid" ]]; then
-        echo "Stopping I2P Service gracefully..."
-        kill -HUP "$pid"
-        [[ $? != 0 ]] && fail "Unable to stop I2P Service."
+        echo -n "Graceful shutdown initiated"
+        kill -HUP "$pid" || fail "Unable to stop I2P Router."
+        i=0
+        while [[ "$pid" || $i -gt 660 ]]; do
+            echo -n "."
+            sleep 1
+            [[ ! $(get_pid) ]] && unset pid
+            ((i++))
+        done
+        [[ "$pid" ]] &&
+            fail "timeout: Took longer than 10m to stop. (pid: $pid)" || echo " done"
     else
-        echo "I2P Service is not running."
+        echo "I2P Router is not running."
     fi
-}
-
-_status() {
-    [[ "$pid" ]] &&
-        echo "I2P Service is running: PID:$pid" || echo "I2P Service is not running."
 }
 
 _dump() {
     if [[ "$pid" ]]; then
-        echo "Dumping threads..."
-        kill -QUIT "$pid"
-        [[ $? != 0 ]] &&
-            fail "Failed to dump threads" || echo "Thread Dump is available in wrapper.log"
+        kill -QUIT "$pid" || fail "Failed to dump threads"
+        echo "Thread Dump is available in wrapper.log"
     else
-        echo "I2P Service is not running."
+        echo "I2P Router is not running."
     fi
 }
 #-----------------------------------------------------------------------------
 
+[[ "$1" != @(console|start|stop|graceful|restart|dump) ]] && {
+    echo "Usage: $(basename $0) <command>"
+    echo "Commands:"
+    echo "  console     Launch in the current console"
+    echo "  start       Start in the background as a daemon process"
+    echo "  stop        Stop if running as a daemon or in another console"
+    echo "  graceful    Stop gracefully, may take up to 11 minutes for all tunnels to close"
+    echo "  restart     Restart the JVM"
+    echo "  dump        Request a Java thread dump"
+    exit
+}
+
 check_user "$@"
-init_vars
 check_if_running
+init_vars
 
 case "$1" in
      'console') _console
@@ -171,22 +170,6 @@ case "$1" in
                 ;;
      'restart') _restart
                 ;;
-      'status') _status
-                ;;
         'dump') _dump
                 ;;
-
-    *)  echo "Usage: $(basename $0) [command]"
-        echo
-        echo "Commands:"
-        echo "  console     Launch in the current console"
-        echo "  start       Start in the background as a daemon process"
-        echo "  stop        Stop if running as a daemon or in another console"
-        echo "  graceful    Stop gracefully, may take up to 11 minutes for all tunnels to close"
-        echo "  restart     Restart the JVM"
-        echo "  status      Query the current status"
-        echo "  dump        Request a Java thread dump if running"
-        echo
-        ;;
 esac
-exit 0

@@ -18,7 +18,7 @@ md5sums=(SKIP)
 
 pkgver() {
   cd "$srcdir/$_pkgname"
-  echo 0.$(git log -1 --pretty='%cd' --date=short | tr -d '-')
+  echo 0.$(TZ=UTC git log -1 --pretty='%cd' --date=short-local | tr -d '-')
 }
 
 build() {

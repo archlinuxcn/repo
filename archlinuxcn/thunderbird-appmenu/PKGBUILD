@@ -1,36 +1,37 @@
+### Original Thunderbird from extra ###
+# Maintainer: Levente Polyak <anthraxx[at]archlinux[dot]org>
 # Contributor: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 # Contributor: Ionut Biru <ibiru@archlinux.org>
 # Contributor: Alexander Baldeck <alexander@archlinux.org>
 # Contributor: Dale Blount <dale@archlinux.org>
 # Contributor: Anders Bostrom <anders.bostrom@home.se>
-# Additional patching: Nikita Tarasov <nikatar@disroot.org>
 
+### Appmenu patching ###
+# PKGBUILD: Nikita Tarasov <nikatar@disroot.org>
 
 _pkgname=thunderbird
 pkgname=thunderbird-appmenu
-pkgver=60.8.0
+pkgver=68.6.0
 pkgrel=2
 pkgdesc="Thunderbird from extra with appmenu patch"
 arch=(x86_64)
 license=(MPL GPL LGPL)
-url="https://aur.archlinux.org/packages/thunderbird-appmenu/"
+url="https://www.mozilla.org/thunderbird/"
 depends=(gtk3 mozilla-common libxt startup-notification mime-types dbus-glib alsa-lib
-         nss hunspell sqlite ttf-font icu)
-makedepends=(unzip zip diffutils python2 yasm mesa imake libpulse inetutils xorg-server-xvfb
-             autoconf2.13 rust clang llvm gtk2)
+         nss hunspell sqlite ttf-font icu)  # libvpx
+makedepends=(unzip zip diffutils python python2 yasm nasm mesa imake libpulse inetutils xorg-server-xvfb
+             autoconf2.13 rust clang llvm gtk2 cbindgen nodejs)
 optdepends=('libcanberra: sound support')
 provides=("thunderbird=$pkgver")
 conflicts=("thunderbird")
 options=(!emptydirs !makeflags)
 source=(https://ftp.mozilla.org/pub/mozilla.org/thunderbird/releases/$pkgver/source/thunderbird-$pkgver.source.tar.xz{,.asc}
-        rust-1.35.patch
         $_pkgname.desktop
         unity-menubar.patch)
-sha256sums=('1e7a13e64b63476d2235aaac6823fdab949af45cfcd5a25ee710cbae08c2f5d1'
+sha512sums=('3502cc42b594eebf3511219ae8e7fb8a13594534abfe7a40ec32e5a3f60343cfab7c652b161a5f33af46bd5e6f096e3abd4a407c8b307ce4693089b471a42c3e'
             'SKIP'
-            '3257987cc0ab0559c65561d523eb4d0e73b5edb86d9d18a2487818d9fca0bb30'
-            '3534ea85d8e0e35dba5f40a7a07844df19f3a480e1358fc50c2502f122dab789'
-            '22786f52773b93046fdb12378f67343b1d7d3390e83a00ff4aa03948c2b1c9e2')
+            'fa28ec547f87658cf72d160e9c2a7867d3e8a9b8c76ffa29d1098fddfc9331f65cc6dbf24c15da28c5d1b4ffa587d14d529d5da522a8805b073ad89986a552c9'
+            'f3aa468974780016de60fa61a61f7e67a2cc51b4f888b223d16b9afaa42e82100c3b3d7f9491dfd0de3c5667ad4ac0fc58b96d81ef448ccf6e924cdc49066ad5')
 validpgpkeys=(14F26682D0916CDD81E37B6D61B7B526D98F0353) # Mozilla Software Releases <release@mozilla.com>
 
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
@@ -48,10 +49,7 @@ _mozilla_api_key=16674381-f021-49de-8622-3021c5942aff
 prepare() {
   cd $_pkgname-$pkgver
 
-  # # Fix build with rust 1.35 (Fedora)
-  patch -Np1 -i ../rust-1.35.patch
-
-  # actual appmenu patch from ubuntu repos
+  # Actual appmenu patch from ubuntu repos
   patch -Np1 -i ../unity-menubar.patch
 
   echo -n "$_google_api_key" >google-api-key
@@ -86,9 +84,9 @@ ac_add_options --with-system-zlib
 ac_add_options --with-system-bz2
 ac_add_options --with-system-icu
 ac_add_options --with-system-jpeg
+# ac_add_options --with-system-libvpx
 ac_add_options --with-system-nspr
 ac_add_options --with-system-nss
-ac_add_options --enable-system-hunspell
 ac_add_options --enable-system-sqlite
 ac_add_options --enable-system-ffi
 
@@ -100,7 +98,6 @@ ac_add_options --disable-crashreporter
 ac_add_options --disable-updater
 ac_add_options --disable-gconf
 END
-
 }
 
 build() {
@@ -140,7 +137,6 @@ about=Mozilla Thunderbird for Arch Linux
 [Preferences]
 app.distributor=archlinux
 app.distributor.channel=$_pkgname
-app.partner.archlinux=archlinux
 END
 
   for i in 16 22 24 32 48 64 128 256; do
@@ -154,7 +150,6 @@ END
     "$pkgdir/usr/share/applications/$_pkgname.desktop"
 
   # Use system-provided dictionaries
-  rm -r "$pkgdir/usr/lib/$_pkgname/dictionaries"
   ln -Ts /usr/share/hunspell "$pkgdir/usr/lib/$_pkgname/dictionaries"
   ln -Ts /usr/share/hyphen "$pkgdir/usr/lib/$_pkgname/hyphenation"
 

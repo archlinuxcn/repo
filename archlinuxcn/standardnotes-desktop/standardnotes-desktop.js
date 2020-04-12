@@ -21,7 +21,7 @@ const packageJson = require(path.join(appPath, 'package.json'));
 const productName = 'Standard Notes';
 app.setAppPath(appPath);
 app.setDesktopName(name + '.desktop');
-app.setName(productName);
+app.name = productName;
 app.setPath('userCache', path.join(app.getPath('cache'), productName));
 app.setPath('userData', path.join(app.getPath('appData'), productName));
 app.setVersion(packageJson.version);

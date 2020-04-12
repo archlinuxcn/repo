@@ -7,4 +7,4 @@ maintainers:
 build_prefix: extra-x86_64
 
 update_on:
-  - cmd: curl https://www.giss.nasa.gov/tools/panoply/download/ | grep 'The current version' | sed 's/^.*[^0-9]\([0-9]*\.[0-9]*\.[0-9]*\).*$/\1/'
+  - cmd: curl https://www.giss.nasa.gov/tools/panoply/ | grep 'The current version' | sed 's/^.*[^0-9]\([0-9]*\.[0-9]*\.[0-9]*\).*$/\1/'

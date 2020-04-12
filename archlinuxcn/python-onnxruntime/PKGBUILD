@@ -2,23 +2,24 @@
 
 pkgbase=python-onnxruntime
 pkgname=(python-onnxruntime python-onnxruntime-cuda)
-pkgver=1.0.0
+pkgver=1.2.0
 pkgdesc='Cross-platform, high performance scoring engine for ML models'
 pkgrel=2
 arch=(x86_64)
 url='https://github.com/microsoft/onnxruntime'
 license=(MIT)
 depends=(protobuf re2 python-numpy)
-makedepends=(git cmake cuda cudnn gtest gmock pybind11 python-setuptools cub)
+makedepends=(git cmake cuda cudnn gtest gmock pybind11 python-setuptools cub nlohmann-json chrono-date)
 # not de-vendored libraries
 # eigen: API changes a lot since extra/eigen 3.3.7 to the commit onnxruntime uses
-# onnx: onnxruntime requires headers, which are not installed in python-onnx
+# onnx: onnxruntime uses different protobuf files than upstream onnx
+# https://github.com/microsoft/onnxruntime/blob/v1.1.2/onnxruntime/core/protobuf/onnx-ml.proto#L250-L251
 source=("git+https://github.com/microsoft/onnxruntime#tag=v$pkgver"
-        "git+https://github.com/HowardHinnant/date.git"
-        "eigen::git+https://github.com/eigenteam/eigen-git-mirror.git"
+        "git+https://gitlab.com/libeigen/eigen.git"
         "git+https://github.com/google/gemmlowp.git"
         "git+https://github.com/google/nsync.git"
         "git+https://github.com/onnx/onnx.git"
+        "git+https://github.com/dcleblanc/SafeInt.git"
         build-fixes.patch)
 sha512sums=('SKIP'
             'SKIP'
@@ -26,18 +27,18 @@ sha512sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
-            'da8e27ff0011fb207ee8a6f8675160eb85cb8711f01050fa7454234242af141951cb5bba52fa50b98cf8567b8faa973565dfef37f4daa2219a42cf26e03c86b5')
+            '4457e19e3e91195ea2976a70e31a70d07b1b5e2279f1493a537c7d128aef5695e317cfdb84a87a0ca8d2d53ba15d72edf0f95905ecff7fbfb250e3a97944313c')
 
 prepare() {
   cd onnxruntime
 
   # More protobuf debundling; inspired by https://github.com/microsoft/onnxruntime/pull/1928
-  rm -v onnxruntime/core/util/protobuf_parsing_utils.{h,cc}
+  rm -v onnxruntime/core/util/protobuf_parsing_utils.h
   echo "#include <google/protobuf/io/zero_copy_stream_impl.h>" >> onnxruntime/core/util/protobuf_parsing_utils.h
   patch -Np1 -i ../build-fixes.patch
 
   git submodule init
-  for mod in date eigen gemmlowp nsync onnx ; do
+  for mod in eigen gemmlowp nsync onnx SafeInt; do
     git config submodule.cmake/external/$mod.url "$srcdir"/$mod
     git submodule update cmake/external/$mod
   done
@@ -46,12 +47,13 @@ prepare() {
 }
 
 _build() {
-  # Uses the same compiler as CUDA, or there will be linker errors due to
-  # attempts on linking object files with libstdc++ from older GCC
-  CC=/opt/cuda/bin/gcc CXX=/opt/cuda/bin/g++ \
+  # Use protobuf-lite instead of full protobuf to workaround symbol conflicts
+  # with onnx; see https://github.com/onnx/onnx/issues/1277 for details.
   cmake ../cmake \
     -Donnxruntime_ENABLE_PYTHON=ON \
     -DONNX_CUSTOM_PROTOC_EXECUTABLE=/usr/bin/protoc \
+    -Donnxruntime_PREFER_SYSTEM_LIB=ON \
+    -Donnxruntime_USE_FULL_PROTOBUF=OFF \
     $@
   make
   python ../setup.py build
@@ -62,6 +64,9 @@ build() {
   _build
 
   cd "$srcdir"/onnxruntime/build-cuda
+  # Uses the same compiler as CUDA, or there will be linker errors due to
+  # attempts on linking object files with libstdc++ from older GCC
+  CC=/opt/cuda/bin/gcc CXX=/opt/cuda/bin/g++ \
   _build -Donnxruntime_USE_CUDA=ON -Donnxruntime_CUDNN_HOME=/usr
 }
 

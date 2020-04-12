@@ -3,31 +3,26 @@
 # Contributor: Ariel AxionL <i [at] axionl [dot] me>
 
 pkgname=annie
-pkgver=0.9.5
-pkgrel=1
+pkgver=0.9.8
+pkgrel=2
 arch=('x86_64')
 pkgdesc="A fast, simple and clean video downloader written in Go"
 url="https://github.com/iawia002/annie"
 license=("MIT")
-makedepends=("go")
+makedepends=("go-pie")
 depends=("ffmpeg")
+provides=("annie")
 conflicts=("annie")
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/iawia002/annie/archive/${pkgver}.tar.gz")
-sha256sums=('69e0213c81b88838c01f93eb00ce68701ad36ba53301327965acb7a6b39bcc3c')
-
-prepare(){
-	install -dm755 build/src/github.com/iawia002
-	cp ${pkgname}-${pkgver} build/src/github.com/iawia002/${pkgname} -r
-}
-
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
+sha256sums=('49bad7855cfacde8c55cf7d2c5bb8b5e5bf6d8853a414e5c5ca6447d9f7be3ac')
 
 build(){
-	export GOPATH="${srcdir}/build"
-	go build github.com/iawia002/annie
+  cd "${pkgname}-${pkgver}"
+  go build -trimpath -ldflags "-extldflags ${LDFLAGS}" .
 }
 
 package(){
-	install -Dm755 "${srcdir}/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
-	install -Dm644 "${srcdir}/${pkgname}-${pkgver}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  cd "${pkgname}-${pkgver}"
+  install -Dm755 "${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
-# vim:set ts=4 sw=4 et:

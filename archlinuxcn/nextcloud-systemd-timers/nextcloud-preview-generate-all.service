@@ -1,0 +1,9 @@
+[Unit]
+Description=Nextcloud; generate previews for all files
+
+[Service]
+User=http
+ExecStart=/usr/share/webapps/nextcloud/occ preview:generate-all
+
+[Install]
+WantedBy=basic.target

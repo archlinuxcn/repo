@@ -1,0 +1,57 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+pkgname=openturns
+pkgver=1.14
+pkgrel=2
+pkgdesc='Uncertainty treatment library'
+license=('LGPL')
+arch=('x86_64')
+url='http://www.openturns.org'
+depends=(
+  'blas'
+  'intel-tbb'
+  'lapack'
+  'libxml2'
+  'muparser'
+  'nlopt'
+  'python'
+)
+makedepends=(
+  'bison'
+  'boost'
+  'cmake'
+  'flex'
+  'python-psutil'
+  'python-matplotlib'
+  'swig'
+)
+optdepends=(
+  'bison'
+  'flex'
+  'python-psutil'
+  'python-matplotlib'
+)
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/openturns/openturns/archive/v${pkgver}.tar.gz")
+sha256sums=('22f55bb3bc6e94a5308d94ad6b6272ea74145ba172746fdc1252a5869eb492a8')
+
+get_pyver() {
+  python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
+}
+
+build() {
+  mkdir build
+  cd build
+  cmake "${srcdir}/${pkgname}-${pkgver}" \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DOPENTURNS_SYSCONFIG_PATH=/etc \
+    -DCMAKE_SKIP_INSTALL_RPATH=ON
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR="${pkgdir}" install
+  python -O -m compileall "${pkgdir}/usr/lib/python$(get_pyver)/site-packages"
+}
+# vim:set ts=2 sw=2 et:
+

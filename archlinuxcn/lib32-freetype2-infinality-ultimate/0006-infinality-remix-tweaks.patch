@@ -1,0 +1,139 @@
+diff --git a/src/base/ftinf_sh.c b/src/base/ftinf_sh.c
+index 87d2ff8bd..5a350f8f2 100644
+--- a/src/base/ftinf_sh.c
++++ b/src/base/ftinf_sh.c
+@@ -250,7 +250,8 @@ _settings_get (register const char *str, register unsigned int len)
+     .stem_alignment_strength=15,
+     .stem_fitting_strength=15,
+     .use_various_tweaks=true,
+-    .windows_style_sharpening_strength=25
++    .windows_style_sharpening_strength=25,
++    .stem_darkening_cff=true
+ },
+ #line 197 "ftinf_sh.gperf"
+ {   .name="windows7",
+@@ -300,7 +301,8 @@ _settings_get (register const char *str, register unsigned int len)
+     .stem_alignment_strength=15,
+     .stem_fitting_strength=15,
+     .use_various_tweaks=true,
+-    .windows_style_sharpening_strength=25
++    .windows_style_sharpening_strength=25,
++    .stem_darkening_cff=true
+ },
+ #line 87 "ftinf_sh.gperf"
+ {   .name="push",
+@@ -324,7 +326,8 @@ _settings_get (register const char *str, register unsigned int len)
+     .stem_alignment_strength=15,
+     .stem_fitting_strength=15,
+     .use_various_tweaks=true,
+-    .windows_style_sharpening_strength=25
++    .windows_style_sharpening_strength=25,
++    .stem_darkening_cff=true
+ },
+ #line 162 "ftinf_sh.gperf"
+ {   .name="ultimate4",
+@@ -334,7 +337,8 @@ _settings_get (register const char *str, register unsigned int len)
+     .stem_alignment_strength=15,
+     .stem_fitting_strength=15,
+     .use_various_tweaks=true,
+-    .windows_style_sharpening_strength=25
++    .windows_style_sharpening_strength=25,
++    .stem_darkening_cff=true
+ },
+ #line 153 "ftinf_sh.gperf"
+ {   .name="ultimate3",
+@@ -344,7 +348,8 @@ _settings_get (register const char *str, register unsigned int len)
+     .stem_alignment_strength=15,
+     .stem_fitting_strength=15,
+     .use_various_tweaks=true,
+-    .windows_style_sharpening_strength=25
++    .windows_style_sharpening_strength=25,
++    .stem_darkening_cff=true
+ }
+     };
+ 
+diff --git a/src/base/ftinf_sh.gperf b/src/base/ftinf_sh.gperf
+index 5f6e0ae62..f694fb374 100644
+--- a/src/base/ftinf_sh.gperf
++++ b/src/base/ftinf_sh.gperf
+@@ -139,7 +139,8 @@ struct ftinf_s;
+     .stem_alignment_strength=15,
+     .stem_fitting_strength=15,
+     .use_various_tweaks=true,
+-    .windows_style_sharpening_strength=25
++    .windows_style_sharpening_strength=25,
++    .stem_darkening_cff=true
+ },
+ {   .name="ultimate2",
+     .filter_params={on, 6, 22, 36, 22, 6},
+@@ -148,7 +149,8 @@ struct ftinf_s;
+     .stem_alignment_strength=15,
+     .stem_fitting_strength=15,
+     .use_various_tweaks=true,
+-    .windows_style_sharpening_strength=25
++    .windows_style_sharpening_strength=25,
++    .stem_darkening_cff=true
+ },
+ {   .name="ultimate3",
+     .filter_params={on, 8, 24, 36, 24, 8},
+@@ -157,7 +159,8 @@ struct ftinf_s;
+     .stem_alignment_strength=15,
+     .stem_fitting_strength=15,
+     .use_various_tweaks=true,
+-    .windows_style_sharpening_strength=25
++    .windows_style_sharpening_strength=25,
++    .stem_darkening_cff=true
+ },
+ {   .name="ultimate4",
+     .filter_params={on, 10, 25, 37, 25, 10},
+@@ -166,7 +169,8 @@ struct ftinf_s;
+     .stem_alignment_strength=15,
+     .stem_fitting_strength=15,
+     .use_various_tweaks=true,
+-    .windows_style_sharpening_strength=25
++    .windows_style_sharpening_strength=25,
++    .stem_darkening_cff=true
+ },
+ {   .name="ultimate5",
+     .filter_params={on, 12, 28, 42, 28, 12},
+@@ -175,7 +179,8 @@ struct ftinf_s;
+     .stem_alignment_strength=15,
+     .stem_fitting_strength=15,
+     .use_various_tweaks=true,
+-    .windows_style_sharpening_strength=25
++    .windows_style_sharpening_strength=25,
++    .stem_darkening_cff=true
+ },
+ {   .name="vanilla",
+     .filter_params={on, 6, 25, 38, 25, 6},
+diff --git a/src/base/ftobjs.c b/src/base/ftobjs.c
+index d8fd36c81..ef10506d0 100644
+--- a/src/base/ftobjs.c
++++ b/src/base/ftobjs.c
+@@ -938,6 +938,13 @@
+                ttface->cvt_program_size == 0                  ) )
+           autohint = TRUE;
+       }
++
++#ifdef FT_CONFIG_OPTION_INFINALITY_PATCHSET
++      if ( use_various_tweaks )
++      {
++        autohint = TRUE;
++      }
++#endif
+     }
+ 
+     if ( autohint )
+diff --git a/src/smooth/ftsmooth.c b/src/smooth/ftsmooth.c
+index e82c15c25..99df34a3c 100644
+--- a/src/smooth/ftsmooth.c
++++ b/src/smooth/ftsmooth.c
+@@ -42,6 +42,8 @@
+   static FT_Error
+   ft_smooth_init( FT_Renderer  render )
+   {
++    FT_Library_SetLcdFilter( render->root.library, FT_LCD_FILTER_DEFAULT );
++
+     render->clazz->raster_class->raster_reset( render->raster, NULL, 0 );
+ 
+     return 0;

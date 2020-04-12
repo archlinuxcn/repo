@@ -1482,3 +1482,200 @@ Mon Oct 21 20:14:31 2019 +0200
      2019-10-20 4ad6979 actionless feat(args): read stdin if `-` specified and stdin is not tty (fixes #411)
      2019-10-18 29efb8a actionless fix: make `python -m pikaur <args>` work
      2019-10-17 8e19240 actionless chore(core: sudo_loop; pikspect): return back to using `sudo pacman -T` instead of `sudo -v` (fixes #408)
+
+
+Thu Dec 19 17:30:31 2019 +0100
+-------------------------------------------------
+1.5.5           Release 1.5.5
+    
+    Notable changes:
+     2019-12-19 d0972de actionless feat(print dept: pformat upgradeable): print if aur package is marked as 'out of date'
+     2019-12-05 8884e66 actionless fix(main: cli entry point): -Sca don't require sudo (fixes #430)
+     2019-12-05 0e3707d Yauhen Kirylau feat(install cli, build): --devel should follow -u/-uu behavior on downgrade policy (fixes #358)
+     2019-12-05 e13c0ec actionless fix(install cli: install prompt): correctly handle next command after `v`
+     2019-12-03 a828bed actionless feat(install info fetcher: get aur pkgs info): don't log what non-found package is ignored
+     2019-11-28 c264873 Florian Knodt Keep proxy in environment when using systemd-run (#348)
+     2019-11-27 1866d7e actionless feat: --keepbuilddeps flag and config option (fixes #370)
+     2019-11-26 6f96fc3 Jason doc: Amend various typos (#426)
+     2019-11-08 a5040fc Heimen Stoffels Updated Dutch translation (#417)
+     2019-10-27 e53cbb5 Bundy01 fix(locale): fr,es (#414)
+     2019-10-26 27d47fd Bundy01 chore(locale): update fr, es (#413)
+     2019-10-22 f3cafc9 Felix Yan doc: fix typos in README (#412)
+     2019-10-21 605049e actionless fix(core: sudo_loop): revert back to `sudo -v` as it's fixed upstream (re: #408)
+
+
+Sat Dec 21 11:43:57 2019 +0100
+-------------------------------------------------
+1.5.6           Hotfix release 1.5.6
+    
+     2019-12-21 94c9abb actionless Revert "fix(core: sudo_loop): revert back to `sudo -v` as it's fixed upstream (re: #408)"
+     2019-12-20 909eb69 actionless chore(news): change colors for easier discoverability of the news (fixes #419)
+
+
+Wed Dec 25 05:57:40 2019 +0100
+-------------------------------------------------
+1.5.7           Release 1.5.7
+    
+    Notable changes:
+     2019-12-24 27fb1de actionless refactor,fix(news): clean-up the code and also handle ValueError (corrupted date file) (fixes #435)
+     2019-12-23 1f20d6c actionless fix(install_cli): don't check package for upgradeability if it's not already installed
+     2019-12-22 54f5dec actionless fix(core: dynamic_users): apply workaround for broken 'SuccessExitStatus= SuccessExitStatus=0' in systemd (fixes #434)
+     2019-12-22 cc607d6 actionless fix(core: dynamic_users): use --pty so makepkg will be able to handle Ctrl+C (ref #434)
+
+
+Wed Jan 1 23:52:45 2020 +0100
+-------------------------------------------------
+1.5.8           Release 1.5.8
+    
+    Notable changes:
+     2019-12-29 15815b4 actionless feat(install_cli, build): show new dependencies in install prompt after the user has edited PKGBUILD (fixes #372)
+     2019-12-29 d570038 actionless fix(install_cli): detecting extra (unlisted in aur rpc) deps in split packages
+     2019-12-28 f8375c5 actionless feat(install_cli, install info fetcher): show install prompt if list of deps changed after editing PKGBUILD (ref: #427)
+     2019-12-28 ee8f879 actionless feat(updates: aur; args; config): option to ignore outofdate aur upgrades
+
+
+Thu Jan 9 01:24:42 2020 +0100
+-------------------------------------------------
+1.5.8.1         Hotfix release 1.5.8.1
+    
+    Notable changes:
+     2020-01-08 fd88c62 actionless fix(aur: AURPkgInfo: from_srcinfo): fix *depends fields
+     2020-01-08 a36531e actionless fix(print-upgradeable-cli): don't print ignored packages
+
+
+Fri Jan 10 15:16:16 2020 +0100
+-------------------------------------------------
+1.5.8.2         Hotfix release 1.5.8.2
+    
+    Notables changes:
+     2020-01-10 7b1303c actionless fix(install_cli, install info): handle the case when only some of AUR packages got edited with changing install info (ref #440)
+
+
+Sat Jan 11 22:36:16 2020 +0100
+-------------------------------------------------
+1.5.9           Release 1.5.9
+    
+    Notable changes:
+     2020-01-11 7afe82d Mikhail Khvoinitsky pikspect: do not throttle output writes; read at most 4096 bytes from output instead of at most one byte; fixes #326
+     2020-01-11 12d2820 actionless fix(install_cli): also discard old install_info when it changed without user editing it
+
+
+Fri Jan 17 23:14:44 2020 +0100
+-------------------------------------------------
+1.5.9.1         Hotfix release 1.5.9.1
+    
+    Notable changes:
+     2020-01-17 54faf55 actionless fix(build): editing PKGBUILD not available in AUR
+     2020-01-16 ec3d06f Bundy01 Locale update: es, fr (#444)
+
+
+Sun Feb 2 17:24:11 2020 +0100
+-------------------------------------------------
+1.6             Release 1.6
+    
+    Notable changes:
+     2020-02-01 4ebb5be actionless feat(install cli): separate messages for new and removed deps
+     2020-02-01 43c4610 actionless fix(install cli): handle case when dependency which need to be removed also have some unlisted in AUR RPC deps
+     2020-02-01 2ac8044 actionless feat(dynamic pkg selection): choose multiple packages at once (fixes #397)
+     2020-01-31 2e484dd actionless fix(config: config-item): define __eq__ (fixes #447)
+     2020-01-31 465177b actionless chore(cli-clean-pkgs): use bold line for question similar to pacman's -Sc
+     2020-01-20 95fd008 actionless feat(install cli): show recovery prompt if deps for an AUR pkg are missing (fixes #282)
+
+
+Mon Feb 3 18:02:51 2020 +0100
+-------------------------------------------------
+1.6.1           Hotfix release 1.6.1
+    
+    Changes:
+     2020-02-03 bf8f1e8 actionless fix(install_cli): don't skip file review if --devel or --needed modes
+     2020-02-03 021fae1 actionless fix(install cli): when discarding package also add it manually_excluded, to prevent showing twice update itself and user-modified pkgbuild (fixes #446)
+
+
+Sat Feb 8 15:05:05 2020 +0100
+-------------------------------------------------
+1.6.2           Hotfix release 1.6.2
+    
+    Notable changes:
+     2020-02-08 8e0ee37 actionless fix(install_cli): run mksrcinfo only after all files have been reviewed
+
+
+Sat Feb 8 16:32:36 2020 +0100
+-------------------------------------------------
+1.6.3           Hotfix release 1.6.3
+    
+    Notables changes:
+     2020-02-08 80d9409 actionless Revert "fix(install_cli): run mksrcinfo only after all files have been reviewed"
+     2020-02-08 47f2eb1 actionless fix(build): run mksrcinfo only after all files have been reviewed
+
+
+Sun Feb 16 20:13:00 2020 +0100
+-------------------------------------------------
+1.6.4           Release 1.6.4
+    
+    Notable changes:
+     2020-02-16 fdad6df actionless fix(install cli, build): regression after latest fix for reviewed status (problem with detecting changes with --devel packages' builds)
+     2020-02-15 42fe418 actionless fix(install_info_fetcher: discard): discard only pkg and its deps, but not the pkgs which depend on it (re: #452)
+     2020-02-15 d701695 actionless fix(args): make --print-commands work again (but still keep --verbose work as well)
+     2020-02-15 77619d3 actionless feat(pprint, args, install_info): handle pacman's --debug and add its own --pikaur-debug, add print_debug(), minimal debugging output in install info fetcher
+     2020-02-13 671f15f actionless feat(search_cli): workaround/handle 'Query arg too small.' from AUR RPC
+
+
+Sat Feb 22 13:59:34 2020 +0100
+-------------------------------------------------
+1.6.5           Release 1.6.5
+    
+    Notable changes:
+     2020-02-22 9927f58 NeoTheFox feat: add `doas` support as PrivilegeEscalationTool config option (#455)
+     2020-02-19 7f04667 actionless fix(print_department: pformat_upgradeable): AUR pkgs when upgrades sorted by repo (fixes #454)
+
+
+Thu Feb 27 00:30:20 2020 +0100
+-------------------------------------------------
+1.6.6           Release 1.6.6
+    
+    Notables changes:
+     2020-02-26 fa3f9e1 actionless chore(args): document --pikaur-debug and mention it in GitHub issue template
+     2020-02-26 5403392 actionless fix(build: init): allow limiting package_names when building pkgbuild by path (fixes #452)
+     2020-02-22 5557ee6 actionless chore(config): move 'AurUrl' and 'NewsUrl' to [network] config section
+     2020-02-22 b3995fb actionless chore(config): move 'NoEdit', 'DontEditByDefault', 'NoDiff', 'GitDiffArgs' and 'DiffPager' to [review] config section
+     2020-02-22 123552e actionless feat(config): implement config migration
+
+
+Tue Mar 10 16:45:20 2020 +0100
+-------------------------------------------------
+1.6.7           Release 1.6.7
+    
+    Notable changes:
+     2020-03-05 456eb3e actionless refactor(install cli; config): add HideDiffFiles=.SRCINFO (re #398)
+     2020-03-05 ca2cec1 actionless fix(install cli): handle pkgbuild changed even on earliest stages
+     2020-03-03 05a66d9 Bundy01 Locale update: es, fr
+     2020-03-02 588f5b4 actionless feat(aur, news): extract urllib-related code to separate module in order to add verbose logging for network requests
+
+
+Tue Mar 17 22:41:17 2020 +0100
+-------------------------------------------------
+1.6.8           Release 1.6.8
+    
+    Notable changes:
+     2020-03-17 aa54551 actionless fix(install_cli: conflicts): check also conflicting aur deps
+     2020-03-17 4d70a69 actionless fix(install_cli): remove failed pkgbuild from the list
+     2020-03-15 136d03a actionless fix(urllib): return empty string if url request is not required (fixes #461)
+
+
+Wed Mar 25 21:18:06 2020 +0100
+-------------------------------------------------
+1.6.9           Release 1.6.9
+    
+    Notables changes:
+     2020-03-25 bfeccf6 actionless fix(config: DATA_ROOT): correctly handle change of XDG_DATA_HOME (fixes #465)
+     2020-03-24 8c2f0b8 actionless fix(print_dept: color_generator): determenistic colors for known official arch repos
+     2020-03-22 ff40ebf actionless refactor(print_dept: pp_repo_name): generate unique color sequence instead of just relying on string length
+     2020-03-22 2558db0 actionless fix(print_dept: pp_upgradeable): format repo name the same as in search cli (fixes #464)
+     2020-03-22 1abee42 actionless fix(core: isolate_root_cmd): find a way to correctly handle SIGINT(Ctrl+C), fixes #463
+
+
+Fri Mar 27 22:46:36 2020 +0100
+-------------------------------------------------
+1.6.9.1         Hotfix release 1.6.9.1
+    
+     2020-03-27 eb256aa actionless fix(print_department: pformat_reponame): add color argument (fixes #466)

@@ -1,0 +1,32 @@
+# Source build of the official GitHub CLI
+# Maintainer: Richard Bradfield <bradfier@fstab.me>
+
+pkgname=github-cli
+pkgver=0.6.4
+pkgrel=1
+pkgdesc="The GitHub CLI"
+arch=("x86_64")
+url="https://github.com/cli/cli"
+license=("MIT")
+provides=("gh")
+depends=("glibc")
+makedepends=("glibc" "go-pie")
+optdepends=("git: To interact with repositories")
+
+source=("$pkgname-$pkgver.tar.gz::https://github.com/cli/cli/archive/v${pkgver}.tar.gz")
+
+sha256sums=('7dbe61da02c8fed6412ed6a3f5ed6163c495275f6e61236f51a27ccb052acf41')
+
+build() {
+	cd "cli-$pkgver"
+    go build \
+        -trimpath \
+        -ldflags "-extldflags ${LDFLAGS} -X github.com/cli/cli/command.Version=v${pkgver} -X github.com/cli/cli/command.BuildDate=$(date +%Y-%m-%d)" -o "bin/gh" ./cmd/gh
+}
+
+package() {
+	cd "cli-$pkgver"
+    install -Dm755 "${srcdir}/cli-${pkgver}/bin/gh" "${pkgdir}/usr/bin/gh"
+    install -Dm644 "${srcdir}/cli-${pkgver}/LICENSE" "${pkgdir}/usr/share/licenses/github-cli"
+    install -Dm644 "${srcdir}/cli-${pkgver}/README.md" "${pkgdir}/usr/share/doc/github-cli/README.md"
+}

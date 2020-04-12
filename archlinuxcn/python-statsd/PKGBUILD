@@ -1,7 +1,7 @@
 _pkgname=statsd
 pkgname=python-statsd
 pkgver=3.3.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A simple statsd client."
 arch=('any')
 url="https://github.com/jsocol/pystatsd"

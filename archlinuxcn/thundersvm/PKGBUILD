@@ -1,0 +1,112 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+# Contributor: Adrien Wu <adrien.sf.wu@gmail.com>
+
+_pkgname=thundersvm
+pkgname=('thundersvm' 'thundersvm-cpu')
+pkgver=0.3.4
+pkgrel=4
+pkgdesc='A Fast SVM Library on GPUs and CPUs'
+url='https://github.com/Xtra-Computing/thundersvm'
+license=('Apache')
+makedepends=(
+  'chrpath'
+  'cmake'
+  'cuda'
+  'git'
+  'python-setuptools'
+  'python-wheel'
+)
+depends=(
+  'python-numpy'
+  'python-scikit-learn'
+  'python-scipy'
+)
+arch=('x86_64')
+source=("${_pkgname}::git+https://github.com/Xtra-Computing/thundersvm.git#tag=v${pkgver}")
+sha256sums=('SKIP')
+
+get_pyver() {
+  python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
+}
+
+prepare() {
+  mkdir "${srcdir}/${_pkgname}/build"
+  cd "${srcdir}/${_pkgname}"
+  git submodule update --init --recursive
+  cp -a "${srcdir}/${_pkgname}" "${srcdir}/${_pkgname}-cpu"
+
+  export BUILD_TAG=""
+  export CUDAHOSTCXX=/opt/cuda/bin/g++
+}
+
+build() {
+  export CC=/opt/cuda/bin/gcc
+  export CXX=/opt/cuda/bin/g++
+  cd "${srcdir}/${_pkgname}/build"
+  cmake .. \
+    -DBUILD_TESTS=ON \
+    -DCMAKE_INSTALL_PREFIX:PATH=/usr \
+    -DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON \
+    -DUSE_CUDA:BOOL=ON \
+    -DUSE_DOUBLE:BOOL=ON \
+    -DUSE_EIGEN:BOOL=ON
+  make
+  cd ../python
+  python setup.py build
+
+  export CC=gcc
+  export CXX=g++
+  cd "${srcdir}/${_pkgname}-cpu/build"
+  cmake .. \
+    -DBUILD_TESTS=ON \
+    -DCMAKE_INSTALL_PREFIX:PATH=/usr \
+    -DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON \
+    -DUSE_CUDA:BOOL=OFF \
+    -DUSE_DOUBLE:BOOL=ON \
+    -DUSE_EIGEN:BOOL=ON
+  make
+  cd ../python
+  python setup.py build
+}
+
+check() {
+# no NVIDIA GPU available on the build machine, so disable the tests
+# cd "${srcdir}/${_pkgname}/build"
+# make runtest
+  
+  cd "${srcdir}/${_pkgname}-cpu/build"
+  make runtest
+}
+
+_package() {
+  cd "${srcdir}/${pkgname}/build"
+  install -Dm755 "bin/thundersvm-predict" "${pkgdir}/usr/bin/thundersvm-predict"
+  install -Dm755 "bin/thundersvm-train" "${pkgdir}/usr/bin/thundersvm-train"
+  install -Dm755 "lib/libthundersvm.so" "${pkgdir}/usr/lib/libthundersvm.so"
+  install -Dm644 "${srcdir}/${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  cd "${srcdir}/${pkgname}/python"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  ln -sf "/usr/lib/libthundersvm.so" "${pkgdir}/usr/lib/python$(get_pyver)/site-packages/thundersvm/libthundersvm.so"
+  find "${pkgdir}" -type f -executable -exec chrpath --delete {} \;
+}
+
+package_thundersvm() {
+  provides=(thundersvm)
+  depends+=(cuda)
+  
+  export CC=/opt/cuda/bin/gcc
+  export CXX=/opt/cuda/bin/g++
+  _package
+}
+
+package_thundersvm-cpu() {
+  desc="${desc} (CPU only)"
+  provides=(thundersvm=${pkgver})
+  conflicts=(thundersvm)
+  
+  export CC=gcc
+  export CXX=g++
+  _package
+}
+# vim:set ts=2 sw=2 et:
+

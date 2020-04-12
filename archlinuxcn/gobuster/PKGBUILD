@@ -1,0 +1,26 @@
+# Maintainer: Hao Long <aur@esd.cc>
+
+pkgname=gobuster
+pkgver=3.0.1
+pkgrel=3
+pkgdesc="Directory/File, DNS and VHost busting tool written in Go"
+arch=("x86_64" "i686")
+url="https://github.com/OJ/gobuster"
+license=('Apache')
+provides=('gobuster')
+conflicts=('gobuster')
+depends=('glibc')
+makedepends=('go-pie')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/OJ/gobuster/archive/v${pkgver}.tar.gz")
+sha256sums=('9c70c73b4c08b02d1fc722cd82eda3d8ce683de53b08c8bddd31fc5c4d90a977')
+
+build() {
+  cd ${pkgname}-${pkgver}
+  go build -trimpath -ldflags "-extldflags ${LDFLAGS}" .
+}
+
+package() {
+  cd ${pkgname}-${pkgver}
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm755 gobuster "$pkgdir/usr/bin/gobuster"
+}

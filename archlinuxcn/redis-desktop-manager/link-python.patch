@@ -1,0 +1,13 @@
+diff --git a/3rdparty/pyotherside.pri b/3rdparty/pyotherside.pri
+index a98930fa..5cc95bde 100644
+--- a/3rdparty/pyotherside.pri
++++ b/3rdparty/pyotherside.pri
+@@ -23,7 +23,7 @@ win32* {
+     } else {
+       PYTHON_CONFIG = python3-config
+ 
+-      QMAKE_LIBS += $$system($$PYTHON_CONFIG --ldflags --libs)
++      QMAKE_LIBS += $$system($$PYTHON_CONFIG --embed --ldflags --libs)
+       QMAKE_CXXFLAGS += $$system($$PYTHON_CONFIG --includes)
+       DEFINES *= HAVE_DLADDR
+     }

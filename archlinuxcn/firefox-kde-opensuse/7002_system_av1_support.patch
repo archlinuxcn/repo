@@ -1,5 +1,6 @@
 # HG changeset patch
 # User Thomas Deutschmann <whissi@gentoo.org>
+# Parent  3a154721ac07532973fcfa0dbec3e648bd5077c7
 
 # Parent  66f9c84511dda432587261f6b9ebf07c4771aad8
 Add ability to use system-av1 (media-libs/libaom and media-libs/dav1d) instead of bundled.
@@ -32,13 +33,13 @@ diff --git a/config/external/moz.build b/config/external/moz.build
 diff --git a/config/system-headers.mozbuild b/config/system-headers.mozbuild
 --- a/config/system-headers.mozbuild
 +++ b/config/system-headers.mozbuild
-@@ -1311,16 +1311,24 @@ if CONFIG['MOZ_ENABLE_CONTENTMANAGER']:
+@@ -1302,16 +1302,24 @@ else:
+         'sys/event.h',
+     ]
+ 
+ if CONFIG['MOZ_ENABLE_LIBPROXY']:
      system_headers += [
-         'QtSparql/qsparqlconnection.h',
-         'QtSparql/qsparqlquery.h',
-         'QtSparql/qsparqlresult.h',
-         'SelectMultipleContentItemsPage.h',
-         'SelectSingleContentItemPage.h',
+         'proxy.h',
      ]
  
 +if CONFIG['MOZ_SYSTEM_AV1']:
@@ -60,7 +61,7 @@ diff --git a/config/system-headers.mozbuild b/config/system-headers.mozbuild
 diff --git a/dom/media/platforms/moz.build b/dom/media/platforms/moz.build
 --- a/dom/media/platforms/moz.build
 +++ b/dom/media/platforms/moz.build
-@@ -75,16 +75,21 @@ if CONFIG['MOZ_AV1']:
+@@ -76,16 +76,21 @@ if CONFIG['MOZ_AV1']:
      EXPORTS += [
          'agnostic/AOMDecoder.h',
          'agnostic/DAV1DDecoder.h',
@@ -85,7 +86,7 @@ diff --git a/dom/media/platforms/moz.build b/dom/media/platforms/moz.build
 diff --git a/toolkit/moz.configure b/toolkit/moz.configure
 --- a/toolkit/moz.configure
 +++ b/toolkit/moz.configure
-@@ -460,32 +460,49 @@ imply_option('--enable-fmp4', ffmpeg, '-
+@@ -473,32 +473,49 @@ imply_option('--enable-fmp4', ffmpeg, '-
  option('--disable-av1',
          help='Disable av1 video support')
  

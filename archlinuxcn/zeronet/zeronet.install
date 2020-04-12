@@ -8,6 +8,9 @@ post_install() {
     mkdir -p /var/log/zeronet
     chown zeronet:zeronet /var/log/zeronet
 
+    mkdir -p /var/lib/zeronet
+    chown zeronet:zeronet /var/lib/zeronet
+
     # This is not usual practice but to editting from web interface
     chown zeronet:zeronet /etc/zeronet.conf
 

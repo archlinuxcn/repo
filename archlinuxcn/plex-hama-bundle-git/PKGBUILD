@@ -1,12 +1,12 @@
 # Maintainer: Frantic1048 <archer@frantic1048.com>
 pkgdesc='Plex HTTP Anidb Metadata Agent (HAMA)'
 pkgname='plex-hama-bundle-git'
-pkgver=r844.f98cf15
+pkgver=r883.6ab37e2
 pkgrel=1
 makedepends=('git')
 depends=('plex-media-server')
-conflicts=('')
-provides=('')
+conflicts=()
+provides=()
 arch=('x86_64' 'i686')
 url='https://github.com/ZeroQI/Hama.bundle'
 license=('GPL3')

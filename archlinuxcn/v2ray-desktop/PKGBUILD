@@ -1,0 +1,39 @@
+# Maintainer: Dr-Incognito <v2ray.dev at gmail dot com>
+
+pkgname=v2ray-desktop
+pkgver=2.1.4
+pkgrel=1
+pkgdesc="A cross-platform GUI proxy client that supports Shadowsocks, V2Ray, and Trojan protocols (Stable Release)"
+arch=("x86_64")
+url="https://github.com/Dr-Incognito/V2Ray-Desktop"
+license=("GPL3")
+depends=("clash" "qt5-base>=5.14.0" "qt5-quickcontrols>=5.14.0" "qt5-quickcontrols2>=5.14.0" "qt5-svg>=5.14.0")
+makedepends=("git" "qt5-tools>=5.14.0" "qt5-declarative>=5.14.0")
+provides=(v2ray-desktop)
+source=("V2Ray-Desktop::git+${url}#tag=${pkgver}")
+sha512sums=('SKIP')
+
+prepare() {
+    cd "${srcdir}/V2Ray-Desktop"
+    git submodule init
+    git submodule update --progress
+}
+
+build() {
+    cd "${srcdir}/V2Ray-Desktop"
+    sed -ie "s/V2RAY_USE_LOCAL_INSTALL[[:space:]]*= true/V2RAY_USE_LOCAL_INSTALL=false/" src/constants.h
+    sed -i "s/Exec=%1/Exec=\/opt\/v2ray-desktop\/v2ray-desktop/" src/misc/tpl-linux-autostart.desktop
+    sed -i "s/Icon=/Icon=\/opt\/v2ray-desktop\//" src/misc/tpl-linux-autostart.desktop
+    lrelease src/locales/zh-CN.ts
+    mkdir -p build && cd build
+    qmake PREFIX=/usr ../src
+    make -j$nproc
+}
+
+package() {
+    cd "${srcdir}/V2Ray-Desktop"
+    install -Dm755 build/V2Ray-Desktop "${pkgdir}/opt/v2ray-desktop/v2ray-desktop"
+    install -Dm644 src/images/v2ray.png "${pkgdir}/opt/v2ray-desktop/v2ray-desktop.png"
+    install -Dm644 src/locales/zh-CN.qm "${pkgdir}/opt/v2ray-desktop/locales/zh-CN.qm"
+    install -Dm644 src/misc/tpl-linux-autostart.desktop "${pkgdir}/usr/share/applications/v2ray-desktop.desktop"
+}

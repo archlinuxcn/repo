@@ -1,5 +1,5 @@
 pkgname=python-multiprocess
-pkgver=0.70.7
+pkgver=0.70.9
 pkgrel=1
 pkgdesc="better multiprocessing and multithreading in python"
 url="http://trac.mystic.cacr.caltech.edu/project/pathos/wiki.html"
@@ -8,7 +8,7 @@ license=('BSD')
 makedepends=('python-setuptools')
 depends=('python-dill')
 source=("https://github.com/uqfoundation/multiprocess/archive/multiprocess-${pkgver}.tar.gz")
-sha256sums=('225526007f02469eb8d0baabcd397058c6a68cf33ba231fd3ded9de3c43941fd')
+sha256sums=('7cff4ea58e01e813c31756247c11616edb605fb4cb7a6bf5c2704a95277b9bf6')
 
 build() {
   cd "${srcdir}"/multiprocess-multiprocess-$pkgver

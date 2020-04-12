@@ -1,11 +1,6 @@
 [Unit]
 Description=VMware Networks Configuration Generation
-ConditionPathExists=|!/etc/vmware/networking
-ConditionPathExists=|!/etc/vmware/vmnet1/dhcpd/dhcpd.conf
-ConditionPathExists=|!/etc/vmware/vmnet1/dhcpd/dhcpd.leases
-ConditionPathExists=|!/etc/vmware/vmnet8/dhcpd/dhcpd.conf
-ConditionPathExists=|!/etc/vmware/vmnet8/dhcpd/dhcpd.leases
-ConditionPathExists=|!/etc/vmware/vmnet8/nat/nat.conf
+ConditionPathExists=!/etc/vmware/networking
 
 [Service]
 UMask=0077

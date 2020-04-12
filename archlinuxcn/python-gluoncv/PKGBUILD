@@ -2,21 +2,28 @@
 
 _pkgname=gluon-cv
 pkgname=python-gluoncv
-pkgver=0.5.0
-pkgrel=2
+pkgver=0.6.0
+pkgrel=3
 pkgdesc='A Deep Learning Toolkit for Computer Vision'
-arch=(any)
+arch=('any')
 url='https://gluon-cv.mxnet.io'
 license=('Apache')
 depends=(
   'mxnet'
   'python-matplotlib'
   'python-numpy'
+  'python-portalocker'
+  'python-requests'
   'python-scipy'
+  'python-tqdm'
 )
 makedepends=(python-setuptools)
-source=("${pkgname}-${pkgver}.tar.gz"::"https://github.com/dmlc/gluon-cv/archive/v${pkgver}.tar.gz")
-sha512sums=('b50f7ca9232cf8657c2953a7501f197225b389a767f9a0a7f4453a239700a198077472c8a21924bba6a1f32909b708becb00841bff5326cb6b42e94f9c23ca4d')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/dmlc/gluon-cv/archive/v${pkgver}.tar.gz")
+sha512sums=('7c18d92a088e9c15d16626178aeea5e17e4c673c21bcd006c8e7dc9006ffc1341c30c7dce0f09e19213beaf81b7a289bd00a50968c7f5831e3c45b345666ccd6')
+
+get_pyver() {
+  python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
+}
 
 build() {
   cd ${_pkgname}-${pkgver}
@@ -26,9 +33,6 @@ build() {
 package() {
   cd "${_pkgname}-${pkgver}"
   python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
-  # install missing json files
-  find "${srcdir}/${_pkgname}-${pkgver}/gluoncv/model_zoo/pruned_resnet" -type f -name "*.json" -exec install -Dm644 {} -t "${pkgdir}/usr/lib/python3.7/site-packages/gluoncv/model_zoo/pruned_resnet" \;
-  find "${srcdir}/${_pkgname}-${pkgver}/gluoncv/model_zoo/quantized" -type f -name "*.json" -exec install -Dm644 {} "${pkgdir}/usr/lib/python3.7/site-packages/gluoncv/model_zoo/quantized" \;
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:

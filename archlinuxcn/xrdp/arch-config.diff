@@ -34,18 +34,6 @@ diff -up src/xrdp-0.9.9/instfiles/xrdp-sesman.service.in.orig src/xrdp-0.9.9/ins
  
  [Install]
  WantedBy=multi-user.target
-diff -up src/xrdp-0.9.9/instfiles/xrdp.sh.orig src/xrdp-0.9.9/instfiles/xrdp.sh
---- src/xrdp-0.9.9/instfiles/xrdp.sh.orig	2018-10-18 23:50:31.000000000 -0600
-+++ src/xrdp-0.9.9/instfiles/xrdp.sh	2019-01-13 06:49:55.000000000 -0700
-@@ -17,7 +17,7 @@
- # Description: starts xrdp
- ### END INIT INFO
- 
--SBINDIR=/usr/local/sbin
-+SBINDIR=/usr/bin
- LOG=/dev/null
- CFGDIR=/etc/xrdp
- 
 diff -up src/xrdp-0.9.9/sesman/startwm.sh.orig src/xrdp-0.9.9/sesman/startwm.sh
 --- src/xrdp-0.9.9/sesman/startwm.sh.orig	2018-10-25 00:20:43.000000000 -0600
 +++ src/xrdp-0.9.9/sesman/startwm.sh	2019-01-13 06:52:12.000000000 -0700

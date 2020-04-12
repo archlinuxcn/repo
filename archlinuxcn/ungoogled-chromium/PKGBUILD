@@ -3,9 +3,9 @@
 # Derived from official Chromium and Inox PKGBUILDS and ungoogled-chromium buildkit
 
 pkgname=ungoogled-chromium
-pkgver=77.0.3865.120
+pkgver=80.0.3987.149
 _rev=1
-_archver=19c53c4ce8a6b674500cf94dacafde41ba98cbf0
+_archver=b39bf35e8765a7af01d97a53854ff0628b2fba07
 pkgrel=1
 _launcher_ver=6
 pkgdesc="A lightweight approach to removing Google web service dependency"
@@ -15,7 +15,7 @@ license=('BSD')
 depends=('gtk3' 'nss' 'alsa-lib' 'xdg-utils' 'libxss' 'libcups' 'libgcrypt'
          'ttf-font' 'systemd' 'dbus' 'libpulse' 'pciutils' 'json-glib' 'libva'
          'desktop-file-utils' 'hicolor-icon-theme' 'jsoncpp' 'openjpeg2')
-makedepends=('python' 'python2' 'gperf' 'yasm' 'mesa' 'ninja' 'git'
+makedepends=('python' 'python2' 'gperf' 'yasm' 'mesa' 'ninja' 'nodejs' 'git'
              'clang' 'lld' 'gn' 'llvm' 'quilt')
 optdepends=('pepper-flash: support for Flash content'
             'kdialog: needed for file dialogs in KDE'
@@ -30,10 +30,10 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-launcher-$_launcher_ver.tar.gz::https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver.tar.gz
 https://github.com/Eloston/ungoogled-chromium/archive/$pkgver-$_rev.tar.gz
         https://github.com/ungoogled-software/ungoogled-chromium-archlinux/archive/${_archver}.tar.gz)
-sha256sums=('d792f9b09b1dcfd64e68f47a611c540dd1383dd9abd78ca1e06b2a7e2ff06af8'
+sha256sums=('50bedde7932921e375b521ceab8989be134a8d937751847e9d9287f7e0a02c1e'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
-            '456eabbc889c7135ca0eecb2bf57a10915f424ebf8a65016636b5b47b2a13e37'
-            'c70c5d3e92d64fc40e2f81e53fcf62099159ad8972d65853afb3f27e966a544d')
+            '309522e2c6bb615bc8dd20b96939d9f5c18830d173e26818bcdff10f2d420218'
+            '82f3f5ac30fc7d525547a25bc429bbcff2378ce1228c8125851ad3b5675fabff')
 
 # Possible replacements are listed in build/linux/unbundle/replace_gn_files.py
 # Keys are the names in the above script; values are the dependencies in Arch
@@ -81,6 +81,9 @@ prepare() {
   # Force script incompatible with Python 3 to use /usr/bin/python2
   sed -i '1s|python$|&2|' third_party/dom_distiller_js/protoc_plugins/*.py
 
+  mkdir -p third_party/node/linux/node-linux-x64/bin
+  ln -s /usr/bin/node third_party/node/linux/node-linux-x64/bin/
+
   # Remove bundled libraries for which we will use the system copies; this
   # *should* do what the remove_bundled_libraries.py script does, with the
   # added benefit of not having to list all the remaining libraries
@@ -125,11 +128,16 @@ build() {
   cp "$_ungoogled_repo/flags.gn" "out/Default/args.gn"
   printf '\n' >> "out/Default/args.gn"
   cat "$_ungoogled_archlinux_repo/flags.archlinux.gn" >> "out/Default/args.gn"
+  sed -i '/use_system_libopenjpeg2=true/d' "out/Default/args.gn"
 
   # Facilitate deterministic builds (taken from build/config/compiler/BUILD.gn)
   CFLAGS+='   -Wno-builtin-macro-redefined'
   CXXFLAGS+=' -Wno-builtin-macro-redefined'
   CPPFLAGS+=' -D__DATE__=  -D__TIME__=  -D__TIMESTAMP__='
+
+  # Do not warn about unknown warning options
+  CFLAGS+='   -Wno-unknown-warning-option'
+  CXXFLAGS+=' -Wno-unknown-warning-option'
 
   msg2 'Configuring Chromium'
   gn gen out/Default --script-executable=/usr/bin/python2 --fail-on-unused-args

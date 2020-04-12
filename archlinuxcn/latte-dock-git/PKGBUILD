@@ -3,7 +3,7 @@
 
 pkgname=latte-dock-git
 _gitname=latte-dock
-pkgver=0.9.4.r0.g0a78fc01
+pkgver=0.9.11.r0.gff490a41
 pkgrel=1
 pkgdesc='Latte is a dock based on plasma frameworks that provides an elegant and intuitive experience for your tasks and plasmoids'
 arch=('i686' 'x86_64')
@@ -11,7 +11,9 @@ url='https://cgit.kde.org/latte-dock.git/'
 license=('GPL')
 depends=('plasma-framework' 'plasma-desktop')
 optdepends=('libunity: quicklists, counters, and progress bars for apps using libunity')
-makedepends=('git' 'cmake' 'extra-cmake-modules' 'python' 'ruby' 'subversion')
+makedepends=('git' 'cmake' 'extra-cmake-modules' 'python' 'subversion'
+    # 'ruby'
+    )
 conflicts=('latte-dock')
 provides=('latte-dock')
 source=("git://anongit.kde.org/latte-dock.git")
@@ -25,12 +27,17 @@ pkgver() {
 
 build() {
     cd ${_gitname}
-    mkdir build && cd build
+    mkdir -p build && cd build
+
+    # Upstream requirements do not currently support ruby 2.7.0, disable translations.
     cmake -DCMAKE_INSTALL_PREFIX=/usr \
-        -DKDE_L10N_BRANCH=trunk \
-        -DKDE_L10N_AUTO_TRANSLATIONS=OFF \
         -DCMAKE_BUILD_TYPE=Release ..
-    make fetch-translations
+
+    # cmake -DCMAKE_INSTALL_PREFIX=/usr \
+    #     -DKDE_L10N_BRANCH=trunk \
+    #     -DKDE_L10N_AUTO_TRANSLATIONS=OFF \
+    #     -DCMAKE_BUILD_TYPE=Release ..
+    # make fetch-translations
 }
 
 package() {

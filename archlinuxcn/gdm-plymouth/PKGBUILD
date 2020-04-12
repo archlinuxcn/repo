@@ -8,7 +8,7 @@ _pkgbase=gdm
 pkgbase=gdm-plymouth
 pkgname=(gdm-plymouth libgdm-plymouth)
 pkgver=3.34.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Display manager and login screen with plymouth support"
 url="https://wiki.gnome.org/Projects/GDM"
 arch=(x86_64)
@@ -86,6 +86,11 @@ package_gdm-plymouth() {
 
   # Unused or created at start
   rm -r "$pkgdir"/var/{cache,log,run}
+
+  install -Dm644 /dev/stdin "$pkgdir/usr/lib/sysusers.d/gdm.conf" <<END
+g gdm 120 -
+u gdm 120 "Gnome Display Manager" /var/lib/gdm
+END
 
 ### Split libgdm
   mkdir -p libgdm/{lib,share}

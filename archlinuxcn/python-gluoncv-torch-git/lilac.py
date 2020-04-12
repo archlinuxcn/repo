@@ -3,6 +3,7 @@
 from lilaclib import *
 
 def pre_build():
+  update_pkgrel()
   update_pkgver_and_pkgrel("0.0.3."+_G.newver)
 
 def post_build():

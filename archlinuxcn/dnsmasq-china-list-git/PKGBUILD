@@ -1,29 +1,45 @@
 # Maintainer: Felix Yan <felixonmars@gmail.com>
 
-_pkgname=dnsmasq-china-list
-pkgname=$_pkgname-git
-pkgver=0.88918.26508ba409
+pkgbase=dnsmasq-china-list-git
+pkgname=(dnsmasq-china-list-git smartdns-china-list-git)
+pkgver=0.100917.d63c1a533b
 pkgrel=1
 pkgdesc="Configuration for hot China domains to accelerate via Dnsmasq"
 arch=('any')
 url="https://github.com/felixonmars/dnsmasq-china-list"
-license=('WTFPL') 
-depends=('dnsmasq')
+license=('WTFPL')
 makedepends=('git')
-source=("git+https://github.com/felixonmars/${_pkgname}.git")
+source=("git+https://github.com/felixonmars/dnsmasq-china-list.git")
 md5sums=('SKIP')
 
 pkgver() {
-  cd "$srcdir/$_pkgname"
+  cd dnsmasq-china-list
   echo 0.$(git rev-list --count HEAD).$(git rev-parse --short HEAD)
 }
 
-package() {
-  install -Dm644 "$srcdir/$_pkgname/accelerated-domains.china.conf" "$pkgdir/etc/dnsmasq.d/accelerated-domains.china.conf"
-  install -Dm644 "$srcdir/$_pkgname/apple.china.conf" "$pkgdir/etc/dnsmasq.d/apple.china.conf"
-  install -Dm644 "$srcdir/$_pkgname/google.china.conf" "$pkgdir/etc/dnsmasq.d/google.china.conf"
-  install -Dm644 "$srcdir/$_pkgname/bogus-nxdomain.china.conf" "$pkgdir/etc/dnsmasq.d/bogus-nxdomain.china.conf"
-  install -Dm755 "$srcdir/$_pkgname/dnsmasq-update-china-list" "$pkgdir/usr/bin/dnsmasq-update-china-list"
+build() {
+  cd dnsmasq-china-list
+  make smartdns SERVER=china
+}
+
+package_dnsmasq-china-list-git() {
+  pkgdesc="Configuration for hot China domains to accelerate via Dnsmasq"
+  depends=('dnsmasq')
+
+  install -Dm644 dnsmasq-china-list/accelerated-domains.china.conf "$pkgdir/etc/dnsmasq.d/accelerated-domains.china.conf"
+  install -Dm644 dnsmasq-china-list/apple.china.conf "$pkgdir/etc/dnsmasq.d/apple.china.conf"
+  install -Dm644 dnsmasq-china-list/google.china.conf "$pkgdir/etc/dnsmasq.d/google.china.conf"
+  install -Dm644 dnsmasq-china-list/bogus-nxdomain.china.conf "$pkgdir/etc/dnsmasq.d/bogus-nxdomain.china.conf"
+  install -Dm755 dnsmasq-china-list/dnsmasq-update-china-list "$pkgdir/usr/bin/dnsmasq-update-china-list"
+}
+
+package_smartdns-china-list-git() {
+  pkgdesc="Configuration for hot China domains to accelerate via smartdns"
+  depends=('smartdns')
+
+  install -Dm644 dnsmasq-china-list/accelerated-domains.china.smartdns.conf "$pkgdir/etc/smartdns/accelerated-domains.china.smartdns.conf"
+  install -Dm644 dnsmasq-china-list/apple.china.smartdns.conf "$pkgdir/etc/smartdns/apple.china.smartdns.conf"
+  install -Dm644 dnsmasq-china-list/google.china.smartdns.conf "$pkgdir/etc/smartdns/google.china.smartdns.conf"
 }
 
 # vim:set ts=2 sw=2 et:

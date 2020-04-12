@@ -1,0 +1,10 @@
+[Unit]
+Description=Nextcloud; scan all files weekly
+
+[Timer]
+OnBootSec=15min
+OnCalendar=weekly
+Persistent=True
+
+[Install]
+WantedBy=timers.target

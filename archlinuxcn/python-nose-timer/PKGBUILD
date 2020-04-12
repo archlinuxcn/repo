@@ -4,17 +4,21 @@
 
 pkgname=python-nose-timer
 _pkgname=nose-timer
-pkgver=0.7.5
-pkgrel=2
+pkgver=1.0.0
+pkgrel=1
 pkgdesc='Timer plugin for nosetests'
 arch=(any)
 url='https://github.com/mahmoudimus/nose-timer'
 license=(MIT)
 depends=(python-nose)
 makedepends=(python-setuptools)
-checkdepends=(python-mock python-parameterized python-pytest)
+checkdepends=(
+  'python-mock'
+  'python-parameterized'
+  'python-termcolor'
+)
 source=("https://github.com/mahmoudimus/nose-timer/archive/v${pkgver}.tar.gz")
-sha512sums=('25fa639d15a01492bde0d47b262c579061eaf21be6953c2451a56aa3be43a09c1e730e4a053f0005f6d8482100f4b8546465456755169df6a66b798313569c49')
+sha512sums=('1afca31d422fc0306721cdcf4e6f23a88dffdbd85e3ec83d6a72c59c584f3919f17f0042129993d857bbf6f4105f58e989a7ee71835a7debf2844d674e587344')
 
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
@@ -23,7 +27,7 @@ build() {
 
 check() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
-  pytest -v
+  nosetests --verbosity 2 --with-coverage --cover-erase --cover-html --cover-package=nosetimer tests
 }
 
 package() {

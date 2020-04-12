@@ -2,13 +2,13 @@
 # Contributor: svalo <me@valo.space>
 
 pkgname=dino-git
-pkgver=r565.0acbe48
+pkgver=v0.1.0.r47.g5b2683d
 pkgrel=1
 pkgdesc="Simple and modern Jabber/XMPP client written in vala"
 arch=('i686' 'x86_64' 'aarch64')
-url="https://github.com/dino/dino"
+url="https://dino.im/"
 license=('GPL3')
-depends=('glib2>=2.38' 'glib-networking' 'gtk3>=3.22' 'gpgme' 'libgee>=0.10' 'libgcrypt' 'libsoup' 'sqlite' 'qrencode')
+depends=('glib2>=2.38' 'glib-networking' 'gtk3>=3.22' 'gpgme' 'libgee>=0.10' 'libgcrypt' 'libsoup' 'sqlite' 'qrencode' 'libsignal-protocol-c' )
 makedepends=('git' 'cmake' 'vala>=0.34' 'ninja')
 optdepends=('libcanberra: audio notification support')
 provides=("${pkgname%-git}")
@@ -25,14 +25,17 @@ sha512sums=('SKIP')
 
 #_ENABLE_PLUGINS="--enable-plugin='notification-sound'"
 
+### Since 55b148a0f78c1abef57c21b2a84d97cad32b2290 dino uses by default the shared libsignal library.
+# To restore the old behaviour add '--with-libsignal-in-tree' flag to configure
+
 pkgver() {
     cd "${srcdir}/${pkgname%-git}"
-    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+    git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build() {
     cd "${srcdir}/${pkgname%-git}"
-    ./configure $_DISABLE_PLUGINS $_ENABLE_PLUGINS --prefix="/usr" --with-tests CC="$CC" CFLAGS="$CFLAGS" VALACFLAGS="$VALACFLAGS"
+    ./configure $_DISABLE_PLUGINS $_ENABLE_PLUGINS --with-tests --prefix="/usr" CC="$CC" CFLAGS="$CFLAGS" VALACFLAGS="$VALACFLAGS"
     make
 }
 
@@ -45,7 +48,4 @@ check() {
     cd "${srcdir}/${pkgname%-git}"
     echo "Executing xmpp-vala-test:"
     build/xmpp-vala-test
-    echo
-    echo "Executing signal-protocol-vala-test:"
-    build/signal-protocol-vala-test
 }

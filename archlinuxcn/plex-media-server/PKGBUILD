@@ -9,8 +9,8 @@
 # Contributor: Praekon <praekon@googlemail.com>
 
 pkgname=plex-media-server
-pkgver=1.18.1.1973
-_pkgsum=0f4abfbcc
+pkgver=1.19.1.2645
+_pkgsum=ccb6eb67e
 pkgrel=1
 pkgdesc='The back-end media server component of Plex.'
 arch=('x86_64' 'armv7h' 'aarch64')
@@ -23,6 +23,7 @@ conflicts=('plex-media-server-plexpass')
 install='plex-media-server.install'
 source=('plexmediaserver.conf.d'
         'plexmediaserver.service'
+        'plexmediaserver.hook'
         'plex.sysusers'
         'plex.tmpfiles'
         'terms.txt')
@@ -33,12 +34,13 @@ source_x86_64=("https://downloads.plex.tv/plex-media-server-new/${pkgver}-${_pkg
 
 sha256sums=('398ba7958598609453f5289b3d5f2389d2756158b340cf28e83c39d9ed60280b'
             '348075917da3bac9659d047a45c264c556475e66779ecd84cf00d178a5b7bebf'
+            '204600b223eb87b7ee8d4b01dd168996498828bbdb4e4a795f36f8ab4ae205fb'
             'c597bee0bcbb59ed791651555a904e5f7e9d2e82f6c6986b6352e5fc38e5b557'
-            '7d321e237f2861405e7cb752eb5602efb091bad28cd873ff65244ed09dcf8736'
+            'b7ff6525a3c7a8be885edc85bb523095f8e25ddb38873127e2a4e97b28f2c7ad'
             'dbfb5a9a7146a975863c0932f1a68c4b040ec5d7e693361f39ddfbf60885e631')
-sha256sums_x86_64=('587cb706fdb8cea0764cc86fdb0ff29fb24513a8c9769e0b1707b8409527b2d2')
-sha256sums_armv7h=('339ac2874fb9aedc01db7864568152b082ecb1d6bc620ba6a2c194caffc30e02')
-sha256sums_aarch64=('edbd853118ee32c382b1cfbc9f6467f4cdb90306781ce2f9c4a48d371872cf0a')
+sha256sums_x86_64=('26810afb956340ea4b5ce062c66ed7c83f2725105571e8f327fecdadae327b47')
+sha256sums_armv7h=('3ba41a9d260d1d6d7a6c1e820d5c64f8bff3d44e6073e4f16b5d05d01ed27d19')
+sha256sums_aarch64=('d8fcb5bac09cf7229e0a23ce949ee5b4e8865ba33e78bf1741bd1907b8c30812')
 
 prepare() {
   if [[ $CARCH = armv7h ]] || [[ $CARCH = aarch64 ]]; then
@@ -56,6 +58,7 @@ package() {
   install -D -m 644 "${srcdir}/plex.tmpfiles" "${pkgdir}/usr/lib/tmpfiles.d/plex.conf"
 
   install -D -m 644 "${srcdir}/terms.txt" "${pkgdir}/usr/share/licenses/${pkgname}/terms.txt"
+  install -D -m 644 "${srcdir}/plexmediaserver.hook" "${pkgdir}/usr/share/doc/${pkgname}/plexmediaserver.hook"
 }
 
 # vim: ts=2 sw=2 et:

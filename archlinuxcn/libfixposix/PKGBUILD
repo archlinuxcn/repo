@@ -1,0 +1,30 @@
+# Maintainer: Andrew Sun <adsun701@gmail.com>
+# Contributor: June Tate-Gans <june@theonelab.com>
+
+pkgname=libfixposix
+pkgver=0.4.3
+pkgrel=2
+pkgdesc='Thin wrapper over POSIX syscalls'
+arch=('i686' 'x86_64')
+url="https://github.com/sionescu/libfixposix"
+license=('Boost')
+depends=('glibc')
+source=("${pkgname}-${pkgver}.tar.gz"::"https://github.com/sionescu/libfixposix/archive/v${pkgver}.tar.gz")
+sha256sums=('78fe8bcebf496520ac29b5b65049f5ec1977c6bd956640bdc6d1da6ea04d8504')
+
+prepare() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  autoreconf -fiv
+}
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  make DESTDIR="${pkgdir}" install
+  install -Dm644 LICENCE "${pkgdir}/usr/share/licenses/${pkgname}/LICENCE"
+}

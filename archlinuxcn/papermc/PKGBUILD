@@ -1,0 +1,55 @@
+# Maintainer: Gordian Edenhofer <gordian.edenhofer@gmail.com>
+
+pkgname=papermc
+_pkgver=1.15.2
+_build=173
+pkgver="${_pkgver}+b${_build}"
+pkgrel=1
+pkgdesc="Next generation of Minecraft server, compatible with Spigot plugins and offering uncompromising performance"
+arch=('any')
+url="https://papermc.io/"
+license=('custom')
+depends=('java-runtime-headless>=8' 'screen' 'sudo' 'bash' 'awk' 'sed')
+optdepends=("tar: needed in order to create world backups"
+	"netcat: required in order to suspend an idle server")
+conflicts=('papermc-git')
+backup=('etc/conf.d/papermc')
+install="${pkgname}.install"
+source=("papermc.${pkgver}.jar"::"https://papermc.io/api/v1/paper/${_pkgver}/${_build}/download"
+	"papermc-backup.service"
+	"papermc-backup.timer"
+	"papermc.service"
+	"papermc.conf"
+	"papermc.sh"
+	"papermc_${pkgver}_LICENSE.md"::"https://raw.githubusercontent.com/PaperMC/Paper/master/LICENSE.md")
+noextract=("papermc.${pkgver}.jar")
+sha512sums=('24d6a9dbd9b6d09d8958402ef4475f408a59a82625ddb3c29243d555f3effa113a92e92d0a51e0235b90d48e427a711d3f99921d6d7cb78af75732cbf3958fb7'
+            'a4fcc9f28436c0163e9414f2793fcbd4f6ea74772230cdff4a628246eae2a8008688b3dfb94d433f8f0887cd7eea3fe43ce25f9d5812d46e62179ff315b62895'
+            '51c5345155e8640d4f1eaef0c8cfb890ae46063f2d4e7a0fe181ad4c8ff7b96fea88b0f9fc74031d589dfd61602f37b440f183ca1859835930fe69d37508cd42'
+            'f29c4044d9e3cc5ab137c21f7e62399b36d7e1f777d5558a39f7b4a01de75bdf2de0b8678e424accc03934ca7db9ebb6a22c78c8c4497759287dd55e1c3eb456'
+            'bec77bc748ee9b9efe4913608f7a6f9b1bd40ed8f018a431981451f8ad77accc4b3670096a8523ddd9f745aef5edb7294ef3b15f483cf9af32c69f9a40ef40a1'
+            'c777e62beb213b5203883e13045953daa3d054c59da8ab535d416464366790edfe77fd9517f968d140dfb4c9009f7e8152f693312364ebbdc71cf2148d6a7df4'
+            '3edf367c6f16736367159adc9f56742f0fa86abc4dbb115e7f8e2c1060b618f8f292919929aeeca755ddc90c0c39be13733149e2c4a114990536aac2084e1b91')
+
+_game="papermc"
+_server_root="/srv/papermc"
+
+package() {
+	install -Dm644 ${_game}.conf              "${pkgdir}/etc/conf.d/${_game}"
+	install -Dm755 ${_game}.sh                "${pkgdir}/usr/bin/${_game}"
+	install -Dm644 ${_game}.service           "${pkgdir}/usr/lib/systemd/system/${_game}.service"
+	install -Dm644 ${_game}-backup.service    "${pkgdir}/usr/lib/systemd/system/${_game}-backup.service"
+	install -Dm644 ${_game}-backup.timer      "${pkgdir}/usr/lib/systemd/system/${_game}-backup.timer"
+	install -Dm644 ${_game}.${pkgver}.jar     "${pkgdir}/${_server_root}/${_game}.${pkgver}.jar"
+	ln -s "${_game}.${pkgver}.jar" "${pkgdir}${_server_root}/${_game}_server.jar"
+
+	# Link the log files
+	mkdir -p "${pkgdir}/var/log/"
+	install -dm2755 "${pkgdir}/${_server_root}/logs"
+	ln -s "${_server_root}/logs" "${pkgdir}/var/log/${_game}"
+
+	# Give the group write permissions and set user or group ID on execution
+	chmod g+ws "${pkgdir}${_server_root}"
+
+	install -D ./papermc_${pkgver}_LICENSE.md "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}

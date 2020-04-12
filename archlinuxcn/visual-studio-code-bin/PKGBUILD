@@ -2,7 +2,7 @@
 
 pkgname=visual-studio-code-bin
 _pkgname=visual-studio-code
-pkgver=1.40.0
+pkgver=1.44.0
 pkgrel=1
 pkgdesc="Visual Studio Code (vscode): Editor for building and debugging modern web and cloud applications (official binary version)"
 arch=('x86_64')
@@ -10,14 +10,15 @@ url="https://code.visualstudio.com/"
 license=('custom: commercial')
 provides=('code')
 conflicts=('code')
-depends=(fontconfig libxtst gtk3 python cairo alsa-lib nss gcc-libs libnotify libxss 'glibc>=2.28-4' lsof which)
+# lsof: need for terminal splitting, see https://github.com/Microsoft/vscode/issues/62991
+depends=(libxkbfile gnupg gtk3 libsecret nss gcc-libs libnotify libxss glibc lsof)
 optdepends=('glib2: Needed for move to trash functionality'
             'libdbusmenu-glib: Needed for KDE global menu')
 source=(code_x64_${pkgver}.tar.gz::https://vscode-update.azurewebsites.net/${pkgver}/linux-x64/stable
                ${_pkgname}.desktop ${_pkgname}-url-handler.desktop)
-sha256sums=('4fa1ae53452e76aebca3665c74b542aa19414c4804da8a910d869ef07c70b2cb'
-            '488592034dd5f979083bbd80788d33e253bb3ac3e52d50faee80e715a924a212'
-            '727adaf263801462744c65bc0fad1b64ab31b3c96ed1a11e5b61bffbd5d71bc7')
+sha256sums=('9dd2cad3f16750e9f16a3e8b58123ec5d01c3c3009e9fbbbb7cd564f54992e60'
+            '0deefcb638e06c35a52e7e9fb8e19b2dc393f01e5c1c122d2938cddeb22cf8de'
+            'be3d123aacd575d8f836728266eb421ea70399d713d1fc30378dbc5602b519fb')
 package() {
   _pkg=VSCode-linux-x64
 

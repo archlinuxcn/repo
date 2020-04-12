@@ -2,10 +2,10 @@
 # Contributor: "Amhairghin" Oscar Garcia Amor (https://ogarcia.me)
 
 _pkgname='python-magic'
-pkgname='python-magic-ahupp'
+pkgname=python-magic-ahupp
 pkgdesc='A python wrapper for libmagic'
 pkgver=0.4.15
-pkgrel=1
+pkgrel=2
 arch=('any')
 url="https://github.com/ahupp/python-magic"
 license=('MIT')

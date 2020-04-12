@@ -10,3 +10,4 @@ def post_build():
   git_commit()
   update_aur_repo()
 
+# vim:set ts=2 sw=2 et:

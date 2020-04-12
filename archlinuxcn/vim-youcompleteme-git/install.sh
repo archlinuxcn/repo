@@ -13,7 +13,6 @@ post_install() {
   echo -e "\trustup toolchain install nightly"
   echo -e "\trustup default nightly"
   echo -e "\trustup component add rls rust-analysis rust-src"
-  echo -e "\n\n\n"
 }
 
 post_upgrade() {
@@ -24,7 +23,6 @@ post_upgrade() {
   echo -e "\trustup toolchain install nightly"
   echo -e "\trustup default nightly"
   echo -e "\trustup component add rls rust-analysis rust-src"
-  echo -e "\n\n\n"
 }
 
 post_remove() {

@@ -3,8 +3,8 @@
 
 pkgbase='frp'
 pkgname=('frpc' 'frps')
-pkgver=0.29.1
-pkgrel=1
+pkgver=0.32.1
+pkgrel=2
 pkgdesc="A fast reverse proxy to help you expose a local server behind a NAT or firewall to the internet."
 arch=('x86_64' 'i686' 'arm' 'armv6h' 'armv7h' 'aarch64')
 license=('Apache')
@@ -14,23 +14,15 @@ makedepends=('go')
 
 source=("${pkgbase}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
 
-sha256sums=('ac95f0b204da2fa1116ce0f30c3caa46a2fa280bce0cb91e8f46690b065e5665')
-
-prepare() {
-  cd "${pkgbase}-${pkgver}"
-  sed -i 's#go build -o bin/#go build -mod=vendor -o bin/#g' Makefile
-}
+sha256sums=('3a6ef59163f5a1d41b67908269e924000a8ccb2984e4bdfc18bd1405b5dbaf22')
 
 build() {
-  #make all
-  #export GOPATH=`pwd`"/vendor"
   cd "${pkgbase}-${pkgver}"
   make build
 }
 
 check() {
   cd "${pkgbase}-${pkgver}"
-  sed -i 's#go test -v#go test -mod=vendor -v#g' Makefile
   make test
 }
 

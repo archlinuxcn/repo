@@ -2,7 +2,7 @@
 
 pkgname=python-nbval
 _pkgname=nbval
-pkgver=0.9.3
+pkgver=0.9.5
 pkgrel=1
 pkgdesc='A py.test plugin to validate Jupyter notebooks'
 arch=(any)
@@ -13,7 +13,7 @@ depends=(python python-pytest python-six python-jupyter_client
 makedepends=(python-setuptools)
 checkdepends=(python-doit python-matplotlib python-sympy python-pytest-cov)
 source=("https://github.com/computationalmodelling/nbval/archive/$pkgver/$pkgname-$pkgver.tar.gz")
-sha256sums=('edf1ad505db19313140c055a64ea96c3f87bee18f7c54162a4889deb4e463919')
+sha256sums=('2c8179bf8c23e3f58db980373b0b40b68c791039a996c604d96bb05b4665820f')
 
 build() {
   cd $_pkgname-$pkgver
@@ -24,7 +24,8 @@ check() {
   cd $_pkgname-$pkgver
   # needed for the pytest plugin entry point
   python setup.py install --root="$srcdir"/tmp_install
-  PYTHONPATH="$srcdir"/tmp_install/usr/lib/python3.7/site-packages doit test
+  site_packages_path=$(python -c 'import site; print(site.getsitepackages()[0])')
+  PYTHONPATH="$srcdir"/tmp_install$site_packages_path doit test
 }
 
 package() {

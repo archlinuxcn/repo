@@ -1,26 +1,27 @@
-# Maintainer: Ben Yip <yebenmy@protonmail.com>
+# Maintainer: NOGISAKA Sadata <ngsksdt@gmail.com>
+# Contributor: Kohei Suzuki <eagletmt@gmail.com>
+
 pkgname=ghq
-pkgver=0.8.0
+pkgver=1.1.0
 pkgrel=1
 pkgdesc="Remote repository management made easy"
 arch=('i686' 'x86_64')
 url="https://github.com/motemen/ghq"
 license=('MIT')
+depends=('glibc')
 makedepends=('go' 'git')
-provides=('ghq')
 optdepends=('zsh: ghq function for zsh')
+source=("ghq-${pkgver}.tar.gz::https://github.com/motemen/ghq/archive/v${pkgver}.tar.gz")
 
-source=("ghq-${pkgver}.tar.gz::https://github.com/motemen/ghq/archive/v${pkgver}.tar.gz"
-        "url.go.patch"
-        "url_test.go.patch")
+sha512sums=('f307118c7052e7f23638796dc15936e2ecc9252d7e994a0281e329a9332573c9dd41fe7f45103aa249af1f0706bd14c31230892c2b808b1ac94f85dcf366316d')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
   export GOPATH="$srcdir/build"
+  export CGO_LDFLAGS="${LDFLAGS}"
+  export GOFLAGS="-trimpath"
   go get -t -d -v
-  patch < ../url.go.patch
-  patch < ../url_test.go.patch
-  go build .
+  go build -buildmode=pie .
 }
 
 check() {
@@ -31,13 +32,10 @@ check() {
 
 package() {
   cd "$srcdir/$pkgname-$pkgver"
-  install -Dm 755 ghq-$pkgver "$pkgdir/usr/bin/ghq"
-  install -Dm 644 zsh/_ghq "$pkgdir/usr/share/zsh/site-functions/_ghq"
+  install -Dm 755 ghq "$pkgdir/usr/bin/ghq"
+  install -Dm 644 misc/zsh/_ghq "$pkgdir/usr/share/zsh/site-functions/_ghq"
   install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/ghq/LICENSE"
 }
-sh512sums=('e3df98794a423000676987812ded7dab30367dfbc82a2b7a8d2ebbea12fa81b2'
-            '1cea43d09f4b9199ab0d04cb51f9cc1a3cfa351d12676a9aff38b1768a5d7d2a'
-            'a1213418e95d722d2d1dc78539c4beb432bce22439df99e402eb7ce09ff3b671')
-md5sums=('cd486f7b8e464ca89c0aff4f421ecaf1'
-         'f60e476bd339fd994915c95923207fbd'
-         'b5d0219abc687f0c09f973b2e97bd5c8')
+
+
+# vim: set et sw=2 sts=2:

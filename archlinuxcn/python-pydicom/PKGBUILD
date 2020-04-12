@@ -2,20 +2,26 @@
 
 pkgname=python-pydicom
 _pkgname=pydicom
-pkgver=1.3.0
+pkgver=1.4.2
 pkgrel=3
-pkgdesc="Read, modify and write DICOM files with python code"
+pkgdesc='Read, modify and write DICOM files with python code'
 arch=(any)
-url="https://github.com/pydicom/pydicom"
+url='https://github.com/pydicom/pydicom'
 license=(MIT)
 optdepends=(
-    "python-numpy: for working with pixel data"
-    "python-pillow: for working with compressed image data"
+    'python-numpy: for working with pixel data'
+    'python-pillow: for working with compressed image data'
 )
-makedepends=("python-setuptools")
-checkdepends=("python-pytest" "python-pytest-cov")
+makedepends=(
+  'python-setuptools'
+  'git'
+)
+checkdepends=(
+  'python-pytest'
+  'python-pytest-cov'
+)
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/pydicom/pydicom/archive/v${pkgver}.tar.gz")
-sha512sums=('bff4925ed77aae812a507c1501db0772964f1d76637f7eaf1b978bbcf080e2fff6f15f4a35c14b4828913114817c76a6d79df8e94c3c2f6a173949d8a084dc63')
+md5sums=('dc5c3e61f6dd6db4b92f34c8026b6e8a')
 
 build() {
   cd "${_pkgname}-${pkgver}"

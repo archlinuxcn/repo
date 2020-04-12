@@ -1,7 +1,7 @@
 _pkgname=libsass
 pkgname=python-libsass
 pkgver=0.19.4
-pkgrel=1
+pkgrel=2
 pkgdesc="Sass for Python: A straightforward binding of libsass for Python."
 arch=('x86_64')
 url="https://sass.github.io/libsass-python/"

@@ -7,7 +7,7 @@
 pkgbase=pyqt4
 pkgname=('pyqt4-common' 'python-pyqt4' 'python2-pyqt4')
 pkgver=4.12.3
-pkgrel=4
+pkgrel=5
 arch=('x86_64')
 url='http://www.riverbankcomputing.com/software/pyqt/intro'
 license=('GPL')
@@ -17,6 +17,7 @@ source=("http://downloads.sourceforge.net/pyqt/PyQt4_gpl_x11-${pkgver}.tar.gz")
 sha256sums=('a00f5abef240a7b5852b7924fa5fdf5174569525dc076cd368a566619e56d472')
 
 prepare() {
+  sed -i -e "/'PyQt4\.sip', '-f', sip_flags/s/'-f', //" PyQt4_gpl_x11-${pkgver}/configure-ng.py
   cp -a PyQt4_gpl_x11-${pkgver}{,-py2}
 }
 

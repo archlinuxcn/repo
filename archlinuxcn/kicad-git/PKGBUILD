@@ -4,7 +4,7 @@
 pkgname=kicad-git
 _langpack=kicad-i18n-git
 replaces=(${_langpack})
-pkgver=r14425.6182133a4
+pkgver=r15374.096564ec0
 pkgrel=1
 pkgdesc="Electronic schematic and printed circuit board (PCB) design tools"
 arch=('i686' 'x86_64')
@@ -16,8 +16,8 @@ optdepends=('kicad-library: for footprints and symbols'
             'kicad-library-3d: for 3d models of components')
 conflicts=('kicad' 'kicad-bzr')
 provides=('kicad')
-source=("${pkgname}"'::git+https://git.launchpad.net/kicad'
-        "${_langpack}"'::git+https://github.com/kicad/kicad-i18n')
+source=("${pkgname}"'::git+https://gitlab.com/kicad/code/kicad.git'
+        "${_langpack}"'::git+https://gitlab.com/kicad/code/kicad-i18n.git')
 md5sums=('SKIP'
          'SKIP')
 

@@ -1,0 +1,16 @@
+diff -aur ncbi-vdb-2.9.3/build/Makefile.install src/ncbi-vdb-2.9.3/build/Makefile.install
+--- ncbi-vdb-2.9.3/build/Makefile.install	2018-10-17 16:41:58.000000000 -0400
++++ src/ncbi-vdb-2.9.3/build/Makefile.install	2018-11-10 15:42:30.394214052 -0500
+@@ -38,11 +38,7 @@
+ #fake root for debugging
+ #uncomment this line and change the following test for root ( see under install: ) to succeed:
+ #ROOT = ~/root
+-ifeq (linux, $(OS))
+-    ifeq (0, $(shell id -u))
+-        LINUX_ROOT = true
+-    endif
+-endif
++LINUX_ROOT = false
+ 
+ ifeq (true, $(LINUX_ROOT))
+     KONFIG_DIR = $(ROOT)/etc/ncbi

@@ -5,7 +5,7 @@
 
 pkgname=gegl-git
 _pkgname=gegl
-pkgver=0.4.18.5
+pkgver=0.4.20.48
 pkgrel=1
 pkgdesc="Graph based image processing framework"
 arch=('i686' 'x86_64')
@@ -33,11 +33,6 @@ build() {
         -Ddocs=true \
         -Dworkshop=true
   ninja -C "${srcdir}/build"
-}
-
-check() {
-  cd ${_pkgname}
-  meson test -C "${srcdir}/build"
 }
 
 package() {

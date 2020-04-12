@@ -1,8 +1,6 @@
 post_install() {
   dkms add r8168/${1%-*}
   cat << EOF
-==> To build and install your modules run: dkms install r8168/${1%-*}
-==> To do this automatically at startup run: systemctl enable dkms.service
 ==> The module r8168 conflicts with r8169. You can blacklist it with:
 ==> echo "blacklist r8169" > /etc/modprobe.d/r8169_blacklist.conf
 EOF

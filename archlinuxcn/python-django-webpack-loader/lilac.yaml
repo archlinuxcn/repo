@@ -1,0 +1,10 @@
+maintainers:
+  - github: yuyichao
+
+build_prefix: extra-x86_64
+
+post_build: pypi_post_build
+
+update_on:
+  - pypi: django-webpack-loader
+  - alias: python

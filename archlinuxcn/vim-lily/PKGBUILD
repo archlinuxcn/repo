@@ -2,7 +2,7 @@
 
 pkgbase=vim-lily
 pkgname=(gvim-lily vim-runtime-lily vim-lily)
-pkgver=8.1.2269
+pkgver=8.2.548
 _versiondir="vim$(echo $pkgver | awk -F. '{print $1$2}')"
 pkgrel=1
 arch=('i686' 'x86_64')
@@ -20,7 +20,7 @@ options=('debug' 'strip')
 
 pkgver() {
   cd vim-repo
-  echo $(awk '/^#define VIM_VERSION_SHORT/ {print $3}' src/version.h | tr -d '"').$(sed -n '/ included_patches\[\]/,+3p' src/version.c | sed '/[^,]$/d;s/\s*\|,//g')
+  echo $(awk '/^#define VIM_VERSION_(MAJOR|MINOR)\>/ {print $3}' src/version.h | tr '\n' '.')$(sed -n '/ included_patches\[\]/,+3p' src/version.c | sed '/[^,]$/d;s/\s*\|,//g')
 }
 
 build() {

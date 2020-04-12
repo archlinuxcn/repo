@@ -1,0 +1,11 @@
+[Unit]
+Description=Greenclip agent
+After=display-manager.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/greenclip daemon
+Restart=always
+
+[Install]
+WantedBy=default.target
