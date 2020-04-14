@@ -5,19 +5,19 @@
 # Contributor: codekoala <codekoala at gmail dot com>
 
 pkgname=etcd
-pkgver=3.4.6
+pkgver=3.4.7
 pkgrel=1
 pkgdesc='A highly-available key value store for shared configuration and service discovery.'
 arch=('x86_64' 'armv6h' 'armv7h')
 url='https://github.com/etcd-io/etcd'
 license=('Apache')
-makedepends=('go-pie')
+makedepends=('go')
 backup=('etc/conf.d/etcd')
 install="${pkgname}".install
 source=("${pkgname}"-"${pkgver}".tar.gz::https://github.com/etcd-io/"${pkgname}"/archive/v"${pkgver}".tar.gz
          10-EnvironmentFile.conf
          etcd.env)
-sha512sums=('481b6a4f686df0ef60303caeeaf5db23be54e22a0e45a099f2f070d87726cfb37f1e07c4edc6f60d63032e685c6b345c5695c2b1c179c055b6078323e97fbda7'
+sha512sums=('18851be0cbe8dabc6be8ba0c61d783f21b1fb9403256166016767926c731f1d95a1adebad9f36d43c57a424a7ac88c49b1d1ce01c2aa065e5bbbff847eb9234a'
             'fa85d772929ea7e0a18bddd4b9c41d043a7f75e560eacfab67b979985e510dea694c332b5130570e47101c1ec5c25925872c6a581568390e7b141d9c6c26aae2'
             '040cee3c04dd5bb253415169d1f6f50bbccac10b687706c1b168184985c0c6c6cc67858f0c71d2ebb475891e54b370fa39b20ead5155658d01fac31d7d388324')
 
