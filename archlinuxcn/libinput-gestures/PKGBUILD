@@ -1,6 +1,6 @@
 # Maintainer: mark.blakeney at bullet-systems dot net
 pkgname=libinput-gestures
-pkgver=2.49
+pkgver=2.50
 pkgrel=1
 pkgdesc="Actions gestures on your touchpad using libinput"
 url="https://github.com/bulletmark/$pkgname"
@@ -12,7 +12,7 @@ replaces=("$pkgname-git")
 backup=("etc/$pkgname.conf")
 source=("$pkgname-$pkgver.tar.gz::$url/archive/$pkgver.tar.gz")
 install=install.sh
-md5sums=('353fdcf8c28f281fe04757c8a7a8dce7')
+md5sums=('2c6495223757413e199afed0c4271dc5')
 
 package() {
   cd "$pkgname-$pkgver"
