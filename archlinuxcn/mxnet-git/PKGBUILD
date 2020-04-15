@@ -137,6 +137,7 @@ _package() {
 
   # create neccesarry soft links
   ln -sf '/usr/lib/libmxnet.so' "${pkgdir}/usr/lib/python$(get_pyver)/site-packages/mxnet/libmxnet.so"
+  ln -s "/usr/include" "${pkgdir}/usr/lib/python$(get_pyver)/site-packages/mxnet/include"
 
   # remove unwantted files
   rm -rfv "${pkgdir}/usr/mxnet"
