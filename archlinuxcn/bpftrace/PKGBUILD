@@ -27,6 +27,7 @@ package() {
   cd "${srcdir}/${pkgname}-${pkgver}/build"
 
   make DESTDIR="${pkgdir}/" install
+  find ${pkgdir}/usr/share/man/man8 -name '*.8.gz' | awk -F '.' '{printf("mv %s.8.gz %s-bpftrace.8.gz\n",$1,$1)}' | sh
 }
 
 # vim:set ts=2 sw=2 et:
