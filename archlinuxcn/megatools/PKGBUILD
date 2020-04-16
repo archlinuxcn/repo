@@ -1,28 +1,24 @@
 # Maintainer: Ondrej Jirman <megous@megous.com>
 
 pkgname=megatools
-pkgver=1.10.2
+pkgver=1.11.0.git.20200404
+_pkgver=1.11.0-git-20200404
 pkgrel=1
 pkgdesc="Command line client application for Mega.nz"
 arch=('i686' 'x86_64' 'armv7h')
 url="http://megatools.megous.com"
 license=('GPL')
 depends=('curl' 'glib2' 'openssl')
-makedepends=('asciidoc')
-source=("http://megatools.megous.com/builds/megatools-${pkgver}.tar.gz")
-options=(!libtool)
-sha256sums=('179e84c68e24696c171238a72bcfe5e28198e4c4e9f9043704f36e5c0b17c38a')
+makedepends=(asciidoc meson)
+source=("https://megatools.megous.com/builds/experimental/megatools-${_pkgver}.tar.gz")
+sha256sums=('999404dd065ecadbc117311e4de431d85eca98a2c4bfd3f29a4c30372e213b9c')
 
 build() {
-  cd "megatools-${pkgver}"
-
-  ./configure --prefix=/usr
-
-  make
+  meson --prefix /usr --buildtype=plain megatools-${_pkgver} build -Dsymlinks=true
+  ninja -C build
 }
 
 package() {
-  cd "megatools-${pkgver}"
-
-  make install DESTDIR="${pkgdir}"
+  DESTDIR="$pkgdir" ninja -C build install
 }
+
