@@ -6,7 +6,7 @@
 BUILD_DOC=1
 
 pkgbase=julia-git
-pkgname=julia-git
+pkgname=(julia-git)
 
 if [[ $CARCH != x86_64 ]]; then
     BUILD_DOC=0
@@ -37,10 +37,11 @@ pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
 license=('GPL')
-makedepends=(gcc-fortran arpack fftw git gmp libgit2-julia libunwind-git
-             "${makedepends_llvm[@]}" mpfr pcre2 suitesparse
-             openspecfun openblas-lapack libutf8proc-git patchelf
-             openlibm mbedtls libssh2 zlib p7zip)
+depends_libs=(arpack fftw gmp libgit2-julia libunwind-git mpfr pcre2 suitesparse
+              openspecfun openblas-lapack libutf8proc-git
+              openlibm mbedtls libssh2 zlib p7zip)
+makedepends=("${depends_libs[@]}" "${makedepends_llvm[@]}"
+             gcc-fortran git patchelf python)
 options=('debug' '!strip' '!buildflags')
 source=('git://github.com/JuliaLang/julia'
         0001-Revert-Replace-quiet-with-banner-23343.patch
@@ -201,10 +202,8 @@ build() {
 
 package-julia-in() {
   arch=('i686' 'x86_64' 'armv7h' 'aarch64')
-  depends=(arpack fftw gmp libgit2-julia libunwind-git "${depends_llvm[@]}"
-           mpfr pcre2 hicolor-icon-theme xdg-utils suitesparse
-           openspecfun openblas-lapack libutf8proc-git
-           mbedtls libssh2)
+  depends=("${depends_libs[@]}" "${depends_llvm[@]}"
+           hicolor-icon-theme xdg-utils)
   conflicts=('julia' "${_builtin_pkgs[@]}")
   replaces=("${_builtin_pkgs[@]}")
   opts=("${@:2}")
