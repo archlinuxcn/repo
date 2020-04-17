@@ -1,9 +1,9 @@
-# Maintainer: Miguel de Val-Borro <miguel at archlinux dot net>
+# Maintainer: Miguel de Val-Borro <miguel dot deval at gmail dot com>
 # Contributor: piggy1983
 # Contributor: Patrice Peterson <runiq at archlinux dot us>
 
 pkgname=python-numpy-doc
-pkgver=1.15.1
+pkgver=1.17.0
 pkgrel=1
 pkgdesc="Documentation for NumPy"
 makedepends=('unzip')
@@ -12,7 +12,7 @@ url='http://docs.scipy.org'
 license=('BSD')
 source=("$pkgname-$pkgver.zip::http://docs.scipy.org/doc/numpy-${pkgver}/numpy-html-${pkgver}.zip")
 noextract=("$pkgname-$pkgver.zip")
-md5sums=('95b5d45d5c7ab7ba43fd1609baeddfc1')
+md5sums=('9c2d7630b7f078cac07ae7796882b92f')
 
 package()
 {
