@@ -65,24 +65,27 @@ _builtin_pkgs=(julia-base64
                julia-future
                julia-interactiveutils
                julia-iterativeeigensolvers
-               julia-libgit2
                julia-libdl
+               julia-libgit2
                julia-linearalgebra
-               julia-loggin
+               julia-logging
                julia-markdown
                julia-mmap
                julia-pkg
                julia-printf
                julia-profile
-               julia-repl
                julia-random
-               julia-sha
+               julia-repl
                julia-serialization
+               julia-sha
+               julia-sharedarrays
+               julia-sockets
                julia-sparsearrays
+               julia-statistics
                julia-suitesparse
                julia-test
-               julia-uuids
-               julia-unicode)
+               julia-unicode
+               julia-uuids)
 
 pkgver() {
   cd julia
