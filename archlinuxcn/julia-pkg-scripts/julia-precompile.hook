@@ -16,4 +16,4 @@ Target = @STDLIB@/*
 [Action]
 Description = Precompiling julia packages...
 When = PostTransaction
-Exec = /usr/bin/julia --startup-file=no /usr/lib/julia/julia-compile-pkgs.jl @STDLIB@
+Exec = /usr/bin/julia --startup-file=no /usr/lib/julia/julia-compile-pkgs.jl /@STDLIB@
