@@ -1,0 +1,19 @@
+[Trigger]
+Type = Package
+Operation = Install
+Operation = Upgrade
+Target = julia
+Target = julia-git
+Target = julia-pkg-scripts
+
+[Trigger]
+Type = Path
+Operation = Install
+Operation = Upgrade
+Operation = Remove
+Target = @STDLIB@
+
+[Action]
+Description = Precompiling julia packages...
+When = PostTransaction
+Exec = /usr/bin/julia --startup-file=no /usr/lib/julia/julia-compile-pkgs.jl @STDLIB@
