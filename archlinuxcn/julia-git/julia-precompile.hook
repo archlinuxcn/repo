@@ -2,9 +2,7 @@
 Type = Package
 Operation = Install
 Operation = Upgrade
-Target = julia
 Target = julia-git
-Target = julia-pkg-scripts
 
 [Trigger]
 Type = Path
@@ -16,4 +14,5 @@ Target = @STDLIB@/*
 [Action]
 Description = Precompiling julia packages...
 When = PostTransaction
+Depends = julia-git
 Exec = /usr/bin/julia --startup-file=no /usr/lib/julia/julia-compile-pkgs.jl /usr/share/julia

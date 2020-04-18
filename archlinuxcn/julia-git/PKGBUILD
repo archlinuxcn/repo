@@ -31,7 +31,7 @@ case $CARCH in
 esac
 
 epoch=1
-pkgver=1.5.0.DEV.639.gcc6e1213867
+pkgver=1.5.0.DEV.640.g380e68f5f39
 pkgrel=2
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -48,13 +48,21 @@ source=('git://github.com/JuliaLang/julia'
         0001-Add-install-nodoc-make-target-to-skip-building-and-i.patch
         0001-Revert-turn-on-deprecation-warnings-for-type-and-imm.patch
         0002-Revert-deprecation-warning-for-old-parametric-method.patch
-        0001-Optimize-GC-frame-push-pop-insertion.patch)
+        0001-Optimize-GC-frame-push-pop-insertion.patch
+        julia-compile-pkgs.jl
+        julia-clear-precompile.sh
+        julia-precompile.hook
+        julia-clear-precompile.hook)
 md5sums=('SKIP'
          'b3c5a4ba02fbbfa53b7043beb0242156'
          '2222d3eabfe6040a8cca466303c86d2b'
          'f13c0f5ddd2ad990bb4560d9af1203ac'
          'f90e6a0139600b182d6c36e6c7cf3492'
-         '3dbb81b1dae3a9d977bd69f8354b3007')
+         '3dbb81b1dae3a9d977bd69f8354b3007'
+         '68424f87d5cf08af959afa321a7a9286'
+         '6e7fcba300512df8ab8ab65d3e1eb847'
+         '99e53f9675a5eebe5b9b05de52719971'
+         'f3501b5dbcef3080ba758fd5aa021cdd')
 
 _builtin_pkgs=(julia-base64
                julia-crc32c
@@ -228,8 +236,20 @@ package-julia-in() {
   ver=$("$pkgdir/usr/bin/julia" \
             --startup-file=no \
             -e 'print(VERSION.major, ".", VERSION.minor, ".", VERSION.patch)')
+  ver_short=$("$pkgdir/usr/bin/julia" \
+            --startup-file=no \
+            -e 'print(VERSION.major, ".", VERSION.minor)')
+  stdlib=/usr/share/julia/stdlib/v$ver_short
 
   provides=("julia=2:$ver" "${_builtin_pkgs[@]}")
+
+  install -Dm644 ../julia-compile-pkgs.jl "${pkgdir}/usr/lib/julia/"
+  install -Dm644 ../julia-clear-precompile.sh "${pkgdir}/usr/lib/julia/"
+  sed "s|@STDLIB@|$stdlib|" ../julia-precompile.hook |
+    install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/julia-precompile.hook"
+  sed "s|@VER@|$ver_short|" ../julia-clear-precompile.hook |
+    install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/julia-clear-precompile.hook"
+  mkdir -p "${pkgdir}/usr/share/julia/compiled/v$ver_short"
 }
 
 package_julia-git() {
