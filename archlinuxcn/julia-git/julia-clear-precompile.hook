@@ -7,4 +7,4 @@ Target = julia-git
 [Action]
 Description = Removing julia precompile cache...
 When = PreTransaction
-Exec = bash /usr/lib/julia/julia-clear-precompile.sh /usr/share/julia/compiled/v@VER@/
+Exec = /usr/bin/bash /usr/lib/julia/julia-clear-precompile.sh /usr/share/julia/compiled/v@VER@/
