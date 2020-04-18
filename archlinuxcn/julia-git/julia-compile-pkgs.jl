@@ -5,16 +5,34 @@ using Pkg
 function get_deps(pkg)
     try
         projfile = joinpath(Sys.STDLIB, pkg, "Project.toml")
-        isfile(projfile) || return Dict{String,Base.UUID}()
-        return Pkg.Types.read_project(projfile).deps
+        isfile(projfile) &&
+            return String[dep for (dep, id) in Pkg.Types.read_project(projfile).deps]
     catch
-        return Dict{String,Base.UUID}()
     end
+    try
+        reqfile = joinpath(Sys.STDLIB, pkg, "REQUIRE")
+        if isfile(reqfile)
+            res = String[]
+            for line in readlines(reqfile)
+                line = strip(line)
+                if isempty(line) || startswith(line, '#')
+                    continue
+                end
+                pkg = split(split(line)[1], "#")[1]
+                if !isempty(pkg) && pkg != "julia"
+                    push!(res, pkg)
+                end
+            end
+            return res
+        end
+    catch
+    end
+    return String[]
 end
 
 function add_compile_pkg(pkgs, pkg)
     pkg in pkgs && return
-    for (dep, id) in get_deps(pkg)
+    for dep in get_deps(pkg)
         add_compile_pkg(pkgs, dep)
     end
     push!(pkgs, pkg)
