@@ -2,6 +2,36 @@
 
 using Pkg
 
+function get_deps(pkg)
+    try
+        projfile = joinpath(Sys.STDLIB, pkg, "Project.toml")
+        isfile(projfile) || return Dict{String,Base.UUID}()
+        return Pkg.Types.read_project(projfile).deps
+    catch
+        return Dict{String,Base.UUID}()
+    end
+end
+
+function add_compile_pkg(pkgs, pkg)
+    pkg in pkgs && return
+    for (dep, id) in get_deps(pkg)
+        add_compile_pkg(pkgs, dep)
+    end
+    push!(pkgs, pkg)
+end
+
+function get_compile_list()
+    # Get a topologically sorted list of packages to compile
+    pkgs = String[]
+    for pkg in readdir(Sys.STDLIB)
+        id = Base.project_deps_get(Sys.STDLIB, pkg)
+        id === nothing && continue
+        Base.root_module_exists(id) && continue # Already loaded, this is a stdlib library.
+        add_compile_pkg(pkgs, pkg)
+    end
+    return pkgs
+end
+
 function find_src(name)
     path = joinpath(Sys.STDLIB, "$name.jl")
     isfile(path) && return path
@@ -37,12 +67,11 @@ function add_precompile_deps(compiled, pkg)
 end
 
 function precompile(path)
-    Core.eval(Base, :(is_interactive = true))
     compiled = Set{String}()
     insert!(Base.DEPOT_PATH, 1, path)
     resize!(Base.DEPOT_PATH, 1)
-    # TODO do a topological sort first
-    for pkg in readdir(Sys.STDLIB)
+    Core.eval(Base, :(is_interactive = true))
+    for pkg in get_compile_list()
         pkg in compiled && continue
         path = check_src(pkg)
         path === nothing && continue
