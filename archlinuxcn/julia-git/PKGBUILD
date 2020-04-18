@@ -61,7 +61,7 @@ md5sums=('SKIP'
          '3dbb81b1dae3a9d977bd69f8354b3007'
          '68424f87d5cf08af959afa321a7a9286'
          '6e7fcba300512df8ab8ab65d3e1eb847'
-         '99e53f9675a5eebe5b9b05de52719971'
+         'f1f6ffc7ddcbc7fa0000d6f5fdbbe925'
          'f9d0b11988630599dc860a5b33a7ba13')
 
 _builtin_pkgs=(julia-base64
@@ -239,13 +239,12 @@ package-julia-in() {
   ver_short=$("$pkgdir/usr/bin/julia" \
             --startup-file=no \
             -e 'print(VERSION.major, ".", VERSION.minor)')
-  stdlib=/usr/share/julia/stdlib/v$ver_short
 
   provides=("julia=2:$ver" "${_builtin_pkgs[@]}")
 
   install -Dm644 ../julia-compile-pkgs.jl "${pkgdir}/usr/lib/julia/"
   install -Dm644 ../julia-clear-precompile.sh "${pkgdir}/usr/lib/julia/"
-  sed "s|@STDLIB@|$stdlib|" ../julia-precompile.hook |
+  sed "s|@VER@|$ver_short|" ../julia-precompile.hook |
     install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/julia-precompile.hook"
   sed "s|@VER@|$ver_short|" ../julia-clear-precompile.hook |
     install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/julia-clear-precompile.hook"
