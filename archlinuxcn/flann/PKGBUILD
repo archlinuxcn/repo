@@ -7,7 +7,7 @@
 
 pkgname=flann
 pkgver=1.9.1
-pkgrel=6
+pkgrel=7
 pkgdesc="FLANN is a library for performing fast approximate nearest neighbor searches in high dimensional spaces"
 arch=('i686' 'x86_64')
 url='https://github.com/mariusmuja/flann'
@@ -39,7 +39,7 @@ build() {
       -DCMAKE_INSTALL_PREFIX=/usr \
       -DBUILD_MATLAB_BINDINGS=OFF \
       -DBUILD_PYTHON_BINDINGS=ON \
-      -DPYTHON_EXECUTABLE=/usr/bin/python2 \
+      -DPYTHON_EXECUTABLE=/usr/bin/python \
       -DBUILD_TESTS=OFF \
       -DBUILD_EXAMPLES=OFF
   make
