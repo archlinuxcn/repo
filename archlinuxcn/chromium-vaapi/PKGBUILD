@@ -10,7 +10,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=chromium-vaapi
-pkgver=81.0.4044.92
+pkgver=81.0.4044.113
 pkgrel=1
 _launcher_ver=6
 pkgdesc="Chromium with VA-API support to enable hardware acceleration"
@@ -39,7 +39,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         rebuild-Linux-frame-button-cache-when-activation.patch
         chromium-widevine.patch
         chromium-skia-harmony.patch)
-sha256sums=('a2cf3fd07a66330b189724cdcb4549ddac72705fba6adb33020bc6444efb1a44'
+sha256sums=('27cce807a91919211821c4d25be5be8ce48d362166615d4779e886ea0eef5d43'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
             'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb'
             '0ec6ee49113cc8cc5036fa008519b94137df6987bf1f9fbffb2d42d298af868a'
