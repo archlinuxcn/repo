@@ -2,7 +2,7 @@
 
 pkgname=openlibm-git
 pkgver=0.7.0.3.g5b0e7e9
-pkgrel=2
+pkgrel=3
 pkgdesc="standalone implementation of C mathematical functions"
 arch=(i686 x86_64 armv7h aarch64)
 url="https://github.com/JuliaLang/openlibm"
@@ -18,8 +18,9 @@ makedepends=('git')
 source=("git://github.com/JuliaLang/openlibm")
 md5sums=('SKIP')
 
-_CFLAGS=' -g -flto -O3'
-_LDFLAGS=' -g -flto -O3 -fno-plt -Wl,-Bsymbolic-functions'
+# LTO seems to mess up symbol table
+_CFLAGS=' -g -O3'
+_LDFLAGS=' -g -O3 -fno-plt -Wl,-Bsymbolic-functions'
 
 if [[ $CARCH = x86_64 ]]; then
   _CFLAGS+=' -mtune=skylake'
