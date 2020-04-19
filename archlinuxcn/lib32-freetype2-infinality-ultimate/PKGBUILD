@@ -12,7 +12,7 @@
 _pkgbasename=freetype2
 pkgname=lib32-$_pkgbasename-infinality-ultimate
 pkgver=2.10.1
-pkgrel=1
+pkgrel=2
 _patchrel=2019.08.21
 pkgdesc="TrueType font rendering library with Infinality patches and custom settings by bohoomil with Infinality Remix patches (32-bit)."
 arch=(x86_64)
@@ -23,7 +23,7 @@ depends=('lib32-zlib' 'lib32-bzip2' 'lib32-libpng' 'lib32-harfbuzz')
 makedepends=('gcc-multilib')
 conflicts=('lib32-freetype2' 'lib32-freetype2-infinality' 'lib32-freetype2-git-infinality'
            'lib32-freetype2-ubuntu')
-provides=('lib32-freetype2' 'lib32-freetype2-infinality')
+provides=('lib32-freetype2' 'lib32-freetype2-infinality' 'libfreetype.so=6-32')
 options=('!libtool')
 source=(#"https://download-mirror.savannah.gnu.org/releases/freetype/freetype-${pkgver}.tar.gz"{,.sig}
         #"https://download-mirror.savannah.gnu.org/releases/freetype/freetype-doc-${pkgver}.tar.gz"{,.sig}
@@ -36,6 +36,7 @@ source=(#"https://download-mirror.savannah.gnu.org/releases/freetype/freetype-${
         0004-Enable-long-PCF-family-names.patch
         0005-freetype-2.5.2-more-demos.patch
         0006-infinality-remix-tweaks.patch
+	0004-Properly-handle-phantom-points-for-variation-fonts-5.patch
         freetype2.sh
         infinality-settings.sh
 	xft-settings.sh)
@@ -60,6 +61,7 @@ sha256sums=('16dbfa488a21fe827dc27eaf708f42f7aa3bb997d745d31a19781628c36ba26f'
             '54800d4da18611cf9232aad8b63d74a83153a51bb56dd39191678c738ffc8b53'
             '36484db4b926ed026e7f32570573493b5a9793a129f08d54383a26d65a6af89b'
             '94493ed2865fd32e5ef8ef3493fcb2ccaaf8be4c9e0eaa7b417fcbc47fe4314d'
+            '38ac61033c349311f1180f5ebf5b5439f1b91bf2978cbd4cbbbcf279f32ae320'
             'f7f8e09c44f7552c883846e9a6a1efc50377c4932234e74adc4a8ff750606467'
             '1a5c12aa96e2ee66f7316b8ccb7012520b231a2d8ee21cfe4064aa28db35a57c'
             '4842d1461c240cd0f60a7247ee038271fdb1067107bea9024be6bdbb218d1bd4')
@@ -80,6 +82,9 @@ prepare() {
   patch -Np1 --verbose -i ../0002-infinality-${pkgver}-${_patchrel}.patch
   patch -Np1 -i ../0004-Enable-long-PCF-family-names.patch
   patch -Np1 --verbose -i ../0006-infinality-remix-tweaks.patch
+
+  # https://bugs.archlinux.org/task/65629
+  patch -Np1 -i ../0004-Properly-handle-phantom-points-for-variation-fonts-5.patch
 
   # Patching FreeType Demos
   #cd ../freetype2-demos
