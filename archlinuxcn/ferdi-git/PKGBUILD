@@ -5,8 +5,9 @@
 # Contributor: Pieter Goetschalckx <3.14.e.ter <at> gmail <dot> com>
 _pkgname='ferdi'
 pkgname="$_pkgname-git"
-pkgver=5.4.4.beta.3.r0.g0e601dbd
-pkgrel=1
+pkgver=20200418_000000
+epoch=1
+pkgrel=2
 pkgdesc='A messaging browser that allows you to combine your favorite messaging services into one application - git version'
 arch=('x86_64' 'i686' 'armv7h' 'aarch64')
 url="https://get$_pkgname.com"
@@ -34,7 +35,7 @@ _sourcedirectory="$pkgname"
 
 pkgver() {
 	cd "$srcdir/$_sourcedirectory/"
-	git describe --long --tags | sed -e 's/^v//' -e 's/\([^-]*-g\)/r\1/;s/-/./g'
+	git log -1 --format="%at" | xargs -I{} date -ud @{} +%Y%m%d_%H%M%S
 }
 
 prepare() {
