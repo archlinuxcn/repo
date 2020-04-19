@@ -3,8 +3,11 @@
 from lilaclib import *
 
 def pre_build():
-    update_pkgver_and_pkgrel(_G.newver.lstrip('v').replace('-','.'))
+    version = _G.newver.lstrip('v')
+    update_pkgver_and_pkgrel(version)
     run_cmd(['updpkgsums'])
+    version = version.replace('-','_')
+    update_pkgver_and_pkgrel(version)
 
 def post_build():
     git_add_files('PKGBUILD')
