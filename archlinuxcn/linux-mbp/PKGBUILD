@@ -12,7 +12,7 @@ arch=(x86_64)
 license=(GPL2)
 makedepends=(
   bc kmod libelf
-  xmlto python-sphinx python-sphinx_rtd_theme graphviz imagemagick
+  xmlto python-sphinx-1 python-sphinx_rtd_theme graphviz imagemagick
   git
 )
 options=('!strip')
@@ -55,7 +55,7 @@ source=(
   camera.patch   # UVC Camera support
   wifi.patch     # Broadcom Wifi support  
 
-  # sphinex patch
+  # sphinx patch
 
   sphinx-workaround.patch
 )
@@ -90,7 +90,8 @@ sha256sums=('1f3b3614a06bffc9c621c82f98d8ca88c60538a8c6dd77f96f2e7fee310a4ee2'
             '0318952f59efdce4dc72703adc764940db6fdff184960c27a23a80c3413d8a60'
             'e632f2959efca848fd28acb5e278cc476f8fb54d70ca95272b0a76add47e474e'
             '717f7fc70a3e3fcfa5ffbac505c8259c1d86718ca1ca6593e8925dac3d29a835'
-            '359555c0c391fdac9c57e2d0be9af5570767218ccae9be9d51175970c54cacc8')
+            '359555c0c391fdac9c57e2d0be9af5570767218ccae9be9d51175970c54cacc8'
+            '8cb21e0b3411327b627a9dd15b8eb773295a0d2782b1a41b2a8839d1b2f5778c')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
