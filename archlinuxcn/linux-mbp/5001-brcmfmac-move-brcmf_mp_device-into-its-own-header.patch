@@ -1,0 +1,122 @@
+From c5c75744f812e8fefa9a4a8706fe137c06c52814 Mon Sep 17 00:00:00 2001
+From: Aun-Ali Zaidi <admin@kodeit.net>
+Date: Fri, 10 Jan 2020 12:47:25 -0600
+Subject: [PATCH 1/2] brcmfmac: move brcmf_mp_device into its own header
+
+This commit relocates the brcmf_mp_device struct into its own header. This aids
+in utilizing the struct without the redefinition of the existing included headers
+found in common.h, such as fwil_types.h.
+
+Tested-by: Aun-Ali Zaidi <admin@kodeit.net>
+Signed-off-by: Aun-Ali Zaidi <admin@kodeit.net>
+---
+ .../broadcom/brcm80211/brcmfmac/common.h      | 36 +++--------------
+ .../broadcom/brcm80211/brcmfmac/settings.h    | 39 +++++++++++++++++++
+ 2 files changed, 44 insertions(+), 31 deletions(-)
+ create mode 100644 drivers/net/wireless/broadcom/brcm80211/brcmfmac/settings.h
+
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.h b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.h
+index 144cf4570bc3..3826403ec5ff 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.h
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.h
+@@ -8,15 +8,14 @@
+ #include <linux/platform_device.h>
+ #include <linux/platform_data/brcmfmac.h>
+ #include "fwil_types.h"
++#include "settings.h"
+ 
+ #define BRCMF_FW_ALTPATH_LEN			256
+ 
+-/* Definitions for the module global and device specific settings are defined
+- * here. Two structs are used for them. brcmf_mp_global_t and brcmf_mp_device.
+- * The mp_global is instantiated once in a global struct and gets initialized
+- * by the common_attach function which should be called before any other
+- * (module) initiliazation takes place. The device specific settings is part
+- * of the drvr struct and should be initialized on every brcmf_attach.
++/* Definition for the module global settings are defined here. One struct is
++ * used called brcmf_mp_global_t. The mp_global is instantiated once in a
++ * global struct and gets initialized by the common_attach function which
++ * should be called before any other (module) initiliazation takes place.
+  */
+ 
+ /**
+@@ -30,31 +29,6 @@ struct brcmf_mp_global_t {
+ 
+ extern struct brcmf_mp_global_t brcmf_mp_global;
+ 
+-/**
+- * struct brcmf_mp_device - Device module paramaters.
+- *
+- * @p2p_enable: Legacy P2P0 enable (old wpa_supplicant).
+- * @feature_disable: Feature_disable bitmask.
+- * @fcmode: FWS flow control.
+- * @roamoff: Firmware roaming off?
+- * @ignore_probe_fail: Ignore probe failure.
+- * @country_codes: If available, pointer to struct for translating country codes
+- * @bus: Bus specific platform data. Only SDIO at the mmoment.
+- */
+-struct brcmf_mp_device {
+-	bool		p2p_enable;
+-	unsigned int	feature_disable;
+-	int		fcmode;
+-	bool		roamoff;
+-	bool		iapp;
+-	bool		ignore_probe_fail;
+-	struct brcmfmac_pd_cc *country_codes;
+-	const char	*board_type;
+-	union {
+-		struct brcmfmac_sdio_pd sdio;
+-	} bus;
+-};
+-
+ void brcmf_c_set_joinpref_default(struct brcmf_if *ifp);
+ 
+ struct brcmf_mp_device *brcmf_get_module_param(struct device *dev,
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/settings.h b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/settings.h
+new file mode 100644
+index 000000000000..5c4aa32fb73d
+--- /dev/null
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/settings.h
+@@ -0,0 +1,39 @@
++// SPDX-License-Identifier: ISC
++/*
++ * Copyright (c) 2014 Broadcom Corporation
++ */
++
++#ifndef BRCMFMAC_SETTINGS_H
++#define BRCMFMAC_SETTINGS_H
++
++/* Definition for the device specific settings are defined here. One struct
++ * is used called brcmf_mp_device. The device specific settings is part of
++ * the drvr struct and should be initialized on every brcmf_attach.
++ */
++
++/**
++ * struct brcmf_mp_device - Device module paramaters.
++ *
++ * @p2p_enable: Legacy P2P0 enable (old wpa_supplicant).
++ * @feature_disable: Feature_disable bitmask.
++ * @fcmode: FWS flow control.
++ * @roamoff: Firmware roaming off?
++ * @ignore_probe_fail: Ignore probe failure.
++ * @country_codes: If available, pointer to struct for translating country codes
++ * @bus: Bus specific platform data. Only SDIO at the mmoment.
++ */
++struct brcmf_mp_device {
++	bool		p2p_enable;
++	unsigned int	feature_disable;
++	int		fcmode;
++	bool		roamoff;
++	bool		iapp;
++	bool		ignore_probe_fail;
++	struct brcmfmac_pd_cc *country_codes;
++	const char	*board_type;
++	union {
++		struct brcmfmac_sdio_pd sdio;
++	} bus;
++};
++
++#endif /* BRCMFMAC_SETTINGS_H */
+-- 
+2.24.1
+

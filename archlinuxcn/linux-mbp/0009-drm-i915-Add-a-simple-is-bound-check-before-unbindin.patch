@@ -1,0 +1,41 @@
+From bb1cfe5bf25e128d6f8df0bd9ecc999cb58164a7 Mon Sep 17 00:00:00 2001
+From: Chris Wilson <chris@chris-wilson.co.uk>
+Date: Sun, 22 Dec 2019 21:02:54 +0000
+Subject: [PATCH 09/11] drm/i915: Add a simple is-bound check before unbinding
+
+Only acquire the various atomic references required to unbind the vma if
+we do need to unbind the vma.
+
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Acked-by: Imre Deak <imre.deak@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191222210256.2066451-1-chris@chris-wilson.co.uk
+---
+ drivers/gpu/drm/i915/i915_gem.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/i915/i915_gem.c b/drivers/gpu/drm/i915/i915_gem.c
+index c2c025c4f4ad..83eed642cbcd 100644
+--- a/drivers/gpu/drm/i915/i915_gem.c
++++ b/drivers/gpu/drm/i915/i915_gem.c
+@@ -145,6 +145,10 @@ int i915_gem_object_unbind(struct drm_i915_gem_object *obj,
+ 		struct i915_address_space *vm = vma->vm;
+ 		bool awake = false;
+ 
++		list_move_tail(&vma->obj_link, &still_in_list);
++		if (!i915_vma_is_bound(vma, I915_VMA_BIND_MASK))
++			continue;
++
+ 		ret = -EAGAIN;
+ 		if (!i915_vm_tryopen(vm))
+ 			break;
+@@ -160,7 +164,6 @@ int i915_gem_object_unbind(struct drm_i915_gem_object *obj,
+ 			}
+ 		}
+ 
+-		list_move_tail(&vma->obj_link, &still_in_list);
+ 		spin_unlock(&obj->vma.lock);
+ 
+ 		ret = -EBUSY;
+-- 
+2.25.2
+
