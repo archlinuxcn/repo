@@ -2,7 +2,7 @@
 
 _pkgname=yuzu
 pkgname=$_pkgname-git
-pkgver=r14384.4af522e4a
+pkgver=r14397.6e7df35f9
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (mainline GIT version)"
 arch=('i686' 'x86_64')
@@ -27,6 +27,8 @@ prepare() {
 
 	git submodule init
 	git submodule update --init --recursive
+
+  sed -i 's/Werror=reorder/Wno-reorder/g' src/CMakeLists.txt
 }
 
 build() {
@@ -40,7 +42,13 @@ build() {
 	
 	# Hopefully temporary fix for a compilation error involving fmt
 	CXXFLAGS+=" -DFMT_USE_USER_DEFINED_LITERALS=0"
-	
+
+	# Flag to disable pre-compiled headers so boost can build properly
+	CXXFLAGS+=" -DENABLE_PRECOMPILED_HEADERS=OFF"
+
+	# Flag to fix SDL exceptions occurring in some users' builds
+	CXXFLAGS+=" -I/usr/include/SDL2 -D_REENTRANT -pthread -lSDL2"
+
 	mkdir -p build && cd build
 	cmake .. \
 	  -DCMAKE_INSTALL_PREFIX=/usr \
@@ -52,17 +60,12 @@ build() {
 	make
 }
 
-# Tests removed temporarily as they haven't been updated and throw a false error
-#check() {
-#	cd "$srcdir/$_pkgname/build"
-#	make test
-#}
+check() {
+	cd "$srcdir/$_pkgname/build"
+	make test
+}
 
 package() {
 	cd "$srcdir/$_pkgname/build"
 	make DESTDIR="$pkgdir/" install
-	
-	# Temporary fix until yuzu fixes the zlib and libzip patch
-	cd "$pkgdir/usr"
-	rm -rf include lib lib64 share/man share/pkgconfig
 }
