@@ -16,7 +16,7 @@ makedepends=('gendesk')
 provides=(3dslicer=${pkgver})
 conflicts=('3dslicer')
 source=(
-    "${_pkgname}.tar.gz::http://download.slicer.org/download?os=linux&stability=nightly"
+    "${_pkgname}-${pkgver}.tar.gz::http://download.slicer.org/download?os=linux&stability=nightly"
     "${_pkgname}.svg::https://github.com/Slicer/Slicer/raw/master/Resources/3DSlicerLogo-app-icon.svg"
 )
 noextract=("${_pkgname}.tar.gz")
@@ -26,7 +26,7 @@ sha512sums=('76238111dcb35a25abe114f6d4e89e0974548169d52455a7c57c60171dc6e9ec1a3
 prepare() {
 # manually extract tarball due to their unpredicted name
   mkdir "${srcdir}/${_pkgname}"
-  tar xvf "${srcdir}/${_pkgname}.tar.gz" -C "${srcdir}/${_pkgname}" --strip-components 1
+  tar xvf "${srcdir}/${_pkgname}-${pkgver}.tar.gz" -C "${srcdir}/${_pkgname}" --strip-components 1
 
   echo "Creating desktop file"
   gendesk -f -n --pkgname ${_pkgname} \

@@ -22,7 +22,7 @@ provides=(itk-snap=${pkgver})
 conflicts=('itk-snap')
 source=(
   "${_pkgname}-git::git+https://git.code.sf.net/p/itk-snap/src"
-  "${_pkgname}.tar.gz::https://sourceforge.net/projects/itk-snap/files/itk-snap/Nightly/itksnap-nightly-master-Linux-gcc64.tar.gz"
+  "${_pkgname}-${pkgver}.tar.gz::https://sourceforge.net/projects/itk-snap/files/itk-snap/Nightly/itksnap-nightly-master-Linux-gcc64.tar.gz"
   "${_pkgname}.png::https://sourceforge.net/p/itk-snap/src/ci/master/tree/GUI/Qt/Resources/logo_square.png?format=raw"
 )
 sha512sums=('SKIP'
