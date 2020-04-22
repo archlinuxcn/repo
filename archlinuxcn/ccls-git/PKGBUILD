@@ -2,8 +2,8 @@
 
 pkgname=ccls-git
 _pkgname=ccls
-pkgver=20200322
-pkgrel=1
+pkgver=20200419
+pkgrel=2
 pkgdesc='C/C++ language server supporting cross references, hierarchies, completion and semantic highlighting'
 arch=('x86_64')
 url='https://github.com/MaskRay/ccls'
@@ -24,7 +24,7 @@ prepare() {
 
 build() {
   cd $_pkgname
-  cmake -H. -Bbuild -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_CXX_COMPILER=clang++
+  cmake -H. -Bbuild -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_CXX_COMPILER=clang++ -DCLANG_LINK_CLANG_DYLIB=on
   cmake --build build
 }
 
