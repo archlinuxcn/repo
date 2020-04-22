@@ -2,9 +2,9 @@
 # Contributor: Det <nimetonmaili g-mail>
 
 pkgname=jdk
-pkgver=14
-_build=36
-_hash=076bab302c7b4508975440c56f6cc26a
+pkgver=14.0.1
+_build=7
+_hash=664493ef4a6946b186ff29eb326336a2
 _majver="${pkgver%%.*}"
 _next="$((_majver + 1))"
 pkgrel=1
@@ -21,7 +21,7 @@ source=("https://download.oracle.com/otn-pub/java/jdk/${pkgver}+${_build}/${_has
         'jshell.desktop'
         'java_16.png'
         'java_48.png')
-sha256sums=('4639bbaecc9cc606f1a4b99fda1efcaefcbf57a7025b3828b095093a6c866afd'
+sha256sums=('927cfcfff502c5e73db33bb6fee7f29f62bd0e831233fd78cd58a5b998bc73be'
             '4b38647428fc576f423197104a5721c0a07c825196dad426359c78fd19d1f823'
             'b517c7883a81a9951b3b1ddae0427619212808324482b5f02a9b7810328c2ce6'
             '3061d6d325067b6a0e7f900ee699322741b53fd6da200209844edc54530e2bef'
