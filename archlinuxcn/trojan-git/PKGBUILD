@@ -2,7 +2,7 @@
 # Contributor: GreaterFire <GreaterFire@protonmail.com>
 pkgname=trojan-git
 pkgver=r450.3d608e8
-pkgrel=24
+pkgrel=25
 pkgdesc="An unidentifiable mechanism that helps you bypass GFW"
 arch=('x86_64')
 url="https://github.com/trojan-gfw/trojan"
