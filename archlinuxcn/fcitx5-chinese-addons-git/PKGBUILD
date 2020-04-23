@@ -4,7 +4,7 @@
 
 _pkgname=fcitx5-chinese-addons
 pkgname=${_pkgname}-git
-pkgver=r186.808c0bb
+pkgver=r189.1555cde
 pkgrel=1
 pkgdesc="Addons related to Chinese, including IME previous bundled inside fcitx4"
 arch=('i686' 'x86_64')
