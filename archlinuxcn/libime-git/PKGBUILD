@@ -3,7 +3,7 @@
 # Contributor: csslayer <wengxt AT gmail com>
 
 pkgname=libime-git
-pkgver=r153.a78efdf
+pkgver=r157.6589f51
 pkgrel=1
 pkgdesc="A library to support generic input method implementation"
 arch=('i686' 'x86_64')
