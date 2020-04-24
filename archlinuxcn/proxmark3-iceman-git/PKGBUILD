@@ -1,7 +1,7 @@
 # Maintainer: edward-p <edward At edward-p Dot xyz>
 
 pkgname=proxmark3-iceman-git
-pkgver=8806.d6564e8e
+pkgver=8819.27fb718e
 pkgrel=1
 pkgdesc='RRG / Iceman repo - Proxmark3 RDV4.0 and other Proxmark3 platforms.'
 arch=('x86_64')
