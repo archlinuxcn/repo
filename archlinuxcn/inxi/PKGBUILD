@@ -3,7 +3,7 @@
 # Contributor: Florian Pritz <f-p@gmx.at>
 
 pkgname=inxi
-pkgver=3.0.38
+pkgver=3.1.00
 pkgrel=1
 pkgdesc="Full featured CLI system information tool"
 arch=(any)
@@ -11,30 +11,30 @@ url="https://github.com/smxi/inxi"
 license=(GPL3)
 depends=(coreutils pciutils perl procps-ng)
 optdepends=(
-  "bind-tools: -i wlan IP"
-  "dmidecode: inxi -M if no sys machine data"
-  "file: inxi -o unmounted file system"
-  "hddtemp: inxi -Dx show hdd temp"
-  "iproute2: inxi -i ip lan"
-  "kmod: inxi -Ax,-Nx module version"
-  "lm_sensors: inxi -s sensors output"
-  "mesa-demos: inxi -G glx info"
-  "net-tools: inxi -i ip lan-deprecated"
-  "perl-io-socket-ssl: -U; -w,-W; -i (if dig not installed)"
-  "perl-cpanel-json-xs: --output json - required for export"
-  "perl-json-xs: --output json - required for export (legacy)"
-  "perl-xml-dumper: --output xml - Crude and raw"
-  "systemd-sysvcompat: inxi -I runlevel"
-  "sudo: inxi -Dx hddtemp-user;-o file-user"
-  "tree: --debugger 20,21 /sys tree"
-  "usbutils: inxi -A usb audio;-N usb networking"
-  "wmctrl: -S active window manager (not all wm)"
-  "xorg-xdpyinfo: inxi -G multi screen resolution"
-  "xorg-xprop: inxi -S desktop data"
-  "xorg-xrandr: inxi -G single screen resolution"
+            "bind-tools: -i wlan IP"
+            "dmidecode: inxi -M if no sys machine data"
+            "file: inxi -o unmounted file system"
+            "hddtemp: inxi -Dx show hdd temp"
+            "iproute2: inxi -i ip lan"
+            "kmod: inxi -Ax,-Nx module version"
+            "lm_sensors: inxi -s sensors output"
+            "mesa-demos: inxi -G glx info"
+            "net-tools: inxi -i ip lan-deprecated"
+            "perl-io-socket-ssl: -U; -w,-W; -i (if dig not installed)"
+            "perl-cpanel-json-xs: --output json - required for export"
+            "perl-json-xs: --output json - required for export (legacy)"
+            "perl-xml-dumper: --output xml - Crude and raw"
+            "systemd-sysvcompat: inxi -I runlevel"
+            "sudo: inxi -Dx hddtemp-user;-o file-user"
+            "tree: --debugger 20,21 /sys tree"
+            "usbutils: inxi -A usb audio;-N usb networking"
+            "wmctrl: -S active window manager (not all wm)"
+            "xorg-xdpyinfo: inxi -G multi screen resolution"
+            "xorg-xprop: inxi -S desktop data"
+            "xorg-xrandr: inxi -G single screen resolution"
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/smxi/inxi/archive/${pkgver}-1.tar.gz")
-sha256sums=('5adbbe8145e970de1d516a404554e887806d31382de81d290e71fe270183c28a')
+sha256sums=('ee6675489467cbfb90756db9aaf55da4bc5f7506cc8166d3a42ba28963e810f1')
 
 package() {
   cd "${pkgname}-${pkgver}-1"
