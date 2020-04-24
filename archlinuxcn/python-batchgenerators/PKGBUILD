@@ -2,7 +2,7 @@
 
 _pkgname=batchgenerators
 pkgname=python-batchgenerators
-pkgver=0.19.7
+pkgver=0.20.0
 pkgrel=1
 pkgdesc='A framework for data augmentation for 2D and 3D image classification and segmentation'
 arch=('any')
@@ -19,7 +19,7 @@ makedepends=(
   'python-setuptools'
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/MIC-DKFZ/batchgenerators/archive/v${pkgver}.tar.gz")
-sha512sums=('b9128f1beee7c57a894b52708a97d1356a31544c1eedfdd29ff68ffb3a4fae75bb082f4ac66b763e559b5aefda83f149fc4983e82e21859da0d0810842e2a1fd')
+sha512sums=('e223a8b9906448462b942dd6761b1be5cc5809234196c911b21e08b9537ab08c7230f6bb2390f78c26a587b0a032c1e355090d36bab5c6a9870e5990fecbba96')
 
 get_pyver() {
   python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
