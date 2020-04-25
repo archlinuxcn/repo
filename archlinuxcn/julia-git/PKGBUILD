@@ -32,7 +32,7 @@ esac
 
 epoch=1
 pkgver=1.5.0.DEV.682.g4c7ae7702d4
-pkgrel=1
+pkgrel=2
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
@@ -63,37 +63,6 @@ md5sums=('SKIP'
          '6e7fcba300512df8ab8ab65d3e1eb847'
          'f1f6ffc7ddcbc7fa0000d6f5fdbbe925'
          'f9d0b11988630599dc860a5b33a7ba13')
-
-_builtin_pkgs=(julia-base64
-               julia-crc32c
-               julia-dates
-               julia-delimitedfiles
-               julia-distributed
-               julia-filewatching
-               julia-future
-               julia-interactiveutils
-               julia-iterativeeigensolvers
-               julia-libdl
-               julia-libgit2
-               julia-linearalgebra
-               julia-logging
-               julia-markdown
-               julia-mmap
-               julia-pkg
-               julia-printf
-               julia-profile
-               julia-random
-               julia-repl
-               julia-serialization
-               julia-sha
-               julia-sharedarrays
-               julia-sockets
-               julia-sparsearrays
-               julia-statistics
-               julia-suitesparse
-               julia-test
-               julia-unicode
-               julia-uuids)
 
 pkgver() {
   cd julia
@@ -215,8 +184,6 @@ package-julia-in() {
   arch=('i686' 'x86_64' 'armv7h' 'aarch64')
   depends=("${depends_libs[@]}" "${depends_llvm[@]}"
            hicolor-icon-theme xdg-utils)
-  conflicts=('julia' "${_builtin_pkgs[@]}")
-  replaces=("${_builtin_pkgs[@]}")
   opts=("${@:2}")
 
   cd "$1"
@@ -239,8 +206,16 @@ package-julia-in() {
   ver_short=$("$pkgdir/usr/bin/julia" \
             --startup-file=no \
             -e 'print(VERSION.major, ".", VERSION.minor)')
-
-  provides=("julia=2:$ver" "${_builtin_pkgs[@]}")
+  stdlib_dir="$pkgdir/usr/share/julia/stdlib/v$ver_short"
+  builtin_pkgs=()
+  for pkg in $(ls -1 "$stdlib_dir"); do
+    if [[ -f "$stdlib_dir/$pkg/Project.toml" ]]; then
+      builtin_pkgs=("${builtin_pkgs[@]}" "julia-${pkg,,}")
+    fi
+  done
+  provides=("julia=2:$ver" "${builtin_pkgs[@]}")
+  conflicts=('julia' "${builtin_pkgs[@]}")
+  replaces=("${builtin_pkgs[@]}")
 
   install -Dm644 ../julia-compile-pkgs.jl "${pkgdir}/usr/lib/julia/"
   install -Dm644 ../julia-clear-precompile.sh "${pkgdir}/usr/lib/julia/"
