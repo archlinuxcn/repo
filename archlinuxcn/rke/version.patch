@@ -1,0 +1,13 @@
+--- rke-1.0.2/scripts/version	2020-01-19 13:26:04.053368662 -0500
++++ rke-1.0.2-patch/scripts/version	2020-01-19 13:25:33.360035246 -0500
+@@ -1,7 +1,9 @@
+ #!/bin/bash
+ 
+ if [ -n "$(git status --porcelain --untracked-files=no)" ]; then
+-    DIRTY="-dirty"
++    # Ignore the fact git is dirty to properly version the binary.
++    # DIRTY="-dirty"
++    true
+ fi
+ 
+ COMMIT=$(git rev-parse --short HEAD)
