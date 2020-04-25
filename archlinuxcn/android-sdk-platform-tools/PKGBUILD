@@ -4,25 +4,24 @@
 # Contributor: Christoph Bayer <chrbayer@criby.de>
 
 pkgname=android-sdk-platform-tools
-pkgver=29.0.6
+pkgver=30.0.0
 pkgrel=1
 pkgdesc='Platform-Tools for Google Android SDK (adb and fastboot)'
 arch=('x86_64')
 url='http://developer.android.com/sdk/index.html'
 license=('custom')
-depends_x86_64=('zlib' 'ncurses')
+depends=('zlib' 'ncurses')
 provides=('adb' 'android-tools')
 conflicts=('adb')
 install="${pkgname}.install"
 source=("https://dl.google.com/android/repository/platform-tools_r${pkgver}-linux.zip"
         "adb.service"
         "license.html")
-sha1sums=('e95ed28330406705d47fe96bafb589be6c1f2f23'
+sha1sums=('d124084d621a8cb4b3eb1113d9c90be641d40494'
           '49a40c129199844603afe71fce69c0908e062393'
           'bfb91be7e0b602d765b7a1fcaf0ce1b7e1a93faa')
 
 package() {
-
   install -Dm644 "${srcdir}/adb.service" "${pkgdir}/usr/lib/systemd/system/adb.service"
   install -Dm644 "${srcdir}/license.html" "${pkgdir}/usr/share/licenses/${pkgname}/license.html"
 
