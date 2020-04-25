@@ -2,7 +2,7 @@
 
 pkgname=charls
 pkgver=2.1.0
-pkgrel=2
+pkgrel=3
 pkgdesc='A C++ JPEG-LS library implementation'
 arch=('x86_64')
 url='https://github.com/team-charls/charls'
@@ -25,6 +25,9 @@ package() {
   cd "${pkgname}-${pkgver}"
   make DESTDIR="${pkgdir}" install
   install -D -m644 "${srcdir}/${pkgname}-${pkgver}/LICENSE.md" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+# for compatibility
+  ln -s "/usr/include/charls" "${pkgdir}/usr/include/CharLS"
+  ln -s "/usr/lib/libcharls.so" "${pkgdir}/usr/lib/libCharLS.so.2"
 }
 # vim:set ts=2 sw=2 et:
 
