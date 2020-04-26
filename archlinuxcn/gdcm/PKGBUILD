@@ -4,13 +4,14 @@
 
 pkgname=gdcm
 _pkgname=GDCM
-pkgver=3.0.4
-pkgrel=6
+pkgver=3.0.5
+pkgrel=1
 pkgdesc='A C++ library for DICOM medical files'
 arch=('x86_64')
 url='http://gdcm.sourceforge.net'
 license=('BSD')
 depends=(
+  'charls'
   'libxml2'
   'poppler'
   'python'
@@ -31,21 +32,30 @@ makedepends=(
   'qt5-multimedia'
   'swig'
   'texlive-latexextra'
+  'utf8cpp'
 )
 source=(
   "${pkgname}-${pkgver}.tar.gz::https://github.com/malaterre/GDCM/archive/v${pkgver}.tar.gz"
+  "01-fix-building-with-poppler.patch"
 )
-sha512sums=('ee65e12b431a61ac6d9564e4c87c9a2cc8d28fe2c6bac5a9db10eeab29851593fa02d5b16d618ca4887fefbb43e23aac24efd013125df2890abaddc892108fde')
+sha512sums=('da3453230e9fe0890e750cc10b74a7e07a5efd916219118af260b3710e15f0972239df746091e9c639e65201126c91c881b4ad3b8a836681993f8294d1cad187'
+            '3a8f825d07a687f211874d99237ee666280203e06b7c65fb152be1ed103d2ff04e255817c21da36fc8cebacda6faa8a12525fa60decb3c33d858f3342b29bd0a')
 
 get_pyver() {
   python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
 }
 
+prepare() {
+  cd "${_pkgname}-${pkgver}"
+  patch -p1 -i "${srcdir}/01-fix-building-with-poppler.patch"
+}
+
 build() {
-  cd "${srcdir}/${_pkgname}-${pkgver}"
-  mkdir -p build
-  cd build
+  export CXXFLAGS+=" ${CPPFLAGS} -fpermissive"
   cmake \
+    -B build \
+    -S "${_pkgname}-${pkgver}" \
+    -DCHARLS_LIBRARY=/usr/lib/libcharls.so \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON \
     -DGDCM_BUILD_APPLICATIONS:BOOL=ON \
@@ -55,7 +65,7 @@ build() {
     -DGDCM_BUILD_TESTING:BOOL=OFF \
     -DGDCM_DOCUMENTATION:BOOL=OFF \
     -DGDCM_LEGACY_REMOVE:BOOL=ON \
-    -DGDCM_USE_SYSTEM_CHARLS:BOOL=OFF \
+    -DGDCM_USE_SYSTEM_CHARLS:BOOL=ON \
     -DGDCM_USE_SYSTEM_EXPAT:BOOL=ON \
     -DGDCM_USE_SYSTEM_LIBXML2:BOOL=ON \
     -DGDCM_USE_SYSTEM_OPENJPEG:BOOL=ON \
@@ -65,22 +75,20 @@ build() {
     -DGDCM_USE_SYSTEM_ZLIB:BOOL=ON \
     -DGDCM_USE_VTK:BOOL=ON \
     -DGDCMV2_0_COMPATIBILITY:BOOL=OFF \
-    -DGDCM_WRAP_PYTHON:BOOL=ON \
-    ..
-  make -j1
+    -DGDCM_WRAP_PYTHON:BOOL=ON
+  make -C "build" -j 1
 }
 
 package() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
-  install -Dm644 Copyright.txt "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
+  install -Dm644 "${srcdir}/${_pkgname}-${pkgver}/Copyright.txt" "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
 
-  cd "${srcdir}/${_pkgname}-${pkgver}/build"
-  make DESTDIR="${pkgdir}" install
+  make -C "${srcdir}/build" DESTDIR="${pkgdir}" install
 
   # fix python binding installation
   install -d "${pkgdir}/usr/lib/python$(get_pyver)/site-packages"
-  ln -s "${pkgdir}/usr/lib/python$(get_pyver)/site-packages/_gdcmswig.so" "/usr/lib/_gdcmswig.so"
-  ln -s "${pkgdir}/usr/lib/python$(get_pyver)/site-packages/vtkgdcmPython.so" "/usr/lib/vtkgdcmPython.so"
+  ln -s "/usr/lib/_gdcmswig.so" "${pkgdir}/usr/lib/python$(get_pyver)/site-packages/_gdcmswig.so"
+  ln -s "/usr/lib/vtkgdcmPython.so" "${pkgdir}/usr/lib/python$(get_pyver)/site-packages/vtkgdcmPython.so"
   mv -v "${pkgdir}/usr/lib/gdcm.py" "${pkgdir}/usr/lib/python$(get_pyver)/site-packages"
   mv -v "${pkgdir}/usr/lib/vtkgdcm.py" "${pkgdir}/usr/lib/python$(get_pyver)/site-packages"
   mv -v "${pkgdir}/usr/lib/gdcmswig.py" "${pkgdir}/usr/lib/python$(get_pyver)/site-packages"
