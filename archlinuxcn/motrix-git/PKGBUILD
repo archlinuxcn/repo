@@ -3,7 +3,7 @@
 pkgname=motrix-git
 _pkgname=motrix
 _pkgver=1.4.1
-pkgver=1.4.1.r666.f57d71c
+pkgver=1.4.1.r667.e232e4a
 pkgrel=1
 pkgdesc='A full-featured download manager'
 arch=('any')
