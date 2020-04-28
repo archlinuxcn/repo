@@ -1,8 +1,9 @@
 # Maintainer: Sampson Crowley <sampsonsprojects@gmail.com>
 # Contributor: Rhys Kenwell <redrield+aur@gmail.com>
+# Github Contributor: Michael Herold <https://github.com/michaelherold>
 
 pkgname=heroku-cli
-pkgver=7.39.2
+pkgver=7.39.5
 _builddir=cli-${pkgver}
 pkgrel=1
 pkgdesc="a tool for creating and managing Heroku apps from the command line"
@@ -14,13 +15,13 @@ makedepends=('npm')
 optdepends=('git: Deploying to Heroku')
 conflicts=('heroku-client-standalone' 'heroku-toolbelt' 'ruby-heroku')
 source=("https://registry.npmjs.org/heroku/-/heroku-$pkgver.tgz")
-sha256sums=('f5a092a4781891c672f290b808a1aaf2cb4638ba3a09bdbf4123622d017aa7ea')
-sha512sums=('000a676b7a592b289b9882b9af04034f057a2237d144ccb5fc0c365108303a0dd2f0a3af15431ba2117f065a5d8929634743915e158c54aa45d743764a48eb45')
+sha256sums=('2e8969a99f1a4437cdeb0467cc531b937279a923b90c7bdfd0e94246b1935e45')
+sha512sums=('b741d3a6dd1d883ad5c193bee2197124b6c1088448e3240acc43c30037aca03cad768d6cf69f88e37bf2491c637b9d11d666fa828958fef5e83a073987a6eb7b')
 noextract=("heroku-$pkgver.tgz")
 options=('!strip')
 
 package() {
-  npm install -g --user root --prefix "$pkgdir/usr" heroku-$pkgver.tgz
+  npm install -g --no-progress --user root --prefix "$pkgdir/usr" --cache "$srcdir/npm-cache" heroku-$pkgver.tgz
   mkdir -p "$pkgdir/usr/share/licenses/$pkgname"
   ln -s "../../../lib/node_modules/heroku/LICENSE" "$pkgdir/usr/share/licenses/$pkgname"
 
