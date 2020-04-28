@@ -1,7 +1,7 @@
 # Maintainer: Dct Mei <dctxmei@gmail.com>
 
 pkgname=geph-bridge
-pkgver=0.20.2
+pkgver=0.21.4
 pkgrel=1
 pkgdesc='Runs on bridge nodes, which relay client-to-exit encrypted traffic across harsh firewalls'
 arch=('x86_64')
@@ -11,7 +11,7 @@ groups=('geph2')
 depends=('glibc')
 makedepends=('go-pie')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/geph-official/geph2/archive/v$pkgver.tar.gz")
-sha512sums=('7170f31d5a9549d47b9e9582825925b6c04f45af2a8fb78a63f6f1885ab36bc2f97385b9155bfa5aa96445143a533b929f89eef9c0a2d5b986078ee2726b062d')
+sha512sums=('aecf3bb0f5c6cec5a6db9ce9c11174686208f9caca16736a7addeb70e556446ebdb1384a95c6ee440bf8a583de9b609cb2bc1c8a5720a618024fe57b14d9cd18')
 
 build() {
     cd "geph2-$pkgver/cmd/$pkgname/"
