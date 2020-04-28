@@ -3,10 +3,10 @@
 pkgbase=goland
 pkgname=(goland goland-jre)
 pkgver=2020.1.1
-pkgrel=1
+pkgrel=2
 arch=('x86_64' 'i686')
 url='https://www.jetbrains.com/go/'
-license=('commercial')
+license=('custom:jetbrains')
 depends=('glib2')
 options=('!strip')
 source=("https://download.jetbrains.com/go/${pkgbase}-${pkgver}.tar.gz"
