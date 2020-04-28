@@ -1,0 +1,604 @@
+From 5cddfb828ddd82fc741549d5ee44cd9b94bd97f5 Mon Sep 17 00:00:00 2001
+From: Jonah Ryan-Davis <jonahr@google.com>
+Date: Mon, 30 Mar 2020 17:13:54 +0000
+Subject: [PATCH] Use EGL_ANGLE_sync_control_rate for eglGetMscRate call
+
+eglGetMscRateCHROMIUM is not universally supported, so we will
+switch to using the ANGLE version of the extension instead.
+
+Bug: chromium:1064078
+Change-Id: Ic57e2e55230df1d1c2c584e1cbf54331330a0b87
+Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/2120453
+Reviewed-by: Zhenyao Mo <zmo@chromium.org>
+Commit-Queue: Jonah Ryan-Davis <jonahr@google.com>
+Cr-Commit-Position: refs/heads/master@{#754518}
+---
+
+diff --git a/gpu/GLES2/extensions/ANGLE/EGL_ANGLE_sync_control_rate.txt b/gpu/GLES2/extensions/ANGLE/EGL_ANGLE_sync_control_rate.txt
+new file mode 100644
+index 0000000..2056ae8
+--- /dev/null
++++ b/gpu/GLES2/extensions/ANGLE/EGL_ANGLE_sync_control_rate.txt
+@@ -0,0 +1,110 @@
++﻿Name
++
++   ANGLE_sync_control_rate
++
++Name Strings
++
++   EGL_ANGLE_sync_control_rate
++
++Contact
++
++   Jonah Ryan-Davis, Google (jonahr 'at' google.com)
++
++Status
++
++   Draft.
++
++Version
++
++   Version 1, 2020-03-24
++
++   Based on GLX_OML_sync_control Revision 6.0
++
++Number
++
++   ???
++
++Dependencies
++
++   The extension is written against the EGL 1.2 Specification, although it
++   should work on other versions of these specifications. This extension
++   also requires an operating system which supports CLOCK_MONOTONIC.
++
++Overview
++
++   This extension provides counters which let applications know about the
++   timing of the last vertical retrace. By looking at the system clock, as
++   well as the refresh rate of the monitor, this should enable applications
++   to predict the position of future retraces so as to schedule an optimal
++   workload.
++
++   This extension incorporates the use of three counters that provide
++   the necessary synchronization. The Unadjusted System Time (or UST)
++   is the 64-bit CLOCK_MONOTONIC clock; in particular this lets the
++   application schedule future vertical retraces by querying this clock.
++   The graphics Media Stream Counter (or graphics MSC) is a counter
++   that is unique to the graphics subsystem and increments for each
++   vertical retrace that occurs. The Swap Buffer Counter (SBC) is an
++   attribute of an EGLSurface and is incremented each time a swap
++   buffer action is performed on the associated surface.
++
++   The use of these three counters allows the application to
++   synchronize graphics rendering to vertical retraces and/or swap
++   buffer actions. For example, by querying the synchronization values for
++   a given surface, the application can accurately predict the timing for
++   the next vertical retraces and schedule rendering accordingly.
++
++Issues
++
++   None.
++
++IP Status
++
++   No known issues.
++
++New Procedures and Functions
++
++   Bool eglGetMscRateANGLE(EGLDisplay* dpy,
++                           EGLSurface surface,
++                           int32_t* numerator,
++                           int32_t* denominator)
++
++New Tokens
++
++   None
++
++Additions to the EGL 1.3 Specification
++
++   The graphics MSC value is incremented once for each screen refresh.
++   For a non-interlaced display, this means that the graphics MSC value
++   is incremented for each frame. For an interlaced display, it means
++   that it will be incremented for each field. For a multi-monitor
++   system, the monitor used to determine MSC is the one where the surface
++   is located. If the surface spans multiple monitors, the monitor used
++   to determine MSC is the one with the biggest coverage in pixels.
++
++   eglGetMscRateANGLE returns the rate at which the MSC will be incremented
++   for the display associated with <hdc>. The rate is expressed in Hertz
++   as <numerator> / <denominator>. If the MSC rate in Hertz is an
++   integer, then <denominator> will be 1 and <numerator> will be
++   the MSC rate.
++
++   The function eglGetMscRateANGLE will return TRUE if the function
++   completed successfully, FALSE otherwise.
++
++   Each time eglSwapBuffer succeeds, the SBC will be increased within a
++   finite time period.
++
++Errors
++
++   The function eglGetMscRateANGLE will return FALSE if there is no
++   current EGLContext.
++
++New Implementation Dependent State
++
++   None
++
++Revision History
++
++    Version 1, 2020-03-24 (Jonah Ryan-Davis)
++       - Initial draft, based on GLX_OML_sync_control revision 6.0.
+diff --git a/gpu/GLES2/extensions/CHROMIUM/EGL_CHROMIUM_sync_control.txt b/gpu/GLES2/extensions/CHROMIUM/EGL_CHROMIUM_sync_control.txt
+index 14f4e56..f699f61 100644
+--- a/gpu/GLES2/extensions/CHROMIUM/EGL_CHROMIUM_sync_control.txt
++++ b/gpu/GLES2/extensions/CHROMIUM/EGL_CHROMIUM_sync_control.txt
+@@ -16,7 +16,7 @@
+ 
+ Version
+ 
+-   Version 3, 2020-01-23
++   Version 2, 2015-05-05
+ 
+    Based on GLX_OML_sync_control Revision 6.0
+ 
+@@ -70,12 +70,6 @@
+                                  int64_t* msc,
+                                  int64_t* sbc)
+ 
+-   Bool eglGetMscRateCHROMIUM(EGLDisplay* dpy,
+-                              EGLSurface surface,
+-                              int32_t* numerator,
+-                              int32_t* denominator)
+-
+-
+ New Tokens
+ 
+    None
+@@ -112,22 +106,16 @@
+    is located. If the surface spans multiple monitors, the monitor used
+    to determine MSC is the one with the biggest coverage in pixels.
+ 
+-   eglGetMscRateCHROMIUM returns the rate at which the MSC will be incremented
+-   for the display associated with <hdc>. The rate is expressed in Hertz
+-   as <numerator> / <denominator>. If the MSC rate in Hertz is an
+-   integer, then <denominator> will be 1 and <numerator> will be
+-   the MSC rate.
+-
+-   The functions eglGetSyncValuesCHROMIUM, and eglGetMscRateCHROMIUM will
+-   return TRUE if the function completed successfully, FALSE otherwise.
++   The function eglGetSyncValuesCHROMIUM will return TRUE if the function
++   completed successfully, FALSE otherwise.
+ 
+    Each time eglSwapBuffer succeeds, the SBC will be increased within a
+    finite time period.
+ 
+ Errors
+ 
+-   The functions eglGetSyncValuesCHROMIUM, and eglGetMscRateCHROMIUM will
+-   return FALSE if there is no current EGLContext.
++   The function eglGetSyncValuesCHROMIUM will return FALSE if there is no
++   current EGLContext.
+ 
+ 
+ New State
+@@ -144,10 +132,6 @@
+ 
+ Revision History
+ 
+-    Version 3, 2020-01-23 (Jonah Ryan-Davis)
+-       - Add the function eglGetMscRateCHROMIUM based on glXGetMscRateOML from
+-         GLX_OML_sync_control revision 6.0.
+-
+     Version 2, 2015-05-05 (Chad Versace)
+        - Rename to EGL_CHROMIUM_sync_control from EGL_CHROMIUM_get_sync_values.
+          EGL_CHROMIUM_sync_control is the de facto extension name because all
+diff --git a/ui/gl/EGL/eglextchromium.h b/ui/gl/EGL/eglextchromium.h
+index e66d34a..22e3cf0 100644
+--- a/ui/gl/EGL/eglextchromium.h
++++ b/ui/gl/EGL/eglextchromium.h
+@@ -22,21 +22,26 @@
+ EGLAPI EGLBoolean EGLAPIENTRY eglGetSyncValuesCHROMIUM(
+     EGLDisplay dpy, EGLSurface surface, EGLuint64CHROMIUM *ust,
+     EGLuint64CHROMIUM *msc, EGLuint64CHROMIUM *sbc);
+-EGLAPI EGLBoolean EGLAPIENTRY eglGetMscRateCHROMIUM(EGLDisplay dpy,
+-                                                    EGLSurface surface,
+-                                                    EGLint* numerator,
+-                                                    EGLint* denominator);
+ #endif /* EGL_EGLEXT_PROTOTYPES */
+ typedef EGLBoolean (EGLAPIENTRYP PFNEGLGETSYNCVALUESCHROMIUMPROC)
+     (EGLDisplay dpy, EGLSurface surface, EGLuint64CHROMIUM *ust,
+      EGLuint64CHROMIUM *msc, EGLuint64CHROMIUM *sbc);
+-typedef EGLBoolean(EGLAPIENTRYP PFNEGLGETMSCRATECHROMIUMPROC)(
+-    EGLDisplay dpy,
+-    EGLSurface surface,
+-    EGLint* numerator,
+-    EGLint* denominator);
+-#endif
+-#endif
++#endif /* EGL_CHROMIUM_sync_control */
++
++#ifndef EGL_ANGLE_sync_control_rate
++#define EGL_ANGLE_sync_control_rate 1
++#ifdef EGL_EGLEXT_PROTOTYPES
++EGLAPI EGLBoolean EGLAPIENTRY eglGetMscRateANGLE(EGLDisplay dpy,
++                                                 EGLSurface surface,
++                                                 EGLint* numerator,
++                                                 EGLint* denominator);
++#endif /* EGL_EGLEXT_PROTOTYPES */
++typedef EGLBoolean(EGLAPIENTRYP PFNEGLGETMSCRATEANGLEPROC)(EGLDisplay dpy,
++                                                           EGLSurface surface,
++                                                           EGLint* numerator,
++                                                           EGLint* denominator);
++#endif /* EGL_ANGLE_sync_control_rate */
++#endif /* KHRONOS_SUPPORT_INT64 */
+ 
+ #ifdef __cplusplus
+ }
+diff --git a/ui/gl/egl_bindings_autogen_mock.cc b/ui/gl/egl_bindings_autogen_mock.cc
+index f6562ad..d4d3a04 100644
+--- a/ui/gl/egl_bindings_autogen_mock.cc
++++ b/ui/gl/egl_bindings_autogen_mock.cc
+@@ -299,12 +299,12 @@
+ }
+ 
+ EGLBoolean GL_BINDING_CALL
+-MockEGLInterface::Mock_eglGetMscRateCHROMIUM(EGLDisplay dpy,
+-                                             EGLSurface surface,
+-                                             EGLint* numerator,
+-                                             EGLint* denominator) {
+-  MakeEglMockFunctionUnique("eglGetMscRateCHROMIUM");
+-  return interface_->GetMscRateCHROMIUM(dpy, surface, numerator, denominator);
++MockEGLInterface::Mock_eglGetMscRateANGLE(EGLDisplay dpy,
++                                          EGLSurface surface,
++                                          EGLint* numerator,
++                                          EGLint* denominator) {
++  MakeEglMockFunctionUnique("eglGetMscRateANGLE");
++  return interface_->GetMscRateANGLE(dpy, surface, numerator, denominator);
+ }
+ 
+ EGLClientBuffer GL_BINDING_CALL
+@@ -706,8 +706,8 @@
+   if (strcmp(name, "eglGetFrameTimestampsANDROID") == 0)
+     return reinterpret_cast<GLFunctionPointerType>(
+         Mock_eglGetFrameTimestampsANDROID);
+-  if (strcmp(name, "eglGetMscRateCHROMIUM") == 0)
+-    return reinterpret_cast<GLFunctionPointerType>(Mock_eglGetMscRateCHROMIUM);
++  if (strcmp(name, "eglGetMscRateANGLE") == 0)
++    return reinterpret_cast<GLFunctionPointerType>(Mock_eglGetMscRateANGLE);
+   if (strcmp(name, "eglGetNativeClientBufferANDROID") == 0)
+     return reinterpret_cast<GLFunctionPointerType>(
+         Mock_eglGetNativeClientBufferANDROID);
+diff --git a/ui/gl/egl_bindings_autogen_mock.h b/ui/gl/egl_bindings_autogen_mock.h
+index 06f1117..4b7eb01 100644
+--- a/ui/gl/egl_bindings_autogen_mock.h
++++ b/ui/gl/egl_bindings_autogen_mock.h
+@@ -131,11 +131,10 @@
+                                   EGLint numTimestamps,
+                                   EGLint* timestamps,
+                                   EGLnsecsANDROID* values);
+-static EGLBoolean GL_BINDING_CALL
+-Mock_eglGetMscRateCHROMIUM(EGLDisplay dpy,
+-                           EGLSurface surface,
+-                           EGLint* numerator,
+-                           EGLint* denominator);
++static EGLBoolean GL_BINDING_CALL Mock_eglGetMscRateANGLE(EGLDisplay dpy,
++                                                          EGLSurface surface,
++                                                          EGLint* numerator,
++                                                          EGLint* denominator);
+ static EGLClientBuffer GL_BINDING_CALL Mock_eglGetNativeClientBufferANDROID(
+     const struct AHardwareBuffer* ahardwarebuffer);
+ static EGLBoolean GL_BINDING_CALL
+diff --git a/ui/gl/generate_bindings.py b/ui/gl/generate_bindings.py
+index 6a89047..01da79a 100755
+--- a/ui/gl/generate_bindings.py
++++ b/ui/gl/generate_bindings.py
+@@ -2452,9 +2452,9 @@
+                  ] }],
+   'arguments': 'EGLDisplay dpy, EGLSurface surface, EGLint timestamp', },
+ { 'return_type': 'EGLBoolean',
+-  'versions': [{ 'name': 'eglGetMscRateCHROMIUM',
++  'versions': [{ 'name': 'eglGetMscRateANGLE',
+                  'extensions': [
+-                   'EGL_CHROMIUM_sync_control'
++                   'EGL_ANGLE_sync_control_rate'
+                  ] }],
+   'arguments':
+       'EGLDisplay dpy, EGLSurface surface, '
+diff --git a/ui/gl/gl_bindings_api_autogen_egl.h b/ui/gl/gl_bindings_api_autogen_egl.h
+index 8628d7c..30b0ba80 100644
+--- a/ui/gl/gl_bindings_api_autogen_egl.h
++++ b/ui/gl/gl_bindings_api_autogen_egl.h
+@@ -111,10 +111,10 @@
+ EGLBoolean eglGetFrameTimestampSupportedANDROIDFn(EGLDisplay dpy,
+                                                   EGLSurface surface,
+                                                   EGLint timestamp) override;
+-EGLBoolean eglGetMscRateCHROMIUMFn(EGLDisplay dpy,
+-                                   EGLSurface surface,
+-                                   EGLint* numerator,
+-                                   EGLint* denominator) override;
++EGLBoolean eglGetMscRateANGLEFn(EGLDisplay dpy,
++                                EGLSurface surface,
++                                EGLint* numerator,
++                                EGLint* denominator) override;
+ EGLClientBuffer eglGetNativeClientBufferANDROIDFn(
+     const struct AHardwareBuffer* ahardwarebuffer) override;
+ EGLBoolean eglGetNextFrameIdANDROIDFn(EGLDisplay dpy,
+diff --git a/ui/gl/gl_bindings_autogen_egl.cc b/ui/gl/gl_bindings_autogen_egl.cc
+index 2f1ed11..18444223 100644
+--- a/ui/gl/gl_bindings_autogen_egl.cc
++++ b/ui/gl/gl_bindings_autogen_egl.cc
+@@ -187,6 +187,8 @@
+       gfx::HasExtension(extensions, "EGL_ANGLE_stream_producer_d3d_texture");
+   ext.b_EGL_ANGLE_surface_d3d_texture_2d_share_handle = gfx::HasExtension(
+       extensions, "EGL_ANGLE_surface_d3d_texture_2d_share_handle");
++  ext.b_EGL_ANGLE_sync_control_rate =
++      gfx::HasExtension(extensions, "EGL_ANGLE_sync_control_rate");
+   ext.b_EGL_CHROMIUM_sync_control =
+       gfx::HasExtension(extensions, "EGL_CHROMIUM_sync_control");
+   ext.b_EGL_EXT_image_flush_external =
+@@ -278,9 +280,9 @@
+             GetGLProcAddress("eglGetFrameTimestampSupportedANDROID"));
+   }
+ 
+-  if (ext.b_EGL_CHROMIUM_sync_control) {
+-    fn.eglGetMscRateCHROMIUMFn = reinterpret_cast<eglGetMscRateCHROMIUMProc>(
+-        GetGLProcAddress("eglGetMscRateCHROMIUM"));
++  if (ext.b_EGL_ANGLE_sync_control_rate) {
++    fn.eglGetMscRateANGLEFn = reinterpret_cast<eglGetMscRateANGLEProc>(
++        GetGLProcAddress("eglGetMscRateANGLE"));
+   }
+ 
+   if (ext.b_EGL_ANDROID_get_native_client_buffer) {
+@@ -602,12 +604,11 @@
+                                                             timestamp);
+ }
+ 
+-EGLBoolean EGLApiBase::eglGetMscRateCHROMIUMFn(EGLDisplay dpy,
+-                                               EGLSurface surface,
+-                                               EGLint* numerator,
+-                                               EGLint* denominator) {
+-  return driver_->fn.eglGetMscRateCHROMIUMFn(dpy, surface, numerator,
+-                                             denominator);
++EGLBoolean EGLApiBase::eglGetMscRateANGLEFn(EGLDisplay dpy,
++                                            EGLSurface surface,
++                                            EGLint* numerator,
++                                            EGLint* denominator) {
++  return driver_->fn.eglGetMscRateANGLEFn(dpy, surface, numerator, denominator);
+ }
+ 
+ EGLClientBuffer EGLApiBase::eglGetNativeClientBufferANDROIDFn(
+@@ -1117,13 +1118,12 @@
+                                                           timestamp);
+ }
+ 
+-EGLBoolean TraceEGLApi::eglGetMscRateCHROMIUMFn(EGLDisplay dpy,
+-                                                EGLSurface surface,
+-                                                EGLint* numerator,
+-                                                EGLint* denominator) {
+-  TRACE_EVENT_BINARY_EFFICIENT0("gpu", "TraceEGLAPI::eglGetMscRateCHROMIUM")
+-  return egl_api_->eglGetMscRateCHROMIUMFn(dpy, surface, numerator,
+-                                           denominator);
++EGLBoolean TraceEGLApi::eglGetMscRateANGLEFn(EGLDisplay dpy,
++                                             EGLSurface surface,
++                                             EGLint* numerator,
++                                             EGLint* denominator) {
++  TRACE_EVENT_BINARY_EFFICIENT0("gpu", "TraceEGLAPI::eglGetMscRateANGLE")
++  return egl_api_->eglGetMscRateANGLEFn(dpy, surface, numerator, denominator);
+ }
+ 
+ EGLClientBuffer TraceEGLApi::eglGetNativeClientBufferANDROIDFn(
+@@ -1811,16 +1811,16 @@
+   return result;
+ }
+ 
+-EGLBoolean LogEGLApi::eglGetMscRateCHROMIUMFn(EGLDisplay dpy,
+-                                              EGLSurface surface,
+-                                              EGLint* numerator,
+-                                              EGLint* denominator) {
+-  GL_SERVICE_LOG("eglGetMscRateCHROMIUM"
++EGLBoolean LogEGLApi::eglGetMscRateANGLEFn(EGLDisplay dpy,
++                                           EGLSurface surface,
++                                           EGLint* numerator,
++                                           EGLint* denominator) {
++  GL_SERVICE_LOG("eglGetMscRateANGLE"
+                  << "(" << dpy << ", " << surface << ", "
+                  << static_cast<const void*>(numerator) << ", "
+                  << static_cast<const void*>(denominator) << ")");
+   EGLBoolean result =
+-      egl_api_->eglGetMscRateCHROMIUMFn(dpy, surface, numerator, denominator);
++      egl_api_->eglGetMscRateANGLEFn(dpy, surface, numerator, denominator);
+   GL_SERVICE_LOG("GL_RESULT: " << result);
+   return result;
+ }
+diff --git a/ui/gl/gl_bindings_autogen_egl.h b/ui/gl/gl_bindings_autogen_egl.h
+index 546e2c9..6cafd14 100644
+--- a/ui/gl/gl_bindings_autogen_egl.h
++++ b/ui/gl/gl_bindings_autogen_egl.h
+@@ -141,7 +141,7 @@
+     EGLDisplay dpy,
+     EGLSurface surface,
+     EGLint timestamp);
+-typedef EGLBoolean(GL_BINDING_CALL* eglGetMscRateCHROMIUMProc)(
++typedef EGLBoolean(GL_BINDING_CALL* eglGetMscRateANGLEProc)(
+     EGLDisplay dpy,
+     EGLSurface surface,
+     EGLint* numerator,
+@@ -296,6 +296,7 @@
+   bool b_EGL_ANGLE_query_surface_pointer;
+   bool b_EGL_ANGLE_stream_producer_d3d_texture;
+   bool b_EGL_ANGLE_surface_d3d_texture_2d_share_handle;
++  bool b_EGL_ANGLE_sync_control_rate;
+   bool b_EGL_CHROMIUM_sync_control;
+   bool b_EGL_EXT_image_flush_external;
+   bool b_EGL_KHR_fence_sync;
+@@ -351,7 +352,7 @@
+   eglGetFrameTimestampsANDROIDProc eglGetFrameTimestampsANDROIDFn;
+   eglGetFrameTimestampSupportedANDROIDProc
+       eglGetFrameTimestampSupportedANDROIDFn;
+-  eglGetMscRateCHROMIUMProc eglGetMscRateCHROMIUMFn;
++  eglGetMscRateANGLEProc eglGetMscRateANGLEFn;
+   eglGetNativeClientBufferANDROIDProc eglGetNativeClientBufferANDROIDFn;
+   eglGetNextFrameIdANDROIDProc eglGetNextFrameIdANDROIDFn;
+   eglGetPlatformDisplayProc eglGetPlatformDisplayFn;
+@@ -512,10 +513,10 @@
+       EGLDisplay dpy,
+       EGLSurface surface,
+       EGLint timestamp) = 0;
+-  virtual EGLBoolean eglGetMscRateCHROMIUMFn(EGLDisplay dpy,
+-                                             EGLSurface surface,
+-                                             EGLint* numerator,
+-                                             EGLint* denominator) = 0;
++  virtual EGLBoolean eglGetMscRateANGLEFn(EGLDisplay dpy,
++                                          EGLSurface surface,
++                                          EGLint* numerator,
++                                          EGLint* denominator) = 0;
+   virtual EGLClientBuffer eglGetNativeClientBufferANDROIDFn(
+       const struct AHardwareBuffer* ahardwarebuffer) = 0;
+   virtual EGLBoolean eglGetNextFrameIdANDROIDFn(EGLDisplay dpy,
+@@ -685,8 +686,7 @@
+   ::gl::g_current_egl_context->eglGetFrameTimestampsANDROIDFn
+ #define eglGetFrameTimestampSupportedANDROID \
+   ::gl::g_current_egl_context->eglGetFrameTimestampSupportedANDROIDFn
+-#define eglGetMscRateCHROMIUM \
+-  ::gl::g_current_egl_context->eglGetMscRateCHROMIUMFn
++#define eglGetMscRateANGLE ::gl::g_current_egl_context->eglGetMscRateANGLEFn
+ #define eglGetNativeClientBufferANDROID \
+   ::gl::g_current_egl_context->eglGetNativeClientBufferANDROIDFn
+ #define eglGetNextFrameIdANDROID \
+diff --git a/ui/gl/gl_enums_implementation_autogen.h b/ui/gl/gl_enums_implementation_autogen.h
+index d35439c..1209923b 100644
+--- a/ui/gl/gl_enums_implementation_autogen.h
++++ b/ui/gl/gl_enums_implementation_autogen.h
+@@ -829,10 +829,6 @@
+         "GL_FILL_NV",
+     },
+     {
+-        0x1D00,
+-        "GL_FLAT_CHROMIUM",
+-    },
+-    {
+         0x1E00,
+         "GL_KEEP",
+     },
+@@ -877,14 +873,6 @@
+         "GL_FONT_NUM_GLYPH_INDICES_BIT_NV",
+     },
+     {
+-        0x2400,
+-        "GL_EYE_LINEAR_CHROMIUM",
+-    },
+-    {
+-        0x2401,
+-        "GL_OBJECT_LINEAR_CHROMIUM",
+-    },
+-    {
+         0x2600,
+         "GL_NEAREST",
+     },
+@@ -2053,10 +2041,6 @@
+         "GL_MAX_CUBE_MAP_TEXTURE_SIZE",
+     },
+     {
+-        0x8576,
+-        "GL_CONSTANT_CHROMIUM",
+-    },
+-    {
+         0x8589,
+         "GL_SRC1_ALPHA_EXT",
+     },
+@@ -4629,10 +4613,6 @@
+         "GL_PATH_CLIENT_LENGTH_NV",
+     },
+     {
+-        0x907a,
+-        "GL_PATH_MITER_LIMIT_CHROMIUM",
+-    },
+-    {
+         0x9080,
+         "GL_PATH_FILL_MODE_NV",
+     },
+@@ -4653,10 +4633,6 @@
+         "GL_PATH_STROKE_MASK_NV",
+     },
+     {
+-        0x9086,
+-        "GL_PATH_STROKE_BOUND_CHROMIUM",
+-    },
+-    {
+         0x9088,
+         "GL_COUNT_UP_NV",
+     },
+@@ -4965,14 +4941,6 @@
+         "GL_CONTEXT_ROBUST_ACCESS_KHR",
+     },
+     {
+-        0x90a3,
+-        "GL_SQUARE_CHROMIUM",
+-    },
+-    {
+-        0x90a4,
+-        "GL_ROUND_CHROMIUM",
+-    },
+-    {
+         0x9100,
+         "GL_TEXTURE_2D_MULTISAMPLE",
+     },
+diff --git a/ui/gl/gl_mock_autogen_egl.h b/ui/gl/gl_mock_autogen_egl.h
+index bcdd2a3..ba2f95f 100644
+--- a/ui/gl/gl_mock_autogen_egl.h
++++ b/ui/gl/gl_mock_autogen_egl.h
+@@ -121,7 +121,7 @@
+                         EGLnsecsANDROID* values));
+ MOCK_METHOD3(GetFrameTimestampSupportedANDROID,
+              EGLBoolean(EGLDisplay dpy, EGLSurface surface, EGLint timestamp));
+-MOCK_METHOD4(GetMscRateCHROMIUM,
++MOCK_METHOD4(GetMscRateANGLE,
+              EGLBoolean(EGLDisplay dpy,
+                         EGLSurface surface,
+                         EGLint* numerator,
+diff --git a/ui/gl/gl_surface_egl.cc b/ui/gl/gl_surface_egl.cc
+index 72268904..750f3ed 100644
+--- a/ui/gl/gl_surface_egl.cc
++++ b/ui/gl/gl_surface_egl.cc
+@@ -174,6 +174,7 @@
+ bool g_egl_create_context_bind_generates_resource_supported = false;
+ bool g_egl_create_context_webgl_compatability_supported = false;
+ bool g_egl_sync_control_supported = false;
++bool g_egl_sync_control_rate_supported = false;
+ bool g_egl_window_fixed_size_supported = false;
+ bool g_egl_surfaceless_context_supported = false;
+ bool g_egl_surface_orientation_supported = false;
+@@ -266,8 +267,12 @@
+   }
+ 
+   bool GetMscRate(int32_t* numerator, int32_t* denominator) override {
++    if (!g_egl_sync_control_rate_supported) {
++      return false;
++    }
++ 
+-    bool result = eglGetMscRateCHROMIUM(g_egl_display, surface_, numerator,
+-                                        denominator) == EGL_TRUE;
++    bool result = eglGetMscRateANGLE(g_egl_display, surface_, numerator,
++                                     denominator) == EGL_TRUE;
+     return result;
+   }
+ 
+@@ -921,6 +920,8 @@
+   g_egl_create_context_webgl_compatability_supported =
+       HasEGLExtension("EGL_ANGLE_create_context_webgl_compatibility");
+   g_egl_sync_control_supported = HasEGLExtension("EGL_CHROMIUM_sync_control");
++  g_egl_sync_control_rate_supported =
++      HasEGLExtension("EGL_ANGLE_sync_control_rate");
+   g_egl_window_fixed_size_supported =
+       HasEGLExtension("EGL_ANGLE_window_fixed_size");
+   g_egl_surface_orientation_supported =
+@@ -1036,6 +1037,7 @@
+   g_egl_create_context_bind_generates_resource_supported = false;
+   g_egl_create_context_webgl_compatability_supported = false;
+   g_egl_sync_control_supported = false;
++  g_egl_sync_control_rate_supported = false;
+   g_egl_window_fixed_size_supported = false;
+   g_egl_surface_orientation_supported = false;
+   g_egl_surfaceless_context_supported = false;

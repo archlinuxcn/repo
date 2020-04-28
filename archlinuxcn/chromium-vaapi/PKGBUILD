@@ -10,7 +10,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=chromium-vaapi
-pkgver=81.0.4044.122
+pkgver=81.0.4044.129
 pkgrel=1
 _launcher_ver=6
 pkgdesc="Chromium with VA-API support to enable hardware acceleration"
@@ -35,15 +35,17 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-drirc-disable-10bpc-color-configs.conf
         vdpau-support.patch
         vaapi-build-fix.patch
+        eglGetMscRateCHROMIUM.patch
         rename-Relayout-in-DesktopWindowTreeHostPlatform.patch
         rebuild-Linux-frame-button-cache-when-activation.patch
         chromium-widevine.patch
         chromium-skia-harmony.patch)
-sha256sums=('0f9ffd30d769e25e091a87b9dda4d688c19bf85b1e1fcb3b89eaae5ff780182a'
+sha256sums=('ff74592f83ed91c082f746c6b0a3acf384bad91f170bd24548971c17f43046d3'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
             'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb'
             '0ec6ee49113cc8cc5036fa008519b94137df6987bf1f9fbffb2d42d298af868a'
             'fad5e678d62de0e45db1c2aa871628fdc981f78c26392c1dccc457082906a350'
+            '1dd330409094dc4bf393f00a51961a983360ccf99affd4f97a61d885129d326e'
             'ae3bf107834bd8eda9a3ec7899fe35fde62e6111062e5def7d24bf49b53db3db'
             '46f7fc9768730c460b27681ccf3dc2685c7e1fd22d70d3a82d9e57e3389bb014'
             '709e2fddba3c1f2ed4deb3a239fc0479bfa50c46e054e7f32db4fb1365fed070'
@@ -101,6 +103,9 @@ prepare() {
 
   # Fix VAAPI build on chromium 81+
   patch -Np1 -i ../vaapi-build-fix.patch
+
+  # https://bugs.chromium.org/p/chromium/issues/detail?id=1064078
+  patch -Np1 -i ../eglGetMscRateCHROMIUM.patch
 
   # https://crbug.com/1049258
   patch -Np1 -i ../rename-Relayout-in-DesktopWindowTreeHostPlatform.patch
