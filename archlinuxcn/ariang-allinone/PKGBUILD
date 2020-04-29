@@ -2,13 +2,13 @@
 
 pkgname=ariang-allinone
 pkgver=1.1.5
-pkgrel=1
+pkgrel=2
 pkgdesc="A modern web frontend making aria2 easier to use (all-in-one version)"
 arch=('any')
 url="https://github.com/mayswind/AriaNg"
 license=('MIT')
 depends=('bash')
-makedepends=('git' 'gulp' 'npm' 'nvm')
+makedepends=('git' 'nvm')
 source=("$url/archive/1.1.5.tar.gz"
         "$pkgname.desktop"
         "$pkgname.sh")
@@ -19,11 +19,9 @@ sha512sums=('ca41d9012ba5fcec5efbdae2d670064e08f4a2949087b3c4b5a62c9375060834d02
 build() {
     cd "AriaNg-$pkgver"
     source /usr/share/nvm/init-nvm.sh
-    nvm install v8.17.0
-    npm update
-    npm audit fix
+    nvm install 8.17.0
     npm install --devDependencies
-    gulp clean build-bundle
+    node_modules/gulp/bin/gulp.js clean build-bundle
 }
 
 package() {
