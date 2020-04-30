@@ -20,6 +20,7 @@ depends=(
 makedepends=(
   'cmake'
   'doxygen'
+  'docbook-xsl'
   'git'
   'glew'
   'graphviz'
@@ -76,7 +77,7 @@ build() {
     -DGDCM_USE_VTK:BOOL=ON \
     -DGDCMV2_0_COMPATIBILITY:BOOL=OFF \
     -DGDCM_WRAP_PYTHON:BOOL=ON
-  make -C "build" -j 1
+  make -C "build"
 }
 
 package() {
