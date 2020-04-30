@@ -5,7 +5,7 @@ pkgname=python-av
 _pkgname=PyAV
 pkgdesc="Pythonic bindings for FFmpeg's libraries"
 url='https://github.com/mikeboers/PyAV'
-pkgver=8.0.0
+pkgver=8.0.1
 pkgrel=1
 arch=("x86_64")
 license=("BSD")
@@ -22,7 +22,7 @@ depends=(
   'python-pillow'
 )
 source=("${pkgname}-${pkver}.tar.gz::https://github.com/mikeboers/PyAV/archive/v${pkgver}.tar.gz")
-sha512sums=('0974d89f23a162cc94aa9215772c49d870e4de3dbe194d310811ebac7f216bc414c148be239fc157d6ff2d70175f1383d1d2af2a562786d60c701bc1f47bc744')
+sha512sums=('05484ecdb87f3b02b040d81d16d653d09902f10885168ae9471f53d4247f9ae4976ade219f69dc8eaf1bf1ac6209149d429c257e7bccbe11f47eca3fc1363fb9')
 
 get_pyver() {
   python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
