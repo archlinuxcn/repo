@@ -4,16 +4,18 @@
 _pkgname=skypeforlinux
 pkgname=$_pkgname-preview-bin
 pkgver=8.60.76.27
-pkgrel=1
+pkgrel=2
 pkgdesc="Skype for Linux - Preview/Insider Version"
 arch=("x86_64")
 url="http://www.skype.com"
 license=("custom")
 depends=("gtk3" "libxss" "alsa-lib" "libxtst" "libsecret" "nss"
-         "glibc>=2.28-4" "libappindicator-gtk3")
-optdepends=("org.freedesktop.secrets")
+         "glibc>=2.28-4")
+optdepends=("org.freedesktop.secrets: keyring/password support"
+            "libappindicator-gtk3: systray icon support")
 makedepends=("asar")
-conflicts=("$_pkgname" "$_pkgname-bin" "$_pkgname-stable-bin" "$_pkgname-beta-bin" "skype")
+conflicts=("$_pkgname" "$_pkgname-bin" "$_pkgname-stable-bin"
+           "$_pkgname-beta-bin" "skype")
 provides=("$_pkgname" "skype")
 replaces=("$_pkgname-bin")
 install=install.sh
