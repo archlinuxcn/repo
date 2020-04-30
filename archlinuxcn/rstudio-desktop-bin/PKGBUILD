@@ -3,15 +3,15 @@
 # NOTE: If you are experiencing segmentation fault, delete the ".rstudio-desktop" folder from your home directory then restart the program should fix the issue.
 
 pkgname=rstudio-desktop-bin
-pkgver=1.2.5033
-pkgrel=3
+pkgver=1.2.5042
+pkgrel=1
 pkgdesc="An integrated development environment (IDE) for R (binary from RStudio official repository)"
 arch=('x86_64')
 license=('GPL')
 url="http://www.rstudio.org/"
 #depends=('r' 'hicolor-icon-theme' 'shared-mime-info' 'orc' 'openssl-1.0')
 depends=('r' 'hicolor-icon-theme' 'shared-mime-info' 'openssl' 'libxkbcommon-x11' 'libedit')
-makedepends=('upx')
+makedepends=()
 optdepends=(
 'clang: C/C++ and Rcpp support'
 #'pandoc: markdown support'
@@ -22,7 +22,7 @@ provides=("rstudio-desktop=${pkgver}")
 options=(!strip)
 
 md5sums_x86_64=(
-bbd78f351f64f8b8c36672fd0f5d6394
+2567879411893d7c72765abd5cf3d71e
 #84e61f5eda991b978fa168d6762f7990
 #391ba54997d6faddbfe41a185a823ee4
 )
@@ -77,8 +77,8 @@ package() {
   cd "$pkgdir/usr/lib/rstudio/bin/pandoc"
   #ln -sf /usr/bin/pandoc ./
  # ln -sf /usr/bin/pandoc-citeproc ./
- upx -q pandoc-citeproc
- upx -q pandoc
+ #upx -q pandoc-citeproc
+ #upx -q pandoc
 
 #  cd "$pkgdir/usr/lib/rstudio/bin/plugins"
 #  ls */*.so | xargs -n1 patchelf --set-rpath '$ORIGIN/../..'
