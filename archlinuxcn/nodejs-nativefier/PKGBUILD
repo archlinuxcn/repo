@@ -2,7 +2,7 @@ _npmname=nativefier
 _npmver=8.0.7
 pkgname=nodejs-nativefier
 pkgver=8.0.7
-pkgrel=1
+pkgrel=2
 pkgdesc="Wrap web apps natively"
 arch=(any)
 url="https://github.com/jiahaog/nativefier#readme"
@@ -12,6 +12,7 @@ makedepends=('jq' 'npm')
 optdepends=()
 source=(http://registry.npmjs.org/$_npmname/-/$_npmname-$_npmver.tgz)
 sha1sums=('b52957f0c55bd2619e6970c34bc73c22e5ebf09c')
+noextract=("$_npmname-$_npmver.tgz")
 
 package() {
     # Thanks jeremejevs and je-vv for the pointers on these!
@@ -19,6 +20,10 @@ package() {
 
     # Fix permissions
     find "$pkgdir"/usr -type d -exec chmod 755 {} +
+
+    # npm gives ownership of ALL FILES to build user
+    # https://bugs.archlinux.org/task/63396
+    chown -R root:root "${pkgdir}"
 
     # Remove references to pkgdir
     find "$pkgdir" -type f -name package.json -print0 | xargs -0 sed -i "/_where/d"
