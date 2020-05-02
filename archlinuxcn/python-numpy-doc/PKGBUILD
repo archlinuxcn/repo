@@ -4,11 +4,11 @@
 
 pkgname=python-numpy-doc
 pkgver=1.17.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Documentation for NumPy"
 makedepends=('unzip')
 arch=('any')
-url='http://docs.scipy.org'
+url='https://docs.scipy.org'
 license=('BSD')
 source=("$pkgname-$pkgver.zip::http://docs.scipy.org/doc/numpy-${pkgver}/numpy-html-${pkgver}.zip")
 noextract=("$pkgname-$pkgver.zip")
