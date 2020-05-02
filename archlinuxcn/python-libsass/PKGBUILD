@@ -1,7 +1,7 @@
 _pkgname=libsass
 pkgname=python-libsass
-pkgver=0.19.4
-pkgrel=2
+pkgver=0.20.0
+pkgrel=1
 pkgdesc="Sass for Python: A straightforward binding of libsass for Python."
 arch=('x86_64')
 url="https://sass.github.io/libsass-python/"
@@ -11,7 +11,7 @@ _name=${pkgname#python-}
 makedepends=('gcc')
 provides=('sassc')
 source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_pkgname}-${pkgver}.tar.gz")
-md5sums=('33247c8777f30b03d02163e8fd86b214')
+md5sums=('98c65fddf9e272eae77d2b6abb73255d')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
