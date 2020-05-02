@@ -1,14 +1,16 @@
+#Maintainer: heavysink (winstonwu91 at gmail)
+
 pkgname=supertuxkart-git
-pkgver=21981+18271
+pkgver=22020+18271
 pkgrel=1
 pkgdesc="A kart racing game featuring Tux and his friends - development version"
 url="http://supertuxkart.sourceforge.net/"
 license=("cc-by-sa-3.0")
 arch=('i686' 'x86_64')
 
-makedepends=("git" "subversion" "cmake" "bluez-libs")
+makedepends=("git" "subversion" "cmake")
 
-depends=("libvorbis" "freealut" "libgl" "glut" "fribidi" "glew" "libopenglrecorder" "libjpeg-turbo" "libpng" "freetype2")
+depends=("hicolor-icon-theme" "sqlite" "python" "libvorbis" "freealut" "mcpp" "glut" "glew" "libraqm" "libxkbcommon" "libopenglrecorder" "sdl2" "bluez-libs")
 
 conflicts=("supertuxkart")
 replaces=("supertuxkart-cmakesvn" "supertuxkart-svn")
@@ -33,7 +35,6 @@ pkgver() {
 
 build() {
     cd "${srcdir}/stk-code"
-    msg "Starting build..."
 
     [ -d "cmake_build" ] && rm -rf cmake_build
     mkdir cmake_build && cd cmake_build
