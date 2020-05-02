@@ -7,7 +7,7 @@
 pkgname=ungoogled-chromium
 pkgver=81.0.4044.129
 _rel=1
-pkgrel=1
+pkgrel=2
 _launcher_ver=6
 _archver=7ce267da626a5a178d60aad2c11638b62042bd23
 pkgdesc="A lightweight approach to removing Google web service dependency"
@@ -33,6 +33,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         rename-Relayout-in-DesktopWindowTreeHostPlatform.patch
         rebuild-Linux-frame-button-cache-when-activation.patch
         vdpau-support.patch
+        icu67.patch
         vaapi-build-fix.patch
         chromium-widevine.patch
         chromium-skia-harmony.patch)
@@ -44,6 +45,7 @@ sha256sums=('ff74592f83ed91c082f746c6b0a3acf384bad91f170bd24548971c17f43046d3'
             '46f7fc9768730c460b27681ccf3dc2685c7e1fd22d70d3a82d9e57e3389bb014'
             '0ec6ee49113cc8cc5036fa008519b94137df6987bf1f9fbffb2d42d298af868a'
             'fad5e678d62de0e45db1c2aa871628fdc981f78c26392c1dccc457082906a350'
+            'c126d91ce6c84e4ff91c79fb853ec691a81848223647260554099919352eb8db'
             '709e2fddba3c1f2ed4deb3a239fc0479bfa50c46e054e7f32db4fb1365fed070'
             '771292942c0901092a402cc60ee883877a99fb804cb54d568c8c6c94565a48e1')
 
@@ -90,6 +92,9 @@ prepare() {
   # https://crbug.com/1049258
   patch -Np1 -i ../rename-Relayout-in-DesktopWindowTreeHostPlatform.patch
   patch -Np1 -i ../rebuild-Linux-frame-button-cache-when-activation.patch
+
+   # https://crbug.com/v8/10393
+  patch -Np3 -d v8 <../icu67.patch
 
   # Load bundled Widevine CDM if available (see chromium-widevine in the AUR)
   # M79 is supposed to download it as a component but it doesn't seem to work
