@@ -1,0 +1,71 @@
+
+# HG changeset patch
+# User Emilio Cobos Álvarez <emilio@crisal.io>
+# Date 1568322567 0
+# Node ID 773adf85740c7f5f295f9e17bba1d8a95888ee32
+# Parent  a1824d4c404b8926930c2fbde5c9a14c7bd05763
+Bug 1580963 - Cherry-pick some servo changes from a rustc upgrade.
+
+This cherry-picks from Servo commit 98e4a53b724.
+
+Differential Revision: https://phabricator.services.mozilla.com/D45738
+
+diff --git a/servo/components/style/stylesheets/viewport_rule.rs b/servo/components/style/stylesheets/viewport_rule.rs
+--- a/servo/components/style/stylesheets/viewport_rule.rs
++++ b/servo/components/style/stylesheets/viewport_rule.rs
+@@ -286,38 +286,47 @@ impl<'a, 'b, 'i> DeclarationParser<'i> f
+ 
+     fn parse_value<'t>(
+         &mut self,
+         name: CowRcStr<'i>,
+         input: &mut Parser<'i, 't>,
+     ) -> Result<Vec<ViewportDescriptorDeclaration>, ParseError<'i>> {
+         macro_rules! declaration {
+             ($declaration:ident($parse:expr)) => {
+-                declaration!($declaration(value: try!($parse(input)),
+-                                          important: input.try(parse_important).is_ok()))
++                declaration!($declaration {
++                    value: $parse(input)?,
++                    important: input.try(parse_important).is_ok(),
++                })
+             };
+-            ($declaration:ident(value: $value:expr, important: $important:expr)) => {
++            ($declaration:ident { value: $value:expr, important: $important:expr, }) => {
+                 ViewportDescriptorDeclaration::new(
+                     self.context.stylesheet_origin,
+                     ViewportDescriptor::$declaration($value),
+-                    $important)
+-            }
++                    $important,
++                )
++            };
+         }
+ 
+         macro_rules! ok {
+             ($declaration:ident($parse:expr)) => {
+                 Ok(vec![declaration!($declaration($parse))])
+             };
+             (shorthand -> [$min:ident, $max:ident]) => {{
+                 let shorthand = parse_shorthand(self.context, input)?;
+                 let important = input.try(parse_important).is_ok();
+ 
+                 Ok(vec![
+-                    declaration!($min(value: shorthand.0, important: important)),
+-                    declaration!($max(value: shorthand.1, important: important)),
++                    declaration!($min {
++                        value: shorthand.0,
++                        important: important,
++                    }),
++                    declaration!($max {
++                        value: shorthand.1,
++                        important: important,
++                    }),
+                 ])
+             }};
+         }
+ 
+         match_ignore_ascii_case! { &*name,
+             "min-width" => ok!(MinWidth(|i| ViewportLength::parse(self.context, i))),
+             "max-width" => ok!(MaxWidth(|i| ViewportLength::parse(self.context, i))),
+             "width" => ok!(shorthand -> [MinWidth, MaxWidth]),
+
