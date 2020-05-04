@@ -6,7 +6,7 @@
 
 pkgname=('mysql' 'libmysqlclient' 'mysql-clients')
 pkgbase=mysql
-pkgver=8.0.19
+pkgver=8.0.20
 pkgrel=1
 pkgdesc="Fast SQL database server, community edition"
 arch=('x86_64')
@@ -21,12 +21,12 @@ source=("https://cdn.mysql.com/Downloads/MySQL-8.0/${pkgbase}-boost-${pkgver}.ta
         "mysql.sysconfig"
         "mysqld_service.patch"
         "systemd-sysusers-tmpfiles.patch")
-sha256sums=('3622d2a53236ed9ca62de0616a7e80fd477a9a3f862ba09d503da188f53ca523'
+sha256sums=('b6ad1a09eb146fa913f1afc257bbed8ffab688e2d504fb8ddb652f69f551a9c1'
             '6bc24ae510f6b6bbad6b3edda2d0028b29292937b482274a4c2fae335f4de328'
             'e1c23fa0971a13d998f2790379b68c475438d05b6d6f2691b99051dbf497567f'
             '203dcd22fea668477ac7123dbd9909fae72d3d07f8855417a669a9c94db072ae'
             '8fbedfc2c5fe271ed13217feeceeac00202d2cb135e4283eeee2f9a13d6251af'
-            '9e585631cfe95da9d18df6c64fca370c0aff2b2cda5dc29f694579dab9d9f561')
+            '7dfc863de8ba62b31e412bdb82a2617c90b9e588db34028ab694813547dab167')
 
 build() {
   rm -rf build
@@ -96,16 +96,9 @@ package_libmysqlclient(){
     make -C "${dir}" DESTDIR="${pkgdir}" install
   done
 
-  install -m 755 -d "${pkgdir}/usr/bin"
-  install -m 755 scripts/mysql_config "${pkgdir}/usr/bin/"
-  install -m 755 -d "${pkgdir}/usr/share/man/man1"
   install -m 700 -d "${pkgdir}/var/lib/mysql"
   install -m 644 -D "${srcdir}/my-default.cnf" "${pkgdir}/etc/mysql/my.cnf.default"
   install -m 644 -D "${srcdir}/${pkgbase}-${pkgver}/support-files/mysql.m4" "${pkgdir}/usr/share/aclocal/mysql.m4"
-  for man in mysql_config
-  do
-    install -m 644 "${srcdir}/${pkgbase}-${pkgver}/man/${man}.1" "${pkgdir}/usr/share/man/man1/${man}.1"
-  done
 }
 
 package_mysql-clients(){
@@ -117,16 +110,22 @@ package_mysql-clients(){
   cd build
   make -C "client" DESTDIR="${pkgdir}" install
 
+  install -m 755 -d "${pkgdir}/usr/bin"
+  install -m 755 "runtime_output_directory/mysql_client_test" "${pkgdir}/usr/bin"
+  install -m 755 "scripts/mysql_config" "${pkgdir}/usr/bin"
+
   # install man pages
-  install -d "${pkgdir}/usr/share/man/man1"
-  for man in mysql mysqladmin mysqlcheck mysqldump mysqlimport mysqlshow mysqlslap
+  install -m 755 -d "${pkgdir}/usr/share/man/man1"
+  for man in mysql mysqladmin mysqlcheck mysqldump mysqlimport mysqlshow mysqlslap mysql_config mysql_config_editor
   do
-    install -m644 "${srcdir}/${pkgbase}-${pkgver}/man/${man}.1" "${pkgdir}/usr/share/man/man1/${man}.1"
+    install -m 644 "${srcdir}/${pkgbase}-${pkgver}/man/${man}.1" "${pkgdir}/usr/share/man/man1/${man}.1"
   done
+
+  # install pkgconfig
+  install -m 644 -D "${srcdir}/build/scripts/mysqlclient.pc" "${pkgdir}/usr/lib/pkgconfig/mysqlclient.pc"
 
   # provided by mysql
   rm "${pkgdir}/usr/bin/mysql_upgrade"
-  rm "${pkgdir}/usr/bin/mysql_config_editor"
   rm "${pkgdir}/usr/bin/mysqlbinlog"
   rm "${pkgdir}/usr/bin/mysqlpump"
   rm "${pkgdir}/usr/bin/mysql_secure_installation"
@@ -155,35 +154,37 @@ package_mysql(){
 
   # provided by libmysqlclient
   rm "${pkgdir}/usr/bin/mysql_config"
+  rm "${pkgdir}/usr/lib/libmysqlclient.a"
   rm "${pkgdir}/usr/lib/libmysqlclient.so"
   rm "${pkgdir}/usr/lib/libmysqlclient.so.21"
-  rm "${pkgdir}/usr/lib/libmysqlclient.so.21.1.19"
+  rm "${pkgdir}/usr/lib/libmysqlclient.so.21.1.20"
   rm "${pkgdir}/usr/lib/libmysqlservices.a"
+  rm "${pkgdir}/usr/lib/pkgconfig/mysqlclient.pc"
+  rmdir "${pkgdir}/usr/lib/pkgconfig"
   rm "${pkgdir}/usr/lib/mysql/plugin/authentication_ldap_sasl_client.so"
-  rm -r "${pkgdir}/usr/include/"
-  rm "${pkgdir}/usr/share/man/man1/mysql_config.1"
+  rm -r "${pkgdir}/usr/include"
   rm "${pkgdir}/usr/share/mysql/aclocal/mysql.m4"
-  rmdir "${pkgdir}/usr/share/mysql/aclocal/"
+  rmdir "${pkgdir}/usr/share/mysql/aclocal"
 
   # provided by mysql-clients
   rm "${pkgdir}/usr/bin/mysql"
   rm "${pkgdir}/usr/bin/mysqladmin"
-  rm "${pkgdir}/usr/bin/mysqlbinlog"
   rm "${pkgdir}/usr/bin/mysqlcheck"
   rm "${pkgdir}/usr/bin/mysqldump"
   rm "${pkgdir}/usr/bin/mysqlimport"
   rm "${pkgdir}/usr/bin/mysqlshow"
   rm "${pkgdir}/usr/bin/mysqlslap"
-  rm "${pkgdir}/usr/bin/mysql_upgrade"
+  rm "${pkgdir}/usr/bin/mysql_client_test"
+  rm "${pkgdir}/usr/bin/mysql_config_editor"
   rm "${pkgdir}/usr/share/man/man1/mysql.1"
   rm "${pkgdir}/usr/share/man/man1/mysqladmin.1"
-  rm "${pkgdir}/usr/share/man/man1/mysqlbinlog.1"
   rm "${pkgdir}/usr/share/man/man1/mysqlcheck.1"
+  rm "${pkgdir}/usr/share/man/man1/mysql_config.1"
+  rm "${pkgdir}/usr/share/man/man1/mysql_config_editor.1"
   rm "${pkgdir}/usr/share/man/man1/mysqldump.1"
   rm "${pkgdir}/usr/share/man/man1/mysqlimport.1"
   rm "${pkgdir}/usr/share/man/man1/mysqlshow.1"
   rm "${pkgdir}/usr/share/man/man1/mysqlslap.1"
-  rm "${pkgdir}/usr/share/man/man1/mysql_upgrade.1"
 
   # not needed
   rm -r "${pkgdir}/usr/mysql-test"
@@ -194,14 +195,14 @@ package_mysql(){
   mv "${pkgdir}/usr/README.router" "${pkgdir}/usr/share/mysql/docs"
 
   # Create environment file
-  install -D -m 644 "${srcdir}/mysql.sysconfig" "${pkgdir}/etc/conf.d/${pkgname}.conf"
+  install -m 644 -D "${srcdir}/mysql.sysconfig" "${pkgdir}/etc/conf.d/${pkgname}.conf"
 
   # Fix permissions
   chmod 755 "${pkgdir}/usr"
 
   # Move systemd files
-  mv "${pkgdir}/usr/usr/lib/systemd" "${pkgdir}/usr/lib/"
-  mv "${pkgdir}/usr/usr/lib/tmpfiles.d" "${pkgdir}/usr/lib/"
+  mv "${pkgdir}/usr/usr/lib/systemd" "${pkgdir}/usr/lib"
+  mv "${pkgdir}/usr/usr/lib/tmpfiles.d" "${pkgdir}/usr/lib"
 
   # Cleanup
   rmdir "${pkgdir}/usr/usr/lib"
