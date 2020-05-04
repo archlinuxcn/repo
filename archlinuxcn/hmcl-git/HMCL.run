@@ -1,9 +1,0 @@
-#!/bin/bash
-
-if [[ "$1" != "-p" ]]; then
-    WORKDIR=${XDG_CONFIG_HOME:-$HOME/.config}/hmcl
-    mkdir -p $WORKDIR
-    cd $WORKDIR
-fi
-_java=$(ls /usr/lib/jvm | grep 8-openjdk)
-exec /usr/lib/jvm/$_java/jre/bin/java -jar /usr/share/hmcl/hmcl.jar
