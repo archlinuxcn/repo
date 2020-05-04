@@ -126,6 +126,8 @@ package_vtk-git() {
 package_vtk-cuda-git() {
   pkgdesc="${pkgdesc} (with CUDA)"
   depends+=(cuda)
+
+  _package
 }
 # vim:set ts=2 sw=2 et:
 
