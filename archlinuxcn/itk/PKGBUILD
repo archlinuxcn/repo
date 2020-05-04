@@ -20,6 +20,7 @@ depends=(
   'libjpeg'
   'libpng'
   'libtiff'
+  'ocl-icd'
   'opencv'
   'openslide'
   'python-numpy'
@@ -28,7 +29,6 @@ depends=(
   'zlib'
 )
 makedepends=(
-  'ocl-icd'
   'opencl-headers'
   'cmake'
   'git'
@@ -55,8 +55,21 @@ build() {
     -DBUILD_TESTING:BOOL=OFF
     -DCMAKE_INSTALL_PREFIX:PATH=/usr
     -DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON
+    -DITK_BUILD_DEFAULT_MODULES:BOOL=OFF
+    -DITKGroup_Bridge:BOOL=ON
+    -DITKGroup_Compatibility:BOOL=ON
+    -DITKGroup_Core:BOOL=ON
+    -DITKGroup_Filtering:BOOL=ON
+    -DITKGroup_IO:BOOL=ON
+    -DITKGroup_Nonunit:BOOL=ON
+    -DITKGroup_Numerics:BOOL=ON
+    -DITKGroup_Registration:BOOL=ON
+    -DITKGroup_Segmentation:BOOL=ON
+    -DITKGroup_ThirdParty:BOOL=ON
+    -DITKGroup_Video:BOOL=ON
     -DITK_LEGACY_REMOVE:BOOL=ON
     -DITK_USE_64BITS_IDS:BOOL=ON
+    -DITK_USE_GPU:BOOL=ON
     -DITK_USE_SYSTEM_DOUBLECONVERSION:BOOL=ON
     -DITK_USE_SYSTEM_EIGEN:BOOL=ON
     -DITK_USE_SYSTEM_EXPAT:BOOL=ON
@@ -70,27 +83,15 @@ build() {
     -DITK_USE_SYSTEM_ZLIB:BOOL=ON
     -DITK_WRAP_PYTHON:BOOL=ON
     -DITK_WRAP_PYTHON_LEGACY:BOOL=OFF
-    -DITK_BUILD_DEFAULT_MODULES:BOOL=OFF
-    -DITKGroup_Bridge:BOOL=ON
-    -DITKGroup_Compatibility:BOOL=ON
-    -DITKGroup_Core:BOOL=ON
-    -DITKGroup_Filtering:BOOL=ON
-    -DITKGroup_IO:BOOL=ON
-    -DITKGroup_Nonunit:BOOL=ON
-    -DITKGroup_Numerics:BOOL=ON
-    -DITKGroup_Registration:BOOL=ON
-    -DITKGroup_Segmentation:BOOL=ON
-    -DITKGroup_ThirdParty:BOOL=ON
-    -DITKGroup_Video:BOOL=ON
-    -DModule_SimpleITKFilters:BOOL=ON
-    -DModule_ITKVideoBridgeOpenCV:BOOL=ON
     -DModule_IOOpenSlide:BOOL=ON
+    -DModule_ITKVideoBridgeOpenCV:BOOL=ON
+    -DModule_SimpleITKFilters:BOOL=ON
 )
 
   cmake \
     -B "build" -S "${_pkgname}-${pkgver}" \
     ${cmake_opts[@]}
-  make -C"build"
+  make -C "build"
 }
 
 check() {
