@@ -67,7 +67,7 @@ provides=("qt5-base=$pkgver")
       line.replace('qt5-base', 'qt5-base-24h')
       checks = checks + 'a'
     print(line)
-  if len(checks) != 11:
+  if len(checks) != 12:
     raise ValueError('PKGBUILD editing not completed. checks=' + checks)
 
 def post_build():
