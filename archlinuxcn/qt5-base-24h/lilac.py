@@ -33,7 +33,7 @@ def pre_build():
     elif line.startswith('groups=('):
       line = '''
 provides=("qt5-base=$pkgver")
-''' + line
+''' # remove official groups
       checks = checks + '4'
     elif line.startswith('_pkgfqn='):
       line = line.replace('${pkgbase/5-/}', '${_origpkgname/5-/}')
