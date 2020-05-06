@@ -2,13 +2,15 @@
 
 pkgname=android-emulator
 pkgver=30.0.5
-pkgrel=1
+pkgrel=2
 pkgdesc='Google Android Emulator'
 arch=('x86_64')
 url='https://developer.android.com/studio/releases/emulator.html'
 license=('custom')
-depends=('libpulse' 'libx11' 'libxcb' 'libxdamage' 'libxext'
-         'libxfixes' 'ncurses5-compat-libs' 'zlib')
+depends=('alsa-lib' 'dbus' 'expat' 'gcc-libs' 'glibc' 'libpulse'
+         'libutil-linux' 'libx11' 'libxcb' 'libxcomposite' 'libxcursor'
+         'libxdamage' 'libxext' 'libxfixes' 'libxi' 'libxrender' 'libxtst'
+         'nspr' 'nss' 'zlib')
 install="${pkgname}.install"
 source=('https://dl.google.com/android/repository/emulator-linux-6306047.zip'
         "${pkgname}.sh"
