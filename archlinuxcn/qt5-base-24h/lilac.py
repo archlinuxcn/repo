@@ -46,7 +46,7 @@ provides=("qt5-base=$pkgver")
       checks = checks + '6'
     elif line.startswith('sha256sums=('):
       line = line.replace('=(', '''=(
-      '8265146554cea16ef94df3f21e4597a1e9c0a9b52b278348a98de14dd7611606'
+      '311cd7a963327c9d008ffd8ec49e3f48e9771b4d4b4e52d09778e8efd2bd25dd'
       '07279e56c1f4266d140b907ef3ec379dce0a99542303a9628562ac5fe460ba43'
       ''')
       checks = checks + '7'

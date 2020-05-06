@@ -10,7 +10,7 @@ diff -u -r qtbase-everywhere-src-5.14.2/util/locale_database/cldr2qlocalexml.py 
 -    result['shortTimeFormat'] = convert_date(findEntry(path, "dates/calendars/calendar[gregorian]/timeFormats/timeFormatLength[short]/timeFormat/pattern"))
 +    result['shortDateFormat'] = "yyyy-MM-dd"
 +    result['longTimeFormat'] = "HH:mm:ss t"
-+    result['shortTimeFormat'] = "H:mm"
++    result['shortTimeFormat'] = "HH:mm"
  
      endonym = None
      if country_code and script_code:
