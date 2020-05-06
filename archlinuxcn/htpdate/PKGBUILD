@@ -3,7 +3,7 @@
 # Contributor: Hussam Al-Tayeb <hussam at visp dot net dot lb>
 pkgname=htpdate
 pkgver=1.2.2
-pkgrel=3
+pkgrel=4
 pkgdesc="A client for time synchronisation"
 arch=(i686 x86_64)
 url="http://www.vervest.org/htp/"
@@ -12,14 +12,15 @@ depends=('glibc')
 # TODO: In the process of adding two patches from OpenWRT, but they are rejected.
 # See https://aur.archlinux.org/packages/htpdate/.
 source=("http://www.vervest.org/htp/archive/c/${pkgname}-${pkgver}.tar.xz"
-        "htpdate.service")
+        "htpdate.service"
+        "100-pidfile.patch")
 md5sums=('aad8c33933648532ac8716c809b15be1'
-         'd00fce722a88150cffb1b322e6cc8869')
-        # "100-adjtimex.patch"
-        # "101-daemon-run-in-foreground.patch")
+         'd00fce722a88150cffb1b322e6cc8869'
+         'f4612bb44274ed571117724a49abb3c1')
 
 build() {
   cd ${pkgname}-${pkgver}
+  patch htpdate.c ../100-pidfile.patch
   make
 }
 
