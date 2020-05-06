@@ -19,7 +19,7 @@ def pre_build():
       line = 'pkgbase=qt5-base-24h' + '\n' + '_origpkgname=qt5-base'
       checks = checks + '0'
     elif line.startswith('pkgname='):
-      line = 'pkgname=(qt5-base)'
+      line = 'pkgname=(qt5-base-24h)'
       checks = checks + '1'
     elif line.startswith('pkgdesc='):
       line = "pkgdesc='A cross-platform application and UI framework. This package uses 24-hour notation in all locales.'"
@@ -66,6 +66,11 @@ provides=("qt5-base=$pkgver")
     elif line.startswith('package_qt5-base('):
       line.replace('qt5-base', 'qt5-base-24h')
       checks = checks + 'a'
+    elif line.startswith('package_qt5-xcb-private-headers('):
+      # Might be a bug. Play with it!
+      # I suspect that even if it's not being packaged,
+      # lilac would still report the "in-official-repo" issue
+      line.replace('qt5-xcb-private-headers', 'supertuxkart')
     print(line)
   if len(checks) != 12:
     raise ValueError('PKGBUILD editing not completed. checks=' + checks)
