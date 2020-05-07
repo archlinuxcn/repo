@@ -6,31 +6,31 @@
 # Contributor: Hexchain Tong <i at hexchain dot org>
 
 pkgname=megasync
-pkgver=4.2.5
-pkgrel=5
+pkgver=4.3.1.0
+pkgrel=1
 pkgdesc="Easy automated syncing between your computers and your MEGA cloud drive"
 arch=('i686' 'x86_64')
 url="https://github.com/meganz/MEGAsync"
 license=('custom:MEGA LIMITED CODE REVIEW LICENCE')
 depends=('c-ares' 'crypto++' 'libsodium' 'hicolor-icon-theme' 'libuv'
-         'qt5-svg' 'libmediainfo' 'libraw' 'qt5-base' 'ffmpeg')
+         'qt5-svg' 'libmediainfo' 'libraw' 'qt5-base' 'ffmpeg' 'libpdfium')
 makedepends=('qt5-tools' 'swig' 'doxygen' 'lsb-release' 'git')
-optdepends=('sni-qt: fix systray issue on KDE and LXQt')
-_extname=".0_Linux"
+_extname="_Linux"
 source=("git+https://github.com/meganz/MEGAsync.git#tag=v${pkgver}${_extname}"
         "meganz-sdk::git+https://github.com/meganz/sdk.git"
-        "fix-double-declaration-of-tgkill.patch")
+        "pdfium.patch")
 sha256sums=('SKIP'
             'SKIP'
-            'a4ee87777bc055bc98dc9b044734d24e0ec17124389fedcf45e6a67cfe2fb061')
+            'f913ff490771e170610829f42f9285412ed8f4e7343f5dd7cb33e3bda4175aba')
 
 prepare() {
     cd "MEGAsync"
     git submodule init
     git config submodule.src/MEGASync/mega.url "../meganz-sdk"
     git submodule update
-    
-    patch -Np1 -i "../fix-double-declaration-of-tgkill.patch"
+
+    cd "src/MEGASync/mega"
+    patch -Np1 -i "../../../../pdfium.patch"
 }
 
 build() {
@@ -71,7 +71,8 @@ package () {
     install -Dm 644 src/MEGASync/mega/LICENSE "${pkgdir}/usr/share/licenses/megasync/SDK-LICENCE"
     
     cd "src"
-    make INSTALL_ROOT="${pkgdir}" install
+    mkdir -pm 755 "${pkgdir}/usr/bin"
+    make INSTALL_ROOT="${pkgdir}" TARGET="${pkgdir}/usr/bin/megasync" install
 
     install -Dm 755 "MEGASync/megasync" "${pkgdir}/usr/bin/megasync"
 }
