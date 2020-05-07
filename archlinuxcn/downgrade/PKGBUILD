@@ -2,7 +2,7 @@
 # shellcheck disable=SC2154
 # Author: Patrick Brisbin <pbrisbin@gmail.com>
 pkgname=downgrade
-pkgver=6.3.0
+pkgver=7.0.0
 pkgrel=1
 pkgdesc="Bash script for downgrading one or more packages to a version in your cache or the A.L.A."
 arch=('any')
@@ -13,17 +13,8 @@ depends=('pacman-contrib') # pacsort
 optdepends=('sudo: for installation via sudo')
 
 package() {
-  local po_file
-
   cd "$pkgname-$pkgver" || exit 1
 
-  for po_file in locale/*.po; do
-    locale="$(basename "$po_file" .po)"
-
-    mkdir -p "$pkgdir/usr/share/locale/$locale/LC_MESSAGES/"
-    msgfmt "$po_file" -o "$pkgdir/usr/share/locale/$locale/LC_MESSAGES/$pkgname.mo"
-  done
-
-  make PREFIX=/usr DESTDIR="$pkgdir" install
+  make DESTDIR="$pkgdir" PREFIX=/usr install
 }
-md5sums=('ecce9392ecbe06ebd33a96c37248ee26')
+md5sums=('b3a27af8cb7362a84d01caff0af614f7')
