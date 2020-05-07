@@ -9,8 +9,8 @@
 # Contributor: Praekon <praekon@googlemail.com>
 
 pkgname=plex-media-server
-pkgver=1.19.2.2737
-_pkgsum=b69929dab
+pkgver=1.19.3.2764
+_pkgsum=ef515a800
 pkgrel=1
 pkgdesc='The back-end media server component of Plex.'
 arch=('x86_64' 'armv7h' 'aarch64')
@@ -18,8 +18,7 @@ url='https://plex.tv/'
 license=('custom')
 options=('!emptydirs'  '!strip' 'staticlibs')
 conflicts=('plex-media-server-plexpass')
-# Commented to override user version
-#backup=('etc/conf.d/plexmediaserver')
+backup=('etc/conf.d/plexmediaserver')
 install='plex-media-server.install'
 source=('plexmediaserver.conf.d'
         'plexmediaserver.service'
@@ -38,9 +37,9 @@ sha256sums=('398ba7958598609453f5289b3d5f2389d2756158b340cf28e83c39d9ed60280b'
             'c597bee0bcbb59ed791651555a904e5f7e9d2e82f6c6986b6352e5fc38e5b557'
             'b7ff6525a3c7a8be885edc85bb523095f8e25ddb38873127e2a4e97b28f2c7ad'
             'dbfb5a9a7146a975863c0932f1a68c4b040ec5d7e693361f39ddfbf60885e631')
-sha256sums_x86_64=('da0590610a0a34424d4d11ec150bd462d0e159d6e85970b39cfc5a6ecc524303')
-sha256sums_armv7h=('868182c7468614f6f3cf616f49c1d6394d7890a70f9ee068a7a17676ad8e32e1')
-sha256sums_aarch64=('449c47d862a41bf013724e30c924f55cf7cd8c3548c5dedf9ec92f8e642d88dc')
+sha256sums_x86_64=('85607e2a9b67d7138d32aeb6314c3765b74306707e8d7cd1d706f6233547aefd')
+sha256sums_armv7h=('09257ffeb952a7cbc91d398619782126c69ae45a179cfe92ef46d89a45d246fe')
+sha256sums_aarch64=('9f50aa7a20f6a6c12b858936694b2f925d9f1fcc8a638f8b46f06a6f7d685c63')
 
 prepare() {
   if [[ $CARCH = armv7h ]] || [[ $CARCH = aarch64 ]]; then
