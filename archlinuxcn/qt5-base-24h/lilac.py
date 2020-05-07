@@ -62,11 +62,12 @@ provides=("qt5-base=$pkgver")
   echo "This is slow. It takes about 4 minutes on my desktop."
   ./cldr2qlocalexml.py ../../../common/main > ./24h.xml
   ./qlocalexml2cpp.py ./24h.xml ../..
-      ''' + line
+''' + line
       prepare = False
       checks = checks + '9'
     elif line.startswith('package_qt5-base('):
-      line.replace('qt5-base', 'qt5-base-24h')
+      # single package now
+      line.replace('_qt5-base', '')
       checks = checks + 'a'
     elif line.startswith('package_qt5-xcb-private-headers('):
       # Might be a bug. Play with it!
