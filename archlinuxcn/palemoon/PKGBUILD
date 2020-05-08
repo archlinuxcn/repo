@@ -4,8 +4,8 @@
 # Contributor: American_Jesus
 pkgname=palemoon
 _repo=Pale-Moon
-pkgver=28.9.2
-_commit=ed113a268f3f56a7012350ab98fcf7f1f5e5870b
+pkgver=28.9.3
+_commit=1e9e1f61221f5787ecae01a0be622bc7a4d23d6a
 pkgrel=1
 pkgdesc="Open source web browser based on Firefox focusing on efficiency."
 arch=('i686' 'x86_64')
