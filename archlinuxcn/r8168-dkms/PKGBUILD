@@ -4,7 +4,7 @@
 _pkgbase=r8168
 pkgname=${_pkgbase}-dkms
 pkgver=8.048.02
-pkgrel=3
+pkgrel=4
 pkgdesc="A kernel module for Realtek 8168 network cards (DKMS version)"
 url="https://github.com/simonbcn/r8168-dkms"
 license=("GPL")
@@ -26,7 +26,6 @@ package() {
 		-i "${pkgdir}/usr/src/${_pkgbase}-${pkgver}/dkms.conf"
 
 	cd "${pkgname}"
-	rm src/Makefile_linux24x
 	cp -dr --no-preserve='ownership' src "${pkgdir}/usr/src/${_pkgbase}-${pkgver}/src"
 }
 sha256sums=('SKIP'
