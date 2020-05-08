@@ -4,7 +4,7 @@ pkgbase=python-onnxruntime
 pkgname=(python-onnxruntime python-onnxruntime-cuda)
 pkgver=1.2.0
 pkgdesc='Cross-platform, high performance scoring engine for ML models'
-pkgrel=2
+pkgrel=3
 arch=(x86_64)
 url='https://github.com/microsoft/onnxruntime'
 license=(MIT)
@@ -20,14 +20,16 @@ source=("git+https://github.com/microsoft/onnxruntime#tag=v$pkgver"
         "git+https://github.com/google/nsync.git"
         "git+https://github.com/onnx/onnx.git"
         "git+https://github.com/dcleblanc/SafeInt.git"
-        build-fixes.patch)
+        build-fixes.patch
+        cmake-3.17.patch::https://github.com/microsoft/onnxruntime/commit/355f39ddee885237bf6fde9b587c7a5f80d22c53.patch)
 sha512sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
-            '4457e19e3e91195ea2976a70e31a70d07b1b5e2279f1493a537c7d128aef5695e317cfdb84a87a0ca8d2d53ba15d72edf0f95905ecff7fbfb250e3a97944313c')
+            '4457e19e3e91195ea2976a70e31a70d07b1b5e2279f1493a537c7d128aef5695e317cfdb84a87a0ca8d2d53ba15d72edf0f95905ecff7fbfb250e3a97944313c'
+            '8804a5ecda6c5b2a341a723e918fc06f1e64a4500ea8fef835e76cca99ba4aba91465f2ddde8aac99ddf759bfa022a9b18641f9ec17c8592ec9e82eac69edef1')
 
 prepare() {
   cd onnxruntime
@@ -36,6 +38,7 @@ prepare() {
   rm -v onnxruntime/core/util/protobuf_parsing_utils.h
   echo "#include <google/protobuf/io/zero_copy_stream_impl.h>" >> onnxruntime/core/util/protobuf_parsing_utils.h
   patch -Np1 -i ../build-fixes.patch
+  patch -Np1 -i ../cmake-3.17.patch
 
   git submodule init
   for mod in eigen gemmlowp nsync onnx SafeInt; do
