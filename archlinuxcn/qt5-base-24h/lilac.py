@@ -69,11 +69,9 @@ provides=("qt5-base=$pkgver")
       # single package now
       line = line.replace('_qt5-base', '')
       checks = checks + 'a'
-    elif line.startswith('package_qt5-xcb-private-headers('):
-      # Might be a bug. Play with it!
-      # I suspect that even if it's not being packaged,
-      # lilac would still report the "in-official-repo" issue
-      line = line.replace('qt5-xcb-private-headers', 'supertuxkart')
+    elif line.startswith('package_('):
+      # other split packages. do not build them.
+      line = 'no' + line
     print(line)
   if len(checks) != 12:
     raise ValueError('PKGBUILD editing not completed. checks=' + checks)
