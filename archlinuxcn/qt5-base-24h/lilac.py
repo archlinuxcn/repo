@@ -30,7 +30,7 @@ def pre_build():
       line = line.replace('(', "('python2' ")
       checks = checks + '2'
     elif line.startswith('conflicts=('):
-      line.replace('(', '("qt5-base" ')
+      line = line.replace('(', '("qt5-base" ')
       checks = checks + '3'
     elif line.startswith('groups=('):
       line = '''
@@ -67,13 +67,13 @@ provides=("qt5-base=$pkgver")
       checks = checks + '9'
     elif line.startswith('package_qt5-base('):
       # single package now
-      line.replace('_qt5-base', '')
+      line = line.replace('_qt5-base', '')
       checks = checks + 'a'
     elif line.startswith('package_qt5-xcb-private-headers('):
       # Might be a bug. Play with it!
       # I suspect that even if it's not being packaged,
       # lilac would still report the "in-official-repo" issue
-      line.replace('qt5-xcb-private-headers', 'supertuxkart')
+      line = line.replace('qt5-xcb-private-headers', 'supertuxkart')
     print(line)
   if len(checks) != 12:
     raise ValueError('PKGBUILD editing not completed. checks=' + checks)
