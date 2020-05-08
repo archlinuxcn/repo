@@ -6,7 +6,7 @@ _origpkgname=qt5-base
 pkgname=(qt5-base-24h)
 _qtver=5.14.2
 pkgver=${_qtver/-/}
-pkgrel=2.02
+pkgrel=2.1
 arch=('x86_64')
 url='https://www.qt.io'
 license=('GPL3' 'LGPL3' 'FDL' 'custom')
@@ -26,7 +26,7 @@ optdepends=('qt5-svg: to use SVG icon themes'
             'freetds: MS SQL driver'
             'gtk3: GTK platform plugin'
             'perl: for fixqt4headers and syncqt')
-conflicts=('qtchooser')
+conflicts=("qt5-base" 'qtchooser')
 
 provides=("qt5-base=$pkgver")
 
@@ -37,7 +37,7 @@ source=(
       "https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz"
          qt5-base-cflags.patch)
 sha256sums=(
-      '8265146554cea16ef94df3f21e4597a1e9c0a9b52b278348a98de14dd7611606'
+      '311cd7a963327c9d008ffd8ec49e3f48e9771b4d4b4e52d09778e8efd2bd25dd'
       '07279e56c1f4266d140b907ef3ec379dce0a99542303a9628562ac5fe460ba43'
       '48b9e79220941665a9dd827548c6428f7aa3052ccba8f4f7e039a94aa1d2b28a'
             'cf707cd970650f8b60f8897692b36708ded9ba116723ec8fcd885576783fe85c')
@@ -52,7 +52,7 @@ prepare() {
   echo "This is slow. It takes about 4 minutes on my desktop."
   ./cldr2qlocalexml.py ../../../common/main > ./24h.xml
   ./qlocalexml2cpp.py ./24h.xml ../..
-      }
+}
 
 build() {
   cd ${_pkgfqn}
@@ -79,7 +79,7 @@ build() {
   make
 }
 
-package_qt5-base() {
+package() {
   pkgdesc='A cross-platform application and UI framework'
 
   cd ${_pkgfqn}
@@ -101,7 +101,7 @@ package_qt5-base() {
   done
 }
 
-package_qt5-xcb-private-headers() {
+package_supertuxkart() {
   pkgdesc='Private headers for Qt5 Xcb'
 
   depends=("qt5-base=$pkgver")
