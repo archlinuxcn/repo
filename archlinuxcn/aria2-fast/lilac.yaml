@@ -11,3 +11,6 @@ post_build: aur_post_build
 
 update_on:
   - aur: aria2-fast
+  - archpkg: nettle
+    provided: libnettle.so
+    strip-release: true
