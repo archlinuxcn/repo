@@ -11,7 +11,7 @@
 
 pkgname=chromium-vaapi
 pkgver=81.0.4044.129
-pkgrel=2
+pkgrel=3
 _launcher_ver=6
 pkgdesc="Chromium with VA-API support to enable hardware acceleration"
 arch=('x86_64')
@@ -36,6 +36,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         vdpau-support.patch
         vaapi-build-fix.patch
         eglGetMscRateCHROMIUM.patch
+        clean-up-a-call-to-set_utf8.patch
         rename-Relayout-in-DesktopWindowTreeHostPlatform.patch
         rebuild-Linux-frame-button-cache-when-activation.patch
         icu67.patch
@@ -47,6 +48,7 @@ sha256sums=('ff74592f83ed91c082f746c6b0a3acf384bad91f170bd24548971c17f43046d3'
             '0ec6ee49113cc8cc5036fa008519b94137df6987bf1f9fbffb2d42d298af868a'
             'fad5e678d62de0e45db1c2aa871628fdc981f78c26392c1dccc457082906a350'
             '1dd330409094dc4bf393f00a51961a983360ccf99affd4f97a61d885129d326e'
+            '58c41713eb6fb33b6eef120f4324fa1fb8123b1fbc4ecbe5662f1f9779b9b6af'
             'ae3bf107834bd8eda9a3ec7899fe35fde62e6111062e5def7d24bf49b53db3db'
             '46f7fc9768730c460b27681ccf3dc2685c7e1fd22d70d3a82d9e57e3389bb014'
             '5315977307e69d20b3e856d3f8724835b08e02085a4444a5c5cefea83fd7d006'
@@ -99,6 +101,9 @@ prepare() {
     third_party/blink/renderer/core/xml/*.cc \
     third_party/blink/renderer/core/xml/parser/xml_document_parser.cc \
     third_party/libxml/chromium/*.cc
+
+ # https://chromium-review.googlesource.com/c/chromium/src/+/2145261
+  patch -Np1 -i ../clean-up-a-call-to-set_utf8.patch
 
   # Fix VA-API on Nvidia
   patch -Np1 -i ../vdpau-support.patch
