@@ -3,7 +3,6 @@ from lilaclib import *
 
 update_on = [{'aur':None}, {'github':'demokritos/bomi'}, {'archpkg': 'libdvdread'}]
 build_prefix = 'extra-x86_64'
-repo_depends = ['libchardet']
 pre_build = aur_pre_build
 post_build = aur_post_build
 

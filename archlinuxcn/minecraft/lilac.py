@@ -3,8 +3,6 @@ from lilaclib import *
 
 update_on = [{'aur':None}]
 build_prefix = 'extra-x86_64'
-repo_depends = ['gconf']
-
 def pre_build():
     aur_pre_build()
     run_cmd(['sh', '-c', 'rm *.deb'])

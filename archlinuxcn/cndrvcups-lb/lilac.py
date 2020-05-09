@@ -7,8 +7,6 @@
 
 from lilaclib import *
 
-repo_depends = ['cndrvcups-common-lb']
-
 #build_prefix = 'multilib'
 #pre_build = aur_pre_build
 #post_build = aur_post_build
