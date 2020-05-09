@@ -2,7 +2,7 @@
 # Contributor: James P. Harvey <jamespharvey20 at gmail dot com>
 
 pkgname=libfabric
-pkgver=1.10.0
+pkgver=1.10.1
 pkgrel=1
 pkgdesc='A framework focused on exporting fabric communication services to applications'
 arch=('x86_64')
@@ -10,7 +10,7 @@ url='https://github.com/ofiwg/libfabric'
 license=('BSD' 'GPL2')
 depends=('gcc-libs')
 source=("${pkgname}-${pkgver}.tar.bz2::https://github.com/ofiwg/${pkgname}/releases/download/v${pkgver}/${pkgname}-${pkgver}.tar.bz2")
-sha256sums=('c1ef6e9cd6dafec3f003d2f78f0f3a25f055a7a791e98b5a0db1e4c5036e40f6')
+sha256sums=('889fa8c99eed1ff2a5fd6faf6d5222f2cf38476b24f3b764f2cbb5900fee8284')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
