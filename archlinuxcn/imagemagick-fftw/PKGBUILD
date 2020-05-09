@@ -3,8 +3,8 @@
 
 pkgbase=imagemagick-fftw
 pkgname=(imagemagick-fftw)
-pkgver=7.0.10.10
-pkgrel=2
+pkgver=7.0.10.11
+pkgrel=1
 pkgdesc="An image viewing/manipulation program"
 url="https://www.imagemagick.org/"
 arch=(x86_64)
@@ -17,10 +17,10 @@ _tarname=ImageMagick-${pkgver%.*}-${pkgver##*.}
 source=(https://imagemagick.org/download/$_tarname.tar.xz{,.asc}
         arch-fonts.diff
         imagemagick-inkscape-1.0.patch)
-sha256sums=('df1a37b73aa49423abb422c2150a0e1436920ba50dfc4377c6a3793f9826e5f1'
+sha256sums=('a06d686bbad1eae663b2571bd7bb45f0e1ba438ed2217863d2e79ab394c5dfbd'
             'SKIP'
             'a85b744c61b1b563743ecb7c7adad999d7ed9a8af816650e3ab9321b2b102e73'
-            'c84c7baea1d2397a57a19b3adb8f98fe1c723d55792101ecb3b806320dd28f77')
+            'dd856b0d7b5b98535d2bc61dfa995f4162677486c1eac14b384668a28a60af30')
 validpgpkeys=(D8272EF51DA223E4D05B466989AB63D48277377A)  # Lexie Parsimoniae
 
 shopt -s extglob
