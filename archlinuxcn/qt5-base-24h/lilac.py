@@ -69,9 +69,10 @@ provides=("qt5-base=$pkgver")
       # single package now
       line = line.replace('_qt5-base', '')
       checks = checks + 'a'
-    elif line.startswith('package_('):
+    elif line.startswith('package_'):
       # other split packages. do not build them.
       line = 'no' + line
+      logger.info('removed: %s', line)
     print(line)
   if len(checks) != 12:
     raise ValueError('PKGBUILD editing not completed. checks=' + checks)
