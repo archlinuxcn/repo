@@ -11,8 +11,8 @@
 
 _pkgname=thunderbird
 pkgname=thunderbird-appmenu
-pkgver=68.7.0
-pkgrel=3
+pkgver=68.8.0
+pkgrel=1
 pkgdesc="Thunderbird from extra with appmenu patch"
 arch=(x86_64)
 license=(MPL GPL LGPL)
@@ -27,12 +27,10 @@ conflicts=("thunderbird")
 options=(!emptydirs !makeflags)
 source=(https://ftp.mozilla.org/pub/mozilla.org/thunderbird/releases/$pkgver/source/thunderbird-$pkgver.source.tar.xz{,.asc}
         $_pkgname.desktop
-        rust-1.43.patch
         unity-menubar.patch)
-sha512sums=('fae763030b7a54930291a10f298b7fa4ffc400849082f576556b9040d095f1007ae686daf1241dff8b73bac35c14acf21c156a18a3e16d62a7719c6cc34e4d1f'
+sha512sums=('1af899913454e97ba3b08a090f775c0ce65ae6d8c1d31171017f09355a0bb126516d4770b4a4a0e774419497c404fa70dcfcafdf767c9caba0bf1d658c0d9350'
             'SKIP'
             'fa28ec547f87658cf72d160e9c2a7867d3e8a9b8c76ffa29d1098fddfc9331f65cc6dbf24c15da28c5d1b4ffa587d14d529d5da522a8805b073ad89986a552c9'
-            '8833130802e2bfb34036444d6855c96a5b819f90c9835decd816bbf50dc507a71b2c343fd53d3fec0d79df791bb56436b06f2430abbeb70c726574a57c385d54'
             'f3aa468974780016de60fa61a61f7e67a2cc51b4f888b223d16b9afaa42e82100c3b3d7f9491dfd0de3c5667ad4ac0fc58b96d81ef448ccf6e924cdc49066ad5')
 validpgpkeys=(14F26682D0916CDD81E37B6D61B7B526D98F0353) # Mozilla Software Releases <release@mozilla.com>
 
@@ -50,8 +48,6 @@ _mozilla_api_key=16674381-f021-49de-8622-3021c5942aff
 
 prepare() {
   cd $_pkgname-$pkgver
-  
-  patch -Np1 -i ../rust-1.43.patch
 
   # Actual appmenu patch from ubuntu repos
   # http://archive.ubuntu.com/ubuntu/pool/main/t/thunderbird/thunderbird_68.7.0+build1-0ubuntu0.18.04.1.debian.tar.xz
