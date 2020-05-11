@@ -1,10 +1,10 @@
 # Maintainer: Zion Nimchuk <zionnimchuk@gmail.com>
 # Submitter: Maxime Gauduin <alucryd@archlinux.org>
 
-pkgname=rpcs3-git
+pkgname=rpcs3-avx-git
 pkgver=0.0.10.10317.fc68c508c
 pkgrel=1
-pkgdesc='A Sony PlayStation 3 emulator'
+pkgdesc='A Sony PlayStation 3 emulator (AVX1 Optimized, for using Sandybridge/Ivybridge cpus)'
 arch=(x86_64)
 url=https://github.com/RPCS3/rpcs3
 license=(GPL2)
@@ -39,7 +39,7 @@ makedepends=(
   python
   vulkan-validation-layers
 )
-provides=(rpcs3)
+provides=(rpcs3 rpcs3-git)
 conflicts=(rpcs3)
 options=(!emptydirs)
 source=(
@@ -75,7 +75,7 @@ prepare() {
   
   git submodule update Vulkan/glslang llvm
 
-  sed -i 's/march=native/march=sandybridge -mtune=sandybridge/g' ${srcdir}/rpcs3/rpcs3/CMakeLists.txt
+  sed -i 's/march=native/march=sandybridge -mtune=sandybridge/g' ${srcdir}/rpcs3/cmake_modules/ConfigureCompiler.cmake
 }
 
 build() {
@@ -83,7 +83,6 @@ build() {
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_SKIP_RPATH=ON \
-    -DUSE_NATIVE_INSTRUCTIONS=OFF \
     -DUSE_SYSTEM_FFMPEG=ON \
     -DUSE_SYSTEM_LIBPNG=ON \
     -DUSE_SYSTEM_ZLIB=ON \
