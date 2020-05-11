@@ -2,11 +2,11 @@
 
 pkgname=lief
 pkgver=0.10.1
-pkgrel=2
+pkgrel=3
 pkgdesc='Library to instrument executable formats'
 arch=(x86_64)
 url='https://lief.quarkslab.com/'
-license=(APACHE)
+license=(apache)
 depends=(python)
 makedepends=(git cmake python-setuptools)
 source=("git+https://github.com/lief-project/LIEF#tag=${pkgver}")
@@ -16,7 +16,7 @@ build() {
   cd "${srcdir}/LIEF"
   mkdir build
 
-  cmake . -B build -DCMAKE_BUILD_TYPE=Release
+  cmake . -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=1
   make -C build
   python setup.py build --build-temp=build
 }
@@ -26,4 +26,19 @@ package() {
 
   make -C build DESTDIR="${pkgdir}" install
   python setup.py install --optimize=1 --root="${pkgdir}" --skip-build
+
+  if [[ -f "$pkgdir/usr/include/json.hpp" ]]; then
+    mv "$pkgdir/usr/include/json.hpp" "$pkgdir/usr/include/LIEF/json.hpp"
+    cat >> "$pkgdir/usr/include/LIEF/json.hpp" <<EOF
+
+#ifndef LIEF_JSON_H_
+#define LIEF_JSON_H_
+
+#include <LIEF/config.h>
+
+using json = nlohmann::json;
+
+#endif
+EOF
+  fi
 }
