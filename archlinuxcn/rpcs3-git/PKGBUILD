@@ -41,6 +41,7 @@ makedepends=(
 )
 provides=(rpcs3)
 conflicts=(rpcs3)
+replaces=(rpcs3-avx-git rpcs3-avx2-git)
 options=(!emptydirs)
 source=(
   git+https://github.com/RPCS3/rpcs3.git
@@ -74,8 +75,6 @@ prepare() {
   git submodule update --init --depth=1 $SUBMODULES
   
   git submodule update Vulkan/glslang llvm
-
-  sed -i 's/march=native/march=sandybridge -mtune=sandybridge/g' ${srcdir}/rpcs3/rpcs3/CMakeLists.txt
 }
 
 build() {
@@ -95,3 +94,4 @@ package() {
   make DESTDIR="${pkgdir}" -C build install
 }
 
+# vim: ts=2 sw=2 et:
