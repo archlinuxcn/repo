@@ -5,25 +5,25 @@
 pkgname=cockroachdb-bin
 conflicts=('cockroachdb')
 provides=('cockroachdb')
-pkgver=19.2.5
+pkgver=19.2.6
 pkgrel=1
-pkgdesc="An open source, survivable, strongly consistent, scale-out SQL database"
+pkgdesc='An open source, survivable, strongly consistent, scale-out SQL database'
 arch=('x86_64')
-url="https://www.cockroachlabs.com/"
-license=('Apache 2.0' 'custom:BSL' 'custom:CCL')
+url='https://www.cockroachlabs.com'
+license=('Apache' 'custom:BSL' 'custom:CCL')
 depends=('glibc')
-source=("https://binaries.cockroachdb.com/cockroach-v${pkgver}.linux-amd64.tgz"
-        "https://raw.githubusercontent.com/cockroachdb/cockroach/v${pkgver}/LICENSE"
+source=("${pkgname}-${pkgver}.tgz::https://binaries.cockroachdb.com/cockroach-v${pkgver}.linux-amd64.tgz"
+        "LICENSE::https://raw.githubusercontent.com/cockroachdb/cockroach/v${pkgver}/LICENSE"
         'cockroach.service'
         'cockroach.default'
         'cockroach.sysusers'
         'cockroach.tmpfiles')
-md5sums=('0e2c326a216a6a370135f8e274cfccdb'
-         '3fc7209c0a232ac26a7bd96c3d74d0d8'
-         'SKIP'
-         'SKIP'
-         'SKIP'
-         'SKIP')
+sha256sums=('66f9f9819453efca62ef752f5bc93cc53d5c514856463dde0da231e22102d0f4'
+         '8a2fba9d26592ff3538f44c96d1b894ef44649058b4d04f3fda49518a9c4ae11'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP')
 
 package() {
   # generate shell completion
@@ -56,5 +56,5 @@ package() {
   install -Dm644 cockroach.zsh  "${pkgdir}/usr/share/zsh/site-functions/_cockroach"
 
   # licenses
-  install -Dm644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/cockroachdb/LICENSE"
+  install -Dm644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
