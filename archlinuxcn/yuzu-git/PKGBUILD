@@ -2,14 +2,14 @@
 
 _pkgname=yuzu
 pkgname=$_pkgname-git
-pkgver=r14644.dd2518fd9
+pkgver=r14660.4da5dd4dc
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (mainline GIT version)"
 arch=('i686' 'x86_64')
 url="https://github.com/yuzu-emu/yuzu-mainline"
 license=('GPL2')
-depends=('shared-mime-info' 'desktop-file-utils' 'sdl2' 'qt5-base' 'qt5-multimedia' 'qt5-tools' 'libxkbcommon-x11')
-makedepends=('git' 'cmake' 'python2')
+depends=('shared-mime-info' 'desktop-file-utils' 'sdl2' 'qt5-base' 'qt5-multimedia' 'qt5-tools' 'libxkbcommon-x11' 'boost' 'catch2' 'fmt' 'nlohmann-json' 'lz4' 'libzip' 'openssl' 'opus' 'zlib' 'zstd')
+makedepends=('git' 'cmake' 'python2' 'ninja')
 optdepends=('qt5-wayland: for Wayland support')
 provides=('yuzu' 'yuzu-canary-git' 'yuzu-cmd' 'yuzu-mainline' 'yuzu-canary' 'yuzu-mainline-git')
 conflicts=('yuzu-canary-git' 'yuzu-master-git')
