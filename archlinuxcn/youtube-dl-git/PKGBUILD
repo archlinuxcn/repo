@@ -2,41 +2,41 @@
 
 pkgname=youtube-dl-git
 _gitname="youtube-dl"
-pkgver=2020.03.24.r8.c9595ee78
+pkgver=2020.05.08.r0.b002bc433
 pkgrel=1
 pkgdesc="A small command-line program to download videos from YouTube.com and a few more sites (git version)"
 arch=('any')
-url="https://github.com/rg3/youtube-dl"
+url="http://ytdl-org.github.io/youtube-dl/"
 license=('custom')
 depends=('python' 'python-setuptools')
-makedepends=('git' 'python-setuptools' 'pandoc')
+makedepends=('git' 'pandoc')
 optdepends=('ffmpeg: for video post-processing'
             'rtmpdump: for rtmp streams support'
             'atomicparsley: for embedding thumbnails into m4a files'
             'phantomjs: for openload support')
 provides=("youtube-dl")
 conflicts=("youtube-dl")
-source=('git+https://github.com/rg3/youtube-dl.git')
+source=('git+https://github.com/ytdl-org/youtube-dl.git')
 md5sums=('SKIP')
 
 pkgver() {
-  cd $srcdir/$_gitname
+  cd $_gitname
   printf "%s" "$(git describe --long | sed 's/\([^-]*-\)g/r\1/;s/-/./g')"
 }
 
 prepare() {
-  cd $srcdir/$_gitname
+  cd $_gitname
   sed -i 's|etc/bash_completion.d|share/bash-completion/completions|' setup.py
   sed -i 's|etc/fish/completions|share/fish/completions|' setup.py
 }
 
 build() {
-  cd $srcdir/$_gitname
+  cd $_gitname
   make pypi-files zsh-completion
 }
 
 package() {
-  cd $srcdir/$_gitname
+  cd $_gitname
   python setup.py install --root="${pkgdir}/" --optimize=1
   mv "${pkgdir}/usr/share/bash-completion/completions/youtube-dl.bash-completion" \
      "${pkgdir}/usr/share/bash-completion/completions/youtube-dl"
