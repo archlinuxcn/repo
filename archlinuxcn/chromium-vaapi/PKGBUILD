@@ -10,8 +10,8 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=chromium-vaapi
-pkgver=81.0.4044.129
-pkgrel=3
+pkgver=81.0.4044.138
+pkgrel=1
 _launcher_ver=6
 pkgdesc="Chromium with VA-API support to enable hardware acceleration"
 arch=('x86_64')
@@ -42,7 +42,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         icu67.patch
         chromium-widevine.patch
         chromium-skia-harmony.patch)
-sha256sums=('ff74592f83ed91c082f746c6b0a3acf384bad91f170bd24548971c17f43046d3'
+sha256sums=('f478f28b8111cb70231df4c36e754d812ad7a94b7c844e9d0515345a71fd77a6'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
             'babda4f5c1179825797496898d77334ac067149cac03d797ab27ac69671a7feb'
             '0ec6ee49113cc8cc5036fa008519b94137df6987bf1f9fbffb2d42d298af868a'
@@ -209,7 +209,7 @@ build() {
   CXXFLAGS+=' -Wno-unknown-warning-option'
 
   gn gen out/Release --args="${_flags[*]}" --script-executable=/usr/bin/python2
-  ninja -C out/Release chrome chrome_sandbox chromedriver
+  ninja  -C out/Release chrome chrome_sandbox chromedriver
 }
 
 package() {
