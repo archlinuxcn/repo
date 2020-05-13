@@ -2,8 +2,8 @@
 
 pkgbase=sheepshaver-git
 pkgname=(basiliskii-git sheepshaver-git sheepnet-dkms-git)
-pkgver=r2608.g01052ca8
-pkgrel=2
+pkgver=r2619.gcbad6f95
+pkgrel=1
 pkgdesc="An Open Source PowerMac and Classic Macintosh Emulator"
 arch=('x86_64')
 url="http://sheepshaver.cebix.net"
@@ -41,6 +41,8 @@ build() {
   make -j1
 
   cd $srcdir/macemu/BasiliskII/src/Unix
+  sed -i 's/I_PUSH/TIOCPKT/g' sshpty.c
+
   ./autogen.sh \
 		--prefix=/usr \
 		--enable-sdl-video \
