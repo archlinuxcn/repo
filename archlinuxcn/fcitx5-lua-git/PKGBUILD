@@ -3,7 +3,7 @@
 
 _pkgname=fcitx5-lua
 pkgname="$_pkgname-git"
-pkgver=r19.7b1549c
+pkgver=r20.3e49126
 pkgrel=1
 pkgdesc="Lua support for fcitx5, with an imeapi addon implementing googlepinyin api"
 arch=('i686' 'x86_64')
