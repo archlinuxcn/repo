@@ -2,7 +2,7 @@
 
 _appname=whalebird
 pkgname="$_appname-bin"
-pkgver=4.0.2
+pkgver=4.1.0
 pkgrel=1
 pkgdesc='An Electron based Mastodon client for Windows, Mac and Linux'
 arch=(x86_64)
@@ -10,7 +10,7 @@ url='https://whalebird.org/'
 license=(MIT)
 depends=(c-ares ffmpeg gtk3 http-parser libevent libvpx libxslt libxss minizip nss re2 snappy libnotify libappindicator-gtk3)
 source=("https://github.com/h3poteto/whalebird-desktop/releases/download/$pkgver/Whalebird-$pkgver-linux-x64.rpm")
-sha256sums=('7329f84b8a1a42f4cbd2c0376542eb46581d51b7dc6b6fd40d811a8f6c1d719d')
+sha256sums=('9f651f33664dd07e869c7f0ab0f3f0ac81a15484cbe521ed197f50bc1a70a06b')
 
 package() {
   mkdir -p "$pkgdir/usr/bin"
