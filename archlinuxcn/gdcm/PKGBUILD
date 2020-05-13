@@ -4,8 +4,8 @@
 
 pkgname=gdcm
 _pkgname=GDCM
-pkgver=3.0.5
-pkgrel=3
+pkgver=3.0.6
+pkgrel=1
 pkgdesc='A C++ library for DICOM medical files'
 arch=('x86_64')
 url='http://gdcm.sourceforge.net'
@@ -37,18 +37,11 @@ makedepends=(
 )
 source=(
   "${pkgname}-${pkgver}.tar.gz::https://github.com/malaterre/GDCM/archive/v${pkgver}.tar.gz"
-  "01-fix-building-with-poppler.patch"
 )
-sha512sums=('da3453230e9fe0890e750cc10b74a7e07a5efd916219118af260b3710e15f0972239df746091e9c639e65201126c91c881b4ad3b8a836681993f8294d1cad187'
-            '3a8f825d07a687f211874d99237ee666280203e06b7c65fb152be1ed103d2ff04e255817c21da36fc8cebacda6faa8a12525fa60decb3c33d858f3342b29bd0a')
+sha512sums=('d5ea0a7419372dfd03ace014e116738b369acdebe82e6314e39f9bef33480525b03f7028d2c12260d6152e3817ef8ac061d8a0ed9aff5d8f39256c87d17b76d6')
 
 get_pyver() {
   python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
-}
-
-prepare() {
-  cd "${_pkgname}-${pkgver}"
-  patch -p1 -i "${srcdir}/01-fix-building-with-poppler.patch"
 }
 
 build() {
