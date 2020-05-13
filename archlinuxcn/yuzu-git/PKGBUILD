@@ -9,7 +9,7 @@ arch=('i686' 'x86_64')
 url="https://github.com/yuzu-emu/yuzu-mainline"
 license=('GPL2')
 depends=('shared-mime-info' 'desktop-file-utils' 'sdl2' 'qt5-base' 'qt5-multimedia' 'qt5-tools' 'libxkbcommon-x11' 'boost' 'catch2' 'fmt' 'nlohmann-json' 'lz4' 'libzip' 'openssl' 'opus' 'zlib' 'zstd')
-makedepends=('git' 'cmake' 'python2' 'ninja')
+makedepends=('git' 'cmake' 'python2')
 optdepends=('qt5-wayland: for Wayland support')
 provides=('yuzu' 'yuzu-canary-git' 'yuzu-cmd' 'yuzu-mainline' 'yuzu-canary' 'yuzu-mainline-git')
 conflicts=('yuzu-canary-git' 'yuzu-master-git')
@@ -58,7 +58,7 @@ build() {
 	  -DYUZU_ENABLE_COMPATIBILITY_REPORTING=ON \
 	  -DENABLE_COMPATIBILITY_LIST_DOWNLOAD=ON \
 	  -DUSE_DISCORD_PRESENCE=ON
-	make
+ make
 }
 
 check() {

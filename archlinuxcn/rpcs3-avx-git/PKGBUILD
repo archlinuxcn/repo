@@ -2,7 +2,7 @@
 # Submitter: Maxime Gauduin <alucryd@archlinux.org>
 
 pkgname=rpcs3-avx-git
-pkgver=0.0.10.10317.fc68c508c
+pkgver=0.0.10.10357.69ea573b0
 pkgrel=1
 pkgdesc='A Sony PlayStation 3 emulator (AVX1 Optimized, for using Sandybridge/Ivybridge cpus)'
 arch=(x86_64)
@@ -75,7 +75,7 @@ prepare() {
   
   git submodule update Vulkan/glslang llvm
 
-  sed -i 's/march=native/march=sandybridge -mtune=sandybridge/g' ${srcdir}/rpcs3/cmake_modules/ConfigureCompiler.cmake
+  sed -i 's/march=native/march=sandybridge -mtune=sandybridge/g' rpcs3/cmake_modules/ConfigureCompiler.cmake
 }
 
 build() {
