@@ -10,11 +10,9 @@ license=('custom:vim')
 url="http://www.vim.org"
 makedepends=('gpm' 'gtk3' 'perl' 'python' 'ruby' 'gettext'
              'pkg-config' 'sed' 'luajit' 'git' 'tar' 'desktop-file-utils' 'libxt')
-source=('tmpfiles.conf'
-        'vimdoc.hook'
+source=('vimdoc.hook'
         "vim-repo::git://localhost/vim")
-sha1sums=('f4d0ccb87d0add6bd76280ed82f401e9a91aabc5'
-          'adc4c82b6c4097944e5a767270a772721455eb8c'
+sha1sums=('adc4c82b6c4097944e5a767270a772721455eb8c'
           'SKIP')
 options=('debug' 'strip')
 
@@ -101,7 +99,6 @@ package_vim-lily() {
   # license
   install -Dm644 "${srcdir}"/vim-repo/runtime/doc/uganda.txt \
     "${pkgdir}"/usr/share/licenses/${pkgname}/license.txt
-  install -D -m644 "${srcdir}"/tmpfiles.conf "${pkgdir}/usr/lib/tmpfiles.d/${pkgname}.conf"
 }
 
 package_gvim-lily() {
@@ -140,7 +137,6 @@ package_gvim-lily() {
   # license
   install -Dm644 "${srcdir}"/vim-repo/runtime/doc/uganda.txt \
     "${pkgdir}"/usr/share/licenses/${pkgname}/license.txt
-  install -D -m644 "${srcdir}"/tmpfiles.conf "${pkgdir}/usr/lib/tmpfiles.d/${pkgname}.conf"
 }
 
 package_vim-runtime-lily() {
