@@ -3,12 +3,12 @@
 
 pkgname=wireguard-lily
 pkgver=1.0.20200506
-pkgrel=1
+pkgrel=2
 pkgdesc='Wireguard module for linux-lily Kernel'
 url='https://www.wireguard.com/'
 arch=('x86_64')
 license=('GPL')
-depends=("linux-lily=5.4.27-1")
+depends=("linux-lily=5.4.40-1")
 makedepends=('linux-lily-headers' "wireguard-dkms>=$pkgver")
 conflicts=('wireguard-dkms')
 provides=('WIREGUARD-MODULE')
@@ -31,6 +31,7 @@ package() {
 }
 
 # vim:set sw=2 et:
+
 
 
 
