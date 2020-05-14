@@ -1,9 +1,10 @@
 # Maintainer: rHermes <teodor_spaeren@riseup.net>
+# Maintainer: bnavigator <code@bnavigator.de>
 # Contributor: PlusMinus
 # Contributor: rhabbachi
 
 pkgname=displaylink
-pkgver=5.2.14
+pkgver=5.3.1.34
 pkgrel=1
 pkgdesc="Linux driver for DL-6xxx, DL-5xxx, DL-41xx and DL-3x00"
 arch=('i686' 'x86_64')
@@ -12,19 +13,19 @@ license=('custom' 'GPL2' 'LGPL2.1')
 depends=('evdi>=1.5.0' 'libusb>=1.0.0')
 makedepends=('grep' 'gawk' 'wget')
 install=
-changelog="release-note.txt"
-source=(displaylink-driver-$pkgver.zip::https://www.displaylink.com/downloads/file?id=1369
+changelog='DisplayLink USB Graphics Software for Ubuntu 5.3.1-Release Notes.txt'
+source=(displaylink-driver-$pkgver.zip::https://www.displaylink.com/downloads/file?id=1576
 	udev.sh
         99-displaylink.rules 
 	displaylink.service 
         displaylink-sleep.sh)
-md5sums=('a96ae6fc0d244ec4f9a8e9482f6c1535'
-         'd5de775e41af06edbd8073adc490139d'
-         '20495d81c7d2540910ef86dc437b7fac'
-         'c141a15e973481c7d961f8e135627ca4'
-         '7cbd9ab2ac79ba66e8297689c6e5483e')
+sha256sums=('1e1231aa141c2a00f7e639a1835bdb915013f9ce84506ff1382e9c759f5c33b0'
+            'dc41ae8a2c287fc50fdda65bad8b0ffd76726f7773c25e1b0c5b7de95cecbdb6'
+            'c08a4726cf4e2f92c7cab00168ae9cc8d69d36a67c570609396a4a674934245a'
+            '342e83abfe2a38d5635ea928345e933d2ad127ebd3f7caca476663d4f583684b'
+            '8be4ab7616e38f91746bdd3e7fafe9004322a8be8e6722389746df9868d576e0')
 
-DLAGENTS=('https::/usr/bin/wget -O %o --post-data=fileId=1369&accept_submit=Accept %u')
+DLAGENTS=('https::/usr/bin/wget -O %o --post-data=fileId=1576&accept_submit=Accept %u')
 
 # Update with > updpkgsums
 

@@ -1,16 +1,14 @@
 =============================================================================
 =============================================================================
 
-DisplayLink Ubuntu Software Release Note
+        DisplayLink Ubuntu Software Release Note
 
-Version: 4.2.29
-Date: 23th Feb 2018
+Version: v5.3.1
+Build: posix/54-2620-g5f342b9920d (34)
 
-DisplayLink DL-3xx0 / DL-5xx0 Firmware Version: 9.5.18.93117
-DisplayLink DL-41xx Firmware Version: 9.5.20.93215
-DisplayLink DL-6xxx Firmware Version: 9.5.18.93117
-Extensible Virtual Display Interface version included: 1.5.0-r2
+Date: 5th May 2020
 
+Extensible Virtual Display Interface version included: v1.7.0 (dc595db)
 =============================================================================
 =============================================================================
 
@@ -18,7 +16,7 @@ Extensible Virtual Display Interface version included: 1.5.0-r2
 A. Introduction
 ===============
 
-This is DisplayLink Driver Software 4.2.0 for Ubuntu. It provides production quality support for DisplayLink USB 3.0 devices on specific variants of desktop Ubuntu Linux.
+This is DisplayLink Driver Software v5.3.1 for Ubuntu. It provides production quality support for DisplayLink USB 3.0 devices on specific variants of desktop Ubuntu Linux. This release adds support for Ubuntu 20.04.
 
 The driver enables video support for products using DisplayLink USB 3.0 technology. Standard native Ubuntu drivers provide support for DisplayLink audio and Ethernet interfaces.
 
@@ -34,39 +32,47 @@ B. Contents
 ===========
 
 A.  Introduction
-A1. Important notes about DL-6xxx, DL-5xxx, DL-3xxx and DL-41xx Firmware
+A1. Important notes about DL-6xxx, DL-5xxx, DL-3xxx and DL-41xx firmware
 B.  Contents
-C.  Issues fixed
+C.  Bugs fixed in this release
 D.  Supported O/S variants
 E.  Release components
-F.  How to Install
-G.  Supported Features & Hardware
-H.  Limitations & Known issues
-I.  Future Development
+F.  How to install
+G.  Supported features & hardware
+H.  Limitations & known issues
+I.  Future development
 
-C. Issues fixed
-===============
+C.  Bugs fixed in this release
+==============================
 
-Issues fixed since DisplayLink Driver Software v4.1.0 for Ubuntu (4.1.9)
---------------------------------------------------------------------------
+Bugs fixed in release 5.3.1
+-----------------------------
 
-Sometimes PC may become unresponsive when a DisplayLink display is connected. (27139)
+- Installer fails on system with language setting different than English (31722)
+
+Bugs fixed in release 5.3
+-----------------------------
+
+- DL-6xxx series: CPU usage reduced when mouse is moved (31342)
+- DisplayLink driver crashes after re-plug in Ubuntu 20.04 (31470)
+- Installer stuck when asking for temporary UEFI password if secure boot is enabled (30453)
+- Hub USB3.0 link power management control improvement to address connection stability (31500)
 
 D. Supported O/S variants
 =========================
 
-This release has been prepared to be compatible with Ubuntu 17.10 and Ubuntu 16.04. Other variants and editions may be compatible if they meet minimum O/S requirements, but are not supported by DisplayLink.
+This release has been prepared to be compatible with Ubuntu 20.04, 19.04 and 18.04. Other variants and editions may be compatible if they meet minimum O/S requirements, but are not supported by DisplayLink.
 
 The Software contains binaries which work on Intel x86 platform (32 bit and 64 bit).
-Minimum supported Linux Kernel version is 3.16.
-Minimum supported Xorg version is 1.16.
+Supported Linux Kernel version range is from 4.15 to 5.5.
+Minimum supported Xorg version is 1.16, minimum supported Mutter (Wayland) version is 3.32.
 
 E. Release components
 =====================
 The Software consists of an open-source kernel mode driver (EVDI) with an accompanying library (libevdi), and a supporting binary application compatible with Intel x86 platform.
 Source code for the open-source components can be found at DisplayLink's GitHub, https://github.com/DisplayLink
 
-F. How to Install
+F. How to install
 =================
 
 To install the release, from a terminal window, with root permissions use the command:
@@ -75,11 +81,16 @@ sudo ./displaylink-driver-XXXX.run
 
 Where displaylink-driver-XXXX.run is the name of the extracted DisplayLink driver.
 
-The dkms framework is required for installation of DisplayLink. This can be installed with the command: sudo apt-get install dkms
+The installer checks for dependencies automatically and executes the package manager when needed.
+
+The dkms and libdrm-dev packages are required for installation of DisplayLink.
+
+You can refuse to grant permissions to the installer to execute package manager commands and install them manually running  package manager commands.
+If you opt for manual installation, after installing package dependencies, please re-run the installer.
 
 More detailed information on installation can be found at http://support.displaylink.com/knowledgebase/articles/615714#ubuntu
 
-G. Supported Features & Hardware
+G. Supported features & hardware
 ================================
 
 This driver will support up to 2 displays connected to DisplayLink devices. More than 2 DisplayLink displays may work, but not supported or tested by DisplayLink.
@@ -94,18 +105,18 @@ Device families supported:
 
 DL-1x5 and DL-1x0 devices use the open source udl driver, which is not developed or maintained by DisplayLink.
 
-H. Limitations & Known issues
+H. Limitations & known issues
 =============================
 
 A list of limitations and known issues can be found here:
 http://support.displaylink.com/knowledgebase/articles/641668
 
-I. Future Development
+I. Future development
 ======================
 
 DisplayLink are open to suggestions and feedback on improving the proposed architecture and will gladly review patches or proposals from the developer community. Please find a current list of areas we identify as requiring attention below.
 
-- In this release, the user mode driver service is running with root permissions. In future versions, we would like to reduce the privilege level required for this process – e.g. by using a separate low-privileged user and a separate group, to ensure the permissions needed for driving DisplayLink screens are as low as possible.
+- In this release, the user mode driver service is running with root permissions. In future versions, we would like to reduce the privilege level required for this process - e.g. by using a separate low-privileged user and a separate group, to ensure the permissions needed for driving DisplayLink screens are as low as possible.
 
 - The communication between the EVDI kernel module and the wrapper libevdi library is not access-controlled or authenticated. This could be improved in future releases, making it harder to compromise the data EVDI is sending and receiving.
 
