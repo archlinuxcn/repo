@@ -5,12 +5,12 @@
 
 pkgname=bbswitch-lily
 pkgver=0.8
-pkgrel=248
+pkgrel=249
 pkgdesc="Kernel module allowing to switch dedicated graphics card on Optimus laptops (for linux-lily kernel)"
 arch=('x86_64')
 url="http://github.com/Bumblebee-Project/bbswitch"
 license=('GPL')
-depends=("linux-lily=5.4.27-1")
+depends=("linux-lily=5.4.40-1")
 makedepends=('linux-lily-headers')
 source=("bbswitch-${pkgver}.tar.gz::https://github.com/Bumblebee-Project/bbswitch/archive/v${pkgver}.tar.gz")
 md5sums=('5b116b31ace3604ddf9d1fc1f4bc5807')
