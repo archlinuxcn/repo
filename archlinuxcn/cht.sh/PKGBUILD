@@ -1,7 +1,7 @@
 # Maintainer: Simon Legner <Simon.Legner@gmail.com
 pkgname=cht.sh
 pkgver=6
-pkgrel=4
+pkgrel=5
 pkgdesc="The only cheat sheet you need (command line client for cheat.sh)"
 arch=('any')
 url='https://cheat.sh/'
@@ -15,5 +15,5 @@ package() {
   install -Dm755 "cht-completion-$pkgver-$pkgrel.sh" "$pkgdir/usr/share/bash-completion/completions/cht.sh"
 }
 
-sha256sums=('ee411d78c607d47814604d4137c56de7ccaf653c78adabaabd11a62ad43c9886'
+sha256sums=('0de3b3189e8253f790e32aa7963bbe745c405bd9f80bc798218d81968ce4771d'
             'b06387495bcb49b9800121820f4a29ea09c1f1534e0ab4c0f8647cc9a643f928')
