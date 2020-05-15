@@ -6,5 +6,7 @@ build_prefix: extra-x86_64
 pre_build: vcs_update
 
 update_on:
-  - github: RfidResearchGroup/proxmark3 
+  - github: RfidResearchGroup/proxmark3
 
+repo_depends:
+  - gcc-arm-none-eabi-bin
