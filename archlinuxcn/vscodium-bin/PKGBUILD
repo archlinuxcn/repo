@@ -3,7 +3,7 @@
 # Contributor: Rowisi < nomail <at> private <dot> com >
 
 pkgname=vscodium-bin
-pkgver=1.45.0
+pkgver=1.45.1
 pkgrel=1
 pkgdesc="Binary releases of VS Code without MS branding/telemetry/licensing."
 arch=('x86_64' 'aarch64' 'armv7h')
@@ -21,9 +21,9 @@ provides=('code')
 conflicts=('code')
 source=(vscodium-bin.desktop)
 sha256sums=('5504e93bd55f2bc068c29e4fa962c1eddc6e08edb39c3255319dd5ad998a1b86')
-sha256sums_x86_64=('16d9eb07ce26dbbd5a63abeaa9e8eb8a7740f94ba318fab8a23982c4a5d064f1')
-sha256sums_aarch64=('0d24b1c0cc62a7d13c8d10fab8b03acb7de5d16befaec1176acab756c8b53295')
-sha256sums_armv7h=('ec580a2407819fe98b36a1620b7c1f486346290b6c766ab0e7da1b14f28082b6')
+sha256sums_x86_64=('b7535c73bf6881919a5e4f0ff6b5f45bb1195f764dbdece1724ebcf7502b26d5')
+sha256sums_aarch64=('0f67273a3b862afbc2917bfd0c87f7b5e52c06e94f2612fefa520e8d148cb619')
+sha256sums_armv7h=('9bc2e842ec99b728377a7fb92725131fd9ebe918caa7948237337854643d5a36')
 
 source_x86_64=("${pkgname}-${pkgver}-${pkgrel}-x86_64.tar.gz::${url}/releases/download/${pkgver}/VSCodium-linux-x64-${pkgver}.tar.gz")
 source_aarch64=("${pkgname}-${pkgver}-${pkgrel}-aarch64.tar.gz::${url}/releases/download/${pkgver}/VSCodium-linux-arm64-${pkgver}.tar.gz")
