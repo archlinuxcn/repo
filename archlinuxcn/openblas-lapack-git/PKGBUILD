@@ -63,6 +63,7 @@ build() {
 
   export FFLAGS="-g -O2"
   echo "MAKEFLAGS='$MAKEFLAGS'"
+  env
 
   # The OpenBLAS build system doesn't handle update very well.
   git clean -fdx
@@ -85,6 +86,7 @@ package_openblas-git() {
 
   cd "${_pkgname}"
   echo "MAKEFLAGS='$MAKEFLAGS'"
+  env
 
   make "${_config[@]}" PREFIX="${pkgdir}/usr" install &> install.log || {
     cat install.log
