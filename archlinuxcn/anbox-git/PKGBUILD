@@ -1,13 +1,13 @@
 # Maintainer: Iwan Timmer <irtimmer@gmail.com>
 pkgname=('anbox-git' 'anbox-modules-dkms-git')
 _pkgname=anbox
-pkgver=1168.73804a3
-pkgrel=2
+pkgver=1177.3a54509
+pkgrel=1
 epoch=1
 arch=('x86_64')
 url="http://anbox.io/"
 license=('GPL3')
-makedepends=('cmake' 'git' 'glm' 'lxc' 'sdl2_image' 'protobuf' 'boost' 'properties-cpp' 'gtest' 'python2')
+makedepends=('cmake' 'git' 'dbus' 'glm' 'lxc' 'sdl2_image' 'protobuf' 'boost' 'properties-cpp' 'gtest' 'python2' 'systemd')
 source=("git+https://github.com/anbox/anbox.git"
 	"git+https://github.com/anbox/anbox-modules.git"
 	'anbox-container-manager.service'
@@ -41,6 +41,11 @@ prepare() {
   # Don't build tests
   truncate -s 0 cmake/FindGMock.cmake
   truncate -s 0 tests/CMakeLists.txt
+  
+  cd src/anbox/graphics/
+
+  echo '#include <stdexcept> '$'\n'"$(cat program_family.cpp)" > program_family.cpp
+  echo '#include <string> '$'\n'"$(cat program_family.cpp)" > program_family.cpp
 }
 
 build() {
