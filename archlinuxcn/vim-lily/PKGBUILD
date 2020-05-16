@@ -4,7 +4,7 @@ pkgbase=vim-lily
 pkgname=(gvim-lily vim-runtime-lily vim-lily)
 pkgver=8.2.752
 _versiondir="vim$(echo $pkgver | awk -F. '{print $1$2}')"
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 license=('custom:vim')
 url="http://www.vim.org"
@@ -30,8 +30,8 @@ build() {
   sed -i 's|^.*\(#define VIMRC_FILE.*"\) .*$|\1|' \
     src/feature.h
 
-  local vim_options='--without-x --disable-canberra --disable-fontset --disable-gui --disable-xsmp'
-  local gvim_options='--enable-xsmp --enable-fontset --enable-gui=gtk3'
+  local vim_options='--without-x --disable-canberra --disable-gui --disable-xsmp'
+  local gvim_options='--enable-xsmp --enable-gui=gtk3'
 
   for name in vim gvim; do
     local _dir="${srcdir}"/$pkgbase
@@ -49,11 +49,12 @@ build() {
       --enable-luainterp=dynamic \
       --enable-multibyte \
       --enable-perlinterp=dynamic \
-      --enable-python3interp \
+      --enable-python3interp=dynamic \
       --enable-rubyinterp=dynamic \
       --enable-terminal \
       --with-features=huge \
       --with-luajit \
+      --disable-icon-cache-update --disable-desktop-database-update \
       $(eval "echo \$${name}_options") --enable-fail-if-missing \
       --with-compiledby=百合仙子 --with-modified-by=百合仙子
 
