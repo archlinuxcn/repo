@@ -4,12 +4,12 @@
 
 pkgbase=virtualbox-modules-lily
 pkgname=('virtualbox-host-modules-lily')
-pkgver=6.1.6
-pkgrel=2
+pkgver=6.1.8
+pkgrel=1
 arch=('x86_64')
 url='https://virtualbox.org'
 license=('GPL')
-depends=("linux-lily=5.4.40-1")
+depends=("linux-lily=5.4.41-1")
 makedepends=('linux-lily-headers'
              "virtualbox-host-dkms>=$pkgver")
 
@@ -51,6 +51,7 @@ package_virtualbox-guest-modules-lily(){
 }
 
 # vim:set sw=2 et:
+
 
 
 
