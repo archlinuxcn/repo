@@ -1,0 +1,68 @@
+From 703acd86750275dea73d28200ac8959f4aa72589 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sun, 17 May 2020 00:29:21 -0400
+Subject: [PATCH] Add support for more audio and video formats
+
+---
+ seahub/base/templatetags/seahub_tags.py | 7 +++++++
+ seahub/utils/__init__.py                | 4 ++--
+ 2 files changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/seahub/base/templatetags/seahub_tags.py b/seahub/base/templatetags/seahub_tags.py
+index 12e6b3d..aa5e531 100644
+--- a/seahub/base/templatetags/seahub_tags.py
++++ b/seahub/base/templatetags/seahub_tags.py
+@@ -73,20 +73,27 @@ FILEEXT_ICON_MAP = {
+ 
+     # video
+     'mp4': 'video.png',
++    'm4v': 'video.png',
++    'mkv': 'video.png',
++    'opus': 'video.png',
+     'ogv': 'video.png',
+     'webm': 'video.png',
+     'mov': 'video.png',
+     'flv': 'video.png',
+     'wmv': 'video.png',
+     'rmvb': 'video.png',
++    'rm': 'video.png',
+ 
+     # music file
++    'm4a': 'music.png',
+     'mp3': 'music.png',
+     'oga': 'music.png',
+     'ogg': 'music.png',
+     'flac': 'music.png',
+     'aac': 'music.png',
+     'ac3': 'music.png',
++    'caf': 'music.png',
++    'wav': 'music.png',
+     'wma': 'music.png',
+ 
+     # image file
+@@ -97,6 +103,7 @@ FILEEXT_ICON_MAP = {
+     'gif': 'pic.png',
+     'bmp': 'pic.png',
+     'ico': 'pic.png',
++    'webp': 'pic.png',
+ 
+     # default
+     'default': 'file.png',
+diff --git a/seahub/utils/__init__.py b/seahub/utils/__init__.py
+index 0ec17b5..13ef60b 100644
+--- a/seahub/utils/__init__.py
++++ b/seahub/utils/__init__.py
+@@ -129,8 +129,8 @@ PREVIEW_FILEEXT = {
+     SVG: ('svg',),
+     PDF: ('pdf', 'ai'),
+     MARKDOWN: ('markdown', 'md'),
+-    VIDEO: ('mp4', 'ogv', 'webm', 'mov'),
+-    AUDIO: ('mp3', 'oga', 'ogg'),
++    VIDEO: ('m4v', 'mkv', 'mov', 'mp4', 'ogv', 'opus', 'webm'),
++    AUDIO: ('aac', 'flac', 'caf', 'm4a', 'mp3', 'oga', 'ogg', 'wav'),
+     #'3D': ('stl', 'obj'),
+     XMIND: ('xmind',),
+     CDOC: ('cdoc',),
+-- 
+2.26.2
+
