@@ -3,16 +3,14 @@
 maintainers:
   - github: yuyichao
 
-managed: false
+build_prefix: archlinuxcn-x86_64
 
-# build_prefix: archlinuxcn-x86_64
+pre_build: aur_pre_build
 
-# pre_build: aur_pre_build
+post_build: aur_post_build
 
-# post_build: aur_post_build
-
-# update_on:
-#   - aur: seafile
+update_on:
+  - aur: seafile
 
 # repo_depends:
 #   - libsearpc

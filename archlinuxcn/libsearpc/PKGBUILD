@@ -6,59 +6,36 @@
 pkgname=libsearpc
 epoch=2
 pkgver=3.2.0
-pkgrel=5
+pkgrel=5.2
 pkgdesc="A simple C language RPC framework (including both server side & client side)"
 arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
 url="https://github.com/haiwen/libsearpc"
 license=('Apache')
 depends=("glib2>=2.26.0" "jansson>=2.2.1")
-makedepends=(python python2)
-
+makedepends=(python)
 # upstream seems to change tag so let's rename the download...
-source=("libsearpc-${pkgver}-5.tar.gz::${url}/archive/v${pkgver}.tar.gz"
-        "libsearpc.pc.patch"
-        "fix_python_future_builtins_object.patch")
-sha256sums=('cd00197fcc40b45b1d5e892b2d08dfa5947f737e0d80f3ef26419334e75b0bff'
-            'aec39a303aaebc0777a22d8c53367f52f619654d63f62b362d75c1c599e632f4'
-            'f7f8a43bca73e05ce234fb13cae0663c0c7b095d4500200e3479b8eea5fc1497')
+source=("libsearpc-${pkgver}-5.tar.gz::${url}/archive/v${pkgver}.tar.gz")
+sha256sums=('cd00197fcc40b45b1d5e892b2d08dfa5947f737e0d80f3ef26419334e75b0bff')
 
 prepare () {
-  (cd ${pkgname}-${pkgver}
-   patch -p1 -i "${srcdir}"/libsearpc.pc.patch
-   patch -p1 -i "${srcdir}"/fix_python_future_builtins_object.patch)
-
-  rm -rf ${pkgname}-${pkgver}-python2
-  cp -r ${pkgname}-${pkgver} ${pkgname}-${pkgver}-python2
+  cd ${pkgname}-${pkgver}
+  sed -i 's|(DESTDIR)@prefix@|@prefix@|' './libsearpc.pc.in'
 }
 
 build () {
   echo "Building python3 version"
-  (cd ${pkgname}-${pkgver}
-   ./autogen.sh
-   ./configure --prefix=/usr PYTHON=/usr/bin/python
-   make)
-
-  echo "Building python2 version"
-  (cd ${pkgname}-${pkgver}-python2
-   ./autogen.sh
-   ./configure --prefix=/usr PYTHON=/usr/bin/python2
-   make)
+  cd ${pkgname}-${pkgver}
+  ./autogen.sh
+  ./configure --prefix=/usr PYTHON=/usr/bin/python
+  make
 }
 
 check () {
-  (cd ${pkgname}-${pkgver}
-   make check)
-
-  (cd ${pkgname}-${pkgver}-python2
-   make check)
+  cd ${pkgname}-${pkgver}
+  make check
 }
 
 package () {
-  (cd ${pkgname}-${pkgver}
-   make DESTDIR="${pkgdir}" install)
-
-  (cd ${pkgname}-${pkgver}-python2
-   mkdir python2-pkg
-   make DESTDIR=${PWD}/python2-pkg install
-   mv python2-pkg/usr/lib/python2.7 "${pkgdir}/usr/lib/")
+  cd ${pkgname}-${pkgver}
+  make DESTDIR="${pkgdir}" install
 }
