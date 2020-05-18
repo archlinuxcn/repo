@@ -1,7 +1,7 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
 pkgname=(vtk-git vtk-cuda-git)
-_pkgver=9.0.0rc1
+_pkgver=9.0.0
 pkgver=9.0.0rc1.r74524.06c1830867
 pkgrel=1
 pkgdesc='A software system for 3D computer graphics, image processing, and visualization'
@@ -81,7 +81,9 @@ build() {
   cmake_opts=(
     -DBUILD_SHARED_LIBS=ON
     -DBUILD_TESTING=OFF
-    -DCMAKE_BUILD_TYPE=Release
+    -DCMAKE_C_COMPILER=/opt/cuda/bin/gcc
+    -DCMAKE_CUDA_HOST_COMPILER=/opt/cuda/bin/g++
+    -DCMAKE_CXX_COMPILER=/opt/cuda/bin/g++
     -DCMAKE_INSTALL_LIBDIR=lib
     -DCMAKE_INSTALL_PREFIX=/usr
     -DCMAKE_SKIP_INSTALL_RPATH=ON
