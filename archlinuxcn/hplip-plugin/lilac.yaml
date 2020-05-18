@@ -1,4 +1,8 @@
 maintainers:
   - github: colinkeenan
 
-managed: false
+build_prefix: extra-x86_64
+
+update_on:
+  - archpkg: hplip
+  - strip-release: true
