@@ -1,0 +1,124 @@
+From f099ba8a94583aae11997c0d8a50e6e32bebf3ff Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sun, 17 May 2020 22:32:40 -0400
+Subject: [PATCH] python3
+
+---
+ spatialmedia/__init__.py       |  5 -----
+ spatialmedia/__main__.py       |  6 ------
+ spatialmedia/gui.py            | 18 +++++++-----------
+ spatialmedia/metadata_utils.py |  2 +-
+ 4 files changed, 8 insertions(+), 23 deletions(-)
+
+diff --git a/spatialmedia/__init__.py b/spatialmedia/__init__.py
+index cc5d4dd..382ac1d 100644
+--- a/spatialmedia/__init__.py
++++ b/spatialmedia/__init__.py
+@@ -15,11 +15,6 @@
+ # See the License for the specific language governing permissions and
+ # limitations under the License.
+ 
+-# Ensure the package is available on the current path or is installed.
+-import os
+-import sys
+-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+-
+ __all__ = ["metadata_utils", "mpeg"]
+ 
+ import spatialmedia.metadata_utils
+diff --git a/spatialmedia/__main__.py b/spatialmedia/__main__.py
+index e0a8349..7c52a87 100755
+--- a/spatialmedia/__main__.py
++++ b/spatialmedia/__main__.py
+@@ -20,13 +20,7 @@ Tool for examining and injecting spatial media metadata in MP4/MOV files.
+ """
+ 
+ import argparse
+-import os
+ import re
+-import sys
+-
+-path = os.path.dirname(sys.modules[__name__].__file__)
+-path = os.path.join(path, '..')
+-sys.path.insert(0, path)
+ from spatialmedia import metadata_utils
+ 
+ 
+diff --git a/spatialmedia/gui.py b/spatialmedia/gui.py
+index 96eee80..c6974ef 100755
+--- a/spatialmedia/gui.py
++++ b/spatialmedia/gui.py
+@@ -22,20 +22,16 @@ GUI application for examining/injecting spatial media metadata in MP4/MOV files.
+ 
+ import ntpath
+ import os
+-import sys
+-import tkFileDialog
+-import tkMessageBox
++import tkinter.filedialog
++import tkinter.messagebox
+ import traceback
+ 
+ try:
+-    from Tkinter import *
++    from tkinter import *
+ except ImportError:
+     print("Tkinter library is not available.")
+     exit(0)
+ 
+-path = os.path.dirname(sys.modules[__name__].__file__)
+-path = os.path.join(path, '..')
+-sys.path.insert(0, path)
+ from spatialmedia import metadata_utils
+ 
+ SPATIAL_AUDIO_LABEL = "My video has spatial audio (ambiX ACN/SN3D format)"
+@@ -53,7 +49,7 @@ class Console(object):
+ class Application(Frame):
+     def action_open(self):
+         """Triggers open file diaglog, reading a new file's metadata."""
+-        tmp_in_file = tkFileDialog.askopenfilename(**self.open_options)
++        tmp_in_file = tkinter.filedialog.askopenfilename(**self.open_options)
+         if not tmp_in_file:
+             return
+         self.in_file = tmp_in_file
+@@ -97,7 +93,7 @@ class Application(Frame):
+             self.var_spatial_audio.set(0)
+ 
+         if metadata:
+-            metadata = metadata.itervalues().next()
++            metadata = next(iter(metadata.values()))
+ 
+             if metadata.get("Spherical", "") == "true":
+                 self.var_spherical.set(1)
+@@ -143,7 +139,7 @@ class Application(Frame):
+         extension = split_filename[1]
+         self.save_options["initialfile"] = (base_filename
+                                             + "_injected" + extension)
+-        self.save_file = tkFileDialog.asksaveasfilename(**self.save_options)
++        self.save_file = tkinter.filedialog.asksaveasfilename(**self.save_options)
+         if not self.save_file:
+             return
+ 
+@@ -302,7 +298,7 @@ class Application(Frame):
+ 
+ def report_callback_exception(self, *args):
+     exception = traceback.format_exception(*args)
+-    tkMessageBox.showerror("Error", exception)
++    tkinter.messagebox.showerror("Error", exception)
+ 
+ def main():
+     root = Tk()
+diff --git a/spatialmedia/metadata_utils.py b/spatialmedia/metadata_utils.py
+index 71c11ca..1f74acf 100755
+--- a/spatialmedia/metadata_utils.py
++++ b/spatialmedia/metadata_utils.py
+@@ -663,5 +663,5 @@ def get_spatial_audio_metadata(ambisonic_order, head_locked_stereo):
+     }
+     metadata['ambisonic_order'] = ambisonic_order
+     metadata['head_locked_stereo'] = head_locked_stereo
+-    metadata['channel_map'] = range(0, num_channels)
++    metadata['channel_map'] = list(range(0, num_channels))
+     return metadata
+-- 
+2.26.2
+

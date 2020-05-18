@@ -1,0 +1,35 @@
+# $Id$
+# Maintainer: Grey Christoforo <grey at christoforo dot net>
+
+pkgname=python-spatial-media
+pkgver=2.1
+pkgrel=2
+pkgdesc="Specifications and tools for 360º video and spatial audio."
+arch=('any')
+url="https://github.com/google/spatial-media"
+license=('APACHE2')
+depends=('python')
+optdepends=('tk: for spatialmedia-gui')
+source=("https://github.com/google/spatial-media/archive/v${pkgver}.tar.gz"
+        0001-python3.patch
+        spatialmedia
+        spatialmedia-gui)
+md5sums=('5fba71cd926a7ebb72c2a3f2b52699ae'
+         'ff21de0e926ce69d5a0629cac67fc730'
+         'eb15b1bbabe94c95d9237f6b667683af'
+         'fd8ca6b9eff91a0afbb6727e377aa164')
+
+prepare() {
+  cd spatial-media-${pkgver}
+
+  patch -Np1 --no-backup-if-mismatch < ../0001-python3.patch
+}
+
+package() {
+  cd spatial-media-${pkgver}
+
+  python setup.py install --root="$pkgdir/" --prefix=/usr --optimize=1
+
+  mkdir -p "$pkgdir/usr/bin"
+  install -Dm755 ../spatialmedia ../spatialmedia-gui "$pkgdir/usr/bin"
+}
