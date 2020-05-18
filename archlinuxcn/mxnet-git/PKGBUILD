@@ -70,6 +70,8 @@ build() {
   cmake_opts=(
     -DBUILD_CPP_EXAMPLES:BOOL=OFF
     -DBUILD_TESTING:BOOL=OFF
+    -DCMAKE_C_COMPILER=/opt/cuda/bin/gcc
+    -DCMAKE_CXX_COMPILER=/opt/cuda/bin/g++
     -DCMAKE_CUDA_HOST_COMPILER=/opt/cuda/bin/g++
     -DCMAKE_INSTALL_LIBDIR:PATH=lib
     -DCMAKE_INSTALL_PREFIX:PATH=/usr
