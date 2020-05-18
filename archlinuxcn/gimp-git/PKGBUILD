@@ -8,8 +8,8 @@
 pkgname=gimp-git
 _pkgname=${pkgname%-git}
 epoch=1
-pkgver=45432.60b6c06638
-pkgrel=2
+pkgver=45653.2956873740
+pkgrel=1
 pkgdesc="GNU Image Manipulation Program (non-conflicting git version)"
 arch=('i686' 'x86_64')
 url="https://www.gimp.org"
@@ -19,11 +19,11 @@ depends=(
 	'libwmf>=0.2.8'
 	'icu'
 	'enchant'
+  'libxmu'
 	'libgexiv2>=0.10.6'
 	'librsvg>=2.40.6'
 	'desktop-file-utils'
 	'libexif>=0.6.15'
-	'libart-lgpl>=2.3.19'
 	'dbus-glib'
 	'gtk-doc>=1.0'
 	'poppler-glib>=0.69.0'
@@ -40,8 +40,7 @@ makedepends=('git' 'intltool>=0.40.1'
              'alsa-lib>=1.0.0' 'libxslt' 'glib-networking'
              'alsa-lib' 'curl' 'ghostscript' 'libxpm' 'webkit2gtk'
              'libheif' 'libwebp' 'libmng' 'iso-codes' 'aalib' 'zlib'
-             'gjs' 'python-gobject' 'luajit' 'meson' 'xorg-server-xvfb'
-             )
+             'gjs' 'python-gobject' 'luajit' 'meson' 'xorg-server-xvfb')
 checkdepends=('xorg-server-xvfb')
 optdepends=('gutenprint: for sophisticated printing only as gimp has built-in cups print support'
             'alsa-lib: for MIDI event controller module'
@@ -79,10 +78,6 @@ prepare() {
 build() {
   export NINJA_STATUS="[%p | %f<%r<%u | %cbps ] "
   ninja -C "${srcdir}/build"
-}
-
-check() {
-  ninja -C "${srcdir}/build" test
 }
 
 package() {

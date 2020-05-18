@@ -2,19 +2,19 @@
 
 pkgbase=goland
 pkgname=(goland goland-jre)
-pkgver=2020.1
+pkgver=2020.1.2
 pkgrel=1
 arch=('x86_64' 'i686')
 url='https://www.jetbrains.com/go/'
-license=('commercial')
+license=('custom:jetbrains')
 depends=('glib2')
 options=('!strip')
 source=("https://download.jetbrains.com/go/${pkgbase}-${pkgver}.tar.gz"
         jetbrains-goland.desktop
         LICENSE)
-sha512sums=('159437ca7b17571f41efe11d0aa0184cbd4c8adb931dd7883a30dfece3e4aa3315ac1a855f28d33ae9163fa036b515b5c09c6ccf230d3f142929e1ad52df08d3'
-            'bafd07eebf41fd815d182473041ff1cf6e069a4c66755cb5eeea27d8f5222e7c79a85765d14d7f78e57d29bdf91ba844069946388c80689189ac7f60c9c1cb81'
-            'e2aaaa75571f368f85bcc4baef27cc502781ce382bf04737763b07244716918fc2f0eb0b78b02631e242c9a5c246b27d720bb28556fc64bbde213403b7bf57f6')
+b2sums=('2798792ab4e7af4747ac87b85e7155dbf491eb6d8b6a56c5ff45c3068a94ae65bbedd472acd78f8c2329b4dd0f4040839618d9fe47c4f556680d2392ae4cf205'
+        '69a09c3ff4182cd5ae43c967b4a58ce3bdf428f0fb87f91f835ffcde5c10019cf4a789cfdb8966ad98c95dda47517a6c49e9c4bf6c217f0cb1b553100730a6a6'
+        'dadaf0e67b598aa7a7a4bf8644943a7ee8ebf4412abb17cd307f5989e36caf9d0db529a0e717a9df5d9537b10c4b13e814b955ada6f0d445913c812b63804e77')
 
 package_goland() {
   pkgdesc='Capable and Ergonomic Go IDE'

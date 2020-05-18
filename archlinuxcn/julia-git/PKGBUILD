@@ -6,7 +6,7 @@
 BUILD_DOC=1
 
 pkgbase=julia-git
-pkgname=julia-git
+pkgname=(julia-git)
 
 if [[ $CARCH != x86_64 ]]; then
     BUILD_DOC=0
@@ -18,8 +18,8 @@ fi
 
 case $CARCH in
   x86_64|i686|aarch64|armv7h)
-    makedepends_llvm=("llvm-julia>=9.0" "llvm-julia<10.0")
-    depends_llvm=("llvm-libs-julia>=9.0" "llvm-libs-julia<10.0")
+    makedepends_llvm=("llvm-julia>=10.0" "llvm-julia<11.0")
+    depends_llvm=("llvm-libs-julia>=10.0" "llvm-libs-julia<11.0")
     ;;
   # armv7h)
   #   makedepends_llvm=("llvm-svn")
@@ -31,57 +31,40 @@ case $CARCH in
 esac
 
 epoch=1
-pkgver=1.5.0.DEV.612.gddf2f619ed
-pkgrel=1
+pkgver=1.6.0.DEV.58.gcfd7f483307
+pkgrel=2
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
 license=('GPL')
-makedepends=(gcc-fortran arpack fftw git gmp libgit2-julia libunwind-git
-             "${makedepends_llvm[@]}" mpfr pcre2 suitesparse
-             openspecfun openblas-lapack libutf8proc-git patchelf
-             openlibm mbedtls libssh2)
+depends_libs=(arpack fftw gmp libgit2-julia libunwind-git mpfr pcre2 suitesparse
+              openspecfun openblas-lapack libutf8proc-git
+              openlibm mbedtls libssh2 zlib p7zip)
+makedepends=("${depends_libs[@]}" "${makedepends_llvm[@]}"
+             gcc-fortran git patchelf python)
 options=('debug' '!strip' '!buildflags')
 source=('git://github.com/JuliaLang/julia'
         0001-Revert-Replace-quiet-with-banner-23343.patch
         0001-Add-install-nodoc-make-target-to-skip-building-and-i.patch
         0001-Revert-turn-on-deprecation-warnings-for-type-and-imm.patch
         0002-Revert-deprecation-warning-for-old-parametric-method.patch
-        0001-Optimize-GC-frame-push-pop-insertion.patch)
+        0001-Optimize-GC-frame-push-pop-insertion.patch
+        35232.patch
+        julia-compile-pkgs.jl
+        julia-clear-precompile.sh
+        julia-precompile.hook
+        julia-clear-precompile.hook)
 md5sums=('SKIP'
          'b3c5a4ba02fbbfa53b7043beb0242156'
          '2222d3eabfe6040a8cca466303c86d2b'
          'f13c0f5ddd2ad990bb4560d9af1203ac'
          'f90e6a0139600b182d6c36e6c7cf3492'
-         '3dbb81b1dae3a9d977bd69f8354b3007')
-
-_builtin_pkgs=(julia-base64
-               julia-crc32c
-               julia-dates
-               julia-delimitedfiles
-               julia-distributed
-               julia-filewatching
-               julia-future
-               julia-interactiveutils
-               julia-iterativeeigensolvers
-               julia-libgit2
-               julia-libdl
-               julia-linearalgebra
-               julia-loggin
-               julia-markdown
-               julia-mmap
-               julia-pkg
-               julia-printf
-               julia-profile
-               julia-repl
-               julia-random
-               julia-sha
-               julia-serialization
-               julia-sparsearrays
-               julia-suitesparse
-               julia-test
-               julia-uuids
-               julia-unicode)
+         '3dbb81b1dae3a9d977bd69f8354b3007'
+         '566f8c29977e9f81cfe7956e6344dce5'
+         '0b3bfcd680da2dc47d861b04ee695f52'
+         '6e7fcba300512df8ab8ab65d3e1eb847'
+         'f1f6ffc7ddcbc7fa0000d6f5fdbbe925'
+         'f9d0b11988630599dc860a5b33a7ba13')
 
 pkgver() {
   cd julia
@@ -116,13 +99,16 @@ julia_opts=(prefix=/usr sysconfdir=/etc
             USE_SYSTEM_MBEDTLS=1
             USE_SYSTEM_CURL=1
             USE_SYSTEM_PATCHELF=1
+            USE_SYSTEM_ZLIB=1
+            USE_SYSTEM_P7ZIP=1
             USE_LLVM_SHLIB=1
             USE_BINARYBUILDER=0
             LLVM_USE_CMAKE=0 # Workaround LLVM linking with system LLVM
             LIBBLASNAME=libopenblas
             LIBBLAS=-lopenblas
             LIBLAPACKNAME=libopenblas
-            LIBLAPACK=-lopenblas)
+            LIBLAPACK=-lopenblas
+            BUNDLE_DEBUG_LIBS=1)
 
 _x86_target='generic,opt_size;haswell,clone_all,-rdrnd;skylake,base(1),-rdrnd,-rdseed,-rtm;cannonlake,base(1),-rdrnd,-rdseed,-rtm'
 _arm_target='armv7-a;armv7-a,neon;armv7-a,neon,vfp4'
@@ -163,6 +149,7 @@ EOF
   # patch -Np1 < ../0001-Revert-turn-on-deprecation-warnings-for-type-and-imm.patch
   # patch -Np1 < ../0002-Revert-deprecation-warning-for-old-parametric-method.patch
   # patch -Np1 < ../0001-Optimize-GC-frame-push-pop-insertion.patch
+  patch -Np1 < ../35232.patch
 
   sed -i -e 's/-fno-omit-frame-pointer/-fomit-frame-pointer/g' src/Makefile ui/Makefile
 }
@@ -199,12 +186,8 @@ build() {
 
 package-julia-in() {
   arch=('i686' 'x86_64' 'armv7h' 'aarch64')
-  depends=(arpack fftw gmp libgit2-julia libunwind-git "${depends_llvm[@]}"
-           mpfr pcre2 hicolor-icon-theme xdg-utils suitesparse
-           openspecfun openblas-lapack libutf8proc-git
-           mbedtls libssh2)
-  conflicts=('julia' "${_builtin_pkgs[@]}")
-  replaces=("${_builtin_pkgs[@]}")
+  depends=("${depends_libs[@]}" "${depends_llvm[@]}"
+           hicolor-icon-theme xdg-utils)
   opts=("${@:2}")
 
   cd "$1"
@@ -224,8 +207,27 @@ package-julia-in() {
   ver=$("$pkgdir/usr/bin/julia" \
             --startup-file=no \
             -e 'print(VERSION.major, ".", VERSION.minor, ".", VERSION.patch)')
+  ver_short=$("$pkgdir/usr/bin/julia" \
+            --startup-file=no \
+            -e 'print(VERSION.major, ".", VERSION.minor)')
+  stdlib_dir="$pkgdir/usr/share/julia/stdlib/v$ver_short"
+  builtin_pkgs=()
+  for pkg in $(ls -1 "$stdlib_dir"); do
+    if [[ -f "$stdlib_dir/$pkg/Project.toml" ]]; then
+      builtin_pkgs=("${builtin_pkgs[@]}" "julia-${pkg,,}")
+    fi
+  done
+  provides=("julia=2:$ver" "${builtin_pkgs[@]}")
+  conflicts=('julia' "${builtin_pkgs[@]}")
+  replaces=("${builtin_pkgs[@]}")
 
-  provides=("julia=2:$ver" "${_builtin_pkgs[@]}")
+  install -Dm644 ../julia-compile-pkgs.jl "${pkgdir}/usr/lib/julia/"
+  install -Dm644 ../julia-clear-precompile.sh "${pkgdir}/usr/lib/julia/"
+  sed "s|@VER@|$ver_short|" ../julia-precompile.hook |
+    install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/julia-precompile.hook"
+  sed "s|@VER@|$ver_short|" ../julia-clear-precompile.hook |
+    install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/julia-clear-precompile.hook"
+  mkdir -p "${pkgdir}/usr/share/julia/compiled/v$ver_short"
 }
 
 package_julia-git() {

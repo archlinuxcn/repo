@@ -1,0 +1,18 @@
+[Trigger]
+Type = Package
+Operation = Install
+Operation = Upgrade
+Target = julia-git
+
+[Trigger]
+Type = Path
+Operation = Install
+Operation = Upgrade
+Operation = Remove
+Target = usr/share/julia/stdlib/v@VER@/*
+
+[Action]
+Description = Precompiling julia packages...
+When = PostTransaction
+Depends = julia-git
+Exec = /usr/bin/julia --startup-file=no /usr/lib/julia/julia-compile-pkgs.jl /usr/share/julia

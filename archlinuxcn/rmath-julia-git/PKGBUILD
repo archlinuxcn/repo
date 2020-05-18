@@ -1,0 +1,34 @@
+# Maintainer: Alexander Rødseth <rodseth@gmail.com>
+# Contributor: lolilolicon #<moc.liamg@nocilolilol>.reverse
+
+pkgname=rmath-julia-git
+pkgver=0.2.2
+pkgrel=3
+pkgdesc='The Rmath library from R (modified for julia-rmath)'
+arch=('x86_64' 'i686' 'armv7h' 'aarch64')
+url='https://github.com/JuliaStats/Rmath-julia'
+license=('GPLv2')
+makedepends=('git')
+provides=('rmath-julia')
+conflicts=('rmath-julia')
+source=("git://github.com/JuliaStats/Rmath-julia")
+md5sums=('SKIP')
+options=('debug' '!strip')
+
+pkgver() {
+  cd Rmath-julia
+
+  git describe --tags | sed -e 's/^[^0-9]*//g;s/-/.0./;s/-/./g'
+}
+
+build() {
+  cd Rmath-julia
+
+  make
+}
+
+package() {
+  cd Rmath-julia
+
+  install -Dm755 src/libRmath-julia.so "$pkgdir/usr/lib/libRmath-julia.so"
+}

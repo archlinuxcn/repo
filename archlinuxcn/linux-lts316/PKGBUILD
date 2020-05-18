@@ -5,8 +5,8 @@
 
 set -u
 pkgbase="linux-lts316"
-_srcname="linux-3.16"
-pkgver="3.16.82"
+pkgver="3.16.83"
+_srcname="linux-${pkgver%.*}"
 pkgrel='1'
 arch=('i686' 'x86_64')
 url="https://www.kernel.org/"
@@ -23,15 +23,26 @@ source=(
   '99-linux.hook'
   # standard config files for mkinitcpio ramdisk
   'linux.preset'
+
+  # add latest fixes from stable queue, if needed
+  # http://git.kernel.org/?p=linux/kernel/git/stable/stable-queue.git
+
+  # set DEFAULT_CONSOLE_LOGLEVEL to 4 (same value as the 'quiet' kernel param)
+  # remove this when a Kconfig knob is made available by upstream
+  # (relevant patch sent upstream: https://lkml.org/lkml/2011/7/26/227)
   'change-default-console-loglevel.patch'
   #'0000-unknown-rela-relocation-4-binutils.2.31.kernel.3.16.patch' # https://www.reddit.com/r/linuxquestions/comments/903xwq/unable_to_compile_working_kernel_modules_anymore/
   '0001-binutils.2.31.max-page-size.patch' # http://lists.gnu.org/archive/html/bug-binutils/2018-03/msg00193.html
+  # Fix for binutils 2.34
   '0002-binutils.2.34.sysexit.patch' # https://gist.github.com/bbidulock/263c5c3aee34e3a1b09dca0b937c210b
+  # Fix for systemd 245
+  # https://forum.odroid.com/viewtopic.php?f=141&t=38171
+  # by stas-t Re: C2 won't boot up after upgrading systemd to 245-1 on Arch
   '0003-systemd.245.kernel.316.ambient.capabilities.patch' # https://github.com/hardkernel/linux/commit/2ddfe869e9964afe1175919557e6b4f18b78941a
   'update.sh'
 )
 md5sums=('5c569ed649a0c9711879f333e90c5386'
-         '8da6a4c655cecd0f2657436334a60d9c'
+         '94b9ee74d9d4c8fc59dbb161c6a2c361'
          '5c85a1cef25029a8eb87d0edeec0cb04'
          'f45197ec50bb5f7a85991f6e99ad49c6'
          '90cd68710e3064d9b65f5549570f7821'
@@ -42,7 +53,7 @@ md5sums=('5c569ed649a0c9711879f333e90c5386'
          '4f2248545c0a3997a1d301195b7dcfe7'
          'e6a1be64b190d846648d671c012d6dd3')
 sha256sums=('4813ad7927a7d92e5339a873ab16201b242b2748934f12cb5df9ba2cfe1d77a0'
-            '82bd3706afe2beff9ff9a00fae0dd7f92e6f8f300ba0bbe8cc778c2bced20a11'
+            '85e1b0d1e3b9e67fc46affe8cd374d8cd7406b307732401c5a4e18e011c879c2'
             '3bce3e9adce8ae3f826eebab75e9784ca92a914e526ae352de61c1da93aab8d3'
             '328539797005cb43362b75ca9965791a1ed34525101c286e4fb49694faa40e4c'
             '834bd254b56ab71d73f59b3221f056c72f559553c04718e350ab2a3e2991afe0'
@@ -72,27 +83,17 @@ prepare() {
   patch -Nup1 -i "${srcdir}/patch-${pkgver}"
   set +u; msg2 "Complete: patch-${pkgver}"; set -u
 
-  # add latest fixes from stable queue, if needed
-  # http://git.kernel.org/?p=linux/kernel/git/stable/stable-queue.git
-
-  # set DEFAULT_CONSOLE_LOGLEVEL to 4 (same value as the 'quiet' kernel param)
-  # remove this when a Kconfig knob is made available by upstream
-  # (relevant patch sent upstream: https://lkml.org/lkml/2011/7/26/227)
-  patch -Nup1 -i "${srcdir}/change-default-console-loglevel.patch"
-
-  # diff -pNaru5 'linux-3.16'{.61.orig,} > 'new_0000-unknown-rela-relocation-4-binutils.2.31.kernel.3.16.patch'
-  #(cd ..; cp -pr "${_srcname}"{,.61.orig})
-  #patch -Nup1 -i "${srcdir}/0000-unknown-rela-relocation-4-binutils.2.31.kernel.3.16.patch"
-
-  patch -Nup1 -i "${srcdir}/0001-binutils.2.31.max-page-size.patch"
-
-  # Fix for binutils 2.34
-  patch -Nup1 -i "${srcdir}/0002-binutils.2.34.sysexit.patch"
-
-  # Fix for systemd 245
-  # https://forum.odroid.com/viewtopic.php?f=141&t=38171
-  # by stas-t Re: C2 won't boot up after upgrading systemd to 245-1 on Arch
-  patch -Nup1 -i "${srcdir}/0003-systemd.245.kernel.316.ambient.capabilities.patch"
+  local _f
+  for _f in "${source[@]}"; do
+    _f="${_f%%::*}"
+    _f="${_f##*/}"
+    case "${_f}" in
+    *.patch)
+      set +u; msg2 "Patch ${_f}"; set +u
+      patch -Nup1 -i "${srcdir}/${_f}"
+      ;;
+    esac
+  done
 
   declare -A _config=([i686]='config' [x86_64]='config.x86_64')
   cat "${srcdir}/${_config[${CARCH}]}" > './.config'

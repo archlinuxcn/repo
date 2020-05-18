@@ -1,7 +1,7 @@
 # Maintainer:  <yuyichao@yyc2.yyc-arch.org>
 pkgname=julia-pkg-scripts
-pkgver=0.1.0.1.g22f0c63
-pkgrel=2
+pkgver=0.1.0.17.ge00613c
+pkgrel=3
 pkgdesc="Packaging script for julia"
 arch=('any')
 license=('custom:MIT')
@@ -19,6 +19,9 @@ package() {
   depends=('julia')
   cd julia-pkg-scripts
 
-  mkdir -p "${pkgdir}/usr/bin"
-  install -Dm644 julia-install-pkg.sh "${pkgdir}/usr/bin"
+  mkdir -p "${pkgdir}/usr/lib/julia/"
+  install -Dm644 julia-install-pkg.sh "${pkgdir}/usr/lib/julia/"
+  install -Dm755 julia-read-soname.sh "${pkgdir}/usr/lib/julia/"
+  install -Dm755 julia-gen-jll.sh "${pkgdir}/usr/lib/julia/"
+  install -Dm644 julia-gen-jll.jl "${pkgdir}/usr/lib/julia/"
 }

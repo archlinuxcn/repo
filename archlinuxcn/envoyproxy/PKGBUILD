@@ -1,38 +1,39 @@
 # Maintainer: kXuan <kxuanobj@gmail.com>
 
 pkgname=envoyproxy
-pkgver=1.10.0
-pkgrel=2
+pkgver=1.14.1
+pkgrel=1
 pkgdesc="A high performance, open source, general RPC framework that puts mobile and HTTP/2 first."
 arch=('i686' 'x86_64')
 url='https://envoyproxy.io'
 license=('Apache2')
-makedepends=('cmake' 'go' 'bazel' 'perl' 'ninja' 'python' 'git')
-source=(
-    https://github.com/$pkgname/envoy/archive/v$pkgver.tar.gz
+makedepends=(
+    'bazel'
+    'cmake'
+    'git'
+    'go'
+    'java-environment-openjdk'
+    'ninja'
+    'perl'
+    'python'
 )
-sha512sums=('59f9921642ee4cb34eb7af574a719c8468d45c17da72c2a478817b48fc121a4be7cf4b1a58bbe79261976bcba07ec8be346561f53901dba5ca2f212f65de85f1')
+source=(
+    "https://github.com/$pkgname/envoy/archive/v$pkgver.tar.gz"
+)
+sha512sums=('0d68a15f7eb5a16a26a093a993132d57941931963f06845d3ba489505f18a9a7d82c809c38c6552ef01bc542ee715152b964f1dcf6b69951c3d9bbe6b3f3af20'
+)
 
 prepare() {
   cd "envoy-$pkgver"
   go get github.com/bazelbuild/buildtools/buildifier
+  bazel --version | cut -d\  -f2 > .bazelversion
   # The commit id of $pkgver
-  echo "37bfd8ac347955661af695a417492655b21939dc" > SOURCE_VERSION
+  echo "3504d40f752eb5c20bc2883053547717bcb92fd8" > SOURCE_VERSION
 }
 
 build() {
   cd "envoy-$pkgver"
 
-  # -fno-plt cause boringssl build failed with this error:
-  # error while processing "\tjmpq\t*aes_nohw_encrypt@GOTPCREL(%rip) # TAILCALL\n" on line 94: "Cannot rewrite GOTPCREL reference for instruction \"jmpq\""
-  if [[ "$CXXFLAGS" == *-fno-plt* ]]; then
-      echo "NOTE: Found '-fno-plt' in CXXFLAGS. Drop it."
-      export CXXFLAGS=${CXXFLAGS//-fno-plt/}
-  fi
-  if [[ "$CFLAGS" == *-fno-plt* ]]; then
-      echo "NOTE: Found '-fno-plt' in CFLAGS. Drop it."
-      export CFLAGS=${CFLAGS//-fno-plt/}
-  fi
   bazel build --verbose_failures --workspace_status_command bazel/get_workspace_status -c opt //source/exe:envoy-static
 }
 

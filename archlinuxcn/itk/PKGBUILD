@@ -2,9 +2,8 @@
 
 _pkgname=InsightToolkit
 pkgname=itk
-_pkgver=5.0.1
 pkgver=5.0.1
-pkgrel=2
+pkgrel=5
 pkgdesc='An open-source, cross-platform library that provides developers with an extensive suite of software tools for image analysis'
 arch=('x86_64')
 url='https://itk.org/'
@@ -15,11 +14,13 @@ depends=(
   'eigen'
   'expat'
   'fftw'
+  'gdcm'
   'hdf5'
   'intel-tbb'
   'libjpeg'
   'libpng'
   'libtiff'
+  'ocl-icd'
   'opencv'
   'openslide'
   'python-numpy'
@@ -28,7 +29,6 @@ depends=(
   'zlib'
 )
 makedepends=(
-  'ocl-icd'
   'opencl-headers'
   'cmake'
   'git'
@@ -38,6 +38,7 @@ makedepends=(
 )
 provides=(insighttoolkit=${pkgver} insight-toolkit=${pkgver} python-itk=${pkgver})
 conflicts=(insighttoolkit insight-toolkit python-itk)
+options=(!emptydirs)
 source=("https://github.com/InsightSoftwareConsortium/ITK/releases/download/v${pkgver}/InsightToolkit-${pkgver}.tar.gz"
 "https://github.com/InsightSoftwareConsortium/ITK/releases/download/v${pkgver}/InsightData-${pkgver}.tar.gz")
 sha512sums=('f36613ff72c513ded3d32504f71308a94fe75555cf9fd22b77485d1375601f6e1f1539cc5ac82a9e1e229bcf514a88ccb55122a7dfc74a6ae1b6604aa70bd814'
@@ -51,22 +52,9 @@ build() {
   cmake_opts=(
     -DBUILD_EXAMPLES:BOOL=OFF
     -DBUILD_SHARED_LIBS:BOOL=ON
-    -DBUILD_TESTING:BOOL=ON
-    -DCMAKE_INSTALL_LIBDIR:PATH=lib
+    -DBUILD_TESTING:BOOL=OFF
     -DCMAKE_INSTALL_PREFIX:PATH=/usr
     -DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON
-    -DITK_LEGACY_REMOVE:BOOL=ON
-    -DITK_USE_64BITS_IDS_DEFAULT:BOOL=ON
-    -DITK_USE_SYSTEM_DOUBLECONVERSION:BOOL=ON
-    -DITK_USE_SYSTEM_EIGEN:BOOL=ON
-    -DITK_USE_SYSTEM_EXPAT:BOOL=ON
-    -DITK_USE_SYSTEM_GOOGLETEST:BOOL=ON
-    -DITK_USE_SYSTEM_HDF5:BOOL=ON
-    -DITK_USE_SYSTEM_JPEG:BOOL=ON
-    -DITK_USE_SYSTEM_PNG:BOOL=ON
-    -DITK_USE_SYSTEM_TIFF:BOOL=ON
-    -DITK_USE_SYSTEM_ZLIB:BOOL=ON
-    -DITK_WRAP_PYTHON:BOOL=ON
     -DITK_BUILD_DEFAULT_MODULES:BOOL=OFF
     -DITKGroup_Bridge:BOOL=ON
     -DITKGroup_Compatibility:BOOL=ON
@@ -76,31 +64,44 @@ build() {
     -DITKGroup_Nonunit:BOOL=ON
     -DITKGroup_Numerics:BOOL=ON
     -DITKGroup_Registration:BOOL=ON
-    -DITKGroup_Remote:BOOL=ON
     -DITKGroup_Segmentation:BOOL=ON
     -DITKGroup_ThirdParty:BOOL=ON
     -DITKGroup_Video:BOOL=ON
+    -DITK_LEGACY_REMOVE:BOOL=ON
+    -DITK_USE_64BITS_IDS:BOOL=ON
+    -DITK_USE_GPU:BOOL=ON
+    -DITK_USE_SYSTEM_DOUBLECONVERSION:BOOL=ON
+    -DITK_USE_SYSTEM_EIGEN:BOOL=ON
+    -DITK_USE_SYSTEM_EXPAT:BOOL=ON
+    -DITK_USE_SYSTEM_FFTW:BOOL=ON
+    -DITK_USE_SYSTEM_GDCM:BOOL=ON
+    -DITK_USE_SYSTEM_GOOGLETEST:BOOL=ON
+    -DITK_USE_SYSTEM_HDF5:BOOL=ON
+    -DITK_USE_SYSTEM_JPEG:BOOL=ON
+    -DITK_USE_SYSTEM_PNG:BOOL=ON
+    -DITK_USE_SYSTEM_TIFF:BOOL=ON
+    -DITK_USE_SYSTEM_ZLIB:BOOL=ON
+    -DITK_WRAP_PYTHON:BOOL=ON
+    -DITK_WRAP_PYTHON_LEGACY:BOOL=OFF
+    -DModule_IOOpenSlide:BOOL=ON
+    -DModule_ITKVideoBridgeOpenCV:BOOL=ON
+    -DModule_SimpleITKFilters:BOOL=ON
 )
 
-  rm -rf "${srcdir}/build"
-  mkdir "${srcdir}/build"
-  cd "${srcdir}/build"
   cmake \
-    ${cmake_opts[@]} \
-    ../${_pkgname}-${pkgver}
-  make
+    -B "build" -S "${_pkgname}-${pkgver}" \
+    ${cmake_opts[@]}
+  make -C "build"
 }
 
 check() {
   cd "${srcdir}/build"
-  ctest
+  ctest --verbose
 }
 
 package() {
-  cd "${srcdir}/build"
-  make DESTDIR="${pkgdir}" install
+  make -C "build" DESTDIR="${pkgdir}" install
   python -O -m compileall "${pkgdir}/usr/lib/python$(get_pyver)/site-packages/itk"
   rm -rvf "${pkgdir}/usr/lib/pkgconfig"
-  find "${pkgdir}" -type d -empty -delete
 }
 # vim:set ts=2 sw=2 et:

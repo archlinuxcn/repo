@@ -3,7 +3,7 @@
 
 pkgbase=imagemagick-fftw
 pkgname=(imagemagick-fftw)
-pkgver=7.0.10.6
+pkgver=7.0.10.13
 pkgrel=1
 pkgdesc="An image viewing/manipulation program"
 url="https://www.imagemagick.org/"
@@ -15,10 +15,12 @@ checkdepends=(gsfonts ttf-dejavu)
 _relname=ImageMagick-${pkgver%%.*}
 _tarname=ImageMagick-${pkgver%.*}-${pkgver##*.}
 source=(https://imagemagick.org/download/$_tarname.tar.xz{,.asc}
-        arch-fonts.diff)
-sha256sums=('30ac7ce423cef9fb7baf0aefc734ae7b2593b9499c3782057ab73b7a360a0ac5'
+        arch-fonts.diff
+        imagemagick-inkscape-1.0.patch)
+sha256sums=('9d129eae1db867fa367b7c7ca9b0e9ae6f1cbd65a9f6db7e8176823a75ef0a0a'
             'SKIP'
-            'a85b744c61b1b563743ecb7c7adad999d7ed9a8af816650e3ab9321b2b102e73')
+            'a85b744c61b1b563743ecb7c7adad999d7ed9a8af816650e3ab9321b2b102e73'
+            'dd856b0d7b5b98535d2bc61dfa995f4162677486c1eac14b384668a28a60af30')
 validpgpkeys=(D8272EF51DA223E4D05B466989AB63D48277377A)  # Lexie Parsimoniae
 
 shopt -s extglob
@@ -30,6 +32,9 @@ prepare() {
 
   # Fix up typemaps to match our packages, where possible
   patch -p1 -i ../arch-fonts.diff
+
+  # Use correct parameter for inkscape 1.0
+  patch -p1 -i ../imagemagick-inkscape-1.0.patch
 }
 
 build() {
@@ -106,8 +111,5 @@ package_imagemagick-fftw() {
 
 # Harden security policy https://bugs.archlinux.org/task/62785
   sed -e '/<\/policymap>/i \ \ <policy domain="delegate" rights="none" pattern="gs" \/>' -i "$pkgdir"/etc/ImageMagick-7/policy.xml
-
-# Use correct options for inkscape<1.0
-  sed -e 's|--export-file|--export-png|' -i "$pkgdir"/etc/ImageMagick-7/delegates.xml
 }
 

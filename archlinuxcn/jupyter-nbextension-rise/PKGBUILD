@@ -1,0 +1,33 @@
+#
+
+pkgname=jupyter-nbextension-rise
+_name=rise
+pkgver=5.6.1
+pkgrel=1
+pkgdesc='RISE: "Live" Reveal.js Jupyter/IPython Slideshow Extension'
+arch=(any)
+url="https://github.com/damianavila/RISE"
+license=('BSD')
+conflicts=(python-rise jupyter-rise)
+provides=(python-rise jupyter-rise)
+depends=('jupyter' 'python>=3.8' 'python<3.9')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
+sha256sums=('1343f068d01adc4dd0226d9b278ce93fc92f365d827431a57e8d5679eb39f4d6')
+
+build() {
+  cd rise-$pkgver
+
+  python setup.py build
+}
+
+package() {
+  cd rise-$pkgver
+  python setup.py install --root="$pkgdir/" --optimize=1 --skip-build
+
+  install -D -m644 LICENSE.md "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
+
+  # No need to call `jupyter nbextension install rise`, it is handled in setup.py
+  # however, change the path from /usr/etc to /etc
+  mv "$pkgdir/"{usr/etc,etc}
+}

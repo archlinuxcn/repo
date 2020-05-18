@@ -5,7 +5,7 @@ _cudaarch="6.0;6.1;7.0;7.5"
 _pkgname=mxnet
 pkgname=('mxnet-git' 'mxnet-cuda-git')
 _pkgver=2.0.0
-pkgver=2.0.0.r10844.13841ddd2d
+pkgver=2.0.0.r10976.8a5886a677
 pkgrel=1
 pkgdesc='A flexible and efficient library for deep learning'
 arch=('x86_64')
@@ -70,7 +70,7 @@ build() {
   cmake_opts=(
     -DBUILD_CPP_EXAMPLES:BOOL=OFF
     -DBUILD_TESTING:BOOL=OFF
-    -DCMAKE_CUDA_HOST_COMPILER=/usr/bin/g++
+    -DCMAKE_CUDA_HOST_COMPILER=/opt/cuda/bin/g++
     -DCMAKE_INSTALL_LIBDIR:PATH=lib
     -DCMAKE_INSTALL_PREFIX:PATH=/usr
     -DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON
@@ -137,6 +137,7 @@ _package() {
 
   # create neccesarry soft links
   ln -sf '/usr/lib/libmxnet.so' "${pkgdir}/usr/lib/python$(get_pyver)/site-packages/mxnet/libmxnet.so"
+  ln -s "/usr/include" "${pkgdir}/usr/lib/python$(get_pyver)/site-packages/mxnet/include"
 
   # remove unwantted files
   rm -rfv "${pkgdir}/usr/mxnet"

@@ -1,17 +1,17 @@
 # Maintainer: BennyYip <yebenmy@protonmail.com>
 pkgname=pijul
 _pkgname=pijul
-pkgver=0.11.1
+pkgver=0.12.2
 pkgrel=1
 pkgdesc="A patch-based distributed version control system, easy to use and fast. Command-line interface."
 arch=('x86_64')
 url="https://pijul.org/"
 license=('GPL-2.0+')
-makedepends=('rust' 'cargo')
+makedepends=('rust' 'cargo' 'clang')
 depends=('libsodium')
 provides=("$_pkgname")
 source=($_pkgname.tar.gz::"https://crates.io//api/v1/crates/$_pkgname/$pkgver/download")
-sha256sums=('10ed9a0c7a3f8bed92fbb0fac07d1731333d214cdc299577510783d3ef6bcdd5')
+sha256sums=('f92a3f4063e780ca45c161ceb0f42baf34dfeddf3359ebf6c2e0442d9abb5889')
 
 build() {
   cd $srcdir/$_pkgname-$pkgver

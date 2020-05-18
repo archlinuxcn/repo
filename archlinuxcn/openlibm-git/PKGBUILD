@@ -1,26 +1,31 @@
 # Maintainer: Arthur Zamarin <arthurzam@gmail.com>
 
-pkgbase=openlibm-git
-if [[ $CARCH = x86_64 ]]; then
-    pkgname=(openlibm-git openlibm-git-avx2)
-else
-    pkgname=(openlibm-git)
-fi
+pkgname=openlibm-git
 pkgver=0.7.0.3.g5b0e7e9
-pkgrel=1
+pkgrel=4
 pkgdesc="standalone implementation of C mathematical functions"
 arch=(i686 x86_64 armv7h aarch64)
 url="https://github.com/JuliaLang/openlibm"
 license=('BSD')
-provides=('openlibm=0.5.4')
+provides=('openlibm=0.7.0')
+if [[ $CARCH = x86_64 ]]; then
+  provides+=(openlibm-git-avx2 openlibm-avx2)
+  replaces+=(openlibm-git-avx2)
+fi
 conflicts=('openlibm')
 options=('debug' '!strip')
 makedepends=('git')
 source=("git://github.com/JuliaLang/openlibm")
 md5sums=('SKIP')
 
-_CFLAGS_common=' -g -flto -O3'
-_LDFLAGS_common=' -g -flto -O3 -fno-plt -Wl,-Bsymbolic-functions'
+# LTO seems to mess up symbol table
+_CFLAGS=' -g -O3'
+_LDFLAGS=' -g -O3 -fno-plt -Wl,-Bsymbolic-functions'
+
+if [[ $CARCH = x86_64 ]]; then
+  _CFLAGS+=' -mtune=skylake'
+  _LDFLAGS+=' -mtune=skylake'
+fi
 
 pkgver() {
   cd openlibm
@@ -29,45 +34,29 @@ pkgver() {
 }
 
 prepare() {
-  (cd openlibm
-   git reset --hard HEAD
-   git clean -fdx
+  cd openlibm
+  git reset --hard HEAD
+  git clean -fdx
 
-   sed -i "s@/usr/local@/usr@" Make.inc)
-
-  if [[ $CARCH = x86_64 ]]; then
-      rm -rf openlibm-avx2
-      cp -a openlibm openlibm-avx2
+  if [[ $CARCH = x86_64 ]] || [[ $CARCH = i686 ]]; then
+    find -iname '*.c' -exec sed -i 's/OLM_DLLEXPORT/OLM_DLLEXPORT __attribute__((flatten, target_clones("default,avx2,avx512f")))/' {} \;
   fi
+
+  sed -i "s@/usr/local@/usr@" Make.inc
 }
 
 build() {
-  CFLAGS+="$_CFLAGS_common"
-  LDFLAGS+="$_LDFLAGS_common"
-  (cd openlibm
-   make)
-
-  if [[ $CARCH = x86_64 ]]; then
-      (cd openlibm-avx2
-       CFLAGS+=' -mavx2 -march=haswell'
-       LDFLAGS+=' -mavx2 -march=haswell'
-       make)
-  fi
+  CFLAGS+="$_CFLAGS"
+  LDFLAGS+="$_LDFLAGS"
+  cd openlibm
+  make
 }
 
 package_openlibm-git() {
   cd openlibm
   provides+=('openlibm-git-debug')
   replaces+=('openlibm-git-debug')
-  (CFLAGS+="$_CFLAGS_common"
-   LDFLAGS+="$_LDFLAGS_common"
-   make DESTDIR="$pkgdir" install)
-}
-
-package_openlibm-git-avx2() {
-  cd openlibm-avx2
-  provides+=(openlibm-git openlibm-avx2)
-  (CFLAGS+="$_CFLAGS_common -mavx2 -march=haswell"
-   LDFLAGS+="$_LDFLAGS_common -mavx2 -march=haswell"
-   make DESTDIR="$pkgdir" install)
+  CFLAGS+="$_CFLAGS"
+  LDFLAGS+="$_LDFLAGS"
+  make DESTDIR="$pkgdir" install
 }

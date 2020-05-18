@@ -4,13 +4,13 @@
 
 _pkgname=fcitx5-chinese-addons
 pkgname=${_pkgname}-git
-pkgver=r170.54ef2da
+pkgver=r218.040b5fb
 pkgrel=1
 pkgdesc="Addons related to Chinese, including IME previous bundled inside fcitx4"
 arch=('i686' 'x86_64')
 url="https://github.com/fcitx/fcitx5-chinese-addons"
 license=('GPL')
-depends=('curl' 'libime-git' 'qt5-webengine' 'fcitx5-qt5-git' 'boost-libs' 'opencc' 'fcitx5-git')
+depends=('curl' 'libime-git' 'qt5-webkit' 'fcitx5-qt5-git' 'opencc')
 makedepends=('boost' 'extra-cmake-modules' 'git' 'fcitx5-lua-git')
 optdepends=('fcitx5-lua-git: Lua and imeapi support from pinyin')
 provides=(${_pkgname})

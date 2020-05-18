@@ -1,0 +1,54 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+pkgname=vxl
+pkgver=2.0.2
+pkgrel=2
+pkgdesc='A multi-platform collection of C++ software libraries for Computer Vision and Image Understanding'
+arch=('x86_64')
+url='https://github.com/vxl/vxl'
+license=('BSD')
+depends=(
+  ffmpeg
+  glu
+  libdc1394
+  libgeotiff
+  libpng
+  libtiff
+  libxft
+  libxinerama
+  libxkbfile
+  libxmu
+  libxpm
+  libxres
+  libxss
+  libxt
+  openjpeg2
+)
+makedepends=('cmake')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/vxl/vxl/archive/v${pkgver}.tar.gz")
+sha512sums=('113a94cd4e904d39d6ee9a854523de09f607570b97acef8e83ce95f71439549abe9f15b0bc367a0c193b2da2b68acea6b4263660bcf979fc0f87c10193253fb3')
+
+build() {
+	cmake \
+	  -B "build" \
+	  -S "${pkgname}-${pkgver}" \
+	  -DVXL_BUILD_EXAMPLES:BOOL=OFF \
+	  -DBUILD_SHARED_LIBS=BOOL:ON \
+    -DBUILD_TESTING:BOOL=OFF \
+	  -DCMAKE_INSTALL_PREFIX=/usr \
+	  -DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON \
+	  -DVXL_BUILD_CORE_VIDEO:BOOL=ON \
+	  -DVXL_BUILD_DCMTK:BOOL=ON \
+	  -DVXL_BUILD_VGUI:BOOL=ON \
+	  -DVXL_USE_LFS:BOOL=ON \
+	  -Wno-dev
+	make -C "build"
+}
+
+package() {
+	make -C "build" DESTDIR="${pkgdir}" install
+	install -Dm644 "${srcdir}/${pkgname}-${pkgver}/core/vxl_copyright.h" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  rm -rfv "${pkgdir}/usr/v3p"
+}
+# vim:set ts=2 sw=2 et:
+

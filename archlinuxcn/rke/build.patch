@@ -1,0 +1,14 @@
+--- rke-1.0.2/scripts/build	2020-01-25 14:38:29.922569136 -0500
++++ rke-1.0.2-patches/scripts/build	2020-01-25 14:38:59.085902963 -0500
+@@ -10,8 +10,9 @@
+ OS_ARCH_ARG_DARWIN="amd64"
+ 
+ mkdir -p bin
+-[ "$(uname)" != "Darwin" ] && LINKFLAGS="-extldflags -static -s"
+-CGO_ENABLED=0 go build -ldflags "-X main.VERSION=$VERSION $LINKFLAGS" -o bin/rke
++# https://wiki.archlinux.org/index.php/Go_package_guidelines#Flags_and_build_options
++[ "$(uname)" != "Darwin" ] && LINKFLAGS="-extldflags '-static -s $LDFLAGS'"
++CGO_ENABLED=0 go build -trimpath -ldflags "-X main.VERSION=$VERSION $LINKFLAGS" -o bin/rke
+ 
+ if [ -n "$CROSS" ]; then
+     rm -rf build/bin

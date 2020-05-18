@@ -1,0 +1,79 @@
+From 82e980a8fda88e473e2038e729603fb55e8750ea Mon Sep 17 00:00:00 2001
+From: Chris Wilson <chris@chris-wilson.co.uk>
+Date: Thu, 5 Dec 2019 18:33:32 +0000
+Subject: [PATCH 04/11] drm/i915: Serialise i915_active_acquire() with
+ __active_retire()
+
+As __active_retire() does it's final atomic_dec() under the
+ref->tree_lock spinlock, in order to prevent ourselves from reusing the
+ref->cache and ref->tree as they are being destroyed, we need to
+serialise with the retirement during i915_active_acquire().
+
+[  +0.000005] kernel BUG at drivers/gpu/drm/i915/i915_active.c:157!
+[  +0.000011] invalid opcode: 0000 [#1] SMP
+[  +0.000004] CPU: 7 PID: 188 Comm: kworker/u16:4 Not tainted 5.4.0-rc8-03070-gac5e57322614 #89
+[  +0.000002] Hardware name: Razer Razer Blade Stealth 13 Late 2019/LY320, BIOS 1.02 09/10/2019
+[  +0.000082] Workqueue: events_unbound active_work [i915]
+[  +0.000059] RIP: 0010:__active_retire+0x115/0x120 [i915]
+[  +0.000003] Code: 75 28 48 8b 3d 8c 6e 1a 00 48 89 ee e8 e4 5f a5 c0 48 8b 44 24 10 65 48 33 04 25 28 00 00 00 75 0f 48 83 c4 18 5b 5d 41 5c c3 <0f> 0b 0f 0b 0f 0b e8 a0 90 87 c0 0f 1f 44 00 00 48 8b 3d 54 6e 1a
+[  +0.000002] RSP: 0018:ffffb833003f7e48 EFLAGS: 00010286
+[  +0.000003] RAX: ffff8d6e8d726d00 RBX: ffff8d6f9db4e840 RCX: 0000000000000000
+[  +0.000001] RDX: ffffffff82605930 RSI: ffff8d6f9adc4908 RDI: ffff8d6e96cefe28
+[  +0.000002] RBP: ffff8d6e96cefe00 R08: 0000000000000000 R09: ffff8d6f9ffe9a50
+[  +0.000002] R10: 0000000000000048 R11: 0000000000000018 R12: ffff8d6f9adc4930
+[  +0.000001] R13: ffff8d6f9e04fb00 R14: 0000000000000000 R15: ffff8d6f9adc4988
+[  +0.000002] FS:  0000000000000000(0000) GS:ffff8d6f9ffc0000(0000) knlGS:0000000000000000
+[  +0.000002] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  +0.000002] CR2: 000055eb5a34cf10 CR3: 000000018d609002 CR4: 0000000000760ee0
+[  +0.000002] PKRU: 55555554
+[  +0.000001] Call Trace:
+[  +0.000010]  process_one_work+0x1aa/0x350
+[  +0.000004]  worker_thread+0x4d/0x3a0
+[  +0.000004]  kthread+0xfb/0x130
+[  +0.000004]  ? process_one_work+0x350/0x350
+[  +0.000003]  ? kthread_park+0x90/0x90
+[  +0.000005]  ret_from_fork+0x1f/0x40
+
+Reported-by: Kenneth Graunke <kenneth@whitecape.org>
+Fixes: c9ad602feabe ("drm/i915: Split i915_active.mutex into an irq-safe spinlock for the rbtree")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Cc: Kenneth Graunke <kenneth@whitecape.org>
+Cc: Matthew Auld <matthew.auld@intel.com>
+Tested-by: Kenneth Graunke <kenneth@whitecape.org>
+Reviewed-by: Kenneth Graunke <kenneth@whitecape.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191205183332.801237-1-chris@chris-wilson.co.uk
+---
+ drivers/gpu/drm/i915/i915_active.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/i915/i915_active.c b/drivers/gpu/drm/i915/i915_active.c
+index a19e7d89bc8a..378b52d1ab74 100644
+--- a/drivers/gpu/drm/i915/i915_active.c
++++ b/drivers/gpu/drm/i915/i915_active.c
+@@ -91,10 +91,9 @@ static void debug_active_init(struct i915_active *ref)
+ 
+ static void debug_active_activate(struct i915_active *ref)
+ {
+-	spin_lock_irq(&ref->tree_lock);
++	lockdep_assert_held(&ref->tree_lock);
+ 	if (!atomic_read(&ref->count)) /* before the first inc */
+ 		debug_object_activate(ref, &active_debug_desc);
+-	spin_unlock_irq(&ref->tree_lock);
+ }
+ 
+ static void debug_active_deactivate(struct i915_active *ref)
+@@ -407,8 +406,10 @@ int i915_active_acquire(struct i915_active *ref)
+ 	if (!atomic_read(&ref->count) && ref->active)
+ 		err = ref->active(ref);
+ 	if (!err) {
++		spin_lock_irq(&ref->tree_lock); /* vs __active_retire() */
+ 		debug_active_activate(ref);
+ 		atomic_inc(&ref->count);
++		spin_unlock_irq(&ref->tree_lock);
+ 	}
+ 
+ 	mutex_unlock(&ref->mutex);
+-- 
+2.25.2
+

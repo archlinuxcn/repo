@@ -6,7 +6,7 @@ pkgbase=gstreamer0.10-base
 _pkgname=gst-plugins-base
 pkgname=('gstreamer0.10-base' 'gstreamer0.10-base-plugins')
 pkgver=0.10.36
-pkgrel=11
+pkgrel=13
 arch=('i686' 'x86_64' 'armv7h')
 license=('LGPL')
 makedepends=('gstreamer0.10>=0.10.36' 'orc' 'libxv' 'alsa-lib' 'cdparanoia' 
@@ -18,13 +18,15 @@ source=("https://gstreamer.freedesktop.org/src/${_pkgname}/${_pkgname}-${pkgver}
         colorbalance-fix-abi.patch
         videoscale-fix-negotiation.patch
         ayuv64-lanczos.patch
-        gstaudio-symbols.patch)
+        gstaudio-symbols.patch
+        enum_headers.patch)
 sha256sums=('1fe45c3894903001d4d008b0713dab089f53726dcb5842d5b40c2595a984e64a'
             'a6a01035ea9627737f9c17f72919857ed43ccc7c2cb08b645b43ed89f78d0f4f'
             '7442c5c68068428b8c7ac1d3825ce29f1bb152b75b77047b9e806c7d322b780c'
             'ae27f7be58997217f67898b37b138a485c203389e56b65e6b31c23f769ef39ca'
             '3792dfe80c69f51c0db98533e8fb16707b5dd2ee6933ea6098583af873ceb44a'
-            '56e7a988df39d2ec4befa265536ad8c30d3c8d18d136cebef64e8d6baac1abae')
+            '56e7a988df39d2ec4befa265536ad8c30d3c8d18d136cebef64e8d6baac1abae'
+            '0e2a6ef0479621d522c7dbaeb577df3e422c8f7111f5892540f8437475a38932')
 
 prepare() {
   cd ${_pkgname}-${pkgver}
@@ -34,6 +36,7 @@ prepare() {
   patch -Np1 -i ../ayuv64-lanczos.patch
   patch -Np1 -i ../videoscale-fix-negotiation.patch
   patch -Np1 -i ../gstaudio-symbols.patch
+  patch -Np1 -i ../enum_headers.patch
 }
 
 build() {

@@ -3,17 +3,15 @@
 
 pkgname=latte-dock-git
 _gitname=latte-dock
-pkgver=0.9.11.r0.gff490a41
+pkgver=0.9.11.r4184.b264854a
 pkgrel=1
 pkgdesc='Latte is a dock based on plasma frameworks that provides an elegant and intuitive experience for your tasks and plasmoids'
 arch=('i686' 'x86_64')
 url='https://cgit.kde.org/latte-dock.git/'
 license=('GPL')
-depends=('plasma-framework' 'plasma-desktop')
+depends=('plasma-framework>=5.38.0' 'plasma-desktop')
 optdepends=('libunity: quicklists, counters, and progress bars for apps using libunity')
-makedepends=('git' 'cmake' 'extra-cmake-modules' 'python' 'subversion'
-    # 'ruby'
-    )
+makedepends=('git' 'cmake' 'extra-cmake-modules' 'python' 'subversion')
 conflicts=('latte-dock')
 provides=('latte-dock')
 source=("git://anongit.kde.org/latte-dock.git")
@@ -22,7 +20,7 @@ sha256sums=('SKIP')
 
 pkgver() {
     cd ${_gitname}
-    git describe --long --tags "$(git rev-list --tags --max-count=1)" | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+    printf "%s.r%s.%s" $(git describe --tags $(git rev-list --tags --max-count=1) | sed 's/^v//g') $(git rev-list --count HEAD) $(git rev-parse --short HEAD)
 }
 
 build() {

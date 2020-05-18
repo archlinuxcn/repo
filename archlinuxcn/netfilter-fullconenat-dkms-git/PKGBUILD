@@ -2,7 +2,7 @@
 
 pkgname=netfilter-fullconenat-dkms-git
 pkgver=r73.0cf3b48
-pkgrel=2
+pkgrel=4
 pkgdesc="A kernel module that turns MASQUERADE into full cone SNAT"
 arch=('any')
 url="https://github.com/Chion82/netfilter-full-cone-nat"
@@ -10,6 +10,8 @@ license=('GPL2')
 depends=('dkms')
 makedepends=('git')
 optdepends=('iptables-fullconenat: iptables with FULLCONENAT')
+provides=('netfilter-fullconenat')
+conflicts=('netfilter-fullconenat')
 source=("netfilter-fullconenat-dkms.conf"
         "dkms.conf"
         "Kbuild"

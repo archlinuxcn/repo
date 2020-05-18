@@ -4,8 +4,8 @@
 # Contributor: Aaron Lindsay <aaron@aclindsay.com>
 
 pkgname=seahub
-pkgver=7.1.3
-pkgrel=1
+pkgver=7.1.4
+pkgrel=2
 pkgdesc='The web frontend for seafile server'
 arch=('any')
 url='https://github.com/haiwen/seahub'
@@ -13,66 +13,80 @@ license=('Apache')
 makedepends=('python-setuptools')
 source=("$pkgname-$pkgver-server.tar.gz::$url/archive/v$pkgver-server.tar.gz"
         "https://www.djangoproject.com/m/releases/1.11/Django-1.11.25.tar.gz"
-        fix_shared_link.patch)
-sha256sums=('a2cf1ad1ff357b06c112f3f80e2e4a2ef109813496c96afc309449f6915e8797'
+        0001-Add-support-for-more-audio-and-video-formats.patch)
+sha256sums=('4b4a53df13234582cb283695a8a15af7fb97bd6f46543a3715eb7e174a613c5b'
             '5314e8586285d532b7aa5c6d763b0248d9a977a37efec86d30f0212b82e8ef66'
-            'f2af699359155b0a303044e6027828950fb3eaf11795b9143896b0a5a4431b31')
+            'fd9f7c40fea3e60661861735f7741064ae8c35e838dbaa0c5ab251ee67e35534')
 options=('!strip')
 
-prepare() {
-    cd "$srcdir/$pkgname-$pkgver-server"
-    patch -Np1 --no-backup-if-mismatch < ../fix_shared_link.patch
+_patch_js() {
+  local orig="$1"
+  local new="$2"
+  local dir="$3"
 
-    # Remove useless files and directories
-    rm -rf \
-        './'{CONTRIBUTORS,HACKING,Makefile} \
-        './'{*test*,*dev*,*sh*,README*,pylintrc*,LICENSE*}
+  # make sure there is a match
+  grep -q "$orig" "$dir"/*.js
+  sed -i "s|$orig|$new|g" "$dir"/*.js
+}
+
+prepare() {
+  cd "$srcdir/$pkgname-$pkgver-server"
+  _patch_js 'mp4:"video.png",ogv:"video.png",webm:"video.png",mov:"video.png",flv:"video.png",wmv:"video.png",rmvb:"video.png",mp3:"music.png",oga:"music.png",ogg:"music.png",flac:"music.png",aac:"music.png",ac3:"music.png",wma:"music.png",jpg:"pic.png",jpeg:"pic.png",png:"pic.png",svg:"pic.png",gif:"pic.png",bmp:"pic.png",ico:"pic.png"' 'mp4:"video.png",m4v:"video.png",mkv:"video.png",opus:"video.png",ogv:"video.png",webm:"video.png",mov:"video.png",flv:"video.png",wmv:"video.png",rmvb:"video.png",rm:"video.png",m4a:"music.png",mp3:"music.png",oga:"music.png",ogg:"music.png",flac:"music.png",aac:"music.png",ac3:"music.png",caf:"music.png",wav:"music.png",wma:"music.png",jpg:"pic.png",jpeg:"pic.png",png:"pic.png",svg:"pic.png",gif:"pic.png",bmp:"pic.png",ico:"pic.png"' media/assets/frontend/js/
+  _patch_js 'opus:"video/ogg",ogv:"video/ogg",mp4:"video/mp4",mov:"video/mp4",m4v:"video/mp4",mkv:"video/x-matroska",mp3:"audio/mpeg",aac:"audio/aac",oga:"audio/ogg",m3u8:"application/x-mpegURL"' 'opus:"video/ogg",ogv:"video/ogg",mp4:"video/mp4",mov:"video/mp4",m4v:"video/mp4",mkv:"video/x-matroska",m4a:"audio/mp4",mp3:"audio/mpeg",caf:"audio/x-caf",aac:"audio/aac",oga:"audio/ogg",m3u8:"application/x-mpegURL",flac:"audio/flac",jpg:"image/jpeg",jpeg:"image/jpeg",gif:"image/gif",png:"image/png",svg:"image/svg+xml",wav:"audio/wav",webp:"image/webp"' media/assets/frontend/js/
+
+  patch -Np1 --no-backup-if-mismatch < ../0001-Add-support-for-more-audio-and-video-formats.patch
+  # Remove useless files and directories
+  rm -rf \
+     './'{CONTRIBUTORS,HACKING,Makefile} \
+     './'{*test*,*dev*,*sh*,README*,pylintrc*,LICENSE*}
 }
 
 build() {
-    cd "$srcdir/$pkgname-$pkgver-server"
-    for locale in ./locale/*/LC_MESSAGES/*.po; do
-        msgfmt -vo "${locale%.po}.mo" "$locale"
-    done
+  cd "$srcdir/$pkgname-$pkgver-server"
+  for locale in ./locale/*/LC_MESSAGES/*.po; do
+    msgfmt -vo "${locale%.po}.mo" "$locale"
+  done
 
-    cd "$srcdir/Django-1.11.25"
-    python setup.py build
+  cd "$srcdir/Django-1.11.25"
+  python setup.py build
 }
 
 package() {
-    depends=(
-        "seafile-server>=$pkgver"
-        # The following list is from seahub/requirements.txt
-        # python-django # 1.11.25
-        'python-future'
-        # 'python-captcha' # This one seems to conflict with django-simple-captcha
-        'python-django-statici18n'
-        'python-django-post-office'
-        'python-django-webpack-loader'
-        'gunicorn'
-        'python-pymysql'
-        'python-django-picklefield'
-        'python-openpyxl'
-        'python-qrcode'
-        'python-django-formtools'
-        'python-django-simple-captcha'
-        'python-django-rest-framework'
-        'python-dateutil'
-        'python-requests'
-        'python-pillow'
-        'python-pyjwt'
-        'python-pycryptodome'
-    )
-    optdepends=(
-      'ffmpeg: For video thumbnails'
-      'python-seafdav: For WebDAV support'
-    )
-    cd "$srcdir/seahub-$pkgver-server/"
-    install -dm755 "$pkgdir/usr/share/seafile-server/seahub"
-    cp -r -p "./"* "$pkgdir/usr/share/seafile-server/seahub/"
+  depends=(
+    "seafile-server>=$pkgver"
+    # The following list is from seahub/requirements.txt
+    # python-django # 1.11.25
+    'python-future'
+    # 'python-captcha' # This one seems to conflict with django-simple-captcha
+    'python-django-statici18n'
+    'python-django-post-office'
+    'python-django-webpack-loader'
+    'gunicorn'
+    'python-pymysql'
+    'python-django-picklefield'
+    'python-openpyxl'
+    'python-qrcode'
+    'python-django-formtools'
+    'python-django-simple-captcha'
+    'python-django-rest-framework'
+    'python-dateutil'
+    'python-requests'
+    'python-pillow'
+    'python-pyjwt'
+    'python-pycryptodome'
+  )
+  optdepends=(
+    'ffmpeg: For video thumbnails'
+    'python-seafdav: For WebDAV support'
+  )
+  cd "$srcdir/seahub-$pkgver-server/"
+  install -dm755 "$pkgdir/usr/share/seafile-server/seahub"
+  cp -r -p "./"* "$pkgdir/usr/share/seafile-server/seahub/"
 
-    cd "$srcdir/Django-1.11.25"
-    python setup.py install --root="$pkgdir" --optimize=1 \
-        --install-lib "usr/share/seafile-server/seahub/thirdpart"
-    rm -rf "$pkgdir/usr/bin/"
+  cd "$srcdir/Django-1.11.25"
+  python setup.py install --root="$pkgdir" --optimize=1 \
+         --install-lib "usr/share/seafile-server/seahub/thirdpart"
+  rm -rf "$pkgdir/usr/bin/"
+
+  python -m compileall "$pkgdir/usr/share/seafile-server/seahub/"
 }

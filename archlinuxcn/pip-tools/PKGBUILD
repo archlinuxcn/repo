@@ -2,15 +2,15 @@
 # Contributor: Simon Conseil <contact+aur at saimon dot org>
 
 pkgname=pip-tools
-pkgver=4.5.1
+pkgver=5.1.2
 pkgrel=1
 pkgdesc="A set of tools to keep your pinned Python dependencies fresh."
 arch=('any')
 url="https://github.com/jazzband/pip-tools/"
 license=('BSD')
-depends=('python-click' 'python-pip' 'python-six')
+depends=('python-click' 'python-pip>=20.0' 'python-six')
 source=("https://files.pythonhosted.org/packages/source/${pkgname::1}/${pkgname}/${pkgname}-${pkgver}.tar.gz")
-md5sums=('f2183cd9e1f91ce1b4795ec1b1cd4c67')
+sha256sums=('111ec415d3776498c8c1a8596ae9651160d17ea93303a70f25aa1f8de3d1a47b')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
@@ -22,7 +22,13 @@ package() {
   cd "$srcdir/$pkgname-$pkgver"
 
   python setup.py install --root="$pkgdir/" --prefix=/usr --optimize=1 --skip-build
+  # license
   install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
+  # documentation
+  install -Dm644 CHANGELOG.md CONTRIBUTING.md README.rst \
+    -t "$pkgdir/usr/share/doc/$pkgname"
+  install -Dm644 examples/* \
+    -t "$pkgdir/usr/share/doc/$pkgname/examples"
 }
 
 # vim:set ts=2 sw=2 et:

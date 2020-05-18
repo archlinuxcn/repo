@@ -1,6 +1,6 @@
 # Maintainer: Johan Brandhorst <johan.brandhorst at gmail dot com>
 pkgname=tinygo-bin
-pkgver=0.12.0
+pkgver=0.13.1
 pkgrel=1
 epoch=
 pkgdesc='TinyGo - Go for small spaces'
@@ -10,8 +10,7 @@ license=('custom: BSD 3-clause')
 depends=('gcc-libs'
          'go>=1.11.0'
 )
-optdepends=('clang: Cortex-M support'
-            'avr-gcc: Arduino Uno support'
+optdepends=('avr-gcc: Arduino Uno support'
             'avrdude: Arduino Uno support'
             'openocd: BBC Micro:bit support'
             'arm-none-eabi-gdb: tinygo gdb support'
@@ -21,8 +20,8 @@ conflicts=('tinygo')
 source=("https://github.com/tinygo-org/tinygo/releases/download/v${pkgver}/tinygo${pkgver}.linux-amd64.tar.gz"
         "https://raw.githubusercontent.com/tinygo-org/tinygo/v${pkgver}/LICENSE"
 )
-sha256sums=('2dc9a4b9f455b62282034f6d1b97fd1aa494acb8276b9e81b31e6290f30113c9'
-            'e6efa1b804521f915053451d0c84f4824751539003ca046a4977549e02eff2f3'
+sha256sums=('a7ea6827faa70248bc5efdc8ed7f368d2ca4afed31aca974cf4fede9a3bedefc'
+            '6d2fe86f53ee2c23c92c2d30abd434bfec5bccc7163431af0fc2a0a2a11e3c5b'
 )
 
 package() {

@@ -1,0 +1,10 @@
+[Trigger]
+Type = Package
+Operation = Upgrade
+Operation = Remove
+Target = julia-git
+
+[Action]
+Description = Removing julia precompile cache...
+When = PreTransaction
+Exec = /usr/bin/bash /usr/lib/julia/julia-clear-precompile.sh /usr/share/julia/compiled/v@VER@/

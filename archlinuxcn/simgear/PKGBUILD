@@ -4,27 +4,44 @@
 # Contributor: Hans Janssen <hans@janserv.xs4all.nl>
 
 pkgname=simgear
-pkgver=2018.2.2
+pkgver=2020.1.1
 _pkgver=${pkgver%.*}
 pkgrel=2
 pkgdesc="A set of open-source libraries designed to be used as building blocks for quickly assembling 3d simulations, games, and visualization applications."
 arch=(x86_64)
-depends=('glut')
-makedepends=('boost' 'cmake' 'mesa' 'openscenegraph34' 'plib' 'freealut' 'glu')
+depends=(glu glut freealut openscenegraph expat udns)
+makedepends=(boost cmake mesa plib)
 license=("GPL")
 url="http://www.flightgear.org/"
 options=('makeflags' 'staticlibs')
 source=("https://downloads.sourceforge.net/project/flightgear/release-${_pkgver}/${pkgname}-${pkgver}.tar.bz2")
-sha256sums=('f61576bc36aae36f350154749df1cee396763604c06b8a71c4b50452d9151ce5')
+sha256sums=('d0699c1943c59fb25294ea36617d5b7bbe4ba5fb5f13481b34b880d791c8a2fc')
+
+prepare() {
+  cd "$srcdir"/simgear-$pkgver
+  # sed -i -e "s|#include <simgear/structure/map.hxx>|#include <simgear/structure/map.hxx>\n#include <boost/utility/enable_if.hpp>|g" simgear/nasal/cppbind/NasalHash.hxx
+
+  rm -rf build
+  mkdir -p build/
+}
 
 build() {
-  cd "$srcdir"/simgear-$pkgver
-  mkdir ../sgbuild && cd ../sgbuild
-  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=Release ../simgear-${pkgver}
+  cd "$srcdir"/simgear-$pkgver/build
+  cmake .. \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_INSTALL_LIBDIR=lib \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DENABLE_TESTS=Off \
+        -DSIMGEAR_SHARED=On \
+        -DSYSTEM_EXPAT=On \
+        -DSYSTEM_UDNS=On \
+        -DENABLE_SIMD=On \
+        -DENABLE_SIMD_CODE=On \
+        -DENABLE_OPENMP=On
   make
 }
 
 package() {
-  cd "$srcdir"/sgbuild
+  cd "$srcdir"/simgear-$pkgver/build
   make DESTDIR="$pkgdir" install
 }

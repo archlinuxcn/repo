@@ -2,7 +2,7 @@
 
 pkgname=lightdm-slick-greeter
 _pkgname=slick-greeter
-pkgver=1.3.2
+pkgver=1.4.0
 #_pkgver=master.mint19
 pkgrel=1
 pkgdesc='A slick-looking LightDM greeter'
@@ -28,7 +28,7 @@ makedepends=(
 backup=('etc/lightdm/slick-greeter.conf')
 install=slick-greeter.install
 source=("${_pkgname}-${pkgver}.tar.gz::$url/archive/${pkgver}.tar.gz")
-sha256sums=('0654faee4578c7499205f52e95e158b6a0ccadca8933bb3e94690f80a4f15ce0')
+sha256sums=('3fdfa6f99dcf8ebeb69646510daa95207b3f2f5e50ed9eddeb22acdd9d9c2418')
 
 #prepare() {
 #  cd ${_pkgname}-${pkgver}

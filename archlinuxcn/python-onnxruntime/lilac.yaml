@@ -12,3 +12,6 @@ update_on:
     prefix: v
   - alias: protobuf
   - alias: python
+  # re2 does not provide sodepends (yet)
+  - archpkg: re2
+    strip-release: true

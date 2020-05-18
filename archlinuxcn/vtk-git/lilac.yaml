@@ -2,7 +2,7 @@ maintainers:
   - github: hubutui
 
 build_prefix: extra-x86_64
-
+time_limit_hours: 5
 repo_depends:
   - adios2
   - libfabric
@@ -12,7 +12,7 @@ repo_depends:
   - zfp
 
 update_on:
-  - cmd: python -c "import time; print(int(time.time()) // (5 * 24 * 60 * 60))"
+  - cmd: python -c "import time; print(int(time.time()) // (10 * 24 * 60 * 60))"
   - alias: python
 # vim:set ts=2 sw=2 et:
 

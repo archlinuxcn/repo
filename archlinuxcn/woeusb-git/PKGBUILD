@@ -2,11 +2,11 @@
 # Contibutor: Salvador Pardiñas <darkfm@vera.com.uy>
 
 pkgname=woeusb-git
-pkgver=3.3.0.r0.g5e9a3a7
-pkgrel=8
+pkgver=3.3.1.r0.gf21bb19
+pkgrel=2
 pkgdesc="A Linux program to create Windows USB stick installer from a real Windows DVD or an image"
 arch=('x86_64')
-url="https://github.com/WoeUSB/WoeUSB-frontend-wxgtk"
+url="https://github.com/slacka/WoeUSB"
 license=('GPL3')
 depends=('wxgtk3' 'grub' 'dosfstools' 'parted' 'wget' 'ntfs-3g')
 optdepends=('gksu'
@@ -14,28 +14,28 @@ optdepends=('gksu'
 makedepends=('git')
 provides=("woeusb")
 conflicts=("woeusb")
-source=('git+https://github.com/WoeUSB/WoeUSB-frontend-wxgtk.git')
+source=('git+https://github.com/slacka/WoeUSB.git')
 md5sums=('SKIP')
 
 pkgver() {
-    cd "$srcdir/WoeUSB-frontend-wxgtk"
+    cd "$srcdir/WoeUSB"
     git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 prepare() {
-	cd "$srcdir/WoeUSB-frontend-wxgtk"
+	cd "$srcdir/WoeUSB"
     ./setup-development-environment.bash
 	autoreconf --force --install
 }
 
 build() {
-	cd "$srcdir/WoeUSB-frontend-wxgtk"
+	cd "$srcdir/WoeUSB"
 	autoconf
 	./configure --with-wx-config=wx-config-gtk3
 	make
 }
 
 package() {
-	cd "$srcdir/WoeUSB-frontend-wxgtk"
+	cd "$srcdir/WoeUSB"
 	make DESTDIR="$pkgdir/" prefix="/usr" install
 }

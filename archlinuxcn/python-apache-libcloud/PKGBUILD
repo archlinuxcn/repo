@@ -6,7 +6,7 @@
 
 _name=apache-libcloud
 pkgname=python-apache-libcloud
-pkgver=2.8.1
+pkgver=3.0.0
 pkgrel=1
 pkgdesc="standard Python library that abstracts away differences among multiple cloud provider APIs"
 arch=('any')
@@ -16,7 +16,7 @@ depends=('python-requests')
 makedepends=('python-setuptools')
 checkdepends=('python-mock' 'python-pytest-runner' 'openssh' 'python-requests-mock' 'python-pyopenssl')
 source=(https://files.pythonhosted.org/packages/source/${_name::1}/$_name/$_name-$pkgver.tar.gz{,.asc})
-sha512sums=('10cdccfad211857807ed9b98eb3cd54c0f25cac37077afa9a8635a7fed53ab1f58e3c6b4c3cf3f40e51de7d541263fbfe2ff341c71a8ea8477123d8d27c66236'
+sha512sums=('c04e55e0b7b8943250fd3b291d7aa5e2aa67c4460405f8cb7f527a2c95e045dcd4ce3785ad83fe8284e49d761c84c3f243f491e59c94de463e2079d77da09332'
             'SKIP')
 # possible keys: https://downloads.apache.org/libcloud/KEYS
 validpgpkeys=('3ACBB4086C01F7376628088CAB4A19AE1CE85744'  # Anthony Shaw <anthonyshaw@apache.org>

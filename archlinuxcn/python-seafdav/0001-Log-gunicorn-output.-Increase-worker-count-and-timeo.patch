@@ -1,0 +1,31 @@
+From e2f335cbc1b610d551ffb1473780f680b1e55c74 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sun, 17 May 2020 00:06:19 -0400
+Subject: [PATCH] Log gunicorn output. Increase worker count and timeout for
+ better support of uploading large files
+
+---
+ wsgidav/server/server_cli.py | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/wsgidav/server/server_cli.py b/wsgidav/server/server_cli.py
+index dae4e37..535ff5b 100644
+--- a/wsgidav/server/server_cli.py
++++ b/wsgidav/server/server_cli.py
+@@ -501,8 +501,11 @@ class GunicornApplication(gunicorn.app.base.BaseApplication):
+ def _run_gunicorn(app, config, mode):
+     options = {
+         'bind': '%s:%s' % (config.get('host'), config.get('port')),
+-        'workers': 5,
+-        "pidfile": config.get('pidfile'), 
++        'workers': 10,
++        "pidfile": config.get('pidfile'),
++        "errorlog": config.get('log_file'),
++        "accesslog": config.get('log_file'),
++        "timeout": 1800,
+     }
+ 
+     GunicornApplication(app, options).run()
+-- 
+2.26.2
+

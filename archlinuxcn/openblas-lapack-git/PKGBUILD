@@ -6,7 +6,7 @@
 pkgbase=openblas-git
 pkgname=(openblas-git--dummy-for-debug openblas-git openblas-lapack-git)
 _pkgname=OpenBLAS
-pkgver=v0.2.20.r1926.g7905383c
+pkgver=v0.2.20.r2064.g20245ded
 pkgrel=1
 pkgdesc="Optimized BLAS library based on GotoBLAS2 1.13 BSD"
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -62,6 +62,8 @@ build() {
   cd "${_pkgname}"
 
   export FFLAGS="-g -O2"
+  echo "MAKEFLAGS='$MAKEFLAGS'"
+  env
 
   # The OpenBLAS build system doesn't handle update very well.
   git clean -fdx
@@ -83,6 +85,8 @@ package_openblas-git() {
   conflicts=('openblas')
 
   cd "${_pkgname}"
+  echo "MAKEFLAGS='$MAKEFLAGS'"
+  env
 
   make "${_config[@]}" PREFIX="${pkgdir}/usr" install &> install.log || {
     cat install.log
@@ -107,6 +111,7 @@ package_openblas-lapack-git() {
   rm -rf pkg
   mkdir -p "${pkgdir}/usr/"{include,lib}/
   cd "${_pkgname}"
+  echo "MAKEFLAGS='$MAKEFLAGS'"
 
   make "${_config[@]}" PREFIX="${srcdir}/pkg" install
 

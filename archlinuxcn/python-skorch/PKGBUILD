@@ -2,7 +2,7 @@
 
 _pkgname=skorch
 pkgname=python-skorch
-pkgver=0.7.0
+pkgver=0.8.0
 pkgrel=1
 pkgdesc='A scikit-learn compatible neural network library that wraps pytorch'
 arch=(any)
@@ -12,7 +12,7 @@ depends=(python-numpy python-pytorch python-scikit-learn python-scipy python-tab
 makedepends=(python-setuptools)
 checkdepends=(flake8 python-flaky python-pytest python-pytest-cov)
 source=("${_pkgname}-${pkgver}.tar.gz"::"https://github.com/skorch-dev/skorch/archive/v${pkgver}.tar.gz")
-sha512sums=('70759ee87739e544196ac6350ba640b419a0f964ee710ce572455528454064661216a1dbf424c2e44560139cec62fefb6abcb2e5ad23b168b7d7fbcbd94e40af')
+sha512sums=('f5b32f174005c68405eb2b9cf53fd594f0093fd383cd2d18dfe0837b6e996ac60507b04037b4055a812a4f1df804dda4e1f732ffa2b070d345b10d28ca460e8b')
 
 prepare() {
 # dirty hack to pass all the tests, might be removed once upstream fix it

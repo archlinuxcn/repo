@@ -2,7 +2,7 @@
 # Contributors: Felix Seidel, Claudia Pellegrino, Liu Yuxuan
 
 pkgname=1password-cli
-pkgver=0.9.4
+pkgver=0.10.0
 pkgrel=1
 pkgdesc="1Password command line tool"
 arch=('x86_64' 'i686' 'arm' 'armv6h' 'aarch64')
@@ -16,11 +16,11 @@ source_arm=("https://cache.agilebits.com/dist/1P/op/pkg/v${pkgver}/op_linux_arm_
 source_armv6h=("${source_arm}")
 source_aarch64=("${source_arm}")
 
-sha256sums_x86_64=('02ecf34ea840552926d3273bcf07f08658c3c5481e8f1630b48eb7c841f4ed8b')
-sha256sums_i686=('1f05c745612a5bee822a421f59503ca0b18b03902ff10a4c2f9fe18c089c8269')
-sha256sums_arm=('41b69bc5b3146039c7b2fd6672a7bbf5fda825f394353de00e5e3eec5c233f82')
-sha256sums_armv6h=('41b69bc5b3146039c7b2fd6672a7bbf5fda825f394353de00e5e3eec5c233f82')
-sha256sums_aarch64=('41b69bc5b3146039c7b2fd6672a7bbf5fda825f394353de00e5e3eec5c233f82')
+sha256sums_x86_64=('f1e8f371958d3b12dbefb85a41ce7cac411c9830964d0c7cbf8d2315ad55a836')
+sha256sums_i686=('1f10d7d8b6f6330728c851c5099413863c9fba22c50aa80bacbe4f30a27b2d53')
+sha256sums_arm=('b1d63015f5cd9a8f944fbfeb6af472c95041f48c5ea3d0524607f7476fb2c535')
+sha256sums_armv6h=('b1d63015f5cd9a8f944fbfeb6af472c95041f48c5ea3d0524607f7476fb2c535')
+sha256sums_aarch64=('b1d63015f5cd9a8f944fbfeb6af472c95041f48c5ea3d0524607f7476fb2c535')
 
 check() {
   if (( ! SKIPPGPCHECK )); then

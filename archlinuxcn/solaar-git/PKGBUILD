@@ -4,7 +4,7 @@
 
 _name=Solaar
 pkgname=solaar-git
-pkgver=1143.ca9f9b3
+pkgver=1183.4472256
 pkgrel=2
 pkgdesc="Device manager for Logitech's Unifying receiver peripherals"
 url="https://pwr-solaar.github.io/Solaar/"
@@ -39,6 +39,4 @@ package() {
   # docs
   install -vDm 644 {ChangeLog,README.md} \
     -t "${pkgdir}/usr/share/doc/${pkgname}/"
-  # install fix
-  mv "${pkgdir}/usr/etc" "${pkgdir}/etc"
 }

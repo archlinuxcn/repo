@@ -43,12 +43,12 @@ pkgver() {
 	cd "YouCompleteMe" || exit
 	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
-pkgrel=1.1
+pkgrel=2
 pkgdesc="A code-completion engine for Vim"
 arch=('x86_64')
 url='https://ycm-core.github.io/YouCompleteMe/'
 license=('GPL3')
-depends=('boost' 'boost-libs' 'python' 'nodejs' 'vim' 'clang')
+depends=('boost' 'boost-libs' 'python' 'nodejs' 'vim' 'clang' 'python-watchdog')
 optdepends=('rustup: rust language support'
             'omnisharp-roslyn-http-bin: C# language support')
 makedepends=('cmake' 'git' 'make' 'curl')
@@ -188,8 +188,11 @@ build() {
 	make ycm_core
 
 	if [[ "$_gocode" == "y" ]]; then
-		cd "$srcdir"/YouCompleteMe/third_party/ycmd/third_party/go/src/golang.org/x/tools/cmd/gopls || exit
-		go build
+		local _local_GOPATH="$srcdir"/YouCompleteMe/third_party/ycmd/third_party/go
+		mkdir ${_local_GOPATH} || exit
+		cd ${_local_GOPATH} || exit
+		GO111MODULE=on GOPATH=${_local_GOPATH} go get -trimpath golang.org/x/tools/gopls@v0.4.0
+		GO111MODULE=on GOPATH=${_local_GOPATH} go clean -modcache
 	else
 		echo 'Skipping Gocode completer...'
 	fi

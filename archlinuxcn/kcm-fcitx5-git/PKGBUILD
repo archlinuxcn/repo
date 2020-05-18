@@ -5,13 +5,13 @@
 _pkgname=kcm-fcitx5
 pkgbase=$_pkgname-git
 pkgname=(kcm-fcitx5-git fcitx5-config-qt-git kbd-layout-viewer5-git)
-pkgver=r259.8afa921
+pkgver=r291.44f6113
 pkgrel=1
 pkgdesc="KDE Config Module for Fcitx5"
 arch=('i686' 'x86_64')
 url="https://github.com/fcitx/kcm-fcitx5"
 license=('GPL')
-depends=('fcitx5-qt5-git' 'kconfigwidgets' 'kitemviews')
+depends=('fcitx5-qt5-git' 'kconfigwidgets' 'kitemviews' 'kirigami2' 'kpackage')
 makedepends=('extra-cmake-modules' 'python' 'git' 'kcmutils')
 conflicts=("$_pkgname")
 provides=("$_pkgname")

@@ -3,7 +3,7 @@
 
 pkgname=python-spotipy
 _pkgname=spotipy
-pkgver=2.9.0
+pkgver=2.11.2
 pkgrel=1
 pkgdesc='Simple client for the Spotify Web API'
 arch=(any)
@@ -17,7 +17,7 @@ source=("https://github.com/plamere/${_pkgname}/archive/${pkgver}.tar.gz")
 
 pkgver() {
   cd ${_pkgname}-${pkgver}
-  grep version setup.py |cut -f 2 -d "=" |grep -oP "(?<=\').*?(?=\')"
+  grep version setup.py | cut -d "=" -f 2 | grep -oP "(?<=\').*?(?=\')"
 }
 
 build() {
@@ -31,4 +31,4 @@ package() {
   install -Dm644 LICENSE.md "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
 
-sha256sums=('51197f578a56c0197b717e4bbe7a60e11aa8ad41ea15b5d8773c24fa398e42db')
+sha256sums=('9473201662ae72f0defcf95ff3ebfee57dfa2183955f9f90d7796b8ba7d81530')

@@ -2,14 +2,14 @@
 
 _pkgname=yuzu
 pkgname=$_pkgname-git
-pkgver=r14207.6d1ddafe1
+pkgver=r14688.d8dbe4230
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (mainline GIT version)"
 arch=('i686' 'x86_64')
 url="https://github.com/yuzu-emu/yuzu-mainline"
 license=('GPL2')
-depends=('shared-mime-info' 'desktop-file-utils' 'sdl2' 'qt5-base' 'qt5-multimedia' 'qt5-tools' 'libxkbcommon-x11')
-makedepends=('git' 'cmake' 'python2')
+depends=('shared-mime-info' 'hicolor-icon-theme' 'sdl2' 'qt5-base' 'qt5-multimedia' 'qt5-tools' 'libxkbcommon-x11' 'fmt' 'libzip' 'opus' 'libfdk-aac' 'lz4' 'mbedtls' 'openssl' 'zstd')
+makedepends=('git' 'cmake' 'ninja' 'python2' 'conan' 'graphviz' 'doxygen' 'clang' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'desktop-file-utils')
 optdepends=('qt5-wayland: for Wayland support')
 provides=('yuzu' 'yuzu-canary-git' 'yuzu-cmd' 'yuzu-mainline' 'yuzu-canary' 'yuzu-mainline-git')
 conflicts=('yuzu-canary-git' 'yuzu-master-git')
@@ -27,6 +27,9 @@ prepare() {
 
 	git submodule init
 	git submodule update --init --recursive
+
+  sed -i 's/Werror=reorder/Wno-reorder/g' src/CMakeLists.txt
+  sed -i 's/Werror=conversion/Wno-conversion/g' src/video_core/CMakeLists.txt
 }
 
 build() {
@@ -40,29 +43,30 @@ build() {
 	
 	# Hopefully temporary fix for a compilation error involving fmt
 	CXXFLAGS+=" -DFMT_USE_USER_DEFINED_LITERALS=0"
-	
+
+	# Flag to disable pre-compiled headers so boost can build properly
+	# CXXFLAGS+=" -DENABLE_PRECOMPILED_HEADERS=OFF"
+
+	# Flag to fix SDL exceptions occurring in some users' builds
+	CXXFLAGS+=" -I/usr/include/SDL2 -D_REENTRANT -pthread -lSDL2"
+
 	mkdir -p build && cd build
-	cmake .. \
+	cmake -GNinja .. \
 	  -DCMAKE_INSTALL_PREFIX=/usr \
 	  -DCMAKE_BUILD_TYPE=Release \
-	  -DYUZU_USE_BUNDLED_UNICORN=ON \
 	  -DYUZU_ENABLE_COMPATIBILITY_REPORTING=ON \
+    -DYUZU_USE_BUNDLED_UNICORN=ON \
 	  -DENABLE_COMPATIBILITY_LIST_DOWNLOAD=ON \
 	  -DUSE_DISCORD_PRESENCE=ON
-	make
+ ninja
 }
 
-# Tests removed temporarily as they haven't been updated and throw a false error
-#check() {
-#	cd "$srcdir/$_pkgname/build"
-#	make test
-#}
+check() {
+	cd "$srcdir/$_pkgname/build"
+	ninja test
+}
 
 package() {
 	cd "$srcdir/$_pkgname/build"
-	make DESTDIR="$pkgdir/" install
-	
-	# Temporary fix until yuzu fixes the zlib and libzip patch
-	cd "$pkgdir/usr"
-	rm -rf include lib lib64 share/man share/pkgconfig
+	DESTDIR="$pkgdir" ninja install
 }

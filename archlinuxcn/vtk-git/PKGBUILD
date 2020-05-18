@@ -1,8 +1,8 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
-pkgname=vtk-git
-_pkgver=9.0.0rc1
-pkgver=9.0.0rc1.r73878.c5463a17ea
+pkgname=(vtk-git vtk-cuda-git)
+_pkgver=9.0.0
+pkgver=9.0.0rc1.r74524.06c1830867
 pkgrel=1
 pkgdesc='A software system for 3D computer graphics, image processing, and visualization'
 arch=('x86_64')
@@ -23,6 +23,7 @@ depends=(
   'openturns'
   'ospray'
   'pdal'
+  'pegtl'
   'postgresql'
   'proj'
   'pugixml'
@@ -34,6 +35,7 @@ depends=(
 makedepends=(
   'boost'
   'cmake'
+  'cuda'
   'eigen'
   'gcc-fortran'
   'git'
@@ -56,10 +58,10 @@ optdepends=(
   'qt5-webkit'
   'qt5-x11extras'
 )
-provides=("vtk")
-conflicts=("vtk")
+provides=(vtk=${pkgver})
+conflicts=(vtk)
 source=("git+https://gitlab.kitware.com/vtk/vtk.git")
-sha256sums=("SKIP")
+sha256sums=('SKIP')
 
 get_pyver() {
   python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
@@ -76,37 +78,58 @@ pkgver() {
 }
 
 build() {
-  cd "${srcdir}/vtk"
-  mkdir -p build && cd build
-  cmake .. \
-    -DBUILD_SHARED_LIBS=ON \
-    -DBUILD_TESTING=OFF \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_LIBDIR=lib \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_SKIP_INSTALL_RPATH=ON \
-    -DVTK_BUILD_ALL_MODULES=ON \
-    -DVTK_BUILD_TESTING=OFF \
-    -DVTK_LEGACY_REMOVE=ON \
-    -DVTK_MODULE_ENABLE_VTK_FiltersOpenTURNS=YES \
-    -DVTK_MODULE_ENABLE_VTK_IOLAS=NO \
-    -DVTK_MODULE_ENABLE_VTK_RenderingOpenVR=NO \
-    -DVTK_MODULE_USE_EXTERNAL_VTK_gl2ps=OFF \
-    -DVTK_MODULE_USE_EXTERNAL_VTK_libharu=OFF \
-    -DVTK_PYTHON_VERSION="3" \
-    -DVTK_USE_EXTERNAL=ON \
-    -DVTK_USE_FFMPEG_ENCODER=ON \
-    -DVTK_USE_LARGE_DATA=ON \
-    -DVTK_USE_MPI=ON \
+  cmake_opts=(
+    -DBUILD_SHARED_LIBS=ON
+    -DBUILD_TESTING=OFF
+    -DCMAKE_C_COMPILER=/opt/cuda/bin/gcc
+    -DCMAKE_CUDA_HOST_COMPILER=/opt/cuda/bin/g++
+    -DCMAKE_CXX_COMPILER=/opt/cuda/bin/g++
+    -DCMAKE_INSTALL_LIBDIR=lib
+    -DCMAKE_INSTALL_PREFIX=/usr
+    -DCMAKE_SKIP_INSTALL_RPATH=ON
+    -DVTK_BUILD_ALL_MODULES=ON
+    -DVTK_BUILD_TESTING=OFF
+    -DVTK_LEGACY_REMOVE=ON
+    -DVTK_MODULE_ENABLE_VTK_FiltersOpenTURNS=YES
+    -DVTK_MODULE_ENABLE_VTK_IOLAS=NO
+    -DVTK_MODULE_ENABLE_VTK_RenderingOpenVR=NO
+    -DVTK_MODULE_USE_EXTERNAL_VTK_gl2ps=OFF
+    -DVTK_MODULE_USE_EXTERNAL_VTK_libharu=OFF
+    -DVTK_PYTHON_VERSION="3"
+    -DVTK_USE_EXTERNAL=ON
+    -DVTK_USE_FFMPEG_ENCODER=ON
+    -DVTK_USE_LARGE_DATA=ON
+    -DVTK_USE_MPI=ON
     -DVTK_WRAP_PYTHON=ON
-  make
+    -DVTKm_CUDA_Architecture=all
+)
+  
+  cmake -B "${srcdir}/build-vtk-git" -S "${srcdir}/vtk" \
+    -DVTK_USE_CUDA=OFF \
+    ${cmake_opts[@]}
+  make -C "${srcdir}/build-vtk-git"
+  
+  cmake -B "${srcdir}/build-vtk-cuda-git" -S "${srcdir}/vtk" \
+    -DVTK_USE_CUDA=ON \
+    ${cmake_opts[@]}
+  make -C "${srcdir}/build-vtk-cuda-git"
 }
 
-package() {
-  cd "${srcdir}/vtk/build"
-  make DESTDIR="${pkgdir}" install
+_package() {
+  make -C "${srcdir}/build-${pkgname}" DESTDIR="${pkgdir}" install
   install -D -m644 "${srcdir}/vtk/Copyright.txt" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
   python -O -m compileall "${pkgdir}/usr/lib/python$(get_pyver)/site-packages"
+}
+
+package_vtk-git() {
+  _package
+}
+
+package_vtk-cuda-git() {
+  pkgdesc="${pkgdesc} (with CUDA)"
+  depends+=(cuda)
+
+  _package
 }
 # vim:set ts=2 sw=2 et:
 

@@ -1,0 +1,132 @@
+diff --unified --recursive --text package.orig/common/glib-gen.mak package.new/common/glib-gen.mak
+--- package.orig/common/glib-gen.mak	2020-03-18 22:16:50.800759634 -0400
++++ package.new/common/glib-gen.mak	2020-03-18 22:17:26.360479044 -0400
+@@ -5,7 +5,7 @@
+ #glib_enum_define=GST_COLOR_BALANCE
+ #glib_enum_prefix=gst_color_balance
+ 
+-enum_headers=$(foreach h,$(glib_enum_headers),\n\#include \"$(h)\")
++enum_headers=$(foreach h,$(glib_enum_headers),\n#include \"$(h)\")
+ 
+ # these are all the rules generating the relevant files
+ %-marshal.h: %-marshal.list
+diff --unified --recursive --text package.orig/common/gst-glib-gen.mak package.new/common/gst-glib-gen.mak
+--- package.orig/common/gst-glib-gen.mak	2020-03-18 22:16:50.800759634 -0400
++++ package.new/common/gst-glib-gen.mak	2020-03-18 22:17:26.360479044 -0400
+@@ -6,7 +6,7 @@
+ #glib_gen_prefix=gst_color_balance
+ #glib_gen_basename=colorbalance
+ 
+-enum_headers=$(foreach h,$(glib_enum_headers),\n\#include \"$(h)\")
++enum_headers=$(foreach h,$(glib_enum_headers),\n#include \"$(h)\")
+ 
+ # these are all the rules generating the relevant files
+ $(glib_gen_basename)-marshal.h: $(glib_gen_basename)-marshal.list
+diff --unified --recursive --text package.orig/gst/encoding/Makefile.in package.new/gst/encoding/Makefile.in
+--- package.orig/gst/encoding/Makefile.in	2020-03-18 22:16:50.807426248 -0400
++++ package.new/gst/encoding/Makefile.in	2020-03-18 22:17:26.620476983 -0400
+@@ -493,7 +493,7 @@
+ BUILT_SOURCES = $(built_headers) $(built_sources)
+ EXTRA_DIST = gstencode-marshal.list
+ CLEANFILES = $(BUILT_SOURCES)
+-enum_headers = $(foreach h,$(glib_enum_headers),\n\#include \"$(h)\")
++enum_headers = $(foreach h,$(glib_enum_headers),\n#include \"$(h)\")
+ all: $(BUILT_SOURCES)
+ 	$(MAKE) $(AM_MAKEFLAGS) all-am
+ 
+diff --unified --recursive --text package.orig/gst/playback/Makefile.in package.new/gst/playback/Makefile.in
+--- package.orig/gst/playback/Makefile.in	2020-03-18 22:16:50.804092941 -0400
++++ package.new/gst/playback/Makefile.in	2020-03-18 22:17:26.540477618 -0400
+@@ -569,7 +569,7 @@
+ BUILT_SOURCES = $(built_headers) $(built_sources)
+ EXTRA_DIST = gstplay-marshal.list
+ CLEANFILES = $(BUILT_SOURCES)
+-enum_headers = $(foreach h,$(glib_enum_headers),\n\#include \"$(h)\")
++enum_headers = $(foreach h,$(glib_enum_headers),\n#include \"$(h)\")
+ all: $(BUILT_SOURCES)
+ 	$(MAKE) $(AM_MAKEFLAGS) all-am
+ 
+diff --unified --recursive --text package.orig/gst/tcp/Makefile.in package.new/gst/tcp/Makefile.in
+--- package.orig/gst/tcp/Makefile.in	2020-03-18 22:16:50.804092941 -0400
++++ package.new/gst/tcp/Makefile.in	2020-03-18 22:17:26.457144945 -0400
+@@ -471,7 +471,7 @@
+ glib_enum_define = GST_TCP
+ glib_gen_prefix = gst_tcp
+ glib_gen_basename = gsttcp
+-enum_headers = $(foreach h,$(glib_enum_headers),\n\#include \"$(h)\")
++enum_headers = $(foreach h,$(glib_enum_headers),\n#include \"$(h)\")
+ built_sources = gsttcp-enumtypes.c gsttcp-marshal.c
+ built_headers = gsttcp-enumtypes.h gsttcp-marshal.h
+ BUILT_SOURCES = $(built_sources) $(built_headers)
+diff --unified --recursive --text package.orig/gst-libs/gst/app/Makefile.in package.new/gst-libs/gst/app/Makefile.in
+--- package.orig/gst-libs/gst/app/Makefile.in	2020-03-18 22:16:50.817426170 -0400
++++ package.new/gst-libs/gst/app/Makefile.in	2020-03-18 22:17:27.103806485 -0400
+@@ -473,7 +473,7 @@
+ glib_enum_define = GST_APP
+ glib_gen_prefix = __gst_app
+ glib_gen_basename = gstapp
+-enum_headers = $(foreach h,$(glib_enum_headers),\n\#include \"$(h)\")
++enum_headers = $(foreach h,$(glib_enum_headers),\n#include \"$(h)\")
+ built_sources = gstapp-marshal.c
+ built_headers = gstapp-marshal.h
+ BUILT_SOURCES = $(built_sources) $(built_headers)
+diff --unified --recursive --text package.orig/gst-libs/gst/audio/Makefile.in package.new/gst-libs/gst/audio/Makefile.in
+--- package.orig/gst-libs/gst/audio/Makefile.in	2020-03-18 22:16:50.817426170 -0400
++++ package.new/gst-libs/gst/audio/Makefile.in	2020-03-18 22:17:27.070473416 -0400
+@@ -544,7 +544,7 @@
+   $(GST_BASE_LIBS) $(GST_LIBS)
+ 
+ libgstaudio_@GST_MAJORMINOR@_la_LDFLAGS = $(GST_LIB_LDFLAGS) $(GST_ALL_LDFLAGS) $(GST_LT_LDFLAGS)
+-enum_headers = $(foreach h,$(glib_enum_headers),\n\#include \"$(h)\")
++enum_headers = $(foreach h,$(glib_enum_headers),\n#include \"$(h)\")
+ @HAVE_INTROSPECTION_TRUE@BUILT_GIRSOURCES = GstAudio-@GST_MAJORMINOR@.gir
+ @HAVE_INTROSPECTION_TRUE@gir_headers = $(patsubst %,$(srcdir)/%, \
+ @HAVE_INTROSPECTION_TRUE@	$(libgstaudio_@GST_MAJORMINOR@include_HEADERS)) \
+diff --unified --recursive --text package.orig/gst-libs/gst/interfaces/Makefile.in package.new/gst-libs/gst/interfaces/Makefile.in
+--- package.orig/gst-libs/gst/interfaces/Makefile.in	2020-03-18 22:16:50.814092862 -0400
++++ package.new/gst-libs/gst/interfaces/Makefile.in	2020-03-18 22:17:26.897141457 -0400
+@@ -551,7 +551,7 @@
+ 
+ EXTRA_DIST = interfaces-marshal.list
+ CLEANFILES = $(BUILT_SOURCES) $(am__append_1)
+-enum_headers = $(foreach h,$(glib_enum_headers),\n\#include \"$(h)\")
++enum_headers = $(foreach h,$(glib_enum_headers),\n#include \"$(h)\")
+ @HAVE_INTROSPECTION_TRUE@BUILT_GIRSOURCES = GstInterfaces-@GST_MAJORMINOR@.gir
+ @HAVE_INTROSPECTION_TRUE@gir_headers = $(patsubst %,$(srcdir)/%, \
+ @HAVE_INTROSPECTION_TRUE@	$(libgstinterfacesinclude_HEADERS)) \
+diff --unified --recursive --text package.orig/gst-libs/gst/pbutils/Makefile.in package.new/gst-libs/gst/pbutils/Makefile.in
+--- package.orig/gst-libs/gst/pbutils/Makefile.in	2020-03-18 22:16:50.814092862 -0400
++++ package.new/gst-libs/gst/pbutils/Makefile.in	2020-03-18 22:17:26.937141140 -0400
+@@ -542,7 +542,7 @@
+ 
+ # DISTCLEANFILES is for files generated by configure
+ DISTCLEANFILES = $(built_headers_configure)
+-enum_headers = $(foreach h,$(glib_enum_headers),\n\#include \"$(h)\")
++enum_headers = $(foreach h,$(glib_enum_headers),\n#include \"$(h)\")
+ @HAVE_INTROSPECTION_TRUE@BUILT_GIRSOURCES = GstPbutils-@GST_MAJORMINOR@.gir
+ @HAVE_INTROSPECTION_TRUE@gir_headers = $(patsubst %,$(srcdir)/%, \
+ @HAVE_INTROSPECTION_TRUE@	$(libgstpbutils_@GST_MAJORMINOR@include_HEADERS)) \
+diff --unified --recursive --text package.orig/gst-libs/gst/rtsp/Makefile.in package.new/gst-libs/gst/rtsp/Makefile.in
+--- package.orig/gst-libs/gst/rtsp/Makefile.in	2020-03-18 22:16:50.817426170 -0400
++++ package.new/gst-libs/gst/rtsp/Makefile.in	2020-03-18 22:17:27.113806406 -0400
+@@ -517,7 +517,7 @@
+ glib_enum_define = gst_rtsp
+ glib_enum_headers = gstrtspdefs.h
+ glib_gen_basename = gstrtsp
+-enum_headers = $(foreach h,$(glib_enum_headers),\n\#include \"$(h)\")
++enum_headers = $(foreach h,$(glib_enum_headers),\n#include \"$(h)\")
+ @HAVE_INTROSPECTION_TRUE@BUILT_GIRSOURCES = GstRtsp-@GST_MAJORMINOR@.gir
+ @HAVE_INTROSPECTION_TRUE@gir_headers = $(patsubst %,$(srcdir)/%, \
+ @HAVE_INTROSPECTION_TRUE@	$(libgstrtspinclude_HEADERS)) \
+diff --unified --recursive --text package.orig/gst-libs/gst/video/Makefile.in package.new/gst-libs/gst/video/Makefile.in
+--- package.orig/gst-libs/gst/video/Makefile.in	2020-03-18 22:16:50.810759555 -0400
++++ package.new/gst-libs/gst/video/Makefile.in	2020-03-18 22:17:26.847141854 -0400
+@@ -553,7 +553,7 @@
+ 	$(GST_ALL_LDFLAGS) \
+ 	$(GST_LT_LDFLAGS)
+ 
+-enum_headers = $(foreach h,$(glib_enum_headers),\n\#include \"$(h)\")
++enum_headers = $(foreach h,$(glib_enum_headers),\n#include \"$(h)\")
+ @HAVE_INTROSPECTION_TRUE@BUILT_GIRSOURCES = GstVideo-@GST_MAJORMINOR@.gir
+ @HAVE_INTROSPECTION_TRUE@gir_headers = $(patsubst %,$(srcdir)/%, \
+ @HAVE_INTROSPECTION_TRUE@	$(libgstvideo_@GST_MAJORMINOR@include_HEADERS)) \

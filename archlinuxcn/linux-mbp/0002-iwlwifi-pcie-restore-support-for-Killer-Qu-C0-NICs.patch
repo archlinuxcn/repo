@@ -1,0 +1,42 @@
+From 4c617291d0cbe8b6ec15d645a28d915ac03e4b86 Mon Sep 17 00:00:00 2001
+From: "Jan Alexander Steffens (heftig)" <jan.steffens@gmail.com>
+Date: Tue, 24 Dec 2019 06:16:39 +0100
+Subject: [PATCH 02/11] iwlwifi: pcie: restore support for Killer Qu C0 NICs
+
+Commit 809805a820c6 ("iwlwifi: pcie: move some cfg mangling from
+trans_pcie_alloc to probe") refactored the cfg mangling. Unfortunately,
+in this process the lines which picked the right cfg for Killer Qu C0
+NICs after C0 detection were lost. These lines were added by commit
+b9500577d361 ("iwlwifi: pcie: handle switching killer Qu B0 NICs to
+C0").
+
+I suspect this is more of the "merge damage" which commit 7cded5658329
+("iwlwifi: pcie: fix merge damage on making QnJ exclusive") talks about.
+
+Restore the missing lines so the driver loads the right firmware for
+these NICs.
+
+Fixes: 809805a820c6 ("iwlwifi: pcie: move some cfg mangling from trans_pcie_alloc to probe")
+Signed-off-by: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
+---
+ drivers/net/wireless/intel/iwlwifi/pcie/drv.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/drv.c b/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
+index b0b7eca1754e..de62a6dc4e73 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
+@@ -1107,6 +1107,10 @@ static int iwl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 			cfg = &iwl9560_2ac_cfg_qu_c0_jf_b0;
+ 		else if (cfg == &iwl9560_2ac_160_cfg_qu_b0_jf_b0)
+ 			cfg = &iwl9560_2ac_160_cfg_qu_c0_jf_b0;
++		else if (cfg == &killer1650s_2ax_cfg_qu_b0_hr_b0)
++			cfg = &killer1650s_2ax_cfg_qu_c0_hr_b0;
++		else if (cfg == &killer1650i_2ax_cfg_qu_b0_hr_b0)
++			cfg = &killer1650i_2ax_cfg_qu_c0_hr_b0;
+ 	}
+ 
+ 	/* same thing for QuZ... */
+-- 
+2.25.2
+

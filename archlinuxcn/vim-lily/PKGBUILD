@@ -2,7 +2,7 @@
 
 pkgbase=vim-lily
 pkgname=(gvim-lily vim-runtime-lily vim-lily)
-pkgver=8.2.548
+pkgver=8.2.788
 _versiondir="vim$(echo $pkgver | awk -F. '{print $1$2}')"
 pkgrel=1
 arch=('i686' 'x86_64')
@@ -10,11 +10,9 @@ license=('custom:vim')
 url="http://www.vim.org"
 makedepends=('gpm' 'gtk3' 'perl' 'python' 'ruby' 'gettext'
              'pkg-config' 'sed' 'luajit' 'git' 'tar' 'desktop-file-utils' 'libxt')
-source=('tmpfiles.conf'
-        'vimdoc.hook'
+source=('vimdoc.hook'
         "vim-repo::git://localhost/vim")
-sha1sums=('f4d0ccb87d0add6bd76280ed82f401e9a91aabc5'
-          'adc4c82b6c4097944e5a767270a772721455eb8c'
+sha1sums=('adc4c82b6c4097944e5a767270a772721455eb8c'
           'SKIP')
 options=('debug' 'strip')
 
@@ -32,8 +30,8 @@ build() {
   sed -i 's|^.*\(#define VIMRC_FILE.*"\) .*$|\1|' \
     src/feature.h
 
-  local vim_options='--without-x --disable-canberra --disable-fontset --disable-gui --disable-xsmp'
-  local gvim_options='--enable-xsmp --enable-fontset --enable-gui=gtk3'
+  local vim_options='--without-x --disable-canberra --disable-gui --disable-xsmp'
+  local gvim_options='--enable-xsmp --enable-gui=gtk3'
 
   for name in vim gvim; do
     local _dir="${srcdir}"/$pkgbase
@@ -51,11 +49,12 @@ build() {
       --enable-luainterp=dynamic \
       --enable-multibyte \
       --enable-perlinterp=dynamic \
-      --enable-python3interp \
+      --enable-python3interp=dynamic \
       --enable-rubyinterp=dynamic \
       --enable-terminal \
       --with-features=huge \
       --with-luajit \
+      --disable-icon-cache-update --disable-desktop-database-update \
       $(eval "echo \$${name}_options") --enable-fail-if-missing \
       --with-compiledby=百合仙子 --with-modified-by=百合仙子
 
@@ -101,7 +100,6 @@ package_vim-lily() {
   # license
   install -Dm644 "${srcdir}"/vim-repo/runtime/doc/uganda.txt \
     "${pkgdir}"/usr/share/licenses/${pkgname}/license.txt
-  install -D -m644 "${srcdir}"/tmpfiles.conf "${pkgdir}/usr/lib/tmpfiles.d/${pkgname}.conf"
 }
 
 package_gvim-lily() {
@@ -140,7 +138,6 @@ package_gvim-lily() {
   # license
   install -Dm644 "${srcdir}"/vim-repo/runtime/doc/uganda.txt \
     "${pkgdir}"/usr/share/licenses/${pkgname}/license.txt
-  install -D -m644 "${srcdir}"/tmpfiles.conf "${pkgdir}/usr/lib/tmpfiles.d/${pkgname}.conf"
 }
 
 package_vim-runtime-lily() {

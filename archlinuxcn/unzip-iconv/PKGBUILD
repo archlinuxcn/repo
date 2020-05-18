@@ -7,14 +7,14 @@ pkgname=unzip-iconv
 _pkgname=unzip
 pkgver=6.0
 _pkgver=${pkgver/./}
-pkgrel=13
+pkgrel=14
 pkgdesc="Unpacks .zip archives such as those made by PKZIP. With iconv patch for -O / -I goodness."
-url='http://www.info-zip.org/UnZip.html'
+url='https://www.info-zip.org/UnZip.html'
 arch=('x86_64')
 license=('custom')
 provides=('unzip')
 conflicts=('unzip')
-source=("http://downloads.sourceforge.net/infozip/$_pkgname${_pkgver}.tar.gz"
+source=("https://downloads.sourceforge.net/infozip/$_pkgname${_pkgver}.tar.gz"
         'unzip60-alt-iconv-utf8.patch'
         'overflow-fsize.patch'
         'cve20149636.patch'

@@ -1,0 +1,34 @@
+pkgname=ncdu-diff-git
+pkgver=1.14.2.r14.g5482563
+pkgrel=1
+pkgdesc='Disk usage analyzer with an ncurses interface (patched with diff support)'
+url='https://github.com/lilydjwg/ncdu-diff'
+license=('custom:MIT')
+depends=('ncurses' 'python')
+makedepends=('git')
+arch=('x86_64')
+source=(git+https://github.com/lilydjwg/ncdu-diff)
+sha256sums=('SKIP')
+provides=(ncdu=$pkgver)
+conflicts=(ncdu)
+_gitname=ncdu-diff
+
+pkgver() {
+  cd "${srcdir}/${_gitname}"
+  git describe | sed -E 's/([^-]*-g)/r\1/;s/-/./g;s/^v//'
+}
+
+build() {
+  cd "${srcdir}/${_gitname}"
+  autoreconf -i
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "${srcdir}/${_gitname}"
+  make DESTDIR="${pkgdir}" install
+  install -Dm644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  install -Dm755 ncdu-diff "${pkgdir}/usr/bin/ncdu-diff"
+  install -Dm755 ncdu-diffdir "${pkgdir}/usr/bin/ncdu-diffdir"
+}

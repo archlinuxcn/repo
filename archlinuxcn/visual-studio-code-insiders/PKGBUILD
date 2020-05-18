@@ -1,13 +1,12 @@
 # Maintainer: D. Can Celasun <can[at]dcc[dot]im>
 
 pkgname=visual-studio-code-insiders
-pkgver=1586543210
+pkgver=1589521400
 pkgrel=1
 pkgdesc="Editor for building and debugging modern web and cloud applications (insiders version)"
 arch=('x86_64' 'i686')
 url="https://code.visualstudio.com/"
 license=('custom: commercial')
-provides=('code')
 # lsof: need for terminal splitting, see https://github.com/Microsoft/vscode/issues/62991
 depends=(libxkbfile gnupg gtk3 libsecret nss gcc-libs libnotify libxss glibc lsof)
 optdepends=('glib2: Needed for move to trash functionality'

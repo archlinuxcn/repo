@@ -1,0 +1,32 @@
+#
+
+pkgname=libddierckx-git
+pkgver=v1.0.0.1.r0.gc81cad5
+pkgrel=3
+pkgdesc='ddierckx is a `real8` version of dierckx from NETLIB'
+arch=(aarch64 armv7h i686 x86_64)
+url='https://github.com/kbarbary/DierckxBuilder'
+license=('MIT')
+makedepends=(git gcc-fortran)
+source=('git://github.com/kbarbary/DierckxBuilder')
+sha1sums=('SKIP')
+provides=('libddierckx')
+conflicts=('libddierckx')
+
+pkgver() {
+  cd DierckxBuilder
+  git describe --long --tags | sed -r 's/([^-]*-g)/r\1/;s/-/./g'
+}
+
+build() {
+  cd DierckxBuilder/src/ddierckx
+
+  make FFLAGS="$FFLAGS -g -flto -O3" FC='gfortran -Wl,-Bsymbolic-functions'
+}
+
+package() {
+  cd DierckxBuilder/src/ddierckx
+
+  mkdir -p "${pkgdir}/usr/lib/"
+  install -Dm755 libddierckx.so "${pkgdir}/usr/lib/"
+}

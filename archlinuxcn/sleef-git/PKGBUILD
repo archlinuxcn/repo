@@ -1,0 +1,42 @@
+# Maintainer: Yichao Yu <yyc1992@gmail.com>
+
+pkgname=sleef-git
+_realver=3.3.1
+pkgver=3.4.1.21.g9fb5f33
+pkgrel=1
+pkgdesc='SIMD Library for Evaluating Elementary Functions, vectorized libm and DFT'
+arch=('i686' 'x86_64')
+url="https://sleef.org"
+license=('custom')
+depends=()
+makedepends=('cmake' 'git')
+provides=(
+  "sleef=${_realver}")
+conflicts=("sleef")
+options=('debug' 'strip')
+source=("git://github.com/shibatch/sleef")
+md5sums=('SKIP')
+
+pkgver() {
+  cd sleef
+
+  git describe --tags | sed -e 's/-/./g'
+}
+
+build() {
+  cd sleef
+
+  mkdir -p build
+  cd build
+
+  cmake .. \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DCMAKE_INSTALL_PREFIX=/usr
+  make
+}
+
+package() {
+  cd sleef/build
+
+  make DESTDIR="$pkgdir/" install
+}

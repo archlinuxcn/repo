@@ -1,7 +1,7 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 pkgname=python-pretrainedmodels-git
-pkgver=r152.021d978
-pkgrel=3
+pkgver=r154.8aae3d8
+pkgrel=1
 pkgdesc="Pretrained ConvNets for PyTorch"
 arch=(any)
 url="https://github.com/Cadene/pretrained-models.pytorch"

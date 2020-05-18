@@ -1,0 +1,35 @@
+#
+
+pkgname=cubature-git
+pkgver=v1.0.3.r6.g4b49688
+pkgrel=3
+pkgdesc='multi-dimensional adaptive integration (cubature) in C'
+arch=(aarch64 armv7h i686 x86_64)
+url='https://github.com/stevengj/cubature'
+license=('GPLv2+')
+makedepends=('git' 'cmake')
+source=('git://github.com/stevengj/cubature')
+sha1sums=('SKIP')
+provides=('cubature')
+conflicts=('cubature')
+
+pkgver() {
+  cd cubature
+  git describe --long --tags | sed -r 's/([^-]*-g)/r\1/;s/-/./g'
+}
+
+build() {
+  cd cubature
+  mkdir -p build
+
+  cd build
+  export CFLAGS+=' -g -flto -O3'
+  export LDFLAGS+=' -g -flto -O3 -Wl,-Bsymbolic-functions'
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=Release ..
+  make
+}
+
+package() {
+  cd cubature/build
+  make DESTDIR="${pkgdir}" install
+}

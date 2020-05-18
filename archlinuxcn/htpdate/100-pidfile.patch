@@ -1,0 +1,11 @@
+--- htpdate.c	2019-07-12 19:10:17.000000000 +0200
++++ htpdate.c.patched	2020-05-06 13:15:51.419075086 +0200
+@@ -499,7 +499,7 @@
+ 			printlog( 1, "Error writing pid file" );
+ 			exit(1);
+ 		} else {
+-			fprintf( pid_file, "%u\n", (unsigned short)pid );
++			fprintf( pid_file, "%d\n", (signed int)pid );
+ 			fclose( pid_file );
+ 		}
+ 		printlog( 0, "htpdate version "VERSION" started" );

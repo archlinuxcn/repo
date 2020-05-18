@@ -1,7 +1,10 @@
---- a/usr/lib/tmpfiles.d/mysql.conf
-+++ b/usr/lib/tmpfiles.d/mysql.conf
-@@ -21,3 +21,4 @@
+--- a/usr/lib/tmpfiles.d/mysql.conf	2020-05-04 00:44:00.673600092 +0200
++++ b/usr/lib/tmpfiles.d/mysql.conf	2020-05-04 00:44:21.536926656 +0200
+@@ -20,4 +20,5 @@
+ # along with this program; if not, write to the Free Software
  # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
  
- d /var/run/mysqld 0755 mysql mysql  -
+-d /var/run/mysqld 0755 mysql mysql  -
++d /run/mysqld 0755 mysql mysql  -
 +d /var/lib/mysql 0700 mysql mysql  -
+

@@ -1,8 +1,8 @@
 # Maintainer: Roland <hr_01y@protonmail.com>
 
 pkgname=wine-x64
-pkgver=5.4
-pkgrel=3
+pkgver=5.8
+pkgrel=1
 pkgdesc="A compatibility layer for running Windows programs. This only configured with x64 support."
 url="http://www.winehq.com"
 arch=(x86_64)
@@ -16,8 +16,8 @@ _pkgbasever=${pkgver/rc/-rc}
 
 source=(https://dl.winehq.org/wine/source/5.x/wine-$_pkgbasever.tar.xz{,.sign}
         30-win32-aliases.conf)
-sha512sums=('892e8b875484ada01eaddab4ea50992f95cf3ced6730f8e2ca1f0765770d7fa53a21080c526772b9b3ac83b3559d3d68e83ad3af3afbe9d6f931d833afde7e98'
-            'f22d83532184b414925bd96b4014fe3eceda6616eaec01109625d410eb4995932da2b1380c893c4ae81ec5b9450c9af6f54fe241ed14d035c475eb15224c91cb'
+sha512sums=('7b9df380655a72e8b9e95ca271a62308262d8efabbeb2ad459071afc9ed51518b42b1f75b019fe8d6b53cf5185e9cfc45ac1b8a7092f118fa2aff14f99c012de'
+            '7e8d018ee428775ff51d682e724d0b3a07a267b6543ab98a9b807f33bf8178ba4585e5b64709f6ade1bccfd814afbb6fec69977ecd53ad15c89bb0512765256a'
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb')
 validpgpkeys=(DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D)
 

@@ -1,0 +1,57 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+_pkgname=nipy
+pkgname=python-nipy
+pkgver=0.4.2
+pkgrel=2
+pkgdesc='Neuroimaging in Python FMRI analysis package'
+arch=('x86_64')
+url='http://nipy.org/nipy'
+license=('BSD')
+depends=(
+  'python-nibabel'
+  'python-numpy'
+  'python-scipy'
+  'python-sympy'
+)
+makedepends=(
+  'python-setuptools'
+  'cython'
+  'git'
+)
+source=(
+  'http://nipy.org/data-packages/nipy-templates-0.2.tar.gz'
+  'http://nipy.org/data-packages/nipy-data-0.2.tar.gz'
+  "${_pkgname}-${pkgver}::git+https://github.com/nipy/nipy.git")
+sha512sums=('3e68e4ce77988f7ddccb85b1ee024cc0717f80316f311ae281dd07f728265d62afb7bc60a7d2e60f88853586627595f601d0248ee5ee64036936c001aeae1e4d'
+            '6f9a6593973d55fa9f43a6d9fca68bfcaa52228bb0186fe62a21adf4cddd5874c80312c7087fc2004d2df6e4f1c9d74ed07174c784882f8fa144d036fe401ea4'
+            'SKIP')
+
+prepare() {
+  sed -i 's/ConfigParser.SafeConfigParser/configparser.ConfigParser/g' "${srcdir}/nipy-data-0.2/setup.py" "${srcdir}/nipy-templates-0.2/setup.py"
+  sed -i 's/import ConfigParser/import configparser/g' "${srcdir}/nipy-data-0.2/setup.py" "${srcdir}/nipy-templates-0.2/setup.py"
+}
+
+build() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  python setup.py build
+
+  cd "${srcdir}/nipy-data-0.2"
+  python setup.py build
+
+  cd "${srcdir}/nipy-templates-0.2"
+  python setup.py build
+}
+
+package() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+  
+  cd "${srcdir}/nipy-data-0.2"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  
+  cd "${srcdir}/nipy-templates-0.2"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+}
+# vim:set ts=2 sw=2 et:

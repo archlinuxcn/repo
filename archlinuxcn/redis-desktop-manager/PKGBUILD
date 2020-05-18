@@ -3,7 +3,7 @@
 # Contributor: Vyacheslav Konovalov <echo dnlhY2hrb25vdmFsb3ZAZ21haWwuY29tCg== | base64 -d>
 
 pkgname=redis-desktop-manager
-pkgver=2019.5
+pkgver=2020.0
 pkgrel=3
 pkgdesc='Open source cross-platform Redis Desktop Manager based on Qt 5'
 arch=('x86_64')
@@ -21,23 +21,20 @@ depends=(
   'qt5-svg'
   'libssh2'
   'python')
-makedepends=('git' 'gcc')
+makedepends=('git' 'gcc' 'make')
 conflicts=('redis-desktop-manager-bin')
 source=("rdm::git://github.com/uglide/RedisDesktopManager.git#tag=$pkgver"
         'rdm.sh'
         'rdm.desktop'
-        'link-python.patch'
-	'missing-include.patch')
+        'link-python.patch')
 sha256sums=('SKIP'
             'f469d9a5adce723904efe0f1b1db5d79807410f90aafb117f18ae108d8b2d391'
             '9ca6cfe0fc1a050552ec2fa009a2d517de3b049ff6f379f0fda849e4dbca3f68'
-            '428d2758345059f844dee05bbc6d06eecf82f6cbd3f1a8a308fe4f54cadb43ce'
-            '6c145342ed3b3d07a3618e6a5caeb43c3caad4fa61ec9b2f51c6b8438599a31d')
+            '428d2758345059f844dee05bbc6d06eecf82f6cbd3f1a8a308fe4f54cadb43ce')
 
 prepare() {
   cd rdm/
   git apply ../link-python.patch
-  git apply ../missing-include.patch
   git submodule update --init --recursive
   git submodule add https://chromium.googlesource.com/linux-syscall-support 3rdparty/linux-syscall-support
 

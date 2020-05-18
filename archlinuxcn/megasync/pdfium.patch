@@ -1,0 +1,16 @@
+diff --git a/bindings/qt/sdk.pri b/bindings/qt/sdk.pri
+index aa68cb00d..1d495d78f 100644
+--- a/bindings/qt/sdk.pri
++++ b/bindings/qt/sdk.pri
+@@ -206,6 +206,11 @@ CONFIG(USE_PDFIUM) {
+             DEFINES += HAVE_PDFIUM
+             LIBS += -lpdfium
+         }
++        else:exists(/usr/include/pdfium/fpdfview.h) {
++            DEFINES += HAVE_PDFIUM
++            INCLUDEPATH += /usr/include/pdfium
++            LIBS += -lpdfium
++        }
+     }
+     else {#win/mac
+         DEFINES += HAVE_PDFIUM
