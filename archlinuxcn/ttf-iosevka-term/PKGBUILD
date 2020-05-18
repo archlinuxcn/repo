@@ -1,17 +1,15 @@
 # Maintainer: Markus Weimar <mail@markusweimar.de>
 pkgname=ttf-iosevka-term
-pkgver=2.3.3
+pkgver=3.0.0
 pkgrel=1
-pkgdesc='A slender monospace typeface. Shape: default'
+pkgdesc='Typeface family designed for coding, terminal use and technical documents.'
 arch=('any')
-url='https://be5invis.github.io/Iosevka/'
-license=('custom:OFL')
-depends=('fontconfig' 'xorg-font-utils')
-conflicts=('ttf-iosevka-pack')
-source=("https://github.com/be5invis/Iosevka/releases/download/v${pkgver}/02-iosevka-term-${pkgver}.zip"
+url='https://typeof.net/Iosevka/'
+license=('OFL')
+source=("https://github.com/be5invis/Iosevka/releases/download/v${pkgver}/ttf-iosevka-term-${pkgver}.zip"
         "${pkgname}-${pkgver}-${pkgrel}-LICENSE.md::https://raw.githubusercontent.com/be5invis/Iosevka/v${pkgver}/LICENSE.md")
-sha256sums=('00fce617405fccd7fbf7316dadd3f6b3ccb1e276f2910e9a9cde12e3f058b4d7'
-            'ecfd74a1d6749bf509cee122870da0186bccfae446e3f6bc5faff253577ab000')
+sha256sums=('5a2930e36227dfebb9434f9a80ddc3ab6896a002ba30d26218bdf65e156fbf03'
+            'e61c0988bb231a321f14cce1b119a468f279ea86826c32e943ab16dbf08c1ba9')
 
 package() {
     install -d ${pkgdir}/usr/share/fonts/${pkgname}
