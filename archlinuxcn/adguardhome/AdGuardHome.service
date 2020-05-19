@@ -7,16 +7,17 @@ After=syslog.target network-online.target
 User=adguardhome
 Group=adguardhome
 
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
 StartLimitInterval=5
 StartLimitBurst=10
-ExecStart=/var/lib/adguardhome/AdGuardHome "-s" "run"
+ExecStart=/var/lib/adguardhome/AdGuardHome -s run
 
 WorkingDirectory=/var/lib/adguardhome
 StandardOutput=file:/var/lib/adguardhome/AdGuardHome.out
 StandardError=file:/var/lib/adguardhome/AdGuardHome.err
 Restart=always
 RestartSec=10
-EnvironmentFile=-/etc/sysconfig/AdGuardHome
 
 [Install]
 WantedBy=multi-user.target

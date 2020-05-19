@@ -1,19 +1,10 @@
 post_install() {
-  getent group adguardhome > /dev/null || groupadd -g 555 adguardhome
-  if ! getent passwd adguardhome > /dev/null; then
-    useradd -c 'adguardhome user' -u 555 -g adguardhome \
-      -d /var/lib/adguardhome -s /usr/bin/nologin adguardhome
-    passwd -l adguardhome > /dev/null
-    [[ ! -d /var/lib/adguardhome/ ]] &&
-      mkdir /var/lib/adguardhome/ &&
-      chown -R adguardhome:adguardhome /var/lib/adguardhome/
-  fi
-
-  post_upgrade
-}
-
-post_upgrade() {
-  setcap CAP_NET_BIND_SERVICE=+eip /var/lib/adguardhome/AdGuardHome
+  echo "==>   FIRST TIME SETUP"
+  echo "::  1. First time run as root:  /var/lib/adguardhome/AdGuardHome"
+  echo "::  2. Log in to web interface to create config: http://ip.of.server:3000"
+  echo "::     Stop AdGuardHome with ctrl+c when complete"
+  echo "::  3. Fix permissions:  chown -R adguardhome:adguardhome /var/lib/adguardhome"
+  echo "==>   Now you can start AdGuardHome.service via systemd and run as the unprivileged user"
 }
 
 post_remove() {
