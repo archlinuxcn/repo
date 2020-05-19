@@ -5,7 +5,7 @@
 _pkgname=kcm-fcitx5
 pkgbase=$_pkgname-git
 pkgname=(kcm-fcitx5-git fcitx5-config-qt-git kbd-layout-viewer5-git)
-pkgver=r291.44f6113
+pkgver=r292.765b011
 pkgrel=1
 pkgdesc="KDE Config Module for Fcitx5"
 arch=('i686' 'x86_64')
