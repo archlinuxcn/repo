@@ -1,0 +1,24 @@
+# Maintainer: Hao Long <aur@esd.cc>
+
+pkgname=python-pprintpp
+_pkgname=pprintpp
+pkgver=0.4.0
+pkgrel=0
+pkgdesc="A drop-in replacement for pprint that's actually pretty"
+arch=('any')
+url='https://github.com/wolever/pprintpp'
+license=('BSD')
+depends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
+sha256sums=('ea826108e2c7f49dc6d66c752973c3fc9749142a798d6b254e1e301cfdbc6403')
+
+build() {
+  cd ${_pkgname}-${pkgver}
+  python setup.py build
+}
+
+package() {
+  cd ${_pkgname}-${pkgver}
+  python setup.py install --root="$pkgdir" --optimize=1 --skip-build
+  install -Dm644 LICENSE.txt "${pkgdir}"/usr/share/licenses/${pkgname}/LICENSE.txt
+}
