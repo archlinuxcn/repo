@@ -2,7 +2,7 @@
 
 pkgname=proxmark3-iceman-git
 pkgver=9189.3dd55e2c
-pkgrel=1
+pkgrel=2
 pkgdesc='RRG / Iceman repo - Proxmark3 RDV4.0 and other Proxmark3 platforms.'
 arch=('x86_64')
 url='https://github.com/RfidResearchGroup/proxmark3'
