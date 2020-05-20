@@ -1,3 +1,5 @@
+# Maintainer: Hao Long <imlonghao@archlinuxcn.org>
+
 _name=pprintpp
 pkgname=python-pprintpp
 pkgver=0.4.0
@@ -6,7 +8,7 @@ pkgdesc="A drop-in replacement for pprint that's actually pretty"
 arch=(any)
 url="https://github.com/wolever/pprintpp"
 license=('BSD')
-depends=('python' 'python-setuptools')
+depends=('python-setuptools')
 source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
 sha256sums=('ea826108e2c7f49dc6d66c752973c3fc9749142a798d6b254e1e301cfdbc6403')
 
@@ -22,5 +24,7 @@ package() {
   # make sure we don't install annoying files
   local _site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
   rm -rf "$pkgdir/$_site_packages/tests/"
+
+  install -Dm644 LICENSE.txt "${pkgdir}"/usr/share/licenses/${pkgname}/LICENSE.txt
 }
 
