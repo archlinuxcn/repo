@@ -14,7 +14,7 @@ build_prefix = 'extra-x86_64'
 
 def post_build():
     git_pkgbuild_commit()
-    update_aur_repo()
+    #update_aur_repo()
 
 if __name__ == '__main__':
     single_main(build_prefix)
