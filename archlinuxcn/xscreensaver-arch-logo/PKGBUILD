@@ -5,7 +5,7 @@
 
 pkgname=xscreensaver-arch-logo
 pkgver=5.44
-pkgrel=1
+pkgrel=2
 pkgdesc='Screen saver and locker for the X Window System with Arch Linux branding'
 url='https://www.jwz.org/xscreensaver/'
 arch=('x86_64')
@@ -31,6 +31,7 @@ prepare() {
 }
 
 build() {
+  cp logo-* "${srcdir}"/${pkgname%%-*}-${pkgver}/hacks/images/
   cd "${pkgname%%-*}-${pkgver}"
   install -Dm644 "$srcdir"/logo-180.xpm  "${srcdir}"/${pkgname%%-*}-${pkgver}/utils/images/logo-180.xpm
     ./configure \
