@@ -27,6 +27,6 @@ build () {
 package () {
   cd diffr
 
-  install -Dm755 "target/release/$pkgname" "$pkgdir/usr/bin/$pkgname"
+  install -Dm755 "target/release/diffr" "$pkgdir/usr/bin/diffr"
   install -Dm644 "LICENSE.txt" "$pkgdir/usr/share/licenses/$pkgname"
 }
