@@ -8,13 +8,13 @@
 
 pkgname=libsepol
 pkgver=3.0
-pkgrel=1
+pkgrel=2
 pkgdesc="SELinux binary policy manipulation library"
 arch=('i686' 'x86_64' 'armv6h')
 url='http://userspace.selinuxproject.org'
 license=('LGPL2.1')
 groups=('selinux')
-makedepends=('flex')
+makedepends=('clang' 'flex')
 depends=('glibc')
 options=(staticlibs)
 conflicts=("selinux-usr-${pkgname}")
@@ -24,10 +24,10 @@ sha256sums=('5b7ae1881909f1048b06f7a0c364c5c8a86ec12e0ec76e740fe9595a6033eb79')
 
 build() {
   cd "${pkgname}-${pkgver}"
-  make
+  make CC=clang
 }
 
 package() {
   cd "${pkgname}-${pkgver}"
-  make DESTDIR="${pkgdir}" SHLIBDIR=/usr/lib install
+  make CC=clang DESTDIR="${pkgdir}" SHLIBDIR=/usr/lib install
 }
