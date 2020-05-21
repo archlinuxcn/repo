@@ -1,0 +1,32 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+pkgname=diffr-git
+pkgver=0.1.4.20200520
+pkgrel=1
+pkgdesc="Yet another diff highlighting tool"
+arch=('x86_64')
+url="https://github.com/mookid/diffr"
+license=('MIT')
+makedepends=('rust' 'cargo' 'git')
+source=("git+$url")
+sha256sums=('SKIP')
+conflicts=(diffr)
+provides=(diffr=$pkgver)
+
+pkgver () {
+  cd diffr
+  echo $(grep -oPm1 '(?<=^version = ")[^"]+' Cargo.toml).$(TZ=UTC git log -1 --pretty='%cd' --date=short-local | tr -d '-')
+}
+
+build () {
+  cd diffr
+  sed -i '/profile.release/alto = true' Cargo.toml
+  cargo build --release
+  git checkout Cargo.toml
+}
+
+package () {
+  cd diffr
+
+  install -Dm755 "target/release/$pkgname" "$pkgdir/usr/bin/$pkgname"
+  install -Dm644 "LICENSE.txt" "$pkgdir/usr/share/licenses/$pkgname"
+}
