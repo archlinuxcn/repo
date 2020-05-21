@@ -39,7 +39,7 @@ build() {
 
 package_optimus-manager-qt() {
     cd $pkgname-$pkgver/build
-    make DESTDIR=$pkgdir/usr install
+    cmake --install . --prefix $pkgdir/usr 
 }
 
 package_optimus-manager-qt-kde() {
@@ -50,5 +50,5 @@ package_optimus-manager-qt-kde() {
     conflicts=(optimus-manager-qt)
 
     cd optimus-manager-qt-$pkgver/build-kf5
-    make DESTDIR=$pkgdir/usr install
+    cmake --install . --prefix $pkgdir/usr 
 } 
