@@ -44,6 +44,7 @@ package_optimus-manager-qt() {
 
 package_optimus-manager-qt-kde() {
     _pkgname=optimus-manager-qt-kf5
+    depends+=('knotifications' 'kiconthemes')
     replaces=($_pkgname)
     pkgdesc="optimus-manager-qt with KDE API features."
     provides=(optimus-manager-qt)
