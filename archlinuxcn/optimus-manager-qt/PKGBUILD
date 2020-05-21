@@ -4,7 +4,7 @@
 pkgbase=optimus-manager-qt
 pkgname=(optimus-manager-qt optimus-manager-qt-kde)
 pkgver=1.5.1
-pkgrel=2
+pkgrel=3
 pkgdesc="A Qt interface for Optimus Manager that allows to configure and switch GPUs on Optimus laptops using the tray menu"
 arch=('x86_64')
 url="https://github.com/Shatur95/optimus-manager-qt"
@@ -27,19 +27,19 @@ prepare() {
 build() {
   mkdir -p $pkgname-$pkgver/build
   cd $pkgname-$pkgver/build
-  cmake -D CMAKE_INSTALL_PREFIX="$pkgdir/usr" ..
+  cmake ..
   cmake --build .
 
   cd ..
   mkdir build-kf5
   cd build-kf5
-  cmake -D CMAKE_INSTALL_PREFIX="$pkgdir/usr" -D PLASMA=ON ..
+  cmake -D PLASMA=ON ..
   cmake --build .
 }
 
 package_optimus-manager-qt() {
     cd $pkgname-$pkgver/build
-    cmake --install .
+    make DESTDIR=$pkgdir/usr install
 }
 
 package_optimus-manager-qt-kde() {
@@ -50,5 +50,5 @@ package_optimus-manager-qt-kde() {
     conflicts=(optimus-manager-qt)
 
     cd optimus-manager-qt-$pkgver/build-kf5
-    cmake --install .
+    make DESTDIR=$pkgdir/usr install
 } 
